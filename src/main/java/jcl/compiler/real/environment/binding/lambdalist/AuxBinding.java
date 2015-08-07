@@ -18,6 +18,16 @@ public class AuxBinding extends ParameterBinding {
 	}
 
 	public AuxBinding(final SymbolStruct<?> symbolStruct, final LispStruct initForm, final boolean isSpecial) {
-		super(symbolStruct, TType.INSTANCE, initForm, isSpecial);
+		this(symbolStruct, null, initForm, isSpecial);
+	}
+
+	public AuxBinding(final SymbolStruct<?> symbolStruct, final DestructuringLambdaListBindings destructuringForm,
+	                  final LispStruct initForm) {
+		this(symbolStruct, destructuringForm, initForm, false);
+	}
+
+	public AuxBinding(final SymbolStruct<?> symbolStruct, final DestructuringLambdaListBindings destructuringForm,
+	                  final LispStruct initForm, final boolean isSpecial) {
+		super(symbolStruct, destructuringForm, TType.INSTANCE, initForm, isSpecial);
 	}
 }

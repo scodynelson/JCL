@@ -17,6 +17,6 @@ public class SuppliedPBinding extends ParameterBinding {
 	}
 
 	public SuppliedPBinding(final SymbolStruct<?> symbolStruct, final boolean isSpecial) {
-		super(symbolStruct, TType.INSTANCE, null, isSpecial);
+		super(symbolStruct, null, TType.INSTANCE, null, isSpecial);
 	}
 }

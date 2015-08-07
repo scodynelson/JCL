@@ -28,7 +28,18 @@ public class KeyBinding extends ParameterBinding {
 
 	public KeyBinding(final SymbolStruct<?> symbolStruct, final LispStruct initForm, final boolean isSpecial,
 	                  final SymbolStruct<?> keyName, final SuppliedPBinding suppliedPBinding) {
-		super(symbolStruct, TType.INSTANCE, initForm, isSpecial);
+		this(symbolStruct, null, initForm, isSpecial, keyName, suppliedPBinding);
+	}
+
+	public KeyBinding(final SymbolStruct<?> symbolStruct, final DestructuringLambdaListBindings destructuringForm,
+	                  final LispStruct initForm, final SymbolStruct<?> keyName, final SuppliedPBinding suppliedPBinding) {
+		this(symbolStruct, destructuringForm, initForm, false, keyName, suppliedPBinding);
+	}
+
+	public KeyBinding(final SymbolStruct<?> symbolStruct, final DestructuringLambdaListBindings destructuringForm,
+	                  final LispStruct initForm, final boolean isSpecial, final SymbolStruct<?> keyName,
+	                  final SuppliedPBinding suppliedPBinding) {
+		super(symbolStruct, destructuringForm, TType.INSTANCE, initForm, isSpecial);
 		this.keyName = keyName;
 		this.suppliedPBinding = suppliedPBinding;
 	}

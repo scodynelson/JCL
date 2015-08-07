@@ -12,6 +12,7 @@ import jcl.compiler.real.environment.LambdaEnvironment;
 import jcl.compiler.real.environment.binding.EnvironmentParameterBinding;
 import jcl.compiler.real.environment.binding.lambdalist.AuxBinding;
 import jcl.compiler.real.environment.binding.lambdalist.BodyBinding;
+import jcl.compiler.real.environment.binding.lambdalist.DestructuringLambdaListBindings;
 import jcl.compiler.real.environment.binding.lambdalist.EnvironmentBinding;
 import jcl.compiler.real.environment.binding.lambdalist.KeyBinding;
 import jcl.compiler.real.environment.binding.lambdalist.OptionalBinding;
@@ -34,6 +35,9 @@ import jcl.types.TType;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class LambdaListParser {
+
+	@Autowired
+	private DestructuringLambdaListParser destructuringLambdaListParser;
 
 	@Autowired
 	private FormAnalyzer formAnalyzer;
@@ -98,7 +102,8 @@ public class LambdaListParser {
 	}
 
 	protected RequiredParseResult parseRequiredBindings(final Environment environment, final Iterator<LispStruct> iterator,
-	                                                    final DeclareStruct declareElement, final boolean isDotted) {
+	                                                    final DeclareStruct declareElement, final boolean isDotted,
+	                                                    final boolean isDestructuringAllowed) {
 
 		final List<RequiredBinding> requiredBindings = new ArrayList<>();
 
@@ -112,11 +117,26 @@ public class LambdaListParser {
 				return new RequiredParseResult(currentElement, requiredBindings);
 			}
 
-			if (!(currentElement instanceof SymbolStruct)) {
-				final String printedElement = printer.print(currentElement);
-				throw new ProgramErrorException("LambdaList required parameters must be a symbol: " + printedElement);
+			final SymbolStruct<?> currentParam;
+			DestructuringLambdaListBindings destructuringForm = null;
+			if (currentElement instanceof SymbolStruct) {
+				currentParam = (SymbolStruct) currentElement;
+			} else {
+				if (isDestructuringAllowed) {
+					if (currentElement instanceof ListStruct) {
+						final String destructuringName = "DestructuringSymbolName-" + System.nanoTime();
+						currentParam = GlobalPackageStruct.COMMON_LISP_USER.intern(destructuringName).getSymbol();
+						final ListStruct destructuringFormList = (ListStruct) currentElement;
+						destructuringForm = destructuringLambdaListParser.parseDestructuringLambdaList(environment, destructuringFormList, declareElement);
+					} else {
+						final String printedElement = printer.print(currentElement);
+						throw new ProgramErrorException("LambdaList required parameter must be a symbol or a destructuring list: " + printedElement);
+					}
+				} else {
+					final String printedElement = printer.print(currentElement);
+					throw new ProgramErrorException("LambdaList required parameters must be a symbol: " + printedElement);
+				}
 			}
-			final SymbolStruct<?> currentParam = (SymbolStruct) currentElement;
 
 			final LambdaEnvironment currentLambda = Environments.getEnclosingLambda(environment);
 			final int newBindingsPosition = currentLambda.getNextParameterNumber();
@@ -131,7 +151,7 @@ public class LambdaListParser {
 				environment.addLexicalBinding(binding);
 			}
 
-			final RequiredBinding requiredBinding = new RequiredBinding(currentParam, isSpecial);
+			final RequiredBinding requiredBinding = new RequiredBinding(currentParam, destructuringForm, isSpecial);
 			requiredBindings.add(requiredBinding);
 		} while (iterator.hasNext());
 
@@ -139,7 +159,8 @@ public class LambdaListParser {
 	}
 
 	protected OptionalParseResult parseOptionalBindings(final Environment environment, final Iterator<LispStruct> iterator,
-	                                                    final DeclareStruct declareElement, final boolean isDotted) {
+	                                                    final DeclareStruct declareElement, final boolean isDotted,
+	                                                    final boolean isDestructuringAllowed) {
 
 		final List<OptionalBinding> optionalBindings = new ArrayList<>();
 
@@ -193,92 +214,121 @@ public class LambdaListParser {
 
 				final SuppliedPBinding suppliedPBinding = new SuppliedPBinding(customSuppliedPCurrent, isSuppliedPSpecial);
 
-				final OptionalBinding optionalBinding = new OptionalBinding(currentParam, NullStruct.INSTANCE, isSpecial, suppliedPBinding);
+				final OptionalBinding optionalBinding = new OptionalBinding(currentParam, null, NullStruct.INSTANCE, isSpecial, suppliedPBinding);
 				optionalBindings.add(optionalBinding);
 			} else if (currentElement instanceof ListStruct) {
 				final ListStruct currentParam = (ListStruct) currentElement;
 				if ((currentParam.size() < 1) || (currentParam.size() > 3)) {
-					final String printedElement = printer.print(currentParam);
-					throw new ProgramErrorException("LambdaList &optional parameters must have between 1 and 3 parameters: " + printedElement);
-				}
+					if (isDestructuringAllowed) {
+						final String destructuringName = "DestructuringSymbolName-" + System.nanoTime();
+						final SymbolStruct<?> varNameCurrent = GlobalPackageStruct.COMMON_LISP_USER.intern(destructuringName).getSymbol();
+						final ListStruct destructuringFormList = (ListStruct) currentElement;
+						final DestructuringLambdaListBindings destructuringForm = destructuringLambdaListParser.parseDestructuringLambdaList(environment, destructuringFormList, declareElement);
 
-				final LispStruct firstInCurrent = currentParam.getFirst();
-				final LispStruct secondInCurrent = currentParam.getRest().getFirst();
-				final LispStruct thirdInCurrent = currentParam.getRest().getRest().getFirst();
+						final String customSuppliedPName = destructuringName + "-P-" + System.nanoTime();
+						final SymbolStruct<?> customSuppliedPCurrent = GlobalPackageStruct.COMMON_LISP_USER.intern(customSuppliedPName).getSymbol();
+						final SuppliedPBinding suppliedPBinding = new SuppliedPBinding(customSuppliedPCurrent);
 
-				if (!(firstInCurrent instanceof SymbolStruct)) {
-					final String printedElement = printer.print(firstInCurrent);
-					throw new ProgramErrorException("LambdaList &optional var name parameters must be a symbol: " + printedElement);
-				}
-				final SymbolStruct<?> varNameCurrent = (SymbolStruct) firstInCurrent;
-
-				LispStruct initForm = NullStruct.INSTANCE;
-				if (!secondInCurrent.equals(NullStruct.INSTANCE)) {
-					initForm = secondInCurrent;
-				}
-
-				final LispStruct parameterValueInitForm = formAnalyzer.analyze(initForm, environment);
-
-				LambdaEnvironment currentLambda = Environments.getEnclosingLambda(environment);
-				int newBindingsPosition = currentLambda.getNextParameterNumber();
-				environment.setBindingsPosition(newBindingsPosition);
-
-				final boolean isSpecial = Environments.isSpecial(declareElement, varNameCurrent);
-
-				EnvironmentParameterBinding binding = new EnvironmentParameterBinding(varNameCurrent, TType.INSTANCE, parameterValueInitForm);
-				if (isSpecial) {
-					environment.addDynamicBinding(binding);
+						final OptionalBinding optionalBinding = new OptionalBinding(varNameCurrent, destructuringForm, NullStruct.INSTANCE, false, suppliedPBinding);
+						optionalBindings.add(optionalBinding);
+					} else {
+						final String printedElement = printer.print(currentParam);
+						throw new ProgramErrorException("LambdaList &optional parameters must have between 1 and 3 parameters: " + printedElement);
+					}
 				} else {
-					environment.addLexicalBinding(binding);
-				}
+					final LispStruct firstInCurrent = currentParam.getFirst();
+					final LispStruct secondInCurrent = currentParam.getRest().getFirst();
+					final LispStruct thirdInCurrent = currentParam.getRest().getRest().getFirst();
 
-				final SuppliedPBinding suppliedPBinding;
-				if (thirdInCurrent.equals(NullStruct.INSTANCE)) {
-					final String paramName = varNameCurrent.getName();
-					final String customSuppliedPName = paramName + "-P-" + System.nanoTime();
-					final PackageStruct currentParamPackage = varNameCurrent.getSymbolPackage();
+					final SymbolStruct<?> varNameCurrent;
+					DestructuringLambdaListBindings destructuringForm = null;
+					if (firstInCurrent instanceof SymbolStruct) {
+						varNameCurrent = (SymbolStruct) firstInCurrent;
+					} else {
+						if (isDestructuringAllowed) {
+							if (firstInCurrent instanceof ListStruct) {
+								final String destructuringName = "DestructuringSymbolName-" + System.nanoTime();
+								varNameCurrent = GlobalPackageStruct.COMMON_LISP_USER.intern(destructuringName).getSymbol();
+								final ListStruct destructuringFormList = (ListStruct) firstInCurrent;
+								destructuringForm = destructuringLambdaListParser.parseDestructuringLambdaList(environment, destructuringFormList, declareElement);
+							} else {
+								final String printedElement = printer.print(firstInCurrent);
+								throw new ProgramErrorException("LambdaList &optional var name parameter must be a symbol or a destructuring list: " + printedElement);
+							}
+						} else {
+							final String printedElement = printer.print(firstInCurrent);
+							throw new ProgramErrorException("LambdaList &optional var name parameters must be a symbol: " + printedElement);
+						}
+					}
 
-					final SymbolStruct<?> customSuppliedPCurrent = currentParamPackage.intern(customSuppliedPName).getSymbol();
+					LispStruct initForm = NullStruct.INSTANCE;
+					if (!secondInCurrent.equals(NullStruct.INSTANCE)) {
+						initForm = secondInCurrent;
+					}
 
-					newBindingsPosition = currentLambda.getNextParameterNumber();
+					final LispStruct parameterValueInitForm = formAnalyzer.analyze(initForm, environment);
+
+					LambdaEnvironment currentLambda = Environments.getEnclosingLambda(environment);
+					int newBindingsPosition = currentLambda.getNextParameterNumber();
 					environment.setBindingsPosition(newBindingsPosition);
 
-					final boolean isSuppliedPSpecial = Environments.isSpecial(declareElement, customSuppliedPCurrent);
+					final boolean isSpecial = Environments.isSpecial(declareElement, varNameCurrent);
 
-					binding = new EnvironmentParameterBinding(customSuppliedPCurrent, TType.INSTANCE, NullStruct.INSTANCE);
-					if (isSuppliedPSpecial) {
+					EnvironmentParameterBinding binding = new EnvironmentParameterBinding(varNameCurrent, TType.INSTANCE, parameterValueInitForm);
+					if (isSpecial) {
 						environment.addDynamicBinding(binding);
 					} else {
 						environment.addLexicalBinding(binding);
 					}
 
-					suppliedPBinding = new SuppliedPBinding(customSuppliedPCurrent, isSuppliedPSpecial);
-				} else {
-					if (!(thirdInCurrent instanceof SymbolStruct)) {
-						final String printedElement = printer.print(thirdInCurrent);
-						throw new ProgramErrorException("LambdaList &optional supplied-p parameters must be a symbol: " + printedElement);
-					}
+					final SuppliedPBinding suppliedPBinding;
+					if (thirdInCurrent.equals(NullStruct.INSTANCE)) {
+						final String paramName = varNameCurrent.getName();
+						final String customSuppliedPName = paramName + "-P-" + System.nanoTime();
+						final PackageStruct currentParamPackage = varNameCurrent.getSymbolPackage();
 
-					final SymbolStruct<?> suppliedPCurrent = (SymbolStruct) thirdInCurrent;
+						final SymbolStruct<?> customSuppliedPCurrent = currentParamPackage.intern(customSuppliedPName).getSymbol();
 
-					currentLambda = Environments.getEnclosingLambda(environment);
-					newBindingsPosition = currentLambda.getNextParameterNumber();
-					environment.setBindingsPosition(newBindingsPosition);
+						newBindingsPosition = currentLambda.getNextParameterNumber();
+						environment.setBindingsPosition(newBindingsPosition);
 
-					final boolean isSuppliedPSpecial = Environments.isSpecial(declareElement, suppliedPCurrent);
+						final boolean isSuppliedPSpecial = Environments.isSpecial(declareElement, customSuppliedPCurrent);
 
-					binding = new EnvironmentParameterBinding(suppliedPCurrent, TType.INSTANCE, NullStruct.INSTANCE);
-					if (isSuppliedPSpecial) {
-						environment.addDynamicBinding(binding);
+						binding = new EnvironmentParameterBinding(customSuppliedPCurrent, TType.INSTANCE, NullStruct.INSTANCE);
+						if (isSuppliedPSpecial) {
+							environment.addDynamicBinding(binding);
+						} else {
+							environment.addLexicalBinding(binding);
+						}
+
+						suppliedPBinding = new SuppliedPBinding(customSuppliedPCurrent, isSuppliedPSpecial);
 					} else {
-						environment.addLexicalBinding(binding);
+						if (!(thirdInCurrent instanceof SymbolStruct)) {
+							final String printedElement = printer.print(thirdInCurrent);
+							throw new ProgramErrorException("LambdaList &optional supplied-p parameters must be a symbol: " + printedElement);
+						}
+
+						final SymbolStruct<?> suppliedPCurrent = (SymbolStruct) thirdInCurrent;
+
+						currentLambda = Environments.getEnclosingLambda(environment);
+						newBindingsPosition = currentLambda.getNextParameterNumber();
+						environment.setBindingsPosition(newBindingsPosition);
+
+						final boolean isSuppliedPSpecial = Environments.isSpecial(declareElement, suppliedPCurrent);
+
+						binding = new EnvironmentParameterBinding(suppliedPCurrent, TType.INSTANCE, NullStruct.INSTANCE);
+						if (isSuppliedPSpecial) {
+							environment.addDynamicBinding(binding);
+						} else {
+							environment.addLexicalBinding(binding);
+						}
+
+						suppliedPBinding = new SuppliedPBinding(suppliedPCurrent, isSuppliedPSpecial);
 					}
 
-					suppliedPBinding = new SuppliedPBinding(suppliedPCurrent, isSuppliedPSpecial);
+					final OptionalBinding optionalBinding = new OptionalBinding(varNameCurrent, destructuringForm, parameterValueInitForm, isSpecial, suppliedPBinding);
+					optionalBindings.add(optionalBinding);
 				}
-
-				final OptionalBinding optionalBinding = new OptionalBinding(varNameCurrent, parameterValueInitForm, isSpecial, suppliedPBinding);
-				optionalBindings.add(optionalBinding);
 			} else {
 				final String printedElement = printer.print(currentElement);
 				throw new ProgramErrorException("LambdaList &optional parameters must be a symbol or a list: " + printedElement);
@@ -289,18 +339,34 @@ public class LambdaListParser {
 	}
 
 	protected RestParseResult parseRestBinding(final Environment environment, final Iterator<LispStruct> iterator,
-	                                           final DeclareStruct declareElement) {
+	                                           final DeclareStruct declareElement, final boolean isDestructuringAllowed) {
 
 		if (!iterator.hasNext()) {
 			throw new ProgramErrorException("LambdaList &rest parameter must be provided.");
 		}
 
 		LispStruct currentElement = iterator.next();
-		if (!(currentElement instanceof SymbolStruct)) {
-			final String printedElement = printer.print(currentElement);
-			throw new ProgramErrorException("LambdaList &rest parameters must be a symbol: " + printedElement);
+
+		final SymbolStruct<?> currentParam;
+		DestructuringLambdaListBindings destructuringForm = null;
+		if (currentElement instanceof SymbolStruct) {
+			currentParam = (SymbolStruct) currentElement;
+		} else {
+			if (isDestructuringAllowed) {
+				if (currentElement instanceof ListStruct) {
+					final String destructuringName = "DestructuringSymbolName-" + System.nanoTime();
+					currentParam = GlobalPackageStruct.COMMON_LISP_USER.intern(destructuringName).getSymbol();
+					final ListStruct destructuringFormList = (ListStruct) currentElement;
+					destructuringForm = destructuringLambdaListParser.parseDestructuringLambdaList(environment, destructuringFormList, declareElement);
+				} else {
+					final String printedElement = printer.print(currentElement);
+					throw new ProgramErrorException("LambdaList &rest parameters must be a symbol or a destructuring list: " + printedElement);
+				}
+			} else {
+				final String printedElement = printer.print(currentElement);
+				throw new ProgramErrorException("LambdaList &rest parameters must be a symbol: " + printedElement);
+			}
 		}
-		final SymbolStruct<?> currentParam = (SymbolStruct) currentElement;
 
 		if (iterator.hasNext()) {
 			currentElement = iterator.next();
@@ -323,18 +389,33 @@ public class LambdaListParser {
 			environment.addLexicalBinding(binding);
 		}
 
-		final RestBinding restBinding = new RestBinding(currentParam, isSpecial);
+		final RestBinding restBinding = new RestBinding(currentParam, destructuringForm, isSpecial);
 		return new RestParseResult(currentElement, restBinding);
 	}
 
 	protected RestParseResult parseDottedRestBinding(final Environment environment, final LispStruct dottedRest,
-	                                                 final DeclareStruct declareElement) {
+	                                                 final DeclareStruct declareElement, final boolean isDestructuringAllowed) {
 
-		if (!(dottedRest instanceof SymbolStruct)) {
-			final String printedElement = printer.print(dottedRest);
-			throw new ProgramErrorException("LambdaList &rest parameters must be a symbol: " + printedElement);
+		final SymbolStruct<?> currentParam;
+		DestructuringLambdaListBindings destructuringForm = null;
+		if (dottedRest instanceof SymbolStruct) {
+			currentParam = (SymbolStruct) dottedRest;
+		} else {
+			if (isDestructuringAllowed) {
+				if (dottedRest instanceof ListStruct) {
+					final String destructuringName = "DestructuringSymbolName-" + System.nanoTime();
+					currentParam = GlobalPackageStruct.COMMON_LISP_USER.intern(destructuringName).getSymbol();
+					final ListStruct destructuringFormList = (ListStruct) dottedRest;
+					destructuringForm = destructuringLambdaListParser.parseDestructuringLambdaList(environment, destructuringFormList, declareElement);
+				} else {
+					final String printedElement = printer.print(dottedRest);
+					throw new ProgramErrorException("LambdaList &rest parameters must be a symbol or a destructuring list: " + printedElement);
+				}
+			} else {
+				final String printedElement = printer.print(dottedRest);
+				throw new ProgramErrorException("LambdaList &rest parameters must be a symbol: " + printedElement);
+			}
 		}
-		final SymbolStruct<?> currentParam = (SymbolStruct) dottedRest;
 
 		final LambdaEnvironment currentLambda = Environments.getEnclosingLambda(environment);
 		final int newBindingsPosition = currentLambda.getNextParameterNumber();
@@ -349,23 +430,39 @@ public class LambdaListParser {
 			environment.addLexicalBinding(binding);
 		}
 
-		final RestBinding restBinding = new RestBinding(currentParam, isSpecial);
+		final RestBinding restBinding = new RestBinding(currentParam, destructuringForm, isSpecial);
 		return new RestParseResult(dottedRest, restBinding);
 	}
 
 	protected BodyParseResult parseBodyBinding(final Environment environment, final Iterator<LispStruct> iterator,
-	                                           final DeclareStruct declareElement) {
+	                                           final DeclareStruct declareElement, final boolean isDestructuringAllowed) {
 
 		if (!iterator.hasNext()) {
 			throw new ProgramErrorException("LambdaList &body parameter must be provided.");
 		}
 
 		LispStruct currentElement = iterator.next();
-		if (!(currentElement instanceof SymbolStruct)) {
-			final String printedElement = printer.print(currentElement);
-			throw new ProgramErrorException("LambdaList &body parameters must be a symbol: " + printedElement);
+
+		final SymbolStruct<?> currentParam;
+		DestructuringLambdaListBindings destructuringForm = null;
+		if (currentElement instanceof SymbolStruct) {
+			currentParam = (SymbolStruct) currentElement;
+		} else {
+			if (isDestructuringAllowed) {
+				if (currentElement instanceof ListStruct) {
+					final String destructuringName = "DestructuringSymbolName-" + System.nanoTime();
+					currentParam = GlobalPackageStruct.COMMON_LISP_USER.intern(destructuringName).getSymbol();
+					final ListStruct destructuringFormList = (ListStruct) currentElement;
+					destructuringForm = destructuringLambdaListParser.parseDestructuringLambdaList(environment, destructuringFormList, declareElement);
+				} else {
+					final String printedElement = printer.print(currentElement);
+					throw new ProgramErrorException("LambdaList &rest parameters must be a symbol or a destructuring list: " + printedElement);
+				}
+			} else {
+				final String printedElement = printer.print(currentElement);
+				throw new ProgramErrorException("LambdaList &rest parameters must be a symbol: " + printedElement);
+			}
 		}
-		final SymbolStruct<?> currentParam = (SymbolStruct) currentElement;
 
 		if (iterator.hasNext()) {
 			currentElement = iterator.next();
@@ -388,12 +485,12 @@ public class LambdaListParser {
 			environment.addLexicalBinding(binding);
 		}
 
-		final BodyBinding bodyBinding = new BodyBinding(currentParam, isSpecial);
+		final BodyBinding bodyBinding = new BodyBinding(currentParam, destructuringForm, isSpecial);
 		return new BodyParseResult(currentElement, bodyBinding);
 	}
 
 	protected KeyParseResult parseKeyBindings(final Environment environment, final Iterator<LispStruct> iterator,
-	                                          final DeclareStruct declareElement) {
+	                                          final DeclareStruct declareElement, final boolean isDestructuringAllowed) {
 
 		final List<KeyBinding> keyBindings = new ArrayList<>();
 
@@ -445,117 +542,141 @@ public class LambdaListParser {
 
 				final SuppliedPBinding suppliedPBinding = new SuppliedPBinding(customSuppliedPCurrent, isSuppliedPSpecial);
 
-				final KeyBinding keyBinding = new KeyBinding(currentParam, NullStruct.INSTANCE, isSpecial, keyName, suppliedPBinding);
+				final KeyBinding keyBinding = new KeyBinding(currentParam, null, NullStruct.INSTANCE, isSpecial, keyName, suppliedPBinding);
 				keyBindings.add(keyBinding);
 			} else if (currentElement instanceof ListStruct) {
 				final ListStruct currentParam = (ListStruct) currentElement;
 				if ((currentParam.size() < 1) || (currentParam.size() > 3)) {
-					final String printedElement = printer.print(currentParam);
-					throw new ProgramErrorException("LambdaList &key parameters must have between 1 and 3 parameters: " + printedElement);
-				}
+					if (isDestructuringAllowed) {
+						final String destructuringName = "DestructuringSymbolName-" + System.nanoTime();
+						final SymbolStruct<?> varNameCurrent = GlobalPackageStruct.COMMON_LISP_USER.intern(destructuringName).getSymbol();
+						final SymbolStruct<?> varKeyNameCurrent = getKeywordStruct(varNameCurrent.getName());
+						final ListStruct destructuringFormList = (ListStruct) currentElement;
+						final DestructuringLambdaListBindings destructuringForm = destructuringLambdaListParser.parseDestructuringLambdaList(environment, destructuringFormList, declareElement);
 
-				final LispStruct firstInCurrent = currentParam.getFirst();
-				final LispStruct secondInCurrent = currentParam.getRest().getFirst();
-				final LispStruct thirdInCurrent = currentParam.getRest().getRest().getFirst();
+						final String customSuppliedPName = destructuringName + "-P-" + System.nanoTime();
+						final SymbolStruct<?> customSuppliedPCurrent = GlobalPackageStruct.COMMON_LISP_USER.intern(customSuppliedPName).getSymbol();
+						final SuppliedPBinding suppliedPBinding = new SuppliedPBinding(customSuppliedPCurrent);
 
-				final SymbolStruct<?> varNameCurrent;
-				final SymbolStruct<?> varKeyNameCurrent;
-				if (firstInCurrent instanceof SymbolStruct) {
-					varNameCurrent = (SymbolStruct) firstInCurrent;
-					varKeyNameCurrent = getKeywordStruct(varNameCurrent.getName());
-				} else if (firstInCurrent instanceof ListStruct) {
-					final ListStruct currentVar = (ListStruct) firstInCurrent;
-					if (currentVar.size() != 2) {
-						final String printedElement = printer.print(currentVar);
-						throw new ProgramErrorException("LambdaList &key var name list parameters must have 2 parameters: " + printedElement);
-					}
-
-					final LispStruct firstInCurrentVar = currentVar.getFirst();
-					if (firstInCurrentVar instanceof SymbolStruct) {
-						varKeyNameCurrent = (SymbolStruct) firstInCurrentVar;
+						final KeyBinding keyBinding = new KeyBinding(varNameCurrent, destructuringForm, NullStruct.INSTANCE, false, varKeyNameCurrent, suppliedPBinding);
+						keyBindings.add(keyBinding);
 					} else {
-						final String printedElement = printer.print(firstInCurrentVar);
-						throw new ProgramErrorException("LambdaList &key var name list key-name parameters must be a symbol: " + printedElement);
+						final String printedElement = printer.print(currentParam);
+						throw new ProgramErrorException("LambdaList &key parameters must have between 1 and 3 parameters: " + printedElement);
+					}
+				} else {
+					final LispStruct firstInCurrent = currentParam.getFirst();
+					final LispStruct secondInCurrent = currentParam.getRest().getFirst();
+					final LispStruct thirdInCurrent = currentParam.getRest().getRest().getFirst();
+
+					final SymbolStruct<?> varNameCurrent;
+					final SymbolStruct<?> varKeyNameCurrent;
+					DestructuringLambdaListBindings destructuringForm = null;
+					if (firstInCurrent instanceof SymbolStruct) {
+						varNameCurrent = (SymbolStruct) firstInCurrent;
+						varKeyNameCurrent = getKeywordStruct(varNameCurrent.getName());
+					} else if (firstInCurrent instanceof ListStruct) {
+						final ListStruct currentVar = (ListStruct) firstInCurrent;
+						if (currentVar.size() == 2) {
+							final LispStruct firstInCurrentVar = currentVar.getFirst();
+							if (firstInCurrentVar instanceof SymbolStruct) {
+								varKeyNameCurrent = (SymbolStruct) firstInCurrentVar;
+							} else {
+								final String printedElement = printer.print(firstInCurrentVar);
+								throw new ProgramErrorException("LambdaList &key var name list key-name parameters must be a symbol: " + printedElement);
+							}
+
+							final LispStruct secondInCurrentVar = currentVar.getRest().getFirst();
+							if (!(secondInCurrentVar instanceof SymbolStruct)) {
+								final String printedElement = printer.print(secondInCurrentVar);
+								throw new ProgramErrorException("LambdaList &key var name list name parameters must be a symbol: " + printedElement);
+							}
+							varNameCurrent = (SymbolStruct) secondInCurrentVar;
+						} else {
+							if (isDestructuringAllowed) {
+								final String destructuringName = "DestructuringSymbolName-" + System.nanoTime();
+								varNameCurrent = GlobalPackageStruct.COMMON_LISP_USER.intern(destructuringName).getSymbol();
+								varKeyNameCurrent = getKeywordStruct(varNameCurrent.getName());
+								final ListStruct destructuringFormList = (ListStruct) currentElement;
+								destructuringForm = destructuringLambdaListParser.parseDestructuringLambdaList(environment, destructuringFormList, declareElement);
+							} else {
+								final String printedElement = printer.print(currentVar);
+								throw new ProgramErrorException("LambdaList &key var name list parameters must have 2 parameters: " + printedElement);
+							}
+						}
+					} else {
+						final String printedElement = printer.print(firstInCurrent);
+						throw new ProgramErrorException("LambdaList &key var name parameters must be a symbol or a list: " + printedElement);
 					}
 
-					final LispStruct secondInCurrentVar = currentVar.getRest().getFirst();
-					if (!(secondInCurrentVar instanceof SymbolStruct)) {
-						final String printedElement = printer.print(secondInCurrentVar);
-						throw new ProgramErrorException("LambdaList &key var name list name parameters must be a symbol: " + printedElement);
+					LispStruct initForm = NullStruct.INSTANCE;
+					if (!secondInCurrent.equals(NullStruct.INSTANCE)) {
+						initForm = secondInCurrent;
 					}
-					varNameCurrent = (SymbolStruct) secondInCurrentVar;
-				} else {
-					final String printedElement = printer.print(firstInCurrent);
-					throw new ProgramErrorException("LambdaList &key var name parameters must be a symbol or a list: " + printedElement);
-				}
 
-				LispStruct initForm = NullStruct.INSTANCE;
-				if (!secondInCurrent.equals(NullStruct.INSTANCE)) {
-					initForm = secondInCurrent;
-				}
+					final LispStruct parameterValueInitForm = formAnalyzer.analyze(initForm, environment);
 
-				final LispStruct parameterValueInitForm = formAnalyzer.analyze(initForm, environment);
-
-				LambdaEnvironment currentLambda = Environments.getEnclosingLambda(environment);
-				int newBindingsPosition = currentLambda.getNextParameterNumber();
-				environment.setBindingsPosition(newBindingsPosition);
-
-				final boolean isSpecial = Environments.isSpecial(declareElement, varNameCurrent);
-
-				EnvironmentParameterBinding binding = new EnvironmentParameterBinding(varNameCurrent, TType.INSTANCE, parameterValueInitForm);
-				if (isSpecial) {
-					environment.addDynamicBinding(binding);
-				} else {
-					environment.addLexicalBinding(binding);
-				}
-
-				final SuppliedPBinding suppliedPBinding;
-				if (thirdInCurrent.equals(NullStruct.INSTANCE)) {
-					final String paramName = varNameCurrent.getName();
-					final String customSuppliedPName = paramName + "-P-" + System.nanoTime();
-					final PackageStruct currentParamPackage = varNameCurrent.getSymbolPackage();
-
-					final SymbolStruct<?> customSuppliedPCurrent = currentParamPackage.intern(customSuppliedPName).getSymbol();
-
-					newBindingsPosition = currentLambda.getNextParameterNumber();
+					LambdaEnvironment currentLambda = Environments.getEnclosingLambda(environment);
+					int newBindingsPosition = currentLambda.getNextParameterNumber();
 					environment.setBindingsPosition(newBindingsPosition);
 
-					final boolean isSuppliedPSpecial = Environments.isSpecial(declareElement, customSuppliedPCurrent);
+					final boolean isSpecial = Environments.isSpecial(declareElement, varNameCurrent);
 
-					binding = new EnvironmentParameterBinding(customSuppliedPCurrent, TType.INSTANCE, NullStruct.INSTANCE);
-					if (isSuppliedPSpecial) {
+					EnvironmentParameterBinding binding = new EnvironmentParameterBinding(varNameCurrent, TType.INSTANCE, parameterValueInitForm);
+					if (isSpecial) {
 						environment.addDynamicBinding(binding);
 					} else {
 						environment.addLexicalBinding(binding);
 					}
 
-					suppliedPBinding = new SuppliedPBinding(customSuppliedPCurrent, isSuppliedPSpecial);
-				} else {
-					if (!(thirdInCurrent instanceof SymbolStruct)) {
-						final String printedElement = printer.print(thirdInCurrent);
-						throw new ProgramErrorException("LambdaList &key supplied-p parameters must be a symbol: " + printedElement);
-					}
+					final SuppliedPBinding suppliedPBinding;
+					if (thirdInCurrent.equals(NullStruct.INSTANCE)) {
+						final String paramName = varNameCurrent.getName();
+						final String customSuppliedPName = paramName + "-P-" + System.nanoTime();
+						final PackageStruct currentParamPackage = varNameCurrent.getSymbolPackage();
 
-					final SymbolStruct<?> suppliedPCurrent = (SymbolStruct) thirdInCurrent;
+						final SymbolStruct<?> customSuppliedPCurrent = currentParamPackage.intern(customSuppliedPName).getSymbol();
 
-					currentLambda = Environments.getEnclosingLambda(environment);
-					newBindingsPosition = currentLambda.getNextParameterNumber();
-					environment.setBindingsPosition(newBindingsPosition);
+						newBindingsPosition = currentLambda.getNextParameterNumber();
+						environment.setBindingsPosition(newBindingsPosition);
 
-					final boolean isSuppliedPSpecial = Environments.isSpecial(declareElement, suppliedPCurrent);
+						final boolean isSuppliedPSpecial = Environments.isSpecial(declareElement, customSuppliedPCurrent);
 
-					binding = new EnvironmentParameterBinding(suppliedPCurrent, TType.INSTANCE, NullStruct.INSTANCE);
-					if (isSuppliedPSpecial) {
-						environment.addDynamicBinding(binding);
+						binding = new EnvironmentParameterBinding(customSuppliedPCurrent, TType.INSTANCE, NullStruct.INSTANCE);
+						if (isSuppliedPSpecial) {
+							environment.addDynamicBinding(binding);
+						} else {
+							environment.addLexicalBinding(binding);
+						}
+
+						suppliedPBinding = new SuppliedPBinding(customSuppliedPCurrent, isSuppliedPSpecial);
 					} else {
-						environment.addLexicalBinding(binding);
+						if (!(thirdInCurrent instanceof SymbolStruct)) {
+							final String printedElement = printer.print(thirdInCurrent);
+							throw new ProgramErrorException("LambdaList &key supplied-p parameters must be a symbol: " + printedElement);
+						}
+
+						final SymbolStruct<?> suppliedPCurrent = (SymbolStruct) thirdInCurrent;
+
+						currentLambda = Environments.getEnclosingLambda(environment);
+						newBindingsPosition = currentLambda.getNextParameterNumber();
+						environment.setBindingsPosition(newBindingsPosition);
+
+						final boolean isSuppliedPSpecial = Environments.isSpecial(declareElement, suppliedPCurrent);
+
+						binding = new EnvironmentParameterBinding(suppliedPCurrent, TType.INSTANCE, NullStruct.INSTANCE);
+						if (isSuppliedPSpecial) {
+							environment.addDynamicBinding(binding);
+						} else {
+							environment.addLexicalBinding(binding);
+						}
+
+						suppliedPBinding = new SuppliedPBinding(suppliedPCurrent, isSuppliedPSpecial);
 					}
 
-					suppliedPBinding = new SuppliedPBinding(suppliedPCurrent, isSuppliedPSpecial);
+					final KeyBinding keyBinding = new KeyBinding(varNameCurrent, destructuringForm, parameterValueInitForm, isSpecial, varKeyNameCurrent, suppliedPBinding);
+					keyBindings.add(keyBinding);
 				}
-
-				final KeyBinding keyBinding = new KeyBinding(varNameCurrent, parameterValueInitForm, isSpecial, varKeyNameCurrent, suppliedPBinding);
-				keyBindings.add(keyBinding);
 			} else {
 				final String printedElement = printer.print(currentElement);
 				throw new ProgramErrorException("LambdaList &key parameters must be a symbol or a list: " + printedElement);
@@ -567,7 +688,7 @@ public class LambdaListParser {
 	}
 
 	protected AuxParseResult parseAuxBindings(final Environment environment, final Iterator<LispStruct> iterator,
-	                                          final DeclareStruct declareElement) {
+	                                          final DeclareStruct declareElement, final boolean isDestructuringAllowed) {
 
 		final List<AuxBinding> auxBindings = new ArrayList<>();
 
@@ -598,46 +719,71 @@ public class LambdaListParser {
 					environment.addLexicalBinding(binding);
 				}
 
-				final AuxBinding auxBinding = new AuxBinding(currentParam, NullStruct.INSTANCE, isSpecial);
+				final AuxBinding auxBinding = new AuxBinding(currentParam, null, NullStruct.INSTANCE, isSpecial);
 				auxBindings.add(auxBinding);
 			} else if (currentElement instanceof ListStruct) {
 				final ListStruct currentParam = (ListStruct) currentElement;
 				if ((currentParam.size() < 1) || (currentParam.size() > 2)) {
-					final String printedElement = printer.print(currentParam);
-					throw new ProgramErrorException("LambdaList &aux parameters must have between 1 and 3 parameters: " + printedElement);
-				}
+					if (isDestructuringAllowed) {
+						final String destructuringName = "DestructuringSymbolName-" + System.nanoTime();
+						final SymbolStruct<?> varNameCurrent = GlobalPackageStruct.COMMON_LISP_USER.intern(destructuringName).getSymbol();
+						final ListStruct destructuringFormList = (ListStruct) currentElement;
+						final DestructuringLambdaListBindings destructuringForm = destructuringLambdaListParser.parseDestructuringLambdaList(environment, destructuringFormList, declareElement);
 
-				final LispStruct firstInCurrent = currentParam.getFirst();
-				final LispStruct secondInCurrent = currentParam.getRest().getFirst();
-
-				if (!(firstInCurrent instanceof SymbolStruct)) {
-					final String printedElement = printer.print(firstInCurrent);
-					throw new ProgramErrorException("LambdaList &aux var name parameters must be a symbol: " + printedElement);
-				}
-				final SymbolStruct<?> varNameCurrent = (SymbolStruct) firstInCurrent;
-
-				LispStruct initForm = NullStruct.INSTANCE;
-				if (!secondInCurrent.equals(NullStruct.INSTANCE)) {
-					initForm = secondInCurrent;
-				}
-
-				final LispStruct parameterValueInitForm = formAnalyzer.analyze(initForm, environment);
-
-				final LambdaEnvironment currentLambda = Environments.getEnclosingLambda(environment);
-				final int newBindingsPosition = currentLambda.getNextParameterNumber();
-				environment.setBindingsPosition(newBindingsPosition);
-
-				final boolean isSpecial = Environments.isSpecial(declareElement, varNameCurrent);
-
-				final EnvironmentParameterBinding binding = new EnvironmentParameterBinding(varNameCurrent, TType.INSTANCE, parameterValueInitForm);
-				if (isSpecial) {
-					environment.addDynamicBinding(binding);
+						final AuxBinding auxBinding = new AuxBinding(varNameCurrent, destructuringForm, NullStruct.INSTANCE);
+						auxBindings.add(auxBinding);
+					} else {
+						final String printedElement = printer.print(currentParam);
+						throw new ProgramErrorException("LambdaList &aux parameters must have between 1 and 2 parameters: " + printedElement);
+					}
 				} else {
-					environment.addLexicalBinding(binding);
-				}
+					final LispStruct firstInCurrent = currentParam.getFirst();
+					final LispStruct secondInCurrent = currentParam.getRest().getFirst();
 
-				final AuxBinding auxBinding = new AuxBinding(varNameCurrent, parameterValueInitForm, isSpecial);
-				auxBindings.add(auxBinding);
+					final SymbolStruct<?> varNameCurrent;
+					DestructuringLambdaListBindings destructuringForm = null;
+					if (firstInCurrent instanceof SymbolStruct) {
+						varNameCurrent = (SymbolStruct) firstInCurrent;
+					} else {
+						if (isDestructuringAllowed) {
+							if (firstInCurrent instanceof ListStruct) {
+								final String destructuringName = "DestructuringSymbolName-" + System.nanoTime();
+								varNameCurrent = GlobalPackageStruct.COMMON_LISP_USER.intern(destructuringName).getSymbol();
+								final ListStruct destructuringFormList = (ListStruct) firstInCurrent;
+								destructuringForm = destructuringLambdaListParser.parseDestructuringLambdaList(environment, destructuringFormList, declareElement);
+							} else {
+								final String printedElement = printer.print(firstInCurrent);
+								throw new ProgramErrorException("LambdaList &aux var name parameter must be a symbol or a destructuring list: " + printedElement);
+							}
+						} else {
+							final String printedElement = printer.print(firstInCurrent);
+							throw new ProgramErrorException("LambdaList &aux var name parameters must be a symbol: " + printedElement);
+						}
+					}
+
+					LispStruct initForm = NullStruct.INSTANCE;
+					if (!secondInCurrent.equals(NullStruct.INSTANCE)) {
+						initForm = secondInCurrent;
+					}
+
+					final LispStruct parameterValueInitForm = formAnalyzer.analyze(initForm, environment);
+
+					final LambdaEnvironment currentLambda = Environments.getEnclosingLambda(environment);
+					final int newBindingsPosition = currentLambda.getNextParameterNumber();
+					environment.setBindingsPosition(newBindingsPosition);
+
+					final boolean isSpecial = Environments.isSpecial(declareElement, varNameCurrent);
+
+					final EnvironmentParameterBinding binding = new EnvironmentParameterBinding(varNameCurrent, TType.INSTANCE, parameterValueInitForm);
+					if (isSpecial) {
+						environment.addDynamicBinding(binding);
+					} else {
+						environment.addLexicalBinding(binding);
+					}
+
+					final AuxBinding auxBinding = new AuxBinding(varNameCurrent, destructuringForm, parameterValueInitForm, isSpecial);
+					auxBindings.add(auxBinding);
+				}
 			} else {
 				final String printedElement = printer.print(currentElement);
 				throw new ProgramErrorException("LambdaList &aux parameters must be a symbol or a list: " + printedElement);

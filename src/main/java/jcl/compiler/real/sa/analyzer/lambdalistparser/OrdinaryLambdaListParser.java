@@ -42,7 +42,7 @@ public final class OrdinaryLambdaListParser extends LambdaListParser {
 		List<RequiredBinding> requiredBindings = Collections.emptyList();
 		if (iterator.hasNext()) {
 			final RequiredParseResult requiredParseResult
-					= parseRequiredBindings(environment, iterator, declareElement, false);
+					= parseRequiredBindings(environment, iterator, declareElement, false, false);
 
 			requiredBindings = requiredParseResult.getRequiredBindings();
 			currentElement = requiredParseResult.getCurrentElement();
@@ -51,7 +51,7 @@ public final class OrdinaryLambdaListParser extends LambdaListParser {
 		List<OptionalBinding> optionalBindings = Collections.emptyList();
 		if (CompilerConstants.OPTIONAL.equals(currentElement)) {
 			final OptionalParseResult optionalParseResult
-					= parseOptionalBindings(environment, iterator, declareElement, false);
+					= parseOptionalBindings(environment, iterator, declareElement, false, false);
 
 			optionalBindings = optionalParseResult.getOptionalBindings();
 			currentElement = optionalParseResult.getCurrentElement();
@@ -60,7 +60,7 @@ public final class OrdinaryLambdaListParser extends LambdaListParser {
 		RestBinding restBinding = null;
 		if (CompilerConstants.REST.equals(currentElement)) {
 			final RestParseResult restParseResult
-					= parseRestBinding(environment, iterator, declareElement);
+					= parseRestBinding(environment, iterator, declareElement, false);
 
 			restBinding = restParseResult.getRestBinding();
 			currentElement = restParseResult.getCurrentElement();
@@ -71,7 +71,7 @@ public final class OrdinaryLambdaListParser extends LambdaListParser {
 		List<KeyBinding> keyBindings = Collections.emptyList();
 		if (CompilerConstants.KEY.equals(currentElement)) {
 			final KeyParseResult keyParseResult
-					= parseKeyBindings(environment, iterator, declareElement);
+					= parseKeyBindings(environment, iterator, declareElement, false);
 
 			keyBindings = keyParseResult.getKeyBindings();
 			currentElement = keyParseResult.getCurrentElement();
@@ -94,7 +94,7 @@ public final class OrdinaryLambdaListParser extends LambdaListParser {
 		List<AuxBinding> auxBindings = Collections.emptyList();
 		if (CompilerConstants.AUX.equals(currentElement)) {
 			final AuxParseResult auxParseResult
-					= parseAuxBindings(environment, iterator, declareElement);
+					= parseAuxBindings(environment, iterator, declareElement, false);
 
 			auxBindings = auxParseResult.getAuxBindings();
 		}

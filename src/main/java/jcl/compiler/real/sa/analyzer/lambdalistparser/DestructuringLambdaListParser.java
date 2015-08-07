@@ -27,7 +27,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class DestructuringLambdaListParser extends LambdaListParser {
+public final class DestructuringLambdaListParser {
+
+	@Autowired
+	private MacroLambdaListParser lambdaListParser;
 
 	@Autowired
 	private Printer printer;
@@ -63,7 +66,7 @@ public final class DestructuringLambdaListParser extends LambdaListParser {
 			currentElement = iterator.next();
 
 			final WholeParseResult wholeParseResult
-					= parseWholeBinding(environment, iterator, declareElement);
+					= lambdaListParser.parseWholeBinding(environment, iterator, declareElement);
 
 			wholeBinding = wholeParseResult.getWholeBinding();
 		}
@@ -71,7 +74,7 @@ public final class DestructuringLambdaListParser extends LambdaListParser {
 		List<RequiredBinding> requiredBindings = Collections.emptyList();
 		if (iterator.hasNext()) {
 			final RequiredParseResult requiredParseResult
-					= parseRequiredBindings(environment, iterator, declareElement, false);
+					= lambdaListParser.parseRequiredBindings(environment, iterator, declareElement, false, true);
 
 			requiredBindings = requiredParseResult.getRequiredBindings();
 			currentElement = requiredParseResult.getCurrentElement();
@@ -80,7 +83,7 @@ public final class DestructuringLambdaListParser extends LambdaListParser {
 		List<OptionalBinding> optionalBindings = Collections.emptyList();
 		if (CompilerConstants.OPTIONAL.equals(currentElement)) {
 			final OptionalParseResult optionalParseResult
-					= parseOptionalBindings(environment, iterator, declareElement, false);
+					= lambdaListParser.parseOptionalBindings(environment, iterator, declareElement, false, true);
 
 			optionalBindings = optionalParseResult.getOptionalBindings();
 			currentElement = optionalParseResult.getCurrentElement();
@@ -89,7 +92,7 @@ public final class DestructuringLambdaListParser extends LambdaListParser {
 		RestBinding restBinding = null;
 		if (CompilerConstants.REST.equals(currentElement)) {
 			final RestParseResult restParseResult
-					= parseRestBinding(environment, iterator, declareElement);
+					= lambdaListParser.parseRestBinding(environment, iterator, declareElement, true);
 
 			restBinding = restParseResult.getRestBinding();
 			currentElement = restParseResult.getCurrentElement();
@@ -102,7 +105,7 @@ public final class DestructuringLambdaListParser extends LambdaListParser {
 			}
 
 			final BodyParseResult bodyParseResult
-					= parseBodyBinding(environment, iterator, declareElement);
+					= lambdaListParser.parseBodyBinding(environment, iterator, declareElement, true);
 
 			bodyBinding = bodyParseResult.getBodyBinding();
 			currentElement = bodyParseResult.getCurrentElement();
@@ -113,7 +116,7 @@ public final class DestructuringLambdaListParser extends LambdaListParser {
 		List<KeyBinding> keyBindings = Collections.emptyList();
 		if (CompilerConstants.KEY.equals(currentElement)) {
 			final KeyParseResult keyParseResult
-					= parseKeyBindings(environment, iterator, declareElement);
+					= lambdaListParser.parseKeyBindings(environment, iterator, declareElement, true);
 
 			keyBindings = keyParseResult.getKeyBindings();
 			currentElement = keyParseResult.getCurrentElement();
@@ -136,7 +139,7 @@ public final class DestructuringLambdaListParser extends LambdaListParser {
 		List<AuxBinding> auxBindings = Collections.emptyList();
 		if (CompilerConstants.AUX.equals(currentElement)) {
 			final AuxParseResult auxParseResult
-					= parseAuxBindings(environment, iterator, declareElement);
+					= lambdaListParser.parseAuxBindings(environment, iterator, declareElement, true);
 
 			auxBindings = auxParseResult.getAuxBindings();
 		}
@@ -171,7 +174,7 @@ public final class DestructuringLambdaListParser extends LambdaListParser {
 			currentElement = iterator.next();
 
 			final WholeParseResult wholeParseResult
-					= parseWholeBinding(environment, iterator, declareElement);
+					= lambdaListParser.parseWholeBinding(environment, iterator, declareElement);
 
 			wholeBinding = wholeParseResult.getWholeBinding();
 		}
@@ -179,7 +182,7 @@ public final class DestructuringLambdaListParser extends LambdaListParser {
 		List<RequiredBinding> requiredBindings = Collections.emptyList();
 		if (iterator.hasNext()) {
 			final RequiredParseResult requiredParseResult
-					= parseRequiredBindings(environment, iterator, declareElement, true);
+					= lambdaListParser.parseRequiredBindings(environment, iterator, declareElement, true, true);
 
 			requiredBindings = requiredParseResult.getRequiredBindings();
 			currentElement = requiredParseResult.getCurrentElement();
@@ -188,14 +191,14 @@ public final class DestructuringLambdaListParser extends LambdaListParser {
 		List<OptionalBinding> optionalBindings = Collections.emptyList();
 		if (CompilerConstants.OPTIONAL.equals(currentElement)) {
 			final OptionalParseResult optionalParseResult
-					= parseOptionalBindings(environment, iterator, declareElement, true);
+					= lambdaListParser.parseOptionalBindings(environment, iterator, declareElement, true, true);
 
 			optionalBindings = optionalParseResult.getOptionalBindings();
 			currentElement = optionalParseResult.getCurrentElement();
 		}
 
 		final RestParseResult restParseResult
-				= parseDottedRestBinding(environment, currentElement, declareElement);
+				= lambdaListParser.parseDottedRestBinding(environment, currentElement, declareElement, true);
 		final RestBinding restBinding = restParseResult.getRestBinding();
 
 		if (iterator.hasNext()) {

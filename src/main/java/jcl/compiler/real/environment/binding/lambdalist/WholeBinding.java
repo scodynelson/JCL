@@ -17,6 +17,6 @@ public class WholeBinding extends ParameterBinding {
 	}
 
 	public WholeBinding(final SymbolStruct<?> symbolStruct, final boolean isSpecial) {
-		super(symbolStruct, ListType.INSTANCE, null, isSpecial);
+		super(symbolStruct, null, ListType.INSTANCE, null, isSpecial);
 	}
 }

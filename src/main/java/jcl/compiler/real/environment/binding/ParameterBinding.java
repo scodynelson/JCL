@@ -6,6 +6,7 @@ package jcl.compiler.real.environment.binding;
 
 import jcl.LispStruct;
 import jcl.LispType;
+import jcl.compiler.real.environment.binding.lambdalist.DestructuringLambdaListBindings;
 import jcl.symbols.SymbolStruct;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -18,13 +19,20 @@ public class ParameterBinding extends Binding {
 
 	private final LispStruct initForm;
 
+	private final DestructuringLambdaListBindings destructuringForm;
+
 	private final boolean isSpecial;
 
-	protected ParameterBinding(final SymbolStruct<?> symbolStruct, final LispType type,
-	                           final LispStruct initForm, final boolean isSpecial) {
+	protected ParameterBinding(final SymbolStruct<?> symbolStruct, final DestructuringLambdaListBindings destructuringForm,
+	                           final LispType type, final LispStruct initForm, final boolean isSpecial) {
 		super(symbolStruct, type);
+		this.destructuringForm = destructuringForm;
 		this.initForm = initForm;
 		this.isSpecial = isSpecial;
+	}
+
+	public DestructuringLambdaListBindings getDestructuringForm() {
+		return destructuringForm;
 	}
 
 	public LispStruct getInitForm() {

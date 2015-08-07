@@ -17,6 +17,14 @@ public class RestBinding extends ParameterBinding {
 	}
 
 	public RestBinding(final SymbolStruct<?> symbolStruct, final boolean isSpecial) {
-		super(symbolStruct, ListType.INSTANCE, null, isSpecial);
+		this(symbolStruct, null, isSpecial);
+	}
+
+	public RestBinding(final SymbolStruct<?> symbolStruct, final DestructuringLambdaListBindings destructuringForm) {
+		this(symbolStruct, destructuringForm, false);
+	}
+
+	public RestBinding(final SymbolStruct<?> symbolStruct, final DestructuringLambdaListBindings destructuringForm, final boolean isSpecial) {
+		super(symbolStruct, destructuringForm, ListType.INSTANCE, null, isSpecial);
 	}
 }

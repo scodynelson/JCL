@@ -17,6 +17,15 @@ public class BodyBinding extends ParameterBinding {
 	}
 
 	public BodyBinding(final SymbolStruct<?> symbolStruct, final boolean isSpecial) {
-		super(symbolStruct, ListType.INSTANCE, null, isSpecial);
+		this(symbolStruct, null, isSpecial);
+	}
+
+	public BodyBinding(final SymbolStruct<?> symbolStruct, final DestructuringLambdaListBindings destructuringForm) {
+		this(symbolStruct, destructuringForm, false);
+	}
+
+	public BodyBinding(final SymbolStruct<?> symbolStruct, final DestructuringLambdaListBindings destructuringForm,
+	                   final boolean isSpecial) {
+		super(symbolStruct, destructuringForm, ListType.INSTANCE, null, isSpecial);
 	}
 }

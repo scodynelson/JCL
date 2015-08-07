@@ -17,6 +17,15 @@ public class RequiredBinding extends ParameterBinding {
 	}
 
 	public RequiredBinding(final SymbolStruct<?> symbolStruct, final boolean isSpecial) {
-		super(symbolStruct, TType.INSTANCE, null, isSpecial);
+		this(symbolStruct, null, isSpecial);
+	}
+
+	public RequiredBinding(final SymbolStruct<?> symbolStruct, final DestructuringLambdaListBindings destructuringForm) {
+		this(symbolStruct, destructuringForm, false);
+	}
+
+	public RequiredBinding(final SymbolStruct<?> symbolStruct, final DestructuringLambdaListBindings destructuringForm,
+	                       final boolean isSpecial) {
+		super(symbolStruct, destructuringForm, TType.INSTANCE, null, isSpecial);
 	}
 }

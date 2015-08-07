@@ -665,6 +665,8 @@ public class FloatStruct extends RealStruct {
 	 * @return
 	 */
 	public IntegerStruct floatPrecision() {
+//		final int binary32Precision = 24;
+//		final int binary64Precision = 53;
 		final int binary128Precision = 113;
 		return new IntegerStruct(BigInteger.valueOf(binary128Precision));
 	}

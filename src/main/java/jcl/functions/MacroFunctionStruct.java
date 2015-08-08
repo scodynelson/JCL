@@ -5,7 +5,7 @@
 package jcl.functions;
 
 import jcl.compiler.real.environment.binding.lambdalist.MacroLambdaListBindings;
-import jcl.functions.expanders.MacroExpander;
+import jcl.functions.expanders.MacroFunctionExpander;
 
 public abstract class MacroFunctionStruct extends FunctionStruct {
 
@@ -13,7 +13,7 @@ public abstract class MacroFunctionStruct extends FunctionStruct {
 
 	protected final MacroLambdaListBindings macroLambdaListBindings;
 
-	protected final MacroExpander<?, ?> macroExpander;
+	protected final MacroFunctionExpander<?> macroFunctionExpander;
 
 	/**
 	 * Protected constructor.
@@ -26,25 +26,24 @@ public abstract class MacroFunctionStruct extends FunctionStruct {
 		this(documentation, closure, null, null);
 	}
 
-	protected MacroFunctionStruct(final MacroLambdaListBindings macroLambdaListBindings, final MacroExpander<?, ?> macroExpander) {
-		this.macroLambdaListBindings = macroLambdaListBindings;
-		this.macroExpander = macroExpander;
+	protected MacroFunctionStruct(final MacroLambdaListBindings macroLambdaListBindings, final MacroFunctionExpander<?> macroFunctionExpander) {
+		this(null, null, macroLambdaListBindings, macroFunctionExpander);
 	}
 
 	protected MacroFunctionStruct(final String documentation, final MacroLambdaListBindings lambdaListBindings,
-	                              final MacroExpander<?, ?> macroExpander) {
-		this(documentation, null, lambdaListBindings, macroExpander);
+	                              final MacroFunctionExpander<?> macroFunctionExpander) {
+		this(documentation, null, lambdaListBindings, macroFunctionExpander);
 	}
 
 	protected MacroFunctionStruct(final Closure closure, final MacroLambdaListBindings lambdaListBindings,
-	                              final MacroExpander<?, ?> macroExpander) {
-		this(null, closure, lambdaListBindings, macroExpander);
+	                              final MacroFunctionExpander<?> macroFunctionExpander) {
+		this(null, closure, lambdaListBindings, macroFunctionExpander);
 	}
 
 	protected MacroFunctionStruct(final String documentation, final Closure closure, final MacroLambdaListBindings macroLambdaListBindings,
-	                              final MacroExpander<?, ?> macroExpander) {
+	                              final MacroFunctionExpander<?> macroFunctionExpander) {
 		super(documentation, closure);
 		this.macroLambdaListBindings = macroLambdaListBindings;
-		this.macroExpander = macroExpander;
+		this.macroFunctionExpander = macroFunctionExpander;
 	}
 }

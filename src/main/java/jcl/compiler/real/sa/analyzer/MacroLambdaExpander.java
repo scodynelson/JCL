@@ -28,6 +28,7 @@ import jcl.functions.expanders.MacroFunctionExpander;
 import jcl.lists.ListStruct;
 import jcl.printer.Printer;
 import jcl.symbols.SpecialOperatorStruct;
+import jcl.symbols.SymbolStruct;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -67,24 +68,34 @@ public class MacroLambdaExpander extends MacroFunctionExpander<MacroLambdaStruct
 	public MacroLambdaStruct expand(final ListStruct form, final Environment environment) {
 
 		final int formSize = form.size();
-		if (formSize < 2) {
-			throw new ProgramErrorException("MACRO LAMBDA: Incorrect number of arguments: " + formSize + ". Expected at least 2 arguments.");
+		if (formSize < 3) {
+			throw new ProgramErrorException("MACRO LAMBDA: Incorrect number of arguments: " + formSize + ". Expected at least 3 arguments.");
 		}
 
 		final ListStruct formRest = form.getRest();
 
 		final LispStruct second = formRest.getFirst();
-		if (!(second instanceof ListStruct)) {
+		if (!(second instanceof SymbolStruct)) {
 			final String printedObject = printer.print(second);
+			throw new ProgramErrorException("MACRO LAMBDA: Macro name must be a symbol. Got: " + printedObject);
+		}
+
+		final SymbolStruct<?> macroName = (SymbolStruct) second;
+
+		final ListStruct formRestRest = formRest.getRest();
+
+		final LispStruct third = formRestRest.getFirst();
+		if (!(third instanceof ListStruct)) {
+			final String printedObject = printer.print(third);
 			throw new ProgramErrorException("MACRO LAMBDA: Parameter list must be a list. Got: " + printedObject);
 		}
 
 		final LambdaEnvironment lambdaEnvironment = new LambdaEnvironment(environment);
 
-		final ListStruct parameters = (ListStruct) second;
+		final ListStruct parameters = (ListStruct) third;
 
-		final ListStruct formRestRest = formRest.getRest();
-		final List<LispStruct> forms = formRestRest.getAsJavaList();
+		final ListStruct formRestRestRest = formRestRest.getRest();
+		final List<LispStruct> forms = formRestRestRest.getAsJavaList();
 
 		final BodyProcessingResult bodyProcessingResult = bodyWithDeclaresAndDocStringAnalyzer.analyze(forms);
 
@@ -97,7 +108,7 @@ public class MacroLambdaExpander extends MacroFunctionExpander<MacroLambdaStruct
 		final JavaClassNameDeclarationStruct javaClassNameDeclaration = declare.getJavaClassNameDeclaration();
 		final String fileName;
 		if (javaClassNameDeclaration == null) {
-			final String className = "MacroLambda" + '_' + System.nanoTime();
+			final String className = "MacroLambda" + '_' + macroName.getName() + '_' + System.nanoTime();
 			fileName = "jcl." + className;
 		} else {
 			fileName = javaClassNameDeclaration.getClassName();
@@ -110,7 +121,7 @@ public class MacroLambdaExpander extends MacroFunctionExpander<MacroLambdaStruct
 				= bodyForms.stream()
 				           .map(e -> formAnalyzer.analyze(e, lambdaEnvironment))
 				           .collect(Collectors.toList());
-		return new MacroLambdaStruct(fileName, parsedLambdaList, bodyProcessingResult.getDocString(), new PrognStruct(analyzedBodyForms), lambdaEnvironment);
+		return new MacroLambdaStruct(fileName, macroName, parsedLambdaList, bodyProcessingResult.getDocString(), new PrognStruct(analyzedBodyForms), lambdaEnvironment);
 	}
 
 	@Override

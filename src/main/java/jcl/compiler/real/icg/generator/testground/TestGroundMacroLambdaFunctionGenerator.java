@@ -12,9 +12,7 @@ import jcl.LispStruct;
 import jcl.characters.CharacterStruct;
 import jcl.compiler.real.environment.binding.lambdalist.AuxBinding;
 import jcl.compiler.real.environment.binding.lambdalist.KeyBinding;
-import jcl.compiler.real.environment.binding.lambdalist.MacroLambdaListBindings;
 import jcl.compiler.real.environment.binding.lambdalist.OptionalBinding;
-import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaListBindings;
 import jcl.compiler.real.environment.binding.lambdalist.RequiredBinding;
 import jcl.compiler.real.environment.binding.lambdalist.RestBinding;
 import jcl.compiler.real.environment.binding.lambdalist.SuppliedPBinding;
@@ -174,10 +172,7 @@ public class TestGroundMacroLambdaFunctionGenerator extends MacroFunctionStruct 
 	}
 
 	private LispStruct internalApply(final Closure currentClosure) {
-		// TODO: expand the expander and apply with the closure??
-
-		return new CharacterStruct(97);
-//		return new TestGroundLambdaFunction(currentClosure);
+		return macroFunctionExpander.expand(null, null);
 	}
 
 	private LispStruct getInitForm(final SymbolStruct<?> symbolBinding) {

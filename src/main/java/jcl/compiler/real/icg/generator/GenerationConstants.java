@@ -19,6 +19,9 @@ import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaListBindin
 import jcl.compiler.real.environment.binding.lambdalist.RequiredBinding;
 import jcl.compiler.real.environment.binding.lambdalist.RestBinding;
 import jcl.compiler.real.environment.binding.lambdalist.SuppliedPBinding;
+import jcl.compiler.real.icg.generator.specialoperator.exception.GoException;
+import jcl.compiler.real.icg.generator.specialoperator.exception.ReturnFromException;
+import jcl.compiler.real.icg.generator.specialoperator.exception.ThrowException;
 import jcl.compiler.real.struct.ValuesStruct;
 import jcl.conditions.exceptions.ErrorException;
 import jcl.functions.FunctionParameterBinding;
@@ -37,6 +40,10 @@ public interface GenerationConstants {
 	String CLASS_INIT_METHOD_NAME = "<clinit>";
 
 	String JAVA_OBJECT_NAME = Type.getInternalName(Object.class);
+
+	String JAVA_EQUALS_METHOD_NAME = "equals";
+
+	String JAVA_EQUALS_METHOD_DESC = GeneratorUtils.getMethodDescription(Object.class, JAVA_EQUALS_METHOD_NAME, Object.class);
 
 	String JAVA_STRING_NAME = Type.getInternalName(String.class);
 
@@ -135,4 +142,31 @@ public interface GenerationConstants {
 	String AUX_BINDING_NAME = Type.getInternalName(AuxBinding.class);
 
 	String SUPPLIED_P_BINDING_NAME = Type.getInternalName(SuppliedPBinding.class);
+
+	String RETURN_FROM_EXCEPTION_NAME = Type.getInternalName(ReturnFromException.class);
+
+	String RETURN_FROM_EXCEPTION_GET_NAME_METHOD_NAME = "getName";
+
+	String RETURN_FROM_EXCEPTION_GET_NAME_METHOD_DESC = GeneratorUtils.getMethodDescription(ReturnFromException.class, RETURN_FROM_EXCEPTION_GET_NAME_METHOD_NAME);
+
+	String RETURN_FROM_EXCEPTION_GET_RESULT_METHOD_NAME = "getResult";
+
+	String RETURN_FROM_EXCEPTION_GET_RESULT_METHOD_DESC = GeneratorUtils.getMethodDescription(ReturnFromException.class, RETURN_FROM_EXCEPTION_GET_RESULT_METHOD_NAME);
+
+	String GO_EXCEPTION_NAME = Type.getInternalName(GoException.class);
+
+	String GO_EXCEPTION_GET_TAG_INDEX_METHOD_NAME = "getTagIndex";
+
+	String GO_EXCEPTION_GET_TAG_INDEX_METHOD_DESC = GeneratorUtils.getMethodDescription(GoException.class, GO_EXCEPTION_GET_TAG_INDEX_METHOD_NAME);
+
+	String THROW_EXCEPTION_NAME = Type.getInternalName(ThrowException.class);
+
+	String THROW_EXCEPTION_GET_CATCH_TAG_METHOD_NAME = "getCatchTag";
+
+	String THROW_EXCEPTION_GET_CATCH_TAG_METHOD_DESC = GeneratorUtils.getMethodDescription(ThrowException.class, THROW_EXCEPTION_GET_CATCH_TAG_METHOD_NAME);
+
+	String THROW_EXCEPTION_GET_RESULT_FORM_METHOD_NAME = "getResultForm";
+
+	String THROW_EXCEPTION_GET_RESULT_FORM_METHOD_DESC = GeneratorUtils.getMethodDescription(ThrowException.class, THROW_EXCEPTION_GET_RESULT_FORM_METHOD_NAME);
+
 }

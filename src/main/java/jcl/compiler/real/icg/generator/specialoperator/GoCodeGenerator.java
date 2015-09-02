@@ -9,6 +9,9 @@ import jcl.compiler.real.icg.ClassDef;
 import jcl.compiler.real.icg.JavaClassBuilder;
 import jcl.compiler.real.icg.JavaMethodBuilder;
 import jcl.compiler.real.icg.generator.CodeGenerator;
+import jcl.compiler.real.icg.generator.GenerationConstants;
+import jcl.compiler.real.icg.generator.GeneratorUtils;
+import jcl.compiler.real.icg.generator.specialoperator.exception.GoException;
 import jcl.compiler.real.struct.specialoperator.go.GoStruct;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.printer.Printer;
@@ -24,6 +27,12 @@ public class GoCodeGenerator implements CodeGenerator<GoStruct<?>> {
 	@Autowired
 	private Printer printer;
 
+	private static final String GO_METHOD_NAME_PREFIX = "go_";
+
+	private static final String GO_METHOD_DESC = "(Ljcl/functions/Closure;)Ljcl/LispStruct;";
+
+	private static final String GO_EXCEPTION_INIT_DESC = GeneratorUtils.getConstructorDescription(GoException.class, int.class);
+
 	@Override
 	public void generate(final GoStruct<?> input, final JavaClassBuilder classBuilder) {
 
@@ -32,8 +41,8 @@ public class GoCodeGenerator implements CodeGenerator<GoStruct<?>> {
 
 		final ClassWriter cw = currentClass.getClassWriter();
 
-		final String goMethodName = "go_" + System.nanoTime();
-		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PRIVATE, goMethodName, "(Ljcl/functions/Closure;)Ljcl/LispStruct;", null, null);
+		final String goMethodName = GO_METHOD_NAME_PREFIX + System.nanoTime();
+		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PRIVATE, goMethodName, GO_METHOD_DESC, null, null);
 
 		final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
 		final Stack<JavaMethodBuilder> methodBuilderStack = classBuilder.getMethodBuilderStack();
@@ -51,10 +60,14 @@ public class GoCodeGenerator implements CodeGenerator<GoStruct<?>> {
 		final int tagIndexStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ISTORE, tagIndexStore);
 
-		mv.visitTypeInsn(Opcodes.NEW, "jcl/compiler/real/icg/generator/specialoperator/exception/GoException");
+		mv.visitTypeInsn(Opcodes.NEW, GenerationConstants.GO_EXCEPTION_NAME);
 		mv.visitInsn(Opcodes.DUP);
 		mv.visitVarInsn(Opcodes.ILOAD, tagIndexStore);
-		mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "jcl/compiler/real/icg/generator/specialoperator/exception/GoException", "<init>", "(I)V", false);
+		mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
+				GenerationConstants.GO_EXCEPTION_NAME,
+				GenerationConstants.INIT_METHOD_NAME,
+				GO_EXCEPTION_INIT_DESC,
+				false);
 		mv.visitInsn(Opcodes.ATHROW);
 
 		mv.visitMaxs(-1, -1);
@@ -67,7 +80,7 @@ public class GoCodeGenerator implements CodeGenerator<GoStruct<?>> {
 
 		previousMv.visitVarInsn(Opcodes.ALOAD, thisStore);
 		previousMv.visitVarInsn(Opcodes.ALOAD, closureArgStore);
-		previousMv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, fileName, goMethodName, "(Ljcl/functions/Closure;)Ljcl/LispStruct;", false);
+		previousMv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, fileName, goMethodName, GO_METHOD_DESC, false);
 	}
 
 	private TagbodyLabel getTagbodyLabel(final Stack<Set<TagbodyLabel>> tagbodyLabelStack, final GoStruct<?> tagToFind) {

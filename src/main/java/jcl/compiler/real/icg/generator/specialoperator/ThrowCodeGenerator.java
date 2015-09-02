@@ -8,6 +8,9 @@ import jcl.compiler.real.icg.JavaClassBuilder;
 import jcl.compiler.real.icg.JavaMethodBuilder;
 import jcl.compiler.real.icg.generator.CodeGenerator;
 import jcl.compiler.real.icg.generator.FormGenerator;
+import jcl.compiler.real.icg.generator.GenerationConstants;
+import jcl.compiler.real.icg.generator.GeneratorUtils;
+import jcl.compiler.real.icg.generator.specialoperator.exception.ThrowException;
 import jcl.compiler.real.struct.specialoperator.ThrowStruct;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.MethodVisitor;
@@ -21,6 +24,12 @@ public class ThrowCodeGenerator implements CodeGenerator<ThrowStruct> {
 	@Autowired
 	private FormGenerator formGenerator;
 
+	private static final String THROW_METHOD_NAME_PREFIX = "throw_";
+
+	private static final String THROW_METHOD_DESC = "(Ljcl/functions/Closure;)Ljcl/LispStruct;";
+
+	private static final String THROW_EXCEPTION_INIT_DESC = GeneratorUtils.getConstructorDescription(ThrowException.class, LispStruct.class, LispStruct.class);
+
 	@Override
 	public void generate(final ThrowStruct input, final JavaClassBuilder classBuilder) {
 
@@ -32,8 +41,8 @@ public class ThrowCodeGenerator implements CodeGenerator<ThrowStruct> {
 
 		final ClassWriter cw = currentClass.getClassWriter();
 
-		final String throwMethodName = "throw_" + System.nanoTime();
-		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PRIVATE, throwMethodName, "(Ljcl/functions/Closure;)Ljcl/LispStruct;", null, null);
+		final String throwMethodName = THROW_METHOD_NAME_PREFIX + System.nanoTime();
+		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PRIVATE, throwMethodName, THROW_METHOD_DESC, null, null);
 
 		final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
 		final Stack<JavaMethodBuilder> methodBuilderStack = classBuilder.getMethodBuilderStack();
@@ -51,11 +60,15 @@ public class ThrowCodeGenerator implements CodeGenerator<ThrowStruct> {
 		final int resultFormStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, resultFormStore);
 
-		mv.visitTypeInsn(Opcodes.NEW, "jcl/compiler/real/icg/generator/specialoperator/exception/ThrowException");
+		mv.visitTypeInsn(Opcodes.NEW, GenerationConstants.THROW_EXCEPTION_NAME);
 		mv.visitInsn(Opcodes.DUP);
 		mv.visitVarInsn(Opcodes.ALOAD, catchTagStore);
 		mv.visitVarInsn(Opcodes.ALOAD, resultFormStore);
-		mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "jcl/compiler/real/icg/generator/specialoperator/exception/ThrowException", "<init>", "(Ljcl/LispStruct;Ljcl/LispStruct;)V", false);
+		mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
+				GenerationConstants.THROW_EXCEPTION_NAME,
+				GenerationConstants.INIT_METHOD_NAME,
+				THROW_EXCEPTION_INIT_DESC,
+				false);
 		mv.visitInsn(Opcodes.ATHROW);
 
 		mv.visitMaxs(-1, -1);
@@ -68,6 +81,6 @@ public class ThrowCodeGenerator implements CodeGenerator<ThrowStruct> {
 
 		previousMv.visitVarInsn(Opcodes.ALOAD, thisStore);
 		previousMv.visitVarInsn(Opcodes.ALOAD, closureArgStore);
-		previousMv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, fileName, throwMethodName, "(Ljcl/functions/Closure;)Ljcl/LispStruct;", false);
+		previousMv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, fileName, throwMethodName, THROW_METHOD_DESC, false);
 	}
 }

@@ -8,6 +8,7 @@ import jcl.compiler.real.icg.JavaClassBuilder;
 import jcl.compiler.real.icg.JavaMethodBuilder;
 import jcl.compiler.real.icg.generator.CodeGenerator;
 import jcl.compiler.real.icg.generator.FormGenerator;
+import jcl.compiler.real.icg.generator.GenerationConstants;
 import jcl.compiler.real.struct.specialoperator.CatchStruct;
 import jcl.compiler.real.struct.specialoperator.PrognStruct;
 import org.objectweb.asm.ClassWriter;
@@ -26,6 +27,10 @@ public class CatchCodeGenerator implements CodeGenerator<CatchStruct> {
 	@Autowired
 	private PrognCodeGenerator prognCodeGenerator;
 
+	private static final String CATCH_METHOD_NAME_PREFIX = "catch_";
+
+	private static final String CATCH_METHOD_DESC = "(Ljcl/functions/Closure;)Ljcl/LispStruct;";
+
 	@Override
 	public void generate(final CatchStruct input, final JavaClassBuilder classBuilder) {
 
@@ -37,8 +42,8 @@ public class CatchCodeGenerator implements CodeGenerator<CatchStruct> {
 
 		final ClassWriter cw = currentClass.getClassWriter();
 
-		final String catchMethodName = "catch_" + System.nanoTime();
-		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PRIVATE, catchMethodName, "(Ljcl/functions/Closure;)Ljcl/LispStruct;", null, null);
+		final String catchMethodName = CATCH_METHOD_NAME_PREFIX + System.nanoTime();
+		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PRIVATE, catchMethodName, CATCH_METHOD_DESC, null, null);
 
 		final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
 		final Stack<JavaMethodBuilder> methodBuilderStack = classBuilder.getMethodBuilderStack();
@@ -52,7 +57,7 @@ public class CatchCodeGenerator implements CodeGenerator<CatchStruct> {
 		final Label tryBlockEnd = new Label();
 		final Label catchBlockStart = new Label();
 		final Label catchBlockEnd = new Label();
-		mv.visitTryCatchBlock(tryBlockStart, tryBlockEnd, catchBlockStart, "jcl/compiler/real/icg/generator/specialoperator/exception/ThrowException");
+		mv.visitTryCatchBlock(tryBlockStart, tryBlockEnd, catchBlockStart, GenerationConstants.THROW_EXCEPTION_NAME);
 
 		formGenerator.generate(catchTag, classBuilder);
 		final int catchTagStore = methodBuilder.getNextAvailableStore();
@@ -71,19 +76,31 @@ public class CatchCodeGenerator implements CodeGenerator<CatchStruct> {
 		mv.visitVarInsn(Opcodes.ASTORE, throwExceptionStore);
 
 		mv.visitVarInsn(Opcodes.ALOAD, throwExceptionStore);
-		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/compiler/real/icg/generator/specialoperator/exception/ThrowException", "getCatchTag", "()Ljcl/LispStruct;", false);
+		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
+				GenerationConstants.THROW_EXCEPTION_NAME,
+				GenerationConstants.THROW_EXCEPTION_GET_CATCH_TAG_METHOD_NAME,
+				GenerationConstants.THROW_EXCEPTION_GET_CATCH_TAG_METHOD_DESC,
+				false);
 		final int throwExceptionCatchTagStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, throwExceptionCatchTagStore);
 
 		mv.visitVarInsn(Opcodes.ALOAD, throwExceptionCatchTagStore);
 		mv.visitVarInsn(Opcodes.ALOAD, catchTagStore);
-		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/lang/Object", "equals", "(Ljava/lang/Object;)Z", false);
+		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
+				GenerationConstants.JAVA_OBJECT_NAME,
+				GenerationConstants.JAVA_EQUALS_METHOD_NAME,
+				GenerationConstants.JAVA_EQUALS_METHOD_DESC,
+				false);
 
 		final Label rethrowException = new Label();
 		mv.visitJumpInsn(Opcodes.IFEQ, rethrowException);
 
 		mv.visitVarInsn(Opcodes.ALOAD, throwExceptionStore);
-		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/compiler/real/icg/generator/specialoperator/exception/ThrowException", "getResultForm", "()Ljcl/LispStruct;", false);
+		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
+				GenerationConstants.THROW_EXCEPTION_NAME,
+				GenerationConstants.THROW_EXCEPTION_GET_RESULT_FORM_METHOD_NAME,
+				GenerationConstants.THROW_EXCEPTION_GET_RESULT_FORM_METHOD_DESC,
+				false);
 		mv.visitVarInsn(Opcodes.ASTORE, resultFormStore);
 		mv.visitJumpInsn(Opcodes.GOTO, catchBlockEnd);
 
@@ -106,6 +123,6 @@ public class CatchCodeGenerator implements CodeGenerator<CatchStruct> {
 
 		previousMv.visitVarInsn(Opcodes.ALOAD, thisStore);
 		previousMv.visitVarInsn(Opcodes.ALOAD, closureArgStore);
-		previousMv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, fileName, catchMethodName, "(Ljcl/functions/Closure;)Ljcl/LispStruct;", false);
+		previousMv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, fileName, catchMethodName, CATCH_METHOD_DESC, false);
 	}
 }

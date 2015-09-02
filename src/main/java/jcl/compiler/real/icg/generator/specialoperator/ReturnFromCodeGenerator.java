@@ -8,7 +8,10 @@ import jcl.compiler.real.icg.JavaClassBuilder;
 import jcl.compiler.real.icg.JavaMethodBuilder;
 import jcl.compiler.real.icg.generator.CodeGenerator;
 import jcl.compiler.real.icg.generator.FormGenerator;
+import jcl.compiler.real.icg.generator.GenerationConstants;
+import jcl.compiler.real.icg.generator.GeneratorUtils;
 import jcl.compiler.real.icg.generator.simple.SymbolCodeGeneratorUtil;
+import jcl.compiler.real.icg.generator.specialoperator.exception.ReturnFromException;
 import jcl.compiler.real.struct.specialoperator.ReturnFromStruct;
 import jcl.symbols.SymbolStruct;
 import org.objectweb.asm.ClassWriter;
@@ -23,6 +26,12 @@ public class ReturnFromCodeGenerator implements CodeGenerator<ReturnFromStruct> 
 	@Autowired
 	private FormGenerator formGenerator;
 
+	private static final String RETURN_FROM_METHOD_NAME_PREFIX = "returnFrom_";
+
+	private static final String RETURN_FROM_METHOD_DESC = "(Ljcl/functions/Closure;)Ljcl/LispStruct;";
+
+	private static final String RETURN_FROM_EXCEPTION_INIT_DESC = GeneratorUtils.getConstructorDescription(ReturnFromException.class, SymbolStruct.class, LispStruct.class);
+
 	@Override
 	public void generate(final ReturnFromStruct input, final JavaClassBuilder classBuilder) {
 
@@ -34,8 +43,8 @@ public class ReturnFromCodeGenerator implements CodeGenerator<ReturnFromStruct> 
 
 		final ClassWriter cw = currentClass.getClassWriter();
 
-		final String returnFromMethodName = "returnFrom_" + System.nanoTime();
-		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PRIVATE, returnFromMethodName, "(Ljcl/functions/Closure;)Ljcl/LispStruct;", null, null);
+		final String returnFromMethodName = RETURN_FROM_METHOD_NAME_PREFIX + System.nanoTime();
+		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PRIVATE, returnFromMethodName, RETURN_FROM_METHOD_DESC, null, null);
 
 		final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
 		final Stack<JavaMethodBuilder> methodBuilderStack = classBuilder.getMethodBuilderStack();
@@ -53,11 +62,15 @@ public class ReturnFromCodeGenerator implements CodeGenerator<ReturnFromStruct> 
 		final int resultStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, resultStore);
 
-		mv.visitTypeInsn(Opcodes.NEW, "jcl/compiler/real/icg/generator/specialoperator/exception/ReturnFromException");
+		mv.visitTypeInsn(Opcodes.NEW, GenerationConstants.RETURN_FROM_EXCEPTION_NAME);
 		mv.visitInsn(Opcodes.DUP);
 		mv.visitVarInsn(Opcodes.ALOAD, nameSymbolStore);
 		mv.visitVarInsn(Opcodes.ALOAD, resultStore);
-		mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "jcl/compiler/real/icg/generator/specialoperator/exception/ReturnFromException", "<init>", "(Ljcl/symbols/SymbolStruct;Ljcl/LispStruct;)V", false);
+		mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
+				GenerationConstants.RETURN_FROM_EXCEPTION_NAME,
+				GenerationConstants.INIT_METHOD_NAME,
+				RETURN_FROM_EXCEPTION_INIT_DESC,
+				false);
 		mv.visitInsn(Opcodes.ATHROW);
 
 		mv.visitMaxs(-1, -1);
@@ -70,6 +83,6 @@ public class ReturnFromCodeGenerator implements CodeGenerator<ReturnFromStruct> 
 
 		previousMv.visitVarInsn(Opcodes.ALOAD, thisStore);
 		previousMv.visitVarInsn(Opcodes.ALOAD, closureArgStore);
-		previousMv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, fileName, returnFromMethodName, "(Ljcl/functions/Closure;)Ljcl/LispStruct;", false);
+		previousMv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, fileName, returnFromMethodName, RETURN_FROM_METHOD_DESC, false);
 	}
 }

@@ -11,6 +11,7 @@ import jcl.compiler.real.icg.ClassDef;
 import jcl.compiler.real.icg.JavaClassBuilder;
 import jcl.compiler.real.icg.JavaMethodBuilder;
 import jcl.compiler.real.icg.generator.CodeGenerator;
+import jcl.compiler.real.icg.generator.GenerationConstants;
 import jcl.compiler.real.icg.generator.simple.NullCodeGenerator;
 import jcl.compiler.real.struct.specialoperator.PrognStruct;
 import jcl.compiler.real.struct.specialoperator.TagbodyStruct;
@@ -32,6 +33,10 @@ public class TagbodyCodeGenerator implements CodeGenerator<TagbodyStruct> {
 	@Autowired
 	private NullCodeGenerator nullCodeGenerator;
 
+	private static final String TAGBODY_METHOD_NAME_PREFIX = "tagbody_";
+
+	private static final String TAGBODY_METHOD_DESC = "(Ljcl/functions/Closure;)Ljcl/LispStruct;";
+
 	@Override
 	public void generate(final TagbodyStruct input, final JavaClassBuilder classBuilder) {
 
@@ -42,8 +47,8 @@ public class TagbodyCodeGenerator implements CodeGenerator<TagbodyStruct> {
 
 		final ClassWriter cw = currentClass.getClassWriter();
 
-		final String tagbodyMethodName = "tagbody_" + System.nanoTime();
-		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PRIVATE, tagbodyMethodName, "(Ljcl/functions/Closure;)Ljcl/LispStruct;", null, null);
+		final String tagbodyMethodName = TAGBODY_METHOD_NAME_PREFIX + System.nanoTime();
+		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PRIVATE, tagbodyMethodName, TAGBODY_METHOD_DESC, null, null);
 
 		final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
 		final Stack<JavaMethodBuilder> methodBuilderStack = classBuilder.getMethodBuilderStack();
@@ -57,7 +62,7 @@ public class TagbodyCodeGenerator implements CodeGenerator<TagbodyStruct> {
 		final Label tryBlockEnd = new Label();
 		final Label catchBlockStart = new Label();
 		final Label catchBlockEnd = new Label();
-		mv.visitTryCatchBlock(tryBlockStart, tryBlockEnd, catchBlockStart, "jcl/compiler/real/icg/generator/specialoperator/exception/GoException");
+		mv.visitTryCatchBlock(tryBlockStart, tryBlockEnd, catchBlockStart, GenerationConstants.GO_EXCEPTION_NAME);
 
 		final Map<TagbodyLabel, PrognStruct> tagbodyLabeledForms = getTagbodyLabeledForms(tagbodyForms, classBuilder);
 
@@ -85,7 +90,11 @@ public class TagbodyCodeGenerator implements CodeGenerator<TagbodyStruct> {
 		mv.visitVarInsn(Opcodes.ASTORE, goExceptionStore);
 
 		mv.visitVarInsn(Opcodes.ALOAD, goExceptionStore);
-		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/compiler/real/icg/generator/specialoperator/exception/GoException", "getTagIndex", "()I", false);
+		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
+				GenerationConstants.GO_EXCEPTION_NAME,
+				GenerationConstants.GO_EXCEPTION_NAME,
+				GenerationConstants.GO_EXCEPTION_GET_TAG_INDEX_METHOD_DESC,
+				false);
 		final int goExceptionIndexStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ISTORE, goExceptionIndexStore);
 
@@ -130,7 +139,7 @@ public class TagbodyCodeGenerator implements CodeGenerator<TagbodyStruct> {
 
 		previousMv.visitVarInsn(Opcodes.ALOAD, thisStore);
 		previousMv.visitVarInsn(Opcodes.ALOAD, closureArgStore);
-		previousMv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, fileName, tagbodyMethodName, "(Ljcl/functions/Closure;)Ljcl/LispStruct;", false);
+		previousMv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, fileName, tagbodyMethodName, TAGBODY_METHOD_DESC, false);
 	}
 
 	private Map<TagbodyLabel, PrognStruct> getTagbodyLabeledForms(final Map<GoStruct<?>, PrognStruct> tagbodyForms,

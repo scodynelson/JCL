@@ -36,7 +36,11 @@ public class FloatCodeGenerator implements CodeGenerator<FloatStruct> {
 		final BigDecimal bigDecimal = input.getBigDecimal();
 		final String decimalString = bigDecimal.toString();
 		mv.visitLdcInsn(decimalString);
-		mv.visitMethodInsn(Opcodes.INVOKESPECIAL, BIG_DECIMAL_NAME, GenerationConstants.INIT_METHOD_NAME, BIG_DECIMAL_INIT_DESC, false);
+		mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
+				BIG_DECIMAL_NAME,
+				GenerationConstants.INIT_METHOD_NAME,
+				BIG_DECIMAL_INIT_DESC,
+				false);
 		final int bigDecimalStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, bigDecimalStore);
 
@@ -44,6 +48,10 @@ public class FloatCodeGenerator implements CodeGenerator<FloatStruct> {
 		mv.visitInsn(Opcodes.DUP);
 
 		mv.visitVarInsn(Opcodes.ALOAD, bigDecimalStore);
-		mv.visitMethodInsn(Opcodes.INVOKESPECIAL, FLOAT_STRUCT_NAME, GenerationConstants.INIT_METHOD_NAME, FLOAT_STRUCT_INIT_DESC, false);
+		mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
+				FLOAT_STRUCT_NAME,
+				GenerationConstants.INIT_METHOD_NAME,
+				FLOAT_STRUCT_INIT_DESC,
+				false);
 	}
 }

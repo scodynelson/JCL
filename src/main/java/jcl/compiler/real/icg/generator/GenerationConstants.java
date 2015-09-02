@@ -6,8 +6,23 @@ package jcl.compiler.real.icg.generator;
 
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
+import jcl.LispStruct;
+import jcl.compiler.real.environment.binding.lambdalist.AuxBinding;
+import jcl.compiler.real.environment.binding.lambdalist.KeyBinding;
+import jcl.compiler.real.environment.binding.lambdalist.OptionalBinding;
+import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaListBindings;
+import jcl.compiler.real.environment.binding.lambdalist.RequiredBinding;
+import jcl.compiler.real.environment.binding.lambdalist.RestBinding;
+import jcl.compiler.real.environment.binding.lambdalist.SuppliedPBinding;
+import jcl.compiler.real.struct.ValuesStruct;
+import jcl.conditions.exceptions.ErrorException;
+import jcl.functions.FunctionParameterBinding;
+import jcl.functions.FunctionStruct;
 import jcl.packages.PackageStruct;
 import jcl.packages.PackageSymbolStruct;
 import jcl.symbols.SymbolStruct;
@@ -18,6 +33,10 @@ public interface GenerationConstants {
 	String SINGLETON_INSTANCE = "INSTANCE";
 
 	String INIT_METHOD_NAME = "<init>";
+
+	String CLASS_INIT_METHOD_NAME = "<clinit>";
+
+	String JAVA_OBJECT_NAME = Type.getInternalName(Object.class);
 
 	String JAVA_STRING_NAME = Type.getInternalName(String.class);
 
@@ -31,6 +50,14 @@ public interface GenerationConstants {
 
 	String JAVA_ARRAY_LIST_INIT_DESC = GeneratorUtils.getConstructorDescription(ArrayList.class);
 
+	String JAVA_MAP_NAME = Type.getInternalName(Map.class);
+
+	String JAVA_MAP_ENTRY_NAME = Type.getInternalName(Map.Entry.class);
+
+	String JAVA_SET_NAME = Type.getInternalName(Set.class);
+
+	String JAVA_ITERATOR_NAME = Type.getInternalName(Iterator.class);
+
 	String JAVA_INTEGER_NAME = Type.getInternalName(Integer.class);
 
 	String JAVA_INTEGER_VALUE_OF_METHOD_NAME = "valueOf";
@@ -43,9 +70,23 @@ public interface GenerationConstants {
 
 	String JAVA_URI_CREATE_METHOD_DESC = GeneratorUtils.getMethodDescription(URI.class, JAVA_URI_CREATE_METHOD_NAME, String.class);
 
+	String JAVA_THROWABLE_NAME = Type.getInternalName(Throwable.class);
+
 	String SYMBOL_STRUCT_NAME = Type.getInternalName(SymbolStruct.class);
 
 	String SYMBOL_STRUCT_DESC = Type.getDescriptor(SymbolStruct.class);
+
+	String SYMBOL_STRUCT_GET_LEXICAL_VALUE_METHOD_NAME = "getLexicalValue";
+
+	String SYMBOL_STRUCT_GET_LEXICAL_VALUE_METHOD_DESC = GeneratorUtils.getMethodDescription(SymbolStruct.class, SYMBOL_STRUCT_GET_LEXICAL_VALUE_METHOD_NAME);
+
+	String SYMBOL_STRUCT_GET_DYNAMIC_VALUE_METHOD_NAME = "getDynamicValue";
+
+	String SYMBOL_STRUCT_GET_DYNAMIC_VALUE_METHOD_DESC = GeneratorUtils.getMethodDescription(SymbolStruct.class, SYMBOL_STRUCT_GET_DYNAMIC_VALUE_METHOD_NAME);
+
+	String SYMBOL_STRUCT_GET_VALUE_METHOD_NAME = "getValue";
+
+	String SYMBOL_STRUCT_GET_VALUE_METHOD_DESC = GeneratorUtils.getMethodDescription(SymbolStruct.class, SYMBOL_STRUCT_GET_VALUE_METHOD_NAME);
 
 	String PACKAGE_STRUCT_NAME = Type.getInternalName(PackageStruct.class);
 
@@ -64,5 +105,34 @@ public interface GenerationConstants {
 	String PACKAGE_SYMBOL_STRUCT_GET_SYMBOL_METHOD_NAME = "getSymbol";
 
 	String PACKAGE_SYMBOL_STRUCT_GET_SYMBOL_METHOD_DESC = GeneratorUtils.getMethodDescription(PackageSymbolStruct.class, PACKAGE_SYMBOL_STRUCT_GET_SYMBOL_METHOD_NAME);
-	;
+
+	String FUNCTION_STRUCT_NAME = Type.getInternalName(FunctionStruct.class);
+
+	String LISP_STRUCT_NAME = Type.getInternalName(LispStruct.class);
+
+	String LISP_STRUCT_DESC = Type.getDescriptor(LispStruct.class);
+
+	String VALUES_STRUCT_NAME = Type.getInternalName(ValuesStruct.class);
+
+	String VALUES_STRUCT_DESC = Type.getDescriptor(ValuesStruct.class);
+
+	String O_LAMBDA_LIST_BINDINGS_NAME = Type.getInternalName(OrdinaryLambdaListBindings.class);
+
+	String O_LAMBDA_LIST_BINDINGS_DESC = Type.getDescriptor(OrdinaryLambdaListBindings.class);
+
+	String ERROR_EXCEPTION_NAME = Type.getInternalName(ErrorException.class);
+
+	String FUNCTION_PARAMETER_BINDING_NAME = Type.getInternalName(FunctionParameterBinding.class);
+
+	String REQUIRED_BINDING_NAME = Type.getInternalName(RequiredBinding.class);
+
+	String OPTIONAL_BINDING_NAME = Type.getInternalName(OptionalBinding.class);
+
+	String REST_BINDING_NAME = Type.getInternalName(RestBinding.class);
+
+	String KEY_BINDING_NAME = Type.getInternalName(KeyBinding.class);
+
+	String AUX_BINDING_NAME = Type.getInternalName(AuxBinding.class);
+
+	String SUPPLIED_P_BINDING_NAME = Type.getInternalName(SuppliedPBinding.class);
 }

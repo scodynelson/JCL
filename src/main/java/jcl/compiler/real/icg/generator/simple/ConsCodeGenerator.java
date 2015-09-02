@@ -50,6 +50,10 @@ public class ConsCodeGenerator implements CodeGenerator<ConsStruct> {
 
 		mv.visitVarInsn(Opcodes.ALOAD, carStore);
 		mv.visitVarInsn(Opcodes.ALOAD, cdrStore);
-		mv.visitMethodInsn(Opcodes.INVOKESPECIAL, CONS_STRUCT_NAME, GenerationConstants.INIT_METHOD_NAME, CONS_STRUCT_INIT_DESC, false);
+		mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
+				CONS_STRUCT_NAME,
+				GenerationConstants.INIT_METHOD_NAME,
+				CONS_STRUCT_INIT_DESC,
+				false);
 	}
 }

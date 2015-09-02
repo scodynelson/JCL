@@ -34,6 +34,10 @@ public class StringCodeGenerator implements CodeGenerator<StringStruct> {
 		final String javaString = input.getAsJavaString();
 		mv.visitLdcInsn(javaString);
 
-		mv.visitMethodInsn(Opcodes.INVOKESPECIAL, STRING_STRUCT_NAME, GenerationConstants.INIT_METHOD_NAME, STRING_STRUCT_INIT_DESC, false);
+		mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
+				STRING_STRUCT_NAME,
+				GenerationConstants.INIT_METHOD_NAME,
+				STRING_STRUCT_INIT_DESC,
+				false);
 	}
 }

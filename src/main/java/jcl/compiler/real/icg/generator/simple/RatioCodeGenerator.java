@@ -39,7 +39,11 @@ public class RatioCodeGenerator implements CodeGenerator<RatioStruct> {
 		final BigInteger numerator = bigFraction.getNumerator();
 		final String numeratorString = numerator.toString();
 		mv.visitLdcInsn(numeratorString);
-		mv.visitMethodInsn(Opcodes.INVOKESPECIAL, BIG_INTEGER_NAME, GenerationConstants.INIT_METHOD_NAME, BIG_INTEGER_INIT_DESC, false);
+		mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
+				BIG_INTEGER_NAME,
+				GenerationConstants.INIT_METHOD_NAME,
+				BIG_INTEGER_INIT_DESC,
+				false);
 		final int numeratorStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, numeratorStore);
 
@@ -49,7 +53,11 @@ public class RatioCodeGenerator implements CodeGenerator<RatioStruct> {
 		final BigInteger denominator = bigFraction.getDenominator();
 		final String denominatorString = denominator.toString();
 		mv.visitLdcInsn(denominatorString);
-		mv.visitMethodInsn(Opcodes.INVOKESPECIAL, BIG_INTEGER_NAME, GenerationConstants.INIT_METHOD_NAME, BIG_INTEGER_INIT_DESC, false);
+		mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
+				BIG_INTEGER_NAME,
+				GenerationConstants.INIT_METHOD_NAME,
+				BIG_INTEGER_INIT_DESC,
+				false);
 		final int denominatorStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, denominatorStore);
 
@@ -58,6 +66,10 @@ public class RatioCodeGenerator implements CodeGenerator<RatioStruct> {
 
 		mv.visitVarInsn(Opcodes.ALOAD, numeratorStore);
 		mv.visitVarInsn(Opcodes.ALOAD, denominatorStore);
-		mv.visitMethodInsn(Opcodes.INVOKESPECIAL, RATIO_STRUCT_NAME, GenerationConstants.INIT_METHOD_NAME, RATIO_STRUCT_INIT_DESC, false);
+		mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
+				RATIO_STRUCT_NAME,
+				GenerationConstants.INIT_METHOD_NAME,
+				RATIO_STRUCT_INIT_DESC,
+				false);
 	}
 }

@@ -38,11 +38,23 @@ public class SymbolBindingCodeGenerator implements CodeGenerator<SymbolStruct<?>
 		final boolean hasDynamicBinding = currentEnvironment.hasDynamicBinding(input);
 
 		if (hasLexicalBinding) {
-			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, GenerationConstants.SYMBOL_STRUCT_NAME, "getLexicalValue", "()Ljcl/LispStruct;", false);
+			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
+					GenerationConstants.SYMBOL_STRUCT_NAME,
+					GenerationConstants.SYMBOL_STRUCT_GET_LEXICAL_VALUE_METHOD_NAME,
+					GenerationConstants.SYMBOL_STRUCT_GET_LEXICAL_VALUE_METHOD_DESC,
+					false);
 		} else if (hasDynamicBinding) {
-			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, GenerationConstants.SYMBOL_STRUCT_NAME, "getDynamicValue", "()Ljcl/LispStruct;", false);
+			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
+					GenerationConstants.SYMBOL_STRUCT_NAME,
+					GenerationConstants.SYMBOL_STRUCT_GET_DYNAMIC_VALUE_METHOD_NAME,
+					GenerationConstants.SYMBOL_STRUCT_GET_DYNAMIC_VALUE_METHOD_DESC,
+					false);
 		} else {
-			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, GenerationConstants.SYMBOL_STRUCT_NAME, "getValue", "()Ljcl/LispStruct;", false);
+			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
+					GenerationConstants.SYMBOL_STRUCT_NAME,
+					GenerationConstants.SYMBOL_STRUCT_GET_VALUE_METHOD_NAME,
+					GenerationConstants.SYMBOL_STRUCT_GET_VALUE_METHOD_DESC,
+					false);
 		}
 	}
 }

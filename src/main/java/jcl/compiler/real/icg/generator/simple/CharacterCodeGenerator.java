@@ -29,6 +29,10 @@ public class CharacterCodeGenerator implements CodeGenerator<CharacterStruct> {
 
 		final int codePoint = input.getCodePoint();
 		mv.visitLdcInsn(codePoint);
-		mv.visitMethodInsn(Opcodes.INVOKESPECIAL, CHARACTER_STRUCT_NAME, GenerationConstants.INIT_METHOD_NAME, CHARACTER_STRUCT_INIT_DESC, false);
+		mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
+				CHARACTER_STRUCT_NAME,
+				GenerationConstants.INIT_METHOD_NAME,
+				CHARACTER_STRUCT_INIT_DESC,
+				false);
 	}
 }

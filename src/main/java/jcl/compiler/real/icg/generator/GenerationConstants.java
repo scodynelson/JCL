@@ -24,9 +24,12 @@ import jcl.compiler.real.icg.generator.specialoperator.exception.ReturnFromExcep
 import jcl.compiler.real.icg.generator.specialoperator.exception.ThrowException;
 import jcl.compiler.real.struct.ValuesStruct;
 import jcl.conditions.exceptions.ErrorException;
+import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.functions.Closure;
 import jcl.functions.FunctionParameterBinding;
 import jcl.functions.FunctionStruct;
+import jcl.lists.ConsStruct;
+import jcl.lists.ListStruct;
 import jcl.packages.PackageStruct;
 import jcl.packages.PackageSymbolStruct;
 import jcl.symbols.SymbolStruct;
@@ -54,6 +57,22 @@ public interface GenerationConstants {
 
 	String JAVA_LIST_ADD_METHOD_DESC = GeneratorUtils.getMethodDescription(List.class, JAVA_LIST_ADD_METHOD_NAME, Object.class);
 
+	String JAVA_LIST_GET_METHOD_NAME = "get";
+
+	String JAVA_LIST_GET_METHOD_DESC = GeneratorUtils.getMethodDescription(List.class, JAVA_LIST_GET_METHOD_NAME, int.class);
+
+	String JAVA_LIST_SIZE_METHOD_NAME = "size";
+
+	String JAVA_LIST_SIZE_METHOD_DESC = GeneratorUtils.getMethodDescription(List.class, JAVA_LIST_SIZE_METHOD_NAME);
+
+	String JAVA_LIST_ITERATOR_METHOD_NAME = "iterator";
+
+	String JAVA_LIST_ITERATOR_METHOD_DESC = GeneratorUtils.getMethodDescription(List.class, JAVA_LIST_ITERATOR_METHOD_NAME);
+
+	String JAVA_LIST_TO_ARRAY_METHOD_NAME = "toArray";
+
+	String JAVA_LIST_TO_ARRAY_METHOD_DESC = GeneratorUtils.getMethodDescription(List.class, JAVA_LIST_TO_ARRAY_METHOD_NAME, Object[].class);
+
 	String JAVA_ARRAY_LIST_NAME = Type.getInternalName(ArrayList.class);
 
 	String JAVA_ARRAY_LIST_INIT_DESC = GeneratorUtils.getConstructorDescription(ArrayList.class);
@@ -70,6 +89,14 @@ public interface GenerationConstants {
 
 	String JAVA_ITERATOR_NAME = Type.getInternalName(Iterator.class);
 
+	String JAVA_ITERATOR_HAS_NEXT_METHOD_NAME = "hasNext";
+
+	String JAVA_ITERATOR_HAS_NEXT_METHOD_DESC = GeneratorUtils.getMethodDescription(Iterator.class, JAVA_ITERATOR_HAS_NEXT_METHOD_NAME);
+
+	String JAVA_ITERATOR_NEXT_METHOD_NAME = "next";
+
+	String JAVA_ITERATOR_NEXT_METHOD_DESC = GeneratorUtils.getMethodDescription(Iterator.class, JAVA_ITERATOR_NEXT_METHOD_NAME);
+
 	String JAVA_INTEGER_NAME = Type.getInternalName(Integer.class);
 
 	String JAVA_INTEGER_VALUE_OF_METHOD_NAME = "valueOf";
@@ -84,6 +111,18 @@ public interface GenerationConstants {
 
 	String JAVA_THROWABLE_NAME = Type.getInternalName(Throwable.class);
 
+	String JAVA_STRING_BUILDER_NAME = Type.getInternalName(StringBuilder.class);
+
+	String JAVA_STRING_BUILDER_INIT_DESC = GeneratorUtils.getConstructorDescription(StringBuilder.class);
+
+	String JAVA_STRING_BUILDER_APPEND_METHOD_NAME = "append";
+
+	String JAVA_STRING_BUILDER_APPEND_METHOD_DESC = GeneratorUtils.getMethodDescription(StringBuilder.class, JAVA_STRING_BUILDER_APPEND_METHOD_NAME, String.class);
+
+	String JAVA_STRING_BUILDER_TOSTRING_METHOD_NAME = "toString";
+
+	String JAVA_STRING_BUILDER_TOSTRING_METHOD_DESC = GeneratorUtils.getMethodDescription(StringBuilder.class, JAVA_STRING_BUILDER_TOSTRING_METHOD_NAME);
+
 	String SYMBOL_STRUCT_NAME = Type.getInternalName(SymbolStruct.class);
 
 	String SYMBOL_STRUCT_DESC = Type.getDescriptor(SymbolStruct.class);
@@ -96,6 +135,14 @@ public interface GenerationConstants {
 
 	String SYMBOL_STRUCT_SET_LEXICAL_VALUE_METHOD_DESC = GeneratorUtils.getMethodDescription(SymbolStruct.class, SYMBOL_STRUCT_SET_LEXICAL_VALUE_METHOD_NAME, LispStruct.class);
 
+	String SYMBOL_STRUCT_BIND_LEXICAL_VALUE_METHOD_NAME = "bindLexicalValue";
+
+	String SYMBOL_STRUCT_BIND_LEXICAL_VALUE_METHOD_DESC = GeneratorUtils.getMethodDescription(SymbolStruct.class, SYMBOL_STRUCT_BIND_LEXICAL_VALUE_METHOD_NAME, LispStruct.class);
+
+	String SYMBOL_STRUCT_UNBIND_LEXICAL_VALUE_METHOD_NAME = "unbindLexicalValue";
+
+	String SYMBOL_STRUCT_UNBIND_LEXICAL_VALUE_METHOD_DESC = GeneratorUtils.getMethodDescription(SymbolStruct.class, SYMBOL_STRUCT_UNBIND_LEXICAL_VALUE_METHOD_NAME);
+
 	String SYMBOL_STRUCT_GET_DYNAMIC_VALUE_METHOD_NAME = "getDynamicValue";
 
 	String SYMBOL_STRUCT_GET_DYNAMIC_VALUE_METHOD_DESC = GeneratorUtils.getMethodDescription(SymbolStruct.class, SYMBOL_STRUCT_GET_DYNAMIC_VALUE_METHOD_NAME);
@@ -104,6 +151,14 @@ public interface GenerationConstants {
 
 	String SYMBOL_STRUCT_SET_DYNAMIC_VALUE_METHOD_DESC = GeneratorUtils.getMethodDescription(SymbolStruct.class, SYMBOL_STRUCT_SET_DYNAMIC_VALUE_METHOD_NAME, LispStruct.class);
 
+	String SYMBOL_STRUCT_BIND_DYNAMIC_VALUE_METHOD_NAME = "bindDynamicValue";
+
+	String SYMBOL_STRUCT_BIND_DYNAMIC_VALUE_METHOD_DESC = GeneratorUtils.getMethodDescription(SymbolStruct.class, SYMBOL_STRUCT_BIND_DYNAMIC_VALUE_METHOD_NAME, LispStruct.class);
+
+	String SYMBOL_STRUCT_UNBIND_DYNAMIC_VALUE_METHOD_NAME = "unbindDynamicValue";
+
+	String SYMBOL_STRUCT_UNBIND_DYNAMIC_VALUE_METHOD_DESC = GeneratorUtils.getMethodDescription(SymbolStruct.class, SYMBOL_STRUCT_UNBIND_DYNAMIC_VALUE_METHOD_NAME);
+
 	String SYMBOL_STRUCT_GET_VALUE_METHOD_NAME = "getValue";
 
 	String SYMBOL_STRUCT_GET_VALUE_METHOD_DESC = GeneratorUtils.getMethodDescription(SymbolStruct.class, SYMBOL_STRUCT_GET_VALUE_METHOD_NAME);
@@ -111,6 +166,10 @@ public interface GenerationConstants {
 	String SYMBOL_STRUCT_SET_VALUE_METHOD_NAME = "setValue";
 
 	String SYMBOL_STRUCT_SET_VALUE_METHOD_DESC = GeneratorUtils.getMethodDescription(SymbolStruct.class, SYMBOL_STRUCT_SET_VALUE_METHOD_NAME, LispStruct.class);
+
+	String SYMBOL_STRUCT_GET_FUNCTION_METHOD_NAME = "getFunction";
+
+	String SYMBOL_STRUCT_GET_FUNCTION_METHOD_DESC = GeneratorUtils.getMethodDescription(SymbolStruct.class, SYMBOL_STRUCT_GET_FUNCTION_METHOD_NAME);
 
 	String SYMBOL_STRUCT_BIND_FUNCTION_METHOD_NAME = "bindFunction";
 
@@ -142,11 +201,17 @@ public interface GenerationConstants {
 
 	String FUNCTION_STRUCT_GET_CLOSURE_METHOD_NAME = "getClosure";
 
-	String FUNCTION_STRUCT_GET_CLOSURE_METHOD_DESC = GeneratorUtils.getMethodDescription(Closure.class, FUNCTION_STRUCT_GET_CLOSURE_METHOD_NAME);
+	String FUNCTION_STRUCT_GET_CLOSURE_METHOD_DESC = GeneratorUtils.getMethodDescription(FunctionStruct.class, FUNCTION_STRUCT_GET_CLOSURE_METHOD_NAME);
+
+	String FUNCTION_STRUCT_APPLY_METHOD_NAME = "apply";
+
+	String FUNCTION_STRUCT_APPLY_METHOD_DESC = GeneratorUtils.getMethodDescription(FunctionStruct.class, FUNCTION_STRUCT_APPLY_METHOD_NAME, LispStruct[].class);
 
 	String LISP_STRUCT_NAME = Type.getInternalName(LispStruct.class);
 
 	String LISP_STRUCT_DESC = Type.getDescriptor(LispStruct.class);
+
+	String LISP_STRUCT_ARRAY_DESC = Type.getDescriptor(LispStruct[].class);
 
 	String VALUES_STRUCT_NAME = Type.getInternalName(ValuesStruct.class);
 
@@ -155,6 +220,10 @@ public interface GenerationConstants {
 	String VALUES_STRUCT_GET_PRIMARY_VALUE_METHOD_NAME = "getPrimaryValue";
 
 	String VALUES_STRUCT_GET_PRIMARY_VALUE_METHOD_DESC = GeneratorUtils.getMethodDescription(ValuesStruct.class, VALUES_STRUCT_GET_PRIMARY_VALUE_METHOD_NAME);
+
+	String VALUES_STRUCT_GET_VALUES_LIST_METHOD_NAME = "getValuesList";
+
+	String VALUES_STRUCT_GET_VALUES_LIST_METHOD_DESC = GeneratorUtils.getMethodDescription(ValuesStruct.class, VALUES_STRUCT_GET_VALUES_LIST_METHOD_NAME);
 
 	String CLOSURE_NAME = Type.getInternalName(Closure.class);
 
@@ -171,6 +240,10 @@ public interface GenerationConstants {
 	String O_LAMBDA_LIST_BINDINGS_DESC = Type.getDescriptor(OrdinaryLambdaListBindings.class);
 
 	String ERROR_EXCEPTION_NAME = Type.getInternalName(ErrorException.class);
+
+	String PROGRAM_ERROR_EXCEPTION_NAME = Type.getInternalName(ProgramErrorException.class);
+
+	String PROGRAM_ERROR_EXCEPTION_INIT_STRING_DESC = GeneratorUtils.getConstructorDescription(ProgramErrorException.class, String.class);
 
 	String FUNCTION_PARAMETER_BINDING_NAME = Type.getInternalName(FunctionParameterBinding.class);
 
@@ -212,4 +285,15 @@ public interface GenerationConstants {
 
 	String THROW_EXCEPTION_GET_RESULT_FORM_METHOD_DESC = GeneratorUtils.getMethodDescription(ThrowException.class, THROW_EXCEPTION_GET_RESULT_FORM_METHOD_NAME);
 
+	String CONS_STRUCT_NAME = Type.getInternalName(ConsStruct.class);
+
+	String CONS_STRUCT_INIT_CAR_DESC = GeneratorUtils.getConstructorDescription(ConsStruct.class, LispStruct.class);
+
+	String CONS_STRUCT_INIT_CAR_CDR_DESC = GeneratorUtils.getConstructorDescription(ConsStruct.class, LispStruct.class, LispStruct.class);
+
+	String LIST_STRUCT_NAME = Type.getInternalName(ListStruct.class);
+
+	String LIST_STRUCT_GET_AS_JAVA_LIST_METHOD_NAME = "getAsJavaList";
+
+	String LIST_STRUCT_GET_AS_JAVA_LIST_METHOD_DESC = GeneratorUtils.getMethodDescription(ListStruct.class, LIST_STRUCT_GET_AS_JAVA_LIST_METHOD_NAME);
 }

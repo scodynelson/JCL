@@ -10,6 +10,7 @@ import jcl.compiler.real.icg.JavaClassBuilder;
 import jcl.compiler.real.icg.JavaMethodBuilder;
 import jcl.compiler.real.icg.generator.CodeGenerator;
 import jcl.compiler.real.icg.generator.FormGenerator;
+import jcl.compiler.real.icg.generator.GenerationConstants;
 import jcl.compiler.real.struct.specialoperator.PrognStruct;
 import jcl.compiler.real.struct.specialoperator.ProgvStruct;
 import org.objectweb.asm.ClassWriter;
@@ -28,6 +29,16 @@ public class ProgvCodeGenerator implements CodeGenerator<ProgvStruct> {
 	@Autowired
 	private PrognCodeGenerator prognCodeGenerator;
 
+	private static final String PROGV_METHOD_NAME_PREFIX = "progv_";
+
+	private static final String PROGV_METHOD_DESC = "(Ljcl/functions/Closure;)Ljcl/LispStruct;";
+
+	private static final String SYMBOLS_LIST_MUST_BE_A_LIST = "PROGV: Symbols list must be a list. Got: ";
+
+	private static final String ELEMENTS_IN_SYMBOLS_LIST_MUST_BE_SYMBOLS = "PROGV: Elements in symbols list must be symbols. Got: ";
+
+	private static final String VALUES_LIST_MUST_BE_A_LIST = "PROGV: Values list must be a list. Got: ";
+
 	@Override
 	public void generate(final ProgvStruct input, final JavaClassBuilder classBuilder) {
 
@@ -41,8 +52,8 @@ public class ProgvCodeGenerator implements CodeGenerator<ProgvStruct> {
 
 		final ClassWriter cw = currentClass.getClassWriter();
 
-		final String progvMethodName = "progv_" + System.nanoTime();
-		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PRIVATE, progvMethodName, "(Ljcl/functions/Closure;)Ljcl/LispStruct;", null, null);
+		final String progvMethodName = PROGV_METHOD_NAME_PREFIX + System.nanoTime();
+		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PRIVATE, progvMethodName, PROGV_METHOD_DESC, null, null);
 
 		final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
 		final Stack<JavaMethodBuilder> methodBuilderStack = classBuilder.getMethodBuilderStack();
@@ -68,36 +79,64 @@ public class ProgvCodeGenerator implements CodeGenerator<ProgvStruct> {
 		final Label varsListCheckEnd = new Label();
 
 		mv.visitVarInsn(Opcodes.ALOAD, varsStore);
-		mv.visitTypeInsn(Opcodes.INSTANCEOF, "jcl/lists/ListStruct");
+		mv.visitTypeInsn(Opcodes.INSTANCEOF, GenerationConstants.LIST_STRUCT_NAME);
 		mv.visitJumpInsn(Opcodes.IFNE, varsListCheckEnd);
 
-		mv.visitTypeInsn(Opcodes.NEW, "jcl/conditions/exceptions/ProgramErrorException");
+		mv.visitTypeInsn(Opcodes.NEW, GenerationConstants.PROGRAM_ERROR_EXCEPTION_NAME);
 		mv.visitInsn(Opcodes.DUP);
-		mv.visitTypeInsn(Opcodes.NEW, "java/lang/StringBuilder");
+		mv.visitTypeInsn(Opcodes.NEW, GenerationConstants.JAVA_STRING_BUILDER_NAME);
 		mv.visitInsn(Opcodes.DUP);
-		mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "java/lang/StringBuilder", "<init>", "()V", false);
-		mv.visitLdcInsn("PROGV: Symbols list must be a list. Got: ");
-		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/lang/StringBuilder", "append", "(Ljava/lang/String;)Ljava/lang/StringBuilder;", false);
+		mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
+				GenerationConstants.JAVA_STRING_BUILDER_NAME,
+				GenerationConstants.INIT_METHOD_NAME,
+				GenerationConstants.JAVA_STRING_BUILDER_INIT_DESC,
+				false);
+		mv.visitLdcInsn(SYMBOLS_LIST_MUST_BE_A_LIST);
+		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
+				GenerationConstants.JAVA_STRING_BUILDER_NAME,
+				GenerationConstants.JAVA_STRING_BUILDER_APPEND_METHOD_NAME,
+				GenerationConstants.JAVA_STRING_BUILDER_APPEND_METHOD_DESC,
+				false);
 		mv.visitVarInsn(Opcodes.ALOAD, varsStore);
-		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/lang/StringBuilder", "append", "(Ljava/lang/Object;)Ljava/lang/StringBuilder;", false);
-		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/lang/StringBuilder", "toString", "()Ljava/lang/String;", false);
-		mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "jcl/conditions/exceptions/ProgramErrorException", "<init>", "(Ljava/lang/String;)V", false);
+		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
+				GenerationConstants.JAVA_STRING_BUILDER_NAME,
+				GenerationConstants.JAVA_STRING_BUILDER_APPEND_METHOD_NAME,
+				GenerationConstants.JAVA_STRING_BUILDER_APPEND_METHOD_DESC,
+				false);
+		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
+				GenerationConstants.JAVA_STRING_BUILDER_NAME,
+				GenerationConstants.JAVA_STRING_BUILDER_TOSTRING_METHOD_NAME,
+				GenerationConstants.JAVA_STRING_BUILDER_TOSTRING_METHOD_DESC,
+				false);
+		mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
+				GenerationConstants.PROGRAM_ERROR_EXCEPTION_NAME,
+				GenerationConstants.INIT_METHOD_NAME,
+				GenerationConstants.PROGRAM_ERROR_EXCEPTION_INIT_STRING_DESC,
+				false);
 		mv.visitInsn(Opcodes.ATHROW);
 
 		mv.visitLabel(varsListCheckEnd);
 
 		mv.visitVarInsn(Opcodes.ALOAD, varsStore);
-		mv.visitTypeInsn(Opcodes.CHECKCAST, "jcl/lists/ListStruct");
+		mv.visitTypeInsn(Opcodes.CHECKCAST, GenerationConstants.LIST_STRUCT_NAME);
 		final int varsListStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, varsListStore);
 
 		mv.visitVarInsn(Opcodes.ALOAD, varsListStore);
-		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/lists/ListStruct", "getAsJavaList", "()Ljava/util/List;", false);
+		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
+				GenerationConstants.LIST_STRUCT_NAME,
+				GenerationConstants.LIST_STRUCT_GET_AS_JAVA_LIST_METHOD_NAME,
+				GenerationConstants.LIST_STRUCT_GET_AS_JAVA_LIST_METHOD_DESC,
+				false);
 		final int varsJavaListStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, varsJavaListStore);
 
 		mv.visitVarInsn(Opcodes.ALOAD, varsJavaListStore);
-		mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, "java/util/List", "iterator", "()Ljava/util/Iterator;", true);
+		mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
+				GenerationConstants.JAVA_LIST_NAME,
+				GenerationConstants.JAVA_LIST_ITERATOR_METHOD_NAME,
+				GenerationConstants.JAVA_LIST_ITERATOR_METHOD_DESC,
+				true);
 		final int varsJavaListIteratorStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, varsJavaListIteratorStore);
 
@@ -107,32 +146,60 @@ public class ProgvCodeGenerator implements CodeGenerator<ProgvStruct> {
 		mv.visitLabel(varsListOfSymbolsIteratorLoopStart);
 
 		mv.visitVarInsn(Opcodes.ALOAD, varsJavaListIteratorStore);
-		mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, "java/util/Iterator", "hasNext", "()Z", true);
+		mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
+				GenerationConstants.JAVA_ITERATOR_NAME,
+				GenerationConstants.JAVA_ITERATOR_HAS_NEXT_METHOD_NAME,
+				GenerationConstants.JAVA_ITERATOR_HAS_NEXT_METHOD_DESC,
+				true);
 		mv.visitJumpInsn(Opcodes.IFEQ, varsListOfSymbolsIteratorLoopEnd);
 
 		mv.visitVarInsn(Opcodes.ALOAD, varsJavaListIteratorStore);
-		mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, "java/util/Iterator", "next", "()Ljava/lang/Object;", true);
-		mv.visitTypeInsn(Opcodes.CHECKCAST, "jcl/LispStruct");
+		mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
+				GenerationConstants.JAVA_ITERATOR_NAME,
+				GenerationConstants.JAVA_ITERATOR_NEXT_METHOD_NAME,
+				GenerationConstants.JAVA_ITERATOR_NEXT_METHOD_DESC,
+				true);
+		mv.visitTypeInsn(Opcodes.CHECKCAST, GenerationConstants.LISP_STRUCT_NAME);
 		final int varSymbolCheckStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, varSymbolCheckStore);
 
 		final Label varSymbolCheckEnd = new Label();
 
 		mv.visitVarInsn(Opcodes.ALOAD, varSymbolCheckStore);
-		mv.visitTypeInsn(Opcodes.INSTANCEOF, "jcl/symbols/SymbolStruct");
+		mv.visitTypeInsn(Opcodes.INSTANCEOF, GenerationConstants.SYMBOL_STRUCT_NAME);
 		mv.visitJumpInsn(Opcodes.IFNE, varSymbolCheckEnd);
 
-		mv.visitTypeInsn(Opcodes.NEW, "jcl/conditions/exceptions/ProgramErrorException");
+		mv.visitTypeInsn(Opcodes.NEW, GenerationConstants.PROGRAM_ERROR_EXCEPTION_NAME);
 		mv.visitInsn(Opcodes.DUP);
-		mv.visitTypeInsn(Opcodes.NEW, "java/lang/StringBuilder");
+		mv.visitTypeInsn(Opcodes.NEW, GenerationConstants.JAVA_STRING_BUILDER_NAME);
 		mv.visitInsn(Opcodes.DUP);
-		mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "java/lang/StringBuilder", "<init>", "()V", false);
-		mv.visitLdcInsn("PROGV: Elements in symbols list must be symbols. Got: ");
-		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/lang/StringBuilder", "append", "(Ljava/lang/String;)Ljava/lang/StringBuilder;", false);
+		mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
+				GenerationConstants.JAVA_STRING_BUILDER_NAME,
+				GenerationConstants.INIT_METHOD_NAME,
+				GenerationConstants.JAVA_STRING_BUILDER_INIT_DESC,
+				false);
+		mv.visitLdcInsn(ELEMENTS_IN_SYMBOLS_LIST_MUST_BE_SYMBOLS);
+		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
+				GenerationConstants.JAVA_STRING_BUILDER_NAME,
+				GenerationConstants.JAVA_STRING_BUILDER_APPEND_METHOD_NAME,
+				GenerationConstants.JAVA_STRING_BUILDER_APPEND_METHOD_DESC,
+				false);
 		mv.visitVarInsn(Opcodes.ALOAD, varSymbolCheckStore);
-		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/lang/StringBuilder", "append", "(Ljava/lang/Object;)Ljava/lang/StringBuilder;", false);
-		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/lang/StringBuilder", "toString", "()Ljava/lang/String;", false);
-		mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "jcl/conditions/exceptions/ProgramErrorException", "<init>", "(Ljava/lang/String;)V", false);
+		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
+				GenerationConstants.JAVA_STRING_BUILDER_NAME,
+				GenerationConstants.JAVA_STRING_BUILDER_APPEND_METHOD_NAME,
+				GenerationConstants.JAVA_STRING_BUILDER_APPEND_METHOD_DESC,
+				false);
+		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
+				GenerationConstants.JAVA_STRING_BUILDER_NAME,
+				GenerationConstants.JAVA_STRING_BUILDER_TOSTRING_METHOD_NAME,
+				GenerationConstants.JAVA_STRING_BUILDER_TOSTRING_METHOD_DESC,
+				false);
+		mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
+				GenerationConstants.PROGRAM_ERROR_EXCEPTION_NAME,
+				GenerationConstants.INIT_METHOD_NAME,
+				GenerationConstants.PROGRAM_ERROR_EXCEPTION_INIT_STRING_DESC,
+				false);
 		mv.visitInsn(Opcodes.ATHROW);
 
 		mv.visitLabel(varSymbolCheckEnd);
@@ -149,40 +216,72 @@ public class ProgvCodeGenerator implements CodeGenerator<ProgvStruct> {
 		final Label valsListCheckEnd = new Label();
 
 		mv.visitVarInsn(Opcodes.ALOAD, valsStore);
-		mv.visitTypeInsn(Opcodes.INSTANCEOF, "jcl/lists/ListStruct");
+		mv.visitTypeInsn(Opcodes.INSTANCEOF, GenerationConstants.LIST_STRUCT_NAME);
 		mv.visitJumpInsn(Opcodes.IFNE, valsListCheckEnd);
 
-		mv.visitTypeInsn(Opcodes.NEW, "jcl/conditions/exceptions/ProgramErrorException");
+		mv.visitTypeInsn(Opcodes.NEW, GenerationConstants.PROGRAM_ERROR_EXCEPTION_NAME);
 		mv.visitInsn(Opcodes.DUP);
-		mv.visitTypeInsn(Opcodes.NEW, "java/lang/StringBuilder");
+		mv.visitTypeInsn(Opcodes.NEW, GenerationConstants.JAVA_STRING_BUILDER_NAME);
 		mv.visitInsn(Opcodes.DUP);
-		mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "java/lang/StringBuilder", "<init>", "()V", false);
-		mv.visitLdcInsn("PROGV: Values list must be a list. Got: ");
-		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/lang/StringBuilder", "append", "(Ljava/lang/String;)Ljava/lang/StringBuilder;", false);
+		mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
+				GenerationConstants.JAVA_STRING_BUILDER_NAME,
+				GenerationConstants.INIT_METHOD_NAME,
+				GenerationConstants.JAVA_STRING_BUILDER_INIT_DESC,
+				false);
+		mv.visitLdcInsn(VALUES_LIST_MUST_BE_A_LIST);
+		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
+				GenerationConstants.JAVA_STRING_BUILDER_NAME,
+				GenerationConstants.JAVA_STRING_BUILDER_APPEND_METHOD_NAME,
+				GenerationConstants.JAVA_STRING_BUILDER_APPEND_METHOD_DESC,
+				false);
 		mv.visitVarInsn(Opcodes.ALOAD, valsStore);
-		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/lang/StringBuilder", "append", "(Ljava/lang/Object;)Ljava/lang/StringBuilder;", false);
-		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/lang/StringBuilder", "toString", "()Ljava/lang/String;", false);
-		mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "jcl/conditions/exceptions/ProgramErrorException", "<init>", "(Ljava/lang/String;)V", false);
+		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
+				GenerationConstants.JAVA_STRING_BUILDER_NAME,
+				GenerationConstants.JAVA_STRING_BUILDER_APPEND_METHOD_NAME,
+				GenerationConstants.JAVA_STRING_BUILDER_APPEND_METHOD_DESC,
+				false);
+		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
+				GenerationConstants.JAVA_STRING_BUILDER_NAME,
+				GenerationConstants.JAVA_STRING_BUILDER_TOSTRING_METHOD_NAME,
+				GenerationConstants.JAVA_STRING_BUILDER_TOSTRING_METHOD_DESC,
+				false);
+		mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
+				GenerationConstants.PROGRAM_ERROR_EXCEPTION_NAME,
+				GenerationConstants.INIT_METHOD_NAME,
+				GenerationConstants.PROGRAM_ERROR_EXCEPTION_INIT_STRING_DESC,
+				false);
 		mv.visitInsn(Opcodes.ATHROW);
 
 		mv.visitLabel(valsListCheckEnd);
 		mv.visitVarInsn(Opcodes.ALOAD, valsStore);
-		mv.visitTypeInsn(Opcodes.CHECKCAST, "jcl/lists/ListStruct");
+		mv.visitTypeInsn(Opcodes.CHECKCAST, GenerationConstants.LIST_STRUCT_NAME);
 		final int valsListStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, valsListStore);
 
 		mv.visitVarInsn(Opcodes.ALOAD, valsListStore);
-		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/lists/ListStruct", "getAsJavaList", "()Ljava/util/List;", false);
+		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
+				GenerationConstants.LIST_STRUCT_NAME,
+				GenerationConstants.LIST_STRUCT_GET_AS_JAVA_LIST_METHOD_NAME,
+				GenerationConstants.LIST_STRUCT_GET_AS_JAVA_LIST_METHOD_DESC,
+				false);
 		final int valsJavaListStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, valsJavaListStore);
 
 		mv.visitVarInsn(Opcodes.ALOAD, varsJavaListStore);
-		mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, "java/util/List", "size", "()I", true);
+		mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
+				GenerationConstants.JAVA_LIST_NAME,
+				GenerationConstants.JAVA_LIST_SIZE_METHOD_NAME,
+				GenerationConstants.JAVA_LIST_SIZE_METHOD_DESC,
+				true);
 		final int varsJavaListSizeStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ISTORE, varsJavaListSizeStore);
 
 		mv.visitVarInsn(Opcodes.ALOAD, valsJavaListStore);
-		mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, "java/util/List", "size", "()I", true);
+		mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
+				GenerationConstants.JAVA_LIST_NAME,
+				GenerationConstants.JAVA_LIST_SIZE_METHOD_NAME,
+				GenerationConstants.JAVA_LIST_SIZE_METHOD_DESC,
+				true);
 		final int valsJavaListSizeStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ISTORE, valsJavaListSizeStore);
 
@@ -202,8 +301,12 @@ public class ProgvCodeGenerator implements CodeGenerator<ProgvStruct> {
 
 		mv.visitVarInsn(Opcodes.ALOAD, varsJavaListStore);
 		mv.visitVarInsn(Opcodes.ILOAD, indexValueStore);
-		mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, "java/util/List", "get", "(I)Ljava/lang/Object;", true);
-		mv.visitTypeInsn(Opcodes.CHECKCAST, "jcl/symbols/SymbolStruct");
+		mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
+				GenerationConstants.JAVA_LIST_NAME,
+				GenerationConstants.JAVA_LIST_GET_METHOD_NAME,
+				GenerationConstants.JAVA_LIST_GET_METHOD_DESC,
+				true);
+		mv.visitTypeInsn(Opcodes.CHECKCAST, GenerationConstants.SYMBOL_STRUCT_NAME);
 		final int varSymbolStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, varSymbolStore);
 
@@ -219,8 +322,12 @@ public class ProgvCodeGenerator implements CodeGenerator<ProgvStruct> {
 		mv.visitJumpInsn(Opcodes.IF_ICMPGE, numberOfValsCheckEnd);
 		mv.visitVarInsn(Opcodes.ALOAD, valsJavaListStore);
 		mv.visitVarInsn(Opcodes.ILOAD, indexValueStore);
-		mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, "java/util/List", "get", "(I)Ljava/lang/Object;", true);
-		mv.visitTypeInsn(Opcodes.CHECKCAST, "jcl/LispStruct");
+		mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
+				GenerationConstants.JAVA_LIST_NAME,
+				GenerationConstants.JAVA_LIST_GET_METHOD_NAME,
+				GenerationConstants.JAVA_LIST_GET_METHOD_DESC,
+				true);
+		mv.visitTypeInsn(Opcodes.CHECKCAST, GenerationConstants.LISP_STRUCT_NAME);
 		mv.visitVarInsn(Opcodes.ASTORE, valStore);
 
 		mv.visitLabel(numberOfValsCheckEnd);
@@ -228,23 +335,31 @@ public class ProgvCodeGenerator implements CodeGenerator<ProgvStruct> {
 		final Label valuesCheckIfEnd = new Label();
 
 		mv.visitVarInsn(Opcodes.ALOAD, valStore);
-		mv.visitTypeInsn(Opcodes.INSTANCEOF, "jcl/compiler/real/struct/ValuesStruct");
+		mv.visitTypeInsn(Opcodes.INSTANCEOF, GenerationConstants.VALUES_STRUCT_NAME);
 		mv.visitJumpInsn(Opcodes.IFEQ, valuesCheckIfEnd);
 
 		mv.visitVarInsn(Opcodes.ALOAD, valStore);
-		mv.visitTypeInsn(Opcodes.CHECKCAST, "jcl/compiler/real/struct/ValuesStruct");
+		mv.visitTypeInsn(Opcodes.CHECKCAST, GenerationConstants.VALUES_STRUCT_NAME);
 		final int valuesStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, valuesStore);
 
 		mv.visitVarInsn(Opcodes.ALOAD, valuesStore);
-		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/compiler/real/struct/ValuesStruct", "getPrimaryValue", "()Ljcl/LispStruct;", false);
+		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
+				GenerationConstants.VALUES_STRUCT_NAME,
+				GenerationConstants.VALUES_STRUCT_GET_PRIMARY_VALUE_METHOD_NAME,
+				GenerationConstants.VALUES_STRUCT_GET_PRIMARY_VALUE_METHOD_DESC,
+				false);
 		mv.visitVarInsn(Opcodes.ASTORE, valStore);
 
 		mv.visitLabel(valuesCheckIfEnd);
 
 		mv.visitVarInsn(Opcodes.ALOAD, varSymbolStore);
 		mv.visitVarInsn(Opcodes.ALOAD, valStore);
-		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/symbols/SymbolStruct", "bindDynamicValue", "(Ljcl/LispStruct;)V", false);
+		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
+				GenerationConstants.SYMBOL_STRUCT_NAME,
+				GenerationConstants.SYMBOL_STRUCT_BIND_DYNAMIC_VALUE_METHOD_NAME,
+				GenerationConstants.SYMBOL_STRUCT_BIND_DYNAMIC_VALUE_METHOD_DESC,
+				false);
 
 		mv.visitIincInsn(indexValueStore, 1);
 		mv.visitJumpInsn(Opcodes.GOTO, varBindingLoopStart);
@@ -264,7 +379,11 @@ public class ProgvCodeGenerator implements CodeGenerator<ProgvStruct> {
 		mv.visitLabel(tryBlockEnd);
 
 		mv.visitVarInsn(Opcodes.ALOAD, varsJavaListStore);
-		mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, "java/util/List", "iterator", "()Ljava/util/Iterator;", true);
+		mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
+				GenerationConstants.JAVA_LIST_NAME,
+				GenerationConstants.JAVA_LIST_ITERATOR_METHOD_NAME,
+				GenerationConstants.JAVA_LIST_ITERATOR_METHOD_DESC,
+				true);
 		final int normalUnbindingIteratorStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, normalUnbindingIteratorStore);
 
@@ -273,22 +392,34 @@ public class ProgvCodeGenerator implements CodeGenerator<ProgvStruct> {
 
 		mv.visitLabel(normalUnbindingIteratorLoopStart);
 		mv.visitVarInsn(Opcodes.ALOAD, normalUnbindingIteratorStore);
-		mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, "java/util/Iterator", "hasNext", "()Z", true);
+		mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
+				GenerationConstants.JAVA_ITERATOR_NAME,
+				GenerationConstants.JAVA_ITERATOR_HAS_NEXT_METHOD_NAME,
+				GenerationConstants.JAVA_ITERATOR_HAS_NEXT_METHOD_DESC,
+				true);
 		mv.visitJumpInsn(Opcodes.IFEQ, normalUnbindingIteratorLoopEnd);
 
 		mv.visitVarInsn(Opcodes.ALOAD, normalUnbindingIteratorStore);
-		mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, "java/util/Iterator", "next", "()Ljava/lang/Object;", true);
-		mv.visitTypeInsn(Opcodes.CHECKCAST, "jcl/LispStruct");
+		mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
+				GenerationConstants.JAVA_ITERATOR_NAME,
+				GenerationConstants.JAVA_ITERATOR_NEXT_METHOD_NAME,
+				GenerationConstants.JAVA_ITERATOR_NEXT_METHOD_DESC,
+				true);
+		mv.visitTypeInsn(Opcodes.CHECKCAST, GenerationConstants.LISP_STRUCT_NAME);
 		final int normalUnbindingVarStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, normalUnbindingVarStore);
 
 		mv.visitVarInsn(Opcodes.ALOAD, normalUnbindingVarStore);
-		mv.visitTypeInsn(Opcodes.CHECKCAST, "jcl/symbols/SymbolStruct");
+		mv.visitTypeInsn(Opcodes.CHECKCAST, GenerationConstants.SYMBOL_STRUCT_NAME);
 		final int normalUnbindingVarSymbolStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, normalUnbindingVarSymbolStore);
 
 		mv.visitVarInsn(Opcodes.ALOAD, normalUnbindingVarSymbolStore);
-		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/symbols/SymbolStruct", "unbindDynamicValue", "()V", false);
+		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
+				GenerationConstants.SYMBOL_STRUCT_NAME,
+				GenerationConstants.SYMBOL_STRUCT_UNBIND_DYNAMIC_VALUE_METHOD_NAME,
+				GenerationConstants.SYMBOL_STRUCT_UNBIND_DYNAMIC_VALUE_METHOD_DESC,
+				false);
 
 		mv.visitJumpInsn(Opcodes.GOTO, normalUnbindingIteratorLoopStart);
 
@@ -302,7 +433,11 @@ public class ProgvCodeGenerator implements CodeGenerator<ProgvStruct> {
 
 		mv.visitLabel(finallyBlockStart);
 		mv.visitVarInsn(Opcodes.ALOAD, varsJavaListStore);
-		mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, "java/util/List", "iterator", "()Ljava/util/Iterator;", true);
+		mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
+				GenerationConstants.JAVA_LIST_NAME,
+				GenerationConstants.JAVA_LIST_ITERATOR_METHOD_NAME,
+				GenerationConstants.JAVA_LIST_ITERATOR_METHOD_DESC,
+				true);
 		final int exceptionUnbindingIteratorStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, exceptionUnbindingIteratorStore);
 
@@ -311,22 +446,34 @@ public class ProgvCodeGenerator implements CodeGenerator<ProgvStruct> {
 
 		mv.visitLabel(exceptionUnbindingIteratorLoopStart);
 		mv.visitVarInsn(Opcodes.ALOAD, exceptionUnbindingIteratorStore);
-		mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, "java/util/Iterator", "hasNext", "()Z", true);
+		mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
+				GenerationConstants.JAVA_ITERATOR_NAME,
+				GenerationConstants.JAVA_ITERATOR_HAS_NEXT_METHOD_NAME,
+				GenerationConstants.JAVA_ITERATOR_HAS_NEXT_METHOD_DESC,
+				true);
 		mv.visitJumpInsn(Opcodes.IFEQ, exceptionUnbindingIteratorLoopEnd);
 
 		mv.visitVarInsn(Opcodes.ALOAD, exceptionUnbindingIteratorStore);
-		mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, "java/util/Iterator", "next", "()Ljava/lang/Object;", true);
-		mv.visitTypeInsn(Opcodes.CHECKCAST, "jcl/LispStruct");
+		mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
+				GenerationConstants.JAVA_ITERATOR_NAME,
+				GenerationConstants.JAVA_ITERATOR_NEXT_METHOD_NAME,
+				GenerationConstants.JAVA_ITERATOR_NEXT_METHOD_DESC,
+				true);
+		mv.visitTypeInsn(Opcodes.CHECKCAST, GenerationConstants.LISP_STRUCT_NAME);
 		final int exceptionUnbindingVarStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, exceptionUnbindingVarStore);
 
 		mv.visitVarInsn(Opcodes.ALOAD, exceptionUnbindingVarStore);
-		mv.visitTypeInsn(Opcodes.CHECKCAST, "jcl/symbols/SymbolStruct");
+		mv.visitTypeInsn(Opcodes.CHECKCAST, GenerationConstants.SYMBOL_STRUCT_NAME);
 		final int exceptionUnbindingVarSymbolStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, exceptionUnbindingVarSymbolStore);
 
 		mv.visitVarInsn(Opcodes.ALOAD, exceptionUnbindingVarSymbolStore);
-		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/symbols/SymbolStruct", "unbindDynamicValue", "()V", false);
+		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
+				GenerationConstants.SYMBOL_STRUCT_NAME,
+				GenerationConstants.SYMBOL_STRUCT_UNBIND_DYNAMIC_VALUE_METHOD_NAME,
+				GenerationConstants.SYMBOL_STRUCT_UNBIND_DYNAMIC_VALUE_METHOD_DESC,
+				false);
 
 		mv.visitJumpInsn(Opcodes.GOTO, exceptionUnbindingIteratorLoopStart);
 
@@ -349,6 +496,6 @@ public class ProgvCodeGenerator implements CodeGenerator<ProgvStruct> {
 
 		previousMv.visitVarInsn(Opcodes.ALOAD, thisStore);
 		previousMv.visitVarInsn(Opcodes.ALOAD, closureArgStore);
-		previousMv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, fileName, progvMethodName, "(Ljcl/functions/Closure;)Ljcl/LispStruct;", false);
+		previousMv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, fileName, progvMethodName, PROGV_METHOD_DESC, false);
 	}
 }

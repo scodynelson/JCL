@@ -8,6 +8,7 @@ import jcl.compiler.real.icg.JavaClassBuilder;
 import jcl.compiler.real.icg.JavaMethodBuilder;
 import jcl.compiler.real.icg.generator.CodeGenerator;
 import jcl.compiler.real.icg.generator.FormGenerator;
+import jcl.compiler.real.icg.generator.GenerationConstants;
 import jcl.compiler.real.icg.generator.simple.SymbolCodeGeneratorUtil;
 import jcl.compiler.real.struct.specialoperator.QuoteStruct;
 import jcl.conditions.exceptions.ProgramErrorException;
@@ -76,18 +77,26 @@ public class QuoteCodeGenerator implements CodeGenerator<QuoteStruct> {
 			final int secondToLastElementStore = methodBuilder.getNextAvailableStore();
 			mv.visitVarInsn(Opcodes.ASTORE, secondToLastElementStore);
 
-			mv.visitTypeInsn(Opcodes.NEW, "jcl/lists/ConsStruct");
+			mv.visitTypeInsn(Opcodes.NEW, GenerationConstants.CONS_STRUCT_NAME);
 			mv.visitInsn(Opcodes.DUP);
 
 			mv.visitVarInsn(Opcodes.ALOAD, secondToLastElementStore);
 			mv.visitVarInsn(Opcodes.ALOAD, lastElementStore);
-			mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "jcl/lists/ConsStruct", "<init>", "(Ljcl/LispStruct;Ljcl/LispStruct;)V", false);
+			mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
+					GenerationConstants.CONS_STRUCT_NAME,
+					GenerationConstants.INIT_METHOD_NAME,
+					GenerationConstants.CONS_STRUCT_INIT_CAR_CDR_DESC,
+					false);
 		} else {
-			mv.visitTypeInsn(Opcodes.NEW, "jcl/lists/ConsStruct");
+			mv.visitTypeInsn(Opcodes.NEW, GenerationConstants.CONS_STRUCT_NAME);
 			mv.visitInsn(Opcodes.DUP);
 
 			mv.visitVarInsn(Opcodes.ALOAD, lastElementStore);
-			mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "jcl/lists/ConsStruct", "<init>", "(Ljcl/LispStruct;)V", false);
+			mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
+					GenerationConstants.CONS_STRUCT_NAME,
+					GenerationConstants.INIT_METHOD_NAME,
+					GenerationConstants.CONS_STRUCT_INIT_CAR_DESC,
+					false);
 		}
 
 		final int previousConsStore = methodBuilder.getNextAvailableStore();
@@ -100,12 +109,16 @@ public class QuoteCodeGenerator implements CodeGenerator<QuoteStruct> {
 			generateQuotedObject(previousCdr, classBuilder);
 			mv.visitVarInsn(Opcodes.ASTORE, nextElementStore);
 
-			mv.visitTypeInsn(Opcodes.NEW, "jcl/lists/ConsStruct");
+			mv.visitTypeInsn(Opcodes.NEW, GenerationConstants.CONS_STRUCT_NAME);
 			mv.visitInsn(Opcodes.DUP);
 
 			mv.visitVarInsn(Opcodes.ALOAD, nextElementStore);
 			mv.visitVarInsn(Opcodes.ALOAD, previousConsStore);
-			mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "jcl/lists/ConsStruct", "<init>", "(Ljcl/LispStruct;Ljcl/LispStruct;)V", false);
+			mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
+					GenerationConstants.CONS_STRUCT_NAME,
+					GenerationConstants.INIT_METHOD_NAME,
+					GenerationConstants.CONS_STRUCT_INIT_CAR_CDR_DESC,
+					false);
 			mv.visitVarInsn(Opcodes.ASTORE, previousConsStore);
 		}
 

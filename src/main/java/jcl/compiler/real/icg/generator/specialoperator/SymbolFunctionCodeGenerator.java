@@ -7,6 +7,7 @@ package jcl.compiler.real.icg.generator.specialoperator;
 import jcl.compiler.real.icg.JavaClassBuilder;
 import jcl.compiler.real.icg.JavaMethodBuilder;
 import jcl.compiler.real.icg.generator.CodeGenerator;
+import jcl.compiler.real.icg.generator.GenerationConstants;
 import jcl.compiler.real.icg.generator.simple.SymbolCodeGeneratorUtil;
 import jcl.compiler.real.struct.specialoperator.SymbolCompilerFunctionStruct;
 import jcl.symbols.SymbolStruct;
@@ -30,6 +31,10 @@ public class SymbolFunctionCodeGenerator implements CodeGenerator<SymbolCompiler
 		SymbolCodeGeneratorUtil.generate(functionSymbol, classBuilder, functionPackageStore, functionSymbolStore);
 
 		mv.visitVarInsn(Opcodes.ALOAD, functionSymbolStore);
-		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/symbols/SymbolStruct", "getFunction", "()Ljcl/functions/FunctionStruct;", false);
+		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
+				GenerationConstants.SYMBOL_STRUCT_NAME,
+				GenerationConstants.SYMBOL_STRUCT_GET_FUNCTION_METHOD_NAME,
+				GenerationConstants.SYMBOL_STRUCT_GET_FUNCTION_METHOD_DESC,
+				false);
 	}
 }

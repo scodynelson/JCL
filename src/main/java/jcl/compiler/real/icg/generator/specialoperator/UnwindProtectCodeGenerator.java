@@ -26,6 +26,10 @@ public class UnwindProtectCodeGenerator implements CodeGenerator<UnwindProtectSt
 	@Autowired
 	private PrognCodeGenerator prognCodeGenerator;
 
+	private static final String UNWIND_PROTECT_METHOD_NAME_PREFIX = "unwindProtect_";
+
+	private static final String UNWIND_PROTECT_METHOD_DESC = "(Ljcl/functions/Closure;)Ljcl/LispStruct;";
+
 	@Override
 	public void generate(final UnwindProtectStruct input, final JavaClassBuilder classBuilder) {
 
@@ -37,8 +41,8 @@ public class UnwindProtectCodeGenerator implements CodeGenerator<UnwindProtectSt
 
 		final ClassWriter cw = currentClass.getClassWriter();
 
-		final String unwindProtectMethodName = "unwindProtect_" + System.nanoTime();
-		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PRIVATE, unwindProtectMethodName, "(Ljcl/functions/Closure;)Ljcl/LispStruct;", null, null);
+		final String unwindProtectMethodName = UNWIND_PROTECT_METHOD_NAME_PREFIX + System.nanoTime();
+		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PRIVATE, unwindProtectMethodName, UNWIND_PROTECT_METHOD_DESC, null, null);
 
 		final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
 		final Stack<JavaMethodBuilder> methodBuilderStack = classBuilder.getMethodBuilderStack();
@@ -89,6 +93,6 @@ public class UnwindProtectCodeGenerator implements CodeGenerator<UnwindProtectSt
 
 		previousMv.visitVarInsn(Opcodes.ALOAD, thisStore);
 		previousMv.visitVarInsn(Opcodes.ALOAD, closureArgStore);
-		previousMv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, fileName, unwindProtectMethodName, "(Ljcl/functions/Closure;)Ljcl/LispStruct;", false);
+		previousMv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, fileName, unwindProtectMethodName, UNWIND_PROTECT_METHOD_DESC, false);
 	}
 }

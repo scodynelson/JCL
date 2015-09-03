@@ -9,6 +9,7 @@ import jcl.compiler.real.icg.JavaClassBuilder;
 import jcl.compiler.real.icg.JavaMethodBuilder;
 import jcl.compiler.real.icg.generator.CodeGenerator;
 import jcl.compiler.real.icg.generator.FormGenerator;
+import jcl.compiler.real.icg.generator.GenerationConstants;
 import jcl.compiler.real.struct.specialoperator.MutableLoadTimeValueStruct;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
@@ -37,16 +38,20 @@ public class MutableLoadTimeValueCodeGenerator implements CodeGenerator<MutableL
 		final Label valuesCheckIfEnd = new Label();
 
 		mv.visitVarInsn(Opcodes.ALOAD, initFormStore);
-		mv.visitTypeInsn(Opcodes.INSTANCEOF, "jcl/compiler/real/struct/ValuesStruct");
+		mv.visitTypeInsn(Opcodes.INSTANCEOF, GenerationConstants.VALUES_STRUCT_NAME);
 		mv.visitJumpInsn(Opcodes.IFEQ, valuesCheckIfEnd);
 
 		mv.visitVarInsn(Opcodes.ALOAD, initFormStore);
-		mv.visitTypeInsn(Opcodes.CHECKCAST, "jcl/compiler/real/struct/ValuesStruct");
+		mv.visitTypeInsn(Opcodes.CHECKCAST, GenerationConstants.VALUES_STRUCT_NAME);
 		final int valuesStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, valuesStore);
 
 		mv.visitVarInsn(Opcodes.ALOAD, valuesStore);
-		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/compiler/real/struct/ValuesStruct", "getPrimaryValue", "()Ljcl/LispStruct;", false);
+		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
+				GenerationConstants.VALUES_STRUCT_NAME,
+				GenerationConstants.VALUES_STRUCT_GET_PRIMARY_VALUE_METHOD_NAME,
+				GenerationConstants.VALUES_STRUCT_GET_PRIMARY_VALUE_METHOD_DESC,
+				false);
 		mv.visitVarInsn(Opcodes.ASTORE, initFormStore);
 
 		mv.visitLabel(valuesCheckIfEnd);

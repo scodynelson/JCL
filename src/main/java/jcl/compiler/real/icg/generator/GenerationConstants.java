@@ -24,6 +24,7 @@ import jcl.compiler.real.icg.generator.specialoperator.exception.ReturnFromExcep
 import jcl.compiler.real.icg.generator.specialoperator.exception.ThrowException;
 import jcl.compiler.real.struct.ValuesStruct;
 import jcl.conditions.exceptions.ErrorException;
+import jcl.functions.Closure;
 import jcl.functions.FunctionParameterBinding;
 import jcl.functions.FunctionStruct;
 import jcl.packages.PackageStruct;
@@ -59,6 +60,10 @@ public interface GenerationConstants {
 
 	String JAVA_MAP_NAME = Type.getInternalName(Map.class);
 
+	String JAVA_MAP_PUT_METHOD_NAME = "put";
+
+	String JAVA_MAP_PUT_METHOD_DESC = GeneratorUtils.getMethodDescription(Map.class, JAVA_MAP_PUT_METHOD_NAME, Object.class, Object.class);
+
 	String JAVA_MAP_ENTRY_NAME = Type.getInternalName(Map.Entry.class);
 
 	String JAVA_SET_NAME = Type.getInternalName(Set.class);
@@ -87,13 +92,33 @@ public interface GenerationConstants {
 
 	String SYMBOL_STRUCT_GET_LEXICAL_VALUE_METHOD_DESC = GeneratorUtils.getMethodDescription(SymbolStruct.class, SYMBOL_STRUCT_GET_LEXICAL_VALUE_METHOD_NAME);
 
+	String SYMBOL_STRUCT_SET_LEXICAL_VALUE_METHOD_NAME = "setLexicalValue";
+
+	String SYMBOL_STRUCT_SET_LEXICAL_VALUE_METHOD_DESC = GeneratorUtils.getMethodDescription(SymbolStruct.class, SYMBOL_STRUCT_SET_LEXICAL_VALUE_METHOD_NAME, LispStruct.class);
+
 	String SYMBOL_STRUCT_GET_DYNAMIC_VALUE_METHOD_NAME = "getDynamicValue";
 
 	String SYMBOL_STRUCT_GET_DYNAMIC_VALUE_METHOD_DESC = GeneratorUtils.getMethodDescription(SymbolStruct.class, SYMBOL_STRUCT_GET_DYNAMIC_VALUE_METHOD_NAME);
 
+	String SYMBOL_STRUCT_SET_DYNAMIC_VALUE_METHOD_NAME = "setDynamicValue";
+
+	String SYMBOL_STRUCT_SET_DYNAMIC_VALUE_METHOD_DESC = GeneratorUtils.getMethodDescription(SymbolStruct.class, SYMBOL_STRUCT_SET_DYNAMIC_VALUE_METHOD_NAME, LispStruct.class);
+
 	String SYMBOL_STRUCT_GET_VALUE_METHOD_NAME = "getValue";
 
 	String SYMBOL_STRUCT_GET_VALUE_METHOD_DESC = GeneratorUtils.getMethodDescription(SymbolStruct.class, SYMBOL_STRUCT_GET_VALUE_METHOD_NAME);
+
+	String SYMBOL_STRUCT_SET_VALUE_METHOD_NAME = "setValue";
+
+	String SYMBOL_STRUCT_SET_VALUE_METHOD_DESC = GeneratorUtils.getMethodDescription(SymbolStruct.class, SYMBOL_STRUCT_SET_VALUE_METHOD_NAME, LispStruct.class);
+
+	String SYMBOL_STRUCT_BIND_FUNCTION_METHOD_NAME = "bindFunction";
+
+	String SYMBOL_STRUCT_BIND_FUNCTION_METHOD_DESC = GeneratorUtils.getMethodDescription(SymbolStruct.class, SYMBOL_STRUCT_BIND_FUNCTION_METHOD_NAME, FunctionStruct.class);
+
+	String SYMBOL_STRUCT_UNBIND_FUNCTION_METHOD_NAME = "unbindFunction";
+
+	String SYMBOL_STRUCT_UNBIND_FUNCTION_METHOD_DESC = GeneratorUtils.getMethodDescription(SymbolStruct.class, SYMBOL_STRUCT_UNBIND_FUNCTION_METHOD_NAME);
 
 	String PACKAGE_STRUCT_NAME = Type.getInternalName(PackageStruct.class);
 
@@ -115,6 +140,10 @@ public interface GenerationConstants {
 
 	String FUNCTION_STRUCT_NAME = Type.getInternalName(FunctionStruct.class);
 
+	String FUNCTION_STRUCT_GET_CLOSURE_METHOD_NAME = "getClosure";
+
+	String FUNCTION_STRUCT_GET_CLOSURE_METHOD_DESC = GeneratorUtils.getMethodDescription(Closure.class, FUNCTION_STRUCT_GET_CLOSURE_METHOD_NAME);
+
 	String LISP_STRUCT_NAME = Type.getInternalName(LispStruct.class);
 
 	String LISP_STRUCT_DESC = Type.getDescriptor(LispStruct.class);
@@ -122,6 +151,20 @@ public interface GenerationConstants {
 	String VALUES_STRUCT_NAME = Type.getInternalName(ValuesStruct.class);
 
 	String VALUES_STRUCT_DESC = Type.getDescriptor(ValuesStruct.class);
+
+	String VALUES_STRUCT_GET_PRIMARY_VALUE_METHOD_NAME = "getPrimaryValue";
+
+	String VALUES_STRUCT_GET_PRIMARY_VALUE_METHOD_DESC = GeneratorUtils.getMethodDescription(ValuesStruct.class, VALUES_STRUCT_GET_PRIMARY_VALUE_METHOD_NAME);
+
+	String CLOSURE_NAME = Type.getInternalName(Closure.class);
+
+	String CLOSURE_GET_FUNCTION_BINDINGS_METHOD_NAME = "getFunctionBindings";
+
+	String CLOSURE_GET_FUNCTION_BINDINGS_METHOD_DESC = GeneratorUtils.getMethodDescription(Closure.class, CLOSURE_GET_FUNCTION_BINDINGS_METHOD_NAME);
+
+	String CLOSURE_GET_SYMBOL_BINDINGS_METHOD_NAME = "getSymbolBindings";
+
+	String CLOSURE_GET_SYMBOL_BINDINGS_METHOD_DESC = GeneratorUtils.getMethodDescription(Closure.class, CLOSURE_GET_SYMBOL_BINDINGS_METHOD_NAME);
 
 	String O_LAMBDA_LIST_BINDINGS_NAME = Type.getInternalName(OrdinaryLambdaListBindings.class);
 

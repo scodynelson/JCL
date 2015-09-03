@@ -8,6 +8,7 @@ import jcl.compiler.real.icg.ClassDef;
 import jcl.compiler.real.icg.JavaClassBuilder;
 import jcl.compiler.real.icg.JavaMethodBuilder;
 import jcl.compiler.real.icg.generator.CodeGenerator;
+import jcl.compiler.real.icg.generator.GenerationConstants;
 import jcl.compiler.real.struct.specialoperator.ImmutableLoadTimeValueStruct;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
@@ -28,6 +29,6 @@ public class ImmutableLoadTimeValueCodeGenerator implements CodeGenerator<Immuta
 
 		final String fileName = currentClass.getFileName();
 
-		mv.visitFieldInsn(Opcodes.GETSTATIC, fileName, uniqueLTVId, "Ljcl/LispStruct;");
+		mv.visitFieldInsn(Opcodes.GETSTATIC, fileName, uniqueLTVId, GenerationConstants.LISP_STRUCT_DESC);
 	}
 }

@@ -8,6 +8,7 @@ import jcl.compiler.real.icg.JavaClassBuilder;
 import jcl.compiler.real.icg.JavaMethodBuilder;
 import jcl.compiler.real.icg.generator.CodeGenerator;
 import jcl.compiler.real.icg.generator.FormGenerator;
+import jcl.compiler.real.icg.generator.GenerationConstants;
 import jcl.compiler.real.icg.generator.simple.NILCodeGenerator;
 import jcl.compiler.real.icg.generator.simple.NullCodeGenerator;
 import jcl.compiler.real.struct.specialoperator.IfStruct;
@@ -32,6 +33,10 @@ public class IfCodeGenerator implements CodeGenerator<IfStruct> {
 	@Autowired
 	private NullCodeGenerator nullCodeGenerator;
 
+	private static final String IF_METHOD_NAME_PREFIX = "if_";
+
+	private static final String IF_METHOD_DESC = "(Ljcl/functions/Closure;)Ljcl/LispStruct;";
+
 	@Override
 	public void generate(final IfStruct input, final JavaClassBuilder classBuilder) {
 
@@ -44,8 +49,8 @@ public class IfCodeGenerator implements CodeGenerator<IfStruct> {
 
 		final ClassWriter cw = currentClass.getClassWriter();
 
-		final String ifMethodName = "if_" + System.nanoTime();
-		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PRIVATE, ifMethodName, "(Ljcl/functions/Closure;)Ljcl/LispStruct;", null, null);
+		final String ifMethodName = IF_METHOD_NAME_PREFIX + System.nanoTime();
+		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PRIVATE, ifMethodName, IF_METHOD_DESC, null, null);
 
 		final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
 		final Stack<JavaMethodBuilder> methodBuilderStack = classBuilder.getMethodBuilderStack();
@@ -62,16 +67,20 @@ public class IfCodeGenerator implements CodeGenerator<IfStruct> {
 		final Label valuesCheckIfEnd = new Label();
 
 		mv.visitVarInsn(Opcodes.ALOAD, testFormStore);
-		mv.visitTypeInsn(Opcodes.INSTANCEOF, "jcl/compiler/real/struct/ValuesStruct");
+		mv.visitTypeInsn(Opcodes.INSTANCEOF, GenerationConstants.VALUES_STRUCT_NAME);
 		mv.visitJumpInsn(Opcodes.IFEQ, valuesCheckIfEnd);
 
 		mv.visitVarInsn(Opcodes.ALOAD, testFormStore);
-		mv.visitTypeInsn(Opcodes.CHECKCAST, "jcl/compiler/real/struct/ValuesStruct");
+		mv.visitTypeInsn(Opcodes.CHECKCAST, GenerationConstants.VALUES_STRUCT_NAME);
 		final int valuesStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, valuesStore);
 
 		mv.visitVarInsn(Opcodes.ALOAD, valuesStore);
-		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/compiler/real/struct/ValuesStruct", "getPrimaryValue", "()Ljcl/LispStruct;", false);
+		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
+				GenerationConstants.VALUES_STRUCT_NAME,
+				GenerationConstants.VALUES_STRUCT_GET_PRIMARY_VALUE_METHOD_NAME,
+				GenerationConstants.VALUES_STRUCT_GET_PRIMARY_VALUE_METHOD_DESC,
+				false);
 		mv.visitVarInsn(Opcodes.ASTORE, testFormStore);
 
 		mv.visitLabel(valuesCheckIfEnd);
@@ -81,12 +90,20 @@ public class IfCodeGenerator implements CodeGenerator<IfStruct> {
 
 		mv.visitVarInsn(Opcodes.ALOAD, testFormStore);
 		nullCodeGenerator.generate(NullStruct.INSTANCE, classBuilder);
-		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/lang/Object", "equals", "(Ljava/lang/Object;)Z", false);
+		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
+				GenerationConstants.JAVA_OBJECT_NAME,
+				GenerationConstants.JAVA_EQUALS_METHOD_NAME,
+				GenerationConstants.JAVA_EQUALS_METHOD_DESC,
+				false);
 		mv.visitJumpInsn(Opcodes.IFNE, elseStart);
 
 		mv.visitVarInsn(Opcodes.ALOAD, testFormStore);
 		nilCodeGenerator.generate(NILStruct.INSTANCE, classBuilder);
-		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/lang/Object", "equals", "(Ljava/lang/Object;)Z", false);
+		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
+				GenerationConstants.JAVA_OBJECT_NAME,
+				GenerationConstants.JAVA_EQUALS_METHOD_NAME,
+				GenerationConstants.JAVA_EQUALS_METHOD_DESC,
+				false);
 		mv.visitJumpInsn(Opcodes.IFNE, elseStart);
 
 		final int resultFormStore = methodBuilder.getNextAvailableStore();
@@ -115,6 +132,6 @@ public class IfCodeGenerator implements CodeGenerator<IfStruct> {
 
 		previousMv.visitVarInsn(Opcodes.ALOAD, thisStore);
 		previousMv.visitVarInsn(Opcodes.ALOAD, closureArgStore);
-		previousMv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, fileName, ifMethodName, "(Ljcl/functions/Closure;)Ljcl/LispStruct;", false);
+		previousMv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, fileName, ifMethodName, IF_METHOD_DESC, false);
 	}
 }

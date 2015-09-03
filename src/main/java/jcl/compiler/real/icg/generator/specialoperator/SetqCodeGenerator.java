@@ -10,6 +10,7 @@ import jcl.compiler.real.icg.JavaClassBuilder;
 import jcl.compiler.real.icg.JavaMethodBuilder;
 import jcl.compiler.real.icg.generator.CodeGenerator;
 import jcl.compiler.real.icg.generator.FormGenerator;
+import jcl.compiler.real.icg.generator.GenerationConstants;
 import jcl.compiler.real.icg.generator.simple.SymbolCodeGeneratorUtil;
 import jcl.compiler.real.struct.specialoperator.SetqStruct;
 import jcl.symbols.SymbolStruct;
@@ -26,6 +27,10 @@ public class SetqCodeGenerator implements CodeGenerator<SetqStruct> {
 	@Autowired
 	private FormGenerator formGenerator;
 
+	private static final String SETQ_METHOD_NAME_PREFIX = "setq_";
+
+	private static final String SETQ_METHOD_DESC = "(Ljcl/functions/Closure;)Ljcl/LispStruct;";
+
 	@Override
 	public void generate(final SetqStruct input, final JavaClassBuilder classBuilder) {
 
@@ -36,8 +41,8 @@ public class SetqCodeGenerator implements CodeGenerator<SetqStruct> {
 
 		final ClassWriter cw = currentClass.getClassWriter();
 
-		final String setqMethodName = "setq_" + System.nanoTime();
-		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PRIVATE, setqMethodName, "(Ljcl/functions/Closure;)Ljcl/LispStruct;", null, null);
+		final String setqMethodName = SETQ_METHOD_NAME_PREFIX + System.nanoTime();
+		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PRIVATE, setqMethodName, SETQ_METHOD_DESC, null, null);
 
 		final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
 		final Stack<JavaMethodBuilder> methodBuilderStack = classBuilder.getMethodBuilderStack();
@@ -53,7 +58,11 @@ public class SetqCodeGenerator implements CodeGenerator<SetqStruct> {
 		final Integer closureSymbolBindingsStore = methodBuilder.getNextAvailableStore();
 
 		mv.visitVarInsn(Opcodes.ALOAD, 0);
-		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/functions/FunctionStruct", "getClosure", "()Ljcl/functions/Closure;", false);
+		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
+				GenerationConstants.FUNCTION_STRUCT_NAME,
+				GenerationConstants.FUNCTION_STRUCT_GET_CLOSURE_METHOD_NAME,
+				GenerationConstants.FUNCTION_STRUCT_GET_CLOSURE_METHOD_DESC,
+				false);
 		final Integer closureStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, closureStore);
 
@@ -65,7 +74,11 @@ public class SetqCodeGenerator implements CodeGenerator<SetqStruct> {
 		mv.visitJumpInsn(Opcodes.IFNULL, closureNullCheckIfEnd);
 
 		mv.visitVarInsn(Opcodes.ALOAD, closureStore);
-		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/functions/Closure", "getSymbolBindings", "()Ljava/util/Map;", false);
+		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
+				GenerationConstants.CLOSURE_NAME,
+				GenerationConstants.CLOSURE_GET_SYMBOL_BINDINGS_METHOD_NAME,
+				GenerationConstants.CLOSURE_GET_SYMBOL_BINDINGS_METHOD_DESC,
+				false);
 		mv.visitVarInsn(Opcodes.ASTORE, closureSymbolBindingsStore);
 
 		mv.visitLabel(closureNullCheckIfEnd);
@@ -85,16 +98,20 @@ public class SetqCodeGenerator implements CodeGenerator<SetqStruct> {
 			final Label valuesCheckIfEnd = new Label();
 
 			mv.visitVarInsn(Opcodes.ALOAD, initFormStore);
-			mv.visitTypeInsn(Opcodes.INSTANCEOF, "jcl/compiler/real/struct/ValuesStruct");
+			mv.visitTypeInsn(Opcodes.INSTANCEOF, GenerationConstants.VALUES_STRUCT_NAME);
 			mv.visitJumpInsn(Opcodes.IFEQ, valuesCheckIfEnd);
 
 			mv.visitVarInsn(Opcodes.ALOAD, initFormStore);
-			mv.visitTypeInsn(Opcodes.CHECKCAST, "jcl/compiler/real/struct/ValuesStruct");
+			mv.visitTypeInsn(Opcodes.CHECKCAST, GenerationConstants.VALUES_STRUCT_NAME);
 			final int valuesStore = methodBuilder.getNextAvailableStore();
 			mv.visitVarInsn(Opcodes.ASTORE, valuesStore);
 
 			mv.visitVarInsn(Opcodes.ALOAD, valuesStore);
-			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/compiler/real/struct/ValuesStruct", "getPrimaryValue", "()Ljcl/LispStruct;", false);
+			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
+					GenerationConstants.VALUES_STRUCT_NAME,
+					GenerationConstants.VALUES_STRUCT_GET_PRIMARY_VALUE_METHOD_NAME,
+					GenerationConstants.VALUES_STRUCT_GET_PRIMARY_VALUE_METHOD_DESC,
+					false);
 			mv.visitVarInsn(Opcodes.ASTORE, initFormStore);
 
 			mv.visitLabel(valuesCheckIfEnd);
@@ -106,11 +123,23 @@ public class SetqCodeGenerator implements CodeGenerator<SetqStruct> {
 			final boolean hasDynamicBinding = currentEnvironment.hasDynamicBinding(var);
 
 			if (hasLexicalBinding) {
-				mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/symbols/SymbolStruct", "setLexicalValue", "(Ljcl/LispStruct;)V", false);
+				mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
+						GenerationConstants.SYMBOL_STRUCT_NAME,
+						GenerationConstants.SYMBOL_STRUCT_SET_LEXICAL_VALUE_METHOD_NAME,
+						GenerationConstants.SYMBOL_STRUCT_SET_LEXICAL_VALUE_METHOD_DESC,
+						false);
 			} else if (hasDynamicBinding) {
-				mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/symbols/SymbolStruct", "setDynamicValue", "(Ljcl/LispStruct;)V", false);
+				mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
+						GenerationConstants.SYMBOL_STRUCT_NAME,
+						GenerationConstants.SYMBOL_STRUCT_SET_DYNAMIC_VALUE_METHOD_NAME,
+						GenerationConstants.SYMBOL_STRUCT_SET_DYNAMIC_VALUE_METHOD_DESC,
+						false);
 			} else {
-				mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/symbols/SymbolStruct", "setValue", "(Ljcl/LispStruct;)V", false);
+				mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
+						GenerationConstants.SYMBOL_STRUCT_NAME,
+						GenerationConstants.SYMBOL_STRUCT_SET_VALUE_METHOD_NAME,
+						GenerationConstants.SYMBOL_STRUCT_SET_VALUE_METHOD_DESC,
+						false);
 			}
 
 			mv.visitVarInsn(Opcodes.ALOAD, closureSymbolBindingsStore);
@@ -120,7 +149,11 @@ public class SetqCodeGenerator implements CodeGenerator<SetqStruct> {
 			mv.visitVarInsn(Opcodes.ALOAD, closureSymbolBindingsStore);
 			mv.visitVarInsn(Opcodes.ALOAD, symbolStore);
 			mv.visitVarInsn(Opcodes.ALOAD, initFormStore);
-			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, "java/util/Map", "put", "(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;", true);
+			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
+					GenerationConstants.JAVA_MAP_NAME,
+					GenerationConstants.JAVA_MAP_PUT_METHOD_NAME,
+					GenerationConstants.JAVA_MAP_PUT_METHOD_DESC,
+					true);
 			mv.visitInsn(Opcodes.POP);
 
 			mv.visitLabel(closureBindingsNullCheckIfEnd);
@@ -140,6 +173,6 @@ public class SetqCodeGenerator implements CodeGenerator<SetqStruct> {
 
 		previousMv.visitVarInsn(Opcodes.ALOAD, thisStore);
 		previousMv.visitVarInsn(Opcodes.ALOAD, closureArgStore);
-		previousMv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, fileName, setqMethodName, "(Ljcl/functions/Closure;)Ljcl/LispStruct;", false);
+		previousMv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, fileName, setqMethodName, SETQ_METHOD_DESC, false);
 	}
 }

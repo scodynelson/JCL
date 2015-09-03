@@ -25,6 +25,10 @@ public class MultipleValueProg1CodeGenerator implements CodeGenerator<MultipleVa
 	@Autowired
 	private PrognCodeGenerator prognCodeGenerator;
 
+	private static final String MULTIPLE_VALUE_PROG1_METHOD_NAME_PREFIX = "multipleValueProg1_";
+
+	private static final String MULTIPLE_VALUE_PROG1_METHOD_DESC = "(Ljcl/functions/Closure;)Ljcl/LispStruct;";
+
 	@Override
 	public void generate(final MultipleValueProg1Struct input, final JavaClassBuilder classBuilder) {
 
@@ -36,8 +40,8 @@ public class MultipleValueProg1CodeGenerator implements CodeGenerator<MultipleVa
 
 		final ClassWriter cw = currentClass.getClassWriter();
 
-		final String multipleValueProg1MethodName = "multipleValueProg1_" + System.nanoTime();
-		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PRIVATE, multipleValueProg1MethodName, "(Ljcl/functions/Closure;)Ljcl/LispStruct;", null, null);
+		final String multipleValueProg1MethodName = MULTIPLE_VALUE_PROG1_METHOD_NAME_PREFIX + System.nanoTime();
+		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PRIVATE, multipleValueProg1MethodName, MULTIPLE_VALUE_PROG1_METHOD_DESC, null, null);
 
 		final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
 		final Stack<JavaMethodBuilder> methodBuilderStack = classBuilder.getMethodBuilderStack();
@@ -69,6 +73,6 @@ public class MultipleValueProg1CodeGenerator implements CodeGenerator<MultipleVa
 
 		previousMv.visitVarInsn(Opcodes.ALOAD, thisStore);
 		previousMv.visitVarInsn(Opcodes.ALOAD, closureArgStore);
-		previousMv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, fileName, multipleValueProg1MethodName, "(Ljcl/functions/Closure;)Ljcl/LispStruct;", false);
+		previousMv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, fileName, multipleValueProg1MethodName, MULTIPLE_VALUE_PROG1_METHOD_DESC, false);
 	}
 }

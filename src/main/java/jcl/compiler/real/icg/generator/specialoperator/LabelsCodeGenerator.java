@@ -13,6 +13,7 @@ import jcl.compiler.real.icg.JavaClassBuilder;
 import jcl.compiler.real.icg.JavaMethodBuilder;
 import jcl.compiler.real.icg.generator.CodeGenerator;
 import jcl.compiler.real.icg.generator.FormGenerator;
+import jcl.compiler.real.icg.generator.GenerationConstants;
 import jcl.compiler.real.icg.generator.simple.SymbolCodeGeneratorUtil;
 import jcl.compiler.real.struct.specialoperator.CompilerFunctionStruct;
 import jcl.compiler.real.struct.specialoperator.LabelsStruct;
@@ -34,6 +35,10 @@ public class LabelsCodeGenerator implements CodeGenerator<LabelsStruct> {
 	@Autowired
 	private PrognCodeGenerator prognCodeGenerator;
 
+	private static final String LABELS_METHOD_NAME_PREFIX = "labels_";
+
+	private static final String LABELS_METHOD_DESC = "(Ljcl/functions/Closure;)Ljcl/LispStruct;";
+
 	@Override
 	public void generate(final LabelsStruct input, final JavaClassBuilder classBuilder) {
 
@@ -46,8 +51,8 @@ public class LabelsCodeGenerator implements CodeGenerator<LabelsStruct> {
 
 		final ClassWriter cw = currentClass.getClassWriter();
 
-		final String labelsMethodName = "labels_" + System.nanoTime();
-		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PRIVATE, labelsMethodName, "(Ljcl/functions/Closure;)Ljcl/LispStruct;", null, null);
+		final String labelsMethodName = LABELS_METHOD_NAME_PREFIX + System.nanoTime();
+		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PRIVATE, labelsMethodName, LABELS_METHOD_DESC, null, null);
 
 		final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
 		final Stack<JavaMethodBuilder> methodBuilderStack = classBuilder.getMethodBuilderStack();
@@ -73,7 +78,11 @@ public class LabelsCodeGenerator implements CodeGenerator<LabelsStruct> {
 		mv.visitJumpInsn(Opcodes.IFNULL, closureNullCheckIfEnd);
 
 		mv.visitVarInsn(Opcodes.ALOAD, closureArgStore);
-		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/functions/Closure", "getFunctionBindings", "()Ljava/util/Map;", false);
+		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
+				GenerationConstants.CLOSURE_NAME,
+				GenerationConstants.CLOSURE_GET_FUNCTION_BINDINGS_METHOD_NAME,
+				GenerationConstants.CLOSURE_GET_FUNCTION_BINDINGS_METHOD_DESC,
+				false);
 		mv.visitVarInsn(Opcodes.ASTORE, closureFunctionBindingsStore);
 
 		mv.visitLabel(closureNullCheckIfEnd);
@@ -102,7 +111,11 @@ public class LabelsCodeGenerator implements CodeGenerator<LabelsStruct> {
 
 			mv.visitVarInsn(Opcodes.ALOAD, functionSymbolStore);
 			mv.visitVarInsn(Opcodes.ALOAD, initFormStore);
-			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/symbols/SymbolStruct", "bindFunction", "(Ljcl/functions/FunctionStruct;)V", false);
+			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
+					GenerationConstants.SYMBOL_STRUCT_NAME,
+					GenerationConstants.SYMBOL_STRUCT_BIND_FUNCTION_METHOD_NAME,
+					GenerationConstants.SYMBOL_STRUCT_BIND_FUNCTION_METHOD_DESC,
+					false);
 
 			mv.visitVarInsn(Opcodes.ALOAD, closureFunctionBindingsStore);
 			final Label closureBindingsNullCheckIfEnd = new Label();
@@ -111,7 +124,11 @@ public class LabelsCodeGenerator implements CodeGenerator<LabelsStruct> {
 			mv.visitVarInsn(Opcodes.ALOAD, closureFunctionBindingsStore);
 			mv.visitVarInsn(Opcodes.ALOAD, functionSymbolStore);
 			mv.visitVarInsn(Opcodes.ALOAD, initFormStore);
-			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, "java/util/Map", "put", "(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;", true);
+			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
+					GenerationConstants.JAVA_MAP_NAME,
+					GenerationConstants.JAVA_MAP_PUT_METHOD_NAME,
+					GenerationConstants.JAVA_MAP_PUT_METHOD_DESC,
+					true);
 			mv.visitInsn(Opcodes.POP);
 
 			mv.visitLabel(closureBindingsNullCheckIfEnd);
@@ -158,13 +175,17 @@ public class LabelsCodeGenerator implements CodeGenerator<LabelsStruct> {
 
 		previousMv.visitVarInsn(Opcodes.ALOAD, thisStore);
 		previousMv.visitVarInsn(Opcodes.ALOAD, closureArgStore);
-		previousMv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, fileName, labelsMethodName, "(Ljcl/functions/Closure;)Ljcl/LispStruct;", false);
+		previousMv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, fileName, labelsMethodName, LABELS_METHOD_DESC, false);
 	}
 
 	private void generateFinallyCode(final MethodVisitor mv, final Set<Integer> varSymbolStores) {
 		for (final Integer varSymbolStore : varSymbolStores) {
 			mv.visitVarInsn(Opcodes.ALOAD, varSymbolStore);
-			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/symbols/SymbolStruct", "unbindFunction", "()V", false);
+			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
+					GenerationConstants.SYMBOL_STRUCT_NAME,
+					GenerationConstants.SYMBOL_STRUCT_UNBIND_FUNCTION_METHOD_NAME,
+					GenerationConstants.SYMBOL_STRUCT_UNBIND_FUNCTION_METHOD_DESC,
+					false);
 		}
 	}
 }

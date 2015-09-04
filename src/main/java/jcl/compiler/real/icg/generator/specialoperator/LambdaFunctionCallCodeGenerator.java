@@ -11,6 +11,7 @@ import jcl.compiler.real.icg.JavaClassBuilder;
 import jcl.compiler.real.icg.JavaMethodBuilder;
 import jcl.compiler.real.icg.generator.CodeGenerator;
 import jcl.compiler.real.icg.generator.FormGenerator;
+import jcl.compiler.real.icg.generator.GenerationConstants;
 import jcl.compiler.real.icg.generator.LambdaCodeGenerator;
 import jcl.compiler.real.struct.specialoperator.LambdaFunctionCallStruct;
 import jcl.compiler.real.struct.specialoperator.lambda.LambdaStruct;
@@ -43,7 +44,7 @@ public class LambdaFunctionCallCodeGenerator implements CodeGenerator<LambdaFunc
 
 		final int numberOfArguments = arguments.size();
 		mv.visitLdcInsn(numberOfArguments);
-		mv.visitTypeInsn(Opcodes.ANEWARRAY, "jcl/LispStruct");
+		mv.visitTypeInsn(Opcodes.ANEWARRAY, GenerationConstants.LISP_STRUCT_NAME);
 		final int argumentsArrayStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, argumentsArrayStore);
 
@@ -62,6 +63,10 @@ public class LambdaFunctionCallCodeGenerator implements CodeGenerator<LambdaFunc
 
 		mv.visitVarInsn(Opcodes.ALOAD, functionStore);
 		mv.visitVarInsn(Opcodes.ALOAD, argumentsArrayStore);
-		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/functions/FunctionStruct", "apply", "([Ljcl/LispStruct;)Ljcl/LispStruct;", false);
+		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
+				GenerationConstants.FUNCTION_STRUCT_NAME,
+				GenerationConstants.FUNCTION_STRUCT_APPLY_METHOD_NAME,
+				GenerationConstants.FUNCTION_STRUCT_APPLY_METHOD_DESC,
+				false);
 	}
 }

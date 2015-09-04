@@ -18,6 +18,7 @@ import jcl.compiler.real.icg.JavaClassBuilder;
 import jcl.compiler.real.icg.JavaMethodBuilder;
 import jcl.compiler.real.icg.generator.CodeGenerator;
 import jcl.compiler.real.icg.generator.FormGenerator;
+import jcl.compiler.real.icg.generator.GenerationConstants;
 import jcl.compiler.real.icg.generator.simple.SymbolCodeGeneratorUtil;
 import jcl.compiler.real.struct.specialoperator.LetStruct;
 import jcl.compiler.real.struct.specialoperator.PrognStruct;
@@ -38,6 +39,10 @@ public class LetCodeGenerator implements CodeGenerator<LetStruct> {
 	@Autowired
 	private PrognCodeGenerator prognCodeGenerator;
 
+	private static final String LET_METHOD_NAME_PREFIX = "let_";
+
+	private static final String LET_METHOD_DESC = "(Ljcl/functions/Closure;)Ljcl/LispStruct;";
+
 	@Override
 	public void generate(final LetStruct input, final JavaClassBuilder classBuilder) {
 
@@ -50,8 +55,8 @@ public class LetCodeGenerator implements CodeGenerator<LetStruct> {
 
 		final ClassWriter cw = currentClass.getClassWriter();
 
-		final String letMethodName = "let_" + System.nanoTime();
-		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PRIVATE, letMethodName, "(Ljcl/functions/Closure;)Ljcl/LispStruct;", null, null);
+		final String letMethodName = LET_METHOD_NAME_PREFIX + System.nanoTime();
+		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PRIVATE, letMethodName, LET_METHOD_DESC, null, null);
 
 		final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
 		final Stack<JavaMethodBuilder> methodBuilderStack = classBuilder.getMethodBuilderStack();
@@ -69,14 +74,22 @@ public class LetCodeGenerator implements CodeGenerator<LetStruct> {
 		mv.visitTryCatchBlock(tryBlockStart, tryBlockEnd, catchBlockStart, null);
 		mv.visitTryCatchBlock(catchBlockStart, finallyBlockStart, catchBlockStart, null);
 
-		mv.visitTypeInsn(Opcodes.NEW, "jcl/functions/Closure");
+		mv.visitTypeInsn(Opcodes.NEW, GenerationConstants.CLOSURE_NAME);
 		mv.visitInsn(Opcodes.DUP);
 		mv.visitVarInsn(Opcodes.ALOAD, closureArgStore);
-		mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "jcl/functions/Closure", "<init>", "(Ljcl/functions/Closure;)V", false);
+		mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
+				GenerationConstants.CLOSURE_NAME,
+				GenerationConstants.INIT_METHOD_NAME,
+				GenerationConstants.CLOSURE_INIT_CLOSURE_DESC,
+				false);
 		mv.visitVarInsn(Opcodes.ASTORE, closureArgStore);
 
 		mv.visitVarInsn(Opcodes.ALOAD, closureArgStore);
-		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/functions/Closure", "getSymbolBindings", "()Ljava/util/Map;", false);
+		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
+				GenerationConstants.CLOSURE_NAME,
+				GenerationConstants.CLOSURE_GET_SYMBOL_BINDINGS_METHOD_NAME,
+				GenerationConstants.CLOSURE_GET_SYMBOL_BINDINGS_METHOD_DESC,
+				false);
 		final int newClosureBindingsStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, newClosureBindingsStore);
 
@@ -105,16 +118,20 @@ public class LetCodeGenerator implements CodeGenerator<LetStruct> {
 			final Label valuesCheckIfEnd = new Label();
 
 			mv.visitVarInsn(Opcodes.ALOAD, initFormStore);
-			mv.visitTypeInsn(Opcodes.INSTANCEOF, "jcl/compiler/real/struct/ValuesStruct");
+			mv.visitTypeInsn(Opcodes.INSTANCEOF, GenerationConstants.VALUES_STRUCT_NAME);
 			mv.visitJumpInsn(Opcodes.IFEQ, valuesCheckIfEnd);
 
 			mv.visitVarInsn(Opcodes.ALOAD, initFormStore);
-			mv.visitTypeInsn(Opcodes.CHECKCAST, "jcl/compiler/real/struct/ValuesStruct");
+			mv.visitTypeInsn(Opcodes.CHECKCAST, GenerationConstants.VALUES_STRUCT_NAME);
 			final int valuesStore = methodBuilder.getNextAvailableStore();
 			mv.visitVarInsn(Opcodes.ASTORE, valuesStore);
 
 			mv.visitVarInsn(Opcodes.ALOAD, valuesStore);
-			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/compiler/real/struct/ValuesStruct", "getPrimaryValue", "()Ljcl/LispStruct;", false);
+			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
+					GenerationConstants.VALUES_STRUCT_NAME,
+					GenerationConstants.VALUES_STRUCT_GET_PRIMARY_VALUE_METHOD_NAME,
+					GenerationConstants.VALUES_STRUCT_GET_PRIMARY_VALUE_METHOD_DESC,
+					false);
 			mv.visitVarInsn(Opcodes.ASTORE, initFormStore);
 
 			mv.visitLabel(valuesCheckIfEnd);
@@ -132,15 +149,27 @@ public class LetCodeGenerator implements CodeGenerator<LetStruct> {
 
 			mv.visitVarInsn(Opcodes.ALOAD, symbolStore);
 			mv.visitVarInsn(Opcodes.ALOAD, initFormStore);
-			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/symbols/SymbolStruct", "bindLexicalValue", "(Ljcl/LispStruct;)V", false);
+			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
+					GenerationConstants.SYMBOL_STRUCT_NAME,
+					GenerationConstants.SYMBOL_STRUCT_BIND_LEXICAL_VALUE_METHOD_NAME,
+					GenerationConstants.SYMBOL_STRUCT_BIND_LEXICAL_VALUE_METHOD_DESC,
+					false);
 
 			mv.visitVarInsn(Opcodes.ALOAD, closureArgStore);
-			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/functions/Closure", "getSymbolBindings", "()Ljava/util/Map;", false);
+			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
+					GenerationConstants.CLOSURE_NAME,
+					GenerationConstants.CLOSURE_GET_SYMBOL_BINDINGS_METHOD_NAME,
+					GenerationConstants.CLOSURE_GET_SYMBOL_BINDINGS_METHOD_DESC,
+					false);
 
 			mv.visitVarInsn(Opcodes.ALOAD, newClosureBindingsStore);
 			mv.visitVarInsn(Opcodes.ALOAD, symbolStore);
 			mv.visitVarInsn(Opcodes.ALOAD, initFormStore);
-			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, "java/util/Map", "put", "(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;", true);
+			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
+					GenerationConstants.JAVA_MAP_NAME,
+					GenerationConstants.JAVA_MAP_PUT_METHOD_NAME,
+					GenerationConstants.JAVA_MAP_PUT_METHOD_DESC,
+					true);
 			mv.visitInsn(Opcodes.POP);
 		}
 
@@ -150,7 +179,11 @@ public class LetCodeGenerator implements CodeGenerator<LetStruct> {
 
 			mv.visitVarInsn(Opcodes.ALOAD, symbolStore);
 			mv.visitVarInsn(Opcodes.ALOAD, initFormStore);
-			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/symbols/SymbolStruct", "bindDynamicValue", "(Ljcl/LispStruct;)V", false);
+			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
+					GenerationConstants.SYMBOL_STRUCT_NAME,
+					GenerationConstants.SYMBOL_STRUCT_BIND_DYNAMIC_VALUE_METHOD_NAME,
+					GenerationConstants.SYMBOL_STRUCT_BIND_DYNAMIC_VALUE_METHOD_DESC,
+					false);
 		}
 
 		mv.visitLabel(tryBlockStart);
@@ -167,11 +200,19 @@ public class LetCodeGenerator implements CodeGenerator<LetStruct> {
 		mv.visitLabel(tryBlockEnd);
 		for (final Integer symbolStore : dynamicSymbolStoresToUnbind) {
 			mv.visitVarInsn(Opcodes.ALOAD, symbolStore);
-			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/symbols/SymbolStruct", "unbindDynamicValue", "()V", false);
+			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
+					GenerationConstants.SYMBOL_STRUCT_NAME,
+					GenerationConstants.SYMBOL_STRUCT_UNBIND_DYNAMIC_VALUE_METHOD_NAME,
+					GenerationConstants.SYMBOL_STRUCT_UNBIND_DYNAMIC_VALUE_METHOD_DESC,
+					false);
 		}
 		for (final Integer symbolStore : lexicalSymbolStoresToUnbind) {
 			mv.visitVarInsn(Opcodes.ALOAD, symbolStore);
-			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/symbols/SymbolStruct", "unbindLexicalValue", "()V", false);
+			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
+					GenerationConstants.SYMBOL_STRUCT_NAME,
+					GenerationConstants.SYMBOL_STRUCT_UNBIND_LEXICAL_VALUE_METHOD_NAME,
+					GenerationConstants.SYMBOL_STRUCT_UNBIND_LEXICAL_VALUE_METHOD_DESC,
+					false);
 		}
 		mv.visitJumpInsn(Opcodes.GOTO, catchBlockEnd);
 
@@ -182,11 +223,19 @@ public class LetCodeGenerator implements CodeGenerator<LetStruct> {
 		mv.visitLabel(finallyBlockStart);
 		for (final Integer symbolStore : dynamicSymbolStoresToUnbind) {
 			mv.visitVarInsn(Opcodes.ALOAD, symbolStore);
-			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/symbols/SymbolStruct", "unbindDynamicValue", "()V", false);
+			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
+					GenerationConstants.SYMBOL_STRUCT_NAME,
+					GenerationConstants.SYMBOL_STRUCT_UNBIND_DYNAMIC_VALUE_METHOD_NAME,
+					GenerationConstants.SYMBOL_STRUCT_UNBIND_DYNAMIC_VALUE_METHOD_DESC,
+					false);
 		}
 		for (final Integer symbolStore : lexicalSymbolStoresToUnbind) {
 			mv.visitVarInsn(Opcodes.ALOAD, symbolStore);
-			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/symbols/SymbolStruct", "unbindLexicalValue", "()V", false);
+			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
+					GenerationConstants.SYMBOL_STRUCT_NAME,
+					GenerationConstants.SYMBOL_STRUCT_UNBIND_LEXICAL_VALUE_METHOD_NAME,
+					GenerationConstants.SYMBOL_STRUCT_UNBIND_LEXICAL_VALUE_METHOD_DESC,
+					false);
 		}
 
 		mv.visitVarInsn(Opcodes.ALOAD, exceptionStore);
@@ -207,6 +256,6 @@ public class LetCodeGenerator implements CodeGenerator<LetStruct> {
 
 		previousMv.visitVarInsn(Opcodes.ALOAD, thisStore);
 		previousMv.visitVarInsn(Opcodes.ALOAD, closureArgStore);
-		previousMv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, fileName, letMethodName, "(Ljcl/functions/Closure;)Ljcl/LispStruct;", false);
+		previousMv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, fileName, letMethodName, LET_METHOD_DESC, false);
 	}
 }

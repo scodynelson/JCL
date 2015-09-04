@@ -39,17 +39,19 @@ public interface GenerationConstants {
 
 	String SINGLETON_INSTANCE = "INSTANCE";
 
+	String JAVA_LONG_TYPE_NAME = Type.LONG_TYPE.getDescriptor();
+
 	String INIT_METHOD_NAME = "<init>";
 
 	String CLASS_INIT_METHOD_NAME = "<clinit>";
+
+	String CLASS_INIT_METHOD_DESC = "()V";
 
 	String JAVA_OBJECT_NAME = Type.getInternalName(Object.class);
 
 	String JAVA_EQUALS_METHOD_NAME = "equals";
 
 	String JAVA_EQUALS_METHOD_DESC = GeneratorUtils.getMethodDescription(Object.class, JAVA_EQUALS_METHOD_NAME, Object.class);
-
-	String JAVA_STRING_NAME = Type.getInternalName(String.class);
 
 	String JAVA_LIST_NAME = Type.getInternalName(List.class);
 
@@ -83,9 +85,29 @@ public interface GenerationConstants {
 
 	String JAVA_MAP_PUT_METHOD_DESC = GeneratorUtils.getMethodDescription(Map.class, JAVA_MAP_PUT_METHOD_NAME, Object.class, Object.class);
 
+	String JAVA_MAP_ENTRY_SET_METHOD_NAME = "entrySet";
+
+	String JAVA_MAP_ENTRY_SET_METHOD_DESC = GeneratorUtils.getMethodDescription(Map.class, JAVA_MAP_ENTRY_SET_METHOD_NAME);
+
+	String JAVA_MAP_KEY_SET_METHOD_NAME = "keySet";
+
+	String JAVA_MAP_KEY_SET_METHOD_DESC = GeneratorUtils.getMethodDescription(Map.class, JAVA_MAP_KEY_SET_METHOD_NAME);
+
 	String JAVA_MAP_ENTRY_NAME = Type.getInternalName(Map.Entry.class);
 
+	String JAVA_MAP_ENTRY_GET_KEY_METHOD_NAME = "getKey";
+
+	String JAVA_MAP_ENTRY_GET_KEY_METHOD_DESC = GeneratorUtils.getMethodDescription(Map.Entry.class, JAVA_MAP_ENTRY_GET_KEY_METHOD_NAME);
+
+	String JAVA_MAP_ENTRY_GET_VALUE_METHOD_NAME = "getValue";
+
+	String JAVA_MAP_ENTRY_GET_VALUE_METHOD_DESC = GeneratorUtils.getMethodDescription(Map.Entry.class, JAVA_MAP_ENTRY_GET_VALUE_METHOD_NAME);
+
 	String JAVA_SET_NAME = Type.getInternalName(Set.class);
+
+	String JAVA_SET_ITERATOR_METHOD_NAME = "iterator";
+
+	String JAVA_SET_ITERATOR_METHOD_DESC = GeneratorUtils.getMethodDescription(Set.class, JAVA_SET_ITERATOR_METHOD_NAME);
 
 	String JAVA_ITERATOR_NAME = Type.getInternalName(Iterator.class);
 
@@ -126,8 +148,6 @@ public interface GenerationConstants {
 	String JAVA_STRING_BUILDER_TOSTRING_METHOD_DESC = GeneratorUtils.getMethodDescription(StringBuilder.class, JAVA_STRING_BUILDER_TOSTRING_METHOD_NAME);
 
 	String SYMBOL_STRUCT_NAME = Type.getInternalName(SymbolStruct.class);
-
-	String SYMBOL_STRUCT_DESC = Type.getDescriptor(SymbolStruct.class);
 
 	String SYMBOL_STRUCT_GET_LEXICAL_VALUE_METHOD_NAME = "getLexicalValue";
 
@@ -201,6 +221,23 @@ public interface GenerationConstants {
 
 	String FUNCTION_STRUCT_NAME = Type.getInternalName(FunctionStruct.class);
 
+	String FUNCTION_STRUCT_INIT_DESC = GeneratorUtils.getConstructorDescription(FunctionStruct.class);
+
+	String FUNCTION_STRUCT_INIT_STRING_CLOSURE_DESC = GeneratorUtils.getConstructorDescription(FunctionStruct.class, String.class, Closure.class);
+
+	String FUNCTION_STRUCT_GET_FUNCTION_BINDINGS_METHOD_NAME = "getFunctionBindings";
+
+	// NOTE: Can't use the GeneratorUtils here because this method has 'PROTECTED' access.
+	String FUNCTION_STRUCT_GET_FUNCTION_BINDINGS_METHOD_DESC = "([Ljcl/LispStruct;)Ljava/util/List;";
+
+	String FUNCTION_STRUCT_GET_CLOSURE_FUNCTION_BINDINGS_METHOD_NAME = "getClosureFunctionBindings";
+
+	String FUNCTION_STRUCT_GET_CLOSURE_FUNCTION_BINDINGS_METHOD_DESC = GeneratorUtils.getMethodDescription(FunctionStruct.class, FUNCTION_STRUCT_GET_CLOSURE_FUNCTION_BINDINGS_METHOD_NAME);
+
+	String FUNCTION_STRUCT_GET_CLOSURE_SYMBOL_BINDINGS_METHOD_NAME = "getClosureSymbolBindings";
+
+	String FUNCTION_STRUCT_GET_CLOSURE_SYMBOL_BINDINGS_METHOD_DESC = GeneratorUtils.getMethodDescription(FunctionStruct.class, FUNCTION_STRUCT_GET_CLOSURE_SYMBOL_BINDINGS_METHOD_NAME);
+
 	String FUNCTION_STRUCT_GET_CLOSURE_METHOD_NAME = "getClosure";
 
 	String FUNCTION_STRUCT_GET_CLOSURE_METHOD_DESC = GeneratorUtils.getMethodDescription(FunctionStruct.class, FUNCTION_STRUCT_GET_CLOSURE_METHOD_NAME);
@@ -217,8 +254,6 @@ public interface GenerationConstants {
 
 	String VALUES_STRUCT_NAME = Type.getInternalName(ValuesStruct.class);
 
-	String VALUES_STRUCT_DESC = Type.getDescriptor(ValuesStruct.class);
-
 	String VALUES_STRUCT_GET_PRIMARY_VALUE_METHOD_NAME = "getPrimaryValue";
 
 	String VALUES_STRUCT_GET_PRIMARY_VALUE_METHOD_DESC = GeneratorUtils.getMethodDescription(ValuesStruct.class, VALUES_STRUCT_GET_PRIMARY_VALUE_METHOD_NAME);
@@ -228,6 +263,10 @@ public interface GenerationConstants {
 	String VALUES_STRUCT_GET_VALUES_LIST_METHOD_DESC = GeneratorUtils.getMethodDescription(ValuesStruct.class, VALUES_STRUCT_GET_VALUES_LIST_METHOD_NAME);
 
 	String CLOSURE_NAME = Type.getInternalName(Closure.class);
+
+	String CLOSURE_DESC = Type.getDescriptor(Closure.class);
+
+	String CLOSURE_INIT_CLOSURE_DESC = GeneratorUtils.getConstructorDescription(Closure.class, Closure.class);
 
 	String CLOSURE_GET_FUNCTION_BINDINGS_METHOD_NAME = "getFunctionBindings";
 
@@ -241,6 +280,8 @@ public interface GenerationConstants {
 
 	String O_LAMBDA_LIST_BINDINGS_DESC = Type.getDescriptor(OrdinaryLambdaListBindings.class);
 
+	String O_LAMBDA_LIST_BINDINGS_INIT_DESC = GeneratorUtils.getConstructorDescription(OrdinaryLambdaListBindings.class, List.class, List.class, RestBinding.class, List.class, List.class, boolean.class);
+
 	String ERROR_EXCEPTION_NAME = Type.getInternalName(ErrorException.class);
 
 	String PROGRAM_ERROR_EXCEPTION_NAME = Type.getInternalName(ProgramErrorException.class);
@@ -249,17 +290,41 @@ public interface GenerationConstants {
 
 	String FUNCTION_PARAMETER_BINDING_NAME = Type.getInternalName(FunctionParameterBinding.class);
 
+	String FUNCTION_PARAMETER_BINDING_GET_PARAMETER_SYMBOL_METHOD_NAME = "getParameterSymbol";
+
+	String FUNCTION_PARAMETER_BINDING_GET_PARAMETER_SYMBOL_METHOD_DESC = GeneratorUtils.getMethodDescription(FunctionParameterBinding.class, FUNCTION_PARAMETER_BINDING_GET_PARAMETER_SYMBOL_METHOD_NAME);
+
+	String FUNCTION_PARAMETER_BINDING_GET_PARAMETER_VALUE_METHOD_NAME = "getParameterValue";
+
+	String FUNCTION_PARAMETER_BINDING_GET_PARAMETER_VALUE_METHOD_DESC = GeneratorUtils.getMethodDescription(FunctionParameterBinding.class, FUNCTION_PARAMETER_BINDING_GET_PARAMETER_VALUE_METHOD_NAME);
+
+	String FUNCTION_PARAMETER_BINDING_IS_SPECIAL_METHOD_NAME = "isSpecial";
+
+	String FUNCTION_PARAMETER_BINDING_IS_SPECIAL_METHOD_DESC = GeneratorUtils.getMethodDescription(FunctionParameterBinding.class, FUNCTION_PARAMETER_BINDING_IS_SPECIAL_METHOD_NAME);
+
 	String REQUIRED_BINDING_NAME = Type.getInternalName(RequiredBinding.class);
+
+	String REQUIRED_BINDING_INIT_DESC = GeneratorUtils.getConstructorDescription(RequiredBinding.class, SymbolStruct.class, boolean.class);
 
 	String OPTIONAL_BINDING_NAME = Type.getInternalName(OptionalBinding.class);
 
+	String OPTIONAL_BINDING_INIT_DESC = GeneratorUtils.getConstructorDescription(OptionalBinding.class, SymbolStruct.class, LispStruct.class, boolean.class, SuppliedPBinding.class);
+
 	String REST_BINDING_NAME = Type.getInternalName(RestBinding.class);
+
+	String REST_BINDING_INIT_DESC = GeneratorUtils.getConstructorDescription(RestBinding.class, SymbolStruct.class, boolean.class);
 
 	String KEY_BINDING_NAME = Type.getInternalName(KeyBinding.class);
 
+	String KEY_BINDING_INIT_DESC = GeneratorUtils.getConstructorDescription(KeyBinding.class, SymbolStruct.class, LispStruct.class, boolean.class, SymbolStruct.class, SuppliedPBinding.class);
+
 	String AUX_BINDING_NAME = Type.getInternalName(AuxBinding.class);
 
+	String AUX_BINDING_INIT_DESC = GeneratorUtils.getConstructorDescription(AuxBinding.class, SymbolStruct.class, LispStruct.class, boolean.class);
+
 	String SUPPLIED_P_BINDING_NAME = Type.getInternalName(SuppliedPBinding.class);
+
+	String SUPPLIED_P_BINDING_INIT_DESC = GeneratorUtils.getConstructorDescription(SuppliedPBinding.class, SymbolStruct.class, boolean.class);
 
 	String RETURN_FROM_EXCEPTION_NAME = Type.getInternalName(ReturnFromException.class);
 

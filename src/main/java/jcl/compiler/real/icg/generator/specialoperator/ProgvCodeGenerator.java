@@ -95,13 +95,13 @@ public class ProgvCodeGenerator implements CodeGenerator<ProgvStruct> {
 		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
 				GenerationConstants.JAVA_STRING_BUILDER_NAME,
 				GenerationConstants.JAVA_STRING_BUILDER_APPEND_METHOD_NAME,
-				GenerationConstants.JAVA_STRING_BUILDER_APPEND_METHOD_DESC,
+				GenerationConstants.JAVA_STRING_BUILDER_APPEND_STRING_METHOD_DESC,
 				false);
 		mv.visitVarInsn(Opcodes.ALOAD, varsStore);
 		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
 				GenerationConstants.JAVA_STRING_BUILDER_NAME,
 				GenerationConstants.JAVA_STRING_BUILDER_APPEND_METHOD_NAME,
-				GenerationConstants.JAVA_STRING_BUILDER_APPEND_METHOD_DESC,
+				GenerationConstants.JAVA_STRING_BUILDER_APPEND_OBJECT_METHOD_DESC,
 				false);
 		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
 				GenerationConstants.JAVA_STRING_BUILDER_NAME,
@@ -182,13 +182,13 @@ public class ProgvCodeGenerator implements CodeGenerator<ProgvStruct> {
 		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
 				GenerationConstants.JAVA_STRING_BUILDER_NAME,
 				GenerationConstants.JAVA_STRING_BUILDER_APPEND_METHOD_NAME,
-				GenerationConstants.JAVA_STRING_BUILDER_APPEND_METHOD_DESC,
+				GenerationConstants.JAVA_STRING_BUILDER_APPEND_STRING_METHOD_DESC,
 				false);
 		mv.visitVarInsn(Opcodes.ALOAD, varSymbolCheckStore);
 		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
 				GenerationConstants.JAVA_STRING_BUILDER_NAME,
 				GenerationConstants.JAVA_STRING_BUILDER_APPEND_METHOD_NAME,
-				GenerationConstants.JAVA_STRING_BUILDER_APPEND_METHOD_DESC,
+				GenerationConstants.JAVA_STRING_BUILDER_APPEND_OBJECT_METHOD_DESC,
 				false);
 		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
 				GenerationConstants.JAVA_STRING_BUILDER_NAME,
@@ -232,13 +232,13 @@ public class ProgvCodeGenerator implements CodeGenerator<ProgvStruct> {
 		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
 				GenerationConstants.JAVA_STRING_BUILDER_NAME,
 				GenerationConstants.JAVA_STRING_BUILDER_APPEND_METHOD_NAME,
-				GenerationConstants.JAVA_STRING_BUILDER_APPEND_METHOD_DESC,
+				GenerationConstants.JAVA_STRING_BUILDER_APPEND_STRING_METHOD_DESC,
 				false);
 		mv.visitVarInsn(Opcodes.ALOAD, valsStore);
 		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
 				GenerationConstants.JAVA_STRING_BUILDER_NAME,
 				GenerationConstants.JAVA_STRING_BUILDER_APPEND_METHOD_NAME,
-				GenerationConstants.JAVA_STRING_BUILDER_APPEND_METHOD_DESC,
+				GenerationConstants.JAVA_STRING_BUILDER_APPEND_OBJECT_METHOD_DESC,
 				false);
 		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
 				GenerationConstants.JAVA_STRING_BUILDER_NAME,

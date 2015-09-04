@@ -117,7 +117,9 @@ public interface GenerationConstants {
 
 	String JAVA_STRING_BUILDER_APPEND_METHOD_NAME = "append";
 
-	String JAVA_STRING_BUILDER_APPEND_METHOD_DESC = GeneratorUtils.getMethodDescription(StringBuilder.class, JAVA_STRING_BUILDER_APPEND_METHOD_NAME, String.class);
+	String JAVA_STRING_BUILDER_APPEND_STRING_METHOD_DESC = GeneratorUtils.getMethodDescription(StringBuilder.class, JAVA_STRING_BUILDER_APPEND_METHOD_NAME, String.class);
+
+	String JAVA_STRING_BUILDER_APPEND_OBJECT_METHOD_DESC = GeneratorUtils.getMethodDescription(StringBuilder.class, JAVA_STRING_BUILDER_APPEND_METHOD_NAME, Object.class);
 
 	String JAVA_STRING_BUILDER_TOSTRING_METHOD_NAME = "toString";
 

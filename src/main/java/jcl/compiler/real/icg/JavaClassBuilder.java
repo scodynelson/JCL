@@ -1,15 +1,12 @@
 package jcl.compiler.real.icg;
 
 import java.util.Deque;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
 import java.util.concurrent.ConcurrentLinkedDeque;
 
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.icg.generator.specialoperator.TagbodyLabel;
-import jcl.symbols.SymbolStruct;
 
 public class JavaClassBuilder {
 
@@ -31,17 +28,11 @@ public class JavaClassBuilder {
 
 	private ClassDef currentClass;
 
-	private final Map<SymbolStruct<?>, Integer> fletFunctionStoresToBind = new HashMap<>();
-
 	public JavaClassBuilder() {
 		bindingStack = new Stack<>();
 		bindingStack.push(Environment.NULL);
 		tagCounter = 0;
 		tagbodyLabelStack = new Stack<>();
-	}
-
-	public Environment getBindingEnvironment() {
-		return bindingStack.peek();
 	}
 
 	public Stack<Environment> getBindingStack() {
@@ -54,10 +45,6 @@ public class JavaClassBuilder {
 
 	public Stack<Set<TagbodyLabel>> getTagbodyLabelStack() {
 		return tagbodyLabelStack;
-	}
-
-	public void setTagbodyLabelStack(final Stack<Set<TagbodyLabel>> tagbodyLabelStack) {
-		this.tagbodyLabelStack = tagbodyLabelStack;
 	}
 
 	public int getNextTagbodyTagIndex() {
@@ -89,13 +76,5 @@ public class JavaClassBuilder {
 
 	public void setCurrentClass(final ClassDef currentClass) {
 		this.currentClass = currentClass;
-	}
-
-	public int getTagCounter() {
-		return tagCounter;
-	}
-
-	public Map<SymbolStruct<?>, Integer> getFletFunctionStoresToBind() {
-		return fletFunctionStoresToBind;
 	}
 }

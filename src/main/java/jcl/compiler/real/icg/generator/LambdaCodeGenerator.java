@@ -53,10 +53,6 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 	@Autowired
 	private NullCodeGenerator nullCodeGenerator;
 
-	private static final String JAVA_EXTENSION = ".java";
-
-	private static final String SERIAL_VERSION_UID_FIELD = "serialVersionUID";
-
 	private static final String LAMBDA_LIST_BINDINGS_FIELD = "lambdaListBindings";
 
 	private static final String INIT_FORM_PLACEHOLDER_FIELD = "INIT_FORM_PLACEHOLDER";
@@ -101,14 +97,14 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 
 		cw.visit(Opcodes.V1_8, Opcodes.ACC_PUBLIC + Opcodes.ACC_SUPER, fileName, null, GenerationConstants.FUNCTION_STRUCT_NAME, null);
 
-		cw.visitSource(className + JAVA_EXTENSION, null);
+		cw.visitSource(className + GenerationConstants.JAVA_EXTENSION, null);
 
 		{
 			final Random random = new SecureRandom();
 			final long serialVersionUID = random.nextLong();
 
 			final FieldVisitor fv = cw.visitField(Opcodes.ACC_PRIVATE + Opcodes.ACC_FINAL + Opcodes.ACC_STATIC,
-					SERIAL_VERSION_UID_FIELD,
+					GenerationConstants.SERIAL_VERSION_UID_FIELD,
 					GenerationConstants.JAVA_LONG_TYPE_NAME,
 					null,
 					serialVersionUID);

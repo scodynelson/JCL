@@ -20,7 +20,6 @@ public class IntermediateCodeGeneratorImpl implements IntermediateCodeGenerator 
 	public Deque<ClassDef> generate(final LambdaStruct lambdaStruct) {
 		final JavaClassBuilder classBuilder = new JavaClassBuilder();
 		lambdaCodeGenerator.generate(lambdaStruct, classBuilder);
-//        assert(closureDepth == 0) : "Unbalanced closure depth: " + closureDepth;
 		return classBuilder.getClasses();
 	}
 }

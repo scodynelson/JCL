@@ -32,10 +32,18 @@ import jcl.lists.ConsStruct;
 import jcl.lists.ListStruct;
 import jcl.packages.PackageStruct;
 import jcl.packages.PackageSymbolStruct;
+import jcl.structures.StructureClassStruct;
+import jcl.structures.StructureObjectStruct;
 import jcl.symbols.SymbolStruct;
+import jcl.types.TypeBaseClass;
+import jcl.types.typespecifiers.AtomicTypeSpecifier;
 import org.objectweb.asm.Type;
 
 public interface GenerationConstants {
+
+	String JAVA_EXTENSION = ".java";
+
+	String SERIAL_VERSION_UID_FIELD = "serialVersionUID";
 
 	String SINGLETON_INSTANCE = "INSTANCE";
 
@@ -80,6 +88,8 @@ public interface GenerationConstants {
 	String JAVA_ARRAY_LIST_INIT_DESC = GeneratorUtils.getConstructorDescription(ArrayList.class);
 
 	String JAVA_MAP_NAME = Type.getInternalName(Map.class);
+
+	String JAVA_MAP_DESC = Type.getDescriptor(Map.class);
 
 	String JAVA_MAP_PUT_METHOD_NAME = "put";
 
@@ -200,6 +210,10 @@ public interface GenerationConstants {
 	String SYMBOL_STRUCT_UNBIND_FUNCTION_METHOD_NAME = "unbindFunction";
 
 	String SYMBOL_STRUCT_UNBIND_FUNCTION_METHOD_DESC = GeneratorUtils.getMethodDescription(SymbolStruct.class, SYMBOL_STRUCT_UNBIND_FUNCTION_METHOD_NAME);
+
+	String SYMBOL_STRUCT_SET_STRUCTURE_CLASS_METHOD_NAME = "setStructureClass";
+
+	String SYMBOL_STRUCT_SET_STRUCTURE_CLASS_METHOD_DESC = GeneratorUtils.getMethodDescription(SymbolStruct.class, SYMBOL_STRUCT_SET_STRUCTURE_CLASS_METHOD_NAME, StructureClassStruct.class);
 
 	String PACKAGE_STRUCT_NAME = Type.getInternalName(PackageStruct.class);
 
@@ -363,4 +377,12 @@ public interface GenerationConstants {
 	String LIST_STRUCT_GET_AS_JAVA_LIST_METHOD_NAME = "getAsJavaList";
 
 	String LIST_STRUCT_GET_AS_JAVA_LIST_METHOD_DESC = GeneratorUtils.getMethodDescription(ListStruct.class, LIST_STRUCT_GET_AS_JAVA_LIST_METHOD_NAME);
+
+	String STRUCTURE_OBJECT_STRUCT_NAME = Type.getInternalName(StructureObjectStruct.class);
+
+	String TYPE_BASE_CLASS_NAME = Type.getInternalName(TypeBaseClass.class);
+
+	String TYPE_BASE_CLASS_INIT_STRING_DESC = GeneratorUtils.getConstructorDescription(TypeBaseClass.class, String.class);
+
+	String ATOMIC_TYPE_SPECIFIER_NAME = Type.getInternalName(AtomicTypeSpecifier.class);
 }

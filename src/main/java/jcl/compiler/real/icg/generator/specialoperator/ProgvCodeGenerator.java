@@ -105,8 +105,8 @@ public class ProgvCodeGenerator implements CodeGenerator<ProgvStruct> {
 				false);
 		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
 				GenerationConstants.JAVA_STRING_BUILDER_NAME,
-				GenerationConstants.JAVA_STRING_BUILDER_TOSTRING_METHOD_NAME,
-				GenerationConstants.JAVA_STRING_BUILDER_TOSTRING_METHOD_DESC,
+				GenerationConstants.JAVA_STRING_BUILDER_TO_STRING_METHOD_NAME,
+				GenerationConstants.JAVA_STRING_BUILDER_TO_STRING_METHOD_DESC,
 				false);
 		mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
 				GenerationConstants.PROGRAM_ERROR_EXCEPTION_NAME,
@@ -192,8 +192,8 @@ public class ProgvCodeGenerator implements CodeGenerator<ProgvStruct> {
 				false);
 		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
 				GenerationConstants.JAVA_STRING_BUILDER_NAME,
-				GenerationConstants.JAVA_STRING_BUILDER_TOSTRING_METHOD_NAME,
-				GenerationConstants.JAVA_STRING_BUILDER_TOSTRING_METHOD_DESC,
+				GenerationConstants.JAVA_STRING_BUILDER_TO_STRING_METHOD_NAME,
+				GenerationConstants.JAVA_STRING_BUILDER_TO_STRING_METHOD_DESC,
 				false);
 		mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
 				GenerationConstants.PROGRAM_ERROR_EXCEPTION_NAME,
@@ -242,8 +242,8 @@ public class ProgvCodeGenerator implements CodeGenerator<ProgvStruct> {
 				false);
 		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
 				GenerationConstants.JAVA_STRING_BUILDER_NAME,
-				GenerationConstants.JAVA_STRING_BUILDER_TOSTRING_METHOD_NAME,
-				GenerationConstants.JAVA_STRING_BUILDER_TOSTRING_METHOD_DESC,
+				GenerationConstants.JAVA_STRING_BUILDER_TO_STRING_METHOD_NAME,
+				GenerationConstants.JAVA_STRING_BUILDER_TO_STRING_METHOD_DESC,
 				false);
 		mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
 				GenerationConstants.PROGRAM_ERROR_EXCEPTION_NAME,

@@ -36,6 +36,7 @@ import jcl.structures.StructureClassStruct;
 import jcl.structures.StructureObjectStruct;
 import jcl.symbols.SymbolStruct;
 import jcl.types.TypeBaseClass;
+import jcl.types.TypeFactory;
 import jcl.types.typespecifiers.AtomicTypeSpecifier;
 import org.objectweb.asm.Type;
 
@@ -51,6 +52,8 @@ public interface GenerationConstants {
 
 	String INIT_METHOD_NAME = "<init>";
 
+	String INIT_METHOD_DESC = "()V";
+
 	String CLASS_INIT_METHOD_NAME = "<clinit>";
 
 	String CLASS_INIT_METHOD_DESC = "()V";
@@ -60,6 +63,10 @@ public interface GenerationConstants {
 	String JAVA_EQUALS_METHOD_NAME = "equals";
 
 	String JAVA_EQUALS_METHOD_DESC = GeneratorUtils.getMethodDescription(Object.class, JAVA_EQUALS_METHOD_NAME, Object.class);
+
+	String JAVA_HASH_CODE_METHOD_NAME = "hashCode";
+
+	String JAVA_HASH_CODE_METHOD_DESC = GeneratorUtils.getMethodDescription(Object.class, JAVA_HASH_CODE_METHOD_NAME);
 
 	String JAVA_LIST_NAME = Type.getInternalName(List.class);
 
@@ -153,9 +160,19 @@ public interface GenerationConstants {
 
 	String JAVA_STRING_BUILDER_APPEND_OBJECT_METHOD_DESC = GeneratorUtils.getMethodDescription(StringBuilder.class, JAVA_STRING_BUILDER_APPEND_METHOD_NAME, Object.class);
 
-	String JAVA_STRING_BUILDER_TOSTRING_METHOD_NAME = "toString";
+	String JAVA_STRING_BUILDER_TO_STRING_METHOD_NAME = "toString";
 
-	String JAVA_STRING_BUILDER_TOSTRING_METHOD_DESC = GeneratorUtils.getMethodDescription(StringBuilder.class, JAVA_STRING_BUILDER_TOSTRING_METHOD_NAME);
+	String JAVA_STRING_BUILDER_TO_STRING_METHOD_DESC = GeneratorUtils.getMethodDescription(StringBuilder.class, JAVA_STRING_BUILDER_TO_STRING_METHOD_NAME);
+
+	String HASH_CODE_BUILDER_NAME = "org/apache/commons/lang3/builder/HashCodeBuilder";
+
+	String HASH_CODE_BUILDER_APPEND_SUPER_METHOD_NAME = "appendSuper";
+
+	String HASH_CODE_BUILDER_APPEND_SUPER_METHOD_DESC = GeneratorUtils.getMethodDescription(StringBuilder.class, HASH_CODE_BUILDER_APPEND_SUPER_METHOD_NAME, int.class);
+
+	String HASH_CODE_BUILDER_TO_HASH_CODE_METHOD_NAME = "toHashCode";
+
+	String HASH_CODE_BUILDER_TO_HASH_CODE_METHOD_DESC = GeneratorUtils.getMethodDescription(StringBuilder.class, HASH_CODE_BUILDER_TO_HASH_CODE_METHOD_NAME);
 
 	String SYMBOL_STRUCT_NAME = Type.getInternalName(SymbolStruct.class);
 
@@ -385,4 +402,6 @@ public interface GenerationConstants {
 	String TYPE_BASE_CLASS_INIT_STRING_DESC = GeneratorUtils.getConstructorDescription(TypeBaseClass.class, String.class);
 
 	String ATOMIC_TYPE_SPECIFIER_NAME = Type.getInternalName(AtomicTypeSpecifier.class);
+
+	String TYPE_FACTORY_NAME = Type.getInternalName(TypeFactory.class);
 }

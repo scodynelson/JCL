@@ -5,7 +5,7 @@
 package jcl.compiler.real.icg.generator.simple;
 
 import jcl.LispStruct;
-import jcl.compiler.real.icg.JavaClassBuilder;
+import jcl.compiler.real.icg.GeneratorState;
 import jcl.compiler.real.icg.JavaMethodBuilder;
 import jcl.compiler.real.icg.generator.CodeGenerator;
 import jcl.compiler.real.icg.generator.FormGenerator;
@@ -23,19 +23,19 @@ public class ConsCodeGenerator implements CodeGenerator<ConsStruct> {
 	private FormGenerator formGenerator;
 
 	@Override
-	public void generate(final ConsStruct input, final JavaClassBuilder classBuilder) {
+	public void generate(final ConsStruct input, final GeneratorState generatorState) {
 
 		final LispStruct car = input.getCar();
 		final LispStruct cdr = input.getCdr();
 
-		final JavaMethodBuilder methodBuilder = classBuilder.getCurrentMethodBuilder();
+		final JavaMethodBuilder methodBuilder = generatorState.getCurrentMethodBuilder();
 		final MethodVisitor mv = methodBuilder.getMethodVisitor();
 
-		formGenerator.generate(car, classBuilder);
+		formGenerator.generate(car, generatorState);
 		final int carStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, carStore);
 
-		formGenerator.generate(cdr, classBuilder);
+		formGenerator.generate(cdr, generatorState);
 		final int cdrStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, cdrStore);
 

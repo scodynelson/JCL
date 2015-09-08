@@ -2,8 +2,8 @@ package jcl.compiler.real.icg.generator.specialoperator;
 
 import java.util.Stack;
 
-import jcl.compiler.real.icg.ClassDef;
 import jcl.compiler.real.icg.JavaClassBuilder;
+import jcl.compiler.real.icg.GeneratorState;
 import jcl.compiler.real.icg.JavaMethodBuilder;
 import jcl.compiler.real.icg.generator.CodeGenerator;
 import jcl.compiler.real.icg.generator.GenerationConstants;
@@ -29,12 +29,12 @@ public class BlockCodeGenerator implements CodeGenerator<BlockStruct> {
 	private static final String BLOCK_METHOD_DESC = "(Ljcl/functions/Closure;)Ljcl/LispStruct;";
 
 	@Override
-	public void generate(final BlockStruct input, final JavaClassBuilder classBuilder) {
+	public void generate(final BlockStruct input, final GeneratorState generatorState) {
 
 		final SymbolStruct<?> name = input.getName();
 		final PrognStruct forms = input.getForms();
 
-		final ClassDef currentClass = classBuilder.getCurrentClass();
+		final JavaClassBuilder currentClass = generatorState.getCurrentClass();
 		final String fileName = currentClass.getFileName();
 
 		final ClassWriter cw = currentClass.getClassWriter();
@@ -43,7 +43,7 @@ public class BlockCodeGenerator implements CodeGenerator<BlockStruct> {
 		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PRIVATE, blockMethodName, BLOCK_METHOD_DESC, null, null);
 
 		final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
-		final Stack<JavaMethodBuilder> methodBuilderStack = classBuilder.getMethodBuilderStack();
+		final Stack<JavaMethodBuilder> methodBuilderStack = generatorState.getMethodBuilderStack();
 		methodBuilderStack.push(methodBuilder);
 
 		mv.visitCode();
@@ -58,10 +58,10 @@ public class BlockCodeGenerator implements CodeGenerator<BlockStruct> {
 
 		final int namePackageStore = methodBuilder.getNextAvailableStore();
 		final int nameSymbolStore = methodBuilder.getNextAvailableStore();
-		SymbolCodeGeneratorUtil.generate(name, classBuilder, namePackageStore, nameSymbolStore);
+		SymbolCodeGeneratorUtil.generate(name, generatorState, namePackageStore, nameSymbolStore);
 
 		mv.visitLabel(tryBlockStart);
-		prognCodeGenerator.generate(forms, classBuilder);
+		prognCodeGenerator.generate(forms, generatorState);
 		final int resultStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, resultStore);
 

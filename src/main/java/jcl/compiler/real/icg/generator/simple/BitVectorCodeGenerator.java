@@ -7,7 +7,7 @@ package jcl.compiler.real.icg.generator.simple;
 import java.util.List;
 
 import jcl.arrays.BitVectorStruct;
-import jcl.compiler.real.icg.JavaClassBuilder;
+import jcl.compiler.real.icg.GeneratorState;
 import jcl.compiler.real.icg.JavaMethodBuilder;
 import jcl.compiler.real.icg.generator.CodeGenerator;
 import jcl.compiler.real.icg.generator.GenerationConstants;
@@ -30,9 +30,9 @@ public class BitVectorCodeGenerator implements CodeGenerator<BitVectorStruct> {
 	private IntegerCodeGenerator integerCodeGenerator;
 
 	@Override
-	public void generate(final BitVectorStruct input, final JavaClassBuilder classBuilder) {
+	public void generate(final BitVectorStruct input, final GeneratorState generatorState) {
 
-		final JavaMethodBuilder methodBuilder = classBuilder.getCurrentMethodBuilder();
+		final JavaMethodBuilder methodBuilder = generatorState.getCurrentMethodBuilder();
 		final MethodVisitor mv = methodBuilder.getMethodVisitor();
 
 		mv.visitTypeInsn(Opcodes.NEW, GenerationConstants.JAVA_ARRAY_LIST_NAME);
@@ -49,7 +49,7 @@ public class BitVectorCodeGenerator implements CodeGenerator<BitVectorStruct> {
 
 		final List<IntegerStruct> contents = input.getContents();
 		for (final IntegerStruct content : contents) {
-			integerCodeGenerator.generate(content, classBuilder);
+			integerCodeGenerator.generate(content, generatorState);
 			mv.visitVarInsn(Opcodes.ASTORE, contentStore);
 
 			mv.visitVarInsn(Opcodes.ALOAD, contentsStore);

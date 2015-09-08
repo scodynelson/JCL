@@ -1,6 +1,6 @@
 package jcl.compiler.real.icg.generator.simple;
 
-import jcl.compiler.real.icg.JavaClassBuilder;
+import jcl.compiler.real.icg.GeneratorState;
 import jcl.compiler.real.icg.JavaMethodBuilder;
 import jcl.compiler.real.icg.generator.CodeGenerator;
 import jcl.compiler.real.icg.generator.GenerationConstants;
@@ -18,9 +18,9 @@ public class NILCodeGenerator implements CodeGenerator<NILStruct> {
 	private static final String NIL_STRUCT_DESC = Type.getDescriptor(NILStruct.class);
 
 	@Override
-	public void generate(final NILStruct input, final JavaClassBuilder classBuilder) {
+	public void generate(final NILStruct input, final GeneratorState generatorState) {
 
-		final JavaMethodBuilder methodBuilder = classBuilder.getCurrentMethodBuilder();
+		final JavaMethodBuilder methodBuilder = generatorState.getCurrentMethodBuilder();
 		final MethodVisitor mv = methodBuilder.getMethodVisitor();
 
 		mv.visitFieldInsn(Opcodes.GETSTATIC, NIL_STRUCT_NAME, GenerationConstants.SINGLETON_INSTANCE, NIL_STRUCT_DESC);

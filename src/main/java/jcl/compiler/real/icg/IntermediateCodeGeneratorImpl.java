@@ -17,8 +17,8 @@ public class IntermediateCodeGeneratorImpl implements IntermediateCodeGenerator 
 	private LambdaCodeGenerator lambdaCodeGenerator;
 
 	@Override
-	public Deque<ClassDef> generate(final LambdaStruct lambdaStruct) {
-		final JavaClassBuilder classBuilder = new JavaClassBuilder();
+	public Deque<JavaClassBuilder> generate(final LambdaStruct lambdaStruct) {
+		final GeneratorState classBuilder = new GeneratorState();
 		lambdaCodeGenerator.generate(lambdaStruct, classBuilder);
 		return classBuilder.getClasses();
 	}

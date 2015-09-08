@@ -6,8 +6,8 @@ import java.util.Random;
 import java.util.Stack;
 
 import jcl.LispType;
-import jcl.compiler.real.icg.ClassDef;
 import jcl.compiler.real.icg.JavaClassBuilder;
+import jcl.compiler.real.icg.GeneratorState;
 import jcl.compiler.real.icg.JavaMethodBuilder;
 import jcl.compiler.real.icg.generator.CodeGenerator;
 import jcl.compiler.real.icg.generator.GenerationConstants;
@@ -78,7 +78,7 @@ public class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 	private static final String STRUCTURE_CLASS_NEW_INSTANCE_METHOD_DESC = "()Ljcl/structures/StructureObjectStruct;";
 
 	@Override
-	public void generate(final DefstructStruct input, final JavaClassBuilder classBuilder) {
+	public void generate(final DefstructStruct input, final GeneratorState generatorState) {
 
 		final SymbolStruct<?> structureSymbol = input.getStructureSymbol();
 		final String structureName = structureSymbol.getName();
@@ -95,45 +95,45 @@ public class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 		final String structureTypeImplClassName = structureName + STRUCTURE_TYPE_IMPL_POSTFIX + systemTimePostfix;
 		final String structureTypeImplInnerClass = structureTypeFactoryInnerClass + '$' + structureTypeImplClassName;
 
-		generateStructureObject(input, classBuilder,
+		generateStructureObject(input, generatorState,
 				structureClassFileName,
 				structureObjectFileName);
-		generateStructureClass(input, classBuilder,
+		generateStructureClass(input, generatorState,
 				structureTypeFileName,
 				structureClassFileName,
 				structureObjectFileName);
-		generateStructureTypeImpl(classBuilder,
+		generateStructureTypeImpl(generatorState,
 				structureName,
 				structureTypeFileName,
 				structureTypeSyntheticInnerClass,
 				structureTypeFactoryInnerClass,
 				structureTypeImplClassName,
 				structureTypeImplInnerClass);
-		generateStructureTypeFactory(classBuilder,
+		generateStructureTypeFactory(generatorState,
 				structureTypeFileName,
 				structureTypeFactoryInnerClass,
 				structureTypeImplClassName,
 				structureTypeImplInnerClass);
-		generateStructureType(input, classBuilder,
+		generateStructureType(input, generatorState,
 				structureTypeFileName,
 				structureTypeSyntheticInnerClass,
 				structureTypeFactoryInnerClass,
 				structureTypeImplClassName,
 				structureTypeImplInnerClass);
 
-		final Stack<ClassDef> classStack = classBuilder.getClassStack();
+		final Stack<JavaClassBuilder> classStack = generatorState.getClassStack();
 
 		if (!classStack.isEmpty()) {
-			final ClassDef previousClassDef = classStack.peek();
-			classBuilder.setCurrentClass(previousClassDef);
+			final JavaClassBuilder previousJavaClassBuilder = classStack.peek();
+			generatorState.setCurrentClass(previousJavaClassBuilder);
 
-			final Stack<JavaMethodBuilder> methodBuilderStack = classBuilder.getMethodBuilderStack();
+			final Stack<JavaMethodBuilder> methodBuilderStack = generatorState.getMethodBuilderStack();
 			final JavaMethodBuilder previousMethodBuilder = methodBuilderStack.peek();
 			final MethodVisitor previousMv = previousMethodBuilder.getMethodVisitor();
 
 			final int packageStore = previousMethodBuilder.getNextAvailableStore();
 			final int symbolStore = previousMethodBuilder.getNextAvailableStore();
-			SymbolCodeGeneratorUtil.generate(structureSymbol, classBuilder, packageStore, symbolStore);
+			SymbolCodeGeneratorUtil.generate(structureSymbol, generatorState, packageStore, symbolStore);
 
 			previousMv.visitVarInsn(Opcodes.ALOAD, symbolStore);
 			previousMv.visitInsn(Opcodes.DUP); // DUP the symbol so it will still be on the stack after we set the structure class.
@@ -147,7 +147,7 @@ public class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 		}
 	}
 
-	public static void generateStructureType(final DefstructStruct defstructStruct, final JavaClassBuilder classBuilder,
+	public static void generateStructureType(final DefstructStruct defstructStruct, final GeneratorState classBuilder,
 	                                         final String structureTypeFileName,
 	                                         final String structureTypeSyntheticInnerClass,
 	                                         final String structureTypeFactoryInnerClass,
@@ -156,8 +156,8 @@ public class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 
 		final String className = structureTypeFileName.substring(structureTypeFileName.lastIndexOf('/') + 1, structureTypeFileName.length());
 
-		final ClassDef currentClass = new ClassDef(structureTypeFileName, className);
-		final Stack<ClassDef> classStack = classBuilder.getClassStack();
+		final JavaClassBuilder currentClass = new JavaClassBuilder(structureTypeFileName, className);
+		final Stack<JavaClassBuilder> classStack = classBuilder.getClassStack();
 
 		classStack.push(currentClass);
 		classBuilder.setCurrentClass(currentClass);
@@ -252,7 +252,7 @@ public class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 		classStack.pop();
 	}
 
-	public static void generateStructureTypeFactory(final JavaClassBuilder classBuilder,
+	public static void generateStructureTypeFactory(final GeneratorState classBuilder,
 	                                                final String structureTypeFileName,
 	                                                final String structureTypeFactoryInnerClass,
 	                                                final String structureTypeImplClassName,
@@ -260,8 +260,8 @@ public class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 
 		final String className = structureTypeFactoryInnerClass.substring(structureTypeFactoryInnerClass.lastIndexOf('/') + 1, structureTypeFactoryInnerClass.length());
 
-		final ClassDef currentClass = new ClassDef(structureTypeFactoryInnerClass, className);
-		final Stack<ClassDef> classStack = classBuilder.getClassStack();
+		final JavaClassBuilder currentClass = new JavaClassBuilder(structureTypeFactoryInnerClass, className);
+		final Stack<JavaClassBuilder> classStack = classBuilder.getClassStack();
 
 		classStack.push(currentClass);
 		classBuilder.setCurrentClass(currentClass);
@@ -371,7 +371,7 @@ public class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 		classStack.pop();
 	}
 
-	public static void generateStructureTypeImpl(final JavaClassBuilder classBuilder,
+	public static void generateStructureTypeImpl(final GeneratorState classBuilder,
 	                                             final String structureName,
 	                                             final String structureTypeFileName,
 	                                             final String structureTypeSyntheticInnerClass,
@@ -381,8 +381,8 @@ public class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 
 		final String className = structureTypeImplInnerClass.substring(structureTypeImplInnerClass.lastIndexOf('/') + 1, structureTypeImplInnerClass.length());
 
-		final ClassDef currentClass = new ClassDef(structureTypeImplInnerClass, className);
-		final Stack<ClassDef> classStack = classBuilder.getClassStack();
+		final JavaClassBuilder currentClass = new JavaClassBuilder(structureTypeImplInnerClass, className);
+		final Stack<JavaClassBuilder> classStack = classBuilder.getClassStack();
 
 		classStack.push(currentClass);
 		classBuilder.setCurrentClass(currentClass);
@@ -578,15 +578,15 @@ public class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 		classStack.pop();
 	}
 
-	public static void generateStructureClass(final DefstructStruct defstructStruct, final JavaClassBuilder classBuilder,
+	public static void generateStructureClass(final DefstructStruct defstructStruct, final GeneratorState classBuilder,
 	                                          final String structureTypeFileName,
 	                                          final String structureClassFileName,
 	                                          final String structureObjectFileName) {
 
 		final String className = structureClassFileName.substring(structureClassFileName.lastIndexOf('/') + 1, structureClassFileName.length());
 
-		final ClassDef currentClass = new ClassDef(structureClassFileName, className);
-		final Stack<ClassDef> classStack = classBuilder.getClassStack();
+		final JavaClassBuilder currentClass = new JavaClassBuilder(structureClassFileName, className);
+		final Stack<JavaClassBuilder> classStack = classBuilder.getClassStack();
 
 		classStack.push(currentClass);
 		classBuilder.setCurrentClass(currentClass);
@@ -799,14 +799,14 @@ public class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 		classStack.pop();
 	}
 
-	public static void generateStructureObject(final DefstructStruct defstructStruct, final JavaClassBuilder classBuilder,
+	public static void generateStructureObject(final DefstructStruct defstructStruct, final GeneratorState classBuilder,
 	                                           final String structureClassFileName,
 	                                           final String structureObjectFileName) {
 
 		final String className = structureObjectFileName.substring(structureObjectFileName.lastIndexOf('/') + 1, structureObjectFileName.length());
 
-		final ClassDef currentClass = new ClassDef(structureObjectFileName, className);
-		final Stack<ClassDef> classStack = classBuilder.getClassStack();
+		final JavaClassBuilder currentClass = new JavaClassBuilder(structureObjectFileName, className);
+		final Stack<JavaClassBuilder> classStack = classBuilder.getClassStack();
 
 		classStack.push(currentClass);
 		classBuilder.setCurrentClass(currentClass);

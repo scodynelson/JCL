@@ -4,7 +4,7 @@ import java.util.Stack;
 
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.LocallyEnvironment;
-import jcl.compiler.real.icg.JavaClassBuilder;
+import jcl.compiler.real.icg.GeneratorState;
 import jcl.compiler.real.icg.generator.CodeGenerator;
 import jcl.compiler.real.struct.specialoperator.LocallyStruct;
 import jcl.compiler.real.struct.specialoperator.PrognStruct;
@@ -18,15 +18,15 @@ public class LocallyCodeGenerator implements CodeGenerator<LocallyStruct> {
 	private PrognCodeGenerator prognCodeGenerator;
 
 	@Override
-	public void generate(final LocallyStruct input, final JavaClassBuilder classBuilder) {
+	public void generate(final LocallyStruct input, final GeneratorState generatorState) {
 
 		final PrognStruct forms = input.getForms();
 		final LocallyEnvironment locallyEnvironment = input.getLocallyEnvironment();
 
-		final Stack<Environment> bindingStack = classBuilder.getBindingStack();
+		final Stack<Environment> bindingStack = generatorState.getBindingStack();
 
 		bindingStack.push(locallyEnvironment);
-		prognCodeGenerator.generate(forms, classBuilder);
+		prognCodeGenerator.generate(forms, generatorState);
 		bindingStack.pop();
 	}
 }

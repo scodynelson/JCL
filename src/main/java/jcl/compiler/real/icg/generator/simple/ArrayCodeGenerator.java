@@ -8,7 +8,7 @@ import java.util.List;
 
 import jcl.LispStruct;
 import jcl.arrays.ArrayStruct;
-import jcl.compiler.real.icg.JavaClassBuilder;
+import jcl.compiler.real.icg.GeneratorState;
 import jcl.compiler.real.icg.JavaMethodBuilder;
 import jcl.compiler.real.icg.generator.CodeGenerator;
 import jcl.compiler.real.icg.generator.GenerationConstants;
@@ -31,9 +31,9 @@ public class ArrayCodeGenerator implements CodeGenerator<ArrayStruct<LispStruct>
 	private QuoteCodeGenerator quoteCodeGenerator;
 
 	@Override
-	public void generate(final ArrayStruct<LispStruct> input, final JavaClassBuilder classBuilder) {
+	public void generate(final ArrayStruct<LispStruct> input, final GeneratorState generatorState) {
 
-		final JavaMethodBuilder methodBuilder = classBuilder.getCurrentMethodBuilder();
+		final JavaMethodBuilder methodBuilder = generatorState.getCurrentMethodBuilder();
 		final MethodVisitor mv = methodBuilder.getMethodVisitor();
 
 		mv.visitTypeInsn(Opcodes.NEW, GenerationConstants.JAVA_ARRAY_LIST_NAME);
@@ -77,7 +77,7 @@ public class ArrayCodeGenerator implements CodeGenerator<ArrayStruct<LispStruct>
 
 		final List<LispStruct> contents = input.getContents();
 		for (final LispStruct content : contents) {
-			quoteCodeGenerator.generateQuotedObject(content, classBuilder);
+			quoteCodeGenerator.generateQuotedObject(content, generatorState);
 			mv.visitVarInsn(Opcodes.ASTORE, contentStore);
 
 			mv.visitVarInsn(Opcodes.ALOAD, contentsStore);

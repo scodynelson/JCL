@@ -4,7 +4,7 @@
 
 package jcl.compiler.real.icg.generator.specialoperator;
 
-import jcl.compiler.real.icg.JavaClassBuilder;
+import jcl.compiler.real.icg.GeneratorState;
 import jcl.compiler.real.icg.JavaMethodBuilder;
 import jcl.compiler.real.icg.generator.CodeGenerator;
 import jcl.compiler.real.icg.generator.GenerationConstants;
@@ -19,16 +19,16 @@ import org.springframework.stereotype.Component;
 public class SymbolFunctionCodeGenerator implements CodeGenerator<SymbolCompilerFunctionStruct> {
 
 	@Override
-	public void generate(final SymbolCompilerFunctionStruct input, final JavaClassBuilder classBuilder) {
+	public void generate(final SymbolCompilerFunctionStruct input, final GeneratorState generatorState) {
 
 		final SymbolStruct<?> functionSymbol = input.getFunctionSymbol();
 
-		final JavaMethodBuilder methodBuilder = classBuilder.getCurrentMethodBuilder();
+		final JavaMethodBuilder methodBuilder = generatorState.getCurrentMethodBuilder();
 		final MethodVisitor mv = methodBuilder.getMethodVisitor();
 
 		final int functionPackageStore = methodBuilder.getNextAvailableStore();
 		final int functionSymbolStore = methodBuilder.getNextAvailableStore();
-		SymbolCodeGeneratorUtil.generate(functionSymbol, classBuilder, functionPackageStore, functionSymbolStore);
+		SymbolCodeGeneratorUtil.generate(functionSymbol, generatorState, functionPackageStore, functionSymbolStore);
 
 		mv.visitVarInsn(Opcodes.ALOAD, functionSymbolStore);
 		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,

@@ -3,8 +3,8 @@ package jcl.compiler.real.icg.generator.specialoperator;
 import java.util.Stack;
 
 import jcl.LispStruct;
-import jcl.compiler.real.icg.ClassDef;
 import jcl.compiler.real.icg.JavaClassBuilder;
+import jcl.compiler.real.icg.GeneratorState;
 import jcl.compiler.real.icg.JavaMethodBuilder;
 import jcl.compiler.real.icg.generator.CodeGenerator;
 import jcl.compiler.real.icg.generator.FormGenerator;
@@ -33,12 +33,12 @@ public class ReturnFromCodeGenerator implements CodeGenerator<ReturnFromStruct> 
 	private static final String RETURN_FROM_EXCEPTION_INIT_DESC = GeneratorUtils.getConstructorDescription(ReturnFromException.class, SymbolStruct.class, LispStruct.class);
 
 	@Override
-	public void generate(final ReturnFromStruct input, final JavaClassBuilder classBuilder) {
+	public void generate(final ReturnFromStruct input, final GeneratorState generatorState) {
 
 		final SymbolStruct<?> name = input.getName();
 		final LispStruct result = input.getResult();
 
-		final ClassDef currentClass = classBuilder.getCurrentClass();
+		final JavaClassBuilder currentClass = generatorState.getCurrentClass();
 		final String fileName = currentClass.getFileName();
 
 		final ClassWriter cw = currentClass.getClassWriter();
@@ -47,7 +47,7 @@ public class ReturnFromCodeGenerator implements CodeGenerator<ReturnFromStruct> 
 		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PRIVATE, returnFromMethodName, RETURN_FROM_METHOD_DESC, null, null);
 
 		final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
-		final Stack<JavaMethodBuilder> methodBuilderStack = classBuilder.getMethodBuilderStack();
+		final Stack<JavaMethodBuilder> methodBuilderStack = generatorState.getMethodBuilderStack();
 		methodBuilderStack.push(methodBuilder);
 
 		mv.visitCode();
@@ -56,9 +56,9 @@ public class ReturnFromCodeGenerator implements CodeGenerator<ReturnFromStruct> 
 
 		final int namePackageStore = methodBuilder.getNextAvailableStore();
 		final int nameSymbolStore = methodBuilder.getNextAvailableStore();
-		SymbolCodeGeneratorUtil.generate(name, classBuilder, namePackageStore, nameSymbolStore);
+		SymbolCodeGeneratorUtil.generate(name, generatorState, namePackageStore, nameSymbolStore);
 
-		formGenerator.generate(result, classBuilder);
+		formGenerator.generate(result, generatorState);
 		final int resultStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, resultStore);
 

@@ -4,7 +4,7 @@
 
 package jcl.compiler.real.icg.generator.simple;
 
-import jcl.compiler.real.icg.JavaClassBuilder;
+import jcl.compiler.real.icg.GeneratorState;
 import jcl.compiler.real.icg.JavaMethodBuilder;
 import jcl.compiler.real.icg.generator.CodeGenerator;
 import jcl.compiler.real.icg.generator.GenerationConstants;
@@ -22,9 +22,9 @@ public class TCodeGenerator implements CodeGenerator<TStruct> {
 	private static final String T_STRUCT_DESC = Type.getDescriptor(TStruct.class);
 
 	@Override
-	public void generate(final TStruct input, final JavaClassBuilder classBuilder) {
+	public void generate(final TStruct input, final GeneratorState generatorState) {
 
-		final JavaMethodBuilder methodBuilder = classBuilder.getCurrentMethodBuilder();
+		final JavaMethodBuilder methodBuilder = generatorState.getCurrentMethodBuilder();
 		final MethodVisitor mv = methodBuilder.getMethodVisitor();
 
 		mv.visitFieldInsn(Opcodes.GETSTATIC, T_STRUCT_NAME, GenerationConstants.SINGLETON_INSTANCE, T_STRUCT_DESC);

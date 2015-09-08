@@ -5,8 +5,8 @@ import java.util.Set;
 import java.util.Stack;
 
 import jcl.LispStruct;
-import jcl.compiler.real.icg.ClassDef;
 import jcl.compiler.real.icg.JavaClassBuilder;
+import jcl.compiler.real.icg.GeneratorState;
 import jcl.compiler.real.icg.JavaMethodBuilder;
 import jcl.compiler.real.icg.generator.CodeGenerator;
 import jcl.compiler.real.icg.generator.GenerationConstants;
@@ -34,9 +34,9 @@ public class GoCodeGenerator implements CodeGenerator<GoStruct<?>> {
 	private static final String GO_EXCEPTION_INIT_DESC = GeneratorUtils.getConstructorDescription(GoException.class, int.class);
 
 	@Override
-	public void generate(final GoStruct<?> input, final JavaClassBuilder classBuilder) {
+	public void generate(final GoStruct<?> input, final GeneratorState generatorState) {
 
-		final ClassDef currentClass = classBuilder.getCurrentClass();
+		final JavaClassBuilder currentClass = generatorState.getCurrentClass();
 		final String fileName = currentClass.getFileName();
 
 		final ClassWriter cw = currentClass.getClassWriter();
@@ -45,14 +45,14 @@ public class GoCodeGenerator implements CodeGenerator<GoStruct<?>> {
 		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PRIVATE, goMethodName, GO_METHOD_DESC, null, null);
 
 		final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
-		final Stack<JavaMethodBuilder> methodBuilderStack = classBuilder.getMethodBuilderStack();
+		final Stack<JavaMethodBuilder> methodBuilderStack = generatorState.getMethodBuilderStack();
 		methodBuilderStack.push(methodBuilder);
 
 		mv.visitCode();
 		final int thisStore = methodBuilder.getNextAvailableStore();
 		final int closureArgStore = methodBuilder.getNextAvailableStore();
 
-		final Stack<Set<TagbodyLabel>> tagbodyLabelStack = classBuilder.getTagbodyLabelStack();
+		final Stack<Set<TagbodyLabel>> tagbodyLabelStack = generatorState.getTagbodyLabelStack();
 		final TagbodyLabel tagbodyLabel = getTagbodyLabel(tagbodyLabelStack, input);
 
 		final int index = tagbodyLabel.getIndex();

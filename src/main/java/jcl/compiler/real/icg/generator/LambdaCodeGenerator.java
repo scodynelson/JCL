@@ -21,8 +21,8 @@ import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaListBindin
 import jcl.compiler.real.environment.binding.lambdalist.RequiredBinding;
 import jcl.compiler.real.environment.binding.lambdalist.RestBinding;
 import jcl.compiler.real.environment.binding.lambdalist.SuppliedPBinding;
-import jcl.compiler.real.icg.ClassDef;
 import jcl.compiler.real.icg.JavaClassBuilder;
+import jcl.compiler.real.icg.GeneratorState;
 import jcl.compiler.real.icg.JavaMethodBuilder;
 import jcl.compiler.real.icg.generator.simple.NullCodeGenerator;
 import jcl.compiler.real.icg.generator.simple.SymbolCodeGeneratorUtil;
@@ -72,7 +72,7 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 	private static final String NON_LISP_ERROR_FOUND = "Non-Lisp error found.";
 
 	@Override
-	public void generate(final LambdaStruct input, final JavaClassBuilder classBuilder) {
+	public void generate(final LambdaStruct input, final GeneratorState generatorState) {
 
 		final OrdinaryLambdaListBindings lambdaListBindings = input.getLambdaListBindings();
 		final StringStruct docString = input.getDocString();
@@ -84,14 +84,14 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 
 		final String className = fileName.substring(fileName.lastIndexOf('/') + 1, fileName.length());
 
-		final ClassDef currentClass = new ClassDef(fileName, className);
-		final Stack<ClassDef> classStack = classBuilder.getClassStack();
+		final JavaClassBuilder currentClass = new JavaClassBuilder(fileName, className);
+		final Stack<JavaClassBuilder> classStack = generatorState.getClassStack();
 
 		classStack.push(currentClass);
-		classBuilder.setCurrentClass(currentClass);
-		classBuilder.getClasses().addFirst(currentClass);
+		generatorState.setCurrentClass(currentClass);
+		generatorState.getClasses().addFirst(currentClass);
 
-		final Stack<Environment> bindingStack = classBuilder.getBindingStack();
+		final Stack<Environment> bindingStack = generatorState.getBindingStack();
 
 		final ClassWriter cw = currentClass.getClassWriter();
 
@@ -132,7 +132,7 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 					null);
 
 			final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
-			final Stack<JavaMethodBuilder> methodBuilderStack = classBuilder.getMethodBuilderStack();
+			final Stack<JavaMethodBuilder> methodBuilderStack = generatorState.getMethodBuilderStack();
 			methodBuilderStack.push(methodBuilder);
 
 			mv.visitCode();
@@ -161,7 +161,7 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 					null);
 
 			final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
-			final Stack<JavaMethodBuilder> methodBuilderStack = classBuilder.getMethodBuilderStack();
+			final Stack<JavaMethodBuilder> methodBuilderStack = generatorState.getMethodBuilderStack();
 			methodBuilderStack.push(methodBuilder);
 
 			mv.visitCode();
@@ -204,7 +204,7 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 					null);
 
 			final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
-			final Stack<JavaMethodBuilder> methodBuilderStack = classBuilder.getMethodBuilderStack();
+			final Stack<JavaMethodBuilder> methodBuilderStack = generatorState.getMethodBuilderStack();
 			methodBuilderStack.push(methodBuilder);
 
 			mv.visitCode();
@@ -214,22 +214,22 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 
 			// End: Required
 			final int requiredBindingsStore = methodBuilder.getNextAvailableStore();
-			generateRequiredBindings(classBuilder, methodBuilder, lambdaListBindings, mv, packageStore, requiredBindingsStore);
+			generateRequiredBindings(generatorState, methodBuilder, lambdaListBindings, mv, packageStore, requiredBindingsStore);
 			// End: Required
 
 			// Start: Optional
 			final int optionalBindingsStore = methodBuilder.getNextAvailableStore();
-			generateOptionalBindings(classBuilder, methodBuilder, lambdaListBindings, mv, packageStore, optionalBindingsStore);
+			generateOptionalBindings(generatorState, methodBuilder, lambdaListBindings, mv, packageStore, optionalBindingsStore);
 			// End: Optional
 
 			// Start: Rest
 			final int restBindingStore = methodBuilder.getNextAvailableStore();
-			generateRestBinding(classBuilder, methodBuilder, lambdaListBindings, mv, packageStore, restBindingStore);
+			generateRestBinding(generatorState, methodBuilder, lambdaListBindings, mv, packageStore, restBindingStore);
 			// End: Rest
 
 			// Start: Key
 			final int keyBindingsStore = methodBuilder.getNextAvailableStore();
-			generateKeyBindings(classBuilder, methodBuilder, lambdaListBindings, mv, packageStore, keyBindingsStore);
+			generateKeyBindings(generatorState, methodBuilder, lambdaListBindings, mv, packageStore, keyBindingsStore);
 			// End: Key
 
 			// Start: Allow-Other-Keys
@@ -239,7 +239,7 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 
 			// Start: Aux
 			final int auxBindingsStore = methodBuilder.getNextAvailableStore();
-			generateAuxBindings(classBuilder, methodBuilder, lambdaListBindings, mv, packageStore, auxBindingsStore);
+			generateAuxBindings(generatorState, methodBuilder, lambdaListBindings, mv, packageStore, auxBindingsStore);
 			// Start: End
 
 			mv.visitVarInsn(Opcodes.ALOAD, thisStore);
@@ -275,7 +275,7 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 					null);
 
 			final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
-			final Stack<JavaMethodBuilder> methodBuilderStack = classBuilder.getMethodBuilderStack();
+			final Stack<JavaMethodBuilder> methodBuilderStack = generatorState.getMethodBuilderStack();
 			methodBuilderStack.push(methodBuilder);
 
 			mv.visitCode();
@@ -1030,7 +1030,7 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 					null);
 
 			final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
-			final Stack<JavaMethodBuilder> methodBuilderStack = classBuilder.getMethodBuilderStack();
+			final Stack<JavaMethodBuilder> methodBuilderStack = generatorState.getMethodBuilderStack();
 			methodBuilderStack.push(methodBuilder);
 
 			mv.visitCode();
@@ -1038,7 +1038,7 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 			final int closureArgStore = methodBuilder.getNextAvailableStore();
 
 			bindingStack.push(lambdaEnvironment);
-			prognCodeGenerator.generate(forms, classBuilder);
+			prognCodeGenerator.generate(forms, generatorState);
 			bindingStack.pop();
 
 			mv.visitInsn(Opcodes.ARETURN);
@@ -1056,7 +1056,7 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 					null);
 
 			final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
-			final Stack<JavaMethodBuilder> methodBuilderStack = classBuilder.getMethodBuilderStack();
+			final Stack<JavaMethodBuilder> methodBuilderStack = generatorState.getMethodBuilderStack();
 			methodBuilderStack.push(methodBuilder);
 
 			mv.visitCode();
@@ -1072,7 +1072,7 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 			final List<OptionalBinding> optionalBindings = lambdaListBindings.getOptionalBindings();
 			for (final OptionalBinding optionalBinding : optionalBindings) {
 				final SymbolStruct<?> var = optionalBinding.getSymbolStruct();
-				SymbolCodeGeneratorUtil.generate(var, classBuilder, initFormVarPackageStore, initFormVarSymbolStore);
+				SymbolCodeGeneratorUtil.generate(var, generatorState, initFormVarPackageStore, initFormVarSymbolStore);
 
 				final Label symbolCheckIfEnd = new Label();
 
@@ -1086,7 +1086,7 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 				mv.visitJumpInsn(Opcodes.IFEQ, symbolCheckIfEnd);
 
 				final LispStruct initForm = optionalBinding.getInitForm();
-				formGenerator.generate(initForm, classBuilder);
+				formGenerator.generate(initForm, generatorState);
 				mv.visitInsn(Opcodes.ARETURN);
 
 				mv.visitLabel(symbolCheckIfEnd);
@@ -1095,7 +1095,7 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 			final List<KeyBinding> keyBindings = lambdaListBindings.getKeyBindings();
 			for (final KeyBinding keyBinding : keyBindings) {
 				final SymbolStruct<?> var = keyBinding.getSymbolStruct();
-				SymbolCodeGeneratorUtil.generate(var, classBuilder, initFormVarPackageStore, initFormVarSymbolStore);
+				SymbolCodeGeneratorUtil.generate(var, generatorState, initFormVarPackageStore, initFormVarSymbolStore);
 
 				final Label symbolCheckIfEnd = new Label();
 
@@ -1109,7 +1109,7 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 				mv.visitJumpInsn(Opcodes.IFEQ, symbolCheckIfEnd);
 
 				final LispStruct initForm = keyBinding.getInitForm();
-				formGenerator.generate(initForm, classBuilder);
+				formGenerator.generate(initForm, generatorState);
 				mv.visitInsn(Opcodes.ARETURN);
 
 				mv.visitLabel(symbolCheckIfEnd);
@@ -1118,7 +1118,7 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 			final List<AuxBinding> auxBindings = lambdaListBindings.getAuxBindings();
 			for (final AuxBinding auxBinding : auxBindings) {
 				final SymbolStruct<?> var = auxBinding.getSymbolStruct();
-				SymbolCodeGeneratorUtil.generate(var, classBuilder, initFormVarPackageStore, initFormVarSymbolStore);
+				SymbolCodeGeneratorUtil.generate(var, generatorState, initFormVarPackageStore, initFormVarSymbolStore);
 
 				final Label symbolCheckIfEnd = new Label();
 
@@ -1132,7 +1132,7 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 				mv.visitJumpInsn(Opcodes.IFEQ, symbolCheckIfEnd);
 
 				final LispStruct initForm = auxBinding.getInitForm();
-				formGenerator.generate(initForm, classBuilder);
+				formGenerator.generate(initForm, generatorState);
 				mv.visitInsn(Opcodes.ARETURN);
 
 				mv.visitLabel(symbolCheckIfEnd);
@@ -1140,7 +1140,7 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 
 //			bindingStack.pop();
 
-			nullCodeGenerator.generate(NullStruct.INSTANCE, classBuilder);
+			nullCodeGenerator.generate(NullStruct.INSTANCE, generatorState);
 			mv.visitInsn(Opcodes.ARETURN);
 
 			mv.visitMaxs(-1, -1);
@@ -1156,7 +1156,7 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 					null);
 
 			final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
-			final Stack<JavaMethodBuilder> methodBuilderStack = classBuilder.getMethodBuilderStack();
+			final Stack<JavaMethodBuilder> methodBuilderStack = generatorState.getMethodBuilderStack();
 			methodBuilderStack.push(methodBuilder);
 
 			mv.visitCode();
@@ -1169,7 +1169,7 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 				final String uniqueLTVId = loadTimeValue.getUniqueLTVId();
 				final LispStruct value = loadTimeValue.getValue();
 
-				formGenerator.generate(value, classBuilder);
+				formGenerator.generate(value, generatorState);
 				mv.visitVarInsn(Opcodes.ASTORE, initFormStore);
 
 				final Label valuesCheckIfEnd = new Label();
@@ -1208,10 +1208,10 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 
 		classStack.pop();
 		if (!classStack.isEmpty()) {
-			final ClassDef previousClassDef = classStack.peek();
-			classBuilder.setCurrentClass(previousClassDef);
+			final JavaClassBuilder previousJavaClassBuilder = classStack.peek();
+			generatorState.setCurrentClass(previousJavaClassBuilder);
 
-			final Stack<JavaMethodBuilder> methodBuilderStack = classBuilder.getMethodBuilderStack();
+			final Stack<JavaMethodBuilder> methodBuilderStack = generatorState.getMethodBuilderStack();
 			final JavaMethodBuilder previousMethodBuilder = methodBuilderStack.peek();
 			final MethodVisitor previousMv = previousMethodBuilder.getMethodVisitor();
 
@@ -1227,7 +1227,7 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 		}
 	}
 
-	private void generateRequiredBindings(final JavaClassBuilder classBuilder, final JavaMethodBuilder methodBuilder,
+	private void generateRequiredBindings(final GeneratorState classBuilder, final JavaMethodBuilder methodBuilder,
 	                                      final OrdinaryLambdaListBindings lambdaListBindings, final MethodVisitor mv,
 	                                      final int packageStore, final int requiredBindingsStore) {
 
@@ -1274,7 +1274,7 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 		}
 	}
 
-	private void generateOptionalBindings(final JavaClassBuilder classBuilder, final JavaMethodBuilder methodBuilder,
+	private void generateOptionalBindings(final GeneratorState classBuilder, final JavaMethodBuilder methodBuilder,
 	                                      final OrdinaryLambdaListBindings lambdaListBindings, final MethodVisitor mv,
 	                                      final int packageStore, final int optionalBindingsStore) {
 
@@ -1355,7 +1355,7 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 		}
 	}
 
-	private void generateRestBinding(final JavaClassBuilder classBuilder, final JavaMethodBuilder methodBuilder,
+	private void generateRestBinding(final GeneratorState classBuilder, final JavaMethodBuilder methodBuilder,
 	                                 final OrdinaryLambdaListBindings lambdaListBindings, final MethodVisitor mv,
 	                                 final int packageStore, final int restBindingStore) {
 
@@ -1386,7 +1386,7 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 		}
 	}
 
-	private void generateKeyBindings(final JavaClassBuilder classBuilder, final JavaMethodBuilder methodBuilder,
+	private void generateKeyBindings(final GeneratorState classBuilder, final JavaMethodBuilder methodBuilder,
 	                                 final OrdinaryLambdaListBindings lambdaListBindings, final MethodVisitor mv,
 	                                 final int packageStore, final int keyBindingsStore) {
 
@@ -1485,7 +1485,7 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 		}
 	}
 
-	private void generateAuxBindings(final JavaClassBuilder classBuilder, final JavaMethodBuilder methodBuilder,
+	private void generateAuxBindings(final GeneratorState classBuilder, final JavaMethodBuilder methodBuilder,
 	                                 final OrdinaryLambdaListBindings lambdaListBindings, final MethodVisitor mv,
 	                                 final int packageStore, final int auxBindingsStore) {
 

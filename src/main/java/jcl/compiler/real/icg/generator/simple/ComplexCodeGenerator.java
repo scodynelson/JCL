@@ -1,6 +1,6 @@
 package jcl.compiler.real.icg.generator.simple;
 
-import jcl.compiler.real.icg.JavaClassBuilder;
+import jcl.compiler.real.icg.GeneratorState;
 import jcl.compiler.real.icg.JavaMethodBuilder;
 import jcl.compiler.real.icg.generator.CodeGenerator;
 import jcl.compiler.real.icg.generator.FormGenerator;
@@ -25,19 +25,19 @@ public class ComplexCodeGenerator implements CodeGenerator<ComplexStruct> {
 	private FormGenerator formGenerator;
 
 	@Override
-	public void generate(final ComplexStruct input, final JavaClassBuilder classBuilder) {
+	public void generate(final ComplexStruct input, final GeneratorState generatorState) {
 
 		final RealStruct real = input.getReal();
 		final RealStruct imaginary = input.getImaginary();
 
-		final JavaMethodBuilder methodBuilder = classBuilder.getCurrentMethodBuilder();
+		final JavaMethodBuilder methodBuilder = generatorState.getCurrentMethodBuilder();
 		final MethodVisitor mv = methodBuilder.getMethodVisitor();
 
-		formGenerator.generate(real, classBuilder);
+		formGenerator.generate(real, generatorState);
 		final int realStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, realStore);
 
-		formGenerator.generate(imaginary, classBuilder);
+		formGenerator.generate(imaginary, generatorState);
 		final int imaginaryStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, imaginaryStore);
 

@@ -7,7 +7,7 @@ package jcl.compiler.real.icg.generator.simple;
 import java.util.Stack;
 
 import jcl.compiler.real.environment.Environment;
-import jcl.compiler.real.icg.JavaClassBuilder;
+import jcl.compiler.real.icg.GeneratorState;
 import jcl.compiler.real.icg.JavaMethodBuilder;
 import jcl.compiler.real.icg.generator.CodeGenerator;
 import jcl.compiler.real.icg.generator.GenerationConstants;
@@ -20,18 +20,18 @@ import org.springframework.stereotype.Component;
 public class SymbolBindingCodeGenerator implements CodeGenerator<SymbolStruct<?>> {
 
 	@Override
-	public void generate(final SymbolStruct<?> input, final JavaClassBuilder classBuilder) {
+	public void generate(final SymbolStruct<?> input, final GeneratorState generatorState) {
 
-		final JavaMethodBuilder methodBuilder = classBuilder.getCurrentMethodBuilder();
+		final JavaMethodBuilder methodBuilder = generatorState.getCurrentMethodBuilder();
 		final MethodVisitor mv = methodBuilder.getMethodVisitor();
 
 		final int packageStore = methodBuilder.getNextAvailableStore();
 		final int symbolStore = methodBuilder.getNextAvailableStore();
-		SymbolCodeGeneratorUtil.generate(input, classBuilder, packageStore, symbolStore);
+		SymbolCodeGeneratorUtil.generate(input, generatorState, packageStore, symbolStore);
 
 		mv.visitVarInsn(Opcodes.ALOAD, symbolStore);
 
-		final Stack<Environment> bindingStack = classBuilder.getBindingStack();
+		final Stack<Environment> bindingStack = generatorState.getBindingStack();
 		final Environment currentEnvironment = bindingStack.peek();
 
 		final boolean hasLexicalBinding = currentEnvironment.hasLexicalBinding(input);

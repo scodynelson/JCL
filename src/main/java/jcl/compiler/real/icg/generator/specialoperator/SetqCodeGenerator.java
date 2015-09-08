@@ -5,8 +5,8 @@ import java.util.Stack;
 
 import jcl.LispStruct;
 import jcl.compiler.real.environment.Environment;
-import jcl.compiler.real.icg.ClassDef;
 import jcl.compiler.real.icg.JavaClassBuilder;
+import jcl.compiler.real.icg.GeneratorState;
 import jcl.compiler.real.icg.JavaMethodBuilder;
 import jcl.compiler.real.icg.generator.CodeGenerator;
 import jcl.compiler.real.icg.generator.FormGenerator;
@@ -32,11 +32,11 @@ public class SetqCodeGenerator implements CodeGenerator<SetqStruct> {
 	private static final String SETQ_METHOD_DESC = "(Ljcl/functions/Closure;)Ljcl/LispStruct;";
 
 	@Override
-	public void generate(final SetqStruct input, final JavaClassBuilder classBuilder) {
+	public void generate(final SetqStruct input, final GeneratorState generatorState) {
 
 		final List<SetqStruct.SetqPair> setqPairs = input.getSetqPairs();
 
-		final ClassDef currentClass = classBuilder.getCurrentClass();
+		final JavaClassBuilder currentClass = generatorState.getCurrentClass();
 		final String fileName = currentClass.getFileName();
 
 		final ClassWriter cw = currentClass.getClassWriter();
@@ -45,14 +45,14 @@ public class SetqCodeGenerator implements CodeGenerator<SetqStruct> {
 		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PRIVATE, setqMethodName, SETQ_METHOD_DESC, null, null);
 
 		final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
-		final Stack<JavaMethodBuilder> methodBuilderStack = classBuilder.getMethodBuilderStack();
+		final Stack<JavaMethodBuilder> methodBuilderStack = generatorState.getMethodBuilderStack();
 		methodBuilderStack.push(methodBuilder);
 
 		mv.visitCode();
 		final int thisStore = methodBuilder.getNextAvailableStore();
 		final int closureArgStore = methodBuilder.getNextAvailableStore();
 
-		final Stack<Environment> bindingStack = classBuilder.getBindingStack();
+		final Stack<Environment> bindingStack = generatorState.getBindingStack();
 		final Environment currentEnvironment = bindingStack.peek();
 
 		final Integer closureSymbolBindingsStore = methodBuilder.getNextAvailableStore();
@@ -89,10 +89,10 @@ public class SetqCodeGenerator implements CodeGenerator<SetqStruct> {
 
 		for (final SetqStruct.SetqPair setqPair : setqPairs) {
 			final SymbolStruct<?> var = setqPair.getVar();
-			SymbolCodeGeneratorUtil.generate(var, classBuilder, packageStore, symbolStore);
+			SymbolCodeGeneratorUtil.generate(var, generatorState, packageStore, symbolStore);
 
 			final LispStruct form = setqPair.getForm();
-			formGenerator.generate(form, classBuilder);
+			formGenerator.generate(form, generatorState);
 			mv.visitVarInsn(Opcodes.ASTORE, initFormStore);
 
 			final Label valuesCheckIfEnd = new Label();

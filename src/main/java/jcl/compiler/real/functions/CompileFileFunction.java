@@ -28,7 +28,7 @@ import jcl.compiler.real.environment.binding.lambdalist.KeyBinding;
 import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaListBindings;
 import jcl.compiler.real.environment.binding.lambdalist.RequiredBinding;
 import jcl.compiler.real.environment.binding.lambdalist.SuppliedPBinding;
-import jcl.compiler.real.icg.ClassDef;
+import jcl.compiler.real.icg.JavaClassBuilder;
 import jcl.compiler.real.icg.IntermediateCodeGenerator;
 import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.compiler.real.struct.ValuesStruct;
@@ -286,9 +286,9 @@ public final class CompileFileFunction extends FunctionStruct {
 			final ListStruct fileLambda = buildFileLambda(forms, inputClassName);
 
 			final LambdaStruct analyzedFileLambda = semanticAnalyzer.analyze(fileLambda);
-			final Deque<ClassDef> classDefDeque = intermediateCodeGenerator.generate(analyzedFileLambda);
+			final Deque<JavaClassBuilder> javaClassBuilderDeque = intermediateCodeGenerator.generate(analyzedFileLambda);
 
-			writeToJar(classDefDeque, outputFilePath, inputFileName, inputClassName, print);
+			writeToJar(javaClassBuilderDeque, outputFilePath, inputFileName, inputClassName, print);
 			compiledSuccessfully = true;
 
 			return new ValuesStruct(outputFileTruename, compiledWithWarnings, NILStruct.INSTANCE);
@@ -328,7 +328,7 @@ public final class CompileFileFunction extends FunctionStruct {
 		return ListStruct.buildDottedList(SpecialOperatorStruct.LAMBDA, NullStruct.INSTANCE, declareBlock, formsToCompile);
 	}
 
-	private static void writeToJar(final Deque<ClassDef> classDefDeque, final Path outputFilePath, final String inputFileName,
+	private static void writeToJar(final Deque<JavaClassBuilder> javaClassBuilderDeque, final Path outputFilePath, final String inputFileName,
 	                               final String inputClassName, final boolean print)
 			throws IOException {
 
@@ -343,8 +343,8 @@ public final class CompileFileFunction extends FunctionStruct {
 		try (final OutputStream outputStream = Files.newOutputStream(tempOutputFilePath, StandardOpenOption.WRITE, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
 		     final JarOutputStream jar = new JarOutputStream(outputStream, manifest)) {
 
-			for (final ClassDef classDef : classDefDeque) {
-				final ClassWriter cw = classDef.getClassWriter();
+			for (final JavaClassBuilder javaClassBuilder : javaClassBuilderDeque) {
+				final ClassWriter cw = javaClassBuilder.getClassWriter();
 
 				final byte[] byteArray = cw.toByteArray();
 				final ClassReader cr = new ClassReader(byteArray);
@@ -353,11 +353,11 @@ public final class CompileFileFunction extends FunctionStruct {
 				cr.accept(cca, ClassReader.SKIP_DEBUG + ClassReader.SKIP_FRAMES);
 
 				if (print) {
-					final String className = classDef.getClassName();
+					final String className = javaClassBuilder.getClassName();
 					LOGGER.info("; Compiled '{}'", className);
 				}
 
-				final String fileName = classDef.getFileName();
+				final String fileName = javaClassBuilder.getFileName();
 				final String entryFileName = fileName + ".class";
 				final JarEntry entry = new JarEntry(entryFileName);
 				jar.putNextEntry(entry);

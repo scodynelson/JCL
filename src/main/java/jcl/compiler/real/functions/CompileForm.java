@@ -13,7 +13,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Deque;
 
 import jcl.LispStruct;
-import jcl.compiler.real.icg.ClassDef;
+import jcl.compiler.real.icg.JavaClassBuilder;
 import jcl.compiler.real.icg.IntermediateCodeGenerator;
 import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.compiler.real.struct.specialoperator.lambda.LambdaStruct;
@@ -46,19 +46,19 @@ class CompileForm implements Serializable {
 	public CompileResult compile(final LispStruct form) {
 
 		final LambdaStruct analyzedObj = semanticAnalyzer.analyze(form);
-		final Deque<ClassDef> classDefDeque = intermediateCodeGenerator.generate(analyzedObj);
+		final Deque<JavaClassBuilder> javaClassBuilderDeque = intermediateCodeGenerator.generate(analyzedObj);
 
 		BooleanStruct compiledWithWarnings = NILStruct.INSTANCE;
 		BooleanStruct failedToCompile = NILStruct.INSTANCE;
 
 		FunctionStruct function = null;
-		for (final ClassDef classDef : classDefDeque) {
-			final ClassWriter cw = classDef.getClassWriter();
+		for (final JavaClassBuilder javaClassBuilder : javaClassBuilderDeque) {
+			final ClassWriter cw = javaClassBuilder.getClassWriter();
 
 			final byte[] byteArray = cw.toByteArray();
 
 			// TODO: Maybe set this up as a super debugging variable that we can control or something???
-			final String className = classDef.getClassName();
+			final String className = javaClassBuilder.getClassName();
 			try (FileOutputStream outputStream = new FileOutputStream(new File("/Volumes/Dev/repo/JCL/tmp/" + className + ".class"))) {
 				outputStream.write(byteArray);
 			} catch (final IOException ioe) {
@@ -67,7 +67,7 @@ class CompileForm implements Serializable {
 
 			final ClassReader cr = new ClassReader(byteArray);
 
-			String fileName = classDef.getFileName();
+			String fileName = javaClassBuilder.getFileName();
 			fileName = fileName.replace('/', '.');
 
 			final CheckClassAdapter cca = new CheckClassAdapter(new ClassWriter(0), false);

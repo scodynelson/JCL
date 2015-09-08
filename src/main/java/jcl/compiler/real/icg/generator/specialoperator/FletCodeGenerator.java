@@ -8,8 +8,8 @@ import java.util.Stack;
 
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.FletEnvironment;
-import jcl.compiler.real.icg.ClassDef;
 import jcl.compiler.real.icg.JavaClassBuilder;
+import jcl.compiler.real.icg.GeneratorState;
 import jcl.compiler.real.icg.JavaMethodBuilder;
 import jcl.compiler.real.icg.generator.CodeGenerator;
 import jcl.compiler.real.icg.generator.FormGenerator;
@@ -40,13 +40,13 @@ public class FletCodeGenerator implements CodeGenerator<FletStruct> {
 	private static final String FLET_METHOD_DESC = "(Ljcl/functions/Closure;)Ljcl/LispStruct;";
 
 	@Override
-	public void generate(final FletStruct input, final JavaClassBuilder classBuilder) {
+	public void generate(final FletStruct input, final GeneratorState generatorState) {
 
 		final List<FletStruct.FletVar> vars = input.getVars();
 		final PrognStruct forms = input.getForms();
 		final FletEnvironment fletEnvironment = input.getLexicalEnvironment();
 
-		final ClassDef currentClass = classBuilder.getCurrentClass();
+		final JavaClassBuilder currentClass = generatorState.getCurrentClass();
 		final String fileName = currentClass.getFileName();
 
 		final ClassWriter cw = currentClass.getClassWriter();
@@ -55,7 +55,7 @@ public class FletCodeGenerator implements CodeGenerator<FletStruct> {
 		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PRIVATE, fletMethodName, FLET_METHOD_DESC, null, null);
 
 		final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
-		final Stack<JavaMethodBuilder> methodBuilderStack = classBuilder.getMethodBuilderStack();
+		final Stack<JavaMethodBuilder> methodBuilderStack = generatorState.getMethodBuilderStack();
 		methodBuilderStack.push(methodBuilder);
 
 		mv.visitCode();
@@ -95,10 +95,10 @@ public class FletCodeGenerator implements CodeGenerator<FletStruct> {
 			final SymbolStruct<?> functionSymbolVar = var.getVar();
 			// NOTE: we have to get a new 'functionSymbolStore' for each var so we can properly unbind the expansions later
 			final int functionSymbolStore = methodBuilder.getNextAvailableStore();
-			SymbolCodeGeneratorUtil.generate(functionSymbolVar, classBuilder, packageStore, functionSymbolStore);
+			SymbolCodeGeneratorUtil.generate(functionSymbolVar, generatorState, packageStore, functionSymbolStore);
 
 			final CompilerFunctionStruct initForm = var.getInitForm();
-			formGenerator.generate(initForm, classBuilder);
+			formGenerator.generate(initForm, generatorState);
 			final int initFormStore = methodBuilder.getNextAvailableStore();
 			mv.visitVarInsn(Opcodes.ASTORE, initFormStore);
 
@@ -136,10 +136,10 @@ public class FletCodeGenerator implements CodeGenerator<FletStruct> {
 
 		mv.visitLabel(tryBlockStart);
 
-		final Stack<Environment> bindingStack = classBuilder.getBindingStack();
+		final Stack<Environment> bindingStack = generatorState.getBindingStack();
 
 		bindingStack.push(fletEnvironment);
-		prognCodeGenerator.generate(forms, classBuilder);
+		prognCodeGenerator.generate(forms, generatorState);
 		bindingStack.pop();
 
 		final int resultStore = methodBuilder.getNextAvailableStore();

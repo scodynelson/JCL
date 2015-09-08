@@ -4,7 +4,7 @@
 
 package jcl.compiler.real.icg.generator.simple;
 
-import jcl.compiler.real.icg.JavaClassBuilder;
+import jcl.compiler.real.icg.GeneratorState;
 import jcl.compiler.real.icg.JavaMethodBuilder;
 import jcl.compiler.real.icg.generator.CodeGenerator;
 import jcl.compiler.real.icg.generator.GenerationConstants;
@@ -25,9 +25,9 @@ public class KeywordStructCodeGenerator implements CodeGenerator<KeywordStruct> 
 	private static final String KEYWORD_STRUCT_NAME = Type.getInternalName(KeywordStruct.class);
 
 	@Override
-	public void generate(final KeywordStruct input, final JavaClassBuilder classBuilder) {
+	public void generate(final KeywordStruct input, final GeneratorState generatorState) {
 
-		final JavaMethodBuilder methodBuilder = classBuilder.getCurrentMethodBuilder();
+		final JavaMethodBuilder methodBuilder = generatorState.getCurrentMethodBuilder();
 		final MethodVisitor mv = methodBuilder.getMethodVisitor();
 
 		mv.visitFieldInsn(Opcodes.GETSTATIC, GLOBAL_PACKAGE_STRUCT_NAME, KEYWORD_PACKAGE_NAME, GenerationConstants.PACKAGE_STRUCT_DESC);

@@ -3,8 +3,8 @@ package jcl.compiler.real.icg.generator.specialoperator;
 import java.util.Stack;
 
 import jcl.LispStruct;
-import jcl.compiler.real.icg.ClassDef;
 import jcl.compiler.real.icg.JavaClassBuilder;
+import jcl.compiler.real.icg.GeneratorState;
 import jcl.compiler.real.icg.JavaMethodBuilder;
 import jcl.compiler.real.icg.generator.CodeGenerator;
 import jcl.compiler.real.icg.generator.FormGenerator;
@@ -30,12 +30,12 @@ public class MultipleValueProg1CodeGenerator implements CodeGenerator<MultipleVa
 	private static final String MULTIPLE_VALUE_PROG1_METHOD_DESC = "(Ljcl/functions/Closure;)Ljcl/LispStruct;";
 
 	@Override
-	public void generate(final MultipleValueProg1Struct input, final JavaClassBuilder classBuilder) {
+	public void generate(final MultipleValueProg1Struct input, final GeneratorState generatorState) {
 
 		final LispStruct firstForm = input.getFirstForm();
 		final PrognStruct forms = input.getForms();
 
-		final ClassDef currentClass = classBuilder.getCurrentClass();
+		final JavaClassBuilder currentClass = generatorState.getCurrentClass();
 		final String fileName = currentClass.getFileName();
 
 		final ClassWriter cw = currentClass.getClassWriter();
@@ -44,19 +44,19 @@ public class MultipleValueProg1CodeGenerator implements CodeGenerator<MultipleVa
 		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PRIVATE, multipleValueProg1MethodName, MULTIPLE_VALUE_PROG1_METHOD_DESC, null, null);
 
 		final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
-		final Stack<JavaMethodBuilder> methodBuilderStack = classBuilder.getMethodBuilderStack();
+		final Stack<JavaMethodBuilder> methodBuilderStack = generatorState.getMethodBuilderStack();
 		methodBuilderStack.push(methodBuilder);
 
 		mv.visitCode();
 		final int thisStore = methodBuilder.getNextAvailableStore();
 		final int closureArgStore = methodBuilder.getNextAvailableStore();
 
-		formGenerator.generate(firstForm, classBuilder);
+		formGenerator.generate(firstForm, generatorState);
 
 		final int firstFormStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, firstFormStore);
 
-		prognCodeGenerator.generate(forms, classBuilder);
+		prognCodeGenerator.generate(forms, generatorState);
 		mv.visitInsn(Opcodes.POP);
 
 		mv.visitVarInsn(Opcodes.ALOAD, firstFormStore);

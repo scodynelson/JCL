@@ -3,8 +3,8 @@ package jcl.compiler.real.icg.generator.specialoperator;
 import java.util.Stack;
 
 import jcl.LispStruct;
-import jcl.compiler.real.icg.ClassDef;
 import jcl.compiler.real.icg.JavaClassBuilder;
+import jcl.compiler.real.icg.GeneratorState;
 import jcl.compiler.real.icg.JavaMethodBuilder;
 import jcl.compiler.real.icg.generator.CodeGenerator;
 import jcl.compiler.real.icg.generator.FormGenerator;
@@ -32,12 +32,12 @@ public class CatchCodeGenerator implements CodeGenerator<CatchStruct> {
 	private static final String CATCH_METHOD_DESC = "(Ljcl/functions/Closure;)Ljcl/LispStruct;";
 
 	@Override
-	public void generate(final CatchStruct input, final JavaClassBuilder classBuilder) {
+	public void generate(final CatchStruct input, final GeneratorState generatorState) {
 
 		final LispStruct catchTag = input.getCatchTag();
 		final PrognStruct forms = input.getForms();
 
-		final ClassDef currentClass = classBuilder.getCurrentClass();
+		final JavaClassBuilder currentClass = generatorState.getCurrentClass();
 		final String fileName = currentClass.getFileName();
 
 		final ClassWriter cw = currentClass.getClassWriter();
@@ -46,7 +46,7 @@ public class CatchCodeGenerator implements CodeGenerator<CatchStruct> {
 		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PRIVATE, catchMethodName, CATCH_METHOD_DESC, null, null);
 
 		final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
-		final Stack<JavaMethodBuilder> methodBuilderStack = classBuilder.getMethodBuilderStack();
+		final Stack<JavaMethodBuilder> methodBuilderStack = generatorState.getMethodBuilderStack();
 		methodBuilderStack.push(methodBuilder);
 
 		mv.visitCode();
@@ -59,12 +59,12 @@ public class CatchCodeGenerator implements CodeGenerator<CatchStruct> {
 		final Label catchBlockEnd = new Label();
 		mv.visitTryCatchBlock(tryBlockStart, tryBlockEnd, catchBlockStart, GenerationConstants.THROW_EXCEPTION_NAME);
 
-		formGenerator.generate(catchTag, classBuilder);
+		formGenerator.generate(catchTag, generatorState);
 		final int catchTagStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, catchTagStore);
 
 		mv.visitLabel(tryBlockStart);
-		prognCodeGenerator.generate(forms, classBuilder);
+		prognCodeGenerator.generate(forms, generatorState);
 		final int resultFormStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, resultFormStore);
 

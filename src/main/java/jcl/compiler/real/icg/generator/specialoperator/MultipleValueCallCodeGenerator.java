@@ -4,8 +4,8 @@ import java.util.List;
 import java.util.Stack;
 
 import jcl.LispStruct;
-import jcl.compiler.real.icg.ClassDef;
 import jcl.compiler.real.icg.JavaClassBuilder;
+import jcl.compiler.real.icg.GeneratorState;
 import jcl.compiler.real.icg.JavaMethodBuilder;
 import jcl.compiler.real.icg.generator.CodeGenerator;
 import jcl.compiler.real.icg.generator.FormGenerator;
@@ -32,12 +32,12 @@ public class MultipleValueCallCodeGenerator implements CodeGenerator<MultipleVal
 	private static final String NOT_FUNCTION_ERROR_STRING = "MULTIPLE-VALUE-CALL: Invalid function form: ";
 
 	@Override
-	public void generate(final MultipleValueCallStruct input, final JavaClassBuilder classBuilder) {
+	public void generate(final MultipleValueCallStruct input, final GeneratorState generatorState) {
 
 		final CompilerFunctionStruct functionForm = input.getFunctionForm();
 		final List<LispStruct> forms = input.getForms();
 
-		final ClassDef currentClass = classBuilder.getCurrentClass();
+		final JavaClassBuilder currentClass = generatorState.getCurrentClass();
 		final String fileName = currentClass.getFileName();
 
 		final ClassWriter cw = currentClass.getClassWriter();
@@ -46,14 +46,14 @@ public class MultipleValueCallCodeGenerator implements CodeGenerator<MultipleVal
 		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PRIVATE, multipleValueCallMethodName, MULTIPLE_VALUE_CALL_METHOD_DESC, null, null);
 
 		final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
-		final Stack<JavaMethodBuilder> methodBuilderStack = classBuilder.getMethodBuilderStack();
+		final Stack<JavaMethodBuilder> methodBuilderStack = generatorState.getMethodBuilderStack();
 		methodBuilderStack.push(methodBuilder);
 
 		mv.visitCode();
 		final int thisStore = methodBuilder.getNextAvailableStore();
 		final int closureArgStore = methodBuilder.getNextAvailableStore();
 
-		formGenerator.generate(functionForm, classBuilder);
+		formGenerator.generate(functionForm, generatorState);
 		final int functionFormStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, functionFormStore);
 
@@ -126,7 +126,7 @@ public class MultipleValueCallCodeGenerator implements CodeGenerator<MultipleVal
 			final Label iteratorLoopStart = new Label();
 			final Label iteratorLoopEnd = new Label();
 
-			formGenerator.generate(form, classBuilder);
+			formGenerator.generate(form, generatorState);
 			mv.visitVarInsn(Opcodes.ASTORE, formStore);
 
 			mv.visitVarInsn(Opcodes.ALOAD, formStore);

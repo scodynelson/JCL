@@ -1,7 +1,7 @@
 package jcl.compiler.real.icg.generator.specialoperator;
 
 import jcl.LispStruct;
-import jcl.compiler.real.icg.JavaClassBuilder;
+import jcl.compiler.real.icg.GeneratorState;
 import jcl.compiler.real.icg.generator.CodeGenerator;
 import jcl.compiler.real.icg.generator.FormGenerator;
 import jcl.compiler.real.struct.specialoperator.TheStruct;
@@ -15,10 +15,10 @@ public class TheCodeGenerator implements CodeGenerator<TheStruct> {
 	private FormGenerator formGenerator;
 
 	@Override
-	public void generate(final TheStruct input, final JavaClassBuilder classBuilder) {
+	public void generate(final TheStruct input, final GeneratorState generatorState) {
 		// TODO: do we want to add the logic here to verify the type information of the generated form???
 
 		final LispStruct form = input.getForm();
-		formGenerator.generate(form, classBuilder);
+		formGenerator.generate(form, generatorState);
 	}
 }

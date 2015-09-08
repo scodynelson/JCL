@@ -5,7 +5,7 @@
 package jcl.compiler.real.icg.generator.simple;
 
 import jcl.arrays.StringStruct;
-import jcl.compiler.real.icg.JavaClassBuilder;
+import jcl.compiler.real.icg.GeneratorState;
 import jcl.compiler.real.icg.JavaMethodBuilder;
 import jcl.compiler.real.icg.generator.GenerationConstants;
 import jcl.compiler.real.icg.generator.GeneratorUtils;
@@ -21,7 +21,7 @@ public final class SymbolCodeGeneratorUtil {
 	private SymbolCodeGeneratorUtil() {
 	}
 
-	public static void generate(final SymbolStruct<?> input, final JavaClassBuilder classBuilder,
+	public static void generate(final SymbolStruct<?> input, final GeneratorState classBuilder,
 	                            final int packageStore, final int symbolStore) {
 
 		final JavaMethodBuilder methodBuilder = classBuilder.getCurrentMethodBuilder();

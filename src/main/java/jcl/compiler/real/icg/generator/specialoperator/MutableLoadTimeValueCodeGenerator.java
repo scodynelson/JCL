@@ -5,7 +5,7 @@
 package jcl.compiler.real.icg.generator.specialoperator;
 
 import jcl.LispStruct;
-import jcl.compiler.real.icg.JavaClassBuilder;
+import jcl.compiler.real.icg.GeneratorState;
 import jcl.compiler.real.icg.JavaMethodBuilder;
 import jcl.compiler.real.icg.generator.CodeGenerator;
 import jcl.compiler.real.icg.generator.FormGenerator;
@@ -24,14 +24,14 @@ public class MutableLoadTimeValueCodeGenerator implements CodeGenerator<MutableL
 	private FormGenerator formGenerator;
 
 	@Override
-	public void generate(final MutableLoadTimeValueStruct input, final JavaClassBuilder classBuilder) {
+	public void generate(final MutableLoadTimeValueStruct input, final GeneratorState generatorState) {
 
 		final LispStruct form = input.getForm();
 
-		final JavaMethodBuilder methodBuilder = classBuilder.getCurrentMethodBuilder();
+		final JavaMethodBuilder methodBuilder = generatorState.getCurrentMethodBuilder();
 		final MethodVisitor mv = methodBuilder.getMethodVisitor();
 
-		formGenerator.generate(form, classBuilder);
+		formGenerator.generate(form, generatorState);
 		final int initFormStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, initFormStore);
 

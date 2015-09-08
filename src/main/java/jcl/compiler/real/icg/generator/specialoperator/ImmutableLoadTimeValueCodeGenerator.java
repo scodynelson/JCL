@@ -4,8 +4,8 @@
 
 package jcl.compiler.real.icg.generator.specialoperator;
 
-import jcl.compiler.real.icg.ClassDef;
 import jcl.compiler.real.icg.JavaClassBuilder;
+import jcl.compiler.real.icg.GeneratorState;
 import jcl.compiler.real.icg.JavaMethodBuilder;
 import jcl.compiler.real.icg.generator.CodeGenerator;
 import jcl.compiler.real.icg.generator.GenerationConstants;
@@ -18,13 +18,13 @@ import org.springframework.stereotype.Component;
 public class ImmutableLoadTimeValueCodeGenerator implements CodeGenerator<ImmutableLoadTimeValueStruct> {
 
 	@Override
-	public void generate(final ImmutableLoadTimeValueStruct input, final JavaClassBuilder classBuilder) {
+	public void generate(final ImmutableLoadTimeValueStruct input, final GeneratorState generatorState) {
 
 		final String uniqueLTVId = input.getUniqueLTVId();
 
-		final ClassDef currentClass = classBuilder.getCurrentClass();
+		final JavaClassBuilder currentClass = generatorState.getCurrentClass();
 
-		final JavaMethodBuilder methodBuilder = classBuilder.getCurrentMethodBuilder();
+		final JavaMethodBuilder methodBuilder = generatorState.getCurrentMethodBuilder();
 		final MethodVisitor mv = methodBuilder.getMethodVisitor();
 
 		final String fileName = currentClass.getFileName();

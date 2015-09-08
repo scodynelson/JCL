@@ -1,7 +1,7 @@
 package jcl.compiler.real.icg.generator.simple;
 
 import jcl.characters.CharacterStruct;
-import jcl.compiler.real.icg.JavaClassBuilder;
+import jcl.compiler.real.icg.GeneratorState;
 import jcl.compiler.real.icg.JavaMethodBuilder;
 import jcl.compiler.real.icg.generator.CodeGenerator;
 import jcl.compiler.real.icg.generator.GenerationConstants;
@@ -19,9 +19,9 @@ public class CharacterCodeGenerator implements CodeGenerator<CharacterStruct> {
 	private static final String CHARACTER_STRUCT_INIT_DESC = GeneratorUtils.getConstructorDescription(CharacterStruct.class, int.class);
 
 	@Override
-	public void generate(final CharacterStruct input, final JavaClassBuilder classBuilder) {
+	public void generate(final CharacterStruct input, final GeneratorState generatorState) {
 
-		final JavaMethodBuilder methodBuilder = classBuilder.getCurrentMethodBuilder();
+		final JavaMethodBuilder methodBuilder = generatorState.getCurrentMethodBuilder();
 		final MethodVisitor mv = methodBuilder.getMethodVisitor();
 
 		mv.visitTypeInsn(Opcodes.NEW, CHARACTER_STRUCT_NAME);

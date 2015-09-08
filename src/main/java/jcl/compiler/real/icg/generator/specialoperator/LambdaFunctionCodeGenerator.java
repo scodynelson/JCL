@@ -4,7 +4,7 @@
 
 package jcl.compiler.real.icg.generator.specialoperator;
 
-import jcl.compiler.real.icg.JavaClassBuilder;
+import jcl.compiler.real.icg.GeneratorState;
 import jcl.compiler.real.icg.generator.CodeGenerator;
 import jcl.compiler.real.icg.generator.LambdaCodeGenerator;
 import jcl.compiler.real.struct.specialoperator.LambdaCompilerFunctionStruct;
@@ -19,9 +19,9 @@ public class LambdaFunctionCodeGenerator implements CodeGenerator<LambdaCompiler
 	private LambdaCodeGenerator lambdaCodeGenerator;
 
 	@Override
-	public void generate(final LambdaCompilerFunctionStruct input, final JavaClassBuilder classBuilder) {
+	public void generate(final LambdaCompilerFunctionStruct input, final GeneratorState generatorState) {
 
 		final LambdaStruct lambdaStruct = input.getLambdaStruct();
-		lambdaCodeGenerator.generate(lambdaStruct, classBuilder);
+		lambdaCodeGenerator.generate(lambdaStruct, generatorState);
 	}
 }

@@ -5,8 +5,8 @@ import java.util.Stack;
 import jcl.LispStruct;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.ProgvEnvironment;
-import jcl.compiler.real.icg.ClassDef;
 import jcl.compiler.real.icg.JavaClassBuilder;
+import jcl.compiler.real.icg.GeneratorState;
 import jcl.compiler.real.icg.JavaMethodBuilder;
 import jcl.compiler.real.icg.generator.CodeGenerator;
 import jcl.compiler.real.icg.generator.FormGenerator;
@@ -40,14 +40,14 @@ public class ProgvCodeGenerator implements CodeGenerator<ProgvStruct> {
 	private static final String VALUES_LIST_MUST_BE_A_LIST = "PROGV: Values list must be a list. Got: ";
 
 	@Override
-	public void generate(final ProgvStruct input, final JavaClassBuilder classBuilder) {
+	public void generate(final ProgvStruct input, final GeneratorState generatorState) {
 
 		final LispStruct vars = input.getVars();
 		final LispStruct vals = input.getVals();
 		final PrognStruct forms = input.getForms();
 		final ProgvEnvironment progvEnvironment = input.getProgvEnvironment();
 
-		final ClassDef currentClass = classBuilder.getCurrentClass();
+		final JavaClassBuilder currentClass = generatorState.getCurrentClass();
 		final String fileName = currentClass.getFileName();
 
 		final ClassWriter cw = currentClass.getClassWriter();
@@ -56,7 +56,7 @@ public class ProgvCodeGenerator implements CodeGenerator<ProgvStruct> {
 		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PRIVATE, progvMethodName, PROGV_METHOD_DESC, null, null);
 
 		final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
-		final Stack<JavaMethodBuilder> methodBuilderStack = classBuilder.getMethodBuilderStack();
+		final Stack<JavaMethodBuilder> methodBuilderStack = generatorState.getMethodBuilderStack();
 		methodBuilderStack.push(methodBuilder);
 
 		mv.visitCode();
@@ -71,7 +71,7 @@ public class ProgvCodeGenerator implements CodeGenerator<ProgvStruct> {
 		mv.visitTryCatchBlock(tryBlockStart, tryBlockEnd, catchBlockStart, null);
 		mv.visitTryCatchBlock(catchBlockStart, finallyBlockStart, catchBlockStart, null);
 
-		formGenerator.generate(vars, classBuilder);
+		formGenerator.generate(vars, generatorState);
 
 		final int varsStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, varsStore);
@@ -208,7 +208,7 @@ public class ProgvCodeGenerator implements CodeGenerator<ProgvStruct> {
 
 		mv.visitLabel(varsListOfSymbolsIteratorLoopEnd);
 
-		formGenerator.generate(vals, classBuilder);
+		formGenerator.generate(vals, generatorState);
 
 		final int valsStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, valsStore);
@@ -367,10 +367,10 @@ public class ProgvCodeGenerator implements CodeGenerator<ProgvStruct> {
 		// BODY START
 		mv.visitLabel(tryBlockStart);
 
-		final Stack<Environment> bindingStack = classBuilder.getBindingStack();
+		final Stack<Environment> bindingStack = generatorState.getBindingStack();
 
 		bindingStack.push(progvEnvironment);
-		prognCodeGenerator.generate(forms, classBuilder);
+		prognCodeGenerator.generate(forms, generatorState);
 		bindingStack.pop();
 
 		final int resultStore = methodBuilder.getNextAvailableStore();

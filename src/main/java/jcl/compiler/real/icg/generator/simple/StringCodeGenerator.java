@@ -5,7 +5,7 @@
 package jcl.compiler.real.icg.generator.simple;
 
 import jcl.arrays.StringStruct;
-import jcl.compiler.real.icg.JavaClassBuilder;
+import jcl.compiler.real.icg.GeneratorState;
 import jcl.compiler.real.icg.JavaMethodBuilder;
 import jcl.compiler.real.icg.generator.CodeGenerator;
 import jcl.compiler.real.icg.generator.GenerationConstants;
@@ -23,9 +23,9 @@ public class StringCodeGenerator implements CodeGenerator<StringStruct> {
 	private static final String STRING_STRUCT_INIT_DESC = GeneratorUtils.getConstructorDescription(StringStruct.class, String.class);
 
 	@Override
-	public void generate(final StringStruct input, final JavaClassBuilder classBuilder) {
+	public void generate(final StringStruct input, final GeneratorState generatorState) {
 
-		final JavaMethodBuilder methodBuilder = classBuilder.getCurrentMethodBuilder();
+		final JavaMethodBuilder methodBuilder = generatorState.getCurrentMethodBuilder();
 		final MethodVisitor mv = methodBuilder.getMethodVisitor();
 
 		mv.visitTypeInsn(Opcodes.NEW, STRING_STRUCT_NAME);

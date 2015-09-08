@@ -3,8 +3,8 @@ package jcl.compiler.real.icg.generator.specialoperator;
 import java.util.Stack;
 
 import jcl.LispStruct;
-import jcl.compiler.real.icg.ClassDef;
 import jcl.compiler.real.icg.JavaClassBuilder;
+import jcl.compiler.real.icg.GeneratorState;
 import jcl.compiler.real.icg.JavaMethodBuilder;
 import jcl.compiler.real.icg.generator.CodeGenerator;
 import jcl.compiler.real.icg.generator.FormGenerator;
@@ -38,13 +38,13 @@ public class IfCodeGenerator implements CodeGenerator<IfStruct> {
 	private static final String IF_METHOD_DESC = "(Ljcl/functions/Closure;)Ljcl/LispStruct;";
 
 	@Override
-	public void generate(final IfStruct input, final JavaClassBuilder classBuilder) {
+	public void generate(final IfStruct input, final GeneratorState generatorState) {
 
 		final LispStruct testForm = input.getTestForm();
 		final LispStruct thenForm = input.getThenForm();
 		final LispStruct elseForm = input.getElseForm();
 
-		final ClassDef currentClass = classBuilder.getCurrentClass();
+		final JavaClassBuilder currentClass = generatorState.getCurrentClass();
 		final String fileName = currentClass.getFileName();
 
 		final ClassWriter cw = currentClass.getClassWriter();
@@ -53,14 +53,14 @@ public class IfCodeGenerator implements CodeGenerator<IfStruct> {
 		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PRIVATE, ifMethodName, IF_METHOD_DESC, null, null);
 
 		final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
-		final Stack<JavaMethodBuilder> methodBuilderStack = classBuilder.getMethodBuilderStack();
+		final Stack<JavaMethodBuilder> methodBuilderStack = generatorState.getMethodBuilderStack();
 		methodBuilderStack.push(methodBuilder);
 
 		mv.visitCode();
 		final int thisStore = methodBuilder.getNextAvailableStore();
 		final int closureArgStore = methodBuilder.getNextAvailableStore();
 
-		formGenerator.generate(testForm, classBuilder);
+		formGenerator.generate(testForm, generatorState);
 		final int testFormStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, testFormStore);
 
@@ -89,7 +89,7 @@ public class IfCodeGenerator implements CodeGenerator<IfStruct> {
 		final Label elseEnd = new Label();
 
 		mv.visitVarInsn(Opcodes.ALOAD, testFormStore);
-		nullCodeGenerator.generate(NullStruct.INSTANCE, classBuilder);
+		nullCodeGenerator.generate(NullStruct.INSTANCE, generatorState);
 		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
 				GenerationConstants.JAVA_OBJECT_NAME,
 				GenerationConstants.JAVA_EQUALS_METHOD_NAME,
@@ -98,7 +98,7 @@ public class IfCodeGenerator implements CodeGenerator<IfStruct> {
 		mv.visitJumpInsn(Opcodes.IFNE, elseStart);
 
 		mv.visitVarInsn(Opcodes.ALOAD, testFormStore);
-		nilCodeGenerator.generate(NILStruct.INSTANCE, classBuilder);
+		nilCodeGenerator.generate(NILStruct.INSTANCE, generatorState);
 		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
 				GenerationConstants.JAVA_OBJECT_NAME,
 				GenerationConstants.JAVA_EQUALS_METHOD_NAME,
@@ -108,13 +108,13 @@ public class IfCodeGenerator implements CodeGenerator<IfStruct> {
 
 		final int resultFormStore = methodBuilder.getNextAvailableStore();
 
-		formGenerator.generate(thenForm, classBuilder);
+		formGenerator.generate(thenForm, generatorState);
 		mv.visitVarInsn(Opcodes.ASTORE, resultFormStore);
 
 		mv.visitJumpInsn(Opcodes.GOTO, elseEnd);
 
 		mv.visitLabel(elseStart);
-		formGenerator.generate(elseForm, classBuilder);
+		formGenerator.generate(elseForm, generatorState);
 		mv.visitVarInsn(Opcodes.ASTORE, resultFormStore);
 
 		mv.visitLabel(elseEnd);

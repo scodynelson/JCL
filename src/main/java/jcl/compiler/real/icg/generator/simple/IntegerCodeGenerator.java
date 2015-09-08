@@ -2,7 +2,7 @@ package jcl.compiler.real.icg.generator.simple;
 
 import java.math.BigInteger;
 
-import jcl.compiler.real.icg.JavaClassBuilder;
+import jcl.compiler.real.icg.GeneratorState;
 import jcl.compiler.real.icg.JavaMethodBuilder;
 import jcl.compiler.real.icg.generator.CodeGenerator;
 import jcl.compiler.real.icg.generator.GenerationConstants;
@@ -25,9 +25,9 @@ public class IntegerCodeGenerator implements CodeGenerator<IntegerStruct> {
 	private static final String INTEGER_STRUCT_INIT_DESC = GeneratorUtils.getConstructorDescription(IntegerStruct.class, BigInteger.class);
 
 	@Override
-	public void generate(final IntegerStruct input, final JavaClassBuilder classBuilder) {
+	public void generate(final IntegerStruct input, final GeneratorState generatorState) {
 
-		final JavaMethodBuilder methodBuilder = classBuilder.getCurrentMethodBuilder();
+		final JavaMethodBuilder methodBuilder = generatorState.getCurrentMethodBuilder();
 		final MethodVisitor mv = methodBuilder.getMethodVisitor();
 
 		mv.visitTypeInsn(Opcodes.NEW, BIG_INTEGER_NAME);

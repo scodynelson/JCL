@@ -2,7 +2,7 @@ package jcl.compiler.real.icg.generator.simple;
 
 import java.math.BigInteger;
 
-import jcl.compiler.real.icg.JavaClassBuilder;
+import jcl.compiler.real.icg.GeneratorState;
 import jcl.compiler.real.icg.JavaMethodBuilder;
 import jcl.compiler.real.icg.generator.CodeGenerator;
 import jcl.compiler.real.icg.generator.GenerationConstants;
@@ -26,9 +26,9 @@ public class RatioCodeGenerator implements CodeGenerator<RatioStruct> {
 	private static final String RATIO_STRUCT_INIT_DESC = GeneratorUtils.getConstructorDescription(RatioStruct.class, BigInteger.class, BigInteger.class);
 
 	@Override
-	public void generate(final RatioStruct input, final JavaClassBuilder classBuilder) {
+	public void generate(final RatioStruct input, final GeneratorState generatorState) {
 
-		final JavaMethodBuilder methodBuilder = classBuilder.getCurrentMethodBuilder();
+		final JavaMethodBuilder methodBuilder = generatorState.getCurrentMethodBuilder();
 		final MethodVisitor mv = methodBuilder.getMethodVisitor();
 
 		final BigFraction bigFraction = input.getBigFraction();

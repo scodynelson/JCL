@@ -3,8 +3,8 @@ package jcl.compiler.real.icg.generator.specialoperator;
 import java.util.Stack;
 
 import jcl.LispStruct;
-import jcl.compiler.real.icg.ClassDef;
 import jcl.compiler.real.icg.JavaClassBuilder;
+import jcl.compiler.real.icg.GeneratorState;
 import jcl.compiler.real.icg.JavaMethodBuilder;
 import jcl.compiler.real.icg.generator.CodeGenerator;
 import jcl.compiler.real.icg.generator.FormGenerator;
@@ -31,12 +31,12 @@ public class UnwindProtectCodeGenerator implements CodeGenerator<UnwindProtectSt
 	private static final String UNWIND_PROTECT_METHOD_DESC = "(Ljcl/functions/Closure;)Ljcl/LispStruct;";
 
 	@Override
-	public void generate(final UnwindProtectStruct input, final JavaClassBuilder classBuilder) {
+	public void generate(final UnwindProtectStruct input, final GeneratorState generatorState) {
 
 		final LispStruct protectedForm = input.getProtectedForm();
 		final PrognStruct cleanupForms = input.getCleanupForms();
 
-		final ClassDef currentClass = classBuilder.getCurrentClass();
+		final JavaClassBuilder currentClass = generatorState.getCurrentClass();
 		final String fileName = currentClass.getFileName();
 
 		final ClassWriter cw = currentClass.getClassWriter();
@@ -45,7 +45,7 @@ public class UnwindProtectCodeGenerator implements CodeGenerator<UnwindProtectSt
 		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PRIVATE, unwindProtectMethodName, UNWIND_PROTECT_METHOD_DESC, null, null);
 
 		final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
-		final Stack<JavaMethodBuilder> methodBuilderStack = classBuilder.getMethodBuilderStack();
+		final Stack<JavaMethodBuilder> methodBuilderStack = generatorState.getMethodBuilderStack();
 		methodBuilderStack.push(methodBuilder);
 
 		mv.visitCode();
@@ -59,12 +59,12 @@ public class UnwindProtectCodeGenerator implements CodeGenerator<UnwindProtectSt
 		mv.visitTryCatchBlock(tryBlockStart, tryBlockEnd, catchBlockStart, null);
 
 		mv.visitLabel(tryBlockStart);
-		formGenerator.generate(protectedForm, classBuilder);
+		formGenerator.generate(protectedForm, generatorState);
 		final int protectedFormStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, protectedFormStore);
 
 		mv.visitLabel(tryBlockEnd);
-		prognCodeGenerator.generate(cleanupForms, classBuilder);
+		prognCodeGenerator.generate(cleanupForms, generatorState);
 		mv.visitInsn(Opcodes.POP);
 		mv.visitJumpInsn(Opcodes.GOTO, catchBlockEnd);
 
@@ -72,7 +72,7 @@ public class UnwindProtectCodeGenerator implements CodeGenerator<UnwindProtectSt
 		final int exceptionStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, exceptionStore);
 
-		prognCodeGenerator.generate(cleanupForms, classBuilder);
+		prognCodeGenerator.generate(cleanupForms, generatorState);
 		mv.visitInsn(Opcodes.POP);
 
 		mv.visitVarInsn(Opcodes.ALOAD, exceptionStore);

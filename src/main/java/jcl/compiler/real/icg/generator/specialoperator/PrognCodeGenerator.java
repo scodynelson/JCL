@@ -4,7 +4,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import jcl.LispStruct;
-import jcl.compiler.real.icg.JavaClassBuilder;
+import jcl.compiler.real.icg.GeneratorState;
 import jcl.compiler.real.icg.JavaMethodBuilder;
 import jcl.compiler.real.icg.generator.CodeGenerator;
 import jcl.compiler.real.icg.generator.FormGenerator;
@@ -26,19 +26,19 @@ public class PrognCodeGenerator implements CodeGenerator<PrognStruct> {
 	private NullCodeGenerator nullCodeGenerator;
 
 	@Override
-	public void generate(final PrognStruct input, final JavaClassBuilder classBuilder) {
+	public void generate(final PrognStruct input, final GeneratorState generatorState) {
 
-		final JavaMethodBuilder methodBuilder = classBuilder.getCurrentMethodBuilder();
+		final JavaMethodBuilder methodBuilder = generatorState.getCurrentMethodBuilder();
 		final MethodVisitor mv = methodBuilder.getMethodVisitor();
 
 		final List<LispStruct> forms = input.getForms();
 		if (forms.isEmpty()) {
-			nullCodeGenerator.generate(NullStruct.INSTANCE, classBuilder);
+			nullCodeGenerator.generate(NullStruct.INSTANCE, generatorState);
 		} else {
 			for (final Iterator<LispStruct> iterator = forms.iterator(); iterator.hasNext(); ) {
 
 				final LispStruct form = iterator.next();
-				formGenerator.generate(form, classBuilder);
+				formGenerator.generate(form, generatorState);
 				if (iterator.hasNext()) {
 					mv.visitInsn(Opcodes.POP);
 				}

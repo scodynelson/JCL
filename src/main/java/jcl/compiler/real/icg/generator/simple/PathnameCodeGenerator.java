@@ -6,7 +6,7 @@ package jcl.compiler.real.icg.generator.simple;
 
 import java.net.URI;
 
-import jcl.compiler.real.icg.JavaClassBuilder;
+import jcl.compiler.real.icg.GeneratorState;
 import jcl.compiler.real.icg.JavaMethodBuilder;
 import jcl.compiler.real.icg.generator.CodeGenerator;
 import jcl.compiler.real.icg.generator.GenerationConstants;
@@ -25,9 +25,9 @@ public class PathnameCodeGenerator implements CodeGenerator<PathnameStruct> {
 	private static final String PATHNAME_STRUCT_NAME_INIT_DESC = GeneratorUtils.getConstructorDescription(PathnameStruct.class, URI.class);
 
 	@Override
-	public void generate(final PathnameStruct input, final JavaClassBuilder classBuilder) {
+	public void generate(final PathnameStruct input, final GeneratorState generatorState) {
 
-		final JavaMethodBuilder methodBuilder = classBuilder.getCurrentMethodBuilder();
+		final JavaMethodBuilder methodBuilder = generatorState.getCurrentMethodBuilder();
 		final MethodVisitor mv = methodBuilder.getMethodVisitor();
 
 		final URI uri = input.getUri();

@@ -10,5 +10,5 @@ import jcl.compiler.real.struct.specialoperator.lambda.LambdaStruct;
 
 public interface IntermediateCodeGenerator {
 
-	Deque<ClassDef> generate(LambdaStruct lambdaStruct);
+	Deque<JavaClassBuilder> generate(LambdaStruct lambdaStruct);
 }

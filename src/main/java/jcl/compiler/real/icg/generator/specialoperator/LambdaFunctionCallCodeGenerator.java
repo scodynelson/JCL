@@ -7,7 +7,7 @@ package jcl.compiler.real.icg.generator.specialoperator;
 import java.util.List;
 
 import jcl.LispStruct;
-import jcl.compiler.real.icg.JavaClassBuilder;
+import jcl.compiler.real.icg.GeneratorState;
 import jcl.compiler.real.icg.JavaMethodBuilder;
 import jcl.compiler.real.icg.generator.CodeGenerator;
 import jcl.compiler.real.icg.generator.FormGenerator;
@@ -30,15 +30,15 @@ public class LambdaFunctionCallCodeGenerator implements CodeGenerator<LambdaFunc
 	private LambdaCodeGenerator lambdaCodeGenerator;
 
 	@Override
-	public void generate(final LambdaFunctionCallStruct input, final JavaClassBuilder classBuilder) {
+	public void generate(final LambdaFunctionCallStruct input, final GeneratorState generatorState) {
 
 		final LambdaStruct lambda = input.getLambdaStruct();
 		final List<LispStruct> arguments = input.getArguments();
 
-		final JavaMethodBuilder methodBuilder = classBuilder.getCurrentMethodBuilder();
+		final JavaMethodBuilder methodBuilder = generatorState.getCurrentMethodBuilder();
 		final MethodVisitor mv = methodBuilder.getMethodVisitor();
 
-		lambdaCodeGenerator.generate(lambda, classBuilder);
+		lambdaCodeGenerator.generate(lambda, generatorState);
 		final int functionStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, functionStore);
 
@@ -52,7 +52,7 @@ public class LambdaFunctionCallCodeGenerator implements CodeGenerator<LambdaFunc
 
 		for (int index = 0; index < numberOfArguments; index++) {
 			final LispStruct argument = arguments.get(index);
-			formGenerator.generate(argument, classBuilder);
+			formGenerator.generate(argument, generatorState);
 			mv.visitVarInsn(Opcodes.ASTORE, argumentStore);
 
 			mv.visitVarInsn(Opcodes.ALOAD, argumentsArrayStore);

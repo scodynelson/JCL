@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.ListIterator;
 
 import jcl.LispStruct;
-import jcl.compiler.real.icg.JavaClassBuilder;
+import jcl.compiler.real.icg.GeneratorState;
 import jcl.compiler.real.icg.JavaMethodBuilder;
 import jcl.compiler.real.icg.generator.CodeGenerator;
 import jcl.compiler.real.icg.generator.FormGenerator;
@@ -26,13 +26,13 @@ public class QuoteCodeGenerator implements CodeGenerator<QuoteStruct> {
 	private FormGenerator formGenerator;
 
 	@Override
-	public void generate(final QuoteStruct input, final JavaClassBuilder classBuilder) {
+	public void generate(final QuoteStruct input, final GeneratorState generatorState) {
 
 		final LispStruct quotedObject = input.getObject();
-		generateQuotedObject(quotedObject, classBuilder);
+		generateQuotedObject(quotedObject, generatorState);
 	}
 
-	public void generateQuotedObject(final LispStruct quotedObject, final JavaClassBuilder classBuilder) {
+	public void generateQuotedObject(final LispStruct quotedObject, final GeneratorState classBuilder) {
 		if (quotedObject instanceof SymbolStruct) {
 			generateQuotedSymbol((SymbolStruct) quotedObject, classBuilder);
 		} else if (quotedObject instanceof ConsStruct) {
@@ -42,7 +42,7 @@ public class QuoteCodeGenerator implements CodeGenerator<QuoteStruct> {
 		}
 	}
 
-	private void generateQuotedSymbol(final SymbolStruct<?> quotedSymbol, final JavaClassBuilder classBuilder) {
+	private void generateQuotedSymbol(final SymbolStruct<?> quotedSymbol, final GeneratorState classBuilder) {
 
 		final JavaMethodBuilder methodBuilder = classBuilder.getCurrentMethodBuilder();
 		final MethodVisitor mv = methodBuilder.getMethodVisitor();
@@ -54,7 +54,7 @@ public class QuoteCodeGenerator implements CodeGenerator<QuoteStruct> {
 		mv.visitVarInsn(Opcodes.ALOAD, symbolStore);
 	}
 
-	private void generateQuotedCons(final ConsStruct quotedCons, final JavaClassBuilder classBuilder) {
+	private void generateQuotedCons(final ConsStruct quotedCons, final GeneratorState classBuilder) {
 
 		final JavaMethodBuilder methodBuilder = classBuilder.getCurrentMethodBuilder();
 		final MethodVisitor mv = methodBuilder.getMethodVisitor();

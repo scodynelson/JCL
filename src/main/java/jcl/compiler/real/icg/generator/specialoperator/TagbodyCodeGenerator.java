@@ -7,8 +7,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
 
-import jcl.compiler.real.icg.ClassDef;
 import jcl.compiler.real.icg.JavaClassBuilder;
+import jcl.compiler.real.icg.GeneratorState;
 import jcl.compiler.real.icg.JavaMethodBuilder;
 import jcl.compiler.real.icg.generator.CodeGenerator;
 import jcl.compiler.real.icg.generator.GenerationConstants;
@@ -38,11 +38,11 @@ public class TagbodyCodeGenerator implements CodeGenerator<TagbodyStruct> {
 	private static final String TAGBODY_METHOD_DESC = "(Ljcl/functions/Closure;)Ljcl/LispStruct;";
 
 	@Override
-	public void generate(final TagbodyStruct input, final JavaClassBuilder classBuilder) {
+	public void generate(final TagbodyStruct input, final GeneratorState generatorState) {
 
 		final Map<GoStruct<?>, PrognStruct> tagbodyForms = input.getTagbodyForms();
 
-		final ClassDef currentClass = classBuilder.getCurrentClass();
+		final JavaClassBuilder currentClass = generatorState.getCurrentClass();
 		final String fileName = currentClass.getFileName();
 
 		final ClassWriter cw = currentClass.getClassWriter();
@@ -51,7 +51,7 @@ public class TagbodyCodeGenerator implements CodeGenerator<TagbodyStruct> {
 		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PRIVATE, tagbodyMethodName, TAGBODY_METHOD_DESC, null, null);
 
 		final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
-		final Stack<JavaMethodBuilder> methodBuilderStack = classBuilder.getMethodBuilderStack();
+		final Stack<JavaMethodBuilder> methodBuilderStack = generatorState.getMethodBuilderStack();
 		methodBuilderStack.push(methodBuilder);
 
 		mv.visitCode();
@@ -64,10 +64,10 @@ public class TagbodyCodeGenerator implements CodeGenerator<TagbodyStruct> {
 		final Label catchBlockEnd = new Label();
 		mv.visitTryCatchBlock(tryBlockStart, tryBlockEnd, catchBlockStart, GenerationConstants.GO_EXCEPTION_NAME);
 
-		final Map<TagbodyLabel, PrognStruct> tagbodyLabeledForms = getTagbodyLabeledForms(tagbodyForms, classBuilder);
+		final Map<TagbodyLabel, PrognStruct> tagbodyLabeledForms = getTagbodyLabeledForms(tagbodyForms, generatorState);
 
 		final Set<TagbodyLabel> tagbodyLabels = tagbodyLabeledForms.keySet();
-		classBuilder.getTagbodyLabelStack().push(tagbodyLabels);
+		generatorState.getTagbodyLabelStack().push(tagbodyLabels);
 
 		mv.visitLabel(tryBlockStart);
 
@@ -78,7 +78,7 @@ public class TagbodyCodeGenerator implements CodeGenerator<TagbodyStruct> {
 			final Label tagLabel = tagbodyLabel.getLabel();
 			mv.visitLabel(tagLabel);
 
-			prognCodeGenerator.generate(forms, classBuilder);
+			prognCodeGenerator.generate(forms, generatorState);
 			mv.visitInsn(Opcodes.POP);
 		}
 
@@ -125,7 +125,7 @@ public class TagbodyCodeGenerator implements CodeGenerator<TagbodyStruct> {
 		mv.visitInsn(Opcodes.ATHROW);
 
 		mv.visitLabel(catchBlockEnd);
-		nullCodeGenerator.generate(NullStruct.INSTANCE, classBuilder);
+		nullCodeGenerator.generate(NullStruct.INSTANCE, generatorState);
 
 		mv.visitInsn(Opcodes.ARETURN);
 
@@ -143,7 +143,7 @@ public class TagbodyCodeGenerator implements CodeGenerator<TagbodyStruct> {
 	}
 
 	private Map<TagbodyLabel, PrognStruct> getTagbodyLabeledForms(final Map<GoStruct<?>, PrognStruct> tagbodyForms,
-	                                                              final JavaClassBuilder classBuilder) {
+	                                                              final GeneratorState classBuilder) {
 
 		// NOTE: use LinkedHashMap so the tags and forms are ordered appropriately
 		final Map<TagbodyLabel, PrognStruct> tagbodyLabeledForms = new LinkedHashMap<>();

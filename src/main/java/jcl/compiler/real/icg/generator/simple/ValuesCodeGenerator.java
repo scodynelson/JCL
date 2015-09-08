@@ -5,7 +5,7 @@
 package jcl.compiler.real.icg.generator.simple;
 
 import jcl.LispStruct;
-import jcl.compiler.real.icg.JavaClassBuilder;
+import jcl.compiler.real.icg.GeneratorState;
 import jcl.compiler.real.icg.generator.CodeGenerator;
 import jcl.compiler.real.icg.generator.FormGenerator;
 import jcl.compiler.real.struct.ValuesStruct;
@@ -19,9 +19,9 @@ public class ValuesCodeGenerator implements CodeGenerator<ValuesStruct> {
 	private FormGenerator formGenerator;
 
 	@Override
-	public void generate(final ValuesStruct input, final JavaClassBuilder classBuilder) {
+	public void generate(final ValuesStruct input, final GeneratorState generatorState) {
 
 		final LispStruct value = input.getPrimaryValue();
-		formGenerator.generate(value, classBuilder);
+		formGenerator.generate(value, generatorState);
 	}
 }

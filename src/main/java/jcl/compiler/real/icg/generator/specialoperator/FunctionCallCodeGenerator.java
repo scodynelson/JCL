@@ -3,7 +3,7 @@ package jcl.compiler.real.icg.generator.specialoperator;
 import java.util.List;
 
 import jcl.LispStruct;
-import jcl.compiler.real.icg.JavaClassBuilder;
+import jcl.compiler.real.icg.GeneratorState;
 import jcl.compiler.real.icg.JavaMethodBuilder;
 import jcl.compiler.real.icg.generator.CodeGenerator;
 import jcl.compiler.real.icg.generator.FormGenerator;
@@ -23,27 +23,27 @@ public class FunctionCallCodeGenerator implements CodeGenerator<FunctionCallStru
 	private FormGenerator formGenerator;
 
 	@Override
-	public void generate(final FunctionCallStruct input, final JavaClassBuilder classBuilder) {
+	public void generate(final FunctionCallStruct input, final GeneratorState generatorState) {
 
 		final boolean recursiveCall = input.isRecursiveCall();
 		final SymbolStruct<?> functionSymbol = input.getFunctionSymbol();
 		final List<LispStruct> arguments = input.getArguments();
 
-		final JavaMethodBuilder methodBuilder = classBuilder.getCurrentMethodBuilder();
+		final JavaMethodBuilder methodBuilder = generatorState.getCurrentMethodBuilder();
 		final MethodVisitor mv = methodBuilder.getMethodVisitor();
 
 		if (recursiveCall) {
-			tailCallGenerate(methodBuilder, mv, classBuilder, arguments);
+			tailCallGenerate(methodBuilder, mv, generatorState, arguments);
 		} else {
 			final int functionPackageStore = methodBuilder.getNextAvailableStore();
 			final int functionSymbolStore = methodBuilder.getNextAvailableStore();
-			SymbolCodeGeneratorUtil.generate(functionSymbol, classBuilder, functionPackageStore, functionSymbolStore);
+			SymbolCodeGeneratorUtil.generate(functionSymbol, generatorState, functionPackageStore, functionSymbolStore);
 
-			nonTailCallGenerate(methodBuilder, mv, classBuilder, arguments, functionSymbolStore);
+			nonTailCallGenerate(methodBuilder, mv, generatorState, arguments, functionSymbolStore);
 		}
 	}
 
-	private void tailCallGenerate(final JavaMethodBuilder methodBuilder, final MethodVisitor mv, final JavaClassBuilder classBuilder,
+	private void tailCallGenerate(final JavaMethodBuilder methodBuilder, final MethodVisitor mv, final GeneratorState classBuilder,
 	                              final List<LispStruct> arguments) {
 
 		final int numberOfArguments = arguments.size();
@@ -74,7 +74,7 @@ public class FunctionCallCodeGenerator implements CodeGenerator<FunctionCallStru
 				false);
 	}
 
-	private void nonTailCallGenerate(final JavaMethodBuilder methodBuilder, final MethodVisitor mv, final JavaClassBuilder classBuilder,
+	private void nonTailCallGenerate(final JavaMethodBuilder methodBuilder, final MethodVisitor mv, final GeneratorState classBuilder,
 	                                 final List<LispStruct> arguments, final int functionSymbolStore) {
 
 		mv.visitVarInsn(Opcodes.ALOAD, functionSymbolStore);

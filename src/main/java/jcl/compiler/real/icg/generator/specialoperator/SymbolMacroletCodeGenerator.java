@@ -10,8 +10,8 @@ import java.util.Stack;
 import jcl.LispStruct;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.SymbolMacroletEnvironment;
-import jcl.compiler.real.icg.ClassDef;
 import jcl.compiler.real.icg.JavaClassBuilder;
+import jcl.compiler.real.icg.GeneratorState;
 import jcl.compiler.real.icg.JavaMethodBuilder;
 import jcl.compiler.real.icg.generator.CodeGenerator;
 import jcl.compiler.real.icg.generator.FormGenerator;
@@ -37,13 +37,13 @@ public class SymbolMacroletCodeGenerator implements CodeGenerator<SymbolMacrolet
 	private PrognCodeGenerator prognCodeGenerator;
 
 	@Override
-	public void generate(final SymbolMacroletStruct input, final JavaClassBuilder classBuilder) {
+	public void generate(final SymbolMacroletStruct input, final GeneratorState generatorState) {
 
 		final List<SymbolMacroletStruct.SymbolMacroletVar> vars = input.getVars();
 		final PrognStruct forms = input.getForms();
 		final SymbolMacroletEnvironment symbolMacroletEnvironment = input.getSymbolMacroletEnvironment();
 
-		final JavaMethodBuilder methodBuilder = classBuilder.getCurrentMethodBuilder();
+		final JavaMethodBuilder methodBuilder = generatorState.getCurrentMethodBuilder();
 		final MethodVisitor mv = methodBuilder.getMethodVisitor();
 
 		final Label tryBlockStart = new Label();
@@ -61,13 +61,13 @@ public class SymbolMacroletCodeGenerator implements CodeGenerator<SymbolMacrolet
 			final SymbolStruct<?> symbolVar = var.getVar();
 			// NOTE: we have to get a new 'symbolStore' for each var so we can properly unbind the expansions later
 			final int symbolStore = methodBuilder.getNextAvailableStore();
-			SymbolCodeGeneratorUtil.generate(symbolVar, classBuilder, packageStore, symbolStore);
+			SymbolCodeGeneratorUtil.generate(symbolVar, generatorState, packageStore, symbolStore);
 
 			// Add the symbolStore here so we can unbind the expansions later
 			symbolVarStores.add(symbolStore);
 
 			final LispStruct expansion = var.getExpansion();
-			final String symbolMacroExpanderClassName = generateSymbolMacroExpander(expansion, classBuilder);
+			final String symbolMacroExpanderClassName = generateSymbolMacroExpander(expansion, generatorState);
 
 			mv.visitTypeInsn(Opcodes.NEW, symbolMacroExpanderClassName);
 			mv.visitInsn(Opcodes.DUP);
@@ -81,10 +81,10 @@ public class SymbolMacroletCodeGenerator implements CodeGenerator<SymbolMacrolet
 
 		mv.visitLabel(tryBlockStart);
 
-		final Stack<Environment> bindingStack = classBuilder.getBindingStack();
+		final Stack<Environment> bindingStack = generatorState.getBindingStack();
 
 		bindingStack.push(symbolMacroletEnvironment);
-		prognCodeGenerator.generate(forms, classBuilder);
+		prognCodeGenerator.generate(forms, generatorState);
 		bindingStack.pop();
 
 		final int resultStore = methodBuilder.getNextAvailableStore();
@@ -114,13 +114,13 @@ public class SymbolMacroletCodeGenerator implements CodeGenerator<SymbolMacrolet
 		}
 	}
 
-	private String generateSymbolMacroExpander(final LispStruct expansion, final JavaClassBuilder classBuilder) {
+	private String generateSymbolMacroExpander(final LispStruct expansion, final GeneratorState classBuilder) {
 
 		final String fileName = "SymbolMacrolet" + '_' + System.nanoTime();
 		final String className = "jcl/" + fileName;
 
-		final ClassDef currentClass = new ClassDef(className, fileName);
-		final Stack<ClassDef> classStack = classBuilder.getClassStack();
+		final JavaClassBuilder currentClass = new JavaClassBuilder(className, fileName);
+		final Stack<JavaClassBuilder> classStack = classBuilder.getClassStack();
 
 		classStack.push(currentClass);
 		classBuilder.setCurrentClass(currentClass);

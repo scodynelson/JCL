@@ -2,7 +2,7 @@
  * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
  */
 
-package jcl.compiler.real.icg.generator.testground;
+package testground;
 
 import jcl.LispStruct;
 import jcl.characters.CharacterStruct;
@@ -21,6 +21,8 @@ public class TestGroundMacroFunctionExpanderGenerator extends MacroFunctionExpan
 	}
 
 	private class TestGroundMacroFunctionExpanderInnerFunction extends FunctionStruct {
+
+		private static final long serialVersionUID = -5371992564511489062L;
 
 		@Override
 		public LispStruct apply(final LispStruct... lispStructs) {

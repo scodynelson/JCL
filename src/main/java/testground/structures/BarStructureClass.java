@@ -2,7 +2,7 @@
  * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
  */
 
-package jcl.compiler.real.icg.generator.testground.structures;
+package testground.structures;
 
 import java.util.List;
 

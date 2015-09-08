@@ -2,7 +2,7 @@
  * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
  */
 
-package jcl.compiler.real.icg.generator.testground;
+package testground;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +13,6 @@ import jcl.characters.CharacterStruct;
 import jcl.compiler.real.environment.binding.lambdalist.AuxBinding;
 import jcl.compiler.real.environment.binding.lambdalist.KeyBinding;
 import jcl.compiler.real.environment.binding.lambdalist.OptionalBinding;
-import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaListBindings;
 import jcl.compiler.real.environment.binding.lambdalist.RequiredBinding;
 import jcl.compiler.real.environment.binding.lambdalist.RestBinding;
 import jcl.compiler.real.environment.binding.lambdalist.SuppliedPBinding;
@@ -22,23 +21,26 @@ import jcl.conditions.exceptions.ErrorException;
 import jcl.functions.Closure;
 import jcl.functions.FunctionParameterBinding;
 import jcl.functions.FunctionStruct;
+import jcl.functions.MacroFunctionStruct;
 import jcl.lists.NullStruct;
 import jcl.packages.PackageStruct;
 import jcl.symbols.SymbolStruct;
 
-public class TestLambdaGenerator extends FunctionStruct {
+public class TestGroundMacroLambdaFunctionGenerator extends MacroFunctionStruct {
 
-	private static final long serialVersionUID = 5616713628691655052L;
+	private static final long serialVersionUID = -1939696402314939143L;
 
 	private static final LispStruct LTV_1 = new CharacterStruct(1997);
 
-	public TestLambdaGenerator() {
+	public TestGroundMacroLambdaFunctionGenerator() {
 		this(null);
 	}
 
-	protected TestLambdaGenerator(final Closure closure) {
+	protected TestGroundMacroLambdaFunctionGenerator(final Closure closure) {
 		super("DocumentationString", closure);
 		initLambdaListBindings();
+
+		// TODO: init the expander
 	}
 
 	private void initLambdaListBindings() {
@@ -99,7 +101,8 @@ public class TestLambdaGenerator extends FunctionStruct {
 		auxBindings.add(auxBinding);
 		// End: Aux
 
-		lambdaListBindings = new OrdinaryLambdaListBindings(requiredBindings, optionalBindings, restBinding, keyBindings, auxBindings, allowOtherKeys);
+		// TODO: MacroLambdaListBindings
+//		macroLambdaListBindings = new MacroLambdaListBindings(requiredBindings, optionalBindings, restBinding, keyBindings, auxBindings, allowOtherKeys);
 	}
 
 	@SuppressWarnings({"unchecked", "rawtypes"})
@@ -169,8 +172,7 @@ public class TestLambdaGenerator extends FunctionStruct {
 	}
 
 	private LispStruct internalApply(final Closure currentClosure) {
-//		result = new CharacterStruct(97);
-		return new TestGroundLambdaFunction(currentClosure);
+		return macroFunctionExpander.expand(null, null);
 	}
 
 	private LispStruct getInitForm(final SymbolStruct<?> symbolBinding) {

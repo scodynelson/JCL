@@ -16,16 +16,45 @@ import org.objectweb.asm.Type;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+/**
+ * Class to generate {@link ArrayStruct} objects dynamically by utilizing the {@link ArrayStruct#dimensions} and {@link
+ * ArrayStruct#contents} of the provided {@link ArrayStruct} input value.
+ */
 @Component
 class ArrayCodeGenerator implements CodeGenerator<ArrayStruct<LispStruct>> {
 
+	/**
+	 * Constant {@link String} containing the name for the {@link ArrayStruct} class.
+	 */
 	private static final String ARRAY_STRUCT_NAME = Type.getInternalName(ArrayStruct.class);
 
+	/**
+	 * Constant {@link String} containing the description for the {@link ArrayStruct#ArrayStruct(List, List)}
+	 * constructor method.
+	 */
 	private static final String ARRAY_STRUCT_INIT_DESC = GeneratorUtils.getConstructorDescription(ArrayStruct.class, List.class, List.class);
 
+	/**
+	 * {@link QuoteCodeGenerator} used for generating the {@link ArrayStruct} contents as if they were quoted values.
+	 */
 	@Autowired
 	private QuoteCodeGenerator quoteCodeGenerator;
 
+	/**
+	 * {@inheritDoc}
+	 * Generation method for {@link ArrayStruct} objects, by performing the following operations:
+	 * <ol>
+	 * <li>Building the {@link ArrayStruct#dimensions}</li>
+	 * <li>Building the {@link ArrayStruct#contents}, ensuring that each content value is treated as being
+	 * 'quoted'</li>
+	 * <li>Constructing a new {@link ArrayStruct} with the build dimension and contents {@link List}s</li>
+	 * </ol>
+	 *
+	 * @param input
+	 * 		the {@link ArrayStruct} input value to generate code for
+	 * @param generatorState
+	 * 		stateful object used to hold the current state of the code generation process
+	 */
 	@Override
 	public void generate(final ArrayStruct<LispStruct> input, final GeneratorState generatorState) {
 

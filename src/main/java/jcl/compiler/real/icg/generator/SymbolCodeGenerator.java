@@ -6,14 +6,13 @@ package jcl.compiler.real.icg.generator;
 
 import jcl.compiler.real.icg.GeneratorState;
 import jcl.compiler.real.icg.JavaMethodBuilder;
-import jcl.compiler.real.icg.generator.simple.SymbolCodeGeneratorUtil;
 import jcl.symbols.SymbolStruct;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.springframework.stereotype.Component;
 
 @Component
-public class SymbolCodeGenerator implements CodeGenerator<SymbolStruct<?>> {
+class SymbolCodeGenerator implements CodeGenerator<SymbolStruct<?>> {
 
 	@Override
 	public void generate(final SymbolStruct<?> input, final GeneratorState generatorState) {

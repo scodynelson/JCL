@@ -19,9 +19,6 @@ import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaListBindin
 import jcl.compiler.real.environment.binding.lambdalist.RequiredBinding;
 import jcl.compiler.real.environment.binding.lambdalist.RestBinding;
 import jcl.compiler.real.environment.binding.lambdalist.SuppliedPBinding;
-import jcl.compiler.real.icg.generator.specialoperator.exception.GoException;
-import jcl.compiler.real.icg.generator.specialoperator.exception.ReturnFromException;
-import jcl.compiler.real.icg.generator.specialoperator.exception.ThrowException;
 import jcl.compiler.real.struct.ValuesStruct;
 import jcl.conditions.exceptions.ErrorException;
 import jcl.conditions.exceptions.ProgramErrorException;

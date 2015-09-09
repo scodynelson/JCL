@@ -6,7 +6,7 @@ import java.util.Stack;
 import java.util.concurrent.ConcurrentLinkedDeque;
 
 import jcl.compiler.real.environment.Environment;
-import jcl.compiler.real.icg.generator.specialoperator.TagbodyLabel;
+import jcl.compiler.real.icg.generator.TagbodyLabel;
 
 public class GeneratorState {
 

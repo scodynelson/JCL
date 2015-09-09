@@ -55,6 +55,7 @@
       <w>characterp</w>
       <w>circularities</w>
       <w>clhs</w>
+      <w>clinit</w>
       <w>clrhash</w>
       <w>complexp</w>
       <w>consp</w>
@@ -118,6 +119,8 @@
       <w>ldiff</w>
       <w>lessp</w>
       <w>listp</w>
+      <w>ljava</w>
+      <w>ljcl</w>
       <w>logand</w>
       <w>logandc</w>
       <w>logback</w>

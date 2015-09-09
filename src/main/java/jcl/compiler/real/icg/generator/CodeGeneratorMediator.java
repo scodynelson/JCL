@@ -4,6 +4,7 @@
 
 package jcl.compiler.real.icg.generator;
 
+import jcl.LispStruct;
 import jcl.arrays.ArrayStruct;
 import jcl.arrays.BitVectorStruct;
 import jcl.arrays.StringStruct;
@@ -54,12 +55,12 @@ import jcl.symbols.TStruct;
 
 public interface CodeGeneratorMediator {
 
-	void generate(Object input, final GenerationConstants generationConstants);
+	void generate(LispStruct input, final GeneratorState generatorState);
 	
-	void generate(ArrayStruct<?> input, final GeneratorState generatorState);
+	void generate(ArrayStruct<LispStruct> input, final GeneratorState generatorState);
 	void generate(BitVectorStruct input, final GeneratorState generatorState);
 	void generate(StringStruct input, final GeneratorState generatorState);
-	void generate(VectorStruct<?> input, final GeneratorState generatorState);
+	void generate(VectorStruct<LispStruct> input, final GeneratorState generatorState);
 	
 	void generate(CharacterStruct input, final GeneratorState generatorState);
 	
@@ -77,7 +78,7 @@ public interface CodeGeneratorMediator {
 	
 	void generate(KeywordStruct input, final GeneratorState generatorState);
 	void generate(NILStruct input, final GeneratorState generatorState);
-	void generate(SymbolStruct<?> input, final GeneratorState generatorState);
+	void generate(SymbolStruct<LispStruct> input, final GeneratorState generatorState);
 	void generate(TStruct input, final GeneratorState generatorState);
 	
 	void generate(BlockStruct input, final GeneratorState generatorState);

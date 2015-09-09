@@ -16,7 +16,7 @@ import org.objectweb.asm.Type;
 import org.springframework.stereotype.Component;
 
 @Component
-class KeywordStructCodeGenerator implements CodeGenerator<KeywordStruct> {
+class KeywordCodeGenerator implements CodeGenerator<KeywordStruct> {
 
 	private static final String GLOBAL_PACKAGE_STRUCT_NAME = Type.getInternalName(GlobalPackageStruct.class);
 

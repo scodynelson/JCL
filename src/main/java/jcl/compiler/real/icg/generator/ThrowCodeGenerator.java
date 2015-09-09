@@ -3,8 +3,9 @@ package jcl.compiler.real.icg.generator;
 import java.util.Stack;
 
 import jcl.LispStruct;
-import jcl.compiler.real.icg.JavaClassBuilder;
 import jcl.compiler.real.icg.GeneratorState;
+import jcl.compiler.real.icg.IntermediateCodeGenerator;
+import jcl.compiler.real.icg.JavaClassBuilder;
 import jcl.compiler.real.icg.JavaMethodBuilder;
 import jcl.compiler.real.struct.specialoperator.ThrowStruct;
 import org.objectweb.asm.ClassWriter;
@@ -17,7 +18,7 @@ import org.springframework.stereotype.Component;
 class ThrowCodeGenerator implements CodeGenerator<ThrowStruct> {
 
 	@Autowired
-	private FormGenerator formGenerator;
+	private IntermediateCodeGenerator codeGenerator;
 
 	private static final String THROW_METHOD_NAME_PREFIX = "throw_";
 
@@ -47,11 +48,11 @@ class ThrowCodeGenerator implements CodeGenerator<ThrowStruct> {
 		final int thisStore = methodBuilder.getNextAvailableStore();
 		final int closureArgStore = methodBuilder.getNextAvailableStore();
 
-		formGenerator.generate(catchTag, generatorState);
+		codeGenerator.generate(catchTag, generatorState);
 		final int catchTagStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, catchTagStore);
 
-		formGenerator.generate(resultForm, generatorState);
+		codeGenerator.generate(resultForm, generatorState);
 		final int resultFormStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, resultFormStore);
 

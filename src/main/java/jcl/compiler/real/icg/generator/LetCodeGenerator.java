@@ -13,8 +13,9 @@ import java.util.Stack;
 import jcl.LispStruct;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.LetEnvironment;
-import jcl.compiler.real.icg.JavaClassBuilder;
 import jcl.compiler.real.icg.GeneratorState;
+import jcl.compiler.real.icg.IntermediateCodeGenerator;
+import jcl.compiler.real.icg.JavaClassBuilder;
 import jcl.compiler.real.icg.JavaMethodBuilder;
 import jcl.compiler.real.struct.specialoperator.LetStruct;
 import jcl.compiler.real.struct.specialoperator.PrognStruct;
@@ -30,7 +31,7 @@ import org.springframework.stereotype.Component;
 class LetCodeGenerator implements CodeGenerator<LetStruct> {
 
 	@Autowired
-	private FormGenerator formGenerator;
+	private IntermediateCodeGenerator codeGenerator;
 
 	@Autowired
 	private PrognCodeGenerator prognCodeGenerator;
@@ -107,7 +108,7 @@ class LetCodeGenerator implements CodeGenerator<LetStruct> {
 
 			SymbolCodeGeneratorUtil.generate(symbolVar, generatorState, packageStore, symbolStore);
 
-			formGenerator.generate(initForm, generatorState);
+			codeGenerator.generate(initForm, generatorState);
 			final int initFormStore = methodBuilder.getNextAvailableStore();
 			mv.visitVarInsn(Opcodes.ASTORE, initFormStore);
 

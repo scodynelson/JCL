@@ -2,8 +2,8 @@ package jcl.compiler.real.icg.generator;
 
 import java.util.Stack;
 
-import jcl.compiler.real.icg.JavaClassBuilder;
 import jcl.compiler.real.icg.GeneratorState;
+import jcl.compiler.real.icg.JavaClassBuilder;
 import jcl.compiler.real.icg.JavaMethodBuilder;
 import jcl.compiler.real.struct.specialoperator.BlockStruct;
 import jcl.compiler.real.struct.specialoperator.PrognStruct;

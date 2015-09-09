@@ -9,12 +9,12 @@ import java.lang.reflect.Method;
 
 import org.objectweb.asm.Type;
 
-public final class GeneratorUtils {
+final class GeneratorUtils {
 
 	private GeneratorUtils() {
 	}
 
-	public static <TYPE> String getConstructorDescription(final Class<TYPE> clazz, final Class<?>... parameterTypes) {
+	static <TYPE> String getConstructorDescription(final Class<TYPE> clazz, final Class<?>... parameterTypes) {
 		final Constructor<TYPE> constructor = getConstructor(clazz, parameterTypes);
 		if (constructor == null) {
 			return null;
@@ -23,7 +23,7 @@ public final class GeneratorUtils {
 		}
 	}
 
-	public static <TYPE> Constructor<TYPE> getConstructor(final Class<TYPE> clazz, final Class<?>... parameterTypes) {
+	private static <TYPE> Constructor<TYPE> getConstructor(final Class<TYPE> clazz, final Class<?>... parameterTypes) {
 		try {
 			return clazz.getDeclaredConstructor(parameterTypes);
 		} catch (final NoSuchMethodException ignored) {
@@ -31,7 +31,7 @@ public final class GeneratorUtils {
 		}
 	}
 
-	public static <TYPE> String getMethodDescription(final Class<TYPE> clazz, final String methodName, final Class<?>... parameterTypes) {
+	static <TYPE> String getMethodDescription(final Class<TYPE> clazz, final String methodName, final Class<?>... parameterTypes) {
 		final Method method = getMethod(clazz, methodName, parameterTypes);
 		if (method == null) {
 			return null;
@@ -40,7 +40,7 @@ public final class GeneratorUtils {
 		}
 	}
 
-	public static Method getMethod(final Class<?> clazz, final String methodName, final Class<?>... parameterTypes) {
+	private static Method getMethod(final Class<?> clazz, final String methodName, final Class<?>... parameterTypes) {
 		try {
 			return clazz.getMethod(methodName, parameterTypes);
 		} catch (final NoSuchMethodException ignored) {

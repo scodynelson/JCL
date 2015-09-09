@@ -3,8 +3,9 @@ package jcl.compiler.real.icg.generator;
 import java.util.Stack;
 
 import jcl.LispStruct;
-import jcl.compiler.real.icg.JavaClassBuilder;
 import jcl.compiler.real.icg.GeneratorState;
+import jcl.compiler.real.icg.IntermediateCodeGenerator;
+import jcl.compiler.real.icg.JavaClassBuilder;
 import jcl.compiler.real.icg.JavaMethodBuilder;
 import jcl.compiler.real.struct.specialoperator.PrognStruct;
 import jcl.compiler.real.struct.specialoperator.UnwindProtectStruct;
@@ -19,7 +20,7 @@ import org.springframework.stereotype.Component;
 class UnwindProtectCodeGenerator implements CodeGenerator<UnwindProtectStruct> {
 
 	@Autowired
-	private FormGenerator formGenerator;
+	private IntermediateCodeGenerator codeGenerator;
 
 	@Autowired
 	private PrognCodeGenerator prognCodeGenerator;
@@ -57,7 +58,7 @@ class UnwindProtectCodeGenerator implements CodeGenerator<UnwindProtectStruct> {
 		mv.visitTryCatchBlock(tryBlockStart, tryBlockEnd, catchBlockStart, null);
 
 		mv.visitLabel(tryBlockStart);
-		formGenerator.generate(protectedForm, generatorState);
+		codeGenerator.generate(protectedForm, generatorState);
 		final int protectedFormStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, protectedFormStore);
 

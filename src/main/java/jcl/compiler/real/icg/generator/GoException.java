@@ -18,6 +18,7 @@ public class GoException extends ProgramErrorException {
 		this.tagIndex = tagIndex;
 	}
 
+	@SuppressWarnings({"unused", "SuppressionAnnotation"}) // NOTE: This is used inside the compiler bytecode generation
 	public int getTagIndex() {
 		return tagIndex;
 	}

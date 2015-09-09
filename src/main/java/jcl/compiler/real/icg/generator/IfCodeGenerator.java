@@ -3,14 +3,10 @@ package jcl.compiler.real.icg.generator;
 import java.util.Stack;
 
 import jcl.LispStruct;
-import jcl.compiler.real.icg.JavaClassBuilder;
 import jcl.compiler.real.icg.GeneratorState;
+import jcl.compiler.real.icg.IntermediateCodeGenerator;
+import jcl.compiler.real.icg.JavaClassBuilder;
 import jcl.compiler.real.icg.JavaMethodBuilder;
-import jcl.compiler.real.icg.generator.CodeGenerator;
-import jcl.compiler.real.icg.generator.FormGenerator;
-import jcl.compiler.real.icg.generator.GenerationConstants;
-import jcl.compiler.real.icg.generator.NILCodeGenerator;
-import jcl.compiler.real.icg.generator.NullCodeGenerator;
 import jcl.compiler.real.struct.specialoperator.IfStruct;
 import jcl.lists.NullStruct;
 import jcl.symbols.NILStruct;
@@ -25,7 +21,7 @@ import org.springframework.stereotype.Component;
 class IfCodeGenerator implements CodeGenerator<IfStruct> {
 
 	@Autowired
-	private FormGenerator formGenerator;
+	private IntermediateCodeGenerator codeGenerator;
 
 	@Autowired
 	private NILCodeGenerator nilCodeGenerator;
@@ -60,7 +56,7 @@ class IfCodeGenerator implements CodeGenerator<IfStruct> {
 		final int thisStore = methodBuilder.getNextAvailableStore();
 		final int closureArgStore = methodBuilder.getNextAvailableStore();
 
-		formGenerator.generate(testForm, generatorState);
+		codeGenerator.generate(testForm, generatorState);
 		final int testFormStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, testFormStore);
 
@@ -108,13 +104,13 @@ class IfCodeGenerator implements CodeGenerator<IfStruct> {
 
 		final int resultFormStore = methodBuilder.getNextAvailableStore();
 
-		formGenerator.generate(thenForm, generatorState);
+		codeGenerator.generate(thenForm, generatorState);
 		mv.visitVarInsn(Opcodes.ASTORE, resultFormStore);
 
 		mv.visitJumpInsn(Opcodes.GOTO, elseEnd);
 
 		mv.visitLabel(elseStart);
-		formGenerator.generate(elseForm, generatorState);
+		codeGenerator.generate(elseForm, generatorState);
 		mv.visitVarInsn(Opcodes.ASTORE, resultFormStore);
 
 		mv.visitLabel(elseEnd);

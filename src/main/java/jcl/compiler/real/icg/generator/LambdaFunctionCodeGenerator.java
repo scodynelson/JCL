@@ -5,8 +5,6 @@
 package jcl.compiler.real.icg.generator;
 
 import jcl.compiler.real.icg.GeneratorState;
-import jcl.compiler.real.icg.generator.CodeGenerator;
-import jcl.compiler.real.icg.generator.LambdaCodeGenerator;
 import jcl.compiler.real.struct.specialoperator.LambdaCompilerFunctionStruct;
 import jcl.compiler.real.struct.specialoperator.lambda.LambdaStruct;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -5,10 +5,8 @@ import java.util.List;
 
 import jcl.LispStruct;
 import jcl.compiler.real.icg.GeneratorState;
+import jcl.compiler.real.icg.IntermediateCodeGenerator;
 import jcl.compiler.real.icg.JavaMethodBuilder;
-import jcl.compiler.real.icg.generator.CodeGenerator;
-import jcl.compiler.real.icg.generator.FormGenerator;
-import jcl.compiler.real.icg.generator.NullCodeGenerator;
 import jcl.compiler.real.struct.specialoperator.PrognStruct;
 import jcl.lists.NullStruct;
 import org.objectweb.asm.MethodVisitor;
@@ -20,7 +18,7 @@ import org.springframework.stereotype.Component;
 class PrognCodeGenerator implements CodeGenerator<PrognStruct> {
 
 	@Autowired
-	private FormGenerator formGenerator;
+	private IntermediateCodeGenerator codeGenerator;
 
 	@Autowired
 	private NullCodeGenerator nullCodeGenerator;
@@ -38,7 +36,7 @@ class PrognCodeGenerator implements CodeGenerator<PrognStruct> {
 			for (final Iterator<LispStruct> iterator = forms.iterator(); iterator.hasNext(); ) {
 
 				final LispStruct form = iterator.next();
-				formGenerator.generate(form, generatorState);
+				codeGenerator.generate(form, generatorState);
 				if (iterator.hasNext()) {
 					mv.visitInsn(Opcodes.POP);
 				}

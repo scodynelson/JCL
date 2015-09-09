@@ -5,8 +5,9 @@ import java.util.Stack;
 import jcl.LispStruct;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.ProgvEnvironment;
-import jcl.compiler.real.icg.JavaClassBuilder;
 import jcl.compiler.real.icg.GeneratorState;
+import jcl.compiler.real.icg.IntermediateCodeGenerator;
+import jcl.compiler.real.icg.JavaClassBuilder;
 import jcl.compiler.real.icg.JavaMethodBuilder;
 import jcl.compiler.real.struct.specialoperator.PrognStruct;
 import jcl.compiler.real.struct.specialoperator.ProgvStruct;
@@ -21,7 +22,7 @@ import org.springframework.stereotype.Component;
 class ProgvCodeGenerator implements CodeGenerator<ProgvStruct> {
 
 	@Autowired
-	private FormGenerator formGenerator;
+	private IntermediateCodeGenerator codeGenerator;
 
 	@Autowired
 	private PrognCodeGenerator prognCodeGenerator;
@@ -68,7 +69,7 @@ class ProgvCodeGenerator implements CodeGenerator<ProgvStruct> {
 		mv.visitTryCatchBlock(tryBlockStart, tryBlockEnd, catchBlockStart, null);
 		mv.visitTryCatchBlock(catchBlockStart, finallyBlockStart, catchBlockStart, null);
 
-		formGenerator.generate(vars, generatorState);
+		codeGenerator.generate(vars, generatorState);
 
 		final int varsStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, varsStore);
@@ -205,7 +206,7 @@ class ProgvCodeGenerator implements CodeGenerator<ProgvStruct> {
 
 		mv.visitLabel(varsListOfSymbolsIteratorLoopEnd);
 
-		formGenerator.generate(vals, generatorState);
+		codeGenerator.generate(vals, generatorState);
 
 		final int valsStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, valsStore);

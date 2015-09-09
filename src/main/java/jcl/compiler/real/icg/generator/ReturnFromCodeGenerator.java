@@ -3,8 +3,9 @@ package jcl.compiler.real.icg.generator;
 import java.util.Stack;
 
 import jcl.LispStruct;
-import jcl.compiler.real.icg.JavaClassBuilder;
 import jcl.compiler.real.icg.GeneratorState;
+import jcl.compiler.real.icg.IntermediateCodeGenerator;
+import jcl.compiler.real.icg.JavaClassBuilder;
 import jcl.compiler.real.icg.JavaMethodBuilder;
 import jcl.compiler.real.struct.specialoperator.ReturnFromStruct;
 import jcl.symbols.SymbolStruct;
@@ -18,7 +19,7 @@ import org.springframework.stereotype.Component;
 class ReturnFromCodeGenerator implements CodeGenerator<ReturnFromStruct> {
 
 	@Autowired
-	private FormGenerator formGenerator;
+	private IntermediateCodeGenerator codeGenerator;
 
 	private static final String RETURN_FROM_METHOD_NAME_PREFIX = "returnFrom_";
 
@@ -52,7 +53,7 @@ class ReturnFromCodeGenerator implements CodeGenerator<ReturnFromStruct> {
 		final int nameSymbolStore = methodBuilder.getNextAvailableStore();
 		SymbolCodeGeneratorUtil.generate(name, generatorState, namePackageStore, nameSymbolStore);
 
-		formGenerator.generate(result, generatorState);
+		codeGenerator.generate(result, generatorState);
 		final int resultStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, resultStore);
 

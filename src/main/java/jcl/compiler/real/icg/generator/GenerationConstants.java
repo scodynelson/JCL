@@ -37,7 +37,7 @@ import jcl.types.TypeFactory;
 import jcl.types.typespecifiers.AtomicTypeSpecifier;
 import org.objectweb.asm.Type;
 
-public interface GenerationConstants {
+interface GenerationConstants {
 
 	String JAVA_EXTENSION = ".java";
 

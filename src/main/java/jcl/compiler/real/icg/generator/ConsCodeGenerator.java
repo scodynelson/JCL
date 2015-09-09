@@ -6,10 +6,8 @@ package jcl.compiler.real.icg.generator;
 
 import jcl.LispStruct;
 import jcl.compiler.real.icg.GeneratorState;
+import jcl.compiler.real.icg.IntermediateCodeGenerator;
 import jcl.compiler.real.icg.JavaMethodBuilder;
-import jcl.compiler.real.icg.generator.CodeGenerator;
-import jcl.compiler.real.icg.generator.FormGenerator;
-import jcl.compiler.real.icg.generator.GenerationConstants;
 import jcl.lists.ConsStruct;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
@@ -20,7 +18,7 @@ import org.springframework.stereotype.Component;
 class ConsCodeGenerator implements CodeGenerator<ConsStruct> {
 
 	@Autowired
-	private FormGenerator formGenerator;
+	private IntermediateCodeGenerator codeGenerator;
 
 	@Override
 	public void generate(final ConsStruct input, final GeneratorState generatorState) {
@@ -31,11 +29,11 @@ class ConsCodeGenerator implements CodeGenerator<ConsStruct> {
 		final JavaMethodBuilder methodBuilder = generatorState.getCurrentMethodBuilder();
 		final MethodVisitor mv = methodBuilder.getMethodVisitor();
 
-		formGenerator.generate(car, generatorState);
+		codeGenerator.generate(car, generatorState);
 		final int carStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, carStore);
 
-		formGenerator.generate(cdr, generatorState);
+		codeGenerator.generate(cdr, generatorState);
 		final int cdrStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, cdrStore);
 

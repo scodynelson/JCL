@@ -5,13 +5,10 @@ import java.util.Stack;
 
 import jcl.LispStruct;
 import jcl.compiler.real.environment.Environment;
-import jcl.compiler.real.icg.JavaClassBuilder;
 import jcl.compiler.real.icg.GeneratorState;
+import jcl.compiler.real.icg.IntermediateCodeGenerator;
+import jcl.compiler.real.icg.JavaClassBuilder;
 import jcl.compiler.real.icg.JavaMethodBuilder;
-import jcl.compiler.real.icg.generator.CodeGenerator;
-import jcl.compiler.real.icg.generator.FormGenerator;
-import jcl.compiler.real.icg.generator.GenerationConstants;
-import jcl.compiler.real.icg.generator.SymbolCodeGeneratorUtil;
 import jcl.compiler.real.struct.specialoperator.SetqStruct;
 import jcl.symbols.SymbolStruct;
 import org.objectweb.asm.ClassWriter;
@@ -25,7 +22,7 @@ import org.springframework.stereotype.Component;
 class SetqCodeGenerator implements CodeGenerator<SetqStruct> {
 
 	@Autowired
-	private FormGenerator formGenerator;
+	private IntermediateCodeGenerator codeGenerator;
 
 	private static final String SETQ_METHOD_NAME_PREFIX = "setq_";
 
@@ -92,7 +89,7 @@ class SetqCodeGenerator implements CodeGenerator<SetqStruct> {
 			SymbolCodeGeneratorUtil.generate(var, generatorState, packageStore, symbolStore);
 
 			final LispStruct form = setqPair.getForm();
-			formGenerator.generate(form, generatorState);
+			codeGenerator.generate(form, generatorState);
 			mv.visitVarInsn(Opcodes.ASTORE, initFormStore);
 
 			final Label valuesCheckIfEnd = new Label();

@@ -10,8 +10,9 @@ import java.util.Stack;
 import jcl.LispStruct;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.SymbolMacroletEnvironment;
-import jcl.compiler.real.icg.JavaClassBuilder;
 import jcl.compiler.real.icg.GeneratorState;
+import jcl.compiler.real.icg.IntermediateCodeGenerator;
+import jcl.compiler.real.icg.JavaClassBuilder;
 import jcl.compiler.real.icg.JavaMethodBuilder;
 import jcl.compiler.real.struct.specialoperator.PrognStruct;
 import jcl.compiler.real.struct.specialoperator.SymbolMacroletStruct;
@@ -28,7 +29,7 @@ import org.springframework.stereotype.Component;
 class SymbolMacroletCodeGenerator implements CodeGenerator<SymbolMacroletStruct> {
 
 	@Autowired
-	private FormGenerator formGenerator;
+	private IntermediateCodeGenerator codeGenerator;
 
 	@Autowired
 	private PrognCodeGenerator prognCodeGenerator;
@@ -104,7 +105,7 @@ class SymbolMacroletCodeGenerator implements CodeGenerator<SymbolMacroletStruct>
 		mv.visitVarInsn(Opcodes.ALOAD, resultStore);
 	}
 
-	private void generateFinallyCode(final MethodVisitor mv, final Set<Integer> varSymbolStores) {
+	private static void generateFinallyCode(final MethodVisitor mv, final Set<Integer> varSymbolStores) {
 		for (final Integer varSymbolStore : varSymbolStores) {
 			mv.visitVarInsn(Opcodes.ALOAD, varSymbolStore);
 			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/symbols/SymbolStruct", "unbindSymbolMacroExpander", "()V", false);
@@ -168,7 +169,7 @@ class SymbolMacroletCodeGenerator implements CodeGenerator<SymbolMacroletStruct>
 			final int expressionStore = methodBuilder.getNextAvailableStore();
 			final int environmentStore = methodBuilder.getNextAvailableStore();
 
-			formGenerator.generate(expansion, classBuilder);
+			codeGenerator.generate(expansion, classBuilder);
 
 			mv.visitInsn(Opcodes.ARETURN);
 

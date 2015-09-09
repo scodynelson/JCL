@@ -6,9 +6,12 @@ package jcl.compiler.real.icg;
 
 import java.util.Deque;
 
+import jcl.LispStruct;
 import jcl.compiler.real.struct.specialoperator.lambda.LambdaStruct;
 
 public interface IntermediateCodeGenerator {
 
 	Deque<JavaClassBuilder> generate(LambdaStruct lambdaStruct);
+
+	void generate(LispStruct input, GeneratorState generatorState);
 }

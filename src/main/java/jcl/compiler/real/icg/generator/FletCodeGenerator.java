@@ -8,8 +8,9 @@ import java.util.Stack;
 
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.FletEnvironment;
-import jcl.compiler.real.icg.JavaClassBuilder;
 import jcl.compiler.real.icg.GeneratorState;
+import jcl.compiler.real.icg.IntermediateCodeGenerator;
+import jcl.compiler.real.icg.JavaClassBuilder;
 import jcl.compiler.real.icg.JavaMethodBuilder;
 import jcl.compiler.real.struct.specialoperator.CompilerFunctionStruct;
 import jcl.compiler.real.struct.specialoperator.FletStruct;
@@ -26,7 +27,7 @@ import org.springframework.stereotype.Component;
 class FletCodeGenerator implements CodeGenerator<FletStruct> {
 
 	@Autowired
-	private FormGenerator formGenerator;
+	private IntermediateCodeGenerator codeGenerator;
 
 	@Autowired
 	private PrognCodeGenerator prognCodeGenerator;
@@ -94,7 +95,7 @@ class FletCodeGenerator implements CodeGenerator<FletStruct> {
 			SymbolCodeGeneratorUtil.generate(functionSymbolVar, generatorState, packageStore, functionSymbolStore);
 
 			final CompilerFunctionStruct initForm = var.getInitForm();
-			formGenerator.generate(initForm, generatorState);
+			codeGenerator.generate(initForm, generatorState);
 			final int initFormStore = methodBuilder.getNextAvailableStore();
 			mv.visitVarInsn(Opcodes.ASTORE, initFormStore);
 
@@ -174,7 +175,7 @@ class FletCodeGenerator implements CodeGenerator<FletStruct> {
 		previousMv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, fileName, fletMethodName, FLET_METHOD_DESC, false);
 	}
 
-	private void generateFinallyCode(final MethodVisitor mv, final Set<Integer> varSymbolStores) {
+	private static void generateFinallyCode(final MethodVisitor mv, final Set<Integer> varSymbolStores) {
 		for (final Integer varSymbolStore : varSymbolStores) {
 			mv.visitVarInsn(Opcodes.ALOAD, varSymbolStore);
 			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,

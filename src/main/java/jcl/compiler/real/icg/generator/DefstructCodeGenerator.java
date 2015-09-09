@@ -6,12 +6,9 @@ import java.util.Random;
 import java.util.Stack;
 
 import jcl.LispType;
-import jcl.compiler.real.icg.JavaClassBuilder;
 import jcl.compiler.real.icg.GeneratorState;
+import jcl.compiler.real.icg.JavaClassBuilder;
 import jcl.compiler.real.icg.JavaMethodBuilder;
-import jcl.compiler.real.icg.generator.CodeGenerator;
-import jcl.compiler.real.icg.generator.GenerationConstants;
-import jcl.compiler.real.icg.generator.SymbolCodeGeneratorUtil;
 import jcl.compiler.real.struct.specialoperator.defstruct.DefstructStruct;
 import jcl.structures.StructureClassStruct;
 import jcl.symbols.SymbolStruct;
@@ -147,12 +144,12 @@ class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 		}
 	}
 
-	public static void generateStructureType(final DefstructStruct defstructStruct, final GeneratorState classBuilder,
-	                                         final String structureTypeFileName,
-	                                         final String structureTypeSyntheticInnerClass,
-	                                         final String structureTypeFactoryInnerClass,
-	                                         final String structureTypeImplClassName,
-	                                         final String structureTypeImplInnerClass) {
+	private static void generateStructureType(final DefstructStruct defstructStruct, final GeneratorState classBuilder,
+	                                          final String structureTypeFileName,
+	                                          final String structureTypeSyntheticInnerClass,
+	                                          final String structureTypeFactoryInnerClass,
+	                                          final String structureTypeImplClassName,
+	                                          final String structureTypeImplInnerClass) {
 
 		final String className = structureTypeFileName.substring(structureTypeFileName.lastIndexOf('/') + 1, structureTypeFileName.length());
 
@@ -252,11 +249,11 @@ class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 		classStack.pop();
 	}
 
-	public static void generateStructureTypeFactory(final GeneratorState classBuilder,
-	                                                final String structureTypeFileName,
-	                                                final String structureTypeFactoryInnerClass,
-	                                                final String structureTypeImplClassName,
-	                                                final String structureTypeImplInnerClass) {
+	private static void generateStructureTypeFactory(final GeneratorState classBuilder,
+	                                                 final String structureTypeFileName,
+	                                                 final String structureTypeFactoryInnerClass,
+	                                                 final String structureTypeImplClassName,
+	                                                 final String structureTypeImplInnerClass) {
 
 		final String className = structureTypeFactoryInnerClass.substring(structureTypeFactoryInnerClass.lastIndexOf('/') + 1, structureTypeFactoryInnerClass.length());
 
@@ -371,13 +368,13 @@ class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 		classStack.pop();
 	}
 
-	public static void generateStructureTypeImpl(final GeneratorState classBuilder,
-	                                             final String structureName,
-	                                             final String structureTypeFileName,
-	                                             final String structureTypeSyntheticInnerClass,
-	                                             final String structureTypeFactoryInnerClass,
-	                                             final String structureTypeImplClassName,
-	                                             final String structureTypeImplInnerClass) {
+	private static void generateStructureTypeImpl(final GeneratorState classBuilder,
+	                                              final String structureName,
+	                                              final String structureTypeFileName,
+	                                              final String structureTypeSyntheticInnerClass,
+	                                              final String structureTypeFactoryInnerClass,
+	                                              final String structureTypeImplClassName,
+	                                              final String structureTypeImplInnerClass) {
 
 		final String className = structureTypeImplInnerClass.substring(structureTypeImplInnerClass.lastIndexOf('/') + 1, structureTypeImplInnerClass.length());
 
@@ -578,10 +575,10 @@ class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 		classStack.pop();
 	}
 
-	public static void generateStructureClass(final DefstructStruct defstructStruct, final GeneratorState classBuilder,
-	                                          final String structureTypeFileName,
-	                                          final String structureClassFileName,
-	                                          final String structureObjectFileName) {
+	private static void generateStructureClass(final DefstructStruct defstructStruct, final GeneratorState classBuilder,
+	                                           final String structureTypeFileName,
+	                                           final String structureClassFileName,
+	                                           final String structureObjectFileName) {
 
 		final String className = structureClassFileName.substring(structureClassFileName.lastIndexOf('/') + 1, structureClassFileName.length());
 
@@ -799,9 +796,9 @@ class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 		classStack.pop();
 	}
 
-	public static void generateStructureObject(final DefstructStruct defstructStruct, final GeneratorState classBuilder,
-	                                           final String structureClassFileName,
-	                                           final String structureObjectFileName) {
+	private static void generateStructureObject(final DefstructStruct defstructStruct, final GeneratorState classBuilder,
+	                                            final String structureClassFileName,
+	                                            final String structureObjectFileName) {
 
 		final String className = structureObjectFileName.substring(structureObjectFileName.lastIndexOf('/') + 1, structureObjectFileName.length());
 

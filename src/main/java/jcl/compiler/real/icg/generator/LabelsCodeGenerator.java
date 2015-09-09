@@ -8,8 +8,9 @@ import java.util.Stack;
 
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.LabelsEnvironment;
-import jcl.compiler.real.icg.JavaClassBuilder;
 import jcl.compiler.real.icg.GeneratorState;
+import jcl.compiler.real.icg.IntermediateCodeGenerator;
+import jcl.compiler.real.icg.JavaClassBuilder;
 import jcl.compiler.real.icg.JavaMethodBuilder;
 import jcl.compiler.real.struct.specialoperator.CompilerFunctionStruct;
 import jcl.compiler.real.struct.specialoperator.LabelsStruct;
@@ -26,7 +27,7 @@ import org.springframework.stereotype.Component;
 class LabelsCodeGenerator implements CodeGenerator<LabelsStruct> {
 
 	@Autowired
-	private FormGenerator formGenerator;
+	private IntermediateCodeGenerator codeGenerator;
 
 	@Autowired
 	private PrognCodeGenerator prognCodeGenerator;
@@ -94,7 +95,7 @@ class LabelsCodeGenerator implements CodeGenerator<LabelsStruct> {
 			SymbolCodeGeneratorUtil.generate(functionSymbolVar, generatorState, packageStore, functionSymbolStore);
 
 			final CompilerFunctionStruct initForm = var.getInitForm();
-			formGenerator.generate(initForm, generatorState);
+			codeGenerator.generate(initForm, generatorState);
 			final int initFormStore = methodBuilder.getNextAvailableStore();
 			mv.visitVarInsn(Opcodes.ASTORE, initFormStore);
 
@@ -174,7 +175,7 @@ class LabelsCodeGenerator implements CodeGenerator<LabelsStruct> {
 		previousMv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, fileName, labelsMethodName, LABELS_METHOD_DESC, false);
 	}
 
-	private void generateFinallyCode(final MethodVisitor mv, final Set<Integer> varSymbolStores) {
+	private static void generateFinallyCode(final MethodVisitor mv, final Set<Integer> varSymbolStores) {
 		for (final Integer varSymbolStore : varSymbolStores) {
 			mv.visitVarInsn(Opcodes.ALOAD, varSymbolStore);
 			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,

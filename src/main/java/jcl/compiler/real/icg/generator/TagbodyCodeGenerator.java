@@ -7,8 +7,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
 
-import jcl.compiler.real.icg.JavaClassBuilder;
 import jcl.compiler.real.icg.GeneratorState;
+import jcl.compiler.real.icg.JavaClassBuilder;
 import jcl.compiler.real.icg.JavaMethodBuilder;
 import jcl.compiler.real.struct.specialoperator.PrognStruct;
 import jcl.compiler.real.struct.specialoperator.TagbodyStruct;
@@ -139,8 +139,8 @@ class TagbodyCodeGenerator implements CodeGenerator<TagbodyStruct> {
 		previousMv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, fileName, tagbodyMethodName, TAGBODY_METHOD_DESC, false);
 	}
 
-	private Map<TagbodyLabel, PrognStruct> getTagbodyLabeledForms(final Map<GoStruct<?>, PrognStruct> tagbodyForms,
-	                                                              final GeneratorState classBuilder) {
+	private static Map<TagbodyLabel, PrognStruct> getTagbodyLabeledForms(final Map<GoStruct<?>, PrognStruct> tagbodyForms,
+	                                                                     final GeneratorState classBuilder) {
 
 		// NOTE: use LinkedHashMap so the tags and forms are ordered appropriately
 		final Map<TagbodyLabel, PrognStruct> tagbodyLabeledForms = new LinkedHashMap<>();

@@ -8,9 +8,6 @@ import java.net.URI;
 
 import jcl.compiler.real.icg.GeneratorState;
 import jcl.compiler.real.icg.JavaMethodBuilder;
-import jcl.compiler.real.icg.generator.CodeGenerator;
-import jcl.compiler.real.icg.generator.GenerationConstants;
-import jcl.compiler.real.icg.generator.GeneratorUtils;
 import jcl.pathnames.PathnameStruct;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;

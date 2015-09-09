@@ -5,11 +5,8 @@ import java.util.ListIterator;
 
 import jcl.LispStruct;
 import jcl.compiler.real.icg.GeneratorState;
+import jcl.compiler.real.icg.IntermediateCodeGenerator;
 import jcl.compiler.real.icg.JavaMethodBuilder;
-import jcl.compiler.real.icg.generator.CodeGenerator;
-import jcl.compiler.real.icg.generator.FormGenerator;
-import jcl.compiler.real.icg.generator.GenerationConstants;
-import jcl.compiler.real.icg.generator.SymbolCodeGeneratorUtil;
 import jcl.compiler.real.struct.specialoperator.QuoteStruct;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.lists.ConsStruct;
@@ -23,7 +20,7 @@ import org.springframework.stereotype.Component;
 class QuoteCodeGenerator implements CodeGenerator<QuoteStruct> {
 
 	@Autowired
-	private FormGenerator formGenerator;
+	private IntermediateCodeGenerator codeGenerator;
 
 	@Override
 	public void generate(final QuoteStruct input, final GeneratorState generatorState) {
@@ -38,11 +35,11 @@ class QuoteCodeGenerator implements CodeGenerator<QuoteStruct> {
 		} else if (quotedObject instanceof ConsStruct) {
 			generateQuotedCons((ConsStruct) quotedObject, classBuilder);
 		} else {
-			formGenerator.generate(quotedObject, classBuilder);
+			codeGenerator.generate(quotedObject, classBuilder);
 		}
 	}
 
-	private void generateQuotedSymbol(final SymbolStruct<?> quotedSymbol, final GeneratorState classBuilder) {
+	private static void generateQuotedSymbol(final SymbolStruct<?> quotedSymbol, final GeneratorState classBuilder) {
 
 		final JavaMethodBuilder methodBuilder = classBuilder.getCurrentMethodBuilder();
 		final MethodVisitor mv = methodBuilder.getMethodVisitor();

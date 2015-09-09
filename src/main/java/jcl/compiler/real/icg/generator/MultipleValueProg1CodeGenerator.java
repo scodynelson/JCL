@@ -3,8 +3,9 @@ package jcl.compiler.real.icg.generator;
 import java.util.Stack;
 
 import jcl.LispStruct;
-import jcl.compiler.real.icg.JavaClassBuilder;
 import jcl.compiler.real.icg.GeneratorState;
+import jcl.compiler.real.icg.IntermediateCodeGenerator;
+import jcl.compiler.real.icg.JavaClassBuilder;
 import jcl.compiler.real.icg.JavaMethodBuilder;
 import jcl.compiler.real.struct.specialoperator.MultipleValueProg1Struct;
 import jcl.compiler.real.struct.specialoperator.PrognStruct;
@@ -18,7 +19,7 @@ import org.springframework.stereotype.Component;
 class MultipleValueProg1CodeGenerator implements CodeGenerator<MultipleValueProg1Struct> {
 
 	@Autowired
-	private FormGenerator formGenerator;
+	private IntermediateCodeGenerator codeGenerator;
 
 	@Autowired
 	private PrognCodeGenerator prognCodeGenerator;
@@ -49,7 +50,7 @@ class MultipleValueProg1CodeGenerator implements CodeGenerator<MultipleValueProg
 		final int thisStore = methodBuilder.getNextAvailableStore();
 		final int closureArgStore = methodBuilder.getNextAvailableStore();
 
-		formGenerator.generate(firstForm, generatorState);
+		codeGenerator.generate(firstForm, generatorState);
 
 		final int firstFormStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, firstFormStore);

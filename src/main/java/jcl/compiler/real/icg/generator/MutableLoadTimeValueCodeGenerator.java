@@ -6,10 +6,8 @@ package jcl.compiler.real.icg.generator;
 
 import jcl.LispStruct;
 import jcl.compiler.real.icg.GeneratorState;
+import jcl.compiler.real.icg.IntermediateCodeGenerator;
 import jcl.compiler.real.icg.JavaMethodBuilder;
-import jcl.compiler.real.icg.generator.CodeGenerator;
-import jcl.compiler.real.icg.generator.FormGenerator;
-import jcl.compiler.real.icg.generator.GenerationConstants;
 import jcl.compiler.real.struct.specialoperator.MutableLoadTimeValueStruct;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
@@ -21,7 +19,7 @@ import org.springframework.stereotype.Component;
 class MutableLoadTimeValueCodeGenerator implements CodeGenerator<MutableLoadTimeValueStruct> {
 
 	@Autowired
-	private FormGenerator formGenerator;
+	private IntermediateCodeGenerator codeGenerator;
 
 	@Override
 	public void generate(final MutableLoadTimeValueStruct input, final GeneratorState generatorState) {
@@ -31,7 +29,7 @@ class MutableLoadTimeValueCodeGenerator implements CodeGenerator<MutableLoadTime
 		final JavaMethodBuilder methodBuilder = generatorState.getCurrentMethodBuilder();
 		final MethodVisitor mv = methodBuilder.getMethodVisitor();
 
-		formGenerator.generate(form, generatorState);
+		codeGenerator.generate(form, generatorState);
 		final int initFormStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, initFormStore);
 

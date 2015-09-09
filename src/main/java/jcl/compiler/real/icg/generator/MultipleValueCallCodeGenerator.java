@@ -4,12 +4,10 @@ import java.util.List;
 import java.util.Stack;
 
 import jcl.LispStruct;
-import jcl.compiler.real.icg.JavaClassBuilder;
 import jcl.compiler.real.icg.GeneratorState;
+import jcl.compiler.real.icg.IntermediateCodeGenerator;
+import jcl.compiler.real.icg.JavaClassBuilder;
 import jcl.compiler.real.icg.JavaMethodBuilder;
-import jcl.compiler.real.icg.generator.CodeGenerator;
-import jcl.compiler.real.icg.generator.FormGenerator;
-import jcl.compiler.real.icg.generator.GenerationConstants;
 import jcl.compiler.real.struct.specialoperator.CompilerFunctionStruct;
 import jcl.compiler.real.struct.specialoperator.MultipleValueCallStruct;
 import org.objectweb.asm.ClassWriter;
@@ -23,7 +21,7 @@ import org.springframework.stereotype.Component;
 class MultipleValueCallCodeGenerator implements CodeGenerator<MultipleValueCallStruct> {
 
 	@Autowired
-	private FormGenerator formGenerator;
+	private IntermediateCodeGenerator codeGenerator;
 
 	private static final String MULTIPLE_VALUE_CALL_METHOD_NAME_PREFIX = "multipleValueCall_";
 
@@ -53,7 +51,7 @@ class MultipleValueCallCodeGenerator implements CodeGenerator<MultipleValueCallS
 		final int thisStore = methodBuilder.getNextAvailableStore();
 		final int closureArgStore = methodBuilder.getNextAvailableStore();
 
-		formGenerator.generate(functionForm, generatorState);
+		codeGenerator.generate(functionForm, generatorState);
 		final int functionFormStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, functionFormStore);
 
@@ -126,7 +124,7 @@ class MultipleValueCallCodeGenerator implements CodeGenerator<MultipleValueCallS
 			final Label iteratorLoopStart = new Label();
 			final Label iteratorLoopEnd = new Label();
 
-			formGenerator.generate(form, generatorState);
+			codeGenerator.generate(form, generatorState);
 			mv.visitVarInsn(Opcodes.ASTORE, formStore);
 
 			mv.visitVarInsn(Opcodes.ALOAD, formStore);

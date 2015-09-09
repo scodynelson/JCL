@@ -20,9 +20,9 @@ public class GeneratorState {
 	// bindingEnvironment is set to the new environment. When that binding is no
 	// longer in force, the stack is popped and the value of bindingEnvironment is
 	// set to the new top of stack
-	private Stack<Environment> bindingStack;
+	private final Stack<Environment> bindingStack;
 
-	private Stack<Set<TagbodyLabel>> tagbodyLabelStack;
+	private final Stack<Set<TagbodyLabel>> tagbodyLabelStack;
 
 	private int tagCounter;
 
@@ -33,14 +33,11 @@ public class GeneratorState {
 		bindingStack.push(Environment.NULL);
 		tagCounter = 0;
 		tagbodyLabelStack = new Stack<>();
+		currentClass = null;
 	}
 
 	public Stack<Environment> getBindingStack() {
 		return bindingStack;
-	}
-
-	public void setBindingStack(final Stack<Environment> bindingStack) {
-		this.bindingStack = bindingStack;
 	}
 
 	public Stack<Set<TagbodyLabel>> getTagbodyLabelStack() {

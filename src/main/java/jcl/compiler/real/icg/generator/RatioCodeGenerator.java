@@ -4,9 +4,6 @@ import java.math.BigInteger;
 
 import jcl.compiler.real.icg.GeneratorState;
 import jcl.compiler.real.icg.JavaMethodBuilder;
-import jcl.compiler.real.icg.generator.CodeGenerator;
-import jcl.compiler.real.icg.generator.GenerationConstants;
-import jcl.compiler.real.icg.generator.GeneratorUtils;
 import jcl.numbers.RatioStruct;
 import org.apache.commons.math3.fraction.BigFraction;
 import org.objectweb.asm.MethodVisitor;

@@ -6,8 +6,6 @@ package jcl.compiler.real.icg.generator;
 
 import jcl.compiler.real.icg.GeneratorState;
 import jcl.compiler.real.icg.JavaMethodBuilder;
-import jcl.compiler.real.icg.generator.CodeGenerator;
-import jcl.compiler.real.icg.generator.GenerationConstants;
 import jcl.packages.GlobalPackageStruct;
 import jcl.symbols.KeywordStruct;
 import org.objectweb.asm.MethodVisitor;

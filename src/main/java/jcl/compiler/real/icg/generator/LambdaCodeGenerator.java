@@ -21,8 +21,9 @@ import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaListBindin
 import jcl.compiler.real.environment.binding.lambdalist.RequiredBinding;
 import jcl.compiler.real.environment.binding.lambdalist.RestBinding;
 import jcl.compiler.real.environment.binding.lambdalist.SuppliedPBinding;
-import jcl.compiler.real.icg.JavaClassBuilder;
 import jcl.compiler.real.icg.GeneratorState;
+import jcl.compiler.real.icg.IntermediateCodeGenerator;
+import jcl.compiler.real.icg.JavaClassBuilder;
 import jcl.compiler.real.icg.JavaMethodBuilder;
 import jcl.compiler.real.struct.specialoperator.PrognStruct;
 import jcl.compiler.real.struct.specialoperator.lambda.LambdaStruct;
@@ -37,15 +38,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
-
-	public static final String FUNCTION_STRUCT_INIT_CLOSURE_DESC = "(Ljcl/functions/Closure;)V";
+class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 
 	@Autowired
 	private PrognCodeGenerator prognCodeGenerator;
 
 	@Autowired
-	private FormGenerator formGenerator;
+	private IntermediateCodeGenerator codeGenerator;
 
 	@Autowired
 	private NullCodeGenerator nullCodeGenerator;
@@ -67,6 +66,8 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 	private static final String GET_INIT_FORM_METHOD_SIGNATURE = "(Ljcl/symbols/SymbolStruct<*>;)Ljcl/LispStruct;";
 
 	private static final String NON_LISP_ERROR_FOUND = "Non-Lisp error found.";
+
+	private static final String FUNCTION_STRUCT_INIT_CLOSURE_DESC = "(Ljcl/functions/Closure;)V";
 
 	@Override
 	public void generate(final LambdaStruct input, final GeneratorState generatorState) {
@@ -1083,7 +1084,7 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 				mv.visitJumpInsn(Opcodes.IFEQ, symbolCheckIfEnd);
 
 				final LispStruct initForm = optionalBinding.getInitForm();
-				formGenerator.generate(initForm, generatorState);
+				codeGenerator.generate(initForm, generatorState);
 				mv.visitInsn(Opcodes.ARETURN);
 
 				mv.visitLabel(symbolCheckIfEnd);
@@ -1106,7 +1107,7 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 				mv.visitJumpInsn(Opcodes.IFEQ, symbolCheckIfEnd);
 
 				final LispStruct initForm = keyBinding.getInitForm();
-				formGenerator.generate(initForm, generatorState);
+				codeGenerator.generate(initForm, generatorState);
 				mv.visitInsn(Opcodes.ARETURN);
 
 				mv.visitLabel(symbolCheckIfEnd);
@@ -1129,7 +1130,7 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 				mv.visitJumpInsn(Opcodes.IFEQ, symbolCheckIfEnd);
 
 				final LispStruct initForm = auxBinding.getInitForm();
-				formGenerator.generate(initForm, generatorState);
+				codeGenerator.generate(initForm, generatorState);
 				mv.visitInsn(Opcodes.ARETURN);
 
 				mv.visitLabel(symbolCheckIfEnd);
@@ -1166,7 +1167,7 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 				final String uniqueLTVId = loadTimeValue.getUniqueLTVId();
 				final LispStruct value = loadTimeValue.getValue();
 
-				formGenerator.generate(value, generatorState);
+				codeGenerator.generate(value, generatorState);
 				mv.visitVarInsn(Opcodes.ASTORE, initFormStore);
 
 				final Label valuesCheckIfEnd = new Label();
@@ -1224,9 +1225,9 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 		}
 	}
 
-	private void generateRequiredBindings(final GeneratorState classBuilder, final JavaMethodBuilder methodBuilder,
-	                                      final OrdinaryLambdaListBindings lambdaListBindings, final MethodVisitor mv,
-	                                      final int packageStore, final int requiredBindingsStore) {
+	private static void generateRequiredBindings(final GeneratorState classBuilder, final JavaMethodBuilder methodBuilder,
+	                                             final OrdinaryLambdaListBindings lambdaListBindings, final MethodVisitor mv,
+	                                             final int packageStore, final int requiredBindingsStore) {
 
 		mv.visitTypeInsn(Opcodes.NEW, GenerationConstants.JAVA_ARRAY_LIST_NAME);
 		mv.visitInsn(Opcodes.DUP);
@@ -1352,9 +1353,9 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 		}
 	}
 
-	private void generateRestBinding(final GeneratorState classBuilder, final JavaMethodBuilder methodBuilder,
-	                                 final OrdinaryLambdaListBindings lambdaListBindings, final MethodVisitor mv,
-	                                 final int packageStore, final int restBindingStore) {
+	private static void generateRestBinding(final GeneratorState classBuilder, final JavaMethodBuilder methodBuilder,
+	                                        final OrdinaryLambdaListBindings lambdaListBindings, final MethodVisitor mv,
+	                                        final int packageStore, final int restBindingStore) {
 
 		final int restSymbolStore = methodBuilder.getNextAvailableStore();
 
@@ -1469,8 +1470,8 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 		}
 	}
 
-	private void generateAllowOtherKeys(final OrdinaryLambdaListBindings lambdaListBindings, final MethodVisitor mv,
-	                                    final int allowOtherKeysStore) {
+	private static void generateAllowOtherKeys(final OrdinaryLambdaListBindings lambdaListBindings, final MethodVisitor mv,
+	                                           final int allowOtherKeysStore) {
 
 		final boolean allowOtherKeys = lambdaListBindings.isAllowOtherKeys();
 		if (allowOtherKeys) {

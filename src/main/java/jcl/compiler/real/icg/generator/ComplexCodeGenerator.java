@@ -1,11 +1,8 @@
 package jcl.compiler.real.icg.generator;
 
 import jcl.compiler.real.icg.GeneratorState;
+import jcl.compiler.real.icg.IntermediateCodeGenerator;
 import jcl.compiler.real.icg.JavaMethodBuilder;
-import jcl.compiler.real.icg.generator.CodeGenerator;
-import jcl.compiler.real.icg.generator.FormGenerator;
-import jcl.compiler.real.icg.generator.GenerationConstants;
-import jcl.compiler.real.icg.generator.GeneratorUtils;
 import jcl.numbers.ComplexStruct;
 import jcl.numbers.RealStruct;
 import org.objectweb.asm.MethodVisitor;
@@ -22,7 +19,7 @@ class ComplexCodeGenerator implements CodeGenerator<ComplexStruct> {
 	private static final String COMPLEX_STRUCT_INIT_DESC = GeneratorUtils.getConstructorDescription(ComplexStruct.class, RealStruct.class, RealStruct.class);
 
 	@Autowired
-	private FormGenerator formGenerator;
+	private IntermediateCodeGenerator codeGenerator;
 
 	@Override
 	public void generate(final ComplexStruct input, final GeneratorState generatorState) {
@@ -33,11 +30,11 @@ class ComplexCodeGenerator implements CodeGenerator<ComplexStruct> {
 		final JavaMethodBuilder methodBuilder = generatorState.getCurrentMethodBuilder();
 		final MethodVisitor mv = methodBuilder.getMethodVisitor();
 
-		formGenerator.generate(real, generatorState);
+		codeGenerator.generate(real, generatorState);
 		final int realStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, realStore);
 
-		formGenerator.generate(imaginary, generatorState);
+		codeGenerator.generate(imaginary, generatorState);
 		final int imaginaryStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, imaginaryStore);
 

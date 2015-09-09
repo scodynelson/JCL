@@ -4,11 +4,8 @@ import java.util.List;
 
 import jcl.LispStruct;
 import jcl.compiler.real.icg.GeneratorState;
+import jcl.compiler.real.icg.IntermediateCodeGenerator;
 import jcl.compiler.real.icg.JavaMethodBuilder;
-import jcl.compiler.real.icg.generator.CodeGenerator;
-import jcl.compiler.real.icg.generator.FormGenerator;
-import jcl.compiler.real.icg.generator.GenerationConstants;
-import jcl.compiler.real.icg.generator.SymbolCodeGeneratorUtil;
 import jcl.compiler.real.struct.specialoperator.FunctionCallStruct;
 import jcl.symbols.SymbolStruct;
 import org.objectweb.asm.MethodVisitor;
@@ -20,7 +17,7 @@ import org.springframework.stereotype.Component;
 class FunctionCallCodeGenerator implements CodeGenerator<FunctionCallStruct> {
 
 	@Autowired
-	private FormGenerator formGenerator;
+	private IntermediateCodeGenerator codeGenerator;
 
 	@Override
 	public void generate(final FunctionCallStruct input, final GeneratorState generatorState) {
@@ -56,7 +53,7 @@ class FunctionCallCodeGenerator implements CodeGenerator<FunctionCallStruct> {
 
 		for (int index = 0; index < numberOfArguments; index++) {
 			final LispStruct argument = arguments.get(index);
-			formGenerator.generate(argument, classBuilder);
+			codeGenerator.generate(argument, classBuilder);
 			mv.visitVarInsn(Opcodes.ASTORE, argumentStore);
 
 			mv.visitVarInsn(Opcodes.ALOAD, argumentsArrayStore);
@@ -96,7 +93,7 @@ class FunctionCallCodeGenerator implements CodeGenerator<FunctionCallStruct> {
 
 		for (int index = 0; index < numberOfArguments; index++) {
 			final LispStruct argument = arguments.get(index);
-			formGenerator.generate(argument, classBuilder);
+			codeGenerator.generate(argument, classBuilder);
 			mv.visitVarInsn(Opcodes.ASTORE, argumentStore);
 
 			mv.visitVarInsn(Opcodes.ALOAD, argumentsArrayStore);

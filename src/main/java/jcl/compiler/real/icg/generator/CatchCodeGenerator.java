@@ -3,8 +3,9 @@ package jcl.compiler.real.icg.generator;
 import java.util.Stack;
 
 import jcl.LispStruct;
-import jcl.compiler.real.icg.JavaClassBuilder;
 import jcl.compiler.real.icg.GeneratorState;
+import jcl.compiler.real.icg.IntermediateCodeGenerator;
+import jcl.compiler.real.icg.JavaClassBuilder;
 import jcl.compiler.real.icg.JavaMethodBuilder;
 import jcl.compiler.real.struct.specialoperator.CatchStruct;
 import jcl.compiler.real.struct.specialoperator.PrognStruct;
@@ -19,7 +20,7 @@ import org.springframework.stereotype.Component;
 class CatchCodeGenerator implements CodeGenerator<CatchStruct> {
 
 	@Autowired
-	private FormGenerator formGenerator;
+	private IntermediateCodeGenerator codeGenerator;
 
 	@Autowired
 	private PrognCodeGenerator prognCodeGenerator;
@@ -56,7 +57,7 @@ class CatchCodeGenerator implements CodeGenerator<CatchStruct> {
 		final Label catchBlockEnd = new Label();
 		mv.visitTryCatchBlock(tryBlockStart, tryBlockEnd, catchBlockStart, GenerationConstants.THROW_EXCEPTION_NAME);
 
-		formGenerator.generate(catchTag, generatorState);
+		codeGenerator.generate(catchTag, generatorState);
 		final int catchTagStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, catchTagStore);
 

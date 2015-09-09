@@ -8,11 +8,8 @@ import java.util.List;
 
 import jcl.LispStruct;
 import jcl.compiler.real.icg.GeneratorState;
+import jcl.compiler.real.icg.IntermediateCodeGenerator;
 import jcl.compiler.real.icg.JavaMethodBuilder;
-import jcl.compiler.real.icg.generator.CodeGenerator;
-import jcl.compiler.real.icg.generator.FormGenerator;
-import jcl.compiler.real.icg.generator.GenerationConstants;
-import jcl.compiler.real.icg.generator.LambdaCodeGenerator;
 import jcl.compiler.real.struct.specialoperator.LambdaFunctionCallStruct;
 import jcl.compiler.real.struct.specialoperator.lambda.LambdaStruct;
 import org.objectweb.asm.MethodVisitor;
@@ -24,7 +21,7 @@ import org.springframework.stereotype.Component;
 class LambdaFunctionCallCodeGenerator implements CodeGenerator<LambdaFunctionCallStruct> {
 
 	@Autowired
-	private FormGenerator formGenerator;
+	private IntermediateCodeGenerator codeGenerator;
 
 	@Autowired
 	private LambdaCodeGenerator lambdaCodeGenerator;
@@ -52,7 +49,7 @@ class LambdaFunctionCallCodeGenerator implements CodeGenerator<LambdaFunctionCal
 
 		for (int index = 0; index < numberOfArguments; index++) {
 			final LispStruct argument = arguments.get(index);
-			formGenerator.generate(argument, generatorState);
+			codeGenerator.generate(argument, generatorState);
 			mv.visitVarInsn(Opcodes.ASTORE, argumentStore);
 
 			mv.visitVarInsn(Opcodes.ALOAD, argumentsArrayStore);

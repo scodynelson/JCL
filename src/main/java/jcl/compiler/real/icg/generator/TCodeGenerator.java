@@ -12,13 +12,32 @@ import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
 import org.springframework.stereotype.Component;
 
+/**
+ * Class to generate {@link TStruct} objects dynamically by utilizing the static singleton {@link TStruct#INSTANCE}
+ * value.
+ */
 @Component
 class TCodeGenerator implements CodeGenerator<TStruct> {
 
+	/**
+	 * Constant {@link String} containing the name for the {@link TStruct} class.
+	 */
 	private static final String T_STRUCT_NAME = Type.getInternalName(TStruct.class);
 
+	/**
+	 * Constant {@link String} containing the description for the {@link TStruct} class.
+	 */
 	private static final String T_STRUCT_DESC = Type.getDescriptor(TStruct.class);
 
+	/**
+	 * {@inheritDoc}
+	 * Generation method for {@link TStruct} objects, by retrieving the static singleton {@link TStruct#INSTANCE}.
+	 *
+	 * @param input
+	 * 		the {@link TStruct} input value to generate code for
+	 * @param generatorState
+	 * 		stateful object used to hold the current state of the code generation process
+	 */
 	@Override
 	public void generate(final TStruct input, final GeneratorState generatorState) {
 

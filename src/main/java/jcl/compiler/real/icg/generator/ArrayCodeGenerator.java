@@ -32,7 +32,8 @@ class ArrayCodeGenerator implements CodeGenerator<ArrayStruct<LispStruct>> {
 	 * Constant {@link String} containing the description for the {@link ArrayStruct#ArrayStruct(List, List)}
 	 * constructor method.
 	 */
-	private static final String ARRAY_STRUCT_INIT_DESC = GeneratorUtils.getConstructorDescription(ArrayStruct.class, List.class, List.class);
+	private static final String ARRAY_STRUCT_INIT_DESC
+			= GeneratorUtils.getConstructorDescription(ArrayStruct.class, List.class, List.class);
 
 	/**
 	 * {@link QuoteCodeGenerator} used for generating the {@link ArrayStruct} contents as if they were quoted values.
@@ -44,10 +45,10 @@ class ArrayCodeGenerator implements CodeGenerator<ArrayStruct<LispStruct>> {
 	 * {@inheritDoc}
 	 * Generation method for {@link ArrayStruct} objects, by performing the following operations:
 	 * <ol>
-	 * <li>Building the {@link ArrayStruct#dimensions}</li>
-	 * <li>Building the {@link ArrayStruct#contents}, ensuring that each content value is treated as being
+	 * <li>Building the {@link ArrayStruct#dimensions} values</li>
+	 * <li>Building the {@link ArrayStruct#contents} values, ensuring that each content value is treated as being
 	 * 'quoted'</li>
-	 * <li>Constructing a new {@link ArrayStruct} with the build dimension and contents {@link List}s</li>
+	 * <li>Constructing a new {@link ArrayStruct} with the built dimension and content {@link List}s</li>
 	 * </ol>
 	 *
 	 * @param input
@@ -117,6 +118,7 @@ class ArrayCodeGenerator implements CodeGenerator<ArrayStruct<LispStruct>> {
 
 		mv.visitTypeInsn(Opcodes.NEW, ARRAY_STRUCT_NAME);
 		mv.visitInsn(Opcodes.DUP);
+
 		mv.visitVarInsn(Opcodes.ALOAD, dimensionsStore);
 		mv.visitVarInsn(Opcodes.ALOAD, contentsStore);
 		mv.visitMethodInsn(Opcodes.INVOKESPECIAL,

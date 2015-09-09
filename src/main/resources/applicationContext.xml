@@ -93,7 +93,7 @@
 
 		<entry key="jcl.symbols.KeywordStruct" value-ref="keywordCodeGenerator"/>
 		<entry key="jcl.symbols.NILStruct" value-ref="NILCodeGenerator"/>
-		<entry key="jcl.symbols.SymbolStruct" value-ref="symbolBindingCodeGenerator"/>
+		<entry key="jcl.symbols.SymbolStruct" value-ref="symbolValueCodeGenerator"/>
 		<entry key="jcl.symbols.TStruct" value-ref="TCodeGenerator"/>
 
 		<entry key="jcl.compiler.real.struct.specialoperator.BlockStruct" value-ref="blockCodeGenerator"/>

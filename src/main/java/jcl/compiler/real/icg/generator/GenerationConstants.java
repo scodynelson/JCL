@@ -4,6 +4,8 @@
 
 package jcl.compiler.real.icg.generator;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -27,10 +29,12 @@ import jcl.functions.FunctionParameterBinding;
 import jcl.functions.FunctionStruct;
 import jcl.lists.ConsStruct;
 import jcl.lists.ListStruct;
+import jcl.packages.GlobalPackageStruct;
 import jcl.packages.PackageStruct;
 import jcl.packages.PackageSymbolStruct;
 import jcl.structures.StructureClassStruct;
 import jcl.structures.StructureObjectStruct;
+import jcl.symbols.KeywordStruct;
 import jcl.symbols.SymbolStruct;
 import jcl.types.TypeBaseClass;
 import jcl.types.TypeFactory;
@@ -139,6 +143,14 @@ interface GenerationConstants {
 
 	String JAVA_INTEGER_VALUE_OF_METHOD_DESC = GeneratorUtils.getMethodDescription(Integer.class, JAVA_INTEGER_VALUE_OF_METHOD_NAME, int.class);
 
+	String JAVA_BIG_INTEGER_NAME = Type.getInternalName(BigInteger.class);
+
+	String JAVA_BIG_INTEGER_INIT_DESC = GeneratorUtils.getConstructorDescription(BigInteger.class, String.class);
+
+	String JAVA_BIG_DECIMAL_NAME = Type.getInternalName(BigDecimal.class);
+
+	String JAVA_BIG_DECIMAL_INIT_DESC = GeneratorUtils.getConstructorDescription(BigDecimal.class, String.class);
+
 	String JAVA_URI_NAME = Type.getInternalName(URI.class);
 
 	String JAVA_URI_CREATE_METHOD_NAME = "create";
@@ -246,6 +258,10 @@ interface GenerationConstants {
 	String PACKAGE_SYMBOL_STRUCT_GET_SYMBOL_METHOD_NAME = "getSymbol";
 
 	String PACKAGE_SYMBOL_STRUCT_GET_SYMBOL_METHOD_DESC = GeneratorUtils.getMethodDescription(PackageSymbolStruct.class, PACKAGE_SYMBOL_STRUCT_GET_SYMBOL_METHOD_NAME);
+
+	String GLOBAL_PACKAGE_STRUCT_NAME = Type.getInternalName(GlobalPackageStruct.class);
+
+	String KEYWORD_STRUCT_NAME = Type.getInternalName(KeywordStruct.class);
 
 	String FUNCTION_STRUCT_NAME = Type.getInternalName(FunctionStruct.class);
 

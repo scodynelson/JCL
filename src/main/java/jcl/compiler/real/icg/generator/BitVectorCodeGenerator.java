@@ -16,16 +16,46 @@ import org.objectweb.asm.Type;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+/**
+ * Class to generate {@link BitVectorStruct} objects dynamically by utilizing the {@link BitVectorStruct#contents} of
+ * the provided {@link BitVectorStruct} input value.
+ */
 @Component
 class BitVectorCodeGenerator implements CodeGenerator<BitVectorStruct> {
 
+	/**
+	 * Constant {@link String} containing the name for the {@link BitVectorStruct} class.
+	 */
 	private static final String BIT_VECTOR_STRUCT_NAME = Type.getInternalName(BitVectorStruct.class);
 
-	private static final String BIT_VECTOR_STRUCT_INIT_DESC = GeneratorUtils.getConstructorDescription(BitVectorStruct.class, List.class);
+	/**
+	 * Constant {@link String} containing the description for the {@link BitVectorStruct#BitVectorStruct(List)}
+	 * constructor method.
+	 */
+	private static final String BIT_VECTOR_STRUCT_INIT_DESC
+			= GeneratorUtils.getConstructorDescription(BitVectorStruct.class, List.class);
 
+	/**
+	 * {@link IntegerCodeGenerator} used for generating the {@link BitVectorStruct} {@link IntegerStruct} content
+	 * values.
+	 */
 	@Autowired
 	private IntegerCodeGenerator integerCodeGenerator;
 
+	/**
+	 * {@inheritDoc}
+	 * Generation method for {@link BitVectorStruct} objects, by performing the following operations:
+	 * <ol>
+	 * <li>Building the {@link BitVectorStruct#contents}, ensuring that each content {@link IntegerStruct} value is
+	 * generated properly</li>
+	 * <li>Constructing a new {@link BitVectorStruct} with the built content {@link List}</li>
+	 * </ol>
+	 *
+	 * @param input
+	 * 		the {@link BitVectorStruct} input value to generate code for
+	 * @param generatorState
+	 * 		stateful object used to hold the current state of the code generation process
+	 */
 	@Override
 	public void generate(final BitVectorStruct input, final GeneratorState generatorState) {
 
@@ -61,6 +91,7 @@ class BitVectorCodeGenerator implements CodeGenerator<BitVectorStruct> {
 
 		mv.visitTypeInsn(Opcodes.NEW, BIT_VECTOR_STRUCT_NAME);
 		mv.visitInsn(Opcodes.DUP);
+
 		mv.visitVarInsn(Opcodes.ALOAD, contentsStore);
 		mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
 				BIT_VECTOR_STRUCT_NAME,

@@ -1,3 +1,7 @@
+/*
+ * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
+ */
+
 package jcl.compiler.real.icg.generator;
 
 import java.math.BigInteger;
@@ -10,33 +14,54 @@ import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
 import org.springframework.stereotype.Component;
 
+/**
+ * Class to generate {@link IntegerStruct} objects dynamically by utilizing the {@link IntegerStruct#bigInteger} of
+ * the provided {@link IntegerStruct} input value.
+ */
 @Component
 class IntegerCodeGenerator implements CodeGenerator<IntegerStruct> {
 
-	private static final String BIG_INTEGER_NAME = Type.getInternalName(BigInteger.class);
-
-	private static final String BIG_INTEGER_INIT_DESC = GeneratorUtils.getConstructorDescription(BigInteger.class, String.class);
-
+	/**
+	 * Constant {@link String} containing the name for the {@link IntegerStruct} class.
+	 */
 	private static final String INTEGER_STRUCT_NAME = Type.getInternalName(IntegerStruct.class);
 
-	private static final String INTEGER_STRUCT_INIT_DESC = GeneratorUtils.getConstructorDescription(IntegerStruct.class, BigInteger.class);
+	/**
+	 * Constant {@link String} containing the description for the {@link IntegerStruct#IntegerStruct(BigInteger)}
+	 * constructor method.
+	 */
+	private static final String INTEGER_STRUCT_INIT_DESC
+			= GeneratorUtils.getConstructorDescription(IntegerStruct.class, BigInteger.class);
 
+	/**
+	 * {@inheritDoc}
+	 * Generation method for {@link IntegerStruct} objects, by performing the following operations:
+	 * <ol>
+	 * <li>Building the {@link IntegerStruct#bigInteger} value</li>
+	 * <li>Constructing a new {@link IntegerStruct} with the build {@link BigInteger} value</li>
+	 * </ol>
+	 *
+	 * @param input
+	 * 		the {@link IntegerStruct} input value to generate code for
+	 * @param generatorState
+	 * 		stateful object used to hold the current state of the code generation process
+	 */
 	@Override
 	public void generate(final IntegerStruct input, final GeneratorState generatorState) {
 
 		final JavaMethodBuilder methodBuilder = generatorState.getCurrentMethodBuilder();
 		final MethodVisitor mv = methodBuilder.getMethodVisitor();
 
-		mv.visitTypeInsn(Opcodes.NEW, BIG_INTEGER_NAME);
+		mv.visitTypeInsn(Opcodes.NEW, GenerationConstants.JAVA_BIG_INTEGER_NAME);
 		mv.visitInsn(Opcodes.DUP);
 
 		final BigInteger bigInteger = input.getBigInteger();
 		final String integerString = bigInteger.toString();
 		mv.visitLdcInsn(integerString);
 		mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
-				BIG_INTEGER_NAME,
+				GenerationConstants.JAVA_BIG_INTEGER_NAME,
 				GenerationConstants.INIT_METHOD_NAME,
-				BIG_INTEGER_INIT_DESC,
+				GenerationConstants.JAVA_BIG_INTEGER_INIT_DESC,
 				false);
 		final int bigIntegerStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, bigIntegerStore);

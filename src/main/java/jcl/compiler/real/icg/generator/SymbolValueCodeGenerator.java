@@ -16,7 +16,7 @@ import org.objectweb.asm.Opcodes;
 import org.springframework.stereotype.Component;
 
 @Component
-class SymbolBindingCodeGenerator implements CodeGenerator<SymbolStruct<LispStruct>> {
+class SymbolValueCodeGenerator implements CodeGenerator<SymbolStruct<LispStruct>> {
 
 	@Override
 	public void generate(final SymbolStruct<LispStruct> input, final GeneratorState generatorState) {

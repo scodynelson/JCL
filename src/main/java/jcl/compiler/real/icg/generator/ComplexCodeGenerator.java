@@ -32,7 +32,7 @@ class ComplexCodeGenerator implements CodeGenerator<ComplexStruct> {
 	 * RealStruct)} constructor method.
 	 */
 	private static final String COMPLEX_STRUCT_INIT_DESC
-			= GeneratorUtils.getConstructorDescription(ComplexStruct.class, RealStruct.class, RealStruct.class);
+			= CodeGenerators.getConstructorDescription(ComplexStruct.class, RealStruct.class, RealStruct.class);
 
 	/**
 	 * {@link IntermediateCodeGenerator} used for generating the {@link ComplexStruct} real and imaginary values.

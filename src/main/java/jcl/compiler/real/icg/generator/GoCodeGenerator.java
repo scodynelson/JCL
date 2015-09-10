@@ -27,7 +27,7 @@ class GoCodeGenerator implements CodeGenerator<GoStruct<?>> {
 
 	private static final String GO_METHOD_DESC = "(Ljcl/functions/Closure;)Ljcl/LispStruct;";
 
-	private static final String GO_EXCEPTION_INIT_DESC = GeneratorUtils.getConstructorDescription(GoException.class, int.class);
+	private static final String GO_EXCEPTION_INIT_DESC = CodeGenerators.getConstructorDescription(GoException.class, int.class);
 
 	@Override
 	public void generate(final GoStruct<?> input, final GeneratorState generatorState) {

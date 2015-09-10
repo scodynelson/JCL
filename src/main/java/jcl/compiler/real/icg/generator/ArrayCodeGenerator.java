@@ -33,7 +33,7 @@ class ArrayCodeGenerator implements CodeGenerator<ArrayStruct<LispStruct>> {
 	 * constructor method.
 	 */
 	private static final String ARRAY_STRUCT_INIT_DESC
-			= GeneratorUtils.getConstructorDescription(ArrayStruct.class, List.class, List.class);
+			= CodeGenerators.getConstructorDescription(ArrayStruct.class, List.class, List.class);
 
 	/**
 	 * {@link QuoteCodeGenerator} used for generating the {@link ArrayStruct} contents as if they were quoted values.

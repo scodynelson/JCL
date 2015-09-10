@@ -32,7 +32,7 @@ class RatioCodeGenerator implements CodeGenerator<RatioStruct> {
 	 * BigInteger)} constructor method.
 	 */
 	private static final String RATIO_STRUCT_INIT_DESC
-			= GeneratorUtils.getConstructorDescription(RatioStruct.class, BigInteger.class, BigInteger.class);
+			= CodeGenerators.getConstructorDescription(RatioStruct.class, BigInteger.class, BigInteger.class);
 
 	/**
 	 * {@inheritDoc}

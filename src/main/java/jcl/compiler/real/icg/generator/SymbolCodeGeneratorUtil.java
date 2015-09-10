@@ -14,7 +14,7 @@ import org.objectweb.asm.Opcodes;
 
 final class SymbolCodeGeneratorUtil {
 
-	private static final String SYMBOL_STRUCT_INIT_STRING_DESC = GeneratorUtils.getConstructorDescription(StringStruct.class, String.class);
+	private static final String SYMBOL_STRUCT_INIT_STRING_DESC = CodeGenerators.getConstructorDescription(StringStruct.class, String.class);
 
 	private SymbolCodeGeneratorUtil() {
 	}

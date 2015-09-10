@@ -24,7 +24,7 @@ class ThrowCodeGenerator implements CodeGenerator<ThrowStruct> {
 
 	private static final String THROW_METHOD_DESC = "(Ljcl/functions/Closure;)Ljcl/LispStruct;";
 
-	private static final String THROW_EXCEPTION_INIT_DESC = GeneratorUtils.getConstructorDescription(ThrowException.class, LispStruct.class, LispStruct.class);
+	private static final String THROW_EXCEPTION_INIT_DESC = CodeGenerators.getConstructorDescription(ThrowException.class, LispStruct.class, LispStruct.class);
 
 	@Override
 	public void generate(final ThrowStruct input, final GeneratorState generatorState) {

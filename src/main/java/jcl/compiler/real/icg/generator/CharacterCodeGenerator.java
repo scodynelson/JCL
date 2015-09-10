@@ -29,7 +29,7 @@ class CharacterCodeGenerator implements CodeGenerator<CharacterStruct> {
 	 * constructor method.
 	 */
 	private static final String CHARACTER_STRUCT_INIT_DESC
-			= GeneratorUtils.getConstructorDescription(CharacterStruct.class, int.class);
+			= CodeGenerators.getConstructorDescription(CharacterStruct.class, int.class);
 
 	/**
 	 * {@inheritDoc}

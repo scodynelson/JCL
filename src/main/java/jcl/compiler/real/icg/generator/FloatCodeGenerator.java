@@ -31,7 +31,7 @@ class FloatCodeGenerator implements CodeGenerator<FloatStruct> {
 	 * constructor method.
 	 */
 	private static final String FLOAT_STRUCT_INIT_DESC
-			= GeneratorUtils.getConstructorDescription(FloatStruct.class, BigDecimal.class);
+			= CodeGenerators.getConstructorDescription(FloatStruct.class, BigDecimal.class);
 
 	/**
 	 * {@inheritDoc}

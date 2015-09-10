@@ -19,7 +19,7 @@ class PathnameCodeGenerator implements CodeGenerator<PathnameStruct> {
 
 	private static final String PATHNAME_STRUCT_NAME = Type.getInternalName(PathnameStruct.class);
 
-	private static final String PATHNAME_STRUCT_NAME_INIT_DESC = GeneratorUtils.getConstructorDescription(PathnameStruct.class, URI.class);
+	private static final String PATHNAME_STRUCT_NAME_INIT_DESC = CodeGenerators.getConstructorDescription(PathnameStruct.class, URI.class);
 
 	@Override
 	public void generate(final PathnameStruct input, final GeneratorState generatorState) {

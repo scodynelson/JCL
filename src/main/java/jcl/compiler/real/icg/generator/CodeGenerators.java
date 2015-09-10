@@ -9,9 +9,9 @@ import java.lang.reflect.Method;
 
 import org.objectweb.asm.Type;
 
-final class GeneratorUtils {
+final class CodeGenerators {
 
-	private GeneratorUtils() {
+	private CodeGenerators() {
 	}
 
 	static <TYPE> String getConstructorDescription(final Class<TYPE> clazz, final Class<?>... parameterTypes) {

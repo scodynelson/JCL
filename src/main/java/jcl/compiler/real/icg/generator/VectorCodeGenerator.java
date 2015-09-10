@@ -33,7 +33,7 @@ class VectorCodeGenerator implements CodeGenerator<VectorStruct<LispStruct>> {
 	 * constructor method.
 	 */
 	private static final String VECTOR_STRUCT_INIT_DESC
-			= GeneratorUtils.getConstructorDescription(VectorStruct.class, List.class);
+			= CodeGenerators.getConstructorDescription(VectorStruct.class, List.class);
 
 	/**
 	 * {@link QuoteCodeGenerator} used for generating the {@link VectorStruct} contents as if they were quoted values.

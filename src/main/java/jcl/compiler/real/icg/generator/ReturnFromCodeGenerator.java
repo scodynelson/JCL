@@ -25,7 +25,7 @@ class ReturnFromCodeGenerator implements CodeGenerator<ReturnFromStruct> {
 
 	private static final String RETURN_FROM_METHOD_DESC = "(Ljcl/functions/Closure;)Ljcl/LispStruct;";
 
-	private static final String RETURN_FROM_EXCEPTION_INIT_DESC = GeneratorUtils.getConstructorDescription(ReturnFromException.class, SymbolStruct.class, LispStruct.class);
+	private static final String RETURN_FROM_EXCEPTION_INIT_DESC = CodeGenerators.getConstructorDescription(ReturnFromException.class, SymbolStruct.class, LispStruct.class);
 
 	@Override
 	public void generate(final ReturnFromStruct input, final GeneratorState generatorState) {

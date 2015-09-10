@@ -31,7 +31,7 @@ class IntegerCodeGenerator implements CodeGenerator<IntegerStruct> {
 	 * constructor method.
 	 */
 	private static final String INTEGER_STRUCT_INIT_DESC
-			= GeneratorUtils.getConstructorDescription(IntegerStruct.class, BigInteger.class);
+			= CodeGenerators.getConstructorDescription(IntegerStruct.class, BigInteger.class);
 
 	/**
 	 * {@inheritDoc}

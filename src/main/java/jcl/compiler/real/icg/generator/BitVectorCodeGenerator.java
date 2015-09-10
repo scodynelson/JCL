@@ -33,7 +33,7 @@ class BitVectorCodeGenerator implements CodeGenerator<BitVectorStruct> {
 	 * constructor method.
 	 */
 	private static final String BIT_VECTOR_STRUCT_INIT_DESC
-			= GeneratorUtils.getConstructorDescription(BitVectorStruct.class, List.class);
+			= CodeGenerators.getConstructorDescription(BitVectorStruct.class, List.class);
 
 	/**
 	 * {@link IntegerCodeGenerator} used for generating the {@link BitVectorStruct} {@link IntegerStruct} content

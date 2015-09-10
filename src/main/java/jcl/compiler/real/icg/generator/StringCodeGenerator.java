@@ -29,7 +29,7 @@ class StringCodeGenerator implements CodeGenerator<StringStruct> {
 	 * constructor method.
 	 */
 	private static final String STRING_STRUCT_INIT_DESC
-			= GeneratorUtils.getConstructorDescription(StringStruct.class, String.class);
+			= CodeGenerators.getConstructorDescription(StringStruct.class, String.class);
 
 	/**
 	 * {@inheritDoc}

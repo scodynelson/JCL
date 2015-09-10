@@ -3,7 +3,6 @@ package jcl.compiler.real.icg.generator;
 import java.util.Stack;
 
 import jcl.LispStruct;
-import jcl.compiler.real.icg.CodeGenerator;
 import jcl.compiler.real.icg.GeneratorState;
 import jcl.compiler.real.icg.IntermediateCodeGenerator;
 import jcl.compiler.real.icg.JavaClassBuilder;
@@ -17,16 +16,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-class ReturnFromCodeGenerator implements CodeGenerator<ReturnFromStruct> {
+class ReturnFromCodeGenerator extends SpecialOperatorCodeGenerator<ReturnFromStruct> {
 
 	@Autowired
 	private IntermediateCodeGenerator codeGenerator;
 
-	private static final String RETURN_FROM_METHOD_NAME_PREFIX = "returnFrom_";
-
-	private static final String RETURN_FROM_METHOD_DESC = "(Ljcl/functions/Closure;)Ljcl/LispStruct;";
-
 	private static final String RETURN_FROM_EXCEPTION_INIT_DESC = CodeGenerators.getConstructorDescription(ReturnFromException.class, SymbolStruct.class, LispStruct.class);
+
+	private ReturnFromCodeGenerator() {
+		super("returnFrom_");
+	}
 
 	@Override
 	public void generate(final ReturnFromStruct input, final GeneratorState generatorState) {
@@ -39,8 +38,8 @@ class ReturnFromCodeGenerator implements CodeGenerator<ReturnFromStruct> {
 
 		final ClassWriter cw = currentClass.getClassWriter();
 
-		final String returnFromMethodName = RETURN_FROM_METHOD_NAME_PREFIX + System.nanoTime();
-		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PRIVATE, returnFromMethodName, RETURN_FROM_METHOD_DESC, null, null);
+		final String returnFromMethodName = methodNamePrefix + System.nanoTime();
+		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PRIVATE, returnFromMethodName, SPECIAL_OPERATOR_METHOD_DESC, null, null);
 
 		final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
 		final Stack<JavaMethodBuilder> methodBuilderStack = generatorState.getMethodBuilderStack();
@@ -79,6 +78,6 @@ class ReturnFromCodeGenerator implements CodeGenerator<ReturnFromStruct> {
 
 		previousMv.visitVarInsn(Opcodes.ALOAD, thisStore);
 		previousMv.visitVarInsn(Opcodes.ALOAD, closureArgStore);
-		previousMv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, fileName, returnFromMethodName, RETURN_FROM_METHOD_DESC, false);
+		previousMv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, fileName, returnFromMethodName, SPECIAL_OPERATOR_METHOD_DESC, false);
 	}
 }

@@ -12,7 +12,6 @@ import java.util.Stack;
 import jcl.LispStruct;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.LetStarEnvironment;
-import jcl.compiler.real.icg.CodeGenerator;
 import jcl.compiler.real.icg.GeneratorState;
 import jcl.compiler.real.icg.IntermediateCodeGenerator;
 import jcl.compiler.real.icg.JavaClassBuilder;
@@ -28,7 +27,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-class LetStarCodeGenerator implements CodeGenerator<LetStarStruct> {
+class LetStarCodeGenerator extends SpecialOperatorCodeGenerator<LetStarStruct> {
 
 	@Autowired
 	private IntermediateCodeGenerator codeGenerator;
@@ -36,9 +35,9 @@ class LetStarCodeGenerator implements CodeGenerator<LetStarStruct> {
 	@Autowired
 	private PrognCodeGenerator prognCodeGenerator;
 
-	private static final String LET_STAR_METHOD_NAME_PREFIX = "letStar_";
-
-	private static final String LET_STAR_METHOD_DESC = "(Ljcl/functions/Closure;)Ljcl/LispStruct;";
+	private LetStarCodeGenerator() {
+		super("letStar_");
+	}
 
 	@Override
 	public void generate(final LetStarStruct input, final GeneratorState generatorState) {
@@ -52,8 +51,8 @@ class LetStarCodeGenerator implements CodeGenerator<LetStarStruct> {
 
 		final ClassWriter cw = currentClass.getClassWriter();
 
-		final String letStarMethodName = LET_STAR_METHOD_NAME_PREFIX + System.nanoTime();
-		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PRIVATE, letStarMethodName, LET_STAR_METHOD_DESC, null, null);
+		final String letStarMethodName = methodNamePrefix + System.nanoTime();
+		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PRIVATE, letStarMethodName, SPECIAL_OPERATOR_METHOD_DESC, null, null);
 
 		final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
 		final Stack<JavaMethodBuilder> methodBuilderStack = generatorState.getMethodBuilderStack();
@@ -239,6 +238,6 @@ class LetStarCodeGenerator implements CodeGenerator<LetStarStruct> {
 
 		previousMv.visitVarInsn(Opcodes.ALOAD, thisStore);
 		previousMv.visitVarInsn(Opcodes.ALOAD, closureArgStore);
-		previousMv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, fileName, letStarMethodName, LET_STAR_METHOD_DESC, false);
+		previousMv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, fileName, letStarMethodName, SPECIAL_OPERATOR_METHOD_DESC, false);
 	}
 }

@@ -5,7 +5,6 @@ import java.util.Stack;
 
 import jcl.LispStruct;
 import jcl.compiler.real.environment.Environment;
-import jcl.compiler.real.icg.CodeGenerator;
 import jcl.compiler.real.icg.GeneratorState;
 import jcl.compiler.real.icg.IntermediateCodeGenerator;
 import jcl.compiler.real.icg.JavaClassBuilder;
@@ -20,14 +19,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-class SetqCodeGenerator implements CodeGenerator<SetqStruct> {
+class SetqCodeGenerator extends SpecialOperatorCodeGenerator<SetqStruct> {
 
 	@Autowired
 	private IntermediateCodeGenerator codeGenerator;
 
-	private static final String SETQ_METHOD_NAME_PREFIX = "setq_";
-
-	private static final String SETQ_METHOD_DESC = "(Ljcl/functions/Closure;)Ljcl/LispStruct;";
+	private SetqCodeGenerator() {
+		super("setq_");
+	}
 
 	@Override
 	public void generate(final SetqStruct input, final GeneratorState generatorState) {
@@ -39,8 +38,8 @@ class SetqCodeGenerator implements CodeGenerator<SetqStruct> {
 
 		final ClassWriter cw = currentClass.getClassWriter();
 
-		final String setqMethodName = SETQ_METHOD_NAME_PREFIX + System.nanoTime();
-		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PRIVATE, setqMethodName, SETQ_METHOD_DESC, null, null);
+		final String setqMethodName = methodNamePrefix + System.nanoTime();
+		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PRIVATE, setqMethodName, SPECIAL_OPERATOR_METHOD_DESC, null, null);
 
 		final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
 		final Stack<JavaMethodBuilder> methodBuilderStack = generatorState.getMethodBuilderStack();
@@ -171,6 +170,6 @@ class SetqCodeGenerator implements CodeGenerator<SetqStruct> {
 
 		previousMv.visitVarInsn(Opcodes.ALOAD, thisStore);
 		previousMv.visitVarInsn(Opcodes.ALOAD, closureArgStore);
-		previousMv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, fileName, setqMethodName, SETQ_METHOD_DESC, false);
+		previousMv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, fileName, setqMethodName, SPECIAL_OPERATOR_METHOD_DESC, false);
 	}
 }

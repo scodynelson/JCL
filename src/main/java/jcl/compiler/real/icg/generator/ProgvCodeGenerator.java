@@ -5,7 +5,6 @@ import java.util.Stack;
 import jcl.LispStruct;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.ProgvEnvironment;
-import jcl.compiler.real.icg.CodeGenerator;
 import jcl.compiler.real.icg.GeneratorState;
 import jcl.compiler.real.icg.IntermediateCodeGenerator;
 import jcl.compiler.real.icg.JavaClassBuilder;
@@ -20,7 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-class ProgvCodeGenerator implements CodeGenerator<ProgvStruct> {
+class ProgvCodeGenerator extends SpecialOperatorCodeGenerator<ProgvStruct> {
 
 	@Autowired
 	private IntermediateCodeGenerator codeGenerator;
@@ -28,15 +27,15 @@ class ProgvCodeGenerator implements CodeGenerator<ProgvStruct> {
 	@Autowired
 	private PrognCodeGenerator prognCodeGenerator;
 
-	private static final String PROGV_METHOD_NAME_PREFIX = "progv_";
-
-	private static final String PROGV_METHOD_DESC = "(Ljcl/functions/Closure;)Ljcl/LispStruct;";
-
 	private static final String SYMBOLS_LIST_MUST_BE_A_LIST = "PROGV: Symbols list must be a list. Got: ";
 
 	private static final String ELEMENTS_IN_SYMBOLS_LIST_MUST_BE_SYMBOLS = "PROGV: Elements in symbols list must be symbols. Got: ";
 
 	private static final String VALUES_LIST_MUST_BE_A_LIST = "PROGV: Values list must be a list. Got: ";
+
+	private ProgvCodeGenerator() {
+		super("progv_");
+	}
 
 	@Override
 	public void generate(final ProgvStruct input, final GeneratorState generatorState) {
@@ -51,8 +50,8 @@ class ProgvCodeGenerator implements CodeGenerator<ProgvStruct> {
 
 		final ClassWriter cw = currentClass.getClassWriter();
 
-		final String progvMethodName = PROGV_METHOD_NAME_PREFIX + System.nanoTime();
-		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PRIVATE, progvMethodName, PROGV_METHOD_DESC, null, null);
+		final String progvMethodName = methodNamePrefix + System.nanoTime();
+		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PRIVATE, progvMethodName, SPECIAL_OPERATOR_METHOD_DESC, null, null);
 
 		final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
 		final Stack<JavaMethodBuilder> methodBuilderStack = generatorState.getMethodBuilderStack();
@@ -495,6 +494,6 @@ class ProgvCodeGenerator implements CodeGenerator<ProgvStruct> {
 
 		previousMv.visitVarInsn(Opcodes.ALOAD, thisStore);
 		previousMv.visitVarInsn(Opcodes.ALOAD, closureArgStore);
-		previousMv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, fileName, progvMethodName, PROGV_METHOD_DESC, false);
+		previousMv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, fileName, progvMethodName, SPECIAL_OPERATOR_METHOD_DESC, false);
 	}
 }

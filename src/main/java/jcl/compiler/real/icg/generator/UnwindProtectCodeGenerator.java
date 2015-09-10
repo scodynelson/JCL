@@ -3,7 +3,6 @@ package jcl.compiler.real.icg.generator;
 import java.util.Stack;
 
 import jcl.LispStruct;
-import jcl.compiler.real.icg.CodeGenerator;
 import jcl.compiler.real.icg.GeneratorState;
 import jcl.compiler.real.icg.IntermediateCodeGenerator;
 import jcl.compiler.real.icg.JavaClassBuilder;
@@ -18,7 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-class UnwindProtectCodeGenerator implements CodeGenerator<UnwindProtectStruct> {
+class UnwindProtectCodeGenerator extends SpecialOperatorCodeGenerator<UnwindProtectStruct> {
 
 	@Autowired
 	private IntermediateCodeGenerator codeGenerator;
@@ -26,9 +25,9 @@ class UnwindProtectCodeGenerator implements CodeGenerator<UnwindProtectStruct> {
 	@Autowired
 	private PrognCodeGenerator prognCodeGenerator;
 
-	private static final String UNWIND_PROTECT_METHOD_NAME_PREFIX = "unwindProtect_";
-
-	private static final String UNWIND_PROTECT_METHOD_DESC = "(Ljcl/functions/Closure;)Ljcl/LispStruct;";
+	private UnwindProtectCodeGenerator() {
+		super("unwindProtect_");
+	}
 
 	@Override
 	public void generate(final UnwindProtectStruct input, final GeneratorState generatorState) {
@@ -41,8 +40,8 @@ class UnwindProtectCodeGenerator implements CodeGenerator<UnwindProtectStruct> {
 
 		final ClassWriter cw = currentClass.getClassWriter();
 
-		final String unwindProtectMethodName = UNWIND_PROTECT_METHOD_NAME_PREFIX + System.nanoTime();
-		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PRIVATE, unwindProtectMethodName, UNWIND_PROTECT_METHOD_DESC, null, null);
+		final String unwindProtectMethodName = methodNamePrefix + System.nanoTime();
+		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PRIVATE, unwindProtectMethodName, SPECIAL_OPERATOR_METHOD_DESC, null, null);
 
 		final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
 		final Stack<JavaMethodBuilder> methodBuilderStack = generatorState.getMethodBuilderStack();
@@ -93,6 +92,6 @@ class UnwindProtectCodeGenerator implements CodeGenerator<UnwindProtectStruct> {
 
 		previousMv.visitVarInsn(Opcodes.ALOAD, thisStore);
 		previousMv.visitVarInsn(Opcodes.ALOAD, closureArgStore);
-		previousMv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, fileName, unwindProtectMethodName, UNWIND_PROTECT_METHOD_DESC, false);
+		previousMv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, fileName, unwindProtectMethodName, SPECIAL_OPERATOR_METHOD_DESC, false);
 	}
 }

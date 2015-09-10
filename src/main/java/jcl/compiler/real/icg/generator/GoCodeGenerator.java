@@ -5,7 +5,6 @@ import java.util.Set;
 import java.util.Stack;
 
 import jcl.LispStruct;
-import jcl.compiler.real.icg.CodeGenerator;
 import jcl.compiler.real.icg.GeneratorState;
 import jcl.compiler.real.icg.JavaClassBuilder;
 import jcl.compiler.real.icg.JavaMethodBuilder;
@@ -19,16 +18,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-class GoCodeGenerator implements CodeGenerator<GoStruct<?>> {
+class GoCodeGenerator extends SpecialOperatorCodeGenerator<GoStruct<?>> {
 
 	@Autowired
 	private Printer printer;
 
-	private static final String GO_METHOD_NAME_PREFIX = "go_";
-
-	private static final String GO_METHOD_DESC = "(Ljcl/functions/Closure;)Ljcl/LispStruct;";
-
 	private static final String GO_EXCEPTION_INIT_DESC = CodeGenerators.getConstructorDescription(GoException.class, int.class);
+
+	private GoCodeGenerator() {
+		super("go_");
+	}
 
 	@Override
 	public void generate(final GoStruct<?> input, final GeneratorState generatorState) {
@@ -38,8 +37,8 @@ class GoCodeGenerator implements CodeGenerator<GoStruct<?>> {
 
 		final ClassWriter cw = currentClass.getClassWriter();
 
-		final String goMethodName = GO_METHOD_NAME_PREFIX + System.nanoTime();
-		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PRIVATE, goMethodName, GO_METHOD_DESC, null, null);
+		final String goMethodName = methodNamePrefix + System.nanoTime();
+		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PRIVATE, goMethodName, SPECIAL_OPERATOR_METHOD_DESC, null, null);
 
 		final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
 		final Stack<JavaMethodBuilder> methodBuilderStack = generatorState.getMethodBuilderStack();
@@ -77,7 +76,7 @@ class GoCodeGenerator implements CodeGenerator<GoStruct<?>> {
 
 		previousMv.visitVarInsn(Opcodes.ALOAD, thisStore);
 		previousMv.visitVarInsn(Opcodes.ALOAD, closureArgStore);
-		previousMv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, fileName, goMethodName, GO_METHOD_DESC, false);
+		previousMv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, fileName, goMethodName, SPECIAL_OPERATOR_METHOD_DESC, false);
 	}
 
 	private TagbodyLabel getTagbodyLabel(final Stack<Set<TagbodyLabel>> tagbodyLabelStack, final GoStruct<?> tagToFind) {

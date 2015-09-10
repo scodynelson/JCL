@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Stack;
 
 import jcl.LispStruct;
-import jcl.compiler.real.icg.CodeGenerator;
 import jcl.compiler.real.icg.GeneratorState;
 import jcl.compiler.real.icg.IntermediateCodeGenerator;
 import jcl.compiler.real.icg.JavaClassBuilder;
@@ -19,16 +18,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-class MultipleValueCallCodeGenerator implements CodeGenerator<MultipleValueCallStruct> {
+class MultipleValueCallCodeGenerator extends SpecialOperatorCodeGenerator<MultipleValueCallStruct> {
 
 	@Autowired
 	private IntermediateCodeGenerator codeGenerator;
 
-	private static final String MULTIPLE_VALUE_CALL_METHOD_NAME_PREFIX = "multipleValueCall_";
-
-	private static final String MULTIPLE_VALUE_CALL_METHOD_DESC = "(Ljcl/functions/Closure;)Ljcl/LispStruct;";
-
 	private static final String NOT_FUNCTION_ERROR_STRING = "MULTIPLE-VALUE-CALL: Invalid function form: ";
+
+	private MultipleValueCallCodeGenerator() {
+		super("multipleValueCall_");
+	}
 
 	@Override
 	public void generate(final MultipleValueCallStruct input, final GeneratorState generatorState) {
@@ -41,8 +40,8 @@ class MultipleValueCallCodeGenerator implements CodeGenerator<MultipleValueCallS
 
 		final ClassWriter cw = currentClass.getClassWriter();
 
-		final String multipleValueCallMethodName = MULTIPLE_VALUE_CALL_METHOD_NAME_PREFIX + System.nanoTime();
-		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PRIVATE, multipleValueCallMethodName, MULTIPLE_VALUE_CALL_METHOD_DESC, null, null);
+		final String multipleValueCallMethodName = methodNamePrefix + System.nanoTime();
+		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PRIVATE, multipleValueCallMethodName, SPECIAL_OPERATOR_METHOD_DESC, null, null);
 
 		final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
 		final Stack<JavaMethodBuilder> methodBuilderStack = generatorState.getMethodBuilderStack();
@@ -235,6 +234,6 @@ class MultipleValueCallCodeGenerator implements CodeGenerator<MultipleValueCallS
 
 		previousMv.visitVarInsn(Opcodes.ALOAD, thisStore);
 		previousMv.visitVarInsn(Opcodes.ALOAD, closureArgStore);
-		previousMv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, fileName, multipleValueCallMethodName, MULTIPLE_VALUE_CALL_METHOD_DESC, false);
+		previousMv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, fileName, multipleValueCallMethodName, SPECIAL_OPERATOR_METHOD_DESC, false);
 	}
 }

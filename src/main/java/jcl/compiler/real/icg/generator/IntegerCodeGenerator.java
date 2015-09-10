@@ -39,7 +39,7 @@ class IntegerCodeGenerator implements CodeGenerator<IntegerStruct> {
 	 * Generation method for {@link IntegerStruct} objects, by performing the following operations:
 	 * <ol>
 	 * <li>Building the {@link IntegerStruct#bigInteger} value</li>
-	 * <li>Constructing a new {@link IntegerStruct} with the build {@link BigInteger} value</li>
+	 * <li>Constructing a new {@link IntegerStruct} with the built {@link BigInteger} value</li>
 	 * </ol>
 	 *
 	 * @param input

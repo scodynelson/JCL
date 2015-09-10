@@ -3,7 +3,6 @@ package jcl.compiler.real.icg.generator;
 import java.util.Stack;
 
 import jcl.LispStruct;
-import jcl.compiler.real.icg.CodeGenerator;
 import jcl.compiler.real.icg.GeneratorState;
 import jcl.compiler.real.icg.IntermediateCodeGenerator;
 import jcl.compiler.real.icg.JavaClassBuilder;
@@ -17,7 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-class MultipleValueProg1CodeGenerator implements CodeGenerator<MultipleValueProg1Struct> {
+class MultipleValueProg1CodeGenerator extends SpecialOperatorCodeGenerator<MultipleValueProg1Struct> {
 
 	@Autowired
 	private IntermediateCodeGenerator codeGenerator;
@@ -25,9 +24,9 @@ class MultipleValueProg1CodeGenerator implements CodeGenerator<MultipleValueProg
 	@Autowired
 	private PrognCodeGenerator prognCodeGenerator;
 
-	private static final String MULTIPLE_VALUE_PROG1_METHOD_NAME_PREFIX = "multipleValueProg1_";
-
-	private static final String MULTIPLE_VALUE_PROG1_METHOD_DESC = "(Ljcl/functions/Closure;)Ljcl/LispStruct;";
+	private MultipleValueProg1CodeGenerator() {
+		super("multipleValueProg1_");
+	}
 
 	@Override
 	public void generate(final MultipleValueProg1Struct input, final GeneratorState generatorState) {
@@ -40,8 +39,8 @@ class MultipleValueProg1CodeGenerator implements CodeGenerator<MultipleValueProg
 
 		final ClassWriter cw = currentClass.getClassWriter();
 
-		final String multipleValueProg1MethodName = MULTIPLE_VALUE_PROG1_METHOD_NAME_PREFIX + System.nanoTime();
-		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PRIVATE, multipleValueProg1MethodName, MULTIPLE_VALUE_PROG1_METHOD_DESC, null, null);
+		final String multipleValueProg1MethodName = methodNamePrefix + System.nanoTime();
+		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PRIVATE, multipleValueProg1MethodName, SPECIAL_OPERATOR_METHOD_DESC, null, null);
 
 		final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
 		final Stack<JavaMethodBuilder> methodBuilderStack = generatorState.getMethodBuilderStack();
@@ -73,6 +72,6 @@ class MultipleValueProg1CodeGenerator implements CodeGenerator<MultipleValueProg
 
 		previousMv.visitVarInsn(Opcodes.ALOAD, thisStore);
 		previousMv.visitVarInsn(Opcodes.ALOAD, closureArgStore);
-		previousMv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, fileName, multipleValueProg1MethodName, MULTIPLE_VALUE_PROG1_METHOD_DESC, false);
+		previousMv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, fileName, multipleValueProg1MethodName, SPECIAL_OPERATOR_METHOD_DESC, false);
 	}
 }

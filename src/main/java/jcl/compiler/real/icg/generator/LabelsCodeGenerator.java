@@ -8,7 +8,6 @@ import java.util.Stack;
 
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.LabelsEnvironment;
-import jcl.compiler.real.icg.CodeGenerator;
 import jcl.compiler.real.icg.GeneratorState;
 import jcl.compiler.real.icg.IntermediateCodeGenerator;
 import jcl.compiler.real.icg.JavaClassBuilder;
@@ -25,7 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-class LabelsCodeGenerator implements CodeGenerator<LabelsStruct> {
+class LabelsCodeGenerator extends SpecialOperatorCodeGenerator<LabelsStruct> {
 
 	@Autowired
 	private IntermediateCodeGenerator codeGenerator;
@@ -33,9 +32,9 @@ class LabelsCodeGenerator implements CodeGenerator<LabelsStruct> {
 	@Autowired
 	private PrognCodeGenerator prognCodeGenerator;
 
-	private static final String LABELS_METHOD_NAME_PREFIX = "labels_";
-
-	private static final String LABELS_METHOD_DESC = "(Ljcl/functions/Closure;)Ljcl/LispStruct;";
+	private LabelsCodeGenerator() {
+		super("labels_");
+	}
 
 	@Override
 	public void generate(final LabelsStruct input, final GeneratorState generatorState) {
@@ -49,8 +48,8 @@ class LabelsCodeGenerator implements CodeGenerator<LabelsStruct> {
 
 		final ClassWriter cw = currentClass.getClassWriter();
 
-		final String labelsMethodName = LABELS_METHOD_NAME_PREFIX + System.nanoTime();
-		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PRIVATE, labelsMethodName, LABELS_METHOD_DESC, null, null);
+		final String labelsMethodName = methodNamePrefix + System.nanoTime();
+		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PRIVATE, labelsMethodName, SPECIAL_OPERATOR_METHOD_DESC, null, null);
 
 		final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
 		final Stack<JavaMethodBuilder> methodBuilderStack = generatorState.getMethodBuilderStack();
@@ -173,7 +172,7 @@ class LabelsCodeGenerator implements CodeGenerator<LabelsStruct> {
 
 		previousMv.visitVarInsn(Opcodes.ALOAD, thisStore);
 		previousMv.visitVarInsn(Opcodes.ALOAD, closureArgStore);
-		previousMv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, fileName, labelsMethodName, LABELS_METHOD_DESC, false);
+		previousMv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, fileName, labelsMethodName, SPECIAL_OPERATOR_METHOD_DESC, false);
 	}
 
 	private static void generateFinallyCode(final MethodVisitor mv, final Set<Integer> varSymbolStores) {

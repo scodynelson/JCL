@@ -3,7 +3,6 @@ package jcl.compiler.real.icg.generator;
 import java.util.Stack;
 
 import jcl.LispStruct;
-import jcl.compiler.real.icg.CodeGenerator;
 import jcl.compiler.real.icg.GeneratorState;
 import jcl.compiler.real.icg.IntermediateCodeGenerator;
 import jcl.compiler.real.icg.JavaClassBuilder;
@@ -19,7 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-class IfCodeGenerator implements CodeGenerator<IfStruct> {
+class IfCodeGenerator extends SpecialOperatorCodeGenerator<IfStruct> {
 
 	@Autowired
 	private IntermediateCodeGenerator codeGenerator;
@@ -30,9 +29,9 @@ class IfCodeGenerator implements CodeGenerator<IfStruct> {
 	@Autowired
 	private NullCodeGenerator nullCodeGenerator;
 
-	private static final String IF_METHOD_NAME_PREFIX = "if_";
-
-	private static final String IF_METHOD_DESC = "(Ljcl/functions/Closure;)Ljcl/LispStruct;";
+	private IfCodeGenerator() {
+		super("if_");
+	}
 
 	@Override
 	public void generate(final IfStruct input, final GeneratorState generatorState) {
@@ -46,8 +45,8 @@ class IfCodeGenerator implements CodeGenerator<IfStruct> {
 
 		final ClassWriter cw = currentClass.getClassWriter();
 
-		final String ifMethodName = IF_METHOD_NAME_PREFIX + System.nanoTime();
-		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PRIVATE, ifMethodName, IF_METHOD_DESC, null, null);
+		final String ifMethodName = methodNamePrefix + System.nanoTime();
+		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PRIVATE, ifMethodName, SPECIAL_OPERATOR_METHOD_DESC, null, null);
 
 		final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
 		final Stack<JavaMethodBuilder> methodBuilderStack = generatorState.getMethodBuilderStack();
@@ -129,6 +128,6 @@ class IfCodeGenerator implements CodeGenerator<IfStruct> {
 
 		previousMv.visitVarInsn(Opcodes.ALOAD, thisStore);
 		previousMv.visitVarInsn(Opcodes.ALOAD, closureArgStore);
-		previousMv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, fileName, ifMethodName, IF_METHOD_DESC, false);
+		previousMv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, fileName, ifMethodName, SPECIAL_OPERATOR_METHOD_DESC, false);
 	}
 }

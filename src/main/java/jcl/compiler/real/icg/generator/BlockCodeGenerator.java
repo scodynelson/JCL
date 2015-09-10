@@ -2,7 +2,6 @@ package jcl.compiler.real.icg.generator;
 
 import java.util.Stack;
 
-import jcl.compiler.real.icg.CodeGenerator;
 import jcl.compiler.real.icg.GeneratorState;
 import jcl.compiler.real.icg.JavaClassBuilder;
 import jcl.compiler.real.icg.JavaMethodBuilder;
@@ -17,14 +16,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-class BlockCodeGenerator implements CodeGenerator<BlockStruct> {
+class BlockCodeGenerator extends SpecialOperatorCodeGenerator<BlockStruct> {
 
 	@Autowired
 	private PrognCodeGenerator prognCodeGenerator;
 
-	private static final String BLOCK_METHOD_NAME_PREFIX = "block_";
-
-	private static final String BLOCK_METHOD_DESC = "(Ljcl/functions/Closure;)Ljcl/LispStruct;";
+	private BlockCodeGenerator() {
+		super("block_");
+	}
 
 	@Override
 	public void generate(final BlockStruct input, final GeneratorState generatorState) {
@@ -37,8 +36,8 @@ class BlockCodeGenerator implements CodeGenerator<BlockStruct> {
 
 		final ClassWriter cw = currentClass.getClassWriter();
 
-		final String blockMethodName = BLOCK_METHOD_NAME_PREFIX + System.nanoTime();
-		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PRIVATE, blockMethodName, BLOCK_METHOD_DESC, null, null);
+		final String blockMethodName = methodNamePrefix + System.nanoTime();
+		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PRIVATE, blockMethodName, SPECIAL_OPERATOR_METHOD_DESC, null, null);
 
 		final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
 		final Stack<JavaMethodBuilder> methodBuilderStack = generatorState.getMethodBuilderStack();
@@ -118,6 +117,6 @@ class BlockCodeGenerator implements CodeGenerator<BlockStruct> {
 
 		previousMv.visitVarInsn(Opcodes.ALOAD, thisStore);
 		previousMv.visitVarInsn(Opcodes.ALOAD, closureArgStore);
-		previousMv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, fileName, blockMethodName, BLOCK_METHOD_DESC, false);
+		previousMv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, fileName, blockMethodName, SPECIAL_OPERATOR_METHOD_DESC, false);
 	}
 }

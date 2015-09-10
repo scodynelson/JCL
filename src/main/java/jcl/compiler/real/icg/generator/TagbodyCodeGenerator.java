@@ -7,7 +7,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
 
-import jcl.compiler.real.icg.CodeGenerator;
 import jcl.compiler.real.icg.GeneratorState;
 import jcl.compiler.real.icg.JavaClassBuilder;
 import jcl.compiler.real.icg.JavaMethodBuilder;
@@ -23,7 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-class TagbodyCodeGenerator implements CodeGenerator<TagbodyStruct> {
+class TagbodyCodeGenerator extends SpecialOperatorCodeGenerator<TagbodyStruct> {
 
 	@Autowired
 	private PrognCodeGenerator prognCodeGenerator;
@@ -31,9 +30,9 @@ class TagbodyCodeGenerator implements CodeGenerator<TagbodyStruct> {
 	@Autowired
 	private NullCodeGenerator nullCodeGenerator;
 
-	private static final String TAGBODY_METHOD_NAME_PREFIX = "tagbody_";
-
-	private static final String TAGBODY_METHOD_DESC = "(Ljcl/functions/Closure;)Ljcl/LispStruct;";
+	private TagbodyCodeGenerator() {
+		super("tagbody_");
+	}
 
 	@Override
 	public void generate(final TagbodyStruct input, final GeneratorState generatorState) {
@@ -45,8 +44,8 @@ class TagbodyCodeGenerator implements CodeGenerator<TagbodyStruct> {
 
 		final ClassWriter cw = currentClass.getClassWriter();
 
-		final String tagbodyMethodName = TAGBODY_METHOD_NAME_PREFIX + System.nanoTime();
-		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PRIVATE, tagbodyMethodName, TAGBODY_METHOD_DESC, null, null);
+		final String tagbodyMethodName = methodNamePrefix + System.nanoTime();
+		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PRIVATE, tagbodyMethodName, SPECIAL_OPERATOR_METHOD_DESC, null, null);
 
 		final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
 		final Stack<JavaMethodBuilder> methodBuilderStack = generatorState.getMethodBuilderStack();
@@ -137,7 +136,7 @@ class TagbodyCodeGenerator implements CodeGenerator<TagbodyStruct> {
 
 		previousMv.visitVarInsn(Opcodes.ALOAD, thisStore);
 		previousMv.visitVarInsn(Opcodes.ALOAD, closureArgStore);
-		previousMv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, fileName, tagbodyMethodName, TAGBODY_METHOD_DESC, false);
+		previousMv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, fileName, tagbodyMethodName, SPECIAL_OPERATOR_METHOD_DESC, false);
 	}
 
 	private static Map<TagbodyLabel, PrognStruct> getTagbodyLabeledForms(final Map<GoStruct<?>, PrognStruct> tagbodyForms,

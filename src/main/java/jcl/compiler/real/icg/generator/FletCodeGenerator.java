@@ -8,7 +8,6 @@ import java.util.Stack;
 
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.FletEnvironment;
-import jcl.compiler.real.icg.CodeGenerator;
 import jcl.compiler.real.icg.GeneratorState;
 import jcl.compiler.real.icg.IntermediateCodeGenerator;
 import jcl.compiler.real.icg.JavaClassBuilder;
@@ -25,7 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-class FletCodeGenerator implements CodeGenerator<FletStruct> {
+class FletCodeGenerator extends SpecialOperatorCodeGenerator<FletStruct> {
 
 	@Autowired
 	private IntermediateCodeGenerator codeGenerator;
@@ -33,9 +32,9 @@ class FletCodeGenerator implements CodeGenerator<FletStruct> {
 	@Autowired
 	private PrognCodeGenerator prognCodeGenerator;
 
-	private static final String FLET_METHOD_NAME_PREFIX = "flet_";
-
-	private static final String FLET_METHOD_DESC = "(Ljcl/functions/Closure;)Ljcl/LispStruct;";
+	private FletCodeGenerator() {
+		super("flet_");
+	}
 
 	@Override
 	public void generate(final FletStruct input, final GeneratorState generatorState) {
@@ -49,8 +48,8 @@ class FletCodeGenerator implements CodeGenerator<FletStruct> {
 
 		final ClassWriter cw = currentClass.getClassWriter();
 
-		final String fletMethodName = FLET_METHOD_NAME_PREFIX + System.nanoTime();
-		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PRIVATE, fletMethodName, FLET_METHOD_DESC, null, null);
+		final String fletMethodName = methodNamePrefix + System.nanoTime();
+		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PRIVATE, fletMethodName, SPECIAL_OPERATOR_METHOD_DESC, null, null);
 
 		final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
 		final Stack<JavaMethodBuilder> methodBuilderStack = generatorState.getMethodBuilderStack();
@@ -173,7 +172,7 @@ class FletCodeGenerator implements CodeGenerator<FletStruct> {
 
 		previousMv.visitVarInsn(Opcodes.ALOAD, thisStore);
 		previousMv.visitVarInsn(Opcodes.ALOAD, closureArgStore);
-		previousMv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, fileName, fletMethodName, FLET_METHOD_DESC, false);
+		previousMv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, fileName, fletMethodName, SPECIAL_OPERATOR_METHOD_DESC, false);
 	}
 
 	private static void generateFinallyCode(final MethodVisitor mv, final Set<Integer> varSymbolStores) {

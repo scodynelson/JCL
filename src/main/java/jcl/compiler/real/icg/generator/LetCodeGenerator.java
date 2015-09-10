@@ -13,7 +13,6 @@ import java.util.Stack;
 import jcl.LispStruct;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.LetEnvironment;
-import jcl.compiler.real.icg.CodeGenerator;
 import jcl.compiler.real.icg.GeneratorState;
 import jcl.compiler.real.icg.IntermediateCodeGenerator;
 import jcl.compiler.real.icg.JavaClassBuilder;
@@ -29,7 +28,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-class LetCodeGenerator implements CodeGenerator<LetStruct> {
+class LetCodeGenerator extends SpecialOperatorCodeGenerator<LetStruct> {
 
 	@Autowired
 	private IntermediateCodeGenerator codeGenerator;
@@ -37,9 +36,9 @@ class LetCodeGenerator implements CodeGenerator<LetStruct> {
 	@Autowired
 	private PrognCodeGenerator prognCodeGenerator;
 
-	private static final String LET_METHOD_NAME_PREFIX = "let_";
-
-	private static final String LET_METHOD_DESC = "(Ljcl/functions/Closure;)Ljcl/LispStruct;";
+	private LetCodeGenerator() {
+		super("let_");
+	}
 
 	@Override
 	public void generate(final LetStruct input, final GeneratorState generatorState) {
@@ -53,8 +52,8 @@ class LetCodeGenerator implements CodeGenerator<LetStruct> {
 
 		final ClassWriter cw = currentClass.getClassWriter();
 
-		final String letMethodName = LET_METHOD_NAME_PREFIX + System.nanoTime();
-		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PRIVATE, letMethodName, LET_METHOD_DESC, null, null);
+		final String letMethodName = methodNamePrefix + System.nanoTime();
+		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PRIVATE, letMethodName, SPECIAL_OPERATOR_METHOD_DESC, null, null);
 
 		final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
 		final Stack<JavaMethodBuilder> methodBuilderStack = generatorState.getMethodBuilderStack();
@@ -254,6 +253,6 @@ class LetCodeGenerator implements CodeGenerator<LetStruct> {
 
 		previousMv.visitVarInsn(Opcodes.ALOAD, thisStore);
 		previousMv.visitVarInsn(Opcodes.ALOAD, closureArgStore);
-		previousMv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, fileName, letMethodName, LET_METHOD_DESC, false);
+		previousMv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, fileName, letMethodName, SPECIAL_OPERATOR_METHOD_DESC, false);
 	}
 }

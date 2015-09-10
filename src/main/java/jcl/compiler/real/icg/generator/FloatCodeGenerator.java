@@ -39,7 +39,7 @@ class FloatCodeGenerator implements CodeGenerator<FloatStruct> {
 	 * Generation method for {@link FloatStruct} objects, by performing the following operations:
 	 * <ol>
 	 * <li>Building the {@link FloatStruct#bigDecimal} value</li>
-	 * <li>Constructing a new {@link FloatStruct} with the build {@link BigDecimal} value</li>
+	 * <li>Constructing a new {@link FloatStruct} with the built {@link BigDecimal} value</li>
 	 * </ol>
 	 *
 	 * @param input

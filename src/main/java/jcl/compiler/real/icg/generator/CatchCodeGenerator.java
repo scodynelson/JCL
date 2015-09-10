@@ -3,7 +3,6 @@ package jcl.compiler.real.icg.generator;
 import java.util.Stack;
 
 import jcl.LispStruct;
-import jcl.compiler.real.icg.CodeGenerator;
 import jcl.compiler.real.icg.GeneratorState;
 import jcl.compiler.real.icg.IntermediateCodeGenerator;
 import jcl.compiler.real.icg.JavaClassBuilder;
@@ -18,7 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-class CatchCodeGenerator implements CodeGenerator<CatchStruct> {
+class CatchCodeGenerator extends SpecialOperatorCodeGenerator<CatchStruct> {
 
 	@Autowired
 	private IntermediateCodeGenerator codeGenerator;
@@ -26,9 +25,9 @@ class CatchCodeGenerator implements CodeGenerator<CatchStruct> {
 	@Autowired
 	private PrognCodeGenerator prognCodeGenerator;
 
-	private static final String CATCH_METHOD_NAME_PREFIX = "catch_";
-
-	private static final String CATCH_METHOD_DESC = "(Ljcl/functions/Closure;)Ljcl/LispStruct;";
+	private CatchCodeGenerator() {
+		super("catch_");
+	}
 
 	@Override
 	public void generate(final CatchStruct input, final GeneratorState generatorState) {
@@ -41,8 +40,8 @@ class CatchCodeGenerator implements CodeGenerator<CatchStruct> {
 
 		final ClassWriter cw = currentClass.getClassWriter();
 
-		final String catchMethodName = CATCH_METHOD_NAME_PREFIX + System.nanoTime();
-		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PRIVATE, catchMethodName, CATCH_METHOD_DESC, null, null);
+		final String catchMethodName = methodNamePrefix + System.nanoTime();
+		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PRIVATE, catchMethodName, SPECIAL_OPERATOR_METHOD_DESC, null, null);
 
 		final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
 		final Stack<JavaMethodBuilder> methodBuilderStack = generatorState.getMethodBuilderStack();
@@ -122,6 +121,6 @@ class CatchCodeGenerator implements CodeGenerator<CatchStruct> {
 
 		previousMv.visitVarInsn(Opcodes.ALOAD, thisStore);
 		previousMv.visitVarInsn(Opcodes.ALOAD, closureArgStore);
-		previousMv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, fileName, catchMethodName, CATCH_METHOD_DESC, false);
+		previousMv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, fileName, catchMethodName, SPECIAL_OPERATOR_METHOD_DESC, false);
 	}
 }

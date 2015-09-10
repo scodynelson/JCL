@@ -3,7 +3,6 @@ package jcl.compiler.real.icg.generator;
 import java.util.Stack;
 
 import jcl.LispStruct;
-import jcl.compiler.real.icg.CodeGenerator;
 import jcl.compiler.real.icg.GeneratorState;
 import jcl.compiler.real.icg.IntermediateCodeGenerator;
 import jcl.compiler.real.icg.JavaClassBuilder;
@@ -16,16 +15,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-class ThrowCodeGenerator implements CodeGenerator<ThrowStruct> {
+class ThrowCodeGenerator extends SpecialOperatorCodeGenerator<ThrowStruct> {
 
 	@Autowired
 	private IntermediateCodeGenerator codeGenerator;
 
-	private static final String THROW_METHOD_NAME_PREFIX = "throw_";
-
-	private static final String THROW_METHOD_DESC = "(Ljcl/functions/Closure;)Ljcl/LispStruct;";
-
 	private static final String THROW_EXCEPTION_INIT_DESC = CodeGenerators.getConstructorDescription(ThrowException.class, LispStruct.class, LispStruct.class);
+
+	private ThrowCodeGenerator() {
+		super("throw_");
+	}
 
 	@Override
 	public void generate(final ThrowStruct input, final GeneratorState generatorState) {
@@ -38,8 +37,8 @@ class ThrowCodeGenerator implements CodeGenerator<ThrowStruct> {
 
 		final ClassWriter cw = currentClass.getClassWriter();
 
-		final String throwMethodName = THROW_METHOD_NAME_PREFIX + System.nanoTime();
-		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PRIVATE, throwMethodName, THROW_METHOD_DESC, null, null);
+		final String throwMethodName = methodNamePrefix + System.nanoTime();
+		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PRIVATE, throwMethodName, SPECIAL_OPERATOR_METHOD_DESC, null, null);
 
 		final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
 		final Stack<JavaMethodBuilder> methodBuilderStack = generatorState.getMethodBuilderStack();
@@ -78,6 +77,6 @@ class ThrowCodeGenerator implements CodeGenerator<ThrowStruct> {
 
 		previousMv.visitVarInsn(Opcodes.ALOAD, thisStore);
 		previousMv.visitVarInsn(Opcodes.ALOAD, closureArgStore);
-		previousMv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, fileName, throwMethodName, THROW_METHOD_DESC, false);
+		previousMv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, fileName, throwMethodName, SPECIAL_OPERATOR_METHOD_DESC, false);
 	}
 }

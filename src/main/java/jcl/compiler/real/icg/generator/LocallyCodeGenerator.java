@@ -4,6 +4,7 @@ import java.util.Stack;
 
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.LocallyEnvironment;
+import jcl.compiler.real.icg.CodeGenerator;
 import jcl.compiler.real.icg.GeneratorState;
 import jcl.compiler.real.struct.specialoperator.LocallyStruct;
 import jcl.compiler.real.struct.specialoperator.PrognStruct;

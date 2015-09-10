@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.ListIterator;
 
 import jcl.LispStruct;
+import jcl.compiler.real.icg.CodeGenerator;
 import jcl.compiler.real.icg.GeneratorState;
 import jcl.compiler.real.icg.IntermediateCodeGenerator;
 import jcl.compiler.real.icg.JavaMethodBuilder;

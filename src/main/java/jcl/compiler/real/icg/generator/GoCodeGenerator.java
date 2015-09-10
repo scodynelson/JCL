@@ -5,6 +5,7 @@ import java.util.Set;
 import java.util.Stack;
 
 import jcl.LispStruct;
+import jcl.compiler.real.icg.CodeGenerator;
 import jcl.compiler.real.icg.GeneratorState;
 import jcl.compiler.real.icg.JavaClassBuilder;
 import jcl.compiler.real.icg.JavaMethodBuilder;

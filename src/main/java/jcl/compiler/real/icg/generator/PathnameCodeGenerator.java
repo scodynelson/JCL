@@ -6,6 +6,7 @@ package jcl.compiler.real.icg.generator;
 
 import java.net.URI;
 
+import jcl.compiler.real.icg.CodeGenerator;
 import jcl.compiler.real.icg.GeneratorState;
 import jcl.compiler.real.icg.JavaMethodBuilder;
 import jcl.pathnames.PathnameStruct;

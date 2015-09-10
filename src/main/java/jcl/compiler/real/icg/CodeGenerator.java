@@ -1,7 +1,6 @@
-package jcl.compiler.real.icg.generator;
+package jcl.compiler.real.icg;
 
 import jcl.LispStruct;
-import jcl.compiler.real.icg.GeneratorState;
 
 /**
  * Defines the code generation interface with a single method {@link #generate(LispStruct, GeneratorState)} used for

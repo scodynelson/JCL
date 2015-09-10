@@ -5,6 +5,7 @@
 package jcl.compiler.real.icg.generator;
 
 import jcl.characters.CharacterStruct;
+import jcl.compiler.real.icg.CodeGenerator;
 import jcl.compiler.real.icg.GeneratorState;
 import jcl.compiler.real.icg.JavaMethodBuilder;
 import org.objectweb.asm.MethodVisitor;

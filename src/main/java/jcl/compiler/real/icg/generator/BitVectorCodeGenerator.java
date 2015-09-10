@@ -7,6 +7,7 @@ package jcl.compiler.real.icg.generator;
 import java.util.List;
 
 import jcl.arrays.BitVectorStruct;
+import jcl.compiler.real.icg.CodeGenerator;
 import jcl.compiler.real.icg.GeneratorState;
 import jcl.compiler.real.icg.JavaMethodBuilder;
 import jcl.numbers.IntegerStruct;

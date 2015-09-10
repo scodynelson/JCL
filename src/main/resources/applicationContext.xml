@@ -70,7 +70,7 @@
 
 	<util:map id="codeGeneratorStrategies"
 	          key-type="java.lang.Class"
-	          value-type="jcl.compiler.real.icg.generator.CodeGenerator">
+	          value-type="jcl.compiler.real.icg.CodeGenerator">
 
 		<entry key="jcl.arrays.ArrayStruct" value-ref="arrayCodeGenerator"/>
 		<entry key="jcl.arrays.BitVectorStruct" value-ref="bitVectorCodeGenerator"/>

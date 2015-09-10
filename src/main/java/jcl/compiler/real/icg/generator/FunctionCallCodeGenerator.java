@@ -3,6 +3,7 @@ package jcl.compiler.real.icg.generator;
 import java.util.List;
 
 import jcl.LispStruct;
+import jcl.compiler.real.icg.CodeGenerator;
 import jcl.compiler.real.icg.GeneratorState;
 import jcl.compiler.real.icg.IntermediateCodeGenerator;
 import jcl.compiler.real.icg.JavaMethodBuilder;

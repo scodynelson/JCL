@@ -1,5 +1,6 @@
 package jcl.compiler.real.icg.generator;
 
+import jcl.compiler.real.icg.CodeGenerator;
 import jcl.compiler.real.icg.GeneratorState;
 import jcl.compiler.real.struct.specialoperator.MacroletStruct;
 import jcl.compiler.real.struct.specialoperator.PrognStruct;

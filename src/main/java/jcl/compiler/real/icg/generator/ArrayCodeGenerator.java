@@ -8,6 +8,7 @@ import java.util.List;
 
 import jcl.LispStruct;
 import jcl.arrays.ArrayStruct;
+import jcl.compiler.real.icg.CodeGenerator;
 import jcl.compiler.real.icg.GeneratorState;
 import jcl.compiler.real.icg.JavaMethodBuilder;
 import org.objectweb.asm.MethodVisitor;

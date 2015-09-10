@@ -6,6 +6,7 @@ package jcl.compiler.real.icg.generator;
 
 import java.math.BigInteger;
 
+import jcl.compiler.real.icg.CodeGenerator;
 import jcl.compiler.real.icg.GeneratorState;
 import jcl.compiler.real.icg.JavaMethodBuilder;
 import jcl.numbers.RatioStruct;

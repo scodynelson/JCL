@@ -7,11 +7,9 @@ import jcl.LispStruct;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.icg.GeneratorState;
 import jcl.compiler.real.icg.IntermediateCodeGenerator;
-import jcl.compiler.real.icg.JavaClassBuilder;
 import jcl.compiler.real.icg.JavaMethodBuilder;
 import jcl.compiler.real.struct.specialoperator.SetqStruct;
 import jcl.symbols.SymbolStruct;
-import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
@@ -29,25 +27,12 @@ class SetqCodeGenerator extends SpecialOperatorCodeGenerator<SetqStruct> {
 	}
 
 	@Override
-	public void generate(final SetqStruct input, final GeneratorState generatorState) {
+	protected void generateSpecialOperator(final SetqStruct input, final GeneratorState generatorState,
+	                                       final JavaMethodBuilder methodBuilder, final int closureArgStore) {
+
+		final MethodVisitor mv = methodBuilder.getMethodVisitor();
 
 		final List<SetqStruct.SetqPair> setqPairs = input.getSetqPairs();
-
-		final JavaClassBuilder currentClass = generatorState.getCurrentClass();
-		final String fileName = currentClass.getFileName();
-
-		final ClassWriter cw = currentClass.getClassWriter();
-
-		final String setqMethodName = methodNamePrefix + System.nanoTime();
-		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PRIVATE, setqMethodName, SPECIAL_OPERATOR_METHOD_DESC, null, null);
-
-		final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
-		final Stack<JavaMethodBuilder> methodBuilderStack = generatorState.getMethodBuilderStack();
-		methodBuilderStack.push(methodBuilder);
-
-		mv.visitCode();
-		final int thisStore = methodBuilder.getNextAvailableStore();
-		final int closureArgStore = methodBuilder.getNextAvailableStore();
 
 		final Stack<Environment> bindingStack = generatorState.getBindingStack();
 		final Environment currentEnvironment = bindingStack.peek();
@@ -159,17 +144,5 @@ class SetqCodeGenerator extends SpecialOperatorCodeGenerator<SetqStruct> {
 		mv.visitVarInsn(Opcodes.ALOAD, initFormStore);
 
 		mv.visitInsn(Opcodes.ARETURN);
-
-		mv.visitMaxs(-1, -1);
-		mv.visitEnd();
-
-		methodBuilderStack.pop();
-
-		final JavaMethodBuilder previousMethodBuilder = methodBuilderStack.peek();
-		final MethodVisitor previousMv = previousMethodBuilder.getMethodVisitor();
-
-		previousMv.visitVarInsn(Opcodes.ALOAD, thisStore);
-		previousMv.visitVarInsn(Opcodes.ALOAD, closureArgStore);
-		previousMv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, fileName, setqMethodName, SPECIAL_OPERATOR_METHOD_DESC, false);
 	}
 }

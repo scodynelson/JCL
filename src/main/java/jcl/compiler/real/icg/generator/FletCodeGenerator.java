@@ -10,13 +10,11 @@ import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.FletEnvironment;
 import jcl.compiler.real.icg.GeneratorState;
 import jcl.compiler.real.icg.IntermediateCodeGenerator;
-import jcl.compiler.real.icg.JavaClassBuilder;
 import jcl.compiler.real.icg.JavaMethodBuilder;
 import jcl.compiler.real.struct.specialoperator.CompilerFunctionStruct;
 import jcl.compiler.real.struct.specialoperator.FletStruct;
 import jcl.compiler.real.struct.specialoperator.PrognStruct;
 import jcl.symbols.SymbolStruct;
-import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
@@ -37,27 +35,14 @@ class FletCodeGenerator extends SpecialOperatorCodeGenerator<FletStruct> {
 	}
 
 	@Override
-	public void generate(final FletStruct input, final GeneratorState generatorState) {
+	protected void generateSpecialOperator(final FletStruct input, final GeneratorState generatorState,
+	                                       final JavaMethodBuilder methodBuilder, final int closureArgStore) {
+
+		final MethodVisitor mv = methodBuilder.getMethodVisitor();
 
 		final List<FletStruct.FletVar> vars = input.getVars();
 		final PrognStruct forms = input.getForms();
 		final FletEnvironment fletEnvironment = input.getLexicalEnvironment();
-
-		final JavaClassBuilder currentClass = generatorState.getCurrentClass();
-		final String fileName = currentClass.getFileName();
-
-		final ClassWriter cw = currentClass.getClassWriter();
-
-		final String fletMethodName = methodNamePrefix + System.nanoTime();
-		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PRIVATE, fletMethodName, SPECIAL_OPERATOR_METHOD_DESC, null, null);
-
-		final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
-		final Stack<JavaMethodBuilder> methodBuilderStack = generatorState.getMethodBuilderStack();
-		methodBuilderStack.push(methodBuilder);
-
-		mv.visitCode();
-		final int thisStore = methodBuilder.getNextAvailableStore();
-		final int closureArgStore = methodBuilder.getNextAvailableStore();
 
 		final Label tryBlockStart = new Label();
 		final Label tryBlockEnd = new Label();
@@ -161,18 +146,6 @@ class FletCodeGenerator extends SpecialOperatorCodeGenerator<FletStruct> {
 		mv.visitVarInsn(Opcodes.ALOAD, resultStore);
 
 		mv.visitInsn(Opcodes.ARETURN);
-
-		mv.visitMaxs(-1, -1);
-		mv.visitEnd();
-
-		methodBuilderStack.pop();
-
-		final JavaMethodBuilder previousMethodBuilder = methodBuilderStack.peek();
-		final MethodVisitor previousMv = previousMethodBuilder.getMethodVisitor();
-
-		previousMv.visitVarInsn(Opcodes.ALOAD, thisStore);
-		previousMv.visitVarInsn(Opcodes.ALOAD, closureArgStore);
-		previousMv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, fileName, fletMethodName, SPECIAL_OPERATOR_METHOD_DESC, false);
 	}
 
 	private static void generateFinallyCode(final MethodVisitor mv, final Set<Integer> varSymbolStores) {

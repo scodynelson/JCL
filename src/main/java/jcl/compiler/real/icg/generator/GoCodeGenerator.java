@@ -6,12 +6,10 @@ import java.util.Stack;
 
 import jcl.LispStruct;
 import jcl.compiler.real.icg.GeneratorState;
-import jcl.compiler.real.icg.JavaClassBuilder;
 import jcl.compiler.real.icg.JavaMethodBuilder;
 import jcl.compiler.real.struct.specialoperator.go.GoStruct;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.printer.Printer;
-import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,23 +28,10 @@ class GoCodeGenerator extends SpecialOperatorCodeGenerator<GoStruct<?>> {
 	}
 
 	@Override
-	public void generate(final GoStruct<?> input, final GeneratorState generatorState) {
+	protected void generateSpecialOperator(final GoStruct<?> input, final GeneratorState generatorState,
+	                                       final JavaMethodBuilder methodBuilder, final int closureArgStore) {
 
-		final JavaClassBuilder currentClass = generatorState.getCurrentClass();
-		final String fileName = currentClass.getFileName();
-
-		final ClassWriter cw = currentClass.getClassWriter();
-
-		final String goMethodName = methodNamePrefix + System.nanoTime();
-		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PRIVATE, goMethodName, SPECIAL_OPERATOR_METHOD_DESC, null, null);
-
-		final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
-		final Stack<JavaMethodBuilder> methodBuilderStack = generatorState.getMethodBuilderStack();
-		methodBuilderStack.push(methodBuilder);
-
-		mv.visitCode();
-		final int thisStore = methodBuilder.getNextAvailableStore();
-		final int closureArgStore = methodBuilder.getNextAvailableStore();
+		final MethodVisitor mv = methodBuilder.getMethodVisitor();
 
 		final Stack<Set<TagbodyLabel>> tagbodyLabelStack = generatorState.getTagbodyLabelStack();
 		final TagbodyLabel tagbodyLabel = getTagbodyLabel(tagbodyLabelStack, input);
@@ -65,18 +50,6 @@ class GoCodeGenerator extends SpecialOperatorCodeGenerator<GoStruct<?>> {
 				GO_EXCEPTION_INIT_DESC,
 				false);
 		mv.visitInsn(Opcodes.ATHROW);
-
-		mv.visitMaxs(-1, -1);
-		mv.visitEnd();
-
-		methodBuilderStack.pop();
-
-		final JavaMethodBuilder previousMethodBuilder = methodBuilderStack.peek();
-		final MethodVisitor previousMv = previousMethodBuilder.getMethodVisitor();
-
-		previousMv.visitVarInsn(Opcodes.ALOAD, thisStore);
-		previousMv.visitVarInsn(Opcodes.ALOAD, closureArgStore);
-		previousMv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, fileName, goMethodName, SPECIAL_OPERATOR_METHOD_DESC, false);
 	}
 
 	private TagbodyLabel getTagbodyLabel(final Stack<Set<TagbodyLabel>> tagbodyLabelStack, final GoStruct<?> tagToFind) {

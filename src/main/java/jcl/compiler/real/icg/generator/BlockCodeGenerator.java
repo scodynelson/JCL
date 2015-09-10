@@ -1,14 +1,10 @@
 package jcl.compiler.real.icg.generator;
 
-import java.util.Stack;
-
 import jcl.compiler.real.icg.GeneratorState;
-import jcl.compiler.real.icg.JavaClassBuilder;
 import jcl.compiler.real.icg.JavaMethodBuilder;
 import jcl.compiler.real.struct.specialoperator.BlockStruct;
 import jcl.compiler.real.struct.specialoperator.PrognStruct;
 import jcl.symbols.SymbolStruct;
-import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
@@ -26,26 +22,13 @@ class BlockCodeGenerator extends SpecialOperatorCodeGenerator<BlockStruct> {
 	}
 
 	@Override
-	public void generate(final BlockStruct input, final GeneratorState generatorState) {
+	protected void generateSpecialOperator(final BlockStruct input, final GeneratorState generatorState,
+	                                       final JavaMethodBuilder methodBuilder, final int closureArgStore) {
+
+		final MethodVisitor mv = methodBuilder.getMethodVisitor();
 
 		final SymbolStruct<?> name = input.getName();
 		final PrognStruct forms = input.getForms();
-
-		final JavaClassBuilder currentClass = generatorState.getCurrentClass();
-		final String fileName = currentClass.getFileName();
-
-		final ClassWriter cw = currentClass.getClassWriter();
-
-		final String blockMethodName = methodNamePrefix + System.nanoTime();
-		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PRIVATE, blockMethodName, SPECIAL_OPERATOR_METHOD_DESC, null, null);
-
-		final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
-		final Stack<JavaMethodBuilder> methodBuilderStack = generatorState.getMethodBuilderStack();
-		methodBuilderStack.push(methodBuilder);
-
-		mv.visitCode();
-		final int thisStore = methodBuilder.getNextAvailableStore();
-		final int closureArgStore = methodBuilder.getNextAvailableStore();
 
 		final Label tryBlockStart = new Label();
 		final Label tryBlockEnd = new Label();
@@ -106,17 +89,5 @@ class BlockCodeGenerator extends SpecialOperatorCodeGenerator<BlockStruct> {
 		mv.visitVarInsn(Opcodes.ALOAD, resultStore);
 
 		mv.visitInsn(Opcodes.ARETURN);
-
-		mv.visitMaxs(-1, -1);
-		mv.visitEnd();
-
-		methodBuilderStack.pop();
-
-		final JavaMethodBuilder previousMethodBuilder = methodBuilderStack.peek();
-		final MethodVisitor previousMv = previousMethodBuilder.getMethodVisitor();
-
-		previousMv.visitVarInsn(Opcodes.ALOAD, thisStore);
-		previousMv.visitVarInsn(Opcodes.ALOAD, closureArgStore);
-		previousMv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, fileName, blockMethodName, SPECIAL_OPERATOR_METHOD_DESC, false);
 	}
 }

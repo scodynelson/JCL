@@ -19,7 +19,7 @@ class ThrowCodeGenerator extends SpecialOperatorCodeGenerator<ThrowStruct> {
 	private static final String THROW_EXCEPTION_INIT_DESC = CodeGenerators.getConstructorDescription(ThrowException.class, LispStruct.class, LispStruct.class);
 
 	private ThrowCodeGenerator() {
-		super("throw_");
+		super("throw");
 	}
 
 	@Override

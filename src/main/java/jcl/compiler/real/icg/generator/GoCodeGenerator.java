@@ -24,7 +24,7 @@ class GoCodeGenerator extends SpecialOperatorCodeGenerator<GoStruct<?>> {
 	private static final String GO_EXCEPTION_INIT_DESC = CodeGenerators.getConstructorDescription(GoException.class, int.class);
 
 	private GoCodeGenerator() {
-		super("go_");
+		super("go");
 	}
 
 	@Override

@@ -23,7 +23,7 @@ class MultipleValueCallCodeGenerator extends SpecialOperatorCodeGenerator<Multip
 	private static final String NOT_FUNCTION_ERROR_STRING = "MULTIPLE-VALUE-CALL: Invalid function form: ";
 
 	private MultipleValueCallCodeGenerator() {
-		super("multipleValueCall_");
+		super("multipleValueCall");
 	}
 
 	@Override

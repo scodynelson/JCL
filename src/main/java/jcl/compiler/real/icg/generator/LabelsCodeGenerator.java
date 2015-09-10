@@ -31,7 +31,7 @@ class LabelsCodeGenerator extends SpecialOperatorCodeGenerator<LabelsStruct> {
 	private PrognCodeGenerator prognCodeGenerator;
 
 	private LabelsCodeGenerator() {
-		super("labels_");
+		super("labels");
 	}
 
 	@Override

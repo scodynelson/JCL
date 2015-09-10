@@ -26,7 +26,7 @@ class IfCodeGenerator extends SpecialOperatorCodeGenerator<IfStruct> {
 	private NullCodeGenerator nullCodeGenerator;
 
 	private IfCodeGenerator() {
-		super("if_");
+		super("if");
 	}
 
 	@Override

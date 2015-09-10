@@ -34,7 +34,7 @@ class LetStarCodeGenerator extends SpecialOperatorCodeGenerator<LetStarStruct> {
 	private PrognCodeGenerator prognCodeGenerator;
 
 	private LetStarCodeGenerator() {
-		super("letStar_");
+		super("letStar");
 	}
 
 	@Override

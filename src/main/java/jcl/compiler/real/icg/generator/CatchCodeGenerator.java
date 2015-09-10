@@ -22,7 +22,7 @@ class CatchCodeGenerator extends SpecialOperatorCodeGenerator<CatchStruct> {
 	private PrognCodeGenerator prognCodeGenerator;
 
 	private CatchCodeGenerator() {
-		super("catch_");
+		super("catch");
 	}
 
 	@Override

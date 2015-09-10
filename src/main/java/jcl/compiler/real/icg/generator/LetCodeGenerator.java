@@ -35,7 +35,7 @@ class LetCodeGenerator extends SpecialOperatorCodeGenerator<LetStruct> {
 	private PrognCodeGenerator prognCodeGenerator;
 
 	private LetCodeGenerator() {
-		super("let_");
+		super("let");
 	}
 
 	@Override

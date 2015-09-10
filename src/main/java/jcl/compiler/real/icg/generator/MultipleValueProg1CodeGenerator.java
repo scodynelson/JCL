@@ -21,7 +21,7 @@ class MultipleValueProg1CodeGenerator extends SpecialOperatorCodeGenerator<Multi
 	private PrognCodeGenerator prognCodeGenerator;
 
 	private MultipleValueProg1CodeGenerator() {
-		super("multipleValueProg1_");
+		super("multipleValueProg1");
 	}
 
 	@Override

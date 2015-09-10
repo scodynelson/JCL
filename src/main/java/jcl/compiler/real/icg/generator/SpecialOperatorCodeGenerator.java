@@ -17,9 +17,9 @@ import org.objectweb.asm.Opcodes;
 
 abstract class SpecialOperatorCodeGenerator<T extends CompilerSpecialOperatorStruct> implements CodeGenerator<T> {
 
-	protected static final String SPECIAL_OPERATOR_METHOD_DESC = "(Ljcl/functions/Closure;)Ljcl/LispStruct;";
+	private static final String SPECIAL_OPERATOR_METHOD_DESC = "(Ljcl/functions/Closure;)Ljcl/LispStruct;";
 
-	protected final String methodNamePrefix;
+	private final String methodNamePrefix;
 
 	protected SpecialOperatorCodeGenerator(final String methodNamePrefix) {
 		this.methodNamePrefix = methodNamePrefix;
@@ -33,7 +33,7 @@ abstract class SpecialOperatorCodeGenerator<T extends CompilerSpecialOperatorStr
 
 		final ClassWriter cw = currentClass.getClassWriter();
 
-		final String methodName = methodNamePrefix + System.nanoTime();
+		final String methodName = methodNamePrefix + '_' + System.nanoTime();
 		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PRIVATE, methodName, SPECIAL_OPERATOR_METHOD_DESC, null, null);
 
 		final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);

@@ -22,7 +22,7 @@ class UnwindProtectCodeGenerator extends SpecialOperatorCodeGenerator<UnwindProt
 	private PrognCodeGenerator prognCodeGenerator;
 
 	private UnwindProtectCodeGenerator() {
-		super("unwindProtect_");
+		super("unwindProtect");
 	}
 
 	@Override

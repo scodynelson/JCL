@@ -23,7 +23,7 @@ class SetqCodeGenerator extends SpecialOperatorCodeGenerator<SetqStruct> {
 	private IntermediateCodeGenerator codeGenerator;
 
 	private SetqCodeGenerator() {
-		super("setq_");
+		super("setq");
 	}
 
 	@Override

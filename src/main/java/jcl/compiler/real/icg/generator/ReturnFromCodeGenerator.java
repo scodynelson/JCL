@@ -20,7 +20,7 @@ class ReturnFromCodeGenerator extends SpecialOperatorCodeGenerator<ReturnFromStr
 	private static final String RETURN_FROM_EXCEPTION_INIT_DESC = CodeGenerators.getConstructorDescription(ReturnFromException.class, SymbolStruct.class, LispStruct.class);
 
 	private ReturnFromCodeGenerator() {
-		super("returnFrom_");
+		super("returnFrom");
 	}
 
 	@Override

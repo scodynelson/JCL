@@ -28,7 +28,7 @@ class TagbodyCodeGenerator extends SpecialOperatorCodeGenerator<TagbodyStruct> {
 	private NullCodeGenerator nullCodeGenerator;
 
 	private TagbodyCodeGenerator() {
-		super("tagbody_");
+		super("tagbody");
 	}
 
 	@Override

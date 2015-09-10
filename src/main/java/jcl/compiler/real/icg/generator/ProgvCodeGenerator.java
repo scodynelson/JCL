@@ -32,7 +32,7 @@ class ProgvCodeGenerator extends SpecialOperatorCodeGenerator<ProgvStruct> {
 	private static final String VALUES_LIST_MUST_BE_A_LIST = "PROGV: Values list must be a list. Got: ";
 
 	private ProgvCodeGenerator() {
-		super("progv_");
+		super("progv");
 	}
 
 	@Override

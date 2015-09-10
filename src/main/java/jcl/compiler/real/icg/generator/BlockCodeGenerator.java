@@ -11,24 +11,59 @@ import org.objectweb.asm.Opcodes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+/**
+ * Class to perform 'block' special operator code generation.
+ */
 @Component
-class BlockCodeGenerator extends SpecialOperatorCodeGenerator<BlockStruct> {
+final class BlockCodeGenerator extends SpecialOperatorCodeGenerator<BlockStruct> {
 
+	/**
+	 * {@link PrognCodeGenerator} used for generating the {@link BlockStruct#forms}.
+	 */
 	@Autowired
 	private PrognCodeGenerator prognCodeGenerator;
 
+	/**
+	 * Private constructor which passes 'block' as the prefix value to be set in it's {@link #methodNamePrefix} value.
+	 */
 	private BlockCodeGenerator() {
-		super("block_");
+		super("block");
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * Generation method for {@link BlockStruct} objects. As an example, it will transform {@code (block foo)} into
+	 * the following Java code:
+	 * <pre>
+	 * {@code
+	 * private LispStruct block_1(Closure var1) {
+	 *      PackageStruct var2 = PackageStruct.findPackage("COMMON-LISP-USER");
+	 *      SymbolStruct var3 = var2.findSymbol("FOO").getSymbol();
+	 *      Object var4;
+	 *      try {
+	 *          var4 = NullStruct.INSTANCE;
+	 *      } catch (ReturnFromException var7) {
+	 *          SymbolStruct var6 = var7.getName();
+	 *          if(!var6.equals(var3)) {
+	 *              throw var7;
+	 *          }
+	 *          var4 = var8.getResult();
+	 *      }
+	 *      return (LispStruct)var4;
+	 * }
+	 * }
+	 * </pre>
+	 *
+	 * @param input
+	 * 		the {@link PrognStruct} input value to generate code for
+	 * @param generatorState
+	 * 		stateful object used to hold the current state of the code generation process
+	 */
 	@Override
 	protected void generateSpecialOperator(final BlockStruct input, final GeneratorState generatorState,
 	                                       final JavaMethodBuilder methodBuilder, final int closureArgStore) {
 
 		final MethodVisitor mv = methodBuilder.getMethodVisitor();
-
-		final SymbolStruct<?> name = input.getName();
-		final PrognStruct forms = input.getForms();
 
 		final Label tryBlockStart = new Label();
 		final Label tryBlockEnd = new Label();
@@ -38,16 +73,23 @@ class BlockCodeGenerator extends SpecialOperatorCodeGenerator<BlockStruct> {
 
 		final int namePackageStore = methodBuilder.getNextAvailableStore();
 		final int nameSymbolStore = methodBuilder.getNextAvailableStore();
+		final SymbolStruct<?> name = input.getName();
 		SymbolCodeGeneratorUtil.generate(name, generatorState, namePackageStore, nameSymbolStore);
 
+		// Start 'try{}'
 		mv.visitLabel(tryBlockStart);
+
+		final PrognStruct forms = input.getForms();
 		prognCodeGenerator.generate(forms, generatorState);
+
 		final int resultStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, resultStore);
 
+		// End 'try{}'
 		mv.visitLabel(tryBlockEnd);
 		mv.visitJumpInsn(Opcodes.GOTO, catchBlockEnd);
 
+		// Start 'catch(ReturnFromException rfe){}'
 		mv.visitLabel(catchBlockStart);
 		final int returnFromExceptionStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, returnFromExceptionStore);
@@ -85,6 +127,7 @@ class BlockCodeGenerator extends SpecialOperatorCodeGenerator<BlockStruct> {
 		mv.visitVarInsn(Opcodes.ALOAD, returnFromExceptionStore);
 		mv.visitInsn(Opcodes.ATHROW);
 
+		// End 'catch(ReturnFromException rfe){}'
 		mv.visitLabel(catchBlockEnd);
 		mv.visitVarInsn(Opcodes.ALOAD, resultStore);
 

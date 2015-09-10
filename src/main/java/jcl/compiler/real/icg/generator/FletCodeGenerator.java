@@ -31,7 +31,7 @@ class FletCodeGenerator extends SpecialOperatorCodeGenerator<FletStruct> {
 	private PrognCodeGenerator prognCodeGenerator;
 
 	private FletCodeGenerator() {
-		super("flet_");
+		super("flet");
 	}
 
 	@Override

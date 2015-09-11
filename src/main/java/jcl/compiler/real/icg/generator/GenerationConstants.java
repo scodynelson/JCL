@@ -372,6 +372,8 @@ interface GenerationConstants {
 
 	String RETURN_FROM_EXCEPTION_NAME = Type.getInternalName(ReturnFromException.class);
 
+	String RETURN_FROM_EXCEPTION_INIT_DESC = CodeGenerators.getConstructorDescription(ReturnFromException.class, SymbolStruct.class, LispStruct.class);
+
 	String RETURN_FROM_EXCEPTION_GET_NAME_METHOD_NAME = "getName";
 
 	String RETURN_FROM_EXCEPTION_GET_NAME_METHOD_DESC = CodeGenerators.getMethodDescription(ReturnFromException.class, RETURN_FROM_EXCEPTION_GET_NAME_METHOD_NAME);
@@ -382,11 +384,15 @@ interface GenerationConstants {
 
 	String GO_EXCEPTION_NAME = Type.getInternalName(GoException.class);
 
+	String GO_EXCEPTION_INIT_DESC = CodeGenerators.getConstructorDescription(GoException.class, int.class);
+
 	String GO_EXCEPTION_GET_TAG_INDEX_METHOD_NAME = "getTagIndex";
 
 	String GO_EXCEPTION_GET_TAG_INDEX_METHOD_DESC = CodeGenerators.getMethodDescription(GoException.class, GO_EXCEPTION_GET_TAG_INDEX_METHOD_NAME);
 
 	String THROW_EXCEPTION_NAME = Type.getInternalName(ThrowException.class);
+
+	String THROW_EXCEPTION_INIT_DESC = CodeGenerators.getConstructorDescription(ThrowException.class, LispStruct.class, LispStruct.class);
 
 	String THROW_EXCEPTION_GET_CATCH_TAG_METHOD_NAME = "getCatchTag";
 

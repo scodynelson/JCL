@@ -1,6 +1,11 @@
+/*
+ * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
+ */
+
 package jcl.compiler.real.icg.generator;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Stack;
 
 import jcl.LispStruct;
@@ -8,7 +13,9 @@ import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.icg.GeneratorState;
 import jcl.compiler.real.icg.IntermediateCodeGenerator;
 import jcl.compiler.real.icg.JavaMethodBuilder;
+import jcl.compiler.real.struct.ValuesStruct;
 import jcl.compiler.real.struct.specialoperator.SetqStruct;
+import jcl.functions.Closure;
 import jcl.symbols.SymbolStruct;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
@@ -16,46 +23,94 @@ import org.objectweb.asm.Opcodes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+/**
+ * Class to perform 'setq' special operator code generation.
+ */
 @Component
-class SetqCodeGenerator extends SpecialOperatorCodeGenerator<SetqStruct> {
+final class SetqCodeGenerator extends SpecialOperatorCodeGenerator<SetqStruct> {
 
+	/**
+	 * {@link IntermediateCodeGenerator} used for generating the values.
+	 */
 	@Autowired
 	private IntermediateCodeGenerator codeGenerator;
 
+	/**
+	 * Private constructor which passes 'setq' as the prefix value to be set in it's {@link #methodNamePrefix} value.
+	 */
 	private SetqCodeGenerator() {
 		super("setq");
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * Generation method for {@link SetqStruct} objects, by performing the following operations:
+	 * <ol>
+	 * <li>Retrieving the {@link List} of symbol bindings from the {@link Closure} parameter if the parameter is not
+	 * null</li>
+	 * <li>Generating each of the {@link SetqStruct#setqPairs}, by performing the following operations:
+	 * <ol>
+	 * <li>Generating the {@link SetqStruct.SetqPair#var} value</li>
+	 * <li>Generating the {@link SetqStruct.SetqPair#form} value</li>
+	 * <li>Retrieving the primary value via {@link ValuesStruct#getPrimaryValue()} if the generated form is a {@link
+	 * ValuesStruct}</li>
+	 * <li>Generating the code to set the {@link SymbolStruct} value (lexical, dynamic, or regular) based on the
+	 * current {@link Environment} at the top of the {@link GeneratorState#bindingStack}</li>
+	 * <li>Inserting the generated {@link SetqStruct.SetqPair#var} as the key and the {@link SetqStruct.SetqPair#form}
+	 * as the value as an entry in the {@link Closure#symbolBindings} {@link Map} if the {@link Closure} parameter is
+	 * not null</li>
+	 * </ol>
+	 * </li>
+	 * <li>Generating the code to load the last generated {@link SetqStruct.SetqPair#form} value to return</li>
+	 * </ol>
+	 * As an example, it will transform {@code (setq x 1)} into the following Java code:
+	 * <pre>
+	 * {@code
+	 * private LispStruct setq_1(Closure var1) {
+	 *      Map var2 = null;
+	 *      if(var1 != null) {
+	 *          var2 = var1.getSymbolBindings();
+	 *      }
+	 *
+	 *      PackageStruct var3 = PackageStruct.findPackage("COMMON-LISP-USER");
+	 *      SymbolStruct var4 = var3.findSymbol("X").getSymbol();
+	 *      BigInteger var6 = new BigInteger("1");
+	 *      LispStruct var5 = new IntegerStruct(var6);
+	 *      if(var5 instanceof ValuesStruct) {
+	 *          ValuesStruct var7 = (ValuesStruct)var5;
+	 *          var5 = var7.getPrimaryValue();
+	 *      }
+	 *
+	 *      var4.setValue(var5);
+	 *      if(var2 != null) {
+	 *          var2.put(var4, var5);
+	 *      }
+	 *      return var5;
+	 * }
+	 * }
+	 * </pre>
+	 *
+	 * @param input
+	 * 		the {@link SetqStruct} input value to generate code for
+	 * @param generatorState
+	 * 		stateful object used to hold the current state of the code generation process
+	 */
 	@Override
 	protected void generateSpecialOperator(final SetqStruct input, final GeneratorState generatorState,
 	                                       final JavaMethodBuilder methodBuilder, final int closureArgStore) {
 
 		final MethodVisitor mv = methodBuilder.getMethodVisitor();
 
-		final List<SetqStruct.SetqPair> setqPairs = input.getSetqPairs();
-
-		final Stack<Environment> bindingStack = generatorState.getBindingStack();
-		final Environment currentEnvironment = bindingStack.peek();
-
-		final Integer closureSymbolBindingsStore = methodBuilder.getNextAvailableStore();
-
-		mv.visitVarInsn(Opcodes.ALOAD, 0);
-		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
-				GenerationConstants.FUNCTION_STRUCT_NAME,
-				GenerationConstants.FUNCTION_STRUCT_GET_CLOSURE_METHOD_NAME,
-				GenerationConstants.FUNCTION_STRUCT_GET_CLOSURE_METHOD_DESC,
-				false);
-		final Integer closureStore = methodBuilder.getNextAvailableStore();
-		mv.visitVarInsn(Opcodes.ASTORE, closureStore);
-
 		mv.visitInsn(Opcodes.ACONST_NULL);
+		final int closureSymbolBindingsStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, closureSymbolBindingsStore);
 
-		mv.visitVarInsn(Opcodes.ALOAD, closureStore);
 		final Label closureNullCheckIfEnd = new Label();
+
+		mv.visitVarInsn(Opcodes.ALOAD, closureArgStore);
 		mv.visitJumpInsn(Opcodes.IFNULL, closureNullCheckIfEnd);
 
-		mv.visitVarInsn(Opcodes.ALOAD, closureStore);
+		mv.visitVarInsn(Opcodes.ALOAD, closureArgStore);
 		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
 				GenerationConstants.CLOSURE_NAME,
 				GenerationConstants.CLOSURE_GET_SYMBOL_BINDINGS_METHOD_NAME,
@@ -65,10 +120,14 @@ class SetqCodeGenerator extends SpecialOperatorCodeGenerator<SetqStruct> {
 
 		mv.visitLabel(closureNullCheckIfEnd);
 
+		final Stack<Environment> bindingStack = generatorState.getBindingStack();
+		final Environment currentEnvironment = bindingStack.peek();
+
 		final int packageStore = methodBuilder.getNextAvailableStore();
 		final int symbolStore = methodBuilder.getNextAvailableStore();
 		final int initFormStore = methodBuilder.getNextAvailableStore();
 
+		final List<SetqStruct.SetqPair> setqPairs = input.getSetqPairs();
 		for (final SetqStruct.SetqPair setqPair : setqPairs) {
 			final SymbolStruct<?> var = setqPair.getVar();
 			CodeGenerators.generateSymbol(var, methodBuilder, packageStore, symbolStore);
@@ -105,8 +164,9 @@ class SetqCodeGenerator extends SpecialOperatorCodeGenerator<SetqStruct> {
 						false);
 			}
 
-			mv.visitVarInsn(Opcodes.ALOAD, closureSymbolBindingsStore);
 			final Label closureBindingsNullCheckIfEnd = new Label();
+
+			mv.visitVarInsn(Opcodes.ALOAD, closureSymbolBindingsStore);
 			mv.visitJumpInsn(Opcodes.IFNULL, closureBindingsNullCheckIfEnd);
 
 			mv.visitVarInsn(Opcodes.ALOAD, closureSymbolBindingsStore);
@@ -121,7 +181,6 @@ class SetqCodeGenerator extends SpecialOperatorCodeGenerator<SetqStruct> {
 
 			mv.visitLabel(closureBindingsNullCheckIfEnd);
 		}
-
 		mv.visitVarInsn(Opcodes.ALOAD, initFormStore);
 
 		mv.visitInsn(Opcodes.ARETURN);

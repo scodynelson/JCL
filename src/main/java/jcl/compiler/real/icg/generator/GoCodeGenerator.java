@@ -1,3 +1,7 @@
+/*
+ * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
+ */
+
 package jcl.compiler.real.icg.generator;
 
 import java.util.ListIterator;
@@ -77,8 +81,8 @@ final class GoCodeGenerator extends SpecialOperatorCodeGenerator<GoStruct<?>> {
 	/**
 	 * Private method to retrieve the {@link TagbodyLabel} corresponding to the provided {@link GoStruct} tag within
 	 * the current execution stack from the provided {@link GeneratorState}. This is accomplished by iterating through
-	 * each {@link Set<TagbodyLabel>} within the {@link GeneratorState#tagbodyLabelStack} until the tag equivalent to
-	 * the provided {@link GoStruct} tag is located.
+	 * each {@link Set} within the {@link GeneratorState#tagbodyLabelStack} until the tag equivalent to the provided
+	 * {@link GoStruct} tag is located.
 	 *
 	 * @param generatorState
 	 * 		the {@link GeneratorState} used to retrieve the {@link TagbodyLabel} corresponding to the provided {@link

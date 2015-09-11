@@ -39,24 +39,36 @@ final class CatchCodeGenerator extends SpecialOperatorCodeGenerator<CatchStruct>
 
 	/**
 	 * {@inheritDoc}
-	 * Generation method for {@link CatchStruct} objects. As an example, it will transform {@code (catch 'foo)} into
-	 * the following Java code:
+	 * Generation method for {@link CatchStruct} objects, by performing the following operations:
+	 * <ol>
+	 * <li>Generating the {@link CatchStruct#catchTag} value</li>
+	 * <li>Initializing a try-catch block</li>
+	 * <li>Generating each of the {@link CatchStruct#forms} inside the try block, ensuring to store the final result
+	 * into a variable</li>
+	 * <li>Catching the expected {@link ThrowException}</li>
+	 * <li>Grabbing the {@link ThrowException#catchTag} {@link LispStruct} and comparing it for equality against the
+	 * previously fetched {@link CatchStruct#catchTag}</li>
+	 * <li>If the {@link LispStruct}s are equal, the final result variable is assigned the {@link
+	 * ThrowException#resultForm} value</li>
+	 * <li>If the {@link LispStruct}s are not equal, the {@link ThrowException} is re-thrown</li>
+	 * </ol>
+	 * As an example, it will transform {@code (catch 'foo)} into the following Java code:
 	 * <pre>
 	 * {@code
 	 * private LispStruct catch_1(Closure var1) {
 	 *      PackageStruct var2 = PackageStruct.findPackage("COMMON-LISP-USER");
 	 *      SymbolStruct var3 = var2.findSymbol("FOO").getSymbol();
-	 *      Object var5;
+	 *      LispStruct var5;
 	 *      try {
 	 *          var5 = NullStruct.INSTANCE;
 	 *      } catch (ThrowException var8) {
-	 *          SymbolStruct var7 = var8.getName();
+	 *          LispStruct var7 = var8.getCatchTag();
 	 *          if(!var7.equals(var3)) {
 	 *              throw var8;
 	 *          }
-	 *          var5 = var8.getResult();
+	 *          var5 = var8.getResultForm();
 	 *      }
-	 *      return (LispStruct)var5;
+	 *      return var5;
 	 * }
 	 * }
 	 * </pre>
@@ -72,16 +84,16 @@ final class CatchCodeGenerator extends SpecialOperatorCodeGenerator<CatchStruct>
 
 		final MethodVisitor mv = methodBuilder.getMethodVisitor();
 
+		final LispStruct catchTag = input.getCatchTag();
+		codeGenerator.generate(catchTag, generatorState);
+		final int catchTagStore = methodBuilder.getNextAvailableStore();
+		mv.visitVarInsn(Opcodes.ASTORE, catchTagStore);
+
 		final Label tryBlockStart = new Label();
 		final Label tryBlockEnd = new Label();
 		final Label catchBlockStart = new Label();
 		final Label catchBlockEnd = new Label();
 		mv.visitTryCatchBlock(tryBlockStart, tryBlockEnd, catchBlockStart, GenerationConstants.THROW_EXCEPTION_NAME);
-
-		final LispStruct catchTag = input.getCatchTag();
-		codeGenerator.generate(catchTag, generatorState);
-		final int catchTagStore = methodBuilder.getNextAvailableStore();
-		mv.visitVarInsn(Opcodes.ASTORE, catchTagStore);
 
 		// Start 'try{}'
 		mv.visitLabel(tryBlockStart);

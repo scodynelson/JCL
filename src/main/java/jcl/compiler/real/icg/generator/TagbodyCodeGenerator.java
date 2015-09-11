@@ -47,8 +47,20 @@ final class TagbodyCodeGenerator extends SpecialOperatorCodeGenerator<TagbodyStr
 
 	/**
 	 * {@inheritDoc}
-	 * Generation method for {@link TagbodyStruct} objects. As an example, it will transform {@code (tagbody)} into
-	 * the following Java code:
+	 * Generation method for {@link TagbodyStruct} objects, by performing the following operations:
+	 * <ol>
+	 * <li>Initializing a try-catch block</li>
+	 * <li>Generating each of the {@link TagbodyStruct#tagbodyForms} inside the try block, each separated by a custom
+	 * defined {@link Label} indicating the branch point</li>
+	 * <li>Catching the expected {@link GoException}</li>
+	 * <li>Grabbing the {@link GoException#tagIndex} {@code int} and using it to 'switch' on to know where to make a
+	 * branch label jump into the appropriate 'tagbody' form within either the previously generated 'try{}' block or a
+	 * 'try{}' block of an outer scoped 'tagbody'</li>
+	 * <li>If the {@code int} tag index can be switched to, the case statement will jump to the appropriate label
+	 * within the previously generated 'try{}' block</li>
+	 * <li>If the {@code int} tag index cannot be switched to, the {@link GoException} is re-thrown</li>
+	 * </ol>
+	 * As an rough example, it will transform {@code (tagbody)} into the following Java code:
 	 * <pre>
 	 * {@code
 	 * private LispStruct tagbody_1(Closure var1) {
@@ -69,6 +81,8 @@ final class TagbodyCodeGenerator extends SpecialOperatorCodeGenerator<TagbodyStr
 	 * }
 	 * }
 	 * </pre>
+	 * NOTE: For any 'tagbody' calls that utilize the 'go' branching procedure, there is no equatable Java code to
+	 * represent what bytecode is generated due to branching to labels that are only present at the bytecode level.
 	 *
 	 * @param input
 	 * 		the {@link TagbodyStruct} input value to generate code for
@@ -87,14 +101,14 @@ final class TagbodyCodeGenerator extends SpecialOperatorCodeGenerator<TagbodyStr
 		final Label catchBlockEnd = new Label();
 		mv.visitTryCatchBlock(tryBlockStart, tryBlockEnd, catchBlockStart, GenerationConstants.GO_EXCEPTION_NAME);
 
+		// Start 'try{}'
+		mv.visitLabel(tryBlockStart);
+
 		final Map<GoStruct<?>, PrognStruct> tagbodyForms = input.getTagbodyForms();
 		final Map<TagbodyLabel, PrognStruct> tagbodyLabeledForms = getTagbodyLabeledForms(tagbodyForms, generatorState);
 
 		final Set<TagbodyLabel> tagbodyLabels = tagbodyLabeledForms.keySet();
 		generatorState.getTagbodyLabelStack().push(tagbodyLabels);
-
-		// Start 'try{}'
-		mv.visitLabel(tryBlockStart);
 
 		// Create a label for each set of 'progn' body forms and generate the 'progn' body forms, popping the final result
 		// after each generation

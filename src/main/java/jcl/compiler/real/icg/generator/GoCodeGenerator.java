@@ -26,8 +26,13 @@ final class GoCodeGenerator extends SpecialOperatorCodeGenerator<GoStruct<?>> {
 
 	/**
 	 * {@inheritDoc}
-	 * Generation method for {@link GoStruct} objects. As an example, it will transform {@code (go 1)} into
-	 * the following Java code:
+	 * Generation method for {@link GoStruct} objects, by performing the following operations:
+	 * <ol>
+	 * <li>Retrieving the appropriate tag index by searching the {@link GeneratorState#tagbodyLabelStack} for the
+	 * {@link TagbodyLabel#getTag()} matching the provided {@link GoStruct}</li>
+	 * <li>Creating and throwing a new {@link GoException} with the {@code int} tag index value</li>
+	 * </ol>
+	 * As an example, it will transform {@code (go 1)} into the following Java code:
 	 * <pre>
 	 * {@code
 	 * private LispStruct go_1(Closure var1) {

@@ -40,8 +40,16 @@ final class UnwindProtectCodeGenerator extends SpecialOperatorCodeGenerator<Unwi
 
 	/**
 	 * {@inheritDoc}
-	 * Generation method for {@link UnwindProtectStruct} objects. As an example, it will transform {@code
-	 * (unwind-protect 1 2)} into the following Java code:
+	 * Generation method for {@link UnwindProtectStruct} objects, by performing the following operations:
+	 * <ol>
+	 * <li>Initializing a try-catch block</li>
+	 * <li>Generating the {@link UnwindProtectStruct#protectedForm} inside the try block, ensuring to store the final
+	 * result into a variable</li>
+	 * <li>Generate the {@link UnwindProtectStruct#cleanupForms} as part of the error free 'finally'</li>
+	 * <li>Generate the {@link UnwindProtectStruct#cleanupForms} as part of the error caught 'finally', ensuring that
+	 * the error caught is re-thrown</li>
+	 * </ol>
+	 * As an example, it will transform {@code (unwind-protect 1 2)} into the following Java code:
 	 * <pre>
 	 * {@code
 	 * private LispStruct unwindProtect_1(Closure var1) {*

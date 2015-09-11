@@ -34,8 +34,16 @@ final class ReturnFromCodeGenerator extends SpecialOperatorCodeGenerator<ReturnF
 
 	/**
 	 * {@inheritDoc}
-	 * Generation method for {@link ReturnFromStruct} objects. As an example, it will transform {@code (return-from foo
-	 * 1)} into the following Java code:
+	 * Generation method for {@link ReturnFromStruct} objects, by performing the following operations:
+	 * <ol>
+	 * <li>Fetching the global 'COMMON-LISP-USER' package</li>
+	 * <li>Finding the {@link SymbolStruct} with the {@link ReturnFromStruct#name} value in the fetched
+	 * 'COMMON-LISP-USER' package</li>
+	 * <li>Generating the {@link ReturnFromStruct#result} value</li>
+	 * <li>Creating and throwing a new {@link ReturnFromException} with the {@link SymbolStruct} name and {@link
+	 * LispStruct} result values</li>
+	 * </ol>
+	 * As an example, it will transform {@code (return-from foo 1)} into the following Java code:
 	 * <pre>
 	 * {@code
 	 * private LispStruct returnFrom_1(Closure var1) {

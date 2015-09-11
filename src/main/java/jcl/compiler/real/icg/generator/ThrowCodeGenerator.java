@@ -32,8 +32,14 @@ final class ThrowCodeGenerator extends SpecialOperatorCodeGenerator<ThrowStruct>
 
 	/**
 	 * {@inheritDoc}
-	 * Generation method for {@link ThrowStruct} objects. As an example, it will transform {@code (throw 'foo 1)} into
-	 * the following Java code:
+	 * Generation method for {@link ThrowStruct} objects, by performing the following operations:
+	 * <ol>
+	 * <li>Generating the {@link ThrowStruct#catchTag} value</li>
+	 * <li>Generating the {@link ThrowStruct#resultForm} value</li>
+	 * <li>Creating and throwing a new {@link ThrowException} with the {@link LispStruct} catch tag and {@link
+	 * LispStruct} result form values</li>
+	 * </ol>
+	 * As an example, it will transform {@code (throw 'foo 1)} into the following Java code:
 	 * <pre>
 	 * {@code
 	 * private LispStruct throw_1(Closure var1) {

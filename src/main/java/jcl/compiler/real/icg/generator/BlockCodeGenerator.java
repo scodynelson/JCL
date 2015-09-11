@@ -32,14 +32,28 @@ final class BlockCodeGenerator extends SpecialOperatorCodeGenerator<BlockStruct>
 
 	/**
 	 * {@inheritDoc}
-	 * Generation method for {@link BlockStruct} objects. As an example, it will transform {@code (block foo)} into
-	 * the following Java code:
+	 * Generation method for {@link BlockStruct} objects, by performing the following operations:
+	 * <ol>
+	 * <li>Fetching the global 'COMMON-LISP-USER' package</li>
+	 * <li>Finding the {@link SymbolStruct} with the {@link BlockStruct#name} value in the fetched 'COMMON-LISP-USER'
+	 * package</li>
+	 * <li>Initializing a try-catch block</li>
+	 * <li>Generating each of the {@link BlockStruct#forms} inside the try block, ensuring to store the final result
+	 * into a variable</li>
+	 * <li>Catching the expected {@link ReturnFromException}</li>
+	 * <li>Grabbing the {@link ReturnFromException#name} {@link SymbolStruct} and comparing it for equality against the
+	 * previously fetched {@link BlockStruct#name}</li>
+	 * <li>If the {@link SymbolStruct}s are equal, the final result variable is assigned the {@link
+	 * ReturnFromException#result} value</li>
+	 * <li>If the {@link SymbolStruct}s are not equal, the {@link ReturnFromException} is re-thrown</li>
+	 * </ol>
+	 * As an example, it will transform {@code (block foo)} into the following Java code:
 	 * <pre>
 	 * {@code
 	 * private LispStruct block_1(Closure var1) {
 	 *      PackageStruct var2 = PackageStruct.findPackage("COMMON-LISP-USER");
 	 *      SymbolStruct var3 = var2.findSymbol("FOO").getSymbol();
-	 *      Object var4;
+	 *      LispStruct var4;
 	 *      try {
 	 *          var4 = NullStruct.INSTANCE;
 	 *      } catch (ReturnFromException var7) {
@@ -49,7 +63,7 @@ final class BlockCodeGenerator extends SpecialOperatorCodeGenerator<BlockStruct>
 	 *          }
 	 *          var4 = var8.getResult();
 	 *      }
-	 *      return (LispStruct)var4;
+	 *      return var4;
 	 * }
 	 * }
 	 * </pre>
@@ -65,16 +79,16 @@ final class BlockCodeGenerator extends SpecialOperatorCodeGenerator<BlockStruct>
 
 		final MethodVisitor mv = methodBuilder.getMethodVisitor();
 
+		final int namePackageStore = methodBuilder.getNextAvailableStore();
+		final int nameSymbolStore = methodBuilder.getNextAvailableStore();
+		final SymbolStruct<?> name = input.getName();
+		SymbolCodeGeneratorUtil.generate(name, generatorState, namePackageStore, nameSymbolStore);
+
 		final Label tryBlockStart = new Label();
 		final Label tryBlockEnd = new Label();
 		final Label catchBlockStart = new Label();
 		final Label catchBlockEnd = new Label();
 		mv.visitTryCatchBlock(tryBlockStart, tryBlockEnd, catchBlockStart, GenerationConstants.RETURN_FROM_EXCEPTION_NAME);
-
-		final int namePackageStore = methodBuilder.getNextAvailableStore();
-		final int nameSymbolStore = methodBuilder.getNextAvailableStore();
-		final SymbolStruct<?> name = input.getName();
-		SymbolCodeGeneratorUtil.generate(name, generatorState, namePackageStore, nameSymbolStore);
 
 		// Start 'try{}'
 		mv.visitLabel(tryBlockStart);

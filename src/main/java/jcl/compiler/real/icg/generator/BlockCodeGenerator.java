@@ -55,7 +55,7 @@ final class BlockCodeGenerator extends SpecialOperatorCodeGenerator<BlockStruct>
 	 * </pre>
 	 *
 	 * @param input
-	 * 		the {@link PrognStruct} input value to generate code for
+	 * 		the {@link BlockStruct} input value to generate code for
 	 * @param generatorState
 	 * 		stateful object used to hold the current state of the code generation process
 	 */

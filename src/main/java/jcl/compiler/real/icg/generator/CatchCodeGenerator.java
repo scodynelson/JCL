@@ -12,27 +12,65 @@ import org.objectweb.asm.Opcodes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+/**
+ * Class to perform 'catch' special operator code generation.
+ */
 @Component
-class CatchCodeGenerator extends SpecialOperatorCodeGenerator<CatchStruct> {
+final class CatchCodeGenerator extends SpecialOperatorCodeGenerator<CatchStruct> {
 
+	/**
+	 * {@link IntermediateCodeGenerator} used for generating the {@link CatchStruct#catchTag}.
+	 */
 	@Autowired
 	private IntermediateCodeGenerator codeGenerator;
 
+	/**
+	 * {@link PrognCodeGenerator} used for generating the {@link CatchStruct#forms}.
+	 */
 	@Autowired
 	private PrognCodeGenerator prognCodeGenerator;
 
+	/**
+	 * Private constructor which passes 'catch' as the prefix value to be set in it's {@link #methodNamePrefix} value.
+	 */
 	private CatchCodeGenerator() {
 		super("catch");
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * Generation method for {@link CatchStruct} objects. As an example, it will transform {@code (catch 'foo)} into
+	 * the following Java code:
+	 * <pre>
+	 * {@code
+	 * private LispStruct catch_1(Closure var1) {
+	 *      PackageStruct var2 = PackageStruct.findPackage("COMMON-LISP-USER");
+	 *      SymbolStruct var3 = var2.findSymbol("FOO").getSymbol();
+	 *      Object var5;
+	 *      try {
+	 *          var5 = NullStruct.INSTANCE;
+	 *      } catch (ThrowException var8) {
+	 *          SymbolStruct var7 = var8.getName();
+	 *          if(!var7.equals(var3)) {
+	 *              throw var8;
+	 *          }
+	 *          var5 = var8.getResult();
+	 *      }
+	 *      return (LispStruct)var5;
+	 * }
+	 * }
+	 * </pre>
+	 *
+	 * @param input
+	 * 		the {@link CatchStruct} input value to generate code for
+	 * @param generatorState
+	 * 		stateful object used to hold the current state of the code generation process
+	 */
 	@Override
 	protected void generateSpecialOperator(final CatchStruct input, final GeneratorState generatorState,
 	                                       final JavaMethodBuilder methodBuilder, final int closureArgStore) {
 
 		final MethodVisitor mv = methodBuilder.getMethodVisitor();
-
-		final LispStruct catchTag = input.getCatchTag();
-		final PrognStruct forms = input.getForms();
 
 		final Label tryBlockStart = new Label();
 		final Label tryBlockEnd = new Label();
@@ -40,18 +78,25 @@ class CatchCodeGenerator extends SpecialOperatorCodeGenerator<CatchStruct> {
 		final Label catchBlockEnd = new Label();
 		mv.visitTryCatchBlock(tryBlockStart, tryBlockEnd, catchBlockStart, GenerationConstants.THROW_EXCEPTION_NAME);
 
+		final LispStruct catchTag = input.getCatchTag();
 		codeGenerator.generate(catchTag, generatorState);
 		final int catchTagStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, catchTagStore);
 
+		// Start 'try{}'
 		mv.visitLabel(tryBlockStart);
+
+		final PrognStruct forms = input.getForms();
 		prognCodeGenerator.generate(forms, generatorState);
+
 		final int resultFormStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, resultFormStore);
 
+		// End 'try{}'
 		mv.visitLabel(tryBlockEnd);
 		mv.visitJumpInsn(Opcodes.GOTO, catchBlockEnd);
 
+		// Start 'catch(ThrowException te){}'
 		mv.visitLabel(catchBlockStart);
 		final int throwExceptionStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, throwExceptionStore);
@@ -89,6 +134,7 @@ class CatchCodeGenerator extends SpecialOperatorCodeGenerator<CatchStruct> {
 		mv.visitVarInsn(Opcodes.ALOAD, throwExceptionStore);
 		mv.visitInsn(Opcodes.ATHROW);
 
+		// End 'catch(ThrowException te){}'
 		mv.visitLabel(catchBlockEnd);
 		mv.visitVarInsn(Opcodes.ALOAD, resultFormStore);
 

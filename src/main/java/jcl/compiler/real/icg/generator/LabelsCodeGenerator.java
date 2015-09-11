@@ -77,7 +77,7 @@ class LabelsCodeGenerator extends SpecialOperatorCodeGenerator<LabelsStruct> {
 			final SymbolStruct<?> functionSymbolVar = var.getVar();
 			// NOTE: we have to get a new 'functionSymbolStore' for each var so we can properly unbind the expansions later
 			final int functionSymbolStore = methodBuilder.getNextAvailableStore();
-			SymbolCodeGeneratorUtil.generate(functionSymbolVar, generatorState, packageStore, functionSymbolStore);
+			CodeGenerators.generateSymbol(functionSymbolVar, methodBuilder, packageStore, functionSymbolStore);
 
 			final CompilerFunctionStruct initForm = var.getInitForm();
 			codeGenerator.generate(initForm, generatorState);

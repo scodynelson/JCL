@@ -1071,7 +1071,7 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 			final List<OptionalBinding> optionalBindings = lambdaListBindings.getOptionalBindings();
 			for (final OptionalBinding optionalBinding : optionalBindings) {
 				final SymbolStruct<?> var = optionalBinding.getSymbolStruct();
-				SymbolCodeGeneratorUtil.generate(var, generatorState, initFormVarPackageStore, initFormVarSymbolStore);
+				CodeGenerators.generateSymbol(var, methodBuilder, initFormVarPackageStore, initFormVarSymbolStore);
 
 				final Label symbolCheckIfEnd = new Label();
 
@@ -1094,7 +1094,7 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 			final List<KeyBinding> keyBindings = lambdaListBindings.getKeyBindings();
 			for (final KeyBinding keyBinding : keyBindings) {
 				final SymbolStruct<?> var = keyBinding.getSymbolStruct();
-				SymbolCodeGeneratorUtil.generate(var, generatorState, initFormVarPackageStore, initFormVarSymbolStore);
+				CodeGenerators.generateSymbol(var, methodBuilder, initFormVarPackageStore, initFormVarSymbolStore);
 
 				final Label symbolCheckIfEnd = new Label();
 
@@ -1117,7 +1117,7 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 			final List<AuxBinding> auxBindings = lambdaListBindings.getAuxBindings();
 			for (final AuxBinding auxBinding : auxBindings) {
 				final SymbolStruct<?> var = auxBinding.getSymbolStruct();
-				SymbolCodeGeneratorUtil.generate(var, generatorState, initFormVarPackageStore, initFormVarSymbolStore);
+				CodeGenerators.generateSymbol(var, methodBuilder, initFormVarPackageStore, initFormVarSymbolStore);
 
 				final Label symbolCheckIfEnd = new Label();
 
@@ -1245,7 +1245,7 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 		final List<RequiredBinding> requiredBindings = lambdaListBindings.getRequiredBindings();
 		for (final RequiredBinding requiredBinding : requiredBindings) {
 			final SymbolStruct<?> requiredSymbol = requiredBinding.getSymbolStruct();
-			SymbolCodeGeneratorUtil.generate(requiredSymbol, classBuilder, packageStore, requiredSymbolStore);
+			CodeGenerators.generateSymbol(requiredSymbol, methodBuilder, packageStore, requiredSymbolStore);
 
 			mv.visitTypeInsn(Opcodes.NEW, GenerationConstants.REQUIRED_BINDING_NAME);
 			mv.visitInsn(Opcodes.DUP);
@@ -1295,7 +1295,7 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 		final List<OptionalBinding> optionalBindings = lambdaListBindings.getOptionalBindings();
 		for (final OptionalBinding optionalBinding : optionalBindings) {
 			final SymbolStruct<?> optionalSymbol = optionalBinding.getSymbolStruct();
-			SymbolCodeGeneratorUtil.generate(optionalSymbol, classBuilder, packageStore, optionalSymbolStore);
+			CodeGenerators.generateSymbol(optionalSymbol, methodBuilder, packageStore, optionalSymbolStore);
 
 			nullCodeGenerator.generate(NullStruct.INSTANCE, classBuilder);
 			mv.visitVarInsn(Opcodes.ASTORE, optionalInitFormStore);
@@ -1307,7 +1307,7 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 				mv.visitVarInsn(Opcodes.ASTORE, optionalSuppliedPStore);
 			} else {
 				final SymbolStruct<?> optionalSuppliedPSymbol = suppliedPBinding.getSymbolStruct();
-				SymbolCodeGeneratorUtil.generate(optionalSuppliedPSymbol, classBuilder, packageStore, optionalSuppliedPSymbolStore);
+				CodeGenerators.generateSymbol(optionalSuppliedPSymbol, methodBuilder, packageStore, optionalSuppliedPSymbolStore);
 
 				mv.visitTypeInsn(Opcodes.NEW, GenerationConstants.SUPPLIED_P_BINDING_NAME);
 				mv.visitInsn(Opcodes.DUP);
@@ -1366,7 +1366,7 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 			mv.visitVarInsn(Opcodes.ASTORE, restBindingStore);
 		} else {
 			final SymbolStruct<?> restSymbol = restBinding.getSymbolStruct();
-			SymbolCodeGeneratorUtil.generate(restSymbol, classBuilder, packageStore, restSymbolStore);
+			CodeGenerators.generateSymbol(restSymbol, methodBuilder, packageStore, restSymbolStore);
 
 			mv.visitTypeInsn(Opcodes.NEW, GenerationConstants.REST_BINDING_NAME);
 			mv.visitInsn(Opcodes.DUP);
@@ -1408,13 +1408,13 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 		final List<KeyBinding> keyBindings = lambdaListBindings.getKeyBindings();
 		for (final KeyBinding keyBinding : keyBindings) {
 			final SymbolStruct<?> keySymbol = keyBinding.getSymbolStruct();
-			SymbolCodeGeneratorUtil.generate(keySymbol, classBuilder, packageStore, keySymbolStore);
+			CodeGenerators.generateSymbol(keySymbol, methodBuilder, packageStore, keySymbolStore);
 
 			nullCodeGenerator.generate(NullStruct.INSTANCE, classBuilder);
 			mv.visitVarInsn(Opcodes.ASTORE, keyInitFormStore);
 
 			final SymbolStruct<?> keyName = keyBinding.getKeyName();
-			SymbolCodeGeneratorUtil.generate(keyName, classBuilder, packageStore, keyNameStore);
+			CodeGenerators.generateSymbol(keyName, methodBuilder, packageStore, keyNameStore);
 
 			// Start: Supplied-P
 			final SuppliedPBinding suppliedPBinding = keyBinding.getSuppliedPBinding();
@@ -1423,7 +1423,7 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 				mv.visitVarInsn(Opcodes.ASTORE, keySuppliedPStore);
 			} else {
 				final SymbolStruct<?> keySuppliedPSymbol = suppliedPBinding.getSymbolStruct();
-				SymbolCodeGeneratorUtil.generate(keySuppliedPSymbol, classBuilder, packageStore, keySuppliedPSymbolStore);
+				CodeGenerators.generateSymbol(keySuppliedPSymbol, methodBuilder, packageStore, keySuppliedPSymbolStore);
 
 				mv.visitTypeInsn(Opcodes.NEW, GenerationConstants.SUPPLIED_P_BINDING_NAME);
 				mv.visitInsn(Opcodes.DUP);
@@ -1504,7 +1504,7 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 		final List<AuxBinding> auxBindings = lambdaListBindings.getAuxBindings();
 		for (final AuxBinding auxBinding : auxBindings) {
 			final SymbolStruct<?> auxSymbol = auxBinding.getSymbolStruct();
-			SymbolCodeGeneratorUtil.generate(auxSymbol, classBuilder, packageStore, auxSymbolStore);
+			CodeGenerators.generateSymbol(auxSymbol, methodBuilder, packageStore, auxSymbolStore);
 
 			// NOTE: Just generate a null value for this initForm here. We take care of the &aux initForms in the body
 			//       when it is processed

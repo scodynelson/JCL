@@ -7,6 +7,12 @@ package jcl.compiler.real.icg.generator;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 
+import jcl.compiler.real.icg.JavaMethodBuilder;
+import jcl.packages.PackageStruct;
+import jcl.symbols.SymbolStruct;
+import org.objectweb.asm.Label;
+import org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
 
 final class CodeGenerators {
@@ -46,5 +52,76 @@ final class CodeGenerators {
 		} catch (final NoSuchMethodException ignored) {
 			return null;
 		}
+	}
+
+	static void generateSymbol(final SymbolStruct<?> input, final JavaMethodBuilder methodBuilder,
+	                           final int packageStore, final int symbolStore) {
+
+		final MethodVisitor mv = methodBuilder.getMethodVisitor();
+
+		final PackageStruct pkg = input.getSymbolPackage();
+		final String symbolName = input.getName();
+
+		if (pkg == null) {
+			mv.visitTypeInsn(Opcodes.NEW, GenerationConstants.SYMBOL_STRUCT_NAME);
+			mv.visitInsn(Opcodes.DUP);
+			mv.visitLdcInsn(symbolName);
+			mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
+					GenerationConstants.SYMBOL_STRUCT_NAME,
+					GenerationConstants.INIT_METHOD_NAME,
+					GenerationConstants.SYMBOL_STRUCT_INIT_STRING_DESC,
+					false);
+			mv.visitVarInsn(Opcodes.ASTORE, symbolStore);
+		} else {
+			final String packageName = pkg.getName();
+
+			mv.visitLdcInsn(packageName);
+			mv.visitMethodInsn(Opcodes.INVOKESTATIC,
+					GenerationConstants.PACKAGE_STRUCT_NAME,
+					GenerationConstants.PACKAGE_STRUCT_FIND_PACKAGE_METHOD_NAME,
+					GenerationConstants.PACKAGE_STRUCT_FIND_PACKAGE_METHOD_DESC,
+					false);
+			mv.visitVarInsn(Opcodes.ASTORE, packageStore);
+
+			mv.visitVarInsn(Opcodes.ALOAD, packageStore);
+			mv.visitLdcInsn(symbolName);
+			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
+					GenerationConstants.PACKAGE_STRUCT_NAME,
+					GenerationConstants.PACKAGE_STRUCT_FIND_SYMBOL_METHOD_NAME,
+					GenerationConstants.PACKAGE_STRUCT_FIND_SYMBOL_METHOD_DESC,
+					false);
+			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
+					GenerationConstants.PACKAGE_SYMBOL_STRUCT_NAME,
+					GenerationConstants.PACKAGE_SYMBOL_STRUCT_GET_SYMBOL_METHOD_NAME,
+					GenerationConstants.PACKAGE_SYMBOL_STRUCT_GET_SYMBOL_METHOD_DESC,
+					false);
+			mv.visitVarInsn(Opcodes.ASTORE, symbolStore);
+		}
+	}
+
+	static void generateValuesCheckAndStore(final JavaMethodBuilder methodBuilder, final int valuesResultStore) {
+
+		final MethodVisitor mv = methodBuilder.getMethodVisitor();
+
+		final Label valuesCheckIfEnd = new Label();
+
+		mv.visitVarInsn(Opcodes.ALOAD, valuesResultStore);
+		mv.visitTypeInsn(Opcodes.INSTANCEOF, GenerationConstants.VALUES_STRUCT_NAME);
+		mv.visitJumpInsn(Opcodes.IFEQ, valuesCheckIfEnd);
+
+		mv.visitVarInsn(Opcodes.ALOAD, valuesResultStore);
+		mv.visitTypeInsn(Opcodes.CHECKCAST, GenerationConstants.VALUES_STRUCT_NAME);
+		final int valuesStore = methodBuilder.getNextAvailableStore();
+		mv.visitVarInsn(Opcodes.ASTORE, valuesStore);
+
+		mv.visitVarInsn(Opcodes.ALOAD, valuesStore);
+		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
+				GenerationConstants.VALUES_STRUCT_NAME,
+				GenerationConstants.VALUES_STRUCT_GET_PRIMARY_VALUE_METHOD_NAME,
+				GenerationConstants.VALUES_STRUCT_GET_PRIMARY_VALUE_METHOD_DESC,
+				false);
+		mv.visitVarInsn(Opcodes.ASTORE, valuesResultStore);
+
+		mv.visitLabel(valuesCheckIfEnd);
 	}
 }

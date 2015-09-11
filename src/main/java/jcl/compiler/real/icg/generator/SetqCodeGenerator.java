@@ -71,32 +71,13 @@ class SetqCodeGenerator extends SpecialOperatorCodeGenerator<SetqStruct> {
 
 		for (final SetqStruct.SetqPair setqPair : setqPairs) {
 			final SymbolStruct<?> var = setqPair.getVar();
-			SymbolCodeGeneratorUtil.generate(var, generatorState, packageStore, symbolStore);
+			CodeGenerators.generateSymbol(var, methodBuilder, packageStore, symbolStore);
 
 			final LispStruct form = setqPair.getForm();
 			codeGenerator.generate(form, generatorState);
 			mv.visitVarInsn(Opcodes.ASTORE, initFormStore);
 
-			final Label valuesCheckIfEnd = new Label();
-
-			mv.visitVarInsn(Opcodes.ALOAD, initFormStore);
-			mv.visitTypeInsn(Opcodes.INSTANCEOF, GenerationConstants.VALUES_STRUCT_NAME);
-			mv.visitJumpInsn(Opcodes.IFEQ, valuesCheckIfEnd);
-
-			mv.visitVarInsn(Opcodes.ALOAD, initFormStore);
-			mv.visitTypeInsn(Opcodes.CHECKCAST, GenerationConstants.VALUES_STRUCT_NAME);
-			final int valuesStore = methodBuilder.getNextAvailableStore();
-			mv.visitVarInsn(Opcodes.ASTORE, valuesStore);
-
-			mv.visitVarInsn(Opcodes.ALOAD, valuesStore);
-			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
-					GenerationConstants.VALUES_STRUCT_NAME,
-					GenerationConstants.VALUES_STRUCT_GET_PRIMARY_VALUE_METHOD_NAME,
-					GenerationConstants.VALUES_STRUCT_GET_PRIMARY_VALUE_METHOD_DESC,
-					false);
-			mv.visitVarInsn(Opcodes.ASTORE, initFormStore);
-
-			mv.visitLabel(valuesCheckIfEnd);
+			CodeGenerators.generateValuesCheckAndStore(methodBuilder, initFormStore);
 
 			mv.visitVarInsn(Opcodes.ALOAD, symbolStore);
 			mv.visitVarInsn(Opcodes.ALOAD, initFormStore);

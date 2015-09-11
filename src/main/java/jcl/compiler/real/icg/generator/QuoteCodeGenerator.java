@@ -47,7 +47,7 @@ class QuoteCodeGenerator implements CodeGenerator<QuoteStruct> {
 
 		final int packageStore = methodBuilder.getNextAvailableStore();
 		final int symbolStore = methodBuilder.getNextAvailableStore();
-		SymbolCodeGeneratorUtil.generate(quotedSymbol, classBuilder, packageStore, symbolStore);
+		CodeGenerators.generateSymbol(quotedSymbol, methodBuilder, packageStore, symbolStore);
 
 		mv.visitVarInsn(Opcodes.ALOAD, symbolStore);
 	}

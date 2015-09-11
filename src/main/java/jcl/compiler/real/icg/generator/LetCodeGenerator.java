@@ -91,7 +91,7 @@ class LetCodeGenerator extends SpecialOperatorCodeGenerator<LetStruct> {
 			final int symbolStore = methodBuilder.getNextAvailableStore();
 			// NOTE: we have to get a new 'symbolStore' for each var so we can properly unbind the initForms later
 
-			SymbolCodeGeneratorUtil.generate(symbolVar, generatorState, packageStore, symbolStore);
+			CodeGenerators.generateSymbol(symbolVar, methodBuilder, packageStore, symbolStore);
 
 			codeGenerator.generate(initForm, generatorState);
 			final int initFormStore = methodBuilder.getNextAvailableStore();

@@ -26,7 +26,7 @@ class SymbolFunctionCodeGenerator implements CodeGenerator<SymbolCompilerFunctio
 
 		final int functionPackageStore = methodBuilder.getNextAvailableStore();
 		final int functionSymbolStore = methodBuilder.getNextAvailableStore();
-		SymbolCodeGeneratorUtil.generate(functionSymbol, generatorState, functionPackageStore, functionSymbolStore);
+		CodeGenerators.generateSymbol(functionSymbol, methodBuilder, functionPackageStore, functionSymbolStore);
 
 		mv.visitVarInsn(Opcodes.ALOAD, functionSymbolStore);
 		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,

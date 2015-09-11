@@ -71,7 +71,7 @@ final class ReturnFromCodeGenerator extends SpecialOperatorCodeGenerator<ReturnF
 		final int namePackageStore = methodBuilder.getNextAvailableStore();
 		final int nameSymbolStore = methodBuilder.getNextAvailableStore();
 		final SymbolStruct<?> name = input.getName();
-		SymbolCodeGeneratorUtil.generate(name, generatorState, namePackageStore, nameSymbolStore);
+		CodeGenerators.generateSymbol(name, methodBuilder, namePackageStore, nameSymbolStore);
 
 		// Generate the Result
 		final LispStruct result = input.getResult();

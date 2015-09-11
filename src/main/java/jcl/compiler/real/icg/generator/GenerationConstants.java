@@ -185,6 +185,8 @@ interface GenerationConstants {
 
 	String SYMBOL_STRUCT_NAME = Type.getInternalName(SymbolStruct.class);
 
+	String SYMBOL_STRUCT_INIT_STRING_DESC = CodeGenerators.getConstructorDescription(SymbolStruct.class, String.class);
+
 	String SYMBOL_STRUCT_GET_LEXICAL_VALUE_METHOD_NAME = "getLexicalValue";
 
 	String SYMBOL_STRUCT_GET_LEXICAL_VALUE_METHOD_DESC = CodeGenerators.getMethodDescription(SymbolStruct.class, SYMBOL_STRUCT_GET_LEXICAL_VALUE_METHOD_NAME);

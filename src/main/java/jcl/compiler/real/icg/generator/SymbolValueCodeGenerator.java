@@ -27,7 +27,7 @@ class SymbolValueCodeGenerator implements CodeGenerator<SymbolStruct<LispStruct>
 
 		final int packageStore = methodBuilder.getNextAvailableStore();
 		final int symbolStore = methodBuilder.getNextAvailableStore();
-		SymbolCodeGeneratorUtil.generate(input, generatorState, packageStore, symbolStore);
+		CodeGenerators.generateSymbol(input, methodBuilder, packageStore, symbolStore);
 
 		mv.visitVarInsn(Opcodes.ALOAD, symbolStore);
 

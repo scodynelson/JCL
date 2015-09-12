@@ -15,6 +15,7 @@ import jcl.compiler.real.icg.JavaMethodBuilder;
 import jcl.compiler.real.struct.specialoperator.PrognStruct;
 import jcl.compiler.real.struct.specialoperator.TagbodyStruct;
 import jcl.compiler.real.struct.specialoperator.go.GoStruct;
+import jcl.functions.Closure;
 import jcl.lists.NullStruct;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
@@ -92,6 +93,10 @@ final class TagbodyCodeGenerator extends SpecialOperatorCodeGenerator<TagbodyStr
 	 * 		the {@link TagbodyStruct} input value to generate code for
 	 * @param generatorState
 	 * 		stateful object used to hold the current state of the code generation process
+	 * @param methodBuilder
+	 * 		{@link JavaMethodBuilder} used for building a Java method body
+	 * @param closureArgStore
+	 * 		the storage location index on the stack where the {@link Closure} argument exists
 	 */
 	@Override
 	protected void generateSpecialOperator(final TagbodyStruct input, final GeneratorState generatorState,

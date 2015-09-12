@@ -8,6 +8,7 @@ import jcl.compiler.real.icg.GeneratorState;
 import jcl.compiler.real.icg.JavaMethodBuilder;
 import jcl.compiler.real.struct.specialoperator.BlockStruct;
 import jcl.compiler.real.struct.specialoperator.PrognStruct;
+import jcl.functions.Closure;
 import jcl.symbols.SymbolStruct;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
@@ -76,6 +77,10 @@ final class BlockCodeGenerator extends SpecialOperatorCodeGenerator<BlockStruct>
 	 * 		the {@link BlockStruct} input value to generate code for
 	 * @param generatorState
 	 * 		stateful object used to hold the current state of the code generation process
+	 * @param methodBuilder
+	 * 		{@link JavaMethodBuilder} used for building a Java method body
+	 * @param closureArgStore
+	 * 		the storage location index on the stack where the {@link Closure} argument exists
 	 */
 	@Override
 	protected void generateSpecialOperator(final BlockStruct input, final GeneratorState generatorState,

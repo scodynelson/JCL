@@ -10,6 +10,7 @@ import jcl.compiler.real.icg.IntermediateCodeGenerator;
 import jcl.compiler.real.icg.JavaMethodBuilder;
 import jcl.compiler.real.struct.specialoperator.CatchStruct;
 import jcl.compiler.real.struct.specialoperator.PrognStruct;
+import jcl.functions.Closure;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
@@ -81,6 +82,10 @@ final class CatchCodeGenerator extends SpecialOperatorCodeGenerator<CatchStruct>
 	 * 		the {@link CatchStruct} input value to generate code for
 	 * @param generatorState
 	 * 		stateful object used to hold the current state of the code generation process
+	 * @param methodBuilder
+	 * 		{@link JavaMethodBuilder} used for building a Java method body
+	 * @param closureArgStore
+	 * 		the storage location index on the stack where the {@link Closure} argument exists
 	 */
 	@Override
 	protected void generateSpecialOperator(final CatchStruct input, final GeneratorState generatorState,

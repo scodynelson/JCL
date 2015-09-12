@@ -11,6 +11,7 @@ import java.util.Stack;
 import jcl.compiler.real.icg.GeneratorState;
 import jcl.compiler.real.icg.JavaMethodBuilder;
 import jcl.compiler.real.struct.specialoperator.go.GoStruct;
+import jcl.functions.Closure;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.springframework.stereotype.Component;
@@ -50,6 +51,10 @@ final class GoCodeGenerator extends SpecialOperatorCodeGenerator<GoStruct<?>> {
 	 * 		the {@link GoStruct} input value to generate code for
 	 * @param generatorState
 	 * 		stateful object used to hold the current state of the code generation process
+	 * @param methodBuilder
+	 * 		{@link JavaMethodBuilder} used for building a Java method body
+	 * @param closureArgStore
+	 * 		the storage location index on the stack where the {@link Closure} argument exists
 	 */
 	@Override
 	protected void generateSpecialOperator(final GoStruct<?> input, final GeneratorState generatorState,

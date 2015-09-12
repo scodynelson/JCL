@@ -31,6 +31,43 @@ class LetCodeGenerator extends ClosureCreationCodeGenerator<LetEnvironment, LetS
 		super("let");
 	}
 
+	/**
+	 *
+	 private LispStruct let_22794422208983(Closure var1) {
+	 var1 = new Closure(var1);
+	 Map var2 = var1.getSymbolBindings();
+	 PackageStruct var3 = PackageStruct.findPackage("COMMON-LISP-USER");
+	 SymbolStruct var4 = var3.findSymbol("X").getSymbol();
+	 BigInteger var5 = new BigInteger("1");
+	 Object var6 = new IntegerStruct(var5);
+	 if(var6 instanceof ValuesStruct) {
+	 ValuesStruct var7 = (ValuesStruct)var6;
+	 var6 = var7.getPrimaryValue();
+	 }
+
+	 var4.bindLexicalValue((LispStruct)var6);
+	 var2.put(var4, var6);
+
+	 LispStruct var10;
+	 try {
+	 PackageStruct var8 = PackageStruct.findPackage("COMMON-LISP-USER");
+	 SymbolStruct var9 = var8.findSymbol("X").getSymbol();
+	 var10 = var9.getLexicalValue();
+	 } finally {
+	 var4.unbindLexicalValue();
+	 }
+
+	 return var10;
+	 }
+
+	 * @param vars
+	 * @param generatorState
+	 * @param methodBuilder
+	 * @param closureArgStore
+	 * @param newClosureBindingsStore
+	 * @param lexicalSymbolStoresToUnbind
+	 * @param dynamicSymbolStoresToUnbind
+	 */
 	@Override
 	protected void generateBindings(final List<LetStruct.LetVar> vars, final GeneratorState generatorState,
 	                                final JavaMethodBuilder methodBuilder, final int closureArgStore,
@@ -94,13 +131,6 @@ class LetCodeGenerator extends ClosureCreationCodeGenerator<LetEnvironment, LetS
 					GenerationConstants.SYMBOL_STRUCT_NAME,
 					GenerationConstants.SYMBOL_STRUCT_BIND_LEXICAL_VALUE_METHOD_NAME,
 					GenerationConstants.SYMBOL_STRUCT_BIND_LEXICAL_VALUE_METHOD_DESC,
-					false);
-
-			mv.visitVarInsn(Opcodes.ALOAD, closureArgStore);
-			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
-					GenerationConstants.CLOSURE_NAME,
-					GenerationConstants.CLOSURE_GET_SYMBOL_BINDINGS_METHOD_NAME,
-					GenerationConstants.CLOSURE_GET_SYMBOL_BINDINGS_METHOD_DESC,
 					false);
 
 			mv.visitVarInsn(Opcodes.ALOAD, newClosureBindingsStore);

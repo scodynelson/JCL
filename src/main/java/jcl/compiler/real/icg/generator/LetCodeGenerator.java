@@ -15,58 +15,95 @@ import jcl.compiler.real.icg.GeneratorState;
 import jcl.compiler.real.icg.IntermediateCodeGenerator;
 import jcl.compiler.real.icg.JavaMethodBuilder;
 import jcl.compiler.real.struct.specialoperator.LetStruct;
+import jcl.functions.Closure;
 import jcl.symbols.SymbolStruct;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+/**
+ * Class to perform 'let' special operator code generation. 'Let' is different from 'Let*' in that the binding of the
+ * {@link SymbolStruct}s to their scoped {@link LispStruct} values occurs after all the forms have had their code
+ * generated. This ensures that no variables are affected nor dependent on the definition of others.
+ */
 @Component
-class LetCodeGenerator extends ClosureCreationCodeGenerator<LetEnvironment, LetStruct.LetVar, LetStruct> {
+final class LetCodeGenerator extends ClosureCreationCodeGenerator<LetEnvironment, LetStruct.LetVar, LetStruct> {
 
+	/**
+	 * {@link IntermediateCodeGenerator} used for generating the {@link LetStruct.LetVar#initForm} values.
+	 */
 	@Autowired
 	private IntermediateCodeGenerator codeGenerator;
 
+	/**
+	 * Private constructor which passes 'let' as the prefix value to be set in it's {@link #methodNamePrefix} value.
+	 */
 	private LetCodeGenerator() {
 		super("let");
 	}
 
 	/**
+	 * {@inheritDoc}
+	 * Generation method for {@link LetStruct} objects, by performing the following operations:
+	 * <ol>
+	 * <li>Generating each of the {@link LetStruct.LetVar#var} and {@link LetStruct.LetVar#initForm} values</li>
+	 * <li>Collect all generated symbol and form stack locations for lazily binding the values to the {@link
+	 * SymbolStruct}s</li>
+	 * <li>Symbols bindings where {@link LetStruct.LetVar#isSpecial} is true are binded via {@link
+	 * SymbolStruct#bindDynamicValue(LispStruct)}</li>
+	 * <li>Symbols bindings where {@link LetStruct.LetVar#isSpecial} is false are binded via {@link
+	 * SymbolStruct#bindLexicalValue(LispStruct)}</li>
+	 * <li>Symbols bindings where {@link LetStruct.LetVar#isSpecial} is false are also added to the {@link
+	 * Closure#symbolBindings} map for the new {@link Closure} created with the 'let'</li>
+	 * </ol>
+	 * As an example, it will transform {@code (throw 'foo 1)} into the following Java code:
+	 * <pre>
+	 * {@code
+	 * private LispStruct let_1(Closure var1) {
+	 *      var1 = new Closure(var1);
+	 *      Map var2 = var1.getSymbolBindings();
 	 *
-	 private LispStruct let_22794422208983(Closure var1) {
-	 var1 = new Closure(var1);
-	 Map var2 = var1.getSymbolBindings();
-	 PackageStruct var3 = PackageStruct.findPackage("COMMON-LISP-USER");
-	 SymbolStruct var4 = var3.findSymbol("X").getSymbol();
-	 BigInteger var5 = new BigInteger("1");
-	 Object var6 = new IntegerStruct(var5);
-	 if(var6 instanceof ValuesStruct) {
-	 ValuesStruct var7 = (ValuesStruct)var6;
-	 var6 = var7.getPrimaryValue();
-	 }
-
-	 var4.bindLexicalValue((LispStruct)var6);
-	 var2.put(var4, var6);
-
-	 LispStruct var10;
-	 try {
-	 PackageStruct var8 = PackageStruct.findPackage("COMMON-LISP-USER");
-	 SymbolStruct var9 = var8.findSymbol("X").getSymbol();
-	 var10 = var9.getLexicalValue();
-	 } finally {
-	 var4.unbindLexicalValue();
-	 }
-
-	 return var10;
-	 }
-
+	 *      PackageStruct var3 = PackageStruct.findPackage("COMMON-LISP-USER");
+	 *      SymbolStruct var4 = var3.findSymbol("X").getSymbol();
+	 *
+	 *      BigInteger var5 = new BigInteger("1");
+	 *      LispStruct var6 = new IntegerStruct(var5);
+	 *
+	 *      if(var6 instanceof ValuesStruct) {
+	 *          ValuesStruct var7 = (ValuesStruct)var6;
+	 *          var6 = var7.getPrimaryValue();
+	 *      }
+	 *      var4.bindLexicalValue((LispStruct)var6);
+	 *      var2.put(var4, var6);
+	 *
+	 *      LispStruct var10;
+	 *      try {
+	 *          PackageStruct var8 = PackageStruct.findPackage("COMMON-LISP-USER");
+	 *          SymbolStruct var9 = var8.findSymbol("X").getSymbol();
+	 *          var10 = var9.getLexicalValue();
+	 *      } finally {
+	 *          var4.unbindLexicalValue();
+	 *      }
+	 *      return var10;
+	 * }
+	 * }
+	 * </pre>
+	 *
 	 * @param vars
+	 * 		the {@link LetStruct.LetVar}s used to generate the {@link SymbolStruct} binding code
 	 * @param generatorState
+	 * 		stateful object used to hold the current state of the code generation process
 	 * @param methodBuilder
+	 * 		{@link JavaMethodBuilder} used for building a Java method body
 	 * @param closureArgStore
+	 * 		the storage location index on the stack where the {@link Closure} argument exists
 	 * @param newClosureBindingsStore
+	 * 		the storage location index on the stack where the {@link Closure#symbolBindings} {@link Map} exists
 	 * @param lexicalSymbolStoresToUnbind
+	 * 		the {@link Set} of lexical {@link SymbolStruct} binding locations to unbind after the 'let' body executes
 	 * @param dynamicSymbolStoresToUnbind
+	 * 		the {@link Set} of dynamic {@link SymbolStruct} binding locations to unbind after the 'let' body executes
 	 */
 	@Override
 	protected void generateBindings(final List<LetStruct.LetVar> vars, final GeneratorState generatorState,
@@ -83,20 +120,18 @@ class LetCodeGenerator extends ClosureCreationCodeGenerator<LetEnvironment, LetS
 
 		for (final LetStruct.LetVar var : vars) {
 			final SymbolStruct<?> symbolVar = var.getVar();
-			final LispStruct initForm = var.getInitForm();
-			final boolean isSpecial = var.isSpecial();
-
 			final int symbolStore = methodBuilder.getNextAvailableStore();
-			// NOTE: we have to get a new 'symbolStore' for each var so we can properly unbind the initForms later
-
 			CodeGenerators.generateSymbol(symbolVar, methodBuilder, packageStore, symbolStore);
 
+			final LispStruct initForm = var.getInitForm();
 			codeGenerator.generate(initForm, generatorState);
+
 			final int initFormStore = methodBuilder.getNextAvailableStore();
 			mv.visitVarInsn(Opcodes.ASTORE, initFormStore);
 
 			CodeGenerators.generateValuesCheckAndStore(methodBuilder, initFormStore);
 
+			final boolean isSpecial = var.isSpecial();
 			if (isSpecial) {
 				dynamicSymbolStoresToBind.put(symbolStore, initFormStore);
 			} else {
@@ -104,7 +139,7 @@ class LetCodeGenerator extends ClosureCreationCodeGenerator<LetEnvironment, LetS
 			}
 		}
 
-		// Add the symbols to unbind
+		// Add the symbolStores for the SymbolStructs to unbind
 		lexicalSymbolStoresToUnbind.addAll(lexicalSymbolStoresToBind.keySet());
 		dynamicSymbolStoresToUnbind.addAll(dynamicSymbolStoresToBind.keySet());
 

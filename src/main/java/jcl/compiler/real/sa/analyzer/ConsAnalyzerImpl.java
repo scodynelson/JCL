@@ -13,7 +13,7 @@ import jcl.LispStruct;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.Environments;
 import jcl.compiler.real.sa.FormAnalyzer;
-import jcl.compiler.real.struct.specialoperator.FunctionCallStruct;
+import jcl.compiler.real.struct.specialoperator.SymbolFunctionCallStruct;
 import jcl.compiler.real.struct.specialoperator.JavaMethodCallStruct;
 import jcl.compiler.real.struct.specialoperator.LambdaFunctionCallStruct;
 import jcl.compiler.real.struct.specialoperator.lambda.LambdaStruct;
@@ -60,7 +60,7 @@ public class ConsAnalyzerImpl implements ConsAnalyzer {
 		}
 	}
 
-	private FunctionCallStruct analyzeSymbolFunctionCall(final ListStruct input, final Environment environment) {
+	private SymbolFunctionCallStruct analyzeSymbolFunctionCall(final ListStruct input, final Environment environment) {
 
 		final SymbolStruct<?> functionSymbol = (SymbolStruct<?>) input.getFirst();
 		final List<LispStruct> functionArguments = input.getRest().getAsJavaList();
@@ -97,7 +97,7 @@ public class ConsAnalyzerImpl implements ConsAnalyzer {
 
 		final boolean hasFunctionBinding = Environments.hasFunctionBinding(environment, functionSymbol);
 
-		return new FunctionCallStruct(hasFunctionBinding, functionSymbol, analyzedFunctionArguments);
+		return new SymbolFunctionCallStruct(hasFunctionBinding, functionSymbol, analyzedFunctionArguments);
 	}
 
 	private JavaMethodCallStruct analyzeJavaMethodCall(final ListStruct input, final Environment environment) {

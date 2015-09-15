@@ -14,7 +14,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-public class FunctionCallStruct extends CompilerSpecialOperatorStruct {
+public class SymbolFunctionCallStruct extends CompilerSpecialOperatorStruct {
 
 	private static final long serialVersionUID = 2676444242188589421L;
 
@@ -24,7 +24,7 @@ public class FunctionCallStruct extends CompilerSpecialOperatorStruct {
 
 	private final List<LispStruct> arguments;
 
-	public FunctionCallStruct(final boolean isRecursiveCall, final SymbolStruct<?> functionSymbol, final List<LispStruct> arguments) {
+	public SymbolFunctionCallStruct(final boolean isRecursiveCall, final SymbolStruct<?> functionSymbol, final List<LispStruct> arguments) {
 		this.isRecursiveCall = isRecursiveCall;
 		this.functionSymbol = functionSymbol;
 		this.arguments = arguments;
@@ -62,7 +62,7 @@ public class FunctionCallStruct extends CompilerSpecialOperatorStruct {
 		if (obj.getClass() != getClass()) {
 			return false;
 		}
-		final FunctionCallStruct rhs = (FunctionCallStruct) obj;
+		final SymbolFunctionCallStruct rhs = (SymbolFunctionCallStruct) obj;
 		return new EqualsBuilder().appendSuper(super.equals(obj))
 		                          .append(isRecursiveCall, rhs.isRecursiveCall)
 		                          .append(functionSymbol, rhs.functionSymbol)

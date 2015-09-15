@@ -99,7 +99,7 @@
 		<entry key="jcl.compiler.real.struct.specialoperator.BlockStruct" value-ref="blockCodeGenerator"/>
 		<entry key="jcl.compiler.real.struct.specialoperator.CatchStruct" value-ref="catchCodeGenerator"/>
 		<entry key="jcl.compiler.real.struct.specialoperator.FletStruct" value-ref="fletCodeGenerator"/>
-		<entry key="jcl.compiler.real.struct.specialoperator.FunctionCallStruct" value-ref="functionCallCodeGenerator"/>
+		<entry key="jcl.compiler.real.struct.specialoperator.SymbolFunctionCallStruct" value-ref="symbolFunctionCallCodeGenerator"/>
 		<entry key="jcl.compiler.real.struct.specialoperator.IfStruct" value-ref="ifCodeGenerator"/>
 		<entry key="jcl.compiler.real.struct.specialoperator.ImmutableLoadTimeValueStruct" value-ref="immutableLoadTimeValueCodeGenerator"/>
 		<entry key="jcl.compiler.real.struct.specialoperator.LabelsStruct" value-ref="labelsCodeGenerator"/>

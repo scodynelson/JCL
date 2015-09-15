@@ -7,7 +7,7 @@ import jcl.compiler.real.icg.CodeGenerator;
 import jcl.compiler.real.icg.GeneratorState;
 import jcl.compiler.real.icg.IntermediateCodeGenerator;
 import jcl.compiler.real.icg.JavaMethodBuilder;
-import jcl.compiler.real.struct.specialoperator.FunctionCallStruct;
+import jcl.compiler.real.struct.specialoperator.SymbolFunctionCallStruct;
 import jcl.symbols.SymbolStruct;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
@@ -15,13 +15,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-class FunctionCallCodeGenerator implements CodeGenerator<FunctionCallStruct> {
+class SymbolFunctionCallCodeGenerator implements CodeGenerator<SymbolFunctionCallStruct> {
 
 	@Autowired
 	private IntermediateCodeGenerator codeGenerator;
 
 	@Override
-	public void generate(final FunctionCallStruct input, final GeneratorState generatorState) {
+	public void generate(final SymbolFunctionCallStruct input, final GeneratorState generatorState) {
 
 		final boolean recursiveCall = input.isRecursiveCall();
 		final SymbolStruct<?> functionSymbol = input.getFunctionSymbol();

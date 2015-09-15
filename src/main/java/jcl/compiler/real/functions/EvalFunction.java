@@ -15,7 +15,7 @@ import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaListBindin
 import jcl.compiler.real.environment.binding.lambdalist.RequiredBinding;
 import jcl.compiler.real.sa.FormAnalyzer;
 import jcl.compiler.real.struct.CompilerSpecialOperatorStruct;
-import jcl.compiler.real.struct.specialoperator.FunctionCallStruct;
+import jcl.compiler.real.struct.specialoperator.SymbolFunctionCallStruct;
 import jcl.compiler.real.struct.specialoperator.ImmutableLoadTimeValueStruct;
 import jcl.compiler.real.struct.specialoperator.JavaMethodCallStruct;
 import jcl.compiler.real.struct.specialoperator.LambdaCompilerFunctionStruct;
@@ -174,8 +174,8 @@ public final class EvalFunction extends FunctionStruct {
 			return function.apply();
 		}
 
-		if (exp instanceof FunctionCallStruct) {
-			final FunctionCallStruct functionCall = (FunctionCallStruct) exp;
+		if (exp instanceof SymbolFunctionCallStruct) {
+			final SymbolFunctionCallStruct functionCall = (SymbolFunctionCallStruct) exp;
 			final SymbolStruct<?> functionSymbol = functionCall.getFunctionSymbol();
 
 			final FunctionStruct function = functionSymbol.getFunction();

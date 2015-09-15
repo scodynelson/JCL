@@ -22,6 +22,7 @@ import jcl.compiler.real.environment.binding.lambdalist.RequiredBinding;
 import jcl.compiler.real.environment.binding.lambdalist.RestBinding;
 import jcl.compiler.real.environment.binding.lambdalist.SuppliedPBinding;
 import jcl.compiler.real.struct.ValuesStruct;
+import jcl.compiler.real.struct.ValuesStructs;
 import jcl.conditions.exceptions.ErrorException;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.functions.Closure;
@@ -284,10 +285,6 @@ interface GenerationConstants {
 
 	String FUNCTION_STRUCT_GET_CLOSURE_SYMBOL_BINDINGS_METHOD_DESC = CodeGenerators.getMethodDescription(FunctionStruct.class, FUNCTION_STRUCT_GET_CLOSURE_SYMBOL_BINDINGS_METHOD_NAME);
 
-	String FUNCTION_STRUCT_GET_CLOSURE_METHOD_NAME = "getClosure";
-
-	String FUNCTION_STRUCT_GET_CLOSURE_METHOD_DESC = CodeGenerators.getMethodDescription(FunctionStruct.class, FUNCTION_STRUCT_GET_CLOSURE_METHOD_NAME);
-
 	String FUNCTION_STRUCT_APPLY_METHOD_NAME = "apply";
 
 	String FUNCTION_STRUCT_APPLY_METHOD_DESC = CodeGenerators.getMethodDescription(FunctionStruct.class, FUNCTION_STRUCT_APPLY_METHOD_NAME, LispStruct[].class);
@@ -304,9 +301,11 @@ interface GenerationConstants {
 
 	String VALUES_STRUCT_GET_PRIMARY_VALUE_METHOD_DESC = CodeGenerators.getMethodDescription(ValuesStruct.class, VALUES_STRUCT_GET_PRIMARY_VALUE_METHOD_NAME);
 
-	String VALUES_STRUCT_GET_VALUES_LIST_METHOD_NAME = "getValuesList";
+	String VALUES_STRUCTS_NAME = Type.getInternalName(ValuesStructs.class);
 
-	String VALUES_STRUCT_GET_VALUES_LIST_METHOD_DESC = CodeGenerators.getMethodDescription(ValuesStruct.class, VALUES_STRUCT_GET_VALUES_LIST_METHOD_NAME);
+	String VALUES_STRUCTS_ADD_VALUES_TO_LIST_METHOD_NAME = "addValuesToList";
+
+	String VALUES_STRUCTS_ADD_VALUES_TO_LIST_METHOD_DESC = CodeGenerators.getMethodDescription(ValuesStructs.class, VALUES_STRUCTS_ADD_VALUES_TO_LIST_METHOD_NAME, List.class, LispStruct.class);
 
 	String CLOSURE_NAME = Type.getInternalName(Closure.class);
 

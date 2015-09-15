@@ -16,11 +16,12 @@ import jcl.arrays.ArrayStruct;
 import jcl.arrays.BitVectorStruct;
 import jcl.arrays.VectorStruct;
 import jcl.characters.CharacterStruct;
-import jcl.compiler.real.icg.generator.TagbodyLabel;
 import jcl.compiler.real.icg.generator.GoException;
 import jcl.compiler.real.icg.generator.ReturnFromException;
+import jcl.compiler.real.icg.generator.TagbodyLabel;
 import jcl.compiler.real.icg.generator.ThrowException;
 import jcl.compiler.real.struct.ValuesStruct;
+import jcl.compiler.real.struct.ValuesStructs;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.functions.Closure;
 import jcl.functions.FunctionStruct;
@@ -397,14 +398,7 @@ public class TestGround {
 
 		final List<LispStruct> argsList = new ArrayList<>();
 		final LispStruct form1 = new CharacterStruct(197);
-		if (form1 instanceof ValuesStruct) {
-			final List<LispStruct> valuesList = ((ValuesStruct) form1).getValuesList();
-			for (final LispStruct value : valuesList) {
-				argsList.add(value);
-			}
-		} else {
-			argsList.add(form1);
-		}
+		ValuesStructs.addValuesToList(argsList, form1);
 
 		LispStruct[] args = new LispStruct[argsList.size()];
 		args = argsList.toArray(args);

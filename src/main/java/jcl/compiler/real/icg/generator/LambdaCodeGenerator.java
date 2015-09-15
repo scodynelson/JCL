@@ -6,6 +6,7 @@ package jcl.compiler.real.icg.generator;
 
 import java.security.SecureRandom;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.Stack;
 
@@ -13,7 +14,6 @@ import jcl.LispStruct;
 import jcl.arrays.StringStruct;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.LambdaEnvironment;
-import jcl.compiler.real.environment.LoadTimeValue;
 import jcl.compiler.real.environment.binding.lambdalist.AuxBinding;
 import jcl.compiler.real.environment.binding.lambdalist.KeyBinding;
 import jcl.compiler.real.environment.binding.lambdalist.OptionalBinding;
@@ -111,10 +111,8 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 			fv.visitEnd();
 		}
 		{
-			final List<LoadTimeValue> loadTimeValues = lambdaEnvironment.getLoadTimeValues();
-			for (final LoadTimeValue loadTimeValue : loadTimeValues) {
-				final String uniqueLTVId = loadTimeValue.getUniqueLTVId();
-
+			final Map<String, LispStruct> loadTimeValues = lambdaEnvironment.getLoadTimeValues();
+			for (final String uniqueLTVId : loadTimeValues.keySet()) {
 				final FieldVisitor fv = cw.visitField(Opcodes.ACC_PRIVATE + Opcodes.ACC_FINAL + Opcodes.ACC_STATIC,
 						uniqueLTVId,
 						GenerationConstants.LISP_STRUCT_DESC,
@@ -1163,9 +1161,9 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 
 			final int initFormStore = methodBuilder.getNextAvailableStore();
 
-			final List<LoadTimeValue> loadTimeValues = lambdaEnvironment.getLoadTimeValues();
-			for (final LoadTimeValue loadTimeValue : loadTimeValues) {
-				final String uniqueLTVId = loadTimeValue.getUniqueLTVId();
+			final Map<String, LispStruct> loadTimeValues = lambdaEnvironment.getLoadTimeValues();
+			for (final Map.Entry<String, LispStruct> loadTimeValue : loadTimeValues.entrySet()) {
+				final String uniqueLTVId = loadTimeValue.getKey();
 				final LispStruct value = loadTimeValue.getValue();
 
 				codeGenerator.generate(value, generatorState);

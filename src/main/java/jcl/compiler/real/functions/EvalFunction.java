@@ -4,16 +4,19 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
 import jcl.compiler.real.CompilerVariables;
 import jcl.compiler.real.environment.Environment;
+import jcl.compiler.real.environment.LambdaEnvironment;
 import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaListBindings;
 import jcl.compiler.real.environment.binding.lambdalist.RequiredBinding;
 import jcl.compiler.real.sa.FormAnalyzer;
 import jcl.compiler.real.struct.CompilerSpecialOperatorStruct;
 import jcl.compiler.real.struct.specialoperator.FunctionCallStruct;
+import jcl.compiler.real.struct.specialoperator.ImmutableLoadTimeValueStruct;
 import jcl.compiler.real.struct.specialoperator.JavaMethodCallStruct;
 import jcl.compiler.real.struct.specialoperator.LambdaCompilerFunctionStruct;
 import jcl.compiler.real.struct.specialoperator.LambdaFunctionCallStruct;
@@ -144,6 +147,17 @@ public final class EvalFunction extends FunctionStruct {
 				finalForm = eval(form);
 			}
 			return finalForm;
+		}
+
+		if (exp instanceof ImmutableLoadTimeValueStruct) {
+			final ImmutableLoadTimeValueStruct ltv = (ImmutableLoadTimeValueStruct) exp;
+			final String uniqueLTVId = ltv.getUniqueLTVId();
+
+			final LambdaEnvironment nullEnvironment = (LambdaEnvironment) Environment.NULL;
+			final Map<String, LispStruct> loadTimeValues = nullEnvironment.getLoadTimeValues();
+
+			final LispStruct form = loadTimeValues.get(uniqueLTVId);
+			return eval(form);
 		}
 
 		if (exp instanceof SymbolCompilerFunctionStruct) {

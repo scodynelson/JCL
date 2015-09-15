@@ -7,13 +7,12 @@ import jcl.LispStruct;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.Environments;
 import jcl.compiler.real.environment.LambdaEnvironment;
-import jcl.compiler.real.environment.LoadTimeValue;
 import jcl.compiler.real.sa.FormAnalyzer;
-import jcl.functions.expanders.MacroFunctionExpander;
 import jcl.compiler.real.struct.specialoperator.ImmutableLoadTimeValueStruct;
 import jcl.compiler.real.struct.specialoperator.LoadTimeValueStruct;
 import jcl.compiler.real.struct.specialoperator.MutableLoadTimeValueStruct;
 import jcl.conditions.exceptions.ProgramErrorException;
+import jcl.functions.expanders.MacroFunctionExpander;
 import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;
 import jcl.printer.Printer;
@@ -77,9 +76,14 @@ public class LoadTimeValueExpander extends MacroFunctionExpander<LoadTimeValueSt
 		if (isReadOnly) {
 			final LambdaEnvironment enclosingLambda = Environments.getEnclosingLambda(environment);
 
-			final String uniqueLTVId = UUID.randomUUID().toString().replace('-', '_');
-			final LoadTimeValue newLoadTimeValue = new LoadTimeValue(uniqueLTVId, analyzedEvalForm);
-			enclosingLambda.addLoadTimeValue(newLoadTimeValue);
+			String fieldName = UUID.randomUUID().toString();
+			while (Character.isDigit(fieldName.charAt(0))) {
+				// Ensure the fieldId starts with a character, not a number
+				fieldName = UUID.randomUUID().toString();
+			}
+
+			final String uniqueLTVId = fieldName.replace('-', '_');
+			enclosingLambda.getLoadTimeValues().put(uniqueLTVId, analyzedEvalForm);
 
 			return new ImmutableLoadTimeValueStruct(uniqueLTVId);
 		} else {

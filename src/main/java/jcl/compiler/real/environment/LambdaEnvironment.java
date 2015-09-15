@@ -4,9 +4,10 @@
 
 package jcl.compiler.real.environment;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
+import jcl.LispStruct;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -16,7 +17,7 @@ public class LambdaEnvironment extends BindingEnvironment {
 
 	private static final long serialVersionUID = -1182568685360839544L;
 
-	private final List<LoadTimeValue> loadTimeValues = new ArrayList<>();
+	private final Map<String, LispStruct> loadTimeValues = new HashMap<>();
 
 	private int parameterNumber;
 
@@ -24,12 +25,8 @@ public class LambdaEnvironment extends BindingEnvironment {
 		super(parent);
 	}
 
-	public List<LoadTimeValue> getLoadTimeValues() {
+	public Map<String, LispStruct> getLoadTimeValues() {
 		return loadTimeValues;
-	}
-
-	public void addLoadTimeValue(final LoadTimeValue loadTimeValue) {
-		loadTimeValues.add(loadTimeValue);
 	}
 
 	public int getNextParameterNumber() {

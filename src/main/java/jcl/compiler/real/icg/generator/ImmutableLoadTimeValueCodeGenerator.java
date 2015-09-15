@@ -13,21 +13,41 @@ import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.springframework.stereotype.Component;
 
+/**
+ * Class to perform 'load-time-value' special operator code generation where the value is immutable, or read-only.
+ */
 @Component
 class ImmutableLoadTimeValueCodeGenerator implements CodeGenerator<ImmutableLoadTimeValueStruct> {
 
+	/**
+	 * {@inheritDoc}
+	 * Generation method for {@link ImmutableLoadTimeValueStruct} objects, by performing the following operations:
+	 * <ol>
+	 * <li>Retrieving the pre-generated form value calculated at load-time (in this case, the field with the name
+	 * 'f2ceebd1_e143_4b7f_86ca_96a7835275f0'</li>
+	 * </ol>
+	 * As an example, it will transform {@code (load-time-value 1 t)} into the following Java code:
+	 * <pre>
+	 * {@code
+	 *      val2 = f2ceebd1_e143_4b7f_86ca_96a7835275f0;
+	 * }
+	 * </pre>
+	 *
+	 * @param input
+	 * 		the {@link ImmutableLoadTimeValueStruct} input value to generate code for
+	 * @param generatorState
+	 * 		stateful object used to hold the current state of the code generation process
+	 */
 	@Override
 	public void generate(final ImmutableLoadTimeValueStruct input, final GeneratorState generatorState) {
-
-		final String uniqueLTVId = input.getUniqueLTVId();
-
-		final JavaClassBuilder currentClass = generatorState.getCurrentClass();
 
 		final JavaMethodBuilder methodBuilder = generatorState.getCurrentMethodBuilder();
 		final MethodVisitor mv = methodBuilder.getMethodVisitor();
 
+		final JavaClassBuilder currentClass = generatorState.getCurrentClass();
 		final String fileName = currentClass.getFileName();
 
+		final String uniqueLTVId = input.getUniqueLTVId();
 		mv.visitFieldInsn(Opcodes.GETSTATIC, fileName, uniqueLTVId, GenerationConstants.LISP_STRUCT_DESC);
 	}
 }

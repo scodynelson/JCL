@@ -11,6 +11,7 @@ import jcl.compiler.real.icg.CodeGenerator;
 import jcl.compiler.real.icg.GeneratorState;
 import jcl.compiler.real.icg.IntermediateCodeGenerator;
 import jcl.compiler.real.icg.JavaMethodBuilder;
+import jcl.compiler.real.struct.specialoperator.LambdaCompilerFunctionStruct;
 import jcl.compiler.real.struct.specialoperator.LambdaFunctionCallStruct;
 import jcl.compiler.real.struct.specialoperator.lambda.LambdaStruct;
 import org.objectweb.asm.MethodVisitor;
@@ -25,10 +26,11 @@ import org.springframework.stereotype.Component;
 class LambdaFunctionCallCodeGenerator implements CodeGenerator<LambdaFunctionCallStruct> {
 
 	/**
-	 * {@link LambdaCodeGenerator} used for generating the {@link LambdaFunctionCallStruct#lambdaStruct} value.
+	 * {@link LambdaFunctionCodeGenerator} used for generating the {@link LambdaFunctionCallStruct#lambdaCompilerFunction}
+	 * value.
 	 */
 	@Autowired
-	private LambdaCodeGenerator lambdaCodeGenerator;
+	private LambdaFunctionCodeGenerator lambdaFunctionCodeGenerator;
 
 	/**
 	 * {@link IntermediateCodeGenerator} used for generating the {@link LambdaFunctionCallStruct#arguments} values.
@@ -40,7 +42,7 @@ class LambdaFunctionCallCodeGenerator implements CodeGenerator<LambdaFunctionCal
 	 * {@inheritDoc}
 	 * Generation method for {@link LambdaFunctionCallStruct} objects, by performing the following operations:
 	 * <ol>
-	 * <li>Generating the {@link LambdaFunctionCallStruct#lambdaStruct} value, creating the anonymous {@link
+	 * <li>Generating the {@link LambdaFunctionCallStruct#lambdaCompilerFunction} value, creating the anonymous {@link
 	 * LambdaStruct} class</li>
 	 * <li>Generating a new array of {@link LispStruct} to be used as the function call arguments</li>
 	 * <li>Generating each of the {@link LambdaFunctionCallStruct#arguments} values and adding them to the arguments
@@ -68,8 +70,8 @@ class LambdaFunctionCallCodeGenerator implements CodeGenerator<LambdaFunctionCal
 		final JavaMethodBuilder methodBuilder = generatorState.getCurrentMethodBuilder();
 		final MethodVisitor mv = methodBuilder.getMethodVisitor();
 
-		final LambdaStruct lambda = input.getLambdaStruct();
-		lambdaCodeGenerator.generate(lambda, generatorState);
+		final LambdaCompilerFunctionStruct lambdaCompilerFunction = input.getLambdaCompilerFunction();
+		lambdaFunctionCodeGenerator.generate(lambdaCompilerFunction, generatorState);
 
 		final int functionStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, functionStore);

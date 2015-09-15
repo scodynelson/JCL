@@ -30,8 +30,8 @@ class LambdaFunctionCodeGenerator implements CodeGenerator<LambdaCompilerFunctio
 	 * <li>Generating the {@link LambdaCompilerFunctionStruct#lambdaStruct} value, creating the anonymous {@link
 	 * LambdaStruct} class</li>
 	 * </ol>
-	 * As an example, it will transform the anonymous lambda function call for {@code #'(lambda ())} into the following
-	 * Java code:
+	 * As an example, it will transform the anonymous lambda function for {@code (lambda ())} into the following Java
+	 * code:
 	 * <pre>
 	 * {@code
 	 *      new Lambda_10(var1);

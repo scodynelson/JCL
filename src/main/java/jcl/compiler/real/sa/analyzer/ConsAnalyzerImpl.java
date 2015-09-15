@@ -11,15 +11,14 @@ import java.util.Stack;
 
 import jcl.LispStruct;
 import jcl.compiler.real.environment.Environment;
-import jcl.compiler.real.environment.Environments;
 import jcl.compiler.real.sa.FormAnalyzer;
-import jcl.compiler.real.struct.specialoperator.SymbolFunctionCallStruct;
 import jcl.compiler.real.struct.specialoperator.JavaMethodCallStruct;
+import jcl.compiler.real.struct.specialoperator.LambdaCompilerFunctionStruct;
 import jcl.compiler.real.struct.specialoperator.LambdaFunctionCallStruct;
+import jcl.compiler.real.struct.specialoperator.SymbolCompilerFunctionStruct;
+import jcl.compiler.real.struct.specialoperator.SymbolFunctionCallStruct;
 import jcl.compiler.real.struct.specialoperator.lambda.LambdaStruct;
-import jcl.conditions.exceptions.ErrorException;
 import jcl.conditions.exceptions.ProgramErrorException;
-import jcl.functions.FunctionStruct;
 import jcl.java.JavaNameStruct;
 import jcl.lists.ConsStruct;
 import jcl.lists.ListStruct;
@@ -67,13 +66,10 @@ public class ConsAnalyzerImpl implements ConsAnalyzer {
 
 		final Set<SymbolStruct<?>> undefinedFunctions = environment.getUndefinedFunctions();
 
-		FunctionStruct function;
-		try {
-			function = functionSymbol.getFunction();
-		} catch (final ErrorException ignore) {
-			function = null;
-		}
-		if (function == null) {
+		if (functionSymbol.hasFunction()) {
+			// Function is defined
+			undefinedFunctions.remove(functionSymbol);
+		} else {
 			final Stack<SymbolStruct<?>> functionNameStack = environment.getFunctionNameStack();
 
 			if (functionNameStack.contains(functionSymbol)) {
@@ -83,9 +79,6 @@ public class ConsAnalyzerImpl implements ConsAnalyzer {
 				// Add this as a possible undefined function
 				undefinedFunctions.add(functionSymbol);
 			}
-		} else {
-			// Function is defined
-			undefinedFunctions.remove(functionSymbol);
 		}
 
 		final List<LispStruct> analyzedFunctionArguments = new ArrayList<>(functionArguments.size());
@@ -95,9 +88,9 @@ public class ConsAnalyzerImpl implements ConsAnalyzer {
 			analyzedFunctionArguments.add(analyzedFunctionArgument);
 		}
 
-		final boolean hasFunctionBinding = Environments.hasFunctionBinding(environment, functionSymbol);
-
-		return new SymbolFunctionCallStruct(hasFunctionBinding, functionSymbol, analyzedFunctionArguments);
+		// TODO: work on how to determine tail recursive optimization here!!!
+		final SymbolCompilerFunctionStruct symbolCompilerFunction = new SymbolCompilerFunctionStruct(functionSymbol);
+		return new SymbolFunctionCallStruct(symbolCompilerFunction, analyzedFunctionArguments, false);
 	}
 
 	private JavaMethodCallStruct analyzeJavaMethodCall(final ListStruct input, final Environment environment) {
@@ -140,7 +133,8 @@ public class ConsAnalyzerImpl implements ConsAnalyzer {
 			analyzedFunctionArguments.add(analyzedFunctionArgument);
 		}
 
-		return new LambdaFunctionCallStruct(lambdaAnalyzed, analyzedFunctionArguments);
+		final LambdaCompilerFunctionStruct lambdaCompilerFunction = new LambdaCompilerFunctionStruct(lambdaAnalyzed);
+		return new LambdaFunctionCallStruct(lambdaCompilerFunction, analyzedFunctionArguments);
 	}
 
 //	@Override

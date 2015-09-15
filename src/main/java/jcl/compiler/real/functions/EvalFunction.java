@@ -15,7 +15,6 @@ import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaListBindin
 import jcl.compiler.real.environment.binding.lambdalist.RequiredBinding;
 import jcl.compiler.real.sa.FormAnalyzer;
 import jcl.compiler.real.struct.CompilerSpecialOperatorStruct;
-import jcl.compiler.real.struct.specialoperator.SymbolFunctionCallStruct;
 import jcl.compiler.real.struct.specialoperator.ImmutableLoadTimeValueStruct;
 import jcl.compiler.real.struct.specialoperator.JavaMethodCallStruct;
 import jcl.compiler.real.struct.specialoperator.LambdaCompilerFunctionStruct;
@@ -24,6 +23,7 @@ import jcl.compiler.real.struct.specialoperator.PrognStruct;
 import jcl.compiler.real.struct.specialoperator.QuoteStruct;
 import jcl.compiler.real.struct.specialoperator.SetqStruct;
 import jcl.compiler.real.struct.specialoperator.SymbolCompilerFunctionStruct;
+import jcl.compiler.real.struct.specialoperator.SymbolFunctionCallStruct;
 import jcl.compiler.real.struct.specialoperator.lambda.LambdaStruct;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.functions.FunctionStruct;
@@ -176,7 +176,8 @@ public final class EvalFunction extends FunctionStruct {
 
 		if (exp instanceof SymbolFunctionCallStruct) {
 			final SymbolFunctionCallStruct functionCall = (SymbolFunctionCallStruct) exp;
-			final SymbolStruct<?> functionSymbol = functionCall.getFunctionSymbol();
+			final SymbolCompilerFunctionStruct symbolCompilerFunction = functionCall.getSymbolCompilerFunction();
+			final SymbolStruct<?> functionSymbol = symbolCompilerFunction.getFunctionSymbol();
 
 			final FunctionStruct function = functionSymbol.getFunction();
 
@@ -195,7 +196,6 @@ public final class EvalFunction extends FunctionStruct {
 
 		if (exp instanceof JavaMethodCallStruct) {
 			final JavaMethodCallStruct javaMethodCall = (JavaMethodCallStruct) exp;
-
 			final JavaNameStruct methodName = javaMethodCall.getMethodName();
 
 			final LispStruct javaObject = javaMethodCall.getJavaObject();
@@ -228,7 +228,8 @@ public final class EvalFunction extends FunctionStruct {
 
 		if (exp instanceof LambdaFunctionCallStruct) {
 			final LambdaFunctionCallStruct lambdaFunctionCall = (LambdaFunctionCallStruct) exp;
-			final LambdaStruct lambda = lambdaFunctionCall.getLambdaStruct();
+			final LambdaCompilerFunctionStruct lambdaCompilerFunction = lambdaFunctionCall.getLambdaCompilerFunction();
+			final LambdaStruct lambda = lambdaCompilerFunction.getLambdaStruct();
 
 			final FunctionStruct function = getCompiledExpression(oldCompileTopLevel, lambda);
 

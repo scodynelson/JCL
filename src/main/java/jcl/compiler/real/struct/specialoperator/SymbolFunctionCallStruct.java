@@ -8,7 +8,6 @@ import java.util.List;
 
 import jcl.LispStruct;
 import jcl.compiler.real.struct.CompilerSpecialOperatorStruct;
-import jcl.symbols.SymbolStruct;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -18,36 +17,37 @@ public class SymbolFunctionCallStruct extends CompilerSpecialOperatorStruct {
 
 	private static final long serialVersionUID = 2676444242188589421L;
 
-	private final boolean isRecursiveCall;
-
-	private final SymbolStruct<?> functionSymbol;
+	private final SymbolCompilerFunctionStruct symbolCompilerFunction;
 
 	private final List<LispStruct> arguments;
 
-	public SymbolFunctionCallStruct(final boolean isRecursiveCall, final SymbolStruct<?> functionSymbol, final List<LispStruct> arguments) {
-		this.isRecursiveCall = isRecursiveCall;
-		this.functionSymbol = functionSymbol;
+	private final boolean isRecursiveCall;
+
+	public SymbolFunctionCallStruct(final SymbolCompilerFunctionStruct symbolCompilerFunction, final List<LispStruct> arguments,
+	                                final boolean isRecursiveCall) {
+		this.symbolCompilerFunction = symbolCompilerFunction;
 		this.arguments = arguments;
+		this.isRecursiveCall = isRecursiveCall;
 	}
 
-	public boolean isRecursiveCall() {
-		return isRecursiveCall;
-	}
-
-	public SymbolStruct<?> getFunctionSymbol() {
-		return functionSymbol;
+	public SymbolCompilerFunctionStruct getSymbolCompilerFunction() {
+		return symbolCompilerFunction;
 	}
 
 	public List<LispStruct> getArguments() {
 		return arguments;
 	}
 
+	public boolean isRecursiveCall() {
+		return isRecursiveCall;
+	}
+
 	@Override
 	public int hashCode() {
 		return new HashCodeBuilder().appendSuper(super.hashCode())
-		                            .append(isRecursiveCall)
-		                            .append(functionSymbol)
+		                            .append(symbolCompilerFunction)
 		                            .append(arguments)
+		                            .append(isRecursiveCall)
 		                            .toHashCode();
 	}
 
@@ -64,17 +64,17 @@ public class SymbolFunctionCallStruct extends CompilerSpecialOperatorStruct {
 		}
 		final SymbolFunctionCallStruct rhs = (SymbolFunctionCallStruct) obj;
 		return new EqualsBuilder().appendSuper(super.equals(obj))
-		                          .append(isRecursiveCall, rhs.isRecursiveCall)
-		                          .append(functionSymbol, rhs.functionSymbol)
+		                          .append(symbolCompilerFunction, rhs.symbolCompilerFunction)
 		                          .append(arguments, rhs.arguments)
+		                          .append(isRecursiveCall, rhs.isRecursiveCall)
 		                          .isEquals();
 	}
 
 	@Override
 	public String toString() {
-		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(isRecursiveCall)
-		                                                                .append(functionSymbol)
+		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(symbolCompilerFunction)
 		                                                                .append(arguments)
+		                                                                .append(isRecursiveCall)
 		                                                                .toString();
 	}
 }

@@ -1,3 +1,7 @@
+/*
+ * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
+ */
+
 package jcl.compiler.real.icg.generator;
 
 import java.util.HashMap;
@@ -7,12 +11,12 @@ import java.util.Set;
 import java.util.Stack;
 
 import jcl.compiler.real.environment.Environment;
-import jcl.compiler.real.environment.LabelsEnvironment;
+import jcl.compiler.real.environment.InnerLambdaEnvironment;
 import jcl.compiler.real.icg.GeneratorState;
 import jcl.compiler.real.icg.IntermediateCodeGenerator;
 import jcl.compiler.real.icg.JavaMethodBuilder;
 import jcl.compiler.real.struct.specialoperator.CompilerFunctionStruct;
-import jcl.compiler.real.struct.specialoperator.LabelsStruct;
+import jcl.compiler.real.struct.specialoperator.InnerLambdaStruct;
 import jcl.compiler.real.struct.specialoperator.PrognStruct;
 import jcl.symbols.SymbolStruct;
 import org.objectweb.asm.Label;
@@ -22,7 +26,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-class LabelsCodeGenerator extends SpecialOperatorCodeGenerator<LabelsStruct> {
+class InnerLambdaCodeGenerator extends SpecialOperatorCodeGenerator<InnerLambdaStruct> {
 
 	@Autowired
 	private IntermediateCodeGenerator codeGenerator;
@@ -30,19 +34,19 @@ class LabelsCodeGenerator extends SpecialOperatorCodeGenerator<LabelsStruct> {
 	@Autowired
 	private PrognCodeGenerator prognCodeGenerator;
 
-	private LabelsCodeGenerator() {
-		super("labels");
+	private InnerLambdaCodeGenerator() {
+		super("innerLambda");
 	}
 
 	@Override
-	protected void generateSpecialOperator(final LabelsStruct input, final GeneratorState generatorState,
+	protected void generateSpecialOperator(final InnerLambdaStruct input, final GeneratorState generatorState,
 	                                       final JavaMethodBuilder methodBuilder, final int closureArgStore) {
 
 		final MethodVisitor mv = methodBuilder.getMethodVisitor();
 
-		final List<LabelsStruct.LabelsVar> vars = input.getVars();
+		final List<InnerLambdaStruct.InnerLambdaVar> vars = input.getVars();
 		final PrognStruct forms = input.getForms();
-		final LabelsEnvironment labelsEnvironment = input.getLexicalEnvironment();
+		final InnerLambdaEnvironment innerLambdaEnvironment = input.getLexicalEnvironment();
 
 		final Label tryBlockStart = new Label();
 		final Label tryBlockEnd = new Label();
@@ -50,7 +54,7 @@ class LabelsCodeGenerator extends SpecialOperatorCodeGenerator<LabelsStruct> {
 		final Label catchBlockEnd = new Label();
 		mv.visitTryCatchBlock(tryBlockStart, tryBlockEnd, catchBlockStart, null);
 
-		final Integer closureFunctionBindingsStore = methodBuilder.getNextAvailableStore();
+		final int closureFunctionBindingsStore = methodBuilder.getNextAvailableStore();
 
 		mv.visitInsn(Opcodes.ACONST_NULL);
 		mv.visitVarInsn(Opcodes.ASTORE, closureFunctionBindingsStore);
@@ -73,7 +77,7 @@ class LabelsCodeGenerator extends SpecialOperatorCodeGenerator<LabelsStruct> {
 
 		final Map<Integer, Integer> functionStoresToBind = new HashMap<>();
 
-		for (final LabelsStruct.LabelsVar var : vars) {
+		for (final InnerLambdaStruct.InnerLambdaVar var : vars) {
 			final SymbolStruct<?> functionSymbolVar = var.getVar();
 			// NOTE: we have to get a new 'functionSymbolStore' for each var so we can properly unbind the expansions later
 			final int functionSymbolStore = methodBuilder.getNextAvailableStore();
@@ -120,7 +124,7 @@ class LabelsCodeGenerator extends SpecialOperatorCodeGenerator<LabelsStruct> {
 
 		final Stack<Environment> bindingStack = generatorState.getBindingStack();
 
-		bindingStack.push(labelsEnvironment);
+		bindingStack.push(innerLambdaEnvironment);
 		prognCodeGenerator.generate(forms, generatorState);
 		bindingStack.pop();
 

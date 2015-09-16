@@ -10,7 +10,7 @@ import jcl.LispStruct;
 import jcl.arrays.StringStruct;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.Environments;
-import jcl.compiler.real.environment.LabelsEnvironment;
+import jcl.compiler.real.environment.InnerLambdaEnvironment;
 import jcl.compiler.real.environment.LambdaEnvironment;
 import jcl.compiler.real.environment.binding.EnvironmentParameterBinding;
 import jcl.compiler.real.sa.FormAnalyzer;
@@ -19,7 +19,7 @@ import jcl.compiler.real.sa.analyzer.body.BodyWithDeclaresAnalyzer;
 import jcl.compiler.real.sa.analyzer.body.BodyWithDeclaresAndDocStringAnalyzer;
 import jcl.compiler.real.sa.analyzer.declare.DeclareExpander;
 import jcl.compiler.real.struct.specialoperator.CompilerFunctionStruct;
-import jcl.compiler.real.struct.specialoperator.LabelsStruct;
+import jcl.compiler.real.struct.specialoperator.InnerLambdaStruct;
 import jcl.compiler.real.struct.specialoperator.PrognStruct;
 import jcl.compiler.real.struct.specialoperator.declare.DeclareStruct;
 import jcl.compiler.real.struct.specialoperator.declare.SpecialDeclarationStruct;
@@ -40,7 +40,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class LabelsExpander extends MacroFunctionExpander<LabelsStruct> {
+public class LabelsExpander extends MacroFunctionExpander<InnerLambdaStruct> {
 
 	private static final long serialVersionUID = -3698985413039911540L;
 
@@ -71,7 +71,7 @@ public class LabelsExpander extends MacroFunctionExpander<LabelsStruct> {
 	}
 
 	@Override
-	public LabelsStruct expand(final ListStruct form, final Environment environment) {
+	public InnerLambdaStruct expand(final ListStruct form, final Environment environment) {
 
 		final int formSize = form.size();
 		if (formSize < 2) {
@@ -86,15 +86,15 @@ public class LabelsExpander extends MacroFunctionExpander<LabelsStruct> {
 			throw new ProgramErrorException("LABELS: Parameter list must be a list. Got: " + printedObject);
 		}
 
-		final LabelsEnvironment labelsEnvironment = new LabelsEnvironment(environment);
+		final InnerLambdaEnvironment labelsEnvironment = new InnerLambdaEnvironment(environment);
 
 		final Stack<SymbolStruct<?>> functionNameStack = environment.getFunctionNameStack();
 		List<SymbolStruct<?>> functionNames = null;
 
 		try {
-			final ListStruct innerFunctions = (ListStruct) second;
-			final List<LispStruct> innerFunctionsAsJavaList = innerFunctions.getAsJavaList();
-			functionNames = getFunctionNames(innerFunctionsAsJavaList);
+			final ListStruct innerLambdas = (ListStruct) second;
+			final List<LispStruct> innerLambdasAsJavaList = innerLambdas.getAsJavaList();
+			functionNames = getFunctionNames(innerLambdasAsJavaList);
 
 			// Add function names BEFORE analyzing the functions. This is one of the differences between Flet and Labels/Macrolet.
 			StackUtils.pushAll(functionNameStack, functionNames);
@@ -107,10 +107,10 @@ public class LabelsExpander extends MacroFunctionExpander<LabelsStruct> {
 			final ListStruct fullDeclaration = ListStruct.buildProperList(bodyProcessingResult.getDeclares());
 			final DeclareStruct declare = declareExpander.expand(fullDeclaration, labelsEnvironment);
 
-			final List<LabelsStruct.LabelsVar> labelsVars
-					= innerFunctionsAsJavaList.stream()
-					                          .map(e -> getLabelsVar(e, declare, labelsEnvironment))
-					                          .collect(Collectors.toList());
+			final List<InnerLambdaStruct.InnerLambdaVar> labelsVars
+					= innerLambdasAsJavaList.stream()
+					                        .map(e -> getLabelsVar(e, declare, labelsEnvironment))
+					                        .collect(Collectors.toList());
 
 			final List<SpecialDeclarationStruct> specialDeclarations = declare.getSpecialDeclarations();
 			specialDeclarations.forEach(specialDeclaration -> Environments.addDynamicVariableBinding(specialDeclaration, labelsEnvironment));
@@ -121,7 +121,7 @@ public class LabelsExpander extends MacroFunctionExpander<LabelsStruct> {
 					           .map(e -> formAnalyzer.analyze(e, labelsEnvironment))
 					           .collect(Collectors.toList());
 
-			return new LabelsStruct(labelsVars, new PrognStruct(analyzedBodyForms), labelsEnvironment);
+			return new InnerLambdaStruct(labelsVars, new PrognStruct(analyzedBodyForms), labelsEnvironment);
 		} finally {
 			if (functionNames != null) {
 				StackUtils.popX(functionNameStack, functionNames.size());
@@ -152,8 +152,8 @@ public class LabelsExpander extends MacroFunctionExpander<LabelsStruct> {
 		return functionNames;
 	}
 
-	private LabelsStruct.LabelsVar getLabelsVar(final LispStruct functionDefinition, final DeclareStruct declare,
-	                                            final LabelsEnvironment labelsEnvironment) {
+	private InnerLambdaStruct.InnerLambdaVar getLabelsVar(final LispStruct functionDefinition, final DeclareStruct declare,
+	                                                      final InnerLambdaEnvironment labelsEnvironment) {
 
 		final ListStruct functionList = (ListStruct) functionDefinition;
 		final SymbolStruct<?> functionName = (SymbolStruct<?>) functionList.getFirst();
@@ -168,11 +168,11 @@ public class LabelsExpander extends MacroFunctionExpander<LabelsStruct> {
 		final EnvironmentParameterBinding binding = new EnvironmentParameterBinding(functionName, TType.INSTANCE, functionInitForm);
 		labelsEnvironment.addFunctionBinding(binding);
 
-		return new LabelsStruct.LabelsVar(functionName, functionInitForm, isSpecial);
+		return new InnerLambdaStruct.InnerLambdaVar(functionName, functionInitForm, isSpecial);
 	}
 
 	private CompilerFunctionStruct getFunctionParameterInitForm(final ListStruct functionListParameter,
-	                                                            final LabelsEnvironment labelsEnvironment) {
+	                                                            final InnerLambdaEnvironment labelsEnvironment) {
 
 		final int functionListParameterSize = functionListParameter.size();
 		if (functionListParameterSize < 2) {

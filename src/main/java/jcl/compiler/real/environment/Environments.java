@@ -17,26 +17,6 @@ public final class Environments {
 	private Environments() {
 	}
 
-	public static Environment getInnerFunctionLexicalBindingEnvironment(final Environment environment, final SymbolStruct<?> variable) {
-
-		Environment currentEnvironment = environment;
-
-		while (!currentEnvironment.equals(Environment.NULL)) {
-
-			if (currentEnvironment instanceof InnerFunctionEnvironment) {
-
-				final boolean hasBinding = currentEnvironment.hasLexicalBinding(variable);
-				if (hasBinding) {
-					break;
-				}
-			}
-
-			currentEnvironment = currentEnvironment.getParent();
-		}
-
-		return currentEnvironment;
-	}
-
 	public static Environment getFunctionLexicalBindingEnvironment(final Environment environment, final SymbolStruct<?> variable) {
 
 		Environment currentEnvironment = environment;

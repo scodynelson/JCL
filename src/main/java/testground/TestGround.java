@@ -351,7 +351,7 @@ public class TestGround {
 		return function.apply(args);
 	}
 
-	private Object fletGen(final Closure currentClosure) {
+	private Object innerLambdaGen(final Closure currentClosure) {
 
 		Map<SymbolStruct<?>, FunctionStruct> closureBindings = null;
 		if (currentClosure != null) {

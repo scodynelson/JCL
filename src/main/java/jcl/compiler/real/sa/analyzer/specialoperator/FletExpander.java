@@ -10,7 +10,7 @@ import jcl.LispStruct;
 import jcl.arrays.StringStruct;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.Environments;
-import jcl.compiler.real.environment.FletEnvironment;
+import jcl.compiler.real.environment.InnerLambdaEnvironment;
 import jcl.compiler.real.environment.LambdaEnvironment;
 import jcl.compiler.real.environment.binding.EnvironmentParameterBinding;
 import jcl.compiler.real.sa.FormAnalyzer;
@@ -19,7 +19,7 @@ import jcl.compiler.real.sa.analyzer.body.BodyWithDeclaresAnalyzer;
 import jcl.compiler.real.sa.analyzer.body.BodyWithDeclaresAndDocStringAnalyzer;
 import jcl.compiler.real.sa.analyzer.declare.DeclareExpander;
 import jcl.compiler.real.struct.specialoperator.CompilerFunctionStruct;
-import jcl.compiler.real.struct.specialoperator.FletStruct;
+import jcl.compiler.real.struct.specialoperator.InnerLambdaStruct;
 import jcl.compiler.real.struct.specialoperator.PrognStruct;
 import jcl.compiler.real.struct.specialoperator.declare.DeclareStruct;
 import jcl.compiler.real.struct.specialoperator.declare.SpecialDeclarationStruct;
@@ -43,7 +43,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class FletExpander extends MacroFunctionExpander<FletStruct> {
+public class FletExpander extends MacroFunctionExpander<InnerLambdaStruct> {
 
 	private static final long serialVersionUID = -3183832254183452606L;
 
@@ -74,7 +74,7 @@ public class FletExpander extends MacroFunctionExpander<FletStruct> {
 	}
 
 	@Override
-	public FletStruct expand(final ListStruct form, final Environment environment) {
+	public InnerLambdaStruct expand(final ListStruct form, final Environment environment) {
 
 		final int formSize = form.size();
 		if (formSize < 2) {
@@ -89,13 +89,13 @@ public class FletExpander extends MacroFunctionExpander<FletStruct> {
 			throw new ProgramErrorException("FLET: Parameter list must be a list. Got: " + printedObject);
 		}
 
-		final FletEnvironment fletEnvironment = new FletEnvironment(environment);
+		final InnerLambdaEnvironment fletEnvironment = new InnerLambdaEnvironment(environment);
 
 		final Stack<SymbolStruct<?>> functionNameStack = environment.getFunctionNameStack();
 
-		final ListStruct innerFunctions = (ListStruct) second;
-		final List<LispStruct> innerFunctionsAsJavaList = innerFunctions.getAsJavaList();
-		final List<SymbolStruct<?>> functionNames = getFunctionNames(innerFunctionsAsJavaList);
+		final ListStruct innerLambdas = (ListStruct) second;
+		final List<LispStruct> innerLambdasAsJavaList = innerLambdas.getAsJavaList();
+		final List<SymbolStruct<?>> functionNames = getFunctionNames(innerLambdasAsJavaList);
 
 		try {
 			final ListStruct formRestRest = formRest.getRest();
@@ -106,10 +106,10 @@ public class FletExpander extends MacroFunctionExpander<FletStruct> {
 			final ListStruct fullDeclaration = ListStruct.buildProperList(bodyProcessingResult.getDeclares());
 			final DeclareStruct declare = declareExpander.expand(fullDeclaration, fletEnvironment);
 
-			final List<FletStruct.FletVar> fletVars
-					= innerFunctionsAsJavaList.stream()
-					                          .map(e -> getFletVar(e, declare, fletEnvironment, functionNames))
-					                          .collect(Collectors.toList());
+			final List<InnerLambdaStruct.InnerLambdaVar> fletVars
+					= innerLambdasAsJavaList.stream()
+					                        .map(e -> getFletVar(e, declare, fletEnvironment, functionNames))
+					                        .collect(Collectors.toList());
 
 			final List<SpecialDeclarationStruct> specialDeclarations = declare.getSpecialDeclarations();
 			specialDeclarations.forEach(specialDeclaration -> Environments.addDynamicVariableBinding(specialDeclaration, fletEnvironment));
@@ -123,7 +123,7 @@ public class FletExpander extends MacroFunctionExpander<FletStruct> {
 					           .map(e -> formAnalyzer.analyze(e, fletEnvironment))
 					           .collect(Collectors.toList());
 
-			return new FletStruct(fletVars, new PrognStruct(analyzedBodyForms), fletEnvironment);
+			return new InnerLambdaStruct(fletVars, new PrognStruct(analyzedBodyForms), fletEnvironment);
 		} finally {
 			if (functionNames != null) {
 				StackUtils.popX(functionNameStack, functionNames.size());
@@ -154,8 +154,8 @@ public class FletExpander extends MacroFunctionExpander<FletStruct> {
 		return functionNames;
 	}
 
-	private FletStruct.FletVar getFletVar(final LispStruct functionDefinition, final DeclareStruct declare,
-	                                      final FletEnvironment fletEnvironment, final List<SymbolStruct<?>> functionNames) {
+	private InnerLambdaStruct.InnerLambdaVar getFletVar(final LispStruct functionDefinition, final DeclareStruct declare,
+	                                                    final InnerLambdaEnvironment fletEnvironment, final List<SymbolStruct<?>> functionNames) {
 
 		final ListStruct functionList = (ListStruct) functionDefinition;
 		final SymbolStruct<?> functionName = (SymbolStruct<?>) functionList.getFirst();
@@ -170,10 +170,10 @@ public class FletExpander extends MacroFunctionExpander<FletStruct> {
 		final EnvironmentParameterBinding binding = new EnvironmentParameterBinding(functionName, TType.INSTANCE, functionInitForm);
 		fletEnvironment.addFunctionBinding(binding);
 
-		return new FletStruct.FletVar(functionName, functionInitForm, isSpecial);
+		return new InnerLambdaStruct.InnerLambdaVar(functionName, functionInitForm, isSpecial);
 	}
 
-	private CompilerFunctionStruct getFunctionParameterInitForm(final ListStruct functionListParameter, final FletEnvironment fletEnvironment,
+	private CompilerFunctionStruct getFunctionParameterInitForm(final ListStruct functionListParameter, final InnerLambdaEnvironment fletEnvironment,
 	                                                            final List<SymbolStruct<?>> functionNames) {
 
 		final int functionListParameterSize = functionListParameter.size();

@@ -11,13 +11,13 @@ import java.util.Optional;
 import jcl.compiler.real.environment.binding.EnvironmentParameterBinding;
 import jcl.symbols.SymbolStruct;
 
-public class InnerFunctionEnvironment extends LambdaEnvironment {
+public class InnerLambdaEnvironment extends LambdaEnvironment {
 
 	private static final long serialVersionUID = -5882720704455871085L;
 
 	private final List<EnvironmentParameterBinding> functionBindings = new ArrayList<>();
 
-	protected InnerFunctionEnvironment(final Environment parent) {
+	public InnerLambdaEnvironment(final Environment parent) {
 		super(parent);
 	}
 

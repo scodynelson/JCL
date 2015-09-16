@@ -10,8 +10,8 @@ import jcl.LispStruct;
 import jcl.arrays.StringStruct;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.Environments;
+import jcl.compiler.real.environment.InnerLambdaEnvironment;
 import jcl.compiler.real.environment.LambdaEnvironment;
-import jcl.compiler.real.environment.MacroletEnvironment;
 import jcl.compiler.real.environment.binding.EnvironmentParameterBinding;
 import jcl.compiler.real.sa.FormAnalyzer;
 import jcl.compiler.real.sa.analyzer.body.BodyProcessingResult;
@@ -19,7 +19,7 @@ import jcl.compiler.real.sa.analyzer.body.BodyWithDeclaresAnalyzer;
 import jcl.compiler.real.sa.analyzer.body.BodyWithDeclaresAndDocStringAnalyzer;
 import jcl.compiler.real.sa.analyzer.declare.DeclareExpander;
 import jcl.compiler.real.struct.specialoperator.CompilerFunctionStruct;
-import jcl.compiler.real.struct.specialoperator.MacroletStruct;
+import jcl.compiler.real.struct.specialoperator.InnerLambdaStruct;
 import jcl.compiler.real.struct.specialoperator.PrognStruct;
 import jcl.compiler.real.struct.specialoperator.declare.DeclareStruct;
 import jcl.compiler.real.struct.specialoperator.declare.SpecialDeclarationStruct;
@@ -40,7 +40,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class MacroletExpander extends MacroFunctionExpander<MacroletStruct> {
+public class MacroletExpander extends MacroFunctionExpander<InnerLambdaStruct> {
 
 	private static final long serialVersionUID = 920568167525914860L;
 
@@ -71,7 +71,7 @@ public class MacroletExpander extends MacroFunctionExpander<MacroletStruct> {
 	}
 
 	@Override
-	public MacroletStruct expand(final ListStruct form, final Environment environment) {
+	public InnerLambdaStruct expand(final ListStruct form, final Environment environment) {
 
 		final int formSize = form.size();
 		if (formSize < 2) {
@@ -86,15 +86,15 @@ public class MacroletExpander extends MacroFunctionExpander<MacroletStruct> {
 			throw new ProgramErrorException("MACROLET: Parameter list must be a list. Got: " + printedObject);
 		}
 
-		final MacroletEnvironment macroletEnvironment = new MacroletEnvironment(environment);
+		final InnerLambdaEnvironment macroletEnvironment = new InnerLambdaEnvironment(environment);
 
 		final Stack<SymbolStruct<?>> functionNameStack = macroletEnvironment.getFunctionNameStack();
 		List<SymbolStruct<?>> functionNames = null;
 
 		try {
-			final ListStruct innerFunctions = (ListStruct) second;
-			final List<LispStruct> innerFunctionsAsJavaList = innerFunctions.getAsJavaList();
-			functionNames = getFunctionNames(innerFunctionsAsJavaList);
+			final ListStruct innerLambdas = (ListStruct) second;
+			final List<LispStruct> innerLambdasAsJavaList = innerLambdas.getAsJavaList();
+			functionNames = getFunctionNames(innerLambdasAsJavaList);
 
 			// Add function names BEFORE analyzing the functions. This is one of the differences between Flet and Labels/Macrolet.
 			StackUtils.pushAll(functionNameStack, functionNames);
@@ -107,10 +107,10 @@ public class MacroletExpander extends MacroFunctionExpander<MacroletStruct> {
 			final ListStruct fullDeclaration = ListStruct.buildProperList(bodyProcessingResult.getDeclares());
 			final DeclareStruct declare = declareExpander.expand(fullDeclaration, macroletEnvironment);
 
-			final List<MacroletStruct.MacroletVar> macroletVars
-					= innerFunctionsAsJavaList.stream()
-					                          .map(e -> getMacroletVar(e, declare, macroletEnvironment))
-					                          .collect(Collectors.toList());
+			final List<InnerLambdaStruct.InnerLambdaVar> macroletVars
+					= innerLambdasAsJavaList.stream()
+					                        .map(e -> getMacroletVar(e, declare, macroletEnvironment))
+					                        .collect(Collectors.toList());
 
 			final List<SpecialDeclarationStruct> specialDeclarations = declare.getSpecialDeclarations();
 			specialDeclarations.forEach(specialDeclaration -> Environments.addDynamicVariableBinding(specialDeclaration, macroletEnvironment));
@@ -121,7 +121,7 @@ public class MacroletExpander extends MacroFunctionExpander<MacroletStruct> {
 					           .map(e -> formAnalyzer.analyze(e, macroletEnvironment))
 					           .collect(Collectors.toList());
 
-			return new MacroletStruct(macroletVars, new PrognStruct(analyzedBodyForms), macroletEnvironment);
+			return new InnerLambdaStruct(macroletVars, new PrognStruct(analyzedBodyForms), macroletEnvironment);
 		} finally {
 			if (functionNames != null) {
 				StackUtils.popX(functionNameStack, functionNames.size());
@@ -152,8 +152,8 @@ public class MacroletExpander extends MacroFunctionExpander<MacroletStruct> {
 		return functionNames;
 	}
 
-	private MacroletStruct.MacroletVar getMacroletVar(final LispStruct functionDefinition, final DeclareStruct declare,
-	                                                  final MacroletEnvironment macroletEnvironment) {
+	private InnerLambdaStruct.InnerLambdaVar getMacroletVar(final LispStruct functionDefinition, final DeclareStruct declare,
+	                                                        final InnerLambdaEnvironment macroletEnvironment) {
 
 		final ListStruct functionList = (ListStruct) functionDefinition;
 		final SymbolStruct<?> functionName = (SymbolStruct<?>) functionList.getFirst();
@@ -172,11 +172,11 @@ public class MacroletExpander extends MacroFunctionExpander<MacroletStruct> {
 			macroletEnvironment.addLexicalBinding(binding);
 		}
 
-		return new MacroletStruct.MacroletVar(functionName, functionInitForm, isSpecial);
+		return new InnerLambdaStruct.InnerLambdaVar(functionName, functionInitForm, isSpecial);
 	}
 
 	private CompilerFunctionStruct getFunctionParameterInitForm(final ListStruct functionListParameter,
-	                                                            final MacroletEnvironment macroletEnvironment) {
+	                                                            final InnerLambdaEnvironment macroletEnvironment) {
 
 		// TODO: This will be a MacroLambda, NOT a Lambda form!!!
 

@@ -51,21 +51,19 @@ abstract class ClosureCreationCodeGenerator<E extends Environment, V, T extends 
 				GenerationConstants.CLOSURE_GET_SYMBOL_BINDINGS_METHOD_NAME,
 				GenerationConstants.CLOSURE_GET_SYMBOL_BINDINGS_METHOD_DESC,
 				false);
-		final int newClosureBindingsStore = methodBuilder.getNextAvailableStore();
-		mv.visitVarInsn(Opcodes.ASTORE, newClosureBindingsStore);
+		final int closureSymbolBindingsStore = methodBuilder.getNextAvailableStore();
+		mv.visitVarInsn(Opcodes.ASTORE, closureSymbolBindingsStore);
 
 		final List<V> vars = input.getVars();
 		final Set<Integer> lexicalSymbolStoresToUnbind = new HashSet<>();
 		final Set<Integer> dynamicSymbolStoresToUnbind = new HashSet<>();
-		generateBindings(vars, generatorState, methodBuilder, closureArgStore, newClosureBindingsStore, lexicalSymbolStoresToUnbind, dynamicSymbolStoresToUnbind);
+		generateBindings(vars, generatorState, methodBuilder, closureArgStore, closureSymbolBindingsStore, lexicalSymbolStoresToUnbind, dynamicSymbolStoresToUnbind);
 
 		final Label tryBlockStart = new Label();
 		final Label tryBlockEnd = new Label();
 		final Label catchBlockStart = new Label();
 		final Label catchBlockEnd = new Label();
-		final Label finallyBlockStart = new Label();
 		mv.visitTryCatchBlock(tryBlockStart, tryBlockEnd, catchBlockStart, null);
-		mv.visitTryCatchBlock(catchBlockStart, finallyBlockStart, catchBlockStart, null);
 
 		mv.visitLabel(tryBlockStart);
 
@@ -82,45 +80,14 @@ abstract class ClosureCreationCodeGenerator<E extends Environment, V, T extends 
 		mv.visitVarInsn(Opcodes.ASTORE, resultStore);
 
 		mv.visitLabel(tryBlockEnd);
-		for (final Integer symbolStore : dynamicSymbolStoresToUnbind) {
-			mv.visitVarInsn(Opcodes.ALOAD, symbolStore);
-			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
-					GenerationConstants.SYMBOL_STRUCT_NAME,
-					GenerationConstants.SYMBOL_STRUCT_UNBIND_DYNAMIC_VALUE_METHOD_NAME,
-					GenerationConstants.SYMBOL_STRUCT_UNBIND_DYNAMIC_VALUE_METHOD_DESC,
-					false);
-		}
-		for (final Integer symbolStore : lexicalSymbolStoresToUnbind) {
-			mv.visitVarInsn(Opcodes.ALOAD, symbolStore);
-			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
-					GenerationConstants.SYMBOL_STRUCT_NAME,
-					GenerationConstants.SYMBOL_STRUCT_UNBIND_LEXICAL_VALUE_METHOD_NAME,
-					GenerationConstants.SYMBOL_STRUCT_UNBIND_LEXICAL_VALUE_METHOD_DESC,
-					false);
-		}
+		generateFinallyCode(mv, lexicalSymbolStoresToUnbind, dynamicSymbolStoresToUnbind);
 		mv.visitJumpInsn(Opcodes.GOTO, catchBlockEnd);
 
 		mv.visitLabel(catchBlockStart);
 		final int exceptionStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, exceptionStore);
 
-		mv.visitLabel(finallyBlockStart);
-		for (final Integer symbolStore : dynamicSymbolStoresToUnbind) {
-			mv.visitVarInsn(Opcodes.ALOAD, symbolStore);
-			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
-					GenerationConstants.SYMBOL_STRUCT_NAME,
-					GenerationConstants.SYMBOL_STRUCT_UNBIND_DYNAMIC_VALUE_METHOD_NAME,
-					GenerationConstants.SYMBOL_STRUCT_UNBIND_DYNAMIC_VALUE_METHOD_DESC,
-					false);
-		}
-		for (final Integer symbolStore : lexicalSymbolStoresToUnbind) {
-			mv.visitVarInsn(Opcodes.ALOAD, symbolStore);
-			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
-					GenerationConstants.SYMBOL_STRUCT_NAME,
-					GenerationConstants.SYMBOL_STRUCT_UNBIND_LEXICAL_VALUE_METHOD_NAME,
-					GenerationConstants.SYMBOL_STRUCT_UNBIND_LEXICAL_VALUE_METHOD_DESC,
-					false);
-		}
+		generateFinallyCode(mv, lexicalSymbolStoresToUnbind, dynamicSymbolStoresToUnbind);
 
 		mv.visitVarInsn(Opcodes.ALOAD, exceptionStore);
 		mv.visitInsn(Opcodes.ATHROW);
@@ -133,6 +100,26 @@ abstract class ClosureCreationCodeGenerator<E extends Environment, V, T extends 
 
 	protected abstract void generateBindings(final List<V> vars, final GeneratorState generatorState,
 	                                         final JavaMethodBuilder methodBuilder, final int closureArgStore,
-	                                         final int newClosureBindingsStore, final Set<Integer> lexicalSymbolStoresToUnbind,
+	                                         final int closureSymbolBindingsStore, final Set<Integer> lexicalSymbolStoresToUnbind,
 	                                         final Set<Integer> dynamicSymbolStoresToUnbind);
+
+	private static void generateFinallyCode(final MethodVisitor mv, final Set<Integer> lexicalSymbolStoresToUnbind,
+	                                        final Set<Integer> dynamicSymbolStoresToUnbind) {
+		for (final Integer symbolStore : dynamicSymbolStoresToUnbind) {
+			mv.visitVarInsn(Opcodes.ALOAD, symbolStore);
+			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
+					GenerationConstants.SYMBOL_STRUCT_NAME,
+					GenerationConstants.SYMBOL_STRUCT_UNBIND_DYNAMIC_VALUE_METHOD_NAME,
+					GenerationConstants.SYMBOL_STRUCT_UNBIND_DYNAMIC_VALUE_METHOD_DESC,
+					false);
+		}
+		for (final Integer symbolStore : lexicalSymbolStoresToUnbind) {
+			mv.visitVarInsn(Opcodes.ALOAD, symbolStore);
+			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
+					GenerationConstants.SYMBOL_STRUCT_NAME,
+					GenerationConstants.SYMBOL_STRUCT_UNBIND_LEXICAL_VALUE_METHOD_NAME,
+					GenerationConstants.SYMBOL_STRUCT_UNBIND_LEXICAL_VALUE_METHOD_DESC,
+					false);
+		}
+	}
 }

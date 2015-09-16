@@ -100,7 +100,7 @@ final class LetStarCodeGenerator extends ClosureCreationCodeGenerator<LetStarEnv
 	 * 		{@link JavaMethodBuilder} used for building a Java method body
 	 * @param closureArgStore
 	 * 		the storage location index on the stack where the {@link Closure} argument exists
-	 * @param newClosureBindingsStore
+	 * @param closureSymbolBindingsStore
 	 * 		the storage location index on the stack where the {@link Closure#symbolBindings} {@link Map} exists
 	 * @param lexicalSymbolStoresToUnbind
 	 * 		the {@link Set} of lexical {@link SymbolStruct} binding locations to unbind after the 'let' body executes
@@ -110,7 +110,7 @@ final class LetStarCodeGenerator extends ClosureCreationCodeGenerator<LetStarEnv
 	@Override
 	protected void generateBindings(final List<LetStarStruct.LetStarVar> vars, final GeneratorState generatorState,
 	                                final JavaMethodBuilder methodBuilder, final int closureArgStore,
-	                                final int newClosureBindingsStore, final Set<Integer> lexicalSymbolStoresToUnbind,
+	                                final int closureSymbolBindingsStore, final Set<Integer> lexicalSymbolStoresToUnbind,
 	                                final Set<Integer> dynamicSymbolStoresToUnbind) {
 
 		final MethodVisitor mv = methodBuilder.getMethodVisitor();
@@ -151,7 +151,7 @@ final class LetStarCodeGenerator extends ClosureCreationCodeGenerator<LetStarEnv
 
 				lexicalSymbolStoresToUnbind.add(symbolStore);
 
-				mv.visitVarInsn(Opcodes.ALOAD, newClosureBindingsStore);
+				mv.visitVarInsn(Opcodes.ALOAD, closureSymbolBindingsStore);
 				mv.visitVarInsn(Opcodes.ALOAD, symbolStore);
 				mv.visitVarInsn(Opcodes.ALOAD, initFormStore);
 				mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,

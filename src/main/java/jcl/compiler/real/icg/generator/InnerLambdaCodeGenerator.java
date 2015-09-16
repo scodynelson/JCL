@@ -44,23 +44,13 @@ class InnerLambdaCodeGenerator extends SpecialOperatorCodeGenerator<InnerLambdaS
 
 		final MethodVisitor mv = methodBuilder.getMethodVisitor();
 
-		final List<InnerLambdaStruct.InnerLambdaVar> vars = input.getVars();
-		final PrognStruct forms = input.getForms();
-		final InnerLambdaEnvironment innerLambdaEnvironment = input.getLexicalEnvironment();
-
-		final Label tryBlockStart = new Label();
-		final Label tryBlockEnd = new Label();
-		final Label catchBlockStart = new Label();
-		final Label catchBlockEnd = new Label();
-		mv.visitTryCatchBlock(tryBlockStart, tryBlockEnd, catchBlockStart, null);
-
-		final int closureFunctionBindingsStore = methodBuilder.getNextAvailableStore();
-
 		mv.visitInsn(Opcodes.ACONST_NULL);
+		final int closureFunctionBindingsStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, closureFunctionBindingsStore);
 
-		mv.visitVarInsn(Opcodes.ALOAD, closureArgStore);
 		final Label closureNullCheckIfEnd = new Label();
+
+		mv.visitVarInsn(Opcodes.ALOAD, closureArgStore);
 		mv.visitJumpInsn(Opcodes.IFNULL, closureNullCheckIfEnd);
 
 		mv.visitVarInsn(Opcodes.ALOAD, closureArgStore);
@@ -77,14 +67,15 @@ class InnerLambdaCodeGenerator extends SpecialOperatorCodeGenerator<InnerLambdaS
 
 		final Map<Integer, Integer> functionStoresToBind = new HashMap<>();
 
+		final List<InnerLambdaStruct.InnerLambdaVar> vars = input.getVars();
 		for (final InnerLambdaStruct.InnerLambdaVar var : vars) {
 			final SymbolStruct<?> functionSymbolVar = var.getVar();
-			// NOTE: we have to get a new 'functionSymbolStore' for each var so we can properly unbind the expansions later
 			final int functionSymbolStore = methodBuilder.getNextAvailableStore();
 			CodeGenerators.generateSymbol(functionSymbolVar, methodBuilder, packageStore, functionSymbolStore);
 
 			final CompilerFunctionStruct initForm = var.getInitForm();
 			codeGenerator.generate(initForm, generatorState);
+
 			final int initFormStore = methodBuilder.getNextAvailableStore();
 			mv.visitVarInsn(Opcodes.ASTORE, initFormStore);
 
@@ -103,9 +94,10 @@ class InnerLambdaCodeGenerator extends SpecialOperatorCodeGenerator<InnerLambdaS
 					GenerationConstants.SYMBOL_STRUCT_BIND_FUNCTION_METHOD_DESC,
 					false);
 
+			final Label closureFunctionBindingsNullCheckIfEnd = new Label();
+
 			mv.visitVarInsn(Opcodes.ALOAD, closureFunctionBindingsStore);
-			final Label closureBindingsNullCheckIfEnd = new Label();
-			mv.visitJumpInsn(Opcodes.IFNULL, closureBindingsNullCheckIfEnd);
+			mv.visitJumpInsn(Opcodes.IFNULL, closureFunctionBindingsNullCheckIfEnd);
 
 			mv.visitVarInsn(Opcodes.ALOAD, closureFunctionBindingsStore);
 			mv.visitVarInsn(Opcodes.ALOAD, functionSymbolStore);
@@ -117,14 +109,23 @@ class InnerLambdaCodeGenerator extends SpecialOperatorCodeGenerator<InnerLambdaS
 					true);
 			mv.visitInsn(Opcodes.POP);
 
-			mv.visitLabel(closureBindingsNullCheckIfEnd);
+			mv.visitLabel(closureFunctionBindingsNullCheckIfEnd);
 		}
+
+		final Label tryBlockStart = new Label();
+		final Label tryBlockEnd = new Label();
+		final Label catchBlockStart = new Label();
+		final Label catchBlockEnd = new Label();
+		mv.visitTryCatchBlock(tryBlockStart, tryBlockEnd, catchBlockStart, null);
 
 		mv.visitLabel(tryBlockStart);
 
+		final InnerLambdaEnvironment environment = input.getLexicalEnvironment();
+		final PrognStruct forms = input.getForms();
+
 		final Stack<Environment> bindingStack = generatorState.getBindingStack();
 
-		bindingStack.push(innerLambdaEnvironment);
+		bindingStack.push(environment);
 		prognCodeGenerator.generate(forms, generatorState);
 		bindingStack.pop();
 

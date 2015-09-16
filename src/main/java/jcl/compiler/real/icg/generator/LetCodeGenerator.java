@@ -50,14 +50,14 @@ final class LetCodeGenerator extends ClosureCreationCodeGenerator<LetEnvironment
 	 * <li>Generating each of the {@link LetStruct.LetVar#var} and {@link LetStruct.LetVar#initForm} values</li>
 	 * <li>Collect all generated symbol and form stack locations for lazily binding the values to the {@link
 	 * SymbolStruct}s</li>
-	 * <li>Symbols bindings where {@link LetStruct.LetVar#isSpecial} is true are binded via {@link
+	 * <li>Symbol bindings where {@link LetStruct.LetVar#isSpecial} is true are binded via {@link
 	 * SymbolStruct#bindDynamicValue(LispStruct)}</li>
-	 * <li>Symbols bindings where {@link LetStruct.LetVar#isSpecial} is false are binded via {@link
+	 * <li>Symbol bindings where {@link LetStruct.LetVar#isSpecial} is false are binded via {@link
 	 * SymbolStruct#bindLexicalValue(LispStruct)}</li>
-	 * <li>Symbols bindings where {@link LetStruct.LetVar#isSpecial} is false are also added to the {@link
+	 * <li>Symbol bindings where {@link LetStruct.LetVar#isSpecial} is false are also added to the {@link
 	 * Closure#symbolBindings} map for the new {@link Closure} created with the 'let'</li>
 	 * </ol>
-	 * As an example, it will transform {@code (throw 'foo 1)} into the following Java code:
+	 * As an example, it will transform {@code (let ((x 1)) x)} into the following Java code:
 	 * <pre>
 	 * {@code
 	 * private LispStruct let_1(Closure var1) {

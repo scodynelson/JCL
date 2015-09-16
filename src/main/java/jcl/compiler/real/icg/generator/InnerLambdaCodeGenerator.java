@@ -18,6 +18,8 @@ import jcl.compiler.real.icg.JavaMethodBuilder;
 import jcl.compiler.real.struct.specialoperator.CompilerFunctionStruct;
 import jcl.compiler.real.struct.specialoperator.InnerLambdaStruct;
 import jcl.compiler.real.struct.specialoperator.PrognStruct;
+import jcl.functions.Closure;
+import jcl.functions.FunctionStruct;
 import jcl.symbols.SymbolStruct;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
@@ -25,19 +27,96 @@ import org.objectweb.asm.Opcodes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+/**
+ * Class to perform 'flet' and 'labels' special operator code generation. Both special operators generate the same
+ * code, but will act differently due to differences in the structure of the generated lambda forms as altered in the
+ * Semantic Analyzer.
+ */
 @Component
-class InnerLambdaCodeGenerator extends SpecialOperatorCodeGenerator<InnerLambdaStruct> {
+final class InnerLambdaCodeGenerator extends SpecialOperatorCodeGenerator<InnerLambdaStruct> {
 
+	/**
+	 * {@link IntermediateCodeGenerator} used for generating the {@link InnerLambdaStruct.InnerLambdaVar#initForm}
+	 * values.
+	 */
 	@Autowired
 	private IntermediateCodeGenerator codeGenerator;
 
+	/**
+	 * {@link PrognCodeGenerator} used for generating the {@link InnerLambdaStruct#forms}.
+	 */
 	@Autowired
 	private PrognCodeGenerator prognCodeGenerator;
 
+	/**
+	 * Private constructor which passes 'innerLambda' as the prefix value to be set in it's {@link #methodNamePrefix}
+	 * value.
+	 */
 	private InnerLambdaCodeGenerator() {
 		super("innerLambda");
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * Generation method for {@link InnerLambdaStruct} objects, by performing the following operations:
+	 * <ol>
+	 * <li>Retrieving the {@link List} of function bindings from the {@link Closure} parameter if the parameter is not
+	 * null</li>
+	 * <li>Generating each of the {@link InnerLambdaStruct.InnerLambdaVar#var} and {@link
+	 * InnerLambdaStruct.InnerLambdaVar#initForm} values</li>
+	 * <li>Collect all generated function and form stack locations for lazily binding the functions to the {@link
+	 * SymbolStruct}s</li>
+	 * <li>Binding functions via {@link SymbolStruct#bindFunction(FunctionStruct)} and adding functions to the {@link
+	 * Closure#functionBindings} map for the current {@link Closure}, if one exists</li>
+	 * <li>Temporarily pushing the {@link InnerLambdaStruct#lexicalEnvironment} onto the {@link
+	 * GeneratorState#bindingStack} while generating the code for the {@link InnerLambdaStruct#forms} values</li>
+	 * <li>Generating the code to unbind the functions from {@link SymbolStruct}s as part of the error free
+	 * 'finally'</li>
+	 * <li>Generating the code to unbind the functions from {@link SymbolStruct}s as part of the error caught
+	 * 'finally', ensuring the error caught is re-thrown</li>
+	 * </ol>
+	 * As an example, it will transform {@code (flet ((foo () 1)) (foo))} into the following Java code:
+	 * <pre>
+	 * {@code
+	 * private LispStruct innerLambda_1(Closure var1) {
+	 *      Map var2 = null;
+	 *      if(var1 != null) {
+	 *          var2 = var1.getFunctionBindings();
+	 *      }
+	 *
+	 *      PackageStruct var3 = PackageStruct.findPackage("COMMON-LISP-USER");
+	 *      SymbolStruct var4 = var3.findSymbol("FOO").getSymbol();
+	 *      FLET_FOO_Lambda_123456789 var5 = new FLET_FOO_Lambda_123456789(var1);
+	 *      var4.bindFunction(var5);
+	 *      if(var2 != null) {
+	 *          var2.put(var4, var5);
+	 *      }
+	 *
+	 *      LispStruct var11;
+	 *      try {
+	 *          PackageStruct var6 = PackageStruct.findPackage("COMMON-LISP-USER");
+	 *          SymbolStruct var7 = var6.findSymbol("FOO").getSymbol();
+	 *          FunctionStruct var8 = var7.getFunction();
+	 *          LispStruct[] var9 = new LispStruct[0];
+	 *          var11 = var8.apply(var9);
+	 *      } finally {
+	 *          var4.unbindFunction();
+	 *      }
+	 *
+	 *      return var11;
+	 * }
+	 * }
+	 * </pre>
+	 *
+	 * @param input
+	 * 		the {@link InnerLambdaStruct} input value to generate code for
+	 * @param generatorState
+	 * 		stateful object used to hold the current state of the code generation process
+	 * @param methodBuilder
+	 * 		{@link JavaMethodBuilder} used for building a Java method body
+	 * @param closureArgStore
+	 * 		the storage location index on the stack where the {@link Closure} argument exists
+	 */
 	@Override
 	protected void generateSpecialOperator(final InnerLambdaStruct input, final GeneratorState generatorState,
 	                                       final JavaMethodBuilder methodBuilder, final int closureArgStore) {
@@ -132,17 +211,17 @@ class InnerLambdaCodeGenerator extends SpecialOperatorCodeGenerator<InnerLambdaS
 		final int resultStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, resultStore);
 
-		final Set<Integer> varSymbolStores = functionStoresToBind.keySet();
+		final Set<Integer> functionSymbolStores = functionStoresToBind.keySet();
 
 		mv.visitLabel(tryBlockEnd);
-		generateFinallyCode(mv, varSymbolStores);
+		generateFinallyCode(mv, functionSymbolStores);
 		mv.visitJumpInsn(Opcodes.GOTO, catchBlockEnd);
 
 		mv.visitLabel(catchBlockStart);
 		final int exceptionStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, exceptionStore);
 
-		generateFinallyCode(mv, varSymbolStores);
+		generateFinallyCode(mv, functionSymbolStores);
 
 		mv.visitVarInsn(Opcodes.ALOAD, exceptionStore);
 		mv.visitInsn(Opcodes.ATHROW);
@@ -153,9 +232,19 @@ class InnerLambdaCodeGenerator extends SpecialOperatorCodeGenerator<InnerLambdaS
 		mv.visitInsn(Opcodes.ARETURN);
 	}
 
-	private static void generateFinallyCode(final MethodVisitor mv, final Set<Integer> varSymbolStores) {
-		for (final Integer varSymbolStore : varSymbolStores) {
-			mv.visitVarInsn(Opcodes.ALOAD, varSymbolStore);
+	/**
+	 * Private method for generating the 'finally' block code for unbinding the function values from each {@link
+	 * SymbolStruct} at the storage location of each of the {@code functionSymbolStores}.
+	 *
+	 * @param mv
+	 * 		the current {@link MethodVisitor} to generate the code inside
+	 * @param functionSymbolStores
+	 * 		the {@link Set} of storage location indexes on the stack where the {@link SymbolStruct}s to unbind function
+	 * 		values from exist
+	 */
+	private static void generateFinallyCode(final MethodVisitor mv, final Set<Integer> functionSymbolStores) {
+		for (final Integer functionSymbolStore : functionSymbolStores) {
+			mv.visitVarInsn(Opcodes.ALOAD, functionSymbolStore);
 			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
 					GenerationConstants.SYMBOL_STRUCT_NAME,
 					GenerationConstants.SYMBOL_STRUCT_UNBIND_FUNCTION_METHOD_NAME,

@@ -11,6 +11,7 @@ import jcl.functions.FunctionStruct;
 import jcl.functions.expanders.MacroFunctionExpander;
 import jcl.lists.ListStruct;
 
+@SuppressWarnings("all")
 public class TestGroundMacroFunctionExpanderGenerator extends MacroFunctionExpander<LispStruct> {
 
 	private static final long serialVersionUID = -1939696402314939143L;

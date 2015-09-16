@@ -10,6 +10,7 @@ import jcl.types.TypeFactory;
 import jcl.types.typespecifiers.AtomicTypeSpecifier;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+@SuppressWarnings("all")
 public interface FooStructureType extends StructureObjectType {
 
 	FooStructureType INSTANCE = new Factory.FooStructureTypeImpl();

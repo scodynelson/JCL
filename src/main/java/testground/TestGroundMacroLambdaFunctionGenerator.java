@@ -26,6 +26,7 @@ import jcl.lists.NullStruct;
 import jcl.packages.PackageStruct;
 import jcl.symbols.SymbolStruct;
 
+@SuppressWarnings("all")
 public class TestGroundMacroLambdaFunctionGenerator extends MacroFunctionStruct {
 
 	private static final long serialVersionUID = -1939696402314939143L;

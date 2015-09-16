@@ -9,6 +9,7 @@ import jcl.types.TypeFactory;
 import jcl.types.typespecifiers.AtomicTypeSpecifier;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+@SuppressWarnings("all")
 public interface BarStructureType extends FooStructureType {
 
 	BarStructureType INSTANCE = new Factory.BarStructureTypeImpl();

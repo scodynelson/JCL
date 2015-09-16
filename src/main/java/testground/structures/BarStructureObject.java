@@ -7,6 +7,7 @@ package testground.structures;
 import jcl.structures.StructureObjectStruct;
 import jcl.symbols.SymbolStruct;
 
+@SuppressWarnings("all")
 public class BarStructureObject extends StructureObjectStruct {
 
 	private static final long serialVersionUID = -8377552736219667545L;

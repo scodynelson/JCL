@@ -26,6 +26,7 @@ import jcl.lists.NullStruct;
 import jcl.packages.PackageStruct;
 import jcl.symbols.SymbolStruct;
 
+@SuppressWarnings("all")
 public class TestLambdaGenerator extends FunctionStruct {
 
 	private static final long serialVersionUID = 5616713628691655052L;

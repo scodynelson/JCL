@@ -746,6 +746,7 @@
       <option name="myAllowedSuppressions">
         <list>
           <option value="checkstyle:strictduplicatecodecheck" />
+          <option value="ChainOfInstanceofChecks" />
         </list>
       </option>
     </inspection_tool>

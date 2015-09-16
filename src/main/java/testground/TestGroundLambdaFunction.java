@@ -8,6 +8,7 @@ import jcl.LispStruct;
 import jcl.functions.Closure;
 import jcl.functions.FunctionStruct;
 
+@SuppressWarnings("all")
 public class TestGroundLambdaFunction extends FunctionStruct {
 
 	private static final long serialVersionUID = -1939696402314939143L;

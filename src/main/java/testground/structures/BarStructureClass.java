@@ -11,6 +11,7 @@ import jcl.LispType;
 import jcl.structures.StructureObjectStruct;
 import jcl.symbols.SymbolStruct;
 
+@SuppressWarnings("all")
 public class BarStructureClass extends FooStructureClass {
 
 	public static final BarStructureClass INSTANCE

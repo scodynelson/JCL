@@ -40,6 +40,7 @@ import jcl.symbols.SymbolStruct;
 import jcl.symbols.TStruct;
 import org.objectweb.asm.Label;
 
+@SuppressWarnings("all")
 public class TestGround {
 
 	private static final LispStruct LTV_1 = new CharacterStruct(1997);

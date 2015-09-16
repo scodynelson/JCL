@@ -11,6 +11,7 @@ import jcl.arrays.ArrayStruct;
 import jcl.compiler.real.icg.CodeGenerator;
 import jcl.compiler.real.icg.GeneratorState;
 import jcl.compiler.real.icg.JavaMethodBuilder;
+import jcl.compiler.real.struct.specialoperator.QuoteStruct;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
@@ -104,7 +105,8 @@ class ArrayCodeGenerator implements CodeGenerator<ArrayStruct<LispStruct>> {
 
 		final List<LispStruct> contents = input.getContents();
 		for (final LispStruct content : contents) {
-			quoteCodeGenerator.generateQuotedObject(content, generatorState);
+			final QuoteStruct quotedContent = new QuoteStruct(content);
+			quoteCodeGenerator.generate(quotedContent, generatorState);
 			mv.visitVarInsn(Opcodes.ASTORE, contentStore);
 
 			mv.visitVarInsn(Opcodes.ALOAD, contentsStore);

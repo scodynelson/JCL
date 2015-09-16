@@ -12,6 +12,7 @@ import jcl.structures.StructureClassStruct;
 import jcl.structures.StructureObjectStruct;
 import jcl.symbols.SymbolStruct;
 
+@SuppressWarnings("all")
 public class FooStructureClass extends StructureClassStruct {
 
 	public static final FooStructureClass INSTANCE

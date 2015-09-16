@@ -193,6 +193,9 @@ public class FletExpander extends MacroFunctionExpander<FletStruct> {
 
 		// NOTE: Make Dotted list here so the 'contents' of the body get added to the block
 		final ListStruct blockBody = ListStruct.buildProperList(bodyForms);
+		// TODO: Need to unbind, then rebind before and after execution of the body forms....
+		// TODO: Need some system functions for unbinding, storing, and rebinding function
+		// TODO: USE UNWIND-PROTECT to guarantee that the functions get re-bound correctly even if the code errors out!!!
 		final ListStruct innerBlockListStruct = ListStruct.buildDottedList(SpecialOperatorStruct.BLOCK, functionName, blockBody);
 
 		// NOTE: This will be a safe cast since we verify it is a symbol earlier

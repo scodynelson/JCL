@@ -750,6 +750,7 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 					GenerationConstants.SYMBOL_STRUCT_UNBIND_FUNCTION_METHOD_NAME,
 					GenerationConstants.SYMBOL_STRUCT_UNBIND_FUNCTION_METHOD_DESC,
 					false);
+			mv.visitInsn(Opcodes.POP);
 			mv.visitJumpInsn(Opcodes.GOTO, normalClosureFunctionUnbindingIteratorLoopStart);
 
 			mv.visitLabel(normalClosureFunctionUnbindingIteratorLoopEnd);
@@ -953,6 +954,7 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 					GenerationConstants.SYMBOL_STRUCT_UNBIND_FUNCTION_METHOD_NAME,
 					GenerationConstants.SYMBOL_STRUCT_UNBIND_FUNCTION_METHOD_DESC,
 					false);
+			mv.visitInsn(Opcodes.POP);
 			mv.visitJumpInsn(Opcodes.GOTO, exceptionClosureFunctionUnbindingIteratorLoopStart);
 
 			mv.visitLabel(exceptionClosureFunctionUnbindingIteratorLoopEnd);

@@ -77,8 +77,8 @@ public class LoadTimeValueExpander extends MacroFunctionExpander<LoadTimeValueSt
 			final LambdaEnvironment enclosingLambda = Environments.getEnclosingLambda(environment);
 
 			String fieldName = UUID.randomUUID().toString();
-			while (Character.isDigit(fieldName.charAt(0))) {
-				// Ensure the fieldId starts with a character, not a number
+			while (Character.isJavaIdentifierStart(fieldName.charAt(0))) {
+				// Ensure the fieldId starts with a valid Java identifier character
 				fieldName = UUID.randomUUID().toString();
 			}
 

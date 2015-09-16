@@ -26,10 +26,13 @@ import jcl.compiler.real.struct.specialoperator.declare.SpecialDeclarationStruct
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.functions.expanders.MacroFunctionExpander;
 import jcl.lists.ListStruct;
+import jcl.packages.GlobalPackageStruct;
 import jcl.printer.Printer;
 import jcl.symbols.DeclarationStruct;
 import jcl.symbols.SpecialOperatorStruct;
 import jcl.symbols.SymbolStruct;
+import jcl.symbols.functions.BindSymbolFunctionFunction;
+import jcl.symbols.functions.UnbindSymbolFunctionFunction;
 import jcl.system.StackUtils;
 import jcl.types.TType;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -89,13 +92,12 @@ public class FletExpander extends MacroFunctionExpander<FletStruct> {
 		final FletEnvironment fletEnvironment = new FletEnvironment(environment);
 
 		final Stack<SymbolStruct<?>> functionNameStack = environment.getFunctionNameStack();
-		List<SymbolStruct<?>> functionNames = null;
+
+		final ListStruct innerFunctions = (ListStruct) second;
+		final List<LispStruct> innerFunctionsAsJavaList = innerFunctions.getAsJavaList();
+		final List<SymbolStruct<?>> functionNames = getFunctionNames(innerFunctionsAsJavaList);
 
 		try {
-			final ListStruct innerFunctions = (ListStruct) second;
-			final List<LispStruct> innerFunctionsAsJavaList = innerFunctions.getAsJavaList();
-			functionNames = getFunctionNames(innerFunctionsAsJavaList);
-
 			final ListStruct formRestRest = formRest.getRest();
 			final List<LispStruct> forms = formRestRest.getAsJavaList();
 
@@ -106,7 +108,7 @@ public class FletExpander extends MacroFunctionExpander<FletStruct> {
 
 			final List<FletStruct.FletVar> fletVars
 					= innerFunctionsAsJavaList.stream()
-					                          .map(e -> getFletVar(e, declare, fletEnvironment))
+					                          .map(e -> getFletVar(e, declare, fletEnvironment, functionNames))
 					                          .collect(Collectors.toList());
 
 			final List<SpecialDeclarationStruct> specialDeclarations = declare.getSpecialDeclarations();
@@ -153,11 +155,11 @@ public class FletExpander extends MacroFunctionExpander<FletStruct> {
 	}
 
 	private FletStruct.FletVar getFletVar(final LispStruct functionDefinition, final DeclareStruct declare,
-	                                      final FletEnvironment fletEnvironment) {
+	                                      final FletEnvironment fletEnvironment, final List<SymbolStruct<?>> functionNames) {
 
 		final ListStruct functionList = (ListStruct) functionDefinition;
 		final SymbolStruct<?> functionName = (SymbolStruct<?>) functionList.getFirst();
-		final CompilerFunctionStruct functionInitForm = getFunctionParameterInitForm(functionList, fletEnvironment);
+		final CompilerFunctionStruct functionInitForm = getFunctionParameterInitForm(functionList, fletEnvironment, functionNames);
 
 		final LambdaEnvironment currentLambda = Environments.getEnclosingLambda(fletEnvironment);
 		final int nextBindingsPosition = currentLambda.getNextParameterNumber();
@@ -171,7 +173,8 @@ public class FletExpander extends MacroFunctionExpander<FletStruct> {
 		return new FletStruct.FletVar(functionName, functionInitForm, isSpecial);
 	}
 
-	private CompilerFunctionStruct getFunctionParameterInitForm(final ListStruct functionListParameter, final FletEnvironment fletEnvironment) {
+	private CompilerFunctionStruct getFunctionParameterInitForm(final ListStruct functionListParameter, final FletEnvironment fletEnvironment,
+	                                                            final List<SymbolStruct<?>> functionNames) {
 
 		final int functionListParameterSize = functionListParameter.size();
 		if (functionListParameterSize < 2) {
@@ -184,6 +187,9 @@ public class FletExpander extends MacroFunctionExpander<FletStruct> {
 		final LispStruct lambdaList = functionListParameterRest.getFirst();
 		final ListStruct body = functionListParameterRest.getRest();
 
+		// NOTE: This will be a safe cast since we verify it is a symbol earlier
+		final SymbolStruct<?> functionNameSymbol = (SymbolStruct) functionName;
+
 		final List<LispStruct> forms = body.getAsJavaList();
 		final BodyProcessingResult bodyProcessingResult = bodyWithDeclaresAndDocStringAnalyzer.analyze(forms);
 
@@ -193,13 +199,33 @@ public class FletExpander extends MacroFunctionExpander<FletStruct> {
 
 		// NOTE: Make Dotted list here so the 'contents' of the body get added to the block
 		final ListStruct blockBody = ListStruct.buildProperList(bodyForms);
-		// TODO: Need to unbind, then rebind before and after execution of the body forms....
-		// TODO: Need some system functions for unbinding, storing, and rebinding function
-		// TODO: USE UNWIND-PROTECT to guarantee that the functions get re-bound correctly even if the code errors out!!!
 		final ListStruct innerBlockListStruct = ListStruct.buildDottedList(SpecialOperatorStruct.BLOCK, functionName, blockBody);
 
-		// NOTE: This will be a safe cast since we verify it is a symbol earlier
-		final SymbolStruct<?> functionNameSymbol = (SymbolStruct) functionName;
+		final List<LispStruct> letFunctionBindVars = new ArrayList<>();
+		final List<LispStruct> rebindFunctions = new ArrayList<>();
+		functionNames.stream()
+		             .filter(name -> !name.equals(functionNameSymbol))
+		             .forEach(name -> {
+			             final String tempFunctionBindName = "temp_" + name.getName() + "_bind_" + System.nanoTime();
+			             final SymbolStruct<?> tempFunctionBindVar = GlobalPackageStruct.COMMON_LISP_USER.intern(tempFunctionBindName).getSymbol();
+
+			             final ListStruct quoteName = ListStruct.buildProperList(SpecialOperatorStruct.QUOTE, name);
+
+			             // Unbinding of the function
+			             final ListStruct unbindFunction = ListStruct.buildProperList(UnbindSymbolFunctionFunction.UNBIND_SYMBOL_FUNCTION, quoteName);
+			             final ListStruct letFunctionBindVar = ListStruct.buildProperList(tempFunctionBindVar, unbindFunction);
+			             letFunctionBindVars.add(letFunctionBindVar);
+
+			             // Rebinding of the function
+			             final ListStruct rebindFunction = ListStruct.buildProperList(BindSymbolFunctionFunction.BIND_SYMBOL_FUNCTION, quoteName, tempFunctionBindVar);
+			             rebindFunctions.add(rebindFunction);
+		             });
+		final ListStruct letFunctionBindVarList = ListStruct.buildProperList(letFunctionBindVars);
+		final ListStruct rebindFunctionList = ListStruct.buildProperList(rebindFunctions);
+
+		// NOTE: Make Dotted list here so the 'rebind functions' are added each as a separate cleanup-form
+		final ListStruct unwindProtect = ListStruct.buildDottedList(SpecialOperatorStruct.UNWIND_PROTECT, innerBlockListStruct, rebindFunctionList);
+		final ListStruct letBinding = ListStruct.buildProperList(SpecialOperatorStruct.LET, letFunctionBindVarList, unwindProtect);
 
 		final String functionNameString = functionNameSymbol.getName();
 		final String properFunctionNameString = functionNameString.codePoints()
@@ -214,7 +240,7 @@ public class FletExpander extends MacroFunctionExpander<FletStruct> {
 
 		final ListStruct fullDeclaration = ListStruct.buildProperList(declares);
 
-		final ListStruct innerLambdaListStruct = ListStruct.buildProperList(SpecialOperatorStruct.LAMBDA, lambdaList, fullDeclaration, docString, innerBlockListStruct);
+		final ListStruct innerLambdaListStruct = ListStruct.buildProperList(SpecialOperatorStruct.LAMBDA, lambdaList, fullDeclaration, docString, letBinding);
 		final ListStruct innerFunctionListStruct = ListStruct.buildProperList(SpecialOperatorStruct.FUNCTION, innerLambdaListStruct);
 
 		// Evaluate in the 'outer' environment. This is one of the differences between Flet and Labels/Macrolet.

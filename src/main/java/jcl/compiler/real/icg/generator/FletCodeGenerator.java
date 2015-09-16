@@ -156,6 +156,7 @@ class FletCodeGenerator extends SpecialOperatorCodeGenerator<FletStruct> {
 					GenerationConstants.SYMBOL_STRUCT_UNBIND_FUNCTION_METHOD_NAME,
 					GenerationConstants.SYMBOL_STRUCT_UNBIND_FUNCTION_METHOD_DESC,
 					false);
+			mv.visitInsn(Opcodes.POP);
 		}
 	}
 }

@@ -375,8 +375,8 @@ public class SymbolStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 		functionStack.push(function);
 	}
 
-	public void unbindFunction() {
-		functionStack.pop();
+	public FunctionStruct unbindFunction() {
+		return functionStack.pop();
 	}
 
 	/**

@@ -7,13 +7,13 @@ package jcl.compiler.real.icg.generator;
 import java.util.List;
 
 import jcl.LispStruct;
-import jcl.compiler.real.icg.CodeGenerator;
 import jcl.compiler.real.icg.GeneratorState;
 import jcl.compiler.real.icg.IntermediateCodeGenerator;
 import jcl.compiler.real.icg.JavaMethodBuilder;
 import jcl.compiler.real.struct.specialoperator.LambdaCompilerFunctionStruct;
 import jcl.compiler.real.struct.specialoperator.LambdaFunctionCallStruct;
 import jcl.compiler.real.struct.specialoperator.lambda.LambdaStruct;
+import jcl.functions.Closure;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +23,7 @@ import org.springframework.stereotype.Component;
  * Class to perform the generation of the code for anonymous lambda function calls, such as '((lambda ()))'.
  */
 @Component
-class LambdaFunctionCallCodeGenerator implements CodeGenerator<LambdaFunctionCallStruct> {
+final class LambdaFunctionCallCodeGenerator extends SpecialOperatorCodeGenerator<LambdaFunctionCallStruct> {
 
 	/**
 	 * {@link LambdaFunctionCodeGenerator} used for generating the {@link LambdaFunctionCallStruct#lambdaCompilerFunction}
@@ -37,6 +37,14 @@ class LambdaFunctionCallCodeGenerator implements CodeGenerator<LambdaFunctionCal
 	 */
 	@Autowired
 	private IntermediateCodeGenerator codeGenerator;
+
+	/**
+	 * Private constructor which passes 'lambdaFunctionCall' as the prefix value to be set in it's {@link
+	 * #methodNamePrefix} value.
+	 */
+	private LambdaFunctionCallCodeGenerator() {
+		super("lambdaFunctionCall");
+	}
 
 	/**
 	 * {@inheritDoc}
@@ -53,9 +61,11 @@ class LambdaFunctionCallCodeGenerator implements CodeGenerator<LambdaFunctionCal
 	 * Java code:
 	 * <pre>
 	 * {@code
+	 * private LispStruct lambdaFunctionCall_1(Closure var1) {
 	 *      Lambda_10 var2 = new Lambda_10(var1);
 	 *      LispStruct[] var3 = new LispStruct[0];
-	 *      var2.apply(var3);
+	 *      return var2.apply(var3);
+	 * }
 	 * }
 	 * </pre>
 	 *
@@ -63,11 +73,15 @@ class LambdaFunctionCallCodeGenerator implements CodeGenerator<LambdaFunctionCal
 	 * 		the {@link LambdaFunctionCallStruct} input value to generate code for
 	 * @param generatorState
 	 * 		stateful object used to hold the current state of the code generation process
+	 * @param methodBuilder
+	 * 		{@link JavaMethodBuilder} used for building a Java method body
+	 * @param closureArgStore
+	 * 		the storage location index on the stack where the {@link Closure} argument exists
 	 */
 	@Override
-	public void generate(final LambdaFunctionCallStruct input, final GeneratorState generatorState) {
+	protected void generateSpecialOperator(final LambdaFunctionCallStruct input, final GeneratorState generatorState,
+	                                       final JavaMethodBuilder methodBuilder, final int closureArgStore) {
 
-		final JavaMethodBuilder methodBuilder = generatorState.getCurrentMethodBuilder();
 		final MethodVisitor mv = methodBuilder.getMethodVisitor();
 
 		final LambdaCompilerFunctionStruct lambdaCompilerFunction = input.getLambdaCompilerFunction();
@@ -104,5 +118,7 @@ class LambdaFunctionCallCodeGenerator implements CodeGenerator<LambdaFunctionCal
 				GenerationConstants.FUNCTION_STRUCT_APPLY_METHOD_NAME,
 				GenerationConstants.FUNCTION_STRUCT_APPLY_METHOD_DESC,
 				false);
+
+		mv.visitInsn(Opcodes.ARETURN);
 	}
 }

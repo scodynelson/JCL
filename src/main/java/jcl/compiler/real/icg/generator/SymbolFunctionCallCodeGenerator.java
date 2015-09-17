@@ -7,12 +7,12 @@ package jcl.compiler.real.icg.generator;
 import java.util.List;
 
 import jcl.LispStruct;
-import jcl.compiler.real.icg.CodeGenerator;
 import jcl.compiler.real.icg.GeneratorState;
 import jcl.compiler.real.icg.IntermediateCodeGenerator;
 import jcl.compiler.real.icg.JavaMethodBuilder;
 import jcl.compiler.real.struct.specialoperator.SymbolCompilerFunctionStruct;
 import jcl.compiler.real.struct.specialoperator.SymbolFunctionCallStruct;
+import jcl.functions.Closure;
 import jcl.symbols.SymbolStruct;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
@@ -23,7 +23,7 @@ import org.springframework.stereotype.Component;
  * Class to perform the generation of the code for anonymous lambda function calls, such as '(+ 1)'.
  */
 @Component
-class SymbolFunctionCallCodeGenerator implements CodeGenerator<SymbolFunctionCallStruct> {
+final class SymbolFunctionCallCodeGenerator extends SpecialOperatorCodeGenerator<SymbolFunctionCallStruct> {
 
 	/**
 	 * {@link SymbolFunctionCodeGenerator} for generating the {@link SymbolFunctionCallStruct#symbolCompilerFunction}
@@ -37,6 +37,14 @@ class SymbolFunctionCallCodeGenerator implements CodeGenerator<SymbolFunctionCal
 	 */
 	@Autowired
 	private IntermediateCodeGenerator codeGenerator;
+
+	/**
+	 * Private constructor which passes 'symbolFunctionCall' as the prefix value to be set in it's {@link
+	 * #methodNamePrefix} value.
+	 */
+	private SymbolFunctionCallCodeGenerator() {
+		super("symbolFunctionCall");
+	}
 
 	/**
 	 * {@inheritDoc}
@@ -53,6 +61,7 @@ class SymbolFunctionCallCodeGenerator implements CodeGenerator<SymbolFunctionCal
 	 * Java code:
 	 * <pre>
 	 * {@code
+	 * private LispStruct symbolFunctionCall_1(Closure var1) {
 	 *      PackageStruct var2 = PackageStruct.findPackage("COMMON-LISP");
 	 *      SymbolStruct var3 = var2.findSymbol("+").getSymbol();
 	 *      FunctionStruct var4 = var3.getFunction();
@@ -60,7 +69,8 @@ class SymbolFunctionCallCodeGenerator implements CodeGenerator<SymbolFunctionCal
 	 *      BigInteger var7 = new BigInteger("1");
 	 *      IntegerStruct var6 = new IntegerStruct(var7);
 	 *      var5[0] = var6;
-	 *      var4.apply(var5);
+	 *      return var4.apply(var5);
+	 * }
 	 * }
 	 * </pre>
 	 * NOTE: If the value of {@link SymbolFunctionCallStruct#isRecursiveCall} is true, the current lambda will be used
@@ -71,11 +81,15 @@ class SymbolFunctionCallCodeGenerator implements CodeGenerator<SymbolFunctionCal
 	 * 		the {@link SymbolFunctionCallStruct} input value to generate code for
 	 * @param generatorState
 	 * 		stateful object used to hold the current state of the code generation process
+	 * @param methodBuilder
+	 * 		{@link JavaMethodBuilder} used for building a Java method body
+	 * @param closureArgStore
+	 * 		the storage location index on the stack where the {@link Closure} argument exists
 	 */
 	@Override
-	public void generate(final SymbolFunctionCallStruct input, final GeneratorState generatorState) {
+	protected void generateSpecialOperator(final SymbolFunctionCallStruct input, final GeneratorState generatorState,
+	                                       final JavaMethodBuilder methodBuilder, final int closureArgStore) {
 
-		final JavaMethodBuilder methodBuilder = generatorState.getCurrentMethodBuilder();
 		final MethodVisitor mv = methodBuilder.getMethodVisitor();
 
 		final boolean recursiveCall = input.isRecursiveCall();
@@ -119,5 +133,7 @@ class SymbolFunctionCallCodeGenerator implements CodeGenerator<SymbolFunctionCal
 				GenerationConstants.FUNCTION_STRUCT_APPLY_METHOD_NAME,
 				GenerationConstants.FUNCTION_STRUCT_APPLY_METHOD_DESC,
 				false);
+
+		mv.visitInsn(Opcodes.ARETURN);
 	}
 }

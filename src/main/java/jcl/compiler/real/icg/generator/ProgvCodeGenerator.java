@@ -1,5 +1,10 @@
+/*
+ * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
+ */
+
 package jcl.compiler.real.icg.generator;
 
+import java.util.List;
 import java.util.Stack;
 
 import jcl.LispStruct;
@@ -10,31 +15,149 @@ import jcl.compiler.real.icg.IntermediateCodeGenerator;
 import jcl.compiler.real.icg.JavaMethodBuilder;
 import jcl.compiler.real.struct.specialoperator.PrognStruct;
 import jcl.compiler.real.struct.specialoperator.ProgvStruct;
+import jcl.conditions.exceptions.ProgramErrorException;
+import jcl.functions.Closure;
+import jcl.lists.ListStruct;
+import jcl.symbols.SymbolStruct;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+/**
+ * Class to perform 'progv' special operator code generation.
+ */
 @Component
 final class ProgvCodeGenerator extends SpecialOperatorCodeGenerator<ProgvStruct> {
 
+	/**
+	 * Constant {@link String} containing the error message prefix for the customized {@link ProgramErrorException}
+	 * thrown if the {@link ProgvStruct#vars} value does not produce a {@link ListStruct} value.
+	 */
 	private static final String SYMBOLS_LIST_MUST_BE_A_LIST = "PROGV: Symbols list must be a list. Got: ";
 
+	/**
+	 * Constant {@link String} containing the error message prefix for the customized {@link ProgramErrorException}
+	 * thrown if each of the elements comprising the {@link ProgvStruct#vars} {@link ListStruct} value does not produce
+	 * a {@link SymbolStruct} value.
+	 */
 	private static final String ELEMENTS_IN_SYMBOLS_LIST_MUST_BE_SYMBOLS = "PROGV: Elements in symbols list must be symbols. Got: ";
 
+	/**
+	 * Constant {@link String} containing the error message prefix for the customized {@link ProgramErrorException}
+	 * thrown if the {@link ProgvStruct#vals} value does not produce a {@link ListStruct} value.
+	 */
 	private static final String VALUES_LIST_MUST_BE_A_LIST = "PROGV: Values list must be a list. Got: ";
 
+	/**
+	 * {@link IntermediateCodeGenerator} used for generating the {@link ProgvStruct#vars} and {@link ProgvStruct#vals}
+	 * values.
+	 */
 	@Autowired
 	private IntermediateCodeGenerator codeGenerator;
 
+	/**
+	 * {@link PrognCodeGenerator} used for generating the {@link ProgvStruct#forms}.
+	 */
 	@Autowired
 	private PrognCodeGenerator prognCodeGenerator;
 
+	/**
+	 * Private constructor which passes 'progv' as the prefix value to be set in it's {@link #methodNamePrefix} value.
+	 */
 	private ProgvCodeGenerator() {
 		super("progv");
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * Generation method for {@link ProgvStruct} objects, by performing the following operations:
+	 * <ol>
+	 * <li>Generating the {@link ProgvStruct#vars} value, checking that the var result is a {@link ListStruct} and that
+	 * each of the vars are {@link SymbolStruct}s</li>
+	 * <li>Generating the {@link ProgvStruct#vals} value, checking that the val result is a {@link ListStruct}</li>
+	 * <li>Binding the vals comprising the {@link ListStruct} to the vars comprising the other {@link ListStruct} in
+	 * sequential, matching order via {@link SymbolStruct#bindDynamicValue(LispStruct)}</li>
+	 * <li>Temporarily pushing the {@link ProgvStruct#progvEnvironment} onto the {@link GeneratorState#bindingStack}
+	 * while generating the code for the {@link ProgvStruct#forms} values</li>
+	 * <li>Generating the code to unbind the vals dynamic binding from {@link SymbolStruct}s as part of the error free
+	 * 'finally'</li>
+	 * <li>Generating the code to unbind the vals dynamic binding from {@link SymbolStruct}s as part of the error
+	 * caught 'finally', ensuring the error caught is re-thrown</li>
+	 * </ol>
+	 * As an example, it will transform {@code (progv '(x) '(1) x)} into the following Java code:
+	 * <pre>
+	 * {@code
+	 * private LispStruct progv_1(Closure var1) {
+	 *      LispStruct var2 = this.symbolFunctionCall_1(var1);
+	 *      if(!(var2 instanceof ListStruct)) {
+	 *          throw new ProgramErrorException("PROGV: Symbols list must be a list. Got: " + var2);
+	 *      }
+	 *
+	 *      ListStruct var3 = (ListStruct)var2;
+	 *      List var4 = var3.getAsJavaList();
+	 *      Iterator var5 = var4.iterator();
+	 *
+	 *      while(var5.hasNext()) {
+	 *          LispStruct var6 = (LispStruct)var5.next();
+	 *          if(!(var6 instanceof SymbolStruct)) {
+	 *              throw new ProgramErrorException("PROGV: Elements in symbols list must be symbols. Got: " + var6);
+	 *          }
+	 *      }
+	 *
+	 *      LispStruct var7 = this.symbolFunctionCall_2(var1);
+	 *      if(!(var7 instanceof ListStruct)) {
+	 *          throw new ProgramErrorException("PROGV: Values list must be a list. Got: " + var7);
+	 *      }
+	 *
+	 *      ListStruct var8 = (ListStruct)var7;
+	 *      List var9 = var8.getAsJavaList();
+	 *      int var10 = var4.size();
+	 *      int var11 = var9.size();
+	 *
+	 *      for(int var12 = 0; var12 < var10; ++var12) {
+	 *          SymbolStruct var13 = (SymbolStruct)var4.get(var12);
+	 *          LispStruct var14 = null;
+	 *          if(var12 < var11) {
+	 *              var14 = (LispStruct)var9.get(var12);
+	 *          }
+	 *
+	 *          if(var14 instanceof ValuesStruct) {
+	 *              ValuesStruct var15 = (ValuesStruct)var14;
+	 *              var14 = var15.getPrimaryValue();
+	 *          }
+	 *
+	 *          var13.bindDynamicValue(var14);
+	 *      }
+	 *
+	 *      LispStruct var18;
+	 *      try {
+	 *          PackageStruct var16 = PackageStruct.findPackage("COMMON-LISP-USER");
+	 *          SymbolStruct var17 = var16.findSymbol("X").getSymbol();
+	 *          var18 = var17.getValue();
+	 *      } finally {
+	 *          Iterator var22 = var4.iterator();
+	 *
+	 *          while(var22.hasNext()) {
+	 *              SymbolStruct var23 = (SymbolStruct)var22.next();
+	 *              var23.unbindDynamicValue();
+	 *          }
+	 *      }
+	 *      return var18;
+	 * }
+	 * }
+	 * </pre>
+	 *
+	 * @param input
+	 * 		the {@link ProgvStruct} input value to generate code for
+	 * @param generatorState
+	 * 		stateful object used to hold the current state of the code generation process
+	 * @param methodBuilder
+	 * 		{@link JavaMethodBuilder} used for building a Java method body
+	 * @param closureArgStore
+	 * 		the storage location index on the stack where the {@link Closure} argument exists
+	 */
 	@Override
 	protected void generateSpecialOperator(final ProgvStruct input, final GeneratorState generatorState,
 	                                       final JavaMethodBuilder methodBuilder, final int closureArgStore) {
@@ -92,6 +215,25 @@ final class ProgvCodeGenerator extends SpecialOperatorCodeGenerator<ProgvStruct>
 		mv.visitInsn(Opcodes.ARETURN);
 	}
 
+	/**
+	 * Private method to handle the generation of a {@link LispStruct} that could possibly be a {@link ListStruct}. If
+	 * it does evaluate to a {@link ListStruct} at runtime, the code to generate the return of a {@link List} via
+	 * {@link ListStruct#getAsJavaList()} is executed. Otherwise, the code to generate a {@link ProgramErrorException}
+	 * and throw is executed.
+	 *
+	 * @param possibleList
+	 * 		the {@link LispStruct} to be generated that might be a possible {@link ListStruct}
+	 * @param generatorState
+	 * 		stateful object used to hold the current state of the code generation process
+	 * @param methodBuilder
+	 * 		{@link JavaMethodBuilder} used for building a Java method body
+	 * @param mustBeListErrorString
+	 * 		the {@link String} to use as the error message when creating the {@link ProgramErrorException} when the
+	 * 		provided {@code possibleList} does not produce a {@link ListStruct}
+	 *
+	 * @return the storage location index on the stack where the {@link List} produced from generating the possible
+	 * {@link ListStruct} and calling its {@link ListStruct#getAsJavaList()} method produces
+	 */
 	private int generateListAndCheck(final LispStruct possibleList, final GeneratorState generatorState,
 	                                 final JavaMethodBuilder methodBuilder, final String mustBeListErrorString) {
 		final MethodVisitor mv = methodBuilder.getMethodVisitor();
@@ -128,6 +270,16 @@ final class ProgvCodeGenerator extends SpecialOperatorCodeGenerator<ProgvStruct>
 		return inputJavaListStore;
 	}
 
+	/**
+	 * Private method to handle the generation of a type check against all the elements of the {@link List} at the
+	 * provided {@code varsJavaListStore} to ensure each of the elements is a {@link SymbolStruct}. If any of them are
+	 * not, the generated {@link ProgramErrorException} response is thrown.
+	 *
+	 * @param methodBuilder
+	 * 		{@link JavaMethodBuilder} used for building a Java method body
+	 * @param varsJavaListStore
+	 * 		the storage location index on the stack where the {@link List} of {@link SymbolStruct} vars exist
+	 */
 	private static void generateVarListSymbolsCheck(final JavaMethodBuilder methodBuilder, final int varsJavaListStore) {
 		final MethodVisitor mv = methodBuilder.getMethodVisitor();
 
@@ -178,6 +330,20 @@ final class ProgvCodeGenerator extends SpecialOperatorCodeGenerator<ProgvStruct>
 		mv.visitLabel(varsListOfSymbolsIteratorLoopEnd);
 	}
 
+	/**
+	 * Private method to handle the generation of dynamic binding of the {@link List} of vars at the {@code
+	 * varsJavaListStore} location and the {@link List} of vals at the {@code valsJavaListStore} location. The var
+	 * {@link SymbolStruct}s are bound via {@link SymbolStruct#bindDynamicValue(LispStruct)} by looping through the
+	 * lists binding the vars to the matching vals sequentially and to 'null' (unbound) if the {@link List} of vals is
+	 * greater than the list of vars.
+	 *
+	 * @param methodBuilder
+	 * 		{@link JavaMethodBuilder} used for building a Java method body
+	 * @param varsJavaListStore
+	 * 		the storage location index on the stack where the {@link List} of {@link SymbolStruct} vars exist
+	 * @param valsJavaListStore
+	 * 		the storage location index on the stack where the {@link List} of {@link LispStruct} vals exist
+	 */
 	private static void generateVarBindingLoop(final JavaMethodBuilder methodBuilder, final int varsJavaListStore,
 	                                           final int valsJavaListStore) {
 		final MethodVisitor mv = methodBuilder.getMethodVisitor();
@@ -262,6 +428,16 @@ final class ProgvCodeGenerator extends SpecialOperatorCodeGenerator<ProgvStruct>
 		mv.visitLabel(varBindingLoopEnd);
 	}
 
+	/**
+	 * Private method for generating the 'finally' block code for unbinding the dynamic {@link ProgvStruct#vars} from
+	 * each {@link SymbolStruct} within the {@link List} at the storage location of the {@code varJavaListStore}.
+	 *
+	 * @param methodBuilder
+	 * 		{@link JavaMethodBuilder} used for building a Java method body
+	 * @param varsJavaListStore
+	 * 		the storage location index on the stack where the {@link List} of {@link SymbolStruct}s to unbind dynamic
+	 * 		values from exists
+	 */
 	private static void generateFinallyCode(final JavaMethodBuilder methodBuilder, final int varsJavaListStore) {
 		final MethodVisitor mv = methodBuilder.getMethodVisitor();
 
@@ -308,7 +484,20 @@ final class ProgvCodeGenerator extends SpecialOperatorCodeGenerator<ProgvStruct>
 		mv.visitLabel(unbindingIteratorLoopEnd);
 	}
 
-	private static void generateProgramError(final MethodVisitor mv, final int varsStore, final String errorString) {
+	/**
+	 * Private method for generating the code to create and throw a customized {@link ProgramErrorException} when the
+	 * {@link ProgvStruct#vars} value does not generate a {@link ListStruct} value, the {@link ProgvStruct#vals} value
+	 * does not produce a {@link ListStruct} value, or each of the elements comprising the {@link ProgvStruct#vars}
+	 * {@link ListStruct} value does not produce a {@link SymbolStruct} value.
+	 *
+	 * @param mv
+	 * 		the current {@link MethodVisitor} to generate the code inside
+	 * @param itemStore
+	 * 		the storage location index on the stack where the generated item exists
+	 * @param errorString
+	 * 		the {@link String} to use as the error message when creating the {@link ProgramErrorException}
+	 */
+	private static void generateProgramError(final MethodVisitor mv, final int itemStore, final String errorString) {
 		mv.visitTypeInsn(Opcodes.NEW, GenerationConstants.PROGRAM_ERROR_EXCEPTION_NAME);
 		mv.visitInsn(Opcodes.DUP);
 
@@ -325,7 +514,7 @@ final class ProgvCodeGenerator extends SpecialOperatorCodeGenerator<ProgvStruct>
 				GenerationConstants.JAVA_STRING_BUILDER_APPEND_METHOD_NAME,
 				GenerationConstants.JAVA_STRING_BUILDER_APPEND_STRING_METHOD_DESC,
 				false);
-		mv.visitVarInsn(Opcodes.ALOAD, varsStore);
+		mv.visitVarInsn(Opcodes.ALOAD, itemStore);
 		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
 				GenerationConstants.JAVA_STRING_BUILDER_NAME,
 				GenerationConstants.JAVA_STRING_BUILDER_APPEND_METHOD_NAME,

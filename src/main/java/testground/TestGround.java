@@ -16,9 +16,9 @@ import jcl.arrays.ArrayStruct;
 import jcl.arrays.BitVectorStruct;
 import jcl.arrays.VectorStruct;
 import jcl.characters.CharacterStruct;
+import jcl.compiler.real.icg.GeneratorState;
 import jcl.compiler.real.icg.generator.GoException;
 import jcl.compiler.real.icg.generator.ReturnFromException;
-import jcl.compiler.real.icg.generator.TagbodyLabel;
 import jcl.compiler.real.icg.generator.ThrowException;
 import jcl.compiler.real.struct.ValuesStruct;
 import jcl.compiler.real.struct.ValuesStructs;
@@ -258,7 +258,7 @@ public class TestGround {
 
 	private int tagbodyGen(final Closure currentClosure) {
 
-		final TagbodyLabel tagbodyLabel = new TagbodyLabel(null, 20, new Label());
+		final GeneratorState.TagbodyLabel tagbodyLabel = new GeneratorState.TagbodyLabel(null, 20, new Label());
 		final int index = tagbodyLabel.getIndex();
 		return index;
 	}

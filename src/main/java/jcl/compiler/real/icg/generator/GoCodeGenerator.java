@@ -34,7 +34,7 @@ final class GoCodeGenerator extends SpecialOperatorCodeGenerator<GoStruct<?>> {
 	 * Generation method for {@link GoStruct} objects, by performing the following operations:
 	 * <ol>
 	 * <li>Retrieving the appropriate tag index by searching the {@link GeneratorState#tagbodyLabelStack} for the
-	 * {@link TagbodyLabel#getTag()} matching the provided {@link GoStruct}</li>
+	 * {@link GeneratorState.TagbodyLabel#getTag()} matching the provided {@link GoStruct}</li>
 	 * <li>Creating and throwing a new {@link GoException} with the {@code int} tag index value</li>
 	 * </ol>
 	 * As an example, it will transform {@code (go 1)} into the following Java code:
@@ -63,7 +63,7 @@ final class GoCodeGenerator extends SpecialOperatorCodeGenerator<GoStruct<?>> {
 		final MethodVisitor mv = methodBuilder.getMethodVisitor();
 
 		// Generate the Tag Index
-		final TagbodyLabel tagbodyLabel = getTagbodyLabel(generatorState, input);
+		final GeneratorState.TagbodyLabel tagbodyLabel = getTagbodyLabel(generatorState, input);
 		final int tagIndex = tagbodyLabel.getIndex();
 		mv.visitLdcInsn(tagIndex);
 
@@ -84,31 +84,31 @@ final class GoCodeGenerator extends SpecialOperatorCodeGenerator<GoStruct<?>> {
 	}
 
 	/**
-	 * Private method to retrieve the {@link TagbodyLabel} corresponding to the provided {@link GoStruct} tag within
-	 * the current execution stack from the provided {@link GeneratorState}. This is accomplished by iterating through
-	 * each {@link Set} within the {@link GeneratorState#tagbodyLabelStack} until the tag equivalent to the provided
-	 * {@link GoStruct} tag is located.
+	 * Private method to retrieve the {@link GeneratorState.TagbodyLabel} corresponding to the provided {@link
+	 * GoStruct} tag within the current execution stack from the provided {@link GeneratorState}. This is accomplished
+	 * by iterating through each {@link Set} within the {@link GeneratorState#tagbodyLabelStack} until the tag
+	 * equivalent to the provided {@link GoStruct} tag is located.
 	 *
 	 * @param generatorState
-	 * 		the {@link GeneratorState} used to retrieve the {@link TagbodyLabel} corresponding to the provided {@link
-	 * 		GoStruct} tag
+	 * 		the {@link GeneratorState} used to retrieve the {@link GeneratorState.TagbodyLabel} corresponding to the
+	 * 		provided {@link GoStruct} tag
 	 * @param tagToFind
-	 * 		the {@link GoStruct} tag used to located the corresponding {@link TagbodyLabel} within the {@link
-	 * 		GeneratorState#tagbodyLabelStack}
+	 * 		the {@link GoStruct} tag used to located the corresponding {@link GeneratorState.TagbodyLabel} within the
+	 * 		{@link GeneratorState#tagbodyLabelStack}
 	 *
-	 * @return the {@link TagbodyLabel} corresponding to the provided {@link GoStruct} tag
+	 * @return the {@link GeneratorState.TagbodyLabel} corresponding to the provided {@link GoStruct} tag
 	 */
-	private static TagbodyLabel getTagbodyLabel(final GeneratorState generatorState, final GoStruct<?> tagToFind) {
+	private static GeneratorState.TagbodyLabel getTagbodyLabel(final GeneratorState generatorState, final GoStruct<?> tagToFind) {
 
-		final Stack<Set<TagbodyLabel>> tagbodyLabelStack = generatorState.getTagbodyLabelStack();
-		final ListIterator<Set<TagbodyLabel>> tagbodyLabelListIterator = tagbodyLabelStack.listIterator(tagbodyLabelStack.size());
+		final Stack<Set<GeneratorState.TagbodyLabel>> tagbodyLabelStack = generatorState.getTagbodyLabelStack();
+		final ListIterator<Set<GeneratorState.TagbodyLabel>> tagbodyLabelListIterator = tagbodyLabelStack.listIterator(tagbodyLabelStack.size());
 
-		TagbodyLabel tagbodyLabel = null;
+		GeneratorState.TagbodyLabel tagbodyLabel = null;
 
 		out:
 		while (tagbodyLabelListIterator.hasPrevious()) {
-			final Set<TagbodyLabel> previousStack = tagbodyLabelListIterator.previous();
-			for (final TagbodyLabel currentTBL : previousStack) {
+			final Set<GeneratorState.TagbodyLabel> previousStack = tagbodyLabelListIterator.previous();
+			for (final GeneratorState.TagbodyLabel currentTBL : previousStack) {
 				final GoStruct<?> goTag = currentTBL.getTag();
 				if (tagToFind.equals(goTag)) {
 					tagbodyLabel = currentTBL;

@@ -114,15 +114,15 @@ final class TagbodyCodeGenerator extends SpecialOperatorCodeGenerator<TagbodyStr
 		mv.visitLabel(tryBlockStart);
 
 		final Map<GoStruct<?>, PrognStruct> tagbodyForms = input.getTagbodyForms();
-		final Map<TagbodyLabel, PrognStruct> tagbodyLabeledForms = getTagbodyLabeledForms(tagbodyForms, generatorState);
+		final Map<GeneratorState.TagbodyLabel, PrognStruct> tagbodyLabeledForms = getTagbodyLabeledForms(tagbodyForms, generatorState);
 
-		final Set<TagbodyLabel> tagbodyLabels = tagbodyLabeledForms.keySet();
+		final Set<GeneratorState.TagbodyLabel> tagbodyLabels = tagbodyLabeledForms.keySet();
 		generatorState.getTagbodyLabelStack().push(tagbodyLabels);
 
 		// Create a label for each set of 'progn' body forms and generate the 'progn' body forms, popping the final result
 		// after each generation
-		for (final Map.Entry<TagbodyLabel, PrognStruct> tagbodyLabeledForm : tagbodyLabeledForms.entrySet()) {
-			final TagbodyLabel tagbodyLabel = tagbodyLabeledForm.getKey();
+		for (final Map.Entry<GeneratorState.TagbodyLabel, PrognStruct> tagbodyLabeledForm : tagbodyLabeledForms.entrySet()) {
+			final GeneratorState.TagbodyLabel tagbodyLabel = tagbodyLabeledForm.getKey();
 			final PrognStruct forms = tagbodyLabeledForm.getValue();
 
 			final Label tagLabel = tagbodyLabel.getLabel();
@@ -152,14 +152,14 @@ final class TagbodyCodeGenerator extends SpecialOperatorCodeGenerator<TagbodyStr
 
 		// NOTE: The 'tagbodyLabelList' here will be properly ordered because the 'tagbodyLabels' are an ordered LinkedKeySet
 		//       thanks to the usage of 'LinkedHashMap'
-		final List<TagbodyLabel> tagbodyLabelList = new ArrayList<>(tagbodyLabels);
+		final List<GeneratorState.TagbodyLabel> tagbodyLabelList = new ArrayList<>(tagbodyLabels);
 
 		final int tagsSize = tagbodyLabelList.size();
 		final int[] tagNumbers = new int[tagsSize];
 		final Label[] tagLabels = new Label[tagsSize];
 
 		for (int index = 0; index < tagsSize; index++) {
-			final TagbodyLabel indexedLabel = tagbodyLabelList.get(index);
+			final GeneratorState.TagbodyLabel indexedLabel = tagbodyLabelList.get(index);
 
 			tagNumbers[index] = indexedLabel.getIndex();
 			tagLabels[index] = indexedLabel.getLabel();
@@ -184,31 +184,32 @@ final class TagbodyCodeGenerator extends SpecialOperatorCodeGenerator<TagbodyStr
 	}
 
 	/**
-	 * Private method for creating a {@link Map} of {@link TagbodyLabel}s to corresponding {@link PrognStruct}s. The
-	 * provided {@code tagbodyForms} is iterated over, grabbing each {@link GoStruct} tag, fetching the next available
-	 * tag index via {@link GeneratorState#getNextTagbodyTagIndex()}, and creating a new {@link Label} to comprise each
-	 * newly created {@link TagbodyLabel}. From here, each {@link TagbodyLabel} is then added to a {@link
-	 * LinkedHashMap} with the corresponding {@link PrognStruct} as the entry.
+	 * Private method for creating a {@link Map} of {@link GeneratorState.TagbodyLabel}s to corresponding {@link
+	 * PrognStruct}s. The provided {@code tagbodyForms} is iterated over, grabbing each {@link GoStruct} tag, fetching
+	 * the next available tag index via {@link GeneratorState#getNextTagbodyTagIndex()}, and creating a new {@link
+	 * Label} to comprise each newly created {@link GeneratorState.TagbodyLabel}. From here, each {@link
+	 * GeneratorState.TagbodyLabel} is then added to a {@link LinkedHashMap} with the corresponding {@link PrognStruct}
+	 * as the entry.
 	 *
 	 * @param tagbodyForms
 	 * 		the original {@link Map} of {@link GoStruct} tags to {@link PrognStruct}s to convert to the {@link Map} of
-	 * 		{@link TagbodyLabel}s to the same {@link PrognStruct}s
+	 * 		{@link GeneratorState.TagbodyLabel}s to the same {@link PrognStruct}s
 	 * @param generatorState
 	 * 		the {@link GeneratorState} used to retrieve the next available tag index
 	 *
-	 * @return a {@link Map} of {@link TagbodyLabel}s to corresponding {@link PrognStruct}s
+	 * @return a {@link Map} of {@link GeneratorState.TagbodyLabel}s to corresponding {@link PrognStruct}s
 	 */
-	private static Map<TagbodyLabel, PrognStruct> getTagbodyLabeledForms(final Map<GoStruct<?>, PrognStruct> tagbodyForms,
-	                                                                     final GeneratorState generatorState) {
+	private static Map<GeneratorState.TagbodyLabel, PrognStruct> getTagbodyLabeledForms(final Map<GoStruct<?>, PrognStruct> tagbodyForms,
+	                                                                                    final GeneratorState generatorState) {
 
 		// NOTE: use LinkedHashMap so the tags and forms are ordered appropriately
-		final Map<TagbodyLabel, PrognStruct> tagbodyLabeledForms = new LinkedHashMap<>();
+		final Map<GeneratorState.TagbodyLabel, PrognStruct> tagbodyLabeledForms = new LinkedHashMap<>();
 		for (final Map.Entry<GoStruct<?>, PrognStruct> tagbodyForm : tagbodyForms.entrySet()) {
 			final GoStruct<?> tag = tagbodyForm.getKey();
 			final PrognStruct forms = tagbodyForm.getValue();
 
 			final int nextTagbodyTagIndex = generatorState.getNextTagbodyTagIndex();
-			final TagbodyLabel tagbodyLabel = new TagbodyLabel(tag, nextTagbodyTagIndex, new Label());
+			final GeneratorState.TagbodyLabel tagbodyLabel = new GeneratorState.TagbodyLabel(tag, nextTagbodyTagIndex, new Label());
 			tagbodyLabeledForms.put(tagbodyLabel, forms);
 		}
 

@@ -1,11 +1,11 @@
 package jcl.compiler.real.icg.generator;
 
 import java.security.SecureRandom;
+import java.util.Deque;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
-import java.util.Stack;
 
 import jcl.LispStruct;
 import jcl.compiler.real.environment.Environment;
@@ -80,11 +80,11 @@ class SymbolMacroletCodeGenerator implements CodeGenerator<SymbolMacroletStruct>
 
 		mv.visitLabel(tryBlockStart);
 
-		final Stack<Environment> bindingStack = generatorState.getBindingStack();
+		final Deque<Environment> environmentDeque = generatorState.getEnvironmentDeque();
 
-		bindingStack.push(symbolMacroletEnvironment);
+		environmentDeque.addFirst(symbolMacroletEnvironment);
 		prognCodeGenerator.generate(forms, generatorState);
-		bindingStack.pop();
+		environmentDeque.removeFirst();
 
 		final int resultStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, resultStore);
@@ -119,11 +119,10 @@ class SymbolMacroletCodeGenerator implements CodeGenerator<SymbolMacroletStruct>
 		final String className = "jcl/" + fileName;
 
 		final JavaClassBuilder currentClass = new JavaClassBuilder(className, fileName);
-		final Stack<JavaClassBuilder> classStack = classBuilder.getClassStack();
+		final Deque<JavaClassBuilder> classBuilderDeque = classBuilder.getClassBuilderDeque();
 
-		classStack.push(currentClass);
-		classBuilder.setCurrentClass(currentClass);
-		classBuilder.getClasses().addFirst(currentClass);
+		classBuilderDeque.addFirst(currentClass);
+		classBuilder.getFinalClassBuilderDeque().addFirst(currentClass);
 
 		final ClassWriter cw = currentClass.getClassWriter();
 		cw.visit(Opcodes.V1_8, Opcodes.ACC_PUBLIC + Opcodes.ACC_SUPER, className, null, "jcl/compiler/real/sa/analyzer/expander/SymbolMacroExpander", null);
@@ -142,8 +141,8 @@ class SymbolMacroletCodeGenerator implements CodeGenerator<SymbolMacroletStruct>
 			final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PUBLIC, "<init>", "()V", null, null);
 
 			final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
-			final Stack<JavaMethodBuilder> methodBuilderStack = classBuilder.getMethodBuilderStack();
-			methodBuilderStack.push(methodBuilder);
+			final Deque<JavaMethodBuilder> methodBuilderDeque = classBuilder.getMethodBuilderDeque();
+			methodBuilderDeque.addFirst(methodBuilder);
 
 			mv.visitCode();
 			final int thisStore = methodBuilder.getNextAvailableStore();
@@ -156,14 +155,14 @@ class SymbolMacroletCodeGenerator implements CodeGenerator<SymbolMacroletStruct>
 			mv.visitMaxs(-1, -1);
 			mv.visitEnd();
 
-			methodBuilderStack.pop();
+			methodBuilderDeque.removeFirst();
 		}
 		{
 			final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PUBLIC, "expand", "(Ljcl/LispStruct;Ljcl/compiler/real/environment/Environment;)Ljcl/LispStruct;", null, null);
 
 			final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
-			final Stack<JavaMethodBuilder> methodBuilderStack = classBuilder.getMethodBuilderStack();
-			methodBuilderStack.push(methodBuilder);
+			final Deque<JavaMethodBuilder> methodBuilderDeque = classBuilder.getMethodBuilderDeque();
+			methodBuilderDeque.addFirst(methodBuilder);
 
 			mv.visitCode();
 			final int thisStore = methodBuilder.getNextAvailableStore();
@@ -177,11 +176,11 @@ class SymbolMacroletCodeGenerator implements CodeGenerator<SymbolMacroletStruct>
 			mv.visitMaxs(-1, -1);
 			mv.visitEnd();
 
-			methodBuilderStack.pop();
+			methodBuilderDeque.removeFirst();
 		}
 		cw.visitEnd();
 
-		classStack.pop();
+		classBuilderDeque.removeFirst();
 
 		return className;
 	}

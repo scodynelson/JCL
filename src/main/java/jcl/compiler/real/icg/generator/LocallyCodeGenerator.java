@@ -4,7 +4,7 @@
 
 package jcl.compiler.real.icg.generator;
 
-import java.util.Stack;
+import java.util.Deque;
 
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.LocallyEnvironment;
@@ -32,7 +32,7 @@ class LocallyCodeGenerator implements CodeGenerator<LocallyStruct> {
 	 * Generation method for {@link LocallyStruct} objects, by performing the following operations:
 	 * <ol>
 	 * <li>Temporarily pushing the {@link LocallyStruct#locallyEnvironment} onto the {@link
-	 * GeneratorState#bindingStack} while generating the code for the {@link LocallyStruct#forms} values</li>
+	 * GeneratorState#environmentDeque} while generating the code for the {@link LocallyStruct#forms} values</li>
 	 * </ol>
 	 * As an example, it will transform {@code (locally 1)} into the following Java code:
 	 * <pre>
@@ -53,10 +53,10 @@ class LocallyCodeGenerator implements CodeGenerator<LocallyStruct> {
 		final PrognStruct forms = input.getForms();
 		final LocallyEnvironment locallyEnvironment = input.getLocallyEnvironment();
 
-		final Stack<Environment> bindingStack = generatorState.getBindingStack();
+		final Deque<Environment> environmentDeque = generatorState.getEnvironmentDeque();
 
-		bindingStack.push(locallyEnvironment);
+		environmentDeque.addFirst(locallyEnvironment);
 		prognCodeGenerator.generate(forms, generatorState);
-		bindingStack.pop();
+		environmentDeque.removeFirst();
 	}
 }

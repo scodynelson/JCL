@@ -5,10 +5,10 @@
 package jcl.compiler.real.icg.generator;
 
 import java.security.SecureRandom;
+import java.util.Deque;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
-import java.util.Stack;
 
 import jcl.LispStruct;
 import jcl.arrays.StringStruct;
@@ -84,13 +84,12 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 		final String className = fileName.substring(fileName.lastIndexOf('/') + 1, fileName.length());
 
 		final JavaClassBuilder currentClass = new JavaClassBuilder(fileName, className);
-		final Stack<JavaClassBuilder> classStack = generatorState.getClassStack();
+		final Deque<JavaClassBuilder> classBuilderDeque = generatorState.getClassBuilderDeque();
 
-		classStack.push(currentClass);
-		generatorState.setCurrentClass(currentClass);
-		generatorState.getClasses().addFirst(currentClass);
+		classBuilderDeque.addFirst(currentClass);
+		generatorState.getFinalClassBuilderDeque().addFirst(currentClass);
 
-		final Stack<Environment> bindingStack = generatorState.getBindingStack();
+		final Deque<Environment> environmentDeque = generatorState.getEnvironmentDeque();
 
 		final ClassWriter cw = currentClass.getClassWriter();
 
@@ -129,8 +128,8 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 					null);
 
 			final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
-			final Stack<JavaMethodBuilder> methodBuilderStack = generatorState.getMethodBuilderStack();
-			methodBuilderStack.push(methodBuilder);
+			final Deque<JavaMethodBuilder> methodBuilderDeque = generatorState.getMethodBuilderDeque();
+			methodBuilderDeque.addFirst(methodBuilder);
 
 			mv.visitCode();
 			final int thisStore = methodBuilder.getNextAvailableStore();
@@ -148,7 +147,7 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 			mv.visitMaxs(-1, -1);
 			mv.visitEnd();
 
-			methodBuilderStack.pop();
+			methodBuilderDeque.removeFirst();
 		}
 		{
 			final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PUBLIC,
@@ -158,8 +157,8 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 					null);
 
 			final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
-			final Stack<JavaMethodBuilder> methodBuilderStack = generatorState.getMethodBuilderStack();
-			methodBuilderStack.push(methodBuilder);
+			final Deque<JavaMethodBuilder> methodBuilderDeque = generatorState.getMethodBuilderDeque();
+			methodBuilderDeque.addFirst(methodBuilder);
 
 			mv.visitCode();
 			final int thisStore = methodBuilder.getNextAvailableStore();
@@ -191,7 +190,7 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 			mv.visitMaxs(-1, -1);
 			mv.visitEnd();
 
-			methodBuilderStack.pop();
+			methodBuilderDeque.removeFirst();
 		}
 		{
 			final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PRIVATE,
@@ -201,8 +200,8 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 					null);
 
 			final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
-			final Stack<JavaMethodBuilder> methodBuilderStack = generatorState.getMethodBuilderStack();
-			methodBuilderStack.push(methodBuilder);
+			final Deque<JavaMethodBuilder> methodBuilderDeque = generatorState.getMethodBuilderDeque();
+			methodBuilderDeque.addFirst(methodBuilder);
 
 			mv.visitCode();
 			final int thisStore = methodBuilder.getNextAvailableStore();
@@ -262,7 +261,7 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 			mv.visitMaxs(-1, -1);
 			mv.visitEnd();
 
-			methodBuilderStack.pop();
+			methodBuilderDeque.removeFirst();
 		}
 		{
 			final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PUBLIC + Opcodes.ACC_VARARGS,
@@ -272,8 +271,8 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 					null);
 
 			final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
-			final Stack<JavaMethodBuilder> methodBuilderStack = generatorState.getMethodBuilderStack();
-			methodBuilderStack.push(methodBuilder);
+			final Deque<JavaMethodBuilder> methodBuilderDeque = generatorState.getMethodBuilderDeque();
+			methodBuilderDeque.addFirst(methodBuilder);
 
 			mv.visitCode();
 			final int thisStore = methodBuilder.getNextAvailableStore();
@@ -1019,7 +1018,7 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 			mv.visitMaxs(-1, -1);
 			mv.visitEnd();
 
-			methodBuilderStack.pop();
+			methodBuilderDeque.removeFirst();
 		}
 		{
 			final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PRIVATE,
@@ -1029,23 +1028,23 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 					null);
 
 			final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
-			final Stack<JavaMethodBuilder> methodBuilderStack = generatorState.getMethodBuilderStack();
-			methodBuilderStack.push(methodBuilder);
+			final Deque<JavaMethodBuilder> methodBuilderDeque = generatorState.getMethodBuilderDeque();
+			methodBuilderDeque.addFirst(methodBuilder);
 
 			mv.visitCode();
 			final int thisStore = methodBuilder.getNextAvailableStore();
 			final int closureArgStore = methodBuilder.getNextAvailableStore();
 
-			bindingStack.push(lambdaEnvironment);
+			environmentDeque.addFirst(lambdaEnvironment);
 			prognCodeGenerator.generate(forms, generatorState);
-			bindingStack.pop();
+			environmentDeque.removeFirst();
 
 			mv.visitInsn(Opcodes.ARETURN);
 
 			mv.visitMaxs(-1, -1);
 			mv.visitEnd();
 
-			methodBuilderStack.pop();
+			methodBuilderDeque.removeFirst();
 		}
 		{
 			final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PRIVATE,
@@ -1055,8 +1054,8 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 					null);
 
 			final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
-			final Stack<JavaMethodBuilder> methodBuilderStack = generatorState.getMethodBuilderStack();
-			methodBuilderStack.push(methodBuilder);
+			final Deque<JavaMethodBuilder> methodBuilderDeque = generatorState.getMethodBuilderDeque();
+			methodBuilderDeque.addFirst(methodBuilder);
 
 			mv.visitCode();
 			final int thisStore = methodBuilder.getNextAvailableStore();
@@ -1145,7 +1144,7 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 			mv.visitMaxs(-1, -1);
 			mv.visitEnd();
 
-			methodBuilderStack.pop();
+			methodBuilderDeque.removeFirst();
 		}
 		{
 			final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_STATIC,
@@ -1155,8 +1154,8 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 					null);
 
 			final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
-			final Stack<JavaMethodBuilder> methodBuilderStack = generatorState.getMethodBuilderStack();
-			methodBuilderStack.push(methodBuilder);
+			final Deque<JavaMethodBuilder> methodBuilderDeque = generatorState.getMethodBuilderDeque();
+			methodBuilderDeque.addFirst(methodBuilder);
 
 			mv.visitCode();
 			final int thisStore = methodBuilder.getNextAvailableStore();
@@ -1201,17 +1200,13 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 			mv.visitMaxs(-1, -1);
 			mv.visitEnd();
 
-			methodBuilderStack.pop();
+			methodBuilderDeque.removeFirst();
 		}
 		cw.visitEnd();
 
-		classStack.pop();
-		if (!classStack.isEmpty()) {
-			final JavaClassBuilder previousJavaClassBuilder = classStack.peek();
-			generatorState.setCurrentClass(previousJavaClassBuilder);
-
-			final Stack<JavaMethodBuilder> methodBuilderStack = generatorState.getMethodBuilderStack();
-			final JavaMethodBuilder previousMethodBuilder = methodBuilderStack.peek();
+		classBuilderDeque.removeFirst();
+		if (!classBuilderDeque.isEmpty()) {
+			final JavaMethodBuilder previousMethodBuilder = generatorState.getCurrentMethodBuilder();
 			final MethodVisitor previousMv = previousMethodBuilder.getMethodVisitor();
 
 			previousMv.visitTypeInsn(Opcodes.NEW, fileName);

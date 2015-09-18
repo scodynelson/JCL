@@ -1,9 +1,9 @@
 package jcl.compiler.real.icg;
 
+import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.Set;
 import java.util.Stack;
-import java.util.concurrent.ConcurrentLinkedDeque;
 
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.struct.specialoperator.go.GoStruct;
@@ -11,69 +11,66 @@ import org.objectweb.asm.Label;
 
 public class GeneratorState {
 
-	private final Deque<JavaClassBuilder> classes = new ConcurrentLinkedDeque<>();
+	private final Deque<JavaClassBuilder> finalClassBuilderDeque = new ArrayDeque<>();
 
-	private final Stack<JavaClassBuilder> classStack = new Stack<>();
+	private final Deque<JavaClassBuilder> classBuilderDeque = new ArrayDeque<>();
 
-	private final Stack<JavaMethodBuilder> methodBuilderStack = new Stack<>();
+	private final Deque<JavaMethodBuilder> methodBuilderDeque = new ArrayDeque<>();
 
-	// Whenever a binding environment is encountered, it is pushed on the stack and
-	// bindingEnvironment is set to the new environment. When that binding is no
-	// longer in force, the stack is popped and the value of bindingEnvironment is
-	// set to the new top of stack
-	private final Stack<Environment> bindingStack;
+	private final Deque<Environment> environmentDeque = new ArrayDeque<>();
 
-	private final Stack<Set<TagbodyLabel>> tagbodyLabelStack;
+	private final Stack<Set<TagbodyLabel>> tagbodyLabelStack = new Stack<>();
 
 	private int tagCounter;
 
-	private JavaClassBuilder currentClass;
-
 	public GeneratorState() {
-		bindingStack = new Stack<>();
-		bindingStack.push(Environment.NULL);
+		environmentDeque.push(Environment.NULL);
 		tagCounter = 0;
-		tagbodyLabelStack = new Stack<>();
-		currentClass = null;
-	}
-
-	public Stack<Environment> getBindingStack() {
-		return bindingStack;
-	}
-
-	public Stack<Set<TagbodyLabel>> getTagbodyLabelStack() {
-		return tagbodyLabelStack;
 	}
 
 	public int getNextTagbodyTagIndex() {
 		return tagCounter++;
 	}
 
-	public Deque<JavaClassBuilder> getClasses() {
-		return classes;
+	public Deque<JavaClassBuilder> getFinalClassBuilderDeque() {
+		return finalClassBuilderDeque;
 	}
 
-	public Stack<JavaClassBuilder> getClassStack() {
-		return classStack;
+	public Deque<JavaClassBuilder> getClassBuilderDeque() {
+		return classBuilderDeque;
 	}
 
-	public Stack<JavaMethodBuilder> getMethodBuilderStack() {
-		return methodBuilderStack;
+	public JavaClassBuilder getCurrentClassBuilder() {
+		if (classBuilderDeque.isEmpty()) {
+			return null;
+		}
+		return classBuilderDeque.peek();
+	}
+
+	public Deque<JavaMethodBuilder> getMethodBuilderDeque() {
+		return methodBuilderDeque;
 	}
 
 	public JavaMethodBuilder getCurrentMethodBuilder() {
-		if (methodBuilderStack.empty()) {
+		if (methodBuilderDeque.isEmpty()) {
 			return null;
 		}
-		return methodBuilderStack.peek();
+		return methodBuilderDeque.peek();
 	}
 
-	public JavaClassBuilder getCurrentClass() {
-		return currentClass;
+	public Deque<Environment> getEnvironmentDeque() {
+		return environmentDeque;
 	}
 
-	public void setCurrentClass(final JavaClassBuilder currentClass) {
-		this.currentClass = currentClass;
+	public Environment getCurrentEnvironment() {
+		if (environmentDeque.isEmpty()) {
+			return null;
+		}
+		return environmentDeque.peek();
+	}
+
+	public Stack<Set<TagbodyLabel>> getTagbodyLabelStack() {
+		return tagbodyLabelStack;
 	}
 
 	public static class TagbodyLabel {

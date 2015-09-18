@@ -6,7 +6,6 @@ package jcl.compiler.real.icg.generator;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Stack;
 
 import jcl.LispStruct;
 import jcl.compiler.real.environment.Environment;
@@ -55,7 +54,7 @@ final class SetqCodeGenerator extends SpecialOperatorCodeGenerator<SetqStruct> {
 	 * <li>Retrieving the primary value via {@link ValuesStruct#getPrimaryValue()} if the generated form is a {@link
 	 * ValuesStruct}</li>
 	 * <li>Generating the code to set the {@link SymbolStruct} value (lexical, dynamic, or regular) based on the
-	 * current {@link Environment} at the top of the {@link GeneratorState#bindingStack}</li>
+	 * current {@link Environment} at the top of the {@link GeneratorState#environmentDeque}</li>
 	 * <li>Inserting the generated {@link SetqStruct.SetqPair#var} as the key and the {@link SetqStruct.SetqPair#form}
 	 * as the value as an entry in the {@link Closure#symbolBindings} {@link Map} if the {@link Closure} parameter is
 	 * not null</li>
@@ -124,8 +123,7 @@ final class SetqCodeGenerator extends SpecialOperatorCodeGenerator<SetqStruct> {
 
 		mv.visitLabel(closureNullCheckIfEnd);
 
-		final Stack<Environment> bindingStack = generatorState.getBindingStack();
-		final Environment currentEnvironment = bindingStack.peek();
+		final Environment currentEnvironment = generatorState.getCurrentEnvironment();
 
 		final int packageStore = methodBuilder.getNextAvailableStore();
 		final int symbolStore = methodBuilder.getNextAvailableStore();

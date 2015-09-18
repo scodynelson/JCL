@@ -4,8 +4,8 @@
 
 package jcl.compiler.real.icg.generator;
 
+import java.util.Deque;
 import java.util.List;
-import java.util.Stack;
 
 import jcl.LispStruct;
 import jcl.compiler.real.environment.Environment;
@@ -79,8 +79,8 @@ final class ProgvCodeGenerator extends SpecialOperatorCodeGenerator<ProgvStruct>
 	 * <li>Generating the {@link ProgvStruct#vals} value, checking that the val result is a {@link ListStruct}</li>
 	 * <li>Binding the vals comprising the {@link ListStruct} to the vars comprising the other {@link ListStruct} in
 	 * sequential, matching order via {@link SymbolStruct#bindDynamicValue(LispStruct)}</li>
-	 * <li>Temporarily pushing the {@link ProgvStruct#progvEnvironment} onto the {@link GeneratorState#bindingStack}
-	 * while generating the code for the {@link ProgvStruct#forms} values</li>
+	 * <li>Temporarily pushing the {@link ProgvStruct#progvEnvironment} onto the {@link
+	 * GeneratorState#environmentDeque} while generating the code for the {@link ProgvStruct#forms} values</li>
 	 * <li>Generating the code to unbind the vals dynamic binding from {@link SymbolStruct}s as part of the error free
 	 * 'finally'</li>
 	 * <li>Generating the code to unbind the vals dynamic binding from {@link SymbolStruct}s as part of the error
@@ -187,11 +187,11 @@ final class ProgvCodeGenerator extends SpecialOperatorCodeGenerator<ProgvStruct>
 		final ProgvEnvironment environment = input.getProgvEnvironment();
 		final PrognStruct forms = input.getForms();
 
-		final Stack<Environment> bindingStack = generatorState.getBindingStack();
+		final Deque<Environment> environmentDeque = generatorState.getEnvironmentDeque();
 
-		bindingStack.push(environment);
+		environmentDeque.addFirst(environment);
 		prognCodeGenerator.generate(forms, generatorState);
-		bindingStack.pop();
+		environmentDeque.removeFirst();
 
 		final int resultStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, resultStore);

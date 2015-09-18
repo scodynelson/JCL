@@ -4,11 +4,11 @@
 
 package jcl.compiler.real.icg.generator;
 
+import java.util.Deque;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.Stack;
 
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.InnerLambdaEnvironment;
@@ -69,7 +69,7 @@ final class InnerLambdaCodeGenerator extends SpecialOperatorCodeGenerator<InnerL
 	 * <li>Binding functions via {@link SymbolStruct#bindFunction(FunctionStruct)} and adding functions to the {@link
 	 * Closure#functionBindings} map for the current {@link Closure}, if one exists</li>
 	 * <li>Temporarily pushing the {@link InnerLambdaStruct#lexicalEnvironment} onto the {@link
-	 * GeneratorState#bindingStack} while generating the code for the {@link InnerLambdaStruct#forms} values</li>
+	 * GeneratorState#environmentDeque} while generating the code for the {@link InnerLambdaStruct#forms} values</li>
 	 * <li>Generating the code to unbind the functions from {@link SymbolStruct}s as part of the error free
 	 * 'finally'</li>
 	 * <li>Generating the code to unbind the functions from {@link SymbolStruct}s as part of the error caught
@@ -202,11 +202,11 @@ final class InnerLambdaCodeGenerator extends SpecialOperatorCodeGenerator<InnerL
 		final InnerLambdaEnvironment environment = input.getLexicalEnvironment();
 		final PrognStruct forms = input.getForms();
 
-		final Stack<Environment> bindingStack = generatorState.getBindingStack();
+		final Deque<Environment> environmentDeque = generatorState.getEnvironmentDeque();
 
-		bindingStack.push(environment);
+		environmentDeque.addFirst(environment);
 		prognCodeGenerator.generate(forms, generatorState);
-		bindingStack.pop();
+		environmentDeque.removeFirst();
 
 		final int resultStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, resultStore);

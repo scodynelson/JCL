@@ -4,8 +4,6 @@
 
 package jcl.compiler.real.icg.generator;
 
-import java.util.Stack;
-
 import jcl.LispStruct;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.icg.CodeGenerator;
@@ -31,8 +29,7 @@ class SymbolValueCodeGenerator implements CodeGenerator<SymbolStruct<LispStruct>
 
 		mv.visitVarInsn(Opcodes.ALOAD, symbolStore);
 
-		final Stack<Environment> bindingStack = generatorState.getBindingStack();
-		final Environment currentEnvironment = bindingStack.peek();
+		final Environment currentEnvironment = generatorState.getCurrentEnvironment();
 
 		final boolean hasLexicalBinding = currentEnvironment.hasLexicalBinding(input);
 		final boolean hasDynamicBinding = currentEnvironment.hasDynamicBinding(input);

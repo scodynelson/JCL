@@ -1,9 +1,9 @@
 package jcl.compiler.real.icg.generator;
 
 import java.security.SecureRandom;
+import java.util.Deque;
 import java.util.List;
 import java.util.Random;
-import java.util.Stack;
 
 import jcl.LispType;
 import jcl.compiler.real.icg.CodeGenerator;
@@ -119,14 +119,10 @@ class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 				structureTypeImplClassName,
 				structureTypeImplInnerClass);
 
-		final Stack<JavaClassBuilder> classStack = generatorState.getClassStack();
+		final Deque<JavaClassBuilder> classBuilderDeque = generatorState.getClassBuilderDeque();
 
-		if (!classStack.isEmpty()) {
-			final JavaClassBuilder previousJavaClassBuilder = classStack.peek();
-			generatorState.setCurrentClass(previousJavaClassBuilder);
-
-			final Stack<JavaMethodBuilder> methodBuilderStack = generatorState.getMethodBuilderStack();
-			final JavaMethodBuilder previousMethodBuilder = methodBuilderStack.peek();
+		if (!classBuilderDeque.isEmpty()) {
+			final JavaMethodBuilder previousMethodBuilder = generatorState.getCurrentMethodBuilder();
 			final MethodVisitor previousMv = previousMethodBuilder.getMethodVisitor();
 
 			final int packageStore = previousMethodBuilder.getNextAvailableStore();
@@ -155,11 +151,10 @@ class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 		final String className = structureTypeFileName.substring(structureTypeFileName.lastIndexOf('/') + 1, structureTypeFileName.length());
 
 		final JavaClassBuilder currentClass = new JavaClassBuilder(structureTypeFileName, className);
-		final Stack<JavaClassBuilder> classStack = classBuilder.getClassStack();
+		final Deque<JavaClassBuilder> classBuilderDeque = classBuilder.getClassBuilderDeque();
 
-		classStack.push(currentClass);
-		classBuilder.setCurrentClass(currentClass);
-		classBuilder.getClasses().addFirst(currentClass);
+		classBuilderDeque.addFirst(currentClass);
+		classBuilder.getFinalClassBuilderDeque().addFirst(currentClass);
 
 		final ClassWriter cw = currentClass.getClassWriter();
 
@@ -221,8 +216,8 @@ class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 					null);
 
 			final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
-			final Stack<JavaMethodBuilder> methodBuilderStack = classBuilder.getMethodBuilderStack();
-			methodBuilderStack.push(methodBuilder);
+			final Deque<JavaMethodBuilder> methodBuilderDeque = classBuilder.getMethodBuilderDeque();
+			methodBuilderDeque.addFirst(methodBuilder);
 
 			mv.visitCode();
 			final int thisStore = methodBuilder.getNextAvailableStore();
@@ -242,12 +237,12 @@ class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 			mv.visitMaxs(-1, -1);
 			mv.visitEnd();
 
-			methodBuilderStack.pop();
+			methodBuilderDeque.removeFirst();
 		}
 
 		cw.visitEnd();
 
-		classStack.pop();
+		classBuilderDeque.removeFirst();
 	}
 
 	private static void generateStructureTypeFactory(final GeneratorState classBuilder,
@@ -259,11 +254,10 @@ class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 		final String className = structureTypeFactoryInnerClass.substring(structureTypeFactoryInnerClass.lastIndexOf('/') + 1, structureTypeFactoryInnerClass.length());
 
 		final JavaClassBuilder currentClass = new JavaClassBuilder(structureTypeFactoryInnerClass, className);
-		final Stack<JavaClassBuilder> classStack = classBuilder.getClassStack();
+		final Deque<JavaClassBuilder> classBuilderDeque = classBuilder.getClassBuilderDeque();
 
-		classStack.push(currentClass);
-		classBuilder.setCurrentClass(currentClass);
-		classBuilder.getClasses().addFirst(currentClass);
+		classBuilderDeque.addFirst(currentClass);
+		classBuilder.getFinalClassBuilderDeque().addFirst(currentClass);
 
 		final ClassWriter cw = currentClass.getClassWriter();
 
@@ -292,8 +286,8 @@ class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 					null);
 
 			final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
-			final Stack<JavaMethodBuilder> methodBuilderStack = classBuilder.getMethodBuilderStack();
-			methodBuilderStack.push(methodBuilder);
+			final Deque<JavaMethodBuilder> methodBuilderDeque = classBuilder.getMethodBuilderDeque();
+			methodBuilderDeque.addFirst(methodBuilder);
 
 			mv.visitCode();
 			final int thisStore = methodBuilder.getNextAvailableStore();
@@ -310,7 +304,7 @@ class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 			mv.visitMaxs(-1, -1);
 			mv.visitEnd();
 
-			methodBuilderStack.pop();
+			methodBuilderDeque.removeFirst();
 		}
 		{
 			final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PUBLIC,
@@ -320,8 +314,8 @@ class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 					null);
 
 			final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
-			final Stack<JavaMethodBuilder> methodBuilderStack = classBuilder.getMethodBuilderStack();
-			methodBuilderStack.push(methodBuilder);
+			final Deque<JavaMethodBuilder> methodBuilderDeque = classBuilder.getMethodBuilderDeque();
+			methodBuilderDeque.addFirst(methodBuilder);
 
 			mv.visitCode();
 			final int thisStore = methodBuilder.getNextAvailableStore();
@@ -333,7 +327,7 @@ class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 			mv.visitMaxs(-1, -1);
 			mv.visitEnd();
 
-			methodBuilderStack.pop();
+			methodBuilderDeque.removeFirst();
 		}
 		{
 			final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PUBLIC + Opcodes.ACC_BRIDGE + Opcodes.ACC_SYNTHETIC,
@@ -343,8 +337,8 @@ class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 					null);
 
 			final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
-			final Stack<JavaMethodBuilder> methodBuilderStack = classBuilder.getMethodBuilderStack();
-			methodBuilderStack.push(methodBuilder);
+			final Deque<JavaMethodBuilder> methodBuilderDeque = classBuilder.getMethodBuilderDeque();
+			methodBuilderDeque.addFirst(methodBuilder);
 
 			mv.visitCode();
 			final int thisStore = methodBuilder.getNextAvailableStore();
@@ -361,12 +355,12 @@ class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 			mv.visitMaxs(-1, -1);
 			mv.visitEnd();
 
-			methodBuilderStack.pop();
+			methodBuilderDeque.removeFirst();
 		}
 
 		cw.visitEnd();
 
-		classStack.pop();
+		classBuilderDeque.removeFirst();
 	}
 
 	private static void generateStructureTypeImpl(final GeneratorState classBuilder,
@@ -380,11 +374,10 @@ class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 		final String className = structureTypeImplInnerClass.substring(structureTypeImplInnerClass.lastIndexOf('/') + 1, structureTypeImplInnerClass.length());
 
 		final JavaClassBuilder currentClass = new JavaClassBuilder(structureTypeImplInnerClass, className);
-		final Stack<JavaClassBuilder> classStack = classBuilder.getClassStack();
+		final Deque<JavaClassBuilder> classBuilderDeque = classBuilder.getClassBuilderDeque();
 
-		classStack.push(currentClass);
-		classBuilder.setCurrentClass(currentClass);
-		classBuilder.getClasses().addFirst(currentClass);
+		classBuilderDeque.addFirst(currentClass);
+		classBuilder.getFinalClassBuilderDeque().addFirst(currentClass);
 
 		final ClassWriter cw = currentClass.getClassWriter();
 
@@ -429,8 +422,8 @@ class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 					null);
 
 			final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
-			final Stack<JavaMethodBuilder> methodBuilderStack = classBuilder.getMethodBuilderStack();
-			methodBuilderStack.push(methodBuilder);
+			final Deque<JavaMethodBuilder> methodBuilderDeque = classBuilder.getMethodBuilderDeque();
+			methodBuilderDeque.addFirst(methodBuilder);
 
 			mv.visitCode();
 			final int thisStore = methodBuilder.getNextAvailableStore();
@@ -448,7 +441,7 @@ class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 			mv.visitMaxs(-1, -1);
 			mv.visitEnd();
 
-			methodBuilderStack.pop();
+			methodBuilderDeque.removeFirst();
 		}
 		{
 			final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PUBLIC,
@@ -458,8 +451,8 @@ class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 					null);
 
 			final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
-			final Stack<JavaMethodBuilder> methodBuilderStack = classBuilder.getMethodBuilderStack();
-			methodBuilderStack.push(methodBuilder);
+			final Deque<JavaMethodBuilder> methodBuilderDeque = classBuilder.getMethodBuilderDeque();
+			methodBuilderDeque.addFirst(methodBuilder);
 
 			mv.visitCode();
 			final int thisStore = methodBuilder.getNextAvailableStore();
@@ -495,7 +488,7 @@ class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 			mv.visitMaxs(-1, -1);
 			mv.visitEnd();
 
-			methodBuilderStack.pop();
+			methodBuilderDeque.removeFirst();
 		}
 		{
 			final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PUBLIC,
@@ -505,8 +498,8 @@ class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 					null);
 
 			final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
-			final Stack<JavaMethodBuilder> methodBuilderStack = classBuilder.getMethodBuilderStack();
-			methodBuilderStack.push(methodBuilder);
+			final Deque<JavaMethodBuilder> methodBuilderDeque = classBuilder.getMethodBuilderDeque();
+			methodBuilderDeque.addFirst(methodBuilder);
 
 			mv.visitCode();
 			final int thisStore = methodBuilder.getNextAvailableStore();
@@ -540,7 +533,7 @@ class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 			mv.visitMaxs(-1, -1);
 			mv.visitEnd();
 
-			methodBuilderStack.pop();
+			methodBuilderDeque.removeFirst();
 		}
 		{
 			final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_SYNTHETIC,
@@ -550,8 +543,8 @@ class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 					null);
 
 			final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
-			final Stack<JavaMethodBuilder> methodBuilderStack = classBuilder.getMethodBuilderStack();
-			methodBuilderStack.push(methodBuilder);
+			final Deque<JavaMethodBuilder> methodBuilderDeque = classBuilder.getMethodBuilderDeque();
+			methodBuilderDeque.addFirst(methodBuilder);
 
 			mv.visitCode();
 			final int thisStore = methodBuilder.getNextAvailableStore();
@@ -568,12 +561,12 @@ class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 			mv.visitMaxs(-1, -1);
 			mv.visitEnd();
 
-			methodBuilderStack.pop();
+			methodBuilderDeque.removeFirst();
 		}
 
 		cw.visitEnd();
 
-		classStack.pop();
+		classBuilderDeque.removeFirst();
 	}
 
 	private static void generateStructureClass(final DefstructStruct defstructStruct, final GeneratorState classBuilder,
@@ -584,11 +577,10 @@ class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 		final String className = structureClassFileName.substring(structureClassFileName.lastIndexOf('/') + 1, structureClassFileName.length());
 
 		final JavaClassBuilder currentClass = new JavaClassBuilder(structureClassFileName, className);
-		final Stack<JavaClassBuilder> classStack = classBuilder.getClassStack();
+		final Deque<JavaClassBuilder> classBuilderDeque = classBuilder.getClassBuilderDeque();
 
-		classStack.push(currentClass);
-		classBuilder.setCurrentClass(currentClass);
-		classBuilder.getClasses().addFirst(currentClass);
+		classBuilderDeque.addFirst(currentClass);
+		classBuilder.getFinalClassBuilderDeque().addFirst(currentClass);
 
 		final ClassWriter cw = currentClass.getClassWriter();
 
@@ -637,8 +629,8 @@ class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 					null);
 
 			final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
-			final Stack<JavaMethodBuilder> methodBuilderStack = classBuilder.getMethodBuilderStack();
-			methodBuilderStack.push(methodBuilder);
+			final Deque<JavaMethodBuilder> methodBuilderDeque = classBuilder.getMethodBuilderDeque();
+			methodBuilderDeque.addFirst(methodBuilder);
 
 			mv.visitCode();
 			final int thisStore = methodBuilder.getNextAvailableStore();
@@ -665,7 +657,7 @@ class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 			mv.visitMaxs(-1, -1);
 			mv.visitEnd();
 
-			methodBuilderStack.pop();
+			methodBuilderDeque.removeFirst();
 		}
 		{
 			final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PROTECTED,
@@ -675,8 +667,8 @@ class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 					null);
 
 			final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
-			final Stack<JavaMethodBuilder> methodBuilderStack = classBuilder.getMethodBuilderStack();
-			methodBuilderStack.push(methodBuilder);
+			final Deque<JavaMethodBuilder> methodBuilderDeque = classBuilder.getMethodBuilderDeque();
+			methodBuilderDeque.addFirst(methodBuilder);
 
 			mv.visitCode();
 			final int thisStore = methodBuilder.getNextAvailableStore();
@@ -704,7 +696,7 @@ class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 			mv.visitMaxs(-1, -1);
 			mv.visitEnd();
 
-			methodBuilderStack.pop();
+			methodBuilderDeque.removeFirst();
 		}
 		{
 			final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PUBLIC,
@@ -714,8 +706,8 @@ class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 					null);
 
 			final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
-			final Stack<JavaMethodBuilder> methodBuilderStack = classBuilder.getMethodBuilderStack();
-			methodBuilderStack.push(methodBuilder);
+			final Deque<JavaMethodBuilder> methodBuilderDeque = classBuilder.getMethodBuilderDeque();
+			methodBuilderDeque.addFirst(methodBuilder);
 
 			mv.visitCode();
 			final int thisStore = methodBuilder.getNextAvailableStore();
@@ -733,7 +725,7 @@ class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 			mv.visitMaxs(-1, -1);
 			mv.visitEnd();
 
-			methodBuilderStack.pop();
+			methodBuilderDeque.removeFirst();
 		}
 		{
 			final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_STATIC,
@@ -743,8 +735,8 @@ class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 					null);
 
 			final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
-			final Stack<JavaMethodBuilder> methodBuilderStack = classBuilder.getMethodBuilderStack();
-			methodBuilderStack.push(methodBuilder);
+			final Deque<JavaMethodBuilder> methodBuilderDeque = classBuilder.getMethodBuilderDeque();
+			methodBuilderDeque.addFirst(methodBuilder);
 
 			mv.visitCode();
 			final int thisStore = methodBuilder.getNextAvailableStore();
@@ -789,12 +781,12 @@ class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 			mv.visitMaxs(-1, -1);
 			mv.visitEnd();
 
-			methodBuilderStack.pop();
+			methodBuilderDeque.removeFirst();
 		}
 
 		cw.visitEnd();
 
-		classStack.pop();
+		classBuilderDeque.removeFirst();
 	}
 
 	private static void generateStructureObject(final DefstructStruct defstructStruct, final GeneratorState classBuilder,
@@ -804,11 +796,10 @@ class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 		final String className = structureObjectFileName.substring(structureObjectFileName.lastIndexOf('/') + 1, structureObjectFileName.length());
 
 		final JavaClassBuilder currentClass = new JavaClassBuilder(structureObjectFileName, className);
-		final Stack<JavaClassBuilder> classStack = classBuilder.getClassStack();
+		final Deque<JavaClassBuilder> classBuilderDeque = classBuilder.getClassBuilderDeque();
 
-		classStack.push(currentClass);
-		classBuilder.setCurrentClass(currentClass);
-		classBuilder.getClasses().addFirst(currentClass);
+		classBuilderDeque.addFirst(currentClass);
+		classBuilder.getFinalClassBuilderDeque().addFirst(currentClass);
 
 		final ClassWriter cw = currentClass.getClassWriter();
 
@@ -846,8 +837,8 @@ class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 					null);
 
 			final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
-			final Stack<JavaMethodBuilder> methodBuilderStack = classBuilder.getMethodBuilderStack();
-			methodBuilderStack.push(methodBuilder);
+			final Deque<JavaMethodBuilder> methodBuilderDeque = classBuilder.getMethodBuilderDeque();
+			methodBuilderDeque.addFirst(methodBuilder);
 
 			mv.visitCode();
 			final int thisStore = methodBuilder.getNextAvailableStore();
@@ -890,7 +881,7 @@ class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 			mv.visitMaxs(-1, -1);
 			mv.visitEnd();
 
-			methodBuilderStack.pop();
+			methodBuilderDeque.removeFirst();
 		}
 		{
 			final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PRIVATE,
@@ -900,8 +891,8 @@ class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 					null);
 
 			final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
-			final Stack<JavaMethodBuilder> methodBuilderStack = classBuilder.getMethodBuilderStack();
-			methodBuilderStack.push(methodBuilder);
+			final Deque<JavaMethodBuilder> methodBuilderDeque = classBuilder.getMethodBuilderDeque();
+			methodBuilderDeque.addFirst(methodBuilder);
 
 			mv.visitCode();
 			final int thisStore = methodBuilder.getNextAvailableStore();
@@ -934,12 +925,12 @@ class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 			mv.visitMaxs(-1, -1);
 			mv.visitEnd();
 
-			methodBuilderStack.pop();
+			methodBuilderDeque.removeFirst();
 		}
 
 		cw.visitEnd();
 
-		classStack.pop();
+		classBuilderDeque.removeFirst();
 	}
 
 	private static String getStructureTypeGetInstanceDesc(final String structureTypeFileName) {

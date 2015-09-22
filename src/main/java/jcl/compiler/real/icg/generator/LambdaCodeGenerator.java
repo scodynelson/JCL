@@ -81,10 +81,6 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 	@Override
 	public void generate(final LambdaStruct input, final GeneratorState generatorState) {
 
-		final OrdinaryLambdaListBindings lambdaListBindings = input.getLambdaListBindings();
-		final StringStruct docString = input.getDocString();
-		final PrognStruct forms = input.getForms();
-		final LambdaEnvironment lambdaEnvironment = input.getLambdaEnvironment();
 
 		String fileName = input.getFileName();
 		fileName = fileName.replace('.', '/');
@@ -97,1132 +93,23 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 		classBuilderDeque.addFirst(currentClass);
 		generatorState.getFinalClassBuilderDeque().addFirst(currentClass);
 
-		final Deque<Environment> environmentDeque = generatorState.getEnvironmentDeque();
-
 		final ClassWriter cw = currentClass.getClassWriter();
 
 		cw.visit(Opcodes.V1_8, Opcodes.ACC_PUBLIC + Opcodes.ACC_SUPER, fileName, null, GenerationConstants.FUNCTION_STRUCT_NAME, null);
 
 		cw.visitSource(className + GenerationConstants.JAVA_EXTENSION, null);
 
-		{
-			final Random random = new SecureRandom();
-			final long serialVersionUID = random.nextLong();
+		generateSerialVersionUIDField(cw);
+		generateLoadTimeValueFields(input, cw);
+		generateNoArgConstructor(generatorState, fileName, cw);
+		generateClosureArgConstructor(input, generatorState, fileName, cw);
+		generateInitLoadTimeValueFormsMethod(input, generatorState, fileName, cw);
+		generateInitLambdaListBindingsMethod(input, generatorState, fileName, cw);
+		generateApplyMethod(generatorState, fileName, cw);
+		generateInternalApplyMethod(input, generatorState, cw);
+		generateGetInitFormMethod(input, generatorState, cw);
+//		generateClassInitMethod(generatorState, cw);
 
-			final FieldVisitor fv = cw.visitField(Opcodes.ACC_PRIVATE + Opcodes.ACC_FINAL + Opcodes.ACC_STATIC,
-					GenerationConstants.SERIAL_VERSION_UID_FIELD,
-					GenerationConstants.JAVA_LONG_TYPE_NAME,
-					null,
-					serialVersionUID);
-
-			fv.visitEnd();
-		}
-		{
-			final Map<String, LispStruct> loadTimeValues = lambdaEnvironment.getLoadTimeValues();
-			for (final String uniqueLTVId : loadTimeValues.keySet()) {
-				final FieldVisitor fv = cw.visitField(Opcodes.ACC_PRIVATE + Opcodes.ACC_FINAL,
-						uniqueLTVId,
-						GenerationConstants.LISP_STRUCT_DESC,
-						null,
-						null);
-				fv.visitEnd();
-			}
-		}
-		{
-			final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PUBLIC,
-					GenerationConstants.INIT_METHOD_NAME,
-					GenerationConstants.FUNCTION_STRUCT_INIT_DESC,
-					null,
-					null);
-
-			final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
-			final Deque<JavaMethodBuilder> methodBuilderDeque = generatorState.getMethodBuilderDeque();
-			methodBuilderDeque.addFirst(methodBuilder);
-
-			mv.visitCode();
-			final int thisStore = methodBuilder.getNextAvailableStore();
-
-			mv.visitVarInsn(Opcodes.ALOAD, thisStore);
-			mv.visitInsn(Opcodes.ACONST_NULL);
-			mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
-					fileName,
-					GenerationConstants.INIT_METHOD_NAME,
-					FUNCTION_STRUCT_INIT_CLOSURE_DESC,
-					false);
-
-			mv.visitInsn(Opcodes.RETURN);
-
-			mv.visitMaxs(-1, -1);
-			mv.visitEnd();
-
-			methodBuilderDeque.removeFirst();
-		}
-		{
-			final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PUBLIC,
-					GenerationConstants.INIT_METHOD_NAME,
-					FUNCTION_STRUCT_INIT_CLOSURE_DESC,
-					null,
-					null);
-
-			final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
-			final Deque<JavaMethodBuilder> methodBuilderDeque = generatorState.getMethodBuilderDeque();
-			methodBuilderDeque.addFirst(methodBuilder);
-
-			mv.visitCode();
-			final int thisStore = methodBuilder.getNextAvailableStore();
-			final int closureStore = methodBuilder.getNextAvailableStore();
-
-			mv.visitVarInsn(Opcodes.ALOAD, thisStore);
-
-			String documentation = "";
-			if (docString != null) {
-				documentation = docString.getAsJavaString();
-			}
-			mv.visitLdcInsn(documentation);
-			mv.visitVarInsn(Opcodes.ALOAD, closureStore);
-			mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
-					GenerationConstants.FUNCTION_STRUCT_NAME,
-					GenerationConstants.INIT_METHOD_NAME,
-					GenerationConstants.FUNCTION_STRUCT_INIT_STRING_CLOSURE_DESC,
-					false);
-
-			mv.visitVarInsn(Opcodes.ALOAD, thisStore);
-			mv.visitVarInsn(Opcodes.ALOAD, closureStore);
-			mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
-					fileName,
-					INIT_LOAD_TIME_VALUE_FORMS_METHOD_NAME,
-					INIT_LOAD_TIME_VALUE_FORMS_METHOD_DESC,
-					false);
-
-			mv.visitVarInsn(Opcodes.ALOAD, thisStore);
-			mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
-					fileName,
-					INIT_LAMBDA_LIST_BINDINGS_METHOD_NAME,
-					INIT_LAMBDA_LIST_BINDINGS_METHOD_DESC,
-					false);
-
-			mv.visitInsn(Opcodes.RETURN);
-
-			mv.visitMaxs(-1, -1);
-			mv.visitEnd();
-
-			methodBuilderDeque.removeFirst();
-		}
-		{
-			final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PRIVATE,
-					INIT_LOAD_TIME_VALUE_FORMS_METHOD_NAME,
-					INIT_LOAD_TIME_VALUE_FORMS_METHOD_DESC,
-					null,
-					null);
-
-			final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
-			final Deque<JavaMethodBuilder> methodBuilderDeque = generatorState.getMethodBuilderDeque();
-			methodBuilderDeque.addFirst(methodBuilder);
-
-			mv.visitCode();
-			final int thisStore = methodBuilder.getNextAvailableStore();
-			final int closureArgStore = methodBuilder.getNextAvailableStore();
-
-			final int loadTimeValueInitFormStore = methodBuilder.getNextAvailableStore();
-
-			final LambdaEnvironment environment = input.getLambdaEnvironment();
-			final Map<String, LispStruct> loadTimeValues = environment.getLoadTimeValues();
-
-			for (final Map.Entry<String, LispStruct> loadTimeValue : loadTimeValues.entrySet()) {
-				final String uniqueLTVId = loadTimeValue.getKey();
-				final LispStruct value = loadTimeValue.getValue();
-
-				codeGenerator.generate(value, generatorState);
-				mv.visitVarInsn(Opcodes.ASTORE, loadTimeValueInitFormStore);
-
-				CodeGenerators.generateValuesCheckAndStore(methodBuilder, loadTimeValueInitFormStore);
-
-				mv.visitVarInsn(Opcodes.ALOAD, thisStore);
-				mv.visitVarInsn(Opcodes.ALOAD, loadTimeValueInitFormStore);
-				mv.visitFieldInsn(Opcodes.PUTFIELD, fileName, uniqueLTVId, GenerationConstants.LISP_STRUCT_DESC);
-			}
-
-			mv.visitInsn(Opcodes.RETURN);
-
-			mv.visitMaxs(-1, -1);
-			mv.visitEnd();
-
-			methodBuilderDeque.removeFirst();
-		}
-		{
-			final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PRIVATE,
-					INIT_LAMBDA_LIST_BINDINGS_METHOD_NAME,
-					INIT_LAMBDA_LIST_BINDINGS_METHOD_DESC,
-					null,
-					null);
-
-			final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
-			final Deque<JavaMethodBuilder> methodBuilderDeque = generatorState.getMethodBuilderDeque();
-			methodBuilderDeque.addFirst(methodBuilder);
-
-			mv.visitCode();
-			final int thisStore = methodBuilder.getNextAvailableStore();
-
-			final int packageStore = methodBuilder.getNextAvailableStore();
-
-			// End: Required
-			final int requiredBindingsStore = methodBuilder.getNextAvailableStore();
-			generateRequiredBindings(generatorState, methodBuilder, lambdaListBindings, mv, packageStore, requiredBindingsStore);
-			// End: Required
-
-			// Start: Optional
-			final int optionalBindingsStore = methodBuilder.getNextAvailableStore();
-			generateOptionalBindings(generatorState, methodBuilder, lambdaListBindings, mv, packageStore, optionalBindingsStore);
-			// End: Optional
-
-			// Start: Rest
-			final int restBindingStore = methodBuilder.getNextAvailableStore();
-			generateRestBinding(generatorState, methodBuilder, lambdaListBindings, mv, packageStore, restBindingStore);
-			// End: Rest
-
-			// Start: Key
-			final int keyBindingsStore = methodBuilder.getNextAvailableStore();
-			generateKeyBindings(generatorState, methodBuilder, lambdaListBindings, mv, packageStore, keyBindingsStore);
-			// End: Key
-
-			// Start: Allow-Other-Keys
-			final int allowOtherKeysStore = methodBuilder.getNextAvailableStore();
-			generateAllowOtherKeys(lambdaListBindings, mv, allowOtherKeysStore);
-			// End: Allow-Other-Keys
-
-			// Start: Aux
-			final int auxBindingsStore = methodBuilder.getNextAvailableStore();
-			generateAuxBindings(generatorState, methodBuilder, lambdaListBindings, mv, packageStore, auxBindingsStore);
-			// Start: End
-
-			mv.visitVarInsn(Opcodes.ALOAD, thisStore);
-
-			mv.visitTypeInsn(Opcodes.NEW, GenerationConstants.ORDINARY_LAMBDA_LIST_BINDINGS_NAME);
-			mv.visitInsn(Opcodes.DUP);
-			mv.visitVarInsn(Opcodes.ALOAD, requiredBindingsStore);
-			mv.visitVarInsn(Opcodes.ALOAD, optionalBindingsStore);
-			mv.visitVarInsn(Opcodes.ALOAD, restBindingStore);
-			mv.visitVarInsn(Opcodes.ALOAD, keyBindingsStore);
-			mv.visitVarInsn(Opcodes.ALOAD, auxBindingsStore);
-			mv.visitVarInsn(Opcodes.ILOAD, allowOtherKeysStore);
-			mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
-					GenerationConstants.ORDINARY_LAMBDA_LIST_BINDINGS_NAME,
-					GenerationConstants.INIT_METHOD_NAME,
-					GenerationConstants.ORDINARY_LAMBDA_LIST_BINDINGS_INIT_DESC,
-					false);
-
-			mv.visitFieldInsn(Opcodes.PUTFIELD, fileName, LAMBDA_LIST_BINDINGS_FIELD, GenerationConstants.ORDINARY_LAMBDA_LIST_BINDINGS_DESC);
-
-			mv.visitInsn(Opcodes.RETURN);
-
-			mv.visitMaxs(-1, -1);
-			mv.visitEnd();
-
-			methodBuilderDeque.removeFirst();
-		}
-		{
-			final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PUBLIC + Opcodes.ACC_VARARGS,
-					GenerationConstants.FUNCTION_STRUCT_APPLY_METHOD_NAME,
-					GenerationConstants.FUNCTION_STRUCT_APPLY_METHOD_DESC,
-					null,
-					null);
-
-			final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
-			final Deque<JavaMethodBuilder> methodBuilderDeque = generatorState.getMethodBuilderDeque();
-			methodBuilderDeque.addFirst(methodBuilder);
-
-			mv.visitCode();
-			final int thisStore = methodBuilder.getNextAvailableStore();
-			final int argsStore = methodBuilder.getNextAvailableStore();
-
-			final Label tryBlockStart = new Label();
-			final Label tryBlockEnd = new Label();
-			final Label catchBlockStart = new Label();
-			final Label catchErrorExceptionStart = new Label();
-			final Label catchThrowableStart = new Label();
-			final Label finallyBlockStart = new Label();
-			final Label finallyBlockEnd = new Label();
-			mv.visitTryCatchBlock(tryBlockStart, tryBlockEnd, catchErrorExceptionStart, GenerationConstants.ERROR_EXCEPTION_NAME);
-			mv.visitTryCatchBlock(tryBlockStart, tryBlockEnd, catchThrowableStart, GenerationConstants.JAVA_THROWABLE_NAME);
-			mv.visitTryCatchBlock(tryBlockStart, tryBlockEnd, catchBlockStart, null);
-			mv.visitTryCatchBlock(catchErrorExceptionStart, finallyBlockStart, catchBlockStart, null);
-
-			// START: Bind Closure Symbol values
-			mv.visitVarInsn(Opcodes.ALOAD, thisStore);
-			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
-					fileName,
-					GenerationConstants.FUNCTION_STRUCT_GET_CLOSURE_SYMBOL_BINDINGS_METHOD_NAME,
-					GenerationConstants.FUNCTION_STRUCT_GET_CLOSURE_SYMBOL_BINDINGS_METHOD_DESC,
-					false);
-			final int closureSymbolBindingsStore = methodBuilder.getNextAvailableStore();
-			mv.visitVarInsn(Opcodes.ASTORE, closureSymbolBindingsStore);
-
-			mv.visitVarInsn(Opcodes.ALOAD, closureSymbolBindingsStore);
-			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
-					GenerationConstants.JAVA_MAP_NAME,
-					GenerationConstants.JAVA_MAP_ENTRY_SET_METHOD_NAME,
-					GenerationConstants.JAVA_MAP_ENTRY_SET_METHOD_DESC,
-					true);
-			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
-					GenerationConstants.JAVA_SET_NAME,
-					GenerationConstants.JAVA_SET_ITERATOR_METHOD_NAME,
-					GenerationConstants.JAVA_SET_ITERATOR_METHOD_DESC,
-					true);
-			final int closureSymbolBindingIteratorStore = methodBuilder.getNextAvailableStore();
-			mv.visitVarInsn(Opcodes.ASTORE, closureSymbolBindingIteratorStore);
-
-			final Label closureSymbolBindingIteratorLoopStart = new Label();
-			final Label closureSymbolBindingIteratorLoopEnd = new Label();
-
-			mv.visitLabel(closureSymbolBindingIteratorLoopStart);
-			mv.visitVarInsn(Opcodes.ALOAD, closureSymbolBindingIteratorStore);
-			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
-					GenerationConstants.JAVA_ITERATOR_NAME,
-					GenerationConstants.JAVA_ITERATOR_HAS_NEXT_METHOD_NAME,
-					GenerationConstants.JAVA_ITERATOR_HAS_NEXT_METHOD_DESC,
-					true);
-
-			mv.visitJumpInsn(Opcodes.IFEQ, closureSymbolBindingIteratorLoopEnd);
-			mv.visitVarInsn(Opcodes.ALOAD, closureSymbolBindingIteratorStore);
-			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
-					GenerationConstants.JAVA_ITERATOR_NAME,
-					GenerationConstants.JAVA_ITERATOR_NEXT_METHOD_NAME,
-					GenerationConstants.JAVA_ITERATOR_NEXT_METHOD_DESC,
-					true);
-			mv.visitTypeInsn(Opcodes.CHECKCAST, GenerationConstants.JAVA_MAP_ENTRY_NAME);
-			final int closureSymbolBindingMapEntryStore = methodBuilder.getNextAvailableStore();
-			mv.visitVarInsn(Opcodes.ASTORE, closureSymbolBindingMapEntryStore);
-
-			mv.visitVarInsn(Opcodes.ALOAD, closureSymbolBindingMapEntryStore);
-			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
-					GenerationConstants.JAVA_MAP_ENTRY_NAME,
-					GenerationConstants.JAVA_MAP_ENTRY_GET_KEY_METHOD_NAME,
-					GenerationConstants.JAVA_MAP_ENTRY_GET_KEY_METHOD_DESC,
-					true);
-			mv.visitTypeInsn(Opcodes.CHECKCAST, GenerationConstants.SYMBOL_STRUCT_NAME);
-			final int closureSymbolToBindStore = methodBuilder.getNextAvailableStore();
-			mv.visitVarInsn(Opcodes.ASTORE, closureSymbolToBindStore);
-
-			mv.visitVarInsn(Opcodes.ALOAD, closureSymbolBindingMapEntryStore);
-			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
-					GenerationConstants.JAVA_MAP_ENTRY_NAME,
-					GenerationConstants.JAVA_MAP_ENTRY_GET_VALUE_METHOD_NAME,
-					GenerationConstants.JAVA_MAP_ENTRY_GET_VALUE_METHOD_DESC,
-					true);
-			mv.visitTypeInsn(Opcodes.CHECKCAST, GenerationConstants.LISP_STRUCT_NAME);
-			final int closureSymbolLexicalValueStore = methodBuilder.getNextAvailableStore();
-			mv.visitVarInsn(Opcodes.ASTORE, closureSymbolLexicalValueStore);
-
-			final Label closureSymbolValuesCheckIfEnd = new Label();
-
-			mv.visitVarInsn(Opcodes.ALOAD, closureSymbolLexicalValueStore);
-			mv.visitTypeInsn(Opcodes.INSTANCEOF, GenerationConstants.VALUES_STRUCT_NAME);
-			mv.visitJumpInsn(Opcodes.IFEQ, closureSymbolValuesCheckIfEnd);
-
-			mv.visitVarInsn(Opcodes.ALOAD, closureSymbolLexicalValueStore);
-			mv.visitTypeInsn(Opcodes.CHECKCAST, GenerationConstants.VALUES_STRUCT_NAME);
-			final int closureSymbolValuesStore = methodBuilder.getNextAvailableStore();
-			mv.visitVarInsn(Opcodes.ASTORE, closureSymbolValuesStore);
-
-			mv.visitVarInsn(Opcodes.ALOAD, closureSymbolValuesStore);
-			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
-					GenerationConstants.VALUES_STRUCT_NAME,
-					GenerationConstants.VALUES_STRUCT_GET_PRIMARY_VALUE_METHOD_NAME,
-					GenerationConstants.VALUES_STRUCT_GET_PRIMARY_VALUE_METHOD_DESC,
-					false);
-			mv.visitVarInsn(Opcodes.ASTORE, closureSymbolLexicalValueStore);
-
-			mv.visitLabel(closureSymbolValuesCheckIfEnd);
-
-			mv.visitVarInsn(Opcodes.ALOAD, closureSymbolToBindStore);
-			mv.visitVarInsn(Opcodes.ALOAD, closureSymbolLexicalValueStore);
-			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
-					GenerationConstants.SYMBOL_STRUCT_NAME,
-					GenerationConstants.SYMBOL_STRUCT_BIND_LEXICAL_VALUE_METHOD_NAME,
-					GenerationConstants.SYMBOL_STRUCT_BIND_LEXICAL_VALUE_METHOD_DESC,
-					false);
-			mv.visitJumpInsn(Opcodes.GOTO, closureSymbolBindingIteratorLoopStart);
-
-			mv.visitLabel(closureSymbolBindingIteratorLoopEnd);
-			// END: Bind Closure Symbol values
-
-			// START: Bind Closure Function values
-			mv.visitVarInsn(Opcodes.ALOAD, thisStore);
-			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
-					fileName,
-					GenerationConstants.FUNCTION_STRUCT_GET_CLOSURE_FUNCTION_BINDINGS_METHOD_NAME,
-					GenerationConstants.FUNCTION_STRUCT_GET_CLOSURE_FUNCTION_BINDINGS_METHOD_DESC,
-					false);
-			final int closureFunctionBindingsStore = methodBuilder.getNextAvailableStore();
-			mv.visitVarInsn(Opcodes.ASTORE, closureFunctionBindingsStore);
-
-			mv.visitVarInsn(Opcodes.ALOAD, closureFunctionBindingsStore);
-			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
-					GenerationConstants.JAVA_MAP_NAME,
-					GenerationConstants.JAVA_MAP_ENTRY_SET_METHOD_NAME,
-					GenerationConstants.JAVA_MAP_ENTRY_SET_METHOD_DESC,
-					true);
-			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
-					GenerationConstants.JAVA_SET_NAME,
-					GenerationConstants.JAVA_SET_ITERATOR_METHOD_NAME,
-					GenerationConstants.JAVA_SET_ITERATOR_METHOD_DESC,
-					true);
-			final int closureFunctionBindingIteratorStore = methodBuilder.getNextAvailableStore();
-			mv.visitVarInsn(Opcodes.ASTORE, closureFunctionBindingIteratorStore);
-
-			final Label closureFunctionBindingIteratorLoopStart = new Label();
-			final Label closureFunctionBindingIteratorLoopEnd = new Label();
-
-			mv.visitLabel(closureFunctionBindingIteratorLoopStart);
-			mv.visitVarInsn(Opcodes.ALOAD, closureFunctionBindingIteratorStore);
-			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
-					GenerationConstants.JAVA_ITERATOR_NAME,
-					GenerationConstants.JAVA_ITERATOR_HAS_NEXT_METHOD_NAME,
-					GenerationConstants.JAVA_ITERATOR_HAS_NEXT_METHOD_DESC,
-					true);
-
-			mv.visitJumpInsn(Opcodes.IFEQ, closureFunctionBindingIteratorLoopEnd);
-			mv.visitVarInsn(Opcodes.ALOAD, closureFunctionBindingIteratorStore);
-			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
-					GenerationConstants.JAVA_ITERATOR_NAME,
-					GenerationConstants.JAVA_ITERATOR_NEXT_METHOD_NAME,
-					GenerationConstants.JAVA_ITERATOR_NEXT_METHOD_DESC,
-					true);
-			mv.visitTypeInsn(Opcodes.CHECKCAST, GenerationConstants.JAVA_MAP_ENTRY_NAME);
-			final int closureFunctionBindingMapEntryStore = methodBuilder.getNextAvailableStore();
-			mv.visitVarInsn(Opcodes.ASTORE, closureFunctionBindingMapEntryStore);
-
-			mv.visitVarInsn(Opcodes.ALOAD, closureFunctionBindingMapEntryStore);
-			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
-					GenerationConstants.JAVA_MAP_ENTRY_NAME,
-					GenerationConstants.JAVA_MAP_ENTRY_GET_KEY_METHOD_NAME,
-					GenerationConstants.JAVA_MAP_ENTRY_GET_KEY_METHOD_DESC,
-					true);
-			mv.visitTypeInsn(Opcodes.CHECKCAST, GenerationConstants.SYMBOL_STRUCT_NAME);
-			final int closureFunctionToBindStore = methodBuilder.getNextAvailableStore();
-			mv.visitVarInsn(Opcodes.ASTORE, closureFunctionToBindStore);
-
-			mv.visitVarInsn(Opcodes.ALOAD, closureFunctionBindingMapEntryStore);
-			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
-					GenerationConstants.JAVA_MAP_ENTRY_NAME,
-					GenerationConstants.JAVA_MAP_ENTRY_GET_VALUE_METHOD_NAME,
-					GenerationConstants.JAVA_MAP_ENTRY_GET_VALUE_METHOD_DESC,
-					true);
-			mv.visitTypeInsn(Opcodes.CHECKCAST, GenerationConstants.FUNCTION_STRUCT_NAME);
-			final int closureFunctionValueStore = methodBuilder.getNextAvailableStore();
-			mv.visitVarInsn(Opcodes.ASTORE, closureFunctionValueStore);
-
-			mv.visitVarInsn(Opcodes.ALOAD, closureFunctionToBindStore);
-			mv.visitVarInsn(Opcodes.ALOAD, closureFunctionValueStore);
-			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
-					GenerationConstants.SYMBOL_STRUCT_NAME,
-					GenerationConstants.SYMBOL_STRUCT_BIND_FUNCTION_METHOD_NAME,
-					GenerationConstants.SYMBOL_STRUCT_BIND_FUNCTION_METHOD_DESC,
-					false);
-			mv.visitJumpInsn(Opcodes.GOTO, closureFunctionBindingIteratorLoopStart);
-
-			mv.visitLabel(closureFunctionBindingIteratorLoopEnd);
-			// END: Bind Closure Function values
-
-			// START: Bind Parameter values
-			mv.visitVarInsn(Opcodes.ALOAD, thisStore);
-			mv.visitVarInsn(Opcodes.ALOAD, argsStore);
-			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
-					fileName,
-					GenerationConstants.FUNCTION_STRUCT_GET_FUNCTION_BINDINGS_METHOD_NAME,
-					GenerationConstants.FUNCTION_STRUCT_GET_FUNCTION_BINDINGS_METHOD_DESC,
-					false);
-			final int functionBindingsStore = methodBuilder.getNextAvailableStore();
-			mv.visitVarInsn(Opcodes.ASTORE, functionBindingsStore);
-
-			mv.visitVarInsn(Opcodes.ALOAD, functionBindingsStore);
-			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
-					GenerationConstants.JAVA_LIST_NAME,
-					GenerationConstants.JAVA_LIST_ITERATOR_METHOD_NAME,
-					GenerationConstants.JAVA_LIST_ITERATOR_METHOD_DESC,
-					true);
-			final int parameterBindingIteratorStore = methodBuilder.getNextAvailableStore();
-			mv.visitVarInsn(Opcodes.ASTORE, parameterBindingIteratorStore);
-
-			final Label parameterBindingIteratorLoopStart = new Label();
-			final Label parameterBindingIteratorLoopEnd = new Label();
-
-			mv.visitLabel(parameterBindingIteratorLoopStart);
-			mv.visitVarInsn(Opcodes.ALOAD, parameterBindingIteratorStore);
-			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
-					GenerationConstants.JAVA_ITERATOR_NAME,
-					GenerationConstants.JAVA_ITERATOR_HAS_NEXT_METHOD_NAME,
-					GenerationConstants.JAVA_ITERATOR_HAS_NEXT_METHOD_DESC,
-					true);
-
-			mv.visitJumpInsn(Opcodes.IFEQ, parameterBindingIteratorLoopEnd);
-			mv.visitVarInsn(Opcodes.ALOAD, parameterBindingIteratorStore);
-			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
-					GenerationConstants.JAVA_ITERATOR_NAME,
-					GenerationConstants.JAVA_ITERATOR_NEXT_METHOD_NAME,
-					GenerationConstants.JAVA_ITERATOR_NEXT_METHOD_DESC,
-					true);
-			mv.visitTypeInsn(Opcodes.CHECKCAST, GenerationConstants.FUNCTION_PARAMETER_BINDING_NAME);
-			final int functionParameterBindingStore = methodBuilder.getNextAvailableStore();
-			mv.visitVarInsn(Opcodes.ASTORE, functionParameterBindingStore);
-
-			mv.visitVarInsn(Opcodes.ALOAD, functionParameterBindingStore);
-			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
-					GenerationConstants.FUNCTION_PARAMETER_BINDING_NAME,
-					GenerationConstants.FUNCTION_PARAMETER_BINDING_GET_PARAMETER_SYMBOL_METHOD_NAME,
-					GenerationConstants.FUNCTION_PARAMETER_BINDING_GET_PARAMETER_SYMBOL_METHOD_DESC,
-					false);
-			final int parameterSymbolToBindStore = methodBuilder.getNextAvailableStore();
-			mv.visitVarInsn(Opcodes.ASTORE, parameterSymbolToBindStore);
-
-			mv.visitVarInsn(Opcodes.ALOAD, functionParameterBindingStore);
-			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
-					GenerationConstants.FUNCTION_PARAMETER_BINDING_NAME,
-					GenerationConstants.FUNCTION_PARAMETER_BINDING_GET_PARAMETER_VALUE_METHOD_NAME,
-					GenerationConstants.FUNCTION_PARAMETER_BINDING_GET_PARAMETER_VALUE_METHOD_DESC,
-					false);
-			final int parameterValueStore = methodBuilder.getNextAvailableStore();
-			mv.visitVarInsn(Opcodes.ASTORE, parameterValueStore);
-
-			final Label parameterValuesCheckIfEnd = new Label();
-			final Label parameterInitFormCheckIfEnd = new Label();
-
-			mv.visitVarInsn(Opcodes.ALOAD, parameterValueStore);
-			mv.visitTypeInsn(Opcodes.INSTANCEOF, GenerationConstants.VALUES_STRUCT_NAME);
-			mv.visitJumpInsn(Opcodes.IFEQ, parameterValuesCheckIfEnd);
-
-			mv.visitVarInsn(Opcodes.ALOAD, parameterValueStore);
-			mv.visitTypeInsn(Opcodes.CHECKCAST, GenerationConstants.VALUES_STRUCT_NAME);
-			final int parameterValuesStore = methodBuilder.getNextAvailableStore();
-			mv.visitVarInsn(Opcodes.ASTORE, parameterValuesStore);
-
-			mv.visitVarInsn(Opcodes.ALOAD, parameterValuesStore);
-			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
-					GenerationConstants.VALUES_STRUCT_NAME,
-					GenerationConstants.VALUES_STRUCT_GET_PRIMARY_VALUE_METHOD_NAME,
-					GenerationConstants.VALUES_STRUCT_GET_PRIMARY_VALUE_METHOD_DESC,
-					false);
-			mv.visitVarInsn(Opcodes.ASTORE, parameterValueStore);
-
-			mv.visitLabel(parameterValuesCheckIfEnd);
-
-			mv.visitFieldInsn(Opcodes.GETSTATIC, fileName, INIT_FORM_PLACEHOLDER_FIELD, GenerationConstants.LISP_STRUCT_DESC);
-			mv.visitVarInsn(Opcodes.ALOAD, parameterValueStore);
-			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
-					GenerationConstants.JAVA_OBJECT_NAME,
-					GenerationConstants.JAVA_EQUALS_METHOD_NAME,
-					GenerationConstants.JAVA_EQUALS_METHOD_DESC,
-					false);
-			mv.visitJumpInsn(Opcodes.IFEQ, parameterInitFormCheckIfEnd);
-
-			mv.visitVarInsn(Opcodes.ALOAD, thisStore);
-			mv.visitVarInsn(Opcodes.ALOAD, parameterSymbolToBindStore);
-			mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
-					fileName,
-					GET_INIT_FORM_METHOD_NAME,
-					GET_INIT_FORM_METHOD_DESC,
-					false);
-			mv.visitVarInsn(Opcodes.ASTORE, parameterValueStore);
-
-			mv.visitLabel(parameterInitFormCheckIfEnd);
-
-			mv.visitVarInsn(Opcodes.ALOAD, functionParameterBindingStore);
-			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
-					GenerationConstants.FUNCTION_PARAMETER_BINDING_NAME,
-					GenerationConstants.FUNCTION_PARAMETER_BINDING_IS_SPECIAL_METHOD_NAME,
-					GenerationConstants.FUNCTION_PARAMETER_BINDING_IS_SPECIAL_METHOD_DESC,
-					false);
-			final int parameterIsSpecialStore = methodBuilder.getNextAvailableStore();
-			mv.visitVarInsn(Opcodes.ISTORE, parameterIsSpecialStore);
-
-			final Label parameterIsSpecialCheckElse = new Label();
-			final Label parameterIsSpecialCheckElseEnd = new Label();
-
-			mv.visitVarInsn(Opcodes.ILOAD, parameterIsSpecialStore);
-			mv.visitJumpInsn(Opcodes.IFEQ, parameterIsSpecialCheckElse);
-
-			mv.visitVarInsn(Opcodes.ALOAD, parameterSymbolToBindStore);
-			mv.visitVarInsn(Opcodes.ALOAD, parameterValueStore);
-			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
-					GenerationConstants.SYMBOL_STRUCT_NAME,
-					GenerationConstants.SYMBOL_STRUCT_BIND_DYNAMIC_VALUE_METHOD_NAME,
-					GenerationConstants.SYMBOL_STRUCT_BIND_DYNAMIC_VALUE_METHOD_DESC,
-					false);
-			mv.visitJumpInsn(Opcodes.GOTO, parameterIsSpecialCheckElseEnd);
-
-			mv.visitLabel(parameterIsSpecialCheckElse);
-
-			mv.visitVarInsn(Opcodes.ALOAD, parameterSymbolToBindStore);
-			mv.visitVarInsn(Opcodes.ALOAD, parameterValueStore);
-			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
-					GenerationConstants.SYMBOL_STRUCT_NAME,
-					GenerationConstants.SYMBOL_STRUCT_BIND_LEXICAL_VALUE_METHOD_NAME,
-					GenerationConstants.SYMBOL_STRUCT_BIND_LEXICAL_VALUE_METHOD_DESC,
-					false);
-
-			mv.visitLabel(parameterIsSpecialCheckElseEnd);
-
-			mv.visitJumpInsn(Opcodes.GOTO, parameterBindingIteratorLoopStart);
-
-			mv.visitLabel(parameterBindingIteratorLoopEnd);
-			// END: Bind Parameter values
-
-			mv.visitLabel(tryBlockStart);
-
-			mv.visitVarInsn(Opcodes.ALOAD, thisStore);
-			mv.visitVarInsn(Opcodes.ALOAD, thisStore);
-			mv.visitFieldInsn(Opcodes.GETFIELD, fileName, CLOSURE_FIELD, GenerationConstants.CLOSURE_DESC);
-			mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
-					fileName,
-					INTERNAL_APPLY_METHOD_NAME,
-					INTERNAL_APPLY_METHOD_DESC,
-					false);
-
-			final int resultStore = methodBuilder.getNextAvailableStore();
-			mv.visitVarInsn(Opcodes.ASTORE, resultStore);
-
-			mv.visitLabel(tryBlockEnd);
-
-			// START: Unbind Parameter values
-			mv.visitVarInsn(Opcodes.ALOAD, functionBindingsStore);
-			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
-					GenerationConstants.JAVA_LIST_NAME,
-					GenerationConstants.JAVA_LIST_ITERATOR_METHOD_NAME,
-					GenerationConstants.JAVA_LIST_ITERATOR_METHOD_DESC,
-					true);
-			final int normalParameterUnbindingIteratorStore = methodBuilder.getNextAvailableStore();
-			mv.visitVarInsn(Opcodes.ASTORE, normalParameterUnbindingIteratorStore);
-
-			final Label normalParameterUnbindingIteratorLoopStart = new Label();
-			final Label normalParameterUnbindingIteratorLoopEnd = new Label();
-
-			mv.visitLabel(normalParameterUnbindingIteratorLoopStart);
-			mv.visitVarInsn(Opcodes.ALOAD, normalParameterUnbindingIteratorStore);
-			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
-					GenerationConstants.JAVA_ITERATOR_NAME,
-					GenerationConstants.JAVA_ITERATOR_HAS_NEXT_METHOD_NAME,
-					GenerationConstants.JAVA_ITERATOR_HAS_NEXT_METHOD_DESC,
-					true);
-
-			mv.visitJumpInsn(Opcodes.IFEQ, normalParameterUnbindingIteratorLoopEnd);
-			mv.visitVarInsn(Opcodes.ALOAD, normalParameterUnbindingIteratorStore);
-			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
-					GenerationConstants.JAVA_ITERATOR_NAME,
-					GenerationConstants.JAVA_ITERATOR_NEXT_METHOD_NAME,
-					GenerationConstants.JAVA_ITERATOR_NEXT_METHOD_DESC,
-					true);
-			mv.visitTypeInsn(Opcodes.CHECKCAST, GenerationConstants.FUNCTION_PARAMETER_BINDING_NAME);
-			final int normalParameterUnbindingStore = methodBuilder.getNextAvailableStore();
-			mv.visitVarInsn(Opcodes.ASTORE, normalParameterUnbindingStore);
-
-			mv.visitVarInsn(Opcodes.ALOAD, normalParameterUnbindingStore);
-			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
-					GenerationConstants.FUNCTION_PARAMETER_BINDING_NAME,
-					GenerationConstants.FUNCTION_PARAMETER_BINDING_GET_PARAMETER_SYMBOL_METHOD_NAME,
-					GenerationConstants.FUNCTION_PARAMETER_BINDING_GET_PARAMETER_SYMBOL_METHOD_DESC,
-					false);
-			final int normalParameterSymbolToUnbindStore = methodBuilder.getNextAvailableStore();
-			mv.visitVarInsn(Opcodes.ASTORE, normalParameterSymbolToUnbindStore);
-
-			mv.visitVarInsn(Opcodes.ALOAD, normalParameterUnbindingStore);
-			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
-					GenerationConstants.FUNCTION_PARAMETER_BINDING_NAME,
-					GenerationConstants.FUNCTION_PARAMETER_BINDING_IS_SPECIAL_METHOD_NAME,
-					GenerationConstants.FUNCTION_PARAMETER_BINDING_IS_SPECIAL_METHOD_DESC,
-					false);
-			final int normalParameterUnbindingIsSpecialStore = methodBuilder.getNextAvailableStore();
-			mv.visitVarInsn(Opcodes.ISTORE, normalParameterUnbindingIsSpecialStore);
-
-			final Label normalParameterUnbindingIsSpecialCheckElse = new Label();
-			final Label normalParameterUnbindingIsSpecialCheckElseEnd = new Label();
-
-			mv.visitVarInsn(Opcodes.ILOAD, normalParameterUnbindingIsSpecialStore);
-			mv.visitJumpInsn(Opcodes.IFEQ, normalParameterUnbindingIsSpecialCheckElse);
-
-			mv.visitVarInsn(Opcodes.ALOAD, normalParameterSymbolToUnbindStore);
-			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
-					GenerationConstants.SYMBOL_STRUCT_NAME,
-					GenerationConstants.SYMBOL_STRUCT_UNBIND_DYNAMIC_VALUE_METHOD_NAME,
-					GenerationConstants.SYMBOL_STRUCT_UNBIND_DYNAMIC_VALUE_METHOD_DESC,
-					false);
-			mv.visitJumpInsn(Opcodes.GOTO, normalParameterUnbindingIsSpecialCheckElseEnd);
-
-			mv.visitLabel(normalParameterUnbindingIsSpecialCheckElse);
-
-			mv.visitVarInsn(Opcodes.ALOAD, normalParameterSymbolToUnbindStore);
-			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
-					GenerationConstants.SYMBOL_STRUCT_NAME,
-					GenerationConstants.SYMBOL_STRUCT_UNBIND_LEXICAL_VALUE_METHOD_NAME,
-					GenerationConstants.SYMBOL_STRUCT_UNBIND_LEXICAL_VALUE_METHOD_DESC,
-					false);
-
-			mv.visitLabel(normalParameterUnbindingIsSpecialCheckElseEnd);
-
-			mv.visitJumpInsn(Opcodes.GOTO, normalParameterUnbindingIteratorLoopStart);
-
-			mv.visitLabel(normalParameterUnbindingIteratorLoopEnd);
-			// END: Unbind Parameter values
-
-			// START: Unbind Closure Function values
-			mv.visitVarInsn(Opcodes.ALOAD, closureFunctionBindingsStore);
-			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
-					GenerationConstants.JAVA_MAP_NAME,
-					GenerationConstants.JAVA_MAP_KEY_SET_METHOD_NAME,
-					GenerationConstants.JAVA_MAP_KEY_SET_METHOD_DESC,
-					true);
-			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
-					GenerationConstants.JAVA_SET_NAME,
-					GenerationConstants.JAVA_SET_ITERATOR_METHOD_NAME,
-					GenerationConstants.JAVA_SET_ITERATOR_METHOD_DESC,
-					true);
-			final int normalClosureFunctionUnbindingIteratorStore = methodBuilder.getNextAvailableStore();
-			mv.visitVarInsn(Opcodes.ASTORE, normalClosureFunctionUnbindingIteratorStore);
-
-			final Label normalClosureFunctionUnbindingIteratorLoopStart = new Label();
-			final Label normalClosureFunctionUnbindingIteratorLoopEnd = new Label();
-
-			mv.visitLabel(normalClosureFunctionUnbindingIteratorLoopStart);
-			mv.visitVarInsn(Opcodes.ALOAD, normalClosureFunctionUnbindingIteratorStore);
-			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
-					GenerationConstants.JAVA_ITERATOR_NAME,
-					GenerationConstants.JAVA_ITERATOR_HAS_NEXT_METHOD_NAME,
-					GenerationConstants.JAVA_ITERATOR_HAS_NEXT_METHOD_DESC,
-					true);
-
-			mv.visitJumpInsn(Opcodes.IFEQ, normalClosureFunctionUnbindingIteratorLoopEnd);
-			mv.visitVarInsn(Opcodes.ALOAD, normalClosureFunctionUnbindingIteratorStore);
-			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
-					GenerationConstants.JAVA_ITERATOR_NAME,
-					GenerationConstants.JAVA_ITERATOR_NEXT_METHOD_NAME,
-					GenerationConstants.JAVA_ITERATOR_NEXT_METHOD_DESC,
-					true);
-			mv.visitTypeInsn(Opcodes.CHECKCAST, GenerationConstants.SYMBOL_STRUCT_NAME);
-			final int normalClosureFunctionUnbindingMapKeySymbolStore = methodBuilder.getNextAvailableStore();
-			mv.visitVarInsn(Opcodes.ASTORE, normalClosureFunctionUnbindingMapKeySymbolStore);
-
-			mv.visitVarInsn(Opcodes.ALOAD, normalClosureFunctionUnbindingMapKeySymbolStore);
-			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
-					GenerationConstants.SYMBOL_STRUCT_NAME,
-					GenerationConstants.SYMBOL_STRUCT_UNBIND_FUNCTION_METHOD_NAME,
-					GenerationConstants.SYMBOL_STRUCT_UNBIND_FUNCTION_METHOD_DESC,
-					false);
-			mv.visitInsn(Opcodes.POP);
-			mv.visitJumpInsn(Opcodes.GOTO, normalClosureFunctionUnbindingIteratorLoopStart);
-
-			mv.visitLabel(normalClosureFunctionUnbindingIteratorLoopEnd);
-			// END: Unbind Closure Function values
-
-			// START: Unbind Closure Symbol values
-			mv.visitVarInsn(Opcodes.ALOAD, closureSymbolBindingsStore);
-			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
-					GenerationConstants.JAVA_MAP_NAME,
-					GenerationConstants.JAVA_MAP_KEY_SET_METHOD_NAME,
-					GenerationConstants.JAVA_MAP_KEY_SET_METHOD_DESC,
-					true);
-			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
-					GenerationConstants.JAVA_SET_NAME,
-					GenerationConstants.JAVA_SET_ITERATOR_METHOD_NAME,
-					GenerationConstants.JAVA_SET_ITERATOR_METHOD_DESC,
-					true);
-			final int normalClosureUnbindingIteratorStore = methodBuilder.getNextAvailableStore();
-			mv.visitVarInsn(Opcodes.ASTORE, normalClosureUnbindingIteratorStore);
-
-			final Label normalClosureSymbolUnbindingIteratorLoopStart = new Label();
-			final Label normalClosureSymbolUnbindingIteratorLoopEnd = new Label();
-
-			mv.visitLabel(normalClosureSymbolUnbindingIteratorLoopStart);
-			mv.visitVarInsn(Opcodes.ALOAD, normalClosureUnbindingIteratorStore);
-			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
-					GenerationConstants.JAVA_ITERATOR_NAME,
-					GenerationConstants.JAVA_ITERATOR_HAS_NEXT_METHOD_NAME,
-					GenerationConstants.JAVA_ITERATOR_HAS_NEXT_METHOD_DESC,
-					true);
-
-			mv.visitJumpInsn(Opcodes.IFEQ, normalClosureSymbolUnbindingIteratorLoopEnd);
-			mv.visitVarInsn(Opcodes.ALOAD, normalClosureUnbindingIteratorStore);
-			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
-					GenerationConstants.JAVA_ITERATOR_NAME,
-					GenerationConstants.JAVA_ITERATOR_NEXT_METHOD_NAME,
-					GenerationConstants.JAVA_ITERATOR_NEXT_METHOD_DESC,
-					true);
-			mv.visitTypeInsn(Opcodes.CHECKCAST, GenerationConstants.SYMBOL_STRUCT_NAME);
-			final int normalClosureUnbindingMapKeySymbolStore = methodBuilder.getNextAvailableStore();
-			mv.visitVarInsn(Opcodes.ASTORE, normalClosureUnbindingMapKeySymbolStore);
-
-			mv.visitVarInsn(Opcodes.ALOAD, normalClosureUnbindingMapKeySymbolStore);
-			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
-					GenerationConstants.SYMBOL_STRUCT_NAME,
-					GenerationConstants.SYMBOL_STRUCT_UNBIND_LEXICAL_VALUE_METHOD_NAME,
-					GenerationConstants.SYMBOL_STRUCT_UNBIND_LEXICAL_VALUE_METHOD_DESC,
-					false);
-			mv.visitJumpInsn(Opcodes.GOTO, normalClosureSymbolUnbindingIteratorLoopStart);
-
-			mv.visitLabel(normalClosureSymbolUnbindingIteratorLoopEnd);
-			// END: Unbind Closure Symbol values
-
-			mv.visitJumpInsn(Opcodes.GOTO, finallyBlockEnd);
-
-			final int exceptionStore = methodBuilder.getNextAvailableStore();
-
-			mv.visitLabel(catchErrorExceptionStart);
-			mv.visitVarInsn(Opcodes.ASTORE, exceptionStore);
-
-			mv.visitVarInsn(Opcodes.ALOAD, exceptionStore);
-			mv.visitInsn(Opcodes.ATHROW);
-
-			mv.visitLabel(catchThrowableStart);
-			mv.visitVarInsn(Opcodes.ASTORE, exceptionStore);
-
-			mv.visitTypeInsn(Opcodes.NEW, GenerationConstants.ERROR_EXCEPTION_NAME);
-			mv.visitInsn(Opcodes.DUP);
-			mv.visitLdcInsn(NON_LISP_ERROR_FOUND);
-			mv.visitVarInsn(Opcodes.ALOAD, exceptionStore);
-			mv.visitMethodInsn(Opcodes.INVOKESPECIAL, GenerationConstants.ERROR_EXCEPTION_NAME, GenerationConstants.INIT_METHOD_NAME, "(Ljava/lang/String;Ljava/lang/Throwable;)V", false);
-			mv.visitInsn(Opcodes.ATHROW);
-
-			mv.visitLabel(catchBlockStart);
-
-			final int finallyExceptionStore = methodBuilder.getNextAvailableStore();
-			mv.visitVarInsn(Opcodes.ASTORE, finallyExceptionStore);
-
-			mv.visitLabel(finallyBlockStart);
-
-			// START: Unbind Parameter values
-			mv.visitVarInsn(Opcodes.ALOAD, functionBindingsStore);
-			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
-					GenerationConstants.JAVA_LIST_NAME,
-					GenerationConstants.JAVA_LIST_ITERATOR_METHOD_NAME,
-					GenerationConstants.JAVA_LIST_ITERATOR_METHOD_DESC,
-					true);
-			final int exceptionParameterUnbindingIteratorStore = methodBuilder.getNextAvailableStore();
-			mv.visitVarInsn(Opcodes.ASTORE, exceptionParameterUnbindingIteratorStore);
-
-			final Label exceptionParameterUnbindingIteratorLoopStart = new Label();
-			final Label exceptionParameterUnbindingIteratorLoopEnd = new Label();
-
-			mv.visitLabel(exceptionParameterUnbindingIteratorLoopStart);
-			mv.visitVarInsn(Opcodes.ALOAD, exceptionParameterUnbindingIteratorStore);
-			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
-					GenerationConstants.JAVA_ITERATOR_NAME,
-					GenerationConstants.JAVA_ITERATOR_HAS_NEXT_METHOD_NAME,
-					GenerationConstants.JAVA_ITERATOR_HAS_NEXT_METHOD_DESC,
-					true);
-
-			mv.visitJumpInsn(Opcodes.IFEQ, exceptionParameterUnbindingIteratorLoopEnd);
-			mv.visitVarInsn(Opcodes.ALOAD, exceptionParameterUnbindingIteratorStore);
-			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
-					GenerationConstants.JAVA_ITERATOR_NAME,
-					GenerationConstants.JAVA_ITERATOR_NEXT_METHOD_NAME,
-					GenerationConstants.JAVA_ITERATOR_NEXT_METHOD_DESC,
-					true);
-			mv.visitTypeInsn(Opcodes.CHECKCAST, GenerationConstants.FUNCTION_PARAMETER_BINDING_NAME);
-			final int exceptionParameterUnbindingStore = methodBuilder.getNextAvailableStore();
-			mv.visitVarInsn(Opcodes.ASTORE, exceptionParameterUnbindingStore);
-
-			mv.visitVarInsn(Opcodes.ALOAD, exceptionParameterUnbindingStore);
-			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
-					GenerationConstants.FUNCTION_PARAMETER_BINDING_NAME,
-					GenerationConstants.FUNCTION_PARAMETER_BINDING_GET_PARAMETER_SYMBOL_METHOD_NAME,
-					GenerationConstants.FUNCTION_PARAMETER_BINDING_GET_PARAMETER_SYMBOL_METHOD_DESC,
-					false);
-			final int exceptionParameterSymbolToUnbindStore = methodBuilder.getNextAvailableStore();
-			mv.visitVarInsn(Opcodes.ASTORE, exceptionParameterSymbolToUnbindStore);
-
-			mv.visitVarInsn(Opcodes.ALOAD, exceptionParameterUnbindingStore);
-			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
-					GenerationConstants.FUNCTION_PARAMETER_BINDING_NAME,
-					GenerationConstants.FUNCTION_PARAMETER_BINDING_IS_SPECIAL_METHOD_NAME,
-					GenerationConstants.FUNCTION_PARAMETER_BINDING_IS_SPECIAL_METHOD_DESC,
-					false);
-			final int exceptionParameterUnbindingIsSpecialStore = methodBuilder.getNextAvailableStore();
-			mv.visitVarInsn(Opcodes.ISTORE, exceptionParameterUnbindingIsSpecialStore);
-
-			final Label exceptionParameterUnbindingIsSpecialCheckElse = new Label();
-			final Label exceptionParameterUnbindingIsSpecialCheckElseEnd = new Label();
-
-			mv.visitVarInsn(Opcodes.ILOAD, exceptionParameterUnbindingIsSpecialStore);
-			mv.visitJumpInsn(Opcodes.IFEQ, exceptionParameterUnbindingIsSpecialCheckElse);
-
-			mv.visitVarInsn(Opcodes.ALOAD, exceptionParameterSymbolToUnbindStore);
-			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
-					GenerationConstants.SYMBOL_STRUCT_NAME,
-					GenerationConstants.SYMBOL_STRUCT_UNBIND_DYNAMIC_VALUE_METHOD_NAME,
-					GenerationConstants.SYMBOL_STRUCT_UNBIND_DYNAMIC_VALUE_METHOD_DESC,
-					false);
-			mv.visitJumpInsn(Opcodes.GOTO, exceptionParameterUnbindingIsSpecialCheckElseEnd);
-
-			mv.visitLabel(exceptionParameterUnbindingIsSpecialCheckElse);
-
-			mv.visitVarInsn(Opcodes.ALOAD, exceptionParameterSymbolToUnbindStore);
-			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
-					GenerationConstants.SYMBOL_STRUCT_NAME,
-					GenerationConstants.SYMBOL_STRUCT_UNBIND_LEXICAL_VALUE_METHOD_NAME,
-					GenerationConstants.SYMBOL_STRUCT_UNBIND_LEXICAL_VALUE_METHOD_DESC,
-					false);
-
-			mv.visitLabel(exceptionParameterUnbindingIsSpecialCheckElseEnd);
-
-			mv.visitJumpInsn(Opcodes.GOTO, exceptionParameterUnbindingIteratorLoopStart);
-
-			mv.visitLabel(exceptionParameterUnbindingIteratorLoopEnd);
-			// END: Unbind Parameter values
-
-			// START: Unbind Closure Function values
-			mv.visitVarInsn(Opcodes.ALOAD, closureFunctionBindingsStore);
-			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
-					GenerationConstants.JAVA_MAP_NAME,
-					GenerationConstants.JAVA_MAP_KEY_SET_METHOD_NAME,
-					GenerationConstants.JAVA_MAP_KEY_SET_METHOD_DESC,
-					true);
-			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
-					GenerationConstants.JAVA_SET_NAME,
-					GenerationConstants.JAVA_SET_ITERATOR_METHOD_NAME,
-					GenerationConstants.JAVA_SET_ITERATOR_METHOD_DESC,
-					true);
-			final int exceptionClosureFunctionUnbindingIteratorStore = methodBuilder.getNextAvailableStore();
-			mv.visitVarInsn(Opcodes.ASTORE, exceptionClosureFunctionUnbindingIteratorStore);
-
-			final Label exceptionClosureFunctionUnbindingIteratorLoopStart = new Label();
-			final Label exceptionClosureFunctionUnbindingIteratorLoopEnd = new Label();
-
-			mv.visitLabel(exceptionClosureFunctionUnbindingIteratorLoopStart);
-			mv.visitVarInsn(Opcodes.ALOAD, exceptionClosureFunctionUnbindingIteratorStore);
-			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
-					GenerationConstants.JAVA_ITERATOR_NAME,
-					GenerationConstants.JAVA_ITERATOR_HAS_NEXT_METHOD_NAME,
-					GenerationConstants.JAVA_ITERATOR_HAS_NEXT_METHOD_DESC,
-					true);
-
-			mv.visitJumpInsn(Opcodes.IFEQ, exceptionClosureFunctionUnbindingIteratorLoopEnd);
-			mv.visitVarInsn(Opcodes.ALOAD, exceptionClosureFunctionUnbindingIteratorStore);
-			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
-					GenerationConstants.JAVA_ITERATOR_NAME,
-					GenerationConstants.JAVA_ITERATOR_NEXT_METHOD_NAME,
-					GenerationConstants.JAVA_ITERATOR_NEXT_METHOD_DESC,
-					true);
-			mv.visitTypeInsn(Opcodes.CHECKCAST, GenerationConstants.SYMBOL_STRUCT_NAME);
-			final int exceptionClosureFunctionUnbindingMapKeySymbolStore = methodBuilder.getNextAvailableStore();
-			mv.visitVarInsn(Opcodes.ASTORE, exceptionClosureFunctionUnbindingMapKeySymbolStore);
-
-			mv.visitVarInsn(Opcodes.ALOAD, exceptionClosureFunctionUnbindingMapKeySymbolStore);
-			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
-					GenerationConstants.SYMBOL_STRUCT_NAME,
-					GenerationConstants.SYMBOL_STRUCT_UNBIND_FUNCTION_METHOD_NAME,
-					GenerationConstants.SYMBOL_STRUCT_UNBIND_FUNCTION_METHOD_DESC,
-					false);
-			mv.visitInsn(Opcodes.POP);
-			mv.visitJumpInsn(Opcodes.GOTO, exceptionClosureFunctionUnbindingIteratorLoopStart);
-
-			mv.visitLabel(exceptionClosureFunctionUnbindingIteratorLoopEnd);
-			// END: Unbind Closure Function values
-
-			// START: Unbind Closure Symbol values
-			mv.visitVarInsn(Opcodes.ALOAD, closureSymbolBindingsStore);
-			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
-					GenerationConstants.JAVA_MAP_NAME,
-					GenerationConstants.JAVA_MAP_KEY_SET_METHOD_NAME,
-					GenerationConstants.JAVA_MAP_KEY_SET_METHOD_DESC,
-					true);
-			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
-					GenerationConstants.JAVA_SET_NAME,
-					GenerationConstants.JAVA_SET_ITERATOR_METHOD_NAME,
-					GenerationConstants.JAVA_SET_ITERATOR_METHOD_DESC,
-					true);
-			final int exceptionClosureUnbindingIteratorStore = methodBuilder.getNextAvailableStore();
-			mv.visitVarInsn(Opcodes.ASTORE, exceptionClosureUnbindingIteratorStore);
-
-			final Label exceptionClosureUnbindingIteratorLoopStart = new Label();
-			final Label exceptionClosureUnbindingIteratorLoopEnd = new Label();
-
-			mv.visitLabel(exceptionClosureUnbindingIteratorLoopStart);
-			mv.visitVarInsn(Opcodes.ALOAD, exceptionClosureUnbindingIteratorStore);
-			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
-					GenerationConstants.JAVA_ITERATOR_NAME,
-					GenerationConstants.JAVA_ITERATOR_HAS_NEXT_METHOD_NAME,
-					GenerationConstants.JAVA_ITERATOR_HAS_NEXT_METHOD_DESC,
-					true);
-
-			mv.visitJumpInsn(Opcodes.IFEQ, exceptionClosureUnbindingIteratorLoopEnd);
-			mv.visitVarInsn(Opcodes.ALOAD, exceptionClosureUnbindingIteratorStore);
-			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
-					GenerationConstants.JAVA_ITERATOR_NAME,
-					GenerationConstants.JAVA_ITERATOR_NEXT_METHOD_NAME,
-					GenerationConstants.JAVA_ITERATOR_NEXT_METHOD_DESC,
-					true);
-			mv.visitTypeInsn(Opcodes.CHECKCAST, GenerationConstants.SYMBOL_STRUCT_NAME);
-			final int exceptionClosureUnbindingMapKeySymbolStore = methodBuilder.getNextAvailableStore();
-			mv.visitVarInsn(Opcodes.ASTORE, exceptionClosureUnbindingMapKeySymbolStore);
-
-			mv.visitVarInsn(Opcodes.ALOAD, exceptionClosureUnbindingMapKeySymbolStore);
-			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
-					GenerationConstants.SYMBOL_STRUCT_NAME,
-					GenerationConstants.SYMBOL_STRUCT_UNBIND_LEXICAL_VALUE_METHOD_NAME,
-					GenerationConstants.SYMBOL_STRUCT_UNBIND_LEXICAL_VALUE_METHOD_DESC,
-					false);
-			mv.visitJumpInsn(Opcodes.GOTO, exceptionClosureUnbindingIteratorLoopStart);
-
-			mv.visitLabel(exceptionClosureUnbindingIteratorLoopEnd);
-			// END: Unbind Closure Symbol values
-
-			mv.visitVarInsn(Opcodes.ALOAD, finallyExceptionStore);
-			mv.visitInsn(Opcodes.ATHROW);
-
-			mv.visitLabel(finallyBlockEnd);
-			mv.visitVarInsn(Opcodes.ALOAD, resultStore);
-
-			mv.visitInsn(Opcodes.ARETURN);
-
-			mv.visitMaxs(-1, -1);
-			mv.visitEnd();
-
-			methodBuilderDeque.removeFirst();
-		}
-		{
-			final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PRIVATE,
-					INTERNAL_APPLY_METHOD_NAME,
-					INTERNAL_APPLY_METHOD_DESC,
-					null,
-					null);
-
-			final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
-			final Deque<JavaMethodBuilder> methodBuilderDeque = generatorState.getMethodBuilderDeque();
-			methodBuilderDeque.addFirst(methodBuilder);
-
-			mv.visitCode();
-			final int thisStore = methodBuilder.getNextAvailableStore();
-			final int closureArgStore = methodBuilder.getNextAvailableStore();
-
-			environmentDeque.addFirst(lambdaEnvironment);
-			prognCodeGenerator.generate(forms, generatorState);
-			environmentDeque.removeFirst();
-
-			mv.visitInsn(Opcodes.ARETURN);
-
-			mv.visitMaxs(-1, -1);
-			mv.visitEnd();
-
-			methodBuilderDeque.removeFirst();
-		}
-		{
-			final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PRIVATE,
-					GET_INIT_FORM_METHOD_NAME,
-					GET_INIT_FORM_METHOD_DESC,
-					GET_INIT_FORM_METHOD_SIGNATURE,
-					null);
-
-			final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
-			final Deque<JavaMethodBuilder> methodBuilderDeque = generatorState.getMethodBuilderDeque();
-			methodBuilderDeque.addFirst(methodBuilder);
-
-			mv.visitCode();
-			final int thisStore = methodBuilder.getNextAvailableStore();
-			final int symbolArgStore = methodBuilder.getNextAvailableStore();
-
-			// NOTE: commented out to allow proper scoping of dynamic variables. I think we just don't worry about the binding stack here.
-//			bindingStack.push(lambdaEnvironment);
-
-			final int initFormVarPackageStore = methodBuilder.getNextAvailableStore();
-			final int initFormVarSymbolStore = methodBuilder.getNextAvailableStore();
-
-			final List<OptionalBinding> optionalBindings = lambdaListBindings.getOptionalBindings();
-			for (final OptionalBinding optionalBinding : optionalBindings) {
-				final SymbolStruct<?> var = optionalBinding.getSymbolStruct();
-				CodeGenerators.generateSymbol(var, methodBuilder, initFormVarPackageStore, initFormVarSymbolStore);
-
-				final Label symbolCheckIfEnd = new Label();
-
-				mv.visitVarInsn(Opcodes.ALOAD, symbolArgStore);
-				mv.visitVarInsn(Opcodes.ALOAD, initFormVarSymbolStore);
-				mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
-						GenerationConstants.SYMBOL_STRUCT_NAME,
-						GenerationConstants.JAVA_EQUALS_METHOD_NAME,
-						GenerationConstants.JAVA_EQUALS_METHOD_DESC,
-						false);
-				mv.visitJumpInsn(Opcodes.IFEQ, symbolCheckIfEnd);
-
-				final LispStruct initForm = optionalBinding.getInitForm();
-				codeGenerator.generate(initForm, generatorState);
-				mv.visitInsn(Opcodes.ARETURN);
-
-				mv.visitLabel(symbolCheckIfEnd);
-			}
-
-			final List<KeyBinding> keyBindings = lambdaListBindings.getKeyBindings();
-			for (final KeyBinding keyBinding : keyBindings) {
-				final SymbolStruct<?> var = keyBinding.getSymbolStruct();
-				CodeGenerators.generateSymbol(var, methodBuilder, initFormVarPackageStore, initFormVarSymbolStore);
-
-				final Label symbolCheckIfEnd = new Label();
-
-				mv.visitVarInsn(Opcodes.ALOAD, symbolArgStore);
-				mv.visitVarInsn(Opcodes.ALOAD, initFormVarSymbolStore);
-				mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
-						GenerationConstants.SYMBOL_STRUCT_NAME,
-						GenerationConstants.JAVA_EQUALS_METHOD_NAME,
-						GenerationConstants.JAVA_EQUALS_METHOD_DESC,
-						false);
-				mv.visitJumpInsn(Opcodes.IFEQ, symbolCheckIfEnd);
-
-				final LispStruct initForm = keyBinding.getInitForm();
-				codeGenerator.generate(initForm, generatorState);
-				mv.visitInsn(Opcodes.ARETURN);
-
-				mv.visitLabel(symbolCheckIfEnd);
-			}
-
-			final List<AuxBinding> auxBindings = lambdaListBindings.getAuxBindings();
-			for (final AuxBinding auxBinding : auxBindings) {
-				final SymbolStruct<?> var = auxBinding.getSymbolStruct();
-				CodeGenerators.generateSymbol(var, methodBuilder, initFormVarPackageStore, initFormVarSymbolStore);
-
-				final Label symbolCheckIfEnd = new Label();
-
-				mv.visitVarInsn(Opcodes.ALOAD, symbolArgStore);
-				mv.visitVarInsn(Opcodes.ALOAD, initFormVarSymbolStore);
-				mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
-						GenerationConstants.SYMBOL_STRUCT_NAME,
-						GenerationConstants.JAVA_EQUALS_METHOD_NAME,
-						GenerationConstants.JAVA_EQUALS_METHOD_DESC,
-						false);
-				mv.visitJumpInsn(Opcodes.IFEQ, symbolCheckIfEnd);
-
-				final LispStruct initForm = auxBinding.getInitForm();
-				codeGenerator.generate(initForm, generatorState);
-				mv.visitInsn(Opcodes.ARETURN);
-
-				mv.visitLabel(symbolCheckIfEnd);
-			}
-
-//			bindingStack.pop();
-
-			nullCodeGenerator.generate(NullStruct.INSTANCE, generatorState);
-			mv.visitInsn(Opcodes.ARETURN);
-
-			mv.visitMaxs(-1, -1);
-			mv.visitEnd();
-
-			methodBuilderDeque.removeFirst();
-		}
-//		{
-//			final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_STATIC,
-//					GenerationConstants.CLASS_INIT_METHOD_NAME,
-//					GenerationConstants.CLASS_INIT_METHOD_DESC,
-//					null,
-//					null);
-//
-//			final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
-//			final Deque<JavaMethodBuilder> methodBuilderDeque = generatorState.getMethodBuilderDeque();
-//			methodBuilderDeque.addFirst(methodBuilder);
-//
-//			mv.visitCode();
-//
-//			mv.visitInsn(Opcodes.RETURN);
-//
-//			mv.visitMaxs(-1, -1);
-//			mv.visitEnd();
-//
-//			methodBuilderDeque.removeFirst();
-//		}
 		cw.visitEnd();
 
 		classBuilderDeque.removeFirst();
@@ -1242,7 +129,1146 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 		}
 	}
 
-	private static void generateRequiredBindings(final GeneratorState classBuilder, final JavaMethodBuilder methodBuilder,
+	private void generateSerialVersionUIDField(final ClassWriter cw) {
+		final Random random = new SecureRandom();
+		final long serialVersionUID = random.nextLong();
+
+		final FieldVisitor fv = cw.visitField(Opcodes.ACC_PRIVATE + Opcodes.ACC_FINAL + Opcodes.ACC_STATIC,
+				GenerationConstants.SERIAL_VERSION_UID_FIELD,
+				GenerationConstants.JAVA_LONG_TYPE_NAME,
+				null,
+				serialVersionUID);
+
+		fv.visitEnd();
+	}
+
+	private static void generateLoadTimeValueFields(final LambdaStruct input, final ClassWriter cw) {
+		final LambdaEnvironment environment = input.getLambdaEnvironment();
+		final Map<String, LispStruct> loadTimeValues = environment.getLoadTimeValues();
+		for (final String uniqueLTVId : loadTimeValues.keySet()) {
+			final FieldVisitor fv = cw.visitField(Opcodes.ACC_PRIVATE + Opcodes.ACC_FINAL,
+					uniqueLTVId,
+					GenerationConstants.LISP_STRUCT_DESC,
+					null,
+					null);
+			fv.visitEnd();
+		}
+	}
+
+	private static void generateNoArgConstructor(final GeneratorState generatorState, final String fileName, final ClassWriter cw) {
+		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PUBLIC,
+				GenerationConstants.INIT_METHOD_NAME,
+				GenerationConstants.FUNCTION_STRUCT_INIT_DESC,
+				null,
+				null);
+
+		final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
+		final Deque<JavaMethodBuilder> methodBuilderDeque = generatorState.getMethodBuilderDeque();
+		methodBuilderDeque.addFirst(methodBuilder);
+
+		mv.visitCode();
+		final int thisStore = methodBuilder.getNextAvailableStore();
+
+		mv.visitVarInsn(Opcodes.ALOAD, thisStore);
+		mv.visitInsn(Opcodes.ACONST_NULL);
+		mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
+				fileName,
+				GenerationConstants.INIT_METHOD_NAME,
+				FUNCTION_STRUCT_INIT_CLOSURE_DESC,
+				false);
+
+		mv.visitInsn(Opcodes.RETURN);
+
+		mv.visitMaxs(-1, -1);
+		mv.visitEnd();
+
+		methodBuilderDeque.removeFirst();
+	}
+
+	private static void generateClosureArgConstructor(final LambdaStruct input, final GeneratorState generatorState, final String fileName, final ClassWriter cw) {
+		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PUBLIC,
+				GenerationConstants.INIT_METHOD_NAME,
+				FUNCTION_STRUCT_INIT_CLOSURE_DESC,
+				null,
+				null);
+
+		final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
+		final Deque<JavaMethodBuilder> methodBuilderDeque = generatorState.getMethodBuilderDeque();
+		methodBuilderDeque.addFirst(methodBuilder);
+
+		mv.visitCode();
+		final int thisStore = methodBuilder.getNextAvailableStore();
+		final int closureStore = methodBuilder.getNextAvailableStore();
+
+		mv.visitVarInsn(Opcodes.ALOAD, thisStore);
+
+		String documentation = "";
+		final StringStruct docString = input.getDocString();
+		if (docString != null) {
+			documentation = docString.getAsJavaString();
+		}
+		mv.visitLdcInsn(documentation);
+		mv.visitVarInsn(Opcodes.ALOAD, closureStore);
+		mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
+				GenerationConstants.FUNCTION_STRUCT_NAME,
+				GenerationConstants.INIT_METHOD_NAME,
+				GenerationConstants.FUNCTION_STRUCT_INIT_STRING_CLOSURE_DESC,
+				false);
+
+		mv.visitVarInsn(Opcodes.ALOAD, thisStore);
+		mv.visitVarInsn(Opcodes.ALOAD, closureStore);
+		mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
+				fileName,
+				INIT_LOAD_TIME_VALUE_FORMS_METHOD_NAME,
+				INIT_LOAD_TIME_VALUE_FORMS_METHOD_DESC,
+				false);
+
+		mv.visitVarInsn(Opcodes.ALOAD, thisStore);
+		mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
+				fileName,
+				INIT_LAMBDA_LIST_BINDINGS_METHOD_NAME,
+				INIT_LAMBDA_LIST_BINDINGS_METHOD_DESC,
+				false);
+
+		mv.visitInsn(Opcodes.RETURN);
+
+		mv.visitMaxs(-1, -1);
+		mv.visitEnd();
+
+		methodBuilderDeque.removeFirst();
+	}
+
+	private void generateInitLoadTimeValueFormsMethod(final LambdaStruct input, final GeneratorState generatorState, final String fileName, final ClassWriter cw) {
+		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PRIVATE,
+				INIT_LOAD_TIME_VALUE_FORMS_METHOD_NAME,
+				INIT_LOAD_TIME_VALUE_FORMS_METHOD_DESC,
+				null,
+				null);
+
+		final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
+		final Deque<JavaMethodBuilder> methodBuilderDeque = generatorState.getMethodBuilderDeque();
+		methodBuilderDeque.addFirst(methodBuilder);
+
+		mv.visitCode();
+		final int thisStore = methodBuilder.getNextAvailableStore();
+		final int closureArgStore = methodBuilder.getNextAvailableStore();
+
+		final int loadTimeValueInitFormStore = methodBuilder.getNextAvailableStore();
+
+		final LambdaEnvironment environment = input.getLambdaEnvironment();
+		final Map<String, LispStruct> loadTimeValues = environment.getLoadTimeValues();
+
+		for (final Map.Entry<String, LispStruct> loadTimeValue : loadTimeValues.entrySet()) {
+			final String uniqueLTVId = loadTimeValue.getKey();
+			final LispStruct value = loadTimeValue.getValue();
+
+			codeGenerator.generate(value, generatorState);
+			mv.visitVarInsn(Opcodes.ASTORE, loadTimeValueInitFormStore);
+
+			CodeGenerators.generateValuesCheckAndStore(methodBuilder, loadTimeValueInitFormStore);
+
+			mv.visitVarInsn(Opcodes.ALOAD, thisStore);
+			mv.visitVarInsn(Opcodes.ALOAD, loadTimeValueInitFormStore);
+			mv.visitFieldInsn(Opcodes.PUTFIELD, fileName, uniqueLTVId, GenerationConstants.LISP_STRUCT_DESC);
+		}
+
+		mv.visitInsn(Opcodes.RETURN);
+
+		mv.visitMaxs(-1, -1);
+		mv.visitEnd();
+
+		methodBuilderDeque.removeFirst();
+	}
+
+	private void generateInitLambdaListBindingsMethod(final LambdaStruct input, final GeneratorState generatorState, final String fileName, final ClassWriter cw) {
+		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PRIVATE,
+				INIT_LAMBDA_LIST_BINDINGS_METHOD_NAME,
+				INIT_LAMBDA_LIST_BINDINGS_METHOD_DESC,
+				null,
+				null);
+
+		final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
+		final Deque<JavaMethodBuilder> methodBuilderDeque = generatorState.getMethodBuilderDeque();
+		methodBuilderDeque.addFirst(methodBuilder);
+
+		mv.visitCode();
+		final int thisStore = methodBuilder.getNextAvailableStore();
+
+		final int packageStore = methodBuilder.getNextAvailableStore();
+
+		final OrdinaryLambdaListBindings lambdaListBindings = input.getLambdaListBindings();
+
+		// End: Required
+		final int requiredBindingsStore = methodBuilder.getNextAvailableStore();
+		generateRequiredBindings(methodBuilder, lambdaListBindings, mv, packageStore, requiredBindingsStore);
+		// End: Required
+
+		// Start: Optional
+		final int optionalBindingsStore = methodBuilder.getNextAvailableStore();
+		generateOptionalBindings(generatorState, methodBuilder, lambdaListBindings, mv, packageStore, optionalBindingsStore);
+		// End: Optional
+
+		// Start: Rest
+		final int restBindingStore = methodBuilder.getNextAvailableStore();
+		generateRestBinding(methodBuilder, lambdaListBindings, mv, packageStore, restBindingStore);
+		// End: Rest
+
+		// Start: Key
+		final int keyBindingsStore = methodBuilder.getNextAvailableStore();
+		generateKeyBindings(generatorState, methodBuilder, lambdaListBindings, mv, packageStore, keyBindingsStore);
+		// End: Key
+
+		// Start: Allow-Other-Keys
+		final int allowOtherKeysStore = methodBuilder.getNextAvailableStore();
+		generateAllowOtherKeys(lambdaListBindings, mv, allowOtherKeysStore);
+		// End: Allow-Other-Keys
+
+		// Start: Aux
+		final int auxBindingsStore = methodBuilder.getNextAvailableStore();
+		generateAuxBindings(generatorState, methodBuilder, lambdaListBindings, mv, packageStore, auxBindingsStore);
+		// Start: End
+
+		mv.visitVarInsn(Opcodes.ALOAD, thisStore);
+
+		mv.visitTypeInsn(Opcodes.NEW, GenerationConstants.ORDINARY_LAMBDA_LIST_BINDINGS_NAME);
+		mv.visitInsn(Opcodes.DUP);
+		mv.visitVarInsn(Opcodes.ALOAD, requiredBindingsStore);
+		mv.visitVarInsn(Opcodes.ALOAD, optionalBindingsStore);
+		mv.visitVarInsn(Opcodes.ALOAD, restBindingStore);
+		mv.visitVarInsn(Opcodes.ALOAD, keyBindingsStore);
+		mv.visitVarInsn(Opcodes.ALOAD, auxBindingsStore);
+		mv.visitVarInsn(Opcodes.ILOAD, allowOtherKeysStore);
+		mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
+				GenerationConstants.ORDINARY_LAMBDA_LIST_BINDINGS_NAME,
+				GenerationConstants.INIT_METHOD_NAME,
+				GenerationConstants.ORDINARY_LAMBDA_LIST_BINDINGS_INIT_DESC,
+				false);
+
+		mv.visitFieldInsn(Opcodes.PUTFIELD, fileName, LAMBDA_LIST_BINDINGS_FIELD, GenerationConstants.ORDINARY_LAMBDA_LIST_BINDINGS_DESC);
+
+		mv.visitInsn(Opcodes.RETURN);
+
+		mv.visitMaxs(-1, -1);
+		mv.visitEnd();
+
+		methodBuilderDeque.removeFirst();
+	}
+
+	private static void generateApplyMethod(final GeneratorState generatorState, final String fileName, final ClassWriter cw) {
+		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PUBLIC + Opcodes.ACC_VARARGS,
+				GenerationConstants.FUNCTION_STRUCT_APPLY_METHOD_NAME,
+				GenerationConstants.FUNCTION_STRUCT_APPLY_METHOD_DESC,
+				null,
+				null);
+
+		final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
+		final Deque<JavaMethodBuilder> methodBuilderDeque = generatorState.getMethodBuilderDeque();
+		methodBuilderDeque.addFirst(methodBuilder);
+
+		mv.visitCode();
+		final int thisStore = methodBuilder.getNextAvailableStore();
+		final int argsStore = methodBuilder.getNextAvailableStore();
+
+		final Label tryBlockStart = new Label();
+		final Label tryBlockEnd = new Label();
+		final Label catchBlockStart = new Label();
+		final Label catchErrorExceptionStart = new Label();
+		final Label catchThrowableStart = new Label();
+		final Label finallyBlockStart = new Label();
+		final Label finallyBlockEnd = new Label();
+		mv.visitTryCatchBlock(tryBlockStart, tryBlockEnd, catchErrorExceptionStart, GenerationConstants.ERROR_EXCEPTION_NAME);
+		mv.visitTryCatchBlock(tryBlockStart, tryBlockEnd, catchThrowableStart, GenerationConstants.JAVA_THROWABLE_NAME);
+		mv.visitTryCatchBlock(tryBlockStart, tryBlockEnd, catchBlockStart, null);
+		mv.visitTryCatchBlock(catchErrorExceptionStart, finallyBlockStart, catchBlockStart, null);
+
+		// START: Bind Closure Symbol values
+		mv.visitVarInsn(Opcodes.ALOAD, thisStore);
+		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
+				fileName,
+				GenerationConstants.FUNCTION_STRUCT_GET_CLOSURE_SYMBOL_BINDINGS_METHOD_NAME,
+				GenerationConstants.FUNCTION_STRUCT_GET_CLOSURE_SYMBOL_BINDINGS_METHOD_DESC,
+				false);
+		final int closureSymbolBindingsStore = methodBuilder.getNextAvailableStore();
+		mv.visitVarInsn(Opcodes.ASTORE, closureSymbolBindingsStore);
+
+		mv.visitVarInsn(Opcodes.ALOAD, closureSymbolBindingsStore);
+		mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
+				GenerationConstants.JAVA_MAP_NAME,
+				GenerationConstants.JAVA_MAP_ENTRY_SET_METHOD_NAME,
+				GenerationConstants.JAVA_MAP_ENTRY_SET_METHOD_DESC,
+				true);
+		mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
+				GenerationConstants.JAVA_SET_NAME,
+				GenerationConstants.JAVA_SET_ITERATOR_METHOD_NAME,
+				GenerationConstants.JAVA_SET_ITERATOR_METHOD_DESC,
+				true);
+		final int closureSymbolBindingIteratorStore = methodBuilder.getNextAvailableStore();
+		mv.visitVarInsn(Opcodes.ASTORE, closureSymbolBindingIteratorStore);
+
+		final Label closureSymbolBindingIteratorLoopStart = new Label();
+		final Label closureSymbolBindingIteratorLoopEnd = new Label();
+
+		mv.visitLabel(closureSymbolBindingIteratorLoopStart);
+		mv.visitVarInsn(Opcodes.ALOAD, closureSymbolBindingIteratorStore);
+		mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
+				GenerationConstants.JAVA_ITERATOR_NAME,
+				GenerationConstants.JAVA_ITERATOR_HAS_NEXT_METHOD_NAME,
+				GenerationConstants.JAVA_ITERATOR_HAS_NEXT_METHOD_DESC,
+				true);
+
+		mv.visitJumpInsn(Opcodes.IFEQ, closureSymbolBindingIteratorLoopEnd);
+		mv.visitVarInsn(Opcodes.ALOAD, closureSymbolBindingIteratorStore);
+		mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
+				GenerationConstants.JAVA_ITERATOR_NAME,
+				GenerationConstants.JAVA_ITERATOR_NEXT_METHOD_NAME,
+				GenerationConstants.JAVA_ITERATOR_NEXT_METHOD_DESC,
+				true);
+		mv.visitTypeInsn(Opcodes.CHECKCAST, GenerationConstants.JAVA_MAP_ENTRY_NAME);
+		final int closureSymbolBindingMapEntryStore = methodBuilder.getNextAvailableStore();
+		mv.visitVarInsn(Opcodes.ASTORE, closureSymbolBindingMapEntryStore);
+
+		mv.visitVarInsn(Opcodes.ALOAD, closureSymbolBindingMapEntryStore);
+		mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
+				GenerationConstants.JAVA_MAP_ENTRY_NAME,
+				GenerationConstants.JAVA_MAP_ENTRY_GET_KEY_METHOD_NAME,
+				GenerationConstants.JAVA_MAP_ENTRY_GET_KEY_METHOD_DESC,
+				true);
+		mv.visitTypeInsn(Opcodes.CHECKCAST, GenerationConstants.SYMBOL_STRUCT_NAME);
+		final int closureSymbolToBindStore = methodBuilder.getNextAvailableStore();
+		mv.visitVarInsn(Opcodes.ASTORE, closureSymbolToBindStore);
+
+		mv.visitVarInsn(Opcodes.ALOAD, closureSymbolBindingMapEntryStore);
+		mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
+				GenerationConstants.JAVA_MAP_ENTRY_NAME,
+				GenerationConstants.JAVA_MAP_ENTRY_GET_VALUE_METHOD_NAME,
+				GenerationConstants.JAVA_MAP_ENTRY_GET_VALUE_METHOD_DESC,
+				true);
+		mv.visitTypeInsn(Opcodes.CHECKCAST, GenerationConstants.LISP_STRUCT_NAME);
+		final int closureSymbolLexicalValueStore = methodBuilder.getNextAvailableStore();
+		mv.visitVarInsn(Opcodes.ASTORE, closureSymbolLexicalValueStore);
+
+		final Label closureSymbolValuesCheckIfEnd = new Label();
+
+		mv.visitVarInsn(Opcodes.ALOAD, closureSymbolLexicalValueStore);
+		mv.visitTypeInsn(Opcodes.INSTANCEOF, GenerationConstants.VALUES_STRUCT_NAME);
+		mv.visitJumpInsn(Opcodes.IFEQ, closureSymbolValuesCheckIfEnd);
+
+		mv.visitVarInsn(Opcodes.ALOAD, closureSymbolLexicalValueStore);
+		mv.visitTypeInsn(Opcodes.CHECKCAST, GenerationConstants.VALUES_STRUCT_NAME);
+		final int closureSymbolValuesStore = methodBuilder.getNextAvailableStore();
+		mv.visitVarInsn(Opcodes.ASTORE, closureSymbolValuesStore);
+
+		mv.visitVarInsn(Opcodes.ALOAD, closureSymbolValuesStore);
+		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
+				GenerationConstants.VALUES_STRUCT_NAME,
+				GenerationConstants.VALUES_STRUCT_GET_PRIMARY_VALUE_METHOD_NAME,
+				GenerationConstants.VALUES_STRUCT_GET_PRIMARY_VALUE_METHOD_DESC,
+				false);
+		mv.visitVarInsn(Opcodes.ASTORE, closureSymbolLexicalValueStore);
+
+		mv.visitLabel(closureSymbolValuesCheckIfEnd);
+
+		mv.visitVarInsn(Opcodes.ALOAD, closureSymbolToBindStore);
+		mv.visitVarInsn(Opcodes.ALOAD, closureSymbolLexicalValueStore);
+		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
+				GenerationConstants.SYMBOL_STRUCT_NAME,
+				GenerationConstants.SYMBOL_STRUCT_BIND_LEXICAL_VALUE_METHOD_NAME,
+				GenerationConstants.SYMBOL_STRUCT_BIND_LEXICAL_VALUE_METHOD_DESC,
+				false);
+		mv.visitJumpInsn(Opcodes.GOTO, closureSymbolBindingIteratorLoopStart);
+
+		mv.visitLabel(closureSymbolBindingIteratorLoopEnd);
+		// END: Bind Closure Symbol values
+
+		// START: Bind Closure Function values
+		mv.visitVarInsn(Opcodes.ALOAD, thisStore);
+		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
+				fileName,
+				GenerationConstants.FUNCTION_STRUCT_GET_CLOSURE_FUNCTION_BINDINGS_METHOD_NAME,
+				GenerationConstants.FUNCTION_STRUCT_GET_CLOSURE_FUNCTION_BINDINGS_METHOD_DESC,
+				false);
+		final int closureFunctionBindingsStore = methodBuilder.getNextAvailableStore();
+		mv.visitVarInsn(Opcodes.ASTORE, closureFunctionBindingsStore);
+
+		mv.visitVarInsn(Opcodes.ALOAD, closureFunctionBindingsStore);
+		mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
+				GenerationConstants.JAVA_MAP_NAME,
+				GenerationConstants.JAVA_MAP_ENTRY_SET_METHOD_NAME,
+				GenerationConstants.JAVA_MAP_ENTRY_SET_METHOD_DESC,
+				true);
+		mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
+				GenerationConstants.JAVA_SET_NAME,
+				GenerationConstants.JAVA_SET_ITERATOR_METHOD_NAME,
+				GenerationConstants.JAVA_SET_ITERATOR_METHOD_DESC,
+				true);
+		final int closureFunctionBindingIteratorStore = methodBuilder.getNextAvailableStore();
+		mv.visitVarInsn(Opcodes.ASTORE, closureFunctionBindingIteratorStore);
+
+		final Label closureFunctionBindingIteratorLoopStart = new Label();
+		final Label closureFunctionBindingIteratorLoopEnd = new Label();
+
+		mv.visitLabel(closureFunctionBindingIteratorLoopStart);
+		mv.visitVarInsn(Opcodes.ALOAD, closureFunctionBindingIteratorStore);
+		mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
+				GenerationConstants.JAVA_ITERATOR_NAME,
+				GenerationConstants.JAVA_ITERATOR_HAS_NEXT_METHOD_NAME,
+				GenerationConstants.JAVA_ITERATOR_HAS_NEXT_METHOD_DESC,
+				true);
+
+		mv.visitJumpInsn(Opcodes.IFEQ, closureFunctionBindingIteratorLoopEnd);
+		mv.visitVarInsn(Opcodes.ALOAD, closureFunctionBindingIteratorStore);
+		mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
+				GenerationConstants.JAVA_ITERATOR_NAME,
+				GenerationConstants.JAVA_ITERATOR_NEXT_METHOD_NAME,
+				GenerationConstants.JAVA_ITERATOR_NEXT_METHOD_DESC,
+				true);
+		mv.visitTypeInsn(Opcodes.CHECKCAST, GenerationConstants.JAVA_MAP_ENTRY_NAME);
+		final int closureFunctionBindingMapEntryStore = methodBuilder.getNextAvailableStore();
+		mv.visitVarInsn(Opcodes.ASTORE, closureFunctionBindingMapEntryStore);
+
+		mv.visitVarInsn(Opcodes.ALOAD, closureFunctionBindingMapEntryStore);
+		mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
+				GenerationConstants.JAVA_MAP_ENTRY_NAME,
+				GenerationConstants.JAVA_MAP_ENTRY_GET_KEY_METHOD_NAME,
+				GenerationConstants.JAVA_MAP_ENTRY_GET_KEY_METHOD_DESC,
+				true);
+		mv.visitTypeInsn(Opcodes.CHECKCAST, GenerationConstants.SYMBOL_STRUCT_NAME);
+		final int closureFunctionToBindStore = methodBuilder.getNextAvailableStore();
+		mv.visitVarInsn(Opcodes.ASTORE, closureFunctionToBindStore);
+
+		mv.visitVarInsn(Opcodes.ALOAD, closureFunctionBindingMapEntryStore);
+		mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
+				GenerationConstants.JAVA_MAP_ENTRY_NAME,
+				GenerationConstants.JAVA_MAP_ENTRY_GET_VALUE_METHOD_NAME,
+				GenerationConstants.JAVA_MAP_ENTRY_GET_VALUE_METHOD_DESC,
+				true);
+		mv.visitTypeInsn(Opcodes.CHECKCAST, GenerationConstants.FUNCTION_STRUCT_NAME);
+		final int closureFunctionValueStore = methodBuilder.getNextAvailableStore();
+		mv.visitVarInsn(Opcodes.ASTORE, closureFunctionValueStore);
+
+		mv.visitVarInsn(Opcodes.ALOAD, closureFunctionToBindStore);
+		mv.visitVarInsn(Opcodes.ALOAD, closureFunctionValueStore);
+		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
+				GenerationConstants.SYMBOL_STRUCT_NAME,
+				GenerationConstants.SYMBOL_STRUCT_BIND_FUNCTION_METHOD_NAME,
+				GenerationConstants.SYMBOL_STRUCT_BIND_FUNCTION_METHOD_DESC,
+				false);
+		mv.visitJumpInsn(Opcodes.GOTO, closureFunctionBindingIteratorLoopStart);
+
+		mv.visitLabel(closureFunctionBindingIteratorLoopEnd);
+		// END: Bind Closure Function values
+
+		// START: Bind Parameter values
+		mv.visitVarInsn(Opcodes.ALOAD, thisStore);
+		mv.visitVarInsn(Opcodes.ALOAD, argsStore);
+		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
+				fileName,
+				GenerationConstants.FUNCTION_STRUCT_GET_FUNCTION_BINDINGS_METHOD_NAME,
+				GenerationConstants.FUNCTION_STRUCT_GET_FUNCTION_BINDINGS_METHOD_DESC,
+				false);
+		final int functionBindingsStore = methodBuilder.getNextAvailableStore();
+		mv.visitVarInsn(Opcodes.ASTORE, functionBindingsStore);
+
+		mv.visitVarInsn(Opcodes.ALOAD, functionBindingsStore);
+		mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
+				GenerationConstants.JAVA_LIST_NAME,
+				GenerationConstants.JAVA_LIST_ITERATOR_METHOD_NAME,
+				GenerationConstants.JAVA_LIST_ITERATOR_METHOD_DESC,
+				true);
+		final int parameterBindingIteratorStore = methodBuilder.getNextAvailableStore();
+		mv.visitVarInsn(Opcodes.ASTORE, parameterBindingIteratorStore);
+
+		final Label parameterBindingIteratorLoopStart = new Label();
+		final Label parameterBindingIteratorLoopEnd = new Label();
+
+		mv.visitLabel(parameterBindingIteratorLoopStart);
+		mv.visitVarInsn(Opcodes.ALOAD, parameterBindingIteratorStore);
+		mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
+				GenerationConstants.JAVA_ITERATOR_NAME,
+				GenerationConstants.JAVA_ITERATOR_HAS_NEXT_METHOD_NAME,
+				GenerationConstants.JAVA_ITERATOR_HAS_NEXT_METHOD_DESC,
+				true);
+
+		mv.visitJumpInsn(Opcodes.IFEQ, parameterBindingIteratorLoopEnd);
+		mv.visitVarInsn(Opcodes.ALOAD, parameterBindingIteratorStore);
+		mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
+				GenerationConstants.JAVA_ITERATOR_NAME,
+				GenerationConstants.JAVA_ITERATOR_NEXT_METHOD_NAME,
+				GenerationConstants.JAVA_ITERATOR_NEXT_METHOD_DESC,
+				true);
+		mv.visitTypeInsn(Opcodes.CHECKCAST, GenerationConstants.FUNCTION_PARAMETER_BINDING_NAME);
+		final int functionParameterBindingStore = methodBuilder.getNextAvailableStore();
+		mv.visitVarInsn(Opcodes.ASTORE, functionParameterBindingStore);
+
+		mv.visitVarInsn(Opcodes.ALOAD, functionParameterBindingStore);
+		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
+				GenerationConstants.FUNCTION_PARAMETER_BINDING_NAME,
+				GenerationConstants.FUNCTION_PARAMETER_BINDING_GET_PARAMETER_SYMBOL_METHOD_NAME,
+				GenerationConstants.FUNCTION_PARAMETER_BINDING_GET_PARAMETER_SYMBOL_METHOD_DESC,
+				false);
+		final int parameterSymbolToBindStore = methodBuilder.getNextAvailableStore();
+		mv.visitVarInsn(Opcodes.ASTORE, parameterSymbolToBindStore);
+
+		mv.visitVarInsn(Opcodes.ALOAD, functionParameterBindingStore);
+		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
+				GenerationConstants.FUNCTION_PARAMETER_BINDING_NAME,
+				GenerationConstants.FUNCTION_PARAMETER_BINDING_GET_PARAMETER_VALUE_METHOD_NAME,
+				GenerationConstants.FUNCTION_PARAMETER_BINDING_GET_PARAMETER_VALUE_METHOD_DESC,
+				false);
+		final int parameterValueStore = methodBuilder.getNextAvailableStore();
+		mv.visitVarInsn(Opcodes.ASTORE, parameterValueStore);
+
+		final Label parameterValuesCheckIfEnd = new Label();
+		final Label parameterInitFormCheckIfEnd = new Label();
+
+		mv.visitVarInsn(Opcodes.ALOAD, parameterValueStore);
+		mv.visitTypeInsn(Opcodes.INSTANCEOF, GenerationConstants.VALUES_STRUCT_NAME);
+		mv.visitJumpInsn(Opcodes.IFEQ, parameterValuesCheckIfEnd);
+
+		mv.visitVarInsn(Opcodes.ALOAD, parameterValueStore);
+		mv.visitTypeInsn(Opcodes.CHECKCAST, GenerationConstants.VALUES_STRUCT_NAME);
+		final int parameterValuesStore = methodBuilder.getNextAvailableStore();
+		mv.visitVarInsn(Opcodes.ASTORE, parameterValuesStore);
+
+		mv.visitVarInsn(Opcodes.ALOAD, parameterValuesStore);
+		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
+				GenerationConstants.VALUES_STRUCT_NAME,
+				GenerationConstants.VALUES_STRUCT_GET_PRIMARY_VALUE_METHOD_NAME,
+				GenerationConstants.VALUES_STRUCT_GET_PRIMARY_VALUE_METHOD_DESC,
+				false);
+		mv.visitVarInsn(Opcodes.ASTORE, parameterValueStore);
+
+		mv.visitLabel(parameterValuesCheckIfEnd);
+
+		mv.visitFieldInsn(Opcodes.GETSTATIC, fileName, INIT_FORM_PLACEHOLDER_FIELD, GenerationConstants.LISP_STRUCT_DESC);
+		mv.visitVarInsn(Opcodes.ALOAD, parameterValueStore);
+		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
+				GenerationConstants.JAVA_OBJECT_NAME,
+				GenerationConstants.JAVA_EQUALS_METHOD_NAME,
+				GenerationConstants.JAVA_EQUALS_METHOD_DESC,
+				false);
+		mv.visitJumpInsn(Opcodes.IFEQ, parameterInitFormCheckIfEnd);
+
+		mv.visitVarInsn(Opcodes.ALOAD, thisStore);
+		mv.visitVarInsn(Opcodes.ALOAD, parameterSymbolToBindStore);
+		mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
+				fileName,
+				GET_INIT_FORM_METHOD_NAME,
+				GET_INIT_FORM_METHOD_DESC,
+				false);
+		mv.visitVarInsn(Opcodes.ASTORE, parameterValueStore);
+
+		mv.visitLabel(parameterInitFormCheckIfEnd);
+
+		mv.visitVarInsn(Opcodes.ALOAD, functionParameterBindingStore);
+		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
+				GenerationConstants.FUNCTION_PARAMETER_BINDING_NAME,
+				GenerationConstants.FUNCTION_PARAMETER_BINDING_IS_SPECIAL_METHOD_NAME,
+				GenerationConstants.FUNCTION_PARAMETER_BINDING_IS_SPECIAL_METHOD_DESC,
+				false);
+		final int parameterIsSpecialStore = methodBuilder.getNextAvailableStore();
+		mv.visitVarInsn(Opcodes.ISTORE, parameterIsSpecialStore);
+
+		final Label parameterIsSpecialCheckElse = new Label();
+		final Label parameterIsSpecialCheckElseEnd = new Label();
+
+		mv.visitVarInsn(Opcodes.ILOAD, parameterIsSpecialStore);
+		mv.visitJumpInsn(Opcodes.IFEQ, parameterIsSpecialCheckElse);
+
+		mv.visitVarInsn(Opcodes.ALOAD, parameterSymbolToBindStore);
+		mv.visitVarInsn(Opcodes.ALOAD, parameterValueStore);
+		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
+				GenerationConstants.SYMBOL_STRUCT_NAME,
+				GenerationConstants.SYMBOL_STRUCT_BIND_DYNAMIC_VALUE_METHOD_NAME,
+				GenerationConstants.SYMBOL_STRUCT_BIND_DYNAMIC_VALUE_METHOD_DESC,
+				false);
+		mv.visitJumpInsn(Opcodes.GOTO, parameterIsSpecialCheckElseEnd);
+
+		mv.visitLabel(parameterIsSpecialCheckElse);
+
+		mv.visitVarInsn(Opcodes.ALOAD, parameterSymbolToBindStore);
+		mv.visitVarInsn(Opcodes.ALOAD, parameterValueStore);
+		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
+				GenerationConstants.SYMBOL_STRUCT_NAME,
+				GenerationConstants.SYMBOL_STRUCT_BIND_LEXICAL_VALUE_METHOD_NAME,
+				GenerationConstants.SYMBOL_STRUCT_BIND_LEXICAL_VALUE_METHOD_DESC,
+				false);
+
+		mv.visitLabel(parameterIsSpecialCheckElseEnd);
+
+		mv.visitJumpInsn(Opcodes.GOTO, parameterBindingIteratorLoopStart);
+
+		mv.visitLabel(parameterBindingIteratorLoopEnd);
+		// END: Bind Parameter values
+
+		mv.visitLabel(tryBlockStart);
+
+		mv.visitVarInsn(Opcodes.ALOAD, thisStore);
+		mv.visitVarInsn(Opcodes.ALOAD, thisStore);
+		mv.visitFieldInsn(Opcodes.GETFIELD, fileName, CLOSURE_FIELD, GenerationConstants.CLOSURE_DESC);
+		mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
+				fileName,
+				INTERNAL_APPLY_METHOD_NAME,
+				INTERNAL_APPLY_METHOD_DESC,
+				false);
+
+		final int resultStore = methodBuilder.getNextAvailableStore();
+		mv.visitVarInsn(Opcodes.ASTORE, resultStore);
+
+		mv.visitLabel(tryBlockEnd);
+
+		// START: Unbind Parameter values
+		mv.visitVarInsn(Opcodes.ALOAD, functionBindingsStore);
+		mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
+				GenerationConstants.JAVA_LIST_NAME,
+				GenerationConstants.JAVA_LIST_ITERATOR_METHOD_NAME,
+				GenerationConstants.JAVA_LIST_ITERATOR_METHOD_DESC,
+				true);
+		final int normalParameterUnbindingIteratorStore = methodBuilder.getNextAvailableStore();
+		mv.visitVarInsn(Opcodes.ASTORE, normalParameterUnbindingIteratorStore);
+
+		final Label normalParameterUnbindingIteratorLoopStart = new Label();
+		final Label normalParameterUnbindingIteratorLoopEnd = new Label();
+
+		mv.visitLabel(normalParameterUnbindingIteratorLoopStart);
+		mv.visitVarInsn(Opcodes.ALOAD, normalParameterUnbindingIteratorStore);
+		mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
+				GenerationConstants.JAVA_ITERATOR_NAME,
+				GenerationConstants.JAVA_ITERATOR_HAS_NEXT_METHOD_NAME,
+				GenerationConstants.JAVA_ITERATOR_HAS_NEXT_METHOD_DESC,
+				true);
+
+		mv.visitJumpInsn(Opcodes.IFEQ, normalParameterUnbindingIteratorLoopEnd);
+		mv.visitVarInsn(Opcodes.ALOAD, normalParameterUnbindingIteratorStore);
+		mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
+				GenerationConstants.JAVA_ITERATOR_NAME,
+				GenerationConstants.JAVA_ITERATOR_NEXT_METHOD_NAME,
+				GenerationConstants.JAVA_ITERATOR_NEXT_METHOD_DESC,
+				true);
+		mv.visitTypeInsn(Opcodes.CHECKCAST, GenerationConstants.FUNCTION_PARAMETER_BINDING_NAME);
+		final int normalParameterUnbindingStore = methodBuilder.getNextAvailableStore();
+		mv.visitVarInsn(Opcodes.ASTORE, normalParameterUnbindingStore);
+
+		mv.visitVarInsn(Opcodes.ALOAD, normalParameterUnbindingStore);
+		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
+				GenerationConstants.FUNCTION_PARAMETER_BINDING_NAME,
+				GenerationConstants.FUNCTION_PARAMETER_BINDING_GET_PARAMETER_SYMBOL_METHOD_NAME,
+				GenerationConstants.FUNCTION_PARAMETER_BINDING_GET_PARAMETER_SYMBOL_METHOD_DESC,
+				false);
+		final int normalParameterSymbolToUnbindStore = methodBuilder.getNextAvailableStore();
+		mv.visitVarInsn(Opcodes.ASTORE, normalParameterSymbolToUnbindStore);
+
+		mv.visitVarInsn(Opcodes.ALOAD, normalParameterUnbindingStore);
+		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
+				GenerationConstants.FUNCTION_PARAMETER_BINDING_NAME,
+				GenerationConstants.FUNCTION_PARAMETER_BINDING_IS_SPECIAL_METHOD_NAME,
+				GenerationConstants.FUNCTION_PARAMETER_BINDING_IS_SPECIAL_METHOD_DESC,
+				false);
+		final int normalParameterUnbindingIsSpecialStore = methodBuilder.getNextAvailableStore();
+		mv.visitVarInsn(Opcodes.ISTORE, normalParameterUnbindingIsSpecialStore);
+
+		final Label normalParameterUnbindingIsSpecialCheckElse = new Label();
+		final Label normalParameterUnbindingIsSpecialCheckElseEnd = new Label();
+
+		mv.visitVarInsn(Opcodes.ILOAD, normalParameterUnbindingIsSpecialStore);
+		mv.visitJumpInsn(Opcodes.IFEQ, normalParameterUnbindingIsSpecialCheckElse);
+
+		mv.visitVarInsn(Opcodes.ALOAD, normalParameterSymbolToUnbindStore);
+		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
+				GenerationConstants.SYMBOL_STRUCT_NAME,
+				GenerationConstants.SYMBOL_STRUCT_UNBIND_DYNAMIC_VALUE_METHOD_NAME,
+				GenerationConstants.SYMBOL_STRUCT_UNBIND_DYNAMIC_VALUE_METHOD_DESC,
+				false);
+		mv.visitJumpInsn(Opcodes.GOTO, normalParameterUnbindingIsSpecialCheckElseEnd);
+
+		mv.visitLabel(normalParameterUnbindingIsSpecialCheckElse);
+
+		mv.visitVarInsn(Opcodes.ALOAD, normalParameterSymbolToUnbindStore);
+		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
+				GenerationConstants.SYMBOL_STRUCT_NAME,
+				GenerationConstants.SYMBOL_STRUCT_UNBIND_LEXICAL_VALUE_METHOD_NAME,
+				GenerationConstants.SYMBOL_STRUCT_UNBIND_LEXICAL_VALUE_METHOD_DESC,
+				false);
+
+		mv.visitLabel(normalParameterUnbindingIsSpecialCheckElseEnd);
+
+		mv.visitJumpInsn(Opcodes.GOTO, normalParameterUnbindingIteratorLoopStart);
+
+		mv.visitLabel(normalParameterUnbindingIteratorLoopEnd);
+		// END: Unbind Parameter values
+
+		// START: Unbind Closure Function values
+		mv.visitVarInsn(Opcodes.ALOAD, closureFunctionBindingsStore);
+		mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
+				GenerationConstants.JAVA_MAP_NAME,
+				GenerationConstants.JAVA_MAP_KEY_SET_METHOD_NAME,
+				GenerationConstants.JAVA_MAP_KEY_SET_METHOD_DESC,
+				true);
+		mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
+				GenerationConstants.JAVA_SET_NAME,
+				GenerationConstants.JAVA_SET_ITERATOR_METHOD_NAME,
+				GenerationConstants.JAVA_SET_ITERATOR_METHOD_DESC,
+				true);
+		final int normalClosureFunctionUnbindingIteratorStore = methodBuilder.getNextAvailableStore();
+		mv.visitVarInsn(Opcodes.ASTORE, normalClosureFunctionUnbindingIteratorStore);
+
+		final Label normalClosureFunctionUnbindingIteratorLoopStart = new Label();
+		final Label normalClosureFunctionUnbindingIteratorLoopEnd = new Label();
+
+		mv.visitLabel(normalClosureFunctionUnbindingIteratorLoopStart);
+		mv.visitVarInsn(Opcodes.ALOAD, normalClosureFunctionUnbindingIteratorStore);
+		mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
+				GenerationConstants.JAVA_ITERATOR_NAME,
+				GenerationConstants.JAVA_ITERATOR_HAS_NEXT_METHOD_NAME,
+				GenerationConstants.JAVA_ITERATOR_HAS_NEXT_METHOD_DESC,
+				true);
+
+		mv.visitJumpInsn(Opcodes.IFEQ, normalClosureFunctionUnbindingIteratorLoopEnd);
+		mv.visitVarInsn(Opcodes.ALOAD, normalClosureFunctionUnbindingIteratorStore);
+		mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
+				GenerationConstants.JAVA_ITERATOR_NAME,
+				GenerationConstants.JAVA_ITERATOR_NEXT_METHOD_NAME,
+				GenerationConstants.JAVA_ITERATOR_NEXT_METHOD_DESC,
+				true);
+		mv.visitTypeInsn(Opcodes.CHECKCAST, GenerationConstants.SYMBOL_STRUCT_NAME);
+		final int normalClosureFunctionUnbindingMapKeySymbolStore = methodBuilder.getNextAvailableStore();
+		mv.visitVarInsn(Opcodes.ASTORE, normalClosureFunctionUnbindingMapKeySymbolStore);
+
+		mv.visitVarInsn(Opcodes.ALOAD, normalClosureFunctionUnbindingMapKeySymbolStore);
+		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
+				GenerationConstants.SYMBOL_STRUCT_NAME,
+				GenerationConstants.SYMBOL_STRUCT_UNBIND_FUNCTION_METHOD_NAME,
+				GenerationConstants.SYMBOL_STRUCT_UNBIND_FUNCTION_METHOD_DESC,
+				false);
+		mv.visitInsn(Opcodes.POP);
+		mv.visitJumpInsn(Opcodes.GOTO, normalClosureFunctionUnbindingIteratorLoopStart);
+
+		mv.visitLabel(normalClosureFunctionUnbindingIteratorLoopEnd);
+		// END: Unbind Closure Function values
+
+		// START: Unbind Closure Symbol values
+		mv.visitVarInsn(Opcodes.ALOAD, closureSymbolBindingsStore);
+		mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
+				GenerationConstants.JAVA_MAP_NAME,
+				GenerationConstants.JAVA_MAP_KEY_SET_METHOD_NAME,
+				GenerationConstants.JAVA_MAP_KEY_SET_METHOD_DESC,
+				true);
+		mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
+				GenerationConstants.JAVA_SET_NAME,
+				GenerationConstants.JAVA_SET_ITERATOR_METHOD_NAME,
+				GenerationConstants.JAVA_SET_ITERATOR_METHOD_DESC,
+				true);
+		final int normalClosureUnbindingIteratorStore = methodBuilder.getNextAvailableStore();
+		mv.visitVarInsn(Opcodes.ASTORE, normalClosureUnbindingIteratorStore);
+
+		final Label normalClosureSymbolUnbindingIteratorLoopStart = new Label();
+		final Label normalClosureSymbolUnbindingIteratorLoopEnd = new Label();
+
+		mv.visitLabel(normalClosureSymbolUnbindingIteratorLoopStart);
+		mv.visitVarInsn(Opcodes.ALOAD, normalClosureUnbindingIteratorStore);
+		mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
+				GenerationConstants.JAVA_ITERATOR_NAME,
+				GenerationConstants.JAVA_ITERATOR_HAS_NEXT_METHOD_NAME,
+				GenerationConstants.JAVA_ITERATOR_HAS_NEXT_METHOD_DESC,
+				true);
+
+		mv.visitJumpInsn(Opcodes.IFEQ, normalClosureSymbolUnbindingIteratorLoopEnd);
+		mv.visitVarInsn(Opcodes.ALOAD, normalClosureUnbindingIteratorStore);
+		mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
+				GenerationConstants.JAVA_ITERATOR_NAME,
+				GenerationConstants.JAVA_ITERATOR_NEXT_METHOD_NAME,
+				GenerationConstants.JAVA_ITERATOR_NEXT_METHOD_DESC,
+				true);
+		mv.visitTypeInsn(Opcodes.CHECKCAST, GenerationConstants.SYMBOL_STRUCT_NAME);
+		final int normalClosureUnbindingMapKeySymbolStore = methodBuilder.getNextAvailableStore();
+		mv.visitVarInsn(Opcodes.ASTORE, normalClosureUnbindingMapKeySymbolStore);
+
+		mv.visitVarInsn(Opcodes.ALOAD, normalClosureUnbindingMapKeySymbolStore);
+		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
+				GenerationConstants.SYMBOL_STRUCT_NAME,
+				GenerationConstants.SYMBOL_STRUCT_UNBIND_LEXICAL_VALUE_METHOD_NAME,
+				GenerationConstants.SYMBOL_STRUCT_UNBIND_LEXICAL_VALUE_METHOD_DESC,
+				false);
+		mv.visitJumpInsn(Opcodes.GOTO, normalClosureSymbolUnbindingIteratorLoopStart);
+
+		mv.visitLabel(normalClosureSymbolUnbindingIteratorLoopEnd);
+		// END: Unbind Closure Symbol values
+
+		mv.visitJumpInsn(Opcodes.GOTO, finallyBlockEnd);
+
+		final int exceptionStore = methodBuilder.getNextAvailableStore();
+
+		mv.visitLabel(catchErrorExceptionStart);
+		mv.visitVarInsn(Opcodes.ASTORE, exceptionStore);
+
+		mv.visitVarInsn(Opcodes.ALOAD, exceptionStore);
+		mv.visitInsn(Opcodes.ATHROW);
+
+		mv.visitLabel(catchThrowableStart);
+		mv.visitVarInsn(Opcodes.ASTORE, exceptionStore);
+
+		mv.visitTypeInsn(Opcodes.NEW, GenerationConstants.ERROR_EXCEPTION_NAME);
+		mv.visitInsn(Opcodes.DUP);
+		mv.visitLdcInsn(NON_LISP_ERROR_FOUND);
+		mv.visitVarInsn(Opcodes.ALOAD, exceptionStore);
+		mv.visitMethodInsn(Opcodes.INVOKESPECIAL, GenerationConstants.ERROR_EXCEPTION_NAME, GenerationConstants.INIT_METHOD_NAME, "(Ljava/lang/String;Ljava/lang/Throwable;)V", false);
+		mv.visitInsn(Opcodes.ATHROW);
+
+		mv.visitLabel(catchBlockStart);
+
+		final int finallyExceptionStore = methodBuilder.getNextAvailableStore();
+		mv.visitVarInsn(Opcodes.ASTORE, finallyExceptionStore);
+
+		mv.visitLabel(finallyBlockStart);
+
+		// START: Unbind Parameter values
+		mv.visitVarInsn(Opcodes.ALOAD, functionBindingsStore);
+		mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
+				GenerationConstants.JAVA_LIST_NAME,
+				GenerationConstants.JAVA_LIST_ITERATOR_METHOD_NAME,
+				GenerationConstants.JAVA_LIST_ITERATOR_METHOD_DESC,
+				true);
+		final int exceptionParameterUnbindingIteratorStore = methodBuilder.getNextAvailableStore();
+		mv.visitVarInsn(Opcodes.ASTORE, exceptionParameterUnbindingIteratorStore);
+
+		final Label exceptionParameterUnbindingIteratorLoopStart = new Label();
+		final Label exceptionParameterUnbindingIteratorLoopEnd = new Label();
+
+		mv.visitLabel(exceptionParameterUnbindingIteratorLoopStart);
+		mv.visitVarInsn(Opcodes.ALOAD, exceptionParameterUnbindingIteratorStore);
+		mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
+				GenerationConstants.JAVA_ITERATOR_NAME,
+				GenerationConstants.JAVA_ITERATOR_HAS_NEXT_METHOD_NAME,
+				GenerationConstants.JAVA_ITERATOR_HAS_NEXT_METHOD_DESC,
+				true);
+
+		mv.visitJumpInsn(Opcodes.IFEQ, exceptionParameterUnbindingIteratorLoopEnd);
+		mv.visitVarInsn(Opcodes.ALOAD, exceptionParameterUnbindingIteratorStore);
+		mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
+				GenerationConstants.JAVA_ITERATOR_NAME,
+				GenerationConstants.JAVA_ITERATOR_NEXT_METHOD_NAME,
+				GenerationConstants.JAVA_ITERATOR_NEXT_METHOD_DESC,
+				true);
+		mv.visitTypeInsn(Opcodes.CHECKCAST, GenerationConstants.FUNCTION_PARAMETER_BINDING_NAME);
+		final int exceptionParameterUnbindingStore = methodBuilder.getNextAvailableStore();
+		mv.visitVarInsn(Opcodes.ASTORE, exceptionParameterUnbindingStore);
+
+		mv.visitVarInsn(Opcodes.ALOAD, exceptionParameterUnbindingStore);
+		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
+				GenerationConstants.FUNCTION_PARAMETER_BINDING_NAME,
+				GenerationConstants.FUNCTION_PARAMETER_BINDING_GET_PARAMETER_SYMBOL_METHOD_NAME,
+				GenerationConstants.FUNCTION_PARAMETER_BINDING_GET_PARAMETER_SYMBOL_METHOD_DESC,
+				false);
+		final int exceptionParameterSymbolToUnbindStore = methodBuilder.getNextAvailableStore();
+		mv.visitVarInsn(Opcodes.ASTORE, exceptionParameterSymbolToUnbindStore);
+
+		mv.visitVarInsn(Opcodes.ALOAD, exceptionParameterUnbindingStore);
+		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
+				GenerationConstants.FUNCTION_PARAMETER_BINDING_NAME,
+				GenerationConstants.FUNCTION_PARAMETER_BINDING_IS_SPECIAL_METHOD_NAME,
+				GenerationConstants.FUNCTION_PARAMETER_BINDING_IS_SPECIAL_METHOD_DESC,
+				false);
+		final int exceptionParameterUnbindingIsSpecialStore = methodBuilder.getNextAvailableStore();
+		mv.visitVarInsn(Opcodes.ISTORE, exceptionParameterUnbindingIsSpecialStore);
+
+		final Label exceptionParameterUnbindingIsSpecialCheckElse = new Label();
+		final Label exceptionParameterUnbindingIsSpecialCheckElseEnd = new Label();
+
+		mv.visitVarInsn(Opcodes.ILOAD, exceptionParameterUnbindingIsSpecialStore);
+		mv.visitJumpInsn(Opcodes.IFEQ, exceptionParameterUnbindingIsSpecialCheckElse);
+
+		mv.visitVarInsn(Opcodes.ALOAD, exceptionParameterSymbolToUnbindStore);
+		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
+				GenerationConstants.SYMBOL_STRUCT_NAME,
+				GenerationConstants.SYMBOL_STRUCT_UNBIND_DYNAMIC_VALUE_METHOD_NAME,
+				GenerationConstants.SYMBOL_STRUCT_UNBIND_DYNAMIC_VALUE_METHOD_DESC,
+				false);
+		mv.visitJumpInsn(Opcodes.GOTO, exceptionParameterUnbindingIsSpecialCheckElseEnd);
+
+		mv.visitLabel(exceptionParameterUnbindingIsSpecialCheckElse);
+
+		mv.visitVarInsn(Opcodes.ALOAD, exceptionParameterSymbolToUnbindStore);
+		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
+				GenerationConstants.SYMBOL_STRUCT_NAME,
+				GenerationConstants.SYMBOL_STRUCT_UNBIND_LEXICAL_VALUE_METHOD_NAME,
+				GenerationConstants.SYMBOL_STRUCT_UNBIND_LEXICAL_VALUE_METHOD_DESC,
+				false);
+
+		mv.visitLabel(exceptionParameterUnbindingIsSpecialCheckElseEnd);
+
+		mv.visitJumpInsn(Opcodes.GOTO, exceptionParameterUnbindingIteratorLoopStart);
+
+		mv.visitLabel(exceptionParameterUnbindingIteratorLoopEnd);
+		// END: Unbind Parameter values
+
+		// START: Unbind Closure Function values
+		mv.visitVarInsn(Opcodes.ALOAD, closureFunctionBindingsStore);
+		mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
+				GenerationConstants.JAVA_MAP_NAME,
+				GenerationConstants.JAVA_MAP_KEY_SET_METHOD_NAME,
+				GenerationConstants.JAVA_MAP_KEY_SET_METHOD_DESC,
+				true);
+		mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
+				GenerationConstants.JAVA_SET_NAME,
+				GenerationConstants.JAVA_SET_ITERATOR_METHOD_NAME,
+				GenerationConstants.JAVA_SET_ITERATOR_METHOD_DESC,
+				true);
+		final int exceptionClosureFunctionUnbindingIteratorStore = methodBuilder.getNextAvailableStore();
+		mv.visitVarInsn(Opcodes.ASTORE, exceptionClosureFunctionUnbindingIteratorStore);
+
+		final Label exceptionClosureFunctionUnbindingIteratorLoopStart = new Label();
+		final Label exceptionClosureFunctionUnbindingIteratorLoopEnd = new Label();
+
+		mv.visitLabel(exceptionClosureFunctionUnbindingIteratorLoopStart);
+		mv.visitVarInsn(Opcodes.ALOAD, exceptionClosureFunctionUnbindingIteratorStore);
+		mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
+				GenerationConstants.JAVA_ITERATOR_NAME,
+				GenerationConstants.JAVA_ITERATOR_HAS_NEXT_METHOD_NAME,
+				GenerationConstants.JAVA_ITERATOR_HAS_NEXT_METHOD_DESC,
+				true);
+
+		mv.visitJumpInsn(Opcodes.IFEQ, exceptionClosureFunctionUnbindingIteratorLoopEnd);
+		mv.visitVarInsn(Opcodes.ALOAD, exceptionClosureFunctionUnbindingIteratorStore);
+		mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
+				GenerationConstants.JAVA_ITERATOR_NAME,
+				GenerationConstants.JAVA_ITERATOR_NEXT_METHOD_NAME,
+				GenerationConstants.JAVA_ITERATOR_NEXT_METHOD_DESC,
+				true);
+		mv.visitTypeInsn(Opcodes.CHECKCAST, GenerationConstants.SYMBOL_STRUCT_NAME);
+		final int exceptionClosureFunctionUnbindingMapKeySymbolStore = methodBuilder.getNextAvailableStore();
+		mv.visitVarInsn(Opcodes.ASTORE, exceptionClosureFunctionUnbindingMapKeySymbolStore);
+
+		mv.visitVarInsn(Opcodes.ALOAD, exceptionClosureFunctionUnbindingMapKeySymbolStore);
+		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
+				GenerationConstants.SYMBOL_STRUCT_NAME,
+				GenerationConstants.SYMBOL_STRUCT_UNBIND_FUNCTION_METHOD_NAME,
+				GenerationConstants.SYMBOL_STRUCT_UNBIND_FUNCTION_METHOD_DESC,
+				false);
+		mv.visitInsn(Opcodes.POP);
+		mv.visitJumpInsn(Opcodes.GOTO, exceptionClosureFunctionUnbindingIteratorLoopStart);
+
+		mv.visitLabel(exceptionClosureFunctionUnbindingIteratorLoopEnd);
+		// END: Unbind Closure Function values
+
+		// START: Unbind Closure Symbol values
+		mv.visitVarInsn(Opcodes.ALOAD, closureSymbolBindingsStore);
+		mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
+				GenerationConstants.JAVA_MAP_NAME,
+				GenerationConstants.JAVA_MAP_KEY_SET_METHOD_NAME,
+				GenerationConstants.JAVA_MAP_KEY_SET_METHOD_DESC,
+				true);
+		mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
+				GenerationConstants.JAVA_SET_NAME,
+				GenerationConstants.JAVA_SET_ITERATOR_METHOD_NAME,
+				GenerationConstants.JAVA_SET_ITERATOR_METHOD_DESC,
+				true);
+		final int exceptionClosureUnbindingIteratorStore = methodBuilder.getNextAvailableStore();
+		mv.visitVarInsn(Opcodes.ASTORE, exceptionClosureUnbindingIteratorStore);
+
+		final Label exceptionClosureUnbindingIteratorLoopStart = new Label();
+		final Label exceptionClosureUnbindingIteratorLoopEnd = new Label();
+
+		mv.visitLabel(exceptionClosureUnbindingIteratorLoopStart);
+		mv.visitVarInsn(Opcodes.ALOAD, exceptionClosureUnbindingIteratorStore);
+		mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
+				GenerationConstants.JAVA_ITERATOR_NAME,
+				GenerationConstants.JAVA_ITERATOR_HAS_NEXT_METHOD_NAME,
+				GenerationConstants.JAVA_ITERATOR_HAS_NEXT_METHOD_DESC,
+				true);
+
+		mv.visitJumpInsn(Opcodes.IFEQ, exceptionClosureUnbindingIteratorLoopEnd);
+		mv.visitVarInsn(Opcodes.ALOAD, exceptionClosureUnbindingIteratorStore);
+		mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
+				GenerationConstants.JAVA_ITERATOR_NAME,
+				GenerationConstants.JAVA_ITERATOR_NEXT_METHOD_NAME,
+				GenerationConstants.JAVA_ITERATOR_NEXT_METHOD_DESC,
+				true);
+		mv.visitTypeInsn(Opcodes.CHECKCAST, GenerationConstants.SYMBOL_STRUCT_NAME);
+		final int exceptionClosureUnbindingMapKeySymbolStore = methodBuilder.getNextAvailableStore();
+		mv.visitVarInsn(Opcodes.ASTORE, exceptionClosureUnbindingMapKeySymbolStore);
+
+		mv.visitVarInsn(Opcodes.ALOAD, exceptionClosureUnbindingMapKeySymbolStore);
+		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
+				GenerationConstants.SYMBOL_STRUCT_NAME,
+				GenerationConstants.SYMBOL_STRUCT_UNBIND_LEXICAL_VALUE_METHOD_NAME,
+				GenerationConstants.SYMBOL_STRUCT_UNBIND_LEXICAL_VALUE_METHOD_DESC,
+				false);
+		mv.visitJumpInsn(Opcodes.GOTO, exceptionClosureUnbindingIteratorLoopStart);
+
+		mv.visitLabel(exceptionClosureUnbindingIteratorLoopEnd);
+		// END: Unbind Closure Symbol values
+
+		mv.visitVarInsn(Opcodes.ALOAD, finallyExceptionStore);
+		mv.visitInsn(Opcodes.ATHROW);
+
+		mv.visitLabel(finallyBlockEnd);
+		mv.visitVarInsn(Opcodes.ALOAD, resultStore);
+
+		mv.visitInsn(Opcodes.ARETURN);
+
+		mv.visitMaxs(-1, -1);
+		mv.visitEnd();
+
+		methodBuilderDeque.removeFirst();
+	}
+
+	private void generateInternalApplyMethod(final LambdaStruct input, final GeneratorState generatorState, final ClassWriter cw) {
+		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PRIVATE,
+				INTERNAL_APPLY_METHOD_NAME,
+				INTERNAL_APPLY_METHOD_DESC,
+				null,
+				null);
+
+		final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
+		final Deque<JavaMethodBuilder> methodBuilderDeque = generatorState.getMethodBuilderDeque();
+		methodBuilderDeque.addFirst(methodBuilder);
+
+		mv.visitCode();
+		final int thisStore = methodBuilder.getNextAvailableStore();
+		final int closureArgStore = methodBuilder.getNextAvailableStore();
+
+		final LambdaEnvironment environment = input.getLambdaEnvironment();
+		final PrognStruct forms = input.getForms();
+
+		final Deque<Environment> environmentDeque = generatorState.getEnvironmentDeque();
+
+		environmentDeque.addFirst(environment);
+		prognCodeGenerator.generate(forms, generatorState);
+		environmentDeque.removeFirst();
+
+		mv.visitInsn(Opcodes.ARETURN);
+
+		mv.visitMaxs(-1, -1);
+		mv.visitEnd();
+
+		methodBuilderDeque.removeFirst();
+	}
+
+	private void generateGetInitFormMethod(final LambdaStruct input, final GeneratorState generatorState, final ClassWriter cw) {
+		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PRIVATE,
+				GET_INIT_FORM_METHOD_NAME,
+				GET_INIT_FORM_METHOD_DESC,
+				GET_INIT_FORM_METHOD_SIGNATURE,
+				null);
+
+		final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
+		final Deque<JavaMethodBuilder> methodBuilderDeque = generatorState.getMethodBuilderDeque();
+		methodBuilderDeque.addFirst(methodBuilder);
+
+		mv.visitCode();
+		final int thisStore = methodBuilder.getNextAvailableStore();
+		final int symbolArgStore = methodBuilder.getNextAvailableStore();
+
+		// NOTE: commented out to allow proper scoping of dynamic variables. I think we just don't worry about the binding stack here.
+//			bindingStack.push(lambdaEnvironment);
+
+		final int initFormVarPackageStore = methodBuilder.getNextAvailableStore();
+		final int initFormVarSymbolStore = methodBuilder.getNextAvailableStore();
+
+		final OrdinaryLambdaListBindings lambdaListBindings = input.getLambdaListBindings();
+
+		final List<OptionalBinding> optionalBindings = lambdaListBindings.getOptionalBindings();
+		for (final OptionalBinding optionalBinding : optionalBindings) {
+			final SymbolStruct<?> var = optionalBinding.getSymbolStruct();
+			CodeGenerators.generateSymbol(var, methodBuilder, initFormVarPackageStore, initFormVarSymbolStore);
+
+			final Label symbolCheckIfEnd = new Label();
+
+			mv.visitVarInsn(Opcodes.ALOAD, symbolArgStore);
+			mv.visitVarInsn(Opcodes.ALOAD, initFormVarSymbolStore);
+			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
+					GenerationConstants.SYMBOL_STRUCT_NAME,
+					GenerationConstants.JAVA_EQUALS_METHOD_NAME,
+					GenerationConstants.JAVA_EQUALS_METHOD_DESC,
+					false);
+			mv.visitJumpInsn(Opcodes.IFEQ, symbolCheckIfEnd);
+
+			final LispStruct initForm = optionalBinding.getInitForm();
+			codeGenerator.generate(initForm, generatorState);
+			mv.visitInsn(Opcodes.ARETURN);
+
+			mv.visitLabel(symbolCheckIfEnd);
+		}
+
+		final List<KeyBinding> keyBindings = lambdaListBindings.getKeyBindings();
+		for (final KeyBinding keyBinding : keyBindings) {
+			final SymbolStruct<?> var = keyBinding.getSymbolStruct();
+			CodeGenerators.generateSymbol(var, methodBuilder, initFormVarPackageStore, initFormVarSymbolStore);
+
+			final Label symbolCheckIfEnd = new Label();
+
+			mv.visitVarInsn(Opcodes.ALOAD, symbolArgStore);
+			mv.visitVarInsn(Opcodes.ALOAD, initFormVarSymbolStore);
+			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
+					GenerationConstants.SYMBOL_STRUCT_NAME,
+					GenerationConstants.JAVA_EQUALS_METHOD_NAME,
+					GenerationConstants.JAVA_EQUALS_METHOD_DESC,
+					false);
+			mv.visitJumpInsn(Opcodes.IFEQ, symbolCheckIfEnd);
+
+			final LispStruct initForm = keyBinding.getInitForm();
+			codeGenerator.generate(initForm, generatorState);
+			mv.visitInsn(Opcodes.ARETURN);
+
+			mv.visitLabel(symbolCheckIfEnd);
+		}
+
+		final List<AuxBinding> auxBindings = lambdaListBindings.getAuxBindings();
+		for (final AuxBinding auxBinding : auxBindings) {
+			final SymbolStruct<?> var = auxBinding.getSymbolStruct();
+			CodeGenerators.generateSymbol(var, methodBuilder, initFormVarPackageStore, initFormVarSymbolStore);
+
+			final Label symbolCheckIfEnd = new Label();
+
+			mv.visitVarInsn(Opcodes.ALOAD, symbolArgStore);
+			mv.visitVarInsn(Opcodes.ALOAD, initFormVarSymbolStore);
+			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
+					GenerationConstants.SYMBOL_STRUCT_NAME,
+					GenerationConstants.JAVA_EQUALS_METHOD_NAME,
+					GenerationConstants.JAVA_EQUALS_METHOD_DESC,
+					false);
+			mv.visitJumpInsn(Opcodes.IFEQ, symbolCheckIfEnd);
+
+			final LispStruct initForm = auxBinding.getInitForm();
+			codeGenerator.generate(initForm, generatorState);
+			mv.visitInsn(Opcodes.ARETURN);
+
+			mv.visitLabel(symbolCheckIfEnd);
+		}
+
+//			bindingStack.pop();
+
+		nullCodeGenerator.generate(NullStruct.INSTANCE, generatorState);
+		mv.visitInsn(Opcodes.ARETURN);
+
+		mv.visitMaxs(-1, -1);
+		mv.visitEnd();
+
+		methodBuilderDeque.removeFirst();
+	}
+
+	private static void generateClassInitMethod(final GeneratorState generatorState, final ClassWriter cw) {
+		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_STATIC,
+				GenerationConstants.CLASS_INIT_METHOD_NAME,
+				GenerationConstants.CLASS_INIT_METHOD_DESC,
+				null,
+				null);
+
+		final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
+		final Deque<JavaMethodBuilder> methodBuilderDeque = generatorState.getMethodBuilderDeque();
+		methodBuilderDeque.addFirst(methodBuilder);
+
+		mv.visitCode();
+
+		mv.visitInsn(Opcodes.RETURN);
+
+		mv.visitMaxs(-1, -1);
+		mv.visitEnd();
+
+		methodBuilderDeque.removeFirst();
+	}
+
+	private static void generateRequiredBindings(final JavaMethodBuilder methodBuilder,
 	                                             final OrdinaryLambdaListBindings lambdaListBindings, final MethodVisitor mv,
 	                                             final int packageStore, final int requiredBindingsStore) {
 
@@ -1289,7 +1315,7 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 		}
 	}
 
-	private void generateOptionalBindings(final GeneratorState classBuilder, final JavaMethodBuilder methodBuilder,
+	private void generateOptionalBindings(final GeneratorState generatorState, final JavaMethodBuilder methodBuilder,
 	                                      final OrdinaryLambdaListBindings lambdaListBindings, final MethodVisitor mv,
 	                                      final int packageStore, final int optionalBindingsStore) {
 
@@ -1313,7 +1339,7 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 			final SymbolStruct<?> optionalSymbol = optionalBinding.getSymbolStruct();
 			CodeGenerators.generateSymbol(optionalSymbol, methodBuilder, packageStore, optionalSymbolStore);
 
-			nullCodeGenerator.generate(NullStruct.INSTANCE, classBuilder);
+			nullCodeGenerator.generate(NullStruct.INSTANCE, generatorState);
 			mv.visitVarInsn(Opcodes.ASTORE, optionalInitFormStore);
 
 			// Start: Supplied-P
@@ -1370,7 +1396,7 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 		}
 	}
 
-	private static void generateRestBinding(final GeneratorState classBuilder, final JavaMethodBuilder methodBuilder,
+	private static void generateRestBinding(final JavaMethodBuilder methodBuilder,
 	                                        final OrdinaryLambdaListBindings lambdaListBindings, final MethodVisitor mv,
 	                                        final int packageStore, final int restBindingStore) {
 
@@ -1401,7 +1427,7 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 		}
 	}
 
-	private void generateKeyBindings(final GeneratorState classBuilder, final JavaMethodBuilder methodBuilder,
+	private void generateKeyBindings(final GeneratorState generatorState, final JavaMethodBuilder methodBuilder,
 	                                 final OrdinaryLambdaListBindings lambdaListBindings, final MethodVisitor mv,
 	                                 final int packageStore, final int keyBindingsStore) {
 
@@ -1426,7 +1452,7 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 			final SymbolStruct<?> keySymbol = keyBinding.getSymbolStruct();
 			CodeGenerators.generateSymbol(keySymbol, methodBuilder, packageStore, keySymbolStore);
 
-			nullCodeGenerator.generate(NullStruct.INSTANCE, classBuilder);
+			nullCodeGenerator.generate(NullStruct.INSTANCE, generatorState);
 			mv.visitVarInsn(Opcodes.ASTORE, keyInitFormStore);
 
 			final SymbolStruct<?> keyName = keyBinding.getKeyName();
@@ -1500,7 +1526,7 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 		}
 	}
 
-	private void generateAuxBindings(final GeneratorState classBuilder, final JavaMethodBuilder methodBuilder,
+	private void generateAuxBindings(final GeneratorState generatorState, final JavaMethodBuilder methodBuilder,
 	                                 final OrdinaryLambdaListBindings lambdaListBindings, final MethodVisitor mv,
 	                                 final int packageStore, final int auxBindingsStore) {
 
@@ -1524,7 +1550,7 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 
 			// NOTE: Just generate a null value for this initForm here. We take care of the &aux initForms in the body
 			//       when it is processed
-			nullCodeGenerator.generate(NullStruct.INSTANCE, classBuilder);
+			nullCodeGenerator.generate(NullStruct.INSTANCE, generatorState);
 			mv.visitVarInsn(Opcodes.ASTORE, auxInitFormStore);
 
 			mv.visitTypeInsn(Opcodes.NEW, GenerationConstants.AUX_BINDING_NAME);

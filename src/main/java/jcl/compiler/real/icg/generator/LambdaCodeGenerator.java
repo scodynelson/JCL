@@ -56,6 +56,12 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 
 	private static final String CLOSURE_FIELD = "closure";
 
+	private static final String FUNCTION_STRUCT_INIT_CLOSURE_DESC = "(Ljcl/functions/Closure;)V";
+
+	private static final String INIT_LAMBDA_LIST_BINDINGS_METHOD_NAME = "initLambdaListBindings";
+
+	private static final String INIT_LAMBDA_LIST_BINDINGS_METHOD_DESC = "()V";
+
 	private static final String INTERNAL_APPLY_METHOD_NAME = "internalApply";
 
 	private static final String INTERNAL_APPLY_METHOD_DESC = "(Ljcl/functions/Closure;)Ljcl/LispStruct;";
@@ -66,9 +72,11 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 
 	private static final String GET_INIT_FORM_METHOD_SIGNATURE = "(Ljcl/symbols/SymbolStruct<*>;)Ljcl/LispStruct;";
 
-	private static final String NON_LISP_ERROR_FOUND = "Non-Lisp error found.";
+	private static final String INIT_LOAD_TIME_VALUE_FORMS_METHOD_NAME = "initLoadTimeValueForms";
 
-	private static final String FUNCTION_STRUCT_INIT_CLOSURE_DESC = "(Ljcl/functions/Closure;)V";
+	private static final String INIT_LOAD_TIME_VALUE_FORMS_METHOD_DESC = "(Ljcl/functions/Closure;)V";
+
+	private static final String NON_LISP_ERROR_FOUND = "Non-Lisp error found.";
 
 	@Override
 	public void generate(final LambdaStruct input, final GeneratorState generatorState) {
@@ -112,7 +120,7 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 		{
 			final Map<String, LispStruct> loadTimeValues = lambdaEnvironment.getLoadTimeValues();
 			for (final String uniqueLTVId : loadTimeValues.keySet()) {
-				final FieldVisitor fv = cw.visitField(Opcodes.ACC_PRIVATE + Opcodes.ACC_FINAL + Opcodes.ACC_STATIC,
+				final FieldVisitor fv = cw.visitField(Opcodes.ACC_PRIVATE + Opcodes.ACC_FINAL,
 						uniqueLTVId,
 						GenerationConstants.LISP_STRUCT_DESC,
 						null,
@@ -179,10 +187,18 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 					false);
 
 			mv.visitVarInsn(Opcodes.ALOAD, thisStore);
+			mv.visitVarInsn(Opcodes.ALOAD, closureStore);
 			mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
 					fileName,
-					"initLambdaListBindings",
-					"()V",
+					INIT_LOAD_TIME_VALUE_FORMS_METHOD_NAME,
+					INIT_LOAD_TIME_VALUE_FORMS_METHOD_DESC,
+					false);
+
+			mv.visitVarInsn(Opcodes.ALOAD, thisStore);
+			mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
+					fileName,
+					INIT_LAMBDA_LIST_BINDINGS_METHOD_NAME,
+					INIT_LAMBDA_LIST_BINDINGS_METHOD_DESC,
 					false);
 
 			mv.visitInsn(Opcodes.RETURN);
@@ -194,8 +210,49 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 		}
 		{
 			final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PRIVATE,
-					"initLambdaListBindings",
-					"()V",
+					INIT_LOAD_TIME_VALUE_FORMS_METHOD_NAME,
+					INIT_LOAD_TIME_VALUE_FORMS_METHOD_DESC,
+					null,
+					null);
+
+			final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
+			final Deque<JavaMethodBuilder> methodBuilderDeque = generatorState.getMethodBuilderDeque();
+			methodBuilderDeque.addFirst(methodBuilder);
+
+			mv.visitCode();
+			final int thisStore = methodBuilder.getNextAvailableStore();
+			final int closureArgStore = methodBuilder.getNextAvailableStore();
+
+			final int loadTimeValueInitFormStore = methodBuilder.getNextAvailableStore();
+
+			final LambdaEnvironment environment = input.getLambdaEnvironment();
+			final Map<String, LispStruct> loadTimeValues = environment.getLoadTimeValues();
+
+			for (final Map.Entry<String, LispStruct> loadTimeValue : loadTimeValues.entrySet()) {
+				final String uniqueLTVId = loadTimeValue.getKey();
+				final LispStruct value = loadTimeValue.getValue();
+
+				codeGenerator.generate(value, generatorState);
+				mv.visitVarInsn(Opcodes.ASTORE, loadTimeValueInitFormStore);
+
+				CodeGenerators.generateValuesCheckAndStore(methodBuilder, loadTimeValueInitFormStore);
+
+				mv.visitVarInsn(Opcodes.ALOAD, thisStore);
+				mv.visitVarInsn(Opcodes.ALOAD, loadTimeValueInitFormStore);
+				mv.visitFieldInsn(Opcodes.PUTFIELD, fileName, uniqueLTVId, GenerationConstants.LISP_STRUCT_DESC);
+			}
+
+			mv.visitInsn(Opcodes.RETURN);
+
+			mv.visitMaxs(-1, -1);
+			mv.visitEnd();
+
+			methodBuilderDeque.removeFirst();
+		}
+		{
+			final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PRIVATE,
+					INIT_LAMBDA_LIST_BINDINGS_METHOD_NAME,
+					INIT_LAMBDA_LIST_BINDINGS_METHOD_DESC,
 					null,
 					null);
 
@@ -240,7 +297,7 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 
 			mv.visitVarInsn(Opcodes.ALOAD, thisStore);
 
-			mv.visitTypeInsn(Opcodes.NEW, GenerationConstants.O_LAMBDA_LIST_BINDINGS_NAME);
+			mv.visitTypeInsn(Opcodes.NEW, GenerationConstants.ORDINARY_LAMBDA_LIST_BINDINGS_NAME);
 			mv.visitInsn(Opcodes.DUP);
 			mv.visitVarInsn(Opcodes.ALOAD, requiredBindingsStore);
 			mv.visitVarInsn(Opcodes.ALOAD, optionalBindingsStore);
@@ -249,12 +306,12 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 			mv.visitVarInsn(Opcodes.ALOAD, auxBindingsStore);
 			mv.visitVarInsn(Opcodes.ILOAD, allowOtherKeysStore);
 			mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
-					GenerationConstants.O_LAMBDA_LIST_BINDINGS_NAME,
+					GenerationConstants.ORDINARY_LAMBDA_LIST_BINDINGS_NAME,
 					GenerationConstants.INIT_METHOD_NAME,
-					GenerationConstants.O_LAMBDA_LIST_BINDINGS_INIT_DESC,
+					GenerationConstants.ORDINARY_LAMBDA_LIST_BINDINGS_INIT_DESC,
 					false);
 
-			mv.visitFieldInsn(Opcodes.PUTFIELD, fileName, LAMBDA_LIST_BINDINGS_FIELD, GenerationConstants.O_LAMBDA_LIST_BINDINGS_DESC);
+			mv.visitFieldInsn(Opcodes.PUTFIELD, fileName, LAMBDA_LIST_BINDINGS_FIELD, GenerationConstants.ORDINARY_LAMBDA_LIST_BINDINGS_DESC);
 
 			mv.visitInsn(Opcodes.RETURN);
 
@@ -1146,62 +1203,26 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 
 			methodBuilderDeque.removeFirst();
 		}
-		{
-			final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_STATIC,
-					GenerationConstants.CLASS_INIT_METHOD_NAME,
-					GenerationConstants.CLASS_INIT_METHOD_DESC,
-					null,
-					null);
-
-			final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
-			final Deque<JavaMethodBuilder> methodBuilderDeque = generatorState.getMethodBuilderDeque();
-			methodBuilderDeque.addFirst(methodBuilder);
-
-			mv.visitCode();
-			final int thisStore = methodBuilder.getNextAvailableStore();
-
-			final int initFormStore = methodBuilder.getNextAvailableStore();
-
-			final Map<String, LispStruct> loadTimeValues = lambdaEnvironment.getLoadTimeValues();
-			for (final Map.Entry<String, LispStruct> loadTimeValue : loadTimeValues.entrySet()) {
-				final String uniqueLTVId = loadTimeValue.getKey();
-				final LispStruct value = loadTimeValue.getValue();
-
-				codeGenerator.generate(value, generatorState);
-				mv.visitVarInsn(Opcodes.ASTORE, initFormStore);
-
-				final Label valuesCheckIfEnd = new Label();
-
-				mv.visitVarInsn(Opcodes.ALOAD, initFormStore);
-				mv.visitTypeInsn(Opcodes.INSTANCEOF, GenerationConstants.VALUES_STRUCT_NAME);
-				mv.visitJumpInsn(Opcodes.IFEQ, valuesCheckIfEnd);
-
-				mv.visitVarInsn(Opcodes.ALOAD, initFormStore);
-				mv.visitTypeInsn(Opcodes.CHECKCAST, GenerationConstants.VALUES_STRUCT_NAME);
-				final int valuesStore = methodBuilder.getNextAvailableStore();
-				mv.visitVarInsn(Opcodes.ASTORE, valuesStore);
-
-				mv.visitVarInsn(Opcodes.ALOAD, valuesStore);
-				mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
-						GenerationConstants.VALUES_STRUCT_NAME,
-						GenerationConstants.VALUES_STRUCT_GET_PRIMARY_VALUE_METHOD_NAME,
-						GenerationConstants.VALUES_STRUCT_GET_PRIMARY_VALUE_METHOD_DESC,
-						false);
-				mv.visitVarInsn(Opcodes.ASTORE, initFormStore);
-
-				mv.visitLabel(valuesCheckIfEnd);
-
-				mv.visitVarInsn(Opcodes.ALOAD, initFormStore);
-				mv.visitFieldInsn(Opcodes.PUTSTATIC, fileName, uniqueLTVId, GenerationConstants.LISP_STRUCT_DESC);
-			}
-
-			mv.visitInsn(Opcodes.RETURN);
-
-			mv.visitMaxs(-1, -1);
-			mv.visitEnd();
-
-			methodBuilderDeque.removeFirst();
-		}
+//		{
+//			final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_STATIC,
+//					GenerationConstants.CLASS_INIT_METHOD_NAME,
+//					GenerationConstants.CLASS_INIT_METHOD_DESC,
+//					null,
+//					null);
+//
+//			final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
+//			final Deque<JavaMethodBuilder> methodBuilderDeque = generatorState.getMethodBuilderDeque();
+//			methodBuilderDeque.addFirst(methodBuilder);
+//
+//			mv.visitCode();
+//
+//			mv.visitInsn(Opcodes.RETURN);
+//
+//			mv.visitMaxs(-1, -1);
+//			mv.visitEnd();
+//
+//			methodBuilderDeque.removeFirst();
+//		}
 		cw.visitEnd();
 
 		classBuilderDeque.removeFirst();

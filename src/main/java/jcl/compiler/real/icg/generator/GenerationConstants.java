@@ -321,11 +321,11 @@ interface GenerationConstants {
 
 	String CLOSURE_GET_SYMBOL_BINDINGS_METHOD_DESC = CodeGenerators.getMethodDescription(Closure.class, CLOSURE_GET_SYMBOL_BINDINGS_METHOD_NAME);
 
-	String O_LAMBDA_LIST_BINDINGS_NAME = Type.getInternalName(OrdinaryLambdaListBindings.class);
+	String ORDINARY_LAMBDA_LIST_BINDINGS_NAME = Type.getInternalName(OrdinaryLambdaListBindings.class);
 
-	String O_LAMBDA_LIST_BINDINGS_DESC = Type.getDescriptor(OrdinaryLambdaListBindings.class);
+	String ORDINARY_LAMBDA_LIST_BINDINGS_DESC = Type.getDescriptor(OrdinaryLambdaListBindings.class);
 
-	String O_LAMBDA_LIST_BINDINGS_INIT_DESC = CodeGenerators.getConstructorDescription(OrdinaryLambdaListBindings.class, List.class, List.class, RestBinding.class, List.class, List.class, boolean.class);
+	String ORDINARY_LAMBDA_LIST_BINDINGS_INIT_DESC = CodeGenerators.getConstructorDescription(OrdinaryLambdaListBindings.class, List.class, List.class, RestBinding.class, List.class, List.class, boolean.class);
 
 	String ERROR_EXCEPTION_NAME = Type.getInternalName(ErrorException.class);
 

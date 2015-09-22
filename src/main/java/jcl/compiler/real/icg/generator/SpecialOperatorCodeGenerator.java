@@ -74,7 +74,11 @@ abstract class SpecialOperatorCodeGenerator<I extends CompilerSpecialOperatorStr
 		final ClassWriter cw = currentClass.getClassWriter();
 
 		final String methodName = methodNamePrefix + '_' + System.nanoTime();
-		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PRIVATE, methodName, SPECIAL_OPERATOR_METHOD_DESC, null, null);
+		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PRIVATE,
+				methodName,
+				SPECIAL_OPERATOR_METHOD_DESC,
+				null,
+				null);
 
 		final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
 		final Deque<JavaMethodBuilder> methodBuilderDeque = generatorState.getMethodBuilderDeque();

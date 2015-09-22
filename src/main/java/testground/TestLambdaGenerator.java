@@ -31,7 +31,7 @@ public class TestLambdaGenerator extends FunctionStruct {
 
 	private static final long serialVersionUID = 5616713628691655052L;
 
-	private static final LispStruct LTV_1 = new CharacterStruct(1997);
+	private LispStruct ltv_1;
 
 	public TestLambdaGenerator() {
 		this(null);
@@ -39,7 +39,12 @@ public class TestLambdaGenerator extends FunctionStruct {
 
 	protected TestLambdaGenerator(final Closure closure) {
 		super("DocumentationString", closure);
+		initLoadTimeValueForms(closure);
 		initLambdaListBindings();
+	}
+
+	private void initLoadTimeValueForms(final Closure currentClosure) {
+		ltv_1 = new CharacterStruct(1997);
 	}
 
 	private void initLambdaListBindings() {
@@ -169,12 +174,12 @@ public class TestLambdaGenerator extends FunctionStruct {
 		return result;
 	}
 
-	private LispStruct internalApply(final Closure currentClosure) {
+	private static LispStruct internalApply(final Closure currentClosure) {
 //		result = new CharacterStruct(97);
 		return new TestGroundLambdaFunction(currentClosure);
 	}
 
-	private LispStruct getInitForm(final SymbolStruct<?> symbolBinding) {
+	private static LispStruct getInitForm(final SymbolStruct<?> symbolBinding) {
 
 		final PackageStruct pkg1 = PackageStruct.findPackage("SYSTEM");
 		final SymbolStruct<?> symbol1 = pkg1.findSymbol("SYMBOL1").getSymbol();

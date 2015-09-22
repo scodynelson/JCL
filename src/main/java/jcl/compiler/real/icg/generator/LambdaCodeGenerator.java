@@ -68,9 +68,9 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 
 	private static final String GET_INIT_FORM_METHOD_NAME = "getInitForm";
 
-	private static final String GET_INIT_FORM_METHOD_DESC = "(Ljcl/symbols/SymbolStruct;)Ljcl/LispStruct;";
+	private static final String GET_INIT_FORM_METHOD_DESC = "(Ljcl/functions/Closure;Ljcl/symbols/SymbolStruct;)Ljcl/LispStruct;";
 
-	private static final String GET_INIT_FORM_METHOD_SIGNATURE = "(Ljcl/symbols/SymbolStruct<*>;)Ljcl/LispStruct;";
+	private static final String GET_INIT_FORM_METHOD_SIGNATURE = "(Ljcl/functions/Closure;Ljcl/symbols/SymbolStruct<*>;)Ljcl/LispStruct;";
 
 	private static final String INIT_LOAD_TIME_VALUE_FORMS_METHOD_NAME = "initLoadTimeValueForms";
 
@@ -529,8 +529,13 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 		mv.visitJumpInsn(Opcodes.IFEQ, parameterInitFormCheckIfEnd);
 
 		mv.visitVarInsn(Opcodes.ALOAD, thisStore);
+		mv.visitVarInsn(Opcodes.ALOAD, thisStore);
+		mv.visitFieldInsn(Opcodes.GETFIELD,
+				fileName,
+				CLOSURE_FIELD,
+				GenerationConstants.CLOSURE_DESC);
 		mv.visitVarInsn(Opcodes.ALOAD, parameterSymbolToBindStore);
-		mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
+		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
 				fileName,
 				GET_INIT_FORM_METHOD_NAME,
 				GET_INIT_FORM_METHOD_DESC,
@@ -951,7 +956,7 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 	}
 
 	private void generateGetInitFormMethod(final LambdaStruct input, final GeneratorState generatorState, final ClassWriter cw) {
-		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PRIVATE,
+		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PROTECTED,
 				GET_INIT_FORM_METHOD_NAME,
 				GET_INIT_FORM_METHOD_DESC,
 				GET_INIT_FORM_METHOD_SIGNATURE,
@@ -963,6 +968,7 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 
 		mv.visitCode();
 		final int thisStore = methodBuilder.getNextAvailableStore();
+		final int closureStore = methodBuilder.getNextAvailableStore();
 		final int symbolArgStore = methodBuilder.getNextAvailableStore();
 
 		// NOTE: commented out to allow proper scoping of dynamic variables. I think we just don't worry about the binding stack here.

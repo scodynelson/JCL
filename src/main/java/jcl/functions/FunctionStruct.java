@@ -348,6 +348,11 @@ public abstract class FunctionStruct extends BuiltInClassStruct {
 		return functionParametersToBind;
 	}
 
+	protected LispStruct getInitForm(final Closure currentClosure, final SymbolStruct<?> parameter) {
+		// TODO: fill in more??
+		return null;
+	}
+
 	@Override
 	public int hashCode() {
 		return new HashCodeBuilder().appendSuper(super.hashCode())

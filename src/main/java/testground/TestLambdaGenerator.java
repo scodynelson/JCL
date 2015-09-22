@@ -137,7 +137,7 @@ public class TestLambdaGenerator extends FunctionStruct {
 				final ValuesStruct valuesStruct = (ValuesStruct) value;
 				value = valuesStruct.getPrimaryValue();
 			} else if (INIT_FORM_PLACEHOLDER.equals(value)) {
-				value = getInitForm(symbol);
+				value = getInitForm(closure, symbol);
 			}
 			final boolean isSpecial = parameterSymbolToBind.isSpecial();
 			if (isSpecial) {
@@ -174,12 +174,13 @@ public class TestLambdaGenerator extends FunctionStruct {
 		return result;
 	}
 
-	private static LispStruct internalApply(final Closure currentClosure) {
+	private LispStruct internalApply(final Closure currentClosure) {
 //		result = new CharacterStruct(97);
 		return new TestGroundLambdaFunction(currentClosure);
 	}
 
-	private static LispStruct getInitForm(final SymbolStruct<?> symbolBinding) {
+	@Override
+	protected LispStruct getInitForm(final Closure currentClosure, final SymbolStruct<?> symbolBinding) {
 
 		final PackageStruct pkg1 = PackageStruct.findPackage("SYSTEM");
 		final SymbolStruct<?> symbol1 = pkg1.findSymbol("SYMBOL1").getSymbol();

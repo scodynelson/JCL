@@ -329,6 +329,8 @@ interface GenerationConstants {
 
 	String ERROR_EXCEPTION_NAME = Type.getInternalName(ErrorException.class);
 
+	String ERROR_EXCEPTION_INIT_STRING_THROWABLE_DESC = CodeGenerators.getConstructorDescription(ErrorException.class, String.class, Throwable.class);
+
 	String PROGRAM_ERROR_EXCEPTION_NAME = Type.getInternalName(ProgramErrorException.class);
 
 	String PROGRAM_ERROR_EXCEPTION_INIT_STRING_DESC = CodeGenerators.getConstructorDescription(ProgramErrorException.class, String.class);

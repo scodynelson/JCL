@@ -25,6 +25,7 @@ import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.util.CheckClassAdapter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
@@ -94,7 +95,7 @@ class CompileForm implements Serializable {
 
 					function = (FunctionStruct) applicationContext.getBean(classLoaded);
 				}
-			} catch (final RuntimeException ex) {
+			} catch (BeansException | IllegalStateException ex) {
 				LOGGER.error("Error compiling definition.", ex);
 				compiledWithWarnings = TStruct.INSTANCE;
 				failedToCompile = TStruct.INSTANCE;

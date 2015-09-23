@@ -44,6 +44,7 @@ import jcl.system.classloaders.LoaderClassLoader;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
@@ -298,7 +299,7 @@ public final class LoadFunction extends FunctionStruct {
 		} catch (final FileErrorException fee) {
 			LOGGER.error(fee.getMessage(), fee.getCause());
 			return NILStruct.INSTANCE;
-		} catch (final RuntimeException ex) {
+		} catch (BeansException | IllegalStateException ex) {
 			LOGGER.error("Error loading main definition for compiled file: '{}'", filespecPath, ex);
 			return NILStruct.INSTANCE;
 		}

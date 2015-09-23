@@ -77,10 +77,7 @@ public class TestGround {
 	private Object ifGen(final Closure currentClosure) {
 
 		LispStruct testObj = new CharacterStruct(97);
-		if (testObj instanceof ValuesStruct) {
-			final ValuesStruct valuesStruct = (ValuesStruct) testObj;
-			testObj = valuesStruct.getPrimaryValue();
-		}
+		testObj = ValuesStructs.extractPrimaryValue(testObj);
 
 		final LispStruct result;
 		if (!testObj.equals(NullStruct.INSTANCE) && !testObj.equals(NILStruct.INSTANCE)) {
@@ -244,10 +241,7 @@ public class TestGround {
 		final SymbolStruct symbol = pkg.findSymbol("FOO").getSymbol();
 
 		LispStruct value = new CharacterStruct(97);
-		if (value instanceof ValuesStruct) {
-			final ValuesStruct valuesStruct = (ValuesStruct) value;
-			value = valuesStruct.getPrimaryValue();
-		}
+		value = ValuesStructs.extractPrimaryValue(value);
 		symbol.setValue(value);
 		if (closureBindings != null) {
 			closureBindings.put(symbol, value);
@@ -280,10 +274,7 @@ public class TestGround {
 		final SymbolStruct symbol = pkg.findSymbol("FOO").getSymbol();
 
 		LispStruct initForm = new CharacterStruct(97);
-		if (initForm instanceof ValuesStruct) {
-			final ValuesStruct valuesStruct = (ValuesStruct) initForm;
-			initForm = valuesStruct.getPrimaryValue();
-		}
+		initForm = ValuesStructs.extractPrimaryValue(initForm);
 		symbol.bindLexicalValue(initForm);
 		closureBindings.put(symbol, initForm);
 
@@ -441,10 +432,7 @@ public class TestGround {
 			if (i < numberOfProgvVals) {
 				val = valsAsJavaList.get(i);
 			}
-			if (val instanceof ValuesStruct) {
-				final ValuesStruct valuesStruct = (ValuesStruct) val;
-				val = valuesStruct.getPrimaryValue();
-			}
+			val = ValuesStructs.extractPrimaryValue(val);
 
 			var.bindDynamicValue(val);
 		}

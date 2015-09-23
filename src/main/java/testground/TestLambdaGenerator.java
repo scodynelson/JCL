@@ -39,7 +39,8 @@ public class TestLambdaGenerator extends FunctionStruct {
 		initLambdaListBindings();
 	}
 
-	private void initLoadTimeValueForms(final Closure currentClosure) {
+	@Override
+	protected void initLoadTimeValueForms(final Closure currentClosure) {
 		ltv_1 = new CharacterStruct(1997);
 	}
 

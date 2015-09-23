@@ -129,7 +129,13 @@ final class LetCodeGenerator extends ClosureCreationCodeGenerator<LetEnvironment
 			final int initFormStore = methodBuilder.getNextAvailableStore();
 			mv.visitVarInsn(Opcodes.ASTORE, initFormStore);
 
-			CodeGenerators.generateValuesCheckAndStore(methodBuilder, initFormStore);
+			mv.visitVarInsn(Opcodes.ALOAD, initFormStore);
+			mv.visitMethodInsn(Opcodes.INVOKESTATIC,
+					GenerationConstants.VALUES_STRUCTS_NAME,
+					GenerationConstants.VALUES_STRUCTS_EXTRACT_PRIMARY_VALUE_METHOD_NAME,
+					GenerationConstants.VALUES_STRUCTS_EXTRACT_PRIMARY_VALUE_METHOD_DESC,
+					false);
+			mv.visitVarInsn(Opcodes.ASTORE, initFormStore);
 
 			final boolean isSpecial = var.isSpecial();
 			if (isSpecial) {

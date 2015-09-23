@@ -10,7 +10,6 @@ import java.lang.reflect.Method;
 import jcl.compiler.real.icg.JavaMethodBuilder;
 import jcl.packages.PackageStruct;
 import jcl.symbols.SymbolStruct;
-import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
@@ -97,31 +96,5 @@ final class CodeGenerators {
 					false);
 			mv.visitVarInsn(Opcodes.ASTORE, symbolStore);
 		}
-	}
-
-	static void generateValuesCheckAndStore(final JavaMethodBuilder methodBuilder, final int valuesResultStore) {
-
-		final MethodVisitor mv = methodBuilder.getMethodVisitor();
-
-		final Label valuesCheckIfEnd = new Label();
-
-		mv.visitVarInsn(Opcodes.ALOAD, valuesResultStore);
-		mv.visitTypeInsn(Opcodes.INSTANCEOF, GenerationConstants.VALUES_STRUCT_NAME);
-		mv.visitJumpInsn(Opcodes.IFEQ, valuesCheckIfEnd);
-
-		mv.visitVarInsn(Opcodes.ALOAD, valuesResultStore);
-		mv.visitTypeInsn(Opcodes.CHECKCAST, GenerationConstants.VALUES_STRUCT_NAME);
-		final int valuesStore = methodBuilder.getNextAvailableStore();
-		mv.visitVarInsn(Opcodes.ASTORE, valuesStore);
-
-		mv.visitVarInsn(Opcodes.ALOAD, valuesStore);
-		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
-				GenerationConstants.VALUES_STRUCT_NAME,
-				GenerationConstants.VALUES_STRUCT_GET_PRIMARY_VALUE_METHOD_NAME,
-				GenerationConstants.VALUES_STRUCT_GET_PRIMARY_VALUE_METHOD_DESC,
-				false);
-		mv.visitVarInsn(Opcodes.ASTORE, valuesResultStore);
-
-		mv.visitLabel(valuesCheckIfEnd);
 	}
 }

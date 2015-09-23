@@ -307,6 +307,10 @@ interface GenerationConstants {
 
 	String VALUES_STRUCTS_ADD_VALUES_TO_LIST_METHOD_DESC = CodeGenerators.getMethodDescription(ValuesStructs.class, VALUES_STRUCTS_ADD_VALUES_TO_LIST_METHOD_NAME, List.class, LispStruct.class);
 
+	String VALUES_STRUCTS_EXTRACT_PRIMARY_VALUE_METHOD_NAME = "extractPrimaryValue";
+
+	String VALUES_STRUCTS_EXTRACT_PRIMARY_VALUE_METHOD_DESC = CodeGenerators.getMethodDescription(ValuesStructs.class, VALUES_STRUCTS_EXTRACT_PRIMARY_VALUE_METHOD_NAME, LispStruct.class);
+
 	String CLOSURE_NAME = Type.getInternalName(Closure.class);
 
 	String CLOSURE_DESC = Type.getDescriptor(Closure.class);

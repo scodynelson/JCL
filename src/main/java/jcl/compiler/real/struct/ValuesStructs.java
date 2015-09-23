@@ -8,9 +8,6 @@ import java.util.List;
 
 import jcl.LispStruct;
 
-/**
- * Created by codynelson on 9/15/15.
- */
 public final class ValuesStructs {
 
 	public static void addValuesToList(final List<LispStruct> lispStructs, final LispStruct lispStruct) {
@@ -20,5 +17,12 @@ public final class ValuesStructs {
 		} else {
 			lispStructs.add(lispStruct);
 		}
+	}
+
+	public static LispStruct extractPrimaryValue(final LispStruct lispStruct) {
+		if (lispStruct instanceof ValuesStruct) {
+			return ((ValuesStruct) lispStruct).getPrimaryValue();
+		}
+		return lispStruct;
 	}
 }

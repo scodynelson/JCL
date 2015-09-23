@@ -231,7 +231,15 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 	}
 
 	private void generateInitLoadTimeValueFormsMethod(final LambdaStruct input, final GeneratorState generatorState, final String fileName, final ClassWriter cw) {
-		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PRIVATE,
+		final LambdaEnvironment environment = input.getLambdaEnvironment();
+
+		final Map<String, LispStruct> loadTimeValues = environment.getLoadTimeValues();
+		if (loadTimeValues.isEmpty()) {
+			// No need to generate this method, as there are no load-time-value forms to initialize
+			return;
+		}
+
+		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PROTECTED,
 				INIT_LOAD_TIME_VALUE_FORMS_METHOD_NAME,
 				INIT_LOAD_TIME_VALUE_FORMS_METHOD_DESC,
 				null,
@@ -247,9 +255,6 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 
 		final int loadTimeValueInitFormStore = methodBuilder.getNextAvailableStore();
 
-		final LambdaEnvironment environment = input.getLambdaEnvironment();
-		final Map<String, LispStruct> loadTimeValues = environment.getLoadTimeValues();
-
 		for (final Map.Entry<String, LispStruct> loadTimeValue : loadTimeValues.entrySet()) {
 			final String uniqueLTVId = loadTimeValue.getKey();
 			final LispStruct value = loadTimeValue.getValue();
@@ -257,7 +262,13 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 			codeGenerator.generate(value, generatorState);
 			mv.visitVarInsn(Opcodes.ASTORE, loadTimeValueInitFormStore);
 
-			CodeGenerators.generateValuesCheckAndStore(methodBuilder, loadTimeValueInitFormStore);
+			mv.visitVarInsn(Opcodes.ALOAD, loadTimeValueInitFormStore);
+			mv.visitMethodInsn(Opcodes.INVOKESTATIC,
+					GenerationConstants.VALUES_STRUCTS_NAME,
+					GenerationConstants.VALUES_STRUCTS_EXTRACT_PRIMARY_VALUE_METHOD_NAME,
+					GenerationConstants.VALUES_STRUCTS_EXTRACT_PRIMARY_VALUE_METHOD_DESC,
+					false);
+			mv.visitVarInsn(Opcodes.ASTORE, loadTimeValueInitFormStore);
 
 			mv.visitVarInsn(Opcodes.ALOAD, thisStore);
 			mv.visitVarInsn(Opcodes.ALOAD, loadTimeValueInitFormStore);
@@ -347,6 +358,12 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 	}
 
 	private void generateInternalApplyMethod(final LambdaStruct input, final GeneratorState generatorState, final ClassWriter cw) {
+		final PrognStruct forms = input.getForms();
+		if (forms.getForms().isEmpty()) {
+			// No need to generate this method, as there are no forms to generate
+			return;
+		}
+
 		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PROTECTED,
 				INTERNAL_APPLY_METHOD_NAME,
 				INTERNAL_APPLY_METHOD_DESC,
@@ -362,7 +379,6 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 		final int closureArgStore = methodBuilder.getNextAvailableStore();
 
 		final LambdaEnvironment environment = input.getLambdaEnvironment();
-		final PrognStruct forms = input.getForms();
 
 		final Deque<Environment> environmentDeque = generatorState.getEnvironmentDeque();
 
@@ -379,6 +395,16 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 	}
 
 	private void generateGetInitFormMethod(final LambdaStruct input, final GeneratorState generatorState, final ClassWriter cw) {
+		final OrdinaryLambdaListBindings lambdaListBindings = input.getLambdaListBindings();
+
+		final List<OptionalBinding> optionalBindings = lambdaListBindings.getOptionalBindings();
+		final List<KeyBinding> keyBindings = lambdaListBindings.getKeyBindings();
+		final List<AuxBinding> auxBindings = lambdaListBindings.getAuxBindings();
+		if (optionalBindings.isEmpty() && keyBindings.isEmpty() && auxBindings.isEmpty()) {
+			// No need to generate this method, as there are no init-forms to initialize
+			return;
+		}
+
 		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PROTECTED,
 				GET_INIT_FORM_METHOD_NAME,
 				GET_INIT_FORM_METHOD_DESC,
@@ -400,9 +426,6 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 		final int initFormVarPackageStore = methodBuilder.getNextAvailableStore();
 		final int initFormVarSymbolStore = methodBuilder.getNextAvailableStore();
 
-		final OrdinaryLambdaListBindings lambdaListBindings = input.getLambdaListBindings();
-
-		final List<OptionalBinding> optionalBindings = lambdaListBindings.getOptionalBindings();
 		for (final OptionalBinding optionalBinding : optionalBindings) {
 			final SymbolStruct<?> var = optionalBinding.getSymbolStruct();
 			CodeGenerators.generateSymbol(var, methodBuilder, initFormVarPackageStore, initFormVarSymbolStore);
@@ -425,7 +448,6 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 			mv.visitLabel(symbolCheckIfEnd);
 		}
 
-		final List<KeyBinding> keyBindings = lambdaListBindings.getKeyBindings();
 		for (final KeyBinding keyBinding : keyBindings) {
 			final SymbolStruct<?> var = keyBinding.getSymbolStruct();
 			CodeGenerators.generateSymbol(var, methodBuilder, initFormVarPackageStore, initFormVarSymbolStore);
@@ -448,7 +470,6 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 			mv.visitLabel(symbolCheckIfEnd);
 		}
 
-		final List<AuxBinding> auxBindings = lambdaListBindings.getAuxBindings();
 		for (final AuxBinding auxBinding : auxBindings) {
 			final SymbolStruct<?> var = auxBinding.getSymbolStruct();
 			CodeGenerators.generateSymbol(var, methodBuilder, initFormVarPackageStore, initFormVarSymbolStore);

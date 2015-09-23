@@ -412,7 +412,13 @@ final class ProgvCodeGenerator extends SpecialOperatorCodeGenerator<ProgvStruct>
 
 		mv.visitLabel(numberOfValsCheckEnd);
 
-		CodeGenerators.generateValuesCheckAndStore(methodBuilder, valStore);
+		mv.visitVarInsn(Opcodes.ALOAD, valStore);
+		mv.visitMethodInsn(Opcodes.INVOKESTATIC,
+				GenerationConstants.VALUES_STRUCTS_NAME,
+				GenerationConstants.VALUES_STRUCTS_EXTRACT_PRIMARY_VALUE_METHOD_NAME,
+				GenerationConstants.VALUES_STRUCTS_EXTRACT_PRIMARY_VALUE_METHOD_DESC,
+				false);
+		mv.visitVarInsn(Opcodes.ASTORE, valStore);
 
 		mv.visitVarInsn(Opcodes.ALOAD, varSymbolStore);
 		mv.visitVarInsn(Opcodes.ALOAD, valStore);

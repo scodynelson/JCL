@@ -67,6 +67,18 @@ public abstract class FunctionStruct extends BuiltInClassStruct {
 	/**
 	 * Protected constructor.
 	 *
+	 * @param closure
+	 * 		instance function closure
+	 */
+	protected FunctionStruct(final Closure closure) {
+		this("", closure);
+//		initLoadTimeValueForms(closure);
+//		this.initLambdaListBindings();
+	}
+
+	/**
+	 * Protected constructor.
+	 *
 	 * @param documentation
 	 * 		instance documentation string
 	 * @param closure
@@ -222,27 +234,6 @@ public abstract class FunctionStruct extends BuiltInClassStruct {
 		return result;
 	}
 
-	protected LispStruct internalApply(final Closure currentClosure) {
-		// TODO: replace with abstract method when finished refactoring Lambda Generation
-		return null;
-	}
-
-	public OrdinaryLambdaListBindings getLambdaListBindings() {
-		return lambdaListBindings;
-	}
-
-	public void setLambdaListBindings(final OrdinaryLambdaListBindings lambdaListBindings) {
-		this.lambdaListBindings = lambdaListBindings;
-	}
-
-	public Closure getClosure() {
-		return closure;
-	}
-
-	public void setClosure(final Closure closure) {
-		this.closure = closure;
-	}
-
 	public Map<SymbolStruct<?>, LispStruct> getClosureSymbolBindings() {
 		if (closure == null) {
 			return Collections.emptyMap();
@@ -255,6 +246,10 @@ public abstract class FunctionStruct extends BuiltInClassStruct {
 			return Collections.emptyMap();
 		}
 		return closure.getFunctionBindings();
+	}
+
+	protected LispStruct internalApply(final Closure currentClosure) {
+		return NullStruct.INSTANCE;
 	}
 
 	protected List<FunctionParameterBinding> getFunctionBindings(final LispStruct[] lispStructs) {
@@ -418,9 +413,11 @@ public abstract class FunctionStruct extends BuiltInClassStruct {
 		return functionParametersToBind;
 	}
 
+	protected void initLoadTimeValueForms(final Closure currentClosure) {
+	}
+
 	protected LispStruct getInitForm(final Closure currentClosure, final SymbolStruct<?> parameter) {
-		// TODO: replace with abstract method when finished refactoring Lambda Generation
-		return null;
+		return NullStruct.INSTANCE;
 	}
 
 	@Override

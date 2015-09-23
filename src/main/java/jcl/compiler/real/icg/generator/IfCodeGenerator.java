@@ -106,7 +106,13 @@ final class IfCodeGenerator extends SpecialOperatorCodeGenerator<IfStruct> {
 		final int testFormStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, testFormStore);
 
-		CodeGenerators.generateValuesCheckAndStore(methodBuilder, testFormStore);
+		mv.visitVarInsn(Opcodes.ALOAD, testFormStore);
+		mv.visitMethodInsn(Opcodes.INVOKESTATIC,
+				GenerationConstants.VALUES_STRUCTS_NAME,
+				GenerationConstants.VALUES_STRUCTS_EXTRACT_PRIMARY_VALUE_METHOD_NAME,
+				GenerationConstants.VALUES_STRUCTS_EXTRACT_PRIMARY_VALUE_METHOD_DESC,
+				false);
+		mv.visitVarInsn(Opcodes.ASTORE, testFormStore);
 
 		final Label elseStart = new Label();
 		final Label elseEnd = new Label();

@@ -21,6 +21,8 @@ import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaListBindin
 import jcl.compiler.real.environment.binding.lambdalist.RequiredBinding;
 import jcl.compiler.real.environment.binding.lambdalist.RestBinding;
 import jcl.compiler.real.environment.binding.lambdalist.SuppliedPBinding;
+import jcl.compiler.real.struct.ValuesStruct;
+import jcl.conditions.exceptions.ErrorException;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;
@@ -155,7 +157,75 @@ public abstract class FunctionStruct extends BuiltInClassStruct {
 	 *
 	 * @return the result object
 	 */
-	public abstract LispStruct apply(LispStruct... lispStructs);
+	@SuppressWarnings({"unchecked", "rawtypes"})
+	public LispStruct apply(final LispStruct... lispStructs) {
+		final Map<SymbolStruct<?>, LispStruct> closureSymbolsToBind = getClosureSymbolBindings();
+		for (final Map.Entry<SymbolStruct<?>, LispStruct> closureSymbolToBind : closureSymbolsToBind.entrySet()) {
+			final SymbolStruct symbol = closureSymbolToBind.getKey();
+			LispStruct value = closureSymbolToBind.getValue();
+			if (value instanceof ValuesStruct) {
+				final ValuesStruct valuesStruct = (ValuesStruct) value;
+				value = valuesStruct.getPrimaryValue();
+			}
+			symbol.bindLexicalValue(value);
+		}
+
+		final Map<SymbolStruct<?>, FunctionStruct> closureFunctionsToBind = getClosureFunctionBindings();
+		for (final Map.Entry<SymbolStruct<?>, FunctionStruct> closureFunctionToBind : closureFunctionsToBind.entrySet()) {
+			final SymbolStruct<?> symbol = closureFunctionToBind.getKey();
+			final FunctionStruct function = closureFunctionToBind.getValue();
+			symbol.bindFunction(function);
+		}
+
+		final List<FunctionParameterBinding> parameterSymbolsToBind = getFunctionBindings(lispStructs);
+		for (final FunctionParameterBinding parameterSymbolToBind : parameterSymbolsToBind) {
+			final SymbolStruct symbol = parameterSymbolToBind.getParameterSymbol();
+			LispStruct value = parameterSymbolToBind.getParameterValue();
+			if (value instanceof ValuesStruct) {
+				final ValuesStruct valuesStruct = (ValuesStruct) value;
+				value = valuesStruct.getPrimaryValue();
+			} else if (INIT_FORM_PLACEHOLDER.equals(value)) {
+				value = getInitForm(closure, symbol);
+			}
+			final boolean isSpecial = parameterSymbolToBind.isSpecial();
+			if (isSpecial) {
+				symbol.bindDynamicValue(value);
+			} else {
+				symbol.bindLexicalValue(value);
+			}
+		}
+
+		final LispStruct result;
+		try {
+			result = internalApply(closure);
+		} catch (final ErrorException ex) {
+			throw ex;
+		} catch (final Throwable t) {
+			throw new ErrorException("Non-Lisp error found.", t);
+		} finally {
+			for (final FunctionParameterBinding parameterSymbolToUnbind : parameterSymbolsToBind) {
+				final SymbolStruct<?> parameterSymbol = parameterSymbolToUnbind.getParameterSymbol();
+				final boolean isSpecial = parameterSymbolToUnbind.isSpecial();
+				if (isSpecial) {
+					parameterSymbol.unbindDynamicValue();
+				} else {
+					parameterSymbol.unbindLexicalValue();
+				}
+			}
+			for (final SymbolStruct<?> closureFunctionToUnbind : closureFunctionsToBind.keySet()) {
+				closureFunctionToUnbind.unbindFunction();
+			}
+			for (final SymbolStruct<?> closureSymbolToUnbind : closureSymbolsToBind.keySet()) {
+				closureSymbolToUnbind.unbindLexicalValue();
+			}
+		}
+		return result;
+	}
+
+	protected LispStruct internalApply(final Closure currentClosure) {
+		// TODO: replace with abstract method when finished refactoring Lambda Generation
+		return null;
+	}
 
 	public OrdinaryLambdaListBindings getLambdaListBindings() {
 		return lambdaListBindings;
@@ -349,7 +419,7 @@ public abstract class FunctionStruct extends BuiltInClassStruct {
 	}
 
 	protected LispStruct getInitForm(final Closure currentClosure, final SymbolStruct<?> parameter) {
-		// TODO: fill in more??
+		// TODO: replace with abstract method when finished refactoring Lambda Generation
 		return null;
 	}
 

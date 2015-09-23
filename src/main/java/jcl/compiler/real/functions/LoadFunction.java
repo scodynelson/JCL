@@ -5,8 +5,6 @@
 package jcl.compiler.real.functions;
 
 import java.io.File;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -47,6 +45,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.beans.factory.support.BeanDefinitionBuilder;
+import org.springframework.beans.factory.support.DefaultListableBeanFactory;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -69,6 +71,9 @@ public final class LoadFunction extends FunctionStruct {
 
 	@Autowired
 	private MergePathnamesFunction mergePathnamesFunction;
+
+	@Autowired
+	private ConfigurableApplicationContext applicationContext;
 
 	private LoadFunction() {
 		super("Loads the file named by filespec into the Lisp environment.", getInitLambdaListBindings());
@@ -271,7 +276,7 @@ public final class LoadFunction extends FunctionStruct {
 		return TStruct.INSTANCE;
 	}
 
-	private static LispStruct loadCompiledCode(final Path filespecPath, final boolean verbose, final boolean print) {
+	private LispStruct loadCompiledCode(final Path filespecPath, final boolean verbose, final boolean print) {
 
 		try {
 			final LoaderClassLoader cl = new LoaderClassLoader(filespecPath, verbose, print);
@@ -280,15 +285,21 @@ public final class LoadFunction extends FunctionStruct {
 			if (classLoaded == null) {
 				return NILStruct.INSTANCE;
 			} else {
-				final Constructor<?> constructor = classLoaded.getConstructor();
-				final FunctionStruct function = (FunctionStruct) constructor.newInstance();
+				final BeanDefinitionBuilder builder = BeanDefinitionBuilder.genericBeanDefinition(classLoaded);
+				final DefaultListableBeanFactory factory = (DefaultListableBeanFactory) applicationContext.getBeanFactory();
+
+				final String beanName = classLoaded.getSimpleName();
+				final BeanDefinition beanDefinition = builder.getBeanDefinition();
+				factory.registerBeanDefinition(beanName, beanDefinition);
+
+				final FunctionStruct function = (FunctionStruct) applicationContext.getBean(classLoaded);
 				return function.apply();
 			}
-		} catch (InstantiationException | NoSuchMethodException | InvocationTargetException | IllegalAccessException ex) {
-			LOGGER.error("Error loading main definition for compiled file: '{}'", filespecPath, ex);
-			return NILStruct.INSTANCE;
 		} catch (final FileErrorException fee) {
 			LOGGER.error(fee.getMessage(), fee.getCause());
+			return NILStruct.INSTANCE;
+		} catch (final RuntimeException ex) {
+			LOGGER.error("Error loading main definition for compiled file: '{}'", filespecPath, ex);
 			return NILStruct.INSTANCE;
 		}
 	}

@@ -12,7 +12,6 @@ import jcl.characters.CharacterStruct;
 import jcl.compiler.real.environment.binding.lambdalist.AuxBinding;
 import jcl.compiler.real.environment.binding.lambdalist.KeyBinding;
 import jcl.compiler.real.environment.binding.lambdalist.OptionalBinding;
-import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaListBindings;
 import jcl.compiler.real.environment.binding.lambdalist.RequiredBinding;
 import jcl.compiler.real.environment.binding.lambdalist.RestBinding;
 import jcl.compiler.real.environment.binding.lambdalist.SuppliedPBinding;
@@ -46,20 +45,23 @@ public class TestLambdaGenerator extends FunctionStruct {
 		ltv_1 = new CharacterStruct(1997);
 	}
 
-	private void initLambdaListBindings() {
+	@Override
+	protected List<RequiredBinding> getRequiredBindings() {
 		final List<RequiredBinding> requiredBindings = new ArrayList<>();
 
-		// Start: Required
-		PackageStruct pkg = PackageStruct.findPackage("SYSTEM");
+		final PackageStruct pkg = PackageStruct.findPackage("SYSTEM");
 		final SymbolStruct<?> requiredSymbol = pkg.intern("REQUIRED-SYMBOL").getSymbol();
 		final RequiredBinding requiredBinding = new RequiredBinding(requiredSymbol, true);
 		requiredBindings.add(requiredBinding);
-		// End: Required
 
-		// Start: Optional
+		return requiredBindings;
+	}
+
+	@Override
+	protected List<OptionalBinding> getOptionalBindings() {
 		final List<OptionalBinding> optionalBindings = new ArrayList<>();
 
-		pkg = PackageStruct.findPackage("SYSTEM");
+		PackageStruct pkg = PackageStruct.findPackage("SYSTEM");
 		final SymbolStruct<?> optionalSymbol = pkg.intern("OPTIONAL-SYMBOL").getSymbol();
 		final LispStruct optionalInitForm = NullStruct.INSTANCE;
 
@@ -69,18 +71,22 @@ public class TestLambdaGenerator extends FunctionStruct {
 
 		final OptionalBinding optionalBinding = new OptionalBinding(optionalSymbol, optionalInitForm, false, optionalSuppliedPBinding);
 		optionalBindings.add(optionalBinding);
-		// End: Optional
 
-		// Start: Rest
-		pkg = PackageStruct.findPackage("SYSTEM");
+		return optionalBindings;
+	}
+
+	@Override
+	protected RestBinding getRestBinding() {
+		final PackageStruct pkg = PackageStruct.findPackage("SYSTEM");
 		final SymbolStruct<?> restSymbol = pkg.intern("REST-SYMBOL").getSymbol();
-		final RestBinding restBinding = new RestBinding(restSymbol, true);
-		// End: Rest
+		return new RestBinding(restSymbol, true);
+	}
 
-		// Start: Keys
+	@Override
+	protected List<KeyBinding> getKeyBindings() {
 		final List<KeyBinding> keyBindings = new ArrayList<>();
 
-		pkg = PackageStruct.findPackage("SYSTEM");
+		PackageStruct pkg = PackageStruct.findPackage("SYSTEM");
 		final SymbolStruct<?> keySymbol = pkg.intern("KEY-SYMBOL").getSymbol();
 		final LispStruct keyInitForm = NullStruct.INSTANCE;
 
@@ -93,24 +99,27 @@ public class TestLambdaGenerator extends FunctionStruct {
 
 		final KeyBinding keyBinding = new KeyBinding(keySymbol, keyInitForm, false, keyName, keySuppliedPBinding);
 		keyBindings.add(keyBinding);
-		// End: Keys
 
-		// Start: Allow-Other-Keys
-		final boolean allowOtherKeys = true;
-		// End: Allow-Other-Keys
+		return keyBindings;
+	}
 
-		// Start: Aux
+	@Override
+	protected boolean getAllowOtherKeys() {
+		return true;
+	}
+
+	@Override
+	protected List<AuxBinding> getAuxBindings() {
 		final List<AuxBinding> auxBindings = new ArrayList<>();
 
-		pkg = PackageStruct.findPackage("SYSTEM");
+		final PackageStruct pkg = PackageStruct.findPackage("SYSTEM");
 		final SymbolStruct<?> auxSymbol = pkg.intern("AUX-SYMBOL").getSymbol();
 		final LispStruct auxInitForm = NullStruct.INSTANCE;
 
 		final AuxBinding auxBinding = new AuxBinding(auxSymbol, auxInitForm, false);
 		auxBindings.add(auxBinding);
-		// End: Aux
 
-		lambdaListBindings = new OrdinaryLambdaListBindings(requiredBindings, optionalBindings, restBinding, keyBindings, auxBindings, allowOtherKeys);
+		return auxBindings;
 	}
 
 	@Override

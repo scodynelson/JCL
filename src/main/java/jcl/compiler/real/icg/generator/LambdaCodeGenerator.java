@@ -54,13 +54,43 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 
 	private static final String COMPONENT_ANNOTATION_DESC = Type.getDescriptor(Component.class);
 
-	private static final String LAMBDA_LIST_BINDINGS_FIELD = "lambdaListBindings";
-
 	private static final String FUNCTION_STRUCT_INIT_CLOSURE_DESC = "(Ljcl/functions/Closure;)V";
 
 	private static final String INIT_LAMBDA_LIST_BINDINGS_METHOD_NAME = "initLambdaListBindings";
 
 	private static final String INIT_LAMBDA_LIST_BINDINGS_METHOD_DESC = "()V";
+
+	private static final String GET_REQUIRED_BINDINGS_METHOD_NAME = "getRequiredBindings";
+
+	private static final String GET_REQUIRED_BINDINGS_METHOD_DESC = "()Ljava/util/List;";
+
+	private static final String GET_REQUIRED_BINDINGS_METHOD_SIGNATURE = "()Ljava/util/List<Ljcl/compiler/real/environment/binding/lambdalist/RequiredBinding;>;";
+
+	private static final String GET_OPTIONAL_BINDINGS_METHOD_NAME = "getOptionalBindings";
+
+	private static final String GET_OPTIONAL_BINDINGS_METHOD_DESC = "()Ljava/util/List;";
+
+	private static final String GET_OPTIONAL_BINDINGS_METHOD_SIGNATURE = "()Ljava/util/List<Ljcl/compiler/real/environment/binding/lambdalist/OptionalBinding;>;";
+
+	private static final String GET_REST_BINDING_METHOD_NAME = "getRestBinding";
+
+	private static final String GET_REST_BINDING_METHOD_DESC = "()Ljcl/compiler/real/environment/binding/lambdalist/RestBinding;";
+
+	private static final String GET_KEY_BINDINGS_METHOD_NAME = "getKeyBindings";
+
+	private static final String GET_KEY_BINDINGS_METHOD_DESC = "()Ljava/util/List;";
+
+	private static final String GET_KEY_BINDINGS_METHOD_SIGNATURE = "()Ljava/util/List<Ljcl/compiler/real/environment/binding/lambdalist/KeyBinding;>;";
+
+	private static final String GET_ALLOW_OTHER_KEYS_METHOD_NAME = "getAllowOtherKeys";
+
+	private static final String GET_ALLOW_OTHER_KEYS_METHOD_DESC = "()Z";
+
+	private static final String GET_AUX_BINDINGS_METHOD_NAME = "getAuxBindings";
+
+	private static final String GET_AUX_BINDINGS_METHOD_DESC = "()Ljava/util/List;";
+
+	private static final String GET_AUX_BINDINGS_METHOD_SIGNATURE = "()Ljava/util/List<Ljcl/compiler/real/environment/binding/lambdalist/AuxBinding;>;";
 
 	private static final String INTERNAL_APPLY_METHOD_NAME = "internalApply";
 
@@ -102,7 +132,15 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 		generateNoArgConstructor(generatorState, fileName, cw);
 		generateClosureArgConstructor(input, generatorState, fileName, cw);
 		generateInitLoadTimeValueFormsMethod(input, generatorState, fileName, cw);
-		generateInitLambdaListBindingsMethod(input, generatorState, fileName, cw);
+
+		final OrdinaryLambdaListBindings lambdaListBindings = input.getLambdaListBindings();
+		generateRequiredBindings(generatorState, lambdaListBindings, cw);
+		generateOptionalBindings(generatorState, lambdaListBindings, cw);
+		generateRestBinding(generatorState, lambdaListBindings, cw);
+		generateKeyBindings(generatorState, lambdaListBindings, cw);
+		generateAllowOtherKeys(generatorState, lambdaListBindings, cw);
+		generateAuxBindings(generatorState, lambdaListBindings, cw);
+
 		generateInternalApplyMethod(input, generatorState, cw);
 		generateGetInitFormMethod(input, generatorState, cw);
 //		generateClassInitMethod(generatorState, cw);
@@ -293,80 +331,6 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 		methodBuilderDeque.removeFirst();
 	}
 
-	private void generateInitLambdaListBindingsMethod(final LambdaStruct input, final GeneratorState generatorState, final String fileName, final ClassWriter cw) {
-		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PRIVATE,
-				INIT_LAMBDA_LIST_BINDINGS_METHOD_NAME,
-				INIT_LAMBDA_LIST_BINDINGS_METHOD_DESC,
-				null,
-				null);
-
-		final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
-		final Deque<JavaMethodBuilder> methodBuilderDeque = generatorState.getMethodBuilderDeque();
-		methodBuilderDeque.addFirst(methodBuilder);
-
-		mv.visitCode();
-		final int thisStore = methodBuilder.getNextAvailableStore();
-
-		final int packageStore = methodBuilder.getNextAvailableStore();
-
-		final OrdinaryLambdaListBindings lambdaListBindings = input.getLambdaListBindings();
-
-		// End: Required
-		final int requiredBindingsStore = methodBuilder.getNextAvailableStore();
-		generateRequiredBindings(methodBuilder, lambdaListBindings, mv, packageStore, requiredBindingsStore);
-		// End: Required
-
-		// Start: Optional
-		final int optionalBindingsStore = methodBuilder.getNextAvailableStore();
-		generateOptionalBindings(generatorState, methodBuilder, lambdaListBindings, mv, packageStore, optionalBindingsStore);
-		// End: Optional
-
-		// Start: Rest
-		final int restBindingStore = methodBuilder.getNextAvailableStore();
-		generateRestBinding(methodBuilder, lambdaListBindings, mv, packageStore, restBindingStore);
-		// End: Rest
-
-		// Start: Key
-		final int keyBindingsStore = methodBuilder.getNextAvailableStore();
-		generateKeyBindings(generatorState, methodBuilder, lambdaListBindings, mv, packageStore, keyBindingsStore);
-		// End: Key
-
-		// Start: Allow-Other-Keys
-		final int allowOtherKeysStore = methodBuilder.getNextAvailableStore();
-		generateAllowOtherKeys(lambdaListBindings, mv, allowOtherKeysStore);
-		// End: Allow-Other-Keys
-
-		// Start: Aux
-		final int auxBindingsStore = methodBuilder.getNextAvailableStore();
-		generateAuxBindings(generatorState, methodBuilder, lambdaListBindings, mv, packageStore, auxBindingsStore);
-		// Start: End
-
-		mv.visitVarInsn(Opcodes.ALOAD, thisStore);
-
-		mv.visitTypeInsn(Opcodes.NEW, GenerationConstants.ORDINARY_LAMBDA_LIST_BINDINGS_NAME);
-		mv.visitInsn(Opcodes.DUP);
-		mv.visitVarInsn(Opcodes.ALOAD, requiredBindingsStore);
-		mv.visitVarInsn(Opcodes.ALOAD, optionalBindingsStore);
-		mv.visitVarInsn(Opcodes.ALOAD, restBindingStore);
-		mv.visitVarInsn(Opcodes.ALOAD, keyBindingsStore);
-		mv.visitVarInsn(Opcodes.ALOAD, auxBindingsStore);
-		mv.visitVarInsn(Opcodes.ILOAD, allowOtherKeysStore);
-		mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
-				GenerationConstants.ORDINARY_LAMBDA_LIST_BINDINGS_NAME,
-				GenerationConstants.INIT_METHOD_NAME,
-				GenerationConstants.ORDINARY_LAMBDA_LIST_BINDINGS_INIT_DESC,
-				false);
-
-		mv.visitFieldInsn(Opcodes.PUTFIELD, fileName, LAMBDA_LIST_BINDINGS_FIELD, GenerationConstants.ORDINARY_LAMBDA_LIST_BINDINGS_DESC);
-
-		mv.visitInsn(Opcodes.RETURN);
-
-		mv.visitMaxs(-1, -1);
-		mv.visitEnd();
-
-		methodBuilderDeque.removeFirst();
-	}
-
 	private void generateInternalApplyMethod(final LambdaStruct input, final GeneratorState generatorState, final ClassWriter cw) {
 		final PrognStruct forms = input.getForms();
 		if (forms.getForms().isEmpty()) {
@@ -534,9 +498,26 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 		methodBuilderDeque.removeFirst();
 	}
 
-	private static void generateRequiredBindings(final JavaMethodBuilder methodBuilder,
-	                                             final OrdinaryLambdaListBindings lambdaListBindings, final MethodVisitor mv,
-	                                             final int packageStore, final int requiredBindingsStore) {
+	private static void generateRequiredBindings(final GeneratorState generatorState, final OrdinaryLambdaListBindings lambdaListBindings,
+	                                             final ClassWriter cw) {
+		final List<RequiredBinding> requiredBindings = lambdaListBindings.getRequiredBindings();
+		if (requiredBindings.isEmpty()) {
+			// No need to generate this method, as there are no bindings to generate
+			return;
+		}
+
+		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PROTECTED,
+				GET_REQUIRED_BINDINGS_METHOD_NAME,
+				GET_REQUIRED_BINDINGS_METHOD_DESC,
+				GET_REQUIRED_BINDINGS_METHOD_SIGNATURE,
+				null);
+
+		final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
+		final Deque<JavaMethodBuilder> methodBuilderDeque = generatorState.getMethodBuilderDeque();
+		methodBuilderDeque.addFirst(methodBuilder);
+
+		mv.visitCode();
+		final int thisStore = methodBuilder.getNextAvailableStore();
 
 		mv.visitTypeInsn(Opcodes.NEW, GenerationConstants.JAVA_ARRAY_LIST_NAME);
 		mv.visitInsn(Opcodes.DUP);
@@ -545,15 +526,16 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 				GenerationConstants.INIT_METHOD_NAME,
 				GenerationConstants.JAVA_ARRAY_LIST_INIT_DESC,
 				false);
+		final int requiredBindingsStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, requiredBindingsStore);
 
+		final int requiredPackageStore = methodBuilder.getNextAvailableStore();
 		final int requiredSymbolStore = methodBuilder.getNextAvailableStore();
 		final int requiredBindingStore = methodBuilder.getNextAvailableStore();
 
-		final List<RequiredBinding> requiredBindings = lambdaListBindings.getRequiredBindings();
 		for (final RequiredBinding requiredBinding : requiredBindings) {
 			final SymbolStruct<?> requiredSymbol = requiredBinding.getSymbolStruct();
-			CodeGenerators.generateSymbol(requiredSymbol, methodBuilder, packageStore, requiredSymbolStore);
+			CodeGenerators.generateSymbol(requiredSymbol, methodBuilder, requiredPackageStore, requiredSymbolStore);
 
 			mv.visitTypeInsn(Opcodes.NEW, GenerationConstants.REQUIRED_BINDING_NAME);
 			mv.visitInsn(Opcodes.DUP);
@@ -579,11 +561,36 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 					true);
 			mv.visitInsn(Opcodes.POP);
 		}
+
+		mv.visitVarInsn(Opcodes.ALOAD, requiredBindingsStore);
+		mv.visitInsn(Opcodes.ARETURN);
+
+		mv.visitMaxs(-1, -1);
+		mv.visitEnd();
+
+		methodBuilderDeque.removeFirst();
 	}
 
-	private void generateOptionalBindings(final GeneratorState generatorState, final JavaMethodBuilder methodBuilder,
-	                                      final OrdinaryLambdaListBindings lambdaListBindings, final MethodVisitor mv,
-	                                      final int packageStore, final int optionalBindingsStore) {
+	private void generateOptionalBindings(final GeneratorState generatorState, final OrdinaryLambdaListBindings lambdaListBindings,
+	                                      final ClassWriter cw) {
+		final List<OptionalBinding> optionalBindings = lambdaListBindings.getOptionalBindings();
+		if (optionalBindings.isEmpty()) {
+			// No need to generate this method, as there are no bindings to generate
+			return;
+		}
+
+		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PROTECTED,
+				GET_OPTIONAL_BINDINGS_METHOD_NAME,
+				GET_OPTIONAL_BINDINGS_METHOD_DESC,
+				GET_OPTIONAL_BINDINGS_METHOD_SIGNATURE,
+				null);
+
+		final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
+		final Deque<JavaMethodBuilder> methodBuilderDeque = generatorState.getMethodBuilderDeque();
+		methodBuilderDeque.addFirst(methodBuilder);
+
+		mv.visitCode();
+		final int thisStore = methodBuilder.getNextAvailableStore();
 
 		mv.visitTypeInsn(Opcodes.NEW, GenerationConstants.JAVA_ARRAY_LIST_NAME);
 		mv.visitInsn(Opcodes.DUP);
@@ -592,47 +599,25 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 				GenerationConstants.INIT_METHOD_NAME,
 				GenerationConstants.JAVA_ARRAY_LIST_INIT_DESC,
 				false);
+		final int optionalBindingsStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, optionalBindingsStore);
 
+		final int optionalPackageStore = methodBuilder.getNextAvailableStore();
 		final int optionalSymbolStore = methodBuilder.getNextAvailableStore();
 		final int optionalInitFormStore = methodBuilder.getNextAvailableStore();
 		final int optionalSuppliedPSymbolStore = methodBuilder.getNextAvailableStore();
 		final int optionalSuppliedPStore = methodBuilder.getNextAvailableStore();
 		final int optionalBindingStore = methodBuilder.getNextAvailableStore();
 
-		final List<OptionalBinding> optionalBindings = lambdaListBindings.getOptionalBindings();
 		for (final OptionalBinding optionalBinding : optionalBindings) {
 			final SymbolStruct<?> optionalSymbol = optionalBinding.getSymbolStruct();
-			CodeGenerators.generateSymbol(optionalSymbol, methodBuilder, packageStore, optionalSymbolStore);
+			CodeGenerators.generateSymbol(optionalSymbol, methodBuilder, optionalPackageStore, optionalSymbolStore);
 
 			nullCodeGenerator.generate(NullStruct.INSTANCE, generatorState);
 			mv.visitVarInsn(Opcodes.ASTORE, optionalInitFormStore);
 
-			// Start: Supplied-P
 			final SuppliedPBinding suppliedPBinding = optionalBinding.getSuppliedPBinding();
-			if (suppliedPBinding == null) {
-				mv.visitInsn(Opcodes.ACONST_NULL);
-				mv.visitVarInsn(Opcodes.ASTORE, optionalSuppliedPStore);
-			} else {
-				final SymbolStruct<?> optionalSuppliedPSymbol = suppliedPBinding.getSymbolStruct();
-				CodeGenerators.generateSymbol(optionalSuppliedPSymbol, methodBuilder, packageStore, optionalSuppliedPSymbolStore);
-
-				mv.visitTypeInsn(Opcodes.NEW, GenerationConstants.SUPPLIED_P_BINDING_NAME);
-				mv.visitInsn(Opcodes.DUP);
-				mv.visitVarInsn(Opcodes.ALOAD, optionalSuppliedPSymbolStore);
-				if (suppliedPBinding.isSpecial()) {
-					mv.visitInsn(Opcodes.ICONST_1);
-				} else {
-					mv.visitInsn(Opcodes.ICONST_0);
-				}
-				mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
-						GenerationConstants.SUPPLIED_P_BINDING_NAME,
-						GenerationConstants.INIT_METHOD_NAME,
-						GenerationConstants.SUPPLIED_P_BINDING_INIT_DESC,
-						false);
-				mv.visitVarInsn(Opcodes.ASTORE, optionalSuppliedPStore);
-			}
-			// End: Supplied-P
+			generateSuppliedPBinding(suppliedPBinding, methodBuilder, optionalPackageStore, optionalSuppliedPSymbolStore, optionalSuppliedPStore);
 
 			mv.visitTypeInsn(Opcodes.NEW, GenerationConstants.OPTIONAL_BINDING_NAME);
 			mv.visitInsn(Opcodes.DUP);
@@ -660,42 +645,84 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 					true);
 			mv.visitInsn(Opcodes.POP);
 		}
+
+		mv.visitVarInsn(Opcodes.ALOAD, optionalBindingsStore);
+		mv.visitInsn(Opcodes.ARETURN);
+
+		mv.visitMaxs(-1, -1);
+		mv.visitEnd();
+
+		methodBuilderDeque.removeFirst();
 	}
 
-	private static void generateRestBinding(final JavaMethodBuilder methodBuilder,
-	                                        final OrdinaryLambdaListBindings lambdaListBindings, final MethodVisitor mv,
-	                                        final int packageStore, final int restBindingStore) {
-
-		final int restSymbolStore = methodBuilder.getNextAvailableStore();
-
+	private static void generateRestBinding(final GeneratorState generatorState, final OrdinaryLambdaListBindings lambdaListBindings,
+	                                        final ClassWriter cw) {
 		final RestBinding restBinding = lambdaListBindings.getRestBinding();
 		if (restBinding == null) {
-			mv.visitInsn(Opcodes.ACONST_NULL);
-			mv.visitVarInsn(Opcodes.ASTORE, restBindingStore);
-		} else {
-			final SymbolStruct<?> restSymbol = restBinding.getSymbolStruct();
-			CodeGenerators.generateSymbol(restSymbol, methodBuilder, packageStore, restSymbolStore);
-
-			mv.visitTypeInsn(Opcodes.NEW, GenerationConstants.REST_BINDING_NAME);
-			mv.visitInsn(Opcodes.DUP);
-			mv.visitVarInsn(Opcodes.ALOAD, restSymbolStore);
-			if (restBinding.isSpecial()) {
-				mv.visitInsn(Opcodes.ICONST_1);
-			} else {
-				mv.visitInsn(Opcodes.ICONST_0);
-			}
-			mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
-					GenerationConstants.REST_BINDING_NAME,
-					GenerationConstants.INIT_METHOD_NAME,
-					GenerationConstants.REST_BINDING_INIT_DESC,
-					false);
-			mv.visitVarInsn(Opcodes.ASTORE, restBindingStore);
+			// No need to generate this method, as there are no bindings to generate
+			return;
 		}
+
+		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PROTECTED,
+				GET_REST_BINDING_METHOD_NAME,
+				GET_REST_BINDING_METHOD_DESC,
+				null,
+				null);
+
+		final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
+		final Deque<JavaMethodBuilder> methodBuilderDeque = generatorState.getMethodBuilderDeque();
+		methodBuilderDeque.addFirst(methodBuilder);
+
+		mv.visitCode();
+		final int thisStore = methodBuilder.getNextAvailableStore();
+
+		final int restPackageStore = methodBuilder.getNextAvailableStore();
+		final int restSymbolStore = methodBuilder.getNextAvailableStore();
+
+		final SymbolStruct<?> restSymbol = restBinding.getSymbolStruct();
+		CodeGenerators.generateSymbol(restSymbol, methodBuilder, restPackageStore, restSymbolStore);
+
+		mv.visitTypeInsn(Opcodes.NEW, GenerationConstants.REST_BINDING_NAME);
+		mv.visitInsn(Opcodes.DUP);
+		mv.visitVarInsn(Opcodes.ALOAD, restSymbolStore);
+		if (restBinding.isSpecial()) {
+			mv.visitInsn(Opcodes.ICONST_1);
+		} else {
+			mv.visitInsn(Opcodes.ICONST_0);
+		}
+		mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
+				GenerationConstants.REST_BINDING_NAME,
+				GenerationConstants.INIT_METHOD_NAME,
+				GenerationConstants.REST_BINDING_INIT_DESC,
+				false);
+		mv.visitInsn(Opcodes.ARETURN);
+
+		mv.visitMaxs(-1, -1);
+		mv.visitEnd();
+
+		methodBuilderDeque.removeFirst();
 	}
 
-	private void generateKeyBindings(final GeneratorState generatorState, final JavaMethodBuilder methodBuilder,
-	                                 final OrdinaryLambdaListBindings lambdaListBindings, final MethodVisitor mv,
-	                                 final int packageStore, final int keyBindingsStore) {
+	private void generateKeyBindings(final GeneratorState generatorState, final OrdinaryLambdaListBindings lambdaListBindings,
+	                                 final ClassWriter cw) {
+		final List<KeyBinding> keyBindings = lambdaListBindings.getKeyBindings();
+		if (keyBindings.isEmpty()) {
+			// No need to generate this method, as there are no bindings to generate
+			return;
+		}
+
+		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PROTECTED,
+				GET_KEY_BINDINGS_METHOD_NAME,
+				GET_KEY_BINDINGS_METHOD_DESC,
+				GET_KEY_BINDINGS_METHOD_SIGNATURE,
+				null);
+
+		final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
+		final Deque<JavaMethodBuilder> methodBuilderDeque = generatorState.getMethodBuilderDeque();
+		methodBuilderDeque.addFirst(methodBuilder);
+
+		mv.visitCode();
+		final int thisStore = methodBuilder.getNextAvailableStore();
 
 		mv.visitTypeInsn(Opcodes.NEW, GenerationConstants.JAVA_ARRAY_LIST_NAME);
 		mv.visitInsn(Opcodes.DUP);
@@ -704,8 +731,10 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 				GenerationConstants.INIT_METHOD_NAME,
 				GenerationConstants.JAVA_ARRAY_LIST_INIT_DESC,
 				false);
+		final int keyBindingsStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, keyBindingsStore);
 
+		final int keyPackageStore = methodBuilder.getNextAvailableStore();
 		final int keySymbolStore = methodBuilder.getNextAvailableStore();
 		final int keyInitFormStore = methodBuilder.getNextAvailableStore();
 		final int keyNameStore = methodBuilder.getNextAvailableStore();
@@ -713,42 +742,18 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 		final int keySuppliedPStore = methodBuilder.getNextAvailableStore();
 		final int keyBindingStore = methodBuilder.getNextAvailableStore();
 
-		final List<KeyBinding> keyBindings = lambdaListBindings.getKeyBindings();
 		for (final KeyBinding keyBinding : keyBindings) {
 			final SymbolStruct<?> keySymbol = keyBinding.getSymbolStruct();
-			CodeGenerators.generateSymbol(keySymbol, methodBuilder, packageStore, keySymbolStore);
+			CodeGenerators.generateSymbol(keySymbol, methodBuilder, keyPackageStore, keySymbolStore);
 
 			nullCodeGenerator.generate(NullStruct.INSTANCE, generatorState);
 			mv.visitVarInsn(Opcodes.ASTORE, keyInitFormStore);
 
 			final SymbolStruct<?> keyName = keyBinding.getKeyName();
-			CodeGenerators.generateSymbol(keyName, methodBuilder, packageStore, keyNameStore);
+			CodeGenerators.generateSymbol(keyName, methodBuilder, keyPackageStore, keyNameStore);
 
-			// Start: Supplied-P
 			final SuppliedPBinding suppliedPBinding = keyBinding.getSuppliedPBinding();
-			if (suppliedPBinding == null) {
-				mv.visitInsn(Opcodes.ACONST_NULL);
-				mv.visitVarInsn(Opcodes.ASTORE, keySuppliedPStore);
-			} else {
-				final SymbolStruct<?> keySuppliedPSymbol = suppliedPBinding.getSymbolStruct();
-				CodeGenerators.generateSymbol(keySuppliedPSymbol, methodBuilder, packageStore, keySuppliedPSymbolStore);
-
-				mv.visitTypeInsn(Opcodes.NEW, GenerationConstants.SUPPLIED_P_BINDING_NAME);
-				mv.visitInsn(Opcodes.DUP);
-				mv.visitVarInsn(Opcodes.ALOAD, keySuppliedPSymbolStore);
-				if (suppliedPBinding.isSpecial()) {
-					mv.visitInsn(Opcodes.ICONST_1);
-				} else {
-					mv.visitInsn(Opcodes.ICONST_0);
-				}
-				mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
-						GenerationConstants.SUPPLIED_P_BINDING_NAME,
-						GenerationConstants.INIT_METHOD_NAME,
-						GenerationConstants.SUPPLIED_P_BINDING_INIT_DESC,
-						false);
-				mv.visitVarInsn(Opcodes.ASTORE, keySuppliedPStore);
-			}
-			// End: Supplied-P
+			generateSuppliedPBinding(suppliedPBinding, methodBuilder, keyPackageStore, keySuppliedPSymbolStore, keySuppliedPStore);
 
 			mv.visitTypeInsn(Opcodes.NEW, GenerationConstants.KEY_BINDING_NAME);
 			mv.visitInsn(Opcodes.DUP);
@@ -777,24 +782,94 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 					true);
 			mv.visitInsn(Opcodes.POP);
 		}
+
+		mv.visitVarInsn(Opcodes.ALOAD, keyBindingsStore);
+		mv.visitInsn(Opcodes.ARETURN);
+
+		mv.visitMaxs(-1, -1);
+		mv.visitEnd();
+
+		methodBuilderDeque.removeFirst();
 	}
 
-	private static void generateAllowOtherKeys(final OrdinaryLambdaListBindings lambdaListBindings, final MethodVisitor mv,
-	                                           final int allowOtherKeysStore) {
+	private static void generateSuppliedPBinding(final SuppliedPBinding suppliedPBinding, final JavaMethodBuilder methodBuilder,
+	                                             final int keyPackageStore, final int keySuppliedPSymbolStore,
+	                                             final int keySuppliedPStore) {
+		final MethodVisitor mv = methodBuilder.getMethodVisitor();
 
-		final boolean allowOtherKeys = lambdaListBindings.isAllowOtherKeys();
-		if (allowOtherKeys) {
-			mv.visitInsn(Opcodes.ICONST_1);
-			mv.visitVarInsn(Opcodes.ISTORE, allowOtherKeysStore);
+		if (suppliedPBinding == null) {
+			mv.visitInsn(Opcodes.ACONST_NULL);
+			mv.visitVarInsn(Opcodes.ASTORE, keySuppliedPStore);
 		} else {
-			mv.visitInsn(Opcodes.ICONST_0);
-			mv.visitVarInsn(Opcodes.ISTORE, allowOtherKeysStore);
+			final SymbolStruct<?> keySuppliedPSymbol = suppliedPBinding.getSymbolStruct();
+			CodeGenerators.generateSymbol(keySuppliedPSymbol, methodBuilder, keyPackageStore, keySuppliedPSymbolStore);
+
+			mv.visitTypeInsn(Opcodes.NEW, GenerationConstants.SUPPLIED_P_BINDING_NAME);
+			mv.visitInsn(Opcodes.DUP);
+			mv.visitVarInsn(Opcodes.ALOAD, keySuppliedPSymbolStore);
+			if (suppliedPBinding.isSpecial()) {
+				mv.visitInsn(Opcodes.ICONST_1);
+			} else {
+				mv.visitInsn(Opcodes.ICONST_0);
+			}
+			mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
+					GenerationConstants.SUPPLIED_P_BINDING_NAME,
+					GenerationConstants.INIT_METHOD_NAME,
+					GenerationConstants.SUPPLIED_P_BINDING_INIT_DESC,
+					false);
+			mv.visitVarInsn(Opcodes.ASTORE, keySuppliedPStore);
 		}
 	}
 
-	private void generateAuxBindings(final GeneratorState generatorState, final JavaMethodBuilder methodBuilder,
-	                                 final OrdinaryLambdaListBindings lambdaListBindings, final MethodVisitor mv,
-	                                 final int packageStore, final int auxBindingsStore) {
+	private static void generateAllowOtherKeys(final GeneratorState generatorState, final OrdinaryLambdaListBindings lambdaListBindings,
+	                                           final ClassWriter cw) {
+		final boolean allowOtherKeys = lambdaListBindings.isAllowOtherKeys();
+		if (!allowOtherKeys) {
+			// No need to generate this method, as false is the default
+			return;
+		}
+
+		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PROTECTED,
+				GET_ALLOW_OTHER_KEYS_METHOD_NAME,
+				GET_ALLOW_OTHER_KEYS_METHOD_DESC,
+				null,
+				null);
+
+		final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
+		final Deque<JavaMethodBuilder> methodBuilderDeque = generatorState.getMethodBuilderDeque();
+		methodBuilderDeque.addFirst(methodBuilder);
+
+		mv.visitCode();
+
+		mv.visitInsn(Opcodes.ICONST_1);
+		mv.visitInsn(Opcodes.ARETURN);
+
+		mv.visitMaxs(-1, -1);
+		mv.visitEnd();
+
+		methodBuilderDeque.removeFirst();
+	}
+
+	private void generateAuxBindings(final GeneratorState generatorState, final OrdinaryLambdaListBindings lambdaListBindings,
+	                                 final ClassWriter cw) {
+		final List<AuxBinding> auxBindings = lambdaListBindings.getAuxBindings();
+		if (auxBindings.isEmpty()) {
+			// No need to generate this method, as there are no bindings to generate
+			return;
+		}
+
+		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PROTECTED,
+				GET_AUX_BINDINGS_METHOD_NAME,
+				GET_AUX_BINDINGS_METHOD_DESC,
+				GET_AUX_BINDINGS_METHOD_SIGNATURE,
+				null);
+
+		final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
+		final Deque<JavaMethodBuilder> methodBuilderDeque = generatorState.getMethodBuilderDeque();
+		methodBuilderDeque.addFirst(methodBuilder);
+
+		mv.visitCode();
+		final int thisStore = methodBuilder.getNextAvailableStore();
 
 		mv.visitTypeInsn(Opcodes.NEW, GenerationConstants.JAVA_ARRAY_LIST_NAME);
 		mv.visitInsn(Opcodes.DUP);
@@ -803,16 +878,17 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 				GenerationConstants.INIT_METHOD_NAME,
 				GenerationConstants.JAVA_ARRAY_LIST_INIT_DESC,
 				false);
+		final int auxBindingsStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, auxBindingsStore);
 
+		final int auxPackageStore = methodBuilder.getNextAvailableStore();
 		final int auxSymbolStore = methodBuilder.getNextAvailableStore();
 		final int auxInitFormStore = methodBuilder.getNextAvailableStore();
 		final int auxBindingStore = methodBuilder.getNextAvailableStore();
 
-		final List<AuxBinding> auxBindings = lambdaListBindings.getAuxBindings();
 		for (final AuxBinding auxBinding : auxBindings) {
 			final SymbolStruct<?> auxSymbol = auxBinding.getSymbolStruct();
-			CodeGenerators.generateSymbol(auxSymbol, methodBuilder, packageStore, auxSymbolStore);
+			CodeGenerators.generateSymbol(auxSymbol, methodBuilder, auxPackageStore, auxSymbolStore);
 
 			// NOTE: Just generate a null value for this initForm here. We take care of the &aux initForms in the body
 			//       when it is processed
@@ -844,5 +920,13 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 					true);
 			mv.visitInsn(Opcodes.POP);
 		}
+
+		mv.visitVarInsn(Opcodes.ALOAD, auxBindingsStore);
+		mv.visitInsn(Opcodes.ARETURN);
+
+		mv.visitMaxs(-1, -1);
+		mv.visitEnd();
+
+		methodBuilderDeque.removeFirst();
 	}
 }

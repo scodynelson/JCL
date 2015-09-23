@@ -39,7 +39,8 @@ public class TestGroundMacroLambdaFunctionGenerator extends MacroFunctionStruct 
 		// TODO: init the expander
 	}
 
-	private void initLambdaListBindings() {
+	@Override
+	protected void initLambdaListBindings() {
 		final List<RequiredBinding> requiredBindings = new ArrayList<>();
 
 		final PackageStruct pkg = PackageStruct.findPackage("SYSTEM");

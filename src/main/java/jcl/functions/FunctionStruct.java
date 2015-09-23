@@ -73,7 +73,7 @@ public abstract class FunctionStruct extends BuiltInClassStruct {
 	protected FunctionStruct(final Closure closure) {
 		this("", closure);
 //		initLoadTimeValueForms(closure);
-//		this.initLambdaListBindings();
+//		initLambdaListBindings();
 	}
 
 	/**
@@ -414,6 +414,46 @@ public abstract class FunctionStruct extends BuiltInClassStruct {
 	}
 
 	protected void initLoadTimeValueForms(final Closure currentClosure) {
+	}
+
+	protected void initLambdaListBindings() {
+		final List<RequiredBinding> requiredBindings = getRequiredBindings();
+		final List<OptionalBinding> optionalBindings = getOptionalBindings();
+		final RestBinding restBinding = getRestBinding();
+		final List<KeyBinding> keyBindings = getKeyBindings();
+		final boolean allowOtherKeys = getAllowOtherKeys();
+		final List<AuxBinding> auxBindings = getAuxBindings();
+		lambdaListBindings = new OrdinaryLambdaListBindings.Builder().requiredBindings(requiredBindings)
+		                                                             .optionalBindings(optionalBindings)
+		                                                             .restBinding(restBinding)
+		                                                             .keyBindings(keyBindings)
+		                                                             .allowOtherKeys(allowOtherKeys)
+		                                                             .auxBindings(auxBindings)
+		                                                             .build();
+	}
+
+	protected List<RequiredBinding> getRequiredBindings() {
+		return Collections.emptyList();
+	}
+
+	protected List<OptionalBinding> getOptionalBindings() {
+		return Collections.emptyList();
+	}
+
+	protected RestBinding getRestBinding() {
+		return null;
+	}
+
+	protected List<KeyBinding> getKeyBindings() {
+		return Collections.emptyList();
+	}
+
+	protected boolean getAllowOtherKeys() {
+		return false;
+	}
+
+	protected List<AuxBinding> getAuxBindings() {
+		return Collections.emptyList();
 	}
 
 	protected LispStruct getInitForm(final Closure currentClosure, final SymbolStruct<?> parameter) {

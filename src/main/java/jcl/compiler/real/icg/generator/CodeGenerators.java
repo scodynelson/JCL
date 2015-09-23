@@ -86,8 +86,8 @@ final class CodeGenerators {
 			mv.visitLdcInsn(symbolName);
 			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
 					GenerationConstants.PACKAGE_STRUCT_NAME,
-					GenerationConstants.PACKAGE_STRUCT_FIND_SYMBOL_METHOD_NAME,
-					GenerationConstants.PACKAGE_STRUCT_FIND_SYMBOL_METHOD_DESC,
+					GenerationConstants.PACKAGE_STRUCT_INTERN_METHOD_NAME,
+					GenerationConstants.PACKAGE_STRUCT_INTERN_METHOD_DESC,
 					false);
 			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
 					GenerationConstants.PACKAGE_SYMBOL_STRUCT_NAME,

@@ -21,8 +21,10 @@ import jcl.functions.FunctionStruct;
 import jcl.lists.NullStruct;
 import jcl.packages.PackageStruct;
 import jcl.symbols.SymbolStruct;
+import org.springframework.stereotype.Component;
 
 @SuppressWarnings("all")
+@Component
 public class TestLambdaGenerator extends FunctionStruct {
 
 	private static final long serialVersionUID = 5616713628691655052L;
@@ -47,10 +49,9 @@ public class TestLambdaGenerator extends FunctionStruct {
 	private void initLambdaListBindings() {
 		final List<RequiredBinding> requiredBindings = new ArrayList<>();
 
-		final PackageStruct pkg = PackageStruct.findPackage("SYSTEM");
-
 		// Start: Required
-		final SymbolStruct<?> requiredSymbol = pkg.findSymbol("REQUIRED-SYMBOL").getSymbol();
+		PackageStruct pkg = PackageStruct.findPackage("SYSTEM");
+		final SymbolStruct<?> requiredSymbol = pkg.intern("REQUIRED-SYMBOL").getSymbol();
 		final RequiredBinding requiredBinding = new RequiredBinding(requiredSymbol, true);
 		requiredBindings.add(requiredBinding);
 		// End: Required
@@ -58,31 +59,37 @@ public class TestLambdaGenerator extends FunctionStruct {
 		// Start: Optional
 		final List<OptionalBinding> optionalBindings = new ArrayList<>();
 
-		final SymbolStruct<?> optionalSuppliedPSymbol = pkg.findSymbol("OPTIONAL-SUPPLIED-P-SYMBOL").getSymbol();
-		final SuppliedPBinding optionalSuppliedPBinding = new SuppliedPBinding(optionalSuppliedPSymbol, false);
+		pkg = PackageStruct.findPackage("SYSTEM");
+		final SymbolStruct<?> optionalSymbol = pkg.intern("OPTIONAL-SYMBOL").getSymbol();
+		final LispStruct optionalInitForm = NullStruct.INSTANCE;
 
-		final SymbolStruct<?> optionalSymbol = pkg.findSymbol("OPTIONAL-SYMBOL").getSymbol();
-		final LispStruct optionalInitForm = new CharacterStruct(100);
+		pkg = PackageStruct.findPackage("SYSTEM");
+		final SymbolStruct<?> optionalSuppliedPSymbol = pkg.intern("OPTIONAL-SYMBOL-P").getSymbol();
+		final SuppliedPBinding optionalSuppliedPBinding = new SuppliedPBinding(optionalSuppliedPSymbol, false);
 
 		final OptionalBinding optionalBinding = new OptionalBinding(optionalSymbol, optionalInitForm, false, optionalSuppliedPBinding);
 		optionalBindings.add(optionalBinding);
 		// End: Optional
 
 		// Start: Rest
-		final SymbolStruct<?> restSymbol = pkg.findSymbol("REST-SYMBOL").getSymbol();
+		pkg = PackageStruct.findPackage("SYSTEM");
+		final SymbolStruct<?> restSymbol = pkg.intern("REST-SYMBOL").getSymbol();
 		final RestBinding restBinding = new RestBinding(restSymbol, true);
 		// End: Rest
 
 		// Start: Keys
 		final List<KeyBinding> keyBindings = new ArrayList<>();
 
-		final SymbolStruct<?> keySuppliedPSymbol = pkg.findSymbol("KEY-SUPPLIED-P-SYMBOL").getSymbol();
+		pkg = PackageStruct.findPackage("SYSTEM");
+		final SymbolStruct<?> keySymbol = pkg.intern("KEY-SYMBOL").getSymbol();
+		final LispStruct keyInitForm = NullStruct.INSTANCE;
+
+		pkg = PackageStruct.findPackage("SYSTEM");
+		final SymbolStruct<?> keySuppliedPSymbol = pkg.intern("KEY-SUPPLIED-P-SYMBOL").getSymbol();
 		final SuppliedPBinding keySuppliedPBinding = new SuppliedPBinding(keySuppliedPSymbol, false);
 
-		final SymbolStruct<?> keySymbol = pkg.findSymbol("KEY-SYMBOL").getSymbol();
-		final LispStruct keyInitForm = new CharacterStruct(200);
-
-		final SymbolStruct<?> keyName = pkg.findSymbol("KEY-NAME").getSymbol();
+		pkg = PackageStruct.findPackage("KEYWORD");
+		final SymbolStruct<?> keyName = pkg.intern("KEY-NAME").getSymbol();
 
 		final KeyBinding keyBinding = new KeyBinding(keySymbol, keyInitForm, false, keyName, keySuppliedPBinding);
 		keyBindings.add(keyBinding);
@@ -95,8 +102,9 @@ public class TestLambdaGenerator extends FunctionStruct {
 		// Start: Aux
 		final List<AuxBinding> auxBindings = new ArrayList<>();
 
-		final SymbolStruct<?> auxSymbol = pkg.findSymbol("AUX-SYMBOL").getSymbol();
-		final LispStruct auxInitForm = new CharacterStruct(300);
+		pkg = PackageStruct.findPackage("SYSTEM");
+		final SymbolStruct<?> auxSymbol = pkg.intern("AUX-SYMBOL").getSymbol();
+		final LispStruct auxInitForm = NullStruct.INSTANCE;
 
 		final AuxBinding auxBinding = new AuxBinding(auxSymbol, auxInitForm, false);
 		auxBindings.add(auxBinding);

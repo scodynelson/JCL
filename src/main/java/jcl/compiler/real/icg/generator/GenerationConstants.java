@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import jcl.LispStruct;
 import jcl.compiler.real.environment.binding.lambdalist.AuxBinding;
@@ -21,12 +20,9 @@ import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaListBindin
 import jcl.compiler.real.environment.binding.lambdalist.RequiredBinding;
 import jcl.compiler.real.environment.binding.lambdalist.RestBinding;
 import jcl.compiler.real.environment.binding.lambdalist.SuppliedPBinding;
-import jcl.compiler.real.struct.ValuesStruct;
 import jcl.compiler.real.struct.ValuesStructs;
-import jcl.conditions.exceptions.ErrorException;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.functions.Closure;
-import jcl.functions.FunctionParameterBinding;
 import jcl.functions.FunctionStruct;
 import jcl.lists.ConsStruct;
 import jcl.lists.ListStruct;
@@ -104,30 +100,6 @@ interface GenerationConstants {
 
 	String JAVA_MAP_PUT_METHOD_DESC = CodeGenerators.getMethodDescription(Map.class, JAVA_MAP_PUT_METHOD_NAME, Object.class, Object.class);
 
-	String JAVA_MAP_ENTRY_SET_METHOD_NAME = "entrySet";
-
-	String JAVA_MAP_ENTRY_SET_METHOD_DESC = CodeGenerators.getMethodDescription(Map.class, JAVA_MAP_ENTRY_SET_METHOD_NAME);
-
-	String JAVA_MAP_KEY_SET_METHOD_NAME = "keySet";
-
-	String JAVA_MAP_KEY_SET_METHOD_DESC = CodeGenerators.getMethodDescription(Map.class, JAVA_MAP_KEY_SET_METHOD_NAME);
-
-	String JAVA_MAP_ENTRY_NAME = Type.getInternalName(Map.Entry.class);
-
-	String JAVA_MAP_ENTRY_GET_KEY_METHOD_NAME = "getKey";
-
-	String JAVA_MAP_ENTRY_GET_KEY_METHOD_DESC = CodeGenerators.getMethodDescription(Map.Entry.class, JAVA_MAP_ENTRY_GET_KEY_METHOD_NAME);
-
-	String JAVA_MAP_ENTRY_GET_VALUE_METHOD_NAME = "getValue";
-
-	String JAVA_MAP_ENTRY_GET_VALUE_METHOD_DESC = CodeGenerators.getMethodDescription(Map.Entry.class, JAVA_MAP_ENTRY_GET_VALUE_METHOD_NAME);
-
-	String JAVA_SET_NAME = Type.getInternalName(Set.class);
-
-	String JAVA_SET_ITERATOR_METHOD_NAME = "iterator";
-
-	String JAVA_SET_ITERATOR_METHOD_DESC = CodeGenerators.getMethodDescription(Set.class, JAVA_SET_ITERATOR_METHOD_NAME);
-
 	String JAVA_ITERATOR_NAME = Type.getInternalName(Iterator.class);
 
 	String JAVA_ITERATOR_HAS_NEXT_METHOD_NAME = "hasNext";
@@ -157,8 +129,6 @@ interface GenerationConstants {
 	String JAVA_URI_CREATE_METHOD_NAME = "create";
 
 	String JAVA_URI_CREATE_METHOD_DESC = CodeGenerators.getMethodDescription(URI.class, JAVA_URI_CREATE_METHOD_NAME, String.class);
-
-	String JAVA_THROWABLE_NAME = Type.getInternalName(Throwable.class);
 
 	String JAVA_STRING_BUILDER_NAME = Type.getInternalName(StringBuilder.class);
 
@@ -252,9 +222,9 @@ interface GenerationConstants {
 
 	String PACKAGE_STRUCT_FIND_PACKAGE_METHOD_DESC = CodeGenerators.getMethodDescription(PackageStruct.class, PACKAGE_STRUCT_FIND_PACKAGE_METHOD_NAME, String.class);
 
-	String PACKAGE_STRUCT_FIND_SYMBOL_METHOD_NAME = "findSymbol";
+	String PACKAGE_STRUCT_INTERN_METHOD_NAME = "intern";
 
-	String PACKAGE_STRUCT_FIND_SYMBOL_METHOD_DESC = CodeGenerators.getMethodDescription(PackageStruct.class, PACKAGE_STRUCT_FIND_SYMBOL_METHOD_NAME, String.class);
+	String PACKAGE_STRUCT_INTERN_METHOD_DESC = CodeGenerators.getMethodDescription(PackageStruct.class, PACKAGE_STRUCT_INTERN_METHOD_NAME, String.class);
 
 	String PACKAGE_SYMBOL_STRUCT_NAME = Type.getInternalName(PackageSymbolStruct.class);
 
@@ -272,19 +242,6 @@ interface GenerationConstants {
 
 	String FUNCTION_STRUCT_INIT_STRING_CLOSURE_DESC = CodeGenerators.getConstructorDescription(FunctionStruct.class, String.class, Closure.class);
 
-	String FUNCTION_STRUCT_GET_FUNCTION_BINDINGS_METHOD_NAME = "getFunctionBindings";
-
-	// NOTE: Can't use the GeneratorUtils here because this method has 'PROTECTED' access.
-	String FUNCTION_STRUCT_GET_FUNCTION_BINDINGS_METHOD_DESC = "([Ljcl/LispStruct;)Ljava/util/List;";
-
-	String FUNCTION_STRUCT_GET_CLOSURE_FUNCTION_BINDINGS_METHOD_NAME = "getClosureFunctionBindings";
-
-	String FUNCTION_STRUCT_GET_CLOSURE_FUNCTION_BINDINGS_METHOD_DESC = CodeGenerators.getMethodDescription(FunctionStruct.class, FUNCTION_STRUCT_GET_CLOSURE_FUNCTION_BINDINGS_METHOD_NAME);
-
-	String FUNCTION_STRUCT_GET_CLOSURE_SYMBOL_BINDINGS_METHOD_NAME = "getClosureSymbolBindings";
-
-	String FUNCTION_STRUCT_GET_CLOSURE_SYMBOL_BINDINGS_METHOD_DESC = CodeGenerators.getMethodDescription(FunctionStruct.class, FUNCTION_STRUCT_GET_CLOSURE_SYMBOL_BINDINGS_METHOD_NAME);
-
 	String FUNCTION_STRUCT_APPLY_METHOD_NAME = "apply";
 
 	String FUNCTION_STRUCT_APPLY_METHOD_DESC = CodeGenerators.getMethodDescription(FunctionStruct.class, FUNCTION_STRUCT_APPLY_METHOD_NAME, LispStruct[].class);
@@ -294,12 +251,6 @@ interface GenerationConstants {
 	String LISP_STRUCT_DESC = Type.getDescriptor(LispStruct.class);
 
 	String LISP_STRUCT_ARRAY_DESC = Type.getDescriptor(LispStruct[].class);
-
-	String VALUES_STRUCT_NAME = Type.getInternalName(ValuesStruct.class);
-
-	String VALUES_STRUCT_GET_PRIMARY_VALUE_METHOD_NAME = "getPrimaryValue";
-
-	String VALUES_STRUCT_GET_PRIMARY_VALUE_METHOD_DESC = CodeGenerators.getMethodDescription(ValuesStruct.class, VALUES_STRUCT_GET_PRIMARY_VALUE_METHOD_NAME);
 
 	String VALUES_STRUCTS_NAME = Type.getInternalName(ValuesStructs.class);
 
@@ -312,8 +263,6 @@ interface GenerationConstants {
 	String VALUES_STRUCTS_EXTRACT_PRIMARY_VALUE_METHOD_DESC = CodeGenerators.getMethodDescription(ValuesStructs.class, VALUES_STRUCTS_EXTRACT_PRIMARY_VALUE_METHOD_NAME, LispStruct.class);
 
 	String CLOSURE_NAME = Type.getInternalName(Closure.class);
-
-	String CLOSURE_DESC = Type.getDescriptor(Closure.class);
 
 	String CLOSURE_INIT_CLOSURE_DESC = CodeGenerators.getConstructorDescription(Closure.class, Closure.class);
 
@@ -331,27 +280,9 @@ interface GenerationConstants {
 
 	String ORDINARY_LAMBDA_LIST_BINDINGS_INIT_DESC = CodeGenerators.getConstructorDescription(OrdinaryLambdaListBindings.class, List.class, List.class, RestBinding.class, List.class, List.class, boolean.class);
 
-	String ERROR_EXCEPTION_NAME = Type.getInternalName(ErrorException.class);
-
-	String ERROR_EXCEPTION_INIT_STRING_THROWABLE_DESC = CodeGenerators.getConstructorDescription(ErrorException.class, String.class, Throwable.class);
-
 	String PROGRAM_ERROR_EXCEPTION_NAME = Type.getInternalName(ProgramErrorException.class);
 
 	String PROGRAM_ERROR_EXCEPTION_INIT_STRING_DESC = CodeGenerators.getConstructorDescription(ProgramErrorException.class, String.class);
-
-	String FUNCTION_PARAMETER_BINDING_NAME = Type.getInternalName(FunctionParameterBinding.class);
-
-	String FUNCTION_PARAMETER_BINDING_GET_PARAMETER_SYMBOL_METHOD_NAME = "getParameterSymbol";
-
-	String FUNCTION_PARAMETER_BINDING_GET_PARAMETER_SYMBOL_METHOD_DESC = CodeGenerators.getMethodDescription(FunctionParameterBinding.class, FUNCTION_PARAMETER_BINDING_GET_PARAMETER_SYMBOL_METHOD_NAME);
-
-	String FUNCTION_PARAMETER_BINDING_GET_PARAMETER_VALUE_METHOD_NAME = "getParameterValue";
-
-	String FUNCTION_PARAMETER_BINDING_GET_PARAMETER_VALUE_METHOD_DESC = CodeGenerators.getMethodDescription(FunctionParameterBinding.class, FUNCTION_PARAMETER_BINDING_GET_PARAMETER_VALUE_METHOD_NAME);
-
-	String FUNCTION_PARAMETER_BINDING_IS_SPECIAL_METHOD_NAME = "isSpecial";
-
-	String FUNCTION_PARAMETER_BINDING_IS_SPECIAL_METHOD_DESC = CodeGenerators.getMethodDescription(FunctionParameterBinding.class, FUNCTION_PARAMETER_BINDING_IS_SPECIAL_METHOD_NAME);
 
 	String REQUIRED_BINDING_NAME = Type.getInternalName(RequiredBinding.class);
 

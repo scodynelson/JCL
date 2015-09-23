@@ -30,11 +30,13 @@ import jcl.compiler.real.struct.specialoperator.PrognStruct;
 import jcl.compiler.real.struct.specialoperator.lambda.LambdaStruct;
 import jcl.lists.NullStruct;
 import jcl.symbols.SymbolStruct;
+import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.FieldVisitor;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.Type;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -49,6 +51,8 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 
 	@Autowired
 	private NullCodeGenerator nullCodeGenerator;
+
+	private static final String COMPONENT_ANNOTATION_DESC = Type.getDescriptor(Component.class);
 
 	private static final String LAMBDA_LIST_BINDINGS_FIELD = "lambdaListBindings";
 
@@ -92,6 +96,7 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 
 		cw.visitSource(className + GenerationConstants.JAVA_EXTENSION, null);
 
+		generateComponentAnnotation(cw);
 		generateSerialVersionUIDField(cw);
 		generateLoadTimeValueFields(input, cw);
 		generateNoArgConstructor(generatorState, fileName, cw);
@@ -121,7 +126,12 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 		}
 	}
 
-	private void generateSerialVersionUIDField(final ClassWriter cw) {
+	private static void generateComponentAnnotation(final ClassWriter cw) {
+		final AnnotationVisitor av = cw.visitAnnotation(COMPONENT_ANNOTATION_DESC, true);
+		av.visitEnd();
+	}
+
+	private static void generateSerialVersionUIDField(final ClassWriter cw) {
 		final Random random = new SecureRandom();
 		final long serialVersionUID = random.nextLong();
 

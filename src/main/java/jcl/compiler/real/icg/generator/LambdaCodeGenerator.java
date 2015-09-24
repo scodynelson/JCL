@@ -43,92 +43,249 @@ import org.objectweb.asm.Type;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+/**
+ * Class to generate {@link LambdaStruct} object dynamically by creating a new Java class with the name of the {@link
+ * LambdaStruct#className} value, the supported parameter methods for the {@link LambdaStruct#lambdaListBindings}
+ * values, and the execution body containing the {@link LambdaStruct#forms} values.
+ */
 @Component
 class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 
-	@Autowired
-	private PrognCodeGenerator prognCodeGenerator;
+	/**
+	 * Constant {@link String} containing the description for the {@link Component} annotation.
+	 */
+	private static final String COMPONENT_ANNOTATION_DESC = Type.getDescriptor(Component.class);
 
+	/**
+	 * Constant {@link String} containing the description for the {@link FunctionStruct#FunctionStruct(Closure)}
+	 * constructor method.
+	 */
+	private static final String FUNCTION_STRUCT_INIT_CLOSURE_DESC = "(Ljcl/functions/Closure;)V";
+
+	/**
+	 * Constant {@link String} containing the name for the {@link FunctionStruct#initLambdaListBindings()} method.
+	 */
+	private static final String INIT_LAMBDA_LIST_BINDINGS_METHOD_NAME = "initLambdaListBindings";
+
+	/**
+	 * Constant {@link String} containing the description for the {@link FunctionStruct#initLambdaListBindings()}
+	 * method.
+	 */
+	private static final String INIT_LAMBDA_LIST_BINDINGS_METHOD_DESC = "()V";
+
+	/**
+	 * Constant {@link String} containing the name for the {@link FunctionStruct#getRequiredBindings()} method.
+	 */
+	private static final String GET_REQUIRED_BINDINGS_METHOD_NAME = "getRequiredBindings";
+
+	/**
+	 * Constant {@link String} containing the description for the {@link FunctionStruct#getRequiredBindings()} method.
+	 */
+	private static final String GET_REQUIRED_BINDINGS_METHOD_DESC = "()Ljava/util/List;";
+
+	/**
+	 * Constant {@link String} containing the signature for the {@link FunctionStruct#getRequiredBindings()} method.
+	 */
+	private static final String GET_REQUIRED_BINDINGS_METHOD_SIGNATURE = "()Ljava/util/List<Ljcl/compiler/real/environment/binding/lambdalist/RequiredBinding;>;";
+
+	/**
+	 * Constant {@link String} containing the name for the {@link FunctionStruct#getOptionalBindings()} method.
+	 */
+	private static final String GET_OPTIONAL_BINDINGS_METHOD_NAME = "getOptionalBindings";
+
+	/**
+	 * Constant {@link String} containing the description for the {@link FunctionStruct#getOptionalBindings()} method.
+	 */
+	private static final String GET_OPTIONAL_BINDINGS_METHOD_DESC = "()Ljava/util/List;";
+
+	/**
+	 * Constant {@link String} containing the signature for the {@link FunctionStruct#getOptionalBindings()} method.
+	 */
+	private static final String GET_OPTIONAL_BINDINGS_METHOD_SIGNATURE = "()Ljava/util/List<Ljcl/compiler/real/environment/binding/lambdalist/OptionalBinding;>;";
+
+	/**
+	 * Constant {@link String} containing the name for the {@link FunctionStruct#getRestBinding()} method.
+	 */
+	private static final String GET_REST_BINDING_METHOD_NAME = "getRestBinding";
+
+	/**
+	 * Constant {@link String} containing the description for the {@link FunctionStruct#getRestBinding()} method.
+	 */
+	private static final String GET_REST_BINDING_METHOD_DESC = "()Ljcl/compiler/real/environment/binding/lambdalist/RestBinding;";
+
+	/**
+	 * Constant {@link String} containing the name for the {@link FunctionStruct#getKeyBindings()} method.
+	 */
+	private static final String GET_KEY_BINDINGS_METHOD_NAME = "getKeyBindings";
+
+	/**
+	 * Constant {@link String} containing the description for the {@link FunctionStruct#getKeyBindings()} method.
+	 */
+	private static final String GET_KEY_BINDINGS_METHOD_DESC = "()Ljava/util/List;";
+
+	/**
+	 * Constant {@link String} containing the signature for the {@link FunctionStruct#getKeyBindings()} method.
+	 */
+	private static final String GET_KEY_BINDINGS_METHOD_SIGNATURE = "()Ljava/util/List<Ljcl/compiler/real/environment/binding/lambdalist/KeyBinding;>;";
+
+	/**
+	 * Constant {@link String} containing the name for the {@link FunctionStruct#getAllowOtherKeys()} method.
+	 */
+	private static final String GET_ALLOW_OTHER_KEYS_METHOD_NAME = "getAllowOtherKeys";
+
+	/**
+	 * Constant {@link String} containing the description for the {@link FunctionStruct#getAllowOtherKeys()} method.
+	 */
+	private static final String GET_ALLOW_OTHER_KEYS_METHOD_DESC = "()Z";
+
+	/**
+	 * Constant {@link String} containing the name for the {@link FunctionStruct#getAuxBindings()} method.
+	 */
+	private static final String GET_AUX_BINDINGS_METHOD_NAME = "getAuxBindings";
+
+	/**
+	 * Constant {@link String} containing the description for the {@link FunctionStruct#getAuxBindings()} method.
+	 */
+	private static final String GET_AUX_BINDINGS_METHOD_DESC = "()Ljava/util/List;";
+
+	/**
+	 * Constant {@link String} containing the signature for the {@link FunctionStruct#getAuxBindings()} method.
+	 */
+	private static final String GET_AUX_BINDINGS_METHOD_SIGNATURE = "()Ljava/util/List<Ljcl/compiler/real/environment/binding/lambdalist/AuxBinding;>;";
+
+	/**
+	 * Constant {@link String} containing the name for the {@link FunctionStruct#internalApply(Closure)} method.
+	 */
+	private static final String INTERNAL_APPLY_METHOD_NAME = "internalApply";
+
+	/**
+	 * Constant {@link String} containing the description for the {@link FunctionStruct#internalApply(Closure)} method.
+	 */
+	private static final String INTERNAL_APPLY_METHOD_DESC = "(Ljcl/functions/Closure;)Ljcl/LispStruct;";
+
+	/**
+	 * Constant {@link String} containing the name for the {@link FunctionStruct#getInitForm(Closure, SymbolStruct)}
+	 * method.
+	 */
+	private static final String GET_INIT_FORM_METHOD_NAME = "getInitForm";
+
+	/**
+	 * Constant {@link String} containing the description for the {@link FunctionStruct#getInitForm(Closure,
+	 * SymbolStruct)} method.
+	 */
+	private static final String GET_INIT_FORM_METHOD_DESC = "(Ljcl/functions/Closure;Ljcl/symbols/SymbolStruct;)Ljcl/LispStruct;";
+
+	/**
+	 * Constant {@link String} containing the signature for the {@link FunctionStruct#getInitForm(Closure,
+	 * SymbolStruct)} method.
+	 */
+	private static final String GET_INIT_FORM_METHOD_SIGNATURE = "(Ljcl/functions/Closure;Ljcl/symbols/SymbolStruct<*>;)Ljcl/LispStruct;";
+
+	/**
+	 * Constant {@link String} containing the name for the {@link FunctionStruct#initLoadTimeValueForms(Closure)}
+	 * method.
+	 */
+	private static final String INIT_LOAD_TIME_VALUE_FORMS_METHOD_NAME = "initLoadTimeValueForms";
+
+	/**
+	 * Constant {@link String} containing the description for the {@link FunctionStruct#initLoadTimeValueForms(Closure)}
+	 * method.
+	 */
+	private static final String INIT_LOAD_TIME_VALUE_FORMS_METHOD_DESC = "(Ljcl/functions/Closure;)V";
+
+	/**
+	 * {@link IntermediateCodeGenerator} used for generating the load-time-value values in the {@link
+	 * FunctionStruct#initLoadTimeValueForms(Closure)} method and 'optional', 'key', and 'aux' init-form values in the
+	 * {@link FunctionStruct#getInitForm(Closure, SymbolStruct)} method.
+	 */
 	@Autowired
 	private IntermediateCodeGenerator codeGenerator;
 
+	/**
+	 * {@link PrognCodeGenerator} used for generating the {@link LambdaStruct#forms}.
+	 */
+	@Autowired
+	private PrognCodeGenerator prognCodeGenerator;
+
+	/**
+	 * {@link NullCodeGenerator} used for generating {@link NullStruct#INSTANCE} constant as the default result in the
+	 * {@link FunctionStruct#getInitForm(Closure, SymbolStruct)} method and for the initial init-form value for
+	 * 'optional', 'key', and 'aux' keyword parameters.
+	 */
 	@Autowired
 	private NullCodeGenerator nullCodeGenerator;
 
-	private static final String COMPONENT_ANNOTATION_DESC = Type.getDescriptor(Component.class);
-
-	private static final String FUNCTION_STRUCT_INIT_CLOSURE_DESC = "(Ljcl/functions/Closure;)V";
-//	private static final String FUNCTION_STRUCT_INIT_CLOSURE_DESC = CodeGenerators.getConstructorDescription(FunctionStruct.class, Closure.class);
-
-	private static final String INIT_LAMBDA_LIST_BINDINGS_METHOD_NAME = "initLambdaListBindings";
-
-	private static final String INIT_LAMBDA_LIST_BINDINGS_METHOD_DESC = "()V";
-//	private static final String INIT_LAMBDA_LIST_BINDINGS_METHOD_DESC = CodeGenerators.getMethodDescription(FunctionStruct.class, INIT_LAMBDA_LIST_BINDINGS_METHOD_NAME);
-
-	private static final String GET_REQUIRED_BINDINGS_METHOD_NAME = "getRequiredBindings";
-
-	private static final String GET_REQUIRED_BINDINGS_METHOD_DESC = "()Ljava/util/List;";
-//	private static final String GET_REQUIRED_BINDINGS_METHOD_DESC = CodeGenerators.getMethodDescription(FunctionStruct.class, GET_REQUIRED_BINDINGS_METHOD_NAME);
-
-	private static final String GET_REQUIRED_BINDINGS_METHOD_SIGNATURE = "()Ljava/util/List<Ljcl/compiler/real/environment/binding/lambdalist/RequiredBinding;>;";
-
-	private static final String GET_OPTIONAL_BINDINGS_METHOD_NAME = "getOptionalBindings";
-
-	private static final String GET_OPTIONAL_BINDINGS_METHOD_DESC = "()Ljava/util/List;";
-//	private static final String GET_OPTIONAL_BINDINGS_METHOD_DESC = CodeGenerators.getMethodDescription(FunctionStruct.class, GET_OPTIONAL_BINDINGS_METHOD_NAME);
-
-	private static final String GET_OPTIONAL_BINDINGS_METHOD_SIGNATURE = "()Ljava/util/List<Ljcl/compiler/real/environment/binding/lambdalist/OptionalBinding;>;";
-
-	private static final String GET_REST_BINDING_METHOD_NAME = "getRestBinding";
-
-	private static final String GET_REST_BINDING_METHOD_DESC = "()Ljcl/compiler/real/environment/binding/lambdalist/RestBinding;";
-//	private static final String GET_REST_BINDING_METHOD_DESC = CodeGenerators.getMethodDescription(FunctionStruct.class, GET_REST_BINDING_METHOD_NAME);
-
-	private static final String GET_KEY_BINDINGS_METHOD_NAME = "getKeyBindings";
-
-	private static final String GET_KEY_BINDINGS_METHOD_DESC = "()Ljava/util/List;";
-//	private static final String GET_KEY_BINDINGS_METHOD_DESC = CodeGenerators.getMethodDescription(FunctionStruct.class, GET_KEY_BINDINGS_METHOD_NAME);
-
-	private static final String GET_KEY_BINDINGS_METHOD_SIGNATURE = "()Ljava/util/List<Ljcl/compiler/real/environment/binding/lambdalist/KeyBinding;>;";
-
-	private static final String GET_ALLOW_OTHER_KEYS_METHOD_NAME = "getAllowOtherKeys";
-
-	private static final String GET_ALLOW_OTHER_KEYS_METHOD_DESC = "()Z";
-//	private static final String GET_ALLOW_OTHER_KEYS_METHOD_DESC = CodeGenerators.getMethodDescription(FunctionStruct.class, GET_ALLOW_OTHER_KEYS_METHOD_NAME);
-
-	private static final String GET_AUX_BINDINGS_METHOD_NAME = "getAuxBindings";
-
-	private static final String GET_AUX_BINDINGS_METHOD_DESC = "()Ljava/util/List;";
-//	private static final String GET_AUX_BINDINGS_METHOD_DESC = CodeGenerators.getMethodDescription(FunctionStruct.class, GET_AUX_BINDINGS_METHOD_NAME);
-
-	private static final String GET_AUX_BINDINGS_METHOD_SIGNATURE = "()Ljava/util/List<Ljcl/compiler/real/environment/binding/lambdalist/AuxBinding;>;";
-
-	private static final String INTERNAL_APPLY_METHOD_NAME = "internalApply";
-
-	private static final String INTERNAL_APPLY_METHOD_DESC = "(Ljcl/functions/Closure;)Ljcl/LispStruct;";
-//	private static final String INTERNAL_APPLY_METHOD_DESC = CodeGenerators.getMethodDescription(FunctionStruct.class, INTERNAL_APPLY_METHOD_NAME, Closure.class);
-
-	private static final String GET_INIT_FORM_METHOD_NAME = "getInitForm";
-
-	private static final String GET_INIT_FORM_METHOD_DESC = "(Ljcl/functions/Closure;Ljcl/symbols/SymbolStruct;)Ljcl/LispStruct;";
-//	private static final String GET_INIT_FORM_METHOD_DESC = CodeGenerators.getMethodDescription(FunctionStruct.class, GET_INIT_FORM_METHOD_NAME, Closure.class, SymbolStruct.class);
-
-	private static final String GET_INIT_FORM_METHOD_SIGNATURE = "(Ljcl/functions/Closure;Ljcl/symbols/SymbolStruct<*>;)Ljcl/LispStruct;";
-
-	private static final String INIT_LOAD_TIME_VALUE_FORMS_METHOD_NAME = "initLoadTimeValueForms";
-
-	private static final String INIT_LOAD_TIME_VALUE_FORMS_METHOD_DESC = "(Ljcl/functions/Closure;)V";
-//	private static final String INIT_LOAD_TIME_VALUE_FORMS_METHOD_DESC = CodeGenerators.getMethodDescription(FunctionStruct.class, INIT_LOAD_TIME_VALUE_FORMS_METHOD_NAME, Closure.class);
-
+	/**
+	 * {@inheritDoc}
+	 * Generation method for {@link LambdaStruct} objects, by performing the following operations:
+	 * <ol>
+	 * <li>Getting the {@link LambdaStruct#className} value and replacing the '.' characters with '/' characters to
+	 * allow the value to be used for generating the new Java class file</li>
+	 * <li>Creating a new {@link JavaClassBuilder}, which internally creates a new {@link ClassWriter}</li>
+	 * <li>Visiting a new class via {@link ClassWriter#visit(int, int, String, String, String, String[])} of the new
+	 * {@link JavaClassBuilder#classWriter}</li>
+	 * <li>Generating the code for the {@link Component} annotation</li>
+	 * <li>Generating the code for the {@code serialVersionUID} field</li>
+	 * <li>Generating the code for the load-time-value fields</li>
+	 * <li>Generating the code for the no-argument constructor</li>
+	 * <li>Generating the code for the {@link Closure} argument constructor</li>
+	 * <li>Generating the code for the {@link FunctionStruct#initLoadTimeValueForms(Closure)} method</li>
+	 * <li>Generating the code for the {@link FunctionStruct#getRequiredBindings()} method</li>
+	 * <li>Generating the code for the {@link FunctionStruct#getOptionalBindings()} method</li>
+	 * <li>Generating the code for the {@link FunctionStruct#getRestBinding()} method</li>
+	 * <li>Generating the code for the {@link FunctionStruct#getKeyBindings()} method</li>
+	 * <li>Generating the code for the {@link FunctionStruct#getAllowOtherKeys()} method</li>
+	 * <li>Generating the code for the {@link FunctionStruct#getAuxBindings()} method</li>
+	 * <li>Generating the code for the {@link FunctionStruct#internalApply(Closure)} method</li>
+	 * <li>Generating the code for the {@link FunctionStruct#getInitForm(Closure, SymbolStruct)} method</li>
+	 * <li>Generating the code to end the new class visitation</li>
+	 * <li>If the {@link GeneratorState#classBuilderDeque} is not empty after the visitation for this new class,
+	 * performing the following operations:
+	 * <ol>
+	 * <li>Generating the code to instantiate the newly created class in the previous method execution stack</li>
+	 * </ol>
+	 * </li>
+	 * </ol>
+	 * As an example, it will transform {@code (lambda ())} into the following Java code:
+	 * <pre>
+	 * {@code
+	 * package jcl;
+	 *
+	 * import jcl.functions.Closure;
+	 * import jcl.functions.FunctionStruct;
+	 * import org.springframework.stereotype.Component;
+	 *
+	 * {@literal @}Component
+	 * public class Lambda_1 extends FunctionStruct {
+	 *      private static final long serialVersionUID = 1199585856102898270L;
+	 *
+	 *      public Lambda_119325376043734() {
+	 *          this((Closure)null);
+	 *      }
+	 *
+	 *      public Lambda_119325376043734(Closure var1) {
+	 *          super("", var1);
+	 *          this.initLoadTimeValueForms(var1);
+	 *          this.initLambdaListBindings();
+	 *      }
+	 * }
+	 * }
+	 * </pre>
+	 *
+	 * @param input
+	 * 		the {@link LambdaStruct} input value to generate code for
+	 * @param generatorState
+	 * 		stateful object used to hold the current state of the code generation process
+	 */
 	@Override
 	public void generate(final LambdaStruct input, final GeneratorState generatorState) {
 
-		String fileName = input.getFileName();
-		fileName = fileName.replace('.', '/');
+		String className = input.getClassName();
+		className = className.replace('.', '/');
 
-		final String className = fileName.substring(fileName.lastIndexOf('/') + 1, fileName.length());
+		final String fileName = className.substring(className.lastIndexOf('/') + 1, className.length());
 
-		final JavaClassBuilder currentClass = new JavaClassBuilder(fileName, className);
+		final JavaClassBuilder currentClass = new JavaClassBuilder(className, fileName);
 		final Deque<JavaClassBuilder> classBuilderDeque = generatorState.getClassBuilderDeque();
 
 		classBuilderDeque.addFirst(currentClass);
@@ -136,16 +293,16 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 
 		final ClassWriter cw = currentClass.getClassWriter();
 
-		cw.visit(Opcodes.V1_8, Opcodes.ACC_PUBLIC + Opcodes.ACC_SUPER, fileName, null, GenerationConstants.FUNCTION_STRUCT_NAME, null);
+		cw.visit(Opcodes.V1_8, Opcodes.ACC_PUBLIC + Opcodes.ACC_SUPER, className, null, GenerationConstants.FUNCTION_STRUCT_NAME, null);
 
-		cw.visitSource(className + GenerationConstants.JAVA_EXTENSION, null);
+		cw.visitSource(fileName + GenerationConstants.JAVA_EXTENSION, null);
 
 		generateComponentAnnotation(cw);
 		generateSerialVersionUIDField(cw);
 		generateLoadTimeValueFields(input, cw);
-		generateNoArgConstructor(generatorState, fileName, cw);
-		generateClosureArgConstructor(input, generatorState, fileName, cw);
-		generateInitLoadTimeValueFormsMethod(input, generatorState, fileName, cw);
+		generateNoArgConstructor(generatorState, className, cw);
+		generateClosureArgConstructor(input, generatorState, className, cw);
+		generateInitLoadTimeValueFormsMethod(input, generatorState, className, cw);
 
 		final OrdinaryLambdaListBindings lambdaListBindings = input.getLambdaListBindings();
 		generateRequiredBindings(generatorState, lambdaListBindings, cw);
@@ -166,12 +323,12 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 			final JavaMethodBuilder previousMethodBuilder = generatorState.getCurrentMethodBuilder();
 			final MethodVisitor previousMv = previousMethodBuilder.getMethodVisitor();
 
-			previousMv.visitTypeInsn(Opcodes.NEW, fileName);
+			previousMv.visitTypeInsn(Opcodes.NEW, className);
 			previousMv.visitInsn(Opcodes.DUP);
 
 			previousMv.visitVarInsn(Opcodes.ALOAD, 1); // Load the Closure Argument. NOTE: This should ALWAYS be 1 on the Store Stack
 			previousMv.visitMethodInsn(Opcodes.INVOKESPECIAL,
-					fileName,
+					className,
 					GenerationConstants.INIT_METHOD_NAME,
 					FUNCTION_STRUCT_INIT_CLOSURE_DESC,
 					false);
@@ -251,12 +408,12 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 	 *
 	 * @param generatorState
 	 * 		stateful object used to hold the current state of the code generation process
-	 * @param fileName
+	 * @param className
 	 * 		the {@link String} containing the name of the current lambda class file name
 	 * @param cw
 	 * 		the current {@link ClassWriter} to generate the constructor code for
 	 */
-	private static void generateNoArgConstructor(final GeneratorState generatorState, final String fileName,
+	private static void generateNoArgConstructor(final GeneratorState generatorState, final String className,
 	                                             final ClassWriter cw) {
 		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PUBLIC,
 				GenerationConstants.INIT_METHOD_NAME,
@@ -274,7 +431,7 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 		mv.visitVarInsn(Opcodes.ALOAD, thisStore);
 		mv.visitInsn(Opcodes.ACONST_NULL);
 		mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
-				fileName,
+				className,
 				GenerationConstants.INIT_METHOD_NAME,
 				FUNCTION_STRUCT_INIT_CLOSURE_DESC,
 				false);
@@ -313,13 +470,13 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 	 * 		String}
 	 * @param generatorState
 	 * 		stateful object used to hold the current state of the code generation process
-	 * @param fileName
+	 * @param className
 	 * 		the {@link String} containing the name of the current lambda class file name
 	 * @param cw
 	 * 		the current {@link ClassWriter} to generate the constructor code for
 	 */
 	private static void generateClosureArgConstructor(final LambdaStruct input, final GeneratorState generatorState,
-	                                                  final String fileName, final ClassWriter cw) {
+	                                                  final String className, final ClassWriter cw) {
 		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PUBLIC,
 				GenerationConstants.INIT_METHOD_NAME,
 				FUNCTION_STRUCT_INIT_CLOSURE_DESC,
@@ -352,14 +509,14 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 		mv.visitVarInsn(Opcodes.ALOAD, thisStore);
 		mv.visitVarInsn(Opcodes.ALOAD, closureStore);
 		mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
-				fileName,
+				className,
 				INIT_LOAD_TIME_VALUE_FORMS_METHOD_NAME,
 				INIT_LOAD_TIME_VALUE_FORMS_METHOD_DESC,
 				false);
 
 		mv.visitVarInsn(Opcodes.ALOAD, thisStore);
 		mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
-				fileName,
+				className,
 				INIT_LAMBDA_LIST_BINDINGS_METHOD_NAME,
 				INIT_LAMBDA_LIST_BINDINGS_METHOD_DESC,
 				false);
@@ -404,13 +561,13 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 	 * 		their initial values
 	 * @param generatorState
 	 * 		stateful object used to hold the current state of the code generation process
-	 * @param fileName
+	 * @param className
 	 * 		the {@link String} containing the name of the current lambda class file name
 	 * @param cw
 	 * 		the current {@link ClassWriter} to generate the method code for
 	 */
 	private void generateInitLoadTimeValueFormsMethod(final LambdaStruct input, final GeneratorState generatorState,
-	                                                  final String fileName, final ClassWriter cw) {
+	                                                  final String className, final ClassWriter cw) {
 		final LambdaEnvironment environment = input.getLambdaEnvironment();
 
 		final Map<String, LispStruct> loadTimeValues = environment.getLoadTimeValues();
@@ -453,7 +610,7 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 
 			mv.visitVarInsn(Opcodes.ALOAD, thisStore);
 			mv.visitVarInsn(Opcodes.ALOAD, loadTimeValueInitFormStore);
-			mv.visitFieldInsn(Opcodes.PUTFIELD, fileName, uniqueLTVId, GenerationConstants.LISP_STRUCT_DESC);
+			mv.visitFieldInsn(Opcodes.PUTFIELD, className, uniqueLTVId, GenerationConstants.LISP_STRUCT_DESC);
 		}
 
 		mv.visitInsn(Opcodes.RETURN);

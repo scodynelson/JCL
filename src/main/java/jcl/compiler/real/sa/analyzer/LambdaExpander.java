@@ -91,12 +91,12 @@ public class LambdaExpander extends MacroFunctionExpander<LambdaStruct> {
 		specialDeclarations.forEach(specialDeclaration -> Environments.addDynamicVariableBinding(specialDeclaration, lambdaEnvironment));
 
 		final JavaClassNameDeclarationStruct javaClassNameDeclaration = declare.getJavaClassNameDeclaration();
-		final String fileName;
+		final String className;
 		if (javaClassNameDeclaration == null) {
-			final String className = "Lambda" + '_' + System.nanoTime();
-			fileName = "jcl." + className;
+			final String lambdaClassName = "Lambda" + '_' + System.nanoTime();
+			className = "jcl." + lambdaClassName;
 		} else {
-			fileName = javaClassNameDeclaration.getClassName();
+			className = javaClassNameDeclaration.getClassName();
 		}
 
 		final OrdinaryLambdaListBindings parsedLambdaList = ordinaryLambdaListParser.parseOrdinaryLambdaList(lambdaEnvironment, parameters, declare);
@@ -106,7 +106,7 @@ public class LambdaExpander extends MacroFunctionExpander<LambdaStruct> {
 				= bodyForms.stream()
 				           .map(e -> formAnalyzer.analyze(e, lambdaEnvironment))
 				           .collect(Collectors.toList());
-		return new LambdaStruct(fileName, parsedLambdaList, bodyProcessingResult.getDocString(), new PrognStruct(analyzedBodyForms), lambdaEnvironment);
+		return new LambdaStruct(className, parsedLambdaList, bodyProcessingResult.getDocString(), new PrognStruct(analyzedBodyForms), lambdaEnvironment);
 	}
 
 	@Override

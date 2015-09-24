@@ -18,7 +18,7 @@ public class LambdaStruct extends CompilerSpecialOperatorStruct {
 
 	private static final long serialVersionUID = -3234593852889478530L;
 
-	private final String fileName;
+	private final String className;
 
 	private final OrdinaryLambdaListBindings lambdaListBindings;
 
@@ -28,17 +28,17 @@ public class LambdaStruct extends CompilerSpecialOperatorStruct {
 
 	private final LambdaEnvironment lambdaEnvironment;
 
-	public LambdaStruct(final String fileName, final OrdinaryLambdaListBindings lambdaListBindings, final StringStruct docString,
+	public LambdaStruct(final String className, final OrdinaryLambdaListBindings lambdaListBindings, final StringStruct docString,
 	                    final PrognStruct forms, final LambdaEnvironment lambdaEnvironment) {
-		this.fileName = fileName;
+		this.className = className;
 		this.lambdaListBindings = lambdaListBindings;
 		this.docString = docString;
 		this.forms = forms;
 		this.lambdaEnvironment = lambdaEnvironment;
 	}
 
-	public String getFileName() {
-		return fileName;
+	public String getClassName() {
+		return className;
 	}
 
 	public OrdinaryLambdaListBindings getLambdaListBindings() {
@@ -60,7 +60,7 @@ public class LambdaStruct extends CompilerSpecialOperatorStruct {
 	@Override
 	public int hashCode() {
 		return new HashCodeBuilder().appendSuper(super.hashCode())
-		                            .append(fileName)
+		                            .append(className)
 		                            .append(lambdaListBindings)
 		                            .append(docString)
 		                            .append(forms)
@@ -81,7 +81,7 @@ public class LambdaStruct extends CompilerSpecialOperatorStruct {
 		}
 		final LambdaStruct rhs = (LambdaStruct) obj;
 		return new EqualsBuilder().appendSuper(super.equals(obj))
-		                          .append(fileName, rhs.fileName)
+		                          .append(className, rhs.className)
 		                          .append(lambdaListBindings, rhs.lambdaListBindings)
 		                          .append(docString, rhs.docString)
 		                          .append(forms, rhs.forms)
@@ -91,7 +91,7 @@ public class LambdaStruct extends CompilerSpecialOperatorStruct {
 
 	@Override
 	public String toString() {
-		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(fileName)
+		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(className)
 		                                                                .append(lambdaListBindings)
 		                                                                .append(docString)
 		                                                                .append(forms)

@@ -299,6 +299,7 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 
 		mv.visitCode();
 		final int thisStore = methodBuilder.getNextAvailableStore();
+		@SuppressWarnings({"unused", "SuppressionAnnotation"})
 		final int closureArgStore = methodBuilder.getNextAvailableStore();
 
 		final int loadTimeValueInitFormStore = methodBuilder.getNextAvailableStore();
@@ -349,7 +350,9 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 		methodBuilderDeque.addFirst(methodBuilder);
 
 		mv.visitCode();
+		@SuppressWarnings({"unused", "SuppressionAnnotation"})
 		final int thisStore = methodBuilder.getNextAvailableStore();
+		@SuppressWarnings({"unused", "SuppressionAnnotation"})
 		final int closureArgStore = methodBuilder.getNextAvailableStore();
 
 		final LambdaEnvironment environment = input.getLambdaEnvironment();
@@ -390,12 +393,11 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 		methodBuilderDeque.addFirst(methodBuilder);
 
 		mv.visitCode();
+		@SuppressWarnings({"unused", "SuppressionAnnotation"})
 		final int thisStore = methodBuilder.getNextAvailableStore();
+		@SuppressWarnings({"unused", "SuppressionAnnotation"})
 		final int closureStore = methodBuilder.getNextAvailableStore();
 		final int symbolArgStore = methodBuilder.getNextAvailableStore();
-
-		// NOTE: commented out to allow proper scoping of dynamic variables. I think we just don't worry about the binding stack here.
-//			bindingStack.push(lambdaEnvironment);
 
 		final int initFormVarPackageStore = methodBuilder.getNextAvailableStore();
 		final int initFormVarSymbolStore = methodBuilder.getNextAvailableStore();
@@ -466,8 +468,6 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 			mv.visitLabel(symbolCheckIfEnd);
 		}
 
-//			bindingStack.pop();
-
 		nullCodeGenerator.generate(NullStruct.INSTANCE, generatorState);
 		mv.visitInsn(Opcodes.ARETURN);
 
@@ -517,6 +517,7 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 		methodBuilderDeque.addFirst(methodBuilder);
 
 		mv.visitCode();
+		@SuppressWarnings({"unused", "SuppressionAnnotation"})
 		final int thisStore = methodBuilder.getNextAvailableStore();
 
 		mv.visitTypeInsn(Opcodes.NEW, GenerationConstants.JAVA_ARRAY_LIST_NAME);
@@ -590,6 +591,7 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 		methodBuilderDeque.addFirst(methodBuilder);
 
 		mv.visitCode();
+		@SuppressWarnings({"unused", "SuppressionAnnotation"})
 		final int thisStore = methodBuilder.getNextAvailableStore();
 
 		mv.visitTypeInsn(Opcodes.NEW, GenerationConstants.JAVA_ARRAY_LIST_NAME);
@@ -674,6 +676,7 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 		methodBuilderDeque.addFirst(methodBuilder);
 
 		mv.visitCode();
+		@SuppressWarnings({"unused", "SuppressionAnnotation"})
 		final int thisStore = methodBuilder.getNextAvailableStore();
 
 		final int restPackageStore = methodBuilder.getNextAvailableStore();
@@ -722,6 +725,7 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 		methodBuilderDeque.addFirst(methodBuilder);
 
 		mv.visitCode();
+		@SuppressWarnings({"unused", "SuppressionAnnotation"})
 		final int thisStore = methodBuilder.getNextAvailableStore();
 
 		mv.visitTypeInsn(Opcodes.NEW, GenerationConstants.JAVA_ARRAY_LIST_NAME);
@@ -823,8 +827,8 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 
 	private static void generateAllowOtherKeys(final GeneratorState generatorState, final OrdinaryLambdaListBindings lambdaListBindings,
 	                                           final ClassWriter cw) {
-		final boolean allowOtherKeys = lambdaListBindings.isAllowOtherKeys();
-		if (!allowOtherKeys) {
+		final boolean notAllowOtherKeys = !lambdaListBindings.isAllowOtherKeys();
+		if (notAllowOtherKeys) {
 			// No need to generate this method, as false is the default
 			return;
 		}
@@ -869,6 +873,7 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 		methodBuilderDeque.addFirst(methodBuilder);
 
 		mv.visitCode();
+		@SuppressWarnings({"unused", "SuppressionAnnotation"})
 		final int thisStore = methodBuilder.getNextAvailableStore();
 
 		mv.visitTypeInsn(Opcodes.NEW, GenerationConstants.JAVA_ARRAY_LIST_NAME);

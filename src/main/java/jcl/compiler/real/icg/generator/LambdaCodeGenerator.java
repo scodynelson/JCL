@@ -31,6 +31,7 @@ import jcl.compiler.real.struct.specialoperator.lambda.LambdaStruct;
 import jcl.functions.Closure;
 import jcl.functions.FunctionStruct;
 import jcl.lists.NullStruct;
+import jcl.packages.PackageStruct;
 import jcl.symbols.SymbolStruct;
 import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.ClassWriter;
@@ -253,7 +254,7 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 	 * @param fileName
 	 * 		the {@link String} containing the name of the current lambda class file name
 	 * @param cw
-	 * 		the current {@link ClassWriter} to generate the field code for
+	 * 		the current {@link ClassWriter} to generate the constructor code for
 	 */
 	private static void generateNoArgConstructor(final GeneratorState generatorState, final String fileName,
 	                                             final ClassWriter cw) {
@@ -315,7 +316,7 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 	 * @param fileName
 	 * 		the {@link String} containing the name of the current lambda class file name
 	 * @param cw
-	 * 		the current {@link ClassWriter} to generate the field code for
+	 * 		the current {@link ClassWriter} to generate the constructor code for
 	 */
 	private static void generateClosureArgConstructor(final LambdaStruct input, final GeneratorState generatorState,
 	                                                  final String fileName, final ClassWriter cw) {
@@ -376,7 +377,7 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 	 * generated lambda class object being written to via the provided {@link ClassWriter}. The generation will perform
 	 * the following operations:
 	 * <ol>
-	 * <li>Returning early and avoid generating the method unnecessarily if the list of {@link
+	 * <li>Returning early and avoid generating the method unnecessarily if the {@link Map} of {@link
 	 * LambdaEnvironment#loadTimeValues} is empty</li>
 	 * <li>Iterating through each of the {@link LambdaEnvironment#loadTimeValues} performing the following operations:
 	 * <ol>
@@ -386,7 +387,8 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 	 * </ol>
 	 * </li>
 	 * </ol>
-	 * The following is the example Java code generated:
+	 * The following is the example Java code generated when a load-time-value expression such as {@code
+	 * (load-time-value 1 t)} is encountered:
 	 * <pre>
 	 * {@code
 	 * protected void initLoadTimeValueForms(Closure var1) {
@@ -405,7 +407,7 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 	 * @param fileName
 	 * 		the {@link String} containing the name of the current lambda class file name
 	 * @param cw
-	 * 		the current {@link ClassWriter} to generate the field code for
+	 * 		the current {@link ClassWriter} to generate the method code for
 	 */
 	private void generateInitLoadTimeValueFormsMethod(final LambdaStruct input, final GeneratorState generatorState,
 	                                                  final String fileName, final ClassWriter cw) {
@@ -462,6 +464,35 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 		methodBuilderDeque.removeFirst();
 	}
 
+	/**
+	 * Private method for generating the {@link FunctionStruct#internalApply(Closure)} method for the generated lambda
+	 * class object being written to via the provided {@link ClassWriter}. The generation will perform the following
+	 * operations:
+	 * <ol>
+	 * <li>Returning early and avoid generating the method unnecessarily if the {@link LambdaStruct#forms} are
+	 * empty</li>
+	 * <li>Temporarily pushing the {@link LambdaStruct#lambdaEnvironment} onto the {@link
+	 * GeneratorState#environmentDeque} while generating the code for the {@link LambdaStruct#forms} values, ensuring
+	 * to
+	 * return the final value as the method result</li>
+	 * </ol>
+	 * The following is the example Java code generated when {@code (lambda () 1)} is encountered:
+	 * <pre>
+	 * {@code
+	 * protected LispStruct internalApply(Closure var1) {
+	 *      BigInteger var2 = new BigInteger("1");
+	 *      return new IntegerStruct(var2);
+	 * }
+	 * }
+	 * </pre>
+	 *
+	 * @param input
+	 * 		the {@link LambdaStruct} containing the {@link LambdaStruct#forms} to generate execution code for
+	 * @param generatorState
+	 * 		stateful object used to hold the current state of the code generation process
+	 * @param cw
+	 * 		the current {@link ClassWriter} to generate the method code for
+	 */
 	private void generateInternalApplyMethod(final LambdaStruct input, final GeneratorState generatorState,
 	                                         final ClassWriter cw) {
 		final PrognStruct forms = input.getForms();
@@ -502,6 +533,44 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 		methodBuilderDeque.removeFirst();
 	}
 
+	/**
+	 * Private method for generating the {@link FunctionStruct#getInitForm(Closure, SymbolStruct)} method for the
+	 * generated lambda class object being written to via the provided {@link ClassWriter}. The generation will perform
+	 * the following operations:
+	 * <ol>
+	 * <li>Generating a condition check using {@link SymbolStruct#equals(Object)} to determine if the provided {@link
+	 * SymbolStruct} provided to the method is equivalent to one of the 'optional', 'key', or 'aux' function
+	 * parameters</li>
+	 * <li>Generating the resulting {@link LispStruct} value of the init-form for each of the 'optional', 'key', and
+	 * 'aux' function parameters</li>
+	 * <li>Generating the {@link NullStruct#INSTANCE} singleton to be used when none of the 'optional', 'key', or 'aux'
+	 * function parameters match the provided {@link SymbolStruct}</li>
+	 * </ol>
+	 * The following is the example Java code generated when {@code (lambda (&optional (y 2)) y)} is encountered:
+	 * <pre>
+	 * {@code
+	 * protected LispStruct getInitForm(Closure var1, SymbolStruct<?> var2) {
+	 *      PackageStruct var3 = PackageStruct.findPackage("COMMON-LISP-USER");
+	 *      SymbolStruct var4 = var3.intern("Y").getSymbol();
+	 *      if(var2.equals(var4)) {
+	 *          BigInteger var5 = new BigInteger("2");
+	 *          return new IntegerStruct(var5);
+	 *      } else {
+	 *          return NullStruct.INSTANCE;
+	 *      }
+	 * }
+	 * }
+	 * </pre>
+	 *
+	 * @param input
+	 * 		the {@link LambdaStruct} containing the {@link OrdinaryLambdaListBindings#optionalBindings}, {@link
+	 * 		OrdinaryLambdaListBindings#keyBindings}, and {@link OrdinaryLambdaListBindings#auxBindings} to generate the
+	 * 		code to retrieve their initial form values
+	 * @param generatorState
+	 * 		stateful object used to hold the current state of the code generation process
+	 * @param cw
+	 * 		the current {@link ClassWriter} to generate the method code for
+	 */
 	private void generateGetInitFormMethod(final LambdaStruct input, final GeneratorState generatorState,
 	                                       final ClassWriter cw) {
 		final OrdinaryLambdaListBindings lambdaListBindings = input.getLambdaListBindings();
@@ -536,68 +605,26 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 
 		for (final OptionalBinding optionalBinding : optionalBindings) {
 			final SymbolStruct<?> var = optionalBinding.getSymbolStruct();
-			CodeGenerators.generateSymbol(var, methodBuilder, initFormVarPackageStore, initFormVarSymbolStore);
-
-			final Label symbolCheckIfEnd = new Label();
-
-			mv.visitVarInsn(Opcodes.ALOAD, symbolArgStore);
-			mv.visitVarInsn(Opcodes.ALOAD, initFormVarSymbolStore);
-			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
-					GenerationConstants.SYMBOL_STRUCT_NAME,
-					GenerationConstants.JAVA_EQUALS_METHOD_NAME,
-					GenerationConstants.JAVA_EQUALS_METHOD_DESC,
-					false);
-			mv.visitJumpInsn(Opcodes.IFEQ, symbolCheckIfEnd);
-
 			final LispStruct initForm = optionalBinding.getInitForm();
-			codeGenerator.generate(initForm, generatorState);
-			mv.visitInsn(Opcodes.ARETURN);
 
-			mv.visitLabel(symbolCheckIfEnd);
+			generateInitForm(generatorState, methodBuilder, symbolArgStore,
+					initFormVarPackageStore, initFormVarSymbolStore, var, initForm);
 		}
 
 		for (final KeyBinding keyBinding : keyBindings) {
 			final SymbolStruct<?> var = keyBinding.getSymbolStruct();
-			CodeGenerators.generateSymbol(var, methodBuilder, initFormVarPackageStore, initFormVarSymbolStore);
-
-			final Label symbolCheckIfEnd = new Label();
-
-			mv.visitVarInsn(Opcodes.ALOAD, symbolArgStore);
-			mv.visitVarInsn(Opcodes.ALOAD, initFormVarSymbolStore);
-			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
-					GenerationConstants.SYMBOL_STRUCT_NAME,
-					GenerationConstants.JAVA_EQUALS_METHOD_NAME,
-					GenerationConstants.JAVA_EQUALS_METHOD_DESC,
-					false);
-			mv.visitJumpInsn(Opcodes.IFEQ, symbolCheckIfEnd);
-
 			final LispStruct initForm = keyBinding.getInitForm();
-			codeGenerator.generate(initForm, generatorState);
-			mv.visitInsn(Opcodes.ARETURN);
 
-			mv.visitLabel(symbolCheckIfEnd);
+			generateInitForm(generatorState, methodBuilder, symbolArgStore,
+					initFormVarPackageStore, initFormVarSymbolStore, var, initForm);
 		}
 
 		for (final AuxBinding auxBinding : auxBindings) {
 			final SymbolStruct<?> var = auxBinding.getSymbolStruct();
-			CodeGenerators.generateSymbol(var, methodBuilder, initFormVarPackageStore, initFormVarSymbolStore);
-
-			final Label symbolCheckIfEnd = new Label();
-
-			mv.visitVarInsn(Opcodes.ALOAD, symbolArgStore);
-			mv.visitVarInsn(Opcodes.ALOAD, initFormVarSymbolStore);
-			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
-					GenerationConstants.SYMBOL_STRUCT_NAME,
-					GenerationConstants.JAVA_EQUALS_METHOD_NAME,
-					GenerationConstants.JAVA_EQUALS_METHOD_DESC,
-					false);
-			mv.visitJumpInsn(Opcodes.IFEQ, symbolCheckIfEnd);
-
 			final LispStruct initForm = auxBinding.getInitForm();
-			codeGenerator.generate(initForm, generatorState);
-			mv.visitInsn(Opcodes.ARETURN);
 
-			mv.visitLabel(symbolCheckIfEnd);
+			generateInitForm(generatorState, methodBuilder, symbolArgStore,
+					initFormVarPackageStore, initFormVarSymbolStore, var, initForm);
 		}
 
 		nullCodeGenerator.generate(NullStruct.INSTANCE, generatorState);
@@ -609,6 +636,55 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 		methodBuilderDeque.removeFirst();
 	}
 
+	/**
+	 * Private method used for assisting the generation of the {@link FunctionStruct#getInitForm(Closure,
+	 * SymbolStruct)} method, generating the {@link SymbolStruct} equality check as well as the {@link LispStruct}
+	 * value of the init-form.
+	 *
+	 * @param generatorState
+	 * 		stateful object used to hold the current state of the code generation process
+	 * @param methodBuilder
+	 * 		{@link JavaMethodBuilder} used for building the Java method body for the {@link
+	 * 		FunctionStruct#getInitForm(Closure, SymbolStruct)} method
+	 * @param symbolArgStore
+	 * 		the storage location index on the stack where the {@link SymbolStruct} parameter value is located
+	 * @param initFormVarPackageStore
+	 * 		the storage location index on the stack where the {@link PackageStruct} for the provided {@code var} {@link
+	 * 		SymbolStruct} will exist
+	 * @param initFormVarSymbolStore
+	 * 		the storage location index on the stack where the provided {@code var} {@link SymbolStruct} will exist
+	 * @param var
+	 * 		the {@link SymbolStruct} variable to be used as the source of the equality check against the {@link
+	 * 		SymbolStruct} value at the provided {@code symbolArgStore} storage location index on the stack
+	 * @param initForm
+	 * 		the {@link LispStruct} init-form value to be generated as the value to be used when the {@link SymbolStruct}
+	 * 		matching equality to the provided {@code var} {@link SymbolStruct} is encountered
+	 */
+	private void generateInitForm(final GeneratorState generatorState, final JavaMethodBuilder methodBuilder,
+	                              final int symbolArgStore, final int initFormVarPackageStore,
+	                              final int initFormVarSymbolStore, final SymbolStruct<?> var, final LispStruct initForm) {
+		final MethodVisitor mv = methodBuilder.getMethodVisitor();
+
+		CodeGenerators.generateSymbol(var, methodBuilder, initFormVarPackageStore, initFormVarSymbolStore);
+
+		final Label symbolCheckIfEnd = new Label();
+
+		mv.visitVarInsn(Opcodes.ALOAD, symbolArgStore);
+		mv.visitVarInsn(Opcodes.ALOAD, initFormVarSymbolStore);
+		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
+				GenerationConstants.SYMBOL_STRUCT_NAME,
+				GenerationConstants.JAVA_EQUALS_METHOD_NAME,
+				GenerationConstants.JAVA_EQUALS_METHOD_DESC,
+				false);
+		mv.visitJumpInsn(Opcodes.IFEQ, symbolCheckIfEnd);
+
+		codeGenerator.generate(initForm, generatorState);
+		mv.visitInsn(Opcodes.ARETURN);
+
+		mv.visitLabel(symbolCheckIfEnd);
+	}
+
+	/*
 	private static void generateClassInitMethod(final GeneratorState generatorState, final ClassWriter cw) {
 		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_STATIC,
 				GenerationConstants.CLASS_INIT_METHOD_NAME,
@@ -629,7 +705,43 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 
 		methodBuilderDeque.removeFirst();
 	}
+	*/
 
+	/**
+	 * Private method for generating the {@link FunctionStruct#getRequiredBindings()} method for the generated lambda
+	 * class object being written to via the provided {@link ClassWriter}. The generation will perform the following
+	 * operations:
+	 * <ol>
+	 * <li>Returning early and avoid generating the method unnecessarily if the {@link List} of {@link
+	 * OrdinaryLambdaListBindings#requiredBindings} is empty</li>
+	 * <li>Generating the {@link List} for containing the resulting {@link RequiredBinding}s</li>
+	 * <li>Generating each of the {@link RequiredBinding}s and adding them to the previously created {@link List}</li>
+	 * <li>Generating the code to return the generated {@link List} of {@link RequiredBinding}s</li>
+	 * </ol>
+	 * The following is the example Java code generated when {@code (lambda (a) a)} is encountered:
+	 * <pre>
+	 * {@code
+	 * protected List<RequiredBinding> getRequiredBindings() {
+	 *      ArrayList var1 = new ArrayList();
+	 *
+	 *      PackageStruct var2 = PackageStruct.findPackage("COMMON-LISP-USER");
+	 *      SymbolStruct var3 = var2.intern("A").getSymbol();
+	 *      RequiredBinding var4 = new RequiredBinding(var3, false);
+	 *      var1.add(var4);
+	 *
+	 *      return var1;
+	 * }
+	 * }
+	 * </pre>
+	 *
+	 * @param generatorState
+	 * 		stateful object used to hold the current state of the code generation process
+	 * @param lambdaListBindings
+	 * 		the {@link OrdinaryLambdaListBindings} containing the {@link List} of {@link RequiredBinding}s to generate
+	 * 		code for
+	 * @param cw
+	 * 		the current {@link ClassWriter} to generate the method code for
+	 */
 	private static void generateRequiredBindings(final GeneratorState generatorState, final OrdinaryLambdaListBindings lambdaListBindings,
 	                                             final ClassWriter cw) {
 		final List<RequiredBinding> requiredBindings = lambdaListBindings.getRequiredBindings();
@@ -704,6 +816,47 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 		methodBuilderDeque.removeFirst();
 	}
 
+	/**
+	 * Private method for generating the {@link FunctionStruct#getOptionalBindings()} method for the generated lambda
+	 * class object being written to via the provided {@link ClassWriter}. The generation will perform the following
+	 * operations:
+	 * <ol>
+	 * <li>Returning early and avoid generating the method unnecessarily if the {@link List} of {@link
+	 * OrdinaryLambdaListBindings#optionalBindings} is empty</li>
+	 * <li>Generating the {@link List} for containing the resulting {@link OptionalBinding}s</li>
+	 * <li>Generating each of the {@link OptionalBinding}s and adding them to the previously created {@link List}</li>
+	 * <li>Generating the code to return the generated {@link List} of {@link OptionalBinding}s</li>
+	 * </ol>
+	 * The following is the example Java code generated when {@code (lambda (&optional (b 2 b-p) b)} is encountered:
+	 * <pre>
+	 * {@code
+	 * protected List<OptionalBinding> getOptionalBindings() {
+	 *      ArrayList var1 = new ArrayList();
+	 *
+	 *      PackageStruct var2 = PackageStruct.findPackage("COMMON-LISP-USER");
+	 *      SymbolStruct var3 = var2.intern("B").getSymbol();
+	 *      NullStruct var4 = NullStruct.INSTANCE;
+	 *
+	 *      var2 = PackageStruct.findPackage("COMMON-LISP-USER");
+	 *      SymbolStruct var5 = var2.intern("B-P").getSymbol();
+	 *      SuppliedPBinding var6 = new SuppliedPBinding(var5, false);
+	 *
+	 *      OptionalBinding var7 = new OptionalBinding(var3, var4, false, var6);
+	 *      var1.add(var7);
+	 *
+	 *      return var1;
+	 * }
+	 * }
+	 * </pre>
+	 *
+	 * @param generatorState
+	 * 		stateful object used to hold the current state of the code generation process
+	 * @param lambdaListBindings
+	 * 		the {@link OrdinaryLambdaListBindings} containing the {@link List} of {@link OptionalBinding}s to generate
+	 * 		code for
+	 * @param cw
+	 * 		the current {@link ClassWriter} to generate the method code for
+	 */
 	private void generateOptionalBindings(final GeneratorState generatorState, final OrdinaryLambdaListBindings lambdaListBindings,
 	                                      final ClassWriter cw) {
 		final List<OptionalBinding> optionalBindings = lambdaListBindings.getOptionalBindings();
@@ -789,6 +942,33 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 		methodBuilderDeque.removeFirst();
 	}
 
+	/**
+	 * Private method for generating the {@link FunctionStruct#getRestBinding()} method for the generated lambda class
+	 * object being written to via the provided {@link ClassWriter}. The generation will perform the following
+	 * operations:
+	 * <ol>
+	 * <li>Returning early and avoid generating the method unnecessarily if the {@link
+	 * OrdinaryLambdaListBindings#restBinding} is null</li>
+	 * <li>Generating and returning the {@link RestBinding}</li>
+	 * </ol>
+	 * The following is the example Java code generated when {@code (lambda (&rest x) x)} is encountered:
+	 * <pre>
+	 * {@code
+	 * protected RestBinding getRestBinding() {
+	 *      PackageStruct var1 = PackageStruct.findPackage("COMMON-LISP-USER");
+	 *      SymbolStruct var2 = var1.intern("X").getSymbol();
+	 *      return new RestBinding(var2, false);
+	 * }
+	 * }
+	 * </pre>
+	 *
+	 * @param generatorState
+	 * 		stateful object used to hold the current state of the code generation process
+	 * @param lambdaListBindings
+	 * 		the {@link OrdinaryLambdaListBindings} containing the {@link RestBinding} to generate code for
+	 * @param cw
+	 * 		the current {@link ClassWriter} to generate the method code for
+	 */
 	private static void generateRestBinding(final GeneratorState generatorState, final OrdinaryLambdaListBindings lambdaListBindings,
 	                                        final ClassWriter cw) {
 		final RestBinding restBinding = lambdaListBindings.getRestBinding();
@@ -838,6 +1018,49 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 		methodBuilderDeque.removeFirst();
 	}
 
+	/**
+	 * Private method for generating the {@link FunctionStruct#getKeyBindings()} method for the generated lambda class
+	 * object being written to via the provided {@link ClassWriter}. The generation will perform the following
+	 * operations:
+	 * <ol>
+	 * <li>Returning early and avoid generating the method unnecessarily if the {@link List} of {@link
+	 * OrdinaryLambdaListBindings#keyBindings} is empty</li>
+	 * <li>Generating the {@link List} for containing the resulting {@link KeyBinding}s</li>
+	 * <li>Generating each of the {@link KeyBinding}s and adding them to the previously created {@link List}</li>
+	 * <li>Generating the code to return the generated {@link List} of {@link KeyBinding}s</li>
+	 * </ol>
+	 * The following is the example Java code generated when {@code (lambda (&key (c 3 c-p)) c)} is encountered:
+	 * <pre>
+	 * {@code
+	 * protected List<KeyBinding> getKeyBindings() {
+	 *      ArrayList var1 = new ArrayList();
+	 *
+	 *      PackageStruct var2 = PackageStruct.findPackage("COMMON-LISP-USER");
+	 *      SymbolStruct var3 = var2.intern("C").getSymbol();
+	 *      NullStruct var4 = NullStruct.INSTANCE;
+	 *
+	 *      var2 = PackageStruct.findPackage("KEYWORD");
+	 *      SymbolStruct var5 = var2.intern("C").getSymbol();
+	 *
+	 *      var2 = PackageStruct.findPackage("COMMON-LISP-USER");
+	 *      SymbolStruct var6 = var2.intern("C-P").getSymbol();
+	 *      SuppliedPBinding var7 = new SuppliedPBinding(var6, false);
+	 *
+	 *      KeyBinding var8 = new KeyBinding(var3, var4, false, var5, var7);
+	 *      var1.add(var8);
+	 *
+	 *      return var1;
+	 * }
+	 * }
+	 * </pre>
+	 *
+	 * @param generatorState
+	 * 		stateful object used to hold the current state of the code generation process
+	 * @param lambdaListBindings
+	 * 		the {@link OrdinaryLambdaListBindings} containing the {@link List} of {@link KeyBinding}s to generate code for
+	 * @param cw
+	 * 		the current {@link ClassWriter} to generate the method code for
+	 */
 	private void generateKeyBindings(final GeneratorState generatorState, final OrdinaryLambdaListBindings lambdaListBindings,
 	                                 final ClassWriter cw) {
 		final List<KeyBinding> keyBindings = lambdaListBindings.getKeyBindings();
@@ -928,8 +1151,26 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 		methodBuilderDeque.removeFirst();
 	}
 
+	/**
+	 * Private method for generating a {@link SuppliedPBinding} to be used in the {@link
+	 * FunctionStruct#getOptionalBindings()} and {@link FunctionStruct#getKeyBindings()} method generation code as the
+	 * {@link OptionalBinding#suppliedPBinding} and {@link KeyBinding#suppliedPBinding} values.
+	 *
+	 * @param suppliedPBinding
+	 * 		the {@link SuppliedPBinding} to generate code for
+	 * @param methodBuilder
+	 * 		{@link JavaMethodBuilder} used for building a Java method body
+	 * @param suppliedPPackageStore
+	 * 		the storage location index on the stack where the {@link PackageStruct} for the provided {@link
+	 * 		SuppliedPBinding#symbolStruct} will exist
+	 * @param suppliedPSymbolStore
+	 * 		the storage location index on the stack where the {@link SuppliedPBinding#symbolStruct} will exist
+	 * @param suppliedPStore
+	 * 		the storage location index on the stack where the generated {@link SuppliedPBinding} will exist
+	 */
 	private static void generateSuppliedPBinding(final SuppliedPBinding suppliedPBinding, final JavaMethodBuilder methodBuilder,
-	                                             final int packageStore, final int suppliedPSymbolStore, final int suppliedPStore) {
+	                                             final int suppliedPPackageStore, final int suppliedPSymbolStore,
+	                                             final int suppliedPStore) {
 		final MethodVisitor mv = methodBuilder.getMethodVisitor();
 
 		if (suppliedPBinding == null) {
@@ -937,7 +1178,7 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 			mv.visitVarInsn(Opcodes.ASTORE, suppliedPStore);
 		} else {
 			final SymbolStruct<?> keySuppliedPSymbol = suppliedPBinding.getSymbolStruct();
-			CodeGenerators.generateSymbol(keySuppliedPSymbol, methodBuilder, packageStore, suppliedPSymbolStore);
+			CodeGenerators.generateSymbol(keySuppliedPSymbol, methodBuilder, suppliedPPackageStore, suppliedPSymbolStore);
 
 			mv.visitTypeInsn(Opcodes.NEW, GenerationConstants.SUPPLIED_P_BINDING_NAME);
 			mv.visitInsn(Opcodes.DUP);
@@ -956,6 +1197,34 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 		}
 	}
 
+	/**
+	 * Private method for generating the {@link FunctionStruct#getAllowOtherKeys()} ()} method for the generated lambda
+	 * class object being written to via the provided {@link ClassWriter}. The generation will perform the following
+	 * operations:
+	 * <ol>
+	 * <li>Returning early and avoid generating the method unnecessarily if the value of {@link
+	 * OrdinaryLambdaListBindings#allowOtherKeys} is false, as this is the default return value of the overridden
+	 * method</li>
+	 * <li>Generating and returning {@code true} the value of {@link OrdinaryLambdaListBindings#allowOtherKeys} is
+	 * true</li>
+	 * </ol>
+	 * The following is the example Java code generated when {@code (lambda (&allow-other-keys))} is encountered:
+	 * <pre>
+	 * {@code
+	 * protected boolean getAllowOtherKeys() {
+	 *      return true;
+	 * }
+	 * }
+	 * </pre>
+	 *
+	 * @param generatorState
+	 * 		stateful object used to hold the current state of the code generation process
+	 * @param lambdaListBindings
+	 * 		the {@link OrdinaryLambdaListBindings} containing the &allow-other-keys {@code boolean} value to generate
+	 * 		code for
+	 * @param cw
+	 * 		the current {@link ClassWriter} to generate the method code for
+	 */
 	private static void generateAllowOtherKeys(final GeneratorState generatorState, final OrdinaryLambdaListBindings lambdaListBindings,
 	                                           final ClassWriter cw) {
 		final boolean notAllowOtherKeys = !lambdaListBindings.isAllowOtherKeys();
@@ -985,6 +1254,40 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 		methodBuilderDeque.removeFirst();
 	}
 
+	/**
+	 * Private method for generating the {@link FunctionStruct#getAuxBindings()} method for the generated lambda class
+	 * object being written to via the provided {@link ClassWriter}. The generation will perform the following
+	 * operations:
+	 * <ol>
+	 * <li>Returning early and avoid generating the method unnecessarily if the {@link List} of {@link
+	 * OrdinaryLambdaListBindings#auxBindings} is empty</li>
+	 * <li>Generating the {@link List} for containing the resulting {@link AuxBinding}s</li>
+	 * <li>Generating each of the {@link AuxBinding}s and adding them to the previously created {@link List}</li>
+	 * <li>Generating the code to return the generated {@link List} of {@link AuxBinding}s</li>
+	 * </ol>
+	 * The following is the example Java code generated when {@code (lambda (&aux (d 2)) d)} is encountered:
+	 * <pre>
+	 * {@code
+	 * protected List<AuxBinding> getAuxBindings() {
+	 *      ArrayList var1 = new ArrayList();
+	 *
+	 *      PackageStruct var2 = PackageStruct.findPackage("COMMON-LISP-USER");
+	 *      SymbolStruct var3 = var2.intern("D").getSymbol();
+	 *      AuxBinding var4 = new AuxBinding(var3, false);
+	 *      var1.add(var4);
+	 *
+	 *      return var1;
+	 * }
+	 * }
+	 * </pre>
+	 *
+	 * @param generatorState
+	 * 		stateful object used to hold the current state of the code generation process
+	 * @param lambdaListBindings
+	 * 		the {@link OrdinaryLambdaListBindings} containing the {@link List} of {@link AuxBinding}s to generate code for
+	 * @param cw
+	 * 		the current {@link ClassWriter} to generate the method code for
+	 */
 	private void generateAuxBindings(final GeneratorState generatorState, final OrdinaryLambdaListBindings lambdaListBindings,
 	                                 final ClassWriter cw) {
 		final List<AuxBinding> auxBindings = lambdaListBindings.getAuxBindings();
@@ -1026,8 +1329,6 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 			final SymbolStruct<?> auxSymbol = auxBinding.getSymbolStruct();
 			CodeGenerators.generateSymbol(auxSymbol, methodBuilder, auxPackageStore, auxSymbolStore);
 
-			// NOTE: Just generate a null value for this initForm here. We take care of the &aux initForms in the body
-			//       when it is processed
 			nullCodeGenerator.generate(NullStruct.INSTANCE, generatorState);
 			mv.visitVarInsn(Opcodes.ASTORE, auxInitFormStore);
 

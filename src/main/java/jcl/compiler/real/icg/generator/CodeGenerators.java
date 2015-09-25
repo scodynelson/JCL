@@ -6,10 +6,14 @@ package jcl.compiler.real.icg.generator;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
+import java.security.SecureRandom;
+import java.util.Random;
 
 import jcl.compiler.real.icg.JavaMethodBuilder;
 import jcl.packages.PackageStruct;
 import jcl.symbols.SymbolStruct;
+import org.objectweb.asm.ClassWriter;
+import org.objectweb.asm.FieldVisitor;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
@@ -96,5 +100,29 @@ final class CodeGenerators {
 					false);
 			mv.visitVarInsn(Opcodes.ASTORE, symbolStore);
 		}
+	}
+
+	static String getFileNameFromClassName(final String className) {
+		return className.substring(className.lastIndexOf('/') + 1, className.length());
+	}
+
+	/**
+	 * Method for generating the {@code serialVersionUID} field for the generated class object being written to via the
+	 * provided {@link ClassWriter}.
+	 *
+	 * @param cw
+	 * 		the current {@link ClassWriter} to generate the field code for
+	 */
+	static void generateSerialVersionUIDField(final ClassWriter cw) {
+		final Random random = new SecureRandom();
+		final long serialVersionUID = random.nextLong();
+
+		final FieldVisitor fv = cw.visitField(Opcodes.ACC_PRIVATE + Opcodes.ACC_FINAL + Opcodes.ACC_STATIC,
+				GenerationConstants.SERIAL_VERSION_UID_FIELD,
+				GenerationConstants.JAVA_LONG_TYPE_NAME,
+				null,
+				serialVersionUID);
+
+		fv.visitEnd();
 	}
 }

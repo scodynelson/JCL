@@ -4,11 +4,9 @@
 
 package jcl.compiler.real.icg.generator;
 
-import java.security.SecureRandom;
 import java.util.Deque;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
 import jcl.LispStruct;
 import jcl.arrays.StringStruct;
@@ -283,7 +281,7 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 		String className = input.getClassName();
 		className = className.replace('.', '/');
 
-		final String fileName = className.substring(className.lastIndexOf('/') + 1, className.length());
+		final String fileName = CodeGenerators.getFileNameFromClassName(className);
 
 		final JavaClassBuilder currentClass = new JavaClassBuilder(className, fileName);
 		final Deque<JavaClassBuilder> classBuilderDeque = generatorState.getClassBuilderDeque();
@@ -293,12 +291,16 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 
 		final ClassWriter cw = currentClass.getClassWriter();
 
-		cw.visit(Opcodes.V1_8, Opcodes.ACC_PUBLIC + Opcodes.ACC_SUPER, className, null, GenerationConstants.FUNCTION_STRUCT_NAME, null);
+		cw.visit(Opcodes.V1_8, Opcodes.ACC_PUBLIC + Opcodes.ACC_SUPER,
+				className,
+				null,
+				GenerationConstants.FUNCTION_STRUCT_NAME,
+				null);
 
 		cw.visitSource(fileName + GenerationConstants.JAVA_EXTENSION, null);
 
 		generateComponentAnnotation(cw);
-		generateSerialVersionUIDField(cw);
+		CodeGenerators.generateSerialVersionUIDField(cw);
 		generateLoadTimeValueFields(input, cw);
 		generateNoArgConstructor(generatorState, className, cw);
 		generateClosureArgConstructor(input, generatorState, className, cw);
@@ -345,26 +347,6 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 	private static void generateComponentAnnotation(final ClassWriter cw) {
 		final AnnotationVisitor av = cw.visitAnnotation(COMPONENT_ANNOTATION_DESC, true);
 		av.visitEnd();
-	}
-
-	/**
-	 * Private method for generating the {@code serialVersionUID} field for the generated lambda class object being
-	 * written to via the provided {@link ClassWriter}.
-	 *
-	 * @param cw
-	 * 		the current {@link ClassWriter} to generate the field code for
-	 */
-	private static void generateSerialVersionUIDField(final ClassWriter cw) {
-		final Random random = new SecureRandom();
-		final long serialVersionUID = random.nextLong();
-
-		final FieldVisitor fv = cw.visitField(Opcodes.ACC_PRIVATE + Opcodes.ACC_FINAL + Opcodes.ACC_STATIC,
-				GenerationConstants.SERIAL_VERSION_UID_FIELD,
-				GenerationConstants.JAVA_LONG_TYPE_NAME,
-				null,
-				serialVersionUID);
-
-		fv.visitEnd();
 	}
 
 	/**

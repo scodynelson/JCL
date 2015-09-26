@@ -2,6 +2,8 @@
   <dictionary name="codynelson">
     <words>
       <w>&amp;amp</w>
+      <w>&amp;aux</w>
+      <w>&amp;key</w>
       <w>accessors</w>
       <w>acons</w>
       <w>acos</w>
@@ -23,6 +25,7 @@
       <w>binded</w>
       <w>boundp</w>
       <w>butlast</w>
+      <w>bytecode</w>
       <w>caaaar</w>
       <w>caaadr</w>
       <w>caaar</w>
@@ -117,6 +120,7 @@
       <w>integerp</w>
       <w>isqrt</w>
       <w>keywordp</w>
+      <w>lambdalist</w>
       <w>ldiff</w>
       <w>lessp</w>
       <w>listp</w>
@@ -242,6 +246,7 @@
       <w>untrace</w>
       <w>unuse</w>
       <w>upcase</w>
+      <w>vals</w>
       <w>vectorp</w>
       <w>zerop</w>
     </words>

@@ -37,6 +37,10 @@ class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 
 	private static final String SYNTHETIC_INNER_CLASS_ID = "$1";
 
+	private static final String SYNTHETIC_INNER_CLASS_DESC_PREFIX = "(L";
+
+	private static final String SYNTHETIC_INNER_CLASS_DESC_POSTFIX = ";)V";
+
 	private static final String STRUCTURE_TYPE_FACTORY_POSTFIX = "Factory";
 
 	private static final String STRUCTURE_TYPE_IMPL_POSTFIX = "StructureTypeImpl";
@@ -86,6 +90,7 @@ class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 		final String structureObjectClassName = STRUCT_OBJECTS_PACKAGE + structureName + STRUCTURE_OBJECT_POSTFIX + systemTimePostfix;
 
 		final String structureTypeSyntheticInnerClassName = structureTypeClassName + SYNTHETIC_INNER_CLASS_ID + systemTimePostfix;
+		final String structureTypeSyntheticInnerClassDesc = SYNTHETIC_INNER_CLASS_DESC_PREFIX + structureTypeSyntheticInnerClassName + SYNTHETIC_INNER_CLASS_DESC_POSTFIX;
 		final String structureTypeFactoryInnerClassName = structureTypeClassName + '$' + STRUCTURE_TYPE_FACTORY_POSTFIX + systemTimePostfix;
 
 		final String structureTypeImplClassName = structureName + STRUCTURE_TYPE_IMPL_POSTFIX + systemTimePostfix;
@@ -118,6 +123,7 @@ class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 				structureTypeClassName,
 				structureTypeClassDesc,
 				structureTypeSyntheticInnerClassName,
+				structureTypeSyntheticInnerClassDesc,
 				structureTypeFactoryInnerClassName,
 				structureTypeImplClassName,
 				structureTypeImplInnerClassName);
@@ -148,6 +154,7 @@ class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 	                                          final String structureTypeClassName,
 	                                          final String structureTypeClassDesc,
 	                                          final String structureTypeSyntheticInnerClassName,
+	                                          final String structureTypeSyntheticInnerClassDesc,
 	                                          final String structureTypeFactoryInnerClassName,
 	                                          final String structureTypeImplClassName,
 	                                          final String structureTypeImplInnerClassName) {
@@ -206,7 +213,7 @@ class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 		generateStructureInstanceField(cw, structureTypeClassDesc);
 		generateStructureTypeClassInitMethod(generatorState, cw,
 				structureTypeClassName, structureTypeClassDesc,
-				structureTypeSyntheticInnerClassName, structureTypeImplInnerClassName);
+				structureTypeSyntheticInnerClassDesc, structureTypeImplInnerClassName);
 
 		cw.visitEnd();
 
@@ -216,7 +223,7 @@ class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 	private static void generateStructureTypeClassInitMethod(final GeneratorState generatorState, final ClassWriter cw,
 	                                                         final String structureTypeClassName,
 	                                                         final String structureTypeClassDesc,
-	                                                         final String structureTypeSyntheticInnerClassName,
+	                                                         final String structureTypeSyntheticInnerClassDesc,
 	                                                         final String structureTypeImplInnerClassName) {
 		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_STATIC,
 				GenerationConstants.CLASS_INIT_METHOD_NAME,
@@ -237,7 +244,7 @@ class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 		mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
 				structureTypeImplInnerClassName,
 				GenerationConstants.INIT_METHOD_NAME,
-				getStructureTypeConstructorDesc(structureTypeSyntheticInnerClassName),
+				structureTypeSyntheticInnerClassDesc,
 				false);
 		mv.visitFieldInsn(Opcodes.PUTSTATIC,
 				structureTypeClassName,
@@ -286,7 +293,7 @@ class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 
 		cw.visitSource(fileName + GenerationConstants.JAVA_EXTENSION, null);
 
-		final String structureTypeGetInstanceDesc = getStructureTypeGetInstanceDesc(structureTypeClassName);
+		final String structureTypeGetInstanceDesc = "()L" + structureTypeClassName + ';';
 
 		generateStructureTypeFactoryConstructor(generatorState, cw);
 		generateStructureTypeFactoryGetInstanceMethod(generatorState, cw,
@@ -576,11 +583,11 @@ class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 
 	private static void generateStructureTypeSyntheticConstructor(final GeneratorState generatorState,
 	                                                              final ClassWriter cw,
-	                                                              final String structureTypeSyntheticInnerClassName,
+	                                                              final String structureTypeSyntheticInnerClassDesc,
 	                                                              final String structureTypeImplInnerClassName) {
 		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_SYNTHETIC,
 				GenerationConstants.INIT_METHOD_NAME,
-				getStructureTypeConstructorDesc(structureTypeSyntheticInnerClassName),
+				structureTypeSyntheticInnerClassDesc,
 				null,
 				null);
 
@@ -1001,13 +1008,5 @@ class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 		mv.visitEnd();
 
 		methodBuilderDeque.removeFirst();
-	}
-
-	private static String getStructureTypeGetInstanceDesc(final String structureTypeClassName) {
-		return "()L" + structureTypeClassName + ';';
-	}
-
-	private static String getStructureTypeConstructorDesc(final String className) {
-		return "(L" + className + ";)V";
 	}
 }

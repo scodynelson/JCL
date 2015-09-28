@@ -117,7 +117,7 @@ final class TagbodyCodeGenerator extends SpecialOperatorCodeGenerator<TagbodyStr
 		final Map<GeneratorState.TagbodyLabel, PrognStruct> tagbodyLabeledForms = getTagbodyLabeledForms(tagbodyForms, generatorState);
 
 		final Set<GeneratorState.TagbodyLabel> tagbodyLabels = tagbodyLabeledForms.keySet();
-		generatorState.getTagbodyLabelStack().push(tagbodyLabels);
+		generatorState.getTagbodyLabelDeque().addFirst(tagbodyLabels);
 
 		// Create a label for each set of 'progn' body forms and generate the 'progn' body forms, popping the final result
 		// after each generation

@@ -4,9 +4,9 @@
 
 package jcl.compiler.real.icg.generator;
 
-import java.util.ListIterator;
+import java.util.Deque;
+import java.util.Iterator;
 import java.util.Set;
-import java.util.Stack;
 
 import jcl.compiler.real.icg.GeneratorState;
 import jcl.compiler.real.icg.JavaMethodBuilder;
@@ -33,7 +33,7 @@ final class GoCodeGenerator extends SpecialOperatorCodeGenerator<GoStruct<?>> {
 	 * {@inheritDoc}
 	 * Generation method for {@link GoStruct} objects, by performing the following operations:
 	 * <ol>
-	 * <li>Retrieving the appropriate tag index by searching the {@link GeneratorState#tagbodyLabelStack} for the
+	 * <li>Retrieving the appropriate tag index by searching the {@link GeneratorState#tagbodyLabelDeque} for the
 	 * {@link GeneratorState.TagbodyLabel#getTag()} matching the provided {@link GoStruct}</li>
 	 * <li>Creating and throwing a new {@link GoException} with the {@code int} tag index value</li>
 	 * </ol>
@@ -86,7 +86,7 @@ final class GoCodeGenerator extends SpecialOperatorCodeGenerator<GoStruct<?>> {
 	/**
 	 * Private method to retrieve the {@link GeneratorState.TagbodyLabel} corresponding to the provided {@link
 	 * GoStruct} tag within the current execution stack from the provided {@link GeneratorState}. This is accomplished
-	 * by iterating through each {@link Set} within the {@link GeneratorState#tagbodyLabelStack} until the tag
+	 * by iterating through each {@link Set} within the {@link GeneratorState#tagbodyLabelDeque} until the tag
 	 * equivalent to the provided {@link GoStruct} tag is located.
 	 *
 	 * @param generatorState
@@ -94,20 +94,20 @@ final class GoCodeGenerator extends SpecialOperatorCodeGenerator<GoStruct<?>> {
 	 * 		provided {@link GoStruct} tag
 	 * @param tagToFind
 	 * 		the {@link GoStruct} tag used to located the corresponding {@link GeneratorState.TagbodyLabel} within the
-	 * 		{@link GeneratorState#tagbodyLabelStack}
+	 * 		{@link GeneratorState#tagbodyLabelDeque}
 	 *
 	 * @return the {@link GeneratorState.TagbodyLabel} corresponding to the provided {@link GoStruct} tag
 	 */
 	private static GeneratorState.TagbodyLabel getTagbodyLabel(final GeneratorState generatorState, final GoStruct<?> tagToFind) {
 
-		final Stack<Set<GeneratorState.TagbodyLabel>> tagbodyLabelStack = generatorState.getTagbodyLabelStack();
-		final ListIterator<Set<GeneratorState.TagbodyLabel>> tagbodyLabelListIterator = tagbodyLabelStack.listIterator(tagbodyLabelStack.size());
+		final Deque<Set<GeneratorState.TagbodyLabel>> tagbodyLabelDeque = generatorState.getTagbodyLabelDeque();
+		final Iterator<Set<GeneratorState.TagbodyLabel>> tagbodyLabelIterator = tagbodyLabelDeque.iterator();
 
 		GeneratorState.TagbodyLabel tagbodyLabel = null;
 
 		out:
-		while (tagbodyLabelListIterator.hasPrevious()) {
-			final Set<GeneratorState.TagbodyLabel> previousStack = tagbodyLabelListIterator.previous();
+		while (tagbodyLabelIterator.hasNext()) {
+			final Set<GeneratorState.TagbodyLabel> previousStack = tagbodyLabelIterator.next();
 			for (final GeneratorState.TagbodyLabel currentTBL : previousStack) {
 				final GoStruct<?> goTag = currentTBL.getTag();
 				if (tagToFind.equals(goTag)) {

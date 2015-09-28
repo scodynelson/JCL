@@ -3,7 +3,6 @@ package jcl.compiler.real.icg;
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.Set;
-import java.util.Stack;
 
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.struct.specialoperator.go.GoStruct;
@@ -19,7 +18,7 @@ public class GeneratorState {
 
 	private final Deque<Environment> environmentDeque = new ArrayDeque<>();
 
-	private final Stack<Set<TagbodyLabel>> tagbodyLabelStack = new Stack<>();
+	private final Deque<Set<TagbodyLabel>> tagbodyLabelDeque = new ArrayDeque<>();
 
 	private int tagCounter;
 
@@ -69,8 +68,8 @@ public class GeneratorState {
 		return environmentDeque.peek();
 	}
 
-	public Stack<Set<TagbodyLabel>> getTagbodyLabelStack() {
-		return tagbodyLabelStack;
+	public Deque<Set<TagbodyLabel>> getTagbodyLabelDeque() {
+		return tagbodyLabelDeque;
 	}
 
 	public static class TagbodyLabel {

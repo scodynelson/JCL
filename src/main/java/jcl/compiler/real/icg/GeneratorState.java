@@ -14,6 +14,10 @@ public class GeneratorState {
 
 	private final Deque<JavaClassBuilder> classBuilderDeque = new ArrayDeque<>();
 
+	private final Deque<JCLClassWriter> classWriterDeque = new ArrayDeque<>();
+
+	private JCLClassWriter currentCw;
+
 	private final Deque<JavaMethodBuilder> methodBuilderDeque = new ArrayDeque<>();
 
 	private final Deque<Environment> environmentDeque = new ArrayDeque<>();
@@ -44,6 +48,18 @@ public class GeneratorState {
 			return null;
 		}
 		return classBuilderDeque.peek();
+	}
+
+	public Deque<JCLClassWriter> getClassWriterDeque() {
+		return classWriterDeque;
+	}
+
+	public JCLClassWriter getCurrentCw() {
+		return currentCw;
+	}
+
+	public void setCurrentCw(final JCLClassWriter currentCw) {
+		this.currentCw = currentCw;
 	}
 
 	public Deque<JavaMethodBuilder> getMethodBuilderDeque() {

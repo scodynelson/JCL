@@ -64,8 +64,8 @@ class CompileForm implements Serializable {
 			final byte[] byteArray = cw.toByteArray();
 
 			// TODO: Maybe set this up as a super debugging variable that we can control or something???
-			final String className = javaClassBuilder.getClassName();
-			try (FileOutputStream outputStream = new FileOutputStream(new File("/Volumes/Dev/repo/JCL/tmp/" + className + ".class"))) {
+			final String fileName = javaClassBuilder.getFileName();
+			try (FileOutputStream outputStream = new FileOutputStream(new File("/Volumes/Dev/repo/JCL/tmp/" + fileName + ".class"))) {
 				outputStream.write(byteArray);
 			} catch (final IOException ioe) {
 				LOGGER.info("Error writing class file.", ioe);
@@ -73,15 +73,15 @@ class CompileForm implements Serializable {
 
 			final ClassReader cr = new ClassReader(byteArray);
 
-			String fileName = javaClassBuilder.getFileName();
-			fileName = fileName.replace('/', '.');
+			String className = javaClassBuilder.getClassName();
+			className = className.replace('/', '.');
 
 			final CheckClassAdapter cca = new CheckClassAdapter(new ClassWriter(0), false);
 			cr.accept(cca, ClassReader.SKIP_DEBUG + ClassReader.SKIP_FRAMES);
 
 			final CompilerClassLoader cl = CompilerClassLoader.INSTANCE;
 
-			final Class<?> classLoaded = cl.loadClass(fileName, byteArray);
+			final Class<?> classLoaded = cl.loadClass(className, byteArray);
 
 			try {
 				final boolean isFunctionStruct = FunctionStruct.class.isAssignableFrom(classLoaded);

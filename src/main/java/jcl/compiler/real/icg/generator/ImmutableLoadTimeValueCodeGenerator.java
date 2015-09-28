@@ -45,10 +45,10 @@ class ImmutableLoadTimeValueCodeGenerator implements CodeGenerator<ImmutableLoad
 		final MethodVisitor mv = methodBuilder.getMethodVisitor();
 
 		final JavaClassBuilder currentClassBuilder = generatorState.getCurrentClassBuilder();
-		final String fileName = currentClassBuilder.getFileName();
+		final String className = currentClassBuilder.getClassName();
 
 		final String uniqueLTVId = input.getUniqueLTVId();
 		mv.visitVarInsn(Opcodes.ALOAD, 0); // 'this' store
-		mv.visitFieldInsn(Opcodes.GETFIELD, fileName, uniqueLTVId, GenerationConstants.LISP_STRUCT_DESC);
+		mv.visitFieldInsn(Opcodes.GETFIELD, className, uniqueLTVId, GenerationConstants.LISP_STRUCT_DESC);
 	}
 }

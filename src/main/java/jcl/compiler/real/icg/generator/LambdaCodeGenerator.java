@@ -217,8 +217,6 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 	 * {@inheritDoc}
 	 * Generation method for {@link LambdaStruct} objects, by performing the following operations:
 	 * <ol>
-	 * <li>Getting the {@link LambdaStruct#className} value and replacing the '.' characters with '/' characters to
-	 * allow the value to be used for generating the new Java class file</li>
 	 * <li>Creating a new {@link JavaClassBuilder}, which internally creates a new {@link ClassWriter}</li>
 	 * <li>Visiting a new class via {@link ClassWriter#visit(int, int, String, String, String, String[])} of the new
 	 * {@link JavaClassBuilder#classWriter}</li>
@@ -278,9 +276,7 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 	@Override
 	public void generate(final LambdaStruct input, final GeneratorState generatorState) {
 
-		String className = input.getClassName();
-		className = className.replace('.', '/');
-
+		final String className = input.getClassName();
 		final String fileName = CodeGenerators.getFileNameFromClassName(className);
 
 		final JavaClassBuilder currentClass = new JavaClassBuilder(className, fileName);

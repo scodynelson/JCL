@@ -28,8 +28,8 @@ import jcl.compiler.real.environment.binding.lambdalist.KeyBinding;
 import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaListBindings;
 import jcl.compiler.real.environment.binding.lambdalist.RequiredBinding;
 import jcl.compiler.real.environment.binding.lambdalist.SuppliedPBinding;
-import jcl.compiler.real.icg.JavaClassBuilder;
 import jcl.compiler.real.icg.IntermediateCodeGenerator;
+import jcl.compiler.real.icg.JavaClassBuilder;
 import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.compiler.real.struct.ValuesStruct;
 import jcl.compiler.real.struct.specialoperator.lambda.LambdaStruct;
@@ -353,13 +353,13 @@ public final class CompileFileFunction extends FunctionStruct {
 				cr.accept(cca, ClassReader.SKIP_DEBUG + ClassReader.SKIP_FRAMES);
 
 				if (print) {
-					final String className = javaClassBuilder.getClassName();
-					LOGGER.info("; Compiled '{}'", className);
+					final String fileName = javaClassBuilder.getFileName();
+					LOGGER.info("; Compiled '{}'", fileName);
 				}
 
-				final String fileName = javaClassBuilder.getFileName();
-				final String entryFileName = fileName + ".class";
-				final JarEntry entry = new JarEntry(entryFileName);
+				final String className = javaClassBuilder.getClassName();
+				final String entryClassName = className + ".class";
+				final JarEntry entry = new JarEntry(entryClassName);
 				jar.putNextEntry(entry);
 				jar.write(byteArray);
 				jar.closeEntry();

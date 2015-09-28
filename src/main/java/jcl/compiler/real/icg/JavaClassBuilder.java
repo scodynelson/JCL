@@ -10,24 +10,24 @@ public class JavaClassBuilder {
 
 	private final ClassWriter classWriter = new ClassWriter(ClassWriter.COMPUTE_FRAMES);
 
-	private final String fileName;
-
 	private final String className;
 
-	public JavaClassBuilder(final String fileName, final String className) {
-		this.fileName = fileName;
+	private final String fileName;
+
+	public JavaClassBuilder(final String className, final String fileName) {
 		this.className = className;
+		this.fileName = fileName;
 	}
 
 	public ClassWriter getClassWriter() {
 		return classWriter;
 	}
 
-	public String getFileName() {
-		return fileName;
-	}
-
 	public String getClassName() {
 		return className;
+	}
+
+	public String getFileName() {
+		return fileName;
 	}
 }

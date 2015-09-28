@@ -69,7 +69,7 @@ abstract class SpecialOperatorCodeGenerator<I extends CompilerSpecialOperatorStr
 	public void generate(final I input, final GeneratorState generatorState) {
 
 		final JavaClassBuilder currentClass = generatorState.getCurrentClassBuilder();
-		final String fileName = currentClass.getFileName();
+		final String className = currentClass.getClassName();
 
 		final ClassWriter cw = currentClass.getClassWriter();
 
@@ -101,7 +101,7 @@ abstract class SpecialOperatorCodeGenerator<I extends CompilerSpecialOperatorStr
 		previousMv.visitVarInsn(Opcodes.ALOAD, thisStore);
 		previousMv.visitVarInsn(Opcodes.ALOAD, closureArgStore);
 		previousMv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
-				fileName,
+				className,
 				methodName,
 				SPECIAL_OPERATOR_METHOD_DESC,
 				false);

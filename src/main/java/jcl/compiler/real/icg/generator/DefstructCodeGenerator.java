@@ -1,7 +1,12 @@
+/*
+ * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
+ */
+
 package jcl.compiler.real.icg.generator;
 
 import java.util.Deque;
 import java.util.List;
+import java.util.Map;
 
 import jcl.LispType;
 import jcl.compiler.real.icg.CodeGenerator;
@@ -10,6 +15,7 @@ import jcl.compiler.real.icg.JavaClassBuilder;
 import jcl.compiler.real.icg.JavaMethodBuilder;
 import jcl.compiler.real.struct.specialoperator.defstruct.DefstructStruct;
 import jcl.structures.StructureClassStruct;
+import jcl.structures.StructureObjectStruct;
 import jcl.symbols.SymbolStruct;
 import jcl.types.StructureObjectType;
 import org.objectweb.asm.ClassWriter;
@@ -110,6 +116,7 @@ class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 				structureName,
 				structureTypeClassName,
 				structureTypeSyntheticInnerClassName,
+				structureTypeSyntheticInnerClassDesc,
 				structureTypeFactoryInnerClassName,
 				structureTypeImplClassName,
 				structureTypeImplInnerClassName);
@@ -403,6 +410,7 @@ class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 	                                              final String structureName,
 	                                              final String structureTypeClassName,
 	                                              final String structureTypeSyntheticInnerClassName,
+	                                              final String structureTypeSyntheticInnerClassDesc,
 	                                              final String structureTypeFactoryInnerClassName,
 	                                              final String structureTypeImplClassName,
 	                                              final String structureTypeImplInnerClassName) {
@@ -445,7 +453,7 @@ class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 		generateStructureTypeImplEqualsMethod(generatorState, cw,
 				structureTypeClassName);
 		generateStructureTypeSyntheticConstructor(generatorState, cw,
-				structureTypeSyntheticInnerClassName, structureTypeImplInnerClassName);
+				structureTypeSyntheticInnerClassDesc, structureTypeImplInnerClassName);
 
 		cw.visitEnd();
 
@@ -948,12 +956,16 @@ class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 				STRUCTURE_OBJECT_INIT_SCS_SS_SOS_METHOD_DESC,
 				false);
 
-		mv.visitVarInsn(Opcodes.ALOAD, thisStore);
-		mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
-				structureObjectClassName,
-				INIT_SLOTS_MAP_METHOD_NAME,
-				INIT_SLOTS_MAP_METHOD_DESC,
-				false);
+		final List<SymbolStruct<?>> slots = input.getSlots();
+		if (!slots.isEmpty()) {
+			// No need to call this method, as there are no slots to initialize
+			mv.visitVarInsn(Opcodes.ALOAD, thisStore);
+			mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
+					structureObjectClassName,
+					INIT_SLOTS_MAP_METHOD_NAME,
+					INIT_SLOTS_MAP_METHOD_DESC,
+					false);
+		}
 
 		mv.visitInsn(Opcodes.RETURN);
 
@@ -963,9 +975,48 @@ class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 		methodBuilderDeque.removeFirst();
 	}
 
+	/**
+	 * Private method for generating the {@code initSlotsMap} initializing method for the generated {@link
+	 * StructureObjectStruct} being written to via the provided {@link ClassWriter}. The generation will perform the
+	 * following operations:
+	 * <ol>
+	 * <li>Returning early and avoid generating the method unnecessarily if the {@link List} of {@link
+	 * DefstructStruct#slots} is empty</li>
+	 * <li>Generating the code to retrieve the {@link StructureObjectStruct#slots} field</li>
+	 * <li>Generating the code to retrieve the slot {@link SymbolStruct} and store a {@code null} value associated with
+	 * that symbol into the {@link StructureObjectStruct#slots} {@link Map}</li>
+	 * </ol>
+	 * The following is the example Java code generated when {@code (compiler:%defstruct foo nil make-foo nil a)} is
+	 * encountered:
+	 * <pre>
+	 * {@code
+	 * protected void initSlotsMap() {
+	 *      Map var1 = this.slots;
+	 *      PackageStruct var2 = PackageStruct.findPackage("COMMON-LISP-USER");
+	 *      SymbolStruct var3 = var2.intern("A").getSymbol();
+	 *      var1.put(var3, (Object)null);
+	 * }
+	 * }
+	 * </pre>
+	 *
+	 * @param input
+	 * 		the {@link DefstructStruct} containing the slots {@link SymbolStruct}s to initialize
+	 * @param generatorState
+	 * 		stateful object used to hold the current state of the code generation process
+	 * @param cw
+	 * 		the current {@link ClassWriter} to generate the method code for
+	 * @param structureObjectClassName
+	 * 		the class name of the current {@link StructureObjectStruct} being created
+	 */
 	private static void generateStructureObjectInitSlotsMap(final DefstructStruct input, final GeneratorState generatorState,
 	                                                        final ClassWriter cw,
 	                                                        final String structureObjectClassName) {
+		final List<SymbolStruct<?>> slots = input.getSlots();
+		if (slots.isEmpty()) {
+			// No need to generate this method, as there are no slots to initialize
+			return;
+		}
+
 		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PRIVATE,
 				INIT_SLOTS_MAP_METHOD_NAME,
 				INIT_SLOTS_MAP_METHOD_DESC,
@@ -987,7 +1038,6 @@ class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 		final int packageStore = methodBuilder.getNextAvailableStore();
 		final int slotStore = methodBuilder.getNextAvailableStore();
 
-		final List<SymbolStruct<?>> slots = input.getSlots();
 		for (final SymbolStruct<?> slot : slots) {
 			CodeGenerators.generateSymbol(slot, methodBuilder, packageStore, slotStore);
 

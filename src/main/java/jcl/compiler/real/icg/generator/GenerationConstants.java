@@ -36,6 +36,7 @@ import jcl.symbols.SymbolStruct;
 import jcl.types.TypeBaseClass;
 import jcl.types.TypeFactory;
 import jcl.types.typespecifiers.AtomicTypeSpecifier;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.objectweb.asm.Type;
 
 interface GenerationConstants {
@@ -148,11 +149,11 @@ interface GenerationConstants {
 
 	String HASH_CODE_BUILDER_APPEND_SUPER_METHOD_NAME = "appendSuper";
 
-	String HASH_CODE_BUILDER_APPEND_SUPER_METHOD_DESC = CodeGenerators.getMethodDescription(StringBuilder.class, HASH_CODE_BUILDER_APPEND_SUPER_METHOD_NAME, int.class);
+	String HASH_CODE_BUILDER_APPEND_SUPER_METHOD_DESC = CodeGenerators.getMethodDescription(HashCodeBuilder.class, HASH_CODE_BUILDER_APPEND_SUPER_METHOD_NAME, int.class);
 
 	String HASH_CODE_BUILDER_TO_HASH_CODE_METHOD_NAME = "toHashCode";
 
-	String HASH_CODE_BUILDER_TO_HASH_CODE_METHOD_DESC = CodeGenerators.getMethodDescription(StringBuilder.class, HASH_CODE_BUILDER_TO_HASH_CODE_METHOD_NAME);
+	String HASH_CODE_BUILDER_TO_HASH_CODE_METHOD_DESC = CodeGenerators.getMethodDescription(HashCodeBuilder.class, HASH_CODE_BUILDER_TO_HASH_CODE_METHOD_NAME);
 
 	String SYMBOL_STRUCT_NAME = Type.getInternalName(SymbolStruct.class);
 

@@ -65,26 +65,26 @@ public class ComplexStruct extends NumberStruct {
 	 */
 	private final RealStruct imaginary;
 
-	/**
-	 * Public constructor.
-	 *
-	 * @param real
-	 * 		a {@link RealStruct} that represents the value of real part of the ComplexStruct
-	 * @param imaginary
-	 * 		a {@link RealStruct} that represents the value of imaginary part ComplexStruct
-	 */
+	//	/**
+//	 * Public constructor.
+//	 *
+//	 * @param real
+//	 * 		a {@link RealStruct} that represents the value of real part of the ComplexStruct
+//	 * @param imaginary
+//	 * 		a {@link RealStruct} that represents the value of imaginary part ComplexStruct
+//	 */
 	ComplexStruct(final Apcomplex apcomplex) {
 		this(apcomplex.real(), apcomplex.imag());
 	}
 
-	/**
-	 * Public constructor.
-	 *
-	 * @param real1
-	 * 		a {@link RealStruct} that represents the value of real part of the ComplexStruct
-	 * @param imaginary2
-	 * 		a {@link RealStruct} that represents the value of imaginary part ComplexStruct
-	 */
+	//	/**
+//	 * Public constructor.
+//	 *
+//	 * @param real1
+//	 * 		a {@link RealStruct} that represents the value of real part of the ComplexStruct
+//	 * @param imaginary2
+//	 * 		a {@link RealStruct} that represents the value of imaginary part ComplexStruct
+//	 */
 	ComplexStruct(final Apfloat real, final Apfloat imaginary) {
 		this(RealStruct.toRealStruct(real), RealStruct.toRealStruct(imaginary));
 	}
@@ -275,7 +275,8 @@ public class ComplexStruct extends NumberStruct {
 	/**
 	 * {@inheritDoc}
 	 * <p>
-	 * Determines whether or not this ComplexStruct is zero using {@link #real#zerop} and {@link #imaginary#zerop()}.
+	 * Determines whether or not this ComplexStruct is zero using {@link RealStruct#zerop} on {@link #real} and {@link
+	 * #imaginary}.
 	 */
 	@Override
 	public boolean zerop() {

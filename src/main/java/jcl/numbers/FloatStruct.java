@@ -121,7 +121,7 @@ public class FloatStruct extends RealStruct {
 	/**
 	 * {@inheritDoc}
 	 * <p>
-	 * Determines whether or not this FloatStruct is zero using {@link #bigDecimal#signum}.
+	 * Determines whether or not this FloatStruct is zero using {@link BigDecimal#signum()} on {@link #bigDecimal}.
 	 */
 	@Override
 	public boolean zerop() {
@@ -131,7 +131,7 @@ public class FloatStruct extends RealStruct {
 	/**
 	 * {@inheritDoc}
 	 * <p>
-	 * Determines whether or not this FloatStruct is positive using {@link #bigDecimal#signum}.
+	 * Determines whether or not this FloatStruct is positive using {@link BigDecimal#signum()} on {@link #bigDecimal}.
 	 */
 	@Override
 	public boolean plusp() {
@@ -141,7 +141,7 @@ public class FloatStruct extends RealStruct {
 	/**
 	 * {@inheritDoc}
 	 * <p>
-	 * Determines whether or not this FloatStruct is negative using {@link #bigDecimal#signum}.
+	 * Determines whether or not this FloatStruct is negative using {@link BigDecimal#signum} on {@link #bigDecimal}.
 	 */
 	@Override
 	public boolean minusp() {
@@ -271,9 +271,9 @@ public class FloatStruct extends RealStruct {
 	 * Compares this FloatStruct to a {@link NumberStruct} using the provided {@link LessThanVisitor}.
 	 *
 	 * @param lessThanVisitor
-	 * 		the {@link LessThanVisitor} to be used in the '<' operation
+	 * 		the {@link LessThanVisitor} to be used in the {@literal '<'} operation
 	 *
-	 * @return the '<' comparison of {@link NumberStruct} using the provided {@link LessThanVisitor} and this
+	 * @return the {@literal '<'} comparison of {@link NumberStruct} using the provided {@link LessThanVisitor} and this
 	 * FloatStruct
 	 */
 	@Override
@@ -287,10 +287,10 @@ public class FloatStruct extends RealStruct {
 	 * Compares this IntegerStruct to a {@link NumberStruct} using the provided {@link GreaterThanVisitor}.
 	 *
 	 * @param greaterThanVisitor
-	 * 		the {@link GreaterThanVisitor} to be used in the '>' operation
+	 * 		the {@link GreaterThanVisitor} to be used in the {@literal '>'} operation
 	 *
-	 * @return the '>' comparison of {@link NumberStruct} using the provided {@link GreaterThanVisitor} and this
-	 * IntegerStruct
+	 * @return the {@literal '>'} comparison of {@link NumberStruct} using the provided {@link GreaterThanVisitor} and
+	 * this IntegerStruct
 	 */
 	@Override
 	protected boolean isGreaterThan(final GreaterThanVisitor<?> greaterThanVisitor) {
@@ -303,10 +303,10 @@ public class FloatStruct extends RealStruct {
 	 * Compares this FloatStruct to a {@link NumberStruct} using the provided {@link LessThanOrEqualToVisitor}.
 	 *
 	 * @param lessThanOrEqualToVisitor
-	 * 		the {@link LessThanOrEqualToVisitor} to be used in the '<=' operation
+	 * 		the {@link LessThanOrEqualToVisitor} to be used in the {@literal '<='} operation
 	 *
-	 * @return the '<=' comparison of {@link NumberStruct} using the provided {@link LessThanOrEqualToVisitor} and this
-	 * FloatStruct
+	 * @return the {@literal '<='} comparison of {@link NumberStruct} using the provided {@link
+	 * LessThanOrEqualToVisitor} and this FloatStruct
 	 */
 	@Override
 	protected boolean isLessThanOrEqualTo(final LessThanOrEqualToVisitor<?> lessThanOrEqualToVisitor) {
@@ -319,10 +319,10 @@ public class FloatStruct extends RealStruct {
 	 * Compares this FloatStruct to a {@link NumberStruct} using the provided {@link GreaterThanOrEqualToVisitor}.
 	 *
 	 * @param greaterThanOrEqualToVisitor
-	 * 		the {@link GreaterThanOrEqualToVisitor} to be used in the '>=' operation
+	 * 		the {@link GreaterThanOrEqualToVisitor} to be used in the {@literal '>='} operation
 	 *
-	 * @return the '>=' comparison of {@link NumberStruct} using the provided {@link GreaterThanOrEqualToVisitor} and
-	 * this FloatStruct
+	 * @return the {@literal '>='} comparison of {@link NumberStruct} using the provided {@link
+	 * GreaterThanOrEqualToVisitor} and this FloatStruct
 	 */
 	@Override
 	protected boolean isGreaterThanOrEqualTo(final GreaterThanOrEqualToVisitor<?> greaterThanOrEqualToVisitor) {
@@ -359,9 +359,9 @@ public class FloatStruct extends RealStruct {
 	/**
 	 * {@inheritDoc}
 	 * <p>
-	 * Computes the negation with {@link #bigDecimal#negation} and the creating a new FloatStruct to wrap it. If this
-	 * FloatStruct is numerically equivalent to {@link #ZERO}, {@link #MINUS_ZERO} is returned. If this FloatStruct is
-	 * numerically equivalent to {@link #MINUS_ZERO}, {@link #ZERO} is returned.
+	 * Computes the negation with {@link BigDecimal#negate()} on {@link #bigDecimal} and then creating a new
+	 * FloatStruct to wrap it. If this FloatStruct is numerically equivalent to {@link #ZERO}, {@link #MINUS_ZERO} is
+	 * returned. If this FloatStruct is numerically equivalent to {@link #MINUS_ZERO}, {@link #ZERO} is returned.
 	 */
 	@Override
 	public NumberStruct negation() {
@@ -435,7 +435,7 @@ public class FloatStruct extends RealStruct {
 	/**
 	 * {@inheritDoc}
 	 * <p>
-	 * Returns {@link this} as it is already a FloatStruct.
+	 * Returns {@code this} as it is already a FloatStruct.
 	 */
 	@Override
 	public FloatStruct coerceRealToFloat() {
@@ -620,20 +620,12 @@ public class FloatStruct extends RealStruct {
 		return new DecodeFloatResult(significandFloat, exponentInteger, signFloat);
 	}
 
-	/**
-	 * @param scale
-	 *
-	 * @return
-	 */
 	public NumberStruct scaleFloat(final IntegerStruct scale) {
 		final IntegerStruct radix = floatRadix();
 		final NumberStruct expt = radix.expt(scale);
 		return multiply(expt);
 	}
 
-	/**
-	 * @return
-	 */
 	public IntegerStruct floatRadix() {
 		return IntegerStruct.TWO;
 	}
@@ -659,10 +651,8 @@ public class FloatStruct extends RealStruct {
 		return floatPrecision();
 	}
 
-	/**
+	/*
 	 * http://en.wikipedia.org/wiki/Quadruple-precision_floating-point_format
-	 *
-	 * @return
 	 */
 	public IntegerStruct floatPrecision() {
 //		final int binary32Precision = 24;
@@ -709,12 +699,10 @@ public class FloatStruct extends RealStruct {
 		return new DecodeFloatResult(significandInteger, exponentInteger, signInteger);
 	}
 
-	/**
+	/*
 	 * See {@link https://docs.oracle.com/javase/8/docs/api/java/lang/Float.html} for details.
 	 * <p>
 	 * The following is per the JVM spec section 4.4.5
-	 *
-	 * @return
 	 */
 	@SuppressWarnings("all")
 	private static DecodedDoubleRaw getDecodedFloatRaw(final int bits) {
@@ -733,12 +721,10 @@ public class FloatStruct extends RealStruct {
 		return new DecodedDoubleRaw(mantissa, exponent, sign);
 	}
 
-	/**
+	/*
 	 * See {@link https://docs.oracle.com/javase/8/docs/api/java/lang/Double.html} for details.
 	 * <p>
 	 * The following is per the JVM spec section 4.4.5
-	 *
-	 * @return
 	 */
 	@SuppressWarnings("all")
 	private static DecodedDoubleRaw getDecodedDoubleRaw(final long bits) {
@@ -757,12 +743,10 @@ public class FloatStruct extends RealStruct {
 		return new DecodedDoubleRaw(mantissa, exponent, sign);
 	}
 
-	/**
+	/*
 	 * See {@link https://docs.oracle.com/javase/8/docs/api/java/lang/Quadruple.html} for details.
 	 * <p>
 	 * The following is per the JVM spec section 4.4.5
-	 *
-	 * @return
 	 */
 	@SuppressWarnings("all")
 	private static DecodedDoubleRaw getDecodedQuadrupleRaw(final BigInteger bits) {

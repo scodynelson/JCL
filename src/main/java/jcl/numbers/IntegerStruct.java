@@ -132,7 +132,7 @@ public class IntegerStruct extends RationalStruct {
 	/**
 	 * {@inheritDoc}
 	 * <p>
-	 * Determines whether or not this IntegerStruct is zero using {@link #bigInteger#signum}.
+	 * Determines whether or not this IntegerStruct is zero using {@link BigInteger#signum()} on {@link #bigInteger}.
 	 */
 	@Override
 	public boolean zerop() {
@@ -142,7 +142,8 @@ public class IntegerStruct extends RationalStruct {
 	/**
 	 * {@inheritDoc}
 	 * <p>
-	 * Determines whether or not this IntegerStruct is positive using {@link #bigInteger#signum}.
+	 * Determines whether or not this IntegerStruct is positive using {@link BigInteger#signum()} on {@link
+	 * #bigInteger}.
 	 */
 	@Override
 	public boolean plusp() {
@@ -152,7 +153,8 @@ public class IntegerStruct extends RationalStruct {
 	/**
 	 * {@inheritDoc}
 	 * <p>
-	 * Determines whether or not this IntegerStruct is negative using {@link #bigInteger#signum}.
+	 * Determines whether or not this IntegerStruct is negative using {@link BigInteger#signum()} on {@link
+	 * #bigInteger}.
 	 */
 	@Override
 	public boolean minusp() {
@@ -310,9 +312,9 @@ public class IntegerStruct extends RationalStruct {
 	 * Compares this IntegerStruct to a {@link NumberStruct} using the provided {@link LessThanVisitor}.
 	 *
 	 * @param lessThanVisitor
-	 * 		the {@link LessThanVisitor} to be used in the '<' operation
+	 * 		the {@link LessThanVisitor} to be used in the {@literal '<'} operation
 	 *
-	 * @return the '<' comparison of {@link NumberStruct} using the provided {@link LessThanVisitor} and this
+	 * @return the {@literal '<'} comparison of {@link NumberStruct} using the provided {@link LessThanVisitor} and this
 	 * IntegerStruct
 	 */
 	@Override
@@ -321,9 +323,9 @@ public class IntegerStruct extends RationalStruct {
 	}
 
 	/**
-	 * Returns a new {@link LessThanVisitor} with this IntegerStruct to be used in a '<' operation.
+	 * Returns a new {@link LessThanVisitor} with this IntegerStruct to be used in a {@literal '<'} operation.
 	 *
-	 * @return a new {@link LessThanVisitor} with this IntegerStruct to be used in a '<' operation
+	 * @return a new {@link LessThanVisitor} with this IntegerStruct to be used in a {@literal '<'} operation
 	 */
 	@Override
 	protected LessThanVisitor<?> lessThanVisitor() {
@@ -336,10 +338,10 @@ public class IntegerStruct extends RationalStruct {
 	 * Compares this IntegerStruct to a {@link NumberStruct} using the provided {@link GreaterThanVisitor}.
 	 *
 	 * @param greaterThanVisitor
-	 * 		the {@link GreaterThanVisitor} to be used in the '>' operation
+	 * 		the {@link GreaterThanVisitor} to be used in the {@literal '>'} operation
 	 *
-	 * @return the '>' comparison of {@link NumberStruct} using the provided {@link GreaterThanVisitor} and this
-	 * IntegerStruct
+	 * @return the {@literal '>'} comparison of {@link NumberStruct} using the provided {@link GreaterThanVisitor} and
+	 * this IntegerStruct
 	 */
 	@Override
 	protected boolean isGreaterThan(final GreaterThanVisitor<?> greaterThanVisitor) {
@@ -347,9 +349,9 @@ public class IntegerStruct extends RationalStruct {
 	}
 
 	/**
-	 * Returns a new {@link GreaterThanVisitor} with this IntegerStruct to be used in a '>' operation.
+	 * Returns a new {@link GreaterThanVisitor} with this IntegerStruct to be used in a {@literal '>'} operation.
 	 *
-	 * @return a new {@link GreaterThanVisitor} with this IntegerStruct to be used in a '>' operation
+	 * @return a new {@link GreaterThanVisitor} with this IntegerStruct to be used in a {@literal '>'} operation
 	 */
 	@Override
 	protected GreaterThanVisitor<?> greaterThanVisitor() {
@@ -362,10 +364,10 @@ public class IntegerStruct extends RationalStruct {
 	 * Compares this IntegerStruct to a {@link NumberStruct} using the provided {@link LessThanOrEqualToVisitor}.
 	 *
 	 * @param lessThanOrEqualToVisitor
-	 * 		the {@link LessThanOrEqualToVisitor} to be used in the '<=' operation
+	 * 		the {@link LessThanOrEqualToVisitor} to be used in the {@literal '<='} operation
 	 *
-	 * @return the '<=' comparison of {@link NumberStruct} using the provided {@link LessThanOrEqualToVisitor} and this
-	 * IntegerStruct
+	 * @return the {@literal '<='} comparison of {@link NumberStruct} using the provided {@link
+	 * LessThanOrEqualToVisitor} and this IntegerStruct
 	 */
 	@Override
 	protected boolean isLessThanOrEqualTo(final LessThanOrEqualToVisitor<?> lessThanOrEqualToVisitor) {
@@ -373,9 +375,10 @@ public class IntegerStruct extends RationalStruct {
 	}
 
 	/**
-	 * Returns a new {@link LessThanOrEqualToVisitor} with this IntegerStruct to be used in a '<=' operation.
+	 * Returns a new {@link LessThanOrEqualToVisitor} with this IntegerStruct to be used in a {@literal '<='}
+	 * operation.
 	 *
-	 * @return a new {@link LessThanOrEqualToVisitor} with this IntegerStruct to be used in a '<=' operation
+	 * @return a new {@link LessThanOrEqualToVisitor} with this IntegerStruct to be used in a {@literal '<='} operation
 	 */
 	@Override
 	protected LessThanOrEqualToVisitor<?> lessThanOrEqualToVisitor() {
@@ -388,10 +391,10 @@ public class IntegerStruct extends RationalStruct {
 	 * Compares this IntegerStruct to a {@link NumberStruct} using the provided {@link GreaterThanOrEqualToVisitor}.
 	 *
 	 * @param greaterThanOrEqualToVisitor
-	 * 		the {@link GreaterThanOrEqualToVisitor} to be used in the '>=' operation
+	 * 		the {@link GreaterThanOrEqualToVisitor} to be used in the {@literal '>='} operation
 	 *
-	 * @return the '>=' comparison of {@link NumberStruct} using the provided {@link GreaterThanOrEqualToVisitor} and
-	 * this IntegerStruct
+	 * @return the {@literal '>='} comparison of {@link NumberStruct} using the provided {@link
+	 * GreaterThanOrEqualToVisitor} and this IntegerStruct
 	 */
 	@Override
 	protected boolean isGreaterThanOrEqualTo(final GreaterThanOrEqualToVisitor<?> greaterThanOrEqualToVisitor) {
@@ -399,9 +402,11 @@ public class IntegerStruct extends RationalStruct {
 	}
 
 	/**
-	 * Returns a new {@link GreaterThanOrEqualToVisitor} with this IntegerStruct to be used in a '>=' operation.
+	 * Returns a new {@link GreaterThanOrEqualToVisitor} with this IntegerStruct to be used in a {@literal '>='}
+	 * operation.
 	 *
-	 * @return a new {@link GreaterThanOrEqualToVisitor} with this IntegerStruct to be used in a '>=' operation
+	 * @return a new {@link GreaterThanOrEqualToVisitor} with this IntegerStruct to be used in a {@literal '>='}
+	 * operation
 	 */
 	@Override
 	protected GreaterThanOrEqualToVisitor<?> greaterThanOrEqualToVisitor() {
@@ -438,7 +443,8 @@ public class IntegerStruct extends RationalStruct {
 	/**
 	 * {@inheritDoc}
 	 * <p>
-	 * Computes the negation with {@link #bigInteger#negation} and the creating a new IntegerStruct to wrap it.
+	 * Computes the negation with {@link BigInteger#negate()} on {@link #bigInteger} and the creating a new
+	 * IntegerStruct to wrap it.
 	 */
 	@Override
 	public NumberStruct negation() {
@@ -499,9 +505,9 @@ public class IntegerStruct extends RationalStruct {
 	}
 
 	/**
-	 * Returns a new {@link GreaterThanOrEqualToVisitor} with this IntegerStruct to be used in a '>=' operation.
+	 * Returns a new {@link IntegerExptVisitor} with this IntegerStruct to be used in an exponential operation.
 	 *
-	 * @return a new {@link GreaterThanOrEqualToVisitor} with this IntegerStruct to be used in a '>=' operation
+	 * @return a new {@link IntegerExptVisitor} with this IntegerStruct to be used in an exponential operation
 	 */
 	@Override
 	protected ExptVisitor<?> exptVisitor() {
@@ -1336,7 +1342,7 @@ public class IntegerStruct extends RationalStruct {
 	}
 
 	/**
-	 * {@link LessThanVisitor} for computing numeric '<' equality results for {@link IntegerStruct}s.
+	 * {@link LessThanVisitor} for computing numeric {@literal '<'} equality results for {@link IntegerStruct}s.
 	 */
 	private static final class IntegerLessThanVisitor extends LessThanVisitor<IntegerStruct> {
 
@@ -1345,7 +1351,7 @@ public class IntegerStruct extends RationalStruct {
 		 * IntegerStruct}.
 		 *
 		 * @param real1
-		 * 		the first argument in the numeric '<' equality operation
+		 * 		the first argument in the numeric {@literal '<'} equality operation
 		 */
 		IntegerLessThanVisitor(final IntegerStruct real1) {
 			super(real1);
@@ -1354,7 +1360,7 @@ public class IntegerStruct extends RationalStruct {
 		/**
 		 * {@inheritDoc}
 		 * <p>
-		 * Computes the numeric '<' equality result for {@link IntegerStruct}s.
+		 * Computes the numeric {@literal '<'} equality result for {@link IntegerStruct}s.
 		 */
 		@Override
 		public boolean lessThan(final IntegerStruct real2) {
@@ -1364,7 +1370,7 @@ public class IntegerStruct extends RationalStruct {
 		/**
 		 * {@inheritDoc}
 		 * <p>
-		 * Computes the numeric '<' equality result for an {@link IntegerStruct} and a {@link RatioStruct}.
+		 * Computes the numeric {@literal '<'} equality result for an {@link IntegerStruct} and a {@link RatioStruct}.
 		 */
 		@Override
 		public boolean lessThan(final RatioStruct real2) {
@@ -1373,7 +1379,7 @@ public class IntegerStruct extends RationalStruct {
 	}
 
 	/**
-	 * {@link GreaterThanVisitor} for computing numeric '>' equality results for {@link IntegerStruct}s.
+	 * {@link GreaterThanVisitor} for computing numeric {@literal '>'} equality results for {@link IntegerStruct}s.
 	 */
 	private static final class IntegerGreaterThanVisitor extends GreaterThanVisitor<IntegerStruct> {
 
@@ -1382,7 +1388,7 @@ public class IntegerStruct extends RationalStruct {
 		 * IntegerStruct}.
 		 *
 		 * @param real1
-		 * 		the first argument in the numeric '>' equality operation
+		 * 		the first argument in the numeric {@literal '>'} equality operation
 		 */
 		IntegerGreaterThanVisitor(final IntegerStruct real1) {
 			super(real1);
@@ -1391,7 +1397,7 @@ public class IntegerStruct extends RationalStruct {
 		/**
 		 * {@inheritDoc}
 		 * <p>
-		 * Computes the numeric '>' equality result for {@link IntegerStruct}s.
+		 * Computes the numeric {@literal '>'} equality result for {@link IntegerStruct}s.
 		 */
 		@Override
 		public boolean greaterThan(final IntegerStruct real2) {
@@ -1401,7 +1407,7 @@ public class IntegerStruct extends RationalStruct {
 		/**
 		 * {@inheritDoc}
 		 * <p>
-		 * Computes the numeric '>' equality result for an {@link IntegerStruct} and a {@link RatioStruct}.
+		 * Computes the numeric {@literal '>'} equality result for an {@link IntegerStruct} and a {@link RatioStruct}.
 		 */
 		@Override
 		public boolean greaterThan(final RatioStruct real2) {
@@ -1410,7 +1416,8 @@ public class IntegerStruct extends RationalStruct {
 	}
 
 	/**
-	 * {@link LessThanOrEqualToVisitor} for computing numeric '<=' equality results for {@link IntegerStruct}s.
+	 * {@link LessThanOrEqualToVisitor} for computing numeric {@literal '<='} equality results for {@link
+	 * IntegerStruct}s.
 	 */
 	private static final class IntegerLessThanOrEqualToVisitor extends LessThanOrEqualToVisitor<IntegerStruct> {
 
@@ -1419,7 +1426,7 @@ public class IntegerStruct extends RationalStruct {
 		 * {@link IntegerStruct}.
 		 *
 		 * @param real1
-		 * 		the first argument in the numeric '<=' equality operation
+		 * 		the first argument in the numeric {@literal '<='} equality operation
 		 */
 		IntegerLessThanOrEqualToVisitor(final IntegerStruct real1) {
 			super(real1);
@@ -1428,7 +1435,7 @@ public class IntegerStruct extends RationalStruct {
 		/**
 		 * {@inheritDoc}
 		 * <p>
-		 * Computes the numeric '<=' equality result for {@link IntegerStruct}s.
+		 * Computes the numeric {@literal '<='} equality result for {@link IntegerStruct}s.
 		 */
 		@Override
 		public boolean lessThanOrEqualTo(final IntegerStruct real2) {
@@ -1438,7 +1445,7 @@ public class IntegerStruct extends RationalStruct {
 		/**
 		 * {@inheritDoc}
 		 * <p>
-		 * Computes the numeric '<=' equality result for an {@link IntegerStruct} and a {@link RatioStruct}.
+		 * Computes the numeric {@literal '<='} equality result for an {@link IntegerStruct} and a {@link RatioStruct}.
 		 */
 		@Override
 		public boolean lessThanOrEqualTo(final RatioStruct real2) {
@@ -1447,7 +1454,8 @@ public class IntegerStruct extends RationalStruct {
 	}
 
 	/**
-	 * {@link GreaterThanOrEqualToVisitor} for computing numeric '>=' equality results for {@link IntegerStruct}s.
+	 * {@link GreaterThanOrEqualToVisitor} for computing numeric {@literal '>='} equality results for {@link
+	 * IntegerStruct}s.
 	 */
 	private static final class IntegerGreaterThanOrEqualToVisitor extends GreaterThanOrEqualToVisitor<IntegerStruct> {
 
@@ -1456,7 +1464,7 @@ public class IntegerStruct extends RationalStruct {
 		 * provided {@link IntegerStruct}.
 		 *
 		 * @param real1
-		 * 		the first argument in the numeric '>=' equality operation
+		 * 		the first argument in the numeric {@literal '>='} equality operation
 		 */
 		IntegerGreaterThanOrEqualToVisitor(final IntegerStruct real1) {
 			super(real1);
@@ -1465,7 +1473,7 @@ public class IntegerStruct extends RationalStruct {
 		/**
 		 * {@inheritDoc}
 		 * <p>
-		 * Computes the numeric '>=' equality result for {@link IntegerStruct}s.
+		 * Computes the numeric {@literal '>='} equality result for {@link IntegerStruct}s.
 		 */
 		@Override
 		public boolean greaterThanOrEqualTo(final IntegerStruct real2) {
@@ -1475,7 +1483,7 @@ public class IntegerStruct extends RationalStruct {
 		/**
 		 * {@inheritDoc}
 		 * <p>
-		 * Computes the numeric '>=' equality result for an {@link IntegerStruct} and a {@link RatioStruct}.
+		 * Computes the numeric {@literal '>='} equality result for an {@link IntegerStruct} and a {@link RatioStruct}.
 		 */
 		@Override
 		public boolean greaterThanOrEqualTo(final RatioStruct real2) {

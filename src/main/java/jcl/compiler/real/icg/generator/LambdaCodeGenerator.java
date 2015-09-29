@@ -1355,8 +1355,8 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 	 * @param generatorState
 	 * 		stateful object used to hold the current state of the code generation process
 	 * @param lambdaListBindings
-	 * 		the {@link OrdinaryLambdaListBindings} containing the &allow-other-keys {@code boolean} value to generate
-	 * 		code for
+	 * 		the {@link OrdinaryLambdaListBindings} containing the {@literal &allow-other-keys} {@code boolean} value to
+	 * 		generate code for
 	 * @param cw
 	 * 		the current {@link ClassWriter} to generate the method code for
 	 */

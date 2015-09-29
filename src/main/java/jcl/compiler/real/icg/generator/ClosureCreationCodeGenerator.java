@@ -151,11 +151,11 @@ abstract class ClosureCreationCodeGenerator<E extends Environment, V, I extends 
 	}
 
 	/**
-	 * Abstract method to perform {@link SymbolStruct} symbol binding generation logic for the provided {@link List<V>}
+	 * Abstract method to perform {@link SymbolStruct} symbol binding generation logic for the provided {@link List}
 	 * variables.
 	 *
 	 * @param vars
-	 * 		the {@link List<V>} variables to generate appropriate binding initialization code for
+	 * 		the {@link List} variables to generate appropriate binding initialization code for
 	 * @param generatorState
 	 * 		stateful object used to hold the current state of the code generation process
 	 * @param methodBuilder

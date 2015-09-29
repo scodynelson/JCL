@@ -125,4 +125,14 @@ final class CodeGenerators {
 
 		fv.visitEnd();
 	}
+
+	static void generateSingletonInstanceField(final ClassWriter cw, final String classDesc) {
+		final FieldVisitor fv = cw.visitField(Opcodes.ACC_PUBLIC + Opcodes.ACC_FINAL + Opcodes.ACC_STATIC,
+				GenerationConstants.SINGLETON_INSTANCE,
+				classDesc,
+				null,
+				null);
+
+		fv.visitEnd();
+	}
 }

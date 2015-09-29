@@ -884,18 +884,11 @@ class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 				GenerationConstants.STRUCTURE_OBJECT_STRUCT_NAME,
 				null);
 
-		final StructureClassStruct includeStructureClass = input.getIncludeStructureClass();
-		String includeStructureClassClassName = null;
-		if (includeStructureClass != null) {
-			includeStructureClassClassName = Type.getInternalName(includeStructureClass.getClass());
-		}
-
 		cw.visitSource(fileName + GenerationConstants.JAVA_EXTENSION, null);
 
 		CodeGenerators.generateSerialVersionUIDField(cw);
 		generateStructureObjectNoArgConstructor(input, generatorState, cw,
-				structureClassClassName, structureClassClassDesc,
-				structureObjectClassName, includeStructureClassClassName);
+				structureClassClassName, structureClassClassDesc, structureObjectClassName);
 		generateStructureObjectInitSlotsMap(input, generatorState, cw,
 				structureObjectClassName);
 
@@ -904,12 +897,74 @@ class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 		classBuilderDeque.removeFirst();
 	}
 
+	/**
+	 * Private method for generating the no-argument constructor for the generated {@link StructureObjectStruct} being
+	 * written to via the provided {@link ClassWriter}. The generation will perform the following operations:
+	 * <ol>
+	 * <li>Generating the code to grab the static singleton {@code INSTANCE} field from the associated {@link
+	 * StructureClassStruct}</li>
+	 * <li>Generating the code to retrieve the {@link SymbolStruct} identifying the {@link StructureObjectStruct}</li>
+	 * <li>If the provided {@link DefstructStruct#includeStructureClass} is {@code null}, generating {@code null} to be
+	 * used as the parent {@link StructureObjectStruct} instance</li>
+	 * <li>If the provided {@link DefstructStruct#includeStructureClass} is not {@code null}, generating the code to
+	 * grab the static singleton {@code INSTANCE} field from the associated {@link StructureClassStruct} of the parent
+	 * {@link StructureObjectStruct} and invoking {@link StructureClassStruct#newInstance()} to retrieve and use a new
+	 * instance of the associated parent {@link StructureObjectStruct}</li>
+	 * <li>Optionally generating the code to invoke the initialization of the {@link StructureObjectStruct#slots} map
+	 * depending on whether or not the {@link DefstructStruct#slots} list is empty or not</li>
+	 * </ol>
+	 * The following is the example Java code generated when {@code (compiler:%defstruct foo nil make-foo nil a)} is
+	 * encountered (no included parent, with slots):
+	 * <pre>
+	 * {@code
+	 * public FOOStructureObject_1() {
+	 *      FOOStructureClass_1 var10001 = FOOStructureClass_1.INSTANCE;
+	 *
+	 *      PackageStruct var1 = PackageStruct.findPackage("COMMON-LISP-USER");
+	 *      SymbolStruct var2 = var1.intern("FOO").getSymbol();
+	 *
+	 *      super(var10001, var2, (StructureObjectStruct)null);
+	 *      this.initSlotsMap();
+	 * }
+	 * }
+	 * </pre>
+	 * The following is the example Java code generated when {@code (compiler:%defstruct bar foo make-bar nil)} is
+	 * encountered (included parent, without slots):
+	 * <pre>
+	 * {@code
+	 * public BARStructureObject_1() {
+	 *      BARStructureClass_1 var10001 = BARStructureClass_1.INSTANCE;
+	 *
+	 *      PackageStruct var1 = PackageStruct.findPackage("COMMON-LISP-USER");
+	 *      SymbolStruct var2 = var1.intern("BAR").getSymbol();
+	 *
+	 *      super(var10001, var2, FOOStructureClass_1.INSTANCE.newInstance());
+	 * }
+	 * }
+	 * </pre>
+	 *
+	 * @param input
+	 * 		the {@link DefstructStruct} containing the {@link StructureObjectStruct} metadata needed to generate the
+	 * 		constructor code
+	 * @param generatorState
+	 * 		stateful object used to hold the current state of the code generation process
+	 * @param cw
+	 * 		the current {@link ClassWriter} to generate the constructor code for
+	 * @param structureClassClassName
+	 * 		the {@link String} containing the name of the {@link StructureClassStruct} for this {@link
+	 * 		StructureObjectStruct}
+	 * @param structureClassClassDesc
+	 * 		the {@link String} containing the type descriptor of the {@link StructureClassStruct} for this {@link
+	 * 		StructureObjectStruct}
+	 * @param structureObjectClassName
+	 * 		the {@link String} containing the name of the {@link StructureObjectStruct} to generate the constructor code
+	 * 		for
+	 */
 	private static void generateStructureObjectNoArgConstructor(final DefstructStruct input, final GeneratorState generatorState,
 	                                                            final ClassWriter cw,
 	                                                            final String structureClassClassName,
 	                                                            final String structureClassClassDesc,
-	                                                            final String structureObjectClassName,
-	                                                            final String includeStructureClassClassName) {
+	                                                            final String structureObjectClassName) {
 		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PUBLIC,
 				GenerationConstants.INIT_METHOD_NAME,
 				GenerationConstants.INIT_METHOD_DESC,
@@ -936,9 +991,11 @@ class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 
 		mv.visitVarInsn(Opcodes.ALOAD, symbolStore);
 
-		if (includeStructureClassClassName == null) {
+		final StructureClassStruct includeStructureClass = input.getIncludeStructureClass();
+		if (includeStructureClass == null) {
 			mv.visitInsn(Opcodes.ACONST_NULL);
 		} else {
+			final String includeStructureClassClassName = Type.getInternalName(includeStructureClass.getClass());
 			final String includeStructureClassClassDesc = 'L' + includeStructureClassClassName + ';';
 			mv.visitFieldInsn(Opcodes.GETSTATIC,
 					includeStructureClassClassName,

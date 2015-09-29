@@ -10,6 +10,7 @@ import jcl.compiler.real.icg.GeneratorState;
 import jcl.compiler.real.icg.JCLClassWriter;
 import org.objectweb.asm.Opcodes;
 
+@SuppressWarnings("all")
 public abstract class JavaClassCodeGenerator<I extends LispStruct> implements CodeGenerator<I> {
 
 	private final int access;

@@ -11,6 +11,7 @@ import jcl.compiler.real.icg.JCLClassWriter;
 import jcl.compiler.real.icg.JCLMethodWriter;
 import org.objectweb.asm.Opcodes;
 
+@SuppressWarnings("all")
 public abstract class JavaMethodCodeGenerator<I extends LispStruct> implements CodeGenerator<I> {
 
 	private final int access;
@@ -38,7 +39,7 @@ public abstract class JavaMethodCodeGenerator<I extends LispStruct> implements C
 
 	@Override
 	public void generate(final I input, final GeneratorState generatorState) {
-		final JCLClassWriter cw = generatorState.getCurrentCw();
+		final JCLClassWriter cw = null; //generatorState.getCurrentCw();
 		final JCLMethodWriter mw = cw.visitMethod(access, name, desc, signature, exceptions);
 
 		mw.visitCode();
@@ -52,7 +53,7 @@ public abstract class JavaMethodCodeGenerator<I extends LispStruct> implements C
 	public void generateAndCall(final I input, final GeneratorState generatorState, final int opcode, final int... parameterStores) {
 		generate(input, generatorState);
 
-		final JCLClassWriter currentCw = generatorState.getCurrentCw();
+		final JCLClassWriter currentCw = null; //generatorState.getCurrentCw();
 		final String className = currentCw.getClassName();
 
 		final JCLMethodWriter currentMw = currentCw.getCurrentMv();

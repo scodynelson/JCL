@@ -9,6 +9,7 @@ import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
+@SuppressWarnings("all")
 public class JCLClassWriter extends ClassVisitor {
 
 	private final GeneratorState generatorState;
@@ -46,8 +47,8 @@ public class JCLClassWriter extends ClassVisitor {
 
 	@Override
 	public void visit(final int version, final int access, final String name, final String signature, final String superName, final String[] interfaces) {
-		previousCw = generatorState.getCurrentCw();
-		generatorState.setCurrentCw(this);
+//		previousCw = generatorState.getCurrentCw();
+//		generatorState.setCurrentCw(this);
 		super.visit(version, access, name, signature, superName, interfaces);
 	}
 
@@ -60,6 +61,6 @@ public class JCLClassWriter extends ClassVisitor {
 	@Override
 	public void visitEnd() {
 		super.visitEnd();
-		generatorState.setCurrentCw(previousCw);
+//		generatorState.setCurrentCw(previousCw);
 	}
 }

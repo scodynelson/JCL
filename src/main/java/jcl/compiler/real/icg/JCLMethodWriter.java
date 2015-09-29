@@ -7,6 +7,7 @@ package jcl.compiler.real.icg;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
+@SuppressWarnings("all")
 public class JCLMethodWriter extends MethodVisitor {
 
 	private final JCLClassWriter cw;

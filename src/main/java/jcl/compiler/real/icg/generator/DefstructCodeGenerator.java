@@ -863,6 +863,65 @@ class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 		methodBuilderDeque.removeFirst();
 	}
 
+	/**
+	 * Private method for generating a new {@link StructureObjectStruct}, by performing the following operations:
+	 * <ol>
+	 * <li>Creating a new {@link JavaClassBuilder}, which internally creates a new {@link ClassWriter}</li>
+	 * <li>Visiting a new class via {@link ClassWriter#visit(int, int, String, String, String, String[])} of the new
+	 * {@link JavaClassBuilder#classWriter}</li>
+	 * <li>Generating the code for the {@code serialVersionUID} field</li>
+	 * <li>Generating the code for the no-argument constructor</li>
+	 * <li>Generating the code for the {@code initSlots} method</li>
+	 * <li>Generating the code to end the new class visitation</li>
+	 * </ol>
+	 * As an example, it will transform {@code (compiler:%defstruct foo nil make-foo nil a)} into the following Java
+	 * code:
+	 * <pre>
+	 * {@code
+	 * package jcl.structures.struct.objects;
+	 *
+	 * import java.util.Map;
+	 * import jcl.packages.PackageStruct;
+	 * import jcl.structures.StructureObjectStruct;
+	 * import jcl.structures.struct.classes.FOOStructureClass_34553964509765;
+	 * import jcl.symbols.SymbolStruct;
+	 *
+	 * public class FOOStructureObject_1 extends StructureObjectStruct {
+	 *      private static final long serialVersionUID = 1L;
+	 *
+	 *      public FOOStructureObject_1() {
+	 *          FOOStructureClass_1 var10001 = FOOStructureClass_1.INSTANCE;
+	 *          PackageStruct var1 = PackageStruct.findPackage("COMMON-LISP-USER");
+	 *          SymbolStruct var2 = var1.intern("FOO").getSymbol();
+	 *          super(var10001, var2, (StructureObjectStruct)null);
+	 *          this.initSlotsMap();
+	 *      }
+	 *
+	 *      private void initSlotsMap() {
+	 *          Map var1 = this.slots;
+	 *          PackageStruct var2 = PackageStruct.findPackage("COMMON-LISP-USER");
+	 *          SymbolStruct var3 = var2.intern("A").getSymbol();
+	 *          var1.put(var3, (Object)null);
+	 *      }
+	 * }
+	 * }
+	 * </pre>
+	 *
+	 * @param input
+	 * 		the {@link DefstructStruct} containing the {@link StructureObjectStruct} metadata needed for generating a new
+	 * 		{@link StructureObjectStruct}
+	 * @param generatorState
+	 * 		stateful object used to hold the current state of the code generation process
+	 * @param structureClassClassName
+	 * 		the {@link String} containing the name of the {@link StructureClassStruct} for this {@link
+	 * 		StructureObjectStruct}
+	 * @param structureClassClassDesc
+	 * 		the {@link String} containing the type descriptor of the {@link StructureClassStruct} for this {@link
+	 * 		StructureObjectStruct}
+	 * @param structureObjectClassName
+	 * 		the {@link String} containing the name of the {@link StructureObjectStruct} to generate the constructor code
+	 * 		for
+	 */
 	private static void generateStructureObject(final DefstructStruct input, final GeneratorState generatorState,
 	                                            final String structureClassClassName,
 	                                            final String structureClassClassDesc,

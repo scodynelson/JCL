@@ -253,13 +253,13 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 	 *
 	 * {@literal @}Component
 	 * public class Lambda_1 extends FunctionStruct {
-	 *      private static final long serialVersionUID = 1199585856102898270L;
+	 *      private static final long serialVersionUID = 1L;
 	 *
-	 *      public Lambda_119325376043734() {
+	 *      public Lambda_1() {
 	 *          this((Closure)null);
 	 *      }
 	 *
-	 *      public Lambda_119325376043734(Closure var1) {
+	 *      public Lambda_1(Closure var1) {
 	 *          super("", var1);
 	 *          this.initLoadTimeValueForms(var1);
 	 *          this.initLambdaListBindings();

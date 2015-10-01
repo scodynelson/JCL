@@ -304,7 +304,7 @@ class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 		generateStructureTypeFactoryConstructor(generatorState, cw);
 		generateStructureTypeFactoryGetInstanceMethod(generatorState, cw,
 				structureTypeClassName, structureTypeClassDesc, structureTypeGetInstanceDesc);
-		generateStructureTypeFactorySyntheticBridgeGetInstanceMethod(generatorState, cw,
+		generateStructureTypeFactoryGetInstanceBridgeMethod(generatorState, cw,
 				structureTypeFactoryInnerClassName, structureTypeGetInstanceDesc);
 
 		cw.visitEnd();
@@ -373,10 +373,10 @@ class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 		methodBuilderDeque.removeFirst();
 	}
 
-	private static void generateStructureTypeFactorySyntheticBridgeGetInstanceMethod(final GeneratorState generatorState,
-	                                                                                 final ClassWriter cw,
-	                                                                                 final String structureTypeFactoryInnerClassName,
-	                                                                                 final String structureTypeGetInstanceDesc) {
+	private static void generateStructureTypeFactoryGetInstanceBridgeMethod(final GeneratorState generatorState,
+	                                                                        final ClassWriter cw,
+	                                                                        final String structureTypeFactoryInnerClassName,
+	                                                                        final String structureTypeGetInstanceDesc) {
 		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PUBLIC + Opcodes.ACC_BRIDGE + Opcodes.ACC_SYNTHETIC,
 				GET_INSTANCE_METHOD_NAME,
 				GET_INSTANCE_METHOD_DESC,
@@ -451,7 +451,7 @@ class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 		generateStructureTypeImplHashCodeMethod(generatorState, cw);
 		generateStructureTypeImplEqualsMethod(generatorState, cw,
 				structureTypeClassName);
-		generateStructureTypeSyntheticConstructor(generatorState, cw,
+		generateStructureTypeImplSyntheticConstructor(generatorState, cw,
 				structureTypeSyntheticInnerClassDesc, structureTypeImplInnerClassName);
 
 		cw.visitEnd();
@@ -481,6 +481,38 @@ class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 				GenerationConstants.TYPE_BASE_CLASS_NAME,
 				GenerationConstants.INIT_METHOD_NAME,
 				GenerationConstants.TYPE_BASE_CLASS_INIT_STRING_DESC,
+				false);
+
+		mv.visitInsn(Opcodes.RETURN);
+
+		mv.visitMaxs(-1, -1);
+		mv.visitEnd();
+
+		methodBuilderDeque.removeFirst();
+	}
+
+	private static void generateStructureTypeImplSyntheticConstructor(final GeneratorState generatorState,
+	                                                                  final ClassWriter cw,
+	                                                                  final String structureTypeSyntheticInnerClassDesc,
+	                                                                  final String structureTypeImplInnerClassName) {
+		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_SYNTHETIC,
+				GenerationConstants.INIT_METHOD_NAME,
+				structureTypeSyntheticInnerClassDesc,
+				null,
+				null);
+
+		final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
+		final Deque<JavaMethodBuilder> methodBuilderDeque = generatorState.getMethodBuilderDeque();
+		methodBuilderDeque.addFirst(methodBuilder);
+
+		mv.visitCode();
+		final int thisStore = methodBuilder.getNextAvailableStore();
+
+		mv.visitVarInsn(Opcodes.ALOAD, thisStore);
+		mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
+				structureTypeImplInnerClassName,
+				GenerationConstants.INIT_METHOD_NAME,
+				GenerationConstants.INIT_METHOD_DESC,
 				false);
 
 		mv.visitInsn(Opcodes.RETURN);
@@ -581,38 +613,6 @@ class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 		mv.visitLabel(endOfEqAndInstanceCheck);
 
 		mv.visitInsn(Opcodes.IRETURN);
-
-		mv.visitMaxs(-1, -1);
-		mv.visitEnd();
-
-		methodBuilderDeque.removeFirst();
-	}
-
-	private static void generateStructureTypeSyntheticConstructor(final GeneratorState generatorState,
-	                                                              final ClassWriter cw,
-	                                                              final String structureTypeSyntheticInnerClassDesc,
-	                                                              final String structureTypeImplInnerClassName) {
-		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_SYNTHETIC,
-				GenerationConstants.INIT_METHOD_NAME,
-				structureTypeSyntheticInnerClassDesc,
-				null,
-				null);
-
-		final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
-		final Deque<JavaMethodBuilder> methodBuilderDeque = generatorState.getMethodBuilderDeque();
-		methodBuilderDeque.addFirst(methodBuilder);
-
-		mv.visitCode();
-		final int thisStore = methodBuilder.getNextAvailableStore();
-
-		mv.visitVarInsn(Opcodes.ALOAD, thisStore);
-		mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
-				structureTypeImplInnerClassName,
-				GenerationConstants.INIT_METHOD_NAME,
-				GenerationConstants.INIT_METHOD_DESC,
-				false);
-
-		mv.visitInsn(Opcodes.RETURN);
 
 		mv.visitMaxs(-1, -1);
 		mv.visitEnd();

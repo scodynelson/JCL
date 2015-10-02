@@ -67,7 +67,7 @@ class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 
 	private static final String GET_INSTANCE_METHOD_NAME = "getInstance";
 
-	private static final String GET_INSTANCE_METHOD_DESC = "()Ljcl/LispType;";
+	private static final String GET_INSTANCE_BRIDGE_METHOD_DESC = "()Ljcl/LispType;";
 
 	private static final String STRUCTURE_OBJECT_INIT_SCS_SS_SOS_METHOD_DESC = "(Ljcl/structures/StructureClassStruct;Ljcl/symbols/SymbolStruct;Ljcl/structures/StructureObjectStruct;)V";
 
@@ -245,6 +245,7 @@ class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 		methodBuilderDeque.addFirst(methodBuilder);
 
 		mv.visitCode();
+		@SuppressWarnings({"unused", "SuppressionAnnotation"})
 		final int thisStore = methodBuilder.getNextAvailableStore();
 
 		mv.visitTypeInsn(Opcodes.NEW, structureTypeImplClassName);
@@ -268,6 +269,70 @@ class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 		methodBuilderDeque.removeFirst();
 	}
 
+	/**
+	 * Private method for generating a new {@link StructureObjectType} {@link TypeFactory} class, by performing the
+	 * following operations:
+	 * <ol>
+	 * <li>Creating a new {@link JavaClassBuilder}, which internally creates a new {@link ClassWriter}</li>
+	 * <li>Visiting a new class via {@link ClassWriter#visit(int, int, String, String, String, String[])} of the new
+	 * {@link JavaClassBuilder#classWriter}</li>
+	 * <li>Visiting {@link TypeFactory} inner implementation class being generated as an inner class for the outer
+	 * top-level {@link StructureObjectType} class</li>
+	 * <li>Visiting {@link StructureObjectType} inner implementation class for the class being generated</li>
+	 * <li>Generating the code for the default constructor</li>
+	 * <li>Generating the code for the {@link TypeFactory#getInstance()} method</li>
+	 * <li>Generating the code for the {@code Bridge} {@link TypeFactory#getInstance()} method</li>
+	 * <li>Generating the code to end the new class visitation</li>
+	 * </ol>
+	 * As an example, it will transform {@code (compiler:%defstruct foo nil make-foo nil a)} into the following Java
+	 * code:
+	 * <pre>
+	 * {@code
+	 * public static class Factory implements TypeFactory<FOOStructureType1> {
+	 *      public Factory() {
+	 *      }
+	 *
+	 *      public FOOStructureType_1 getInstance() {
+	 *          return FOOStructureType_1.INSTANCE;
+	 *      }
+	 *
+	 *      private static final class FOOStructureTypeImpl_1 extends TypeBaseClass
+	 *                                                        implements FOOStructureType_1, AtomicTypeSpecifier {
+	 *          private static final long serialVersionUID = 1L;
+	 *
+	 *          private FOOStructureTypeImpl_1() {
+	 *              super("FOO");
+	 *          }
+	 *
+	 *          public int hashCode() {
+	 *              return (new HashCodeBuilder()).appendSuper(super.hashCode()).toHashCode();
+	 *          }
+	 *
+	 *          public boolean equals(Object var1) {
+	 *              return this == var1 || var1 instanceof FOOStructureType_1;
+	 *          }
+	 *      }
+	 * }
+	 * }
+	 * </pre>
+	 *
+	 * @param generatorState
+	 * 		stateful object used to hold the current state of the code generation process
+	 * @param structureTypeClassName
+	 * 		the {@link String} containing the name of the {@link StructureObjectType} whose {@link TypeFactory}
+	 * 		implementation class is being generated for
+	 * @param structureTypeClassDesc
+	 * 		the {@link String} containing the type descriptor of the {@link StructureObjectType} whose {@link TypeFactory}
+	 * 		implementation class is being generated for
+	 * @param structureTypeFactoryClassName
+	 * 		the {@link String} containing the name of the {@link TypeFactory} implementation class being generated
+	 * @param structureTypeImplClassSimpleName
+	 * 		the {@link String} containing the simple class name of the {@link StructureObjectType} implementation class
+	 * 		to be an inner class of the {@link TypeFactory} implementation class being generated
+	 * @param structureTypeImplClassName
+	 * 		the {@link String} containing the name of the {@link StructureObjectType} implementation class to be an inner
+	 * 		class of the {@link TypeFactory} implementation class being generated
+	 */
 	private static void generateStructureTypeFactory(final GeneratorState generatorState,
 	                                                 final String structureTypeClassName,
 	                                                 final String structureTypeClassDesc,
@@ -315,6 +380,26 @@ class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 		classBuilderDeque.removeFirst();
 	}
 
+	/**
+	 * Private method for generating the constructor for the generated {@link StructureObjectType} {@link TypeFactory}
+	 * being written to via the provided {@link ClassWriter}. The generation will perform the following operations:
+	 * <ol>
+	 * <li>Generating the code to invoke the {@link Object#Object()} super constructor</li>
+	 * </ol>
+	 * The following is the example Java code generated when {@code (compiler:%defstruct foo nil make-foo nil a)} is
+	 * encountered:
+	 * <pre>
+	 * {@code
+	 * public Factory() {
+	 * }
+	 * }
+	 * </pre>
+	 *
+	 * @param generatorState
+	 * 		stateful object used to hold the current state of the code generation process
+	 * @param cw
+	 * 		the current {@link ClassWriter} to generate the constructor code for
+	 */
 	private static void generateStructureTypeFactoryConstructor(final GeneratorState generatorState,
 	                                                            final ClassWriter cw) {
 		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PUBLIC,
@@ -345,6 +430,38 @@ class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 		methodBuilderDeque.removeFirst();
 	}
 
+	/**
+	 * Private method for generating the {@link TypeFactory#getInstance()} method for the generated {@link
+	 * StructureObjectType} {@link TypeFactory} being written to via the provided {@link ClassWriter}. The generation
+	 * will perform the following operations:
+	 * <ol>
+	 * <li>Generating the code to retrieve and return the {@link StructureObjectType} singleton {@code INSTANCE}
+	 * field</li>
+	 * </ol>
+	 * The following is the example Java code generated when {@code (compiler:%defstruct foo nil make-foo nil a)} is
+	 * encountered:
+	 * <pre>
+	 * {@code
+	 * public FOOStructureType_1 getInstance() {
+	 *      return FOOStructureType_1.INSTANCE;
+	 * }
+	 * }
+	 * </pre>
+	 *
+	 * @param generatorState
+	 * 		stateful object used to hold the current state of the code generation process
+	 * @param cw
+	 * 		the current {@link ClassWriter} to generate the method code for
+	 * @param structureTypeClassName
+	 * 		the {@link String} containing the name of the {@link StructureObjectType} whose instance will be returned from
+	 * 		the {@link TypeFactory#getInstance()} method being generated
+	 * @param structureTypeClassDesc
+	 * 		the {@link String} containing the type descriptor of the {@link StructureObjectType} whose instance will be
+	 * 		returned from the {@link TypeFactory#getInstance()} method being generated
+	 * @param structureTypeGetInstanceDesc
+	 * 		the {@link String} containing the type descriptor of the {@link TypeFactory#getInstance()} method being
+	 * 		generated
+	 */
 	private static void generateStructureTypeFactoryGetInstanceMethod(final GeneratorState generatorState,
 	                                                                  final ClassWriter cw,
 	                                                                  final String structureTypeClassName,
@@ -361,6 +478,7 @@ class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 		methodBuilderDeque.addFirst(methodBuilder);
 
 		mv.visitCode();
+		@SuppressWarnings({"unused", "SuppressionAnnotation"})
 		final int thisStore = methodBuilder.getNextAvailableStore();
 
 		mv.visitFieldInsn(Opcodes.GETSTATIC,
@@ -376,13 +494,35 @@ class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 		methodBuilderDeque.removeFirst();
 	}
 
+	/**
+	 * Private method for generating the {@link TypeFactory#getInstance()} {@code Bridge} method for the generated
+	 * {@link StructureObjectType} {@link TypeFactory} being written to via the provided {@link ClassWriter}. The
+	 * generation will perform the following operations:
+	 * <ol>
+	 * <li>Generating the code to call the actual {@link TypeFactory#getInstance()} method with the type descriptor of
+	 * the provided {@code structureTypeGetInstanceDesc}</li>
+	 * </ol>
+	 * NOTE: This {@code Bridge} method allows the correct call to the {@link TypeFactory#getInstance()} method whose
+	 * return type is a generic argument. Since generics have type erasure, a bridge method is needed to invoke the
+	 * method with the correct return type specified by the generic argument.
+	 *
+	 * @param generatorState
+	 * 		stateful object used to hold the current state of the code generation process
+	 * @param cw
+	 * 		the current {@link ClassWriter} to generate the method code for
+	 * @param structureTypeFactoryClassName
+	 * 		the {@link String} containing the name of the {@link TypeFactory} class being generated
+	 * @param structureTypeGetInstanceDesc
+	 * 		the {@link String} containing the type descriptor of the {@link TypeFactory#getInstance()} method the {@code
+	 * 		Bridge} method will call
+	 */
 	private static void generateStructureTypeFactoryGetInstanceBridgeMethod(final GeneratorState generatorState,
 	                                                                        final ClassWriter cw,
 	                                                                        final String structureTypeFactoryClassName,
 	                                                                        final String structureTypeGetInstanceDesc) {
 		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PUBLIC + Opcodes.ACC_BRIDGE + Opcodes.ACC_SYNTHETIC,
 				GET_INSTANCE_METHOD_NAME,
-				GET_INSTANCE_METHOD_DESC,
+				GET_INSTANCE_BRIDGE_METHOD_DESC,
 				null,
 				null);
 
@@ -1361,7 +1501,7 @@ class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 		cw.visitSource(fileName + GenerationConstants.JAVA_EXTENSION, null);
 
 		CodeGenerators.generateSerialVersionUIDField(cw);
-		generateStructureObjectNoArgConstructor(input, generatorState, cw,
+		generateStructureObjectConstructor(input, generatorState, cw,
 				structureClassClassName, structureClassClassDesc, structureObjectClassName);
 		generateStructureObjectInitSlotsMap(input, generatorState, cw,
 				structureObjectClassName);
@@ -1372,8 +1512,8 @@ class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 	}
 
 	/**
-	 * Private method for generating the no-argument constructor for the generated {@link StructureObjectStruct} being
-	 * written to via the provided {@link ClassWriter}. The generation will perform the following operations:
+	 * Private method for generating the constructor for the generated {@link StructureObjectStruct} being written to
+	 * via the provided {@link ClassWriter}. The generation will perform the following operations:
 	 * <ol>
 	 * <li>Generating the code to grab the static singleton {@code INSTANCE} field from the associated {@link
 	 * StructureClassStruct}</li>
@@ -1434,11 +1574,11 @@ class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 	 * 		the {@link String} containing the name of the {@link StructureObjectStruct} to generate the constructor code
 	 * 		for
 	 */
-	private static void generateStructureObjectNoArgConstructor(final DefstructStruct input, final GeneratorState generatorState,
-	                                                            final ClassWriter cw,
-	                                                            final String structureClassClassName,
-	                                                            final String structureClassClassDesc,
-	                                                            final String structureObjectClassName) {
+	private static void generateStructureObjectConstructor(final DefstructStruct input, final GeneratorState generatorState,
+	                                                       final ClassWriter cw,
+	                                                       final String structureClassClassName,
+	                                                       final String structureClassClassDesc,
+	                                                       final String structureObjectClassName) {
 		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PUBLIC,
 				GenerationConstants.INIT_METHOD_NAME,
 				GenerationConstants.INIT_METHOD_DESC,

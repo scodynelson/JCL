@@ -13,7 +13,22 @@ import org.springframework.messaging.MessageChannel;
 public class ICGConfiguration {
 
 	@Bean
-	public MessageChannel generationChannel() {
+	public MessageChannel generationRequestChannel() {
+		return new DirectChannel();
+	}
+
+	@Bean
+	public MessageChannel generationReplyChannel() {
+		return new DirectChannel();
+	}
+
+	@Bean
+	public MessageChannel stringGenerationChannel() {
+		return new DirectChannel();
+	}
+
+	@Bean
+	public MessageChannel lambdaGenerationChannel() {
 		return new DirectChannel();
 	}
 }

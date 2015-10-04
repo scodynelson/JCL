@@ -179,31 +179,84 @@ class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 	 * code:
 	 * <pre>
 	 * {@code
-	 * public static class Factory implements TypeFactory<FOOStructureType1> {
-	 *      public Factory() {
-	 *      }
-	 *
-	 *      public FOOStructureType_1 getInstance() {
-	 *          return FOOStructureType_1.INSTANCE;
-	 *      }
-	 *
-	 *      private static final class FOOStructureTypeImpl_1 extends TypeBaseClass
-	 *                                                        implements FOOStructureType_1, AtomicTypeSpecifier {
-	 *          private static final long serialVersionUID = 1L;
-	 *
-	 *          private FOOStructureTypeImpl_1() {
-	 *              super("FOO");
-	 *          }
-	 *
-	 *          public int hashCode() {
-	 *              return (new HashCodeBuilder()).appendSuper(super.hashCode()).toHashCode();
-	 *          }
-	 *
-	 *          public boolean equals(Object var1) {
-	 *              return this == var1 || var1 instanceof FOOStructureType_1;
-	 *          }
-	 *      }
+	 * package jcl.structures.struct.types;
+
+	import jcl.structures.struct.types.FOOStructureType_34553964509765.1_34553964509765;
+	import jcl.types.StructureObjectType;
+	import jcl.types.TypeBaseClass;
+	import jcl.types.TypeFactory;
+	import jcl.types.typespecifiers.AtomicTypeSpecifier;
+	import org.apache.commons.lang3.builder.HashCodeBuilder;
+
+	public interface FOOStructureType_34553964509765 extends StructureObjectType {
+	FOOStructureType_34553964509765 INSTANCE = new FOOStructureType_34553964509765.Factory.FOOStructureTypeImpl_34553964509765((1_34553964509765)null);
+
+	public static class Factory implements TypeFactory<FOOStructureType_34553964509765> {
+	public Factory() {
+	}
+
+	public FOOStructureType_34553964509765 getInstance() {
+	return FOOStructureType_34553964509765.INSTANCE;
+	}
+
+	private static final class FOOStructureTypeImpl_34553964509765 extends TypeBaseClass implements FOOStructureType_34553964509765, AtomicTypeSpecifier {
+	private static final long serialVersionUID = 3317009723019487076L;
+
+	private FOOStructureTypeImpl_34553964509765() {
+	super("FOO");
+	}
+
+	public int hashCode() {
+	return (new HashCodeBuilder()).appendSuper(super.hashCode()).toHashCode();
+	}
+
+	public boolean equals(Object var1) {
+	return this == var1 || var1 instanceof FOOStructureType_34553964509765;
+	}
+	}
+	}
+	}
 	 * }
+	 * </pre>
+	 * <pre>
+	 * {@code
+	 * package jcl.structures.struct.types;
+
+	import jcl.structures.struct.types.FOOStructureType_35638529195808;
+	import jcl.structures.struct.types.BARStructureType_35662194797508.1_35662194797508;
+	import jcl.types.TypeBaseClass;
+	import jcl.types.TypeFactory;
+	import jcl.types.typespecifiers.AtomicTypeSpecifier;
+	import org.apache.commons.lang3.builder.HashCodeBuilder;
+
+	public interface BARStructureType_35662194797508 extends FOOStructureType_35638529195808 {
+	BARStructureType_35662194797508 INSTANCE = new BARStructureType_35662194797508.Factory.BARStructureTypeImpl_35662194797508((1_35662194797508)null);
+
+	public static class Factory implements TypeFactory<BARStructureType_35662194797508> {
+	public Factory() {
+	}
+
+	public BARStructureType_35662194797508 getInstance() {
+	return BARStructureType_35662194797508.INSTANCE;
+	}
+
+	private static final class BARStructureTypeImpl_35662194797508 extends TypeBaseClass implements BARStructureType_35662194797508, AtomicTypeSpecifier {
+	private static final long serialVersionUID = 4983988676488980087L;
+
+	private BARStructureTypeImpl_35662194797508() {
+	super("BAR");
+	}
+
+	public int hashCode() {
+	return (new HashCodeBuilder()).appendSuper(super.hashCode()).toHashCode();
+	}
+
+	public boolean equals(Object var1) {
+	return this == var1 || var1 instanceof BARStructureType_35662194797508;
+	}
+	}
+	}
+	}
 	 * }
 	 * </pre>
 	 *

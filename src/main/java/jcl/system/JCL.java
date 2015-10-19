@@ -9,7 +9,8 @@ import jcl.system.repl.ReadEvalPrint;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.ApplicationArguments;
+import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
@@ -24,7 +25,7 @@ import org.springframework.integration.config.EnableIntegration;
 @EnableIntegration
 @IntegrationComponentScan("jcl")
 @SpringBootApplication
-public class JCL implements CommandLineRunner {
+public class JCL implements ApplicationRunner {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(JCL.class);
 
@@ -40,12 +41,12 @@ public class JCL implements CommandLineRunner {
 		}
 	}
 
-	@Override
-	public void run(final String... args) {
-		readEvalPrint.funcall(args);
+	public static void main(final String... args) {
+		SpringApplication.run(JCL.class, args).close();
 	}
 
-	public static void main(final String... args) {
-		SpringApplication.run(JCL.class, args);
+	@Override
+	public void run(final ApplicationArguments args) throws Exception {
+		readEvalPrint.funcall(args);
 	}
 }

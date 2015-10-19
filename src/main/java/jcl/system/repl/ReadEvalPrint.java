@@ -19,6 +19,7 @@ import jcl.symbols.VariableStruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.ApplicationArguments;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
@@ -42,7 +43,7 @@ public class ReadEvalPrint {
 	@Autowired
 	private Printer printer;
 
-	public void funcall(final String... args) {
+	public void funcall(final ApplicationArguments args) {
 		try {
 			REPLVariables.DASH.bindDynamicValue(NullStruct.INSTANCE);
 

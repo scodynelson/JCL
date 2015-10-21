@@ -5,10 +5,10 @@ import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
+import jcl.compiler.real.environment.BindingEnvironment;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.Environments;
 import jcl.compiler.real.environment.LambdaEnvironment;
-import jcl.compiler.real.environment.LetStarEnvironment;
 import jcl.compiler.real.environment.binding.EnvironmentParameterBinding;
 import jcl.compiler.real.sa.FormAnalyzer;
 import jcl.compiler.real.sa.analyzer.body.BodyProcessingResult;
@@ -74,7 +74,7 @@ public class LetStarExpander extends MacroFunctionExpander<LetStarStruct> {
 			throw new ProgramErrorException("LET*: Parameter list must be a list. Got: " + printedObject);
 		}
 
-		final LetStarEnvironment letStarEnvironment = new LetStarEnvironment(environment);
+		final BindingEnvironment letStarEnvironment = new BindingEnvironment(environment);
 
 		final ListStruct parameters = (ListStruct) second;
 		final List<LispStruct> parametersAsJavaList = parameters.getAsJavaList();
@@ -105,7 +105,7 @@ public class LetStarExpander extends MacroFunctionExpander<LetStarStruct> {
 	}
 
 	private LetStarStruct.LetStarVar getLetStarVar(final LispStruct parameter, final DeclareStruct declare,
-	                                               final LetStarEnvironment letStarEnvironment) {
+	                                               final BindingEnvironment letStarEnvironment) {
 
 		if (!(parameter instanceof SymbolStruct) && !(parameter instanceof ListStruct)) {
 			final String printedParameter = printer.print(parameter);
@@ -155,7 +155,7 @@ public class LetStarExpander extends MacroFunctionExpander<LetStarStruct> {
 		return (SymbolStruct<?>) listParameterFirst;
 	}
 
-	private LispStruct getLetStarListParameterInitForm(final ListStruct listParameter, final LetStarEnvironment letStarEnvironment) {
+	private LispStruct getLetStarListParameterInitForm(final ListStruct listParameter, final BindingEnvironment letStarEnvironment) {
 
 		final ListStruct listParameterRest = listParameter.getRest();
 		final LispStruct parameterValue = listParameterRest.getFirst();

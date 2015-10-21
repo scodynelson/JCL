@@ -7,7 +7,6 @@ package jcl.compiler.real.icg.generator;
 import java.util.Deque;
 
 import jcl.compiler.real.environment.Environment;
-import jcl.compiler.real.environment.LocallyEnvironment;
 import jcl.compiler.real.icg.CodeGenerator;
 import jcl.compiler.real.icg.GeneratorState;
 import jcl.compiler.real.struct.specialoperator.LocallyStruct;
@@ -51,7 +50,7 @@ class LocallyCodeGenerator implements CodeGenerator<LocallyStruct> {
 	public void generate(final LocallyStruct input, final GeneratorState generatorState) {
 
 		final PrognStruct forms = input.getForms();
-		final LocallyEnvironment locallyEnvironment = input.getLocallyEnvironment();
+		final Environment locallyEnvironment = input.getLocallyEnvironment();
 
 		final Deque<Environment> environmentDeque = generatorState.getEnvironmentDeque();
 

@@ -5,10 +5,10 @@ import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
+import jcl.compiler.real.environment.BindingEnvironment;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.Environments;
 import jcl.compiler.real.environment.LambdaEnvironment;
-import jcl.compiler.real.environment.LetEnvironment;
 import jcl.compiler.real.environment.binding.EnvironmentParameterBinding;
 import jcl.compiler.real.sa.FormAnalyzer;
 import jcl.compiler.real.sa.analyzer.body.BodyProcessingResult;
@@ -74,7 +74,7 @@ public class LetExpander extends MacroFunctionExpander<LetStruct> {
 			throw new ProgramErrorException("LET: Parameter list must be a list. Got: " + printedObject);
 		}
 
-		final LetEnvironment letEnvironment = new LetEnvironment(environment);
+		final BindingEnvironment letEnvironment = new BindingEnvironment(environment);
 
 		final ListStruct parameters = (ListStruct) second;
 		final List<LispStruct> parametersAsJavaList = parameters.getAsJavaList();
@@ -105,7 +105,7 @@ public class LetExpander extends MacroFunctionExpander<LetStruct> {
 	}
 
 	private LetStruct.LetVar getLetVar(final LispStruct parameter, final DeclareStruct declare,
-	                                   final LetEnvironment letEnvironment) {
+	                                   final BindingEnvironment letEnvironment) {
 
 		if (!(parameter instanceof SymbolStruct) && !(parameter instanceof ListStruct)) {
 			final String printedParameter = printer.print(parameter);
@@ -155,7 +155,7 @@ public class LetExpander extends MacroFunctionExpander<LetStruct> {
 		return (SymbolStruct<?>) listParameterFirst;
 	}
 
-	private LispStruct getLetListParameterInitForm(final ListStruct listParameter, final LetEnvironment letEnvironment) {
+	private LispStruct getLetListParameterInitForm(final ListStruct listParameter, final BindingEnvironment letEnvironment) {
 
 		final ListStruct listParameterRest = listParameter.getRest();
 		final LispStruct parameterValue = listParameterRest.getFirst();

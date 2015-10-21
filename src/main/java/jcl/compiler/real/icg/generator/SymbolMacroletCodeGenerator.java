@@ -9,7 +9,6 @@ import java.util.Set;
 
 import jcl.LispStruct;
 import jcl.compiler.real.environment.Environment;
-import jcl.compiler.real.environment.SymbolMacroletEnvironment;
 import jcl.compiler.real.icg.CodeGenerator;
 import jcl.compiler.real.icg.GeneratorState;
 import jcl.compiler.real.icg.IntermediateCodeGenerator;
@@ -40,7 +39,7 @@ class SymbolMacroletCodeGenerator implements CodeGenerator<SymbolMacroletStruct>
 
 		final List<SymbolMacroletStruct.SymbolMacroletVar> vars = input.getVars();
 		final PrognStruct forms = input.getForms();
-		final SymbolMacroletEnvironment symbolMacroletEnvironment = input.getSymbolMacroletEnvironment();
+		final Environment symbolMacroletEnvironment = input.getSymbolMacroletEnvironment();
 
 		final JavaMethodBuilder methodBuilder = generatorState.getCurrentMethodBuilder();
 		final MethodVisitor mv = methodBuilder.getMethodVisitor();

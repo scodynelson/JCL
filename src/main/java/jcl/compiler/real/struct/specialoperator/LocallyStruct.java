@@ -4,7 +4,7 @@
 
 package jcl.compiler.real.struct.specialoperator;
 
-import jcl.compiler.real.environment.LocallyEnvironment;
+import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.struct.CompilerSpecialOperatorStruct;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -17,9 +17,9 @@ public class LocallyStruct extends CompilerSpecialOperatorStruct {
 
 	private final PrognStruct forms;
 
-	private final LocallyEnvironment locallyEnvironment;
+	private final Environment locallyEnvironment;
 
-	public LocallyStruct(final PrognStruct forms, final LocallyEnvironment locallyEnvironment) {
+	public LocallyStruct(final PrognStruct forms, final Environment locallyEnvironment) {
 		this.forms = forms;
 		this.locallyEnvironment = locallyEnvironment;
 	}
@@ -28,7 +28,7 @@ public class LocallyStruct extends CompilerSpecialOperatorStruct {
 		return forms;
 	}
 
-	public LocallyEnvironment getLocallyEnvironment() {
+	public Environment getLocallyEnvironment() {
 		return locallyEnvironment;
 	}
 

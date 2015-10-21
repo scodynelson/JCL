@@ -8,7 +8,7 @@ import java.io.Serializable;
 import java.util.List;
 
 import jcl.LispStruct;
-import jcl.compiler.real.environment.SymbolMacroletEnvironment;
+import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.struct.CompilerSpecialOperatorStruct;
 import jcl.symbols.SymbolStruct;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -24,9 +24,9 @@ public class SymbolMacroletStruct extends CompilerSpecialOperatorStruct {
 
 	private final PrognStruct forms;
 
-	private final SymbolMacroletEnvironment symbolMacroletEnvironment;
+	private final Environment symbolMacroletEnvironment;
 
-	public SymbolMacroletStruct(final List<SymbolMacroletVar> vars, final PrognStruct forms, final SymbolMacroletEnvironment symbolMacroletEnvironment) {
+	public SymbolMacroletStruct(final List<SymbolMacroletVar> vars, final PrognStruct forms, final Environment symbolMacroletEnvironment) {
 		this.vars = vars;
 		this.forms = forms;
 		this.symbolMacroletEnvironment = symbolMacroletEnvironment;
@@ -40,7 +40,7 @@ public class SymbolMacroletStruct extends CompilerSpecialOperatorStruct {
 		return forms;
 	}
 
-	public SymbolMacroletEnvironment getSymbolMacroletEnvironment() {
+	public Environment getSymbolMacroletEnvironment() {
 		return symbolMacroletEnvironment;
 	}
 

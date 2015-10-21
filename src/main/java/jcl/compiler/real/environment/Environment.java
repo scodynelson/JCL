@@ -56,7 +56,7 @@ public class Environment extends StandardObjectStruct {
 	// eval-when processing modes
 	private boolean topLevelMode;
 
-	protected Environment(final Environment parent) {
+	public Environment(final Environment parent) {
 		this.parent = parent;
 		if (parent != null) {
 			closureDepth = parent.closureDepth + 1;

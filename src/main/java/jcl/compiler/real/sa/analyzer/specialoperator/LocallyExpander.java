@@ -7,7 +7,6 @@ import javax.annotation.PostConstruct;
 import jcl.LispStruct;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.Environments;
-import jcl.compiler.real.environment.LocallyEnvironment;
 import jcl.compiler.real.sa.FormAnalyzer;
 import jcl.compiler.real.sa.analyzer.body.BodyProcessingResult;
 import jcl.compiler.real.sa.analyzer.body.BodyWithDeclaresAnalyzer;
@@ -51,7 +50,7 @@ public class LocallyExpander extends MacroFunctionExpander<LocallyStruct> {
 	@Override
 	public LocallyStruct expand(final ListStruct form, final Environment environment) {
 
-		final LocallyEnvironment locallyEnvironment = new LocallyEnvironment(environment);
+		final Environment locallyEnvironment = new Environment(environment);
 
 		final ListStruct formRest = form.getRest();
 		final List<LispStruct> forms = formRest.getAsJavaList();

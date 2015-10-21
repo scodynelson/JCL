@@ -8,7 +8,6 @@ import jcl.LispStruct;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.Environments;
 import jcl.compiler.real.environment.LambdaEnvironment;
-import jcl.compiler.real.environment.SymbolMacroletEnvironment;
 import jcl.compiler.real.environment.binding.SymbolMacroBinding;
 import jcl.compiler.real.sa.FormAnalyzer;
 import jcl.compiler.real.sa.analyzer.body.BodyProcessingResult;
@@ -73,7 +72,7 @@ public class SymbolMacroletExpander extends MacroFunctionExpander<SymbolMacrolet
 			throw new ProgramErrorException("SYMBOL-MACROLET: Parameter list must be of type ListStruct. Got: " + printedObject);
 		}
 
-		final SymbolMacroletEnvironment symbolMacroletEnvironment = new SymbolMacroletEnvironment(environment);
+		final Environment symbolMacroletEnvironment = new Environment(environment);
 
 		final ListStruct parameters = (ListStruct) second;
 		final List<LispStruct> parametersAsJavaList = parameters.getAsJavaList();
@@ -111,7 +110,7 @@ public class SymbolMacroletExpander extends MacroFunctionExpander<SymbolMacrolet
 	}
 
 	private SymbolMacroletStruct.SymbolMacroletVar getSymbolMacroletElementVar(final LispStruct parameter, final DeclareStruct declare,
-	                                                                           final SymbolMacroletEnvironment symbolMacroletEnvironment) {
+	                                                                           final Environment symbolMacroletEnvironment) {
 
 		if (!(parameter instanceof ListStruct)) {
 			final String printedParameter = printer.print(parameter);
@@ -156,7 +155,7 @@ public class SymbolMacroletExpander extends MacroFunctionExpander<SymbolMacrolet
 		return parameterVar;
 	}
 
-	private LispStruct getSymbolMacroletParameterExpansion(final ListStruct listParameter, final SymbolMacroletEnvironment symbolMacroletEnvironment) {
+	private LispStruct getSymbolMacroletParameterExpansion(final ListStruct listParameter, final Environment symbolMacroletEnvironment) {
 
 		final ListStruct listParameterRest = listParameter.getRest();
 		final LispStruct parameterValue = listParameterRest.getFirst();

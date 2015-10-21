@@ -8,7 +8,7 @@ public class BindingEnvironment extends Environment {
 
 	private static final long serialVersionUID = -4289822446049832634L;
 
-	protected BindingEnvironment(final Environment parent) {
+	public BindingEnvironment(final Environment parent) {
 		super(parent);
 	}
 }

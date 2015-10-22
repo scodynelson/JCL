@@ -9,7 +9,7 @@ import java.util.Optional;
 import jcl.compiler.real.environment.binding.Binding;
 import jcl.symbols.SymbolStruct;
 
-public class ProgvEnvironment extends BindingEnvironment {
+public class ProgvEnvironment extends Environment {
 
 	private static final long serialVersionUID = 5583104617030812969L;
 

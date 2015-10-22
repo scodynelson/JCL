@@ -8,18 +8,18 @@ import java.io.Serializable;
 import java.util.List;
 
 import jcl.LispStruct;
-import jcl.compiler.real.environment.BindingEnvironment;
+import jcl.compiler.real.environment.Environment;
 import jcl.symbols.SymbolStruct;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-public class LetStruct extends ClosureCreationStruct<BindingEnvironment, LetStruct.LetVar> {
+public class LetStruct extends ClosureCreationStruct<LetStruct.LetVar> {
 
 	private static final long serialVersionUID = -3186671381163635893L;
 
-	public LetStruct(final List<LetVar> vars, final PrognStruct forms, final BindingEnvironment letEnvironment) {
+	public LetStruct(final List<LetVar> vars, final PrognStruct forms, final Environment letEnvironment) {
 		super(vars, forms, letEnvironment);
 	}
 

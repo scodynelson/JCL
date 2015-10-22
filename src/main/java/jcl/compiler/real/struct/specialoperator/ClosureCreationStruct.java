@@ -13,7 +13,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-public abstract class ClosureCreationStruct<E extends Environment, V> extends CompilerSpecialOperatorStruct {
+public abstract class ClosureCreationStruct<V> extends CompilerSpecialOperatorStruct {
 
 	private static final long serialVersionUID = 9216281797404250223L;
 
@@ -21,9 +21,9 @@ public abstract class ClosureCreationStruct<E extends Environment, V> extends Co
 
 	private final PrognStruct forms;
 
-	private final E environment;
+	private final Environment environment;
 
-	protected ClosureCreationStruct(final List<V> vars, final PrognStruct forms, final E environment) {
+	protected ClosureCreationStruct(final List<V> vars, final PrognStruct forms, final Environment environment) {
 		this.vars = vars;
 		this.forms = forms;
 		this.environment = environment;
@@ -37,7 +37,7 @@ public abstract class ClosureCreationStruct<E extends Environment, V> extends Co
 		return forms;
 	}
 
-	public E getEnvironment() {
+	public Environment getEnvironment() {
 		return environment;
 	}
 
@@ -61,7 +61,7 @@ public abstract class ClosureCreationStruct<E extends Environment, V> extends Co
 		if (obj.getClass() != getClass()) {
 			return false;
 		}
-		final ClosureCreationStruct<?, ?> rhs = (ClosureCreationStruct<?, ?>) obj;
+		final ClosureCreationStruct<?> rhs = (ClosureCreationStruct<?>) obj;
 		return new EqualsBuilder().appendSuper(super.equals(obj))
 		                          .append(vars, rhs.vars)
 		                          .append(forms, rhs.forms)

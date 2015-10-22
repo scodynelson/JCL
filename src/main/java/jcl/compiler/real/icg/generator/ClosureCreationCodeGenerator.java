@@ -27,14 +27,12 @@ import org.springframework.beans.factory.annotation.Autowired;
  * binding variables and executing form logic within the scope where {@link ClosureCreationStruct#vars} are bound and
  * have effect.
  *
- * @param <E>
- * 		the {@link Environment} type of the {@link ClosureCreationStruct#environment} value
  * @param <V>
  * 		the variable type of the {@link ClosureCreationStruct#vars} values
  * @param <I>
  * 		the type of {@link ClosureCreationStruct} to generate code for
  */
-abstract class ClosureCreationCodeGenerator<E extends Environment, V, I extends ClosureCreationStruct<E, V>> extends SpecialOperatorCodeGenerator<I> {
+abstract class ClosureCreationCodeGenerator<V, I extends ClosureCreationStruct<V>> extends SpecialOperatorCodeGenerator<I> {
 
 	/**
 	 * {@link PrognCodeGenerator} used for generating the {@link ClosureCreationStruct#forms}.
@@ -119,7 +117,7 @@ abstract class ClosureCreationCodeGenerator<E extends Environment, V, I extends 
 
 		mv.visitLabel(tryBlockStart);
 
-		final E environment = input.getEnvironment();
+		final Environment environment = input.getEnvironment();
 		final PrognStruct forms = input.getForms();
 
 		final Deque<Environment> environmentDeque = generatorState.getEnvironmentDeque();

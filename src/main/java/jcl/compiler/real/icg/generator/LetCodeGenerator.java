@@ -10,7 +10,6 @@ import java.util.Map;
 import java.util.Set;
 
 import jcl.LispStruct;
-import jcl.compiler.real.environment.BindingEnvironment;
 import jcl.compiler.real.icg.GeneratorState;
 import jcl.compiler.real.icg.IntermediateCodeGenerator;
 import jcl.compiler.real.icg.JavaMethodBuilder;
@@ -28,7 +27,7 @@ import org.springframework.stereotype.Component;
  * generated. This ensures that no variables are affected nor dependent on the definition of others.
  */
 @Component
-final class LetCodeGenerator extends ClosureCreationCodeGenerator<BindingEnvironment, LetStruct.LetVar, LetStruct> {
+final class LetCodeGenerator extends ClosureCreationCodeGenerator<LetStruct.LetVar, LetStruct> {
 
 	/**
 	 * {@link IntermediateCodeGenerator} used for generating the {@link LetStruct.LetVar#initForm} values.

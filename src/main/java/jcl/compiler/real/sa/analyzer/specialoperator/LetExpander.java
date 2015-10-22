@@ -6,7 +6,6 @@ import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
-import jcl.compiler.real.environment.BindingEnvironment;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.binding.Binding;
 import jcl.compiler.real.sa.FormAnalyzer;
@@ -69,7 +68,7 @@ public class LetExpander extends MacroFunctionExpander<LetStruct> {
 			throw new ProgramErrorException("LET: Parameter list must be a list. Got: " + printedObject);
 		}
 
-		final BindingEnvironment letEnvironment = new BindingEnvironment(environment);
+		final Environment letEnvironment = new Environment(environment);
 
 		final ListStruct parameters = (ListStruct) second;
 		final List<LispStruct> parametersAsJavaList = parameters.getAsJavaList();
@@ -103,7 +102,7 @@ public class LetExpander extends MacroFunctionExpander<LetStruct> {
 	}
 
 	private LetStruct.LetVar getLetVar(final LispStruct parameter, final DeclareStruct declare,
-	                                   final BindingEnvironment letEnvironment) {
+	                                   final Environment letEnvironment) {
 
 		if (!(parameter instanceof SymbolStruct) && !(parameter instanceof ListStruct)) {
 			final String printedParameter = printer.print(parameter);
@@ -152,7 +151,7 @@ public class LetExpander extends MacroFunctionExpander<LetStruct> {
 		return (SymbolStruct<?>) listParameterFirst;
 	}
 
-	private LispStruct getLetListParameterInitForm(final ListStruct listParameter, final BindingEnvironment letEnvironment) {
+	private LispStruct getLetListParameterInitForm(final ListStruct listParameter, final Environment letEnvironment) {
 
 		final ListStruct listParameterRest = listParameter.getRest();
 		final LispStruct parameterValue = listParameterRest.getFirst();

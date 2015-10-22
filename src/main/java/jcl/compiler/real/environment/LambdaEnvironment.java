@@ -9,7 +9,7 @@ import java.util.Map;
 
 import jcl.LispStruct;
 
-public class LambdaEnvironment extends BindingEnvironment {
+public class LambdaEnvironment extends Environment {
 
 	private static final long serialVersionUID = -1182568685360839544L;
 

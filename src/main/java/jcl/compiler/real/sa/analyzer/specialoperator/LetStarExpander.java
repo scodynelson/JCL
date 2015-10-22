@@ -6,7 +6,6 @@ import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
-import jcl.compiler.real.environment.BindingEnvironment;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.binding.Binding;
 import jcl.compiler.real.sa.FormAnalyzer;
@@ -69,7 +68,7 @@ public class LetStarExpander extends MacroFunctionExpander<LetStarStruct> {
 			throw new ProgramErrorException("LET*: Parameter list must be a list. Got: " + printedObject);
 		}
 
-		final BindingEnvironment letStarEnvironment = new BindingEnvironment(environment);
+		final Environment letStarEnvironment = new Environment(environment);
 
 		final ListStruct parameters = (ListStruct) second;
 		final List<LispStruct> parametersAsJavaList = parameters.getAsJavaList();
@@ -103,7 +102,7 @@ public class LetStarExpander extends MacroFunctionExpander<LetStarStruct> {
 	}
 
 	private LetStarStruct.LetStarVar getLetStarVar(final LispStruct parameter, final DeclareStruct declare,
-	                                               final BindingEnvironment letStarEnvironment) {
+	                                               final Environment letStarEnvironment) {
 
 		if (!(parameter instanceof SymbolStruct) && !(parameter instanceof ListStruct)) {
 			final String printedParameter = printer.print(parameter);
@@ -152,7 +151,7 @@ public class LetStarExpander extends MacroFunctionExpander<LetStarStruct> {
 		return (SymbolStruct<?>) listParameterFirst;
 	}
 
-	private LispStruct getLetStarListParameterInitForm(final ListStruct listParameter, final BindingEnvironment letStarEnvironment) {
+	private LispStruct getLetStarListParameterInitForm(final ListStruct listParameter, final Environment letStarEnvironment) {
 
 		final ListStruct listParameterRest = listParameter.getRest();
 		final LispStruct parameterValue = listParameterRest.getFirst();

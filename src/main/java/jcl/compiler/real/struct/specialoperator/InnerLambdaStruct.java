@@ -7,7 +7,7 @@ package jcl.compiler.real.struct.specialoperator;
 import java.io.Serializable;
 import java.util.List;
 
-import jcl.compiler.real.environment.InnerLambdaEnvironment;
+import jcl.compiler.real.environment.LambdaEnvironment;
 import jcl.compiler.real.struct.CompilerSpecialOperatorStruct;
 import jcl.symbols.SymbolStruct;
 
@@ -19,9 +19,9 @@ public class InnerLambdaStruct extends CompilerSpecialOperatorStruct {
 
 	private final PrognStruct forms;
 
-	private final InnerLambdaEnvironment lexicalEnvironment;
+	private final LambdaEnvironment lexicalEnvironment;
 
-	public InnerLambdaStruct(final List<InnerLambdaVar> vars, final PrognStruct forms, final InnerLambdaEnvironment lexicalEnvironment) {
+	public InnerLambdaStruct(final List<InnerLambdaVar> vars, final PrognStruct forms, final LambdaEnvironment lexicalEnvironment) {
 		this.vars = vars;
 		this.forms = forms;
 		this.lexicalEnvironment = lexicalEnvironment;
@@ -35,7 +35,7 @@ public class InnerLambdaStruct extends CompilerSpecialOperatorStruct {
 		return forms;
 	}
 
-	public InnerLambdaEnvironment getLexicalEnvironment() {
+	public LambdaEnvironment getLexicalEnvironment() {
 		return lexicalEnvironment;
 	}
 

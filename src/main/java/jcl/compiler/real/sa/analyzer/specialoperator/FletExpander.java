@@ -10,7 +10,7 @@ import javax.annotation.PostConstruct;
 import jcl.LispStruct;
 import jcl.arrays.StringStruct;
 import jcl.compiler.real.environment.Environment;
-import jcl.compiler.real.environment.InnerLambdaEnvironment;
+import jcl.compiler.real.environment.LambdaEnvironment;
 import jcl.compiler.real.environment.binding.Binding;
 import jcl.compiler.real.sa.FormAnalyzer;
 import jcl.compiler.real.sa.analyzer.body.BodyProcessingResult;
@@ -88,7 +88,7 @@ public class FletExpander extends MacroFunctionExpander<InnerLambdaStruct> {
 			throw new ProgramErrorException("FLET: Parameter list must be a list. Got: " + printedObject);
 		}
 
-		final InnerLambdaEnvironment fletEnvironment = new InnerLambdaEnvironment(environment);
+		final LambdaEnvironment fletEnvironment = new LambdaEnvironment(environment);
 
 		final Stack<SymbolStruct<?>> functionNameStack = environment.getFunctionNameStack();
 
@@ -150,6 +150,10 @@ public class FletExpander extends MacroFunctionExpander<InnerLambdaStruct> {
 				throw new ProgramErrorException("FLET: First element of function parameter must be a symbol. Got: " + printedObject);
 			}
 			final SymbolStruct<?> functionName = (SymbolStruct<?>) functionListFirst;
+
+			if (functionNames.contains(functionName)) {
+				LOGGER.warn("FLET: Multiple bindings of {} in FLET form.", functionName.getName());
+			}
 			functionNames.add(functionName);
 		}
 
@@ -157,7 +161,7 @@ public class FletExpander extends MacroFunctionExpander<InnerLambdaStruct> {
 	}
 
 	private InnerLambdaStruct.InnerLambdaVar getFletVar(final LispStruct functionDefinition, final DeclareStruct declare,
-	                                                    final InnerLambdaEnvironment fletEnvironment, final List<SymbolStruct<?>> functionNames) {
+	                                                    final LambdaEnvironment fletEnvironment, final List<SymbolStruct<?>> functionNames) {
 
 		final ListStruct functionList = (ListStruct) functionDefinition;
 		final SymbolStruct<?> functionName = (SymbolStruct<?>) functionList.getFirst();
@@ -167,18 +171,10 @@ public class FletExpander extends MacroFunctionExpander<InnerLambdaStruct> {
 		                                 .stream()
 		                                 .map(SpecialDeclarationStruct::getVar)
 		                                 .anyMatch(Predicate.isEqual(functionName));
-
-		if (fletEnvironment.hasFunctionBinding(functionName)) {
-			LOGGER.warn("FLET: Multiple bindings of {} in FLET form.", functionName.getName());
-		}
-
-		final Binding binding = new Binding(functionName, TType.INSTANCE);
-		fletEnvironment.addFunctionBinding(binding);
-
 		return new InnerLambdaStruct.InnerLambdaVar(functionName, functionInitForm, isSpecial);
 	}
 
-	private CompilerFunctionStruct getFunctionParameterInitForm(final ListStruct functionListParameter, final InnerLambdaEnvironment fletEnvironment,
+	private CompilerFunctionStruct getFunctionParameterInitForm(final ListStruct functionListParameter, final LambdaEnvironment fletEnvironment,
 	                                                            final List<SymbolStruct<?>> functionNames) {
 
 		final int functionListParameterSize = functionListParameter.size();

@@ -11,7 +11,6 @@ import java.util.Map;
 import java.util.Set;
 
 import jcl.compiler.real.environment.Environment;
-import jcl.compiler.real.environment.InnerLambdaEnvironment;
 import jcl.compiler.real.icg.GeneratorState;
 import jcl.compiler.real.icg.IntermediateCodeGenerator;
 import jcl.compiler.real.icg.JavaMethodBuilder;
@@ -199,7 +198,7 @@ final class InnerLambdaCodeGenerator extends SpecialOperatorCodeGenerator<InnerL
 
 		mv.visitLabel(tryBlockStart);
 
-		final InnerLambdaEnvironment environment = input.getLexicalEnvironment();
+		final Environment environment = input.getLexicalEnvironment();
 		final PrognStruct forms = input.getForms();
 
 		final Deque<Environment> environmentDeque = generatorState.getEnvironmentDeque();

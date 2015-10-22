@@ -10,7 +10,7 @@ import javax.annotation.PostConstruct;
 import jcl.LispStruct;
 import jcl.arrays.StringStruct;
 import jcl.compiler.real.environment.Environment;
-import jcl.compiler.real.environment.InnerLambdaEnvironment;
+import jcl.compiler.real.environment.LambdaEnvironment;
 import jcl.compiler.real.environment.binding.Binding;
 import jcl.compiler.real.sa.FormAnalyzer;
 import jcl.compiler.real.sa.analyzer.body.BodyProcessingResult;
@@ -41,7 +41,7 @@ public class LabelsExpander extends MacroFunctionExpander<InnerLambdaStruct> {
 
 	private static final long serialVersionUID = -3698985413039911540L;
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(FletExpander.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(LabelsExpander.class);
 
 	@Autowired
 	private FormAnalyzer formAnalyzer;
@@ -85,7 +85,7 @@ public class LabelsExpander extends MacroFunctionExpander<InnerLambdaStruct> {
 			throw new ProgramErrorException("LABELS: Parameter list must be a list. Got: " + printedObject);
 		}
 
-		final InnerLambdaEnvironment labelsEnvironment = new InnerLambdaEnvironment(environment);
+		final LambdaEnvironment labelsEnvironment = new LambdaEnvironment(environment);
 
 		final Stack<SymbolStruct<?>> functionNameStack = environment.getFunctionNameStack();
 		List<SymbolStruct<?>> functionNames = null;
@@ -148,6 +148,10 @@ public class LabelsExpander extends MacroFunctionExpander<InnerLambdaStruct> {
 				throw new ProgramErrorException("LABELS: First element of function parameter must be a symbol. Got: " + printedObject);
 			}
 			final SymbolStruct<?> functionName = (SymbolStruct<?>) functionListFirst;
+
+			if (functionNames.contains(functionName)) {
+				LOGGER.warn("LABELS: Multiple bindings of {} in LABELS form.", functionName.getName());
+			}
 			functionNames.add(functionName);
 		}
 
@@ -155,7 +159,7 @@ public class LabelsExpander extends MacroFunctionExpander<InnerLambdaStruct> {
 	}
 
 	private InnerLambdaStruct.InnerLambdaVar getLabelsVar(final LispStruct functionDefinition, final DeclareStruct declare,
-	                                                      final InnerLambdaEnvironment labelsEnvironment) {
+	                                                      final LambdaEnvironment labelsEnvironment) {
 
 		final ListStruct functionList = (ListStruct) functionDefinition;
 		final SymbolStruct<?> functionName = (SymbolStruct<?>) functionList.getFirst();
@@ -165,19 +169,11 @@ public class LabelsExpander extends MacroFunctionExpander<InnerLambdaStruct> {
 		                                 .stream()
 		                                 .map(SpecialDeclarationStruct::getVar)
 		                                 .anyMatch(Predicate.isEqual(functionName));
-
-		if (labelsEnvironment.hasFunctionBinding(functionName)) {
-			LOGGER.warn("LABELS: Multiple bindings of {} in LABELS form.", functionName.getName());
-		}
-
-		final Binding binding = new Binding(functionName, TType.INSTANCE);
-		labelsEnvironment.addFunctionBinding(binding);
-
 		return new InnerLambdaStruct.InnerLambdaVar(functionName, functionInitForm, isSpecial);
 	}
 
 	private CompilerFunctionStruct getFunctionParameterInitForm(final ListStruct functionListParameter,
-	                                                            final InnerLambdaEnvironment labelsEnvironment) {
+	                                                            final LambdaEnvironment labelsEnvironment) {
 
 		final int functionListParameterSize = functionListParameter.size();
 		if (functionListParameterSize < 2) {

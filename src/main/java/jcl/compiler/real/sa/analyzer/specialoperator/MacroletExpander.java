@@ -10,7 +10,7 @@ import javax.annotation.PostConstruct;
 import jcl.LispStruct;
 import jcl.arrays.StringStruct;
 import jcl.compiler.real.environment.Environment;
-import jcl.compiler.real.environment.InnerLambdaEnvironment;
+import jcl.compiler.real.environment.LambdaEnvironment;
 import jcl.compiler.real.environment.binding.Binding;
 import jcl.compiler.real.sa.FormAnalyzer;
 import jcl.compiler.real.sa.analyzer.body.BodyProcessingResult;
@@ -31,6 +31,8 @@ import jcl.symbols.SpecialOperatorStruct;
 import jcl.symbols.SymbolStruct;
 import jcl.system.StackUtils;
 import jcl.types.TType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -38,6 +40,8 @@ import org.springframework.stereotype.Component;
 public class MacroletExpander extends MacroFunctionExpander<InnerLambdaStruct> {
 
 	private static final long serialVersionUID = 920568167525914860L;
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(MacroletExpander.class);
 
 	@Autowired
 	private FormAnalyzer formAnalyzer;
@@ -81,7 +85,7 @@ public class MacroletExpander extends MacroFunctionExpander<InnerLambdaStruct> {
 			throw new ProgramErrorException("MACROLET: Parameter list must be a list. Got: " + printedObject);
 		}
 
-		final InnerLambdaEnvironment macroletEnvironment = new InnerLambdaEnvironment(environment);
+		final LambdaEnvironment macroletEnvironment = new LambdaEnvironment(environment);
 
 		final Stack<SymbolStruct<?>> functionNameStack = macroletEnvironment.getFunctionNameStack();
 		List<SymbolStruct<?>> functionNames = null;
@@ -144,6 +148,10 @@ public class MacroletExpander extends MacroFunctionExpander<InnerLambdaStruct> {
 				throw new ProgramErrorException("MACROLET: First element of function parameter must be a symbol. Got: " + printedObject);
 			}
 			final SymbolStruct<?> functionName = (SymbolStruct<?>) functionListFirst;
+
+			if (functionNames.contains(functionName)) {
+				LOGGER.warn("MACROLET: Multiple bindings of {} in MACROLET form.", functionName.getName());
+			}
 			functionNames.add(functionName);
 		}
 
@@ -151,7 +159,7 @@ public class MacroletExpander extends MacroFunctionExpander<InnerLambdaStruct> {
 	}
 
 	private InnerLambdaStruct.InnerLambdaVar getMacroletVar(final LispStruct functionDefinition, final DeclareStruct declare,
-	                                                        final InnerLambdaEnvironment macroletEnvironment) {
+	                                                        final LambdaEnvironment macroletEnvironment) {
 
 		final ListStruct functionList = (ListStruct) functionDefinition;
 		final SymbolStruct<?> functionName = (SymbolStruct<?>) functionList.getFirst();
@@ -173,7 +181,7 @@ public class MacroletExpander extends MacroFunctionExpander<InnerLambdaStruct> {
 	}
 
 	private CompilerFunctionStruct getFunctionParameterInitForm(final ListStruct functionListParameter,
-	                                                            final InnerLambdaEnvironment macroletEnvironment) {
+	                                                            final LambdaEnvironment macroletEnvironment) {
 
 		// TODO: This will be a MacroLambda, NOT a Lambda form!!!
 

@@ -18,7 +18,6 @@ import org.apfloat.Apcomplex;
 import org.apfloat.ApcomplexMath;
 import org.apfloat.Apfloat;
 import org.apfloat.ApfloatMath;
-import org.apfloat.Apint;
 
 /**
  * The {@link RealStruct} is the object representation of a Lisp 'real' type.

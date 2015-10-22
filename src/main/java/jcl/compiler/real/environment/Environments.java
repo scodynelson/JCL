@@ -98,11 +98,6 @@ public final class Environments {
 
 	public static void addDynamicVariableBinding(final SpecialDeclarationStruct specialDeclaration,
 	                                             final Environment environment) {
-
-		final LambdaEnvironment currentLambda = getEnclosingLambda(environment);
-		final int nextBindingsPosition = currentLambda.getNextParameterNumber();
-		environment.setBindingsPosition(nextBindingsPosition);
-
 		final SymbolStruct<?> var = specialDeclaration.getVar();
 
 		final Environment bindingEnvironment = getDynamicBindingEnvironment(environment, var);

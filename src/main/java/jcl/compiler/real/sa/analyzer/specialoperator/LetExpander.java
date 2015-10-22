@@ -8,7 +8,6 @@ import jcl.LispStruct;
 import jcl.compiler.real.environment.BindingEnvironment;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.Environments;
-import jcl.compiler.real.environment.LambdaEnvironment;
 import jcl.compiler.real.environment.binding.EnvironmentParameterBinding;
 import jcl.compiler.real.sa.FormAnalyzer;
 import jcl.compiler.real.sa.analyzer.body.BodyProcessingResult;
@@ -123,10 +122,6 @@ public class LetExpander extends MacroFunctionExpander<LetStruct> {
 			var = (SymbolStruct<?>) parameter;
 			initForm = NullStruct.INSTANCE;
 		}
-
-		final LambdaEnvironment currentLambda = Environments.getEnclosingLambda(letEnvironment);
-		final int newBindingsPosition = currentLambda.getNextParameterNumber();
-		letEnvironment.setBindingsPosition(newBindingsPosition);
 
 		final boolean isSpecial = Environments.isSpecial(declare, var);
 

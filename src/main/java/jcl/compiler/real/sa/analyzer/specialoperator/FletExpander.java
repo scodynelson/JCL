@@ -11,7 +11,6 @@ import jcl.arrays.StringStruct;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.Environments;
 import jcl.compiler.real.environment.InnerLambdaEnvironment;
-import jcl.compiler.real.environment.LambdaEnvironment;
 import jcl.compiler.real.environment.binding.EnvironmentParameterBinding;
 import jcl.compiler.real.sa.FormAnalyzer;
 import jcl.compiler.real.sa.analyzer.body.BodyProcessingResult;
@@ -160,10 +159,6 @@ public class FletExpander extends MacroFunctionExpander<InnerLambdaStruct> {
 		final ListStruct functionList = (ListStruct) functionDefinition;
 		final SymbolStruct<?> functionName = (SymbolStruct<?>) functionList.getFirst();
 		final CompilerFunctionStruct functionInitForm = getFunctionParameterInitForm(functionList, fletEnvironment, functionNames);
-
-		final LambdaEnvironment currentLambda = Environments.getEnclosingLambda(fletEnvironment);
-		final int nextBindingsPosition = currentLambda.getNextParameterNumber();
-		fletEnvironment.setBindingsPosition(nextBindingsPosition);
 
 		final boolean isSpecial = Environments.isSpecial(declare, functionName);
 

@@ -37,12 +37,6 @@ public class Environment extends StandardObjectStruct {
 
 	private final List<SymbolMacroBinding> symbolMacroBindings = new ArrayList<>();
 
-	private final Closure closure;
-
-	private int bindingsPosition;
-
-	private int closureDepth = 0;
-
 	private Stack<SymbolStruct<?>> functionNameStack = new Stack<>();
 
 	private Set<SymbolStruct<?>> undefinedFunctions = Collections.synchronizedSet(new HashSet<>());
@@ -57,9 +51,7 @@ public class Environment extends StandardObjectStruct {
 	public Environment(final Environment parent) {
 		this.parent = parent;
 		if (parent != null) {
-			closureDepth = parent.closureDepth + 1;
 
-			bindingsPosition = parent.bindingsPosition;
 			topLevelMode = parent.topLevelMode;
 
 			functionNameStack = parent.functionNameStack;
@@ -69,8 +61,6 @@ public class Environment extends StandardObjectStruct {
 			blockStack = parent.blockStack;
 			tagbodyStack = parent.tagbodyStack;
 		}
-
-		closure = new Closure(closureDepth);
 
 		if (functionNameStack.isEmpty()) {
 			functionNameStack.push(null);
@@ -87,18 +77,6 @@ public class Environment extends StandardObjectStruct {
 
 	public Set<SymbolStruct<?>> getUndefinedFunctions() {
 		return undefinedFunctions;
-	}
-
-	public int getBindingsPosition() {
-		return bindingsPosition;
-	}
-
-	public void setBindingsPosition(final int bindingsPosition) {
-		this.bindingsPosition = bindingsPosition;
-	}
-
-	public int getClosureDepth() {
-		return closureDepth;
 	}
 
 	public Stack<SymbolStruct<?>> getBlockStack() {
@@ -174,19 +152,12 @@ public class Environment extends StandardObjectStruct {
 		symbolMacroBindings.add(symbolMacroBinding);
 	}
 
-	public Closure getClosure() {
-		return closure;
-	}
-
 	@Override
 	public int hashCode() {
 		return new HashCodeBuilder().appendSuper(super.hashCode())
 		                            .append(parent)
 		                            .append(lexicalBindings)
 		                            .append(dynamicBindings)
-		                            .append(closure)
-		                            .append(bindingsPosition)
-		                            .append(closureDepth)
 		                            .append(functionNameStack)
 		                            .append(undefinedFunctions)
 		                            .append(blockStack)
@@ -211,9 +182,6 @@ public class Environment extends StandardObjectStruct {
 		                          .append(parent, rhs.parent)
 		                          .append(lexicalBindings, rhs.lexicalBindings)
 		                          .append(dynamicBindings, rhs.dynamicBindings)
-		                          .append(closure, rhs.closure)
-		                          .append(bindingsPosition, rhs.bindingsPosition)
-		                          .append(closureDepth, rhs.closureDepth)
 		                          .append(functionNameStack, rhs.functionNameStack)
 		                          .append(undefinedFunctions, rhs.undefinedFunctions)
 		                          .append(blockStack, rhs.blockStack)
@@ -227,9 +195,6 @@ public class Environment extends StandardObjectStruct {
 		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(lexicalBindings)
 		                                                                .append(parent)
 		                                                                .append(dynamicBindings)
-		                                                                .append(closure)
-		                                                                .append(bindingsPosition)
-		                                                                .append(closureDepth)
 		                                                                .append(functionNameStack)
 		                                                                .append(undefinedFunctions)
 		                                                                .append(blockStack)

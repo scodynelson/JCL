@@ -6,8 +6,6 @@ import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
 import jcl.compiler.real.environment.Environment;
-import jcl.compiler.real.environment.Environments;
-import jcl.compiler.real.environment.LambdaEnvironment;
 import jcl.compiler.real.environment.binding.SymbolMacroBinding;
 import jcl.compiler.real.sa.FormAnalyzer;
 import jcl.compiler.real.sa.analyzer.body.BodyProcessingResult;
@@ -120,10 +118,6 @@ public class SymbolMacroletExpander extends MacroFunctionExpander<SymbolMacrolet
 		final ListStruct listParameter = (ListStruct) parameter;
 		final SymbolStruct<?> var = getSymbolMacroletParameterVar(listParameter);
 		final LispStruct expansion = getSymbolMacroletParameterExpansion(listParameter, symbolMacroletEnvironment);
-
-		final LambdaEnvironment currentLambda = Environments.getEnclosingLambda(symbolMacroletEnvironment);
-		final int nextBindingsPosition = currentLambda.getNextParameterNumber();
-		symbolMacroletEnvironment.setBindingsPosition(nextBindingsPosition);
 
 		final SymbolMacroBinding binding = new SymbolMacroBinding(var, TType.INSTANCE, expansion);
 		symbolMacroletEnvironment.addSymbolMacroBinding(binding);

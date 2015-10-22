@@ -11,10 +11,6 @@ import jcl.compiler.real.functions.MacroExpandResult;
 import jcl.compiler.real.sa.FormAnalyzer;
 import jcl.lists.ConsStruct;
 import jcl.symbols.SymbolStruct;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

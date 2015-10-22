@@ -1,11 +1,9 @@
 package jcl.symbols;
 
 import jcl.LispStruct;
-import jcl.functions.expanders.CompilerMacroFunctionExpander;
-import jcl.functions.expanders.MacroFunctionExpander;
-import jcl.functions.expanders.SymbolMacroExpander;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.functions.FunctionStruct;
+import jcl.functions.expanders.SymbolMacroExpander;
 import jcl.packages.PackageStruct;
 import jcl.types.SymbolType;
 

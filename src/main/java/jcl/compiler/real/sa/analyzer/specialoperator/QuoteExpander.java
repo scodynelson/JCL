@@ -4,9 +4,9 @@ import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
 import jcl.compiler.real.environment.Environment;
-import jcl.functions.expanders.MacroFunctionExpander;
 import jcl.compiler.real.struct.specialoperator.QuoteStruct;
 import jcl.conditions.exceptions.ProgramErrorException;
+import jcl.functions.expanders.MacroFunctionExpander;
 import jcl.lists.ListStruct;
 import jcl.symbols.SpecialOperatorStruct;
 import org.springframework.stereotype.Component;

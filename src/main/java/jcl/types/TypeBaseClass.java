@@ -4,8 +4,6 @@
 
 package jcl.types;
 
-import java.lang.String;
-
 import jcl.LispType;
 import jcl.packages.GlobalPackageStruct;
 import jcl.symbols.SymbolStruct;

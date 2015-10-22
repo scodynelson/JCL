@@ -11,9 +11,6 @@ import jcl.classes.BuiltInClassStruct;
 import jcl.conditions.exceptions.ErrorException;
 import jcl.types.NumberType;
 import org.apfloat.Apcomplex;
-import org.apfloat.ApcomplexMath;
-import org.apfloat.Apfloat;
-import org.apfloat.Apint;
 
 /**
  * The {@link NumberStruct} is the object representation of a Lisp 'number' type.

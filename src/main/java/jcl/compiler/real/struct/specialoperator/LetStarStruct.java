@@ -10,10 +10,6 @@ import java.util.List;
 import jcl.LispStruct;
 import jcl.compiler.real.environment.Environment;
 import jcl.symbols.SymbolStruct;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 public class LetStarStruct extends ClosureCreationStruct<LetStarStruct.LetStarVar> {
 
@@ -49,37 +45,6 @@ public class LetStarStruct extends ClosureCreationStruct<LetStarStruct.LetStarVa
 
 		public boolean isSpecial() {
 			return isSpecial;
-		}
-
-		@Override
-		public int hashCode() {
-			return new HashCodeBuilder().append(var)
-			                            .append(initForm)
-			                            .toHashCode();
-		}
-
-		@Override
-		public boolean equals(final Object obj) {
-			if (obj == null) {
-				return false;
-			}
-			if (obj == this) {
-				return true;
-			}
-			if (obj.getClass() != getClass()) {
-				return false;
-			}
-			final LetStarVar rhs = (LetStarVar) obj;
-			return new EqualsBuilder().append(var, rhs.var)
-			                          .append(initForm, rhs.initForm)
-			                          .isEquals();
-		}
-
-		@Override
-		public String toString() {
-			return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(var)
-			                                                                .append(initForm)
-			                                                                .toString();
 		}
 	}
 }

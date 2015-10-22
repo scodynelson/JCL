@@ -11,10 +11,6 @@ import jcl.LispStruct;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.struct.CompilerSpecialOperatorStruct;
 import jcl.symbols.SymbolStruct;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 public class SymbolMacroletStruct extends CompilerSpecialOperatorStruct {
 
@@ -44,42 +40,6 @@ public class SymbolMacroletStruct extends CompilerSpecialOperatorStruct {
 		return symbolMacroletEnvironment;
 	}
 
-	@Override
-	public int hashCode() {
-		return new HashCodeBuilder().appendSuper(super.hashCode())
-		                            .append(vars)
-		                            .append(forms)
-		                            .append(symbolMacroletEnvironment)
-		                            .toHashCode();
-	}
-
-	@Override
-	public boolean equals(final Object obj) {
-		if (obj == null) {
-			return false;
-		}
-		if (obj == this) {
-			return true;
-		}
-		if (obj.getClass() != getClass()) {
-			return false;
-		}
-		final SymbolMacroletStruct rhs = (SymbolMacroletStruct) obj;
-		return new EqualsBuilder().appendSuper(super.equals(obj))
-		                          .append(vars, rhs.vars)
-		                          .append(forms, rhs.forms)
-		                          .append(symbolMacroletEnvironment, rhs.symbolMacroletEnvironment)
-		                          .isEquals();
-	}
-
-	@Override
-	public String toString() {
-		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(vars)
-		                                                                .append(forms)
-		                                                                .append(symbolMacroletEnvironment)
-		                                                                .toString();
-	}
-
 	public static class SymbolMacroletVar implements Serializable {
 
 		private static final long serialVersionUID = -601687250765470819L;
@@ -99,37 +59,6 @@ public class SymbolMacroletStruct extends CompilerSpecialOperatorStruct {
 
 		public LispStruct getExpansion() {
 			return expansion;
-		}
-
-		@Override
-		public int hashCode() {
-			return new HashCodeBuilder().append(var)
-			                            .append(expansion)
-			                            .toHashCode();
-		}
-
-		@Override
-		public boolean equals(final Object obj) {
-			if (obj == null) {
-				return false;
-			}
-			if (obj == this) {
-				return true;
-			}
-			if (obj.getClass() != getClass()) {
-				return false;
-			}
-			final SymbolMacroletVar rhs = (SymbolMacroletVar) obj;
-			return new EqualsBuilder().append(var, rhs.var)
-			                          .append(expansion, rhs.expansion)
-			                          .isEquals();
-		}
-
-		@Override
-		public String toString() {
-			return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(var)
-			                                                                .append(expansion)
-			                                                                .toString();
 		}
 	}
 }

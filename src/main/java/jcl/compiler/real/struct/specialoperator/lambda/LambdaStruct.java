@@ -9,10 +9,6 @@ import jcl.compiler.real.environment.LambdaEnvironment;
 import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaListBindings;
 import jcl.compiler.real.struct.CompilerSpecialOperatorStruct;
 import jcl.compiler.real.struct.specialoperator.PrognStruct;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 public class LambdaStruct extends CompilerSpecialOperatorStruct {
 
@@ -55,47 +51,5 @@ public class LambdaStruct extends CompilerSpecialOperatorStruct {
 
 	public LambdaEnvironment getLambdaEnvironment() {
 		return lambdaEnvironment;
-	}
-
-	@Override
-	public int hashCode() {
-		return new HashCodeBuilder().appendSuper(super.hashCode())
-		                            .append(className)
-		                            .append(lambdaListBindings)
-		                            .append(docString)
-		                            .append(forms)
-		                            .append(lambdaEnvironment)
-		                            .toHashCode();
-	}
-
-	@Override
-	public boolean equals(final Object obj) {
-		if (obj == null) {
-			return false;
-		}
-		if (obj == this) {
-			return true;
-		}
-		if (obj.getClass() != getClass()) {
-			return false;
-		}
-		final LambdaStruct rhs = (LambdaStruct) obj;
-		return new EqualsBuilder().appendSuper(super.equals(obj))
-		                          .append(className, rhs.className)
-		                          .append(lambdaListBindings, rhs.lambdaListBindings)
-		                          .append(docString, rhs.docString)
-		                          .append(forms, rhs.forms)
-		                          .append(lambdaEnvironment, rhs.lambdaEnvironment)
-		                          .isEquals();
-	}
-
-	@Override
-	public String toString() {
-		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(className)
-		                                                                .append(lambdaListBindings)
-		                                                                .append(docString)
-		                                                                .append(forms)
-		                                                                .append(lambdaEnvironment)
-		                                                                .toString();
 	}
 }

@@ -10,10 +10,6 @@ import jcl.compiler.real.environment.binding.lambdalist.MacroLambdaListBindings;
 import jcl.compiler.real.struct.CompilerSpecialOperatorStruct;
 import jcl.compiler.real.struct.specialoperator.PrognStruct;
 import jcl.symbols.SymbolStruct;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 public class MacroLambdaStruct extends CompilerSpecialOperatorStruct {
 
@@ -59,50 +55,5 @@ public class MacroLambdaStruct extends CompilerSpecialOperatorStruct {
 
 	public LambdaEnvironment getLambdaEnvironment() {
 		return lambdaEnvironment;
-	}
-
-	@Override
-	public int hashCode() {
-		return new HashCodeBuilder().appendSuper(super.hashCode())
-		                            .append(fileName)
-		                            .append(macroName)
-		                            .append(lambdaListBindings)
-		                            .append(docString)
-		                            .append(forms)
-		                            .append(lambdaEnvironment)
-		                            .toHashCode();
-	}
-
-	@Override
-	public boolean equals(final Object obj) {
-		if (obj == null) {
-			return false;
-		}
-		if (obj == this) {
-			return true;
-		}
-		if (obj.getClass() != getClass()) {
-			return false;
-		}
-		final MacroLambdaStruct rhs = (MacroLambdaStruct) obj;
-		return new EqualsBuilder().appendSuper(super.equals(obj))
-		                          .append(fileName, rhs.fileName)
-		                          .append(macroName, rhs.macroName)
-		                          .append(lambdaListBindings, rhs.lambdaListBindings)
-		                          .append(docString, rhs.docString)
-		                          .append(forms, rhs.forms)
-		                          .append(lambdaEnvironment, rhs.lambdaEnvironment)
-		                          .isEquals();
-	}
-
-	@Override
-	public String toString() {
-		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(fileName)
-		                                                                .append(macroName)
-		                                                                .append(lambdaListBindings)
-		                                                                .append(docString)
-		                                                                .append(forms)
-		                                                                .append(lambdaEnvironment)
-		                                                                .toString();
 	}
 }

@@ -3,11 +3,11 @@ package jcl.compiler.real.sa.analyzer.lambdalistparser;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.function.Predicate;
 
 import jcl.LispStruct;
 import jcl.compiler.real.CompilerConstants;
 import jcl.compiler.real.environment.Environment;
-import jcl.compiler.real.environment.Environments;
 import jcl.compiler.real.environment.binding.Binding;
 import jcl.compiler.real.environment.binding.lambdalist.AuxBinding;
 import jcl.compiler.real.environment.binding.lambdalist.BodyBinding;
@@ -21,6 +21,7 @@ import jcl.compiler.real.environment.binding.lambdalist.SuppliedPBinding;
 import jcl.compiler.real.environment.binding.lambdalist.WholeBinding;
 import jcl.compiler.real.sa.FormAnalyzer;
 import jcl.compiler.real.struct.specialoperator.declare.DeclareStruct;
+import jcl.compiler.real.struct.specialoperator.declare.SpecialDeclarationStruct;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;
@@ -54,7 +55,10 @@ public class LambdaListParser {
 		}
 		final SymbolStruct<?> currentParam = (SymbolStruct) currentElement;
 
-		final boolean isSpecial = Environments.isSpecial(declareElement, currentParam);
+		final boolean isSpecial = declareElement.getSpecialDeclarations()
+		                                        .stream()
+		                                        .map(SpecialDeclarationStruct::getVar)
+		                                        .anyMatch(Predicate.isEqual(currentParam));
 
 		final Binding binding = new Binding(currentParam, TType.INSTANCE);
 		if (isSpecial) {
@@ -129,7 +133,10 @@ public class LambdaListParser {
 				}
 			}
 
-			final boolean isSpecial = Environments.isSpecial(declareElement, currentParam);
+			final boolean isSpecial = declareElement.getSpecialDeclarations()
+			                                        .stream()
+			                                        .map(SpecialDeclarationStruct::getVar)
+			                                        .anyMatch(Predicate.isEqual(currentParam));
 
 			final Binding binding = new Binding(currentParam, TType.INSTANCE);
 			if (isSpecial) {
@@ -168,7 +175,10 @@ public class LambdaListParser {
 			if (currentElement instanceof SymbolStruct) {
 				final SymbolStruct<?> currentParam = (SymbolStruct) currentElement;
 
-				final boolean isSpecial = Environments.isSpecial(declareElement, currentParam);
+				final boolean isSpecial = declareElement.getSpecialDeclarations()
+				                                        .stream()
+				                                        .map(SpecialDeclarationStruct::getVar)
+				                                        .anyMatch(Predicate.isEqual(currentParam));
 
 				Binding binding = new Binding(currentParam, TType.INSTANCE);
 				if (isSpecial) {
@@ -183,7 +193,10 @@ public class LambdaListParser {
 
 				final SymbolStruct<?> customSuppliedPCurrent = currentParamPackage.intern(customSuppliedPName).getSymbol();
 
-				final boolean isSuppliedPSpecial = Environments.isSpecial(declareElement, customSuppliedPCurrent);
+				final boolean isSuppliedPSpecial = declareElement.getSpecialDeclarations()
+				                                                 .stream()
+				                                                 .map(SpecialDeclarationStruct::getVar)
+				                                                 .anyMatch(Predicate.isEqual(customSuppliedPCurrent));
 
 				binding = new Binding(customSuppliedPCurrent, TType.INSTANCE);
 				if (isSuppliedPSpecial) {
@@ -248,7 +261,10 @@ public class LambdaListParser {
 
 					final LispStruct parameterValueInitForm = formAnalyzer.analyze(initForm, environment);
 
-					final boolean isSpecial = Environments.isSpecial(declareElement, varNameCurrent);
+					final boolean isSpecial = declareElement.getSpecialDeclarations()
+					                                        .stream()
+					                                        .map(SpecialDeclarationStruct::getVar)
+					                                        .anyMatch(Predicate.isEqual(varNameCurrent));
 
 					Binding binding = new Binding(varNameCurrent, TType.INSTANCE);
 					if (isSpecial) {
@@ -265,7 +281,10 @@ public class LambdaListParser {
 
 						final SymbolStruct<?> customSuppliedPCurrent = currentParamPackage.intern(customSuppliedPName).getSymbol();
 
-						final boolean isSuppliedPSpecial = Environments.isSpecial(declareElement, customSuppliedPCurrent);
+						final boolean isSuppliedPSpecial = declareElement.getSpecialDeclarations()
+						                                                 .stream()
+						                                                 .map(SpecialDeclarationStruct::getVar)
+						                                                 .anyMatch(Predicate.isEqual(customSuppliedPCurrent));
 
 						binding = new Binding(customSuppliedPCurrent, TType.INSTANCE);
 						if (isSuppliedPSpecial) {
@@ -283,7 +302,10 @@ public class LambdaListParser {
 
 						final SymbolStruct<?> suppliedPCurrent = (SymbolStruct) thirdInCurrent;
 
-						final boolean isSuppliedPSpecial = Environments.isSpecial(declareElement, suppliedPCurrent);
+						final boolean isSuppliedPSpecial = declareElement.getSpecialDeclarations()
+						                                                 .stream()
+						                                                 .map(SpecialDeclarationStruct::getVar)
+						                                                 .anyMatch(Predicate.isEqual(suppliedPCurrent));
 
 						binding = new Binding(suppliedPCurrent, TType.INSTANCE);
 						if (isSuppliedPSpecial) {
@@ -345,7 +367,10 @@ public class LambdaListParser {
 			}
 		}
 
-		final boolean isSpecial = Environments.isSpecial(declareElement, currentParam);
+		final boolean isSpecial = declareElement.getSpecialDeclarations()
+		                                        .stream()
+		                                        .map(SpecialDeclarationStruct::getVar)
+		                                        .anyMatch(Predicate.isEqual(currentParam));
 
 		final Binding binding = new Binding(currentParam, TType.INSTANCE);
 		if (isSpecial) {
@@ -382,7 +407,10 @@ public class LambdaListParser {
 			}
 		}
 
-		final boolean isSpecial = Environments.isSpecial(declareElement, currentParam);
+		final boolean isSpecial = declareElement.getSpecialDeclarations()
+		                                        .stream()
+		                                        .map(SpecialDeclarationStruct::getVar)
+		                                        .anyMatch(Predicate.isEqual(currentParam));
 
 		final Binding binding = new Binding(currentParam, TType.INSTANCE);
 		if (isSpecial) {
@@ -433,7 +461,10 @@ public class LambdaListParser {
 			}
 		}
 
-		final boolean isSpecial = Environments.isSpecial(declareElement, currentParam);
+		final boolean isSpecial = declareElement.getSpecialDeclarations()
+		                                        .stream()
+		                                        .map(SpecialDeclarationStruct::getVar)
+		                                        .anyMatch(Predicate.isEqual(currentParam));
 
 		final Binding binding = new Binding(currentParam, TType.INSTANCE);
 		if (isSpecial) {
@@ -466,7 +497,10 @@ public class LambdaListParser {
 				final SymbolStruct<?> currentParam = (SymbolStruct) currentElement;
 				final KeywordStruct keyName = getKeywordStruct(currentParam.getName());
 
-				final boolean isSpecial = Environments.isSpecial(declareElement, currentParam);
+				final boolean isSpecial = declareElement.getSpecialDeclarations()
+				                                        .stream()
+				                                        .map(SpecialDeclarationStruct::getVar)
+				                                        .anyMatch(Predicate.isEqual(currentParam));
 
 				Binding binding = new Binding(currentParam, TType.INSTANCE);
 				if (isSpecial) {
@@ -481,7 +515,10 @@ public class LambdaListParser {
 
 				final SymbolStruct<?> customSuppliedPCurrent = currentParamPackage.intern(customSuppliedPName).getSymbol();
 
-				final boolean isSuppliedPSpecial = Environments.isSpecial(declareElement, customSuppliedPCurrent);
+				final boolean isSuppliedPSpecial = declareElement.getSpecialDeclarations()
+				                                                 .stream()
+				                                                 .map(SpecialDeclarationStruct::getVar)
+				                                                 .anyMatch(Predicate.isEqual(customSuppliedPCurrent));
 
 				binding = new Binding(customSuppliedPCurrent, TType.INSTANCE);
 				if (isSuppliedPSpecial) {
@@ -566,7 +603,10 @@ public class LambdaListParser {
 
 					final LispStruct parameterValueInitForm = formAnalyzer.analyze(initForm, environment);
 
-					final boolean isSpecial = Environments.isSpecial(declareElement, varNameCurrent);
+					final boolean isSpecial = declareElement.getSpecialDeclarations()
+					                                        .stream()
+					                                        .map(SpecialDeclarationStruct::getVar)
+					                                        .anyMatch(Predicate.isEqual(varNameCurrent));
 
 					Binding binding = new Binding(varNameCurrent, TType.INSTANCE);
 					if (isSpecial) {
@@ -583,7 +623,10 @@ public class LambdaListParser {
 
 						final SymbolStruct<?> customSuppliedPCurrent = currentParamPackage.intern(customSuppliedPName).getSymbol();
 
-						final boolean isSuppliedPSpecial = Environments.isSpecial(declareElement, customSuppliedPCurrent);
+						final boolean isSuppliedPSpecial = declareElement.getSpecialDeclarations()
+						                                                 .stream()
+						                                                 .map(SpecialDeclarationStruct::getVar)
+						                                                 .anyMatch(Predicate.isEqual(customSuppliedPCurrent));
 
 						binding = new Binding(customSuppliedPCurrent, TType.INSTANCE);
 						if (isSuppliedPSpecial) {
@@ -601,7 +644,10 @@ public class LambdaListParser {
 
 						final SymbolStruct<?> suppliedPCurrent = (SymbolStruct) thirdInCurrent;
 
-						final boolean isSuppliedPSpecial = Environments.isSpecial(declareElement, suppliedPCurrent);
+						final boolean isSuppliedPSpecial = declareElement.getSpecialDeclarations()
+						                                                 .stream()
+						                                                 .map(SpecialDeclarationStruct::getVar)
+						                                                 .anyMatch(Predicate.isEqual(suppliedPCurrent));
 
 						binding = new Binding(suppliedPCurrent, TType.INSTANCE);
 						if (isSuppliedPSpecial) {
@@ -645,7 +691,10 @@ public class LambdaListParser {
 			if (currentElement instanceof SymbolStruct) {
 				final SymbolStruct<?> currentParam = (SymbolStruct) currentElement;
 
-				final boolean isSpecial = Environments.isSpecial(declareElement, currentParam);
+				final boolean isSpecial = declareElement.getSpecialDeclarations()
+				                                        .stream()
+				                                        .map(SpecialDeclarationStruct::getVar)
+				                                        .anyMatch(Predicate.isEqual(currentParam));
 
 				final Binding binding = new Binding(currentParam, TType.INSTANCE);
 				if (isSpecial) {
@@ -703,7 +752,10 @@ public class LambdaListParser {
 
 					final LispStruct parameterValueInitForm = formAnalyzer.analyze(initForm, environment);
 
-					final boolean isSpecial = Environments.isSpecial(declareElement, varNameCurrent);
+					final boolean isSpecial = declareElement.getSpecialDeclarations()
+					                                        .stream()
+					                                        .map(SpecialDeclarationStruct::getVar)
+					                                        .anyMatch(Predicate.isEqual(varNameCurrent));
 
 					final Binding binding = new Binding(varNameCurrent, TType.INSTANCE);
 					if (isSpecial) {

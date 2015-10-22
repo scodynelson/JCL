@@ -3,13 +3,13 @@ package jcl.compiler.real.sa.analyzer.specialoperator;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
 import jcl.arrays.StringStruct;
 import jcl.compiler.real.environment.Environment;
-import jcl.compiler.real.environment.Environments;
 import jcl.compiler.real.environment.InnerLambdaEnvironment;
 import jcl.compiler.real.environment.binding.Binding;
 import jcl.compiler.real.sa.FormAnalyzer;
@@ -108,7 +108,10 @@ public class MacroletExpander extends MacroFunctionExpander<InnerLambdaStruct> {
 					                        .collect(Collectors.toList());
 
 			final List<SpecialDeclarationStruct> specialDeclarations = declare.getSpecialDeclarations();
-			specialDeclarations.forEach(specialDeclaration -> Environments.addDynamicVariableBinding(specialDeclaration, macroletEnvironment));
+			specialDeclarations.stream()
+			                   .map(SpecialDeclarationStruct::getVar)
+			                   .map(e -> new Binding(e, TType.INSTANCE))
+			                   .forEach(macroletEnvironment::addDynamicBinding);
 
 			final List<LispStruct> bodyForms = bodyProcessingResult.getBodyForms();
 			final List<LispStruct> analyzedBodyForms
@@ -154,7 +157,10 @@ public class MacroletExpander extends MacroFunctionExpander<InnerLambdaStruct> {
 		final SymbolStruct<?> functionName = (SymbolStruct<?>) functionList.getFirst();
 		final CompilerFunctionStruct functionInitForm = getFunctionParameterInitForm(functionList, macroletEnvironment);
 
-		final boolean isSpecial = Environments.isSpecial(declare, functionName);
+		final boolean isSpecial = declare.getSpecialDeclarations()
+		                                 .stream()
+		                                 .map(SpecialDeclarationStruct::getVar)
+		                                 .anyMatch(Predicate.isEqual(functionName));
 
 		final Binding binding = new Binding(functionName, TType.INSTANCE);
 		if (isSpecial) {

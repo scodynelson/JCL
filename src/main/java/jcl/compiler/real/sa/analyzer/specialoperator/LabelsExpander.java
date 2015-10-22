@@ -3,13 +3,13 @@ package jcl.compiler.real.sa.analyzer.specialoperator;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
 import jcl.arrays.StringStruct;
 import jcl.compiler.real.environment.Environment;
-import jcl.compiler.real.environment.Environments;
 import jcl.compiler.real.environment.InnerLambdaEnvironment;
 import jcl.compiler.real.environment.binding.Binding;
 import jcl.compiler.real.sa.FormAnalyzer;
@@ -31,6 +31,8 @@ import jcl.symbols.SpecialOperatorStruct;
 import jcl.symbols.SymbolStruct;
 import jcl.system.StackUtils;
 import jcl.types.TType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -38,6 +40,8 @@ import org.springframework.stereotype.Component;
 public class LabelsExpander extends MacroFunctionExpander<InnerLambdaStruct> {
 
 	private static final long serialVersionUID = -3698985413039911540L;
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(FletExpander.class);
 
 	@Autowired
 	private FormAnalyzer formAnalyzer;
@@ -108,7 +112,10 @@ public class LabelsExpander extends MacroFunctionExpander<InnerLambdaStruct> {
 					                        .collect(Collectors.toList());
 
 			final List<SpecialDeclarationStruct> specialDeclarations = declare.getSpecialDeclarations();
-			specialDeclarations.forEach(specialDeclaration -> Environments.addDynamicVariableBinding(specialDeclaration, labelsEnvironment));
+			specialDeclarations.stream()
+			                   .map(SpecialDeclarationStruct::getVar)
+			                   .map(e -> new Binding(e, TType.INSTANCE))
+			                   .forEach(labelsEnvironment::addDynamicBinding);
 
 			final List<LispStruct> bodyForms = bodyProcessingResult.getBodyForms();
 			final List<LispStruct> analyzedBodyForms
@@ -154,7 +161,14 @@ public class LabelsExpander extends MacroFunctionExpander<InnerLambdaStruct> {
 		final SymbolStruct<?> functionName = (SymbolStruct<?>) functionList.getFirst();
 		final CompilerFunctionStruct functionInitForm = getFunctionParameterInitForm(functionList, labelsEnvironment);
 
-		final boolean isSpecial = Environments.isSpecial(declare, functionName);
+		final boolean isSpecial = declare.getSpecialDeclarations()
+		                                 .stream()
+		                                 .map(SpecialDeclarationStruct::getVar)
+		                                 .anyMatch(Predicate.isEqual(functionName));
+
+		if (labelsEnvironment.hasFunctionBinding(functionName)) {
+			LOGGER.warn("LABELS: Multiple bindings of {} in LABELS form.", functionName.getName());
+		}
 
 		final Binding binding = new Binding(functionName, TType.INSTANCE);
 		labelsEnvironment.addFunctionBinding(binding);

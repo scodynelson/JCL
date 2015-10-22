@@ -3,13 +3,13 @@ package jcl.compiler.real.sa.analyzer.specialoperator;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
 import jcl.arrays.StringStruct;
 import jcl.compiler.real.environment.Environment;
-import jcl.compiler.real.environment.Environments;
 import jcl.compiler.real.environment.InnerLambdaEnvironment;
 import jcl.compiler.real.environment.binding.Binding;
 import jcl.compiler.real.sa.FormAnalyzer;
@@ -34,6 +34,8 @@ import jcl.symbols.functions.BindSymbolFunctionFunction;
 import jcl.symbols.functions.UnbindSymbolFunctionFunction;
 import jcl.system.StackUtils;
 import jcl.types.TType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -41,6 +43,8 @@ import org.springframework.stereotype.Component;
 public class FletExpander extends MacroFunctionExpander<InnerLambdaStruct> {
 
 	private static final long serialVersionUID = -3183832254183452606L;
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(FletExpander.class);
 
 	@Autowired
 	private FormAnalyzer formAnalyzer;
@@ -107,7 +111,10 @@ public class FletExpander extends MacroFunctionExpander<InnerLambdaStruct> {
 					                        .collect(Collectors.toList());
 
 			final List<SpecialDeclarationStruct> specialDeclarations = declare.getSpecialDeclarations();
-			specialDeclarations.forEach(specialDeclaration -> Environments.addDynamicVariableBinding(specialDeclaration, fletEnvironment));
+			specialDeclarations.stream()
+			                   .map(SpecialDeclarationStruct::getVar)
+			                   .map(e -> new Binding(e, TType.INSTANCE))
+			                   .forEach(fletEnvironment::addDynamicBinding);
 
 			// Add function names AFTER analyzing the functions. This is one of the differences between Flet and Labels/Macrolet.
 			StackUtils.pushAll(functionNameStack, functionNames);
@@ -156,7 +163,14 @@ public class FletExpander extends MacroFunctionExpander<InnerLambdaStruct> {
 		final SymbolStruct<?> functionName = (SymbolStruct<?>) functionList.getFirst();
 		final CompilerFunctionStruct functionInitForm = getFunctionParameterInitForm(functionList, fletEnvironment, functionNames);
 
-		final boolean isSpecial = Environments.isSpecial(declare, functionName);
+		final boolean isSpecial = declare.getSpecialDeclarations()
+		                                 .stream()
+		                                 .map(SpecialDeclarationStruct::getVar)
+		                                 .anyMatch(Predicate.isEqual(functionName));
+
+		if (fletEnvironment.hasFunctionBinding(functionName)) {
+			LOGGER.warn("FLET: Multiple bindings of {} in FLET form.", functionName.getName());
+		}
 
 		final Binding binding = new Binding(functionName, TType.INSTANCE);
 		fletEnvironment.addFunctionBinding(binding);

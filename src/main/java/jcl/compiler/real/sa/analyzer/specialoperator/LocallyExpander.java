@@ -6,7 +6,7 @@ import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
 import jcl.compiler.real.environment.Environment;
-import jcl.compiler.real.environment.Environments;
+import jcl.compiler.real.environment.binding.Binding;
 import jcl.compiler.real.sa.FormAnalyzer;
 import jcl.compiler.real.sa.analyzer.body.BodyProcessingResult;
 import jcl.compiler.real.sa.analyzer.body.BodyWithDeclaresAnalyzer;
@@ -18,6 +18,7 @@ import jcl.compiler.real.struct.specialoperator.declare.SpecialDeclarationStruct
 import jcl.functions.expanders.MacroFunctionExpander;
 import jcl.lists.ListStruct;
 import jcl.symbols.SpecialOperatorStruct;
+import jcl.types.TType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -57,7 +58,10 @@ public class LocallyExpander extends MacroFunctionExpander<LocallyStruct> {
 		final DeclareStruct declare = declareExpander.expand(fullDeclaration, locallyEnvironment);
 
 		final List<SpecialDeclarationStruct> specialDeclarations = declare.getSpecialDeclarations();
-		specialDeclarations.forEach(specialDeclaration -> Environments.addDynamicVariableBinding(specialDeclaration, locallyEnvironment));
+		specialDeclarations.stream()
+		                   .map(SpecialDeclarationStruct::getVar)
+		                   .map(e -> new Binding(e, TType.INSTANCE))
+		                   .forEach(locallyEnvironment::addDynamicBinding);
 
 		final List<LispStruct> bodyForms = bodyProcessingResult.getBodyForms();
 

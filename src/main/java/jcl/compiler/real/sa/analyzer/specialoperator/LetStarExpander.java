@@ -1,13 +1,13 @@
 package jcl.compiler.real.sa.analyzer.specialoperator;
 
 import java.util.List;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
 import jcl.compiler.real.environment.BindingEnvironment;
 import jcl.compiler.real.environment.Environment;
-import jcl.compiler.real.environment.Environments;
 import jcl.compiler.real.environment.binding.Binding;
 import jcl.compiler.real.sa.FormAnalyzer;
 import jcl.compiler.real.sa.analyzer.body.BodyProcessingResult;
@@ -88,7 +88,10 @@ public class LetStarExpander extends MacroFunctionExpander<LetStarStruct> {
 				                      .collect(Collectors.toList());
 
 		final List<SpecialDeclarationStruct> specialDeclarations = declare.getSpecialDeclarations();
-		specialDeclarations.forEach(specialDeclaration -> Environments.addDynamicVariableBinding(specialDeclaration, letStarEnvironment));
+		specialDeclarations.stream()
+		                   .map(SpecialDeclarationStruct::getVar)
+		                   .map(e -> new Binding(e, TType.INSTANCE))
+		                   .forEach(letStarEnvironment::addDynamicBinding);
 
 		final List<LispStruct> bodyForms = bodyProcessingResult.getBodyForms();
 		final List<LispStruct> analyzedBodyForms
@@ -119,7 +122,10 @@ public class LetStarExpander extends MacroFunctionExpander<LetStarStruct> {
 			initForm = NullStruct.INSTANCE;
 		}
 
-		final boolean isSpecial = Environments.isSpecial(declare, var);
+		final boolean isSpecial = declare.getSpecialDeclarations()
+		                                 .stream()
+		                                 .map(SpecialDeclarationStruct::getVar)
+		                                 .anyMatch(Predicate.isEqual(var));
 
 		final Binding binding = new Binding(var, TType.INSTANCE);
 		if (isSpecial) {

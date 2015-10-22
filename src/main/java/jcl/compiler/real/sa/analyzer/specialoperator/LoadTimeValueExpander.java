@@ -5,7 +5,6 @@ import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
 import jcl.compiler.real.environment.Environment;
-import jcl.compiler.real.environment.Environments;
 import jcl.compiler.real.environment.LambdaEnvironment;
 import jcl.compiler.real.sa.FormAnalyzer;
 import jcl.compiler.real.struct.specialoperator.ImmutableLoadTimeValueStruct;
@@ -70,7 +69,7 @@ public class LoadTimeValueExpander extends MacroFunctionExpander<LoadTimeValueSt
 		final LispStruct analyzedEvalForm = formAnalyzer.analyze(evalForm, Environment.NULL);
 
 		if (isReadOnly) {
-			final LambdaEnvironment enclosingLambda = Environments.getEnclosingLambda(environment);
+			final LambdaEnvironment enclosingLambda = getEnclosingLambda(environment);
 
 			String fieldName = UUID.randomUUID().toString();
 			while (!Character.isJavaIdentifierStart(fieldName.charAt(0))) {
@@ -85,5 +84,17 @@ public class LoadTimeValueExpander extends MacroFunctionExpander<LoadTimeValueSt
 		} else {
 			return new MutableLoadTimeValueStruct(analyzedEvalForm);
 		}
+	}
+
+	private static LambdaEnvironment getEnclosingLambda(final Environment environment) {
+
+		Environment currentEnvironment = environment;
+
+		while (!(currentEnvironment instanceof LambdaEnvironment)) {
+			currentEnvironment = currentEnvironment.getParent();
+		}
+
+		// NOTE: This will never be an improper cast, since the Null Environment is a LambdaEnvironment
+		return (LambdaEnvironment) currentEnvironment;
 	}
 }

@@ -6,8 +6,8 @@ import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
 import jcl.compiler.real.environment.Environment;
-import jcl.compiler.real.environment.Environments;
 import jcl.compiler.real.environment.LambdaEnvironment;
+import jcl.compiler.real.environment.binding.Binding;
 import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaListBindings;
 import jcl.compiler.real.sa.FormAnalyzer;
 import jcl.compiler.real.sa.analyzer.body.BodyProcessingResult;
@@ -24,6 +24,7 @@ import jcl.functions.expanders.MacroFunctionExpander;
 import jcl.lists.ListStruct;
 import jcl.printer.Printer;
 import jcl.symbols.SpecialOperatorStruct;
+import jcl.types.TType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -84,7 +85,10 @@ public class LambdaExpander extends MacroFunctionExpander<LambdaStruct> {
 		final DeclareStruct declare = declareExpander.expand(fullDeclaration, lambdaEnvironment);
 
 		final List<SpecialDeclarationStruct> specialDeclarations = declare.getSpecialDeclarations();
-		specialDeclarations.forEach(specialDeclaration -> Environments.addDynamicVariableBinding(specialDeclaration, lambdaEnvironment));
+		specialDeclarations.stream()
+		                   .map(SpecialDeclarationStruct::getVar)
+		                   .map(e -> new Binding(e, TType.INSTANCE))
+		                   .forEach(lambdaEnvironment::addDynamicBinding);
 
 		final JavaClassNameDeclarationStruct javaClassNameDeclaration = declare.getJavaClassNameDeclaration();
 		final String className;

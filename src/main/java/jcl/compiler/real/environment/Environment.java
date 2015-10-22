@@ -37,8 +37,6 @@ public class Environment extends StandardObjectStruct {
 
 	private final List<SymbolMacroBinding> symbolMacroBindings = new ArrayList<>();
 
-	private final SymbolTable symbolTable = new SymbolTable();
-
 	private final Closure closure;
 
 	private int bindingsPosition;
@@ -176,10 +174,6 @@ public class Environment extends StandardObjectStruct {
 		symbolMacroBindings.add(symbolMacroBinding);
 	}
 
-	public SymbolTable getSymbolTable() {
-		return symbolTable;
-	}
-
 	public Closure getClosure() {
 		return closure;
 	}
@@ -190,7 +184,6 @@ public class Environment extends StandardObjectStruct {
 		                            .append(parent)
 		                            .append(lexicalBindings)
 		                            .append(dynamicBindings)
-		                            .append(symbolTable)
 		                            .append(closure)
 		                            .append(bindingsPosition)
 		                            .append(closureDepth)
@@ -218,7 +211,6 @@ public class Environment extends StandardObjectStruct {
 		                          .append(parent, rhs.parent)
 		                          .append(lexicalBindings, rhs.lexicalBindings)
 		                          .append(dynamicBindings, rhs.dynamicBindings)
-		                          .append(symbolTable, rhs.symbolTable)
 		                          .append(closure, rhs.closure)
 		                          .append(bindingsPosition, rhs.bindingsPosition)
 		                          .append(closureDepth, rhs.closureDepth)
@@ -235,7 +227,6 @@ public class Environment extends StandardObjectStruct {
 		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(lexicalBindings)
 		                                                                .append(parent)
 		                                                                .append(dynamicBindings)
-		                                                                .append(symbolTable)
 		                                                                .append(closure)
 		                                                                .append(bindingsPosition)
 		                                                                .append(closureDepth)

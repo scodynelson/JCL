@@ -7,7 +7,6 @@ import javax.annotation.PostConstruct;
 import jcl.LispStruct;
 import jcl.arrays.StringStruct;
 import jcl.compiler.real.environment.Environment;
-import jcl.compiler.real.sa.analyzer.SymbolAnalyzer;
 import jcl.compiler.real.struct.specialoperator.declare.DeclareStruct;
 import jcl.compiler.real.struct.specialoperator.declare.JavaClassNameDeclarationStruct;
 import jcl.compiler.real.struct.specialoperator.declare.SpecialDeclarationStruct;
@@ -29,9 +28,6 @@ import org.springframework.stereotype.Component;
 public class DeclareExpander extends MacroFunctionExpander<DeclareStruct> {
 
 	private static final long serialVersionUID = -27949883247210201L;
-
-	@Autowired
-	private SymbolAnalyzer symbolAnalyzer;
 
 	@Autowired
 	private Printer printer;
@@ -126,8 +122,6 @@ public class DeclareExpander extends MacroFunctionExpander<DeclareStruct> {
 
 			final SymbolStruct<?> sym = (SymbolStruct<?>) declSpecBodyElement;
 
-			symbolAnalyzer.analyzeDynamic(sym, environment);
-
 			final SpecialDeclarationStruct specialDeclarationElement = new SpecialDeclarationStruct(sym);
 			specialDeclarationElements.add(specialDeclarationElement);
 		}
@@ -138,7 +132,6 @@ public class DeclareExpander extends MacroFunctionExpander<DeclareStruct> {
 	@Override
 	public int hashCode() {
 		return new HashCodeBuilder().appendSuper(super.hashCode())
-		                            .append(symbolAnalyzer)
 		                            .append(printer)
 		                            .toHashCode();
 	}
@@ -156,15 +149,13 @@ public class DeclareExpander extends MacroFunctionExpander<DeclareStruct> {
 		}
 		final DeclareExpander rhs = (DeclareExpander) obj;
 		return new EqualsBuilder().appendSuper(super.equals(obj))
-		                          .append(symbolAnalyzer, rhs.symbolAnalyzer)
 		                          .append(printer, rhs.printer)
 		                          .isEquals();
 	}
 
 	@Override
 	public String toString() {
-		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(symbolAnalyzer)
-		                                                                .append(printer)
+		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(printer)
 		                                                                .toString();
 	}
 }

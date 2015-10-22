@@ -7,13 +7,8 @@ import jcl.compiler.real.environment.Closure;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.Environments;
 import jcl.compiler.real.environment.LambdaEnvironment;
-import jcl.compiler.real.environment.SymbolTable;
 import jcl.compiler.real.environment.binding.ClosureBinding;
-import jcl.compiler.real.environment.binding.SymbolClosureBinding;
-import jcl.compiler.real.environment.binding.SymbolEnvironmentBinding;
-import jcl.compiler.real.environment.binding.SymbolLocalBinding;
 import jcl.symbols.SymbolStruct;
-import jcl.types.TType;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -23,11 +18,6 @@ public class SymbolAnalyzerImpl implements SymbolAnalyzer {
 
 	@Override
 	public SymbolStruct<?> analyze(final SymbolStruct<?> input, final Environment environment) {
-		return analyzeLexical(input, environment);
-	}
-
-	@Override
-	public SymbolStruct<?> analyzeLexical(final SymbolStruct<?> input, final Environment environment) {
 
 		final boolean symbolBoundInEnvironment = environment.hasLexicalBinding(input);
 		if (symbolBoundInEnvironment) {
@@ -38,25 +28,11 @@ public class SymbolAnalyzerImpl implements SymbolAnalyzer {
 		final BindingEnvironment bindingEnvironment
 				= Environments.getLexicalBindingBindingEnvironment(environment, input);
 
-		if (bindingEnvironment.equals(Environment.NULL)) {
-			// No inner binding environment. Add it as a DYNAMIC symbol in the environment before we proceed.
-			analyzeDynamic(input, environment);
-		}
-
 		final LambdaEnvironment enclosingLambda = Environments.getEnclosingLambda(environment);
 		final LambdaEnvironment bindingEnclosingLambda = Environments.getEnclosingLambda(bindingEnvironment);
 
-		final SymbolTable symbolTable = environment.getSymbolTable();
-
 		if (enclosingLambda.equals(bindingEnclosingLambda)) {
 			// Binding Lambda and Enclosing Lambda are the same. No need for a Closure.
-
-			// Create a new SymbolBinding and reference it to the 'bindingEnvironment'
-			final SymbolEnvironmentBinding symbolBinding
-					= new SymbolEnvironmentBinding(input, TType.INSTANCE, bindingEnvironment);
-
-			// Now add that new symbol to the SymbolTable of the 'environment'
-			symbolTable.addLexicalEnvironmentBinding(symbolBinding);
 			return input;
 		}
 
@@ -66,13 +42,6 @@ public class SymbolAnalyzerImpl implements SymbolAnalyzer {
 
 		if (outerBindingEnvironment.equals(Environment.NULL)) {
 			// Outer Binding Environment is the NULL Environment. Therefore, we can't create a Closure.
-
-			// Create a new SymbolBinding and reference it to the 'bindingEnvironment'
-			final SymbolEnvironmentBinding symbolBinding
-					= new SymbolEnvironmentBinding(input, TType.INSTANCE, bindingEnvironment);
-
-			// Now add that new symbol to the SymbolTable of the 'currentEnvironment'
-			symbolTable.addLexicalEnvironmentBinding(symbolBinding);
 			return input;
 		}
 
@@ -83,7 +52,6 @@ public class SymbolAnalyzerImpl implements SymbolAnalyzer {
 
 		if (closureBinding.isPresent()) {
 			// Closure Binding already exists in the Outer Binding Environment.
-
 			final ClosureBinding closureBindingValue = closureBinding.get();
 
 			// Increment the number of references to this Closure Binding.
@@ -93,54 +61,6 @@ public class SymbolAnalyzerImpl implements SymbolAnalyzer {
 			final ClosureBinding newClosureBinding = new ClosureBinding(input, closure.getBindings().size(), 1);
 			closure.addBinding(newClosureBinding);
 		}
-
-		// Create a new SymbolBinding and reference it to the 'outerBindingEnvironment'
-		final SymbolClosureBinding symbolBinding
-				= new SymbolClosureBinding(input, TType.INSTANCE, outerBindingEnvironment);
-
-		symbolTable.addClosureBinding(symbolBinding);
-
-		return input;
-	}
-
-	@Override
-	public SymbolStruct<?> analyzeDynamic(final SymbolStruct<?> input, final Environment environment) {
-
-		final SymbolTable symbolTable = environment.getSymbolTable();
-		final boolean hasSymbolBinding = symbolTable.hasBinding(input);
-
-		if (hasSymbolBinding) {
-			// Binding already exists in the environment.
-			return input;
-		}
-
-		final LambdaEnvironment enclosingLambda = Environments.getEnclosingLambda(environment);
-		final SymbolTable enclosingLambdaSymbolTable = enclosingLambda.getSymbolTable();
-
-		if (environment.equals(enclosingLambda)) {
-			final SymbolLocalBinding symbolBinding
-					= new SymbolLocalBinding(input, TType.INSTANCE, enclosingLambda);
-			enclosingLambdaSymbolTable.addDynamicLocalBinding(symbolBinding);
-
-			return input;
-		}
-
-		// Add Binding to SymbolTable in the environment
-		final SymbolEnvironmentBinding environmentSymbolBinding
-				= new SymbolEnvironmentBinding(input, TType.INSTANCE, enclosingLambda);
-		symbolTable.addDynamicEnvironmentBinding(environmentSymbolBinding);
-
-		final boolean enclosingLambdaHasSymbolBinding = enclosingLambdaSymbolTable.hasBinding(input);
-
-		if (enclosingLambdaHasSymbolBinding) {
-			// Binding already exists in the Enclosing Lambda.
-			return input;
-		}
-
-		// Add Binding to SymbolTable in the Enclosing Lambda.
-		final SymbolLocalBinding symbolBinding
-				= new SymbolLocalBinding(input, TType.INSTANCE, enclosingLambda);
-		enclosingLambdaSymbolTable.addDynamicLocalBinding(symbolBinding);
 
 		return input;
 	}

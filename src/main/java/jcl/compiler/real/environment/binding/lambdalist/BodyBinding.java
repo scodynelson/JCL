@@ -11,20 +11,20 @@ public class BodyBinding extends ParameterBinding {
 
 	private static final long serialVersionUID = 491035484834969841L;
 
-	public BodyBinding(final SymbolStruct<?> symbolStruct) {
-		this(symbolStruct, false);
+	public BodyBinding(final SymbolStruct<?> var) {
+		this(var, false);
 	}
 
-	public BodyBinding(final SymbolStruct<?> symbolStruct, final boolean isSpecial) {
-		this(symbolStruct, null, isSpecial);
+	public BodyBinding(final SymbolStruct<?> var, final boolean isSpecial) {
+		this(var, null, isSpecial);
 	}
 
-	public BodyBinding(final SymbolStruct<?> symbolStruct, final DestructuringLambdaListBindings destructuringForm) {
-		this(symbolStruct, destructuringForm, false);
+	public BodyBinding(final SymbolStruct<?> var, final DestructuringLambdaListBindings destructuringForm) {
+		this(var, destructuringForm, false);
 	}
 
-	public BodyBinding(final SymbolStruct<?> symbolStruct, final DestructuringLambdaListBindings destructuringForm,
+	public BodyBinding(final SymbolStruct<?> var, final DestructuringLambdaListBindings destructuringForm,
 	                   final boolean isSpecial) {
-		super(symbolStruct, destructuringForm, ListType.INSTANCE, null, isSpecial);
+		super(var, destructuringForm, ListType.INSTANCE, null, isSpecial);
 	}
 }

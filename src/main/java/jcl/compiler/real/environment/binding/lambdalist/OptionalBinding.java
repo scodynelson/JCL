@@ -14,23 +14,23 @@ public class OptionalBinding extends ParameterBinding {
 
 	private final SuppliedPBinding suppliedPBinding;
 
-	public OptionalBinding(final SymbolStruct<?> symbolStruct, final LispStruct initForm, final SuppliedPBinding suppliedPBinding) {
-		this(symbolStruct, initForm, false, suppliedPBinding);
+	public OptionalBinding(final SymbolStruct<?> var, final LispStruct initForm, final SuppliedPBinding suppliedPBinding) {
+		this(var, initForm, false, suppliedPBinding);
 	}
 
-	public OptionalBinding(final SymbolStruct<?> symbolStruct, final LispStruct initForm, final boolean isSpecial,
+	public OptionalBinding(final SymbolStruct<?> var, final LispStruct initForm, final boolean isSpecial,
 	                       final SuppliedPBinding suppliedPBinding) {
-		this(symbolStruct, null, initForm, isSpecial, suppliedPBinding);
+		this(var, null, initForm, isSpecial, suppliedPBinding);
 	}
 
-	public OptionalBinding(final SymbolStruct<?> symbolStruct, final DestructuringLambdaListBindings destructuringForm,
+	public OptionalBinding(final SymbolStruct<?> var, final DestructuringLambdaListBindings destructuringForm,
 	                       final LispStruct initForm, final SuppliedPBinding suppliedPBinding) {
-		this(symbolStruct, destructuringForm, initForm, false, suppliedPBinding);
+		this(var, destructuringForm, initForm, false, suppliedPBinding);
 	}
 
-	public OptionalBinding(final SymbolStruct<?> symbolStruct, final DestructuringLambdaListBindings destructuringForm,
+	public OptionalBinding(final SymbolStruct<?> var, final DestructuringLambdaListBindings destructuringForm,
 	                       final LispStruct initForm, final boolean isSpecial, final SuppliedPBinding suppliedPBinding) {
-		super(symbolStruct, destructuringForm, TType.INSTANCE, initForm, isSpecial);
+		super(var, destructuringForm, TType.INSTANCE, initForm, isSpecial);
 		this.suppliedPBinding = suppliedPBinding;
 	}
 

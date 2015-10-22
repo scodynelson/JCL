@@ -11,11 +11,11 @@ public class SuppliedPBinding extends ParameterBinding {
 
 	private static final long serialVersionUID = -8399229506171557644L;
 
-	public SuppliedPBinding(final SymbolStruct<?> symbolStruct) {
-		this(symbolStruct, false);
+	public SuppliedPBinding(final SymbolStruct<?> var) {
+		this(var, false);
 	}
 
-	public SuppliedPBinding(final SymbolStruct<?> symbolStruct, final boolean isSpecial) {
-		super(symbolStruct, null, TType.INSTANCE, null, isSpecial);
+	public SuppliedPBinding(final SymbolStruct<?> var, final boolean isSpecial) {
+		super(var, null, TType.INSTANCE, null, isSpecial);
 	}
 }

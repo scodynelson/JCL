@@ -19,9 +19,9 @@ public class ParameterBinding extends Binding {
 
 	private final boolean isSpecial;
 
-	protected ParameterBinding(final SymbolStruct<?> symbolStruct, final DestructuringLambdaListBindings destructuringForm,
+	protected ParameterBinding(final SymbolStruct<?> var, final DestructuringLambdaListBindings destructuringForm,
 	                           final LispType type, final LispStruct initForm, final boolean isSpecial) {
-		super(symbolStruct, type);
+		super(var, type);
 		this.destructuringForm = destructuringForm;
 		this.initForm = initForm;
 		this.isSpecial = isSpecial;

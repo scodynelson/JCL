@@ -13,17 +13,17 @@ public class Binding implements Serializable {
 
 	private static final long serialVersionUID = 5776546981120800982L;
 
-	private final SymbolStruct<?> symbolStruct;
+	private final SymbolStruct<?> var;
 
 	private final LispType type;
 
-	public Binding(final SymbolStruct<?> symbolStruct, final LispType type) {
-		this.symbolStruct = symbolStruct;
+	public Binding(final SymbolStruct<?> var, final LispType type) {
+		this.var = var;
 		this.type = type;
 	}
 
-	public SymbolStruct<?> getSymbolStruct() {
-		return symbolStruct;
+	public SymbolStruct<?> getVar() {
+		return var;
 	}
 
 	public LispType getType() {

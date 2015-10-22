@@ -739,7 +739,7 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 		final int initFormVarSymbolStore = methodBuilder.getNextAvailableStore();
 
 		for (final OptionalBinding optionalBinding : optionalBindings) {
-			final SymbolStruct<?> var = optionalBinding.getSymbolStruct();
+			final SymbolStruct<?> var = optionalBinding.getVar();
 			final LispStruct initForm = optionalBinding.getInitForm();
 
 			generateInitForm(generatorState, methodBuilder, symbolArgStore,
@@ -747,7 +747,7 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 		}
 
 		for (final KeyBinding keyBinding : keyBindings) {
-			final SymbolStruct<?> var = keyBinding.getSymbolStruct();
+			final SymbolStruct<?> var = keyBinding.getVar();
 			final LispStruct initForm = keyBinding.getInitForm();
 
 			generateInitForm(generatorState, methodBuilder, symbolArgStore,
@@ -755,7 +755,7 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 		}
 
 		for (final AuxBinding auxBinding : auxBindings) {
-			final SymbolStruct<?> var = auxBinding.getSymbolStruct();
+			final SymbolStruct<?> var = auxBinding.getVar();
 			final LispStruct initForm = auxBinding.getInitForm();
 
 			generateInitForm(generatorState, methodBuilder, symbolArgStore,
@@ -914,7 +914,7 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 		final int requiredBindingStore = methodBuilder.getNextAvailableStore();
 
 		for (final RequiredBinding requiredBinding : requiredBindings) {
-			final SymbolStruct<?> requiredSymbol = requiredBinding.getSymbolStruct();
+			final SymbolStruct<?> requiredSymbol = requiredBinding.getVar();
 			CodeGenerators.generateSymbol(requiredSymbol, methodBuilder, requiredPackageStore, requiredSymbolStore);
 
 			mv.visitTypeInsn(Opcodes.NEW, GenerationConstants.REQUIRED_BINDING_NAME);
@@ -1032,7 +1032,7 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 		final int optionalBindingStore = methodBuilder.getNextAvailableStore();
 
 		for (final OptionalBinding optionalBinding : optionalBindings) {
-			final SymbolStruct<?> optionalSymbol = optionalBinding.getSymbolStruct();
+			final SymbolStruct<?> optionalSymbol = optionalBinding.getVar();
 			CodeGenerators.generateSymbol(optionalSymbol, methodBuilder, optionalPackageStore, optionalSymbolStore);
 
 			nullCodeGenerator.generate(NullStruct.INSTANCE, generatorState);
@@ -1129,7 +1129,7 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 		final int restPackageStore = methodBuilder.getNextAvailableStore();
 		final int restSymbolStore = methodBuilder.getNextAvailableStore();
 
-		final SymbolStruct<?> restSymbol = restBinding.getSymbolStruct();
+		final SymbolStruct<?> restSymbol = restBinding.getVar();
 		CodeGenerators.generateSymbol(restSymbol, methodBuilder, restPackageStore, restSymbolStore);
 
 		mv.visitTypeInsn(Opcodes.NEW, GenerationConstants.REST_BINDING_NAME);
@@ -1237,7 +1237,7 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 		final int keyBindingStore = methodBuilder.getNextAvailableStore();
 
 		for (final KeyBinding keyBinding : keyBindings) {
-			final SymbolStruct<?> keySymbol = keyBinding.getSymbolStruct();
+			final SymbolStruct<?> keySymbol = keyBinding.getVar();
 			CodeGenerators.generateSymbol(keySymbol, methodBuilder, keyPackageStore, keySymbolStore);
 
 			nullCodeGenerator.generate(NullStruct.INSTANCE, generatorState);
@@ -1297,9 +1297,9 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 	 * 		{@link JavaMethodBuilder} used for building a Java method body
 	 * @param suppliedPPackageStore
 	 * 		the storage location index on the stack where the {@link PackageStruct} for the provided {@link
-	 * 		SuppliedPBinding#symbolStruct} will exist
+	 * 		SuppliedPBinding#var} will exist
 	 * @param suppliedPSymbolStore
-	 * 		the storage location index on the stack where the {@link SuppliedPBinding#symbolStruct} will exist
+	 * 		the storage location index on the stack where the {@link SuppliedPBinding#var} will exist
 	 * @param suppliedPStore
 	 * 		the storage location index on the stack where the generated {@link SuppliedPBinding} will exist
 	 */
@@ -1312,7 +1312,7 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 			mv.visitInsn(Opcodes.ACONST_NULL);
 			mv.visitVarInsn(Opcodes.ASTORE, suppliedPStore);
 		} else {
-			final SymbolStruct<?> keySuppliedPSymbol = suppliedPBinding.getSymbolStruct();
+			final SymbolStruct<?> keySuppliedPSymbol = suppliedPBinding.getVar();
 			CodeGenerators.generateSymbol(keySuppliedPSymbol, methodBuilder, suppliedPPackageStore, suppliedPSymbolStore);
 
 			mv.visitTypeInsn(Opcodes.NEW, GenerationConstants.SUPPLIED_P_BINDING_NAME);
@@ -1461,7 +1461,7 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 		final int auxBindingStore = methodBuilder.getNextAvailableStore();
 
 		for (final AuxBinding auxBinding : auxBindings) {
-			final SymbolStruct<?> auxSymbol = auxBinding.getSymbolStruct();
+			final SymbolStruct<?> auxSymbol = auxBinding.getVar();
 			CodeGenerators.generateSymbol(auxSymbol, methodBuilder, auxPackageStore, auxSymbolStore);
 
 			nullCodeGenerator.generate(NullStruct.INSTANCE, generatorState);

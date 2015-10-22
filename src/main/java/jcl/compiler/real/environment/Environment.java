@@ -46,13 +46,9 @@ public class Environment extends StandardObjectStruct {
 	public Environment(final Environment parent) {
 		this.parent = parent;
 		if (parent != null) {
-
 			topLevelMode = parent.topLevelMode;
-
 			functionNameStack = parent.functionNameStack;
-
 			undefinedFunctions = parent.undefinedFunctions;
-
 			blockStack = parent.blockStack;
 			tagbodyStack = parent.tagbodyStack;
 		}
@@ -94,14 +90,14 @@ public class Environment extends StandardObjectStruct {
 		return lexicalBindings;
 	}
 
-	public boolean hasLexicalBinding(final SymbolStruct<?> symbolStruct) {
+	public boolean hasLexicalBinding(final SymbolStruct<?> var) {
 		return lexicalBindings.stream()
-		                      .anyMatch(e -> e.getSymbolStruct().equals(symbolStruct));
+		                      .anyMatch(e -> e.getVar().equals(var));
 	}
 
-	public Optional<Binding> getLexicalBinding(final SymbolStruct<?> symbolStruct) {
+	public Optional<Binding> getLexicalBinding(final SymbolStruct<?> var) {
 		return lexicalBindings.stream()
-		                      .filter(e -> e.getSymbolStruct().equals(symbolStruct))
+		                      .filter(e -> e.getVar().equals(var))
 		                      .findFirst();
 	}
 
@@ -113,14 +109,14 @@ public class Environment extends StandardObjectStruct {
 		return dynamicBindings;
 	}
 
-	public boolean hasDynamicBinding(final SymbolStruct<?> symbolStruct) {
+	public boolean hasDynamicBinding(final SymbolStruct<?> var) {
 		return dynamicBindings.stream()
-		                      .anyMatch(e -> e.getSymbolStruct().equals(symbolStruct));
+		                      .anyMatch(e -> e.getVar().equals(var));
 	}
 
-	public Optional<Binding> getDynamicBinding(final SymbolStruct<?> symbolStruct) {
+	public Optional<Binding> getDynamicBinding(final SymbolStruct<?> var) {
 		return dynamicBindings.stream()
-		                      .filter(e -> e.getSymbolStruct().equals(symbolStruct))
+		                      .filter(e -> e.getVar().equals(var))
 		                      .findFirst();
 	}
 
@@ -132,14 +128,14 @@ public class Environment extends StandardObjectStruct {
 		return symbolMacroBindings;
 	}
 
-	public boolean hasSymbolMacroBinding(final SymbolStruct<?> symbolStruct) {
+	public boolean hasSymbolMacroBinding(final SymbolStruct<?> var) {
 		return symbolMacroBindings.stream()
-		                          .anyMatch(e -> e.getSymbolStruct().equals(symbolStruct));
+		                          .anyMatch(e -> e.getVar().equals(var));
 	}
 
-	public Optional<SymbolMacroBinding> getSymbolMacroBinding(final SymbolStruct<?> symbolStruct) {
+	public Optional<SymbolMacroBinding> getSymbolMacroBinding(final SymbolStruct<?> var) {
 		return symbolMacroBindings.stream()
-		                          .filter(e -> e.getSymbolStruct().equals(symbolStruct))
+		                          .filter(e -> e.getVar().equals(var))
 		                          .findFirst();
 	}
 

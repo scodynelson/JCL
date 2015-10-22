@@ -14,9 +14,9 @@ public class SymbolMacroBinding extends Binding {
 
 	private final LispStruct expansion;
 
-	public SymbolMacroBinding(final SymbolStruct<?> symbolStruct, final LispType type,
+	public SymbolMacroBinding(final SymbolStruct<?> var, final LispType type,
 	                          final LispStruct expansion) {
-		super(symbolStruct, type);
+		super(var, type);
 		this.expansion = expansion;
 	}
 

@@ -8,11 +8,6 @@ import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
 
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-
 public class OrdinaryLambdaListBindings implements Serializable {
 
 	private static final long serialVersionUID = 3980582571605022674L;
@@ -120,48 +115,5 @@ public class OrdinaryLambdaListBindings implements Serializable {
 		public OrdinaryLambdaListBindings build() {
 			return new OrdinaryLambdaListBindings(this);
 		}
-	}
-
-	@Override
-	public int hashCode() {
-		return new HashCodeBuilder().append(requiredBindings)
-		                            .append(optionalBindings)
-		                            .append(restBinding)
-		                            .append(keyBindings)
-		                            .append(auxBindings)
-		                            .append(allowOtherKeys)
-		                            .toHashCode();
-	}
-
-	@Override
-	public boolean equals(final Object obj) {
-		if (obj == null) {
-			return false;
-		}
-		if (obj == this) {
-			return true;
-		}
-		if (obj.getClass() != getClass()) {
-			return false;
-		}
-		final OrdinaryLambdaListBindings rhs = (OrdinaryLambdaListBindings) obj;
-		return new EqualsBuilder().append(requiredBindings, rhs.requiredBindings)
-		                          .append(optionalBindings, rhs.optionalBindings)
-		                          .append(restBinding, rhs.restBinding)
-		                          .append(keyBindings, rhs.keyBindings)
-		                          .append(auxBindings, rhs.auxBindings)
-		                          .append(allowOtherKeys, rhs.allowOtherKeys)
-		                          .isEquals();
-	}
-
-	@Override
-	public String toString() {
-		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(requiredBindings)
-		                                                                .append(optionalBindings)
-		                                                                .append(restBinding)
-		                                                                .append(keyBindings)
-		                                                                .append(auxBindings)
-		                                                                .append(allowOtherKeys)
-		                                                                .toString();
 	}
 }

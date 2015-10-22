@@ -8,11 +8,11 @@ import jcl.numbers.IntegerStruct;
 import org.springframework.stereotype.Component;
 
 @Component
-public class GoIntegerStructGenerator extends GoStructGenerator<IntegerStruct> {
+public class GoIntegerStructFactory extends GoStructFactory<IntegerStruct> {
 
 	private static final long serialVersionUID = -4098304819342554338L;
 
-	public GoIntegerStruct generateGoElement(final IntegerStruct tag) {
+	public GoIntegerStruct getGoElement(final IntegerStruct tag) {
 		return new GoIntegerStruct(tag);
 	}
 }

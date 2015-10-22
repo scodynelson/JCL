@@ -8,12 +8,12 @@ import java.io.Serializable;
 
 import jcl.LispStruct;
 
-public abstract class GoStructGenerator<T extends LispStruct> implements Serializable {
+public abstract class GoStructFactory<T extends LispStruct> implements Serializable {
 
 	private static final long serialVersionUID = -5463110914990614222L;
 
-	protected GoStructGenerator() {
+	protected GoStructFactory() {
 	}
 
-	public abstract GoStruct<T> generateGoElement(final T tag);
+	public abstract GoStruct<T> getGoElement(final T tag);
 }

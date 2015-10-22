@@ -21,7 +21,7 @@ import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.sa.FormAnalyzer;
 import jcl.compiler.real.struct.specialoperator.PrognStruct;
 import jcl.compiler.real.struct.specialoperator.go.GoStruct;
-import jcl.compiler.real.struct.specialoperator.go.GoStructGenerator;
+import jcl.compiler.real.struct.specialoperator.go.GoStructFactory;
 
 final class TagbodyFormCollector implements Collector<LispStruct, Map<GoStruct<?>, PrognStruct>, Map<GoStruct<?>, PrognStruct>> {
 
@@ -29,12 +29,12 @@ final class TagbodyFormCollector implements Collector<LispStruct, Map<GoStruct<?
 
 	private final Environment environment;
 
-	private final Map<Class<? extends LispStruct>, GoStructGenerator<LispStruct>> goStructGeneratorStrategies;
+	private final Map<Class<? extends LispStruct>, GoStructFactory<LispStruct>> goStructGeneratorStrategies;
 
 	private GoStruct<?> currentTag;
 
 	TagbodyFormCollector(final FormAnalyzer formAnalyzer, final Environment environment,
-	                     final Map<Class<? extends LispStruct>, GoStructGenerator<LispStruct>> goStructGeneratorStrategies) {
+	                     final Map<Class<? extends LispStruct>, GoStructFactory<LispStruct>> goStructGeneratorStrategies) {
 		this.formAnalyzer = formAnalyzer;
 		this.environment = environment;
 		this.goStructGeneratorStrategies = goStructGeneratorStrategies;
@@ -51,11 +51,11 @@ final class TagbodyFormCollector implements Collector<LispStruct, Map<GoStruct<?
 	public BiConsumer<Map<GoStruct<?>, PrognStruct>, LispStruct> accumulator() {
 		return (tagToFormsMap, current) -> {
 
-			final GoStructGenerator<LispStruct> goStructGenerator = goStructGeneratorStrategies.get(current.getClass());
-			if (goStructGenerator == null) {
+			final GoStructFactory<LispStruct> goStructFactory = goStructGeneratorStrategies.get(current.getClass());
+			if (goStructFactory == null) {
 				handleOtherwise(tagToFormsMap, current);
 			} else {
-				currentTag = goStructGenerator.generateGoElement(current);
+				currentTag = goStructFactory.getGoElement(current);
 				tagToFormsMap.put(currentTag, new PrognStruct(new ArrayList<>()));
 			}
 		};

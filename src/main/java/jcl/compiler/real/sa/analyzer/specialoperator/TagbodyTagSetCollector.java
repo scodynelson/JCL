@@ -18,13 +18,13 @@ import java.util.stream.Collector;
 
 import jcl.LispStruct;
 import jcl.compiler.real.struct.specialoperator.go.GoStruct;
-import jcl.compiler.real.struct.specialoperator.go.GoStructGenerator;
+import jcl.compiler.real.struct.specialoperator.go.GoStructFactory;
 
 final class TagbodyTagSetCollector implements Collector<LispStruct, List<GoStruct<?>>, List<GoStruct<?>>> {
 
-	private final Map<Class<? extends LispStruct>, GoStructGenerator<LispStruct>> goStructGeneratorStrategies;
+	private final Map<Class<? extends LispStruct>, GoStructFactory<LispStruct>> goStructGeneratorStrategies;
 
-	TagbodyTagSetCollector(final Map<Class<? extends LispStruct>, GoStructGenerator<LispStruct>> goStructGeneratorStrategies) {
+	TagbodyTagSetCollector(final Map<Class<? extends LispStruct>, GoStructFactory<LispStruct>> goStructGeneratorStrategies) {
 		this.goStructGeneratorStrategies = goStructGeneratorStrategies;
 	}
 
@@ -38,9 +38,9 @@ final class TagbodyTagSetCollector implements Collector<LispStruct, List<GoStruc
 	public BiConsumer<List<GoStruct<?>>, LispStruct> accumulator() {
 		return (tagSet, current) -> {
 
-			final GoStructGenerator<LispStruct> goStructGenerator = goStructGeneratorStrategies.get(current.getClass());
-			if (goStructGenerator != null) {
-				final GoStruct<?> goTag = goStructGenerator.generateGoElement(current);
+			final GoStructFactory<LispStruct> goStructFactory = goStructGeneratorStrategies.get(current.getClass());
+			if (goStructFactory != null) {
+				final GoStruct<?> goTag = goStructFactory.getGoElement(current);
 				tagSet.add(goTag);
 			}
 		};

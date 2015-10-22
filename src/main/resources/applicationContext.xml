@@ -59,12 +59,12 @@
 
 	<!-- Semantic Analyzer -->
 
-	<util:map id="goStructGeneratorStrategies"
+	<util:map id="goStructFactoryStrategies"
 	          key-type="java.lang.Class"
-	          value-type="jcl.compiler.real.struct.specialoperator.go.GoStructGenerator">
+	          value-type="jcl.compiler.real.struct.specialoperator.go.GoStructFactory">
 
-		<entry key="jcl.symbols.SymbolStruct" value-ref="goSymbolStructGenerator"/>
-		<entry key="jcl.numbers.IntegerStruct" value-ref="goIntegerStructGenerator"/>
+		<entry key="jcl.symbols.SymbolStruct" value-ref="goSymbolStructFactory"/>
+		<entry key="jcl.numbers.IntegerStruct" value-ref="goIntegerStructFactory"/>
 
 	</util:map>
 

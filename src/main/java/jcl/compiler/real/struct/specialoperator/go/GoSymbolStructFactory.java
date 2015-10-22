@@ -8,11 +8,11 @@ import jcl.symbols.SymbolStruct;
 import org.springframework.stereotype.Component;
 
 @Component
-public class GoSymbolStructGenerator extends GoStructGenerator<SymbolStruct<?>> {
+public class GoSymbolStructFactory extends GoStructFactory<SymbolStruct<?>> {
 
 	private static final long serialVersionUID = 1893845150668677901L;
 
-	public GoSymbolStruct generateGoElement(final SymbolStruct<?> tag) {
+	public GoSymbolStruct getGoElement(final SymbolStruct<?> tag) {
 		return new GoSymbolStruct(tag);
 	}
 }

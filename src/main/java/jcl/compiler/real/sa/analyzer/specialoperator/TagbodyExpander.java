@@ -12,7 +12,7 @@ import jcl.compiler.real.sa.FormAnalyzer;
 import jcl.compiler.real.struct.specialoperator.PrognStruct;
 import jcl.compiler.real.struct.specialoperator.TagbodyStruct;
 import jcl.compiler.real.struct.specialoperator.go.GoStruct;
-import jcl.compiler.real.struct.specialoperator.go.GoStructGenerator;
+import jcl.compiler.real.struct.specialoperator.go.GoStructFactory;
 import jcl.functions.expanders.MacroFunctionExpander;
 import jcl.lists.ConsStruct;
 import jcl.lists.ListStruct;
@@ -31,7 +31,7 @@ public class TagbodyExpander extends MacroFunctionExpander<TagbodyStruct> {
 	private FormAnalyzer formAnalyzer;
 
 	@Resource
-	private Map<Class<? extends LispStruct>, GoStructGenerator<LispStruct>> goStructGeneratorStrategies;
+	private Map<Class<? extends LispStruct>, GoStructFactory<LispStruct>> goStructFactoryStrategies;
 
 	/**
 	 * Initializes the tagbody macro function and adds it to the special operator 'tagbody'.
@@ -47,7 +47,7 @@ public class TagbodyExpander extends MacroFunctionExpander<TagbodyStruct> {
 		ListStruct formRest = form.getRest();
 		List<LispStruct> forms = formRest.getAsJavaList();
 
-		final TagbodyTagSetCollector tagSetCollector = new TagbodyTagSetCollector(goStructGeneratorStrategies);
+		final TagbodyTagSetCollector tagSetCollector = new TagbodyTagSetCollector(goStructFactoryStrategies);
 		final List<GoStruct<?>> tagList = forms.stream()
 		                                       .collect(tagSetCollector);
 
@@ -64,7 +64,7 @@ public class TagbodyExpander extends MacroFunctionExpander<TagbodyStruct> {
 		}
 
 		try {
-			final TagbodyFormCollector tagbodyFormCollector = new TagbodyFormCollector(formAnalyzer, environment, goStructGeneratorStrategies);
+			final TagbodyFormCollector tagbodyFormCollector = new TagbodyFormCollector(formAnalyzer, environment, goStructFactoryStrategies);
 			final Map<GoStruct<?>, PrognStruct> analyzedTagbodyForms = forms.stream()
 			                                                                .collect(tagbodyFormCollector);
 			return new TagbodyStruct(analyzedTagbodyForms);

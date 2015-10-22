@@ -5,7 +5,6 @@
 package jcl.compiler.real.environment.binding.lambdalist;
 
 import jcl.LispStruct;
-import jcl.compiler.real.environment.binding.ParameterBinding;
 import jcl.symbols.SymbolStruct;
 import jcl.types.TType;
 import org.apache.commons.lang3.builder.EqualsBuilder;

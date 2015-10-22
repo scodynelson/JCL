@@ -8,7 +8,7 @@ import jcl.LispStruct;
 import jcl.compiler.real.CompilerConstants;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.Environments;
-import jcl.compiler.real.environment.binding.EnvironmentParameterBinding;
+import jcl.compiler.real.environment.binding.Binding;
 import jcl.compiler.real.environment.binding.lambdalist.AuxBinding;
 import jcl.compiler.real.environment.binding.lambdalist.BodyBinding;
 import jcl.compiler.real.environment.binding.lambdalist.DestructuringLambdaListBindings;
@@ -56,7 +56,7 @@ public class LambdaListParser {
 
 		final boolean isSpecial = Environments.isSpecial(declareElement, currentParam);
 
-		final EnvironmentParameterBinding binding = new EnvironmentParameterBinding(currentParam, TType.INSTANCE, NullStruct.INSTANCE);
+		final Binding binding = new Binding(currentParam, TType.INSTANCE);
 		if (isSpecial) {
 			environment.addDynamicBinding(binding);
 		} else {
@@ -85,7 +85,7 @@ public class LambdaListParser {
 			}
 		}
 
-		final EnvironmentParameterBinding binding = new EnvironmentParameterBinding(currentParam, TType.INSTANCE, NullStruct.INSTANCE);
+		final Binding binding = new Binding(currentParam, TType.INSTANCE);
 		environment.addDynamicBinding(binding);
 
 		final EnvironmentBinding environmentBinding = new EnvironmentBinding(currentParam);
@@ -131,7 +131,7 @@ public class LambdaListParser {
 
 			final boolean isSpecial = Environments.isSpecial(declareElement, currentParam);
 
-			final EnvironmentParameterBinding binding = new EnvironmentParameterBinding(currentParam, TType.INSTANCE, NullStruct.INSTANCE);
+			final Binding binding = new Binding(currentParam, TType.INSTANCE);
 			if (isSpecial) {
 				environment.addDynamicBinding(binding);
 			} else {
@@ -170,7 +170,7 @@ public class LambdaListParser {
 
 				final boolean isSpecial = Environments.isSpecial(declareElement, currentParam);
 
-				EnvironmentParameterBinding binding = new EnvironmentParameterBinding(currentParam, TType.INSTANCE, NullStruct.INSTANCE);
+				Binding binding = new Binding(currentParam, TType.INSTANCE);
 				if (isSpecial) {
 					environment.addDynamicBinding(binding);
 				} else {
@@ -185,7 +185,7 @@ public class LambdaListParser {
 
 				final boolean isSuppliedPSpecial = Environments.isSpecial(declareElement, customSuppliedPCurrent);
 
-				binding = new EnvironmentParameterBinding(customSuppliedPCurrent, TType.INSTANCE, NullStruct.INSTANCE);
+				binding = new Binding(customSuppliedPCurrent, TType.INSTANCE);
 				if (isSuppliedPSpecial) {
 					environment.addDynamicBinding(binding);
 				} else {
@@ -250,7 +250,7 @@ public class LambdaListParser {
 
 					final boolean isSpecial = Environments.isSpecial(declareElement, varNameCurrent);
 
-					EnvironmentParameterBinding binding = new EnvironmentParameterBinding(varNameCurrent, TType.INSTANCE, parameterValueInitForm);
+					Binding binding = new Binding(varNameCurrent, TType.INSTANCE);
 					if (isSpecial) {
 						environment.addDynamicBinding(binding);
 					} else {
@@ -267,7 +267,7 @@ public class LambdaListParser {
 
 						final boolean isSuppliedPSpecial = Environments.isSpecial(declareElement, customSuppliedPCurrent);
 
-						binding = new EnvironmentParameterBinding(customSuppliedPCurrent, TType.INSTANCE, NullStruct.INSTANCE);
+						binding = new Binding(customSuppliedPCurrent, TType.INSTANCE);
 						if (isSuppliedPSpecial) {
 							environment.addDynamicBinding(binding);
 						} else {
@@ -285,7 +285,7 @@ public class LambdaListParser {
 
 						final boolean isSuppliedPSpecial = Environments.isSpecial(declareElement, suppliedPCurrent);
 
-						binding = new EnvironmentParameterBinding(suppliedPCurrent, TType.INSTANCE, NullStruct.INSTANCE);
+						binding = new Binding(suppliedPCurrent, TType.INSTANCE);
 						if (isSuppliedPSpecial) {
 							environment.addDynamicBinding(binding);
 						} else {
@@ -347,7 +347,7 @@ public class LambdaListParser {
 
 		final boolean isSpecial = Environments.isSpecial(declareElement, currentParam);
 
-		final EnvironmentParameterBinding binding = new EnvironmentParameterBinding(currentParam, TType.INSTANCE, NullStruct.INSTANCE);
+		final Binding binding = new Binding(currentParam, TType.INSTANCE);
 		if (isSpecial) {
 			environment.addDynamicBinding(binding);
 		} else {
@@ -384,7 +384,7 @@ public class LambdaListParser {
 
 		final boolean isSpecial = Environments.isSpecial(declareElement, currentParam);
 
-		final EnvironmentParameterBinding binding = new EnvironmentParameterBinding(currentParam, TType.INSTANCE, NullStruct.INSTANCE);
+		final Binding binding = new Binding(currentParam, TType.INSTANCE);
 		if (isSpecial) {
 			environment.addDynamicBinding(binding);
 		} else {
@@ -435,7 +435,7 @@ public class LambdaListParser {
 
 		final boolean isSpecial = Environments.isSpecial(declareElement, currentParam);
 
-		final EnvironmentParameterBinding binding = new EnvironmentParameterBinding(currentParam, TType.INSTANCE, NullStruct.INSTANCE);
+		final Binding binding = new Binding(currentParam, TType.INSTANCE);
 		if (isSpecial) {
 			environment.addDynamicBinding(binding);
 		} else {
@@ -468,7 +468,7 @@ public class LambdaListParser {
 
 				final boolean isSpecial = Environments.isSpecial(declareElement, currentParam);
 
-				EnvironmentParameterBinding binding = new EnvironmentParameterBinding(currentParam, TType.INSTANCE, NullStruct.INSTANCE);
+				Binding binding = new Binding(currentParam, TType.INSTANCE);
 				if (isSpecial) {
 					environment.addDynamicBinding(binding);
 				} else {
@@ -483,7 +483,7 @@ public class LambdaListParser {
 
 				final boolean isSuppliedPSpecial = Environments.isSpecial(declareElement, customSuppliedPCurrent);
 
-				binding = new EnvironmentParameterBinding(customSuppliedPCurrent, TType.INSTANCE, NullStruct.INSTANCE);
+				binding = new Binding(customSuppliedPCurrent, TType.INSTANCE);
 				if (isSuppliedPSpecial) {
 					environment.addDynamicBinding(binding);
 				} else {
@@ -568,7 +568,7 @@ public class LambdaListParser {
 
 					final boolean isSpecial = Environments.isSpecial(declareElement, varNameCurrent);
 
-					EnvironmentParameterBinding binding = new EnvironmentParameterBinding(varNameCurrent, TType.INSTANCE, parameterValueInitForm);
+					Binding binding = new Binding(varNameCurrent, TType.INSTANCE);
 					if (isSpecial) {
 						environment.addDynamicBinding(binding);
 					} else {
@@ -585,7 +585,7 @@ public class LambdaListParser {
 
 						final boolean isSuppliedPSpecial = Environments.isSpecial(declareElement, customSuppliedPCurrent);
 
-						binding = new EnvironmentParameterBinding(customSuppliedPCurrent, TType.INSTANCE, NullStruct.INSTANCE);
+						binding = new Binding(customSuppliedPCurrent, TType.INSTANCE);
 						if (isSuppliedPSpecial) {
 							environment.addDynamicBinding(binding);
 						} else {
@@ -603,7 +603,7 @@ public class LambdaListParser {
 
 						final boolean isSuppliedPSpecial = Environments.isSpecial(declareElement, suppliedPCurrent);
 
-						binding = new EnvironmentParameterBinding(suppliedPCurrent, TType.INSTANCE, NullStruct.INSTANCE);
+						binding = new Binding(suppliedPCurrent, TType.INSTANCE);
 						if (isSuppliedPSpecial) {
 							environment.addDynamicBinding(binding);
 						} else {
@@ -647,7 +647,7 @@ public class LambdaListParser {
 
 				final boolean isSpecial = Environments.isSpecial(declareElement, currentParam);
 
-				final EnvironmentParameterBinding binding = new EnvironmentParameterBinding(currentParam, TType.INSTANCE, NullStruct.INSTANCE);
+				final Binding binding = new Binding(currentParam, TType.INSTANCE);
 				if (isSpecial) {
 					environment.addDynamicBinding(binding);
 				} else {
@@ -705,7 +705,7 @@ public class LambdaListParser {
 
 					final boolean isSpecial = Environments.isSpecial(declareElement, varNameCurrent);
 
-					final EnvironmentParameterBinding binding = new EnvironmentParameterBinding(varNameCurrent, TType.INSTANCE, parameterValueInitForm);
+					final Binding binding = new Binding(varNameCurrent, TType.INSTANCE);
 					if (isSpecial) {
 						environment.addDynamicBinding(binding);
 					} else {

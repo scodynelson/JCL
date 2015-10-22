@@ -4,7 +4,6 @@
 
 package jcl.compiler.real.environment.binding.lambdalist;
 
-import jcl.compiler.real.environment.binding.ParameterBinding;
 import jcl.symbols.SymbolStruct;
 import jcl.types.ListType;
 

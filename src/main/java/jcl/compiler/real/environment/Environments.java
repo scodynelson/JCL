@@ -6,7 +6,7 @@ package jcl.compiler.real.environment;
 
 import java.util.List;
 
-import jcl.compiler.real.environment.binding.EnvironmentEnvironmentBinding;
+import jcl.compiler.real.environment.binding.Binding;
 import jcl.compiler.real.struct.specialoperator.declare.DeclareStruct;
 import jcl.compiler.real.struct.specialoperator.declare.SpecialDeclarationStruct;
 import jcl.symbols.SymbolStruct;
@@ -17,110 +17,12 @@ public final class Environments {
 	private Environments() {
 	}
 
-	public static Environment getFunctionLexicalBindingEnvironment(final Environment environment, final SymbolStruct<?> variable) {
-
-		Environment currentEnvironment = environment;
-
-		while (!currentEnvironment.equals(Environment.NULL)) {
-
-			if (currentEnvironment instanceof LambdaEnvironment) {
-
-				final boolean hasBinding = currentEnvironment.hasLexicalBinding(variable);
-				if (hasBinding) {
-					break;
-				}
-			}
-
-			currentEnvironment = currentEnvironment.getParent();
-		}
-
-		return currentEnvironment;
-	}
-
-	public static BindingEnvironment getDynamicBindingBindingEnvironment(final Environment environment, final SymbolStruct<?> variable) {
-
-		Environment currentEnvironment = environment;
-
-		while (!currentEnvironment.equals(Environment.NULL)) {
-
-			if (currentEnvironment instanceof BindingEnvironment) {
-
-				final boolean hasBinding = currentEnvironment.hasDynamicBinding(variable);
-				if (hasBinding) {
-					break;
-				}
-			}
-
-			currentEnvironment = currentEnvironment.getParent();
-		}
-
-		// NOTE: This will never be an improper cast, since the Null Environment is a BindingEnvironment
-		return (BindingEnvironment) currentEnvironment;
-	}
-
-	public static BindingEnvironment getLexicalBindingBindingEnvironment(final Environment environment, final SymbolStruct<?> variable) {
-
-		Environment currentEnvironment = environment;
-
-		while (!currentEnvironment.equals(Environment.NULL)) {
-
-			if (currentEnvironment instanceof BindingEnvironment) {
-
-				final boolean hasBinding = currentEnvironment.hasLexicalBinding(variable);
-				if (hasBinding) {
-					break;
-				}
-			}
-
-			currentEnvironment = currentEnvironment.getParent();
-		}
-
-		// NOTE: This will never be an improper cast, since the Null Environment is a BindingEnvironment
-		return (BindingEnvironment) currentEnvironment;
-	}
-
-	public static boolean hasFunctionBinding(final Environment environment, final SymbolStruct<?> variable) {
-
-		Environment currentEnvironment = environment;
-
-		boolean hasFunctionBinding = false;
-
-		while (!currentEnvironment.equals(Environment.NULL)) {
-			if (currentEnvironment.hasLexicalBinding(variable)) {
-				hasFunctionBinding = true;
-				break;
-			}
-			currentEnvironment = currentEnvironment.getParent();
-		}
-
-		return hasFunctionBinding;
-	}
-
 	public static void addDynamicVariableBinding(final SpecialDeclarationStruct specialDeclaration,
 	                                             final Environment environment) {
 		final SymbolStruct<?> var = specialDeclaration.getVar();
 
-		final Environment bindingEnvironment = getDynamicBindingEnvironment(environment, var);
-
-		final EnvironmentEnvironmentBinding binding = new EnvironmentEnvironmentBinding(var, TType.INSTANCE, bindingEnvironment);
+		final Binding binding = new Binding(var, TType.INSTANCE);
 		environment.addDynamicBinding(binding);
-	}
-
-	public static Environment getDynamicBindingEnvironment(final Environment environment, final SymbolStruct<?> var) {
-
-		Environment currentEnvironment = environment;
-
-		while (!currentEnvironment.equals(Environment.NULL)) {
-
-			final boolean hasDynamicBinding = currentEnvironment.hasDynamicBinding(var);
-			if (hasDynamicBinding) {
-				break;
-			}
-
-			currentEnvironment = currentEnvironment.getParent();
-		}
-
-		return currentEnvironment;
 	}
 
 	public static LambdaEnvironment getEnclosingLambda(final Environment environment) {

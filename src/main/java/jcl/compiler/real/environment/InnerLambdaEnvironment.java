@@ -8,20 +8,20 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import jcl.compiler.real.environment.binding.EnvironmentParameterBinding;
+import jcl.compiler.real.environment.binding.Binding;
 import jcl.symbols.SymbolStruct;
 
 public class InnerLambdaEnvironment extends LambdaEnvironment {
 
 	private static final long serialVersionUID = -5882720704455871085L;
 
-	private final List<EnvironmentParameterBinding> functionBindings = new ArrayList<>();
+	private final List<Binding> functionBindings = new ArrayList<>();
 
 	public InnerLambdaEnvironment(final Environment parent) {
 		super(parent);
 	}
 
-	public List<EnvironmentParameterBinding> getFunctionBindings() {
+	public List<Binding> getFunctionBindings() {
 		return functionBindings;
 	}
 
@@ -30,13 +30,13 @@ public class InnerLambdaEnvironment extends LambdaEnvironment {
 		                       .anyMatch(e -> e.getSymbolStruct().equals(symbolStruct));
 	}
 
-	public Optional<EnvironmentParameterBinding> getFunctionBinding(final SymbolStruct<?> symbolStruct) {
+	public Optional<Binding> getFunctionBinding(final SymbolStruct<?> symbolStruct) {
 		return functionBindings.stream()
 		                       .filter(e -> e.getSymbolStruct().equals(symbolStruct))
 		                       .findFirst();
 	}
 
-	public void addFunctionBinding(final EnvironmentParameterBinding functionBinding) {
+	public void addFunctionBinding(final Binding functionBinding) {
 		functionBindings.add(functionBinding);
 	}
 }

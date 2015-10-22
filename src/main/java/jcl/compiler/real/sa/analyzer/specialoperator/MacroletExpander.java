@@ -11,7 +11,7 @@ import jcl.arrays.StringStruct;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.Environments;
 import jcl.compiler.real.environment.InnerLambdaEnvironment;
-import jcl.compiler.real.environment.binding.EnvironmentParameterBinding;
+import jcl.compiler.real.environment.binding.Binding;
 import jcl.compiler.real.sa.FormAnalyzer;
 import jcl.compiler.real.sa.analyzer.body.BodyProcessingResult;
 import jcl.compiler.real.sa.analyzer.body.BodyWithDeclaresAnalyzer;
@@ -156,7 +156,7 @@ public class MacroletExpander extends MacroFunctionExpander<InnerLambdaStruct> {
 
 		final boolean isSpecial = Environments.isSpecial(declare, functionName);
 
-		final EnvironmentParameterBinding binding = new EnvironmentParameterBinding(functionName, TType.INSTANCE, functionInitForm);
+		final Binding binding = new Binding(functionName, TType.INSTANCE);
 		if (isSpecial) {
 			macroletEnvironment.addDynamicBinding(binding);
 		} else {

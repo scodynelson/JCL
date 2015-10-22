@@ -13,7 +13,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-public abstract class Binding implements Serializable {
+public class Binding implements Serializable {
 
 	private static final long serialVersionUID = 5776546981120800982L;
 
@@ -21,7 +21,7 @@ public abstract class Binding implements Serializable {
 
 	private final LispType type;
 
-	protected Binding(final SymbolStruct<?> symbolStruct, final LispType type) {
+	public Binding(final SymbolStruct<?> symbolStruct, final LispType type) {
 		this.symbolStruct = symbolStruct;
 		this.type = type;
 	}

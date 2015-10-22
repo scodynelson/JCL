@@ -8,7 +8,7 @@ import jcl.LispStruct;
 import jcl.compiler.real.environment.BindingEnvironment;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.Environments;
-import jcl.compiler.real.environment.binding.EnvironmentParameterBinding;
+import jcl.compiler.real.environment.binding.Binding;
 import jcl.compiler.real.sa.FormAnalyzer;
 import jcl.compiler.real.sa.analyzer.body.BodyProcessingResult;
 import jcl.compiler.real.sa.analyzer.body.BodyWithDeclaresAnalyzer;
@@ -121,7 +121,7 @@ public class LetExpander extends MacroFunctionExpander<LetStruct> {
 
 		final boolean isSpecial = Environments.isSpecial(declare, var);
 
-		final EnvironmentParameterBinding binding = new EnvironmentParameterBinding(var, TType.INSTANCE, initForm);
+		final Binding binding = new Binding(var, TType.INSTANCE);
 		if (isSpecial) {
 			letEnvironment.addDynamicBinding(binding);
 		} else {

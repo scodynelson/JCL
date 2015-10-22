@@ -10,10 +10,6 @@ import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.functions.expanders.MacroFunctionExpander;
 import jcl.lists.ListStruct;
 import jcl.symbols.SpecialOperatorStruct;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -52,35 +48,5 @@ public class ThrowExpander extends MacroFunctionExpander<ThrowStruct> {
 		final LispStruct resultFormAnalyzed = formAnalyzer.analyze(resultForm, environment);
 
 		return new ThrowStruct(catchTagAnalyzed, resultFormAnalyzed);
-	}
-
-	@Override
-	public int hashCode() {
-		return new HashCodeBuilder().appendSuper(super.hashCode())
-		                            .append(formAnalyzer)
-		                            .toHashCode();
-	}
-
-	@Override
-	public boolean equals(final Object obj) {
-		if (obj == null) {
-			return false;
-		}
-		if (obj == this) {
-			return true;
-		}
-		if (obj.getClass() != getClass()) {
-			return false;
-		}
-		final ThrowExpander rhs = (ThrowExpander) obj;
-		return new EqualsBuilder().appendSuper(super.equals(obj))
-		                          .append(formAnalyzer, rhs.formAnalyzer)
-		                          .isEquals();
-	}
-
-	@Override
-	public String toString() {
-		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(formAnalyzer)
-		                                                                .toString();
 	}
 }

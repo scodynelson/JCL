@@ -19,10 +19,6 @@ import java.util.stream.Collector;
 import jcl.LispStruct;
 import jcl.compiler.real.struct.specialoperator.go.GoStruct;
 import jcl.compiler.real.struct.specialoperator.go.GoStructGenerator;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 final class TagbodyTagSetCollector implements Collector<LispStruct, List<GoStruct<?>>, List<GoStruct<?>>> {
 
@@ -66,33 +62,5 @@ final class TagbodyTagSetCollector implements Collector<LispStruct, List<GoStruc
 	@Override
 	public Set<Characteristics> characteristics() {
 		return Collections.unmodifiableSet(EnumSet.of(Characteristics.IDENTITY_FINISH));
-	}
-
-	@Override
-	public int hashCode() {
-		return new HashCodeBuilder().append(goStructGeneratorStrategies)
-		                            .toHashCode();
-	}
-
-	@Override
-	public boolean equals(final Object obj) {
-		if (obj == null) {
-			return false;
-		}
-		if (obj == this) {
-			return true;
-		}
-		if (obj.getClass() != getClass()) {
-			return false;
-		}
-		final TagbodyTagSetCollector rhs = (TagbodyTagSetCollector) obj;
-		return new EqualsBuilder().append(goStructGeneratorStrategies, rhs.goStructGeneratorStrategies)
-		                          .isEquals();
-	}
-
-	@Override
-	public String toString() {
-		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(goStructGeneratorStrategies)
-		                                                                .toString();
 	}
 }

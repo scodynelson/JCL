@@ -22,10 +22,6 @@ import jcl.compiler.real.sa.FormAnalyzer;
 import jcl.compiler.real.struct.specialoperator.PrognStruct;
 import jcl.compiler.real.struct.specialoperator.go.GoStruct;
 import jcl.compiler.real.struct.specialoperator.go.GoStructGenerator;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 final class TagbodyFormCollector implements Collector<LispStruct, Map<GoStruct<?>, PrognStruct>, Map<GoStruct<?>, PrognStruct>> {
 
@@ -94,42 +90,5 @@ final class TagbodyFormCollector implements Collector<LispStruct, Map<GoStruct<?
 	@Override
 	public Set<Characteristics> characteristics() {
 		return Collections.unmodifiableSet(EnumSet.of(Characteristics.IDENTITY_FINISH));
-	}
-
-	@Override
-	public int hashCode() {
-		return new HashCodeBuilder().append(formAnalyzer)
-		                            .append(environment)
-		                            .append(goStructGeneratorStrategies)
-		                            .append(currentTag)
-		                            .toHashCode();
-	}
-
-	@Override
-	public boolean equals(final Object obj) {
-		if (obj == null) {
-			return false;
-		}
-		if (obj == this) {
-			return true;
-		}
-		if (obj.getClass() != getClass()) {
-			return false;
-		}
-		final TagbodyFormCollector rhs = (TagbodyFormCollector) obj;
-		return new EqualsBuilder().append(formAnalyzer, rhs.formAnalyzer)
-		                          .append(environment, rhs.environment)
-		                          .append(goStructGeneratorStrategies, rhs.goStructGeneratorStrategies)
-		                          .append(currentTag, rhs.currentTag)
-		                          .isEquals();
-	}
-
-	@Override
-	public String toString() {
-		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(formAnalyzer)
-		                                                                .append(environment)
-		                                                                .append(goStructGeneratorStrategies)
-		                                                                .append(currentTag)
-		                                                                .toString();
 	}
 }

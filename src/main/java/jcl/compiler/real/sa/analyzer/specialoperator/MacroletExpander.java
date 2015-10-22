@@ -31,10 +31,6 @@ import jcl.symbols.SpecialOperatorStruct;
 import jcl.symbols.SymbolStruct;
 import jcl.system.StackUtils;
 import jcl.types.TType;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -218,50 +214,5 @@ public class MacroletExpander extends MacroFunctionExpander<InnerLambdaStruct> {
 
 		// Evaluate in the 'current' environment. This is one of the differences between Flet and Labels/Macrolet.
 		return functionExpander.expand(innerFunctionListStruct, macroletEnvironment);
-	}
-
-	@Override
-	public int hashCode() {
-		return new HashCodeBuilder().appendSuper(super.hashCode())
-		                            .append(formAnalyzer)
-		                            .append(declareExpander)
-		                            .append(bodyWithDeclaresAnalyzer)
-		                            .append(bodyWithDeclaresAndDocStringAnalyzer)
-		                            .append(functionExpander)
-		                            .append(printer)
-		                            .toHashCode();
-	}
-
-	@Override
-	public boolean equals(final Object obj) {
-		if (obj == null) {
-			return false;
-		}
-		if (obj == this) {
-			return true;
-		}
-		if (obj.getClass() != getClass()) {
-			return false;
-		}
-		final MacroletExpander rhs = (MacroletExpander) obj;
-		return new EqualsBuilder().appendSuper(super.equals(obj))
-		                          .append(formAnalyzer, rhs.formAnalyzer)
-		                          .append(declareExpander, rhs.declareExpander)
-		                          .append(bodyWithDeclaresAnalyzer, rhs.bodyWithDeclaresAnalyzer)
-		                          .append(bodyWithDeclaresAndDocStringAnalyzer, rhs.bodyWithDeclaresAndDocStringAnalyzer)
-		                          .append(functionExpander, rhs.functionExpander)
-		                          .append(printer, rhs.printer)
-		                          .isEquals();
-	}
-
-	@Override
-	public String toString() {
-		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(formAnalyzer)
-		                                                                .append(declareExpander)
-		                                                                .append(bodyWithDeclaresAnalyzer)
-		                                                                .append(bodyWithDeclaresAndDocStringAnalyzer)
-		                                                                .append(functionExpander)
-		                                                                .append(printer)
-		                                                                .toString();
 	}
 }

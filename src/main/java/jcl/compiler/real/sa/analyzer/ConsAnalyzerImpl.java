@@ -136,35 +136,4 @@ public class ConsAnalyzerImpl implements ConsAnalyzer {
 		final LambdaCompilerFunctionStruct lambdaCompilerFunction = new LambdaCompilerFunctionStruct(lambdaAnalyzed);
 		return new LambdaFunctionCallStruct(lambdaCompilerFunction, analyzedFunctionArguments);
 	}
-
-//	@Override
-//	public int hashCode() {
-//		return new HashCodeBuilder().append(formAnalyzer)
-//		                            .append(lambdaExpander)
-//		                            .toHashCode();
-//	}
-//
-//	@Override
-//	public boolean equals(final Object obj) {
-//		if (obj == null) {
-//			return false;
-//		}
-//		if (obj == this) {
-//			return true;
-//		}
-//		if (obj.getClass() != getClass()) {
-//			return false;
-//		}
-//		final ConsAnalyzerImpl rhs = (ConsAnalyzerImpl) obj;
-//		return new EqualsBuilder().append(formAnalyzer, rhs.formAnalyzer)
-//		                          .append(lambdaExpander, rhs.lambdaExpander)
-//		                          .isEquals();
-//	}
-//
-//	@Override
-//	public String toString() {
-//		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(formAnalyzer)
-//		                                                                .append(lambdaExpander)
-//		                                                                .toString();
-//	}
 }

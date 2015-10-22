@@ -29,10 +29,6 @@ import jcl.lists.ListStruct;
 import jcl.printer.Printer;
 import jcl.symbols.SpecialOperatorStruct;
 import jcl.symbols.SymbolStruct;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -122,44 +118,5 @@ public class MacroLambdaExpander extends MacroFunctionExpander<MacroLambdaStruct
 				           .map(e -> formAnalyzer.analyze(e, lambdaEnvironment))
 				           .collect(Collectors.toList());
 		return new MacroLambdaStruct(fileName, macroName, parsedLambdaList, bodyProcessingResult.getDocString(), new PrognStruct(analyzedBodyForms), lambdaEnvironment);
-	}
-
-	@Override
-	public int hashCode() {
-		return new HashCodeBuilder().appendSuper(super.hashCode())
-		                            .append(formAnalyzer)
-		                            .append(declareExpander)
-		                            .append(bodyWithDeclaresAndDocStringAnalyzer)
-		                            .append(printer)
-		                            .toHashCode();
-	}
-
-	@Override
-	public boolean equals(final Object obj) {
-		if (obj == null) {
-			return false;
-		}
-		if (obj == this) {
-			return true;
-		}
-		if (obj.getClass() != getClass()) {
-			return false;
-		}
-		final MacroLambdaExpander rhs = (MacroLambdaExpander) obj;
-		return new EqualsBuilder().appendSuper(super.equals(obj))
-		                          .append(formAnalyzer, rhs.formAnalyzer)
-		                          .append(declareExpander, rhs.declareExpander)
-		                          .append(bodyWithDeclaresAndDocStringAnalyzer, rhs.bodyWithDeclaresAndDocStringAnalyzer)
-		                          .append(printer, rhs.printer)
-		                          .isEquals();
-	}
-
-	@Override
-	public String toString() {
-		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(formAnalyzer)
-		                                                                .append(declareExpander)
-		                                                                .append(bodyWithDeclaresAndDocStringAnalyzer)
-		                                                                .append(printer)
-		                                                                .toString();
 	}
 }

@@ -22,10 +22,6 @@ import jcl.printer.Printer;
 import jcl.symbols.SpecialOperatorStruct;
 import jcl.symbols.SymbolStruct;
 import jcl.types.TType;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -157,44 +153,5 @@ public class SymbolMacroletExpander extends MacroFunctionExpander<SymbolMacrolet
 		// Evaluate in the outer environment. This is because we want to ensure we don't have references to symbols that may not exist.
 		final Environment parentEnvironment = symbolMacroletEnvironment.getParent();
 		return formAnalyzer.analyze(parameterValue, parentEnvironment);
-	}
-
-	@Override
-	public int hashCode() {
-		return new HashCodeBuilder().appendSuper(super.hashCode())
-		                            .append(formAnalyzer)
-		                            .append(declareExpander)
-		                            .append(bodyWithDeclaresAnalyzer)
-		                            .append(printer)
-		                            .toHashCode();
-	}
-
-	@Override
-	public boolean equals(final Object obj) {
-		if (obj == null) {
-			return false;
-		}
-		if (obj == this) {
-			return true;
-		}
-		if (obj.getClass() != getClass()) {
-			return false;
-		}
-		final SymbolMacroletExpander rhs = (SymbolMacroletExpander) obj;
-		return new EqualsBuilder().appendSuper(super.equals(obj))
-		                          .append(formAnalyzer, rhs.formAnalyzer)
-		                          .append(declareExpander, rhs.declareExpander)
-		                          .append(bodyWithDeclaresAnalyzer, rhs.bodyWithDeclaresAnalyzer)
-		                          .append(printer, rhs.printer)
-		                          .isEquals();
-	}
-
-	@Override
-	public String toString() {
-		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(formAnalyzer)
-		                                                                .append(declareExpander)
-		                                                                .append(bodyWithDeclaresAnalyzer)
-		                                                                .append(printer)
-		                                                                .toString();
 	}
 }

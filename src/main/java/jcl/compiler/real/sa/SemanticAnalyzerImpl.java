@@ -17,10 +17,6 @@ import jcl.lists.NullStruct;
 import jcl.printer.Printer;
 import jcl.symbols.SpecialOperatorStruct;
 import jcl.symbols.SymbolStruct;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -74,36 +70,5 @@ class SemanticAnalyzerImpl implements SemanticAnalyzer {
 	private void unknownFunctionWarning(final SymbolStruct<?> undefinedFunction) {
 		final String printedUndefinedFunction = printer.print(undefinedFunction);
 		LOGGER.warn("Warning: no function or macro function defined for: {}", printedUndefinedFunction);
-	}
-
-	@Override
-	public int hashCode() {
-		return new HashCodeBuilder().append(lambdaExpander)
-		                            .append(printer)
-		                            .toHashCode();
-	}
-
-	@Override
-	public boolean equals(final Object obj) {
-		if (obj == null) {
-			return false;
-		}
-		if (obj == this) {
-			return true;
-		}
-		if (obj.getClass() != getClass()) {
-			return false;
-		}
-		final SemanticAnalyzerImpl rhs = (SemanticAnalyzerImpl) obj;
-		return new EqualsBuilder().append(lambdaExpander, rhs.lambdaExpander)
-		                          .append(printer, rhs.printer)
-		                          .isEquals();
-	}
-
-	@Override
-	public String toString() {
-		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(lambdaExpander)
-		                                                                .append(printer)
-		                                                                .toString();
 	}
 }

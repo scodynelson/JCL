@@ -1,15 +1,14 @@
 package jcl.compiler.real.sa.analyzer.specialoperator;
 
-import javax.annotation.PostConstruct;
-
 import jcl.LispStruct;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.sa.FormAnalyzer;
+import jcl.compiler.real.sa.analyzer.LispFormValueValidator;
 import jcl.compiler.real.struct.specialoperator.ThrowStruct;
-import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.functions.expanders.MacroFunctionExpander;
 import jcl.lists.ListStruct;
 import jcl.symbols.SpecialOperatorStruct;
+import jcl.symbols.SymbolStruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -21,21 +20,17 @@ public class ThrowExpander extends MacroFunctionExpander<ThrowStruct> {
 	@Autowired
 	private FormAnalyzer formAnalyzer;
 
-	/**
-	 * Initializes the throw macro function and adds it to the special operator 'throw'.
-	 */
-	@PostConstruct
-	private void init() {
-		SpecialOperatorStruct.THROW.setMacroFunctionExpander(this);
+	@Autowired
+	private LispFormValueValidator validator;
+
+	@Override
+	public SymbolStruct<?> getFunctionSymbol() {
+		return SpecialOperatorStruct.THROW;
 	}
 
 	@Override
 	public ThrowStruct expand(final ListStruct form, final Environment environment) {
-
-		final int formSize = form.size();
-		if (formSize != 3) {
-			throw new ProgramErrorException("THROW: Incorrect number of arguments: " + formSize + ". Expected 3 arguments.");
-		}
+		validator.validateListFormSize(form, 3, "THROW");
 
 		final ListStruct formRest = form.getRest();
 

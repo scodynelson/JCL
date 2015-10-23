@@ -35,11 +35,12 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.springframework.beans.factory.InitializingBean;
 
 /**
  * The {@link FunctionStruct} is the object representation of a Lisp 'function' type.
  */
-public abstract class FunctionStruct extends BuiltInClassStruct {
+public abstract class FunctionStruct extends BuiltInClassStruct implements InitializingBean {
 
 	private static final long serialVersionUID = 7356724806391677112L;
 
@@ -159,6 +160,18 @@ public abstract class FunctionStruct extends BuiltInClassStruct {
 	protected FunctionStruct(final String documentation, final LispType type,
 	                         final List<Class<? extends LispStruct>> directSuperClasses, final List<Class<? extends LispStruct>> subClasses) {
 		super(documentation, type, directSuperClasses, subClasses);
+	}
+
+	@Override
+	public void afterPropertiesSet() throws Exception {
+		final SymbolStruct<?> functionSymbol = getFunctionSymbol();
+		functionSymbol.setFunction(this);
+	}
+
+	private static final SymbolStruct<?> DUMMY_SYMBOL = new SymbolStruct<>("dummySymbol");
+
+	public SymbolStruct<?> getFunctionSymbol() {
+		return DUMMY_SYMBOL;
 	}
 
 	/**

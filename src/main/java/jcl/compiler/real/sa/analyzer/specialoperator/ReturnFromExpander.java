@@ -1,10 +1,9 @@
 package jcl.compiler.real.sa.analyzer.specialoperator;
 
-import javax.annotation.PostConstruct;
-
 import jcl.LispStruct;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.sa.FormAnalyzer;
+import jcl.compiler.real.sa.analyzer.LispFormValueValidator;
 import jcl.compiler.real.struct.specialoperator.ReturnFromStruct;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.functions.expanders.MacroFunctionExpander;
@@ -25,40 +24,32 @@ public class ReturnFromExpander extends MacroFunctionExpander<ReturnFromStruct> 
 	private FormAnalyzer formAnalyzer;
 
 	@Autowired
+	private LispFormValueValidator validator;
+
+	@Autowired
 	private Printer printer;
 
-	/**
-	 * Initializes the return-from macro function and adds it to the special operator 'return-from'.
-	 */
-	@PostConstruct
-	private void init() {
-		SpecialOperatorStruct.RETURN_FROM.setMacroFunctionExpander(this);
+	@Override
+	public SymbolStruct<?> getFunctionSymbol() {
+		return SpecialOperatorStruct.RETURN_FROM;
 	}
 
 	@Override
 	public ReturnFromStruct expand(final ListStruct form, final Environment environment) {
-
-		final int formSize = form.size();
-		if ((formSize < 2) || (formSize > 3)) {
-			throw new ProgramErrorException("RETURN-FROM: Incorrect number of arguments: " + formSize + ". Expected either 2 or 3 arguments.");
-		}
+		validator.validateListFormSize(form, 2, 3, "RETURN-FROM");
 
 		final ListStruct formRest = form.getRest();
 
 		final LispStruct second = formRest.getFirst();
-		if (!(second instanceof SymbolStruct)) {
-			final String printedObject = printer.print(second);
-			throw new ProgramErrorException("RETURN-FROM: Name must be a symbol. Got: " + printedObject);
-		}
+		final SymbolStruct<?> name = validator.validateObjectType(second, SymbolStruct.class, "RETURN-FROM", "NAME");
 
-		final SymbolStruct<?> name = (SymbolStruct<?>) second;
 		if (environment.getBlockStack().search(name) == -1) {
 			final String printedObject = printer.print(second);
 			throw new ProgramErrorException("RETURN-FROM: No BLOCK with name " + printedObject + " is visible.");
 		}
 
 		final LispStruct analyzedResult;
-		if (formSize == 3) {
+		if (form.size() == 3) {
 			final ListStruct formRestRest = formRest.getRest();
 
 			final LispStruct result = formRestRest.getFirst();

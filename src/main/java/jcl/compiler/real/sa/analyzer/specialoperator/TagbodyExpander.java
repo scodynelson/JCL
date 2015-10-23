@@ -3,7 +3,6 @@ package jcl.compiler.real.sa.analyzer.specialoperator;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 
 import jcl.LispStruct;
@@ -33,12 +32,9 @@ public class TagbodyExpander extends MacroFunctionExpander<TagbodyStruct> {
 	@Resource
 	private Map<Class<? extends LispStruct>, GoStructFactory<LispStruct>> goStructFactoryStrategies;
 
-	/**
-	 * Initializes the tagbody macro function and adds it to the special operator 'tagbody'.
-	 */
-	@PostConstruct
-	private void init() {
-		SpecialOperatorStruct.TAGBODY.setMacroFunctionExpander(this);
+	@Override
+	public SymbolStruct<?> getFunctionSymbol() {
+		return SpecialOperatorStruct.TAGBODY;
 	}
 
 	@Override

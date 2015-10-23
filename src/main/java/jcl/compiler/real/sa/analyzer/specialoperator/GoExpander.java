@@ -3,10 +3,10 @@ package jcl.compiler.real.sa.analyzer.specialoperator;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Stack;
-import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
 import jcl.compiler.real.environment.Environment;
+import jcl.compiler.real.sa.analyzer.LispFormValueValidator;
 import jcl.compiler.real.struct.specialoperator.go.GoStruct;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.functions.expanders.MacroFunctionExpander;
@@ -24,23 +24,19 @@ public class GoExpander extends MacroFunctionExpander<GoStruct<?>> {
 	private static final long serialVersionUID = -6523523596100793498L;
 
 	@Autowired
+	private LispFormValueValidator validator;
+
+	@Autowired
 	private Printer printer;
 
-	/**
-	 * Initializes the go macro function and adds it to the special operator 'go'.
-	 */
-	@PostConstruct
-	private void init() {
-		SpecialOperatorStruct.GO.setMacroFunctionExpander(this);
+	@Override
+	public SymbolStruct<?> getFunctionSymbol() {
+		return SpecialOperatorStruct.GO;
 	}
 
 	@Override
 	public GoStruct<?> expand(final ListStruct form, final Environment environment) {
-
-		final int formSize = form.size();
-		if (formSize != 2) {
-			throw new ProgramErrorException("GO: Incorrect number of arguments: " + formSize + ". Expected 2 arguments.");
-		}
+		validator.validateListFormSize(form, 2, "GO");
 
 		final ListStruct formRest = form.getRest();
 

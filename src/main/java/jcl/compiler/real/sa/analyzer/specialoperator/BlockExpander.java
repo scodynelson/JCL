@@ -2,17 +2,15 @@ package jcl.compiler.real.sa.analyzer.specialoperator;
 
 import java.util.List;
 import java.util.stream.Collectors;
-import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.sa.FormAnalyzer;
+import jcl.compiler.real.sa.analyzer.LispFormValueValidator;
 import jcl.compiler.real.struct.specialoperator.BlockStruct;
 import jcl.compiler.real.struct.specialoperator.PrognStruct;
-import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.functions.expanders.MacroFunctionExpander;
 import jcl.lists.ListStruct;
-import jcl.printer.Printer;
 import jcl.symbols.SpecialOperatorStruct;
 import jcl.symbols.SymbolStruct;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,33 +25,21 @@ public class BlockExpander extends MacroFunctionExpander<BlockStruct> {
 	private FormAnalyzer formAnalyzer;
 
 	@Autowired
-	private Printer printer;
+	private LispFormValueValidator validator;
 
-	/**
-	 * Initializes the block macro function and adds it to the special operator 'block'.
-	 */
-	@PostConstruct
-	private void init() {
-		SpecialOperatorStruct.BLOCK.setMacroFunctionExpander(this);
+	@Override
+	public SymbolStruct<?> getFunctionSymbol() {
+		return SpecialOperatorStruct.BLOCK;
 	}
 
 	@Override
 	public BlockStruct expand(final ListStruct form, final Environment environment) {
-
-		final int formSize = form.size();
-		if (formSize < 2) {
-			throw new ProgramErrorException("BLOCK: Incorrect number of arguments: " + formSize + ". Expected at least 2 arguments.");
-		}
+		validator.validateListFormSize(form, 2, "BLOCK");
 
 		final ListStruct formRest = form.getRest();
 
 		final LispStruct second = formRest.getFirst();
-		if (!(second instanceof SymbolStruct)) {
-			final String printedObject = printer.print(second);
-			throw new ProgramErrorException("BLOCK: Name must be a symbol. Got: " + printedObject);
-		}
-
-		final SymbolStruct<?> name = (SymbolStruct<?>) second;
+		final SymbolStruct<?> name = validator.validateObjectType(second, SymbolStruct.class, "BLOCK", "NAME");
 		environment.getBlockStack().push(name);
 
 		try {

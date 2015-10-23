@@ -1,14 +1,14 @@
 package jcl.compiler.real.sa.analyzer.specialoperator;
 
-import javax.annotation.PostConstruct;
-
 import jcl.LispStruct;
 import jcl.compiler.real.environment.Environment;
+import jcl.compiler.real.sa.analyzer.LispFormValueValidator;
 import jcl.compiler.real.struct.specialoperator.QuoteStruct;
-import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.functions.expanders.MacroFunctionExpander;
 import jcl.lists.ListStruct;
 import jcl.symbols.SpecialOperatorStruct;
+import jcl.symbols.SymbolStruct;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -16,21 +16,17 @@ public class QuoteExpander extends MacroFunctionExpander<QuoteStruct> {
 
 	private static final long serialVersionUID = 2741011595927247743L;
 
-	/**
-	 * Initializes the quote macro function and adds it to the special operator 'quote'.
-	 */
-	@PostConstruct
-	private void init() {
-		SpecialOperatorStruct.QUOTE.setMacroFunctionExpander(this);
+	@Autowired
+	private LispFormValueValidator validator;
+
+	@Override
+	public SymbolStruct<?> getFunctionSymbol() {
+		return SpecialOperatorStruct.QUOTE;
 	}
 
 	@Override
 	public QuoteStruct expand(final ListStruct form, final Environment environment) {
-
-		final int formSize = form.size();
-		if (formSize != 2) {
-			throw new ProgramErrorException("QUOTE: Incorrect number of arguments: " + formSize + ". Expected 2 arguments.");
-		}
+		validator.validateListFormSizeExact(form, 2, "QUOTE");
 
 		final ListStruct formRest = form.getRest();
 

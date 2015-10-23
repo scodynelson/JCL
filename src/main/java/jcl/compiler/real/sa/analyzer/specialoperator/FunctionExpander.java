@@ -1,10 +1,9 @@
 package jcl.compiler.real.sa.analyzer.specialoperator;
 
-import javax.annotation.PostConstruct;
-
 import jcl.LispStruct;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.sa.analyzer.LambdaExpander;
+import jcl.compiler.real.sa.analyzer.LispFormValueValidator;
 import jcl.compiler.real.struct.specialoperator.CompilerFunctionStruct;
 import jcl.compiler.real.struct.specialoperator.LambdaCompilerFunctionStruct;
 import jcl.compiler.real.struct.specialoperator.SymbolCompilerFunctionStruct;
@@ -27,34 +26,29 @@ public class FunctionExpander extends MacroFunctionExpander<CompilerFunctionStru
 	private LambdaExpander lambdaExpander;
 
 	@Autowired
+	private LispFormValueValidator validator;
+
+	@Autowired
 	private Printer printer;
 
-	/**
-	 * Initializes the function macro function and adds it to the special operator 'function'.
-	 */
-	@PostConstruct
-	private void init() {
-		SpecialOperatorStruct.FUNCTION.setMacroFunctionExpander(this);
+	@Override
+	public SymbolStruct<?> getFunctionSymbol() {
+		return SpecialOperatorStruct.FUNCTION;
 	}
 
 	@Override
 	public CompilerFunctionStruct expand(final ListStruct form, final Environment environment) {
-
-		final int formSize = form.size();
-		if (formSize != 2) {
-			throw new ProgramErrorException("FUNCTION: Incorrect number of arguments: " + formSize + ". Expected 2 arguments.");
-		}
+		validator.validateListFormSizeExact(form, 2, "FUNCTION");
 
 		final ListStruct formRest = form.getRest();
 
 		final LispStruct second = formRest.getFirst();
+		validator.validateObjectTypes(second, "FUNCTION", "FUNCTION ARGUMENT", SymbolStruct.class, ListStruct.class);
+
 		if (second instanceof SymbolStruct) {
 			return new SymbolCompilerFunctionStruct((SymbolStruct<?>) second);
-		} else if (second instanceof ListStruct) {
-			return analyzeFunctionList((ListStruct) second, environment);
 		} else {
-			final String printedObject = printer.print(second);
-			throw new ProgramErrorException("FUNCTION: Function argument must be a symbol or a list. Got: " + printedObject);
+			return analyzeFunctionList((ListStruct) second, environment);
 		}
 	}
 

@@ -3,12 +3,12 @@ package jcl.compiler.real.sa.analyzer.specialoperator;
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
-import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.binding.Binding;
 import jcl.compiler.real.sa.FormAnalyzer;
+import jcl.compiler.real.sa.analyzer.LispFormValueValidator;
 import jcl.compiler.real.sa.analyzer.body.BodyProcessingResult;
 import jcl.compiler.real.sa.analyzer.body.BodyWithDeclaresAnalyzer;
 import jcl.compiler.real.sa.analyzer.declare.DeclareExpander;
@@ -16,14 +16,11 @@ import jcl.compiler.real.struct.specialoperator.LetStruct;
 import jcl.compiler.real.struct.specialoperator.PrognStruct;
 import jcl.compiler.real.struct.specialoperator.declare.DeclareStruct;
 import jcl.compiler.real.struct.specialoperator.declare.SpecialDeclarationStruct;
-import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.functions.expanders.MacroFunctionExpander;
 import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;
-import jcl.printer.Printer;
 import jcl.symbols.SpecialOperatorStruct;
 import jcl.symbols.SymbolStruct;
-import jcl.types.TType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -36,42 +33,30 @@ public class LetExpander extends MacroFunctionExpander<LetStruct> {
 	private FormAnalyzer formAnalyzer;
 
 	@Autowired
+	private LispFormValueValidator validator;
+
+	@Autowired
 	private DeclareExpander declareExpander;
 
 	@Autowired
 	private BodyWithDeclaresAnalyzer bodyWithDeclaresAnalyzer;
 
-	@Autowired
-	private Printer printer;
-
-	/**
-	 * Initializes the let macro function and adds it to the special operator 'let'.
-	 */
-	@PostConstruct
-	private void init() {
-		SpecialOperatorStruct.LET.setMacroFunctionExpander(this);
+	@Override
+	public SymbolStruct<?> getFunctionSymbol() {
+		return SpecialOperatorStruct.LET;
 	}
 
 	@Override
 	public LetStruct expand(final ListStruct form, final Environment environment) {
-
-		final int formSize = form.size();
-		if (formSize < 2) {
-			throw new ProgramErrorException("LET: Incorrect number of arguments: " + formSize + ". Expected at least 2 arguments.");
-		}
+		validator.validateListFormSize(form, 2, "LET");
 
 		final ListStruct formRest = form.getRest();
 
 		final LispStruct second = formRest.getFirst();
-		if (!(second instanceof ListStruct)) {
-			final String printedObject = printer.print(second);
-			throw new ProgramErrorException("LET: Parameter list must be a list. Got: " + printedObject);
-		}
+		final ListStruct parameters = validator.validateObjectType(second, "LET", "PARAMETER LIST", ListStruct.class);
+		final List<LispStruct> parametersAsJavaList = parameters.getAsJavaList();
 
 		final Environment letEnvironment = new Environment(environment);
-
-		final ListStruct parameters = (ListStruct) second;
-		final List<LispStruct> parametersAsJavaList = parameters.getAsJavaList();
 
 		final ListStruct formRestRest = formRest.getRest();
 		final List<LispStruct> forms = formRestRest.getAsJavaList();
@@ -89,7 +74,7 @@ public class LetExpander extends MacroFunctionExpander<LetStruct> {
 		final List<SpecialDeclarationStruct> specialDeclarations = declare.getSpecialDeclarations();
 		specialDeclarations.stream()
 		                   .map(SpecialDeclarationStruct::getVar)
-		                   .map(e -> new Binding(e, TType.INSTANCE))
+		                   .map(Binding::new)
 		                   .forEach(letEnvironment::addDynamicBinding);
 
 		final List<LispStruct> bodyForms = bodyProcessingResult.getBodyForms();
@@ -104,10 +89,7 @@ public class LetExpander extends MacroFunctionExpander<LetStruct> {
 	private LetStruct.LetVar getLetVar(final LispStruct parameter, final DeclareStruct declare,
 	                                   final Environment letEnvironment) {
 
-		if (!(parameter instanceof SymbolStruct) && !(parameter instanceof ListStruct)) {
-			final String printedParameter = printer.print(parameter);
-			throw new ProgramErrorException("LET: Parameter must be a symbol or a list. Got: " + printedParameter);
-		}
+		validator.validateObjectTypes(parameter, "LET", "PARAMETER", SymbolStruct.class, ListStruct.class);
 
 		final SymbolStruct<?> var;
 		final LispStruct initForm;
@@ -126,7 +108,7 @@ public class LetExpander extends MacroFunctionExpander<LetStruct> {
 		                                 .map(SpecialDeclarationStruct::getVar)
 		                                 .anyMatch(Predicate.isEqual(var));
 
-		final Binding binding = new Binding(var, TType.INSTANCE);
+		final Binding binding = new Binding(var);
 		if (isSpecial) {
 			letEnvironment.addDynamicBinding(binding);
 		} else {
@@ -137,18 +119,10 @@ public class LetExpander extends MacroFunctionExpander<LetStruct> {
 	}
 
 	private SymbolStruct<?> getLetListParameterVar(final ListStruct listParameter) {
-		final int listParameterSize = listParameter.size();
-		if ((listParameterSize < 1) || (listParameterSize > 2)) {
-			final String printedListParameter = printer.print(listParameter);
-			throw new ProgramErrorException("LET: List parameter must have only 1 or 2 elements. Got: " + printedListParameter);
-		}
+		validator.validateListParameterSize(listParameter, 1, 2, "LET");
 
 		final LispStruct listParameterFirst = listParameter.getFirst();
-		if (!(listParameterFirst instanceof SymbolStruct)) {
-			final String printedObject = printer.print(listParameterFirst);
-			throw new ProgramErrorException("LET: First element of list parameter must be a symbol. Got: " + printedObject);
-		}
-		return (SymbolStruct<?>) listParameterFirst;
+		return validator.validateObjectType(listParameterFirst, "LET", "First element of list parameter", SymbolStruct.class);
 	}
 
 	private LispStruct getLetListParameterInitForm(final ListStruct listParameter, final Environment letEnvironment) {

@@ -5,13 +5,13 @@ import java.util.List;
 import java.util.Stack;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
-import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
 import jcl.arrays.StringStruct;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.binding.Binding;
 import jcl.compiler.real.sa.FormAnalyzer;
+import jcl.compiler.real.sa.analyzer.LispFormValueValidator;
 import jcl.compiler.real.sa.analyzer.body.BodyProcessingResult;
 import jcl.compiler.real.sa.analyzer.body.BodyWithDeclaresAnalyzer;
 import jcl.compiler.real.sa.analyzer.body.BodyWithDeclaresAndDocStringAnalyzer;
@@ -32,7 +32,6 @@ import jcl.symbols.SymbolStruct;
 import jcl.symbols.functions.BindSymbolFunctionFunction;
 import jcl.symbols.functions.UnbindSymbolFunctionFunction;
 import jcl.system.StackUtils;
-import jcl.types.TType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,6 +48,9 @@ public class FletExpander extends MacroFunctionExpander<InnerLambdaStruct> {
 	private FormAnalyzer formAnalyzer;
 
 	@Autowired
+	private LispFormValueValidator validator;
+
+	@Autowired
 	private DeclareExpander declareExpander;
 
 	@Autowired
@@ -63,36 +65,25 @@ public class FletExpander extends MacroFunctionExpander<InnerLambdaStruct> {
 	@Autowired
 	private Printer printer;
 
-	/**
-	 * Initializes the flet macro function and adds it to the special operator 'flet'.
-	 */
-	@PostConstruct
-	private void init() {
-		SpecialOperatorStruct.FLET.setMacroFunctionExpander(this);
+	@Override
+	public SymbolStruct<?> getFunctionSymbol() {
+		return SpecialOperatorStruct.FLET;
 	}
 
 	@Override
 	public InnerLambdaStruct expand(final ListStruct form, final Environment environment) {
-
-		final int formSize = form.size();
-		if (formSize < 2) {
-			throw new ProgramErrorException("FLET: Incorrect number of arguments: " + formSize + ". Expected at least 2 arguments.");
-		}
+		validator.validateListFormSize(form, 2, "FLET");
 
 		final ListStruct formRest = form.getRest();
 
 		final LispStruct second = formRest.getFirst();
-		if (!(second instanceof ListStruct)) {
-			final String printedObject = printer.print(second);
-			throw new ProgramErrorException("FLET: Parameter list must be a list. Got: " + printedObject);
-		}
+		final ListStruct innerLambdas = validator.validateObjectType(second, "FLET", "FUNCTION LIST", ListStruct.class);
+		final List<LispStruct> innerLambdasAsJavaList = innerLambdas.getAsJavaList();
 
 		final Environment fletEnvironment = new Environment(environment);
 
 		final Stack<SymbolStruct<?>> functionNameStack = environment.getFunctionNameStack();
 
-		final ListStruct innerLambdas = (ListStruct) second;
-		final List<LispStruct> innerLambdasAsJavaList = innerLambdas.getAsJavaList();
 		final List<SymbolStruct<?>> functionNames = getFunctionNames(innerLambdasAsJavaList);
 
 		try {
@@ -112,7 +103,7 @@ public class FletExpander extends MacroFunctionExpander<InnerLambdaStruct> {
 			final List<SpecialDeclarationStruct> specialDeclarations = declare.getSpecialDeclarations();
 			specialDeclarations.stream()
 			                   .map(SpecialDeclarationStruct::getVar)
-			                   .map(e -> new Binding(e, TType.INSTANCE))
+			                   .map(Binding::new)
 			                   .forEach(fletEnvironment::addDynamicBinding);
 
 			// Add function names AFTER analyzing the functions. This is one of the differences between Flet and Labels/Macrolet.

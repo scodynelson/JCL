@@ -2,7 +2,6 @@ package jcl.compiler.real.sa.analyzer.specialoperator;
 
 import java.util.List;
 import java.util.stream.Collectors;
-import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
 import jcl.compiler.real.environment.Environment;
@@ -18,7 +17,7 @@ import jcl.compiler.real.struct.specialoperator.declare.SpecialDeclarationStruct
 import jcl.functions.expanders.MacroFunctionExpander;
 import jcl.lists.ListStruct;
 import jcl.symbols.SpecialOperatorStruct;
-import jcl.types.TType;
+import jcl.symbols.SymbolStruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -36,12 +35,9 @@ public class LocallyExpander extends MacroFunctionExpander<LocallyStruct> {
 	@Autowired
 	private BodyWithDeclaresAnalyzer bodyWithDeclaresAnalyzer;
 
-	/**
-	 * Initializes the locally macro function and adds it to the special operator 'locally'.
-	 */
-	@PostConstruct
-	private void init() {
-		SpecialOperatorStruct.LOCALLY.setMacroFunctionExpander(this);
+	@Override
+	public SymbolStruct<?> getFunctionSymbol() {
+		return SpecialOperatorStruct.LOCALLY;
 	}
 
 	@Override
@@ -60,7 +56,7 @@ public class LocallyExpander extends MacroFunctionExpander<LocallyStruct> {
 		final List<SpecialDeclarationStruct> specialDeclarations = declare.getSpecialDeclarations();
 		specialDeclarations.stream()
 		                   .map(SpecialDeclarationStruct::getVar)
-		                   .map(e -> new Binding(e, TType.INSTANCE))
+		                   .map(Binding::new)
 		                   .forEach(locallyEnvironment::addDynamicBinding);
 
 		final List<LispStruct> bodyForms = bodyProcessingResult.getBodyForms();

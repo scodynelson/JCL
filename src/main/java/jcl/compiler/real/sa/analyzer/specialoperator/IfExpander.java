@@ -1,16 +1,15 @@
 package jcl.compiler.real.sa.analyzer.specialoperator;
 
-import javax.annotation.PostConstruct;
-
 import jcl.LispStruct;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.sa.FormAnalyzer;
+import jcl.compiler.real.sa.analyzer.LispFormValueValidator;
 import jcl.compiler.real.struct.specialoperator.IfStruct;
-import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.functions.expanders.MacroFunctionExpander;
 import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;
 import jcl.symbols.SpecialOperatorStruct;
+import jcl.symbols.SymbolStruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -22,21 +21,17 @@ public class IfExpander extends MacroFunctionExpander<IfStruct> {
 	@Autowired
 	private FormAnalyzer formAnalyzer;
 
-	/**
-	 * Initializes the if macro function and adds it to the special operator 'if'.
-	 */
-	@PostConstruct
-	private void init() {
-		SpecialOperatorStruct.IF.setMacroFunctionExpander(this);
+	@Autowired
+	private LispFormValueValidator validator;
+
+	@Override
+	public SymbolStruct<?> getFunctionSymbol() {
+		return SpecialOperatorStruct.IF;
 	}
 
 	@Override
 	public IfStruct expand(final ListStruct form, final Environment environment) {
-
-		final int formSize = form.size();
-		if ((formSize < 3) || (formSize > 4)) {
-			throw new ProgramErrorException("IF: Incorrect number of arguments: " + formSize + ". Expected either 3 or 4 arguments.");
-		}
+		final int formSize = validator.validateListFormSize(form, 3, 4, "IF");
 
 		final ListStruct formRest = form.getRest();
 

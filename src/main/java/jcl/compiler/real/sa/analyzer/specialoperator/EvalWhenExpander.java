@@ -4,12 +4,12 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
 import jcl.compiler.real.CompilerVariables;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.functions.EvalFunction;
+import jcl.compiler.real.sa.analyzer.LispFormValueValidator;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.functions.expanders.MacroFunctionExpander;
 import jcl.lists.ConsStruct;
@@ -44,33 +44,24 @@ public class EvalWhenExpander extends MacroFunctionExpander<LispStruct> {
 	private EvalFunction evalFunction;
 
 	@Autowired
+	private LispFormValueValidator validator;
+
+	@Autowired
 	private Printer printer;
 
-	/**
-	 * Initializes the eval-when macro function and adds it to the special operator 'eval-when'.
-	 */
-	@PostConstruct
-	private void init() {
-		SpecialOperatorStruct.EVAL_WHEN.setMacroFunctionExpander(this);
+	@Override
+	public SymbolStruct<?> getFunctionSymbol() {
+		return SpecialOperatorStruct.EVAL_WHEN;
 	}
 
 	@Override
 	public LispStruct expand(final ListStruct form, final Environment environment) {
-
-		final int formSize = form.size();
-		if (formSize < 2) {
-			throw new ProgramErrorException("EVAL-WHEN: Incorrect number of arguments: " + formSize + ". Expected at least 2 arguments.");
-		}
+		validator.validateListFormSize(form, 2, "EVAL-WHEN");
 
 		final ListStruct formRest = form.getRest();
 
 		final LispStruct second = formRest.getFirst();
-		if (!(second instanceof ListStruct)) {
-			final String printedObject = printer.print(second);
-			throw new ProgramErrorException("EVAL-WHEN: Situation list must be a list. Got: " + printedObject);
-		}
-
-		final ListStruct situationList = (ListStruct) second;
+		final ListStruct situationList = validator.validateObjectType(second, "EVAL-WHEN", "SITUATION LIST", ListStruct.class);
 		final List<? extends LispStruct> situationJavaList = situationList.getAsJavaList();
 
 		final Collection<? extends LispStruct> difference = CollectionUtils.removeAll(situationJavaList, SITUATION_KEYWORDS);

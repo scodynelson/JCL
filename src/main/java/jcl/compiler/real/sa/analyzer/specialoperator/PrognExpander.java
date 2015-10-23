@@ -2,7 +2,6 @@ package jcl.compiler.real.sa.analyzer.specialoperator;
 
 import java.util.List;
 import java.util.stream.Collectors;
-import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
 import jcl.compiler.real.environment.Environment;
@@ -11,6 +10,7 @@ import jcl.compiler.real.struct.specialoperator.PrognStruct;
 import jcl.functions.expanders.MacroFunctionExpander;
 import jcl.lists.ListStruct;
 import jcl.symbols.SpecialOperatorStruct;
+import jcl.symbols.SymbolStruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -22,12 +22,9 @@ public class PrognExpander extends MacroFunctionExpander<PrognStruct> {
 	@Autowired
 	private FormAnalyzer formAnalyzer;
 
-	/**
-	 * Initializes the progn macro function and adds it to the special operator 'progn'.
-	 */
-	@PostConstruct
-	private void init() {
-		SpecialOperatorStruct.PROGN.setMacroFunctionExpander(this);
+	@Override
+	public SymbolStruct<?> getFunctionSymbol() {
+		return SpecialOperatorStruct.PROGN;
 	}
 
 	@Override

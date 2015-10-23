@@ -12,6 +12,7 @@ import jcl.arrays.StringStruct;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.binding.Binding;
 import jcl.compiler.real.sa.FormAnalyzer;
+import jcl.compiler.real.sa.analyzer.LispFormValueValidator;
 import jcl.compiler.real.sa.analyzer.body.BodyProcessingResult;
 import jcl.compiler.real.sa.analyzer.body.BodyWithDeclaresAnalyzer;
 import jcl.compiler.real.sa.analyzer.body.BodyWithDeclaresAndDocStringAnalyzer;
@@ -46,6 +47,9 @@ public class LabelsExpander extends MacroFunctionExpander<InnerLambdaStruct> {
 	private FormAnalyzer formAnalyzer;
 
 	@Autowired
+	private LispFormValueValidator validator;
+
+	@Autowired
 	private DeclareExpander declareExpander;
 
 	@Autowired
@@ -60,29 +64,20 @@ public class LabelsExpander extends MacroFunctionExpander<InnerLambdaStruct> {
 	@Autowired
 	private Printer printer;
 
-	/**
-	 * Initializes the labels macro function and adds it to the special operator 'labels'.
-	 */
-	@PostConstruct
-	private void init() {
-		SpecialOperatorStruct.LABELS.setMacroFunctionExpander(this);
+	@Override
+	public SymbolStruct<?> getFunctionSymbol() {
+		return SpecialOperatorStruct.LABELS;
 	}
 
 	@Override
 	public InnerLambdaStruct expand(final ListStruct form, final Environment environment) {
-
-		final int formSize = form.size();
-		if (formSize < 2) {
-			throw new ProgramErrorException("LABELS: Incorrect number of arguments: " + formSize + ". Expected at least 2 arguments.");
-		}
+		validator.validateListFormSize(form, 2, "LABELS");
 
 		final ListStruct formRest = form.getRest();
 
 		final LispStruct second = formRest.getFirst();
-		if (!(second instanceof ListStruct)) {
-			final String printedObject = printer.print(second);
-			throw new ProgramErrorException("LABELS: Parameter list must be a list. Got: " + printedObject);
-		}
+		final ListStruct innerLambdas = validator.validateObjectType(second, "LABELS", "FUNCTION LIST", ListStruct.class);
+		final List<LispStruct> innerLambdasAsJavaList = innerLambdas.getAsJavaList();
 
 		final Environment labelsEnvironment = new Environment(environment);
 
@@ -90,8 +85,6 @@ public class LabelsExpander extends MacroFunctionExpander<InnerLambdaStruct> {
 		List<SymbolStruct<?>> functionNames = null;
 
 		try {
-			final ListStruct innerLambdas = (ListStruct) second;
-			final List<LispStruct> innerLambdasAsJavaList = innerLambdas.getAsJavaList();
 			functionNames = getFunctionNames(innerLambdasAsJavaList);
 
 			// Add function names BEFORE analyzing the functions. This is one of the differences between Flet and Labels/Macrolet.
@@ -113,7 +106,7 @@ public class LabelsExpander extends MacroFunctionExpander<InnerLambdaStruct> {
 			final List<SpecialDeclarationStruct> specialDeclarations = declare.getSpecialDeclarations();
 			specialDeclarations.stream()
 			                   .map(SpecialDeclarationStruct::getVar)
-			                   .map(e -> new Binding(e, TType.INSTANCE))
+			                   .map(Binding::new)
 			                   .forEach(labelsEnvironment::addDynamicBinding);
 
 			final List<LispStruct> bodyForms = bodyProcessingResult.getBodyForms();

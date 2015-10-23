@@ -2,11 +2,11 @@ package jcl.compiler.real.sa.analyzer.specialoperator;
 
 import java.util.List;
 import java.util.stream.Collectors;
-import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.sa.FormAnalyzer;
+import jcl.compiler.real.sa.analyzer.LispFormValueValidator;
 import jcl.compiler.real.struct.specialoperator.CompilerFunctionStruct;
 import jcl.compiler.real.struct.specialoperator.MultipleValueCallStruct;
 import jcl.compiler.real.struct.specialoperator.QuoteStruct;
@@ -15,6 +15,7 @@ import jcl.functions.expanders.MacroFunctionExpander;
 import jcl.lists.ListStruct;
 import jcl.printer.Printer;
 import jcl.symbols.SpecialOperatorStruct;
+import jcl.symbols.SymbolStruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -27,26 +28,22 @@ public class MultipleValueCallExpander extends MacroFunctionExpander<MultipleVal
 	private FormAnalyzer formAnalyzer;
 
 	@Autowired
+	private LispFormValueValidator validator;
+
+	@Autowired
 	private FunctionExpander functionExpander;
 
 	@Autowired
 	private Printer printer;
 
-	/**
-	 * Initializes the multiple-value-call macro function and adds it to the special operator 'multiple-value-call'.
-	 */
-	@PostConstruct
-	private void init() {
-		SpecialOperatorStruct.MULTIPLE_VALUE_CALL.setMacroFunctionExpander(this);
+	@Override
+	public SymbolStruct<?> getFunctionSymbol() {
+		return SpecialOperatorStruct.MULTIPLE_VALUE_CALL;
 	}
 
 	@Override
 	public MultipleValueCallStruct expand(final ListStruct form, final Environment environment) {
-
-		final int formSize = form.size();
-		if (formSize < 2) {
-			throw new ProgramErrorException("MULTIPLE-VALUE-CALL: Incorrect number of arguments: " + formSize + ". Expected at least 2 arguments.");
-		}
+		validator.validateListFormSize(form, 2, "MULTIPLE-VALUE-CALL");
 
 		final ListStruct formRest = form.getRest();
 

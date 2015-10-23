@@ -2,19 +2,19 @@ package jcl.compiler.real.sa.analyzer.specialoperator;
 
 import java.util.List;
 import java.util.stream.Collectors;
-import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.ProgvEnvironment;
 import jcl.compiler.real.functions.EvalFunction;
 import jcl.compiler.real.sa.FormAnalyzer;
+import jcl.compiler.real.sa.analyzer.LispFormValueValidator;
 import jcl.compiler.real.struct.specialoperator.PrognStruct;
 import jcl.compiler.real.struct.specialoperator.ProgvStruct;
-import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.functions.expanders.MacroFunctionExpander;
 import jcl.lists.ListStruct;
 import jcl.symbols.SpecialOperatorStruct;
+import jcl.symbols.SymbolStruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -26,21 +26,17 @@ public class ProgvExpander extends MacroFunctionExpander<ProgvStruct> {
 	@Autowired
 	private FormAnalyzer formAnalyzer;
 
-	/**
-	 * Initializes the progv macro function and adds it to the special operator 'progv'.
-	 */
-	@PostConstruct
-	private void init() {
-		SpecialOperatorStruct.PROGV.setMacroFunctionExpander(this);
+	@Autowired
+	private LispFormValueValidator validator;
+
+	@Override
+	public SymbolStruct<?> getFunctionSymbol() {
+		return SpecialOperatorStruct.PROGV;
 	}
 
 	@Override
 	public ProgvStruct expand(final ListStruct form, final Environment environment) {
-
-		final int formSize = form.size();
-		if (formSize < 3) {
-			throw new ProgramErrorException("PROGV: Incorrect number of arguments: " + formSize + ". Expected at least 3 arguments.");
-		}
+		validator.validateListFormSize(form, 3, "PROGV");
 
 		final ListStruct formRest = form.getRest();
 

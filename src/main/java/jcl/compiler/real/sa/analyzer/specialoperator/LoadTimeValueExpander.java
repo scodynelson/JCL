@@ -1,11 +1,10 @@
 package jcl.compiler.real.sa.analyzer.specialoperator;
 
-import javax.annotation.PostConstruct;
-
 import jcl.LispStruct;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.functions.EvalFunction;
 import jcl.compiler.real.sa.FormAnalyzer;
+import jcl.compiler.real.sa.analyzer.LispFormValueValidator;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.functions.expanders.MacroFunctionExpander;
 import jcl.lists.ListStruct;
@@ -13,6 +12,7 @@ import jcl.lists.NullStruct;
 import jcl.printer.Printer;
 import jcl.symbols.BooleanStruct;
 import jcl.symbols.SpecialOperatorStruct;
+import jcl.symbols.SymbolStruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -25,26 +25,22 @@ public class LoadTimeValueExpander extends MacroFunctionExpander<LispStruct> {
 	private FormAnalyzer formAnalyzer;
 
 	@Autowired
+	private LispFormValueValidator validator;
+
+	@Autowired
 	private EvalFunction evalFunction;
 
 	@Autowired
 	private Printer printer;
 
-	/**
-	 * Initializes the load-time-value macro function and adds it to the special operator 'load-time-value'.
-	 */
-	@PostConstruct
-	private void init() {
-		SpecialOperatorStruct.LOAD_TIME_VALUE.setMacroFunctionExpander(this);
+	@Override
+	public SymbolStruct<?> getFunctionSymbol() {
+		return SpecialOperatorStruct.LOAD_TIME_VALUE;
 	}
 
 	@Override
 	public LispStruct expand(final ListStruct form, final Environment environment) {
-
-		final int formSize = form.size();
-		if ((formSize < 2) || (formSize > 3)) {
-			throw new ProgramErrorException("LOAD-TIME-VALUE: Incorrect number of arguments: " + formSize + ". Expected either 2 or 3 arguments.");
-		}
+		validator.validateListFormSize(form, 2, 3, "LOAD-TIME-VALUE");
 
 		final ListStruct formRest = form.getRest();
 		final ListStruct formRestRest = formRest.getRest();

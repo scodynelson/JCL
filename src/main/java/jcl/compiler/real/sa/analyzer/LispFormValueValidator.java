@@ -4,6 +4,9 @@
 
 package jcl.compiler.real.sa.analyzer;
 
+import java.util.Arrays;
+import java.util.stream.Stream;
+
 import jcl.LispStruct;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.lists.ListStruct;
@@ -17,41 +20,63 @@ public final class LispFormValueValidator {
 	@Autowired
 	private Printer printer;
 
-	public void validateListFormSizeEven(final ListStruct form, final String analyzerName) {
+	public int validateListFormSizeEven(final ListStruct form, final String analyzerName) {
 		final int formSize = form.size();
 		if ((formSize % 2) != 0) {
 			throw new ProgramErrorException(analyzerName + ": Odd number of arguments received: " + formSize + ". Expected an even number of arguments.");
 		}
+		return formSize;
 	}
 
-	public void validateListFormSizeExact(final ListStruct form, final int amount, final String analyzerName) {
+	public int validateListFormSizeExact(final ListStruct form, final int amount, final String analyzerName) {
 		final int formSize = form.size();
 		if (formSize != amount) {
 			throw new ProgramErrorException(analyzerName + ": Incorrect number of arguments: " + formSize + ". Expected " + amount + " arguments.");
 		}
+		return formSize;
 	}
 
-	public void validateListFormSize(final ListStruct form, final int lowerBound, final String analyzerName) {
+	public int validateListFormSize(final ListStruct form, final int lowerBound, final String analyzerName) {
 		final int formSize = form.size();
 		if (formSize < lowerBound) {
 			throw new ProgramErrorException(analyzerName + ": Incorrect number of arguments: " + formSize + ". Expected at least " + lowerBound + " arguments.");
 		}
+		return formSize;
 	}
 
-	public void validateListFormSize(final ListStruct form, final int lowerBound, final int upperBound, final String analyzerName) {
+	public int validateListFormSize(final ListStruct form, final int lowerBound, final int upperBound, final String analyzerName) {
 		final int formSize = form.size();
 		if ((formSize < lowerBound) || (formSize > upperBound)) {
 			throw new ProgramErrorException(analyzerName + ": Incorrect number of arguments: " + formSize + ". Expected between " + lowerBound + " and " + upperBound + " arguments.");
 		}
+		return formSize;
+	}
+
+	public int validateListParameterSize(final ListStruct form, final int lowerBound, final int upperBound, final String analyzerName) {
+		final int formSize = form.size();
+		if ((formSize < lowerBound) || (formSize > upperBound)) {
+			throw new ProgramErrorException(analyzerName + ": List parameter must have between " + lowerBound + " and " + upperBound + " elements. Got: " + formSize);
+		}
+		return formSize;
 	}
 
 	@SuppressWarnings({"unchecked", "SuppressionAnnotation"})
-	public <T> T validateObjectType(final LispStruct object, final Class<T> classType, final String analyzerName,
-	                                final String objectName) {
-		if (!object.getClass().isAssignableFrom(classType)) {
-			final String printedObject = printer.print(object);
-			throw new ProgramErrorException(analyzerName + ": " + objectName + " must be a " + classType.getSimpleName() + ". Got: " + printedObject);
-		}
+	public <T> T validateObjectType(final LispStruct object, final String analyzerName, final String objectName,
+	                                final Class<T> classType) {
+		validateObjectTypes(object, analyzerName, objectName, classType);
 		return (T) object;
+	}
+
+	public void validateObjectTypes(final LispStruct object, final String analyzerName, final String objectName,
+	                                final Class<?>... classTypes) {
+
+		final Class<?> objectClass = object.getClass();
+		final boolean noneMatch = Stream.of(classTypes)
+		                                .noneMatch(objectClass::isAssignableFrom);
+
+		if (noneMatch) {
+			final String printedObject = printer.print(object);
+			throw new ProgramErrorException(analyzerName + ": " + objectName + " must be of of the following: " + Arrays.toString(classTypes) + ". Got: " + printedObject);
+		}
 	}
 }

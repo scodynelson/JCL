@@ -26,8 +26,6 @@ public class TestGroundMacroLambdaFunctionGenerator extends MacroFunctionStruct 
 
 	private static final long serialVersionUID = -1939696402314939143L;
 
-	private static final LispStruct LTV_1 = new CharacterStruct(1997);
-
 	public TestGroundMacroLambdaFunctionGenerator() {
 		this(null);
 	}

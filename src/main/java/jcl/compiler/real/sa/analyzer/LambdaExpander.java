@@ -6,7 +6,6 @@ import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
 import jcl.compiler.real.environment.Environment;
-import jcl.compiler.real.environment.LambdaEnvironment;
 import jcl.compiler.real.environment.binding.Binding;
 import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaListBindings;
 import jcl.compiler.real.sa.FormAnalyzer;
@@ -72,7 +71,7 @@ public class LambdaExpander extends MacroFunctionExpander<LambdaStruct> {
 			throw new ProgramErrorException("LAMBDA: Parameter list must be a list. Got: " + printedObject);
 		}
 
-		final LambdaEnvironment lambdaEnvironment = new LambdaEnvironment(environment);
+		final Environment lambdaEnvironment = new Environment(environment);
 
 		final ListStruct parameters = (ListStruct) second;
 

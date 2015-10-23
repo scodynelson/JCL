@@ -5,7 +5,7 @@
 package jcl.compiler.real.struct.specialoperator.lambda;
 
 import jcl.arrays.StringStruct;
-import jcl.compiler.real.environment.LambdaEnvironment;
+import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.binding.lambdalist.MacroLambdaListBindings;
 import jcl.compiler.real.struct.CompilerSpecialOperatorStruct;
 import jcl.compiler.real.struct.specialoperator.PrognStruct;
@@ -25,10 +25,10 @@ public class MacroLambdaStruct extends CompilerSpecialOperatorStruct {
 
 	private final PrognStruct forms;
 
-	private final LambdaEnvironment lambdaEnvironment;
+	private final Environment lambdaEnvironment;
 
 	public MacroLambdaStruct(final String fileName, final SymbolStruct<?> macroName, final MacroLambdaListBindings lambdaListBindings,
-	                         final StringStruct docString, final PrognStruct forms, final LambdaEnvironment lambdaEnvironment) {
+	                         final StringStruct docString, final PrognStruct forms, final Environment lambdaEnvironment) {
 		this.fileName = fileName;
 		this.macroName = macroName;
 		this.lambdaListBindings = lambdaListBindings;
@@ -53,7 +53,7 @@ public class MacroLambdaStruct extends CompilerSpecialOperatorStruct {
 		return forms;
 	}
 
-	public LambdaEnvironment getLambdaEnvironment() {
+	public Environment getLambdaEnvironment() {
 		return lambdaEnvironment;
 	}
 }

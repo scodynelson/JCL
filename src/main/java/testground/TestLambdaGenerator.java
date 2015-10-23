@@ -28,21 +28,13 @@ public class TestLambdaGenerator extends FunctionStruct {
 
 	private static final long serialVersionUID = 5616713628691655052L;
 
-	private LispStruct ltv_1;
-
 	public TestLambdaGenerator() {
 		this(null);
 	}
 
 	protected TestLambdaGenerator(final Closure closure) {
 		super("DocumentationString", closure);
-		initLoadTimeValueForms(closure);
 		initLambdaListBindings();
-	}
-
-	@Override
-	protected void initLoadTimeValueForms(final Closure currentClosure) {
-		ltv_1 = new CharacterStruct(1997);
 	}
 
 	@Override

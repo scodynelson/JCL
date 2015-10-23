@@ -413,9 +413,6 @@ public abstract class FunctionStruct extends BuiltInClassStruct {
 		return functionParametersToBind;
 	}
 
-	protected void initLoadTimeValueForms(final Closure currentClosure) {
-	}
-
 	protected void initLambdaListBindings() {
 		final List<RequiredBinding> requiredBindings = getRequiredBindings();
 		final List<OptionalBinding> optionalBindings = getOptionalBindings();

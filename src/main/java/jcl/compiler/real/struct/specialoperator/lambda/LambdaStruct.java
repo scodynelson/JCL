@@ -5,7 +5,7 @@
 package jcl.compiler.real.struct.specialoperator.lambda;
 
 import jcl.arrays.StringStruct;
-import jcl.compiler.real.environment.LambdaEnvironment;
+import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaListBindings;
 import jcl.compiler.real.struct.CompilerSpecialOperatorStruct;
 import jcl.compiler.real.struct.specialoperator.PrognStruct;
@@ -22,10 +22,10 @@ public class LambdaStruct extends CompilerSpecialOperatorStruct {
 
 	private final PrognStruct forms;
 
-	private final LambdaEnvironment lambdaEnvironment;
+	private final Environment lambdaEnvironment;
 
 	public LambdaStruct(final String className, final OrdinaryLambdaListBindings lambdaListBindings, final StringStruct docString,
-	                    final PrognStruct forms, final LambdaEnvironment lambdaEnvironment) {
+	                    final PrognStruct forms, final Environment lambdaEnvironment) {
 		this.className = className;
 		this.lambdaListBindings = lambdaListBindings;
 		this.docString = docString;
@@ -49,7 +49,7 @@ public class LambdaStruct extends CompilerSpecialOperatorStruct {
 		return forms;
 	}
 
-	public LambdaEnvironment getLambdaEnvironment() {
+	public Environment getLambdaEnvironment() {
 		return lambdaEnvironment;
 	}
 }

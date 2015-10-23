@@ -43,8 +43,6 @@ import org.objectweb.asm.Label;
 @SuppressWarnings("all")
 public class TestGround {
 
-	private static final LispStruct LTV_1 = new CharacterStruct(1997);
-
 	private Object blockGen(final Closure currentClosure) {
 
 		final PackageStruct pkg = PackageStruct.findPackage("SYSTEM");
@@ -366,10 +364,6 @@ public class TestGround {
 			symbol.unbindFunction();
 		}
 		return result;
-	}
-
-	private Object ltvGen() {
-		return LTV_1;
 	}
 
 	private Object multipleValueProg1Gen(final Closure currentClosure) {

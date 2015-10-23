@@ -10,7 +10,6 @@ import javax.annotation.PostConstruct;
 import jcl.LispStruct;
 import jcl.arrays.StringStruct;
 import jcl.compiler.real.environment.Environment;
-import jcl.compiler.real.environment.LambdaEnvironment;
 import jcl.compiler.real.environment.binding.Binding;
 import jcl.compiler.real.sa.FormAnalyzer;
 import jcl.compiler.real.sa.analyzer.body.BodyProcessingResult;
@@ -85,7 +84,7 @@ public class MacroletExpander extends MacroFunctionExpander<InnerLambdaStruct> {
 			throw new ProgramErrorException("MACROLET: Parameter list must be a list. Got: " + printedObject);
 		}
 
-		final LambdaEnvironment macroletEnvironment = new LambdaEnvironment(environment);
+		final Environment macroletEnvironment = new Environment(environment);
 
 		final Stack<SymbolStruct<?>> functionNameStack = macroletEnvironment.getFunctionNameStack();
 		List<SymbolStruct<?>> functionNames = null;
@@ -159,7 +158,7 @@ public class MacroletExpander extends MacroFunctionExpander<InnerLambdaStruct> {
 	}
 
 	private InnerLambdaStruct.InnerLambdaVar getMacroletVar(final LispStruct functionDefinition, final DeclareStruct declare,
-	                                                        final LambdaEnvironment macroletEnvironment) {
+	                                                        final Environment macroletEnvironment) {
 
 		final ListStruct functionList = (ListStruct) functionDefinition;
 		final SymbolStruct<?> functionName = (SymbolStruct<?>) functionList.getFirst();
@@ -181,7 +180,7 @@ public class MacroletExpander extends MacroFunctionExpander<InnerLambdaStruct> {
 	}
 
 	private CompilerFunctionStruct getFunctionParameterInitForm(final ListStruct functionListParameter,
-	                                                            final LambdaEnvironment macroletEnvironment) {
+	                                                            final Environment macroletEnvironment) {
 
 		// TODO: This will be a MacroLambda, NOT a Lambda form!!!
 

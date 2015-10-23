@@ -20,7 +20,7 @@ import jcl.symbols.SymbolStruct;
 
 public class Environment extends StandardObjectStruct {
 
-	public static final Environment NULL = new LambdaEnvironment(null);
+	public static final Environment NULL = new Environment(null);
 
 	private static final long serialVersionUID = 7523547599975901124L;
 

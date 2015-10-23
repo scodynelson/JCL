@@ -10,7 +10,6 @@ import javax.annotation.PostConstruct;
 import jcl.LispStruct;
 import jcl.arrays.StringStruct;
 import jcl.compiler.real.environment.Environment;
-import jcl.compiler.real.environment.LambdaEnvironment;
 import jcl.compiler.real.environment.binding.Binding;
 import jcl.compiler.real.sa.FormAnalyzer;
 import jcl.compiler.real.sa.analyzer.body.BodyProcessingResult;
@@ -85,7 +84,7 @@ public class LabelsExpander extends MacroFunctionExpander<InnerLambdaStruct> {
 			throw new ProgramErrorException("LABELS: Parameter list must be a list. Got: " + printedObject);
 		}
 
-		final LambdaEnvironment labelsEnvironment = new LambdaEnvironment(environment);
+		final Environment labelsEnvironment = new Environment(environment);
 
 		final Stack<SymbolStruct<?>> functionNameStack = environment.getFunctionNameStack();
 		List<SymbolStruct<?>> functionNames = null;
@@ -159,7 +158,7 @@ public class LabelsExpander extends MacroFunctionExpander<InnerLambdaStruct> {
 	}
 
 	private InnerLambdaStruct.InnerLambdaVar getLabelsVar(final LispStruct functionDefinition, final DeclareStruct declare,
-	                                                      final LambdaEnvironment labelsEnvironment) {
+	                                                      final Environment labelsEnvironment) {
 
 		final ListStruct functionList = (ListStruct) functionDefinition;
 		final SymbolStruct<?> functionName = (SymbolStruct<?>) functionList.getFirst();
@@ -173,7 +172,7 @@ public class LabelsExpander extends MacroFunctionExpander<InnerLambdaStruct> {
 	}
 
 	private CompilerFunctionStruct getFunctionParameterInitForm(final ListStruct functionListParameter,
-	                                                            final LambdaEnvironment labelsEnvironment) {
+	                                                            final Environment labelsEnvironment) {
 
 		final int functionListParameterSize = functionListParameter.size();
 		if (functionListParameterSize < 2) {

@@ -10,7 +10,6 @@ import javax.annotation.PostConstruct;
 import jcl.LispStruct;
 import jcl.arrays.StringStruct;
 import jcl.compiler.real.environment.Environment;
-import jcl.compiler.real.environment.LambdaEnvironment;
 import jcl.compiler.real.environment.binding.Binding;
 import jcl.compiler.real.sa.FormAnalyzer;
 import jcl.compiler.real.sa.analyzer.body.BodyProcessingResult;
@@ -88,7 +87,7 @@ public class FletExpander extends MacroFunctionExpander<InnerLambdaStruct> {
 			throw new ProgramErrorException("FLET: Parameter list must be a list. Got: " + printedObject);
 		}
 
-		final LambdaEnvironment fletEnvironment = new LambdaEnvironment(environment);
+		final Environment fletEnvironment = new Environment(environment);
 
 		final Stack<SymbolStruct<?>> functionNameStack = environment.getFunctionNameStack();
 
@@ -161,7 +160,7 @@ public class FletExpander extends MacroFunctionExpander<InnerLambdaStruct> {
 	}
 
 	private InnerLambdaStruct.InnerLambdaVar getFletVar(final LispStruct functionDefinition, final DeclareStruct declare,
-	                                                    final LambdaEnvironment fletEnvironment, final List<SymbolStruct<?>> functionNames) {
+	                                                    final Environment fletEnvironment, final List<SymbolStruct<?>> functionNames) {
 
 		final ListStruct functionList = (ListStruct) functionDefinition;
 		final SymbolStruct<?> functionName = (SymbolStruct<?>) functionList.getFirst();
@@ -174,7 +173,7 @@ public class FletExpander extends MacroFunctionExpander<InnerLambdaStruct> {
 		return new InnerLambdaStruct.InnerLambdaVar(functionName, functionInitForm, isSpecial);
 	}
 
-	private CompilerFunctionStruct getFunctionParameterInitForm(final ListStruct functionListParameter, final LambdaEnvironment fletEnvironment,
+	private CompilerFunctionStruct getFunctionParameterInitForm(final ListStruct functionListParameter, final Environment fletEnvironment,
 	                                                            final List<SymbolStruct<?>> functionNames) {
 
 		final int functionListParameterSize = functionListParameter.size();

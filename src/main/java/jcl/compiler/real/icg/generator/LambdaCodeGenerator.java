@@ -6,12 +6,10 @@ package jcl.compiler.real.icg.generator;
 
 import java.util.Deque;
 import java.util.List;
-import java.util.Map;
 
 import jcl.LispStruct;
 import jcl.arrays.StringStruct;
 import jcl.compiler.real.environment.Environment;
-import jcl.compiler.real.environment.LambdaEnvironment;
 import jcl.compiler.real.environment.binding.lambdalist.AuxBinding;
 import jcl.compiler.real.environment.binding.lambdalist.KeyBinding;
 import jcl.compiler.real.environment.binding.lambdalist.OptionalBinding;
@@ -33,7 +31,6 @@ import jcl.packages.PackageStruct;
 import jcl.symbols.SymbolStruct;
 import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.ClassWriter;
-import org.objectweb.asm.FieldVisitor;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
@@ -180,20 +177,7 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 	private static final String GET_INIT_FORM_METHOD_SIGNATURE = "(Ljcl/functions/Closure;Ljcl/symbols/SymbolStruct<*>;)Ljcl/LispStruct;";
 
 	/**
-	 * Constant {@link String} containing the name for the {@link FunctionStruct#initLoadTimeValueForms(Closure)}
-	 * method.
-	 */
-	private static final String INIT_LOAD_TIME_VALUE_FORMS_METHOD_NAME = "initLoadTimeValueForms";
-
-	/**
-	 * Constant {@link String} containing the description for the {@link FunctionStruct#initLoadTimeValueForms(Closure)}
-	 * method.
-	 */
-	private static final String INIT_LOAD_TIME_VALUE_FORMS_METHOD_DESC = "(Ljcl/functions/Closure;)V";
-
-	/**
-	 * {@link IntermediateCodeGenerator} used for generating the load-time-value values in the {@link
-	 * FunctionStruct#initLoadTimeValueForms(Closure)} method and 'optional', 'key', and 'aux' init-form values in the
+	 * {@link IntermediateCodeGenerator} used for generating the 'optional', 'key', and 'aux' init-form values in the
 	 * {@link FunctionStruct#getInitForm(Closure, SymbolStruct)} method.
 	 */
 	@Autowired
@@ -225,7 +209,6 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 	 * <li>Generating the code for the load-time-value fields</li>
 	 * <li>Generating the code for the no-argument constructor</li>
 	 * <li>Generating the code for the {@link Closure} argument constructor</li>
-	 * <li>Generating the code for the {@link FunctionStruct#initLoadTimeValueForms(Closure)} method</li>
 	 * <li>Generating the code for the {@link FunctionStruct#getRequiredBindings()} method</li>
 	 * <li>Generating the code for the {@link FunctionStruct#getOptionalBindings()} method</li>
 	 * <li>Generating the code for the {@link FunctionStruct#getRestBinding()} method</li>
@@ -261,7 +244,6 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 	 *
 	 *      public Lambda_1(Closure var1) {
 	 *          super("", var1);
-	 *          this.initLoadTimeValueForms(var1);
 	 *          this.initLambdaListBindings();
 	 *      }
 	 * }
@@ -297,10 +279,8 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 
 		generateComponentAnnotation(cw);
 		CodeGenerators.generateSerialVersionUIDField(cw);
-		generateLoadTimeValueFields(input, cw);
 		generateNoArgConstructor(generatorState, className, cw);
 		generateClosureArgConstructor(input, generatorState, className, cw);
-		generateInitLoadTimeValueFormsMethod(input, generatorState, className, cw);
 
 		final OrdinaryLambdaListBindings lambdaListBindings = input.getLambdaListBindings();
 		generateRequiredBindings(generatorState, lambdaListBindings, cw);
@@ -343,29 +323,6 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 	private static void generateComponentAnnotation(final ClassWriter cw) {
 		final AnnotationVisitor av = cw.visitAnnotation(COMPONENT_ANNOTATION_DESC, true);
 		av.visitEnd();
-	}
-
-	/**
-	 * Private method for generating the load-time-value field values contained in the {@link
-	 * LambdaEnvironment#loadTimeValues} on the provided {@link LambdaStruct} input for the generated lambda class
-	 * object being written to via the provided {@link ClassWriter}.
-	 *
-	 * @param input
-	 * 		the {@link LambdaStruct} containing the {@link LambdaEnvironment#loadTimeValues} to generate fields for
-	 * @param cw
-	 * 		the current {@link ClassWriter} to generate the field code for
-	 */
-	private static void generateLoadTimeValueFields(final LambdaStruct input, final ClassWriter cw) {
-		final LambdaEnvironment environment = input.getLambdaEnvironment();
-		final Map<String, LispStruct> loadTimeValues = environment.getLoadTimeValues();
-		for (final String uniqueLTVId : loadTimeValues.keySet()) {
-			final FieldVisitor fv = cw.visitField(Opcodes.ACC_PRIVATE + Opcodes.ACC_FINAL,
-					uniqueLTVId,
-					GenerationConstants.LISP_STRUCT_DESC,
-					null,
-					null);
-			fv.visitEnd();
-		}
 	}
 
 	/**
@@ -429,7 +386,6 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 	 * <li>Generating the call to the {@link FunctionStruct#FunctionStruct(String, Closure)} argument constructor via
 	 * 'super', passing generated {@link LambdaStruct#docString} as a {@link String} constant and the provided {@link
 	 * Closure} parameter value</li>
-	 * <li>Generating the call to {@link FunctionStruct#initLoadTimeValueForms(Closure)}</li>
 	 * <li>Generating the call to {@link FunctionStruct#initLambdaListBindings()}</li>
 	 * </ol>
 	 * The following is the example Java code generated:
@@ -437,7 +393,6 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 	 * {@code
 	 * public Lambda_1(Closure var1) {
 	 *      super("Example Documentation String", var1);
-	 *      this.initLoadTimeValueForms(var1);
 	 *      this.initLambdaListBindings();
 	 * }
 	 * }
@@ -485,111 +440,11 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 				false);
 
 		mv.visitVarInsn(Opcodes.ALOAD, thisStore);
-		mv.visitVarInsn(Opcodes.ALOAD, closureStore);
-		mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
-				className,
-				INIT_LOAD_TIME_VALUE_FORMS_METHOD_NAME,
-				INIT_LOAD_TIME_VALUE_FORMS_METHOD_DESC,
-				false);
-
-		mv.visitVarInsn(Opcodes.ALOAD, thisStore);
 		mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
 				className,
 				INIT_LAMBDA_LIST_BINDINGS_METHOD_NAME,
 				INIT_LAMBDA_LIST_BINDINGS_METHOD_DESC,
 				false);
-
-		mv.visitInsn(Opcodes.RETURN);
-
-		mv.visitMaxs(-1, -1);
-		mv.visitEnd();
-
-		methodBuilderDeque.removeFirst();
-	}
-
-	/**
-	 * Private method for generating the {@link FunctionStruct#initLoadTimeValueForms(Closure)} method for the
-	 * generated lambda class object being written to via the provided {@link ClassWriter}. The generation will perform
-	 * the following operations:
-	 * <ol>
-	 * <li>Returning early and avoid generating the method unnecessarily if the {@link Map} of {@link
-	 * LambdaEnvironment#loadTimeValues} is empty</li>
-	 * <li>Iterating through each of the {@link LambdaEnvironment#loadTimeValues} performing the following operations:
-	 * <ol>
-	 * <li>Generating the {@link Map.Entry#getValue()} as the value of the field</li>
-	 * <li>Generating the code to set the field with the name of {@link Map.Entry#getKey()} to the previously generated
-	 * value result</li>
-	 * </ol>
-	 * </li>
-	 * </ol>
-	 * The following is the example Java code generated when a load-time-value expression such as {@code
-	 * (load-time-value 1 t)} is encountered:
-	 * <pre>
-	 * {@code
-	 * protected void initLoadTimeValueForms(Closure var1) {
-	 *      LispStruct var2 = this.symbolFunctionCall_1(var1);
-	 *      var2 = ValuesStructs.extractPrimaryValue(var2);
-	 *      this.loadTimeValue_1 = var2;
-	 * }
-	 * }
-	 * </pre>
-	 *
-	 * @param input
-	 * 		the {@link LambdaStruct} containing the {@link LambdaEnvironment#loadTimeValues} to generate the code to set
-	 * 		their initial values
-	 * @param generatorState
-	 * 		stateful object used to hold the current state of the code generation process
-	 * @param className
-	 * 		the {@link String} containing the name of the current lambda class file name
-	 * @param cw
-	 * 		the current {@link ClassWriter} to generate the method code for
-	 */
-	private void generateInitLoadTimeValueFormsMethod(final LambdaStruct input, final GeneratorState generatorState,
-	                                                  final String className, final ClassWriter cw) {
-		final LambdaEnvironment environment = input.getLambdaEnvironment();
-
-		final Map<String, LispStruct> loadTimeValues = environment.getLoadTimeValues();
-		if (loadTimeValues.isEmpty()) {
-			// No need to generate this method, as there are no load-time-value forms to initialize
-			return;
-		}
-
-		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PROTECTED,
-				INIT_LOAD_TIME_VALUE_FORMS_METHOD_NAME,
-				INIT_LOAD_TIME_VALUE_FORMS_METHOD_DESC,
-				null,
-				null);
-
-		final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
-		final Deque<JavaMethodBuilder> methodBuilderDeque = generatorState.getMethodBuilderDeque();
-		methodBuilderDeque.addFirst(methodBuilder);
-
-		mv.visitCode();
-		final int thisStore = methodBuilder.getNextAvailableStore();
-		@SuppressWarnings({"unused", "SuppressionAnnotation"})
-		final int closureArgStore = methodBuilder.getNextAvailableStore();
-
-		final int loadTimeValueInitFormStore = methodBuilder.getNextAvailableStore();
-
-		for (final Map.Entry<String, LispStruct> loadTimeValue : loadTimeValues.entrySet()) {
-			final String uniqueLTVId = loadTimeValue.getKey();
-			final LispStruct value = loadTimeValue.getValue();
-
-			codeGenerator.generate(value, generatorState);
-			mv.visitVarInsn(Opcodes.ASTORE, loadTimeValueInitFormStore);
-
-			mv.visitVarInsn(Opcodes.ALOAD, loadTimeValueInitFormStore);
-			mv.visitMethodInsn(Opcodes.INVOKESTATIC,
-					GenerationConstants.VALUES_STRUCTS_NAME,
-					GenerationConstants.VALUES_STRUCTS_EXTRACT_PRIMARY_VALUE_METHOD_NAME,
-					GenerationConstants.VALUES_STRUCTS_EXTRACT_PRIMARY_VALUE_METHOD_DESC,
-					false);
-			mv.visitVarInsn(Opcodes.ASTORE, loadTimeValueInitFormStore);
-
-			mv.visitVarInsn(Opcodes.ALOAD, thisStore);
-			mv.visitVarInsn(Opcodes.ALOAD, loadTimeValueInitFormStore);
-			mv.visitFieldInsn(Opcodes.PUTFIELD, className, uniqueLTVId, GenerationConstants.LISP_STRUCT_DESC);
-		}
 
 		mv.visitInsn(Opcodes.RETURN);
 
@@ -652,7 +507,7 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 		@SuppressWarnings({"unused", "SuppressionAnnotation"})
 		final int closureArgStore = methodBuilder.getNextAvailableStore();
 
-		final LambdaEnvironment environment = input.getLambdaEnvironment();
+		final Environment environment = input.getLambdaEnvironment();
 
 		final Deque<Environment> environmentDeque = generatorState.getEnvironmentDeque();
 

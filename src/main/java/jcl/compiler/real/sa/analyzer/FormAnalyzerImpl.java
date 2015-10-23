@@ -23,9 +23,6 @@ public class FormAnalyzerImpl implements FormAnalyzer {
 	private MacroExpandFunction macroExpandFunction;
 
 	@Autowired
-	private SymbolAnalyzer symbolAnalyzer;
-
-	@Autowired
 	private ConsAnalyzer consAnalyzer;
 
 	@Override
@@ -35,7 +32,7 @@ public class FormAnalyzerImpl implements FormAnalyzer {
 		final LispStruct expandedForm = macroExpandReturn.getExpandedForm();
 
 		if (expandedForm instanceof SymbolStruct) {
-			return symbolAnalyzer.analyze((SymbolStruct<?>) expandedForm, environment);
+			return expandedForm;
 		} else if (expandedForm instanceof ConsStruct) {
 			return consAnalyzer.analyze((ConsStruct) expandedForm, environment);
 		} else {

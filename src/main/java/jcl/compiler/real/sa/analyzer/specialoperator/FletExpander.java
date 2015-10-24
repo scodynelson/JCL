@@ -25,7 +25,6 @@ import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.functions.expanders.MacroFunctionExpander;
 import jcl.lists.ListStruct;
 import jcl.packages.GlobalPackageStruct;
-import jcl.printer.Printer;
 import jcl.symbols.DeclarationStruct;
 import jcl.symbols.SpecialOperatorStruct;
 import jcl.symbols.SymbolStruct;
@@ -62,9 +61,6 @@ public class FletExpander extends MacroFunctionExpander<InnerLambdaStruct> {
 	@Autowired
 	private FunctionExpander functionExpander;
 
-	@Autowired
-	private Printer printer;
-
 	@Override
 	public SymbolStruct<?> getFunctionSymbol() {
 		return SpecialOperatorStruct.FLET;
@@ -83,31 +79,30 @@ public class FletExpander extends MacroFunctionExpander<InnerLambdaStruct> {
 		final Environment fletEnvironment = new Environment(environment);
 
 		final Stack<SymbolStruct<?>> functionNameStack = environment.getFunctionNameStack();
-
 		final List<SymbolStruct<?>> functionNames = getFunctionNames(innerLambdasAsJavaList);
 
+		final ListStruct formRestRest = formRest.getRest();
+		final List<LispStruct> forms = formRestRest.getAsJavaList();
+
+		final BodyProcessingResult bodyProcessingResult = bodyWithDeclaresAnalyzer.analyze(forms);
+
+		final ListStruct fullDeclaration = ListStruct.buildProperList(bodyProcessingResult.getDeclares());
+		final DeclareStruct declare = declareExpander.expand(fullDeclaration, fletEnvironment);
+
+		final List<InnerLambdaStruct.InnerLambdaVar> fletVars
+				= innerLambdasAsJavaList.stream()
+				                        .map(e -> getFletVar(e, declare, fletEnvironment, functionNames))
+				                        .collect(Collectors.toList());
+
 		try {
-			final ListStruct formRestRest = formRest.getRest();
-			final List<LispStruct> forms = formRestRest.getAsJavaList();
-
-			final BodyProcessingResult bodyProcessingResult = bodyWithDeclaresAnalyzer.analyze(forms);
-
-			final ListStruct fullDeclaration = ListStruct.buildProperList(bodyProcessingResult.getDeclares());
-			final DeclareStruct declare = declareExpander.expand(fullDeclaration, fletEnvironment);
-
-			final List<InnerLambdaStruct.InnerLambdaVar> fletVars
-					= innerLambdasAsJavaList.stream()
-					                        .map(e -> getFletVar(e, declare, fletEnvironment, functionNames))
-					                        .collect(Collectors.toList());
+			// Add function names AFTER analyzing the functions.
+			StackUtils.pushAll(functionNameStack, functionNames);
 
 			final List<SpecialDeclarationStruct> specialDeclarations = declare.getSpecialDeclarations();
 			specialDeclarations.stream()
 			                   .map(SpecialDeclarationStruct::getVar)
 			                   .map(Binding::new)
 			                   .forEach(fletEnvironment::addDynamicBinding);
-
-			// Add function names AFTER analyzing the functions. This is one of the differences between Flet and Labels/Macrolet.
-			StackUtils.pushAll(functionNameStack, functionNames);
 
 			final List<LispStruct> bodyForms = bodyProcessingResult.getBodyForms();
 			final List<LispStruct> analyzedBodyForms
@@ -117,9 +112,7 @@ public class FletExpander extends MacroFunctionExpander<InnerLambdaStruct> {
 
 			return new InnerLambdaStruct(fletVars, new PrognStruct(analyzedBodyForms), fletEnvironment);
 		} finally {
-			if (functionNames != null) {
-				StackUtils.popX(functionNameStack, functionNames.size());
-			}
+			StackUtils.popX(functionNameStack, functionNames.size());
 		}
 	}
 
@@ -128,18 +121,10 @@ public class FletExpander extends MacroFunctionExpander<InnerLambdaStruct> {
 		final List<SymbolStruct<?>> functionNames = new ArrayList<>(functionDefinitions.size());
 
 		for (final LispStruct functionDefinition : functionDefinitions) {
-			if (!(functionDefinition instanceof ListStruct)) {
-				final String printedFunctionDefinition = printer.print(functionDefinition);
-				throw new ProgramErrorException("FLET: Function parameter must be a list. Got: " + printedFunctionDefinition);
-			}
-			final ListStruct functionList = (ListStruct) functionDefinition;
+			final ListStruct functionList = validator.validateObjectType(functionDefinition, "FLET", "Function parameter", ListStruct.class);
 
 			final LispStruct functionListFirst = functionList.getFirst();
-			if (!(functionListFirst instanceof SymbolStruct)) {
-				final String printedObject = printer.print(functionListFirst);
-				throw new ProgramErrorException("FLET: First element of function parameter must be a symbol. Got: " + printedObject);
-			}
-			final SymbolStruct<?> functionName = (SymbolStruct<?>) functionListFirst;
+			final SymbolStruct<?> functionName = validator.validateObjectType(functionListFirst, "FLET", "First element of function parameter", SymbolStruct.class);
 
 			if (functionNames.contains(functionName)) {
 				LOGGER.warn("FLET: Multiple bindings of {} in FLET form.", functionName.getName());

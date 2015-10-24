@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Stack;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
-import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
 import jcl.arrays.StringStruct;
@@ -25,12 +24,10 @@ import jcl.compiler.real.struct.specialoperator.declare.SpecialDeclarationStruct
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.functions.expanders.MacroFunctionExpander;
 import jcl.lists.ListStruct;
-import jcl.printer.Printer;
 import jcl.symbols.DeclarationStruct;
 import jcl.symbols.SpecialOperatorStruct;
 import jcl.symbols.SymbolStruct;
 import jcl.system.StackUtils;
-import jcl.types.TType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,9 +58,6 @@ public class LabelsExpander extends MacroFunctionExpander<InnerLambdaStruct> {
 	@Autowired
 	private FunctionExpander functionExpander;
 
-	@Autowired
-	private Printer printer;
-
 	@Override
 	public SymbolStruct<?> getFunctionSymbol() {
 		return SpecialOperatorStruct.LABELS;
@@ -82,21 +76,19 @@ public class LabelsExpander extends MacroFunctionExpander<InnerLambdaStruct> {
 		final Environment labelsEnvironment = new Environment(environment);
 
 		final Stack<SymbolStruct<?>> functionNameStack = environment.getFunctionNameStack();
-		List<SymbolStruct<?>> functionNames = null;
+		final List<SymbolStruct<?>> functionNames = getFunctionNames(innerLambdasAsJavaList);
+
+		final ListStruct formRestRest = formRest.getRest();
+		final List<LispStruct> forms = formRestRest.getAsJavaList();
+
+		final BodyProcessingResult bodyProcessingResult = bodyWithDeclaresAnalyzer.analyze(forms);
+
+		final ListStruct fullDeclaration = ListStruct.buildProperList(bodyProcessingResult.getDeclares());
+		final DeclareStruct declare = declareExpander.expand(fullDeclaration, labelsEnvironment);
 
 		try {
-			functionNames = getFunctionNames(innerLambdasAsJavaList);
-
-			// Add function names BEFORE analyzing the functions. This is one of the differences between Flet and Labels/Macrolet.
+			// Add function names BEFORE analyzing the functions.
 			StackUtils.pushAll(functionNameStack, functionNames);
-
-			final ListStruct formRestRest = formRest.getRest();
-			final List<LispStruct> forms = formRestRest.getAsJavaList();
-
-			final BodyProcessingResult bodyProcessingResult = bodyWithDeclaresAnalyzer.analyze(forms);
-
-			final ListStruct fullDeclaration = ListStruct.buildProperList(bodyProcessingResult.getDeclares());
-			final DeclareStruct declare = declareExpander.expand(fullDeclaration, labelsEnvironment);
 
 			final List<InnerLambdaStruct.InnerLambdaVar> labelsVars
 					= innerLambdasAsJavaList.stream()
@@ -117,9 +109,7 @@ public class LabelsExpander extends MacroFunctionExpander<InnerLambdaStruct> {
 
 			return new InnerLambdaStruct(labelsVars, new PrognStruct(analyzedBodyForms), labelsEnvironment);
 		} finally {
-			if (functionNames != null) {
-				StackUtils.popX(functionNameStack, functionNames.size());
-			}
+			StackUtils.popX(functionNameStack, functionNames.size());
 		}
 	}
 
@@ -128,18 +118,10 @@ public class LabelsExpander extends MacroFunctionExpander<InnerLambdaStruct> {
 		final List<SymbolStruct<?>> functionNames = new ArrayList<>(functionDefinitions.size());
 
 		for (final LispStruct functionDefinition : functionDefinitions) {
-			if (!(functionDefinition instanceof ListStruct)) {
-				final String printedFunctionDefinition = printer.print(functionDefinition);
-				throw new ProgramErrorException("LABELS: Function parameter must be a list. Got: " + printedFunctionDefinition);
-			}
-			final ListStruct functionList = (ListStruct) functionDefinition;
+			final ListStruct functionList = validator.validateObjectType(functionDefinition, "LABELS", "Function parameter", ListStruct.class);
 
 			final LispStruct functionListFirst = functionList.getFirst();
-			if (!(functionListFirst instanceof SymbolStruct)) {
-				final String printedObject = printer.print(functionListFirst);
-				throw new ProgramErrorException("LABELS: First element of function parameter must be a symbol. Got: " + printedObject);
-			}
-			final SymbolStruct<?> functionName = (SymbolStruct<?>) functionListFirst;
+			final SymbolStruct<?> functionName = validator.validateObjectType(functionListFirst, "LABELS", "First element of function parameter", SymbolStruct.class);
 
 			if (functionNames.contains(functionName)) {
 				LOGGER.warn("LABELS: Multiple bindings of {} in LABELS form.", functionName.getName());

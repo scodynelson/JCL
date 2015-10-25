@@ -10,7 +10,10 @@ import java.util.stream.Stream;
 import jcl.LispStruct;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.lists.ListStruct;
+import jcl.lists.NullStruct;
 import jcl.printer.Printer;
+import jcl.symbols.NILStruct;
+import jcl.symbols.SymbolStruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -72,11 +75,23 @@ public final class LispFormValueValidator {
 
 		final Class<?> objectClass = object.getClass();
 		final boolean noneMatch = Stream.of(classTypes)
-		                                .noneMatch(objectClass::isAssignableFrom);
+		                                .noneMatch(e -> e.isAssignableFrom(objectClass));
 
 		if (noneMatch) {
 			final String printedObject = printer.print(object);
 			throw new ProgramErrorException(analyzerName + ": " + objectName + " must be of of the following: " + Arrays.toString(classTypes) + ". Got: " + printedObject);
+		}
+	}
+
+	public SymbolStruct<?> validateSymbolOrNIL(final LispStruct object, final String analyzerName,
+	                                           final String objectName) {
+		if (NILStruct.INSTANCE.equals(object) || NullStruct.INSTANCE.equals(object)) {
+			return null;
+		} else if (object instanceof SymbolStruct) {
+			return (SymbolStruct<?>) object;
+		} else {
+			final String printedObject = printer.print(object);
+			throw new ProgramErrorException(analyzerName + ": " + objectName + " must be a Symbol or NIL. Got: " + printedObject);
 		}
 	}
 }

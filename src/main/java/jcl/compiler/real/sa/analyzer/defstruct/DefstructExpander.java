@@ -2,18 +2,16 @@ package jcl.compiler.real.sa.analyzer.defstruct;
 
 import java.util.ArrayList;
 import java.util.List;
-import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
 import jcl.compiler.real.environment.Environment;
+import jcl.compiler.real.sa.analyzer.LispFormValueValidator;
 import jcl.compiler.real.struct.specialoperator.defstruct.DefstructStruct;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.functions.expanders.MacroFunctionExpander;
 import jcl.lists.ListStruct;
-import jcl.lists.NullStruct;
 import jcl.printer.Printer;
 import jcl.structures.StructureClassStruct;
-import jcl.symbols.NILStruct;
 import jcl.symbols.SpecialOperatorStruct;
 import jcl.symbols.SymbolStruct;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,46 +23,29 @@ public class DefstructExpander extends MacroFunctionExpander<LispStruct> {
 	private static final long serialVersionUID = 5336983779662053736L;
 
 	@Autowired
+	private LispFormValueValidator validator;
+
+	@Autowired
 	private Printer printer;
 
-	/**
-	 * Initializes the defstruct macro function and adds it to the special operator 'defstruct'.
-	 */
-	@PostConstruct
-	private void init() {
-		SpecialOperatorStruct.DEFSTRUCT.setMacroFunctionExpander(this);
+	@Override
+	public SymbolStruct<?> getFunctionSymbol() {
+		return SpecialOperatorStruct.DEFSTRUCT;
 	}
 
 	@Override
 	public DefstructStruct expand(final ListStruct form, final Environment environment) {
-
-		final int formSize = form.size();
-		if (formSize < 5) {
-			throw new ProgramErrorException("%DEFSTRUCT: Incorrect number of arguments: " + formSize + ". Expected at least 3 arguments.");
-		}
+		validator.validateListFormSize(form, 5, "%DEFSTRUCT");
 
 		final ListStruct formRest = form.getRest();
 
 		final LispStruct second = formRest.getFirst();
-		if (!(second instanceof SymbolStruct)) {
-			final String printedObject = printer.print(second);
-			throw new ProgramErrorException("%DEFSTRUCT: Structure name must be a symbol. Got: " + printedObject);
-		}
-		final SymbolStruct<?> structureSymbol = (SymbolStruct) second;
+		final SymbolStruct<?> structureSymbol = validator.validateObjectType(second, "%DEFSTRUCT", "STRUCTURE NAME", SymbolStruct.class);
 
 		final ListStruct formRestRest = formRest.getRest();
 
 		final LispStruct third = formRestRest.getFirst();
-
-		final SymbolStruct<?> includeStructureSymbol;
-		if (NILStruct.INSTANCE.equals(third) || NullStruct.INSTANCE.equals(third)) {
-			includeStructureSymbol = null;
-		} else if (third instanceof SymbolStruct) {
-			includeStructureSymbol = (SymbolStruct) third;
-		} else {
-			final String printedObject = printer.print(third);
-			throw new ProgramErrorException("%DEFSTRUCT: Include structure name must be a symbol or NIL. Got: " + printedObject);
-		}
+		final SymbolStruct<?> includeStructureSymbol = validator.validateSymbolOrNIL(third, "%DEFSTRUCT", "INCLUDE STRUCTURE NAME");
 
 		StructureClassStruct includeStructureClass = null;
 		if (includeStructureSymbol != null) {
@@ -78,30 +59,12 @@ public class DefstructExpander extends MacroFunctionExpander<LispStruct> {
 		final ListStruct formRestRestRest = formRestRest.getRest();
 
 		final LispStruct fourth = formRestRestRest.getFirst();
-
-		final SymbolStruct<?> defaultConstructorSymbol;
-		if (NILStruct.INSTANCE.equals(fourth) || NullStruct.INSTANCE.equals(fourth)) {
-			defaultConstructorSymbol = null;
-		} else if (fourth instanceof SymbolStruct) {
-			defaultConstructorSymbol = (SymbolStruct) fourth;
-		} else {
-			final String printedObject = printer.print(fourth);
-			throw new ProgramErrorException("%DEFSTRUCT: Include structure name must be a symbol or NIL. Got: " + printedObject);
-		}
+		final SymbolStruct<?> defaultConstructorSymbol = validator.validateSymbolOrNIL(fourth, "%DEFSTRUCT", "DEFAULT CONSTRUCTOR NAME");
 
 		final ListStruct formRestRestRestRest = formRestRestRest.getRest();
 
 		final LispStruct fifth = formRestRestRestRest.getFirst();
-
-		final SymbolStruct<?> printerSymbol;
-		if (NILStruct.INSTANCE.equals(fifth) || NullStruct.INSTANCE.equals(fifth)) {
-			printerSymbol = null;
-		} else if (fifth instanceof SymbolStruct) {
-			printerSymbol = (SymbolStruct) fifth;
-		} else {
-			final String printedObject = printer.print(fifth);
-			throw new ProgramErrorException("%DEFSTRUCT: Printer name must be a symbol or NIL. Got: " + printedObject);
-		}
+		final SymbolStruct<?> printerSymbol = validator.validateSymbolOrNIL(fifth, "%DEFSTRUCT", "PRINTER NAME");
 
 		final ListStruct formRestRestRestRestRest = formRestRestRestRest.getRest();
 
@@ -109,12 +72,7 @@ public class DefstructExpander extends MacroFunctionExpander<LispStruct> {
 
 		final List<LispStruct> slotArguments = formRestRestRestRestRest.getAsJavaList();
 		for (final LispStruct slotArgument : slotArguments) {
-			if (!(slotArgument instanceof SymbolStruct)) {
-				final String printedObject = printer.print(slotArgument);
-				throw new ProgramErrorException("%DEFSTRUCT: Structure slot name must be a symbol. Got: " + printedObject);
-			}
-
-			final SymbolStruct<?> slotSymbol = (SymbolStruct<?>) slotArgument;
+			final SymbolStruct<?> slotSymbol = validator.validateObjectType(slotArgument, "%DEFSTRUCT", "STRUCTURE SLOT NAME", SymbolStruct.class);
 			slots.add(slotSymbol);
 		}
 

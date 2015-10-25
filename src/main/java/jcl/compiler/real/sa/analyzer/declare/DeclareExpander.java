@@ -2,11 +2,11 @@ package jcl.compiler.real.sa.analyzer.declare;
 
 import java.util.ArrayList;
 import java.util.List;
-import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
 import jcl.arrays.StringStruct;
 import jcl.compiler.real.environment.Environment;
+import jcl.compiler.real.sa.analyzer.LispFormValueValidator;
 import jcl.compiler.real.struct.specialoperator.declare.DeclareStruct;
 import jcl.compiler.real.struct.specialoperator.declare.JavaClassNameDeclarationStruct;
 import jcl.compiler.real.struct.specialoperator.declare.SpecialDeclarationStruct;
@@ -26,14 +26,14 @@ public class DeclareExpander extends MacroFunctionExpander<DeclareStruct> {
 	private static final long serialVersionUID = -27949883247210201L;
 
 	@Autowired
+	private LispFormValueValidator validator;
+
+	@Autowired
 	private Printer printer;
 
-	/**
-	 * Initializes the declare macro function and adds it to the special operator 'declare'.
-	 */
-	@PostConstruct
-	private void init() {
-		SpecialOperatorStruct.DECLARE.setMacroFunctionExpander(this);
+	@Override
+	public SymbolStruct<?> getFunctionSymbol() {
+		return SpecialOperatorStruct.DECLARE;
 	}
 
 	@Override
@@ -44,12 +44,7 @@ public class DeclareExpander extends MacroFunctionExpander<DeclareStruct> {
 		final DeclareStruct declareElement = new DeclareStruct();
 
 		for (final LispStruct declSpec : declSpecs) {
-
-			if (!(declSpec instanceof ListStruct)) {
-				throw new ProgramErrorException("DECLARE: Declaration specifier must be of type ListStruct. Got: " + declSpec);
-			}
-
-			final ListStruct declSpecList = (ListStruct) declSpec;
+			final ListStruct declSpecList = validator.validateObjectType(declSpec, "DECLARE", "DECLARATION SPECIFIER", ListStruct.class);
 			final LispStruct declIdentifier = declSpecList.getFirst();
 			final ListStruct declSpecBody = declSpecList.getRest();
 
@@ -76,7 +71,7 @@ public class DeclareExpander extends MacroFunctionExpander<DeclareStruct> {
 				final JavaClassNameDeclarationStruct jclds = saJavaClassNameDeclaration(declSpecBodyAsJavaList);
 				declareElement.setJavaClassNameDeclaration(jclds);
 			} else if (declIdentifier.equals(DeclarationStruct.SPECIAL)) {
-				final List<SpecialDeclarationStruct> sds = saSpecialDeclaration(environment, declSpecBodyAsJavaList);
+				final List<SpecialDeclarationStruct> sds = saSpecialDeclaration(declSpecBodyAsJavaList);
 				declareElement.getSpecialDeclarations().addAll(sds);
 			} else if (declIdentifier.equals(DeclarationStruct.TYPE)) {
 				//TODO: we don't do anything here yet
@@ -96,16 +91,11 @@ public class DeclareExpander extends MacroFunctionExpander<DeclareStruct> {
 		}
 
 		final LispStruct javaClassName = declSpecBody.get(0);
-		if (!(javaClassName instanceof StringStruct)) {
-			final String printedObject = printer.print(javaClassName);
-			throw new ProgramErrorException("DECLARE: a non-string cannot be used for a JAVA-CLASS-NAME: " + printedObject);
-		}
-
-		final StringStruct javaClassNameString = (StringStruct) javaClassName;
+		final StringStruct javaClassNameString = validator.validateObjectType(javaClassName, "DECLARE", "JAVA-CLASS-NAME", StringStruct.class);
 		return new JavaClassNameDeclarationStruct(javaClassNameString.getAsJavaString());
 	}
 
-	private List<SpecialDeclarationStruct> saSpecialDeclaration(final Environment environment, final List<LispStruct> declSpecBody) {
+	private List<SpecialDeclarationStruct> saSpecialDeclaration(final List<LispStruct> declSpecBody) {
 
 		final List<SpecialDeclarationStruct> specialDeclarationElements = new ArrayList<>(declSpecBody.size());
 

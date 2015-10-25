@@ -4,9 +4,6 @@
 
 package jcl.compiler.real.environment;
 
-import java.util.Optional;
-
-import jcl.compiler.real.environment.binding.Binding;
 import jcl.symbols.SymbolStruct;
 
 public class ProgvEnvironment extends Environment {
@@ -20,10 +17,5 @@ public class ProgvEnvironment extends Environment {
 	@Override
 	public boolean hasLexicalBinding(final SymbolStruct<?> var) {
 		return getParent().hasLexicalBinding(var);
-	}
-
-	@Override
-	public Optional<Binding> getLexicalBinding(final SymbolStruct<?> var) {
-		return getParent().getLexicalBinding(var);
 	}
 }

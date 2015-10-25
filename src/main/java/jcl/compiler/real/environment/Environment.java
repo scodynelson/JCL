@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.Stack;
 
@@ -40,13 +39,9 @@ public class Environment extends StandardObjectStruct {
 
 	private Stack<List<GoStruct<?>>> tagbodyStack = new Stack<>();
 
-	// eval-when processing modes
-	private boolean topLevelMode;
-
 	public Environment(final Environment parent) {
 		this.parent = parent;
 		if (parent != null) {
-			topLevelMode = parent.topLevelMode;
 			functionNameStack = parent.functionNameStack;
 			undefinedFunctions = parent.undefinedFunctions;
 			blockStack = parent.blockStack;
@@ -78,35 +73,13 @@ public class Environment extends StandardObjectStruct {
 		return tagbodyStack;
 	}
 
-	public boolean isTopLevelMode() {
-		return topLevelMode;
-	}
-
-	public void setTopLevelMode(final boolean topLevelMode) {
-		this.topLevelMode = topLevelMode;
-	}
-
-	public List<Binding> getLexicalBindings() {
-		return lexicalBindings;
-	}
-
 	public boolean hasLexicalBinding(final SymbolStruct<?> var) {
 		return lexicalBindings.stream()
 		                      .anyMatch(e -> e.getVar().equals(var));
 	}
 
-	public Optional<Binding> getLexicalBinding(final SymbolStruct<?> var) {
-		return lexicalBindings.stream()
-		                      .filter(e -> e.getVar().equals(var))
-		                      .findFirst();
-	}
-
 	public void addLexicalBinding(final Binding environmentBinding) {
 		lexicalBindings.add(environmentBinding);
-	}
-
-	public List<Binding> getDynamicBindings() {
-		return dynamicBindings;
 	}
 
 	public boolean hasDynamicBinding(final SymbolStruct<?> var) {
@@ -114,29 +87,13 @@ public class Environment extends StandardObjectStruct {
 		                      .anyMatch(e -> e.getVar().equals(var));
 	}
 
-	public Optional<Binding> getDynamicBinding(final SymbolStruct<?> var) {
-		return dynamicBindings.stream()
-		                      .filter(e -> e.getVar().equals(var))
-		                      .findFirst();
-	}
-
 	public void addDynamicBinding(final Binding environmentBinding) {
 		dynamicBindings.add(environmentBinding);
-	}
-
-	public List<SymbolMacroBinding> getSymbolMacroBindings() {
-		return symbolMacroBindings;
 	}
 
 	public boolean hasSymbolMacroBinding(final SymbolStruct<?> var) {
 		return symbolMacroBindings.stream()
 		                          .anyMatch(e -> e.getVar().equals(var));
-	}
-
-	public Optional<SymbolMacroBinding> getSymbolMacroBinding(final SymbolStruct<?> var) {
-		return symbolMacroBindings.stream()
-		                          .filter(e -> e.getVar().equals(var))
-		                          .findFirst();
 	}
 
 	public void addSymbolMacroBinding(final SymbolMacroBinding symbolMacroBinding) {

@@ -9,10 +9,10 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
-import jcl.compiler.real.environment.binding.lambdalist.KeyBinding;
-import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaListBindings;
-import jcl.compiler.real.environment.binding.lambdalist.RequiredBinding;
-import jcl.compiler.real.environment.binding.lambdalist.SuppliedPBinding;
+import jcl.compiler.real.environment.binding.lambdalist.KeyParameter;
+import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaList;
+import jcl.compiler.real.environment.binding.lambdalist.RequiredParameter;
+import jcl.compiler.real.environment.binding.lambdalist.SuppliedPParameter;
 import jcl.functions.FunctionStruct;
 import jcl.lists.NullStruct;
 import jcl.packages.GlobalPackageStruct;
@@ -50,21 +50,21 @@ public final class CompileFilePathnameFunction extends FunctionStruct {
 		GlobalPackageStruct.COMMON_LISP.export(COMPILE_FILE_PATHNAME);
 	}
 
-	private static OrdinaryLambdaListBindings getInitLambdaListBindings() {
+	private static OrdinaryLambdaList getInitLambdaListBindings() {
 
 		final SymbolStruct<?> inputFileArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("INPUT-FILE").getSymbol();
-		final RequiredBinding requiredBinding = new RequiredBinding(inputFileArgSymbol);
-		final List<RequiredBinding> requiredBindings = Collections.singletonList(requiredBinding);
+		final RequiredParameter requiredBinding = new RequiredParameter(inputFileArgSymbol);
+		final List<RequiredParameter> requiredBindings = Collections.singletonList(requiredBinding);
 
 		final SymbolStruct<?> outputFileArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("OUTPUT-FILE").getSymbol();
 
 		final SymbolStruct<?> outputSuppliedPSymbol = GlobalPackageStruct.COMMON_LISP.intern("OUTPUT-FILE-P-" + System.nanoTime()).getSymbol();
-		final SuppliedPBinding suppliedPBinding = new SuppliedPBinding(outputSuppliedPSymbol);
+		final SuppliedPParameter suppliedPBinding = new SuppliedPParameter(outputSuppliedPSymbol);
 
-		final KeyBinding keyBinding = new KeyBinding(outputFileArgSymbol, NullStruct.INSTANCE, CommonLispSymbols.OUTPUT_FILE_KEYWORD, suppliedPBinding);
-		final List<KeyBinding> keyBindings = Collections.singletonList(keyBinding);
+		final KeyParameter keyBinding = new KeyParameter(outputFileArgSymbol, NullStruct.INSTANCE, CommonLispSymbols.OUTPUT_FILE_KEYWORD, suppliedPBinding);
+		final List<KeyParameter> keyBindings = Collections.singletonList(keyBinding);
 
-		return new OrdinaryLambdaListBindings.Builder().requiredBindings(requiredBindings)
+		return new OrdinaryLambdaList.Builder().requiredBindings(requiredBindings)
 		                                               .keyBindings(keyBindings)
 		                                               .allowOtherKeys(true)
 		                                               .build();

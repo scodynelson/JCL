@@ -5,10 +5,10 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
-import jcl.compiler.real.environment.binding.lambdalist.OptionalBinding;
-import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaListBindings;
-import jcl.compiler.real.environment.binding.lambdalist.RequiredBinding;
-import jcl.compiler.real.environment.binding.lambdalist.SuppliedPBinding;
+import jcl.compiler.real.environment.binding.lambdalist.OptionalParameter;
+import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaList;
+import jcl.compiler.real.environment.binding.lambdalist.RequiredParameter;
+import jcl.compiler.real.environment.binding.lambdalist.SuppliedPParameter;
 import jcl.compiler.real.struct.ValuesStruct;
 import jcl.conditions.exceptions.ErrorException;
 import jcl.conditions.exceptions.ProgramErrorException;
@@ -45,21 +45,21 @@ public final class CompileFunction extends FunctionStruct {
 		GlobalPackageStruct.COMMON_LISP.export(COMPILE);
 	}
 
-	private static OrdinaryLambdaListBindings getInitLambdaListBindings() {
+	private static OrdinaryLambdaList getInitLambdaListBindings() {
 
 		final SymbolStruct<?> nameArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("NAME").getSymbol();
-		final RequiredBinding requiredBinding = new RequiredBinding(nameArgSymbol);
-		final List<RequiredBinding> requiredBindings = Collections.singletonList(requiredBinding);
+		final RequiredParameter requiredBinding = new RequiredParameter(nameArgSymbol);
+		final List<RequiredParameter> requiredBindings = Collections.singletonList(requiredBinding);
 
 		final SymbolStruct<?> definitionArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("DEFINITION").getSymbol();
 
 		final SymbolStruct<?> definitionSuppliedP = GlobalPackageStruct.COMMON_LISP.intern("DEFINITION-P-" + System.nanoTime()).getSymbol();
-		final SuppliedPBinding suppliedPBinding = new SuppliedPBinding(definitionSuppliedP);
+		final SuppliedPParameter suppliedPBinding = new SuppliedPParameter(definitionSuppliedP);
 
-		final OptionalBinding optionalBinding = new OptionalBinding(definitionArgSymbol, NullStruct.INSTANCE, suppliedPBinding);
-		final List<OptionalBinding> optionalBindings = Collections.singletonList(optionalBinding);
+		final OptionalParameter optionalBinding = new OptionalParameter(definitionArgSymbol, NullStruct.INSTANCE, suppliedPBinding);
+		final List<OptionalParameter> optionalBindings = Collections.singletonList(optionalBinding);
 
-		return new OrdinaryLambdaListBindings.Builder().requiredBindings(requiredBindings)
+		return new OrdinaryLambdaList.Builder().requiredBindings(requiredBindings)
 		                                               .optionalBindings(optionalBindings)
 		                                               .build();
 	}

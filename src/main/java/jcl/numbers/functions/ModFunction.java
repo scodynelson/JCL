@@ -9,8 +9,8 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
-import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaListBindings;
-import jcl.compiler.real.environment.binding.lambdalist.RequiredBinding;
+import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaList;
+import jcl.compiler.real.environment.binding.lambdalist.RequiredParameter;
 import jcl.conditions.exceptions.TypeErrorException;
 import jcl.functions.FunctionStruct;
 import jcl.numbers.RealStruct;
@@ -40,18 +40,18 @@ public final class ModFunction extends FunctionStruct {
 		GlobalPackageStruct.COMMON_LISP.export(MOD);
 	}
 
-	private static OrdinaryLambdaListBindings getInitLambdaListBindings() {
-		final List<RequiredBinding> requiredBindings = new ArrayList<>(2);
+	private static OrdinaryLambdaList getInitLambdaListBindings() {
+		final List<RequiredParameter> requiredBindings = new ArrayList<>(2);
 
 		final SymbolStruct<?> realSymbol = GlobalPackageStruct.COMMON_LISP.intern("REAL").getSymbol();
-		final RequiredBinding requiredBinding1 = new RequiredBinding(realSymbol);
+		final RequiredParameter requiredBinding1 = new RequiredParameter(realSymbol);
 		requiredBindings.add(requiredBinding1);
 
 		final SymbolStruct<?> divisorSymbol = GlobalPackageStruct.COMMON_LISP.intern("DIVISOR").getSymbol();
-		final RequiredBinding requiredBinding2 = new RequiredBinding(divisorSymbol);
+		final RequiredParameter requiredBinding2 = new RequiredParameter(divisorSymbol);
 		requiredBindings.add(requiredBinding2);
 
-		return new OrdinaryLambdaListBindings.Builder().requiredBindings(requiredBindings)
+		return new OrdinaryLambdaList.Builder().requiredBindings(requiredBindings)
 		                                               .build();
 	}
 

@@ -9,8 +9,8 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
-import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaListBindings;
-import jcl.compiler.real.environment.binding.lambdalist.RequiredBinding;
+import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaList;
+import jcl.compiler.real.environment.binding.lambdalist.RequiredParameter;
 import jcl.functions.FunctionStruct;
 import jcl.packages.GlobalPackageStruct;
 import jcl.symbols.SymbolStruct;
@@ -33,13 +33,13 @@ public class UnbindSymbolFunctionFunction extends FunctionStruct {
 		GlobalPackageStruct.SYSTEM.export(UNBIND_SYMBOL_FUNCTION);
 	}
 
-	private static OrdinaryLambdaListBindings getInitLambdaListBindings() {
+	private static OrdinaryLambdaList getInitLambdaListBindings() {
 
 		final SymbolStruct<?> symbolArgSymbol = GlobalPackageStruct.SYSTEM.intern("SYM").getSymbol();
-		final RequiredBinding symbolArgRequiredBinding = new RequiredBinding(symbolArgSymbol);
-		final List<RequiredBinding> requiredBindings = Collections.singletonList(symbolArgRequiredBinding);
+		final RequiredParameter symbolArgRequiredBinding = new RequiredParameter(symbolArgSymbol);
+		final List<RequiredParameter> requiredBindings = Collections.singletonList(symbolArgRequiredBinding);
 
-		return new OrdinaryLambdaListBindings.Builder().requiredBindings(requiredBindings)
+		return new OrdinaryLambdaList.Builder().requiredBindings(requiredBindings)
 		                                               .build();
 	}
 

@@ -14,13 +14,13 @@ import java.util.Set;
 import jcl.LispStruct;
 import jcl.LispType;
 import jcl.classes.BuiltInClassStruct;
-import jcl.compiler.real.environment.binding.lambdalist.AuxBinding;
-import jcl.compiler.real.environment.binding.lambdalist.KeyBinding;
-import jcl.compiler.real.environment.binding.lambdalist.OptionalBinding;
-import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaListBindings;
-import jcl.compiler.real.environment.binding.lambdalist.RequiredBinding;
-import jcl.compiler.real.environment.binding.lambdalist.RestBinding;
-import jcl.compiler.real.environment.binding.lambdalist.SuppliedPBinding;
+import jcl.compiler.real.environment.binding.lambdalist.AuxParameter;
+import jcl.compiler.real.environment.binding.lambdalist.KeyParameter;
+import jcl.compiler.real.environment.binding.lambdalist.OptionalParameter;
+import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaList;
+import jcl.compiler.real.environment.binding.lambdalist.RequiredParameter;
+import jcl.compiler.real.environment.binding.lambdalist.RestParameter;
+import jcl.compiler.real.environment.binding.lambdalist.SuppliedPParameter;
 import jcl.compiler.real.struct.ValuesStruct;
 import jcl.conditions.exceptions.ErrorException;
 import jcl.conditions.exceptions.ProgramErrorException;
@@ -44,7 +44,7 @@ public abstract class FunctionStruct extends BuiltInClassStruct implements Initi
 
 	private static final long serialVersionUID = 7356724806391677112L;
 
-	protected OrdinaryLambdaListBindings lambdaListBindings;
+	protected OrdinaryLambdaList lambdaListBindings;
 
 	protected Closure closure;
 
@@ -98,7 +98,7 @@ public abstract class FunctionStruct extends BuiltInClassStruct implements Initi
 	 * @param lambdaListBindings
 	 * 		lambda-list bindings for the function
 	 */
-	protected FunctionStruct(final String documentation, final OrdinaryLambdaListBindings lambdaListBindings) {
+	protected FunctionStruct(final String documentation, final OrdinaryLambdaList lambdaListBindings) {
 		this(documentation, FunctionType.INSTANCE, null, null);
 		this.lambdaListBindings = lambdaListBindings;
 	}
@@ -266,12 +266,12 @@ public abstract class FunctionStruct extends BuiltInClassStruct implements Initi
 	}
 
 	protected List<FunctionParameterBinding> getFunctionBindings(final LispStruct[] lispStructs) {
-		final List<RequiredBinding> requiredBindings = lambdaListBindings.getRequiredBindings();
-		final List<OptionalBinding> optionalBindings = lambdaListBindings.getOptionalBindings();
-		final RestBinding restBinding = lambdaListBindings.getRestBinding();
-		final List<KeyBinding> keyBindings = lambdaListBindings.getKeyBindings();
+		final List<RequiredParameter> requiredBindings = lambdaListBindings.getRequiredBindings();
+		final List<OptionalParameter> optionalBindings = lambdaListBindings.getOptionalBindings();
+		final RestParameter restBinding = lambdaListBindings.getRestBinding();
+		final List<KeyParameter> keyBindings = lambdaListBindings.getKeyBindings();
 		boolean allowOtherKeys = lambdaListBindings.isAllowOtherKeys();
-		final List<AuxBinding> auxBindings = lambdaListBindings.getAuxBindings();
+		final List<AuxParameter> auxBindings = lambdaListBindings.getAuxBindings();
 
 		final List<FunctionParameterBinding> functionParametersToBind = new ArrayList<>();
 
@@ -281,7 +281,7 @@ public abstract class FunctionStruct extends BuiltInClassStruct implements Initi
 
 		final String functionClassName = getClass().getSimpleName();
 		final int numberOfRequired = requiredBindings.size();
-		for (final RequiredBinding requiredBinding : requiredBindings) {
+		for (final RequiredParameter requiredBinding : requiredBindings) {
 			if (!functionArgumentsIterator.hasNext()) {
 				throw new ProgramErrorException("Too few arguments in call to '" + functionClassName + "'. " + numberOfArguments + " arguments provided, at least " + numberOfRequired + " required.");
 			}
@@ -293,7 +293,7 @@ public abstract class FunctionStruct extends BuiltInClassStruct implements Initi
 			functionParametersToBind.add(functionParameterBinding);
 		}
 
-		for (final OptionalBinding optionalBinding : optionalBindings) {
+		for (final OptionalParameter optionalBinding : optionalBindings) {
 			final LispStruct optionalInitForm;
 			final LispStruct suppliedPInitForm;
 
@@ -309,7 +309,7 @@ public abstract class FunctionStruct extends BuiltInClassStruct implements Initi
 			FunctionParameterBinding functionParameterBinding = new FunctionParameterBinding(optionalSymbol, optionalInitForm, optionalBinding.isSpecial());
 			functionParametersToBind.add(functionParameterBinding);
 
-			final SuppliedPBinding suppliedPBinding = optionalBinding.getSuppliedPBinding();
+			final SuppliedPParameter suppliedPBinding = optionalBinding.getSuppliedPBinding();
 			final SymbolStruct<?> suppliedPSymbol = suppliedPBinding.getVar();
 
 			functionParameterBinding = new FunctionParameterBinding(suppliedPSymbol, suppliedPInitForm, suppliedPBinding.isSpecial());
@@ -317,8 +317,8 @@ public abstract class FunctionStruct extends BuiltInClassStruct implements Initi
 		}
 
 		final int numberOfKeys = keyBindings.size();
-		final Map<SymbolStruct<?>, KeyBinding> keysToBindings = new HashMap<>();
-		for (final KeyBinding keyBinding : keyBindings) {
+		final Map<SymbolStruct<?>, KeyParameter> keysToBindings = new HashMap<>();
+		for (final KeyParameter keyBinding : keyBindings) {
 			final SymbolStruct<?> keyName = keyBinding.getKeyName();
 			keysToBindings.put(keyName, keyBinding);
 		}
@@ -336,13 +336,13 @@ public abstract class FunctionStruct extends BuiltInClassStruct implements Initi
 		final List<SymbolStruct<?>> otherKeys = new ArrayList<>();
 
 		final Map<SymbolStruct<?>, FunctionParameterBinding> keywordFunctionParametersToBind = new LinkedHashMap<>(keyBindings.size());
-		for (final KeyBinding keyBinding : keyBindings) {
+		for (final KeyParameter keyBinding : keyBindings) {
 			final SymbolStruct<?> keySymbol = keyBinding.getVar();
 
 			FunctionParameterBinding functionParameterBinding = new FunctionParameterBinding(keySymbol, INIT_FORM_PLACEHOLDER, keyBinding.isSpecial());
 			keywordFunctionParametersToBind.put(keySymbol, functionParameterBinding);
 
-			final SuppliedPBinding suppliedPBinding = keyBinding.getSuppliedPBinding();
+			final SuppliedPParameter suppliedPBinding = keyBinding.getSuppliedPBinding();
 			final SymbolStruct<?> suppliedPSymbol = suppliedPBinding.getVar();
 
 			functionParameterBinding = new FunctionParameterBinding(suppliedPSymbol, NILStruct.INSTANCE, suppliedPBinding.isSpecial());
@@ -355,7 +355,7 @@ public abstract class FunctionStruct extends BuiltInClassStruct implements Initi
 			if (nextArgument instanceof SymbolStruct) {
 				final SymbolStruct<?> keywordArgument = (SymbolStruct) nextArgument;
 				if (keysToBindings.containsKey(keywordArgument)) {
-					final KeyBinding keyBinding = keysToBindings.remove(keywordArgument);
+					final KeyParameter keyBinding = keysToBindings.remove(keywordArgument);
 
 					if (iterator.hasNext()) {
 						final SymbolStruct<?> keySymbol = keyBinding.getVar();
@@ -369,7 +369,7 @@ public abstract class FunctionStruct extends BuiltInClassStruct implements Initi
 						FunctionParameterBinding functionParameterBinding = new FunctionParameterBinding(keySymbol, keyInitForm, keyBinding.isSpecial());
 						keywordFunctionParametersToBind.put(keySymbol, functionParameterBinding);
 
-						final SuppliedPBinding suppliedPBinding = keyBinding.getSuppliedPBinding();
+						final SuppliedPParameter suppliedPBinding = keyBinding.getSuppliedPBinding();
 						final SymbolStruct<?> suppliedPSymbol = suppliedPBinding.getVar();
 						final LispStruct suppliedPInitForm = TStruct.INSTANCE;
 
@@ -416,7 +416,7 @@ public abstract class FunctionStruct extends BuiltInClassStruct implements Initi
 
 		functionParametersToBind.addAll(keywordFunctionParametersToBind.values());
 
-		for (final AuxBinding auxBinding : auxBindings) {
+		for (final AuxParameter auxBinding : auxBindings) {
 			final SymbolStruct<?> auxSymbol = auxBinding.getVar();
 
 			final FunctionParameterBinding functionParameterBinding = new FunctionParameterBinding(auxSymbol, INIT_FORM_PLACEHOLDER, auxBinding.isSpecial());
@@ -427,13 +427,13 @@ public abstract class FunctionStruct extends BuiltInClassStruct implements Initi
 	}
 
 	protected void initLambdaListBindings() {
-		final List<RequiredBinding> requiredBindings = getRequiredBindings();
-		final List<OptionalBinding> optionalBindings = getOptionalBindings();
-		final RestBinding restBinding = getRestBinding();
-		final List<KeyBinding> keyBindings = getKeyBindings();
+		final List<RequiredParameter> requiredBindings = getRequiredBindings();
+		final List<OptionalParameter> optionalBindings = getOptionalBindings();
+		final RestParameter restBinding = getRestBinding();
+		final List<KeyParameter> keyBindings = getKeyBindings();
 		final boolean allowOtherKeys = getAllowOtherKeys();
-		final List<AuxBinding> auxBindings = getAuxBindings();
-		lambdaListBindings = new OrdinaryLambdaListBindings.Builder().requiredBindings(requiredBindings)
+		final List<AuxParameter> auxBindings = getAuxBindings();
+		lambdaListBindings = new OrdinaryLambdaList.Builder().requiredBindings(requiredBindings)
 		                                                             .optionalBindings(optionalBindings)
 		                                                             .restBinding(restBinding)
 		                                                             .keyBindings(keyBindings)
@@ -442,19 +442,19 @@ public abstract class FunctionStruct extends BuiltInClassStruct implements Initi
 		                                                             .build();
 	}
 
-	protected List<RequiredBinding> getRequiredBindings() {
+	protected List<RequiredParameter> getRequiredBindings() {
 		return Collections.emptyList();
 	}
 
-	protected List<OptionalBinding> getOptionalBindings() {
+	protected List<OptionalParameter> getOptionalBindings() {
 		return Collections.emptyList();
 	}
 
-	protected RestBinding getRestBinding() {
+	protected RestParameter getRestBinding() {
 		return null;
 	}
 
-	protected List<KeyBinding> getKeyBindings() {
+	protected List<KeyParameter> getKeyBindings() {
 		return Collections.emptyList();
 	}
 
@@ -462,7 +462,7 @@ public abstract class FunctionStruct extends BuiltInClassStruct implements Initi
 		return false;
 	}
 
-	protected List<AuxBinding> getAuxBindings() {
+	protected List<AuxParameter> getAuxBindings() {
 		return Collections.emptyList();
 	}
 

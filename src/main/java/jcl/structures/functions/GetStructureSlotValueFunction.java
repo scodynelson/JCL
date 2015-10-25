@@ -10,8 +10,8 @@ import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
 import jcl.LispType;
-import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaListBindings;
-import jcl.compiler.real.environment.binding.lambdalist.RequiredBinding;
+import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaList;
+import jcl.compiler.real.environment.binding.lambdalist.RequiredParameter;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.conditions.exceptions.SimpleErrorException;
 import jcl.conditions.exceptions.TypeErrorException;
@@ -39,23 +39,23 @@ public final class GetStructureSlotValueFunction extends FunctionStruct {
 		GlobalPackageStruct.SYSTEM.export(GET_STRUCTURE_SLOT_VALUE);
 	}
 
-	private static OrdinaryLambdaListBindings getInitLambdaListBindings() {
+	private static OrdinaryLambdaList getInitLambdaListBindings() {
 
-		final List<RequiredBinding> requiredBindings = new ArrayList<>();
+		final List<RequiredParameter> requiredBindings = new ArrayList<>();
 
 		final SymbolStruct<?> structureClassArgSymbol = GlobalPackageStruct.SYSTEM.intern("STRUCTURE-CLASS").getSymbol();
-		final RequiredBinding structureClassArgRequiredBinding = new RequiredBinding(structureClassArgSymbol);
+		final RequiredParameter structureClassArgRequiredBinding = new RequiredParameter(structureClassArgSymbol);
 		requiredBindings.add(structureClassArgRequiredBinding);
 
 		final SymbolStruct<?> structureInstanceArgSymbol = GlobalPackageStruct.SYSTEM.intern("STRUCTURE-INSTANCE").getSymbol();
-		final RequiredBinding structureInstanceArgRequiredBinding = new RequiredBinding(structureInstanceArgSymbol);
+		final RequiredParameter structureInstanceArgRequiredBinding = new RequiredParameter(structureInstanceArgSymbol);
 		requiredBindings.add(structureInstanceArgRequiredBinding);
 
 		final SymbolStruct<?> slotNameArgSymbol = GlobalPackageStruct.SYSTEM.intern("SLOT-NAME").getSymbol();
-		final RequiredBinding slotNameArgRequiredBinding = new RequiredBinding(slotNameArgSymbol);
+		final RequiredParameter slotNameArgRequiredBinding = new RequiredParameter(slotNameArgSymbol);
 		requiredBindings.add(slotNameArgRequiredBinding);
 
-		return new OrdinaryLambdaListBindings.Builder().requiredBindings(requiredBindings)
+		return new OrdinaryLambdaList.Builder().requiredBindings(requiredBindings)
 		                                               .build();
 	}
 

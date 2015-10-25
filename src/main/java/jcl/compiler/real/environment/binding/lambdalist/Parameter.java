@@ -9,25 +9,25 @@ import jcl.LispType;
 import jcl.compiler.real.environment.binding.Binding;
 import jcl.symbols.SymbolStruct;
 
-public class ParameterBinding extends Binding {
+public class Parameter extends Binding {
 
 	private static final long serialVersionUID = 4128878993186537174L;
 
 	private final LispStruct initForm;
 
-	private final DestructuringLambdaListBindings destructuringForm;
+	private final DestructuringLambdaList destructuringForm;
 
 	private final boolean isSpecial;
 
-	protected ParameterBinding(final SymbolStruct<?> var, final DestructuringLambdaListBindings destructuringForm,
-	                           final LispType type, final LispStruct initForm, final boolean isSpecial) {
+	protected Parameter(final SymbolStruct<?> var, final DestructuringLambdaList destructuringForm,
+	                    final LispType type, final LispStruct initForm, final boolean isSpecial) {
 		super(var, type);
 		this.destructuringForm = destructuringForm;
 		this.initForm = initForm;
 		this.isSpecial = isSpecial;
 	}
 
-	public DestructuringLambdaListBindings getDestructuringForm() {
+	public DestructuringLambdaList getDestructuringForm() {
 		return destructuringForm;
 	}
 

@@ -9,16 +9,16 @@ import jcl.LispStruct;
 import jcl.compiler.real.CompilerConstants;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.binding.Binding;
-import jcl.compiler.real.environment.binding.lambdalist.AuxBinding;
-import jcl.compiler.real.environment.binding.lambdalist.BodyBinding;
-import jcl.compiler.real.environment.binding.lambdalist.DestructuringLambdaListBindings;
-import jcl.compiler.real.environment.binding.lambdalist.EnvironmentBinding;
-import jcl.compiler.real.environment.binding.lambdalist.KeyBinding;
-import jcl.compiler.real.environment.binding.lambdalist.OptionalBinding;
-import jcl.compiler.real.environment.binding.lambdalist.RequiredBinding;
-import jcl.compiler.real.environment.binding.lambdalist.RestBinding;
-import jcl.compiler.real.environment.binding.lambdalist.SuppliedPBinding;
-import jcl.compiler.real.environment.binding.lambdalist.WholeBinding;
+import jcl.compiler.real.environment.binding.lambdalist.AuxParameter;
+import jcl.compiler.real.environment.binding.lambdalist.BodyParameter;
+import jcl.compiler.real.environment.binding.lambdalist.DestructuringLambdaList;
+import jcl.compiler.real.environment.binding.lambdalist.EnvironmentParameter;
+import jcl.compiler.real.environment.binding.lambdalist.KeyParameter;
+import jcl.compiler.real.environment.binding.lambdalist.OptionalParameter;
+import jcl.compiler.real.environment.binding.lambdalist.RequiredParameter;
+import jcl.compiler.real.environment.binding.lambdalist.RestParameter;
+import jcl.compiler.real.environment.binding.lambdalist.SuppliedPParameter;
+import jcl.compiler.real.environment.binding.lambdalist.WholeParameter;
 import jcl.compiler.real.sa.FormAnalyzer;
 import jcl.compiler.real.struct.specialoperator.declare.DeclareStruct;
 import jcl.compiler.real.struct.specialoperator.declare.SpecialDeclarationStruct;
@@ -67,7 +67,7 @@ public class LambdaListParser {
 			environment.addLexicalBinding(binding);
 		}
 
-		final WholeBinding wholeBinding = new WholeBinding(currentParam, isSpecial);
+		final WholeParameter wholeBinding = new WholeParameter(currentParam, isSpecial);
 		return new WholeParseResult(wholeBinding);
 	}
 
@@ -92,7 +92,7 @@ public class LambdaListParser {
 		final Binding binding = new Binding(currentParam, TType.INSTANCE);
 		environment.addDynamicBinding(binding);
 
-		final EnvironmentBinding environmentBinding = new EnvironmentBinding(currentParam);
+		final EnvironmentParameter environmentBinding = new EnvironmentParameter(currentParam);
 		return new EnvironmentParseResult(currentElement, environmentBinding);
 	}
 
@@ -100,7 +100,7 @@ public class LambdaListParser {
 	                                                    final DeclareStruct declareElement, final boolean isDotted,
 	                                                    final boolean isDestructuringAllowed) {
 
-		final List<RequiredBinding> requiredBindings = new ArrayList<>();
+		final List<RequiredParameter> requiredBindings = new ArrayList<>();
 
 		LispStruct currentElement;
 		do {
@@ -113,7 +113,7 @@ public class LambdaListParser {
 			}
 
 			final SymbolStruct<?> currentParam;
-			DestructuringLambdaListBindings destructuringForm = null;
+			DestructuringLambdaList destructuringForm = null;
 			if (currentElement instanceof SymbolStruct) {
 				currentParam = (SymbolStruct) currentElement;
 			} else {
@@ -145,7 +145,7 @@ public class LambdaListParser {
 				environment.addLexicalBinding(binding);
 			}
 
-			final RequiredBinding requiredBinding = new RequiredBinding(currentParam, destructuringForm, isSpecial);
+			final RequiredParameter requiredBinding = new RequiredParameter(currentParam, destructuringForm, isSpecial);
 			requiredBindings.add(requiredBinding);
 		} while (iterator.hasNext());
 
@@ -156,7 +156,7 @@ public class LambdaListParser {
 	                                                    final DeclareStruct declareElement, final boolean isDotted,
 	                                                    final boolean isDestructuringAllowed) {
 
-		final List<OptionalBinding> optionalBindings = new ArrayList<>();
+		final List<OptionalParameter> optionalBindings = new ArrayList<>();
 
 		if (!iterator.hasNext()) {
 			return new OptionalParseResult(null, optionalBindings);
@@ -205,9 +205,9 @@ public class LambdaListParser {
 					environment.addLexicalBinding(binding);
 				}
 
-				final SuppliedPBinding suppliedPBinding = new SuppliedPBinding(customSuppliedPCurrent, isSuppliedPSpecial);
+				final SuppliedPParameter suppliedPBinding = new SuppliedPParameter(customSuppliedPCurrent, isSuppliedPSpecial);
 
-				final OptionalBinding optionalBinding = new OptionalBinding(currentParam, null, NullStruct.INSTANCE, isSpecial, suppliedPBinding);
+				final OptionalParameter optionalBinding = new OptionalParameter(currentParam, null, NullStruct.INSTANCE, isSpecial, suppliedPBinding);
 				optionalBindings.add(optionalBinding);
 			} else if (currentElement instanceof ListStruct) {
 				final ListStruct currentParam = (ListStruct) currentElement;
@@ -216,13 +216,13 @@ public class LambdaListParser {
 						final String destructuringName = "DestructuringSymbolName-" + System.nanoTime();
 						final SymbolStruct<?> varNameCurrent = GlobalPackageStruct.COMMON_LISP_USER.intern(destructuringName).getSymbol();
 						final ListStruct destructuringFormList = (ListStruct) currentElement;
-						final DestructuringLambdaListBindings destructuringForm = destructuringLambdaListParser.parseDestructuringLambdaList(environment, destructuringFormList, declareElement);
+						final DestructuringLambdaList destructuringForm = destructuringLambdaListParser.parseDestructuringLambdaList(environment, destructuringFormList, declareElement);
 
 						final String customSuppliedPName = destructuringName + "-P-" + System.nanoTime();
 						final SymbolStruct<?> customSuppliedPCurrent = GlobalPackageStruct.COMMON_LISP_USER.intern(customSuppliedPName).getSymbol();
-						final SuppliedPBinding suppliedPBinding = new SuppliedPBinding(customSuppliedPCurrent);
+						final SuppliedPParameter suppliedPBinding = new SuppliedPParameter(customSuppliedPCurrent);
 
-						final OptionalBinding optionalBinding = new OptionalBinding(varNameCurrent, destructuringForm, NullStruct.INSTANCE, false, suppliedPBinding);
+						final OptionalParameter optionalBinding = new OptionalParameter(varNameCurrent, destructuringForm, NullStruct.INSTANCE, false, suppliedPBinding);
 						optionalBindings.add(optionalBinding);
 					} else {
 						final String printedElement = printer.print(currentParam);
@@ -234,7 +234,7 @@ public class LambdaListParser {
 					final LispStruct thirdInCurrent = currentParam.getRest().getRest().getFirst();
 
 					final SymbolStruct<?> varNameCurrent;
-					DestructuringLambdaListBindings destructuringForm = null;
+					DestructuringLambdaList destructuringForm = null;
 					if (firstInCurrent instanceof SymbolStruct) {
 						varNameCurrent = (SymbolStruct) firstInCurrent;
 					} else {
@@ -273,7 +273,7 @@ public class LambdaListParser {
 						environment.addLexicalBinding(binding);
 					}
 
-					final SuppliedPBinding suppliedPBinding;
+					final SuppliedPParameter suppliedPBinding;
 					if (thirdInCurrent.equals(NullStruct.INSTANCE)) {
 						final String paramName = varNameCurrent.getName();
 						final String customSuppliedPName = paramName + "-P-" + System.nanoTime();
@@ -293,7 +293,7 @@ public class LambdaListParser {
 							environment.addLexicalBinding(binding);
 						}
 
-						suppliedPBinding = new SuppliedPBinding(customSuppliedPCurrent, isSuppliedPSpecial);
+						suppliedPBinding = new SuppliedPParameter(customSuppliedPCurrent, isSuppliedPSpecial);
 					} else {
 						if (!(thirdInCurrent instanceof SymbolStruct)) {
 							final String printedElement = printer.print(thirdInCurrent);
@@ -314,10 +314,10 @@ public class LambdaListParser {
 							environment.addLexicalBinding(binding);
 						}
 
-						suppliedPBinding = new SuppliedPBinding(suppliedPCurrent, isSuppliedPSpecial);
+						suppliedPBinding = new SuppliedPParameter(suppliedPCurrent, isSuppliedPSpecial);
 					}
 
-					final OptionalBinding optionalBinding = new OptionalBinding(varNameCurrent, destructuringForm, parameterValueInitForm, isSpecial, suppliedPBinding);
+					final OptionalParameter optionalBinding = new OptionalParameter(varNameCurrent, destructuringForm, parameterValueInitForm, isSpecial, suppliedPBinding);
 					optionalBindings.add(optionalBinding);
 				}
 			} else {
@@ -339,7 +339,7 @@ public class LambdaListParser {
 		LispStruct currentElement = iterator.next();
 
 		final SymbolStruct<?> currentParam;
-		DestructuringLambdaListBindings destructuringForm = null;
+		DestructuringLambdaList destructuringForm = null;
 		if (currentElement instanceof SymbolStruct) {
 			currentParam = (SymbolStruct) currentElement;
 		} else {
@@ -379,7 +379,7 @@ public class LambdaListParser {
 			environment.addLexicalBinding(binding);
 		}
 
-		final RestBinding restBinding = new RestBinding(currentParam, destructuringForm, isSpecial);
+		final RestParameter restBinding = new RestParameter(currentParam, destructuringForm, isSpecial);
 		return new RestParseResult(currentElement, restBinding);
 	}
 
@@ -387,7 +387,7 @@ public class LambdaListParser {
 	                                                 final DeclareStruct declareElement, final boolean isDestructuringAllowed) {
 
 		final SymbolStruct<?> currentParam;
-		DestructuringLambdaListBindings destructuringForm = null;
+		DestructuringLambdaList destructuringForm = null;
 		if (dottedRest instanceof SymbolStruct) {
 			currentParam = (SymbolStruct) dottedRest;
 		} else {
@@ -419,7 +419,7 @@ public class LambdaListParser {
 			environment.addLexicalBinding(binding);
 		}
 
-		final RestBinding restBinding = new RestBinding(currentParam, destructuringForm, isSpecial);
+		final RestParameter restBinding = new RestParameter(currentParam, destructuringForm, isSpecial);
 		return new RestParseResult(dottedRest, restBinding);
 	}
 
@@ -433,7 +433,7 @@ public class LambdaListParser {
 		LispStruct currentElement = iterator.next();
 
 		final SymbolStruct<?> currentParam;
-		DestructuringLambdaListBindings destructuringForm = null;
+		DestructuringLambdaList destructuringForm = null;
 		if (currentElement instanceof SymbolStruct) {
 			currentParam = (SymbolStruct) currentElement;
 		} else {
@@ -473,14 +473,14 @@ public class LambdaListParser {
 			environment.addLexicalBinding(binding);
 		}
 
-		final BodyBinding bodyBinding = new BodyBinding(currentParam, destructuringForm, isSpecial);
+		final BodyParameter bodyBinding = new BodyParameter(currentParam, destructuringForm, isSpecial);
 		return new BodyParseResult(currentElement, bodyBinding);
 	}
 
 	protected KeyParseResult parseKeyBindings(final Environment environment, final Iterator<LispStruct> iterator,
 	                                          final DeclareStruct declareElement, final boolean isDestructuringAllowed) {
 
-		final List<KeyBinding> keyBindings = new ArrayList<>();
+		final List<KeyParameter> keyBindings = new ArrayList<>();
 
 		if (!iterator.hasNext()) {
 			return new KeyParseResult(null, keyBindings);
@@ -527,9 +527,9 @@ public class LambdaListParser {
 					environment.addLexicalBinding(binding);
 				}
 
-				final SuppliedPBinding suppliedPBinding = new SuppliedPBinding(customSuppliedPCurrent, isSuppliedPSpecial);
+				final SuppliedPParameter suppliedPBinding = new SuppliedPParameter(customSuppliedPCurrent, isSuppliedPSpecial);
 
-				final KeyBinding keyBinding = new KeyBinding(currentParam, null, NullStruct.INSTANCE, isSpecial, keyName, suppliedPBinding);
+				final KeyParameter keyBinding = new KeyParameter(currentParam, null, NullStruct.INSTANCE, isSpecial, keyName, suppliedPBinding);
 				keyBindings.add(keyBinding);
 			} else if (currentElement instanceof ListStruct) {
 				final ListStruct currentParam = (ListStruct) currentElement;
@@ -539,13 +539,13 @@ public class LambdaListParser {
 						final SymbolStruct<?> varNameCurrent = GlobalPackageStruct.COMMON_LISP_USER.intern(destructuringName).getSymbol();
 						final SymbolStruct<?> varKeyNameCurrent = getKeywordStruct(varNameCurrent.getName());
 						final ListStruct destructuringFormList = (ListStruct) currentElement;
-						final DestructuringLambdaListBindings destructuringForm = destructuringLambdaListParser.parseDestructuringLambdaList(environment, destructuringFormList, declareElement);
+						final DestructuringLambdaList destructuringForm = destructuringLambdaListParser.parseDestructuringLambdaList(environment, destructuringFormList, declareElement);
 
 						final String customSuppliedPName = destructuringName + "-P-" + System.nanoTime();
 						final SymbolStruct<?> customSuppliedPCurrent = GlobalPackageStruct.COMMON_LISP_USER.intern(customSuppliedPName).getSymbol();
-						final SuppliedPBinding suppliedPBinding = new SuppliedPBinding(customSuppliedPCurrent);
+						final SuppliedPParameter suppliedPBinding = new SuppliedPParameter(customSuppliedPCurrent);
 
-						final KeyBinding keyBinding = new KeyBinding(varNameCurrent, destructuringForm, NullStruct.INSTANCE, false, varKeyNameCurrent, suppliedPBinding);
+						final KeyParameter keyBinding = new KeyParameter(varNameCurrent, destructuringForm, NullStruct.INSTANCE, false, varKeyNameCurrent, suppliedPBinding);
 						keyBindings.add(keyBinding);
 					} else {
 						final String printedElement = printer.print(currentParam);
@@ -558,7 +558,7 @@ public class LambdaListParser {
 
 					final SymbolStruct<?> varNameCurrent;
 					final SymbolStruct<?> varKeyNameCurrent;
-					DestructuringLambdaListBindings destructuringForm = null;
+					DestructuringLambdaList destructuringForm = null;
 					if (firstInCurrent instanceof SymbolStruct) {
 						varNameCurrent = (SymbolStruct) firstInCurrent;
 						varKeyNameCurrent = getKeywordStruct(varNameCurrent.getName());
@@ -615,7 +615,7 @@ public class LambdaListParser {
 						environment.addLexicalBinding(binding);
 					}
 
-					final SuppliedPBinding suppliedPBinding;
+					final SuppliedPParameter suppliedPBinding;
 					if (thirdInCurrent.equals(NullStruct.INSTANCE)) {
 						final String paramName = varNameCurrent.getName();
 						final String customSuppliedPName = paramName + "-P-" + System.nanoTime();
@@ -635,7 +635,7 @@ public class LambdaListParser {
 							environment.addLexicalBinding(binding);
 						}
 
-						suppliedPBinding = new SuppliedPBinding(customSuppliedPCurrent, isSuppliedPSpecial);
+						suppliedPBinding = new SuppliedPParameter(customSuppliedPCurrent, isSuppliedPSpecial);
 					} else {
 						if (!(thirdInCurrent instanceof SymbolStruct)) {
 							final String printedElement = printer.print(thirdInCurrent);
@@ -656,10 +656,10 @@ public class LambdaListParser {
 							environment.addLexicalBinding(binding);
 						}
 
-						suppliedPBinding = new SuppliedPBinding(suppliedPCurrent, isSuppliedPSpecial);
+						suppliedPBinding = new SuppliedPParameter(suppliedPCurrent, isSuppliedPSpecial);
 					}
 
-					final KeyBinding keyBinding = new KeyBinding(varNameCurrent, destructuringForm, parameterValueInitForm, isSpecial, varKeyNameCurrent, suppliedPBinding);
+					final KeyParameter keyBinding = new KeyParameter(varNameCurrent, destructuringForm, parameterValueInitForm, isSpecial, varKeyNameCurrent, suppliedPBinding);
 					keyBindings.add(keyBinding);
 				}
 			} else {
@@ -675,7 +675,7 @@ public class LambdaListParser {
 	protected AuxParseResult parseAuxBindings(final Environment environment, final Iterator<LispStruct> iterator,
 	                                          final DeclareStruct declareElement, final boolean isDestructuringAllowed) {
 
-		final List<AuxBinding> auxBindings = new ArrayList<>();
+		final List<AuxParameter> auxBindings = new ArrayList<>();
 
 		if (!iterator.hasNext()) {
 			return new AuxParseResult(null, auxBindings);
@@ -703,7 +703,7 @@ public class LambdaListParser {
 					environment.addLexicalBinding(binding);
 				}
 
-				final AuxBinding auxBinding = new AuxBinding(currentParam, null, NullStruct.INSTANCE, isSpecial);
+				final AuxParameter auxBinding = new AuxParameter(currentParam, null, NullStruct.INSTANCE, isSpecial);
 				auxBindings.add(auxBinding);
 			} else if (currentElement instanceof ListStruct) {
 				final ListStruct currentParam = (ListStruct) currentElement;
@@ -712,9 +712,9 @@ public class LambdaListParser {
 						final String destructuringName = "DestructuringSymbolName-" + System.nanoTime();
 						final SymbolStruct<?> varNameCurrent = GlobalPackageStruct.COMMON_LISP_USER.intern(destructuringName).getSymbol();
 						final ListStruct destructuringFormList = (ListStruct) currentElement;
-						final DestructuringLambdaListBindings destructuringForm = destructuringLambdaListParser.parseDestructuringLambdaList(environment, destructuringFormList, declareElement);
+						final DestructuringLambdaList destructuringForm = destructuringLambdaListParser.parseDestructuringLambdaList(environment, destructuringFormList, declareElement);
 
-						final AuxBinding auxBinding = new AuxBinding(varNameCurrent, destructuringForm, NullStruct.INSTANCE);
+						final AuxParameter auxBinding = new AuxParameter(varNameCurrent, destructuringForm, NullStruct.INSTANCE);
 						auxBindings.add(auxBinding);
 					} else {
 						final String printedElement = printer.print(currentParam);
@@ -725,7 +725,7 @@ public class LambdaListParser {
 					final LispStruct secondInCurrent = currentParam.getRest().getFirst();
 
 					final SymbolStruct<?> varNameCurrent;
-					DestructuringLambdaListBindings destructuringForm = null;
+					DestructuringLambdaList destructuringForm = null;
 					if (firstInCurrent instanceof SymbolStruct) {
 						varNameCurrent = (SymbolStruct) firstInCurrent;
 					} else {
@@ -764,7 +764,7 @@ public class LambdaListParser {
 						environment.addLexicalBinding(binding);
 					}
 
-					final AuxBinding auxBinding = new AuxBinding(varNameCurrent, destructuringForm, parameterValueInitForm, isSpecial);
+					final AuxParameter auxBinding = new AuxParameter(varNameCurrent, destructuringForm, parameterValueInitForm, isSpecial);
 					auxBindings.add(auxBinding);
 				}
 			} else {

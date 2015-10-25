@@ -10,13 +10,13 @@ import java.util.List;
 import jcl.LispStruct;
 import jcl.arrays.StringStruct;
 import jcl.compiler.real.environment.Environment;
-import jcl.compiler.real.environment.binding.lambdalist.AuxBinding;
-import jcl.compiler.real.environment.binding.lambdalist.KeyBinding;
-import jcl.compiler.real.environment.binding.lambdalist.OptionalBinding;
-import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaListBindings;
-import jcl.compiler.real.environment.binding.lambdalist.RequiredBinding;
-import jcl.compiler.real.environment.binding.lambdalist.RestBinding;
-import jcl.compiler.real.environment.binding.lambdalist.SuppliedPBinding;
+import jcl.compiler.real.environment.binding.lambdalist.AuxParameter;
+import jcl.compiler.real.environment.binding.lambdalist.KeyParameter;
+import jcl.compiler.real.environment.binding.lambdalist.OptionalParameter;
+import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaList;
+import jcl.compiler.real.environment.binding.lambdalist.RequiredParameter;
+import jcl.compiler.real.environment.binding.lambdalist.RestParameter;
+import jcl.compiler.real.environment.binding.lambdalist.SuppliedPParameter;
 import jcl.compiler.real.icg.CodeGenerator;
 import jcl.compiler.real.icg.GeneratorState;
 import jcl.compiler.real.icg.IntermediateCodeGenerator;
@@ -81,7 +81,7 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 	/**
 	 * Constant {@link String} containing the signature for the {@link FunctionStruct#getRequiredBindings()} method.
 	 */
-	private static final String GET_REQUIRED_BINDINGS_METHOD_SIGNATURE = "()Ljava/util/List<Ljcl/compiler/real/environment/binding/lambdalist/RequiredBinding;>;";
+	private static final String GET_REQUIRED_BINDINGS_METHOD_SIGNATURE = "()Ljava/util/List<Ljcl/compiler/real/environment/binding/lambdalist/RequiredParameter;>;";
 
 	/**
 	 * Constant {@link String} containing the name for the {@link FunctionStruct#getOptionalBindings()} method.
@@ -96,7 +96,7 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 	/**
 	 * Constant {@link String} containing the signature for the {@link FunctionStruct#getOptionalBindings()} method.
 	 */
-	private static final String GET_OPTIONAL_BINDINGS_METHOD_SIGNATURE = "()Ljava/util/List<Ljcl/compiler/real/environment/binding/lambdalist/OptionalBinding;>;";
+	private static final String GET_OPTIONAL_BINDINGS_METHOD_SIGNATURE = "()Ljava/util/List<Ljcl/compiler/real/environment/binding/lambdalist/OptionalParameter;>;";
 
 	/**
 	 * Constant {@link String} containing the name for the {@link FunctionStruct#getRestBinding()} method.
@@ -106,7 +106,7 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 	/**
 	 * Constant {@link String} containing the description for the {@link FunctionStruct#getRestBinding()} method.
 	 */
-	private static final String GET_REST_BINDING_METHOD_DESC = "()Ljcl/compiler/real/environment/binding/lambdalist/RestBinding;";
+	private static final String GET_REST_BINDING_METHOD_DESC = "()Ljcl/compiler/real/environment/binding/lambdalist/RestParameter;";
 
 	/**
 	 * Constant {@link String} containing the name for the {@link FunctionStruct#getKeyBindings()} method.
@@ -121,7 +121,7 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 	/**
 	 * Constant {@link String} containing the signature for the {@link FunctionStruct#getKeyBindings()} method.
 	 */
-	private static final String GET_KEY_BINDINGS_METHOD_SIGNATURE = "()Ljava/util/List<Ljcl/compiler/real/environment/binding/lambdalist/KeyBinding;>;";
+	private static final String GET_KEY_BINDINGS_METHOD_SIGNATURE = "()Ljava/util/List<Ljcl/compiler/real/environment/binding/lambdalist/KeyParameter;>;";
 
 	/**
 	 * Constant {@link String} containing the name for the {@link FunctionStruct#getAllowOtherKeys()} method.
@@ -146,7 +146,7 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 	/**
 	 * Constant {@link String} containing the signature for the {@link FunctionStruct#getAuxBindings()} method.
 	 */
-	private static final String GET_AUX_BINDINGS_METHOD_SIGNATURE = "()Ljava/util/List<Ljcl/compiler/real/environment/binding/lambdalist/AuxBinding;>;";
+	private static final String GET_AUX_BINDINGS_METHOD_SIGNATURE = "()Ljava/util/List<Ljcl/compiler/real/environment/binding/lambdalist/AuxParameter;>;";
 
 	/**
 	 * Constant {@link String} containing the name for the {@link FunctionStruct#internalApply(Closure)} method.
@@ -282,7 +282,7 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 		generateNoArgConstructor(generatorState, className, cw);
 		generateClosureArgConstructor(input, generatorState, className, cw);
 
-		final OrdinaryLambdaListBindings lambdaListBindings = input.getLambdaListBindings();
+		final OrdinaryLambdaList lambdaListBindings = input.getLambdaListBindings();
 		generateRequiredBindings(generatorState, lambdaListBindings, cw);
 		generateOptionalBindings(generatorState, lambdaListBindings, cw);
 		generateRestBinding(generatorState, lambdaListBindings, cw);
@@ -553,8 +553,8 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 	 * </pre>
 	 *
 	 * @param input
-	 * 		the {@link LambdaStruct} containing the {@link OrdinaryLambdaListBindings#optionalBindings}, {@link
-	 * 		OrdinaryLambdaListBindings#keyBindings}, and {@link OrdinaryLambdaListBindings#auxBindings} to generate the
+	 * 		the {@link LambdaStruct} containing the {@link OrdinaryLambdaList#optionalBindings}, {@link
+	 * 		OrdinaryLambdaList#keyBindings}, and {@link OrdinaryLambdaList#auxBindings} to generate the
 	 * 		code to retrieve their initial form values
 	 * @param generatorState
 	 * 		stateful object used to hold the current state of the code generation process
@@ -563,11 +563,11 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 	 */
 	private void generateGetInitFormMethod(final LambdaStruct input, final GeneratorState generatorState,
 	                                       final ClassWriter cw) {
-		final OrdinaryLambdaListBindings lambdaListBindings = input.getLambdaListBindings();
+		final OrdinaryLambdaList lambdaListBindings = input.getLambdaListBindings();
 
-		final List<OptionalBinding> optionalBindings = lambdaListBindings.getOptionalBindings();
-		final List<KeyBinding> keyBindings = lambdaListBindings.getKeyBindings();
-		final List<AuxBinding> auxBindings = lambdaListBindings.getAuxBindings();
+		final List<OptionalParameter> optionalBindings = lambdaListBindings.getOptionalBindings();
+		final List<KeyParameter> keyBindings = lambdaListBindings.getKeyBindings();
+		final List<AuxParameter> auxBindings = lambdaListBindings.getAuxBindings();
 		if (optionalBindings.isEmpty() && keyBindings.isEmpty() && auxBindings.isEmpty()) {
 			// No need to generate this method, as there are no init-forms to initialize
 			return;
@@ -593,7 +593,7 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 		final int initFormVarPackageStore = methodBuilder.getNextAvailableStore();
 		final int initFormVarSymbolStore = methodBuilder.getNextAvailableStore();
 
-		for (final OptionalBinding optionalBinding : optionalBindings) {
+		for (final OptionalParameter optionalBinding : optionalBindings) {
 			final SymbolStruct<?> var = optionalBinding.getVar();
 			final LispStruct initForm = optionalBinding.getInitForm();
 
@@ -601,7 +601,7 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 					initFormVarPackageStore, initFormVarSymbolStore, var, initForm);
 		}
 
-		for (final KeyBinding keyBinding : keyBindings) {
+		for (final KeyParameter keyBinding : keyBindings) {
 			final SymbolStruct<?> var = keyBinding.getVar();
 			final LispStruct initForm = keyBinding.getInitForm();
 
@@ -609,7 +609,7 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 					initFormVarPackageStore, initFormVarSymbolStore, var, initForm);
 		}
 
-		for (final AuxBinding auxBinding : auxBindings) {
+		for (final AuxParameter auxBinding : auxBindings) {
 			final SymbolStruct<?> var = auxBinding.getVar();
 			final LispStruct initForm = auxBinding.getInitForm();
 
@@ -703,10 +703,10 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 	 * operations:
 	 * <ol>
 	 * <li>Returning early and avoid generating the method unnecessarily if the {@link List} of {@link
-	 * OrdinaryLambdaListBindings#requiredBindings} is empty</li>
-	 * <li>Generating the {@link List} for containing the resulting {@link RequiredBinding}s</li>
-	 * <li>Generating each of the {@link RequiredBinding}s and adding them to the previously created {@link List}</li>
-	 * <li>Generating the code to return the generated {@link List} of {@link RequiredBinding}s</li>
+	 * OrdinaryLambdaList#requiredBindings} is empty</li>
+	 * <li>Generating the {@link List} for containing the resulting {@link RequiredParameter}s</li>
+	 * <li>Generating each of the {@link RequiredParameter}s and adding them to the previously created {@link List}</li>
+	 * <li>Generating the code to return the generated {@link List} of {@link RequiredParameter}s</li>
 	 * </ol>
 	 * The following is the example Java code generated when {@code (lambda (a) a)} is encountered:
 	 * <pre>
@@ -727,14 +727,14 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 	 * @param generatorState
 	 * 		stateful object used to hold the current state of the code generation process
 	 * @param lambdaListBindings
-	 * 		the {@link OrdinaryLambdaListBindings} containing the {@link List} of {@link RequiredBinding}s to generate
+	 * 		the {@link OrdinaryLambdaList} containing the {@link List} of {@link RequiredParameter}s to generate
 	 * 		code for
 	 * @param cw
 	 * 		the current {@link ClassWriter} to generate the method code for
 	 */
-	private static void generateRequiredBindings(final GeneratorState generatorState, final OrdinaryLambdaListBindings lambdaListBindings,
+	private static void generateRequiredBindings(final GeneratorState generatorState, final OrdinaryLambdaList lambdaListBindings,
 	                                             final ClassWriter cw) {
-		final List<RequiredBinding> requiredBindings = lambdaListBindings.getRequiredBindings();
+		final List<RequiredParameter> requiredBindings = lambdaListBindings.getRequiredBindings();
 		if (requiredBindings.isEmpty()) {
 			// No need to generate this method, as there are no bindings to generate
 			return;
@@ -768,7 +768,7 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 		final int requiredSymbolStore = methodBuilder.getNextAvailableStore();
 		final int requiredBindingStore = methodBuilder.getNextAvailableStore();
 
-		for (final RequiredBinding requiredBinding : requiredBindings) {
+		for (final RequiredParameter requiredBinding : requiredBindings) {
 			final SymbolStruct<?> requiredSymbol = requiredBinding.getVar();
 			CodeGenerators.generateSymbol(requiredSymbol, methodBuilder, requiredPackageStore, requiredSymbolStore);
 
@@ -812,10 +812,10 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 	 * operations:
 	 * <ol>
 	 * <li>Returning early and avoid generating the method unnecessarily if the {@link List} of {@link
-	 * OrdinaryLambdaListBindings#optionalBindings} is empty</li>
-	 * <li>Generating the {@link List} for containing the resulting {@link OptionalBinding}s</li>
-	 * <li>Generating each of the {@link OptionalBinding}s and adding them to the previously created {@link List}</li>
-	 * <li>Generating the code to return the generated {@link List} of {@link OptionalBinding}s</li>
+	 * OrdinaryLambdaList#optionalBindings} is empty</li>
+	 * <li>Generating the {@link List} for containing the resulting {@link OptionalParameter}s</li>
+	 * <li>Generating each of the {@link OptionalParameter}s and adding them to the previously created {@link List}</li>
+	 * <li>Generating the code to return the generated {@link List} of {@link OptionalParameter}s</li>
 	 * </ol>
 	 * The following is the example Java code generated when {@code (lambda (&optional (b 2 b-p) b)} is encountered:
 	 * <pre>
@@ -842,14 +842,14 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 	 * @param generatorState
 	 * 		stateful object used to hold the current state of the code generation process
 	 * @param lambdaListBindings
-	 * 		the {@link OrdinaryLambdaListBindings} containing the {@link List} of {@link OptionalBinding}s to generate
+	 * 		the {@link OrdinaryLambdaList} containing the {@link List} of {@link OptionalParameter}s to generate
 	 * 		code for
 	 * @param cw
 	 * 		the current {@link ClassWriter} to generate the method code for
 	 */
-	private void generateOptionalBindings(final GeneratorState generatorState, final OrdinaryLambdaListBindings lambdaListBindings,
+	private void generateOptionalBindings(final GeneratorState generatorState, final OrdinaryLambdaList lambdaListBindings,
 	                                      final ClassWriter cw) {
-		final List<OptionalBinding> optionalBindings = lambdaListBindings.getOptionalBindings();
+		final List<OptionalParameter> optionalBindings = lambdaListBindings.getOptionalBindings();
 		if (optionalBindings.isEmpty()) {
 			// No need to generate this method, as there are no bindings to generate
 			return;
@@ -886,14 +886,14 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 		final int optionalSuppliedPStore = methodBuilder.getNextAvailableStore();
 		final int optionalBindingStore = methodBuilder.getNextAvailableStore();
 
-		for (final OptionalBinding optionalBinding : optionalBindings) {
+		for (final OptionalParameter optionalBinding : optionalBindings) {
 			final SymbolStruct<?> optionalSymbol = optionalBinding.getVar();
 			CodeGenerators.generateSymbol(optionalSymbol, methodBuilder, optionalPackageStore, optionalSymbolStore);
 
 			nullCodeGenerator.generate(NullStruct.INSTANCE, generatorState);
 			mv.visitVarInsn(Opcodes.ASTORE, optionalInitFormStore);
 
-			final SuppliedPBinding suppliedPBinding = optionalBinding.getSuppliedPBinding();
+			final SuppliedPParameter suppliedPBinding = optionalBinding.getSuppliedPBinding();
 			generateSuppliedPBinding(suppliedPBinding, methodBuilder, optionalPackageStore, optionalSuppliedPSymbolStore, optionalSuppliedPStore);
 
 			mv.visitTypeInsn(Opcodes.NEW, GenerationConstants.OPTIONAL_BINDING_NAME);
@@ -938,8 +938,8 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 	 * operations:
 	 * <ol>
 	 * <li>Returning early and avoid generating the method unnecessarily if the {@link
-	 * OrdinaryLambdaListBindings#restBinding} is null</li>
-	 * <li>Generating and returning the {@link RestBinding}</li>
+	 * OrdinaryLambdaList#restBinding} is null</li>
+	 * <li>Generating and returning the {@link RestParameter}</li>
 	 * </ol>
 	 * The following is the example Java code generated when {@code (lambda (&rest x) x)} is encountered:
 	 * <pre>
@@ -955,13 +955,13 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 	 * @param generatorState
 	 * 		stateful object used to hold the current state of the code generation process
 	 * @param lambdaListBindings
-	 * 		the {@link OrdinaryLambdaListBindings} containing the {@link RestBinding} to generate code for
+	 * 		the {@link OrdinaryLambdaList} containing the {@link RestParameter} to generate code for
 	 * @param cw
 	 * 		the current {@link ClassWriter} to generate the method code for
 	 */
-	private static void generateRestBinding(final GeneratorState generatorState, final OrdinaryLambdaListBindings lambdaListBindings,
+	private static void generateRestBinding(final GeneratorState generatorState, final OrdinaryLambdaList lambdaListBindings,
 	                                        final ClassWriter cw) {
-		final RestBinding restBinding = lambdaListBindings.getRestBinding();
+		final RestParameter restBinding = lambdaListBindings.getRestBinding();
 		if (restBinding == null) {
 			// No need to generate this method, as there are no bindings to generate
 			return;
@@ -1014,10 +1014,10 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 	 * operations:
 	 * <ol>
 	 * <li>Returning early and avoid generating the method unnecessarily if the {@link List} of {@link
-	 * OrdinaryLambdaListBindings#keyBindings} is empty</li>
-	 * <li>Generating the {@link List} for containing the resulting {@link KeyBinding}s</li>
-	 * <li>Generating each of the {@link KeyBinding}s and adding them to the previously created {@link List}</li>
-	 * <li>Generating the code to return the generated {@link List} of {@link KeyBinding}s</li>
+	 * OrdinaryLambdaList#keyBindings} is empty</li>
+	 * <li>Generating the {@link List} for containing the resulting {@link KeyParameter}s</li>
+	 * <li>Generating each of the {@link KeyParameter}s and adding them to the previously created {@link List}</li>
+	 * <li>Generating the code to return the generated {@link List} of {@link KeyParameter}s</li>
 	 * </ol>
 	 * The following is the example Java code generated when {@code (lambda (&key (c 3 c-p)) c)} is encountered:
 	 * <pre>
@@ -1047,13 +1047,13 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 	 * @param generatorState
 	 * 		stateful object used to hold the current state of the code generation process
 	 * @param lambdaListBindings
-	 * 		the {@link OrdinaryLambdaListBindings} containing the {@link List} of {@link KeyBinding}s to generate code for
+	 * 		the {@link OrdinaryLambdaList} containing the {@link List} of {@link KeyParameter}s to generate code for
 	 * @param cw
 	 * 		the current {@link ClassWriter} to generate the method code for
 	 */
-	private void generateKeyBindings(final GeneratorState generatorState, final OrdinaryLambdaListBindings lambdaListBindings,
+	private void generateKeyBindings(final GeneratorState generatorState, final OrdinaryLambdaList lambdaListBindings,
 	                                 final ClassWriter cw) {
-		final List<KeyBinding> keyBindings = lambdaListBindings.getKeyBindings();
+		final List<KeyParameter> keyBindings = lambdaListBindings.getKeyBindings();
 		if (keyBindings.isEmpty()) {
 			// No need to generate this method, as there are no bindings to generate
 			return;
@@ -1091,7 +1091,7 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 		final int keySuppliedPStore = methodBuilder.getNextAvailableStore();
 		final int keyBindingStore = methodBuilder.getNextAvailableStore();
 
-		for (final KeyBinding keyBinding : keyBindings) {
+		for (final KeyParameter keyBinding : keyBindings) {
 			final SymbolStruct<?> keySymbol = keyBinding.getVar();
 			CodeGenerators.generateSymbol(keySymbol, methodBuilder, keyPackageStore, keySymbolStore);
 
@@ -1101,7 +1101,7 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 			final SymbolStruct<?> keyName = keyBinding.getKeyName();
 			CodeGenerators.generateSymbol(keyName, methodBuilder, keyPackageStore, keyNameStore);
 
-			final SuppliedPBinding suppliedPBinding = keyBinding.getSuppliedPBinding();
+			final SuppliedPParameter suppliedPBinding = keyBinding.getSuppliedPBinding();
 			generateSuppliedPBinding(suppliedPBinding, methodBuilder, keyPackageStore, keySuppliedPSymbolStore, keySuppliedPStore);
 
 			mv.visitTypeInsn(Opcodes.NEW, GenerationConstants.KEY_BINDING_NAME);
@@ -1142,23 +1142,23 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 	}
 
 	/**
-	 * Private method for generating a {@link SuppliedPBinding} to be used in the {@link
+	 * Private method for generating a {@link SuppliedPParameter} to be used in the {@link
 	 * FunctionStruct#getOptionalBindings()} and {@link FunctionStruct#getKeyBindings()} method generation code as the
-	 * {@link OptionalBinding#suppliedPBinding} and {@link KeyBinding#suppliedPBinding} values.
+	 * {@link OptionalParameter#suppliedPBinding} and {@link KeyParameter#suppliedPBinding} values.
 	 *
 	 * @param suppliedPBinding
-	 * 		the {@link SuppliedPBinding} to generate code for
+	 * 		the {@link SuppliedPParameter} to generate code for
 	 * @param methodBuilder
 	 * 		{@link JavaMethodBuilder} used for building a Java method body
 	 * @param suppliedPPackageStore
 	 * 		the storage location index on the stack where the {@link PackageStruct} for the provided {@link
-	 * 		SuppliedPBinding#var} will exist
+	 * 		SuppliedPParameter#var} will exist
 	 * @param suppliedPSymbolStore
-	 * 		the storage location index on the stack where the {@link SuppliedPBinding#var} will exist
+	 * 		the storage location index on the stack where the {@link SuppliedPParameter#var} will exist
 	 * @param suppliedPStore
-	 * 		the storage location index on the stack where the generated {@link SuppliedPBinding} will exist
+	 * 		the storage location index on the stack where the generated {@link SuppliedPParameter} will exist
 	 */
-	private static void generateSuppliedPBinding(final SuppliedPBinding suppliedPBinding, final JavaMethodBuilder methodBuilder,
+	private static void generateSuppliedPBinding(final SuppliedPParameter suppliedPBinding, final JavaMethodBuilder methodBuilder,
 	                                             final int suppliedPPackageStore, final int suppliedPSymbolStore,
 	                                             final int suppliedPStore) {
 		final MethodVisitor mv = methodBuilder.getMethodVisitor();
@@ -1193,9 +1193,9 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 	 * operations:
 	 * <ol>
 	 * <li>Returning early and avoid generating the method unnecessarily if the value of {@link
-	 * OrdinaryLambdaListBindings#allowOtherKeys} is false, as this is the default return value of the overridden
+	 * OrdinaryLambdaList#allowOtherKeys} is false, as this is the default return value of the overridden
 	 * method</li>
-	 * <li>Generating and returning {@code true} the value of {@link OrdinaryLambdaListBindings#allowOtherKeys} is
+	 * <li>Generating and returning {@code true} the value of {@link OrdinaryLambdaList#allowOtherKeys} is
 	 * true</li>
 	 * </ol>
 	 * The following is the example Java code generated when {@code (lambda (&allow-other-keys))} is encountered:
@@ -1210,12 +1210,12 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 	 * @param generatorState
 	 * 		stateful object used to hold the current state of the code generation process
 	 * @param lambdaListBindings
-	 * 		the {@link OrdinaryLambdaListBindings} containing the {@literal &allow-other-keys} {@code boolean} value to
+	 * 		the {@link OrdinaryLambdaList} containing the {@literal &allow-other-keys} {@code boolean} value to
 	 * 		generate code for
 	 * @param cw
 	 * 		the current {@link ClassWriter} to generate the method code for
 	 */
-	private static void generateAllowOtherKeys(final GeneratorState generatorState, final OrdinaryLambdaListBindings lambdaListBindings,
+	private static void generateAllowOtherKeys(final GeneratorState generatorState, final OrdinaryLambdaList lambdaListBindings,
 	                                           final ClassWriter cw) {
 		final boolean notAllowOtherKeys = !lambdaListBindings.isAllowOtherKeys();
 		if (notAllowOtherKeys) {
@@ -1250,10 +1250,10 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 	 * operations:
 	 * <ol>
 	 * <li>Returning early and avoid generating the method unnecessarily if the {@link List} of {@link
-	 * OrdinaryLambdaListBindings#auxBindings} is empty</li>
-	 * <li>Generating the {@link List} for containing the resulting {@link AuxBinding}s</li>
-	 * <li>Generating each of the {@link AuxBinding}s and adding them to the previously created {@link List}</li>
-	 * <li>Generating the code to return the generated {@link List} of {@link AuxBinding}s</li>
+	 * OrdinaryLambdaList#auxBindings} is empty</li>
+	 * <li>Generating the {@link List} for containing the resulting {@link AuxParameter}s</li>
+	 * <li>Generating each of the {@link AuxParameter}s and adding them to the previously created {@link List}</li>
+	 * <li>Generating the code to return the generated {@link List} of {@link AuxParameter}s</li>
 	 * </ol>
 	 * The following is the example Java code generated when {@code (lambda (&aux (d 2)) d)} is encountered:
 	 * <pre>
@@ -1274,13 +1274,13 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 	 * @param generatorState
 	 * 		stateful object used to hold the current state of the code generation process
 	 * @param lambdaListBindings
-	 * 		the {@link OrdinaryLambdaListBindings} containing the {@link List} of {@link AuxBinding}s to generate code for
+	 * 		the {@link OrdinaryLambdaList} containing the {@link List} of {@link AuxParameter}s to generate code for
 	 * @param cw
 	 * 		the current {@link ClassWriter} to generate the method code for
 	 */
-	private void generateAuxBindings(final GeneratorState generatorState, final OrdinaryLambdaListBindings lambdaListBindings,
+	private void generateAuxBindings(final GeneratorState generatorState, final OrdinaryLambdaList lambdaListBindings,
 	                                 final ClassWriter cw) {
-		final List<AuxBinding> auxBindings = lambdaListBindings.getAuxBindings();
+		final List<AuxParameter> auxBindings = lambdaListBindings.getAuxBindings();
 		if (auxBindings.isEmpty()) {
 			// No need to generate this method, as there are no bindings to generate
 			return;
@@ -1315,7 +1315,7 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 		final int auxInitFormStore = methodBuilder.getNextAvailableStore();
 		final int auxBindingStore = methodBuilder.getNextAvailableStore();
 
-		for (final AuxBinding auxBinding : auxBindings) {
+		for (final AuxParameter auxBinding : auxBindings) {
 			final SymbolStruct<?> auxSymbol = auxBinding.getVar();
 			CodeGenerators.generateSymbol(auxSymbol, methodBuilder, auxPackageStore, auxSymbolStore);
 

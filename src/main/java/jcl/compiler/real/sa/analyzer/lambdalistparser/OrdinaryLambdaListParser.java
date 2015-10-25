@@ -11,12 +11,12 @@ import java.util.List;
 import jcl.LispStruct;
 import jcl.compiler.real.CompilerConstants;
 import jcl.compiler.real.environment.Environment;
-import jcl.compiler.real.environment.binding.lambdalist.AuxBinding;
-import jcl.compiler.real.environment.binding.lambdalist.KeyBinding;
-import jcl.compiler.real.environment.binding.lambdalist.OptionalBinding;
-import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaListBindings;
-import jcl.compiler.real.environment.binding.lambdalist.RequiredBinding;
-import jcl.compiler.real.environment.binding.lambdalist.RestBinding;
+import jcl.compiler.real.environment.binding.lambdalist.AuxParameter;
+import jcl.compiler.real.environment.binding.lambdalist.KeyParameter;
+import jcl.compiler.real.environment.binding.lambdalist.OptionalParameter;
+import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaList;
+import jcl.compiler.real.environment.binding.lambdalist.RequiredParameter;
+import jcl.compiler.real.environment.binding.lambdalist.RestParameter;
 import jcl.compiler.real.struct.specialoperator.declare.DeclareStruct;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.lists.ListStruct;
@@ -30,7 +30,7 @@ public final class OrdinaryLambdaListParser extends LambdaListParser {
 	@Autowired
 	private Printer printer;
 
-	public OrdinaryLambdaListBindings parseOrdinaryLambdaList(final Environment environment, final ListStruct lambdaList,
+	public OrdinaryLambdaList parseOrdinaryLambdaList(final Environment environment, final ListStruct lambdaList,
 	                                                          final DeclareStruct declareElement) {
 
 		final List<LispStruct> lambdaListJava = lambdaList.getAsJavaList();
@@ -39,7 +39,7 @@ public final class OrdinaryLambdaListParser extends LambdaListParser {
 
 		LispStruct currentElement = null;
 
-		List<RequiredBinding> requiredBindings = Collections.emptyList();
+		List<RequiredParameter> requiredBindings = Collections.emptyList();
 		if (iterator.hasNext()) {
 			final RequiredParseResult requiredParseResult
 					= parseRequiredBindings(environment, iterator, declareElement, false, false);
@@ -48,7 +48,7 @@ public final class OrdinaryLambdaListParser extends LambdaListParser {
 			currentElement = requiredParseResult.getCurrentElement();
 		}
 
-		List<OptionalBinding> optionalBindings = Collections.emptyList();
+		List<OptionalParameter> optionalBindings = Collections.emptyList();
 		if (CompilerConstants.OPTIONAL.equals(currentElement)) {
 			final OptionalParseResult optionalParseResult
 					= parseOptionalBindings(environment, iterator, declareElement, false, false);
@@ -57,7 +57,7 @@ public final class OrdinaryLambdaListParser extends LambdaListParser {
 			currentElement = optionalParseResult.getCurrentElement();
 		}
 
-		RestBinding restBinding = null;
+		RestParameter restBinding = null;
 		if (CompilerConstants.REST.equals(currentElement)) {
 			final RestParseResult restParseResult
 					= parseRestBinding(environment, iterator, declareElement, false);
@@ -68,7 +68,7 @@ public final class OrdinaryLambdaListParser extends LambdaListParser {
 
 		boolean keyNotProvided = true;
 
-		List<KeyBinding> keyBindings = Collections.emptyList();
+		List<KeyParameter> keyBindings = Collections.emptyList();
 		if (CompilerConstants.KEY.equals(currentElement)) {
 			final KeyParseResult keyParseResult
 					= parseKeyBindings(environment, iterator, declareElement, false);
@@ -91,7 +91,7 @@ public final class OrdinaryLambdaListParser extends LambdaListParser {
 			}
 		}
 
-		List<AuxBinding> auxBindings = Collections.emptyList();
+		List<AuxParameter> auxBindings = Collections.emptyList();
 		if (CompilerConstants.AUX.equals(currentElement)) {
 			final AuxParseResult auxParseResult
 					= parseAuxBindings(environment, iterator, declareElement, false);
@@ -105,6 +105,6 @@ public final class OrdinaryLambdaListParser extends LambdaListParser {
 			throw new ProgramErrorException("Unexpected element at the end of Ordinary Lambda List: " + printedElement);
 		}
 
-		return new OrdinaryLambdaListBindings(requiredBindings, optionalBindings, restBinding, keyBindings, auxBindings, allowOtherKeys);
+		return new OrdinaryLambdaList(requiredBindings, optionalBindings, restBinding, keyBindings, auxBindings, allowOtherKeys);
 	}
 }

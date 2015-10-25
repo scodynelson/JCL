@@ -7,15 +7,15 @@ package jcl.compiler.real.environment.binding.lambdalist;
 import jcl.symbols.SymbolStruct;
 import jcl.types.TType;
 
-public class SuppliedPBinding extends ParameterBinding {
+public class SuppliedPParameter extends Parameter {
 
 	private static final long serialVersionUID = -8399229506171557644L;
 
-	public SuppliedPBinding(final SymbolStruct<?> var) {
+	public SuppliedPParameter(final SymbolStruct<?> var) {
 		this(var, false);
 	}
 
-	public SuppliedPBinding(final SymbolStruct<?> var, final boolean isSpecial) {
+	public SuppliedPParameter(final SymbolStruct<?> var, final boolean isSpecial) {
 		super(var, null, TType.INSTANCE, null, isSpecial);
 	}
 }

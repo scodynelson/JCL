@@ -10,10 +10,10 @@ import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
 import jcl.compiler.real.environment.Environment;
-import jcl.compiler.real.environment.binding.lambdalist.OptionalBinding;
-import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaListBindings;
-import jcl.compiler.real.environment.binding.lambdalist.RequiredBinding;
-import jcl.compiler.real.environment.binding.lambdalist.SuppliedPBinding;
+import jcl.compiler.real.environment.binding.lambdalist.OptionalParameter;
+import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaList;
+import jcl.compiler.real.environment.binding.lambdalist.RequiredParameter;
+import jcl.compiler.real.environment.binding.lambdalist.SuppliedPParameter;
 import jcl.compiler.real.struct.ValuesStruct;
 import jcl.functions.FunctionStruct;
 import jcl.lists.NullStruct;
@@ -45,21 +45,21 @@ public final class MacroExpandFunction extends FunctionStruct {
 		GlobalPackageStruct.COMMON_LISP.export(MACROEXPAND);
 	}
 
-	private static OrdinaryLambdaListBindings getInitLambdaListBindings() {
+	private static OrdinaryLambdaList getInitLambdaListBindings() {
 
 		final SymbolStruct<?> formArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("FORM").getSymbol();
-		final RequiredBinding requiredBinding = new RequiredBinding(formArgSymbol);
-		final List<RequiredBinding> requiredBindings = Collections.singletonList(requiredBinding);
+		final RequiredParameter requiredBinding = new RequiredParameter(formArgSymbol);
+		final List<RequiredParameter> requiredBindings = Collections.singletonList(requiredBinding);
 
 		final SymbolStruct<?> envArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("ENV").getSymbol();
 
 		final SymbolStruct<?> envSuppliedPSymbol = GlobalPackageStruct.COMMON_LISP.intern("ENV-P-" + System.nanoTime()).getSymbol();
-		final SuppliedPBinding suppliedPBinding = new SuppliedPBinding(envSuppliedPSymbol);
+		final SuppliedPParameter suppliedPBinding = new SuppliedPParameter(envSuppliedPSymbol);
 
-		final OptionalBinding optionalBinding = new OptionalBinding(envArgSymbol, NullStruct.INSTANCE, suppliedPBinding);
-		final List<OptionalBinding> optionalBindings = Collections.singletonList(optionalBinding);
+		final OptionalParameter optionalBinding = new OptionalParameter(envArgSymbol, NullStruct.INSTANCE, suppliedPBinding);
+		final List<OptionalParameter> optionalBindings = Collections.singletonList(optionalBinding);
 
-		return new OrdinaryLambdaListBindings.Builder().requiredBindings(requiredBindings)
+		return new OrdinaryLambdaList.Builder().requiredBindings(requiredBindings)
 		                                               .optionalBindings(optionalBindings)
 		                                               .build();
 	}

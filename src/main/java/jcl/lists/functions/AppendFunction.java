@@ -7,8 +7,8 @@ package jcl.lists.functions;
 import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
-import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaListBindings;
-import jcl.compiler.real.environment.binding.lambdalist.RestBinding;
+import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaList;
+import jcl.compiler.real.environment.binding.lambdalist.RestParameter;
 import jcl.conditions.exceptions.ErrorException;
 import jcl.conditions.exceptions.TypeErrorException;
 import jcl.functions.FunctionStruct;
@@ -44,12 +44,12 @@ public final class AppendFunction extends FunctionStruct {
 		GlobalPackageStruct.COMMON_LISP.export(APPEND);
 	}
 
-	private static OrdinaryLambdaListBindings getInitLambdaListBindings() {
+	private static OrdinaryLambdaList getInitLambdaListBindings() {
 
 		final SymbolStruct<?> listRestArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("LISTS").getSymbol();
-		final RestBinding restBinding = new RestBinding(listRestArgSymbol);
+		final RestParameter restBinding = new RestParameter(listRestArgSymbol);
 
-		return new OrdinaryLambdaListBindings.Builder().restBinding(restBinding)
+		return new OrdinaryLambdaList.Builder().restBinding(restBinding)
 		                                               .build();
 	}
 

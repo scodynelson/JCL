@@ -12,8 +12,8 @@ import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
 import jcl.arrays.StringStruct;
-import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaListBindings;
-import jcl.compiler.real.environment.binding.lambdalist.RequiredBinding;
+import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaList;
+import jcl.compiler.real.environment.binding.lambdalist.RequiredParameter;
 import jcl.conditions.exceptions.TypeErrorException;
 import jcl.functions.FunctionStruct;
 import jcl.packages.GlobalPackageStruct;
@@ -44,13 +44,13 @@ public final class PathnameFunction extends FunctionStruct {
 		GlobalPackageStruct.COMMON_LISP.export(PATHNAME);
 	}
 
-	private static OrdinaryLambdaListBindings getInitLambdaListBindings() {
+	private static OrdinaryLambdaList getInitLambdaListBindings() {
 
 		final SymbolStruct<?> pathspecArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("PATHSPEC").getSymbol();
-		final RequiredBinding requiredBinding = new RequiredBinding(pathspecArgSymbol);
-		final List<RequiredBinding> requiredBindings = Collections.singletonList(requiredBinding);
+		final RequiredParameter requiredBinding = new RequiredParameter(pathspecArgSymbol);
+		final List<RequiredParameter> requiredBindings = Collections.singletonList(requiredBinding);
 
-		return new OrdinaryLambdaListBindings.Builder().requiredBindings(requiredBindings)
+		return new OrdinaryLambdaList.Builder().requiredBindings(requiredBindings)
 		                                               .build();
 	}
 

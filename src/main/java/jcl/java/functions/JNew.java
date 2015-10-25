@@ -11,8 +11,8 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
-import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaListBindings;
-import jcl.compiler.real.environment.binding.lambdalist.RequiredBinding;
+import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaList;
+import jcl.compiler.real.environment.binding.lambdalist.RequiredParameter;
 import jcl.conditions.exceptions.ErrorException;
 import jcl.functions.FunctionStruct;
 import jcl.java.JavaClassStruct;
@@ -42,14 +42,14 @@ public final class JNew extends FunctionStruct {
 		GlobalPackageStruct.EXTENSIONS.export(J_NEW);
 	}
 
-	private static OrdinaryLambdaListBindings getInitLambdaListBindings() {
+	private static OrdinaryLambdaList getInitLambdaListBindings() {
 
 		// TODO: we should accept a JavaClass Designator (aka. String/JavaClassObject)
 		final SymbolStruct<?> javaClassArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("JAVA-CLASS-ARG").getSymbol();
-		final RequiredBinding requiredBinding = new RequiredBinding(javaClassArgSymbol);
-		final List<RequiredBinding> requiredBindings = Collections.singletonList(requiredBinding);
+		final RequiredParameter requiredBinding = new RequiredParameter(javaClassArgSymbol);
+		final List<RequiredParameter> requiredBindings = Collections.singletonList(requiredBinding);
 
-		return new OrdinaryLambdaListBindings.Builder().requiredBindings(requiredBindings)
+		return new OrdinaryLambdaList.Builder().requiredBindings(requiredBindings)
 		                                               .build();
 	}
 

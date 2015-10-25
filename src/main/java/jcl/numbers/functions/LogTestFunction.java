@@ -9,8 +9,8 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
-import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaListBindings;
-import jcl.compiler.real.environment.binding.lambdalist.RequiredBinding;
+import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaList;
+import jcl.compiler.real.environment.binding.lambdalist.RequiredParameter;
 import jcl.conditions.exceptions.TypeErrorException;
 import jcl.functions.FunctionStruct;
 import jcl.numbers.IntegerStruct;
@@ -42,18 +42,18 @@ public final class LogTestFunction extends FunctionStruct {
 		GlobalPackageStruct.COMMON_LISP.export(LOGTEST);
 	}
 
-	private static OrdinaryLambdaListBindings getInitLambdaListBindings() {
-		final List<RequiredBinding> requiredBindings = new ArrayList<>(2);
+	private static OrdinaryLambdaList getInitLambdaListBindings() {
+		final List<RequiredParameter> requiredBindings = new ArrayList<>(2);
 
 		final SymbolStruct<?> integer1Symbol = GlobalPackageStruct.COMMON_LISP.intern("INTEGER-1").getSymbol();
-		final RequiredBinding requiredBinding1 = new RequiredBinding(integer1Symbol);
+		final RequiredParameter requiredBinding1 = new RequiredParameter(integer1Symbol);
 		requiredBindings.add(requiredBinding1);
 
 		final SymbolStruct<?> integer2Symbol = GlobalPackageStruct.COMMON_LISP.intern("INTEGER-2").getSymbol();
-		final RequiredBinding requiredBinding2 = new RequiredBinding(integer2Symbol);
+		final RequiredParameter requiredBinding2 = new RequiredParameter(integer2Symbol);
 		requiredBindings.add(requiredBinding2);
 
-		return new OrdinaryLambdaListBindings.Builder().requiredBindings(requiredBindings)
+		return new OrdinaryLambdaList.Builder().requiredBindings(requiredBindings)
 		                                               .build();
 	}
 

@@ -16,9 +16,9 @@ import javax.help.HelpSetException;
 
 import jcl.LispStruct;
 import jcl.arrays.StringStruct;
-import jcl.compiler.real.environment.binding.lambdalist.OptionalBinding;
-import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaListBindings;
-import jcl.compiler.real.environment.binding.lambdalist.SuppliedPBinding;
+import jcl.compiler.real.environment.binding.lambdalist.OptionalParameter;
+import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaList;
+import jcl.compiler.real.environment.binding.lambdalist.SuppliedPParameter;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.functions.FunctionStruct;
 import jcl.lists.NullStruct;
@@ -45,17 +45,17 @@ public final class Help extends FunctionStruct {
 		GlobalPackageStruct.EXTENSIONS.export(HELP);
 	}
 
-	private static OrdinaryLambdaListBindings getInitLambdaListBindings() {
+	private static OrdinaryLambdaList getInitLambdaListBindings() {
 
 		final SymbolStruct<?> searchTermArgSymbol = GlobalPackageStruct.EXTENSIONS.intern("SEARCH-TERM").getSymbol();
 
 		final SymbolStruct<?> searchTermSuppliedPSymbol = GlobalPackageStruct.EXTENSIONS.intern("SEARCH-TERM-P-" + System.nanoTime()).getSymbol();
-		final SuppliedPBinding searchTermSuppliedPBinding = new SuppliedPBinding(searchTermSuppliedPSymbol);
+		final SuppliedPParameter searchTermSuppliedPBinding = new SuppliedPParameter(searchTermSuppliedPSymbol);
 
-		final OptionalBinding searchTermOptionalBinding = new OptionalBinding(searchTermArgSymbol, NullStruct.INSTANCE, searchTermSuppliedPBinding);
-		final List<OptionalBinding> optionalBindings = Collections.singletonList(searchTermOptionalBinding);
+		final OptionalParameter searchTermOptionalBinding = new OptionalParameter(searchTermArgSymbol, NullStruct.INSTANCE, searchTermSuppliedPBinding);
+		final List<OptionalParameter> optionalBindings = Collections.singletonList(searchTermOptionalBinding);
 
-		return new OrdinaryLambdaListBindings.Builder().optionalBindings(optionalBindings)
+		return new OrdinaryLambdaList.Builder().optionalBindings(optionalBindings)
 		                                               .build();
 	}
 

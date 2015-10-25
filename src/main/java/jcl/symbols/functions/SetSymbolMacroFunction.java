@@ -9,8 +9,8 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
-import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaListBindings;
-import jcl.compiler.real.environment.binding.lambdalist.RequiredBinding;
+import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaList;
+import jcl.compiler.real.environment.binding.lambdalist.RequiredParameter;
 import jcl.functions.FunctionStruct;
 import jcl.functions.expanders.SymbolMacroExpander;
 import jcl.functions.expanders.SymbolMacroExpanderImpl;
@@ -35,19 +35,19 @@ public final class SetSymbolMacroFunction extends FunctionStruct {
 		GlobalPackageStruct.SYSTEM.export(SET_SYMBOL_MACRO);
 	}
 
-	private static OrdinaryLambdaListBindings getInitLambdaListBindings() {
+	private static OrdinaryLambdaList getInitLambdaListBindings() {
 
-		final List<RequiredBinding> requiredBindings = new ArrayList<>(2);
+		final List<RequiredParameter> requiredBindings = new ArrayList<>(2);
 
 		final SymbolStruct<?> symbolArgSymbol = GlobalPackageStruct.SYSTEM.intern("SYM").getSymbol();
-		final RequiredBinding symbolArgRequiredBinding = new RequiredBinding(symbolArgSymbol);
+		final RequiredParameter symbolArgRequiredBinding = new RequiredParameter(symbolArgSymbol);
 		requiredBindings.add(symbolArgRequiredBinding);
 
 		final SymbolStruct<?> expansionArgSymbol = GlobalPackageStruct.SYSTEM.intern("EXPANSION").getSymbol();
-		final RequiredBinding expansionArgRequiredBinding = new RequiredBinding(expansionArgSymbol);
+		final RequiredParameter expansionArgRequiredBinding = new RequiredParameter(expansionArgSymbol);
 		requiredBindings.add(expansionArgRequiredBinding);
 
-		return new OrdinaryLambdaListBindings.Builder().requiredBindings(requiredBindings)
+		return new OrdinaryLambdaList.Builder().requiredBindings(requiredBindings)
 		                                               .build();
 	}
 

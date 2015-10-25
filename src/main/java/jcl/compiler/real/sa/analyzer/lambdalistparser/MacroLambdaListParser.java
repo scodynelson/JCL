@@ -11,15 +11,15 @@ import java.util.List;
 import jcl.LispStruct;
 import jcl.compiler.real.CompilerConstants;
 import jcl.compiler.real.environment.Environment;
-import jcl.compiler.real.environment.binding.lambdalist.AuxBinding;
-import jcl.compiler.real.environment.binding.lambdalist.BodyBinding;
-import jcl.compiler.real.environment.binding.lambdalist.EnvironmentBinding;
-import jcl.compiler.real.environment.binding.lambdalist.KeyBinding;
+import jcl.compiler.real.environment.binding.lambdalist.AuxParameter;
+import jcl.compiler.real.environment.binding.lambdalist.BodyParameter;
+import jcl.compiler.real.environment.binding.lambdalist.EnvironmentParameter;
+import jcl.compiler.real.environment.binding.lambdalist.KeyParameter;
 import jcl.compiler.real.environment.binding.lambdalist.MacroLambdaListBindings;
-import jcl.compiler.real.environment.binding.lambdalist.OptionalBinding;
-import jcl.compiler.real.environment.binding.lambdalist.RequiredBinding;
-import jcl.compiler.real.environment.binding.lambdalist.RestBinding;
-import jcl.compiler.real.environment.binding.lambdalist.WholeBinding;
+import jcl.compiler.real.environment.binding.lambdalist.OptionalParameter;
+import jcl.compiler.real.environment.binding.lambdalist.RequiredParameter;
+import jcl.compiler.real.environment.binding.lambdalist.RestParameter;
+import jcl.compiler.real.environment.binding.lambdalist.WholeParameter;
 import jcl.compiler.real.struct.specialoperator.declare.DeclareStruct;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.lists.ListStruct;
@@ -61,7 +61,7 @@ public final class MacroLambdaListParser extends LambdaListParser {
 
 		LispStruct currentElement = null;
 
-		WholeBinding wholeBinding = null;
+		WholeParameter wholeBinding = null;
 		if (CompilerConstants.WHOLE.equals(firstElement)) {
 			// Now that we've verified the first element is actually '&whole', consume it.
 			currentElement = iterator.next();
@@ -72,7 +72,7 @@ public final class MacroLambdaListParser extends LambdaListParser {
 			wholeBinding = wholeParseResult.getWholeBinding();
 		}
 
-		EnvironmentBinding environmentBinding = null;
+		EnvironmentParameter environmentBinding = null;
 		if (CompilerConstants.ENVIRONMENT.equals(currentElement)) {
 			final EnvironmentParseResult environmentParseResult
 					= parseEnvironmentBinding(environment, iterator, false);
@@ -80,7 +80,7 @@ public final class MacroLambdaListParser extends LambdaListParser {
 			environmentBinding = environmentParseResult.getEnvironmentBinding();
 		}
 
-		List<RequiredBinding> requiredBindings = Collections.emptyList();
+		List<RequiredParameter> requiredBindings = Collections.emptyList();
 		if (iterator.hasNext()) {
 			final RequiredParseResult requiredParseResult
 					= parseRequiredBindings(environment, iterator, declareElement, false, true);
@@ -101,7 +101,7 @@ public final class MacroLambdaListParser extends LambdaListParser {
 			currentElement = environmentParseResult.getCurrentElement();
 		}
 
-		List<OptionalBinding> optionalBindings = Collections.emptyList();
+		List<OptionalParameter> optionalBindings = Collections.emptyList();
 		if (CompilerConstants.OPTIONAL.equals(currentElement)) {
 			final OptionalParseResult optionalParseResult
 					= parseOptionalBindings(environment, iterator, declareElement, false, true);
@@ -122,7 +122,7 @@ public final class MacroLambdaListParser extends LambdaListParser {
 			currentElement = environmentParseResult.getCurrentElement();
 		}
 
-		RestBinding restBinding = null;
+		RestParameter restBinding = null;
 		if (CompilerConstants.REST.equals(currentElement)) {
 			final RestParseResult restParseResult
 					= parseRestBinding(environment, iterator, declareElement, true);
@@ -131,7 +131,7 @@ public final class MacroLambdaListParser extends LambdaListParser {
 			currentElement = restParseResult.getCurrentElement();
 		}
 
-		BodyBinding bodyBinding = null;
+		BodyParameter bodyBinding = null;
 		if (CompilerConstants.BODY.equals(currentElement)) {
 			if (restBinding != null) {
 				throw new ProgramErrorException("Macro LambdaList &body parameter cannot be supplied alongside &rest parameter.");
@@ -158,7 +158,7 @@ public final class MacroLambdaListParser extends LambdaListParser {
 
 		boolean keyNotProvided = true;
 
-		List<KeyBinding> keyBindings = Collections.emptyList();
+		List<KeyParameter> keyBindings = Collections.emptyList();
 		if (CompilerConstants.KEY.equals(currentElement)) {
 			final KeyParseResult keyParseResult
 					= parseKeyBindings(environment, iterator, declareElement, true);
@@ -193,7 +193,7 @@ public final class MacroLambdaListParser extends LambdaListParser {
 			currentElement = environmentParseResult.getCurrentElement();
 		}
 
-		List<AuxBinding> auxBindings = Collections.emptyList();
+		List<AuxParameter> auxBindings = Collections.emptyList();
 		if (CompilerConstants.AUX.equals(currentElement)) {
 			final AuxParseResult auxParseResult
 					= parseAuxBindings(environment, iterator, declareElement, true);
@@ -237,7 +237,7 @@ public final class MacroLambdaListParser extends LambdaListParser {
 
 		LispStruct currentElement = null;
 
-		WholeBinding wholeBinding = null;
+		WholeParameter wholeBinding = null;
 		if (CompilerConstants.WHOLE.equals(firstElement)) {
 			// Now that we've verified the first element is actually '&whole', consume it.
 			currentElement = iterator.next();
@@ -248,7 +248,7 @@ public final class MacroLambdaListParser extends LambdaListParser {
 			wholeBinding = wholeParseResult.getWholeBinding();
 		}
 
-		EnvironmentBinding environmentBinding = null;
+		EnvironmentParameter environmentBinding = null;
 		if (CompilerConstants.ENVIRONMENT.equals(currentElement)) {
 			final EnvironmentParseResult environmentParseResult
 					= parseEnvironmentBinding(environment, iterator, false);
@@ -256,7 +256,7 @@ public final class MacroLambdaListParser extends LambdaListParser {
 			environmentBinding = environmentParseResult.getEnvironmentBinding();
 		}
 
-		List<RequiredBinding> requiredBindings = Collections.emptyList();
+		List<RequiredParameter> requiredBindings = Collections.emptyList();
 		if (iterator.hasNext()) {
 			final RequiredParseResult requiredParseResult
 					= parseRequiredBindings(environment, iterator, declareElement, true, true);
@@ -277,7 +277,7 @@ public final class MacroLambdaListParser extends LambdaListParser {
 			currentElement = environmentParseResult.getCurrentElement();
 		}
 
-		List<OptionalBinding> optionalBindings = Collections.emptyList();
+		List<OptionalParameter> optionalBindings = Collections.emptyList();
 		if (CompilerConstants.OPTIONAL.equals(currentElement)) {
 			final OptionalParseResult optionalParseResult
 					= parseOptionalBindings(environment, iterator, declareElement, true, true);
@@ -300,7 +300,7 @@ public final class MacroLambdaListParser extends LambdaListParser {
 
 		final RestParseResult restParseResult
 				= parseDottedRestBinding(environment, currentElement, declareElement, true);
-		final RestBinding restBinding = restParseResult.getRestBinding();
+		final RestParameter restBinding = restParseResult.getRestBinding();
 
 		if (iterator.hasNext()) {
 			final LispStruct element = iterator.next();

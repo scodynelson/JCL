@@ -7,7 +7,7 @@ package jcl.system.functions;
 import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
-import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaListBindings;
+import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaList;
 import jcl.functions.FunctionStruct;
 import jcl.packages.GlobalPackageStruct;
 import jcl.symbols.SymbolStruct;
@@ -38,8 +38,8 @@ public final class GC extends FunctionStruct {
 		GlobalPackageStruct.EXTENSIONS.export(GC);
 	}
 
-	private static OrdinaryLambdaListBindings getInitLambdaListBindings() {
-		return new OrdinaryLambdaListBindings.Builder().build();
+	private static OrdinaryLambdaList getInitLambdaListBindings() {
+		return new OrdinaryLambdaList.Builder().build();
 	}
 
 	@SuppressWarnings("all")

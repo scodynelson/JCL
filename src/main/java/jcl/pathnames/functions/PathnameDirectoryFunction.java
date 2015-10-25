@@ -11,10 +11,10 @@ import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
 import jcl.arrays.StringStruct;
-import jcl.compiler.real.environment.binding.lambdalist.KeyBinding;
-import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaListBindings;
-import jcl.compiler.real.environment.binding.lambdalist.RequiredBinding;
-import jcl.compiler.real.environment.binding.lambdalist.SuppliedPBinding;
+import jcl.compiler.real.environment.binding.lambdalist.KeyParameter;
+import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaList;
+import jcl.compiler.real.environment.binding.lambdalist.RequiredParameter;
+import jcl.compiler.real.environment.binding.lambdalist.SuppliedPParameter;
 import jcl.functions.FunctionStruct;
 import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;
@@ -51,21 +51,21 @@ public final class PathnameDirectoryFunction extends FunctionStruct {
 		GlobalPackageStruct.COMMON_LISP.export(PATHNAME_DIRECTORY);
 	}
 
-	private static OrdinaryLambdaListBindings getInitLambdaListBindings() {
+	private static OrdinaryLambdaList getInitLambdaListBindings() {
 
 		final SymbolStruct<?> pathspecArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("PATHSPEC").getSymbol();
-		final RequiredBinding requiredBinding = new RequiredBinding(pathspecArgSymbol);
-		final List<RequiredBinding> requiredBindings = Collections.singletonList(requiredBinding);
+		final RequiredParameter requiredBinding = new RequiredParameter(pathspecArgSymbol);
+		final List<RequiredParameter> requiredBindings = Collections.singletonList(requiredBinding);
 
 		final SymbolStruct<?> caseArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("CASE").getSymbol();
 
 		final SymbolStruct<?> caseSuppliedPSymbol = GlobalPackageStruct.COMMON_LISP.intern("CASE-P-").getSymbol();
-		final SuppliedPBinding suppliedPBinding = new SuppliedPBinding(caseSuppliedPSymbol);
+		final SuppliedPParameter suppliedPBinding = new SuppliedPParameter(caseSuppliedPSymbol);
 
-		final KeyBinding keyBinding = new KeyBinding(caseArgSymbol, NullStruct.INSTANCE, CommonLispSymbols.CASE_KEYWORD, suppliedPBinding);
-		final List<KeyBinding> keyBindings = Collections.singletonList(keyBinding);
+		final KeyParameter keyBinding = new KeyParameter(caseArgSymbol, NullStruct.INSTANCE, CommonLispSymbols.CASE_KEYWORD, suppliedPBinding);
+		final List<KeyParameter> keyBindings = Collections.singletonList(keyBinding);
 
-		return new OrdinaryLambdaListBindings.Builder().requiredBindings(requiredBindings)
+		return new OrdinaryLambdaList.Builder().requiredBindings(requiredBindings)
 		                                               .keyBindings(keyBindings)
 		                                               .build();
 	}

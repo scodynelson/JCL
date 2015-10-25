@@ -12,9 +12,9 @@ import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
 import jcl.arrays.StringStruct;
-import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaListBindings;
-import jcl.compiler.real.environment.binding.lambdalist.RequiredBinding;
-import jcl.compiler.real.environment.binding.lambdalist.RestBinding;
+import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaList;
+import jcl.compiler.real.environment.binding.lambdalist.RequiredParameter;
+import jcl.compiler.real.environment.binding.lambdalist.RestParameter;
 import jcl.conditions.exceptions.ErrorException;
 import jcl.functions.FunctionStruct;
 import jcl.java.JavaClassStruct;
@@ -40,23 +40,23 @@ public final class JMethod extends FunctionStruct {
 		GlobalPackageStruct.EXTENSIONS.export(J_METHOD);
 	}
 
-	private static OrdinaryLambdaListBindings getInitLambdaListBindings() {
+	private static OrdinaryLambdaList getInitLambdaListBindings() {
 
-		final List<RequiredBinding> requiredBindings = new ArrayList<>(2);
+		final List<RequiredParameter> requiredBindings = new ArrayList<>(2);
 
 		final SymbolStruct<?> methodNameArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("METHOD-NAME-ARG").getSymbol();
-		final RequiredBinding methodNameArgRequiredBinding = new RequiredBinding(methodNameArgSymbol);
+		final RequiredParameter methodNameArgRequiredBinding = new RequiredParameter(methodNameArgSymbol);
 		requiredBindings.add(methodNameArgRequiredBinding);
 
 		// TODO: we should accept a JavaClass Designator (aka. String/JavaClassObject)
 		final SymbolStruct<?> javaClassArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("JAVA-CLASS-ARG").getSymbol();
-		final RequiredBinding javaClassArgRequiredBinding = new RequiredBinding(javaClassArgSymbol);
+		final RequiredParameter javaClassArgRequiredBinding = new RequiredParameter(javaClassArgSymbol);
 		requiredBindings.add(javaClassArgRequiredBinding);
 
 		final SymbolStruct<?> objectRestArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("OBJECTS").getSymbol();
-		final RestBinding restBinding = new RestBinding(objectRestArgSymbol);
+		final RestParameter restBinding = new RestParameter(objectRestArgSymbol);
 
-		return new OrdinaryLambdaListBindings.Builder().requiredBindings(requiredBindings)
+		return new OrdinaryLambdaList.Builder().requiredBindings(requiredBindings)
 		                                               .restBinding(restBinding)
 		                                               .build();
 	}

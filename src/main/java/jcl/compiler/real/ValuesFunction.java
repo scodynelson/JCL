@@ -9,8 +9,8 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
-import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaListBindings;
-import jcl.compiler.real.environment.binding.lambdalist.RestBinding;
+import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaList;
+import jcl.compiler.real.environment.binding.lambdalist.RestParameter;
 import jcl.compiler.real.struct.ValuesStruct;
 import jcl.functions.FunctionStruct;
 import jcl.packages.GlobalPackageStruct;
@@ -34,12 +34,12 @@ public final class ValuesFunction extends FunctionStruct {
 		GlobalPackageStruct.COMMON_LISP.export(VALUES);
 	}
 
-	private static OrdinaryLambdaListBindings getInitLambdaListBindings() {
+	private static OrdinaryLambdaList getInitLambdaListBindings() {
 
 		final SymbolStruct<?> objectRestArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("OBJECTS").getSymbol();
-		final RestBinding restBinding = new RestBinding(objectRestArgSymbol);
+		final RestParameter restBinding = new RestParameter(objectRestArgSymbol);
 
-		return new OrdinaryLambdaListBindings.Builder().restBinding(restBinding)
+		return new OrdinaryLambdaList.Builder().restBinding(restBinding)
 		                                               .build();
 	}
 

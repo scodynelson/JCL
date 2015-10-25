@@ -5,18 +5,18 @@
 package jcl.compiler.real.sa.analyzer.lambdalistparser;
 
 import jcl.LispStruct;
-import jcl.compiler.real.environment.binding.lambdalist.BodyBinding;
+import jcl.compiler.real.environment.binding.lambdalist.BodyParameter;
 
 final class BodyParseResult extends ParseResult {
 
-	private final BodyBinding bodyBinding;
+	private final BodyParameter bodyBinding;
 
-	BodyParseResult(final LispStruct currentElement, final BodyBinding bodyBinding) {
+	BodyParseResult(final LispStruct currentElement, final BodyParameter bodyBinding) {
 		super(currentElement);
 		this.bodyBinding = bodyBinding;
 	}
 
-	BodyBinding getBodyBinding() {
+	BodyParameter getBodyBinding() {
 		return bodyBinding;
 	}
 }

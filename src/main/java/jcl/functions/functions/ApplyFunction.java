@@ -10,9 +10,9 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
-import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaListBindings;
-import jcl.compiler.real.environment.binding.lambdalist.RequiredBinding;
-import jcl.compiler.real.environment.binding.lambdalist.RestBinding;
+import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaList;
+import jcl.compiler.real.environment.binding.lambdalist.RequiredParameter;
+import jcl.compiler.real.environment.binding.lambdalist.RestParameter;
 import jcl.compiler.real.struct.ValuesStruct;
 import jcl.conditions.exceptions.ErrorException;
 import jcl.functions.FunctionStruct;
@@ -46,22 +46,22 @@ public final class ApplyFunction extends FunctionStruct {
 		GlobalPackageStruct.COMMON_LISP.export(APPLY);
 	}
 
-	private static OrdinaryLambdaListBindings getInitLambdaListBindings() {
+	private static OrdinaryLambdaList getInitLambdaListBindings() {
 
-		final List<RequiredBinding> requiredBindings = new ArrayList<>(2);
+		final List<RequiredParameter> requiredBindings = new ArrayList<>(2);
 
 		final SymbolStruct<?> fnArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("FN").getSymbol();
-		final RequiredBinding functionRequiredBinding = new RequiredBinding(fnArgSymbol);
+		final RequiredParameter functionRequiredBinding = new RequiredParameter(fnArgSymbol);
 		requiredBindings.add(functionRequiredBinding);
 
 		final SymbolStruct<?> argArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("ARG").getSymbol();
-		final RequiredBinding argRequiredBinding = new RequiredBinding(argArgSymbol);
+		final RequiredParameter argRequiredBinding = new RequiredParameter(argArgSymbol);
 		requiredBindings.add(argRequiredBinding);
 
 		final SymbolStruct<?> argsArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("ARGS").getSymbol();
-		final RestBinding restBinding = new RestBinding(argsArgSymbol);
+		final RestParameter restBinding = new RestParameter(argsArgSymbol);
 
-		return new OrdinaryLambdaListBindings.Builder().requiredBindings(requiredBindings)
+		return new OrdinaryLambdaList.Builder().requiredBindings(requiredBindings)
 		                                               .restBinding(restBinding)
 		                                               .build();
 	}

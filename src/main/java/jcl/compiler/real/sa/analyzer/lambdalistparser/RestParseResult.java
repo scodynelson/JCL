@@ -5,18 +5,18 @@
 package jcl.compiler.real.sa.analyzer.lambdalistparser;
 
 import jcl.LispStruct;
-import jcl.compiler.real.environment.binding.lambdalist.RestBinding;
+import jcl.compiler.real.environment.binding.lambdalist.RestParameter;
 
 final class RestParseResult extends ParseResult {
 
-	private final RestBinding restBinding;
+	private final RestParameter restBinding;
 
-	RestParseResult(final LispStruct currentElement, final RestBinding restBinding) {
+	RestParseResult(final LispStruct currentElement, final RestParameter restBinding) {
 		super(currentElement);
 		this.restBinding = restBinding;
 	}
 
-	RestBinding getRestBinding() {
+	RestParameter getRestBinding() {
 		return restBinding;
 	}
 }

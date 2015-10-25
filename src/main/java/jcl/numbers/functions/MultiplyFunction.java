@@ -7,8 +7,8 @@ package jcl.numbers.functions;
 import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
-import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaListBindings;
-import jcl.compiler.real.environment.binding.lambdalist.RestBinding;
+import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaList;
+import jcl.compiler.real.environment.binding.lambdalist.RestParameter;
 import jcl.conditions.exceptions.TypeErrorException;
 import jcl.functions.FunctionStruct;
 import jcl.numbers.NumberStruct;
@@ -38,12 +38,12 @@ public final class MultiplyFunction extends FunctionStruct {
 		GlobalPackageStruct.COMMON_LISP.export(MULTIPLY);
 	}
 
-	private static OrdinaryLambdaListBindings getInitLambdaListBindings() {
+	private static OrdinaryLambdaList getInitLambdaListBindings() {
 
 		final SymbolStruct<?> restArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("NUMBERS").getSymbol();
-		final RestBinding restBinding = new RestBinding(restArgSymbol);
+		final RestParameter restBinding = new RestParameter(restArgSymbol);
 
-		return new OrdinaryLambdaListBindings.Builder().restBinding(restBinding)
+		return new OrdinaryLambdaList.Builder().restBinding(restBinding)
 		                                               .build();
 	}
 

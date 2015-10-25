@@ -9,8 +9,8 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
-import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaListBindings;
-import jcl.compiler.real.environment.binding.lambdalist.RequiredBinding;
+import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaList;
+import jcl.compiler.real.environment.binding.lambdalist.RequiredParameter;
 import jcl.functions.FunctionStruct;
 import jcl.packages.GlobalPackageStruct;
 import jcl.symbols.BooleanStruct;
@@ -36,19 +36,19 @@ public final class EqFunction extends FunctionStruct {
 		GlobalPackageStruct.COMMON_LISP.export(EQ);
 	}
 
-	private static OrdinaryLambdaListBindings getInitLambdaListBindings() {
+	private static OrdinaryLambdaList getInitLambdaListBindings() {
 
-		final List<RequiredBinding> requiredBindings = new ArrayList<>(2);
+		final List<RequiredParameter> requiredBindings = new ArrayList<>(2);
 
 		final SymbolStruct<?> object1ArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("OBJECT-1").getSymbol();
-		final RequiredBinding object1RequiredBinding = new RequiredBinding(object1ArgSymbol);
+		final RequiredParameter object1RequiredBinding = new RequiredParameter(object1ArgSymbol);
 		requiredBindings.add(object1RequiredBinding);
 
 		final SymbolStruct<?> object2ArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("OBJECT-2").getSymbol();
-		final RequiredBinding object2RequiredBinding = new RequiredBinding(object2ArgSymbol);
+		final RequiredParameter object2RequiredBinding = new RequiredParameter(object2ArgSymbol);
 		requiredBindings.add(object2RequiredBinding);
 
-		return new OrdinaryLambdaListBindings.Builder().requiredBindings(requiredBindings)
+		return new OrdinaryLambdaList.Builder().requiredBindings(requiredBindings)
 		                                               .build();
 	}
 

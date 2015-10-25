@@ -9,8 +9,8 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
-import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaListBindings;
-import jcl.compiler.real.environment.binding.lambdalist.RequiredBinding;
+import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaList;
+import jcl.compiler.real.environment.binding.lambdalist.RequiredParameter;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.functions.FunctionStruct;
 import jcl.packages.GlobalPackageStruct;
@@ -36,13 +36,13 @@ public final class MakeStructureInstanceFunction extends FunctionStruct {
 		GlobalPackageStruct.SYSTEM.export(MAKE_STRUCTURE_INSTANCE);
 	}
 
-	private static OrdinaryLambdaListBindings getInitLambdaListBindings() {
+	private static OrdinaryLambdaList getInitLambdaListBindings() {
 
 		final SymbolStruct<?> structSymArgSymbol = GlobalPackageStruct.SYSTEM.intern("STRUCT-SYM").getSymbol();
-		final RequiredBinding structSymArgRequiredBinding = new RequiredBinding(structSymArgSymbol);
-		final List<RequiredBinding> requiredBindings = Collections.singletonList(structSymArgRequiredBinding);
+		final RequiredParameter structSymArgRequiredBinding = new RequiredParameter(structSymArgSymbol);
+		final List<RequiredParameter> requiredBindings = Collections.singletonList(structSymArgRequiredBinding);
 
-		return new OrdinaryLambdaListBindings.Builder().requiredBindings(requiredBindings)
+		return new OrdinaryLambdaList.Builder().requiredBindings(requiredBindings)
 		                                               .build();
 	}
 

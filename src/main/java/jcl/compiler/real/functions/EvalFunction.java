@@ -9,8 +9,8 @@ import javax.annotation.PostConstruct;
 import jcl.LispStruct;
 import jcl.compiler.real.CompilerVariables;
 import jcl.compiler.real.environment.Environment;
-import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaListBindings;
-import jcl.compiler.real.environment.binding.lambdalist.RequiredBinding;
+import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaList;
+import jcl.compiler.real.environment.binding.lambdalist.RequiredParameter;
 import jcl.compiler.real.sa.FormAnalyzer;
 import jcl.compiler.real.struct.CompilerSpecialOperatorStruct;
 import jcl.compiler.real.struct.specialoperator.JavaMethodCallStruct;
@@ -71,13 +71,13 @@ public final class EvalFunction extends FunctionStruct {
 		GlobalPackageStruct.COMMON_LISP.export(EVAL);
 	}
 
-	private static OrdinaryLambdaListBindings getInitLambdaListBindings() {
+	private static OrdinaryLambdaList getInitLambdaListBindings() {
 
 		final SymbolStruct<?> listArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("FORM").getSymbol();
-		final RequiredBinding requiredBinding = new RequiredBinding(listArgSymbol);
-		final List<RequiredBinding> requiredBindings = Collections.singletonList(requiredBinding);
+		final RequiredParameter requiredBinding = new RequiredParameter(listArgSymbol);
+		final List<RequiredParameter> requiredBindings = Collections.singletonList(requiredBinding);
 
-		return new OrdinaryLambdaListBindings.Builder().requiredBindings(requiredBindings)
+		return new OrdinaryLambdaList.Builder().requiredBindings(requiredBindings)
 		                                               .build();
 	}
 

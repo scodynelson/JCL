@@ -8,7 +8,7 @@ import java.math.BigInteger;
 import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
-import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaListBindings;
+import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaList;
 import jcl.functions.FunctionStruct;
 import jcl.numbers.IntegerStruct;
 import jcl.packages.GlobalPackageStruct;
@@ -32,8 +32,8 @@ public final class TotalMemory extends FunctionStruct {
 		GlobalPackageStruct.EXTENSIONS.export(TOTAL_MEMORY);
 	}
 
-	private static OrdinaryLambdaListBindings getInitLambdaListBindings() {
-		return new OrdinaryLambdaListBindings.Builder().build();
+	private static OrdinaryLambdaList getInitLambdaListBindings() {
+		return new OrdinaryLambdaList.Builder().build();
 	}
 
 	@Override

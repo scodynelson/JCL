@@ -9,12 +9,12 @@ import java.util.List;
 
 import jcl.LispStruct;
 import jcl.characters.CharacterStruct;
-import jcl.compiler.real.environment.binding.lambdalist.AuxBinding;
-import jcl.compiler.real.environment.binding.lambdalist.KeyBinding;
-import jcl.compiler.real.environment.binding.lambdalist.OptionalBinding;
-import jcl.compiler.real.environment.binding.lambdalist.RequiredBinding;
-import jcl.compiler.real.environment.binding.lambdalist.RestBinding;
-import jcl.compiler.real.environment.binding.lambdalist.SuppliedPBinding;
+import jcl.compiler.real.environment.binding.lambdalist.AuxParameter;
+import jcl.compiler.real.environment.binding.lambdalist.KeyParameter;
+import jcl.compiler.real.environment.binding.lambdalist.OptionalParameter;
+import jcl.compiler.real.environment.binding.lambdalist.RequiredParameter;
+import jcl.compiler.real.environment.binding.lambdalist.RestParameter;
+import jcl.compiler.real.environment.binding.lambdalist.SuppliedPParameter;
 import jcl.functions.Closure;
 import jcl.functions.MacroFunctionStruct;
 import jcl.lists.NullStruct;
@@ -39,46 +39,46 @@ public class TestGroundMacroLambdaFunctionGenerator extends MacroFunctionStruct 
 
 	@Override
 	protected void initLambdaListBindings() {
-		final List<RequiredBinding> requiredBindings = new ArrayList<>();
+		final List<RequiredParameter> requiredBindings = new ArrayList<>();
 
 		final PackageStruct pkg = PackageStruct.findPackage("SYSTEM");
 
 		// Start: Required
 		final SymbolStruct<?> requiredSymbol = pkg.findSymbol("REQUIRED-SYMBOL").getSymbol();
-		final RequiredBinding requiredBinding = new RequiredBinding(requiredSymbol, true);
+		final RequiredParameter requiredBinding = new RequiredParameter(requiredSymbol, true);
 		requiredBindings.add(requiredBinding);
 		// End: Required
 
 		// Start: Optional
-		final List<OptionalBinding> optionalBindings = new ArrayList<>();
+		final List<OptionalParameter> optionalBindings = new ArrayList<>();
 
 		final SymbolStruct<?> optionalSuppliedPSymbol = pkg.findSymbol("OPTIONAL-SUPPLIED-P-SYMBOL").getSymbol();
-		final SuppliedPBinding optionalSuppliedPBinding = new SuppliedPBinding(optionalSuppliedPSymbol, false);
+		final SuppliedPParameter optionalSuppliedPBinding = new SuppliedPParameter(optionalSuppliedPSymbol, false);
 
 		final SymbolStruct<?> optionalSymbol = pkg.findSymbol("OPTIONAL-SYMBOL").getSymbol();
 		final LispStruct optionalInitForm = new CharacterStruct(100);
 
-		final OptionalBinding optionalBinding = new OptionalBinding(optionalSymbol, optionalInitForm, false, optionalSuppliedPBinding);
+		final OptionalParameter optionalBinding = new OptionalParameter(optionalSymbol, optionalInitForm, false, optionalSuppliedPBinding);
 		optionalBindings.add(optionalBinding);
 		// End: Optional
 
 		// Start: Rest
 		final SymbolStruct<?> restSymbol = pkg.findSymbol("REST-SYMBOL").getSymbol();
-		final RestBinding restBinding = new RestBinding(restSymbol, true);
+		final RestParameter restBinding = new RestParameter(restSymbol, true);
 		// End: Rest
 
 		// Start: Keys
-		final List<KeyBinding> keyBindings = new ArrayList<>();
+		final List<KeyParameter> keyBindings = new ArrayList<>();
 
 		final SymbolStruct<?> keySuppliedPSymbol = pkg.findSymbol("KEY-SUPPLIED-P-SYMBOL").getSymbol();
-		final SuppliedPBinding keySuppliedPBinding = new SuppliedPBinding(keySuppliedPSymbol, false);
+		final SuppliedPParameter keySuppliedPBinding = new SuppliedPParameter(keySuppliedPSymbol, false);
 
 		final SymbolStruct<?> keySymbol = pkg.findSymbol("KEY-SYMBOL").getSymbol();
 		final LispStruct keyInitForm = new CharacterStruct(200);
 
 		final SymbolStruct<?> keyName = pkg.findSymbol("KEY-NAME").getSymbol();
 
-		final KeyBinding keyBinding = new KeyBinding(keySymbol, keyInitForm, false, keyName, keySuppliedPBinding);
+		final KeyParameter keyBinding = new KeyParameter(keySymbol, keyInitForm, false, keyName, keySuppliedPBinding);
 		keyBindings.add(keyBinding);
 		// End: Keys
 
@@ -87,12 +87,12 @@ public class TestGroundMacroLambdaFunctionGenerator extends MacroFunctionStruct 
 		// End: Allow-Other-Keys
 
 		// Start: Aux
-		final List<AuxBinding> auxBindings = new ArrayList<>();
+		final List<AuxParameter> auxBindings = new ArrayList<>();
 
 		final SymbolStruct<?> auxSymbol = pkg.findSymbol("AUX-SYMBOL").getSymbol();
 		final LispStruct auxInitForm = new CharacterStruct(300);
 
-		final AuxBinding auxBinding = new AuxBinding(auxSymbol, auxInitForm, false);
+		final AuxParameter auxBinding = new AuxParameter(auxSymbol, auxInitForm, false);
 		auxBindings.add(auxBinding);
 		// End: Aux
 

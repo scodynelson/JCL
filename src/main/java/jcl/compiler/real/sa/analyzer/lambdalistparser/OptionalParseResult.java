@@ -7,18 +7,18 @@ package jcl.compiler.real.sa.analyzer.lambdalistparser;
 import java.util.List;
 
 import jcl.LispStruct;
-import jcl.compiler.real.environment.binding.lambdalist.OptionalBinding;
+import jcl.compiler.real.environment.binding.lambdalist.OptionalParameter;
 
 final class OptionalParseResult extends ParseResult {
 
-	private final List<OptionalBinding> optionalBindings;
+	private final List<OptionalParameter> optionalBindings;
 
-	OptionalParseResult(final LispStruct currentElement, final List<OptionalBinding> optionalBindings) {
+	OptionalParseResult(final LispStruct currentElement, final List<OptionalParameter> optionalBindings) {
 		super(currentElement);
 		this.optionalBindings = optionalBindings;
 	}
 
-	List<OptionalBinding> getOptionalBindings() {
+	List<OptionalParameter> getOptionalBindings() {
 		return optionalBindings;
 	}
 }

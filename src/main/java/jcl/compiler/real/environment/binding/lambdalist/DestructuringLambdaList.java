@@ -7,13 +7,11 @@ package jcl.compiler.real.environment.binding.lambdalist;
 import java.io.Serializable;
 import java.util.List;
 
-public class MacroLambdaListBindings implements Serializable {
+public class DestructuringLambdaList implements Serializable {
 
-	private static final long serialVersionUID = 5857625809333286733L;
+	private static final long serialVersionUID = -2835999831080133844L;
 
 	private final WholeParameter wholeBinding;
-
-	private final EnvironmentParameter environmentBinding;
 
 	private final List<RequiredParameter> requiredBindings;
 
@@ -29,13 +27,11 @@ public class MacroLambdaListBindings implements Serializable {
 
 	private final boolean allowOtherKeys;
 
-	public MacroLambdaListBindings(final WholeParameter wholeBinding, final EnvironmentParameter environmentBinding,
-	                               final List<RequiredParameter> requiredBindings, final List<OptionalParameter> optionalBindings,
-	                               final RestParameter restBinding, final BodyParameter bodyBinding,
-	                               final List<KeyParameter> keyBindings, final List<AuxParameter> auxBindings,
-	                               final boolean allowOtherKeys) {
+	public DestructuringLambdaList(final WholeParameter wholeBinding, final List<RequiredParameter> requiredBindings,
+	                               final List<OptionalParameter> optionalBindings, final RestParameter restBinding,
+	                               final BodyParameter bodyBinding, final List<KeyParameter> keyBindings,
+	                               final List<AuxParameter> auxBindings, final boolean allowOtherKeys) {
 		this.wholeBinding = wholeBinding;
-		this.environmentBinding = environmentBinding;
 		this.requiredBindings = requiredBindings;
 		this.optionalBindings = optionalBindings;
 		this.restBinding = restBinding;
@@ -47,10 +43,6 @@ public class MacroLambdaListBindings implements Serializable {
 
 	public WholeParameter getWholeBinding() {
 		return wholeBinding;
-	}
-
-	public EnvironmentParameter getEnvironmentBinding() {
-		return environmentBinding;
 	}
 
 	public List<RequiredParameter> getRequiredBindings() {

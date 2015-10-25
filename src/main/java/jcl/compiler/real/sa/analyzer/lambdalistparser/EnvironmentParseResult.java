@@ -5,18 +5,18 @@
 package jcl.compiler.real.sa.analyzer.lambdalistparser;
 
 import jcl.LispStruct;
-import jcl.compiler.real.environment.binding.lambdalist.EnvironmentBinding;
+import jcl.compiler.real.environment.binding.lambdalist.EnvironmentParameter;
 
 final class EnvironmentParseResult extends ParseResult {
 
-	private final EnvironmentBinding environmentBinding;
+	private final EnvironmentParameter environmentBinding;
 
-	EnvironmentParseResult(final LispStruct currentElement, final EnvironmentBinding environmentBinding) {
+	EnvironmentParseResult(final LispStruct currentElement, final EnvironmentParameter environmentBinding) {
 		super(currentElement);
 		this.environmentBinding = environmentBinding;
 	}
 
-	EnvironmentBinding getEnvironmentBinding() {
+	EnvironmentParameter getEnvironmentBinding() {
 		return environmentBinding;
 	}
 }

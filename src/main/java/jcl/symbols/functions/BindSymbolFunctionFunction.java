@@ -9,8 +9,8 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
-import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaListBindings;
-import jcl.compiler.real.environment.binding.lambdalist.RequiredBinding;
+import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaList;
+import jcl.compiler.real.environment.binding.lambdalist.RequiredParameter;
 import jcl.compiler.real.struct.ValuesStruct;
 import jcl.functions.FunctionStruct;
 import jcl.packages.GlobalPackageStruct;
@@ -34,19 +34,19 @@ public class BindSymbolFunctionFunction extends FunctionStruct {
 		GlobalPackageStruct.SYSTEM.export(BIND_SYMBOL_FUNCTION);
 	}
 
-	private static OrdinaryLambdaListBindings getInitLambdaListBindings() {
+	private static OrdinaryLambdaList getInitLambdaListBindings() {
 
-		final List<RequiredBinding> requiredBindings = new ArrayList<>(2);
+		final List<RequiredParameter> requiredBindings = new ArrayList<>(2);
 
 		final SymbolStruct<?> symbolArgSymbol = GlobalPackageStruct.SYSTEM.intern("SYM").getSymbol();
-		final RequiredBinding symbolArgRequiredBinding = new RequiredBinding(symbolArgSymbol);
+		final RequiredParameter symbolArgRequiredBinding = new RequiredParameter(symbolArgSymbol);
 		requiredBindings.add(symbolArgRequiredBinding);
 
 		final SymbolStruct<?> functionArgSymbol = GlobalPackageStruct.SYSTEM.intern("FN").getSymbol();
-		final RequiredBinding functionArgRequiredBinding = new RequiredBinding(functionArgSymbol);
+		final RequiredParameter functionArgRequiredBinding = new RequiredParameter(functionArgSymbol);
 		requiredBindings.add(functionArgRequiredBinding);
 
-		return new OrdinaryLambdaListBindings.Builder().requiredBindings(requiredBindings)
+		return new OrdinaryLambdaList.Builder().requiredBindings(requiredBindings)
 		                                               .build();
 	}
 

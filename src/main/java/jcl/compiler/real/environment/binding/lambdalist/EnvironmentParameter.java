@@ -7,11 +7,11 @@ package jcl.compiler.real.environment.binding.lambdalist;
 import jcl.symbols.SymbolStruct;
 import jcl.types.ListType;
 
-public class EnvironmentBinding extends ParameterBinding {
+public class EnvironmentParameter extends Parameter {
 
 	private static final long serialVersionUID = 7762075133466719180L;
 
-	public EnvironmentBinding(final SymbolStruct<?> var) {
+	public EnvironmentParameter(final SymbolStruct<?> var) {
 		super(var, null, ListType.INSTANCE, null, true);
 	}
 }

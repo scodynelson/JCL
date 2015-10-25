@@ -11,14 +11,14 @@ import java.util.List;
 import jcl.LispStruct;
 import jcl.compiler.real.CompilerConstants;
 import jcl.compiler.real.environment.Environment;
-import jcl.compiler.real.environment.binding.lambdalist.AuxBinding;
-import jcl.compiler.real.environment.binding.lambdalist.BodyBinding;
-import jcl.compiler.real.environment.binding.lambdalist.DestructuringLambdaListBindings;
-import jcl.compiler.real.environment.binding.lambdalist.KeyBinding;
-import jcl.compiler.real.environment.binding.lambdalist.OptionalBinding;
-import jcl.compiler.real.environment.binding.lambdalist.RequiredBinding;
-import jcl.compiler.real.environment.binding.lambdalist.RestBinding;
-import jcl.compiler.real.environment.binding.lambdalist.WholeBinding;
+import jcl.compiler.real.environment.binding.lambdalist.AuxParameter;
+import jcl.compiler.real.environment.binding.lambdalist.BodyParameter;
+import jcl.compiler.real.environment.binding.lambdalist.DestructuringLambdaList;
+import jcl.compiler.real.environment.binding.lambdalist.KeyParameter;
+import jcl.compiler.real.environment.binding.lambdalist.OptionalParameter;
+import jcl.compiler.real.environment.binding.lambdalist.RequiredParameter;
+import jcl.compiler.real.environment.binding.lambdalist.RestParameter;
+import jcl.compiler.real.environment.binding.lambdalist.WholeParameter;
 import jcl.compiler.real.struct.specialoperator.declare.DeclareStruct;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.lists.ListStruct;
@@ -35,7 +35,7 @@ public final class DestructuringLambdaListParser {
 	@Autowired
 	private Printer printer;
 
-	public DestructuringLambdaListBindings parseDestructuringLambdaList(final Environment environment, final ListStruct lambdaList,
+	public DestructuringLambdaList parseDestructuringLambdaList(final Environment environment, final ListStruct lambdaList,
 	                                                                    final DeclareStruct declareElement) {
 
 		if (lambdaList.isDotted()) {
@@ -45,7 +45,7 @@ public final class DestructuringLambdaListParser {
 		}
 	}
 
-	private DestructuringLambdaListBindings getLambdaListBindings(final Environment environment, final ListStruct lambdaList,
+	private DestructuringLambdaList getLambdaListBindings(final Environment environment, final ListStruct lambdaList,
 	                                                              final DeclareStruct declareElement) {
 
 		final List<LispStruct> lambdaListJava = lambdaList.getAsJavaList();
@@ -60,7 +60,7 @@ public final class DestructuringLambdaListParser {
 
 		LispStruct currentElement = null;
 
-		WholeBinding wholeBinding = null;
+		WholeParameter wholeBinding = null;
 		if (CompilerConstants.WHOLE.equals(firstElement)) {
 			// Now that we've verified the first element is actually '&whole', consume it.
 			currentElement = iterator.next();
@@ -71,7 +71,7 @@ public final class DestructuringLambdaListParser {
 			wholeBinding = wholeParseResult.getWholeBinding();
 		}
 
-		List<RequiredBinding> requiredBindings = Collections.emptyList();
+		List<RequiredParameter> requiredBindings = Collections.emptyList();
 		if (iterator.hasNext()) {
 			final RequiredParseResult requiredParseResult
 					= lambdaListParser.parseRequiredBindings(environment, iterator, declareElement, false, true);
@@ -80,7 +80,7 @@ public final class DestructuringLambdaListParser {
 			currentElement = requiredParseResult.getCurrentElement();
 		}
 
-		List<OptionalBinding> optionalBindings = Collections.emptyList();
+		List<OptionalParameter> optionalBindings = Collections.emptyList();
 		if (CompilerConstants.OPTIONAL.equals(currentElement)) {
 			final OptionalParseResult optionalParseResult
 					= lambdaListParser.parseOptionalBindings(environment, iterator, declareElement, false, true);
@@ -89,7 +89,7 @@ public final class DestructuringLambdaListParser {
 			currentElement = optionalParseResult.getCurrentElement();
 		}
 
-		RestBinding restBinding = null;
+		RestParameter restBinding = null;
 		if (CompilerConstants.REST.equals(currentElement)) {
 			final RestParseResult restParseResult
 					= lambdaListParser.parseRestBinding(environment, iterator, declareElement, true);
@@ -98,7 +98,7 @@ public final class DestructuringLambdaListParser {
 			currentElement = restParseResult.getCurrentElement();
 		}
 
-		BodyBinding bodyBinding = null;
+		BodyParameter bodyBinding = null;
 		if (CompilerConstants.BODY.equals(currentElement)) {
 			if (restBinding != null) {
 				throw new ProgramErrorException("Destructuring LambdaList &body parameter cannot be supplied alongside &rest parameter.");
@@ -113,7 +113,7 @@ public final class DestructuringLambdaListParser {
 
 		boolean keyNotProvided = true;
 
-		List<KeyBinding> keyBindings = Collections.emptyList();
+		List<KeyParameter> keyBindings = Collections.emptyList();
 		if (CompilerConstants.KEY.equals(currentElement)) {
 			final KeyParseResult keyParseResult
 					= lambdaListParser.parseKeyBindings(environment, iterator, declareElement, true);
@@ -136,7 +136,7 @@ public final class DestructuringLambdaListParser {
 			}
 		}
 
-		List<AuxBinding> auxBindings = Collections.emptyList();
+		List<AuxParameter> auxBindings = Collections.emptyList();
 		if (CompilerConstants.AUX.equals(currentElement)) {
 			final AuxParseResult auxParseResult
 					= lambdaListParser.parseAuxBindings(environment, iterator, declareElement, true);
@@ -150,10 +150,10 @@ public final class DestructuringLambdaListParser {
 			throw new ProgramErrorException("Unexpected element at the end of Destructuring Lambda List: " + printedElement);
 		}
 
-		return new DestructuringLambdaListBindings(wholeBinding, requiredBindings, optionalBindings, restBinding, bodyBinding, keyBindings, auxBindings, allowOtherKeys);
+		return new DestructuringLambdaList(wholeBinding, requiredBindings, optionalBindings, restBinding, bodyBinding, keyBindings, auxBindings, allowOtherKeys);
 	}
 
-	private DestructuringLambdaListBindings getDottedLambdaListBindings(final Environment environment, final ListStruct lambdaList,
+	private DestructuringLambdaList getDottedLambdaListBindings(final Environment environment, final ListStruct lambdaList,
 	                                                                    final DeclareStruct declareElement) {
 
 		final List<LispStruct> lambdaListJava = lambdaList.getAsJavaList();
@@ -168,7 +168,7 @@ public final class DestructuringLambdaListParser {
 
 		LispStruct currentElement = null;
 
-		WholeBinding wholeBinding = null;
+		WholeParameter wholeBinding = null;
 		if (CompilerConstants.WHOLE.equals(firstElement)) {
 			// Now that we've verified the first element is actually '&whole', consume it.
 			currentElement = iterator.next();
@@ -179,7 +179,7 @@ public final class DestructuringLambdaListParser {
 			wholeBinding = wholeParseResult.getWholeBinding();
 		}
 
-		List<RequiredBinding> requiredBindings = Collections.emptyList();
+		List<RequiredParameter> requiredBindings = Collections.emptyList();
 		if (iterator.hasNext()) {
 			final RequiredParseResult requiredParseResult
 					= lambdaListParser.parseRequiredBindings(environment, iterator, declareElement, true, true);
@@ -188,7 +188,7 @@ public final class DestructuringLambdaListParser {
 			currentElement = requiredParseResult.getCurrentElement();
 		}
 
-		List<OptionalBinding> optionalBindings = Collections.emptyList();
+		List<OptionalParameter> optionalBindings = Collections.emptyList();
 		if (CompilerConstants.OPTIONAL.equals(currentElement)) {
 			final OptionalParseResult optionalParseResult
 					= lambdaListParser.parseOptionalBindings(environment, iterator, declareElement, true, true);
@@ -199,7 +199,7 @@ public final class DestructuringLambdaListParser {
 
 		final RestParseResult restParseResult
 				= lambdaListParser.parseDottedRestBinding(environment, currentElement, declareElement, true);
-		final RestBinding restBinding = restParseResult.getRestBinding();
+		final RestParameter restBinding = restParseResult.getRestBinding();
 
 		if (iterator.hasNext()) {
 			final LispStruct element = iterator.next();
@@ -207,6 +207,6 @@ public final class DestructuringLambdaListParser {
 			throw new ProgramErrorException("Unexpected element at the end of Destructuring Lambda List: " + printedElement);
 		}
 
-		return new DestructuringLambdaListBindings(wholeBinding, requiredBindings, optionalBindings, restBinding, null, Collections.emptyList(), Collections.emptyList(), false);
+		return new DestructuringLambdaList(wholeBinding, requiredBindings, optionalBindings, restBinding, null, Collections.emptyList(), Collections.emptyList(), false);
 	}
 }

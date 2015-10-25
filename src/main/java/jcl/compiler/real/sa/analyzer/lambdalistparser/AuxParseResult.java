@@ -7,18 +7,18 @@ package jcl.compiler.real.sa.analyzer.lambdalistparser;
 import java.util.List;
 
 import jcl.LispStruct;
-import jcl.compiler.real.environment.binding.lambdalist.AuxBinding;
+import jcl.compiler.real.environment.binding.lambdalist.AuxParameter;
 
 final class AuxParseResult extends ParseResult {
 
-	private final List<AuxBinding> auxBindings;
+	private final List<AuxParameter> auxBindings;
 
-	AuxParseResult(final LispStruct currentElement, final List<AuxBinding> auxBindings) {
+	AuxParseResult(final LispStruct currentElement, final List<AuxParameter> auxBindings) {
 		super(currentElement);
 		this.auxBindings = auxBindings;
 	}
 
-	List<AuxBinding> getAuxBindings() {
+	List<AuxParameter> getAuxBindings() {
 		return auxBindings;
 	}
 }

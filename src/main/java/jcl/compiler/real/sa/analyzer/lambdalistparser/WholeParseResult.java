@@ -4,18 +4,18 @@
 
 package jcl.compiler.real.sa.analyzer.lambdalistparser;
 
-import jcl.compiler.real.environment.binding.lambdalist.WholeBinding;
+import jcl.compiler.real.environment.binding.lambdalist.WholeParameter;
 
 final class WholeParseResult extends ParseResult {
 
-	private final WholeBinding wholeBinding;
+	private final WholeParameter wholeBinding;
 
-	WholeParseResult(final WholeBinding wholeBinding) {
+	WholeParseResult(final WholeParameter wholeBinding) {
 		super(null);
 		this.wholeBinding = wholeBinding;
 	}
 
-	WholeBinding getWholeBinding() {
+	WholeParameter getWholeBinding() {
 		return wholeBinding;
 	}
 }

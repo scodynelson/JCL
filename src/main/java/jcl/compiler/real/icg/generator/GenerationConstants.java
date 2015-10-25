@@ -13,13 +13,13 @@ import java.util.List;
 import java.util.Map;
 
 import jcl.LispStruct;
-import jcl.compiler.real.environment.binding.lambdalist.AuxBinding;
-import jcl.compiler.real.environment.binding.lambdalist.KeyBinding;
-import jcl.compiler.real.environment.binding.lambdalist.OptionalBinding;
-import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaListBindings;
-import jcl.compiler.real.environment.binding.lambdalist.RequiredBinding;
-import jcl.compiler.real.environment.binding.lambdalist.RestBinding;
-import jcl.compiler.real.environment.binding.lambdalist.SuppliedPBinding;
+import jcl.compiler.real.environment.binding.lambdalist.AuxParameter;
+import jcl.compiler.real.environment.binding.lambdalist.KeyParameter;
+import jcl.compiler.real.environment.binding.lambdalist.OptionalParameter;
+import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaList;
+import jcl.compiler.real.environment.binding.lambdalist.RequiredParameter;
+import jcl.compiler.real.environment.binding.lambdalist.RestParameter;
+import jcl.compiler.real.environment.binding.lambdalist.SuppliedPParameter;
 import jcl.compiler.real.struct.ValuesStructs;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.functions.Closure;
@@ -275,39 +275,39 @@ interface GenerationConstants {
 
 	String CLOSURE_GET_SYMBOL_BINDINGS_METHOD_DESC = CodeGenerators.getMethodDescription(Closure.class, CLOSURE_GET_SYMBOL_BINDINGS_METHOD_NAME);
 
-	String ORDINARY_LAMBDA_LIST_BINDINGS_NAME = Type.getInternalName(OrdinaryLambdaListBindings.class);
+	String ORDINARY_LAMBDA_LIST_BINDINGS_NAME = Type.getInternalName(OrdinaryLambdaList.class);
 
-	String ORDINARY_LAMBDA_LIST_BINDINGS_DESC = Type.getDescriptor(OrdinaryLambdaListBindings.class);
+	String ORDINARY_LAMBDA_LIST_BINDINGS_DESC = Type.getDescriptor(OrdinaryLambdaList.class);
 
-	String ORDINARY_LAMBDA_LIST_BINDINGS_INIT_DESC = CodeGenerators.getConstructorDescription(OrdinaryLambdaListBindings.class, List.class, List.class, RestBinding.class, List.class, List.class, boolean.class);
+	String ORDINARY_LAMBDA_LIST_BINDINGS_INIT_DESC = CodeGenerators.getConstructorDescription(OrdinaryLambdaList.class, List.class, List.class, RestParameter.class, List.class, List.class, boolean.class);
 
 	String PROGRAM_ERROR_EXCEPTION_NAME = Type.getInternalName(ProgramErrorException.class);
 
 	String PROGRAM_ERROR_EXCEPTION_INIT_STRING_DESC = CodeGenerators.getConstructorDescription(ProgramErrorException.class, String.class);
 
-	String REQUIRED_BINDING_NAME = Type.getInternalName(RequiredBinding.class);
+	String REQUIRED_BINDING_NAME = Type.getInternalName(RequiredParameter.class);
 
-	String REQUIRED_BINDING_INIT_DESC = CodeGenerators.getConstructorDescription(RequiredBinding.class, SymbolStruct.class, boolean.class);
+	String REQUIRED_BINDING_INIT_DESC = CodeGenerators.getConstructorDescription(RequiredParameter.class, SymbolStruct.class, boolean.class);
 
-	String OPTIONAL_BINDING_NAME = Type.getInternalName(OptionalBinding.class);
+	String OPTIONAL_BINDING_NAME = Type.getInternalName(OptionalParameter.class);
 
-	String OPTIONAL_BINDING_INIT_DESC = CodeGenerators.getConstructorDescription(OptionalBinding.class, SymbolStruct.class, LispStruct.class, boolean.class, SuppliedPBinding.class);
+	String OPTIONAL_BINDING_INIT_DESC = CodeGenerators.getConstructorDescription(OptionalParameter.class, SymbolStruct.class, LispStruct.class, boolean.class, SuppliedPParameter.class);
 
-	String REST_BINDING_NAME = Type.getInternalName(RestBinding.class);
+	String REST_BINDING_NAME = Type.getInternalName(RestParameter.class);
 
-	String REST_BINDING_INIT_DESC = CodeGenerators.getConstructorDescription(RestBinding.class, SymbolStruct.class, boolean.class);
+	String REST_BINDING_INIT_DESC = CodeGenerators.getConstructorDescription(RestParameter.class, SymbolStruct.class, boolean.class);
 
-	String KEY_BINDING_NAME = Type.getInternalName(KeyBinding.class);
+	String KEY_BINDING_NAME = Type.getInternalName(KeyParameter.class);
 
-	String KEY_BINDING_INIT_DESC = CodeGenerators.getConstructorDescription(KeyBinding.class, SymbolStruct.class, LispStruct.class, boolean.class, SymbolStruct.class, SuppliedPBinding.class);
+	String KEY_BINDING_INIT_DESC = CodeGenerators.getConstructorDescription(KeyParameter.class, SymbolStruct.class, LispStruct.class, boolean.class, SymbolStruct.class, SuppliedPParameter.class);
 
-	String AUX_BINDING_NAME = Type.getInternalName(AuxBinding.class);
+	String AUX_BINDING_NAME = Type.getInternalName(AuxParameter.class);
 
-	String AUX_BINDING_INIT_DESC = CodeGenerators.getConstructorDescription(AuxBinding.class, SymbolStruct.class, LispStruct.class, boolean.class);
+	String AUX_BINDING_INIT_DESC = CodeGenerators.getConstructorDescription(AuxParameter.class, SymbolStruct.class, LispStruct.class, boolean.class);
 
-	String SUPPLIED_P_BINDING_NAME = Type.getInternalName(SuppliedPBinding.class);
+	String SUPPLIED_P_BINDING_NAME = Type.getInternalName(SuppliedPParameter.class);
 
-	String SUPPLIED_P_BINDING_INIT_DESC = CodeGenerators.getConstructorDescription(SuppliedPBinding.class, SymbolStruct.class, boolean.class);
+	String SUPPLIED_P_BINDING_INIT_DESC = CodeGenerators.getConstructorDescription(SuppliedPParameter.class, SymbolStruct.class, boolean.class);
 
 	String RETURN_FROM_EXCEPTION_NAME = Type.getInternalName(ReturnFromException.class);
 

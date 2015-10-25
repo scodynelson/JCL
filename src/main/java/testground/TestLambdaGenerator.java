@@ -9,12 +9,12 @@ import java.util.List;
 
 import jcl.LispStruct;
 import jcl.characters.CharacterStruct;
-import jcl.compiler.real.environment.binding.lambdalist.AuxBinding;
-import jcl.compiler.real.environment.binding.lambdalist.KeyBinding;
-import jcl.compiler.real.environment.binding.lambdalist.OptionalBinding;
-import jcl.compiler.real.environment.binding.lambdalist.RequiredBinding;
-import jcl.compiler.real.environment.binding.lambdalist.RestBinding;
-import jcl.compiler.real.environment.binding.lambdalist.SuppliedPBinding;
+import jcl.compiler.real.environment.binding.lambdalist.AuxParameter;
+import jcl.compiler.real.environment.binding.lambdalist.KeyParameter;
+import jcl.compiler.real.environment.binding.lambdalist.OptionalParameter;
+import jcl.compiler.real.environment.binding.lambdalist.RequiredParameter;
+import jcl.compiler.real.environment.binding.lambdalist.RestParameter;
+import jcl.compiler.real.environment.binding.lambdalist.SuppliedPParameter;
 import jcl.functions.Closure;
 import jcl.functions.FunctionStruct;
 import jcl.lists.NullStruct;
@@ -38,20 +38,20 @@ public class TestLambdaGenerator extends FunctionStruct {
 	}
 
 	@Override
-	protected List<RequiredBinding> getRequiredBindings() {
-		final List<RequiredBinding> requiredBindings = new ArrayList<>();
+	protected List<RequiredParameter> getRequiredBindings() {
+		final List<RequiredParameter> requiredBindings = new ArrayList<>();
 
 		final PackageStruct pkg = PackageStruct.findPackage("SYSTEM");
 		final SymbolStruct<?> requiredSymbol = pkg.intern("REQUIRED-SYMBOL").getSymbol();
-		final RequiredBinding requiredBinding = new RequiredBinding(requiredSymbol, true);
+		final RequiredParameter requiredBinding = new RequiredParameter(requiredSymbol, true);
 		requiredBindings.add(requiredBinding);
 
 		return requiredBindings;
 	}
 
 	@Override
-	protected List<OptionalBinding> getOptionalBindings() {
-		final List<OptionalBinding> optionalBindings = new ArrayList<>();
+	protected List<OptionalParameter> getOptionalBindings() {
+		final List<OptionalParameter> optionalBindings = new ArrayList<>();
 
 		PackageStruct pkg = PackageStruct.findPackage("SYSTEM");
 		final SymbolStruct<?> optionalSymbol = pkg.intern("OPTIONAL-SYMBOL").getSymbol();
@@ -59,24 +59,24 @@ public class TestLambdaGenerator extends FunctionStruct {
 
 		pkg = PackageStruct.findPackage("SYSTEM");
 		final SymbolStruct<?> optionalSuppliedPSymbol = pkg.intern("OPTIONAL-SYMBOL-P").getSymbol();
-		final SuppliedPBinding optionalSuppliedPBinding = new SuppliedPBinding(optionalSuppliedPSymbol, false);
+		final SuppliedPParameter optionalSuppliedPBinding = new SuppliedPParameter(optionalSuppliedPSymbol, false);
 
-		final OptionalBinding optionalBinding = new OptionalBinding(optionalSymbol, optionalInitForm, false, optionalSuppliedPBinding);
+		final OptionalParameter optionalBinding = new OptionalParameter(optionalSymbol, optionalInitForm, false, optionalSuppliedPBinding);
 		optionalBindings.add(optionalBinding);
 
 		return optionalBindings;
 	}
 
 	@Override
-	protected RestBinding getRestBinding() {
+	protected RestParameter getRestBinding() {
 		final PackageStruct pkg = PackageStruct.findPackage("SYSTEM");
 		final SymbolStruct<?> restSymbol = pkg.intern("REST-SYMBOL").getSymbol();
-		return new RestBinding(restSymbol, true);
+		return new RestParameter(restSymbol, true);
 	}
 
 	@Override
-	protected List<KeyBinding> getKeyBindings() {
-		final List<KeyBinding> keyBindings = new ArrayList<>();
+	protected List<KeyParameter> getKeyBindings() {
+		final List<KeyParameter> keyBindings = new ArrayList<>();
 
 		PackageStruct pkg = PackageStruct.findPackage("SYSTEM");
 		final SymbolStruct<?> keySymbol = pkg.intern("KEY-SYMBOL").getSymbol();
@@ -84,12 +84,12 @@ public class TestLambdaGenerator extends FunctionStruct {
 
 		pkg = PackageStruct.findPackage("SYSTEM");
 		final SymbolStruct<?> keySuppliedPSymbol = pkg.intern("KEY-SUPPLIED-P-SYMBOL").getSymbol();
-		final SuppliedPBinding keySuppliedPBinding = new SuppliedPBinding(keySuppliedPSymbol, false);
+		final SuppliedPParameter keySuppliedPBinding = new SuppliedPParameter(keySuppliedPSymbol, false);
 
 		pkg = PackageStruct.findPackage("KEYWORD");
 		final SymbolStruct<?> keyName = pkg.intern("KEY-NAME").getSymbol();
 
-		final KeyBinding keyBinding = new KeyBinding(keySymbol, keyInitForm, false, keyName, keySuppliedPBinding);
+		final KeyParameter keyBinding = new KeyParameter(keySymbol, keyInitForm, false, keyName, keySuppliedPBinding);
 		keyBindings.add(keyBinding);
 
 		return keyBindings;
@@ -101,14 +101,14 @@ public class TestLambdaGenerator extends FunctionStruct {
 	}
 
 	@Override
-	protected List<AuxBinding> getAuxBindings() {
-		final List<AuxBinding> auxBindings = new ArrayList<>();
+	protected List<AuxParameter> getAuxBindings() {
+		final List<AuxParameter> auxBindings = new ArrayList<>();
 
 		final PackageStruct pkg = PackageStruct.findPackage("SYSTEM");
 		final SymbolStruct<?> auxSymbol = pkg.intern("AUX-SYMBOL").getSymbol();
 		final LispStruct auxInitForm = NullStruct.INSTANCE;
 
-		final AuxBinding auxBinding = new AuxBinding(auxSymbol, auxInitForm, false);
+		final AuxParameter auxBinding = new AuxParameter(auxSymbol, auxInitForm, false);
 		auxBindings.add(auxBinding);
 
 		return auxBindings;

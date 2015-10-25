@@ -21,7 +21,6 @@ import jcl.functions.expanders.MacroFunctionExpander;
 import jcl.lists.ListStruct;
 import jcl.symbols.SpecialOperatorStruct;
 import jcl.symbols.SymbolStruct;
-import jcl.types.TType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -72,7 +71,7 @@ public class LambdaExpander extends MacroFunctionExpander<LambdaStruct> {
 		final List<SpecialDeclarationStruct> specialDeclarations = declare.getSpecialDeclarations();
 		specialDeclarations.stream()
 		                   .map(SpecialDeclarationStruct::getVar)
-		                   .map(e -> new Binding(e, TType.INSTANCE))
+		                   .map(Binding::new)
 		                   .forEach(lambdaEnvironment::addDynamicBinding);
 
 		final JavaClassNameDeclarationStruct javaClassNameDeclaration = declare.getJavaClassNameDeclaration();

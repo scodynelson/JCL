@@ -60,8 +60,8 @@ public final class MacroExpandFunction extends FunctionStruct {
 		final List<OptionalParameter> optionalBindings = Collections.singletonList(optionalBinding);
 
 		return new OrdinaryLambdaList.Builder().requiredBindings(requiredBindings)
-		                                               .optionalBindings(optionalBindings)
-		                                               .build();
+		                                       .optionalBindings(optionalBindings)
+		                                       .build();
 	}
 
 	@Override
@@ -82,18 +82,18 @@ public final class MacroExpandFunction extends FunctionStruct {
 	}
 
 	public MacroExpandResult macroExpand(final LispStruct element, final Environment environment) {
-		MacroExpandResult expansion = macroExpand1Function.macroExpand1(element, environment);
+		LispStruct tempElement = element;
 
-		LispStruct expandedForm = expansion.getExpandedForm();
-		boolean wasExpanded = expansion.wasExpanded();
+		boolean wasExpanded = false;
+		while (true) {
+			final MacroExpandResult expansion = macroExpand1Function.macroExpand1(tempElement, environment);
+			tempElement = expansion.getExpandedForm();
 
-		while (wasExpanded) {
-			expansion = macroExpand(expandedForm, environment);
-
-			expandedForm = expansion.getExpandedForm();
-			wasExpanded = expansion.wasExpanded();
+			final boolean innerWasNotExpanded = !expansion.wasExpanded();
+			if (innerWasNotExpanded) {
+				return new MacroExpandResult(tempElement, wasExpanded);
+			}
+			wasExpanded = true;
 		}
-
-		return expansion;
 	}
 }

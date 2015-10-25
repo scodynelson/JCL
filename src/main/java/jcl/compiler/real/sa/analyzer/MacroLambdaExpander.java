@@ -6,7 +6,6 @@ package jcl.compiler.real.sa.analyzer;
 
 import java.util.List;
 import java.util.stream.Collectors;
-import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
 import jcl.compiler.real.environment.Environment;
@@ -22,20 +21,17 @@ import jcl.compiler.real.struct.specialoperator.declare.DeclareStruct;
 import jcl.compiler.real.struct.specialoperator.declare.JavaClassNameDeclarationStruct;
 import jcl.compiler.real.struct.specialoperator.declare.SpecialDeclarationStruct;
 import jcl.compiler.real.struct.specialoperator.lambda.MacroLambdaStruct;
-import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.functions.expanders.MacroFunctionExpander;
 import jcl.lists.ListStruct;
-import jcl.printer.Printer;
 import jcl.symbols.SpecialOperatorStruct;
 import jcl.symbols.SymbolStruct;
-import jcl.types.TType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class MacroLambdaExpander extends MacroFunctionExpander<MacroLambdaStruct> {
 
-	private static final long serialVersionUID = -7592502247452528911L;
+	private static final long serialVersionUID = -3836341809506752205L;
 
 	@Autowired
 	private MacroLambdaListParser macroLambdaListParser;
@@ -50,45 +46,28 @@ public class MacroLambdaExpander extends MacroFunctionExpander<MacroLambdaStruct
 	private BodyWithDeclaresAndDocStringAnalyzer bodyWithDeclaresAndDocStringAnalyzer;
 
 	@Autowired
-	private Printer printer;
+	private LispFormValueValidator validator;
 
-	/**
-	 * Initializes the macro-lambda macro function and adds it to the special operator 'macro-lambda'.
-	 */
-	@PostConstruct
-	private void init() {
-		SpecialOperatorStruct.MACRO_LAMBDA.setMacroFunctionExpander(this);
+	@Override
+	public SymbolStruct<?> getFunctionSymbol() {
+		return SpecialOperatorStruct.MACRO_LAMBDA;
 	}
 
 	@Override
 	public MacroLambdaStruct expand(final ListStruct form, final Environment environment) {
-
-		final int formSize = form.size();
-		if (formSize < 3) {
-			throw new ProgramErrorException("MACRO LAMBDA: Incorrect number of arguments: " + formSize + ". Expected at least 3 arguments.");
-		}
+		validator.validateListFormSize(form, 3, "MACRO-LAMBDA");
 
 		final ListStruct formRest = form.getRest();
 
 		final LispStruct second = formRest.getFirst();
-		if (!(second instanceof SymbolStruct)) {
-			final String printedObject = printer.print(second);
-			throw new ProgramErrorException("MACRO LAMBDA: Macro name must be a symbol. Got: " + printedObject);
-		}
-
-		final SymbolStruct<?> macroName = (SymbolStruct) second;
+		final SymbolStruct<?> macroName = validator.validateObjectType(second, "MACRO-LAMBDA", "PARAMETER LIST", SymbolStruct.class);
 
 		final ListStruct formRestRest = formRest.getRest();
 
 		final LispStruct third = formRestRest.getFirst();
-		if (!(third instanceof ListStruct)) {
-			final String printedObject = printer.print(third);
-			throw new ProgramErrorException("MACRO LAMBDA: Parameter list must be a list. Got: " + printedObject);
-		}
+		final ListStruct parameters = validator.validateObjectType(third, "MACRO-LAMBDA", "PARAMETER LIST", ListStruct.class);
 
-		final Environment lambdaEnvironment = new Environment(environment);
-
-		final ListStruct parameters = (ListStruct) third;
+		final Environment macroLambdaEnvironment = new Environment(environment);
 
 		final ListStruct formRestRestRest = formRestRest.getRest();
 		final List<LispStruct> forms = formRestRestRest.getAsJavaList();
@@ -96,13 +75,13 @@ public class MacroLambdaExpander extends MacroFunctionExpander<MacroLambdaStruct
 		final BodyProcessingResult bodyProcessingResult = bodyWithDeclaresAndDocStringAnalyzer.analyze(forms);
 
 		final ListStruct fullDeclaration = ListStruct.buildProperList(bodyProcessingResult.getDeclares());
-		final DeclareStruct declare = declareExpander.expand(fullDeclaration, lambdaEnvironment);
+		final DeclareStruct declare = declareExpander.expand(fullDeclaration, macroLambdaEnvironment);
 
 		final List<SpecialDeclarationStruct> specialDeclarations = declare.getSpecialDeclarations();
 		specialDeclarations.stream()
 		                   .map(SpecialDeclarationStruct::getVar)
-		                   .map(e -> new Binding(e, TType.INSTANCE))
-		                   .forEach(lambdaEnvironment::addDynamicBinding);
+		                   .map(Binding::new)
+		                   .forEach(macroLambdaEnvironment::addDynamicBinding);
 
 		final JavaClassNameDeclarationStruct javaClassNameDeclaration = declare.getJavaClassNameDeclaration();
 		final String fileName;
@@ -113,13 +92,13 @@ public class MacroLambdaExpander extends MacroFunctionExpander<MacroLambdaStruct
 			fileName = javaClassNameDeclaration.getClassName();
 		}
 
-		final MacroLambdaListBindings parsedLambdaList = macroLambdaListParser.parseMacroLambdaList(lambdaEnvironment, parameters, declare);
+		final MacroLambdaListBindings parsedLambdaList = macroLambdaListParser.parseMacroLambdaList(macroLambdaEnvironment, parameters, declare);
 
 		final List<LispStruct> bodyForms = bodyProcessingResult.getBodyForms();
 		final List<LispStruct> analyzedBodyForms
 				= bodyForms.stream()
-				           .map(e -> formAnalyzer.analyze(e, lambdaEnvironment))
+				           .map(e -> formAnalyzer.analyze(e, macroLambdaEnvironment))
 				           .collect(Collectors.toList());
-		return new MacroLambdaStruct(fileName, macroName, parsedLambdaList, bodyProcessingResult.getDocString(), new PrognStruct(analyzedBodyForms), lambdaEnvironment);
+		return new MacroLambdaStruct(fileName, macroName, parsedLambdaList, bodyProcessingResult.getDocString(), new PrognStruct(analyzedBodyForms), macroLambdaEnvironment);
 	}
 }

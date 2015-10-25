@@ -2,7 +2,6 @@ package jcl.compiler.real.sa.analyzer;
 
 import java.util.List;
 import java.util.stream.Collectors;
-import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
 import jcl.compiler.real.environment.Environment;
@@ -18,11 +17,10 @@ import jcl.compiler.real.struct.specialoperator.declare.DeclareStruct;
 import jcl.compiler.real.struct.specialoperator.declare.JavaClassNameDeclarationStruct;
 import jcl.compiler.real.struct.specialoperator.declare.SpecialDeclarationStruct;
 import jcl.compiler.real.struct.specialoperator.lambda.LambdaStruct;
-import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.functions.expanders.MacroFunctionExpander;
 import jcl.lists.ListStruct;
-import jcl.printer.Printer;
 import jcl.symbols.SpecialOperatorStruct;
+import jcl.symbols.SymbolStruct;
 import jcl.types.TType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -45,35 +43,23 @@ public class LambdaExpander extends MacroFunctionExpander<LambdaStruct> {
 	private BodyWithDeclaresAndDocStringAnalyzer bodyWithDeclaresAndDocStringAnalyzer;
 
 	@Autowired
-	private Printer printer;
+	private LispFormValueValidator validator;
 
-	/**
-	 * Initializes the lambda macro function and adds it to the special operator 'lambda'.
-	 */
-	@PostConstruct
-	private void init() {
-		SpecialOperatorStruct.LAMBDA.setMacroFunctionExpander(this);
+	@Override
+	public SymbolStruct<?> getFunctionSymbol() {
+		return SpecialOperatorStruct.LAMBDA;
 	}
 
 	@Override
 	public LambdaStruct expand(final ListStruct form, final Environment environment) {
-
-		final int formSize = form.size();
-		if (formSize < 2) {
-			throw new ProgramErrorException("LAMBDA: Incorrect number of arguments: " + formSize + ". Expected at least 2 arguments.");
-		}
+		validator.validateListFormSize(form, 2, "LAMBDA");
 
 		final ListStruct formRest = form.getRest();
 
 		final LispStruct second = formRest.getFirst();
-		if (!(second instanceof ListStruct)) {
-			final String printedObject = printer.print(second);
-			throw new ProgramErrorException("LAMBDA: Parameter list must be a list. Got: " + printedObject);
-		}
+		final ListStruct parameters = validator.validateObjectType(second, "LAMBDA", "PARAMETER LIST", ListStruct.class);
 
 		final Environment lambdaEnvironment = new Environment(environment);
-
-		final ListStruct parameters = (ListStruct) second;
 
 		final ListStruct formRestRest = formRest.getRest();
 		final List<LispStruct> forms = formRestRest.getAsJavaList();

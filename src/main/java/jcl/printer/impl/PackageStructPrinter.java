@@ -15,7 +15,7 @@ public class PackageStructPrinter implements LispPrinter<PackageStruct> {
 
 	@Override
 	public String print(final PackageStruct object) {
-		final String typeClassName = object.getType().getClass().getName().toUpperCase();
+		final String typeClassName = object.getType().getClass().getSimpleName().toUpperCase();
 		final String packageName = object.getName();
 		return "#<" + typeClassName + ' ' + packageName + '>';
 	}

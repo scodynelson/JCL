@@ -26,7 +26,7 @@ public class SynonymStreamStructPrinter implements LispPrinter<SynonymStreamStru
 
 	@Override
 	public String print(final SynonymStreamStruct object) {
-		final String typeClassName = object.getType().getClass().getName().toUpperCase();
+		final String typeClassName = object.getType().getClass().getSimpleName().toUpperCase();
 
 		final SymbolStruct<? extends StreamStruct> symbol = object.getSymbol();
 		final String printedSymbol = printer.print(symbol);

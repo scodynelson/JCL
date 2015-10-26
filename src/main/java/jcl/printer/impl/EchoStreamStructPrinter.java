@@ -26,7 +26,7 @@ public class EchoStreamStructPrinter implements LispPrinter<EchoStreamStruct> {
 
 	@Override
 	public String print(final EchoStreamStruct object) {
-		final String typeClassName = object.getType().getClass().getName().toUpperCase();
+		final String typeClassName = object.getType().getClass().getSimpleName().toUpperCase();
 
 		final InputStream inputStream = object.getInputStream();
 		final String printedInputStream = printer.print(inputStream);

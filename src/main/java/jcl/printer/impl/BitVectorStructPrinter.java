@@ -47,7 +47,7 @@ public class BitVectorStructPrinter implements LispPrinter<BitVectorStruct> {
 				stringBuilder.append(printedIntegerStruct);
 			}
 		} else {
-			final String typeClassName = object.getType().getClass().getName().toUpperCase();
+			final String typeClassName = object.getType().getClass().getSimpleName().toUpperCase();
 
 			stringBuilder.append("#<");
 			stringBuilder.append(typeClassName);

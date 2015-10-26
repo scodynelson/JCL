@@ -26,7 +26,7 @@ public class TwoWayStreamStructPrinter implements LispPrinter<TwoWayStreamStruct
 
 	@Override
 	public String print(final TwoWayStreamStruct object) {
-		final String typeClassName = object.getType().getClass().getName().toUpperCase();
+		final String typeClassName = object.getType().getClass().getSimpleName().toUpperCase();
 
 		final InputStream inputStream = object.getInputStream();
 		final String printedInputStream = printer.print(inputStream);

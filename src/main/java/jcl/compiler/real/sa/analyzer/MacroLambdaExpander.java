@@ -84,12 +84,12 @@ public class MacroLambdaExpander extends MacroFunctionExpander<MacroLambdaStruct
 		                   .forEach(macroLambdaEnvironment::addDynamicBinding);
 
 		final JavaClassNameDeclarationStruct javaClassNameDeclaration = declare.getJavaClassNameDeclaration();
-		final String fileName;
+		final String className;
 		if (javaClassNameDeclaration == null) {
-			final String className = "MacroLambda" + '_' + macroName.getName() + '_' + System.nanoTime();
-			fileName = "jcl/" + className;
+			final String macroLambdaClassName = "MacroLambda" + '_' + macroName.getName() + '_' + System.nanoTime();
+			className = "jcl/" + macroLambdaClassName;
 		} else {
-			fileName = javaClassNameDeclaration.getClassName();
+			className = javaClassNameDeclaration.getClassName().replace('.', '/') + '_' + System.nanoTime();
 		}
 
 		final MacroLambdaList parsedLambdaList = macroLambdaListParser.parseMacroLambdaList(macroLambdaEnvironment, parameters, declare);
@@ -99,6 +99,6 @@ public class MacroLambdaExpander extends MacroFunctionExpander<MacroLambdaStruct
 				= bodyForms.stream()
 				           .map(e -> formAnalyzer.analyze(e, macroLambdaEnvironment))
 				           .collect(Collectors.toList());
-		return new MacroLambdaStruct(fileName, macroName, parsedLambdaList, bodyProcessingResult.getDocString(), new PrognStruct(analyzedBodyForms), macroLambdaEnvironment);
+		return new MacroLambdaStruct(className, macroName, parsedLambdaList, bodyProcessingResult.getDocString(), new PrognStruct(analyzedBodyForms), macroLambdaEnvironment);
 	}
 }

@@ -80,7 +80,7 @@ public class LambdaExpander extends MacroFunctionExpander<LambdaStruct> {
 			final String lambdaClassName = "Lambda" + '_' + System.nanoTime();
 			className = "jcl/" + lambdaClassName;
 		} else {
-			className = javaClassNameDeclaration.getClassName().replace('.', '/');
+			className = javaClassNameDeclaration.getClassName().replace('.', '/') + '_' + System.nanoTime();
 		}
 
 		final OrdinaryLambdaList parsedLambdaList = ordinaryLambdaListParser.parseOrdinaryLambdaList(lambdaEnvironment, parameters, declare);

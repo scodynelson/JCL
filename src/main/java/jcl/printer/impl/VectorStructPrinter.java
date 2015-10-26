@@ -57,7 +57,7 @@ public class VectorStructPrinter<TYPE extends LispStruct> implements LispPrinter
 
 			stringBuilder.append(')');
 		} else {
-			final String typeClassName = object.getType().getClass().getName().toUpperCase();
+			final String typeClassName = object.getType().getClass().getSimpleName().toUpperCase();
 
 			stringBuilder.append("#<");
 			stringBuilder.append(typeClassName);

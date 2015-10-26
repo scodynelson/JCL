@@ -27,7 +27,7 @@ public class HashTableStructPrinter implements LispPrinter<HashTableStruct> {
 
 	@Override
 	public String print(final HashTableStruct object) {
-		final String typeClassName = object.getType().getClass().getName().toUpperCase();
+		final String typeClassName = object.getType().getClass().getSimpleName().toUpperCase();
 
 		final FunctionStruct test = object.getTest();
 		final String printedTest = printer.print(test);

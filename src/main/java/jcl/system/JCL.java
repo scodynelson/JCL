@@ -16,14 +16,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.ImportResource;
-import org.springframework.integration.annotation.IntegrationComponentScan;
-import org.springframework.integration.config.EnableIntegration;
 
 @Configuration
 @ImportResource("applicationContext.xml")
 @ComponentScan("jcl")
-@EnableIntegration
-@IntegrationComponentScan("jcl")
 @SpringBootApplication
 public class JCL implements ApplicationRunner {
 

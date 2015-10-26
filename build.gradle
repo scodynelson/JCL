@@ -70,7 +70,6 @@ dependencies {
 
 	compile("org.springframework.boot:spring-boot-starter")
 	compile("org.springframework.boot:spring-boot-loader")
-	compile("org.springframework.boot:spring-boot-starter-integration")
 
 	compile("javax.help:javahelp:${javaHelpVersion}")
 

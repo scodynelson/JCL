@@ -15,7 +15,7 @@ import jcl.compiler.real.environment.binding.lambdalist.AuxParameter;
 import jcl.compiler.real.environment.binding.lambdalist.BodyParameter;
 import jcl.compiler.real.environment.binding.lambdalist.EnvironmentParameter;
 import jcl.compiler.real.environment.binding.lambdalist.KeyParameter;
-import jcl.compiler.real.environment.binding.lambdalist.MacroLambdaListBindings;
+import jcl.compiler.real.environment.binding.lambdalist.MacroLambdaList;
 import jcl.compiler.real.environment.binding.lambdalist.OptionalParameter;
 import jcl.compiler.real.environment.binding.lambdalist.RequiredParameter;
 import jcl.compiler.real.environment.binding.lambdalist.RestParameter;
@@ -36,7 +36,7 @@ public final class MacroLambdaListParser extends LambdaListParser {
 	@Autowired
 	private Printer printer;
 
-	public MacroLambdaListBindings parseMacroLambdaList(final Environment environment, final ListStruct lambdaList,
+	public MacroLambdaList parseMacroLambdaList(final Environment environment, final ListStruct lambdaList,
 	                                                    final DeclareStruct declareElement) {
 
 		if (lambdaList.isDotted()) {
@@ -46,7 +46,7 @@ public final class MacroLambdaListParser extends LambdaListParser {
 		}
 	}
 
-	private MacroLambdaListBindings getLambdaListBindings(final Environment environment, final ListStruct lambdaList,
+	private MacroLambdaList getLambdaListBindings(final Environment environment, final ListStruct lambdaList,
 	                                                      final DeclareStruct declareElement) {
 
 		final List<LispStruct> lambdaListJava = lambdaList.getAsJavaList();
@@ -219,10 +219,10 @@ public final class MacroLambdaListParser extends LambdaListParser {
 			throw new ProgramErrorException("Unexpected element at the end of Macro Lambda List: " + printedElement);
 		}
 
-		return new MacroLambdaListBindings(wholeBinding, environmentBinding, requiredBindings, optionalBindings, restBinding, bodyBinding, keyBindings, auxBindings, allowOtherKeys);
+		return new MacroLambdaList(wholeBinding, environmentBinding, requiredBindings, optionalBindings, restBinding, bodyBinding, keyBindings, auxBindings, allowOtherKeys);
 	}
 
-	private MacroLambdaListBindings getDottedLambdaListBindings(final Environment environment, final ListStruct lambdaList,
+	private MacroLambdaList getDottedLambdaListBindings(final Environment environment, final ListStruct lambdaList,
 	                                                            final DeclareStruct declareElement) {
 
 		final List<LispStruct> lambdaListJava = lambdaList.getAsJavaList();
@@ -308,6 +308,6 @@ public final class MacroLambdaListParser extends LambdaListParser {
 			throw new ProgramErrorException("Unexpected element at the end of Destructuring Lambda List: " + printedElement);
 		}
 
-		return new MacroLambdaListBindings(wholeBinding, environmentBinding, requiredBindings, optionalBindings, restBinding, null, Collections.emptyList(), Collections.emptyList(), false);
+		return new MacroLambdaList(wholeBinding, environmentBinding, requiredBindings, optionalBindings, restBinding, null, Collections.emptyList(), Collections.emptyList(), false);
 	}
 }

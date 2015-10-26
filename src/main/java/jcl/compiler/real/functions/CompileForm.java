@@ -11,7 +11,6 @@ import java.io.Serializable;
 import java.util.Deque;
 
 import jcl.LispStruct;
-import jcl.compiler.real.icg.ICGGateway;
 import jcl.compiler.real.icg.IntermediateCodeGenerator;
 import jcl.compiler.real.icg.JavaClassBuilder;
 import jcl.compiler.real.sa.SemanticAnalyzer;
@@ -48,17 +47,12 @@ class CompileForm implements Serializable {
 	private IntermediateCodeGenerator intermediateCodeGenerator;
 
 	@Autowired
-	private ICGGateway icgGateway;
-
-	@Autowired
 	private ConfigurableApplicationContext applicationContext;
 
 	public CompileResult compile(final LispStruct form) {
 
 		final LambdaStruct analyzedObj = semanticAnalyzer.analyze(form);
 		final Deque<JavaClassBuilder> javaClassBuilderDeque = intermediateCodeGenerator.generate(analyzedObj);
-//		final GeneratorState generatorState = icgGateway.generate(analyzedObj, new GeneratorState());
-//		final Deque<JavaClassBuilder> javaClassBuilderDeque = generatorState.getFinalClassBuilderDeque();
 
 		BooleanStruct compiledWithWarnings = NILStruct.INSTANCE;
 		BooleanStruct failedToCompile = NILStruct.INSTANCE;

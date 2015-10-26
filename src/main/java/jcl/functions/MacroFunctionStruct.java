@@ -4,14 +4,17 @@
 
 package jcl.functions;
 
-import jcl.compiler.real.environment.binding.lambdalist.MacroLambdaListBindings;
+import jcl.LispStruct;
+import jcl.compiler.real.environment.Environment;
+import jcl.compiler.real.environment.binding.lambdalist.MacroLambdaList;
 import jcl.functions.expanders.MacroFunctionExpander;
+import jcl.lists.ListStruct;
 
 public abstract class MacroFunctionStruct extends FunctionStruct {
 
 	private static final long serialVersionUID = -5950370781257065737L;
 
-	protected final MacroLambdaListBindings macroLambdaListBindings;
+	protected final MacroLambdaList macroLambdaList;
 
 	protected final MacroFunctionExpander<?> macroFunctionExpander;
 
@@ -26,24 +29,31 @@ public abstract class MacroFunctionStruct extends FunctionStruct {
 		this(documentation, closure, null, null);
 	}
 
-	protected MacroFunctionStruct(final MacroLambdaListBindings macroLambdaListBindings, final MacroFunctionExpander<?> macroFunctionExpander) {
-		this(null, null, macroLambdaListBindings, macroFunctionExpander);
+	protected MacroFunctionStruct(final MacroLambdaList macroLambdaList, final MacroFunctionExpander<?> macroFunctionExpander) {
+		this(null, null, macroLambdaList, macroFunctionExpander);
 	}
 
-	protected MacroFunctionStruct(final String documentation, final MacroLambdaListBindings lambdaListBindings,
+	protected MacroFunctionStruct(final String documentation, final MacroLambdaList lambdaListBindings,
 	                              final MacroFunctionExpander<?> macroFunctionExpander) {
 		this(documentation, null, lambdaListBindings, macroFunctionExpander);
 	}
 
-	protected MacroFunctionStruct(final Closure closure, final MacroLambdaListBindings lambdaListBindings,
+	protected MacroFunctionStruct(final Closure closure, final MacroLambdaList lambdaListBindings,
 	                              final MacroFunctionExpander<?> macroFunctionExpander) {
 		this(null, closure, lambdaListBindings, macroFunctionExpander);
 	}
 
-	protected MacroFunctionStruct(final String documentation, final Closure closure, final MacroLambdaListBindings macroLambdaListBindings,
+	protected MacroFunctionStruct(final String documentation, final Closure closure, final MacroLambdaList macroLambdaList,
 	                              final MacroFunctionExpander<?> macroFunctionExpander) {
 		super(documentation, closure);
-		this.macroLambdaListBindings = macroLambdaListBindings;
+		this.macroLambdaList = macroLambdaList;
 		this.macroFunctionExpander = macroFunctionExpander;
+	}
+
+	@Override
+	public LispStruct apply(final LispStruct... lispStructs) {
+		final ListStruct listStruct = (ListStruct) lispStructs[0];
+		final Environment environment = (Environment) lispStructs[1];
+		return macroFunctionExpander.expand(listStruct, environment);
 	}
 }

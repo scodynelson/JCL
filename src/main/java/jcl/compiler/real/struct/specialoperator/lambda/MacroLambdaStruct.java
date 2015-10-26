@@ -6,7 +6,7 @@ package jcl.compiler.real.struct.specialoperator.lambda;
 
 import jcl.arrays.StringStruct;
 import jcl.compiler.real.environment.Environment;
-import jcl.compiler.real.environment.binding.lambdalist.MacroLambdaListBindings;
+import jcl.compiler.real.environment.binding.lambdalist.MacroLambdaList;
 import jcl.compiler.real.struct.CompilerSpecialOperatorStruct;
 import jcl.compiler.real.struct.specialoperator.PrognStruct;
 import jcl.symbols.SymbolStruct;
@@ -19,7 +19,7 @@ public class MacroLambdaStruct extends CompilerSpecialOperatorStruct {
 
 	private final SymbolStruct<?> macroName;
 
-	private final MacroLambdaListBindings lambdaListBindings;
+	private final MacroLambdaList lambdaListBindings;
 
 	private final StringStruct docString;
 
@@ -27,7 +27,7 @@ public class MacroLambdaStruct extends CompilerSpecialOperatorStruct {
 
 	private final Environment lambdaEnvironment;
 
-	public MacroLambdaStruct(final String fileName, final SymbolStruct<?> macroName, final MacroLambdaListBindings lambdaListBindings,
+	public MacroLambdaStruct(final String fileName, final SymbolStruct<?> macroName, final MacroLambdaList lambdaListBindings,
 	                         final StringStruct docString, final PrognStruct forms, final Environment lambdaEnvironment) {
 		this.fileName = fileName;
 		this.macroName = macroName;
@@ -41,7 +41,7 @@ public class MacroLambdaStruct extends CompilerSpecialOperatorStruct {
 		return fileName;
 	}
 
-	public MacroLambdaListBindings getLambdaListBindings() {
+	public MacroLambdaList getLambdaListBindings() {
 		return lambdaListBindings;
 	}
 

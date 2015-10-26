@@ -171,6 +171,7 @@ public abstract class FunctionStruct extends BuiltInClassStruct implements Initi
 	private static final SymbolStruct<?> DUMMY_SYMBOL = new SymbolStruct<>("dummySymbol");
 
 	public SymbolStruct<?> getFunctionSymbol() {
+		// TODO: we can do this better
 		return DUMMY_SYMBOL;
 	}
 
@@ -266,7 +267,6 @@ public abstract class FunctionStruct extends BuiltInClassStruct implements Initi
 	}
 
 	protected List<FunctionParameterBinding> getFunctionBindings(final LispStruct[] lispStructs) {
-		// TODO: This expansion only applies for "Ordinary" function parameters. Macro??? Override or expand this???
 		final List<RequiredParameter> requiredBindings = lambdaListBindings.getRequiredBindings();
 		final List<OptionalParameter> optionalBindings = lambdaListBindings.getOptionalBindings();
 		final RestParameter restBinding = lambdaListBindings.getRestBinding();

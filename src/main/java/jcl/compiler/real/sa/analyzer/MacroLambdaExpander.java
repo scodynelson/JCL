@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 import jcl.LispStruct;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.binding.Binding;
-import jcl.compiler.real.environment.binding.lambdalist.MacroLambdaListBindings;
+import jcl.compiler.real.environment.binding.lambdalist.MacroLambdaList;
 import jcl.compiler.real.sa.FormAnalyzer;
 import jcl.compiler.real.sa.analyzer.body.BodyProcessingResult;
 import jcl.compiler.real.sa.analyzer.body.BodyWithDeclaresAndDocStringAnalyzer;
@@ -92,7 +92,7 @@ public class MacroLambdaExpander extends MacroFunctionExpander<MacroLambdaStruct
 			fileName = javaClassNameDeclaration.getClassName();
 		}
 
-		final MacroLambdaListBindings parsedLambdaList = macroLambdaListParser.parseMacroLambdaList(macroLambdaEnvironment, parameters, declare);
+		final MacroLambdaList parsedLambdaList = macroLambdaListParser.parseMacroLambdaList(macroLambdaEnvironment, parameters, declare);
 
 		final List<LispStruct> bodyForms = bodyProcessingResult.getBodyForms();
 		final List<LispStruct> analyzedBodyForms

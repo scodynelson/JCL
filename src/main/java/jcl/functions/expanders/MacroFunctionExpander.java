@@ -27,6 +27,7 @@ import jcl.compiler.real.environment.binding.lambdalist.RestParameter;
 import jcl.compiler.real.environment.binding.lambdalist.SuppliedPParameter;
 import jcl.compiler.real.environment.binding.lambdalist.WholeParameter;
 import jcl.conditions.exceptions.ProgramErrorException;
+import jcl.functions.Closure;
 import jcl.functions.FunctionParameterBinding;
 import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;
@@ -40,6 +41,18 @@ public abstract class MacroFunctionExpander<O extends LispStruct> extends MacroE
 	private static final long serialVersionUID = -4041262906159677088L;
 
 	protected MacroLambdaList macroLambdaListBindings;
+
+	protected MacroFunctionExpander() {
+		this(null);
+	}
+
+	protected MacroFunctionExpander(final Closure closure) {
+		super(closure);
+	}
+
+	protected MacroFunctionExpander(final String documentation, final Closure closure) {
+		super(documentation, closure);
+	}
 
 	@Override
 	public void afterPropertiesSet() throws Exception {
@@ -245,16 +258,26 @@ public abstract class MacroFunctionExpander<O extends LispStruct> extends MacroE
 
 	@Override
 	public O expand(final ListStruct form, final Environment environment) {
+		macroLambdaListBindings.getWholeBinding().setInitForm(form);
+		macroLambdaListBindings.getEnvironmentBinding().setInitForm(environment);
 
-		// TODO: I don't think the first argument matters right now... This may just be the 'whole' parameter.
-		// TODO: The 'environment' to be passed is the 'environment' parameter.
-		// TODO: Do we do the '(let ((*environment* environment)) (... expansion-body ...))' here?
+		final ListStruct arguments = form.getRest();
+		final List<LispStruct> asJavaList = arguments.getAsJavaList();
+
+		final LispStruct[] argsArray = new LispStruct[asJavaList.size()];
+		asJavaList.toArray(argsArray);
+
+		getFunctionBindings(argsArray);
+
+		return innerExpand();
+	}
+
+	protected O innerExpand() {
 		return null;
 	}
 
 	@Override
 	public LispStruct apply(final LispStruct... lispStructs) {
-		getFunctionBindings(lispStructs);
 		final ListStruct listStruct = (ListStruct) lispStructs[0];
 		final Environment environment = (Environment) lispStructs[1];
 		return expand(listStruct, environment);

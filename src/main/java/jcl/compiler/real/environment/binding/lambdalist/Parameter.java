@@ -13,7 +13,7 @@ public class Parameter extends Binding {
 
 	private static final long serialVersionUID = 4128878993186537174L;
 
-	private final LispStruct initForm;
+	private LispStruct initForm;
 
 	private final DestructuringLambdaList destructuringForm;
 
@@ -33,6 +33,10 @@ public class Parameter extends Binding {
 
 	public LispStruct getInitForm() {
 		return initForm;
+	}
+
+	public void setInitForm(final LispStruct initForm) {
+		this.initForm = initForm;
 	}
 
 	public boolean isSpecial() {

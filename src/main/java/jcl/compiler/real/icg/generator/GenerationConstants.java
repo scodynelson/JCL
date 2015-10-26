@@ -14,16 +14,20 @@ import java.util.Map;
 
 import jcl.LispStruct;
 import jcl.compiler.real.environment.binding.lambdalist.AuxParameter;
+import jcl.compiler.real.environment.binding.lambdalist.BodyParameter;
+import jcl.compiler.real.environment.binding.lambdalist.EnvironmentParameter;
 import jcl.compiler.real.environment.binding.lambdalist.KeyParameter;
 import jcl.compiler.real.environment.binding.lambdalist.OptionalParameter;
 import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaList;
 import jcl.compiler.real.environment.binding.lambdalist.RequiredParameter;
 import jcl.compiler.real.environment.binding.lambdalist.RestParameter;
 import jcl.compiler.real.environment.binding.lambdalist.SuppliedPParameter;
+import jcl.compiler.real.environment.binding.lambdalist.WholeParameter;
 import jcl.compiler.real.struct.ValuesStructs;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.functions.Closure;
 import jcl.functions.FunctionStruct;
+import jcl.functions.expanders.MacroFunctionExpander;
 import jcl.lists.ConsStruct;
 import jcl.lists.ListStruct;
 import jcl.packages.GlobalPackageStruct;
@@ -215,6 +219,10 @@ interface GenerationConstants {
 
 	String SYMBOL_STRUCT_SET_STRUCTURE_CLASS_METHOD_DESC = CodeGenerators.getMethodDescription(SymbolStruct.class, SYMBOL_STRUCT_SET_STRUCTURE_CLASS_METHOD_NAME, StructureClassStruct.class);
 
+	String SYMBOL_STRUCT_SET_MACRO_FUNCTION_EXPANDER_METHOD_NAME = "setMacroFunctionExpander";
+
+	String SYMBOL_STRUCT_SET_MACRO_FUNCTION_EXPANDER_METHOD_DESC = CodeGenerators.getMethodDescription(SymbolStruct.class, SYMBOL_STRUCT_SET_MACRO_FUNCTION_EXPANDER_METHOD_NAME, MacroFunctionExpander.class);
+
 	String PACKAGE_STRUCT_NAME = Type.getInternalName(PackageStruct.class);
 
 	String PACKAGE_STRUCT_DESC = Type.getDescriptor(PackageStruct.class);
@@ -241,11 +249,21 @@ interface GenerationConstants {
 
 	String FUNCTION_STRUCT_INIT_DESC = CodeGenerators.getConstructorDescription(FunctionStruct.class);
 
+	/**
+	 * Constant {@link String} containing the description for the {@link FunctionStruct#FunctionStruct(Closure)}
+	 * constructor method.
+	 */
+	String FUNCTION_STRUCT_INIT_CLOSURE_DESC = CodeGenerators.getConstructorDescription(FunctionStruct.class, Closure.class);
+
 	String FUNCTION_STRUCT_INIT_STRING_CLOSURE_DESC = CodeGenerators.getConstructorDescription(FunctionStruct.class, String.class, Closure.class);
 
 	String FUNCTION_STRUCT_APPLY_METHOD_NAME = "apply";
 
 	String FUNCTION_STRUCT_APPLY_METHOD_DESC = CodeGenerators.getMethodDescription(FunctionStruct.class, FUNCTION_STRUCT_APPLY_METHOD_NAME, LispStruct[].class);
+
+	String MACRO_FUNCTION_EXPANDER_NAME = Type.getInternalName(MacroFunctionExpander.class);
+
+	String MACRO_FUNCTION_EXPANDER_CLASS_SIGNATURE = "Ljcl/functions/expanders/MacroFunctionExpander<Ljcl/LispStruct;>;";
 
 	String LISP_STRUCT_NAME = Type.getInternalName(LispStruct.class);
 
@@ -308,6 +326,18 @@ interface GenerationConstants {
 	String SUPPLIED_P_BINDING_NAME = Type.getInternalName(SuppliedPParameter.class);
 
 	String SUPPLIED_P_BINDING_INIT_DESC = CodeGenerators.getConstructorDescription(SuppliedPParameter.class, SymbolStruct.class, boolean.class);
+
+	String WHOLE_BINDING_NAME = Type.getInternalName(WholeParameter.class);
+
+	String WHOLE_BINDING_INIT_DESC = CodeGenerators.getConstructorDescription(WholeParameter.class, SymbolStruct.class, boolean.class);
+
+	String ENVIRONMENT_BINDING_NAME = Type.getInternalName(EnvironmentParameter.class);
+
+	String ENVIRONMENT_BINDING_INIT_DESC = CodeGenerators.getConstructorDescription(EnvironmentParameter.class, SymbolStruct.class);
+
+	String BODY_BINDING_NAME = Type.getInternalName(BodyParameter.class);
+
+	String BODY_BINDING_INIT_DESC = CodeGenerators.getConstructorDescription(BodyParameter.class, SymbolStruct.class, boolean.class);
 
 	String RETURN_FROM_EXCEPTION_NAME = Type.getInternalName(ReturnFromException.class);
 

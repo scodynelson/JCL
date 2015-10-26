@@ -443,4 +443,14 @@ public class TestGround {
 		}
 		return result;
 	}
+
+	private Object setUpMacroLambda() {
+		final TestGroundMacroFunctionExpanderGenerator expanderGenerator = new TestGroundMacroFunctionExpanderGenerator();
+
+		final PackageStruct pkg = PackageStruct.findPackage("SYSTEM");
+		final SymbolStruct<?> macroName = pkg.findSymbol("FOO").getSymbol();
+
+		macroName.setMacroFunctionExpander(expanderGenerator);
+		return expanderGenerator;
+	}
 }

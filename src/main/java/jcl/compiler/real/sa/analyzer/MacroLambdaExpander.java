@@ -87,7 +87,7 @@ public class MacroLambdaExpander extends MacroFunctionExpander<MacroLambdaStruct
 		final String fileName;
 		if (javaClassNameDeclaration == null) {
 			final String className = "MacroLambda" + '_' + macroName.getName() + '_' + System.nanoTime();
-			fileName = "jcl." + className;
+			fileName = "jcl/" + className;
 		} else {
 			fileName = javaClassNameDeclaration.getClassName();
 		}

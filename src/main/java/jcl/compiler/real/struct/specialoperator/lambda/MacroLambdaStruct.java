@@ -15,7 +15,7 @@ public class MacroLambdaStruct extends CompilerSpecialOperatorStruct {
 
 	private static final long serialVersionUID = 8461845259414025247L;
 
-	private final String fileName;
+	private final String className;
 
 	private final SymbolStruct<?> macroName;
 
@@ -27,9 +27,9 @@ public class MacroLambdaStruct extends CompilerSpecialOperatorStruct {
 
 	private final Environment lambdaEnvironment;
 
-	public MacroLambdaStruct(final String fileName, final SymbolStruct<?> macroName, final MacroLambdaList lambdaListBindings,
+	public MacroLambdaStruct(final String className, final SymbolStruct<?> macroName, final MacroLambdaList lambdaListBindings,
 	                         final StringStruct docString, final PrognStruct forms, final Environment lambdaEnvironment) {
-		this.fileName = fileName;
+		this.className = className;
 		this.macroName = macroName;
 		this.lambdaListBindings = lambdaListBindings;
 		this.docString = docString;
@@ -37,8 +37,12 @@ public class MacroLambdaStruct extends CompilerSpecialOperatorStruct {
 		this.lambdaEnvironment = lambdaEnvironment;
 	}
 
-	public String getFileName() {
-		return fileName;
+	public String getClassName() {
+		return className;
+	}
+
+	public SymbolStruct<?> getMacroName() {
+		return macroName;
 	}
 
 	public MacroLambdaList getLambdaListBindings() {

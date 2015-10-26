@@ -61,7 +61,8 @@ public final class SpecialOperatorStruct extends SymbolStruct<SpecialOperatorStr
 
 	public static final SpecialOperatorStruct DEFSTRUCT = new SpecialOperatorStruct("%DEFSTRUCT", GlobalPackageStruct.COMPILER);
 
-	public static final SpecialOperatorStruct MACRO_LAMBDA = new SpecialOperatorStruct("MACRO-LAMBDA", GlobalPackageStruct.COMPILER);
+	// TODO: Temporarily having this in the COMMON_LISP package
+	public static final SpecialOperatorStruct MACRO_LAMBDA = new SpecialOperatorStruct("MACRO-LAMBDA", GlobalPackageStruct.COMMON_LISP);
 
 	public static final SpecialOperatorStruct TAIL_CALL = new SpecialOperatorStruct("%TAIL-CALL", GlobalPackageStruct.COMPILER);
 

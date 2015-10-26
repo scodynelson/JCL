@@ -158,9 +158,4 @@ public class TestGroundMacroFunctionExpanderGenerator extends MacroFunctionExpan
 
 		return NullStruct.INSTANCE;
 	}
-
-	@Override
-	protected LispStruct innerExpand() {
-		return new CharacterStruct(97);
-	}
 }

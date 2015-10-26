@@ -26,9 +26,12 @@ import jcl.compiler.real.environment.binding.lambdalist.RequiredParameter;
 import jcl.compiler.real.environment.binding.lambdalist.RestParameter;
 import jcl.compiler.real.environment.binding.lambdalist.SuppliedPParameter;
 import jcl.compiler.real.environment.binding.lambdalist.WholeParameter;
+import jcl.compiler.real.struct.ValuesStruct;
+import jcl.conditions.exceptions.ErrorException;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.functions.Closure;
 import jcl.functions.FunctionParameterBinding;
+import jcl.functions.FunctionStruct;
 import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;
 import jcl.symbols.NILStruct;
@@ -60,16 +63,29 @@ public abstract class MacroFunctionExpander<O extends LispStruct> extends MacroE
 		functionSymbol.setMacroFunctionExpander(this);
 	}
 
+	@Override
 	protected List<FunctionParameterBinding> getFunctionBindings(final LispStruct[] lispStructs) {
-		// TODO: This expansion only applies for "Ordinary" function parameters. Macro??? Override or expand this???
+		final WholeParameter wholeBinding = macroLambdaListBindings.getWholeBinding();
+		final EnvironmentParameter environmentBinding = macroLambdaListBindings.getEnvironmentBinding();
 		final List<RequiredParameter> requiredBindings = macroLambdaListBindings.getRequiredBindings();
 		final List<OptionalParameter> optionalBindings = macroLambdaListBindings.getOptionalBindings();
 		final RestParameter restBinding = macroLambdaListBindings.getRestBinding();
+		final BodyParameter bodyBinding = macroLambdaListBindings.getBodyBinding();
 		final List<KeyParameter> keyBindings = macroLambdaListBindings.getKeyBindings();
 		boolean allowOtherKeys = macroLambdaListBindings.isAllowOtherKeys();
 		final List<AuxParameter> auxBindings = macroLambdaListBindings.getAuxBindings();
 
 		final List<FunctionParameterBinding> functionParametersToBind = new ArrayList<>();
+
+		final SymbolStruct<?> wholeSymbol = wholeBinding.getVar();
+		final LispStruct wholeInitForm = wholeBinding.getInitForm();
+		final FunctionParameterBinding wholeParameterBinding = new FunctionParameterBinding(wholeSymbol, wholeInitForm, wholeBinding.isSpecial());
+		functionParametersToBind.add(wholeParameterBinding);
+
+		final SymbolStruct<?> environmentSymbol = environmentBinding.getVar();
+		final LispStruct environmentInitForm = environmentBinding.getInitForm();
+		final FunctionParameterBinding environmentParameterBinding = new FunctionParameterBinding(environmentSymbol, environmentInitForm, environmentBinding.isSpecial());
+		functionParametersToBind.add(environmentParameterBinding);
 
 		final List<LispStruct> functionArguments = Arrays.asList(lispStructs);
 		final int numberOfArguments = functionArguments.size();
@@ -210,6 +226,14 @@ public abstract class MacroFunctionExpander<O extends LispStruct> extends MacroE
 			functionParametersToBind.add(functionParameterBinding);
 		}
 
+		if (bodyBinding != null) {
+			final SymbolStruct<?> bodySymbol = bodyBinding.getVar();
+			final LispStruct bodListStruct = ListStruct.buildProperList(restList);
+
+			final FunctionParameterBinding functionParameterBinding = new FunctionParameterBinding(bodySymbol, bodListStruct, bodyBinding.isSpecial());
+			functionParametersToBind.add(functionParameterBinding);
+		}
+
 		functionParametersToBind.addAll(keywordFunctionParametersToBind.values());
 
 		for (final AuxParameter auxBinding : auxBindings) {
@@ -223,17 +247,18 @@ public abstract class MacroFunctionExpander<O extends LispStruct> extends MacroE
 	}
 
 	protected WholeParameter getWholeBinding() {
-		return null;
+		return new WholeParameter(new SymbolStruct<>("temp_whole_" + System.nanoTime()));
 	}
 
 	protected EnvironmentParameter getEnvironmentBinding() {
-		return null;
+		return new EnvironmentParameter(new SymbolStruct<>("temp_environment_" + System.nanoTime()));
 	}
 
 	protected BodyParameter getBodyBinding() {
 		return null;
 	}
 
+	@Override
 	protected void initLambdaListBindings() {
 		final WholeParameter wholeBinding = getWholeBinding();
 		final List<RequiredParameter> requiredBindings = getRequiredBindings();
@@ -256,6 +281,7 @@ public abstract class MacroFunctionExpander<O extends LispStruct> extends MacroE
 		                                                       .build();
 	}
 
+	@SuppressWarnings({"unchecked", "rawtypes"})
 	@Override
 	public O expand(final ListStruct form, final Environment environment) {
 		macroLambdaListBindings.getWholeBinding().setInitForm(form);
@@ -267,12 +293,71 @@ public abstract class MacroFunctionExpander<O extends LispStruct> extends MacroE
 		final LispStruct[] argsArray = new LispStruct[asJavaList.size()];
 		asJavaList.toArray(argsArray);
 
-		getFunctionBindings(argsArray);
+		final Map<SymbolStruct<?>, LispStruct> closureSymbolsToBind = getClosureSymbolBindings();
+		for (final Map.Entry<SymbolStruct<?>, LispStruct> closureSymbolToBind : closureSymbolsToBind.entrySet()) {
+			final SymbolStruct symbol = closureSymbolToBind.getKey();
+			LispStruct value = closureSymbolToBind.getValue();
+			if (value instanceof ValuesStruct) {
+				final ValuesStruct valuesStruct = (ValuesStruct) value;
+				value = valuesStruct.getPrimaryValue();
+			}
+			symbol.bindLexicalValue(value);
+		}
 
-		return innerExpand();
+		final Map<SymbolStruct<?>, FunctionStruct> closureFunctionsToBind = getClosureFunctionBindings();
+		for (final Map.Entry<SymbolStruct<?>, FunctionStruct> closureFunctionToBind : closureFunctionsToBind.entrySet()) {
+			final SymbolStruct<?> symbol = closureFunctionToBind.getKey();
+			final FunctionStruct function = closureFunctionToBind.getValue();
+			symbol.bindFunction(function);
+		}
+
+		final List<FunctionParameterBinding> parameterSymbolsToBind = getFunctionBindings(argsArray);
+		for (final FunctionParameterBinding parameterSymbolToBind : parameterSymbolsToBind) {
+			final SymbolStruct symbol = parameterSymbolToBind.getParameterSymbol();
+			LispStruct value = parameterSymbolToBind.getParameterValue();
+			if (value instanceof ValuesStruct) {
+				final ValuesStruct valuesStruct = (ValuesStruct) value;
+				value = valuesStruct.getPrimaryValue();
+			} else if (INIT_FORM_PLACEHOLDER.equals(value)) {
+				value = getInitForm(closure, symbol);
+			}
+			final boolean isSpecial = parameterSymbolToBind.isSpecial();
+			if (isSpecial) {
+				symbol.bindDynamicValue(value);
+			} else {
+				symbol.bindLexicalValue(value);
+			}
+		}
+
+		final O result;
+		try {
+			result = internalApply(closure);
+		} catch (final ErrorException ex) {
+			throw ex;
+		} catch (final Throwable t) {
+			throw new ErrorException("Non-Lisp error found.", t);
+		} finally {
+			for (final FunctionParameterBinding parameterSymbolToUnbind : parameterSymbolsToBind) {
+				final SymbolStruct<?> parameterSymbol = parameterSymbolToUnbind.getParameterSymbol();
+				final boolean isSpecial = parameterSymbolToUnbind.isSpecial();
+				if (isSpecial) {
+					parameterSymbol.unbindDynamicValue();
+				} else {
+					parameterSymbol.unbindLexicalValue();
+				}
+			}
+			for (final SymbolStruct<?> closureFunctionToUnbind : closureFunctionsToBind.keySet()) {
+				closureFunctionToUnbind.unbindFunction();
+			}
+			for (final SymbolStruct<?> closureSymbolToUnbind : closureSymbolsToBind.keySet()) {
+				closureSymbolToUnbind.unbindLexicalValue();
+			}
+		}
+		return result;
 	}
 
-	protected O innerExpand() {
+	@Override
+	protected O internalApply(final Closure currentClosure) {
 		return null;
 	}
 

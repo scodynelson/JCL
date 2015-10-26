@@ -106,6 +106,7 @@
 		<entry key="jcl.compiler.real.struct.specialoperator.LetStruct" value-ref="letCodeGenerator"/>
 		<entry key="jcl.compiler.real.struct.specialoperator.LetStarStruct" value-ref="letStarCodeGenerator"/>
 		<entry key="jcl.compiler.real.struct.specialoperator.LocallyStruct" value-ref="locallyCodeGenerator"/>
+		<entry key="jcl.compiler.real.struct.specialoperator.lambda.MacroLambdaStruct" value-ref="macroLambdaCodeGenerator"/>
 		<entry key="jcl.compiler.real.struct.specialoperator.MultipleValueCallStruct" value-ref="multipleValueCallCodeGenerator"/>
 		<entry key="jcl.compiler.real.struct.specialoperator.MultipleValueProg1Struct" value-ref="multipleValueProg1CodeGenerator"/>
 		<entry key="jcl.compiler.real.struct.specialoperator.PrognStruct" value-ref="prognCodeGenerator"/>

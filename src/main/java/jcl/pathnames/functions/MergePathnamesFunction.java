@@ -21,6 +21,7 @@ import jcl.lists.NullStruct;
 import jcl.numbers.IntegerStruct;
 import jcl.packages.GlobalPackageStruct;
 import jcl.pathnames.LogicalPathnameStruct;
+import jcl.pathnames.PathnameComponentType;
 import jcl.pathnames.PathnameDevice;
 import jcl.pathnames.PathnameDirectory;
 import jcl.pathnames.PathnameHost;
@@ -139,10 +140,10 @@ public final class MergePathnamesFunction extends FunctionStruct {
 		if (mergedPathnameDirectory == null) {
 			mergedPathnameDirectory = defaultPathname.getPathnameDirectory();
 		}
-		if (mergedPathnameName == null) {
+		if ((mergedPathnameName == null) || (mergedPathnameName.getComponentType() == PathnameComponentType.NIL)) {
 			mergedPathnameName = defaultPathname.getPathnameName();
 		}
-		if (mergedPathnameType == null) {
+		if ((mergedPathnameType == null) || (mergedPathnameType.getComponentType() == PathnameComponentType.NIL)) {
 			mergedPathnameType = defaultPathname.getPathnameType();
 		}
 		if (mergedPathnameVersion == null) {

@@ -112,6 +112,7 @@ public class PathnameStruct extends BuiltInClassStruct {
 	 * 		the path to parse into the pathname object elements
 	 */
 	public PathnameStruct(final Path path) {
+		// TODO: This doesn't work correctly!!!
 		this(path.toUri());
 	}
 
@@ -122,6 +123,7 @@ public class PathnameStruct extends BuiltInClassStruct {
 	 * 		the file to parse into the pathname object elements
 	 */
 	public PathnameStruct(final File file) {
+		// TODO: This doesn't work correctly!!!
 		this(file.toURI());
 	}
 

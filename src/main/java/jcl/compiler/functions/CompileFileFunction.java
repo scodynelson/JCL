@@ -19,6 +19,7 @@ import java.util.jar.Attributes;
 import java.util.jar.JarEntry;
 import java.util.jar.JarOutputStream;
 import java.util.jar.Manifest;
+import java.util.regex.Pattern;
 import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
@@ -73,6 +74,8 @@ public final class CompileFileFunction extends FunctionStruct {
 	private static final long serialVersionUID = -3067892826539388846L;
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(CompileFileFunction.class);
+
+	private static final Pattern VALID_FILE_CLASS_NAME_PATTERN = Pattern.compile("[^a-zA-Z0-9]");
 
 	@Autowired
 	private ReadFunction readFunction;
@@ -283,6 +286,7 @@ public final class CompileFileFunction extends FunctionStruct {
 			final String inputFileName = inputFilePath.getFileName().toString();
 			String inputClassName = FilenameUtils.getBaseName(inputFileName);
 			inputClassName = StringUtils.capitalize(inputClassName);
+			inputClassName = VALID_FILE_CLASS_NAME_PATTERN.matcher(inputClassName).replaceAll("_");
 			final ListStruct fileLambda = buildFileLambda(forms, inputClassName);
 
 			final LambdaStruct analyzedFileLambda = semanticAnalyzer.analyze(fileLambda);

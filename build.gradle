@@ -83,6 +83,21 @@ task copyToLib(type: Copy) {
 }
 build.dependsOn(copyToLib)
 
+task generateLispJars {
+	description = 'Generate Lisp Jars'
+	fileTree(dir: 'src/main/lisp/jcl/compiler', include:'**/*.lisp').each { file ->
+		doLast {
+			javaexec {
+				classpath sourceSets.main.runtimeClasspath
+				main = 'jcl.system.JCL'
+				args "--compileFileSrcDir=$file.absolutePath"
+				args "--compileFileDestDir=$buildDir/libs/"
+			}
+		}
+	}
+}
+build.dependsOn(generateLispJars)
+
 //********* TEST *********//
 
 apply plugin: 'jacoco'

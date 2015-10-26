@@ -1,7 +1,16 @@
 package jcl.system;
 
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.List;
 
+import jcl.compiler.functions.CompileFileFunction;
+import jcl.pathnames.PathnameName;
+import jcl.pathnames.PathnameStruct;
+import jcl.pathnames.PathnameType;
+import jcl.pathnames.functions.MergePathnamesFunction;
+import jcl.printer.Printer;
 import jcl.streams.CharacterStreamStruct;
 import jcl.streams.StreamVariables;
 import jcl.streams.TwoWayStreamStruct;
@@ -26,7 +35,13 @@ public class JCL implements ApplicationRunner {
 	private static final Logger LOGGER = LoggerFactory.getLogger(JCL.class);
 
 	@Autowired
+	private CompileFileFunction compileFileFunction;
+
+	@Autowired
 	private ReadEvalPrint readEvalPrint;
+
+	@Autowired
+	private MergePathnamesFunction mergePathnamesFunction;
 
 	public JCL() throws IOException {
 		try (LoggerOutputStream loggerOutputStream = new LoggerOutputStream(LOGGER)) {
@@ -43,6 +58,27 @@ public class JCL implements ApplicationRunner {
 
 	@Override
 	public void run(final ApplicationArguments args) throws Exception {
-		readEvalPrint.funcall(args);
+
+		final boolean compileFileSrcDir = args.containsOption("compileFileSrcDir");
+		final boolean compileFileDestDir = args.containsOption("compileFileDestDir");
+		if(compileFileSrcDir) {
+			final List<String> sourceFiles = args.getOptionValues("compileFileSrcDir");
+			final String destDir = args.getOptionValues("compileFileDestDir").get(0);
+
+			for (final String fileName : sourceFiles) {
+				final PathnameStruct sourceFile = new PathnameStruct(fileName);
+
+				final PathnameName pathnameName = sourceFile.getPathnameName();
+				final PathnameType pathnameType = new PathnameType("jar");
+				final PathnameStruct tempPathname = new PathnameStruct(null, null, null, pathnameName, pathnameType, null);
+
+				final PathnameStruct destDirectory = new PathnameStruct(destDir);
+				final PathnameStruct newSourceFile = mergePathnamesFunction.mergePathnames(destDirectory, tempPathname);
+
+				compileFileFunction.compileFile(sourceFile, newSourceFile, true, true);
+			}
+		} else {
+			readEvalPrint.funcall(args);
+		}
 	}
 }

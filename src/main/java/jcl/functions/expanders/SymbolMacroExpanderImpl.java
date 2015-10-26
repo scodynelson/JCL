@@ -5,7 +5,7 @@
 package jcl.functions.expanders;
 
 import jcl.LispStruct;
-import jcl.compiler.real.environment.Environment;
+import jcl.compiler.environment.Environment;
 import jcl.symbols.SymbolStruct;
 
 public class SymbolMacroExpanderImpl extends SymbolMacroExpander<LispStruct> {

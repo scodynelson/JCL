@@ -22,7 +22,7 @@
 
 		<entry key="jcl.characters.CharacterStruct" value-ref="characterStructPrinter"/>
 
-		<entry key="jcl.compiler.real.struct.ValuesStruct" value-ref="valuesStructPrinter"/>
+		<entry key="jcl.compiler.struct.ValuesStruct" value-ref="valuesStructPrinter"/>
 
 		<entry key="jcl.hashtables.HashTableStruct" value-ref="hashTableStructPrinter"/>
 		<entry key="jcl.hashtables.HashTableStruct.KeyWrapper" value-ref="hashTableKeyWrapperPrinter"/>
@@ -59,7 +59,7 @@
 
 	<util:map id="goStructFactoryStrategies"
 	          key-type="java.lang.Class"
-	          value-type="jcl.compiler.real.struct.specialoperator.go.GoStructFactory">
+	          value-type="jcl.compiler.struct.specialoperator.go.GoStructFactory">
 
 		<entry key="jcl.symbols.SymbolStruct" value-ref="goSymbolStructFactory"/>
 		<entry key="jcl.numbers.IntegerStruct" value-ref="goIntegerStructFactory"/>
@@ -70,7 +70,7 @@
 
 	<util:map id="codeGeneratorStrategies"
 	          key-type="java.lang.Class"
-	          value-type="jcl.compiler.real.icg.CodeGenerator">
+	          value-type="jcl.compiler.icg.CodeGenerator">
 
 		<entry key="jcl.arrays.ArrayStruct" value-ref="arrayCodeGenerator"/>
 		<entry key="jcl.arrays.BitVectorStruct" value-ref="bitVectorCodeGenerator"/>
@@ -79,7 +79,7 @@
 
 		<entry key="jcl.characters.CharacterStruct" value-ref="characterCodeGenerator"/>
 
-		<entry key="jcl.compiler.real.struct.ValuesStruct" value-ref="valuesCodeGenerator"/>
+		<entry key="jcl.compiler.struct.ValuesStruct" value-ref="valuesCodeGenerator"/>
 
 		<entry key="jcl.lists.NullStruct" value-ref="nullCodeGenerator"/>
 		<entry key="jcl.lists.ConsStruct" value-ref="consCodeGenerator"/>
@@ -96,39 +96,39 @@
 		<entry key="jcl.symbols.SymbolStruct" value-ref="symbolValueCodeGenerator"/>
 		<entry key="jcl.symbols.TStruct" value-ref="TCodeGenerator"/>
 
-		<entry key="jcl.compiler.real.struct.specialoperator.BlockStruct" value-ref="blockCodeGenerator"/>
-		<entry key="jcl.compiler.real.struct.specialoperator.CatchStruct" value-ref="catchCodeGenerator"/>
-		<entry key="jcl.compiler.real.struct.specialoperator.SymbolFunctionCallStruct" value-ref="symbolFunctionCallCodeGenerator"/>
-		<entry key="jcl.compiler.real.struct.specialoperator.IfStruct" value-ref="ifCodeGenerator"/>
-		<entry key="jcl.compiler.real.struct.specialoperator.InnerLambdaStruct" value-ref="innerLambdaCodeGenerator"/>
-		<entry key="jcl.compiler.real.struct.specialoperator.LambdaCompilerFunctionStruct" value-ref="lambdaFunctionCodeGenerator"/>
-		<entry key="jcl.compiler.real.struct.specialoperator.LambdaFunctionCallStruct" value-ref="lambdaFunctionCallCodeGenerator"/>
-		<entry key="jcl.compiler.real.struct.specialoperator.LetStruct" value-ref="letCodeGenerator"/>
-		<entry key="jcl.compiler.real.struct.specialoperator.LetStarStruct" value-ref="letStarCodeGenerator"/>
-		<entry key="jcl.compiler.real.struct.specialoperator.LocallyStruct" value-ref="locallyCodeGenerator"/>
-		<entry key="jcl.compiler.real.struct.specialoperator.lambda.MacroLambdaStruct" value-ref="macroLambdaCodeGenerator"/>
-		<entry key="jcl.compiler.real.struct.specialoperator.MultipleValueCallStruct" value-ref="multipleValueCallCodeGenerator"/>
-		<entry key="jcl.compiler.real.struct.specialoperator.MultipleValueProg1Struct" value-ref="multipleValueProg1CodeGenerator"/>
-		<entry key="jcl.compiler.real.struct.specialoperator.PrognStruct" value-ref="prognCodeGenerator"/>
-		<entry key="jcl.compiler.real.struct.specialoperator.ProgvStruct" value-ref="progvCodeGenerator"/>
-		<entry key="jcl.compiler.real.struct.specialoperator.QuoteStruct" value-ref="quoteCodeGenerator"/>
-		<entry key="jcl.compiler.real.struct.specialoperator.ReturnFromStruct" value-ref="returnFromCodeGenerator"/>
-		<entry key="jcl.compiler.real.struct.specialoperator.SetqStruct" value-ref="setqCodeGenerator"/>
-		<entry key="jcl.compiler.real.struct.specialoperator.SymbolCompilerFunctionStruct" value-ref="symbolFunctionCodeGenerator"/>
+		<entry key="jcl.compiler.struct.specialoperator.BlockStruct" value-ref="blockCodeGenerator"/>
+		<entry key="jcl.compiler.struct.specialoperator.CatchStruct" value-ref="catchCodeGenerator"/>
+		<entry key="jcl.compiler.struct.specialoperator.SymbolFunctionCallStruct" value-ref="symbolFunctionCallCodeGenerator"/>
+		<entry key="jcl.compiler.struct.specialoperator.IfStruct" value-ref="ifCodeGenerator"/>
+		<entry key="jcl.compiler.struct.specialoperator.InnerLambdaStruct" value-ref="innerLambdaCodeGenerator"/>
+		<entry key="jcl.compiler.struct.specialoperator.LambdaCompilerFunctionStruct" value-ref="lambdaFunctionCodeGenerator"/>
+		<entry key="jcl.compiler.struct.specialoperator.LambdaFunctionCallStruct" value-ref="lambdaFunctionCallCodeGenerator"/>
+		<entry key="jcl.compiler.struct.specialoperator.LetStruct" value-ref="letCodeGenerator"/>
+		<entry key="jcl.compiler.struct.specialoperator.LetStarStruct" value-ref="letStarCodeGenerator"/>
+		<entry key="jcl.compiler.struct.specialoperator.LocallyStruct" value-ref="locallyCodeGenerator"/>
+		<entry key="jcl.compiler.struct.specialoperator.lambda.MacroLambdaStruct" value-ref="macroLambdaCodeGenerator"/>
+		<entry key="jcl.compiler.struct.specialoperator.MultipleValueCallStruct" value-ref="multipleValueCallCodeGenerator"/>
+		<entry key="jcl.compiler.struct.specialoperator.MultipleValueProg1Struct" value-ref="multipleValueProg1CodeGenerator"/>
+		<entry key="jcl.compiler.struct.specialoperator.PrognStruct" value-ref="prognCodeGenerator"/>
+		<entry key="jcl.compiler.struct.specialoperator.ProgvStruct" value-ref="progvCodeGenerator"/>
+		<entry key="jcl.compiler.struct.specialoperator.QuoteStruct" value-ref="quoteCodeGenerator"/>
+		<entry key="jcl.compiler.struct.specialoperator.ReturnFromStruct" value-ref="returnFromCodeGenerator"/>
+		<entry key="jcl.compiler.struct.specialoperator.SetqStruct" value-ref="setqCodeGenerator"/>
+		<entry key="jcl.compiler.struct.specialoperator.SymbolCompilerFunctionStruct" value-ref="symbolFunctionCodeGenerator"/>
 		<!--<entry key="jcl.compiler.real.struct.specialoperator.SymbolMacroletStruct" value-ref="symbolMacroletCodeGenerator"/>-->
-		<entry key="jcl.compiler.real.struct.specialoperator.TagbodyStruct" value-ref="tagbodyCodeGenerator"/>
-		<entry key="jcl.compiler.real.struct.specialoperator.TheStruct" value-ref="theCodeGenerator"/>
-		<entry key="jcl.compiler.real.struct.specialoperator.ThrowStruct" value-ref="throwCodeGenerator"/>
-		<entry key="jcl.compiler.real.struct.specialoperator.UnwindProtectStruct" value-ref="unwindProtectCodeGenerator"/>
+		<entry key="jcl.compiler.struct.specialoperator.TagbodyStruct" value-ref="tagbodyCodeGenerator"/>
+		<entry key="jcl.compiler.struct.specialoperator.TheStruct" value-ref="theCodeGenerator"/>
+		<entry key="jcl.compiler.struct.specialoperator.ThrowStruct" value-ref="throwCodeGenerator"/>
+		<entry key="jcl.compiler.struct.specialoperator.UnwindProtectStruct" value-ref="unwindProtectCodeGenerator"/>
 
 		<!--<entry key="jcl.compiler.real.struct.specialoperator.declare.DeclareStruct" value-ref=""/>-->
 
-		<entry key="jcl.compiler.real.struct.specialoperator.defstruct.DefstructStruct" value-ref="defstructCodeGenerator"/>
+		<entry key="jcl.compiler.struct.specialoperator.defstruct.DefstructStruct" value-ref="defstructCodeGenerator"/>
 
-		<entry key="jcl.compiler.real.struct.specialoperator.go.GoIntegerStruct" value-ref="goCodeGenerator"/>
-		<entry key="jcl.compiler.real.struct.specialoperator.go.GoSymbolStruct" value-ref="goCodeGenerator"/>
+		<entry key="jcl.compiler.struct.specialoperator.go.GoIntegerStruct" value-ref="goCodeGenerator"/>
+		<entry key="jcl.compiler.struct.specialoperator.go.GoSymbolStruct" value-ref="goCodeGenerator"/>
 
-		<entry key="jcl.compiler.real.struct.specialoperator.lambda.LambdaStruct" value-ref="lambdaCodeGenerator"/>
+		<entry key="jcl.compiler.struct.specialoperator.lambda.LambdaStruct" value-ref="lambdaCodeGenerator"/>
 
 	</util:map>
 

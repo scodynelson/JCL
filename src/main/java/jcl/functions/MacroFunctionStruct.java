@@ -5,8 +5,8 @@
 package jcl.functions;
 
 import jcl.LispStruct;
-import jcl.compiler.real.environment.Environment;
-import jcl.compiler.real.environment.binding.lambdalist.MacroLambdaList;
+import jcl.compiler.environment.Environment;
+import jcl.compiler.environment.binding.lambdalist.MacroLambdaList;
 import jcl.functions.expanders.MacroFunctionExpander;
 import jcl.lists.ListStruct;
 

@@ -5,7 +5,7 @@
 package jcl.functions.expanders;
 
 import jcl.LispStruct;
-import jcl.compiler.real.environment.Environment;
+import jcl.compiler.environment.Environment;
 import jcl.functions.Closure;
 import jcl.functions.FunctionStruct;
 

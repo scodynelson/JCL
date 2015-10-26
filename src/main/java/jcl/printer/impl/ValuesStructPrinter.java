@@ -7,7 +7,7 @@ package jcl.printer.impl;
 import java.util.List;
 
 import jcl.LispStruct;
-import jcl.compiler.real.struct.ValuesStruct;
+import jcl.compiler.struct.ValuesStruct;
 import jcl.printer.LispPrinter;
 import jcl.printer.Printer;
 import org.springframework.beans.factory.annotation.Autowired;

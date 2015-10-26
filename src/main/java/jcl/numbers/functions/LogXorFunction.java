@@ -7,8 +7,8 @@ package jcl.numbers.functions;
 import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
-import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaList;
-import jcl.compiler.real.environment.binding.lambdalist.RestParameter;
+import jcl.compiler.environment.binding.lambdalist.OrdinaryLambdaList;
+import jcl.compiler.environment.binding.lambdalist.RestParameter;
 import jcl.conditions.exceptions.TypeErrorException;
 import jcl.functions.FunctionStruct;
 import jcl.numbers.IntegerStruct;

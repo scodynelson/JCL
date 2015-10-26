@@ -10,8 +10,8 @@ import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
 import jcl.LispType;
-import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaList;
-import jcl.compiler.real.environment.binding.lambdalist.RequiredParameter;
+import jcl.compiler.environment.binding.lambdalist.OrdinaryLambdaList;
+import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.conditions.exceptions.SimpleErrorException;
 import jcl.conditions.exceptions.TypeErrorException;

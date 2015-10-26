@@ -10,8 +10,8 @@ import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
 import jcl.arrays.VectorStruct;
-import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaList;
-import jcl.compiler.real.environment.binding.lambdalist.RequiredParameter;
+import jcl.compiler.environment.binding.lambdalist.OrdinaryLambdaList;
+import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
 import jcl.functions.FunctionStruct;
 import jcl.lists.ListStruct;
 import jcl.packages.GlobalPackageStruct;

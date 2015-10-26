@@ -9,9 +9,9 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
-import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaList;
-import jcl.compiler.real.environment.binding.lambdalist.RequiredParameter;
-import jcl.compiler.real.struct.ValuesStruct;
+import jcl.compiler.environment.binding.lambdalist.OrdinaryLambdaList;
+import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
+import jcl.compiler.struct.ValuesStruct;
 import jcl.functions.FunctionStruct;
 import jcl.packages.GlobalPackageStruct;
 import jcl.symbols.SymbolStruct;

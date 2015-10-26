@@ -6,7 +6,7 @@ package testground;
 
 import jcl.LispStruct;
 import jcl.characters.CharacterStruct;
-import jcl.compiler.real.environment.Environment;
+import jcl.compiler.environment.Environment;
 import jcl.functions.expanders.SymbolMacroExpander;
 
 @SuppressWarnings({"all", "rawtypes"})

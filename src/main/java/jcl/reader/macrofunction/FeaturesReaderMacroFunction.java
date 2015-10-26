@@ -8,7 +8,7 @@ import java.io.Serializable;
 import java.util.List;
 
 import jcl.LispStruct;
-import jcl.compiler.real.CompilerVariables;
+import jcl.compiler.CompilerVariables;
 import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.lists.ConsStruct;
 import jcl.lists.ListStruct;

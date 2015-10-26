@@ -10,7 +10,7 @@ import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
 import jcl.characters.CharacterConstants;
-import jcl.compiler.real.functions.EvalFunction;
+import jcl.compiler.functions.EvalFunction;
 import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.lists.NullStruct;
 import jcl.reader.Reader;

@@ -1,8 +1,8 @@
 package jcl.system.repl;
 
 import jcl.LispStruct;
-import jcl.compiler.real.functions.EvalFunction;
-import jcl.compiler.real.struct.ValuesStruct;
+import jcl.compiler.functions.EvalFunction;
+import jcl.compiler.struct.ValuesStruct;
 import jcl.conditions.exceptions.ConditionException;
 import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.lists.ListStruct;

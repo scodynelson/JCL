@@ -5,11 +5,11 @@
 ;;;;;;;;;;;;;;;;;;;;;;
 
 (macro-lambda defmacro (name lambda-list &rest doc-decls-body)
-  (declare (system:%java-class-name "jcl.compiler.function.Defmacro"))
+  (declare (system:%java-class-name "jcl.compiler.functions.Defmacro"))
   `(macro-lambda ,name ,lambda-list ,@doc-decls-body))
 
 (macro-lambda defun (name lambda-list &rest doc-decls-body)
-  (declare (system:%java-class-name "jcl.compiler.function.Defun"))
+  (declare (system:%java-class-name "jcl.compiler.functions.Defun"))
   `(progn
      (system::set-symbol-function
         (quote ,name)

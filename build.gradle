@@ -29,6 +29,45 @@ jar {
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
+def lispSourceTree = fileTree(dir:'src/main/lisp/jcl/compiler', include: '**/*.lisp')
+//def lispCompiledTree = fileTree(dir:'build/lisp-compiled', include: '**/*.jar')
+def lispCompiledTree = fileTree(dir:'temp', include: '**/*.jar')
+
+task unpackLispJars {
+	lispCompiledTree.each { file ->
+		doLast {
+			println("Unpacking Lisp Jar")
+			println(file.absolutePath)
+
+			copy {
+				from zipTree(file)
+				into compileJava.destinationDir
+			}
+		}
+	}
+}
+jar.dependsOn(unpackLispJars)
+
+task generateLispJars {
+	new File(project.buildDir, "lisp-compiled").mkdirs();
+
+	lispSourceTree.each { file ->
+		doLast {
+			println("Generating Lisp Jar")
+			println(file.absolutePath)
+
+			javaexec {
+				main = 'jcl.system.JCL'
+				classpath sourceSets.main.runtimeClasspath
+				args "--compileFileSrcDir=$file.absolutePath"
+				args "--compileFileDestDir=$buildDir/lisp-compiled/"
+			}
+			println()
+		}
+	}
+}
+unpackLispJars.dependsOn(generateLispJars)
+
 compileJava {
 	options.compilerArgs << "-Xlint"
 }
@@ -76,27 +115,6 @@ dependencies {
 	testCompile("org.springframework.boot:spring-boot-starter-test")
 	testCompile("org.testng:testng:${testngVersion}")
 }
-
-task copyToLib(type: Copy) {
-	into "$buildDir/libs"
-	from configurations.runtime
-}
-build.dependsOn(copyToLib)
-
-task generateLispJars {
-	description = 'Generate Lisp Jars'
-	fileTree(dir: 'src/main/lisp/jcl/compiler', include:'**/*.lisp').each { file ->
-		doLast {
-			javaexec {
-				classpath sourceSets.main.runtimeClasspath
-				main = 'jcl.system.JCL'
-				args "--compileFileSrcDir=$file.absolutePath"
-				args "--compileFileDestDir=$buildDir/libs/"
-			}
-		}
-	}
-}
-build.dependsOn(generateLispJars)
 
 //********* TEST *********//
 

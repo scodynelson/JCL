@@ -65,9 +65,9 @@ public final class CompileFilePathnameFunction extends FunctionStruct {
 		final List<KeyParameter> keyBindings = Collections.singletonList(keyBinding);
 
 		return new OrdinaryLambdaList.Builder().requiredBindings(requiredBindings)
-		                                               .keyBindings(keyBindings)
-		                                               .allowOtherKeys(true)
-		                                               .build();
+		                                       .keyBindings(keyBindings)
+		                                       .allowOtherKeys(true)
+		                                       .build();
 	}
 
 	@Override
@@ -94,19 +94,17 @@ public final class CompileFilePathnameFunction extends FunctionStruct {
 		final boolean isLogicalInputFile = mergedInputFile instanceof LogicalPathnameStruct;
 
 		if ((outputFile == null) && isLogicalInputFile) {
-			return new PathnameStruct(
-					mergedInputFile.getPathnameHost(),
-					mergedInputFile.getPathnameDevice(),
-					mergedInputFile.getPathnameDirectory(),
-					mergedInputFile.getPathnameName(),
+			final PathnameStruct translatedMergedInputFile = translateLogicalPathnameFunction.translateLogicalPathname(mergedInputFile);
+			return new LogicalPathnameStruct(
+					translatedMergedInputFile.getPathnameHost(),
+					translatedMergedInputFile.getPathnameDirectory(),
+					translatedMergedInputFile.getPathnameName(),
 					outputPathnameType,
-					mergedInputFile.getPathnameVersion()
+					translatedMergedInputFile.getPathnameVersion()
 			);
 		} else if (isLogicalInputFile) {
-			final PathnameStruct outputFilePathname = new PathnameStruct(null, null, null, null, outputPathnameType, null);
 			final PathnameStruct translatedMergedInputFile = translateLogicalPathnameFunction.translateLogicalPathname(mergedInputFile);
-			final PathnameStruct mergedOutputFile = mergePathnamesFunction.mergePathnames(outputFilePathname, translatedMergedInputFile);
-
+			final PathnameStruct mergedOutputFile = mergePathnamesFunction.mergePathnames(outputFile, translatedMergedInputFile);
 			return new PathnameStruct(
 					mergedOutputFile.getPathnameHost(),
 					mergedOutputFile.getPathnameDevice(),
@@ -115,10 +113,17 @@ public final class CompileFilePathnameFunction extends FunctionStruct {
 					outputPathnameType,
 					mergedOutputFile.getPathnameVersion()
 			);
+		} else if (outputFile == null) {
+			return new PathnameStruct(
+					mergedInputFile.getPathnameHost(),
+					mergedInputFile.getPathnameDevice(),
+					mergedInputFile.getPathnameDirectory(),
+					mergedInputFile.getPathnameName(),
+					outputPathnameType,
+					mergedInputFile.getPathnameVersion()
+			);
 		} else {
-			final PathnameStruct outputFilePathname = new PathnameStruct(null, null, null, null, outputPathnameType, null);
-			final PathnameStruct mergedOutputFile = mergePathnamesFunction.mergePathnames(outputFilePathname, mergedInputFile);
-
+			final PathnameStruct mergedOutputFile = mergePathnamesFunction.mergePathnames(outputFile, mergedInputFile);
 			return new PathnameStruct(
 					mergedOutputFile.getPathnameHost(),
 					mergedOutputFile.getPathnameDevice(),

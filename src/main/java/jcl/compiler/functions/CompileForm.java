@@ -8,7 +8,9 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Deque;
+import java.util.List;
 
 import jcl.LispStruct;
 import jcl.compiler.icg.IntermediateCodeGenerator;
@@ -16,8 +18,11 @@ import jcl.compiler.icg.JavaClassBuilder;
 import jcl.compiler.sa.SemanticAnalyzer;
 import jcl.compiler.struct.specialoperator.lambda.LambdaStruct;
 import jcl.functions.FunctionStruct;
+import jcl.lists.ListStruct;
+import jcl.lists.NullStruct;
 import jcl.symbols.BooleanStruct;
 import jcl.symbols.NILStruct;
+import jcl.symbols.SpecialOperatorStruct;
 import jcl.symbols.TStruct;
 import jcl.system.classloaders.CompilerClassLoader;
 import org.objectweb.asm.ClassReader;
@@ -51,7 +56,8 @@ class CompileForm implements Serializable {
 
 	public CompileResult compile(final LispStruct form) {
 
-		final LambdaStruct analyzedObj = semanticAnalyzer.analyze(form);
+		final ListStruct lambdaForm = wrapFormInLambda(form);
+		final LambdaStruct analyzedObj = semanticAnalyzer.analyze(lambdaForm);
 		final Deque<JavaClassBuilder> javaClassBuilderDeque = intermediateCodeGenerator.generate(analyzedObj);
 
 		BooleanStruct compiledWithWarnings = NILStruct.INSTANCE;
@@ -103,5 +109,14 @@ class CompileForm implements Serializable {
 		}
 
 		return new CompileResult(function, compiledWithWarnings, failedToCompile);
+	}
+
+	private static ListStruct wrapFormInLambda(final LispStruct form) {
+		final List<LispStruct> lambdaFormList = new ArrayList<>();
+		lambdaFormList.add(SpecialOperatorStruct.LAMBDA);
+		lambdaFormList.add(NullStruct.INSTANCE);
+		lambdaFormList.add(form);
+
+		return ListStruct.buildProperList(lambdaFormList);
 	}
 }

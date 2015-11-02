@@ -4,18 +4,13 @@
 
 package jcl.compiler.sa;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Set;
 
-import jcl.LispStruct;
 import jcl.compiler.environment.Environment;
 import jcl.compiler.sa.analyzer.LambdaExpander;
 import jcl.compiler.struct.specialoperator.lambda.LambdaStruct;
 import jcl.lists.ListStruct;
-import jcl.lists.NullStruct;
 import jcl.printer.Printer;
-import jcl.symbols.SpecialOperatorStruct;
 import jcl.symbols.SymbolStruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,16 +34,13 @@ class SemanticAnalyzerImpl implements SemanticAnalyzer {
 	private Printer printer;
 
 	@Override
-	public LambdaStruct analyze(final LispStruct form) {
-
-		final ListStruct lambdaForm = wrapFormInLambda(form);
-
+	public LambdaStruct analyze(final ListStruct form) {
 		final Environment nullEnvironment = Environment.NULL;
 
 		final Set<SymbolStruct<?>> undefinedFunctions = nullEnvironment.getUndefinedFunctions();
 		undefinedFunctions.clear();
 
-		final LambdaStruct analyzedForm = lambdaExpander.expand(lambdaForm, nullEnvironment);
+		final LambdaStruct analyzedForm = lambdaExpander.expand(form, nullEnvironment);
 
 		// now see if we have any functions still undefined
 		undefinedFunctions.stream()
@@ -56,15 +48,6 @@ class SemanticAnalyzerImpl implements SemanticAnalyzer {
 		undefinedFunctions.clear();
 
 		return analyzedForm;
-	}
-
-	private static ListStruct wrapFormInLambda(final LispStruct form) {
-		final List<LispStruct> lambdaFormList = new ArrayList<>();
-		lambdaFormList.add(SpecialOperatorStruct.LAMBDA);
-		lambdaFormList.add(NullStruct.INSTANCE);
-		lambdaFormList.add(form);
-
-		return ListStruct.buildProperList(lambdaFormList);
 	}
 
 	private void unknownFunctionWarning(final SymbolStruct<?> undefinedFunction) {

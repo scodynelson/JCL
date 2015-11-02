@@ -1,16 +1,14 @@
 package jcl.system;
 
 import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 
 import jcl.compiler.functions.CompileFileFunction;
+import jcl.conditions.exceptions.ErrorException;
 import jcl.pathnames.PathnameName;
 import jcl.pathnames.PathnameStruct;
 import jcl.pathnames.PathnameType;
 import jcl.pathnames.functions.MergePathnamesFunction;
-import jcl.printer.Printer;
 import jcl.streams.CharacterStreamStruct;
 import jcl.streams.StreamVariables;
 import jcl.streams.TwoWayStreamStruct;
@@ -61,7 +59,7 @@ public class JCL implements ApplicationRunner {
 
 		final boolean compileFileSrcDir = args.containsOption("compileFileSrcDir");
 		final boolean compileFileDestDir = args.containsOption("compileFileDestDir");
-		if(compileFileSrcDir) {
+		if(compileFileSrcDir && compileFileDestDir) {
 			final List<String> sourceFiles = args.getOptionValues("compileFileSrcDir");
 			final String destDir = args.getOptionValues("compileFileDestDir").get(0);
 
@@ -77,6 +75,8 @@ public class JCL implements ApplicationRunner {
 
 				compileFileFunction.compileFile(sourceFile, newSourceFile, true, true);
 			}
+		} else if(compileFileSrcDir || compileFileDestDir) {
+			throw new ErrorException("Both Compile File Source and Destination directories must be provided.");
 		} else {
 			readEvalPrint.funcall(args);
 		}

@@ -324,7 +324,7 @@ public final class CompileFileFunction extends FunctionStruct {
 	}
 
 	private static ListStruct buildFileLambda(final List<LispStruct> forms, final String inputClassName) {
-		final StringStruct newJavaClassName = new StringStruct(inputClassName);
+		final StringStruct newJavaClassName = new StringStruct("jcl." + inputClassName);
 		final ListStruct javaClassNameDeclaration = ListStruct.buildProperList(DeclarationStruct.JAVA_CLASS_NAME, newJavaClassName);
 		final ListStruct declareBlock = ListStruct.buildProperList(SpecialOperatorStruct.DECLARE, javaClassNameDeclaration);
 

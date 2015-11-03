@@ -20,14 +20,10 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.ImportResource;
 
-@Configuration
 @ImportResource("applicationContext.xml")
-@ComponentScan("jcl")
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = "jcl")
 public class JCL implements ApplicationRunner {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(JCL.class);
@@ -59,7 +55,7 @@ public class JCL implements ApplicationRunner {
 
 		final boolean compileFileSrcDir = args.containsOption("compileFileSrcDir");
 		final boolean compileFileDestDir = args.containsOption("compileFileDestDir");
-		if(compileFileSrcDir && compileFileDestDir) {
+		if (compileFileSrcDir && compileFileDestDir) {
 			final List<String> sourceFiles = args.getOptionValues("compileFileSrcDir");
 			final String destDir = args.getOptionValues("compileFileDestDir").get(0);
 
@@ -75,7 +71,7 @@ public class JCL implements ApplicationRunner {
 
 				compileFileFunction.compileFile(sourceFile, newSourceFile, true, true);
 			}
-		} else if(compileFileSrcDir || compileFileDestDir) {
+		} else if (compileFileSrcDir || compileFileDestDir) {
 			throw new ErrorException("Both Compile File Source and Destination directories must be provided.");
 		} else {
 			readEvalPrint.funcall(args);

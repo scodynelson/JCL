@@ -13,7 +13,7 @@
 	<util:list id="lispFilesToLoad"
 	           value-type="java.lang.String">
 		<value>${lisp.source.dir}/compiler/base-macro-lambdas.lisp</value>
-		<!--<value>${lisp.source.dir}/compiler/macros.lisp</value>-->
+		<value>${lisp.source.dir}/compiler/macros.lisp</value>
 	</util:list>
 
 	<!-- Printer -->

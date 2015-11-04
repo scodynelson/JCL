@@ -9,6 +9,13 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
                            http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
 
+	<!-- Lisp Files To Load -->
+	<util:list id="lispFilesToLoad"
+	           value-type="java.lang.String">
+		<value>${lisp.source.dir}/compiler/base-macro-lambdas.lisp</value>
+		<!--<value>${lisp.source.dir}/compiler/macros.lisp</value>-->
+	</util:list>
+
 	<!-- Printer -->
 
 	<util:map id="printerStrategies"

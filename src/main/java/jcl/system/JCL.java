@@ -3,7 +3,10 @@ package jcl.system;
 import java.io.IOException;
 import java.util.List;
 
+import javax.annotation.Resource;
+
 import jcl.compiler.functions.CompileFileFunction;
+import jcl.compiler.functions.LoadFunction;
 import jcl.conditions.exceptions.ErrorException;
 import jcl.pathnames.PathnameName;
 import jcl.pathnames.PathnameStruct;
@@ -21,8 +24,10 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ImportResource;
+import org.springframework.context.annotation.PropertySource;
 
-@ImportResource("applicationContext.xml")
+@PropertySource("classpath:jcl.properties")
+@ImportResource("classpath:applicationContext.xml")
 @SpringBootApplication(scanBasePackages = "jcl")
 public class JCL implements ApplicationRunner {
 
@@ -36,6 +41,12 @@ public class JCL implements ApplicationRunner {
 
 	@Autowired
 	private MergePathnamesFunction mergePathnamesFunction;
+
+	@Autowired
+	private LoadFunction loadFunction;
+
+	@Resource
+	private List<String> lispFilesToLoad;
 
 	public JCL() throws IOException {
 		try (LoggerOutputStream loggerOutputStream = new LoggerOutputStream(LOGGER)) {
@@ -52,6 +63,7 @@ public class JCL implements ApplicationRunner {
 
 	@Override
 	public void run(final ApplicationArguments args) throws Exception {
+		loadLispFiles();
 
 		final boolean compileFileSrcDir = args.containsOption("compileFileSrcDir");
 		final boolean compileFileDestDir = args.containsOption("compileFileDestDir");
@@ -75,6 +87,13 @@ public class JCL implements ApplicationRunner {
 			throw new ErrorException("Both Compile File Source and Destination directories must be provided.");
 		} else {
 			readEvalPrint.funcall(args);
+		}
+	}
+
+	private void loadLispFiles() {
+		for (final String lispFileToLoad : lispFilesToLoad) {
+			final PathnameStruct pathname = new PathnameStruct(lispFileToLoad);
+			loadFunction.load(pathname, false, false, true);
 		}
 	}
 }

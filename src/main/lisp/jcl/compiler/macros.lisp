@@ -48,7 +48,32 @@
 ;; Destructuring-Bind
 
 ;; Psetq
+#|
+(defun psetq-bindings (pairs)
+  (if (null pairs)
+      nil
+    (cons `(,(gensym (symbol-name (first pairs))) ,(second pairs))
+          (psetq-bindings (cddr pairs)))))
 
+(defun map-pairs (pairs bindings)
+  (if (null pairs)
+      nil
+    (cons (first pairs)
+          (cons (caar bindings)
+                (map-pairs (rest (rest pairs)) (rest bindings))))))
+
+(defun psetq-aux (pairs)
+  (let ((bindings (psetq-bindings pairs)))
+    `(let ,bindings
+       (setq ,@(map-pairs pairs bindings)))))
+
+(defmacro psetq (&rest pairs)
+  (declare (system::%java-class-name "lisp.common.function.Psetq"))
+  (when pairs
+    (unless (evenp (length pairs))
+      (error "PSETQ requires pairs of arguments, ~S" pairs))
+    (psetq-aux pairs)))
+|#
 ;; Return
 
 (defmacro return (&optional result)
@@ -222,6 +247,16 @@
 
 ;; Multiple-Value-Setq
 #|
+(defmacro multiple-value-setq ((&rest vars) form)
+  (declare (system::%java-class-name "lisp.common.function.MultipleValueSetq"))
+  (let* ((ctr 0)
+         (var-forms (mapcar #'(lambda (var) `(setq ,var (nth 0 xx-00))) vars)))
+    (dolist (form-x var-forms)
+      (rplaca (cdr (third form-x)) ctr)
+      (setq ctr (1+ ctr)))
+    `(let ((xx-00 (multiple-value-list ,form)))
+       (progn ,@var-forms))))
+
 (defmacro multiple-value-setq (varlist value-form)
   (declare (system::%java-class-name "jcl.compiler.functions.MultipleValueSetq"))
   (if varlist

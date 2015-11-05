@@ -1,27 +1,12 @@
+;;;; Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
 
+(in-package "COMMON-LISP")
 
-(defun parse-body (body &optional (doc-string-allowed t))
-  (let ((decls nil)
-        (doc nil)
-        (form (car body)))
-    (tagbody
-      top
-      (cond ((null body)
-             (values body decls doc))
-            ((and (stringp form) (cdr body))
-             (if doc-string-allowed
-                 (setq doc form doc-string-allowed nil body (cdr body) form (car body))
-               (return (values body decls doc))))
-            ((not (and (consp form) (symbolp (car form))))
-		     (return (values body decls doc)))
-		    ((eq (car form) 'declare)
-		     (setq decls (cons form decls) body (cdr body) form (car body)))
-		    (t
-		     (return (values body decls doc)))))))
+;;;;;;;;;;;;;;;;;;;;;;
 
-;CL4Java
+;; DOLIST
 (defmacro dolist ((var list-form &optional result-form) &body body)
-  (declare (system::%java-class-name "jcl.compiler.functions.Dolist"))
+  (declare (system::%java-class-name "jcl.iterators.Dolist"))
   (multiple-value-bind (forms decls)
                        (parse-body body nil)
     (let ((list (gensym "LIST-"))
@@ -34,126 +19,33 @@
              ,top
              (when ,list
                (setq ,var (car ,list))
-               (setq ,list (cdr ,list))
                (tagbody ,@forms)
-               (go ,top))
-             ,`,result-form))))))
+               (setq ,list (cdr ,list))
+               (go ,top)))
+           ,result-form)))))
 
-
-;CL4Java
-;;; Make sure we iterate the given number of times, independent of
-;;; what the body might do to the index variable.  We do this by
-;;; repeatedly binding the var in the body and also in the result
-;;; form.  We also spuriously reference the var in case the body or
-;;; result form don't reference the var either.  (Mostly modeled on
-;;; the dolist macro below.)
+;; DOTIMES
 (defmacro dotimes ((var count-form &optional result-form) &body body)
-  (declare (system::%java-class-name "lisp.common.function.Dotimes"))
-  (let ((cnt (gensym "COUNT-"))
-        (top (gensym "TAG-"))
-        (decls nil))
-    (tagbody
-      label1
-      (when (eq (car (car body)) 'declare)
-        (progn
-          (setq decls (cons (car body) decls))
-          (setq body (cdr body))
-          (go label1))))
-    `(block nil
-       (let ((,var 0)
-             (,cnt ,count-form))
-         ,@decls
-         (tagbody
-           ,top
-           (if (< ,var ,cnt)
-               (tagbody
-                 ,@body
-                 (setq ,var (1+ ,var))
-                 (go ,top))
-             (setq ,var nil)))
-         ,result-form))))
-
-;CMUCL
-(defmacro dotimes ((var count &optional (result nil)) &body body)
-  (let ((count-var (gensym "CTR-")))
-    (multiple-value-bind (forms decls)
-						 (parse-body body nil nil)
-      (multiple-value-bind (var-decls ctr-decls)
-	                       (dotimes-extract-var-decls var count-var count decls)
-		(cond ((numberp count)
-		       `(do ((,count-var 0 (1+ ,count-var)))
-				    ((>= ,count-var ,count)
-				     (let ((,var ,count-var))
-				       ,@var-decls
-				       ,var
-				       ,result))
-				  ,@ctr-decls
-				  (let ((,var ,count-var))
-				    ,@decls
-				    ,var
-				    (tagbody
-				      ,@forms))))
-		      (t (let ((v1 (gensym)))
-				   `(do ((,count-var 0 (1+ ,count-var))
-					     (,v1 ,count))
-						((>= ,count-var ,v1)
-						 (let ((,var ,count-var))
-						   ,@var-decls
-						   ,var
-						   ,result))
-				      ,@ctr-decls
-				      (let ((,var ,count-var))
-						,@decls
-						,var
-						(tagbody
-						  ,@forms))))))))))
-
-;ABCL
-(defmacro dotimes ((var count &optional (result nil)) &body body)
+  (declare (system::%java-class-name "jcl.iterators.Dotimes"))
   (multiple-value-bind (forms decls)
                        (parse-body body nil)
-    (let ((index (gensym "INDEX-"))
+    (let ((count (gensym "COUNT-"))
           (top (gensym "TOP-")))
-      (if (numberp count)
-          `(block nil
-             (let ((,var 0)
-                   (,index 0))
-               ,@decls
-               (when (> ,count 0)
-                 (tagbody
-                  ,top
-                  ,@forms
-                  (setq ,index (1+ ,index))
-                  (setq ,var ,index)
-                  (when (< ,index ,count)
-                    (go ,top))))
-               (progn ,result)))
-        (let ((limit (gensym "LIMIT-")))
-          ;; Annotations for the compiler.
-          (setf (get limit 'dotimes-limit-variable-p) t)
-          (setf (get index 'dotimes-index-variable-name) index)
-          (setf (get index 'dotimes-index-variable-p) t)
-          (setf (get limit 'dotimes-limit-variable-name) limit)
-          `(block nil
-             (let ((,var 0)
-                   (,limit ,count)
-                   (,index 0))
-               ,@decls
-               (when (> ,limit 0)
-                 (tagbody
-                  ,top
-                  ,@forms
-                  (setq ,index (1+ ,index))
-                  (setq ,var ,index)
-                  (when (< ,index ,limit)
-                    (go ,top))))
-               (progn ,result))))))))
+      `(block nil
+         (let ((,var 0)
+               (,count ,count-form))
+           ,@decls
+           (tagbody
+             ,top
+             (when (< ,var ,count)
+               (tagbody
+                 ,@forms
+                 (setq ,var (1+ ,var))
+                 (go ,top))))
+           ,result-form)))))
 
-
-
-
-#| DO AND DO* |#
-
+;; DO, DO*
+#|
 (defun fill-out-var (var)
   (unless (listp var)
     (setq var (list var)))
@@ -249,32 +141,32 @@
                (go ,top-label)))
            ,end-label)
            ,@result-forms))))
-
+|#
 
 ;ABCL
+#|
 (defun do-do-body (varlist endlist decls-and-code bind step name block)
   (let* ((inits ())
-	 (steps ())
-	 (L1 (gensym))
-	 (L2 (gensym)))
-    ;; Check for illegal old-style do.
-    (when (or (not (listp varlist)) (atom endlist))
-      (error "Ill-formed ~S -- possibly illegal old style DO?" name))
+	     (steps ())
+	     (L1 (gensym))
+	     (L2 (gensym)))
     ;; Parse the varlist to get inits and steps.
     (dolist (v varlist)
       (cond ((symbolp v) (push v inits))
-	    ((listp v)
-	     (unless (symbolp (first v))
-	       (error "~S step variable is not a symbol: ~S" name (first v)))
-	     (case (length v)
-	       (1 (push (first v) inits))
-	       (2 (push v inits))
-	       (3 (push (list (first v) (second v)) inits)
-		  (setq steps (list* (third v) (first v) steps)))
-	       (t (error "~S is an illegal form for a ~S varlist." v name))))
-	    (t (error "~S is an illegal form for a ~S varlist." v name))))
+		    ((listp v)
+		     (unless (symbolp (first v))
+		       (error "~S step variable is not a symbol: ~S" name (first v)))
+		     (case (length v)
+		       (1 (push (first v) inits))
+		       (2 (push v inits))
+		       (3 (push (list (first v) (second v)) inits)
+			  (setq steps (list* (third v) (first v) steps)))
+		       (t (error "~S is an illegal form for a ~S varlist." v name))))
+		    (t
+		     (error "~S is an illegal form for a ~S varlist." v name))))
     ;; Construct the new form.
-    (multiple-value-bind (code decls) (parse-body decls-and-code nil)
+    (multiple-value-bind (code decls)
+                         (parse-body decls-and-code nil)
       `(block ,block
          (,bind ,(nreverse inits)
           ,@decls
@@ -284,7 +176,8 @@
            ,@code
            (,step ,@(nreverse steps))
            ,L2
-           (unless ,(car endlist) (go ,L1))
+           (unless ,(car endlist)
+             (go ,L1))
            (return-from ,block (progn ,@(cdr endlist)))))))))
 
 (defmacro do (varlist endlist &rest body)
@@ -292,3 +185,8 @@
 
 (defmacro do* (varlist endlist &rest body)
   (do-do-body varlist endlist body 'let* 'setq 'do* nil))
+|#
+;;;;;;;;;;;;;;;;;;;;;;
+
+(export '(dolist dotimes do do*)
+        "COMMON-LISP")

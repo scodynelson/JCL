@@ -3,7 +3,29 @@
 (in-package "COMMON-LISP")
 
 ;;;;;;;;;;;;;;;;;;;;;;
-
+#|
+(defun parse-body (body &optional (doc-string-allowed t))
+  (let ((decls nil)
+        (doc nil)
+        (form (car body)))
+    (tagbody
+      top
+      (cond ((null body)
+             (values body decls doc))
+            ((and (stringp form) (cdr body))
+             (if doc-string-allowed
+                 (progn
+                   (setq doc form doc-string-allowed nil body (cdr body) form (car body))
+                   (go top))
+               (return-from parse-body (values body decls doc))))
+            ((not (and (consp form) (symbolp (car form))))
+		     (return-from parse-body (values body decls doc)))
+		    ((eq (car form) 'declare)
+		     (setq decls (cons form decls) body (cdr body) form (car body))
+		     (go top))
+		    (t
+		     (return-from parse-body (values body decls doc)))))))
+|#
 ;; Define-Compiler-Macro
 
 ;; Define-Symbol-Macro
@@ -47,33 +69,6 @@
 |#
 ;; Destructuring-Bind
 
-;; Psetq
-#|
-(defun psetq-bindings (pairs)
-  (if (null pairs)
-      nil
-    (cons `(,(gensym (symbol-name (first pairs))) ,(second pairs))
-          (psetq-bindings (cddr pairs)))))
-
-(defun map-pairs (pairs bindings)
-  (if (null pairs)
-      nil
-    (cons (first pairs)
-          (cons (caar bindings)
-                (map-pairs (rest (rest pairs)) (rest bindings))))))
-
-(defun psetq-aux (pairs)
-  (let ((bindings (psetq-bindings pairs)))
-    `(let ,bindings
-       (setq ,@(map-pairs pairs bindings)))))
-
-(defmacro psetq (&rest pairs)
-  (declare (system::%java-class-name "lisp.common.function.Psetq"))
-  (when pairs
-    (unless (evenp (length pairs))
-      (error "PSETQ requires pairs of arguments, ~S" pairs))
-    (psetq-aux pairs)))
-|#
 ;; Return
 
 (defmacro return (&optional result)
@@ -135,6 +130,30 @@
 	                `(if ,first (progn ,@rest))
 	              `,first))))))))
 |#
+;; Psetq
+
+(defun psetq-bindings (pairs)
+  (when pairs
+    (cons `(,(gensym) ,(car (cdr pairs)))
+          (psetq-bindings (cdr (cdr pairs))))))
+
+(defun map-psetq-pairs (pairs bindings)
+  (when pairs
+    (cons (car pairs)
+          (cons (car (car bindings))
+                (map-psetq-pairs (cdr (cdr pairs)) (cdr bindings))))))
+
+(defmacro psetq (&whole w &rest pairs)
+  (declare (system::%java-class-name "jcl.compiler.functions.Psetq"))
+  (when pairs
+    (unless (evenp (length pairs))
+      (error "Uneven number of args in the call: ~S" w))
+    (let ((bindings (psetq-bindings pairs)))
+        `(progn
+           (let ,bindings
+             (setq ,@(map-psetq-pairs pairs bindings))))
+           nil)))
+
 ;; And, Or
 
 (defmacro and (&rest forms)
@@ -326,6 +345,6 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;
 
-(export '(return when unless cond and or multiple-value-bind multiple-value-list multiple-value-setq nth-value
+(export '(psetq return when unless cond and or multiple-value-bind multiple-value-list multiple-value-setq nth-value
 		  prog prog* prog1 prog2)
         "COMMON-LISP")

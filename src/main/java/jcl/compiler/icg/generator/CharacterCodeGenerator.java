@@ -26,11 +26,11 @@ class CharacterCodeGenerator implements CodeGenerator<CharacterStruct> {
 	private static final String CHARACTER_STRUCT_NAME = Type.getInternalName(CharacterStruct.class);
 
 	/**
-	 * Constant {@link String} containing the description for the {@link CharacterStruct#CharacterStruct(int)}
+	 * Constant {@link String} containing the description for the {@link CharacterStruct#CharacterStruct(Integer)}
 	 * constructor method.
 	 */
 	private static final String CHARACTER_STRUCT_INIT_DESC
-			= CodeGenerators.getConstructorDescription(CharacterStruct.class, int.class);
+			= CodeGenerators.getConstructorDescription(CharacterStruct.class, Integer.class);
 
 	/**
 	 * {@inheritDoc}
@@ -56,6 +56,11 @@ class CharacterCodeGenerator implements CodeGenerator<CharacterStruct> {
 
 		final int codePoint = input.getCodePoint();
 		mv.visitLdcInsn(codePoint);
+		mv.visitMethodInsn(Opcodes.INVOKESTATIC,
+				GenerationConstants.JAVA_INTEGER_NAME,
+				GenerationConstants.JAVA_INTEGER_VALUE_OF_METHOD_NAME,
+				GenerationConstants.JAVA_INTEGER_VALUE_OF_METHOD_DESC,
+				false);
 		mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
 				CHARACTER_STRUCT_NAME,
 				GenerationConstants.INIT_METHOD_NAME,

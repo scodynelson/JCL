@@ -82,6 +82,16 @@ public abstract class FunctionStruct extends BuiltInClassStruct implements Initi
 	 *
 	 * @param documentation
 	 * 		instance documentation string
+	 */
+	protected FunctionStruct(final String documentation) {
+		this(documentation, FunctionType.INSTANCE, null, null);
+	}
+
+	/**
+	 * Protected constructor.
+	 *
+	 * @param documentation
+	 * 		instance documentation string
 	 * @param closure
 	 * 		instance function closure
 	 */
@@ -435,12 +445,12 @@ public abstract class FunctionStruct extends BuiltInClassStruct implements Initi
 		final boolean allowOtherKeys = getAllowOtherKeys();
 		final List<AuxParameter> auxBindings = getAuxBindings();
 		lambdaListBindings = new OrdinaryLambdaList.Builder().requiredBindings(requiredBindings)
-		                                                             .optionalBindings(optionalBindings)
-		                                                             .restBinding(restBinding)
-		                                                             .keyBindings(keyBindings)
-		                                                             .allowOtherKeys(allowOtherKeys)
-		                                                             .auxBindings(auxBindings)
-		                                                             .build();
+		                                                     .optionalBindings(optionalBindings)
+		                                                     .restBinding(restBinding)
+		                                                     .keyBindings(keyBindings)
+		                                                     .allowOtherKeys(allowOtherKeys)
+		                                                     .auxBindings(auxBindings)
+		                                                     .build();
 	}
 
 	protected List<RequiredParameter> getRequiredBindings() {

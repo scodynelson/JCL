@@ -39,6 +39,11 @@ public class IntegerStruct extends RationalStruct {
 	public static final IntegerStruct TWO = new IntegerStruct(BigInteger.valueOf(2));
 
 	/**
+	 * {@link IntegerStruct} constant representing 10.
+	 */
+	public static final IntegerStruct TEN = new IntegerStruct(BigInteger.TEN);
+
+	/**
 	 * {@link IntegerStruct} constant representing -1.
 	 */
 	public static final IntegerStruct MINUS_ONE = new IntegerStruct(BigInteger.valueOf(-1));

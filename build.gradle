@@ -104,6 +104,8 @@ String commonsPrimitivesVersion = '1.0'
 
 String apfloatVersion = '1.8.2'
 
+String icu4jVersion = "56.1"
+
 String asmAllVersion = '5.0.4'
 
 String javaHelpVersion = '2.0.05'
@@ -118,6 +120,8 @@ dependencies {
 	compile("commons-primitives:commons-primitives:${commonsPrimitivesVersion}")
 
 	compile("org.apfloat:apfloat:${apfloatVersion}")
+
+	compile("com.ibm.icu:icu4j:${icu4jVersion}")
 
 	compile("org.ow2.asm:asm-all:${asmAllVersion}")
 

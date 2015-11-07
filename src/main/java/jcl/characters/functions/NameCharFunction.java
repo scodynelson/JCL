@@ -16,12 +16,20 @@ import jcl.functions.FunctionStruct;
 import jcl.packages.GlobalPackageStruct;
 import jcl.packages.PackageStruct;
 import jcl.symbols.SymbolStruct;
+import jcl.types.CharacterType;
+import jcl.types.StringType;
+import jcl.types.SymbolType;
+import jcl.types.TypeValidator;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public final class NameCharFunction extends FunctionStruct {
 
 	private static final long serialVersionUID = 3406210294951003426L;
+
+	@Autowired
+	private TypeValidator validator;
 
 	private NameCharFunction() {
 		super("Returns the character object whose name is name. If such a character does not exist, nil is returned.");
@@ -52,17 +60,20 @@ public final class NameCharFunction extends FunctionStruct {
 	public LispStruct apply(final LispStruct... lispStructs) {
 		getFunctionBindings(lispStructs);
 
-		final LispStruct stringDesignator = lispStructs[0];
-		if (stringDesignator instanceof CharacterStruct) {
-			return stringDesignator;
-		} else if (stringDesignator instanceof StringStruct) {
-			final StringStruct stringStruct = (StringStruct) stringDesignator;
+		final LispStruct lispStruct = lispStructs[0];
+		validator.validateTypes(lispStruct, "NAME-CHAR", "Name",
+				CharacterType.INSTANCE, StringType.INSTANCE, SymbolType.INSTANCE);
+
+		if (lispStruct instanceof CharacterStruct) {
+			return lispStruct;
+		} else if (lispStruct instanceof StringStruct) {
+			final StringStruct stringStruct = (StringStruct) lispStruct;
 			return CharacterStruct.nameChar(stringStruct.getAsJavaString());
-		} else if (stringDesignator instanceof SymbolStruct) {
-			final SymbolStruct<?> symbolStruct = (SymbolStruct) stringDesignator;
+		} else if (lispStruct instanceof SymbolStruct) {
+			final SymbolStruct<?> symbolStruct = (SymbolStruct) lispStruct;
 			return CharacterStruct.nameChar(symbolStruct.getName());
 		} else {
-			throw new TypeErrorException("not character designator");
+			throw new TypeErrorException("UNCAUGHT TYPE ERROR.");
 		}
 	}
 }

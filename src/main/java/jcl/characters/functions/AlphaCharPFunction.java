@@ -10,18 +10,23 @@ import java.util.List;
 import jcl.LispStruct;
 import jcl.characters.CharacterStruct;
 import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
-import jcl.conditions.exceptions.TypeErrorException;
 import jcl.functions.FunctionStruct;
 import jcl.packages.GlobalPackageStruct;
 import jcl.packages.PackageStruct;
 import jcl.symbols.BooleanStructs;
 import jcl.symbols.SymbolStruct;
+import jcl.types.CharacterType;
+import jcl.types.TypeValidator;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public final class AlphaCharPFunction extends FunctionStruct {
 
 	private static final long serialVersionUID = 8997206745362935215L;
+
+	@Autowired
+	private TypeValidator validator;
 
 	private AlphaCharPFunction() {
 		super("Returns true if character is an alphabetic character; otherwise, returns false.");
@@ -52,13 +57,11 @@ public final class AlphaCharPFunction extends FunctionStruct {
 	public LispStruct apply(final LispStruct... lispStructs) {
 		getFunctionBindings(lispStructs);
 
-		final LispStruct character = lispStructs[0];
-		if (character instanceof CharacterStruct) {
-			final CharacterStruct struct = (CharacterStruct) character;
-			final boolean alphaChar = struct.isAlphaChar();
-			return BooleanStructs.toLispBoolean(alphaChar);
-		} else {
-			throw new TypeErrorException("not character designator");
-		}
+		final LispStruct lispStruct = lispStructs[0];
+		validator.validateTypes(lispStruct, "ALPHA-CHAR-P", "Character", CharacterType.INSTANCE);
+
+		final CharacterStruct character = (CharacterStruct) lispStruct;
+		final boolean alphaChar = character.isAlphaChar();
+		return BooleanStructs.toLispBoolean(alphaChar);
 	}
 }

@@ -12,19 +12,25 @@ import jcl.characters.CharacterStruct;
 import jcl.compiler.environment.binding.lambdalist.OptionalParameter;
 import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
 import jcl.compiler.environment.binding.lambdalist.SuppliedPParameter;
-import jcl.conditions.exceptions.TypeErrorException;
 import jcl.functions.FunctionStruct;
 import jcl.lists.NullStruct;
 import jcl.numbers.IntegerStruct;
 import jcl.packages.GlobalPackageStruct;
 import jcl.packages.PackageStruct;
 import jcl.symbols.SymbolStruct;
+import jcl.types.CharacterType;
+import jcl.types.IntegerType;
+import jcl.types.TypeValidator;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public final class DigitCharPFunction extends FunctionStruct {
 
 	private static final long serialVersionUID = -7883462040539135670L;
+
+	@Autowired
+	private TypeValidator validator;
 
 	private DigitCharPFunction() {
 		super("Tests whether character is a digit in the specified radix. If it is a digit in that radix, its weight is " +
@@ -67,24 +73,20 @@ public final class DigitCharPFunction extends FunctionStruct {
 	public LispStruct apply(final LispStruct... lispStructs) {
 		getFunctionBindings(lispStructs);
 
+		final LispStruct lispStruct = lispStructs[0];
+		validator.validateTypes(lispStruct, "DIGIT-CHAR-P", "Character", CharacterType.INSTANCE);
+		final CharacterStruct character = (CharacterStruct) lispStruct;
+
 		final IntegerStruct radix;
 		if (lispStructs.length == 2) {
 			final LispStruct possibleRadix = lispStructs[1];
-			if (possibleRadix instanceof IntegerStruct) {
-				radix = (IntegerStruct) possibleRadix;
-			} else {
-				throw new TypeErrorException("not radix");
-			}
+			validator.validateTypes(possibleRadix, "DIGIT-CHAR-P", "Radix", IntegerType.INSTANCE);
+
+			radix = (IntegerStruct) possibleRadix;
 		} else {
 			radix = IntegerStruct.TEN;
 		}
 
-		final LispStruct character = lispStructs[0];
-		if (character instanceof CharacterStruct) {
-			final CharacterStruct struct = (CharacterStruct) character;
-			return struct.charDigit(radix);
-		} else {
-			throw new TypeErrorException("not character designator");
-		}
+		return character.charDigit(radix);
 	}
 }

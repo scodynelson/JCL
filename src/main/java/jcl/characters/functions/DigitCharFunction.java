@@ -12,19 +12,24 @@ import jcl.characters.CharacterStruct;
 import jcl.compiler.environment.binding.lambdalist.OptionalParameter;
 import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
 import jcl.compiler.environment.binding.lambdalist.SuppliedPParameter;
-import jcl.conditions.exceptions.TypeErrorException;
 import jcl.functions.FunctionStruct;
 import jcl.lists.NullStruct;
 import jcl.numbers.IntegerStruct;
 import jcl.packages.GlobalPackageStruct;
 import jcl.packages.PackageStruct;
 import jcl.symbols.SymbolStruct;
+import jcl.types.IntegerType;
+import jcl.types.TypeValidator;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public final class DigitCharFunction extends FunctionStruct {
 
 	private static final long serialVersionUID = -8526559424608179479L;
+
+	@Autowired
+	private TypeValidator validator;
 
 	private DigitCharFunction() {
 		super("If weight is less than radix, digit-char returns a character which has that weight when considered as a " +
@@ -68,24 +73,20 @@ public final class DigitCharFunction extends FunctionStruct {
 	public LispStruct apply(final LispStruct... lispStructs) {
 		getFunctionBindings(lispStructs);
 
+		final LispStruct lispStruct = lispStructs[0];
+		validator.validateTypes(lispStruct, "DIGIT-CHAR", "Weight", IntegerType.INSTANCE);
+		final IntegerStruct weight = (IntegerStruct) lispStruct;
+
 		final IntegerStruct radix;
 		if (lispStructs.length == 2) {
 			final LispStruct possibleRadix = lispStructs[1];
-			if (possibleRadix instanceof IntegerStruct) {
-				radix = (IntegerStruct) possibleRadix;
-			} else {
-				throw new TypeErrorException("not radix");
-			}
+			validator.validateTypes(possibleRadix, "DIGIT-CHAR", "Radix", IntegerType.INSTANCE);
+
+			radix = (IntegerStruct) possibleRadix;
 		} else {
 			radix = IntegerStruct.TEN;
 		}
 
-		final LispStruct weight = lispStructs[0];
-		if (weight instanceof IntegerStruct) {
-			final IntegerStruct struct = (IntegerStruct) weight;
-			return CharacterStruct.digitChar(struct, radix);
-		} else {
-			throw new TypeErrorException("not character designator");
-		}
+		return CharacterStruct.digitChar(weight, radix);
 	}
 }

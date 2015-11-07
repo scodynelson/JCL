@@ -10,18 +10,23 @@ import java.util.List;
 import jcl.LispStruct;
 import jcl.characters.CharacterStruct;
 import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
-import jcl.conditions.exceptions.TypeErrorException;
 import jcl.functions.FunctionStruct;
 import jcl.numbers.IntegerStruct;
 import jcl.packages.GlobalPackageStruct;
 import jcl.packages.PackageStruct;
 import jcl.symbols.SymbolStruct;
+import jcl.types.IntegerType;
+import jcl.types.TypeValidator;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public final class CodeCharFunction extends FunctionStruct {
 
 	private static final long serialVersionUID = -7853448883104247869L;
+
+	@Autowired
+	private TypeValidator validator;
 
 	private CodeCharFunction() {
 		super("Returns a character with the code attribute given by code. If no such character exists and one cannot be " +
@@ -53,12 +58,10 @@ public final class CodeCharFunction extends FunctionStruct {
 	public LispStruct apply(final LispStruct... lispStructs) {
 		getFunctionBindings(lispStructs);
 
-		final LispStruct code = lispStructs[0];
-		if (code instanceof IntegerStruct) {
-			final IntegerStruct struct = (IntegerStruct) code;
-			return CharacterStruct.codeChar(struct);
-		} else {
-			throw new TypeErrorException("not character designator");
-		}
+		final LispStruct lispStruct = lispStructs[0];
+		validator.validateTypes(lispStruct, "CODE-CHAR", "Code", IntegerType.INSTANCE);
+
+		final IntegerStruct code = (IntegerStruct) lispStruct;
+		return CharacterStruct.codeChar(code);
 	}
 }

@@ -17,12 +17,20 @@ import jcl.functions.FunctionStruct;
 import jcl.packages.GlobalPackageStruct;
 import jcl.packages.PackageStruct;
 import jcl.symbols.SymbolStruct;
+import jcl.types.CharacterType;
+import jcl.types.StringType;
+import jcl.types.SymbolType;
+import jcl.types.TypeValidator;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public final class CharacterFunction extends FunctionStruct {
 
 	private static final long serialVersionUID = -1229967753542859679L;
+
+	@Autowired
+	private TypeValidator validator;
 
 	private CharacterFunction() {
 		super("Returns the character denoted by the character designator.");
@@ -53,17 +61,20 @@ public final class CharacterFunction extends FunctionStruct {
 	public LispStruct apply(final LispStruct... lispStructs) {
 		getFunctionBindings(lispStructs);
 
-		final LispStruct characterDesignator = lispStructs[0];
-		if (characterDesignator instanceof CharacterStruct) {
-			return characterDesignator;
-		} else if (characterDesignator instanceof StringStruct) {
-			final StringStruct stringStruct = (StringStruct) characterDesignator;
+		final LispStruct lispStruct = lispStructs[0];
+		validator.validateTypes(lispStruct, "CHARACTER", "Character",
+				CharacterType.INSTANCE, StringType.INSTANCE, SymbolType.INSTANCE);
+
+		if (lispStruct instanceof CharacterStruct) {
+			return lispStruct;
+		} else if (lispStruct instanceof StringStruct) {
+			final StringStruct stringStruct = (StringStruct) lispStruct;
 			return getCharacterFromString(stringStruct.getAsJavaString(), "String");
-		} else if (characterDesignator instanceof SymbolStruct) {
-			final SymbolStruct<?> symbolStruct = (SymbolStruct) characterDesignator;
+		} else if (lispStruct instanceof SymbolStruct) {
+			final SymbolStruct<?> symbolStruct = (SymbolStruct) lispStruct;
 			return getCharacterFromString(symbolStruct.getName(), "Symbol name");
 		} else {
-			throw new TypeErrorException("not character designator");
+			throw new TypeErrorException("UNCAUGHT TYPE ERROR.");
 		}
 	}
 

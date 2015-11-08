@@ -32,11 +32,6 @@ public abstract class AbstractCharacterPredicateFunction extends FunctionStruct 
 	}
 
 	@Override
-	public void afterPropertiesSet() throws Exception {
-		super.afterPropertiesSet();
-	}
-
-	@Override
 	public SymbolStruct<?> getFunctionSymbol() {
 		final PackageStruct aPackage = GlobalPackageStruct.COMMON_LISP;
 		final SymbolStruct<?> symbol = aPackage.intern(functionName()).getSymbol();

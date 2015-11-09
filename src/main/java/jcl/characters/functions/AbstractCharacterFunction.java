@@ -6,7 +6,7 @@ package jcl.characters.functions;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.function.Predicate;
+import java.util.function.Function;
 
 import jcl.LispStruct;
 import jcl.characters.CharacterStruct;
@@ -14,20 +14,19 @@ import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
 import jcl.functions.FunctionStruct;
 import jcl.packages.GlobalPackageStruct;
 import jcl.packages.PackageStruct;
-import jcl.symbols.BooleanStructs;
 import jcl.symbols.SymbolStruct;
 import jcl.types.CharacterType;
 import jcl.types.TypeValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 
-public abstract class AbstractCharacterPredicateFunction extends FunctionStruct {
+public abstract class AbstractCharacterFunction extends FunctionStruct {
 
-	private static final long serialVersionUID = 8935124915148949205L;
+	private static final long serialVersionUID = -7030656974789702740L;
 
 	@Autowired
 	private TypeValidator validator;
 
-	protected AbstractCharacterPredicateFunction(final String documentation) {
+	protected AbstractCharacterFunction(final String documentation) {
 		super(documentation);
 		initLambdaListBindings();
 	}
@@ -51,14 +50,19 @@ public abstract class AbstractCharacterPredicateFunction extends FunctionStruct 
 	public LispStruct apply(final LispStruct... lispStructs) {
 		getFunctionBindings(lispStructs);
 
+		final CharacterStruct character = getCharacter(lispStructs);
+		return characterFunction().apply(character);
+	}
+
+	private CharacterStruct getCharacter(final LispStruct... lispStructs) {
+
 		final LispStruct lispStruct = lispStructs[0];
 		validator.validateTypes(lispStruct, functionName(), "Character", CharacterType.INSTANCE);
 
-		final CharacterStruct character = (CharacterStruct) lispStruct;
-		return BooleanStructs.toLispBoolean(predicate().test(character));
+		return (CharacterStruct) lispStruct;
 	}
 
 	protected abstract String functionName();
 
-	protected abstract Predicate<CharacterStruct> predicate();
+	protected abstract Function<CharacterStruct, LispStruct> characterFunction();
 }

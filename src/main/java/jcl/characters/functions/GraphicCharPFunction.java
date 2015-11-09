@@ -4,6 +4,8 @@
 
 package jcl.characters.functions;
 
+import java.util.function.Predicate;
+
 import jcl.characters.CharacterStruct;
 import org.springframework.stereotype.Component;
 
@@ -22,7 +24,7 @@ public final class GraphicCharPFunction extends AbstractCharacterPredicateFuncti
 	}
 
 	@Override
-	protected boolean predicateCheck(final CharacterStruct character) {
-		return character.isGraphicChar();
+	protected Predicate<CharacterStruct> predicate() {
+		return CharacterStruct::isGraphicChar;
 	}
 }

@@ -4,6 +4,8 @@
 
 package jcl.characters.functions;
 
+import java.util.function.Predicate;
+
 import jcl.characters.CharacterStruct;
 import org.springframework.stereotype.Component;
 
@@ -22,7 +24,7 @@ public final class LowerCasePFunction extends AbstractCharacterPredicateFunction
 	}
 
 	@Override
-	protected boolean predicateCheck(final CharacterStruct character) {
-		return character.isLowerCase();
+	protected Predicate<CharacterStruct> predicate() {
+		return CharacterStruct::isLowerCase;
 	}
 }

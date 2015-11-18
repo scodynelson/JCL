@@ -12,18 +12,16 @@ import jcl.LispStruct;
 import jcl.characters.CharacterStruct;
 import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
 import jcl.compiler.environment.binding.lambdalist.RestParameter;
-import jcl.functions.FunctionStruct;
+import jcl.functions.AbstractCommonLispFunctionStruct;
 import jcl.packages.GlobalPackageStruct;
-import jcl.packages.PackageStruct;
 import jcl.symbols.NILStruct;
 import jcl.symbols.SymbolStruct;
 import jcl.symbols.TStruct;
 import jcl.types.CharacterType;
 import jcl.types.TypeValidator;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
-public abstract class AbstractCharacterEqualityFunction extends FunctionStruct {
+public abstract class AbstractCharacterEqualityFunction extends AbstractCommonLispFunctionStruct {
 
 	private static final long serialVersionUID = 3117929060088318079L;
 
@@ -32,15 +30,6 @@ public abstract class AbstractCharacterEqualityFunction extends FunctionStruct {
 
 	protected AbstractCharacterEqualityFunction(final String documentation) {
 		super(documentation);
-		initLambdaListBindings();
-	}
-
-	@Override
-	public SymbolStruct<?> getFunctionSymbol() {
-		final PackageStruct aPackage = GlobalPackageStruct.COMMON_LISP;
-		final SymbolStruct<?> symbol = aPackage.intern(functionName()).getSymbol();
-		aPackage.export(symbol);
-		return symbol;
 	}
 
 	@Override
@@ -74,8 +63,6 @@ public abstract class AbstractCharacterEqualityFunction extends FunctionStruct {
 		}
 		return characters;
 	}
-
-	protected abstract String functionName();
 
 	protected abstract Function<CharacterStruct[], Boolean> characterEqualityFunction();
 }

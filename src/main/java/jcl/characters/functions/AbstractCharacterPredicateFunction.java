@@ -11,16 +11,15 @@ import java.util.function.Predicate;
 import jcl.LispStruct;
 import jcl.characters.CharacterStruct;
 import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
-import jcl.functions.FunctionStruct;
+import jcl.functions.AbstractCommonLispFunctionStruct;
 import jcl.packages.GlobalPackageStruct;
-import jcl.packages.PackageStruct;
 import jcl.symbols.BooleanStructs;
 import jcl.symbols.SymbolStruct;
 import jcl.types.CharacterType;
 import jcl.types.TypeValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 
-public abstract class AbstractCharacterPredicateFunction extends FunctionStruct {
+public abstract class AbstractCharacterPredicateFunction extends AbstractCommonLispFunctionStruct {
 
 	private static final long serialVersionUID = 8935124915148949205L;
 
@@ -29,15 +28,6 @@ public abstract class AbstractCharacterPredicateFunction extends FunctionStruct 
 
 	protected AbstractCharacterPredicateFunction(final String documentation) {
 		super(documentation);
-		initLambdaListBindings();
-	}
-
-	@Override
-	public SymbolStruct<?> getFunctionSymbol() {
-		final PackageStruct aPackage = GlobalPackageStruct.COMMON_LISP;
-		final SymbolStruct<?> symbol = aPackage.intern(functionName()).getSymbol();
-		aPackage.export(symbol);
-		return symbol;
 	}
 
 	@Override
@@ -57,8 +47,6 @@ public abstract class AbstractCharacterPredicateFunction extends FunctionStruct 
 		final CharacterStruct character = (CharacterStruct) lispStruct;
 		return BooleanStructs.toLispBoolean(predicate().test(character));
 	}
-
-	protected abstract String functionName();
 
 	protected abstract Predicate<CharacterStruct> predicate();
 }

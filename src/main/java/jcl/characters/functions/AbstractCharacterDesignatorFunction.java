@@ -13,9 +13,8 @@ import jcl.arrays.StringStruct;
 import jcl.characters.CharacterStruct;
 import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
 import jcl.conditions.exceptions.TypeErrorException;
-import jcl.functions.FunctionStruct;
+import jcl.functions.AbstractCommonLispFunctionStruct;
 import jcl.packages.GlobalPackageStruct;
-import jcl.packages.PackageStruct;
 import jcl.symbols.SymbolStruct;
 import jcl.types.CharacterType;
 import jcl.types.StringType;
@@ -23,7 +22,7 @@ import jcl.types.SymbolType;
 import jcl.types.TypeValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 
-public abstract class AbstractCharacterDesignatorFunction extends FunctionStruct {
+public abstract class AbstractCharacterDesignatorFunction extends AbstractCommonLispFunctionStruct {
 
 	private static final long serialVersionUID = -748646141505142347L;
 
@@ -32,15 +31,6 @@ public abstract class AbstractCharacterDesignatorFunction extends FunctionStruct
 
 	protected AbstractCharacterDesignatorFunction(final String documentation) {
 		super(documentation);
-		initLambdaListBindings();
-	}
-
-	@Override
-	public SymbolStruct<?> getFunctionSymbol() {
-		final PackageStruct aPackage = GlobalPackageStruct.COMMON_LISP;
-		final SymbolStruct<?> symbol = aPackage.intern(functionName()).getSymbol();
-		aPackage.export(symbol);
-		return symbol;
 	}
 
 	@Override
@@ -68,8 +58,6 @@ public abstract class AbstractCharacterDesignatorFunction extends FunctionStruct
 			throw new TypeErrorException("UNCAUGHT TYPE ERROR.");
 		}
 	}
-
-	protected abstract String functionName();
 
 	protected abstract Function<StringStruct, LispStruct> stringFunction();
 

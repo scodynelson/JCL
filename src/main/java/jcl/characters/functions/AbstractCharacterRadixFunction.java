@@ -10,17 +10,16 @@ import java.util.List;
 import jcl.LispStruct;
 import jcl.compiler.environment.binding.lambdalist.OptionalParameter;
 import jcl.compiler.environment.binding.lambdalist.SuppliedPParameter;
-import jcl.functions.FunctionStruct;
+import jcl.functions.AbstractCommonLispFunctionStruct;
 import jcl.lists.NullStruct;
 import jcl.numbers.IntegerStruct;
 import jcl.packages.GlobalPackageStruct;
-import jcl.packages.PackageStruct;
 import jcl.symbols.SymbolStruct;
 import jcl.types.IntegerType;
 import jcl.types.TypeValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 
-public abstract class AbstractCharacterRadixFunction extends FunctionStruct {
+public abstract class AbstractCharacterRadixFunction extends AbstractCommonLispFunctionStruct {
 
 	private static final long serialVersionUID = 2367501369456274356L;
 
@@ -29,15 +28,6 @@ public abstract class AbstractCharacterRadixFunction extends FunctionStruct {
 
 	protected AbstractCharacterRadixFunction(final String documentation) {
 		super(documentation);
-		initLambdaListBindings();
-	}
-
-	@Override
-	public SymbolStruct<?> getFunctionSymbol() {
-		final PackageStruct aPackage = GlobalPackageStruct.COMMON_LISP;
-		final SymbolStruct<?> symbol = aPackage.intern(functionName()).getSymbol();
-		aPackage.export(symbol);
-		return symbol;
 	}
 
 	@Override
@@ -63,6 +53,4 @@ public abstract class AbstractCharacterRadixFunction extends FunctionStruct {
 		}
 		return radix;
 	}
-
-	protected abstract String functionName();
 }

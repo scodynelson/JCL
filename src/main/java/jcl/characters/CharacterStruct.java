@@ -56,21 +56,21 @@ public class CharacterStruct extends BuiltInClassStruct {
 	}
 
 	/**
-	 * This method gets the character type from the provide character {@code codePoint}.
+	 * This method gets the character type from the provide {@code characterCodePoint}.
 	 *
-	 * @param codePoint
+	 * @param characterCodePoint
 	 * 		the character {@link #codePoint} value
 	 *
-	 * @return the matching character type for the provided character {@code codePoint}
+	 * @return the matching character type for the provided {@code characterCodePoint}
 	 */
-	private static CharacterType getCharacterType(final int codePoint) {
+	private static CharacterType getCharacterType(final int characterCodePoint) {
 		final CharacterType characterType;
 
-		if (CharUtils.isAsciiControl((char) codePoint) && (codePoint != CharUtils.LF)) {
+		if (CharUtils.isAsciiControl((char) characterCodePoint) && (characterCodePoint != CharUtils.LF)) {
 			characterType = BaseCharType.INSTANCE;
-		} else if (CharUtils.isAscii((char) codePoint)) {
+		} else if (CharUtils.isAscii((char) characterCodePoint)) {
 			characterType = StandardCharType.INSTANCE;
-		} else if (Character.isDefined(codePoint)) {
+		} else if (Character.isDefined(characterCodePoint)) {
 			characterType = ExtendedCharType.INSTANCE;
 		} else {
 			characterType = CharacterType.INSTANCE;

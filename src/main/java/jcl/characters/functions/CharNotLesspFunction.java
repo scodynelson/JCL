@@ -25,6 +25,6 @@ public final class CharNotLesspFunction extends AbstractCharacterEqualityFunctio
 
 	@Override
 	protected Function<CharacterStruct[], Boolean> characterEqualityFunction() {
-		return CharacterStruct::isGreaterThanIgnoreCase;
+		return CharacterStruct::isGreaterThanOrEqualToIgnoreCase;
 	}
 }

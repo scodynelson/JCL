@@ -13,15 +13,30 @@ import jcl.conditions.exceptions.SimpleErrorException;
 import jcl.symbols.SymbolStruct;
 import org.springframework.stereotype.Component;
 
+/**
+ * Function implementation for {@code character}.
+ */
 @Component
 public final class CharacterFunction extends AbstractCharacterDesignatorFunction {
 
+	/**
+	 * Serializable Version Unique Identifier.
+	 */
 	private static final long serialVersionUID = -1229967753542859679L;
 
+	/**
+	 * Private constructor passing the documentation string.
+	 */
 	private CharacterFunction() {
 		super("Returns the character denoted by the character designator.");
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * Returns the function name {@code character} as a string.
+	 *
+	 * @return the function name {@code character} as a string
+	 */
 	@Override
 	protected String functionName() {
 		return "CHARACTER";

@@ -19,14 +19,23 @@ import jcl.types.TypeValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+/**
+ * Function implementation for {@code code-char}.
+ */
 @Component
 public final class CodeCharFunction extends AbstractCommonLispFunctionStruct {
 
+	/**
+	 * Serializable Version Unique Identifier.
+	 */
 	private static final long serialVersionUID = -7853448883104247869L;
 
 	@Autowired
 	private TypeValidator validator;
 
+	/**
+	 * Private constructor passing the documentation string.
+	 */
 	private CodeCharFunction() {
 		super("Returns a character with the code attribute given by code. If no such character exists and one cannot be " +
 				"created, nil is returned.");
@@ -50,6 +59,12 @@ public final class CodeCharFunction extends AbstractCommonLispFunctionStruct {
 		return CharacterStruct.codeChar(code);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * Returns the function name {@code code-char} as a string.
+	 *
+	 * @return the function name {@code code-char} as a string
+	 */
 	@Override
 	protected String functionName() {
 		return "CODE-CHAR";

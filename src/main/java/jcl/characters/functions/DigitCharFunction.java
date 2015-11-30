@@ -18,14 +18,23 @@ import jcl.types.TypeValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+/**
+ * Function implementation for {@code digit-char}.
+ */
 @Component
 public final class DigitCharFunction extends AbstractCharacterRadixFunction {
 
+	/**
+	 * Serializable Version Unique Identifier.
+	 */
 	private static final long serialVersionUID = -8526559424608179479L;
 
 	@Autowired
 	private TypeValidator validator;
 
+	/**
+	 * Private constructor passing the documentation string.
+	 */
 	private DigitCharFunction() {
 		super("If weight is less than radix, digit-char returns a character which has that weight when considered as a " +
 				"digit in the specified radix. If the resulting character is to be an alphabetic[1] character, it will " +
@@ -51,6 +60,12 @@ public final class DigitCharFunction extends AbstractCharacterRadixFunction {
 		return CharacterStruct.digitChar(weight, radix);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * Returns the function name {@code digit-char} as a string.
+	 *
+	 * @return the function name {@code digit-char} as a string
+	 */
 	@Override
 	protected String functionName() {
 		return "DIGIT-CHAR";

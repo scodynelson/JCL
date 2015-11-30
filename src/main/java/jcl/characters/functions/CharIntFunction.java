@@ -10,20 +10,41 @@ import jcl.LispStruct;
 import jcl.characters.CharacterStruct;
 import org.springframework.stereotype.Component;
 
+/**
+ * Function implementation for {@code char-int}.
+ */
 @Component
 public final class CharIntFunction extends AbstractCharacterFunction {
 
+	/**
+	 * Serializable Version Unique Identifier.
+	 */
 	private static final long serialVersionUID = -3248960877271323642L;
 
+	/**
+	 * Private constructor passing the documentation string.
+	 */
 	private CharIntFunction() {
 		super("Returns a non-negative integer encoding the character object.");
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * Returns the function name {@code char-int} as a string.
+	 *
+	 * @return the function name {@code char-int} as a string
+	 */
 	@Override
 	protected String functionName() {
 		return "CHAR-INT";
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * Returns {@link CharacterStruct#charInt()} as a method reference function.
+	 *
+	 * @return returns {@link CharacterStruct#charInt()} as a method reference function
+	 */
 	@Override
 	protected Function<CharacterStruct, LispStruct> characterFunction() {
 		return CharacterStruct::charInt;

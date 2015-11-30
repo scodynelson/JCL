@@ -9,20 +9,41 @@ import java.util.function.Function;
 import jcl.characters.CharacterStruct;
 import org.springframework.stereotype.Component;
 
+/**
+ * Function implementation for {@code char=}.
+ */
 @Component
 public final class CharEqFunction extends AbstractCharacterEqualityFunction {
 
+	/**
+	 * Serializable Version Unique Identifier.
+	 */
 	private static final long serialVersionUID = 6869027876359720156L;
 
+	/**
+	 * Private constructor passing the documentation string.
+	 */
 	private CharEqFunction() {
 		super("Returns true if all characters are the same; otherwise, it returns false.");
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * Returns the function name {@code char=} as a string.
+	 *
+	 * @return the function name {@code char=} as a string
+	 */
 	@Override
 	protected String functionName() {
 		return "CHAR=";
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * Returns {@link CharacterStruct#isEqualTo(CharacterStruct...)} as a method reference function.
+	 *
+	 * @return returns {@link CharacterStruct#isEqualTo(CharacterStruct...)} as a method reference function
+	 */
 	@Override
 	protected Function<CharacterStruct[], Boolean> characterEqualityFunction() {
 		return CharacterStruct::isEqualTo;

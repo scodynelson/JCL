@@ -12,15 +12,30 @@ import jcl.characters.CharacterStruct;
 import jcl.symbols.SymbolStruct;
 import org.springframework.stereotype.Component;
 
+/**
+ * Function implementation for {@code name-char}.
+ */
 @Component
 public final class NameCharFunction extends AbstractCharacterDesignatorFunction {
 
+	/**
+	 * Serializable Version Unique Identifier.
+	 */
 	private static final long serialVersionUID = 3406210294951003426L;
 
+	/**
+	 * Private constructor passing the documentation string.
+	 */
 	private NameCharFunction() {
 		super("Returns the character object whose name is name. If such a character does not exist, nil is returned.");
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * Returns the function name {@code name-char} as a string.
+	 *
+	 * @return the function name {@code name-char} as a string
+	 */
 	@Override
 	protected String functionName() {
 		return "NAME-CHAR";

@@ -9,20 +9,43 @@ import java.util.function.Function;
 import jcl.characters.CharacterStruct;
 import org.springframework.stereotype.Component;
 
+/**
+ * Function implementation for {@code char-not-lessp}.
+ */
 @Component
 public final class CharNotLesspFunction extends AbstractCharacterEqualityFunction {
 
+	/**
+	 * Serializable Version Unique Identifier.
+	 */
 	private static final long serialVersionUID = -302980532887992947L;
 
+	/**
+	 * Private constructor passing the documentation string.
+	 */
 	private CharNotLesspFunction() {
 		super("Returns true if the characters are monotonically nonincreasing, ignoring differences in case; otherwise, it returns false.");
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * Returns the function name {@code char-not-lessp} as a string.
+	 *
+	 * @return the function name {@code char-not-lessp} as a string
+	 */
 	@Override
 	protected String functionName() {
 		return "CHAR-NOT-LESSP";
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * Returns {@link CharacterStruct#isGreaterThanOrEqualToIgnoreCase(CharacterStruct...)} as a method reference
+	 * function.
+	 *
+	 * @return returns {@link CharacterStruct#isGreaterThanOrEqualToIgnoreCase(CharacterStruct...)} as a method
+	 * reference function
+	 */
 	@Override
 	protected Function<CharacterStruct[], Boolean> characterEqualityFunction() {
 		return CharacterStruct::isGreaterThanOrEqualToIgnoreCase;

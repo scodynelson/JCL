@@ -4,6 +4,11 @@
 
 package jcl.compiler.environment.binding.lambdalist;
 
+import java.util.Collections;
+import java.util.List;
+
+import jcl.packages.GlobalPackageStruct;
+import jcl.packages.PackageStruct;
 import jcl.symbols.SymbolStruct;
 import jcl.types.TType;
 
@@ -26,5 +31,36 @@ public class RequiredParameter extends Parameter {
 	public RequiredParameter(final SymbolStruct<?> var, final DestructuringLambdaList destructuringForm,
 	                         final boolean isSpecial) {
 		super(var, destructuringForm, TType.INSTANCE, null, isSpecial);
+	}
+
+	public static final class Builder {
+
+		private final SymbolStruct<?> var;
+
+		private DestructuringLambdaList destructuringForm;
+
+		private boolean isSpecial;
+
+		public Builder(final PackageStruct aPackage, final String symbolName) {
+			var = aPackage.intern(symbolName).getSymbol();
+		}
+
+		public Builder destructuringForm(final DestructuringLambdaList destructuringForm) {
+			this.destructuringForm = destructuringForm;
+			return this;
+		}
+
+		public Builder isSpecial() {
+			isSpecial = true;
+			return this;
+		}
+
+		public RequiredParameter build() {
+			return new RequiredParameter(var, destructuringForm, isSpecial);
+		}
+
+		public List<RequiredParameter> buildList() {
+			return Collections.singletonList(build());
+		}
 	}
 }

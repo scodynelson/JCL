@@ -4,7 +4,6 @@
 
 package jcl.characters.functions;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
 
@@ -35,9 +34,7 @@ public abstract class AbstractCharacterDesignatorFunction extends AbstractCommon
 
 	@Override
 	protected List<RequiredParameter> getRequiredBindings() {
-		final SymbolStruct<?> characterDesignator = GlobalPackageStruct.COMMON_LISP.intern("CHARACTER-DESIGNATOR").getSymbol();
-		final RequiredParameter requiredParameter = new RequiredParameter(characterDesignator);
-		return Collections.singletonList(requiredParameter);
+		return new RequiredParameter.Builder(GlobalPackageStruct.COMMON_LISP, "CHARACTER-DESIGNATOR").buildList();
 	}
 
 	@Override

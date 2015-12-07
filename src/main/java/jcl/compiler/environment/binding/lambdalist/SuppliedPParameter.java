@@ -4,6 +4,7 @@
 
 package jcl.compiler.environment.binding.lambdalist;
 
+import jcl.packages.PackageStruct;
 import jcl.symbols.SymbolStruct;
 import jcl.types.TType;
 
@@ -17,5 +18,27 @@ public class SuppliedPParameter extends Parameter {
 
 	public SuppliedPParameter(final SymbolStruct<?> var, final boolean isSpecial) {
 		super(var, null, TType.INSTANCE, null, isSpecial);
+	}
+
+	public static final class Builder {
+
+		private final SymbolStruct<?> var;
+
+		private DestructuringLambdaList destructuringForm;
+
+		private boolean isSpecial;
+
+		public Builder(final PackageStruct aPackage, final String symbolName) {
+			var = aPackage.intern(symbolName).getSymbol();
+		}
+
+		public Builder isSpecial() {
+			isSpecial = true;
+			return this;
+		}
+
+		public SuppliedPParameter build() {
+			return new SuppliedPParameter(var, isSpecial);
+		}
 	}
 }

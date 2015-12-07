@@ -4,7 +4,6 @@
 
 package jcl.characters.functions;
 
-import java.util.Collections;
 import java.util.List;
 
 import jcl.LispStruct;
@@ -13,7 +12,6 @@ import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
 import jcl.functions.AbstractCommonLispFunctionStruct;
 import jcl.numbers.IntegerStruct;
 import jcl.packages.GlobalPackageStruct;
-import jcl.symbols.SymbolStruct;
 import jcl.types.IntegerType;
 import jcl.types.TypeValidator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,9 +41,7 @@ public final class CodeCharFunction extends AbstractCommonLispFunctionStruct {
 
 	@Override
 	protected List<RequiredParameter> getRequiredBindings() {
-		final SymbolStruct<?> code = GlobalPackageStruct.COMMON_LISP.intern("CODE").getSymbol();
-		final RequiredParameter requiredParameter = new RequiredParameter(code);
-		return Collections.singletonList(requiredParameter);
+		return new RequiredParameter.Builder(GlobalPackageStruct.COMMON_LISP, "CODE").buildList();
 	}
 
 	@Override

@@ -4,6 +4,7 @@
 
 package jcl.compiler.environment.binding.lambdalist;
 
+import jcl.packages.PackageStruct;
 import jcl.symbols.SymbolStruct;
 import jcl.types.ListType;
 
@@ -26,5 +27,32 @@ public class RestParameter extends Parameter {
 	public RestParameter(final SymbolStruct<?> var, final DestructuringLambdaList destructuringForm,
 	                     final boolean isSpecial) {
 		super(var, destructuringForm, ListType.INSTANCE, null, isSpecial);
+	}
+
+	public static final class Builder {
+
+		private final SymbolStruct<?> var;
+
+		private DestructuringLambdaList destructuringForm;
+
+		private boolean isSpecial;
+
+		public Builder(final PackageStruct aPackage, final String symbolName) {
+			var = aPackage.intern(symbolName).getSymbol();
+		}
+
+		public Builder destructuringForm(final DestructuringLambdaList destructuringForm) {
+			this.destructuringForm = destructuringForm;
+			return this;
+		}
+
+		public Builder isSpecial() {
+			isSpecial = true;
+			return this;
+		}
+
+		public RestParameter build() {
+			return new RestParameter(var, destructuringForm, isSpecial);
+		}
 	}
 }

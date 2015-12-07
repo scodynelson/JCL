@@ -4,17 +4,13 @@
 
 package jcl.characters.functions;
 
-import java.util.Collections;
 import java.util.List;
 
 import jcl.LispStruct;
 import jcl.compiler.environment.binding.lambdalist.OptionalParameter;
-import jcl.compiler.environment.binding.lambdalist.SuppliedPParameter;
 import jcl.functions.AbstractCommonLispFunctionStruct;
-import jcl.lists.NullStruct;
 import jcl.numbers.IntegerStruct;
 import jcl.packages.GlobalPackageStruct;
-import jcl.symbols.SymbolStruct;
 import jcl.types.IntegerType;
 import jcl.types.TypeValidator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,13 +28,9 @@ public abstract class AbstractCharacterRadixFunction extends AbstractCommonLispF
 
 	@Override
 	protected List<OptionalParameter> getOptionalBindings() {
-		final SymbolStruct<?> radix = GlobalPackageStruct.COMMON_LISP.intern("RADIX").getSymbol();
-
-		final SymbolStruct<?> radixSuppliedP = GlobalPackageStruct.COMMON_LISP.intern("RADIX-P").getSymbol();
-		final SuppliedPParameter suppliedPParameter = new SuppliedPParameter(radixSuppliedP);
-
-		final OptionalParameter optionalParameter = new OptionalParameter(radix, NullStruct.INSTANCE, suppliedPParameter);
-		return Collections.singletonList(optionalParameter);
+		return new OptionalParameter.Builder(GlobalPackageStruct.COMMON_LISP, "RADIX")
+				.suppliedPBinding()
+				.buildList();
 	}
 
 	protected IntegerStruct getRadix(final LispStruct[] lispStructs) {

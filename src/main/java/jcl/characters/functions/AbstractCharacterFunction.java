@@ -31,9 +31,7 @@ public abstract class AbstractCharacterFunction extends AbstractCommonLispFuncti
 
 	@Override
 	protected List<RequiredParameter> getRequiredBindings() {
-		final SymbolStruct<?> character = GlobalPackageStruct.COMMON_LISP.intern("CHARACTER").getSymbol();
-		final RequiredParameter requiredParameter = new RequiredParameter(character);
-		return Collections.singletonList(requiredParameter);
+		return new RequiredParameter.Builder(GlobalPackageStruct.COMMON_LISP, "CHARACTER").buildList();
 	}
 
 	@Override

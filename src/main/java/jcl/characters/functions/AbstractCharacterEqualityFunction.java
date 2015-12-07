@@ -4,7 +4,6 @@
 
 package jcl.characters.functions;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
 
@@ -15,7 +14,6 @@ import jcl.compiler.environment.binding.lambdalist.RestParameter;
 import jcl.functions.AbstractCommonLispFunctionStruct;
 import jcl.packages.GlobalPackageStruct;
 import jcl.symbols.NILStruct;
-import jcl.symbols.SymbolStruct;
 import jcl.symbols.TStruct;
 import jcl.types.CharacterType;
 import jcl.types.TypeValidator;
@@ -34,15 +32,12 @@ public abstract class AbstractCharacterEqualityFunction extends AbstractCommonLi
 
 	@Override
 	protected List<RequiredParameter> getRequiredBindings() {
-		final SymbolStruct<?> character = GlobalPackageStruct.COMMON_LISP.intern("CHARACTER").getSymbol();
-		final RequiredParameter requiredParameter = new RequiredParameter(character);
-		return Collections.singletonList(requiredParameter);
+		return new RequiredParameter.Builder(GlobalPackageStruct.COMMON_LISP, "CHARACTER").buildList();
 	}
 
 	@Override
 	protected RestParameter getRestBinding() {
-		final SymbolStruct<?> characters = GlobalPackageStruct.COMMON_LISP.intern("CHARACTERS").getSymbol();
-		return new RestParameter(characters);
+		return new RestParameter.Builder(GlobalPackageStruct.COMMON_LISP, "CHARACTERS").build();
 	}
 
 	@Override

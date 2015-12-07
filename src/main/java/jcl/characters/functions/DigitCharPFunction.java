@@ -4,7 +4,6 @@
 
 package jcl.characters.functions;
 
-import java.util.Collections;
 import java.util.List;
 
 import jcl.LispStruct;
@@ -12,7 +11,6 @@ import jcl.characters.CharacterStruct;
 import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
 import jcl.numbers.IntegerStruct;
 import jcl.packages.GlobalPackageStruct;
-import jcl.symbols.SymbolStruct;
 import jcl.types.CharacterType;
 import jcl.types.TypeValidator;
 import org.springframework.beans.factory.annotation.Autowired;

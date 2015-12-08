@@ -5,7 +5,7 @@
 package jcl.characters.functions;
 
 import java.util.List;
-import java.util.function.Function;
+import java.util.function.Predicate;
 
 import jcl.LispStruct;
 import jcl.characters.CharacterStruct;
@@ -69,7 +69,7 @@ abstract class AbstractCharacterEqualityFunction extends AbstractCommonLispFunct
 		super.apply(lispStructs);
 
 		final CharacterStruct[] characters = getCharacters(lispStructs);
-		return characterEqualityFunction().apply(characters) ? TStruct.INSTANCE : NILStruct.INSTANCE;
+		return characterEqualityPredicate().test(characters) ? TStruct.INSTANCE : NILStruct.INSTANCE;
 	}
 
 	private CharacterStruct[] getCharacters(final LispStruct... lispStructs) {
@@ -84,11 +84,9 @@ abstract class AbstractCharacterEqualityFunction extends AbstractCommonLispFunct
 	}
 
 	/**
-	 * Abstract method to return a {@link Function} that consumes a {@link CharacterStruct[]} and returns a {@link
-	 * Boolean} as a result.
+	 * Abstract method to return a {@link Predicate} that consumes a {@link CharacterStruct[]}.
 	 *
-	 * @return returns a {@link Function} that consumes a {@link CharacterStruct[]} and returns a {@link Boolean} as a
-	 * result
+	 * @return returns a {@link Predicate} that consumes a {@link CharacterStruct[]}
 	 */
-	protected abstract Function<CharacterStruct[], Boolean> characterEqualityFunction();
+	protected abstract Predicate<CharacterStruct[]> characterEqualityPredicate();
 }

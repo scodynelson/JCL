@@ -21,17 +21,37 @@ import jcl.types.SymbolType;
 import jcl.types.TypeValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 
-public abstract class AbstractCharacterDesignatorFunction extends AbstractCommonLispFunctionStruct {
+abstract class AbstractCharacterDesignatorFunction extends AbstractCommonLispFunctionStruct {
 
+	/**
+	 * Serializable Version Unique Identifier.
+	 */
 	private static final long serialVersionUID = -748646141505142347L;
 
+	/**
+	 * The {@link TypeValidator} for validating the function parameter value types.
+	 */
 	@Autowired
 	private TypeValidator validator;
 
+	/**
+	 * Protected constructor passing the provided {@code documentation} string to the super constructor.
+	 *
+	 * @param documentation
+	 * 		the documentation string
+	 */
 	protected AbstractCharacterDesignatorFunction(final String documentation) {
 		super(documentation);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * Creates the single {@link RequiredParameter} character-designator object (character, string, or symbol) for this
+	 * function.
+	 *
+	 * @return a list of a single {@link RequiredParameter} character-designator object (character, string, or symbol)
+	 * object
+	 */
 	@Override
 	protected List<RequiredParameter> getRequiredBindings() {
 		return new RequiredParameter.Builder(GlobalPackageStruct.COMMON_LISP, "CHARACTER-DESIGNATOR").buildList();
@@ -39,7 +59,7 @@ public abstract class AbstractCharacterDesignatorFunction extends AbstractCommon
 
 	@Override
 	public LispStruct apply(final LispStruct... lispStructs) {
-		getFunctionBindings(lispStructs);
+		super.apply(lispStructs);
 
 		final LispStruct lispStruct = lispStructs[0];
 		validator.validateTypes(lispStruct, "CHARACTER", "Character",
@@ -56,7 +76,21 @@ public abstract class AbstractCharacterDesignatorFunction extends AbstractCommon
 		}
 	}
 
+	/**
+	 * Abstract method to return a {@link Function} that consumes a {@link StringStruct} and returns a {@link
+	 * LispStruct} as a result.
+	 *
+	 * @return returns a {@link Function} that consumes a {@link StringStruct} and returns a {@link LispStruct} as a
+	 * result
+	 */
 	protected abstract Function<StringStruct, LispStruct> stringFunction();
 
+	/**
+	 * Abstract method to return a {@link Function} that consumes a {@link SymbolStruct} and returns a {@link
+	 * LispStruct} as a result.
+	 *
+	 * @return returns a {@link Function} that consumes a {@link SymbolStruct} and returns a {@link LispStruct} as a
+	 * result
+	 */
 	protected abstract Function<SymbolStruct<?>, LispStruct> symbolFunction();
 }

@@ -28,6 +28,9 @@ public final class CodeCharFunction extends AbstractCommonLispFunctionStruct {
 	 */
 	private static final long serialVersionUID = -7853448883104247869L;
 
+	/**
+	 * The {@link TypeValidator} for validating the function parameter value types.
+	 */
 	@Autowired
 	private TypeValidator validator;
 
@@ -39,6 +42,12 @@ public final class CodeCharFunction extends AbstractCommonLispFunctionStruct {
 				"created, nil is returned.");
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * Creates the single {@link RequiredParameter} integer object for this function.
+	 *
+	 * @return a list of a single {@link RequiredParameter} integer object
+	 */
 	@Override
 	protected List<RequiredParameter> getRequiredBindings() {
 		return new RequiredParameter.Builder(GlobalPackageStruct.COMMON_LISP, "CODE").buildList();
@@ -46,7 +55,7 @@ public final class CodeCharFunction extends AbstractCommonLispFunctionStruct {
 
 	@Override
 	public LispStruct apply(final LispStruct... lispStructs) {
-		getFunctionBindings(lispStructs);
+		super.apply(lispStructs);
 
 		final LispStruct lispStruct = lispStructs[0];
 		validator.validateTypes(lispStruct, functionName(), "Code", IntegerType.INSTANCE);

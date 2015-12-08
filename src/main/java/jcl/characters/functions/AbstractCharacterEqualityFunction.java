@@ -19,22 +19,46 @@ import jcl.types.CharacterType;
 import jcl.types.TypeValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 
-public abstract class AbstractCharacterEqualityFunction extends AbstractCommonLispFunctionStruct {
+abstract class AbstractCharacterEqualityFunction extends AbstractCommonLispFunctionStruct {
 
+	/**
+	 * Serializable Version Unique Identifier.
+	 */
 	private static final long serialVersionUID = 3117929060088318079L;
 
+	/**
+	 * The {@link TypeValidator} for validating the function parameter value types.
+	 */
 	@Autowired
 	private TypeValidator validator;
 
+	/**
+	 * Protected constructor passing the provided {@code documentation} string to the super constructor.
+	 *
+	 * @param documentation
+	 * 		the documentation string
+	 */
 	protected AbstractCharacterEqualityFunction(final String documentation) {
 		super(documentation);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * Creates the single {@link RequiredParameter} character object for this function.
+	 *
+	 * @return a list of a single {@link RequiredParameter} character object
+	 */
 	@Override
 	protected List<RequiredParameter> getRequiredBindings() {
 		return new RequiredParameter.Builder(GlobalPackageStruct.COMMON_LISP, "CHARACTER").buildList();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * Creates the {@link RestParameter} to contain the remaining character objects for this function.
+	 *
+	 * @return the {@link RestParameter} to contain the remaining character objects
+	 */
 	@Override
 	protected RestParameter getRestBinding() {
 		return new RestParameter.Builder(GlobalPackageStruct.COMMON_LISP, "CHARACTERS").build();
@@ -42,7 +66,7 @@ public abstract class AbstractCharacterEqualityFunction extends AbstractCommonLi
 
 	@Override
 	public LispStruct apply(final LispStruct... lispStructs) {
-		getFunctionBindings(lispStructs);
+		super.apply(lispStructs);
 
 		final CharacterStruct[] characters = getCharacters(lispStructs);
 		return characterEqualityFunction().apply(characters) ? TStruct.INSTANCE : NILStruct.INSTANCE;
@@ -59,5 +83,12 @@ public abstract class AbstractCharacterEqualityFunction extends AbstractCommonLi
 		return characters;
 	}
 
+	/**
+	 * Abstract method to return a {@link Function} that consumes a {@link CharacterStruct[]} and returns a {@link
+	 * Boolean} as a result.
+	 *
+	 * @return returns a {@link Function} that consumes a {@link CharacterStruct[]} and returns a {@link Boolean} as a
+	 * result
+	 */
 	protected abstract Function<CharacterStruct[], Boolean> characterEqualityFunction();
 }

@@ -16,37 +16,81 @@ import jcl.types.CharacterType;
 import jcl.types.TypeValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 
-public abstract class AbstractCharacterFunction extends AbstractCommonLispFunctionStruct {
+abstract class AbstractCharacterFunction extends AbstractCommonLispFunctionStruct {
 
+	/**
+	 * Serializable Version Unique Identifier.
+	 */
 	private static final long serialVersionUID = -7030656974789702740L;
 
+	/**
+	 * The {@link TypeValidator} for validating the function parameter value types.
+	 */
 	@Autowired
 	private TypeValidator validator;
 
+	/**
+	 * Protected constructor passing the provided {@code documentation} string to the super constructor.
+	 *
+	 * @param documentation
+	 * 		the documentation string
+	 */
 	protected AbstractCharacterFunction(final String documentation) {
 		super(documentation);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * Creates the single {@link RequiredParameter} character object for this function.
+	 *
+	 * @return a list of a single {@link RequiredParameter} character object
+	 */
 	@Override
 	protected List<RequiredParameter> getRequiredBindings() {
 		return new RequiredParameter.Builder(GlobalPackageStruct.COMMON_LISP, "CHARACTER").buildList();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * Application method for the character function that gets the {@link CharacterStruct} parameter object and applies
+	 * the result of the abstract {@link #characterFunction()} method with the parameter as the {@link Function}
+	 * parameter.
+	 *
+	 * @param lispStructs
+	 * 		the function parameters
+	 *
+	 * @return the result of the {@link #characterFunction()} applied to the {@link CharacterStruct} parameter value
+	 */
 	@Override
 	public LispStruct apply(final LispStruct... lispStructs) {
-		getFunctionBindings(lispStructs);
+		super.apply(lispStructs);
 
 		final CharacterStruct character = getCharacter(lispStructs);
 		return characterFunction().apply(character);
 	}
 
+	/**
+	 * Gets the {@link CharacterStruct} parameter value from the provided {@link LispStruct[]}, validating that the
+	 * parameter is a {@link CharacterType}.
+	 *
+	 * @param lispStructs
+	 * 		the parameters to retrieve the {@link CharacterStruct} parameter value from
+	 *
+	 * @return the {@link CharacterStruct} parameter value
+	 */
 	private CharacterStruct getCharacter(final LispStruct... lispStructs) {
-
 		final LispStruct lispStruct = lispStructs[0];
 		validator.validateTypes(lispStruct, functionName(), "Character", CharacterType.INSTANCE);
 
 		return (CharacterStruct) lispStruct;
 	}
 
+	/**
+	 * Abstract method to return a {@link Function} that consumes a {@link CharacterStruct} and returns a {@link
+	 * LispStruct} as a result.
+	 *
+	 * @return returns a {@link Function} that consumes a {@link CharacterStruct} and returns a {@link LispStruct} as a
+	 * result
+	 */
 	protected abstract Function<CharacterStruct, LispStruct> characterFunction();
 }

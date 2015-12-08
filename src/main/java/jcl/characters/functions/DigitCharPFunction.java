@@ -27,6 +27,9 @@ public final class DigitCharPFunction extends AbstractCharacterRadixFunction {
 	 */
 	private static final long serialVersionUID = -7883462040539135670L;
 
+	/**
+	 * The {@link TypeValidator} for validating the function parameter value types.
+	 */
 	@Autowired
 	private TypeValidator validator;
 
@@ -38,6 +41,12 @@ public final class DigitCharPFunction extends AbstractCharacterRadixFunction {
 				"returned as an integer; otherwise nil is returned.");
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * Creates the single {@link RequiredParameter} character object for this function.
+	 *
+	 * @return a list of a single {@link RequiredParameter} character object
+	 */
 	@Override
 	protected List<RequiredParameter> getRequiredBindings() {
 		return new RequiredParameter.Builder(GlobalPackageStruct.COMMON_LISP, "CHARACTER").buildList();
@@ -45,7 +54,7 @@ public final class DigitCharPFunction extends AbstractCharacterRadixFunction {
 
 	@Override
 	public LispStruct apply(final LispStruct... lispStructs) {
-		getFunctionBindings(lispStructs);
+		super.apply(lispStructs);
 
 		final LispStruct lispStruct = lispStructs[0];
 		validator.validateTypes(lispStruct, functionName(), "Character", CharacterType.INSTANCE);

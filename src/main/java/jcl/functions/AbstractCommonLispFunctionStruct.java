@@ -4,6 +4,7 @@
 
 package jcl.functions;
 
+import jcl.LispStruct;
 import jcl.packages.GlobalPackageStruct;
 import jcl.packages.PackageStruct;
 import jcl.symbols.SymbolStruct;
@@ -15,6 +16,12 @@ public abstract class AbstractCommonLispFunctionStruct extends FunctionStruct {
 	protected AbstractCommonLispFunctionStruct(final String documentation) {
 		super(documentation);
 		initLambdaListBindings();
+	}
+
+	@Override
+	public LispStruct apply(final LispStruct... lispStructs) {
+		getFunctionBindings(lispStructs);
+		return null;
 	}
 
 	@Override

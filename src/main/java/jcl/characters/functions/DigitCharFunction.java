@@ -27,6 +27,9 @@ public final class DigitCharFunction extends AbstractCharacterRadixFunction {
 	 */
 	private static final long serialVersionUID = -8526559424608179479L;
 
+	/**
+	 * The {@link TypeValidator} for validating the function parameter value types.
+	 */
 	@Autowired
 	private TypeValidator validator;
 
@@ -39,6 +42,12 @@ public final class DigitCharFunction extends AbstractCharacterRadixFunction {
 				"be an uppercase character. If weight is greater than or equal to radix, digit-char returns false.");
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * Creates the single {@link RequiredParameter} integer object for this function.
+	 *
+	 * @return a list of a single {@link RequiredParameter} integer object
+	 */
 	@Override
 	protected List<RequiredParameter> getRequiredBindings() {
 		return new RequiredParameter.Builder(GlobalPackageStruct.COMMON_LISP, "WEIGHT").buildList();
@@ -46,7 +55,7 @@ public final class DigitCharFunction extends AbstractCharacterRadixFunction {
 
 	@Override
 	public LispStruct apply(final LispStruct... lispStructs) {
-		getFunctionBindings(lispStructs);
+		super.apply(lispStructs);
 
 		final LispStruct lispStruct = lispStructs[0];
 		validator.validateTypes(lispStruct, functionName(), "Weight", IntegerType.INSTANCE);

@@ -15,17 +15,35 @@ import jcl.types.IntegerType;
 import jcl.types.TypeValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 
-public abstract class AbstractCharacterRadixFunction extends AbstractCommonLispFunctionStruct {
+abstract class AbstractCharacterRadixFunction extends AbstractCommonLispFunctionStruct {
 
+	/**
+	 * Serializable Version Unique Identifier.
+	 */
 	private static final long serialVersionUID = 2367501369456274356L;
 
+	/**
+	 * The {@link TypeValidator} for validating the function parameter value types.
+	 */
 	@Autowired
 	private TypeValidator validator;
 
+	/**
+	 * Protected constructor passing the provided {@code documentation} string to the super constructor.
+	 *
+	 * @param documentation
+	 * 		the documentation string
+	 */
 	protected AbstractCharacterRadixFunction(final String documentation) {
 		super(documentation);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * Creates the single {@link OptionalParameter} integer object for this function.
+	 *
+	 * @return a list of a single {@link OptionalParameter} integer object
+	 */
 	@Override
 	protected List<OptionalParameter> getOptionalBindings() {
 		return new OptionalParameter.Builder(GlobalPackageStruct.COMMON_LISP, "RADIX")

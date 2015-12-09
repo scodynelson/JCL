@@ -2,7 +2,7 @@
  * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
  */
 
-package jcl.packages.function;
+package jcl.packages.functions;
 
 import java.util.Collections;
 import java.util.List;

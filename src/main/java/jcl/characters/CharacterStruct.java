@@ -5,6 +5,7 @@
 package jcl.characters;
 
 import java.math.BigInteger;
+import java.util.Map;
 
 import com.ibm.icu.lang.UCharacter;
 import jcl.LispStruct;
@@ -78,7 +79,7 @@ public class CharacterStruct extends BuiltInClassStruct {
 	 * @return a CharacterStruct object with the provided {@code character} value
 	 */
 	public static CharacterStruct valueOf(final Character character) {
-		return new CharacterStruct((int) character);
+		return valueOf((int) character);
 	}
 
 	/**
@@ -90,6 +91,16 @@ public class CharacterStruct extends BuiltInClassStruct {
 	 * @return a CharacterStruct object with the provided {@code codePoint} value
 	 */
 	public static CharacterStruct valueOf(final Integer codePoint) {
+		final Map<Integer, CharacterStruct> standardCharMap = CharacterConstants.STANDARD_CHAR_MAP;
+		if (standardCharMap == null) {
+			// This will occur on the initial load only.
+			return new CharacterStruct(codePoint);
+		}
+
+		final CharacterStruct possibleStandardChar = CharacterConstants.STANDARD_CHAR_MAP.get(codePoint);
+		if (possibleStandardChar != null) {
+			return possibleStandardChar;
+		}
 		return new CharacterStruct(codePoint);
 	}
 

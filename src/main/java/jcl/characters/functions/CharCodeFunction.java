@@ -22,9 +22,9 @@ public final class CharCodeFunction extends AbstractCharacterFunction {
 	private static final long serialVersionUID = -2591389262734333977L;
 
 	/**
-	 * Private constructor passing the documentation string.
+	 * Public constructor passing the documentation string.
 	 */
-	private CharCodeFunction() {
+	public CharCodeFunction() {
 		super("Returns the code attribute of character.");
 	}
 

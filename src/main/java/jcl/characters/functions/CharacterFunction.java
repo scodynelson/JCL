@@ -25,9 +25,9 @@ public final class CharacterFunction extends AbstractCharacterDesignatorFunction
 	private static final long serialVersionUID = -1229967753542859679L;
 
 	/**
-	 * Private constructor passing the documentation string.
+	 * Public constructor passing the documentation string.
 	 */
-	private CharacterFunction() {
+	public CharacterFunction() {
 		super("Returns the character denoted by the character designator.");
 	}
 

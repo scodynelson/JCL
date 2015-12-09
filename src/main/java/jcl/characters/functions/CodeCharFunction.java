@@ -35,9 +35,9 @@ public final class CodeCharFunction extends AbstractCommonLispFunctionStruct {
 	private TypeValidator validator;
 
 	/**
-	 * Private constructor passing the documentation string.
+	 * Public constructor passing the documentation string.
 	 */
-	private CodeCharFunction() {
+	public CodeCharFunction() {
 		super("Returns a character with the code attribute given by code. If no such character exists and one cannot be " +
 				"created, nil is returned.");
 	}

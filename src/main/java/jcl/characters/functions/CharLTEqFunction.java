@@ -21,9 +21,9 @@ public final class CharLTEqFunction extends AbstractCharacterEqualityFunction {
 	private static final long serialVersionUID = 8689782020328962711L;
 
 	/**
-	 * Private constructor passing the documentation string.
+	 * Public constructor passing the documentation string.
 	 */
-	private CharLTEqFunction() {
+	public CharLTEqFunction() {
 		super("Returns true if the characters are monotonically nondecreasing; otherwise, it returns false.");
 	}
 

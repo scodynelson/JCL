@@ -21,9 +21,9 @@ public final class CharGTFunction extends AbstractCharacterEqualityFunction {
 	private static final long serialVersionUID = 4682512262006296525L;
 
 	/**
-	 * Private constructor passing the documentation string.
+	 * Public constructor passing the documentation string.
 	 */
-	private CharGTFunction() {
+	public CharGTFunction() {
 		super("Returns true if the characters are monotonically decreasing; otherwise, it returns false.");
 	}
 

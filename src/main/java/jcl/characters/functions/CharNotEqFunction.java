@@ -21,9 +21,9 @@ public final class CharNotEqFunction extends AbstractCharacterEqualityFunction {
 	private static final long serialVersionUID = -4521919308468314716L;
 
 	/**
-	 * Private constructor passing the documentation string.
+	 * Public constructor passing the documentation string.
 	 */
-	private CharNotEqFunction() {
+	public CharNotEqFunction() {
 		super("Returns true if all characters are different; otherwise, it returns false.");
 	}
 

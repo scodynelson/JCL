@@ -21,9 +21,9 @@ public final class AlphaCharPFunction extends AbstractCharacterPredicateFunction
 	private static final long serialVersionUID = 8997206745362935215L;
 
 	/**
-	 * Private constructor passing the documentation string.
+	 * Public constructor passing the documentation string.
 	 */
-	private AlphaCharPFunction() {
+	public AlphaCharPFunction() {
 		super("Returns true if character is an alphabetic character; otherwise, returns false.");
 	}
 

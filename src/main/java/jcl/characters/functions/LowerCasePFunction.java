@@ -21,9 +21,9 @@ public final class LowerCasePFunction extends AbstractCharacterPredicateFunction
 	private static final long serialVersionUID = 142401577628870337L;
 
 	/**
-	 * Private constructor passing the documentation string.
+	 * Public constructor passing the documentation string.
 	 */
-	private LowerCasePFunction() {
+	public LowerCasePFunction() {
 		super("Returns true if character is a lowercase character; otherwise, returns false.");
 	}
 

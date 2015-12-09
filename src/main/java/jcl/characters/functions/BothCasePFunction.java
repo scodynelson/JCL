@@ -21,9 +21,9 @@ public final class BothCasePFunction extends AbstractCharacterPredicateFunction 
 	private static final long serialVersionUID = 1586747610940151180L;
 
 	/**
-	 * Private constructor passing the documentation string.
+	 * Public constructor passing the documentation string.
 	 */
-	private BothCasePFunction() {
+	public BothCasePFunction() {
 		super("Returns true if character is a character with case; otherwise, returns false.");
 	}
 

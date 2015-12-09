@@ -21,9 +21,9 @@ public final class CharLTFunction extends AbstractCharacterEqualityFunction {
 	private static final long serialVersionUID = -6833377338710486244L;
 
 	/**
-	 * Private constructor passing the documentation string.
+	 * Public constructor passing the documentation string.
 	 */
-	private CharLTFunction() {
+	public CharLTFunction() {
 		super("Returns true if the characters are monotonically increasing; otherwise, it returns false.");
 	}
 

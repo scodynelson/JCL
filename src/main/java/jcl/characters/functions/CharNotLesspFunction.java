@@ -21,9 +21,9 @@ public final class CharNotLesspFunction extends AbstractCharacterEqualityFunctio
 	private static final long serialVersionUID = -302980532887992947L;
 
 	/**
-	 * Private constructor passing the documentation string.
+	 * Public constructor passing the documentation string.
 	 */
-	private CharNotLesspFunction() {
+	public CharNotLesspFunction() {
 		super("Returns true if the characters are monotonically nonincreasing, ignoring differences in case; otherwise, it returns false.");
 	}
 

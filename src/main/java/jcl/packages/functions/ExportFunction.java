@@ -31,7 +31,7 @@ public final class ExportFunction extends AbstractCommonLispFunctionStruct {
 	@Autowired
 	private Printer printer;
 
-	private ExportFunction() {
+	public ExportFunction() {
 		super("Makes one or more symbols that are accessible in package (whether directly or by inheritance) be external symbols of that package.");
 	}
 

@@ -28,7 +28,7 @@ public final class InPackageFunction extends AbstractCommonLispFunctionStruct {
 	@Autowired
 	private Printer printer;
 
-	private InPackageFunction() {
+	public InPackageFunction() {
 		super("Causes the the package named by name to become the current package.");
 	}
 

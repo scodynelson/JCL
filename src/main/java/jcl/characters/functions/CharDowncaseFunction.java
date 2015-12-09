@@ -22,9 +22,9 @@ public final class CharDowncaseFunction extends AbstractCharacterFunction {
 	private static final long serialVersionUID = 9125259122346104648L;
 
 	/**
-	 * Private constructor passing the documentation string.
+	 * Public constructor passing the documentation string.
 	 */
-	private CharDowncaseFunction() {
+	public CharDowncaseFunction() {
 		super("Returns the corresponding lowercase character.");
 	}
 

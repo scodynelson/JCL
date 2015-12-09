@@ -22,9 +22,9 @@ public final class CharIntFunction extends AbstractCharacterFunction {
 	private static final long serialVersionUID = -3248960877271323642L;
 
 	/**
-	 * Private constructor passing the documentation string.
+	 * Public constructor passing the documentation string.
 	 */
-	private CharIntFunction() {
+	public CharIntFunction() {
 		super("Returns a non-negative integer encoding the character object.");
 	}
 

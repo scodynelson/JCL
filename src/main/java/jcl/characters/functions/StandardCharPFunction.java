@@ -21,9 +21,9 @@ public final class StandardCharPFunction extends AbstractCharacterPredicateFunct
 	private static final long serialVersionUID = 7161616010157067470L;
 
 	/**
-	 * Private constructor passing the documentation string.
+	 * Public constructor passing the documentation string.
 	 */
-	private StandardCharPFunction() {
+	public StandardCharPFunction() {
 		super("Returns true if character is a standard character; otherwise, returns false");
 	}
 

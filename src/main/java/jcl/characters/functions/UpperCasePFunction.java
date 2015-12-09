@@ -21,9 +21,9 @@ public final class UpperCasePFunction extends AbstractCharacterPredicateFunction
 	private static final long serialVersionUID = -6043849777082339800L;
 
 	/**
-	 * Private constructor passing the documentation string.
+	 * Public constructor passing the documentation string.
 	 */
-	private UpperCasePFunction() {
+	public UpperCasePFunction() {
 		super("Returns true if character is an uppercase character; otherwise, returns false.");
 	}
 

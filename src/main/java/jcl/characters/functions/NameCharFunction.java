@@ -24,9 +24,9 @@ public final class NameCharFunction extends AbstractCharacterDesignatorFunction 
 	private static final long serialVersionUID = 3406210294951003426L;
 
 	/**
-	 * Private constructor passing the documentation string.
+	 * Public constructor passing the documentation string.
 	 */
-	private NameCharFunction() {
+	public NameCharFunction() {
 		super("Returns the character object whose name is name. If such a character does not exist, nil is returned.");
 	}
 

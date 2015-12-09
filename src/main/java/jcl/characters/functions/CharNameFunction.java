@@ -22,9 +22,9 @@ public final class CharNameFunction extends AbstractCharacterFunction {
 	private static final long serialVersionUID = 6904342812202906067L;
 
 	/**
-	 * Private constructor passing the documentation string.
+	 * Public constructor passing the documentation string.
 	 */
-	private CharNameFunction() {
+	public CharNameFunction() {
 		super("Returns a string that is the name of the character, or nil if the character has no name.");
 	}
 

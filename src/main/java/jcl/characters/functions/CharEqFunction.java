@@ -21,9 +21,9 @@ public final class CharEqFunction extends AbstractCharacterEqualityFunction {
 	private static final long serialVersionUID = 6869027876359720156L;
 
 	/**
-	 * Private constructor passing the documentation string.
+	 * Public constructor passing the documentation string.
 	 */
-	private CharEqFunction() {
+	public CharEqFunction() {
 		super("Returns true if all characters are the same; otherwise, it returns false.");
 	}
 

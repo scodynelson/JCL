@@ -34,9 +34,9 @@ public final class DigitCharPFunction extends AbstractCharacterRadixFunction {
 	private TypeValidator validator;
 
 	/**
-	 * Private constructor passing the documentation string.
+	 * Public constructor passing the documentation string.
 	 */
-	private DigitCharPFunction() {
+	public DigitCharPFunction() {
 		super("Tests whether character is a digit in the specified radix. If it is a digit in that radix, its weight is " +
 				"returned as an integer; otherwise nil is returned.");
 	}

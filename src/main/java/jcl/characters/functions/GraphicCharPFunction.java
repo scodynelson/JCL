@@ -21,9 +21,9 @@ public final class GraphicCharPFunction extends AbstractCharacterPredicateFuncti
 	private static final long serialVersionUID = 8709892843954599169L;
 
 	/**
-	 * Private constructor passing the documentation string.
+	 * Public constructor passing the documentation string.
 	 */
-	private GraphicCharPFunction() {
+	public GraphicCharPFunction() {
 		super("Returns true if character is a graphic character; otherwise, returns false.");
 	}
 

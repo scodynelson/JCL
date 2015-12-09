@@ -22,9 +22,9 @@ public final class CharUpcaseFunction extends AbstractCharacterFunction {
 	private static final long serialVersionUID = 2419349163955092011L;
 
 	/**
-	 * Private constructor passing the documentation string.
+	 * Public constructor passing the documentation string.
 	 */
-	private CharUpcaseFunction() {
+	public CharUpcaseFunction() {
 		super("Returns the corresponding uppercase character.");
 	}
 

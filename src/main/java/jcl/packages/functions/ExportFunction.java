@@ -10,15 +10,16 @@ import java.util.List;
 import jcl.LispStruct;
 import jcl.compiler.environment.binding.lambdalist.OptionalParameter;
 import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
-import jcl.conditions.exceptions.TypeErrorException;
 import jcl.functions.AbstractCommonLispFunctionStruct;
 import jcl.lists.ListStruct;
 import jcl.packages.GlobalPackageStruct;
 import jcl.packages.PackageStruct;
 import jcl.packages.PackageVariables;
-import jcl.printer.Printer;
 import jcl.symbols.SymbolStruct;
 import jcl.symbols.TStruct;
+import jcl.types.ListType;
+import jcl.types.SymbolType;
+import jcl.types.TypeValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -27,8 +28,11 @@ public final class ExportFunction extends AbstractCommonLispFunctionStruct {
 
 	private static final long serialVersionUID = -3271748062551723057L;
 
+	/**
+	 * The {@link TypeValidator} for validating the function parameter value types.
+	 */
 	@Autowired
-	private Printer printer;
+	private TypeValidator validator;
 
 	@Autowired
 	private FindPackageFunction findPackageFunction;
@@ -54,19 +58,13 @@ public final class ExportFunction extends AbstractCommonLispFunctionStruct {
 	public LispStruct apply(final LispStruct... lispStructs) {
 		super.apply(lispStructs);
 
-		final LispStruct symbols = lispStructs[0];
-		if (!(symbols instanceof ListStruct)) {
-			final String printedObject = printer.print(symbols);
-			throw new TypeErrorException("Symbols argument not of type List: " + printedObject);
-		}
+		final LispStruct lispStruct = lispStructs[0];
+		validator.validateTypes(lispStruct, functionName(), "Symbols", ListType.INSTANCE);
 
-		final List<LispStruct> symbolsList = ((ListStruct) symbols).getAsJavaList();
-		final List<SymbolStruct<?>> realSymbolsList = new ArrayList<>(symbolsList.size());
-		for (final LispStruct symbol : symbolsList) {
-			if (!(symbol instanceof SymbolStruct)) {
-				final String printedObject = printer.print(symbol);
-				throw new TypeErrorException("Symbol argument not of type Symbol: " + printedObject);
-			}
+		final List<LispStruct> symbols = ((ListStruct) lispStruct).getAsJavaList();
+		final List<SymbolStruct<?>> realSymbolsList = new ArrayList<>(symbols.size());
+		for (final LispStruct symbol : symbols) {
+			validator.validateTypes(symbol, functionName(), "Symbol", SymbolType.INSTANCE);
 			realSymbolsList.add((SymbolStruct<?>) symbol);
 		}
 

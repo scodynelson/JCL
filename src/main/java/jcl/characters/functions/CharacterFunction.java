@@ -84,6 +84,6 @@ public final class CharacterFunction extends AbstractCharacterDesignatorFunction
 		if (aString.length() != 1) {
 			throw new SimpleErrorException(errorPrefix + " is not of length one: " + aString);
 		}
-		return new CharacterStruct(aString.charAt(0));
+		return CharacterStruct.valueOf(aString.charAt(0));
 	}
 }

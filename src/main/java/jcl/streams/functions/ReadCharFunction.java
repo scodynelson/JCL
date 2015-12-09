@@ -145,7 +145,7 @@ public final class ReadCharFunction extends FunctionStruct {
 			return readPeekResult.getEofValue();
 		} else {
 			final int codePoint = readPeekResult.getResult();
-			return new CharacterStruct(codePoint);
+			return CharacterStruct.valueOf(codePoint);
 		}
 	}
 

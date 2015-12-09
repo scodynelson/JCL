@@ -35,22 +35,12 @@ public class CharacterStruct extends BuiltInClassStruct {
 	private final Integer codePoint;
 
 	/**
-	 * Public constructor.
-	 *
-	 * @param character
-	 * 		the character value
-	 */
-	public CharacterStruct(final Character character) {
-		this((int) character);
-	}
-
-	/**
-	 * Public constructor.
+	 * Protected constructor.
 	 *
 	 * @param codePoint
 	 * 		the character {@link #codePoint} value
 	 */
-	public CharacterStruct(final Integer codePoint) {
+	protected CharacterStruct(final Integer codePoint) {
 		super(getCharacterType(codePoint), null, null);
 		this.codePoint = codePoint;
 	}
@@ -77,6 +67,30 @@ public class CharacterStruct extends BuiltInClassStruct {
 		}
 
 		return characterType;
+	}
+
+	/**
+	 * Returns a CharacterStruct object with the provided {@code character} value.
+	 *
+	 * @param character
+	 * 		the character value used to derive the {@link #codePoint} of the resulting CharacterStruct
+	 *
+	 * @return a CharacterStruct object with the provided {@code character} value
+	 */
+	public static CharacterStruct valueOf(final Character character) {
+		return new CharacterStruct((int) character);
+	}
+
+	/**
+	 * Returns a CharacterStruct object with the provided {@code codePoint} value.
+	 *
+	 * @param codePoint
+	 * 		the {@link #codePoint} value of the resulting CharacterStruct
+	 *
+	 * @return a CharacterStruct object with the provided {@code codePoint} value
+	 */
+	public static CharacterStruct valueOf(final Integer codePoint) {
+		return new CharacterStruct(codePoint);
 	}
 
 	/**
@@ -745,6 +759,6 @@ public class CharacterStruct extends BuiltInClassStruct {
 		}
 
 		final Character result = Character.toUpperCase(digit);
-		return new CharacterStruct(result);
+		return new CharacterStruct((int) result);
 	}
 }

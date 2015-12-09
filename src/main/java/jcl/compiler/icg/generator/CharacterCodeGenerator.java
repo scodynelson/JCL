@@ -26,18 +26,22 @@ class CharacterCodeGenerator implements CodeGenerator<CharacterStruct> {
 	private static final String CHARACTER_STRUCT_NAME = Type.getInternalName(CharacterStruct.class);
 
 	/**
-	 * Constant {@link String} containing the description for the {@link CharacterStruct#CharacterStruct(Integer)}
-	 * constructor method.
+	 * Constant {@link String} containing the name for the {@link CharacterStruct#valueOf(Integer)} method.
 	 */
-	private static final String CHARACTER_STRUCT_INIT_DESC
-			= CodeGenerators.getConstructorDescription(CharacterStruct.class, Integer.class);
+	private static final String CHARACTER_STRUCT_VALUE_OF_METHOD_NAME = "valueOf";
+
+	/**
+	 * Constant {@link String} containing the description for the {@link CharacterStruct#valueOf(Integer)} method.
+	 */
+	private static final String CHARACTER_STRUCT_VALUE_OF_METHOD_DESC
+			= CodeGenerators.getMethodDescription(CharacterStruct.class, CHARACTER_STRUCT_VALUE_OF_METHOD_NAME, Integer.class);
 
 	/**
 	 * {@inheritDoc}
 	 * Generation method for {@link CharacterStruct} objects, by performing the following operations:
 	 * <ol>
 	 * <li>Loading the {@link CharacterStruct#codePoint} constant</li>
-	 * <li>Constructing a new {@link CharacterStruct} with the loaded code point value</li>
+	 * <li>Retrieving a {@link CharacterStruct} with the loaded code point value</li>
 	 * </ol>
 	 *
 	 * @param input
@@ -51,9 +55,6 @@ class CharacterCodeGenerator implements CodeGenerator<CharacterStruct> {
 		final JavaMethodBuilder methodBuilder = generatorState.getCurrentMethodBuilder();
 		final MethodVisitor mv = methodBuilder.getMethodVisitor();
 
-		mv.visitTypeInsn(Opcodes.NEW, CHARACTER_STRUCT_NAME);
-		mv.visitInsn(Opcodes.DUP);
-
 		final int codePoint = input.getCodePoint();
 		mv.visitLdcInsn(codePoint);
 		mv.visitMethodInsn(Opcodes.INVOKESTATIC,
@@ -61,10 +62,10 @@ class CharacterCodeGenerator implements CodeGenerator<CharacterStruct> {
 				GenerationConstants.JAVA_INTEGER_VALUE_OF_METHOD_NAME,
 				GenerationConstants.JAVA_INTEGER_VALUE_OF_METHOD_DESC,
 				false);
-		mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
+		mv.visitMethodInsn(Opcodes.INVOKESTATIC,
 				CHARACTER_STRUCT_NAME,
-				GenerationConstants.INIT_METHOD_NAME,
-				CHARACTER_STRUCT_INIT_DESC,
+				CHARACTER_STRUCT_VALUE_OF_METHOD_NAME,
+				CHARACTER_STRUCT_VALUE_OF_METHOD_DESC,
 				false);
 	}
 }

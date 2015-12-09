@@ -16,6 +16,6 @@ public class TestGroundSymbolMacroExpander extends SymbolMacroExpander {
 
 	@Override
 	public LispStruct expand(final LispStruct form, final Environment environment) {
-		return new CharacterStruct(123456789);
+		return CharacterStruct.valueOf(123456789);
 	}
 }

@@ -48,6 +48,6 @@ public class SharpUReaderMacroFunction extends ReaderMacroFunction {
 		}
 
 		final int unicodeCodePoint = UnicodeCharacterReaderMacroFunction.readUnicodeCharacter(reader);
-		return new CharacterStruct(unicodeCodePoint);
+		return CharacterStruct.valueOf(unicodeCodePoint);
 	}
 }

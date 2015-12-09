@@ -116,7 +116,7 @@ public class TestLambdaGenerator extends FunctionStruct {
 
 	@Override
 	protected LispStruct internalApply(final Closure currentClosure) {
-//		result = new CharacterStruct(97);
+//		result = CharacterStruct.valueOf(97);
 		return new TestGroundLambdaFunction(currentClosure);
 	}
 
@@ -126,13 +126,13 @@ public class TestLambdaGenerator extends FunctionStruct {
 		final PackageStruct pkg1 = PackageStruct.findPackage("SYSTEM");
 		final SymbolStruct<?> symbol1 = pkg1.findSymbol("SYMBOL1").getSymbol();
 		if (symbolBinding.equals(symbol1)) {
-			return new CharacterStruct(100);
+			return CharacterStruct.valueOf(100);
 		}
 
 		final PackageStruct pkg2 = PackageStruct.findPackage("SYSTEM");
 		final SymbolStruct<?> symbol2 = pkg2.findSymbol("SYMBOL2").getSymbol();
 		if (symbolBinding.equals(symbol2)) {
-			return new CharacterStruct(200);
+			return CharacterStruct.valueOf(200);
 		}
 
 		return NullStruct.INSTANCE;

@@ -138,7 +138,7 @@ public class TestGroundMacroFunctionExpanderGenerator extends MacroFunctionExpan
 
 	@Override
 	protected LispStruct internalApply(final Closure currentClosure) {
-		return new CharacterStruct(97);
+		return CharacterStruct.valueOf(97);
 	}
 
 	@Override
@@ -147,13 +147,13 @@ public class TestGroundMacroFunctionExpanderGenerator extends MacroFunctionExpan
 		final PackageStruct pkg1 = PackageStruct.findPackage("SYSTEM");
 		final SymbolStruct<?> symbol1 = pkg1.findSymbol("SYMBOL1").getSymbol();
 		if (symbolBinding.equals(symbol1)) {
-			return new CharacterStruct(100);
+			return CharacterStruct.valueOf(100);
 		}
 
 		final PackageStruct pkg2 = PackageStruct.findPackage("SYSTEM");
 		final SymbolStruct<?> symbol2 = pkg2.findSymbol("SYMBOL2").getSymbol();
 		if (symbolBinding.equals(symbol2)) {
-			return new CharacterStruct(200);
+			return CharacterStruct.valueOf(200);
 		}
 
 		return NullStruct.INSTANCE;

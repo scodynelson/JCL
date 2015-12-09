@@ -52,7 +52,7 @@ public class SharpBackslashReaderMacroFunction extends ReaderMacroFunction {
 		final int maxTokenStringLength = 1;
 		if (StringUtils.length(tokenString) == maxTokenStringLength) {
 			final char characterToken = tokenString.charAt(0);
-			return new CharacterStruct(characterToken);
+			return CharacterStruct.valueOf(characterToken);
 		}
 
 		Integer nameCodePoint = null;
@@ -68,6 +68,6 @@ public class SharpBackslashReaderMacroFunction extends ReaderMacroFunction {
 			throw new ReaderErrorException("Unrecognized character name: " + tokenString);
 		}
 
-		return new CharacterStruct(nameCodePoint);
+		return CharacterStruct.valueOf(nameCodePoint);
 	}
 }

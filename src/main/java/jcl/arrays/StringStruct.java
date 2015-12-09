@@ -80,7 +80,7 @@ public class StringStruct extends VectorStruct<CharacterStruct> {
 	private static List<CharacterStruct> getCharList(final String stringValue) {
 		final List<CharacterStruct> charList = new ArrayList<>(stringValue.length());
 		for (final char character : stringValue.toCharArray()) {
-			final CharacterStruct characterStruct = new CharacterStruct(character);
+			final CharacterStruct characterStruct = CharacterStruct.valueOf(character);
 			charList.add(characterStruct);
 		}
 		return charList;

@@ -18,7 +18,6 @@ import jcl.packages.PackageStruct;
 import jcl.packages.PackageVariables;
 import jcl.symbols.TStruct;
 import jcl.types.ListType;
-import jcl.types.PackageType;
 import jcl.types.TypeValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -40,6 +39,9 @@ public final class UsePackageFunction extends AbstractCommonLispFunctionStruct {
 	@Autowired
 	private FindPackageFunction findPackageFunction;
 
+	/**
+	 * Public constructor passing the documentation string.
+	 */
 	public UsePackageFunction() {
 		super("Causes package to inherit all the external symbols of packages-to-use.");
 	}
@@ -67,8 +69,8 @@ public final class UsePackageFunction extends AbstractCommonLispFunctionStruct {
 		final List<LispStruct> packages = ((ListStruct) lispStruct).getAsJavaList();
 		final List<PackageStruct> realPackages = new ArrayList<>(packages.size());
 		for (final LispStruct aPackage : packages) {
-			validator.validateTypes(aPackage, functionName(), "Package", PackageType.INSTANCE);
-			realPackages.add((PackageStruct) aPackage);
+			final PackageStruct realPackage = findPackageFunction.findPackage(aPackage);
+			realPackages.add(realPackage);
 		}
 
 		final PackageStruct aPackage = getPackage(lispStructs);

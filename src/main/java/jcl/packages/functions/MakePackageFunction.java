@@ -4,8 +4,26 @@
 
 package jcl.packages.functions;
 
-/**
- * Created by codynelson on 12/9/15.
- */
-public class MakePackageFunction {
+import jcl.functions.AbstractCommonLispFunctionStruct;
+import org.springframework.stereotype.Component;
+
+@Component
+public final class MakePackageFunction extends AbstractCommonLispFunctionStruct {
+
+	/**
+	 * Serializable Version Unique Identifier.
+	 */
+	private static final long serialVersionUID = -1982336595153324433L;
+
+	/**
+	 * Public constructor passing the documentation string.
+	 */
+	public MakePackageFunction() {
+		super("");
+	}
+
+	@Override
+	protected String functionName() {
+		return "MAKE-PACKAGE";
+	}
 }

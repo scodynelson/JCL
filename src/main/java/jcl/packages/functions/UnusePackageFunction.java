@@ -39,6 +39,9 @@ public final class UnusePackageFunction extends AbstractCommonLispFunctionStruct
 	@Autowired
 	private FindPackageFunction findPackageFunction;
 
+	/**
+	 * Public constructor passing the documentation string.
+	 */
 	public UnusePackageFunction() {
 		super("Causes package to cease inheriting all the external symbols of packages-to-unuse.");
 	}

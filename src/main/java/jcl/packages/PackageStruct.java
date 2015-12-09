@@ -249,7 +249,7 @@ public class PackageStruct extends BuiltInClassStruct {
 	private void internalUsePackage(final PackageStruct... packagesToUse) {
 		for (final PackageStruct packageToUse : packagesToUse) {
 			if (packageToUse.equals(GlobalPackageStruct.KEYWORD)) {
-				throw new PackageErrorException(this + " can't use package " + GlobalPackageStruct.KEYWORD);
+				throw new PackageErrorException(this + " can't use package " + GlobalPackageStruct.KEYWORD, this);
 			}
 
 			// Shadow current nonInherited symbols
@@ -440,7 +440,7 @@ public class PackageStruct extends BuiltInClassStruct {
 				exceptionStringBuilder.append(' ');
 			}
 			exceptionStringBuilder.append(')');
-			throw new PackageErrorException(exceptionStringBuilder.toString());
+			throw new PackageErrorException(exceptionStringBuilder.toString(), this);
 		}
 	}
 
@@ -509,7 +509,7 @@ public class PackageStruct extends BuiltInClassStruct {
 				exceptionStringBuilder.append(' ');
 			}
 			exceptionStringBuilder.append(')');
-			throw new PackageErrorException(exceptionStringBuilder.toString());
+			throw new PackageErrorException(exceptionStringBuilder.toString(), this);
 		}
 
 		final SymbolStruct<?> externalSymbol = externalSymbols.remove(symbolName);

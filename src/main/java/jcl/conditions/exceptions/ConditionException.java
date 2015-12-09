@@ -2,6 +2,7 @@ package jcl.conditions.exceptions;
 
 import jcl.LispStruct;
 import jcl.LispType;
+import jcl.conditions.ConditionType;
 
 public class ConditionException extends RuntimeException implements LispStruct {
 
@@ -17,6 +18,6 @@ public class ConditionException extends RuntimeException implements LispStruct {
 
 	@Override
 	public LispType getType() {
-		return null;
+		return ConditionType.CONDITION;
 	}
 }

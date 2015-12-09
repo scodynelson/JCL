@@ -37,6 +37,9 @@ public final class ExportFunction extends AbstractCommonLispFunctionStruct {
 	@Autowired
 	private FindPackageFunction findPackageFunction;
 
+	/**
+	 * Public constructor passing the documentation string.
+	 */
 	public ExportFunction() {
 		super("Makes one or more symbols that are accessible in package (whether directly or by inheritance) be external symbols of that package.");
 	}

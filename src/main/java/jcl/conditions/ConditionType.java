@@ -1,6 +1,8 @@
 package jcl.conditions;
 
-public enum ConditionType {
+import jcl.LispType;
+
+public enum ConditionType implements LispType {
 
 	TYPE_ERROR,
 	SIMPLE_TYPE_ERROR,

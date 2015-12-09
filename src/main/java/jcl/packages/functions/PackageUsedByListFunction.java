@@ -13,6 +13,9 @@ import jcl.packages.GlobalPackageStruct;
 import jcl.packages.PackageStruct;
 import org.springframework.stereotype.Component;
 
+/**
+ * Function implementation for {@code package-used-by-list}.
+ */
 @Component
 public final class PackageUsedByListFunction extends AbstractPackageFunction {
 
@@ -45,6 +48,12 @@ public final class PackageUsedByListFunction extends AbstractPackageFunction {
 		return ListStruct.buildProperList(usedByListArray);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * Returns the function name {@code package-used-by-list} as a string.
+	 *
+	 * @return the function name {@code package-used-by-list} as a string
+	 */
 	@Override
 	protected String functionName() {
 		return "PACKAGE-USED-BY-LIST";

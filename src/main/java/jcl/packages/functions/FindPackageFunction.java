@@ -13,6 +13,9 @@ import jcl.packages.GlobalPackageStruct;
 import jcl.packages.PackageStruct;
 import org.springframework.stereotype.Component;
 
+/**
+ * Function implementation for {@code find-package}.
+ */
 @Component
 public final class FindPackageFunction extends AbstractPackageFunction {
 
@@ -42,6 +45,12 @@ public final class FindPackageFunction extends AbstractPackageFunction {
 		return (aPackage == null) ? NullStruct.INSTANCE : aPackage;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * Returns the function name {@code find-package} as a string.
+	 *
+	 * @return the function name {@code find-package} as a string
+	 */
 	@Override
 	protected String functionName() {
 		return "FIND-PACKAGE";

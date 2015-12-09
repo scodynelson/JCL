@@ -12,6 +12,9 @@ import jcl.lists.ListStruct;
 import jcl.packages.PackageStruct;
 import org.springframework.stereotype.Component;
 
+/**
+ * Function implementation for {@code list-all-packages}.
+ */
 @Component
 public final class ListAllPackagesFunction extends AbstractCommonLispFunctionStruct {
 
@@ -36,6 +39,12 @@ public final class ListAllPackagesFunction extends AbstractCommonLispFunctionStr
 		return ListStruct.buildProperList(allPackagesArray);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * Returns the function name {@code list-all-packages} as a string.
+	 *
+	 * @return the function name {@code list-all-packages} as a string
+	 */
 	@Override
 	protected String functionName() {
 		return "LIST-ALL-PACKAGES";

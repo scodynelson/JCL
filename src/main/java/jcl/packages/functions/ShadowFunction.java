@@ -23,6 +23,9 @@ import jcl.types.StringType;
 import jcl.types.SymbolType;
 import org.springframework.stereotype.Component;
 
+/**
+ * Function implementation for {@code shadow}.
+ */
 @Component
 public final class ShadowFunction extends AbstractOptionalPackageFunction {
 
@@ -78,6 +81,12 @@ public final class ShadowFunction extends AbstractOptionalPackageFunction {
 		}
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * Returns the function name {@code shadow} as a string.
+	 *
+	 * @return the function name {@code shadow} as a string
+	 */
 	@Override
 	protected String functionName() {
 		return "SHADOW";

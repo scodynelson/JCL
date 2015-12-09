@@ -61,6 +61,12 @@ public final class FindSymbolFunction extends AbstractOptionalPackageFunction {
 		return new ValuesStruct(symbol, packageSymbolType);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * Returns the function name {@code find-symbol} as a string.
+	 *
+	 * @return the function name {@code find-symbol} as a string
+	 */
 	@Override
 	protected String functionName() {
 		return "FIND-SYMBOL";

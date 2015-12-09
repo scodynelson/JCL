@@ -18,6 +18,9 @@ import jcl.types.ListType;
 import jcl.types.SymbolType;
 import org.springframework.stereotype.Component;
 
+/**
+ * Function implementation for {@code shadowing-import}.
+ */
 @Component
 public final class ShadowingImportFunction extends AbstractOptionalPackageFunction {
 
@@ -59,6 +62,12 @@ public final class ShadowingImportFunction extends AbstractOptionalPackageFuncti
 		return TStruct.INSTANCE;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * Returns the function name {@code shadowing-import} as a string.
+	 *
+	 * @return the function name {@code shadowing-import} as a string
+	 */
 	@Override
 	protected String functionName() {
 		return "SHADOWING-IMPORT";

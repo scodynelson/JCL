@@ -24,8 +24,11 @@ import jcl.types.StringType;
 import jcl.types.SymbolType;
 import org.springframework.stereotype.Component;
 
+/**
+ * Function implementation for {@code rename-package}.
+ */
 @Component
-public class RenamePackageFunction extends AbstractPackageFunction {
+public final class RenamePackageFunction extends AbstractPackageFunction {
 
 	/**
 	 * Serializable Version Unique Identifier.
@@ -114,6 +117,12 @@ public class RenamePackageFunction extends AbstractPackageFunction {
 		}
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * Returns the function name {@code rename-package} as a string.
+	 *
+	 * @return the function name {@code rename-package} as a string
+	 */
 	@Override
 	protected String functionName() {
 		return "RENAME-PACKAGE";

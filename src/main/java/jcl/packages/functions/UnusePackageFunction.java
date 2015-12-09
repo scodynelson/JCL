@@ -16,6 +16,9 @@ import jcl.symbols.TStruct;
 import jcl.types.ListType;
 import org.springframework.stereotype.Component;
 
+/**
+ * Function implementation for {@code unuse-package}.
+ */
 @Component
 public final class UnusePackageFunction extends AbstractOptionalPackageFunction {
 
@@ -57,6 +60,12 @@ public final class UnusePackageFunction extends AbstractOptionalPackageFunction 
 		return TStruct.INSTANCE;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * Returns the function name {@code unuse-package} as a string.
+	 *
+	 * @return the function name {@code unuse-package} as a string
+	 */
 	@Override
 	protected String functionName() {
 		return "UNUSE-PACKAGE";

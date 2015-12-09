@@ -14,6 +14,9 @@ import jcl.packages.PackageStruct;
 import jcl.symbols.TStruct;
 import org.springframework.stereotype.Component;
 
+/**
+ * Function implementation for {@code delete-package}.
+ */
 @Component
 public final class DeletePackageFunction extends AbstractPackageFunction {
 
@@ -49,6 +52,12 @@ public final class DeletePackageFunction extends AbstractPackageFunction {
 		return TStruct.INSTANCE;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * Returns the function name {@code delete-package} as a string.
+	 *
+	 * @return the function name {@code delete-package} as a string
+	 */
 	@Override
 	protected String functionName() {
 		return "DELETE-PACKAGE";

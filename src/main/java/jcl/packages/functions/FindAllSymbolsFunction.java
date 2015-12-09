@@ -23,6 +23,9 @@ import jcl.types.TypeValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+/**
+ * Function implementation for {@code find-all-symbols}.
+ */
 @Component
 public final class FindAllSymbolsFunction extends AbstractCommonLispFunctionStruct {
 
@@ -75,6 +78,12 @@ public final class FindAllSymbolsFunction extends AbstractCommonLispFunctionStru
 		}
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * Returns the function name {@code find-all-symbols} as a string.
+	 *
+	 * @return the function name {@code find-all-symbols} as a string
+	 */
 	@Override
 	protected String functionName() {
 		return "FIND-ALL-SYMBOLS";

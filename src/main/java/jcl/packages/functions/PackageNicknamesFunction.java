@@ -15,6 +15,9 @@ import jcl.packages.GlobalPackageStruct;
 import jcl.packages.PackageStruct;
 import org.springframework.stereotype.Component;
 
+/**
+ * Function implementation for {@code package-nicknames}.
+ */
 @Component
 public final class PackageNicknamesFunction extends AbstractPackageFunction {
 
@@ -50,6 +53,12 @@ public final class PackageNicknamesFunction extends AbstractPackageFunction {
 		return ListStruct.buildProperList(nicknamesStructs);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * Returns the function name {@code package-nicknames} as a string.
+	 *
+	 * @return the function name {@code package-nicknames} as a string
+	 */
 	@Override
 	protected String functionName() {
 		return "PACKAGE-NICKNAMES";

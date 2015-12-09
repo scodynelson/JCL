@@ -28,6 +28,9 @@ import jcl.types.StringType;
 import jcl.types.SymbolType;
 import org.springframework.stereotype.Component;
 
+/**
+ * Function implementation for {@code make-package}.
+ */
 @Component
 public final class MakePackageFunction extends AbstractPackageFunction {
 
@@ -136,6 +139,12 @@ public final class MakePackageFunction extends AbstractPackageFunction {
 		}
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * Returns the function name {@code make-package} as a string.
+	 *
+	 * @return the function name {@code make-package} as a string
+	 */
 	@Override
 	protected String functionName() {
 		return "MAKE-PACKAGE";

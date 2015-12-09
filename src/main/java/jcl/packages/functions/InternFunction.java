@@ -19,8 +19,11 @@ import jcl.symbols.SymbolStruct;
 import jcl.types.StringType;
 import org.springframework.stereotype.Component;
 
+/**
+ * Function implementation for {@code intern}.
+ */
 @Component
-public class InternFunction extends AbstractOptionalPackageFunction {
+public final class InternFunction extends AbstractOptionalPackageFunction {
 
 	/**
 	 * Serializable Version Unique Identifier.
@@ -59,6 +62,12 @@ public class InternFunction extends AbstractOptionalPackageFunction {
 		return new ValuesStruct(symbol, packageSymbolType);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * Returns the function name {@code intern} as a string.
+	 *
+	 * @return the function name {@code intern} as a string
+	 */
 	@Override
 	protected String functionName() {
 		return "INTERN";

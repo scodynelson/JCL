@@ -15,6 +15,9 @@ import jcl.symbols.TStruct;
 import jcl.types.SymbolType;
 import org.springframework.stereotype.Component;
 
+/**
+ * Function implementation for {@code unintern}.
+ */
 @Component
 public final class UninternFunction extends AbstractOptionalPackageFunction {
 
@@ -50,6 +53,12 @@ public final class UninternFunction extends AbstractOptionalPackageFunction {
 		return TStruct.INSTANCE;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * Returns the function name {@code unintern} as a string.
+	 *
+	 * @return the function name {@code unintern} as a string
+	 */
 	@Override
 	protected String functionName() {
 		return "UNINTERN";

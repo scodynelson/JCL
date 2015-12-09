@@ -24,6 +24,9 @@ import jcl.types.TypeValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+/**
+ * Function implementation for {@code in-package}.
+ */
 @Component
 public final class InPackageFunction extends AbstractCommonLispFunctionStruct {
 
@@ -81,6 +84,12 @@ public final class InPackageFunction extends AbstractCommonLispFunctionStruct {
 		}
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * Returns the function name {@code in-package} as a string.
+	 *
+	 * @return the function name {@code in-package} as a string
+	 */
 	@Override
 	protected String functionName() {
 		return "IN-PACKAGE";

@@ -18,6 +18,9 @@ import jcl.types.ListType;
 import jcl.types.SymbolType;
 import org.springframework.stereotype.Component;
 
+/**
+ * Function implementation for {@code unexport}.
+ */
 @Component
 public final class UnexportFunction extends AbstractOptionalPackageFunction {
 
@@ -59,6 +62,12 @@ public final class UnexportFunction extends AbstractOptionalPackageFunction {
 		return TStruct.INSTANCE;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * Returns the function name {@code unexport} as a string.
+	 *
+	 * @return the function name {@code unexport} as a string
+	 */
 	@Override
 	protected String functionName() {
 		return "UNEXPORT";

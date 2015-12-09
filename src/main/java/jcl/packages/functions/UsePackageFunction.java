@@ -17,6 +17,9 @@ import jcl.symbols.TStruct;
 import jcl.types.ListType;
 import org.springframework.stereotype.Component;
 
+/**
+ * Function implementation for {@code use-package}.
+ */
 @Component
 public final class UsePackageFunction extends AbstractOptionalPackageFunction {
 
@@ -69,6 +72,12 @@ public final class UsePackageFunction extends AbstractOptionalPackageFunction {
 		}
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * Returns the function name {@code use-package} as a string.
+	 *
+	 * @return the function name {@code use-package} as a string
+	 */
 	@Override
 	protected String functionName() {
 		return "USE-PACKAGE";

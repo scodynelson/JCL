@@ -18,6 +18,9 @@ import jcl.types.ListType;
 import jcl.types.SymbolType;
 import org.springframework.stereotype.Component;
 
+/**
+ * Function implementation for {@code export}.
+ */
 @Component
 public final class ExportFunction extends AbstractOptionalPackageFunction {
 
@@ -56,6 +59,12 @@ public final class ExportFunction extends AbstractOptionalPackageFunction {
 		return TStruct.INSTANCE;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * Returns the function name {@code export} as a string.
+	 *
+	 * @return the function name {@code export} as a string
+	 */
 	@Override
 	protected String functionName() {
 		return "EXPORT";

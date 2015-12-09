@@ -15,6 +15,9 @@ import jcl.packages.PackageStruct;
 import jcl.symbols.SymbolStruct;
 import org.springframework.stereotype.Component;
 
+/**
+ * Function implementation for {@code package-shadowing-symbols}.
+ */
 @Component
 public final class PackageShadowingSymbolsFunction extends AbstractPackageFunction {
 
@@ -47,6 +50,12 @@ public final class PackageShadowingSymbolsFunction extends AbstractPackageFuncti
 		return ListStruct.buildProperList(shadowingSymbolsArray);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * Returns the function name {@code package-shadowing-symbols} as a string.
+	 *
+	 * @return the function name {@code package-shadowing-symbols} as a string
+	 */
 	@Override
 	protected String functionName() {
 		return "PACKAGE-SHADOWING-SYMBOLS";

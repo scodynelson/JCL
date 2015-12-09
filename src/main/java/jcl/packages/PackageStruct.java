@@ -531,11 +531,7 @@ public class PackageStruct extends BuiltInClassStruct {
 	 * @return the located package for the provided {@code packageName}
 	 */
 	public static PackageStruct findPackage(final String packageName) {
-		final PackageStruct foundPackage = GlobalPackageStruct.ALL_PACKAGES.get(packageName);
-		if (foundPackage == null) {
-			throw new PackageErrorException("There is no package named " + packageName);
-		}
-		return foundPackage;
+		return GlobalPackageStruct.ALL_PACKAGES.get(packageName);
 	}
 
 	/**
@@ -551,8 +547,10 @@ public class PackageStruct extends BuiltInClassStruct {
 		final Set<SymbolStruct<?>> allSymbols = new HashSet<>();
 		for (final PackageStruct packageStruct : GlobalPackageStruct.ALL_PACKAGES.values()) {
 			final PackageSymbolStruct foundPackageSymbol = packageStruct.findSymbol(symbolName);
-			final SymbolStruct<?> foundSymbol = foundPackageSymbol.getSymbol();
-			allSymbols.add(foundSymbol);
+			if (foundPackageSymbol != null) {
+				final SymbolStruct<?> foundSymbol = foundPackageSymbol.getSymbol();
+				allSymbols.add(foundSymbol);
+			}
 		}
 		return new ArrayList<>(allSymbols);
 	}

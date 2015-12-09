@@ -10,6 +10,7 @@ import jcl.LispStruct;
 import jcl.arrays.StringStruct;
 import jcl.characters.CharacterStruct;
 import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
+import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.conditions.exceptions.TypeErrorException;
 import jcl.functions.AbstractCommonLispFunctionStruct;
 import jcl.packages.GlobalPackageStruct;
@@ -57,6 +58,10 @@ public final class InPackageFunction extends AbstractCommonLispFunctionStruct {
 		}
 
 		final PackageStruct newCurrentPackage = PackageStruct.findPackage(newCurrentPackageName);
+		if (newCurrentPackage == null) {
+			throw new ReaderErrorException("There is no package named " + newCurrentPackageName);
+		}
+
 		PackageVariables.PACKAGE.setValue(newCurrentPackage);
 
 		return newCurrentPackage;

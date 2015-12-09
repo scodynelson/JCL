@@ -8,23 +8,18 @@ import java.util.List;
 
 import jcl.LispStruct;
 import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
-import jcl.functions.AbstractCommonLispFunctionStruct;
 import jcl.lists.ListStruct;
 import jcl.packages.GlobalPackageStruct;
 import jcl.packages.PackageStruct;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class PackageUseListFunction extends AbstractCommonLispFunctionStruct {
+public final class PackageUseListFunction extends AbstractPackageFunction {
 
 	/**
 	 * Serializable Version Unique Identifier.
 	 */
 	private static final long serialVersionUID = 5728008797234255860L;
-
-	@Autowired
-	private FindPackageFunction findPackageFunction;
 
 	/**
 	 * Public constructor passing the documentation string.
@@ -43,7 +38,7 @@ public final class PackageUseListFunction extends AbstractCommonLispFunctionStru
 		super.apply(lispStructs);
 
 		final LispStruct lispStruct = lispStructs[0];
-		final PackageStruct aPackage = findPackageFunction.findPackage(lispStruct);
+		final PackageStruct aPackage = findPackage(lispStruct);
 
 		final List<PackageStruct> useList = aPackage.getUseList();
 		final LispStruct[] useListArray = useList.toArray(new LispStruct[useList.size()]);

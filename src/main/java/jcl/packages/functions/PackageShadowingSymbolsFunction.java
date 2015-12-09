@@ -9,24 +9,19 @@ import java.util.List;
 
 import jcl.LispStruct;
 import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
-import jcl.functions.AbstractCommonLispFunctionStruct;
 import jcl.lists.ListStruct;
 import jcl.packages.GlobalPackageStruct;
 import jcl.packages.PackageStruct;
 import jcl.symbols.SymbolStruct;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class PackageShadowingSymbolsFunction extends AbstractCommonLispFunctionStruct {
+public final class PackageShadowingSymbolsFunction extends AbstractPackageFunction {
 
 	/**
 	 * Serializable Version Unique Identifier.
 	 */
 	private static final long serialVersionUID = 1263271762013032850L;
-
-	@Autowired
-	private FindPackageFunction findPackageFunction;
 
 	/**
 	 * Public constructor passing the documentation string.
@@ -45,7 +40,7 @@ public final class PackageShadowingSymbolsFunction extends AbstractCommonLispFun
 		super.apply(lispStructs);
 
 		final LispStruct lispStruct = lispStructs[0];
-		final PackageStruct aPackage = findPackageFunction.findPackage(lispStruct);
+		final PackageStruct aPackage = findPackage(lispStruct);
 
 		final Collection<SymbolStruct<?>> shadowingSymbols = aPackage.getShadowingSymbols().values();
 		final LispStruct[] shadowingSymbolsArray = shadowingSymbols.toArray(new LispStruct[shadowingSymbols.size()]);

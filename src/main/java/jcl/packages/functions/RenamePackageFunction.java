@@ -13,7 +13,6 @@ import jcl.characters.CharacterStruct;
 import jcl.compiler.environment.binding.lambdalist.OptionalParameter;
 import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
 import jcl.conditions.exceptions.TypeErrorException;
-import jcl.functions.AbstractCommonLispFunctionStruct;
 import jcl.lists.ListStruct;
 import jcl.packages.GlobalPackageStruct;
 import jcl.packages.PackageStruct;
@@ -23,26 +22,15 @@ import jcl.types.ListType;
 import jcl.types.PackageType;
 import jcl.types.StringType;
 import jcl.types.SymbolType;
-import jcl.types.TypeValidator;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class RenamePackageFunction extends AbstractCommonLispFunctionStruct {
+public class RenamePackageFunction extends AbstractPackageFunction {
 
 	/**
 	 * Serializable Version Unique Identifier.
 	 */
 	private static final long serialVersionUID = -5908168151723138190L;
-
-	/**
-	 * The {@link TypeValidator} for validating the function parameter value types.
-	 */
-	@Autowired
-	private TypeValidator validator;
-
-	@Autowired
-	private FindPackageFunction findPackageFunction;
 
 	/**
 	 * Public constructor passing the documentation string.
@@ -74,7 +62,7 @@ public class RenamePackageFunction extends AbstractCommonLispFunctionStruct {
 	public LispStruct apply(final LispStruct... lispStructs) {
 		super.apply(lispStructs);
 
-		final PackageStruct aPackage = findPackageFunction.findPackage(lispStructs[0]);
+		final PackageStruct aPackage = findPackage(lispStructs[0]);
 
 		final LispStruct newName = lispStructs[1];
 		final String realNewName = getStringFromPackageDesignator(newName, "New Name");

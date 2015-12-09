@@ -16,7 +16,6 @@ import jcl.compiler.environment.binding.lambdalist.KeyParameter;
 import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.conditions.exceptions.TypeErrorException;
-import jcl.functions.AbstractCommonLispFunctionStruct;
 import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;
 import jcl.packages.GlobalPackageStruct;
@@ -27,26 +26,15 @@ import jcl.types.CharacterType;
 import jcl.types.ListType;
 import jcl.types.StringType;
 import jcl.types.SymbolType;
-import jcl.types.TypeValidator;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class MakePackageFunction extends AbstractCommonLispFunctionStruct {
+public final class MakePackageFunction extends AbstractPackageFunction {
 
 	/**
 	 * Serializable Version Unique Identifier.
 	 */
 	private static final long serialVersionUID = -1982336595153324433L;
-
-	/**
-	 * The {@link TypeValidator} for validating the function parameter value types.
-	 */
-	@Autowired
-	private TypeValidator validator;
-
-	@Autowired
-	private FindPackageFunction findPackageFunction;
 
 	/**
 	 * Public constructor passing the documentation string.
@@ -127,7 +115,7 @@ public final class MakePackageFunction extends AbstractCommonLispFunctionStruct 
 		final List<LispStruct> usePackagesList = usePackages.getAsJavaList();
 		final Set<PackageStruct> realUsePackages = new HashSet<>(usePackagesList.size());
 		for (final LispStruct usePackage : usePackagesList) {
-			final PackageStruct aPackage = findPackageFunction.findPackage(usePackage);
+			final PackageStruct aPackage = findPackage(usePackage);
 			realUsePackages.add(aPackage);
 		}
 

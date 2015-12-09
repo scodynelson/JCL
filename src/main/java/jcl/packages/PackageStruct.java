@@ -132,6 +132,9 @@ public class PackageStruct extends BuiltInClassStruct {
 	 */
 	private void init() {
 		GlobalPackageStruct.ALL_PACKAGES.put(name, this);
+		for (final String nickname : nicknames) {
+			GlobalPackageStruct.ALL_PACKAGES.put(nickname, this);
+		}
 	}
 
 	/**
@@ -211,8 +214,13 @@ public class PackageStruct extends BuiltInClassStruct {
 	public void renamePackage(final String newName, final List<String> newNicknames) {
 		GlobalPackageStruct.ALL_PACKAGES.remove(name);
 		name = newName;
-		nicknames = newNicknames;
 		GlobalPackageStruct.ALL_PACKAGES.put(newName, this);
+
+		nicknames.forEach(GlobalPackageStruct.ALL_PACKAGES::remove);
+		nicknames = newNicknames;
+		for (final String nickname : newNicknames) {
+			GlobalPackageStruct.ALL_PACKAGES.put(nickname, this);
+		}
 	}
 
 	/**
@@ -221,6 +229,7 @@ public class PackageStruct extends BuiltInClassStruct {
 	 */
 	public void deletePackage() {
 		GlobalPackageStruct.ALL_PACKAGES.remove(name);
+		nicknames.forEach(GlobalPackageStruct.ALL_PACKAGES::remove);
 		for (final PackageStruct usedByPackage : usedByList) {
 			usedByPackage.unUsePackage(this);
 		}
@@ -261,7 +270,7 @@ public class PackageStruct extends BuiltInClassStruct {
 				}
 			}
 
-//			packageToUse.usedByList.add(this); // TODO: fix this. StackOverflow here. why?
+			packageToUse.usedByList.add(this);
 		}
 	}
 

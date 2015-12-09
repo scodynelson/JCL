@@ -113,7 +113,7 @@ public class RenamePackageFunction extends AbstractCommonLispFunctionStruct {
 	}
 
 	private String getStringFromStringDesignator(final LispStruct stringDesignator, final String parameterName) {
-		validator.validateTypes(stringDesignator, functionName(), "String-Designator", StringType.INSTANCE, SymbolType.INSTANCE, CharacterType.INSTANCE);
+		validator.validateTypes(stringDesignator, functionName(), parameterName, StringType.INSTANCE, SymbolType.INSTANCE, CharacterType.INSTANCE);
 
 		if (stringDesignator instanceof StringStruct) {
 			return ((StringStruct) stringDesignator).getAsJavaString();

@@ -42,16 +42,44 @@ public final class CharacterFunction extends AbstractCharacterDesignatorFunction
 		return "CHARACTER";
 	}
 
+	/**
+	 * Creates a {@link Function} applying {@link #getCharacterFromString(String, String)} against a {@link
+	 * StringStruct} parameter by retrieving its {@link String} value via {@link StringStruct#getAsJavaString()} and
+	 * validating that it is a single character length string.
+	 *
+	 * @return a {@link Function} applying {@link #getCharacterFromString(String, String)} against a {@link
+	 * StringStruct}
+	 */
 	@Override
 	protected Function<StringStruct, LispStruct> stringFunction() {
 		return aString -> getCharacterFromString(aString.getAsJavaString(), "String");
 	}
 
+	/**
+	 * Creates a {@link Function} applying {@link #getCharacterFromString(String, String)} against a {@link
+	 * SymbolStruct} parameter by retrieving its {@link String} value via {@link SymbolStruct#getName()} and validating
+	 * that it is a single character length string.
+	 *
+	 * @return a {@link Function} applying {@link #getCharacterFromString(String, String)} against a {@link
+	 * SymbolStruct}
+	 */
 	@Override
 	protected Function<SymbolStruct<?>, LispStruct> symbolFunction() {
 		return symbol -> getCharacterFromString(symbol.getName(), "Symbol name");
 	}
 
+	/**
+	 * Gets the {@link CharacterStruct} from the provided {@link String} value, ensuring the {@link String} is a single
+	 * character length string.
+	 *
+	 * @param aString
+	 * 		the {@link String} used to create the appropriate {@link CharacterStruct}
+	 * @param errorPrefix
+	 * 		the {@link String} error prefix for the thrown {@link SimpleErrorException} when the provided string value is
+	 * 		not a single character length string
+	 *
+	 * @return the {@link CharacterStruct} from the provided {@link String} value
+	 */
 	private static CharacterStruct getCharacterFromString(final String aString, final String errorPrefix) {
 		if (aString.length() != 1) {
 			throw new SimpleErrorException(errorPrefix + " is not of length one: " + aString);

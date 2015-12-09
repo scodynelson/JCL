@@ -11,12 +11,17 @@ import jcl.LispStruct;
 import jcl.characters.CharacterStruct;
 import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
 import jcl.functions.AbstractCommonLispFunctionStruct;
+import jcl.functions.FunctionStruct;
 import jcl.packages.GlobalPackageStruct;
 import jcl.symbols.BooleanStructs;
 import jcl.types.CharacterType;
 import jcl.types.TypeValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 
+/**
+ * Abstract {@link FunctionStruct} implementation for character functions that operates on a {@link CharacterStruct} to
+ * check against some {@link Predicate} operation.
+ */
 abstract class AbstractCharacterPredicateFunction extends AbstractCommonLispFunctionStruct {
 
 	/**
@@ -51,6 +56,16 @@ abstract class AbstractCharacterPredicateFunction extends AbstractCommonLispFunc
 		return new RequiredParameter.Builder(GlobalPackageStruct.COMMON_LISP, "CHARACTER").buildList();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * Application method for the character function that gets the {@link CharacterStruct} parameter object and applies
+	 * the result of the abstract {@link #predicate()} method with the parameter as the {@link Predicate} parameter.
+	 *
+	 * @param lispStructs
+	 * 		the function parameters
+	 *
+	 * @return the result of the {@link #predicate()} applied to the {@link CharacterStruct} parameter value
+	 */
 	@Override
 	public LispStruct apply(final LispStruct... lispStructs) {
 		super.apply(lispStructs);

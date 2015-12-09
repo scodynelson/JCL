@@ -41,11 +41,23 @@ public final class NameCharFunction extends AbstractCharacterDesignatorFunction 
 		return "NAME-CHAR";
 	}
 
+	/**
+	 * Creates a {@link Function} applying {@link CharacterStruct#nameChar(String)} against a {@link StringStruct}
+	 * parameter by retrieving its {@link String} value via {@link StringStruct#getAsJavaString()}.
+	 *
+	 * @return a {@link Function} applying {@link CharacterStruct#nameChar(String)} against a {@link StringStruct}
+	 */
 	@Override
 	protected Function<StringStruct, LispStruct> stringFunction() {
 		return aString -> CharacterStruct.nameChar(aString.getAsJavaString());
 	}
 
+	/**
+	 * Creates a {@link Function} applying {@link CharacterStruct#nameChar(String)} against a {@link SymbolStruct}
+	 * parameter by retrieving its {@link String} value via {@link SymbolStruct#getName()}.
+	 *
+	 * @return a {@link Function} applying {@link CharacterStruct#nameChar(String)} against a {@link SymbolStruct}
+	 */
 	@Override
 	protected Function<SymbolStruct<?>, LispStruct> symbolFunction() {
 		return symbol -> CharacterStruct.nameChar(symbol.getName());

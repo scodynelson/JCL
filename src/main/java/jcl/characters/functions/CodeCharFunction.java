@@ -53,6 +53,17 @@ public final class CodeCharFunction extends AbstractCommonLispFunctionStruct {
 		return new RequiredParameter.Builder(GlobalPackageStruct.COMMON_LISP, "CODE").buildList();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * Application method for the {@code code-char} character function that expects a single {@link IntegerStruct}
+	 * parameter object and applies {@link CharacterStruct#codeChar(IntegerStruct)} against the value to retrieve the
+	 * {@link CharacterStruct} for the {@link IntegerStruct} parameter code value.
+	 *
+	 * @param lispStructs
+	 * 		the function parameters
+	 *
+	 * @return the {@link CharacterStruct} for the {@link IntegerStruct} parameter code value
+	 */
 	@Override
 	public LispStruct apply(final LispStruct... lispStructs) {
 		super.apply(lispStructs);

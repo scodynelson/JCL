@@ -11,11 +11,15 @@ import jcl.LispStruct;
 import jcl.characters.CharacterStruct;
 import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
 import jcl.functions.AbstractCommonLispFunctionStruct;
+import jcl.functions.FunctionStruct;
 import jcl.packages.GlobalPackageStruct;
 import jcl.types.CharacterType;
 import jcl.types.TypeValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 
+/**
+ * Abstract {@link FunctionStruct} implementation for character functions that operates on a {@link CharacterStruct}.
+ */
 abstract class AbstractCharacterFunction extends AbstractCommonLispFunctionStruct {
 
 	/**

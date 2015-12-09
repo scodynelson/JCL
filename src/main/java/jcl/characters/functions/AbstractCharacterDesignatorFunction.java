@@ -13,6 +13,7 @@ import jcl.characters.CharacterStruct;
 import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
 import jcl.conditions.exceptions.TypeErrorException;
 import jcl.functions.AbstractCommonLispFunctionStruct;
+import jcl.functions.FunctionStruct;
 import jcl.packages.GlobalPackageStruct;
 import jcl.symbols.SymbolStruct;
 import jcl.types.CharacterType;
@@ -21,6 +22,10 @@ import jcl.types.SymbolType;
 import jcl.types.TypeValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 
+/**
+ * Abstract {@link FunctionStruct} implementation for character functions that operate on character designators, namely
+ * {@link CharacterStruct}s, {@link StringStruct}s, and {@link SymbolStruct}s.
+ */
 abstract class AbstractCharacterDesignatorFunction extends AbstractCommonLispFunctionStruct {
 
 	/**
@@ -57,6 +62,18 @@ abstract class AbstractCharacterDesignatorFunction extends AbstractCommonLispFun
 		return new RequiredParameter.Builder(GlobalPackageStruct.COMMON_LISP, "CHARACTER-DESIGNATOR").buildList();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * Application method for the character function that gets the character-designator parameter object (character,
+	 * string, or symbol) and either returns the {@link CharacterStruct} or applies the {@link Function} from the
+	 * {@link #stringFunction()} or {@link #symbolFunction()} functions.
+	 *
+	 * @param lispStructs
+	 * 		the function parameters
+	 *
+	 * @return the result of the {@link #stringFunction()} or {@link #symbolFunction()} applied to the
+	 * character-designator parameter value
+	 */
 	@Override
 	public LispStruct apply(final LispStruct... lispStructs) {
 		super.apply(lispStructs);

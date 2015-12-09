@@ -9,12 +9,17 @@ import java.util.List;
 import jcl.LispStruct;
 import jcl.compiler.environment.binding.lambdalist.OptionalParameter;
 import jcl.functions.AbstractCommonLispFunctionStruct;
+import jcl.functions.FunctionStruct;
 import jcl.numbers.IntegerStruct;
 import jcl.packages.GlobalPackageStruct;
 import jcl.types.IntegerType;
 import jcl.types.TypeValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 
+/**
+ * Abstract {@link FunctionStruct} implementation for character functions that operates on an optional {@link
+ * IntegerStruct} radix value.
+ */
 abstract class AbstractCharacterRadixFunction extends AbstractCommonLispFunctionStruct {
 
 	/**
@@ -51,9 +56,19 @@ abstract class AbstractCharacterRadixFunction extends AbstractCommonLispFunction
 				.buildList();
 	}
 
-	protected IntegerStruct getRadix(final LispStruct[] lispStructs) {
+	/**
+	 * Gets the {@link IntegerStruct} radix value from the {@link LispStruct[]} parameters. The radix value is to be
+	 * the second value in the parameter list. If there is only a single element in the parameter list, the default
+	 * radix value will be {@link IntegerStruct#TEN}.
+	 *
+	 * @param lispStructs
+	 * 		the function parameter list
+	 *
+	 * @return the radix value from the {@link LispStruct[]} parameters or {@link IntegerStruct#TEN}
+	 */
+	protected IntegerStruct getRadix(final LispStruct... lispStructs) {
 		final IntegerStruct radix;
-		if (lispStructs.length == 2) {
+		if (lispStructs.length >= 2) {
 			final LispStruct possibleRadix = lispStructs[1];
 			validator.validateTypes(possibleRadix, functionName(), "Radix", IntegerType.INSTANCE);
 

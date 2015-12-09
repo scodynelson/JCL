@@ -4,17 +4,14 @@
 
 package jcl.packages.functions;
 
-import java.util.Collections;
 import java.util.List;
-import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
 import jcl.arrays.StringStruct;
 import jcl.characters.CharacterStruct;
-import jcl.compiler.environment.binding.lambdalist.OrdinaryLambdaList;
 import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
 import jcl.conditions.exceptions.TypeErrorException;
-import jcl.functions.FunctionStruct;
+import jcl.functions.AbstractCommonLispFunctionStruct;
 import jcl.packages.GlobalPackageStruct;
 import jcl.packages.PackageStruct;
 import jcl.packages.PackageVariables;
@@ -24,9 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class InPackageFunction extends FunctionStruct {
-
-	public static final SymbolStruct<?> IN_PACKAGE_FUNCTION = GlobalPackageStruct.COMMON_LISP.intern("IN-PACKAGE").getSymbol();
+public final class InPackageFunction extends AbstractCommonLispFunctionStruct {
 
 	private static final long serialVersionUID = 5831829564256951336L;
 
@@ -34,28 +29,17 @@ public final class InPackageFunction extends FunctionStruct {
 	private Printer printer;
 
 	private InPackageFunction() {
-		super("Causes the the package named by name to become the current package.", getInitLambdaListBindings());
+		super("Causes the the package named by name to become the current package.");
 	}
 
-	@PostConstruct
-	private void init() {
-		IN_PACKAGE_FUNCTION.setFunction(this);
-		GlobalPackageStruct.COMMON_LISP.export(IN_PACKAGE_FUNCTION);
-	}
-
-	private static OrdinaryLambdaList getInitLambdaListBindings() {
-
-		final SymbolStruct<?> nameArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("NAME").getSymbol();
-		final RequiredParameter nameArgRequiredBinding = new RequiredParameter(nameArgSymbol);
-		final List<RequiredParameter> requiredBindings = Collections.singletonList(nameArgRequiredBinding);
-
-		return new OrdinaryLambdaList.Builder().requiredBindings(requiredBindings)
-		                                       .build();
+	@Override
+	protected List<RequiredParameter> getRequiredBindings() {
+		return new RequiredParameter.Builder(GlobalPackageStruct.COMMON_LISP, "NAME").buildList();
 	}
 
 	@Override
 	public LispStruct apply(final LispStruct... lispStructs) {
-		getFunctionBindings(lispStructs);
+		super.apply(lispStructs);
 
 		final LispStruct name = lispStructs[0];
 
@@ -76,5 +60,10 @@ public final class InPackageFunction extends FunctionStruct {
 		PackageVariables.PACKAGE.setValue(newCurrentPackage);
 
 		return newCurrentPackage;
+	}
+
+	@Override
+	protected String functionName() {
+		return "IN-PACKAGE";
 	}
 }

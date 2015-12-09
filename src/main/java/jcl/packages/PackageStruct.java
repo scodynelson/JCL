@@ -19,10 +19,6 @@ import jcl.symbols.KeywordStruct;
 import jcl.symbols.SymbolStruct;
 import jcl.system.CommonLispSymbols;
 import jcl.types.PackageType;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
  * The {@link PackageStruct} is the object representation of a Lisp 'package' type.
@@ -400,16 +396,7 @@ public class PackageStruct extends BuiltInClassStruct {
 //			}
 		}
 
-		if (!notFoundSymbolNames.isEmpty()) {
-			final StringBuilder exceptionStringBuilder
-					= new StringBuilder("The following symbols are not accessible in package " + this + ": (");
-			for (final String notFoundSymbolName : notFoundSymbolNames) {
-				exceptionStringBuilder.append(notFoundSymbolName);
-				exceptionStringBuilder.append(' ');
-			}
-			exceptionStringBuilder.append(')');
-			throw new PackageErrorException(exceptionStringBuilder.toString());
-		}
+		handleExportSymbolsNotInPackageError(notFoundSymbolNames);
 	}
 
 	/**
@@ -434,6 +421,17 @@ public class PackageStruct extends BuiltInClassStruct {
 			externalSymbols.remove(symbolName);
 		}
 
+		handleExportSymbolsNotInPackageError(notFoundSymbolNames);
+	}
+
+	/**
+	 * Handles the building of the {@link PackageErrorException} when symbols are not accessible in the package and
+	 * cannot be exported or unexported.
+	 *
+	 * @param notFoundSymbolNames
+	 * 		the symbols not accessible in the package
+	 */
+	private void handleExportSymbolsNotInPackageError(final List<String> notFoundSymbolNames) {
 		if (!notFoundSymbolNames.isEmpty()) {
 			final StringBuilder exceptionStringBuilder
 					= new StringBuilder("The following symbols are not accessible in package " + this + ": (");
@@ -648,53 +646,5 @@ public class PackageStruct extends BuiltInClassStruct {
 		}
 
 		return foundSymbol;
-	}
-
-	@Override
-	public int hashCode() {
-		return new HashCodeBuilder().appendSuper(super.hashCode())
-		                            .append(name)
-		                            .append(nicknames)
-		                            .toHashCode();
-//		                            .append(useList)
-//		                            .append(usedByList)
-//		                            .append(externalSymbols)
-//		                            .append(internalSymbols)
-//		                            .append(shadowingSymbols)
-	}
-
-	@Override
-	public boolean equals(final Object obj) {
-		if (obj == null) {
-			return false;
-		}
-		if (obj == this) {
-			return true;
-		}
-		if (obj.getClass() != getClass()) {
-			return false;
-		}
-		final PackageStruct rhs = (PackageStruct) obj;
-		return new EqualsBuilder().appendSuper(super.equals(obj))
-		                          .append(name, rhs.name)
-		                          .append(nicknames, rhs.nicknames)
-		                          .isEquals();
-//		                          .append(useList, rhs.useList)
-//		                          .append(usedByList, rhs.usedByList)
-//		                          .append(externalSymbols, rhs.externalSymbols)
-//		                          .append(internalSymbols, rhs.internalSymbols)
-//		                          .append(shadowingSymbols, rhs.shadowingSymbols)
-	}
-
-	@Override
-	public String toString() {
-		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(name)
-		                                                                .append(nicknames)
-		                                                                .toString();
-//		                                                                .append(useList)
-//		                                                                .append(usedByList)
-//		                                                                .append(externalSymbols)
-//		                                                                .append(internalSymbols)
-//		                                                                .append(shadowingSymbols)
 	}
 }

@@ -5,20 +5,15 @@
 package jcl.packages.functions;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
 import jcl.arrays.StringStruct;
 import jcl.compiler.environment.binding.lambdalist.OptionalParameter;
-import jcl.compiler.environment.binding.lambdalist.OrdinaryLambdaList;
 import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
-import jcl.compiler.environment.binding.lambdalist.SuppliedPParameter;
 import jcl.conditions.exceptions.TypeErrorException;
-import jcl.functions.FunctionStruct;
+import jcl.functions.AbstractCommonLispFunctionStruct;
 import jcl.lists.ListStruct;
-import jcl.lists.NullStruct;
 import jcl.packages.GlobalPackageStruct;
 import jcl.packages.PackageStruct;
 import jcl.packages.PackageVariables;
@@ -29,9 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class ExportFunction extends FunctionStruct {
-
-	public static final SymbolStruct<?> EXPORT_FUNCTION = GlobalPackageStruct.COMMON_LISP.intern("EXPORT").getSymbol();
+public final class ExportFunction extends AbstractCommonLispFunctionStruct {
 
 	private static final long serialVersionUID = -3271748062551723057L;
 
@@ -39,36 +32,25 @@ public final class ExportFunction extends FunctionStruct {
 	private Printer printer;
 
 	private ExportFunction() {
-		super("Makes one or more symbols that are accessible in package (whether directly or by inheritance) be external symbols of that package.", getInitLambdaListBindings());
+		super("Makes one or more symbols that are accessible in package (whether directly or by inheritance) be external symbols of that package.");
 	}
 
-	@PostConstruct
-	private void init() {
-		EXPORT_FUNCTION.setFunction(this);
-		GlobalPackageStruct.COMMON_LISP.export(EXPORT_FUNCTION);
+	@Override
+	protected List<RequiredParameter> getRequiredBindings() {
+		return new RequiredParameter.Builder(GlobalPackageStruct.COMMON_LISP, "SYMBOLS").buildList();
 	}
 
-	private static OrdinaryLambdaList getInitLambdaListBindings() {
-
-		final SymbolStruct<?> symbolsArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("SYMBOLS").getSymbol();
-		final RequiredParameter symbolsArgRequiredBinding = new RequiredParameter(symbolsArgSymbol);
-		final List<RequiredParameter> requiredBindings = Collections.singletonList(symbolsArgRequiredBinding);
-
-		final SymbolStruct<?> packageArgSuppliedP = GlobalPackageStruct.COMMON_LISP.intern("PACKAGE-P-" + System.nanoTime()).getSymbol();
-		final SuppliedPParameter packageArgSuppliedPBinding = new SuppliedPParameter(packageArgSuppliedP);
-
-		final SymbolStruct<?> packageArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("PACKAGE").getSymbol();
-		final OptionalParameter packageArgOptionalBinding = new OptionalParameter(packageArgSymbol, NullStruct.INSTANCE, packageArgSuppliedPBinding);
-		final List<OptionalParameter> optionalParameters = Collections.singletonList(packageArgOptionalBinding);
-
-		return new OrdinaryLambdaList.Builder().requiredBindings(requiredBindings)
-		                                       .optionalBindings(optionalParameters)
-		                                       .build();
+	@Override
+	protected List<OptionalParameter> getOptionalBindings() {
+		return new OptionalParameter.Builder(GlobalPackageStruct.COMMON_LISP, "PACKAGE")
+				.initForm(PackageVariables.PACKAGE.getValue())
+				.suppliedPBinding()
+				.buildList();
 	}
 
 	@Override
 	public LispStruct apply(final LispStruct... lispStructs) {
-		getFunctionBindings(lispStructs);
+		super.apply(lispStructs);
 
 		final LispStruct symbols = lispStructs[0];
 		if (!(symbols instanceof ListStruct)) {
@@ -104,5 +86,10 @@ public final class ExportFunction extends FunctionStruct {
 		packageStruct.export(realSymbolsList);
 
 		return TStruct.INSTANCE;
+	}
+
+	@Override
+	protected String functionName() {
+		return "EXPORT";
 	}
 }

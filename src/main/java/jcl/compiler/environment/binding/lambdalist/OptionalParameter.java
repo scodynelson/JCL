@@ -64,6 +64,11 @@ public class OptionalParameter extends Parameter {
 			return this;
 		}
 
+		public Builder initForm(final LispStruct initForm) {
+			this.initForm = initForm;
+			return this;
+		}
+
 		public Builder isSpecial() {
 			isSpecial = true;
 			return this;

@@ -359,10 +359,6 @@ public class PackageStruct extends BuiltInClassStruct {
 		}
 	}
 
-	public void export(final SymbolStruct<?>... symbols) {
-		export(Arrays.asList(symbols));
-	}
-
 	/**
 	 * Exports the provided symbols and puts them into the externalSymbols map. All found symbols are exported and
 	 * those
@@ -371,7 +367,7 @@ public class PackageStruct extends BuiltInClassStruct {
 	 * @param symbols
 	 * 		the symbols to export
 	 */
-	public void export(final List<SymbolStruct<?>> symbols) {
+	public void export(final SymbolStruct<?>... symbols) {
 		final List<String> notFoundSymbolNames = new ArrayList<>();
 
 		for (final SymbolStruct<?> symbol : symbols) {

@@ -16,19 +16,31 @@ import jcl.functions.AbstractCommonLispFunctionStruct;
 import jcl.packages.GlobalPackageStruct;
 import jcl.packages.PackageStruct;
 import jcl.packages.PackageVariables;
-import jcl.printer.Printer;
 import jcl.symbols.SymbolStruct;
+import jcl.types.CharacterType;
+import jcl.types.StringType;
+import jcl.types.SymbolType;
+import jcl.types.TypeValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public final class InPackageFunction extends AbstractCommonLispFunctionStruct {
 
+	/**
+	 * Serializable Version Unique Identifier.
+	 */
 	private static final long serialVersionUID = 5831829564256951336L;
 
+	/**
+	 * The {@link TypeValidator} for validating the function parameter value types.
+	 */
 	@Autowired
-	private Printer printer;
+	private TypeValidator validator;
 
+	/**
+	 * Public constructor passing the documentation string.
+	 */
 	public InPackageFunction() {
 		super("Causes the the package named by name to become the current package.");
 	}
@@ -42,29 +54,31 @@ public final class InPackageFunction extends AbstractCommonLispFunctionStruct {
 	public LispStruct apply(final LispStruct... lispStructs) {
 		super.apply(lispStructs);
 
-		final LispStruct name = lispStructs[0];
+		final LispStruct lispStruct = lispStructs[0];
+		final String name = getStringValue(lispStruct);
 
-		final String newCurrentPackageName;
-		if (name instanceof StringStruct) {
-			newCurrentPackageName = ((StringStruct) name).getAsJavaString();
-		} else if (name instanceof CharacterStruct) {
-			final char character = ((CharacterStruct) name).getCharacter();
-			newCurrentPackageName = String.valueOf(character);
-		} else if (name instanceof SymbolStruct) {
-			newCurrentPackageName = ((SymbolStruct) name).getName();
-		} else {
-			final String printedObject = printer.print(name);
-			throw new TypeErrorException("Name is not a valid string designator: " + printedObject);
-		}
-
-		final PackageStruct newCurrentPackage = PackageStruct.findPackage(newCurrentPackageName);
+		final PackageStruct newCurrentPackage = PackageStruct.findPackage(name);
 		if (newCurrentPackage == null) {
-			throw new ReaderErrorException("There is no package named " + newCurrentPackageName);
+			throw new ReaderErrorException("There is no package named " + name);
 		}
 
 		PackageVariables.PACKAGE.setValue(newCurrentPackage);
 
 		return newCurrentPackage;
+	}
+
+	private String getStringValue(final LispStruct stringDesignator) {
+		validator.validateTypes(stringDesignator, functionName(), "String-Designator", StringType.INSTANCE, SymbolType.INSTANCE, CharacterType.INSTANCE);
+
+		if (stringDesignator instanceof StringStruct) {
+			return ((StringStruct) stringDesignator).getAsJavaString();
+		} else if (stringDesignator instanceof SymbolStruct) {
+			return ((SymbolStruct) stringDesignator).getName();
+		} else if (stringDesignator instanceof CharacterStruct) {
+			return ((CharacterStruct) stringDesignator).getCharacter().toString();
+		} else {
+			throw new TypeErrorException("UNCAUGHT TYPE ERROR.");
+		}
 	}
 
 	@Override

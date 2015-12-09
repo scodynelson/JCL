@@ -71,6 +71,14 @@ public final class ExportFunction extends AbstractCommonLispFunctionStruct {
 			realSymbolsList.add((SymbolStruct<?>) symbol);
 		}
 
+		final PackageStruct aPackage = getPackage(lispStructs);
+		final SymbolStruct<?>[] realSymbolArray = realSymbolsList.toArray(new SymbolStruct<?>[realSymbolsList.size()]);
+		aPackage.export(realSymbolArray);
+
+		return TStruct.INSTANCE;
+	}
+
+	private PackageStruct getPackage(final LispStruct... lispStructs) {
 		final PackageStruct aPackage;
 		if (lispStructs.length >= 2) {
 			final LispStruct packageDesignator = lispStructs[1];
@@ -78,9 +86,7 @@ public final class ExportFunction extends AbstractCommonLispFunctionStruct {
 		} else {
 			aPackage = PackageVariables.PACKAGE.getValue();
 		}
-		aPackage.export(realSymbolsList);
-
-		return TStruct.INSTANCE;
+		return aPackage;
 	}
 
 	@Override

@@ -31,6 +31,12 @@ public final class FindPackageFunction extends AbstractPackageFunction {
 		super("Locates and returns the package whose name or nickname is name.");
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * Creates the single {@link RequiredParameter} package-designator object for this function.
+	 *
+	 * @return a list of a single {@link RequiredParameter} package-designator object
+	 */
 	@Override
 	protected List<RequiredParameter> getRequiredBindings() {
 		return new RequiredParameter.Builder(GlobalPackageStruct.COMMON_LISP, "NAME").buildList();

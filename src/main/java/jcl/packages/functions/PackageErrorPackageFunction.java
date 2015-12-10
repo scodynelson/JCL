@@ -12,6 +12,7 @@ import jcl.conditions.ConditionType;
 import jcl.conditions.exceptions.PackageErrorException;
 import jcl.functions.AbstractCommonLispFunctionStruct;
 import jcl.packages.GlobalPackageStruct;
+import jcl.packages.PackageStruct;
 import jcl.types.TypeValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -40,11 +41,27 @@ public final class PackageErrorPackageFunction extends AbstractCommonLispFunctio
 		super("Returns a designator for the offending package in the situation represented by the condition.");
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * Creates the single {@link RequiredParameter} condition object for this function.
+	 *
+	 * @return a list of a single {@link RequiredParameter} condition object
+	 */
 	@Override
 	protected List<RequiredParameter> getRequiredBindings() {
 		return new RequiredParameter.Builder(GlobalPackageStruct.COMMON_LISP, "CONDITION").buildList();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * Application method for {@code package-error-package} package function that returns the {@link PackageStruct}
+	 * that was a part of provided {@link PackageErrorException} condition.
+	 *
+	 * @param lispStructs
+	 * 		the function parameters
+	 *
+	 * @return the {@link PackageStruct} that was a part of provided {@link PackageErrorException} condition
+	 */
 	@Override
 	public LispStruct apply(final LispStruct... lispStructs) {
 		super.apply(lispStructs);
@@ -52,8 +69,7 @@ public final class PackageErrorPackageFunction extends AbstractCommonLispFunctio
 		final LispStruct lispStruct = lispStructs[0];
 		validator.validateTypes(lispStruct, functionName(), "Package Error", ConditionType.PACKAGE_ERROR);
 
-		final PackageErrorException packageErrorException = (PackageErrorException) lispStruct;
-		return packageErrorException.getPackageWithError();
+		return ((PackageErrorException) lispStruct).getPackageWithError();
 	}
 
 	/**

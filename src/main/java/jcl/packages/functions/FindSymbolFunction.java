@@ -28,6 +28,12 @@ public final class FindSymbolFunction extends AbstractStringPackageFunction {
 		super("Locates a symbol whose name is string in a package.");
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * Returns {@link PackageStruct#findSymbol(String)} as a method reference function.
+	 *
+	 * @return returns {@link PackageStruct#findSymbol(String)} as a method reference function
+	 */
 	@Override
 	protected BiFunction<PackageStruct, String, PackageSymbolStruct> packageFunction() {
 		return PackageStruct::findSymbol;

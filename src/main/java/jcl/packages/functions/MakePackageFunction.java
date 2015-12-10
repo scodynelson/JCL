@@ -41,6 +41,12 @@ public final class MakePackageFunction extends AbstractPackageFunction {
 		super("Creates a new package with the name package-name.");
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * Creates the single {@link RequiredParameter} string-designator object for this function.
+	 *
+	 * @return a list of a single {@link RequiredParameter} string-designator object
+	 */
 	@Override
 	protected List<RequiredParameter> getRequiredBindings() {
 		return new RequiredParameter.Builder(GlobalPackageStruct.COMMON_LISP, "PACKAGE-NAME").buildList();

@@ -28,6 +28,12 @@ public final class InternFunction extends AbstractStringPackageFunction {
 		super("Enters a symbol named string into package.");
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * Returns {@link PackageStruct#intern(String)} as a method reference function.
+	 *
+	 * @return returns {@link PackageStruct#intern(String)} as a method reference function
+	 */
 	@Override
 	protected BiFunction<PackageStruct, String, PackageSymbolStruct> packageFunction() {
 		return PackageStruct::intern;

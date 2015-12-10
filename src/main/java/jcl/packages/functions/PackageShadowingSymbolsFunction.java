@@ -34,11 +34,27 @@ public final class PackageShadowingSymbolsFunction extends AbstractPackageFuncti
 		super("Returns a list of symbols that have been declared as shadowing symbols in package by shadow or shadowing-import.");
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * Creates the single {@link RequiredParameter} package object for this function.
+	 *
+	 * @return a list of a single {@link RequiredParameter} package object
+	 */
 	@Override
 	protected List<RequiredParameter> getRequiredBindings() {
 		return new RequiredParameter.Builder(GlobalPackageStruct.COMMON_LISP, "PACKAGE").buildList();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * Application method for {@code package-shadowing-symbols} package function that returns the {@link
+	 * PackageStruct#shadowingSymbols} values as a {@link ListStruct}.
+	 *
+	 * @param lispStructs
+	 * 		the function parameters
+	 *
+	 * @return the {@link PackageStruct#shadowingSymbols} values as a {@link ListStruct}
+	 */
 	@Override
 	public LispStruct apply(final LispStruct... lispStructs) {
 		super.apply(lispStructs);

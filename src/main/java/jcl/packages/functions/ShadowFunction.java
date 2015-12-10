@@ -37,6 +37,12 @@ public final class ShadowFunction extends AbstractOptionalPackageFunction {
 		super("Assures that symbols with names given by symbol-names are present in the package.");
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * Creates the single {@link RequiredParameter} symbol names list or string-designator object for this function.
+	 *
+	 * @return a list of a single {@link RequiredParameter} symbol names list or string-designator object
+	 */
 	@Override
 	protected List<RequiredParameter> getRequiredBindings() {
 		return new RequiredParameter.Builder(GlobalPackageStruct.COMMON_LISP, "SYMBOL-NAMES").buildList();

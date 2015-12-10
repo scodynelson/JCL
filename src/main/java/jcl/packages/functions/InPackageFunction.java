@@ -32,6 +32,12 @@ public final class InPackageFunction extends AbstractPackageFunction {
 		super("Causes the the package named by name to become the current package.");
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * Creates the single {@link RequiredParameter} string-designator object for this function.
+	 *
+	 * @return a list of a single {@link RequiredParameter} string-designator object
+	 */
 	@Override
 	protected List<RequiredParameter> getRequiredBindings() {
 		return new RequiredParameter.Builder(GlobalPackageStruct.COMMON_LISP, "NAME").buildList();

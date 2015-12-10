@@ -28,6 +28,12 @@ public final class UnexportFunction extends AbstractSymbolListPackageFunction {
 		super("Reverts external symbols in package to internal status.");
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * Returns {@link PackageStruct#unexport(SymbolStruct[])} as a method reference function.
+	 *
+	 * @return returns {@link PackageStruct#unexport(SymbolStruct[])} as a method reference function
+	 */
 	@Override
 	protected BiConsumer<PackageStruct, SymbolStruct<?>[]> symbolListFunction() {
 		return PackageStruct::unexport;

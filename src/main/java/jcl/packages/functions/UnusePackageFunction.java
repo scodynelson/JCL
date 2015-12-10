@@ -27,11 +27,24 @@ public final class UnusePackageFunction extends AbstractPackageListPackageFuncti
 		super("Causes package to cease inheriting all the external symbols of packages-to-unuse.");
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * Returns {@link PackageStruct#unUsePackage(PackageStruct...)} as a method reference function.
+	 *
+	 * @return returns {@link PackageStruct#unUsePackage(PackageStruct...)} as a method reference function
+	 */
 	@Override
 	protected BiConsumer<PackageStruct, PackageStruct[]> packageListFunction() {
 		return PackageStruct::unUsePackage;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * Performs default (aka. no) validation on the provided {@link PackageStruct}s.
+	 *
+	 * @param packageStructs
+	 * 		the {@link PackageStruct}s to validate
+	 */
 	@Override
 	protected void validatePackages(final PackageStruct... packageStructs) {
 	}

@@ -32,6 +32,12 @@ public final class DeletePackageFunction extends AbstractPackageFunction {
 		super("Deletes package from all package system data structures. If the operation is successful, returns true, otherwise nil.");
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * Creates the single {@link RequiredParameter} package object for this function.
+	 *
+	 * @return a list of a single {@link RequiredParameter} package object
+	 */
 	@Override
 	protected List<RequiredParameter> getRequiredBindings() {
 		return new RequiredParameter.Builder(GlobalPackageStruct.COMMON_LISP, "PACKAGE").buildList();

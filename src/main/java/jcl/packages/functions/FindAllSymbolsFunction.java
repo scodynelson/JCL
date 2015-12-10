@@ -32,9 +32,15 @@ public final class FindAllSymbolsFunction extends AbstractPackageFunction {
 		super("Searches every registered package for symbols that have a name that is the same as string.");
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * Creates the single {@link RequiredParameter} string-designator object for this function.
+	 *
+	 * @return a list of a single {@link RequiredParameter} string-designator object
+	 */
 	@Override
 	protected List<RequiredParameter> getRequiredBindings() {
-		return new RequiredParameter.Builder(GlobalPackageStruct.COMMON_LISP, "NAME").buildList();
+		return new RequiredParameter.Builder(GlobalPackageStruct.COMMON_LISP, "SYMBOL-NAME").buildList();
 	}
 
 	@Override

@@ -28,6 +28,12 @@ public final class ImportFunction extends AbstractSymbolListPackageFunction {
 		super("Adds symbol or symbols to the internals of package, checking for name conflicts with existing symbols either present in package or accessible to it.");
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * Returns {@link PackageStruct#importSymbols(SymbolStruct[])} as a method reference function.
+	 *
+	 * @return returns {@link PackageStruct#importSymbols(SymbolStruct[])} as a method reference function
+	 */
 	@Override
 	protected BiConsumer<PackageStruct, SymbolStruct<?>[]> symbolListFunction() {
 		return PackageStruct::importSymbols;

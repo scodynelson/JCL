@@ -31,11 +31,27 @@ public final class PackageUsedByListFunction extends AbstractPackageFunction {
 		super("Returns a list of other packages used by package.");
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * Creates the single {@link RequiredParameter} package object for this function.
+	 *
+	 * @return a list of a single {@link RequiredParameter} package object
+	 */
 	@Override
 	protected List<RequiredParameter> getRequiredBindings() {
 		return new RequiredParameter.Builder(GlobalPackageStruct.COMMON_LISP, "PACKAGE").buildList();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * Application method for {@code package-used-by-list} package function that returns the {@link
+	 * PackageStruct#usedByList} as a {@link ListStruct}.
+	 *
+	 * @param lispStructs
+	 * 		the function parameters
+	 *
+	 * @return the {@link PackageStruct#usedByList} as a {@link ListStruct}
+	 */
 	@Override
 	public LispStruct apply(final LispStruct... lispStructs) {
 		super.apply(lispStructs);

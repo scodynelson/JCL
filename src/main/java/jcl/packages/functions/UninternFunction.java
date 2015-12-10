@@ -34,11 +34,28 @@ public final class UninternFunction extends AbstractOptionalPackageFunction {
 		super("Removes symbol from package.");
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * Creates the single {@link RequiredParameter} symbol object for this function.
+	 *
+	 * @return a list of a single {@link RequiredParameter} symbol object
+	 */
 	@Override
 	protected List<RequiredParameter> getRequiredBindings() {
 		return new RequiredParameter.Builder(GlobalPackageStruct.COMMON_LISP, "SYMBOL").buildList();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * Application method for {@code unintern} package function that uninterns the provided {@link SymbolStruct} from
+	 * an optionally provided {@link PackageStruct}.
+	 *
+	 * @param lispStructs
+	 * 		the function parameters
+	 *
+	 * @return {@link TStruct#INSTANCE} if the {@link SymbolStruct} was successfully uninterned; {@link
+	 * NILStruct#INSTANCE} otherwise
+	 */
 	@Override
 	public LispStruct apply(final LispStruct... lispStructs) {
 		super.apply(lispStructs);

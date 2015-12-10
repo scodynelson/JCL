@@ -28,6 +28,12 @@ public final class ExportFunction extends AbstractSymbolListPackageFunction {
 		super("Makes one or more symbols that are accessible in package (whether directly or by inheritance) be external symbols of that package.");
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * Returns {@link PackageStruct#export(SymbolStruct[])} as a method reference function.
+	 *
+	 * @return returns {@link PackageStruct#export(SymbolStruct[])} as a method reference function
+	 */
 	@Override
 	protected BiConsumer<PackageStruct, SymbolStruct<?>[]> symbolListFunction() {
 		return PackageStruct::export;

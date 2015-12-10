@@ -29,11 +29,25 @@ public final class UsePackageFunction extends AbstractPackageListPackageFunction
 		super("Causes package to inherit all the external symbols of packages-to-use.");
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * Returns {@link PackageStruct#usePackage(PackageStruct...)} as a method reference function.
+	 *
+	 * @return returns {@link PackageStruct#usePackage(PackageStruct...)} as a method reference function
+	 */
 	@Override
 	protected BiConsumer<PackageStruct, PackageStruct[]> packageListFunction() {
 		return PackageStruct::usePackage;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * Performs validation on the provided {@link PackageStruct}s, ensuring that none of the {@link PackageStruct}s are
+	 * equal to the constant {@link GlobalPackageStruct#KEYWORD} package.
+	 *
+	 * @param packageStructs
+	 * 		the {@link PackageStruct}s to validate
+	 */
 	@Override
 	protected void validatePackages(final PackageStruct... packageStructs) {
 		for (final PackageStruct packageStruct : packageStructs) {

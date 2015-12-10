@@ -28,6 +28,12 @@ public final class ShadowingImportFunction extends AbstractSymbolListPackageFunc
 		super("Inserts each of symbols into package as an internal symbol, regardless of whether another symbol of the same name is shadowed by this action.");
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * Returns {@link PackageStruct#shadowingImport(SymbolStruct[])} as a method reference function.
+	 *
+	 * @return returns {@link PackageStruct#shadowingImport(SymbolStruct[])} as a method reference function
+	 */
 	@Override
 	protected BiConsumer<PackageStruct, SymbolStruct<?>[]> symbolListFunction() {
 		return PackageStruct::shadowingImport;

@@ -58,25 +58,22 @@ public final class RenamePackageFunction extends AbstractPackageFunction {
 		super.apply(lispStructs);
 
 		final PackageStruct aPackage = findPackage(lispStructs[0]);
-
-		final LispStruct newName = lispStructs[1];
-		final String realNewName = getStringFromPackageDesignator(newName, "New Name");
+		final String newName = getStringFromPackageDesignator(lispStructs[1], "New Name");
 
 		if (lispStructs.length > 2) {
 			final LispStruct lispStruct = lispStructs[2];
 			validator.validateTypes(lispStruct, functionName(), "New Nicknames", ListType.INSTANCE);
 
-			final ListStruct newNicknamesListStruct = (ListStruct) lispStruct;
-			final List<LispStruct> newNicknamesList = newNicknamesListStruct.getAsJavaList();
+			final List<LispStruct> newNicknamesList = ((ListStruct) lispStruct).getAsJavaList();
 
 			final List<String> newNicknames = new ArrayList<>();
 			for (final LispStruct newNickname : newNicknamesList) {
 				final String newNicknameString = getStringFromStringDesignator(newNickname, "New Nickname");
 				newNicknames.add(newNicknameString);
 			}
-			aPackage.renamePackage(realNewName, newNicknames);
+			aPackage.renamePackage(newName, newNicknames);
 		} else {
-			aPackage.renamePackage(realNewName);
+			aPackage.renamePackage(newName);
 		}
 
 		return aPackage;

@@ -32,11 +32,27 @@ public final class PackageNameFunction extends AbstractPackageFunction {
 		super("Returns the string that names package.");
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * Creates the single {@link RequiredParameter} package object for this function.
+	 *
+	 * @return a list of a single {@link RequiredParameter} package object
+	 */
 	@Override
 	protected List<RequiredParameter> getRequiredBindings() {
 		return new RequiredParameter.Builder(GlobalPackageStruct.COMMON_LISP, "PACKAGE").buildList();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * Application method for {@code package-name} package function that returns the {@link PackageStruct#name} as a
+	 * {@link StringStruct}.
+	 *
+	 * @param lispStructs
+	 * 		the function parameters
+	 *
+	 * @return the {@link PackageStruct#name} as a {@link StringStruct}
+	 */
 	@Override
 	public LispStruct apply(final LispStruct... lispStructs) {
 		super.apply(lispStructs);

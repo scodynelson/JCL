@@ -30,6 +30,16 @@ public final class ListAllPackagesFunction extends AbstractCommonLispFunctionStr
 		super("Returns a fresh list of all registered packages.");
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * Application method for {@code list-all-packages} package function returns the result of {@link
+	 * PackageStruct#listAllPackages()} as a {@link ListStruct}.
+	 *
+	 * @param lispStructs
+	 * 		the function parameters
+	 *
+	 * @return the result of {@link PackageStruct#listAllPackages()} as a {@link ListStruct}
+	 */
 	@Override
 	public LispStruct apply(final LispStruct... lispStructs) {
 		super.apply(lispStructs);

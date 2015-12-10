@@ -25,7 +25,7 @@ abstract class AbstractPackageListPackageFunction extends AbstractOptionalPackag
 	/**
 	 * Serializable Version Unique Identifier.
 	 */
-	private static final long serialVersionUID = -5082610749836356431L;
+	private static final long serialVersionUID = -1076930515087895398L;
 
 	protected AbstractPackageListPackageFunction(final String documentation) {
 		super(documentation);

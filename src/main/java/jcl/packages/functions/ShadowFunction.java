@@ -13,7 +13,10 @@ import jcl.lists.ListStruct;
 import jcl.packages.GlobalPackageStruct;
 import jcl.packages.PackageStruct;
 import jcl.symbols.TStruct;
+import jcl.types.CharacterType;
 import jcl.types.ListType;
+import jcl.types.StringType;
+import jcl.types.SymbolType;
 import org.springframework.stereotype.Component;
 
 /**
@@ -44,17 +47,24 @@ public final class ShadowFunction extends AbstractOptionalPackageFunction {
 		super.apply(lispStructs);
 
 		final LispStruct lispStruct = lispStructs[0];
-		validator.validateTypes(lispStruct, functionName(), "Symbol names to shadow", ListType.INSTANCE);
-
-		final List<LispStruct> symbolNames = ((ListStruct) lispStruct).getAsJavaList();
-		final List<String> realSymbolNames = new ArrayList<>(symbolNames.size());
-		for (final LispStruct symbolName : symbolNames) {
-			final String realSymbolName = getStringFromStringDesignator(symbolName, "Symbol Name");
-			realSymbolNames.add(realSymbolName);
-		}
+		validator.validateTypes(lispStruct, functionName(), "Symbol names to shadow", ListType.INSTANCE, StringType.INSTANCE, SymbolType.INSTANCE, CharacterType.INSTANCE);
 
 		final PackageStruct aPackage = getPackage(lispStructs);
-		final String[] symbolNameArray = realSymbolNames.toArray(new String[realSymbolNames.size()]);
+
+		final String[] symbolNameArray;
+		if (lispStruct instanceof ListStruct) {
+			final List<LispStruct> symbolNames = ((ListStruct) lispStruct).getAsJavaList();
+			final List<String> realSymbolNames = new ArrayList<>(symbolNames.size());
+			for (final LispStruct theSymbolName : symbolNames) {
+				final String realSymbolName = getStringFromStringDesignator(theSymbolName, "Symbol Name");
+				realSymbolNames.add(realSymbolName);
+			}
+			symbolNameArray = realSymbolNames.toArray(new String[realSymbolNames.size()]);
+		} else {
+			symbolNameArray = new String[1];
+			symbolNameArray[0] = getStringFromStringDesignator(lispStruct, "Symbol Name");
+		}
+
 		aPackage.shadow(symbolNameArray);
 
 		return TStruct.INSTANCE;

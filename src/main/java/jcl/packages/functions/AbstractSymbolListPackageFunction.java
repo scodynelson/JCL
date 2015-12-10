@@ -5,7 +5,6 @@
 package jcl.packages.functions;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.function.BiConsumer;
 
@@ -43,22 +42,24 @@ abstract class AbstractSymbolListPackageFunction extends AbstractOptionalPackage
 		final LispStruct lispStruct = lispStructs[0];
 		validator.validateTypes(lispStruct, functionName(), "Symbols", ListType.INSTANCE, SymbolType.INSTANCE);
 
-		final List<SymbolStruct<?>> realSymbols;
+		final PackageStruct aPackage = getPackage(lispStructs);
+
+		final SymbolStruct<?>[] realSymbolArray;
 		if (lispStruct instanceof ListStruct) {
 			final List<LispStruct> symbols = ((ListStruct) lispStruct).getAsJavaList();
-			realSymbols = new ArrayList<>(symbols.size());
-			for (final LispStruct symbol : symbols) {
-				validator.validateTypes(symbol, functionName(), "Symbol", SymbolType.INSTANCE);
-				realSymbols.add((SymbolStruct<?>) symbol);
+			final List<SymbolStruct<?>> realSymbols = new ArrayList<>(symbols.size());
+			for (final LispStruct theSymbol : symbols) {
+				validator.validateTypes(theSymbol, functionName(), "Symbol", SymbolType.INSTANCE);
+				realSymbols.add((SymbolStruct<?>) theSymbol);
 			}
+			realSymbolArray = realSymbols.toArray(new SymbolStruct<?>[realSymbols.size()]);
 		} else if (lispStruct instanceof SymbolStruct) {
-			realSymbols = Collections.singletonList((SymbolStruct<?>) lispStruct);
+			realSymbolArray = new SymbolStruct<?>[1];
+			realSymbolArray[0] = (SymbolStruct<?>) lispStruct;
 		} else {
 			throw new TypeErrorException("UNCAUGHT TYPE ERROR.");
 		}
 
-		final PackageStruct aPackage = getPackage(lispStructs);
-		final SymbolStruct<?>[] realSymbolArray = realSymbols.toArray(new SymbolStruct<?>[realSymbols.size()]);
 		symbolListFunction().accept(aPackage, realSymbolArray);
 
 		return TStruct.INSTANCE;

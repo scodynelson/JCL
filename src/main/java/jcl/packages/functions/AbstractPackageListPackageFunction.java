@@ -5,7 +5,6 @@
 package jcl.packages.functions;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.function.BiConsumer;
 
@@ -44,25 +43,24 @@ abstract class AbstractPackageListPackageFunction extends AbstractOptionalPackag
 		final LispStruct lispStruct = lispStructs[0];
 		validator.validateTypes(lispStruct, functionName(), "Packages", ListType.INSTANCE, StringType.INSTANCE, SymbolType.INSTANCE, CharacterType.INSTANCE, PackageType.INSTANCE);
 
-		final List<PackageStruct> realPackages;
-		if (lispStruct instanceof ListStruct) {
-			final List<LispStruct> packages = ((ListStruct) lispStruct).getAsJavaList();
-			realPackages = new ArrayList<>(packages.size());
-			for (final LispStruct aPackage : packages) {
-				final PackageStruct realPackage = findPackage(aPackage);
-				realPackages.add(realPackage);
-			}
-		} else {
-			final PackageStruct aPackage = findPackage(lispStruct);
-			realPackages = Collections.singletonList(aPackage);
-		}
-
 		final PackageStruct aPackage = getPackage(lispStructs);
 		validatePackages(aPackage);
 
-		final PackageStruct[] realPackageArray = realPackages.toArray(new PackageStruct[realPackages.size()]);
-		validatePackages(realPackageArray);
+		final PackageStruct[] realPackageArray;
+		if (lispStruct instanceof ListStruct) {
+			final List<LispStruct> packages = ((ListStruct) lispStruct).getAsJavaList();
+			final List<PackageStruct> realPackages = new ArrayList<>(packages.size());
+			for (final LispStruct thePackage : packages) {
+				final PackageStruct realPackage = findPackage(thePackage);
+				realPackages.add(realPackage);
+			}
+			realPackageArray = realPackages.toArray(new PackageStruct[realPackages.size()]);
+		} else {
+			realPackageArray = new PackageStruct[1];
+			realPackageArray[0] = findPackage(lispStruct);
+		}
 
+		validatePackages(realPackageArray);
 		packageListFunction().accept(aPackage, realPackageArray);
 
 		return TStruct.INSTANCE;

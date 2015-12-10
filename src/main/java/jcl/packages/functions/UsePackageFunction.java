@@ -4,24 +4,18 @@
 
 package jcl.packages.functions;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.function.BiConsumer;
 
-import jcl.LispStruct;
-import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
 import jcl.conditions.exceptions.ErrorException;
-import jcl.lists.ListStruct;
 import jcl.packages.GlobalPackageStruct;
 import jcl.packages.PackageStruct;
-import jcl.symbols.TStruct;
-import jcl.types.ListType;
 import org.springframework.stereotype.Component;
 
 /**
  * Function implementation for {@code use-package}.
  */
 @Component
-public final class UsePackageFunction extends AbstractOptionalPackageFunction {
+public final class UsePackageFunction extends AbstractPackageListPackageFunction {
 
 	/**
 	 * Serializable Version Unique Identifier.
@@ -36,35 +30,12 @@ public final class UsePackageFunction extends AbstractOptionalPackageFunction {
 	}
 
 	@Override
-	protected List<RequiredParameter> getRequiredBindings() {
-		return new RequiredParameter.Builder(GlobalPackageStruct.COMMON_LISP, "PACKAGES-TO-USE").buildList();
+	protected BiConsumer<PackageStruct, PackageStruct[]> packageListFunction() {
+		return PackageStruct::usePackage;
 	}
 
 	@Override
-	public LispStruct apply(final LispStruct... lispStructs) {
-		super.apply(lispStructs);
-
-		final LispStruct lispStruct = lispStructs[0];
-		validator.validateTypes(lispStruct, functionName(), "Packages To Use", ListType.INSTANCE);
-
-		final List<LispStruct> packages = ((ListStruct) lispStruct).getAsJavaList();
-		final List<PackageStruct> realPackages = new ArrayList<>(packages.size());
-		for (final LispStruct aPackage : packages) {
-			final PackageStruct realPackage = findPackage(aPackage);
-			realPackages.add(realPackage);
-		}
-
-		final PackageStruct aPackage = getPackage(lispStructs);
-		validateNotKeywordPackage(aPackage);
-
-		final PackageStruct[] packageArray = realPackages.toArray(new PackageStruct[realPackages.size()]);
-		validateNotKeywordPackage(packageArray);
-
-		aPackage.usePackage(packageArray);
-		return TStruct.INSTANCE;
-	}
-
-	private static void validateNotKeywordPackage(final PackageStruct... packageStructs) {
+	protected void validatePackages(final PackageStruct... packageStructs) {
 		for (final PackageStruct packageStruct : packageStructs) {
 			if (GlobalPackageStruct.KEYWORD.equals(packageStruct)) {
 				throw new ErrorException("Cannot use KEYWORD Package.");

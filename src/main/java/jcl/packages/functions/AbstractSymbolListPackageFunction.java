@@ -5,11 +5,13 @@
 package jcl.packages.functions;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.function.BiConsumer;
 
 import jcl.LispStruct;
 import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
+import jcl.conditions.exceptions.TypeErrorException;
 import jcl.lists.ListStruct;
 import jcl.packages.GlobalPackageStruct;
 import jcl.packages.PackageStruct;
@@ -39,13 +41,20 @@ abstract class AbstractSymbolListPackageFunction extends AbstractOptionalPackage
 		super.apply(lispStructs);
 
 		final LispStruct lispStruct = lispStructs[0];
-		validator.validateTypes(lispStruct, functionName(), "Symbols", ListType.INSTANCE);
+		validator.validateTypes(lispStruct, functionName(), "Symbols", ListType.INSTANCE, SymbolType.INSTANCE);
 
-		final List<LispStruct> symbols = ((ListStruct) lispStruct).getAsJavaList();
-		final List<SymbolStruct<?>> realSymbols = new ArrayList<>(symbols.size());
-		for (final LispStruct symbol : symbols) {
-			validator.validateTypes(symbol, functionName(), "Symbol", SymbolType.INSTANCE);
-			realSymbols.add((SymbolStruct<?>) symbol);
+		final List<SymbolStruct<?>> realSymbols;
+		if (lispStruct instanceof ListStruct) {
+			final List<LispStruct> symbols = ((ListStruct) lispStruct).getAsJavaList();
+			realSymbols = new ArrayList<>(symbols.size());
+			for (final LispStruct symbol : symbols) {
+				validator.validateTypes(symbol, functionName(), "Symbol", SymbolType.INSTANCE);
+				realSymbols.add((SymbolStruct<?>) symbol);
+			}
+		} else if (lispStruct instanceof SymbolStruct) {
+			realSymbols = Collections.singletonList((SymbolStruct<?>) lispStruct);
+		} else {
+			throw new TypeErrorException("UNCAUGHT TYPE ERROR.");
 		}
 
 		final PackageStruct aPackage = getPackage(lispStructs);

@@ -4,23 +4,16 @@
 
 package jcl.packages.functions;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.function.BiConsumer;
 
-import jcl.LispStruct;
-import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
-import jcl.lists.ListStruct;
-import jcl.packages.GlobalPackageStruct;
 import jcl.packages.PackageStruct;
-import jcl.symbols.TStruct;
-import jcl.types.ListType;
 import org.springframework.stereotype.Component;
 
 /**
  * Function implementation for {@code unuse-package}.
  */
 @Component
-public final class UnusePackageFunction extends AbstractOptionalPackageFunction {
+public final class UnusePackageFunction extends AbstractPackageListPackageFunction {
 
 	/**
 	 * Serializable Version Unique Identifier.
@@ -35,29 +28,12 @@ public final class UnusePackageFunction extends AbstractOptionalPackageFunction 
 	}
 
 	@Override
-	protected List<RequiredParameter> getRequiredBindings() {
-		return new RequiredParameter.Builder(GlobalPackageStruct.COMMON_LISP, "PACKAGES-TO-UNUSE").buildList();
+	protected BiConsumer<PackageStruct, PackageStruct[]> packageListFunction() {
+		return PackageStruct::unUsePackage;
 	}
 
 	@Override
-	public LispStruct apply(final LispStruct... lispStructs) {
-		super.apply(lispStructs);
-
-		final LispStruct lispStruct = lispStructs[0];
-		validator.validateTypes(lispStruct, functionName(), "Packages To Unuse", ListType.INSTANCE);
-
-		final List<LispStruct> packages = ((ListStruct) lispStruct).getAsJavaList();
-		final List<PackageStruct> realPackages = new ArrayList<>(packages.size());
-		for (final LispStruct aPackage : packages) {
-			final PackageStruct realPackage = findPackage(aPackage);
-			realPackages.add(realPackage);
-		}
-
-		final PackageStruct aPackage = getPackage(lispStructs);
-		final PackageStruct[] packageArray = realPackages.toArray(new PackageStruct[realPackages.size()]);
-		aPackage.unUsePackage(packageArray);
-
-		return TStruct.INSTANCE;
+	protected void validatePackages(final PackageStruct... packageStructs) {
 	}
 
 	/**

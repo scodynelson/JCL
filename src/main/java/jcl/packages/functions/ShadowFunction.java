@@ -8,19 +8,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import jcl.LispStruct;
-import jcl.arrays.StringStruct;
-import jcl.characters.CharacterStruct;
 import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
-import jcl.conditions.exceptions.TypeErrorException;
 import jcl.lists.ListStruct;
 import jcl.packages.GlobalPackageStruct;
 import jcl.packages.PackageStruct;
-import jcl.symbols.SymbolStruct;
 import jcl.symbols.TStruct;
-import jcl.types.CharacterType;
 import jcl.types.ListType;
-import jcl.types.StringType;
-import jcl.types.SymbolType;
 import org.springframework.stereotype.Component;
 
 /**
@@ -56,7 +49,7 @@ public final class ShadowFunction extends AbstractOptionalPackageFunction {
 		final List<LispStruct> symbolNames = ((ListStruct) lispStruct).getAsJavaList();
 		final List<String> realSymbolNames = new ArrayList<>(symbolNames.size());
 		for (final LispStruct symbolName : symbolNames) {
-			final String realSymbolName = getStringValue(symbolName);
+			final String realSymbolName = getStringFromStringDesignator(symbolName, "Symbol Name");
 			realSymbolNames.add(realSymbolName);
 		}
 
@@ -65,20 +58,6 @@ public final class ShadowFunction extends AbstractOptionalPackageFunction {
 		aPackage.shadow(symbolNameArray);
 
 		return TStruct.INSTANCE;
-	}
-
-	private String getStringValue(final LispStruct stringDesignator) {
-		validator.validateTypes(stringDesignator, functionName(), "String-Designator", StringType.INSTANCE, SymbolType.INSTANCE, CharacterType.INSTANCE);
-
-		if (stringDesignator instanceof StringStruct) {
-			return ((StringStruct) stringDesignator).getAsJavaString();
-		} else if (stringDesignator instanceof SymbolStruct) {
-			return ((SymbolStruct) stringDesignator).getName();
-		} else if (stringDesignator instanceof CharacterStruct) {
-			return ((CharacterStruct) stringDesignator).getCharacter().toString();
-		} else {
-			throw new TypeErrorException("UNCAUGHT TYPE ERROR.");
-		}
 	}
 
 	/**

@@ -10,6 +10,7 @@ import jcl.LispStruct;
 import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
 import jcl.packages.GlobalPackageStruct;
 import jcl.packages.PackageStruct;
+import jcl.symbols.NILStruct;
 import jcl.symbols.SymbolStruct;
 import jcl.symbols.TStruct;
 import jcl.types.SymbolType;
@@ -48,6 +49,9 @@ public final class UninternFunction extends AbstractOptionalPackageFunction {
 		final SymbolStruct<?> symbol = (SymbolStruct<?>) lispStruct;
 
 		final PackageStruct aPackage = getPackage(lispStructs);
+		if (aPackage.findSymbol(symbol.getName()) == null) {
+			return NILStruct.INSTANCE;
+		}
 		aPackage.unintern(symbol);
 
 		return TStruct.INSTANCE;

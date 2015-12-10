@@ -10,22 +10,15 @@ import java.util.List;
 import java.util.Set;
 
 import jcl.LispStruct;
-import jcl.arrays.StringStruct;
-import jcl.characters.CharacterStruct;
 import jcl.compiler.environment.binding.lambdalist.KeyParameter;
 import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
 import jcl.conditions.exceptions.ProgramErrorException;
-import jcl.conditions.exceptions.TypeErrorException;
 import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;
 import jcl.packages.GlobalPackageStruct;
 import jcl.packages.PackageStruct;
-import jcl.symbols.SymbolStruct;
 import jcl.system.CommonLispSymbols;
-import jcl.types.CharacterType;
 import jcl.types.ListType;
-import jcl.types.StringType;
-import jcl.types.SymbolType;
 import org.springframework.stereotype.Component;
 
 /**
@@ -123,20 +116,6 @@ public final class MakePackageFunction extends AbstractPackageFunction {
 		}
 
 		return new PackageStruct(packageName, realNicknames, realUsePackages);
-	}
-
-	private String getStringFromStringDesignator(final LispStruct stringDesignator, final String parameterName) {
-		validator.validateTypes(stringDesignator, functionName(), parameterName, StringType.INSTANCE, SymbolType.INSTANCE, CharacterType.INSTANCE);
-
-		if (stringDesignator instanceof StringStruct) {
-			return ((StringStruct) stringDesignator).getAsJavaString();
-		} else if (stringDesignator instanceof SymbolStruct) {
-			return ((SymbolStruct) stringDesignator).getName();
-		} else if (stringDesignator instanceof CharacterStruct) {
-			return ((CharacterStruct) stringDesignator).getCharacter().toString();
-		} else {
-			throw new TypeErrorException("UNCAUGHT TYPE ERROR.");
-		}
 	}
 
 	/**

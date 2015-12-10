@@ -103,20 +103,6 @@ public final class RenamePackageFunction extends AbstractPackageFunction {
 		}
 	}
 
-	private String getStringFromStringDesignator(final LispStruct stringDesignator, final String parameterName) {
-		validator.validateTypes(stringDesignator, functionName(), parameterName, StringType.INSTANCE, SymbolType.INSTANCE, CharacterType.INSTANCE);
-
-		if (stringDesignator instanceof StringStruct) {
-			return ((StringStruct) stringDesignator).getAsJavaString();
-		} else if (stringDesignator instanceof SymbolStruct) {
-			return ((SymbolStruct) stringDesignator).getName();
-		} else if (stringDesignator instanceof CharacterStruct) {
-			return ((CharacterStruct) stringDesignator).getCharacter().toString();
-		} else {
-			throw new TypeErrorException("UNCAUGHT TYPE ERROR.");
-		}
-	}
-
 	/**
 	 * {@inheritDoc}
 	 * Returns the function name {@code rename-package} as a string.

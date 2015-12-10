@@ -10,11 +10,11 @@ import jcl.LispStruct;
 import jcl.arrays.StringStruct;
 import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
 import jcl.compiler.struct.ValuesStruct;
-import jcl.lists.NullStruct;
 import jcl.packages.GlobalPackageStruct;
 import jcl.packages.PackageStruct;
 import jcl.packages.PackageSymbolStruct;
 import jcl.symbols.KeywordStruct;
+import jcl.symbols.NILStruct;
 import jcl.symbols.SymbolStruct;
 import jcl.types.StringType;
 import org.springframework.stereotype.Component;
@@ -53,7 +53,7 @@ public final class FindSymbolFunction extends AbstractOptionalPackageFunction {
 		final PackageStruct aPackage = getPackage(lispStructs);
 		final PackageSymbolStruct packageSymbol = aPackage.findSymbol(aString.getAsJavaString());
 		if (packageSymbol == null) {
-			return new ValuesStruct(NullStruct.INSTANCE, NullStruct.INSTANCE);
+			return new ValuesStruct(NILStruct.INSTANCE, NILStruct.INSTANCE);
 		}
 
 		final SymbolStruct<?> symbol = packageSymbol.getSymbol();

@@ -45,8 +45,7 @@ public final class FindAllSymbolsFunction extends AbstractPackageFunction {
 		final String name = getStringFromStringDesignator(lispStruct, "Symbol Name");
 
 		final List<SymbolStruct<?>> allSymbols = PackageStruct.findAllSymbols(name);
-		final LispStruct[] allSymbolsArray = allSymbols.toArray(new LispStruct[allSymbols.size()]);
-		return ListStruct.buildProperList(allSymbolsArray);
+		return ListStruct.buildProperList(allSymbols);
 	}
 
 	/**

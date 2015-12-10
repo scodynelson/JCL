@@ -4,6 +4,7 @@
 
 package jcl.packages.functions;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -46,8 +47,7 @@ public final class PackageShadowingSymbolsFunction extends AbstractPackageFuncti
 		final PackageStruct aPackage = findPackage(lispStruct);
 
 		final Collection<SymbolStruct<?>> shadowingSymbols = aPackage.getShadowingSymbols().values();
-		final LispStruct[] shadowingSymbolsArray = shadowingSymbols.toArray(new LispStruct[shadowingSymbols.size()]);
-		return ListStruct.buildProperList(shadowingSymbolsArray);
+		return ListStruct.buildProperList(new ArrayList<>(shadowingSymbols));
 	}
 
 	/**

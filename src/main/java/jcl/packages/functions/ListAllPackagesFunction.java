@@ -35,8 +35,7 @@ public final class ListAllPackagesFunction extends AbstractCommonLispFunctionStr
 		super.apply(lispStructs);
 
 		final List<PackageStruct> allPackages = PackageStruct.listAllPackages();
-		final LispStruct[] allPackagesArray = allPackages.toArray(new LispStruct[allPackages.size()]);
-		return ListStruct.buildProperList(allPackagesArray);
+		return ListStruct.buildProperList(allPackages);
 	}
 
 	/**

@@ -44,8 +44,7 @@ public final class PackageUseListFunction extends AbstractPackageFunction {
 		final PackageStruct aPackage = findPackage(lispStruct);
 
 		final List<PackageStruct> useList = aPackage.getUseList();
-		final LispStruct[] useListArray = useList.toArray(new LispStruct[useList.size()]);
-		return ListStruct.buildProperList(useListArray);
+		return ListStruct.buildProperList(useList);
 	}
 
 	/**

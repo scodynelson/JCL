@@ -47,14 +47,10 @@ public final class UninternFunction extends AbstractOptionalPackageFunction {
 		validator.validateTypes(lispStruct, functionName(), "Symbol", SymbolType.INSTANCE);
 
 		final SymbolStruct<?> symbol = (SymbolStruct<?>) lispStruct;
-
 		final PackageStruct aPackage = getPackage(lispStructs);
-		if (aPackage.findSymbol(symbol.getName()) == null) {
-			return NILStruct.INSTANCE;
-		}
-		aPackage.unintern(symbol);
 
-		return TStruct.INSTANCE;
+		final boolean wasUninterned = aPackage.unintern(symbol);
+		return wasUninterned ? TStruct.INSTANCE : NILStruct.INSTANCE;
 	}
 
 	/**

@@ -14,7 +14,6 @@ import jcl.packages.GlobalPackageStruct;
 import jcl.packages.PackageStruct;
 import jcl.packages.PackageSymbolStruct;
 import jcl.symbols.KeywordStruct;
-import jcl.symbols.NILStruct;
 import jcl.symbols.SymbolStruct;
 import jcl.types.StringType;
 import org.springframework.stereotype.Component;
@@ -53,9 +52,6 @@ public final class InternFunction extends AbstractOptionalPackageFunction {
 		final PackageStruct aPackage = getPackage(lispStructs);
 
 		final PackageSymbolStruct packageSymbol = aPackage.intern(aString.getAsJavaString());
-		if (packageSymbol == null) {
-			return new ValuesStruct(NILStruct.INSTANCE, NILStruct.INSTANCE);
-		}
 
 		final SymbolStruct<?> symbol = packageSymbol.getSymbol();
 		final KeywordStruct packageSymbolType = packageSymbol.getPackageSymbolType();

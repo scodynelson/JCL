@@ -7,6 +7,7 @@ package jcl.packages.functions;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import jcl.LispStruct;
@@ -17,6 +18,7 @@ import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;
 import jcl.packages.GlobalPackageStruct;
 import jcl.packages.PackageStruct;
+import jcl.symbols.KeywordStruct;
 import jcl.system.CommonLispSymbols;
 import jcl.types.ListType;
 import org.springframework.stereotype.Component;
@@ -72,43 +74,25 @@ public final class MakePackageFunction extends AbstractPackageFunction {
 			throw new ProgramErrorException("Package name " + packageName + " is already in use.");
 		}
 
-		ListStruct nicknames = NullStruct.INSTANCE;
-		ListStruct usePackages = ListStruct.buildProperList(GlobalPackageStruct.COMMON_LISP);
+		final Map<KeywordStruct, LispStruct> keywords
+				= getKeywords(lispStructs, 1, CommonLispSymbols.NICKNAMES_KEYWORD, CommonLispSymbols.USE_KEYWORD);
 
-		final int length = lispStructs.length;
-		if (length >= 3) {
-			// 1 keyword
-			final LispStruct firstKeyword = lispStructs[1];
-			final LispStruct keyValue = lispStructs[2];
-			if (CommonLispSymbols.NICKNAMES_KEYWORD.equals(firstKeyword)) {
-				validator.validateTypes(keyValue, functionName(), "Nicknames", ListType.INSTANCE);
-				nicknames = (ListStruct) keyValue;
-			} else if (CommonLispSymbols.USE_KEYWORD.equals(firstKeyword)) {
-				validator.validateTypes(keyValue, functionName(), "Use Packages", ListType.INSTANCE);
-				usePackages = (ListStruct) keyValue;
-			}
-		}
-		if (length >= 5) {
-			// 2 keywords
-			final LispStruct secondKeyword = lispStructs[3];
-			final LispStruct keyValue = lispStructs[4];
-			if (CommonLispSymbols.NICKNAMES_KEYWORD.equals(secondKeyword)) {
-				validator.validateTypes(keyValue, functionName(), "Nicknames", ListType.INSTANCE);
-				nicknames = (ListStruct) keyValue;
-			} else if (CommonLispSymbols.USE_KEYWORD.equals(secondKeyword)) {
-				validator.validateTypes(keyValue, functionName(), "Use Packages", ListType.INSTANCE);
-				usePackages = (ListStruct) keyValue;
-			}
-		}
+		final LispStruct nicknames
+				= keywords.getOrDefault(CommonLispSymbols.NICKNAMES_KEYWORD, NullStruct.INSTANCE);
+		validator.validateTypes(nicknames, functionName(), "Nicknames", ListType.INSTANCE);
 
-		final List<LispStruct> nicknamesList = nicknames.getAsJavaList();
+		final LispStruct usePackages
+				= keywords.getOrDefault(CommonLispSymbols.USE_KEYWORD, ListStruct.buildProperList(GlobalPackageStruct.COMMON_LISP));
+		validator.validateTypes(usePackages, functionName(), "Use Packages", ListType.INSTANCE);
+
+		final List<LispStruct> nicknamesList = ((ListStruct) nicknames).getAsJavaList();
 		final List<String> realNicknames = new ArrayList<>(nicknamesList.size());
 		for (final LispStruct nickname : nicknamesList) {
 			final String nicknameString = getStringFromStringDesignator(nickname, "Nickname");
 			realNicknames.add(nicknameString);
 		}
 
-		final List<LispStruct> usePackagesList = usePackages.getAsJavaList();
+		final List<LispStruct> usePackagesList = ((ListStruct) usePackages).getAsJavaList();
 		final Set<PackageStruct> realUsePackages = new HashSet<>(usePackagesList.size());
 		for (final LispStruct usePackage : usePackagesList) {
 			final PackageStruct aPackage = findPackage(usePackage);

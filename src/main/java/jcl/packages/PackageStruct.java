@@ -198,9 +198,7 @@ public class PackageStruct extends BuiltInClassStruct {
 	 * 		the new package name
 	 */
 	public void renamePackage(final String newName) {
-		GlobalPackageStruct.ALL_PACKAGES.remove(name);
-		name = newName;
-		GlobalPackageStruct.ALL_PACKAGES.put(newName, this);
+		renamePackage(newName, Collections.emptyList());
 	}
 
 	/**

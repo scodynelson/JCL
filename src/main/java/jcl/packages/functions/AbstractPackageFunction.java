@@ -67,4 +67,20 @@ abstract class AbstractPackageFunction extends AbstractCommonLispFunctionStruct 
 			throw new TypeErrorException("UNCAUGHT TYPE ERROR.");
 		}
 	}
+
+	protected String getStringFromPackageDesignator(final LispStruct packageDesignator, final String parameterName) {
+		validator.validateTypes(packageDesignator, functionName(), parameterName, StringType.INSTANCE, SymbolType.INSTANCE, CharacterType.INSTANCE, PackageType.INSTANCE);
+
+		if (packageDesignator instanceof StringStruct) {
+			return ((StringStruct) packageDesignator).getAsJavaString();
+		} else if (packageDesignator instanceof SymbolStruct) {
+			return ((SymbolStruct) packageDesignator).getName();
+		} else if (packageDesignator instanceof CharacterStruct) {
+			return ((CharacterStruct) packageDesignator).getCharacter().toString();
+		} else if (packageDesignator instanceof PackageStruct) {
+			return ((PackageStruct) packageDesignator).getName();
+		} else {
+			throw new TypeErrorException("UNCAUGHT TYPE ERROR.");
+		}
+	}
 }

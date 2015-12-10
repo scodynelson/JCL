@@ -8,20 +8,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import jcl.LispStruct;
-import jcl.arrays.StringStruct;
-import jcl.characters.CharacterStruct;
 import jcl.compiler.environment.binding.lambdalist.OptionalParameter;
 import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
-import jcl.conditions.exceptions.TypeErrorException;
 import jcl.lists.ListStruct;
 import jcl.packages.GlobalPackageStruct;
 import jcl.packages.PackageStruct;
-import jcl.symbols.SymbolStruct;
-import jcl.types.CharacterType;
 import jcl.types.ListType;
-import jcl.types.PackageType;
-import jcl.types.StringType;
-import jcl.types.SymbolType;
 import org.springframework.stereotype.Component;
 
 /**
@@ -70,37 +62,24 @@ public final class RenamePackageFunction extends AbstractPackageFunction {
 		final LispStruct newName = lispStructs[1];
 		final String realNewName = getStringFromPackageDesignator(newName, "New Name");
 
-		final List<String> newNicknames = new ArrayList<>();
 		if (lispStructs.length > 2) {
 			final LispStruct lispStruct = lispStructs[2];
 			validator.validateTypes(lispStruct, functionName(), "New Nicknames", ListType.INSTANCE);
 
 			final ListStruct newNicknamesListStruct = (ListStruct) lispStruct;
 			final List<LispStruct> newNicknamesList = newNicknamesListStruct.getAsJavaList();
+
+			final List<String> newNicknames = new ArrayList<>();
 			for (final LispStruct newNickname : newNicknamesList) {
 				final String newNicknameString = getStringFromStringDesignator(newNickname, "New Nickname");
 				newNicknames.add(newNicknameString);
 			}
-		}
-
-		aPackage.renamePackage(realNewName, newNicknames);
-		return aPackage;
-	}
-
-	private String getStringFromPackageDesignator(final LispStruct packageDesignator, final String parameterName) {
-		validator.validateTypes(packageDesignator, functionName(), parameterName, StringType.INSTANCE, SymbolType.INSTANCE, CharacterType.INSTANCE, PackageType.INSTANCE);
-
-		if (packageDesignator instanceof StringStruct) {
-			return ((StringStruct) packageDesignator).getAsJavaString();
-		} else if (packageDesignator instanceof SymbolStruct) {
-			return ((SymbolStruct) packageDesignator).getName();
-		} else if (packageDesignator instanceof CharacterStruct) {
-			return ((CharacterStruct) packageDesignator).getCharacter().toString();
-		} else if (packageDesignator instanceof PackageStruct) {
-			return ((PackageStruct) packageDesignator).getName();
+			aPackage.renamePackage(realNewName, newNicknames);
 		} else {
-			throw new TypeErrorException("UNCAUGHT TYPE ERROR.");
+			aPackage.renamePackage(realNewName);
 		}
+
+		return aPackage;
 	}
 
 	/**

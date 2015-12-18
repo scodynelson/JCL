@@ -4,54 +4,39 @@
 
 package jcl.symbols.functions;
 
-import java.util.Collections;
 import java.util.List;
-import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
-import jcl.compiler.environment.binding.lambdalist.OrdinaryLambdaList;
 import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
-import jcl.functions.FunctionStruct;
+import jcl.functions.AbstractCommonLispFunctionStruct;
 import jcl.packages.GlobalPackageStruct;
 import jcl.symbols.SymbolStruct;
 import org.springframework.stereotype.Component;
 
 @Component
-public class SymbolFunctionFunction extends FunctionStruct {
-
-	public static final SymbolStruct<?> SYMBOL_FUNCTION = GlobalPackageStruct.COMMON_LISP.intern("SYMBOL-FUNCTION").getSymbol();
+public final class SymbolFunctionFunction extends AbstractCommonLispFunctionStruct {
 
 	private static final long serialVersionUID = 1025657474175401906L;
 
-	private SymbolFunctionFunction() {
-		super("Gets the function value of the provided symbol.", getInitLambdaListBindings());
+	public SymbolFunctionFunction() {
+		super("Gets the function value of the provided symbol.");
 	}
 
-	@PostConstruct
-	private void init() {
-		SYMBOL_FUNCTION.setFunction(this);
-		GlobalPackageStruct.COMMON_LISP.export(SYMBOL_FUNCTION);
-	}
-
-	private static OrdinaryLambdaList getInitLambdaListBindings() {
-
-		final SymbolStruct<?> symbolArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("SYM").getSymbol();
-		final RequiredParameter symbolArgRequiredBinding = new RequiredParameter(symbolArgSymbol);
-		final List<RequiredParameter> requiredBindings = Collections.singletonList(symbolArgRequiredBinding);
-
-		return new OrdinaryLambdaList.Builder().requiredBindings(requiredBindings)
-		                                               .build();
+	@Override
+	protected List<RequiredParameter> getRequiredBindings() {
+		return new RequiredParameter.Builder(GlobalPackageStruct.COMMON_LISP, "SYMBOL").buildList();
 	}
 
 	@Override
 	public LispStruct apply(final LispStruct... lispStructs) {
-		getFunctionBindings(lispStructs);
+		super.apply(lispStructs);
 
 		final SymbolStruct<?> symbol = (SymbolStruct) lispStructs[0];
-		return symbolFunction(symbol);
+		return symbol.getFunction();
 	}
 
-	public LispStruct symbolFunction(final SymbolStruct<?> symbol) {
-		return symbol.getFunction();
+	@Override
+	protected String functionName() {
+		return "SYMBOL-FUNCTION";
 	}
 }

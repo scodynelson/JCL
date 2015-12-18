@@ -4,50 +4,41 @@
 
 package jcl.symbols.functions;
 
-import java.util.Collections;
 import java.util.List;
-import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
-import jcl.compiler.environment.binding.lambdalist.OrdinaryLambdaList;
 import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
-import jcl.functions.FunctionStruct;
+import jcl.functions.AbstractSystemFunctionStruct;
 import jcl.packages.GlobalPackageStruct;
 import jcl.symbols.SymbolStruct;
 import org.springframework.stereotype.Component;
 
 @Component
-public class UnbindSymbolFunctionFunction extends FunctionStruct {
+public final class UnbindSymbolFunctionFunction extends AbstractSystemFunctionStruct {
 
 	public static final SymbolStruct<?> UNBIND_SYMBOL_FUNCTION = GlobalPackageStruct.SYSTEM.intern("UNBIND-SYMBOL-FUNCTION").getSymbol();
 
 	private static final long serialVersionUID = -5643412206135382825L;
 
-	private UnbindSymbolFunctionFunction() {
-		super("Unbinds the function value of the provided symbol from its current value.", getInitLambdaListBindings());
+	public UnbindSymbolFunctionFunction() {
+		super("Unbinds the function value of the provided symbol from its current value.");
 	}
 
-	@PostConstruct
-	private void init() {
-		UNBIND_SYMBOL_FUNCTION.setFunction(this);
-		GlobalPackageStruct.SYSTEM.export(UNBIND_SYMBOL_FUNCTION);
-	}
-
-	private static OrdinaryLambdaList getInitLambdaListBindings() {
-
-		final SymbolStruct<?> symbolArgSymbol = GlobalPackageStruct.SYSTEM.intern("SYM").getSymbol();
-		final RequiredParameter symbolArgRequiredBinding = new RequiredParameter(symbolArgSymbol);
-		final List<RequiredParameter> requiredBindings = Collections.singletonList(symbolArgRequiredBinding);
-
-		return new OrdinaryLambdaList.Builder().requiredBindings(requiredBindings)
-		                                               .build();
+	@Override
+	protected List<RequiredParameter> getRequiredBindings() {
+		return new RequiredParameter.Builder(GlobalPackageStruct.SYSTEM, "SYMBOL").buildList();
 	}
 
 	@Override
 	public LispStruct apply(final LispStruct... lispStructs) {
-		getFunctionBindings(lispStructs);
+		super.apply(lispStructs);
 
 		final SymbolStruct<?> symbol = (SymbolStruct) lispStructs[0];
 		return symbol.unbindFunction();
+	}
+
+	@Override
+	protected String functionName() {
+		return "UNBIND-SYMBOL-FUNCTION";
 	}
 }

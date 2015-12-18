@@ -4,59 +4,48 @@
 
 package jcl.symbols.functions;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
-import jcl.compiler.environment.binding.lambdalist.OrdinaryLambdaList;
 import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
 import jcl.compiler.struct.ValuesStruct;
+import jcl.functions.AbstractSystemFunctionStruct;
 import jcl.functions.FunctionStruct;
 import jcl.packages.GlobalPackageStruct;
 import jcl.symbols.SymbolStruct;
 import org.springframework.stereotype.Component;
 
 @Component
-public class BindSymbolFunctionFunction extends FunctionStruct {
+public final class BindSymbolFunctionFunction extends AbstractSystemFunctionStruct {
 
 	public static final SymbolStruct<?> BIND_SYMBOL_FUNCTION = GlobalPackageStruct.SYSTEM.intern("BIND-SYMBOL-FUNCTION").getSymbol();
 
 	private static final long serialVersionUID = 1025657474175401906L;
 
-	private BindSymbolFunctionFunction() {
-		super("Binds the function value of the provided symbol to the provided function value.", getInitLambdaListBindings());
+	public BindSymbolFunctionFunction() {
+		super("Binds the function value of the provided symbol to the provided function value.");
 	}
 
-	@PostConstruct
-	private void init() {
-		BIND_SYMBOL_FUNCTION.setFunction(this);
-		GlobalPackageStruct.SYSTEM.export(BIND_SYMBOL_FUNCTION);
-	}
-
-	private static OrdinaryLambdaList getInitLambdaListBindings() {
-
-		final List<RequiredParameter> requiredBindings = new ArrayList<>(2);
-
-		final SymbolStruct<?> symbolArgSymbol = GlobalPackageStruct.SYSTEM.intern("SYM").getSymbol();
-		final RequiredParameter symbolArgRequiredBinding = new RequiredParameter(symbolArgSymbol);
-		requiredBindings.add(symbolArgRequiredBinding);
-
-		final SymbolStruct<?> functionArgSymbol = GlobalPackageStruct.SYSTEM.intern("FN").getSymbol();
-		final RequiredParameter functionArgRequiredBinding = new RequiredParameter(functionArgSymbol);
-		requiredBindings.add(functionArgRequiredBinding);
-
-		return new OrdinaryLambdaList.Builder().requiredBindings(requiredBindings)
-		                                               .build();
+	@Override
+	protected List<RequiredParameter> getRequiredBindings() {
+		final RequiredParameter symbolArg = new RequiredParameter.Builder(GlobalPackageStruct.SYSTEM, "SYMBOL").build();
+		final RequiredParameter functionArg = new RequiredParameter.Builder(GlobalPackageStruct.SYSTEM, "FUNCTION").build();
+		return Arrays.asList(symbolArg, functionArg);
 	}
 
 	@Override
 	public LispStruct apply(final LispStruct... lispStructs) {
-		getFunctionBindings(lispStructs);
+		super.apply(lispStructs);
 
 		final SymbolStruct<?> symbol = (SymbolStruct) lispStructs[0];
 		final FunctionStruct function = (FunctionStruct) lispStructs[1];
 		symbol.bindFunction(function);
 		return new ValuesStruct();
+	}
+
+	@Override
+	protected String functionName() {
+		return "BIND-SYMBOL-FUNCTION";
 	}
 }

@@ -945,7 +945,7 @@ public interface CommonLispSymbols {
 	SymbolStruct<?> SVREF = null;
 	SymbolStruct<?> SXHASH = null;
 	SymbolStruct<?> SYMBOL = null;
-	SymbolStruct<?> SYMBOL_FUNCTION = SymbolFunctionFunction.SYMBOL_FUNCTION;
+	SymbolStruct<?> SYMBOL_FUNCTION = null;
 	SymbolStruct<?> SYMBOL_MACROLET = null;
 	SymbolStruct<?> SYMBOL_NAME = null;
 	SymbolStruct<?> SYMBOL_PACKAGE = null;
@@ -1036,7 +1036,7 @@ public interface CommonLispSymbols {
 	SymbolStruct<?> ZEROP = null;
 
 	// System
-	SymbolStruct<?> SET_SYMBOL_FUNCTION = SetSymbolFunctionFunction.SET_SYMBOL_FUNCTION;
+	SymbolStruct<?> SET_SYMBOL_FUNCTION = null;
 
 	// Backquote
 	SymbolStruct<?> BQ_COMMA_FLAG = GlobalPackageStruct.BACKQUOTE.intern(",").getSymbol();

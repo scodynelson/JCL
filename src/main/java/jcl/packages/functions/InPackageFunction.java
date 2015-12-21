@@ -8,7 +8,7 @@ import java.util.List;
 
 import jcl.LispStruct;
 import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
-import jcl.conditions.exceptions.ReaderErrorException;
+import jcl.conditions.exceptions.ErrorException;
 import jcl.packages.GlobalPackageStruct;
 import jcl.packages.PackageStruct;
 import jcl.packages.PackageVariables;
@@ -43,6 +43,16 @@ public final class InPackageFunction extends AbstractPackageFunction {
 		return new RequiredParameter.Builder(GlobalPackageStruct.COMMON_LISP, "NAME").buildList();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * Application method for {@code in-package} package function that gets the package name to set the global {@code
+	 * *package*} variable to. An {@link ErrorException} is thrown when the package cannot be found.
+	 *
+	 * @param lispStructs
+	 * 		the function parameters
+	 *
+	 * @return the new {@link PackageStruct} value of the global {@code *package*} variable
+	 */
 	@Override
 	public LispStruct apply(final LispStruct... lispStructs) {
 		super.apply(lispStructs);
@@ -52,7 +62,7 @@ public final class InPackageFunction extends AbstractPackageFunction {
 
 		final PackageStruct newCurrentPackage = PackageStruct.findPackage(name);
 		if (newCurrentPackage == null) {
-			throw new ReaderErrorException("There is no package named " + name);
+			throw new ErrorException("There is no package named " + name);
 		}
 
 		PackageVariables.PACKAGE.setValue(newCurrentPackage);

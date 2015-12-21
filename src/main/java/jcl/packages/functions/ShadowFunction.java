@@ -48,6 +48,15 @@ public final class ShadowFunction extends AbstractOptionalPackageFunction {
 		return new RequiredParameter.Builder(GlobalPackageStruct.COMMON_LISP, "SYMBOL-NAMES").buildList();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * Application method for {@code shadow} package function that shadows the provided symbol name parameters.
+	 *
+	 * @param lispStructs
+	 * 		the function parameters
+	 *
+	 * @return {@link TStruct#INSTANCE}
+	 */
 	@Override
 	public LispStruct apply(final LispStruct... lispStructs) {
 		super.apply(lispStructs);

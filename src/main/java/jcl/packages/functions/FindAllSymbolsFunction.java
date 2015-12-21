@@ -43,6 +43,17 @@ public final class FindAllSymbolsFunction extends AbstractPackageFunction {
 		return new RequiredParameter.Builder(GlobalPackageStruct.COMMON_LISP, "SYMBOL-NAME").buildList();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * Application method for {@code find-all-symbols} package function that returns all the {@link SymbolStruct}s
+	 * that match the provided string-designator symbol name from every registered {@link PackageStruct}.
+	 *
+	 * @param lispStructs
+	 * 		the function parameters
+	 *
+	 * @return the {@link SymbolStruct}s that match the provided string-designator symbol name from every registered
+	 * {@link PackageStruct}
+	 */
 	@Override
 	public LispStruct apply(final LispStruct... lispStructs) {
 		super.apply(lispStructs);

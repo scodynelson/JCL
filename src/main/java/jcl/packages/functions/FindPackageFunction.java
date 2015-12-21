@@ -42,6 +42,16 @@ public final class FindPackageFunction extends AbstractPackageFunction {
 		return new RequiredParameter.Builder(GlobalPackageStruct.COMMON_LISP, "NAME").buildList();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * Application method for {@code find-package} package function that returns the {@link PackageStruct} with the
+	 * provided package-designator parameter.
+	 *
+	 * @param lispStructs
+	 * 		the function parameters
+	 *
+	 * @return {@link PackageStruct} with the provided package-designator parameter
+	 */
 	@Override
 	public LispStruct apply(final LispStruct... lispStructs) {
 		super.apply(lispStructs);

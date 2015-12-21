@@ -43,6 +43,16 @@ public final class DeletePackageFunction extends AbstractPackageFunction {
 		return new RequiredParameter.Builder(GlobalPackageStruct.COMMON_LISP, "PACKAGE").buildList();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * Application method for {@code delete-package} package function that deletes the provided {@link PackageStruct}
+	 * package-designator.
+	 *
+	 * @param lispStructs
+	 * 		the function parameters
+	 *
+	 * @return {@link TStruct#INSTANCE}
+	 */
 	@Override
 	public LispStruct apply(final LispStruct... lispStructs) {
 		super.apply(lispStructs);

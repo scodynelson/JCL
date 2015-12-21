@@ -6,6 +6,7 @@ package jcl.packages.functions;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import jcl.LispStruct;
 import jcl.compiler.environment.binding.lambdalist.OptionalParameter;
@@ -34,6 +35,13 @@ public final class RenamePackageFunction extends AbstractPackageFunction {
 		super("Replaces the name and nicknames of package.");
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * Creates the {@link RequiredParameter} list with the {@link PackageStruct} package-designator to be renamed and
+	 * the package-designator new package name value.
+	 *
+	 * @return the list of {@link RequiredParameter} objects
+	 */
 	@Override
 	protected List<RequiredParameter> getRequiredBindings() {
 		final List<RequiredParameter> requiredParameters = new ArrayList<>(2);
@@ -46,6 +54,12 @@ public final class RenamePackageFunction extends AbstractPackageFunction {
 		return requiredParameters;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * Creates the single {@link OptionalParameter} list of package nicknames for this function.
+	 *
+	 * @return a list of a single {@link OptionalParameter} list of package nicknames
+	 */
 	@Override
 	protected List<OptionalParameter> getOptionalBindings() {
 		return new OptionalParameter.Builder(GlobalPackageStruct.COMMON_LISP, "NEW-NICKNAMES")
@@ -53,6 +67,16 @@ public final class RenamePackageFunction extends AbstractPackageFunction {
 				.buildList();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * Application method for the package function that renames the provided {@link PackageStruct} package-designator,
+	 * optionally giving it the provided nicknames.
+	 *
+	 * @param lispStructs
+	 * 		the function parameters
+	 *
+	 * @return the renamed {@link PackageStruct}
+	 */
 	@Override
 	public LispStruct apply(final LispStruct... lispStructs) {
 		super.apply(lispStructs);
@@ -66,11 +90,10 @@ public final class RenamePackageFunction extends AbstractPackageFunction {
 
 			final List<LispStruct> newNicknamesList = ((ListStruct) lispStruct).getAsJavaList();
 
-			final List<String> newNicknames = new ArrayList<>();
-			for (final LispStruct newNickname : newNicknamesList) {
-				final String newNicknameString = getStringFromStringDesignator(newNickname, "New Nickname");
-				newNicknames.add(newNicknameString);
-			}
+			final List<String> newNicknames
+					= newNicknamesList.stream()
+					                  .map(newNickname -> getStringFromStringDesignator(newNickname, "New Nickname"))
+					                  .collect(Collectors.toList());
 			aPackage.renamePackage(newName, newNicknames);
 		} else {
 			aPackage.renamePackage(newName);

@@ -11,15 +11,12 @@ import jcl.functions.FunctionStruct;
 import jcl.functions.expanders.CompilerMacroFunctionExpander;
 import jcl.functions.expanders.MacroFunctionExpander;
 import jcl.functions.expanders.SymbolMacroExpander;
-import jcl.lists.NullStruct;
 import jcl.packages.PackageStruct;
 import jcl.packages.PackageVariables;
 import jcl.structures.StructureClassStruct;
 import jcl.types.SymbolType;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
  * The {@link SymbolStruct} is the object representation of a Lisp 'symbol' type.
@@ -478,13 +475,12 @@ public class SymbolStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 
 	/**
 	 * Retrieves the property from the symbol {@link #properties} associated with the provided {@code key}. If the
-	 * property is not found, {@link NullStruct#INSTANCE} is returned.
+	 * property is not found, {@code null} is returned.
 	 *
 	 * @param key
 	 * 		the key for the property to retrieve
 	 *
-	 * @return the property from the symbol {@link #properties} or {@link NullStruct#INSTANCE} if the property cannot be
-	 * found.
+	 * @return the property from the symbol {@link #properties} or {@code null} if the property cannot be found.
 	 */
 	public LispStruct getProperty(final LispStruct key) {
 		for (int i = 0; i < properties.size(); i += 2) {
@@ -494,7 +490,7 @@ public class SymbolStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 				return properties.get(valueIndex);
 			}
 		}
-		return NullStruct.INSTANCE;
+		return null;
 	}
 
 	/**
@@ -518,6 +514,28 @@ public class SymbolStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 	}
 
 	/**
+	 * Removes the first property in the symbol {@link #properties} associated with the provided {@code key}.
+	 *
+	 * @param key
+	 * 		the key for the property to remove
+	 *
+	 * @return whether or not the property was removed
+	 */
+	public boolean removeProperty(final LispStruct key) {
+		boolean wasRemoved = false;
+		for (int i = 0; i < properties.size(); i += 2) {
+			final LispStruct current = properties.get(i);
+			if (key.equals(current)) {
+				final int valueIndex = i + 1;
+				properties.remove(valueIndex);
+				properties.remove(i);
+				wasRemoved = true;
+			}
+		}
+		return wasRemoved;
+	}
+
+	/**
 	 * Copies the symbol and possibly its {@link #properties}.
 	 *
 	 * @param copyProperties
@@ -527,7 +545,7 @@ public class SymbolStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 	 */
 	public SymbolStruct<TYPE> copySymbol(final boolean copyProperties) {
 		if (copyProperties) {
-			final SymbolStruct<TYPE> newSymbol = new SymbolStruct<>(name, symbolPackage);
+			final SymbolStruct<TYPE> newSymbol = new SymbolStruct<>(name);
 			newSymbol.lexicalValueStack.addAll(lexicalValueStack);
 			newSymbol.dynamicValueStack.addAll(dynamicValueStack);
 			newSymbol.functionStack.addAll(functionStack);
@@ -541,14 +559,14 @@ public class SymbolStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 	@Override
 	public int hashCode() {
 		return new HashCodeBuilder().appendSuper(super.hashCode())
-				.append(name)
+		                            .append(name)
 //		                            .append(symbolPackage)
 //		                            .append(functionStack)
-				.append(properties)
+                                    .append(properties)
 //		                            .append(macroFunctionExpander)
 //		                            .append(compilerMacroFunctionExpander)
 //		                            .append(symbolMacroExpanderStack)
-				.toHashCode();
+                                    .toHashCode();
 //		                            .append(lexicalValueStack) TODO: why does this cause explosions???
 //		                            .append(dynamicValueStack) TODO: why does this cause explosions???
 	}
@@ -576,19 +594,5 @@ public class SymbolStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 		                          .append(compilerMacroFunctionExpander, rhs.compilerMacroFunctionExpander)
 		                          .append(symbolMacroExpanderStack, rhs.symbolMacroExpanderStack)
 		                          .isEquals();
-	}
-
-	@Override
-	public String toString() {
-		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(name)
-		                                                                .append(symbolPackage)
-		                                                                .append(lexicalValueStack)
-		                                                                .append(dynamicValueStack)
-		                                                                .append(functionStack)
-		                                                                .append(properties)
-		                                                                .append(macroFunctionExpander)
-		                                                                .append(compilerMacroFunctionExpander)
-		                                                                .append(symbolMacroExpanderStack)
-		                                                                .toString();
 	}
 }

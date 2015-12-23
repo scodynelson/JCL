@@ -10,6 +10,8 @@ import jcl.LispStruct;
 import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
 import jcl.functions.AbstractCommonLispFunctionStruct;
 import jcl.packages.GlobalPackageStruct;
+import jcl.packages.PackageStruct;
+import jcl.symbols.NILStruct;
 import jcl.symbols.SymbolStruct;
 import jcl.types.SymbolType;
 import jcl.types.TypeValidator;
@@ -17,12 +19,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class SymbolFunctionFunction extends AbstractCommonLispFunctionStruct {
+public class SymbolPackageFunction extends AbstractCommonLispFunctionStruct {
 
 	/**
 	 * Serializable Version Unique Identifier.
 	 */
-	private static final long serialVersionUID = 9129599617652575209L;
+	private static final long serialVersionUID = 1120937367349876909L;
 
 	/**
 	 * The {@link TypeValidator} for validating the function parameter value types.
@@ -30,7 +32,7 @@ public final class SymbolFunctionFunction extends AbstractCommonLispFunctionStru
 	@Autowired
 	private TypeValidator validator;
 
-	public SymbolFunctionFunction() {
+	public SymbolPackageFunction() {
 		super("Gets the function value of the provided symbol.");
 	}
 
@@ -46,12 +48,13 @@ public final class SymbolFunctionFunction extends AbstractCommonLispFunctionStru
 		final LispStruct lispStruct = lispStructs[0];
 		validator.validateTypes(lispStruct, functionName(), "Symbol", SymbolType.INSTANCE);
 
-		final SymbolStruct<?> symbol = (SymbolStruct) lispStruct;
-		return symbol.getFunction();
+		final SymbolStruct<?> symbol = (SymbolStruct) lispStructs[0];
+		final PackageStruct symbolPackage = symbol.getSymbolPackage();
+		return (symbolPackage == null) ? NILStruct.INSTANCE : symbolPackage;
 	}
 
 	@Override
 	protected String functionName() {
-		return "SYMBOL-FUNCTION";
+		return "SYMBOL-PACKAGE";
 	}
 }

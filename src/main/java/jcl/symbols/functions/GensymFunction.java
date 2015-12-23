@@ -13,19 +13,27 @@ import jcl.conditions.exceptions.TypeErrorException;
 import jcl.functions.AbstractCommonLispFunctionStruct;
 import jcl.numbers.IntegerStruct;
 import jcl.packages.GlobalPackageStruct;
-import jcl.printer.Printer;
 import jcl.symbols.SymbolStruct;
 import jcl.symbols.SymbolVariables;
+import jcl.types.IntegerType;
+import jcl.types.StringType;
+import jcl.types.TypeValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public final class GensymFunction extends AbstractCommonLispFunctionStruct {
 
-	private static final long serialVersionUID = -1852620624613550769L;
+	/**
+	 * Serializable Version Unique Identifier.
+	 */
+	private static final long serialVersionUID = -6888123105525048725L;
 
+	/**
+	 * The {@link TypeValidator} for validating the function parameter value types.
+	 */
 	@Autowired
-	private Printer printer;
+	private TypeValidator validator;
 
 	public GensymFunction() {
 		super("Creates and returns a fresh, uninterned symbol.");
@@ -33,7 +41,9 @@ public final class GensymFunction extends AbstractCommonLispFunctionStruct {
 
 	@Override
 	protected List<OptionalParameter> getOptionalBindings() {
-		return new OptionalParameter.Builder(GlobalPackageStruct.COMMON_LISP, "X").buildList();
+		return new OptionalParameter.Builder(GlobalPackageStruct.COMMON_LISP, "PREFIX")
+				.suppliedPBinding()
+				.buildList();
 	}
 
 	@Override
@@ -44,14 +54,15 @@ public final class GensymFunction extends AbstractCommonLispFunctionStruct {
 		IntegerStruct gensymPostfix = SymbolVariables.GENSYM_COUNTER.getValue();
 		if (lispStructs.length == 1) {
 			final LispStruct defaulting = lispStructs[0];
+			validator.validateTypes(defaulting, functionName(), "Prefix", StringType.INSTANCE, IntegerType.INSTANCE);
+
 			if (defaulting instanceof StringStruct) {
 				gensymPrefix = ((StringStruct) defaulting).getAsJavaString();
 				SymbolVariables.GENSYM_COUNTER.setValue((IntegerStruct) gensymPostfix.add(IntegerStruct.ONE));
 			} else if (defaulting instanceof IntegerStruct) {
 				gensymPostfix = (IntegerStruct) defaulting;
 			} else {
-				final String printedObject = printer.print(defaulting);
-				throw new TypeErrorException("Expected either a String or Integer for GENSYM defaulting behavior. Got: " + printedObject);
+				throw new TypeErrorException("UNCAUGHT TYPE ERROR.");
 			}
 		} else {
 			SymbolVariables.GENSYM_COUNTER.setValue((IntegerStruct) gensymPostfix.add(IntegerStruct.ONE));

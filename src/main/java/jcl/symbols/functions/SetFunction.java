@@ -4,6 +4,7 @@
 
 package jcl.symbols.functions;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import jcl.LispStruct;
@@ -17,12 +18,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class SymbolFunctionFunction extends AbstractCommonLispFunctionStruct {
+public class SetFunction extends AbstractCommonLispFunctionStruct {
 
 	/**
 	 * Serializable Version Unique Identifier.
 	 */
-	private static final long serialVersionUID = 9129599617652575209L;
+	private static final long serialVersionUID = -5517697908893213287L;
 
 	/**
 	 * The {@link TypeValidator} for validating the function parameter value types.
@@ -30,28 +31,41 @@ public final class SymbolFunctionFunction extends AbstractCommonLispFunctionStru
 	@Autowired
 	private TypeValidator validator;
 
-	public SymbolFunctionFunction() {
+	public SetFunction() {
 		super("Gets the function value of the provided symbol.");
 	}
 
 	@Override
 	protected List<RequiredParameter> getRequiredBindings() {
-		return new RequiredParameter.Builder(GlobalPackageStruct.COMMON_LISP, "SYMBOL").buildList();
+		final List<RequiredParameter> requiredParameters = new ArrayList<>(2);
+
+		final RequiredParameter symbol = new RequiredParameter.Builder(GlobalPackageStruct.COMMON_LISP, "SYMBOL").build();
+		requiredParameters.add(symbol);
+
+		final RequiredParameter value = new RequiredParameter.Builder(GlobalPackageStruct.COMMON_LISP, "VALUE").build();
+		requiredParameters.add(value);
+
+		return requiredParameters;
 	}
 
 	@Override
 	public LispStruct apply(final LispStruct... lispStructs) {
 		super.apply(lispStructs);
 
-		final LispStruct lispStruct = lispStructs[0];
-		validator.validateTypes(lispStruct, functionName(), "Symbol", SymbolType.INSTANCE);
+		final LispStruct lispStruct1 = lispStructs[0];
+		validator.validateTypes(lispStruct1, functionName(), "Symbol", SymbolType.INSTANCE);
 
-		final SymbolStruct<?> symbol = (SymbolStruct) lispStruct;
-		return symbol.getFunction();
+		final LispStruct lispStruct2 = lispStructs[1];
+
+		@SuppressWarnings("unchecked")
+		final SymbolStruct<LispStruct> symbol = (SymbolStruct) lispStruct1;
+		symbol.setValue(lispStruct2);
+
+		return symbol.getValue();
 	}
 
 	@Override
 	protected String functionName() {
-		return "SYMBOL-FUNCTION";
+		return "SET";
 	}
 }

@@ -9,6 +9,7 @@ import java.util.List;
 import jcl.LispStruct;
 import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
 import jcl.functions.AbstractCommonLispFunctionStruct;
+import jcl.lists.ListStruct;
 import jcl.packages.GlobalPackageStruct;
 import jcl.symbols.SymbolStruct;
 import jcl.types.SymbolType;
@@ -17,12 +18,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class SymbolFunctionFunction extends AbstractCommonLispFunctionStruct {
+public class SymbolPlistFunction extends AbstractCommonLispFunctionStruct {
 
 	/**
 	 * Serializable Version Unique Identifier.
 	 */
-	private static final long serialVersionUID = 9129599617652575209L;
+	private static final long serialVersionUID = -7976231996328608349L;
 
 	/**
 	 * The {@link TypeValidator} for validating the function parameter value types.
@@ -30,7 +31,7 @@ public final class SymbolFunctionFunction extends AbstractCommonLispFunctionStru
 	@Autowired
 	private TypeValidator validator;
 
-	public SymbolFunctionFunction() {
+	public SymbolPlistFunction() {
 		super("Gets the function value of the provided symbol.");
 	}
 
@@ -46,12 +47,12 @@ public final class SymbolFunctionFunction extends AbstractCommonLispFunctionStru
 		final LispStruct lispStruct = lispStructs[0];
 		validator.validateTypes(lispStruct, functionName(), "Symbol", SymbolType.INSTANCE);
 
-		final SymbolStruct<?> symbol = (SymbolStruct) lispStruct;
-		return symbol.getFunction();
+		final SymbolStruct<?> symbol = (SymbolStruct) lispStructs[0];
+		return ListStruct.buildProperList(symbol.getProperties());
 	}
 
 	@Override
 	protected String functionName() {
-		return "SYMBOL-FUNCTION";
+		return "SYMBOL-PLIST";
 	}
 }

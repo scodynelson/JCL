@@ -92,7 +92,7 @@ public abstract class ClosureCreationExpander<V> extends MacroFunctionExpander<C
 
 		validator.validateObjectTypes(parameter, expanderName, "PARAMETER", SymbolStruct.class, ListStruct.class);
 
-		final SymbolStruct<?> var;
+		final SymbolStruct var;
 		final LispStruct initForm;
 
 		if (parameter instanceof ListStruct) {
@@ -100,7 +100,7 @@ public abstract class ClosureCreationExpander<V> extends MacroFunctionExpander<C
 			var = getListParameterVar(listParameter);
 			initForm = getListParameterInitForm(listParameter, environment);
 		} else {
-			var = (SymbolStruct<?>) parameter;
+			var = (SymbolStruct) parameter;
 			initForm = NullStruct.INSTANCE;
 		}
 
@@ -119,14 +119,14 @@ public abstract class ClosureCreationExpander<V> extends MacroFunctionExpander<C
 		return getClosureCreationVar(var, initForm, isSpecial);
 	}
 
-	private SymbolStruct<?> getListParameterVar(final ListStruct listParameter) {
+	private SymbolStruct getListParameterVar(final ListStruct listParameter) {
 		validator.validateListParameterSize(listParameter, 1, 2, expanderName);
 
 		final LispStruct listParameterFirst = listParameter.getFirst();
 		return validator.validateObjectType(listParameterFirst, expanderName, "First element of list parameter", SymbolStruct.class);
 	}
 
-	protected abstract V getClosureCreationVar(final SymbolStruct<?> var, final LispStruct initForm,
+	protected abstract V getClosureCreationVar(final SymbolStruct var, final LispStruct initForm,
 	                                           final boolean isSpecial);
 
 	protected abstract ClosureCreationStruct<V> getClosureCreationStruct(final List<V> vars,

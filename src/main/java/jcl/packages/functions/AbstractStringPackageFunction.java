@@ -49,7 +49,7 @@ abstract class AbstractStringPackageFunction extends AbstractOptionalPackageFunc
 			return new ValuesStruct(NILStruct.INSTANCE, NILStruct.INSTANCE);
 		}
 
-		final SymbolStruct<?> symbol = packageSymbol.getSymbol();
+		final SymbolStruct symbol = packageSymbol.getSymbol();
 		final KeywordStruct packageSymbolType = packageSymbol.getPackageSymbolType();
 		return new ValuesStruct(symbol, packageSymbolType);
 	}

@@ -57,7 +57,7 @@ public class SharpLeftParenthesisReaderMacroFunction extends ReaderMacroFunction
 	 */
 	@PostConstruct
 	private void init() {
-		ReaderVariables.READTABLE.getValue().setDispatchMacroCharacter(CharacterConstants.NUMBER_SIGN, CharacterConstants.LEFT_PARENTHESIS, this);
+		ReaderVariables.READTABLE.getVariableValue().setDispatchMacroCharacter(CharacterConstants.NUMBER_SIGN, CharacterConstants.LEFT_PARENTHESIS, this);
 	}
 
 	@Override
@@ -66,7 +66,7 @@ public class SharpLeftParenthesisReaderMacroFunction extends ReaderMacroFunction
 
 		final ListStruct listToken = listReaderMacroFunction.readList(reader);
 
-		if (ReaderVariables.READ_SUPPRESS.getValue().booleanValue()) {
+		if (ReaderVariables.READ_SUPPRESS.getVariableValue().booleanValue()) {
 			return NullStruct.INSTANCE;
 		}
 

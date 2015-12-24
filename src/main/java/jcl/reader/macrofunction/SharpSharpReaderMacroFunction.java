@@ -34,14 +34,14 @@ public class SharpSharpReaderMacroFunction extends ReaderMacroFunction {
 	 */
 	@PostConstruct
 	private void init() {
-		ReaderVariables.READTABLE.getValue().setDispatchMacroCharacter(CharacterConstants.NUMBER_SIGN, CharacterConstants.NUMBER_SIGN, this);
+		ReaderVariables.READTABLE.getVariableValue().setDispatchMacroCharacter(CharacterConstants.NUMBER_SIGN, CharacterConstants.NUMBER_SIGN, this);
 	}
 
 	@Override
 	public LispStruct readMacro(final int codePoint, final Reader reader, final Optional<BigInteger> numberArgument) {
 		assert codePoint == CharacterConstants.NUMBER_SIGN;
 
-		if (ReaderVariables.READ_SUPPRESS.getValue().booleanValue()) {
+		if (ReaderVariables.READ_SUPPRESS.getVariableValue().booleanValue()) {
 			return NullStruct.INSTANCE;
 		}
 
@@ -55,7 +55,7 @@ public class SharpSharpReaderMacroFunction extends ReaderMacroFunction {
 			return labelToken;
 		}
 
-		final SymbolStruct<?> possibleLabelTag = reader.getSharpEqualTempTable().get(numberArgumentValue);
+		final SymbolStruct possibleLabelTag = reader.getSharpEqualTempTable().get(numberArgumentValue);
 		if (possibleLabelTag != null) {
 			return possibleLabelTag;
 		}

@@ -29,7 +29,7 @@ public class LabelsExpander extends InnerLambdaExpander {
 	}
 
 	@Override
-	public SymbolStruct<?> getFunctionSymbol() {
+	public SymbolStruct getFunctionSymbol() {
 		return SpecialOperatorStruct.LABELS;
 	}
 
@@ -38,8 +38,8 @@ public class LabelsExpander extends InnerLambdaExpander {
 	                                             final Environment innerLambdaEnvironment,
 	                                             final BodyProcessingResult bodyProcessingResult,
 	                                             final DeclareStruct declare,
-	                                             final Stack<SymbolStruct<?>> functionNameStack,
-	                                             final List<SymbolStruct<?>> functionNames) {
+	                                             final Stack<SymbolStruct> functionNameStack,
+	                                             final List<SymbolStruct> functionNames) {
 
 		try {
 			// Add function names BEFORE analyzing the functions.
@@ -54,8 +54,8 @@ public class LabelsExpander extends InnerLambdaExpander {
 	}
 
 	@Override
-	protected ListStruct getInnerLambdaBody(final ListStruct innerBlockListStruct, final SymbolStruct<?> functionNameSymbol,
-	                                        final List<SymbolStruct<?>> functionNames) {
+	protected ListStruct getInnerLambdaBody(final ListStruct innerBlockListStruct, final SymbolStruct functionNameSymbol,
+	                                        final List<SymbolStruct> functionNames) {
 		return innerBlockListStruct;
 	}
 

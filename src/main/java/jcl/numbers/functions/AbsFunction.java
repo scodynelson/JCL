@@ -23,7 +23,7 @@ import org.springframework.stereotype.Component;
 @Component
 public final class AbsFunction extends FunctionStruct {
 
-	public static final SymbolStruct<?> ABS = GlobalPackageStruct.COMMON_LISP.intern("ABS").getSymbol();
+	public static final SymbolStruct ABS = GlobalPackageStruct.COMMON_LISP.intern("ABS").getSymbol();
 
 	private static final long serialVersionUID = -5132304713941020270L;
 
@@ -42,7 +42,7 @@ public final class AbsFunction extends FunctionStruct {
 
 	private static OrdinaryLambdaList getInitLambdaListBindings() {
 
-		final SymbolStruct<?> firstArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("NUMBER").getSymbol();
+		final SymbolStruct firstArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("NUMBER").getSymbol();
 		final RequiredParameter requiredBinding = new RequiredParameter(firstArgSymbol);
 		final List<RequiredParameter> requiredBindings = Collections.singletonList(requiredBinding);
 

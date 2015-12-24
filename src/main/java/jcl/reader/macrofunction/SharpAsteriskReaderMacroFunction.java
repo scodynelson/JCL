@@ -35,7 +35,7 @@ public class SharpAsteriskReaderMacroFunction extends ReaderMacroFunction {
 	 */
 	@PostConstruct
 	private void init() {
-		ReaderVariables.READTABLE.getValue().setDispatchMacroCharacter(CharacterConstants.NUMBER_SIGN, CharacterConstants.ASTERISK, this);
+		ReaderVariables.READTABLE.getVariableValue().setDispatchMacroCharacter(CharacterConstants.NUMBER_SIGN, CharacterConstants.ASTERISK, this);
 	}
 
 	@Override
@@ -45,7 +45,7 @@ public class SharpAsteriskReaderMacroFunction extends ReaderMacroFunction {
 		final ExtendedTokenReaderMacroFunction.ReadExtendedToken extendedToken = ExtendedTokenReaderMacroFunction.readExtendedToken(reader, false);
 		final String tokenString = extendedToken.getTokenString();
 
-		if (ReaderVariables.READ_SUPPRESS.getValue().booleanValue()) {
+		if (ReaderVariables.READ_SUPPRESS.getVariableValue().booleanValue()) {
 			return NullStruct.INSTANCE;
 		}
 

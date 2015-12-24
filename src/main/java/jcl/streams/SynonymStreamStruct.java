@@ -26,7 +26,7 @@ public class SynonymStreamStruct extends StreamStruct implements IOStream {
 	/**
 	 * The {@link SymbolStruct} that contains the value for the {@link StreamStruct} to use.
 	 */
-	private final SymbolStruct<? extends StreamStruct> symbol;
+	private final SymbolStruct symbol;
 
 	/**
 	 * Public constructor.
@@ -34,7 +34,7 @@ public class SynonymStreamStruct extends StreamStruct implements IOStream {
 	 * @param variable
 	 * 		the variable to create a SynonymStreamStruct from
 	 */
-	public SynonymStreamStruct(final VariableStruct<? extends StreamStruct> variable) {
+	public SynonymStreamStruct(final VariableStruct<?> variable) {
 		this(false, variable);
 	}
 
@@ -44,7 +44,7 @@ public class SynonymStreamStruct extends StreamStruct implements IOStream {
 	 * @param symbol
 	 * 		the symbol to create a SynonymStreamStruct from
 	 */
-	public SynonymStreamStruct(final SymbolStruct<? extends StreamStruct> symbol) {
+	public SynonymStreamStruct(final SymbolStruct symbol) {
 		this(false, symbol);
 	}
 
@@ -56,7 +56,7 @@ public class SynonymStreamStruct extends StreamStruct implements IOStream {
 	 * @param symbol
 	 * 		the symbol to create a SynonymStreamStruct from
 	 */
-	public SynonymStreamStruct(final boolean interactive, final SymbolStruct<? extends StreamStruct> symbol) {
+	public SynonymStreamStruct(final boolean interactive, final SymbolStruct symbol) {
 		super(SynonymStreamType.INSTANCE, null, null, interactive, getElementType(symbol));
 		this.symbol = symbol;
 	}
@@ -69,11 +69,11 @@ public class SynonymStreamStruct extends StreamStruct implements IOStream {
 	 *
 	 * @return the element type for object construction
 	 */
-	private static LispType getElementType(final SymbolStruct<? extends StreamStruct> symbol) {
+	private static LispType getElementType(final SymbolStruct symbol) {
 		if (symbol == null) {
 			throw new StreamErrorException("Provided Symbol must not be null.");
 		}
-		return symbol.getValue().getElementType();
+		return ((StreamStruct) symbol.getValue()).getElementType();
 	}
 
 	/**
@@ -81,13 +81,13 @@ public class SynonymStreamStruct extends StreamStruct implements IOStream {
 	 *
 	 * @return synonym-stream {@link #symbol} property
 	 */
-	public SymbolStruct<? extends StreamStruct> getSymbol() {
+	public SymbolStruct getSymbol() {
 		return symbol;
 	}
 
 	@Override
 	public ReadPeekResult readChar(final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP) {
-		final StreamStruct stream = symbol.getValue();
+		final StreamStruct stream = (StreamStruct) symbol.getValue();
 		if (stream instanceof InputStream) {
 			return ((InputStream) stream).readChar(eofErrorP, eofValue, recursiveP);
 		} else {
@@ -97,7 +97,7 @@ public class SynonymStreamStruct extends StreamStruct implements IOStream {
 
 	@Override
 	public ReadPeekResult readByte(final boolean eofErrorP, final LispStruct eofValue) {
-		final StreamStruct stream = symbol.getValue();
+		final StreamStruct stream = (StreamStruct) symbol.getValue();
 		if (stream instanceof InputStream) {
 			return ((InputStream) stream).readByte(eofErrorP, eofValue);
 		} else {
@@ -107,7 +107,7 @@ public class SynonymStreamStruct extends StreamStruct implements IOStream {
 
 	@Override
 	public ReadPeekResult peekChar(final PeekType peekType, final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP) {
-		final StreamStruct stream = symbol.getValue();
+		final StreamStruct stream = (StreamStruct) symbol.getValue();
 		if (stream instanceof InputStream) {
 			return ((InputStream) stream).peekChar(peekType, eofErrorP, eofValue, recursiveP);
 		} else {
@@ -117,7 +117,7 @@ public class SynonymStreamStruct extends StreamStruct implements IOStream {
 
 	@Override
 	public Integer unreadChar(final Integer codePoint) {
-		final StreamStruct stream = symbol.getValue();
+		final StreamStruct stream = (StreamStruct) symbol.getValue();
 		if (stream instanceof InputStream) {
 			return ((InputStream) stream).unreadChar(codePoint);
 		} else {
@@ -127,7 +127,7 @@ public class SynonymStreamStruct extends StreamStruct implements IOStream {
 
 	@Override
 	public void clearInput() {
-		final StreamStruct stream = symbol.getValue();
+		final StreamStruct stream = (StreamStruct) symbol.getValue();
 		if (stream instanceof InputStream) {
 			((InputStream) stream).clearInput();
 		}
@@ -135,13 +135,13 @@ public class SynonymStreamStruct extends StreamStruct implements IOStream {
 
 	@Override
 	public boolean listen() {
-		final StreamStruct stream = symbol.getValue();
+		final StreamStruct stream = (StreamStruct) symbol.getValue();
 		return (stream instanceof InputStream) && ((InputStream) stream).listen();
 	}
 
 	@Override
 	public void writeChar(final int aChar) {
-		final StreamStruct stream = symbol.getValue();
+		final StreamStruct stream = (StreamStruct) symbol.getValue();
 		if (stream instanceof OutputStream) {
 			((OutputStream) stream).writeChar(aChar);
 		} else {
@@ -151,7 +151,7 @@ public class SynonymStreamStruct extends StreamStruct implements IOStream {
 
 	@Override
 	public void writeByte(final int aByte) {
-		final StreamStruct stream = symbol.getValue();
+		final StreamStruct stream = (StreamStruct) symbol.getValue();
 		if (stream instanceof OutputStream) {
 			((OutputStream) stream).writeByte(aByte);
 		} else {
@@ -161,7 +161,7 @@ public class SynonymStreamStruct extends StreamStruct implements IOStream {
 
 	@Override
 	public void writeString(final String outputString, final int start, final int end) {
-		final StreamStruct stream = symbol.getValue();
+		final StreamStruct stream = (StreamStruct) symbol.getValue();
 		if (stream instanceof OutputStream) {
 			((OutputStream) stream).writeString(outputString, start, end);
 		} else {
@@ -171,7 +171,7 @@ public class SynonymStreamStruct extends StreamStruct implements IOStream {
 
 	@Override
 	public void clearOutput() {
-		final StreamStruct stream = symbol.getValue();
+		final StreamStruct stream = (StreamStruct) symbol.getValue();
 		if (stream instanceof OutputStream) {
 			((OutputStream) stream).clearOutput();
 		}
@@ -179,7 +179,7 @@ public class SynonymStreamStruct extends StreamStruct implements IOStream {
 
 	@Override
 	public void finishOutput() {
-		final StreamStruct stream = symbol.getValue();
+		final StreamStruct stream = (StreamStruct) symbol.getValue();
 		if (stream instanceof OutputStream) {
 			((OutputStream) stream).finishOutput();
 		}
@@ -187,7 +187,7 @@ public class SynonymStreamStruct extends StreamStruct implements IOStream {
 
 	@Override
 	public void forceOutput() {
-		final StreamStruct stream = symbol.getValue();
+		final StreamStruct stream = (StreamStruct) symbol.getValue();
 		if (stream instanceof OutputStream) {
 			((OutputStream) stream).forceOutput();
 		}
@@ -197,19 +197,19 @@ public class SynonymStreamStruct extends StreamStruct implements IOStream {
 	public void close() {
 		super.close();
 
-		final StreamStruct stream = symbol.getValue();
+		final StreamStruct stream = (StreamStruct) symbol.getValue();
 		stream.close();
 	}
 
 	@Override
 	public Long fileLength() {
-		final StreamStruct stream = symbol.getValue();
+		final StreamStruct stream = (StreamStruct) symbol.getValue();
 		return stream.fileLength();
 	}
 
 	@Override
 	public Long filePosition(final Long filePosition) {
-		final StreamStruct stream = symbol.getValue();
+		final StreamStruct stream = (StreamStruct) symbol.getValue();
 		return stream.filePosition(filePosition);
 	}
 

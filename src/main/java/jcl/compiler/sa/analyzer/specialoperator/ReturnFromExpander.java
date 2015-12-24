@@ -30,7 +30,7 @@ public class ReturnFromExpander extends MacroFunctionExpander<ReturnFromStruct> 
 	private Printer printer;
 
 	@Override
-	public SymbolStruct<?> getFunctionSymbol() {
+	public SymbolStruct getFunctionSymbol() {
 		return SpecialOperatorStruct.RETURN_FROM;
 	}
 
@@ -41,7 +41,7 @@ public class ReturnFromExpander extends MacroFunctionExpander<ReturnFromStruct> 
 		final ListStruct formRest = form.getRest();
 
 		final LispStruct second = formRest.getFirst();
-		final SymbolStruct<?> name = validator.validateObjectType(second, "RETURN-FROM", "NAME", SymbolStruct.class);
+		final SymbolStruct name = validator.validateObjectType(second, "RETURN-FROM", "NAME", SymbolStruct.class);
 
 		if (environment.getBlockStack().search(name) == -1) {
 			final String printedObject = printer.print(second);

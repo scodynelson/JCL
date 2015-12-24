@@ -118,7 +118,7 @@ final class LetCodeGenerator extends ClosureCreationCodeGenerator<LetStruct.LetV
 		final Map<Integer, Integer> dynamicSymbolStoresToBind = new LinkedHashMap<>();
 
 		for (final LetStruct.LetVar var : vars) {
-			final SymbolStruct<?> symbolVar = var.getVar();
+			final SymbolStruct symbolVar = var.getVar();
 			final int symbolStore = methodBuilder.getNextAvailableStore();
 			CodeGenerators.generateSymbol(symbolVar, methodBuilder, packageStore, symbolStore);
 

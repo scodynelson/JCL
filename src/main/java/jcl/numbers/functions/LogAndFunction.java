@@ -21,7 +21,7 @@ import org.springframework.stereotype.Component;
 @Component
 public final class LogAndFunction extends FunctionStruct {
 
-	public static final SymbolStruct<?> LOGAND = GlobalPackageStruct.COMMON_LISP.intern("LOGAND").getSymbol();
+	public static final SymbolStruct LOGAND = GlobalPackageStruct.COMMON_LISP.intern("LOGAND").getSymbol();
 
 	private static final long serialVersionUID = 3280535282577815448L;
 
@@ -40,7 +40,7 @@ public final class LogAndFunction extends FunctionStruct {
 
 	private static OrdinaryLambdaList getInitLambdaListBindings() {
 
-		final SymbolStruct<?> restArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("INTEGERS").getSymbol();
+		final SymbolStruct restArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("INTEGERS").getSymbol();
 		final RestParameter restBinding = new RestParameter(restArgSymbol);
 
 		return new OrdinaryLambdaList.Builder().restBinding(restBinding)

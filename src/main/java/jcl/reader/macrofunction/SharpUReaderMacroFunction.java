@@ -34,7 +34,7 @@ public class SharpUReaderMacroFunction extends ReaderMacroFunction {
 	 */
 	@PostConstruct
 	private void init() {
-		final ReadtableStruct readtable = ReaderVariables.READTABLE.getValue();
+		final ReadtableStruct readtable = ReaderVariables.READTABLE.getVariableValue();
 		readtable.setDispatchMacroCharacter(CharacterConstants.NUMBER_SIGN, CharacterConstants.LATIN_SMALL_LETTER_U, this);
 		readtable.setDispatchMacroCharacter(CharacterConstants.NUMBER_SIGN, CharacterConstants.LATIN_CAPITAL_LETTER_U, this);
 	}
@@ -43,7 +43,7 @@ public class SharpUReaderMacroFunction extends ReaderMacroFunction {
 	public LispStruct readMacro(final int codePoint, final Reader reader, final Optional<BigInteger> numberArgument) {
 		assert (codePoint == CharacterConstants.LATIN_SMALL_LETTER_U) || (codePoint == CharacterConstants.LATIN_CAPITAL_LETTER_U);
 
-		if (ReaderVariables.READ_SUPPRESS.getValue().booleanValue()) {
+		if (ReaderVariables.READ_SUPPRESS.getVariableValue().booleanValue()) {
 			return NullStruct.INSTANCE;
 		}
 

@@ -77,7 +77,7 @@ class SymbolTokenAccumulatedReaderState implements ReaderState {
 	@Override
 	public LispStruct process(final TokenBuilder tokenBuilder) {
 
-		final SymbolStruct<?> symbolToken = getSymbolToken(tokenBuilder);
+		final SymbolStruct symbolToken = getSymbolToken(tokenBuilder);
 		if (symbolToken == null) {
 			return readerStateMediator.readIllegalCharacter(tokenBuilder);
 		} else {
@@ -94,7 +94,7 @@ class SymbolTokenAccumulatedReaderState implements ReaderState {
 	 *
 	 * @return the built {@link SymbolStruct} value
 	 */
-	private static SymbolStruct<?> getSymbolToken(final TokenBuilder tokenBuilder) {
+	private static SymbolStruct getSymbolToken(final TokenBuilder tokenBuilder) {
 
 		final LinkedList<TokenAttribute> tokenAttributes = tokenBuilder.getTokenAttributes();
 
@@ -103,7 +103,7 @@ class SymbolTokenAccumulatedReaderState implements ReaderState {
 		if (hasNoPackageMarkers) {
 			final String symbolName = ReaderState.convertTokenAttributesToString(tokenAttributes);
 
-			final PackageStruct symbolPackage = PackageVariables.PACKAGE.getValue();
+			final PackageStruct symbolPackage = PackageVariables.PACKAGE.getVariableValue();
 			return findExistingOrCreateNewSymbol(symbolName, symbolPackage);
 		}
 
@@ -172,9 +172,9 @@ class SymbolTokenAccumulatedReaderState implements ReaderState {
 			}
 
 			if (packageMarkerCount == 1) {
-				final Map<String, SymbolStruct<?>> symbolPackageExternalSymbols = symbolPackage.getExternalSymbols();
+				final Map<String, SymbolStruct> symbolPackageExternalSymbols = symbolPackage.getExternalSymbols();
 
-				final SymbolStruct<?> externalSymbol = symbolPackageExternalSymbols.get(symbolName);
+				final SymbolStruct externalSymbol = symbolPackageExternalSymbols.get(symbolName);
 				if (externalSymbol == null) {
 					throw new ReaderErrorException("No external symbol named \"" + symbolName + "\" in package " + packageName);
 				}
@@ -200,7 +200,7 @@ class SymbolTokenAccumulatedReaderState implements ReaderState {
 	 *
 	 * @return the existing {@link SymbolStruct} or a newly created one
 	 */
-	private static SymbolStruct<?> findExistingOrCreateNewSymbol(final String symbolName, final PackageStruct symbolPackage) {
+	private static SymbolStruct findExistingOrCreateNewSymbol(final String symbolName, final PackageStruct symbolPackage) {
 
 		final PackageSymbolStruct foundSymbol = symbolPackage.findSymbol(symbolName);
 		if (foundSymbol == null) {

@@ -23,7 +23,7 @@ import org.springframework.stereotype.Component;
 @Component
 public final class SignumFunction extends FunctionStruct {
 
-	public static final SymbolStruct<?> SIGNUM = GlobalPackageStruct.COMMON_LISP.intern("SIGNUM").getSymbol();
+	public static final SymbolStruct SIGNUM = GlobalPackageStruct.COMMON_LISP.intern("SIGNUM").getSymbol();
 
 	private static final long serialVersionUID = 7051957133150873518L;
 
@@ -42,7 +42,7 @@ public final class SignumFunction extends FunctionStruct {
 
 	private static OrdinaryLambdaList getInitLambdaListBindings() {
 
-		final SymbolStruct<?> firstArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("NUMBER").getSymbol();
+		final SymbolStruct firstArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("NUMBER").getSymbol();
 		final RequiredParameter requiredBinding = new RequiredParameter(firstArgSymbol);
 		final List<RequiredParameter> requiredBindings = Collections.singletonList(requiredBinding);
 

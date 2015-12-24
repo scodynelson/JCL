@@ -112,7 +112,7 @@ public class SymbolMacroletExpander extends MacroFunctionExpander<SymbolMacrolet
 		}
 
 		final ListStruct listParameter = (ListStruct) parameter;
-		final SymbolStruct<?> var = getSymbolMacroletParameterVar(listParameter);
+		final SymbolStruct var = getSymbolMacroletParameterVar(listParameter);
 		final LispStruct expansion = getSymbolMacroletParameterExpansion(listParameter, symbolMacroletEnvironment);
 
 		final SymbolMacroBinding binding = new SymbolMacroBinding(var, TType.INSTANCE, expansion);
@@ -121,7 +121,7 @@ public class SymbolMacroletExpander extends MacroFunctionExpander<SymbolMacrolet
 		return new SymbolMacroletStruct.SymbolMacroletVar(var, expansion);
 	}
 
-	private SymbolStruct<?> getSymbolMacroletParameterVar(final ListStruct listParameter) {
+	private SymbolStruct getSymbolMacroletParameterVar(final ListStruct listParameter) {
 
 		final int listParameterSize = listParameter.size();
 		if (listParameterSize != 2) {
@@ -134,7 +134,7 @@ public class SymbolMacroletExpander extends MacroFunctionExpander<SymbolMacrolet
 			throw new ProgramErrorException("SYMBOL-MACROLET: First element of parameter list must be a symbol. Got: " + printedObject);
 		}
 
-		final SymbolStruct<?> parameterVar = (SymbolStruct<?>) listParameterFirst;
+		final SymbolStruct parameterVar = (SymbolStruct) listParameterFirst;
 
 		final boolean hasGlobalBinding = Environment.NULL.hasDynamicBinding(parameterVar);
 		if (hasGlobalBinding) {

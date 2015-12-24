@@ -62,7 +62,7 @@ final class ReaderMacroFunctionUtil {
 	 * @return the {@link SyntaxType} for the provided {@code codePoint} from {@link ReaderVariables#READTABLE} value
 	 */
 	private static SyntaxType getSyntaxType(final int codePoint) {
-		return ReaderVariables.READTABLE.getValue().getSyntaxType(codePoint);
+		return ReaderVariables.READTABLE.getVariableValue().getSyntaxType(codePoint);
 	}
 
 	/**
@@ -111,7 +111,7 @@ final class ReaderMacroFunctionUtil {
 	 * value
 	 */
 	private static AttributeType getAttributeType(final int codePoint) {
-		final IntegerStruct readBase = ReaderVariables.READ_BASE.getValue();
-		return ReaderVariables.READTABLE.getValue().getAttributeType(codePoint, readBase);
+		final IntegerStruct readBase = ReaderVariables.READ_BASE.getVariableValue();
+		return ReaderVariables.READTABLE.getVariableValue().getAttributeType(codePoint, readBase);
 	}
 }

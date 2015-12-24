@@ -28,7 +28,7 @@ import org.springframework.stereotype.Component;
 @Component
 public final class FCeilingFunction extends FunctionStruct {
 
-	public static final SymbolStruct<?> FCEILING = GlobalPackageStruct.COMMON_LISP.intern("FCEILING").getSymbol();
+	public static final SymbolStruct FCEILING = GlobalPackageStruct.COMMON_LISP.intern("FCEILING").getSymbol();
 
 	private static final long serialVersionUID = -4438935638245696680L;
 
@@ -47,13 +47,13 @@ public final class FCeilingFunction extends FunctionStruct {
 
 	private static OrdinaryLambdaList getInitLambdaListBindings() {
 
-		final SymbolStruct<?> firstArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("REAL").getSymbol();
+		final SymbolStruct firstArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("REAL").getSymbol();
 		final RequiredParameter requiredBinding = new RequiredParameter(firstArgSymbol);
 		final List<RequiredParameter> requiredBindings = Collections.singletonList(requiredBinding);
 
-		final SymbolStruct<?> divisorArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("DIVISOR").getSymbol();
+		final SymbolStruct divisorArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("DIVISOR").getSymbol();
 
-		final SymbolStruct<?> divisorSuppliedP = GlobalPackageStruct.COMMON_LISP.intern("DIVISOR-P-" + System.nanoTime()).getSymbol();
+		final SymbolStruct divisorSuppliedP = GlobalPackageStruct.COMMON_LISP.intern("DIVISOR-P-" + System.nanoTime()).getSymbol();
 		final SuppliedPParameter divisorSuppliedPBinding = new SuppliedPParameter(divisorSuppliedP);
 
 		final OptionalParameter optionalBinding = new OptionalParameter(divisorArgSymbol, IntegerStruct.ONE, divisorSuppliedPBinding);

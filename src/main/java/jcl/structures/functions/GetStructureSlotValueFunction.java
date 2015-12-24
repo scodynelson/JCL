@@ -25,7 +25,7 @@ import org.springframework.stereotype.Component;
 @Component
 public final class GetStructureSlotValueFunction extends FunctionStruct {
 
-	public static final SymbolStruct<?> GET_STRUCTURE_SLOT_VALUE = GlobalPackageStruct.SYSTEM.intern("GET-STRUCTURE-SLOT-VALUE").getSymbol();
+	public static final SymbolStruct GET_STRUCTURE_SLOT_VALUE = GlobalPackageStruct.SYSTEM.intern("GET-STRUCTURE-SLOT-VALUE").getSymbol();
 
 	private static final long serialVersionUID = 8765173339549970564L;
 
@@ -43,15 +43,15 @@ public final class GetStructureSlotValueFunction extends FunctionStruct {
 
 		final List<RequiredParameter> requiredBindings = new ArrayList<>();
 
-		final SymbolStruct<?> structureClassArgSymbol = GlobalPackageStruct.SYSTEM.intern("STRUCTURE-CLASS").getSymbol();
+		final SymbolStruct structureClassArgSymbol = GlobalPackageStruct.SYSTEM.intern("STRUCTURE-CLASS").getSymbol();
 		final RequiredParameter structureClassArgRequiredBinding = new RequiredParameter(structureClassArgSymbol);
 		requiredBindings.add(structureClassArgRequiredBinding);
 
-		final SymbolStruct<?> structureInstanceArgSymbol = GlobalPackageStruct.SYSTEM.intern("STRUCTURE-INSTANCE").getSymbol();
+		final SymbolStruct structureInstanceArgSymbol = GlobalPackageStruct.SYSTEM.intern("STRUCTURE-INSTANCE").getSymbol();
 		final RequiredParameter structureInstanceArgRequiredBinding = new RequiredParameter(structureInstanceArgSymbol);
 		requiredBindings.add(structureInstanceArgRequiredBinding);
 
-		final SymbolStruct<?> slotNameArgSymbol = GlobalPackageStruct.SYSTEM.intern("SLOT-NAME").getSymbol();
+		final SymbolStruct slotNameArgSymbol = GlobalPackageStruct.SYSTEM.intern("SLOT-NAME").getSymbol();
 		final RequiredParameter slotNameArgRequiredBinding = new RequiredParameter(slotNameArgSymbol);
 		requiredBindings.add(slotNameArgRequiredBinding);
 
@@ -63,14 +63,14 @@ public final class GetStructureSlotValueFunction extends FunctionStruct {
 	public LispStruct apply(final LispStruct... lispStructs) {
 		getFunctionBindings(lispStructs);
 
-		final SymbolStruct<?> structureClassSymbol = (SymbolStruct) lispStructs[0];
+		final SymbolStruct structureClassSymbol = (SymbolStruct) lispStructs[0];
 		final StructureObjectStruct structureInstance = (StructureObjectStruct) lispStructs[1];
-		final SymbolStruct<?> slotName = (SymbolStruct) lispStructs[2];
+		final SymbolStruct slotName = (SymbolStruct) lispStructs[2];
 		return getStructureSlotValue(structureClassSymbol, structureInstance, slotName);
 	}
 
-	public LispStruct getStructureSlotValue(final SymbolStruct<?> structureClassSymbol, final StructureObjectStruct structureInstance,
-	                                        final SymbolStruct<?> slotName) {
+	public LispStruct getStructureSlotValue(final SymbolStruct structureClassSymbol, final StructureObjectStruct structureInstance,
+	                                        final SymbolStruct slotName) {
 
 		final StructureClassStruct symbolStructureClass = structureClassSymbol.getStructureClass();
 		if (symbolStructureClass == null) {
@@ -90,7 +90,7 @@ public final class GetStructureSlotValueFunction extends FunctionStruct {
 
 	private LispStruct innerGetStructureSlotValue(final StructureClassStruct symbolStructureClass,
 	                                              final StructureObjectStruct structureInstance,
-	                                              final SymbolStruct<?> slotName) {
+	                                              final SymbolStruct slotName) {
 
 		final StructureClassStruct instanceStructureClass = structureInstance.getStructureClass();
 

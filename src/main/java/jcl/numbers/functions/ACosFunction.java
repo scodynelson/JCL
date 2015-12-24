@@ -23,7 +23,7 @@ import org.springframework.stereotype.Component;
 @Component
 public final class ACosFunction extends FunctionStruct {
 
-	public static final SymbolStruct<?> ACOS = GlobalPackageStruct.COMMON_LISP.intern("ACOS").getSymbol();
+	public static final SymbolStruct ACOS = GlobalPackageStruct.COMMON_LISP.intern("ACOS").getSymbol();
 
 	private static final long serialVersionUID = -4279739504051363282L;
 
@@ -42,7 +42,7 @@ public final class ACosFunction extends FunctionStruct {
 
 	private static OrdinaryLambdaList getInitLambdaListBindings() {
 
-		final SymbolStruct<?> firstArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("NUMBER").getSymbol();
+		final SymbolStruct firstArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("NUMBER").getSymbol();
 		final RequiredParameter requiredBinding = new RequiredParameter(firstArgSymbol);
 		final List<RequiredParameter> requiredBindings = Collections.singletonList(requiredBinding);
 

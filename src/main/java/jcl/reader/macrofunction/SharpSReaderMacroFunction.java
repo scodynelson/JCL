@@ -51,7 +51,7 @@ public class SharpSReaderMacroFunction extends ReaderMacroFunction {
 	 */
 	@PostConstruct
 	private void init() {
-		final ReadtableStruct readtable = ReaderVariables.READTABLE.getValue();
+		final ReadtableStruct readtable = ReaderVariables.READTABLE.getVariableValue();
 		readtable.setDispatchMacroCharacter(CharacterConstants.NUMBER_SIGN, CharacterConstants.LATIN_SMALL_LETTER_S, this);
 		readtable.setDispatchMacroCharacter(CharacterConstants.NUMBER_SIGN, CharacterConstants.LATIN_CAPITAL_LETTER_S, this);
 	}
@@ -60,7 +60,7 @@ public class SharpSReaderMacroFunction extends ReaderMacroFunction {
 	public LispStruct readMacro(final int codePoint, final Reader reader, final Optional<BigInteger> numberArgument) {
 		assert (codePoint == CharacterConstants.LATIN_SMALL_LETTER_S) || (codePoint == CharacterConstants.LATIN_CAPITAL_LETTER_S);
 
-		if (ReaderVariables.READ_SUPPRESS.getValue().booleanValue()) {
+		if (ReaderVariables.READ_SUPPRESS.getVariableValue().booleanValue()) {
 			reader.read(true, NullStruct.INSTANCE, true);
 			return NullStruct.INSTANCE;
 		}
@@ -85,13 +85,13 @@ public class SharpSReaderMacroFunction extends ReaderMacroFunction {
 			throw new ReaderErrorException("Structure type is not a symbol: " + structureType);
 		}
 
-		final SymbolStruct<?> structureSymbol = (SymbolStruct<?>) structureType;
+		final SymbolStruct structureSymbol = (SymbolStruct) structureType;
 		final StructureClassStruct structureClass = structureSymbol.getStructureClass();
 		if (structureClass == null) {
 			throw new ReaderErrorException(structureType + " is not a defined structure type for symbol: " + structureSymbol);
 		}
 
-		final SymbolStruct<?> defaultConstructorSymbol = structureClass.getDefaultConstructorSymbol();
+		final SymbolStruct defaultConstructorSymbol = structureClass.getDefaultConstructorSymbol();
 		if (defaultConstructorSymbol == null) {
 			throw new ReaderErrorException("The " + structureType + " structure does not have a default constructor.");
 		}

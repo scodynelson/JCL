@@ -18,7 +18,7 @@ import org.springframework.stereotype.Component;
 @Component
 public final class FreeMemory extends FunctionStruct {
 
-	public static final SymbolStruct<?> FREE_MEMORY = GlobalPackageStruct.EXTENSIONS.intern("FREE-MEMORY").getSymbol();
+	public static final SymbolStruct FREE_MEMORY = GlobalPackageStruct.EXTENSIONS.intern("FREE-MEMORY").getSymbol();
 
 	private static final long serialVersionUID = -3953991334787306041L;
 

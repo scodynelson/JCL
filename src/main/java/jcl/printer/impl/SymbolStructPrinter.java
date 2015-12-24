@@ -16,13 +16,13 @@ import jcl.system.CommonLispSymbols;
 import org.springframework.stereotype.Component;
 
 @Component
-public class SymbolStructPrinter implements LispPrinter<SymbolStruct<?>> {
+public class SymbolStructPrinter implements LispPrinter<SymbolStruct> {
 
 	private static final long serialVersionUID = 5098070113503702856L;
 
 	@Override
-	public String print(final SymbolStruct<?> object) {
-		final BooleanStruct printEscape = PrinterVariables.PRINT_ESCAPE.getValue();
+	public String print(final SymbolStruct object) {
+		final BooleanStruct printEscape = PrinterVariables.PRINT_ESCAPE.getVariableValue();
 
 		// TODO: deal with *PRINT-CASE* and *PRINT-ESCAPE*
 
@@ -42,7 +42,7 @@ public class SymbolStructPrinter implements LispPrinter<SymbolStruct<?>> {
 		// TODO: the following isn't right. It's more like the symbol is not "accessible" in the current package...
 		// TODO: probably by use of 'findSymbol'
 
-		final PackageStruct currentPackage = PackageVariables.PACKAGE.getValue();
+		final PackageStruct currentPackage = PackageVariables.PACKAGE.getVariableValue();
 
 		PackageSymbolStruct symbol = currentPackage.findSymbol(name);
 		if (symbol == null) {

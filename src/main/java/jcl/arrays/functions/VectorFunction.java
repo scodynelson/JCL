@@ -19,7 +19,7 @@ import org.springframework.stereotype.Component;
 @Component
 public final class VectorFunction extends FunctionStruct {
 
-	public static final SymbolStruct<?> VECTOR = GlobalPackageStruct.COMMON_LISP.intern("VECTOR").getSymbol();
+	public static final SymbolStruct VECTOR = GlobalPackageStruct.COMMON_LISP.intern("VECTOR").getSymbol();
 
 	private static final long serialVersionUID = -2957696649653550853L;
 
@@ -35,7 +35,7 @@ public final class VectorFunction extends FunctionStruct {
 
 	private static OrdinaryLambdaList getInitLambdaListBindings() {
 
-		final SymbolStruct<?> objectRestArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("OBJECTS").getSymbol();
+		final SymbolStruct objectRestArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("OBJECTS").getSymbol();
 		final RestParameter restBinding = new RestParameter(objectRestArgSymbol);
 
 		return new OrdinaryLambdaList.Builder().restBinding(restBinding)

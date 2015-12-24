@@ -20,34 +20,34 @@ public class KeyParameter extends Parameter {
 
 	private static final long serialVersionUID = -8247621420473541525L;
 
-	private final SymbolStruct<?> keyName;
+	private final SymbolStruct keyName;
 
 	private final SuppliedPParameter suppliedPBinding;
 
-	public KeyParameter(final SymbolStruct<?> var, final LispStruct initForm, final SymbolStruct<?> keyName,
+	public KeyParameter(final SymbolStruct var, final LispStruct initForm, final SymbolStruct keyName,
 	                    final SuppliedPParameter suppliedPBinding) {
 		this(var, initForm, false, keyName, suppliedPBinding);
 	}
 
-	public KeyParameter(final SymbolStruct<?> var, final LispStruct initForm, final boolean isSpecial,
-	                    final SymbolStruct<?> keyName, final SuppliedPParameter suppliedPBinding) {
+	public KeyParameter(final SymbolStruct var, final LispStruct initForm, final boolean isSpecial,
+	                    final SymbolStruct keyName, final SuppliedPParameter suppliedPBinding) {
 		this(var, null, initForm, isSpecial, keyName, suppliedPBinding);
 	}
 
-	public KeyParameter(final SymbolStruct<?> var, final DestructuringLambdaList destructuringForm,
-	                    final LispStruct initForm, final SymbolStruct<?> keyName, final SuppliedPParameter suppliedPBinding) {
+	public KeyParameter(final SymbolStruct var, final DestructuringLambdaList destructuringForm,
+	                    final LispStruct initForm, final SymbolStruct keyName, final SuppliedPParameter suppliedPBinding) {
 		this(var, destructuringForm, initForm, false, keyName, suppliedPBinding);
 	}
 
-	public KeyParameter(final SymbolStruct<?> var, final DestructuringLambdaList destructuringForm,
-	                    final LispStruct initForm, final boolean isSpecial, final SymbolStruct<?> keyName,
+	public KeyParameter(final SymbolStruct var, final DestructuringLambdaList destructuringForm,
+	                    final LispStruct initForm, final boolean isSpecial, final SymbolStruct keyName,
 	                    final SuppliedPParameter suppliedPBinding) {
 		super(var, destructuringForm, TType.INSTANCE, initForm, isSpecial);
 		this.keyName = keyName;
 		this.suppliedPBinding = suppliedPBinding;
 	}
 
-	public SymbolStruct<?> getKeyName() {
+	public SymbolStruct getKeyName() {
 		return keyName;
 	}
 
@@ -57,13 +57,13 @@ public class KeyParameter extends Parameter {
 
 	public static final class Builder {
 
-		private final SymbolStruct<?> var;
+		private final SymbolStruct var;
 
 		private DestructuringLambdaList destructuringForm;
 
 		private LispStruct initForm = NullStruct.INSTANCE;
 
-		private final SymbolStruct<?> keyName;
+		private final SymbolStruct keyName;
 
 		private SuppliedPParameter suppliedPBinding;
 
@@ -80,7 +80,7 @@ public class KeyParameter extends Parameter {
 			}
 		}
 
-		public Builder(final PackageStruct aPackage, final String symbolName, final SymbolStruct<?> keyName) {
+		public Builder(final PackageStruct aPackage, final String symbolName, final SymbolStruct keyName) {
 			var = aPackage.intern(symbolName).getSymbol();
 			this.keyName = keyName;
 		}
@@ -104,7 +104,7 @@ public class KeyParameter extends Parameter {
 			final PackageStruct aPackage = var.getSymbolPackage();
 			final String symbolName = var.getName();
 
-			final SymbolStruct<?> suppliedP = aPackage.intern(symbolName + "-P-" + System.nanoTime()).getSymbol();
+			final SymbolStruct suppliedP = aPackage.intern(symbolName + "-P-" + System.nanoTime()).getSymbol();
 			return suppliedPBinding(new SuppliedPParameter(suppliedP));
 		}
 

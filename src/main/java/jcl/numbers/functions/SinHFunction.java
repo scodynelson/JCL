@@ -23,7 +23,7 @@ import org.springframework.stereotype.Component;
 @Component
 public final class SinHFunction extends FunctionStruct {
 
-	public static final SymbolStruct<?> SINH = GlobalPackageStruct.COMMON_LISP.intern("SINH").getSymbol();
+	public static final SymbolStruct SINH = GlobalPackageStruct.COMMON_LISP.intern("SINH").getSymbol();
 
 	private static final long serialVersionUID = -6227811971528197555L;
 
@@ -42,7 +42,7 @@ public final class SinHFunction extends FunctionStruct {
 
 	private static OrdinaryLambdaList getInitLambdaListBindings() {
 
-		final SymbolStruct<?> firstArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("NUMBER").getSymbol();
+		final SymbolStruct firstArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("NUMBER").getSymbol();
 		final RequiredParameter requiredBinding = new RequiredParameter(firstArgSymbol);
 		final List<RequiredParameter> requiredBindings = Collections.singletonList(requiredBinding);
 

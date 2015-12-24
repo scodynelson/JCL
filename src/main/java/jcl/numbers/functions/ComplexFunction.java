@@ -29,7 +29,7 @@ import org.springframework.stereotype.Component;
 @Component
 public final class ComplexFunction extends FunctionStruct {
 
-	public static final SymbolStruct<?> COMPLEX = GlobalPackageStruct.COMMON_LISP.intern("COMPLEX").getSymbol();
+	public static final SymbolStruct COMPLEX = GlobalPackageStruct.COMMON_LISP.intern("COMPLEX").getSymbol();
 
 	private static final long serialVersionUID = 547386516399800925L;
 
@@ -48,13 +48,13 @@ public final class ComplexFunction extends FunctionStruct {
 
 	private static OrdinaryLambdaList getInitLambdaListBindings() {
 
-		final SymbolStruct<?> firstArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("REALPART").getSymbol();
+		final SymbolStruct firstArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("REALPART").getSymbol();
 		final RequiredParameter requiredBinding = new RequiredParameter(firstArgSymbol);
 		final List<RequiredParameter> requiredBindings = Collections.singletonList(requiredBinding);
 
-		final SymbolStruct<?> optionalArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("IMAGPART").getSymbol();
+		final SymbolStruct optionalArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("IMAGPART").getSymbol();
 
-		final SymbolStruct<?> optionalSuppliedP = GlobalPackageStruct.COMMON_LISP.intern("IMAGPART-P-" + System.nanoTime()).getSymbol();
+		final SymbolStruct optionalSuppliedP = GlobalPackageStruct.COMMON_LISP.intern("IMAGPART-P-" + System.nanoTime()).getSymbol();
 		final SuppliedPParameter optionalSuppliedPBinding = new SuppliedPParameter(optionalSuppliedP);
 
 		final OptionalParameter optionalBinding = new OptionalParameter(optionalArgSymbol, NullStruct.INSTANCE, optionalSuppliedPBinding);

@@ -23,7 +23,7 @@ import org.springframework.stereotype.Component;
 @Component
 public final class ConjugateFunction extends FunctionStruct {
 
-	public static final SymbolStruct<?> CONJUGATE = GlobalPackageStruct.COMMON_LISP.intern("CONJUGATE").getSymbol();
+	public static final SymbolStruct CONJUGATE = GlobalPackageStruct.COMMON_LISP.intern("CONJUGATE").getSymbol();
 
 	private static final long serialVersionUID = -8426866238961886112L;
 
@@ -42,7 +42,7 @@ public final class ConjugateFunction extends FunctionStruct {
 
 	private static OrdinaryLambdaList getInitLambdaListBindings() {
 
-		final SymbolStruct<?> firstArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("NUMBER").getSymbol();
+		final SymbolStruct firstArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("NUMBER").getSymbol();
 		final RequiredParameter requiredBinding = new RequiredParameter(firstArgSymbol);
 		final List<RequiredParameter> requiredBindings = Collections.singletonList(requiredBinding);
 

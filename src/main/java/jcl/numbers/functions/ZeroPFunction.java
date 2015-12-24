@@ -25,7 +25,7 @@ import org.springframework.stereotype.Component;
 @Component
 public final class ZeroPFunction extends FunctionStruct {
 
-	public static final SymbolStruct<?> ZEROP = GlobalPackageStruct.COMMON_LISP.intern("ZEROP").getSymbol();
+	public static final SymbolStruct ZEROP = GlobalPackageStruct.COMMON_LISP.intern("ZEROP").getSymbol();
 
 	private static final long serialVersionUID = 557857332750163502L;
 
@@ -44,7 +44,7 @@ public final class ZeroPFunction extends FunctionStruct {
 
 	private static OrdinaryLambdaList getInitLambdaListBindings() {
 
-		final SymbolStruct<?> firstArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("NUMBER").getSymbol();
+		final SymbolStruct firstArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("NUMBER").getSymbol();
 		final RequiredParameter requiredBinding = new RequiredParameter(firstArgSymbol);
 		final List<RequiredParameter> requiredBindings = Collections.singletonList(requiredBinding);
 

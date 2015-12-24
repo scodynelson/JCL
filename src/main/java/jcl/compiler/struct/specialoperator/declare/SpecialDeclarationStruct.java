@@ -10,13 +10,13 @@ public class SpecialDeclarationStruct implements DeclarationStruct {
 
 	private static final long serialVersionUID = 7353657327204677544L;
 
-	private final SymbolStruct<?> var;
+	private final SymbolStruct var;
 
-	public SpecialDeclarationStruct(final SymbolStruct<?> var) {
+	public SpecialDeclarationStruct(final SymbolStruct var) {
 		this.var = var;
 	}
 
-	public SymbolStruct<?> getVar() {
+	public SymbolStruct getVar() {
 		return var;
 	}
 }

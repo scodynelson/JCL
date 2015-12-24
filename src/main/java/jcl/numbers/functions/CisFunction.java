@@ -23,7 +23,7 @@ import org.springframework.stereotype.Component;
 @Component
 public final class CisFunction extends FunctionStruct {
 
-	public static final SymbolStruct<?> CIS = GlobalPackageStruct.COMMON_LISP.intern("CIS").getSymbol();
+	public static final SymbolStruct CIS = GlobalPackageStruct.COMMON_LISP.intern("CIS").getSymbol();
 
 	private static final long serialVersionUID = 6206795575617553325L;
 
@@ -42,7 +42,7 @@ public final class CisFunction extends FunctionStruct {
 
 	private static OrdinaryLambdaList getInitLambdaListBindings() {
 
-		final SymbolStruct<?> firstArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("REAL").getSymbol();
+		final SymbolStruct firstArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("REAL").getSymbol();
 		final RequiredParameter requiredBinding = new RequiredParameter(firstArgSymbol);
 		final List<RequiredParameter> requiredBindings = Collections.singletonList(requiredBinding);
 

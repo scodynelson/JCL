@@ -34,7 +34,7 @@ public class SharpColonReaderMacroFunction extends ReaderMacroFunction {
 	 */
 	@PostConstruct
 	private void init() {
-		ReaderVariables.READTABLE.getValue().setDispatchMacroCharacter(CharacterConstants.NUMBER_SIGN, CharacterConstants.COLON, this);
+		ReaderVariables.READTABLE.getVariableValue().setDispatchMacroCharacter(CharacterConstants.NUMBER_SIGN, CharacterConstants.COLON, this);
 	}
 
 	@Override
@@ -44,13 +44,13 @@ public class SharpColonReaderMacroFunction extends ReaderMacroFunction {
 		final ExtendedTokenReaderMacroFunction.ReadExtendedToken extendedToken = ExtendedTokenReaderMacroFunction.readExtendedToken(reader, false);
 		final String tokenString = extendedToken.getTokenString();
 
-		if (ReaderVariables.READ_SUPPRESS.getValue().booleanValue()) {
+		if (ReaderVariables.READ_SUPPRESS.getVariableValue().booleanValue()) {
 			return NullStruct.INSTANCE;
 		}
 
 		if (extendedToken.isHasPackageDelimiter()) {
 			throw new ReaderErrorException("Symbol following #: contains a package marker: " + tokenString);
 		}
-		return new SymbolStruct<>(tokenString);
+		return new SymbolStruct(tokenString);
 	}
 }

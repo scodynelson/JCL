@@ -24,7 +24,7 @@ public class ThrowExpander extends MacroFunctionExpander<ThrowStruct> {
 	private LispFormValueValidator validator;
 
 	@Override
-	public SymbolStruct<?> getFunctionSymbol() {
+	public SymbolStruct getFunctionSymbol() {
 		return SpecialOperatorStruct.THROW;
 	}
 

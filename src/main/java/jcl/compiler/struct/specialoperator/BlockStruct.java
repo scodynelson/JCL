@@ -11,16 +11,16 @@ public class BlockStruct extends CompilerSpecialOperatorStruct {
 
 	private static final long serialVersionUID = -115779602179582479L;
 
-	private final SymbolStruct<?> name;
+	private final SymbolStruct name;
 
 	private final PrognStruct forms;
 
-	public BlockStruct(final SymbolStruct<?> name, final PrognStruct forms) {
+	public BlockStruct(final SymbolStruct name, final PrognStruct forms) {
 		this.name = name;
 		this.forms = forms;
 	}
 
-	public SymbolStruct<?> getName() {
+	public SymbolStruct getName() {
 		return name;
 	}
 

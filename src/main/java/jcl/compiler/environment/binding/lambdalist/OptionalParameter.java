@@ -19,21 +19,21 @@ public class OptionalParameter extends Parameter {
 
 	private final SuppliedPParameter suppliedPBinding;
 
-	public OptionalParameter(final SymbolStruct<?> var, final LispStruct initForm, final SuppliedPParameter suppliedPBinding) {
+	public OptionalParameter(final SymbolStruct var, final LispStruct initForm, final SuppliedPParameter suppliedPBinding) {
 		this(var, initForm, false, suppliedPBinding);
 	}
 
-	public OptionalParameter(final SymbolStruct<?> var, final LispStruct initForm, final boolean isSpecial,
+	public OptionalParameter(final SymbolStruct var, final LispStruct initForm, final boolean isSpecial,
 	                         final SuppliedPParameter suppliedPBinding) {
 		this(var, null, initForm, isSpecial, suppliedPBinding);
 	}
 
-	public OptionalParameter(final SymbolStruct<?> var, final DestructuringLambdaList destructuringForm,
+	public OptionalParameter(final SymbolStruct var, final DestructuringLambdaList destructuringForm,
 	                         final LispStruct initForm, final SuppliedPParameter suppliedPBinding) {
 		this(var, destructuringForm, initForm, false, suppliedPBinding);
 	}
 
-	public OptionalParameter(final SymbolStruct<?> var, final DestructuringLambdaList destructuringForm,
+	public OptionalParameter(final SymbolStruct var, final DestructuringLambdaList destructuringForm,
 	                         final LispStruct initForm, final boolean isSpecial, final SuppliedPParameter suppliedPBinding) {
 		super(var, destructuringForm, TType.INSTANCE, initForm, isSpecial);
 		this.suppliedPBinding = suppliedPBinding;
@@ -45,7 +45,7 @@ public class OptionalParameter extends Parameter {
 
 	public static final class Builder {
 
-		private final SymbolStruct<?> var;
+		private final SymbolStruct var;
 
 		private DestructuringLambdaList destructuringForm;
 
@@ -78,7 +78,7 @@ public class OptionalParameter extends Parameter {
 			final PackageStruct aPackage = var.getSymbolPackage();
 			final String symbolName = var.getName();
 
-			final SymbolStruct<?> suppliedP = aPackage.intern(symbolName + "-P-" + System.nanoTime()).getSymbol();
+			final SymbolStruct suppliedP = aPackage.intern(symbolName + "-P-" + System.nanoTime()).getSymbol();
 			return suppliedPBinding(new SuppliedPParameter(suppliedP));
 		}
 

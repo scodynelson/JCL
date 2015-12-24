@@ -28,7 +28,7 @@ public final class FuncallFunction extends FunctionStruct {
 
 	public static final FuncallFunction INSTANCE = new FuncallFunction();
 
-	public static final SymbolStruct<?> FUNCALL = GlobalPackageStruct.COMMON_LISP.intern("FUNCALL").getSymbol();
+	public static final SymbolStruct FUNCALL = GlobalPackageStruct.COMMON_LISP.intern("FUNCALL").getSymbol();
 
 	private static final long serialVersionUID = -1425587290881971372L;
 
@@ -47,11 +47,11 @@ public final class FuncallFunction extends FunctionStruct {
 
 	private static OrdinaryLambdaList getInitLambdaListBindings() {
 
-		final SymbolStruct<?> fnArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("FN").getSymbol();
+		final SymbolStruct fnArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("FN").getSymbol();
 		final RequiredParameter requiredBinding = new RequiredParameter(fnArgSymbol);
 		final List<RequiredParameter> requiredBindings = Collections.singletonList(requiredBinding);
 
-		final SymbolStruct<?> argsArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("ARGS").getSymbol();
+		final SymbolStruct argsArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("ARGS").getSymbol();
 		final RestParameter restBinding = new RestParameter(argsArgSymbol);
 
 		return new OrdinaryLambdaList.Builder().requiredBindings(requiredBindings)

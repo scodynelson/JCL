@@ -30,7 +30,7 @@ public class GoExpander extends MacroFunctionExpander<GoStruct<?>> {
 	private Printer printer;
 
 	@Override
-	public SymbolStruct<?> getFunctionSymbol() {
+	public SymbolStruct getFunctionSymbol() {
 		return SpecialOperatorStruct.GO;
 	}
 

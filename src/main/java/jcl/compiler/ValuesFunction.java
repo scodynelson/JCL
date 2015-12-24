@@ -20,7 +20,7 @@ import org.springframework.stereotype.Component;
 @Component
 public final class ValuesFunction extends FunctionStruct {
 
-	public static final SymbolStruct<?> VALUES = GlobalPackageStruct.COMMON_LISP.intern("VALUES").getSymbol();
+	public static final SymbolStruct VALUES = GlobalPackageStruct.COMMON_LISP.intern("VALUES").getSymbol();
 
 	private static final long serialVersionUID = -7869325469764526281L;
 
@@ -36,7 +36,7 @@ public final class ValuesFunction extends FunctionStruct {
 
 	private static OrdinaryLambdaList getInitLambdaListBindings() {
 
-		final SymbolStruct<?> objectRestArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("OBJECTS").getSymbol();
+		final SymbolStruct objectRestArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("OBJECTS").getSymbol();
 		final RestParameter restBinding = new RestParameter(objectRestArgSymbol);
 
 		return new OrdinaryLambdaList.Builder().restBinding(restBinding)

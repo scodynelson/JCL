@@ -67,8 +67,8 @@ final class FeaturesReaderMacroFunction implements Serializable {
 	 */
 	void readFeatures(final Reader reader, final boolean shouldHideFeatures) {
 
-		final BooleanStruct previousReadSuppress = ReaderVariables.READ_SUPPRESS.getValue();
-		final PackageStruct previousPackage = PackageVariables.PACKAGE.getValue();
+		final BooleanStruct previousReadSuppress = ReaderVariables.READ_SUPPRESS.getVariableValue();
+		final PackageStruct previousPackage = PackageVariables.PACKAGE.getVariableValue();
 		try {
 			ReaderVariables.READ_SUPPRESS.setValue(NILStruct.INSTANCE);
 
@@ -103,7 +103,7 @@ final class FeaturesReaderMacroFunction implements Serializable {
 		if (token instanceof ListStruct) {
 			return isListFeature((ListStruct) token);
 		} else {
-			final List<LispStruct> featuresList = CompilerVariables.FEATURES.getValue().getAsJavaList();
+			final List<LispStruct> featuresList = CompilerVariables.FEATURES.getVariableValue().getAsJavaList();
 			return featuresList.contains(token);
 		}
 	}
@@ -138,7 +138,7 @@ final class FeaturesReaderMacroFunction implements Serializable {
 
 		final ListStruct rest = consToken.getRest();
 
-		final SymbolStruct<?> featureOperator = (SymbolStruct) first;
+		final SymbolStruct featureOperator = (SymbolStruct) first;
 		if (featureOperator.equals(CommonLispSymbols.NOT_KEYWORD)) {
 			final LispStruct firstOfRest = rest.getFirst();
 			return !isFeature(firstOfRest);

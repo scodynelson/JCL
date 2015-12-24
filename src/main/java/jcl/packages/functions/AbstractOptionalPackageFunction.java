@@ -26,7 +26,7 @@ abstract class AbstractOptionalPackageFunction extends AbstractPackageFunction {
 	@Override
 	protected List<OptionalParameter> getOptionalBindings() {
 		return new OptionalParameter.Builder(GlobalPackageStruct.COMMON_LISP, "PACKAGE")
-				.initForm(PackageVariables.PACKAGE.getValue())
+				.initForm(PackageVariables.PACKAGE.getVariableValue())
 				.suppliedPBinding()
 				.buildList();
 	}
@@ -37,7 +37,7 @@ abstract class AbstractOptionalPackageFunction extends AbstractPackageFunction {
 			final LispStruct packageDesignator = lispStructs[1];
 			aPackage = findPackage(packageDesignator);
 		} else {
-			aPackage = PackageVariables.PACKAGE.getValue();
+			aPackage = PackageVariables.PACKAGE.getVariableValue();
 		}
 		return aPackage;
 	}

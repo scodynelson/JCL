@@ -16,7 +16,7 @@ public class CharacterStructPrinter implements LispPrinter<CharacterStruct> {
 
 	@Override
 	public String print(final CharacterStruct object) {
-		final boolean printEscape = PrinterVariables.PRINT_ESCAPE.getValue().booleanValue();
+		final boolean printEscape = PrinterVariables.PRINT_ESCAPE.getVariableValue().booleanValue();
 
 		final StringBuilder stringBuilder = new StringBuilder();
 		if (printEscape) {

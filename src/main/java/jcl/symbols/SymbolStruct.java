@@ -20,11 +20,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * The {@link SymbolStruct} is the object representation of a Lisp 'symbol' type.
- *
- * @param <TYPE>
- * 		the type of the symbol value
  */
-public class SymbolStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
+public class SymbolStruct extends BuiltInClassStruct {
 
 	private static final long serialVersionUID = -986185868644037105L;
 
@@ -34,9 +31,9 @@ public class SymbolStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 
 	protected PackageStruct symbolPackage;
 
-	protected Stack<TYPE> lexicalValueStack = new Stack<>();
+	protected Stack<LispStruct> lexicalValueStack = new Stack<>();
 
-	protected Stack<TYPE> dynamicValueStack = new Stack<>();
+	protected Stack<LispStruct> dynamicValueStack = new Stack<>();
 
 	protected Stack<FunctionStruct> functionStack = new Stack<>();
 
@@ -78,7 +75,7 @@ public class SymbolStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 	 * @param value
 	 * 		the symbol value
 	 */
-	protected SymbolStruct(final String name, final TYPE value) {
+	protected SymbolStruct(final String name, final LispStruct value) {
 		this(name, null, value, null);
 	}
 
@@ -104,7 +101,7 @@ public class SymbolStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 	 * @param value
 	 * 		the symbol value
 	 */
-	protected SymbolStruct(final String name, final PackageStruct symbolPackage, final TYPE value) {
+	protected SymbolStruct(final String name, final PackageStruct symbolPackage, final LispStruct value) {
 		this(SymbolType.INSTANCE, name, symbolPackage, value, null);
 	}
 
@@ -120,7 +117,7 @@ public class SymbolStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 	 * @param function
 	 * 		the symbol function
 	 */
-	protected SymbolStruct(final String name, final PackageStruct symbolPackage, final TYPE value, final FunctionStruct function) {
+	protected SymbolStruct(final String name, final PackageStruct symbolPackage, final LispStruct value, final FunctionStruct function) {
 		this(SymbolType.INSTANCE, name, symbolPackage, value, function);
 	}
 
@@ -139,7 +136,7 @@ public class SymbolStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 	 * 		the symbol function
 	 */
 	protected SymbolStruct(final SymbolType symbolType,
-	                       final String name, final PackageStruct symbolPackage, final TYPE value, final FunctionStruct function) {
+	                       final String name, final PackageStruct symbolPackage, final LispStruct value, final FunctionStruct function) {
 		super(symbolType, null, null);
 		this.name = name;
 
@@ -202,8 +199,8 @@ public class SymbolStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 //	 *
 //	 * @return symbol {@link #value} property
 //	 */
-	public TYPE getValue() {
-		final TYPE value;
+	public LispStruct getValue() {
+		final LispStruct value;
 		if (lexicalValueStack.isEmpty()) {
 			value = getDynamicValue();
 		} else {
@@ -217,12 +214,12 @@ public class SymbolStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 		return value;
 	}
 
-	public TYPE getLexicalValue() {
+	public LispStruct getLexicalValue() {
 		if (lexicalValueStack.isEmpty()) {
 			return handleUnboundValue();
 		}
 
-		final TYPE value = lexicalValueStack.peek();
+		final LispStruct value = lexicalValueStack.peek();
 		if (value == null) {
 			return handleUnboundValue();
 		}
@@ -230,12 +227,12 @@ public class SymbolStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 		return value;
 	}
 
-	public TYPE getDynamicValue() {
+	public LispStruct getDynamicValue() {
 		if (dynamicValueStack.isEmpty()) {
 			handleUnboundValue();
 		}
 
-		final TYPE value = dynamicValueStack.peek();
+		final LispStruct value = dynamicValueStack.peek();
 		if (value == null) {
 			return handleUnboundValue();
 		}
@@ -243,9 +240,9 @@ public class SymbolStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 		return value;
 	}
 
-	private TYPE handleUnboundValue() {
+	private LispStruct handleUnboundValue() {
 		String variableName = name;
-		final PackageStruct currentPackage = PackageVariables.PACKAGE.getValue();
+		final PackageStruct currentPackage = PackageVariables.PACKAGE.getVariableValue();
 
 		if (!currentPackage.equals(symbolPackage)) {
 			if (symbolPackage == null) {
@@ -269,7 +266,7 @@ public class SymbolStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 //	 * @param value
 //	 * 		new symbol {@link #value} property value
 //	 */
-	public void setValue(final TYPE value) {
+	public void setValue(final LispStruct value) {
 		if (lexicalValueStack.isEmpty()) {
 			if (dynamicValueStack.isEmpty()) {
 				dynamicValueStack.push(value);
@@ -283,7 +280,7 @@ public class SymbolStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 		}
 	}
 
-	public void setLexicalValue(final TYPE value) {
+	public void setLexicalValue(final LispStruct value) {
 		if (lexicalValueStack.isEmpty()) {
 			lexicalValueStack.push(value);
 		} else {
@@ -292,7 +289,7 @@ public class SymbolStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 		}
 	}
 
-	public void setDynamicValue(final TYPE value) {
+	public void setDynamicValue(final LispStruct value) {
 		if (dynamicValueStack.isEmpty()) {
 			dynamicValueStack.push(value);
 		} else {
@@ -301,7 +298,7 @@ public class SymbolStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 		}
 	}
 
-	public void bindLexicalValue(final TYPE value) {
+	public void bindLexicalValue(final LispStruct value) {
 		lexicalValueStack.push(value);
 	}
 
@@ -309,7 +306,7 @@ public class SymbolStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 		lexicalValueStack.pop();
 	}
 
-	public void bindDynamicValue(final TYPE value) {
+	public void bindDynamicValue(final LispStruct value) {
 		dynamicValueStack.push(value);
 	}
 
@@ -335,7 +332,7 @@ public class SymbolStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 
 	private FunctionStruct handleUnboundFunction() {
 		String variableName = name;
-		final PackageStruct currentPackage = PackageVariables.PACKAGE.getValue();
+		final PackageStruct currentPackage = PackageVariables.PACKAGE.getVariableValue();
 
 		if (!currentPackage.equals(symbolPackage)) {
 			if (symbolPackage == null) {
@@ -543,16 +540,16 @@ public class SymbolStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 	 *
 	 * @return the newly copied symbol
 	 */
-	public SymbolStruct<TYPE> copySymbol(final boolean copyProperties) {
+	public SymbolStruct copySymbol(final boolean copyProperties) {
 		if (copyProperties) {
-			final SymbolStruct<TYPE> newSymbol = new SymbolStruct<>(name);
+			final SymbolStruct newSymbol = new SymbolStruct(name);
 			newSymbol.lexicalValueStack.addAll(lexicalValueStack);
 			newSymbol.dynamicValueStack.addAll(dynamicValueStack);
 			newSymbol.functionStack.addAll(functionStack);
 			newSymbol.properties.addAll(properties);
 			return newSymbol;
 		} else {
-			return new SymbolStruct<>(name);
+			return new SymbolStruct(name);
 		}
 	}
 
@@ -582,7 +579,7 @@ public class SymbolStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 		if (obj.getClass() != getClass()) {
 			return false;
 		}
-		final SymbolStruct<?> rhs = (SymbolStruct) obj;
+		final SymbolStruct rhs = (SymbolStruct) obj;
 		return new EqualsBuilder().appendSuper(super.equals(obj))
 		                          .append(name, rhs.name)
 		                          .append(symbolPackage, rhs.symbolPackage)

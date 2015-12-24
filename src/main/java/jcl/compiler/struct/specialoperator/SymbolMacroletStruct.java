@@ -44,16 +44,16 @@ public class SymbolMacroletStruct extends CompilerSpecialOperatorStruct {
 
 		private static final long serialVersionUID = -601687250765470819L;
 
-		private final SymbolStruct<?> var;
+		private final SymbolStruct var;
 
 		private final LispStruct expansion;
 
-		public SymbolMacroletVar(final SymbolStruct<?> var, final LispStruct expansion) {
+		public SymbolMacroletVar(final SymbolStruct var, final LispStruct expansion) {
 			this.var = var;
 			this.expansion = expansion;
 		}
 
-		public SymbolStruct<?> getVar() {
+		public SymbolStruct getVar() {
 			return var;
 		}
 

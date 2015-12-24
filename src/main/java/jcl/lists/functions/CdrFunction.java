@@ -21,7 +21,7 @@ import org.springframework.stereotype.Component;
 @Component
 public final class CdrFunction extends FunctionStruct {
 
-	public static final SymbolStruct<?> CDR = GlobalPackageStruct.COMMON_LISP.intern("CDR").getSymbol();
+	public static final SymbolStruct CDR = GlobalPackageStruct.COMMON_LISP.intern("CDR").getSymbol();
 
 	private static final long serialVersionUID = -4491044198379574303L;
 
@@ -37,7 +37,7 @@ public final class CdrFunction extends FunctionStruct {
 
 	private static OrdinaryLambdaList getInitLambdaListBindings() {
 
-		final SymbolStruct<?> listArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("LIST-ARG").getSymbol();
+		final SymbolStruct listArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("LIST-ARG").getSymbol();
 		final RequiredParameter requiredBinding = new RequiredParameter(listArgSymbol);
 		final List<RequiredParameter> requiredBindings = Collections.singletonList(requiredBinding);
 

@@ -21,7 +21,7 @@ import org.springframework.stereotype.Component;
 @Component
 public final class MultiplyFunction extends FunctionStruct {
 
-	public static final SymbolStruct<?> MULTIPLY = GlobalPackageStruct.COMMON_LISP.intern("*").getSymbol();
+	public static final SymbolStruct MULTIPLY = GlobalPackageStruct.COMMON_LISP.intern("*").getSymbol();
 
 	private static final long serialVersionUID = -3125334565141339662L;
 
@@ -40,7 +40,7 @@ public final class MultiplyFunction extends FunctionStruct {
 
 	private static OrdinaryLambdaList getInitLambdaListBindings() {
 
-		final SymbolStruct<?> restArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("NUMBERS").getSymbol();
+		final SymbolStruct restArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("NUMBERS").getSymbol();
 		final RestParameter restBinding = new RestParameter(restArgSymbol);
 
 		return new OrdinaryLambdaList.Builder().restBinding(restBinding)

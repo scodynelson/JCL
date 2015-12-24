@@ -24,7 +24,7 @@ public class TheExpander extends MacroFunctionExpander<TheStruct> {
 	private LispFormValueValidator validator;
 
 	@Override
-	public SymbolStruct<?> getFunctionSymbol() {
+	public SymbolStruct getFunctionSymbol() {
 		return SpecialOperatorStruct.THE;
 	}
 

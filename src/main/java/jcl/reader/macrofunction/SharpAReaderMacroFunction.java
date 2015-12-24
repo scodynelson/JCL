@@ -51,7 +51,7 @@ public class SharpAReaderMacroFunction extends ReaderMacroFunction {
 	 */
 	@PostConstruct
 	private void init() {
-		final ReadtableStruct readtable = ReaderVariables.READTABLE.getValue();
+		final ReadtableStruct readtable = ReaderVariables.READTABLE.getVariableValue();
 		readtable.setDispatchMacroCharacter(CharacterConstants.NUMBER_SIGN, CharacterConstants.LATIN_SMALL_LETTER_A, this);
 		readtable.setDispatchMacroCharacter(CharacterConstants.NUMBER_SIGN, CharacterConstants.LATIN_CAPITAL_LETTER_A, this);
 	}
@@ -61,7 +61,7 @@ public class SharpAReaderMacroFunction extends ReaderMacroFunction {
 		assert (codePoint == CharacterConstants.LATIN_SMALL_LETTER_A) || (codePoint == CharacterConstants.LATIN_CAPITAL_LETTER_A);
 
 		final LispStruct token = reader.read(true, NullStruct.INSTANCE, true);
-		if (ReaderVariables.READ_SUPPRESS.getValue().booleanValue()) {
+		if (ReaderVariables.READ_SUPPRESS.getVariableValue().booleanValue()) {
 			return NullStruct.INSTANCE;
 		}
 

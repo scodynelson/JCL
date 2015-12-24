@@ -43,19 +43,19 @@ public class InnerLambdaStruct extends CompilerSpecialOperatorStruct {
 
 		private static final long serialVersionUID = 891453745075246590L;
 
-		private final SymbolStruct<?> var;
+		private final SymbolStruct var;
 
 		private final CompilerFunctionStruct initForm;
 
 		private final boolean isSpecial;
 
-		public InnerLambdaVar(final SymbolStruct<?> var, final CompilerFunctionStruct initForm, final boolean isSpecial) {
+		public InnerLambdaVar(final SymbolStruct var, final CompilerFunctionStruct initForm, final boolean isSpecial) {
 			this.var = var;
 			this.initForm = initForm;
 			this.isSpecial = isSpecial;
 		}
 
-		public SymbolStruct<?> getVar() {
+		public SymbolStruct getVar() {
 			return var;
 		}
 

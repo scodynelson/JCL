@@ -65,7 +65,7 @@ public class ReadEvalPrint {
 			while (true) {
 				try {
 					// PROMPT --------------
-					final PackageStruct currentPackage = PackageVariables.PACKAGE.getValue();
+					final PackageStruct currentPackage = PackageVariables.PACKAGE.getVariableValue();
 					final String currentPackageName = currentPackage.getName();
 					LOGGER.info("{}: {}> ", currentPackageName, counter++);
 

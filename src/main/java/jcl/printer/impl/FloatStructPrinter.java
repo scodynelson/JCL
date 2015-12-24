@@ -24,7 +24,7 @@ public class FloatStructPrinter implements LispPrinter<FloatStruct> {
 	@Override
 	public String print(final FloatStruct object) {
 		final FloatType floatType = (FloatType) object.getType();
-		final FloatType defaultFloatFormat = ReaderVariables.READ_DEFAULT_FLOAT_FORMAT.getValue();
+		final FloatType defaultFloatFormat = ReaderVariables.READ_DEFAULT_FLOAT_FORMAT.getVariableValue();
 
 		final BigDecimal bigDecimal = object.getBigDecimal();
 		String bigDecimalString = bigDecimal.toString();

@@ -31,7 +31,7 @@ import org.springframework.stereotype.Component;
 @Component
 public final class RandomFunction extends FunctionStruct {
 
-	public static final SymbolStruct<?> RANDOM = GlobalPackageStruct.COMMON_LISP.intern("RANDOM").getSymbol();
+	public static final SymbolStruct RANDOM = GlobalPackageStruct.COMMON_LISP.intern("RANDOM").getSymbol();
 
 	private static final long serialVersionUID = 5980418597039594418L;
 
@@ -50,13 +50,13 @@ public final class RandomFunction extends FunctionStruct {
 
 	private static OrdinaryLambdaList getInitLambdaListBindings() {
 
-		final SymbolStruct<?> firstArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("LIMIT").getSymbol();
+		final SymbolStruct firstArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("LIMIT").getSymbol();
 		final RequiredParameter requiredBinding = new RequiredParameter(firstArgSymbol);
 		final List<RequiredParameter> requiredBindings = Collections.singletonList(requiredBinding);
 
-		final SymbolStruct<?> optionalArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("RANDOM-STATE").getSymbol();
+		final SymbolStruct optionalArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("RANDOM-STATE").getSymbol();
 
-		final SymbolStruct<?> optionalSuppliedP = GlobalPackageStruct.COMMON_LISP.intern("RANDOM-STATE-P-" + System.nanoTime()).getSymbol();
+		final SymbolStruct optionalSuppliedP = GlobalPackageStruct.COMMON_LISP.intern("RANDOM-STATE-P-" + System.nanoTime()).getSymbol();
 		final SuppliedPParameter optionalSuppliedPBinding = new SuppliedPParameter(optionalSuppliedP);
 
 		final OptionalParameter optionalBinding = new OptionalParameter(optionalArgSymbol, NullStruct.INSTANCE, optionalSuppliedPBinding);
@@ -80,7 +80,7 @@ public final class RandomFunction extends FunctionStruct {
 			}
 			randomState = (RandomStateStruct) lispStruct2;
 		} else {
-			randomState = NumberVariables.RANDOM_STATE.getValue();
+			randomState = NumberVariables.RANDOM_STATE.getVariableValue();
 		}
 
 		final LispStruct lispStruct = lispStructs[0];

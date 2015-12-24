@@ -36,7 +36,7 @@ public final class SetSymbolMacroFunction extends AbstractSystemFunctionStruct {
 	public LispStruct apply(final LispStruct... lispStructs) {
 		super.apply(lispStructs);
 
-		final SymbolStruct<?> symbol = (SymbolStruct) lispStructs[0];
+		final SymbolStruct symbol = (SymbolStruct) lispStructs[0];
 		final LispStruct expansion = lispStructs[1];
 
 		final SymbolMacroExpander<LispStruct> symbolMacroExpander = new SymbolMacroExpanderImpl(expansion);

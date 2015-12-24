@@ -23,7 +23,7 @@ import org.springframework.stereotype.Component;
 @Component
 public final class AshFunction extends FunctionStruct {
 
-	public static final SymbolStruct<?> ASH = GlobalPackageStruct.COMMON_LISP.intern("ASH").getSymbol();
+	public static final SymbolStruct ASH = GlobalPackageStruct.COMMON_LISP.intern("ASH").getSymbol();
 
 	private static final long serialVersionUID = 990280311508475609L;
 
@@ -43,11 +43,11 @@ public final class AshFunction extends FunctionStruct {
 	private static OrdinaryLambdaList getInitLambdaListBindings() {
 		final List<RequiredParameter> requiredBindings = new ArrayList<>(2);
 
-		final SymbolStruct<?> integerSymbol = GlobalPackageStruct.COMMON_LISP.intern("INTEGER").getSymbol();
+		final SymbolStruct integerSymbol = GlobalPackageStruct.COMMON_LISP.intern("INTEGER").getSymbol();
 		final RequiredParameter requiredBinding1 = new RequiredParameter(integerSymbol);
 		requiredBindings.add(requiredBinding1);
 
-		final SymbolStruct<?> countSymbol = GlobalPackageStruct.COMMON_LISP.intern("COUNT").getSymbol();
+		final SymbolStruct countSymbol = GlobalPackageStruct.COMMON_LISP.intern("COUNT").getSymbol();
 		final RequiredParameter requiredBinding2 = new RequiredParameter(countSymbol);
 		requiredBindings.add(requiredBinding2);
 

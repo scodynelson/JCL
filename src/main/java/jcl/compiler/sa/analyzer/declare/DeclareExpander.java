@@ -32,7 +32,7 @@ public class DeclareExpander extends MacroFunctionExpander<DeclareStruct> {
 	private Printer printer;
 
 	@Override
-	public SymbolStruct<?> getFunctionSymbol() {
+	public SymbolStruct getFunctionSymbol() {
 		return SpecialOperatorStruct.DECLARE;
 	}
 
@@ -106,7 +106,7 @@ public class DeclareExpander extends MacroFunctionExpander<DeclareStruct> {
 				throw new ProgramErrorException("DECLARE: a non-symbol cannot be made SPECIAL: " + printedObject);
 			}
 
-			final SymbolStruct<?> sym = (SymbolStruct<?>) declSpecBodyElement;
+			final SymbolStruct sym = (SymbolStruct) declSpecBodyElement;
 
 			final SpecialDeclarationStruct specialDeclarationElement = new SpecialDeclarationStruct(sym);
 			specialDeclarationElements.add(specialDeclarationElement);

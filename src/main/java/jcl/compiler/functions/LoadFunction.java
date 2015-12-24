@@ -55,7 +55,7 @@ import org.springframework.stereotype.Component;
 @Component
 public final class LoadFunction extends FunctionStruct {
 
-	public static final SymbolStruct<?> LOAD = GlobalPackageStruct.COMMON_LISP.intern("LOAD").getSymbol();
+	public static final SymbolStruct LOAD = GlobalPackageStruct.COMMON_LISP.intern("LOAD").getSymbol();
 
 	private static final long serialVersionUID = 348551085956831789L;
 
@@ -88,39 +88,39 @@ public final class LoadFunction extends FunctionStruct {
 
 	private static OrdinaryLambdaList getInitLambdaListBindings() {
 
-		final SymbolStruct<?> filespecArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("FILESPEC").getSymbol();
+		final SymbolStruct filespecArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("FILESPEC").getSymbol();
 		final RequiredParameter requiredBinding = new RequiredParameter(filespecArgSymbol);
 		final List<RequiredParameter> requiredBindings = Collections.singletonList(requiredBinding);
 
 		final List<KeyParameter> keyBindings = new ArrayList<>(4);
 
-		final SymbolStruct<?> verboseArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("VERBOSE").getSymbol();
+		final SymbolStruct verboseArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("VERBOSE").getSymbol();
 
-		final SymbolStruct<?> verboseSuppliedP = GlobalPackageStruct.COMMON_LISP.intern("VERBOSE-P-" + System.nanoTime()).getSymbol();
+		final SymbolStruct verboseSuppliedP = GlobalPackageStruct.COMMON_LISP.intern("VERBOSE-P-" + System.nanoTime()).getSymbol();
 		final SuppliedPParameter verboseSuppliedPBinding = new SuppliedPParameter(verboseSuppliedP);
 
 		final KeyParameter verboseKeyBinding = new KeyParameter(verboseArgSymbol, NullStruct.INSTANCE, CommonLispSymbols.VERBOSE_KEYWORD, verboseSuppliedPBinding);
 		keyBindings.add(verboseKeyBinding);
 
-		final SymbolStruct<?> printArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("PRINT").getSymbol();
+		final SymbolStruct printArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("PRINT").getSymbol();
 
-		final SymbolStruct<?> printSuppliedP = GlobalPackageStruct.COMMON_LISP.intern("PRINT-P-" + System.nanoTime()).getSymbol();
+		final SymbolStruct printSuppliedP = GlobalPackageStruct.COMMON_LISP.intern("PRINT-P-" + System.nanoTime()).getSymbol();
 		final SuppliedPParameter printSuppliedPBinding = new SuppliedPParameter(printSuppliedP);
 
 		final KeyParameter printKeyBinding = new KeyParameter(printArgSymbol, NullStruct.INSTANCE, CommonLispSymbols.PRINT_KEYWORD, printSuppliedPBinding);
 		keyBindings.add(printKeyBinding);
 
-		final SymbolStruct<?> ifDoesNotExistArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("IF-DOES-NOT-EXIST").getSymbol();
+		final SymbolStruct ifDoesNotExistArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("IF-DOES-NOT-EXIST").getSymbol();
 
-		final SymbolStruct<?> ifDoesNotExistSuppliedP = GlobalPackageStruct.COMMON_LISP.intern("IF-DOES-NOT-EXIST-P-" + System.nanoTime()).getSymbol();
+		final SymbolStruct ifDoesNotExistSuppliedP = GlobalPackageStruct.COMMON_LISP.intern("IF-DOES-NOT-EXIST-P-" + System.nanoTime()).getSymbol();
 		final SuppliedPParameter ifDoesNotExistSuppliedPBinding = new SuppliedPParameter(ifDoesNotExistSuppliedP);
 
 		final KeyParameter ifDoesNotExistKeyBinding = new KeyParameter(ifDoesNotExistArgSymbol, NullStruct.INSTANCE, CommonLispSymbols.IF_DOES_NOT_EXIST_KEYWORD, ifDoesNotExistSuppliedPBinding);
 		keyBindings.add(ifDoesNotExistKeyBinding);
 
-		final SymbolStruct<?> externalFormatArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("EXTERNAL-FORMAT").getSymbol();
+		final SymbolStruct externalFormatArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("EXTERNAL-FORMAT").getSymbol();
 
-		final SymbolStruct<?> externalFormatSuppliedP = GlobalPackageStruct.COMMON_LISP.intern("EXTERNAL-FORMAT-P-" + System.nanoTime()).getSymbol();
+		final SymbolStruct externalFormatSuppliedP = GlobalPackageStruct.COMMON_LISP.intern("EXTERNAL-FORMAT-P-" + System.nanoTime()).getSymbol();
 		final SuppliedPParameter externalFormatSuppliedPBinding = new SuppliedPParameter(externalFormatSuppliedP);
 
 		final KeyParameter externalFormatKeyBinding = new KeyParameter(externalFormatArgSymbol, NullStruct.INSTANCE, CommonLispSymbols.EXTERNAL_FORMAT_KEYWORD, externalFormatSuppliedPBinding);
@@ -137,8 +137,8 @@ public final class LoadFunction extends FunctionStruct {
 
 		final LispStruct filespec = lispStructs[0];
 
-		final BooleanStruct currentLoadVerbose = CompilerVariables.LOAD_VERBOSE.getValue();
-		final BooleanStruct currentLoadPrint = CompilerVariables.LOAD_PRINT.getValue();
+		final BooleanStruct currentLoadVerbose = CompilerVariables.LOAD_VERBOSE.getVariableValue();
+		final BooleanStruct currentLoadPrint = CompilerVariables.LOAD_PRINT.getVariableValue();
 
 		boolean verbose = currentLoadVerbose.booleanValue();
 		boolean print = currentLoadPrint.booleanValue();
@@ -205,7 +205,7 @@ public final class LoadFunction extends FunctionStruct {
 			filespecPath = filespecFileStream.getPath();
 			filespecPathname = new PathnameStruct(filespecPath);
 		} else {
-			final PathnameStruct defaultPathspec = PathnameVariables.DEFAULT_PATHNAME_DEFAULTS.getValue();
+			final PathnameStruct defaultPathspec = PathnameVariables.DEFAULT_PATHNAME_DEFAULTS.getVariableValue();
 			final PathnameVersion nilVersion = new PathnameVersion(PathnameVersionComponentType.NIL);
 			filespecPathname = mergePathnamesFunction.mergePathnames(filespec, defaultPathspec, nilVersion);
 			final URI pathnameURI = filespecPathname.getUri();
@@ -229,8 +229,8 @@ public final class LoadFunction extends FunctionStruct {
 		final PathnameStruct filespecTruename = new PathnameStruct(filespecAbsolutePath);
 		CompilerVariables.COMPILE_FILE_TRUENAME.setValue(filespecTruename);
 
-		final ReadtableStruct previousReadtable = ReaderVariables.READTABLE.getValue();
-		final PackageStruct previousPackage = PackageVariables.PACKAGE.getValue();
+		final ReadtableStruct previousReadtable = ReaderVariables.READTABLE.getVariableValue();
+		final PackageStruct previousPackage = PackageVariables.PACKAGE.getVariableValue();
 
 		try {
 			final String filespecNamestring = filespecPath.toString();

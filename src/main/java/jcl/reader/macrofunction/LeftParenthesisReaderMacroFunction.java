@@ -42,7 +42,7 @@ public class LeftParenthesisReaderMacroFunction extends ReaderMacroFunction {
 	 */
 	@PostConstruct
 	private void init() {
-		ReaderVariables.READTABLE.getValue().setMacroCharacter(CharacterConstants.LEFT_PARENTHESIS, this, false);
+		ReaderVariables.READTABLE.getVariableValue().setMacroCharacter(CharacterConstants.LEFT_PARENTHESIS, this, false);
 	}
 
 	@Override

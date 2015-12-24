@@ -22,7 +22,7 @@ import org.springframework.stereotype.Component;
 @Component
 public final class EqFunction extends FunctionStruct {
 
-	public static final SymbolStruct<?> EQ = GlobalPackageStruct.COMMON_LISP.intern("EQ").getSymbol();
+	public static final SymbolStruct EQ = GlobalPackageStruct.COMMON_LISP.intern("EQ").getSymbol();
 
 	private static final long serialVersionUID = 4849096028160792790L;
 
@@ -40,11 +40,11 @@ public final class EqFunction extends FunctionStruct {
 
 		final List<RequiredParameter> requiredBindings = new ArrayList<>(2);
 
-		final SymbolStruct<?> object1ArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("OBJECT-1").getSymbol();
+		final SymbolStruct object1ArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("OBJECT-1").getSymbol();
 		final RequiredParameter object1RequiredBinding = new RequiredParameter(object1ArgSymbol);
 		requiredBindings.add(object1RequiredBinding);
 
-		final SymbolStruct<?> object2ArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("OBJECT-2").getSymbol();
+		final SymbolStruct object2ArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("OBJECT-2").getSymbol();
 		final RequiredParameter object2RequiredBinding = new RequiredParameter(object2ArgSymbol);
 		requiredBindings.add(object2RequiredBinding);
 

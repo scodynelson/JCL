@@ -23,7 +23,7 @@ import org.springframework.stereotype.Component;
 @Component
 public final class DenominatorFunction extends FunctionStruct {
 
-	public static final SymbolStruct<?> DENOMINATOR = GlobalPackageStruct.COMMON_LISP.intern("DENOMINATOR").getSymbol();
+	public static final SymbolStruct DENOMINATOR = GlobalPackageStruct.COMMON_LISP.intern("DENOMINATOR").getSymbol();
 
 	private static final long serialVersionUID = 6210778370087072605L;
 
@@ -42,7 +42,7 @@ public final class DenominatorFunction extends FunctionStruct {
 
 	private static OrdinaryLambdaList getInitLambdaListBindings() {
 
-		final SymbolStruct<?> firstArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("RATIONAL").getSymbol();
+		final SymbolStruct firstArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("RATIONAL").getSymbol();
 		final RequiredParameter requiredBinding = new RequiredParameter(firstArgSymbol);
 		final List<RequiredParameter> requiredBindings = Collections.singletonList(requiredBinding);
 

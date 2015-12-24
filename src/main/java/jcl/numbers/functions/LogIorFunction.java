@@ -21,7 +21,7 @@ import org.springframework.stereotype.Component;
 @Component
 public final class LogIorFunction extends FunctionStruct {
 
-	public static final SymbolStruct<?> LOGIOR = GlobalPackageStruct.COMMON_LISP.intern("LOGIOR").getSymbol();
+	public static final SymbolStruct LOGIOR = GlobalPackageStruct.COMMON_LISP.intern("LOGIOR").getSymbol();
 
 	private static final long serialVersionUID = -6633197856681204953L;
 
@@ -40,7 +40,7 @@ public final class LogIorFunction extends FunctionStruct {
 
 	private static OrdinaryLambdaList getInitLambdaListBindings() {
 
-		final SymbolStruct<?> restArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("INTEGERS").getSymbol();
+		final SymbolStruct restArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("INTEGERS").getSymbol();
 		final RestParameter restBinding = new RestParameter(restArgSymbol);
 
 		return new OrdinaryLambdaList.Builder().restBinding(restBinding)

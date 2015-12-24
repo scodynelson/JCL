@@ -74,11 +74,11 @@ class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 
 	private static final String STRUCTURE_CLASS_INIT_SS_SS_LIST_LIST_METHOD_DESC = "(Ljcl/symbols/SymbolStruct;Ljcl/symbols/SymbolStruct;Ljava/util/List;Ljava/util/List;)V";
 
-	private static final String STRUCTURE_CLASS_INIT_SS_SS_LIST_LIST_METHOD_SIGNATURE = "(Ljcl/symbols/SymbolStruct<*>;Ljcl/symbols/SymbolStruct<*>;Ljava/util/List<Ljava/lang/Class<+Ljcl/LispStruct;>;>;Ljava/util/List<Ljava/lang/Class<+Ljcl/LispStruct;>;>;)V";
+	private static final String STRUCTURE_CLASS_INIT_SS_SS_LIST_LIST_METHOD_SIGNATURE = "(Ljcl/symbols/SymbolStruct;Ljcl/symbols/SymbolStruct;Ljava/util/List<Ljava/lang/Class<+Ljcl/LispStruct;>;>;Ljava/util/List<Ljava/lang/Class<+Ljcl/LispStruct;>;>;)V";
 
 	private static final String STRUCTURE_CLASS_INIT_LISP_TYPE_SS_SS_LIST_LIST_METHOD_DESC = "(Ljcl/LispType;Ljcl/symbols/SymbolStruct;Ljcl/symbols/SymbolStruct;Ljava/util/List;Ljava/util/List;)V";
 
-	private static final String STRUCTURE_CLASS_INIT_LISP_TYPE_SS_SS_LIST_LIST_METHOD_SIGNATURE = "(Ljcl/LispType;Ljcl/symbols/SymbolStruct<*>;Ljcl/symbols/SymbolStruct<*>;Ljava/util/List<Ljava/lang/Class<+Ljcl/LispStruct;>;>;Ljava/util/List<Ljava/lang/Class<+Ljcl/LispStruct;>;>;)V";
+	private static final String STRUCTURE_CLASS_INIT_LISP_TYPE_SS_SS_LIST_LIST_METHOD_SIGNATURE = "(Ljcl/LispType;Ljcl/symbols/SymbolStruct;Ljcl/symbols/SymbolStruct;Ljava/util/List<Ljava/lang/Class<+Ljcl/LispStruct;>;>;Ljava/util/List<Ljava/lang/Class<+Ljcl/LispStruct;>;>;)V";
 
 	private static final String STRUCTURE_CLASS_NEW_INSTANCE_METHOD_NAME = "newInstance";
 
@@ -87,7 +87,7 @@ class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 	@Override
 	public void generate(final DefstructStruct input, final GeneratorState generatorState) {
 
-		final SymbolStruct<?> structureSymbol = input.getStructureSymbol();
+		final SymbolStruct structureSymbol = input.getStructureSymbol();
 		final String structureName = structureSymbol.getName();
 
 		final String systemTimePostfix = "_" + System.nanoTime();
@@ -1132,13 +1132,13 @@ class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 	 *      public static final FOOStructureClass_1 INSTANCE;
 	 *      private static final long serialVersionUID = 1L;
 	 *
-	 *      protected FOOStructureClass_1(SymbolStruct<?> var1, SymbolStruct<?> var2,
+	 *      protected FOOStructureClass_1(SymbolStruct var1, SymbolStruct var2,
 	 *                                    List<Class<? extends LispStruct>> var3,
 	 *                                    List<Class<? extends LispStruct>> var4) {
 	 *          this(FOOStructureType_1.INSTANCE, var1, var2, var3, var4);
 	 *      }
 	 *
-	 *      protected FOOStructureClass_1(LispType var1, SymbolStruct<?> var2, SymbolStruct<?> var3,
+	 *      protected FOOStructureClass_1(LispType var1, SymbolStruct var2, SymbolStruct var3,
 	 *                                    List<Class<? extends LispStruct>> var4,
 	 *                                    List<Class<? extends LispStruct>> var5) {
 	 *          super(var1, var2, var3, var4, var5);
@@ -1178,13 +1178,13 @@ class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 	 *      public static final BARStructureClass_1 INSTANCE;
 	 *      private static final long serialVersionUID = 1L;
 	 *
-	 *      protected BARStructureClass_1(SymbolStruct<?> var1, SymbolStruct<?> var2,
+	 *      protected BARStructureClass_1(SymbolStruct var1, SymbolStruct var2,
 	 *                                    List<Class<? extends LispStruct>> var3,
 	 *                                    List<Class<? extends LispStruct>> var4) {
 	 *          this(BARStructureType_1.INSTANCE, var1, var2, var3, var4);
 	 *      }
 	 *
-	 *      protected BARStructureClass_1(LispType var1, SymbolStruct<?> var2, SymbolStruct<?> var3,
+	 *      protected BARStructureClass_1(LispType var1, SymbolStruct var2, SymbolStruct var3,
 	 *                                    List<Class<? extends LispStruct>> var4,
 	 *                                    List<Class<? extends LispStruct>> var5) {
 	 *          super(var1, var2, var3, var4, var5);
@@ -1286,7 +1286,7 @@ class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 	 * encountered:
 	 * <pre>
 	 * {@code
-	 * protected FOOStructureClass_1(SymbolStruct<?> var1, SymbolStruct<?> var2,
+	 * protected FOOStructureClass_1(SymbolStruct var1, SymbolStruct var2,
 	 *                               List<Class<? extends LispStruct>> var3,
 	 *                               List<Class<? extends LispStruct>> var4) {
 	 *      this(FOOStructureType_1.INSTANCE, var1, var2, var3, var4);
@@ -1367,7 +1367,7 @@ class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 	 * encountered:
 	 * <pre>
 	 * {@code
-	 * protected FOOStructureClass_1(LispType var1, SymbolStruct<?> var2, SymbolStruct<?> var3,
+	 * protected FOOStructureClass_1(LispType var1, SymbolStruct var2, SymbolStruct var3,
 	 *                               List<Class<? extends LispStruct>> var4,
 	 *                               List<Class<? extends LispStruct>> var5) {
 	 *      super(var1, var2, var3, var4, var5);
@@ -1545,7 +1545,7 @@ class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 		mv.visitTypeInsn(Opcodes.NEW, structureClassClassName);
 		mv.visitInsn(Opcodes.DUP);
 
-		final SymbolStruct<?> defaultConstructorSymbol = input.getDefaultConstructorSymbol();
+		final SymbolStruct defaultConstructorSymbol = input.getDefaultConstructorSymbol();
 		if (defaultConstructorSymbol == null) {
 			mv.visitInsn(Opcodes.ACONST_NULL);
 		} else {
@@ -1556,7 +1556,7 @@ class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 			mv.visitVarInsn(Opcodes.ALOAD, symbolStore);
 		}
 
-		final SymbolStruct<?> printerSymbol = input.getPrinterSymbol();
+		final SymbolStruct printerSymbol = input.getPrinterSymbol();
 		if (printerSymbol == null) {
 			mv.visitInsn(Opcodes.ACONST_NULL);
 		} else {
@@ -1768,7 +1768,7 @@ class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 				GenerationConstants.SINGLETON_INSTANCE,
 				structureClassClassDesc);
 
-		final SymbolStruct<?> structureSymbol = input.getStructureSymbol();
+		final SymbolStruct structureSymbol = input.getStructureSymbol();
 		final int packageStore = methodBuilder.getNextAvailableStore();
 		final int symbolStore = methodBuilder.getNextAvailableStore();
 		CodeGenerators.generateSymbol(structureSymbol, methodBuilder, packageStore, symbolStore);
@@ -1797,7 +1797,7 @@ class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 				STRUCTURE_OBJECT_INIT_SCS_SS_SOS_METHOD_DESC,
 				false);
 
-		final List<SymbolStruct<?>> slots = input.getSlots();
+		final List<SymbolStruct> slots = input.getSlots();
 		if (!slots.isEmpty()) {
 			// No need to call this method, as there are no slots to initialize
 			mv.visitVarInsn(Opcodes.ALOAD, thisStore);
@@ -1853,7 +1853,7 @@ class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 	private static void generateStructureObjectInitSlotsMap(final DefstructStruct input, final GeneratorState generatorState,
 	                                                        final ClassWriter cw,
 	                                                        final String structureObjectClassName) {
-		final List<SymbolStruct<?>> slots = input.getSlots();
+		final List<SymbolStruct> slots = input.getSlots();
 		if (slots.isEmpty()) {
 			// No need to generate this method, as there are no slots to initialize
 			return;
@@ -1880,7 +1880,7 @@ class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 		final int packageStore = methodBuilder.getNextAvailableStore();
 		final int slotStore = methodBuilder.getNextAvailableStore();
 
-		for (final SymbolStruct<?> slot : slots) {
+		for (final SymbolStruct slot : slots) {
 			CodeGenerators.generateSymbol(slot, methodBuilder, packageStore, slotStore);
 
 			mv.visitVarInsn(Opcodes.ALOAD, slotsFieldStore);

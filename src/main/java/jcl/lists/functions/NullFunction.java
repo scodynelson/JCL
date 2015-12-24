@@ -23,7 +23,7 @@ import org.springframework.stereotype.Component;
 @Component
 public final class NullFunction extends FunctionStruct {
 
-	public static final SymbolStruct<?> NULL = GlobalPackageStruct.COMMON_LISP.intern("NULL").getSymbol();
+	public static final SymbolStruct NULL = GlobalPackageStruct.COMMON_LISP.intern("NULL").getSymbol();
 
 	private static final long serialVersionUID = 7471817337078296980L;
 
@@ -39,7 +39,7 @@ public final class NullFunction extends FunctionStruct {
 
 	private static OrdinaryLambdaList getInitLambdaListBindings() {
 
-		final SymbolStruct<?> listArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("OBJECT").getSymbol();
+		final SymbolStruct listArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("OBJECT").getSymbol();
 		final RequiredParameter requiredBinding = new RequiredParameter(listArgSymbol);
 		final List<RequiredParameter> requiredBindings = Collections.singletonList(requiredBinding);
 

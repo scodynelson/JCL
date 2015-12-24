@@ -66,7 +66,7 @@ public class CopySymbolFunction extends AbstractCommonLispFunctionStruct {
 			copyProperties = ((BooleanStruct) lispStruct1).booleanValue();
 		}
 
-		final SymbolStruct<?> symbol = (SymbolStruct) lispStructs[0];
+		final SymbolStruct symbol = (SymbolStruct) lispStructs[0];
 
 		return symbol.copySymbol(copyProperties);
 	}

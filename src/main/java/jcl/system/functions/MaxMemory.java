@@ -18,7 +18,7 @@ import org.springframework.stereotype.Component;
 @Component
 public final class MaxMemory extends FunctionStruct {
 
-	public static final SymbolStruct<?> MAX_MEMORY = GlobalPackageStruct.EXTENSIONS.intern("MAX-MEMORY").getSymbol();
+	public static final SymbolStruct MAX_MEMORY = GlobalPackageStruct.EXTENSIONS.intern("MAX-MEMORY").getSymbol();
 
 	private static final long serialVersionUID = -8202963218833948816L;
 

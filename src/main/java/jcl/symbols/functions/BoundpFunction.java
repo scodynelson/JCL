@@ -47,7 +47,7 @@ public class BoundpFunction extends AbstractCommonLispFunctionStruct {
 		final LispStruct lispStruct = lispStructs[0];
 		validator.validateTypes(lispStruct, functionName(), "Symbol", SymbolType.INSTANCE);
 
-		final SymbolStruct<?> symbol = (SymbolStruct) lispStructs[0];
+		final SymbolStruct symbol = (SymbolStruct) lispStructs[0];
 		return BooleanStructs.toLispBoolean(symbol.hasValue());
 	}
 

@@ -51,7 +51,7 @@ public class BackquoteReaderMacroFunction extends ReaderMacroFunction {
 	 */
 	@PostConstruct
 	private void init() {
-		ReaderVariables.READTABLE.getValue().setMacroCharacter(CharacterConstants.GRAVE_ACCENT, this, false);
+		ReaderVariables.READTABLE.getVariableValue().setMacroCharacter(CharacterConstants.GRAVE_ACCENT, this, false);
 	}
 
 	@Override
@@ -63,7 +63,7 @@ public class BackquoteReaderMacroFunction extends ReaderMacroFunction {
 			final LispStruct code = reader.read(true, NullStruct.INSTANCE, true);
 			final BackquoteReturn backquoteReturn = backquotify(code);
 
-			final SymbolStruct<?> flag = backquoteReturn.getFlag();
+			final SymbolStruct flag = backquoteReturn.getFlag();
 			final LispStruct thing = backquoteReturn.getThing();
 
 			if (CommonLispSymbols.BQ_AT_FLAG.equals(flag)) {
@@ -85,9 +85,9 @@ public class BackquoteReaderMacroFunction extends ReaderMacroFunction {
 			return new BackquoteReturn(CommonLispSymbols.NIL, code);
 		}
 
-		if (code instanceof SymbolStruct<?>) {
+		if (code instanceof SymbolStruct) {
 			// Need to check the constant symbols here
-			final SymbolStruct<?> codeSymbol = (SymbolStruct<?>) code;
+			final SymbolStruct codeSymbol = (SymbolStruct) code;
 			if (CommonLispSymbols.T.equals(codeSymbol)) {
 				return new BackquoteReturn(CommonLispSymbols.T, code);
 			}
@@ -104,7 +104,7 @@ public class BackquoteReaderMacroFunction extends ReaderMacroFunction {
 			final LispStruct cdrConsCode = consCode.getCdr();
 
 			if (CommonLispSymbols.BQ_AT_FLAG.equals(carConsCode) || CommonLispSymbols.BQ_DOT_FLAG.equals(carConsCode)) {
-				final SymbolStruct<?> carConsCodeFlag = (SymbolStruct<?>) carConsCode;
+				final SymbolStruct carConsCodeFlag = (SymbolStruct) carConsCode;
 				return new BackquoteReturn(carConsCodeFlag, cdrConsCode);
 			}
 
@@ -115,7 +115,7 @@ public class BackquoteReaderMacroFunction extends ReaderMacroFunction {
 			if (CommonLispSymbols.BQ_VECTOR_FLAG.equals(carConsCode)) {
 				final BackquoteReturn cdrBqtify = backquotify(cdrConsCode);
 
-				final SymbolStruct<?> cdrBqtifyFlag = cdrBqtify.getFlag();
+				final SymbolStruct cdrBqtifyFlag = cdrBqtify.getFlag();
 				final LispStruct cdrBqtifyThing = cdrBqtify.getThing();
 
 				final LispStruct cdrBqtify_1 = backquotify_1(cdrBqtifyFlag, cdrBqtifyThing);
@@ -124,12 +124,12 @@ public class BackquoteReaderMacroFunction extends ReaderMacroFunction {
 
 			final BackquoteReturn carBqtify = backquotify(carConsCode);
 
-			final SymbolStruct<?> carBqtifyFlag = carBqtify.getFlag();
+			final SymbolStruct carBqtifyFlag = carBqtify.getFlag();
 			final LispStruct carBqtifyThing = carBqtify.getThing();
 
 			final BackquoteReturn cdrBqtify = backquotify(cdrConsCode);
 
-			final SymbolStruct<?> cdrBqtifyFlag = cdrBqtify.getFlag();
+			final SymbolStruct cdrBqtifyFlag = cdrBqtify.getFlag();
 			final LispStruct cdrBqtifyThing = cdrBqtify.getThing();
 
 			if (CommonLispSymbols.BQ_AT_FLAG.equals(cdrBqtifyFlag)) {
@@ -201,7 +201,7 @@ public class BackquoteReaderMacroFunction extends ReaderMacroFunction {
 		return new BackquoteReturn(CommonLispSymbols.T, code);
 	}
 
-	private BackquoteReturn backquotifyAtFlag(final LispStruct carBqtifyThing, final SymbolStruct<?> cdrBqtifyFlag, final LispStruct cdrBqtifyThing) {
+	private BackquoteReturn backquotifyAtFlag(final LispStruct carBqtifyThing, final SymbolStruct cdrBqtifyFlag, final LispStruct cdrBqtifyThing) {
 		if (CommonLispSymbols.NIL.equals(cdrBqtifyFlag)) {
 			if (expandableBackqExpressionP(carBqtifyThing)) {
 				final ListStruct bqReturnThing = ListStruct.buildProperList(carBqtifyThing);
@@ -223,7 +223,7 @@ public class BackquoteReaderMacroFunction extends ReaderMacroFunction {
 		}
 	}
 
-	private BackquoteReturn backquotifyDotFlag(final LispStruct carBqtifyThing, final SymbolStruct<?> cdrBqtifyFlag, final LispStruct cdrBqtifyThing) {
+	private BackquoteReturn backquotifyDotFlag(final LispStruct carBqtifyThing, final SymbolStruct cdrBqtifyFlag, final LispStruct cdrBqtifyThing) {
 		if (CommonLispSymbols.NIL.equals(cdrBqtifyFlag)) {
 			if (expandableBackqExpressionP(carBqtifyThing)) {
 				final ListStruct bqReturnThing = ListStruct.buildProperList(carBqtifyThing);
@@ -255,9 +255,9 @@ public class BackquoteReaderMacroFunction extends ReaderMacroFunction {
 			return new BackquoteReturn(CommonLispSymbols.T, code);
 		}
 
-		if (code instanceof SymbolStruct<?>) {
+		if (code instanceof SymbolStruct) {
 			// Need to check the constant symbols here
-			final SymbolStruct<?> codeSymbol = (SymbolStruct<?>) code;
+			final SymbolStruct codeSymbol = (SymbolStruct) code;
 			if (CommonLispSymbols.T.equals(codeSymbol)) {
 				return new BackquoteReturn(CommonLispSymbols.T, code);
 			} else if (CommonLispSymbols.NIL.equals(codeSymbol)) {
@@ -275,7 +275,7 @@ public class BackquoteReaderMacroFunction extends ReaderMacroFunction {
 				// NOTE: This cast will always be fine because of how we build the ConsStruct in the CommaReaderMacroFunction
 				final LispStruct cadrConsCode = ((ConsStruct) cdrConsCode).getCar();
 				if (!expandableBackqExpressionP(cadrConsCode)) {
-					final SymbolStruct<?> carConsCodeFlag = (SymbolStruct<?>) carConsCode;
+					final SymbolStruct carConsCodeFlag = (SymbolStruct) carConsCode;
 					return new BackquoteReturn(carConsCodeFlag, cadrConsCode);
 				}
 			}
@@ -284,7 +284,7 @@ public class BackquoteReaderMacroFunction extends ReaderMacroFunction {
 					|| CommonLispSymbols.LIST.equals(carConsCode)
 					|| CommonLispSymbols.NCONC.equals(carConsCode)) {
 
-				final SymbolStruct<?> carConsCodeFlag = (SymbolStruct<?>) carConsCode;
+				final SymbolStruct carConsCodeFlag = (SymbolStruct) carConsCode;
 				return new BackquoteReturn(carConsCodeFlag, cdrConsCode);
 			}
 
@@ -309,7 +309,7 @@ public class BackquoteReaderMacroFunction extends ReaderMacroFunction {
 		return false;
 	}
 
-	private static LispStruct backquotify_1(final SymbolStruct<?> flag, final LispStruct thing) {
+	private static LispStruct backquotify_1(final SymbolStruct flag, final LispStruct thing) {
 
 		if (CommonLispSymbols.BQ_COMMA_FLAG.equals(flag) || CommonLispSymbols.T.equals(flag) || CommonLispSymbols.NIL.equals(flag)) {
 			return thing;
@@ -388,16 +388,16 @@ public class BackquoteReaderMacroFunction extends ReaderMacroFunction {
 
 	private static final class BackquoteReturn {
 
-		private final SymbolStruct<?> flag;
+		private final SymbolStruct flag;
 
 		private final LispStruct thing;
 
-		private BackquoteReturn(final SymbolStruct<?> flag, final LispStruct thing) {
+		private BackquoteReturn(final SymbolStruct flag, final LispStruct thing) {
 			this.flag = flag;
 			this.thing = thing;
 		}
 
-		public SymbolStruct<?> getFlag() {
+		public SymbolStruct getFlag() {
 			return flag;
 		}
 

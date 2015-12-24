@@ -23,7 +23,7 @@ import org.springframework.stereotype.Component;
 @Component
 public final class AtomFunction extends FunctionStruct {
 
-	public static final SymbolStruct<?> ATOM = GlobalPackageStruct.COMMON_LISP.intern("ATOM").getSymbol();
+	public static final SymbolStruct ATOM = GlobalPackageStruct.COMMON_LISP.intern("ATOM").getSymbol();
 
 	private static final long serialVersionUID = 2155686329445366209L;
 
@@ -39,7 +39,7 @@ public final class AtomFunction extends FunctionStruct {
 
 	private static OrdinaryLambdaList getInitLambdaListBindings() {
 
-		final SymbolStruct<?> listArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("OBJECT").getSymbol();
+		final SymbolStruct listArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("OBJECT").getSymbol();
 		final RequiredParameter requiredBinding = new RequiredParameter(listArgSymbol);
 		final List<RequiredParameter> requiredBindings = Collections.singletonList(requiredBinding);
 

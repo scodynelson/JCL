@@ -23,7 +23,7 @@ import org.springframework.stereotype.Component;
 @Component
 public final class LogAndC1Function extends FunctionStruct {
 
-	public static final SymbolStruct<?> LOGANDC1 = GlobalPackageStruct.COMMON_LISP.intern("LOGANDC1").getSymbol();
+	public static final SymbolStruct LOGANDC1 = GlobalPackageStruct.COMMON_LISP.intern("LOGANDC1").getSymbol();
 
 	private static final long serialVersionUID = -2828613108956817532L;
 
@@ -43,11 +43,11 @@ public final class LogAndC1Function extends FunctionStruct {
 	private static OrdinaryLambdaList getInitLambdaListBindings() {
 		final List<RequiredParameter> requiredBindings = new ArrayList<>(2);
 
-		final SymbolStruct<?> integer1Symbol = GlobalPackageStruct.COMMON_LISP.intern("INTEGER-1").getSymbol();
+		final SymbolStruct integer1Symbol = GlobalPackageStruct.COMMON_LISP.intern("INTEGER-1").getSymbol();
 		final RequiredParameter requiredBinding1 = new RequiredParameter(integer1Symbol);
 		requiredBindings.add(requiredBinding1);
 
-		final SymbolStruct<?> integer2Symbol = GlobalPackageStruct.COMMON_LISP.intern("INTEGER-2").getSymbol();
+		final SymbolStruct integer2Symbol = GlobalPackageStruct.COMMON_LISP.intern("INTEGER-2").getSymbol();
 		final RequiredParameter requiredBinding2 = new RequiredParameter(integer2Symbol);
 		requiredBindings.add(requiredBinding2);
 

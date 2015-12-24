@@ -30,7 +30,7 @@ public class ProgvExpander extends MacroFunctionExpander<ProgvStruct> {
 	private LispFormValueValidator validator;
 
 	@Override
-	public SymbolStruct<?> getFunctionSymbol() {
+	public SymbolStruct getFunctionSymbol() {
 		return SpecialOperatorStruct.PROGV;
 	}
 

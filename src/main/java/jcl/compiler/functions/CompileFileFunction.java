@@ -69,7 +69,7 @@ import org.springframework.stereotype.Component;
 @Component
 public final class CompileFileFunction extends FunctionStruct {
 
-	public static final SymbolStruct<?> COMPILE_FILE = GlobalPackageStruct.COMMON_LISP.intern("COMPILE-FILE").getSymbol();
+	public static final SymbolStruct COMPILE_FILE = GlobalPackageStruct.COMMON_LISP.intern("COMPILE-FILE").getSymbol();
 
 	private static final long serialVersionUID = -3067892826539388846L;
 
@@ -107,39 +107,39 @@ public final class CompileFileFunction extends FunctionStruct {
 
 	private static OrdinaryLambdaList getInitLambdaListBindings() {
 
-		final SymbolStruct<?> inputFileArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("INPUT-FILE").getSymbol();
+		final SymbolStruct inputFileArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("INPUT-FILE").getSymbol();
 		final RequiredParameter requiredBinding = new RequiredParameter(inputFileArgSymbol);
 		final List<RequiredParameter> requiredBindings = Collections.singletonList(requiredBinding);
 
 		final List<KeyParameter> keyBindings = new ArrayList<>(4);
 
-		final SymbolStruct<?> outputFileArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("OUTPUT-FILE").getSymbol();
+		final SymbolStruct outputFileArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("OUTPUT-FILE").getSymbol();
 
-		final SymbolStruct<?> outputFileSuppliedP = GlobalPackageStruct.COMMON_LISP.intern("OUTPUT-FILE-P-" + System.nanoTime()).getSymbol();
+		final SymbolStruct outputFileSuppliedP = GlobalPackageStruct.COMMON_LISP.intern("OUTPUT-FILE-P-" + System.nanoTime()).getSymbol();
 		final SuppliedPParameter outputFileSuppliedPBinding = new SuppliedPParameter(outputFileSuppliedP);
 
 		final KeyParameter outputFileKeyBinding = new KeyParameter(outputFileArgSymbol, NullStruct.INSTANCE, CommonLispSymbols.OUTPUT_FILE_KEYWORD, outputFileSuppliedPBinding);
 		keyBindings.add(outputFileKeyBinding);
 
-		final SymbolStruct<?> verboseArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("VERBOSE").getSymbol();
+		final SymbolStruct verboseArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("VERBOSE").getSymbol();
 
-		final SymbolStruct<?> verboseSuppliedP = GlobalPackageStruct.COMMON_LISP.intern("VERBOSE-P-" + System.nanoTime()).getSymbol();
+		final SymbolStruct verboseSuppliedP = GlobalPackageStruct.COMMON_LISP.intern("VERBOSE-P-" + System.nanoTime()).getSymbol();
 		final SuppliedPParameter verboseSuppliedPBinding = new SuppliedPParameter(verboseSuppliedP);
 
 		final KeyParameter verboseKeyBinding = new KeyParameter(verboseArgSymbol, NullStruct.INSTANCE, CommonLispSymbols.VERBOSE_KEYWORD, verboseSuppliedPBinding);
 		keyBindings.add(verboseKeyBinding);
 
-		final SymbolStruct<?> printArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("PRINT").getSymbol();
+		final SymbolStruct printArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("PRINT").getSymbol();
 
-		final SymbolStruct<?> printSuppliedP = GlobalPackageStruct.COMMON_LISP.intern("PRINT-P-" + System.nanoTime()).getSymbol();
+		final SymbolStruct printSuppliedP = GlobalPackageStruct.COMMON_LISP.intern("PRINT-P-" + System.nanoTime()).getSymbol();
 		final SuppliedPParameter printSuppliedPBinding = new SuppliedPParameter(printSuppliedP);
 
 		final KeyParameter printKeyBinding = new KeyParameter(printArgSymbol, NullStruct.INSTANCE, CommonLispSymbols.PRINT_KEYWORD, printSuppliedPBinding);
 		keyBindings.add(printKeyBinding);
 
-		final SymbolStruct<?> externalFormatArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("EXTERNAL-FORMAT").getSymbol();
+		final SymbolStruct externalFormatArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("EXTERNAL-FORMAT").getSymbol();
 
-		final SymbolStruct<?> externalFormatSuppliedP = GlobalPackageStruct.COMMON_LISP.intern("EXTERNAL-FORMAT-P-" + System.nanoTime()).getSymbol();
+		final SymbolStruct externalFormatSuppliedP = GlobalPackageStruct.COMMON_LISP.intern("EXTERNAL-FORMAT-P-" + System.nanoTime()).getSymbol();
 		final SuppliedPParameter externalFormatSuppliedPBinding = new SuppliedPParameter(externalFormatSuppliedP);
 
 		final KeyParameter externalFormatKeyBinding = new KeyParameter(externalFormatArgSymbol, NullStruct.INSTANCE, CommonLispSymbols.EXTERNAL_FORMAT_KEYWORD, externalFormatSuppliedPBinding);
@@ -156,8 +156,8 @@ public final class CompileFileFunction extends FunctionStruct {
 
 		final LispStruct inputFile = lispStructs[0];
 
-		final BooleanStruct currentCompileVerbose = CompilerVariables.COMPILE_VERBOSE.getValue();
-		final BooleanStruct currentCompilePrint = CompilerVariables.COMPILE_PRINT.getValue();
+		final BooleanStruct currentCompileVerbose = CompilerVariables.COMPILE_VERBOSE.getVariableValue();
+		final BooleanStruct currentCompilePrint = CompilerVariables.COMPILE_PRINT.getVariableValue();
 
 		LispStruct outputFile = null;
 		boolean verbose = currentCompileVerbose.booleanValue();
@@ -252,8 +252,8 @@ public final class CompileFileFunction extends FunctionStruct {
 		final PathnameStruct outputFileTruename = new PathnameStruct(outputFileAbsolutePath);
 		CompilerVariables.COMPILE_FILE_TRUENAME.setValue(outputFileTruename);
 
-		final ReadtableStruct previousReadtable = ReaderVariables.READTABLE.getValue();
-		final PackageStruct previousPackage = PackageVariables.PACKAGE.getValue();
+		final ReadtableStruct previousReadtable = ReaderVariables.READTABLE.getVariableValue();
+		final PackageStruct previousPackage = PackageVariables.PACKAGE.getVariableValue();
 
 		BooleanStruct compiledWithWarnings = NILStruct.INSTANCE;
 		boolean compiledSuccessfully = false;

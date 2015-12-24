@@ -19,7 +19,7 @@ import org.springframework.stereotype.Component;
 @Component
 public final class GC extends FunctionStruct {
 
-	public static final SymbolStruct<?> GC = GlobalPackageStruct.EXTENSIONS.intern("GC").getSymbol();
+	public static final SymbolStruct GC = GlobalPackageStruct.EXTENSIONS.intern("GC").getSymbol();
 
 	private static final long serialVersionUID = 1273370280152802930L;
 

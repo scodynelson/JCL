@@ -25,7 +25,7 @@ import org.springframework.stereotype.Component;
 @Component
 public final class MinusPFunction extends FunctionStruct {
 
-	public static final SymbolStruct<?> MINUSP = GlobalPackageStruct.COMMON_LISP.intern("MINUSP").getSymbol();
+	public static final SymbolStruct MINUSP = GlobalPackageStruct.COMMON_LISP.intern("MINUSP").getSymbol();
 
 	private static final long serialVersionUID = 4997633282366962653L;
 
@@ -44,7 +44,7 @@ public final class MinusPFunction extends FunctionStruct {
 
 	private static OrdinaryLambdaList getInitLambdaListBindings() {
 
-		final SymbolStruct<?> firstArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("REAL").getSymbol();
+		final SymbolStruct firstArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("REAL").getSymbol();
 		final RequiredParameter requiredBinding = new RequiredParameter(firstArgSymbol);
 		final List<RequiredParameter> requiredBindings = Collections.singletonList(requiredBinding);
 

@@ -28,7 +28,7 @@ public class CatchExpander extends MacroFunctionExpander<CatchStruct> {
 	private LispFormValueValidator validator;
 
 	@Override
-	public SymbolStruct<?> getFunctionSymbol() {
+	public SymbolStruct getFunctionSymbol() {
 		return SpecialOperatorStruct.CATCH;
 	}
 

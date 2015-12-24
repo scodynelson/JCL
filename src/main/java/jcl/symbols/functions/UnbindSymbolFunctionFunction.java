@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
 @Component
 public final class UnbindSymbolFunctionFunction extends AbstractSystemFunctionStruct {
 
-	public static final SymbolStruct<?> UNBIND_SYMBOL_FUNCTION = GlobalPackageStruct.SYSTEM.intern("UNBIND-SYMBOL-FUNCTION").getSymbol();
+	public static final SymbolStruct UNBIND_SYMBOL_FUNCTION = GlobalPackageStruct.SYSTEM.intern("UNBIND-SYMBOL-FUNCTION").getSymbol();
 
 	private static final long serialVersionUID = -5643412206135382825L;
 
@@ -33,7 +33,7 @@ public final class UnbindSymbolFunctionFunction extends AbstractSystemFunctionSt
 	public LispStruct apply(final LispStruct... lispStructs) {
 		super.apply(lispStructs);
 
-		final SymbolStruct<?> symbol = (SymbolStruct) lispStructs[0];
+		final SymbolStruct symbol = (SymbolStruct) lispStructs[0];
 		return symbol.unbindFunction();
 	}
 

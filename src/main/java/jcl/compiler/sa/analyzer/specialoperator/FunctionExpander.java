@@ -32,7 +32,7 @@ public class FunctionExpander extends MacroFunctionExpander<CompilerFunctionStru
 	private Printer printer;
 
 	@Override
-	public SymbolStruct<?> getFunctionSymbol() {
+	public SymbolStruct getFunctionSymbol() {
 		return SpecialOperatorStruct.FUNCTION;
 	}
 
@@ -46,7 +46,7 @@ public class FunctionExpander extends MacroFunctionExpander<CompilerFunctionStru
 		validator.validateObjectTypes(second, "FUNCTION", "FUNCTION ARGUMENT", SymbolStruct.class, ListStruct.class);
 
 		if (second instanceof SymbolStruct) {
-			return new SymbolCompilerFunctionStruct((SymbolStruct<?>) second);
+			return new SymbolCompilerFunctionStruct((SymbolStruct) second);
 		} else {
 			return analyzeFunctionList((ListStruct) second, environment);
 		}

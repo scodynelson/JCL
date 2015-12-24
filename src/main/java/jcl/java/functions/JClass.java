@@ -22,7 +22,7 @@ import org.springframework.stereotype.Component;
 @Component
 public final class JClass extends FunctionStruct {
 
-	public static final SymbolStruct<?> J_CLASS = GlobalPackageStruct.EXTENSIONS.intern("JCLASS").getSymbol();
+	public static final SymbolStruct J_CLASS = GlobalPackageStruct.EXTENSIONS.intern("JCLASS").getSymbol();
 
 	private static final long serialVersionUID = -4901948171672174993L;
 
@@ -38,7 +38,7 @@ public final class JClass extends FunctionStruct {
 
 	private static OrdinaryLambdaList getInitLambdaListBindings() {
 
-		final SymbolStruct<?> classNameArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("CLASS-NAME-ARG").getSymbol();
+		final SymbolStruct classNameArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("CLASS-NAME-ARG").getSymbol();
 		final RequiredParameter requiredBinding = new RequiredParameter(classNameArgSymbol);
 		final List<RequiredParameter> requiredBindings = Collections.singletonList(requiredBinding);
 

@@ -35,7 +35,7 @@ public final class ImportFunction extends AbstractSymbolListPackageFunction {
 	 * @return returns {@link PackageStruct#importSymbols(SymbolStruct[])} as a method reference function
 	 */
 	@Override
-	protected BiConsumer<PackageStruct, SymbolStruct<?>[]> symbolListFunction() {
+	protected BiConsumer<PackageStruct, SymbolStruct[]> symbolListFunction() {
 		return PackageStruct::importSymbols;
 	}
 

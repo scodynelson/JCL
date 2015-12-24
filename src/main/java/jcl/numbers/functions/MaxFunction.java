@@ -24,7 +24,7 @@ import org.springframework.stereotype.Component;
 @Component
 public final class MaxFunction extends FunctionStruct {
 
-	public static final SymbolStruct<?> MAX = GlobalPackageStruct.COMMON_LISP.intern("MAX").getSymbol();
+	public static final SymbolStruct MAX = GlobalPackageStruct.COMMON_LISP.intern("MAX").getSymbol();
 
 	private static final long serialVersionUID = 8175787423495063531L;
 
@@ -43,11 +43,11 @@ public final class MaxFunction extends FunctionStruct {
 
 	private static OrdinaryLambdaList getInitLambdaListBindings() {
 
-		final SymbolStruct<?> firstArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("REAL").getSymbol();
+		final SymbolStruct firstArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("REAL").getSymbol();
 		final RequiredParameter requiredBinding = new RequiredParameter(firstArgSymbol);
 		final List<RequiredParameter> requiredBindings = Collections.singletonList(requiredBinding);
 
-		final SymbolStruct<?> restArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("REALS").getSymbol();
+		final SymbolStruct restArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("REALS").getSymbol();
 		final RestParameter restBinding = new RestParameter(restArgSymbol);
 
 		return new OrdinaryLambdaList.Builder().requiredBindings(requiredBindings)

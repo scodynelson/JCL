@@ -25,7 +25,7 @@ import org.springframework.stereotype.Component;
 @Component
 public final class LogBitPFunction extends FunctionStruct {
 
-	public static final SymbolStruct<?> LOGBITP = GlobalPackageStruct.COMMON_LISP.intern("LOGBITP").getSymbol();
+	public static final SymbolStruct LOGBITP = GlobalPackageStruct.COMMON_LISP.intern("LOGBITP").getSymbol();
 
 	private static final long serialVersionUID = 3620896515589895425L;
 
@@ -45,11 +45,11 @@ public final class LogBitPFunction extends FunctionStruct {
 	private static OrdinaryLambdaList getInitLambdaListBindings() {
 		final List<RequiredParameter> requiredBindings = new ArrayList<>(2);
 
-		final SymbolStruct<?> indexSymbol = GlobalPackageStruct.COMMON_LISP.intern("INDEX").getSymbol();
+		final SymbolStruct indexSymbol = GlobalPackageStruct.COMMON_LISP.intern("INDEX").getSymbol();
 		final RequiredParameter requiredBinding1 = new RequiredParameter(indexSymbol);
 		requiredBindings.add(requiredBinding1);
 
-		final SymbolStruct<?> integerSymbol = GlobalPackageStruct.COMMON_LISP.intern("INTEGER").getSymbol();
+		final SymbolStruct integerSymbol = GlobalPackageStruct.COMMON_LISP.intern("INTEGER").getSymbol();
 		final RequiredParameter requiredBinding2 = new RequiredParameter(integerSymbol);
 		requiredBindings.add(requiredBinding2);
 

@@ -77,7 +77,7 @@ final class ListReaderMacroFunction implements Serializable {
 			codePoint = flushWhitespace(reader);
 		}
 
-		if (ReaderVariables.READ_SUPPRESS.getValue().booleanValue()) {
+		if (ReaderVariables.READ_SUPPRESS.getVariableValue().booleanValue()) {
 			return NullStruct.INSTANCE;
 		}
 

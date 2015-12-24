@@ -65,7 +65,7 @@ class MacroCharacterReaderState implements ReaderState {
 		final ReadPeekResult readResult = tokenBuilder.getPreviousReadResult();
 		final int codePoint = readResult.getResult();
 
-		final ReadtableStruct readtable = ReaderVariables.READTABLE.getValue();
+		final ReadtableStruct readtable = ReaderVariables.READTABLE.getVariableValue();
 		final ReaderMacroFunction readerMacroFunction = readtable.getMacroCharacter(codePoint);
 
 		if (readerMacroFunction == null) {

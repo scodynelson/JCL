@@ -21,7 +21,7 @@ import org.springframework.stereotype.Component;
 @Component
 public final class LogEqvFunction extends FunctionStruct {
 
-	public static final SymbolStruct<?> LOGEQV = GlobalPackageStruct.COMMON_LISP.intern("LOGEQV").getSymbol();
+	public static final SymbolStruct LOGEQV = GlobalPackageStruct.COMMON_LISP.intern("LOGEQV").getSymbol();
 
 	private static final long serialVersionUID = 1538837662052530866L;
 
@@ -40,7 +40,7 @@ public final class LogEqvFunction extends FunctionStruct {
 
 	private static OrdinaryLambdaList getInitLambdaListBindings() {
 
-		final SymbolStruct<?> restArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("INTEGERS").getSymbol();
+		final SymbolStruct restArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("INTEGERS").getSymbol();
 		final RestParameter restBinding = new RestParameter(restArgSymbol);
 
 		return new OrdinaryLambdaList.Builder().restBinding(restBinding)

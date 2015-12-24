@@ -28,7 +28,7 @@ import org.springframework.stereotype.Component;
 @Component
 public final class PathnameTypeFunction extends FunctionStruct {
 
-	public static final SymbolStruct<?> PATHNAME_TYPE = GlobalPackageStruct.COMMON_LISP.intern("PATHNAME-TYPE").getSymbol();
+	public static final SymbolStruct PATHNAME_TYPE = GlobalPackageStruct.COMMON_LISP.intern("PATHNAME-TYPE").getSymbol();
 
 	private static final long serialVersionUID = -4494745298812583275L;
 
@@ -47,13 +47,13 @@ public final class PathnameTypeFunction extends FunctionStruct {
 
 	private static OrdinaryLambdaList getInitLambdaListBindings() {
 
-		final SymbolStruct<?> pathspecArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("PATHSPEC").getSymbol();
+		final SymbolStruct pathspecArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("PATHSPEC").getSymbol();
 		final RequiredParameter requiredBinding = new RequiredParameter(pathspecArgSymbol);
 		final List<RequiredParameter> requiredBindings = Collections.singletonList(requiredBinding);
 
-		final SymbolStruct<?> caseArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("CASE").getSymbol();
+		final SymbolStruct caseArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("CASE").getSymbol();
 
-		final SymbolStruct<?> caseSuppliedPSymbol = GlobalPackageStruct.COMMON_LISP.intern("CASE-P-").getSymbol();
+		final SymbolStruct caseSuppliedPSymbol = GlobalPackageStruct.COMMON_LISP.intern("CASE-P-").getSymbol();
 		final SuppliedPParameter suppliedPBinding = new SuppliedPParameter(caseSuppliedPSymbol);
 
 		final KeyParameter keyBinding = new KeyParameter(caseArgSymbol, NullStruct.INSTANCE, CommonLispSymbols.CASE_KEYWORD, suppliedPBinding);

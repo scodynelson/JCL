@@ -22,7 +22,7 @@ public class ReturnFromException extends ProgramErrorException {
 	 * The {@link SymbolStruct} name of the 'block' generated via the {@link BlockCodeGenerator} that matches this
 	 * exception.
 	 */
-	private final SymbolStruct<?> name;
+	private final SymbolStruct name;
 
 	/**
 	 * The resulting {@link LispStruct} value to return when the appropriate 'block' is hit.
@@ -37,7 +37,7 @@ public class ReturnFromException extends ProgramErrorException {
 	 * @param result
 	 * 		the resulting {@link LispStruct} value to return when the appropriate 'block' is hit
 	 */
-	public ReturnFromException(final SymbolStruct<?> name, final LispStruct result) {
+	public ReturnFromException(final SymbolStruct name, final LispStruct result) {
 		super("Name: " + name + " : Result: " + result);
 		this.name = name;
 		this.result = result;
@@ -48,7 +48,7 @@ public class ReturnFromException extends ProgramErrorException {
 	 *
 	 * @return the value of the {@link #name} property
 	 */
-	public SymbolStruct<?> getName() {
+	public SymbolStruct getName() {
 		return name;
 	}
 

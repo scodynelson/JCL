@@ -3,7 +3,7 @@ package jcl.symbols;
 import jcl.packages.GlobalPackageStruct;
 import jcl.packages.PackageStruct;
 
-public final class SpecialOperatorStruct extends SymbolStruct<SpecialOperatorStruct> {
+public final class SpecialOperatorStruct extends SymbolStruct {
 
 	public static final SpecialOperatorStruct BLOCK = new SpecialOperatorStruct("BLOCK", GlobalPackageStruct.COMMON_LISP);
 

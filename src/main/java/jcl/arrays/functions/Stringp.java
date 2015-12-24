@@ -22,7 +22,7 @@ import org.springframework.stereotype.Component;
 @Component
 public final class Stringp extends FunctionStruct {
 
-	public static final SymbolStruct<?> STRINGP = GlobalPackageStruct.COMMON_LISP.intern("STRINGP").getSymbol();
+	public static final SymbolStruct STRINGP = GlobalPackageStruct.COMMON_LISP.intern("STRINGP").getSymbol();
 
 	private static final long serialVersionUID = 8175736295020631918L;
 
@@ -38,7 +38,7 @@ public final class Stringp extends FunctionStruct {
 
 	private static OrdinaryLambdaList getInitLambdaListBindings() {
 
-		final SymbolStruct<?> listArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("OBJECT").getSymbol();
+		final SymbolStruct listArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("OBJECT").getSymbol();
 		final RequiredParameter requiredBinding = new RequiredParameter(listArgSymbol);
 		final List<RequiredParameter> requiredBindings = Collections.singletonList(requiredBinding);
 

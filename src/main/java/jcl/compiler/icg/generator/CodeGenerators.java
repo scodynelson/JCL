@@ -57,7 +57,7 @@ final class CodeGenerators {
 		}
 	}
 
-	static void generateSymbol(final SymbolStruct<?> input, final JavaMethodBuilder methodBuilder,
+	static void generateSymbol(final SymbolStruct input, final JavaMethodBuilder methodBuilder,
 	                           final int packageStore, final int symbolStore) {
 
 		final MethodVisitor mv = methodBuilder.getMethodVisitor();

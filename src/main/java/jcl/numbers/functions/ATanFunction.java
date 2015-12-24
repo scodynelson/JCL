@@ -27,7 +27,7 @@ import org.springframework.stereotype.Component;
 @Component
 public final class ATanFunction extends FunctionStruct {
 
-	public static final SymbolStruct<?> ATAN = GlobalPackageStruct.COMMON_LISP.intern("ATAN").getSymbol();
+	public static final SymbolStruct ATAN = GlobalPackageStruct.COMMON_LISP.intern("ATAN").getSymbol();
 
 	private static final long serialVersionUID = -543069078158302923L;
 
@@ -46,13 +46,13 @@ public final class ATanFunction extends FunctionStruct {
 
 	private static OrdinaryLambdaList getInitLambdaListBindings() {
 
-		final SymbolStruct<?> firstArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("NUMBER1").getSymbol();
+		final SymbolStruct firstArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("NUMBER1").getSymbol();
 		final RequiredParameter requiredBinding = new RequiredParameter(firstArgSymbol);
 		final List<RequiredParameter> requiredBindings = Collections.singletonList(requiredBinding);
 
-		final SymbolStruct<?> optionalArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("NUMBER2").getSymbol();
+		final SymbolStruct optionalArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("NUMBER2").getSymbol();
 
-		final SymbolStruct<?> optionalSuppliedP = GlobalPackageStruct.COMMON_LISP.intern("NUMBER2-P-" + System.nanoTime()).getSymbol();
+		final SymbolStruct optionalSuppliedP = GlobalPackageStruct.COMMON_LISP.intern("NUMBER2-P-" + System.nanoTime()).getSymbol();
 		final SuppliedPParameter optionalSuppliedPBinding = new SuppliedPParameter(optionalSuppliedP);
 
 		final OptionalParameter optionalBinding = new OptionalParameter(optionalArgSymbol, NullStruct.INSTANCE, optionalSuppliedPBinding);

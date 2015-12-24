@@ -21,7 +21,7 @@ import org.springframework.stereotype.Component;
 @Component
 public final class NthFunction extends FunctionStruct {
 
-	public static final SymbolStruct<?> NTH = GlobalPackageStruct.COMMON_LISP.intern("NTH").getSymbol();
+	public static final SymbolStruct NTH = GlobalPackageStruct.COMMON_LISP.intern("NTH").getSymbol();
 
 	private static final long serialVersionUID = 2998151869440671653L;
 
@@ -39,11 +39,11 @@ public final class NthFunction extends FunctionStruct {
 
 		final List<RequiredParameter> requiredBindings = new ArrayList<>(2);
 
-		final SymbolStruct<?> object1ArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("N").getSymbol();
+		final SymbolStruct object1ArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("N").getSymbol();
 		final RequiredParameter object1RequiredBinding = new RequiredParameter(object1ArgSymbol);
 		requiredBindings.add(object1RequiredBinding);
 
-		final SymbolStruct<?> object2ArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("LIST").getSymbol();
+		final SymbolStruct object2ArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("LIST").getSymbol();
 		final RequiredParameter object2RequiredBinding = new RequiredParameter(object2ArgSymbol);
 		requiredBindings.add(object2RequiredBinding);
 

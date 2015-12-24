@@ -11,7 +11,7 @@ public class EnvironmentParameter extends Parameter {
 
 	private static final long serialVersionUID = 7762075133466719180L;
 
-	public EnvironmentParameter(final SymbolStruct<?> var) {
+	public EnvironmentParameter(final SymbolStruct var) {
 		super(var, null, ListType.INSTANCE, null, true);
 	}
 }

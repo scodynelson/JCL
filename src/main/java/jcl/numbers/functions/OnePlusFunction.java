@@ -27,7 +27,7 @@ import org.springframework.stereotype.Component;
 @Component
 public final class OnePlusFunction extends FunctionStruct {
 
-	public static final SymbolStruct<?> ONE_PLUS = GlobalPackageStruct.COMMON_LISP.intern("1+").getSymbol();
+	public static final SymbolStruct ONE_PLUS = GlobalPackageStruct.COMMON_LISP.intern("1+").getSymbol();
 
 	private static final long serialVersionUID = -5365841233828975994L;
 
@@ -43,7 +43,7 @@ public final class OnePlusFunction extends FunctionStruct {
 
 	private static OrdinaryLambdaList getInitLambdaListBindings() {
 
-		final SymbolStruct<?> listArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("OBJECT").getSymbol();
+		final SymbolStruct listArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("OBJECT").getSymbol();
 		final RequiredParameter requiredBinding = new RequiredParameter(listArgSymbol);
 		final List<RequiredParameter> requiredBindings = Collections.singletonList(requiredBinding);
 

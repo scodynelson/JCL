@@ -21,7 +21,7 @@ import org.springframework.stereotype.Component;
 @Component
 public final class MakeStringInputStream extends FunctionStruct {
 
-	public static final SymbolStruct<?> MAKE_STRING_INPUT_STREAM = GlobalPackageStruct.COMMON_LISP.intern("MAKE-STRING-INPUT-STREAM").getSymbol();
+	public static final SymbolStruct MAKE_STRING_INPUT_STREAM = GlobalPackageStruct.COMMON_LISP.intern("MAKE-STRING-INPUT-STREAM").getSymbol();
 
 	private static final long serialVersionUID = -7551808205259177133L;
 
@@ -37,7 +37,7 @@ public final class MakeStringInputStream extends FunctionStruct {
 
 	private static OrdinaryLambdaList getInitLambdaListBindings() {
 
-		final SymbolStruct<?> stringArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("STRING").getSymbol();
+		final SymbolStruct stringArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("STRING").getSymbol();
 		final RequiredParameter requiredBinding = new RequiredParameter(stringArgSymbol);
 		final List<RequiredParameter> requiredBindings = Collections.singletonList(requiredBinding);
 

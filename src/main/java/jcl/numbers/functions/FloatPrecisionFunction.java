@@ -23,7 +23,7 @@ import org.springframework.stereotype.Component;
 @Component
 public final class FloatPrecisionFunction extends FunctionStruct {
 
-	public static final SymbolStruct<?> FLOAT_PRECISION = GlobalPackageStruct.COMMON_LISP.intern("FLOAT-PRECISION").getSymbol();
+	public static final SymbolStruct FLOAT_PRECISION = GlobalPackageStruct.COMMON_LISP.intern("FLOAT-PRECISION").getSymbol();
 
 	private static final long serialVersionUID = -8530487758459648926L;
 
@@ -42,7 +42,7 @@ public final class FloatPrecisionFunction extends FunctionStruct {
 
 	private static OrdinaryLambdaList getInitLambdaListBindings() {
 
-		final SymbolStruct<?> firstArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("FLOAT").getSymbol();
+		final SymbolStruct firstArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("FLOAT").getSymbol();
 		final RequiredParameter requiredBinding = new RequiredParameter(firstArgSymbol);
 		final List<RequiredParameter> requiredBindings = Collections.singletonList(requiredBinding);
 

@@ -39,7 +39,7 @@ import org.springframework.stereotype.Component;
 @Component
 public final class MergePathnamesFunction extends FunctionStruct {
 
-	public static final SymbolStruct<?> MERGE_PATHNAMES = GlobalPackageStruct.COMMON_LISP.intern("MERGE-PATHNAMES").getSymbol();
+	public static final SymbolStruct MERGE_PATHNAMES = GlobalPackageStruct.COMMON_LISP.intern("MERGE-PATHNAMES").getSymbol();
 
 	private static final long serialVersionUID = 3634903325863235363L;
 
@@ -61,23 +61,23 @@ public final class MergePathnamesFunction extends FunctionStruct {
 
 	private static OrdinaryLambdaList getInitLambdaListBindings() {
 
-		final SymbolStruct<?> pathnameArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("PATHNAME").getSymbol();
+		final SymbolStruct pathnameArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("PATHNAME").getSymbol();
 		final RequiredParameter requiredBinding = new RequiredParameter(pathnameArgSymbol);
 		final List<RequiredParameter> requiredBindings = Collections.singletonList(requiredBinding);
 
 		final List<OptionalParameter> optionalBindings = new ArrayList<>(2);
 
-		final SymbolStruct<?> defaultPathnameArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("DEFAULT-PATHNAME").getSymbol();
+		final SymbolStruct defaultPathnameArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("DEFAULT-PATHNAME").getSymbol();
 
-		final SymbolStruct<?> defaultPathnameSuppliedPSymbol = GlobalPackageStruct.COMMON_LISP.intern("DEFAULT-PATHNAME-P-" + System.nanoTime()).getSymbol();
+		final SymbolStruct defaultPathnameSuppliedPSymbol = GlobalPackageStruct.COMMON_LISP.intern("DEFAULT-PATHNAME-P-" + System.nanoTime()).getSymbol();
 		final SuppliedPParameter defaultPathnameSuppliedPBinding = new SuppliedPParameter(defaultPathnameSuppliedPSymbol);
 
 		final OptionalParameter defaultPathnameOptionalBinding = new OptionalParameter(defaultPathnameArgSymbol, NullStruct.INSTANCE, defaultPathnameSuppliedPBinding);
 		optionalBindings.add(defaultPathnameOptionalBinding);
 
-		final SymbolStruct<?> defaultVersionArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("DEFAULT-VERSION").getSymbol();
+		final SymbolStruct defaultVersionArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("DEFAULT-VERSION").getSymbol();
 
-		final SymbolStruct<?> defaultVersionSuppliedPSymbol = GlobalPackageStruct.COMMON_LISP.intern("DEFAULT-VERSION-P-" + System.nanoTime()).getSymbol();
+		final SymbolStruct defaultVersionSuppliedPSymbol = GlobalPackageStruct.COMMON_LISP.intern("DEFAULT-VERSION-P-" + System.nanoTime()).getSymbol();
 		final SuppliedPParameter defaultVersionSuppliedPBinding = new SuppliedPParameter(defaultVersionSuppliedPSymbol);
 
 		final OptionalParameter defaultVersionOptionalBinding = new OptionalParameter(defaultVersionArgSymbol, NullStruct.INSTANCE, defaultVersionSuppliedPBinding);
@@ -109,7 +109,7 @@ public final class MergePathnamesFunction extends FunctionStruct {
 	}
 
 	public PathnameStruct mergePathnames(final LispStruct pathSpec) {
-		final PathnameStruct defaultPathspec = PathnameVariables.DEFAULT_PATHNAME_DEFAULTS.getValue();
+		final PathnameStruct defaultPathspec = PathnameVariables.DEFAULT_PATHNAME_DEFAULTS.getVariableValue();
 		return mergePathnames(pathSpec, defaultPathspec);
 	}
 

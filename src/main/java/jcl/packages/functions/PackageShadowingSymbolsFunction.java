@@ -62,7 +62,7 @@ public final class PackageShadowingSymbolsFunction extends AbstractPackageFuncti
 		final LispStruct lispStruct = lispStructs[0];
 		final PackageStruct aPackage = findPackage(lispStruct);
 
-		final Collection<SymbolStruct<?>> shadowingSymbols = aPackage.getShadowingSymbols().values();
+		final Collection<SymbolStruct> shadowingSymbols = aPackage.getShadowingSymbols().values();
 		return ListStruct.buildProperList(new ArrayList<>(shadowingSymbols));
 	}
 

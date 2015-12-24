@@ -29,16 +29,16 @@ public class SetqStruct extends CompilerSpecialOperatorStruct {
 
 		private static final long serialVersionUID = -7804939280136663517L;
 
-		private final SymbolStruct<?> var;
+		private final SymbolStruct var;
 
 		private final LispStruct form;
 
-		public SetqPair(final SymbolStruct<?> var, final LispStruct form) {
+		public SetqPair(final SymbolStruct var, final LispStruct form) {
 			this.var = var;
 			this.form = form;
 		}
 
-		public SymbolStruct<?> getVar() {
+		public SymbolStruct getVar() {
 			return var;
 		}
 

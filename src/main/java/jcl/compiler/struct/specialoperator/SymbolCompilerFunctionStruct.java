@@ -10,13 +10,13 @@ public class SymbolCompilerFunctionStruct implements CompilerFunctionStruct {
 
 	private static final long serialVersionUID = 1450935885516226944L;
 
-	private final SymbolStruct<?> functionSymbol;
+	private final SymbolStruct functionSymbol;
 
-	public SymbolCompilerFunctionStruct(final SymbolStruct<?> functionSymbol) {
+	public SymbolCompilerFunctionStruct(final SymbolStruct functionSymbol) {
 		this.functionSymbol = functionSymbol;
 	}
 
-	public SymbolStruct<?> getFunctionSymbol() {
+	public SymbolStruct getFunctionSymbol() {
 		return functionSymbol;
 	}
 }

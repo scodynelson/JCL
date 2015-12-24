@@ -42,7 +42,7 @@ import org.springframework.stereotype.Component;
 @Component
 public final class EvalFunction extends FunctionStruct {
 
-	public static final SymbolStruct<?> EVAL = GlobalPackageStruct.COMMON_LISP.intern("EVAL").getSymbol();
+	public static final SymbolStruct EVAL = GlobalPackageStruct.COMMON_LISP.intern("EVAL").getSymbol();
 
 	private static final long serialVersionUID = 6775277576397622716L;
 
@@ -73,7 +73,7 @@ public final class EvalFunction extends FunctionStruct {
 
 	private static OrdinaryLambdaList getInitLambdaListBindings() {
 
-		final SymbolStruct<?> listArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("FORM").getSymbol();
+		final SymbolStruct listArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("FORM").getSymbol();
 		final RequiredParameter requiredBinding = new RequiredParameter(listArgSymbol);
 		final List<RequiredParameter> requiredBindings = Collections.singletonList(requiredBinding);
 
@@ -96,7 +96,7 @@ public final class EvalFunction extends FunctionStruct {
 	@SuppressWarnings({"unchecked", "rawtypes"})
 	public LispStruct eval(final LispStruct originalExp, final Environment environment) {
 
-		final BooleanStruct oldCompileTopLevel = CompilerVariables.COMPILE_TOP_LEVEL.getValue();
+		final BooleanStruct oldCompileTopLevel = CompilerVariables.COMPILE_TOP_LEVEL.getVariableValue();
 		CompilerVariables.COMPILE_TOP_LEVEL.setValue(NILStruct.INSTANCE);
 
 		LispStruct exp;
@@ -107,7 +107,7 @@ public final class EvalFunction extends FunctionStruct {
 		}
 
 		if (exp instanceof SymbolStruct) {
-			final SymbolStruct<?> symbol = (SymbolStruct) exp;
+			final SymbolStruct symbol = (SymbolStruct) exp;
 			return symbol.getValue();
 		}
 
@@ -148,7 +148,7 @@ public final class EvalFunction extends FunctionStruct {
 
 		if (exp instanceof SymbolCompilerFunctionStruct) {
 			final SymbolCompilerFunctionStruct symbolCompilerFunction = (SymbolCompilerFunctionStruct) exp;
-			final SymbolStruct<?> functionSymbol = symbolCompilerFunction.getFunctionSymbol();
+			final SymbolStruct functionSymbol = symbolCompilerFunction.getFunctionSymbol();
 			return functionSymbol.getFunction();
 		}
 
@@ -163,7 +163,7 @@ public final class EvalFunction extends FunctionStruct {
 		if (exp instanceof SymbolFunctionCallStruct) {
 			final SymbolFunctionCallStruct functionCall = (SymbolFunctionCallStruct) exp;
 			final SymbolCompilerFunctionStruct symbolCompilerFunction = functionCall.getSymbolCompilerFunction();
-			final SymbolStruct<?> functionSymbol = symbolCompilerFunction.getFunctionSymbol();
+			final SymbolStruct functionSymbol = symbolCompilerFunction.getFunctionSymbol();
 
 			final FunctionStruct function = functionSymbol.getFunction();
 
@@ -245,7 +245,7 @@ public final class EvalFunction extends FunctionStruct {
 	private FunctionStruct getCompiledExpression(final BooleanStruct oldCompileTopLevel, final CompilerSpecialOperatorStruct exp) {
 		CompilerVariables.COMPILE_TOP_LEVEL.setValue(NILStruct.INSTANCE);
 
-		final BooleanStruct oldConvertingForInterpreter = CompilerVariables.CONVERTING_FOR_INTERPRETER.getValue();
+		final BooleanStruct oldConvertingForInterpreter = CompilerVariables.CONVERTING_FOR_INTERPRETER.getVariableValue();
 		CompilerVariables.CONVERTING_FOR_INTERPRETER.setValue(TStruct.INSTANCE);
 
 		final FunctionStruct function;

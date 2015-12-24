@@ -35,7 +35,7 @@ public class ApostropheReaderMacroFunction extends ReaderMacroFunction {
 	 */
 	@PostConstruct
 	private void init() {
-		ReaderVariables.READTABLE.getValue().setMacroCharacter(CharacterConstants.APOSTROPHE, this, false);
+		ReaderVariables.READTABLE.getVariableValue().setMacroCharacter(CharacterConstants.APOSTROPHE, this, false);
 	}
 
 	@Override
@@ -43,7 +43,7 @@ public class ApostropheReaderMacroFunction extends ReaderMacroFunction {
 		assert codePoint == CharacterConstants.APOSTROPHE;
 
 		final LispStruct token = reader.read(true, NullStruct.INSTANCE, true);
-		if (ReaderVariables.READ_SUPPRESS.getValue().booleanValue()) {
+		if (ReaderVariables.READ_SUPPRESS.getVariableValue().booleanValue()) {
 			return NullStruct.INSTANCE;
 		}
 

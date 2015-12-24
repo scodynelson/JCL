@@ -56,7 +56,7 @@ class SymbolMacroletCodeGenerator implements CodeGenerator<SymbolMacroletStruct>
 		final int expansionStore = methodBuilder.getNextAvailableStore();
 
 		for (final SymbolMacroletStruct.SymbolMacroletVar var : vars) {
-			final SymbolStruct<?> symbolVar = var.getVar();
+			final SymbolStruct symbolVar = var.getVar();
 			// NOTE: we have to get a new 'symbolStore' for each var so we can properly unbind the expansions later
 			final int symbolStore = methodBuilder.getNextAvailableStore();
 			CodeGenerators.generateSymbol(symbolVar, methodBuilder, packageStore, symbolStore);

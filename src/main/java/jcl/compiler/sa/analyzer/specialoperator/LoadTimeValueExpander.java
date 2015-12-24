@@ -34,7 +34,7 @@ public class LoadTimeValueExpander extends MacroFunctionExpander<LispStruct> {
 	private Printer printer;
 
 	@Override
-	public SymbolStruct<?> getFunctionSymbol() {
+	public SymbolStruct getFunctionSymbol() {
 		return SpecialOperatorStruct.LOAD_TIME_VALUE;
 	}
 

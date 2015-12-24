@@ -25,7 +25,7 @@ import org.springframework.stereotype.Component;
 @Component
 public final class SetStructureSlotValueFunction extends FunctionStruct {
 
-	public static final SymbolStruct<?> SET_STRUCTURE_SLOT_VALUE = GlobalPackageStruct.SYSTEM.intern("SET-STRUCTURE-SLOT-VALUE").getSymbol();
+	public static final SymbolStruct SET_STRUCTURE_SLOT_VALUE = GlobalPackageStruct.SYSTEM.intern("SET-STRUCTURE-SLOT-VALUE").getSymbol();
 
 	private static final long serialVersionUID = -5380342029205088545L;
 
@@ -43,19 +43,19 @@ public final class SetStructureSlotValueFunction extends FunctionStruct {
 
 		final List<RequiredParameter> requiredBindings = new ArrayList<>();
 
-		final SymbolStruct<?> structureClassArgSymbol = GlobalPackageStruct.SYSTEM.intern("STRUCTURE-CLASS").getSymbol();
+		final SymbolStruct structureClassArgSymbol = GlobalPackageStruct.SYSTEM.intern("STRUCTURE-CLASS").getSymbol();
 		final RequiredParameter structureClassArgRequiredBinding = new RequiredParameter(structureClassArgSymbol);
 		requiredBindings.add(structureClassArgRequiredBinding);
 
-		final SymbolStruct<?> structureInstanceArgSymbol = GlobalPackageStruct.SYSTEM.intern("STRUCTURE-INSTANCE").getSymbol();
+		final SymbolStruct structureInstanceArgSymbol = GlobalPackageStruct.SYSTEM.intern("STRUCTURE-INSTANCE").getSymbol();
 		final RequiredParameter structureInstanceArgRequiredBinding = new RequiredParameter(structureInstanceArgSymbol);
 		requiredBindings.add(structureInstanceArgRequiredBinding);
 
-		final SymbolStruct<?> slotNameArgSymbol = GlobalPackageStruct.SYSTEM.intern("SLOT-NAME").getSymbol();
+		final SymbolStruct slotNameArgSymbol = GlobalPackageStruct.SYSTEM.intern("SLOT-NAME").getSymbol();
 		final RequiredParameter slotNameArgRequiredBinding = new RequiredParameter(slotNameArgSymbol);
 		requiredBindings.add(slotNameArgRequiredBinding);
 
-		final SymbolStruct<?> slotValueArgSymbol = GlobalPackageStruct.SYSTEM.intern("SLOT-VALUE").getSymbol();
+		final SymbolStruct slotValueArgSymbol = GlobalPackageStruct.SYSTEM.intern("SLOT-VALUE").getSymbol();
 		final RequiredParameter slotValueArgRequiredBinding = new RequiredParameter(slotValueArgSymbol);
 		requiredBindings.add(slotValueArgRequiredBinding);
 
@@ -67,15 +67,15 @@ public final class SetStructureSlotValueFunction extends FunctionStruct {
 	public LispStruct apply(final LispStruct... lispStructs) {
 		getFunctionBindings(lispStructs);
 
-		final SymbolStruct<?> structureClassSymbol = (SymbolStruct) lispStructs[0];
+		final SymbolStruct structureClassSymbol = (SymbolStruct) lispStructs[0];
 		final StructureObjectStruct structureInstance = (StructureObjectStruct) lispStructs[1];
-		final SymbolStruct<?> slotName = (SymbolStruct) lispStructs[2];
+		final SymbolStruct slotName = (SymbolStruct) lispStructs[2];
 		final LispStruct slotValue = lispStructs[3];
 		return setStructureSlotValue(structureClassSymbol, structureInstance, slotName, slotValue);
 	}
 
-	public LispStruct setStructureSlotValue(final SymbolStruct<?> structureClassSymbol, final StructureObjectStruct structureInstance,
-	                                        final SymbolStruct<?> slotName, final LispStruct slotValue) {
+	public LispStruct setStructureSlotValue(final SymbolStruct structureClassSymbol, final StructureObjectStruct structureInstance,
+	                                        final SymbolStruct slotName, final LispStruct slotValue) {
 
 		final StructureClassStruct symbolStructureClass = structureClassSymbol.getStructureClass();
 		if (symbolStructureClass == null) {
@@ -95,7 +95,7 @@ public final class SetStructureSlotValueFunction extends FunctionStruct {
 
 	private LispStruct innerSetStructureSlotValue(final StructureClassStruct symbolStructureClass,
 	                                              final StructureObjectStruct structureInstance,
-	                                              final SymbolStruct<?> slotName, final LispStruct slotValue) {
+	                                              final SymbolStruct slotName, final LispStruct slotValue) {
 
 		final StructureClassStruct instanceStructureClass = structureInstance.getStructureClass();
 

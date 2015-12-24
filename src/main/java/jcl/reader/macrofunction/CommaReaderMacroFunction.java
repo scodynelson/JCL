@@ -36,7 +36,7 @@ public class CommaReaderMacroFunction extends ReaderMacroFunction {
 	 */
 	@PostConstruct
 	private void init() {
-		ReaderVariables.READTABLE.getValue().setMacroCharacter(CharacterConstants.COMMA, this, false);
+		ReaderVariables.READTABLE.getVariableValue().setMacroCharacter(CharacterConstants.COMMA, this, false);
 	}
 
 	@Override
@@ -45,7 +45,7 @@ public class CommaReaderMacroFunction extends ReaderMacroFunction {
 
 		final int currentBackquoteLevel = reader.getBackquoteLevel();
 		if (currentBackquoteLevel <= 0) {
-			if (ReaderVariables.READ_SUPPRESS.getValue().booleanValue()) {
+			if (ReaderVariables.READ_SUPPRESS.getVariableValue().booleanValue()) {
 				return NullStruct.INSTANCE;
 			}
 

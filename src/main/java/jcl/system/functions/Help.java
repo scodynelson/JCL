@@ -31,7 +31,7 @@ import org.springframework.stereotype.Component;
 @Component
 public final class Help extends FunctionStruct {
 
-	public static final SymbolStruct<?> HELP = GlobalPackageStruct.EXTENSIONS.intern("HELP").getSymbol();
+	public static final SymbolStruct HELP = GlobalPackageStruct.EXTENSIONS.intern("HELP").getSymbol();
 
 	private static final long serialVersionUID = -2903697700427964980L;
 
@@ -47,9 +47,9 @@ public final class Help extends FunctionStruct {
 
 	private static OrdinaryLambdaList getInitLambdaListBindings() {
 
-		final SymbolStruct<?> searchTermArgSymbol = GlobalPackageStruct.EXTENSIONS.intern("SEARCH-TERM").getSymbol();
+		final SymbolStruct searchTermArgSymbol = GlobalPackageStruct.EXTENSIONS.intern("SEARCH-TERM").getSymbol();
 
-		final SymbolStruct<?> searchTermSuppliedPSymbol = GlobalPackageStruct.EXTENSIONS.intern("SEARCH-TERM-P-" + System.nanoTime()).getSymbol();
+		final SymbolStruct searchTermSuppliedPSymbol = GlobalPackageStruct.EXTENSIONS.intern("SEARCH-TERM-P-" + System.nanoTime()).getSymbol();
 		final SuppliedPParameter searchTermSuppliedPBinding = new SuppliedPParameter(searchTermSuppliedPSymbol);
 
 		final OptionalParameter searchTermOptionalBinding = new OptionalParameter(searchTermArgSymbol, NullStruct.INSTANCE, searchTermSuppliedPBinding);

@@ -12,17 +12,17 @@ public class SuppliedPParameter extends Parameter {
 
 	private static final long serialVersionUID = -8399229506171557644L;
 
-	public SuppliedPParameter(final SymbolStruct<?> var) {
+	public SuppliedPParameter(final SymbolStruct var) {
 		this(var, false);
 	}
 
-	public SuppliedPParameter(final SymbolStruct<?> var, final boolean isSpecial) {
+	public SuppliedPParameter(final SymbolStruct var, final boolean isSpecial) {
 		super(var, null, TType.INSTANCE, null, isSpecial);
 	}
 
 	public static final class Builder {
 
-		private final SymbolStruct<?> var;
+		private final SymbolStruct var;
 
 		private DestructuringLambdaList destructuringForm;
 

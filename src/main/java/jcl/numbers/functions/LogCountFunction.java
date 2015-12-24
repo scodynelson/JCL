@@ -23,7 +23,7 @@ import org.springframework.stereotype.Component;
 @Component
 public final class LogCountFunction extends FunctionStruct {
 
-	public static final SymbolStruct<?> LOGCOUNT = GlobalPackageStruct.COMMON_LISP.intern("LOGCOUNT").getSymbol();
+	public static final SymbolStruct LOGCOUNT = GlobalPackageStruct.COMMON_LISP.intern("LOGCOUNT").getSymbol();
 
 	private static final long serialVersionUID = 8334910440033488061L;
 
@@ -42,7 +42,7 @@ public final class LogCountFunction extends FunctionStruct {
 
 	private static OrdinaryLambdaList getInitLambdaListBindings() {
 
-		final SymbolStruct<?> firstArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("INTEGER").getSymbol();
+		final SymbolStruct firstArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("INTEGER").getSymbol();
 		final RequiredParameter requiredBinding = new RequiredParameter(firstArgSymbol);
 		final List<RequiredParameter> requiredBindings = Collections.singletonList(requiredBinding);
 

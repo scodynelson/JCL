@@ -2,6 +2,8 @@ package jcl.printer;
 
 import java.math.BigInteger;
 
+import jcl.LispStruct;
+import jcl.conditions.exceptions.TypeErrorException;
 import jcl.numbers.IntegerStruct;
 import jcl.packages.PackageStruct;
 import jcl.symbols.VariableStruct;
@@ -28,13 +30,18 @@ public class RadixVariable extends VariableStruct<IntegerStruct> {
 	}
 
 	@Override
-	public void setValue(final IntegerStruct value) {
+	public void setValue(final LispStruct value) {
+		if (!(value instanceof IntegerStruct)) {
+			// TODO: Fix me
+			throw new TypeErrorException("Must be Integer value.");
+		}
+		final IntegerStruct variableValue = (IntegerStruct) value;
 
-		final BigInteger bigIntegerValue = value.getBigInteger();
+		final BigInteger bigIntegerValue = variableValue.getBigInteger();
 		if (RADIX_RANGE.contains(bigIntegerValue)) {
-			super.setValue(value);
+			super.setValue(variableValue);
 		} else {
-			LOGGER.warn("Error: {} had illegal value {}. Reset to 10", name, value);
+			LOGGER.warn("Error: {} had illegal value {}. Reset to 10", name, variableValue);
 
 			super.setValue(TEN);
 		}

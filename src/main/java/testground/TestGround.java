@@ -46,13 +46,13 @@ public class TestGround {
 	private Object blockGen(final Closure currentClosure) {
 
 		final PackageStruct pkg = PackageStruct.findPackage("SYSTEM");
-		final SymbolStruct<?> name = pkg.findSymbol("FOO").getSymbol();
+		final SymbolStruct name = pkg.findSymbol("FOO").getSymbol();
 
 		LispStruct result;
 		try {
 			result = CharacterStruct.valueOf(97);
 		} catch (final ReturnFromException rte) {
-			final SymbolStruct<?> rteName = rte.getName();
+			final SymbolStruct rteName = rte.getName();
 			if (rteName.equals(name)) {
 				result = rte.getResult();
 			} else {
@@ -65,7 +65,7 @@ public class TestGround {
 	private Object returnFromGen(final Closure currentClosure) {
 
 		final PackageStruct pkg = PackageStruct.findPackage("SYSTEM");
-		final SymbolStruct<?> name = pkg.findSymbol("FOO").getSymbol();
+		final SymbolStruct name = pkg.findSymbol("FOO").getSymbol();
 
 		final LispStruct result = CharacterStruct.valueOf(97);
 
@@ -216,21 +216,21 @@ public class TestGround {
 	private Object symbolGen() {
 
 		final PackageStruct pkg = PackageStruct.findPackage("SYSTEM");
-		final SymbolStruct<?> symbol = pkg.findSymbol("FOO").getSymbol();
+		final SymbolStruct symbol = pkg.findSymbol("FOO").getSymbol();
 
 		return symbol.getValue();
 	}
 
 	private Object uninternedSymbolGen() {
 
-		final SymbolStruct<?> symbol = new SymbolStruct<>("FOO");
+		final SymbolStruct symbol = new SymbolStruct("FOO");
 		return symbol;
 	}
 
 	@SuppressWarnings({"unchecked", "rawtypes"})
 	private Object setqGen(final Closure currentClosure) {
 
-		Map<SymbolStruct<?>, LispStruct> closureBindings = null;
+		Map<SymbolStruct, LispStruct> closureBindings = null;
 		if (currentClosure != null) {
 			closureBindings = currentClosure.getSymbolBindings();
 		}
@@ -266,7 +266,7 @@ public class TestGround {
 	private Object letGen(Closure currentClosure) {
 
 		currentClosure = new Closure(currentClosure);
-		final Map<SymbolStruct<?>, LispStruct> closureBindings = currentClosure.getSymbolBindings();
+		final Map<SymbolStruct, LispStruct> closureBindings = currentClosure.getSymbolBindings();
 
 		final PackageStruct pkg = PackageStruct.findPackage("SYSTEM");
 		final SymbolStruct symbol = pkg.findSymbol("FOO").getSymbol();
@@ -288,7 +288,7 @@ public class TestGround {
 	private Object symbolMacroletGen(final Closure currentClosure) {
 
 		final PackageStruct pkg = PackageStruct.findPackage("SYSTEM");
-		final SymbolStruct<?> symbol = pkg.findSymbol("FOO").getSymbol();
+		final SymbolStruct symbol = pkg.findSymbol("FOO").getSymbol();
 
 		final SymbolMacroExpander<?> symbolMacroExpander = new TestGroundSymbolMacroExpander();
 		symbol.bindSymbolMacroExpander(symbolMacroExpander);
@@ -305,7 +305,7 @@ public class TestGround {
 	private Object symbolFunctionGen() {
 
 		final PackageStruct pkg = PackageStruct.findPackage("SYSTEM");
-		final SymbolStruct<?> symbol = pkg.findSymbol("FOO").getSymbol();
+		final SymbolStruct symbol = pkg.findSymbol("FOO").getSymbol();
 
 		return symbol.getFunction();
 	}
@@ -319,7 +319,7 @@ public class TestGround {
 	private Object functionCallGen(final Closure currentClosure) {
 
 		final PackageStruct pkg = PackageStruct.findPackage("SYSTEM");
-		final SymbolStruct<?> symbol = pkg.findSymbol("FOO").getSymbol();
+		final SymbolStruct symbol = pkg.findSymbol("FOO").getSymbol();
 
 		final FunctionStruct function = symbol.getFunction();
 
@@ -343,13 +343,13 @@ public class TestGround {
 
 	private Object innerLambdaGen(final Closure currentClosure) {
 
-		Map<SymbolStruct<?>, FunctionStruct> closureBindings = null;
+		Map<SymbolStruct, FunctionStruct> closureBindings = null;
 		if (currentClosure != null) {
 			closureBindings = currentClosure.getFunctionBindings();
 		}
 
 		final PackageStruct pkg = PackageStruct.findPackage("SYSTEM");
-		final SymbolStruct<?> symbol = pkg.findSymbol("FOO").getSymbol();
+		final SymbolStruct symbol = pkg.findSymbol("FOO").getSymbol();
 
 		final FunctionStruct initForm = new TestGroundLambdaFunction(currentClosure);
 		symbol.bindFunction(initForm);
@@ -448,7 +448,7 @@ public class TestGround {
 		final TestGroundMacroFunctionExpanderGenerator expanderGenerator = new TestGroundMacroFunctionExpanderGenerator();
 
 		final PackageStruct pkg = PackageStruct.findPackage("SYSTEM");
-		final SymbolStruct<?> macroName = pkg.findSymbol("FOO").getSymbol();
+		final SymbolStruct macroName = pkg.findSymbol("FOO").getSymbol();
 
 		macroName.setMacroFunctionExpander(expanderGenerator);
 		return expanderGenerator;

@@ -35,7 +35,7 @@ public final class SetSymbolFunctionFunction extends AbstractSystemFunctionStruc
 	public LispStruct apply(final LispStruct... lispStructs) {
 		super.apply(lispStructs);
 
-		final SymbolStruct<?> symbol = (SymbolStruct) lispStructs[0];
+		final SymbolStruct symbol = (SymbolStruct) lispStructs[0];
 		final FunctionStruct function = (FunctionStruct) lispStructs[1];
 		symbol.setFunction(function);
 		return function;

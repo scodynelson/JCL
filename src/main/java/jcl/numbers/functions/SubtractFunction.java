@@ -24,7 +24,7 @@ import org.springframework.stereotype.Component;
 @Component
 public final class SubtractFunction extends FunctionStruct {
 
-	public static final SymbolStruct<?> SUBTRACT = GlobalPackageStruct.COMMON_LISP.intern("-").getSymbol();
+	public static final SymbolStruct SUBTRACT = GlobalPackageStruct.COMMON_LISP.intern("-").getSymbol();
 
 	private static final long serialVersionUID = -7035610361287254078L;
 
@@ -43,11 +43,11 @@ public final class SubtractFunction extends FunctionStruct {
 
 	private static OrdinaryLambdaList getInitLambdaListBindings() {
 
-		final SymbolStruct<?> firstArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("NUMBER").getSymbol();
+		final SymbolStruct firstArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("NUMBER").getSymbol();
 		final RequiredParameter requiredBinding = new RequiredParameter(firstArgSymbol);
 		final List<RequiredParameter> requiredBindings = Collections.singletonList(requiredBinding);
 
-		final SymbolStruct<?> restArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("NUMBERS").getSymbol();
+		final SymbolStruct restArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("NUMBERS").getSymbol();
 		final RestParameter restBinding = new RestParameter(restArgSymbol);
 
 		return new OrdinaryLambdaList.Builder().requiredBindings(requiredBindings)

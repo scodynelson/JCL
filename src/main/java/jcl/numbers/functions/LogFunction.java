@@ -26,7 +26,7 @@ import org.springframework.stereotype.Component;
 @Component
 public final class LogFunction extends FunctionStruct {
 
-	public static final SymbolStruct<?> LOG = GlobalPackageStruct.COMMON_LISP.intern("LOG").getSymbol();
+	public static final SymbolStruct LOG = GlobalPackageStruct.COMMON_LISP.intern("LOG").getSymbol();
 
 	private static final long serialVersionUID = 389567032159715710L;
 
@@ -45,13 +45,13 @@ public final class LogFunction extends FunctionStruct {
 
 	private static OrdinaryLambdaList getInitLambdaListBindings() {
 
-		final SymbolStruct<?> firstArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("NUMBER").getSymbol();
+		final SymbolStruct firstArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("NUMBER").getSymbol();
 		final RequiredParameter requiredBinding = new RequiredParameter(firstArgSymbol);
 		final List<RequiredParameter> requiredBindings = Collections.singletonList(requiredBinding);
 
-		final SymbolStruct<?> optionalArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("BASE").getSymbol();
+		final SymbolStruct optionalArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("BASE").getSymbol();
 
-		final SymbolStruct<?> optionalSuppliedP = GlobalPackageStruct.COMMON_LISP.intern("BASE-P-" + System.nanoTime()).getSymbol();
+		final SymbolStruct optionalSuppliedP = GlobalPackageStruct.COMMON_LISP.intern("BASE-P-" + System.nanoTime()).getSymbol();
 		final SuppliedPParameter optionalSuppliedPBinding = new SuppliedPParameter(optionalSuppliedP);
 
 		final OptionalParameter optionalBinding = new OptionalParameter(optionalArgSymbol, NullStruct.INSTANCE, optionalSuppliedPBinding);

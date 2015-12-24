@@ -28,7 +28,7 @@ public class BitVectorStructPrinter implements LispPrinter<BitVectorStruct> {
 
 	@Override
 	public String print(final BitVectorStruct object) {
-		final boolean printArray = PrinterVariables.PRINT_ARRAY.getValue().booleanValue();
+		final boolean printArray = PrinterVariables.PRINT_ARRAY.getVariableValue().booleanValue();
 
 		final StringBuilder stringBuilder = new StringBuilder();
 

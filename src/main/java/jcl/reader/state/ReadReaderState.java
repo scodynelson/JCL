@@ -65,7 +65,7 @@ class ReadReaderState implements ReaderState {
 
 		final int codePoint = readResult.getResult();
 
-		final ReadtableStruct readtable = ReaderVariables.READTABLE.getValue();
+		final ReadtableStruct readtable = ReaderVariables.READTABLE.getVariableValue();
 		final SyntaxType syntaxType = readtable.getSyntaxType(codePoint);
 
 		final LispStruct token;
@@ -85,7 +85,7 @@ class ReadReaderState implements ReaderState {
 			token = readerStateMediator.readIllegalCharacter(tokenBuilder);
 		}
 
-		if (ReaderVariables.READ_SUPPRESS.getValue().booleanValue()) {
+		if (ReaderVariables.READ_SUPPRESS.getVariableValue().booleanValue()) {
 			if (LOGGER.isDebugEnabled()) {
 				LOGGER.debug("{} suppressed.", token);
 			}

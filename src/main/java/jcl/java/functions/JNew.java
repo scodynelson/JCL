@@ -26,7 +26,7 @@ import org.springframework.stereotype.Component;
 @Component
 public final class JNew extends FunctionStruct {
 
-	public static final SymbolStruct<?> J_NEW = GlobalPackageStruct.EXTENSIONS.intern("JNEW").getSymbol();
+	public static final SymbolStruct J_NEW = GlobalPackageStruct.EXTENSIONS.intern("JNEW").getSymbol();
 
 	private static final long serialVersionUID = 4957989978703375166L;
 
@@ -45,7 +45,7 @@ public final class JNew extends FunctionStruct {
 	private static OrdinaryLambdaList getInitLambdaListBindings() {
 
 		// TODO: we should accept a JavaClass Designator (aka. String/JavaClassObject)
-		final SymbolStruct<?> javaClassArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("JAVA-CLASS-ARG").getSymbol();
+		final SymbolStruct javaClassArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("JAVA-CLASS-ARG").getSymbol();
 		final RequiredParameter requiredBinding = new RequiredParameter(javaClassArgSymbol);
 		final List<RequiredParameter> requiredBindings = Collections.singletonList(requiredBinding);
 

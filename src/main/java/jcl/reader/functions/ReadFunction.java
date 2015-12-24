@@ -31,7 +31,7 @@ import org.springframework.stereotype.Component;
 @Component
 public final class ReadFunction extends FunctionStruct {
 
-	public static final SymbolStruct<?> READ = GlobalPackageStruct.COMMON_LISP.intern("READ").getSymbol();
+	public static final SymbolStruct READ = GlobalPackageStruct.COMMON_LISP.intern("READ").getSymbol();
 
 	private static final long serialVersionUID = 907539293814708746L;
 
@@ -55,33 +55,33 @@ public final class ReadFunction extends FunctionStruct {
 
 		final List<OptionalParameter> optionalBindings = new ArrayList<>(4);
 
-		final SymbolStruct<?> inputStreamArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("INPUT-STREAM").getSymbol();
+		final SymbolStruct inputStreamArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("INPUT-STREAM").getSymbol();
 
-		final SymbolStruct<?> inputStreamSuppliedP = GlobalPackageStruct.COMMON_LISP.intern("INPUT-STREAM-P-" + System.nanoTime()).getSymbol();
+		final SymbolStruct inputStreamSuppliedP = GlobalPackageStruct.COMMON_LISP.intern("INPUT-STREAM-P-" + System.nanoTime()).getSymbol();
 		final SuppliedPParameter inputStreamSuppliedPBinding = new SuppliedPParameter(inputStreamSuppliedP);
 
 		final OptionalParameter inputStreamOptionalBinding = new OptionalParameter(inputStreamArgSymbol, NullStruct.INSTANCE, inputStreamSuppliedPBinding);
 		optionalBindings.add(inputStreamOptionalBinding);
 
-		final SymbolStruct<?> eofErrorPArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("EOF-ERROR").getSymbol();
+		final SymbolStruct eofErrorPArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("EOF-ERROR").getSymbol();
 
-		final SymbolStruct<?> eofErrorPSuppliedP = GlobalPackageStruct.COMMON_LISP.intern("EOF-ERROR-P-" + System.nanoTime()).getSymbol();
+		final SymbolStruct eofErrorPSuppliedP = GlobalPackageStruct.COMMON_LISP.intern("EOF-ERROR-P-" + System.nanoTime()).getSymbol();
 		final SuppliedPParameter eofErrorPSuppliedPBinding = new SuppliedPParameter(eofErrorPSuppliedP);
 
 		final OptionalParameter eofErrorPOptionalBinding = new OptionalParameter(eofErrorPArgSymbol, NullStruct.INSTANCE, eofErrorPSuppliedPBinding);
 		optionalBindings.add(eofErrorPOptionalBinding);
 
-		final SymbolStruct<?> eofValueArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("EOF-VALUE").getSymbol();
+		final SymbolStruct eofValueArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("EOF-VALUE").getSymbol();
 
-		final SymbolStruct<?> eofValueSuppliedP = GlobalPackageStruct.COMMON_LISP.intern("EOF-VALUE-P-" + System.nanoTime()).getSymbol();
+		final SymbolStruct eofValueSuppliedP = GlobalPackageStruct.COMMON_LISP.intern("EOF-VALUE-P-" + System.nanoTime()).getSymbol();
 		final SuppliedPParameter eofValueSuppliedPBinding = new SuppliedPParameter(eofValueSuppliedP);
 
 		final OptionalParameter eofValueOptionalBinding = new OptionalParameter(eofValueArgSymbol, NullStruct.INSTANCE, eofValueSuppliedPBinding);
 		optionalBindings.add(eofValueOptionalBinding);
 
-		final SymbolStruct<?> recursivePArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("RECURSIVE-P").getSymbol();
+		final SymbolStruct recursivePArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("RECURSIVE-P").getSymbol();
 
-		final SymbolStruct<?> recursivePSuppliedP = GlobalPackageStruct.COMMON_LISP.intern("RECURSIVE-P-P-" + System.nanoTime()).getSymbol();
+		final SymbolStruct recursivePSuppliedP = GlobalPackageStruct.COMMON_LISP.intern("RECURSIVE-P-P-" + System.nanoTime()).getSymbol();
 		final SuppliedPParameter recursivePSuppliedPBinding = new SuppliedPParameter(recursivePSuppliedP);
 
 		final OptionalParameter recursivePOptionalBinding = new OptionalParameter(recursivePArgSymbol, NullStruct.INSTANCE, recursivePSuppliedPBinding);
@@ -97,14 +97,14 @@ public final class ReadFunction extends FunctionStruct {
 
 		final int length = lispStructs.length;
 
-		InputStream inputStream = StreamVariables.STANDARD_INPUT.getValue();
+		InputStream inputStream = StreamVariables.STANDARD_INPUT.getVariableValue();
 		if (length > 0) {
 			final LispStruct inputStreamArg = lispStructs[0];
 
 			if (TStruct.INSTANCE.equals(inputStreamArg)) {
-				inputStream = StreamVariables.TERMINAL_IO.getValue();
+				inputStream = StreamVariables.TERMINAL_IO.getVariableValue();
 			} else if (NILStruct.INSTANCE.equals(inputStreamArg) || NullStruct.INSTANCE.equals(inputStreamArg)) {
-				inputStream = StreamVariables.STANDARD_INPUT.getValue();
+				inputStream = StreamVariables.STANDARD_INPUT.getVariableValue();
 			} else if (inputStreamArg instanceof InputStream) {
 				inputStream = (InputStream) inputStreamArg;
 			} else {

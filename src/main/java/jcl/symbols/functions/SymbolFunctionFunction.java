@@ -46,7 +46,7 @@ public final class SymbolFunctionFunction extends AbstractCommonLispFunctionStru
 		final LispStruct lispStruct = lispStructs[0];
 		validator.validateTypes(lispStruct, functionName(), "Symbol", SymbolType.INSTANCE);
 
-		final SymbolStruct<?> symbol = (SymbolStruct) lispStruct;
+		final SymbolStruct symbol = (SymbolStruct) lispStruct;
 		return symbol.getFunction();
 	}
 

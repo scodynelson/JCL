@@ -64,7 +64,7 @@ public final class CharacterFunction extends AbstractCharacterDesignatorFunction
 	 * SymbolStruct}
 	 */
 	@Override
-	protected Function<SymbolStruct<?>, LispStruct> symbolFunction() {
+	protected Function<SymbolStruct, LispStruct> symbolFunction() {
 		return symbol -> getCharacterFromString(symbol.getName(), "Symbol name");
 	}
 

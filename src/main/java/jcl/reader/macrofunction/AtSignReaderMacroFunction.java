@@ -43,14 +43,14 @@ public class AtSignReaderMacroFunction extends ReaderMacroFunction {
 	 */
 	@PostConstruct
 	private void init() {
-		ReaderVariables.READTABLE.getValue().setMacroCharacter(CharacterConstants.AT_SIGN, this, false);
+		ReaderVariables.READTABLE.getVariableValue().setMacroCharacter(CharacterConstants.AT_SIGN, this, false);
 	}
 
 	@Override
 	public LispStruct readMacro(final int codePoint, final Reader reader, final Optional<BigInteger> numberArgument) {
 		assert codePoint == CharacterConstants.AT_SIGN;
 
-		final ReadtableStruct readtable = ReaderVariables.READTABLE.getValue();
+		final ReadtableStruct readtable = ReaderVariables.READTABLE.getVariableValue();
 		final ReadtableCase previousCase = readtable.getReadtableCase();
 
 		readtable.setReadtableCase(ReadtableCase.PRESERVE);
@@ -63,7 +63,7 @@ public class AtSignReaderMacroFunction extends ReaderMacroFunction {
 			readtable.setReadtableCase(previousCase);
 		}
 
-		if (ReaderVariables.READ_SUPPRESS.getValue().booleanValue()) {
+		if (ReaderVariables.READ_SUPPRESS.getVariableValue().booleanValue()) {
 			return null;
 		}
 

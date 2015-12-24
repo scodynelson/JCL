@@ -19,7 +19,7 @@ import org.springframework.stereotype.Component;
 @Component
 public final class QuitFunction extends FunctionStruct {
 
-	public static final SymbolStruct<?> QUIT = GlobalPackageStruct.EXTENSIONS.intern("QUIT").getSymbol();
+	public static final SymbolStruct QUIT = GlobalPackageStruct.EXTENSIONS.intern("QUIT").getSymbol();
 
 	private static final long serialVersionUID = -7684846282276245122L;
 

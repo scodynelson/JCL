@@ -15,7 +15,7 @@ public class ProgvEnvironment extends Environment {
 	}
 
 	@Override
-	public boolean hasLexicalBinding(final SymbolStruct<?> var) {
+	public boolean hasLexicalBinding(final SymbolStruct var) {
 		return getParent().hasLexicalBinding(var);
 	}
 }

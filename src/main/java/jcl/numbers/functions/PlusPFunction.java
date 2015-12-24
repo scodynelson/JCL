@@ -25,7 +25,7 @@ import org.springframework.stereotype.Component;
 @Component
 public final class PlusPFunction extends FunctionStruct {
 
-	public static final SymbolStruct<?> PLUSP = GlobalPackageStruct.COMMON_LISP.intern("PLUSP").getSymbol();
+	public static final SymbolStruct PLUSP = GlobalPackageStruct.COMMON_LISP.intern("PLUSP").getSymbol();
 
 	private static final long serialVersionUID = 7660967673229969396L;
 
@@ -44,7 +44,7 @@ public final class PlusPFunction extends FunctionStruct {
 
 	private static OrdinaryLambdaList getInitLambdaListBindings() {
 
-		final SymbolStruct<?> firstArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("REAL").getSymbol();
+		final SymbolStruct firstArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("REAL").getSymbol();
 		final RequiredParameter requiredBinding = new RequiredParameter(firstArgSymbol);
 		final List<RequiredParameter> requiredBindings = Collections.singletonList(requiredBinding);
 

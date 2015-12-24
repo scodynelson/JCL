@@ -23,7 +23,7 @@ import org.springframework.stereotype.Component;
 @Component
 public final class ExptFunction extends FunctionStruct {
 
-	public static final SymbolStruct<?> EXPT = GlobalPackageStruct.COMMON_LISP.intern("EXPT").getSymbol();
+	public static final SymbolStruct EXPT = GlobalPackageStruct.COMMON_LISP.intern("EXPT").getSymbol();
 
 	private static final long serialVersionUID = -3137653647023696113L;
 
@@ -43,11 +43,11 @@ public final class ExptFunction extends FunctionStruct {
 	private static OrdinaryLambdaList getInitLambdaListBindings() {
 		final List<RequiredParameter> requiredBindings = new ArrayList<>(2);
 
-		final SymbolStruct<?> baseNumberSymbol = GlobalPackageStruct.COMMON_LISP.intern("BASE-NUMBER").getSymbol();
+		final SymbolStruct baseNumberSymbol = GlobalPackageStruct.COMMON_LISP.intern("BASE-NUMBER").getSymbol();
 		final RequiredParameter requiredBinding1 = new RequiredParameter(baseNumberSymbol);
 		requiredBindings.add(requiredBinding1);
 
-		final SymbolStruct<?> powerNumberSymbol = GlobalPackageStruct.COMMON_LISP.intern("POWER-NUMBER").getSymbol();
+		final SymbolStruct powerNumberSymbol = GlobalPackageStruct.COMMON_LISP.intern("POWER-NUMBER").getSymbol();
 		final RequiredParameter requiredBinding2 = new RequiredParameter(powerNumberSymbol);
 		requiredBindings.add(requiredBinding2);
 

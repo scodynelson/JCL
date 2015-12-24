@@ -21,7 +21,7 @@ import org.springframework.stereotype.Component;
 @Component
 public final class ListToVectorFunction extends FunctionStruct {
 
-	public static final SymbolStruct<?> LIST_TO_VECTOR = GlobalPackageStruct.SYSTEM.intern("LIST-TO-VECTOR").getSymbol();
+	public static final SymbolStruct LIST_TO_VECTOR = GlobalPackageStruct.SYSTEM.intern("LIST-TO-VECTOR").getSymbol();
 
 	private static final long serialVersionUID = 7202751615463953371L;
 
@@ -37,7 +37,7 @@ public final class ListToVectorFunction extends FunctionStruct {
 
 	private static OrdinaryLambdaList getInitLambdaListBindings() {
 
-		final SymbolStruct<?> listArgSymbol = GlobalPackageStruct.SYSTEM.intern("LIST-ARG").getSymbol();
+		final SymbolStruct listArgSymbol = GlobalPackageStruct.SYSTEM.intern("LIST-ARG").getSymbol();
 		final RequiredParameter requiredBinding = new RequiredParameter(listArgSymbol);
 		final List<RequiredParameter> requiredBindings = Collections.singletonList(requiredBinding);
 

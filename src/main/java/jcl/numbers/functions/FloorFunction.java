@@ -28,7 +28,7 @@ import org.springframework.stereotype.Component;
 @Component
 public final class FloorFunction extends FunctionStruct {
 
-	public static final SymbolStruct<?> FLOOR = GlobalPackageStruct.COMMON_LISP.intern("FLOOR").getSymbol();
+	public static final SymbolStruct FLOOR = GlobalPackageStruct.COMMON_LISP.intern("FLOOR").getSymbol();
 
 	private static final long serialVersionUID = 2935551243166055074L;
 
@@ -47,13 +47,13 @@ public final class FloorFunction extends FunctionStruct {
 
 	private static OrdinaryLambdaList getInitLambdaListBindings() {
 
-		final SymbolStruct<?> firstArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("REAL").getSymbol();
+		final SymbolStruct firstArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("REAL").getSymbol();
 		final RequiredParameter requiredBinding = new RequiredParameter(firstArgSymbol);
 		final List<RequiredParameter> requiredBindings = Collections.singletonList(requiredBinding);
 
-		final SymbolStruct<?> divisorArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("DIVISOR").getSymbol();
+		final SymbolStruct divisorArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("DIVISOR").getSymbol();
 
-		final SymbolStruct<?> divisorSuppliedP = GlobalPackageStruct.COMMON_LISP.intern("DIVISOR-P-" + System.nanoTime()).getSymbol();
+		final SymbolStruct divisorSuppliedP = GlobalPackageStruct.COMMON_LISP.intern("DIVISOR-P-" + System.nanoTime()).getSymbol();
 		final SuppliedPParameter divisorSuppliedPBinding = new SuppliedPParameter(divisorSuppliedP);
 
 		final OptionalParameter optionalBinding = new OptionalParameter(divisorArgSymbol, IntegerStruct.ONE, divisorSuppliedPBinding);

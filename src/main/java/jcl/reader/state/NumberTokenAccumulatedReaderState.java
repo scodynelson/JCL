@@ -217,7 +217,7 @@ class NumberTokenAccumulatedReaderState implements ReaderState {
 	 * @return true if the provided {@code currentToken} is a valid part of a numeric token; false otherwise
 	 */
 	private static boolean isValidNumericToken(final int firstTokenCodePoint, final int currentToken) {
-		final int currentRadix = ReaderVariables.READ_BASE.getValue().getBigInteger().intValueExact();
+		final int currentRadix = ReaderVariables.READ_BASE.getVariableValue().getBigInteger().intValueExact();
 
 		final int digit = Character.digit(currentToken, currentRadix);
 		final boolean isDigitWithRadix = digit >= 0;

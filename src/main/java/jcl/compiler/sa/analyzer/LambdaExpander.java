@@ -45,7 +45,7 @@ public class LambdaExpander extends MacroFunctionExpander<LambdaStruct> {
 	private LispFormValueValidator validator;
 
 	@Override
-	public SymbolStruct<?> getFunctionSymbol() {
+	public SymbolStruct getFunctionSymbol() {
 		return SpecialOperatorStruct.LAMBDA;
 	}
 

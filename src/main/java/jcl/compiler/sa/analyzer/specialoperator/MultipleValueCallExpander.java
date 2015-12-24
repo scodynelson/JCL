@@ -37,7 +37,7 @@ public class MultipleValueCallExpander extends MacroFunctionExpander<MultipleVal
 	private Printer printer;
 
 	@Override
-	public SymbolStruct<?> getFunctionSymbol() {
+	public SymbolStruct getFunctionSymbol() {
 		return SpecialOperatorStruct.MULTIPLE_VALUE_CALL;
 	}
 

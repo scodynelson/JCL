@@ -23,7 +23,7 @@ import org.springframework.stereotype.Component;
 @Component
 public final class PrintObjectFunction extends FunctionStruct {
 
-	public static final SymbolStruct<?> PRINT_OBJECT = GlobalPackageStruct.COMMON_LISP.intern("PRINT-OBJECT").getSymbol();
+	public static final SymbolStruct PRINT_OBJECT = GlobalPackageStruct.COMMON_LISP.intern("PRINT-OBJECT").getSymbol();
 
 	private static final long serialVersionUID = -3100296760084297420L;
 
@@ -44,7 +44,7 @@ public final class PrintObjectFunction extends FunctionStruct {
 
 	private static OrdinaryLambdaList getInitLambdaListBindings() {
 
-		final SymbolStruct<?> listArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("OBJECT").getSymbol();
+		final SymbolStruct listArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("OBJECT").getSymbol();
 		final RequiredParameter requiredBinding = new RequiredParameter(listArgSymbol);
 		final List<RequiredParameter> requiredBindings = Collections.singletonList(requiredBinding);
 

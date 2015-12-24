@@ -100,7 +100,7 @@ class EvenMultiEscapeReaderState implements ReaderState {
 
 		int codePoint = readResult.getResult();
 
-		final ReadtableStruct readtable = ReaderVariables.READTABLE.getValue();
+		final ReadtableStruct readtable = ReaderVariables.READTABLE.getVariableValue();
 		final SyntaxType syntaxType = readtable.getSyntaxType(codePoint);
 
 		if ((syntaxType == SyntaxType.CONSTITUENT) || (syntaxType == SyntaxType.NON_TERMINATING)) {

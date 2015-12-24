@@ -35,7 +35,7 @@ public final class ShadowingImportFunction extends AbstractSymbolListPackageFunc
 	 * @return returns {@link PackageStruct#shadowingImport(SymbolStruct[])} as a method reference function
 	 */
 	@Override
-	protected BiConsumer<PackageStruct, SymbolStruct<?>[]> symbolListFunction() {
+	protected BiConsumer<PackageStruct, SymbolStruct[]> symbolListFunction() {
 		return PackageStruct::shadowingImport;
 	}
 

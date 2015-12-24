@@ -38,8 +38,8 @@ public class IntegerStructPrinter implements LispPrinter<IntegerStruct> {
 
 	@Override
 	public String print(final IntegerStruct object) {
-		final boolean printRadix = PrinterVariables.PRINT_RADIX.getValue().booleanValue();
-		final int printBase = PrinterVariables.PRINT_BASE.getValue().getBigInteger().intValue();
+		final boolean printRadix = PrinterVariables.PRINT_RADIX.getVariableValue().booleanValue();
+		final int printBase = PrinterVariables.PRINT_BASE.getVariableValue().getBigInteger().intValue();
 
 		final StringBuilder stringBuilder = new StringBuilder();
 

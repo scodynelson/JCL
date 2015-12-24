@@ -33,13 +33,13 @@ public class StructureObjectStructPrinter<TYPE extends StructureObjectStruct> im
 
 		stringBuilder.append("#S(");
 
-		final SymbolStruct<?> structureSymbol = object.getStructureSymbol();
+		final SymbolStruct structureSymbol = object.getStructureSymbol();
 		final String printedStructureSymbol = printer.print(structureSymbol);
 		stringBuilder.append(printedStructureSymbol);
 
-		final List<Pair<SymbolStruct<?>, LispStruct>> slots = object.getSlots();
-		for (final Pair<SymbolStruct<?>, LispStruct> slot : slots) {
-			final SymbolStruct<?> slotSymbol = slot.getLeft();
+		final List<Pair<SymbolStruct, LispStruct>> slots = object.getSlots();
+		for (final Pair<SymbolStruct, LispStruct> slot : slots) {
+			final SymbolStruct slotSymbol = slot.getLeft();
 			final LispStruct slotValue = slot.getRight();
 
 			stringBuilder.append(" :");

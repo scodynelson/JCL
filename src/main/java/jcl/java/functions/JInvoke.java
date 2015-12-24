@@ -28,7 +28,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class JInvoke extends FunctionStruct {
 
-	public static final SymbolStruct<?> J_INVOKE = GlobalPackageStruct.EXTENSIONS.intern("JINVOKE").getSymbol();
+	public static final SymbolStruct J_INVOKE = GlobalPackageStruct.EXTENSIONS.intern("JINVOKE").getSymbol();
 
 	private static final long serialVersionUID = 5787148469982523185L;
 
@@ -48,15 +48,15 @@ public class JInvoke extends FunctionStruct {
 
 		final List<RequiredParameter> requiredBindings = new ArrayList<>(2);
 
-		final SymbolStruct<?> javaMethodArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("JAVA-METHOD-ARG").getSymbol();
+		final SymbolStruct javaMethodArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("JAVA-METHOD-ARG").getSymbol();
 		final RequiredParameter javaMethodArgRequiredBinding = new RequiredParameter(javaMethodArgSymbol);
 		requiredBindings.add(javaMethodArgRequiredBinding);
 
-		final SymbolStruct<?> javaObjectArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("JAVA-OBJECT-ARG").getSymbol();
+		final SymbolStruct javaObjectArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("JAVA-OBJECT-ARG").getSymbol();
 		final RequiredParameter javaObjectArgRequiredBinding = new RequiredParameter(javaObjectArgSymbol);
 		requiredBindings.add(javaObjectArgRequiredBinding);
 
-		final SymbolStruct<?> objectRestArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("OBJECTS").getSymbol();
+		final SymbolStruct objectRestArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("OBJECTS").getSymbol();
 		final RestParameter restBinding = new RestParameter(objectRestArgSymbol);
 
 		return new OrdinaryLambdaList.Builder().requiredBindings(requiredBindings)

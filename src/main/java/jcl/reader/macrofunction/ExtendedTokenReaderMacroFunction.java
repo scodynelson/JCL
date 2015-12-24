@@ -221,7 +221,7 @@ final class ExtendedTokenReaderMacroFunction {
 	 * @return the transformed token with the correct case
 	 */
 	private static int getCodePointWithCase(final int codePoint) {
-		final ReadtableCase readtableCase = ReaderVariables.READTABLE.getValue().getReadtableCase();
+		final ReadtableCase readtableCase = ReaderVariables.READTABLE.getVariableValue().getReadtableCase();
 
 		int properCaseCodePoint = codePoint;
 		switch (readtableCase) {

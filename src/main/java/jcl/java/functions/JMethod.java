@@ -26,7 +26,7 @@ import org.springframework.stereotype.Component;
 @Component
 public final class JMethod extends FunctionStruct {
 
-	public static final SymbolStruct<?> J_METHOD = GlobalPackageStruct.EXTENSIONS.intern("JMETHOD").getSymbol();
+	public static final SymbolStruct J_METHOD = GlobalPackageStruct.EXTENSIONS.intern("JMETHOD").getSymbol();
 
 	private static final long serialVersionUID = -1933229031095497469L;
 
@@ -44,16 +44,16 @@ public final class JMethod extends FunctionStruct {
 
 		final List<RequiredParameter> requiredBindings = new ArrayList<>(2);
 
-		final SymbolStruct<?> methodNameArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("METHOD-NAME-ARG").getSymbol();
+		final SymbolStruct methodNameArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("METHOD-NAME-ARG").getSymbol();
 		final RequiredParameter methodNameArgRequiredBinding = new RequiredParameter(methodNameArgSymbol);
 		requiredBindings.add(methodNameArgRequiredBinding);
 
 		// TODO: we should accept a JavaClass Designator (aka. String/JavaClassObject)
-		final SymbolStruct<?> javaClassArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("JAVA-CLASS-ARG").getSymbol();
+		final SymbolStruct javaClassArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("JAVA-CLASS-ARG").getSymbol();
 		final RequiredParameter javaClassArgRequiredBinding = new RequiredParameter(javaClassArgSymbol);
 		requiredBindings.add(javaClassArgRequiredBinding);
 
-		final SymbolStruct<?> objectRestArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("OBJECTS").getSymbol();
+		final SymbolStruct objectRestArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("OBJECTS").getSymbol();
 		final RestParameter restBinding = new RestParameter(objectRestArgSymbol);
 
 		return new OrdinaryLambdaList.Builder().requiredBindings(requiredBindings)

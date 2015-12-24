@@ -22,7 +22,7 @@ import org.springframework.stereotype.Component;
 @Component
 public final class MakeStructureInstanceFunction extends FunctionStruct {
 
-	public static final SymbolStruct<?> MAKE_STRUCTURE_INSTANCE = GlobalPackageStruct.SYSTEM.intern("MAKE-STRUCTURE-INSTANCE").getSymbol();
+	public static final SymbolStruct MAKE_STRUCTURE_INSTANCE = GlobalPackageStruct.SYSTEM.intern("MAKE-STRUCTURE-INSTANCE").getSymbol();
 
 	private static final long serialVersionUID = -3732127004637874803L;
 
@@ -38,7 +38,7 @@ public final class MakeStructureInstanceFunction extends FunctionStruct {
 
 	private static OrdinaryLambdaList getInitLambdaListBindings() {
 
-		final SymbolStruct<?> structSymArgSymbol = GlobalPackageStruct.SYSTEM.intern("STRUCT-SYM").getSymbol();
+		final SymbolStruct structSymArgSymbol = GlobalPackageStruct.SYSTEM.intern("STRUCT-SYM").getSymbol();
 		final RequiredParameter structSymArgRequiredBinding = new RequiredParameter(structSymArgSymbol);
 		final List<RequiredParameter> requiredBindings = Collections.singletonList(structSymArgRequiredBinding);
 
@@ -50,11 +50,11 @@ public final class MakeStructureInstanceFunction extends FunctionStruct {
 	public LispStruct apply(final LispStruct... lispStructs) {
 		getFunctionBindings(lispStructs);
 
-		final SymbolStruct<?> structSymbol = (SymbolStruct) lispStructs[0];
+		final SymbolStruct structSymbol = (SymbolStruct) lispStructs[0];
 		return makeStructureInstance(structSymbol);
 	}
 
-	public StructureObjectStruct makeStructureInstance(final SymbolStruct<?> structSymbol) {
+	public StructureObjectStruct makeStructureInstance(final SymbolStruct structSymbol) {
 
 		final StructureClassStruct structureClass = structSymbol.getStructureClass();
 		if (structureClass == null) {

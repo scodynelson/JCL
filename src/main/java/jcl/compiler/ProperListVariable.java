@@ -4,6 +4,8 @@
 
 package jcl.compiler;
 
+import jcl.LispStruct;
+import jcl.conditions.exceptions.TypeErrorException;
 import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;
 import jcl.packages.PackageStruct;
@@ -22,12 +24,17 @@ class ProperListVariable extends VariableStruct<ListStruct> {
 	}
 
 	@Override
-	public void setValue(final ListStruct value) {
+	public void setValue(final LispStruct value) {
+		if (!(value instanceof ListStruct)) {
+			// TODO: Fix me
+			throw new TypeErrorException("Must be List value.");
+		}
+		final ListStruct variableValue = (ListStruct) value;
 
-		if (value.isProper()) {
-			super.setValue(value);
+		if (variableValue.isProper()) {
+			super.setValue(variableValue);
 		} else {
-			LOGGER.warn("Error: {} had illegal value {}. Reset to NIL", name, value);
+			LOGGER.warn("Error: {} had illegal value {}. Reset to NIL", name, variableValue);
 
 			super.setValue(NullStruct.INSTANCE);
 		}

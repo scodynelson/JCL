@@ -88,7 +88,7 @@ public interface Reader extends Serializable {
 	 *
 	 * @return the {@link Map} #n= labels to their temporary {@link SymbolStruct} tags for the JCL Reader instance
 	 */
-	Map<BigInteger, SymbolStruct<?>> getSharpEqualTempTable();
+	Map<BigInteger, SymbolStruct> getSharpEqualTempTable();
 
 	/**
 	 * Gets the {@link Map} the temporary {@link SymbolStruct} tags for #n= labels to their assigned {@link
@@ -98,7 +98,7 @@ public interface Reader extends Serializable {
 	 * @return the {@link Map} the temporary {@link SymbolStruct} tags for #n= labels to their assigned {@link
 	 * LispStruct}s for the JCL Reader instance
 	 */
-	Map<SymbolStruct<?>, LispStruct> getSharpEqualReplTable();
+	Map<SymbolStruct, LispStruct> getSharpEqualReplTable();
 
 	/**
 	 * Gets the current backquote level for the JCL Reader instance.

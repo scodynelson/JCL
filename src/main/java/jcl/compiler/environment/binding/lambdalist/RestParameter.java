@@ -12,26 +12,26 @@ public class RestParameter extends Parameter {
 
 	private static final long serialVersionUID = 5070599837585531277L;
 
-	public RestParameter(final SymbolStruct<?> var) {
+	public RestParameter(final SymbolStruct var) {
 		this(var, false);
 	}
 
-	public RestParameter(final SymbolStruct<?> var, final boolean isSpecial) {
+	public RestParameter(final SymbolStruct var, final boolean isSpecial) {
 		this(var, null, isSpecial);
 	}
 
-	public RestParameter(final SymbolStruct<?> var, final DestructuringLambdaList destructuringForm) {
+	public RestParameter(final SymbolStruct var, final DestructuringLambdaList destructuringForm) {
 		this(var, destructuringForm, false);
 	}
 
-	public RestParameter(final SymbolStruct<?> var, final DestructuringLambdaList destructuringForm,
+	public RestParameter(final SymbolStruct var, final DestructuringLambdaList destructuringForm,
 	                     final boolean isSpecial) {
 		super(var, destructuringForm, ListType.INSTANCE, null, isSpecial);
 	}
 
 	public static final class Builder {
 
-		private final SymbolStruct<?> var;
+		private final SymbolStruct var;
 
 		private DestructuringLambdaList destructuringForm;
 

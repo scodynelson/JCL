@@ -31,9 +31,9 @@ public abstract class AbstractCommonLispFunctionStruct extends FunctionStruct {
 	}
 
 	@Override
-	public SymbolStruct<?> getFunctionSymbol() {
+	public SymbolStruct getFunctionSymbol() {
 		final PackageStruct aPackage = GlobalPackageStruct.COMMON_LISP;
-		final SymbolStruct<?> symbol = aPackage.intern(functionName()).getSymbol();
+		final SymbolStruct symbol = aPackage.intern(functionName()).getSymbol();
 		aPackage.export(symbol);
 		return symbol;
 	}

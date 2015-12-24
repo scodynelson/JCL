@@ -83,12 +83,12 @@ public final class LispFormValueValidator {
 		}
 	}
 
-	public SymbolStruct<?> validateSymbolOrNIL(final LispStruct object, final String analyzerName,
-	                                           final String objectName) {
+	public SymbolStruct validateSymbolOrNIL(final LispStruct object, final String analyzerName,
+	                                        final String objectName) {
 		if (NILStruct.INSTANCE.equals(object) || NullStruct.INSTANCE.equals(object)) {
 			return null;
 		} else if (object instanceof SymbolStruct) {
-			return (SymbolStruct<?>) object;
+			return (SymbolStruct) object;
 		} else {
 			final String printedObject = printer.print(object);
 			throw new ProgramErrorException(analyzerName + ": " + objectName + " must be a Symbol or NIL. Got: " + printedObject);

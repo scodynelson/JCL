@@ -19,9 +19,9 @@ public abstract class StructureClassStruct extends ClassStruct {
 
 	private static final long serialVersionUID = 8418743690243529133L;
 
-	protected final SymbolStruct<?> defaultConstructorSymbol;
+	protected final SymbolStruct defaultConstructorSymbol;
 
-	protected final SymbolStruct<?> printerSymbol;
+	protected final SymbolStruct printerSymbol;
 
 	/**
 	 * Protected constructor.
@@ -35,7 +35,7 @@ public abstract class StructureClassStruct extends ClassStruct {
 	 * @param subClasses
 	 * 		the subclasses
 	 */
-	protected StructureClassStruct(final SymbolStruct<?> defaultConstructorSymbol, final SymbolStruct<?> printerSymbol,
+	protected StructureClassStruct(final SymbolStruct defaultConstructorSymbol, final SymbolStruct printerSymbol,
 	                               final List<Class<? extends LispStruct>> directSuperClasses, final List<Class<? extends LispStruct>> subClasses) {
 		this(StructureClassType.INSTANCE, defaultConstructorSymbol, printerSymbol, directSuperClasses, subClasses);
 	}
@@ -54,14 +54,14 @@ public abstract class StructureClassStruct extends ClassStruct {
 	 * @param subClasses
 	 * 		the subclasses
 	 */
-	protected StructureClassStruct(final LispType type, final SymbolStruct<?> defaultConstructorSymbol, final SymbolStruct<?> printerSymbol,
+	protected StructureClassStruct(final LispType type, final SymbolStruct defaultConstructorSymbol, final SymbolStruct printerSymbol,
 	                               final List<Class<? extends LispStruct>> directSuperClasses, final List<Class<? extends LispStruct>> subClasses) {
 		super(type, directSuperClasses, subClasses);
 		this.defaultConstructorSymbol = defaultConstructorSymbol;
 		this.printerSymbol = printerSymbol;
 	}
 
-	public SymbolStruct<?> getDefaultConstructorSymbol() {
+	public SymbolStruct getDefaultConstructorSymbol() {
 		return defaultConstructorSymbol;
 	}
 

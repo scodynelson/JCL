@@ -28,7 +28,7 @@ public class MultipleValueProg1Expander extends MacroFunctionExpander<MultipleVa
 	private LispFormValueValidator validator;
 
 	@Override
-	public SymbolStruct<?> getFunctionSymbol() {
+	public SymbolStruct getFunctionSymbol() {
 		return SpecialOperatorStruct.MULTIPLE_VALUE_PROG1;
 	}
 

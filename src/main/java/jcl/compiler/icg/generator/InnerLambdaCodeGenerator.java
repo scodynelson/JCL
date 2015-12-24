@@ -147,7 +147,7 @@ final class InnerLambdaCodeGenerator extends SpecialOperatorCodeGenerator<InnerL
 
 		final List<InnerLambdaStruct.InnerLambdaVar> vars = input.getVars();
 		for (final InnerLambdaStruct.InnerLambdaVar var : vars) {
-			final SymbolStruct<?> functionSymbolVar = var.getVar();
+			final SymbolStruct functionSymbolVar = var.getVar();
 			final int functionSymbolStore = methodBuilder.getNextAvailableStore();
 			CodeGenerators.generateSymbol(functionSymbolVar, methodBuilder, packageStore, functionSymbolStore);
 

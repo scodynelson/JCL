@@ -66,7 +66,7 @@ public class GetFunction extends AbstractCommonLispFunctionStruct {
 
 		final LispStruct lispStruct2 = lispStructs[1];
 
-		final SymbolStruct<?> symbol = (SymbolStruct) lispStruct1;
+		final SymbolStruct symbol = (SymbolStruct) lispStruct1;
 		final LispStruct property = symbol.getProperty(lispStruct2);
 
 		if (property == null) {

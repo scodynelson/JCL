@@ -23,7 +23,7 @@ public class PrognExpander extends MacroFunctionExpander<PrognStruct> {
 	private FormAnalyzer formAnalyzer;
 
 	@Override
-	public SymbolStruct<?> getFunctionSymbol() {
+	public SymbolStruct getFunctionSymbol() {
 		return SpecialOperatorStruct.PROGN;
 	}
 

@@ -52,7 +52,7 @@ public class IntegerTokenAccumulatedReaderState implements ReaderState {
 		}
 
 		final String tokenString = ReaderState.convertTokenAttributesToString(tokenAttributes);
-		final int currentRadix = ReaderVariables.READ_BASE.getValue().getBigInteger().intValueExact();
+		final int currentRadix = ReaderVariables.READ_BASE.getVariableValue().getBigInteger().intValueExact();
 
 		final BigInteger bigInteger = new BigInteger(tokenString, currentRadix);
 		return new IntegerStruct(bigInteger);

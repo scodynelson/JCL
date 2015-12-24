@@ -48,7 +48,7 @@ class TokenAccumulatedReaderState implements ReaderState {
 	@Override
 	public LispStruct process(final TokenBuilder tokenBuilder) {
 
-		if (ReaderVariables.READ_SUPPRESS.getValue().booleanValue()) {
+		if (ReaderVariables.READ_SUPPRESS.getVariableValue().booleanValue()) {
 			return null;
 		}
 

@@ -31,11 +31,11 @@ public class Environment extends StandardObjectStruct {
 
 	private final List<SymbolMacroBinding> symbolMacroBindings = new ArrayList<>();
 
-	private Stack<SymbolStruct<?>> functionNameStack = new Stack<>();
+	private Stack<SymbolStruct> functionNameStack = new Stack<>();
 
-	private Set<SymbolStruct<?>> undefinedFunctions = Collections.synchronizedSet(new HashSet<>());
+	private Set<SymbolStruct> undefinedFunctions = Collections.synchronizedSet(new HashSet<>());
 
-	private Stack<SymbolStruct<?>> blockStack = new Stack<>();
+	private Stack<SymbolStruct> blockStack = new Stack<>();
 
 	private Stack<List<GoStruct<?>>> tagbodyStack = new Stack<>();
 
@@ -57,15 +57,15 @@ public class Environment extends StandardObjectStruct {
 		return parent;
 	}
 
-	public Stack<SymbolStruct<?>> getFunctionNameStack() {
+	public Stack<SymbolStruct> getFunctionNameStack() {
 		return functionNameStack;
 	}
 
-	public Set<SymbolStruct<?>> getUndefinedFunctions() {
+	public Set<SymbolStruct> getUndefinedFunctions() {
 		return undefinedFunctions;
 	}
 
-	public Stack<SymbolStruct<?>> getBlockStack() {
+	public Stack<SymbolStruct> getBlockStack() {
 		return blockStack;
 	}
 
@@ -73,7 +73,7 @@ public class Environment extends StandardObjectStruct {
 		return tagbodyStack;
 	}
 
-	public boolean hasLexicalBinding(final SymbolStruct<?> var) {
+	public boolean hasLexicalBinding(final SymbolStruct var) {
 		return lexicalBindings.stream()
 		                      .anyMatch(e -> e.getVar().equals(var));
 	}
@@ -82,7 +82,7 @@ public class Environment extends StandardObjectStruct {
 		lexicalBindings.add(environmentBinding);
 	}
 
-	public boolean hasDynamicBinding(final SymbolStruct<?> var) {
+	public boolean hasDynamicBinding(final SymbolStruct var) {
 		return dynamicBindings.stream()
 		                      .anyMatch(e -> e.getVar().equals(var));
 	}
@@ -91,7 +91,7 @@ public class Environment extends StandardObjectStruct {
 		dynamicBindings.add(environmentBinding);
 	}
 
-	public boolean hasSymbolMacroBinding(final SymbolStruct<?> var) {
+	public boolean hasSymbolMacroBinding(final SymbolStruct var) {
 		return symbolMacroBindings.stream()
 		                          .anyMatch(e -> e.getVar().equals(var));
 	}

@@ -24,7 +24,7 @@ import org.springframework.stereotype.Component;
 @Component
 public final class AppendFunction extends FunctionStruct {
 
-	public static final SymbolStruct<?> APPEND = GlobalPackageStruct.COMMON_LISP.intern("APPEND").getSymbol();
+	public static final SymbolStruct APPEND = GlobalPackageStruct.COMMON_LISP.intern("APPEND").getSymbol();
 
 	private static final long serialVersionUID = -6347931755033347733L;
 
@@ -46,7 +46,7 @@ public final class AppendFunction extends FunctionStruct {
 
 	private static OrdinaryLambdaList getInitLambdaListBindings() {
 
-		final SymbolStruct<?> listRestArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("LISTS").getSymbol();
+		final SymbolStruct listRestArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("LISTS").getSymbol();
 		final RestParameter restBinding = new RestParameter(listRestArgSymbol);
 
 		return new OrdinaryLambdaList.Builder().restBinding(restBinding)

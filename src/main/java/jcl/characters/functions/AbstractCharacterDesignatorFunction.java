@@ -109,5 +109,5 @@ abstract class AbstractCharacterDesignatorFunction extends AbstractCommonLispFun
 	 * @return returns a {@link Function} that consumes a {@link SymbolStruct} and returns a {@link LispStruct} as a
 	 * result
 	 */
-	protected abstract Function<SymbolStruct<?>, LispStruct> symbolFunction();
+	protected abstract Function<SymbolStruct, LispStruct> symbolFunction();
 }

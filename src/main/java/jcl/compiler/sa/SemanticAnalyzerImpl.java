@@ -37,7 +37,7 @@ class SemanticAnalyzerImpl implements SemanticAnalyzer {
 	public LambdaStruct analyze(final ListStruct form) {
 		final Environment nullEnvironment = Environment.NULL;
 
-		final Set<SymbolStruct<?>> undefinedFunctions = nullEnvironment.getUndefinedFunctions();
+		final Set<SymbolStruct> undefinedFunctions = nullEnvironment.getUndefinedFunctions();
 		undefinedFunctions.clear();
 
 		final LambdaStruct analyzedForm = lambdaExpander.expand(form, nullEnvironment);
@@ -50,7 +50,7 @@ class SemanticAnalyzerImpl implements SemanticAnalyzer {
 		return analyzedForm;
 	}
 
-	private void unknownFunctionWarning(final SymbolStruct<?> undefinedFunction) {
+	private void unknownFunctionWarning(final SymbolStruct undefinedFunction) {
 		final String printedUndefinedFunction = printer.print(undefinedFunction);
 		LOGGER.warn("Warning: no function or macro function defined for: {}", printedUndefinedFunction);
 	}

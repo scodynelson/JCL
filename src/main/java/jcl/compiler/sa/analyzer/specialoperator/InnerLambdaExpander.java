@@ -74,8 +74,8 @@ public abstract class InnerLambdaExpander extends MacroFunctionExpander<InnerLam
 
 		final Environment innerLambdaEnvironment = new Environment(environment);
 
-		final Stack<SymbolStruct<?>> functionNameStack = environment.getFunctionNameStack();
-		final List<SymbolStruct<?>> functionNames = getFunctionNames(innerLambdasAsJavaList);
+		final Stack<SymbolStruct> functionNameStack = environment.getFunctionNameStack();
+		final List<SymbolStruct> functionNames = getFunctionNames(innerLambdasAsJavaList);
 
 		final ListStruct formRestRest = formRest.getRest();
 		final List<LispStruct> forms = formRestRest.getAsJavaList();
@@ -92,11 +92,11 @@ public abstract class InnerLambdaExpander extends MacroFunctionExpander<InnerLam
 	                                                      final Environment innerLambdaEnvironment,
 	                                                      final BodyProcessingResult bodyProcessingResult,
 	                                                      final DeclareStruct declare,
-	                                                      final Stack<SymbolStruct<?>> functionNameStack,
-	                                                      final List<SymbolStruct<?>> functionNames);
+	                                                      final Stack<SymbolStruct> functionNameStack,
+	                                                      final List<SymbolStruct> functionNames);
 
-	protected abstract ListStruct getInnerLambdaBody(final ListStruct innerBlockListStruct, final SymbolStruct<?> functionNameSymbol,
-	                                                 final List<SymbolStruct<?>> functionNames);
+	protected abstract ListStruct getInnerLambdaBody(final ListStruct innerBlockListStruct, final SymbolStruct functionNameSymbol,
+	                                                 final List<SymbolStruct> functionNames);
 
 	protected abstract CompilerFunctionStruct expandBuiltInnerFunction(final ListStruct innerFunctionListStruct,
 	                                                                   final Environment environment);
@@ -104,7 +104,7 @@ public abstract class InnerLambdaExpander extends MacroFunctionExpander<InnerLam
 	protected List<InnerLambdaStruct.InnerLambdaVar> getVars(final List<LispStruct> innerLambdasAsJavaList,
 	                                                         final Environment innerLambdaEnvironment,
 	                                                         final DeclareStruct declare,
-	                                                         final List<SymbolStruct<?>> functionNames) {
+	                                                         final List<SymbolStruct> functionNames) {
 		return innerLambdasAsJavaList.stream()
 		                             .map(e -> getVar(e, declare, innerLambdaEnvironment, functionNames))
 		                             .collect(Collectors.toList());
@@ -130,15 +130,15 @@ public abstract class InnerLambdaExpander extends MacroFunctionExpander<InnerLam
 		return new InnerLambdaStruct(vars, new PrognStruct(analyzedBodyForms), innerLambdaEnvironment);
 	}
 
-	private List<SymbolStruct<?>> getFunctionNames(final List<? extends LispStruct> functionDefinitions) {
+	private List<SymbolStruct> getFunctionNames(final List<? extends LispStruct> functionDefinitions) {
 
-		final List<SymbolStruct<?>> functionNames = new ArrayList<>(functionDefinitions.size());
+		final List<SymbolStruct> functionNames = new ArrayList<>(functionDefinitions.size());
 
 		for (final LispStruct functionDefinition : functionDefinitions) {
 			final ListStruct functionList = validator.validateObjectType(functionDefinition, expanderName, "Function parameter", ListStruct.class);
 
 			final LispStruct functionListFirst = functionList.getFirst();
-			final SymbolStruct<?> functionName = validator.validateObjectType(functionListFirst, expanderName, "First element of function parameter", SymbolStruct.class);
+			final SymbolStruct functionName = validator.validateObjectType(functionListFirst, expanderName, "First element of function parameter", SymbolStruct.class);
 
 			if (functionNames.contains(functionName)) {
 				LOGGER.warn("{}: Multiple bindings of {} in {} form.", expanderName, functionName.getName(), expanderName);
@@ -150,10 +150,10 @@ public abstract class InnerLambdaExpander extends MacroFunctionExpander<InnerLam
 	}
 
 	private InnerLambdaStruct.InnerLambdaVar getVar(final LispStruct functionDefinition, final DeclareStruct declare,
-	                                                final Environment environment, final List<SymbolStruct<?>> functionNames) {
+	                                                final Environment environment, final List<SymbolStruct> functionNames) {
 
 		final ListStruct functionList = (ListStruct) functionDefinition;
-		final SymbolStruct<?> functionName = (SymbolStruct<?>) functionList.getFirst();
+		final SymbolStruct functionName = (SymbolStruct) functionList.getFirst();
 		final CompilerFunctionStruct functionInitForm = getFunctionParameterInitForm(functionList, environment, functionNames);
 
 		final boolean isSpecial = declare.getSpecialDeclarations()
@@ -165,7 +165,7 @@ public abstract class InnerLambdaExpander extends MacroFunctionExpander<InnerLam
 
 	private CompilerFunctionStruct getFunctionParameterInitForm(final ListStruct functionListParameter,
 	                                                            final Environment environment,
-	                                                            final List<SymbolStruct<?>> functionNames) {
+	                                                            final List<SymbolStruct> functionNames) {
 
 		final int functionListParameterSize = functionListParameter.size();
 		if (functionListParameterSize < 2) {
@@ -190,7 +190,7 @@ public abstract class InnerLambdaExpander extends MacroFunctionExpander<InnerLam
 		final ListStruct innerBlockListStruct = ListStruct.buildDottedList(SpecialOperatorStruct.BLOCK, functionName, blockBody);
 
 		// NOTE: This will be a safe cast since we verify it is a symbol earlier
-		final SymbolStruct<?> functionNameSymbol = (SymbolStruct) functionName;
+		final SymbolStruct functionNameSymbol = (SymbolStruct) functionName;
 
 		final ListStruct innerLambdaBody = getInnerLambdaBody(innerBlockListStruct, functionNameSymbol, functionNames);
 

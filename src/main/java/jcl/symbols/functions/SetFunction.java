@@ -57,8 +57,7 @@ public class SetFunction extends AbstractCommonLispFunctionStruct {
 
 		final LispStruct lispStruct2 = lispStructs[1];
 
-		@SuppressWarnings("unchecked")
-		final SymbolStruct<LispStruct> symbol = (SymbolStruct) lispStruct1;
+		final SymbolStruct symbol = (SymbolStruct) lispStruct1;
 		symbol.setValue(lispStruct2);
 
 		return symbol.getValue();

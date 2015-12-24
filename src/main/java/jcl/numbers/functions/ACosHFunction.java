@@ -23,7 +23,7 @@ import org.springframework.stereotype.Component;
 @Component
 public final class ACosHFunction extends FunctionStruct {
 
-	public static final SymbolStruct<?> ACOSH = GlobalPackageStruct.COMMON_LISP.intern("ACOSH").getSymbol();
+	public static final SymbolStruct ACOSH = GlobalPackageStruct.COMMON_LISP.intern("ACOSH").getSymbol();
 
 	private static final long serialVersionUID = -6111322168461853318L;
 
@@ -42,7 +42,7 @@ public final class ACosHFunction extends FunctionStruct {
 
 	private static OrdinaryLambdaList getInitLambdaListBindings() {
 
-		final SymbolStruct<?> firstArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("NUMBER").getSymbol();
+		final SymbolStruct firstArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("NUMBER").getSymbol();
 		final RequiredParameter requiredBinding = new RequiredParameter(firstArgSymbol);
 		final List<RequiredParameter> requiredBindings = Collections.singletonList(requiredBinding);
 

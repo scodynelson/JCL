@@ -117,7 +117,7 @@ final class LetStarCodeGenerator extends ClosureCreationCodeGenerator<LetStarStr
 		final int packageStore = methodBuilder.getNextAvailableStore();
 
 		for (final LetStarStruct.LetStarVar var : vars) {
-			final SymbolStruct<?> symbolVar = var.getVar();
+			final SymbolStruct symbolVar = var.getVar();
 			final int symbolStore = methodBuilder.getNextAvailableStore();
 			CodeGenerators.generateSymbol(symbolVar, methodBuilder, packageStore, symbolStore);
 

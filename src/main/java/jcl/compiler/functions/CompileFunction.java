@@ -25,7 +25,7 @@ import org.springframework.stereotype.Component;
 @Component
 public final class CompileFunction extends FunctionStruct {
 
-	public static final SymbolStruct<?> COMPILE = GlobalPackageStruct.COMMON_LISP.intern("COMPILE").getSymbol();
+	public static final SymbolStruct COMPILE = GlobalPackageStruct.COMMON_LISP.intern("COMPILE").getSymbol();
 
 	private static final long serialVersionUID = 5339244651961527815L;
 
@@ -47,13 +47,13 @@ public final class CompileFunction extends FunctionStruct {
 
 	private static OrdinaryLambdaList getInitLambdaListBindings() {
 
-		final SymbolStruct<?> nameArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("NAME").getSymbol();
+		final SymbolStruct nameArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("NAME").getSymbol();
 		final RequiredParameter requiredBinding = new RequiredParameter(nameArgSymbol);
 		final List<RequiredParameter> requiredBindings = Collections.singletonList(requiredBinding);
 
-		final SymbolStruct<?> definitionArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("DEFINITION").getSymbol();
+		final SymbolStruct definitionArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("DEFINITION").getSymbol();
 
-		final SymbolStruct<?> definitionSuppliedP = GlobalPackageStruct.COMMON_LISP.intern("DEFINITION-P-" + System.nanoTime()).getSymbol();
+		final SymbolStruct definitionSuppliedP = GlobalPackageStruct.COMMON_LISP.intern("DEFINITION-P-" + System.nanoTime()).getSymbol();
 		final SuppliedPParameter suppliedPBinding = new SuppliedPParameter(definitionSuppliedP);
 
 		final OptionalParameter optionalBinding = new OptionalParameter(definitionArgSymbol, NullStruct.INSTANCE, suppliedPBinding);
@@ -98,7 +98,7 @@ public final class CompileFunction extends FunctionStruct {
 			}
 
 			if (name instanceof SymbolStruct) {
-				final SymbolStruct<?> nameSymbol = (SymbolStruct<?>) name;
+				final SymbolStruct nameSymbol = (SymbolStruct) name;
 				nameSymbol.setFunction(function);
 			} else if (!name.equals(NullStruct.INSTANCE) && !name.equals(NILStruct.INSTANCE)) {
 				throw new ErrorException("The value " + name + " is not an acceptable function name.");
@@ -114,7 +114,7 @@ public final class CompileFunction extends FunctionStruct {
 		if (!(name instanceof SymbolStruct)) {
 			throw new ErrorException("The value " + name + " is not an acceptable function name.");
 		}
-		final SymbolStruct<?> nameSymbol = (SymbolStruct<?>) name;
+		final SymbolStruct nameSymbol = (SymbolStruct) name;
 
 		final MacroFunctionExpander<?> macroFunction = nameSymbol.getMacroFunctionExpander();
 		if (macroFunction != null) {

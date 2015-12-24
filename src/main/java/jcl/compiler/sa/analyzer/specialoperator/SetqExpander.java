@@ -27,7 +27,7 @@ public class SetqExpander extends MacroFunctionExpander<SetqStruct> {
 	private LispFormValueValidator validator;
 
 	@Override
-	public SymbolStruct<?> getFunctionSymbol() {
+	public SymbolStruct getFunctionSymbol() {
 		return SpecialOperatorStruct.SETQ;
 	}
 
@@ -44,7 +44,7 @@ public class SetqExpander extends MacroFunctionExpander<SetqStruct> {
 		for (int index = 0; index < numberOfForms; index += 2) {
 
 			final LispStruct setqVar = forms.get(index);
-			final SymbolStruct<?> setqVarSymbol = validator.validateObjectType(setqVar, "SETQ", "VARIABLE", SymbolStruct.class);
+			final SymbolStruct setqVarSymbol = validator.validateObjectType(setqVar, "SETQ", "VARIABLE", SymbolStruct.class);
 
 			final LispStruct setqForm = forms.get(index + 1);
 			final LispStruct setqFormAnalyzed = formAnalyzer.analyze(setqForm, environment);

@@ -23,7 +23,7 @@ import org.springframework.stereotype.Component;
 @Component
 public final class LogNotFunction extends FunctionStruct {
 
-	public static final SymbolStruct<?> LOGNOT = GlobalPackageStruct.COMMON_LISP.intern("LOGNOT").getSymbol();
+	public static final SymbolStruct LOGNOT = GlobalPackageStruct.COMMON_LISP.intern("LOGNOT").getSymbol();
 
 	private static final long serialVersionUID = 1160366761775222238L;
 
@@ -42,7 +42,7 @@ public final class LogNotFunction extends FunctionStruct {
 
 	private static OrdinaryLambdaList getInitLambdaListBindings() {
 
-		final SymbolStruct<?> integerSymbol = GlobalPackageStruct.COMMON_LISP.intern("INTEGER").getSymbol();
+		final SymbolStruct integerSymbol = GlobalPackageStruct.COMMON_LISP.intern("INTEGER").getSymbol();
 		final RequiredParameter requiredBinding = new RequiredParameter(integerSymbol);
 		final List<RequiredParameter> requiredBindings = Collections.singletonList(requiredBinding);
 

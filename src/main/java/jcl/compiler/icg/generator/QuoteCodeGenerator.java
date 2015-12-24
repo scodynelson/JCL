@@ -94,7 +94,7 @@ class QuoteCodeGenerator implements CodeGenerator<QuoteStruct> {
 	 * @param generatorState
 	 * 		stateful object used to hold the current state of the code generation process
 	 */
-	private static void generateQuotedSymbol(final SymbolStruct<?> quotedSymbol, final GeneratorState generatorState) {
+	private static void generateQuotedSymbol(final SymbolStruct quotedSymbol, final GeneratorState generatorState) {
 
 		final JavaMethodBuilder methodBuilder = generatorState.getCurrentMethodBuilder();
 		final MethodVisitor mv = methodBuilder.getMethodVisitor();

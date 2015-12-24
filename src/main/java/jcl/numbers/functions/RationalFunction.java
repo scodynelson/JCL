@@ -23,7 +23,7 @@ import org.springframework.stereotype.Component;
 @Component
 public final class RationalFunction extends FunctionStruct {
 
-	public static final SymbolStruct<?> RATIONAL = GlobalPackageStruct.COMMON_LISP.intern("RATIONAL").getSymbol();
+	public static final SymbolStruct RATIONAL = GlobalPackageStruct.COMMON_LISP.intern("RATIONAL").getSymbol();
 
 	private static final long serialVersionUID = 8676731302230968319L;
 
@@ -42,7 +42,7 @@ public final class RationalFunction extends FunctionStruct {
 
 	private static OrdinaryLambdaList getInitLambdaListBindings() {
 
-		final SymbolStruct<?> firstArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("REAL").getSymbol();
+		final SymbolStruct firstArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("REAL").getSymbol();
 		final RequiredParameter requiredBinding = new RequiredParameter(firstArgSymbol);
 		final List<RequiredParameter> requiredBindings = Collections.singletonList(requiredBinding);
 

@@ -19,7 +19,7 @@ import org.springframework.stereotype.Component;
 @Component
 public final class BindSymbolFunctionFunction extends AbstractSystemFunctionStruct {
 
-	public static final SymbolStruct<?> BIND_SYMBOL_FUNCTION = GlobalPackageStruct.SYSTEM.intern("BIND-SYMBOL-FUNCTION").getSymbol();
+	public static final SymbolStruct BIND_SYMBOL_FUNCTION = GlobalPackageStruct.SYSTEM.intern("BIND-SYMBOL-FUNCTION").getSymbol();
 
 	private static final long serialVersionUID = 1025657474175401906L;
 
@@ -38,7 +38,7 @@ public final class BindSymbolFunctionFunction extends AbstractSystemFunctionStru
 	public LispStruct apply(final LispStruct... lispStructs) {
 		super.apply(lispStructs);
 
-		final SymbolStruct<?> symbol = (SymbolStruct) lispStructs[0];
+		final SymbolStruct symbol = (SymbolStruct) lispStructs[0];
 		final FunctionStruct function = (FunctionStruct) lispStructs[1];
 		symbol.bindFunction(function);
 		return new ValuesStruct();

@@ -19,7 +19,7 @@ public class SymbolMacroExpanderImpl extends SymbolMacroExpander<LispStruct> {
 	}
 
 	@Override
-	public LispStruct expand(final SymbolStruct<?> form, final Environment environment) {
+	public LispStruct expand(final SymbolStruct form, final Environment environment) {
 		return expansion;
 	}
 }

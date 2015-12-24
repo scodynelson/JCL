@@ -24,7 +24,7 @@ import org.springframework.stereotype.Component;
 @Component
 public final class ScaleFloatFunction extends FunctionStruct {
 
-	public static final SymbolStruct<?> SCALE_FLOAT = GlobalPackageStruct.COMMON_LISP.intern("SCALE-FLOAT").getSymbol();
+	public static final SymbolStruct SCALE_FLOAT = GlobalPackageStruct.COMMON_LISP.intern("SCALE-FLOAT").getSymbol();
 
 	private static final long serialVersionUID = -7937903222796631877L;
 
@@ -44,11 +44,11 @@ public final class ScaleFloatFunction extends FunctionStruct {
 	private static OrdinaryLambdaList getInitLambdaListBindings() {
 		final List<RequiredParameter> requiredBindings = new ArrayList<>(2);
 
-		final SymbolStruct<?> floatSymbol = GlobalPackageStruct.COMMON_LISP.intern("FLOAT").getSymbol();
+		final SymbolStruct floatSymbol = GlobalPackageStruct.COMMON_LISP.intern("FLOAT").getSymbol();
 		final RequiredParameter requiredBinding1 = new RequiredParameter(floatSymbol);
 		requiredBindings.add(requiredBinding1);
 
-		final SymbolStruct<?> integerSymbol = GlobalPackageStruct.COMMON_LISP.intern("INTEGER").getSymbol();
+		final SymbolStruct integerSymbol = GlobalPackageStruct.COMMON_LISP.intern("INTEGER").getSymbol();
 		final RequiredParameter requiredBinding2 = new RequiredParameter(integerSymbol);
 		requiredBindings.add(requiredBinding2);
 

@@ -20,7 +20,7 @@ import org.springframework.stereotype.Component;
 @Component
 public final class CarFunction extends FunctionStruct {
 
-	public static final SymbolStruct<?> CAR = GlobalPackageStruct.COMMON_LISP.intern("CAR").getSymbol();
+	public static final SymbolStruct CAR = GlobalPackageStruct.COMMON_LISP.intern("CAR").getSymbol();
 
 	private static final long serialVersionUID = -4167883057835187873L;
 
@@ -36,7 +36,7 @@ public final class CarFunction extends FunctionStruct {
 
 	private static OrdinaryLambdaList getInitLambdaListBindings() {
 
-		final SymbolStruct<?> listArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("LIST-ARG").getSymbol();
+		final SymbolStruct listArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("LIST-ARG").getSymbol();
 		final RequiredParameter requiredBinding = new RequiredParameter(listArgSymbol);
 		final List<RequiredParameter> requiredBindings = Collections.singletonList(requiredBinding);
 

@@ -20,7 +20,7 @@ import org.springframework.stereotype.Component;
 @Component
 public final class ConsFunction extends FunctionStruct {
 
-	public static final SymbolStruct<?> CONS = GlobalPackageStruct.COMMON_LISP.intern("CONS").getSymbol();
+	public static final SymbolStruct CONS = GlobalPackageStruct.COMMON_LISP.intern("CONS").getSymbol();
 
 	private static final long serialVersionUID = 1242798660975184815L;
 
@@ -38,11 +38,11 @@ public final class ConsFunction extends FunctionStruct {
 
 		final List<RequiredParameter> requiredBindings = new ArrayList<>(2);
 
-		final SymbolStruct<?> object1ArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("OBJECT-1").getSymbol();
+		final SymbolStruct object1ArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("OBJECT-1").getSymbol();
 		final RequiredParameter object1RequiredBinding = new RequiredParameter(object1ArgSymbol);
 		requiredBindings.add(object1RequiredBinding);
 
-		final SymbolStruct<?> object2ArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("OBJECT-2").getSymbol();
+		final SymbolStruct object2ArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("OBJECT-2").getSymbol();
 		final RequiredParameter object2RequiredBinding = new RequiredParameter(object2ArgSymbol);
 		requiredBindings.add(object2RequiredBinding);
 

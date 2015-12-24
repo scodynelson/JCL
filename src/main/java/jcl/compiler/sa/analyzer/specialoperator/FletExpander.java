@@ -33,7 +33,7 @@ public class FletExpander extends InnerLambdaExpander {
 	}
 
 	@Override
-	public SymbolStruct<?> getFunctionSymbol() {
+	public SymbolStruct getFunctionSymbol() {
 		return SpecialOperatorStruct.FLET;
 	}
 
@@ -42,8 +42,8 @@ public class FletExpander extends InnerLambdaExpander {
 	                                             final Environment innerLambdaEnvironment,
 	                                             final BodyProcessingResult bodyProcessingResult,
 	                                             final DeclareStruct declare,
-	                                             final Stack<SymbolStruct<?>> functionNameStack,
-	                                             final List<SymbolStruct<?>> functionNames) {
+	                                             final Stack<SymbolStruct> functionNameStack,
+	                                             final List<SymbolStruct> functionNames) {
 
 		final List<InnerLambdaStruct.InnerLambdaVar> vars
 				= getVars(innerLambdasAsJavaList, innerLambdaEnvironment, declare, functionNames);
@@ -58,8 +58,8 @@ public class FletExpander extends InnerLambdaExpander {
 	}
 
 	@Override
-	protected ListStruct getInnerLambdaBody(final ListStruct innerBlockListStruct, final SymbolStruct<?> functionNameSymbol,
-	                                        final List<SymbolStruct<?>> functionNames) {
+	protected ListStruct getInnerLambdaBody(final ListStruct innerBlockListStruct, final SymbolStruct functionNameSymbol,
+	                                        final List<SymbolStruct> functionNames) {
 
 		final List<LispStruct> letFunctionBindVars = new ArrayList<>();
 		final List<LispStruct> rebindFunctions = new ArrayList<>();
@@ -67,7 +67,7 @@ public class FletExpander extends InnerLambdaExpander {
 		             .filter(name -> !name.equals(functionNameSymbol))
 		             .forEach(name -> {
 			             final String tempFunctionBindName = "temp_" + name.getName() + "_bind_" + System.nanoTime();
-			             final SymbolStruct<?> tempFunctionBindVar = GlobalPackageStruct.COMMON_LISP_USER.intern(tempFunctionBindName).getSymbol();
+			             final SymbolStruct tempFunctionBindVar = GlobalPackageStruct.COMMON_LISP_USER.intern(tempFunctionBindName).getSymbol();
 
 			             final ListStruct quoteName = ListStruct.buildProperList(SpecialOperatorStruct.QUOTE, name);
 

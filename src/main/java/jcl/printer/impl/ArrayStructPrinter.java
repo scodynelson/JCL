@@ -31,8 +31,8 @@ public class ArrayStructPrinter<TYPE extends LispStruct> implements LispPrinter<
 	public String print(final ArrayStruct<TYPE> object) {
 		// TODO: Ignoring *PRINT-LEVEL* and *PRINT-LENGTH*
 
-		final boolean printArray = PrinterVariables.PRINT_ARRAY.getValue().booleanValue();
-		final boolean printReadably = PrinterVariables.PRINT_READABLY.getValue().booleanValue();
+		final boolean printArray = PrinterVariables.PRINT_ARRAY.getVariableValue().booleanValue();
+		final boolean printReadably = PrinterVariables.PRINT_READABLY.getVariableValue().booleanValue();
 
 		final StringBuilder stringBuilder = new StringBuilder();
 

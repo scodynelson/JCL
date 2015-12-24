@@ -23,7 +23,7 @@ import org.springframework.stereotype.Component;
 @Component
 public final class ISqrtFunction extends FunctionStruct {
 
-	public static final SymbolStruct<?> ISQRT = GlobalPackageStruct.COMMON_LISP.intern("ISQRT").getSymbol();
+	public static final SymbolStruct ISQRT = GlobalPackageStruct.COMMON_LISP.intern("ISQRT").getSymbol();
 
 	private static final long serialVersionUID = 8041228069336501886L;
 
@@ -42,7 +42,7 @@ public final class ISqrtFunction extends FunctionStruct {
 
 	private static OrdinaryLambdaList getInitLambdaListBindings() {
 
-		final SymbolStruct<?> firstArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("INTEGER").getSymbol();
+		final SymbolStruct firstArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("INTEGER").getSymbol();
 		final RequiredParameter requiredBinding = new RequiredParameter(firstArgSymbol);
 		final List<RequiredParameter> requiredBindings = Collections.singletonList(requiredBinding);
 

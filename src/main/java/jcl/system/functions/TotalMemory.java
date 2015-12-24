@@ -18,7 +18,7 @@ import org.springframework.stereotype.Component;
 @Component
 public final class TotalMemory extends FunctionStruct {
 
-	public static final SymbolStruct<?> TOTAL_MEMORY = GlobalPackageStruct.EXTENSIONS.intern("TOTAL-MEMORY").getSymbol();
+	public static final SymbolStruct TOTAL_MEMORY = GlobalPackageStruct.EXTENSIONS.intern("TOTAL-MEMORY").getSymbol();
 
 	private static final long serialVersionUID = 8319997947442435520L;
 

@@ -18,7 +18,7 @@ import org.springframework.stereotype.Component;
 @Component
 public final class ListStarFunction extends FunctionStruct {
 
-	public static final SymbolStruct<?> LIST_STAR = GlobalPackageStruct.COMMON_LISP.intern("LIST*").getSymbol();
+	public static final SymbolStruct LIST_STAR = GlobalPackageStruct.COMMON_LISP.intern("LIST*").getSymbol();
 
 	private static final long serialVersionUID = -5968990222195634426L;
 
@@ -34,7 +34,7 @@ public final class ListStarFunction extends FunctionStruct {
 
 	private static OrdinaryLambdaList getInitLambdaListBindings() {
 
-		final SymbolStruct<?> objectRestArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("OBJECTS").getSymbol();
+		final SymbolStruct objectRestArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("OBJECTS").getSymbol();
 		final RestParameter restBinding = new RestParameter(objectRestArgSymbol);
 
 		return new OrdinaryLambdaList.Builder().restBinding(restBinding)

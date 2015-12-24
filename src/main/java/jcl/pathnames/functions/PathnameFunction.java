@@ -27,7 +27,7 @@ import org.springframework.stereotype.Component;
 @Component
 public final class PathnameFunction extends FunctionStruct {
 
-	public static final SymbolStruct<?> PATHNAME = GlobalPackageStruct.COMMON_LISP.intern("PATHNAME").getSymbol();
+	public static final SymbolStruct PATHNAME = GlobalPackageStruct.COMMON_LISP.intern("PATHNAME").getSymbol();
 
 	private static final long serialVersionUID = -353874315108380742L;
 
@@ -46,7 +46,7 @@ public final class PathnameFunction extends FunctionStruct {
 
 	private static OrdinaryLambdaList getInitLambdaListBindings() {
 
-		final SymbolStruct<?> pathspecArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("PATHSPEC").getSymbol();
+		final SymbolStruct pathspecArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("PATHSPEC").getSymbol();
 		final RequiredParameter requiredBinding = new RequiredParameter(pathspecArgSymbol);
 		final List<RequiredParameter> requiredBindings = Collections.singletonList(requiredBinding);
 

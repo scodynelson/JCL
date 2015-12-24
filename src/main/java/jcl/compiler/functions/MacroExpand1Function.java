@@ -34,7 +34,7 @@ import org.springframework.stereotype.Component;
 @Component
 public final class MacroExpand1Function extends FunctionStruct {
 
-	public static final SymbolStruct<?> MACROEXPAND_1 = GlobalPackageStruct.COMMON_LISP.intern("MACROEXPAND-1").getSymbol();
+	public static final SymbolStruct MACROEXPAND_1 = GlobalPackageStruct.COMMON_LISP.intern("MACROEXPAND-1").getSymbol();
 
 	private static final long serialVersionUID = 5991270831364188635L;
 
@@ -50,13 +50,13 @@ public final class MacroExpand1Function extends FunctionStruct {
 
 	private static OrdinaryLambdaList getInitLambdaListBindings() {
 
-		final SymbolStruct<?> formArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("FORM").getSymbol();
+		final SymbolStruct formArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("FORM").getSymbol();
 		final RequiredParameter requiredBinding = new RequiredParameter(formArgSymbol);
 		final List<RequiredParameter> requiredBindings = Collections.singletonList(requiredBinding);
 
-		final SymbolStruct<?> envArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("ENV").getSymbol();
+		final SymbolStruct envArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("ENV").getSymbol();
 
-		final SymbolStruct<?> envSuppliedPSymbol = GlobalPackageStruct.COMMON_LISP.intern("ENV-P-" + System.nanoTime()).getSymbol();
+		final SymbolStruct envSuppliedPSymbol = GlobalPackageStruct.COMMON_LISP.intern("ENV-P-" + System.nanoTime()).getSymbol();
 		final SuppliedPParameter suppliedPBinding = new SuppliedPParameter(envSuppliedPSymbol);
 
 		final OptionalParameter optionalBinding = new OptionalParameter(envArgSymbol, NullStruct.INSTANCE, suppliedPBinding);
@@ -88,7 +88,7 @@ public final class MacroExpand1Function extends FunctionStruct {
 		if (element instanceof ListStruct) {
 			return macroExpand1((ListStruct) element, environment);
 		} else if (element instanceof SymbolStruct) {
-			return macroExpand1((SymbolStruct<?>) element, environment);
+			return macroExpand1((SymbolStruct) element, environment);
 		} else {
 			return new MacroExpandResult(element, false);
 		}
@@ -97,16 +97,16 @@ public final class MacroExpand1Function extends FunctionStruct {
 	private static MacroExpandResult macroExpand1(final ListStruct form, final Environment environment) {
 
 		final LispStruct first = form.getFirst();
-		if (first instanceof SymbolStruct<?>) {
+		if (first instanceof SymbolStruct) {
 
-			final Optional<SymbolStruct<?>> symbolStruct = getSymbolStruct((SymbolStruct<?>) first);
+			final Optional<SymbolStruct> symbolStruct = getSymbolStruct((SymbolStruct) first);
 			if (symbolStruct.isPresent()) {
-				final SymbolStruct<?> theSymbol = symbolStruct.get();
+				final SymbolStruct theSymbol = symbolStruct.get();
 
 				final MacroFunctionExpander<?> macroFunctionExpander = theSymbol.getMacroFunctionExpander();
 
 				if (macroFunctionExpander != null) {
-					final FunctionStruct macroExpandHook = CompilerVariables.MACROEXPAND_HOOK.getValue();
+					final FunctionStruct macroExpandHook = CompilerVariables.MACROEXPAND_HOOK.getVariableValue();
 					final LispStruct expansion = macroExpandHook.apply(macroFunctionExpander, form, environment);
 
 					return new MacroExpandResult(expansion, true);
@@ -118,16 +118,16 @@ public final class MacroExpand1Function extends FunctionStruct {
 		return new MacroExpandResult(form, false);
 	}
 
-	private static MacroExpandResult macroExpand1(final SymbolStruct<?> form, final Environment environment) {
+	private static MacroExpandResult macroExpand1(final SymbolStruct form, final Environment environment) {
 
-		final Optional<SymbolStruct<?>> symbolStruct = getSymbolStruct(form);
+		final Optional<SymbolStruct> symbolStruct = getSymbolStruct(form);
 		if (symbolStruct.isPresent()) {
-			final SymbolStruct<?> theSymbol = symbolStruct.get();
+			final SymbolStruct theSymbol = symbolStruct.get();
 
 			final SymbolMacroExpander<?> symbolMacroExpander = theSymbol.getSymbolMacroExpander();
 
 			if (symbolMacroExpander != null) {
-				final FunctionStruct macroExpandHook = CompilerVariables.MACROEXPAND_HOOK.getValue();
+				final FunctionStruct macroExpandHook = CompilerVariables.MACROEXPAND_HOOK.getVariableValue();
 				final LispStruct expansion = macroExpandHook.apply(symbolMacroExpander, form, environment);
 
 				return new MacroExpandResult(expansion, true);
@@ -137,7 +137,7 @@ public final class MacroExpand1Function extends FunctionStruct {
 		return new MacroExpandResult(form, false);
 	}
 
-	private static Optional<SymbolStruct<?>> getSymbolStruct(final SymbolStruct<?> symbolElement) {
+	private static Optional<SymbolStruct> getSymbolStruct(final SymbolStruct symbolElement) {
 		final PackageStruct thePackage = symbolElement.getSymbolPackage();
 		if (thePackage != null) {
 
@@ -145,7 +145,7 @@ public final class MacroExpand1Function extends FunctionStruct {
 			final PackageSymbolStruct thePackageSymbol = thePackage.findSymbol(symbolName);
 
 			if (thePackageSymbol != null) {
-				final SymbolStruct<?> theSymbol = thePackageSymbol.getSymbol();
+				final SymbolStruct theSymbol = thePackageSymbol.getSymbol();
 				return Optional.ofNullable(theSymbol);
 			}
 		}

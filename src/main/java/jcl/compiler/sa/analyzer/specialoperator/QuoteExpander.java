@@ -20,7 +20,7 @@ public class QuoteExpander extends MacroFunctionExpander<QuoteStruct> {
 	private LispFormValueValidator validator;
 
 	@Override
-	public SymbolStruct<?> getFunctionSymbol() {
+	public SymbolStruct getFunctionSymbol() {
 		return SpecialOperatorStruct.QUOTE;
 	}
 

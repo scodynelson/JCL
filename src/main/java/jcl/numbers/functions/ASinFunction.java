@@ -23,7 +23,7 @@ import org.springframework.stereotype.Component;
 @Component
 public final class ASinFunction extends FunctionStruct {
 
-	public static final SymbolStruct<?> ASIN = GlobalPackageStruct.COMMON_LISP.intern("ASIN").getSymbol();
+	public static final SymbolStruct ASIN = GlobalPackageStruct.COMMON_LISP.intern("ASIN").getSymbol();
 
 	private static final long serialVersionUID = -4219569133128730966L;
 
@@ -42,7 +42,7 @@ public final class ASinFunction extends FunctionStruct {
 
 	private static OrdinaryLambdaList getInitLambdaListBindings() {
 
-		final SymbolStruct<?> firstArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("NUMBER").getSymbol();
+		final SymbolStruct firstArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("NUMBER").getSymbol();
 		final RequiredParameter requiredBinding = new RequiredParameter(firstArgSymbol);
 		final List<RequiredParameter> requiredBindings = Collections.singletonList(requiredBinding);
 

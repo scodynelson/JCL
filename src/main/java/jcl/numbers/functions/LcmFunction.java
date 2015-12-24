@@ -21,7 +21,7 @@ import org.springframework.stereotype.Component;
 @Component
 public final class LcmFunction extends FunctionStruct {
 
-	public static final SymbolStruct<?> LCM = GlobalPackageStruct.COMMON_LISP.intern("LCM").getSymbol();
+	public static final SymbolStruct LCM = GlobalPackageStruct.COMMON_LISP.intern("LCM").getSymbol();
 
 	private static final long serialVersionUID = -5504858008080779112L;
 
@@ -40,7 +40,7 @@ public final class LcmFunction extends FunctionStruct {
 
 	private static OrdinaryLambdaList getInitLambdaListBindings() {
 
-		final SymbolStruct<?> restArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("INTEGERS").getSymbol();
+		final SymbolStruct restArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("INTEGERS").getSymbol();
 		final RestParameter restBinding = new RestParameter(restArgSymbol);
 
 		return new OrdinaryLambdaList.Builder().restBinding(restBinding)

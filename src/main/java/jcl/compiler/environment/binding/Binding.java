@@ -14,20 +14,20 @@ public class Binding implements Serializable {
 
 	private static final long serialVersionUID = 5776546981120800982L;
 
-	private final SymbolStruct<?> var;
+	private final SymbolStruct var;
 
 	private final LispType type;
 
-	public Binding(final SymbolStruct<?> var) {
+	public Binding(final SymbolStruct var) {
 		this(var, TType.INSTANCE);
 	}
 
-	public Binding(final SymbolStruct<?> var, final LispType type) {
+	public Binding(final SymbolStruct var, final LispType type) {
 		this.var = var;
 		this.type = type;
 	}
 
-	public SymbolStruct<?> getVar() {
+	public SymbolStruct getVar() {
 		return var;
 	}
 

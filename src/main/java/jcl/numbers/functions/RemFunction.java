@@ -23,7 +23,7 @@ import org.springframework.stereotype.Component;
 @Component
 public final class RemFunction extends FunctionStruct {
 
-	public static final SymbolStruct<?> REM = GlobalPackageStruct.COMMON_LISP.intern("REM").getSymbol();
+	public static final SymbolStruct REM = GlobalPackageStruct.COMMON_LISP.intern("REM").getSymbol();
 
 	private static final long serialVersionUID = 4003956118205210262L;
 
@@ -43,11 +43,11 @@ public final class RemFunction extends FunctionStruct {
 	private static OrdinaryLambdaList getInitLambdaListBindings() {
 		final List<RequiredParameter> requiredBindings = new ArrayList<>(2);
 
-		final SymbolStruct<?> realSymbol = GlobalPackageStruct.COMMON_LISP.intern("REAL").getSymbol();
+		final SymbolStruct realSymbol = GlobalPackageStruct.COMMON_LISP.intern("REAL").getSymbol();
 		final RequiredParameter requiredBinding1 = new RequiredParameter(realSymbol);
 		requiredBindings.add(requiredBinding1);
 
-		final SymbolStruct<?> divisorSymbol = GlobalPackageStruct.COMMON_LISP.intern("DIVISOR").getSymbol();
+		final SymbolStruct divisorSymbol = GlobalPackageStruct.COMMON_LISP.intern("DIVISOR").getSymbol();
 		final RequiredParameter requiredBinding2 = new RequiredParameter(divisorSymbol);
 		requiredBindings.add(requiredBinding2);
 

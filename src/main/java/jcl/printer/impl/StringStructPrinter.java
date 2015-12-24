@@ -23,9 +23,9 @@ public class StringStructPrinter implements LispPrinter<StringStruct> {
 
 	@Override
 	public String print(final StringStruct object) {
-		final boolean printEscape = PrinterVariables.PRINT_ESCAPE.getValue().booleanValue();
+		final boolean printEscape = PrinterVariables.PRINT_ESCAPE.getVariableValue().booleanValue();
 
-		final ReadtableStruct readtable = ReaderVariables.READTABLE.getValue();
+		final ReadtableStruct readtable = ReaderVariables.READTABLE.getVariableValue();
 
 		final StringBuilder stringBuilder = new StringBuilder();
 		if (printEscape) {

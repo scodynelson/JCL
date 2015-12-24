@@ -36,7 +36,7 @@ public class LocallyExpander extends MacroFunctionExpander<LocallyStruct> {
 	private BodyWithDeclaresAnalyzer bodyWithDeclaresAnalyzer;
 
 	@Override
-	public SymbolStruct<?> getFunctionSymbol() {
+	public SymbolStruct getFunctionSymbol() {
 		return SpecialOperatorStruct.LOCALLY;
 	}
 

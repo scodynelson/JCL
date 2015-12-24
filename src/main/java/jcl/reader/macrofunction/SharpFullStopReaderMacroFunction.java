@@ -45,7 +45,7 @@ public class SharpFullStopReaderMacroFunction extends ReaderMacroFunction {
 	 */
 	@PostConstruct
 	private void init() {
-		ReaderVariables.READTABLE.getValue().setDispatchMacroCharacter(CharacterConstants.NUMBER_SIGN, CharacterConstants.FULL_STOP, this);
+		ReaderVariables.READTABLE.getVariableValue().setDispatchMacroCharacter(CharacterConstants.NUMBER_SIGN, CharacterConstants.FULL_STOP, this);
 	}
 
 	@Override
@@ -53,11 +53,11 @@ public class SharpFullStopReaderMacroFunction extends ReaderMacroFunction {
 		assert codePoint == CharacterConstants.FULL_STOP;
 
 		final LispStruct token = reader.read(true, NullStruct.INSTANCE, true);
-		if (ReaderVariables.READ_SUPPRESS.getValue().booleanValue()) {
+		if (ReaderVariables.READ_SUPPRESS.getVariableValue().booleanValue()) {
 			return NullStruct.INSTANCE;
 		}
 
-		if (!ReaderVariables.READ_EVAL.getValue().booleanValue()) {
+		if (!ReaderVariables.READ_EVAL.getVariableValue().booleanValue()) {
 			throw new ReaderErrorException("Attempt to read #. while *READ-EVAL* is bound to NIL.");
 		}
 

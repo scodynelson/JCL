@@ -23,7 +23,7 @@ import org.springframework.stereotype.Component;
 @Component
 public final class RationalizeFunction extends FunctionStruct {
 
-	public static final SymbolStruct<?> RATIONALIZE = GlobalPackageStruct.COMMON_LISP.intern("RATIONALIZE").getSymbol();
+	public static final SymbolStruct RATIONALIZE = GlobalPackageStruct.COMMON_LISP.intern("RATIONALIZE").getSymbol();
 
 	private static final long serialVersionUID = 7826881012957712642L;
 
@@ -42,7 +42,7 @@ public final class RationalizeFunction extends FunctionStruct {
 
 	private static OrdinaryLambdaList getInitLambdaListBindings() {
 
-		final SymbolStruct<?> firstArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("REAL").getSymbol();
+		final SymbolStruct firstArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("REAL").getSymbol();
 		final RequiredParameter requiredBinding = new RequiredParameter(firstArgSymbol);
 		final List<RequiredParameter> requiredBindings = Collections.singletonList(requiredBinding);
 

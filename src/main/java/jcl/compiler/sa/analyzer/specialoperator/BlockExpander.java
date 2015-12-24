@@ -28,7 +28,7 @@ public class BlockExpander extends MacroFunctionExpander<BlockStruct> {
 	private LispFormValueValidator validator;
 
 	@Override
-	public SymbolStruct<?> getFunctionSymbol() {
+	public SymbolStruct getFunctionSymbol() {
 		return SpecialOperatorStruct.BLOCK;
 	}
 
@@ -39,7 +39,7 @@ public class BlockExpander extends MacroFunctionExpander<BlockStruct> {
 		final ListStruct formRest = form.getRest();
 
 		final LispStruct second = formRest.getFirst();
-		final SymbolStruct<?> name = validator.validateObjectType(second, "BLOCK", "NAME", SymbolStruct.class);
+		final SymbolStruct name = validator.validateObjectType(second, "BLOCK", "NAME", SymbolStruct.class);
 		environment.getBlockStack().push(name);
 
 		try {

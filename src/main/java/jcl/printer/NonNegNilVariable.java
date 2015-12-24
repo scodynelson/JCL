@@ -2,6 +2,8 @@ package jcl.printer;
 
 import java.math.BigInteger;
 
+import jcl.LispStruct;
+import jcl.conditions.exceptions.TypeErrorException;
 import jcl.numbers.IntegerStruct;
 import jcl.packages.PackageStruct;
 import jcl.symbols.VariableStruct;
@@ -19,13 +21,18 @@ class NonNegNilVariable extends VariableStruct<IntegerStruct> {
 	}
 
 	@Override
-	public void setValue(final IntegerStruct value) {
+	public void setValue(final LispStruct value) {
+		if (!(value instanceof IntegerStruct)) {
+			// TODO: Fix me
+			throw new TypeErrorException("Must be Integer value.");
+		}
+		final IntegerStruct variableValue = (IntegerStruct) value;
 
-		final BigInteger bigIntegerValue = value.getBigInteger();
+		final BigInteger bigIntegerValue = variableValue.getBigInteger();
 		if (bigIntegerValue.compareTo(BigInteger.ZERO) >= 0) {
-			super.setValue(value);
+			super.setValue(variableValue);
 		} else {
-			LOGGER.warn("Error: {} had illegal value {}. Reset to NIL", name, value);
+			LOGGER.warn("Error: {} had illegal value {}. Reset to NIL", name, variableValue);
 
 			// TODO: check this set here...
 			super.setValue(null);

@@ -14,19 +14,19 @@ public class DefstructStruct extends CompilerSpecialOperatorStruct {
 
 	private static final long serialVersionUID = -7747095883491636502L;
 
-	private final SymbolStruct<?> structureSymbol;
+	private final SymbolStruct structureSymbol;
 
 	private final StructureClassStruct includeStructureClass;
 
-	private final SymbolStruct<?> defaultConstructorSymbol;
+	private final SymbolStruct defaultConstructorSymbol;
 
-	private final SymbolStruct<?> printerSymbol;
+	private final SymbolStruct printerSymbol;
 
-	private final List<SymbolStruct<?>> slots;
+	private final List<SymbolStruct> slots;
 
-	public DefstructStruct(final SymbolStruct<?> structureSymbol, final StructureClassStruct includeStructureClass,
-	                       final SymbolStruct<?> defaultConstructorSymbol, final SymbolStruct<?> printerSymbol,
-	                       final List<SymbolStruct<?>> slots) {
+	public DefstructStruct(final SymbolStruct structureSymbol, final StructureClassStruct includeStructureClass,
+	                       final SymbolStruct defaultConstructorSymbol, final SymbolStruct printerSymbol,
+	                       final List<SymbolStruct> slots) {
 		this.structureSymbol = structureSymbol;
 		this.includeStructureClass = includeStructureClass;
 		this.defaultConstructorSymbol = defaultConstructorSymbol;
@@ -34,7 +34,7 @@ public class DefstructStruct extends CompilerSpecialOperatorStruct {
 		this.slots = slots;
 	}
 
-	public SymbolStruct<?> getStructureSymbol() {
+	public SymbolStruct getStructureSymbol() {
 		return structureSymbol;
 	}
 
@@ -42,15 +42,15 @@ public class DefstructStruct extends CompilerSpecialOperatorStruct {
 		return includeStructureClass;
 	}
 
-	public SymbolStruct<?> getDefaultConstructorSymbol() {
+	public SymbolStruct getDefaultConstructorSymbol() {
 		return defaultConstructorSymbol;
 	}
 
-	public SymbolStruct<?> getPrinterSymbol() {
+	public SymbolStruct getPrinterSymbol() {
 		return printerSymbol;
 	}
 
-	public List<SymbolStruct<?>> getSlots() {
+	public List<SymbolStruct> getSlots() {
 		return slots;
 	}
 }

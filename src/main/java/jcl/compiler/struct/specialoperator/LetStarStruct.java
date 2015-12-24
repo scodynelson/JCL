@@ -23,19 +23,19 @@ public class LetStarStruct extends ClosureCreationStruct<LetStarStruct.LetStarVa
 
 		private static final long serialVersionUID = 3246152127057600416L;
 
-		private final SymbolStruct<?> var;
+		private final SymbolStruct var;
 
 		private final LispStruct initForm;
 
 		private final boolean isSpecial;
 
-		public LetStarVar(final SymbolStruct<?> var, final LispStruct initForm, final boolean isSpecial) {
+		public LetStarVar(final SymbolStruct var, final LispStruct initForm, final boolean isSpecial) {
 			this.var = var;
 			this.initForm = initForm;
 			this.isSpecial = isSpecial;
 		}
 
-		public SymbolStruct<?> getVar() {
+		public SymbolStruct getVar() {
 			return var;
 		}
 

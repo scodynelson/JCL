@@ -33,7 +33,7 @@ public class SemicolonReaderMacroFunction extends ReaderMacroFunction {
 	 */
 	@PostConstruct
 	private void init() {
-		ReaderVariables.READTABLE.getValue().setMacroCharacter(CharacterConstants.SEMICOLON, this, false);
+		ReaderVariables.READTABLE.getVariableValue().setMacroCharacter(CharacterConstants.SEMICOLON, this, false);
 	}
 
 	@Override

@@ -4,7 +4,6 @@
 
 package jcl.compiler.icg.generator;
 
-import jcl.LispStruct;
 import jcl.compiler.environment.Environment;
 import jcl.compiler.icg.CodeGenerator;
 import jcl.compiler.icg.GeneratorState;
@@ -15,10 +14,10 @@ import org.objectweb.asm.Opcodes;
 import org.springframework.stereotype.Component;
 
 @Component
-class SymbolValueCodeGenerator implements CodeGenerator<SymbolStruct<LispStruct>> {
+class SymbolValueCodeGenerator implements CodeGenerator<SymbolStruct> {
 
 	@Override
-	public void generate(final SymbolStruct<LispStruct> input, final GeneratorState generatorState) {
+	public void generate(final SymbolStruct input, final GeneratorState generatorState) {
 
 		final JavaMethodBuilder methodBuilder = generatorState.getCurrentMethodBuilder();
 		final MethodVisitor mv = methodBuilder.getMethodVisitor();

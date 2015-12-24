@@ -19,7 +19,7 @@ public class PathnameStructPrinter implements LispPrinter<PathnameStruct> {
 
 	@Override
 	public String print(final PathnameStruct object) {
-		final BooleanStruct printEscape = PrinterVariables.PRINT_ESCAPE.getValue();
+		final BooleanStruct printEscape = PrinterVariables.PRINT_ESCAPE.getVariableValue();
 
 		final StringBuilder stringBuilder = new StringBuilder();
 

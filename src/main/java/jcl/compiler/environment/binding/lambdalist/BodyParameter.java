@@ -11,19 +11,19 @@ public class BodyParameter extends Parameter {
 
 	private static final long serialVersionUID = 491035484834969841L;
 
-	public BodyParameter(final SymbolStruct<?> var) {
+	public BodyParameter(final SymbolStruct var) {
 		this(var, false);
 	}
 
-	public BodyParameter(final SymbolStruct<?> var, final boolean isSpecial) {
+	public BodyParameter(final SymbolStruct var, final boolean isSpecial) {
 		this(var, null, isSpecial);
 	}
 
-	public BodyParameter(final SymbolStruct<?> var, final DestructuringLambdaList destructuringForm) {
+	public BodyParameter(final SymbolStruct var, final DestructuringLambdaList destructuringForm) {
 		this(var, destructuringForm, false);
 	}
 
-	public BodyParameter(final SymbolStruct<?> var, final DestructuringLambdaList destructuringForm,
+	public BodyParameter(final SymbolStruct var, final DestructuringLambdaList destructuringForm,
 	                     final boolean isSpecial) {
 		super(var, destructuringForm, ListType.INSTANCE, null, isSpecial);
 	}

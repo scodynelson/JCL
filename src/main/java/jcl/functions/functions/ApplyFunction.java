@@ -29,7 +29,7 @@ public final class ApplyFunction extends FunctionStruct {
 
 	public static final ApplyFunction INSTANCE = new ApplyFunction();
 
-	public static final SymbolStruct<?> APPLY = GlobalPackageStruct.COMMON_LISP.intern("APPLY").getSymbol();
+	public static final SymbolStruct APPLY = GlobalPackageStruct.COMMON_LISP.intern("APPLY").getSymbol();
 
 	private static final long serialVersionUID = 1994110477366960170L;
 
@@ -50,15 +50,15 @@ public final class ApplyFunction extends FunctionStruct {
 
 		final List<RequiredParameter> requiredBindings = new ArrayList<>(2);
 
-		final SymbolStruct<?> fnArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("FN").getSymbol();
+		final SymbolStruct fnArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("FN").getSymbol();
 		final RequiredParameter functionRequiredBinding = new RequiredParameter(fnArgSymbol);
 		requiredBindings.add(functionRequiredBinding);
 
-		final SymbolStruct<?> argArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("ARG").getSymbol();
+		final SymbolStruct argArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("ARG").getSymbol();
 		final RequiredParameter argRequiredBinding = new RequiredParameter(argArgSymbol);
 		requiredBindings.add(argRequiredBinding);
 
-		final SymbolStruct<?> argsArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("ARGS").getSymbol();
+		final SymbolStruct argsArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("ARGS").getSymbol();
 		final RestParameter restBinding = new RestParameter(argsArgSymbol);
 
 		return new OrdinaryLambdaList.Builder().requiredBindings(requiredBindings)

@@ -23,7 +23,7 @@ import org.springframework.stereotype.Component;
 @Component
 public final class RealPartFunction extends FunctionStruct {
 
-	public static final SymbolStruct<?> REALPART = GlobalPackageStruct.COMMON_LISP.intern("REALPART").getSymbol();
+	public static final SymbolStruct REALPART = GlobalPackageStruct.COMMON_LISP.intern("REALPART").getSymbol();
 
 	private static final long serialVersionUID = 7335998743851187914L;
 
@@ -42,7 +42,7 @@ public final class RealPartFunction extends FunctionStruct {
 
 	private static OrdinaryLambdaList getInitLambdaListBindings() {
 
-		final SymbolStruct<?> firstArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("NUMBER").getSymbol();
+		final SymbolStruct firstArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("NUMBER").getSymbol();
 		final RequiredParameter requiredBinding = new RequiredParameter(firstArgSymbol);
 		final List<RequiredParameter> requiredBindings = Collections.singletonList(requiredBinding);
 

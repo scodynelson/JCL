@@ -14,9 +14,9 @@ public class Closure {
 
 	private final Closure parent;
 
-	private final Map<SymbolStruct<?>, LispStruct> symbolBindings = new LinkedHashMap<>();
+	private final Map<SymbolStruct, LispStruct> symbolBindings = new LinkedHashMap<>();
 
-	private final Map<SymbolStruct<?>, FunctionStruct> functionBindings = new LinkedHashMap<>();
+	private final Map<SymbolStruct, FunctionStruct> functionBindings = new LinkedHashMap<>();
 
 	public Closure(final Closure parent) {
 		this.parent = parent;
@@ -31,11 +31,11 @@ public class Closure {
 		return parent;
 	}
 
-	public Map<SymbolStruct<?>, LispStruct> getSymbolBindings() {
+	public Map<SymbolStruct, LispStruct> getSymbolBindings() {
 		return symbolBindings;
 	}
 
-	public Map<SymbolStruct<?>, FunctionStruct> getFunctionBindings() {
+	public Map<SymbolStruct, FunctionStruct> getFunctionBindings() {
 		return functionBindings;
 	}
 

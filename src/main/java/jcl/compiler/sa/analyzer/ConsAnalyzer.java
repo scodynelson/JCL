@@ -62,16 +62,16 @@ public class ConsAnalyzer implements Analyzer<LispStruct, ConsStruct> {
 
 	private SymbolFunctionCallStruct analyzeSymbolFunctionCall(final ListStruct input, final Environment environment) {
 
-		final SymbolStruct<?> functionSymbol = (SymbolStruct<?>) input.getFirst();
+		final SymbolStruct functionSymbol = (SymbolStruct) input.getFirst();
 		final List<LispStruct> functionArguments = input.getRest().getAsJavaList();
 
-		final Set<SymbolStruct<?>> undefinedFunctions = environment.getUndefinedFunctions();
+		final Set<SymbolStruct> undefinedFunctions = environment.getUndefinedFunctions();
 
 		if (functionSymbol.hasFunction()) {
 			// Function is defined
 			undefinedFunctions.remove(functionSymbol);
 		} else {
-			final Stack<SymbolStruct<?>> functionNameStack = environment.getFunctionNameStack();
+			final Stack<SymbolStruct> functionNameStack = environment.getFunctionNameStack();
 
 			if (functionNameStack.contains(functionSymbol)) {
 				// Function is undefined, but name exists on the stack to be created

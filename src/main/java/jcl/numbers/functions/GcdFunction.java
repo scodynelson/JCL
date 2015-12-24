@@ -21,7 +21,7 @@ import org.springframework.stereotype.Component;
 @Component
 public final class GcdFunction extends FunctionStruct {
 
-	public static final SymbolStruct<?> GCD = GlobalPackageStruct.COMMON_LISP.intern("GCD").getSymbol();
+	public static final SymbolStruct GCD = GlobalPackageStruct.COMMON_LISP.intern("GCD").getSymbol();
 
 	private static final long serialVersionUID = 7541449030040883862L;
 
@@ -40,7 +40,7 @@ public final class GcdFunction extends FunctionStruct {
 
 	private static OrdinaryLambdaList getInitLambdaListBindings() {
 
-		final SymbolStruct<?> restArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("INTEGERS").getSymbol();
+		final SymbolStruct restArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("INTEGERS").getSymbol();
 		final RestParameter restBinding = new RestParameter(restArgSymbol);
 
 		return new OrdinaryLambdaList.Builder().restBinding(restBinding)

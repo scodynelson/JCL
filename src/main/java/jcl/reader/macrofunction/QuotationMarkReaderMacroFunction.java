@@ -34,7 +34,7 @@ public class QuotationMarkReaderMacroFunction extends ReaderMacroFunction {
 	 */
 	@PostConstruct
 	private void init() {
-		ReaderVariables.READTABLE.getValue().setMacroCharacter(CharacterConstants.QUOTATION_MARK, this, false);
+		ReaderVariables.READTABLE.getVariableValue().setMacroCharacter(CharacterConstants.QUOTATION_MARK, this, false);
 	}
 
 	@Override
@@ -59,7 +59,7 @@ public class QuotationMarkReaderMacroFunction extends ReaderMacroFunction {
 			nextCodePoint = readResult.getResult();
 		}
 
-		if (ReaderVariables.READ_SUPPRESS.getValue().booleanValue()) {
+		if (ReaderVariables.READ_SUPPRESS.getVariableValue().booleanValue()) {
 			return NullStruct.INSTANCE;
 		}
 

@@ -23,7 +23,7 @@ import org.springframework.stereotype.Component;
 @Component
 public final class ATanHFunction extends FunctionStruct {
 
-	public static final SymbolStruct<?> ATANH = GlobalPackageStruct.COMMON_LISP.intern("ATANH").getSymbol();
+	public static final SymbolStruct ATANH = GlobalPackageStruct.COMMON_LISP.intern("ATANH").getSymbol();
 
 	private static final long serialVersionUID = 7673617484964829642L;
 
@@ -42,7 +42,7 @@ public final class ATanHFunction extends FunctionStruct {
 
 	private static OrdinaryLambdaList getInitLambdaListBindings() {
 
-		final SymbolStruct<?> firstArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("NUMBER").getSymbol();
+		final SymbolStruct firstArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("NUMBER").getSymbol();
 		final RequiredParameter requiredBinding = new RequiredParameter(firstArgSymbol);
 		final List<RequiredParameter> requiredBindings = Collections.singletonList(requiredBinding);
 

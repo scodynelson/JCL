@@ -6,7 +6,6 @@ package jcl.printer.impl;
 
 import jcl.printer.LispPrinter;
 import jcl.printer.Printer;
-import jcl.streams.StreamStruct;
 import jcl.streams.SynonymStreamStruct;
 import jcl.symbols.SymbolStruct;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -28,7 +27,7 @@ public class SynonymStreamStructPrinter implements LispPrinter<SynonymStreamStru
 	public String print(final SynonymStreamStruct object) {
 		final String typeClassName = object.getType().getClass().getSimpleName().toUpperCase();
 
-		final SymbolStruct<? extends StreamStruct> symbol = object.getSymbol();
+		final SymbolStruct symbol = object.getSymbol();
 		final String printedSymbol = printer.print(symbol);
 
 		return "#<" + typeClassName + " to " + printedSymbol + '>';

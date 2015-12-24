@@ -23,7 +23,7 @@ import org.springframework.stereotype.Component;
 @Component
 public final class TanHFunction extends FunctionStruct {
 
-	public static final SymbolStruct<?> TANH = GlobalPackageStruct.COMMON_LISP.intern("TANH").getSymbol();
+	public static final SymbolStruct TANH = GlobalPackageStruct.COMMON_LISP.intern("TANH").getSymbol();
 
 	private static final long serialVersionUID = 2921951068732093986L;
 
@@ -42,7 +42,7 @@ public final class TanHFunction extends FunctionStruct {
 
 	private static OrdinaryLambdaList getInitLambdaListBindings() {
 
-		final SymbolStruct<?> firstArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("NUMBER").getSymbol();
+		final SymbolStruct firstArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("NUMBER").getSymbol();
 		final RequiredParameter requiredBinding = new RequiredParameter(firstArgSymbol);
 		final List<RequiredParameter> requiredBindings = Collections.singletonList(requiredBinding);
 

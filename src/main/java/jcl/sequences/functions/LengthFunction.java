@@ -24,7 +24,7 @@ import org.springframework.stereotype.Component;
 @Component
 public final class LengthFunction extends FunctionStruct {
 
-	public static final SymbolStruct<?> LENGTH = GlobalPackageStruct.COMMON_LISP.intern("LENGTH").getSymbol();
+	public static final SymbolStruct LENGTH = GlobalPackageStruct.COMMON_LISP.intern("LENGTH").getSymbol();
 
 	private static final long serialVersionUID = -1598433382342924007L;
 
@@ -40,7 +40,7 @@ public final class LengthFunction extends FunctionStruct {
 
 	private static OrdinaryLambdaList getInitLambdaListBindings() {
 
-		final SymbolStruct<?> listArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("SEQ").getSymbol();
+		final SymbolStruct listArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("SEQ").getSymbol();
 		final RequiredParameter requiredBinding = new RequiredParameter(listArgSymbol);
 		final List<RequiredParameter> requiredBindings = Collections.singletonList(requiredBinding);
 

@@ -56,7 +56,7 @@ public class GentempFunction extends AbstractCommonLispFunctionStruct {
 		optionalParameters.add(prefix);
 
 		final OptionalParameter aPackage = new OptionalParameter.Builder(GlobalPackageStruct.COMMON_LISP, "PACKAGE")
-				.initForm(PackageVariables.PACKAGE.getValue())
+				.initForm(PackageVariables.PACKAGE.getVariableValue())
 				.suppliedPBinding()
 				.build();
 		optionalParameters.add(aPackage);
@@ -69,7 +69,7 @@ public class GentempFunction extends AbstractCommonLispFunctionStruct {
 		super.apply(lispStructs);
 
 		String prefix = "T";
-		PackageStruct aPackage = PackageVariables.PACKAGE.getValue();
+		PackageStruct aPackage = PackageVariables.PACKAGE.getVariableValue();
 
 		if (lispStructs.length > 0) {
 			final LispStruct lispStruct = lispStructs[0];

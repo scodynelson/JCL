@@ -3,7 +3,7 @@ package jcl.symbols;
 import jcl.packages.GlobalPackageStruct;
 import jcl.packages.PackageStruct;
 
-public final class DeclarationStruct extends SymbolStruct<DeclarationStruct> {
+public final class DeclarationStruct extends SymbolStruct {
 
 	// TODO: These are NOT declared in the "COMMON_LISP" package. They probably exist in the "SYSTEM" package instead. Have to work this in...
 	public static final DeclarationStruct IGNORE = new DeclarationStruct("IGNORE", GlobalPackageStruct.COMMON_LISP);

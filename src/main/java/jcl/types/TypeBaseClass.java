@@ -11,7 +11,7 @@ import jcl.symbols.SymbolStruct;
 /**
  * Abstract base class for all {@link LispType} implementations.
  */
-public class TypeBaseClass extends SymbolStruct<LispType> implements LispType {
+public class TypeBaseClass extends SymbolStruct implements LispType {
 
 	/**
 	 * Serializable Version Unique Identifier.

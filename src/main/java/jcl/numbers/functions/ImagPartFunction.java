@@ -23,7 +23,7 @@ import org.springframework.stereotype.Component;
 @Component
 public final class ImagPartFunction extends FunctionStruct {
 
-	public static final SymbolStruct<?> IMAGPART = GlobalPackageStruct.COMMON_LISP.intern("IMAGPART").getSymbol();
+	public static final SymbolStruct IMAGPART = GlobalPackageStruct.COMMON_LISP.intern("IMAGPART").getSymbol();
 
 	private static final long serialVersionUID = 6677692877980023452L;
 
@@ -42,7 +42,7 @@ public final class ImagPartFunction extends FunctionStruct {
 
 	private static OrdinaryLambdaList getInitLambdaListBindings() {
 
-		final SymbolStruct<?> firstArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("NUMBER").getSymbol();
+		final SymbolStruct firstArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("NUMBER").getSymbol();
 		final RequiredParameter requiredBinding = new RequiredParameter(firstArgSymbol);
 		final List<RequiredParameter> requiredBindings = Collections.singletonList(requiredBinding);
 

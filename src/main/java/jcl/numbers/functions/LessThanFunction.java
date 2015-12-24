@@ -26,7 +26,7 @@ import org.springframework.stereotype.Component;
 @Component
 public final class LessThanFunction extends FunctionStruct {
 
-	public static final SymbolStruct<?> LESS_THAN = GlobalPackageStruct.COMMON_LISP.intern("<").getSymbol();
+	public static final SymbolStruct LESS_THAN = GlobalPackageStruct.COMMON_LISP.intern("<").getSymbol();
 
 	private static final long serialVersionUID = -73282057031250298L;
 
@@ -45,11 +45,11 @@ public final class LessThanFunction extends FunctionStruct {
 
 	private static OrdinaryLambdaList getInitLambdaListBindings() {
 
-		final SymbolStruct<?> firstArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("REAL").getSymbol();
+		final SymbolStruct firstArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("REAL").getSymbol();
 		final RequiredParameter requiredBinding = new RequiredParameter(firstArgSymbol);
 		final List<RequiredParameter> requiredBindings = Collections.singletonList(requiredBinding);
 
-		final SymbolStruct<?> restArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("REALS").getSymbol();
+		final SymbolStruct restArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("REALS").getSymbol();
 		final RestParameter restBinding = new RestParameter(restArgSymbol);
 
 		return new OrdinaryLambdaList.Builder().requiredBindings(requiredBindings)

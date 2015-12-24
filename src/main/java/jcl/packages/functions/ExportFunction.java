@@ -35,7 +35,7 @@ public final class ExportFunction extends AbstractSymbolListPackageFunction {
 	 * @return returns {@link PackageStruct#export(SymbolStruct[])} as a method reference function
 	 */
 	@Override
-	protected BiConsumer<PackageStruct, SymbolStruct<?>[]> symbolListFunction() {
+	protected BiConsumer<PackageStruct, SymbolStruct[]> symbolListFunction() {
 		return PackageStruct::export;
 	}
 

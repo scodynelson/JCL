@@ -18,9 +18,9 @@ public abstract class AbstractSystemFunctionStruct extends AbstractCommonLispFun
 	}
 
 	@Override
-	public SymbolStruct<?> getFunctionSymbol() {
+	public SymbolStruct getFunctionSymbol() {
 		final PackageStruct aPackage = GlobalPackageStruct.SYSTEM;
-		final SymbolStruct<?> symbol = aPackage.intern(functionName()).getSymbol();
+		final SymbolStruct symbol = aPackage.intern(functionName()).getSymbol();
 		aPackage.export(symbol);
 		return symbol;
 	}

@@ -16,7 +16,6 @@ import jcl.functions.FunctionStruct;
 import jcl.packages.GlobalPackageStruct;
 import jcl.pathnames.LogicalPathnameStruct;
 import jcl.pathnames.PathnameStruct;
-import jcl.streams.StreamStruct;
 import jcl.streams.SynonymStreamStruct;
 import jcl.symbols.SymbolStruct;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +24,7 @@ import org.springframework.stereotype.Component;
 @Component
 public final class TranslateLogicalPathnameFunction extends FunctionStruct {
 
-	public static final SymbolStruct<?> TRANSLATE_LOGICAL_PATHNAME = GlobalPackageStruct.COMMON_LISP.intern("TRANSLATE-LOGICAL-PATHNAME").getSymbol();
+	public static final SymbolStruct TRANSLATE_LOGICAL_PATHNAME = GlobalPackageStruct.COMMON_LISP.intern("TRANSLATE-LOGICAL-PATHNAME").getSymbol();
 
 	private static final long serialVersionUID = -4200334862391198062L;
 
@@ -44,7 +43,7 @@ public final class TranslateLogicalPathnameFunction extends FunctionStruct {
 
 	private static OrdinaryLambdaList getInitLambdaListBindings() {
 
-		final SymbolStruct<?> pathspecArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("PATHSPEC").getSymbol();
+		final SymbolStruct pathspecArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("PATHSPEC").getSymbol();
 		final RequiredParameter requiredBinding = new RequiredParameter(pathspecArgSymbol);
 		final List<RequiredParameter> requiredBindings = Collections.singletonList(requiredBinding);
 
@@ -70,7 +69,7 @@ public final class TranslateLogicalPathnameFunction extends FunctionStruct {
 			pathname = new PathnameStruct(uri);
 		} else if (pathnameDesignator instanceof SynonymStreamStruct) {
 			final SynonymStreamStruct synonymStream = (SynonymStreamStruct) pathnameDesignator;
-			final SymbolStruct<? extends StreamStruct> streamSymbol = synonymStream.getSymbol();
+			final SymbolStruct streamSymbol = synonymStream.getSymbol();
 			pathname = translateLogicalPathname(streamSymbol.getValue());
 		} else {
 			pathname = pathnameFunction.pathname(pathnameDesignator);

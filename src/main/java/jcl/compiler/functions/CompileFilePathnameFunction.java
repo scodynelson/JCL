@@ -30,7 +30,7 @@ import org.springframework.stereotype.Component;
 @Component
 public final class CompileFilePathnameFunction extends FunctionStruct {
 
-	public static final SymbolStruct<?> COMPILE_FILE_PATHNAME = GlobalPackageStruct.COMMON_LISP.intern("COMPILE-FILE-PATHNAME").getSymbol();
+	public static final SymbolStruct COMPILE_FILE_PATHNAME = GlobalPackageStruct.COMMON_LISP.intern("COMPILE-FILE-PATHNAME").getSymbol();
 
 	private static final long serialVersionUID = 591587108565227067L;
 
@@ -52,13 +52,13 @@ public final class CompileFilePathnameFunction extends FunctionStruct {
 
 	private static OrdinaryLambdaList getInitLambdaListBindings() {
 
-		final SymbolStruct<?> inputFileArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("INPUT-FILE").getSymbol();
+		final SymbolStruct inputFileArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("INPUT-FILE").getSymbol();
 		final RequiredParameter requiredBinding = new RequiredParameter(inputFileArgSymbol);
 		final List<RequiredParameter> requiredBindings = Collections.singletonList(requiredBinding);
 
-		final SymbolStruct<?> outputFileArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("OUTPUT-FILE").getSymbol();
+		final SymbolStruct outputFileArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("OUTPUT-FILE").getSymbol();
 
-		final SymbolStruct<?> outputSuppliedPSymbol = GlobalPackageStruct.COMMON_LISP.intern("OUTPUT-FILE-P-" + System.nanoTime()).getSymbol();
+		final SymbolStruct outputSuppliedPSymbol = GlobalPackageStruct.COMMON_LISP.intern("OUTPUT-FILE-P-" + System.nanoTime()).getSymbol();
 		final SuppliedPParameter suppliedPBinding = new SuppliedPParameter(outputSuppliedPSymbol);
 
 		final KeyParameter keyBinding = new KeyParameter(outputFileArgSymbol, NullStruct.INSTANCE, CommonLispSymbols.OUTPUT_FILE_KEYWORD, suppliedPBinding);
@@ -86,7 +86,7 @@ public final class CompileFilePathnameFunction extends FunctionStruct {
 	public PathnameStruct compileFilePathname(final LispStruct inputFile, final LispStruct outputFile) {
 		// NOTE: 'outputFile' will be null if it is not supplied.
 
-		final PathnameStruct defaultPathnameDefaults = PathnameVariables.DEFAULT_PATHNAME_DEFAULTS.getValue();
+		final PathnameStruct defaultPathnameDefaults = PathnameVariables.DEFAULT_PATHNAME_DEFAULTS.getVariableValue();
 		final PathnameStruct mergedInputFile = mergePathnamesFunction.mergePathnames(inputFile, defaultPathnameDefaults);
 
 		final PathnameType outputPathnameType = new PathnameType("jar");

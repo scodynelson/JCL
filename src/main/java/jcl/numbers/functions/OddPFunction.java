@@ -25,7 +25,7 @@ import org.springframework.stereotype.Component;
 @Component
 public final class OddPFunction extends FunctionStruct {
 
-	public static final SymbolStruct<?> ODDP = GlobalPackageStruct.COMMON_LISP.intern("ODDP").getSymbol();
+	public static final SymbolStruct ODDP = GlobalPackageStruct.COMMON_LISP.intern("ODDP").getSymbol();
 
 	private static final long serialVersionUID = -4319243135134408847L;
 
@@ -44,7 +44,7 @@ public final class OddPFunction extends FunctionStruct {
 
 	private static OrdinaryLambdaList getInitLambdaListBindings() {
 
-		final SymbolStruct<?> firstArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("INTEGER").getSymbol();
+		final SymbolStruct firstArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("INTEGER").getSymbol();
 		final RequiredParameter requiredBinding = new RequiredParameter(firstArgSymbol);
 		final List<RequiredParameter> requiredBindings = Collections.singletonList(requiredBinding);
 

@@ -28,7 +28,7 @@ import org.springframework.stereotype.Component;
 @Component
 public final class FloatFunction extends FunctionStruct {
 
-	public static final SymbolStruct<?> FLOAT = GlobalPackageStruct.COMMON_LISP.intern("FLOAT").getSymbol();
+	public static final SymbolStruct FLOAT = GlobalPackageStruct.COMMON_LISP.intern("FLOAT").getSymbol();
 
 	private static final long serialVersionUID = -1487899103566810524L;
 
@@ -47,13 +47,13 @@ public final class FloatFunction extends FunctionStruct {
 
 	private static OrdinaryLambdaList getInitLambdaListBindings() {
 
-		final SymbolStruct<?> firstArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("REAL").getSymbol();
+		final SymbolStruct firstArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("REAL").getSymbol();
 		final RequiredParameter requiredBinding = new RequiredParameter(firstArgSymbol);
 		final List<RequiredParameter> requiredBindings = Collections.singletonList(requiredBinding);
 
-		final SymbolStruct<?> optionalArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("PROTOTYPE").getSymbol();
+		final SymbolStruct optionalArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("PROTOTYPE").getSymbol();
 
-		final SymbolStruct<?> optionalSuppliedP = GlobalPackageStruct.COMMON_LISP.intern("PROTOTYPE-P-" + System.nanoTime()).getSymbol();
+		final SymbolStruct optionalSuppliedP = GlobalPackageStruct.COMMON_LISP.intern("PROTOTYPE-P-" + System.nanoTime()).getSymbol();
 		final SuppliedPParameter optionalSuppliedPBinding = new SuppliedPParameter(optionalSuppliedP);
 
 		final OptionalParameter optionalBinding = new OptionalParameter(optionalArgSymbol, NullStruct.INSTANCE, optionalSuppliedPBinding);

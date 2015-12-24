@@ -23,7 +23,7 @@ import org.springframework.stereotype.Component;
 @Component
 public final class NotFunction extends FunctionStruct {
 
-	public static final SymbolStruct<?> NOT = GlobalPackageStruct.COMMON_LISP.intern("NOT").getSymbol();
+	public static final SymbolStruct NOT = GlobalPackageStruct.COMMON_LISP.intern("NOT").getSymbol();
 
 	private static final long serialVersionUID = 1065457118829768313L;
 
@@ -39,7 +39,7 @@ public final class NotFunction extends FunctionStruct {
 
 	private static OrdinaryLambdaList getInitLambdaListBindings() {
 
-		final SymbolStruct<?> listArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("OBJECT").getSymbol();
+		final SymbolStruct listArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("OBJECT").getSymbol();
 		final RequiredParameter requiredBinding = new RequiredParameter(listArgSymbol);
 		final List<RequiredParameter> requiredBindings = Collections.singletonList(requiredBinding);
 

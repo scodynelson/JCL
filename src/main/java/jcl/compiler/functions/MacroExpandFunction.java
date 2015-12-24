@@ -28,7 +28,7 @@ import org.springframework.stereotype.Component;
 @Component
 public final class MacroExpandFunction extends FunctionStruct {
 
-	public static final SymbolStruct<?> MACROEXPAND = GlobalPackageStruct.COMMON_LISP.intern("MACROEXPAND").getSymbol();
+	public static final SymbolStruct MACROEXPAND = GlobalPackageStruct.COMMON_LISP.intern("MACROEXPAND").getSymbol();
 
 	private static final long serialVersionUID = 5991270831364188635L;
 
@@ -47,13 +47,13 @@ public final class MacroExpandFunction extends FunctionStruct {
 
 	private static OrdinaryLambdaList getInitLambdaListBindings() {
 
-		final SymbolStruct<?> formArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("FORM").getSymbol();
+		final SymbolStruct formArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("FORM").getSymbol();
 		final RequiredParameter requiredBinding = new RequiredParameter(formArgSymbol);
 		final List<RequiredParameter> requiredBindings = Collections.singletonList(requiredBinding);
 
-		final SymbolStruct<?> envArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("ENV").getSymbol();
+		final SymbolStruct envArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("ENV").getSymbol();
 
-		final SymbolStruct<?> envSuppliedPSymbol = GlobalPackageStruct.COMMON_LISP.intern("ENV-P-" + System.nanoTime()).getSymbol();
+		final SymbolStruct envSuppliedPSymbol = GlobalPackageStruct.COMMON_LISP.intern("ENV-P-" + System.nanoTime()).getSymbol();
 		final SuppliedPParameter suppliedPBinding = new SuppliedPParameter(envSuppliedPSymbol);
 
 		final OptionalParameter optionalBinding = new OptionalParameter(envArgSymbol, NullStruct.INSTANCE, suppliedPBinding);

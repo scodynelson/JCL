@@ -27,12 +27,12 @@ public class LetExpander extends ClosureCreationExpander<LetStruct.LetVar> {
 	}
 
 	@Override
-	public SymbolStruct<?> getFunctionSymbol() {
+	public SymbolStruct getFunctionSymbol() {
 		return SpecialOperatorStruct.LET;
 	}
 
 	@Override
-	protected LetStruct.LetVar getClosureCreationVar(final SymbolStruct<?> var, final LispStruct initForm,
+	protected LetStruct.LetVar getClosureCreationVar(final SymbolStruct var, final LispStruct initForm,
 	                                                 final boolean isSpecial) {
 		return new LetStruct.LetVar(var, initForm, isSpecial);
 	}

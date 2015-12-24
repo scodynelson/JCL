@@ -51,7 +51,7 @@ public final class GensymFunction extends AbstractCommonLispFunctionStruct {
 		super.apply(lispStructs);
 
 		String gensymPrefix = "G";
-		IntegerStruct gensymPostfix = SymbolVariables.GENSYM_COUNTER.getValue();
+		IntegerStruct gensymPostfix = SymbolVariables.GENSYM_COUNTER.getVariableValue();
 		if (lispStructs.length == 1) {
 			final LispStruct defaulting = lispStructs[0];
 			validator.validateTypes(defaulting, functionName(), "Prefix", StringType.INSTANCE, IntegerType.INSTANCE);
@@ -69,7 +69,7 @@ public final class GensymFunction extends AbstractCommonLispFunctionStruct {
 		}
 
 		final String symbolName = gensymPrefix + gensymPostfix.getBigInteger();
-		return new SymbolStruct<>(symbolName);
+		return new SymbolStruct(symbolName);
 	}
 
 	@Override

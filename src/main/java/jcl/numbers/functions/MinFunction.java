@@ -24,7 +24,7 @@ import org.springframework.stereotype.Component;
 @Component
 public final class MinFunction extends FunctionStruct {
 
-	public static final SymbolStruct<?> MIN = GlobalPackageStruct.COMMON_LISP.intern("MIN").getSymbol();
+	public static final SymbolStruct MIN = GlobalPackageStruct.COMMON_LISP.intern("MIN").getSymbol();
 
 	private static final long serialVersionUID = -5731222712584378731L;
 
@@ -43,11 +43,11 @@ public final class MinFunction extends FunctionStruct {
 
 	private static OrdinaryLambdaList getInitLambdaListBindings() {
 
-		final SymbolStruct<?> firstArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("REAL").getSymbol();
+		final SymbolStruct firstArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("REAL").getSymbol();
 		final RequiredParameter requiredBinding = new RequiredParameter(firstArgSymbol);
 		final List<RequiredParameter> requiredBindings = Collections.singletonList(requiredBinding);
 
-		final SymbolStruct<?> restArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("REALS").getSymbol();
+		final SymbolStruct restArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("REALS").getSymbol();
 		final RestParameter restBinding = new RestParameter(restArgSymbol);
 
 		return new OrdinaryLambdaList.Builder().requiredBindings(requiredBindings)

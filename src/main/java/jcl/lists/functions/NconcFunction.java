@@ -24,7 +24,7 @@ import org.springframework.stereotype.Component;
 @Component
 public final class NconcFunction extends FunctionStruct {
 
-	public static final SymbolStruct<?> NCONC = GlobalPackageStruct.COMMON_LISP.intern("NCONC").getSymbol();
+	public static final SymbolStruct NCONC = GlobalPackageStruct.COMMON_LISP.intern("NCONC").getSymbol();
 
 	private static final long serialVersionUID = 2304204729441852930L;
 
@@ -46,7 +46,7 @@ public final class NconcFunction extends FunctionStruct {
 
 	private static OrdinaryLambdaList getInitLambdaListBindings() {
 
-		final SymbolStruct<?> listRestArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("LISTS").getSymbol();
+		final SymbolStruct listRestArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("LISTS").getSymbol();
 		final RestParameter restBinding = new RestParameter(listRestArgSymbol);
 
 		return new OrdinaryLambdaList.Builder().restBinding(restBinding)

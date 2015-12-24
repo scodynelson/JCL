@@ -49,7 +49,7 @@ public class MacroLambdaExpander extends MacroFunctionExpander<MacroLambdaStruct
 	private LispFormValueValidator validator;
 
 	@Override
-	public SymbolStruct<?> getFunctionSymbol() {
+	public SymbolStruct getFunctionSymbol() {
 		return SpecialOperatorStruct.MACRO_LAMBDA;
 	}
 
@@ -60,7 +60,7 @@ public class MacroLambdaExpander extends MacroFunctionExpander<MacroLambdaStruct
 		final ListStruct formRest = form.getRest();
 
 		final LispStruct second = formRest.getFirst();
-		final SymbolStruct<?> macroName = validator.validateObjectType(second, "MACRO-LAMBDA", "MACRO NAME", SymbolStruct.class);
+		final SymbolStruct macroName = validator.validateObjectType(second, "MACRO-LAMBDA", "MACRO NAME", SymbolStruct.class);
 
 		final ListStruct formRestRest = formRest.getRest();
 

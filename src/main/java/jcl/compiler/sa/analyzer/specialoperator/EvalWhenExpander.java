@@ -28,7 +28,7 @@ public class EvalWhenExpander extends MacroFunctionExpander<LispStruct> {
 
 	private static final long serialVersionUID = -7301369273443154417L;
 
-	private static final Set<SymbolStruct<?>> SITUATION_KEYWORDS = new HashSet<>(6);
+	private static final Set<SymbolStruct> SITUATION_KEYWORDS = new HashSet<>(6);
 
 	static {
 		SITUATION_KEYWORDS.add(CommonLispSymbols.COMPILE_TOPLEVEL);
@@ -50,7 +50,7 @@ public class EvalWhenExpander extends MacroFunctionExpander<LispStruct> {
 	private Printer printer;
 
 	@Override
-	public SymbolStruct<?> getFunctionSymbol() {
+	public SymbolStruct getFunctionSymbol() {
 		return SpecialOperatorStruct.EVAL_WHEN;
 	}
 
@@ -72,8 +72,8 @@ public class EvalWhenExpander extends MacroFunctionExpander<LispStruct> {
 
 		final ListStruct forms = formRest.getRest();
 
-		final boolean isTopLevel = CompilerVariables.COMPILE_TOP_LEVEL.getValue().booleanValue();
-		final boolean notConvertingForInterpreter = !CompilerVariables.CONVERTING_FOR_INTERPRETER.getValue().booleanValue();
+		final boolean isTopLevel = CompilerVariables.COMPILE_TOP_LEVEL.getVariableValue().booleanValue();
+		final boolean notConvertingForInterpreter = !CompilerVariables.CONVERTING_FOR_INTERPRETER.getVariableValue().booleanValue();
 
 		if (isTopLevel) {
 			if (isCompileTopLevel(situationJavaList)) {

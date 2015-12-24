@@ -89,7 +89,7 @@ public class FloatTokenAccumulatedReaderState implements ReaderState {
 	 * @return the proper float type
 	 */
 	static FloatType getFloatType(final Integer exponentTokenCodePoint) {
-		FloatType floatType = ReaderVariables.READ_DEFAULT_FLOAT_FORMAT.getValue();
+		FloatType floatType = ReaderVariables.READ_DEFAULT_FLOAT_FORMAT.getVariableValue();
 
 		if (exponentTokenCodePoint != null) {
 			final int exponentTokenInt = exponentTokenCodePoint;
@@ -102,7 +102,7 @@ public class FloatTokenAccumulatedReaderState implements ReaderState {
 			} else if ((exponentTokenInt == CharacterConstants.LATIN_SMALL_LETTER_L) || (exponentTokenInt == CharacterConstants.LATIN_CAPITAL_LETTER_L)) {
 				floatType = LongFloatType.INSTANCE;
 			} else if ((exponentTokenInt == CharacterConstants.LATIN_SMALL_LETTER_E) || (exponentTokenInt == CharacterConstants.LATIN_CAPITAL_LETTER_E)) {
-				floatType = ReaderVariables.READ_DEFAULT_FLOAT_FORMAT.getValue();
+				floatType = ReaderVariables.READ_DEFAULT_FLOAT_FORMAT.getVariableValue();
 			}
 		}
 		return floatType;

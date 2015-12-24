@@ -48,7 +48,7 @@ public class MakeSymbolFunction extends AbstractCommonLispFunctionStruct {
 		validator.validateTypes(lispStruct, functionName(), "Name", StringType.INSTANCE);
 
 		final StringStruct name = (StringStruct) lispStructs[0];
-		return new SymbolStruct<>(name.getAsJavaString());
+		return new SymbolStruct(name.getAsJavaString());
 	}
 
 	@Override

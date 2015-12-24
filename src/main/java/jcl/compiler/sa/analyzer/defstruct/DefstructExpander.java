@@ -29,7 +29,7 @@ public class DefstructExpander extends MacroFunctionExpander<LispStruct> {
 	private Printer printer;
 
 	@Override
-	public SymbolStruct<?> getFunctionSymbol() {
+	public SymbolStruct getFunctionSymbol() {
 		return SpecialOperatorStruct.DEFSTRUCT;
 	}
 
@@ -40,12 +40,12 @@ public class DefstructExpander extends MacroFunctionExpander<LispStruct> {
 		final ListStruct formRest = form.getRest();
 
 		final LispStruct second = formRest.getFirst();
-		final SymbolStruct<?> structureSymbol = validator.validateObjectType(second, "%DEFSTRUCT", "STRUCTURE NAME", SymbolStruct.class);
+		final SymbolStruct structureSymbol = validator.validateObjectType(second, "%DEFSTRUCT", "STRUCTURE NAME", SymbolStruct.class);
 
 		final ListStruct formRestRest = formRest.getRest();
 
 		final LispStruct third = formRestRest.getFirst();
-		final SymbolStruct<?> includeStructureSymbol = validator.validateSymbolOrNIL(third, "%DEFSTRUCT", "INCLUDE STRUCTURE NAME");
+		final SymbolStruct includeStructureSymbol = validator.validateSymbolOrNIL(third, "%DEFSTRUCT", "INCLUDE STRUCTURE NAME");
 
 		StructureClassStruct includeStructureClass = null;
 		if (includeStructureSymbol != null) {
@@ -59,20 +59,20 @@ public class DefstructExpander extends MacroFunctionExpander<LispStruct> {
 		final ListStruct formRestRestRest = formRestRest.getRest();
 
 		final LispStruct fourth = formRestRestRest.getFirst();
-		final SymbolStruct<?> defaultConstructorSymbol = validator.validateSymbolOrNIL(fourth, "%DEFSTRUCT", "DEFAULT CONSTRUCTOR NAME");
+		final SymbolStruct defaultConstructorSymbol = validator.validateSymbolOrNIL(fourth, "%DEFSTRUCT", "DEFAULT CONSTRUCTOR NAME");
 
 		final ListStruct formRestRestRestRest = formRestRestRest.getRest();
 
 		final LispStruct fifth = formRestRestRestRest.getFirst();
-		final SymbolStruct<?> printerSymbol = validator.validateSymbolOrNIL(fifth, "%DEFSTRUCT", "PRINTER NAME");
+		final SymbolStruct printerSymbol = validator.validateSymbolOrNIL(fifth, "%DEFSTRUCT", "PRINTER NAME");
 
 		final ListStruct formRestRestRestRestRest = formRestRestRestRest.getRest();
 
-		final List<SymbolStruct<?>> slots = new ArrayList<>();
+		final List<SymbolStruct> slots = new ArrayList<>();
 
 		final List<LispStruct> slotArguments = formRestRestRestRestRest.getAsJavaList();
 		for (final LispStruct slotArgument : slotArguments) {
-			final SymbolStruct<?> slotSymbol = validator.validateObjectType(slotArgument, "%DEFSTRUCT", "STRUCTURE SLOT NAME", SymbolStruct.class);
+			final SymbolStruct slotSymbol = validator.validateObjectType(slotArgument, "%DEFSTRUCT", "STRUCTURE SLOT NAME", SymbolStruct.class);
 			slots.add(slotSymbol);
 		}
 

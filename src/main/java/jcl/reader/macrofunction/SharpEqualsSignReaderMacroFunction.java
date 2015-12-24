@@ -40,14 +40,14 @@ public class SharpEqualsSignReaderMacroFunction extends ReaderMacroFunction {
 	 */
 	@PostConstruct
 	private void init() {
-		ReaderVariables.READTABLE.getValue().setDispatchMacroCharacter(CharacterConstants.NUMBER_SIGN, CharacterConstants.EQUALS_SIGN, this);
+		ReaderVariables.READTABLE.getVariableValue().setDispatchMacroCharacter(CharacterConstants.NUMBER_SIGN, CharacterConstants.EQUALS_SIGN, this);
 	}
 
 	@Override
 	public LispStruct readMacro(final int codePoint, final Reader reader, final Optional<BigInteger> numberArgument) {
 		assert codePoint == CharacterConstants.EQUALS_SIGN;
 
-		if (ReaderVariables.READ_SUPPRESS.getValue().booleanValue()) {
+		if (ReaderVariables.READ_SUPPRESS.getVariableValue().booleanValue()) {
 			return null;
 		}
 
@@ -57,7 +57,7 @@ public class SharpEqualsSignReaderMacroFunction extends ReaderMacroFunction {
 		final BigInteger numberArgumentValue = numberArgument.get();
 
 		final Map<BigInteger, LispStruct> sharpEqualFinalTable = reader.getSharpEqualFinalTable();
-		final Map<BigInteger, SymbolStruct<?>> sharpEqualTempTable = reader.getSharpEqualTempTable();
+		final Map<BigInteger, SymbolStruct> sharpEqualTempTable = reader.getSharpEqualTempTable();
 
 		if (sharpEqualFinalTable.containsKey(numberArgumentValue)
 				|| sharpEqualTempTable.containsKey(numberArgumentValue)) {
@@ -65,12 +65,12 @@ public class SharpEqualsSignReaderMacroFunction extends ReaderMacroFunction {
 		}
 
 		final String labelTagName = UUID.randomUUID().toString();
-		final SymbolStruct<?> labelTag = new SymbolStruct<>(labelTagName);
+		final SymbolStruct labelTag = new SymbolStruct(labelTagName);
 		sharpEqualTempTable.put(numberArgumentValue, labelTag);
 
 		final LispStruct token = reader.read(true, NullStruct.INSTANCE, true);
 
-		final Map<SymbolStruct<?>, LispStruct> sharpEqualReplTable = reader.getSharpEqualReplTable();
+		final Map<SymbolStruct, LispStruct> sharpEqualReplTable = reader.getSharpEqualReplTable();
 		sharpEqualReplTable.put(labelTag, token);
 
 		final Set<LispStruct> sharpEqualCircleSet = new HashSet<>();
@@ -100,7 +100,7 @@ public class SharpEqualsSignReaderMacroFunction extends ReaderMacroFunction {
 	 * @return the modified token with all {@link SymbolStruct} tags replaced with their corresponding {@link
 	 * LispStruct} tokens
 	 */
-	private static LispStruct replaceTagsWithTokens(final LispStruct token, final Map<SymbolStruct<?>, LispStruct> sharpEqualReplTable,
+	private static LispStruct replaceTagsWithTokens(final LispStruct token, final Map<SymbolStruct, LispStruct> sharpEqualReplTable,
 	                                                final Set<LispStruct> sharpEqualCircleSet) {
 
 		if (token instanceof SymbolStruct) {

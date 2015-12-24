@@ -59,7 +59,7 @@ public final class NameCharFunction extends AbstractCharacterDesignatorFunction 
 	 * @return a {@link Function} applying {@link CharacterStruct#nameChar(String)} against a {@link SymbolStruct}
 	 */
 	@Override
-	protected Function<SymbolStruct<?>, LispStruct> symbolFunction() {
+	protected Function<SymbolStruct, LispStruct> symbolFunction() {
 		return symbol -> CharacterStruct.nameChar(symbol.getName());
 	}
 }

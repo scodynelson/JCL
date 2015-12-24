@@ -51,10 +51,10 @@ class ConstituentReaderState implements ReaderState {
 		// This 'codePoint' will not be 'null'. We check for EOFs after each 'read'.
 		int codePoint = readResult.getResult();
 
-		final ReadtableStruct readtable = ReaderVariables.READTABLE.getValue();
+		final ReadtableStruct readtable = ReaderVariables.READTABLE.getVariableValue();
 		final ReadtableCase readtableCase = readtable.getReadtableCase();
 
-		final IntegerStruct readBase = ReaderVariables.READ_BASE.getValue();
+		final IntegerStruct readBase = ReaderVariables.READ_BASE.getVariableValue();
 		final AttributeType attributeType = readtable.getAttributeType(codePoint, readBase);
 
 		codePoint = ReaderState.getProperCaseForCodePoint(codePoint, attributeType, readtableCase);

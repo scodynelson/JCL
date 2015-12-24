@@ -3,6 +3,8 @@ package jcl.printer;
 import java.util.HashSet;
 import java.util.Set;
 
+import jcl.LispStruct;
+import jcl.conditions.exceptions.TypeErrorException;
 import jcl.packages.GlobalPackageStruct;
 import jcl.symbols.KeywordStruct;
 import jcl.symbols.VariableStruct;
@@ -31,11 +33,17 @@ final class PrintCaseVariable extends VariableStruct<KeywordStruct> {
 	}
 
 	@Override
-	public void setValue(final KeywordStruct value) {
-		if (CASE_KEYWORDS.contains(value)) {
-			super.setValue(value);
+	public void setValue(final LispStruct value) {
+		if (!(value instanceof KeywordStruct)) {
+			// TODO: Fix me
+			throw new TypeErrorException("Must be Keyword value.");
+		}
+		final KeywordStruct variableValue = (KeywordStruct) value;
+
+		if (CASE_KEYWORDS.contains(variableValue)) {
+			super.setValue(variableValue);
 		} else {
-			LOGGER.warn("Error: *PRINT-CASE* had illegal value {}. Reset to :UPCASE", value);
+			LOGGER.warn("Error: *PRINT-CASE* had illegal value {}. Reset to :UPCASE", variableValue);
 
 			super.setValue(CommonLispSymbols.UPCASE);
 		}

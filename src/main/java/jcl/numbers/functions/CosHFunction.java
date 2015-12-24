@@ -23,7 +23,7 @@ import org.springframework.stereotype.Component;
 @Component
 public final class CosHFunction extends FunctionStruct {
 
-	public static final SymbolStruct<?> COSH = GlobalPackageStruct.COMMON_LISP.intern("COSH").getSymbol();
+	public static final SymbolStruct COSH = GlobalPackageStruct.COMMON_LISP.intern("COSH").getSymbol();
 
 	private static final long serialVersionUID = -4866561095341902549L;
 
@@ -42,7 +42,7 @@ public final class CosHFunction extends FunctionStruct {
 
 	private static OrdinaryLambdaList getInitLambdaListBindings() {
 
-		final SymbolStruct<?> firstArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("NUMBER").getSymbol();
+		final SymbolStruct firstArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("NUMBER").getSymbol();
 		final RequiredParameter requiredBinding = new RequiredParameter(firstArgSymbol);
 		final List<RequiredParameter> requiredBindings = Collections.singletonList(requiredBinding);
 

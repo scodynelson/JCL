@@ -28,7 +28,7 @@ public class UnwindProtectExpander extends MacroFunctionExpander<UnwindProtectSt
 	private LispFormValueValidator validator;
 
 	@Override
-	public SymbolStruct<?> getFunctionSymbol() {
+	public SymbolStruct getFunctionSymbol() {
 		return SpecialOperatorStruct.UNWIND_PROTECT;
 	}
 

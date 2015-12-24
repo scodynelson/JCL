@@ -26,7 +26,7 @@ import org.springframework.stereotype.Component;
 @Component
 public final class NotEqualToFunction extends FunctionStruct {
 
-	public static final SymbolStruct<?> NOT_EQUAL_TO = GlobalPackageStruct.COMMON_LISP.intern("/=").getSymbol();
+	public static final SymbolStruct NOT_EQUAL_TO = GlobalPackageStruct.COMMON_LISP.intern("/=").getSymbol();
 
 	private static final long serialVersionUID = -8966405788493785225L;
 
@@ -45,11 +45,11 @@ public final class NotEqualToFunction extends FunctionStruct {
 
 	private static OrdinaryLambdaList getInitLambdaListBindings() {
 
-		final SymbolStruct<?> firstArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("NUMBER").getSymbol();
+		final SymbolStruct firstArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("NUMBER").getSymbol();
 		final RequiredParameter requiredBinding = new RequiredParameter(firstArgSymbol);
 		final List<RequiredParameter> requiredBindings = Collections.singletonList(requiredBinding);
 
-		final SymbolStruct<?> restArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("NUMBERS").getSymbol();
+		final SymbolStruct restArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("NUMBERS").getSymbol();
 		final RestParameter restBinding = new RestParameter(restArgSymbol);
 
 		return new OrdinaryLambdaList.Builder().requiredBindings(requiredBindings)

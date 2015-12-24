@@ -58,7 +58,7 @@ public class RempropFunction extends AbstractCommonLispFunctionStruct {
 
 		final LispStruct lispStruct2 = lispStructs[1];
 
-		final SymbolStruct<?> symbol = (SymbolStruct) lispStruct1;
+		final SymbolStruct symbol = (SymbolStruct) lispStruct1;
 		final boolean wasRemoved = symbol.removeProperty(lispStruct2);
 
 		return BooleanStructs.toLispBoolean(wasRemoved);

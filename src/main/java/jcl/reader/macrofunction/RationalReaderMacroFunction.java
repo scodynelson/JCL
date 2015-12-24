@@ -52,12 +52,12 @@ final class RationalReaderMacroFunction implements Serializable {
 	 * @return the properly parsed {@link RationalStruct}
 	 */
 	LispStruct readRational(final Reader reader, final BigInteger radix) {
-		if (ReaderVariables.READ_SUPPRESS.getValue().booleanValue()) {
+		if (ReaderVariables.READ_SUPPRESS.getVariableValue().booleanValue()) {
 			ExtendedTokenReaderMacroFunction.readExtendedToken(reader, false);
 			return NullStruct.INSTANCE;
 		}
 
-		final IntegerStruct previousReadBase = ReaderVariables.READ_BASE.getValue();
+		final IntegerStruct previousReadBase = ReaderVariables.READ_BASE.getVariableValue();
 
 		// alter the read-base
 		ReaderVariables.READ_BASE.setValue(new IntegerStruct(radix));

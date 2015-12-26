@@ -8,16 +8,19 @@ import java.util.List;
 
 import jcl.LispStruct;
 import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
+import jcl.functions.AbstractCommonLispFunctionStruct;
 import jcl.lists.NullStruct;
 import jcl.packages.GlobalPackageStruct;
 import jcl.packages.PackageStruct;
+import jcl.types.TypeValidator;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
  * Function implementation for {@code find-package}.
  */
 @Component
-public final class FindPackageFunction extends AbstractPackageFunction {
+public final class FindPackageFunction extends AbstractCommonLispFunctionStruct {
 
 	/**
 	 * Serializable Version Unique Identifier.
@@ -30,6 +33,12 @@ public final class FindPackageFunction extends AbstractPackageFunction {
 	public FindPackageFunction() {
 		super("Locates and returns the package whose name or nickname is name.");
 	}
+
+	/**
+	 * The {@link TypeValidator} for validating the function parameter value types.
+	 */
+	@Autowired
+	private TypeValidator validator;
 
 	/**
 	 * {@inheritDoc}
@@ -57,7 +66,7 @@ public final class FindPackageFunction extends AbstractPackageFunction {
 		super.apply(lispStructs);
 
 		final LispStruct packageDesignator = lispStructs[0];
-		final PackageStruct aPackage = findPackage(packageDesignator);
+		final PackageStruct aPackage = validator.validatePackageDesignator(packageDesignator, functionName());
 		return (aPackage == null) ? NullStruct.INSTANCE : aPackage;
 	}
 

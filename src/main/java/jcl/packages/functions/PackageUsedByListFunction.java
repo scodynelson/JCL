@@ -8,21 +8,30 @@ import java.util.List;
 
 import jcl.LispStruct;
 import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
+import jcl.functions.AbstractCommonLispFunctionStruct;
 import jcl.lists.ListStruct;
 import jcl.packages.GlobalPackageStruct;
 import jcl.packages.PackageStruct;
+import jcl.types.TypeValidator;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
  * Function implementation for {@code package-used-by-list}.
  */
 @Component
-public final class PackageUsedByListFunction extends AbstractPackageFunction {
+public final class PackageUsedByListFunction extends AbstractCommonLispFunctionStruct {
 
 	/**
 	 * Serializable Version Unique Identifier.
 	 */
 	private static final long serialVersionUID = 2137341320981943787L;
+
+	/**
+	 * The {@link TypeValidator} for validating the function parameter value types.
+	 */
+	@Autowired
+	private TypeValidator validator;
 
 	/**
 	 * Public constructor passing the documentation string.
@@ -57,7 +66,7 @@ public final class PackageUsedByListFunction extends AbstractPackageFunction {
 		super.apply(lispStructs);
 
 		final LispStruct lispStruct = lispStructs[0];
-		final PackageStruct aPackage = findPackage(lispStruct);
+		final PackageStruct aPackage = validator.validatePackageDesignator(lispStruct, functionName());
 
 		final List<PackageStruct> usedByList = aPackage.getUsedByList();
 		return ListStruct.buildProperList(usedByList);

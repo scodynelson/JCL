@@ -71,13 +71,13 @@ public final class ShadowFunction extends AbstractOptionalPackageFunction {
 			final List<LispStruct> symbolNames = ((ListStruct) lispStruct).getAsJavaList();
 			final List<String> realSymbolNames = new ArrayList<>(symbolNames.size());
 			for (final LispStruct theSymbolName : symbolNames) {
-				final String realSymbolName = getStringFromStringDesignator(theSymbolName, "Symbol Name");
+				final String realSymbolName = validator.validateStringDesignator(theSymbolName, functionName(), "Symbol Name");
 				realSymbolNames.add(realSymbolName);
 			}
 			symbolNameArray = realSymbolNames.toArray(new String[realSymbolNames.size()]);
 		} else {
 			symbolNameArray = new String[1];
-			symbolNameArray[0] = getStringFromStringDesignator(lispStruct, "Symbol Name");
+			symbolNameArray[0] = validator.validateStringDesignator(lispStruct, functionName(), "Symbol Name");
 		}
 
 		aPackage.shadow(symbolNameArray);

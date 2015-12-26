@@ -9,16 +9,19 @@ import java.util.List;
 import jcl.LispStruct;
 import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
 import jcl.conditions.exceptions.ErrorException;
+import jcl.functions.AbstractCommonLispFunctionStruct;
 import jcl.packages.GlobalPackageStruct;
 import jcl.packages.PackageStruct;
 import jcl.packages.PackageVariables;
+import jcl.types.TypeValidator;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
  * Function implementation for {@code in-package}.
  */
 @Component
-public final class InPackageFunction extends AbstractPackageFunction {
+public final class InPackageFunction extends AbstractCommonLispFunctionStruct {
 
 	/**
 	 * Serializable Version Unique Identifier.
@@ -31,6 +34,12 @@ public final class InPackageFunction extends AbstractPackageFunction {
 	public InPackageFunction() {
 		super("Causes the the package named by name to become the current package.");
 	}
+
+	/**
+	 * The {@link TypeValidator} for validating the function parameter value types.
+	 */
+	@Autowired
+	private TypeValidator validator;
 
 	/**
 	 * {@inheritDoc}
@@ -58,7 +67,7 @@ public final class InPackageFunction extends AbstractPackageFunction {
 		super.apply(lispStructs);
 
 		final LispStruct lispStruct = lispStructs[0];
-		final String name = getStringFromStringDesignator(lispStruct, "Package Name");
+		final String name = validator.validateStringDesignator(lispStruct, functionName(), "Package Name");
 
 		final PackageStruct newCurrentPackage = PackageStruct.findPackage(name);
 		if (newCurrentPackage == null) {

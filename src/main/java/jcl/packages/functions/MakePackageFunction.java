@@ -5,15 +5,16 @@
 package jcl.packages.functions;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import jcl.LispStruct;
 import jcl.compiler.environment.binding.lambdalist.KeyParameter;
 import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
 import jcl.conditions.exceptions.ProgramErrorException;
+import jcl.functions.AbstractCommonLispFunctionStruct;
 import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;
 import jcl.packages.GlobalPackageStruct;
@@ -21,18 +22,26 @@ import jcl.packages.PackageStruct;
 import jcl.symbols.KeywordStruct;
 import jcl.system.CommonLispSymbols;
 import jcl.types.ListType;
+import jcl.types.TypeValidator;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
  * Function implementation for {@code make-package}.
  */
 @Component
-public final class MakePackageFunction extends AbstractPackageFunction {
+public final class MakePackageFunction extends AbstractCommonLispFunctionStruct {
 
 	/**
 	 * Serializable Version Unique Identifier.
 	 */
 	private static final long serialVersionUID = -1982336595153324433L;
+
+	/**
+	 * The {@link TypeValidator} for validating the function parameter value types.
+	 */
+	@Autowired
+	private TypeValidator validator;
 
 	/**
 	 * Public constructor passing the documentation string.
@@ -52,6 +61,12 @@ public final class MakePackageFunction extends AbstractPackageFunction {
 		return new RequiredParameter.Builder(GlobalPackageStruct.COMMON_LISP, "PACKAGE-NAME").buildList();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * Create the list of {@link KeyParameter}s for the new {@link PackageStruct} nicknames and packages for it to use.
+	 *
+	 * @return a list of {@link KeyParameter}s
+	 */
 	@Override
 	protected List<KeyParameter> getKeyBindings() {
 		final List<KeyParameter> keyParameters = new ArrayList<>(2);
@@ -69,12 +84,22 @@ public final class MakePackageFunction extends AbstractPackageFunction {
 		return keyParameters;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * Application method for the package function that creates a new {@link PackageStruct} object with the provided
+	 * string-designator package name and the optional nicknames list and packages to use list.
+	 *
+	 * @param lispStructs
+	 * 		the function parameters
+	 *
+	 * @return the newly created {@link PackageStruct} object
+	 */
 	@Override
 	public LispStruct apply(final LispStruct... lispStructs) {
 		super.apply(lispStructs);
 
 		final LispStruct lispStruct = lispStructs[0];
-		final String packageName = getStringFromStringDesignator(lispStruct, "Package Name");
+		final String packageName = validator.validateStringDesignator(lispStruct, functionName(), "Package Name");
 
 		if (PackageStruct.findPackage(packageName) != null) {
 			throw new ProgramErrorException("Package name " + packageName + " is already in use.");
@@ -92,18 +117,16 @@ public final class MakePackageFunction extends AbstractPackageFunction {
 		validator.validateTypes(usePackages, functionName(), "Use Packages", ListType.INSTANCE);
 
 		final List<LispStruct> nicknamesList = ((ListStruct) nicknames).getAsJavaList();
-		final List<String> realNicknames = new ArrayList<>(nicknamesList.size());
-		for (final LispStruct nickname : nicknamesList) {
-			final String nicknameString = getStringFromStringDesignator(nickname, "Nickname");
-			realNicknames.add(nicknameString);
-		}
+		final List<String> realNicknames
+				= nicknamesList.stream()
+				               .map(e -> validator.validateStringDesignator(nicknames, functionName(), "Nickname"))
+				               .collect(Collectors.toList());
 
 		final List<LispStruct> usePackagesList = ((ListStruct) usePackages).getAsJavaList();
-		final Set<PackageStruct> realUsePackages = new HashSet<>(usePackagesList.size());
-		for (final LispStruct usePackage : usePackagesList) {
-			final PackageStruct aPackage = findPackage(usePackage);
-			realUsePackages.add(aPackage);
-		}
+		final Set<PackageStruct> realUsePackages
+				= usePackagesList.stream()
+				                 .map(e -> validator.validatePackageDesignator(e, functionName()))
+				                 .collect(Collectors.toSet());
 
 		return new PackageStruct(packageName, realNicknames, realUsePackages);
 	}

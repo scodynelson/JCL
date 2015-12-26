@@ -9,18 +9,12 @@ import java.util.List;
 
 import jcl.LispStruct;
 import jcl.arrays.StringStruct;
-import jcl.characters.CharacterStruct;
 import jcl.compiler.environment.binding.lambdalist.OptionalParameter;
-import jcl.conditions.exceptions.TypeErrorException;
 import jcl.functions.AbstractCommonLispFunctionStruct;
 import jcl.packages.GlobalPackageStruct;
 import jcl.packages.PackageStruct;
 import jcl.packages.PackageVariables;
-import jcl.symbols.SymbolStruct;
-import jcl.types.CharacterType;
-import jcl.types.PackageType;
 import jcl.types.StringType;
-import jcl.types.SymbolType;
 import jcl.types.TypeValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -78,7 +72,7 @@ public class GentempFunction extends AbstractCommonLispFunctionStruct {
 			prefix = ((StringStruct) lispStruct).getAsJavaString();
 		}
 		if (lispStructs.length > 1) {
-			aPackage = findPackage(lispStructs[1]);
+			aPackage = validator.validatePackageDesignator(lispStructs[1], functionName());
 		}
 
 		String symbolName = prefix + gentempCounter++;
@@ -86,25 +80,6 @@ public class GentempFunction extends AbstractCommonLispFunctionStruct {
 			symbolName = prefix + gentempCounter++;
 		}
 		return aPackage.intern(symbolName).getSymbol();
-	}
-
-	private PackageStruct findPackage(final LispStruct packageDesignator) {
-		validator.validateTypes(packageDesignator, functionName(), "Package", StringType.INSTANCE, SymbolType.INSTANCE, CharacterType.INSTANCE, PackageType.INSTANCE);
-
-		if (packageDesignator instanceof StringStruct) {
-			final String packageName = ((StringStruct) packageDesignator).getAsJavaString();
-			return PackageStruct.findPackage(packageName);
-		} else if (packageDesignator instanceof SymbolStruct) {
-			final String packageName = ((SymbolStruct) packageDesignator).getName();
-			return PackageStruct.findPackage(packageName);
-		} else if (packageDesignator instanceof CharacterStruct) {
-			final String packageName = ((CharacterStruct) packageDesignator).getCharacter().toString();
-			return PackageStruct.findPackage(packageName);
-		} else if (packageDesignator instanceof PackageStruct) {
-			return (PackageStruct) packageDesignator;
-		} else {
-			throw new TypeErrorException("UNCAUGHT TYPE ERROR.");
-		}
 	}
 
 	@Override

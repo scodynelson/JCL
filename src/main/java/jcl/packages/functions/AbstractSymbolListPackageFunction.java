@@ -7,10 +7,12 @@ package jcl.packages.functions;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiConsumer;
+import java.util.function.Function;
 
 import jcl.LispStruct;
 import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
 import jcl.conditions.exceptions.TypeErrorException;
+import jcl.functions.FunctionStruct;
 import jcl.lists.ListStruct;
 import jcl.packages.GlobalPackageStruct;
 import jcl.packages.PackageStruct;
@@ -19,6 +21,10 @@ import jcl.symbols.TStruct;
 import jcl.types.ListType;
 import jcl.types.SymbolType;
 
+/**
+ * Abstract {@link FunctionStruct} implementation for package functions that take symbol objects. This {@link
+ * FunctionStruct} also has an optional package parameter value.
+ */
 abstract class AbstractSymbolListPackageFunction extends AbstractOptionalPackageFunction {
 
 	/**
@@ -26,15 +32,37 @@ abstract class AbstractSymbolListPackageFunction extends AbstractOptionalPackage
 	 */
 	private static final long serialVersionUID = -5082610749836356431L;
 
+	/**
+	 * Protected constructor passing the provided {@code documentation} string to the super constructor.
+	 *
+	 * @param documentation
+	 * 		the documentation string
+	 */
 	protected AbstractSymbolListPackageFunction(final String documentation) {
 		super(documentation);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * Creates the single {@link RequiredParameter} list of symbol objects for this function.
+	 *
+	 * @return a list of a single {@link RequiredParameter} list of symbol objects
+	 */
 	@Override
 	protected List<RequiredParameter> getRequiredBindings() {
 		return new RequiredParameter.Builder(GlobalPackageStruct.COMMON_LISP, "SYMBOLS").buildList();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * Application method for the package function that gets the symbol objects and applies the {@link Function} from
+	 * the {@link #symbolListFunction()} function.
+	 *
+	 * @param lispStructs
+	 * 		the function parameters
+	 *
+	 * @return {@link TStruct#INSTANCE}
+	 */
 	@Override
 	public LispStruct apply(final LispStruct... lispStructs) {
 		super.apply(lispStructs);
@@ -65,5 +93,11 @@ abstract class AbstractSymbolListPackageFunction extends AbstractOptionalPackage
 		return TStruct.INSTANCE;
 	}
 
+	/**
+	 * Abstract method to return a {@link BiConsumer} function that consumes a {@link PackageStruct} and an array of
+	 * {@link SymbolStruct}s.
+	 *
+	 * @return a {@link BiConsumer} function that consumes a {@link PackageStruct} and an array of {@link SymbolStruct}s
+	 */
 	protected abstract BiConsumer<PackageStruct, SymbolStruct[]> symbolListFunction();
 }

@@ -8,22 +8,31 @@ import java.util.List;
 
 import jcl.LispStruct;
 import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
+import jcl.functions.AbstractCommonLispFunctionStruct;
 import jcl.lists.ListStruct;
 import jcl.packages.GlobalPackageStruct;
 import jcl.packages.PackageStruct;
 import jcl.symbols.SymbolStruct;
+import jcl.types.TypeValidator;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
  * Function implementation for {@code find-all-symbols}.
  */
 @Component
-public final class FindAllSymbolsFunction extends AbstractPackageFunction {
+public final class FindAllSymbolsFunction extends AbstractCommonLispFunctionStruct {
 
 	/**
 	 * Serializable Version Unique Identifier.
 	 */
 	private static final long serialVersionUID = -4242697651341404961L;
+
+	/**
+	 * The {@link TypeValidator} for validating the function parameter value types.
+	 */
+	@Autowired
+	private TypeValidator validator;
 
 	/**
 	 * Public constructor passing the documentation string.
@@ -59,7 +68,7 @@ public final class FindAllSymbolsFunction extends AbstractPackageFunction {
 		super.apply(lispStructs);
 
 		final LispStruct lispStruct = lispStructs[0];
-		final String name = getStringFromStringDesignator(lispStruct, "Symbol Name");
+		final String name = validator.validateStringDesignator(lispStruct, functionName(), "Symbol Name");
 
 		final List<SymbolStruct> allSymbols = PackageStruct.findAllSymbols(name);
 		return ListStruct.buildProperList(allSymbols);

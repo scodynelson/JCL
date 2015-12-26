@@ -11,22 +11,31 @@ import java.util.stream.Collectors;
 import jcl.LispStruct;
 import jcl.compiler.environment.binding.lambdalist.OptionalParameter;
 import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
+import jcl.functions.AbstractCommonLispFunctionStruct;
 import jcl.lists.ListStruct;
 import jcl.packages.GlobalPackageStruct;
 import jcl.packages.PackageStruct;
 import jcl.types.ListType;
+import jcl.types.TypeValidator;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
  * Function implementation for {@code rename-package}.
  */
 @Component
-public final class RenamePackageFunction extends AbstractPackageFunction {
+public final class RenamePackageFunction extends AbstractCommonLispFunctionStruct {
 
 	/**
 	 * Serializable Version Unique Identifier.
 	 */
 	private static final long serialVersionUID = -5908168151723138190L;
+
+	/**
+	 * The {@link TypeValidator} for validating the function parameter value types.
+	 */
+	@Autowired
+	private TypeValidator validator;
 
 	/**
 	 * Public constructor passing the documentation string.
@@ -81,8 +90,8 @@ public final class RenamePackageFunction extends AbstractPackageFunction {
 	public LispStruct apply(final LispStruct... lispStructs) {
 		super.apply(lispStructs);
 
-		final PackageStruct aPackage = findPackage(lispStructs[0]);
-		final String newName = getStringFromPackageDesignator(lispStructs[1], "New Name");
+		final PackageStruct aPackage = validator.validatePackageDesignator(lispStructs[0], functionName());
+		final String newName = validator.validatePackageDesignatorAsString(lispStructs[1], functionName(), "New Name");
 
 		if (lispStructs.length > 2) {
 			final LispStruct lispStruct = lispStructs[2];
@@ -92,7 +101,7 @@ public final class RenamePackageFunction extends AbstractPackageFunction {
 
 			final List<String> newNicknames
 					= newNicknamesList.stream()
-					                  .map(newNickname -> getStringFromStringDesignator(newNickname, "New Nickname"))
+					                  .map(newNickname -> validator.validateStringDesignator(newNickname, functionName(), "New Nickname"))
 					                  .collect(Collectors.toList());
 			aPackage.renamePackage(newName, newNicknames);
 		} else {

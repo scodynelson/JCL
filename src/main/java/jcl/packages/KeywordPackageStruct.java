@@ -16,7 +16,7 @@ final class KeywordPackageStruct extends PackageStruct {
 	/**
 	 * Singleton instance of the Keyword package.
 	 */
-	public static final PackageStruct INSTANCE = new KeywordPackageStruct();
+	static final PackageStruct INSTANCE = new KeywordPackageStruct();
 
 	/**
 	 * Serializable Version Unique Identifier.

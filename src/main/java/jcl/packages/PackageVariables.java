@@ -6,7 +6,16 @@ package jcl.packages;
 
 import jcl.symbols.VariableStruct;
 
-public interface PackageVariables {
+/**
+ * Defines the standard package variables for the system.
+ */
+@SuppressWarnings("all")
+public final class PackageVariables {
 
-	VariableStruct<PackageStruct> PACKAGE = new VariableStruct<>("*PACKAGE*", GlobalPackageStruct.COMMON_LISP, GlobalPackageStruct.COMMON_LISP_USER);
+	// Package Variable
+
+	public static final VariableStruct<PackageStruct> PACKAGE = new VariableStruct<>("*PACKAGE*", GlobalPackageStruct.COMMON_LISP, GlobalPackageStruct.COMMON_LISP_USER);
+
+	private PackageVariables() {
+	}
 }

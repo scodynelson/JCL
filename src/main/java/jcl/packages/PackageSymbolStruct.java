@@ -30,14 +30,14 @@ public class PackageSymbolStruct implements Serializable {
 	private final KeywordStruct packageSymbolType;
 
 	/**
-	 * Protected constructor.
+	 * Package protected constructor.
 	 *
 	 * @param symbol
 	 * 		the symbol result
 	 * @param packageSymbolType
 	 * 		the symbol package location
 	 */
-	public PackageSymbolStruct(final SymbolStruct symbol, final KeywordStruct packageSymbolType) {
+	PackageSymbolStruct(final SymbolStruct symbol, final KeywordStruct packageSymbolType) {
 		this.symbol = symbol;
 		this.packageSymbolType = packageSymbolType;
 	}

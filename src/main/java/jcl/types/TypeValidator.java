@@ -13,6 +13,7 @@ import jcl.LispType;
 import jcl.arrays.StringStruct;
 import jcl.characters.CharacterStruct;
 import jcl.conditions.exceptions.TypeErrorException;
+import jcl.functions.FunctionStruct;
 import jcl.packages.PackageStruct;
 import jcl.printer.Printer;
 import jcl.symbols.SymbolStruct;
@@ -91,6 +92,18 @@ public final class TypeValidator implements Serializable {
 			return ((CharacterStruct) packageDesignator).getCharacter().toString();
 		} else if (packageDesignator instanceof PackageStruct) {
 			return ((PackageStruct) packageDesignator).getName();
+		} else {
+			throw new TypeErrorException("UNCAUGHT TYPE ERROR.");
+		}
+	}
+
+	public FunctionStruct validateFunctionDesignator(final LispStruct functionDesignator, final String functionName, final String parameterName) {
+		validateTypes(functionDesignator, functionName, parameterName, FunctionType.INSTANCE, SymbolType.INSTANCE);
+
+		if (functionDesignator instanceof FunctionStruct) {
+			return (FunctionStruct) functionDesignator;
+		} else if (functionDesignator instanceof SymbolStruct) {
+			return ((SymbolStruct) functionDesignator).getFunction();
 		} else {
 			throw new TypeErrorException("UNCAUGHT TYPE ERROR.");
 		}

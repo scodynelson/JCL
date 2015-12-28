@@ -16,10 +16,6 @@ import jcl.classes.BuiltInClassStruct;
 import jcl.functions.EquatorFunctionStruct;
 import jcl.functions.FunctionStruct;
 import jcl.types.HashTableType;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
  * The {@link HashTableStruct} is the object representation of a Lisp 'hash-table' type.
@@ -37,7 +33,7 @@ public class HashTableStruct extends BuiltInClassStruct {
 	/**
 	 * The test function for verifying equivalence of a key.
 	 */
-	private final EquatorFunctionStruct<LispStruct> test;
+	private final EquatorFunctionStruct test;
 
 	/**
 	 * The threshold used in the rehashing of the {@link #map}.
@@ -59,7 +55,7 @@ public class HashTableStruct extends BuiltInClassStruct {
 	 * @param rehashThreshold
 	 * 		the threshold amount when resizing the table
 	 */
-	public HashTableStruct(final EquatorFunctionStruct<LispStruct> test, final BigInteger size, final BigDecimal rehashThreshold) {
+	public HashTableStruct(final EquatorFunctionStruct test, final BigInteger size, final BigDecimal rehashThreshold) {
 		super(HashTableType.INSTANCE, null, null);
 		this.test = test;
 		this.rehashThreshold = rehashThreshold;
@@ -77,12 +73,30 @@ public class HashTableStruct extends BuiltInClassStruct {
 	}
 
 	/**
+	 * Returns {@link BigDecimal#ONE} for the hash-table rehash size.
+	 *
+	 * @return {@link BigDecimal#ONE} for the hash-table rehash size
+	 */
+	public static BigDecimal getRehashSize() {
+		return BigDecimal.ONE;
+	}
+
+	/**
 	 * Getter for hash-table {@link #rehashThreshold} property.
 	 *
 	 * @return hash-table {@link #rehashThreshold} property
 	 */
 	public BigDecimal getRehashThreshold() {
 		return rehashThreshold;
+	}
+
+	/**
+	 * Gets the current size of the internal map.
+	 *
+	 * @return the current size of the internal map
+	 */
+	public BigInteger getSize() {
+		return getCount();
 	}
 
 	/**
@@ -151,42 +165,6 @@ public class HashTableStruct extends BuiltInClassStruct {
 		}
 	}
 
-	@Override
-	public int hashCode() {
-		return new HashCodeBuilder().appendSuper(super.hashCode())
-		                            .append(test)
-		                            .append(rehashThreshold)
-		                            .append(map)
-		                            .toHashCode();
-	}
-
-	@Override
-	public boolean equals(final Object obj) {
-		if (obj == null) {
-			return false;
-		}
-		if (obj == this) {
-			return true;
-		}
-		if (obj.getClass() != getClass()) {
-			return false;
-		}
-		final HashTableStruct rhs = (HashTableStruct) obj;
-		return new EqualsBuilder().appendSuper(super.equals(obj))
-		                          .append(test, rhs.test)
-		                          .append(rehashThreshold, rhs.rehashThreshold)
-		                          .append(map, rhs.map)
-		                          .isEquals();
-	}
-
-	@Override
-	public String toString() {
-		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(test)
-		                                                                .append(rehashThreshold)
-		                                                                .append(map)
-		                                                                .toString();
-	}
-
 	/**
 	 * Private inner class that acts as a wrapper around hash keys for proper equality testing.
 	 */
@@ -205,7 +183,7 @@ public class HashTableStruct extends BuiltInClassStruct {
 		/**
 		 * The {@link EquatorFunctionStruct} used to test equivalence of a key.
 		 */
-		private final EquatorFunctionStruct<LispStruct> equator;
+		private final EquatorFunctionStruct equator;
 
 		/**
 		 * Private constructor.
@@ -215,7 +193,7 @@ public class HashTableStruct extends BuiltInClassStruct {
 		 * @param equator
 		 * 		the equator function used to test equality of keys
 		 */
-		private KeyWrapper(final LispStruct key, final EquatorFunctionStruct<LispStruct> equator) {
+		private KeyWrapper(final LispStruct key, final EquatorFunctionStruct equator) {
 			this.key = key;
 			this.equator = equator;
 		}
@@ -249,13 +227,6 @@ public class HashTableStruct extends BuiltInClassStruct {
 			return equator.equate(key, lispStruct);
 		}
 
-		@Override
-		public String toString() {
-			return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(key)
-			                                                                .append(equator)
-			                                                                .toString();
-		}
-
 		/**
 		 * Gets instance of KeyWrapper object.
 		 *
@@ -266,7 +237,7 @@ public class HashTableStruct extends BuiltInClassStruct {
 		 *
 		 * @return the newly created KeyWrapper object
 		 */
-		private static KeyWrapper getInstance(final LispStruct key, final EquatorFunctionStruct<LispStruct> equator) {
+		private static KeyWrapper getInstance(final LispStruct key, final EquatorFunctionStruct equator) {
 			return new KeyWrapper(key, equator);
 		}
 	}

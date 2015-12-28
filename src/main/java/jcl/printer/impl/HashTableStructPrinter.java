@@ -34,7 +34,7 @@ public class HashTableStructPrinter implements LispPrinter<HashTableStruct> {
 
 		final BigInteger mapSize = object.getCount();
 
-		return "#<" + typeClassName + " :TEST " + printedTest + " size " + mapSize + '>';
+		return "#<" + "HASH-TABLE" + " :TEST " + printedTest + " :SIZE " + mapSize + '>';
 	}
 
 	@Override

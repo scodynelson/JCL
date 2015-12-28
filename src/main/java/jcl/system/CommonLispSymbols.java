@@ -448,10 +448,10 @@ public interface CommonLispSymbols {
 	SymbolStruct ENOUGH_NAMESTRING = null;
 	SymbolStruct ENSURE_DIRECTORIES_EXIST = null;
 	SymbolStruct ENSURE_GENERIC_FUNCTION = null;
-	SymbolStruct EQ = null;
-	SymbolStruct EQL = null;
-	SymbolStruct EQUAL = null;
-	SymbolStruct EQUALP = null;
+	SymbolStruct EQ = GlobalPackageStruct.COMMON_LISP.intern("EQ").getSymbol();
+	SymbolStruct EQL = GlobalPackageStruct.COMMON_LISP.intern("EQL").getSymbol();
+	SymbolStruct EQUAL = GlobalPackageStruct.COMMON_LISP.intern("EQUAL").getSymbol();
+	SymbolStruct EQUALP = GlobalPackageStruct.COMMON_LISP.intern("EQUALP").getSymbol();
 	SymbolStruct ERROR = null;
 	SymbolStruct ETYPECASE = null;
 	SymbolStruct EVAL = EvalFunction.EVAL;

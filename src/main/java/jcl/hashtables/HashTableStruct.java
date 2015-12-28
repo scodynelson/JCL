@@ -139,10 +139,12 @@ public class HashTableStruct extends BuiltInClassStruct {
 	 *
 	 * @param key
 	 * 		the key to remove the matching stored value
+	 *
+	 * @return the removed value or {@code null} if no value existed
 	 */
-	public void remHash(final LispStruct key) {
+	public LispStruct remHash(final LispStruct key) {
 		final LispStruct keyWrapper = KeyWrapper.getInstance(key, test);
-		map.remove(keyWrapper);
+		return map.remove(keyWrapper);
 	}
 
 	/**

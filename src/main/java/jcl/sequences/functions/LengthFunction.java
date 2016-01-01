@@ -12,13 +12,9 @@ import jcl.LispStruct;
 import jcl.compiler.environment.binding.lambdalist.OrdinaryLambdaList;
 import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
 import jcl.functions.FunctionStruct;
-import jcl.lists.NullStruct;
 import jcl.packages.GlobalPackageStruct;
 import jcl.sequences.SequenceStruct;
-import jcl.symbols.BooleanStruct;
-import jcl.symbols.NILStruct;
 import jcl.symbols.SymbolStruct;
-import jcl.symbols.TStruct;
 import org.springframework.stereotype.Component;
 
 @Component

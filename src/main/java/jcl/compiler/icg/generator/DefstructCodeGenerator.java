@@ -160,7 +160,7 @@ class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 		}
 	}
 
-//	/**
+	//	/**
 //	 * TODO: finish javadoc
 //	 * Private method for generating a new {@link StructureObjectType} class, by performing the following operations:
 //	 * <ol>

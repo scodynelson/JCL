@@ -47,7 +47,7 @@ public final class ATanHFunction extends FunctionStruct {
 		final List<RequiredParameter> requiredBindings = Collections.singletonList(requiredBinding);
 
 		return new OrdinaryLambdaList.Builder().requiredBindings(requiredBindings)
-		                                               .build();
+		                                       .build();
 	}
 
 	@Override

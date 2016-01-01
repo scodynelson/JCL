@@ -66,8 +66,8 @@ public final class PathnameDirectoryFunction extends FunctionStruct {
 		final List<KeyParameter> keyBindings = Collections.singletonList(keyBinding);
 
 		return new OrdinaryLambdaList.Builder().requiredBindings(requiredBindings)
-		                                               .keyBindings(keyBindings)
-		                                               .build();
+		                                       .keyBindings(keyBindings)
+		                                       .build();
 	}
 
 	@Override

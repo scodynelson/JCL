@@ -38,7 +38,7 @@ public final class ListFunction extends FunctionStruct {
 		final RestParameter restBinding = new RestParameter(objectRestArgSymbol);
 
 		return new OrdinaryLambdaList.Builder().restBinding(restBinding)
-		                                               .build();
+		                                       .build();
 	}
 
 	@Override

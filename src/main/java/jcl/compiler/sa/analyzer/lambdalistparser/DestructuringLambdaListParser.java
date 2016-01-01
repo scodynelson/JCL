@@ -36,7 +36,7 @@ public final class DestructuringLambdaListParser {
 	private Printer printer;
 
 	public DestructuringLambdaList parseDestructuringLambdaList(final Environment environment, final ListStruct lambdaList,
-	                                                                    final DeclareStruct declareElement) {
+	                                                            final DeclareStruct declareElement) {
 
 		if (lambdaList.isDotted()) {
 			return getDottedLambdaListBindings(environment, lambdaList, declareElement);
@@ -46,7 +46,7 @@ public final class DestructuringLambdaListParser {
 	}
 
 	private DestructuringLambdaList getLambdaListBindings(final Environment environment, final ListStruct lambdaList,
-	                                                              final DeclareStruct declareElement) {
+	                                                      final DeclareStruct declareElement) {
 
 		final List<LispStruct> lambdaListJava = lambdaList.getAsJavaList();
 
@@ -154,7 +154,7 @@ public final class DestructuringLambdaListParser {
 	}
 
 	private DestructuringLambdaList getDottedLambdaListBindings(final Environment environment, final ListStruct lambdaList,
-	                                                                    final DeclareStruct declareElement) {
+	                                                            final DeclareStruct declareElement) {
 
 		final List<LispStruct> lambdaListJava = lambdaList.getAsJavaList();
 

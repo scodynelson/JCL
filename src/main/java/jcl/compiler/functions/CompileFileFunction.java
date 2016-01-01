@@ -146,8 +146,8 @@ public final class CompileFileFunction extends FunctionStruct {
 		keyBindings.add(externalFormatKeyBinding);
 
 		return new OrdinaryLambdaList.Builder().requiredBindings(requiredBindings)
-		                                               .keyBindings(keyBindings)
-		                                               .build();
+		                                       .keyBindings(keyBindings)
+		                                       .build();
 	}
 
 	@Override

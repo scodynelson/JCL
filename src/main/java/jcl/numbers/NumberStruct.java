@@ -50,6 +50,7 @@ public abstract class NumberStruct extends BuiltInClassStruct {
 	}
 
 	// TODO: move the following 3 up
+
 	/**
 	 * {@inheritDoc}
 	 * <p>

@@ -44,7 +44,7 @@ public final class GcdFunction extends FunctionStruct {
 		final RestParameter restBinding = new RestParameter(restArgSymbol);
 
 		return new OrdinaryLambdaList.Builder().restBinding(restBinding)
-		                                               .build();
+		                                       .build();
 	}
 
 	@Override

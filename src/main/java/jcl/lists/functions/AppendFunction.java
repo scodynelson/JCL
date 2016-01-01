@@ -50,7 +50,7 @@ public final class AppendFunction extends FunctionStruct {
 		final RestParameter restBinding = new RestParameter(listRestArgSymbol);
 
 		return new OrdinaryLambdaList.Builder().restBinding(restBinding)
-		                                               .build();
+		                                       .build();
 	}
 
 	@Override

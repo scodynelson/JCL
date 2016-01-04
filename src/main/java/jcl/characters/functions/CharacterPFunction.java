@@ -10,11 +10,11 @@ import jcl.types.CharacterType;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class CharacterP extends AbstractPredicateCommonLispFunction {
+public final class CharacterPFunction extends AbstractPredicateCommonLispFunction {
 
 	private static final long serialVersionUID = -3260845734052708742L;
 
-	public CharacterP() {
+	public CharacterPFunction() {
 		super("Returns true if object is of type character; otherwise, returns false.");
 	}
 

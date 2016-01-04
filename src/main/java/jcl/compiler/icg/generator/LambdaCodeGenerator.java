@@ -699,7 +699,8 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 	 * <li>Returning early and avoid generating the method unnecessarily if the {@link List} of {@link
 	 * OrdinaryLambdaList#requiredBindings} is empty</li>
 	 * <li>Generating the {@link List} for containing the resulting {@link RequiredParameter}s</li>
-	 * <li>Generating each of the {@link RequiredParameter}s and adding them to the previously created {@link List}</li>
+	 * <li>Generating each of the {@link RequiredParameter}s and adding them to the previously created {@link
+	 * List}</li>
 	 * <li>Generating the code to return the generated {@link List} of {@link RequiredParameter}s</li>
 	 * </ol>
 	 * The following is the example Java code generated when {@code (lambda (a) a)} is encountered:
@@ -808,7 +809,8 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 	 * <li>Returning early and avoid generating the method unnecessarily if the {@link List} of {@link
 	 * OrdinaryLambdaList#optionalBindings} is empty</li>
 	 * <li>Generating the {@link List} for containing the resulting {@link OptionalParameter}s</li>
-	 * <li>Generating each of the {@link OptionalParameter}s and adding them to the previously created {@link List}</li>
+	 * <li>Generating each of the {@link OptionalParameter}s and adding them to the previously created {@link
+	 * List}</li>
 	 * <li>Generating the code to return the generated {@link List} of {@link OptionalParameter}s</li>
 	 * </ol>
 	 * The following is the example Java code generated when {@code (lambda (&optional (b 2 b-p) b)} is encountered:

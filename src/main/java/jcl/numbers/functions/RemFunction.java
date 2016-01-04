@@ -52,7 +52,7 @@ public final class RemFunction extends FunctionStruct {
 		requiredBindings.add(requiredBinding2);
 
 		return new OrdinaryLambdaList.Builder().requiredBindings(requiredBindings)
-		                                               .build();
+		                                       .build();
 	}
 
 	@Override

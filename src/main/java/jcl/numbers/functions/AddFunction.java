@@ -44,7 +44,7 @@ public final class AddFunction extends FunctionStruct {
 		final RestParameter restBinding = new RestParameter(restArgSymbol);
 
 		return new OrdinaryLambdaList.Builder().restBinding(restBinding)
-		                                               .build();
+		                                       .build();
 	}
 
 	@Override

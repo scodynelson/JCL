@@ -53,8 +53,8 @@ public final class GreaterThanFunction extends FunctionStruct {
 		final RestParameter restBinding = new RestParameter(restArgSymbol);
 
 		return new OrdinaryLambdaList.Builder().requiredBindings(requiredBindings)
-		                                               .restBinding(restBinding)
-		                                               .build();
+		                                       .restBinding(restBinding)
+		                                       .build();
 	}
 
 	@Override

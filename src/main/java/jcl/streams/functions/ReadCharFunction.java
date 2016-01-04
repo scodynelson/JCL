@@ -90,7 +90,7 @@ public final class ReadCharFunction extends FunctionStruct {
 		optionalBindings.add(recursivePOptionalBinding);
 
 		return new OrdinaryLambdaList.Builder().optionalBindings(optionalBindings)
-		                                               .build();
+		                                       .build();
 	}
 
 	@Override

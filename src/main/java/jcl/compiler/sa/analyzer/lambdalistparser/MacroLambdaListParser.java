@@ -37,7 +37,7 @@ public final class MacroLambdaListParser extends LambdaListParser {
 	private Printer printer;
 
 	public MacroLambdaList parseMacroLambdaList(final Environment environment, final ListStruct lambdaList,
-	                                                    final DeclareStruct declareElement) {
+	                                            final DeclareStruct declareElement) {
 
 		if (lambdaList.isDotted()) {
 			return getDottedLambdaListBindings(environment, lambdaList, declareElement);
@@ -47,7 +47,7 @@ public final class MacroLambdaListParser extends LambdaListParser {
 	}
 
 	private MacroLambdaList getLambdaListBindings(final Environment environment, final ListStruct lambdaList,
-	                                                      final DeclareStruct declareElement) {
+	                                              final DeclareStruct declareElement) {
 
 		final List<LispStruct> lambdaListJava = lambdaList.getAsJavaList();
 
@@ -223,7 +223,7 @@ public final class MacroLambdaListParser extends LambdaListParser {
 	}
 
 	private MacroLambdaList getDottedLambdaListBindings(final Environment environment, final ListStruct lambdaList,
-	                                                            final DeclareStruct declareElement) {
+	                                                    final DeclareStruct declareElement) {
 
 		final List<LispStruct> lambdaListJava = lambdaList.getAsJavaList();
 

@@ -31,7 +31,7 @@ public final class OrdinaryLambdaListParser extends LambdaListParser {
 	private Printer printer;
 
 	public OrdinaryLambdaList parseOrdinaryLambdaList(final Environment environment, final ListStruct lambdaList,
-	                                                          final DeclareStruct declareElement) {
+	                                                  final DeclareStruct declareElement) {
 
 		final List<LispStruct> lambdaListJava = lambdaList.getAsJavaList();
 

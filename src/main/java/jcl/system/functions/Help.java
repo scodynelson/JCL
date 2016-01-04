@@ -56,7 +56,7 @@ public final class Help extends FunctionStruct {
 		final List<OptionalParameter> optionalBindings = Collections.singletonList(searchTermOptionalBinding);
 
 		return new OrdinaryLambdaList.Builder().optionalBindings(optionalBindings)
-		                                               .build();
+		                                       .build();
 	}
 
 	@Override

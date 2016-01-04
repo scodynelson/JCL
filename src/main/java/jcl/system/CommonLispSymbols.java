@@ -44,8 +44,6 @@ import jcl.symbols.KeywordStruct;
 import jcl.symbols.SpecialOperatorStruct;
 import jcl.symbols.SymbolConstants;
 import jcl.symbols.SymbolStruct;
-import jcl.symbols.functions.SetSymbolFunctionFunction;
-import jcl.symbols.functions.SymbolFunctionFunction;
 import jcl.system.repl.REPLVariables;
 
 public interface CommonLispSymbols {

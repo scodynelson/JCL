@@ -232,10 +232,10 @@ public class ConsStruct extends ListStruct {
 //		    return new HashCodeBuilder().appendSuper(super.hashCode())
 //		                                .toHashCode();
 //		} else {
-			return new HashCodeBuilder().appendSuper(super.hashCode())
-			                            .append(car)
-			                            .append(cdr)
-			                            .toHashCode();
+		return new HashCodeBuilder().appendSuper(super.hashCode())
+		                            .append(car)
+		                            .append(cdr)
+		                            .toHashCode();
 //		}
 	}
 
@@ -256,10 +256,10 @@ public class ConsStruct extends ListStruct {
 //			// TODO: we should figure out how to handle circularities here... or should we???
 //			return false;
 //		} else {
-			return new EqualsBuilder().appendSuper(super.equals(obj))
-			                          .append(car, rhs.car)
-			                          .append(cdr, rhs.cdr)
-			                          .isEquals();
+		return new EqualsBuilder().appendSuper(super.equals(obj))
+		                          .append(car, rhs.car)
+		                          .append(cdr, rhs.cdr)
+		                          .isEquals();
 //		}
 	}
 

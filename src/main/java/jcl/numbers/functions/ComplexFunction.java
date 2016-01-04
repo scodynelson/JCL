@@ -61,8 +61,8 @@ public final class ComplexFunction extends FunctionStruct {
 		final List<OptionalParameter> optionalBindings = Collections.singletonList(optionalBinding);
 
 		return new OrdinaryLambdaList.Builder().requiredBindings(requiredBindings)
-		                                               .optionalBindings(optionalBindings)
-		                                               .build();
+		                                       .optionalBindings(optionalBindings)
+		                                       .build();
 	}
 
 	@Override

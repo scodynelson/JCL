@@ -60,8 +60,8 @@ public class JInvoke extends FunctionStruct {
 		final RestParameter restBinding = new RestParameter(objectRestArgSymbol);
 
 		return new OrdinaryLambdaList.Builder().requiredBindings(requiredBindings)
-		                                               .restBinding(restBinding)
-		                                               .build();
+		                                       .restBinding(restBinding)
+		                                       .build();
 	}
 
 	@Override

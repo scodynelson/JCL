@@ -56,7 +56,7 @@ public class JCLClassWriter extends ClassVisitor {
 	public JCLMethodWriter visitMethod(final int access, final String name, final String desc, final String signature, final String[] exceptions) {
 		final MethodVisitor mv = super.visitMethod(access, name, desc, signature, exceptions);
 		return new JCLMethodWriter(this, mv);
- 	}
+	}
 
 	@Override
 	public void visitEnd() {

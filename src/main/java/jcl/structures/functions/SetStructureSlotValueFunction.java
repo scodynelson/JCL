@@ -60,7 +60,7 @@ public final class SetStructureSlotValueFunction extends FunctionStruct {
 		requiredBindings.add(slotValueArgRequiredBinding);
 
 		return new OrdinaryLambdaList.Builder().requiredBindings(requiredBindings)
-		                                               .build();
+		                                       .build();
 	}
 
 	@Override

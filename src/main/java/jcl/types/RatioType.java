@@ -9,8 +9,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * A {@link RatioType} is a {@link NumberType} representing the mathematical ratio of two non-zero integers, the
- * numerator and denominator, whose greatest common divisor is one, and of which the denominator is positive and greater
- * than one.
+ * numerator and denominator, whose greatest common divisor is one, and of which the denominator is positive and
+ * greater than one.
  * <p>
  * {@link RatioType} -&gt; {@link RationalType} -&gt; {@link RealType} -&gt; {@link NumberType} -&gt; {@link TType}
  */

@@ -88,7 +88,7 @@ public final class ReadFunction extends FunctionStruct {
 		optionalBindings.add(recursivePOptionalBinding);
 
 		return new OrdinaryLambdaList.Builder().optionalBindings(optionalBindings)
-		                                               .build();
+		                                       .build();
 	}
 
 	@Override

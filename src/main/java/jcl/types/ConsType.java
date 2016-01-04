@@ -10,8 +10,8 @@ import jcl.types.typespecifiers.CompoundTypeSpecifier;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
- * A {@link ConsType} is a compound object having two components, called the car and cdr. These form a dotted pair. Each
- * component can be any object.
+ * A {@link ConsType} is a compound object having two components, called the car and cdr. These form a dotted pair.
+ * Each component can be any object.
  * <p>
  * {@link ConsType} -&gt; {@link ListType} -&gt; {@link SequenceType} -&gt; {@link TType}
  */

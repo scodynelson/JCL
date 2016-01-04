@@ -60,8 +60,8 @@ public final class FCeilingFunction extends FunctionStruct {
 		final List<OptionalParameter> optionalBindings = Collections.singletonList(optionalBinding);
 
 		return new OrdinaryLambdaList.Builder().requiredBindings(requiredBindings)
-		                                               .optionalBindings(optionalBindings)
-		                                               .build();
+		                                       .optionalBindings(optionalBindings)
+		                                       .build();
 	}
 
 	@Override

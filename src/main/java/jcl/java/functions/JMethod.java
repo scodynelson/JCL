@@ -57,8 +57,8 @@ public final class JMethod extends FunctionStruct {
 		final RestParameter restBinding = new RestParameter(objectRestArgSymbol);
 
 		return new OrdinaryLambdaList.Builder().requiredBindings(requiredBindings)
-		                                               .restBinding(restBinding)
-		                                               .build();
+		                                       .restBinding(restBinding)
+		                                       .build();
 	}
 
 	@Override

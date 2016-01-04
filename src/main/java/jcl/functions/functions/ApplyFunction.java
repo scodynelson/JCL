@@ -62,8 +62,8 @@ public final class ApplyFunction extends FunctionStruct {
 		final RestParameter restBinding = new RestParameter(argsArgSymbol);
 
 		return new OrdinaryLambdaList.Builder().requiredBindings(requiredBindings)
-		                                               .restBinding(restBinding)
-		                                               .build();
+		                                       .restBinding(restBinding)
+		                                       .build();
 	}
 
 	@Override

@@ -78,7 +78,7 @@ public final class EvalFunction extends FunctionStruct {
 		final List<RequiredParameter> requiredBindings = Collections.singletonList(requiredBinding);
 
 		return new OrdinaryLambdaList.Builder().requiredBindings(requiredBindings)
-		                                               .build();
+		                                       .build();
 	}
 
 	public LispStruct apply(final LispStruct... lispStructs) {

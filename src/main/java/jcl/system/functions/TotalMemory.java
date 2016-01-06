@@ -5,42 +5,31 @@
 package jcl.system.functions;
 
 import java.math.BigInteger;
-import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
-import jcl.compiler.environment.binding.lambdalist.OrdinaryLambdaList;
-import jcl.functions.FunctionStruct;
+import jcl.functions.AbstractExtensionsFunctionStruct;
 import jcl.numbers.IntegerStruct;
-import jcl.packages.GlobalPackageStruct;
-import jcl.symbols.SymbolStruct;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class TotalMemory extends FunctionStruct {
-
-	public static final SymbolStruct TOTAL_MEMORY = GlobalPackageStruct.EXTENSIONS.intern("TOTAL-MEMORY").getSymbol();
+public final class TotalMemory extends AbstractExtensionsFunctionStruct {
 
 	private static final long serialVersionUID = 8319997947442435520L;
 
-	private TotalMemory() {
-		super("Returns the current total runtime memory usage.", getInitLambdaListBindings());
-	}
-
-	@PostConstruct
-	private void init() {
-		TOTAL_MEMORY.setFunction(this);
-		GlobalPackageStruct.EXTENSIONS.export(TOTAL_MEMORY);
-	}
-
-	private static OrdinaryLambdaList getInitLambdaListBindings() {
-		return new OrdinaryLambdaList.Builder().build();
+	public TotalMemory() {
+		super("Returns the current total runtime memory usage.");
 	}
 
 	@Override
 	public LispStruct apply(final LispStruct... lispStructs) {
-		getFunctionBindings(lispStructs);
+		super.apply(lispStructs);
 
 		final long totalMemory = Runtime.getRuntime().totalMemory();
 		return new IntegerStruct(BigInteger.valueOf(totalMemory));
+	}
+
+	@Override
+	protected String functionName() {
+		return "TOTAL-MEMORY";
 	}
 }

@@ -6,9 +6,7 @@ package jcl.system.functions;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Collections;
 import java.util.List;
-import javax.annotation.PostConstruct;
 import javax.help.BadIDException;
 import javax.help.HelpBroker;
 import javax.help.HelpSet;
@@ -17,51 +15,32 @@ import javax.help.HelpSetException;
 import jcl.LispStruct;
 import jcl.arrays.StringStruct;
 import jcl.compiler.environment.binding.lambdalist.OptionalParameter;
-import jcl.compiler.environment.binding.lambdalist.OrdinaryLambdaList;
-import jcl.compiler.environment.binding.lambdalist.SuppliedPParameter;
 import jcl.conditions.exceptions.ProgramErrorException;
-import jcl.functions.FunctionStruct;
-import jcl.lists.NullStruct;
+import jcl.functions.AbstractExtensionsFunctionStruct;
 import jcl.packages.GlobalPackageStruct;
 import jcl.symbols.NILStruct;
-import jcl.symbols.SymbolStruct;
 import jcl.system.classloaders.CompilerClassLoader;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class Help extends FunctionStruct {
-
-	public static final SymbolStruct HELP = GlobalPackageStruct.EXTENSIONS.intern("HELP").getSymbol();
+public final class Help extends AbstractExtensionsFunctionStruct {
 
 	private static final long serialVersionUID = -2903697700427964980L;
 
-	private Help() {
-		super("Invokes Java Help.", getInitLambdaListBindings());
+	public Help() {
+		super("Invokes Java Help.");
 	}
 
-	@PostConstruct
-	private void init() {
-		HELP.setFunction(this);
-		GlobalPackageStruct.EXTENSIONS.export(HELP);
-	}
-
-	private static OrdinaryLambdaList getInitLambdaListBindings() {
-
-		final SymbolStruct searchTermArgSymbol = GlobalPackageStruct.EXTENSIONS.intern("SEARCH-TERM").getSymbol();
-
-		final SymbolStruct searchTermSuppliedPSymbol = GlobalPackageStruct.EXTENSIONS.intern("SEARCH-TERM-P-" + System.nanoTime()).getSymbol();
-		final SuppliedPParameter searchTermSuppliedPBinding = new SuppliedPParameter(searchTermSuppliedPSymbol);
-
-		final OptionalParameter searchTermOptionalBinding = new OptionalParameter(searchTermArgSymbol, NullStruct.INSTANCE, searchTermSuppliedPBinding);
-		final List<OptionalParameter> optionalBindings = Collections.singletonList(searchTermOptionalBinding);
-
-		return new OrdinaryLambdaList.Builder().optionalBindings(optionalBindings)
-		                                       .build();
+	@Override
+	protected List<OptionalParameter> getOptionalBindings() {
+		return new OptionalParameter.Builder(GlobalPackageStruct.EXTENSIONS, "SEARCH-TERM")
+				.suppliedPBinding()
+				.buildList();
 	}
 
 	@Override
 	public LispStruct apply(final LispStruct... lispStructs) {
-		getFunctionBindings(lispStructs);
+		super.apply(lispStructs);
 
 		final String searchString;
 		if (lispStructs.length == 0) {
@@ -83,5 +62,10 @@ public final class Help extends FunctionStruct {
 		}
 
 		return NILStruct.INSTANCE;
+	}
+
+	@Override
+	protected String functionName() {
+		return "HELP";
 	}
 }

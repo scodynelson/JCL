@@ -5,42 +5,31 @@
 package jcl.system.functions;
 
 import java.math.BigInteger;
-import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
-import jcl.compiler.environment.binding.lambdalist.OrdinaryLambdaList;
-import jcl.functions.FunctionStruct;
+import jcl.functions.AbstractExtensionsFunctionStruct;
 import jcl.numbers.IntegerStruct;
-import jcl.packages.GlobalPackageStruct;
-import jcl.symbols.SymbolStruct;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class FreeMemory extends FunctionStruct {
-
-	public static final SymbolStruct FREE_MEMORY = GlobalPackageStruct.EXTENSIONS.intern("FREE-MEMORY").getSymbol();
+public final class FreeMemory extends AbstractExtensionsFunctionStruct {
 
 	private static final long serialVersionUID = -3953991334787306041L;
 
-	private FreeMemory() {
-		super("Returns the current free runtime memory usage.", getInitLambdaListBindings());
-	}
-
-	@PostConstruct
-	private void init() {
-		FREE_MEMORY.setFunction(this);
-		GlobalPackageStruct.EXTENSIONS.export(FREE_MEMORY);
-	}
-
-	private static OrdinaryLambdaList getInitLambdaListBindings() {
-		return new OrdinaryLambdaList.Builder().build();
+	public FreeMemory() {
+		super("Returns the current free runtime memory usage.");
 	}
 
 	@Override
 	public LispStruct apply(final LispStruct... lispStructs) {
-		getFunctionBindings(lispStructs);
+		super.apply(lispStructs);
 
 		final long freeMemory = Runtime.getRuntime().freeMemory();
 		return new IntegerStruct(BigInteger.valueOf(freeMemory));
+	}
+
+	@Override
+	protected String functionName() {
+		return "FREE-MEMORY";
 	}
 }

@@ -6,58 +6,62 @@ package jcl.lists.functions;
 
 import java.util.ArrayList;
 import java.util.List;
-import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
-import jcl.compiler.environment.binding.lambdalist.OrdinaryLambdaList;
 import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
-import jcl.functions.FunctionStruct;
+import jcl.functions.AbstractCommonLispFunctionStruct;
 import jcl.lists.ListStruct;
 import jcl.numbers.IntegerStruct;
 import jcl.packages.GlobalPackageStruct;
-import jcl.symbols.SymbolStruct;
+import jcl.types.IntegerType;
+import jcl.types.ListType;
+import jcl.types.TypeValidator;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class NthFunction extends FunctionStruct {
-
-	public static final SymbolStruct NTH = GlobalPackageStruct.COMMON_LISP.intern("NTH").getSymbol();
+public final class NthFunction extends AbstractCommonLispFunctionStruct {
 
 	private static final long serialVersionUID = 2998151869440671653L;
 
-	private NthFunction() {
-		super("Locates the nth element of list, where the car of the list is the ``zeroth'' element.", getInitLambdaListBindings());
+	@Autowired
+	private TypeValidator typeValidator;
+
+	public NthFunction() {
+		super("Locates the nth element of list, where the car of the list is the ``zeroth'' element.");
 	}
 
-	@PostConstruct
-	private void init() {
-		NTH.setFunction(this);
-		GlobalPackageStruct.COMMON_LISP.export(NTH);
-	}
-
-	private static OrdinaryLambdaList getInitLambdaListBindings() {
-
+	@Override
+	protected List<RequiredParameter> getRequiredBindings() {
 		final List<RequiredParameter> requiredBindings = new ArrayList<>(2);
 
-		final SymbolStruct object1ArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("N").getSymbol();
-		final RequiredParameter object1RequiredBinding = new RequiredParameter(object1ArgSymbol);
+		final RequiredParameter object1RequiredBinding = new RequiredParameter.Builder(GlobalPackageStruct.COMMON_LISP, "INDEX").build();
 		requiredBindings.add(object1RequiredBinding);
 
-		final SymbolStruct object2ArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("LIST").getSymbol();
-		final RequiredParameter object2RequiredBinding = new RequiredParameter(object2ArgSymbol);
+		final RequiredParameter object2RequiredBinding = new RequiredParameter.Builder(GlobalPackageStruct.COMMON_LISP, "LIST").build();
 		requiredBindings.add(object2RequiredBinding);
 
-		return new OrdinaryLambdaList.Builder().requiredBindings(requiredBindings)
-		                                       .build();
+		return requiredBindings;
 	}
 
 	@Override
 	public LispStruct apply(final LispStruct... lispStructs) {
-		getFunctionBindings(lispStructs);
+		super.apply(lispStructs);
 
-		final IntegerStruct index = (IntegerStruct) lispStructs[0];
-		final ListStruct list = (ListStruct) lispStructs[1];
+		final LispStruct indexArg = lispStructs[0];
+		typeValidator.validateTypes(indexArg, functionName(), "Index", IntegerType.INSTANCE);
+		final IntegerStruct index = (IntegerStruct) indexArg;
 
-		return list.getElement(index.getBigInteger().intValue());
+		final LispStruct listArg = lispStructs[1];
+		typeValidator.validateTypes(indexArg, functionName(), "List", ListType.INSTANCE);
+		final ListStruct list = (ListStruct) listArg;
+
+		final int indexValue = index.getBigInteger().intValue();
+		return list.getElement(indexValue);
+	}
+
+	@Override
+	protected String functionName() {
+		return "NTH";
 	}
 }

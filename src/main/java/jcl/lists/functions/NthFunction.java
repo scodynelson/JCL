@@ -33,28 +33,25 @@ public final class NthFunction extends AbstractCommonLispFunctionStruct {
 
 	@Override
 	protected List<RequiredParameter> getRequiredBindings() {
-		final List<RequiredParameter> requiredBindings = new ArrayList<>(2);
+		final List<RequiredParameter> requiredParameters = new ArrayList<>(2);
 
-		final RequiredParameter object1RequiredBinding = new RequiredParameter.Builder(GlobalPackageStruct.COMMON_LISP, "INDEX").build();
-		requiredBindings.add(object1RequiredBinding);
+		final RequiredParameter indexParam = new RequiredParameter.Builder(GlobalPackageStruct.COMMON_LISP, "INDEX").build();
+		requiredParameters.add(indexParam);
 
-		final RequiredParameter object2RequiredBinding = new RequiredParameter.Builder(GlobalPackageStruct.COMMON_LISP, "LIST").build();
-		requiredBindings.add(object2RequiredBinding);
+		final RequiredParameter listParam = new RequiredParameter.Builder(GlobalPackageStruct.COMMON_LISP, "LIST").build();
+		requiredParameters.add(listParam);
 
-		return requiredBindings;
+		return requiredParameters;
 	}
 
 	@Override
 	public LispStruct apply(final LispStruct... lispStructs) {
 		super.apply(lispStructs);
 
-		final LispStruct indexArg = lispStructs[0];
-		typeValidator.validateTypes(indexArg, functionName(), "Index", IntegerType.INSTANCE);
-		final IntegerStruct index = (IntegerStruct) indexArg;
-
-		final LispStruct listArg = lispStructs[1];
-		typeValidator.validateTypes(indexArg, functionName(), "List", ListType.INSTANCE);
-		final ListStruct list = (ListStruct) listArg;
+		final IntegerStruct index
+				= typeValidator.validateType(lispStructs[0], functionName(), "Index", IntegerType.INSTANCE, IntegerStruct.class);
+		final ListStruct list
+				= typeValidator.validateType(lispStructs[1], functionName(), "List", ListType.INSTANCE, ListStruct.class);
 
 		final int indexValue = index.getBigInteger().intValue();
 		return list.getElement(indexValue);

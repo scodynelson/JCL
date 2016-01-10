@@ -4,59 +4,50 @@
 
 package jcl.lists.functions;
 
-import java.util.Collections;
 import java.util.List;
-import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
-import jcl.compiler.environment.binding.lambdalist.OrdinaryLambdaList;
 import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
-import jcl.functions.FunctionStruct;
+import jcl.functions.AbstractCommonLispFunctionStruct;
 import jcl.lists.ConsStruct;
 import jcl.lists.ListStruct;
 import jcl.packages.GlobalPackageStruct;
-import jcl.symbols.SymbolStruct;
+import jcl.types.ListType;
+import jcl.types.TypeValidator;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class CdrFunction extends FunctionStruct {
-
-	public static final SymbolStruct CDR = GlobalPackageStruct.COMMON_LISP.intern("CDR").getSymbol();
+public final class CdrFunction extends AbstractCommonLispFunctionStruct {
 
 	private static final long serialVersionUID = -4491044198379574303L;
 
-	private CdrFunction() {
-		super("Gets the cdr of the provided list.", getInitLambdaListBindings());
+	@Autowired
+	private TypeValidator validator;
+
+	public CdrFunction() {
+		super("Gets the cdr of the provided list.");
 	}
 
-	@PostConstruct
-	private void init() {
-		CDR.setFunction(this);
-		GlobalPackageStruct.COMMON_LISP.export(CDR);
-	}
-
-	private static OrdinaryLambdaList getInitLambdaListBindings() {
-
-		final SymbolStruct listArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("LIST-ARG").getSymbol();
-		final RequiredParameter requiredBinding = new RequiredParameter(listArgSymbol);
-		final List<RequiredParameter> requiredBindings = Collections.singletonList(requiredBinding);
-
-		return new OrdinaryLambdaList.Builder().requiredBindings(requiredBindings)
-		                                       .build();
+	@Override
+	protected List<RequiredParameter> getRequiredBindings() {
+		return new RequiredParameter.Builder(GlobalPackageStruct.COMMON_LISP, "LIST").buildList();
 	}
 
 	@Override
 	public LispStruct apply(final LispStruct... lispStructs) {
-		getFunctionBindings(lispStructs);
+		super.apply(lispStructs);
 
-		final ListStruct list = (ListStruct) lispStructs[0];
-		return cdr(list);
-	}
+		final ListStruct list = validator.validateType(lispStructs[0], functionName(), "List", ListType.INSTANCE, ListStruct.class);
 
-	public LispStruct cdr(final ListStruct list) {
 		if (list instanceof ConsStruct) {
 			return ((ConsStruct) list).getCdr();
 		}
 		return list.getRest();
+	}
+
+	@Override
+	protected String functionName() {
+		return "CDR";
 	}
 }

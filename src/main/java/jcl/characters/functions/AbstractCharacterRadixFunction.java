@@ -69,10 +69,7 @@ abstract class AbstractCharacterRadixFunction extends AbstractCommonLispFunction
 	protected IntegerStruct getRadix(final LispStruct... lispStructs) {
 		final IntegerStruct radix;
 		if (lispStructs.length >= 2) {
-			final LispStruct possibleRadix = lispStructs[1];
-			validator.validateTypes(possibleRadix, functionName(), "Radix", IntegerType.INSTANCE);
-
-			radix = (IntegerStruct) possibleRadix;
+			radix = validator.validateType(lispStructs[1], functionName(), "Radix", IntegerType.INSTANCE, IntegerStruct.class);
 		} else {
 			radix = IntegerStruct.TEN;
 		}

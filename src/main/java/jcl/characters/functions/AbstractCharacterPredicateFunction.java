@@ -70,10 +70,8 @@ abstract class AbstractCharacterPredicateFunction extends AbstractCommonLispFunc
 	public LispStruct apply(final LispStruct... lispStructs) {
 		super.apply(lispStructs);
 
-		final LispStruct lispStruct = lispStructs[0];
-		validator.validateTypes(lispStruct, functionName(), "Character", CharacterType.INSTANCE);
-
-		final CharacterStruct character = (CharacterStruct) lispStruct;
+		final CharacterStruct character
+				= validator.validateType(lispStructs[0], functionName(), "Character", CharacterType.INSTANCE, CharacterStruct.class);
 		return BooleanStructs.toLispBoolean(predicate().test(character));
 	}
 

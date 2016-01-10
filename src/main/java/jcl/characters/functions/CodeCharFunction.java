@@ -68,10 +68,8 @@ public final class CodeCharFunction extends AbstractCommonLispFunctionStruct {
 	public LispStruct apply(final LispStruct... lispStructs) {
 		super.apply(lispStructs);
 
-		final LispStruct lispStruct = lispStructs[0];
-		validator.validateTypes(lispStruct, functionName(), "Code", IntegerType.INSTANCE);
-
-		final IntegerStruct code = (IntegerStruct) lispStruct;
+		final IntegerStruct code
+				= validator.validateType(lispStructs[0], functionName(), "Code", IntegerType.INSTANCE, IntegerStruct.class);
 		return CharacterStruct.codeChar(code);
 	}
 

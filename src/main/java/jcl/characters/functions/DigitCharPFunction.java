@@ -70,9 +70,8 @@ public final class DigitCharPFunction extends AbstractCharacterRadixFunction {
 	public LispStruct apply(final LispStruct... lispStructs) {
 		super.apply(lispStructs);
 
-		final LispStruct lispStruct = lispStructs[0];
-		validator.validateTypes(lispStruct, functionName(), "Character", CharacterType.INSTANCE);
-		final CharacterStruct character = (CharacterStruct) lispStruct;
+		final CharacterStruct character
+				= validator.validateType(lispStructs[0], functionName(), "Character", CharacterType.INSTANCE, CharacterStruct.class);
 
 		final IntegerStruct radix = getRadix(lispStructs);
 		return character.charDigit(radix);

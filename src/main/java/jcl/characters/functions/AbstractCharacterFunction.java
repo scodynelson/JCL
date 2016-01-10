@@ -69,24 +69,9 @@ abstract class AbstractCharacterFunction extends AbstractCommonLispFunctionStruc
 	public LispStruct apply(final LispStruct... lispStructs) {
 		super.apply(lispStructs);
 
-		final CharacterStruct character = getCharacter(lispStructs);
+		final CharacterStruct character
+				= validator.validateType(lispStructs[0], functionName(), "Character", CharacterType.INSTANCE, CharacterStruct.class);
 		return characterFunction().apply(character);
-	}
-
-	/**
-	 * Gets the {@link CharacterStruct} parameter value from the provided {@link LispStruct[]}, validating that the
-	 * parameter is a {@link CharacterType}.
-	 *
-	 * @param lispStructs
-	 * 		the parameters to retrieve the {@link CharacterStruct} parameter value from
-	 *
-	 * @return the {@link CharacterStruct} parameter value
-	 */
-	private CharacterStruct getCharacter(final LispStruct... lispStructs) {
-		final LispStruct lispStruct = lispStructs[0];
-		validator.validateTypes(lispStruct, functionName(), "Character", CharacterType.INSTANCE);
-
-		return (CharacterStruct) lispStruct;
 	}
 
 	/**

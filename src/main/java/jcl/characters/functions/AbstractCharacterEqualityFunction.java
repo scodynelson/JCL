@@ -4,6 +4,7 @@
 
 package jcl.characters.functions;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.function.Predicate;
 
@@ -99,14 +100,9 @@ abstract class AbstractCharacterEqualityFunction extends AbstractCommonLispFunct
 	 * @return the {@link CharacterStruct[]} from the provided {@link LispStruct[]} parameters
 	 */
 	private CharacterStruct[] getCharacters(final LispStruct... lispStructs) {
-
-		final CharacterStruct[] characters = new CharacterStruct[lispStructs.length];
-		for (int i = 0; i < lispStructs.length; i++) {
-			final LispStruct lispStruct = lispStructs[i];
-			validator.validateTypes(lispStruct, functionName(), "Character", CharacterType.INSTANCE);
-			characters[i] = (CharacterStruct) lispStruct;
-		}
-		return characters;
+		return Arrays.stream(lispStructs)
+		             .map(e -> validator.validateType(e, functionName(), "Character", CharacterType.INSTANCE, CharacterStruct.class))
+		             .toArray(CharacterStruct[]::new);
 	}
 
 	/**

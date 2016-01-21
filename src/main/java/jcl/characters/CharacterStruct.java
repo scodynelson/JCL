@@ -41,7 +41,7 @@ public class CharacterStruct extends BuiltInClassStruct {
 	 * @param codePoint
 	 * 		the character {@link #codePoint} value
 	 */
-	protected CharacterStruct(final Integer codePoint) {
+	protected CharacterStruct(final int codePoint) {
 		super(getCharacterType(codePoint), null, null);
 		this.codePoint = codePoint;
 	}
@@ -109,7 +109,7 @@ public class CharacterStruct extends BuiltInClassStruct {
 	 *
 	 * @return character {@link #codePoint} property
 	 */
-	public Integer getCodePoint() {
+	public int getCodePoint() {
 		return codePoint;
 	}
 
@@ -692,7 +692,7 @@ public class CharacterStruct extends BuiltInClassStruct {
 	 * NILStruct#INSTANCE} if no character is defined by the code point
 	 */
 	public static LispStruct codeChar(final IntegerStruct code) {
-		final Integer codePoint = code.getBigInteger().intValue();
+		final int codePoint = code.getBigInteger().intValue();
 		if (!Character.isDefined(codePoint)) {
 			return NILStruct.INSTANCE;
 		}
@@ -761,8 +761,8 @@ public class CharacterStruct extends BuiltInClassStruct {
 	 * @return the character representation of the specified digit (weight) in the specified radix
 	 */
 	public static LispStruct digitChar(final IntegerStruct weight, final IntegerStruct radix) {
-		final Integer weightInt = weight.getBigInteger().intValue();
-		final Integer radixInt = radix.getBigInteger().intValue();
+		final int weightInt = weight.getBigInteger().intValue();
+		final int radixInt = radix.getBigInteger().intValue();
 
 		final Character digit = Character.forDigit(weightInt, radixInt);
 		if (digit == '\0') {

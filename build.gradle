@@ -1,5 +1,5 @@
 buildscript {
-	String springBootVersion = '1.3.0.RELEASE'
+	String springBootVersion = '1.3.1.RELEASE'
 	dependencies {
 		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
 	}
@@ -89,10 +89,12 @@ repositories {
 }
 
 String commonsLangVersion = '3.4'
-String commonsMathVersion = '3.5'
-String commonsCollectionsVersion = '4.0'
+String commonsMathVersion = '3.6'
+String commonsCollectionsVersion = '4.1'
 String commonsIoVersion = '2.4'
 String commonsPrimitivesVersion = '1.0'
+
+String lombokVersion = '1.16.6'
 
 String apfloatVersion = '1.8.2'
 
@@ -100,11 +102,11 @@ String icu4jVersion = "56.1"
 
 String asmAllVersion = '5.0.4'
 
-String springBootVersion = '1.3.0.RELEASE'
+String springBootVersion = '1.3.1.RELEASE'
 
 String javaHelpVersion = '2.0.05'
 
-String testngVersion = '6.9.6'
+String testngVersion = '6.9.10'
 
 dependencies {
 	compile("org.apache.commons:commons-lang3:${commonsLangVersion}")
@@ -112,6 +114,8 @@ dependencies {
 	compile("org.apache.commons:commons-collections4:${commonsCollectionsVersion}")
 	compile("commons-io:commons-io:${commonsIoVersion}")
 	compile("commons-primitives:commons-primitives:${commonsPrimitivesVersion}")
+
+	compile("org.projectlombok:lombok:${lombokVersion}")
 
 	compile("org.apfloat:apfloat:${apfloatVersion}")
 

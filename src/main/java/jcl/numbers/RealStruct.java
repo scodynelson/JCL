@@ -13,7 +13,6 @@ import java.util.List;
 import jcl.LispStruct;
 import jcl.conditions.exceptions.ErrorException;
 import jcl.types.RealType;
-import org.apache.commons.math3.util.FastMath;
 import org.apfloat.Apcomplex;
 import org.apfloat.ApcomplexMath;
 import org.apfloat.Apfloat;
@@ -943,12 +942,12 @@ public abstract class RealStruct extends NumberStruct {
 			final double x = base.apfloatValue().doubleValue();
 			final double y = power.apfloatValue().doubleValue();
 
-			double result = FastMath.pow(x, y);
+			double result = StrictMath.pow(x, y);
 			if (Double.isNaN(result)) {
 				if (x < 0) {
-					result = FastMath.pow(-x, y);
-					final double realPart = result * FastMath.cos(y * Math.PI);
-					final double imagPart = result * FastMath.sin(y * Math.PI);
+					result = StrictMath.pow(-x, y);
+					final double realPart = result * StrictMath.cos(y * Math.PI);
+					final double imagPart = result * StrictMath.sin(y * Math.PI);
 
 					final BigDecimal realBigDecimal = BigDecimal.valueOf(realPart);
 					final FloatStruct real = new FloatStruct(realBigDecimal);

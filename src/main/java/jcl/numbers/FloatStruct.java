@@ -14,7 +14,6 @@ import jcl.types.SingleFloatType;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.math3.fraction.BigFraction;
-import org.apache.commons.math3.util.FastMath;
 import org.apfloat.Apfloat;
 
 /**
@@ -602,7 +601,7 @@ public class FloatStruct extends RealStruct {
 		final long mantissa = decodedDoubleRaw.getMantissa();
 		final BigDecimal mantissaBigDecimal = BigDecimal.valueOf(mantissa);
 
-		final double expt = FastMath.pow(2, doubleFloatingPointPrecision);
+		final double expt = StrictMath.pow(2, doubleFloatingPointPrecision);
 		final BigDecimal exptBigDecimal = BigDecimal.valueOf(expt);
 
 		final BigDecimal significand = mantissaBigDecimal.divide(exptBigDecimal, MathContext.DECIMAL128);

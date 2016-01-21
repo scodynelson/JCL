@@ -4,7 +4,6 @@
 
 package jcl.pathnames.functions;
 
-import java.net.URI;
 import java.util.Collections;
 import java.util.List;
 import javax.annotation.PostConstruct;
@@ -64,9 +63,7 @@ public final class TranslateLogicalPathnameFunction extends FunctionStruct {
 		final PathnameStruct pathname;
 		if (pathnameDesignator instanceof LogicalPathnameStruct) {
 			final LogicalPathnameStruct logicalPathname = (LogicalPathnameStruct) pathnameDesignator;
-
-			final URI uri = logicalPathname.getUri();
-			pathname = new PathnameStruct(uri);
+			pathname = logicalPathname.translateLogicalPathname();
 		} else if (pathnameDesignator instanceof SynonymStreamStruct) {
 			final SynonymStreamStruct synonymStream = (SynonymStreamStruct) pathnameDesignator;
 			final SymbolStruct streamSymbol = synonymStream.getSymbol();

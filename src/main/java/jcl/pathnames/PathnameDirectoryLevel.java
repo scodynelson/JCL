@@ -47,13 +47,23 @@ public final class PathnameDirectoryLevel implements Serializable {
 	/**
 	 * Public constructor.
 	 *
+	 * @param directoryLevelType
+	 * 		the directory level type (WILD, WILD_INFERIORS, BACK, UP, or NULL)
+	 */
+	public PathnameDirectoryLevel(final PathnameDirectoryLevelType directoryLevelType) {
+		this(null, directoryLevelType);
+	}
+
+	/**
+	 * Public constructor.
+	 *
 	 * @param directoryLevel
 	 * 		the directory level value
 	 * @param directoryLevelType
-	 * 		the directory level type (WILD, BACK, or UP)
+	 * 		the directory level type (WILD, WILD_INFERIORS, BACK, UP, or NULL)
 	 */
 	public PathnameDirectoryLevel(final String directoryLevel, final PathnameDirectoryLevelType directoryLevelType) {
-		if (StringUtils.isEmpty(directoryLevel)) {
+		if (StringUtils.isEmpty(directoryLevel) && (PathnameDirectoryLevelType.NULL == directoryLevelType)) {
 			throw new FileErrorException("Directory level value cannot be null or empty.");
 		}
 

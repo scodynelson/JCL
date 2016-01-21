@@ -5,7 +5,6 @@
 package jcl.compiler.functions;
 
 import java.io.File;
-import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -208,8 +207,7 @@ public final class LoadFunction extends FunctionStruct {
 			final PathnameStruct defaultPathspec = PathnameVariables.DEFAULT_PATHNAME_DEFAULTS.getVariableValue();
 			final PathnameVersion nilVersion = new PathnameVersion(PathnameVersionComponentType.NIL);
 			filespecPathname = mergePathnamesFunction.mergePathnames(filespec, defaultPathspec, nilVersion);
-			final URI pathnameURI = filespecPathname.getUri();
-			final File pathnameFile = new File(pathnameURI.toString());
+			final File pathnameFile = new File(filespecPathname.getNamestring());
 			filespecPath = pathnameFile.toPath();
 		}
 

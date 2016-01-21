@@ -347,4 +347,23 @@ public class LogicalPathnameStruct extends PathnameStruct {
 		}
 		return pathname.substring(versionMarkerIndex + 1);
 	}
+
+	public PathnameStruct translateLogicalPathname() {
+		/*
+		(let* ((host (pathname-host pathname))
+            (translations (logical-pathname-translations host)))
+       (dolist (translation translations
+                            (error 'file-error
+                                   :pathname pathname
+                                   :format-control "No translation for ~S"
+                                   :format-arguments (list pathname)))
+         (let ((from-wildcard (car translation))
+               (to-wildcard (cadr translation)))
+           (when (pathname-match-p pathname from-wildcard)
+             (return (translate-logical-pathname
+                      (translate-pathname pathname from-wildcard to-wildcard))))))))
+		 */
+		// TODO: do this!!!
+		return null;
+	}
 }

@@ -11,17 +11,18 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
+import java.util.StringTokenizer;
 import java.util.regex.Pattern;
 
 import jcl.classes.BuiltInClassStruct;
+import jcl.conditions.exceptions.ErrorException;
+import jcl.conditions.exceptions.FileErrorException;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.SystemUtils;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
  * The {@link PathnameStruct} is the object representation of a Lisp 'pathname' type.
@@ -33,15 +34,31 @@ public class PathnameStruct extends BuiltInClassStruct {
 	 */
 	private static final long serialVersionUID = -5845491980801761678L;
 
+	private static final String CURRENT_DIR_STRING = ".";
+
+	private static final String CURRENT_DIR_STRING_SLASH = "./";
+
+	private static final String CURRENT_DIR_STRING_BACKSLASH = ".\\";
+
 	/**
 	 * Back/Up string for pathname parsing.
 	 */
 	private static final String BACK_UP_STRING = "..";
 
 	/**
+	 * Back/Up string for pathname parsing.
+	 */
+	private static final String BACK_UP_STRING_SLASH = "../";
+
+	/**
 	 * Wildcard string for pathname parsing.
 	 */
 	private static final String WILDCARD_STRING = "*";
+
+	/**
+	 * Wildcard-Inferiors string for pathname parsing.
+	 */
+	private static final String WILDCARD_INFERIORS_STRING = "**";
 
 	/**
 	 * Tilde string for Unix home directories.
@@ -73,37 +90,39 @@ public class PathnameStruct extends BuiltInClassStruct {
 	/**
 	 * The {@link PathnameHost} value.
 	 */
-	protected final PathnameHost host;
+	protected PathnameHost host = new PathnameHost(PathnameComponentType.UNSPECIFIC);
 
 	/**
 	 * The {@link PathnameDevice} value.
 	 */
-	protected final PathnameDevice device;
+	protected PathnameDevice device = new PathnameDevice(PathnameComponentType.NIL);
 
 	/**
 	 * The {@link PathnameDirectory} value.
 	 */
-	protected final PathnameDirectory directory;
+	protected PathnameDirectory directory = new PathnameDirectory(PathnameComponentType.NIL);
 
 	/**
 	 * The {@link PathnameName} value.
 	 */
-	protected final PathnameName name;
+	protected PathnameName name = new PathnameName(PathnameComponentType.NIL);
 
 	/**
 	 * The {@link PathnameType} value.
 	 */
-	protected final PathnameType type;
+	protected PathnameType type = new PathnameType(PathnameComponentType.NIL);
 
 	/**
 	 * The {@link PathnameVersion} value.
 	 */
-	protected final PathnameVersion version;
+	protected PathnameVersion version = new PathnameVersion(PathnameVersionComponentType.NIL);
 
 	/**
 	 * The internal {@link URI} representation of the pathname.
 	 */
 	protected final URI uri;
+
+	private String namestring;
 
 	/**
 	 * Public constructor.
@@ -135,6 +154,7 @@ public class PathnameStruct extends BuiltInClassStruct {
 	 */
 	public PathnameStruct(final String pathname) {
 		this(getURIFromPathname(pathname));
+//		init(pathnameString);
 	}
 
 	/**
@@ -610,51 +630,324 @@ public class PathnameStruct extends BuiltInClassStruct {
 		return getURIFromPathname(stringBuilder.toString());
 	}
 
-	@Override
-	public int hashCode() {
-		return new HashCodeBuilder().appendSuper(super.hashCode())
-		                            .append(host)
-		                            .append(device)
-		                            .append(directory)
-		                            .append(name)
-		                            .append(type)
-		                            .append(version)
-		                            .append(uri)
-		                            .toHashCode();
+	public String getNamestring() {
+		return uri.toString();
 	}
 
-	@Override
-	public boolean equals(final Object obj) {
-		if (obj == null) {
-			return false;
+	private void init(final String pathnameString) {
+		if (pathnameString == null) {
+			return;
 		}
-		if (obj == this) {
+
+		if (CURRENT_DIR_STRING.equals(pathnameString) || CURRENT_DIR_STRING_SLASH.equals(pathnameString)
+				|| (SystemUtils.IS_OS_WINDOWS && CURRENT_DIR_STRING_BACKSLASH.equals(pathnameString))) {
+			final PathnameDirectoryComponent directoryComponent
+					= new PathnameDirectoryComponent(PathnameDirectoryType.RELATIVE);
+			directory = new PathnameDirectory(directoryComponent);
+			return;
+		}
+		if (BACK_UP_STRING.equals(pathnameString) || BACK_UP_STRING_SLASH.equals(pathnameString)) {
+			final PathnameDirectoryLevel directoryLevel
+					= new PathnameDirectoryLevel(PathnameDirectoryLevelType.UP);
+			final PathnameDirectoryComponent directoryComponent
+					= new PathnameDirectoryComponent(PathnameDirectoryType.RELATIVE, Collections.singletonList(directoryLevel));
+			directory = new PathnameDirectory(directoryComponent);
+			return;
+		}
+
+		if (SystemUtils.IS_OS_WINDOWS && (pathnameString.startsWith("\\\\") || pathnameString.startsWith("//"))) {
+			// UNC path support
+			final int shareIndex;
+			final int dirIndex;
+			// match \\<server>\<share>\[directories-and-files]
+			if (pathnameString.startsWith("\\\\")) {
+				shareIndex = pathnameString.indexOf('\\', 2);
+				dirIndex = pathnameString.indexOf('\\', shareIndex + 1);
+				// match //<server>/<share>/[directories-and-files]
+			} else {
+				shareIndex = pathnameString.indexOf('/', 2);
+				dirIndex = pathnameString.indexOf('/', shareIndex + 1);
+			}
+			if ((shareIndex == -1) || (dirIndex == -1)) {
+				throw new ErrorException("Unsupported UNC path format: \"" + pathnameString + '"');
+			}
+
+			host = new PathnameHost(pathnameString.substring(2, shareIndex));
+			device = new PathnameDevice(pathnameString.substring(shareIndex + 1, dirIndex));
+
+			final PathnameStruct p = new PathnameStruct(pathnameString.substring(dirIndex));
+			directory = p.directory;
+			name = p.name;
+			type = p.type;
+			version = p.version;
+			return;
+		}
+
+		String s1 = FilenameUtils.separatorsToUnix(pathnameString);
+
+		// Expand user home directories
+		if (SystemUtils.IS_OS_UNIX) {
+			final String userHome = SystemUtils.USER_HOME;
+			if ("~".equals(s1)) {
+				s1 = userHome + '/';
+			} else if (s1.startsWith("~/")) {
+				s1 = userHome + s1.substring(1);
+			}
+		}
+
+		namestring = s1;
+
+		String currentPathnameString = s1;
+		if (SystemUtils.IS_OS_WINDOWS) {
+			// Device on Windows is the Drive Letter if it is part of the pathname
+			if ((currentPathnameString.length() >= 2) && (currentPathnameString.charAt(1) == ':')) {
+				device = new PathnameDevice(String.valueOf(currentPathnameString.charAt(0)));
+				currentPathnameString = currentPathnameString.substring(2);
+			}
+		}
+
+		String directoryString = null;
+
+		final int currPathLength = currentPathnameString.length();
+		if (currentPathnameString.charAt(currPathLength) == File.separatorChar) {
+			directoryString = currentPathnameString.substring(0, currPathLength + 1);
+			currentPathnameString = currentPathnameString.substring(currPathLength + 1);
+
+			if ("..".equals(currentPathnameString)) {
+				directoryString += currentPathnameString;
+				currentPathnameString = "";
+			}
+		}
+
+		if (directoryString != null) {
+			directory = parseDirectory(directoryString);
+		}
+
+		if (currentPathnameString.startsWith(".") && ((currentPathnameString.indexOf('.', 1) == -1) || currentPathnameString.endsWith("."))) {
+			name = new PathnameName(currentPathnameString);
+			return;
+		}
+
+		final int index = currentPathnameString.lastIndexOf('.');
+		String pathnameName = null;
+		String pathnameType = null;
+		if (index > 0) {
+			pathnameName = currentPathnameString.substring(0, index);
+			pathnameType = currentPathnameString.substring(index + 1);
+		} else if (!currentPathnameString.isEmpty()) {
+			pathnameName = currentPathnameString;
+		}
+
+		if ("*".equals(pathnameName)) {
+			name = new PathnameName(PathnameComponentType.WILD);
+		} else {
+			name = new PathnameName(pathnameName);
+		}
+
+		if ("*".equals(pathnameType)) {
+			type = new PathnameType(PathnameComponentType.WILD);
+		} else {
+			type = new PathnameType(pathnameType);
+		}
+	}
+
+	private static PathnameDirectory parseDirectory(final String directoryString) {
+		if ("/".equals(directoryString) || (SystemUtils.IS_OS_WINDOWS && "\\".equals(directoryString))) {
+			final PathnameDirectoryComponent directoryComponent = new PathnameDirectoryComponent(PathnameDirectoryType.ABSOLUTE);
+			return new PathnameDirectory(directoryComponent);
+		}
+
+		// This is used for building the path piece by piece so that we can detect symbolic links
+		final StringBuilder currentPathBuilder = new StringBuilder();
+
+		final PathnameDirectoryType directoryType;
+		if (directoryString.startsWith(File.separator)) {
+			directoryType = PathnameDirectoryType.ABSOLUTE;
+			currentPathBuilder.append(File.separator);
+		} else {
+			directoryType = PathnameDirectoryType.RELATIVE;
+		}
+
+		final List<PathnameDirectoryLevel> directoryLevels = new ArrayList<>();
+
+		final StringTokenizer st = new StringTokenizer(directoryString, File.separator);
+		while (st.hasMoreTokens()) {
+			final String token = st.nextToken();
+
+			currentPathBuilder.append(token);
+
+			PathnameDirectoryLevelType directoryLevelType = PathnameDirectoryLevelType.NULL;
+			String directoryLevelString = null;
+			if ("*".equals(token)) {
+				directoryLevelType = PathnameDirectoryLevelType.WILD;
+			} else if ("**".equals(token)) {
+				directoryLevelType = PathnameDirectoryLevelType.WILD_INFERIORS;
+			} else if ("..".equals(token)) {
+				final Path currentPath = Paths.get(currentPathBuilder.toString());
+
+				// Back is for absolutes / up is for symbolic links
+				if (Files.isSymbolicLink(currentPath)) {
+					directoryLevelType = PathnameDirectoryLevelType.UP;
+				} else {
+					directoryLevelType = PathnameDirectoryLevelType.BACK;
+				}
+			} else {
+				directoryLevelString = token;
+			}
+
+			currentPathBuilder.append(File.separatorChar);
+
+			final PathnameDirectoryLevel directoryLevel = new PathnameDirectoryLevel(directoryLevelString, directoryLevelType);
+			directoryLevels.add(directoryLevel);
+		}
+
+		final PathnameDirectoryComponent pathnameDirectoryComponent = new PathnameDirectoryComponent(directoryType, directoryLevels);
+		return new PathnameDirectory(pathnameDirectoryComponent);
+	}
+
+	public String getNamestringNew() {
+		if (namestring != null) {
+			return namestring;
+		}
+		if ((name.getComponentType() == PathnameComponentType.NIL) && (type.getComponentType() != PathnameComponentType.NIL)) {
+			return null;
+		}
+
+		final StringBuilder sb = new StringBuilder();
+		final String hostString = host.getHost();
+		if (hostString != null) {
+			if (this instanceof LogicalPathnameStruct) {
+				sb.append(hostString);
+				sb.append(':');
+			} else {
+				// A UNC path
+				sb.append("//").append(hostString).append('/');
+			}
+		}
+
+		final String deviceString = device.getDevice();
+		if (deviceString != null) {
+			sb.append(deviceString);
+			if ((this instanceof LogicalPathnameStruct) || (hostString == null)) {
+				sb.append(':'); // non-UNC paths
+			}
+		} else {
+			throw new ErrorException("Device cannot be null.");
+		}
+
+		final String directoryNamestring = getDirectoryNamestring();
+		sb.append(directoryNamestring);
+		final String nameValue = name.getName();
+		if (nameValue != null) {
+			if (nameValue.indexOf('/') >= 0) {
+				if (namestring == null) {
+					throw new ErrorException("Namestring null???.");
+				}
+				return null;
+			}
+			sb.append(nameValue);
+		} else if (name.getComponentType() == PathnameComponentType.WILD) {
+			sb.append(WILDCARD_STRING);
+		}
+
+		final String typeValue = type.getType();
+		if (typeValue != null) {
+			sb.append('.');
+			sb.append(typeValue);
+		} else if (type.getComponentType() == PathnameComponentType.WILD) {
+			sb.append('.');
+			sb.append('*');
+		}
+
+		if (this instanceof LogicalPathnameStruct) {
+			final Integer versionValue = version.getVersion();
+			if (versionValue != null) {
+				sb.append('.');
+				sb.append(versionValue);
+			} else if (version.getComponentType() == PathnameVersionComponentType.WILD) {
+				sb.append('.');
+				sb.append(WILDCARD_STRING);
+			} else if (version.getComponentType() == PathnameVersionComponentType.NEWEST) {
+				sb.append('.');
+				sb.append("NEWEST");
+			}
+		}
+		namestring = sb.toString();
+		return namestring;
+	}
+
+	private boolean validateDirectory() {
+		final PathnameDirectoryComponent directoryComponent = directory.getDirectoryComponent();
+		final List<PathnameDirectoryLevel> directoryLevels = directoryComponent.getDirectoryLevels();
+
+		if (directoryLevels.isEmpty()) {
 			return true;
 		}
-		if (obj.getClass() != getClass()) {
-			return false;
+
+		final Iterator<PathnameDirectoryLevel> iterator = directoryLevels.iterator();
+		PathnameDirectoryLevel directoryLevel = iterator.next();
+		while (iterator.hasNext()) {
+			final PathnameDirectoryLevelType directoryLevelType = directoryLevel.getDirectoryLevelType();
+			if (directoryLevelType == PathnameDirectoryLevelType.WILD_INFERIORS) {
+				final PathnameDirectoryLevel next = iterator.next();
+				final PathnameDirectoryLevelType nextDirectoryLevelType = next.getDirectoryLevelType();
+				if ((nextDirectoryLevelType == PathnameDirectoryLevelType.UP)
+						|| (nextDirectoryLevelType == PathnameDirectoryLevelType.BACK)) {
+					throw new FileErrorException("WILD-INFERIORS may not be followed immediately by " + nextDirectoryLevelType + '.');
+				}
+
+				directoryLevel = next;
+			}
 		}
-		final PathnameStruct rhs = (PathnameStruct) obj;
-		return new EqualsBuilder().appendSuper(super.equals(obj))
-		                          .append(host, rhs.host)
-		                          .append(device, rhs.device)
-		                          .append(directory, rhs.directory)
-		                          .append(name, rhs.name)
-		                          .append(type, rhs.type)
-		                          .append(version, rhs.version)
-		                          .append(uri, rhs.uri)
-		                          .isEquals();
+		return true;
 	}
 
-	@Override
-	public String toString() {
-		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(host)
-		                                                                .append(device)
-		                                                                .append(directory)
-		                                                                .append(name)
-		                                                                .append(type)
-		                                                                .append(version)
-		                                                                .append(uri)
-		                                                                .toString();
+	protected String getDirectoryNamestring() {
+		validateDirectory();
+
+		final PathnameDirectoryComponent directoryComponent = directory.getDirectoryComponent();
+		final List<PathnameDirectoryLevel> directoryLevels = directoryComponent.getDirectoryLevels();
+
+		final StringBuilder stringBuilder = new StringBuilder();
+
+		final PathnameDirectoryType pathnameDirectoryType = directoryComponent.getPathnameDirectoryType();
+
+		switch (pathnameDirectoryType) {
+			case ABSOLUTE:
+				stringBuilder.append(File.separatorChar);
+				break;
+			case RELATIVE:
+				if (directoryLevels.isEmpty()) {
+					// #p"./"
+					stringBuilder.append('.');
+					stringBuilder.append(File.separatorChar);
+				}
+				break;
+		}
+
+		for (final PathnameDirectoryLevel directoryLevel : directoryLevels) {
+			final PathnameDirectoryLevelType directoryLevelType = directoryLevel.getDirectoryLevelType();
+			switch (directoryLevelType) {
+				case NULL:
+					final String level = directoryLevel.getDirectoryLevel();
+					stringBuilder.append(level);
+					break;
+				case WILD:
+					stringBuilder.append(WILDCARD_STRING);
+					break;
+				case WILD_INFERIORS:
+					stringBuilder.append(WILDCARD_INFERIORS_STRING);
+					break;
+				case UP:
+					stringBuilder.append(BACK_UP_STRING);
+					break;
+				case BACK:
+					stringBuilder.append(BACK_UP_STRING);
+					break;
+			}
+			stringBuilder.append(File.separatorChar);
+		}
+
+		return stringBuilder.toString();
 	}
 }

@@ -1059,6 +1059,7 @@ public interface CommonLispSymbols {
 
 	// Pathname Keywords
 	KeywordStruct WILD = new KeywordStruct("WILD");
+	KeywordStruct WILD_INFERIORS = new KeywordStruct("WILD-INFERIORS");
 	KeywordStruct UNSPECIFIC = new KeywordStruct("UNSPECIFIC");
 	KeywordStruct COMMON = new KeywordStruct("COMMON");
 	KeywordStruct LOCAL = new KeywordStruct("LOCAL");

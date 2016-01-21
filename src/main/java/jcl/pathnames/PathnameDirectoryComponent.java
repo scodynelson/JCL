@@ -5,6 +5,7 @@
 package jcl.pathnames;
 
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.List;
 
 import jcl.conditions.exceptions.FileErrorException;
@@ -34,6 +35,16 @@ public final class PathnameDirectoryComponent implements Serializable {
 	 * The pathname directory type.
 	 */
 	private final PathnameDirectoryType pathnameDirectoryType;
+
+	/**
+	 * Public constructor.
+	 *
+	 * @param pathnameDirectoryType
+	 * 		the pathname directory type (ABSOLUTE or RELATIVE)
+	 */
+	public PathnameDirectoryComponent(final PathnameDirectoryType pathnameDirectoryType) {
+		this(pathnameDirectoryType, Collections.emptyList());
+	}
 
 	/**
 	 * Public constructor.

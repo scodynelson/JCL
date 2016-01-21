@@ -12,7 +12,6 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 /**
  * The {@link PathnameDirectoryLevelType} is the enumeration of the directory level type of a 'directory' level
  * element of a Lisp 'pathname' type.
- * NOTE: This implementation does NOT support WildInferiors. Period.
  */
 public enum PathnameDirectoryLevelType {
 
@@ -20,6 +19,11 @@ public enum PathnameDirectoryLevelType {
 	 * Wild pathname directory level type.
 	 */
 	WILD(CommonLispSymbols.WILD),
+
+	/**
+	 * Wild-Inferiors pathname directory level type.
+	 */
+	WILD_INFERIORS(CommonLispSymbols.WILD_INFERIORS),
 
 	/**
 	 * Back pathname directory level type.

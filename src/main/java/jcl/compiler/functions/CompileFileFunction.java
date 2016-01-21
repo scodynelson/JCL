@@ -3,7 +3,6 @@ package jcl.compiler.functions;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
@@ -215,8 +214,7 @@ public final class CompileFileFunction extends FunctionStruct {
 		// NOTE: 'outputFile' will be null if it is not supplied.
 
 		final PathnameStruct inputFilePathname = pathnameFunction.pathname(inputFile);
-		final URI inputFilePathnameURI = inputFilePathname.getUri();
-		final File inputFilePathnameFile = new File(inputFilePathnameURI.toString());
+		final File inputFilePathnameFile = new File(inputFilePathname.getNamestring());
 		final Path inputFilePath = inputFilePathnameFile.toPath();
 
 		final boolean inputFileNotExists = Files.notExists(inputFilePath);
@@ -240,8 +238,7 @@ public final class CompileFileFunction extends FunctionStruct {
 		}
 
 		final PathnameStruct outputFilePathname = compileFilePathnameFunction.compileFilePathname(inputFilePathname, outputFile);
-		final URI outputFilePathnameURI = outputFilePathname.getUri();
-		final File outputFilePathnameFile = new File(outputFilePathnameURI.toString());
+		final File outputFilePathnameFile = new File(outputFilePathname.getNamestring());
 		final Path outputFilePath = outputFilePathnameFile.toPath();
 
 		final LispStruct previousCompileFilePathname = CompilerVariables.COMPILE_FILE_PATHNAME.getValue();

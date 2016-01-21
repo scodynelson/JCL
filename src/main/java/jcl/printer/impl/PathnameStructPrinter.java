@@ -4,8 +4,6 @@
 
 package jcl.printer.impl;
 
-import java.net.URI;
-
 import jcl.pathnames.PathnameStruct;
 import jcl.printer.LispPrinter;
 import jcl.printer.PrinterVariables;
@@ -28,8 +26,8 @@ public class PathnameStructPrinter implements LispPrinter<PathnameStruct> {
 		}
 		stringBuilder.append('"');
 
-		final URI uri = object.getUri();
-		stringBuilder.append(uri);
+		final String namestring = object.getNamestring();
+		stringBuilder.append(namestring);
 
 		stringBuilder.append('"');
 

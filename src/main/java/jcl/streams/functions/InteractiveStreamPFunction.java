@@ -23,7 +23,7 @@ public final class InteractiveStreamPFunction extends AbstractCommonLispFunction
 	private static final long serialVersionUID = -7886789546416011880L;
 
 	@Autowired
-	private TypeValidator typeValidator;
+	private TypeValidator validator;
 
 	public InteractiveStreamPFunction() {
 		super("Returns true if stream is an interactive stream; otherwise, returns false.");
@@ -39,7 +39,7 @@ public final class InteractiveStreamPFunction extends AbstractCommonLispFunction
 		super.apply(lispStructs);
 
 		final LispStruct lispStruct = lispStructs[0];
-		typeValidator.validateTypes(lispStruct, functionName(), "STREAM", StreamType.INSTANCE);
+		validator.validateTypes(lispStruct, functionName(), "STREAM", StreamType.INSTANCE);
 
 		final StreamStruct stream = (StreamStruct) lispStruct;
 		return BooleanStructs.toLispBoolean(stream.isInteractive());

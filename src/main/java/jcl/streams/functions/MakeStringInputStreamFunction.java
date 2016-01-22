@@ -12,12 +12,18 @@ import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
 import jcl.functions.AbstractCommonLispFunctionStruct;
 import jcl.packages.GlobalPackageStruct;
 import jcl.streams.StringInputStreamStruct;
+import jcl.types.StringType;
+import jcl.types.TypeValidator;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public final class MakeStringInputStreamFunction extends AbstractCommonLispFunctionStruct {
 
 	private static final long serialVersionUID = -4772345122518084767L;
+
+	@Autowired
+	private TypeValidator validator;
 
 	public MakeStringInputStreamFunction() {
 		super("Returns an input string stream.");
@@ -32,8 +38,11 @@ public final class MakeStringInputStreamFunction extends AbstractCommonLispFunct
 	public LispStruct apply(final LispStruct... lispStructs) {
 		super.apply(lispStructs);
 
-		final StringStruct stringStruct = (StringStruct) lispStructs[0];
-		return new StringInputStreamStruct(stringStruct.getAsJavaString());
+		final LispStruct lispStruct = lispStructs[0];
+		validator.validateTypes(lispStruct, functionName(), "String", StringType.INSTANCE);
+
+		final StringStruct aString = (StringStruct) lispStruct;
+		return new StringInputStreamStruct(aString.getAsJavaString());
 	}
 
 	@Override

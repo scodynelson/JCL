@@ -4,6 +4,7 @@
 
 package jcl.streams;
 
+import jcl.LispType;
 import jcl.conditions.exceptions.StreamErrorException;
 import jcl.types.BaseCharType;
 import jcl.types.StringStreamType;
@@ -39,7 +40,29 @@ public class StringOutputStreamStruct extends StreamStruct implements OutputStre
 	 * 		whether or not the struct created is 'interactive'
 	 */
 	public StringOutputStreamStruct(final boolean interactive) {
-		super(StringStreamType.INSTANCE, null, null, interactive, BaseCharType.INSTANCE);
+		this(interactive, BaseCharType.INSTANCE);
+	}
+
+	/**
+	 * Public constructor.
+	 *
+	 * @param elementType
+	 * 		the type of character elements in the stream
+	 */
+	public StringOutputStreamStruct(final LispType elementType) {
+		this(false, elementType);
+	}
+
+	/**
+	 * Public constructor.
+	 *
+	 * @param interactive
+	 * 		whether or not the struct created is 'interactive'
+	 * @param elementType
+	 * 		the type of character elements in the stream
+	 */
+	public StringOutputStreamStruct(final boolean interactive, final LispType elementType) {
+		super(StringStreamType.INSTANCE, null, null, interactive, elementType);
 	}
 
 	@Override

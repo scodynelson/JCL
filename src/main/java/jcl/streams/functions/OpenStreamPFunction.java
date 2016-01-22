@@ -23,7 +23,7 @@ public final class OpenStreamPFunction extends AbstractCommonLispFunctionStruct 
 	private static final long serialVersionUID = 6474880597653178953L;
 
 	@Autowired
-	private TypeValidator typeValidator;
+	private TypeValidator validator;
 
 	public OpenStreamPFunction() {
 		super("Returns true if stream is an open stream; otherwise, returns false.");
@@ -39,7 +39,7 @@ public final class OpenStreamPFunction extends AbstractCommonLispFunctionStruct 
 		super.apply(lispStructs);
 
 		final LispStruct lispStruct = lispStructs[0];
-		typeValidator.validateTypes(lispStruct, functionName(), "STREAM", StreamType.INSTANCE);
+		validator.validateTypes(lispStruct, functionName(), "STREAM", StreamType.INSTANCE);
 
 		final StreamStruct stream = (StreamStruct) lispStruct;
 		return BooleanStructs.toLispBoolean(!stream.isClosed());

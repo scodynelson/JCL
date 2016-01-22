@@ -22,6 +22,7 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.ImportResource;
 import org.springframework.context.annotation.PropertySource;
 
@@ -57,7 +58,9 @@ public class JCL implements ApplicationRunner {
 	}
 
 	public static void main(final String... args) {
-		SpringApplication.run(JCL.class, args).close();
+		try (final ConfigurableApplicationContext context = SpringApplication.run(JCL.class, args)) {
+			context.registerShutdownHook();
+		}
 	}
 
 	@Override
@@ -67,25 +70,29 @@ public class JCL implements ApplicationRunner {
 		final boolean compileFileSrcDir = args.containsOption("compileFileSrcDir");
 		final boolean compileFileDestDir = args.containsOption("compileFileDestDir");
 		if (compileFileSrcDir && compileFileDestDir) {
-			final List<String> sourceFiles = args.getOptionValues("compileFileSrcDir");
-			final String destDir = args.getOptionValues("compileFileDestDir").get(0);
-
-			for (final String fileName : sourceFiles) {
-				final PathnameStruct sourceFile = new PathnameStruct(fileName);
-
-				final PathnameName pathnameName = sourceFile.getPathnameName();
-				final PathnameType pathnameType = new PathnameType("jar");
-				final PathnameStruct tempPathname = new PathnameStruct(null, null, null, pathnameName, pathnameType, null);
-
-				final PathnameStruct destDirectory = new PathnameStruct(destDir);
-				final PathnameStruct newSourceFile = mergePathnamesFunction.mergePathnames(destDirectory, tempPathname);
-
-				compileFileFunction.compileFile(sourceFile, newSourceFile, true, true);
-			}
+			compileSourceFiles(args);
 		} else if (compileFileSrcDir || compileFileDestDir) {
 			throw new ErrorException("Both Compile File Source and Destination directories must be provided.");
 		} else {
 			readEvalPrint.funcall(args);
+		}
+	}
+
+	private void compileSourceFiles(final ApplicationArguments args) {
+		final List<String> sourceFiles = args.getOptionValues("compileFileSrcDir");
+		final String destDir = args.getOptionValues("compileFileDestDir").get(0);
+
+		for (final String fileName : sourceFiles) {
+			final PathnameStruct sourceFile = new PathnameStruct(fileName);
+
+			final PathnameName pathnameName = sourceFile.getPathnameName();
+			final PathnameType pathnameType = new PathnameType("jar");
+			final PathnameStruct tempPathname = new PathnameStruct(null, null, null, pathnameName, pathnameType, null);
+
+			final PathnameStruct destDirectory = new PathnameStruct(destDir);
+			final PathnameStruct newSourceFile = mergePathnamesFunction.mergePathnames(destDirectory, tempPathname);
+
+			compileFileFunction.compileFile(sourceFile, newSourceFile, true, true);
 		}
 	}
 

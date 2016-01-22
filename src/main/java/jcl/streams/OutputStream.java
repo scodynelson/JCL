@@ -52,4 +52,9 @@ public interface OutputStream extends LispStream {
 	 * Forces the output through the stream.
 	 */
 	void forceOutput();
+
+	@Override
+	default boolean isOutputStream() {
+		return true;
+	}
 }

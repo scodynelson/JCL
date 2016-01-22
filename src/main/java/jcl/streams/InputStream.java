@@ -74,4 +74,9 @@ public interface InputStream extends LispStream {
 	 * @return whether or not there is data left to read from the stream
 	 */
 	boolean listen();
+
+	@Override
+	default boolean isInputStream() {
+		return true;
+	}
 }

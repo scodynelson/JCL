@@ -95,6 +95,11 @@ public abstract class StreamStruct extends BuiltInClassStruct implements LispStr
 	}
 
 	@Override
+	public boolean isOpen() {
+		return !closed;
+	}
+
+	@Override
 	public boolean isClosed() {
 		return closed;
 	}

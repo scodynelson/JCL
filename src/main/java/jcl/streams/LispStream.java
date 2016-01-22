@@ -32,6 +32,13 @@ interface LispStream extends LispStruct {
 	boolean isInteractive();
 
 	/**
+	 * Returns whether or not the stream is open.
+	 *
+	 * @return whether or not the stream is open
+	 */
+	boolean isOpen();
+
+	/**
 	 * Returns whether or not the stream is closed.
 	 *
 	 * @return whether or not the stream is closed
@@ -54,4 +61,12 @@ interface LispStream extends LispStruct {
 	 * @return the current position in the stream
 	 */
 	Long filePosition(Long filePosition);
+
+	default boolean isInputStream() {
+		return false;
+	}
+
+	default boolean isOutputStream() {
+		return false;
+	}
 }

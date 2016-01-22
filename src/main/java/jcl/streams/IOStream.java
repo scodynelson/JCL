@@ -9,4 +9,14 @@ package jcl.streams;
  * 'streams'.
  */
 public interface IOStream extends InputStream, OutputStream {
+
+	@Override
+	default boolean isInputStream() {
+		return true;
+	}
+
+	@Override
+	default boolean isOutputStream() {
+		return true;
+	}
 }

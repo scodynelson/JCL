@@ -59,7 +59,7 @@ abstract class AbstractCharacterDesignatorFunction extends AbstractCommonLispFun
 	 */
 	@Override
 	protected List<RequiredParameter> getRequiredBindings() {
-		return new RequiredParameter.Builder(GlobalPackageStruct.COMMON_LISP, "CHARACTER-DESIGNATOR").buildList();
+		return RequiredParameter.builder(GlobalPackageStruct.COMMON_LISP, "CHARACTER-DESIGNATOR").buildList();
 	}
 
 	/**

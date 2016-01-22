@@ -48,7 +48,7 @@ public final class FindPackageFunction extends AbstractCommonLispFunctionStruct 
 	 */
 	@Override
 	protected List<RequiredParameter> getRequiredBindings() {
-		return new RequiredParameter.Builder(GlobalPackageStruct.COMMON_LISP, "NAME").buildList();
+		return RequiredParameter.builder(GlobalPackageStruct.COMMON_LISP, "NAME").buildList();
 	}
 
 	/**

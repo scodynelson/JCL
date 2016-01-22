@@ -50,7 +50,7 @@ abstract class AbstractSymbolListPackageFunction extends AbstractOptionalPackage
 	 */
 	@Override
 	protected List<RequiredParameter> getRequiredBindings() {
-		return new RequiredParameter.Builder(GlobalPackageStruct.COMMON_LISP, "SYMBOLS").buildList();
+		return RequiredParameter.builder(GlobalPackageStruct.COMMON_LISP, "SYMBOLS").buildList();
 	}
 
 	/**

@@ -35,19 +35,19 @@ public final class GetHashFunction extends AbstractCommonLispFunctionStruct {
 	protected List<RequiredParameter> getRequiredBindings() {
 		final List<RequiredParameter> requiredParameters = new ArrayList<>(2);
 		final RequiredParameter keyParameter
-				= new RequiredParameter.Builder(GlobalPackageStruct.COMMON_LISP, "KEY").build();
+				= RequiredParameter.builder(GlobalPackageStruct.COMMON_LISP, "KEY").build();
 		requiredParameters.add(keyParameter);
 		final RequiredParameter hashTableParameter
-				= new RequiredParameter.Builder(GlobalPackageStruct.COMMON_LISP, "HASH-TABLE").build();
+				= RequiredParameter.builder(GlobalPackageStruct.COMMON_LISP, "HASH-TABLE").build();
 		requiredParameters.add(hashTableParameter);
 		return requiredParameters;
 	}
 
 	@Override
 	protected List<OptionalParameter> getOptionalBindings() {
-		return new OptionalParameter.Builder(GlobalPackageStruct.COMMON_LISP, "DEFAULT")
-				.suppliedPBinding()
-				.buildList();
+		return OptionalParameter.builder(GlobalPackageStruct.COMMON_LISP, "DEFAULT")
+		                        .suppliedPBinding()
+		                        .buildList();
 	}
 
 	@Override

@@ -64,10 +64,11 @@ public final class CompileFilePathnameFunction extends FunctionStruct {
 		final KeyParameter keyBinding = new KeyParameter(outputFileArgSymbol, NullStruct.INSTANCE, CommonLispSymbols.OUTPUT_FILE_KEYWORD, suppliedPBinding);
 		final List<KeyParameter> keyBindings = Collections.singletonList(keyBinding);
 
-		return new OrdinaryLambdaList.Builder().requiredBindings(requiredBindings)
-		                                       .keyBindings(keyBindings)
-		                                       .allowOtherKeys(true)
-		                                       .build();
+		return OrdinaryLambdaList.builder()
+		                         .requiredBindings(requiredBindings)
+		                         .keyBindings(keyBindings)
+		                         .allowOtherKeys(true)
+		                         .build();
 	}
 
 	@Override

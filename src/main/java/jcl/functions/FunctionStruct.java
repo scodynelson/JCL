@@ -444,13 +444,14 @@ public abstract class FunctionStruct extends BuiltInClassStruct implements Initi
 		final List<KeyParameter> keyBindings = getKeyBindings();
 		final boolean allowOtherKeys = getAllowOtherKeys();
 		final List<AuxParameter> auxBindings = getAuxBindings();
-		lambdaListBindings = new OrdinaryLambdaList.Builder().requiredBindings(requiredBindings)
-		                                                     .optionalBindings(optionalBindings)
-		                                                     .restBinding(restBinding)
-		                                                     .keyBindings(keyBindings)
-		                                                     .allowOtherKeys(allowOtherKeys)
-		                                                     .auxBindings(auxBindings)
-		                                                     .build();
+		lambdaListBindings = OrdinaryLambdaList.builder()
+		                                       .requiredBindings(requiredBindings)
+		                                       .optionalBindings(optionalBindings)
+		                                       .restBinding(restBinding)
+		                                       .keyBindings(keyBindings)
+		                                       .allowOtherKeys(allowOtherKeys)
+		                                       .auxBindings(auxBindings)
+		                                       .build();
 	}
 
 	protected List<RequiredParameter> getRequiredBindings() {

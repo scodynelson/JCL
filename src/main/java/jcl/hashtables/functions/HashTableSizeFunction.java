@@ -32,7 +32,7 @@ public final class HashTableSizeFunction extends AbstractCommonLispFunctionStruc
 
 	@Override
 	protected List<RequiredParameter> getRequiredBindings() {
-		return new RequiredParameter.Builder(GlobalPackageStruct.COMMON_LISP, "HASH-TABLE").buildList();
+		return RequiredParameter.builder(GlobalPackageStruct.COMMON_LISP, "HASH-TABLE").buildList();
 	}
 
 	@Override

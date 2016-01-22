@@ -42,8 +42,9 @@ public final class MakeStructureInstanceFunction extends FunctionStruct {
 		final RequiredParameter structSymArgRequiredBinding = new RequiredParameter(structSymArgSymbol);
 		final List<RequiredParameter> requiredBindings = Collections.singletonList(structSymArgRequiredBinding);
 
-		return new OrdinaryLambdaList.Builder().requiredBindings(requiredBindings)
-		                                       .build();
+		return OrdinaryLambdaList.builder()
+		                         .requiredBindings(requiredBindings)
+		                         .build();
 	}
 
 	@Override

@@ -56,7 +56,7 @@ abstract class AbstractCharacterEqualityFunction extends AbstractCommonLispFunct
 	 */
 	@Override
 	protected List<RequiredParameter> getRequiredBindings() {
-		return new RequiredParameter.Builder(GlobalPackageStruct.COMMON_LISP, "CHARACTER").buildList();
+		return RequiredParameter.builder(GlobalPackageStruct.COMMON_LISP, "CHARACTER").buildList();
 	}
 
 	/**
@@ -67,7 +67,7 @@ abstract class AbstractCharacterEqualityFunction extends AbstractCommonLispFunct
 	 */
 	@Override
 	protected RestParameter getRestBinding() {
-		return new RestParameter.Builder(GlobalPackageStruct.COMMON_LISP, "CHARACTERS").build();
+		return RestParameter.builder(GlobalPackageStruct.COMMON_LISP, "CHARACTERS").build();
 	}
 
 	/**

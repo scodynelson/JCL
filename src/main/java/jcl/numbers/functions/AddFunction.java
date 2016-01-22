@@ -43,8 +43,9 @@ public final class AddFunction extends FunctionStruct {
 		final SymbolStruct restArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("NUMBERS").getSymbol();
 		final RestParameter restBinding = new RestParameter(restArgSymbol);
 
-		return new OrdinaryLambdaList.Builder().restBinding(restBinding)
-		                                       .build();
+		return OrdinaryLambdaList.builder()
+		                         .restBinding(restBinding)
+		                         .build();
 	}
 
 	@Override

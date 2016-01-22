@@ -33,9 +33,9 @@ public final class Help extends AbstractExtensionsFunctionStruct {
 
 	@Override
 	protected List<OptionalParameter> getOptionalBindings() {
-		return new OptionalParameter.Builder(GlobalPackageStruct.EXTENSIONS, "SEARCH-TERM")
-				.suppliedPBinding()
-				.buildList();
+		return OptionalParameter.builder(GlobalPackageStruct.EXTENSIONS, "SEARCH-TERM")
+		                        .suppliedPBinding()
+		                        .buildList();
 	}
 
 	@Override

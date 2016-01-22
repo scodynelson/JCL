@@ -50,8 +50,9 @@ public final class PathnameFunction extends FunctionStruct {
 		final RequiredParameter requiredBinding = new RequiredParameter(pathspecArgSymbol);
 		final List<RequiredParameter> requiredBindings = Collections.singletonList(requiredBinding);
 
-		return new OrdinaryLambdaList.Builder().requiredBindings(requiredBindings)
-		                                       .build();
+		return OrdinaryLambdaList.builder()
+		                         .requiredBindings(requiredBindings)
+		                         .build();
 	}
 
 	@Override

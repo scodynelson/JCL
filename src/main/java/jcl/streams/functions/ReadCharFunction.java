@@ -89,8 +89,9 @@ public final class ReadCharFunction extends FunctionStruct {
 		final OptionalParameter recursivePOptionalBinding = new OptionalParameter(recursivePArgSymbol, NullStruct.INSTANCE, recursivePSuppliedPBinding);
 		optionalBindings.add(recursivePOptionalBinding);
 
-		return new OrdinaryLambdaList.Builder().optionalBindings(optionalBindings)
-		                                       .build();
+		return OrdinaryLambdaList.builder()
+		                         .optionalBindings(optionalBindings)
+		                         .build();
 	}
 
 	@Override

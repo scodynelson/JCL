@@ -50,7 +50,7 @@ public final class DigitCharFunction extends AbstractCharacterRadixFunction {
 	 */
 	@Override
 	protected List<RequiredParameter> getRequiredBindings() {
-		return new RequiredParameter.Builder(GlobalPackageStruct.COMMON_LISP, "WEIGHT").buildList();
+		return RequiredParameter.builder(GlobalPackageStruct.COMMON_LISP, "WEIGHT").buildList();
 	}
 
 	/**

@@ -55,10 +55,10 @@ public final class RenamePackageFunction extends AbstractCommonLispFunctionStruc
 	protected List<RequiredParameter> getRequiredBindings() {
 		final List<RequiredParameter> requiredParameters = new ArrayList<>(2);
 		final RequiredParameter packageParam
-				= new RequiredParameter.Builder(GlobalPackageStruct.COMMON_LISP, "PACKAGE").build();
+				= RequiredParameter.builder(GlobalPackageStruct.COMMON_LISP, "PACKAGE").build();
 		requiredParameters.add(packageParam);
 		final RequiredParameter newNameParam
-				= new RequiredParameter.Builder(GlobalPackageStruct.COMMON_LISP, "NEW-NAME").build();
+				= RequiredParameter.builder(GlobalPackageStruct.COMMON_LISP, "NEW-NAME").build();
 		requiredParameters.add(newNameParam);
 		return requiredParameters;
 	}
@@ -71,9 +71,9 @@ public final class RenamePackageFunction extends AbstractCommonLispFunctionStruc
 	 */
 	@Override
 	protected List<OptionalParameter> getOptionalBindings() {
-		return new OptionalParameter.Builder(GlobalPackageStruct.COMMON_LISP, "NEW-NICKNAMES")
-				.suppliedPBinding()
-				.buildList();
+		return OptionalParameter.builder(GlobalPackageStruct.COMMON_LISP, "NEW-NICKNAMES")
+		                        .suppliedPBinding()
+		                        .buildList();
 	}
 
 	/**

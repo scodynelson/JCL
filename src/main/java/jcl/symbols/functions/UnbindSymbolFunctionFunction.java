@@ -26,7 +26,7 @@ public final class UnbindSymbolFunctionFunction extends AbstractSystemFunctionSt
 
 	@Override
 	protected List<RequiredParameter> getRequiredBindings() {
-		return new RequiredParameter.Builder(GlobalPackageStruct.SYSTEM, "SYMBOL").buildList();
+		return RequiredParameter.builder(GlobalPackageStruct.SYSTEM, "SYMBOL").buildList();
 	}
 
 	@Override

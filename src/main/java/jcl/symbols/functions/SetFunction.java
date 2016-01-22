@@ -39,10 +39,10 @@ public class SetFunction extends AbstractCommonLispFunctionStruct {
 	protected List<RequiredParameter> getRequiredBindings() {
 		final List<RequiredParameter> requiredParameters = new ArrayList<>(2);
 
-		final RequiredParameter symbol = new RequiredParameter.Builder(GlobalPackageStruct.COMMON_LISP, "SYMBOL").build();
+		final RequiredParameter symbol = RequiredParameter.builder(GlobalPackageStruct.COMMON_LISP, "SYMBOL").build();
 		requiredParameters.add(symbol);
 
-		final RequiredParameter value = new RequiredParameter.Builder(GlobalPackageStruct.COMMON_LISP, "VALUE").build();
+		final RequiredParameter value = RequiredParameter.builder(GlobalPackageStruct.COMMON_LISP, "VALUE").build();
 		requiredParameters.add(value);
 
 		return requiredParameters;

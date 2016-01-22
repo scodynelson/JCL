@@ -26,8 +26,8 @@ public final class SetSymbolFunctionFunction extends AbstractSystemFunctionStruc
 
 	@Override
 	protected List<RequiredParameter> getRequiredBindings() {
-		final RequiredParameter symbolArg = new RequiredParameter.Builder(GlobalPackageStruct.SYSTEM, "SYMBOL").build();
-		final RequiredParameter functionArg = new RequiredParameter.Builder(GlobalPackageStruct.SYSTEM, "FUNCTION").build();
+		final RequiredParameter symbolArg = RequiredParameter.builder(GlobalPackageStruct.SYSTEM, "SYMBOL").build();
+		final RequiredParameter functionArg = RequiredParameter.builder(GlobalPackageStruct.SYSTEM, "FUNCTION").build();
 		return Arrays.asList(symbolArg, functionArg);
 	}
 

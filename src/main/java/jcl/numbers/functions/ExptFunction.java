@@ -51,8 +51,9 @@ public final class ExptFunction extends FunctionStruct {
 		final RequiredParameter requiredBinding2 = new RequiredParameter(powerNumberSymbol);
 		requiredBindings.add(requiredBinding2);
 
-		return new OrdinaryLambdaList.Builder().requiredBindings(requiredBindings)
-		                                       .build();
+		return OrdinaryLambdaList.builder()
+		                         .requiredBindings(requiredBindings)
+		                         .build();
 	}
 
 	@Override

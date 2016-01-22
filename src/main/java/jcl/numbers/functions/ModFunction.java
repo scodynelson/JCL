@@ -51,8 +51,9 @@ public final class ModFunction extends FunctionStruct {
 		final RequiredParameter requiredBinding2 = new RequiredParameter(divisorSymbol);
 		requiredBindings.add(requiredBinding2);
 
-		return new OrdinaryLambdaList.Builder().requiredBindings(requiredBindings)
-		                                       .build();
+		return OrdinaryLambdaList.builder()
+		                         .requiredBindings(requiredBindings)
+		                         .build();
 	}
 
 	@Override

@@ -53,10 +53,10 @@ abstract class AbstractOptionalPackageFunction extends AbstractCommonLispFunctio
 	 */
 	@Override
 	protected List<OptionalParameter> getOptionalBindings() {
-		return new OptionalParameter.Builder(GlobalPackageStruct.COMMON_LISP, "PACKAGE")
-				.initForm(PackageVariables.PACKAGE.getVariableValue())
-				.suppliedPBinding()
-				.buildList();
+		return OptionalParameter.builder(GlobalPackageStruct.COMMON_LISP, "PACKAGE")
+		                        .initForm(PackageVariables.PACKAGE.getVariableValue())
+		                        .suppliedPBinding()
+		                        .buildList();
 	}
 
 	/**

@@ -45,7 +45,7 @@ public final class ShadowFunction extends AbstractOptionalPackageFunction {
 	 */
 	@Override
 	protected List<RequiredParameter> getRequiredBindings() {
-		return new RequiredParameter.Builder(GlobalPackageStruct.COMMON_LISP, "SYMBOL-NAMES").buildList();
+		return RequiredParameter.builder(GlobalPackageStruct.COMMON_LISP, "SYMBOL-NAMES").buildList();
 	}
 
 	/**

@@ -68,6 +68,10 @@ public class OrdinaryLambdaList implements Serializable {
 		return allowOtherKeys;
 	}
 
+	public static Builder builder() {
+		return new Builder();
+	}
+
 	public static final class Builder {
 
 		private List<RequiredParameter> requiredBindings = Collections.emptyList();
@@ -81,6 +85,9 @@ public class OrdinaryLambdaList implements Serializable {
 		private List<AuxParameter> auxBindings = Collections.emptyList();
 
 		private boolean allowOtherKeys;
+
+		private Builder() {
+		}
 
 		public Builder requiredBindings(final List<RequiredParameter> requiredBindings) {
 			this.requiredBindings = requiredBindings;

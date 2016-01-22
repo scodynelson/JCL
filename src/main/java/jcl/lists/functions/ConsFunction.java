@@ -46,8 +46,9 @@ public final class ConsFunction extends FunctionStruct {
 		final RequiredParameter object2RequiredBinding = new RequiredParameter(object2ArgSymbol);
 		requiredBindings.add(object2RequiredBinding);
 
-		return new OrdinaryLambdaList.Builder().requiredBindings(requiredBindings)
-		                                       .build();
+		return OrdinaryLambdaList.builder()
+		                         .requiredBindings(requiredBindings)
+		                         .build();
 	}
 
 	@Override

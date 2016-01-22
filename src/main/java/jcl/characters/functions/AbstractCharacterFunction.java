@@ -51,7 +51,7 @@ abstract class AbstractCharacterFunction extends AbstractCommonLispFunctionStruc
 	 */
 	@Override
 	protected List<RequiredParameter> getRequiredBindings() {
-		return new RequiredParameter.Builder(GlobalPackageStruct.COMMON_LISP, "CHARACTER").buildList();
+		return RequiredParameter.builder(GlobalPackageStruct.COMMON_LISP, "CHARACTER").buildList();
 	}
 
 	/**

@@ -57,9 +57,10 @@ public final class LogFunction extends FunctionStruct {
 		final OptionalParameter optionalBinding = new OptionalParameter(optionalArgSymbol, NullStruct.INSTANCE, optionalSuppliedPBinding);
 		final List<OptionalParameter> optionalBindings = Collections.singletonList(optionalBinding);
 
-		return new OrdinaryLambdaList.Builder().requiredBindings(requiredBindings)
-		                                       .optionalBindings(optionalBindings)
-		                                       .build();
+		return OrdinaryLambdaList.builder()
+		                         .requiredBindings(requiredBindings)
+		                         .optionalBindings(optionalBindings)
+		                         .build();
 	}
 
 	@Override

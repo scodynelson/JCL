@@ -40,15 +40,15 @@ public class CopySymbolFunction extends AbstractCommonLispFunctionStruct {
 
 	@Override
 	protected List<RequiredParameter> getRequiredBindings() {
-		return new RequiredParameter.Builder(GlobalPackageStruct.COMMON_LISP, "SYMBOL").buildList();
+		return RequiredParameter.builder(GlobalPackageStruct.COMMON_LISP, "SYMBOL").buildList();
 	}
 
 	@Override
 	protected List<OptionalParameter> getOptionalBindings() {
-		return new OptionalParameter.Builder(GlobalPackageStruct.COMMON_LISP, "COPY-PROPERTIES")
-				.initForm(NILStruct.INSTANCE)
-				.suppliedPBinding()
-				.buildList();
+		return OptionalParameter.builder(GlobalPackageStruct.COMMON_LISP, "COPY-PROPERTIES")
+		                        .initForm(NILStruct.INSTANCE)
+		                        .suppliedPBinding()
+		                        .buildList();
 	}
 
 	@Override

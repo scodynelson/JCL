@@ -59,9 +59,10 @@ public final class PathnameNameFunction extends FunctionStruct {
 		final KeyParameter keyBinding = new KeyParameter(caseArgSymbol, NullStruct.INSTANCE, CommonLispSymbols.CASE_KEYWORD, suppliedPBinding);
 		final List<KeyParameter> keyBindings = Collections.singletonList(keyBinding);
 
-		return new OrdinaryLambdaList.Builder().requiredBindings(requiredBindings)
-		                                       .keyBindings(keyBindings)
-		                                       .build();
+		return OrdinaryLambdaList.builder()
+		                         .requiredBindings(requiredBindings)
+		                         .keyBindings(keyBindings)
+		                         .build();
 	}
 
 	@Override

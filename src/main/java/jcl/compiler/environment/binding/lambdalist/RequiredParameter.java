@@ -32,6 +32,10 @@ public class RequiredParameter extends Parameter {
 		super(var, destructuringForm, TType.INSTANCE, null, isSpecial);
 	}
 
+	public static Builder builder(final PackageStruct aPackage, final String symbolName) {
+		return new Builder(aPackage, symbolName);
+	}
+
 	public static final class Builder {
 
 		private final SymbolStruct var;
@@ -40,7 +44,7 @@ public class RequiredParameter extends Parameter {
 
 		private boolean isSpecial;
 
-		public Builder(final PackageStruct aPackage, final String symbolName) {
+		private Builder(final PackageStruct aPackage, final String symbolName) {
 			var = aPackage.intern(symbolName).getSymbol();
 		}
 

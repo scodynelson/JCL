@@ -34,10 +34,10 @@ public final class RemHashFunction extends AbstractCommonLispFunctionStruct {
 	protected List<RequiredParameter> getRequiredBindings() {
 		final List<RequiredParameter> requiredParameters = new ArrayList<>(2);
 		final RequiredParameter keyParameter
-				= new RequiredParameter.Builder(GlobalPackageStruct.COMMON_LISP, "KEY").build();
+				= RequiredParameter.builder(GlobalPackageStruct.COMMON_LISP, "KEY").build();
 		requiredParameters.add(keyParameter);
 		final RequiredParameter hashTableParameter
-				= new RequiredParameter.Builder(GlobalPackageStruct.COMMON_LISP, "HASH-TABLE").build();
+				= RequiredParameter.builder(GlobalPackageStruct.COMMON_LISP, "HASH-TABLE").build();
 		requiredParameters.add(hashTableParameter);
 		return requiredParameters;
 	}

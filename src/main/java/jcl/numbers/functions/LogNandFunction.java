@@ -51,8 +51,9 @@ public final class LogNandFunction extends FunctionStruct {
 		final RequiredParameter requiredBinding2 = new RequiredParameter(integer2Symbol);
 		requiredBindings.add(requiredBinding2);
 
-		return new OrdinaryLambdaList.Builder().requiredBindings(requiredBindings)
-		                                       .build();
+		return OrdinaryLambdaList.builder()
+		                         .requiredBindings(requiredBindings)
+		                         .build();
 	}
 
 	@Override

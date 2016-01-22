@@ -43,8 +43,9 @@ public final class LogXorFunction extends FunctionStruct {
 		final SymbolStruct restArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("INTEGERS").getSymbol();
 		final RestParameter restBinding = new RestParameter(restArgSymbol);
 
-		return new OrdinaryLambdaList.Builder().restBinding(restBinding)
-		                                       .build();
+		return OrdinaryLambdaList.builder()
+		                         .restBinding(restBinding)
+		                         .build();
 	}
 
 	@Override

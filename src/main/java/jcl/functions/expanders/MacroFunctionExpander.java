@@ -269,16 +269,17 @@ public abstract class MacroFunctionExpander<O extends LispStruct> extends MacroE
 		final boolean allowOtherKeys = getAllowOtherKeys();
 		final List<AuxParameter> auxBindings = getAuxBindings();
 		final EnvironmentParameter environmentBinding = getEnvironmentBinding();
-		macroLambdaListBindings = new MacroLambdaList.Builder().wholeBinding(wholeBinding)
-		                                                       .environmentBinding(environmentBinding)
-		                                                       .requiredBindings(requiredBindings)
-		                                                       .optionalBindings(optionalBindings)
-		                                                       .restBinding(restBinding)
-		                                                       .bodyBinding(bodyBinding)
-		                                                       .keyBindings(keyBindings)
-		                                                       .allowOtherKeys(allowOtherKeys)
-		                                                       .auxBindings(auxBindings)
-		                                                       .build();
+		macroLambdaListBindings = MacroLambdaList.builder()
+		                                         .wholeBinding(wholeBinding)
+		                                         .environmentBinding(environmentBinding)
+		                                         .requiredBindings(requiredBindings)
+		                                         .optionalBindings(optionalBindings)
+		                                         .restBinding(restBinding)
+		                                         .bodyBinding(bodyBinding)
+		                                         .keyBindings(keyBindings)
+		                                         .allowOtherKeys(allowOtherKeys)
+		                                         .auxBindings(auxBindings)
+		                                         .build();
 	}
 
 	@SuppressWarnings({"unchecked", "rawtypes"})

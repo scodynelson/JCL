@@ -94,6 +94,10 @@ public class MacroLambdaList implements Serializable {
 		return allowOtherKeys;
 	}
 
+	public static Builder builder() {
+		return new Builder();
+	}
+
 	public static final class Builder {
 
 		private WholeParameter wholeBinding;
@@ -113,6 +117,9 @@ public class MacroLambdaList implements Serializable {
 		private List<AuxParameter> auxBindings = Collections.emptyList();
 
 		private boolean allowOtherKeys;
+
+		private Builder() {
+		}
 
 		public Builder wholeBinding(final WholeParameter wholeBinding) {
 			this.wholeBinding = wholeBinding;

@@ -61,9 +61,10 @@ public final class ApplyFunction extends FunctionStruct {
 		final SymbolStruct argsArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("ARGS").getSymbol();
 		final RestParameter restBinding = new RestParameter(argsArgSymbol);
 
-		return new OrdinaryLambdaList.Builder().requiredBindings(requiredBindings)
-		                                       .restBinding(restBinding)
-		                                       .build();
+		return OrdinaryLambdaList.builder()
+		                         .requiredBindings(requiredBindings)
+		                         .restBinding(restBinding)
+		                         .build();
 	}
 
 	@Override

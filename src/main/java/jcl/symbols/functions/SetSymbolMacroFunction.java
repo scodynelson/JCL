@@ -27,8 +27,8 @@ public final class SetSymbolMacroFunction extends AbstractSystemFunctionStruct {
 
 	@Override
 	protected List<RequiredParameter> getRequiredBindings() {
-		final RequiredParameter symbolArg = new RequiredParameter.Builder(GlobalPackageStruct.SYSTEM, "SYMBOL").build();
-		final RequiredParameter functionArg = new RequiredParameter.Builder(GlobalPackageStruct.SYSTEM, "EXPANSION").build();
+		final RequiredParameter symbolArg = RequiredParameter.builder(GlobalPackageStruct.SYSTEM, "SYMBOL").build();
+		final RequiredParameter functionArg = RequiredParameter.builder(GlobalPackageStruct.SYSTEM, "EXPANSION").build();
 		return Arrays.asList(symbolArg, functionArg);
 	}
 

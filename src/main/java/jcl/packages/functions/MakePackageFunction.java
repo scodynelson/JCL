@@ -58,7 +58,7 @@ public final class MakePackageFunction extends AbstractCommonLispFunctionStruct 
 	 */
 	@Override
 	protected List<RequiredParameter> getRequiredBindings() {
-		return new RequiredParameter.Builder(GlobalPackageStruct.COMMON_LISP, "PACKAGE-NAME").buildList();
+		return RequiredParameter.builder(GlobalPackageStruct.COMMON_LISP, "PACKAGE-NAME").buildList();
 	}
 
 	/**
@@ -71,15 +71,15 @@ public final class MakePackageFunction extends AbstractCommonLispFunctionStruct 
 	protected List<KeyParameter> getKeyBindings() {
 		final List<KeyParameter> keyParameters = new ArrayList<>(2);
 		final KeyParameter nicknamesParam
-				= new KeyParameter.Builder(GlobalPackageStruct.COMMON_LISP, "NICKNAMES")
-				.suppliedPBinding()
-				.build();
+				= KeyParameter.builder(GlobalPackageStruct.COMMON_LISP, "NICKNAMES")
+				              .suppliedPBinding()
+				              .build();
 		keyParameters.add(nicknamesParam);
 		final KeyParameter useParam
-				= new KeyParameter.Builder(GlobalPackageStruct.COMMON_LISP, "USE")
-				.initForm(ListStruct.buildProperList(GlobalPackageStruct.COMMON_LISP))
-				.suppliedPBinding()
-				.build();
+				= KeyParameter.builder(GlobalPackageStruct.COMMON_LISP, "USE")
+				              .initForm(ListStruct.buildProperList(GlobalPackageStruct.COMMON_LISP))
+				              .suppliedPBinding()
+				              .build();
 		keyParameters.add(useParam);
 		return keyParameters;
 	}

@@ -31,7 +31,7 @@ public final class CdrFunction extends AbstractCommonLispFunctionStruct {
 
 	@Override
 	protected List<RequiredParameter> getRequiredBindings() {
-		return new RequiredParameter.Builder(GlobalPackageStruct.COMMON_LISP, "LIST").buildList();
+		return RequiredParameter.builder(GlobalPackageStruct.COMMON_LISP, "LIST").buildList();
 	}
 
 	@Override

@@ -58,31 +58,31 @@ public final class MakeHashTableFunction extends AbstractCommonLispFunctionStruc
 		final List<KeyParameter> keyParameters = new ArrayList<>(4);
 
 		final KeyParameter testParameter
-				= new KeyParameter.Builder(GlobalPackageStruct.COMMON_LISP, "TEST")
-				.initForm(CommonLispSymbols.EQL)
-				.suppliedPBinding()
-				.build();
+				= KeyParameter.builder(GlobalPackageStruct.COMMON_LISP, "TEST")
+				              .initForm(CommonLispSymbols.EQL)
+				              .suppliedPBinding()
+				              .build();
 		keyParameters.add(testParameter);
 
 		final KeyParameter sizeParameter
-				= new KeyParameter.Builder(GlobalPackageStruct.COMMON_LISP, "SIZE")
-				.initForm(IntegerStruct.TEN)
-				.suppliedPBinding()
-				.build();
+				= KeyParameter.builder(GlobalPackageStruct.COMMON_LISP, "SIZE")
+				              .initForm(IntegerStruct.TEN)
+				              .suppliedPBinding()
+				              .build();
 		keyParameters.add(sizeParameter);
 
 		final KeyParameter rehashSizeParameter
-				= new KeyParameter.Builder(GlobalPackageStruct.COMMON_LISP, "REHASH-SIZE")
-				.initForm(IntegerStruct.ONE)
-				.suppliedPBinding()
-				.build();
+				= KeyParameter.builder(GlobalPackageStruct.COMMON_LISP, "REHASH-SIZE")
+				              .initForm(IntegerStruct.ONE)
+				              .suppliedPBinding()
+				              .build();
 		keyParameters.add(rehashSizeParameter);
 
 		final KeyParameter rehashThresholdParameter
-				= new KeyParameter.Builder(GlobalPackageStruct.COMMON_LISP, "REHASH-THRESHOLD")
-				.initForm(DEFAULT_REHASH_THRESHOLD)
-				.suppliedPBinding()
-				.build();
+				= KeyParameter.builder(GlobalPackageStruct.COMMON_LISP, "REHASH-THRESHOLD")
+				              .initForm(DEFAULT_REHASH_THRESHOLD)
+				              .suppliedPBinding()
+				              .build();
 		keyParameters.add(rehashThresholdParameter);
 
 		return keyParameters;

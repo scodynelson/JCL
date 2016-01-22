@@ -46,8 +46,9 @@ public final class LogNotFunction extends FunctionStruct {
 		final RequiredParameter requiredBinding = new RequiredParameter(integerSymbol);
 		final List<RequiredParameter> requiredBindings = Collections.singletonList(requiredBinding);
 
-		return new OrdinaryLambdaList.Builder().requiredBindings(requiredBindings)
-		                                       .build();
+		return OrdinaryLambdaList.builder()
+		                         .requiredBindings(requiredBindings)
+		                         .build();
 	}
 
 	@Override

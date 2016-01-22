@@ -40,10 +40,10 @@ public class RempropFunction extends AbstractCommonLispFunctionStruct {
 	protected List<RequiredParameter> getRequiredBindings() {
 		final List<RequiredParameter> requiredParameters = new ArrayList<>(2);
 
-		final RequiredParameter symbol = new RequiredParameter.Builder(GlobalPackageStruct.COMMON_LISP, "SYMBOL").build();
+		final RequiredParameter symbol = RequiredParameter.builder(GlobalPackageStruct.COMMON_LISP, "SYMBOL").build();
 		requiredParameters.add(symbol);
 
-		final RequiredParameter indicator = new RequiredParameter.Builder(GlobalPackageStruct.COMMON_LISP, "INDICATOR").build();
+		final RequiredParameter indicator = RequiredParameter.builder(GlobalPackageStruct.COMMON_LISP, "INDICATOR").build();
 		requiredParameters.add(indicator);
 
 		return requiredParameters;

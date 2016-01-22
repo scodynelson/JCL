@@ -35,10 +35,10 @@ public final class NthFunction extends AbstractCommonLispFunctionStruct {
 	protected List<RequiredParameter> getRequiredBindings() {
 		final List<RequiredParameter> requiredParameters = new ArrayList<>(2);
 
-		final RequiredParameter indexParam = new RequiredParameter.Builder(GlobalPackageStruct.COMMON_LISP, "INDEX").build();
+		final RequiredParameter indexParam = RequiredParameter.builder(GlobalPackageStruct.COMMON_LISP, "INDEX").build();
 		requiredParameters.add(indexParam);
 
-		final RequiredParameter listParam = new RequiredParameter.Builder(GlobalPackageStruct.COMMON_LISP, "LIST").build();
+		final RequiredParameter listParam = RequiredParameter.builder(GlobalPackageStruct.COMMON_LISP, "LIST").build();
 		requiredParameters.add(listParam);
 
 		return requiredParameters;

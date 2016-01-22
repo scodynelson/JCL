@@ -55,6 +55,14 @@ public class KeyParameter extends Parameter {
 		return suppliedPBinding;
 	}
 
+	public static Builder builder(final PackageStruct aPackage, final String symbolName) {
+		return new Builder(aPackage, symbolName);
+	}
+
+	public static Builder builder(final PackageStruct aPackage, final String symbolName, final SymbolStruct keyName) {
+		return new Builder(aPackage, symbolName, keyName);
+	}
+
 	public static final class Builder {
 
 		private final SymbolStruct var;
@@ -69,7 +77,7 @@ public class KeyParameter extends Parameter {
 
 		private boolean isSpecial;
 
-		public Builder(final PackageStruct aPackage, final String symbolName) {
+		private Builder(final PackageStruct aPackage, final String symbolName) {
 			var = aPackage.intern(symbolName).getSymbol();
 
 			final PackageSymbolStruct symbol = GlobalPackageStruct.KEYWORD.findSymbol(symbolName);
@@ -80,7 +88,7 @@ public class KeyParameter extends Parameter {
 			}
 		}
 
-		public Builder(final PackageStruct aPackage, final String symbolName, final SymbolStruct keyName) {
+		private Builder(final PackageStruct aPackage, final String symbolName, final SymbolStruct keyName) {
 			var = aPackage.intern(symbolName).getSymbol();
 			this.keyName = keyName;
 		}

@@ -43,16 +43,18 @@ public class GentempFunction extends AbstractCommonLispFunctionStruct {
 	protected List<OptionalParameter> getOptionalBindings() {
 		final List<OptionalParameter> optionalParameters = new ArrayList<>(2);
 
-		final OptionalParameter prefix = new OptionalParameter.Builder(GlobalPackageStruct.COMMON_LISP, "PREFIX")
-				.initForm(new StringStruct("T"))
-				.suppliedPBinding()
-				.build();
+		final OptionalParameter prefix =
+				OptionalParameter.builder(GlobalPackageStruct.COMMON_LISP, "PREFIX")
+				                 .initForm(new StringStruct("T"))
+				                 .suppliedPBinding()
+				                 .build();
 		optionalParameters.add(prefix);
 
-		final OptionalParameter aPackage = new OptionalParameter.Builder(GlobalPackageStruct.COMMON_LISP, "PACKAGE")
-				.initForm(PackageVariables.PACKAGE.getVariableValue())
-				.suppliedPBinding()
-				.build();
+		final OptionalParameter aPackage =
+				OptionalParameter.builder(GlobalPackageStruct.COMMON_LISP, "PACKAGE")
+				                 .initForm(PackageVariables.PACKAGE.getVariableValue())
+				                 .suppliedPBinding()
+				                 .build();
 		optionalParameters.add(aPackage);
 
 		return optionalParameters;

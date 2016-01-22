@@ -49,7 +49,7 @@ public final class PackageErrorPackageFunction extends AbstractCommonLispFunctio
 	 */
 	@Override
 	protected List<RequiredParameter> getRequiredBindings() {
-		return new RequiredParameter.Builder(GlobalPackageStruct.COMMON_LISP, "CONDITION").buildList();
+		return RequiredParameter.builder(GlobalPackageStruct.COMMON_LISP, "CONDITION").buildList();
 	}
 
 	/**

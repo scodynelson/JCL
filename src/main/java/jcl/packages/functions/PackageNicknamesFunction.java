@@ -50,7 +50,7 @@ public final class PackageNicknamesFunction extends AbstractCommonLispFunctionSt
 	 */
 	@Override
 	protected List<RequiredParameter> getRequiredBindings() {
-		return new RequiredParameter.Builder(GlobalPackageStruct.COMMON_LISP, "PACKAGE").buildList();
+		return RequiredParameter.builder(GlobalPackageStruct.COMMON_LISP, "PACKAGE").buildList();
 	}
 
 	/**

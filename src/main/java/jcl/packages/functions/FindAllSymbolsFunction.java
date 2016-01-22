@@ -49,7 +49,7 @@ public final class FindAllSymbolsFunction extends AbstractCommonLispFunctionStru
 	 */
 	@Override
 	protected List<RequiredParameter> getRequiredBindings() {
-		return new RequiredParameter.Builder(GlobalPackageStruct.COMMON_LISP, "SYMBOL-NAME").buildList();
+		return RequiredParameter.builder(GlobalPackageStruct.COMMON_LISP, "SYMBOL-NAME").buildList();
 	}
 
 	/**

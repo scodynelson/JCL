@@ -51,9 +51,9 @@ abstract class AbstractCharacterRadixFunction extends AbstractCommonLispFunction
 	 */
 	@Override
 	protected List<OptionalParameter> getOptionalBindings() {
-		return new OptionalParameter.Builder(GlobalPackageStruct.COMMON_LISP, "RADIX")
-				.suppliedPBinding()
-				.buildList();
+		return OptionalParameter.builder(GlobalPackageStruct.COMMON_LISP, "RADIX")
+		                        .suppliedPBinding()
+		                        .buildList();
 	}
 
 	/**

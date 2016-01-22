@@ -52,9 +52,10 @@ public final class GreaterThanFunction extends FunctionStruct {
 		final SymbolStruct restArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("REALS").getSymbol();
 		final RestParameter restBinding = new RestParameter(restArgSymbol);
 
-		return new OrdinaryLambdaList.Builder().requiredBindings(requiredBindings)
-		                                       .restBinding(restBinding)
-		                                       .build();
+		return OrdinaryLambdaList.builder()
+		                         .requiredBindings(requiredBindings)
+		                         .restBinding(restBinding)
+		                         .build();
 	}
 
 	@Override

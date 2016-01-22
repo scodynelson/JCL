@@ -50,7 +50,7 @@ public final class CodeCharFunction extends AbstractCommonLispFunctionStruct {
 	 */
 	@Override
 	protected List<RequiredParameter> getRequiredBindings() {
-		return new RequiredParameter.Builder(GlobalPackageStruct.COMMON_LISP, "CODE").buildList();
+		return RequiredParameter.builder(GlobalPackageStruct.COMMON_LISP, "CODE").buildList();
 	}
 
 	/**

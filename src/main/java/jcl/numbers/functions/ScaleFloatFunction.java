@@ -52,8 +52,9 @@ public final class ScaleFloatFunction extends FunctionStruct {
 		final RequiredParameter requiredBinding2 = new RequiredParameter(integerSymbol);
 		requiredBindings.add(requiredBinding2);
 
-		return new OrdinaryLambdaList.Builder().requiredBindings(requiredBindings)
-		                                       .build();
+		return OrdinaryLambdaList.builder()
+		                         .requiredBindings(requiredBindings)
+		                         .build();
 	}
 
 	@Override

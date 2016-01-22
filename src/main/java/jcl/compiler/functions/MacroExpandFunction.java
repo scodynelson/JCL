@@ -59,9 +59,10 @@ public final class MacroExpandFunction extends FunctionStruct {
 		final OptionalParameter optionalBinding = new OptionalParameter(envArgSymbol, NullStruct.INSTANCE, suppliedPBinding);
 		final List<OptionalParameter> optionalBindings = Collections.singletonList(optionalBinding);
 
-		return new OrdinaryLambdaList.Builder().requiredBindings(requiredBindings)
-		                                       .optionalBindings(optionalBindings)
-		                                       .build();
+		return OrdinaryLambdaList.builder()
+		                         .requiredBindings(requiredBindings)
+		                         .optionalBindings(optionalBindings)
+		                         .build();
 	}
 
 	@Override

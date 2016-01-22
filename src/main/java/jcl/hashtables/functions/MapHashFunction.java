@@ -35,10 +35,10 @@ public final class MapHashFunction extends AbstractCommonLispFunctionStruct {
 	protected List<RequiredParameter> getRequiredBindings() {
 		final List<RequiredParameter> requiredParameters = new ArrayList<>(2);
 		final RequiredParameter functionParameter
-				= new RequiredParameter.Builder(GlobalPackageStruct.COMMON_LISP, "FUNCTION").build();
+				= RequiredParameter.builder(GlobalPackageStruct.COMMON_LISP, "FUNCTION").build();
 		requiredParameters.add(functionParameter);
 		final RequiredParameter hashTableParameter
-				= new RequiredParameter.Builder(GlobalPackageStruct.COMMON_LISP, "HASH-TABLE").build();
+				= RequiredParameter.builder(GlobalPackageStruct.COMMON_LISP, "HASH-TABLE").build();
 		requiredParameters.add(hashTableParameter);
 		return requiredParameters;
 	}

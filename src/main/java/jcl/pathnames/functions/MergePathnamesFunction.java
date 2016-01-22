@@ -83,9 +83,10 @@ public final class MergePathnamesFunction extends FunctionStruct {
 		final OptionalParameter defaultVersionOptionalBinding = new OptionalParameter(defaultVersionArgSymbol, NullStruct.INSTANCE, defaultVersionSuppliedPBinding);
 		optionalBindings.add(defaultVersionOptionalBinding);
 
-		return new OrdinaryLambdaList.Builder().requiredBindings(requiredBindings)
-		                                       .optionalBindings(optionalBindings)
-		                                       .build();
+		return OrdinaryLambdaList.builder()
+		                         .requiredBindings(requiredBindings)
+		                         .optionalBindings(optionalBindings)
+		                         .build();
 	}
 
 	@Override

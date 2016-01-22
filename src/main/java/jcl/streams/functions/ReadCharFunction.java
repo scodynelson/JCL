@@ -6,15 +6,12 @@ package jcl.streams.functions;
 
 import java.util.ArrayList;
 import java.util.List;
-import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
 import jcl.characters.CharacterStruct;
 import jcl.compiler.environment.binding.lambdalist.OptionalParameter;
-import jcl.compiler.environment.binding.lambdalist.OrdinaryLambdaList;
-import jcl.compiler.environment.binding.lambdalist.SuppliedPParameter;
 import jcl.conditions.exceptions.TypeErrorException;
-import jcl.functions.FunctionStruct;
+import jcl.functions.AbstractCommonLispFunctionStruct;
 import jcl.lists.NullStruct;
 import jcl.packages.GlobalPackageStruct;
 import jcl.printer.Printer;
@@ -24,18 +21,15 @@ import jcl.streams.ReadPeekResult;
 import jcl.streams.StreamVariables;
 import jcl.symbols.BooleanStruct;
 import jcl.symbols.NILStruct;
-import jcl.symbols.SymbolStruct;
 import jcl.symbols.TStruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class ReadCharFunction extends FunctionStruct {
+public final class ReadCharFunction extends AbstractCommonLispFunctionStruct {
 
-	public static final SymbolStruct READ_CHAR = GlobalPackageStruct.COMMON_LISP.intern("READ-CHAR").getSymbol();
-
-	private static final long serialVersionUID = -4477847470997236613L;
+	private static final long serialVersionUID = 8697359997833339004L;
 
 	@Autowired
 	private ApplicationContext context;
@@ -43,60 +37,45 @@ public final class ReadCharFunction extends FunctionStruct {
 	@Autowired
 	private Printer printer;
 
-	private ReadCharFunction() {
-		super("Returns the next character from input-stream.", getInitLambdaListBindings());
+	public ReadCharFunction() {
+		super("Returns the next character from input-stream.");
 	}
 
-	@PostConstruct
-	private void init() {
-		READ_CHAR.setFunction(this);
-		GlobalPackageStruct.COMMON_LISP.export(READ_CHAR);
-	}
-
-	private static OrdinaryLambdaList getInitLambdaListBindings() {
+	@Override
+	protected List<OptionalParameter> getOptionalBindings() {
 
 		final List<OptionalParameter> optionalBindings = new ArrayList<>(4);
 
-		final SymbolStruct inputStreamArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("INPUT-STREAM").getSymbol();
-
-		final SymbolStruct inputStreamSuppliedP = GlobalPackageStruct.COMMON_LISP.intern("INPUT-STREAM-P-" + System.nanoTime()).getSymbol();
-		final SuppliedPParameter inputStreamSuppliedPBinding = new SuppliedPParameter(inputStreamSuppliedP);
-
-		final OptionalParameter inputStreamOptionalBinding = new OptionalParameter(inputStreamArgSymbol, NullStruct.INSTANCE, inputStreamSuppliedPBinding);
+		final OptionalParameter inputStreamOptionalBinding =
+				OptionalParameter.builder(GlobalPackageStruct.COMMON_LISP, "INPUT-STREAM")
+				                 .suppliedPBinding()
+				                 .build();
 		optionalBindings.add(inputStreamOptionalBinding);
 
-		final SymbolStruct eofErrorPArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("EOF-ERROR").getSymbol();
-
-		final SymbolStruct eofErrorPSuppliedP = GlobalPackageStruct.COMMON_LISP.intern("EOF-ERROR-P-" + System.nanoTime()).getSymbol();
-		final SuppliedPParameter eofErrorPSuppliedPBinding = new SuppliedPParameter(eofErrorPSuppliedP);
-
-		final OptionalParameter eofErrorPOptionalBinding = new OptionalParameter(eofErrorPArgSymbol, NullStruct.INSTANCE, eofErrorPSuppliedPBinding);
+		final OptionalParameter eofErrorPOptionalBinding =
+				OptionalParameter.builder(GlobalPackageStruct.COMMON_LISP, "EOF-ERROR")
+				                 .suppliedPBinding()
+				                 .build();
 		optionalBindings.add(eofErrorPOptionalBinding);
 
-		final SymbolStruct eofValueArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("EOF-VALUE").getSymbol();
-
-		final SymbolStruct eofValueSuppliedP = GlobalPackageStruct.COMMON_LISP.intern("EOF-VALUE-P-" + System.nanoTime()).getSymbol();
-		final SuppliedPParameter eofValueSuppliedPBinding = new SuppliedPParameter(eofValueSuppliedP);
-
-		final OptionalParameter eofValueOptionalBinding = new OptionalParameter(eofValueArgSymbol, NullStruct.INSTANCE, eofValueSuppliedPBinding);
+		final OptionalParameter eofValueOptionalBinding =
+				OptionalParameter.builder(GlobalPackageStruct.COMMON_LISP, "EOF-VALUE")
+				                 .suppliedPBinding()
+				                 .build();
 		optionalBindings.add(eofValueOptionalBinding);
 
-		final SymbolStruct recursivePArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("RECURSIVE-P").getSymbol();
-
-		final SymbolStruct recursivePSuppliedP = GlobalPackageStruct.COMMON_LISP.intern("RECURSIVE-P-P-" + System.nanoTime()).getSymbol();
-		final SuppliedPParameter recursivePSuppliedPBinding = new SuppliedPParameter(recursivePSuppliedP);
-
-		final OptionalParameter recursivePOptionalBinding = new OptionalParameter(recursivePArgSymbol, NullStruct.INSTANCE, recursivePSuppliedPBinding);
+		final OptionalParameter recursivePOptionalBinding =
+				OptionalParameter.builder(GlobalPackageStruct.COMMON_LISP, "RECURSIVE-P")
+				                 .suppliedPBinding()
+				                 .build();
 		optionalBindings.add(recursivePOptionalBinding);
 
-		return OrdinaryLambdaList.builder()
-		                         .optionalBindings(optionalBindings)
-		                         .build();
+		return optionalBindings;
 	}
 
 	@Override
 	public LispStruct apply(final LispStruct... lispStructs) {
-		getFunctionBindings(lispStructs);
+		super.apply(lispStructs);
 
 		final int length = lispStructs.length;
 
@@ -126,7 +105,7 @@ public final class ReadCharFunction extends FunctionStruct {
 			}
 		}
 
-		LispStruct eofValue = NullStruct.INSTANCE;
+		LispStruct eofValue = NILStruct.INSTANCE;
 		if (length > 2) {
 			eofValue = lispStructs[1];
 		}
@@ -141,7 +120,8 @@ public final class ReadCharFunction extends FunctionStruct {
 			}
 		}
 
-		final ReadPeekResult readPeekResult = readChar(inputStream, eofErrorP, eofValue, recursiveP);
+		final Reader reader = context.getBean(Reader.class, inputStream);
+		final ReadPeekResult readPeekResult = reader.readChar(eofErrorP.booleanValue(), eofValue, recursiveP.booleanValue());
 		if (readPeekResult.isEof()) {
 			return readPeekResult.getEofValue();
 		} else {
@@ -150,22 +130,8 @@ public final class ReadCharFunction extends FunctionStruct {
 		}
 	}
 
-	public ReadPeekResult readChar(final InputStream inputStream, final BooleanStruct eofErrorP, final LispStruct eofValue,
-	                               final BooleanStruct recursiveP) {
-
-		return readChar(inputStream, eofErrorP.booleanValue(), eofValue, recursiveP.booleanValue());
-	}
-
-	public ReadPeekResult readChar(final InputStream inputStream, final boolean eofErrorP, final LispStruct eofValue,
-	                               final boolean recursiveP) {
-
-		final Reader reader = context.getBean(Reader.class, inputStream);
-		return reader.readChar(eofErrorP, eofValue, recursiveP);
-	}
-
-	public ReadPeekResult readChar(final Reader reader, final boolean eofErrorP, final LispStruct eofValue,
-	                               final boolean recursiveP) {
-
-		return reader.readChar(eofErrorP, eofValue, recursiveP);
+	@Override
+	protected String functionName() {
+		return "READ-CHAR";
 	}
 }

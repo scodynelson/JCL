@@ -14,7 +14,6 @@ import jcl.reader.Reader;
 import jcl.reader.functions.ReadFunction;
 import jcl.streams.ReadPeekResult;
 import jcl.streams.StreamVariables;
-import jcl.streams.functions.ReadCharFunction;
 import jcl.symbols.VariableStruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,9 +32,6 @@ public class ReadEvalPrint {
 
 	@Autowired
 	private ReadFunction readFunction;
-
-	@Autowired
-	private ReadCharFunction readCharFunction;
 
 	@Autowired
 	private EvalFunction evalFunction;
@@ -119,7 +115,7 @@ public class ReadEvalPrint {
 					// Consume the rest of the input so we don't attempt to parse the rest of the input when an error occurs.
 					Integer readChar;
 					do {
-						final ReadPeekResult readResult = readCharFunction.readChar(reader, false, null, true);
+						final ReadPeekResult readResult = reader.readChar(false, null, true);
 						readChar = readResult.getResult();
 					} while ((readChar != null) && (readChar != -1) && (readChar != 10));
 

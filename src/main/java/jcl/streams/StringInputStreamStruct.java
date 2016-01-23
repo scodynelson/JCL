@@ -50,6 +50,36 @@ public class StringInputStreamStruct extends StreamStruct implements InputStream
 	 * 		the input to create a StringInputStreamStruct from
 	 */
 	public StringInputStreamStruct(final boolean interactive, final String inputString) {
+		this(interactive, inputString, 0, inputString.length());
+	}
+
+	/**
+	 * Public constructor.
+	 *
+	 * @param inputString
+	 * 		the input to create a StringInputStreamStruct from
+	 * @param current
+	 * 		the current position to read from in the string
+	 * @param end
+	 * 		the ending position to read up to in the string
+	 */
+	public StringInputStreamStruct(final String inputString, final int current, final int end) {
+		this(false, inputString, current, end);
+	}
+
+	/**
+	 * Public constructor.
+	 *
+	 * @param interactive
+	 * 		whether or not the struct created is 'interactive'
+	 * @param inputString
+	 * 		the input to create a StringInputStreamStruct from
+	 * @param current
+	 * 		the current position to read from in the string
+	 * @param end
+	 * 		the ending position to read up to in the string
+	 */
+	public StringInputStreamStruct(final boolean interactive, final String inputString, final int current, final int end) {
 		super(StringStreamType.INSTANCE, null, null, interactive, BaseCharType.INSTANCE);
 
 		if (inputString == null) {
@@ -57,8 +87,8 @@ public class StringInputStreamStruct extends StreamStruct implements InputStream
 		}
 		this.inputString = inputString;
 
-		end = inputString.length();
-		current = 0;
+		this.end = end;
+		this.current = current;
 	}
 
 	@Override

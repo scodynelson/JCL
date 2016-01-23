@@ -34,8 +34,6 @@ import org.springframework.stereotype.Component;
 @Component
 public final class MakeHashTableFunction extends AbstractCommonLispFunctionStruct {
 
-	private static final long serialVersionUID = -6761797908599450463L;
-
 	@Autowired
 	private TypeValidator validator;
 

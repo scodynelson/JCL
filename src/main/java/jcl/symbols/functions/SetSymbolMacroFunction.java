@@ -19,8 +19,6 @@ import org.springframework.stereotype.Component;
 @Component
 public final class SetSymbolMacroFunction extends AbstractSystemFunctionStruct {
 
-	private static final long serialVersionUID = -7741392752973190476L;
-
 	public SetSymbolMacroFunction() {
 		super("Creates a new symbol-macro with the provided expansion and sets the symbol-macro value of the provided symbol to it.");
 	}

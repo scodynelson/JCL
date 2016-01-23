@@ -20,8 +20,6 @@ import org.springframework.stereotype.Component;
 @Component
 public final class CdrFunction extends AbstractCommonLispFunctionStruct {
 
-	private static final long serialVersionUID = -4491044198379574303L;
-
 	@Autowired
 	private TypeValidator validator;
 

@@ -27,8 +27,6 @@ public final class PlusPFunction extends FunctionStruct {
 
 	public static final SymbolStruct PLUSP = GlobalPackageStruct.COMMON_LISP.intern("PLUSP").getSymbol();
 
-	private static final long serialVersionUID = 7660967673229969396L;
-
 	@Autowired
 	private Printer printer;
 

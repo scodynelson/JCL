@@ -14,8 +14,6 @@ import org.springframework.stereotype.Component;
 @Component
 public final class FreeMemory extends AbstractExtensionsFunctionStruct {
 
-	private static final long serialVersionUID = -3953991334787306041L;
-
 	public FreeMemory() {
 		super("Returns the current free runtime memory usage.");
 	}

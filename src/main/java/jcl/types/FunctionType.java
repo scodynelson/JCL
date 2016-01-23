@@ -67,11 +67,6 @@ public interface FunctionType extends TType {
 		private static final class FunctionTypeImpl extends TypeBaseClass implements FunctionType, AtomicTypeSpecifier, CompoundTypeSpecifier {
 
 			/**
-			 * Serializable Version Unique Identifier.
-			 */
-			private static final long serialVersionUID = -6069975817174759971L;
-
-			/**
 			 * The required arguments.
 			 */
 			private final List<TypeSpecifier> typeSpecifiers;

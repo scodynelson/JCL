@@ -19,11 +19,6 @@ import org.springframework.stereotype.Component;
 public final class ListAllPackagesFunction extends AbstractCommonLispFunctionStruct {
 
 	/**
-	 * Serializable Version Unique Identifier.
-	 */
-	private static final long serialVersionUID = 1723339238778095881L;
-
-	/**
 	 * Public constructor passing the documentation string.
 	 */
 	public ListAllPackagesFunction() {

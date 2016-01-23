@@ -37,11 +37,6 @@ public interface StandardCharType extends BaseCharType {
 		private static final class StandardCharTypeImpl extends TypeBaseClass implements StandardCharType, AtomicTypeSpecifier {
 
 			/**
-			 * Serializable Version Unique Identifier.
-			 */
-			private static final long serialVersionUID = 1814050119904469853L;
-
-			/**
 			 * Private constructor.
 			 */
 			private StandardCharTypeImpl() {

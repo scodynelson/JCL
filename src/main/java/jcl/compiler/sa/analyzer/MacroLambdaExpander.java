@@ -31,8 +31,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class MacroLambdaExpander extends MacroFunctionExpander<MacroLambdaStruct> {
 
-	private static final long serialVersionUID = -3836341809506752205L;
-
 	@Autowired
 	private MacroLambdaListParser macroLambdaListParser;
 

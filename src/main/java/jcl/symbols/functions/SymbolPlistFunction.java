@@ -21,11 +21,6 @@ import org.springframework.stereotype.Component;
 public class SymbolPlistFunction extends AbstractCommonLispFunctionStruct {
 
 	/**
-	 * Serializable Version Unique Identifier.
-	 */
-	private static final long serialVersionUID = -7976231996328608349L;
-
-	/**
 	 * The {@link TypeValidator} for validating the function parameter value types.
 	 */
 	@Autowired

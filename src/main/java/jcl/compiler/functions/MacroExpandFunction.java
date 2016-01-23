@@ -30,8 +30,6 @@ public final class MacroExpandFunction extends FunctionStruct {
 
 	public static final SymbolStruct MACROEXPAND = GlobalPackageStruct.COMMON_LISP.intern("MACROEXPAND").getSymbol();
 
-	private static final long serialVersionUID = 5991270831364188635L;
-
 	@Autowired
 	private MacroExpand1Function macroExpand1Function;
 

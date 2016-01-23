@@ -4,13 +4,10 @@
 
 package jcl.compiler.environment.binding.lambdalist;
 
-import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
 
-public class OrdinaryLambdaList implements Serializable {
-
-	private static final long serialVersionUID = 3980582571605022674L;
+public class OrdinaryLambdaList {
 
 	private final List<RequiredParameter> requiredBindings;
 

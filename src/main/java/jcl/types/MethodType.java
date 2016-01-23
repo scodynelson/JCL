@@ -45,11 +45,6 @@ public interface MethodType extends TType {
 		private static final class MethodTypeImpl extends TypeBaseClass implements MethodType, AtomicTypeSpecifier {
 
 			/**
-			 * Serializable Version Unique Identifier.
-			 */
-			private static final long serialVersionUID = 3888222951043301596L;
-
-			/**
 			 * Private constructor.
 			 */
 			private MethodTypeImpl() {

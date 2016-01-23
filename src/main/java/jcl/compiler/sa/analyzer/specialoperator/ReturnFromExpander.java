@@ -18,8 +18,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class ReturnFromExpander extends MacroFunctionExpander<ReturnFromStruct> {
 
-	private static final long serialVersionUID = 3328790948675693554L;
-
 	@Autowired
 	private FormAnalyzer formAnalyzer;
 

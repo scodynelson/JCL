@@ -25,8 +25,6 @@ public final class SinFunction extends FunctionStruct {
 
 	public static final SymbolStruct SIN = GlobalPackageStruct.COMMON_LISP.intern("SIN").getSymbol();
 
-	private static final long serialVersionUID = -6842448536472486589L;
-
 	@Autowired
 	private Printer printer;
 

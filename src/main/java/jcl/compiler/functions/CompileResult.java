@@ -4,8 +4,6 @@
 
 package jcl.compiler.functions;
 
-import java.io.Serializable;
-
 import jcl.functions.FunctionStruct;
 import jcl.symbols.BooleanStruct;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -13,9 +11,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-public class CompileResult implements Serializable {
-
-	private static final long serialVersionUID = 3069814016661457833L;
+public class CompileResult {
 
 	private FunctionStruct function;
 

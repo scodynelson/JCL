@@ -20,11 +20,6 @@ public final class EmptyStreamStruct extends AbstractNativeStreamStruct {
 	public static final EmptyStreamStruct INSTANCE = new EmptyStreamStruct();
 
 	/**
-	 * Serializable Version Unique Identifier.
-	 */
-	private static final long serialVersionUID = -5964127895456720986L;
-
-	/**
 	 * Private constructor.
 	 */
 	private EmptyStreamStruct() {

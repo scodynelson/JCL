@@ -4,7 +4,6 @@
 
 package jcl.compiler.struct.specialoperator;
 
-import java.io.Serializable;
 import java.util.List;
 
 import jcl.compiler.environment.Environment;
@@ -12,8 +11,6 @@ import jcl.compiler.struct.CompilerSpecialOperatorStruct;
 import jcl.symbols.SymbolStruct;
 
 public class InnerLambdaStruct extends CompilerSpecialOperatorStruct {
-
-	private static final long serialVersionUID = -535794959428263863L;
 
 	private final List<InnerLambdaVar> vars;
 
@@ -39,9 +36,7 @@ public class InnerLambdaStruct extends CompilerSpecialOperatorStruct {
 		return lexicalEnvironment;
 	}
 
-	public static class InnerLambdaVar implements Serializable {
-
-		private static final long serialVersionUID = 891453745075246590L;
+	public static class InnerLambdaVar {
 
 		private final SymbolStruct var;
 

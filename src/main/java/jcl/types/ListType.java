@@ -51,11 +51,6 @@ public interface ListType extends SequenceType {
 		private static final class ListTypeImpl extends TypeBaseClass implements ListType, AtomicTypeSpecifier {
 
 			/**
-			 * Serializable Version Unique Identifier.
-			 */
-			private static final long serialVersionUID = 8480820578792501223L;
-
-			/**
 			 * Private constructor.
 			 */
 			private ListTypeImpl() {

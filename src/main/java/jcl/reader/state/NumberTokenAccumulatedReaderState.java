@@ -41,11 +41,6 @@ import org.springframework.stereotype.Component;
 class NumberTokenAccumulatedReaderState implements ReaderState {
 
 	/**
-	 * Serializable Version Unique Identifier.
-	 */
-	private static final long serialVersionUID = -8364722183939779239L;
-
-	/**
 	 * The list of {@link AttributeType}s that should not be present in a numeric token.
 	 */
 	private static final List<AttributeType> NOT_NUMBER_ATTRIBUTES = Arrays.asList(AttributeType.INVALID, AttributeType.ALPHABETIC, AttributeType.PACKAGEMARKER);

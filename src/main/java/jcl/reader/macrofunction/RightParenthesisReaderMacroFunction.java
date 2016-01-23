@@ -23,11 +23,6 @@ import org.springframework.stereotype.Component;
 public class RightParenthesisReaderMacroFunction extends ReaderMacroFunction {
 
 	/**
-	 * Serializable Version Unique Identifier.
-	 */
-	private static final long serialVersionUID = 8031891296893301768L;
-
-	/**
 	 * Initializes the reader macro function and adds it to the global readtable.
 	 */
 	@PostConstruct

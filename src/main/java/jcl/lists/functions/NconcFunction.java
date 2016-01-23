@@ -26,8 +26,6 @@ public final class NconcFunction extends FunctionStruct {
 
 	public static final SymbolStruct NCONC = GlobalPackageStruct.COMMON_LISP.intern("NCONC").getSymbol();
 
-	private static final long serialVersionUID = 2304204729441852930L;
-
 	@Autowired
 	private NullFunction nullFunction;
 

@@ -28,11 +28,6 @@ import jcl.types.StringType;
 abstract class AbstractStringPackageFunction extends AbstractOptionalPackageFunction {
 
 	/**
-	 * Serializable Version Unique Identifier.
-	 */
-	private static final long serialVersionUID = 5852499101326991853L;
-
-	/**
 	 * Protected constructor passing the provided {@code documentation} string to the super constructor.
 	 *
 	 * @param documentation

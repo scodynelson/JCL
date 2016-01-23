@@ -11,8 +11,6 @@ import jcl.compiler.struct.specialoperator.go.GoStruct;
 
 public class TagbodyStruct extends CompilerSpecialOperatorStruct {
 
-	private static final long serialVersionUID = -2970777170741142162L;
-
 	private final Map<GoStruct<?>, PrognStruct> tagbodyForms;
 
 	public TagbodyStruct(final Map<GoStruct<?>, PrognStruct> tagbodyForms) {

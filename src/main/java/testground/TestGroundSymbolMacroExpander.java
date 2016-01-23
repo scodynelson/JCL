@@ -12,8 +12,6 @@ import jcl.functions.expanders.SymbolMacroExpander;
 @SuppressWarnings({"all", "rawtypes"})
 public class TestGroundSymbolMacroExpander extends SymbolMacroExpander {
 
-	private static final long serialVersionUID = -4379776342588838432L;
-
 	@Override
 	public LispStruct expand(final LispStruct form, final Environment environment) {
 		return CharacterStruct.valueOf(123456789);

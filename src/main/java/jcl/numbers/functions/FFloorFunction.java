@@ -30,8 +30,6 @@ public final class FFloorFunction extends FunctionStruct {
 
 	public static final SymbolStruct FFLOOR = GlobalPackageStruct.COMMON_LISP.intern("FFLOOR").getSymbol();
 
-	private static final long serialVersionUID = 2316294992520354150L;
-
 	@Autowired
 	private Printer printer;
 

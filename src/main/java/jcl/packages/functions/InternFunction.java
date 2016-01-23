@@ -17,11 +17,6 @@ import org.springframework.stereotype.Component;
 public final class InternFunction extends AbstractStringPackageFunction {
 
 	/**
-	 * Serializable Version Unique Identifier.
-	 */
-	private static final long serialVersionUID = -4889133141323870879L;
-
-	/**
 	 * Public constructor passing the documentation string.
 	 */
 	public InternFunction() {

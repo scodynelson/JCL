@@ -20,8 +20,6 @@ public final class ListFunction extends FunctionStruct {
 
 	public static final SymbolStruct LIST = GlobalPackageStruct.COMMON_LISP.intern("LIST").getSymbol();
 
-	private static final long serialVersionUID = -4167883057835187873L;
-
 	private ListFunction() {
 		super("Returns a list containing the supplied objects.", getInitLambdaListBindings());
 	}

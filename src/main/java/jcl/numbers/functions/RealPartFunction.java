@@ -25,8 +25,6 @@ public final class RealPartFunction extends FunctionStruct {
 
 	public static final SymbolStruct REALPART = GlobalPackageStruct.COMMON_LISP.intern("REALPART").getSymbol();
 
-	private static final long serialVersionUID = 7335998743851187914L;
-
 	@Autowired
 	private Printer printer;
 

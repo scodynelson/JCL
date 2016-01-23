@@ -19,11 +19,6 @@ import org.springframework.stereotype.Component;
 public final class NameCharFunction extends AbstractCharacterDesignatorFunction {
 
 	/**
-	 * Serializable Version Unique Identifier.
-	 */
-	private static final long serialVersionUID = 3406210294951003426L;
-
-	/**
 	 * Public constructor passing the documentation string.
 	 */
 	public NameCharFunction() {

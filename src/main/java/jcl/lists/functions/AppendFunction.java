@@ -26,8 +26,6 @@ public final class AppendFunction extends FunctionStruct {
 
 	public static final SymbolStruct APPEND = GlobalPackageStruct.COMMON_LISP.intern("APPEND").getSymbol();
 
-	private static final long serialVersionUID = -6347931755033347733L;
-
 	@Autowired
 	private NullFunction nullFunction;
 

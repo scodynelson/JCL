@@ -26,8 +26,6 @@ public final class MaxFunction extends FunctionStruct {
 
 	public static final SymbolStruct MAX = GlobalPackageStruct.COMMON_LISP.intern("MAX").getSymbol();
 
-	private static final long serialVersionUID = 8175787423495063531L;
-
 	@Autowired
 	private Printer printer;
 

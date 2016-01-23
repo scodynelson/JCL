@@ -11,8 +11,6 @@ import jcl.types.StandardClassType;
  */
 public abstract class StandardClassStruct extends ClassStruct {
 
-	private static final long serialVersionUID = 2139719428649639922L;
-
 	/**
 	 * Public constructor.
 	 *

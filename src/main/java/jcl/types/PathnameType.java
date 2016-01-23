@@ -37,11 +37,6 @@ public interface PathnameType extends TType {
 		private static final class PathnameTypeImpl extends TypeBaseClass implements PathnameType, AtomicTypeSpecifier {
 
 			/**
-			 * Serializable Version Unique Identifier.
-			 */
-			private static final long serialVersionUID = -7343108902657436359L;
-
-			/**
 			 * Private constructor.
 			 */
 			private PathnameTypeImpl() {

@@ -21,11 +21,6 @@ import org.springframework.stereotype.Component;
 public class MakeSymbolFunction extends AbstractCommonLispFunctionStruct {
 
 	/**
-	 * Serializable Version Unique Identifier.
-	 */
-	private static final long serialVersionUID = 763642451756794794L;
-
-	/**
 	 * The {@link TypeValidator} for validating the function parameter value types.
 	 */
 	@Autowired

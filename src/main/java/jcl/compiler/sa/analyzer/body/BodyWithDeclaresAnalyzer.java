@@ -1,6 +1,5 @@
 package jcl.compiler.sa.analyzer.body;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -11,9 +10,7 @@ import jcl.symbols.SpecialOperatorStruct;
 import org.springframework.stereotype.Component;
 
 @Component
-public class BodyWithDeclaresAnalyzer implements Serializable {
-
-	private static final long serialVersionUID = -4533785417061599823L;
+public class BodyWithDeclaresAnalyzer {
 
 	public BodyProcessingResult analyze(final List<LispStruct> input) {
 

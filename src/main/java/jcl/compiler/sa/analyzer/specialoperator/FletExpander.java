@@ -23,8 +23,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class FletExpander extends InnerLambdaExpander {
 
-	private static final long serialVersionUID = -3183832254183452606L;
-
 	@Autowired
 	private FunctionExpander functionExpander;
 

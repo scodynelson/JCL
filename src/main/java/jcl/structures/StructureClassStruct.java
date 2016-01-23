@@ -17,8 +17,6 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  */
 public abstract class StructureClassStruct extends ClassStruct {
 
-	private static final long serialVersionUID = 8418743690243529133L;
-
 	protected final SymbolStruct defaultConstructorSymbol;
 
 	protected final SymbolStruct printerSymbol;

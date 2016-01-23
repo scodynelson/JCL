@@ -19,8 +19,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class StringStructPrinter implements LispPrinter<StringStruct> {
 
-	private static final long serialVersionUID = -1997189358891781811L;
-
 	@Override
 	public String print(final StringStruct object) {
 		final boolean printEscape = PrinterVariables.PRINT_ESCAPE.getVariableValue().booleanValue();

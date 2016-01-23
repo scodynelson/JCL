@@ -62,11 +62,6 @@ import org.springframework.stereotype.Component;
 class EvenMultiEscapeReaderState implements ReaderState {
 
 	/**
-	 * Serializable Version Unique Identifier.
-	 */
-	private static final long serialVersionUID = 8084437789946359634L;
-
-	/**
 	 * {@link ReaderStateMediator} singleton used by the reader algorithm.
 	 */
 	@Autowired

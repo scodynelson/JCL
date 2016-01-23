@@ -9,8 +9,6 @@ import jcl.compiler.struct.CompilerSpecialOperatorStruct;
 
 public class UnwindProtectStruct extends CompilerSpecialOperatorStruct {
 
-	private static final long serialVersionUID = 2849602976511423223L;
-
 	private final LispStruct protectedForm;
 
 	private final PrognStruct cleanupForms;

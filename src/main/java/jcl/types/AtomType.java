@@ -36,11 +36,6 @@ public interface AtomType extends TType {
 		private static final class AtomTypeImpl extends NotTypeSpecifier implements AtomType, AtomicTypeSpecifier {
 
 			/**
-			 * Serializable Version Unique Identifier.
-			 */
-			private static final long serialVersionUID = 4480283950568664048L;
-
-			/**
 			 * Private constructor.
 			 */
 			private AtomTypeImpl() {

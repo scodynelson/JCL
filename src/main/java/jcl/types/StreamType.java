@@ -36,11 +36,6 @@ public interface StreamType extends TType {
 		private static final class StreamTypeImpl extends TypeBaseClass implements StreamType, AtomicTypeSpecifier {
 
 			/**
-			 * Serializable Version Unique Identifier.
-			 */
-			private static final long serialVersionUID = 2426298092224091805L;
-
-			/**
 			 * Private constructor.
 			 */
 			private StreamTypeImpl() {

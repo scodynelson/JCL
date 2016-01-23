@@ -70,11 +70,6 @@ public interface SimpleVectorType extends VectorType, SimpleArrayType {
 		private static final class SimpleVectorTypeImpl extends TypeBaseClass implements SimpleVectorType, AtomicTypeSpecifier, CompoundTypeSpecifier {
 
 			/**
-			 * Serializable Version Unique Identifier.
-			 */
-			private static final long serialVersionUID = 1492335612869841944L;
-
-			/**
 			 * The dimensions of the {@link SimpleVectorType} type.
 			 */
 			private final DimensionsDesignator size;

@@ -11,8 +11,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class CommentStructPrinter implements LispPrinter<CommentStruct> {
 
-	private static final long serialVersionUID = 3702811009619046535L;
-
 	@Override
 	public String print(final CommentStruct object) {
 //		return object.getCommentString();

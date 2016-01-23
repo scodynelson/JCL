@@ -19,8 +19,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class BlockExpander extends MacroFunctionExpander<BlockStruct> {
 
-	private static final long serialVersionUID = -5185467468586381117L;
-
 	@Autowired
 	private FormAnalyzer formAnalyzer;
 

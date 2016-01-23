@@ -4,7 +4,6 @@
 
 package jcl.reader;
 
-import java.io.Serializable;
 import java.math.BigInteger;
 import java.util.Map;
 
@@ -16,7 +15,7 @@ import jcl.symbols.SymbolStruct;
 /**
  * JCL Reader that handles reading in lisp tokens and parsing them as {@link LispStruct}s.
  */
-public interface Reader extends Serializable {
+public interface Reader {
 
 	/**
 	 * Reads the next {@link LispStruct} from the {@link InputStream}.

@@ -30,8 +30,6 @@ public final class CeilingFunction extends FunctionStruct {
 
 	public static final SymbolStruct CEILING = GlobalPackageStruct.COMMON_LISP.intern("CEILING").getSymbol();
 
-	private static final long serialVersionUID = 4662950665621256298L;
-
 	@Autowired
 	private Printer printer;
 

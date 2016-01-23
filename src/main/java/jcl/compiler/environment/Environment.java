@@ -21,8 +21,6 @@ public class Environment extends StandardObjectStruct {
 
 	public static final Environment NULL = new Environment(null);
 
-	private static final long serialVersionUID = 7523547599975901124L;
-
 	private final Environment parent;
 
 	private final List<Binding> lexicalBindings = new ArrayList<>();

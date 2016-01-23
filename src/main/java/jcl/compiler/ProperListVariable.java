@@ -15,8 +15,6 @@ import org.slf4j.LoggerFactory;
 
 class ProperListVariable extends VariableStruct<ListStruct> {
 
-	private static final long serialVersionUID = -4038470250934507806L;
-
 	private static final Logger LOGGER = LoggerFactory.getLogger(ProperListVariable.class);
 
 	ProperListVariable(final String name, final PackageStruct symbolPackage) {

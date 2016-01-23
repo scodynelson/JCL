@@ -21,8 +21,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class GoExpander extends MacroFunctionExpander<GoStruct<?>> {
 
-	private static final long serialVersionUID = -6523523596100793498L;
-
 	@Autowired
 	private LispFormValueValidator validator;
 

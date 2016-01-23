@@ -25,8 +25,6 @@ public final class ModFunction extends FunctionStruct {
 
 	public static final SymbolStruct MOD = GlobalPackageStruct.COMMON_LISP.intern("MOD").getSymbol();
 
-	private static final long serialVersionUID = 5684887328457930680L;
-
 	@Autowired
 	private Printer printer;
 

@@ -27,8 +27,6 @@ public final class CompileFunction extends FunctionStruct {
 
 	public static final SymbolStruct COMPILE = GlobalPackageStruct.COMMON_LISP.intern("COMPILE").getSymbol();
 
-	private static final long serialVersionUID = 5339244651961527815L;
-
 	@Autowired
 	private CompileForm compileForm;
 

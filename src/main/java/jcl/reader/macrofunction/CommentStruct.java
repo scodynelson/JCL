@@ -16,11 +16,6 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 public class CommentStruct implements LispStruct {
 
 	/**
-	 * Serializable Version Unique Identifier.
-	 */
-	private static final long serialVersionUID = 8261638201983129004L;
-
-	/**
 	 * The read in comment string.
 	 */
 	private final String commentString;

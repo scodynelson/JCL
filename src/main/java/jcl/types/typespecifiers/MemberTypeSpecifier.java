@@ -23,11 +23,6 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 public class MemberTypeSpecifier extends TypeBaseClass implements CompoundTypeSpecifier {
 
 	/**
-	 * Serializable Version Unique Identifier.
-	 */
-	private static final long serialVersionUID = 4089986064857457060L;
-
-	/**
 	 * The list of {@link LispStruct} to check against the 'MEMBER' type specifier.
 	 */
 	private final List<LispStruct> lispStructs;

@@ -19,8 +19,6 @@ import org.springframework.stereotype.Component;
 @Component
 public final class ClrHashFunction extends AbstractCommonLispFunctionStruct {
 
-	private static final long serialVersionUID = -1268825037585068605L;
-
 	@Autowired
 	private TypeValidator validator;
 

@@ -23,8 +23,6 @@ public final class LogAndFunction extends FunctionStruct {
 
 	public static final SymbolStruct LOGAND = GlobalPackageStruct.COMMON_LISP.intern("LOGAND").getSymbol();
 
-	private static final long serialVersionUID = 3280535282577815448L;
-
 	@Autowired
 	private Printer printer;
 

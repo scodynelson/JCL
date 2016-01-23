@@ -25,11 +25,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 abstract class AbstractCharacterPredicateFunction extends AbstractCommonLispFunctionStruct {
 
 	/**
-	 * Serializable Version Unique Identifier.
-	 */
-	private static final long serialVersionUID = 8935124915148949205L;
-
-	/**
 	 * The {@link TypeValidator} for validating the function parameter value types.
 	 */
 	@Autowired

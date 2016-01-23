@@ -36,11 +36,6 @@ import org.springframework.stereotype.Component;
 public class SharpSReaderMacroFunction extends ReaderMacroFunction {
 
 	/**
-	 * Serializable Version Unique Identifier.
-	 */
-	private static final long serialVersionUID = -3540324881853180103L;
-
-	/**
 	 * {@link Autowired} {@link ListReaderMacroFunction} used for reading {@link ListStruct}s.
 	 */
 	@Autowired

@@ -26,11 +26,6 @@ import jcl.types.PackageType;
 public class PackageStruct extends BuiltInClassStruct {
 
 	/**
-	 * Serializable Version Unique Identifier.
-	 */
-	private static final long serialVersionUID = -1802514718401723443L;
-
-	/**
 	 * The {@link Set} of {@link PackageStruct}s that the package uses.
 	 */
 	private final Set<PackageStruct> useList;

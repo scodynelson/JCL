@@ -25,11 +25,6 @@ import org.springframework.stereotype.Component;
 public class SharpSharpReaderMacroFunction extends ReaderMacroFunction {
 
 	/**
-	 * Serializable Version Unique Identifier.
-	 */
-	private static final long serialVersionUID = -3708120653184478792L;
-
-	/**
 	 * Initializes the reader macro function and adds it to the global readtable.
 	 */
 	@PostConstruct

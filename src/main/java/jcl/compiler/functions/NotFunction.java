@@ -25,8 +25,6 @@ public final class NotFunction extends FunctionStruct {
 
 	public static final SymbolStruct NOT = GlobalPackageStruct.COMMON_LISP.intern("NOT").getSymbol();
 
-	private static final long serialVersionUID = 1065457118829768313L;
-
 	private NotFunction() {
 		super("Returns T if x is false; otherwise, returns NIL.", getInitLambdaListBindings());
 	}

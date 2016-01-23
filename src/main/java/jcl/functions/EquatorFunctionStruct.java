@@ -9,8 +9,6 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 public abstract class EquatorFunctionStruct extends FunctionStruct implements Equator<LispStruct> {
 
-	private static final long serialVersionUID = -3577608074276485972L;
-
 	protected EquatorFunctionStruct(final String documentation) {
 		super(documentation);
 	}

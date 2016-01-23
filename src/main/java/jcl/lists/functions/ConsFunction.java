@@ -22,8 +22,6 @@ public final class ConsFunction extends FunctionStruct {
 
 	public static final SymbolStruct CONS = GlobalPackageStruct.COMMON_LISP.intern("CONS").getSymbol();
 
-	private static final long serialVersionUID = 1242798660975184815L;
-
 	private ConsFunction() {
 		super("Creates a fresh cons, the car of which is object-1 and the cdr of which is object-2.", getInitLambdaListBindings());
 	}

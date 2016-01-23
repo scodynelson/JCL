@@ -22,8 +22,6 @@ import org.springframework.stereotype.Component;
 @Component
 public final class NthFunction extends AbstractCommonLispFunctionStruct {
 
-	private static final long serialVersionUID = 2998151869440671653L;
-
 	@Autowired
 	private TypeValidator typeValidator;
 

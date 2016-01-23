@@ -16,8 +16,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class ValuesStructPrinter implements LispPrinter<ValuesStruct> {
 
-	private static final long serialVersionUID = -8879948664785549560L;
-
 	@Autowired
 	private Printer printer;
 

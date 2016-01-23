@@ -14,8 +14,6 @@ import org.apache.commons.collections4.CollectionUtils;
  */
 public abstract class ListStruct extends BuiltInClassStruct implements SequenceStruct {
 
-	private static final long serialVersionUID = -5758232853991558L;
-
 	/**
 	 * Protected constructor.
 	 *

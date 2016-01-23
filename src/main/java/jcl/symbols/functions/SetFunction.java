@@ -21,11 +21,6 @@ import org.springframework.stereotype.Component;
 public class SetFunction extends AbstractCommonLispFunctionStruct {
 
 	/**
-	 * Serializable Version Unique Identifier.
-	 */
-	private static final long serialVersionUID = -5517697908893213287L;
-
-	/**
 	 * The {@link TypeValidator} for validating the function parameter value types.
 	 */
 	@Autowired

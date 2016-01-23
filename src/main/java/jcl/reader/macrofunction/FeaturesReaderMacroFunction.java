@@ -4,7 +4,6 @@
 
 package jcl.reader.macrofunction;
 
-import java.io.Serializable;
 import java.util.List;
 
 import jcl.LispStruct;
@@ -38,12 +37,7 @@ import org.springframework.stereotype.Component;
  * features should be hidden or not (aka. the token is read in but ignored).
  */
 @Component
-final class FeaturesReaderMacroFunction implements Serializable {
-
-	/**
-	 * Serializable Version Unique Identifier.
-	 */
-	private static final long serialVersionUID = 3522803992369397668L;
+final class FeaturesReaderMacroFunction {
 
 	/**
 	 * The logger for this class.

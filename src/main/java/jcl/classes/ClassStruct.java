@@ -16,8 +16,6 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  */
 public abstract class ClassStruct extends StandardObjectStruct {
 
-	private static final long serialVersionUID = 8395096559216207722L;
-
 	private final LispType type;
 
 	private final List<Class<? extends LispStruct>> directSuperClasses;

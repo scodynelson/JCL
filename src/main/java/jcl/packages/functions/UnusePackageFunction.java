@@ -16,11 +16,6 @@ import org.springframework.stereotype.Component;
 public final class UnusePackageFunction extends AbstractPackageListPackageFunction {
 
 	/**
-	 * Serializable Version Unique Identifier.
-	 */
-	private static final long serialVersionUID = 8241215607658705107L;
-
-	/**
 	 * Public constructor passing the documentation string.
 	 */
 	public UnusePackageFunction() {

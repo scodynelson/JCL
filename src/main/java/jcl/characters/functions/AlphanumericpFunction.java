@@ -16,11 +16,6 @@ import org.springframework.stereotype.Component;
 public final class AlphanumericpFunction extends AbstractCharacterPredicateFunction {
 
 	/**
-	 * Serializable Version Unique Identifier.
-	 */
-	private static final long serialVersionUID = 8079402123675255567L;
-
-	/**
 	 * Public constructor passing the documentation string.
 	 */
 	public AlphanumericpFunction() {

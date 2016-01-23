@@ -25,8 +25,6 @@ public final class NullFunction extends FunctionStruct {
 
 	public static final SymbolStruct NULL = GlobalPackageStruct.COMMON_LISP.intern("NULL").getSymbol();
 
-	private static final long serialVersionUID = 7471817337078296980L;
-
 	private NullFunction() {
 		super("Returns T if object is the empty list; otherwise, returns NIL.", getInitLambdaListBindings());
 	}

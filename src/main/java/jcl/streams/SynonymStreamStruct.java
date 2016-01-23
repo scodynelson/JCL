@@ -19,11 +19,6 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 public class SynonymStreamStruct extends StreamStruct implements IOStream {
 
 	/**
-	 * Serializable Version Unique Identifier.
-	 */
-	private static final long serialVersionUID = -3809768442993249585L;
-
-	/**
 	 * The {@link SymbolStruct} that contains the value for the {@link StreamStruct} to use.
 	 */
 	private final SymbolStruct symbol;

@@ -54,11 +54,6 @@ public interface SimpleStringType extends StringType, SimpleArrayType {
 		private static final class SimpleStringTypeImpl extends TypeBaseClass implements SimpleStringType, AtomicTypeSpecifier, CompoundTypeSpecifier {
 
 			/**
-			 * Serializable Version Unique Identifier.
-			 */
-			private static final long serialVersionUID = -3796698605847581326L;
-
-			/**
 			 * Static {@link CharacterType} element type for {@link SimpleStringType} types.
 			 */
 			private static final LispType ELEMENT_TYPE = CharacterType.INSTANCE;

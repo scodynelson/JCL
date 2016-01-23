@@ -37,11 +37,6 @@ public interface MethodCombinationType extends TType {
 		private static final class MethodCombinationTypeImpl extends TypeBaseClass implements MethodCombinationType, AtomicTypeSpecifier {
 
 			/**
-			 * Serializable Version Unique Identifier.
-			 */
-			private static final long serialVersionUID = 3032946625869229276L;
-
-			/**
 			 * Private constructor.
 			 */
 			private MethodCombinationTypeImpl() {

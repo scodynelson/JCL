@@ -56,8 +56,6 @@ public final class LoadFunction extends FunctionStruct {
 
 	public static final SymbolStruct LOAD = GlobalPackageStruct.COMMON_LISP.intern("LOAD").getSymbol();
 
-	private static final long serialVersionUID = 348551085956831789L;
-
 	private static final Logger LOGGER = LoggerFactory.getLogger(LoadFunction.class);
 
 	@Autowired

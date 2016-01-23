@@ -9,8 +9,6 @@ import jcl.types.ListType;
 
 public class WholeParameter extends Parameter {
 
-	private static final long serialVersionUID = 1375721535668777719L;
-
 	public WholeParameter(final SymbolStruct var) {
 		this(var, false);
 	}

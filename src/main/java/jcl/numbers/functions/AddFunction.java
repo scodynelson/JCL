@@ -23,8 +23,6 @@ public final class AddFunction extends FunctionStruct {
 
 	public static final SymbolStruct ADD = GlobalPackageStruct.COMMON_LISP.intern("+").getSymbol();
 
-	private static final long serialVersionUID = 7827340897460986992L;
-
 	@Autowired
 	private Printer printer;
 

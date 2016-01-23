@@ -25,8 +25,6 @@ public final class ATanHFunction extends FunctionStruct {
 
 	public static final SymbolStruct ATANH = GlobalPackageStruct.COMMON_LISP.intern("ATANH").getSymbol();
 
-	private static final long serialVersionUID = 7673617484964829642L;
-
 	@Autowired
 	private Printer printer;
 

@@ -18,8 +18,6 @@ import jcl.types.TType;
 
 public class KeyParameter extends Parameter {
 
-	private static final long serialVersionUID = -8247621420473541525L;
-
 	private final SymbolStruct keyName;
 
 	private final SuppliedPParameter suppliedPBinding;

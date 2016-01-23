@@ -37,11 +37,6 @@ public interface BooleanType extends SymbolType {
 		private static final class BooleanTypeImpl extends OrTypeSpecifier implements BooleanType, AtomicTypeSpecifier {
 
 			/**
-			 * Serializable Version Unique Identifier.
-			 */
-			private static final long serialVersionUID = -6424016818134588642L;
-
-			/**
 			 * Private constructor.
 			 */
 			private BooleanTypeImpl() {

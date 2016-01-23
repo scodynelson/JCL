@@ -73,11 +73,6 @@ public interface IntegerType extends RationalType {
 		private static final class IntegerTypeImpl extends TypeBaseClass implements IntegerType, AtomicTypeSpecifier, CompoundTypeSpecifier {
 
 			/**
-			 * Serializable Version Unique Identifier.
-			 */
-			private static final long serialVersionUID = 7322232418971038179L;
-
-			/**
 			 * The interval range in which the {@link IntegerType} type exists.
 			 */
 			private final IntervalDesignator<BigInteger> intervalDesignator;

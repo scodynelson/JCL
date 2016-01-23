@@ -17,8 +17,6 @@ import org.apache.commons.collections4.iterators.ArrayIterator;
 
 public abstract class AbstractCommonLispFunctionStruct extends FunctionStruct {
 
-	private static final long serialVersionUID = 4937708575332457902L;
-
 	protected AbstractCommonLispFunctionStruct(final String documentation) {
 		super(documentation);
 		initLambdaListBindings();

@@ -36,11 +36,6 @@ import org.springframework.stereotype.Component;
 public class BackquoteReaderMacroFunction extends ReaderMacroFunction {
 
 	/**
-	 * Serializable Version Unique Identifier.
-	 */
-	private static final long serialVersionUID = 7900660772057166319L;
-
-	/**
 	 * {@link Autowired} {@link Printer} used for printing elements and structures to the output stream.
 	 */
 	@Autowired

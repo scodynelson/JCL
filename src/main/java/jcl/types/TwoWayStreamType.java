@@ -36,11 +36,6 @@ public interface TwoWayStreamType extends StreamType {
 		private static final class TwoWayStreamTypeImpl extends TypeBaseClass implements TwoWayStreamType, AtomicTypeSpecifier {
 
 			/**
-			 * Serializable Version Unique Identifier.
-			 */
-			private static final long serialVersionUID = -6594390772220907590L;
-
-			/**
 			 * Private constructor.
 			 */
 			private TwoWayStreamTypeImpl() {

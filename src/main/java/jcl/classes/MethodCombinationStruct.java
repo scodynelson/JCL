@@ -9,8 +9,6 @@ import jcl.types.MethodCombinationType;
  */
 public abstract class MethodCombinationStruct implements LispStruct {
 
-	private static final long serialVersionUID = -6546675847008375630L;
-
 	@Override
 	public LispType getType() {
 		return MethodCombinationType.INSTANCE;

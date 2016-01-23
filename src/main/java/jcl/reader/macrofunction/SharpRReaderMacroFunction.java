@@ -31,11 +31,6 @@ import org.springframework.stereotype.Component;
 public class SharpRReaderMacroFunction extends ReaderMacroFunction {
 
 	/**
-	 * Serializable Version Unique Identifier.
-	 */
-	private static final long serialVersionUID = -7260114375261055287L;
-
-	/**
 	 * The valid range of radix values.
 	 */
 	@SuppressWarnings("MagicNumber")

@@ -247,7 +247,6 @@ class MacroLambdaCodeGenerator implements CodeGenerator<MacroLambdaStruct> {
 	 * <li>Visiting a new class via {@link ClassWriter#visit(int, int, String, String, String, String[])} of the new
 	 * {@link JavaClassBuilder#classWriter}</li>
 	 * <li>Generating the code for the {@link Component} annotation</li>
-	 * <li>Generating the code for the {@code serialVersionUID} field</li>
 	 * <li>Generating the code for the load-time-value fields</li>
 	 * <li>Generating the code for the no-argument constructor</li>
 	 * <li>Generating the code for the {@link Closure} argument constructor</li>
@@ -281,7 +280,6 @@ class MacroLambdaCodeGenerator implements CodeGenerator<MacroLambdaStruct> {
 	 *
 	 * {@literal @}Component
 	 * public class MacroLambda_1 extends MacroFunctionExpander<LispStruct> {
-	 *      private static final long serialVersionUID = 1L;
 	 *
 	 *      public MacroLambda_1() {
 	 *          this((Closure)null);
@@ -323,7 +321,6 @@ class MacroLambdaCodeGenerator implements CodeGenerator<MacroLambdaStruct> {
 		cw.visitSource(fileName + GenerationConstants.JAVA_EXTENSION, null);
 
 		generateComponentAnnotation(cw);
-		CodeGenerators.generateSerialVersionUIDField(cw);
 		generateNoArgConstructor(generatorState, className, cw);
 		generateClosureArgConstructor(input, generatorState, className, cw);
 

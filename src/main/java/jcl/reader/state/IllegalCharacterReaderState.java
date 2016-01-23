@@ -21,11 +21,6 @@ import org.springframework.stereotype.Component;
 @Component
 class IllegalCharacterReaderState implements ReaderState {
 
-	/**
-	 * Serializable Version Unique Identifier.
-	 */
-	private static final long serialVersionUID = 6789972435089995401L;
-
 	@Override
 	public LispStruct process(final TokenBuilder tokenBuilder) {
 

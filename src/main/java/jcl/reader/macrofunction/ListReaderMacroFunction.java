@@ -4,7 +4,6 @@
 
 package jcl.reader.macrofunction;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,12 +29,7 @@ import org.springframework.stereotype.Component;
  * follow it.
  */
 @Component
-final class ListReaderMacroFunction implements Serializable {
-
-	/**
-	 * Serializable Version Unique Identifier.
-	 */
-	private static final long serialVersionUID = 5022365174547071098L;
+final class ListReaderMacroFunction {
 
 	/**
 	 * {@link Autowired} {@link Printer} used for printing elements and structures to the output stream.

@@ -1,6 +1,5 @@
 package jcl.lambdalist.variable;
 
-import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -15,9 +14,7 @@ import java.util.List;
  * @param <TYPE>
  * 		the type of the initial form
  */
-public class Rest<TYPE> implements Serializable {
-
-	private static final long serialVersionUID = 8868894808794843693L;
+public class Rest<TYPE> {
 
 	private final List<TYPE> forms;
 

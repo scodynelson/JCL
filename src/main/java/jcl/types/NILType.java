@@ -38,11 +38,6 @@ public interface NILType extends TType { // TODO: this needs to extend ALL types
 		private static final class NILTypeImpl extends TypeBaseClass implements NILType, AtomicTypeSpecifier {
 
 			/**
-			 * Serializable Version Unique Identifier.
-			 */
-			private static final long serialVersionUID = 7666156319177181978L;
-
-			/**
 			 * Private constructor.
 			 */
 			private NILTypeImpl() {

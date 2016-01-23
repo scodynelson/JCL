@@ -9,8 +9,6 @@ import jcl.compiler.struct.CompilerSpecialOperatorStruct;
 
 public class QuoteStruct extends CompilerSpecialOperatorStruct {
 
-	private static final long serialVersionUID = 2854755653951600124L;
-
 	private final LispStruct object;
 
 	public QuoteStruct(final LispStruct object) {

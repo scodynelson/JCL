@@ -17,11 +17,6 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 public class StringOutputStreamStruct extends StreamStruct implements OutputStream {
 
 	/**
-	 * Serializable Version Unique Identifier.
-	 */
-	private static final long serialVersionUID = -6102057416932242456L;
-
-	/**
 	 * The {@link StringBuffer} to use for this stream to accept characters and bytes.
 	 */
 	private final StringBuilder stringBuffer = new StringBuilder();

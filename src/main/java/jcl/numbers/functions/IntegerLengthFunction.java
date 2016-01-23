@@ -25,8 +25,6 @@ public final class IntegerLengthFunction extends FunctionStruct {
 
 	public static final SymbolStruct INTEGER_LENGTH = GlobalPackageStruct.COMMON_LISP.intern("INTEGER-LENGTH").getSymbol();
 
-	private static final long serialVersionUID = -371820809283917674L;
-
 	@Autowired
 	private Printer printer;
 

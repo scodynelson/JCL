@@ -22,11 +22,6 @@ import org.springframework.stereotype.Component;
 class ReaderStateMediatorImpl implements ReaderStateMediator {
 
 	/**
-	 * Serializable Version Unique Identifier.
-	 */
-	private static final long serialVersionUID = -3929831111779653134L;
-
-	/**
 	 * {@link ReadReaderState} singleton used by the reader algorithm.
 	 */
 	@Autowired

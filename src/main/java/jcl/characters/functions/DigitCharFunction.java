@@ -23,11 +23,6 @@ import org.springframework.stereotype.Component;
 public final class DigitCharFunction extends AbstractCharacterRadixFunction {
 
 	/**
-	 * Serializable Version Unique Identifier.
-	 */
-	private static final long serialVersionUID = -8526559424608179479L;
-
-	/**
 	 * The {@link TypeValidator} for validating the function parameter value types.
 	 */
 	@Autowired

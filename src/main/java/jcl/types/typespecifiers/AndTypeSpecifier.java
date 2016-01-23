@@ -22,11 +22,6 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 public class AndTypeSpecifier extends TypeBaseClass implements CompoundTypeSpecifier {
 
 	/**
-	 * Serializable Version Unique Identifier.
-	 */
-	private static final long serialVersionUID = 426612277888344025L;
-
-	/**
 	 * The list of {@link LispType}s to 'AND'.
 	 */
 	private final List<LispType> types;

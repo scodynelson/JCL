@@ -13,11 +13,6 @@ import jcl.types.TwoWayStreamType;
 public class TwoWayStreamStruct extends AbstractDualStreamStruct {
 
 	/**
-	 * Serializable Version Unique Identifier.
-	 */
-	private static final long serialVersionUID = 7438024800211893512L;
-
-	/**
 	 * Public constructor.
 	 *
 	 * @param inputStream

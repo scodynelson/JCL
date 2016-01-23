@@ -27,8 +27,6 @@ public final class OddPFunction extends FunctionStruct {
 
 	public static final SymbolStruct ODDP = GlobalPackageStruct.COMMON_LISP.intern("ODDP").getSymbol();
 
-	private static final long serialVersionUID = -4319243135134408847L;
-
 	@Autowired
 	private Printer printer;
 

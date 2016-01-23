@@ -16,11 +16,6 @@ import org.springframework.stereotype.Component;
 public final class LowerCasePFunction extends AbstractCharacterPredicateFunction {
 
 	/**
-	 * Serializable Version Unique Identifier.
-	 */
-	private static final long serialVersionUID = 142401577628870337L;
-
-	/**
 	 * Public constructor passing the documentation string.
 	 */
 	public LowerCasePFunction() {

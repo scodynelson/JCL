@@ -28,8 +28,6 @@ public final class NotEqualToFunction extends FunctionStruct {
 
 	public static final SymbolStruct NOT_EQUAL_TO = GlobalPackageStruct.COMMON_LISP.intern("/=").getSymbol();
 
-	private static final long serialVersionUID = -8966405788493785225L;
-
 	@Autowired
 	private Printer printer;
 

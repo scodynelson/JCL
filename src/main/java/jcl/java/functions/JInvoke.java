@@ -30,8 +30,6 @@ public class JInvoke extends FunctionStruct {
 
 	public static final SymbolStruct J_INVOKE = GlobalPackageStruct.EXTENSIONS.intern("JINVOKE").getSymbol();
 
-	private static final long serialVersionUID = 5787148469982523185L;
-
 	private static final Logger LOGGER = LoggerFactory.getLogger(JInvoke.class);
 
 	private JInvoke() {

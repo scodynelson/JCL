@@ -8,8 +8,6 @@ import jcl.compiler.struct.specialoperator.lambda.LambdaStruct;
 
 public class LambdaCompilerFunctionStruct implements CompilerFunctionStruct {
 
-	private static final long serialVersionUID = 1418688382783925560L;
-
 	private final LambdaStruct lambdaStruct;
 
 	public LambdaCompilerFunctionStruct(final LambdaStruct lambdaStruct) {

@@ -23,11 +23,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 abstract class AbstractCharacterRadixFunction extends AbstractCommonLispFunctionStruct {
 
 	/**
-	 * Serializable Version Unique Identifier.
-	 */
-	private static final long serialVersionUID = 2367501369456274356L;
-
-	/**
 	 * The {@link TypeValidator} for validating the function parameter value types.
 	 */
 	@Autowired

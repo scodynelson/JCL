@@ -20,11 +20,6 @@ import org.springframework.stereotype.Component;
 public final class SymbolFunctionFunction extends AbstractCommonLispFunctionStruct {
 
 	/**
-	 * Serializable Version Unique Identifier.
-	 */
-	private static final long serialVersionUID = 9129599617652575209L;
-
-	/**
 	 * The {@link TypeValidator} for validating the function parameter value types.
 	 */
 	@Autowired

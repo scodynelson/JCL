@@ -4,12 +4,9 @@
 
 package jcl.compiler.environment.binding.lambdalist;
 
-import java.io.Serializable;
 import java.util.List;
 
-public class DestructuringLambdaList implements Serializable {
-
-	private static final long serialVersionUID = -2835999831080133844L;
+public class DestructuringLambdaList {
 
 	private final WholeParameter wholeBinding;
 

@@ -39,11 +39,6 @@ public interface ReadtableType extends TType {
 		private static final class ReadtableTypeImpl extends TypeBaseClass implements ReadtableType, AtomicTypeSpecifier {
 
 			/**
-			 * Serializable Version Unique Identifier.
-			 */
-			private static final long serialVersionUID = -9157541006854981003L;
-
-			/**
 			 * Private constructor.
 			 */
 			private ReadtableTypeImpl() {

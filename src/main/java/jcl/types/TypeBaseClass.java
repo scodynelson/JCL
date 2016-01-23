@@ -14,11 +14,6 @@ import jcl.symbols.SymbolStruct;
 public class TypeBaseClass extends SymbolStruct implements LispType {
 
 	/**
-	 * Serializable Version Unique Identifier.
-	 */
-	private static final long serialVersionUID = 3499497199319905092L;
-
-	/**
 	 * Protected constructor.
 	 *
 	 * @param name

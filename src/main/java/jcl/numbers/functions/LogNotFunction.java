@@ -25,8 +25,6 @@ public final class LogNotFunction extends FunctionStruct {
 
 	public static final SymbolStruct LOGNOT = GlobalPackageStruct.COMMON_LISP.intern("LOGNOT").getSymbol();
 
-	private static final long serialVersionUID = 1160366761775222238L;
-
 	@Autowired
 	private Printer printer;
 

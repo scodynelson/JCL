@@ -25,8 +25,6 @@ public final class ASinFunction extends FunctionStruct {
 
 	public static final SymbolStruct ASIN = GlobalPackageStruct.COMMON_LISP.intern("ASIN").getSymbol();
 
-	private static final long serialVersionUID = -4219569133128730966L;
-
 	@Autowired
 	private Printer printer;
 

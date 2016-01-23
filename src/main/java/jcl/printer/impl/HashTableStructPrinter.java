@@ -20,8 +20,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class HashTableStructPrinter implements LispPrinter<HashTableStruct> {
 
-	private static final long serialVersionUID = 8729748390924216544L;
-
 	@Autowired
 	private Printer printer;
 

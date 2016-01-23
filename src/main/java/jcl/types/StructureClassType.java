@@ -35,11 +35,6 @@ public interface StructureClassType extends ClassType {
 		private static final class StructureClassTypeImpl extends TypeBaseClass implements StructureClassType, AtomicTypeSpecifier {
 
 			/**
-			 * Serializable Version Unique Identifier.
-			 */
-			private static final long serialVersionUID = -199682619819533157L;
-
-			/**
 			 * Private constructor.
 			 */
 			private StructureClassTypeImpl() {

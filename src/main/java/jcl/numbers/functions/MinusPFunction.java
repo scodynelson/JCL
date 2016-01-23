@@ -27,8 +27,6 @@ public final class MinusPFunction extends FunctionStruct {
 
 	public static final SymbolStruct MINUSP = GlobalPackageStruct.COMMON_LISP.intern("MINUSP").getSymbol();
 
-	private static final long serialVersionUID = 4997633282366962653L;
-
 	@Autowired
 	private Printer printer;
 

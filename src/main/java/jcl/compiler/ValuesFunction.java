@@ -22,8 +22,6 @@ public final class ValuesFunction extends FunctionStruct {
 
 	public static final SymbolStruct VALUES = GlobalPackageStruct.COMMON_LISP.intern("VALUES").getSymbol();
 
-	private static final long serialVersionUID = -7869325469764526281L;
-
 	private ValuesFunction() {
 		super("Returns the objects as multiple values.", getInitLambdaListBindings());
 	}

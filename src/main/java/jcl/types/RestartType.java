@@ -38,11 +38,6 @@ public interface RestartType extends TType {
 		private static final class RestartTypeImpl extends TypeBaseClass implements RestartType, AtomicTypeSpecifier {
 
 			/**
-			 * Serializable Version Unique Identifier.
-			 */
-			private static final long serialVersionUID = -7905323000782513518L;
-
-			/**
 			 * Private constructor.
 			 */
 			private RestartTypeImpl() {

@@ -21,8 +21,6 @@ public final class BindSymbolFunctionFunction extends AbstractSystemFunctionStru
 
 	public static final SymbolStruct BIND_SYMBOL_FUNCTION = GlobalPackageStruct.SYSTEM.intern("BIND-SYMBOL-FUNCTION").getSymbol();
 
-	private static final long serialVersionUID = 1025657474175401906L;
-
 	public BindSymbolFunctionFunction() {
 		super("Binds the function value of the provided symbol to the provided function value.");
 	}

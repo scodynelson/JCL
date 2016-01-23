@@ -11,8 +11,6 @@ import jcl.compiler.struct.CompilerSpecialOperatorStruct;
 
 public class PrognStruct extends CompilerSpecialOperatorStruct {
 
-	private static final long serialVersionUID = 2712116484918089080L;
-
 	private final List<LispStruct> forms;
 
 	public PrognStruct(final List<LispStruct> forms) {

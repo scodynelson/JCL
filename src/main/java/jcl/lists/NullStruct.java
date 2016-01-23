@@ -14,8 +14,6 @@ public final class NullStruct extends ListStruct {
 
 	public static final NullStruct INSTANCE = new NullStruct();
 
-	private static final long serialVersionUID = 7049329828061379744L;
-
 	/**
 	 * Private constructor.
 	 */

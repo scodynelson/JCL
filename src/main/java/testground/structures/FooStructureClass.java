@@ -18,8 +18,6 @@ public class FooStructureClass extends StructureClassStruct {
 	public static final FooStructureClass INSTANCE
 			= new FooStructureClass(new SymbolStruct("MAKE-FOO"), null, null, null);
 
-	private static final long serialVersionUID = -7548921709400992640L;
-
 	protected FooStructureClass(final SymbolStruct defaultConstructorSymbol, final SymbolStruct printerSymbol,
 	                            final List<Class<? extends LispStruct>> directSuperClasses, final List<Class<? extends LispStruct>> subClasses) {
 		this(FooStructureType.INSTANCE, defaultConstructorSymbol, printerSymbol, directSuperClasses, subClasses);

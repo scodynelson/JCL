@@ -24,11 +24,6 @@ import org.apfloat.ApfloatMath;
 public abstract class RealStruct extends NumberStruct {
 
 	/**
-	 * Serializable Version Unique Identifier.
-	 */
-	private static final long serialVersionUID = -7159935653316309907L;
-
-	/**
 	 * Protected constructor.
 	 *
 	 * @param directSuperClasses

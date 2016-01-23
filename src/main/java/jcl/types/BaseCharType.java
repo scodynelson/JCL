@@ -44,11 +44,6 @@ public interface BaseCharType extends CharacterType {
 		private static final class BaseCharTypeImpl extends TypeBaseClass implements BaseCharType, AtomicTypeSpecifier {
 
 			/**
-			 * Serializable Version Unique Identifier.
-			 */
-			private static final long serialVersionUID = -8696160841949273489L;
-
-			/**
 			 * Private constructor.
 			 */
 			private BaseCharTypeImpl() {

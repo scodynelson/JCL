@@ -28,8 +28,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 public abstract class ClosureCreationExpander<V> extends MacroFunctionExpander<ClosureCreationStruct<V>> {
 
-	private static final long serialVersionUID = -7834811764790179674L;
-
 	@Autowired
 	private FormAnalyzer formAnalyzer;
 

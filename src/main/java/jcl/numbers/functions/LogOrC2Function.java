@@ -25,8 +25,6 @@ public final class LogOrC2Function extends FunctionStruct {
 
 	public static final SymbolStruct LOGORC2 = GlobalPackageStruct.COMMON_LISP.intern("LOGORC2").getSymbol();
 
-	private static final long serialVersionUID = -411302022079574274L;
-
 	@Autowired
 	private Printer printer;
 

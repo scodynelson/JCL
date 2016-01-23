@@ -86,11 +86,6 @@ public interface SymbolType extends TType {
 		private static final class SymbolTypeImpl extends TypeBaseClass implements SymbolType, AtomicTypeSpecifier {
 
 			/**
-			 * Serializable Version Unique Identifier.
-			 */
-			private static final long serialVersionUID = 8451494531682274447L;
-
-			/**
 			 * Private constructor.
 			 */
 			private SymbolTypeImpl() {

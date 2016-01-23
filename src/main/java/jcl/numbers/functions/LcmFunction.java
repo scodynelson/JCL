@@ -23,8 +23,6 @@ public final class LcmFunction extends FunctionStruct {
 
 	public static final SymbolStruct LCM = GlobalPackageStruct.COMMON_LISP.intern("LCM").getSymbol();
 
-	private static final long serialVersionUID = -5504858008080779112L;
-
 	@Autowired
 	private Printer printer;
 

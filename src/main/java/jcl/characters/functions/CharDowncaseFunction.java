@@ -17,11 +17,6 @@ import org.springframework.stereotype.Component;
 public final class CharDowncaseFunction extends AbstractCharacterFunction {
 
 	/**
-	 * Serializable Version Unique Identifier.
-	 */
-	private static final long serialVersionUID = 9125259122346104648L;
-
-	/**
 	 * Public constructor passing the documentation string.
 	 */
 	public CharDowncaseFunction() {

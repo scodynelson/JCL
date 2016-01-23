@@ -19,8 +19,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class LabelsExpander extends InnerLambdaExpander {
 
-	private static final long serialVersionUID = -3698985413039911540L;
-
 	@Autowired
 	private FunctionExpander functionExpander;
 

@@ -25,8 +25,6 @@ public final class LogAndC1Function extends FunctionStruct {
 
 	public static final SymbolStruct LOGANDC1 = GlobalPackageStruct.COMMON_LISP.intern("LOGANDC1").getSymbol();
 
-	private static final long serialVersionUID = -2828613108956817532L;
-
 	@Autowired
 	private Printer printer;
 

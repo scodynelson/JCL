@@ -23,8 +23,6 @@ public final class EqlFunction extends EquatorFunctionStruct {
 
 	public static final SymbolStruct EQL = GlobalPackageStruct.COMMON_LISP.intern("EQL").getSymbol();
 
-	private static final long serialVersionUID = -3351834660287063758L;
-
 	private EqlFunction() {
 		// TODO: fix
 		super("Returns true if its arguments are the same, identical object; otherwise, returns false.", getInitLambdaListBindings());

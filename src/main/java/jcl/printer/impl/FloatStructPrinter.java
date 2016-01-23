@@ -19,8 +19,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class FloatStructPrinter implements LispPrinter<FloatStruct> {
 
-	private static final long serialVersionUID = 5762270611242790794L;
-
 	@Override
 	public String print(final FloatStruct object) {
 		final FloatType floatType = (FloatType) object.getType();

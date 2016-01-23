@@ -9,8 +9,6 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 public abstract class BooleanStruct extends ConstantStruct<BooleanStruct> {
 
-	private static final long serialVersionUID = 2558133019376289518L;
-
 	private final boolean booleanValue;
 
 	protected BooleanStruct(final String name, final boolean booleanValue) {

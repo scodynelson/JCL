@@ -23,11 +23,6 @@ import org.springframework.stereotype.Component;
 public final class UninternFunction extends AbstractOptionalPackageFunction {
 
 	/**
-	 * Serializable Version Unique Identifier.
-	 */
-	private static final long serialVersionUID = -7726668790858900177L;
-
-	/**
 	 * Public constructor passing the documentation string.
 	 */
 	public UninternFunction() {

@@ -25,11 +25,6 @@ import org.springframework.stereotype.Component;
 public class QuotationMarkReaderMacroFunction extends ReaderMacroFunction {
 
 	/**
-	 * Serializable Version Unique Identifier.
-	 */
-	private static final long serialVersionUID = -1864699043486615339L;
-
-	/**
 	 * Initializes the reader macro function and adds it to the global readtable.
 	 */
 	@PostConstruct

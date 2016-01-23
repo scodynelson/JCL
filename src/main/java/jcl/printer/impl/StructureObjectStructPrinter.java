@@ -22,8 +22,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class StructureObjectStructPrinter<TYPE extends StructureObjectStruct> implements LispPrinter<TYPE> {
 
-	private static final long serialVersionUID = 1860328949714109890L;
-
 	@Autowired
 	private Printer printer;
 

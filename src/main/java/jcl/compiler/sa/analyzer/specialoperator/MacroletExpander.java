@@ -38,8 +38,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class MacroletExpander extends MacroFunctionExpander<InnerLambdaStruct> {
 
-	private static final long serialVersionUID = 920568167525914860L;
-
 	private static final Logger LOGGER = LoggerFactory.getLogger(MacroletExpander.class);
 
 	@Autowired

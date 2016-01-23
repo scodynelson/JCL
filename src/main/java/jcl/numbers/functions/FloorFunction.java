@@ -30,8 +30,6 @@ public final class FloorFunction extends FunctionStruct {
 
 	public static final SymbolStruct FLOOR = GlobalPackageStruct.COMMON_LISP.intern("FLOOR").getSymbol();
 
-	private static final long serialVersionUID = 2935551243166055074L;
-
 	@Autowired
 	private Printer printer;
 

@@ -15,8 +15,6 @@ import jcl.types.TType;
 
 public class OptionalParameter extends Parameter {
 
-	private static final long serialVersionUID = 3357381481589151323L;
-
 	private final SuppliedPParameter suppliedPBinding;
 
 	public OptionalParameter(final SymbolStruct var, final LispStruct initForm, final SuppliedPParameter suppliedPBinding) {

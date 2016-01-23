@@ -21,8 +21,6 @@ public final class VectorFunction extends FunctionStruct {
 
 	public static final SymbolStruct VECTOR = GlobalPackageStruct.COMMON_LISP.intern("VECTOR").getSymbol();
 
-	private static final long serialVersionUID = -2957696649653550853L;
-
 	private VectorFunction() {
 		super("Creates a fresh simple general vector whose size corresponds to the number of objects.", getInitLambdaListBindings());
 	}

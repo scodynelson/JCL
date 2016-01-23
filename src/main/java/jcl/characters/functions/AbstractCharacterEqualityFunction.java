@@ -28,11 +28,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 abstract class AbstractCharacterEqualityFunction extends AbstractCommonLispFunctionStruct {
 
 	/**
-	 * Serializable Version Unique Identifier.
-	 */
-	private static final long serialVersionUID = 3117929060088318079L;
-
-	/**
 	 * The {@link TypeValidator} for validating the function parameter value types.
 	 */
 	@Autowired

@@ -26,11 +26,6 @@ import jcl.types.HashTableType;
 public class HashTableStruct extends BuiltInClassStruct {
 
 	/**
-	 * Serializable Version Unique Identifier.
-	 */
-	private static final long serialVersionUID = -1366238928844179728L;
-
-	/**
 	 * The test function for verifying equivalence of a key.
 	 */
 	private final EquatorFunctionStruct test;
@@ -171,11 +166,6 @@ public class HashTableStruct extends BuiltInClassStruct {
 	 * Private inner class that acts as a wrapper around hash keys for proper equality testing.
 	 */
 	public static final class KeyWrapper implements LispStruct {
-
-		/**
-		 * Serializable Version Unique Identifier.
-		 */
-		private static final long serialVersionUID = -5433164484857026785L;
 
 		/**
 		 * The {@link LispStruct} key to wrap.

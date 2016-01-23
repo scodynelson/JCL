@@ -22,8 +22,6 @@ public final class LengthFunction extends FunctionStruct {
 
 	public static final SymbolStruct LENGTH = GlobalPackageStruct.COMMON_LISP.intern("LENGTH").getSymbol();
 
-	private static final long serialVersionUID = -1598433382342924007L;
-
 	private LengthFunction() {
 		super("Returns the number of elements in sequence.", getInitLambdaListBindings());
 	}

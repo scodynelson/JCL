@@ -13,8 +13,6 @@ import jcl.symbols.SymbolStruct;
 
 public class MacroLambdaStruct extends CompilerSpecialOperatorStruct {
 
-	private static final long serialVersionUID = 8461845259414025247L;
-
 	private final String className;
 
 	private final SymbolStruct macroName;

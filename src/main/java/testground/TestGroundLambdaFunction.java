@@ -11,8 +11,6 @@ import jcl.functions.FunctionStruct;
 @SuppressWarnings("all")
 public class TestGroundLambdaFunction extends FunctionStruct {
 
-	private static final long serialVersionUID = -1939696402314939143L;
-
 	public TestGroundLambdaFunction(final Closure parentClosure) {
 		closure = parentClosure;
 	}

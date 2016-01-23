@@ -12,8 +12,6 @@ import org.springframework.stereotype.Component;
 @Component
 public final class StreamPFunction extends AbstractPredicateCommonLispFunction {
 
-	private static final long serialVersionUID = 2387609057737277604L;
-
 	public StreamPFunction() {
 		super("Returns true if object is of type stream; otherwise, returns false.");
 	}

@@ -71,11 +71,6 @@ public interface DoubleFloatType extends FloatType {
 		private static final class DoubleFloatTypeImpl extends TypeBaseClass implements DoubleFloatType, AtomicTypeSpecifier, CompoundTypeSpecifier {
 
 			/**
-			 * Serializable Version Unique Identifier.
-			 */
-			private static final long serialVersionUID = -5453487463729956878L;
-
-			/**
 			 * The interval range in which the {@link DoubleFloatType} type exists.
 			 */
 			private final IntervalDesignator<BigDecimal> intervalDesignator;

@@ -40,11 +40,6 @@ public interface KeywordType extends SymbolType {
 		private static final class KeywordTypeImpl extends TypeBaseClass implements KeywordType, AtomicTypeSpecifier {
 
 			/**
-			 * Serializable Version Unique Identifier.
-			 */
-			private static final long serialVersionUID = 5121311310780522485L;
-
-			/**
 			 * Private constructor.
 			 */
 			private KeywordTypeImpl() {

@@ -26,11 +26,6 @@ import org.apache.commons.lang3.CharUtils;
 public class CharacterStruct extends BuiltInClassStruct {
 
 	/**
-	 * Serializable Version Unique Identifier.
-	 */
-	private static final long serialVersionUID = -384956123492937850L;
-
-	/**
 	 * The code point of the character.
 	 */
 	private final Integer codePoint;

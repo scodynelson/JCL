@@ -14,8 +14,6 @@ import org.springframework.stereotype.Component;
 @Component
 public final class QuitFunction extends AbstractExtensionsFunctionStruct {
 
-	private static final long serialVersionUID = -7684846282276245122L;
-
 	@Autowired
 	private ApplicationContext context;
 

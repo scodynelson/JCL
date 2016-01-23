@@ -18,8 +18,6 @@ import org.springframework.stereotype.Component;
 @Component
 public final class SetSymbolFunctionFunction extends AbstractSystemFunctionStruct {
 
-	private static final long serialVersionUID = 1025657474175401906L;
-
 	public SetSymbolFunctionFunction() {
 		super("Sets the function value of the provided symbol to the provided function value.");
 	}

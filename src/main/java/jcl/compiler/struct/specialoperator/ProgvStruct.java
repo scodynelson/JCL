@@ -10,8 +10,6 @@ import jcl.compiler.struct.CompilerSpecialOperatorStruct;
 
 public class ProgvStruct extends CompilerSpecialOperatorStruct {
 
-	private static final long serialVersionUID = 6286708668973616872L;
-
 	private final LispStruct vars;
 
 	private final LispStruct vals;

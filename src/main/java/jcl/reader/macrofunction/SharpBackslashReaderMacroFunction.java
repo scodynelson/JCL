@@ -26,11 +26,6 @@ import org.springframework.stereotype.Component;
 public class SharpBackslashReaderMacroFunction extends ReaderMacroFunction {
 
 	/**
-	 * Serializable Version Unique Identifier.
-	 */
-	private static final long serialVersionUID = 3860297910163190444L;
-
-	/**
 	 * Initializes the reader macro function and adds it to the global readtable.
 	 */
 	@PostConstruct

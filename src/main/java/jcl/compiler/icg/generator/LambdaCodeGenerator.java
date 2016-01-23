@@ -199,7 +199,6 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 	 * <li>Visiting a new class via {@link ClassWriter#visit(int, int, String, String, String, String[])} of the new
 	 * {@link JavaClassBuilder#classWriter}</li>
 	 * <li>Generating the code for the {@link Component} annotation</li>
-	 * <li>Generating the code for the {@code serialVersionUID} field</li>
 	 * <li>Generating the code for the load-time-value fields</li>
 	 * <li>Generating the code for the no-argument constructor</li>
 	 * <li>Generating the code for the {@link Closure} argument constructor</li>
@@ -230,7 +229,6 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 	 *
 	 * {@literal @}Component
 	 * public class Lambda_1 extends FunctionStruct {
-	 *      private static final long serialVersionUID = 1L;
 	 *
 	 *      public Lambda_1() {
 	 *          this((Closure)null);
@@ -272,7 +270,6 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 		cw.visitSource(fileName + GenerationConstants.JAVA_EXTENSION, null);
 
 		generateComponentAnnotation(cw);
-		CodeGenerators.generateSerialVersionUIDField(cw);
 		generateNoArgConstructor(generatorState, className, cw);
 		generateClosureArgConstructor(input, generatorState, className, cw);
 

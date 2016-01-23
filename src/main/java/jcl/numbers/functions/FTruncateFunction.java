@@ -30,8 +30,6 @@ public final class FTruncateFunction extends FunctionStruct {
 
 	public static final SymbolStruct FTRUNCATE = GlobalPackageStruct.COMMON_LISP.intern("FTRUNCATE").getSymbol();
 
-	private static final long serialVersionUID = -7028504106745078192L;
-
 	@Autowired
 	private Printer printer;
 

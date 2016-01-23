@@ -4,7 +4,6 @@
 
 package jcl.reader.state;
 
-import java.io.Serializable;
 import java.util.List;
 
 import jcl.LispStruct;
@@ -37,12 +36,7 @@ import org.apache.commons.collections4.CollectionUtils;
  * This site is the Reader Algorithm that is outlined within the CommonLisp HyperSpec (TM).
  */
 @FunctionalInterface
-interface ReaderState extends Serializable {
-
-	/**
-	 * Serializable Version Unique Identifier.
-	 */
-	long serialVersionUID = -1L;
+interface ReaderState {
 
 	/**
 	 * Converts the provided list of {@link TokenAttribute}s to a {@link String}.

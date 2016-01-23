@@ -54,11 +54,6 @@ public interface ComplexType extends NumberType {
 		private static final class ComplexTypeImpl extends TypeBaseClass implements ComplexType, AtomicTypeSpecifier, CompoundTypeSpecifier {
 
 			/**
-			 * Serializable Version Unique Identifier.
-			 */
-			private static final long serialVersionUID = -5225089521365916136L;
-
-			/**
 			 * The type of {@link RealType} that comprises the {@link ComplexType}.
 			 */
 			private final RealType realType;

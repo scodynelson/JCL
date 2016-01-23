@@ -4,7 +4,6 @@
 
 package jcl.reader.struct;
 
-import java.io.Serializable;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -19,12 +18,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  * Represents a lookup table for {@link AttributeType}s matching {@link Integer} code points.
  */
 @SuppressWarnings("all")
-class AttributeTable implements Serializable {
-
-	/**
-	 * Serializable Version Unique Identifier.
-	 */
-	private static final long serialVersionUID = 6562355378415062388L;
+class AttributeTable {
 
 	/**
 	 * The internal mapping of character code points to {@link AttributeType}s.

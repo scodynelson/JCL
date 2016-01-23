@@ -9,8 +9,6 @@ import jcl.compiler.struct.CompilerSpecialOperatorStruct;
 
 public class MultipleValueProg1Struct extends CompilerSpecialOperatorStruct {
 
-	private static final long serialVersionUID = -1036080843176598388L;
-
 	private final LispStruct firstForm;
 
 	private final PrognStruct forms;

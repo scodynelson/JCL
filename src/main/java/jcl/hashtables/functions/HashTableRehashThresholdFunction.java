@@ -21,8 +21,6 @@ import org.springframework.stereotype.Component;
 @Component
 public final class HashTableRehashThresholdFunction extends AbstractCommonLispFunctionStruct {
 
-	private static final long serialVersionUID = 3974370956259789053L;
-
 	@Autowired
 	private TypeValidator validator;
 

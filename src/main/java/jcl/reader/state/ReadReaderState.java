@@ -33,11 +33,6 @@ import org.springframework.stereotype.Component;
 class ReadReaderState implements ReaderState {
 
 	/**
-	 * Serializable Version Unique Identifier.
-	 */
-	private static final long serialVersionUID = 5191264706029366940L;
-
-	/**
 	 * The logger for this class.
 	 */
 	private static final Logger LOGGER = LoggerFactory.getLogger(ReadReaderState.class);

@@ -42,15 +42,11 @@ import org.springframework.beans.factory.InitializingBean;
  */
 public abstract class FunctionStruct extends BuiltInClassStruct implements InitializingBean {
 
-	private static final long serialVersionUID = 7356724806391677112L;
-
 	protected OrdinaryLambdaList lambdaListBindings;
 
 	protected Closure closure;
 
 	protected static final LispStruct INIT_FORM_PLACEHOLDER = new LispStruct() {
-
-		private static final long serialVersionUID = 8747573493160199571L;
 
 		@Override
 		public LispType getType() {

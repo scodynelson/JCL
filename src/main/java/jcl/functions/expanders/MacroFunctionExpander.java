@@ -41,8 +41,6 @@ import jcl.system.CommonLispSymbols;
 
 public abstract class MacroFunctionExpander<O extends LispStruct> extends MacroExpander<O, ListStruct> {
 
-	private static final long serialVersionUID = -4041262906159677088L;
-
 	protected MacroLambdaList macroLambdaListBindings;
 
 	protected MacroFunctionExpander() {

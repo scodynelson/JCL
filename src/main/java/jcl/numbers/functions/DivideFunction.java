@@ -26,8 +26,6 @@ public final class DivideFunction extends FunctionStruct {
 
 	public static final SymbolStruct DIVIDE = GlobalPackageStruct.COMMON_LISP.intern("/").getSymbol();
 
-	private static final long serialVersionUID = 3707551983173481844L;
-
 	@Autowired
 	private Printer printer;
 

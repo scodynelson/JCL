@@ -25,8 +25,6 @@ public final class CisFunction extends FunctionStruct {
 
 	public static final SymbolStruct CIS = GlobalPackageStruct.COMMON_LISP.intern("CIS").getSymbol();
 
-	private static final long serialVersionUID = 6206795575617553325L;
-
 	@Autowired
 	private Printer printer;
 

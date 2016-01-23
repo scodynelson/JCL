@@ -29,11 +29,6 @@ import org.apache.commons.lang3.SystemUtils;
  */
 public class PathnameStruct extends BuiltInClassStruct {
 
-	/**
-	 * Serializable Version Unique Identifier.
-	 */
-	private static final long serialVersionUID = -5845491980801761678L;
-
 	private static final String CURRENT_DIR_STRING = ".";
 
 	private static final String CURRENT_DIR_STRING_SLASH = "./";

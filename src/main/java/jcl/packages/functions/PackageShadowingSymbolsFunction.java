@@ -26,11 +26,6 @@ import org.springframework.stereotype.Component;
 public final class PackageShadowingSymbolsFunction extends AbstractCommonLispFunctionStruct {
 
 	/**
-	 * Serializable Version Unique Identifier.
-	 */
-	private static final long serialVersionUID = 1263271762013032850L;
-
-	/**
 	 * The {@link TypeValidator} for validating the function parameter value types.
 	 */
 	@Autowired

@@ -28,8 +28,6 @@ public final class JMethod extends FunctionStruct {
 
 	public static final SymbolStruct J_METHOD = GlobalPackageStruct.EXTENSIONS.intern("JMETHOD").getSymbol();
 
-	private static final long serialVersionUID = -1933229031095497469L;
-
 	private JMethod() {
 		super("Gets the Java method matching the provided method name string for the provided Java Class object and the provided Java Class parameter object types.", getInitLambdaListBindings());
 	}

@@ -26,8 +26,6 @@ public final class MinFunction extends FunctionStruct {
 
 	public static final SymbolStruct MIN = GlobalPackageStruct.COMMON_LISP.intern("MIN").getSymbol();
 
-	private static final long serialVersionUID = -5731222712584378731L;
-
 	@Autowired
 	private Printer printer;
 

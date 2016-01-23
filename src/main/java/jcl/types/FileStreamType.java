@@ -35,11 +35,6 @@ public interface FileStreamType extends StreamType {
 		private static final class FileStreamTypeImpl extends TypeBaseClass implements FileStreamType, AtomicTypeSpecifier {
 
 			/**
-			 * Serializable Version Unique Identifier.
-			 */
-			private static final long serialVersionUID = 772081181395170511L;
-
-			/**
 			 * Private constructor.
 			 */
 			private FileStreamTypeImpl() {

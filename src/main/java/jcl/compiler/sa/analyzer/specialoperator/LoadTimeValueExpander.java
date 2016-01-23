@@ -19,8 +19,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class LoadTimeValueExpander extends MacroFunctionExpander<LispStruct> {
 
-	private static final long serialVersionUID = 2168018740373766746L;
-
 	@Autowired
 	private FormAnalyzer formAnalyzer;
 

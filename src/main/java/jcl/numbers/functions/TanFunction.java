@@ -25,8 +25,6 @@ public final class TanFunction extends FunctionStruct {
 
 	public static final SymbolStruct TAN = GlobalPackageStruct.COMMON_LISP.intern("TAN").getSymbol();
 
-	private static final long serialVersionUID = -2688898964888454515L;
-
 	@Autowired
 	private Printer printer;
 

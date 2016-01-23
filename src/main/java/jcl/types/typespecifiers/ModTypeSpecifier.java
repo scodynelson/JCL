@@ -20,11 +20,6 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 public class ModTypeSpecifier extends TypeBaseClass implements CompoundTypeSpecifier {
 
 	/**
-	 * Serializable Version Unique Identifier.
-	 */
-	private static final long serialVersionUID = -1987661534825521492L;
-
-	/**
 	 * The {@link IntegerStruct} to check against the 'MOD' type specifier.
 	 */
 	private final IntegerStruct integerStruct;

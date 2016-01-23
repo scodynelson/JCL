@@ -15,8 +15,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class TheExpander extends MacroFunctionExpander<TheStruct> {
 
-	private static final long serialVersionUID = 6723289642694216454L;
-
 	@Autowired
 	private FormAnalyzer formAnalyzer;
 

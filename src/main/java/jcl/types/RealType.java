@@ -108,11 +108,6 @@ public interface RealType extends NumberType {
 		private static final class RealTypeImpl extends TypeBaseClass implements RealType, AtomicTypeSpecifier, CompoundTypeSpecifier {
 
 			/**
-			 * Serializable Version Unique Identifier.
-			 */
-			private static final long serialVersionUID = -1322534214307811494L;
-
-			/**
 			 * The interval range for {@link IntegerType} types in which the {@link RealType} type exists.
 			 */
 			private final IntervalDesignator<BigInteger> integerIntervalDesignator;

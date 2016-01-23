@@ -24,8 +24,6 @@ public final class JClass extends FunctionStruct {
 
 	public static final SymbolStruct J_CLASS = GlobalPackageStruct.EXTENSIONS.intern("JCLASS").getSymbol();
 
-	private static final long serialVersionUID = -4901948171672174993L;
-
 	private JClass() {
 		super("Gets the Java class matching the provided class name string.", getInitLambdaListBindings());
 	}

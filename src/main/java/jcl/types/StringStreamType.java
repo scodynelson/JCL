@@ -37,11 +37,6 @@ public interface StringStreamType extends StreamType {
 		private static final class StringStreamTypeImpl extends TypeBaseClass implements StringStreamType, AtomicTypeSpecifier {
 
 			/**
-			 * Serializable Version Unique Identifier.
-			 */
-			private static final long serialVersionUID = -4875583581598270616L;
-
-			/**
 			 * Private constructor.
 			 */
 			private StringStreamTypeImpl() {

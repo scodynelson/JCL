@@ -38,11 +38,6 @@ public interface CharacterType extends TType {
 		private static final class CharacterTypeImpl extends TypeBaseClass implements CharacterType, AtomicTypeSpecifier {
 
 			/**
-			 * Serializable Version Unique Identifier.
-			 */
-			private static final long serialVersionUID = 8069574443377375137L;
-
-			/**
 			 * Private constructor.
 			 */
 			private CharacterTypeImpl() {

@@ -25,8 +25,6 @@ public final class ISqrtFunction extends FunctionStruct {
 
 	public static final SymbolStruct ISQRT = GlobalPackageStruct.COMMON_LISP.intern("ISQRT").getSymbol();
 
-	private static final long serialVersionUID = 8041228069336501886L;
-
 	@Autowired
 	private Printer printer;
 

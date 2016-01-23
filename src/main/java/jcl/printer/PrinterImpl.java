@@ -17,8 +17,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class PrinterImpl implements Printer {
 
-	private static final long serialVersionUID = -3051919400352866531L;
-
 	@Resource
 	private Map<Class<?>, LispPrinter<LispStruct>> printerStrategies;
 

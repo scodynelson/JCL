@@ -7,8 +7,6 @@ public final class TStruct extends BooleanStruct {
 
 	public static final TStruct INSTANCE = new TStruct();
 
-	private static final long serialVersionUID = -22807328848501661L;
-
 	/**
 	 * Private constructor.
 	 */

@@ -27,8 +27,6 @@ public final class LogBitPFunction extends FunctionStruct {
 
 	public static final SymbolStruct LOGBITP = GlobalPackageStruct.COMMON_LISP.intern("LOGBITP").getSymbol();
 
-	private static final long serialVersionUID = 3620896515589895425L;
-
 	@Autowired
 	private Printer printer;
 

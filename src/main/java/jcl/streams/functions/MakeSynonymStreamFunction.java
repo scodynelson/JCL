@@ -20,8 +20,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class MakeSynonymStreamFunction extends AbstractCommonLispFunctionStruct {
 
-	private static final long serialVersionUID = -5073235218175589378L;
-
 	@Autowired
 	private TypeValidator validator;
 

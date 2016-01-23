@@ -10,8 +10,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class GoSymbolStructFactory extends GoStructFactory<SymbolStruct> {
 
-	private static final long serialVersionUID = 1893845150668677901L;
-
 	public GoSymbolStruct getGoElement(final SymbolStruct tag) {
 		return new GoSymbolStruct(tag);
 	}

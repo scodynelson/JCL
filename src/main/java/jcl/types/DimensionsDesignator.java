@@ -4,7 +4,6 @@
 
 package jcl.types;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -15,12 +14,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 /**
  * This class represents a dimensions designator, found within compound {@link ArrayType}s.
  */
-public class DimensionsDesignator implements Serializable {
-
-	/**
-	 * Serializable Version Unique Identifier.
-	 */
-	private static final long serialVersionUID = 4135680663527588143L;
+public class DimensionsDesignator {
 
 	/**
 	 * The list of {@link Integer} dimensions.

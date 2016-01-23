@@ -42,8 +42,6 @@ public final class DeclarationStruct extends SymbolStruct {
 
 	public static final DeclarationStruct LISP_NAME = new DeclarationStruct("%LISP-NAME", GlobalPackageStruct.SYSTEM);
 
-	private static final long serialVersionUID = -7171797715492689333L;
-
 	private DeclarationStruct(final String name, final PackageStruct symbolPackage) {
 		super(name, symbolPackage);
 		init();

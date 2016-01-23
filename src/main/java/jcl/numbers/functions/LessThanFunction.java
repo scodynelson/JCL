@@ -28,8 +28,6 @@ public final class LessThanFunction extends FunctionStruct {
 
 	public static final SymbolStruct LESS_THAN = GlobalPackageStruct.COMMON_LISP.intern("<").getSymbol();
 
-	private static final long serialVersionUID = -73282057031250298L;
-
 	@Autowired
 	private Printer printer;
 

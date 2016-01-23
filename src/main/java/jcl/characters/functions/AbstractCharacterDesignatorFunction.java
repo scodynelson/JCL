@@ -29,11 +29,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 abstract class AbstractCharacterDesignatorFunction extends AbstractCommonLispFunctionStruct {
 
 	/**
-	 * Serializable Version Unique Identifier.
-	 */
-	private static final long serialVersionUID = -748646141505142347L;
-
-	/**
 	 * The {@link TypeValidator} for validating the function parameter value types.
 	 */
 	@Autowired

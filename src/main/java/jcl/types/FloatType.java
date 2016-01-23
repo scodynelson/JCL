@@ -78,11 +78,6 @@ public interface FloatType extends RealType {
 		private static final class FloatTypeImpl extends TypeBaseClass implements FloatType, AtomicTypeSpecifier, CompoundTypeSpecifier {
 
 			/**
-			 * Serializable Version Unique Identifier.
-			 */
-			private static final long serialVersionUID = -2016076958464841739L;
-
-			/**
 			 * The interval range in which the {@link FloatType} type exists.
 			 */
 			private final IntervalDesignator<BigDecimal> intervalDesignator;

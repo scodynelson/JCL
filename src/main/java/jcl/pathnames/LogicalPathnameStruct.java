@@ -20,11 +20,6 @@ import org.slf4j.LoggerFactory;
 public class LogicalPathnameStruct extends PathnameStruct {
 
 	/**
-	 * Serializable Version Unique Identifier.
-	 */
-	private static final long serialVersionUID = 7133088468874193624L;
-
-	/**
 	 * {@link Pattern} used to parse pathname words.
 	 */
 	private static final Pattern WORD_PATTERN = Pattern.compile("[A-Z0-9\\-]+");

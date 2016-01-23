@@ -10,8 +10,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class GoIntegerStructFactory extends GoStructFactory<IntegerStruct> {
 
-	private static final long serialVersionUID = -4098304819342554338L;
-
 	public GoIntegerStruct getGoElement(final IntegerStruct tag) {
 		return new GoIntegerStruct(tag);
 	}

@@ -24,8 +24,6 @@ public final class EqFunction extends FunctionStruct {
 
 	public static final SymbolStruct EQ = GlobalPackageStruct.COMMON_LISP.intern("EQ").getSymbol();
 
-	private static final long serialVersionUID = 4849096028160792790L;
-
 	private EqFunction() {
 		super("Returns true if its arguments are the same, identical object; otherwise, returns false.", getInitLambdaListBindings());
 	}

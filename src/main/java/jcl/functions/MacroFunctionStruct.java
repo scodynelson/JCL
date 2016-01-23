@@ -12,8 +12,6 @@ import jcl.lists.ListStruct;
 
 public abstract class MacroFunctionStruct extends FunctionStruct {
 
-	private static final long serialVersionUID = -5950370781257065737L;
-
 	protected final MacroLambdaList macroLambdaList;
 
 	protected final MacroFunctionExpander<?> macroFunctionExpander;

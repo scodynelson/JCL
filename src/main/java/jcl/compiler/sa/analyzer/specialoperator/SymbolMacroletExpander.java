@@ -28,8 +28,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class SymbolMacroletExpander extends MacroFunctionExpander<SymbolMacroletStruct> {
 
-	private static final long serialVersionUID = 3878455475225336840L;
-
 	@Autowired
 	private FormAnalyzer formAnalyzer;
 

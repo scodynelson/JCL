@@ -38,11 +38,6 @@ public interface BignumType extends IntegerType {
 		private static final class BignumTypeImpl extends AndTypeSpecifier implements BignumType, AtomicTypeSpecifier {
 
 			/**
-			 * Serializable Version Unique Identifier.
-			 */
-			private static final long serialVersionUID = -2641268480714921916L;
-
-			/**
 			 * Private constructor.
 			 */
 			private BignumTypeImpl() {

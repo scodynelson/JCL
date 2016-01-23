@@ -30,8 +30,6 @@ public final class FRoundFunction extends FunctionStruct {
 
 	public static final SymbolStruct FROUND = GlobalPackageStruct.COMMON_LISP.intern("FROUND").getSymbol();
 
-	private static final long serialVersionUID = 7154427568385187262L;
-
 	@Autowired
 	private Printer printer;
 

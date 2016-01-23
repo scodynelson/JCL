@@ -52,11 +52,6 @@ public interface ConsType extends ListType {
 		private static final class ConsTypeImpl extends TypeBaseClass implements ConsType, AtomicTypeSpecifier, CompoundTypeSpecifier {
 
 			/**
-			 * Serializable Version Unique Identifier.
-			 */
-			private static final long serialVersionUID = -991060349966644883L;
-
-			/**
 			 * The type of the car element.
 			 */
 			private final LispType carSpec;

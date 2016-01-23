@@ -18,8 +18,6 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  */
 public class ConsStruct extends ListStruct {
 
-	private static final long serialVersionUID = 4871665353563364787L;
-
 	private LispStruct car;
 
 	private LispStruct cdr;

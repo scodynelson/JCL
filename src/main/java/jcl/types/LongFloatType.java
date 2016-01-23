@@ -71,11 +71,6 @@ public interface LongFloatType extends FloatType {
 		private static final class LongFloatTypeImpl extends TypeBaseClass implements LongFloatType, AtomicTypeSpecifier, CompoundTypeSpecifier {
 
 			/**
-			 * Serializable Version Unique Identifier.
-			 */
-			private static final long serialVersionUID = 2113007121037284963L;
-
-			/**
 			 * The interval range in which the {@link LongFloatType} type exists.
 			 */
 			private final IntervalDesignator<BigDecimal> intervalDesignator;

@@ -18,8 +18,6 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  */
 public class StringStruct extends VectorStruct<CharacterStruct> {
 
-	private static final long serialVersionUID = -7245128288805244021L;
-
 	/**
 	 * Public constructor.
 	 *

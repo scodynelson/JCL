@@ -58,11 +58,6 @@ public interface SimpleArrayType extends ArrayType {
 		private static final class SimpleArrayTypeImpl extends TypeBaseClass implements SimpleArrayType, AtomicTypeSpecifier, CompoundTypeSpecifier {
 
 			/**
-			 * Serializable Version Unique Identifier.
-			 */
-			private static final long serialVersionUID = 7655313490354936454L;
-
-			/**
 			 * The dimensions of the {@link SimpleArrayType} type.
 			 */
 			private final DimensionsDesignator dimensions;

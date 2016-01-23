@@ -20,11 +20,6 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 public class BroadcastStreamStruct extends StreamStruct implements OutputStream {
 
 	/**
-	 * Serializable Version Unique Identifier.
-	 */
-	private static final long serialVersionUID = 9133930758245275144L;
-
-	/**
 	 * This {@link OutputStream}s in the BroadcastStreamStruct.
 	 */
 	private final Deque<OutputStream> outputStreams;

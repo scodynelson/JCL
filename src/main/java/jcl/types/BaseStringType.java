@@ -54,11 +54,6 @@ public interface BaseStringType extends StringType {
 		private static final class BaseStringTypeImpl extends TypeBaseClass implements BaseStringType, AtomicTypeSpecifier, CompoundTypeSpecifier {
 
 			/**
-			 * Serializable Version Unique Identifier.
-			 */
-			private static final long serialVersionUID = 2958508991471569816L;
-
-			/**
 			 * Static {@link BaseCharType} element type for {@link BaseStringType} types.
 			 */
 			private static final LispType ELEMENT_TYPE = BaseCharType.INSTANCE;

@@ -30,8 +30,6 @@ public final class RoundFunction extends FunctionStruct {
 
 	public static final SymbolStruct ROUND = GlobalPackageStruct.COMMON_LISP.intern("ROUND").getSymbol();
 
-	private static final long serialVersionUID = -789201475610539122L;
-
 	@Autowired
 	private Printer printer;
 

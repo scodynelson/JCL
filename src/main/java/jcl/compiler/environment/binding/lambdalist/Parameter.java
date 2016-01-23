@@ -11,8 +11,6 @@ import jcl.symbols.SymbolStruct;
 
 public class Parameter extends Binding {
 
-	private static final long serialVersionUID = 4128878993186537174L;
-
 	private LispStruct initForm;
 
 	private final DestructuringLambdaList destructuringForm;

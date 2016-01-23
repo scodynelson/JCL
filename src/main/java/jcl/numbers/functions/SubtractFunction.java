@@ -26,8 +26,6 @@ public final class SubtractFunction extends FunctionStruct {
 
 	public static final SymbolStruct SUBTRACT = GlobalPackageStruct.COMMON_LISP.intern("-").getSymbol();
 
-	private static final long serialVersionUID = -7035610361287254078L;
-
 	@Autowired
 	private Printer printer;
 

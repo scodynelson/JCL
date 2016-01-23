@@ -22,8 +22,6 @@ import org.springframework.stereotype.Component;
 @Component
 public final class MapHashFunction extends AbstractCommonLispFunctionStruct {
 
-	private static final long serialVersionUID = -5287826548927565885L;
-
 	@Autowired
 	private TypeValidator validator;
 

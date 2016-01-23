@@ -17,11 +17,6 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 public class StringInputStreamStruct extends StreamStruct implements InputStream {
 
 	/**
-	 * Serializable Version Unique Identifier.
-	 */
-	private static final long serialVersionUID = 4439375845861585598L;
-
-	/**
 	 * The {@link String} input value to read characters from.
 	 */
 	private final String inputString;

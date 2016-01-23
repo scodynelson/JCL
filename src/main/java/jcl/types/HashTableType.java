@@ -35,11 +35,6 @@ public interface HashTableType extends TType {
 		private static final class HashTableTypeImpl extends TypeBaseClass implements HashTableType, AtomicTypeSpecifier {
 
 			/**
-			 * Serializable Version Unique Identifier.
-			 */
-			private static final long serialVersionUID = 1398788699336001310L;
-
-			/**
 			 * Private constructor.
 			 */
 			private HashTableTypeImpl() {

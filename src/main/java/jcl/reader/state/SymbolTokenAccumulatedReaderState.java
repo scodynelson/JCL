@@ -64,11 +64,6 @@ import org.springframework.stereotype.Component;
 class SymbolTokenAccumulatedReaderState implements ReaderState {
 
 	/**
-	 * Serializable Version Unique Identifier.
-	 */
-	private static final long serialVersionUID = 4237075506539486959L;
-
-	/**
 	 * {@link ReaderStateMediator} singleton used by the reader algorithm.
 	 */
 	@Autowired

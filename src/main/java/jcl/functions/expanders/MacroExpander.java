@@ -11,8 +11,6 @@ import jcl.functions.FunctionStruct;
 
 public abstract class MacroExpander<O extends LispStruct, I extends LispStruct> extends FunctionStruct {
 
-	private static final long serialVersionUID = 4976821260573562104L;
-
 	protected MacroExpander() {
 		this(null);
 	}

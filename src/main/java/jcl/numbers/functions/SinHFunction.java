@@ -25,8 +25,6 @@ public final class SinHFunction extends FunctionStruct {
 
 	public static final SymbolStruct SINH = GlobalPackageStruct.COMMON_LISP.intern("SINH").getSymbol();
 
-	private static final long serialVersionUID = -6227811971528197555L;
-
 	@Autowired
 	private Printer printer;
 

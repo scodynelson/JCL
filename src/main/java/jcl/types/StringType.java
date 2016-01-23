@@ -53,11 +53,6 @@ public interface StringType extends VectorType {
 		private static final class StringTypeImpl extends TypeBaseClass implements StringType, AtomicTypeSpecifier, CompoundTypeSpecifier {
 
 			/**
-			 * Serializable Version Unique Identifier.
-			 */
-			private static final long serialVersionUID = -8137934390331662477L;
-
-			/**
 			 * Static {@link CharacterType} element type for {@link StringType} types.
 			 */
 			private static final LispType ELEMENT_TYPE = CharacterType.INSTANCE;

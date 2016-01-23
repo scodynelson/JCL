@@ -22,11 +22,6 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 public class SatisfiesTypeSpecifier extends TypeBaseClass implements CompoundTypeSpecifier {
 
 	/**
-	 * Serializable Version Unique Identifier.
-	 */
-	private static final long serialVersionUID = -7481582322732047642L;
-
-	/**
 	 * The {@link PredicateFunctionStruct} to check against the 'SATISFIES' type specifier.
 	 */
 	private final PredicateFunctionStruct<LispStruct> predicate;

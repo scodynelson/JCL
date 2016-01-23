@@ -14,8 +14,6 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 public class JavaMethodStruct extends BuiltInClassStruct {
 
-	private static final long serialVersionUID = 6501883002898369486L;
-
 	private final Method javaMethod;
 
 	public JavaMethodStruct(final Method javaMethod) {

@@ -30,8 +30,6 @@ public final class FloatFunction extends FunctionStruct {
 
 	public static final SymbolStruct FLOAT = GlobalPackageStruct.COMMON_LISP.intern("FLOAT").getSymbol();
 
-	private static final long serialVersionUID = -1487899103566810524L;
-
 	@Autowired
 	private Printer printer;
 

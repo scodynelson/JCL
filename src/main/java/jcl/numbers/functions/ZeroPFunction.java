@@ -27,8 +27,6 @@ public final class ZeroPFunction extends FunctionStruct {
 
 	public static final SymbolStruct ZEROP = GlobalPackageStruct.COMMON_LISP.intern("ZEROP").getSymbol();
 
-	private static final long serialVersionUID = 557857332750163502L;
-
 	@Autowired
 	private Printer printer;
 

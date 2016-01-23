@@ -17,11 +17,6 @@ import org.springframework.stereotype.Component;
 public final class FindSymbolFunction extends AbstractStringPackageFunction {
 
 	/**
-	 * Serializable Version Unique Identifier.
-	 */
-	private static final long serialVersionUID = 2861315799136211349L;
-
-	/**
 	 * Public constructor passing the documentation string.
 	 */
 	public FindSymbolFunction() {

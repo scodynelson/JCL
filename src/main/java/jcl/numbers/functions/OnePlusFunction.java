@@ -29,8 +29,6 @@ public final class OnePlusFunction extends FunctionStruct {
 
 	public static final SymbolStruct ONE_PLUS = GlobalPackageStruct.COMMON_LISP.intern("1+").getSymbol();
 
-	private static final long serialVersionUID = -5365841233828975994L;
-
 	private OnePlusFunction() {
 		super("Adds one to the object and returns the result.", getInitLambdaListBindings());
 	}

@@ -200,7 +200,6 @@ class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 //	}
 //
 //	private static final class FOOStructureTypeImpl_34553964509765 extends TypeBaseClass implements FOOStructureType_34553964509765, AtomicTypeSpecifier {
-//	private static final long serialVersionUID = 3317009723019487076L;
 //
 //	private FOOStructureTypeImpl_34553964509765() {
 //	super("FOO");
@@ -241,7 +240,6 @@ class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 //	}
 //
 //	private static final class BARStructureTypeImpl_35662194797508 extends TypeBaseClass implements BARStructureType_35662194797508, AtomicTypeSpecifier {
-//	private static final long serialVersionUID = 4983988676488980087L;
 //
 //	private BARStructureTypeImpl_35662194797508() {
 //	super("BAR");
@@ -468,7 +466,6 @@ class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 	 *
 	 *      private static final class FOOStructureTypeImpl_1 extends TypeBaseClass
 	 *                                                        implements FOOStructureType_1, AtomicTypeSpecifier {
-	 *          private static final long serialVersionUID = 1L;
 	 *
 	 *          private FOOStructureTypeImpl_1() {
 	 *              super("FOO");
@@ -730,7 +727,6 @@ class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 	 * <li>Visiting {@link StructureObjectType} inner implementation class for the class being generated</li>
 	 * <li>Visiting {@code Synthetic} {@link StructureObjectType} inner implementation class for the class being
 	 * generated</li>
-	 * <li>Generating the code for the {@code serialVersionUID} field</li>
 	 * <li>Generating the code for the default constructor</li>
 	 * <li>Generating the code for the {@code Synthetic} constructor</li>
 	 * <li>Generating the code for the {@link Object#hashCode()} method</li>
@@ -743,7 +739,6 @@ class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 	 * {@code
 	 * private static final class FOOStructureTypeImpl_1 extends TypeBaseClass
 	 *                                                   implements FOOStructureType_1, AtomicTypeSpecifier {
-	 *      private static final long serialVersionUID = 1L;
 	 *
 	 *      private FOOStructureTypeImpl_1() {
 	 *          super("FOO");
@@ -822,7 +817,6 @@ class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 
 		cw.visitSource(fileName + GenerationConstants.JAVA_EXTENSION, null);
 
-		CodeGenerators.generateSerialVersionUIDField(cw);
 		generateStructureTypeImplConstructor(generatorState, cw,
 				structureName);
 		generateStructureTypeImplSyntheticConstructor(generatorState, cw,
@@ -1105,7 +1099,6 @@ class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 	 * <li>Visiting a new class via {@link ClassWriter#visit(int, int, String, String, String, String[])} of the new
 	 * {@link JavaClassBuilder#classWriter}</li>
 	 * <li>Generating the code for the {@code INSTANCE} singleton field</li>
-	 * <li>Generating the code for the {@code serialVersionUID} field</li>
 	 * <li>Generating the code for the standard argument constructor</li>
 	 * <li>Generating the code for the type addition argument constructor</li>
 	 * <li>Generating the code for the {@link StructureClassStruct#newInstance()} method</li>
@@ -1130,7 +1123,6 @@ class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 	 *
 	 * public class FOOStructureClass_1 extends StructureClassStruct {
 	 *      public static final FOOStructureClass_1 INSTANCE;
-	 *      private static final long serialVersionUID = 1L;
 	 *
 	 *      protected FOOStructureClass_1(SymbolStruct var1, SymbolStruct var2,
 	 *                                    List<Class<? extends LispStruct>> var3,
@@ -1176,7 +1168,6 @@ class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 	 *
 	 * public class BARStructureClass_1 extends FOOStructureClass_1 {
 	 *      public static final BARStructureClass_1 INSTANCE;
-	 *      private static final long serialVersionUID = 1L;
 	 *
 	 *      protected BARStructureClass_1(SymbolStruct var1, SymbolStruct var2,
 	 *                                    List<Class<? extends LispStruct>> var3,
@@ -1258,7 +1249,6 @@ class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 		cw.visitSource(fileName + GenerationConstants.JAVA_EXTENSION, null);
 
 		CodeGenerators.generateSingletonInstanceField(cw, structureClassClassDesc);
-		CodeGenerators.generateSerialVersionUIDField(cw);
 		generateStructureClassConstructor(generatorState, cw,
 				structureTypeClassName, structureTypeClassDesc, structureClassClassName);
 		generateStructureClassTypeArgConstructor(generatorState, cw,
@@ -1594,7 +1584,6 @@ class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 	 * <li>Creating a new {@link JavaClassBuilder}, which internally creates a new {@link ClassWriter}</li>
 	 * <li>Visiting a new class via {@link ClassWriter#visit(int, int, String, String, String, String[])} of the new
 	 * {@link JavaClassBuilder#classWriter}</li>
-	 * <li>Generating the code for the {@code serialVersionUID} field</li>
 	 * <li>Generating the code for the no-argument constructor</li>
 	 * <li>Generating the code for the {@code initSlots} method</li>
 	 * <li>Generating the code to end the new class visitation</li>
@@ -1612,7 +1601,6 @@ class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 	 * import jcl.symbols.SymbolStruct;
 	 *
 	 * public class FOOStructureObject_1 extends StructureObjectStruct {
-	 *      private static final long serialVersionUID = 1L;
 	 *
 	 *      public FOOStructureObject_1() {
 	 *          FOOStructureClass_1 var10001 = FOOStructureClass_1.INSTANCE;
@@ -1670,7 +1658,6 @@ class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 
 		cw.visitSource(fileName + GenerationConstants.JAVA_EXTENSION, null);
 
-		CodeGenerators.generateSerialVersionUIDField(cw);
 		generateStructureObjectConstructor(input, generatorState, cw,
 				structureClassClassName, structureClassClassDesc, structureObjectClassName);
 		generateStructureObjectInitSlotsMap(input, generatorState, cw,

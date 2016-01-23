@@ -4,7 +4,6 @@
 
 package jcl.pathnames;
 
-import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
 
@@ -19,12 +18,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  * The {@link PathnameDirectoryComponent} is the object representation of a directory component of the 'directory'
  * element of a Lisp 'pathname' type.
  */
-public final class PathnameDirectoryComponent implements Serializable {
-
-	/**
-	 * Serializable Version Unique Identifier.
-	 */
-	private static final long serialVersionUID = -3157529987901934426L;
+public final class PathnameDirectoryComponent {
 
 	/**
 	 * The pathname list of directory level values.

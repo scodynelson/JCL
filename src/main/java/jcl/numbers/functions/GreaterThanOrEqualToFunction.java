@@ -28,8 +28,6 @@ public final class GreaterThanOrEqualToFunction extends FunctionStruct {
 
 	public static final SymbolStruct GREATER_THAN_OR_EQUAL_TO = GlobalPackageStruct.COMMON_LISP.intern(">=").getSymbol();
 
-	private static final long serialVersionUID = 2427273733050273073L;
-
 	@Autowired
 	private Printer printer;
 

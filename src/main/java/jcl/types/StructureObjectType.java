@@ -36,11 +36,6 @@ public interface StructureObjectType extends TType {
 		private static final class StructureObjectTypeImpl extends TypeBaseClass implements StructureObjectType, AtomicTypeSpecifier {
 
 			/**
-			 * Serializable Version Unique Identifier.
-			 */
-			private static final long serialVersionUID = 1530448854463167701L;
-
-			/**
 			 * Private constructor.
 			 */
 			private StructureObjectTypeImpl() {

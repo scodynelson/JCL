@@ -12,8 +12,6 @@ import jcl.compiler.struct.specialoperator.PrognStruct;
 
 public class LambdaStruct extends CompilerSpecialOperatorStruct {
 
-	private static final long serialVersionUID = -3234593852889478530L;
-
 	private final String className;
 
 	private final OrdinaryLambdaList lambdaListBindings;

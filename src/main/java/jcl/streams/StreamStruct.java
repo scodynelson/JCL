@@ -19,11 +19,6 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 public abstract class StreamStruct extends BuiltInClassStruct implements LispStream {
 
 	/**
-	 * Serializable Version Unique Identifier.
-	 */
-	private static final long serialVersionUID = -5129615077425690834L;
-
-	/**
 	 * Whether or not the StreamStruct is interactive.
 	 */
 	private final boolean interactive;

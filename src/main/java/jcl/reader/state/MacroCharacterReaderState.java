@@ -48,11 +48,6 @@ import org.springframework.stereotype.Component;
 class MacroCharacterReaderState implements ReaderState {
 
 	/**
-	 * Serializable Version Unique Identifier.
-	 */
-	private static final long serialVersionUID = 6724298209965623929L;
-
-	/**
 	 * {@link ReaderStateMediator} singleton used by the reader algorithm.
 	 */
 	@Autowired

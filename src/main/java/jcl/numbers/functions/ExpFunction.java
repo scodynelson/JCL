@@ -25,8 +25,6 @@ public final class ExpFunction extends FunctionStruct {
 
 	public static final SymbolStruct EXP = GlobalPackageStruct.COMMON_LISP.intern("EXP").getSymbol();
 
-	private static final long serialVersionUID = -751661794023274994L;
-
 	@Autowired
 	private Printer printer;
 

@@ -54,11 +54,6 @@ public interface BitVectorType extends VectorType {
 		private static final class BitVectorTypeImpl extends TypeBaseClass implements BitVectorType, AtomicTypeSpecifier, CompoundTypeSpecifier {
 
 			/**
-			 * Serializable Version Unique Identifier.
-			 */
-			private static final long serialVersionUID = 6131204063063057512L;
-
-			/**
 			 * Static {@link BitType} element type for {@link BitVectorType} types.
 			 */
 			private static final LispType ELEMENT_TYPE = BitType.INSTANCE;

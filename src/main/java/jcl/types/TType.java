@@ -37,11 +37,6 @@ public interface TType extends LispType {
 		private static final class TTypeImpl extends TypeBaseClass implements TType, AtomicTypeSpecifier {
 
 			/**
-			 * Serializable Version Unique Identifier.
-			 */
-			private static final long serialVersionUID = -5539110546772298423L;
-
-			/**
 			 * Private constructor.
 			 */
 			private TTypeImpl() {

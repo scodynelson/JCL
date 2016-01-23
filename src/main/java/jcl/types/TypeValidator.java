@@ -4,7 +4,6 @@
 
 package jcl.types;
 
-import java.io.Serializable;
 import java.util.Arrays;
 import java.util.stream.Stream;
 
@@ -21,9 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class TypeValidator implements Serializable {
-
-	private static final long serialVersionUID = -9023815286880276310L;
+public final class TypeValidator {
 
 	@Autowired
 	private Printer printer;

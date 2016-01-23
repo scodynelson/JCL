@@ -16,11 +16,6 @@ import org.springframework.stereotype.Component;
 public final class StandardCharPFunction extends AbstractCharacterPredicateFunction {
 
 	/**
-	 * Serializable Version Unique Identifier.
-	 */
-	private static final long serialVersionUID = 7161616010157067470L;
-
-	/**
 	 * Public constructor passing the documentation string.
 	 */
 	public StandardCharPFunction() {

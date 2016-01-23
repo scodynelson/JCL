@@ -18,8 +18,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class SymbolStructPrinter implements LispPrinter<SymbolStruct> {
 
-	private static final long serialVersionUID = 5098070113503702856L;
-
 	@Override
 	public String print(final SymbolStruct object) {
 		final BooleanStruct printEscape = PrinterVariables.PRINT_ESCAPE.getVariableValue();

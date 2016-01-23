@@ -17,11 +17,6 @@ import org.apache.commons.lang3.RandomUtils;
 public class RandomStateStruct extends BuiltInClassStruct {
 
 	/**
-	 * Serializable Version Unique Identifier.
-	 */
-	private static final long serialVersionUID = 457336984118960936L;
-
-	/**
 	 * Public constructor.
 	 */
 	public RandomStateStruct() {

@@ -70,8 +70,6 @@ public final class CompileFileFunction extends FunctionStruct {
 
 	public static final SymbolStruct COMPILE_FILE = GlobalPackageStruct.COMMON_LISP.intern("COMPILE-FILE").getSymbol();
 
-	private static final long serialVersionUID = -3067892826539388846L;
-
 	private static final Logger LOGGER = LoggerFactory.getLogger(CompileFileFunction.class);
 
 	private static final Pattern VALID_FILE_CLASS_NAME_PATTERN = Pattern.compile("[^a-zA-Z0-9]");

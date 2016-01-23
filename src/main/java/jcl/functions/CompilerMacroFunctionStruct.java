@@ -6,8 +6,6 @@ package jcl.functions;
 
 public abstract class CompilerMacroFunctionStruct extends MacroFunctionStruct {
 
-	private static final long serialVersionUID = 7312002510753986842L;
-
 	public CompilerMacroFunctionStruct() {
 	}
 }

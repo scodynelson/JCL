@@ -23,8 +23,6 @@ import org.springframework.stereotype.Component;
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 class SemanticAnalyzerImpl implements SemanticAnalyzer {
 
-	private static final long serialVersionUID = -1291208288043954547L;
-
 	private static final Logger LOGGER = LoggerFactory.getLogger(SemanticAnalyzerImpl.class);
 
 	@Autowired

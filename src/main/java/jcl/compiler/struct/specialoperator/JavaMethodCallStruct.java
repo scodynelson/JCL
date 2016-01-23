@@ -12,8 +12,6 @@ import jcl.java.JavaNameStruct;
 
 public class JavaMethodCallStruct extends CompilerSpecialOperatorStruct {
 
-	private static final long serialVersionUID = 1475342953851995228L;
-
 	private final JavaNameStruct methodName;
 
 	private final LispStruct javaObject;

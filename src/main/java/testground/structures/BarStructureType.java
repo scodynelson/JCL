@@ -23,8 +23,6 @@ public interface BarStructureType extends FooStructureType {
 
 		private static final class BarStructureTypeImpl extends TypeBaseClass implements BarStructureType, AtomicTypeSpecifier {
 
-			private static final long serialVersionUID = -3028679544540370260L;
-
 			private BarStructureTypeImpl() {
 				super("BAR");
 			}

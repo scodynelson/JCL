@@ -16,11 +16,6 @@ import jcl.numbers.IntegerStruct;
 public interface SequenceStruct extends LispStruct {
 
 	/**
-	 * Serializable Version Unique Identifier.
-	 */
-	long serialVersionUID = 1L;
-
-	/**
 	 * Returns the Lisp sequence as a Java list.
 	 *
 	 * @return the Lisp sequence as a Java list

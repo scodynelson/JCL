@@ -4,15 +4,11 @@
 
 package jcl.compiler.environment.binding;
 
-import java.io.Serializable;
-
 import jcl.LispType;
 import jcl.symbols.SymbolStruct;
 import jcl.types.TType;
 
-public class Binding implements Serializable {
-
-	private static final long serialVersionUID = 5776546981120800982L;
+public class Binding {
 
 	private final SymbolStruct var;
 

@@ -42,11 +42,6 @@ public class FloatStruct extends RealStruct {
 	public static final FloatStruct MINUS_ONE = new FloatStruct(BigDecimal.valueOf(-1.0));
 
 	/**
-	 * Serializable Version Unique Identifier.
-	 */
-	private static final long serialVersionUID = 4803312076840516559L;
-
-	/**
 	 * The internal {@link BigDecimal} containing the float contents.
 	 */
 	private final BigDecimal bigDecimal;

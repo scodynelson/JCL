@@ -11,8 +11,6 @@ import jcl.compiler.struct.CompilerSpecialOperatorStruct;
 
 public abstract class ClosureCreationStruct<V> extends CompilerSpecialOperatorStruct {
 
-	private static final long serialVersionUID = 9216281797404250223L;
-
 	private final List<V> vars;
 
 	private final PrognStruct forms;

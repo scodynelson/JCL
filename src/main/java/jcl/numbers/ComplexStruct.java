@@ -51,11 +51,6 @@ public class ComplexStruct extends NumberStruct {
 	public static final ComplexStruct ONE_FLOAT = new ComplexStruct(FloatStruct.ONE, FloatStruct.ZERO);
 
 	/**
-	 * Serializable Version Unique Identifier.
-	 */
-	private static final long serialVersionUID = 7848008215064899579L;
-
-	/**
 	 * The {@link RealStruct} that comprises the real value of the complex.
 	 */
 	private final RealStruct real;

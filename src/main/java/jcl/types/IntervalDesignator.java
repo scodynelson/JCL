@@ -4,7 +4,6 @@
 
 package jcl.types;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.MathContext;
@@ -19,12 +18,7 @@ import org.apache.commons.math3.fraction.BigFraction;
  * @param <N>
  * 		the number type used for the interval boundaries
  */
-public class IntervalDesignator<N extends Number> implements Serializable {
-
-	/**
-	 * Serializable Version Unique Identifier.
-	 */
-	private static final long serialVersionUID = -3886366956143132538L;
+public class IntervalDesignator<N extends Number> {
 
 	/**
 	 * The lower boundary for the interval. This is 'inclusive'. The 'inclusive/exclusive' handling is taken care of

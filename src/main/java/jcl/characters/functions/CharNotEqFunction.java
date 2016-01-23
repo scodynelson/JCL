@@ -16,11 +16,6 @@ import org.springframework.stereotype.Component;
 public final class CharNotEqFunction extends AbstractCharacterEqualityFunction {
 
 	/**
-	 * Serializable Version Unique Identifier.
-	 */
-	private static final long serialVersionUID = -4521919308468314716L;
-
-	/**
 	 * Public constructor passing the documentation string.
 	 */
 	public CharNotEqFunction() {

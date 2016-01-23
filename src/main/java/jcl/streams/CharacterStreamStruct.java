@@ -29,11 +29,6 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 public class CharacterStreamStruct extends AbstractNativeStreamStruct {
 
 	/**
-	 * Serializable Version Unique Identifier.
-	 */
-	private static final long serialVersionUID = 3029213066284401689L;
-
-	/**
 	 * The maximum size of internal buffer array to allocate in the {@link PushbackReader} {@link #inputStream}.
 	 */
 	private static final int PUSHBACK_BUFFER_SIZE = Short.MAX_VALUE;

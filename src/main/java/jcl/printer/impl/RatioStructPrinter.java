@@ -17,8 +17,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class RatioStructPrinter implements LispPrinter<RatioStruct> {
 
-	private static final long serialVersionUID = -491452763122265968L;
-
 	@Autowired
 	private IntegerStructPrinter integerStructPrinter;
 

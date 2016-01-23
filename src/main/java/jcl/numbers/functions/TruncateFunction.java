@@ -30,8 +30,6 @@ public final class TruncateFunction extends FunctionStruct {
 
 	public static final SymbolStruct TRUNCATE = GlobalPackageStruct.COMMON_LISP.intern("TRUNCATE").getSymbol();
 
-	private static final long serialVersionUID = -1499497837586171497L;
-
 	@Autowired
 	private Printer printer;
 

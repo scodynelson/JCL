@@ -25,8 +25,6 @@ public final class DenominatorFunction extends FunctionStruct {
 
 	public static final SymbolStruct DENOMINATOR = GlobalPackageStruct.COMMON_LISP.intern("DENOMINATOR").getSymbol();
 
-	private static final long serialVersionUID = 6210778370087072605L;
-
 	@Autowired
 	private Printer printer;
 

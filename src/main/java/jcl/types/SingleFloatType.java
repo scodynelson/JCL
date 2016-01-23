@@ -71,11 +71,6 @@ public interface SingleFloatType extends FloatType {
 		private static final class SingleFloatTypeImpl extends TypeBaseClass implements SingleFloatType, AtomicTypeSpecifier, CompoundTypeSpecifier {
 
 			/**
-			 * Serializable Version Unique Identifier.
-			 */
-			private static final long serialVersionUID = 4101497705229577694L;
-
-			/**
 			 * The interval range in which the {@link SingleFloatType} type exists.
 			 */
 			private final IntervalDesignator<BigDecimal> intervalDesignator;

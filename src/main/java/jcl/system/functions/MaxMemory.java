@@ -14,8 +14,6 @@ import org.springframework.stereotype.Component;
 @Component
 public final class MaxMemory extends AbstractExtensionsFunctionStruct {
 
-	private static final long serialVersionUID = -8202963218833948816L;
-
 	public MaxMemory() {
 		super("Returns the current max runtime memory usage.");
 	}

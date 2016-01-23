@@ -35,11 +35,6 @@ public interface PackageType extends TType {
 		private static final class PackageTypeImpl extends TypeBaseClass implements PackageType, AtomicTypeSpecifier {
 
 			/**
-			 * Serializable Version Unique Identifier.
-			 */
-			private static final long serialVersionUID = -3289071503998628075L;
-
-			/**
 			 * Private constructor.
 			 */
 			private PackageTypeImpl() {

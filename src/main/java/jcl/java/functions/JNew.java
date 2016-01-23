@@ -28,8 +28,6 @@ public final class JNew extends FunctionStruct {
 
 	public static final SymbolStruct J_NEW = GlobalPackageStruct.EXTENSIONS.intern("JNEW").getSymbol();
 
-	private static final long serialVersionUID = 4957989978703375166L;
-
 	private static final Logger LOGGER = LoggerFactory.getLogger(JNew.class);
 
 	private JNew() {

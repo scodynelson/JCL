@@ -25,8 +25,6 @@ public final class RemFunction extends FunctionStruct {
 
 	public static final SymbolStruct REM = GlobalPackageStruct.COMMON_LISP.intern("REM").getSymbol();
 
-	private static final long serialVersionUID = 4003956118205210262L;
-
 	@Autowired
 	private Printer printer;
 

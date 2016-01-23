@@ -30,8 +30,6 @@ public final class PathnameHostFunction extends FunctionStruct {
 
 	public static final SymbolStruct PATHNAME_HOST = GlobalPackageStruct.COMMON_LISP.intern("PATHNAME-HOST").getSymbol();
 
-	private static final long serialVersionUID = 5305854243645678052L;
-
 	@Autowired
 	private PathnameFunction pathnameFunction;
 

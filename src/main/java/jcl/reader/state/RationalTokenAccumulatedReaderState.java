@@ -25,11 +25,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class RationalTokenAccumulatedReaderState implements ReaderState {
 
-	/**
-	 * Serializable Version Unique Identifier.
-	 */
-	private static final long serialVersionUID = -1560698912123354546L;
-
 	@Override
 	public NumberStruct process(final TokenBuilder tokenBuilder) {
 

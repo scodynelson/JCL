@@ -23,11 +23,6 @@ import org.springframework.stereotype.Component;
 public final class PackageUsedByListFunction extends AbstractCommonLispFunctionStruct {
 
 	/**
-	 * Serializable Version Unique Identifier.
-	 */
-	private static final long serialVersionUID = 2137341320981943787L;
-
-	/**
 	 * The {@link TypeValidator} for validating the function parameter value types.
 	 */
 	@Autowired

@@ -25,8 +25,6 @@ public final class SignumFunction extends FunctionStruct {
 
 	public static final SymbolStruct SIGNUM = GlobalPackageStruct.COMMON_LISP.intern("SIGNUM").getSymbol();
 
-	private static final long serialVersionUID = 7051957133150873518L;
-
 	@Autowired
 	private Printer printer;
 

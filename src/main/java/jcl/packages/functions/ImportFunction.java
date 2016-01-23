@@ -17,11 +17,6 @@ import org.springframework.stereotype.Component;
 public final class ImportFunction extends AbstractSymbolListPackageFunction {
 
 	/**
-	 * Serializable Version Unique Identifier.
-	 */
-	private static final long serialVersionUID = -8715208276814574717L;
-
-	/**
 	 * Public constructor passing the documentation string.
 	 */
 	public ImportFunction() {

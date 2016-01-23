@@ -20,8 +20,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class FunctionExpander extends MacroFunctionExpander<CompilerFunctionStruct> {
 
-	private static final long serialVersionUID = -8290125563768560922L;
-
 	@Autowired
 	private LambdaExpander lambdaExpander;
 

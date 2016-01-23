@@ -27,8 +27,6 @@ public final class GetStructureSlotValueFunction extends FunctionStruct {
 
 	public static final SymbolStruct GET_STRUCTURE_SLOT_VALUE = GlobalPackageStruct.SYSTEM.intern("GET-STRUCTURE-SLOT-VALUE").getSymbol();
 
-	private static final long serialVersionUID = 8765173339549970564L;
-
 	private GetStructureSlotValueFunction() {
 		super("Gets the slot value matching the provided symbol for the provided structure-object.", getInitLambdaListBindings());
 	}

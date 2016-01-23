@@ -25,8 +25,6 @@ public final class ConjugateFunction extends FunctionStruct {
 
 	public static final SymbolStruct CONJUGATE = GlobalPackageStruct.COMMON_LISP.intern("CONJUGATE").getSymbol();
 
-	private static final long serialVersionUID = -8426866238961886112L;
-
 	@Autowired
 	private Printer printer;
 

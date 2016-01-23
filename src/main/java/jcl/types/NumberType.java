@@ -43,11 +43,6 @@ public interface NumberType extends TType {
 		private static final class NumberTypeImpl extends TypeBaseClass implements NumberType, AtomicTypeSpecifier {
 
 			/**
-			 * Serializable Version Unique Identifier.
-			 */
-			private static final long serialVersionUID = -5294062331876830385L;
-
-			/**
 			 * Private constructor.
 			 */
 			private NumberTypeImpl() {

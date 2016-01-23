@@ -74,11 +74,6 @@ public interface RationalType extends RealType {
 		private static final class RationalTypeImpl extends TypeBaseClass implements RationalType, AtomicTypeSpecifier, CompoundTypeSpecifier {
 
 			/**
-			 * Serializable Version Unique Identifier.
-			 */
-			private static final long serialVersionUID = 5111174222785842955L;
-
-			/**
 			 * The interval range in which the {@link RationalType} type exists.
 			 */
 			private final IntervalDesignator<BigInteger> intervalDesignator;

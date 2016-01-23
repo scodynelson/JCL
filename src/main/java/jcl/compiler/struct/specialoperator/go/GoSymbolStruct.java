@@ -8,8 +8,6 @@ import jcl.symbols.SymbolStruct;
 
 public class GoSymbolStruct extends GoStruct<SymbolStruct> {
 
-	private static final long serialVersionUID = -6696260185148126193L;
-
 	public GoSymbolStruct(final SymbolStruct tag) {
 		super(tag);
 	}

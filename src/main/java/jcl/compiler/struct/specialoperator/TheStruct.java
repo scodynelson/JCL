@@ -10,8 +10,6 @@ import jcl.types.typespecifiers.TypeSpecifier;
 
 public class TheStruct extends CompilerSpecialOperatorStruct {
 
-	private static final long serialVersionUID = -8054543185157500625L;
-
 	private final TypeSpecifier valueType;
 
 	private final LispStruct form;

@@ -27,8 +27,6 @@ import jcl.symbols.SymbolStruct;
 @SuppressWarnings("all")
 public class TestGroundMacroFunctionExpanderGenerator extends MacroFunctionExpander<LispStruct> {
 
-	private static final long serialVersionUID = -1939696402314939143L;
-
 	public TestGroundMacroFunctionExpanderGenerator() {
 		this(null);
 	}

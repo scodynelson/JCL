@@ -30,8 +30,6 @@ public final class FuncallFunction extends FunctionStruct {
 
 	public static final SymbolStruct FUNCALL = GlobalPackageStruct.COMMON_LISP.intern("FUNCALL").getSymbol();
 
-	private static final long serialVersionUID = -1425587290881971372L;
-
 	@Autowired
 	private Printer printer;
 

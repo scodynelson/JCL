@@ -49,11 +49,6 @@ public class IntegerStruct extends RationalStruct {
 	public static final IntegerStruct MINUS_ONE = new IntegerStruct(BigInteger.valueOf(-1));
 
 	/**
-	 * Serializable Version Unique Identifier.
-	 */
-	private static final long serialVersionUID = -4665072618932472349L;
-
-	/**
 	 * The internal {@link BigInteger} containing the float contents.
 	 */
 	private final BigInteger bigInteger;

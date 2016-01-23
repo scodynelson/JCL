@@ -12,8 +12,6 @@ import jcl.symbols.SymbolStruct;
 
 public class DefstructStruct extends CompilerSpecialOperatorStruct {
 
-	private static final long serialVersionUID = -7747095883491636502L;
-
 	private final SymbolStruct structureSymbol;
 
 	private final StructureClassStruct includeStructureClass;

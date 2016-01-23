@@ -26,8 +26,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class EvalWhenExpander extends MacroFunctionExpander<LispStruct> {
 
-	private static final long serialVersionUID = -7301369273443154417L;
-
 	private static final Set<SymbolStruct> SITUATION_KEYWORDS = new HashSet<>(6);
 
 	static {

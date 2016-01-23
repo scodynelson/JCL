@@ -21,8 +21,6 @@ import org.apache.commons.lang3.tuple.Pair;
  */
 public class StructureObjectStruct implements LispStruct {
 
-	private static final long serialVersionUID = 5766790087319221572L;
-
 	protected final StructureClassStruct structureClass;
 
 	protected final SymbolStruct structureSymbol;

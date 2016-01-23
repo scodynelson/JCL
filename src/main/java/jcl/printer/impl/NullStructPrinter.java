@@ -11,8 +11,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class NullStructPrinter implements LispPrinter<NullStruct> {
 
-	private static final long serialVersionUID = -1270182745085221302L;
-
 	@Override
 	public String print(final NullStruct object) {
 		return "NIL";

@@ -14,8 +14,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class IntegerStructPrinter implements LispPrinter<IntegerStruct> {
 
-	private static final long serialVersionUID = 3499223261380244866L;
-
 	/**
 	 * Int constant for the value '2'.
 	 */

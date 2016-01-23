@@ -26,8 +26,6 @@ public final class ScaleFloatFunction extends FunctionStruct {
 
 	public static final SymbolStruct SCALE_FLOAT = GlobalPackageStruct.COMMON_LISP.intern("SCALE-FLOAT").getSymbol();
 
-	private static final long serialVersionUID = -7937903222796631877L;
-
 	@Autowired
 	private Printer printer;
 

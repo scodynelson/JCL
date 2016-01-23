@@ -24,11 +24,6 @@ import org.springframework.stereotype.Component;
 public final class InPackageFunction extends AbstractCommonLispFunctionStruct {
 
 	/**
-	 * Serializable Version Unique Identifier.
-	 */
-	private static final long serialVersionUID = 5831829564256951336L;
-
-	/**
 	 * Public constructor passing the documentation string.
 	 */
 	public InPackageFunction() {

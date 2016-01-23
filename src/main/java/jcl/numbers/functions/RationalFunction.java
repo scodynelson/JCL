@@ -25,8 +25,6 @@ public final class RationalFunction extends FunctionStruct {
 
 	public static final SymbolStruct RATIONAL = GlobalPackageStruct.COMMON_LISP.intern("RATIONAL").getSymbol();
 
-	private static final long serialVersionUID = 8676731302230968319L;
-
 	@Autowired
 	private Printer printer;
 

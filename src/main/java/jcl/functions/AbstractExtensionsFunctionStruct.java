@@ -10,8 +10,6 @@ import jcl.symbols.SymbolStruct;
 
 public abstract class AbstractExtensionsFunctionStruct extends AbstractCommonLispFunctionStruct {
 
-	private static final long serialVersionUID = -137945525862999968L;
-
 	protected AbstractExtensionsFunctionStruct(final String documentation) {
 		super(documentation);
 		initLambdaListBindings();

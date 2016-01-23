@@ -35,11 +35,6 @@ public interface StandardClassType extends ClassType {
 		private static final class StandardClassTypeImpl extends TypeBaseClass implements StandardClassType, AtomicTypeSpecifier {
 
 			/**
-			 * Serializable Version Unique Identifier.
-			 */
-			private static final long serialVersionUID = 8869486055336833896L;
-
-			/**
 			 * Private constructor.
 			 */
 			private StandardClassTypeImpl() {

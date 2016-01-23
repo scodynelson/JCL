@@ -10,8 +10,6 @@ import jcl.symbols.SymbolStruct;
 
 public abstract class SymbolMacroExpander<O extends LispStruct> extends MacroExpander<O, SymbolStruct> {
 
-	private static final long serialVersionUID = -4579665130389126919L;
-
 	@Override
 	public LispStruct apply(final LispStruct... lispStructs) {
 		final SymbolStruct symbolStruct = (SymbolStruct) lispStructs[0];

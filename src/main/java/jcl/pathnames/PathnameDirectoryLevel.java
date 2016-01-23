@@ -4,8 +4,6 @@
 
 package jcl.pathnames;
 
-import java.io.Serializable;
-
 import jcl.conditions.exceptions.FileErrorException;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -17,12 +15,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  * The {@link PathnameDirectoryLevel} is the object representation of a specific directory level of the 'directory'
  * element of a Lisp 'pathname' type.
  */
-public final class PathnameDirectoryLevel implements Serializable {
-
-	/**
-	 * Serializable Version Unique Identifier.
-	 */
-	private static final long serialVersionUID = 6880250210314842459L;
+public final class PathnameDirectoryLevel {
 
 	/**
 	 * The pathname directory level value.

@@ -25,8 +25,6 @@ public final class AtomFunction extends FunctionStruct {
 
 	public static final SymbolStruct ATOM = GlobalPackageStruct.COMMON_LISP.intern("ATOM").getSymbol();
 
-	private static final long serialVersionUID = 2155686329445366209L;
-
 	private AtomFunction() {
 		super("Returns T if object is of type atom; otherwise, returns NIL.", getInitLambdaListBindings());
 	}

@@ -25,8 +25,6 @@ public final class AshFunction extends FunctionStruct {
 
 	public static final SymbolStruct ASH = GlobalPackageStruct.COMMON_LISP.intern("ASH").getSymbol();
 
-	private static final long serialVersionUID = 990280311508475609L;
-
 	@Autowired
 	private Printer printer;
 

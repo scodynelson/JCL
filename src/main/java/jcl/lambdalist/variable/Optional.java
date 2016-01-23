@@ -1,6 +1,5 @@
 package jcl.lambdalist.variable;
 
-import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -17,9 +16,7 @@ import java.util.List;
  * @param <VAR>
  * 		the type of the initial form
  */
-public class Optional<VAR> implements Serializable {
-
-	private static final long serialVersionUID = 7718154232664886745L;
+public class Optional<VAR> {
 
 	private final List<OptionalVar<VAR>> vars;
 

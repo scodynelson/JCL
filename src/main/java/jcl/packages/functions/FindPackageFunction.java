@@ -23,11 +23,6 @@ import org.springframework.stereotype.Component;
 public final class FindPackageFunction extends AbstractCommonLispFunctionStruct {
 
 	/**
-	 * Serializable Version Unique Identifier.
-	 */
-	private static final long serialVersionUID = -3051378531665513323L;
-
-	/**
 	 * Public constructor passing the documentation string.
 	 */
 	public FindPackageFunction() {

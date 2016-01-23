@@ -53,11 +53,6 @@ public interface SimpleBitVectorType extends BitVectorType, SimpleArrayType {
 		private static final class SimpleBitVectorTypeImpl extends TypeBaseClass implements SimpleBitVectorType, AtomicTypeSpecifier, CompoundTypeSpecifier {
 
 			/**
-			 * Serializable Version Unique Identifier.
-			 */
-			private static final long serialVersionUID = 8121576367616102856L;
-
-			/**
 			 * Static {@link BitType} element type for {@link SimpleBitVectorType} types.
 			 */
 			private static final LispType ELEMENT_TYPE = BitType.INSTANCE;

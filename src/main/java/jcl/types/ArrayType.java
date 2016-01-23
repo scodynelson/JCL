@@ -72,11 +72,6 @@ public interface ArrayType extends TType {
 		private static final class ArrayTypeImpl extends TypeBaseClass implements ArrayType, AtomicTypeSpecifier, CompoundTypeSpecifier {
 
 			/**
-			 * Serializable Version Unique Identifier.
-			 */
-			private static final long serialVersionUID = 2325035154860979758L;
-
-			/**
 			 * The dimensions of the {@link ArrayType} type.
 			 */
 			private final DimensionsDesignator dimensions;

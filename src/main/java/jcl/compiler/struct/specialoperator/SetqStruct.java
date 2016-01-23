@@ -4,7 +4,6 @@
 
 package jcl.compiler.struct.specialoperator;
 
-import java.io.Serializable;
 import java.util.List;
 
 import jcl.LispStruct;
@@ -12,8 +11,6 @@ import jcl.compiler.struct.CompilerSpecialOperatorStruct;
 import jcl.symbols.SymbolStruct;
 
 public class SetqStruct extends CompilerSpecialOperatorStruct {
-
-	private static final long serialVersionUID = -5092653942359022766L;
 
 	private final List<SetqPair> setqPairs;
 
@@ -25,9 +22,7 @@ public class SetqStruct extends CompilerSpecialOperatorStruct {
 		return setqPairs;
 	}
 
-	public static class SetqPair implements Serializable {
-
-		private static final long serialVersionUID = -7804939280136663517L;
+	public static class SetqPair {
 
 		private final SymbolStruct var;
 

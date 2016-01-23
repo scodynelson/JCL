@@ -25,8 +25,6 @@ public final class TanHFunction extends FunctionStruct {
 
 	public static final SymbolStruct TANH = GlobalPackageStruct.COMMON_LISP.intern("TANH").getSymbol();
 
-	private static final long serialVersionUID = 2921951068732093986L;
-
 	@Autowired
 	private Printer printer;
 

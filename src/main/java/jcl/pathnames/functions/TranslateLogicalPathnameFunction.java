@@ -25,8 +25,6 @@ public final class TranslateLogicalPathnameFunction extends FunctionStruct {
 
 	public static final SymbolStruct TRANSLATE_LOGICAL_PATHNAME = GlobalPackageStruct.COMMON_LISP.intern("TRANSLATE-LOGICAL-PATHNAME").getSymbol();
 
-	private static final long serialVersionUID = -4200334862391198062L;
-
 	@Autowired
 	private PathnameFunction pathnameFunction;
 

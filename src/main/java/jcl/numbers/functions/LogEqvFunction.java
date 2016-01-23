@@ -23,8 +23,6 @@ public final class LogEqvFunction extends FunctionStruct {
 
 	public static final SymbolStruct LOGEQV = GlobalPackageStruct.COMMON_LISP.intern("LOGEQV").getSymbol();
 
-	private static final long serialVersionUID = 1538837662052530866L;
-
 	@Autowired
 	private Printer printer;
 

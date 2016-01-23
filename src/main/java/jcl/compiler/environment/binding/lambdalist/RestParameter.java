@@ -10,8 +10,6 @@ import jcl.types.ListType;
 
 public class RestParameter extends Parameter {
 
-	private static final long serialVersionUID = 5070599837585531277L;
-
 	public RestParameter(final SymbolStruct var) {
 		this(var, false);
 	}

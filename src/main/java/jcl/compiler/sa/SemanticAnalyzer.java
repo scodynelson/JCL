@@ -4,13 +4,11 @@
 
 package jcl.compiler.sa;
 
-import java.io.Serializable;
-
 import jcl.compiler.struct.specialoperator.lambda.LambdaStruct;
 import jcl.lists.ListStruct;
 
 @FunctionalInterface
-public interface SemanticAnalyzer extends Serializable {
+public interface SemanticAnalyzer {
 
 	LambdaStruct analyze(final ListStruct form);
 }

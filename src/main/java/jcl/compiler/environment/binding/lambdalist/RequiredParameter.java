@@ -13,8 +13,6 @@ import jcl.types.TType;
 
 public class RequiredParameter extends Parameter {
 
-	private static final long serialVersionUID = 2544143727820268303L;
-
 	public RequiredParameter(final SymbolStruct var) {
 		this(var, false);
 	}

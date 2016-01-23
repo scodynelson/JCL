@@ -9,8 +9,6 @@ import jcl.compiler.struct.CompilerSpecialOperatorStruct;
 
 public class LocallyStruct extends CompilerSpecialOperatorStruct {
 
-	private static final long serialVersionUID = 3549306656634788482L;
-
 	private final PrognStruct forms;
 
 	private final Environment locallyEnvironment;

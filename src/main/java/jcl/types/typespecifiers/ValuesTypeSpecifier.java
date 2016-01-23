@@ -24,11 +24,6 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 public class ValuesTypeSpecifier extends TypeBaseClass implements CompoundTypeSpecifier {
 
 	/**
-	 * Serializable Version Unique Identifier.
-	 */
-	private static final long serialVersionUID = 8149280908073613528L;
-
-	/**
 	 * The required arguments.
 	 */
 	private final List<TypeSpecifier> typeSpecifiers;

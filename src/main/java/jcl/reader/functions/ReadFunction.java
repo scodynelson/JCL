@@ -33,8 +33,6 @@ public final class ReadFunction extends FunctionStruct {
 
 	public static final SymbolStruct READ = GlobalPackageStruct.COMMON_LISP.intern("READ").getSymbol();
 
-	private static final long serialVersionUID = 907539293814708746L;
-
 	@Autowired
 	private ApplicationContext context;
 

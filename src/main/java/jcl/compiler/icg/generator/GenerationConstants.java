@@ -47,11 +47,7 @@ interface GenerationConstants {
 
 	String JAVA_EXTENSION = ".java";
 
-	String SERIAL_VERSION_UID_FIELD = "serialVersionUID";
-
 	String SINGLETON_INSTANCE = "INSTANCE";
-
-	String JAVA_LONG_TYPE_NAME = Type.LONG_TYPE.getDescriptor();
 
 	String INIT_METHOD_NAME = "<init>";
 

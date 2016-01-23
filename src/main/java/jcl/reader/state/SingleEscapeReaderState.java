@@ -29,11 +29,6 @@ import org.springframework.stereotype.Component;
 class SingleEscapeReaderState implements ReaderState {
 
 	/**
-	 * Serializable Version Unique Identifier.
-	 */
-	private static final long serialVersionUID = -253481092824201426L;
-
-	/**
 	 * {@link ReaderStateMediator} singleton used by the reader algorithm.
 	 */
 	@Autowired

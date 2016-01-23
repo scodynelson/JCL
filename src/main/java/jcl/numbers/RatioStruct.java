@@ -35,11 +35,6 @@ public class RatioStruct extends RationalStruct {
 	public static final RatioStruct ONE = new RatioStruct(BigFraction.ONE);
 
 	/**
-	 * Serializable Version Unique Identifier.
-	 */
-	private static final long serialVersionUID = -2468768422160538347L;
-
-	/**
 	 * The internal {@link BigFraction} containing the ratio contents.
 	 */
 	private final BigFraction bigFraction;

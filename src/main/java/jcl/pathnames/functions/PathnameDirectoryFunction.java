@@ -36,8 +36,6 @@ public final class PathnameDirectoryFunction extends FunctionStruct {
 
 	public static final SymbolStruct PATHNAME_DIRECTORY = GlobalPackageStruct.COMMON_LISP.intern("PATHNAME-DIRECTORY").getSymbol();
 
-	private static final long serialVersionUID = 4226158594681993729L;
-
 	@Autowired
 	private PathnameFunction pathnameFunction;
 

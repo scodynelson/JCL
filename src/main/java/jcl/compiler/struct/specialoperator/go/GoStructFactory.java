@@ -4,13 +4,9 @@
 
 package jcl.compiler.struct.specialoperator.go;
 
-import java.io.Serializable;
-
 import jcl.LispStruct;
 
-public abstract class GoStructFactory<T extends LispStruct> implements Serializable {
-
-	private static final long serialVersionUID = -5463110914990614222L;
+public abstract class GoStructFactory<T extends LispStruct> {
 
 	protected GoStructFactory() {
 	}

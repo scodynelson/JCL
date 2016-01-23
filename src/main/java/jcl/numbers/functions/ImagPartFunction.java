@@ -25,8 +25,6 @@ public final class ImagPartFunction extends FunctionStruct {
 
 	public static final SymbolStruct IMAGPART = GlobalPackageStruct.COMMON_LISP.intern("IMAGPART").getSymbol();
 
-	private static final long serialVersionUID = 6677692877980023452L;
-
 	@Autowired
 	private Printer printer;
 

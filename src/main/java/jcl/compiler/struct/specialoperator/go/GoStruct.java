@@ -9,8 +9,6 @@ import jcl.compiler.struct.CompilerSpecialOperatorStruct;
 
 public class GoStruct<T extends LispStruct> extends CompilerSpecialOperatorStruct {
 
-	private static final long serialVersionUID = -4331758400526441262L;
-
 	private final T tag;
 
 	protected GoStruct(final T tag) {

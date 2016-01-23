@@ -26,11 +26,6 @@ import org.springframework.stereotype.Component;
 public class ApostropheReaderMacroFunction extends ReaderMacroFunction {
 
 	/**
-	 * Serializable Version Unique Identifier.
-	 */
-	private static final long serialVersionUID = 1319912697712324737L;
-
-	/**
 	 * Initializes the reader macro function and adds it to the global readtable.
 	 */
 	@PostConstruct

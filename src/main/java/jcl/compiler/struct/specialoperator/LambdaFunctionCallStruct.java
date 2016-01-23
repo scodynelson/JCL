@@ -11,8 +11,6 @@ import jcl.compiler.struct.CompilerSpecialOperatorStruct;
 
 public class LambdaFunctionCallStruct extends CompilerSpecialOperatorStruct {
 
-	private static final long serialVersionUID = -6330612245404973713L;
-
 	private final LambdaCompilerFunctionStruct lambdaCompilerFunction;
 
 	private final List<LispStruct> arguments;

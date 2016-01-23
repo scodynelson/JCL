@@ -28,11 +28,6 @@ import jcl.types.SymbolType;
 abstract class AbstractSymbolListPackageFunction extends AbstractOptionalPackageFunction {
 
 	/**
-	 * Serializable Version Unique Identifier.
-	 */
-	private static final long serialVersionUID = -5082610749836356431L;
-
-	/**
 	 * Protected constructor passing the provided {@code documentation} string to the super constructor.
 	 *
 	 * @param documentation

@@ -37,11 +37,6 @@ public interface RatioType extends RationalType {
 		private static final class RatioTypeImpl extends TypeBaseClass implements RatioType, AtomicTypeSpecifier {
 
 			/**
-			 * Serializable Version Unique Identifier.
-			 */
-			private static final long serialVersionUID = -7412019342239495711L;
-
-			/**
 			 * Private constructor.
 			 */
 			private RatioTypeImpl() {

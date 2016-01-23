@@ -1,10 +1,8 @@
 package jcl.compiler.icg.generator;
 
-import java.security.SecureRandom;
 import java.util.Deque;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Random;
 import java.util.Set;
 
 import jcl.LispStruct;
@@ -18,7 +16,6 @@ import jcl.compiler.struct.specialoperator.PrognStruct;
 import jcl.compiler.struct.specialoperator.SymbolMacroletStruct;
 import jcl.symbols.SymbolStruct;
 import org.objectweb.asm.ClassWriter;
-import org.objectweb.asm.FieldVisitor;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
@@ -128,14 +125,6 @@ class SymbolMacroletCodeGenerator implements CodeGenerator<SymbolMacroletStruct>
 
 		cw.visitSource(fileName + ".java", null);
 
-		{
-			final Random random = new SecureRandom();
-			final long serialVersionUID = random.nextLong();
-
-			final FieldVisitor fv = cw.visitField(Opcodes.ACC_PRIVATE + Opcodes.ACC_FINAL + Opcodes.ACC_STATIC, "serialVersionUID", "J", null, serialVersionUID);
-
-			fv.visitEnd();
-		}
 		{
 			final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PUBLIC, "<init>", "()V", null, null);
 

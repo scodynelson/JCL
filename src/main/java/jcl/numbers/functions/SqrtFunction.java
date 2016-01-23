@@ -25,8 +25,6 @@ public final class SqrtFunction extends FunctionStruct {
 
 	public static final SymbolStruct SQRT = GlobalPackageStruct.COMMON_LISP.intern("SQRT").getSymbol();
 
-	private static final long serialVersionUID = -8918700714284554490L;
-
 	@Autowired
 	private Printer printer;
 

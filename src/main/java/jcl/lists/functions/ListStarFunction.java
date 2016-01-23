@@ -20,8 +20,6 @@ public final class ListStarFunction extends FunctionStruct {
 
 	public static final SymbolStruct LIST_STAR = GlobalPackageStruct.COMMON_LISP.intern("LIST*").getSymbol();
 
-	private static final long serialVersionUID = -5968990222195634426L;
-
 	private ListStarFunction() {
 		super("Returns a list containing the supplied objects where the last argument becomes the cdr of the last cons constructed.", getInitLambdaListBindings());
 	}

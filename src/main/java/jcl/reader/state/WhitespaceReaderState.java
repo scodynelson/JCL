@@ -24,11 +24,6 @@ import org.springframework.stereotype.Component;
 class WhitespaceReaderState implements ReaderState {
 
 	/**
-	 * Serializable Version Unique Identifier.
-	 */
-	private static final long serialVersionUID = -4394081567280147347L;
-
-	/**
 	 * {@link ReaderStateMediator} singleton used by the reader algorithm.
 	 */
 	@Autowired

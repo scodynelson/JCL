@@ -10,8 +10,6 @@ import jcl.types.TType;
 
 public class AuxParameter extends Parameter {
 
-	private static final long serialVersionUID = 6424631350711831345L;
-
 	public AuxParameter(final SymbolStruct var, final LispStruct initForm) {
 		this(var, initForm, false);
 	}

@@ -19,8 +19,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class UnwindProtectExpander extends MacroFunctionExpander<UnwindProtectStruct> {
 
-	private static final long serialVersionUID = 3379320303375207710L;
-
 	@Autowired
 	private FormAnalyzer formAnalyzer;
 

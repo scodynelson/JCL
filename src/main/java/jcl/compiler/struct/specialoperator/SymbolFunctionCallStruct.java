@@ -11,8 +11,6 @@ import jcl.compiler.struct.CompilerSpecialOperatorStruct;
 
 public class SymbolFunctionCallStruct extends CompilerSpecialOperatorStruct {
 
-	private static final long serialVersionUID = 2676444242188589421L;
-
 	private final SymbolCompilerFunctionStruct symbolCompilerFunction;
 
 	private final List<LispStruct> arguments;

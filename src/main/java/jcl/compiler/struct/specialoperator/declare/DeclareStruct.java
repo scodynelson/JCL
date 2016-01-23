@@ -11,8 +11,6 @@ import jcl.compiler.struct.CompilerSpecialOperatorStruct;
 
 public class DeclareStruct extends CompilerSpecialOperatorStruct {
 
-	private static final long serialVersionUID = -7730761501615283012L;
-
 	private final List<SpecialDeclarationStruct> specialDeclarations = new ArrayList<>();
 
 	private JavaClassNameDeclarationStruct javaClassNameDeclaration;

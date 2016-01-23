@@ -27,8 +27,6 @@ public final class EvenPFunction extends FunctionStruct {
 
 	public static final SymbolStruct EVENP = GlobalPackageStruct.COMMON_LISP.intern("EVENP").getSymbol();
 
-	private static final long serialVersionUID = 3872098052930948397L;
-
 	@Autowired
 	private Printer printer;
 

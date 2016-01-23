@@ -23,8 +23,6 @@ public final class LogXorFunction extends FunctionStruct {
 
 	public static final SymbolStruct LOGXOR = GlobalPackageStruct.COMMON_LISP.intern("LOGXOR").getSymbol();
 
-	private static final long serialVersionUID = -9184222555038405807L;
-
 	@Autowired
 	private Printer printer;
 

@@ -17,8 +17,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class LetExpander extends ClosureCreationExpander<LetStruct.LetVar> {
 
-	private static final long serialVersionUID = 2933802423859476026L;
-
 	@Autowired
 	private FormAnalyzer formAnalyzer;
 

@@ -27,11 +27,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class AtSignReaderMacroFunction extends ReaderMacroFunction {
 
-	/**
-	 * Serializable Version Unique Identifier.
-	 */
-	private static final long serialVersionUID = -1864699043486615339L;
-
 	@Autowired
 	private JClass jClass;
 

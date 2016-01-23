@@ -27,11 +27,6 @@ import org.springframework.stereotype.Component;
 public class SharpPlusSignReaderMacroFunction extends ReaderMacroFunction {
 
 	/**
-	 * Serializable Version Unique Identifier.
-	 */
-	private static final long serialVersionUID = 1554400291119838206L;
-
-	/**
 	 * {@link Autowired} {@link FeaturesReaderMacroFunction} used for reading features and either reading or
 	 * suppressing the following {@link LispStruct}s based on whether or not the feature is present.
 	 */

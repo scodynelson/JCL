@@ -21,8 +21,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class BitVectorStructPrinter implements LispPrinter<BitVectorStruct> {
 
-	private static final long serialVersionUID = -1549143424753157961L;
-
 	@Autowired
 	private Printer printer;
 

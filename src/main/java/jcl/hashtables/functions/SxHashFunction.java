@@ -19,8 +19,6 @@ import org.springframework.stereotype.Component;
 @Component
 public final class SxHashFunction extends AbstractCommonLispFunctionStruct {
 
-	private static final long serialVersionUID = -7444850332899583238L;
-
 	@Autowired
 	private TypeValidator validator;
 

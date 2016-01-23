@@ -40,11 +40,6 @@ public interface SynonymStreamType extends StreamType {
 		private static final class SynonymStreamTypeImpl extends TypeBaseClass implements SynonymStreamType, AtomicTypeSpecifier {
 
 			/**
-			 * Serializable Version Unique Identifier.
-			 */
-			private static final long serialVersionUID = -6782441795090632210L;
-
-			/**
 			 * Private constructor.
 			 */
 			private SynonymStreamTypeImpl() {

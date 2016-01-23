@@ -24,8 +24,6 @@ public interface FooStructureType extends StructureObjectType {
 
 		private static final class FooStructureTypeImpl extends TypeBaseClass implements FooStructureType, AtomicTypeSpecifier {
 
-			private static final long serialVersionUID = -938155620899376896L;
-
 			private FooStructureTypeImpl() {
 				super("FOO");
 			}

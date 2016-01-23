@@ -21,8 +21,6 @@ import org.springframework.stereotype.Component;
 @Component
 public final class HashTableSizeFunction extends AbstractCommonLispFunctionStruct {
 
-	private static final long serialVersionUID = -247885852390208866L;
-
 	@Autowired
 	private TypeValidator validator;
 

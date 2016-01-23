@@ -12,8 +12,6 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  */
 public class KeywordStruct extends ConstantStruct<KeywordStruct> {
 
-	private static final long serialVersionUID = -8081437644901785951L;
-
 	/**
 	 * Public constructor.
 	 *

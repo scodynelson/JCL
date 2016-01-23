@@ -19,8 +19,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class ConsStructPrinter implements LispPrinter<ConsStruct> {
 
-	private static final long serialVersionUID = 2018276801770003739L;
-
 	@Autowired
 	private Printer printer;
 

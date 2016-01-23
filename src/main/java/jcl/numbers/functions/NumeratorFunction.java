@@ -25,8 +25,6 @@ public final class NumeratorFunction extends FunctionStruct {
 
 	public static final SymbolStruct NUMERATOR = GlobalPackageStruct.COMMON_LISP.intern("NUMERATOR").getSymbol();
 
-	private static final long serialVersionUID = 6210778370087072605L;
-
 	@Autowired
 	private Printer printer;
 

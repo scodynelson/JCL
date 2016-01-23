@@ -4,7 +4,6 @@
 
 package jcl.reader.macrofunction;
 
-import java.io.Serializable;
 import java.math.BigInteger;
 
 import jcl.LispStruct;
@@ -27,12 +26,7 @@ import org.springframework.stereotype.Component;
  * provided radix value.
  */
 @Component
-final class RationalReaderMacroFunction implements Serializable {
-
-	/**
-	 * Serializable Version Unique Identifier.
-	 */
-	private static final long serialVersionUID = -8849349790791106477L;
+final class RationalReaderMacroFunction {
 
 	/**
 	 * {@link Autowired} {@link Printer} used for printing elements and structures to the output stream.

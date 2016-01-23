@@ -39,11 +39,6 @@ public interface BitType extends UnsignedByteType {
 		private static final class BitTypeImpl extends AndTypeSpecifier implements BitType, AtomicTypeSpecifier {
 
 			/**
-			 * Serializable Version Unique Identifier.
-			 */
-			private static final long serialVersionUID = 1872465815435985391L;
-
-			/**
 			 * Private constructor.
 			 */
 			private BitTypeImpl() {

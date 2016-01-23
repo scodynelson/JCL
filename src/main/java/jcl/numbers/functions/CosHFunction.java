@@ -25,8 +25,6 @@ public final class CosHFunction extends FunctionStruct {
 
 	public static final SymbolStruct COSH = GlobalPackageStruct.COMMON_LISP.intern("COSH").getSymbol();
 
-	private static final long serialVersionUID = -4866561095341902549L;
-
 	@Autowired
 	private Printer printer;
 

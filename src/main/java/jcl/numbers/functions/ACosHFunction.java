@@ -25,8 +25,6 @@ public final class ACosHFunction extends FunctionStruct {
 
 	public static final SymbolStruct ACOSH = GlobalPackageStruct.COMMON_LISP.intern("ACOSH").getSymbol();
 
-	private static final long serialVersionUID = -6111322168461853318L;
-
 	@Autowired
 	private Printer printer;
 

@@ -9,8 +9,6 @@ import jcl.types.ListType;
 
 public class BodyParameter extends Parameter {
 
-	private static final long serialVersionUID = 491035484834969841L;
-
 	public BodyParameter(final SymbolStruct var) {
 		this(var, false);
 	}

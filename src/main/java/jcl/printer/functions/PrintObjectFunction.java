@@ -25,8 +25,6 @@ public final class PrintObjectFunction extends FunctionStruct {
 
 	public static final SymbolStruct PRINT_OBJECT = GlobalPackageStruct.COMMON_LISP.intern("PRINT-OBJECT").getSymbol();
 
-	private static final long serialVersionUID = -3100296760084297420L;
-
 	private static final Logger LOGGER = LoggerFactory.getLogger(PrintObjectFunction.class);
 
 	@Autowired

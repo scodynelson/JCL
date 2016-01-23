@@ -14,8 +14,6 @@ import org.springframework.stereotype.Component;
 @Component
 public final class TotalMemory extends AbstractExtensionsFunctionStruct {
 
-	private static final long serialVersionUID = 8319997947442435520L;
-
 	public TotalMemory() {
 		super("Returns the current total runtime memory usage.");
 	}

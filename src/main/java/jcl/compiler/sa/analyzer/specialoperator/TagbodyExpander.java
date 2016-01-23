@@ -24,8 +24,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class TagbodyExpander extends MacroFunctionExpander<TagbodyStruct> {
 
-	private static final long serialVersionUID = -1543233114989622747L;
-
 	@Autowired
 	private FormAnalyzer formAnalyzer;
 

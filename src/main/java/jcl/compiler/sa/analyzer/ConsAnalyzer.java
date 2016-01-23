@@ -32,8 +32,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class ConsAnalyzer implements Analyzer<LispStruct, ConsStruct> {
 
-	private static final long serialVersionUID = -503813311252711494L;
-
 	@Autowired
 	private FormAnalyzer formAnalyzer;
 

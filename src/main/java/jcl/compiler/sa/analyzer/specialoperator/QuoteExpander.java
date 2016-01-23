@@ -14,8 +14,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class QuoteExpander extends MacroFunctionExpander<QuoteStruct> {
 
-	private static final long serialVersionUID = 2741011595927247743L;
-
 	@Autowired
 	private LispFormValueValidator validator;
 

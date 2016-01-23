@@ -28,8 +28,6 @@ public final class FloatSignFunction extends FunctionStruct {
 
 	public static final SymbolStruct FLOAT_SIGN = GlobalPackageStruct.COMMON_LISP.intern("FLOAT-SIGN").getSymbol();
 
-	private static final long serialVersionUID = 6851077465479293675L;
-
 	@Autowired
 	private Printer printer;
 

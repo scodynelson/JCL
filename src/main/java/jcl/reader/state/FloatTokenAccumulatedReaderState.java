@@ -29,11 +29,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class FloatTokenAccumulatedReaderState implements ReaderState {
 
-	/**
-	 * Serializable Version Unique Identifier.
-	 */
-	private static final long serialVersionUID = 3908401531730468150L;
-
 	@Override
 	public NumberStruct process(final TokenBuilder tokenBuilder) {
 

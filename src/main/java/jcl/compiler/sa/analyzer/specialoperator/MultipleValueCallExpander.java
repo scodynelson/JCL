@@ -22,8 +22,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class MultipleValueCallExpander extends MacroFunctionExpander<MultipleValueCallStruct> {
 
-	private static final long serialVersionUID = -8350781874747372684L;
-
 	@Autowired
 	private FormAnalyzer formAnalyzer;
 

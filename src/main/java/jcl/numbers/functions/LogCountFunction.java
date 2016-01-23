@@ -25,8 +25,6 @@ public final class LogCountFunction extends FunctionStruct {
 
 	public static final SymbolStruct LOGCOUNT = GlobalPackageStruct.COMMON_LISP.intern("LOGCOUNT").getSymbol();
 
-	private static final long serialVersionUID = 8334910440033488061L;
-
 	@Autowired
 	private Printer printer;
 

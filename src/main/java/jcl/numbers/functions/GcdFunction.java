@@ -23,8 +23,6 @@ public final class GcdFunction extends FunctionStruct {
 
 	public static final SymbolStruct GCD = GlobalPackageStruct.COMMON_LISP.intern("GCD").getSymbol();
 
-	private static final long serialVersionUID = 7541449030040883862L;
-
 	@Autowired
 	private Printer printer;
 

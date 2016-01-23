@@ -26,11 +26,6 @@ import org.springframework.context.ApplicationContext;
 public abstract class ReaderMacroFunction extends FunctionStruct {
 
 	/**
-	 * Serializable Version Unique Identifier.
-	 */
-	private static final long serialVersionUID = -5244042303586458372L;
-
-	/**
 	 * {@link Autowired} {@link ApplicationContext} used for getting a new {@link Reader} bean instance.
 	 */
 	@Autowired

@@ -14,8 +14,6 @@ import org.springframework.stereotype.Component;
 @Component
 public final class GC extends AbstractExtensionsFunctionStruct {
 
-	private static final long serialVersionUID = 1273370280152802930L;
-
 	/**
 	 * The logger for this class.
 	 */

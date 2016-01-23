@@ -28,8 +28,6 @@ public final class EqualToFunction extends FunctionStruct {
 
 	public static final SymbolStruct EQUAL_TO = GlobalPackageStruct.COMMON_LISP.intern("=").getSymbol();
 
-	private static final long serialVersionUID = -3354088591917108312L;
-
 	@Autowired
 	private Printer printer;
 

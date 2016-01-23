@@ -20,8 +20,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class OutputStreamPFunction extends AbstractCommonLispFunctionStruct {
 
-	private static final long serialVersionUID = 5069657762619439986L;
-
 	@Autowired
 	private TypeValidator typeValidator;
 

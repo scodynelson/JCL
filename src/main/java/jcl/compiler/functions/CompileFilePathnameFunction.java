@@ -32,8 +32,6 @@ public final class CompileFilePathnameFunction extends FunctionStruct {
 
 	public static final SymbolStruct COMPILE_FILE_PATHNAME = GlobalPackageStruct.COMMON_LISP.intern("COMPILE-FILE-PATHNAME").getSymbol();
 
-	private static final long serialVersionUID = 591587108565227067L;
-
 	@Autowired
 	private MergePathnamesFunction mergePathnamesFunction;
 

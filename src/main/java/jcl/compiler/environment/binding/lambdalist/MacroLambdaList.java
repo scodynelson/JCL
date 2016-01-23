@@ -4,13 +4,10 @@
 
 package jcl.compiler.environment.binding.lambdalist;
 
-import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
 
-public class MacroLambdaList implements Serializable {
-
-	private static final long serialVersionUID = 5857625809333286733L;
+public class MacroLambdaList {
 
 	private final WholeParameter wholeBinding;
 

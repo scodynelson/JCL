@@ -20,11 +20,6 @@ import org.springframework.stereotype.Component;
 public final class CharacterFunction extends AbstractCharacterDesignatorFunction {
 
 	/**
-	 * Serializable Version Unique Identifier.
-	 */
-	private static final long serialVersionUID = -1229967753542859679L;
-
-	/**
 	 * Public constructor passing the documentation string.
 	 */
 	public CharacterFunction() {

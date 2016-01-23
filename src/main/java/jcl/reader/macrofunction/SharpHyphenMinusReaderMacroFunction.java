@@ -27,11 +27,6 @@ import org.springframework.stereotype.Component;
 public class SharpHyphenMinusReaderMacroFunction extends ReaderMacroFunction {
 
 	/**
-	 * Serializable Version Unique Identifier.
-	 */
-	private static final long serialVersionUID = -582954823547720438L;
-
-	/**
 	 * {@link Autowired} {@link FeaturesReaderMacroFunction} used for reading features and either reading or
 	 * suppressing the following {@link LispStruct}s based on whether or not the feature is present.
 	 */

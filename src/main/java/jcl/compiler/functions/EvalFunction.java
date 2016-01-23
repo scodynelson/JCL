@@ -44,8 +44,6 @@ public final class EvalFunction extends FunctionStruct {
 
 	public static final SymbolStruct EVAL = GlobalPackageStruct.COMMON_LISP.intern("EVAL").getSymbol();
 
-	private static final long serialVersionUID = 6775277576397622716L;
-
 	@Autowired
 	private CompileForm compileForm;
 

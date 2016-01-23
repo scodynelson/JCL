@@ -28,11 +28,6 @@ import org.slf4j.LoggerFactory;
 public class FileStreamStruct extends AbstractNativeStreamStruct {
 
 	/**
-	 * Serializable Version Unique Identifier.
-	 */
-	private static final long serialVersionUID = 5508947420127346965L;
-
-	/**
 	 * The logger for this class.
 	 */
 	private static final Logger LOGGER = LoggerFactory.getLogger(FileStreamStruct.class);

@@ -36,11 +36,6 @@ public interface NullType extends SymbolType, ListType {
 		private static final class NullTypeImpl extends TypeBaseClass implements NullType, AtomicTypeSpecifier {
 
 			/**
-			 * Serializable Version Unique Identifier.
-			 */
-			private static final long serialVersionUID = -9181095754133674561L;
-
-			/**
 			 * Private constructor.
 			 */
 			private NullTypeImpl() {

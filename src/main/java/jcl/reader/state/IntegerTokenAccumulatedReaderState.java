@@ -25,11 +25,6 @@ import org.springframework.stereotype.Component;
 public class IntegerTokenAccumulatedReaderState implements ReaderState {
 
 	/**
-	 * Serializable Version Unique Identifier.
-	 */
-	private static final long serialVersionUID = -8986705547108246215L;
-
-	/**
 	 * The list of {@link AttributeType}s that should only be first if present in a numeric token.
 	 */
 	private static final List<AttributeType> FIRST_ONLY_ATTRIBUTES = Arrays.asList(AttributeType.PLUS, AttributeType.MINUS);

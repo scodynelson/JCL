@@ -11,8 +11,6 @@ import jcl.types.GenericFunctionType;
  */
 public abstract class GenericFunctionStruct extends FunctionStruct {
 
-	private static final long serialVersionUID = 7195886854842789542L;
-
 	/**
 	 * Protected constructor.
 	 */

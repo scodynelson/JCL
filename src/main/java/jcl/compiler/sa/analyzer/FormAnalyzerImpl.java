@@ -17,8 +17,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class FormAnalyzerImpl implements FormAnalyzer {
 
-	private static final long serialVersionUID = 7315325926130864447L;
-
 	@Autowired
 	private MacroExpandFunction macroExpandFunction;
 

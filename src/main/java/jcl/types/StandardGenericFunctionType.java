@@ -35,11 +35,6 @@ public interface StandardGenericFunctionType extends GenericFunctionType {
 		private static final class StandardGenericFunctionTypeImpl extends TypeBaseClass implements StandardGenericFunctionType, AtomicTypeSpecifier {
 
 			/**
-			 * Serializable Version Unique Identifier.
-			 */
-			private static final long serialVersionUID = -4167796389671311751L;
-
-			/**
 			 * Private constructor.
 			 */
 			private StandardGenericFunctionTypeImpl() {

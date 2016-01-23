@@ -9,8 +9,6 @@ import jcl.compiler.struct.CompilerSpecialOperatorStruct;
 
 public class CatchStruct extends CompilerSpecialOperatorStruct {
 
-	private static final long serialVersionUID = -1022768814372160089L;
-
 	private final LispStruct catchTag;
 
 	private final PrognStruct forms;

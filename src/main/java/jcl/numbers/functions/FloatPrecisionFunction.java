@@ -25,8 +25,6 @@ public final class FloatPrecisionFunction extends FunctionStruct {
 
 	public static final SymbolStruct FLOAT_PRECISION = GlobalPackageStruct.COMMON_LISP.intern("FLOAT-PRECISION").getSymbol();
 
-	private static final long serialVersionUID = -8530487758459648926L;
-
 	@Autowired
 	private Printer printer;
 

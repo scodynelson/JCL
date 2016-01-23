@@ -30,11 +30,6 @@ import org.springframework.stereotype.Component;
 public class SharpFullStopReaderMacroFunction extends ReaderMacroFunction {
 
 	/**
-	 * Serializable Version Unique Identifier.
-	 */
-	private static final long serialVersionUID = 8806757995826578582L;
-
-	/**
 	 * {@link EvalFunction} singleton used to evaluate the expression passed to '#.'.
 	 */
 	@Autowired

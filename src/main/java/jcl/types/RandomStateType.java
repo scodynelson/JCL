@@ -35,11 +35,6 @@ public interface RandomStateType extends TType {
 		private static final class RandomStateTypeImpl extends TypeBaseClass implements RandomStateType, AtomicTypeSpecifier {
 
 			/**
-			 * Serializable Version Unique Identifier.
-			 */
-			private static final long serialVersionUID = -8325573429698690966L;
-
-			/**
 			 * Private constructor.
 			 */
 			private RandomStateTypeImpl() {

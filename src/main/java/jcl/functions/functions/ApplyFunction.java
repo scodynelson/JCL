@@ -31,8 +31,6 @@ public final class ApplyFunction extends FunctionStruct {
 
 	public static final SymbolStruct APPLY = GlobalPackageStruct.COMMON_LISP.intern("APPLY").getSymbol();
 
-	private static final long serialVersionUID = 1994110477366960170L;
-
 	@Autowired
 	private Printer printer;
 

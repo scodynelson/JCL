@@ -36,11 +36,6 @@ public interface StandardObjectType extends TType {
 		private static final class StandardObjectTypeImpl extends TypeBaseClass implements StandardObjectType, AtomicTypeSpecifier {
 
 			/**
-			 * Serializable Version Unique Identifier.
-			 */
-			private static final long serialVersionUID = -3398435200495623399L;
-
-			/**
 			 * Private constructor.
 			 */
 			private StandardObjectTypeImpl() {

@@ -40,11 +40,6 @@ public interface SequenceType extends TType {
 		private static final class SequenceTypeImpl extends TypeBaseClass implements SequenceType, AtomicTypeSpecifier {
 
 			/**
-			 * Serializable Version Unique Identifier.
-			 */
-			private static final long serialVersionUID = -4924814075712876096L;
-
-			/**
 			 * Private constructor.
 			 */
 			private SequenceTypeImpl() {

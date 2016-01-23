@@ -9,8 +9,6 @@ import jcl.types.SymbolType;
 
 public class ConstantStruct<TYPE extends LispStruct> extends SymbolStruct {
 
-	private static final long serialVersionUID = -2257699556001691329L;
-
 	private final TYPE constantValue;
 
 	protected ConstantStruct(final SymbolType symbolType,

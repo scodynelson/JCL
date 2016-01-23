@@ -20,8 +20,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class DefstructExpander extends MacroFunctionExpander<LispStruct> {
 
-	private static final long serialVersionUID = 5336983779662053736L;
-
 	@Autowired
 	private LispFormValueValidator validator;
 

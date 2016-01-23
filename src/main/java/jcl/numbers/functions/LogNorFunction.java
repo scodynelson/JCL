@@ -25,8 +25,6 @@ public final class LogNorFunction extends FunctionStruct {
 
 	public static final SymbolStruct LOGNOR = GlobalPackageStruct.COMMON_LISP.intern("LOGNOR").getSymbol();
 
-	private static final long serialVersionUID = -2356375612617571761L;
-
 	@Autowired
 	private Printer printer;
 

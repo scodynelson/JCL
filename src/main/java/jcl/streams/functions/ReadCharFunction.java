@@ -29,8 +29,6 @@ import org.springframework.stereotype.Component;
 @Component
 public final class ReadCharFunction extends AbstractCommonLispFunctionStruct {
 
-	private static final long serialVersionUID = 8697359997833339004L;
-
 	@Autowired
 	private ApplicationContext context;
 

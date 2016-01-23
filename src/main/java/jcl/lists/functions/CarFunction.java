@@ -22,8 +22,6 @@ public final class CarFunction extends FunctionStruct {
 
 	public static final SymbolStruct CAR = GlobalPackageStruct.COMMON_LISP.intern("CAR").getSymbol();
 
-	private static final long serialVersionUID = -4167883057835187873L;
-
 	private CarFunction() {
 		super("Gets the car of the provided list.", getInitLambdaListBindings());
 	}

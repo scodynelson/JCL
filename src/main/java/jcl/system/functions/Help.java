@@ -25,8 +25,6 @@ import org.springframework.stereotype.Component;
 @Component
 public final class Help extends AbstractExtensionsFunctionStruct {
 
-	private static final long serialVersionUID = -2903697700427964980L;
-
 	public Help() {
 		super("Invokes Java Help.");
 	}

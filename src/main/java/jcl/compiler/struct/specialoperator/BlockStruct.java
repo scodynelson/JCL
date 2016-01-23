@@ -9,8 +9,6 @@ import jcl.symbols.SymbolStruct;
 
 public class BlockStruct extends CompilerSpecialOperatorStruct {
 
-	private static final long serialVersionUID = -115779602179582479L;
-
 	private final SymbolStruct name;
 
 	private final PrognStruct forms;

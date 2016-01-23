@@ -18,11 +18,6 @@ import org.apfloat.Apcomplex;
 public abstract class NumberStruct extends BuiltInClassStruct {
 
 	/**
-	 * Serializable Version Unique Identifier.
-	 */
-	private static final long serialVersionUID = -506448097593323391L;
-
-	/**
 	 * Protected constructor.
 	 *
 	 * @param directSuperClasses

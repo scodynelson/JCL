@@ -14,8 +14,6 @@ import jcl.symbols.BooleanStructs;
 
 public abstract class AbstractPredicateCommonLispFunction extends AbstractCommonLispFunctionStruct {
 
-	private static final long serialVersionUID = 2069209846321958268L;
-
 	protected AbstractPredicateCommonLispFunction(final String documentation) {
 		super(documentation);
 	}

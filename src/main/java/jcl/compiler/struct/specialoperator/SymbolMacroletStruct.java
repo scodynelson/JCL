@@ -4,7 +4,6 @@
 
 package jcl.compiler.struct.specialoperator;
 
-import java.io.Serializable;
 import java.util.List;
 
 import jcl.LispStruct;
@@ -13,8 +12,6 @@ import jcl.compiler.struct.CompilerSpecialOperatorStruct;
 import jcl.symbols.SymbolStruct;
 
 public class SymbolMacroletStruct extends CompilerSpecialOperatorStruct {
-
-	private static final long serialVersionUID = 2362123144166759037L;
 
 	private final List<SymbolMacroletVar> vars;
 
@@ -40,9 +37,7 @@ public class SymbolMacroletStruct extends CompilerSpecialOperatorStruct {
 		return symbolMacroletEnvironment;
 	}
 
-	public static class SymbolMacroletVar implements Serializable {
-
-		private static final long serialVersionUID = -601687250765470819L;
+	public static class SymbolMacroletVar {
 
 		private final SymbolStruct var;
 

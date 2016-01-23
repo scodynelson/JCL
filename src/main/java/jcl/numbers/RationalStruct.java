@@ -20,11 +20,6 @@ import org.apache.commons.math3.fraction.BigFraction;
 public abstract class RationalStruct extends RealStruct {
 
 	/**
-	 * Serializable Version Unique Identifier.
-	 */
-	private static final long serialVersionUID = 3775544213011392520L;
-
-	/**
 	 * Protected constructor.
 	 *
 	 * @param directSuperClasses

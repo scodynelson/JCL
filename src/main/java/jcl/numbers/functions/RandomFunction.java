@@ -33,8 +33,6 @@ public final class RandomFunction extends FunctionStruct {
 
 	public static final SymbolStruct RANDOM = GlobalPackageStruct.COMMON_LISP.intern("RANDOM").getSymbol();
 
-	private static final long serialVersionUID = 5980418597039594418L;
-
 	@Autowired
 	private Printer printer;
 

@@ -4,8 +4,6 @@
 
 package jcl.pathnames;
 
-import java.io.Serializable;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -15,12 +13,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 /**
  * The {@link PathnameHost} is the object representation of the 'host' element of a Lisp 'pathname' type.
  */
-public final class PathnameHost implements Serializable {
-
-	/**
-	 * Serializable Version Unique Identifier.
-	 */
-	private static final long serialVersionUID = -1256306706415594229L;
+public final class PathnameHost {
 
 	/**
 	 * The pathname host value.

@@ -41,8 +41,6 @@ public final class MergePathnamesFunction extends FunctionStruct {
 
 	public static final SymbolStruct MERGE_PATHNAMES = GlobalPackageStruct.COMMON_LISP.intern("MERGE-PATHNAMES").getSymbol();
 
-	private static final long serialVersionUID = 3634903325863235363L;
-
 	@Autowired
 	private PathnameFunction pathnameFunction;
 

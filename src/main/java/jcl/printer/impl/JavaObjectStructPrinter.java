@@ -11,8 +11,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class JavaObjectStructPrinter implements LispPrinter<JavaObjectStruct> {
 
-	private static final long serialVersionUID = 6469002816679658685L;
-
 	@Override
 	public String print(final JavaObjectStruct object) {
 		return object.getJavaObject().toString();

@@ -23,8 +23,6 @@ public final class MultiplyFunction extends FunctionStruct {
 
 	public static final SymbolStruct MULTIPLY = GlobalPackageStruct.COMMON_LISP.intern("*").getSymbol();
 
-	private static final long serialVersionUID = -3125334565141339662L;
-
 	@Autowired
 	private Printer printer;
 

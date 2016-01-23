@@ -16,8 +16,6 @@ final class PrintCaseVariable extends VariableStruct<KeywordStruct> {
 
 	public static final PrintCaseVariable INSTANCE = new PrintCaseVariable();
 
-	private static final long serialVersionUID = 7692936629546046586L;
-
 	private static final Set<KeywordStruct> CASE_KEYWORDS = new HashSet<>();
 
 	static {

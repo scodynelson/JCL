@@ -22,11 +22,6 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 public class OrTypeSpecifier extends TypeBaseClass implements CompoundTypeSpecifier {
 
 	/**
-	 * Serializable Version Unique Identifier.
-	 */
-	private static final long serialVersionUID = 4007082814148597401L;
-
-	/**
 	 * The list of {@link LispType}s to 'OR'.
 	 */
 	private final List<LispType> types;

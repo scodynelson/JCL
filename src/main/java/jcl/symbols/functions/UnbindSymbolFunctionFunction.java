@@ -18,8 +18,6 @@ public final class UnbindSymbolFunctionFunction extends AbstractSystemFunctionSt
 
 	public static final SymbolStruct UNBIND_SYMBOL_FUNCTION = GlobalPackageStruct.SYSTEM.intern("UNBIND-SYMBOL-FUNCTION").getSymbol();
 
-	private static final long serialVersionUID = -5643412206135382825L;
-
 	public UnbindSymbolFunctionFunction() {
 		super("Unbinds the function value of the provided symbol from its current value.");
 	}

@@ -16,11 +16,6 @@ import org.springframework.stereotype.Component;
 public final class CharLTFunction extends AbstractCharacterEqualityFunction {
 
 	/**
-	 * Serializable Version Unique Identifier.
-	 */
-	private static final long serialVersionUID = -6833377338710486244L;
-
-	/**
 	 * Public constructor passing the documentation string.
 	 */
 	public CharLTFunction() {

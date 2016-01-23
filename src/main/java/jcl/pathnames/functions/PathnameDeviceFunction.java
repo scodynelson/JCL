@@ -30,8 +30,6 @@ public final class PathnameDeviceFunction extends FunctionStruct {
 
 	public static final SymbolStruct PATHNAME_DEVICE = GlobalPackageStruct.COMMON_LISP.intern("PATHNAME-DEVICE").getSymbol();
 
-	private static final long serialVersionUID = 7115138569329848864L;
-
 	@Autowired
 	private PathnameFunction pathnameFunction;
 

@@ -20,8 +20,6 @@ import org.springframework.stereotype.Component;
 @Component
 public final class OpenStreamPFunction extends AbstractCommonLispFunctionStruct {
 
-	private static final long serialVersionUID = 6474880597653178953L;
-
 	@Autowired
 	private TypeValidator validator;
 

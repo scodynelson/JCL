@@ -23,11 +23,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 abstract class AbstractOptionalPackageFunction extends AbstractCommonLispFunctionStruct {
 
 	/**
-	 * Serializable Version Unique Identifier.
-	 */
-	private static final long serialVersionUID = 1300235783486543518L;
-
-	/**
 	 * The {@link TypeValidator} for validating the function parameter value types.
 	 */
 	@Autowired

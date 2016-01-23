@@ -4,12 +4,10 @@
 
 package jcl.printer;
 
-import java.io.Serializable;
-
 import jcl.LispStruct;
 
 @FunctionalInterface
-public interface Printer extends Serializable {
+public interface Printer {
 
 	String print(LispStruct object);
 }

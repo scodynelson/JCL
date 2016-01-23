@@ -24,8 +24,6 @@ public final class Stringp extends FunctionStruct {
 
 	public static final SymbolStruct STRINGP = GlobalPackageStruct.COMMON_LISP.intern("STRINGP").getSymbol();
 
-	private static final long serialVersionUID = 8175736295020631918L;
-
 	private Stringp() {
 		super("Returns T if object is a STRING; otherwise, returns NIL.", getInitLambdaListBindings());
 	}

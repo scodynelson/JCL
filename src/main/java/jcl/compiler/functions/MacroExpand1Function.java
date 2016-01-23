@@ -36,8 +36,6 @@ public final class MacroExpand1Function extends FunctionStruct {
 
 	public static final SymbolStruct MACROEXPAND_1 = GlobalPackageStruct.COMMON_LISP.intern("MACROEXPAND-1").getSymbol();
 
-	private static final long serialVersionUID = 5991270831364188635L;
-
 	private MacroExpand1Function() {
 		super("Expands form once.", getInitLambdaListBindings());
 	}

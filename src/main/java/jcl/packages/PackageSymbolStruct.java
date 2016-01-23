@@ -4,20 +4,13 @@
 
 package jcl.packages;
 
-import java.io.Serializable;
-
 import jcl.symbols.KeywordStruct;
 import jcl.symbols.SymbolStruct;
 
 /**
  * Internal class for returning a {@link SymbolStruct} and it's current package symbol type as a {@link KeywordStruct}.
  */
-public class PackageSymbolStruct implements Serializable {
-
-	/**
-	 * Serializable Version Unique Identifier.
-	 */
-	private static final long serialVersionUID = -8169693960575105621L;
+public class PackageSymbolStruct {
 
 	/**
 	 * The {@link SymbolStruct} symbol.

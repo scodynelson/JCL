@@ -4,7 +4,6 @@
 
 package jcl.compiler.struct.specialoperator;
 
-import java.io.Serializable;
 import java.util.List;
 
 import jcl.LispStruct;
@@ -13,15 +12,11 @@ import jcl.symbols.SymbolStruct;
 
 public class LetStruct extends ClosureCreationStruct<LetStruct.LetVar> {
 
-	private static final long serialVersionUID = -3186671381163635893L;
-
 	public LetStruct(final List<LetVar> vars, final PrognStruct forms, final Environment letEnvironment) {
 		super(vars, forms, letEnvironment);
 	}
 
-	public static class LetVar implements Serializable {
-
-		private static final long serialVersionUID = 3246152127057600416L;
+	public static class LetVar {
 
 		private final SymbolStruct var;
 

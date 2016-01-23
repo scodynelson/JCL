@@ -23,8 +23,6 @@ public final class ListToVectorFunction extends FunctionStruct {
 
 	public static final SymbolStruct LIST_TO_VECTOR = GlobalPackageStruct.SYSTEM.intern("LIST-TO-VECTOR").getSymbol();
 
-	private static final long serialVersionUID = 7202751615463953371L;
-
 	private ListToVectorFunction() {
 		super("Creates a fresh simple general vector from the provided list.", getInitLambdaListBindings());
 	}

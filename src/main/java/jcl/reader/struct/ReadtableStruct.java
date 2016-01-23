@@ -30,11 +30,6 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 public class ReadtableStruct extends BuiltInClassStruct {
 
 	/**
-	 * Serializable Version Unique Identifier.
-	 */
-	private static final long serialVersionUID = 2102020602278207707L;
-
-	/**
 	 * Internal map storing the {@link Integer} code point mappings to appropriate {@link ReaderMacroFunction}s.
 	 */
 	private final Map<Integer, ReaderMacroFunction> macroTableMap = new ConcurrentHashMap<>();
@@ -258,11 +253,6 @@ public class ReadtableStruct extends BuiltInClassStruct {
 	 * This holds mappings for code points to {@link ReaderMacroFunction}s and delegates to the proper one when used.
 	 */
 	private static final class DispatchTable extends ReaderMacroFunction {
-
-		/**
-		 * Serializable Version Unique Identifier.
-		 */
-		private static final long serialVersionUID = 3844100213975511317L;
 
 		/**
 		 * Internal map storing character code points to {@link ReaderMacroFunction}s to dispatch on when reading.

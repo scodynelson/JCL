@@ -25,8 +25,6 @@ public final class LogNandFunction extends FunctionStruct {
 
 	public static final SymbolStruct LOGNAND = GlobalPackageStruct.COMMON_LISP.intern("LOGNAND").getSymbol();
 
-	private static final long serialVersionUID = 2944108957771218524L;
-
 	@Autowired
 	private Printer printer;
 

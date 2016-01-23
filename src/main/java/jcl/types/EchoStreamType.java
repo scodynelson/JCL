@@ -37,11 +37,6 @@ public interface EchoStreamType extends StreamType {
 		private static final class EchoStreamTypeImpl extends TypeBaseClass implements EchoStreamType, AtomicTypeSpecifier {
 
 			/**
-			 * Serializable Version Unique Identifier.
-			 */
-			private static final long serialVersionUID = 35831157298596493L;
-
-			/**
 			 * Private constructor.
 			 */
 			private EchoStreamTypeImpl() {

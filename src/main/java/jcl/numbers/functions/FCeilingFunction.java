@@ -30,8 +30,6 @@ public final class FCeilingFunction extends FunctionStruct {
 
 	public static final SymbolStruct FCEILING = GlobalPackageStruct.COMMON_LISP.intern("FCEILING").getSymbol();
 
-	private static final long serialVersionUID = -4438935638245696680L;
-
 	@Autowired
 	private Printer printer;
 

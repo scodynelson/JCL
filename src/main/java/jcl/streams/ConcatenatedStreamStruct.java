@@ -22,11 +22,6 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 public class ConcatenatedStreamStruct extends StreamStruct implements InputStream {
 
 	/**
-	 * Serializable Version Unique Identifier.
-	 */
-	private static final long serialVersionUID = 2526239313385149080L;
-
-	/**
 	 * This {@link InputStream}s in the ConcatenatedStreamStruct.
 	 */
 	private final Deque<InputStream> inputStreams;

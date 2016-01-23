@@ -11,8 +11,6 @@ import jcl.types.BuiltInClassType;
  */
 public abstract class BuiltInClassStruct extends ClassStruct {
 
-	private static final long serialVersionUID = -4998279729528734323L;
-
 	/**
 	 * Protected constructor.
 	 *

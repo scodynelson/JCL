@@ -71,11 +71,6 @@ public interface ShortFloatType extends FloatType {
 		private static final class ShortFloatTypeImpl extends TypeBaseClass implements ShortFloatType, AtomicTypeSpecifier, CompoundTypeSpecifier {
 
 			/**
-			 * Serializable Version Unique Identifier.
-			 */
-			private static final long serialVersionUID = 6688479128158831477L;
-
-			/**
 			 * The interval range in which the {@link ShortFloatType} type exists.
 			 */
 			private final IntervalDesignator<BigDecimal> intervalDesignator;

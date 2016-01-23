@@ -17,11 +17,6 @@ import org.slf4j.LoggerFactory;
 abstract class AbstractNativeStreamStruct extends StreamStruct implements IOStream {
 
 	/**
-	 * Serializable Version Unique Identifier.
-	 */
-	private static final long serialVersionUID = -4334429877946908390L;
-
-	/**
 	 * The logger for this class.
 	 */
 	private static final Logger LOGGER = LoggerFactory.getLogger(AbstractNativeStreamStruct.class);

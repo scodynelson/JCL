@@ -26,11 +26,6 @@ import org.springframework.stereotype.Component;
 public final class ShadowFunction extends AbstractOptionalPackageFunction {
 
 	/**
-	 * Serializable Version Unique Identifier.
-	 */
-	private static final long serialVersionUID = -307962001320583822L;
-
-	/**
 	 * Public constructor passing the documentation string.
 	 */
 	public ShadowFunction() {

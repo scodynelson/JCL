@@ -24,8 +24,6 @@ public final class MakeStructureInstanceFunction extends FunctionStruct {
 
 	public static final SymbolStruct MAKE_STRUCTURE_INSTANCE = GlobalPackageStruct.SYSTEM.intern("MAKE-STRUCTURE-INSTANCE").getSymbol();
 
-	private static final long serialVersionUID = -3732127004637874803L;
-
 	private MakeStructureInstanceFunction() {
 		super("Makes a new structure-object instance of the structure-class assigned to the provided symbol with the provided arguments as slot values.", getInitLambdaListBindings());
 	}

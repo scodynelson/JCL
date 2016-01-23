@@ -17,8 +17,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class PrognExpander extends MacroFunctionExpander<PrognStruct> {
 
-	private static final long serialVersionUID = -2851059577992887882L;
-
 	@Autowired
 	private FormAnalyzer formAnalyzer;
 

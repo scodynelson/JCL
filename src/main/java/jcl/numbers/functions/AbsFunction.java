@@ -25,8 +25,6 @@ public final class AbsFunction extends FunctionStruct {
 
 	public static final SymbolStruct ABS = GlobalPackageStruct.COMMON_LISP.intern("ABS").getSymbol();
 
-	private static final long serialVersionUID = -5132304713941020270L;
-
 	@Autowired
 	private Printer printer;
 

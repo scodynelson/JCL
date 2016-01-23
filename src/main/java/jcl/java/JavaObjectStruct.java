@@ -12,8 +12,6 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 public class JavaObjectStruct extends BuiltInClassStruct {
 
-	private static final long serialVersionUID = -1994392358840879592L;
-
 	private final Object javaObject;
 
 	public JavaObjectStruct(final Object javaObject) {

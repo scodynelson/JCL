@@ -23,8 +23,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class DeclareExpander extends MacroFunctionExpander<DeclareStruct> {
 
-	private static final long serialVersionUID = -27949883247210201L;
-
 	@Autowired
 	private LispFormValueValidator validator;
 

@@ -10,8 +10,6 @@ import jcl.types.TType;
 
 public class SuppliedPParameter extends Parameter {
 
-	private static final long serialVersionUID = -8399229506171557644L;
-
 	public SuppliedPParameter(final SymbolStruct var) {
 		this(var, false);
 	}

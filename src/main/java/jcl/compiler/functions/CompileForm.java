@@ -7,7 +7,6 @@ package jcl.compiler.functions;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Deque;
 import java.util.List;
@@ -39,9 +38,7 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.stereotype.Component;
 
 @Component
-class CompileForm implements Serializable {
-
-	private static final long serialVersionUID = -8967661954514725036L;
+class CompileForm {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(CompileForm.class);
 

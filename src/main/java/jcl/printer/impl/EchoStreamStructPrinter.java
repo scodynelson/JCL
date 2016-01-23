@@ -19,8 +19,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class EchoStreamStructPrinter implements LispPrinter<EchoStreamStruct> {
 
-	private static final long serialVersionUID = 5872440805729953534L;
-
 	@Autowired
 	private Printer printer;
 

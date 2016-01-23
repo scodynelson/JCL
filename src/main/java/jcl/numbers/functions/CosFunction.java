@@ -25,8 +25,6 @@ public final class CosFunction extends FunctionStruct {
 
 	public static final SymbolStruct COS = GlobalPackageStruct.COMMON_LISP.intern("COS").getSymbol();
 
-	private static final long serialVersionUID = 1786048860875832000L;
-
 	@Autowired
 	private Printer printer;
 

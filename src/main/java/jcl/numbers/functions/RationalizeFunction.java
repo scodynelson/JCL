@@ -25,8 +25,6 @@ public final class RationalizeFunction extends FunctionStruct {
 
 	public static final SymbolStruct RATIONALIZE = GlobalPackageStruct.COMMON_LISP.intern("RATIONALIZE").getSymbol();
 
-	private static final long serialVersionUID = 7826881012957712642L;
-
 	@Autowired
 	private Printer printer;
 

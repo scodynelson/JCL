@@ -59,11 +59,6 @@ public interface VectorType extends ArrayType, SequenceType {
 		private static final class VectorTypeImpl extends TypeBaseClass implements VectorType, AtomicTypeSpecifier, CompoundTypeSpecifier {
 
 			/**
-			 * Serializable Version Unique Identifier.
-			 */
-			private static final long serialVersionUID = 8666531696390635781L;
-
-			/**
 			 * The dimensions of the {@link VectorType} type.
 			 */
 			private final DimensionsDesignator size;

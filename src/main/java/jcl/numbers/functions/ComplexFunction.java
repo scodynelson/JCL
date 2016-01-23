@@ -31,8 +31,6 @@ public final class ComplexFunction extends FunctionStruct {
 
 	public static final SymbolStruct COMPLEX = GlobalPackageStruct.COMMON_LISP.intern("COMPLEX").getSymbol();
 
-	private static final long serialVersionUID = 547386516399800925L;
-
 	@Autowired
 	private Printer printer;
 

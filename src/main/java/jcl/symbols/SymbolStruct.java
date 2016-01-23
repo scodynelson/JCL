@@ -23,8 +23,6 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  */
 public class SymbolStruct extends BuiltInClassStruct {
 
-	private static final long serialVersionUID = -986185868644037105L;
-
 	protected final String name;
 
 	protected final List<LispStruct> properties = new ArrayList<>();

@@ -19,11 +19,6 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 public class EchoStreamStruct extends AbstractDualStreamStruct {
 
 	/**
-	 * Serializable Version Unique Identifier.
-	 */
-	private static final long serialVersionUID = 5140093388290527648L;
-
-	/**
 	 * The {@link Integer} tokens that have been unread so far.
 	 */
 	private final Deque<Integer> unreadTokens = new ArrayDeque<>();

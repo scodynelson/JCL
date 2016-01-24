@@ -81,6 +81,10 @@ public class ConcatenatedStreamStruct extends StreamStruct implements InputStrea
 		return last.getElementType();
 	}
 
+	public Deque<InputStream> getInputStreams() {
+		return inputStreams;
+	}
+
 	@Override
 	public ReadPeekResult readChar(final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP) {
 		while (true) {

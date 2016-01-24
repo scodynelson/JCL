@@ -60,6 +60,14 @@ public class StringOutputStreamStruct extends StreamStruct implements OutputStre
 		super(StringStreamType.INSTANCE, null, null, interactive, elementType);
 	}
 
+	public String getStreamString() {
+		return stringBuffer.toString();
+	}
+
+	public void clearStream() {
+		stringBuffer.setLength(0);
+	}
+
 	@Override
 	public void writeChar(final int aChar) {
 		stringBuffer.appendCodePoint(aChar);

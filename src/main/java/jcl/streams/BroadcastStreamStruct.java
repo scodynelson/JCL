@@ -79,6 +79,10 @@ public class BroadcastStreamStruct extends StreamStruct implements OutputStream 
 		return last.getElementType();
 	}
 
+	public Deque<OutputStream> getOutputStreams() {
+		return outputStreams;
+	}
+
 	@Override
 	public void writeChar(final int aChar) {
 		outputStreams.forEach(e -> e.writeChar(aChar));

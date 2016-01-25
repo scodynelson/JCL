@@ -17,6 +17,7 @@ import jcl.numbers.IntegerStruct;
 import jcl.packages.GlobalPackageStruct;
 import jcl.printer.Printer;
 import jcl.streams.StringInputStreamStruct;
+import jcl.symbols.NILStruct;
 import jcl.types.IntegerType;
 import jcl.types.NILType;
 import jcl.types.NullType;
@@ -57,6 +58,7 @@ public final class MakeStringInputStreamFunction extends AbstractCommonLispFunct
 		final OptionalParameter end =
 				OptionalParameter.builder(GlobalPackageStruct.COMMON_LISP, "END")
 				                 .suppliedPBinding()
+				                 .initForm(NILStruct.INSTANCE)
 				                 .build();
 		optionalParameters.add(end);
 

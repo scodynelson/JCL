@@ -52,7 +52,7 @@ public class JCL implements ApplicationRunner {
 		try (LoggerOutputStream loggerOutputStream = new LoggerOutputStream(LOGGER)) {
 			final CharacterStreamStruct characterStream = new CharacterStreamStruct(System.in, loggerOutputStream);
 
-			final TwoWayStreamStruct terminalIoStream = new TwoWayStreamStruct(characterStream, characterStream);
+			final TwoWayStreamStruct terminalIoStream = new TwoWayStreamStruct(true, characterStream, characterStream);
 			StreamVariables.TERMINAL_IO.setValue(terminalIoStream);
 		}
 	}

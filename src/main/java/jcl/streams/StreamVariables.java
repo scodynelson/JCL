@@ -10,7 +10,7 @@ import jcl.symbols.VariableStruct;
 public interface StreamVariables {
 
 	VariableStruct<TwoWayStreamStruct> TERMINAL_IO = new VariableStruct<>("*TERMINAL-IO*", GlobalPackageStruct.COMMON_LISP,
-			new TwoWayStreamStruct(EmptyStreamStruct.INSTANCE, EmptyStreamStruct.INSTANCE));
+			new TwoWayStreamStruct(true, EmptyStreamStruct.INSTANCE, EmptyStreamStruct.INSTANCE));
 
 	VariableStruct<IOStream> DEBUG_IO = new VariableStruct<>("*DEBUG-IO*", GlobalPackageStruct.COMMON_LISP, new SynonymStreamStruct(TERMINAL_IO));
 	VariableStruct<OutputStream> ERROR_OUTPUT = new VariableStruct<>("*ERROR-OUTPUT*", GlobalPackageStruct.COMMON_LISP, new SynonymStreamStruct(TERMINAL_IO));

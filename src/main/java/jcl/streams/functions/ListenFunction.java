@@ -35,7 +35,10 @@ public final class ListenFunction extends AbstractCommonLispFunctionStruct {
 
 	@Override
 	protected List<OptionalParameter> getOptionalBindings() {
-		return OptionalParameter.builder(GlobalPackageStruct.COMMON_LISP, "INPUT-STREAM").buildList();
+		return OptionalParameter.builder(GlobalPackageStruct.COMMON_LISP, "INPUT-STREAM")
+		                        .suppliedPBinding()
+		                        .initForm(StreamVariables.STANDARD_INPUT)
+		                        .buildList();
 	}
 
 	@Override

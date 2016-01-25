@@ -35,7 +35,10 @@ public final class ClearOutputFunction extends AbstractCommonLispFunctionStruct 
 
 	@Override
 	protected List<OptionalParameter> getOptionalBindings() {
-		return OptionalParameter.builder(GlobalPackageStruct.COMMON_LISP, "OUTPUT-STREAM").buildList();
+		return OptionalParameter.builder(GlobalPackageStruct.COMMON_LISP, "OUTPUT-STREAM")
+		                        .suppliedPBinding()
+		                        .initForm(StreamVariables.STANDARD_OUTPUT)
+		                        .buildList();
 	}
 
 	@Override

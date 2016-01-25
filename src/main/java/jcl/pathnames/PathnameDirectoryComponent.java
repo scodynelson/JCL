@@ -55,7 +55,8 @@ public final class PathnameDirectoryComponent {
 			final PathnameDirectoryLevel firstElement = directoryLevels.get(0);
 			if ((firstElement.getDirectoryLevelType() == PathnameDirectoryLevelType.BACK)
 					|| (firstElement.getDirectoryLevelType() == PathnameDirectoryLevelType.UP)) {
-				throw new FileErrorException(":ABSOLUTE must not be followed by :BACK or :UP.");
+				// TODO: should this take a stream!??!?
+				throw new FileErrorException(":ABSOLUTE must not be followed by :BACK or :UP.", null);
 			}
 		}
 

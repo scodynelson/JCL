@@ -31,7 +31,7 @@ abstract class AbstractNativeStreamStruct extends StreamStruct implements IOStre
 	 * @param elementType
 	 * 		the stream elementType
 	 */
-	AbstractNativeStreamStruct(final StreamType type,
+	protected AbstractNativeStreamStruct(final StreamType type,
 	                           final boolean interactive, final LispType elementType) {
 		super(type, null, null, interactive, elementType);
 	}

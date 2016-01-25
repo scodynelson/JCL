@@ -218,12 +218,14 @@ public final class CompileFileFunction extends FunctionStruct {
 
 		final boolean inputFileNotExists = Files.notExists(inputFilePath);
 		if (inputFileNotExists) {
-			throw new FileErrorException("Input file provided to COMPILE-FILE does not exist: " + inputFilePath);
+			// TODO: This should take a stream!!!
+			throw new FileErrorException("Input file provided to COMPILE-FILE does not exist: " + inputFilePath, null);
 		}
 
 		final String inputFileNamestring = inputFilePath.toString();
 		if (!StringUtils.endsWithIgnoreCase(inputFileNamestring, ".lsp") && !StringUtils.endsWithIgnoreCase(inputFileNamestring, ".lisp")) {
-			throw new FileErrorException("Input file provided to COMPILE-FILE must have an extension of '.lsp' or '.lisp'");
+			// TODO: This should take a stream!!!
+			throw new FileErrorException("Input file provided to COMPILE-FILE must have an extension of '.lsp' or '.lisp'", null);
 		}
 
 		final Instant startTime = Instant.now();

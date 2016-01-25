@@ -75,8 +75,10 @@ public abstract class StreamStruct extends BuiltInClassStruct implements LispStr
 	}
 
 	@Override
-	public void close() {
+	public boolean close() {
+		final boolean wasClosed = closed;
 		closed = true;
+		return wasClosed;
 	}
 
 	@Override

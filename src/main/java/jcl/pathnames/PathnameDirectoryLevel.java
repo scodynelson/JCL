@@ -57,7 +57,8 @@ public final class PathnameDirectoryLevel {
 	 */
 	public PathnameDirectoryLevel(final String directoryLevel, final PathnameDirectoryLevelType directoryLevelType) {
 		if (StringUtils.isEmpty(directoryLevel) && (PathnameDirectoryLevelType.NULL == directoryLevelType)) {
-			throw new FileErrorException("Directory level value cannot be null or empty.");
+			// TODO: should this take a stream!??!?
+			throw new FileErrorException("Directory level value cannot be null or empty.", null);
 		}
 
 		this.directoryLevel = directoryLevel;

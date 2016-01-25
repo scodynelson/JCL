@@ -8,7 +8,7 @@ import java.util.ArrayDeque;
 import java.util.Deque;
 
 import jcl.LispType;
-import jcl.conditions.exceptions.StreamErrorException;
+import jcl.conditions.exceptions.ErrorException;
 import jcl.types.BroadcastStreamType;
 import jcl.types.TType;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -57,7 +57,7 @@ public class BroadcastStreamStruct extends StreamStruct implements OutputStream 
 	 */
 	private static LispType getElementType2(final Deque<OutputStream> outputStreams) {
 		if (outputStreams == null) {
-			throw new StreamErrorException("Provided Output Stream List must not be null.");
+			throw new ErrorException("Provided Output Stream List must not be null.");
 		}
 		return getElementType3(outputStreams);
 	}

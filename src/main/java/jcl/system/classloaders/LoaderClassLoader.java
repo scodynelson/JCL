@@ -96,7 +96,8 @@ public class LoaderClassLoader extends ClassLoader {
 			manifest = jarFile.getManifest();
 		} catch (final IOException ioe) {
 			final String msg = "Error loading main class: " + jarFileName;
-			throw new FileErrorException(msg, ioe);
+			// TODO: Take a StreamStruct!!!
+			throw new FileErrorException(msg, ioe, null);
 		}
 
 		final Attributes manifestMainAttributes = manifest.getMainAttributes();
@@ -105,11 +106,13 @@ public class LoaderClassLoader extends ClassLoader {
 		if (classes.containsKey(mainClassName)) {
 			final Class<?> mainClass = classes.get(mainClassName);
 			if (mainClass == null) {
-				throw new FileErrorException("Main class definition for compiled file was not defined correctly: " + jarFileName);
+				// TODO: Take a StreamStruct!!!
+				throw new FileErrorException("Main class definition for compiled file was not defined correctly: " + jarFileName, null);
 			}
 			return mainClass;
 		}
 
-		throw new FileErrorException("Error loading main class definition for compiled file: " + jarFileName);
+		// TODO: Take a StreamStruct!!!
+		throw new FileErrorException("Error loading main class definition for compiled file: " + jarFileName, null);
 	}
 }

@@ -5,6 +5,7 @@
 package jcl.streams;
 
 import jcl.LispStruct;
+import jcl.conditions.exceptions.ErrorException;
 import jcl.conditions.exceptions.StreamErrorException;
 import jcl.types.BaseCharType;
 import jcl.types.StringStreamType;
@@ -83,7 +84,7 @@ public class StringInputStreamStruct extends StreamStruct implements InputStream
 		super(StringStreamType.INSTANCE, null, null, interactive, BaseCharType.INSTANCE);
 
 		if (inputString == null) {
-			throw new StreamErrorException("Provided Input String must not be null.");
+			throw new ErrorException("Provided Input String must not be null.");
 		}
 		this.inputString = inputString;
 
@@ -108,7 +109,7 @@ public class StringInputStreamStruct extends StreamStruct implements InputStream
 
 	@Override
 	public ReadPeekResult readByte(final boolean eofErrorP, final LispStruct eofValue) {
-		throw new StreamErrorException(StreamUtils.OPERATION_ONLY_BINARY_STREAM);
+		throw new StreamErrorException(StreamUtils.OPERATION_ONLY_BINARY_STREAM, this);
 	}
 
 	@Override
@@ -137,7 +138,7 @@ public class StringInputStreamStruct extends StreamStruct implements InputStream
 				break;
 		}
 
-		return StreamUtils.getReadPeekResult(nextChar, eofErrorP, eofValue);
+		return StreamUtils.getReadPeekResult(this, nextChar, eofErrorP, eofValue);
 	}
 
 	/**
@@ -206,7 +207,7 @@ public class StringInputStreamStruct extends StreamStruct implements InputStream
 
 	@Override
 	public Long fileLength() {
-		throw new StreamErrorException(StreamUtils.OPERATION_ONLY_FILE_STREAM);
+		throw new StreamErrorException(StreamUtils.OPERATION_ONLY_FILE_STREAM, this);
 	}
 
 	@Override

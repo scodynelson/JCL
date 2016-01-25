@@ -75,7 +75,7 @@ public class StringOutputStreamStruct extends StreamStruct implements OutputStre
 
 	@Override
 	public void writeByte(final int aByte) {
-		throw new StreamErrorException(StreamUtils.OPERATION_ONLY_BINARY_STREAM);
+		throw new StreamErrorException(StreamUtils.OPERATION_ONLY_BINARY_STREAM, this);
 	}
 
 	@Override
@@ -101,7 +101,7 @@ public class StringOutputStreamStruct extends StreamStruct implements OutputStre
 
 	@Override
 	public Long fileLength() {
-		throw new StreamErrorException(StreamUtils.OPERATION_ONLY_FILE_STREAM);
+		throw new StreamErrorException(StreamUtils.OPERATION_ONLY_FILE_STREAM, this);
 	}
 
 	@Override

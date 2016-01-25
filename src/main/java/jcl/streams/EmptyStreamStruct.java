@@ -28,22 +28,22 @@ public final class EmptyStreamStruct extends AbstractNativeStreamStruct {
 
 	@Override
 	public ReadPeekResult readChar(final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP) {
-		throw new StreamErrorException(StreamUtils.OPERATION_NOT_SUPPORTED_FOR_EMPTY_STREAM);
+		throw new StreamErrorException(StreamUtils.OPERATION_NOT_SUPPORTED_FOR_EMPTY_STREAM, this);
 	}
 
 	@Override
 	public ReadPeekResult readByte(final boolean eofErrorP, final LispStruct eofValue) {
-		throw new StreamErrorException(StreamUtils.OPERATION_NOT_SUPPORTED_FOR_EMPTY_STREAM);
+		throw new StreamErrorException(StreamUtils.OPERATION_NOT_SUPPORTED_FOR_EMPTY_STREAM, this);
 	}
 
 	@Override
 	public ReadPeekResult peekChar(final PeekType peekType, final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP) {
-		throw new StreamErrorException(StreamUtils.OPERATION_NOT_SUPPORTED_FOR_EMPTY_STREAM);
+		throw new StreamErrorException(StreamUtils.OPERATION_NOT_SUPPORTED_FOR_EMPTY_STREAM, this);
 	}
 
 	@Override
 	public Integer unreadChar(final Integer codePoint) {
-		throw new StreamErrorException(StreamUtils.OPERATION_NOT_SUPPORTED_FOR_EMPTY_STREAM);
+		throw new StreamErrorException(StreamUtils.OPERATION_NOT_SUPPORTED_FOR_EMPTY_STREAM, this);
 	}
 
 	@Override
@@ -53,17 +53,17 @@ public final class EmptyStreamStruct extends AbstractNativeStreamStruct {
 
 	@Override
 	public void writeChar(final int aChar) {
-		throw new StreamErrorException(StreamUtils.OPERATION_NOT_SUPPORTED_FOR_EMPTY_STREAM);
+		throw new StreamErrorException(StreamUtils.OPERATION_NOT_SUPPORTED_FOR_EMPTY_STREAM, this);
 	}
 
 	@Override
 	public void writeByte(final int aByte) {
-		throw new StreamErrorException(StreamUtils.OPERATION_ONLY_BINARY_STREAM);
+		throw new StreamErrorException(StreamUtils.OPERATION_ONLY_BINARY_STREAM, this);
 	}
 
 	@Override
 	public void writeString(final String outputString, final int start, final int end) {
-		throw new StreamErrorException(StreamUtils.OPERATION_NOT_SUPPORTED_FOR_EMPTY_STREAM);
+		throw new StreamErrorException(StreamUtils.OPERATION_NOT_SUPPORTED_FOR_EMPTY_STREAM, this);
 	}
 
 	@Override
@@ -83,11 +83,11 @@ public final class EmptyStreamStruct extends AbstractNativeStreamStruct {
 
 	@Override
 	public Long fileLength() {
-		throw new StreamErrorException(StreamUtils.OPERATION_NOT_SUPPORTED_FOR_EMPTY_STREAM);
+		throw new StreamErrorException(StreamUtils.OPERATION_NOT_SUPPORTED_FOR_EMPTY_STREAM, this);
 	}
 
 	@Override
 	public Long filePosition(final Long filePosition) {
-		throw new StreamErrorException(StreamUtils.OPERATION_NOT_SUPPORTED_FOR_EMPTY_STREAM);
+		throw new StreamErrorException(StreamUtils.OPERATION_NOT_SUPPORTED_FOR_EMPTY_STREAM, this);
 	}
 }

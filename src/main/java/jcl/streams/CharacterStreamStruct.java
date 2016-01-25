@@ -77,15 +77,15 @@ public class CharacterStreamStruct extends AbstractNativeStreamStruct {
 	public ReadPeekResult readChar(final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP) {
 		try {
 			final int readChar = inputStream.read();
-			return StreamUtils.getReadPeekResult(readChar, eofErrorP, eofValue);
+			return StreamUtils.getReadPeekResult(this, readChar, eofErrorP, eofValue);
 		} catch (final IOException ioe) {
-			throw new StreamErrorException(StreamUtils.FAILED_TO_READ_CHAR, ioe);
+			throw new StreamErrorException(StreamUtils.FAILED_TO_READ_CHAR, ioe, this);
 		}
 	}
 
 	@Override
 	public ReadPeekResult readByte(final boolean eofErrorP, final LispStruct eofValue) {
-		throw new StreamErrorException(StreamUtils.OPERATION_ONLY_BINARY_STREAM);
+		throw new StreamErrorException(StreamUtils.OPERATION_ONLY_BINARY_STREAM, this);
 	}
 
 	@Override
@@ -107,7 +107,7 @@ public class CharacterStreamStruct extends AbstractNativeStreamStruct {
 				break;
 		}
 
-		return StreamUtils.getReadPeekResult(nextChar, eofErrorP, eofValue);
+		return StreamUtils.getReadPeekResult(this, nextChar, eofErrorP, eofValue);
 	}
 
 	/**
@@ -121,7 +121,7 @@ public class CharacterStreamStruct extends AbstractNativeStreamStruct {
 			inputStream.unread(nextChar);
 			return nextChar;
 		} catch (final IOException ioe) {
-			throw new StreamErrorException(StreamUtils.FAILED_TO_PEEK_CHAR, ioe);
+			throw new StreamErrorException(StreamUtils.FAILED_TO_PEEK_CHAR, ioe, this);
 		}
 	}
 
@@ -146,7 +146,7 @@ public class CharacterStreamStruct extends AbstractNativeStreamStruct {
 			}
 			return nextChar;
 		} catch (final IOException ioe) {
-			throw new StreamErrorException(StreamUtils.FAILED_TO_PEEK_CHAR, ioe);
+			throw new StreamErrorException(StreamUtils.FAILED_TO_PEEK_CHAR, ioe, this);
 		}
 	}
 
@@ -174,7 +174,7 @@ public class CharacterStreamStruct extends AbstractNativeStreamStruct {
 			}
 			return nextChar;
 		} catch (final IOException ioe) {
-			throw new StreamErrorException(StreamUtils.FAILED_TO_PEEK_CHAR, ioe);
+			throw new StreamErrorException(StreamUtils.FAILED_TO_PEEK_CHAR, ioe, this);
 		}
 	}
 
@@ -184,7 +184,7 @@ public class CharacterStreamStruct extends AbstractNativeStreamStruct {
 			inputStream.unread(codePoint);
 			return codePoint;
 		} catch (final IOException ioe) {
-			throw new StreamErrorException(StreamUtils.FAILED_TO_UNREAD_CHAR, ioe);
+			throw new StreamErrorException(StreamUtils.FAILED_TO_UNREAD_CHAR, ioe, this);
 		}
 	}
 
@@ -200,7 +200,7 @@ public class CharacterStreamStruct extends AbstractNativeStreamStruct {
 
 	@Override
 	public void writeByte(final int aByte) {
-		throw new StreamErrorException(StreamUtils.OPERATION_ONLY_BINARY_STREAM);
+		throw new StreamErrorException(StreamUtils.OPERATION_ONLY_BINARY_STREAM, this);
 	}
 
 	@Override
@@ -224,19 +224,19 @@ public class CharacterStreamStruct extends AbstractNativeStreamStruct {
 	}
 
 	@Override
-	public void close() {
+	public boolean close() {
 		try {
 			inputStream.close();
 			outputStream.close();
 		} catch (final IOException ioe) {
-			throw new StreamErrorException("Could not close stream.", ioe);
+			throw new StreamErrorException("Could not close stream.", ioe, this);
 		}
-		super.close();
+		return super.close();
 	}
 
 	@Override
 	public Long fileLength() {
-		throw new StreamErrorException(StreamUtils.OPERATION_ONLY_FILE_STREAM);
+		throw new StreamErrorException(StreamUtils.OPERATION_ONLY_FILE_STREAM, this);
 	}
 
 	@Override

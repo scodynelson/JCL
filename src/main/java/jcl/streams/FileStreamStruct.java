@@ -14,6 +14,7 @@ import java.nio.file.StandardOpenOption;
 
 import jcl.LispStruct;
 import jcl.LispType;
+import jcl.conditions.exceptions.ErrorException;
 import jcl.conditions.exceptions.StreamErrorException;
 import jcl.types.FileStreamType;
 import jcl.types.SignedByteType;
@@ -76,7 +77,7 @@ public class FileStreamStruct extends AbstractNativeStreamStruct {
 			fileChannel = FileChannel.open(path, StandardOpenOption.READ, StandardOpenOption.WRITE);
 			bufferSize = BigInteger.valueOf(fileChannel.size()).intValueExact();
 		} catch (final IOException ioe) {
-			throw new StreamErrorException("Failed to open provided file.", ioe);
+			throw new ErrorException("Failed to open provided file.", ioe);
 		}
 	}
 
@@ -94,7 +95,7 @@ public class FileStreamStruct extends AbstractNativeStreamStruct {
 			final BigInteger bits = BigInteger.valueOf(bufferSize);
 			return SignedByteType.Factory.getInstance(bits);
 		} catch (final IOException ioe) {
-			throw new StreamErrorException("Failed to open provided file.", ioe);
+			throw new ErrorException("Failed to open provided file.", ioe);
 		}
 	}
 
@@ -110,7 +111,7 @@ public class FileStreamStruct extends AbstractNativeStreamStruct {
 	@Override
 	public ReadPeekResult readChar(final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP) {
 		final int readChar = readChar(StreamUtils.FAILED_TO_READ_CHAR);
-		return StreamUtils.getReadPeekResult(readChar, eofErrorP, eofValue);
+		return StreamUtils.getReadPeekResult(this, readChar, eofErrorP, eofValue);
 	}
 
 	/**
@@ -135,14 +136,14 @@ public class FileStreamStruct extends AbstractNativeStreamStruct {
 			}
 			return -1;
 		} catch (final IOException ioe) {
-			throw new StreamErrorException(streamErrorString, ioe);
+			throw new StreamErrorException(streamErrorString, ioe, this);
 		}
 	}
 
 	@Override
 	public ReadPeekResult readByte(final boolean eofErrorP, final LispStruct eofValue) {
 		final int readByte = readByte();
-		return StreamUtils.getReadPeekResult(readByte, eofErrorP, eofValue);
+		return StreamUtils.getReadPeekResult(this, readByte, eofErrorP, eofValue);
 	}
 
 	/**
@@ -161,7 +162,7 @@ public class FileStreamStruct extends AbstractNativeStreamStruct {
 			}
 			return -1;
 		} catch (final IOException ioe) {
-			throw new StreamErrorException(StreamUtils.FAILED_TO_READ_BYTE, ioe);
+			throw new StreamErrorException(StreamUtils.FAILED_TO_READ_BYTE, ioe, this);
 		}
 	}
 
@@ -184,7 +185,7 @@ public class FileStreamStruct extends AbstractNativeStreamStruct {
 				break;
 		}
 
-		return StreamUtils.getReadPeekResult(nextChar, eofErrorP, eofValue);
+		return StreamUtils.getReadPeekResult(this, nextChar, eofErrorP, eofValue);
 	}
 
 	/**
@@ -206,7 +207,7 @@ public class FileStreamStruct extends AbstractNativeStreamStruct {
 			}
 			return -1;
 		} catch (final IOException ioe) {
-			throw new StreamErrorException(StreamUtils.FAILED_TO_PEEK_CHAR, ioe);
+			throw new StreamErrorException(StreamUtils.FAILED_TO_PEEK_CHAR, ioe, this);
 		}
 	}
 
@@ -237,7 +238,7 @@ public class FileStreamStruct extends AbstractNativeStreamStruct {
 			}
 			return -1;
 		} catch (final IOException ioe) {
-			throw new StreamErrorException(StreamUtils.FAILED_TO_PEEK_CHAR, ioe);
+			throw new StreamErrorException(StreamUtils.FAILED_TO_PEEK_CHAR, ioe, this);
 		}
 	}
 
@@ -271,7 +272,7 @@ public class FileStreamStruct extends AbstractNativeStreamStruct {
 			}
 			return -1;
 		} catch (final IOException ioe) {
-			throw new StreamErrorException(StreamUtils.FAILED_TO_PEEK_CHAR, ioe);
+			throw new StreamErrorException(StreamUtils.FAILED_TO_PEEK_CHAR, ioe, this);
 		}
 	}
 
@@ -282,7 +283,7 @@ public class FileStreamStruct extends AbstractNativeStreamStruct {
 //			fileChannel.position(fileChannel.position() - 1);
 			return codePoint;
 		} catch (final IOException ioe) {
-			throw new StreamErrorException(StreamUtils.FAILED_TO_UNREAD_CHAR, ioe);
+			throw new StreamErrorException(StreamUtils.FAILED_TO_UNREAD_CHAR, ioe, this);
 		}
 	}
 
@@ -301,7 +302,7 @@ public class FileStreamStruct extends AbstractNativeStreamStruct {
 //			final ByteBuffer byteBuffer = Charset.defaultCharset().encode(charBuffer);
 //			fileChannel.write(byteBuffer);
 		} catch (final IOException ioe) {
-			throw new StreamErrorException(StreamUtils.FAILED_TO_WRITE_CHAR, ioe);
+			throw new StreamErrorException(StreamUtils.FAILED_TO_WRITE_CHAR, ioe, this);
 		}
 	}
 
@@ -312,7 +313,7 @@ public class FileStreamStruct extends AbstractNativeStreamStruct {
 //			final ByteBuffer byteBuffer = ByteBuffer.allocate(aByte);
 //			fileChannel.write(byteBuffer);
 		} catch (final IOException ioe) {
-			throw new StreamErrorException(StreamUtils.FAILED_TO_WRITE_BYTE, ioe);
+			throw new StreamErrorException(StreamUtils.FAILED_TO_WRITE_BYTE, ioe, this);
 		}
 	}
 
@@ -326,7 +327,7 @@ public class FileStreamStruct extends AbstractNativeStreamStruct {
 //			final ByteBuffer byteBuffer = Charset.defaultCharset().encode(charBuffer);
 //			fileChannel.write(byteBuffer);
 		} catch (final IOException ioe) {
-			throw new StreamErrorException(StreamUtils.FAILED_TO_WRITE_STRING, ioe);
+			throw new StreamErrorException(StreamUtils.FAILED_TO_WRITE_STRING, ioe, this);
 		}
 	}
 
@@ -358,14 +359,14 @@ public class FileStreamStruct extends AbstractNativeStreamStruct {
 	}
 
 	@Override
-	public void close() {
+	public boolean close() {
 		try {
 			randomAccessFile.close();
 //			fileChannel.close();
 		} catch (final IOException ioe) {
-			throw new StreamErrorException("Could not close stream.", ioe);
+			throw new StreamErrorException("Could not close stream.", ioe, this);
 		}
-		super.close();
+		return super.close();
 	}
 
 	@Override
@@ -374,7 +375,7 @@ public class FileStreamStruct extends AbstractNativeStreamStruct {
 			return randomAccessFile.length();
 //			return fileChannel.size();
 		} catch (final IOException ioe) {
-			throw new StreamErrorException("Could not retrieve file length.", ioe);
+			throw new StreamErrorException("Could not retrieve file length.", ioe, this);
 		}
 	}
 
@@ -388,7 +389,7 @@ public class FileStreamStruct extends AbstractNativeStreamStruct {
 			return randomAccessFile.getFilePointer();
 //			return fileChannel.position();
 		} catch (final IOException ioe) {
-			throw new StreamErrorException("Could not retrieve file position.", ioe);
+			throw new StreamErrorException("Could not retrieve file position.", ioe, this);
 		}
 	}
 

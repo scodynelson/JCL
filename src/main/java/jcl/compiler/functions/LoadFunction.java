@@ -212,7 +212,7 @@ public final class LoadFunction extends FunctionStruct {
 
 		final boolean filespecNotExists = Files.notExists(filespecPath);
 		if (filespecNotExists && ifDoesNotExist) {
-			throw new FileErrorException("Filespec provided to LOAD does not exist: " + filespecPath);
+			throw new FileErrorException("Filespec provided to LOAD does not exist: " + filespecPath, filespecFileStream);
 		}
 		if (filespecNotExists) {
 			return NILStruct.INSTANCE;
@@ -239,7 +239,7 @@ public final class LoadFunction extends FunctionStruct {
 				}
 				return loadSourceCode(filespecFileStream, filespecPath, verbose, print);
 			} else {
-				throw new FileErrorException("Cannot LOAD file with unsupported extension: " + filespecPath);
+				throw new FileErrorException("Cannot LOAD file with unsupported extension: " + filespecPath, filespecFileStream);
 			}
 		} finally {
 			CompilerVariables.LOAD_TRUENAME.setValue(previousLoadTruename);

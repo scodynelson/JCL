@@ -1031,6 +1031,11 @@ public interface CommonLispSymbols {
 	KeywordStruct EXTERNAL = new KeywordStruct("EXTERNAL");
 	KeywordStruct INHERITED = new KeywordStruct("INHERITED");
 
+	// Stream Keywords
+	KeywordStruct ABORT_KEYWORD = new KeywordStruct("ABORT");
+	KeywordStruct START_KEYWORD = new KeywordStruct("START");
+	KeywordStruct END_KEYWORD = new KeywordStruct("END");
+
 	// Features Keywords
 	/**
 	 * NOT {@link KeywordStruct} for processing features that should 'not' be included.

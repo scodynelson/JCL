@@ -888,7 +888,8 @@ public class PathnameStruct extends BuiltInClassStruct {
 				final PathnameDirectoryLevelType nextDirectoryLevelType = next.getDirectoryLevelType();
 				if ((nextDirectoryLevelType == PathnameDirectoryLevelType.UP)
 						|| (nextDirectoryLevelType == PathnameDirectoryLevelType.BACK)) {
-					throw new FileErrorException("WILD-INFERIORS may not be followed immediately by " + nextDirectoryLevelType + '.');
+					// TODO: should this take a stream!??!?
+					throw new FileErrorException("WILD-INFERIORS may not be followed immediately by " + nextDirectoryLevelType + '.', null);
 				}
 
 				directoryLevel = next;

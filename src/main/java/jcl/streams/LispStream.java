@@ -10,12 +10,18 @@ import jcl.LispType;
 /**
  * The {@link LispStream} is the representation for all Lisp 'stream' types.
  */
-interface LispStream extends LispStruct {
+public interface LispStream extends LispStruct {
 
 	/**
 	 * Closes the stream.
+	 *
+	 * @return whether or not the stream was closed or modified in any way
 	 */
-	void close();
+	boolean close();
+
+	default boolean close(final boolean abort) {
+		return close();
+	}
 
 	/**
 	 * Returns the element type of the stream.

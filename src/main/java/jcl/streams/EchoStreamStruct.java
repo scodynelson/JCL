@@ -60,7 +60,7 @@ public class EchoStreamStruct extends AbstractDualStreamStruct {
 
 		if (readResult.isEof()) {
 			if (eofErrorP) {
-				throw new EndOfFileException(StreamUtils.END_OF_FILE_REACHED);
+				throw new EndOfFileException(StreamUtils.END_OF_FILE_REACHED, this);
 			} else {
 				return readResult;
 			}
@@ -82,7 +82,7 @@ public class EchoStreamStruct extends AbstractDualStreamStruct {
 
 		if (readResult.isEof()) {
 			if (eofErrorP) {
-				throw new EndOfFileException(StreamUtils.END_OF_FILE_REACHED);
+				throw new EndOfFileException(StreamUtils.END_OF_FILE_REACHED, this);
 			} else {
 				return readResult;
 			}

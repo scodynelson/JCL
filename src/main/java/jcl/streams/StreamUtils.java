@@ -46,6 +46,8 @@ final class StreamUtils {
 	 * {@code eofErrorP} is true and the value is the End-of-File value, or a result with the {@code eofValue} if
 	 * {@code eofErrorP} is false.
 	 *
+	 * @param stream
+	 * 		the stream performing the read/peek operation
 	 * @param readPeekVal
 	 * 		the character or byte read or peeked
 	 * @param eofErrorP
@@ -55,10 +57,11 @@ final class StreamUtils {
 	 *
 	 * @return the resulting {@link ReadPeekResult} object
 	 */
-	static ReadPeekResult getReadPeekResult(final int readPeekVal, final boolean eofErrorP, final LispStruct eofValue) {
+	static ReadPeekResult getReadPeekResult(final LispStream stream, final int readPeekVal, final boolean eofErrorP,
+	                                        final LispStruct eofValue) {
 		if (readPeekVal == -1) {
 			if (eofErrorP) {
-				throw new EndOfFileException(END_OF_FILE_REACHED);
+				throw new EndOfFileException(END_OF_FILE_REACHED, stream);
 			} else {
 				return new ReadPeekResult(eofValue);
 			}

@@ -5,6 +5,7 @@
 package jcl.streams;
 
 import jcl.LispType;
+import jcl.conditions.exceptions.ErrorException;
 import jcl.conditions.exceptions.StreamErrorException;
 import jcl.types.StreamType;
 import jcl.types.typespecifiers.AndTypeSpecifier;
@@ -19,12 +20,12 @@ abstract class AbstractDualStreamStruct extends StreamStruct implements IOStream
 	/**
 	 * This {@link InputStream} in the AbstractDualStreamStruct.
 	 */
-	final InputStream inputStream;
+	protected final InputStream inputStream;
 
 	/**
 	 * This {@link OutputStream} in the AbstractDualStreamStruct.
 	 */
-	final OutputStream outputStream;
+	protected final OutputStream outputStream;
 
 	/**
 	 * Protected constructor.
@@ -38,8 +39,8 @@ abstract class AbstractDualStreamStruct extends StreamStruct implements IOStream
 	 * @param outputStream
 	 * 		the {@link OutputStream} to create an AbstractDualStreamStruct from
 	 */
-	AbstractDualStreamStruct(final StreamType type,
-	                         final boolean interactive, final InputStream inputStream, final OutputStream outputStream) {
+	protected AbstractDualStreamStruct(final StreamType type,
+	                                   final boolean interactive, final InputStream inputStream, final OutputStream outputStream) {
 		super(type, null, null, interactive, getElementType(inputStream, outputStream));
 		this.inputStream = inputStream;
 		this.outputStream = outputStream;
@@ -57,10 +58,10 @@ abstract class AbstractDualStreamStruct extends StreamStruct implements IOStream
 	 */
 	private static LispType getElementType(final InputStream inputStream, final OutputStream outputStream) {
 		if (inputStream == null) {
-			throw new StreamErrorException("Provided Input Stream must not be null.");
+			throw new ErrorException("Provided Input Stream must not be null.");
 		}
 		if (outputStream == null) {
-			throw new StreamErrorException("Provided Output Stream must not be null.");
+			throw new ErrorException("Provided Output Stream must not be null.");
 		}
 
 		final LispType inType = inputStream.getElementType();
@@ -129,7 +130,7 @@ abstract class AbstractDualStreamStruct extends StreamStruct implements IOStream
 
 	@Override
 	public Long fileLength() {
-		throw new StreamErrorException(StreamUtils.OPERATION_ONLY_FILE_STREAM);
+		throw new StreamErrorException(StreamUtils.OPERATION_ONLY_FILE_STREAM, this);
 	}
 
 	@Override

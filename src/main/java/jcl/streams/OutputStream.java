@@ -9,6 +9,16 @@ package jcl.streams;
  */
 public interface OutputStream extends LispStream {
 
+	@Override
+	default boolean close(final boolean abort) {
+		if (abort) {
+			clearOutput();
+		} else {
+			forceOutput();;
+		}
+		return close();
+	}
+
 	/**
 	 * Writes the provided {@code aChar} out to the stream.
 	 *

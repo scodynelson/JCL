@@ -6,6 +6,7 @@ package jcl.streams;
 
 import jcl.LispStruct;
 import jcl.LispType;
+import jcl.conditions.exceptions.ErrorException;
 import jcl.conditions.exceptions.StreamErrorException;
 import jcl.symbols.SymbolStruct;
 import jcl.symbols.VariableStruct;
@@ -66,7 +67,7 @@ public class SynonymStreamStruct extends StreamStruct implements IOStream {
 	 */
 	private static LispType getElementType(final SymbolStruct symbol) {
 		if (symbol == null) {
-			throw new StreamErrorException("Provided Symbol must not be null.");
+			throw new ErrorException("Provided Symbol must not be null.");
 		}
 		return ((StreamStruct) symbol.getValue()).getElementType();
 	}
@@ -86,7 +87,7 @@ public class SynonymStreamStruct extends StreamStruct implements IOStream {
 		if (stream instanceof InputStream) {
 			return ((InputStream) stream).readChar(eofErrorP, eofValue, recursiveP);
 		} else {
-			throw new StreamErrorException("Characters can only be read from Input Streams.");
+			throw new StreamErrorException("Characters can only be read from Input Streams.", stream);
 		}
 	}
 
@@ -96,7 +97,7 @@ public class SynonymStreamStruct extends StreamStruct implements IOStream {
 		if (stream instanceof InputStream) {
 			return ((InputStream) stream).readByte(eofErrorP, eofValue);
 		} else {
-			throw new StreamErrorException("Bytes can only be read from Input Streams.");
+			throw new StreamErrorException("Bytes can only be read from Input Streams.", stream);
 		}
 	}
 
@@ -106,7 +107,7 @@ public class SynonymStreamStruct extends StreamStruct implements IOStream {
 		if (stream instanceof InputStream) {
 			return ((InputStream) stream).peekChar(peekType, eofErrorP, eofValue, recursiveP);
 		} else {
-			throw new StreamErrorException("Characters can only be peeked at from Input Streams.");
+			throw new StreamErrorException("Characters can only be peeked at from Input Streams.", stream);
 		}
 	}
 
@@ -116,7 +117,7 @@ public class SynonymStreamStruct extends StreamStruct implements IOStream {
 		if (stream instanceof InputStream) {
 			return ((InputStream) stream).unreadChar(codePoint);
 		} else {
-			throw new StreamErrorException("Characters can only be unread from Input Streams.");
+			throw new StreamErrorException("Characters can only be unread from Input Streams.", stream);
 		}
 	}
 
@@ -140,7 +141,7 @@ public class SynonymStreamStruct extends StreamStruct implements IOStream {
 		if (stream instanceof OutputStream) {
 			((OutputStream) stream).writeChar(aChar);
 		} else {
-			throw new StreamErrorException("Characters can only be written to Input Streams.");
+			throw new StreamErrorException("Characters can only be written to Input Streams.", stream);
 		}
 	}
 
@@ -150,7 +151,7 @@ public class SynonymStreamStruct extends StreamStruct implements IOStream {
 		if (stream instanceof OutputStream) {
 			((OutputStream) stream).writeByte(aByte);
 		} else {
-			throw new StreamErrorException("Bytes can only be written to Input Streams.");
+			throw new StreamErrorException("Bytes can only be written to Input Streams.", stream);
 		}
 	}
 
@@ -160,7 +161,7 @@ public class SynonymStreamStruct extends StreamStruct implements IOStream {
 		if (stream instanceof OutputStream) {
 			((OutputStream) stream).writeString(outputString, start, end);
 		} else {
-			throw new StreamErrorException("Strings can only be written to Input Streams.");
+			throw new StreamErrorException("Strings can only be written to Input Streams.", stream);
 		}
 	}
 
@@ -189,11 +190,12 @@ public class SynonymStreamStruct extends StreamStruct implements IOStream {
 	}
 
 	@Override
-	public void close() {
-		super.close();
+	public boolean close() {
+		final boolean wasClosed = super.close();
 
 		final StreamStruct stream = (StreamStruct) symbol.getValue();
-		stream.close();
+		final boolean wasSynonymClosed = stream.close();
+		return wasClosed || wasSynonymClosed;
 	}
 
 	@Override

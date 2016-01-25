@@ -41,7 +41,8 @@ public final class PathnameVersion {
 	 */
 	public PathnameVersion(final Integer version) {
 		if ((version == null) || (version < 1)) {
-			throw new FileErrorException("Version value cannot be null or less than 1.");
+			// TODO: should this take a stream!??!?
+			throw new FileErrorException("Version value cannot be null or less than 1.", null);
 		}
 
 		this.version = version;

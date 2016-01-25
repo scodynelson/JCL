@@ -10,7 +10,7 @@ import java.util.Deque;
 import jcl.LispStruct;
 import jcl.LispType;
 import jcl.conditions.exceptions.EndOfFileException;
-import jcl.conditions.exceptions.StreamErrorException;
+import jcl.conditions.exceptions.ErrorException;
 import jcl.types.ConcatenatedStreamType;
 import jcl.types.TType;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -59,7 +59,7 @@ public class ConcatenatedStreamStruct extends StreamStruct implements InputStrea
 	 */
 	private static LispType getElementType2(final Deque<InputStream> inputStreams) {
 		if (inputStreams == null) {
-			throw new StreamErrorException("Provided Input Stream List must not be null.");
+			throw new ErrorException("Provided Input Stream List must not be null.");
 		}
 		return getElementType3(inputStreams);
 	}
@@ -90,7 +90,7 @@ public class ConcatenatedStreamStruct extends StreamStruct implements InputStrea
 		while (true) {
 			if (inputStreams.isEmpty()) {
 				if (eofErrorP) {
-					throw new EndOfFileException(StreamUtils.END_OF_FILE_REACHED);
+					throw new EndOfFileException(StreamUtils.END_OF_FILE_REACHED, this);
 				} else {
 					return new ReadPeekResult(eofValue);
 				}
@@ -112,7 +112,7 @@ public class ConcatenatedStreamStruct extends StreamStruct implements InputStrea
 		while (true) {
 			if (inputStreams.isEmpty()) {
 				if (eofErrorP) {
-					throw new EndOfFileException(StreamUtils.END_OF_FILE_REACHED);
+					throw new EndOfFileException(StreamUtils.END_OF_FILE_REACHED, this);
 				} else {
 					return new ReadPeekResult(eofValue);
 				}
@@ -133,7 +133,7 @@ public class ConcatenatedStreamStruct extends StreamStruct implements InputStrea
 	public ReadPeekResult peekChar(final PeekType peekType, final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP) {
 		if (inputStreams.isEmpty()) {
 			if (eofErrorP) {
-				throw new EndOfFileException(StreamUtils.END_OF_FILE_REACHED);
+				throw new EndOfFileException(StreamUtils.END_OF_FILE_REACHED, this);
 			} else {
 				return new ReadPeekResult(eofValue);
 			}

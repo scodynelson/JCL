@@ -11,6 +11,7 @@ import java.net.URL;
 import java.net.URLConnection;
 
 import jcl.LispStruct;
+import jcl.conditions.exceptions.ErrorException;
 import jcl.conditions.exceptions.StreamErrorException;
 import jcl.types.CharacterType;
 import jcl.types.FileStreamType;
@@ -71,7 +72,7 @@ public class URLStreamStruct extends AbstractNativeStreamStruct {
 			urlConnection = url.openConnection();
 			inputStream = new BufferedReader(new InputStreamReader(url.openStream()));
 		} catch (final IOException ioe) {
-			throw new StreamErrorException("Failed to open provided url.", ioe);
+			throw new ErrorException("Failed to open provided url.", ioe);
 		}
 	}
 
@@ -89,15 +90,15 @@ public class URLStreamStruct extends AbstractNativeStreamStruct {
 		try {
 			inputStream.mark(1);
 			final int readChar = inputStream.read();
-			return StreamUtils.getReadPeekResult(readChar, eofErrorP, eofValue);
+			return StreamUtils.getReadPeekResult(this, readChar, eofErrorP, eofValue);
 		} catch (final IOException ioe) {
-			throw new StreamErrorException(StreamUtils.FAILED_TO_READ_CHAR, ioe);
+			throw new StreamErrorException(StreamUtils.FAILED_TO_READ_CHAR, ioe, this);
 		}
 	}
 
 	@Override
 	public ReadPeekResult readByte(final boolean eofErrorP, final LispStruct eofValue) {
-		throw new StreamErrorException(StreamUtils.OPERATION_ONLY_BINARY_STREAM);
+		throw new StreamErrorException(StreamUtils.OPERATION_ONLY_BINARY_STREAM, this);
 	}
 
 	@Override
@@ -119,7 +120,7 @@ public class URLStreamStruct extends AbstractNativeStreamStruct {
 				break;
 		}
 
-		return StreamUtils.getReadPeekResult(nextChar, eofErrorP, eofValue);
+		return StreamUtils.getReadPeekResult(this, nextChar, eofErrorP, eofValue);
 	}
 
 	/**
@@ -135,7 +136,7 @@ public class URLStreamStruct extends AbstractNativeStreamStruct {
 			inputStream.reset();
 			return nextChar;
 		} catch (final IOException ioe) {
-			throw new StreamErrorException(StreamUtils.FAILED_TO_PEEK_CHAR, ioe);
+			throw new StreamErrorException(StreamUtils.FAILED_TO_PEEK_CHAR, ioe, this);
 		}
 	}
 
@@ -156,7 +157,7 @@ public class URLStreamStruct extends AbstractNativeStreamStruct {
 			inputStream.reset();
 			return nextChar;
 		} catch (final IOException ioe) {
-			throw new StreamErrorException(StreamUtils.FAILED_TO_PEEK_CHAR, ioe);
+			throw new StreamErrorException(StreamUtils.FAILED_TO_PEEK_CHAR, ioe, this);
 		}
 	}
 
@@ -180,7 +181,7 @@ public class URLStreamStruct extends AbstractNativeStreamStruct {
 			inputStream.reset();
 			return nextChar;
 		} catch (final IOException ioe) {
-			throw new StreamErrorException(StreamUtils.FAILED_TO_PEEK_CHAR, ioe);
+			throw new StreamErrorException(StreamUtils.FAILED_TO_PEEK_CHAR, ioe, this);
 		}
 	}
 
@@ -190,7 +191,7 @@ public class URLStreamStruct extends AbstractNativeStreamStruct {
 			inputStream.reset();
 			return codePoint;
 		} catch (final IOException ioe) {
-			throw new StreamErrorException(StreamUtils.FAILED_TO_UNREAD_CHAR, ioe);
+			throw new StreamErrorException(StreamUtils.FAILED_TO_UNREAD_CHAR, ioe, this);
 		}
 	}
 
@@ -217,7 +218,7 @@ public class URLStreamStruct extends AbstractNativeStreamStruct {
 
 	@Override
 	public void writeByte(final int aByte) {
-		throw new StreamErrorException(StreamUtils.OPERATION_ONLY_BINARY_STREAM);
+		throw new StreamErrorException(StreamUtils.OPERATION_ONLY_BINARY_STREAM, this);
 	}
 
 	@Override
@@ -246,18 +247,18 @@ public class URLStreamStruct extends AbstractNativeStreamStruct {
 	}
 
 	@Override
-	public void close() {
+	public boolean close() {
 		try {
 			inputStream.close();
 		} catch (final IOException ioe) {
-			throw new StreamErrorException("Could not close stream.", ioe);
+			throw new StreamErrorException("Could not close stream.", ioe, this);
 		}
-		super.close();
+		return super.close();
 	}
 
 	@Override
 	public Long fileLength() {
-		throw new StreamErrorException(StreamUtils.OPERATION_ONLY_FILE_STREAM);
+		throw new StreamErrorException(StreamUtils.OPERATION_ONLY_FILE_STREAM, this);
 	}
 
 	@Override

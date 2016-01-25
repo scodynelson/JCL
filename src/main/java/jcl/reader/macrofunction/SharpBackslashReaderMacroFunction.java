@@ -8,6 +8,7 @@ import java.math.BigInteger;
 import java.util.Optional;
 import javax.annotation.PostConstruct;
 
+import com.ibm.icu.lang.UCharacter;
 import jcl.LispStruct;
 import jcl.characters.CharacterConstants;
 import jcl.characters.CharacterStruct;
@@ -60,6 +61,10 @@ public class SharpBackslashReaderMacroFunction extends ReaderMacroFunction {
 		}
 
 		if (nameCodePoint == null) {
+			nameCodePoint = UCharacter.getCharFromName(tokenString);
+		}
+
+		if (nameCodePoint == -1) {
 			throw new ReaderErrorException("Unrecognized character name: " + tokenString);
 		}
 

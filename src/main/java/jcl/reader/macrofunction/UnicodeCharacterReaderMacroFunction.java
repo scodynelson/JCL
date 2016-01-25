@@ -5,9 +5,7 @@
 package jcl.reader.macrofunction;
 
 import jcl.conditions.exceptions.ReaderErrorException;
-import jcl.lists.NullStruct;
 import jcl.reader.Reader;
-import jcl.streams.ReadPeekResult;
 
 /**
  * Reader Macro Function for handling the reading unicode character.
@@ -35,19 +33,10 @@ final class UnicodeCharacterReaderMacroFunction {
 	 * @return a Unicode character code point
 	 */
 	static int readUnicodeCharacter(final Reader reader) {
-		final StringBuilder unicodeCharacterBuilder = new StringBuilder();
+		final ExtendedTokenReaderMacroFunction.ReadExtendedToken readExtendedToken =
+				ExtendedTokenReaderMacroFunction.readExtendedToken(reader, true);
 
-		// NOTE: This will throw errors when it reaches an EOF
-		ReadPeekResult readResult = reader.readChar(true, NullStruct.INSTANCE, false);
-		int codePoint = readResult.getResult();
-		while (!ReaderMacroFunctionUtil.isWhitespace(codePoint)) {
-			unicodeCharacterBuilder.appendCodePoint(codePoint);
-
-			readResult = reader.readChar(true, NullStruct.INSTANCE, false);
-			codePoint = readResult.getResult();
-		}
-
-		final String unicodeCharacterString = unicodeCharacterBuilder.toString();
+		final String unicodeCharacterString = readExtendedToken.getTokenString();
 		try {
 			final int unicodeCodePoint = Integer.parseInt(unicodeCharacterString, UNICODE_RADIX);
 			if (!Character.isValidCodePoint(unicodeCodePoint)) {

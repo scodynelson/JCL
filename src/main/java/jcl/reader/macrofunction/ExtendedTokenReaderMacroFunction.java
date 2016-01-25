@@ -46,7 +46,7 @@ final class ExtendedTokenReaderMacroFunction {
 		ReadPeekResult readResult = readToken(reader, false, !isEscaped, stringBuilder, isEscaped);
 
 		if (isEscaped) {
-			readResult = readToken(reader, false, false, stringBuilder, false);
+			readResult = readToken(reader, false, false, stringBuilder, true);
 		}
 
 		boolean hasEscapes = false;
@@ -75,7 +75,7 @@ final class ExtendedTokenReaderMacroFunction {
 				hasPackageDelimiter = isPackageMarker(codePoint);
 			}
 
-			readResult = readToken(reader, false, false, stringBuilder, false);
+			readResult = readToken(reader, false, false, stringBuilder, isEscaped);
 		}
 
 		return new ReadExtendedToken(stringBuilder.toString(), hasEscapes, hasPackageDelimiter);

@@ -5,6 +5,7 @@
 package jcl.streams;
 
 import java.io.EOFException;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.math.BigInteger;
@@ -18,8 +19,6 @@ import jcl.conditions.exceptions.ErrorException;
 import jcl.conditions.exceptions.StreamErrorException;
 import jcl.types.FileStreamType;
 import jcl.types.SignedByteType;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,21 +33,14 @@ public class FileStreamStruct extends AbstractNativeStreamStruct {
 	private static final Logger LOGGER = LoggerFactory.getLogger(FileStreamStruct.class);
 
 	/**
-	 * The {@link Path} of the file that the {@link #fileChannel} interacts with.
+	 * The {@link Path} of the file that the {@link #randomAccessFile} interacts with.
 	 */
 	private final Path path;
 
 	/**
-	 * The {@link FileChannel} to read from and write to.
+	 * The {@link RandomAccessFile} used for reading and writing file information.
 	 */
-	private final FileChannel fileChannel;
-
 	private final RandomAccessFile randomAccessFile;
-
-	/**
-	 * The buffer size for the {@link #fileChannel}.
-	 */
-	private final int bufferSize;
 
 	/**
 	 * Public constructor.
@@ -74,10 +66,8 @@ public class FileStreamStruct extends AbstractNativeStreamStruct {
 		this.path = path;
 		try {
 			randomAccessFile = new RandomAccessFile(path.toFile(), "rw");
-			fileChannel = FileChannel.open(path, StandardOpenOption.READ, StandardOpenOption.WRITE);
-			bufferSize = BigInteger.valueOf(fileChannel.size()).intValueExact();
-		} catch (final IOException ioe) {
-			throw new ErrorException("Failed to open provided file.", ioe);
+		} catch (final FileNotFoundException fnfe) {
+			throw new ErrorException("Failed to open provided file.", fnfe);
 		}
 	}
 
@@ -125,11 +115,6 @@ public class FileStreamStruct extends AbstractNativeStreamStruct {
 	private int readChar(final String streamErrorString) {
 		try {
 			return randomAccessFile.readUnsignedByte();
-//			final ByteBuffer byteBuffer = ByteBuffer.allocate(1024);
-//			fileChannel.read(byteBuffer);
-//
-//			final CharBuffer charBuffer = Charset.defaultCharset().decode(byteBuffer);
-//			return charBuffer.get();
 		} catch (final EOFException eofe) {
 			if (LOGGER.isTraceEnabled()) {
 				LOGGER.trace(StreamUtils.END_OF_FILE_REACHED, eofe);
@@ -154,8 +139,6 @@ public class FileStreamStruct extends AbstractNativeStreamStruct {
 	private int readByte() {
 		try {
 			return randomAccessFile.readByte();
-//			final ByteBuffer byteBuffer = ByteBuffer.allocate(bufferSize);
-//			return fileChannel.read(byteBuffer);
 		} catch (final EOFException eofe) {
 			if (LOGGER.isTraceEnabled()) {
 				LOGGER.trace(StreamUtils.END_OF_FILE_REACHED, eofe);
@@ -198,9 +181,6 @@ public class FileStreamStruct extends AbstractNativeStreamStruct {
 			final int nextChar = randomAccessFile.readUnsignedByte();
 			randomAccessFile.seek(randomAccessFile.getFilePointer() - 1);
 			return nextChar;
-//			final int nextChar = readChar(StreamUtils.FAILED_TO_PEEK_CHAR);
-//			fileChannel.position(fileChannel.position() - 1);
-//			return nextChar;
 		} catch (final EOFException eofe) {
 			if (LOGGER.isTraceEnabled()) {
 				LOGGER.trace(StreamUtils.END_OF_FILE_REACHED, eofe);
@@ -221,15 +201,12 @@ public class FileStreamStruct extends AbstractNativeStreamStruct {
 			// Initialize to whitespace, since we are attempting to skip it anyways
 			int nextChar = ' ';
 
-			int i = 0;
 			while (Character.isWhitespace(nextChar) && (nextChar != -1)) {
 				nextChar = readChar(StreamUtils.FAILED_TO_PEEK_CHAR);
-				i++;
 			}
 
 			if (nextChar != -1) {
 				randomAccessFile.seek(randomAccessFile.getFilePointer() - 1);
-//				fileChannel.position(fileChannel.position() - i);
 			}
 			return nextChar;
 		} catch (final EOFException eofe) {
@@ -255,15 +232,12 @@ public class FileStreamStruct extends AbstractNativeStreamStruct {
 			// Initialize to 0 value
 			int nextChar = 0;
 
-			int i = 0;
 			while ((nextChar != codePoint) && (nextChar != -1)) {
 				nextChar = readChar(StreamUtils.FAILED_TO_PEEK_CHAR);
-				i++;
 			}
 
 			if (nextChar != -1) {
 				randomAccessFile.seek(randomAccessFile.getFilePointer() - 1);
-//				fileChannel.position(fileChannel.position() - i);
 			}
 			return nextChar;
 		} catch (final EOFException eofe) {
@@ -280,7 +254,6 @@ public class FileStreamStruct extends AbstractNativeStreamStruct {
 	public Integer unreadChar(final Integer codePoint) {
 		try {
 			randomAccessFile.seek(randomAccessFile.getFilePointer() - 1);
-//			fileChannel.position(fileChannel.position() - 1);
 			return codePoint;
 		} catch (final IOException ioe) {
 			throw new StreamErrorException(StreamUtils.FAILED_TO_UNREAD_CHAR, ioe, this);
@@ -296,11 +269,6 @@ public class FileStreamStruct extends AbstractNativeStreamStruct {
 	public void writeChar(final int aChar) {
 		try {
 			randomAccessFile.writeChar(aChar);
-//			final char[] chars = {(char) aChar};
-//			final CharBuffer charBuffer = CharBuffer.wrap(chars);
-//
-//			final ByteBuffer byteBuffer = Charset.defaultCharset().encode(charBuffer);
-//			fileChannel.write(byteBuffer);
 		} catch (final IOException ioe) {
 			throw new StreamErrorException(StreamUtils.FAILED_TO_WRITE_CHAR, ioe, this);
 		}
@@ -310,8 +278,6 @@ public class FileStreamStruct extends AbstractNativeStreamStruct {
 	public void writeByte(final int aByte) {
 		try {
 			randomAccessFile.writeByte(aByte);
-//			final ByteBuffer byteBuffer = ByteBuffer.allocate(aByte);
-//			fileChannel.write(byteBuffer);
 		} catch (final IOException ioe) {
 			throw new StreamErrorException(StreamUtils.FAILED_TO_WRITE_BYTE, ioe, this);
 		}
@@ -322,10 +288,6 @@ public class FileStreamStruct extends AbstractNativeStreamStruct {
 		try {
 			final String subString = outputString.substring(start, end);
 			randomAccessFile.writeChars(subString);
-//			final CharBuffer charBuffer = CharBuffer.wrap(subString);
-//
-//			final ByteBuffer byteBuffer = Charset.defaultCharset().encode(charBuffer);
-//			fileChannel.write(byteBuffer);
 		} catch (final IOException ioe) {
 			throw new StreamErrorException(StreamUtils.FAILED_TO_WRITE_STRING, ioe, this);
 		}
@@ -338,31 +300,18 @@ public class FileStreamStruct extends AbstractNativeStreamStruct {
 
 	@Override
 	public void finishOutput() {
-//		try {
-//			fileChannel.force(true);
-//		} catch (final IOException ioe) {
-//			if (LOGGER.isWarnEnabled()) {
-//				LOGGER.warn("Could not finish stream output.", ioe);
-//			}
-//		}
+		// Do nothing.
 	}
 
 	@Override
 	public void forceOutput() {
-//		try {
-//			fileChannel.force(false);
-//		} catch (final IOException ioe) {
-//			if (LOGGER.isWarnEnabled()) {
-//				LOGGER.warn("Could not force stream output.", ioe);
-//			}
-//		}
+		// Do nothing.
 	}
 
 	@Override
 	public boolean close() {
 		try {
 			randomAccessFile.close();
-//			fileChannel.close();
 		} catch (final IOException ioe) {
 			throw new StreamErrorException("Could not close stream.", ioe, this);
 		}
@@ -373,7 +322,6 @@ public class FileStreamStruct extends AbstractNativeStreamStruct {
 	public Long fileLength() {
 		try {
 			return randomAccessFile.length();
-//			return fileChannel.size();
 		} catch (final IOException ioe) {
 			throw new StreamErrorException("Could not retrieve file length.", ioe, this);
 		}
@@ -384,38 +332,10 @@ public class FileStreamStruct extends AbstractNativeStreamStruct {
 		try {
 			if (filePosition != null) {
 				randomAccessFile.seek(filePosition);
-//				fileChannel.position(filePosition);
 			}
 			return randomAccessFile.getFilePointer();
-//			return fileChannel.position();
 		} catch (final IOException ioe) {
 			throw new StreamErrorException("Could not retrieve file position.", ioe, this);
 		}
-	}
-
-	@Override
-	public int hashCode() {
-		return new HashCodeBuilder().appendSuper(super.hashCode())
-		                            .append(fileChannel)
-		                            .append(bufferSize)
-		                            .toHashCode();
-	}
-
-	@Override
-	public boolean equals(final Object obj) {
-		if (obj == null) {
-			return false;
-		}
-		if (obj == this) {
-			return true;
-		}
-		if (obj.getClass() != getClass()) {
-			return false;
-		}
-		final FileStreamStruct rhs = (FileStreamStruct) obj;
-		return new EqualsBuilder().appendSuper(super.equals(obj))
-		                          .append(fileChannel, rhs.fileChannel)
-		                          .append(bufferSize, rhs.bufferSize)
-		                          .isEquals();
 	}
 }

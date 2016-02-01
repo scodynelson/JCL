@@ -78,6 +78,7 @@ public class LambdaExpander extends MacroFunctionExpander<LambdaStruct> {
 			final String lambdaClassName = "Lambda" + '_' + System.nanoTime();
 			className = "jcl/" + lambdaClassName;
 		} else {
+			// TODO: Remove System.nanoTime() from here, since this breaks JAR loading. But we need it for now.
 			className = javaClassNameDeclaration.getClassName().replace('.', '/') + '_' + System.nanoTime();
 		}
 

@@ -23,10 +23,10 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
- * The {@link CharacterStreamStruct} is the object representation of a character reading and writing system level Lisp
+ * The {@link BinaryStreamStruct} is the object representation of a character reading and writing system level Lisp
  * stream.
  */
-public class CharacterStreamStruct extends JavaStreamStruct {
+public class BinaryStreamStruct extends JavaStreamStruct {
 
 	/**
 	 * The maximum size of internal buffer array to allocate in the {@link PushbackReader} {@link #inputStream}.
@@ -47,11 +47,11 @@ public class CharacterStreamStruct extends JavaStreamStruct {
 	 * Public constructor.
 	 *
 	 * @param inputStream
-	 * 		the {@link java.io.InputStream} to create a CharacterStreamStruct from
+	 * 		the {@link InputStream} to create a CharacterStreamStruct from
 	 * @param outputStream
-	 * 		the {@link java.io.OutputStream} to create a CharacterStreamStruct from
+	 * 		the {@link OutputStream} to create a CharacterStreamStruct from
 	 */
-	public CharacterStreamStruct(final InputStream inputStream, final OutputStream outputStream) {
+	public BinaryStreamStruct(final InputStream inputStream, final OutputStream outputStream) {
 		this(false, inputStream, outputStream);
 	}
 
@@ -61,11 +61,11 @@ public class CharacterStreamStruct extends JavaStreamStruct {
 	 * @param interactive
 	 * 		whether or not the struct created is 'interactive'
 	 * @param inputStream
-	 * 		the {@link java.io.InputStream} to create a CharacterStreamStruct from
+	 * 		the {@link InputStream} to create a CharacterStreamStruct from
 	 * @param outputStream
-	 * 		the {@link java.io.OutputStream} to create a CharacterStreamStruct from
+	 * 		the {@link OutputStream} to create a CharacterStreamStruct from
 	 */
-	public CharacterStreamStruct(final boolean interactive, final InputStream inputStream, final OutputStream outputStream) {
+	public BinaryStreamStruct(final boolean interactive, final InputStream inputStream, final OutputStream outputStream) {
 		super(interactive, inputStream, outputStream);
 		this.inputStream = null;
 		this.outputStream = null;
@@ -261,7 +261,7 @@ public class CharacterStreamStruct extends JavaStreamStruct {
 		if (obj.getClass() != getClass()) {
 			return false;
 		}
-		final CharacterStreamStruct rhs = (CharacterStreamStruct) obj;
+		final BinaryStreamStruct rhs = (BinaryStreamStruct) obj;
 		return new EqualsBuilder().appendSuper(super.equals(obj))
 		                          .append(inputStream, rhs.inputStream)
 		                          .append(outputStream, rhs.outputStream)

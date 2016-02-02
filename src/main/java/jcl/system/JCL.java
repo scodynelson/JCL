@@ -11,7 +11,7 @@ import jcl.pathnames.PathnameName;
 import jcl.pathnames.PathnameStruct;
 import jcl.pathnames.PathnameType;
 import jcl.pathnames.functions.MergePathnamesFunction;
-import jcl.streams.CharacterStreamStruct;
+import jcl.streams.JavaStreamStruct;
 import jcl.streams.StreamVariables;
 import jcl.streams.TwoWayStreamStruct;
 import jcl.system.repl.ReadEvalPrint;
@@ -50,7 +50,7 @@ public class JCL implements ApplicationRunner {
 
 	public JCL() throws IOException {
 		try (LoggerOutputStream loggerOutputStream = new LoggerOutputStream(LOGGER)) {
-			final CharacterStreamStruct characterStream = new CharacterStreamStruct(System.in, loggerOutputStream);
+			final JavaStreamStruct characterStream = new JavaStreamStruct(System.in, loggerOutputStream);
 
 			final TwoWayStreamStruct terminalIoStream = new TwoWayStreamStruct(true, characterStream, characterStream);
 			StreamVariables.TERMINAL_IO.setValue(terminalIoStream);

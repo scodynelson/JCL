@@ -75,4 +75,6 @@ public interface LispStream extends LispStruct {
 	default boolean isOutputStream() {
 		return false;
 	}
+
+	Long lineNumber();
 }

@@ -19,14 +19,13 @@ import jcl.LispStruct;
 import jcl.conditions.exceptions.StreamErrorException;
 import jcl.types.CharacterType;
 import jcl.types.StreamType;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.SystemUtils;
 
 /**
  * The {@link CharacterStreamStruct} is the object representation of a character reading and writing system level Lisp
  * stream.
  */
-public class CharacterStreamStruct extends JavaStreamStruct {
+public class CharacterStreamStruct extends AbstractNativeStreamStruct {
 
 	/**
 	 * The maximum size of internal buffer array to allocate in the {@link PushbackReader} {@link #inputStream}.
@@ -42,6 +41,11 @@ public class CharacterStreamStruct extends JavaStreamStruct {
 	 * The {@link PrintWriter} for writing output.
 	 */
 	private final PrintWriter outputStream;
+
+	/**
+	 * The last character read from the {@link #inputStream}.
+	 */
+	private char lastChar;
 
 	/**
 	 * Public constructor.
@@ -66,18 +70,44 @@ public class CharacterStreamStruct extends JavaStreamStruct {
 	 * 		the {@link java.io.OutputStream} to create a CharacterStreamStruct from
 	 */
 	public CharacterStreamStruct(final boolean interactive, final InputStream inputStream, final OutputStream outputStream) {
-		super(interactive, inputStream, outputStream);
-		this.inputStream = null;
-		this.outputStream = null;
+		super(StreamType.INSTANCE, interactive, CharacterType.INSTANCE);
+
+		final Charset defaultCharset = Charset.defaultCharset();
+		this.inputStream = new PushbackReader(new InputStreamReader(inputStream, defaultCharset), PUSHBACK_BUFFER_SIZE);
+		this.outputStream = new PrintWriter(new OutputStreamWriter(outputStream, defaultCharset));
 	}
 
 	@Override
 	public ReadPeekResult readChar(final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP) {
 		try {
 			final int readChar = inputStream.read();
-			return StreamUtils.getReadPeekResult(this, readChar, eofErrorP, eofValue);
+			final ReadPeekResult readPeekResult = StreamUtils.getReadPeekResult(this, readChar, eofErrorP, eofValue);
+			if ((readChar == '\r') && SystemUtils.IS_OS_WINDOWS) {
+				return handleWindowsEOLChar(eofErrorP, eofValue, recursiveP, readPeekResult);
+			}
+			if (readChar == '\n') {
+				lineNumber++;
+			}
+			return readPeekResult;
 		} catch (final IOException ioe) {
 			throw new StreamErrorException(StreamUtils.FAILED_TO_READ_CHAR, ioe, this);
+		}
+	}
+
+	private ReadPeekResult handleWindowsEOLChar(final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP,
+	                                            final ReadPeekResult readPeekResult) {
+		final ReadPeekResult tempReadPeekResult = readChar(eofErrorP, eofValue, recursiveP);
+		final Integer result = tempReadPeekResult.getResult();
+		if (result == null) {
+			return tempReadPeekResult;
+		}
+
+		if (result == '\n') {
+			lineNumber++;
+			return tempReadPeekResult;
+		} else {
+			unreadChar(result);
+			return readPeekResult;
 		}
 	}
 
@@ -179,6 +209,9 @@ public class CharacterStreamStruct extends JavaStreamStruct {
 	@Override
 	public Integer unreadChar(final Integer codePoint) {
 		try {
+			if (codePoint == '\n') {
+				lineNumber--;
+			}
 			inputStream.unread(codePoint);
 			return codePoint;
 		} catch (final IOException ioe) {
@@ -188,12 +221,27 @@ public class CharacterStreamStruct extends JavaStreamStruct {
 
 	@Override
 	public void clearInput() {
-		// Do nothing.
+		try {
+			ReadPeekResult result = new ReadPeekResult(0);
+			while (inputStream.ready() && !result.isEof()) {
+				result = readChar(false, null, false);
+			}
+		} catch (final IOException ioe) {
+			throw new StreamErrorException("Could not clear input for stream.", ioe, this);
+		}
 	}
 
 	@Override
 	public void writeChar(final int aChar) {
-		outputStream.append((char) aChar);
+		if ((aChar == '\n') && SystemUtils.IS_OS_WINDOWS && (lastChar != '\r')) {
+			outputStream.write('\r');
+			outputStream.write('\n');
+			lastChar = '\n';
+			outputStream.flush();
+		} else {
+			outputStream.write((char) aChar);
+			lastChar = (char) aChar;
+		}
 	}
 
 	@Override
@@ -203,7 +251,10 @@ public class CharacterStreamStruct extends JavaStreamStruct {
 
 	@Override
 	public void writeString(final String outputString, final int start, final int end) {
-		outputStream.append(outputString, start, end);
+		final String substring = outputString.substring(start, end);
+		outputStream.write(substring);
+
+		lastChar = outputString.charAt(end - 1);
 	}
 
 	@Override
@@ -240,31 +291,5 @@ public class CharacterStreamStruct extends JavaStreamStruct {
 	@Override
 	public Long filePosition(final Long filePosition) {
 		return null;
-	}
-
-	@Override
-	public int hashCode() {
-		return new HashCodeBuilder().appendSuper(super.hashCode())
-		                            .append(inputStream)
-		                            .append(outputStream)
-		                            .toHashCode();
-	}
-
-	@Override
-	public boolean equals(final Object obj) {
-		if (obj == null) {
-			return false;
-		}
-		if (obj == this) {
-			return true;
-		}
-		if (obj.getClass() != getClass()) {
-			return false;
-		}
-		final CharacterStreamStruct rhs = (CharacterStreamStruct) obj;
-		return new EqualsBuilder().appendSuper(super.equals(obj))
-		                          .append(inputStream, rhs.inputStream)
-		                          .append(outputStream, rhs.outputStream)
-		                          .isEquals();
 	}
 }

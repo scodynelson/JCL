@@ -15,8 +15,6 @@ import jcl.conditions.exceptions.ErrorException;
 import jcl.conditions.exceptions.StreamErrorException;
 import jcl.types.CharacterType;
 import jcl.types.FileStreamType;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -264,33 +262,5 @@ public class URLStreamStruct extends AbstractNativeStreamStruct {
 	@Override
 	public Long filePosition(final Long filePosition) {
 		return null;
-	}
-
-	@Override
-	public int hashCode() {
-		return new HashCodeBuilder().appendSuper(super.hashCode())
-		                            .append(url)
-		                            .append(inputStream)
-		                            .append(urlConnection)
-		                            .toHashCode();
-	}
-
-	@Override
-	public boolean equals(final Object obj) {
-		if (obj == null) {
-			return false;
-		}
-		if (obj == this) {
-			return true;
-		}
-		if (obj.getClass() != getClass()) {
-			return false;
-		}
-		final URLStreamStruct rhs = (URLStreamStruct) obj;
-		return new EqualsBuilder().appendSuper(super.equals(obj))
-		                          .append(url, rhs.url)
-		                          .append(inputStream, rhs.inputStream)
-		                          .append(urlConnection, rhs.urlConnection)
-		                          .isEquals();
 	}
 }

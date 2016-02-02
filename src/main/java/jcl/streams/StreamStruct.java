@@ -10,8 +10,6 @@ import jcl.LispStruct;
 import jcl.LispType;
 import jcl.classes.BuiltInClassStruct;
 import jcl.types.StreamType;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * The {@link StreamStruct} is the object representation of a Lisp 'stream' type.
@@ -32,6 +30,8 @@ public abstract class StreamStruct extends BuiltInClassStruct implements LispStr
 	 * Whether or not the StreamStruct is closed.
 	 */
 	private boolean closed;
+
+	protected long lineNumber;
 
 	/**
 	 * Protected constructor.
@@ -102,30 +102,7 @@ public abstract class StreamStruct extends BuiltInClassStruct implements LispStr
 	}
 
 	@Override
-	public int hashCode() {
-		return new HashCodeBuilder().appendSuper(super.hashCode())
-		                            .append(interactive)
-		                            .append(elementType)
-		                            .append(closed)
-		                            .toHashCode();
-	}
-
-	@Override
-	public boolean equals(final Object obj) {
-		if (obj == null) {
-			return false;
-		}
-		if (obj == this) {
-			return true;
-		}
-		if (obj.getClass() != getClass()) {
-			return false;
-		}
-		final StreamStruct rhs = (StreamStruct) obj;
-		return new EqualsBuilder().appendSuper(super.equals(obj))
-		                          .append(interactive, rhs.interactive)
-		                          .append(elementType, rhs.elementType)
-		                          .append(closed, rhs.closed)
-		                          .isEquals();
+	public Long lineNumber() {
+		return lineNumber;
 	}
 }

@@ -13,8 +13,6 @@ import jcl.conditions.exceptions.EndOfFileException;
 import jcl.conditions.exceptions.ErrorException;
 import jcl.types.ConcatenatedStreamType;
 import jcl.types.TType;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * The {@link ConcatenatedStreamStruct} is the object representation of a Lisp 'concatenated-stream' type.
@@ -204,29 +202,5 @@ public class ConcatenatedStreamStruct extends StreamStruct implements InputStrea
 
 		final InputStream last = inputStreams.getLast();
 		return last.filePosition(filePosition);
-	}
-
-	@Override
-	public int hashCode() {
-		return new HashCodeBuilder().appendSuper(super.hashCode())
-		                            .append(inputStreams)
-		                            .toHashCode();
-	}
-
-	@Override
-	public boolean equals(final Object obj) {
-		if (obj == null) {
-			return false;
-		}
-		if (obj == this) {
-			return true;
-		}
-		if (obj.getClass() != getClass()) {
-			return false;
-		}
-		final ConcatenatedStreamStruct rhs = (ConcatenatedStreamStruct) obj;
-		return new EqualsBuilder().appendSuper(super.equals(obj))
-		                          .append(inputStreams, rhs.inputStreams)
-		                          .isEquals();
 	}
 }

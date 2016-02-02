@@ -31,6 +31,8 @@ final class StreamUtils {
 
 	static final String OPERATION_ONLY_FILE_STREAM = "Operation only supported on a FileStream.";
 
+	static final String OPERATION_ONLY_CHARACTER_STREAM = "Operation only supported for CharacterStreams.";
+
 	static final String OPERATION_ONLY_BINARY_STREAM = "Operation only supported for BinaryStreams.";
 
 	static final String OPERATION_NOT_SUPPORTED_FOR_EMPTY_STREAM = "Operation not supported for EmptyStream.";

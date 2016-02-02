@@ -14,7 +14,7 @@ public interface OutputStream extends LispStream {
 		if (abort) {
 			clearOutput();
 		} else {
-			forceOutput();;
+			forceOutput();
 		}
 		return close();
 	}
@@ -47,6 +47,11 @@ public interface OutputStream extends LispStream {
 	 * 		the ending index
 	 */
 	void writeString(String outputString, int start, int end);
+
+	default void writeLine(String outputString, int start, int end) {
+		writeString(outputString, start, end);
+		writeChar('\n');
+	}
 
 	/**
 	 * Clears the output from the stream.

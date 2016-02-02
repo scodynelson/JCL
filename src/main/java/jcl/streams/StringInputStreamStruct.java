@@ -9,8 +9,6 @@ import jcl.conditions.exceptions.ErrorException;
 import jcl.conditions.exceptions.StreamErrorException;
 import jcl.types.BaseCharType;
 import jcl.types.StringStreamType;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * The {@link StringInputStreamStruct} is the object representation of a Lisp 'string-stream' input type.
@@ -103,6 +101,9 @@ public class StringInputStreamStruct extends StreamStruct implements InputStream
 		}
 
 		final int readChar = inputString.charAt(current);
+		if (readChar == '\n') {
+			lineNumber++;
+		}
 		current++;
 		return new ReadPeekResult(readChar);
 	}
@@ -191,6 +192,9 @@ public class StringInputStreamStruct extends StreamStruct implements InputStream
 
 	@Override
 	public Integer unreadChar(final Integer codePoint) {
+		if (codePoint == '\n') {
+			lineNumber--;
+		}
 		current--;
 		return codePoint;
 	}
@@ -216,33 +220,5 @@ public class StringInputStreamStruct extends StreamStruct implements InputStream
 			current = filePosition.intValue();
 		}
 		return (long) current;
-	}
-
-	@Override
-	public int hashCode() {
-		return new HashCodeBuilder().appendSuper(super.hashCode())
-		                            .append(inputString)
-		                            .append(end)
-		                            .append(current)
-		                            .toHashCode();
-	}
-
-	@Override
-	public boolean equals(final Object obj) {
-		if (obj == null) {
-			return false;
-		}
-		if (obj == this) {
-			return true;
-		}
-		if (obj.getClass() != getClass()) {
-			return false;
-		}
-		final StringInputStreamStruct rhs = (StringInputStreamStruct) obj;
-		return new EqualsBuilder().appendSuper(super.equals(obj))
-		                          .append(inputString, rhs.inputString)
-		                          .append(end, rhs.end)
-		                          .append(current, rhs.current)
-		                          .isEquals();
 	}
 }

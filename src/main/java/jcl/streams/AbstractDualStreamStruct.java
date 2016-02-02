@@ -9,8 +9,6 @@ import jcl.conditions.exceptions.ErrorException;
 import jcl.conditions.exceptions.StreamErrorException;
 import jcl.types.StreamType;
 import jcl.types.typespecifiers.AndTypeSpecifier;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * The {@link AbstractDualStreamStruct} is an abstraction for dual stream types.
@@ -131,31 +129,5 @@ abstract class AbstractDualStreamStruct extends StreamStruct implements IOStream
 	@Override
 	public Long fileLength() {
 		throw new StreamErrorException(StreamUtils.OPERATION_ONLY_FILE_STREAM, this);
-	}
-
-	@Override
-	public int hashCode() {
-		return new HashCodeBuilder().appendSuper(super.hashCode())
-		                            .append(inputStream)
-		                            .append(outputStream)
-		                            .toHashCode();
-	}
-
-	@Override
-	public boolean equals(final Object obj) {
-		if (obj == null) {
-			return false;
-		}
-		if (obj == this) {
-			return true;
-		}
-		if (obj.getClass() != getClass()) {
-			return false;
-		}
-		final AbstractDualStreamStruct rhs = (AbstractDualStreamStruct) obj;
-		return new EqualsBuilder().appendSuper(super.equals(obj))
-		                          .append(inputStream, rhs.inputStream)
-		                          .append(outputStream, rhs.outputStream)
-		                          .isEquals();
 	}
 }

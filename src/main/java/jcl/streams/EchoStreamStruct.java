@@ -10,8 +10,6 @@ import java.util.Deque;
 import jcl.LispStruct;
 import jcl.conditions.exceptions.EndOfFileException;
 import jcl.types.EchoStreamType;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * The {@link EchoStreamStruct} is the object representation of a Lisp 'echo-stream' type.
@@ -120,29 +118,5 @@ public class EchoStreamStruct extends AbstractDualStreamStruct {
 	@Override
 	public Long filePosition(final Long filePosition) {
 		return null;
-	}
-
-	@Override
-	public int hashCode() {
-		return new HashCodeBuilder().appendSuper(super.hashCode())
-		                            .append(unreadTokens)
-		                            .toHashCode();
-	}
-
-	@Override
-	public boolean equals(final Object obj) {
-		if (obj == null) {
-			return false;
-		}
-		if (obj == this) {
-			return true;
-		}
-		if (obj.getClass() != getClass()) {
-			return false;
-		}
-		final EchoStreamStruct rhs = (EchoStreamStruct) obj;
-		return new EqualsBuilder().appendSuper(super.equals(obj))
-		                          .append(unreadTokens, rhs.unreadTokens)
-		                          .isEquals();
 	}
 }

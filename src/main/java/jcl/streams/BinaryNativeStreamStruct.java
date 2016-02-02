@@ -16,10 +16,10 @@ import jcl.types.StreamType;
 import jcl.types.UnsignedByteType;
 
 /**
- * The {@link BinaryStreamStruct} is the object representation of a binary reading and writing system level Lisp
+ * The {@link BinaryNativeStreamStruct} is the object representation of a binary reading and writing system level Lisp
  * stream.
  */
-public class BinaryStreamStruct extends AbstractNativeStreamStruct {
+public class BinaryNativeStreamStruct extends AbstractNativeStreamStruct {
 
 	/**
 	 * The {@link InputStream} for reading input.
@@ -39,7 +39,7 @@ public class BinaryStreamStruct extends AbstractNativeStreamStruct {
 	 * @param outputStream
 	 * 		the {@link OutputStream} to create a BinaryStreamStruct from
 	 */
-	public BinaryStreamStruct(final InputStream inputStream, final OutputStream outputStream) {
+	public BinaryNativeStreamStruct(final InputStream inputStream, final OutputStream outputStream) {
 		this(false, inputStream, outputStream);
 	}
 
@@ -53,7 +53,7 @@ public class BinaryStreamStruct extends AbstractNativeStreamStruct {
 	 * @param outputStream
 	 * 		the {@link OutputStream} to create a BinaryStreamStruct from
 	 */
-	public BinaryStreamStruct(final boolean interactive, final InputStream inputStream, final OutputStream outputStream) {
+	public BinaryNativeStreamStruct(final boolean interactive, final InputStream inputStream, final OutputStream outputStream) {
 		super(StreamType.INSTANCE, interactive, UnsignedByteType.INSTANCE);
 
 		this.inputStream = new BufferedInputStream(inputStream);

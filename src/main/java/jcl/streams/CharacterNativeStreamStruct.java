@@ -22,10 +22,10 @@ import jcl.types.StreamType;
 import org.apache.commons.lang3.SystemUtils;
 
 /**
- * The {@link CharacterStreamStruct} is the object representation of a character reading and writing system level Lisp
+ * The {@link CharacterNativeStreamStruct} is the object representation of a character reading and writing system level Lisp
  * stream.
  */
-public class CharacterStreamStruct extends AbstractNativeStreamStruct {
+public class CharacterNativeStreamStruct extends AbstractNativeStreamStruct {
 
 	/**
 	 * The maximum size of internal buffer array to allocate in the {@link PushbackReader} {@link #inputStream}.
@@ -55,7 +55,7 @@ public class CharacterStreamStruct extends AbstractNativeStreamStruct {
 	 * @param outputStream
 	 * 		the {@link java.io.OutputStream} to create a CharacterStreamStruct from
 	 */
-	public CharacterStreamStruct(final InputStream inputStream, final OutputStream outputStream) {
+	public CharacterNativeStreamStruct(final InputStream inputStream, final OutputStream outputStream) {
 		this(false, inputStream, outputStream);
 	}
 
@@ -69,7 +69,7 @@ public class CharacterStreamStruct extends AbstractNativeStreamStruct {
 	 * @param outputStream
 	 * 		the {@link java.io.OutputStream} to create a CharacterStreamStruct from
 	 */
-	public CharacterStreamStruct(final boolean interactive, final InputStream inputStream, final OutputStream outputStream) {
+	public CharacterNativeStreamStruct(final boolean interactive, final InputStream inputStream, final OutputStream outputStream) {
 		super(StreamType.INSTANCE, interactive, CharacterType.INSTANCE);
 
 		final Charset defaultCharset = Charset.defaultCharset();

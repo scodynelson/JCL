@@ -4,8 +4,13 @@
 
 package jcl.streams.functions;
 
-/**
- * Created by codynelson on 1/22/16.
- */
-public class ReadCharNoHangFunction {
+import org.springframework.stereotype.Component;
+
+@Component
+public final class ReadCharNoHangFunction extends ReadCharFunction {
+
+	@Override
+	protected String functionName() {
+		return "READ-CHAR-NO-HANG";
+	}
 }

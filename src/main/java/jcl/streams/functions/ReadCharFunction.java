@@ -15,22 +15,23 @@ import jcl.functions.AbstractCommonLispFunctionStruct;
 import jcl.lists.NullStruct;
 import jcl.packages.GlobalPackageStruct;
 import jcl.printer.Printer;
-import jcl.reader.Reader;
 import jcl.streams.InputStream;
 import jcl.streams.ReadPeekResult;
 import jcl.streams.StreamVariables;
 import jcl.symbols.BooleanStruct;
 import jcl.symbols.NILStruct;
 import jcl.symbols.TStruct;
+import jcl.types.BooleanType;
+import jcl.types.StreamType;
+import jcl.types.TypeValidator;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class ReadCharFunction extends AbstractCommonLispFunctionStruct {
+public class ReadCharFunction extends AbstractCommonLispFunctionStruct {
 
 	@Autowired
-	private ApplicationContext context;
+	private TypeValidator validator;
 
 	@Autowired
 	private Printer printer;
@@ -41,34 +42,34 @@ public final class ReadCharFunction extends AbstractCommonLispFunctionStruct {
 
 	@Override
 	protected List<OptionalParameter> getOptionalBindings() {
-
-		final List<OptionalParameter> optionalBindings = new ArrayList<>(4);
+		final List<OptionalParameter> optionalParameters = new ArrayList<>(4);
 
 		final OptionalParameter inputStreamOptionalBinding =
 				OptionalParameter.builder(GlobalPackageStruct.COMMON_LISP, "INPUT-STREAM")
 				                 .suppliedPBinding()
+				                 .initForm(StreamVariables.STANDARD_INPUT.getVariableValue())
 				                 .build();
-		optionalBindings.add(inputStreamOptionalBinding);
-
+		optionalParameters.add(inputStreamOptionalBinding);
 		final OptionalParameter eofErrorPOptionalBinding =
 				OptionalParameter.builder(GlobalPackageStruct.COMMON_LISP, "EOF-ERROR")
 				                 .suppliedPBinding()
+				                 .initForm(TStruct.INSTANCE)
 				                 .build();
-		optionalBindings.add(eofErrorPOptionalBinding);
-
+		optionalParameters.add(eofErrorPOptionalBinding);
 		final OptionalParameter eofValueOptionalBinding =
 				OptionalParameter.builder(GlobalPackageStruct.COMMON_LISP, "EOF-VALUE")
 				                 .suppliedPBinding()
+				                 .initForm(NILStruct.INSTANCE)
 				                 .build();
-		optionalBindings.add(eofValueOptionalBinding);
-
+		optionalParameters.add(eofValueOptionalBinding);
 		final OptionalParameter recursivePOptionalBinding =
 				OptionalParameter.builder(GlobalPackageStruct.COMMON_LISP, "RECURSIVE-P")
 				                 .suppliedPBinding()
+				                 .initForm(NILStruct.INSTANCE)
 				                 .build();
-		optionalBindings.add(recursivePOptionalBinding);
+		optionalParameters.add(recursivePOptionalBinding);
 
-		return optionalBindings;
+		return optionalParameters;
 	}
 
 	@Override
@@ -79,53 +80,41 @@ public final class ReadCharFunction extends AbstractCommonLispFunctionStruct {
 
 		InputStream inputStream = StreamVariables.STANDARD_INPUT.getVariableValue();
 		if (length > 0) {
-			final LispStruct inputStreamArg = lispStructs[0];
-
-			if (TStruct.INSTANCE.equals(inputStreamArg)) {
-				inputStream = StreamVariables.TERMINAL_IO.getVariableValue();
-			} else if (NILStruct.INSTANCE.equals(inputStreamArg) || NullStruct.INSTANCE.equals(inputStreamArg)) {
+			final LispStruct lispStruct = lispStructs[0];
+			validator.validateTypes(lispStruct, functionName(), "Input Stream", BooleanType.INSTANCE, StreamType.INSTANCE);
+			if (TStruct.INSTANCE.equals(lispStruct)) {
 				inputStream = StreamVariables.STANDARD_INPUT.getVariableValue();
-			} else if (inputStreamArg instanceof InputStream) {
-				inputStream = (InputStream) inputStreamArg;
+			} else if (NILStruct.INSTANCE.equals(lispStruct) || NullStruct.INSTANCE.equals(lispStruct)) {
+				inputStream = StreamVariables.STANDARD_INPUT.getVariableValue();
+			} else if (lispStruct instanceof InputStream) {
+				inputStream = (InputStream) lispStruct;
 			} else {
-				final String printedObject = printer.print(inputStreamArg);
-				throw new TypeErrorException("The value " + printedObject + " is not either T, NIL, or a STREAM.");
+				final String printedObject = printer.print(lispStruct);
+				throw new TypeErrorException("The value " + printedObject + " is not either T, NIL, or an Input Stream.");
 			}
 		}
 
 		BooleanStruct eofErrorP = TStruct.INSTANCE;
 		if (length > 1) {
-			final LispStruct eofErrorPArg = lispStructs[1];
-			if (NILStruct.INSTANCE.equals(eofErrorPArg) || NullStruct.INSTANCE.equals(eofErrorPArg)) {
-				eofErrorP = NILStruct.INSTANCE;
-			} else {
-				eofErrorP = TStruct.INSTANCE;
-			}
+			final LispStruct lispStruct = lispStructs[1];
+			validator.validateTypes(lispStruct, functionName(), "EOF Error Predicate", BooleanType.INSTANCE);
+			eofErrorP = (BooleanStruct) lispStruct;
 		}
 
 		LispStruct eofValue = NILStruct.INSTANCE;
 		if (length > 2) {
-			eofValue = lispStructs[1];
+			eofValue = lispStructs[2];
 		}
 
 		BooleanStruct recursiveP = NILStruct.INSTANCE;
-		if (length >= 3) {
-			final LispStruct recursivePArg = lispStructs[1];
-			if (NILStruct.INSTANCE.equals(recursivePArg) || NullStruct.INSTANCE.equals(recursivePArg)) {
-				recursiveP = NILStruct.INSTANCE;
-			} else {
-				recursiveP = TStruct.INSTANCE;
-			}
+		if (length > 3) {
+			final LispStruct lispStruct = lispStructs[3];
+			validator.validateTypes(lispStruct, functionName(), "Recursive Predicate", BooleanType.INSTANCE);
+			recursiveP = (BooleanStruct) lispStruct;
 		}
 
-		final Reader reader = context.getBean(Reader.class, inputStream);
-		final ReadPeekResult readPeekResult = reader.readChar(eofErrorP.booleanValue(), eofValue, recursiveP.booleanValue());
-		if (readPeekResult.isEof()) {
-			return readPeekResult.getEofValue();
-		} else {
-			final int codePoint = readPeekResult.getResult();
-			return CharacterStruct.valueOf(codePoint);
-		}
+		final ReadPeekResult readPeekResult = inputStream.readChar(eofErrorP.booleanValue(), eofValue, recursiveP.booleanValue());
+		return readPeekResult.isEof() ? eofValue : CharacterStruct.valueOf(readPeekResult.getResult());
 	}
 
 	@Override

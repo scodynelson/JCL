@@ -4,9 +4,6 @@
 
 package jcl.streams;
 
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-
 /**
  * Special object denoting a peek type in how the 'peek-char' should operate. There are 3 categories of PeekTypes:
  * 1. {@link PeekType#NIL_PEEK_TYPE} - this denotes the NIL based PeekType
@@ -14,17 +11,17 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  * 3. Character based PeekTypes - these are created by calling the static method {@link PeekType#getCharacterPeekType}
  * to create a specific character-based PeekType based off of a provided {@link Integer} codePoint value
  */
-final class PeekType {
+public final class PeekType {
 
 	/**
 	 * Constant for 'T' PeekTypes.
 	 */
-	static final PeekType T_PEEK_TYPE = new PeekType(PeekTypeType.T, null);
+	public static final PeekType T_PEEK_TYPE = new PeekType(PeekTypeType.T, null);
 
 	/**
 	 * Constant for 'NIL' PeekTypes.
 	 */
-	static final PeekType NIL_PEEK_TYPE = new PeekType(PeekTypeType.NIL, null);
+	public static final PeekType NIL_PEEK_TYPE = new PeekType(PeekTypeType.NIL, null);
 
 	/**
 	 * The {@link PeekTypeType} of the peek type.
@@ -68,30 +65,6 @@ final class PeekType {
 		return codePoint;
 	}
 
-	@Override
-	public int hashCode() {
-		return new HashCodeBuilder().append(type)
-		                            .append(codePoint)
-		                            .toHashCode();
-	}
-
-	@Override
-	public boolean equals(final Object obj) {
-		if (obj == null) {
-			return false;
-		}
-		if (obj == this) {
-			return true;
-		}
-		if (obj.getClass() != getClass()) {
-			return false;
-		}
-		final PeekType rhs = (PeekType) obj;
-		return new EqualsBuilder().append(type, rhs.type)
-		                          .append(codePoint, rhs.codePoint)
-		                          .isEquals();
-	}
-
 	/**
 	 * Gets a new {@link PeekTypeType#CHARACTER} based PeekType instance.
 	 *
@@ -100,7 +73,7 @@ final class PeekType {
 	 *
 	 * @return a new {@link PeekTypeType#CHARACTER} with the provided codePoint value
 	 */
-	static PeekType getCharacterPeekType(final int codePoint) {
+	public static PeekType getCharacterPeekType(final int codePoint) {
 		return new PeekType(PeekTypeType.CHARACTER, codePoint);
 	}
 

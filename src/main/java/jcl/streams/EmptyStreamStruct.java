@@ -82,6 +82,11 @@ public final class EmptyStreamStruct extends AbstractNativeStreamStruct {
 	}
 
 	@Override
+	public boolean isStartOfLine() {
+		return false;
+	}
+
+	@Override
 	public Long fileLength() {
 		throw new StreamErrorException(StreamUtils.OPERATION_NOT_SUPPORTED_FOR_EMPTY_STREAM, this);
 	}

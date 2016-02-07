@@ -309,6 +309,12 @@ public class FileStreamStruct extends AbstractNativeStreamStruct {
 	}
 
 	@Override
+	public boolean isStartOfLine() {
+		final int nextChar = nilPeekCharFSS();
+		return nextChar == '\n';
+	}
+
+	@Override
 	public boolean close() {
 		try {
 			randomAccessFile.close();

@@ -188,6 +188,15 @@ public class SynonymStreamStruct extends StreamStruct implements IOStream {
 	}
 
 	@Override
+	public boolean isStartOfLine() {
+		final StreamStruct stream = (StreamStruct) symbol.getValue();
+		if (stream instanceof OutputStream) {
+			((OutputStream) stream).isStartOfLine();
+		}
+		return false;
+	}
+
+	@Override
 	public boolean close() {
 		final boolean wasClosed = super.close();
 

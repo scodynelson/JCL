@@ -112,6 +112,11 @@ public class BroadcastStreamStruct extends StreamStruct implements OutputStream 
 	}
 
 	@Override
+	public boolean isStartOfLine() {
+		return outputStreams.stream().map(OutputStream::isStartOfLine).reduce(false, Boolean::logicalAnd);
+	}
+
+	@Override
 	public LispType getElementType() {
 		return getElementType3(outputStreams);
 	}

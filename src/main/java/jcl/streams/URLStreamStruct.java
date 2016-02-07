@@ -245,6 +245,11 @@ public class URLStreamStruct extends AbstractNativeStreamStruct {
 	}
 
 	@Override
+	public boolean isStartOfLine() {
+		return false;
+	}
+
+	@Override
 	public boolean close() {
 		try {
 			inputStream.close();

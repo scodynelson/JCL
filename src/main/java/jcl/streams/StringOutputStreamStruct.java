@@ -98,6 +98,11 @@ public class StringOutputStreamStruct extends StreamStruct implements OutputStre
 	}
 
 	@Override
+	public boolean isStartOfLine() {
+		return stringBuffer.charAt(stringBuffer.length() - 1) == '\n';
+	}
+
+	@Override
 	public Long fileLength() {
 		throw new StreamErrorException(StreamUtils.OPERATION_ONLY_FILE_STREAM, this);
 	}

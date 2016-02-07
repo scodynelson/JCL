@@ -48,7 +48,7 @@ public interface OutputStream extends LispStream {
 	 */
 	void writeString(String outputString, int start, int end);
 
-	default void writeLine(String outputString, int start, int end) {
+	default void writeLine(final String outputString, final int start, final int end) {
 		writeString(outputString, start, end);
 		writeChar('\n');
 	}
@@ -72,4 +72,6 @@ public interface OutputStream extends LispStream {
 	default boolean isOutputStream() {
 		return true;
 	}
+
+	boolean isStartOfLine();
 }

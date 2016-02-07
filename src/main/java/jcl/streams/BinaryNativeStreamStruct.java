@@ -144,6 +144,11 @@ public class BinaryNativeStreamStruct extends AbstractNativeStreamStruct {
 	}
 
 	@Override
+	public boolean isStartOfLine() {
+		return false;
+	}
+
+	@Override
 	public boolean close() {
 		try {
 			inputStream.close();

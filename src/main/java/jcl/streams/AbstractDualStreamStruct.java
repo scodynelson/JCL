@@ -130,4 +130,9 @@ abstract class AbstractDualStreamStruct extends StreamStruct implements IOStream
 	public Long fileLength() {
 		throw new StreamErrorException(StreamUtils.OPERATION_ONLY_FILE_STREAM, this);
 	}
+
+	@Override
+	public boolean isStartOfLine() {
+		return outputStream.isStartOfLine();
+	}
 }

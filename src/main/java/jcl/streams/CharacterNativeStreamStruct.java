@@ -273,6 +273,11 @@ public class CharacterNativeStreamStruct extends AbstractNativeStreamStruct {
 	}
 
 	@Override
+	public boolean isStartOfLine() {
+		return lastChar == '\n';
+	}
+
+	@Override
 	public boolean close() {
 		try {
 			inputStream.close();

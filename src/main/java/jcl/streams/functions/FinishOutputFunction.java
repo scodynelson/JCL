@@ -37,7 +37,7 @@ public final class FinishOutputFunction extends AbstractCommonLispFunctionStruct
 	protected List<OptionalParameter> getOptionalBindings() {
 		return OptionalParameter.builder(GlobalPackageStruct.COMMON_LISP, "OUTPUT-STREAM")
 		                        .suppliedPBinding()
-		                        .initForm(StreamVariables.STANDARD_OUTPUT)
+		                        .initForm(StreamVariables.STANDARD_OUTPUT.getVariableValue())
 		                        .buildList();
 	}
 

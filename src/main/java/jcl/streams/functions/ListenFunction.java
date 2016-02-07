@@ -37,7 +37,7 @@ public final class ListenFunction extends AbstractCommonLispFunctionStruct {
 	protected List<OptionalParameter> getOptionalBindings() {
 		return OptionalParameter.builder(GlobalPackageStruct.COMMON_LISP, "INPUT-STREAM")
 		                        .suppliedPBinding()
-		                        .initForm(StreamVariables.STANDARD_INPUT)
+		                        .initForm(StreamVariables.STANDARD_INPUT.getVariableValue())
 		                        .buildList();
 	}
 

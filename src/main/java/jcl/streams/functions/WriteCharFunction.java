@@ -44,7 +44,7 @@ public final class WriteCharFunction extends AbstractCommonLispFunctionStruct {
 	protected List<OptionalParameter> getOptionalBindings() {
 		return OptionalParameter.builder(GlobalPackageStruct.COMMON_LISP, "OUTPUT-STREAM")
 		                        .suppliedPBinding()
-		                        .initForm(StreamVariables.STANDARD_OUTPUT)
+		                        .initForm(StreamVariables.STANDARD_OUTPUT.getVariableValue())
 		                        .buildList();
 	}
 
@@ -56,19 +56,17 @@ public final class WriteCharFunction extends AbstractCommonLispFunctionStruct {
 		validator.validateTypes(lispStruct1, functionName(), "Character", CharacterType.INSTANCE);
 		final CharacterStruct character = (CharacterStruct) lispStruct1;
 
-		final OutputStream outputStream;
+		OutputStream outputStream = StreamVariables.STANDARD_OUTPUT.getVariableValue();
 		if (lispStructs.length > 1) {
 			final LispStruct lispStruct2 = lispStructs[1];
 			validator.validateTypes(lispStruct2, functionName(), "Output Stream", StreamType.INSTANCE);
 
 			if (!(lispStruct2 instanceof OutputStream)) {
 				final String printedObject = printer.print(lispStruct2);
-				throw new TypeErrorException(functionName() + ": Input Stream must be an actual OUTPUT-STREAM. Got: " + printedObject);
+				throw new TypeErrorException(functionName() + ": Output Stream must be an actual OUTPUT-STREAM. Got: " + printedObject);
 			}
 
 			outputStream = (OutputStream) lispStruct2;
-		} else {
-			outputStream = StreamVariables.STANDARD_OUTPUT.getVariableValue();
 		}
 
 		outputStream.writeChar(character.getCodePoint());

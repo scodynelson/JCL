@@ -18,7 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class OutputStreamPFunction extends AbstractCommonLispFunctionStruct {
+public final class OutputStreamPFunction extends AbstractCommonLispFunctionStruct {
 
 	@Autowired
 	private TypeValidator typeValidator;

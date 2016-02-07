@@ -46,7 +46,10 @@ public interface OutputStream extends LispStream {
 	 * @param end
 	 * 		the ending index
 	 */
-	void writeString(String outputString, int start, int end);
+	default void writeString(final String outputString, final int start, final int end) {
+		final String subString = outputString.substring(start, end);
+		subString.chars().forEach(this::writeChar);
+	}
 
 	default void writeLine(final String outputString, final int start, final int end) {
 		writeString(outputString, start, end);

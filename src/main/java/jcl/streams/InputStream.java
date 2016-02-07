@@ -79,4 +79,20 @@ public interface InputStream extends LispStream {
 	default boolean isInputStream() {
 		return true;
 	}
+
+	default ReadLineResult readLine(final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP) {
+
+		final StringBuilder stringBuilder = new StringBuilder();
+
+		ReadPeekResult readPeekResult = readChar(eofErrorP, eofValue, recursiveP);
+		Integer result = readPeekResult.getResult();
+		while (!readPeekResult.isEof() && (result != '\n')) {
+			stringBuilder.appendCodePoint(result);
+
+			readPeekResult = readChar(eofErrorP, eofValue, recursiveP);
+			result = readPeekResult.getResult();
+		}
+		final String resultString = stringBuilder.toString();
+		return new ReadLineResult(resultString, readPeekResult.isEof());
+	}
 }

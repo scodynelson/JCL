@@ -344,4 +344,8 @@ public class FileStreamStruct extends AbstractNativeStreamStruct {
 			throw new StreamErrorException("Could not retrieve file position.", ioe, this);
 		}
 	}
+
+	public ExternalFormat getExternalFormat() {
+		return ExternalFormat.DEFAULT;
+	}
 }

@@ -11,7 +11,6 @@ import jcl.LispStruct;
 import jcl.arrays.StringStruct;
 import jcl.characters.CharacterStruct;
 import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
-import jcl.conditions.exceptions.TypeErrorException;
 import jcl.functions.AbstractCommonLispFunctionStruct;
 import jcl.functions.FunctionStruct;
 import jcl.packages.GlobalPackageStruct;
@@ -60,14 +59,12 @@ abstract class AbstractCharacterDesignatorFunction extends AbstractCommonLispFun
 	/**
 	 * {@inheritDoc}
 	 * Application method for the character function that gets the character-designator parameter object (character,
-	 * string, or symbol) and either returns the {@link CharacterStruct} or applies the {@link Function} from the
-	 * {@link #stringFunction()} or {@link #symbolFunction()} functions.
+	 * string, or symbol) and applies the {@link Function} from the {@link #characterFunction()} function.
 	 *
 	 * @param lispStructs
 	 * 		the function parameters
 	 *
-	 * @return the result of the {@link #stringFunction()} or {@link #symbolFunction()} applied to the
-	 * character-designator parameter value
+	 * @return the result of the {@link #characterFunction()} applied to the character-designator parameter value
 	 */
 	@Override
 	public LispStruct apply(final LispStruct... lispStructs) {
@@ -77,32 +74,15 @@ abstract class AbstractCharacterDesignatorFunction extends AbstractCommonLispFun
 		validator.validateTypes(lispStruct, "CHARACTER", "Character",
 				CharacterType.INSTANCE, StringType.INSTANCE, SymbolType.INSTANCE);
 
-		if (lispStruct instanceof CharacterStruct) {
-			return lispStruct;
-		} else if (lispStruct instanceof StringStruct) {
-			return stringFunction().apply((StringStruct) lispStruct);
-		} else if (lispStruct instanceof SymbolStruct) {
-			return symbolFunction().apply((SymbolStruct) lispStruct);
-		} else {
-			throw new TypeErrorException("UNCAUGHT TYPE ERROR.");
-		}
+		return characterFunction().apply(lispStruct);
 	}
 
 	/**
-	 * Abstract method to return a {@link Function} that consumes a {@link StringStruct} and returns a {@link
-	 * LispStruct} as a result.
+	 * Abstract method to return a {@link Function} that consumes a {@link LispStruct} and returns a {@link LispStruct}
+	 * as a result.
 	 *
-	 * @return returns a {@link Function} that consumes a {@link StringStruct} and returns a {@link LispStruct} as a
+	 * @return returns a {@link Function} that consumes a {@link LispStruct} and returns a {@link LispStruct} as a
 	 * result
 	 */
-	protected abstract Function<StringStruct, LispStruct> stringFunction();
-
-	/**
-	 * Abstract method to return a {@link Function} that consumes a {@link SymbolStruct} and returns a {@link
-	 * LispStruct} as a result.
-	 *
-	 * @return returns a {@link Function} that consumes a {@link SymbolStruct} and returns a {@link LispStruct} as a
-	 * result
-	 */
-	protected abstract Function<SymbolStruct, LispStruct> symbolFunction();
+	protected abstract Function<LispStruct, LispStruct> characterFunction();
 }

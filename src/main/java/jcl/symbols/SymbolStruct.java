@@ -5,8 +5,10 @@ import java.util.List;
 import java.util.Stack;
 
 import jcl.LispStruct;
+import jcl.characters.CharacterStruct;
 import jcl.classes.BuiltInClassStruct;
 import jcl.conditions.exceptions.ErrorException;
+import jcl.conditions.exceptions.SimpleErrorException;
 import jcl.functions.FunctionStruct;
 import jcl.functions.expanders.CompilerMacroFunctionExpander;
 import jcl.functions.expanders.MacroFunctionExpander;
@@ -186,6 +188,19 @@ public class SymbolStruct extends BuiltInClassStruct {
 	 */
 	public void setSymbolPackage(final PackageStruct symbolPackage) {
 		this.symbolPackage = symbolPackage;
+	}
+
+	@Override
+	public LispStruct toCharacter() {
+		if (name.length() != 1) {
+			throw new SimpleErrorException("Symbol name is not of length one: " + name);
+		}
+		return CharacterStruct.valueOf(name.charAt(0));
+	}
+
+	@Override
+	public LispStruct toNamedCharacter() {
+		return CharacterStruct.nameChar(name);
 	}
 
 	public boolean hasValue() {

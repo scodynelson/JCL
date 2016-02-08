@@ -3,7 +3,9 @@ package jcl.arrays;
 import java.util.ArrayList;
 import java.util.List;
 
+import jcl.LispStruct;
 import jcl.characters.CharacterStruct;
+import jcl.conditions.exceptions.SimpleErrorException;
 import jcl.types.BaseCharType;
 import jcl.types.BaseStringType;
 import jcl.types.CharacterType;
@@ -98,6 +100,22 @@ public class StringStruct extends VectorStruct<CharacterStruct> {
 		}
 
 		return stringBuilder.toString();
+	}
+
+	@Override
+	public LispStruct toCharacter() {
+		// TODO: Can improve this
+		final String javaString = getAsJavaString();
+		if (javaString.length() != 1) {
+			throw new SimpleErrorException("String is not of length one: " + javaString);
+		}
+		return CharacterStruct.valueOf(javaString.charAt(0));
+	}
+
+	@Override
+	public LispStruct toNamedCharacter() {
+		final String javaString = getAsJavaString();
+		return CharacterStruct.nameChar(javaString);
 	}
 
 	@Override

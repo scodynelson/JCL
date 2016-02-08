@@ -7,9 +7,6 @@ package jcl.characters.functions;
 import java.util.function.Function;
 
 import jcl.LispStruct;
-import jcl.arrays.StringStruct;
-import jcl.characters.CharacterStruct;
-import jcl.symbols.SymbolStruct;
 import org.springframework.stereotype.Component;
 
 /**
@@ -37,24 +34,14 @@ public final class NameCharFunction extends AbstractCharacterDesignatorFunction 
 	}
 
 	/**
-	 * Creates a {@link Function} applying {@link CharacterStruct#nameChar(String)} against a {@link StringStruct}
-	 * parameter by retrieving its {@link String} value via {@link StringStruct#getAsJavaString()}.
+	 * {@inheritDoc}
+	 * Creates a {@link Function} applying {@link LispStruct#toNamedCharacter()} against a {@link LispStruct}
+	 * parameter.
 	 *
-	 * @return a {@link Function} applying {@link CharacterStruct#nameChar(String)} against a {@link StringStruct}
+	 * @return a {@link Function} applying {@link LispStruct#toNamedCharacter()} against a {@link LispStruct}
 	 */
 	@Override
-	protected Function<StringStruct, LispStruct> stringFunction() {
-		return aString -> CharacterStruct.nameChar(aString.getAsJavaString());
-	}
-
-	/**
-	 * Creates a {@link Function} applying {@link CharacterStruct#nameChar(String)} against a {@link SymbolStruct}
-	 * parameter by retrieving its {@link String} value via {@link SymbolStruct#getName()}.
-	 *
-	 * @return a {@link Function} applying {@link CharacterStruct#nameChar(String)} against a {@link SymbolStruct}
-	 */
-	@Override
-	protected Function<SymbolStruct, LispStruct> symbolFunction() {
-		return symbol -> CharacterStruct.nameChar(symbol.getName());
+	protected Function<LispStruct, LispStruct> characterFunction() {
+		return LispStruct::toNamedCharacter;
 	}
 }

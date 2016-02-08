@@ -118,6 +118,28 @@ public class CharacterStruct extends BuiltInClassStruct {
 	}
 
 	/**
+	 * {@inheritDoc}
+	 * Returns the CharacterStruct instance as is, since it is already a character.
+	 *
+	 * @return the instance, as it is already a character
+	 */
+	@Override
+	public LispStruct toCharacter() {
+		return this;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * Returns the CharacterStruct instance as is, since it is already a character.
+	 *
+	 * @return the instance, as it is already a character
+	 */
+	@Override
+	public LispStruct toNamedCharacter() {
+		return this;
+	}
+
+	/**
 	 * Returns the '=' comparison of this CharacterStruct and the provided CharacterStruct.
 	 *
 	 * @param character

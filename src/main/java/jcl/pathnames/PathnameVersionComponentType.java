@@ -18,12 +18,12 @@ public enum PathnameVersionComponentType {
 	/**
 	 * Unspecific pathname version component type.
 	 */
-	UNSPECIFIC(CommonLispSymbols.UNSPECIFIC),
+	UNSPECIFIC(CommonLispSymbols.UNSPECIFIC_KEYWORD),
 
 	/**
 	 * Wild pathname version component type.
 	 */
-	WILD(CommonLispSymbols.WILD),
+	WILD(CommonLispSymbols.WILD_KEYWORD),
 
 	/**
 	 * Nil pathname version component type.
@@ -33,12 +33,12 @@ public enum PathnameVersionComponentType {
 	/**
 	 * Newest pathname version component type.
 	 */
-	NEWEST(CommonLispSymbols.NEWEST),
+	NEWEST(CommonLispSymbols.NEWEST_KEYWORD),
 
 	/**
 	 * Oldest pathname version component type.
 	 */
-	OLDEST(CommonLispSymbols.OLDEST);
+	OLDEST(CommonLispSymbols.OLDEST_KEYWORD);
 
 	/**
 	 * Value of the pathname version component type.

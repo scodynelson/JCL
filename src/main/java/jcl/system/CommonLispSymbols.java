@@ -1027,14 +1027,29 @@ public interface CommonLispSymbols {
 	KeywordStruct INITIAL_CONTENTS_KEYWORD = new KeywordStruct("INITIAL-CONTENTS");
 
 	// Package Keywords
-	KeywordStruct INTERNAL = new KeywordStruct("INTERNAL");
-	KeywordStruct EXTERNAL = new KeywordStruct("EXTERNAL");
-	KeywordStruct INHERITED = new KeywordStruct("INHERITED");
+	KeywordStruct INTERNAL_KEYWORD = new KeywordStruct("INTERNAL");
+	KeywordStruct EXTERNAL_KEYWORD = new KeywordStruct("EXTERNAL");
+	KeywordStruct INHERITED_KEYWORD = new KeywordStruct("INHERITED");
 
 	// Stream Keywords
+	KeywordStruct DEFAULT_KEYWORD = new KeywordStruct("DEFAULT");
 	KeywordStruct ABORT_KEYWORD = new KeywordStruct("ABORT");
 	KeywordStruct START_KEYWORD = new KeywordStruct("START");
 	KeywordStruct END_KEYWORD = new KeywordStruct("END");
+	KeywordStruct DIRECTION_KEYWORD = new KeywordStruct("DIRECTION");
+	KeywordStruct INPUT_KEYWORD = new KeywordStruct("INPUT");
+	KeywordStruct OUTPUT_KEYWORD = new KeywordStruct("OUTPUT");
+	KeywordStruct IO_KEYWORD = new KeywordStruct("IO");
+	KeywordStruct PROBE_KEYWORD = new KeywordStruct("PROBE");
+	KeywordStruct IF_EXISTS_KEYWORD = new KeywordStruct("IF-EXISTS");
+	KeywordStruct ERROR_KEYWORD = new KeywordStruct("ERROR");
+	KeywordStruct NEW_VERSION_KEYWORD = new KeywordStruct("NEW-VERSION");
+	KeywordStruct RENAME_KEYWORD = new KeywordStruct("RENAME");
+	KeywordStruct RENAME_AND_DELETE_KEYWORD = new KeywordStruct("RENAME-AND-DELETE");
+	KeywordStruct OVERWRITE_KEYWORD = new KeywordStruct("OVERWRITE");
+	KeywordStruct APPEND_KEYWORD = new KeywordStruct("APPEND");
+	KeywordStruct SUPERSEDE_KEYWORD = new KeywordStruct("SUPERSEDE");
+	KeywordStruct CREATE_KEYWORD = new KeywordStruct("CREATE");
 
 	// Features Keywords
 	/**
@@ -1058,22 +1073,22 @@ public interface CommonLispSymbols {
 	KeywordStruct EXECUTE = new KeywordStruct("EXECUTE");
 
 	// Print-Case Keywords
-	KeywordStruct UPCASE = new KeywordStruct("UPCASE");
-	KeywordStruct DOWNCASE = new KeywordStruct("DOWNCASE");
-	KeywordStruct CAPITALIZE = new KeywordStruct("CAPITALIZE");
+	KeywordStruct UPCASE_KEYWORD = new KeywordStruct("UPCASE");
+	KeywordStruct DOWNCASE_KEYWORD = new KeywordStruct("DOWNCASE");
+	KeywordStruct CAPITALIZE_KEYWORD = new KeywordStruct("CAPITALIZE");
 
 	// Pathname Keywords
-	KeywordStruct WILD = new KeywordStruct("WILD");
-	KeywordStruct WILD_INFERIORS = new KeywordStruct("WILD-INFERIORS");
-	KeywordStruct UNSPECIFIC = new KeywordStruct("UNSPECIFIC");
-	KeywordStruct COMMON = new KeywordStruct("COMMON");
-	KeywordStruct LOCAL = new KeywordStruct("LOCAL");
-	KeywordStruct RELATIVE = new KeywordStruct("RELATIVE");
-	KeywordStruct ABSOLUTE = new KeywordStruct("ABSOLUTE");
-	KeywordStruct BACK = new KeywordStruct("BACK");
-	KeywordStruct UP = new KeywordStruct("UP");
-	KeywordStruct NEWEST = new KeywordStruct("NEWEST");
-	KeywordStruct OLDEST = new KeywordStruct("OLDEST");
+	KeywordStruct WILD_KEYWORD = new KeywordStruct("WILD");
+	KeywordStruct WILD_INFERIORS_KEYWORD = new KeywordStruct("WILD-INFERIORS");
+	KeywordStruct UNSPECIFIC_KEYWORD = new KeywordStruct("UNSPECIFIC");
+	KeywordStruct COMMON_KEYWORD = new KeywordStruct("COMMON");
+	KeywordStruct LOCAL_KEYWORD = new KeywordStruct("LOCAL");
+	KeywordStruct RELATIVE_KEYWORD = new KeywordStruct("RELATIVE");
+	KeywordStruct ABSOLUTE_KEYWORD = new KeywordStruct("ABSOLUTE");
+	KeywordStruct BACK_KEYWORD = new KeywordStruct("BACK");
+	KeywordStruct UP_KEYWORD = new KeywordStruct("UP");
+	KeywordStruct NEWEST_KEYWORD = new KeywordStruct("NEWEST");
+	KeywordStruct OLDEST_KEYWORD = new KeywordStruct("OLDEST");
 	KeywordStruct CASE_KEYWORD = new KeywordStruct("CASE");
 
 	// Compile-File/Load Keywords

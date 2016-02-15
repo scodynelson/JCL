@@ -48,7 +48,7 @@ public class SymbolStructPrinter implements LispPrinter<SymbolStruct> {
 
 			final String packageName = pkg.getName();
 
-			final boolean externalSymbol = CommonLispSymbols.EXTERNAL.equals(symbol.getPackageSymbolType());
+			final boolean externalSymbol = CommonLispSymbols.EXTERNAL_KEYWORD.equals(symbol.getPackageSymbolType());
 			if (externalSymbol) {
 				// TODO: verify it is a single colon for external symbols when printing...
 				return packageName + ':' + name;

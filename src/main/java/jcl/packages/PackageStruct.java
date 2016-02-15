@@ -301,7 +301,7 @@ public class PackageStruct extends BuiltInClassStruct {
 
 		final SymbolStruct foundSymbol = findInheritedSymbol(symbolName);
 		if (foundSymbol != null) {
-			return new PackageSymbolStruct(foundSymbol, CommonLispSymbols.INHERITED);
+			return new PackageSymbolStruct(foundSymbol, CommonLispSymbols.INHERITED_KEYWORD);
 		}
 
 		return null;
@@ -483,7 +483,7 @@ public class PackageStruct extends BuiltInClassStruct {
 		final SymbolStruct symbolStruct = new SymbolStruct(symbolName);
 		internalSymbols.put(symbolName, symbolStruct);
 		symbolStruct.setSymbolPackage(this);
-		return new PackageSymbolStruct(symbolStruct, CommonLispSymbols.INTERNAL);
+		return new PackageSymbolStruct(symbolStruct, CommonLispSymbols.INTERNAL_KEYWORD);
 	}
 
 	/**
@@ -600,17 +600,17 @@ public class PackageStruct extends BuiltInClassStruct {
 
 		SymbolStruct foundSymbol = externalSymbols.get(symbolName);
 		if (foundSymbol != null) {
-			return new PackageSymbolStruct(foundSymbol, CommonLispSymbols.EXTERNAL);
+			return new PackageSymbolStruct(foundSymbol, CommonLispSymbols.EXTERNAL_KEYWORD);
 		}
 
 		foundSymbol = shadowingSymbols.get(symbolName);
 		if (foundSymbol != null) {
-			return new PackageSymbolStruct(foundSymbol, CommonLispSymbols.INTERNAL);
+			return new PackageSymbolStruct(foundSymbol, CommonLispSymbols.INTERNAL_KEYWORD);
 		}
 
 		foundSymbol = internalSymbols.get(symbolName);
 		if (foundSymbol != null) {
-			return new PackageSymbolStruct(foundSymbol, CommonLispSymbols.INTERNAL);
+			return new PackageSymbolStruct(foundSymbol, CommonLispSymbols.INTERNAL_KEYWORD);
 		}
 
 		return null;
@@ -635,7 +635,7 @@ public class PackageStruct extends BuiltInClassStruct {
 			}
 
 			final KeywordStruct packageSymbolType = inheritedPackageSymbol.getPackageSymbolType();
-			if (CommonLispSymbols.EXTERNAL.equals(packageSymbolType)) {
+			if (CommonLispSymbols.EXTERNAL_KEYWORD.equals(packageSymbolType)) {
 				foundSymbol = inheritedPackageSymbol.getSymbol();
 				break;
 			}

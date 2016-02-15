@@ -18,22 +18,22 @@ public enum PathnameDirectoryLevelType {
 	/**
 	 * Wild pathname directory level type.
 	 */
-	WILD(CommonLispSymbols.WILD),
+	WILD(CommonLispSymbols.WILD_KEYWORD),
 
 	/**
 	 * Wild-Inferiors pathname directory level type.
 	 */
-	WILD_INFERIORS(CommonLispSymbols.WILD_INFERIORS),
+	WILD_INFERIORS(CommonLispSymbols.WILD_INFERIORS_KEYWORD),
 
 	/**
 	 * Back pathname directory level type.
 	 */
-	BACK(CommonLispSymbols.BACK),
+	BACK(CommonLispSymbols.BACK_KEYWORD),
 
 	/**
 	 * Up pathname directory level type.
 	 */
-	UP(CommonLispSymbols.UP),
+	UP(CommonLispSymbols.UP_KEYWORD),
 
 	/**
 	 * Null pathname directory level type.

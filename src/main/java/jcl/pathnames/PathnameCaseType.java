@@ -17,12 +17,12 @@ public enum PathnameCaseType {
 	/**
 	 * Common pathname case type.
 	 */
-	COMMON(CommonLispSymbols.COMMON),
+	COMMON(CommonLispSymbols.COMMON_KEYWORD),
 
 	/**
 	 * Local pathname case type.
 	 */
-	LOCAL(CommonLispSymbols.LOCAL);
+	LOCAL(CommonLispSymbols.LOCAL_KEYWORD);
 
 	/**
 	 * Value of the pathname case type.

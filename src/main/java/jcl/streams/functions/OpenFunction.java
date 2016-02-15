@@ -112,24 +112,7 @@ public final class OpenFunction extends AbstractCommonLispFunctionStruct {
 
 		final LispStruct pathnameDesignator = lispStructs[0];
 
-		final PathnameStruct pathname;
-		final String namestring;
-		if (pathnameDesignator instanceof PathnameStruct) {
-			pathname = (PathnameStruct) pathnameDesignator;
-		} else if (pathnameDesignator instanceof StringStruct) {
-			final StringStruct namestringStruct = (StringStruct) pathnameDesignator;
-			namestring = namestringStruct.getAsJavaString();
-			pathname = new PathnameStruct(namestring);
-		} else if (pathnameDesignator instanceof FileStreamStruct) {
-			final FileStreamStruct fileStream = (FileStreamStruct) pathnameDesignator;
-			final Path path = fileStream.getPath();
-			final File file = path.toFile();
-			namestring = file.getAbsolutePath();
-			pathname = new PathnameStruct(namestring);
-		} else {
-			final String printedObject = printer.print(pathnameDesignator);
-			throw new TypeErrorException("Illegal pathname designator argument provided: " + printedObject);
-		}
+		final PathnameStruct pathname = pathnameDesignator.toPathname().get();
 		final File filePathnameFile = new File(pathname.getNamestring());
 		final Path filePath = filePathnameFile.toPath();
 

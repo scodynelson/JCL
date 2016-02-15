@@ -5,8 +5,10 @@
 package jcl.characters.functions;
 
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 import jcl.LispStruct;
+import jcl.characters.CharacterStruct;
 import org.springframework.stereotype.Component;
 
 /**
@@ -40,7 +42,7 @@ public final class CharacterFunction extends AbstractCharacterDesignatorFunction
 	 * @return a {@link Function} applying {@link LispStruct#toCharacter()} against a {@link LispStruct}
 	 */
 	@Override
-	protected Function<LispStruct, LispStruct> characterFunction() {
+	protected Function<LispStruct, Supplier<CharacterStruct>> characterFunction() {
 		return LispStruct::toCharacter;
 	}
 }

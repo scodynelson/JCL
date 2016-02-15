@@ -6,6 +6,8 @@ package jcl.characters;
 
 import java.math.BigInteger;
 import java.util.Map;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 import com.ibm.icu.lang.UCharacter;
 import jcl.LispStruct;
@@ -124,8 +126,8 @@ public class CharacterStruct extends BuiltInClassStruct {
 	 * @return the instance, as it is already a character
 	 */
 	@Override
-	public LispStruct toCharacter() {
-		return this;
+	public Supplier<CharacterStruct> toCharacter() {
+		return () -> this;
 	}
 
 	/**
@@ -135,8 +137,8 @@ public class CharacterStruct extends BuiltInClassStruct {
 	 * @return the instance, as it is already a character
 	 */
 	@Override
-	public LispStruct toNamedCharacter() {
-		return this;
+	public Supplier<CharacterStruct> toNamedCharacter() {
+		return () -> this;
 	}
 
 	/**

@@ -2,10 +2,13 @@ package jcl.arrays;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 import jcl.LispStruct;
 import jcl.characters.CharacterStruct;
 import jcl.conditions.exceptions.SimpleErrorException;
+import jcl.pathnames.PathnameStruct;
 import jcl.types.BaseCharType;
 import jcl.types.BaseStringType;
 import jcl.types.CharacterType;
@@ -103,19 +106,31 @@ public class StringStruct extends VectorStruct<CharacterStruct> {
 	}
 
 	@Override
-	public LispStruct toCharacter() {
-		// TODO: Can improve this
-		final String javaString = getAsJavaString();
-		if (javaString.length() != 1) {
-			throw new SimpleErrorException("String is not of length one: " + javaString);
-		}
-		return CharacterStruct.valueOf(javaString.charAt(0));
+	public Supplier<CharacterStruct> toCharacter() {
+		return () -> {
+			// TODO: Can improve this
+			final String javaString = getAsJavaString();
+			if (javaString.length() != 1) {
+				throw new SimpleErrorException("String is not of length one: " + javaString);
+			}
+			return CharacterStruct.valueOf(javaString.charAt(0));
+		};
 	}
 
 	@Override
-	public LispStruct toNamedCharacter() {
-		final String javaString = getAsJavaString();
-		return CharacterStruct.nameChar(javaString);
+	public Supplier<CharacterStruct> toNamedCharacter() {
+		return () -> {
+			final String javaString = getAsJavaString();
+			return CharacterStruct.nameChar(javaString);
+		};
+	}
+
+	@Override
+	public Supplier<PathnameStruct> toPathname() {
+		return () -> {
+			final String namestring = getAsJavaString();
+			return new PathnameStruct(namestring);
+		};
 	}
 
 	@Override

@@ -6,6 +6,7 @@ package jcl.characters.functions;
 
 import java.util.List;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 import jcl.LispStruct;
 import jcl.arrays.StringStruct;
@@ -74,15 +75,15 @@ abstract class AbstractCharacterDesignatorFunction extends AbstractCommonLispFun
 		validator.validateTypes(lispStruct, "CHARACTER", "Character",
 				CharacterType.INSTANCE, StringType.INSTANCE, SymbolType.INSTANCE);
 
-		return characterFunction().apply(lispStruct);
+		return characterFunction().apply(lispStruct).get();
 	}
 
 	/**
-	 * Abstract method to return a {@link Function} that consumes a {@link LispStruct} and returns a {@link LispStruct}
-	 * as a result.
+	 * Abstract method to return a {@link Function} that consumes a {@link LispStruct} and returns a {@link
+	 * CharacterStruct} as a result.
 	 *
-	 * @return returns a {@link Function} that consumes a {@link LispStruct} and returns a {@link LispStruct} as a
+	 * @return returns a {@link Function} that consumes a {@link LispStruct} and returns a {@link CharacterStruct} as a
 	 * result
 	 */
-	protected abstract Function<LispStruct, LispStruct> characterFunction();
+	protected abstract Function<LispStruct, Supplier<CharacterStruct>> characterFunction();
 }

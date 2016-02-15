@@ -3,6 +3,8 @@ package jcl.symbols;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 import jcl.LispStruct;
 import jcl.characters.CharacterStruct;
@@ -191,16 +193,18 @@ public class SymbolStruct extends BuiltInClassStruct {
 	}
 
 	@Override
-	public LispStruct toCharacter() {
-		if (name.length() != 1) {
-			throw new SimpleErrorException("Symbol name is not of length one: " + name);
-		}
-		return CharacterStruct.valueOf(name.charAt(0));
+	public Supplier<CharacterStruct> toCharacter() {
+		return () -> {
+			if (name.length() != 1) {
+				throw new SimpleErrorException("Symbol name is not of length one: " + name);
+			}
+			return CharacterStruct.valueOf(name.charAt(0));
+		};
 	}
 
 	@Override
-	public LispStruct toNamedCharacter() {
-		return CharacterStruct.nameChar(name);
+	public Supplier<CharacterStruct> toNamedCharacter() {
+		return () -> CharacterStruct.nameChar(name);
 	}
 
 	public boolean hasValue() {

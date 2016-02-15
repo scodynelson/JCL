@@ -4,7 +4,11 @@
 
 package jcl;
 
+import java.util.function.Supplier;
+
+import jcl.characters.CharacterStruct;
 import jcl.conditions.exceptions.TypeErrorException;
+import jcl.pathnames.PathnameStruct;
 import jcl.types.TType;
 
 /**
@@ -27,7 +31,7 @@ public interface LispStruct {
 	 *
 	 * @return a converted character, or a throw {@link TypeErrorException}
 	 */
-	default LispStruct toCharacter() {
+	default Supplier<CharacterStruct> toCharacter() {
 		throw new TypeErrorException("Type cannot be converted to Character.");
 	}
 
@@ -37,7 +41,17 @@ public interface LispStruct {
 	 *
 	 * @return a converted character, or a throw {@link TypeErrorException}
 	 */
-	default LispStruct toNamedCharacter() {
+	default Supplier<CharacterStruct> toNamedCharacter() {
 		throw new TypeErrorException("Type cannot be converted to Character.");
+	}
+
+	/**
+	 * By default, throws a {@link TypeErrorException} indicating a problem conversion to a pathname. This will be
+	 * overridden in implementations that support conversion to pathnames.
+	 *
+	 * @return a converted pathname, or a throw {@link TypeErrorException}
+	 */
+	default Supplier<PathnameStruct> toPathname() {
+		throw new TypeErrorException("Type cannot be converted to Pathname.");
 	}
 }

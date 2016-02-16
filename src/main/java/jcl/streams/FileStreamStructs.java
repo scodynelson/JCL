@@ -1,0 +1,118 @@
+/*
+ * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
+ */
+
+package jcl.streams;
+
+import java.nio.file.Path;
+
+import jcl.LispType;
+import jcl.pathnames.PathnameStruct;
+
+/**
+ * Created by codynelson on 2/15/16.
+ */
+public final class FileStreamStructs {
+
+	private FileStreamStructs() {
+	}
+
+	public static FileStreamStruct open(final PathnameStruct pathname, final DirectionType directionType, final LispType elementType,
+	                                    final IfExistsType ifExistsType, final IfDoesNotExistType ifDoesNotExistType,
+	                                    final ExternalFormat externalFormat) {
+
+		final Path filePath = pathname.getPath();
+
+		final FileStreamStruct fileStream = new FileStreamStruct(filePath);
+		if (directionType == DirectionType.PROBE) {
+			fileStream.close();
+		}
+		return null;
+	}
+}
+
+/*
+(defun open (filename
+	     &key
+	     (direction :input)
+	     (element-type 'character)
+	     (if-exists nil if-exists-p)
+	     (if-does-not-exist nil if-does-not-exist-p)
+	     (external-format :default))
+  (setf element-type (case element-type
+                       ((character base-char)
+                        'character)
+                       (:default
+                        '(unsigned-byte 8))
+                       (t
+                        (upgraded-element-type element-type))))
+  (when (memq direction '(:output :io))
+    (unless if-exists-p
+      (setf if-exists
+            (if (eq (pathname-version pathname) :newest)
+                :new-version
+              :error))))
+  (unless if-does-not-exist-p
+    (setf if-does-not-exist
+          (cond ((eq direction :input) :error)
+                ((and (memq direction '(:output :io))
+                      (memq if-exists '(:overwrite :append)))
+                 :error)
+                ((eq direction :probe)
+                 nil)
+                (t
+                 :create))))
+  (case direction
+    (:input
+     (case if-does-not-exist
+       (:error
+        (unless (probe-file pathname)
+          (error "The file ~S does not exist."))))
+     (make-file-stream pathname namestring element-type :input nil external-format))
+    (:probe
+     (case if-does-not-exist
+       (:error
+        (unless (probe-file pathname)
+          (error "The file ~S does not exist.")))
+       (:create
+        (create-new-file namestring)))
+     (let ((stream (make-file-stream pathname namestring element-type :input nil external-format)))
+       (when stream
+         (close stream))
+       stream))
+    ((:output :io)
+     (case if-does-not-exist
+       (:error
+        (unless (probe-file pathname)
+          (error "The file ~S does not exist.")))
+       ((nil)
+        (unless (probe-file pathname)
+          (return-from open nil))))
+     (case if-exists
+       (:error
+        (when (probe-file pathname)
+          (error "The file ~S already exists.")))
+       ((nil)
+        (when (probe-file pathname)
+          (return-from open nil)))
+       ((:rename :rename-and-delete)
+        (when (probe-file pathname)
+          ;; Make sure the original file is not a directory.
+          (when (probe-directory pathname)
+            (error "The file ~S is a directory."))
+          (let ((backup-name (concatenate 'string namestring ".bak")))
+            (when (probe-file backup-name)
+              (when (probe-directory backup-name)
+                (error "Unable to rename ~S."))
+              (delete-file backup-name))
+            (rename-file pathname backup-name))))
+       ((:new-version :supersede :overwrite :append)) ; OK to proceed.
+       (t
+        (error "Option not supported: ~S.")))
+     (let ((stream (make-file-stream pathname namestring element-type direction if-exists external-format)))
+       (unless stream
+         (error "Unable to open ~S."))
+       stream))
+    (t
+     (error ":DIRECTION ~S not supported.")))))
+ */

@@ -225,6 +225,12 @@ public class PathnameStruct extends BuiltInClassStruct {
 		return () -> this;
 	}
 
+	public Path getPath() {
+		final String namestring = getNamestring();
+		final File file = new File(namestring);
+		return file.toPath();
+	}
+
 	/**
 	 * Gets the pathname host.
 	 *

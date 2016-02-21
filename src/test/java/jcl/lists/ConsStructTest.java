@@ -1,11 +1,11 @@
 package jcl.lists;
 
+import java.util.List;
+
 import jcl.LispStruct;
 import jcl.symbols.TStruct;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import java.util.List;
 
 /**
  * The test class for the {@link ConsStruct} object.

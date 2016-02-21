@@ -2,10 +2,8 @@ package jcl.arrays;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Function;
 import java.util.function.Supplier;
 
-import jcl.LispStruct;
 import jcl.characters.CharacterStruct;
 import jcl.conditions.exceptions.SimpleErrorException;
 import jcl.pathnames.PathnameStruct;

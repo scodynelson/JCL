@@ -13,7 +13,6 @@ import java.math.BigInteger;
 import java.nio.channels.FileChannel;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
-import java.util.function.Function;
 import java.util.function.Supplier;
 
 import jcl.LispStruct;

@@ -6,7 +6,6 @@ package jcl.characters;
 
 import java.math.BigInteger;
 import java.util.Map;
-import java.util.function.Function;
 import java.util.function.Supplier;
 
 import com.ibm.icu.lang.UCharacter;

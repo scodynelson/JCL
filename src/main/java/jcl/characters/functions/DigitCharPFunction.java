@@ -33,7 +33,7 @@ public final class DigitCharPFunction extends AbstractCharacterRadixFunction {
 	 */
 	public DigitCharPFunction() {
 		super("Tests whether character is a digit in the specified radix. If it is a digit in that radix, its weight is " +
-				"returned as an integer; otherwise nil is returned.");
+				      "returned as an integer; otherwise nil is returned.");
 	}
 
 	/**

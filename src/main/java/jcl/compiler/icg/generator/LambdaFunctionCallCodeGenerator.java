@@ -114,10 +114,10 @@ final class LambdaFunctionCallCodeGenerator extends SpecialOperatorCodeGenerator
 		mv.visitVarInsn(Opcodes.ALOAD, functionStore);
 		mv.visitVarInsn(Opcodes.ALOAD, argumentsArrayStore);
 		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
-				GenerationConstants.FUNCTION_STRUCT_NAME,
-				GenerationConstants.FUNCTION_STRUCT_APPLY_METHOD_NAME,
-				GenerationConstants.FUNCTION_STRUCT_APPLY_METHOD_DESC,
-				false);
+		                   GenerationConstants.FUNCTION_STRUCT_NAME,
+		                   GenerationConstants.FUNCTION_STRUCT_APPLY_METHOD_NAME,
+		                   GenerationConstants.FUNCTION_STRUCT_APPLY_METHOD_DESC,
+		                   false);
 
 		mv.visitInsn(Opcodes.ARETURN);
 	}

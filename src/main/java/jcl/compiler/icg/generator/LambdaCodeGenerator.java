@@ -262,10 +262,10 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 		final ClassWriter cw = currentClass.getClassWriter();
 
 		cw.visit(Opcodes.V1_8, Opcodes.ACC_PUBLIC + Opcodes.ACC_SUPER,
-				className,
-				null,
-				GenerationConstants.FUNCTION_STRUCT_NAME,
-				null);
+		         className,
+		         null,
+		         GenerationConstants.FUNCTION_STRUCT_NAME,
+		         null);
 
 		cw.visitSource(fileName + GenerationConstants.JAVA_EXTENSION, null);
 
@@ -297,10 +297,10 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 
 			previousMv.visitVarInsn(Opcodes.ALOAD, 1); // Load the Closure Argument. NOTE: This should ALWAYS be 1 on the Store Stack
 			previousMv.visitMethodInsn(Opcodes.INVOKESPECIAL,
-					className,
-					GenerationConstants.INIT_METHOD_NAME,
-					GenerationConstants.FUNCTION_STRUCT_INIT_CLOSURE_DESC,
-					false);
+			                           className,
+			                           GenerationConstants.INIT_METHOD_NAME,
+			                           GenerationConstants.FUNCTION_STRUCT_INIT_CLOSURE_DESC,
+			                           false);
 		}
 	}
 
@@ -342,10 +342,10 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 	private static void generateNoArgConstructor(final GeneratorState generatorState, final String className,
 	                                             final ClassWriter cw) {
 		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PUBLIC,
-				GenerationConstants.INIT_METHOD_NAME,
-				GenerationConstants.FUNCTION_STRUCT_INIT_DESC,
-				null,
-				null);
+		                                        GenerationConstants.INIT_METHOD_NAME,
+		                                        GenerationConstants.FUNCTION_STRUCT_INIT_DESC,
+		                                        null,
+		                                        null);
 
 		final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
 		final Deque<JavaMethodBuilder> methodBuilderDeque = generatorState.getMethodBuilderDeque();
@@ -357,10 +357,10 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 		mv.visitVarInsn(Opcodes.ALOAD, thisStore);
 		mv.visitInsn(Opcodes.ACONST_NULL);
 		mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
-				className,
-				GenerationConstants.INIT_METHOD_NAME,
-				GenerationConstants.FUNCTION_STRUCT_INIT_CLOSURE_DESC,
-				false);
+		                   className,
+		                   GenerationConstants.INIT_METHOD_NAME,
+		                   GenerationConstants.FUNCTION_STRUCT_INIT_CLOSURE_DESC,
+		                   false);
 
 		mv.visitInsn(Opcodes.RETURN);
 
@@ -402,10 +402,10 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 	private static void generateClosureArgConstructor(final LambdaStruct input, final GeneratorState generatorState,
 	                                                  final String className, final ClassWriter cw) {
 		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PUBLIC,
-				GenerationConstants.INIT_METHOD_NAME,
-				GenerationConstants.FUNCTION_STRUCT_INIT_CLOSURE_DESC,
-				null,
-				null);
+		                                        GenerationConstants.INIT_METHOD_NAME,
+		                                        GenerationConstants.FUNCTION_STRUCT_INIT_CLOSURE_DESC,
+		                                        null,
+		                                        null);
 
 		final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
 		final Deque<JavaMethodBuilder> methodBuilderDeque = generatorState.getMethodBuilderDeque();
@@ -425,17 +425,17 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 		mv.visitLdcInsn(documentation);
 		mv.visitVarInsn(Opcodes.ALOAD, closureStore);
 		mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
-				GenerationConstants.FUNCTION_STRUCT_NAME,
-				GenerationConstants.INIT_METHOD_NAME,
-				GenerationConstants.FUNCTION_STRUCT_INIT_STRING_CLOSURE_DESC,
-				false);
+		                   GenerationConstants.FUNCTION_STRUCT_NAME,
+		                   GenerationConstants.INIT_METHOD_NAME,
+		                   GenerationConstants.FUNCTION_STRUCT_INIT_STRING_CLOSURE_DESC,
+		                   false);
 
 		mv.visitVarInsn(Opcodes.ALOAD, thisStore);
 		mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
-				className,
-				INIT_LAMBDA_LIST_BINDINGS_METHOD_NAME,
-				INIT_LAMBDA_LIST_BINDINGS_METHOD_DESC,
-				false);
+		                   className,
+		                   INIT_LAMBDA_LIST_BINDINGS_METHOD_NAME,
+		                   INIT_LAMBDA_LIST_BINDINGS_METHOD_DESC,
+		                   false);
 
 		mv.visitInsn(Opcodes.RETURN);
 
@@ -483,10 +483,10 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 		}
 
 		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PROTECTED,
-				INTERNAL_APPLY_METHOD_NAME,
-				INTERNAL_APPLY_METHOD_DESC,
-				null,
-				null);
+		                                        INTERNAL_APPLY_METHOD_NAME,
+		                                        INTERNAL_APPLY_METHOD_DESC,
+		                                        null,
+		                                        null);
 
 		final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
 		final Deque<JavaMethodBuilder> methodBuilderDeque = generatorState.getMethodBuilderDeque();
@@ -565,10 +565,10 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 		}
 
 		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PROTECTED,
-				GET_INIT_FORM_METHOD_NAME,
-				GET_INIT_FORM_METHOD_DESC,
-				GET_INIT_FORM_METHOD_SIGNATURE,
-				null);
+		                                        GET_INIT_FORM_METHOD_NAME,
+		                                        GET_INIT_FORM_METHOD_DESC,
+		                                        GET_INIT_FORM_METHOD_SIGNATURE,
+		                                        null);
 
 		final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
 		final Deque<JavaMethodBuilder> methodBuilderDeque = generatorState.getMethodBuilderDeque();
@@ -589,7 +589,7 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 			final LispStruct initForm = optionalBinding.getInitForm();
 
 			generateInitForm(generatorState, methodBuilder, symbolArgStore,
-					initFormVarPackageStore, initFormVarSymbolStore, var, initForm);
+			                 initFormVarPackageStore, initFormVarSymbolStore, var, initForm);
 		}
 
 		for (final KeyParameter keyBinding : keyBindings) {
@@ -597,7 +597,7 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 			final LispStruct initForm = keyBinding.getInitForm();
 
 			generateInitForm(generatorState, methodBuilder, symbolArgStore,
-					initFormVarPackageStore, initFormVarSymbolStore, var, initForm);
+			                 initFormVarPackageStore, initFormVarSymbolStore, var, initForm);
 		}
 
 		for (final AuxParameter auxBinding : auxBindings) {
@@ -605,7 +605,7 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 			final LispStruct initForm = auxBinding.getInitForm();
 
 			generateInitForm(generatorState, methodBuilder, symbolArgStore,
-					initFormVarPackageStore, initFormVarSymbolStore, var, initForm);
+			                 initFormVarPackageStore, initFormVarSymbolStore, var, initForm);
 		}
 
 		nullCodeGenerator.generate(NullStruct.INSTANCE, generatorState);
@@ -653,10 +653,10 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 		mv.visitVarInsn(Opcodes.ALOAD, symbolArgStore);
 		mv.visitVarInsn(Opcodes.ALOAD, initFormVarSymbolStore);
 		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
-				GenerationConstants.SYMBOL_STRUCT_NAME,
-				GenerationConstants.JAVA_EQUALS_METHOD_NAME,
-				GenerationConstants.JAVA_EQUALS_METHOD_DESC,
-				false);
+		                   GenerationConstants.SYMBOL_STRUCT_NAME,
+		                   GenerationConstants.JAVA_EQUALS_METHOD_NAME,
+		                   GenerationConstants.JAVA_EQUALS_METHOD_DESC,
+		                   false);
 		mv.visitJumpInsn(Opcodes.IFEQ, symbolCheckIfEnd);
 
 		codeGenerator.generate(initForm, generatorState);
@@ -733,10 +733,10 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 		}
 
 		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PROTECTED,
-				GET_REQUIRED_BINDINGS_METHOD_NAME,
-				GET_REQUIRED_BINDINGS_METHOD_DESC,
-				GET_REQUIRED_BINDINGS_METHOD_SIGNATURE,
-				null);
+		                                        GET_REQUIRED_BINDINGS_METHOD_NAME,
+		                                        GET_REQUIRED_BINDINGS_METHOD_DESC,
+		                                        GET_REQUIRED_BINDINGS_METHOD_SIGNATURE,
+		                                        null);
 
 		final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
 		final Deque<JavaMethodBuilder> methodBuilderDeque = generatorState.getMethodBuilderDeque();
@@ -749,10 +749,10 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 		mv.visitTypeInsn(Opcodes.NEW, GenerationConstants.JAVA_ARRAY_LIST_NAME);
 		mv.visitInsn(Opcodes.DUP);
 		mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
-				GenerationConstants.JAVA_ARRAY_LIST_NAME,
-				GenerationConstants.INIT_METHOD_NAME,
-				GenerationConstants.JAVA_ARRAY_LIST_INIT_DESC,
-				false);
+		                   GenerationConstants.JAVA_ARRAY_LIST_NAME,
+		                   GenerationConstants.INIT_METHOD_NAME,
+		                   GenerationConstants.JAVA_ARRAY_LIST_INIT_DESC,
+		                   false);
 		final int requiredBindingsStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, requiredBindingsStore);
 
@@ -773,19 +773,19 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 				mv.visitInsn(Opcodes.ICONST_0);
 			}
 			mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
-					GenerationConstants.REQUIRED_BINDING_NAME,
-					GenerationConstants.INIT_METHOD_NAME,
-					GenerationConstants.REQUIRED_BINDING_INIT_DESC,
-					false);
+			                   GenerationConstants.REQUIRED_BINDING_NAME,
+			                   GenerationConstants.INIT_METHOD_NAME,
+			                   GenerationConstants.REQUIRED_BINDING_INIT_DESC,
+			                   false);
 			mv.visitVarInsn(Opcodes.ASTORE, requiredBindingStore);
 
 			mv.visitVarInsn(Opcodes.ALOAD, requiredBindingsStore);
 			mv.visitVarInsn(Opcodes.ALOAD, requiredBindingStore);
 			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
-					GenerationConstants.JAVA_LIST_NAME,
-					GenerationConstants.JAVA_LIST_ADD_METHOD_NAME,
-					GenerationConstants.JAVA_LIST_ADD_METHOD_DESC,
-					true);
+			                   GenerationConstants.JAVA_LIST_NAME,
+			                   GenerationConstants.JAVA_LIST_ADD_METHOD_NAME,
+			                   GenerationConstants.JAVA_LIST_ADD_METHOD_DESC,
+			                   true);
 			mv.visitInsn(Opcodes.POP);
 		}
 
@@ -849,10 +849,10 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 		}
 
 		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PROTECTED,
-				GET_OPTIONAL_BINDINGS_METHOD_NAME,
-				GET_OPTIONAL_BINDINGS_METHOD_DESC,
-				GET_OPTIONAL_BINDINGS_METHOD_SIGNATURE,
-				null);
+		                                        GET_OPTIONAL_BINDINGS_METHOD_NAME,
+		                                        GET_OPTIONAL_BINDINGS_METHOD_DESC,
+		                                        GET_OPTIONAL_BINDINGS_METHOD_SIGNATURE,
+		                                        null);
 
 		final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
 		final Deque<JavaMethodBuilder> methodBuilderDeque = generatorState.getMethodBuilderDeque();
@@ -865,10 +865,10 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 		mv.visitTypeInsn(Opcodes.NEW, GenerationConstants.JAVA_ARRAY_LIST_NAME);
 		mv.visitInsn(Opcodes.DUP);
 		mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
-				GenerationConstants.JAVA_ARRAY_LIST_NAME,
-				GenerationConstants.INIT_METHOD_NAME,
-				GenerationConstants.JAVA_ARRAY_LIST_INIT_DESC,
-				false);
+		                   GenerationConstants.JAVA_ARRAY_LIST_NAME,
+		                   GenerationConstants.INIT_METHOD_NAME,
+		                   GenerationConstants.JAVA_ARRAY_LIST_INIT_DESC,
+		                   false);
 		final int optionalBindingsStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, optionalBindingsStore);
 
@@ -900,19 +900,19 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 			}
 			mv.visitVarInsn(Opcodes.ALOAD, optionalSuppliedPStore);
 			mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
-					GenerationConstants.OPTIONAL_BINDING_NAME,
-					GenerationConstants.INIT_METHOD_NAME,
-					GenerationConstants.OPTIONAL_BINDING_INIT_DESC,
-					false);
+			                   GenerationConstants.OPTIONAL_BINDING_NAME,
+			                   GenerationConstants.INIT_METHOD_NAME,
+			                   GenerationConstants.OPTIONAL_BINDING_INIT_DESC,
+			                   false);
 			mv.visitVarInsn(Opcodes.ASTORE, optionalBindingStore);
 
 			mv.visitVarInsn(Opcodes.ALOAD, optionalBindingsStore);
 			mv.visitVarInsn(Opcodes.ALOAD, optionalBindingStore);
 			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
-					GenerationConstants.JAVA_LIST_NAME,
-					GenerationConstants.JAVA_LIST_ADD_METHOD_NAME,
-					GenerationConstants.JAVA_LIST_ADD_METHOD_DESC,
-					true);
+			                   GenerationConstants.JAVA_LIST_NAME,
+			                   GenerationConstants.JAVA_LIST_ADD_METHOD_NAME,
+			                   GenerationConstants.JAVA_LIST_ADD_METHOD_DESC,
+			                   true);
 			mv.visitInsn(Opcodes.POP);
 		}
 
@@ -961,10 +961,10 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 		}
 
 		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PROTECTED,
-				GET_REST_BINDING_METHOD_NAME,
-				GET_REST_BINDING_METHOD_DESC,
-				null,
-				null);
+		                                        GET_REST_BINDING_METHOD_NAME,
+		                                        GET_REST_BINDING_METHOD_DESC,
+		                                        null,
+		                                        null);
 
 		final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
 		final Deque<JavaMethodBuilder> methodBuilderDeque = generatorState.getMethodBuilderDeque();
@@ -989,10 +989,10 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 			mv.visitInsn(Opcodes.ICONST_0);
 		}
 		mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
-				GenerationConstants.REST_BINDING_NAME,
-				GenerationConstants.INIT_METHOD_NAME,
-				GenerationConstants.REST_BINDING_INIT_DESC,
-				false);
+		                   GenerationConstants.REST_BINDING_NAME,
+		                   GenerationConstants.INIT_METHOD_NAME,
+		                   GenerationConstants.REST_BINDING_INIT_DESC,
+		                   false);
 		mv.visitInsn(Opcodes.ARETURN);
 
 		mv.visitMaxs(-1, -1);
@@ -1053,10 +1053,10 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 		}
 
 		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PROTECTED,
-				GET_KEY_BINDINGS_METHOD_NAME,
-				GET_KEY_BINDINGS_METHOD_DESC,
-				GET_KEY_BINDINGS_METHOD_SIGNATURE,
-				null);
+		                                        GET_KEY_BINDINGS_METHOD_NAME,
+		                                        GET_KEY_BINDINGS_METHOD_DESC,
+		                                        GET_KEY_BINDINGS_METHOD_SIGNATURE,
+		                                        null);
 
 		final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
 		final Deque<JavaMethodBuilder> methodBuilderDeque = generatorState.getMethodBuilderDeque();
@@ -1069,10 +1069,10 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 		mv.visitTypeInsn(Opcodes.NEW, GenerationConstants.JAVA_ARRAY_LIST_NAME);
 		mv.visitInsn(Opcodes.DUP);
 		mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
-				GenerationConstants.JAVA_ARRAY_LIST_NAME,
-				GenerationConstants.INIT_METHOD_NAME,
-				GenerationConstants.JAVA_ARRAY_LIST_INIT_DESC,
-				false);
+		                   GenerationConstants.JAVA_ARRAY_LIST_NAME,
+		                   GenerationConstants.INIT_METHOD_NAME,
+		                   GenerationConstants.JAVA_ARRAY_LIST_INIT_DESC,
+		                   false);
 		final int keyBindingsStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, keyBindingsStore);
 
@@ -1109,19 +1109,19 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 			mv.visitVarInsn(Opcodes.ALOAD, keyNameStore);
 			mv.visitVarInsn(Opcodes.ALOAD, keySuppliedPStore);
 			mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
-					GenerationConstants.KEY_BINDING_NAME,
-					GenerationConstants.INIT_METHOD_NAME,
-					GenerationConstants.KEY_BINDING_INIT_DESC,
-					false);
+			                   GenerationConstants.KEY_BINDING_NAME,
+			                   GenerationConstants.INIT_METHOD_NAME,
+			                   GenerationConstants.KEY_BINDING_INIT_DESC,
+			                   false);
 			mv.visitVarInsn(Opcodes.ASTORE, keyBindingStore);
 
 			mv.visitVarInsn(Opcodes.ALOAD, keyBindingsStore);
 			mv.visitVarInsn(Opcodes.ALOAD, keyBindingStore);
 			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
-					GenerationConstants.JAVA_LIST_NAME,
-					GenerationConstants.JAVA_LIST_ADD_METHOD_NAME,
-					GenerationConstants.JAVA_LIST_ADD_METHOD_DESC,
-					true);
+			                   GenerationConstants.JAVA_LIST_NAME,
+			                   GenerationConstants.JAVA_LIST_ADD_METHOD_NAME,
+			                   GenerationConstants.JAVA_LIST_ADD_METHOD_DESC,
+			                   true);
 			mv.visitInsn(Opcodes.POP);
 		}
 
@@ -1172,10 +1172,10 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 				mv.visitInsn(Opcodes.ICONST_0);
 			}
 			mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
-					GenerationConstants.SUPPLIED_P_BINDING_NAME,
-					GenerationConstants.INIT_METHOD_NAME,
-					GenerationConstants.SUPPLIED_P_BINDING_INIT_DESC,
-					false);
+			                   GenerationConstants.SUPPLIED_P_BINDING_NAME,
+			                   GenerationConstants.INIT_METHOD_NAME,
+			                   GenerationConstants.SUPPLIED_P_BINDING_INIT_DESC,
+			                   false);
 			mv.visitVarInsn(Opcodes.ASTORE, suppliedPStore);
 		}
 	}
@@ -1217,10 +1217,10 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 		}
 
 		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PROTECTED,
-				GET_ALLOW_OTHER_KEYS_METHOD_NAME,
-				GET_ALLOW_OTHER_KEYS_METHOD_DESC,
-				null,
-				null);
+		                                        GET_ALLOW_OTHER_KEYS_METHOD_NAME,
+		                                        GET_ALLOW_OTHER_KEYS_METHOD_DESC,
+		                                        null,
+		                                        null);
 
 		final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
 		final Deque<JavaMethodBuilder> methodBuilderDeque = generatorState.getMethodBuilderDeque();
@@ -1280,10 +1280,10 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 		}
 
 		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PROTECTED,
-				GET_AUX_BINDINGS_METHOD_NAME,
-				GET_AUX_BINDINGS_METHOD_DESC,
-				GET_AUX_BINDINGS_METHOD_SIGNATURE,
-				null);
+		                                        GET_AUX_BINDINGS_METHOD_NAME,
+		                                        GET_AUX_BINDINGS_METHOD_DESC,
+		                                        GET_AUX_BINDINGS_METHOD_SIGNATURE,
+		                                        null);
 
 		final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
 		final Deque<JavaMethodBuilder> methodBuilderDeque = generatorState.getMethodBuilderDeque();
@@ -1296,10 +1296,10 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 		mv.visitTypeInsn(Opcodes.NEW, GenerationConstants.JAVA_ARRAY_LIST_NAME);
 		mv.visitInsn(Opcodes.DUP);
 		mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
-				GenerationConstants.JAVA_ARRAY_LIST_NAME,
-				GenerationConstants.INIT_METHOD_NAME,
-				GenerationConstants.JAVA_ARRAY_LIST_INIT_DESC,
-				false);
+		                   GenerationConstants.JAVA_ARRAY_LIST_NAME,
+		                   GenerationConstants.INIT_METHOD_NAME,
+		                   GenerationConstants.JAVA_ARRAY_LIST_INIT_DESC,
+		                   false);
 		final int auxBindingsStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, auxBindingsStore);
 
@@ -1325,19 +1325,19 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 				mv.visitInsn(Opcodes.ICONST_0);
 			}
 			mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
-					GenerationConstants.AUX_BINDING_NAME,
-					GenerationConstants.INIT_METHOD_NAME,
-					GenerationConstants.AUX_BINDING_INIT_DESC,
-					false);
+			                   GenerationConstants.AUX_BINDING_NAME,
+			                   GenerationConstants.INIT_METHOD_NAME,
+			                   GenerationConstants.AUX_BINDING_INIT_DESC,
+			                   false);
 			mv.visitVarInsn(Opcodes.ASTORE, auxBindingStore);
 
 			mv.visitVarInsn(Opcodes.ALOAD, auxBindingsStore);
 			mv.visitVarInsn(Opcodes.ALOAD, auxBindingStore);
 			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
-					GenerationConstants.JAVA_LIST_NAME,
-					GenerationConstants.JAVA_LIST_ADD_METHOD_NAME,
-					GenerationConstants.JAVA_LIST_ADD_METHOD_DESC,
-					true);
+			                   GenerationConstants.JAVA_LIST_NAME,
+			                   GenerationConstants.JAVA_LIST_ADD_METHOD_NAME,
+			                   GenerationConstants.JAVA_LIST_ADD_METHOD_DESC,
+			                   true);
 			mv.visitInsn(Opcodes.POP);
 		}
 

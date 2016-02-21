@@ -119,30 +119,30 @@ final class BlockCodeGenerator extends SpecialOperatorCodeGenerator<BlockStruct>
 
 		mv.visitVarInsn(Opcodes.ALOAD, returnFromExceptionStore);
 		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
-				GenerationConstants.RETURN_FROM_EXCEPTION_NAME,
-				GenerationConstants.RETURN_FROM_EXCEPTION_GET_NAME_METHOD_NAME,
-				GenerationConstants.RETURN_FROM_EXCEPTION_GET_NAME_METHOD_DESC,
-				false);
+		                   GenerationConstants.RETURN_FROM_EXCEPTION_NAME,
+		                   GenerationConstants.RETURN_FROM_EXCEPTION_GET_NAME_METHOD_NAME,
+		                   GenerationConstants.RETURN_FROM_EXCEPTION_GET_NAME_METHOD_DESC,
+		                   false);
 		final int returnFromExceptionNameStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, returnFromExceptionNameStore);
 
 		mv.visitVarInsn(Opcodes.ALOAD, returnFromExceptionNameStore);
 		mv.visitVarInsn(Opcodes.ALOAD, nameSymbolStore);
 		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
-				GenerationConstants.SYMBOL_STRUCT_NAME,
-				GenerationConstants.JAVA_EQUALS_METHOD_NAME,
-				GenerationConstants.JAVA_EQUALS_METHOD_DESC,
-				false);
+		                   GenerationConstants.SYMBOL_STRUCT_NAME,
+		                   GenerationConstants.JAVA_EQUALS_METHOD_NAME,
+		                   GenerationConstants.JAVA_EQUALS_METHOD_DESC,
+		                   false);
 
 		final Label rethrowException = new Label();
 		mv.visitJumpInsn(Opcodes.IFEQ, rethrowException);
 
 		mv.visitVarInsn(Opcodes.ALOAD, returnFromExceptionStore);
 		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
-				GenerationConstants.RETURN_FROM_EXCEPTION_NAME,
-				GenerationConstants.RETURN_FROM_EXCEPTION_GET_RESULT_METHOD_NAME,
-				GenerationConstants.RETURN_FROM_EXCEPTION_GET_RESULT_METHOD_DESC,
-				false);
+		                   GenerationConstants.RETURN_FROM_EXCEPTION_NAME,
+		                   GenerationConstants.RETURN_FROM_EXCEPTION_GET_RESULT_METHOD_NAME,
+		                   GenerationConstants.RETURN_FROM_EXCEPTION_GET_RESULT_METHOD_DESC,
+		                   false);
 		mv.visitVarInsn(Opcodes.ASTORE, resultStore);
 		mv.visitJumpInsn(Opcodes.GOTO, catchBlockEnd);
 

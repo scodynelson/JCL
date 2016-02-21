@@ -124,30 +124,30 @@ final class CatchCodeGenerator extends SpecialOperatorCodeGenerator<CatchStruct>
 
 		mv.visitVarInsn(Opcodes.ALOAD, throwExceptionStore);
 		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
-				GenerationConstants.THROW_EXCEPTION_NAME,
-				GenerationConstants.THROW_EXCEPTION_GET_CATCH_TAG_METHOD_NAME,
-				GenerationConstants.THROW_EXCEPTION_GET_CATCH_TAG_METHOD_DESC,
-				false);
+		                   GenerationConstants.THROW_EXCEPTION_NAME,
+		                   GenerationConstants.THROW_EXCEPTION_GET_CATCH_TAG_METHOD_NAME,
+		                   GenerationConstants.THROW_EXCEPTION_GET_CATCH_TAG_METHOD_DESC,
+		                   false);
 		final int throwExceptionCatchTagStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, throwExceptionCatchTagStore);
 
 		mv.visitVarInsn(Opcodes.ALOAD, throwExceptionCatchTagStore);
 		mv.visitVarInsn(Opcodes.ALOAD, catchTagStore);
 		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
-				GenerationConstants.JAVA_OBJECT_NAME,
-				GenerationConstants.JAVA_EQUALS_METHOD_NAME,
-				GenerationConstants.JAVA_EQUALS_METHOD_DESC,
-				false);
+		                   GenerationConstants.JAVA_OBJECT_NAME,
+		                   GenerationConstants.JAVA_EQUALS_METHOD_NAME,
+		                   GenerationConstants.JAVA_EQUALS_METHOD_DESC,
+		                   false);
 
 		final Label rethrowException = new Label();
 		mv.visitJumpInsn(Opcodes.IFEQ, rethrowException);
 
 		mv.visitVarInsn(Opcodes.ALOAD, throwExceptionStore);
 		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
-				GenerationConstants.THROW_EXCEPTION_NAME,
-				GenerationConstants.THROW_EXCEPTION_GET_RESULT_FORM_METHOD_NAME,
-				GenerationConstants.THROW_EXCEPTION_GET_RESULT_FORM_METHOD_DESC,
-				false);
+		                   GenerationConstants.THROW_EXCEPTION_NAME,
+		                   GenerationConstants.THROW_EXCEPTION_GET_RESULT_FORM_METHOD_NAME,
+		                   GenerationConstants.THROW_EXCEPTION_GET_RESULT_FORM_METHOD_DESC,
+		                   false);
 		mv.visitVarInsn(Opcodes.ASTORE, resultFormStore);
 		mv.visitJumpInsn(Opcodes.GOTO, catchBlockEnd);
 

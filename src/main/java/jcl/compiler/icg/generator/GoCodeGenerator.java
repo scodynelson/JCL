@@ -76,10 +76,10 @@ final class GoCodeGenerator extends SpecialOperatorCodeGenerator<GoStruct<?>> {
 
 		mv.visitVarInsn(Opcodes.ILOAD, tagIndexStore);
 		mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
-				GenerationConstants.GO_EXCEPTION_NAME,
-				GenerationConstants.INIT_METHOD_NAME,
-				GenerationConstants.GO_EXCEPTION_INIT_DESC,
-				false);
+		                   GenerationConstants.GO_EXCEPTION_NAME,
+		                   GenerationConstants.INIT_METHOD_NAME,
+		                   GenerationConstants.GO_EXCEPTION_INIT_DESC,
+		                   false);
 		mv.visitInsn(Opcodes.ATHROW);
 	}
 

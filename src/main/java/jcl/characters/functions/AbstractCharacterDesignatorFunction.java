@@ -73,7 +73,7 @@ abstract class AbstractCharacterDesignatorFunction extends AbstractCommonLispFun
 
 		final LispStruct lispStruct = lispStructs[0];
 		validator.validateTypes(lispStruct, "CHARACTER", "Character",
-				CharacterType.INSTANCE, StringType.INSTANCE, SymbolType.INSTANCE);
+		                        CharacterType.INSTANCE, StringType.INSTANCE, SymbolType.INSTANCE);
 
 		return characterFunction().apply(lispStruct).get();
 	}

@@ -26,15 +26,15 @@ public interface CompilerConstants {
 	ConstantStruct<?> WHOLE = new ConstantStruct<>("&WHOLE", GlobalPackageStruct.COMMON_LISP, null);
 
 	ConstantStruct<?> LAMBDA_LIST_KEYWORDS = new ConstantStruct<>("LAMBDA-LIST-KEYWORDS", GlobalPackageStruct.COMMON_LISP,
-			ListStruct.buildProperList(
-					ALLOW_OTHER_KEYS,
-					AUX,
-					BODY,
-					ENVIRONMENT,
-					KEY,
-					OPTIONAL,
-					REST,
-					WHOLE));
+	                                                              ListStruct.buildProperList(
+			                                                              ALLOW_OTHER_KEYS,
+			                                                              AUX,
+			                                                              BODY,
+			                                                              ENVIRONMENT,
+			                                                              KEY,
+			                                                              OPTIONAL,
+			                                                              REST,
+			                                                              WHOLE));
 	ConstantStruct<IntegerStruct> LAMBDA_PARAMETERS_LIMIT = new ConstantStruct<>("LAMBDA-PARAMETERS-LIMIT", GlobalPackageStruct.COMMON_LISP, new IntegerStruct(BigInteger.valueOf(Short.MAX_VALUE)));
 
 	ConstantStruct<IntegerStruct> MULTIPLE_VALUES_LIMIT = new ConstantStruct<>("MULTIPLE-VALUES-LIMIT", GlobalPackageStruct.COMMON_LISP, new IntegerStruct(BigInteger.valueOf(Short.MAX_VALUE)));

@@ -132,10 +132,10 @@ final class MultipleValueCallCodeGenerator extends SpecialOperatorCodeGenerator<
 		mv.visitTypeInsn(Opcodes.NEW, GenerationConstants.JAVA_ARRAY_LIST_NAME);
 		mv.visitInsn(Opcodes.DUP);
 		mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
-				GenerationConstants.JAVA_ARRAY_LIST_NAME,
-				GenerationConstants.INIT_METHOD_NAME,
-				GenerationConstants.JAVA_ARRAY_LIST_INIT_DESC,
-				false);
+		                   GenerationConstants.JAVA_ARRAY_LIST_NAME,
+		                   GenerationConstants.INIT_METHOD_NAME,
+		                   GenerationConstants.JAVA_ARRAY_LIST_INIT_DESC,
+		                   false);
 		final int argsListStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, argsListStore);
 
@@ -149,18 +149,18 @@ final class MultipleValueCallCodeGenerator extends SpecialOperatorCodeGenerator<
 			mv.visitVarInsn(Opcodes.ALOAD, argsListStore);
 			mv.visitVarInsn(Opcodes.ALOAD, formStore);
 			mv.visitMethodInsn(Opcodes.INVOKESTATIC,
-					GenerationConstants.VALUES_STRUCTS_NAME,
-					GenerationConstants.VALUES_STRUCTS_ADD_VALUES_TO_LIST_METHOD_NAME,
-					GenerationConstants.VALUES_STRUCTS_ADD_VALUES_TO_LIST_METHOD_DESC,
-					false);
+			                   GenerationConstants.VALUES_STRUCTS_NAME,
+			                   GenerationConstants.VALUES_STRUCTS_ADD_VALUES_TO_LIST_METHOD_NAME,
+			                   GenerationConstants.VALUES_STRUCTS_ADD_VALUES_TO_LIST_METHOD_DESC,
+			                   false);
 		}
 
 		mv.visitVarInsn(Opcodes.ALOAD, argsListStore);
 		mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
-				GenerationConstants.JAVA_LIST_NAME,
-				GenerationConstants.JAVA_LIST_SIZE_METHOD_NAME,
-				GenerationConstants.JAVA_LIST_SIZE_METHOD_DESC,
-				true);
+		                   GenerationConstants.JAVA_LIST_NAME,
+		                   GenerationConstants.JAVA_LIST_SIZE_METHOD_NAME,
+		                   GenerationConstants.JAVA_LIST_SIZE_METHOD_DESC,
+		                   true);
 		mv.visitTypeInsn(Opcodes.ANEWARRAY, GenerationConstants.LISP_STRUCT_NAME);
 		final int argsStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, argsStore);
@@ -168,20 +168,20 @@ final class MultipleValueCallCodeGenerator extends SpecialOperatorCodeGenerator<
 		mv.visitVarInsn(Opcodes.ALOAD, argsListStore);
 		mv.visitVarInsn(Opcodes.ALOAD, argsStore);
 		mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
-				GenerationConstants.JAVA_LIST_NAME,
-				GenerationConstants.JAVA_LIST_TO_ARRAY_METHOD_NAME,
-				GenerationConstants.JAVA_LIST_TO_ARRAY_METHOD_DESC,
-				true);
+		                   GenerationConstants.JAVA_LIST_NAME,
+		                   GenerationConstants.JAVA_LIST_TO_ARRAY_METHOD_NAME,
+		                   GenerationConstants.JAVA_LIST_TO_ARRAY_METHOD_DESC,
+		                   true);
 		mv.visitTypeInsn(Opcodes.CHECKCAST, GenerationConstants.LISP_STRUCT_ARRAY_DESC);
 		mv.visitVarInsn(Opcodes.ASTORE, argsStore);
 
 		mv.visitVarInsn(Opcodes.ALOAD, realFunctionFormStore);
 		mv.visitVarInsn(Opcodes.ALOAD, argsStore);
 		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
-				GenerationConstants.FUNCTION_STRUCT_NAME,
-				GenerationConstants.FUNCTION_STRUCT_APPLY_METHOD_NAME,
-				GenerationConstants.FUNCTION_STRUCT_APPLY_METHOD_DESC,
-				false);
+		                   GenerationConstants.FUNCTION_STRUCT_NAME,
+		                   GenerationConstants.FUNCTION_STRUCT_APPLY_METHOD_NAME,
+		                   GenerationConstants.FUNCTION_STRUCT_APPLY_METHOD_DESC,
+		                   false);
 
 		mv.visitInsn(Opcodes.ARETURN);
 	}
@@ -202,33 +202,33 @@ final class MultipleValueCallCodeGenerator extends SpecialOperatorCodeGenerator<
 		mv.visitTypeInsn(Opcodes.NEW, GenerationConstants.JAVA_STRING_BUILDER_NAME);
 		mv.visitInsn(Opcodes.DUP);
 		mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
-				GenerationConstants.JAVA_STRING_BUILDER_NAME,
-				GenerationConstants.INIT_METHOD_NAME,
-				GenerationConstants.JAVA_STRING_BUILDER_INIT_DESC,
-				false);
+		                   GenerationConstants.JAVA_STRING_BUILDER_NAME,
+		                   GenerationConstants.INIT_METHOD_NAME,
+		                   GenerationConstants.JAVA_STRING_BUILDER_INIT_DESC,
+		                   false);
 		mv.visitLdcInsn(NOT_FUNCTION_ERROR_STRING);
 		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
-				GenerationConstants.JAVA_STRING_BUILDER_NAME,
-				GenerationConstants.JAVA_STRING_BUILDER_APPEND_METHOD_NAME,
-				GenerationConstants.JAVA_STRING_BUILDER_APPEND_STRING_METHOD_DESC,
-				false);
+		                   GenerationConstants.JAVA_STRING_BUILDER_NAME,
+		                   GenerationConstants.JAVA_STRING_BUILDER_APPEND_METHOD_NAME,
+		                   GenerationConstants.JAVA_STRING_BUILDER_APPEND_STRING_METHOD_DESC,
+		                   false);
 		mv.visitVarInsn(Opcodes.ALOAD, functionFormStore);
 		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
-				GenerationConstants.JAVA_STRING_BUILDER_NAME,
-				GenerationConstants.JAVA_STRING_BUILDER_APPEND_METHOD_NAME,
-				GenerationConstants.JAVA_STRING_BUILDER_APPEND_OBJECT_METHOD_DESC,
-				false);
+		                   GenerationConstants.JAVA_STRING_BUILDER_NAME,
+		                   GenerationConstants.JAVA_STRING_BUILDER_APPEND_METHOD_NAME,
+		                   GenerationConstants.JAVA_STRING_BUILDER_APPEND_OBJECT_METHOD_DESC,
+		                   false);
 		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
-				GenerationConstants.JAVA_STRING_BUILDER_NAME,
-				GenerationConstants.JAVA_STRING_BUILDER_TO_STRING_METHOD_NAME,
-				GenerationConstants.JAVA_STRING_BUILDER_TO_STRING_METHOD_DESC,
-				false);
+		                   GenerationConstants.JAVA_STRING_BUILDER_NAME,
+		                   GenerationConstants.JAVA_STRING_BUILDER_TO_STRING_METHOD_NAME,
+		                   GenerationConstants.JAVA_STRING_BUILDER_TO_STRING_METHOD_DESC,
+		                   false);
 
 		mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
-				GenerationConstants.PROGRAM_ERROR_EXCEPTION_NAME,
-				GenerationConstants.INIT_METHOD_NAME,
-				GenerationConstants.PROGRAM_ERROR_EXCEPTION_INIT_STRING_DESC,
-				false);
+		                   GenerationConstants.PROGRAM_ERROR_EXCEPTION_NAME,
+		                   GenerationConstants.INIT_METHOD_NAME,
+		                   GenerationConstants.PROGRAM_ERROR_EXCEPTION_INIT_STRING_DESC,
+		                   false);
 		mv.visitInsn(Opcodes.ATHROW);
 	}
 }

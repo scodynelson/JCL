@@ -108,10 +108,10 @@ final class IfCodeGenerator extends SpecialOperatorCodeGenerator<IfStruct> {
 
 		mv.visitVarInsn(Opcodes.ALOAD, testFormStore);
 		mv.visitMethodInsn(Opcodes.INVOKESTATIC,
-				GenerationConstants.VALUES_STRUCTS_NAME,
-				GenerationConstants.VALUES_STRUCTS_EXTRACT_PRIMARY_VALUE_METHOD_NAME,
-				GenerationConstants.VALUES_STRUCTS_EXTRACT_PRIMARY_VALUE_METHOD_DESC,
-				false);
+		                   GenerationConstants.VALUES_STRUCTS_NAME,
+		                   GenerationConstants.VALUES_STRUCTS_EXTRACT_PRIMARY_VALUE_METHOD_NAME,
+		                   GenerationConstants.VALUES_STRUCTS_EXTRACT_PRIMARY_VALUE_METHOD_DESC,
+		                   false);
 		mv.visitVarInsn(Opcodes.ASTORE, testFormStore);
 
 		final Label elseStart = new Label();
@@ -120,19 +120,19 @@ final class IfCodeGenerator extends SpecialOperatorCodeGenerator<IfStruct> {
 		mv.visitVarInsn(Opcodes.ALOAD, testFormStore);
 		nullCodeGenerator.generate(NullStruct.INSTANCE, generatorState);
 		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
-				GenerationConstants.JAVA_OBJECT_NAME,
-				GenerationConstants.JAVA_EQUALS_METHOD_NAME,
-				GenerationConstants.JAVA_EQUALS_METHOD_DESC,
-				false);
+		                   GenerationConstants.JAVA_OBJECT_NAME,
+		                   GenerationConstants.JAVA_EQUALS_METHOD_NAME,
+		                   GenerationConstants.JAVA_EQUALS_METHOD_DESC,
+		                   false);
 		mv.visitJumpInsn(Opcodes.IFNE, elseStart);
 
 		mv.visitVarInsn(Opcodes.ALOAD, testFormStore);
 		nilCodeGenerator.generate(NILStruct.INSTANCE, generatorState);
 		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
-				GenerationConstants.JAVA_OBJECT_NAME,
-				GenerationConstants.JAVA_EQUALS_METHOD_NAME,
-				GenerationConstants.JAVA_EQUALS_METHOD_DESC,
-				false);
+		                   GenerationConstants.JAVA_OBJECT_NAME,
+		                   GenerationConstants.JAVA_EQUALS_METHOD_NAME,
+		                   GenerationConstants.JAVA_EQUALS_METHOD_DESC,
+		                   false);
 		mv.visitJumpInsn(Opcodes.IFNE, elseStart);
 
 		final int resultFormStore = methodBuilder.getNextAvailableStore();

@@ -68,34 +68,34 @@ final class CodeGenerators {
 			mv.visitInsn(Opcodes.DUP);
 			mv.visitLdcInsn(symbolName);
 			mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
-					GenerationConstants.SYMBOL_STRUCT_NAME,
-					GenerationConstants.INIT_METHOD_NAME,
-					GenerationConstants.SYMBOL_STRUCT_INIT_STRING_DESC,
-					false);
+			                   GenerationConstants.SYMBOL_STRUCT_NAME,
+			                   GenerationConstants.INIT_METHOD_NAME,
+			                   GenerationConstants.SYMBOL_STRUCT_INIT_STRING_DESC,
+			                   false);
 			mv.visitVarInsn(Opcodes.ASTORE, symbolStore);
 		} else {
 			final String packageName = pkg.getName();
 
 			mv.visitLdcInsn(packageName);
 			mv.visitMethodInsn(Opcodes.INVOKESTATIC,
-					GenerationConstants.PACKAGE_STRUCT_NAME,
-					GenerationConstants.PACKAGE_STRUCT_FIND_PACKAGE_METHOD_NAME,
-					GenerationConstants.PACKAGE_STRUCT_FIND_PACKAGE_METHOD_DESC,
-					false);
+			                   GenerationConstants.PACKAGE_STRUCT_NAME,
+			                   GenerationConstants.PACKAGE_STRUCT_FIND_PACKAGE_METHOD_NAME,
+			                   GenerationConstants.PACKAGE_STRUCT_FIND_PACKAGE_METHOD_DESC,
+			                   false);
 			mv.visitVarInsn(Opcodes.ASTORE, packageStore);
 
 			mv.visitVarInsn(Opcodes.ALOAD, packageStore);
 			mv.visitLdcInsn(symbolName);
 			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
-					GenerationConstants.PACKAGE_STRUCT_NAME,
-					GenerationConstants.PACKAGE_STRUCT_INTERN_METHOD_NAME,
-					GenerationConstants.PACKAGE_STRUCT_INTERN_METHOD_DESC,
-					false);
+			                   GenerationConstants.PACKAGE_STRUCT_NAME,
+			                   GenerationConstants.PACKAGE_STRUCT_INTERN_METHOD_NAME,
+			                   GenerationConstants.PACKAGE_STRUCT_INTERN_METHOD_DESC,
+			                   false);
 			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
-					GenerationConstants.PACKAGE_SYMBOL_STRUCT_NAME,
-					GenerationConstants.PACKAGE_SYMBOL_STRUCT_GET_SYMBOL_METHOD_NAME,
-					GenerationConstants.PACKAGE_SYMBOL_STRUCT_GET_SYMBOL_METHOD_DESC,
-					false);
+			                   GenerationConstants.PACKAGE_SYMBOL_STRUCT_NAME,
+			                   GenerationConstants.PACKAGE_SYMBOL_STRUCT_GET_SYMBOL_METHOD_NAME,
+			                   GenerationConstants.PACKAGE_SYMBOL_STRUCT_GET_SYMBOL_METHOD_DESC,
+			                   false);
 			mv.visitVarInsn(Opcodes.ASTORE, symbolStore);
 		}
 	}
@@ -106,10 +106,10 @@ final class CodeGenerators {
 
 	static void generateSingletonInstanceField(final ClassWriter cw, final String classDesc) {
 		final FieldVisitor fv = cw.visitField(Opcodes.ACC_PUBLIC + Opcodes.ACC_FINAL + Opcodes.ACC_STATIC,
-				GenerationConstants.SINGLETON_INSTANCE,
-				classDesc,
-				null,
-				null);
+		                                      GenerationConstants.SINGLETON_INSTANCE,
+		                                      classDesc,
+		                                      null,
+		                                      null);
 
 		fv.visitEnd();
 	}

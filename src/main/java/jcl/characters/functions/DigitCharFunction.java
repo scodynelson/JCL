@@ -33,8 +33,8 @@ public final class DigitCharFunction extends AbstractCharacterRadixFunction {
 	 */
 	public DigitCharFunction() {
 		super("If weight is less than radix, digit-char returns a character which has that weight when considered as a " +
-				"digit in the specified radix. If the resulting character is to be an alphabetic[1] character, it will " +
-				"be an uppercase character. If weight is greater than or equal to radix, digit-char returns false.");
+				      "digit in the specified radix. If the resulting character is to be an alphabetic[1] character, it will " +
+				      "be an uppercase character. If weight is greater than or equal to radix, digit-char returns false.");
 	}
 
 	/**

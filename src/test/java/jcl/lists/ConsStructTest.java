@@ -15,7 +15,8 @@ public class ConsStructTest {
 	/**
 	 * Test for 'getCar' method.
 	 *
-	 * @throws Exception if any error occurs
+	 * @throws Exception
+	 * 		if any error occurs
 	 */
 	@Test
 	public void testGetCar() throws Exception {
@@ -26,7 +27,8 @@ public class ConsStructTest {
 	/**
 	 * Test for 'setCar' method.
 	 *
-	 * @throws Exception if any error occurs
+	 * @throws Exception
+	 * 		if any error occurs
 	 */
 	@Test
 	public void testSetCar() throws Exception {
@@ -41,7 +43,8 @@ public class ConsStructTest {
 	/**
 	 * Test for 'getCdr' method.
 	 *
-	 * @throws Exception if any error occurs
+	 * @throws Exception
+	 * 		if any error occurs
 	 */
 	@Test
 	public void testGetCdr() throws Exception {
@@ -52,7 +55,8 @@ public class ConsStructTest {
 	/**
 	 * Test for 'setCdr' method.
 	 *
-	 * @throws Exception if any error occurs
+	 * @throws Exception
+	 * 		if any error occurs
 	 */
 	@Test
 	public void testSetCdr() throws Exception {
@@ -67,7 +71,8 @@ public class ConsStructTest {
 	/**
 	 * Test for 'size' method where the cdr of the ConsStruct is a ListStruct.
 	 *
-	 * @throws Exception if any error occurs
+	 * @throws Exception
+	 * 		if any error occurs
 	 */
 	@Test
 	public void testSize_cdrListStruct() throws Exception {
@@ -78,7 +83,8 @@ public class ConsStructTest {
 	/**
 	 * Test for 'size' method where the cdr of the ConsStruct is not a ListStruct.
 	 *
-	 * @throws Exception if any error occurs
+	 * @throws Exception
+	 * 		if any error occurs
 	 */
 	@Test
 	public void testSize_cdrNotListStruct() throws Exception {
@@ -89,7 +95,8 @@ public class ConsStructTest {
 	/**
 	 * Test for 'getElement' method where the index passed is zero.
 	 *
-	 * @throws Exception if any error occurs
+	 * @throws Exception
+	 * 		if any error occurs
 	 */
 	@Test
 	public void testGetElement_indexZero() throws Exception {
@@ -102,7 +109,8 @@ public class ConsStructTest {
 	/**
 	 * Test for 'getElement' method where the cdr of the ConsStruct is a ListStruct.
 	 *
-	 * @throws Exception if any error occurs
+	 * @throws Exception
+	 * 		if any error occurs
 	 */
 	@Test
 	public void testGetElement_cdrListStruct() throws Exception {
@@ -115,7 +123,8 @@ public class ConsStructTest {
 	/**
 	 * Test for 'getElement' method where the index passed is not zero and cdr of the ConsStruct is not a ListStruct.
 	 *
-	 * @throws Exception if any error occurs
+	 * @throws Exception
+	 * 		if any error occurs
 	 */
 	@Test
 	public void testGetElement_indexNotZero_cdrNotListStruct() throws Exception {
@@ -128,7 +137,8 @@ public class ConsStructTest {
 	/**
 	 * Test for 'setElement' method where the index passed is zero.
 	 *
-	 * @throws Exception if any error occurs
+	 * @throws Exception
+	 * 		if any error occurs
 	 */
 	@Test
 	public void testSetElement_indexZero() throws Exception {
@@ -144,7 +154,8 @@ public class ConsStructTest {
 	/**
 	 * Test for 'setElement' method where the cdr of the ConsStruct is a ListStruct.
 	 *
-	 * @throws Exception if any error occurs
+	 * @throws Exception
+	 * 		if any error occurs
 	 */
 	@Test
 	public void testSetElement_cdrListStruct() throws Exception {
@@ -162,7 +173,8 @@ public class ConsStructTest {
 	/**
 	 * Test for 'setElement' method where the index passed is not zero and cdr of the ConsStruct is not a ListStruct.
 	 *
-	 * @throws Exception if any error occurs
+	 * @throws Exception
+	 * 		if any error occurs
 	 */
 	@Test
 	public void testSetElement_indexNotZero_cdrNotListStruct() throws Exception {
@@ -178,7 +190,8 @@ public class ConsStructTest {
 	/**
 	 * Test for 'getFirst' method.
 	 *
-	 * @throws Exception if any error occurs
+	 * @throws Exception
+	 * 		if any error occurs
 	 */
 	@Test
 	public void testGetFirst() throws Exception {
@@ -189,7 +202,8 @@ public class ConsStructTest {
 	/**
 	 * Test for 'getRest' method where the cdr of the ConsStruct is a ListStruct.
 	 *
-	 * @throws Exception if any error occurs
+	 * @throws Exception
+	 * 		if any error occurs
 	 */
 	@Test
 	public void testGetRest_cdrListStruct() throws Exception {
@@ -200,7 +214,8 @@ public class ConsStructTest {
 	/**
 	 * Test for 'getRest' method where the cdr of the ConsStruct is not a ListStruct.
 	 *
-	 * @throws Exception if any error occurs
+	 * @throws Exception
+	 * 		if any error occurs
 	 */
 	@Test
 	public void testGetRest_cdrNotListStruct() throws Exception {
@@ -214,7 +229,8 @@ public class ConsStructTest {
 	/**
 	 * Test for 'getAsJavaList' method where the cdr of the ConsStruct is a ListStruct.
 	 *
-	 * @throws Exception if any error occurs
+	 * @throws Exception
+	 * 		if any error occurs
 	 */
 	@Test
 	public void testGetAsJavaList_cdrListStruct() throws Exception {
@@ -228,7 +244,8 @@ public class ConsStructTest {
 	/**
 	 * Test for 'getAsJavaList' method where the cdr of the ConsStruct is not a ListStruct.
 	 *
-	 * @throws Exception if any error occurs
+	 * @throws Exception
+	 * 		if any error occurs
 	 */
 	@Test
 	public void testGetAsJavaList_cdrNotListStruct() throws Exception {
@@ -243,7 +260,8 @@ public class ConsStructTest {
 	/**
 	 * Test for 'isDotted' method where the cdr of the ConsStruct is a ListStruct.
 	 *
-	 * @throws Exception if any error occurs
+	 * @throws Exception
+	 * 		if any error occurs
 	 */
 	@Test
 	public void testIsDotted_cdrListStruct() throws Exception {
@@ -254,7 +272,8 @@ public class ConsStructTest {
 	/**
 	 * Test for 'isDotted' method where the cdr of the ConsStruct is not a ListStruct.
 	 *
-	 * @throws Exception if any error occurs
+	 * @throws Exception
+	 * 		if any error occurs
 	 */
 	@Test
 	public void testIsDotted_cdrNotListStruct() throws Exception {

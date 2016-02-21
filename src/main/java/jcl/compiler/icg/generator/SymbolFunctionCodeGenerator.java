@@ -55,9 +55,9 @@ class SymbolFunctionCodeGenerator implements CodeGenerator<SymbolCompilerFunctio
 
 		mv.visitVarInsn(Opcodes.ALOAD, functionSymbolStore);
 		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
-				GenerationConstants.SYMBOL_STRUCT_NAME,
-				GenerationConstants.SYMBOL_STRUCT_GET_FUNCTION_METHOD_NAME,
-				GenerationConstants.SYMBOL_STRUCT_GET_FUNCTION_METHOD_DESC,
-				false);
+		                   GenerationConstants.SYMBOL_STRUCT_NAME,
+		                   GenerationConstants.SYMBOL_STRUCT_GET_FUNCTION_METHOD_NAME,
+		                   GenerationConstants.SYMBOL_STRUCT_GET_FUNCTION_METHOD_DESC,
+		                   false);
 	}
 }

@@ -101,8 +101,8 @@ public final class OpenFunction extends AbstractCommonLispFunctionStruct {
 
 		final Map<KeywordStruct, LispStruct> keywords
 				= getKeywords(lispStructs, 1, CommonLispSymbols.DIRECTION_KEYWORD, CommonLispSymbols.ELEMENT_TYPE_KEYWORD,
-				CommonLispSymbols.IF_EXISTS_KEYWORD, CommonLispSymbols.IF_DOES_NOT_EXIST_KEYWORD,
-				CommonLispSymbols.EXTERNAL_FORMAT_KEYWORD);
+				              CommonLispSymbols.IF_EXISTS_KEYWORD, CommonLispSymbols.IF_DOES_NOT_EXIST_KEYWORD,
+				              CommonLispSymbols.EXTERNAL_FORMAT_KEYWORD);
 
 		final LispStruct directionParam
 				= keywords.getOrDefault(CommonLispSymbols.START_KEYWORD, CommonLispSymbols.INPUT_KEYWORD);

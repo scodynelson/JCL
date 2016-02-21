@@ -51,9 +51,9 @@ class KeywordCodeGenerator implements CodeGenerator<KeywordStruct> {
 		final MethodVisitor mv = methodBuilder.getMethodVisitor();
 
 		mv.visitFieldInsn(Opcodes.GETSTATIC,
-				GenerationConstants.GLOBAL_PACKAGE_STRUCT_NAME,
-				KEYWORD_PACKAGE_NAME,
-				GenerationConstants.PACKAGE_STRUCT_DESC);
+		                  GenerationConstants.GLOBAL_PACKAGE_STRUCT_NAME,
+		                  KEYWORD_PACKAGE_NAME,
+		                  GenerationConstants.PACKAGE_STRUCT_DESC);
 		final int packageStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, packageStore);
 
@@ -61,15 +61,15 @@ class KeywordCodeGenerator implements CodeGenerator<KeywordStruct> {
 		final String keywordName = input.getName();
 		mv.visitLdcInsn(keywordName);
 		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
-				GenerationConstants.PACKAGE_STRUCT_NAME,
-				GenerationConstants.PACKAGE_STRUCT_INTERN_METHOD_NAME,
-				GenerationConstants.PACKAGE_STRUCT_INTERN_METHOD_DESC,
-				false);
+		                   GenerationConstants.PACKAGE_STRUCT_NAME,
+		                   GenerationConstants.PACKAGE_STRUCT_INTERN_METHOD_NAME,
+		                   GenerationConstants.PACKAGE_STRUCT_INTERN_METHOD_DESC,
+		                   false);
 		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
-				GenerationConstants.PACKAGE_SYMBOL_STRUCT_NAME,
-				GenerationConstants.PACKAGE_SYMBOL_STRUCT_GET_SYMBOL_METHOD_NAME,
-				GenerationConstants.PACKAGE_SYMBOL_STRUCT_GET_SYMBOL_METHOD_DESC,
-				false);
+		                   GenerationConstants.PACKAGE_SYMBOL_STRUCT_NAME,
+		                   GenerationConstants.PACKAGE_SYMBOL_STRUCT_GET_SYMBOL_METHOD_NAME,
+		                   GenerationConstants.PACKAGE_SYMBOL_STRUCT_GET_SYMBOL_METHOD_DESC,
+		                   false);
 		mv.visitTypeInsn(Opcodes.CHECKCAST, GenerationConstants.KEYWORD_STRUCT_NAME);
 	}
 }

@@ -115,10 +115,10 @@ final class SetqCodeGenerator extends SpecialOperatorCodeGenerator<SetqStruct> {
 
 		mv.visitVarInsn(Opcodes.ALOAD, closureArgStore);
 		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
-				GenerationConstants.CLOSURE_NAME,
-				GenerationConstants.CLOSURE_GET_SYMBOL_BINDINGS_METHOD_NAME,
-				GenerationConstants.CLOSURE_GET_SYMBOL_BINDINGS_METHOD_DESC,
-				false);
+		                   GenerationConstants.CLOSURE_NAME,
+		                   GenerationConstants.CLOSURE_GET_SYMBOL_BINDINGS_METHOD_NAME,
+		                   GenerationConstants.CLOSURE_GET_SYMBOL_BINDINGS_METHOD_DESC,
+		                   false);
 		mv.visitVarInsn(Opcodes.ASTORE, closureSymbolBindingsStore);
 
 		mv.visitLabel(closureNullCheckIfEnd);
@@ -140,10 +140,10 @@ final class SetqCodeGenerator extends SpecialOperatorCodeGenerator<SetqStruct> {
 
 			mv.visitVarInsn(Opcodes.ALOAD, initFormStore);
 			mv.visitMethodInsn(Opcodes.INVOKESTATIC,
-					GenerationConstants.VALUES_STRUCTS_NAME,
-					GenerationConstants.VALUES_STRUCTS_EXTRACT_PRIMARY_VALUE_METHOD_NAME,
-					GenerationConstants.VALUES_STRUCTS_EXTRACT_PRIMARY_VALUE_METHOD_DESC,
-					false);
+			                   GenerationConstants.VALUES_STRUCTS_NAME,
+			                   GenerationConstants.VALUES_STRUCTS_EXTRACT_PRIMARY_VALUE_METHOD_NAME,
+			                   GenerationConstants.VALUES_STRUCTS_EXTRACT_PRIMARY_VALUE_METHOD_DESC,
+			                   false);
 			mv.visitVarInsn(Opcodes.ASTORE, initFormStore);
 
 			mv.visitVarInsn(Opcodes.ALOAD, symbolStore);
@@ -154,22 +154,22 @@ final class SetqCodeGenerator extends SpecialOperatorCodeGenerator<SetqStruct> {
 
 			if (hasLexicalBinding) {
 				mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
-						GenerationConstants.SYMBOL_STRUCT_NAME,
-						GenerationConstants.SYMBOL_STRUCT_SET_LEXICAL_VALUE_METHOD_NAME,
-						GenerationConstants.SYMBOL_STRUCT_SET_LEXICAL_VALUE_METHOD_DESC,
-						false);
+				                   GenerationConstants.SYMBOL_STRUCT_NAME,
+				                   GenerationConstants.SYMBOL_STRUCT_SET_LEXICAL_VALUE_METHOD_NAME,
+				                   GenerationConstants.SYMBOL_STRUCT_SET_LEXICAL_VALUE_METHOD_DESC,
+				                   false);
 			} else if (hasDynamicBinding) {
 				mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
-						GenerationConstants.SYMBOL_STRUCT_NAME,
-						GenerationConstants.SYMBOL_STRUCT_SET_DYNAMIC_VALUE_METHOD_NAME,
-						GenerationConstants.SYMBOL_STRUCT_SET_DYNAMIC_VALUE_METHOD_DESC,
-						false);
+				                   GenerationConstants.SYMBOL_STRUCT_NAME,
+				                   GenerationConstants.SYMBOL_STRUCT_SET_DYNAMIC_VALUE_METHOD_NAME,
+				                   GenerationConstants.SYMBOL_STRUCT_SET_DYNAMIC_VALUE_METHOD_DESC,
+				                   false);
 			} else {
 				mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
-						GenerationConstants.SYMBOL_STRUCT_NAME,
-						GenerationConstants.SYMBOL_STRUCT_SET_VALUE_METHOD_NAME,
-						GenerationConstants.SYMBOL_STRUCT_SET_VALUE_METHOD_DESC,
-						false);
+				                   GenerationConstants.SYMBOL_STRUCT_NAME,
+				                   GenerationConstants.SYMBOL_STRUCT_SET_VALUE_METHOD_NAME,
+				                   GenerationConstants.SYMBOL_STRUCT_SET_VALUE_METHOD_DESC,
+				                   false);
 			}
 
 			final Label closureBindingsNullCheckIfEnd = new Label();
@@ -181,10 +181,10 @@ final class SetqCodeGenerator extends SpecialOperatorCodeGenerator<SetqStruct> {
 			mv.visitVarInsn(Opcodes.ALOAD, symbolStore);
 			mv.visitVarInsn(Opcodes.ALOAD, initFormStore);
 			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
-					GenerationConstants.JAVA_MAP_NAME,
-					GenerationConstants.JAVA_MAP_PUT_METHOD_NAME,
-					GenerationConstants.JAVA_MAP_PUT_METHOD_DESC,
-					true);
+			                   GenerationConstants.JAVA_MAP_NAME,
+			                   GenerationConstants.JAVA_MAP_PUT_METHOD_NAME,
+			                   GenerationConstants.JAVA_MAP_PUT_METHOD_DESC,
+			                   true);
 			mv.visitInsn(Opcodes.POP);
 
 			mv.visitLabel(closureBindingsNullCheckIfEnd);

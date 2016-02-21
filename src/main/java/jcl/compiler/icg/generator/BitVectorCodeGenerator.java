@@ -66,10 +66,10 @@ class BitVectorCodeGenerator implements CodeGenerator<BitVectorStruct> {
 		mv.visitTypeInsn(Opcodes.NEW, GenerationConstants.JAVA_ARRAY_LIST_NAME);
 		mv.visitInsn(Opcodes.DUP);
 		mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
-				GenerationConstants.JAVA_ARRAY_LIST_NAME,
-				GenerationConstants.INIT_METHOD_NAME,
-				GenerationConstants.JAVA_ARRAY_LIST_INIT_DESC,
-				false);
+		                   GenerationConstants.JAVA_ARRAY_LIST_NAME,
+		                   GenerationConstants.INIT_METHOD_NAME,
+		                   GenerationConstants.JAVA_ARRAY_LIST_INIT_DESC,
+		                   false);
 		final int contentsStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, contentsStore);
 
@@ -83,10 +83,10 @@ class BitVectorCodeGenerator implements CodeGenerator<BitVectorStruct> {
 			mv.visitVarInsn(Opcodes.ALOAD, contentsStore);
 			mv.visitVarInsn(Opcodes.ALOAD, contentStore);
 			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
-					GenerationConstants.JAVA_LIST_NAME,
-					GenerationConstants.JAVA_LIST_ADD_METHOD_NAME,
-					GenerationConstants.JAVA_LIST_ADD_METHOD_DESC,
-					true);
+			                   GenerationConstants.JAVA_LIST_NAME,
+			                   GenerationConstants.JAVA_LIST_ADD_METHOD_NAME,
+			                   GenerationConstants.JAVA_LIST_ADD_METHOD_DESC,
+			                   true);
 			mv.visitInsn(Opcodes.POP);
 		}
 
@@ -95,9 +95,9 @@ class BitVectorCodeGenerator implements CodeGenerator<BitVectorStruct> {
 
 		mv.visitVarInsn(Opcodes.ALOAD, contentsStore);
 		mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
-				BIT_VECTOR_STRUCT_NAME,
-				GenerationConstants.INIT_METHOD_NAME,
-				BIT_VECTOR_STRUCT_INIT_DESC,
-				false);
+		                   BIT_VECTOR_STRUCT_NAME,
+		                   GenerationConstants.INIT_METHOD_NAME,
+		                   BIT_VECTOR_STRUCT_INIT_DESC,
+		                   false);
 	}
 }

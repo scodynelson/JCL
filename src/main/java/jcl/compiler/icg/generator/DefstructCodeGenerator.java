@@ -106,37 +106,37 @@ class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 		final String structureTypeImplClassName = structureTypeFactoryClassName + '$' + structureTypeImplClassSimpleName;
 
 		generateStructureObject(input, generatorState,
-				structureClassClassName,
-				structureClassClassDesc,
-				structureObjectClassName);
+		                        structureClassClassName,
+		                        structureClassClassDesc,
+		                        structureObjectClassName);
 		generateStructureClass(input, generatorState,
-				structureTypeClassName,
-				structureTypeClassDesc,
-				structureClassClassName,
-				structureClassClassDesc,
-				structureObjectClassName);
+		                       structureTypeClassName,
+		                       structureTypeClassDesc,
+		                       structureClassClassName,
+		                       structureClassClassDesc,
+		                       structureObjectClassName);
 		generateStructureTypeImpl(generatorState,
-				structureName,
-				structureTypeClassName,
-				structureTypeFactoryClassName,
-				structureTypeImplClassSimpleName,
-				structureTypeImplClassName,
-				structureTypeImplSyntheticClassName,
-				structureTypeImplSyntheticClassDesc);
+		                          structureName,
+		                          structureTypeClassName,
+		                          structureTypeFactoryClassName,
+		                          structureTypeImplClassSimpleName,
+		                          structureTypeImplClassName,
+		                          structureTypeImplSyntheticClassName,
+		                          structureTypeImplSyntheticClassDesc);
 		generateStructureTypeFactory(generatorState,
-				structureTypeClassName,
-				structureTypeClassDesc,
-				structureTypeFactoryClassName,
-				structureTypeImplClassSimpleName,
-				structureTypeImplClassName);
+		                             structureTypeClassName,
+		                             structureTypeClassDesc,
+		                             structureTypeFactoryClassName,
+		                             structureTypeImplClassSimpleName,
+		                             structureTypeImplClassName);
 		generateStructureType(input, generatorState,
-				structureTypeClassName,
-				structureTypeClassDesc,
-				structureTypeFactoryClassName,
-				structureTypeImplClassSimpleName,
-				structureTypeImplClassName,
-				structureTypeImplSyntheticClassName,
-				structureTypeImplSyntheticClassDesc);
+		                      structureTypeClassName,
+		                      structureTypeClassDesc,
+		                      structureTypeFactoryClassName,
+		                      structureTypeImplClassSimpleName,
+		                      structureTypeImplClassName,
+		                      structureTypeImplSyntheticClassName,
+		                      structureTypeImplSyntheticClassDesc);
 
 		final Deque<JavaClassBuilder> classBuilderDeque = generatorState.getClassBuilderDeque();
 
@@ -153,10 +153,10 @@ class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 
 			previousMv.visitFieldInsn(Opcodes.GETSTATIC, structureClassClassName, GenerationConstants.SINGLETON_INSTANCE, structureClassClassDesc);
 			previousMv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
-					GenerationConstants.SYMBOL_STRUCT_NAME,
-					GenerationConstants.SYMBOL_STRUCT_SET_STRUCTURE_CLASS_METHOD_NAME,
-					GenerationConstants.SYMBOL_STRUCT_SET_STRUCTURE_CLASS_METHOD_DESC,
-					false);
+			                           GenerationConstants.SYMBOL_STRUCT_NAME,
+			                           GenerationConstants.SYMBOL_STRUCT_SET_STRUCTURE_CLASS_METHOD_NAME,
+			                           GenerationConstants.SYMBOL_STRUCT_SET_STRUCTURE_CLASS_METHOD_DESC,
+			                           false);
 		}
 	}
 
@@ -297,30 +297,30 @@ class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 		final String[] interfaces = getStructureTypeInterfaces(input);
 
 		cw.visit(Opcodes.V1_8, Opcodes.ACC_PUBLIC + Opcodes.ACC_ABSTRACT + Opcodes.ACC_INTERFACE,
-				structureTypeClassName,
-				null,
-				GenerationConstants.JAVA_OBJECT_NAME,
-				interfaces);
+		         structureTypeClassName,
+		         null,
+		         GenerationConstants.JAVA_OBJECT_NAME,
+		         interfaces);
 
 		cw.visitInnerClass(structureTypeImplSyntheticClassName,
-				null,
-				null,
-				Opcodes.ACC_STATIC + Opcodes.ACC_SYNTHETIC);
+		                   null,
+		                   null,
+		                   Opcodes.ACC_STATIC + Opcodes.ACC_SYNTHETIC);
 		cw.visitInnerClass(structureTypeFactoryClassName,
-				structureTypeClassName,
-				STRUCTURE_TYPE_FACTORY_CLASS_SIMPLE_NAME,
-				Opcodes.ACC_PUBLIC + Opcodes.ACC_STATIC);
+		                   structureTypeClassName,
+		                   STRUCTURE_TYPE_FACTORY_CLASS_SIMPLE_NAME,
+		                   Opcodes.ACC_PUBLIC + Opcodes.ACC_STATIC);
 		cw.visitInnerClass(structureTypeImplClassName,
-				structureTypeFactoryClassName,
-				structureTypeImplClassSimpleName,
-				Opcodes.ACC_PRIVATE + Opcodes.ACC_FINAL + Opcodes.ACC_STATIC);
+		                   structureTypeFactoryClassName,
+		                   structureTypeImplClassSimpleName,
+		                   Opcodes.ACC_PRIVATE + Opcodes.ACC_FINAL + Opcodes.ACC_STATIC);
 
 		cw.visitSource(fileName + GenerationConstants.JAVA_EXTENSION, null);
 
 		CodeGenerators.generateSingletonInstanceField(cw, structureTypeClassDesc);
 		generateStructureTypeClassInitMethod(generatorState, cw,
-				structureTypeClassName, structureTypeClassDesc,
-				structureTypeImplClassName, structureTypeImplSyntheticClassDesc);
+		                                     structureTypeClassName, structureTypeClassDesc,
+		                                     structureTypeImplClassName, structureTypeImplSyntheticClassDesc);
 
 		cw.visitEnd();
 
@@ -403,10 +403,10 @@ class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 	                                                         final String structureTypeImplClassName,
 	                                                         final String structureTypeImplSyntheticClassDesc) {
 		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_STATIC,
-				GenerationConstants.CLASS_INIT_METHOD_NAME,
-				GenerationConstants.CLASS_INIT_METHOD_DESC,
-				null,
-				null);
+		                                        GenerationConstants.CLASS_INIT_METHOD_NAME,
+		                                        GenerationConstants.CLASS_INIT_METHOD_DESC,
+		                                        null,
+		                                        null);
 
 		final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
 		final Deque<JavaMethodBuilder> methodBuilderDeque = generatorState.getMethodBuilderDeque();
@@ -420,14 +420,14 @@ class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 		mv.visitInsn(Opcodes.DUP);
 		mv.visitInsn(Opcodes.ACONST_NULL);
 		mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
-				structureTypeImplClassName,
-				GenerationConstants.INIT_METHOD_NAME,
-				structureTypeImplSyntheticClassDesc,
-				false);
+		                   structureTypeImplClassName,
+		                   GenerationConstants.INIT_METHOD_NAME,
+		                   structureTypeImplSyntheticClassDesc,
+		                   false);
 		mv.visitFieldInsn(Opcodes.PUTSTATIC,
-				structureTypeClassName,
-				GenerationConstants.SINGLETON_INSTANCE,
-				structureTypeClassDesc);
+		                  structureTypeClassName,
+		                  GenerationConstants.SINGLETON_INSTANCE,
+		                  structureTypeClassDesc);
 
 		mv.visitInsn(Opcodes.RETURN);
 
@@ -518,19 +518,19 @@ class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 		final ClassWriter cw = currentClass.getClassWriter();
 
 		cw.visit(Opcodes.V1_8, Opcodes.ACC_PUBLIC + Opcodes.ACC_SUPER,
-				structureTypeFactoryClassName,
-				STRUCTURE_TYPE_FACTORY_SIGNATURE_PREFIX + structureTypeClassName + STRUCTURE_TYPE_FACTORY_SIGNATURE_POSTFIX,
-				GenerationConstants.JAVA_OBJECT_NAME,
-				STRUCTURE_TYPE_FACTORY_INTERFACES);
+		         structureTypeFactoryClassName,
+		         STRUCTURE_TYPE_FACTORY_SIGNATURE_PREFIX + structureTypeClassName + STRUCTURE_TYPE_FACTORY_SIGNATURE_POSTFIX,
+		         GenerationConstants.JAVA_OBJECT_NAME,
+		         STRUCTURE_TYPE_FACTORY_INTERFACES);
 
 		cw.visitInnerClass(structureTypeFactoryClassName,
-				structureTypeClassName,
-				STRUCTURE_TYPE_FACTORY_CLASS_SIMPLE_NAME,
-				Opcodes.ACC_PUBLIC + Opcodes.ACC_STATIC);
+		                   structureTypeClassName,
+		                   STRUCTURE_TYPE_FACTORY_CLASS_SIMPLE_NAME,
+		                   Opcodes.ACC_PUBLIC + Opcodes.ACC_STATIC);
 		cw.visitInnerClass(structureTypeImplClassName,
-				structureTypeFactoryClassName,
-				structureTypeImplClassSimpleName,
-				Opcodes.ACC_PRIVATE + Opcodes.ACC_FINAL + Opcodes.ACC_STATIC);
+		                   structureTypeFactoryClassName,
+		                   structureTypeImplClassSimpleName,
+		                   Opcodes.ACC_PRIVATE + Opcodes.ACC_FINAL + Opcodes.ACC_STATIC);
 
 		cw.visitSource(fileName + GenerationConstants.JAVA_EXTENSION, null);
 
@@ -538,9 +538,9 @@ class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 
 		generateStructureTypeFactoryConstructor(generatorState, cw);
 		generateStructureTypeFactoryGetInstanceMethod(generatorState, cw,
-				structureTypeClassName, structureTypeClassDesc, structureTypeGetInstanceDesc);
+		                                              structureTypeClassName, structureTypeClassDesc, structureTypeGetInstanceDesc);
 		generateStructureTypeFactoryGetInstanceBridgeMethod(generatorState, cw,
-				structureTypeFactoryClassName, structureTypeGetInstanceDesc);
+		                                                    structureTypeFactoryClassName, structureTypeGetInstanceDesc);
 
 		cw.visitEnd();
 
@@ -570,10 +570,10 @@ class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 	private static void generateStructureTypeFactoryConstructor(final GeneratorState generatorState,
 	                                                            final ClassWriter cw) {
 		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PUBLIC,
-				GenerationConstants.INIT_METHOD_NAME,
-				GenerationConstants.INIT_METHOD_DESC,
-				null,
-				null);
+		                                        GenerationConstants.INIT_METHOD_NAME,
+		                                        GenerationConstants.INIT_METHOD_DESC,
+		                                        null,
+		                                        null);
 
 		final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
 		final Deque<JavaMethodBuilder> methodBuilderDeque = generatorState.getMethodBuilderDeque();
@@ -584,10 +584,10 @@ class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 
 		mv.visitVarInsn(Opcodes.ALOAD, thisStore);
 		mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
-				GenerationConstants.JAVA_OBJECT_NAME,
-				GenerationConstants.INIT_METHOD_NAME,
-				GenerationConstants.INIT_METHOD_DESC,
-				false);
+		                   GenerationConstants.JAVA_OBJECT_NAME,
+		                   GenerationConstants.INIT_METHOD_NAME,
+		                   GenerationConstants.INIT_METHOD_DESC,
+		                   false);
 
 		mv.visitInsn(Opcodes.RETURN);
 
@@ -635,10 +635,10 @@ class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 	                                                                  final String structureTypeClassDesc,
 	                                                                  final String structureTypeGetInstanceDesc) {
 		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PUBLIC,
-				GET_INSTANCE_METHOD_NAME,
-				structureTypeGetInstanceDesc,
-				null,
-				null);
+		                                        GET_INSTANCE_METHOD_NAME,
+		                                        structureTypeGetInstanceDesc,
+		                                        null,
+		                                        null);
 
 		final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
 		final Deque<JavaMethodBuilder> methodBuilderDeque = generatorState.getMethodBuilderDeque();
@@ -649,9 +649,9 @@ class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 		final int thisStore = methodBuilder.getNextAvailableStore();
 
 		mv.visitFieldInsn(Opcodes.GETSTATIC,
-				structureTypeClassName,
-				GenerationConstants.SINGLETON_INSTANCE,
-				structureTypeClassDesc);
+		                  structureTypeClassName,
+		                  GenerationConstants.SINGLETON_INSTANCE,
+		                  structureTypeClassDesc);
 
 		mv.visitInsn(Opcodes.ARETURN);
 
@@ -688,10 +688,10 @@ class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 	                                                                        final String structureTypeFactoryClassName,
 	                                                                        final String structureTypeGetInstanceDesc) {
 		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PUBLIC + Opcodes.ACC_BRIDGE + Opcodes.ACC_SYNTHETIC,
-				GET_INSTANCE_METHOD_NAME,
-				GET_INSTANCE_BRIDGE_METHOD_DESC,
-				null,
-				null);
+		                                        GET_INSTANCE_METHOD_NAME,
+		                                        GET_INSTANCE_BRIDGE_METHOD_DESC,
+		                                        null,
+		                                        null);
 
 		final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
 		final Deque<JavaMethodBuilder> methodBuilderDeque = generatorState.getMethodBuilderDeque();
@@ -702,10 +702,10 @@ class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 
 		mv.visitVarInsn(Opcodes.ALOAD, thisStore);
 		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
-				structureTypeFactoryClassName,
-				GET_INSTANCE_METHOD_NAME,
-				structureTypeGetInstanceDesc,
-				false);
+		                   structureTypeFactoryClassName,
+		                   GET_INSTANCE_METHOD_NAME,
+		                   structureTypeGetInstanceDesc,
+		                   false);
 
 		mv.visitInsn(Opcodes.ARETURN);
 
@@ -797,33 +797,33 @@ class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 		final ClassWriter cw = currentClass.getClassWriter();
 
 		cw.visit(Opcodes.V1_8, Opcodes.ACC_FINAL + Opcodes.ACC_SUPER,
-				structureTypeImplClassName,
-				null,
-				GenerationConstants.TYPE_BASE_CLASS_NAME,
-				new String[]{structureTypeClassName, GenerationConstants.ATOMIC_TYPE_SPECIFIER_NAME});
+		         structureTypeImplClassName,
+		         null,
+		         GenerationConstants.TYPE_BASE_CLASS_NAME,
+		         new String[]{structureTypeClassName, GenerationConstants.ATOMIC_TYPE_SPECIFIER_NAME});
 
 		cw.visitInnerClass(structureTypeFactoryClassName,
-				structureTypeClassName,
-				STRUCTURE_TYPE_FACTORY_CLASS_SIMPLE_NAME,
-				Opcodes.ACC_PUBLIC + Opcodes.ACC_STATIC);
+		                   structureTypeClassName,
+		                   STRUCTURE_TYPE_FACTORY_CLASS_SIMPLE_NAME,
+		                   Opcodes.ACC_PUBLIC + Opcodes.ACC_STATIC);
 		cw.visitInnerClass(structureTypeImplClassName,
-				structureTypeFactoryClassName,
-				structureTypeImplClassSimpleName,
-				Opcodes.ACC_PRIVATE + Opcodes.ACC_FINAL + Opcodes.ACC_STATIC);
+		                   structureTypeFactoryClassName,
+		                   structureTypeImplClassSimpleName,
+		                   Opcodes.ACC_PRIVATE + Opcodes.ACC_FINAL + Opcodes.ACC_STATIC);
 		cw.visitInnerClass(structureTypeImplSyntheticClassName,
-				null,
-				null,
-				Opcodes.ACC_STATIC + Opcodes.ACC_SYNTHETIC);
+		                   null,
+		                   null,
+		                   Opcodes.ACC_STATIC + Opcodes.ACC_SYNTHETIC);
 
 		cw.visitSource(fileName + GenerationConstants.JAVA_EXTENSION, null);
 
 		generateStructureTypeImplConstructor(generatorState, cw,
-				structureName);
+		                                     structureName);
 		generateStructureTypeImplSyntheticConstructor(generatorState, cw,
-				structureTypeImplClassName, structureTypeImplSyntheticClassDesc);
+		                                              structureTypeImplClassName, structureTypeImplSyntheticClassDesc);
 		generateStructureTypeImplHashCodeMethod(generatorState, cw);
 		generateStructureTypeImplEqualsMethod(generatorState, cw,
-				structureTypeClassName);
+		                                      structureTypeClassName);
 
 		cw.visitEnd();
 
@@ -859,10 +859,10 @@ class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 	                                                         final ClassWriter cw,
 	                                                         final String structureName) {
 		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PRIVATE,
-				GenerationConstants.INIT_METHOD_NAME,
-				GenerationConstants.INIT_METHOD_DESC,
-				null,
-				null);
+		                                        GenerationConstants.INIT_METHOD_NAME,
+		                                        GenerationConstants.INIT_METHOD_DESC,
+		                                        null,
+		                                        null);
 
 		final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
 		final Deque<JavaMethodBuilder> methodBuilderDeque = generatorState.getMethodBuilderDeque();
@@ -874,10 +874,10 @@ class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 		mv.visitVarInsn(Opcodes.ALOAD, thisStore);
 		mv.visitLdcInsn(structureName);
 		mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
-				GenerationConstants.TYPE_BASE_CLASS_NAME,
-				GenerationConstants.INIT_METHOD_NAME,
-				GenerationConstants.TYPE_BASE_CLASS_INIT_STRING_DESC,
-				false);
+		                   GenerationConstants.TYPE_BASE_CLASS_NAME,
+		                   GenerationConstants.INIT_METHOD_NAME,
+		                   GenerationConstants.TYPE_BASE_CLASS_INIT_STRING_DESC,
+		                   false);
 
 		mv.visitInsn(Opcodes.RETURN);
 
@@ -914,10 +914,10 @@ class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 	                                                                  final String structureTypeImplClassName,
 	                                                                  final String structureTypeImplSyntheticClassDesc) {
 		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_SYNTHETIC,
-				GenerationConstants.INIT_METHOD_NAME,
-				structureTypeImplSyntheticClassDesc,
-				null,
-				null);
+		                                        GenerationConstants.INIT_METHOD_NAME,
+		                                        structureTypeImplSyntheticClassDesc,
+		                                        null,
+		                                        null);
 
 		final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
 		final Deque<JavaMethodBuilder> methodBuilderDeque = generatorState.getMethodBuilderDeque();
@@ -928,10 +928,10 @@ class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 
 		mv.visitVarInsn(Opcodes.ALOAD, thisStore);
 		mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
-				structureTypeImplClassName,
-				GenerationConstants.INIT_METHOD_NAME,
-				GenerationConstants.INIT_METHOD_DESC,
-				false);
+		                   structureTypeImplClassName,
+		                   GenerationConstants.INIT_METHOD_NAME,
+		                   GenerationConstants.INIT_METHOD_DESC,
+		                   false);
 
 		mv.visitInsn(Opcodes.RETURN);
 
@@ -968,10 +968,10 @@ class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 	private static void generateStructureTypeImplHashCodeMethod(final GeneratorState generatorState,
 	                                                            final ClassWriter cw) {
 		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PUBLIC,
-				GenerationConstants.JAVA_HASH_CODE_METHOD_NAME,
-				GenerationConstants.JAVA_HASH_CODE_METHOD_DESC,
-				null,
-				null);
+		                                        GenerationConstants.JAVA_HASH_CODE_METHOD_NAME,
+		                                        GenerationConstants.JAVA_HASH_CODE_METHOD_DESC,
+		                                        null,
+		                                        null);
 
 		final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
 		final Deque<JavaMethodBuilder> methodBuilderDeque = generatorState.getMethodBuilderDeque();
@@ -984,27 +984,27 @@ class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 		mv.visitInsn(Opcodes.DUP);
 
 		mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
-				GenerationConstants.HASH_CODE_BUILDER_NAME,
-				GenerationConstants.INIT_METHOD_NAME,
-				GenerationConstants.INIT_METHOD_DESC,
-				false);
+		                   GenerationConstants.HASH_CODE_BUILDER_NAME,
+		                   GenerationConstants.INIT_METHOD_NAME,
+		                   GenerationConstants.INIT_METHOD_DESC,
+		                   false);
 		mv.visitVarInsn(Opcodes.ALOAD, thisStore);
 		mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
-				GenerationConstants.TYPE_BASE_CLASS_NAME,
-				GenerationConstants.JAVA_HASH_CODE_METHOD_NAME,
-				GenerationConstants.JAVA_HASH_CODE_METHOD_DESC,
-				false);
+		                   GenerationConstants.TYPE_BASE_CLASS_NAME,
+		                   GenerationConstants.JAVA_HASH_CODE_METHOD_NAME,
+		                   GenerationConstants.JAVA_HASH_CODE_METHOD_DESC,
+		                   false);
 
 		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
-				GenerationConstants.HASH_CODE_BUILDER_NAME,
-				GenerationConstants.HASH_CODE_BUILDER_APPEND_SUPER_METHOD_NAME,
-				GenerationConstants.HASH_CODE_BUILDER_APPEND_SUPER_METHOD_DESC,
-				false);
+		                   GenerationConstants.HASH_CODE_BUILDER_NAME,
+		                   GenerationConstants.HASH_CODE_BUILDER_APPEND_SUPER_METHOD_NAME,
+		                   GenerationConstants.HASH_CODE_BUILDER_APPEND_SUPER_METHOD_DESC,
+		                   false);
 		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
-				GenerationConstants.HASH_CODE_BUILDER_NAME,
-				GenerationConstants.HASH_CODE_BUILDER_TO_HASH_CODE_METHOD_NAME,
-				GenerationConstants.HASH_CODE_BUILDER_TO_HASH_CODE_METHOD_DESC,
-				false);
+		                   GenerationConstants.HASH_CODE_BUILDER_NAME,
+		                   GenerationConstants.HASH_CODE_BUILDER_TO_HASH_CODE_METHOD_NAME,
+		                   GenerationConstants.HASH_CODE_BUILDER_TO_HASH_CODE_METHOD_DESC,
+		                   false);
 
 		mv.visitInsn(Opcodes.IRETURN);
 
@@ -1048,10 +1048,10 @@ class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 	                                                          final ClassWriter cw,
 	                                                          final String structureTypeClassName) {
 		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PUBLIC,
-				GenerationConstants.JAVA_EQUALS_METHOD_NAME,
-				GenerationConstants.JAVA_EQUALS_METHOD_DESC,
-				null,
-				null);
+		                                        GenerationConstants.JAVA_EQUALS_METHOD_NAME,
+		                                        GenerationConstants.JAVA_EQUALS_METHOD_DESC,
+		                                        null,
+		                                        null);
 
 		final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
 		final Deque<JavaMethodBuilder> methodBuilderDeque = generatorState.getMethodBuilderDeque();
@@ -1241,22 +1241,22 @@ class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 		}
 
 		cw.visit(Opcodes.V1_8, Opcodes.ACC_PUBLIC + Opcodes.ACC_SUPER,
-				structureClassClassName,
-				null,
-				includeStructureClassFileName,
-				null);
+		         structureClassClassName,
+		         null,
+		         includeStructureClassFileName,
+		         null);
 
 		cw.visitSource(fileName + GenerationConstants.JAVA_EXTENSION, null);
 
 		CodeGenerators.generateSingletonInstanceField(cw, structureClassClassDesc);
 		generateStructureClassConstructor(generatorState, cw,
-				structureTypeClassName, structureTypeClassDesc, structureClassClassName);
+		                                  structureTypeClassName, structureTypeClassDesc, structureClassClassName);
 		generateStructureClassTypeArgConstructor(generatorState, cw,
-				includeStructureClassFileName);
+		                                         includeStructureClassFileName);
 		generateStructureClassNewInstanceMethod(generatorState, cw,
-				structureObjectClassName);
+		                                        structureObjectClassName);
 		generateStructureClassClassInitMethod(input, generatorState, cw,
-				structureClassClassName, structureClassClassDesc);
+		                                      structureClassClassName, structureClassClassDesc);
 
 		cw.visitEnd();
 
@@ -1304,10 +1304,10 @@ class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 	                                                      final String structureTypeClassDesc,
 	                                                      final String structureClassClassName) {
 		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PROTECTED,
-				GenerationConstants.INIT_METHOD_NAME,
-				STRUCTURE_CLASS_INIT_SS_SS_LIST_LIST_METHOD_DESC,
-				STRUCTURE_CLASS_INIT_SS_SS_LIST_LIST_METHOD_SIGNATURE,
-				null);
+		                                        GenerationConstants.INIT_METHOD_NAME,
+		                                        STRUCTURE_CLASS_INIT_SS_SS_LIST_LIST_METHOD_DESC,
+		                                        STRUCTURE_CLASS_INIT_SS_SS_LIST_LIST_METHOD_SIGNATURE,
+		                                        null);
 
 		final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
 		final Deque<JavaMethodBuilder> methodBuilderDeque = generatorState.getMethodBuilderDeque();
@@ -1322,19 +1322,19 @@ class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 
 		mv.visitVarInsn(Opcodes.ALOAD, thisStore);
 		mv.visitFieldInsn(Opcodes.GETSTATIC,
-				structureTypeClassName,
-				GenerationConstants.SINGLETON_INSTANCE,
-				structureTypeClassDesc);
+		                  structureTypeClassName,
+		                  GenerationConstants.SINGLETON_INSTANCE,
+		                  structureTypeClassDesc);
 		mv.visitVarInsn(Opcodes.ALOAD, defaultConstructorSymbolArgStore);
 		mv.visitVarInsn(Opcodes.ALOAD, printerSymbolArgStore);
 		mv.visitVarInsn(Opcodes.ALOAD, directSuperClassesArgStore);
 		mv.visitVarInsn(Opcodes.ALOAD, subClassesArgStore);
 
 		mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
-				structureClassClassName,
-				GenerationConstants.INIT_METHOD_NAME,
-				STRUCTURE_CLASS_INIT_LISP_TYPE_SS_SS_LIST_LIST_METHOD_DESC,
-				false);
+		                   structureClassClassName,
+		                   GenerationConstants.INIT_METHOD_NAME,
+		                   STRUCTURE_CLASS_INIT_LISP_TYPE_SS_SS_LIST_LIST_METHOD_DESC,
+		                   false);
 
 		mv.visitInsn(Opcodes.RETURN);
 
@@ -1378,10 +1378,10 @@ class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 	                                                             final ClassWriter cw,
 	                                                             final String includeStructureClassFileName) {
 		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PROTECTED,
-				GenerationConstants.INIT_METHOD_NAME,
-				STRUCTURE_CLASS_INIT_LISP_TYPE_SS_SS_LIST_LIST_METHOD_DESC,
-				STRUCTURE_CLASS_INIT_LISP_TYPE_SS_SS_LIST_LIST_METHOD_SIGNATURE,
-				null);
+		                                        GenerationConstants.INIT_METHOD_NAME,
+		                                        STRUCTURE_CLASS_INIT_LISP_TYPE_SS_SS_LIST_LIST_METHOD_DESC,
+		                                        STRUCTURE_CLASS_INIT_LISP_TYPE_SS_SS_LIST_LIST_METHOD_SIGNATURE,
+		                                        null);
 
 		final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
 		final Deque<JavaMethodBuilder> methodBuilderDeque = generatorState.getMethodBuilderDeque();
@@ -1403,10 +1403,10 @@ class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 		mv.visitVarInsn(Opcodes.ALOAD, subClassesArgStore);
 
 		mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
-				includeStructureClassFileName,
-				GenerationConstants.INIT_METHOD_NAME,
-				STRUCTURE_CLASS_INIT_LISP_TYPE_SS_SS_LIST_LIST_METHOD_DESC,
-				false);
+		                   includeStructureClassFileName,
+		                   GenerationConstants.INIT_METHOD_NAME,
+		                   STRUCTURE_CLASS_INIT_LISP_TYPE_SS_SS_LIST_LIST_METHOD_DESC,
+		                   false);
 
 		mv.visitInsn(Opcodes.RETURN);
 
@@ -1446,10 +1446,10 @@ class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 	                                                            final ClassWriter cw,
 	                                                            final String structureObjectClassName) {
 		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PUBLIC,
-				STRUCTURE_CLASS_NEW_INSTANCE_METHOD_NAME,
-				STRUCTURE_CLASS_NEW_INSTANCE_METHOD_DESC,
-				null,
-				null);
+		                                        STRUCTURE_CLASS_NEW_INSTANCE_METHOD_NAME,
+		                                        STRUCTURE_CLASS_NEW_INSTANCE_METHOD_DESC,
+		                                        null,
+		                                        null);
 
 		final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
 		final Deque<JavaMethodBuilder> methodBuilderDeque = generatorState.getMethodBuilderDeque();
@@ -1462,10 +1462,10 @@ class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 		mv.visitTypeInsn(Opcodes.NEW, structureObjectClassName);
 		mv.visitInsn(Opcodes.DUP);
 		mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
-				structureObjectClassName,
-				GenerationConstants.INIT_METHOD_NAME,
-				GenerationConstants.INIT_METHOD_DESC,
-				false);
+		                   structureObjectClassName,
+		                   GenerationConstants.INIT_METHOD_NAME,
+		                   GenerationConstants.INIT_METHOD_DESC,
+		                   false);
 
 		mv.visitInsn(Opcodes.ARETURN);
 
@@ -1519,10 +1519,10 @@ class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 	                                                          final String structureClassClassName,
 	                                                          final String structureClassClassDesc) {
 		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_STATIC,
-				GenerationConstants.CLASS_INIT_METHOD_NAME,
-				GenerationConstants.CLASS_INIT_METHOD_DESC,
-				null,
-				null);
+		                                        GenerationConstants.CLASS_INIT_METHOD_NAME,
+		                                        GenerationConstants.CLASS_INIT_METHOD_DESC,
+		                                        null,
+		                                        null);
 
 		final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
 		final Deque<JavaMethodBuilder> methodBuilderDeque = generatorState.getMethodBuilderDeque();
@@ -1561,14 +1561,14 @@ class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 		mv.visitInsn(Opcodes.ACONST_NULL);
 
 		mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
-				structureClassClassName,
-				GenerationConstants.INIT_METHOD_NAME,
-				STRUCTURE_CLASS_INIT_SS_SS_LIST_LIST_METHOD_DESC,
-				false);
+		                   structureClassClassName,
+		                   GenerationConstants.INIT_METHOD_NAME,
+		                   STRUCTURE_CLASS_INIT_SS_SS_LIST_LIST_METHOD_DESC,
+		                   false);
 		mv.visitFieldInsn(Opcodes.PUTSTATIC,
-				structureClassClassName,
-				GenerationConstants.SINGLETON_INSTANCE,
-				structureClassClassDesc);
+		                  structureClassClassName,
+		                  GenerationConstants.SINGLETON_INSTANCE,
+		                  structureClassClassDesc);
 
 		mv.visitInsn(Opcodes.RETURN);
 
@@ -1651,17 +1651,17 @@ class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 		final ClassWriter cw = currentClass.getClassWriter();
 
 		cw.visit(Opcodes.V1_8, Opcodes.ACC_PUBLIC + Opcodes.ACC_SUPER,
-				structureObjectClassName,
-				null,
-				GenerationConstants.STRUCTURE_OBJECT_STRUCT_NAME,
-				null);
+		         structureObjectClassName,
+		         null,
+		         GenerationConstants.STRUCTURE_OBJECT_STRUCT_NAME,
+		         null);
 
 		cw.visitSource(fileName + GenerationConstants.JAVA_EXTENSION, null);
 
 		generateStructureObjectConstructor(input, generatorState, cw,
-				structureClassClassName, structureClassClassDesc, structureObjectClassName);
+		                                   structureClassClassName, structureClassClassDesc, structureObjectClassName);
 		generateStructureObjectInitSlotsMap(input, generatorState, cw,
-				structureObjectClassName);
+		                                    structureObjectClassName);
 
 		cw.visitEnd();
 
@@ -1737,10 +1737,10 @@ class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 	                                                       final String structureClassClassDesc,
 	                                                       final String structureObjectClassName) {
 		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PUBLIC,
-				GenerationConstants.INIT_METHOD_NAME,
-				GenerationConstants.INIT_METHOD_DESC,
-				null,
-				null);
+		                                        GenerationConstants.INIT_METHOD_NAME,
+		                                        GenerationConstants.INIT_METHOD_DESC,
+		                                        null,
+		                                        null);
 
 		final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
 		final Deque<JavaMethodBuilder> methodBuilderDeque = generatorState.getMethodBuilderDeque();
@@ -1751,9 +1751,9 @@ class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 
 		mv.visitVarInsn(Opcodes.ALOAD, thisStore);
 		mv.visitFieldInsn(Opcodes.GETSTATIC,
-				structureClassClassName,
-				GenerationConstants.SINGLETON_INSTANCE,
-				structureClassClassDesc);
+		                  structureClassClassName,
+		                  GenerationConstants.SINGLETON_INSTANCE,
+		                  structureClassClassDesc);
 
 		final SymbolStruct structureSymbol = input.getStructureSymbol();
 		final int packageStore = methodBuilder.getNextAvailableStore();
@@ -1769,30 +1769,30 @@ class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 			final String includeStructureClassClassName = Type.getInternalName(includeStructureClass.getClass());
 			final String includeStructureClassClassDesc = 'L' + includeStructureClassClassName + ';';
 			mv.visitFieldInsn(Opcodes.GETSTATIC,
-					includeStructureClassClassName,
-					GenerationConstants.SINGLETON_INSTANCE,
-					includeStructureClassClassDesc);
+			                  includeStructureClassClassName,
+			                  GenerationConstants.SINGLETON_INSTANCE,
+			                  includeStructureClassClassDesc);
 			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
-					includeStructureClassClassName,
-					STRUCTURE_CLASS_NEW_INSTANCE_METHOD_NAME,
-					STRUCTURE_CLASS_NEW_INSTANCE_METHOD_DESC,
-					false);
+			                   includeStructureClassClassName,
+			                   STRUCTURE_CLASS_NEW_INSTANCE_METHOD_NAME,
+			                   STRUCTURE_CLASS_NEW_INSTANCE_METHOD_DESC,
+			                   false);
 		}
 		mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
-				GenerationConstants.STRUCTURE_OBJECT_STRUCT_NAME,
-				GenerationConstants.INIT_METHOD_NAME,
-				STRUCTURE_OBJECT_INIT_SCS_SS_SOS_METHOD_DESC,
-				false);
+		                   GenerationConstants.STRUCTURE_OBJECT_STRUCT_NAME,
+		                   GenerationConstants.INIT_METHOD_NAME,
+		                   STRUCTURE_OBJECT_INIT_SCS_SS_SOS_METHOD_DESC,
+		                   false);
 
 		final List<SymbolStruct> slots = input.getSlots();
 		if (!slots.isEmpty()) {
 			// No need to call this method, as there are no slots to initialize
 			mv.visitVarInsn(Opcodes.ALOAD, thisStore);
 			mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
-					structureObjectClassName,
-					INIT_SLOTS_MAP_METHOD_NAME,
-					INIT_SLOTS_MAP_METHOD_DESC,
-					false);
+			                   structureObjectClassName,
+			                   INIT_SLOTS_MAP_METHOD_NAME,
+			                   INIT_SLOTS_MAP_METHOD_DESC,
+			                   false);
 		}
 
 		mv.visitInsn(Opcodes.RETURN);
@@ -1847,10 +1847,10 @@ class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 		}
 
 		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PRIVATE,
-				INIT_SLOTS_MAP_METHOD_NAME,
-				INIT_SLOTS_MAP_METHOD_DESC,
-				null,
-				null);
+		                                        INIT_SLOTS_MAP_METHOD_NAME,
+		                                        INIT_SLOTS_MAP_METHOD_DESC,
+		                                        null,
+		                                        null);
 
 		final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
 		final Deque<JavaMethodBuilder> methodBuilderDeque = generatorState.getMethodBuilderDeque();
@@ -1874,10 +1874,10 @@ class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 			mv.visitVarInsn(Opcodes.ALOAD, slotStore);
 			mv.visitInsn(Opcodes.ACONST_NULL);
 			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
-					GenerationConstants.JAVA_MAP_NAME,
-					GenerationConstants.JAVA_MAP_PUT_METHOD_NAME,
-					GenerationConstants.JAVA_MAP_PUT_METHOD_DESC,
-					true);
+			                   GenerationConstants.JAVA_MAP_NAME,
+			                   GenerationConstants.JAVA_MAP_PUT_METHOD_NAME,
+			                   GenerationConstants.JAVA_MAP_PUT_METHOD_DESC,
+			                   true);
 			mv.visitInsn(Opcodes.POP);
 		}
 

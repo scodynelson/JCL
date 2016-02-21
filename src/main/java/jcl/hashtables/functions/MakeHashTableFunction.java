@@ -109,16 +109,16 @@ public final class MakeHashTableFunction extends AbstractCommonLispFunctionStruc
 		final LispStruct rehashSize
 				= keywords.getOrDefault(REHASH_SIZE, IntegerStruct.ONE);
 		validator.validateTypes(rehashSize, functionName(), "Rehash Size",
-				new OrTypeSpecifier(
-						IntegerType.Factory.getInstance(BigInteger.ONE, null),
-						FloatType.Factory.getInstance(BigDecimal.ONE, null)
-				)
+		                        new OrTypeSpecifier(
+				                        IntegerType.Factory.getInstance(BigInteger.ONE, null),
+				                        FloatType.Factory.getInstance(BigDecimal.ONE, null)
+		                        )
 		);
 
 		final LispStruct rehashThreshold
 				= keywords.getOrDefault(REHASH_THRESHOLD, DEFAULT_REHASH_THRESHOLD);
 		validator.validateTypes(rehashThreshold, functionName(), "Rehash Threshold",
-				RealType.Factory.getInstance(BigInteger.ZERO, BigInteger.ONE));
+		                        RealType.Factory.getInstance(BigInteger.ZERO, BigInteger.ONE));
 		final RealStruct rehashThresholdValue = (RealStruct) rehashThreshold;
 
 		return new HashTableStruct(equatorTestFunction, sizeValue.getBigInteger(), rehashThresholdValue.bigDecimalValue());

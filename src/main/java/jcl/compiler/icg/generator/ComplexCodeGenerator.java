@@ -77,9 +77,9 @@ class ComplexCodeGenerator implements CodeGenerator<ComplexStruct> {
 		mv.visitVarInsn(Opcodes.ALOAD, realStore);
 		mv.visitVarInsn(Opcodes.ALOAD, imaginaryStore);
 		mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
-				COMPLEX_STRUCT_NAME,
-				GenerationConstants.INIT_METHOD_NAME,
-				COMPLEX_STRUCT_INIT_DESC,
-				false);
+		                   COMPLEX_STRUCT_NAME,
+		                   GenerationConstants.INIT_METHOD_NAME,
+		                   COMPLEX_STRUCT_INIT_DESC,
+		                   false);
 	}
 }

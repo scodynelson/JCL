@@ -7,7 +7,6 @@ package jcl.hashtables;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
 import jcl.LispStruct;
@@ -156,7 +155,7 @@ public class HashTableStruct extends BuiltInClassStruct {
 	 * 		the mapping function
 	 */
 	public void mapHash(final FunctionStruct function) {
-		for (final Entry<LispStruct, LispStruct> entry : map.entrySet()) {
+		for (final Map.Entry<LispStruct, LispStruct> entry : map.entrySet()) {
 			final LispStruct keyWrapper = KeyWrapper.getInstance(entry.getKey(), test);
 			function.apply(keyWrapper, entry.getValue());
 		}

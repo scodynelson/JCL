@@ -10,5 +10,5 @@ import jcl.lists.ListStruct;
 @FunctionalInterface
 public interface SemanticAnalyzer {
 
-	LambdaStruct analyze(final ListStruct form);
+	LambdaStruct analyze(ListStruct form);
 }

@@ -80,6 +80,7 @@ public final class EvalFunction extends FunctionStruct {
 		                         .build();
 	}
 
+	@Override
 	public LispStruct apply(final LispStruct... lispStructs) {
 		getFunctionBindings(lispStructs);
 

@@ -104,7 +104,7 @@ public abstract class RationalStruct extends RealStruct {
 
 	// Visitor Implementations
 
-	protected abstract static class RationalQuotientRemainderVisitor<S extends RationalStruct> extends QuotientRemainderVisitor<S> {
+	protected abstract static class RationalQuotientRemainderVisitor<S extends RationalStruct> extends RealStruct.QuotientRemainderVisitor<S> {
 
 		protected RationalQuotientRemainderVisitor(final S real) {
 			super(real);

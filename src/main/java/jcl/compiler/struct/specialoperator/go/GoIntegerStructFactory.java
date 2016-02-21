@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class GoIntegerStructFactory extends GoStructFactory<IntegerStruct> {
 
+	@Override
 	public GoIntegerStruct getGoElement(final IntegerStruct tag) {
 		return new GoIntegerStruct(tag);
 	}

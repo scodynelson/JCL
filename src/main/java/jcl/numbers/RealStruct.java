@@ -65,7 +65,7 @@ public abstract class RealStruct extends NumberStruct {
 	public abstract boolean minusp();
 
 	@Override
-	protected EqualToVisitor<?> equalToVisitor() {
+	protected NumberStruct.EqualToVisitor<?> equalToVisitor() {
 		return new RealEqualToVisitor<>(this);
 	}
 
@@ -74,7 +74,7 @@ public abstract class RealStruct extends NumberStruct {
 		return real.isLessThan(lessThanVisitor);
 	}
 
-	protected abstract boolean isLessThan(final LessThanVisitor<?> lessThanVisitor);
+	protected abstract boolean isLessThan(LessThanVisitor<?> lessThanVisitor);
 
 	public static boolean isLessThan(final RealStruct... reals) {
 		if (reals.length == 0) {
@@ -104,7 +104,7 @@ public abstract class RealStruct extends NumberStruct {
 		return real.isGreaterThan(greaterThanVisitor);
 	}
 
-	protected abstract boolean isGreaterThan(final GreaterThanVisitor<?> greaterThanVisitor);
+	protected abstract boolean isGreaterThan(GreaterThanVisitor<?> greaterThanVisitor);
 
 	protected GreaterThanVisitor<?> greaterThanVisitor() {
 		return new GreaterThanVisitor<>(this);
@@ -134,7 +134,7 @@ public abstract class RealStruct extends NumberStruct {
 		return real.isLessThanOrEqualTo(lessThanOrEqualToVisitor);
 	}
 
-	protected abstract boolean isLessThanOrEqualTo(final LessThanOrEqualToVisitor<?> lessThanOrEqualToVisitor);
+	protected abstract boolean isLessThanOrEqualTo(LessThanOrEqualToVisitor<?> lessThanOrEqualToVisitor);
 
 	protected LessThanOrEqualToVisitor<?> lessThanOrEqualToVisitor() {
 		return new LessThanOrEqualToVisitor<>(this);
@@ -164,7 +164,7 @@ public abstract class RealStruct extends NumberStruct {
 		return real.isGreaterThanOrEqualTo(greaterThanOrEqualToVisitor);
 	}
 
-	protected abstract boolean isGreaterThanOrEqualTo(final GreaterThanOrEqualToVisitor<?> greaterThanOrEqualToVisitor);
+	protected abstract boolean isGreaterThanOrEqualTo(GreaterThanOrEqualToVisitor<?> greaterThanOrEqualToVisitor);
 
 	protected GreaterThanOrEqualToVisitor<?> greaterThanOrEqualToVisitor() {
 		return new GreaterThanOrEqualToVisitor<>(this);
@@ -251,7 +251,7 @@ public abstract class RealStruct extends NumberStruct {
 		return divisor.floor(quotientRemainderVisitor);
 	}
 
-	protected abstract QuotientRemainderResult floor(final QuotientRemainderVisitor<?> quotientRemainderVisitor);
+	protected abstract QuotientRemainderResult floor(QuotientRemainderVisitor<?> quotientRemainderVisitor);
 
 	public QuotientRemainderResult ffloor() {
 		return ffloor(IntegerStruct.ONE);
@@ -262,7 +262,7 @@ public abstract class RealStruct extends NumberStruct {
 		return divisor.ffloor(quotientRemainderVisitor);
 	}
 
-	protected abstract QuotientRemainderResult ffloor(final QuotientRemainderVisitor<?> quotientRemainderVisitor);
+	protected abstract QuotientRemainderResult ffloor(QuotientRemainderVisitor<?> quotientRemainderVisitor);
 
 	public QuotientRemainderResult ceiling() {
 		return ceiling(IntegerStruct.ONE);
@@ -273,7 +273,7 @@ public abstract class RealStruct extends NumberStruct {
 		return divisor.ceiling(quotientRemainderVisitor);
 	}
 
-	protected abstract QuotientRemainderResult ceiling(final QuotientRemainderVisitor<?> quotientRemainderVisitor);
+	protected abstract QuotientRemainderResult ceiling(QuotientRemainderVisitor<?> quotientRemainderVisitor);
 
 	public QuotientRemainderResult fceiling() {
 		return fceiling(IntegerStruct.ONE);
@@ -284,7 +284,7 @@ public abstract class RealStruct extends NumberStruct {
 		return divisor.fceiling(quotientRemainderVisitor);
 	}
 
-	protected abstract QuotientRemainderResult fceiling(final QuotientRemainderVisitor<?> quotientRemainderVisitor);
+	protected abstract QuotientRemainderResult fceiling(QuotientRemainderVisitor<?> quotientRemainderVisitor);
 
 	public QuotientRemainderResult truncate() {
 		return truncate(IntegerStruct.ONE);
@@ -319,7 +319,7 @@ public abstract class RealStruct extends NumberStruct {
 		return divisor.round(quotientRemainderVisitor);
 	}
 
-	protected abstract QuotientRemainderResult round(final QuotientRemainderVisitor<?> quotientRemainderVisitor);
+	protected abstract QuotientRemainderResult round(QuotientRemainderVisitor<?> quotientRemainderVisitor);
 
 	public QuotientRemainderResult fround() {
 		return fround(IntegerStruct.ONE);
@@ -330,7 +330,7 @@ public abstract class RealStruct extends NumberStruct {
 		return divisor.fround(quotientRemainderVisitor);
 	}
 
-	protected abstract QuotientRemainderResult fround(final QuotientRemainderVisitor<?> quotientRemainderVisitor);
+	protected abstract QuotientRemainderResult fround(QuotientRemainderVisitor<?> quotientRemainderVisitor);
 
 	protected abstract QuotientRemainderVisitor<?> quotientRemainderVisitor();
 
@@ -357,7 +357,7 @@ public abstract class RealStruct extends NumberStruct {
 	}
 
 	@Override
-	protected ExptVisitor<?> exptVisitor() {
+	protected NumberStruct.ExptVisitor<?> exptVisitor() {
 		return new RealExptVisitor<>(this);
 	}
 
@@ -495,14 +495,14 @@ public abstract class RealStruct extends NumberStruct {
 
 	// Visitor Implementations
 
-	protected abstract static class RealAddVisitor<S extends RealStruct> extends AddVisitor<S> {
+	protected abstract static class RealAddVisitor<S extends RealStruct> extends NumberStruct.AddVisitor<S> {
 
 		protected RealAddVisitor(final S number1) {
 			super(number1);
 		}
 
 		@Override
-		public abstract RealStruct add(final IntegerStruct number2);
+		public abstract RealStruct add(IntegerStruct number2);
 
 		@Override
 		public RealStruct add(final FloatStruct number2) {
@@ -510,7 +510,7 @@ public abstract class RealStruct extends NumberStruct {
 		}
 
 		@Override
-		public abstract RealStruct add(final RatioStruct number2);
+		public abstract RealStruct add(RatioStruct number2);
 
 		@Override
 		public NumberStruct add(final ComplexStruct number2) {
@@ -540,14 +540,14 @@ public abstract class RealStruct extends NumberStruct {
 		}
 	}
 
-	protected abstract static class RealSubtractVisitor<S extends RealStruct> extends SubtractVisitor<S> {
+	protected abstract static class RealSubtractVisitor<S extends RealStruct> extends NumberStruct.SubtractVisitor<S> {
 
 		protected RealSubtractVisitor(final S number1) {
 			super(number1);
 		}
 
 		@Override
-		public abstract RealStruct subtract(final IntegerStruct number2);
+		public abstract RealStruct subtract(IntegerStruct number2);
 
 		@Override
 		public RealStruct subtract(final FloatStruct number2) {
@@ -558,7 +558,7 @@ public abstract class RealStruct extends NumberStruct {
 		}
 
 		@Override
-		public abstract RealStruct subtract(final RatioStruct number2);
+		public abstract RealStruct subtract(RatioStruct number2);
 
 		@Override
 		public NumberStruct subtract(final ComplexStruct number2) {
@@ -570,14 +570,14 @@ public abstract class RealStruct extends NumberStruct {
 		}
 	}
 
-	protected abstract static class RealMultiplyVisitor<S extends RealStruct> extends MultiplyVisitor<S> {
+	protected abstract static class RealMultiplyVisitor<S extends RealStruct> extends NumberStruct.MultiplyVisitor<S> {
 
 		protected RealMultiplyVisitor(final S number1) {
 			super(number1);
 		}
 
 		@Override
-		public abstract RealStruct multiply(final IntegerStruct number2);
+		public abstract RealStruct multiply(IntegerStruct number2);
 
 		@Override
 		public RealStruct multiply(final FloatStruct number2) {
@@ -585,7 +585,7 @@ public abstract class RealStruct extends NumberStruct {
 		}
 
 		@Override
-		public abstract RealStruct multiply(final RatioStruct number2);
+		public abstract RealStruct multiply(RatioStruct number2);
 
 		@Override
 		public NumberStruct multiply(final ComplexStruct number2) {
@@ -622,14 +622,14 @@ public abstract class RealStruct extends NumberStruct {
 		}
 	}
 
-	protected abstract static class RealDivideVisitor<S extends RealStruct> extends DivideVisitor<S> {
+	protected abstract static class RealDivideVisitor<S extends RealStruct> extends NumberStruct.DivideVisitor<S> {
 
 		protected RealDivideVisitor(final S number1) {
 			super(number1);
 		}
 
 		@Override
-		public abstract RealStruct divide(final IntegerStruct number2);
+		public abstract RealStruct divide(IntegerStruct number2);
 
 		@Override
 		public RealStruct divide(final FloatStruct number2) {
@@ -640,7 +640,7 @@ public abstract class RealStruct extends NumberStruct {
 		}
 
 		@Override
-		public abstract RealStruct divide(final RatioStruct number2);
+		public abstract RealStruct divide(RatioStruct number2);
 
 		@Override
 		public NumberStruct divide(final ComplexStruct number2) {
@@ -658,7 +658,7 @@ public abstract class RealStruct extends NumberStruct {
 		return bigDecimal1.compareTo(bigDecimal2);
 	}
 
-	protected static class RealEqualToVisitor<S extends RealStruct> extends EqualToVisitor<S> {
+	protected static class RealEqualToVisitor<S extends RealStruct> extends NumberStruct.EqualToVisitor<S> {
 
 		protected RealEqualToVisitor(final S number1) {
 			super(number1);
@@ -859,8 +859,8 @@ public abstract class RealStruct extends NumberStruct {
 			return quotientRemainder(divisor, RoundingMode.HALF_EVEN, true);
 		}
 
-		public abstract QuotientRemainderResult quotientRemainder(final IntegerStruct divisor, final RoundingMode roundingMode,
-		                                                          final boolean isQuotientFloat);
+		public abstract QuotientRemainderResult quotientRemainder(IntegerStruct divisor, RoundingMode roundingMode,
+		                                                          boolean isQuotientFloat);
 
 		public QuotientRemainderResult quotientRemainder(final FloatStruct divisor, final RoundingMode roundingMode,
 		                                                 final boolean isQuotientFloat) {
@@ -908,11 +908,11 @@ public abstract class RealStruct extends NumberStruct {
 		}
 
 
-		public abstract QuotientRemainderResult quotientRemainder(final RatioStruct divisor, final RoundingMode roundingMode,
-		                                                          final boolean isQuotientFloat);
+		public abstract QuotientRemainderResult quotientRemainder(RatioStruct divisor, RoundingMode roundingMode,
+		                                                          boolean isQuotientFloat);
 	}
 
-	protected static class RealExptVisitor<S extends RealStruct> extends ExptVisitor<S> {
+	protected static class RealExptVisitor<S extends RealStruct> extends NumberStruct.ExptVisitor<S> {
 
 		protected RealExptVisitor(final S base) {
 			super(base);

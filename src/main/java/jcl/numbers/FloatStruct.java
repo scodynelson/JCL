@@ -462,16 +462,16 @@ public class FloatStruct extends RealStruct {
 	 * {@inheritDoc}
 	 * <p>
 	 * Calculates the {@link QuotientRemainderResult} for a 'FLOOR' operation with this FloatStruct as the 'divisor'
-	 * using the provided {@link QuotientRemainderVisitor}.
+	 * using the provided {@link RealStruct.QuotientRemainderVisitor}.
 	 *
 	 * @param quotientRemainderVisitor
-	 * 		the {@link QuotientRemainderVisitor} to be used in the 'FLOOR' operation
+	 * 		the {@link RealStruct.QuotientRemainderVisitor} to be used in the 'FLOOR' operation
 	 *
 	 * @return the {@link QuotientRemainderResult} for a 'FLOOR' operation with this FloatStruct as the 'divisor'
-	 * using the provided {@link QuotientRemainderVisitor}
+	 * using the provided {@link RealStruct.QuotientRemainderVisitor}
 	 */
 	@Override
-	protected QuotientRemainderResult floor(final QuotientRemainderVisitor<?> quotientRemainderVisitor) {
+	protected QuotientRemainderResult floor(final RealStruct.QuotientRemainderVisitor<?> quotientRemainderVisitor) {
 		return quotientRemainderVisitor.floor(this);
 	}
 
@@ -479,16 +479,16 @@ public class FloatStruct extends RealStruct {
 	 * {@inheritDoc}
 	 * <p>
 	 * Calculates the {@link QuotientRemainderResult} for a 'FLOOR' operation with this FloatStruct as the 'divisor'
-	 * using the provided {@link QuotientRemainderVisitor}. The resulting 'quotient' will be a FloatStruct.
+	 * using the provided {@link RealStruct.QuotientRemainderVisitor}. The resulting 'quotient' will be a FloatStruct.
 	 *
 	 * @param quotientRemainderVisitor
-	 * 		the {@link QuotientRemainderVisitor} to be used in the 'FLOOR' operation
+	 * 		the {@link RealStruct.QuotientRemainderVisitor} to be used in the 'FLOOR' operation
 	 *
 	 * @return the {@link QuotientRemainderResult} for a 'FLOOR' operation with this FloatStruct as the 'divisor'
-	 * using the provided {@link QuotientRemainderVisitor}
+	 * using the provided {@link RealStruct.QuotientRemainderVisitor}
 	 */
 	@Override
-	protected QuotientRemainderResult ffloor(final QuotientRemainderVisitor<?> quotientRemainderVisitor) {
+	protected QuotientRemainderResult ffloor(final RealStruct.QuotientRemainderVisitor<?> quotientRemainderVisitor) {
 		return quotientRemainderVisitor.ffloor(this);
 	}
 
@@ -496,16 +496,16 @@ public class FloatStruct extends RealStruct {
 	 * {@inheritDoc}
 	 * <p>
 	 * Calculates the {@link QuotientRemainderResult} for a 'CEILING' operation with this FloatStruct as the 'divisor'
-	 * using the provided {@link QuotientRemainderVisitor}.
+	 * using the provided {@link RealStruct.QuotientRemainderVisitor}.
 	 *
 	 * @param quotientRemainderVisitor
-	 * 		the {@link QuotientRemainderVisitor} to be used in the 'CEILING' operation
+	 * 		the {@link RealStruct.QuotientRemainderVisitor} to be used in the 'CEILING' operation
 	 *
 	 * @return the {@link QuotientRemainderResult} for a 'CEILING' operation with this FloatStruct as the 'divisor'
-	 * using the provided {@link QuotientRemainderVisitor}
+	 * using the provided {@link RealStruct.QuotientRemainderVisitor}
 	 */
 	@Override
-	protected QuotientRemainderResult ceiling(final QuotientRemainderVisitor<?> quotientRemainderVisitor) {
+	protected QuotientRemainderResult ceiling(final RealStruct.QuotientRemainderVisitor<?> quotientRemainderVisitor) {
 		return quotientRemainderVisitor.ceiling(this);
 	}
 
@@ -513,16 +513,16 @@ public class FloatStruct extends RealStruct {
 	 * {@inheritDoc}
 	 * <p>
 	 * Calculates the {@link QuotientRemainderResult} for a 'CEILING' operation with this FloatStruct as the 'divisor'
-	 * using the provided {@link QuotientRemainderVisitor}. The resulting 'quotient' will be a FloatStruct.
+	 * using the provided {@link RealStruct.QuotientRemainderVisitor}. The resulting 'quotient' will be a FloatStruct.
 	 *
 	 * @param quotientRemainderVisitor
-	 * 		the {@link QuotientRemainderVisitor} to be used in the 'CEILING' operation
+	 * 		the {@link RealStruct.QuotientRemainderVisitor} to be used in the 'CEILING' operation
 	 *
 	 * @return the {@link QuotientRemainderResult} for a 'CEILING' operation with this FloatStruct as the 'divisor'
-	 * using the provided {@link QuotientRemainderVisitor}
+	 * using the provided {@link RealStruct.QuotientRemainderVisitor}
 	 */
 	@Override
-	protected QuotientRemainderResult fceiling(final QuotientRemainderVisitor<?> quotientRemainderVisitor) {
+	protected QuotientRemainderResult fceiling(final RealStruct.QuotientRemainderVisitor<?> quotientRemainderVisitor) {
 		return quotientRemainderVisitor.fceiling(this);
 	}
 
@@ -530,16 +530,16 @@ public class FloatStruct extends RealStruct {
 	 * {@inheritDoc}
 	 * <p>
 	 * Calculates the {@link QuotientRemainderResult} for a 'ROUND' operation with this FloatStruct as the 'divisor'
-	 * using the provided {@link QuotientRemainderVisitor}.
+	 * using the provided {@link RealStruct.QuotientRemainderVisitor}.
 	 *
 	 * @param quotientRemainderVisitor
-	 * 		the {@link QuotientRemainderVisitor} to be used in the 'ROUND' operation
+	 * 		the {@link RealStruct.QuotientRemainderVisitor} to be used in the 'ROUND' operation
 	 *
 	 * @return the {@link QuotientRemainderResult} for a 'ROUND' operation with this FloatStruct as the 'divisor'
-	 * using the provided {@link QuotientRemainderVisitor}
+	 * using the provided {@link RealStruct.QuotientRemainderVisitor}
 	 */
 	@Override
-	protected QuotientRemainderResult round(final QuotientRemainderVisitor<?> quotientRemainderVisitor) {
+	protected QuotientRemainderResult round(final RealStruct.QuotientRemainderVisitor<?> quotientRemainderVisitor) {
 		return quotientRemainderVisitor.round(this);
 	}
 
@@ -547,28 +547,28 @@ public class FloatStruct extends RealStruct {
 	 * {@inheritDoc}
 	 * <p>
 	 * Calculates the {@link QuotientRemainderResult} for a 'ROUND' operation with this FloatStruct as the 'divisor'
-	 * using the provided {@link QuotientRemainderVisitor}. The resulting 'quotient' will be a FloatStruct.
+	 * using the provided {@link RealStruct.QuotientRemainderVisitor}. The resulting 'quotient' will be a FloatStruct.
 	 *
 	 * @param quotientRemainderVisitor
-	 * 		the {@link QuotientRemainderVisitor} to be used in the 'ROUND' operation
+	 * 		the {@link RealStruct.QuotientRemainderVisitor} to be used in the 'ROUND' operation
 	 *
 	 * @return the {@link QuotientRemainderResult} for a 'ROUND' operation with this FloatStruct as the 'divisor'
-	 * using the provided {@link QuotientRemainderVisitor}
+	 * using the provided {@link RealStruct.QuotientRemainderVisitor}
 	 */
 	@Override
-	protected QuotientRemainderResult fround(final QuotientRemainderVisitor<?> quotientRemainderVisitor) {
+	protected QuotientRemainderResult fround(final RealStruct.QuotientRemainderVisitor<?> quotientRemainderVisitor) {
 		return quotientRemainderVisitor.fround(this);
 	}
 
 	/**
-	 * Returns a new {@link QuotientRemainderVisitor} with this FloatStruct to be used in a 'quotient' and 'remainder'
+	 * Returns a new {@link RealStruct.QuotientRemainderVisitor} with this FloatStruct to be used in a 'quotient' and 'remainder'
 	 * calculation operation.
 	 *
-	 * @return a new {@link QuotientRemainderVisitor} with this FloatStruct to be used in a 'quotient' and 'remainder'
+	 * @return a new {@link RealStruct.QuotientRemainderVisitor} with this FloatStruct to be used in a 'quotient' and 'remainder'
 	 * calculation operation
 	 */
 	@Override
-	protected QuotientRemainderVisitor<?> quotientRemainderVisitor() {
+	protected RealStruct.QuotientRemainderVisitor<?> quotientRemainderVisitor() {
 		return new FloatQuotientRemainderVisitor(this);
 	}
 
@@ -831,9 +831,9 @@ public class FloatStruct extends RealStruct {
 	// Visitor Implementations
 
 	/**
-	 * {@link RealAddVisitor} for computing addition results for {@link FloatStruct}s.
+	 * {@link RealStruct.RealAddVisitor} for computing addition results for {@link FloatStruct}s.
 	 */
-	private static final class FloatAddVisitor extends RealAddVisitor<FloatStruct> {
+	private static final class FloatAddVisitor extends RealStruct.RealAddVisitor<FloatStruct> {
 
 		/**
 		 * Package private constructor to make a new instance of an FloatAddVisitor with the provided {@link
@@ -868,9 +868,9 @@ public class FloatStruct extends RealStruct {
 	}
 
 	/**
-	 * {@link RealSubtractVisitor} for computing subtraction function results for {@link FloatStruct}s.
+	 * {@link RealStruct.RealSubtractVisitor} for computing subtraction function results for {@link FloatStruct}s.
 	 */
-	private static final class FloatSubtractVisitor extends RealSubtractVisitor<FloatStruct> {
+	private static final class FloatSubtractVisitor extends RealStruct.RealSubtractVisitor<FloatStruct> {
 
 		/**
 		 * Package private constructor to make a new instance of an FloatSubtractVisitor with the provided {@link
@@ -923,9 +923,9 @@ public class FloatStruct extends RealStruct {
 	}
 
 	/**
-	 * {@link RealMultiplyVisitor} for computing multiplication function results for {@link FloatStruct}s.
+	 * {@link RealStruct.RealMultiplyVisitor} for computing multiplication function results for {@link FloatStruct}s.
 	 */
-	private static final class FloatMultiplyVisitor extends RealMultiplyVisitor<FloatStruct> {
+	private static final class FloatMultiplyVisitor extends RealStruct.RealMultiplyVisitor<FloatStruct> {
 
 		/**
 		 * Package private constructor to make a new instance of an FloatMultiplyVisitor with the provided {@link
@@ -960,9 +960,9 @@ public class FloatStruct extends RealStruct {
 	}
 
 	/**
-	 * {@link RealDivideVisitor} for computing division function results for {@link FloatStruct}s.
+	 * {@link RealStruct.RealDivideVisitor} for computing division function results for {@link FloatStruct}s.
 	 */
-	private static final class FloatDivideVisitor extends RealDivideVisitor<FloatStruct> {
+	private static final class FloatDivideVisitor extends RealStruct.RealDivideVisitor<FloatStruct> {
 
 		/**
 		 * Package private constructor to make a new instance of an FloatDivideVisitor with the provided {@link
@@ -1018,7 +1018,7 @@ public class FloatStruct extends RealStruct {
 	 * {@link FloatQuotientRemainderVisitor} for computing quotient and remainder results for {@link
 	 * FloatStruct}s.
 	 */
-	private static final class FloatQuotientRemainderVisitor extends QuotientRemainderVisitor<FloatStruct> {
+	private static final class FloatQuotientRemainderVisitor extends RealStruct.QuotientRemainderVisitor<FloatStruct> {
 
 		/**
 		 * Package private constructor to make a new instance of an FloatQuotientRemainderVisitor with the provided

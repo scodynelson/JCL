@@ -169,10 +169,10 @@ abstract class ClosureCreationCodeGenerator<V, I extends ClosureCreationStruct<V
 	 * 		the {@link Set} of storage location indexes on the stack where the {@link SymbolStruct}s with dynamic
 	 * 		values to unbind exists
 	 */
-	protected abstract void generateBindings(final List<V> vars, final GeneratorState generatorState,
-	                                         final JavaMethodBuilder methodBuilder, final int closureArgStore,
-	                                         final int closureSymbolBindingsStore, final Set<Integer> lexicalSymbolStoresToUnbind,
-	                                         final Set<Integer> dynamicSymbolStoresToUnbind);
+	protected abstract void generateBindings(List<V> vars, GeneratorState generatorState,
+	                                         JavaMethodBuilder methodBuilder, int closureArgStore,
+	                                         int closureSymbolBindingsStore, Set<Integer> lexicalSymbolStoresToUnbind,
+	                                         Set<Integer> dynamicSymbolStoresToUnbind);
 
 	/**
 	 * Private method for generating the 'finally' block code for unbinding the lexical and dynamic values from each

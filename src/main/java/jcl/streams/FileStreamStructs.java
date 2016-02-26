@@ -27,7 +27,7 @@ public final class FileStreamStructs {
 		if (directionType == DirectionType.PROBE) {
 			fileStream.close();
 		}
-		return null;
+		return fileStream;
 	}
 }
 
@@ -46,13 +46,15 @@ public final class FileStreamStructs {
                         '(unsigned-byte 8))
                        (t
                         (upgraded-element-type element-type))))
+
   (when (memq direction '(:output :io))
-    (unless if-exists-p
+    (when (not if-exists-p)
       (setf if-exists
             (if (eq (pathname-version pathname) :newest)
                 :new-version
               :error))))
-  (unless if-does-not-exist-p
+
+  (when (not if-does-not-exist-p)
     (setf if-does-not-exist
           (cond ((eq direction :input) :error)
                 ((and (memq direction '(:output :io))
@@ -62,17 +64,19 @@ public final class FileStreamStructs {
                  nil)
                 (t
                  :create))))
+
   (case direction
     (:input
      (case if-does-not-exist
        (:error
-        (unless (probe-file pathname)
+        (when (not (probe-file pathname))
           (error "The file ~S does not exist."))))
      (make-file-stream pathname namestring element-type :input nil external-format))
+
     (:probe
      (case if-does-not-exist
        (:error
-        (unless (probe-file pathname)
+        (when (not (probe-file pathname))
           (error "The file ~S does not exist.")))
        (:create
         (create-new-file namestring)))
@@ -80,21 +84,24 @@ public final class FileStreamStructs {
        (when stream
          (close stream))
        stream))
+
     ((:output :io)
      (case if-does-not-exist
        (:error
-        (unless (probe-file pathname)
+        (when (not (probe-file pathname))
           (error "The file ~S does not exist.")))
        ((nil)
-        (unless (probe-file pathname)
+        (when (not (probe-file pathname))
           (return-from open nil))))
      (case if-exists
        (:error
         (when (probe-file pathname)
           (error "The file ~S already exists.")))
+
        ((nil)
         (when (probe-file pathname)
           (return-from open nil)))
+
        ((:rename :rename-and-delete)
         (when (probe-file pathname)
           ;; Make sure the original file is not a directory.
@@ -106,11 +113,14 @@ public final class FileStreamStructs {
                 (error "Unable to rename ~S."))
               (delete-file backup-name))
             (rename-file pathname backup-name))))
+
        ((:new-version :supersede :overwrite :append)) ; OK to proceed.
+
        (t
         (error "Option not supported: ~S.")))
+
      (let ((stream (make-file-stream pathname namestring element-type direction if-exists external-format)))
-       (unless stream
+       (when (not stream)
          (error "Unable to open ~S."))
        stream))
     (t

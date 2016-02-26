@@ -229,6 +229,12 @@ public class PathnameStruct extends BuiltInClassStruct {
 		return file.toPath();
 	}
 
+	public boolean exists() {
+		final String namestring = getNamestring();
+		final File file = new File(namestring);
+		return file.exists();
+	}
+
 	/**
 	 * Gets the pathname host.
 	 *

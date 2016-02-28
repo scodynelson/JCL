@@ -18,7 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class BoundpFunction extends AbstractCommonLispFunctionStruct {
+public final class BoundpFunction extends AbstractCommonLispFunctionStruct {
 
 	/**
 	 * The {@link TypeValidator} for validating the function parameter value types.
@@ -27,7 +27,7 @@ public class BoundpFunction extends AbstractCommonLispFunctionStruct {
 	private TypeValidator validator;
 
 	public BoundpFunction() {
-		super("Gets the function value of the provided symbol.");
+		super("Returns true if symbol is bound; otherwise, returns false.");
 	}
 
 	@Override
@@ -39,11 +39,10 @@ public class BoundpFunction extends AbstractCommonLispFunctionStruct {
 	public LispStruct apply(final LispStruct... lispStructs) {
 		super.apply(lispStructs);
 
-		final LispStruct lispStruct = lispStructs[0];
-		validator.validateTypes(lispStruct, functionName(), "Symbol", SymbolType.INSTANCE);
-
-		final SymbolStruct symbol = (SymbolStruct) lispStructs[0];
-		return BooleanStructs.toLispBoolean(symbol.hasValue());
+		final SymbolStruct symbol =
+				validator.validateType(lispStructs[0], functionName(), "Symbol", SymbolType.INSTANCE, SymbolStruct.class);
+		final boolean hasValue = symbol.hasValue();
+		return BooleanStructs.toLispBoolean(hasValue);
 	}
 
 	@Override

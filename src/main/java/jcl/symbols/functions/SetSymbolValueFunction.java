@@ -9,9 +9,8 @@ import java.util.List;
 
 import jcl.LispStruct;
 import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
-import jcl.functions.AbstractCommonLispFunctionStruct;
+import jcl.functions.AbstractSystemFunctionStruct;
 import jcl.packages.GlobalPackageStruct;
-import jcl.symbols.BooleanStructs;
 import jcl.symbols.SymbolStruct;
 import jcl.types.SymbolType;
 import jcl.types.TypeValidator;
@@ -19,7 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class RempropFunction extends AbstractCommonLispFunctionStruct {
+public final class SetSymbolValueFunction extends AbstractSystemFunctionStruct {
 
 	/**
 	 * The {@link TypeValidator} for validating the function parameter value types.
@@ -27,15 +26,15 @@ public final class RempropFunction extends AbstractCommonLispFunctionStruct {
 	@Autowired
 	private TypeValidator validator;
 
-	public RempropFunction() {
-		super("Removes from the property list of symbol a property[1] with a property indicator identical to indicator.");
+	public SetSymbolValueFunction() {
+		super("Sets the value of the provided symbol to the provided value.");
 	}
 
 	@Override
 	protected List<RequiredParameter> getRequiredBindings() {
-		final RequiredParameter symbol = RequiredParameter.builder(GlobalPackageStruct.COMMON_LISP, "SYMBOL").build();
-		final RequiredParameter indicator = RequiredParameter.builder(GlobalPackageStruct.COMMON_LISP, "INDICATOR").build();
-		return Arrays.asList(symbol, indicator);
+		final RequiredParameter symbolArg = RequiredParameter.builder(GlobalPackageStruct.SYSTEM, "SYMBOL").build();
+		final RequiredParameter valueArg = RequiredParameter.builder(GlobalPackageStruct.SYSTEM, "VALUE").build();
+		return Arrays.asList(symbolArg, valueArg);
 	}
 
 	@Override
@@ -44,14 +43,14 @@ public final class RempropFunction extends AbstractCommonLispFunctionStruct {
 
 		final SymbolStruct symbol =
 				validator.validateType(lispStructs[0], functionName(), "Symbol", SymbolType.INSTANCE, SymbolStruct.class);
-		final LispStruct indicator = lispStructs[1];
-		final boolean wasRemoved = symbol.removeProperty(indicator);
+		final LispStruct value = lispStructs[1];
 
-		return BooleanStructs.toLispBoolean(wasRemoved);
+		symbol.setValue(value);
+		return value;
 	}
 
 	@Override
 	protected String functionName() {
-		return "REMPROP";
+		return "SET-SYMBOL-VALUE";
 	}
 }

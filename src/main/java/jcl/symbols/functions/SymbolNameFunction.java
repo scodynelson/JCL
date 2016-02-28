@@ -7,7 +7,6 @@ package jcl.symbols.functions;
 import java.util.List;
 
 import jcl.LispStruct;
-import jcl.arrays.StringStruct;
 import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
 import jcl.functions.AbstractCommonLispFunctionStruct;
 import jcl.packages.GlobalPackageStruct;
@@ -18,7 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class SymbolNameFunction extends AbstractCommonLispFunctionStruct {
+public final class SymbolNameFunction extends AbstractCommonLispFunctionStruct {
 
 	/**
 	 * The {@link TypeValidator} for validating the function parameter value types.
@@ -27,7 +26,7 @@ public class SymbolNameFunction extends AbstractCommonLispFunctionStruct {
 	private TypeValidator validator;
 
 	public SymbolNameFunction() {
-		super("Gets the function value of the provided symbol.");
+		super("Gets the name of the provided symbol.");
 	}
 
 	@Override
@@ -39,11 +38,9 @@ public class SymbolNameFunction extends AbstractCommonLispFunctionStruct {
 	public LispStruct apply(final LispStruct... lispStructs) {
 		super.apply(lispStructs);
 
-		final LispStruct lispStruct = lispStructs[0];
-		validator.validateTypes(lispStruct, functionName(), "Symbol", SymbolType.INSTANCE);
-
-		final SymbolStruct symbol = (SymbolStruct) lispStructs[0];
-		return new StringStruct(symbol.getName());
+		final SymbolStruct symbol =
+				validator.validateType(lispStructs[0], functionName(), "Symbol", SymbolType.INSTANCE, SymbolStruct.class);
+		return symbol.asString().get();
 	}
 
 	@Override

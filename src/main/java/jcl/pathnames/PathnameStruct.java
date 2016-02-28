@@ -219,7 +219,7 @@ public class PathnameStruct extends BuiltInClassStruct {
 	}
 
 	@Override
-	public Supplier<PathnameStruct> toPathname() {
+	public Supplier<PathnameStruct> asPathname() {
 		return () -> this;
 	}
 

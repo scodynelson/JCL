@@ -9,17 +9,18 @@ import java.util.List;
 
 import jcl.LispStruct;
 import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
-import jcl.functions.AbstractCommonLispFunctionStruct;
+import jcl.functions.AbstractSystemFunctionStruct;
+import jcl.lists.ListStruct;
 import jcl.packages.GlobalPackageStruct;
-import jcl.symbols.BooleanStructs;
 import jcl.symbols.SymbolStruct;
+import jcl.types.FunctionType;
 import jcl.types.SymbolType;
 import jcl.types.TypeValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class RempropFunction extends AbstractCommonLispFunctionStruct {
+public final class SetSymbolPlistFunction extends AbstractSystemFunctionStruct {
 
 	/**
 	 * The {@link TypeValidator} for validating the function parameter value types.
@@ -27,15 +28,15 @@ public final class RempropFunction extends AbstractCommonLispFunctionStruct {
 	@Autowired
 	private TypeValidator validator;
 
-	public RempropFunction() {
-		super("Removes from the property list of symbol a property[1] with a property indicator identical to indicator.");
+	public SetSymbolPlistFunction() {
+		super("Sets the plist value of the provided symbol to the provided plist value.");
 	}
 
 	@Override
 	protected List<RequiredParameter> getRequiredBindings() {
-		final RequiredParameter symbol = RequiredParameter.builder(GlobalPackageStruct.COMMON_LISP, "SYMBOL").build();
-		final RequiredParameter indicator = RequiredParameter.builder(GlobalPackageStruct.COMMON_LISP, "INDICATOR").build();
-		return Arrays.asList(symbol, indicator);
+		final RequiredParameter symbolArg = RequiredParameter.builder(GlobalPackageStruct.SYSTEM, "SYMBOL").build();
+		final RequiredParameter plistArg = RequiredParameter.builder(GlobalPackageStruct.SYSTEM, "PLIST").build();
+		return Arrays.asList(symbolArg, plistArg);
 	}
 
 	@Override
@@ -44,14 +45,16 @@ public final class RempropFunction extends AbstractCommonLispFunctionStruct {
 
 		final SymbolStruct symbol =
 				validator.validateType(lispStructs[0], functionName(), "Symbol", SymbolType.INSTANCE, SymbolStruct.class);
-		final LispStruct indicator = lispStructs[1];
-		final boolean wasRemoved = symbol.removeProperty(indicator);
+		final ListStruct plist =
+				validator.validateType(lispStructs[1], functionName(), "Plist", FunctionType.INSTANCE, ListStruct.class);
 
-		return BooleanStructs.toLispBoolean(wasRemoved);
+		final List<LispStruct> plistAsJavaList = plist.getAsJavaList();
+		symbol.setProperties(plistAsJavaList);
+		return plist;
 	}
 
 	@Override
 	protected String functionName() {
-		return "REMPROP";
+		return "SET-SYMBOL-PLIST";
 	}
 }

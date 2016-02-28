@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Supplier;
 
 import jcl.classes.BuiltInClassStruct;
 import jcl.conditions.exceptions.PackageErrorException;
@@ -130,6 +131,11 @@ public class PackageStruct extends BuiltInClassStruct {
 		for (final String nickname : nicknames) {
 			GlobalPackageStruct.ALL_PACKAGES.put(nickname, this);
 		}
+	}
+
+	@Override
+	public Supplier<PackageStruct> asPackage() {
+		return () -> this;
 	}
 
 	/**

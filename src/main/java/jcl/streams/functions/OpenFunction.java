@@ -97,7 +97,7 @@ public final class OpenFunction extends AbstractCommonLispFunctionStruct {
 	public LispStruct apply(final LispStruct... lispStructs) {
 		super.apply(lispStructs);
 
-		final PathnameStruct pathname = lispStructs[0].toPathname().get();
+		final PathnameStruct pathname = lispStructs[0].asPathname().get();
 
 		final Map<KeywordStruct, LispStruct> keywords
 				= getKeywords(lispStructs, 1, CommonLispSymbols.DIRECTION_KEYWORD, CommonLispSymbols.ELEMENT_TYPE_KEYWORD,

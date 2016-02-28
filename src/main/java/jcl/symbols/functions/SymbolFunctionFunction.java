@@ -38,10 +38,8 @@ public final class SymbolFunctionFunction extends AbstractCommonLispFunctionStru
 	public LispStruct apply(final LispStruct... lispStructs) {
 		super.apply(lispStructs);
 
-		final LispStruct lispStruct = lispStructs[0];
-		validator.validateTypes(lispStruct, functionName(), "Symbol", SymbolType.INSTANCE);
-
-		final SymbolStruct symbol = (SymbolStruct) lispStruct;
+		final SymbolStruct symbol =
+				validator.validateType(lispStructs[0], functionName(), "Symbol", SymbolType.INSTANCE, SymbolStruct.class);
 		return symbol.getFunction();
 	}
 

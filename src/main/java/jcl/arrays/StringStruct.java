@@ -6,7 +6,9 @@ import java.util.function.Supplier;
 
 import jcl.characters.CharacterStruct;
 import jcl.conditions.exceptions.SimpleErrorException;
+import jcl.packages.PackageStruct;
 import jcl.pathnames.PathnameStruct;
+import jcl.symbols.SymbolStruct;
 import jcl.types.BaseCharType;
 import jcl.types.BaseStringType;
 import jcl.types.CharacterType;
@@ -104,7 +106,7 @@ public class StringStruct extends VectorStruct<CharacterStruct> {
 	}
 
 	@Override
-	public Supplier<CharacterStruct> toCharacter() {
+	public Supplier<CharacterStruct> asCharacter() {
 		return () -> {
 			// TODO: Can improve this
 			final String javaString = getAsJavaString();
@@ -116,7 +118,7 @@ public class StringStruct extends VectorStruct<CharacterStruct> {
 	}
 
 	@Override
-	public Supplier<CharacterStruct> toNamedCharacter() {
+	public Supplier<CharacterStruct> asNamedCharacter() {
 		return () -> {
 			final String javaString = getAsJavaString();
 			return CharacterStruct.nameChar(javaString);
@@ -124,10 +126,33 @@ public class StringStruct extends VectorStruct<CharacterStruct> {
 	}
 
 	@Override
-	public Supplier<PathnameStruct> toPathname() {
+	public Supplier<PathnameStruct> asPathname() {
 		return () -> {
 			final String namestring = getAsJavaString();
 			return new PathnameStruct(namestring);
+		};
+	}
+
+	@Override
+	public Supplier<SymbolStruct> asSymbol() {
+		return () -> {
+			final String namestring = getAsJavaString();
+			return new SymbolStruct(namestring);
+		};
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * Returns the PackageStruct with the {@link PackageStruct#name} that matches the StringStruct instance via
+	 * {@link PackageStruct#findPackage(String)}.
+	 *
+	 * @return the PackageStruct with the {@link PackageStruct#name} that matches the instance
+	 */
+	@Override
+	public Supplier<PackageStruct> asPackage() {
+		return () -> {
+			final String packageName = getAsJavaString();
+			return PackageStruct.findPackage(packageName);
 		};
 	}
 

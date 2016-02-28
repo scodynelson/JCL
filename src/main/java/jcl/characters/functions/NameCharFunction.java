@@ -37,13 +37,13 @@ public final class NameCharFunction extends AbstractCharacterDesignatorFunction 
 
 	/**
 	 * {@inheritDoc}
-	 * Creates a {@link Function} applying {@link LispStruct#toNamedCharacter()} against a {@link LispStruct}
+	 * Creates a {@link Function} applying {@link LispStruct#asNamedCharacter()} against a {@link LispStruct}
 	 * parameter.
 	 *
-	 * @return a {@link Function} applying {@link LispStruct#toNamedCharacter()} against a {@link LispStruct}
+	 * @return a {@link Function} applying {@link LispStruct#asNamedCharacter()} against a {@link LispStruct}
 	 */
 	@Override
 	protected Function<LispStruct, Supplier<CharacterStruct>> characterFunction() {
-		return LispStruct::toNamedCharacter;
+		return LispStruct::asNamedCharacter;
 	}
 }

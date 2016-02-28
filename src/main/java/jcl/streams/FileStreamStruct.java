@@ -102,7 +102,7 @@ public class FileStreamStruct extends AbstractNativeStreamStruct {
 	}
 
 	@Override
-	public Supplier<PathnameStruct> toPathname() {
+	public Supplier<PathnameStruct> asPathname() {
 		return () -> {
 			final File file = path.toFile();
 			final String namestring = file.getAbsolutePath();

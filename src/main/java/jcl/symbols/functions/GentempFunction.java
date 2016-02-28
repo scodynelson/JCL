@@ -4,7 +4,7 @@
 
 package jcl.symbols.functions;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import jcl.LispStruct;
@@ -20,7 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class GentempFunction extends AbstractCommonLispFunctionStruct {
+public final class GentempFunction extends AbstractCommonLispFunctionStruct {
 
 	/**
 	 * The {@link TypeValidator} for validating the function parameter value types.
@@ -31,28 +31,22 @@ public class GentempFunction extends AbstractCommonLispFunctionStruct {
 	private int gentempCounter;
 
 	public GentempFunction() {
-		super("Creates and returns a fresh, uninterned symbol.");
+		super("Creates and returns a fresh symbol, interned in the indicated package.");
 	}
 
 	@Override
 	protected List<OptionalParameter> getOptionalBindings() {
-		final List<OptionalParameter> optionalParameters = new ArrayList<>(2);
-
 		final OptionalParameter prefix =
 				OptionalParameter.builder(GlobalPackageStruct.COMMON_LISP, "PREFIX")
 				                 .initForm(new StringStruct("T"))
 				                 .suppliedPBinding()
 				                 .build();
-		optionalParameters.add(prefix);
-
 		final OptionalParameter aPackage =
 				OptionalParameter.builder(GlobalPackageStruct.COMMON_LISP, "PACKAGE")
 				                 .initForm(PackageVariables.PACKAGE.getVariableValue())
 				                 .suppliedPBinding()
 				                 .build();
-		optionalParameters.add(aPackage);
-
-		return optionalParameters;
+		return Arrays.asList(prefix, aPackage);
 	}
 
 	@Override
@@ -63,13 +57,12 @@ public class GentempFunction extends AbstractCommonLispFunctionStruct {
 		PackageStruct aPackage = PackageVariables.PACKAGE.getVariableValue();
 
 		if (lispStructs.length > 0) {
-			final LispStruct lispStruct = lispStructs[0];
-			validator.validateTypes(lispStruct, functionName(), "Prefix", StringType.INSTANCE);
-
-			prefix = ((StringStruct) lispStruct).getAsJavaString();
+			final StringStruct prefixVal
+					= validator.validateType(lispStructs[0], functionName(), "Prefix", StringType.INSTANCE, StringStruct.class);
+			prefix = prefixVal.getAsJavaString();
 		}
 		if (lispStructs.length > 1) {
-			aPackage = validator.validatePackageDesignator(lispStructs[1], functionName());
+			aPackage = lispStructs[1].asPackage().get();
 		}
 
 		String symbolName = prefix + gentempCounter++;

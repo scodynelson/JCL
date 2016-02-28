@@ -290,7 +290,7 @@ public class TestGround {
 		final PackageStruct pkg = PackageStruct.findPackage("SYSTEM");
 		final SymbolStruct symbol = pkg.findSymbol("FOO").getSymbol();
 
-		final SymbolMacroExpander<?> symbolMacroExpander = new TestGroundSymbolMacroExpander();
+		final SymbolMacroExpander symbolMacroExpander = new TestGroundSymbolMacroExpander();
 		symbol.bindSymbolMacroExpander(symbolMacroExpander);
 
 		final LispStruct result;

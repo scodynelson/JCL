@@ -19,7 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class SymbolPackageFunction extends AbstractCommonLispFunctionStruct {
+public final class SymbolPackageFunction extends AbstractCommonLispFunctionStruct {
 
 	/**
 	 * The {@link TypeValidator} for validating the function parameter value types.
@@ -28,7 +28,7 @@ public class SymbolPackageFunction extends AbstractCommonLispFunctionStruct {
 	private TypeValidator validator;
 
 	public SymbolPackageFunction() {
-		super("Gets the function value of the provided symbol.");
+		super("Gets the package of the provided symbol.");
 	}
 
 	@Override
@@ -40,10 +40,8 @@ public class SymbolPackageFunction extends AbstractCommonLispFunctionStruct {
 	public LispStruct apply(final LispStruct... lispStructs) {
 		super.apply(lispStructs);
 
-		final LispStruct lispStruct = lispStructs[0];
-		validator.validateTypes(lispStruct, functionName(), "Symbol", SymbolType.INSTANCE);
-
-		final SymbolStruct symbol = (SymbolStruct) lispStructs[0];
+		final SymbolStruct symbol =
+				validator.validateType(lispStructs[0], functionName(), "Symbol", SymbolType.INSTANCE, SymbolStruct.class);
 		final PackageStruct symbolPackage = symbol.getSymbolPackage();
 		return (symbolPackage == null) ? NILStruct.INSTANCE : symbolPackage;
 	}

@@ -2,7 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/JCL.iml" filepath="$PROJECT_DIR$/JCL.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/JCL.iml" filepath="$PROJECT_DIR$/.idea/modules/JCL.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/JCL_main.iml" filepath="$PROJECT_DIR$/.idea/modules/JCL_main.iml" group="JCL" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/JCL_test.iml" filepath="$PROJECT_DIR$/.idea/modules/JCL_test.iml" group="JCL" />
     </modules>
   </component>
 </project>

@@ -91,10 +91,10 @@ final class ReturnFromCodeGenerator extends SpecialOperatorCodeGenerator<ReturnF
 		mv.visitVarInsn(Opcodes.ALOAD, nameSymbolStore);
 		mv.visitVarInsn(Opcodes.ALOAD, resultStore);
 		mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
-				GenerationConstants.RETURN_FROM_EXCEPTION_NAME,
-				GenerationConstants.INIT_METHOD_NAME,
-				GenerationConstants.RETURN_FROM_EXCEPTION_INIT_DESC,
-				false);
+		                   GenerationConstants.RETURN_FROM_EXCEPTION_NAME,
+		                   GenerationConstants.INIT_METHOD_NAME,
+		                   GenerationConstants.RETURN_FROM_EXCEPTION_INIT_DESC,
+		                   false);
 		mv.visitInsn(Opcodes.ATHROW);
 	}
 }

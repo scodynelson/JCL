@@ -75,10 +75,10 @@ abstract class SpecialOperatorCodeGenerator<I extends CompilerSpecialOperatorStr
 
 		final String methodName = methodNamePrefix + '_' + System.nanoTime();
 		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PRIVATE,
-				methodName,
-				SPECIAL_OPERATOR_METHOD_DESC,
-				null,
-				null);
+		                                        methodName,
+		                                        SPECIAL_OPERATOR_METHOD_DESC,
+		                                        null,
+		                                        null);
 
 		final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
 		final Deque<JavaMethodBuilder> methodBuilderDeque = generatorState.getMethodBuilderDeque();
@@ -101,10 +101,10 @@ abstract class SpecialOperatorCodeGenerator<I extends CompilerSpecialOperatorStr
 		previousMv.visitVarInsn(Opcodes.ALOAD, thisStore);
 		previousMv.visitVarInsn(Opcodes.ALOAD, closureArgStore);
 		previousMv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
-				className,
-				methodName,
-				SPECIAL_OPERATOR_METHOD_DESC,
-				false);
+		                           className,
+		                           methodName,
+		                           SPECIAL_OPERATOR_METHOD_DESC,
+		                           false);
 	}
 
 	/**

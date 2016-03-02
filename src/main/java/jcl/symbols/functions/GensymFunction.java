@@ -53,14 +53,14 @@ public final class GensymFunction extends AbstractCommonLispFunctionStruct {
 
 			if (defaulting instanceof StringStruct) {
 				gensymPrefix = ((StringStruct) defaulting).getAsJavaString();
-				SymbolVariables.GENSYM_COUNTER.setValue((IntegerStruct) gensymPostfix.add(IntegerStruct.ONE));
+				SymbolVariables.GENSYM_COUNTER.setValue(gensymPostfix.add(IntegerStruct.ONE));
 			} else if (defaulting instanceof IntegerStruct) {
 				gensymPostfix = (IntegerStruct) defaulting;
 			} else {
 				throw new TypeErrorException("UNCAUGHT TYPE ERROR.");
 			}
 		} else {
-			SymbolVariables.GENSYM_COUNTER.setValue((IntegerStruct) gensymPostfix.add(IntegerStruct.ONE));
+			SymbolVariables.GENSYM_COUNTER.setValue(gensymPostfix.add(IntegerStruct.ONE));
 		}
 
 		final String symbolName = gensymPrefix + gensymPostfix.getBigInteger();

@@ -57,10 +57,10 @@ class PathnameCodeGenerator implements CodeGenerator<PathnameStruct> {
 		final String filePath = uri.toString();
 		mv.visitLdcInsn(filePath);
 		mv.visitMethodInsn(Opcodes.INVOKESTATIC,
-				GenerationConstants.JAVA_URI_NAME,
-				GenerationConstants.JAVA_URI_CREATE_METHOD_NAME,
-				GenerationConstants.JAVA_URI_CREATE_METHOD_DESC,
-				false);
+		                   GenerationConstants.JAVA_URI_NAME,
+		                   GenerationConstants.JAVA_URI_CREATE_METHOD_NAME,
+		                   GenerationConstants.JAVA_URI_CREATE_METHOD_DESC,
+		                   false);
 		final int uriStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, uriStore);
 
@@ -69,9 +69,9 @@ class PathnameCodeGenerator implements CodeGenerator<PathnameStruct> {
 
 		mv.visitVarInsn(Opcodes.ALOAD, uriStore);
 		mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
-				PATHNAME_STRUCT_NAME,
-				GenerationConstants.INIT_METHOD_NAME,
-				PATHNAME_STRUCT_NAME_INIT_DESC,
-				false);
+		                   PATHNAME_STRUCT_NAME,
+		                   GenerationConstants.INIT_METHOD_NAME,
+		                   PATHNAME_STRUCT_NAME_INIT_DESC,
+		                   false);
 	}
 }

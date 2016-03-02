@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class GoSymbolStructFactory extends GoStructFactory<SymbolStruct> {
 
+	@Override
 	public GoSymbolStruct getGoElement(final SymbolStruct tag) {
 		return new GoSymbolStruct(tag);
 	}

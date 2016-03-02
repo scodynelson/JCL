@@ -86,18 +86,18 @@ public abstract class InnerLambdaExpander extends MacroFunctionExpander<InnerLam
 		return buildInnerLambda(innerLambdasAsJavaList, innerLambdaEnvironment, bodyProcessingResult, declare, functionNameStack, functionNames);
 	}
 
-	protected abstract InnerLambdaStruct buildInnerLambda(final List<LispStruct> innerLambdasAsJavaList,
-	                                                      final Environment innerLambdaEnvironment,
-	                                                      final BodyProcessingResult bodyProcessingResult,
-	                                                      final DeclareStruct declare,
-	                                                      final Stack<SymbolStruct> functionNameStack,
-	                                                      final List<SymbolStruct> functionNames);
+	protected abstract InnerLambdaStruct buildInnerLambda(List<LispStruct> innerLambdasAsJavaList,
+	                                                      Environment innerLambdaEnvironment,
+	                                                      BodyProcessingResult bodyProcessingResult,
+	                                                      DeclareStruct declare,
+	                                                      Stack<SymbolStruct> functionNameStack,
+	                                                      List<SymbolStruct> functionNames);
 
-	protected abstract ListStruct getInnerLambdaBody(final ListStruct innerBlockListStruct, final SymbolStruct functionNameSymbol,
-	                                                 final List<SymbolStruct> functionNames);
+	protected abstract ListStruct getInnerLambdaBody(ListStruct innerBlockListStruct, SymbolStruct functionNameSymbol,
+	                                                 List<SymbolStruct> functionNames);
 
-	protected abstract CompilerFunctionStruct expandBuiltInnerFunction(final ListStruct innerFunctionListStruct,
-	                                                                   final Environment environment);
+	protected abstract CompilerFunctionStruct expandBuiltInnerFunction(ListStruct innerFunctionListStruct,
+	                                                                   Environment environment);
 
 	protected List<InnerLambdaStruct.InnerLambdaVar> getVars(final List<LispStruct> innerLambdasAsJavaList,
 	                                                         final Environment innerLambdaEnvironment,

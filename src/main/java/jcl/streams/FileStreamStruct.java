@@ -5,6 +5,7 @@
 package jcl.streams;
 
 import java.io.EOFException;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
@@ -12,11 +13,13 @@ import java.math.BigInteger;
 import java.nio.channels.FileChannel;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
+import java.util.function.Supplier;
 
 import jcl.LispStruct;
 import jcl.LispType;
 import jcl.conditions.exceptions.ErrorException;
 import jcl.conditions.exceptions.StreamErrorException;
+import jcl.pathnames.PathnameStruct;
 import jcl.types.FileStreamType;
 import jcl.types.SignedByteType;
 import org.slf4j.Logger;
@@ -96,6 +99,15 @@ public class FileStreamStruct extends AbstractNativeStreamStruct {
 	 */
 	public Path getPath() {
 		return path;
+	}
+
+	@Override
+	public Supplier<PathnameStruct> asPathname() {
+		return () -> {
+			final File file = path.toFile();
+			final String namestring = file.getAbsolutePath();
+			return new PathnameStruct(namestring);
+		};
 	}
 
 	@Override

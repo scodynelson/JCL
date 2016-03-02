@@ -62,10 +62,10 @@ public abstract class JavaMethodCodeGenerator<I extends LispStruct> implements C
 			currentMw.visitVarInsn(Opcodes.ALOAD, parameterStore);
 		}
 		currentMw.visitMethodInsn(opcode,
-				className,
-				name,
-				desc,
-				false);
+		                          className,
+		                          name,
+		                          desc,
+		                          false);
 	}
 
 	protected abstract void generateMethodContent(JCLMethodWriter mw);

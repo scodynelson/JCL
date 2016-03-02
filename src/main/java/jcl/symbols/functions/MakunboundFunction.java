@@ -17,7 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class MakunboundFunction extends AbstractCommonLispFunctionStruct {
+public final class MakunboundFunction extends AbstractCommonLispFunctionStruct {
 
 	/**
 	 * The {@link TypeValidator} for validating the function parameter value types.
@@ -26,7 +26,7 @@ public class MakunboundFunction extends AbstractCommonLispFunctionStruct {
 	private TypeValidator validator;
 
 	public MakunboundFunction() {
-		super("Gets the function value of the provided symbol.");
+		super("Makes the symbol be unbound, regardless of whether it was previously bound.");
 	}
 
 	@Override
@@ -38,10 +38,8 @@ public class MakunboundFunction extends AbstractCommonLispFunctionStruct {
 	public LispStruct apply(final LispStruct... lispStructs) {
 		super.apply(lispStructs);
 
-		final LispStruct lispStruct = lispStructs[0];
-		validator.validateTypes(lispStruct, functionName(), "Symbol", SymbolType.INSTANCE);
-
-		final SymbolStruct symbol = (SymbolStruct) lispStructs[0];
+		final SymbolStruct symbol =
+				validator.validateType(lispStructs[0], functionName(), "Symbol", SymbolType.INSTANCE, SymbolStruct.class);
 		symbol.setValue(null);
 		return symbol;
 	}

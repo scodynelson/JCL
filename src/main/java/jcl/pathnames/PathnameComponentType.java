@@ -21,12 +21,12 @@ public enum PathnameComponentType {
 	/**
 	 * Unspecific pathname component type.
 	 */
-	UNSPECIFIC(CommonLispSymbols.UNSPECIFIC),
+	UNSPECIFIC(CommonLispSymbols.UNSPECIFIC_KEYWORD),
 
 	/**
 	 * Wild pathname component type.
 	 */
-	WILD(CommonLispSymbols.WILD),
+	WILD(CommonLispSymbols.WILD_KEYWORD),
 
 	/**
 	 * Nil pathname component type.

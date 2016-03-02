@@ -4,7 +4,7 @@
 
 package jcl.symbols.functions;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import jcl.LispStruct;
@@ -18,7 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class SetFunction extends AbstractCommonLispFunctionStruct {
+public final class SetFunction extends AbstractCommonLispFunctionStruct {
 
 	/**
 	 * The {@link TypeValidator} for validating the function parameter value types.
@@ -27,35 +27,26 @@ public class SetFunction extends AbstractCommonLispFunctionStruct {
 	private TypeValidator validator;
 
 	public SetFunction() {
-		super("Gets the function value of the provided symbol.");
+		super("Sets the value of the provided symbol to the provided value.");
 	}
 
 	@Override
 	protected List<RequiredParameter> getRequiredBindings() {
-		final List<RequiredParameter> requiredParameters = new ArrayList<>(2);
-
 		final RequiredParameter symbol = RequiredParameter.builder(GlobalPackageStruct.COMMON_LISP, "SYMBOL").build();
-		requiredParameters.add(symbol);
-
 		final RequiredParameter value = RequiredParameter.builder(GlobalPackageStruct.COMMON_LISP, "VALUE").build();
-		requiredParameters.add(value);
-
-		return requiredParameters;
+		return Arrays.asList(symbol, value);
 	}
 
 	@Override
 	public LispStruct apply(final LispStruct... lispStructs) {
 		super.apply(lispStructs);
 
-		final LispStruct lispStruct1 = lispStructs[0];
-		validator.validateTypes(lispStruct1, functionName(), "Symbol", SymbolType.INSTANCE);
+		final SymbolStruct symbol =
+				validator.validateType(lispStructs[0], functionName(), "Symbol", SymbolType.INSTANCE, SymbolStruct.class);
+		final LispStruct value = lispStructs[1];
 
-		final LispStruct lispStruct2 = lispStructs[1];
-
-		final SymbolStruct symbol = (SymbolStruct) lispStruct1;
-		symbol.setValue(lispStruct2);
-
-		return symbol.getValue();
+		symbol.setValue(value);
+		return value;
 	}
 
 	@Override

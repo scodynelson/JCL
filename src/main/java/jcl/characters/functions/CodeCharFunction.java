@@ -34,7 +34,7 @@ public final class CodeCharFunction extends AbstractCommonLispFunctionStruct {
 	 */
 	public CodeCharFunction() {
 		super("Returns a character with the code attribute given by code. If no such character exists and one cannot be " +
-				"created, nil is returned.");
+				      "created, nil is returned.");
 	}
 
 	/**

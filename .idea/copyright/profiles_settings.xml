@@ -1,7 +1,3 @@
 <component name="CopyrightManager">
-  <settings default="JCL">
-    <module2copyright>
-      <element module="All" copyright="JCL" />
-    </module2copyright>
-  </settings>
+  <settings default="" />
 </component>

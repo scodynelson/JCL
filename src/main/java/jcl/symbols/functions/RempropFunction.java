@@ -4,7 +4,7 @@
 
 package jcl.symbols.functions;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import jcl.LispStruct;
@@ -19,7 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class RempropFunction extends AbstractCommonLispFunctionStruct {
+public final class RempropFunction extends AbstractCommonLispFunctionStruct {
 
 	/**
 	 * The {@link TypeValidator} for validating the function parameter value types.
@@ -28,33 +28,24 @@ public class RempropFunction extends AbstractCommonLispFunctionStruct {
 	private TypeValidator validator;
 
 	public RempropFunction() {
-		super("Gets the function value of the provided symbol.");
+		super("Removes from the property list of symbol a property[1] with a property indicator identical to indicator.");
 	}
 
 	@Override
 	protected List<RequiredParameter> getRequiredBindings() {
-		final List<RequiredParameter> requiredParameters = new ArrayList<>(2);
-
 		final RequiredParameter symbol = RequiredParameter.builder(GlobalPackageStruct.COMMON_LISP, "SYMBOL").build();
-		requiredParameters.add(symbol);
-
 		final RequiredParameter indicator = RequiredParameter.builder(GlobalPackageStruct.COMMON_LISP, "INDICATOR").build();
-		requiredParameters.add(indicator);
-
-		return requiredParameters;
+		return Arrays.asList(symbol, indicator);
 	}
 
 	@Override
 	public LispStruct apply(final LispStruct... lispStructs) {
 		super.apply(lispStructs);
 
-		final LispStruct lispStruct1 = lispStructs[0];
-		validator.validateTypes(lispStruct1, functionName(), "Symbol", SymbolType.INSTANCE);
-
-		final LispStruct lispStruct2 = lispStructs[1];
-
-		final SymbolStruct symbol = (SymbolStruct) lispStruct1;
-		final boolean wasRemoved = symbol.removeProperty(lispStruct2);
+		final SymbolStruct symbol =
+				validator.validateType(lispStructs[0], functionName(), "Symbol", SymbolType.INSTANCE, SymbolStruct.class);
+		final LispStruct indicator = lispStructs[1];
+		final boolean wasRemoved = symbol.removeProperty(indicator);
 
 		return BooleanStructs.toLispBoolean(wasRemoved);
 	}

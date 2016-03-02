@@ -15,6 +15,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.StringTokenizer;
+import java.util.function.Supplier;
 import java.util.regex.Pattern;
 
 import jcl.classes.BuiltInClassStruct;
@@ -215,6 +216,23 @@ public class PathnameStruct extends BuiltInClassStruct {
 		this.type = type;
 		this.version = version;
 		this.uri = uri;
+	}
+
+	@Override
+	public Supplier<PathnameStruct> asPathname() {
+		return () -> this;
+	}
+
+	public Path getPath() {
+		final String namestring = getNamestring();
+		final File file = new File(namestring);
+		return file.toPath();
+	}
+
+	public boolean exists() {
+		final String namestring = getNamestring();
+		final File file = new File(namestring);
+		return file.exists();
 	}
 
 	/**

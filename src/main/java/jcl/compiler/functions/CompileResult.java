@@ -13,11 +13,11 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 public class CompileResult {
 
-	private FunctionStruct function;
+	private final FunctionStruct function;
 
-	private BooleanStruct compiledWithWarnings;
+	private final BooleanStruct compiledWithWarnings;
 
-	private BooleanStruct failedToCompile;
+	private final BooleanStruct failedToCompile;
 
 	public CompileResult(final FunctionStruct function, final BooleanStruct compiledWithWarnings, final BooleanStruct failedToCompile) {
 		this.function = function;

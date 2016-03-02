@@ -6,6 +6,7 @@ package jcl.characters;
 
 import java.math.BigInteger;
 import java.util.Map;
+import java.util.function.Supplier;
 
 import com.ibm.icu.lang.UCharacter;
 import jcl.LispStruct;
@@ -13,6 +14,7 @@ import jcl.arrays.StringStruct;
 import jcl.classes.BuiltInClassStruct;
 import jcl.conditions.exceptions.ErrorException;
 import jcl.numbers.IntegerStruct;
+import jcl.packages.PackageStruct;
 import jcl.symbols.NILStruct;
 import jcl.types.BaseCharType;
 import jcl.types.CharacterType;
@@ -124,8 +126,8 @@ public class CharacterStruct extends BuiltInClassStruct {
 	 * @return the instance, as it is already a character
 	 */
 	@Override
-	public LispStruct toCharacter() {
-		return this;
+	public Supplier<CharacterStruct> asCharacter() {
+		return () -> this;
 	}
 
 	/**
@@ -135,8 +137,23 @@ public class CharacterStruct extends BuiltInClassStruct {
 	 * @return the instance, as it is already a character
 	 */
 	@Override
-	public LispStruct toNamedCharacter() {
-		return this;
+	public Supplier<CharacterStruct> asNamedCharacter() {
+		return () -> this;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * Returns the PackageStruct with the {@link PackageStruct#name} that matches the CharacterStruct instance via
+	 * {@link PackageStruct#findPackage(String)}.
+	 *
+	 * @return the PackageStruct with the {@link PackageStruct#name} that matches the instance
+	 */
+	@Override
+	public Supplier<PackageStruct> asPackage() {
+		return () -> {
+			final String packageName = getCharacter().toString();
+			return PackageStruct.findPackage(packageName);
+		};
 	}
 
 	/**

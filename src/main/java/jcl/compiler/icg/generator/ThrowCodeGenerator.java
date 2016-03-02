@@ -93,10 +93,10 @@ final class ThrowCodeGenerator extends SpecialOperatorCodeGenerator<ThrowStruct>
 		mv.visitVarInsn(Opcodes.ALOAD, catchTagStore);
 		mv.visitVarInsn(Opcodes.ALOAD, resultFormStore);
 		mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
-				GenerationConstants.THROW_EXCEPTION_NAME,
-				GenerationConstants.INIT_METHOD_NAME,
-				GenerationConstants.THROW_EXCEPTION_INIT_DESC,
-				false);
+		                   GenerationConstants.THROW_EXCEPTION_NAME,
+		                   GenerationConstants.INIT_METHOD_NAME,
+		                   GenerationConstants.THROW_EXCEPTION_INIT_DESC,
+		                   false);
 		mv.visitInsn(Opcodes.ATHROW);
 	}
 }

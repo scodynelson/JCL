@@ -133,10 +133,10 @@ final class InnerLambdaCodeGenerator extends SpecialOperatorCodeGenerator<InnerL
 
 		mv.visitVarInsn(Opcodes.ALOAD, closureArgStore);
 		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
-				GenerationConstants.CLOSURE_NAME,
-				GenerationConstants.CLOSURE_GET_FUNCTION_BINDINGS_METHOD_NAME,
-				GenerationConstants.CLOSURE_GET_FUNCTION_BINDINGS_METHOD_DESC,
-				false);
+		                   GenerationConstants.CLOSURE_NAME,
+		                   GenerationConstants.CLOSURE_GET_FUNCTION_BINDINGS_METHOD_NAME,
+		                   GenerationConstants.CLOSURE_GET_FUNCTION_BINDINGS_METHOD_DESC,
+		                   false);
 		mv.visitVarInsn(Opcodes.ASTORE, closureFunctionBindingsStore);
 
 		mv.visitLabel(closureNullCheckIfEnd);
@@ -167,10 +167,10 @@ final class InnerLambdaCodeGenerator extends SpecialOperatorCodeGenerator<InnerL
 			mv.visitVarInsn(Opcodes.ALOAD, functionSymbolStore);
 			mv.visitVarInsn(Opcodes.ALOAD, initFormStore);
 			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
-					GenerationConstants.SYMBOL_STRUCT_NAME,
-					GenerationConstants.SYMBOL_STRUCT_BIND_FUNCTION_METHOD_NAME,
-					GenerationConstants.SYMBOL_STRUCT_BIND_FUNCTION_METHOD_DESC,
-					false);
+			                   GenerationConstants.SYMBOL_STRUCT_NAME,
+			                   GenerationConstants.SYMBOL_STRUCT_BIND_FUNCTION_METHOD_NAME,
+			                   GenerationConstants.SYMBOL_STRUCT_BIND_FUNCTION_METHOD_DESC,
+			                   false);
 
 			final Label closureFunctionBindingsNullCheckIfEnd = new Label();
 
@@ -181,10 +181,10 @@ final class InnerLambdaCodeGenerator extends SpecialOperatorCodeGenerator<InnerL
 			mv.visitVarInsn(Opcodes.ALOAD, functionSymbolStore);
 			mv.visitVarInsn(Opcodes.ALOAD, initFormStore);
 			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
-					GenerationConstants.JAVA_MAP_NAME,
-					GenerationConstants.JAVA_MAP_PUT_METHOD_NAME,
-					GenerationConstants.JAVA_MAP_PUT_METHOD_DESC,
-					true);
+			                   GenerationConstants.JAVA_MAP_NAME,
+			                   GenerationConstants.JAVA_MAP_PUT_METHOD_NAME,
+			                   GenerationConstants.JAVA_MAP_PUT_METHOD_DESC,
+			                   true);
 			mv.visitInsn(Opcodes.POP);
 
 			mv.visitLabel(closureFunctionBindingsNullCheckIfEnd);
@@ -245,10 +245,10 @@ final class InnerLambdaCodeGenerator extends SpecialOperatorCodeGenerator<InnerL
 		for (final Integer functionSymbolStore : functionSymbolStores) {
 			mv.visitVarInsn(Opcodes.ALOAD, functionSymbolStore);
 			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
-					GenerationConstants.SYMBOL_STRUCT_NAME,
-					GenerationConstants.SYMBOL_STRUCT_UNBIND_FUNCTION_METHOD_NAME,
-					GenerationConstants.SYMBOL_STRUCT_UNBIND_FUNCTION_METHOD_DESC,
-					false);
+			                   GenerationConstants.SYMBOL_STRUCT_NAME,
+			                   GenerationConstants.SYMBOL_STRUCT_UNBIND_FUNCTION_METHOD_NAME,
+			                   GenerationConstants.SYMBOL_STRUCT_UNBIND_FUNCTION_METHOD_DESC,
+			                   false);
 			mv.visitInsn(Opcodes.POP);
 		}
 	}

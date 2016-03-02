@@ -4,7 +4,7 @@
 
 package jcl.symbols.functions;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import jcl.LispStruct;
@@ -20,7 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class GetFunction extends AbstractCommonLispFunctionStruct {
+public final class GetFunction extends AbstractCommonLispFunctionStruct {
 
 	/**
 	 * The {@link TypeValidator} for validating the function parameter value types.
@@ -29,20 +29,14 @@ public class GetFunction extends AbstractCommonLispFunctionStruct {
 	private TypeValidator validator;
 
 	public GetFunction() {
-		super("Gets the function value of the provided symbol.");
+		super("Finds a property on the property list of symbol whose property indicator is identical to indicator, and returns its corresponding property value.");
 	}
 
 	@Override
 	protected List<RequiredParameter> getRequiredBindings() {
-		final List<RequiredParameter> requiredParameters = new ArrayList<>(2);
-
 		final RequiredParameter symbol = RequiredParameter.builder(GlobalPackageStruct.COMMON_LISP, "SYMBOL").build();
-		requiredParameters.add(symbol);
-
 		final RequiredParameter indicator = RequiredParameter.builder(GlobalPackageStruct.COMMON_LISP, "INDICATOR").build();
-		requiredParameters.add(indicator);
-
-		return requiredParameters;
+		return Arrays.asList(symbol, indicator);
 	}
 
 	@Override
@@ -56,23 +50,19 @@ public class GetFunction extends AbstractCommonLispFunctionStruct {
 	public LispStruct apply(final LispStruct... lispStructs) {
 		super.apply(lispStructs);
 
-		final LispStruct lispStruct1 = lispStructs[0];
-		validator.validateTypes(lispStruct1, functionName(), "Symbol", SymbolType.INSTANCE);
+		final SymbolStruct symbol =
+				validator.validateType(lispStructs[0], functionName(), "Symbol", SymbolType.INSTANCE, SymbolStruct.class);
+		final LispStruct indicator = lispStructs[1];
 
-		final LispStruct lispStruct2 = lispStructs[1];
-
-		final SymbolStruct symbol = (SymbolStruct) lispStruct1;
-		final LispStruct property = symbol.getProperty(lispStruct2);
-
-		if (property == null) {
-			if (lispStructs.length >= 2) {
-				return lispStructs[2];
-			} else {
-				return NILStruct.INSTANCE;
-			}
+		final LispStruct defaultReturn;
+		if (lispStructs.length >= 2) {
+			defaultReturn = lispStructs[2];
 		} else {
-			return property;
+			defaultReturn = NILStruct.INSTANCE;
 		}
+
+		final LispStruct property = symbol.getProperty(indicator);
+		return (property == null) ? defaultReturn : property;
 	}
 
 	@Override

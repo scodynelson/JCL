@@ -248,105 +248,105 @@ public class RatioStruct extends RationalStruct {
 	/**
 	 * {@inheritDoc}
 	 * <p>
-	 * Compares this RatioStruct to a {@link NumberStruct} using the provided {@link LessThanVisitor}.
+	 * Compares this RatioStruct to a {@link NumberStruct} using the provided {@link RealStruct.LessThanVisitor}.
 	 *
 	 * @param lessThanVisitor
-	 * 		the {@link LessThanVisitor} to be used in the {@literal '<'} operation
+	 * 		the {@link RealStruct.LessThanVisitor} to be used in the {@literal '<'} operation
 	 *
-	 * @return the {@literal '<'} comparison of {@link NumberStruct} using the provided {@link LessThanVisitor} and this
+	 * @return the {@literal '<'} comparison of {@link NumberStruct} using the provided {@link RealStruct.LessThanVisitor} and this
 	 * RatioStruct
 	 */
 	@Override
-	protected boolean isLessThan(final LessThanVisitor<?> lessThanVisitor) {
+	protected boolean isLessThan(final RealStruct.LessThanVisitor<?> lessThanVisitor) {
 		return lessThanVisitor.lessThan(this);
 	}
 
 	/**
-	 * Returns a new {@link LessThanVisitor} with this RatioStruct to be used in a {@literal '<'} operation.
+	 * Returns a new {@link RealStruct.LessThanVisitor} with this RatioStruct to be used in a {@literal '<'} operation.
 	 *
-	 * @return a new {@link LessThanVisitor} with this RatioStruct to be used in a {@literal '<'} operation
+	 * @return a new {@link RealStruct.LessThanVisitor} with this RatioStruct to be used in a {@literal '<'} operation
 	 */
 	@Override
-	protected LessThanVisitor<?> lessThanVisitor() {
+	protected RealStruct.LessThanVisitor<?> lessThanVisitor() {
 		return new RatioLessThanVisitor(this);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 * <p>
-	 * Compares this RatioStruct to a {@link NumberStruct} using the provided {@link GreaterThanVisitor}.
+	 * Compares this RatioStruct to a {@link NumberStruct} using the provided {@link RealStruct.GreaterThanVisitor}.
 	 *
 	 * @param greaterThanVisitor
-	 * 		the {@link GreaterThanVisitor} to be used in the {@literal '>'} operation
+	 * 		the {@link RealStruct.GreaterThanVisitor} to be used in the {@literal '>'} operation
 	 *
-	 * @return the {@literal '>'} comparison of {@link NumberStruct} using the provided {@link GreaterThanVisitor} and
+	 * @return the {@literal '>'} comparison of {@link NumberStruct} using the provided {@link RealStruct.GreaterThanVisitor} and
 	 * this RatioStruct
 	 */
 	@Override
-	protected boolean isGreaterThan(final GreaterThanVisitor<?> greaterThanVisitor) {
+	protected boolean isGreaterThan(final RealStruct.GreaterThanVisitor<?> greaterThanVisitor) {
 		return greaterThanVisitor.greaterThan(this);
 	}
 
 	/**
-	 * Returns a new {@link GreaterThanVisitor} with this RatioStruct to be used in a {@literal '>'} operation.
+	 * Returns a new {@link RealStruct.GreaterThanVisitor} with this RatioStruct to be used in a {@literal '>'} operation.
 	 *
-	 * @return a new {@link GreaterThanVisitor} with this RatioStruct to be used in a {@literal '>'} operation
+	 * @return a new {@link RealStruct.GreaterThanVisitor} with this RatioStruct to be used in a {@literal '>'} operation
 	 */
 	@Override
-	protected GreaterThanVisitor<?> greaterThanVisitor() {
+	protected RealStruct.GreaterThanVisitor<?> greaterThanVisitor() {
 		return new RatioGreaterThanVisitor(this);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 * <p>
-	 * Compares this RatioStruct to a {@link NumberStruct} using the provided {@link LessThanOrEqualToVisitor}.
+	 * Compares this RatioStruct to a {@link NumberStruct} using the provided {@link RealStruct.LessThanOrEqualToVisitor}.
 	 *
 	 * @param lessThanOrEqualToVisitor
-	 * 		the {@link LessThanOrEqualToVisitor} to be used in the {@literal '<='} operation
+	 * 		the {@link RealStruct.LessThanOrEqualToVisitor} to be used in the {@literal '<='} operation
 	 *
 	 * @return the {@literal '<='} comparison of {@link NumberStruct} using the provided {@link
-	 * LessThanOrEqualToVisitor} and this RatioStruct
+	 * RealStruct.LessThanOrEqualToVisitor} and this RatioStruct
 	 */
 	@Override
-	protected boolean isLessThanOrEqualTo(final LessThanOrEqualToVisitor<?> lessThanOrEqualToVisitor) {
+	protected boolean isLessThanOrEqualTo(final RealStruct.LessThanOrEqualToVisitor<?> lessThanOrEqualToVisitor) {
 		return lessThanOrEqualToVisitor.lessThanOrEqualTo(this);
 	}
 
 	/**
-	 * Returns a new {@link LessThanOrEqualToVisitor} with this RatioStruct to be used in a {@literal '<='} operation.
+	 * Returns a new {@link RealStruct.LessThanOrEqualToVisitor} with this RatioStruct to be used in a {@literal '<='} operation.
 	 *
-	 * @return a new {@link LessThanOrEqualToVisitor} with this RatioStruct to be used in a {@literal '<='} operation
+	 * @return a new {@link RealStruct.LessThanOrEqualToVisitor} with this RatioStruct to be used in a {@literal '<='} operation
 	 */
 	@Override
-	protected LessThanOrEqualToVisitor<?> lessThanOrEqualToVisitor() {
+	protected RealStruct.LessThanOrEqualToVisitor<?> lessThanOrEqualToVisitor() {
 		return new RatioLessThanOrEqualToVisitor(this);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 * <p>
-	 * Compares this RatioStruct to a {@link NumberStruct} using the provided {@link GreaterThanOrEqualToVisitor}.
+	 * Compares this RatioStruct to a {@link NumberStruct} using the provided {@link RealStruct.GreaterThanOrEqualToVisitor}.
 	 *
 	 * @param greaterThanOrEqualToVisitor
-	 * 		the {@link GreaterThanOrEqualToVisitor} to be used in the {@literal '>='} operation
+	 * 		the {@link RealStruct.GreaterThanOrEqualToVisitor} to be used in the {@literal '>='} operation
 	 *
 	 * @return the {@literal '>='} comparison of {@link NumberStruct} using the provided {@link
-	 * GreaterThanOrEqualToVisitor} and this RatioStruct
+	 * RealStruct.GreaterThanOrEqualToVisitor} and this RatioStruct
 	 */
 	@Override
-	protected boolean isGreaterThanOrEqualTo(final GreaterThanOrEqualToVisitor<?> greaterThanOrEqualToVisitor) {
+	protected boolean isGreaterThanOrEqualTo(final RealStruct.GreaterThanOrEqualToVisitor<?> greaterThanOrEqualToVisitor) {
 		return greaterThanOrEqualToVisitor.greaterThanOrEqualTo(this);
 	}
 
 	/**
-	 * Returns a new {@link GreaterThanOrEqualToVisitor} with this RatioStruct to be used in a {@literal '>='}
+	 * Returns a new {@link RealStruct.GreaterThanOrEqualToVisitor} with this RatioStruct to be used in a {@literal '>='}
 	 * operation.
 	 *
-	 * @return a new {@link GreaterThanOrEqualToVisitor} with this RatioStruct to be used in a {@literal '>='} operation
+	 * @return a new {@link RealStruct.GreaterThanOrEqualToVisitor} with this RatioStruct to be used in a {@literal '>='} operation
 	 */
 	@Override
-	protected GreaterThanOrEqualToVisitor<?> greaterThanOrEqualToVisitor() {
+	protected RealStruct.GreaterThanOrEqualToVisitor<?> greaterThanOrEqualToVisitor() {
 		return new RatioGreaterThanOrEqualToVisitor(this);
 	}
 
@@ -701,9 +701,9 @@ public class RatioStruct extends RationalStruct {
 	// Visitor Implementations
 
 	/**
-	 * {@link RealAddVisitor} for computing addition results for {@link RatioStruct}s.
+	 * {@link RealStruct.RealAddVisitor} for computing addition results for {@link RatioStruct}s.
 	 */
-	private static final class RatioAddVisitor extends RealAddVisitor<RatioStruct> {
+	private static final class RatioAddVisitor extends RealStruct.RealAddVisitor<RatioStruct> {
 
 		/**
 		 * Package private constructor to make a new instance of an RatioAddVisitor with the provided {@link
@@ -744,9 +744,9 @@ public class RatioStruct extends RationalStruct {
 	}
 
 	/**
-	 * {@link RealSubtractVisitor} for computing subtraction function results for {@link RatioStruct}s.
+	 * {@link RealStruct.RealSubtractVisitor} for computing subtraction function results for {@link RatioStruct}s.
 	 */
-	private static final class RatioSubtractVisitor extends RealSubtractVisitor<RatioStruct> {
+	private static final class RatioSubtractVisitor extends RealStruct.RealSubtractVisitor<RatioStruct> {
 
 		/**
 		 * Package private constructor to make a new instance of an RatioSubtractVisitor with the provided {@link
@@ -787,9 +787,9 @@ public class RatioStruct extends RationalStruct {
 	}
 
 	/**
-	 * {@link RealMultiplyVisitor} for computing multiplication function results for {@link RatioStruct}s.
+	 * {@link RealStruct.RealMultiplyVisitor} for computing multiplication function results for {@link RatioStruct}s.
 	 */
-	private static final class RatioMultiplyVisitor extends RealMultiplyVisitor<RatioStruct> {
+	private static final class RatioMultiplyVisitor extends RealStruct.RealMultiplyVisitor<RatioStruct> {
 
 		/**
 		 * Package private constructor to make a new instance of an RatioMultiplyVisitor with the provided {@link
@@ -830,9 +830,9 @@ public class RatioStruct extends RationalStruct {
 	}
 
 	/**
-	 * {@link RealDivideVisitor} for computing division function results for {@link RatioStruct}s.
+	 * {@link RealStruct.RealDivideVisitor} for computing division function results for {@link RatioStruct}s.
 	 */
-	private static final class RatioDivideVisitor extends RealDivideVisitor<RatioStruct> {
+	private static final class RatioDivideVisitor extends RealStruct.RealDivideVisitor<RatioStruct> {
 
 		/**
 		 * Package private constructor to make a new instance of an RatioDivideVisitor with the provided {@link
@@ -873,9 +873,9 @@ public class RatioStruct extends RationalStruct {
 	}
 
 	/**
-	 * {@link RealEqualToVisitor} for computing numeric '=' equality results for {@link RatioStruct}s.
+	 * {@link RealStruct.RealEqualToVisitor} for computing numeric '=' equality results for {@link RatioStruct}s.
 	 */
-	private static final class RatioEqualToVisitor extends RealEqualToVisitor<RatioStruct> {
+	private static final class RatioEqualToVisitor extends RealStruct.RealEqualToVisitor<RatioStruct> {
 
 		/**
 		 * Package private constructor to make a new instance of an RatioEqualToVisitor with the provided {@link
@@ -910,9 +910,9 @@ public class RatioStruct extends RationalStruct {
 	}
 
 	/**
-	 * {@link LessThanVisitor} for computing numeric {@literal '<'} equality results for {@link RatioStruct}s.
+	 * {@link RealStruct.LessThanVisitor} for computing numeric {@literal '<'} equality results for {@link RatioStruct}s.
 	 */
-	private static final class RatioLessThanVisitor extends LessThanVisitor<RatioStruct> {
+	private static final class RatioLessThanVisitor extends RealStruct.LessThanVisitor<RatioStruct> {
 
 		/**
 		 * Package private constructor to make a new instance of an RatioLessThanVisitor with the provided {@link
@@ -947,9 +947,9 @@ public class RatioStruct extends RationalStruct {
 	}
 
 	/**
-	 * {@link GreaterThanVisitor} for computing numeric {@literal '>'} equality results for {@link RatioStruct}s.
+	 * {@link RealStruct.GreaterThanVisitor} for computing numeric {@literal '>'} equality results for {@link RatioStruct}s.
 	 */
-	private static final class RatioGreaterThanVisitor extends GreaterThanVisitor<RatioStruct> {
+	private static final class RatioGreaterThanVisitor extends RealStruct.GreaterThanVisitor<RatioStruct> {
 
 		/**
 		 * Package private constructor to make a new instance of an RatioGreaterThanVisitor with the provided {@link
@@ -984,10 +984,10 @@ public class RatioStruct extends RationalStruct {
 	}
 
 	/**
-	 * {@link LessThanOrEqualToVisitor} for computing numeric {@literal '<='} equality results for {@link
+	 * {@link RealStruct.LessThanOrEqualToVisitor} for computing numeric {@literal '<='} equality results for {@link
 	 * RatioStruct}s.
 	 */
-	private static final class RatioLessThanOrEqualToVisitor extends LessThanOrEqualToVisitor<RatioStruct> {
+	private static final class RatioLessThanOrEqualToVisitor extends RealStruct.LessThanOrEqualToVisitor<RatioStruct> {
 
 		/**
 		 * Package private constructor to make a new instance of an RatioLessThanOrEqualToVisitor with the provided
@@ -1022,10 +1022,10 @@ public class RatioStruct extends RationalStruct {
 	}
 
 	/**
-	 * {@link GreaterThanOrEqualToVisitor} for computing numeric {@literal '>='} equality results for {@link
+	 * {@link RealStruct.GreaterThanOrEqualToVisitor} for computing numeric {@literal '>='} equality results for {@link
 	 * RatioStruct}s.
 	 */
-	private static final class RatioGreaterThanOrEqualToVisitor extends GreaterThanOrEqualToVisitor<RatioStruct> {
+	private static final class RatioGreaterThanOrEqualToVisitor extends RealStruct.GreaterThanOrEqualToVisitor<RatioStruct> {
 
 		/**
 		 * Package private constructor to make a new instance of an RatioGreaterThanOrEqualToVisitor with the provided
@@ -1060,9 +1060,9 @@ public class RatioStruct extends RationalStruct {
 	}
 
 	/**
-	 * {@link RationalQuotientRemainderVisitor} for computing quotient and remainder results for {@link RatioStruct}s.
+	 * {@link RationalStruct.RationalQuotientRemainderVisitor} for computing quotient and remainder results for {@link RatioStruct}s.
 	 */
-	private static final class RatioQuotientRemainderVisitor extends RationalQuotientRemainderVisitor<RatioStruct> {
+	private static final class RatioQuotientRemainderVisitor extends RationalStruct.RationalQuotientRemainderVisitor<RatioStruct> {
 
 		/**
 		 * Package private constructor to make a new instance of an RatioQuotientRemainderVisitor with the provided

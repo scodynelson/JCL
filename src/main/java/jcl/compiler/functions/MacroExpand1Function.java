@@ -123,7 +123,7 @@ public final class MacroExpand1Function extends FunctionStruct {
 		if (symbolStruct.isPresent()) {
 			final SymbolStruct theSymbol = symbolStruct.get();
 
-			final SymbolMacroExpander<?> symbolMacroExpander = theSymbol.getSymbolMacroExpander();
+			final SymbolMacroExpander symbolMacroExpander = theSymbol.getSymbolMacroExpander();
 
 			if (symbolMacroExpander != null) {
 				final FunctionStruct macroExpandHook = CompilerVariables.MACROEXPAND_HOOK.getVariableValue();

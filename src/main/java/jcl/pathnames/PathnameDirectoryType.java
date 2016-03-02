@@ -18,12 +18,12 @@ public enum PathnameDirectoryType {
 	/**
 	 * Absolute pathname directory type.
 	 */
-	ABSOLUTE(CommonLispSymbols.ABSOLUTE),
+	ABSOLUTE(CommonLispSymbols.ABSOLUTE_KEYWORD),
 
 	/**
 	 * Relative pathname directory type.
 	 */
-	RELATIVE(CommonLispSymbols.RELATIVE);
+	RELATIVE(CommonLispSymbols.RELATIVE_KEYWORD);
 
 	/**
 	 * Value of the pathname directory type.

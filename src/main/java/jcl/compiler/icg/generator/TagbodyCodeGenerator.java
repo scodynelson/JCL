@@ -143,10 +143,10 @@ final class TagbodyCodeGenerator extends SpecialOperatorCodeGenerator<TagbodyStr
 
 		mv.visitVarInsn(Opcodes.ALOAD, goExceptionStore);
 		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
-				GenerationConstants.GO_EXCEPTION_NAME,
-				GenerationConstants.GO_EXCEPTION_GET_TAG_INDEX_METHOD_NAME,
-				GenerationConstants.GO_EXCEPTION_GET_TAG_INDEX_METHOD_DESC,
-				false);
+		                   GenerationConstants.GO_EXCEPTION_NAME,
+		                   GenerationConstants.GO_EXCEPTION_GET_TAG_INDEX_METHOD_NAME,
+		                   GenerationConstants.GO_EXCEPTION_GET_TAG_INDEX_METHOD_DESC,
+		                   false);
 		final int goExceptionIndexStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ISTORE, goExceptionIndexStore);
 

@@ -8,7 +8,7 @@ import jcl.LispStruct;
 import jcl.compiler.environment.Environment;
 import jcl.symbols.SymbolStruct;
 
-public class SymbolMacroExpanderImpl extends SymbolMacroExpander<LispStruct> {
+public class SymbolMacroExpanderImpl extends SymbolMacroExpander {
 
 	private final LispStruct expansion;
 

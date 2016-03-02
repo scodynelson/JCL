@@ -58,14 +58,14 @@ class CharacterCodeGenerator implements CodeGenerator<CharacterStruct> {
 		final int codePoint = input.getCodePoint();
 		mv.visitLdcInsn(codePoint);
 		mv.visitMethodInsn(Opcodes.INVOKESTATIC,
-				GenerationConstants.JAVA_INTEGER_NAME,
-				GenerationConstants.JAVA_INTEGER_VALUE_OF_METHOD_NAME,
-				GenerationConstants.JAVA_INTEGER_VALUE_OF_METHOD_DESC,
-				false);
+		                   GenerationConstants.JAVA_INTEGER_NAME,
+		                   GenerationConstants.JAVA_INTEGER_VALUE_OF_METHOD_NAME,
+		                   GenerationConstants.JAVA_INTEGER_VALUE_OF_METHOD_DESC,
+		                   false);
 		mv.visitMethodInsn(Opcodes.INVOKESTATIC,
-				CHARACTER_STRUCT_NAME,
-				CHARACTER_STRUCT_VALUE_OF_METHOD_NAME,
-				CHARACTER_STRUCT_VALUE_OF_METHOD_DESC,
-				false);
+		                   CHARACTER_STRUCT_NAME,
+		                   CHARACTER_STRUCT_VALUE_OF_METHOD_NAME,
+		                   CHARACTER_STRUCT_VALUE_OF_METHOD_DESC,
+		                   false);
 	}
 }

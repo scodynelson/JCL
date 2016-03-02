@@ -124,13 +124,13 @@ public abstract class ClosureCreationExpander<V> extends MacroFunctionExpander<C
 		return validator.validateObjectType(listParameterFirst, expanderName, "First element of list parameter", SymbolStruct.class);
 	}
 
-	protected abstract V getClosureCreationVar(final SymbolStruct var, final LispStruct initForm,
-	                                           final boolean isSpecial);
+	protected abstract V getClosureCreationVar(SymbolStruct var, LispStruct initForm,
+	                                           boolean isSpecial);
 
-	protected abstract ClosureCreationStruct<V> getClosureCreationStruct(final List<V> vars,
-	                                                                     final PrognStruct prognBody,
-	                                                                     final Environment environment);
+	protected abstract ClosureCreationStruct<V> getClosureCreationStruct(List<V> vars,
+	                                                                     PrognStruct prognBody,
+	                                                                     Environment environment);
 
 
-	protected abstract LispStruct getListParameterInitForm(final ListStruct listParameter, final Environment environment);
+	protected abstract LispStruct getListParameterInitForm(ListStruct listParameter, Environment environment);
 }

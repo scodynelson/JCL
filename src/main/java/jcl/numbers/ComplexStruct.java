@@ -279,52 +279,52 @@ public class ComplexStruct extends NumberStruct {
 	}
 
 	@Override
-	protected NumberStruct add(final AddVisitor<?> addVisitor) {
+	protected NumberStruct add(final NumberStruct.AddVisitor<?> addVisitor) {
 		return addVisitor.add(this);
 	}
 
 	@Override
-	protected AddVisitor<?> addVisitor() {
+	protected NumberStruct.AddVisitor<?> addVisitor() {
 		return new ComplexAddVisitor(this);
 	}
 
 	@Override
-	protected NumberStruct subtract(final SubtractVisitor<?> subtractVisitor) {
+	protected NumberStruct subtract(final NumberStruct.SubtractVisitor<?> subtractVisitor) {
 		return subtractVisitor.subtract(this);
 	}
 
 	@Override
-	protected SubtractVisitor<?> subtractVisitor() {
+	protected NumberStruct.SubtractVisitor<?> subtractVisitor() {
 		return new ComplexSubtractVisitor(this);
 	}
 
 	@Override
-	protected NumberStruct multiply(final MultiplyVisitor<?> multiplyVisitor) {
+	protected NumberStruct multiply(final NumberStruct.MultiplyVisitor<?> multiplyVisitor) {
 		return multiplyVisitor.multiply(this);
 	}
 
 	@Override
-	protected MultiplyVisitor<?> multiplyVisitor() {
+	protected NumberStruct.MultiplyVisitor<?> multiplyVisitor() {
 		return new ComplexMultiplyVisitor(this);
 	}
 
 	@Override
-	protected NumberStruct divide(final DivideVisitor<?> divideVisitor) {
+	protected NumberStruct divide(final NumberStruct.DivideVisitor<?> divideVisitor) {
 		return divideVisitor.divide(this);
 	}
 
 	@Override
-	protected DivideVisitor<?> divideVisitor() {
+	protected NumberStruct.DivideVisitor<?> divideVisitor() {
 		return new ComplexDivideVisitor(this);
 	}
 
 	@Override
-	protected boolean isEqualTo(final EqualToVisitor<?> equalToVisitor) {
+	protected boolean isEqualTo(final NumberStruct.EqualToVisitor<?> equalToVisitor) {
 		return equalToVisitor.equalTo(this);
 	}
 
 	@Override
-	protected EqualToVisitor<?> equalToVisitor() {
+	protected NumberStruct.EqualToVisitor<?> equalToVisitor() {
 		return new ComplexEqualToVisitor(this);
 	}
 
@@ -394,12 +394,12 @@ public class ComplexStruct extends NumberStruct {
 	}
 
 	@Override
-	protected NumberStruct expt(final ExptVisitor<?> exptVisitor) {
+	protected NumberStruct expt(final NumberStruct.ExptVisitor<?> exptVisitor) {
 		return exptVisitor.expt(this);
 	}
 
 	@Override
-	protected ExptVisitor<?> exptVisitor() {
+	protected NumberStruct.ExptVisitor<?> exptVisitor() {
 		return new ComplexExptVisitor(this);
 	}
 
@@ -543,9 +543,9 @@ public class ComplexStruct extends NumberStruct {
 	// Visitor Implementations
 
 	/**
-	 * {@link AddVisitor} for computing addition results for {@link ComplexStruct}s.
+	 * {@link NumberStruct.AddVisitor} for computing addition results for {@link ComplexStruct}s.
 	 */
-	private static final class ComplexAddVisitor extends AddVisitor<ComplexStruct> {
+	private static final class ComplexAddVisitor extends NumberStruct.AddVisitor<ComplexStruct> {
 
 		private ComplexAddVisitor(final ComplexStruct number1) {
 			super(number1);
@@ -589,9 +589,9 @@ public class ComplexStruct extends NumberStruct {
 	}
 
 	/**
-	 * {@link SubtractVisitor} for computing subtraction function results for {@link ComplexStruct}s.
+	 * {@link NumberStruct.SubtractVisitor} for computing subtraction function results for {@link ComplexStruct}s.
 	 */
-	private static final class ComplexSubtractVisitor extends SubtractVisitor<ComplexStruct> {
+	private static final class ComplexSubtractVisitor extends NumberStruct.SubtractVisitor<ComplexStruct> {
 
 		private ComplexSubtractVisitor(final ComplexStruct number1) {
 			super(number1);
@@ -635,9 +635,9 @@ public class ComplexStruct extends NumberStruct {
 	}
 
 	/**
-	 * {@link MultiplyVisitor} for computing multiplication function results for {@link ComplexStruct}s.
+	 * {@link NumberStruct.MultiplyVisitor} for computing multiplication function results for {@link ComplexStruct}s.
 	 */
-	private static final class ComplexMultiplyVisitor extends MultiplyVisitor<ComplexStruct> {
+	private static final class ComplexMultiplyVisitor extends NumberStruct.MultiplyVisitor<ComplexStruct> {
 
 		private ComplexMultiplyVisitor(final ComplexStruct number1) {
 			super(number1);
@@ -681,9 +681,9 @@ public class ComplexStruct extends NumberStruct {
 	}
 
 	/**
-	 * {@link DivideVisitor} for computing division function results for {@link ComplexStruct}s.
+	 * {@link NumberStruct.DivideVisitor} for computing division function results for {@link ComplexStruct}s.
 	 */
-	private static final class ComplexDivideVisitor extends DivideVisitor<ComplexStruct> {
+	private static final class ComplexDivideVisitor extends NumberStruct.DivideVisitor<ComplexStruct> {
 
 		private ComplexDivideVisitor(final ComplexStruct number1) {
 			super(number1);
@@ -727,9 +727,9 @@ public class ComplexStruct extends NumberStruct {
 	}
 
 	/**
-	 * {@link EqualToVisitor} for computing numeric '=' equality results for {@link ComplexStruct}s.
+	 * {@link NumberStruct.EqualToVisitor} for computing numeric '=' equality results for {@link ComplexStruct}s.
 	 */
-	private static final class ComplexEqualToVisitor extends EqualToVisitor<ComplexStruct> {
+	private static final class ComplexEqualToVisitor extends NumberStruct.EqualToVisitor<ComplexStruct> {
 
 		private ComplexEqualToVisitor(final ComplexStruct number1) {
 			super(number1);
@@ -781,9 +781,9 @@ public class ComplexStruct extends NumberStruct {
 	}
 
 	/**
-	 * {@link ExptVisitor} for computing exponential function results for {@link ComplexStruct}s.
+	 * {@link NumberStruct.ExptVisitor} for computing exponential function results for {@link ComplexStruct}s.
 	 */
-	private static final class ComplexExptVisitor extends ExptVisitor<ComplexStruct> {
+	private static final class ComplexExptVisitor extends NumberStruct.ExptVisitor<ComplexStruct> {
 
 		private ComplexExptVisitor(final ComplexStruct number1) {
 			super(number1);

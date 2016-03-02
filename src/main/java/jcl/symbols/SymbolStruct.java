@@ -3,8 +3,10 @@ package jcl.symbols;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
+import java.util.function.Supplier;
 
 import jcl.LispStruct;
+import jcl.arrays.StringStruct;
 import jcl.characters.CharacterStruct;
 import jcl.classes.BuiltInClassStruct;
 import jcl.conditions.exceptions.ErrorException;
@@ -27,7 +29,7 @@ public class SymbolStruct extends BuiltInClassStruct {
 
 	protected final String name;
 
-	protected final List<LispStruct> properties = new ArrayList<>();
+	protected List<LispStruct> properties = new ArrayList<>();
 
 	protected PackageStruct symbolPackage;
 
@@ -41,7 +43,7 @@ public class SymbolStruct extends BuiltInClassStruct {
 
 	protected CompilerMacroFunctionExpander<?> compilerMacroFunctionExpander;
 
-	protected Stack<SymbolMacroExpander<?>> symbolMacroExpanderStack = new Stack<>();
+	protected Stack<SymbolMacroExpander> symbolMacroExpanderStack = new Stack<>();
 
 	protected StructureClassStruct structureClass;
 
@@ -191,16 +193,36 @@ public class SymbolStruct extends BuiltInClassStruct {
 	}
 
 	@Override
-	public LispStruct toCharacter() {
-		if (name.length() != 1) {
-			throw new SimpleErrorException("Symbol name is not of length one: " + name);
-		}
-		return CharacterStruct.valueOf(name.charAt(0));
+	public Supplier<CharacterStruct> asCharacter() {
+		return () -> {
+			if (name.length() != 1) {
+				throw new SimpleErrorException("Symbol name is not of length one: " + name);
+			}
+			return CharacterStruct.valueOf(name.charAt(0));
+		};
 	}
 
 	@Override
-	public LispStruct toNamedCharacter() {
-		return CharacterStruct.nameChar(name);
+	public Supplier<CharacterStruct> asNamedCharacter() {
+		return () -> CharacterStruct.nameChar(name);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * Returns the PackageStruct with the {@link PackageStruct#name} that matches the {@link #name} value on the
+	 * instance via {@link PackageStruct#findPackage(String)}.
+	 *
+	 * @return the PackageStruct with the {@link PackageStruct#name} that matches the {@link #name} value on the
+	 * instance
+	 */
+	@Override
+	public Supplier<PackageStruct> asPackage() {
+		return () -> PackageStruct.findPackage(name);
+	}
+
+	@Override
+	public Supplier<StringStruct> asString() {
+		return () -> new StringStruct(name);
 	}
 
 	public boolean hasValue() {
@@ -429,7 +451,7 @@ public class SymbolStruct extends BuiltInClassStruct {
 //	 *
 //	 * @return symbol {@link #symbolMacroExpander} property
 //	 */
-	public SymbolMacroExpander<?> getSymbolMacroExpander() {
+	public SymbolMacroExpander getSymbolMacroExpander() {
 		if (symbolMacroExpanderStack.isEmpty()) {
 			return null;
 		}
@@ -442,12 +464,12 @@ public class SymbolStruct extends BuiltInClassStruct {
 //	 * @param symbolMacroExpander
 //	 * 		new symbol {@link #symbolMacroExpander} property value
 //	 */
-	public void setSymbolMacroExpander(final SymbolMacroExpander<?> symbolMacroExpander) {
+	public void setSymbolMacroExpander(final SymbolMacroExpander symbolMacroExpander) {
 		symbolMacroExpanderStack.pop();
 		symbolMacroExpanderStack.push(symbolMacroExpander);
 	}
 
-	public void bindSymbolMacroExpander(final SymbolMacroExpander<?> symbolMacroExpander) {
+	public void bindSymbolMacroExpander(final SymbolMacroExpander symbolMacroExpander) {
 		symbolMacroExpanderStack.push(symbolMacroExpander);
 	}
 
@@ -462,6 +484,10 @@ public class SymbolStruct extends BuiltInClassStruct {
 	 */
 	public List<LispStruct> getProperties() {
 		return properties;
+	}
+
+	public void setProperties(final List<LispStruct> properties) {
+		this.properties = properties;
 	}
 
 	/**
@@ -519,8 +545,13 @@ public class SymbolStruct extends BuiltInClassStruct {
 				final int valueIndex = i + 1;
 				properties.remove(valueIndex);
 				properties.add(valueIndex, value);
+				return;
 			}
 		}
+
+		// If no value was updated, it means no value existed. Therefore, we add this new key-value pair to the plist.
+		properties.add(key);
+		properties.add(value);
 	}
 
 	/**

@@ -13,11 +13,11 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 public class FunctionParameterBinding {
 
-	private SymbolStruct parameterSymbol;
+	private final SymbolStruct parameterSymbol;
 
-	private LispStruct parameterValue;
+	private final LispStruct parameterValue;
 
-	private boolean isSpecial;
+	private final boolean isSpecial;
 
 	public FunctionParameterBinding(final SymbolStruct parameterSymbol, final LispStruct parameterValue,
 	                                final boolean isSpecial) {

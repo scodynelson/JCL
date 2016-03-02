@@ -21,7 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class CopySymbolFunction extends AbstractCommonLispFunctionStruct {
+public final class CopySymbolFunction extends AbstractCommonLispFunctionStruct {
 
 	/**
 	 * The {@link TypeValidator} for validating the function parameter value types.
@@ -30,7 +30,7 @@ public class CopySymbolFunction extends AbstractCommonLispFunctionStruct {
 	private TypeValidator validator;
 
 	public CopySymbolFunction() {
-		super("Gets the function value of the provided symbol.");
+		super("Returns a fresh, uninterned symbol, the name of which is equal to and possibly the same as the name of the given symbol.");
 	}
 
 	@Override
@@ -50,18 +50,16 @@ public class CopySymbolFunction extends AbstractCommonLispFunctionStruct {
 	public LispStruct apply(final LispStruct... lispStructs) {
 		super.apply(lispStructs);
 
-		final LispStruct lispStruct = lispStructs[0];
-		validator.validateTypes(lispStruct, functionName(), "Symbol", SymbolType.INSTANCE);
+		final SymbolStruct symbol
+				= validator.validateType(lispStructs[0], functionName(), "Symbol", SymbolType.INSTANCE, SymbolStruct.class);
 
 		boolean copyProperties = false;
 		if (lispStructs.length > 1) {
-			final LispStruct lispStruct1 = lispStructs[1];
-			validator.validateTypes(lispStruct1, functionName(), "Copy-Properties", BooleanType.INSTANCE);
+			final BooleanStruct shouldCopy
+					= validator.validateType(lispStructs[1], functionName(), "Copy-Properties", BooleanType.INSTANCE, BooleanStruct.class);
 
-			copyProperties = ((BooleanStruct) lispStruct1).booleanValue();
+			copyProperties = shouldCopy.booleanValue();
 		}
-
-		final SymbolStruct symbol = (SymbolStruct) lispStructs[0];
 
 		return symbol.copySymbol(copyProperties);
 	}

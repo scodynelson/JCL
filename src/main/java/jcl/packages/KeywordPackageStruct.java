@@ -45,6 +45,6 @@ final class KeywordPackageStruct extends PackageStruct {
 		final KeywordStruct symbolStruct = new KeywordStruct(symbolName);
 		externalSymbols.put(symbolName, symbolStruct);
 		symbolStruct.setSymbolPackage(this);
-		return new PackageSymbolStruct(symbolStruct, CommonLispSymbols.INTERNAL);
+		return new PackageSymbolStruct(symbolStruct, CommonLispSymbols.INTERNAL_KEYWORD);
 	}
 }

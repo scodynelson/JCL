@@ -309,107 +309,107 @@ public class IntegerStruct extends RationalStruct {
 	/**
 	 * {@inheritDoc}
 	 * <p>
-	 * Compares this IntegerStruct to a {@link NumberStruct} using the provided {@link LessThanVisitor}.
+	 * Compares this IntegerStruct to a {@link NumberStruct} using the provided {@link RealStruct.LessThanVisitor}.
 	 *
 	 * @param lessThanVisitor
-	 * 		the {@link LessThanVisitor} to be used in the {@literal '<'} operation
+	 * 		the {@link RealStruct.LessThanVisitor} to be used in the {@literal '<'} operation
 	 *
-	 * @return the {@literal '<'} comparison of {@link NumberStruct} using the provided {@link LessThanVisitor} and this
+	 * @return the {@literal '<'} comparison of {@link NumberStruct} using the provided {@link RealStruct.LessThanVisitor} and this
 	 * IntegerStruct
 	 */
 	@Override
-	protected boolean isLessThan(final LessThanVisitor<?> lessThanVisitor) {
+	protected boolean isLessThan(final RealStruct.LessThanVisitor<?> lessThanVisitor) {
 		return lessThanVisitor.lessThan(this);
 	}
 
 	/**
-	 * Returns a new {@link LessThanVisitor} with this IntegerStruct to be used in a {@literal '<'} operation.
+	 * Returns a new {@link RealStruct.LessThanVisitor} with this IntegerStruct to be used in a {@literal '<'} operation.
 	 *
-	 * @return a new {@link LessThanVisitor} with this IntegerStruct to be used in a {@literal '<'} operation
+	 * @return a new {@link RealStruct.LessThanVisitor} with this IntegerStruct to be used in a {@literal '<'} operation
 	 */
 	@Override
-	protected LessThanVisitor<?> lessThanVisitor() {
+	protected RealStruct.LessThanVisitor<?> lessThanVisitor() {
 		return new IntegerLessThanVisitor(this);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 * <p>
-	 * Compares this IntegerStruct to a {@link NumberStruct} using the provided {@link GreaterThanVisitor}.
+	 * Compares this IntegerStruct to a {@link NumberStruct} using the provided {@link RealStruct.GreaterThanVisitor}.
 	 *
 	 * @param greaterThanVisitor
-	 * 		the {@link GreaterThanVisitor} to be used in the {@literal '>'} operation
+	 * 		the {@link RealStruct.GreaterThanVisitor} to be used in the {@literal '>'} operation
 	 *
-	 * @return the {@literal '>'} comparison of {@link NumberStruct} using the provided {@link GreaterThanVisitor} and
+	 * @return the {@literal '>'} comparison of {@link NumberStruct} using the provided {@link RealStruct.GreaterThanVisitor} and
 	 * this IntegerStruct
 	 */
 	@Override
-	protected boolean isGreaterThan(final GreaterThanVisitor<?> greaterThanVisitor) {
+	protected boolean isGreaterThan(final RealStruct.GreaterThanVisitor<?> greaterThanVisitor) {
 		return greaterThanVisitor.greaterThan(this);
 	}
 
 	/**
-	 * Returns a new {@link GreaterThanVisitor} with this IntegerStruct to be used in a {@literal '>'} operation.
+	 * Returns a new {@link RealStruct.GreaterThanVisitor} with this IntegerStruct to be used in a {@literal '>'} operation.
 	 *
-	 * @return a new {@link GreaterThanVisitor} with this IntegerStruct to be used in a {@literal '>'} operation
+	 * @return a new {@link RealStruct.GreaterThanVisitor} with this IntegerStruct to be used in a {@literal '>'} operation
 	 */
 	@Override
-	protected GreaterThanVisitor<?> greaterThanVisitor() {
+	protected RealStruct.GreaterThanVisitor<?> greaterThanVisitor() {
 		return new IntegerGreaterThanVisitor(this);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 * <p>
-	 * Compares this IntegerStruct to a {@link NumberStruct} using the provided {@link LessThanOrEqualToVisitor}.
+	 * Compares this IntegerStruct to a {@link NumberStruct} using the provided {@link RealStruct.LessThanOrEqualToVisitor}.
 	 *
 	 * @param lessThanOrEqualToVisitor
-	 * 		the {@link LessThanOrEqualToVisitor} to be used in the {@literal '<='} operation
+	 * 		the {@link RealStruct.LessThanOrEqualToVisitor} to be used in the {@literal '<='} operation
 	 *
 	 * @return the {@literal '<='} comparison of {@link NumberStruct} using the provided {@link
-	 * LessThanOrEqualToVisitor} and this IntegerStruct
+	 * RealStruct.LessThanOrEqualToVisitor} and this IntegerStruct
 	 */
 	@Override
-	protected boolean isLessThanOrEqualTo(final LessThanOrEqualToVisitor<?> lessThanOrEqualToVisitor) {
+	protected boolean isLessThanOrEqualTo(final RealStruct.LessThanOrEqualToVisitor<?> lessThanOrEqualToVisitor) {
 		return lessThanOrEqualToVisitor.lessThanOrEqualTo(this);
 	}
 
 	/**
-	 * Returns a new {@link LessThanOrEqualToVisitor} with this IntegerStruct to be used in a {@literal '<='}
+	 * Returns a new {@link RealStruct.LessThanOrEqualToVisitor} with this IntegerStruct to be used in a {@literal '<='}
 	 * operation.
 	 *
-	 * @return a new {@link LessThanOrEqualToVisitor} with this IntegerStruct to be used in a {@literal '<='} operation
+	 * @return a new {@link RealStruct.LessThanOrEqualToVisitor} with this IntegerStruct to be used in a {@literal '<='} operation
 	 */
 	@Override
-	protected LessThanOrEqualToVisitor<?> lessThanOrEqualToVisitor() {
+	protected RealStruct.LessThanOrEqualToVisitor<?> lessThanOrEqualToVisitor() {
 		return new IntegerLessThanOrEqualToVisitor(this);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 * <p>
-	 * Compares this IntegerStruct to a {@link NumberStruct} using the provided {@link GreaterThanOrEqualToVisitor}.
+	 * Compares this IntegerStruct to a {@link NumberStruct} using the provided {@link RealStruct.GreaterThanOrEqualToVisitor}.
 	 *
 	 * @param greaterThanOrEqualToVisitor
-	 * 		the {@link GreaterThanOrEqualToVisitor} to be used in the {@literal '>='} operation
+	 * 		the {@link RealStruct.GreaterThanOrEqualToVisitor} to be used in the {@literal '>='} operation
 	 *
 	 * @return the {@literal '>='} comparison of {@link NumberStruct} using the provided {@link
-	 * GreaterThanOrEqualToVisitor} and this IntegerStruct
+	 * RealStruct.GreaterThanOrEqualToVisitor} and this IntegerStruct
 	 */
 	@Override
-	protected boolean isGreaterThanOrEqualTo(final GreaterThanOrEqualToVisitor<?> greaterThanOrEqualToVisitor) {
+	protected boolean isGreaterThanOrEqualTo(final RealStruct.GreaterThanOrEqualToVisitor<?> greaterThanOrEqualToVisitor) {
 		return greaterThanOrEqualToVisitor.greaterThanOrEqualTo(this);
 	}
 
 	/**
-	 * Returns a new {@link GreaterThanOrEqualToVisitor} with this IntegerStruct to be used in a {@literal '>='}
+	 * Returns a new {@link RealStruct.GreaterThanOrEqualToVisitor} with this IntegerStruct to be used in a {@literal '>='}
 	 * operation.
 	 *
-	 * @return a new {@link GreaterThanOrEqualToVisitor} with this IntegerStruct to be used in a {@literal '>='}
+	 * @return a new {@link RealStruct.GreaterThanOrEqualToVisitor} with this IntegerStruct to be used in a {@literal '>='}
 	 * operation
 	 */
 	@Override
-	protected GreaterThanOrEqualToVisitor<?> greaterThanOrEqualToVisitor() {
+	protected RealStruct.GreaterThanOrEqualToVisitor<?> greaterThanOrEqualToVisitor() {
 		return new IntegerGreaterThanOrEqualToVisitor(this);
 	}
 
@@ -1116,9 +1116,9 @@ public class IntegerStruct extends RationalStruct {
 	// Visitor Implementations
 
 	/**
-	 * {@link RealAddVisitor} for computing addition results for {@link IntegerStruct}s.
+	 * {@link RealStruct.RealAddVisitor} for computing addition results for {@link IntegerStruct}s.
 	 */
-	private static final class IntegerAddVisitor extends RealAddVisitor<IntegerStruct> {
+	private static final class IntegerAddVisitor extends RealStruct.RealAddVisitor<IntegerStruct> {
 
 		/**
 		 * Package private constructor to make a new instance of an IntegerAddVisitor with the provided {@link
@@ -1164,9 +1164,9 @@ public class IntegerStruct extends RationalStruct {
 	}
 
 	/**
-	 * {@link RealSubtractVisitor} for computing subtraction function results for {@link IntegerStruct}s.
+	 * {@link RealStruct.RealSubtractVisitor} for computing subtraction function results for {@link IntegerStruct}s.
 	 */
-	private static final class IntegerSubtractVisitor extends RealSubtractVisitor<IntegerStruct> {
+	private static final class IntegerSubtractVisitor extends RealStruct.RealSubtractVisitor<IntegerStruct> {
 
 		/**
 		 * Package private constructor to make a new instance of an IntegerSubtractVisitor with the provided {@link
@@ -1212,9 +1212,9 @@ public class IntegerStruct extends RationalStruct {
 	}
 
 	/**
-	 * {@link RealMultiplyVisitor} for computing multiplication function results for {@link IntegerStruct}s.
+	 * {@link RealStruct.RealMultiplyVisitor} for computing multiplication function results for {@link IntegerStruct}s.
 	 */
-	private static final class IntegerMultiplyVisitor extends RealMultiplyVisitor<IntegerStruct> {
+	private static final class IntegerMultiplyVisitor extends RealStruct.RealMultiplyVisitor<IntegerStruct> {
 
 		/**
 		 * Package private constructor to make a new instance of an IntegerMultiplyVisitor with the provided {@link
@@ -1259,9 +1259,9 @@ public class IntegerStruct extends RationalStruct {
 	}
 
 	/**
-	 * {@link RealDivideVisitor} for computing division function results for {@link IntegerStruct}s.
+	 * {@link RealStruct.RealDivideVisitor} for computing division function results for {@link IntegerStruct}s.
 	 */
-	private static final class IntegerDivideVisitor extends RealDivideVisitor<IntegerStruct> {
+	private static final class IntegerDivideVisitor extends RealStruct.RealDivideVisitor<IntegerStruct> {
 
 		/**
 		 * Package private constructor to make a new instance of an IntegerDivideVisitor with the provided {@link
@@ -1305,9 +1305,9 @@ public class IntegerStruct extends RationalStruct {
 	}
 
 	/**
-	 * {@link RealEqualToVisitor} for computing numeric '=' equality results for {@link IntegerStruct}s.
+	 * {@link RealStruct.RealEqualToVisitor} for computing numeric '=' equality results for {@link IntegerStruct}s.
 	 */
-	private static final class IntegerEqualToVisitor extends RealEqualToVisitor<IntegerStruct> {
+	private static final class IntegerEqualToVisitor extends RealStruct.RealEqualToVisitor<IntegerStruct> {
 
 		/**
 		 * Package private constructor to make a new instance of an IntegerEqualToVisitor with the provided {@link
@@ -1342,9 +1342,9 @@ public class IntegerStruct extends RationalStruct {
 	}
 
 	/**
-	 * {@link LessThanVisitor} for computing numeric {@literal '<'} equality results for {@link IntegerStruct}s.
+	 * {@link RealStruct.LessThanVisitor} for computing numeric {@literal '<'} equality results for {@link IntegerStruct}s.
 	 */
-	private static final class IntegerLessThanVisitor extends LessThanVisitor<IntegerStruct> {
+	private static final class IntegerLessThanVisitor extends RealStruct.LessThanVisitor<IntegerStruct> {
 
 		/**
 		 * Package private constructor to make a new instance of an IntegerLessThanVisitor with the provided {@link
@@ -1379,9 +1379,9 @@ public class IntegerStruct extends RationalStruct {
 	}
 
 	/**
-	 * {@link GreaterThanVisitor} for computing numeric {@literal '>'} equality results for {@link IntegerStruct}s.
+	 * {@link RealStruct.GreaterThanVisitor} for computing numeric {@literal '>'} equality results for {@link IntegerStruct}s.
 	 */
-	private static final class IntegerGreaterThanVisitor extends GreaterThanVisitor<IntegerStruct> {
+	private static final class IntegerGreaterThanVisitor extends RealStruct.GreaterThanVisitor<IntegerStruct> {
 
 		/**
 		 * Package private constructor to make a new instance of an IntegerGreaterThanVisitor with the provided {@link
@@ -1416,10 +1416,10 @@ public class IntegerStruct extends RationalStruct {
 	}
 
 	/**
-	 * {@link LessThanOrEqualToVisitor} for computing numeric {@literal '<='} equality results for {@link
+	 * {@link RealStruct.LessThanOrEqualToVisitor} for computing numeric {@literal '<='} equality results for {@link
 	 * IntegerStruct}s.
 	 */
-	private static final class IntegerLessThanOrEqualToVisitor extends LessThanOrEqualToVisitor<IntegerStruct> {
+	private static final class IntegerLessThanOrEqualToVisitor extends RealStruct.LessThanOrEqualToVisitor<IntegerStruct> {
 
 		/**
 		 * Package private constructor to make a new instance of an IntegerLessThanOrEqualToVisitor with the provided
@@ -1454,10 +1454,10 @@ public class IntegerStruct extends RationalStruct {
 	}
 
 	/**
-	 * {@link GreaterThanOrEqualToVisitor} for computing numeric {@literal '>='} equality results for {@link
+	 * {@link RealStruct.GreaterThanOrEqualToVisitor} for computing numeric {@literal '>='} equality results for {@link
 	 * IntegerStruct}s.
 	 */
-	private static final class IntegerGreaterThanOrEqualToVisitor extends GreaterThanOrEqualToVisitor<IntegerStruct> {
+	private static final class IntegerGreaterThanOrEqualToVisitor extends RealStruct.GreaterThanOrEqualToVisitor<IntegerStruct> {
 
 		/**
 		 * Package private constructor to make a new instance of an IntegerGreaterThanOrEqualToVisitor with the
@@ -1495,7 +1495,7 @@ public class IntegerStruct extends RationalStruct {
 	 * {@link IntegerQuotientRemainderVisitor} for computing quotient and remainder results for {@link
 	 * IntegerStruct}s.
 	 */
-	private static final class IntegerQuotientRemainderVisitor extends RationalQuotientRemainderVisitor<IntegerStruct> {
+	private static final class IntegerQuotientRemainderVisitor extends RationalStruct.RationalQuotientRemainderVisitor<IntegerStruct> {
 
 		/**
 		 * Package private constructor to make a new instance of an IntegerQuotientRemainderVisitor with the provided
@@ -1540,9 +1540,9 @@ public class IntegerStruct extends RationalStruct {
 	}
 
 	/**
-	 * {@link RealExptVisitor} for computing exponential function results for {@link IntegerStruct}s.
+	 * {@link RealStruct.RealExptVisitor} for computing exponential function results for {@link IntegerStruct}s.
 	 */
-	private static final class IntegerExptVisitor extends RealExptVisitor<IntegerStruct> {
+	private static final class IntegerExptVisitor extends RealStruct.RealExptVisitor<IntegerStruct> {
 
 		/**
 		 * Package private constructor to make a new instance of an IntegerExptVisitor with the provided {@link

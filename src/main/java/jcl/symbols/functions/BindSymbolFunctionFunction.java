@@ -14,12 +14,23 @@ import jcl.functions.AbstractSystemFunctionStruct;
 import jcl.functions.FunctionStruct;
 import jcl.packages.GlobalPackageStruct;
 import jcl.symbols.SymbolStruct;
+import jcl.types.FunctionType;
+import jcl.types.SymbolType;
+import jcl.types.TypeValidator;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public final class BindSymbolFunctionFunction extends AbstractSystemFunctionStruct {
 
+	// TODO: Get rid of this??
 	public static final SymbolStruct BIND_SYMBOL_FUNCTION = GlobalPackageStruct.SYSTEM.intern("BIND-SYMBOL-FUNCTION").getSymbol();
+
+	/**
+	 * The {@link TypeValidator} for validating the function parameter value types.
+	 */
+	@Autowired
+	private TypeValidator validator;
 
 	public BindSymbolFunctionFunction() {
 		super("Binds the function value of the provided symbol to the provided function value.");
@@ -36,8 +47,11 @@ public final class BindSymbolFunctionFunction extends AbstractSystemFunctionStru
 	public LispStruct apply(final LispStruct... lispStructs) {
 		super.apply(lispStructs);
 
-		final SymbolStruct symbol = (SymbolStruct) lispStructs[0];
-		final FunctionStruct function = (FunctionStruct) lispStructs[1];
+		final SymbolStruct symbol =
+				validator.validateType(lispStructs[0], functionName(), "Symbol", SymbolType.INSTANCE, SymbolStruct.class);
+		final FunctionStruct function =
+				validator.validateType(lispStructs[1], functionName(), "Function", FunctionType.INSTANCE, FunctionStruct.class);
+
 		symbol.bindFunction(function);
 		return new ValuesStruct();
 	}

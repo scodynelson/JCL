@@ -90,7 +90,7 @@ public abstract class NumberStruct extends BuiltInClassStruct {
 		return number.add(addVisitor);
 	}
 
-	protected abstract NumberStruct add(final AddVisitor<?> addVisitor);
+	protected abstract NumberStruct add(AddVisitor<?> addVisitor);
 
 	protected abstract AddVisitor<?> addVisitor();
 
@@ -112,7 +112,7 @@ public abstract class NumberStruct extends BuiltInClassStruct {
 		return number.subtract(subtractVisitor);
 	}
 
-	protected abstract NumberStruct subtract(final SubtractVisitor<?> subtractVisitor);
+	protected abstract NumberStruct subtract(SubtractVisitor<?> subtractVisitor);
 
 	protected abstract SubtractVisitor<?> subtractVisitor();
 
@@ -137,7 +137,7 @@ public abstract class NumberStruct extends BuiltInClassStruct {
 		return number.multiply(multiplyVisitor);
 	}
 
-	protected abstract NumberStruct multiply(final MultiplyVisitor<?> multiplyVisitor);
+	protected abstract NumberStruct multiply(MultiplyVisitor<?> multiplyVisitor);
 
 	protected abstract MultiplyVisitor<?> multiplyVisitor();
 
@@ -159,7 +159,7 @@ public abstract class NumberStruct extends BuiltInClassStruct {
 		return number.divide(divideVisitor);
 	}
 
-	protected abstract NumberStruct divide(final DivideVisitor<?> divideVisitor);
+	protected abstract NumberStruct divide(DivideVisitor<?> divideVisitor);
 
 	protected abstract DivideVisitor<?> divideVisitor();
 
@@ -184,7 +184,7 @@ public abstract class NumberStruct extends BuiltInClassStruct {
 		return number.isEqualTo(equalToVisitor);
 	}
 
-	protected abstract boolean isEqualTo(final EqualToVisitor<?> equalToVisitor);
+	protected abstract boolean isEqualTo(EqualToVisitor<?> equalToVisitor);
 
 	protected abstract EqualToVisitor<?> equalToVisitor();
 
@@ -260,7 +260,7 @@ public abstract class NumberStruct extends BuiltInClassStruct {
 		return power.expt(exptVisitor);
 	}
 
-	protected abstract NumberStruct expt(final ExptVisitor<?> exptVisitor);
+	protected abstract NumberStruct expt(ExptVisitor<?> exptVisitor);
 
 	protected abstract ExptVisitor<?> exptVisitor();
 

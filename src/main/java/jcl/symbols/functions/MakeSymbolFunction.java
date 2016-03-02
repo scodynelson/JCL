@@ -11,14 +11,13 @@ import jcl.arrays.StringStruct;
 import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
 import jcl.functions.AbstractCommonLispFunctionStruct;
 import jcl.packages.GlobalPackageStruct;
-import jcl.symbols.SymbolStruct;
 import jcl.types.StringType;
 import jcl.types.TypeValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class MakeSymbolFunction extends AbstractCommonLispFunctionStruct {
+public final class MakeSymbolFunction extends AbstractCommonLispFunctionStruct {
 
 	/**
 	 * The {@link TypeValidator} for validating the function parameter value types.
@@ -27,7 +26,7 @@ public class MakeSymbolFunction extends AbstractCommonLispFunctionStruct {
 	private TypeValidator validator;
 
 	public MakeSymbolFunction() {
-		super("Gets the function value of the provided symbol.");
+		super("Creates and returns a fresh, uninterned symbol whose name is the given name.");
 	}
 
 	@Override
@@ -39,11 +38,9 @@ public class MakeSymbolFunction extends AbstractCommonLispFunctionStruct {
 	public LispStruct apply(final LispStruct... lispStructs) {
 		super.apply(lispStructs);
 
-		final LispStruct lispStruct = lispStructs[0];
-		validator.validateTypes(lispStruct, functionName(), "Name", StringType.INSTANCE);
-
-		final StringStruct name = (StringStruct) lispStructs[0];
-		return new SymbolStruct(name.getAsJavaString());
+		final StringStruct name
+				= validator.validateType(lispStructs[0], functionName(), "Name", StringType.INSTANCE, StringStruct.class);
+		return name.asSymbol().get();
 	}
 
 	@Override

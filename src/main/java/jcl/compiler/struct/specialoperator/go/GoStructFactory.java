@@ -11,5 +11,5 @@ public abstract class GoStructFactory<T extends LispStruct> {
 	protected GoStructFactory() {
 	}
 
-	public abstract GoStruct<T> getGoElement(final T tag);
+	public abstract GoStruct<T> getGoElement(T tag);
 }

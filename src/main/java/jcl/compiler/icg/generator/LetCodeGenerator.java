@@ -130,10 +130,10 @@ final class LetCodeGenerator extends ClosureCreationCodeGenerator<LetStruct.LetV
 
 			mv.visitVarInsn(Opcodes.ALOAD, initFormStore);
 			mv.visitMethodInsn(Opcodes.INVOKESTATIC,
-					GenerationConstants.VALUES_STRUCTS_NAME,
-					GenerationConstants.VALUES_STRUCTS_EXTRACT_PRIMARY_VALUE_METHOD_NAME,
-					GenerationConstants.VALUES_STRUCTS_EXTRACT_PRIMARY_VALUE_METHOD_DESC,
-					false);
+			                   GenerationConstants.VALUES_STRUCTS_NAME,
+			                   GenerationConstants.VALUES_STRUCTS_EXTRACT_PRIMARY_VALUE_METHOD_NAME,
+			                   GenerationConstants.VALUES_STRUCTS_EXTRACT_PRIMARY_VALUE_METHOD_DESC,
+			                   false);
 			mv.visitVarInsn(Opcodes.ASTORE, initFormStore);
 
 			final boolean isSpecial = var.isSpecial();
@@ -155,10 +155,10 @@ final class LetCodeGenerator extends ClosureCreationCodeGenerator<LetStruct.LetV
 			mv.visitVarInsn(Opcodes.ALOAD, symbolStore);
 			mv.visitVarInsn(Opcodes.ALOAD, initFormStore);
 			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
-					GenerationConstants.SYMBOL_STRUCT_NAME,
-					GenerationConstants.SYMBOL_STRUCT_BIND_DYNAMIC_VALUE_METHOD_NAME,
-					GenerationConstants.SYMBOL_STRUCT_BIND_DYNAMIC_VALUE_METHOD_DESC,
-					false);
+			                   GenerationConstants.SYMBOL_STRUCT_NAME,
+			                   GenerationConstants.SYMBOL_STRUCT_BIND_DYNAMIC_VALUE_METHOD_NAME,
+			                   GenerationConstants.SYMBOL_STRUCT_BIND_DYNAMIC_VALUE_METHOD_DESC,
+			                   false);
 		}
 
 		for (final Map.Entry<Integer, Integer> functionStoreToBind : lexicalSymbolStoresToBind.entrySet()) {
@@ -168,19 +168,19 @@ final class LetCodeGenerator extends ClosureCreationCodeGenerator<LetStruct.LetV
 			mv.visitVarInsn(Opcodes.ALOAD, symbolStore);
 			mv.visitVarInsn(Opcodes.ALOAD, initFormStore);
 			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
-					GenerationConstants.SYMBOL_STRUCT_NAME,
-					GenerationConstants.SYMBOL_STRUCT_BIND_LEXICAL_VALUE_METHOD_NAME,
-					GenerationConstants.SYMBOL_STRUCT_BIND_LEXICAL_VALUE_METHOD_DESC,
-					false);
+			                   GenerationConstants.SYMBOL_STRUCT_NAME,
+			                   GenerationConstants.SYMBOL_STRUCT_BIND_LEXICAL_VALUE_METHOD_NAME,
+			                   GenerationConstants.SYMBOL_STRUCT_BIND_LEXICAL_VALUE_METHOD_DESC,
+			                   false);
 
 			mv.visitVarInsn(Opcodes.ALOAD, closureSymbolBindingsStore);
 			mv.visitVarInsn(Opcodes.ALOAD, symbolStore);
 			mv.visitVarInsn(Opcodes.ALOAD, initFormStore);
 			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
-					GenerationConstants.JAVA_MAP_NAME,
-					GenerationConstants.JAVA_MAP_PUT_METHOD_NAME,
-					GenerationConstants.JAVA_MAP_PUT_METHOD_DESC,
-					true);
+			                   GenerationConstants.JAVA_MAP_NAME,
+			                   GenerationConstants.JAVA_MAP_PUT_METHOD_NAME,
+			                   GenerationConstants.JAVA_MAP_PUT_METHOD_DESC,
+			                   true);
 			mv.visitInsn(Opcodes.POP);
 		}
 	}

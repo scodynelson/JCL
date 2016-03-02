@@ -9,13 +9,13 @@ package jcl.streams;
  */
 public class ReadLineResult {
 
-	private String result;
+	private final String result;
 
-	private boolean eof;
+	private final boolean eof;
 
 	ReadLineResult(final String result, final boolean wasEof) {
 		this.result = result;
-		this.eof = wasEof;
+		eof = wasEof;
 	}
 
 	public String getResult() {

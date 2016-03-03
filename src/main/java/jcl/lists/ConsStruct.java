@@ -1,9 +1,16 @@
 package jcl.lists;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Objects;
 import java.util.Set;
+import java.util.Spliterator;
+import java.util.Spliterators;
+import java.util.function.Consumer;
 
 import jcl.LispStruct;
 import jcl.symbols.NILStruct;
@@ -86,16 +93,6 @@ public class ConsStruct extends ListStruct {
 	 */
 	public void setCdr(final LispStruct cdr) {
 		this.cdr = cdr;
-	}
-
-	@Override
-	public int size() {
-		if (cdr instanceof ListStruct) {
-			final ListStruct cdrAsList = (ListStruct) cdr;
-			return 1 + cdrAsList.size();
-		} else {
-			return 2;
-		}
 	}
 
 	@Override
@@ -269,6 +266,142 @@ public class ConsStruct extends ListStruct {
 			return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(car)
 			                                                                .append(cdr)
 			                                                                .toString();
+		}
+	}
+
+	@Override
+	public Iterator<LispStruct> iterator() {
+		return new ConsIterator(this);
+	}
+
+	@Override
+	public Spliterator<LispStruct> spliterator() {
+		return Spliterators.spliterator(this,
+				Spliterator.ORDERED |
+						Spliterator.SIZED |
+						Spliterator.NONNULL |
+						Spliterator.IMMUTABLE |
+						Spliterator.SUBSIZED
+		);
+	}
+
+	@Override
+	public int size() {
+		// TODO: We might be able to do this better
+		if (cdr instanceof ListStruct) {
+			final ListStruct cdrAsList = (ListStruct) cdr;
+			return 1 + cdrAsList.size();
+		} else {
+			return 2;
+		}
+	}
+
+	@Override
+	public boolean isEmpty() {
+		// TODO
+		return false;
+	}
+
+	@Override
+	public boolean contains(final Object o) {
+		// TODO
+		return false;
+	}
+
+	@Override
+	public Object[] toArray() {
+		// TODO
+		return null;
+	}
+
+	@Override
+	public <T> T[] toArray(final T[] a) {
+		// TODO
+		return null;
+	}
+
+	@Override
+	public boolean add(final LispStruct e) {
+		// TODO
+		return false;
+	}
+
+	@Override
+	public boolean remove(final Object o) {
+		// TODO
+		return false;
+	}
+
+	@Override
+	public boolean containsAll(final Collection<?> c) {
+		// TODO
+		return false;
+	}
+
+	@Override
+	public boolean addAll(final Collection<? extends LispStruct> c) {
+		// TODO
+		return false;
+	}
+
+	@Override
+	public boolean removeAll(final Collection<?> c) {
+		// TODO
+		return false;
+	}
+
+	@Override
+	public boolean retainAll(final Collection<?> c) {
+		// TODO
+		return false;
+	}
+
+	@Override
+	public void clear() {
+		// TODO
+	}
+
+	private static final class ConsIterator implements Iterator<LispStruct> {
+
+		private final int totalSize;
+
+		private ConsStruct previous;
+		private LispStruct current;
+		private int nextIndex;
+
+		private ConsIterator(final ConsStruct cons) {
+			totalSize = cons.size();
+			current = cons;
+		}
+
+		@Override
+		public boolean hasNext() {
+			return !(current instanceof ConsStruct);
+		}
+
+		@Override
+		public LispStruct next() {
+			if (!hasNext()) {
+				throw new NoSuchElementException("No elements left in the Cons.");
+			}
+			final ConsStruct currentAsCons = (ConsStruct) current;
+
+			previous = currentAsCons;
+			current = currentAsCons.getCdr();
+			nextIndex++;
+			return previous.getCar();
+		}
+
+		@Override
+		public void forEachRemaining(final Consumer<? super LispStruct> action) {
+			Objects.requireNonNull(action);
+			while (nextIndex < totalSize) {
+				final ConsStruct currentAsCons = (ConsStruct) current;
+				action.accept(currentAsCons.getCar());
+				previous = currentAsCons;
+				current = currentAsCons.getCdr();
+				nextIndex++;
+			}
 		}
 	}
 }

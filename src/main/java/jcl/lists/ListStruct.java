@@ -1,6 +1,7 @@
 package jcl.lists;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 import jcl.LispStruct;
@@ -12,7 +13,7 @@ import org.apache.commons.collections4.CollectionUtils;
 /**
  * The {@link ListStruct} is the object representation of a Lisp 'list' type.
  */
-public abstract class ListStruct extends BuiltInClassStruct implements SequenceStruct {
+public abstract class ListStruct extends BuiltInClassStruct implements SequenceStruct, Collection<LispStruct> {
 
 	/**
 	 * Protected constructor.
@@ -40,13 +41,6 @@ public abstract class ListStruct extends BuiltInClassStruct implements SequenceS
 	                     final List<Class<? extends LispStruct>> directSuperClasses, final List<Class<? extends LispStruct>> subClasses) {
 		super(type, directSuperClasses, subClasses);
 	}
-
-	/**
-	 * Returns the size of the list.
-	 *
-	 * @return the size of the list
-	 */
-	public abstract int size();
 
 	/**
 	 * Returns the first element in the list.

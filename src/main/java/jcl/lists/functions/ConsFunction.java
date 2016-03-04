@@ -4,59 +4,45 @@
 
 package jcl.lists.functions;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
-import jcl.compiler.environment.binding.lambdalist.OrdinaryLambdaList;
 import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
-import jcl.functions.FunctionStruct;
+import jcl.functions.AbstractCommonLispFunctionStruct;
 import jcl.lists.ConsStruct;
 import jcl.packages.GlobalPackageStruct;
 import jcl.symbols.SymbolStruct;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class ConsFunction extends FunctionStruct {
+public final class ConsFunction extends AbstractCommonLispFunctionStruct {
 
 	public static final SymbolStruct CONS = GlobalPackageStruct.COMMON_LISP.intern("CONS").getSymbol();
 
-	private ConsFunction() {
-		super("Creates a fresh cons, the car of which is object-1 and the cdr of which is object-2.", getInitLambdaListBindings());
+	public ConsFunction() {
+		super("Creates a fresh cons, the car of which is object-1 and the cdr of which is object-2.");
 	}
 
-	@PostConstruct
-	private void init() {
-		CONS.setFunction(this);
-		GlobalPackageStruct.COMMON_LISP.export(CONS);
-	}
-
-	private static OrdinaryLambdaList getInitLambdaListBindings() {
-
-		final List<RequiredParameter> requiredBindings = new ArrayList<>(2);
-
-		final SymbolStruct object1ArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("OBJECT-1").getSymbol();
-		final RequiredParameter object1RequiredBinding = new RequiredParameter(object1ArgSymbol);
-		requiredBindings.add(object1RequiredBinding);
-
-		final SymbolStruct object2ArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("OBJECT-2").getSymbol();
-		final RequiredParameter object2RequiredBinding = new RequiredParameter(object2ArgSymbol);
-		requiredBindings.add(object2RequiredBinding);
-
-		return OrdinaryLambdaList.builder()
-		                         .requiredBindings(requiredBindings)
-		                         .build();
+	@Override
+	protected List<RequiredParameter> getRequiredBindings() {
+		return Arrays.asList(
+				RequiredParameter.builder(GlobalPackageStruct.COMMON_LISP, "OBJECT-1").build(),
+				RequiredParameter.builder(GlobalPackageStruct.COMMON_LISP, "OBJECT-2").build()
+		);
 	}
 
 	@Override
 	public LispStruct apply(final LispStruct... lispStructs) {
-		getFunctionBindings(lispStructs);
+		super.apply(lispStructs);
 
-		return cons(lispStructs[0], lispStructs[1]);
+		final LispStruct object1 = lispStructs[0];
+		final LispStruct object2 = lispStructs[1];
+		return new ConsStruct(object1, object2);
 	}
 
-	public LispStruct cons(final LispStruct object1, final LispStruct object2) {
-		return new ConsStruct(object1, object2);
+	@Override
+	protected String functionName() {
+		return "CONS";
 	}
 }

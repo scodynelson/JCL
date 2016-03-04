@@ -49,6 +49,14 @@ public abstract class ListStruct extends BuiltInClassStruct implements SequenceS
 	 */
 	public abstract int size();
 
+	public LispStruct getCar() {
+		return getFirst();
+	}
+
+	public LispStruct getCdr() {
+		return getRest();
+	}
+
 	/**
 	 * Returns the first element in the list.
 	 *
@@ -127,6 +135,12 @@ public abstract class ListStruct extends BuiltInClassStruct implements SequenceS
 	public abstract Stream<LispStruct> parallelStream();
 
 	public abstract LispStruct[] toArray();
+
+	public abstract ListStruct copyTree();
+
+	public abstract ListStruct copyList();
+
+	public abstract Long listLength();
 
 	// BUILDERS
 

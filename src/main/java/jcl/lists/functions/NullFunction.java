@@ -4,60 +4,42 @@
 
 package jcl.lists.functions;
 
-import java.util.Collections;
 import java.util.List;
-import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
-import jcl.compiler.environment.binding.lambdalist.OrdinaryLambdaList;
 import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
-import jcl.functions.FunctionStruct;
+import jcl.functions.AbstractCommonLispFunctionStruct;
 import jcl.lists.NullStruct;
 import jcl.packages.GlobalPackageStruct;
-import jcl.symbols.BooleanStruct;
+import jcl.symbols.BooleanStructs;
 import jcl.symbols.NILStruct;
 import jcl.symbols.SymbolStruct;
-import jcl.symbols.TStruct;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class NullFunction extends FunctionStruct {
+public final class NullFunction extends AbstractCommonLispFunctionStruct {
 
 	public static final SymbolStruct NULL = GlobalPackageStruct.COMMON_LISP.intern("NULL").getSymbol();
 
-	private NullFunction() {
-		super("Returns T if object is the empty list; otherwise, returns NIL.", getInitLambdaListBindings());
+	public NullFunction() {
+		super("Returns T if object is the empty list; otherwise, returns NIL.");
 	}
 
-	@PostConstruct
-	private void init() {
-		NULL.setFunction(this);
-		GlobalPackageStruct.COMMON_LISP.export(NULL);
-	}
-
-	private static OrdinaryLambdaList getInitLambdaListBindings() {
-
-		final SymbolStruct listArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("OBJECT").getSymbol();
-		final RequiredParameter requiredBinding = new RequiredParameter(listArgSymbol);
-		final List<RequiredParameter> requiredBindings = Collections.singletonList(requiredBinding);
-
-		return OrdinaryLambdaList.builder()
-		                         .requiredBindings(requiredBindings)
-		                         .build();
+	@Override
+	protected List<RequiredParameter> getRequiredBindings() {
+		return RequiredParameter.builder(GlobalPackageStruct.COMMON_LISP, "OBJECT").buildList();
 	}
 
 	@Override
 	public LispStruct apply(final LispStruct... lispStructs) {
-		getFunctionBindings(lispStructs);
+		super.apply(lispStructs);
 
-		return nullFn(lispStructs[0]);
+		final LispStruct object = lispStructs[0];
+		return BooleanStructs.toLispBoolean(NullStruct.INSTANCE.equals(object) || NILStruct.INSTANCE.equals(object));
 	}
 
-	public BooleanStruct nullFn(final LispStruct object) {
-		return nullFnJavaBoolean(object) ? TStruct.INSTANCE : NILStruct.INSTANCE;
-	}
-
-	public boolean nullFnJavaBoolean(final LispStruct object) {
-		return NullStruct.INSTANCE.equals(object) || NILStruct.INSTANCE.equals(object);
+	@Override
+	protected String functionName() {
+		return "NULL";
 	}
 }

@@ -14,6 +14,7 @@ import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 import jcl.LispStruct;
+import jcl.conditions.exceptions.TypeErrorException;
 import jcl.symbols.NILStruct;
 import jcl.types.ConsType;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -63,6 +64,7 @@ public class ConsStruct extends ListStruct {
 	 *
 	 * @return cons {@link #car} property
 	 */
+	@Override
 	public LispStruct getCar() {
 		return car;
 	}
@@ -82,6 +84,7 @@ public class ConsStruct extends ListStruct {
 	 *
 	 * @return cons {@link #cdr} property
 	 */
+	@Override
 	public LispStruct getCdr() {
 		return cdr;
 	}
@@ -288,11 +291,11 @@ public class ConsStruct extends ListStruct {
 	@Override
 	public Spliterator<LispStruct> spliterator() {
 		return Spliterators.spliterator(iterator(), size(),
-				Spliterator.ORDERED |
-						Spliterator.SIZED |
-						Spliterator.NONNULL |
-						Spliterator.IMMUTABLE |
-						Spliterator.SUBSIZED
+		                                Spliterator.ORDERED |
+				                                Spliterator.SIZED |
+				                                Spliterator.NONNULL |
+				                                Spliterator.IMMUTABLE |
+				                                Spliterator.SUBSIZED
 		);
 	}
 
@@ -316,6 +319,30 @@ public class ConsStruct extends ListStruct {
 			result[i++] = xCons.car;
 		}
 		return result;
+	}
+
+	@Override
+	public ListStruct copyTree() {
+		final LispStruct deepCar = (car instanceof ConsStruct) ? ((ConsStruct) car).copyTree() : car;
+		final LispStruct deepCdr = (cdr instanceof ConsStruct) ? ((ConsStruct) cdr).copyTree() : cdr;
+		return new ConsStruct(deepCar, deepCdr);
+	}
+
+	@Override
+	public ListStruct copyList() {
+		final LispStruct copyCdr = (cdr instanceof ConsStruct) ? ((ConsStruct) cdr).copyList() : cdr;
+		return new ConsStruct(car, copyCdr);
+	}
+
+	@Override
+	public Long listLength() {
+		if (isDotted()) {
+			throw new TypeErrorException("Not a proper or circular list.");
+		}
+		if (isCircular()) {
+			return null;
+		}
+		return (long) size();
 	}
 
 	private static final class ConsIterator implements Iterator<LispStruct> {

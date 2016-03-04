@@ -4,7 +4,7 @@
 
 package jcl.lists.functions;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import jcl.LispStruct;
@@ -31,15 +31,10 @@ public final class NthFunction extends AbstractCommonLispFunctionStruct {
 
 	@Override
 	protected List<RequiredParameter> getRequiredBindings() {
-		final List<RequiredParameter> requiredParameters = new ArrayList<>(2);
-
-		final RequiredParameter indexParam = RequiredParameter.builder(GlobalPackageStruct.COMMON_LISP, "INDEX").build();
-		requiredParameters.add(indexParam);
-
-		final RequiredParameter listParam = RequiredParameter.builder(GlobalPackageStruct.COMMON_LISP, "LIST").build();
-		requiredParameters.add(listParam);
-
-		return requiredParameters;
+		return Arrays.asList(
+				RequiredParameter.builder(GlobalPackageStruct.COMMON_LISP, "INDEX").build(),
+				RequiredParameter.builder(GlobalPackageStruct.COMMON_LISP, "LIST").build()
+		);
 	}
 
 	@Override

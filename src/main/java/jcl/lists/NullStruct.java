@@ -100,4 +100,19 @@ public final class NullStruct extends ListStruct {
 	public LispStruct[] toArray() {
 		return ArrayUtils.toArray();
 	}
+
+	@Override
+	public ListStruct copyTree() {
+		return INSTANCE;
+	}
+
+	@Override
+	public ListStruct copyList() {
+		return INSTANCE;
+	}
+
+	@Override
+	public Long listLength() {
+		return 0L;
+	}
 }

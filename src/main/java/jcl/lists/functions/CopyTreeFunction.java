@@ -1,7 +1,3 @@
-/*
- * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
- */
-
 package jcl.lists.functions;
 
 import java.util.List;
@@ -17,13 +13,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class CdrFunction extends AbstractCommonLispFunctionStruct {
+public final class CopyTreeFunction extends AbstractCommonLispFunctionStruct {
 
 	@Autowired
 	private TypeValidator validator;
 
-	public CdrFunction() {
-		super("Gets the cdr of the provided list.");
+	public CopyTreeFunction() {
+		super("Creates a copy of a tree of conses.");
 	}
 
 	@Override
@@ -36,11 +32,11 @@ public final class CdrFunction extends AbstractCommonLispFunctionStruct {
 		super.apply(lispStructs);
 
 		final ListStruct list = validator.validateType(lispStructs[0], functionName(), "List", ListType.INSTANCE, ListStruct.class);
-		return list.getCdr();
+		return list.copyTree();
 	}
 
 	@Override
 	protected String functionName() {
-		return "CDR";
+		return "COPY-TREE";
 	}
 }

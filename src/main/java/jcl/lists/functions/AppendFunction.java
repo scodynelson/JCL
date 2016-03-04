@@ -17,6 +17,7 @@ import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;
 import jcl.packages.GlobalPackageStruct;
 import jcl.printer.Printer;
+import jcl.symbols.NILStruct;
 import jcl.symbols.SymbolStruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -25,9 +26,6 @@ import org.springframework.stereotype.Component;
 public final class AppendFunction extends FunctionStruct {
 
 	public static final SymbolStruct APPEND = GlobalPackageStruct.COMMON_LISP.intern("APPEND").getSymbol();
-
-	@Autowired
-	private NullFunction nullFunction;
 
 	@Autowired
 	private Printer printer;
@@ -66,11 +64,11 @@ public final class AppendFunction extends FunctionStruct {
 			final ConsStruct topConsStruct = (ConsStruct) top;
 			final LispStruct carOfTop = topConsStruct.getCar();
 
-			if (nullFunction.nullFnJavaBoolean(carOfTop)) {
+			if (NullStruct.INSTANCE.equals(carOfTop) || NILStruct.INSTANCE.equals(carOfTop)) {
 				top = topConsStruct.getCdr();
 			} else if (!(carOfTop instanceof ConsStruct)) {
 				final LispStruct cdrTop = topConsStruct.getCdr();
-				if (nullFunction.nullFnJavaBoolean(cdrTop)) {
+				if (NullStruct.INSTANCE.equals(cdrTop) || NILStruct.INSTANCE.equals(cdrTop)) {
 					return carOfTop;
 				} else {
 					final String printedObject = printer.print(carOfTop);
@@ -98,7 +96,7 @@ public final class AppendFunction extends FunctionStruct {
 
 					x = xAsConsStruct.getCdr();
 				}
-				if (!nullFunction.nullFnJavaBoolean(x)) {
+				if (!(NullStruct.INSTANCE.equals(x) || NILStruct.INSTANCE.equals(x))) {
 					final String printedObject = printer.print(carOfTop);
 					throw new TypeErrorException("Argument is not a proper list -- " + printedObject);
 				}
@@ -122,7 +120,7 @@ public final class AppendFunction extends FunctionStruct {
 							innerX = innerXAsConsStruct.getCdr();
 						}
 
-						if (!nullFunction.nullFnJavaBoolean(innerX)) {
+						if (!(NullStruct.INSTANCE.equals(innerX) || NILStruct.INSTANCE.equals(innerX))) {
 							final String printedObject = printer.print(y.getCar());
 							throw new TypeErrorException("Argument is not a proper list -- " + printedObject);
 						}

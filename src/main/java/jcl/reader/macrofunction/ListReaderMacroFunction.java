@@ -140,7 +140,7 @@ final class ListReaderMacroFunction {
 			if (firstCodePoint == CharacterConstants.RIGHT_PARENTHESIS) {
 				throw new ReaderErrorException("Nothing appears after . in list.");
 			}
-			reader.unreadChar(codePoint);
+			reader.unreadChar(firstCodePoint);
 
 			// NOTE: This will throw errors when it reaches an EOF
 			token = reader.read(true, NullStruct.INSTANCE, true);

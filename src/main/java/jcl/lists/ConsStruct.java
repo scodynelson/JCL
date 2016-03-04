@@ -335,6 +335,19 @@ public class ConsStruct extends ListStruct {
 	}
 
 	@Override
+	public ListStruct copyAlist() {
+		final LispStruct copyCar;
+		if (car instanceof ConsStruct) {
+			final ConsStruct assocCar = (ConsStruct) car;
+			copyCar = new ConsStruct(assocCar.car, assocCar.cdr);
+		} else {
+			copyCar = car;
+		}
+		final LispStruct copyCdr = (cdr instanceof ConsStruct) ? ((ConsStruct) cdr).copyAlist() : cdr;
+		return new ConsStruct(copyCar, copyCdr);
+	}
+
+	@Override
 	public Long listLength() {
 		if (isDotted()) {
 			throw new TypeErrorException("Not a proper or circular list.");

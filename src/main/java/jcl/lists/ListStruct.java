@@ -140,6 +140,8 @@ public abstract class ListStruct extends BuiltInClassStruct implements SequenceS
 
 	public abstract ListStruct copyList();
 
+	public abstract ListStruct copyAlist();
+
 	public abstract Long listLength();
 
 	// BUILDERS

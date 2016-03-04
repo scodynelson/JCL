@@ -40,7 +40,6 @@
 		<entry key="jcl.java.JavaObjectStruct" value-ref="javaObjectStructPrinter"/>
 
 		<entry key="jcl.lists.ConsStruct" value-ref="consStructPrinter"/>
-		<entry key="jcl.lists.NullStruct" value-ref="nullStructPrinter"/>
 
 		<entry key="jcl.numbers.ComplexStruct" value-ref="complexStructPrinter"/>
 		<entry key="jcl.numbers.FloatStruct" value-ref="floatStructPrinter"/>
@@ -89,7 +88,6 @@
 
 		<entry key="jcl.compiler.struct.ValuesStruct" value-ref="valuesCodeGenerator"/>
 
-		<entry key="jcl.lists.NullStruct" value-ref="nullCodeGenerator"/>
 		<entry key="jcl.lists.ConsStruct" value-ref="consCodeGenerator"/>
 
 		<entry key="jcl.numbers.ComplexStruct" value-ref="complexCodeGenerator"/>

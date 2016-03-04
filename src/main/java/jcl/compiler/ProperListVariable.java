@@ -7,8 +7,8 @@ package jcl.compiler;
 import jcl.LispStruct;
 import jcl.conditions.exceptions.TypeErrorException;
 import jcl.lists.ListStruct;
-import jcl.lists.NullStruct;
 import jcl.packages.PackageStruct;
+import jcl.symbols.NILStruct;
 import jcl.symbols.VariableStruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,7 +18,7 @@ class ProperListVariable extends VariableStruct<ListStruct> {
 	private static final Logger LOGGER = LoggerFactory.getLogger(ProperListVariable.class);
 
 	ProperListVariable(final String name, final PackageStruct symbolPackage) {
-		super(name, symbolPackage, NullStruct.INSTANCE);
+		super(name, symbolPackage, NILStruct.INSTANCE);
 	}
 
 	@Override
@@ -34,7 +34,7 @@ class ProperListVariable extends VariableStruct<ListStruct> {
 		} else {
 			LOGGER.warn("Error: {} had illegal value {}. Reset to NIL", name, variableValue);
 
-			super.setValue(NullStruct.INSTANCE);
+			super.setValue(NILStruct.INSTANCE);
 		}
 	}
 }

@@ -17,8 +17,8 @@ import jcl.compiler.environment.binding.lambdalist.RestParameter;
 import jcl.compiler.environment.binding.lambdalist.SuppliedPParameter;
 import jcl.functions.Closure;
 import jcl.functions.FunctionStruct;
-import jcl.lists.NullStruct;
 import jcl.packages.PackageStruct;
+import jcl.symbols.NILStruct;
 import jcl.symbols.SymbolStruct;
 import org.springframework.stereotype.Component;
 
@@ -53,7 +53,7 @@ public class TestLambdaGenerator extends FunctionStruct {
 
 		PackageStruct pkg = PackageStruct.findPackage("SYSTEM");
 		final SymbolStruct optionalSymbol = pkg.intern("OPTIONAL-SYMBOL").getSymbol();
-		final LispStruct optionalInitForm = NullStruct.INSTANCE;
+		final LispStruct optionalInitForm = NILStruct.INSTANCE;
 
 		pkg = PackageStruct.findPackage("SYSTEM");
 		final SymbolStruct optionalSuppliedPSymbol = pkg.intern("OPTIONAL-SYMBOL-P").getSymbol();
@@ -78,7 +78,7 @@ public class TestLambdaGenerator extends FunctionStruct {
 
 		PackageStruct pkg = PackageStruct.findPackage("SYSTEM");
 		final SymbolStruct keySymbol = pkg.intern("KEY-SYMBOL").getSymbol();
-		final LispStruct keyInitForm = NullStruct.INSTANCE;
+		final LispStruct keyInitForm = NILStruct.INSTANCE;
 
 		pkg = PackageStruct.findPackage("SYSTEM");
 		final SymbolStruct keySuppliedPSymbol = pkg.intern("KEY-SUPPLIED-P-SYMBOL").getSymbol();
@@ -104,7 +104,7 @@ public class TestLambdaGenerator extends FunctionStruct {
 
 		final PackageStruct pkg = PackageStruct.findPackage("SYSTEM");
 		final SymbolStruct auxSymbol = pkg.intern("AUX-SYMBOL").getSymbol();
-		final LispStruct auxInitForm = NullStruct.INSTANCE;
+		final LispStruct auxInitForm = NILStruct.INSTANCE;
 
 		final AuxParameter auxBinding = new AuxParameter(auxSymbol, auxInitForm, false);
 		auxBindings.add(auxBinding);
@@ -133,6 +133,6 @@ public class TestLambdaGenerator extends FunctionStruct {
 			return CharacterStruct.valueOf(200);
 		}
 
-		return NullStruct.INSTANCE;
+		return NILStruct.INSTANCE;
 	}
 }

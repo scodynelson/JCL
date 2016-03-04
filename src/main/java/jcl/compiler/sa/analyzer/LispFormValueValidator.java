@@ -10,7 +10,6 @@ import java.util.stream.Stream;
 import jcl.LispStruct;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.lists.ListStruct;
-import jcl.lists.NullStruct;
 import jcl.printer.Printer;
 import jcl.symbols.NILStruct;
 import jcl.symbols.SymbolStruct;
@@ -85,7 +84,7 @@ public final class LispFormValueValidator {
 
 	public SymbolStruct validateSymbolOrNIL(final LispStruct object, final String analyzerName,
 	                                        final String objectName) {
-		if (NILStruct.INSTANCE.equals(object) || NullStruct.INSTANCE.equals(object)) {
+		if (NILStruct.INSTANCE.equals(object)) {
 			return null;
 		} else if (object instanceof SymbolStruct) {
 			return (SymbolStruct) object;

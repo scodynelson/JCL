@@ -28,7 +28,6 @@ import jcl.functions.FunctionStruct;
 import jcl.functions.expanders.SymbolMacroExpander;
 import jcl.lists.ConsStruct;
 import jcl.lists.ListStruct;
-import jcl.lists.NullStruct;
 import jcl.numbers.ComplexStruct;
 import jcl.numbers.FloatStruct;
 import jcl.numbers.IntegerStruct;
@@ -78,7 +77,7 @@ public class TestGround {
 		testObj = ValuesStructs.extractPrimaryValue(testObj);
 
 		final LispStruct result;
-		if (!testObj.equals(NullStruct.INSTANCE) && !testObj.equals(NILStruct.INSTANCE)) {
+		if (!testObj.equals(NILStruct.INSTANCE)) {
 			result = CharacterStruct.valueOf(197);
 		} else {
 			result = CharacterStruct.valueOf(297);
@@ -118,10 +117,6 @@ public class TestGround {
 
 	private Object nilGen() {
 		return NILStruct.INSTANCE;
-	}
-
-	private Object nullGen() {
-		return NullStruct.INSTANCE;
 	}
 
 	private Object characterGen() {

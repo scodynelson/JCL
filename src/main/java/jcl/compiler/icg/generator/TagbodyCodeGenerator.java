@@ -16,7 +16,7 @@ import jcl.compiler.struct.specialoperator.PrognStruct;
 import jcl.compiler.struct.specialoperator.TagbodyStruct;
 import jcl.compiler.struct.specialoperator.go.GoStruct;
 import jcl.functions.Closure;
-import jcl.lists.NullStruct;
+import jcl.symbols.NILStruct;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
@@ -36,11 +36,11 @@ final class TagbodyCodeGenerator extends SpecialOperatorCodeGenerator<TagbodyStr
 	private PrognCodeGenerator prognCodeGenerator;
 
 	/**
-	 * {@link NullCodeGenerator} used for generating a {@link NullStruct} at the end of the created 'tagbody' method as
+	 * {@link NILCodeGenerator} used for generating a {@link NILStruct} at the end of the created 'tagbody' method as
 	 * the result.
 	 */
 	@Autowired
-	private NullCodeGenerator nullCodeGenerator;
+	private NILCodeGenerator nilCodeGenerator;
 
 	/**
 	 * Private constructor which passes 'tagbody' as the prefix value to be set in it's {@link #methodNamePrefix}
@@ -71,7 +71,7 @@ final class TagbodyCodeGenerator extends SpecialOperatorCodeGenerator<TagbodyStr
 	 * private LispStruct tagbody_1(Closure var1) {
 	 *      while(true) {
 	 *          try {
-	 *              NullStruct var10000 = NullStruct.INSTANCE;
+	 *              NILStruct var10000 = NILStruct.INSTANCE;
 	 *          } catch (GoException var4) {
 	 *              int var3 = var4.getTagIndex();
 	 *              switch(var3) {
@@ -81,7 +81,7 @@ final class TagbodyCodeGenerator extends SpecialOperatorCodeGenerator<TagbodyStr
 	 *                      throw var4;
 	 *              }
 	 *          }
-	 *          return NullStruct.INSTANCE;
+	 *          return NILStruct.INSTANCE;
 	 *      }
 	 * }
 	 * }
@@ -178,7 +178,7 @@ final class TagbodyCodeGenerator extends SpecialOperatorCodeGenerator<TagbodyStr
 
 		// End 'catch(GoException ge){}'
 		mv.visitLabel(catchBlockEnd);
-		nullCodeGenerator.generate(NullStruct.INSTANCE, generatorState);
+		nilCodeGenerator.generate(NILStruct.INSTANCE, generatorState);
 
 		mv.visitInsn(Opcodes.ARETURN);
 	}

@@ -15,11 +15,11 @@ import jcl.compiler.environment.binding.lambdalist.OrdinaryLambdaList;
 import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
 import jcl.compiler.environment.binding.lambdalist.SuppliedPParameter;
 import jcl.functions.FunctionStruct;
-import jcl.lists.NullStruct;
 import jcl.packages.GlobalPackageStruct;
 import jcl.pathnames.PathnameComponentType;
 import jcl.pathnames.PathnameHost;
 import jcl.pathnames.PathnameStruct;
+import jcl.symbols.NILStruct;
 import jcl.symbols.SymbolStruct;
 import jcl.system.CommonLispSymbols;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,7 +54,7 @@ public final class PathnameHostFunction extends FunctionStruct {
 		final SymbolStruct caseSuppliedPSymbol = GlobalPackageStruct.COMMON_LISP.intern("CASE-P-").getSymbol();
 		final SuppliedPParameter suppliedPBinding = new SuppliedPParameter(caseSuppliedPSymbol);
 
-		final KeyParameter keyBinding = new KeyParameter(caseArgSymbol, NullStruct.INSTANCE, CommonLispSymbols.CASE_KEYWORD, suppliedPBinding);
+		final KeyParameter keyBinding = new KeyParameter(caseArgSymbol, NILStruct.INSTANCE, CommonLispSymbols.CASE_KEYWORD, suppliedPBinding);
 		final List<KeyParameter> keyBindings = Collections.singletonList(keyBinding);
 
 		return OrdinaryLambdaList.builder()
@@ -70,7 +70,7 @@ public final class PathnameHostFunction extends FunctionStruct {
 		final LispStruct pathspec = lispStructs[0];
 		final PathnameHost pathnameHost = pathnameHost(pathspec);
 		if (pathnameHost == null) {
-			return NullStruct.INSTANCE;
+			return NILStruct.INSTANCE;
 		}
 
 		final String host = pathnameHost.getHost();

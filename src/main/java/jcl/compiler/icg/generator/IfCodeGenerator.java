@@ -11,7 +11,6 @@ import jcl.compiler.icg.JavaMethodBuilder;
 import jcl.compiler.struct.ValuesStruct;
 import jcl.compiler.struct.specialoperator.IfStruct;
 import jcl.functions.Closure;
-import jcl.lists.NullStruct;
 import jcl.symbols.NILStruct;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
@@ -39,12 +38,6 @@ final class IfCodeGenerator extends SpecialOperatorCodeGenerator<IfStruct> {
 	private NILCodeGenerator nilCodeGenerator;
 
 	/**
-	 * {@link NullCodeGenerator} used for generating a {@link NullStruct} when comparing the {@link IfStruct#testForm}.
-	 */
-	@Autowired
-	private NullCodeGenerator nullCodeGenerator;
-
-	/**
 	 * Private constructor which passes 'if' as the prefix value to be set in it's {@link #methodNamePrefix} value.
 	 */
 	private IfCodeGenerator() {
@@ -58,8 +51,7 @@ final class IfCodeGenerator extends SpecialOperatorCodeGenerator<IfStruct> {
 	 * <li>Generating the {@link IfStruct#testForm}</li>
 	 * <li>Retrieving the primary value via {@link ValuesStruct#getPrimaryValue()} if the generated test form is a
 	 * {@link ValuesStruct}</li>
-	 * <li>Generating the equality test for the test form against {@link NullStruct#INSTANCE} and {@link
-	 * NILStruct#INSTANCE}</li>
+	 * <li>Generating the equality test for the test form against {@link NILStruct#INSTANCE}</li>
 	 * <li>Generating the {@link IfStruct#thenForm}</li>
 	 * <li>Generating the {@link IfStruct#elseForm}</li>
 	 * </ol>
@@ -73,7 +65,7 @@ final class IfCodeGenerator extends SpecialOperatorCodeGenerator<IfStruct> {
 	 *          var2 = var3.getPrimaryValue();
 	 *      }
 	 *      IntegerStruct var4;
-	 *      if(!var2.equals(NullStruct.INSTANCE) && !var2.equals(NILStruct.INSTANCE)) {
+	 *      if(!var2.equals(NILStruct.INSTANCE)) {
 	 *          BigInteger var5 = new BigInteger("1");
 	 *          var4 = new IntegerStruct(var5);
 	 *      } else {
@@ -116,15 +108,6 @@ final class IfCodeGenerator extends SpecialOperatorCodeGenerator<IfStruct> {
 
 		final Label elseStart = new Label();
 		final Label elseEnd = new Label();
-
-		mv.visitVarInsn(Opcodes.ALOAD, testFormStore);
-		nullCodeGenerator.generate(NullStruct.INSTANCE, generatorState);
-		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
-		                   GenerationConstants.JAVA_OBJECT_NAME,
-		                   GenerationConstants.JAVA_EQUALS_METHOD_NAME,
-		                   GenerationConstants.JAVA_EQUALS_METHOD_DESC,
-		                   false);
-		mv.visitJumpInsn(Opcodes.IFNE, elseStart);
 
 		mv.visitVarInsn(Opcodes.ALOAD, testFormStore);
 		nilCodeGenerator.generate(NILStruct.INSTANCE, generatorState);

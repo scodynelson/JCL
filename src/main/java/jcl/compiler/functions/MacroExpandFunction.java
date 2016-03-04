@@ -16,7 +16,6 @@ import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
 import jcl.compiler.environment.binding.lambdalist.SuppliedPParameter;
 import jcl.compiler.struct.ValuesStruct;
 import jcl.functions.FunctionStruct;
-import jcl.lists.NullStruct;
 import jcl.packages.GlobalPackageStruct;
 import jcl.symbols.BooleanStruct;
 import jcl.symbols.NILStruct;
@@ -54,7 +53,7 @@ public final class MacroExpandFunction extends FunctionStruct {
 		final SymbolStruct envSuppliedPSymbol = GlobalPackageStruct.COMMON_LISP.intern("ENV-P-" + System.nanoTime()).getSymbol();
 		final SuppliedPParameter suppliedPBinding = new SuppliedPParameter(envSuppliedPSymbol);
 
-		final OptionalParameter optionalBinding = new OptionalParameter(envArgSymbol, NullStruct.INSTANCE, suppliedPBinding);
+		final OptionalParameter optionalBinding = new OptionalParameter(envArgSymbol, NILStruct.INSTANCE, suppliedPBinding);
 		final List<OptionalParameter> optionalBindings = Collections.singletonList(optionalBinding);
 
 		return OrdinaryLambdaList.builder()

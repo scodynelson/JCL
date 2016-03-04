@@ -7,7 +7,6 @@ package jcl.streams.functions;
 import jcl.LispStruct;
 import jcl.conditions.exceptions.TypeErrorException;
 import jcl.functions.AbstractCommonLispFunctionStruct;
-import jcl.lists.NullStruct;
 import jcl.printer.Printer;
 import jcl.streams.InputStream;
 import jcl.streams.OutputStream;
@@ -32,7 +31,7 @@ abstract class AbstractStreamFunction extends AbstractCommonLispFunctionStruct {
 	protected InputStream getInputStreamFromDesignator(final LispStruct lispStruct) {
 		if (TStruct.INSTANCE.equals(lispStruct)) {
 			return StreamVariables.TERMINAL_IO.getVariableValue();
-		} else if (NILStruct.INSTANCE.equals(lispStruct) || NullStruct.INSTANCE.equals(lispStruct)) {
+		} else if (NILStruct.INSTANCE.equals(lispStruct)) {
 			return StreamVariables.STANDARD_INPUT.getVariableValue();
 		} else if (lispStruct instanceof InputStream) {
 			return (InputStream) lispStruct;
@@ -44,7 +43,7 @@ abstract class AbstractStreamFunction extends AbstractCommonLispFunctionStruct {
 	protected OutputStream getOutputStreamFromDesignator(final LispStruct lispStruct) {
 		if (TStruct.INSTANCE.equals(lispStruct)) {
 			return StreamVariables.TERMINAL_IO.getVariableValue();
-		} else if (NILStruct.INSTANCE.equals(lispStruct) || NullStruct.INSTANCE.equals(lispStruct)) {
+		} else if (NILStruct.INSTANCE.equals(lispStruct)) {
 			return StreamVariables.STANDARD_OUTPUT.getVariableValue();
 		} else if (lispStruct instanceof OutputStream) {
 			return (OutputStream) lispStruct;

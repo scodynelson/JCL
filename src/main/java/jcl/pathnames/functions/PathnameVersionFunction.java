@@ -13,11 +13,11 @@ import jcl.arrays.StringStruct;
 import jcl.compiler.environment.binding.lambdalist.OrdinaryLambdaList;
 import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
 import jcl.functions.FunctionStruct;
-import jcl.lists.NullStruct;
 import jcl.packages.GlobalPackageStruct;
 import jcl.pathnames.PathnameStruct;
 import jcl.pathnames.PathnameVersion;
 import jcl.pathnames.PathnameVersionComponentType;
+import jcl.symbols.NILStruct;
 import jcl.symbols.SymbolStruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -58,7 +58,7 @@ public final class PathnameVersionFunction extends FunctionStruct {
 		final LispStruct pathspec = lispStructs[0];
 		final PathnameVersion pathnameVersion = pathnameVersion(pathspec);
 		if (pathnameVersion == null) {
-			return NullStruct.INSTANCE;
+			return NILStruct.INSTANCE;
 		}
 
 		final Integer version = pathnameVersion.getVersion();

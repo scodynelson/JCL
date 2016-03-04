@@ -10,11 +10,11 @@ import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
 import jcl.characters.CharacterConstants;
-import jcl.lists.NullStruct;
 import jcl.reader.Reader;
 import jcl.reader.ReaderMacroFunction;
 import jcl.reader.struct.ReaderVariables;
 import jcl.streams.ReadPeekResult;
+import jcl.symbols.NILStruct;
 import org.springframework.stereotype.Component;
 
 /**
@@ -48,6 +48,6 @@ public class SemicolonReaderMacroFunction extends ReaderMacroFunction {
 
 //		final String stringValue = stringBuilder.toString();
 //		return new CommentStruct(stringValue);
-		return NullStruct.INSTANCE;
+		return NILStruct.INSTANCE;
 	}
 }

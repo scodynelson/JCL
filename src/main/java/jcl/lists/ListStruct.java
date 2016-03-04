@@ -6,6 +6,7 @@ import java.util.stream.Stream;
 
 import jcl.LispStruct;
 import jcl.sequences.SequenceStruct;
+import jcl.symbols.NILStruct;
 import org.apache.commons.collections4.CollectionUtils;
 
 /**
@@ -122,7 +123,7 @@ public interface ListStruct extends SequenceStruct, Iterable<LispStruct> {
 	 * @return a proper list with the provided {@code lispStructs} as the elements
 	 */
 	static ListStruct buildProperList(final LispStruct... lispStructs) {
-		return (lispStructs.length == 0) ? NullStruct.INSTANCE : getProperList(Arrays.asList(lispStructs));
+		return (lispStructs.length == 0) ? NILStruct.INSTANCE : getProperList(Arrays.asList(lispStructs));
 	}
 
 	/**
@@ -134,7 +135,7 @@ public interface ListStruct extends SequenceStruct, Iterable<LispStruct> {
 	 * @return a proper list with the provided {@code lispStructs} as the elements
 	 */
 	static ListStruct buildProperList(final List<? extends LispStruct> lispStructs) {
-		return CollectionUtils.isEmpty(lispStructs) ? NullStruct.INSTANCE : getProperList(lispStructs);
+		return CollectionUtils.isEmpty(lispStructs) ? NILStruct.INSTANCE : getProperList(lispStructs);
 	}
 
 	/**
@@ -149,7 +150,7 @@ public interface ListStruct extends SequenceStruct, Iterable<LispStruct> {
 		final LispStruct car = lispStructs.get(0);
 		final List<? extends LispStruct> rest = lispStructs.subList(1, lispStructs.size());
 
-		final LispStruct cdr = CollectionUtils.isEmpty(rest) ? NullStruct.INSTANCE : getProperList(rest);
+		final LispStruct cdr = CollectionUtils.isEmpty(rest) ? NILStruct.INSTANCE : getProperList(rest);
 		return new ConsStruct(car, cdr);
 	}
 
@@ -163,13 +164,13 @@ public interface ListStruct extends SequenceStruct, Iterable<LispStruct> {
 	 */
 	static ListStruct buildDottedList(final LispStruct... lispStructs) {
 		if (lispStructs.length == 0) {
-			return NullStruct.INSTANCE;
+			return NILStruct.INSTANCE;
 		} else if (lispStructs.length == 1) {
 			final LispStruct firstElement = lispStructs[0];
 			if (firstElement instanceof ListStruct) {
 				return (ListStruct) firstElement;
 			}
-			return new ConsStruct(firstElement, NullStruct.INSTANCE);
+			return new ConsStruct(firstElement, NILStruct.INSTANCE);
 		} else {
 			return getDottedList(Arrays.asList(lispStructs));
 		}
@@ -185,13 +186,13 @@ public interface ListStruct extends SequenceStruct, Iterable<LispStruct> {
 	 */
 	static ListStruct buildDottedList(final List<? extends LispStruct> lispStructs) {
 		if (CollectionUtils.isEmpty(lispStructs)) {
-			return NullStruct.INSTANCE;
+			return NILStruct.INSTANCE;
 		} else if (lispStructs.size() == 1) {
 			final LispStruct firstElement = lispStructs.get(0);
 			if (firstElement instanceof ListStruct) {
 				return (ListStruct) firstElement;
 			}
-			return new ConsStruct(firstElement, NullStruct.INSTANCE);
+			return new ConsStruct(firstElement, NILStruct.INSTANCE);
 		} else {
 			return getDottedList(lispStructs);
 		}

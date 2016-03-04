@@ -5,7 +5,6 @@ import java.util.List;
 import jcl.LispStruct;
 import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
 import jcl.functions.AbstractCommonLispFunctionStruct;
-import jcl.lists.NullStruct;
 import jcl.packages.GlobalPackageStruct;
 import jcl.symbols.BooleanStructs;
 import jcl.symbols.NILStruct;
@@ -34,7 +33,7 @@ public class EndpFunction extends AbstractCommonLispFunctionStruct {
 		super.apply(lispStructs);
 
 		final LispStruct list = validator.validateType(lispStructs[0], functionName(), "List", ListType.INSTANCE, LispStruct.class);
-		return BooleanStructs.toLispBoolean(NullStruct.INSTANCE.equals(list) || NILStruct.INSTANCE.equals(list));
+		return BooleanStructs.toLispBoolean(NILStruct.INSTANCE.equals(list));
 	}
 
 	@Override

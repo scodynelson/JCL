@@ -9,7 +9,6 @@ import java.util.List;
 import jcl.LispStruct;
 import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
 import jcl.functions.AbstractCommonLispFunctionStruct;
-import jcl.lists.NullStruct;
 import jcl.packages.GlobalPackageStruct;
 import jcl.symbols.BooleanStructs;
 import jcl.symbols.NILStruct;
@@ -35,7 +34,7 @@ public final class NullFunction extends AbstractCommonLispFunctionStruct {
 		super.apply(lispStructs);
 
 		final LispStruct object = lispStructs[0];
-		return BooleanStructs.toLispBoolean(NullStruct.INSTANCE.equals(object) || NILStruct.INSTANCE.equals(object));
+		return BooleanStructs.toLispBoolean(NILStruct.INSTANCE.equals(object));
 	}
 
 	@Override

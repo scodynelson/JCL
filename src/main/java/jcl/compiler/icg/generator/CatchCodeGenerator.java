@@ -65,7 +65,7 @@ final class CatchCodeGenerator extends SpecialOperatorCodeGenerator<CatchStruct>
 	 *      SymbolStruct var3 = var2.findSymbol("FOO").getSymbol();
 	 *      LispStruct var5;
 	 *      try {
-	 *          var5 = NullStruct.INSTANCE;
+	 *          var5 = NILStruct.INSTANCE;
 	 *      } catch (ThrowException var8) {
 	 *          LispStruct var7 = var8.getCatchTag();
 	 *          if(!var7.equals(var3)) {

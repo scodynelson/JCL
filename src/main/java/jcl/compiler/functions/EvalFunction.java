@@ -29,7 +29,6 @@ import jcl.java.JavaNameStruct;
 import jcl.java.JavaObjectStruct;
 import jcl.java.functions.JInvoke;
 import jcl.java.functions.JMethod;
-import jcl.lists.NullStruct;
 import jcl.packages.GlobalPackageStruct;
 import jcl.printer.Printer;
 import jcl.symbols.BooleanStruct;
@@ -120,7 +119,7 @@ public final class EvalFunction extends FunctionStruct {
 			final SetqStruct setq = (SetqStruct) exp;
 			final List<SetqStruct.SetqPair> setqPairs = setq.getSetqPairs();
 
-			LispStruct finalForm = NullStruct.INSTANCE;
+			LispStruct finalForm = NILStruct.INSTANCE;
 
 			for (final SetqStruct.SetqPair setqPair : setqPairs) {
 				final SymbolStruct var = setqPair.getVar();
@@ -138,7 +137,7 @@ public final class EvalFunction extends FunctionStruct {
 			final PrognStruct progn = (PrognStruct) exp;
 			final List<LispStruct> forms = progn.getForms();
 
-			LispStruct finalForm = NullStruct.INSTANCE;
+			LispStruct finalForm = NILStruct.INSTANCE;
 
 			for (final LispStruct form : forms) {
 				finalForm = eval(form);

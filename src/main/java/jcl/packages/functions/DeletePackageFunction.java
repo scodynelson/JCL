@@ -9,9 +9,9 @@ import java.util.List;
 import jcl.LispStruct;
 import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
 import jcl.functions.AbstractCommonLispFunctionStruct;
-import jcl.lists.NullStruct;
 import jcl.packages.GlobalPackageStruct;
 import jcl.packages.PackageStruct;
+import jcl.symbols.NILStruct;
 import jcl.symbols.TStruct;
 import jcl.types.TypeValidator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,7 +65,7 @@ public final class DeletePackageFunction extends AbstractCommonLispFunctionStruc
 		final PackageStruct aPackage = validator.validatePackageDesignator(lispStruct, functionName());
 
 		if (aPackage.getName() == null) {
-			return NullStruct.INSTANCE;
+			return NILStruct.INSTANCE;
 		}
 
 		aPackage.deletePackage();

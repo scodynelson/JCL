@@ -12,7 +12,6 @@ import jcl.LispStruct;
 import jcl.characters.CharacterConstants;
 import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.lists.ListStruct;
-import jcl.lists.NullStruct;
 import jcl.numbers.ComplexStruct;
 import jcl.numbers.RealStruct;
 import jcl.printer.Printer;
@@ -20,6 +19,7 @@ import jcl.reader.Reader;
 import jcl.reader.ReaderMacroFunction;
 import jcl.reader.struct.ReaderVariables;
 import jcl.reader.struct.ReadtableStruct;
+import jcl.symbols.NILStruct;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -53,9 +53,9 @@ public class SharpCReaderMacroFunction extends ReaderMacroFunction {
 	public LispStruct readMacro(final int codePoint, final Reader reader, final Optional<BigInteger> numberArgument) {
 		assert (codePoint == CharacterConstants.LATIN_SMALL_LETTER_C) || (codePoint == CharacterConstants.LATIN_CAPITAL_LETTER_C);
 
-		final LispStruct token = reader.read(true, NullStruct.INSTANCE, true);
+		final LispStruct token = reader.read(true, NILStruct.INSTANCE, true);
 		if (ReaderVariables.READ_SUPPRESS.getVariableValue().booleanValue()) {
-			return NullStruct.INSTANCE;
+			return NILStruct.INSTANCE;
 		}
 
 		if (!(token instanceof ListStruct)) {

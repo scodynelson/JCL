@@ -5,7 +5,6 @@
 package jcl.reader.state;
 
 import jcl.LispStruct;
-import jcl.lists.NullStruct;
 import jcl.reader.Reader;
 import jcl.reader.ReaderStateMediator;
 import jcl.reader.TokenBuilder;
@@ -13,6 +12,7 @@ import jcl.reader.struct.ReaderVariables;
 import jcl.reader.struct.ReadtableStruct;
 import jcl.reader.struct.SyntaxType;
 import jcl.streams.ReadPeekResult;
+import jcl.symbols.NILStruct;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -84,7 +84,7 @@ class ReadReaderState implements ReaderState {
 			if (LOGGER.isDebugEnabled()) {
 				LOGGER.debug("{} suppressed.", token);
 			}
-			return NullStruct.INSTANCE;
+			return NILStruct.INSTANCE;
 		}
 		return token;
 	}

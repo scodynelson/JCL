@@ -14,13 +14,13 @@ import jcl.characters.CharacterConstants;
 import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.functions.FunctionStruct;
 import jcl.lists.ListStruct;
-import jcl.lists.NullStruct;
 import jcl.reader.Reader;
 import jcl.reader.ReaderMacroFunction;
 import jcl.reader.struct.ReaderVariables;
 import jcl.reader.struct.ReadtableStruct;
 import jcl.streams.ReadPeekResult;
 import jcl.structures.StructureClassStruct;
+import jcl.symbols.NILStruct;
 import jcl.symbols.SymbolStruct;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -56,11 +56,11 @@ public class SharpSReaderMacroFunction extends ReaderMacroFunction {
 		assert (codePoint == CharacterConstants.LATIN_SMALL_LETTER_S) || (codePoint == CharacterConstants.LATIN_CAPITAL_LETTER_S);
 
 		if (ReaderVariables.READ_SUPPRESS.getVariableValue().booleanValue()) {
-			reader.read(true, NullStruct.INSTANCE, true);
-			return NullStruct.INSTANCE;
+			reader.read(true, NILStruct.INSTANCE, true);
+			return NILStruct.INSTANCE;
 		}
 
-		final ReadPeekResult readResult = reader.readChar(true, NullStruct.INSTANCE, false);
+		final ReadPeekResult readResult = reader.readChar(true, NILStruct.INSTANCE, false);
 		final int nextCodePoint = readResult.getResult();
 		if (nextCodePoint != CharacterConstants.LEFT_PARENTHESIS) {
 			throw new ReaderErrorException("Non-list following #S");

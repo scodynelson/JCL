@@ -6,9 +6,9 @@ package jcl.printer.impl;
 
 import jcl.LispStruct;
 import jcl.lists.ConsStruct;
-import jcl.lists.NullStruct;
 import jcl.printer.LispPrinter;
 import jcl.printer.Printer;
+import jcl.symbols.NILStruct;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -53,7 +53,7 @@ public class ConsStructPrinter implements LispPrinter<ConsStruct> {
 
 			stringBuilder.append(' ');
 			stringBuilder.append(innerConsPrinted);
-		} else if (!object.getCdr().equals(NullStruct.INSTANCE)) {
+		} else if (!object.getCdr().equals(NILStruct.INSTANCE)) {
 			stringBuilder.append(" . ");
 
 			final LispStruct cdr = object.getCdr();

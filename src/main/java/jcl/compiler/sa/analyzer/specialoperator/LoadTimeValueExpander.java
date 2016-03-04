@@ -8,7 +8,6 @@ import jcl.compiler.sa.analyzer.LispFormValueValidator;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.functions.expanders.MacroFunctionExpander;
 import jcl.lists.ListStruct;
-import jcl.lists.NullStruct;
 import jcl.printer.Printer;
 import jcl.symbols.BooleanStruct;
 import jcl.symbols.SpecialOperatorStruct;
@@ -44,7 +43,7 @@ public class LoadTimeValueExpander extends MacroFunctionExpander<LispStruct> {
 		final ListStruct formRestRest = formRest.getRest();
 
 		final LispStruct third = formRestRest.getFirst();
-		if (!(third instanceof BooleanStruct) && !(third instanceof NullStruct)) {
+		if (!(third instanceof BooleanStruct)) {
 			final String printedObject = printer.print(third);
 			throw new ProgramErrorException("LOAD-TIME-VALUE: Read-Only-P value must be either 'T' or 'NIL'. Got: " + printedObject);
 		}

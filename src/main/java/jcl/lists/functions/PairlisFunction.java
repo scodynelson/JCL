@@ -10,8 +10,8 @@ import jcl.conditions.exceptions.SimpleErrorException;
 import jcl.functions.AbstractCommonLispFunctionStruct;
 import jcl.lists.ConsStruct;
 import jcl.lists.ListStruct;
-import jcl.lists.NullStruct;
 import jcl.packages.GlobalPackageStruct;
+import jcl.symbols.NILStruct;
 import jcl.types.ListType;
 import jcl.types.TypeValidator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +39,7 @@ public final class PairlisFunction extends AbstractCommonLispFunctionStruct {
 	protected List<OptionalParameter> getOptionalBindings() {
 		return OptionalParameter.builder(GlobalPackageStruct.COMMON_LISP, "ALIST")
 		                        .suppliedPBinding()
-		                        .initForm(NullStruct.INSTANCE)
+		                        .initForm(NILStruct.INSTANCE)
 		                        .buildList();
 	}
 
@@ -59,7 +59,7 @@ public final class PairlisFunction extends AbstractCommonLispFunctionStruct {
 		final LispStruct[] keysArray = keys.toArray();
 		final LispStruct[] datumsArray = datums.toArray();
 
-		ListStruct alist = NullStruct.INSTANCE;
+		ListStruct alist = NILStruct.INSTANCE;
 		if (lispStructs.length > 2) {
 			alist = validator.validateType(lispStructs[2], functionName(), "Association-List", ListType.INSTANCE, ListStruct.class);
 		}

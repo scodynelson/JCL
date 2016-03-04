@@ -14,8 +14,8 @@ import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.functions.expanders.MacroFunctionExpander;
 import jcl.lists.ConsStruct;
 import jcl.lists.ListStruct;
-import jcl.lists.NullStruct;
 import jcl.printer.Printer;
+import jcl.symbols.NILStruct;
 import jcl.symbols.SpecialOperatorStruct;
 import jcl.symbols.SymbolStruct;
 import jcl.system.CommonLispSymbols;
@@ -90,7 +90,7 @@ public class EvalWhenExpander extends MacroFunctionExpander<LispStruct> {
 			return evalFunction.eval(prognOperatorList);
 		}
 
-		return NullStruct.INSTANCE;
+		return NILStruct.INSTANCE;
 	}
 
 	private static boolean isCompileTopLevel(final List<? extends LispStruct> situationList) {

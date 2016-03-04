@@ -8,7 +8,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import jcl.LispStruct;
-import jcl.lists.NullStruct;
+import jcl.symbols.NILStruct;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -32,7 +32,7 @@ public class ValuesStruct implements LispStruct {
 
 	public LispStruct getPrimaryValue() {
 		if (valuesList.isEmpty()) {
-			return NullStruct.INSTANCE;
+			return NILStruct.INSTANCE;
 		}
 		return valuesList.get(0);
 	}

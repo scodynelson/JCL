@@ -11,7 +11,6 @@ import jcl.compiler.CompilerVariables;
 import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.lists.ConsStruct;
 import jcl.lists.ListStruct;
-import jcl.lists.NullStruct;
 import jcl.packages.GlobalPackageStruct;
 import jcl.packages.PackageStruct;
 import jcl.packages.PackageVariables;
@@ -67,13 +66,13 @@ final class FeaturesReaderMacroFunction {
 			ReaderVariables.READ_SUPPRESS.setValue(NILStruct.INSTANCE);
 
 			PackageVariables.PACKAGE.setValue(GlobalPackageStruct.KEYWORD);
-			final LispStruct token = reader.read(true, NullStruct.INSTANCE, true);
+			final LispStruct token = reader.read(true, NILStruct.INSTANCE, true);
 			PackageVariables.PACKAGE.setValue(previousPackage);
 
 			final boolean isFeature = isFeature(token);
 			if (isFeature && shouldHideFeatures) {
 				ReaderVariables.READ_SUPPRESS.setValue(TStruct.INSTANCE);
-				reader.read(true, NullStruct.INSTANCE, true);
+				reader.read(true, NILStruct.INSTANCE, true);
 			}
 		} catch (final ReaderErrorException ree) {
 			if (LOGGER.isDebugEnabled()) {

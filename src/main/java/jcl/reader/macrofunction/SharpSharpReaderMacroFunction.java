@@ -11,10 +11,10 @@ import javax.annotation.PostConstruct;
 import jcl.LispStruct;
 import jcl.characters.CharacterConstants;
 import jcl.conditions.exceptions.ReaderErrorException;
-import jcl.lists.NullStruct;
 import jcl.reader.Reader;
 import jcl.reader.ReaderMacroFunction;
 import jcl.reader.struct.ReaderVariables;
+import jcl.symbols.NILStruct;
 import jcl.symbols.SymbolStruct;
 import org.springframework.stereotype.Component;
 
@@ -37,7 +37,7 @@ public class SharpSharpReaderMacroFunction extends ReaderMacroFunction {
 		assert codePoint == CharacterConstants.NUMBER_SIGN;
 
 		if (ReaderVariables.READ_SUPPRESS.getVariableValue().booleanValue()) {
-			return NullStruct.INSTANCE;
+			return NILStruct.INSTANCE;
 		}
 
 		if (!numberArgument.isPresent()) {

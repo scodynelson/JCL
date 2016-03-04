@@ -8,8 +8,8 @@ import jcl.compiler.struct.specialoperator.ReturnFromStruct;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.functions.expanders.MacroFunctionExpander;
 import jcl.lists.ListStruct;
-import jcl.lists.NullStruct;
 import jcl.printer.Printer;
+import jcl.symbols.NILStruct;
 import jcl.symbols.SpecialOperatorStruct;
 import jcl.symbols.SymbolStruct;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,7 +53,7 @@ public class ReturnFromExpander extends MacroFunctionExpander<ReturnFromStruct> 
 			final LispStruct result = formRestRest.getFirst();
 			analyzedResult = formAnalyzer.analyze(result, environment);
 		} else {
-			analyzedResult = NullStruct.INSTANCE;
+			analyzedResult = NILStruct.INSTANCE;
 		}
 
 		return new ReturnFromStruct(name, analyzedResult);

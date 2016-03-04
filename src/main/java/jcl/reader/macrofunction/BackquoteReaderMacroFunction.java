@@ -14,12 +14,12 @@ import jcl.characters.CharacterConstants;
 import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.lists.ConsStruct;
 import jcl.lists.ListStruct;
-import jcl.lists.NullStruct;
 import jcl.numbers.NumberStruct;
 import jcl.printer.Printer;
 import jcl.reader.Reader;
 import jcl.reader.ReaderMacroFunction;
 import jcl.reader.struct.ReaderVariables;
+import jcl.symbols.NILStruct;
 import jcl.symbols.SymbolStruct;
 import jcl.system.CommonLispSymbols;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -55,7 +55,7 @@ public class BackquoteReaderMacroFunction extends ReaderMacroFunction {
 
 		reader.incrementBackquoteLevel();
 		try {
-			final LispStruct code = reader.read(true, NullStruct.INSTANCE, true);
+			final LispStruct code = reader.read(true, NILStruct.INSTANCE, true);
 			final BackquoteReturn backquoteReturn = backquotify(code);
 
 			final SymbolStruct flag = backquoteReturn.getFlag();
@@ -76,7 +76,7 @@ public class BackquoteReaderMacroFunction extends ReaderMacroFunction {
 
 	private BackquoteReturn backquotify(final LispStruct code) {
 
-		if (code instanceof NullStruct) {
+		if (code instanceof NILStruct) {
 			return new BackquoteReturn(CommonLispSymbols.NIL, code);
 		}
 
@@ -242,7 +242,7 @@ public class BackquoteReaderMacroFunction extends ReaderMacroFunction {
 
 	private static BackquoteReturn comma(final LispStruct code) {
 
-		if (code instanceof NullStruct) {
+		if (code instanceof NILStruct) {
 			return new BackquoteReturn(CommonLispSymbols.NIL, code);
 		}
 
@@ -325,7 +325,7 @@ public class BackquoteReaderMacroFunction extends ReaderMacroFunction {
 				final LispStruct cadrThing = ((ConsStruct) cdrThing).getCar();
 				final LispStruct cddrThing = ((ConsStruct) cdrThing).getCdr();
 
-				if (NullStruct.INSTANCE.equals(cddrThing) && !expandableBackqExpressionP(cadrThing)) {
+				if (NILStruct.INSTANCE.equals(cddrThing) && !expandableBackqExpressionP(cadrThing)) {
 					// Basically if there are only 2 items in the list, just use Cons function
 					return new ConsStruct(CommonLispSymbols.CONS, thing);
 				}

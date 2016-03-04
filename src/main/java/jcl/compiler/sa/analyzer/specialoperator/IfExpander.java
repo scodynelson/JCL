@@ -7,7 +7,7 @@ import jcl.compiler.sa.analyzer.LispFormValueValidator;
 import jcl.compiler.struct.specialoperator.IfStruct;
 import jcl.functions.expanders.MacroFunctionExpander;
 import jcl.lists.ListStruct;
-import jcl.lists.NullStruct;
+import jcl.symbols.NILStruct;
 import jcl.symbols.SpecialOperatorStruct;
 import jcl.symbols.SymbolStruct;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,7 +48,7 @@ public class IfExpander extends MacroFunctionExpander<IfStruct> {
 			final LispStruct elseForm = formRestRestRest.getFirst();
 			elseFormAnalyzed = formAnalyzer.analyze(elseForm, environment);
 		} else {
-			elseFormAnalyzed = NullStruct.INSTANCE;
+			elseFormAnalyzed = NILStruct.INSTANCE;
 		}
 
 		return new IfStruct(testFormAnalyzed, thenFormAnalyzed, elseFormAnalyzed);

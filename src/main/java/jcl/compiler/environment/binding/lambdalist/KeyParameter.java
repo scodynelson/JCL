@@ -8,11 +8,11 @@ import java.util.Collections;
 import java.util.List;
 
 import jcl.LispStruct;
-import jcl.lists.NullStruct;
 import jcl.packages.GlobalPackageStruct;
 import jcl.packages.PackageStruct;
 import jcl.packages.PackageSymbolStruct;
 import jcl.symbols.KeywordStruct;
+import jcl.symbols.NILStruct;
 import jcl.symbols.SymbolStruct;
 import jcl.types.TType;
 
@@ -67,7 +67,7 @@ public class KeyParameter extends Parameter {
 
 		private DestructuringLambdaList destructuringForm;
 
-		private LispStruct initForm = NullStruct.INSTANCE;
+		private LispStruct initForm = NILStruct.INSTANCE;
 
 		private final SymbolStruct keyName;
 

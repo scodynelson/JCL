@@ -11,11 +11,11 @@ import javax.annotation.PostConstruct;
 import jcl.LispStruct;
 import jcl.arrays.StringStruct;
 import jcl.characters.CharacterConstants;
-import jcl.lists.NullStruct;
 import jcl.reader.Reader;
 import jcl.reader.ReaderMacroFunction;
 import jcl.reader.struct.ReaderVariables;
 import jcl.streams.ReadPeekResult;
+import jcl.symbols.NILStruct;
 import org.springframework.stereotype.Component;
 
 /**
@@ -39,7 +39,7 @@ public class QuotationMarkReaderMacroFunction extends ReaderMacroFunction {
 		final StringBuilder stringBuilder = new StringBuilder();
 
 		// NOTE: This will throw errors when it reaches an EOF
-		ReadPeekResult readResult = reader.readChar(true, NullStruct.INSTANCE, true);
+		ReadPeekResult readResult = reader.readChar(true, NILStruct.INSTANCE, true);
 		int nextCodePoint = readResult.getResult();
 
 		while (nextCodePoint != CharacterConstants.QUOTATION_MARK) {
@@ -50,12 +50,12 @@ public class QuotationMarkReaderMacroFunction extends ReaderMacroFunction {
 			}
 
 			// NOTE: This will throw errors when it reaches an EOF
-			readResult = reader.readChar(true, NullStruct.INSTANCE, true);
+			readResult = reader.readChar(true, NILStruct.INSTANCE, true);
 			nextCodePoint = readResult.getResult();
 		}
 
 		if (ReaderVariables.READ_SUPPRESS.getVariableValue().booleanValue()) {
-			return NullStruct.INSTANCE;
+			return NILStruct.INSTANCE;
 		}
 
 		final String stringValue = stringBuilder.toString();
@@ -74,12 +74,12 @@ public class QuotationMarkReaderMacroFunction extends ReaderMacroFunction {
 		int codePoint = CharacterConstants.BACKSLASH;
 
 		// NOTE: This will throw errors when it reaches an EOF
-		final ReadPeekResult tempReadResult = reader.readChar(true, NullStruct.INSTANCE, true);
+		final ReadPeekResult tempReadResult = reader.readChar(true, NILStruct.INSTANCE, true);
 		final int tempCodePoint = tempReadResult.getResult();
 		if ((tempCodePoint == CharacterConstants.LATIN_SMALL_LETTER_U)
 				|| (tempCodePoint == CharacterConstants.LATIN_CAPITAL_LETTER_U)) {
 
-			final ReadPeekResult nextTempReadResult = reader.readChar(true, NullStruct.INSTANCE, true);
+			final ReadPeekResult nextTempReadResult = reader.readChar(true, NILStruct.INSTANCE, true);
 			final int nextTempCodePoint = nextTempReadResult.getResult();
 			if (nextTempCodePoint == CharacterConstants.PLUS_SIGN) {
 				codePoint = UnicodeCharacterReaderMacroFunction.readUnicodeCharacter(reader);

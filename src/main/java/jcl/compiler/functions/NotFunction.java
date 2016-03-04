@@ -12,7 +12,6 @@ import jcl.LispStruct;
 import jcl.compiler.environment.binding.lambdalist.OrdinaryLambdaList;
 import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
 import jcl.functions.FunctionStruct;
-import jcl.lists.NullStruct;
 import jcl.packages.GlobalPackageStruct;
 import jcl.symbols.BooleanStruct;
 import jcl.symbols.NILStruct;
@@ -58,6 +57,6 @@ public final class NotFunction extends FunctionStruct {
 	}
 
 	public boolean notFnJavaBoolean(final LispStruct object) {
-		return NullStruct.INSTANCE.equals(object) || NILStruct.INSTANCE.equals(object);
+		return NILStruct.INSTANCE.equals(object);
 	}
 }

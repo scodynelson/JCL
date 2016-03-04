@@ -14,7 +14,6 @@ import jcl.conditions.exceptions.TypeErrorException;
 import jcl.functions.FunctionStruct;
 import jcl.lists.ConsStruct;
 import jcl.lists.ListStruct;
-import jcl.lists.NullStruct;
 import jcl.packages.GlobalPackageStruct;
 import jcl.printer.Printer;
 import jcl.symbols.NILStruct;
@@ -64,11 +63,11 @@ public final class AppendFunction extends FunctionStruct {
 			final ConsStruct topConsStruct = (ConsStruct) top;
 			final LispStruct carOfTop = topConsStruct.getCar();
 
-			if (NullStruct.INSTANCE.equals(carOfTop) || NILStruct.INSTANCE.equals(carOfTop)) {
+			if (NILStruct.INSTANCE.equals(carOfTop)) {
 				top = topConsStruct.getCdr();
 			} else if (!(carOfTop instanceof ConsStruct)) {
 				final LispStruct cdrTop = topConsStruct.getCdr();
-				if (NullStruct.INSTANCE.equals(cdrTop) || NILStruct.INSTANCE.equals(cdrTop)) {
+				if (NILStruct.INSTANCE.equals(cdrTop)) {
 					return carOfTop;
 				} else {
 					final String printedObject = printer.print(carOfTop);
@@ -96,7 +95,7 @@ public final class AppendFunction extends FunctionStruct {
 
 					x = xAsConsStruct.getCdr();
 				}
-				if (!(NullStruct.INSTANCE.equals(x) || NILStruct.INSTANCE.equals(x))) {
+				if (!(NILStruct.INSTANCE.equals(x))) {
 					final String printedObject = printer.print(carOfTop);
 					throw new TypeErrorException("Argument is not a proper list -- " + printedObject);
 				}
@@ -120,7 +119,7 @@ public final class AppendFunction extends FunctionStruct {
 							innerX = innerXAsConsStruct.getCdr();
 						}
 
-						if (!(NullStruct.INSTANCE.equals(innerX) || NILStruct.INSTANCE.equals(innerX))) {
+						if (!(NILStruct.INSTANCE.equals(innerX))) {
 							final String printedObject = printer.print(y.getCar());
 							throw new TypeErrorException("Argument is not a proper list -- " + printedObject);
 						}
@@ -138,6 +137,6 @@ public final class AppendFunction extends FunctionStruct {
 			}
 		}
 
-		return NullStruct.INSTANCE;
+		return NILStruct.INSTANCE;
 	}
 }

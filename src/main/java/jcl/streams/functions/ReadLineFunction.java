@@ -13,7 +13,6 @@ import jcl.compiler.environment.binding.lambdalist.OptionalParameter;
 import jcl.compiler.struct.ValuesStruct;
 import jcl.conditions.exceptions.TypeErrorException;
 import jcl.functions.AbstractCommonLispFunctionStruct;
-import jcl.lists.NullStruct;
 import jcl.packages.GlobalPackageStruct;
 import jcl.printer.Printer;
 import jcl.streams.InputStream;
@@ -86,7 +85,7 @@ public final class ReadLineFunction extends AbstractCommonLispFunctionStruct {
 			validator.validateTypes(lispStruct, functionName(), "Input Stream", BooleanType.INSTANCE, StreamType.INSTANCE);
 			if (TStruct.INSTANCE.equals(lispStruct)) {
 				inputStream = StreamVariables.STANDARD_INPUT.getVariableValue();
-			} else if (NILStruct.INSTANCE.equals(lispStruct) || NullStruct.INSTANCE.equals(lispStruct)) {
+			} else if (NILStruct.INSTANCE.equals(lispStruct)) {
 				inputStream = StreamVariables.STANDARD_INPUT.getVariableValue();
 			} else if (lispStruct instanceof InputStream) {
 				inputStream = (InputStream) lispStruct;

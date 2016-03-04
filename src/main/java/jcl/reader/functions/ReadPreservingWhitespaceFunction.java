@@ -14,7 +14,6 @@ import jcl.compiler.environment.binding.lambdalist.OrdinaryLambdaList;
 import jcl.compiler.environment.binding.lambdalist.SuppliedPParameter;
 import jcl.conditions.exceptions.TypeErrorException;
 import jcl.functions.FunctionStruct;
-import jcl.lists.NullStruct;
 import jcl.packages.GlobalPackageStruct;
 import jcl.printer.Printer;
 import jcl.reader.Reader;
@@ -58,7 +57,7 @@ public final class ReadPreservingWhitespaceFunction extends FunctionStruct {
 		final SymbolStruct inputStreamSuppliedP = GlobalPackageStruct.COMMON_LISP.intern("INPUT-STREAM-P-" + System.nanoTime()).getSymbol();
 		final SuppliedPParameter inputStreamSuppliedPBinding = new SuppliedPParameter(inputStreamSuppliedP);
 
-		final OptionalParameter inputStreamOptionalBinding = new OptionalParameter(inputStreamArgSymbol, NullStruct.INSTANCE, inputStreamSuppliedPBinding);
+		final OptionalParameter inputStreamOptionalBinding = new OptionalParameter(inputStreamArgSymbol, NILStruct.INSTANCE, inputStreamSuppliedPBinding);
 		optionalBindings.add(inputStreamOptionalBinding);
 
 		final SymbolStruct eofErrorPArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("EOF-ERROR").getSymbol();
@@ -66,7 +65,7 @@ public final class ReadPreservingWhitespaceFunction extends FunctionStruct {
 		final SymbolStruct eofErrorPSuppliedP = GlobalPackageStruct.COMMON_LISP.intern("EOF-ERROR-P-" + System.nanoTime()).getSymbol();
 		final SuppliedPParameter eofErrorPSuppliedPBinding = new SuppliedPParameter(eofErrorPSuppliedP);
 
-		final OptionalParameter eofErrorPOptionalBinding = new OptionalParameter(eofErrorPArgSymbol, NullStruct.INSTANCE, eofErrorPSuppliedPBinding);
+		final OptionalParameter eofErrorPOptionalBinding = new OptionalParameter(eofErrorPArgSymbol, NILStruct.INSTANCE, eofErrorPSuppliedPBinding);
 		optionalBindings.add(eofErrorPOptionalBinding);
 
 		final SymbolStruct eofValueArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("EOF-VALUE").getSymbol();
@@ -74,7 +73,7 @@ public final class ReadPreservingWhitespaceFunction extends FunctionStruct {
 		final SymbolStruct eofValueSuppliedP = GlobalPackageStruct.COMMON_LISP.intern("EOF-VALUE-P-" + System.nanoTime()).getSymbol();
 		final SuppliedPParameter eofValueSuppliedPBinding = new SuppliedPParameter(eofValueSuppliedP);
 
-		final OptionalParameter eofValueOptionalBinding = new OptionalParameter(eofValueArgSymbol, NullStruct.INSTANCE, eofValueSuppliedPBinding);
+		final OptionalParameter eofValueOptionalBinding = new OptionalParameter(eofValueArgSymbol, NILStruct.INSTANCE, eofValueSuppliedPBinding);
 		optionalBindings.add(eofValueOptionalBinding);
 
 		final SymbolStruct recursivePArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("RECURSIVE-P").getSymbol();
@@ -82,7 +81,7 @@ public final class ReadPreservingWhitespaceFunction extends FunctionStruct {
 		final SymbolStruct recursivePSuppliedP = GlobalPackageStruct.COMMON_LISP.intern("RECURSIVE-P-P-" + System.nanoTime()).getSymbol();
 		final SuppliedPParameter recursivePSuppliedPBinding = new SuppliedPParameter(recursivePSuppliedP);
 
-		final OptionalParameter recursivePOptionalBinding = new OptionalParameter(recursivePArgSymbol, NullStruct.INSTANCE, recursivePSuppliedPBinding);
+		final OptionalParameter recursivePOptionalBinding = new OptionalParameter(recursivePArgSymbol, NILStruct.INSTANCE, recursivePSuppliedPBinding);
 		optionalBindings.add(recursivePOptionalBinding);
 
 		return OrdinaryLambdaList.builder()
@@ -102,7 +101,7 @@ public final class ReadPreservingWhitespaceFunction extends FunctionStruct {
 
 			if (TStruct.INSTANCE.equals(inputStreamArg)) {
 				inputStream = StreamVariables.TERMINAL_IO.getVariableValue();
-			} else if (NILStruct.INSTANCE.equals(inputStreamArg) || NullStruct.INSTANCE.equals(inputStreamArg)) {
+			} else if (NILStruct.INSTANCE.equals(inputStreamArg)) {
 				inputStream = StreamVariables.STANDARD_INPUT.getVariableValue();
 			} else if (inputStreamArg instanceof InputStream) {
 				inputStream = (InputStream) inputStreamArg;
@@ -115,14 +114,14 @@ public final class ReadPreservingWhitespaceFunction extends FunctionStruct {
 		BooleanStruct eofErrorP = TStruct.INSTANCE;
 		if (length > 1) {
 			final LispStruct eofErrorPArg = lispStructs[1];
-			if (NILStruct.INSTANCE.equals(eofErrorPArg) || NullStruct.INSTANCE.equals(eofErrorPArg)) {
+			if (NILStruct.INSTANCE.equals(eofErrorPArg)) {
 				eofErrorP = NILStruct.INSTANCE;
 			} else {
 				eofErrorP = TStruct.INSTANCE;
 			}
 		}
 
-		LispStruct eofValue = NullStruct.INSTANCE;
+		LispStruct eofValue = NILStruct.INSTANCE;
 		if (length > 2) {
 			eofValue = lispStructs[1];
 		}
@@ -130,7 +129,7 @@ public final class ReadPreservingWhitespaceFunction extends FunctionStruct {
 		BooleanStruct recursiveP = NILStruct.INSTANCE;
 		if (length >= 3) {
 			final LispStruct recursivePArg = lispStructs[1];
-			if (NILStruct.INSTANCE.equals(recursivePArg) || NullStruct.INSTANCE.equals(recursivePArg)) {
+			if (NILStruct.INSTANCE.equals(recursivePArg)) {
 				recursiveP = NILStruct.INSTANCE;
 			} else {
 				recursiveP = TStruct.INSTANCE;

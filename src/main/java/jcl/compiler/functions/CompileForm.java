@@ -18,7 +18,6 @@ import jcl.compiler.sa.SemanticAnalyzer;
 import jcl.compiler.struct.specialoperator.lambda.LambdaStruct;
 import jcl.functions.FunctionStruct;
 import jcl.lists.ListStruct;
-import jcl.lists.NullStruct;
 import jcl.symbols.BooleanStruct;
 import jcl.symbols.NILStruct;
 import jcl.symbols.SpecialOperatorStruct;
@@ -111,7 +110,7 @@ class CompileForm {
 	private static ListStruct wrapFormInLambda(final LispStruct form) {
 		final List<LispStruct> lambdaFormList = new ArrayList<>();
 		lambdaFormList.add(SpecialOperatorStruct.LAMBDA);
-		lambdaFormList.add(NullStruct.INSTANCE);
+		lambdaFormList.add(NILStruct.INSTANCE);
 		lambdaFormList.add(form);
 
 		return ListStruct.buildProperList(lambdaFormList);

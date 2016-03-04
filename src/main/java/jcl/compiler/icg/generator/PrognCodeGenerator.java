@@ -13,7 +13,7 @@ import jcl.compiler.icg.GeneratorState;
 import jcl.compiler.icg.IntermediateCodeGenerator;
 import jcl.compiler.icg.JavaMethodBuilder;
 import jcl.compiler.struct.specialoperator.PrognStruct;
-import jcl.lists.NullStruct;
+import jcl.symbols.NILStruct;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,16 +32,16 @@ class PrognCodeGenerator implements CodeGenerator<PrognStruct> {
 	private IntermediateCodeGenerator codeGenerator;
 
 	/**
-	 * {@link NullCodeGenerator} used for generating a {@link NullStruct} when the {@link PrognStruct#forms} {@link
+	 * {@link NILCodeGenerator} used for generating a {@link NILStruct} when the {@link PrognStruct#forms} {@link
 	 * List} is empty.
 	 */
 	@Autowired
-	private NullCodeGenerator nullCodeGenerator;
+	private NILCodeGenerator nilCodeGenerator;
 
 	/**
 	 * {@inheritDoc}
 	 * Generation method for {@link PrognStruct} objects. If the {@link PrognStruct#forms} {@link List} is empty, a
-	 * {@link NullStruct} is generated. Otherwise, each form value is generated via the {@link
+	 * {@link NILStruct} is generated. Otherwise, each form value is generated via the {@link
 	 * IntermediateCodeGenerator}. When iterating through and generating each of the forms, each of the form generation
 	 * results will be popped off the top of the Stack, except for the final generated form.
 	 *
@@ -58,7 +58,7 @@ class PrognCodeGenerator implements CodeGenerator<PrognStruct> {
 
 		final List<LispStruct> forms = input.getForms();
 		if (forms.isEmpty()) {
-			nullCodeGenerator.generate(NullStruct.INSTANCE, generatorState);
+			nilCodeGenerator.generate(NILStruct.INSTANCE, generatorState);
 		} else {
 			for (final Iterator<LispStruct> iterator = forms.iterator(); iterator.hasNext(); ) {
 

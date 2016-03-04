@@ -13,7 +13,6 @@ import jcl.compiler.environment.binding.lambdalist.OptionalParameter;
 import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
 import jcl.conditions.exceptions.TypeErrorException;
 import jcl.functions.AbstractCommonLispFunctionStruct;
-import jcl.lists.NullStruct;
 import jcl.numbers.IntegerStruct;
 import jcl.packages.GlobalPackageStruct;
 import jcl.printer.Printer;
@@ -77,7 +76,7 @@ public final class ReadByteFunction extends AbstractCommonLispFunctionStruct {
 		final InputStream inputStream;
 		if (TStruct.INSTANCE.equals(inputStreamArg)) {
 			inputStream = StreamVariables.STANDARD_INPUT.getVariableValue();
-		} else if (NILStruct.INSTANCE.equals(inputStreamArg) || NullStruct.INSTANCE.equals(inputStreamArg)) {
+		} else if (NILStruct.INSTANCE.equals(inputStreamArg)) {
 			inputStream = StreamVariables.STANDARD_INPUT.getVariableValue();
 		} else if (inputStreamArg instanceof InputStream) {
 			inputStream = (InputStream) inputStreamArg;

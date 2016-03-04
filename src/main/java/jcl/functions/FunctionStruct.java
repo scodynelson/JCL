@@ -25,7 +25,6 @@ import jcl.compiler.struct.ValuesStruct;
 import jcl.conditions.exceptions.ErrorException;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.lists.ListStruct;
-import jcl.lists.NullStruct;
 import jcl.symbols.NILStruct;
 import jcl.symbols.SymbolStruct;
 import jcl.symbols.TStruct;
@@ -269,7 +268,7 @@ public abstract class FunctionStruct extends BuiltInClassStruct implements Initi
 	}
 
 	protected LispStruct internalApply(final Closure currentClosure) {
-		return NullStruct.INSTANCE;
+		return NILStruct.INSTANCE;
 	}
 
 	protected List<FunctionParameterBinding> getFunctionBindings(final LispStruct[] lispStructs) {
@@ -368,7 +367,7 @@ public abstract class FunctionStruct extends BuiltInClassStruct implements Initi
 						final SymbolStruct keySymbol = keyBinding.getVar();
 						final LispStruct keyInitForm = iterator.next();
 						if (CommonLispSymbols.ALLOW_OTHER_KEYS.equals(nextArgument)) {
-							if (!keyInitForm.equals(NullStruct.INSTANCE) && !keyInitForm.equals(NILStruct.INSTANCE)) {
+							if (!keyInitForm.equals(NILStruct.INSTANCE)) {
 								allowOtherKeys = true;
 							}
 						}
@@ -387,7 +386,7 @@ public abstract class FunctionStruct extends BuiltInClassStruct implements Initi
 					}
 				} else if (CommonLispSymbols.ALLOW_OTHER_KEYS.equals(nextArgument)) {
 					final LispStruct allowOtherKeysValue = iterator.next();
-					if (!allowOtherKeysValue.equals(NullStruct.INSTANCE) && !allowOtherKeysValue.equals(NILStruct.INSTANCE)) {
+					if (!allowOtherKeysValue.equals(NILStruct.INSTANCE)) {
 						allowOtherKeys = true;
 					}
 				} else {
@@ -475,7 +474,7 @@ public abstract class FunctionStruct extends BuiltInClassStruct implements Initi
 	}
 
 	protected LispStruct getInitForm(final Closure currentClosure, final SymbolStruct parameter) {
-		return NullStruct.INSTANCE;
+		return NILStruct.INSTANCE;
 	}
 
 	@Override

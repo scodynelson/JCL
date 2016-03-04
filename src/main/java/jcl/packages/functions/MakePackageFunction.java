@@ -16,10 +16,10 @@ import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.functions.AbstractCommonLispFunctionStruct;
 import jcl.lists.ListStruct;
-import jcl.lists.NullStruct;
 import jcl.packages.GlobalPackageStruct;
 import jcl.packages.PackageStruct;
 import jcl.symbols.KeywordStruct;
+import jcl.symbols.NILStruct;
 import jcl.system.CommonLispSymbols;
 import jcl.types.ListType;
 import jcl.types.TypeValidator;
@@ -104,7 +104,7 @@ public final class MakePackageFunction extends AbstractCommonLispFunctionStruct 
 				= getKeywords(lispStructs, 1, CommonLispSymbols.NICKNAMES_KEYWORD, CommonLispSymbols.USE_KEYWORD);
 
 		final LispStruct nicknames
-				= keywords.getOrDefault(CommonLispSymbols.NICKNAMES_KEYWORD, NullStruct.INSTANCE);
+				= keywords.getOrDefault(CommonLispSymbols.NICKNAMES_KEYWORD, NILStruct.INSTANCE);
 		validator.validateTypes(nicknames, functionName(), "Nicknames", ListType.INSTANCE);
 
 		final LispStruct usePackages

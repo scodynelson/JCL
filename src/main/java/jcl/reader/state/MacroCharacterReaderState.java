@@ -9,7 +9,6 @@ import java.util.Optional;
 
 import jcl.LispStruct;
 import jcl.conditions.exceptions.ReaderErrorException;
-import jcl.lists.NullStruct;
 import jcl.reader.Reader;
 import jcl.reader.ReaderMacroFunction;
 import jcl.reader.ReaderStateMediator;
@@ -17,6 +16,7 @@ import jcl.reader.TokenBuilder;
 import jcl.reader.struct.ReaderVariables;
 import jcl.reader.struct.ReadtableStruct;
 import jcl.streams.ReadPeekResult;
+import jcl.symbols.NILStruct;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -91,7 +91,7 @@ class MacroCharacterReaderState implements ReaderState {
 	private static Optional<BigInteger> getNumberArgument(final Reader reader) {
 
 		// NOTE: This will throw errors when it reaches an EOF. That's why we can un-box the 'readChar' variable below.
-		ReadPeekResult readResult = reader.readChar(true, NullStruct.INSTANCE, false);
+		ReadPeekResult readResult = reader.readChar(true, NILStruct.INSTANCE, false);
 		int codePoint = readResult.getResult();
 
 		final StringBuilder digitStringBuilder = new StringBuilder();
@@ -99,7 +99,7 @@ class MacroCharacterReaderState implements ReaderState {
 		while (Character.isDigit(codePoint)) {
 			digitStringBuilder.appendCodePoint(codePoint);
 
-			readResult = reader.readChar(true, NullStruct.INSTANCE, false);
+			readResult = reader.readChar(true, NILStruct.INSTANCE, false);
 			codePoint = readResult.getResult();
 		}
 

@@ -24,12 +24,12 @@ import jcl.compiler.struct.specialoperator.declare.DeclareStruct;
 import jcl.compiler.struct.specialoperator.declare.SpecialDeclarationStruct;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.lists.ListStruct;
-import jcl.lists.NullStruct;
 import jcl.packages.GlobalPackageStruct;
 import jcl.packages.PackageStruct;
 import jcl.packages.PackageSymbolStruct;
 import jcl.printer.Printer;
 import jcl.symbols.KeywordStruct;
+import jcl.symbols.NILStruct;
 import jcl.symbols.SymbolStruct;
 import jcl.types.TType;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -207,7 +207,7 @@ public class LambdaListParser {
 
 				final SuppliedPParameter suppliedPBinding = new SuppliedPParameter(customSuppliedPCurrent, isSuppliedPSpecial);
 
-				final OptionalParameter optionalBinding = new OptionalParameter(currentParam, null, NullStruct.INSTANCE, isSpecial, suppliedPBinding);
+				final OptionalParameter optionalBinding = new OptionalParameter(currentParam, null, NILStruct.INSTANCE, isSpecial, suppliedPBinding);
 				optionalBindings.add(optionalBinding);
 			} else if (currentElement instanceof ListStruct) {
 				final ListStruct currentParam = (ListStruct) currentElement;
@@ -222,7 +222,7 @@ public class LambdaListParser {
 						final SymbolStruct customSuppliedPCurrent = GlobalPackageStruct.COMMON_LISP_USER.intern(customSuppliedPName).getSymbol();
 						final SuppliedPParameter suppliedPBinding = new SuppliedPParameter(customSuppliedPCurrent);
 
-						final OptionalParameter optionalBinding = new OptionalParameter(varNameCurrent, destructuringForm, NullStruct.INSTANCE, false, suppliedPBinding);
+						final OptionalParameter optionalBinding = new OptionalParameter(varNameCurrent, destructuringForm, NILStruct.INSTANCE, false, suppliedPBinding);
 						optionalBindings.add(optionalBinding);
 					} else {
 						final String printedElement = printer.print(currentParam);
@@ -254,8 +254,8 @@ public class LambdaListParser {
 						}
 					}
 
-					LispStruct initForm = NullStruct.INSTANCE;
-					if (!secondInCurrent.equals(NullStruct.INSTANCE)) {
+					LispStruct initForm = NILStruct.INSTANCE;
+					if (!secondInCurrent.equals(NILStruct.INSTANCE)) {
 						initForm = secondInCurrent;
 					}
 
@@ -274,7 +274,7 @@ public class LambdaListParser {
 					}
 
 					final SuppliedPParameter suppliedPBinding;
-					if (thirdInCurrent.equals(NullStruct.INSTANCE)) {
+					if (thirdInCurrent.equals(NILStruct.INSTANCE)) {
 						final String paramName = varNameCurrent.getName();
 						final String customSuppliedPName = paramName + "-P-" + System.nanoTime();
 						final PackageStruct currentParamPackage = varNameCurrent.getSymbolPackage();
@@ -529,7 +529,7 @@ public class LambdaListParser {
 
 				final SuppliedPParameter suppliedPBinding = new SuppliedPParameter(customSuppliedPCurrent, isSuppliedPSpecial);
 
-				final KeyParameter keyBinding = new KeyParameter(currentParam, null, NullStruct.INSTANCE, isSpecial, keyName, suppliedPBinding);
+				final KeyParameter keyBinding = new KeyParameter(currentParam, null, NILStruct.INSTANCE, isSpecial, keyName, suppliedPBinding);
 				keyBindings.add(keyBinding);
 			} else if (currentElement instanceof ListStruct) {
 				final ListStruct currentParam = (ListStruct) currentElement;
@@ -545,7 +545,7 @@ public class LambdaListParser {
 						final SymbolStruct customSuppliedPCurrent = GlobalPackageStruct.COMMON_LISP_USER.intern(customSuppliedPName).getSymbol();
 						final SuppliedPParameter suppliedPBinding = new SuppliedPParameter(customSuppliedPCurrent);
 
-						final KeyParameter keyBinding = new KeyParameter(varNameCurrent, destructuringForm, NullStruct.INSTANCE, false, varKeyNameCurrent, suppliedPBinding);
+						final KeyParameter keyBinding = new KeyParameter(varNameCurrent, destructuringForm, NILStruct.INSTANCE, false, varKeyNameCurrent, suppliedPBinding);
 						keyBindings.add(keyBinding);
 					} else {
 						final String printedElement = printer.print(currentParam);
@@ -596,8 +596,8 @@ public class LambdaListParser {
 						throw new ProgramErrorException("LambdaList &key var name parameters must be a symbol or a list: " + printedElement);
 					}
 
-					LispStruct initForm = NullStruct.INSTANCE;
-					if (!secondInCurrent.equals(NullStruct.INSTANCE)) {
+					LispStruct initForm = NILStruct.INSTANCE;
+					if (!secondInCurrent.equals(NILStruct.INSTANCE)) {
 						initForm = secondInCurrent;
 					}
 
@@ -616,7 +616,7 @@ public class LambdaListParser {
 					}
 
 					final SuppliedPParameter suppliedPBinding;
-					if (thirdInCurrent.equals(NullStruct.INSTANCE)) {
+					if (thirdInCurrent.equals(NILStruct.INSTANCE)) {
 						final String paramName = varNameCurrent.getName();
 						final String customSuppliedPName = paramName + "-P-" + System.nanoTime();
 						final PackageStruct currentParamPackage = varNameCurrent.getSymbolPackage();
@@ -703,7 +703,7 @@ public class LambdaListParser {
 					environment.addLexicalBinding(binding);
 				}
 
-				final AuxParameter auxBinding = new AuxParameter(currentParam, null, NullStruct.INSTANCE, isSpecial);
+				final AuxParameter auxBinding = new AuxParameter(currentParam, null, NILStruct.INSTANCE, isSpecial);
 				auxBindings.add(auxBinding);
 			} else if (currentElement instanceof ListStruct) {
 				final ListStruct currentParam = (ListStruct) currentElement;
@@ -714,7 +714,7 @@ public class LambdaListParser {
 						final ListStruct destructuringFormList = (ListStruct) currentElement;
 						final DestructuringLambdaList destructuringForm = destructuringLambdaListParser.parseDestructuringLambdaList(environment, destructuringFormList, declareElement);
 
-						final AuxParameter auxBinding = new AuxParameter(varNameCurrent, destructuringForm, NullStruct.INSTANCE);
+						final AuxParameter auxBinding = new AuxParameter(varNameCurrent, destructuringForm, NILStruct.INSTANCE);
 						auxBindings.add(auxBinding);
 					} else {
 						final String printedElement = printer.print(currentParam);
@@ -745,8 +745,8 @@ public class LambdaListParser {
 						}
 					}
 
-					LispStruct initForm = NullStruct.INSTANCE;
-					if (!secondInCurrent.equals(NullStruct.INSTANCE)) {
+					LispStruct initForm = NILStruct.INSTANCE;
+					if (!secondInCurrent.equals(NILStruct.INSTANCE)) {
 						initForm = secondInCurrent;
 					}
 

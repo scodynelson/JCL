@@ -13,7 +13,6 @@ import jcl.conditions.exceptions.ErrorException;
 import jcl.functions.FunctionStruct;
 import jcl.lists.ConsStruct;
 import jcl.lists.ListStruct;
-import jcl.lists.NullStruct;
 import jcl.packages.GlobalPackageStruct;
 import jcl.printer.Printer;
 import jcl.symbols.NILStruct;
@@ -60,7 +59,7 @@ public final class NconcFunction extends FunctionStruct {
 	public LispStruct nconc(final LispStruct... lispStructs) {
 
 		if (lispStructs.length == 0) {
-			return NullStruct.INSTANCE;
+			return NILStruct.INSTANCE;
 		}
 
 		// NOTE: The (length - 1) below. This is so we skip the last argument.
@@ -74,7 +73,7 @@ public final class NconcFunction extends FunctionStruct {
 
 		LispStruct top = ListStruct.buildProperList(lispStructs);
 
-		while (!(NullStruct.INSTANCE.equals(top) || NILStruct.INSTANCE.equals(top))) {
+		while (!(NILStruct.INSTANCE.equals(top))) {
 
 			final ConsStruct topConsStruct = (ConsStruct) top;
 			final LispStruct topOfTop = topConsStruct.getCar();
@@ -86,7 +85,7 @@ public final class NconcFunction extends FunctionStruct {
 
 				LispStruct elements = topConsStruct.getCdr();
 
-				while (!NullStruct.INSTANCE.equals(elements) && !NILStruct.INSTANCE.equals(elements)) {
+				while (!NILStruct.INSTANCE.equals(elements)) {
 
 					// NOTE: The cast below is safe because of the check we do ealier to verify all the 'lispStructs' are actually lists.
 					final ConsStruct elementsConsStruct = (ConsStruct) elements;
@@ -98,11 +97,11 @@ public final class NconcFunction extends FunctionStruct {
 					if (ele instanceof ConsStruct) {
 						spliceLastConsStruct.setCdr(ele);
 						splice = (ConsStruct) ele;
-					} else if (NullStruct.INSTANCE.equals(ele) || NILStruct.INSTANCE.equals(ele)) {
-						spliceLastConsStruct.setCdr(NullStruct.INSTANCE);
+					} else if (NILStruct.INSTANCE.equals(ele)) {
+						spliceLastConsStruct.setCdr(NILStruct.INSTANCE);
 					} else {
 						final LispStruct cdrElements = elementsConsStruct.getCdr();
-						if (NullStruct.INSTANCE.equals(cdrElements) || NILStruct.INSTANCE.equals(cdrElements)) {
+						if (NILStruct.INSTANCE.equals(cdrElements)) {
 							spliceLastConsStruct.setCdr(ele);
 						} else {
 							final String printedObject = printer.print(ele);
@@ -114,11 +113,11 @@ public final class NconcFunction extends FunctionStruct {
 				}
 
 				return result;
-			} else if (NullStruct.INSTANCE.equals(top) || NILStruct.INSTANCE.equals(top)) {
+			} else if (NILStruct.INSTANCE.equals(top)) {
 				top = topConsStruct.getCdr();
 			} else {
 				final LispStruct cdrTop = topConsStruct.getCdr();
-				if (NullStruct.INSTANCE.equals(cdrTop) || NILStruct.INSTANCE.equals(cdrTop)) {
+				if (NILStruct.INSTANCE.equals(cdrTop)) {
 					return topOfTop;
 				} else {
 					final String printedObject = printer.print(topOfTop);
@@ -127,6 +126,6 @@ public final class NconcFunction extends FunctionStruct {
 			}
 		}
 
-		return NullStruct.INSTANCE;
+		return NILStruct.INSTANCE;
 	}
 }

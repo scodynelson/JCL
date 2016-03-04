@@ -12,10 +12,10 @@ import jcl.LispStruct;
 import jcl.arrays.BitVectorStruct;
 import jcl.characters.CharacterConstants;
 import jcl.conditions.exceptions.ReaderErrorException;
-import jcl.lists.NullStruct;
 import jcl.reader.Reader;
 import jcl.reader.ReaderMacroFunction;
 import jcl.reader.struct.ReaderVariables;
+import jcl.symbols.NILStruct;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
@@ -41,7 +41,7 @@ public class SharpAsteriskReaderMacroFunction extends ReaderMacroFunction {
 		final String tokenString = extendedToken.getTokenString();
 
 		if (ReaderVariables.READ_SUPPRESS.getVariableValue().booleanValue()) {
-			return NullStruct.INSTANCE;
+			return NILStruct.INSTANCE;
 		}
 
 		if (extendedToken.isHasEscapes()) {

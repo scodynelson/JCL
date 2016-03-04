@@ -11,11 +11,11 @@ import jcl.LispStruct;
 import jcl.characters.CharacterConstants;
 import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.lists.ListStruct;
-import jcl.lists.NullStruct;
 import jcl.printer.Printer;
 import jcl.reader.Reader;
 import jcl.reader.struct.ReaderVariables;
 import jcl.streams.ReadPeekResult;
+import jcl.symbols.NILStruct;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -63,7 +63,7 @@ final class ListReaderMacroFunction {
 
 			reader.unreadChar(codePoint);
 
-			final LispStruct token = reader.read(true, NullStruct.INSTANCE, true);
+			final LispStruct token = reader.read(true, NILStruct.INSTANCE, true);
 			if (token != null) {
 				currentTokenList.add(token);
 			}
@@ -72,11 +72,11 @@ final class ListReaderMacroFunction {
 		}
 
 		if (ReaderVariables.READ_SUPPRESS.getVariableValue().booleanValue()) {
-			return NullStruct.INSTANCE;
+			return NILStruct.INSTANCE;
 		}
 
 		if (currentTokenList.isEmpty()) {
-			return NullStruct.INSTANCE;
+			return NILStruct.INSTANCE;
 		}
 
 		return isDottedList ? ListStruct.buildDottedList(currentTokenList) : ListStruct.buildProperList(currentTokenList);
@@ -100,7 +100,7 @@ final class ListReaderMacroFunction {
 		boolean isDotted = false;
 
 		// NOTE: This will throw errors when it reaches an EOF
-		final ReadPeekResult readResult = reader.readChar(true, NullStruct.INSTANCE, false);
+		final ReadPeekResult readResult = reader.readChar(true, NILStruct.INSTANCE, false);
 		final int nextCodePoint = readResult.getResult();
 
 		if (ReaderMacroFunctionUtil.isWhitespaceOrTerminating(nextCodePoint)) {
@@ -143,7 +143,7 @@ final class ListReaderMacroFunction {
 			reader.unreadChar(firstCodePoint);
 
 			// NOTE: This will throw errors when it reaches an EOF
-			token = reader.read(true, NullStruct.INSTANCE, true);
+			token = reader.read(true, NILStruct.INSTANCE, true);
 			firstCodePoint = flushWhitespace(reader);
 		}
 		currentTokenList.add(token);
@@ -152,7 +152,7 @@ final class ListReaderMacroFunction {
 			reader.unreadChar(firstCodePoint);
 
 			// NOTE: This will throw errors when it reaches an EOF
-			token = reader.read(true, NullStruct.INSTANCE, true);
+			token = reader.read(true, NILStruct.INSTANCE, true);
 			if (token != null) {
 				final String printedToken = printer.print(token);
 				throw new ReaderErrorException("More than one object follows . in list: " + printedToken);
@@ -173,10 +173,10 @@ final class ListReaderMacroFunction {
 	private static int flushWhitespace(final Reader reader) {
 
 		// NOTE: This will throw errors when it reaches an EOF
-		ReadPeekResult readResult = reader.readChar(true, NullStruct.INSTANCE, false);
+		ReadPeekResult readResult = reader.readChar(true, NILStruct.INSTANCE, false);
 		int codePoint = readResult.getResult();
 		while (ReaderMacroFunctionUtil.isWhitespace(codePoint)) {
-			readResult = reader.readChar(true, NullStruct.INSTANCE, false);
+			readResult = reader.readChar(true, NILStruct.INSTANCE, false);
 			codePoint = readResult.getResult();
 		}
 		return codePoint;

@@ -15,7 +15,6 @@ import jcl.compiler.environment.binding.lambdalist.OptionalParameter;
 import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
 import jcl.conditions.exceptions.TypeErrorException;
 import jcl.functions.AbstractCommonLispFunctionStruct;
-import jcl.lists.NullStruct;
 import jcl.numbers.IntegerStruct;
 import jcl.packages.GlobalPackageStruct;
 import jcl.printer.Printer;
@@ -103,7 +102,7 @@ public final class WriteStringFunction extends AbstractCommonLispFunctionStruct 
 				validator.validateTypes(lispStruct, functionName(), "Output Stream", BooleanType.INSTANCE, StreamType.INSTANCE);
 				if (TStruct.INSTANCE.equals(lispStruct)) {
 					outputStream = StreamVariables.STANDARD_OUTPUT.getVariableValue();
-				} else if (NILStruct.INSTANCE.equals(lispStruct) || NullStruct.INSTANCE.equals(lispStruct)) {
+				} else if (NILStruct.INSTANCE.equals(lispStruct)) {
 					outputStream = StreamVariables.STANDARD_OUTPUT.getVariableValue();
 				} else if (lispStruct instanceof OutputStream) {
 					outputStream = (OutputStream) lispStruct;

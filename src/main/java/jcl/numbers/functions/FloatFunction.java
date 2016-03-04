@@ -16,11 +16,11 @@ import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
 import jcl.compiler.environment.binding.lambdalist.SuppliedPParameter;
 import jcl.conditions.exceptions.TypeErrorException;
 import jcl.functions.FunctionStruct;
-import jcl.lists.NullStruct;
 import jcl.numbers.FloatStruct;
 import jcl.numbers.RealStruct;
 import jcl.packages.GlobalPackageStruct;
 import jcl.printer.Printer;
+import jcl.symbols.NILStruct;
 import jcl.symbols.SymbolStruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -54,7 +54,7 @@ public final class FloatFunction extends FunctionStruct {
 		final SymbolStruct optionalSuppliedP = GlobalPackageStruct.COMMON_LISP.intern("PROTOTYPE-P-" + System.nanoTime()).getSymbol();
 		final SuppliedPParameter optionalSuppliedPBinding = new SuppliedPParameter(optionalSuppliedP);
 
-		final OptionalParameter optionalBinding = new OptionalParameter(optionalArgSymbol, NullStruct.INSTANCE, optionalSuppliedPBinding);
+		final OptionalParameter optionalBinding = new OptionalParameter(optionalArgSymbol, NILStruct.INSTANCE, optionalSuppliedPBinding);
 		final List<OptionalParameter> optionalBindings = Collections.singletonList(optionalBinding);
 
 		return OrdinaryLambdaList.builder()

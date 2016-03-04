@@ -26,8 +26,8 @@ import jcl.compiler.struct.specialoperator.PrognStruct;
 import jcl.compiler.struct.specialoperator.lambda.LambdaStruct;
 import jcl.functions.Closure;
 import jcl.functions.FunctionStruct;
-import jcl.lists.NullStruct;
 import jcl.packages.PackageStruct;
+import jcl.symbols.NILStruct;
 import jcl.symbols.SymbolStruct;
 import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.ClassWriter;
@@ -184,12 +184,12 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 	private PrognCodeGenerator prognCodeGenerator;
 
 	/**
-	 * {@link NullCodeGenerator} used for generating {@link NullStruct#INSTANCE} constant as the default result in the
+	 * {@link NILCodeGenerator} used for generating {@link NILStruct#INSTANCE} constant as the default result in the
 	 * {@link FunctionStruct#getInitForm(Closure, SymbolStruct)} method and for the initial init-form value for
 	 * 'optional', 'key', and 'aux' keyword parameters.
 	 */
 	@Autowired
-	private NullCodeGenerator nullCodeGenerator;
+	private NILCodeGenerator nilCodeGenerator;
 
 	/**
 	 * {@inheritDoc}
@@ -524,7 +524,7 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 	 * parameters</li>
 	 * <li>Generating the resulting {@link LispStruct} value of the init-form for each of the 'optional', 'key', and
 	 * 'aux' function parameters</li>
-	 * <li>Generating the {@link NullStruct#INSTANCE} singleton to be used when none of the 'optional', 'key', or 'aux'
+	 * <li>Generating the {@link NILStruct#INSTANCE} singleton to be used when none of the 'optional', 'key', or 'aux'
 	 * function parameters match the provided {@link SymbolStruct}</li>
 	 * </ol>
 	 * The following is the example Java code generated when {@code (lambda (&optional (y 2)) y)} is encountered:
@@ -537,7 +537,7 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 	 *          BigInteger var5 = new BigInteger("2");
 	 *          return new IntegerStruct(var5);
 	 *      } else {
-	 *          return NullStruct.INSTANCE;
+	 *          return NILStruct.INSTANCE;
 	 *      }
 	 * }
 	 * }
@@ -608,7 +608,7 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 			                 initFormVarPackageStore, initFormVarSymbolStore, var, initForm);
 		}
 
-		nullCodeGenerator.generate(NullStruct.INSTANCE, generatorState);
+		nilCodeGenerator.generate(NILStruct.INSTANCE, generatorState);
 		mv.visitInsn(Opcodes.ARETURN);
 
 		mv.visitMaxs(-1, -1);
@@ -818,7 +818,7 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 	 *
 	 *      PackageStruct var2 = PackageStruct.findPackage("COMMON-LISP-USER");
 	 *      SymbolStruct var3 = var2.intern("B").getSymbol();
-	 *      NullStruct var4 = NullStruct.INSTANCE;
+	 *      NILStruct var4 = NILStruct.INSTANCE;
 	 *
 	 *      var2 = PackageStruct.findPackage("COMMON-LISP-USER");
 	 *      SymbolStruct var5 = var2.intern("B-P").getSymbol();
@@ -883,7 +883,7 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 			final SymbolStruct optionalSymbol = optionalBinding.getVar();
 			CodeGenerators.generateSymbol(optionalSymbol, methodBuilder, optionalPackageStore, optionalSymbolStore);
 
-			nullCodeGenerator.generate(NullStruct.INSTANCE, generatorState);
+			nilCodeGenerator.generate(NILStruct.INSTANCE, generatorState);
 			mv.visitVarInsn(Opcodes.ASTORE, optionalInitFormStore);
 
 			final SuppliedPParameter suppliedPBinding = optionalBinding.getSuppliedPBinding();
@@ -1020,7 +1020,7 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 	 *
 	 *      PackageStruct var2 = PackageStruct.findPackage("COMMON-LISP-USER");
 	 *      SymbolStruct var3 = var2.intern("C").getSymbol();
-	 *      NullStruct var4 = NullStruct.INSTANCE;
+	 *      NILStruct var4 = NILStruct.INSTANCE;
 	 *
 	 *      var2 = PackageStruct.findPackage("KEYWORD");
 	 *      SymbolStruct var5 = var2.intern("C").getSymbol();
@@ -1088,7 +1088,7 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 			final SymbolStruct keySymbol = keyBinding.getVar();
 			CodeGenerators.generateSymbol(keySymbol, methodBuilder, keyPackageStore, keySymbolStore);
 
-			nullCodeGenerator.generate(NullStruct.INSTANCE, generatorState);
+			nilCodeGenerator.generate(NILStruct.INSTANCE, generatorState);
 			mv.visitVarInsn(Opcodes.ASTORE, keyInitFormStore);
 
 			final SymbolStruct keyName = keyBinding.getKeyName();
@@ -1312,7 +1312,7 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 			final SymbolStruct auxSymbol = auxBinding.getVar();
 			CodeGenerators.generateSymbol(auxSymbol, methodBuilder, auxPackageStore, auxSymbolStore);
 
-			nullCodeGenerator.generate(NullStruct.INSTANCE, generatorState);
+			nilCodeGenerator.generate(NILStruct.INSTANCE, generatorState);
 			mv.visitVarInsn(Opcodes.ASTORE, auxInitFormStore);
 
 			mv.visitTypeInsn(Opcodes.NEW, GenerationConstants.AUX_BINDING_NAME);

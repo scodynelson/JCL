@@ -6,7 +6,6 @@ import jcl.compiler.struct.ValuesStruct;
 import jcl.conditions.exceptions.ConditionException;
 import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.lists.ListStruct;
-import jcl.lists.NullStruct;
 import jcl.packages.PackageStruct;
 import jcl.packages.PackageVariables;
 import jcl.printer.Printer;
@@ -14,6 +13,7 @@ import jcl.reader.Reader;
 import jcl.reader.functions.ReadFunction;
 import jcl.streams.ReadPeekResult;
 import jcl.streams.StreamVariables;
+import jcl.symbols.NILStruct;
 import jcl.symbols.VariableStruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,19 +41,19 @@ public class ReadEvalPrint {
 
 	public void funcall(final ApplicationArguments args) {
 		try {
-			REPLVariables.DASH.bindDynamicValue(NullStruct.INSTANCE);
+			REPLVariables.DASH.bindDynamicValue(NILStruct.INSTANCE);
 
-			REPLVariables.PLUS.bindDynamicValue(NullStruct.INSTANCE);
-			REPLVariables.PLUS_PLUS.bindDynamicValue(NullStruct.INSTANCE);
-			REPLVariables.PLUS_PLUS_PLUS.bindDynamicValue(NullStruct.INSTANCE);
+			REPLVariables.PLUS.bindDynamicValue(NILStruct.INSTANCE);
+			REPLVariables.PLUS_PLUS.bindDynamicValue(NILStruct.INSTANCE);
+			REPLVariables.PLUS_PLUS_PLUS.bindDynamicValue(NILStruct.INSTANCE);
 
-			REPLVariables.SLASH.bindDynamicValue(NullStruct.INSTANCE);
-			REPLVariables.SLASH_SLASH.bindDynamicValue(NullStruct.INSTANCE);
-			REPLVariables.SLASH_SLASH_SLASH.bindDynamicValue(NullStruct.INSTANCE);
+			REPLVariables.SLASH.bindDynamicValue(NILStruct.INSTANCE);
+			REPLVariables.SLASH_SLASH.bindDynamicValue(NILStruct.INSTANCE);
+			REPLVariables.SLASH_SLASH_SLASH.bindDynamicValue(NILStruct.INSTANCE);
 
-			REPLVariables.STAR.bindDynamicValue(NullStruct.INSTANCE);
-			REPLVariables.STAR_STAR.bindDynamicValue(NullStruct.INSTANCE);
-			REPLVariables.STAR_STAR_STAR.bindDynamicValue(NullStruct.INSTANCE);
+			REPLVariables.STAR.bindDynamicValue(NILStruct.INSTANCE);
+			REPLVariables.STAR_STAR.bindDynamicValue(NILStruct.INSTANCE);
+			REPLVariables.STAR_STAR_STAR.bindDynamicValue(NILStruct.INSTANCE);
 
 			final Reader reader = context.getBean(Reader.class, StreamVariables.STANDARD_INPUT.getValue());
 
@@ -66,7 +66,7 @@ public class ReadEvalPrint {
 					LOGGER.info("{}: {}> ", currentPackageName, counter++);
 
 					// READ --------------
-					final LispStruct whatRead = readFunction.read(reader, true, NullStruct.INSTANCE, false);
+					final LispStruct whatRead = readFunction.read(reader, true, NILStruct.INSTANCE, false);
 
 					// bind '-' to the form just read
 					REPLVariables.DASH.setDynamicValue(whatRead);
@@ -100,7 +100,7 @@ public class ReadEvalPrint {
 
 					if (value == null) {
 						LOGGER.warn("Setting * to NIL since it had no value.");
-						REPLVariables.STAR.setDynamicValue(NullStruct.INSTANCE);
+						REPLVariables.STAR.setDynamicValue(NILStruct.INSTANCE);
 					}
 
 					// PRINT -------------

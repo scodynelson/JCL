@@ -17,10 +17,10 @@ import jcl.LispStruct;
 import jcl.characters.CharacterConstants;
 import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.lists.ConsStruct;
-import jcl.lists.NullStruct;
 import jcl.reader.Reader;
 import jcl.reader.ReaderMacroFunction;
 import jcl.reader.struct.ReaderVariables;
+import jcl.symbols.NILStruct;
 import jcl.symbols.SymbolStruct;
 import org.springframework.stereotype.Component;
 
@@ -63,7 +63,7 @@ public class SharpEqualsSignReaderMacroFunction extends ReaderMacroFunction {
 		final SymbolStruct labelTag = new SymbolStruct(labelTagName);
 		sharpEqualTempTable.put(numberArgumentValue, labelTag);
 
-		final LispStruct token = reader.read(true, NullStruct.INSTANCE, true);
+		final LispStruct token = reader.read(true, NILStruct.INSTANCE, true);
 
 		final Map<SymbolStruct, LispStruct> sharpEqualReplTable = reader.getSharpEqualReplTable();
 		sharpEqualReplTable.put(labelTag, token);

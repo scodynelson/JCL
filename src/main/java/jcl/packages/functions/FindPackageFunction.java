@@ -9,9 +9,9 @@ import java.util.List;
 import jcl.LispStruct;
 import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
 import jcl.functions.AbstractCommonLispFunctionStruct;
-import jcl.lists.NullStruct;
 import jcl.packages.GlobalPackageStruct;
 import jcl.packages.PackageStruct;
+import jcl.symbols.NILStruct;
 import jcl.types.TypeValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -62,7 +62,7 @@ public final class FindPackageFunction extends AbstractCommonLispFunctionStruct 
 
 		final LispStruct packageDesignator = lispStructs[0];
 		final PackageStruct aPackage = validator.validatePackageDesignator(packageDesignator, functionName());
-		return (aPackage == null) ? NullStruct.INSTANCE : aPackage;
+		return (aPackage == null) ? NILStruct.INSTANCE : aPackage;
 	}
 
 	/**

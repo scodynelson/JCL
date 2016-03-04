@@ -39,7 +39,7 @@ public class ConsStruct extends BuiltInClassStruct implements ListStruct {
 	 * 		the car of the binary cons structure
 	 */
 	public ConsStruct(final LispStruct car) {
-		this(car, NullStruct.INSTANCE);
+		this(car, NILStruct.INSTANCE);
 	}
 
 	/**
@@ -54,7 +54,7 @@ public class ConsStruct extends BuiltInClassStruct implements ListStruct {
 		super(ConsType.INSTANCE, null, null);
 		this.car = car;
 		if (NILStruct.INSTANCE.equals(cdr)) {
-			this.cdr = NullStruct.INSTANCE;
+			this.cdr = NILStruct.INSTANCE;
 		} else {
 			this.cdr = cdr;
 		}
@@ -128,7 +128,7 @@ public class ConsStruct extends BuiltInClassStruct implements ListStruct {
 	@Override
 	public ListStruct getAllButLast() {
 		if (!(cdr instanceof ConsStruct)) {
-			return NullStruct.INSTANCE;
+			return NILStruct.INSTANCE;
 		}
 
 		final ConsStruct cdrAsCons = (ConsStruct) cdr;

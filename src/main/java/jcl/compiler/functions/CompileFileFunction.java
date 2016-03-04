@@ -36,7 +36,6 @@ import jcl.compiler.struct.specialoperator.lambda.LambdaStruct;
 import jcl.conditions.exceptions.FileErrorException;
 import jcl.functions.FunctionStruct;
 import jcl.lists.ListStruct;
-import jcl.lists.NullStruct;
 import jcl.packages.GlobalPackageStruct;
 import jcl.packages.PackageStruct;
 import jcl.packages.PackageVariables;
@@ -115,7 +114,7 @@ public final class CompileFileFunction extends FunctionStruct {
 		final SymbolStruct outputFileSuppliedP = GlobalPackageStruct.COMMON_LISP.intern("OUTPUT-FILE-P-" + System.nanoTime()).getSymbol();
 		final SuppliedPParameter outputFileSuppliedPBinding = new SuppliedPParameter(outputFileSuppliedP);
 
-		final KeyParameter outputFileKeyBinding = new KeyParameter(outputFileArgSymbol, NullStruct.INSTANCE, CommonLispSymbols.OUTPUT_FILE_KEYWORD, outputFileSuppliedPBinding);
+		final KeyParameter outputFileKeyBinding = new KeyParameter(outputFileArgSymbol, NILStruct.INSTANCE, CommonLispSymbols.OUTPUT_FILE_KEYWORD, outputFileSuppliedPBinding);
 		keyBindings.add(outputFileKeyBinding);
 
 		final SymbolStruct verboseArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("VERBOSE").getSymbol();
@@ -123,7 +122,7 @@ public final class CompileFileFunction extends FunctionStruct {
 		final SymbolStruct verboseSuppliedP = GlobalPackageStruct.COMMON_LISP.intern("VERBOSE-P-" + System.nanoTime()).getSymbol();
 		final SuppliedPParameter verboseSuppliedPBinding = new SuppliedPParameter(verboseSuppliedP);
 
-		final KeyParameter verboseKeyBinding = new KeyParameter(verboseArgSymbol, NullStruct.INSTANCE, CommonLispSymbols.VERBOSE_KEYWORD, verboseSuppliedPBinding);
+		final KeyParameter verboseKeyBinding = new KeyParameter(verboseArgSymbol, NILStruct.INSTANCE, CommonLispSymbols.VERBOSE_KEYWORD, verboseSuppliedPBinding);
 		keyBindings.add(verboseKeyBinding);
 
 		final SymbolStruct printArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("PRINT").getSymbol();
@@ -131,7 +130,7 @@ public final class CompileFileFunction extends FunctionStruct {
 		final SymbolStruct printSuppliedP = GlobalPackageStruct.COMMON_LISP.intern("PRINT-P-" + System.nanoTime()).getSymbol();
 		final SuppliedPParameter printSuppliedPBinding = new SuppliedPParameter(printSuppliedP);
 
-		final KeyParameter printKeyBinding = new KeyParameter(printArgSymbol, NullStruct.INSTANCE, CommonLispSymbols.PRINT_KEYWORD, printSuppliedPBinding);
+		final KeyParameter printKeyBinding = new KeyParameter(printArgSymbol, NILStruct.INSTANCE, CommonLispSymbols.PRINT_KEYWORD, printSuppliedPBinding);
 		keyBindings.add(printKeyBinding);
 
 		final SymbolStruct externalFormatArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("EXTERNAL-FORMAT").getSymbol();
@@ -139,7 +138,7 @@ public final class CompileFileFunction extends FunctionStruct {
 		final SymbolStruct externalFormatSuppliedP = GlobalPackageStruct.COMMON_LISP.intern("EXTERNAL-FORMAT-P-" + System.nanoTime()).getSymbol();
 		final SuppliedPParameter externalFormatSuppliedPBinding = new SuppliedPParameter(externalFormatSuppliedP);
 
-		final KeyParameter externalFormatKeyBinding = new KeyParameter(externalFormatArgSymbol, NullStruct.INSTANCE, CommonLispSymbols.EXTERNAL_FORMAT_KEYWORD, externalFormatSuppliedPBinding);
+		final KeyParameter externalFormatKeyBinding = new KeyParameter(externalFormatArgSymbol, NILStruct.INSTANCE, CommonLispSymbols.EXTERNAL_FORMAT_KEYWORD, externalFormatSuppliedPBinding);
 		keyBindings.add(externalFormatKeyBinding);
 
 		return OrdinaryLambdaList.builder()
@@ -270,7 +269,7 @@ public final class CompileFileFunction extends FunctionStruct {
 					final Long currentFilePosition = inputFileStream.filePosition(null);
 					// TODO: can we rework this to tell what line we're on???
 					LOGGER.info("; Deleted a non-list form '{}' found at position {}.", printedForm, currentFilePosition);
-					form = NullStruct.INSTANCE;
+					form = NILStruct.INSTANCE;
 
 					compiledWithWarnings = TStruct.INSTANCE;
 				}
@@ -299,7 +298,7 @@ public final class CompileFileFunction extends FunctionStruct {
 
 			LOGGER.error("Error in COMPILE-FILE for file: '{}'", inputFilePath, e);
 
-			return new ValuesStruct(NullStruct.INSTANCE, compiledWithWarnings, TStruct.INSTANCE);
+			return new ValuesStruct(NILStruct.INSTANCE, compiledWithWarnings, TStruct.INSTANCE);
 		} finally {
 			if (compiledSuccessfully && verbose) {
 				LOGGER.info("\n; '{}' written", outputFilePath);
@@ -327,7 +326,7 @@ public final class CompileFileFunction extends FunctionStruct {
 		final ListStruct declareBlock = ListStruct.buildProperList(SpecialOperatorStruct.DECLARE, javaClassNameDeclaration);
 
 		final ListStruct formsToCompile = ListStruct.buildProperList(forms);
-		return ListStruct.buildDottedList(SpecialOperatorStruct.LAMBDA, NullStruct.INSTANCE, declareBlock, formsToCompile);
+		return ListStruct.buildDottedList(SpecialOperatorStruct.LAMBDA, NILStruct.INSTANCE, declareBlock, formsToCompile);
 	}
 
 	private static void writeToJar(final Deque<JavaClassBuilder> javaClassBuilderDeque, final Path outputFilePath, final String inputFileName,

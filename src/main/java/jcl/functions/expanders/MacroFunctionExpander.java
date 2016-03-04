@@ -33,7 +33,6 @@ import jcl.functions.Closure;
 import jcl.functions.FunctionParameterBinding;
 import jcl.functions.FunctionStruct;
 import jcl.lists.ListStruct;
-import jcl.lists.NullStruct;
 import jcl.symbols.NILStruct;
 import jcl.symbols.SymbolStruct;
 import jcl.symbols.TStruct;
@@ -171,7 +170,7 @@ public abstract class MacroFunctionExpander<O extends LispStruct> extends MacroE
 						final SymbolStruct keySymbol = keyBinding.getVar();
 						final LispStruct keyInitForm = iterator.next();
 						if (CommonLispSymbols.ALLOW_OTHER_KEYS.equals(nextArgument)) {
-							if (!keyInitForm.equals(NullStruct.INSTANCE) && !keyInitForm.equals(NILStruct.INSTANCE)) {
+							if (!keyInitForm.equals(NILStruct.INSTANCE)) {
 								allowOtherKeys = true;
 							}
 						}
@@ -190,7 +189,7 @@ public abstract class MacroFunctionExpander<O extends LispStruct> extends MacroE
 					}
 				} else if (CommonLispSymbols.ALLOW_OTHER_KEYS.equals(nextArgument)) {
 					final LispStruct allowOtherKeysValue = iterator.next();
-					if (!allowOtherKeysValue.equals(NullStruct.INSTANCE) && !allowOtherKeysValue.equals(NILStruct.INSTANCE)) {
+					if (!allowOtherKeysValue.equals(NILStruct.INSTANCE)) {
 						allowOtherKeys = true;
 					}
 				} else {

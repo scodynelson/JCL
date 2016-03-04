@@ -60,7 +60,7 @@ final class BlockCodeGenerator extends SpecialOperatorCodeGenerator<BlockStruct>
 	 *      SymbolStruct var3 = var2.findSymbol("FOO").getSymbol();
 	 *      LispStruct var4;
 	 *      try {
-	 *          var4 = NullStruct.INSTANCE;
+	 *          var4 = NILStruct.INSTANCE;
 	 *      } catch (ReturnFromException var7) {
 	 *          SymbolStruct var6 = var7.getName();
 	 *          if(!var6.equals(var3)) {

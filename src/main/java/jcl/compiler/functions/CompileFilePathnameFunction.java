@@ -14,7 +14,6 @@ import jcl.compiler.environment.binding.lambdalist.OrdinaryLambdaList;
 import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
 import jcl.compiler.environment.binding.lambdalist.SuppliedPParameter;
 import jcl.functions.FunctionStruct;
-import jcl.lists.NullStruct;
 import jcl.packages.GlobalPackageStruct;
 import jcl.pathnames.LogicalPathnameStruct;
 import jcl.pathnames.PathnameStruct;
@@ -22,6 +21,7 @@ import jcl.pathnames.PathnameType;
 import jcl.pathnames.PathnameVariables;
 import jcl.pathnames.functions.MergePathnamesFunction;
 import jcl.pathnames.functions.TranslateLogicalPathnameFunction;
+import jcl.symbols.NILStruct;
 import jcl.symbols.SymbolStruct;
 import jcl.system.CommonLispSymbols;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,7 +59,7 @@ public final class CompileFilePathnameFunction extends FunctionStruct {
 		final SymbolStruct outputSuppliedPSymbol = GlobalPackageStruct.COMMON_LISP.intern("OUTPUT-FILE-P-" + System.nanoTime()).getSymbol();
 		final SuppliedPParameter suppliedPBinding = new SuppliedPParameter(outputSuppliedPSymbol);
 
-		final KeyParameter keyBinding = new KeyParameter(outputFileArgSymbol, NullStruct.INSTANCE, CommonLispSymbols.OUTPUT_FILE_KEYWORD, suppliedPBinding);
+		final KeyParameter keyBinding = new KeyParameter(outputFileArgSymbol, NILStruct.INSTANCE, CommonLispSymbols.OUTPUT_FILE_KEYWORD, suppliedPBinding);
 		final List<KeyParameter> keyBindings = Collections.singletonList(keyBinding);
 
 		return OrdinaryLambdaList.builder()

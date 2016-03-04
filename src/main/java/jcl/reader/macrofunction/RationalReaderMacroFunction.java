@@ -8,12 +8,12 @@ import java.math.BigInteger;
 
 import jcl.LispStruct;
 import jcl.conditions.exceptions.ReaderErrorException;
-import jcl.lists.NullStruct;
 import jcl.numbers.IntegerStruct;
 import jcl.numbers.RationalStruct;
 import jcl.printer.Printer;
 import jcl.reader.Reader;
 import jcl.reader.struct.ReaderVariables;
+import jcl.symbols.NILStruct;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -48,7 +48,7 @@ final class RationalReaderMacroFunction {
 	LispStruct readRational(final Reader reader, final BigInteger radix) {
 		if (ReaderVariables.READ_SUPPRESS.getVariableValue().booleanValue()) {
 			ExtendedTokenReaderMacroFunction.readExtendedToken(reader, false);
-			return NullStruct.INSTANCE;
+			return NILStruct.INSTANCE;
 		}
 
 		final IntegerStruct previousReadBase = ReaderVariables.READ_BASE.getVariableValue();
@@ -57,7 +57,7 @@ final class RationalReaderMacroFunction {
 		ReaderVariables.READ_BASE.setValue(new IntegerStruct(radix));
 
 		// read rational
-		final LispStruct token = reader.read(true, NullStruct.INSTANCE, true);
+		final LispStruct token = reader.read(true, NILStruct.INSTANCE, true);
 
 		// reset the read-base
 		ReaderVariables.READ_BASE.setValue(previousReadBase);

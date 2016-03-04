@@ -12,11 +12,11 @@ import jcl.LispStruct;
 import jcl.characters.CharacterConstants;
 import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.lists.ConsStruct;
-import jcl.lists.NullStruct;
 import jcl.reader.Reader;
 import jcl.reader.ReaderMacroFunction;
 import jcl.reader.struct.ReaderVariables;
 import jcl.streams.ReadPeekResult;
+import jcl.symbols.NILStruct;
 import jcl.system.CommonLispSymbols;
 import org.springframework.stereotype.Component;
 
@@ -41,13 +41,13 @@ public class CommaReaderMacroFunction extends ReaderMacroFunction {
 		final int currentBackquoteLevel = reader.getBackquoteLevel();
 		if (currentBackquoteLevel <= 0) {
 			if (ReaderVariables.READ_SUPPRESS.getVariableValue().booleanValue()) {
-				return NullStruct.INSTANCE;
+				return NILStruct.INSTANCE;
 			}
 
 			throw new ReaderErrorException("Comma not inside a backquote.");
 		}
 
-		final ReadPeekResult readResult = reader.readChar(true, NullStruct.INSTANCE, false);
+		final ReadPeekResult readResult = reader.readChar(true, NILStruct.INSTANCE, false);
 		final int nextCodePoint = readResult.getResult();
 
 		reader.decrementBackquoteLevel();
@@ -55,14 +55,14 @@ public class CommaReaderMacroFunction extends ReaderMacroFunction {
 			final ConsStruct commaCons;
 
 			if (nextCodePoint == CharacterConstants.AT_SIGN) {
-				final LispStruct token = reader.read(true, NullStruct.INSTANCE, true);
+				final LispStruct token = reader.read(true, NILStruct.INSTANCE, true);
 				commaCons = new ConsStruct(CommonLispSymbols.BQ_AT_FLAG, token);
 			} else if (nextCodePoint == CharacterConstants.FULL_STOP) {
-				final LispStruct token = reader.read(true, NullStruct.INSTANCE, true);
+				final LispStruct token = reader.read(true, NILStruct.INSTANCE, true);
 				commaCons = new ConsStruct(CommonLispSymbols.BQ_DOT_FLAG, token);
 			} else {
 				reader.unreadChar(nextCodePoint);
-				final LispStruct token = reader.read(true, NullStruct.INSTANCE, true);
+				final LispStruct token = reader.read(true, NILStruct.INSTANCE, true);
 				commaCons = new ConsStruct(CommonLispSymbols.BQ_COMMA_FLAG, token);
 			}
 			return commaCons;

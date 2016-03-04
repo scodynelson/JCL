@@ -4,13 +4,13 @@
 
 package jcl.reader.macrofunction;
 
-import jcl.lists.NullStruct;
 import jcl.reader.AttributeType;
 import jcl.reader.Reader;
 import jcl.reader.struct.ReaderVariables;
 import jcl.reader.struct.ReadtableCase;
 import jcl.reader.struct.SyntaxType;
 import jcl.streams.ReadPeekResult;
+import jcl.symbols.NILStruct;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -117,7 +117,7 @@ final class ExtendedTokenReaderMacroFunction {
 				appendToken(tempReadResult, stringBuilder, true);
 			}
 
-			tempReadResult = reader.readChar(true, NullStruct.INSTANCE, false);
+			tempReadResult = reader.readChar(true, NILStruct.INSTANCE, false);
 			tempCodePoint = tempReadResult.getResult();
 		}
 		appendToken(tempReadResult, stringBuilder, false);
@@ -144,7 +144,7 @@ final class ExtendedTokenReaderMacroFunction {
 	 */
 	private static ReadPeekResult readToken(final Reader reader, final boolean eofErrorP, final boolean recursiveP,
 	                                        final StringBuilder stringBuilder, final boolean isEscaped) {
-		final ReadPeekResult readResult = reader.readChar(eofErrorP, NullStruct.INSTANCE, recursiveP);
+		final ReadPeekResult readResult = reader.readChar(eofErrorP, NILStruct.INSTANCE, recursiveP);
 		appendToken(readResult, stringBuilder, isEscaped);
 		return readResult;
 	}

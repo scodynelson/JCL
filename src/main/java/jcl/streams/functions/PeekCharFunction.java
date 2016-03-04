@@ -12,7 +12,6 @@ import jcl.characters.CharacterStruct;
 import jcl.compiler.environment.binding.lambdalist.OptionalParameter;
 import jcl.conditions.exceptions.TypeErrorException;
 import jcl.functions.AbstractCommonLispFunctionStruct;
-import jcl.lists.NullStruct;
 import jcl.packages.GlobalPackageStruct;
 import jcl.printer.Printer;
 import jcl.streams.InputStream;
@@ -92,7 +91,7 @@ public final class PeekCharFunction extends AbstractCommonLispFunctionStruct {
 			validator.validateTypes(lispStruct, functionName(), "Peek Type", BooleanType.INSTANCE, CharacterType.INSTANCE);
 			if (TStruct.INSTANCE.equals(lispStruct)) {
 				peekType = PeekType.T_PEEK_TYPE;
-			} else if (NILStruct.INSTANCE.equals(lispStruct) || NullStruct.INSTANCE.equals(lispStruct)) {
+			} else if (NILStruct.INSTANCE.equals(lispStruct)) {
 				peekType = PeekType.NIL_PEEK_TYPE;
 			} else if (lispStruct instanceof CharacterStruct) {
 				final CharacterStruct character = (CharacterStruct) lispStruct;

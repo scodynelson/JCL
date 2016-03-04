@@ -11,11 +11,11 @@ import javax.annotation.PostConstruct;
 import jcl.LispStruct;
 import jcl.characters.CharacterConstants;
 import jcl.characters.CharacterStruct;
-import jcl.lists.NullStruct;
 import jcl.reader.Reader;
 import jcl.reader.ReaderMacroFunction;
 import jcl.reader.struct.ReaderVariables;
 import jcl.reader.struct.ReadtableStruct;
+import jcl.symbols.NILStruct;
 import org.springframework.stereotype.Component;
 
 /**
@@ -39,7 +39,7 @@ public class SharpUReaderMacroFunction extends ReaderMacroFunction {
 		assert (codePoint == CharacterConstants.LATIN_SMALL_LETTER_U) || (codePoint == CharacterConstants.LATIN_CAPITAL_LETTER_U);
 
 		if (ReaderVariables.READ_SUPPRESS.getVariableValue().booleanValue()) {
-			return NullStruct.INSTANCE;
+			return NILStruct.INSTANCE;
 		}
 
 		final int unicodeCodePoint = UnicodeCharacterReaderMacroFunction.readUnicodeCharacter(reader);

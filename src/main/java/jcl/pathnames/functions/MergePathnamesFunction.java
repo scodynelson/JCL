@@ -17,7 +17,6 @@ import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
 import jcl.compiler.environment.binding.lambdalist.SuppliedPParameter;
 import jcl.conditions.exceptions.ErrorException;
 import jcl.functions.FunctionStruct;
-import jcl.lists.NullStruct;
 import jcl.numbers.IntegerStruct;
 import jcl.packages.GlobalPackageStruct;
 import jcl.pathnames.LogicalPathnameStruct;
@@ -32,6 +31,7 @@ import jcl.pathnames.PathnameVariables;
 import jcl.pathnames.PathnameVersion;
 import jcl.pathnames.PathnameVersionComponentType;
 import jcl.printer.Printer;
+import jcl.symbols.NILStruct;
 import jcl.symbols.SymbolStruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -70,7 +70,7 @@ public final class MergePathnamesFunction extends FunctionStruct {
 		final SymbolStruct defaultPathnameSuppliedPSymbol = GlobalPackageStruct.COMMON_LISP.intern("DEFAULT-PATHNAME-P-" + System.nanoTime()).getSymbol();
 		final SuppliedPParameter defaultPathnameSuppliedPBinding = new SuppliedPParameter(defaultPathnameSuppliedPSymbol);
 
-		final OptionalParameter defaultPathnameOptionalBinding = new OptionalParameter(defaultPathnameArgSymbol, NullStruct.INSTANCE, defaultPathnameSuppliedPBinding);
+		final OptionalParameter defaultPathnameOptionalBinding = new OptionalParameter(defaultPathnameArgSymbol, NILStruct.INSTANCE, defaultPathnameSuppliedPBinding);
 		optionalBindings.add(defaultPathnameOptionalBinding);
 
 		final SymbolStruct defaultVersionArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("DEFAULT-VERSION").getSymbol();
@@ -78,7 +78,7 @@ public final class MergePathnamesFunction extends FunctionStruct {
 		final SymbolStruct defaultVersionSuppliedPSymbol = GlobalPackageStruct.COMMON_LISP.intern("DEFAULT-VERSION-P-" + System.nanoTime()).getSymbol();
 		final SuppliedPParameter defaultVersionSuppliedPBinding = new SuppliedPParameter(defaultVersionSuppliedPSymbol);
 
-		final OptionalParameter defaultVersionOptionalBinding = new OptionalParameter(defaultVersionArgSymbol, NullStruct.INSTANCE, defaultVersionSuppliedPBinding);
+		final OptionalParameter defaultVersionOptionalBinding = new OptionalParameter(defaultVersionArgSymbol, NILStruct.INSTANCE, defaultVersionSuppliedPBinding);
 		optionalBindings.add(defaultVersionOptionalBinding);
 
 		return OrdinaryLambdaList.builder()

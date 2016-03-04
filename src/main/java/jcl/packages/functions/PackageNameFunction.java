@@ -10,9 +10,9 @@ import jcl.LispStruct;
 import jcl.arrays.StringStruct;
 import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
 import jcl.functions.AbstractCommonLispFunctionStruct;
-import jcl.lists.NullStruct;
 import jcl.packages.GlobalPackageStruct;
 import jcl.packages.PackageStruct;
+import jcl.symbols.NILStruct;
 import jcl.types.TypeValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -65,7 +65,7 @@ public final class PackageNameFunction extends AbstractCommonLispFunctionStruct 
 		final PackageStruct aPackage = validator.validatePackageDesignator(lispStruct, functionName());
 
 		final String name = aPackage.getName();
-		return (name == null) ? NullStruct.INSTANCE : new StringStruct(name);
+		return (name == null) ? NILStruct.INSTANCE : new StringStruct(name);
 	}
 
 	/**

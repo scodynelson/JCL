@@ -12,7 +12,6 @@ import jcl.compiler.environment.binding.lambdalist.OptionalParameter;
 import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
 import jcl.conditions.exceptions.TypeErrorException;
 import jcl.functions.AbstractCommonLispFunctionStruct;
-import jcl.lists.NullStruct;
 import jcl.numbers.IntegerStruct;
 import jcl.packages.GlobalPackageStruct;
 import jcl.streams.StreamStruct;
@@ -68,7 +67,7 @@ public final class FilePositionFunction extends AbstractCommonLispFunctionStruct
 			position = 0L;
 		} else if (CommonLispSymbols.END_KEYWORD.equals(lispStruct2)) {
 			position = stream.fileLength();
-		} else if (NILStruct.INSTANCE.equals(lispStruct2) || NullStruct.INSTANCE.equals(lispStruct2)) {
+		} else if (NILStruct.INSTANCE.equals(lispStruct2)) {
 			position = null;
 		} else {
 			throw new TypeErrorException("UNCAUGHT TYPE ERROR.");

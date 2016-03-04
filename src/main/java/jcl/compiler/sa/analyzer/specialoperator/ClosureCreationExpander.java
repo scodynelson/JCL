@@ -22,7 +22,7 @@ import jcl.compiler.struct.specialoperator.declare.DeclareStruct;
 import jcl.compiler.struct.specialoperator.declare.SpecialDeclarationStruct;
 import jcl.functions.expanders.MacroFunctionExpander;
 import jcl.lists.ListStruct;
-import jcl.lists.NullStruct;
+import jcl.symbols.NILStruct;
 import jcl.symbols.SymbolStruct;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -99,7 +99,7 @@ public abstract class ClosureCreationExpander<V> extends MacroFunctionExpander<C
 			initForm = getListParameterInitForm(listParameter, environment);
 		} else {
 			var = (SymbolStruct) parameter;
-			initForm = NullStruct.INSTANCE;
+			initForm = NILStruct.INSTANCE;
 		}
 
 		final boolean isSpecial = declare.getSpecialDeclarations()

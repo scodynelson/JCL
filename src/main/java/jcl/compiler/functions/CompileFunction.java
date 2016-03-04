@@ -14,7 +14,6 @@ import jcl.conditions.exceptions.ErrorException;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.functions.FunctionStruct;
 import jcl.functions.expanders.MacroFunctionExpander;
-import jcl.lists.NullStruct;
 import jcl.packages.GlobalPackageStruct;
 import jcl.printer.Printer;
 import jcl.symbols.NILStruct;
@@ -54,7 +53,7 @@ public final class CompileFunction extends FunctionStruct {
 		final SymbolStruct definitionSuppliedP = GlobalPackageStruct.COMMON_LISP.intern("DEFINITION-P-" + System.nanoTime()).getSymbol();
 		final SuppliedPParameter suppliedPBinding = new SuppliedPParameter(definitionSuppliedP);
 
-		final OptionalParameter optionalBinding = new OptionalParameter(definitionArgSymbol, NullStruct.INSTANCE, suppliedPBinding);
+		final OptionalParameter optionalBinding = new OptionalParameter(definitionArgSymbol, NILStruct.INSTANCE, suppliedPBinding);
 		final List<OptionalParameter> optionalBindings = Collections.singletonList(optionalBinding);
 
 		return OrdinaryLambdaList.builder()
@@ -99,7 +98,7 @@ public final class CompileFunction extends FunctionStruct {
 			if (name instanceof SymbolStruct) {
 				final SymbolStruct nameSymbol = (SymbolStruct) name;
 				nameSymbol.setFunction(function);
-			} else if (!name.equals(NullStruct.INSTANCE) && !name.equals(NILStruct.INSTANCE)) {
+			} else if (!NILStruct.INSTANCE.equals(name)) {
 				throw new ErrorException("The value " + name + " is not an acceptable function name.");
 			}
 

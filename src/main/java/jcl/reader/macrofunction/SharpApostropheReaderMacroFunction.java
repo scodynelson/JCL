@@ -12,10 +12,10 @@ import jcl.LispStruct;
 import jcl.characters.CharacterConstants;
 import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.lists.ListStruct;
-import jcl.lists.NullStruct;
 import jcl.reader.Reader;
 import jcl.reader.ReaderMacroFunction;
 import jcl.reader.struct.ReaderVariables;
+import jcl.symbols.NILStruct;
 import jcl.system.CommonLispSymbols;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -39,7 +39,7 @@ public class SharpApostropheReaderMacroFunction extends ReaderMacroFunction {
 	public LispStruct readMacro(final int codePoint, final Reader reader, final Optional<BigInteger> numberArgument) {
 		assert codePoint == CharacterConstants.APOSTROPHE;
 
-		final LispStruct token = reader.read(true, NullStruct.INSTANCE, true);
+		final LispStruct token = reader.read(true, NILStruct.INSTANCE, true);
 		if (token == null) {
 			throw new ReaderErrorException("Missing expression.");
 		}

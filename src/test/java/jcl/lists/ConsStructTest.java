@@ -3,6 +3,7 @@ package jcl.lists;
 import java.util.List;
 
 import jcl.LispStruct;
+import jcl.symbols.NILStruct;
 import jcl.symbols.TStruct;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -32,7 +33,7 @@ public class ConsStructTest {
 	 */
 	@Test
 	public void testSetCar() throws Exception {
-		final LispStruct value = NullStruct.INSTANCE;
+		final LispStruct value = NILStruct.INSTANCE;
 
 		final ConsStruct consStruct = new ConsStruct(TStruct.INSTANCE);
 		consStruct.setCar(value);
@@ -48,7 +49,7 @@ public class ConsStructTest {
 	 */
 	@Test
 	public void testGetCdr() throws Exception {
-		final ConsStruct consStruct = new ConsStruct(NullStruct.INSTANCE, TStruct.INSTANCE);
+		final ConsStruct consStruct = new ConsStruct(NILStruct.INSTANCE, TStruct.INSTANCE);
 		Assert.assertEquals(consStruct.getCdr(), TStruct.INSTANCE, "'cdr' value of ConsStruct was not equal.");
 	}
 
@@ -60,9 +61,9 @@ public class ConsStructTest {
 	 */
 	@Test
 	public void testSetCdr() throws Exception {
-		final LispStruct value = NullStruct.INSTANCE;
+		final LispStruct value = NILStruct.INSTANCE;
 
-		final ConsStruct consStruct = new ConsStruct(NullStruct.INSTANCE, TStruct.INSTANCE);
+		final ConsStruct consStruct = new ConsStruct(NILStruct.INSTANCE, TStruct.INSTANCE);
 		consStruct.setCdr(value);
 
 		Assert.assertEquals(consStruct.getCdr(), value, "'cdr' value of ConsStruct was not equal.");
@@ -88,7 +89,7 @@ public class ConsStructTest {
 	 */
 	@Test
 	public void testSize_cdrNotListStruct() throws Exception {
-		final ConsStruct consStruct = new ConsStruct(NullStruct.INSTANCE, TStruct.INSTANCE);
+		final ConsStruct consStruct = new ConsStruct(NILStruct.INSTANCE, TStruct.INSTANCE);
 		Assert.assertEquals(consStruct.size(), 2, "'size' of ConsStruct was not expected value of '2'.");
 	}
 
@@ -117,7 +118,7 @@ public class ConsStructTest {
 		final int index = 1;
 
 		final ConsStruct consStruct = new ConsStruct(TStruct.INSTANCE); // Null.INSTANCE is default CDR, which is a ListStruct
-		Assert.assertEquals(consStruct.getElement(index), NullStruct.INSTANCE, "'element' value of ConsStruct at index 1 was not equal.");
+		Assert.assertEquals(consStruct.getElement(index), NILStruct.INSTANCE, "'element' value of ConsStruct at index 1 was not equal.");
 	}
 
 	/**
@@ -130,7 +131,7 @@ public class ConsStructTest {
 	public void testGetElement_indexNotZero_cdrNotListStruct() throws Exception {
 		final int index = 1;
 
-		final ConsStruct consStruct = new ConsStruct(NullStruct.INSTANCE, TStruct.INSTANCE);
+		final ConsStruct consStruct = new ConsStruct(NILStruct.INSTANCE, TStruct.INSTANCE);
 		Assert.assertEquals(consStruct.getElement(index), TStruct.INSTANCE, "'element' value of ConsStruct at index 1 was not equal.");
 	}
 
@@ -143,7 +144,7 @@ public class ConsStructTest {
 	@Test
 	public void testSetElement_indexZero() throws Exception {
 		final int index = 0;
-		final LispStruct value = NullStruct.INSTANCE;
+		final LispStruct value = NILStruct.INSTANCE;
 
 		final ConsStruct consStruct = new ConsStruct(TStruct.INSTANCE);
 		consStruct.setElement(index, value);
@@ -160,7 +161,7 @@ public class ConsStructTest {
 	@Test
 	public void testSetElement_cdrListStruct() throws Exception {
 		final int index = 1;
-		final LispStruct value = NullStruct.INSTANCE;
+		final LispStruct value = NILStruct.INSTANCE;
 
 		final ConsStruct innerConsStruct = new ConsStruct(TStruct.INSTANCE);
 
@@ -179,9 +180,9 @@ public class ConsStructTest {
 	@Test
 	public void testSetElement_indexNotZero_cdrNotListStruct() throws Exception {
 		final int index = 1;
-		final LispStruct value = NullStruct.INSTANCE;
+		final LispStruct value = NILStruct.INSTANCE;
 
-		final ConsStruct consStruct = new ConsStruct(NullStruct.INSTANCE, TStruct.INSTANCE);
+		final ConsStruct consStruct = new ConsStruct(NILStruct.INSTANCE, TStruct.INSTANCE);
 		consStruct.setElement(index, value);
 
 		Assert.assertEquals(consStruct.getElement(index), value, "'element' value of ConsStruct at index 1 was not equal.");
@@ -208,7 +209,7 @@ public class ConsStructTest {
 	@Test
 	public void testGetRest_cdrListStruct() throws Exception {
 		final ConsStruct consStruct = new ConsStruct(TStruct.INSTANCE);
-		Assert.assertEquals(consStruct.getRest(), NullStruct.INSTANCE, "'rest' value of ConsStruct was not equal.");
+		Assert.assertEquals(consStruct.getRest(), NILStruct.INSTANCE, "'rest' value of ConsStruct was not equal.");
 	}
 
 	/**
@@ -219,11 +220,11 @@ public class ConsStructTest {
 	 */
 	@Test
 	public void testGetRest_cdrNotListStruct() throws Exception {
-		final ConsStruct consStruct = new ConsStruct(NullStruct.INSTANCE, TStruct.INSTANCE);
+		final ConsStruct consStruct = new ConsStruct(NILStruct.INSTANCE, TStruct.INSTANCE);
 
 		final ListStruct rest = consStruct.getRest();
 		Assert.assertTrue(rest instanceof ConsStruct, "'rest' value of ConsStruct was not an expected ConsStruct.");
-		Assert.assertEquals(rest.getFirst(), NullStruct.INSTANCE, "First value of 'rest' value of ConsStruct was not equal.");
+		Assert.assertEquals(rest.getFirst(), NILStruct.INSTANCE, "First value of 'rest' value of ConsStruct was not equal.");
 	}
 
 	/**
@@ -249,11 +250,11 @@ public class ConsStructTest {
 	 */
 	@Test
 	public void testGetAsJavaList_cdrNotListStruct() throws Exception {
-		final ConsStruct consStruct = new ConsStruct(NullStruct.INSTANCE, TStruct.INSTANCE);
+		final ConsStruct consStruct = new ConsStruct(NILStruct.INSTANCE, TStruct.INSTANCE);
 
 		final List<LispStruct> javaList = consStruct.getAsJavaList();
 		Assert.assertEquals(javaList.size(), 2, "Java List was not expected size of 2");
-		Assert.assertEquals(javaList.get(0), NullStruct.INSTANCE, "First element of Java List was not equal.");
+		Assert.assertEquals(javaList.get(0), NILStruct.INSTANCE, "First element of Java List was not equal.");
 		Assert.assertEquals(javaList.get(1), TStruct.INSTANCE, "Second element of Java List was not equal.");
 	}
 
@@ -277,7 +278,7 @@ public class ConsStructTest {
 	 */
 	@Test
 	public void testIsDotted_cdrNotListStruct() throws Exception {
-		final ConsStruct consStruct = new ConsStruct(NullStruct.INSTANCE, TStruct.INSTANCE);
+		final ConsStruct consStruct = new ConsStruct(NILStruct.INSTANCE, TStruct.INSTANCE);
 		Assert.assertTrue(consStruct.isDotted(), "ConsStruct expected to be dotted.");
 	}
 

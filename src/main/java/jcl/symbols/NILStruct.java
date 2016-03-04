@@ -140,4 +140,9 @@ public final class NILStruct extends BooleanStruct implements ListStruct {
 	public ListStruct ldiff(final LispStruct object) {
 		return INSTANCE;
 	}
+
+	@Override
+	public ListStruct nthCdr(final long n) {
+		return INSTANCE;
+	}
 }

@@ -15,6 +15,7 @@ import java.util.stream.StreamSupport;
 
 import jcl.LispStruct;
 import jcl.classes.BuiltInClassStruct;
+import jcl.conditions.exceptions.ErrorException;
 import jcl.conditions.exceptions.TypeErrorException;
 import jcl.symbols.NILStruct;
 import jcl.types.ConsType;
@@ -381,6 +382,22 @@ public class ConsStruct extends BuiltInClassStruct implements ListStruct {
 			return new ConsStruct(car, listCdr.ldiff(object));
 		}
 		return (cdr.eql(object)) ? new ConsStruct(car) : new ConsStruct(car, cdr);
+	}
+
+	@Override
+	public ListStruct nthCdr(final long n) {
+		if (n < 0) {
+			throw new TypeErrorException("N value must be non-negative.");
+		}
+		if (n == 0) {
+			return this;
+		}
+		if (cdr instanceof ListStruct) {
+			final ListStruct listCdr = (ListStruct) cdr;
+			return listCdr.nthCdr(n - 1);
+		} else {
+			throw new ErrorException("Cannot take CDR of " + cdr);
+		}
 	}
 
 	@Override

@@ -359,6 +359,64 @@ public class ConsStruct extends BuiltInClassStruct implements ListStruct {
 		return (long) size();
 	}
 
+	@Override
+	public boolean tailp(final LispStruct object) {
+		if (eql(object)) {
+			return true;
+		}
+		if (cdr instanceof ListStruct) {
+			final ListStruct listCdr = (ListStruct) cdr;
+			return listCdr.tailp(object);
+		}
+		return cdr.eql(object);
+	}
+
+	@Override
+	public ListStruct ldiff(final LispStruct object) {
+		if (eql(object)) {
+			return NILStruct.INSTANCE;
+		}
+		if (cdr instanceof ListStruct) {
+			final ListStruct listCdr = (ListStruct) cdr;
+			return new ConsStruct(car, listCdr.ldiff(object));
+		}
+		return (cdr.eql(object)) ? new ConsStruct(car) : new ConsStruct(car, cdr);
+	}
+
+	@Override
+	public boolean eql(final LispStruct object) {
+		// TODO: Fix this when we fix 'eql' for everything
+		return eq(object);
+	}
+
+	@Override
+	public boolean equal(final LispStruct object) {
+		if (eq(object)) {
+			return true;
+		}
+		if (object instanceof ConsStruct) {
+			final ConsStruct objectCons = (ConsStruct) object;
+			if (car.equal(objectCons.car) && cdr.equal(objectCons.cdr)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	@Override
+	public boolean equalp(final LispStruct object) {
+		if (eq(object)) {
+			return true;
+		}
+		if (object instanceof ConsStruct) {
+			final ConsStruct objectCons = (ConsStruct) object;
+			if (car.equalp(objectCons.car) && cdr.equalp(objectCons.cdr)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	private static final class ConsIterator implements Iterator<LispStruct> {
 
 		private final int totalSize;

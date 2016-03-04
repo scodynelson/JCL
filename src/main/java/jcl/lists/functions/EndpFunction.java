@@ -5,6 +5,7 @@ import java.util.List;
 import jcl.LispStruct;
 import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
 import jcl.functions.AbstractCommonLispFunctionStruct;
+import jcl.lists.ListStruct;
 import jcl.packages.GlobalPackageStruct;
 import jcl.symbols.BooleanStructs;
 import jcl.symbols.NILStruct;
@@ -14,7 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class EndpFunction extends AbstractCommonLispFunctionStruct {
+public final class EndpFunction extends AbstractCommonLispFunctionStruct {
 
 	@Autowired
 	private TypeValidator validator;
@@ -32,7 +33,7 @@ public class EndpFunction extends AbstractCommonLispFunctionStruct {
 	public LispStruct apply(final LispStruct... lispStructs) {
 		super.apply(lispStructs);
 
-		final LispStruct list = validator.validateType(lispStructs[0], functionName(), "List", ListType.INSTANCE, LispStruct.class);
+		final ListStruct list = validator.validateType(lispStructs[0], functionName(), "List", ListType.INSTANCE, ListStruct.class);
 		return BooleanStructs.toLispBoolean(NILStruct.INSTANCE.equals(list));
 	}
 

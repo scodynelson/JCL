@@ -130,4 +130,14 @@ public final class NILStruct extends BooleanStruct implements ListStruct {
 	public Long listLength() {
 		return 0L;
 	}
+
+	@Override
+	public boolean tailp(final LispStruct object) {
+		return INSTANCE.equals(object);
+	}
+
+	@Override
+	public ListStruct ldiff(final LispStruct object) {
+		return INSTANCE;
+	}
 }

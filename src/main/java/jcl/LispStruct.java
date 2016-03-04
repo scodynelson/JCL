@@ -28,6 +28,22 @@ public interface LispStruct {
 		return TType.INSTANCE;
 	}
 
+	default boolean eq(final LispStruct object) {
+		return this == object;
+	}
+
+	default boolean eql(final LispStruct object) {
+		return equals(object);
+	}
+
+	default boolean equal(final LispStruct object) {
+		return equals(object);
+	}
+
+	default boolean equalp(final LispStruct object) {
+		return equals(object);
+	}
+
 	/**
 	 * By default, throws a {@link TypeErrorException} indicating a problem conversion to a character. This will be
 	 * overridden in implementations that support conversion to characters.

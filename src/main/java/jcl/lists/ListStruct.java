@@ -5,85 +5,52 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import jcl.LispStruct;
-import jcl.classes.BuiltInClassStruct;
 import jcl.sequences.SequenceStruct;
-import jcl.types.ListType;
 import org.apache.commons.collections4.CollectionUtils;
 
 /**
  * The {@link ListStruct} is the object representation of a Lisp 'list' type.
  */
-public abstract class ListStruct extends BuiltInClassStruct implements SequenceStruct, Iterable<LispStruct> {
-
-	/**
-	 * Protected constructor.
-	 *
-	 * @param directSuperClasses
-	 * 		the direct super classes
-	 * @param subClasses
-	 * 		the subclasses
-	 */
-	protected ListStruct(final List<Class<? extends LispStruct>> directSuperClasses, final List<Class<? extends LispStruct>> subClasses) {
-		this(ListType.INSTANCE, directSuperClasses, subClasses);
-	}
-
-	/**
-	 * Protected constructor.
-	 *
-	 * @param type
-	 * 		the type of the list object
-	 * @param directSuperClasses
-	 * 		the direct super classes
-	 * @param subClasses
-	 * 		the subclasses
-	 */
-	protected ListStruct(final ListType type,
-	                     final List<Class<? extends LispStruct>> directSuperClasses, final List<Class<? extends LispStruct>> subClasses) {
-		super(type, directSuperClasses, subClasses);
-	}
+public interface ListStruct extends SequenceStruct, Iterable<LispStruct> {
 
 	/**
 	 * Returns the size of the list.
 	 *
 	 * @return the size of the list
 	 */
-	public abstract int size();
+	int size();
 
-	public LispStruct getCar() {
-		return getFirst();
-	}
+	LispStruct getCar();
 
-	public LispStruct getCdr() {
-		return getRest();
-	}
+	LispStruct getCdr();
 
 	/**
 	 * Returns the first element in the list.
 	 *
 	 * @return the first element in the list
 	 */
-	public abstract LispStruct getFirst();
+	LispStruct getFirst();
 
 	/**
 	 * Returns all but the first element in the list.
 	 *
 	 * @return all but the first element in the list
 	 */
-	public abstract ListStruct getRest();
+	ListStruct getRest();
 
 	/**
 	 * Returns the last element in the list.
 	 *
 	 * @return the last element in the list
 	 */
-	public abstract ListStruct getLast();
+	ListStruct getLast();
 
 	/**
 	 * Returns all but the last element in the list.
 	 *
 	 * @return all but the last element in the list
 	 */
-	public abstract ListStruct getAllButLast();
+	ListStruct getAllButLast();
 
 	/**
 	 * Returns the element at the provided {@code index} location in the list.
@@ -93,7 +60,7 @@ public abstract class ListStruct extends BuiltInClassStruct implements SequenceS
 	 *
 	 * @return the element at the provided {@code index} location in the list.
 	 */
-	public abstract LispStruct getElement(int index);
+	LispStruct getElement(int index);
 
 	/**
 	 * Sets the value of the element at the provided {@code index} location in the list to the provided {@code
@@ -105,44 +72,44 @@ public abstract class ListStruct extends BuiltInClassStruct implements SequenceS
 	 * @param newValue
 	 * 		the new value to set
 	 */
-	public abstract void setElement(int index, LispStruct newValue);
+	void setElement(int index, LispStruct newValue);
 
 	/**
 	 * Determines if the list is a dotted list.
 	 *
 	 * @return if the list is a dotted list
 	 */
-	public abstract boolean isDotted();
+	boolean isDotted();
 
 	/**
 	 * Determines if the list is a circular list.
 	 *
 	 * @return if the list is a circular list
 	 */
-	public abstract boolean isCircular();
+	boolean isCircular();
 
 	/**
 	 * Determines if the list is a proper list.
 	 *
 	 * @return if the list is a proper list
 	 */
-	public boolean isProper() {
+	default boolean isProper() {
 		return !isDotted() && !isCircular();
 	}
 
-	public abstract Stream<LispStruct> stream();
+	Stream<LispStruct> stream();
 
-	public abstract Stream<LispStruct> parallelStream();
+	Stream<LispStruct> parallelStream();
 
-	public abstract LispStruct[] toArray();
+	LispStruct[] toArray();
 
-	public abstract ListStruct copyTree();
+	ListStruct copyTree();
 
-	public abstract ListStruct copyList();
+	ListStruct copyList();
 
-	public abstract ListStruct copyAlist();
+	ListStruct copyAlist();
 
-	public abstract Long listLength();
+	Long listLength();
 
 	// BUILDERS
 
@@ -154,7 +121,7 @@ public abstract class ListStruct extends BuiltInClassStruct implements SequenceS
 	 *
 	 * @return a proper list with the provided {@code lispStructs} as the elements
 	 */
-	public static ListStruct buildProperList(final LispStruct... lispStructs) {
+	static ListStruct buildProperList(final LispStruct... lispStructs) {
 		return (lispStructs.length == 0) ? NullStruct.INSTANCE : getProperList(Arrays.asList(lispStructs));
 	}
 
@@ -166,7 +133,7 @@ public abstract class ListStruct extends BuiltInClassStruct implements SequenceS
 	 *
 	 * @return a proper list with the provided {@code lispStructs} as the elements
 	 */
-	public static ListStruct buildProperList(final List<? extends LispStruct> lispStructs) {
+	static ListStruct buildProperList(final List<? extends LispStruct> lispStructs) {
 		return CollectionUtils.isEmpty(lispStructs) ? NullStruct.INSTANCE : getProperList(lispStructs);
 	}
 
@@ -178,7 +145,7 @@ public abstract class ListStruct extends BuiltInClassStruct implements SequenceS
 	 *
 	 * @return a proper list with the provided {@code lispStructs} as the elements
 	 */
-	private static ListStruct getProperList(final List<? extends LispStruct> lispStructs) {
+	static ListStruct getProperList(final List<? extends LispStruct> lispStructs) {
 		final LispStruct car = lispStructs.get(0);
 		final List<? extends LispStruct> rest = lispStructs.subList(1, lispStructs.size());
 
@@ -194,7 +161,7 @@ public abstract class ListStruct extends BuiltInClassStruct implements SequenceS
 	 *
 	 * @return a dotted list with the provided {@code lispStructs} as the elements
 	 */
-	public static ListStruct buildDottedList(final LispStruct... lispStructs) {
+	static ListStruct buildDottedList(final LispStruct... lispStructs) {
 		if (lispStructs.length == 0) {
 			return NullStruct.INSTANCE;
 		} else if (lispStructs.length == 1) {
@@ -216,7 +183,7 @@ public abstract class ListStruct extends BuiltInClassStruct implements SequenceS
 	 *
 	 * @return a dotted list with the provided {@code lispStructs} as the elements
 	 */
-	public static ListStruct buildDottedList(final List<? extends LispStruct> lispStructs) {
+	static ListStruct buildDottedList(final List<? extends LispStruct> lispStructs) {
 		if (CollectionUtils.isEmpty(lispStructs)) {
 			return NullStruct.INSTANCE;
 		} else if (lispStructs.size() == 1) {
@@ -238,7 +205,7 @@ public abstract class ListStruct extends BuiltInClassStruct implements SequenceS
 	 *
 	 * @return a dotted list with the provided {@code lispStructs} as the elements
 	 */
-	private static ListStruct getDottedList(final List<? extends LispStruct> lispStructs) {
+	static ListStruct getDottedList(final List<? extends LispStruct> lispStructs) {
 		final LispStruct car = lispStructs.get(0);
 		final List<? extends LispStruct> rest = lispStructs.subList(1, lispStructs.size());
 

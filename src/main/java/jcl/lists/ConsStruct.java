@@ -14,6 +14,7 @@ import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 import jcl.LispStruct;
+import jcl.classes.BuiltInClassStruct;
 import jcl.conditions.exceptions.TypeErrorException;
 import jcl.symbols.NILStruct;
 import jcl.types.ConsType;
@@ -25,7 +26,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 /**
  * The {@link ConsStruct} is the object representation of a Lisp 'cons' type.
  */
-public class ConsStruct extends ListStruct {
+public class ConsStruct extends BuiltInClassStruct implements ListStruct {
 
 	private LispStruct car;
 

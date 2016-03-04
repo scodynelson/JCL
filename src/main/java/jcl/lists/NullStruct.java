@@ -8,6 +8,7 @@ import java.util.Spliterators;
 import java.util.stream.Stream;
 
 import jcl.LispStruct;
+import jcl.classes.BuiltInClassStruct;
 import jcl.conditions.exceptions.SimpleErrorException;
 import jcl.types.NullType;
 import org.apache.commons.lang3.ArrayUtils;
@@ -15,7 +16,7 @@ import org.apache.commons.lang3.ArrayUtils;
 /**
  * The {@link NullStruct} is the object representation of a Lisp 'null' type.
  */
-public final class NullStruct extends ListStruct {
+public final class NullStruct extends BuiltInClassStruct implements ListStruct {
 
 	public static final NullStruct INSTANCE = new NullStruct();
 
@@ -29,6 +30,16 @@ public final class NullStruct extends ListStruct {
 	@Override
 	public int size() {
 		return 0;
+	}
+
+	@Override
+	public LispStruct getCar() {
+		return INSTANCE;
+	}
+
+	@Override
+	public LispStruct getCdr() {
+		return INSTANCE;
 	}
 
 	@Override

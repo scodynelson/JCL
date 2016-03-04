@@ -10,6 +10,7 @@ import java.util.stream.Stream;
 import jcl.LispStruct;
 import jcl.conditions.exceptions.SimpleErrorException;
 import jcl.types.NullType;
+import org.apache.commons.lang3.ArrayUtils;
 
 /**
  * The {@link NullStruct} is the object representation of a Lisp 'null' type.
@@ -93,5 +94,10 @@ public final class NullStruct extends ListStruct {
 	@Override
 	public Stream<LispStruct> parallelStream() {
 		return Stream.empty();
+	}
+
+	@Override
+	public LispStruct[] toArray() {
+		return ArrayUtils.toArray();
 	}
 }

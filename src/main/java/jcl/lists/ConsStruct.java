@@ -306,6 +306,18 @@ public class ConsStruct extends ListStruct {
 		return StreamSupport.stream(spliterator(), true);
 	}
 
+	@Override
+	public LispStruct[] toArray() {
+		final LispStruct[] result = new LispStruct[size()];
+		int i = 0;
+
+		for (LispStruct x = this; x instanceof ConsStruct; x = ((ConsStruct) x).cdr) {
+			final ConsStruct xCons = (ConsStruct) x;
+			result[i++] = xCons.car;
+		}
+		return result;
+	}
+
 	private static final class ConsIterator implements Iterator<LispStruct> {
 
 		private final int totalSize;

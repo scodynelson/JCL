@@ -126,6 +126,8 @@ public abstract class ListStruct extends BuiltInClassStruct implements SequenceS
 
 	public abstract Stream<LispStruct> parallelStream();
 
+	public abstract LispStruct[] toArray();
+
 	// BUILDERS
 
 	/**

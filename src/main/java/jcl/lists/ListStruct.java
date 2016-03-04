@@ -1,8 +1,8 @@
 package jcl.lists;
 
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
+import java.util.stream.Stream;
 
 import jcl.LispStruct;
 import jcl.classes.BuiltInClassStruct;
@@ -13,7 +13,7 @@ import org.apache.commons.collections4.CollectionUtils;
 /**
  * The {@link ListStruct} is the object representation of a Lisp 'list' type.
  */
-public abstract class ListStruct extends BuiltInClassStruct implements SequenceStruct, Collection<LispStruct> {
+public abstract class ListStruct extends BuiltInClassStruct implements SequenceStruct, Iterable<LispStruct> {
 
 	/**
 	 * Protected constructor.
@@ -41,6 +41,13 @@ public abstract class ListStruct extends BuiltInClassStruct implements SequenceS
 	                     final List<Class<? extends LispStruct>> directSuperClasses, final List<Class<? extends LispStruct>> subClasses) {
 		super(type, directSuperClasses, subClasses);
 	}
+
+	/**
+	 * Returns the size of the list.
+	 *
+	 * @return the size of the list
+	 */
+	public abstract int size();
 
 	/**
 	 * Returns the first element in the list.
@@ -114,6 +121,10 @@ public abstract class ListStruct extends BuiltInClassStruct implements SequenceS
 	public boolean isProper() {
 		return !isDotted() && !isCircular();
 	}
+
+	public abstract Stream<LispStruct> stream();
+
+	public abstract Stream<LispStruct> parallelStream();
 
 	// BUILDERS
 

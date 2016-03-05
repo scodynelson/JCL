@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import jcl.LispStruct;
+import jcl.compiler.struct.ValuesStruct;
 import jcl.sequences.SequenceStruct;
 import jcl.symbols.NILStruct;
 import org.apache.commons.collections4.CollectionUtils;
@@ -123,6 +124,8 @@ public interface ListStruct extends SequenceStruct, Iterable<LispStruct> {
 	ListStruct setProperty(LispStruct indicator, LispStruct newValue);
 
 	boolean removeProperty(LispStruct indicator);
+
+	ValuesStruct getProperties(ListStruct indicators);
 
 	// BUILDERS
 

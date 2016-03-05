@@ -6,17 +6,16 @@ import java.util.List;
 import jcl.LispStruct;
 import jcl.compiler.environment.binding.lambdalist.OptionalParameter;
 import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
-import jcl.functions.AbstractCommonLispFunctionStruct;
+import jcl.functions.AbstractSystemFunctionStruct;
 import jcl.lists.ListStruct;
 import jcl.packages.GlobalPackageStruct;
-import jcl.symbols.NILStruct;
 import jcl.types.ListType;
 import jcl.types.TypeValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class GetfFunction extends AbstractCommonLispFunctionStruct {
+public final class SetGetfFunction extends AbstractSystemFunctionStruct {
 
 	/**
 	 * The {@link TypeValidator} for validating the function parameter value types.
@@ -24,21 +23,22 @@ public final class GetfFunction extends AbstractCommonLispFunctionStruct {
 	@Autowired
 	private TypeValidator validator;
 
-	public GetfFunction() {
-		super("Finds a property on the property list whose property indicator is identical to indicator, and returns its corresponding property value.");
+	public SetGetfFunction() {
+		super("Finds a property on the property list whose property indicator is identical to indicator, and sets its corresponding property value with the new-value provided.");
 	}
 
 	@Override
 	protected List<RequiredParameter> getRequiredBindings() {
 		return Arrays.asList(
-				RequiredParameter.builder(GlobalPackageStruct.COMMON_LISP, "PLIST").build(),
-				RequiredParameter.builder(GlobalPackageStruct.COMMON_LISP, "INDICATOR").build()
+				RequiredParameter.builder(GlobalPackageStruct.SYSTEM, "PLIST").build(),
+				RequiredParameter.builder(GlobalPackageStruct.SYSTEM, "INDICATOR").build(),
+				RequiredParameter.builder(GlobalPackageStruct.SYSTEM, "VALUE").build()
 		);
 	}
 
 	@Override
 	protected List<OptionalParameter> getOptionalBindings() {
-		return OptionalParameter.builder(GlobalPackageStruct.COMMON_LISP, "DEFAULT")
+		return OptionalParameter.builder(GlobalPackageStruct.SYSTEM, "DEFAULT")
 		                        .suppliedPBinding()
 		                        .buildList();
 	}
@@ -50,19 +50,14 @@ public final class GetfFunction extends AbstractCommonLispFunctionStruct {
 		final ListStruct plist =
 				validator.validateType(lispStructs[0], functionName(), "Property List", ListType.INSTANCE, ListStruct.class);
 		final LispStruct indicator = lispStructs[1];
+		final LispStruct value = lispStructs[2];
 
-		final LispStruct defaultValue;
-		if (lispStructs.length > 2) {
-			defaultValue = lispStructs[2];
-		} else {
-			defaultValue = NILStruct.INSTANCE;
-		}
-
-		return plist.getProperty(indicator, defaultValue);
+		plist.setProperty(indicator, value);
+		return value;
 	}
 
 	@Override
 	protected String functionName() {
-		return "GETF";
+		return "SET-GETF";
 	}
 }

@@ -15,7 +15,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  * <p>
  * {@link NILType}
  */
-public interface NILType extends TType { // TODO: this needs to extend ALL types...
+public interface NILType extends TType, ListType { // TODO: this needs to extend ALL types...
 
 	/**
 	 * Singleton instance of the {@link NILType} type.

@@ -8,6 +8,7 @@ import java.util.Spliterators;
 import java.util.stream.Stream;
 
 import jcl.LispStruct;
+import jcl.compiler.struct.ValuesStruct;
 import jcl.conditions.exceptions.SimpleErrorException;
 import jcl.lists.ConsStruct;
 import jcl.lists.ListStruct;
@@ -161,5 +162,10 @@ public final class NILStruct extends BooleanStruct implements ListStruct {
 	@Override
 	public boolean removeProperty(final LispStruct indicator) {
 		return false;
+	}
+
+	@Override
+	public ValuesStruct getProperties(final ListStruct indicators) {
+		return new ValuesStruct(INSTANCE, INSTANCE, INSTANCE);
 	}
 }

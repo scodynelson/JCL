@@ -15,6 +15,7 @@ import java.util.stream.StreamSupport;
 
 import jcl.LispStruct;
 import jcl.classes.BuiltInClassStruct;
+import jcl.compiler.struct.ValuesStruct;
 import jcl.conditions.exceptions.ErrorException;
 import jcl.conditions.exceptions.TypeErrorException;
 import jcl.symbols.NILStruct;
@@ -461,6 +462,24 @@ public class ConsStruct extends BuiltInClassStruct implements ListStruct {
 	}
 
 	@Override
+	public ValuesStruct getProperties(final ListStruct indicators) {
+		if (!(cdr instanceof ConsStruct)) {
+			throw new ErrorException("List is not a valid property list.");
+		}
+		final boolean carIsIndicator = indicators.stream().anyMatch(indicator -> car.eq(indicator));
+
+		final ConsStruct cdrCons = (ConsStruct) cdr;
+		if (carIsIndicator) {
+			return new ValuesStruct(car, cdrCons.car, this);
+		} else if (!(cdrCons.cdr instanceof ListStruct)) {
+			throw new ErrorException("List is not a valid property list.");
+		} else {
+			final ListStruct cdrCdrList = (ListStruct) cdrCons.cdr;
+			return cdrCdrList.getProperties(indicators);
+		}
+	}
+
+	@Override
 	public boolean eql(final LispStruct object) {
 		// TODO: Fix this when we fix 'eql' for everything
 		return eq(object);
@@ -509,7 +528,7 @@ public class ConsStruct extends BuiltInClassStruct implements ListStruct {
 
 		@Override
 		public boolean hasNext() {
-			return !(current instanceof ConsStruct);
+			return current instanceof ConsStruct;
 		}
 
 		@Override

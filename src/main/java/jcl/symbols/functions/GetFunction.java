@@ -55,7 +55,7 @@ public final class GetFunction extends AbstractCommonLispFunctionStruct {
 		final LispStruct indicator = lispStructs[1];
 
 		final LispStruct defaultValue;
-		if (lispStructs.length >= 2) {
+		if (lispStructs.length > 2) {
 			defaultValue = lispStructs[2];
 		} else {
 			defaultValue = NILStruct.INSTANCE;

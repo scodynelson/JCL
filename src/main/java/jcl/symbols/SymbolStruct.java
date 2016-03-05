@@ -1,11 +1,10 @@
 package jcl.symbols;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Stack;
 import java.util.function.Supplier;
 
 import jcl.LispStruct;
+import jcl.LispType;
 import jcl.arrays.StringStruct;
 import jcl.characters.CharacterStruct;
 import jcl.classes.BuiltInClassStruct;
@@ -15,6 +14,7 @@ import jcl.functions.FunctionStruct;
 import jcl.functions.expanders.CompilerMacroFunctionExpander;
 import jcl.functions.expanders.MacroFunctionExpander;
 import jcl.functions.expanders.SymbolMacroExpander;
+import jcl.lists.ListStruct;
 import jcl.packages.PackageStruct;
 import jcl.packages.PackageVariables;
 import jcl.structures.StructureClassStruct;
@@ -29,7 +29,7 @@ public class SymbolStruct extends BuiltInClassStruct {
 
 	protected final String name;
 
-	protected List<LispStruct> properties = new ArrayList<>();
+	protected ListStruct properties;
 
 	protected PackageStruct symbolPackage;
 
@@ -126,8 +126,8 @@ public class SymbolStruct extends BuiltInClassStruct {
 	/**
 	 * Protected constructor.
 	 *
-	 * @param symbolType
-	 * 		the symbol type
+	 * @param lispType
+	 * 		the type of the symbol object
 	 * @param name
 	 * 		the symbol name
 	 * @param symbolPackage
@@ -137,9 +137,9 @@ public class SymbolStruct extends BuiltInClassStruct {
 	 * @param function
 	 * 		the symbol function
 	 */
-	protected SymbolStruct(final SymbolType symbolType,
+	protected SymbolStruct(final LispType lispType,
 	                       final String name, final PackageStruct symbolPackage, final LispStruct value, final FunctionStruct function) {
-		super(symbolType, null, null);
+		super(lispType, null, null);
 		this.name = name;
 
 		this.symbolPackage = symbolPackage;
@@ -482,11 +482,16 @@ public class SymbolStruct extends BuiltInClassStruct {
 	 *
 	 * @return symbol {@link #properties} property
 	 */
-	public List<LispStruct> getProperties() {
+	public ListStruct getProperties() {
+		if (properties == null) {
+			// We MUST lazy load this. Because NIlStruct is a symbol and can have its own Plist, but we can't initialize
+			//      the constant NIL symbol with a dependence on its existence.
+			properties = NILStruct.INSTANCE;
+		}
 		return properties;
 	}
 
-	public void setProperties(final List<LispStruct> properties) {
+	public void setProperties(final ListStruct properties) {
 		this.properties = properties;
 	}
 
@@ -510,70 +515,56 @@ public class SymbolStruct extends BuiltInClassStruct {
 	}
 
 	/**
-	 * Retrieves the property from the symbol {@link #properties} associated with the provided {@code key}. If the
+	 * Retrieves the property from the symbol {@link #properties} associated with the provided {@code indicator}. If the
 	 * property is not found, {@code null} is returned.
 	 *
-	 * @param key
+	 * @param indicator
 	 * 		the key for the property to retrieve
 	 *
 	 * @return the property from the symbol {@link #properties} or {@code null} if the property cannot be found.
 	 */
-	public LispStruct getProperty(final LispStruct key) {
-		for (int i = 0; i < properties.size(); i += 2) {
-			final LispStruct current = properties.get(i);
-			if (key.equals(current)) {
-				final int valueIndex = i + 1;
-				return properties.get(valueIndex);
-			}
+	public LispStruct getProperty(final LispStruct indicator, final LispStruct defaultValue) {
+		if (properties == null) {
+			// We MUST lazy load this. Because NIlStruct is a symbol and can have its own Plist, but we can't initialize
+			//      the constant NIL symbol with a dependence on its existence.
+			properties = NILStruct.INSTANCE;
 		}
-		return null;
+		return properties.getProperty(indicator, defaultValue);
 	}
 
 	/**
-	 * Sets the property in the symbol {@link #properties} associated with the provided {@code key} to the provided
+	 * Sets the property in the symbol {@link #properties} associated with the provided {@code indicator} to the provided
 	 * {@code value}.
 	 *
-	 * @param key
+	 * @param indicator
 	 * 		the key for the property to set
-	 * @param value
+	 * @param newValue
 	 * 		the value of the property
 	 */
-	public void setProperty(final LispStruct key, final LispStruct value) {
-		for (int i = 0; i < properties.size(); i += 2) {
-			final LispStruct current = properties.get(i);
-			if (key.equals(current)) {
-				final int valueIndex = i + 1;
-				properties.remove(valueIndex);
-				properties.add(valueIndex, value);
-				return;
-			}
+	public ListStruct setProperty(final LispStruct indicator, final LispStruct newValue) {
+		if (properties == null) {
+			// We MUST lazy load this. Because NIlStruct is a symbol and can have its own Plist, but we can't initialize
+			//      the constant NIL symbol with a dependence on its existence.
+			properties = NILStruct.INSTANCE;
 		}
-
-		// If no value was updated, it means no value existed. Therefore, we add this new key-value pair to the plist.
-		properties.add(key);
-		properties.add(value);
+		return properties.setProperty(indicator, newValue);
 	}
 
 	/**
-	 * Removes the first property in the symbol {@link #properties} associated with the provided {@code key}.
+	 * Removes the first property in the symbol {@link #properties} associated with the provided {@code indicator}.
 	 *
-	 * @param key
+	 * @param indicator
 	 * 		the key for the property to remove
 	 *
 	 * @return whether or not the property was removed
 	 */
-	public boolean removeProperty(final LispStruct key) {
-		boolean wasRemoved = false;
-		for (int i = 0; i < properties.size(); i += 2) {
-			final LispStruct current = properties.get(i);
-			if (key.equals(current)) {
-				final int valueIndex = i + 1;
-				properties.remove(valueIndex);
-				properties.remove(i);
-				wasRemoved = true;
-			}
+	public boolean removeProperty(final LispStruct indicator) {
+		if (properties == null) {
+			// We MUST lazy load this. Because NIlStruct is a symbol and can have its own Plist, but we can't initialize
+			//      the constant NIL symbol with a dependence on its existence.
+			properties = NILStruct.INSTANCE;
 		}
-		return wasRemoved;
+		return properties.removeProperty(indicator);
 	}
 
 	/**
@@ -590,7 +581,12 @@ public class SymbolStruct extends BuiltInClassStruct {
 			newSymbol.lexicalValueStack.addAll(lexicalValueStack);
 			newSymbol.dynamicValueStack.addAll(dynamicValueStack);
 			newSymbol.functionStack.addAll(functionStack);
-			newSymbol.properties.addAll(properties);
+			if (properties == null) {
+				// We MUST lazy load this. Because NIlStruct is a symbol and can have its own Plist, but we can't initialize
+				//      the constant NIL symbol with a dependence on its existence.
+				properties = NILStruct.INSTANCE;
+			}
+			newSymbol.properties = properties.copyList();
 			return newSymbol;
 		} else {
 			return new SymbolStruct(name);

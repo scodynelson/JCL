@@ -54,15 +54,14 @@ public final class GetFunction extends AbstractCommonLispFunctionStruct {
 				validator.validateType(lispStructs[0], functionName(), "Symbol", SymbolType.INSTANCE, SymbolStruct.class);
 		final LispStruct indicator = lispStructs[1];
 
-		final LispStruct defaultReturn;
+		final LispStruct defaultValue;
 		if (lispStructs.length >= 2) {
-			defaultReturn = lispStructs[2];
+			defaultValue = lispStructs[2];
 		} else {
-			defaultReturn = NILStruct.INSTANCE;
+			defaultValue = NILStruct.INSTANCE;
 		}
 
-		final LispStruct property = symbol.getProperty(indicator);
-		return (property == null) ? defaultReturn : property;
+		return symbol.getProperty(indicator, defaultValue);
 	}
 
 	@Override

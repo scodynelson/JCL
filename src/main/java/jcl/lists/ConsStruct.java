@@ -401,6 +401,66 @@ public class ConsStruct extends BuiltInClassStruct implements ListStruct {
 	}
 
 	@Override
+	public LispStruct getProperty(final LispStruct indicator, final LispStruct defaultValue) {
+		final Iterator<LispStruct> iterator = iterator();
+		while (iterator.hasNext()) {
+			final LispStruct key = iterator.next();
+			if (!iterator.hasNext()) {
+				return defaultValue;
+			}
+			final LispStruct value = iterator.next();
+			if (key.eq(indicator)) {
+				return value;
+			}
+		}
+		return defaultValue;
+	}
+
+	@Override
+	public ListStruct setProperty(final LispStruct indicator, final LispStruct newValue) {
+		if (!(cdr instanceof ConsStruct)) {
+			throw new ErrorException("List is not a valid property list.");
+		}
+
+		final ConsStruct cdrCons = (ConsStruct) cdr;
+		if (car.eq(indicator)) {
+			cdrCons.car = newValue;
+		} else if (!(cdrCons.cdr instanceof ListStruct)) {
+			throw new ErrorException("List is not a valid property list.");
+		} else {
+			final ListStruct cdrCdrList = (ListStruct) cdrCons.cdr;
+			cdrCdrList.setProperty(indicator, newValue);
+		}
+		return this;
+	}
+
+	@Override
+	public boolean removeProperty(final LispStruct indicator) {
+		if (!(cdr instanceof ConsStruct)) {
+			throw new ErrorException("List is not a valid property list.");
+		}
+
+		final ConsStruct cdrCons = (ConsStruct) cdr;
+		if (car.eq(indicator)) {
+			if (NILStruct.INSTANCE.equals(cdrCons.cdr)) {
+				throw new ErrorException("Cannot remove last entry from property list.");
+			}
+			if (!(cdrCons.cdr instanceof ConsStruct)) {
+				throw new ErrorException("List is not a valid property list.");
+			}
+			final ConsStruct cdrCdrCons = (ConsStruct) cdrCons.cdr;
+			car = cdrCdrCons.car;
+			cdr = cdrCdrCons.cdr;
+		} else if (!(cdrCons.cdr instanceof ListStruct)) {
+			throw new ErrorException("List is not a valid property list.");
+		} else {
+			final ListStruct cdrCdrList = (ListStruct) cdrCons.cdr;
+			return cdrCdrList.removeProperty(indicator);
+		}
+		return false;
+	}
+
+	@Override
 	public boolean eql(final LispStruct object) {
 		// TODO: Fix this when we fix 'eql' for everything
 		return eq(object);

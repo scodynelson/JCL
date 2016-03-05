@@ -9,7 +9,9 @@ import java.util.stream.Stream;
 
 import jcl.LispStruct;
 import jcl.conditions.exceptions.SimpleErrorException;
+import jcl.lists.ConsStruct;
 import jcl.lists.ListStruct;
+import jcl.types.NILType;
 import org.apache.commons.lang3.ArrayUtils;
 
 /**
@@ -23,7 +25,7 @@ public final class NILStruct extends BooleanStruct implements ListStruct {
 	 * Private constructor.
 	 */
 	private NILStruct() {
-		super("NIL", false);
+		super(NILType.INSTANCE, "NIL", false);
 	}
 
 	@Override
@@ -144,5 +146,20 @@ public final class NILStruct extends BooleanStruct implements ListStruct {
 	@Override
 	public ListStruct nthCdr(final long n) {
 		return INSTANCE;
+	}
+
+	@Override
+	public LispStruct getProperty(final LispStruct indicator, final LispStruct defaultValue) {
+		return INSTANCE;
+	}
+
+	@Override
+	public ListStruct setProperty(final LispStruct indicator, final LispStruct newValue) {
+		return new ConsStruct(indicator, newValue);
+	}
+
+	@Override
+	public boolean removeProperty(final LispStruct indicator) {
+		return false;
 	}
 }

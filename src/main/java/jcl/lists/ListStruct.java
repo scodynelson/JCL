@@ -112,11 +112,17 @@ public interface ListStruct extends SequenceStruct, Iterable<LispStruct> {
 
 	Long listLength();
 
-	boolean tailp(final LispStruct object);
+	boolean tailp(LispStruct object);
 
-	ListStruct ldiff(final LispStruct object);
+	ListStruct ldiff(LispStruct object);
 
-	ListStruct nthCdr(final long n);
+	ListStruct nthCdr(long n);
+
+	LispStruct getProperty(LispStruct indicator, LispStruct defaultValue);
+
+	ListStruct setProperty(LispStruct indicator, LispStruct newValue);
+
+	boolean removeProperty(LispStruct indicator);
 
 	// BUILDERS
 

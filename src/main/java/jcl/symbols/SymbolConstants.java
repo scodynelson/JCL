@@ -4,10 +4,8 @@
 
 package jcl.symbols;
 
-import jcl.packages.GlobalPackageStruct;
-
 public interface SymbolConstants {
 
-	ConstantStruct<NILStruct> NIL = new ConstantStruct<>("NIL", GlobalPackageStruct.COMMON_LISP, NILStruct.INSTANCE);
-	ConstantStruct<TStruct> T = new ConstantStruct<>("T", GlobalPackageStruct.COMMON_LISP, TStruct.INSTANCE);
+	NILStruct NIL = NILStruct.INSTANCE;
+	TStruct T = TStruct.INSTANCE;
 }

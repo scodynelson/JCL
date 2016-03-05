@@ -5,6 +5,7 @@
 package jcl.pathnames;
 
 import jcl.LispStruct;
+import jcl.symbols.NILStruct;
 import jcl.system.CommonLispSymbols;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -38,7 +39,7 @@ public enum PathnameDirectoryLevelType {
 	/**
 	 * Null pathname directory level type.
 	 */
-	NULL(CommonLispSymbols.NIL);
+	NULL(NILStruct.INSTANCE);
 
 	/**
 	 * Value of the pathname directory level type.

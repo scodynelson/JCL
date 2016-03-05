@@ -1,9 +1,11 @@
 package jcl.symbols;
 
 import jcl.LispStruct;
+import jcl.LispType;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.functions.FunctionStruct;
 import jcl.functions.expanders.SymbolMacroExpander;
+import jcl.lists.ListStruct;
 import jcl.packages.PackageStruct;
 import jcl.types.SymbolType;
 
@@ -11,9 +13,9 @@ public class ConstantStruct<TYPE extends LispStruct> extends SymbolStruct {
 
 	private final TYPE constantValue;
 
-	protected ConstantStruct(final SymbolType symbolType,
+	protected ConstantStruct(final LispType lispType,
 	                         final String name, final PackageStruct symbolPackage, final TYPE value, final FunctionStruct function) {
-		super(symbolType, name, symbolPackage, value, function);
+		super(lispType, name, symbolPackage, value, function);
 		constantValue = value;
 	}
 
@@ -62,7 +64,7 @@ public class ConstantStruct<TYPE extends LispStruct> extends SymbolStruct {
 	}
 
 	@Override
-	public void setProperty(final LispStruct key, final LispStruct value) {
+	public ListStruct setProperty(final LispStruct indicator, final LispStruct newValue) {
 		throw new ProgramErrorException("Can't set properties for constant " + name + '.');
 	}
 }

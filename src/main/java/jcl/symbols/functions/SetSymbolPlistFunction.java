@@ -48,8 +48,7 @@ public final class SetSymbolPlistFunction extends AbstractSystemFunctionStruct {
 		final ListStruct plist =
 				validator.validateType(lispStructs[1], functionName(), "Plist", FunctionType.INSTANCE, ListStruct.class);
 
-		final List<LispStruct> plistAsJavaList = plist.getAsJavaList();
-		symbol.setProperties(plistAsJavaList);
+		symbol.setProperties(plist);
 		return plist;
 	}
 

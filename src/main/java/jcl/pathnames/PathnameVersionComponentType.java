@@ -5,6 +5,7 @@
 package jcl.pathnames;
 
 import jcl.LispStruct;
+import jcl.symbols.NILStruct;
 import jcl.system.CommonLispSymbols;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -28,7 +29,7 @@ public enum PathnameVersionComponentType {
 	/**
 	 * Nil pathname version component type.
 	 */
-	NIL(CommonLispSymbols.NIL),
+	NIL(NILStruct.INSTANCE),
 
 	/**
 	 * Newest pathname version component type.

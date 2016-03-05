@@ -21,6 +21,7 @@ import jcl.reader.ReaderMacroFunction;
 import jcl.reader.struct.ReaderVariables;
 import jcl.symbols.NILStruct;
 import jcl.symbols.SymbolStruct;
+import jcl.symbols.TStruct;
 import jcl.system.CommonLispSymbols;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -77,17 +78,17 @@ public class BackquoteReaderMacroFunction extends ReaderMacroFunction {
 	private BackquoteReturn backquotify(final LispStruct code) {
 
 		if (code instanceof NILStruct) {
-			return new BackquoteReturn(CommonLispSymbols.NIL, code);
+			return new BackquoteReturn(NILStruct.INSTANCE, code);
 		}
 
 		if (code instanceof SymbolStruct) {
 			// Need to check the constant symbols here
 			final SymbolStruct codeSymbol = (SymbolStruct) code;
-			if (CommonLispSymbols.T.equals(codeSymbol)) {
-				return new BackquoteReturn(CommonLispSymbols.T, code);
+			if (TStruct.INSTANCE.equals(codeSymbol)) {
+				return new BackquoteReturn(TStruct.INSTANCE, code);
 			}
-			if (CommonLispSymbols.NIL.equals(codeSymbol)) {
-				return new BackquoteReturn(CommonLispSymbols.NIL, code);
+			if (NILStruct.INSTANCE.equals(codeSymbol)) {
+				return new BackquoteReturn(NILStruct.INSTANCE, code);
 			}
 			return new BackquoteReturn(CommonLispSymbols.QUOTE, code);
 		}
@@ -143,11 +144,11 @@ public class BackquoteReaderMacroFunction extends ReaderMacroFunction {
 				return backquotifyDotFlag(carBqtifyThing, cdrBqtifyFlag, cdrBqtifyThing);
 			}
 
-			if (CommonLispSymbols.NIL.equals(cdrBqtifyFlag)) {
+			if (NILStruct.INSTANCE.equals(cdrBqtifyFlag)) {
 
 				if (CommonLispSymbols.QUOTE.equals(carBqtifyFlag)
-						|| CommonLispSymbols.T.equals(carBqtifyFlag)
-						|| CommonLispSymbols.NIL.equals(carBqtifyFlag)) {
+						|| TStruct.INSTANCE.equals(carBqtifyFlag)
+						|| NILStruct.INSTANCE.equals(carBqtifyFlag)) {
 
 					final ListStruct bqReturnThing = ListStruct.buildProperList(carBqtifyThing);
 					return new BackquoteReturn(CommonLispSymbols.QUOTE, bqReturnThing);
@@ -161,11 +162,11 @@ public class BackquoteReaderMacroFunction extends ReaderMacroFunction {
 			}
 
 			if (CommonLispSymbols.QUOTE.equals(cdrBqtifyFlag)
-					|| CommonLispSymbols.T.equals(cdrBqtifyFlag)) {
+					|| TStruct.INSTANCE.equals(cdrBqtifyFlag)) {
 
 				if (CommonLispSymbols.QUOTE.equals(carBqtifyFlag)
-						|| CommonLispSymbols.T.equals(carBqtifyFlag)
-						|| CommonLispSymbols.NIL.equals(carBqtifyFlag)) {
+						|| TStruct.INSTANCE.equals(carBqtifyFlag)
+						|| NILStruct.INSTANCE.equals(carBqtifyFlag)) {
 
 					final ConsStruct bqReturnThing = new ConsStruct(carBqtifyThing, cdrBqtifyThing);
 					return new BackquoteReturn(CommonLispSymbols.QUOTE, bqReturnThing);
@@ -193,11 +194,11 @@ public class BackquoteReaderMacroFunction extends ReaderMacroFunction {
 			return new BackquoteReturn(CommonLispSymbols.LIST_STAR, bqReturnThing);
 		}
 
-		return new BackquoteReturn(CommonLispSymbols.T, code);
+		return new BackquoteReturn(TStruct.INSTANCE, code);
 	}
 
 	private BackquoteReturn backquotifyAtFlag(final LispStruct carBqtifyThing, final SymbolStruct cdrBqtifyFlag, final LispStruct cdrBqtifyThing) {
-		if (CommonLispSymbols.NIL.equals(cdrBqtifyFlag)) {
+		if (NILStruct.INSTANCE.equals(cdrBqtifyFlag)) {
 			if (expandableBackqExpressionP(carBqtifyThing)) {
 				final ListStruct bqReturnThing = ListStruct.buildProperList(carBqtifyThing);
 				return new BackquoteReturn(CommonLispSymbols.APPEND, bqReturnThing);
@@ -219,7 +220,7 @@ public class BackquoteReaderMacroFunction extends ReaderMacroFunction {
 	}
 
 	private BackquoteReturn backquotifyDotFlag(final LispStruct carBqtifyThing, final SymbolStruct cdrBqtifyFlag, final LispStruct cdrBqtifyThing) {
-		if (CommonLispSymbols.NIL.equals(cdrBqtifyFlag)) {
+		if (NILStruct.INSTANCE.equals(cdrBqtifyFlag)) {
 			if (expandableBackqExpressionP(carBqtifyThing)) {
 				final ListStruct bqReturnThing = ListStruct.buildProperList(carBqtifyThing);
 				return new BackquoteReturn(CommonLispSymbols.NCONC, bqReturnThing);
@@ -243,20 +244,20 @@ public class BackquoteReaderMacroFunction extends ReaderMacroFunction {
 	private static BackquoteReturn comma(final LispStruct code) {
 
 		if (code instanceof NILStruct) {
-			return new BackquoteReturn(CommonLispSymbols.NIL, code);
+			return new BackquoteReturn(NILStruct.INSTANCE, code);
 		}
 
 		if (code instanceof NumberStruct) {
-			return new BackquoteReturn(CommonLispSymbols.T, code);
+			return new BackquoteReturn(TStruct.INSTANCE, code);
 		}
 
 		if (code instanceof SymbolStruct) {
 			// Need to check the constant symbols here
 			final SymbolStruct codeSymbol = (SymbolStruct) code;
-			if (CommonLispSymbols.T.equals(codeSymbol)) {
-				return new BackquoteReturn(CommonLispSymbols.T, code);
-			} else if (CommonLispSymbols.NIL.equals(codeSymbol)) {
-				return new BackquoteReturn(CommonLispSymbols.NIL, code);
+			if (TStruct.INSTANCE.equals(codeSymbol)) {
+				return new BackquoteReturn(TStruct.INSTANCE, code);
+			} else if (NILStruct.INSTANCE.equals(codeSymbol)) {
+				return new BackquoteReturn(NILStruct.INSTANCE, code);
 			}
 		}
 
@@ -306,7 +307,7 @@ public class BackquoteReaderMacroFunction extends ReaderMacroFunction {
 
 	private static LispStruct backquotify_1(final SymbolStruct flag, final LispStruct thing) {
 
-		if (CommonLispSymbols.BQ_COMMA_FLAG.equals(flag) || CommonLispSymbols.T.equals(flag) || CommonLispSymbols.NIL.equals(flag)) {
+		if (CommonLispSymbols.BQ_COMMA_FLAG.equals(flag) || TStruct.INSTANCE.equals(flag) || NILStruct.INSTANCE.equals(flag)) {
 			return thing;
 		}
 

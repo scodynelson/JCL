@@ -9,7 +9,6 @@ import java.util.List;
 import jcl.LispStruct;
 import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
 import jcl.functions.AbstractCommonLispFunctionStruct;
-import jcl.lists.ListStruct;
 import jcl.packages.GlobalPackageStruct;
 import jcl.symbols.SymbolStruct;
 import jcl.types.SymbolType;
@@ -41,8 +40,7 @@ public final class SymbolPlistFunction extends AbstractCommonLispFunctionStruct 
 
 		final SymbolStruct symbol =
 				validator.validateType(lispStructs[0], functionName(), "Symbol", SymbolType.INSTANCE, SymbolStruct.class);
-		final List<LispStruct> properties = symbol.getProperties();
-		return ListStruct.buildProperList(properties);
+		return symbol.getProperties();
 	}
 
 	@Override

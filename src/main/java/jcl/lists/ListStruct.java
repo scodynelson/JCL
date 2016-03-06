@@ -31,6 +31,7 @@ public interface ListStruct extends SequenceStruct, Iterable<LispStruct> {
 	 *
 	 * @return the first element in the list
 	 */
+	@Deprecated
 	LispStruct getFirst();
 
 	/**
@@ -38,6 +39,7 @@ public interface ListStruct extends SequenceStruct, Iterable<LispStruct> {
 	 *
 	 * @return all but the first element in the list
 	 */
+	@Deprecated
 	ListStruct getRest();
 
 	/**
@@ -45,6 +47,7 @@ public interface ListStruct extends SequenceStruct, Iterable<LispStruct> {
 	 *
 	 * @return the last element in the list
 	 */
+	@Deprecated
 	ListStruct getLast();
 
 	/**
@@ -52,6 +55,7 @@ public interface ListStruct extends SequenceStruct, Iterable<LispStruct> {
 	 *
 	 * @return all but the last element in the list
 	 */
+	@Deprecated
 	ListStruct getAllButLast();
 
 	/**
@@ -62,6 +66,7 @@ public interface ListStruct extends SequenceStruct, Iterable<LispStruct> {
 	 *
 	 * @return the element at the provided {@code index} location in the list.
 	 */
+	@Deprecated
 	LispStruct getElement(int index);
 
 	/**
@@ -74,6 +79,7 @@ public interface ListStruct extends SequenceStruct, Iterable<LispStruct> {
 	 * @param newValue
 	 * 		the new value to set
 	 */
+	@Deprecated
 	void setElement(int index, LispStruct newValue);
 
 	/**

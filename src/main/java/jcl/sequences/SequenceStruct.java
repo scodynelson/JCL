@@ -20,6 +20,7 @@ public interface SequenceStruct extends LispStruct {
 	 *
 	 * @return the Lisp sequence as a Java list
 	 */
+	@Deprecated
 	List<LispStruct> getAsJavaList();
 
 	default IntegerStruct length() {

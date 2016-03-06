@@ -22,8 +22,6 @@ import jcl.symbols.NILStruct;
 import jcl.types.ConsType;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
  * The {@link ConsStruct} is the object representation of a Lisp 'cons' type.
@@ -275,15 +273,58 @@ public class ConsStruct extends BuiltInClassStruct implements ListStruct {
 //		}
 	}
 
+//	@Override
+//	public String toString() {
+//		if (isCircular()) {
+//			return "ConsStruct{'circular'}";
+//		} else {
+//			return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(car)
+//			                                                                .append(cdr)
+//			                                                                .toString();
+//		}
+//	}
+
 	@Override
 	public String toString() {
+		// TODO: Ignoring *PRINT-PRETTY* and the pretty printer in general right now...
+
 		if (isCircular()) {
-			return "ConsStruct{'circular'}";
-		} else {
-			return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(car)
-			                                                                .append(cdr)
-			                                                                .toString();
+			return "CIRCULAR LIST PRINTING NOT YET SUPPORTED!!!";
 		}
+
+		final StringBuilder stringBuilder = new StringBuilder();
+		stringBuilder.append('(');
+
+		printElements(this, stringBuilder);
+
+		stringBuilder.append(')');
+
+		return stringBuilder.toString();
+	}
+
+	private String printElements(final ConsStruct object, final StringBuilder stringBuilder) {
+
+		final LispStruct car = object.getCar();
+		final String printedCar = car.toString();
+
+		stringBuilder.append(printedCar);
+
+		if (object.getCdr() instanceof ConsStruct) {
+			final ConsStruct cdrAsCons = (ConsStruct) object.getCdr();
+			final String innerConsPrinted = printElements(cdrAsCons, new StringBuilder());
+
+			stringBuilder.append(' ');
+			stringBuilder.append(innerConsPrinted);
+		} else if (!object.getCdr().equals(NILStruct.INSTANCE)) {
+			stringBuilder.append(" . ");
+
+			final LispStruct cdr = object.getCdr();
+			final String printedCdr = cdr.toString();
+
+			stringBuilder.append(printedCdr);
+		}
+
+		return stringBuilder.toString();
 	}
 
 	@Override
@@ -499,6 +540,55 @@ public class ConsStruct extends BuiltInClassStruct implements ListStruct {
 			index++;
 		}
 		return returnList;
+	}
+
+	@Override
+	public ListStruct butLast(final long n) {
+		final long listLength = listLength();
+		if (listLength < n) {
+			return NILStruct.INSTANCE;
+		}
+
+		final long limit = listLength - n;
+		return butLastAux(this, limit);
+	}
+
+	private static ListStruct butLastAux(final ListStruct list, final long limit) {
+		if (limit <= 0) {
+			return NILStruct.INSTANCE;
+		} else {
+			final LispStruct listCar = list.getCar();
+			final LispStruct listCdr = list.getCdr();
+			// NOTE: We know this will be safe due to the use of 'listLength()'. Therefore, only 'proper' lists will
+			//          pass through here, in which case this is always a good cast.
+			return new ConsStruct(listCar, butLastAux((ListStruct) listCdr, limit - 1));
+		}
+	}
+
+	@Override
+	public ListStruct nButLast(final long n) {
+		final long listLength = listLength();
+		if (listLength < n) {
+			return NILStruct.INSTANCE;
+		}
+		if (listLength == 1) {
+			return NILStruct.INSTANCE;
+		}
+
+		final long limit = listLength - n;
+		nButLastAux(this, limit);
+		return this;
+	}
+
+	private static void nButLastAux(final ListStruct list, final long limit) {
+		if (limit <= 0) {
+			((ConsStruct) list).cdr = NILStruct.INSTANCE;
+		} else {
+			final LispStruct listCdr = list.getCdr();
+			// NOTE: We know this will be safe due to the use of 'listLength()'. Therefore, only 'proper' lists will
+			//          pass through here, in which case this is always a good cast.
+			nButLastAux((ListStruct) listCdr, limit - 1);
+		}
 	}
 
 	@Override

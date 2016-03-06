@@ -173,4 +173,14 @@ public final class NILStruct extends BooleanStruct implements ListStruct {
 	public LispStruct last(final long n) {
 		return INSTANCE;
 	}
+
+	@Override
+	public ListStruct butLast(final long n) {
+		return INSTANCE;
+	}
+
+	@Override
+	public ListStruct nButLast(final long n) {
+		return INSTANCE;
+	}
 }

@@ -127,7 +127,23 @@ public interface ListStruct extends SequenceStruct, Iterable<LispStruct> {
 
 	ValuesStruct getProperties(ListStruct indicators);
 
+	default LispStruct last() {
+		return last(1);
+	}
+
 	LispStruct last(long n);
+
+	default ListStruct butLast() {
+		return butLast(1);
+	}
+
+	ListStruct butLast(long n);
+
+	default ListStruct nButLast() {
+		return nButLast(1);
+	}
+
+	ListStruct nButLast(long n);
 
 	// BUILDERS
 

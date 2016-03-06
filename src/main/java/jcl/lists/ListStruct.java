@@ -127,6 +127,8 @@ public interface ListStruct extends SequenceStruct, Iterable<LispStruct> {
 
 	ValuesStruct getProperties(ListStruct indicators);
 
+	LispStruct last(long n);
+
 	// BUILDERS
 
 	/**

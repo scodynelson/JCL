@@ -480,6 +480,28 @@ public class ConsStruct extends BuiltInClassStruct implements ListStruct {
 	}
 
 	@Override
+	public LispStruct last(final long n) {
+		LispStruct currentList = this;
+		LispStruct returnList = currentList;
+
+		long index = 0L;
+		while (currentList instanceof ConsStruct) {
+			if (n <= index) {
+				// NOTE: We know this will be safe as the 'cdr' operation will always be performed on the currentList
+				//          first; the only time this isn't true is if 'n' is 0, in which case, the returnList and the
+				//          currentList refer to the same object, 'this', which we already know to be a ConsStruct.
+				final ConsStruct returnCons = (ConsStruct) returnList;
+				returnList = returnCons.cdr;
+			}
+
+			final ConsStruct currentCons = (ConsStruct) currentList;
+			currentList = currentCons.cdr;
+			index++;
+		}
+		return returnList;
+	}
+
+	@Override
 	public boolean eql(final LispStruct object) {
 		// TODO: Fix this when we fix 'eql' for everything
 		return eq(object);

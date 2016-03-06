@@ -168,4 +168,9 @@ public final class NILStruct extends BooleanStruct implements ListStruct {
 	public ValuesStruct getProperties(final ListStruct indicators) {
 		return new ValuesStruct(INSTANCE, INSTANCE, INSTANCE);
 	}
+
+	@Override
+	public LispStruct last(final long n) {
+		return INSTANCE;
+	}
 }

@@ -1,11 +1,13 @@
 package jcl.lists;
 
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Stream;
 
 import jcl.LispStruct;
 import jcl.compiler.struct.ValuesStruct;
+import jcl.conditions.exceptions.TypeErrorException;
 import jcl.sequences.SequenceStruct;
 import jcl.symbols.NILStruct;
 import org.apache.commons.collections4.CollectionUtils;
@@ -24,7 +26,11 @@ public interface ListStruct extends SequenceStruct, Iterable<LispStruct> {
 
 	LispStruct getCar();
 
+	void setCar(LispStruct car);
+
 	LispStruct getCdr();
+
+	void setCdr(LispStruct cdr);
 
 	/**
 	 * Returns the first element in the list.
@@ -150,6 +156,101 @@ public interface ListStruct extends SequenceStruct, Iterable<LispStruct> {
 	}
 
 	ListStruct nButLast(long n);
+
+	static LispStruct append() {
+		return NILStruct.INSTANCE;
+	}
+
+	static LispStruct append(final LispStruct object) {
+		return object;
+	}
+
+	static LispStruct append(final List<ListStruct> lists, final LispStruct object) {
+		final Iterator<ListStruct> iterator = lists.iterator();
+
+		ListStruct result = NILStruct.INSTANCE;
+
+		while (iterator.hasNext()) {
+			final ListStruct list = iterator.next();
+
+			if (NILStruct.INSTANCE.equals(list)) {
+				continue;
+			}
+
+			final ListStruct copyList = list.copyList();
+			if (NILStruct.INSTANCE.equals(result)) {
+				result = copyList;
+				continue;
+			}
+
+			final LispStruct last = result.last();
+			if (!(last instanceof ListStruct)) {
+				throw new TypeErrorException("Arguments contain a non-proper list -- " + result);
+			}
+			final ListStruct lastOfResult = (ListStruct) last;
+			lastOfResult.setCdr(copyList);
+		}
+
+		if (NILStruct.INSTANCE.equals(result)) {
+			return object;
+		}
+
+		final LispStruct last = result.last();
+		if (!(last instanceof ListStruct)) {
+			throw new TypeErrorException("Arguments contain a non-proper list -- " + result);
+		}
+		final ListStruct lastOfResult = (ListStruct) last;
+		lastOfResult.setCdr(object);
+
+		return result;
+	}
+
+	static LispStruct nconc() {
+		return NILStruct.INSTANCE;
+	}
+
+	static LispStruct nconc(final LispStruct object) {
+		return object;
+	}
+
+	static LispStruct nconc(final List<ListStruct> lists, final LispStruct object) {
+		final Iterator<ListStruct> iterator = lists.iterator();
+
+		ListStruct result = NILStruct.INSTANCE;
+
+		while (iterator.hasNext()) {
+			final ListStruct list = iterator.next();
+
+			if (NILStruct.INSTANCE.equals(list)) {
+				continue;
+			}
+
+			if (NILStruct.INSTANCE.equals(result)) {
+				result = list;
+				continue;
+			}
+
+			final LispStruct last = result.last();
+			if (!(last instanceof ListStruct)) {
+				throw new TypeErrorException("Arguments contain a non-proper list -- " + result);
+			}
+			final ListStruct lastOfResult = (ListStruct) last;
+			lastOfResult.setCdr(list);
+		}
+
+		if (NILStruct.INSTANCE.equals(result)) {
+			return object;
+		}
+
+		final LispStruct last = result.last();
+		if (!(last instanceof ListStruct)) {
+			throw new TypeErrorException("Arguments contain a non-proper list -- " + result);
+		}
+		final ListStruct lastOfResult = (ListStruct) last;
+		lastOfResult.setCdr(object);
+
+		return result;
+	}
 
 	// BUILDERS
 

@@ -4,128 +4,77 @@
 
 package jcl.lists.functions;
 
-import javax.annotation.PostConstruct;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
 
 import jcl.LispStruct;
-import jcl.compiler.environment.binding.lambdalist.OrdinaryLambdaList;
 import jcl.compiler.environment.binding.lambdalist.RestParameter;
-import jcl.conditions.exceptions.ErrorException;
-import jcl.functions.FunctionStruct;
-import jcl.lists.ConsStruct;
+import jcl.functions.AbstractCommonLispFunctionStruct;
 import jcl.lists.ListStruct;
 import jcl.packages.GlobalPackageStruct;
-import jcl.printer.Printer;
 import jcl.symbols.NILStruct;
 import jcl.symbols.SymbolStruct;
+import jcl.types.ListType;
+import jcl.types.TypeValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class NconcFunction extends FunctionStruct {
+public final class NconcFunction extends AbstractCommonLispFunctionStruct {
 
 	public static final SymbolStruct NCONC = GlobalPackageStruct.COMMON_LISP.intern("NCONC").getSymbol();
 
+	/**
+	 * The {@link TypeValidator} for validating the function parameter value types.
+	 */
 	@Autowired
-	private NullFunction nullFunction;
+	private TypeValidator validator;
 
-	@Autowired
-	private Printer printer;
-
-	private NconcFunction() {
-		super("Returns a list that is the concatenation of lists.", getInitLambdaListBindings());
+	public NconcFunction() {
+		super("Returns a list that is the concatenation of lists.");
 	}
 
-	@PostConstruct
-	private void init() {
-		NCONC.setFunction(this);
-		GlobalPackageStruct.COMMON_LISP.export(NCONC);
-	}
-
-	private static OrdinaryLambdaList getInitLambdaListBindings() {
-
-		final SymbolStruct listRestArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("LISTS").getSymbol();
-		final RestParameter restBinding = new RestParameter(listRestArgSymbol);
-
-		return OrdinaryLambdaList.builder()
-		                         .restBinding(restBinding)
-		                         .build();
+	@Override
+	protected RestParameter getRestBinding() {
+		return RestParameter.builder(GlobalPackageStruct.COMMON_LISP, "LISTS").build();
 	}
 
 	@Override
 	public LispStruct apply(final LispStruct... lispStructs) {
-		return nconc(lispStructs);
-	}
+		super.apply(lispStructs);
 
-	public LispStruct nconc(final LispStruct... lispStructs) {
-
-		if (lispStructs.length == 0) {
+		final int length = lispStructs.length;
+		if (length == 0) {
 			return NILStruct.INSTANCE;
 		}
-
-		// NOTE: The (length - 1) below. This is so we skip the last argument.
-		for (int i = 0; i < (lispStructs.length - 1); i++) {
-			final LispStruct lispStruct = lispStructs[0];
-			if (!(lispStruct instanceof ListStruct)) {
-				final String printedObject = printer.print(lispStruct);
-				throw new ErrorException("The value " + printedObject + " is not a list.");
-			}
+		if (length == 1) {
+			return lispStructs[0];
 		}
 
-		LispStruct top = ListStruct.buildProperList(lispStructs);
+		final Iterator<LispStruct> iterator = Arrays.asList(lispStructs).iterator();
 
-		while (!(NILStruct.INSTANCE.equals(top))) {
+		final List<ListStruct> lists = new ArrayList<>(lispStructs.length - 1);
+		LispStruct object = NILStruct.INSTANCE;
 
-			final ConsStruct topConsStruct = (ConsStruct) top;
-			final LispStruct topOfTop = topConsStruct.getCar();
-
-			if (topOfTop instanceof ConsStruct) {
-
-				final ConsStruct result = (ConsStruct) topOfTop;
-				ConsStruct splice = result;
-
-				LispStruct elements = topConsStruct.getCdr();
-
-				while (!NILStruct.INSTANCE.equals(elements)) {
-
-					// NOTE: The cast below is safe because of the check we do ealier to verify all the 'lispStructs' are actually lists.
-					final ConsStruct elementsConsStruct = (ConsStruct) elements;
-					final LispStruct ele = elementsConsStruct.getCar();
-
-					final ListStruct spliceLast = splice.getLast();
-					final ConsStruct spliceLastConsStruct = (ConsStruct) spliceLast;
-
-					if (ele instanceof ConsStruct) {
-						spliceLastConsStruct.setCdr(ele);
-						splice = (ConsStruct) ele;
-					} else if (NILStruct.INSTANCE.equals(ele)) {
-						spliceLastConsStruct.setCdr(NILStruct.INSTANCE);
-					} else {
-						final LispStruct cdrElements = elementsConsStruct.getCdr();
-						if (NILStruct.INSTANCE.equals(cdrElements)) {
-							spliceLastConsStruct.setCdr(ele);
-						} else {
-							final String printedObject = printer.print(ele);
-							throw new ErrorException("Argument is not a list -- " + printedObject);
-						}
-					}
-
-					elements = elementsConsStruct.getCdr();
-				}
-
-				return result;
-			} else if (NILStruct.INSTANCE.equals(top)) {
-				top = topConsStruct.getCdr();
-			} else {
-				final LispStruct cdrTop = topConsStruct.getCdr();
-				if (NILStruct.INSTANCE.equals(cdrTop)) {
-					return topOfTop;
-				} else {
-					final String printedObject = printer.print(topOfTop);
-					throw new ErrorException("Argument is not a list -- " + printedObject);
-				}
+		while (iterator.hasNext()) {
+			final LispStruct next = iterator.next();
+			if (!iterator.hasNext()) {
+				object = next;
+				break;
 			}
+
+			final ListStruct list
+					= validator.validateType(next, functionName(), "List", ListType.INSTANCE, ListStruct.class);
+			lists.add(list);
 		}
 
-		return NILStruct.INSTANCE;
+		return ListStruct.nconc(lists, object);
+	}
+
+	@Override
+	protected String functionName() {
+		return "NCONC";
 	}
 }

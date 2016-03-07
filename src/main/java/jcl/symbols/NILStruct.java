@@ -40,8 +40,18 @@ public final class NILStruct extends BooleanStruct implements ListStruct {
 	}
 
 	@Override
+	public void setCar(final LispStruct car) {
+		throw new SimpleErrorException("Cannot set element within NIL.");
+	}
+
+	@Override
 	public LispStruct getCdr() {
 		return INSTANCE;
+	}
+
+	@Override
+	public void setCdr(final LispStruct cdr) {
+		throw new SimpleErrorException("Cannot set element within NIL.");
 	}
 
 	@Override

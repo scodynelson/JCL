@@ -4,139 +4,77 @@
 
 package jcl.lists.functions;
 
-import javax.annotation.PostConstruct;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
 
 import jcl.LispStruct;
-import jcl.compiler.environment.binding.lambdalist.OrdinaryLambdaList;
 import jcl.compiler.environment.binding.lambdalist.RestParameter;
-import jcl.conditions.exceptions.ErrorException;
-import jcl.conditions.exceptions.TypeErrorException;
-import jcl.functions.FunctionStruct;
-import jcl.lists.ConsStruct;
+import jcl.functions.AbstractCommonLispFunctionStruct;
 import jcl.lists.ListStruct;
 import jcl.packages.GlobalPackageStruct;
-import jcl.printer.Printer;
 import jcl.symbols.NILStruct;
 import jcl.symbols.SymbolStruct;
+import jcl.types.ListType;
+import jcl.types.TypeValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class AppendFunction extends FunctionStruct {
+public final class AppendFunction extends AbstractCommonLispFunctionStruct {
 
 	public static final SymbolStruct APPEND = GlobalPackageStruct.COMMON_LISP.intern("APPEND").getSymbol();
 
+	/**
+	 * The {@link TypeValidator} for validating the function parameter value types.
+	 */
 	@Autowired
-	private Printer printer;
+	private TypeValidator validator;
 
-	private AppendFunction() {
-		super("Returns a new list that is the concatenation of the copies.", getInitLambdaListBindings());
+	public AppendFunction() {
+		super("Returns a new list that is the concatenation of the copies.");
 	}
 
-	@PostConstruct
-	private void init() {
-		APPEND.setFunction(this);
-		GlobalPackageStruct.COMMON_LISP.export(APPEND);
-	}
-
-	private static OrdinaryLambdaList getInitLambdaListBindings() {
-
-		final SymbolStruct listRestArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("LISTS").getSymbol();
-		final RestParameter restBinding = new RestParameter(listRestArgSymbol);
-
-		return OrdinaryLambdaList.builder()
-		                         .restBinding(restBinding)
-		                         .build();
+	@Override
+	protected RestParameter getRestBinding() {
+		return RestParameter.builder(GlobalPackageStruct.COMMON_LISP, "LISTS").build();
 	}
 
 	@Override
 	public LispStruct apply(final LispStruct... lispStructs) {
-		return append(lispStructs);
-	}
+		super.apply(lispStructs);
 
-	public LispStruct append(final LispStruct... lispStructs) {
-
-		LispStruct top = ListStruct.buildProperList(lispStructs);
-
-		while (top instanceof ConsStruct) {
-
-			final ConsStruct topConsStruct = (ConsStruct) top;
-			final LispStruct carOfTop = topConsStruct.getCar();
-
-			if (NILStruct.INSTANCE.equals(carOfTop)) {
-				top = topConsStruct.getCdr();
-			} else if (!(carOfTop instanceof ConsStruct)) {
-				final LispStruct cdrTop = topConsStruct.getCdr();
-				if (NILStruct.INSTANCE.equals(cdrTop)) {
-					return carOfTop;
-				} else {
-					final String printedObject = printer.print(carOfTop);
-					throw new ErrorException("Argument is not a list -- " + printedObject);
-				}
-			} else {
-				final LispStruct cdrTop = topConsStruct.getCdr();
-				if (!(cdrTop instanceof ConsStruct)) {
-					return carOfTop;
-				}
-
-				final ConsStruct carOfTopConsStruct = (ConsStruct) carOfTop;
-
-				final ConsStruct result = new ConsStruct(carOfTopConsStruct.getCar());
-				ConsStruct splice = result;
-
-				LispStruct x = carOfTopConsStruct.getCdr();
-				while (x instanceof ConsStruct) {
-					final ConsStruct xAsConsStruct = (ConsStruct) x;
-
-					final LispStruct carOfX = xAsConsStruct.getCar();
-					final ConsStruct newSpliceCdr = new ConsStruct(carOfX);
-					splice.setCdr(newSpliceCdr);
-					splice = newSpliceCdr;
-
-					x = xAsConsStruct.getCdr();
-				}
-				if (!(NILStruct.INSTANCE.equals(x))) {
-					final String printedObject = printer.print(carOfTop);
-					throw new TypeErrorException("Argument is not a proper list -- " + printedObject);
-				}
-
-				ConsStruct y = (ConsStruct) topConsStruct.getCdr();
-
-				while (y.getCdr() instanceof ConsStruct) {
-					final LispStruct carOfY = y.getCar();
-
-					if (carOfY instanceof ListStruct) {
-
-						LispStruct innerX = y.getCar();
-						while (innerX instanceof ConsStruct) {
-							final ConsStruct innerXAsConsStruct = (ConsStruct) innerX;
-
-							final LispStruct carOfInnerX = innerXAsConsStruct.getCar();
-							final ConsStruct newSpliceCdr = new ConsStruct(carOfInnerX);
-							splice.setCdr(newSpliceCdr);
-							splice = newSpliceCdr;
-
-							innerX = innerXAsConsStruct.getCdr();
-						}
-
-						if (!(NILStruct.INSTANCE.equals(innerX))) {
-							final String printedObject = printer.print(y.getCar());
-							throw new TypeErrorException("Argument is not a proper list -- " + printedObject);
-						}
-
-						y = (ConsStruct) y.getCdr();
-					} else {
-						final String printedObject = printer.print(carOfY);
-						throw new ErrorException("Argument is not a list -- " + printedObject);
-					}
-				}
-
-				splice.setCdr(y.getCar());
-
-				return result;
-			}
+		final int length = lispStructs.length;
+		if (length == 0) {
+			return NILStruct.INSTANCE;
+		}
+		if (length == 1) {
+			return lispStructs[0];
 		}
 
-		return NILStruct.INSTANCE;
+		final Iterator<LispStruct> iterator = Arrays.asList(lispStructs).iterator();
+
+		final List<ListStruct> lists = new ArrayList<>(lispStructs.length - 1);
+		LispStruct object = NILStruct.INSTANCE;
+
+		while (iterator.hasNext()) {
+			final LispStruct next = iterator.next();
+			if (!iterator.hasNext()) {
+				object = next;
+				break;
+			}
+
+			final ListStruct list
+					= validator.validateType(next, functionName(), "List", ListType.INSTANCE, ListStruct.class);
+			lists.add(list);
+		}
+
+		return ListStruct.append(lists, object);
+	}
+
+	@Override
+	protected String functionName() {
+		return "APPEND";
 	}
 }

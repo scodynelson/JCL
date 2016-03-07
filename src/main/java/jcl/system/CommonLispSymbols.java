@@ -1024,6 +1024,7 @@ public interface CommonLispSymbols {
 
 	// Standard Keywords
 	KeywordStruct ELEMENT_TYPE_KEYWORD = new KeywordStruct("ELEMENT-TYPE");
+	KeywordStruct INITIAL_ELEMENT_KEYWORD = new KeywordStruct("INITIAL-ELEMENT");
 	KeywordStruct INITIAL_CONTENTS_KEYWORD = new KeywordStruct("INITIAL-CONTENTS");
 
 	// Package Keywords

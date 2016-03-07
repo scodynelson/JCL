@@ -252,6 +252,14 @@ public interface ListStruct extends SequenceStruct, Iterable<LispStruct> {
 		return result;
 	}
 
+	static ListStruct makeList(final Long size, final LispStruct initialElement) {
+		ListStruct result = NILStruct.INSTANCE;
+		for (long l = 0; l < size; l++) {
+			result = new ConsStruct(initialElement, result);
+		}
+		return result;
+	}
+
 	// BUILDERS
 
 	/**

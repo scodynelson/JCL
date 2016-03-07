@@ -249,7 +249,7 @@
        ,(handle-error-clauses clauses 'typep test-val t))))
 |#
 ;; Multiple-Value-Bind
-#|
+#| TODO: The reason this doesn't work is because the Symbol 'IGNORE' is a Declaration right now. :(
 (defmacro multiple-value-bind ((&rest vars) value-form &body body)
   (declare (system::%java-class-name "jcl.compiler.functions.MultipleValueBind"))
   (let ((ignore (gensym)))

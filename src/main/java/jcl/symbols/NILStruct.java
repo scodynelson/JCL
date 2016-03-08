@@ -29,6 +29,10 @@ public final class NILStruct extends BooleanStruct implements ListStruct {
 		super(NILType.INSTANCE, "NIL", false);
 	}
 
+	/*
+	LIST
+	 */
+
 	@Override
 	public int size() {
 		return 0;
@@ -95,21 +99,6 @@ public final class NILStruct extends BooleanStruct implements ListStruct {
 	}
 
 	@Override
-	public List<LispStruct> getAsJavaList() {
-		return Collections.emptyList();
-	}
-
-	@Override
-	public Iterator<LispStruct> iterator() {
-		return Collections.emptyIterator();
-	}
-
-	@Override
-	public Spliterator<LispStruct> spliterator() {
-		return Spliterators.emptySpliterator();
-	}
-
-	@Override
 	public Stream<LispStruct> stream() {
 		return Stream.empty();
 	}
@@ -155,6 +144,16 @@ public final class NILStruct extends BooleanStruct implements ListStruct {
 	}
 
 	@Override
+	public LispStruct nth(final long index) {
+		return INSTANCE;
+	}
+
+	@Override
+	public void setNth(final long index, final LispStruct newValue) {
+		throw new SimpleErrorException("Cannot set element within NIL.");
+	}
+
+	@Override
 	public ListStruct nthCdr(final long n) {
 		return INSTANCE;
 	}
@@ -194,6 +193,30 @@ public final class NILStruct extends BooleanStruct implements ListStruct {
 		return INSTANCE;
 	}
 
+	/*
+	SEQUENCE
+	 */
+
+	@Override
+	public List<LispStruct> getAsJavaList() {
+		return Collections.emptyList();
+	}
+
+	@Override
+	public Long length() {
+		return 0L;
+	}
+
+	@Override
+	public LispStruct elt(final long index) {
+		return INSTANCE;
+	}
+
+	@Override
+	public void setElt(final long index, final LispStruct newValue) {
+		throw new SimpleErrorException("Cannot set element within NIL.");
+	}
+
 	@Override
 	public ListStruct reverse() {
 		return INSTANCE;
@@ -202,5 +225,19 @@ public final class NILStruct extends BooleanStruct implements ListStruct {
 	@Override
 	public ListStruct nReverse() {
 		return INSTANCE;
+	}
+
+	/*
+	ITERABLE
+	 */
+
+	@Override
+	public Iterator<LispStruct> iterator() {
+		return Collections.emptyIterator();
+	}
+
+	@Override
+	public Spliterator<LispStruct> spliterator() {
+		return Spliterators.emptySpliterator();
 	}
 }

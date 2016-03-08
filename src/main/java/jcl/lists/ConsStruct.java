@@ -60,6 +60,20 @@ public class ConsStruct extends BuiltInClassStruct implements ListStruct {
 		}
 	}
 
+	/*
+	LIST
+	 */
+
+	@Override
+	public int size() {
+		if (cdr instanceof ListStruct) {
+			final ListStruct cdrAsList = (ListStruct) cdr;
+			return 1 + cdrAsList.size();
+		} else {
+			return 2;
+		}
+	}
+
 	/**
 	 * Getter for cons {@link #car} property.
 	 *
@@ -76,6 +90,7 @@ public class ConsStruct extends BuiltInClassStruct implements ListStruct {
 	 * @param car
 	 * 		new cons {@link #car} property value
 	 */
+	@Override
 	public void setCar(final LispStruct car) {
 		this.car = car;
 	}
@@ -96,18 +111,9 @@ public class ConsStruct extends BuiltInClassStruct implements ListStruct {
 	 * @param cdr
 	 * 		new cons {@link #cdr} property value
 	 */
+	@Override
 	public void setCdr(final LispStruct cdr) {
 		this.cdr = cdr;
-	}
-
-	@Override
-	public int size() {
-		if (cdr instanceof ListStruct) {
-			final ListStruct cdrAsList = (ListStruct) cdr;
-			return 1 + cdrAsList.size();
-		} else {
-			return 2;
-		}
 	}
 
 	@Override
@@ -178,19 +184,6 @@ public class ConsStruct extends BuiltInClassStruct implements ListStruct {
 		return innerIsCircular(this, conses);
 	}
 
-	@Override
-	public List<LispStruct> getAsJavaList() {
-		final List<LispStruct> javaList = new ArrayList<>();
-		javaList.add(car);
-		if (cdr instanceof ListStruct) {
-			final ListStruct cdrAsList = (ListStruct) cdr;
-			javaList.addAll(cdrAsList.getAsJavaList());
-		} else {
-			javaList.add(cdr);
-		}
-		return javaList;
-	}
-
 	/**
 	 * Tests the provided {@code consStruct} for circularity. If the consStruct itself, or any of its cons nodes are
 	 * located in the provided conses list, the cons is circular. This method is recursive and will constantly populate
@@ -233,114 +226,6 @@ public class ConsStruct extends BuiltInClassStruct implements ListStruct {
 			isElementCircular = false;
 		}
 		return isElementCircular;
-	}
-
-	@Override
-	public int hashCode() {
-//		if (isCircular()) {
-//		    // TODO: we should figure out how to handle circularities here... or should we???
-//		    return new HashCodeBuilder().appendSuper(super.hashCode())
-//		                                .toHashCode();
-//		} else {
-		return new HashCodeBuilder().appendSuper(super.hashCode())
-		                            .append(car)
-		                            .append(cdr)
-		                            .toHashCode();
-//		}
-	}
-
-	@Override
-	public boolean equals(final Object obj) {
-		if (obj == null) {
-			return false;
-		}
-		if (obj == this) {
-			return true;
-		}
-		if (obj.getClass() != getClass()) {
-			return false;
-		}
-		final ConsStruct rhs = (ConsStruct) obj;
-
-//		if (isCircular() || rhs.isCircular()) {
-//			// TODO: we should figure out how to handle circularities here... or should we???
-//			return false;
-//		} else {
-		return new EqualsBuilder().appendSuper(super.equals(obj))
-		                          .append(car, rhs.car)
-		                          .append(cdr, rhs.cdr)
-		                          .isEquals();
-//		}
-	}
-
-//	@Override
-//	public String toString() {
-//		if (isCircular()) {
-//			return "ConsStruct{'circular'}";
-//		} else {
-//			return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(car)
-//			                                                                .append(cdr)
-//			                                                                .toString();
-//		}
-//	}
-
-	@Override
-	public String toString() {
-		// TODO: Ignoring *PRINT-PRETTY* and the pretty printer in general right now...
-
-		if (isCircular()) {
-			return "CIRCULAR LIST PRINTING NOT YET SUPPORTED!!!";
-		}
-
-		final StringBuilder stringBuilder = new StringBuilder();
-		stringBuilder.append('(');
-
-		printElements(this, stringBuilder);
-
-		stringBuilder.append(')');
-
-		return stringBuilder.toString();
-	}
-
-	private String printElements(final ConsStruct object, final StringBuilder stringBuilder) {
-
-		final LispStruct car = object.getCar();
-		final String printedCar = car.toString();
-
-		stringBuilder.append(printedCar);
-
-		if (object.getCdr() instanceof ConsStruct) {
-			final ConsStruct cdrAsCons = (ConsStruct) object.getCdr();
-			final String innerConsPrinted = printElements(cdrAsCons, new StringBuilder());
-
-			stringBuilder.append(' ');
-			stringBuilder.append(innerConsPrinted);
-		} else if (!object.getCdr().equals(NILStruct.INSTANCE)) {
-			stringBuilder.append(" . ");
-
-			final LispStruct cdr = object.getCdr();
-			final String printedCdr = cdr.toString();
-
-			stringBuilder.append(printedCdr);
-		}
-
-		return stringBuilder.toString();
-	}
-
-	@Override
-	public Iterator<LispStruct> iterator() {
-		return new ConsIterator(this);
-	}
-
-	@Override
-	public Spliterator<LispStruct> spliterator() {
-		return Spliterators.spliterator(iterator(), size(),
-		                                Spliterator.ORDERED |
-				                                Spliterator.SIZED |
-				                                Spliterator.NONNULL |
-				                                Spliterator.IMMUTABLE |
-				                                Spliterator.SUBSIZED
-		);
 	}
 
 	@Override
@@ -399,7 +284,7 @@ public class ConsStruct extends BuiltInClassStruct implements ListStruct {
 		if (isCircular()) {
 			return null;
 		}
-		return (long) size();
+		return length();
 	}
 
 	@Override
@@ -424,6 +309,57 @@ public class ConsStruct extends BuiltInClassStruct implements ListStruct {
 			return new ConsStruct(car, listCdr.ldiff(object));
 		}
 		return (cdr.eql(object)) ? new ConsStruct(car) : new ConsStruct(car, cdr);
+	}
+
+	@Override
+	public LispStruct nth(final long index) {
+		if (index < 0) {
+			throw new TypeErrorException("N value must be non-negative.");
+		}
+
+		long currentIndex = 0L;
+		ConsStruct cons = this;
+		while (true) {
+			if (currentIndex == index) {
+				return cons.car;
+			}
+
+			final LispStruct consCdr = cons.cdr;
+			if (consCdr instanceof ConsStruct) {
+				cons = (ConsStruct) consCdr;
+				currentIndex++;
+			} else if (NILStruct.INSTANCE.equals(consCdr)) {
+				return NILStruct.INSTANCE;
+			} else {
+				throw new TypeErrorException("Not a proper list.");
+			}
+		}
+	}
+
+	@Override
+	public void setNth(final long index, final LispStruct newValue) {
+		if (index < 0) {
+			throw new TypeErrorException("N value must be non-negative.");
+		}
+
+		long currentIndex = 0L;
+		ConsStruct cons = this;
+		while (true) {
+			if (currentIndex == index) {
+				cons.car = newValue;
+				return;
+			}
+
+			final LispStruct consCdr = cons.cdr;
+			if (consCdr instanceof ConsStruct) {
+				cons = (ConsStruct) consCdr;
+				currentIndex++;
+			} else if (NILStruct.INSTANCE.equals(consCdr)) {
+				return;
+			} else {
+				throw new TypeErrorException("Not a proper list.");
+			}
+		}
 	}
 
 	@Override
@@ -522,6 +458,10 @@ public class ConsStruct extends BuiltInClassStruct implements ListStruct {
 
 	@Override
 	public LispStruct last(final long n) {
+		if (n < 0) {
+			throw new TypeErrorException("N value must be non-negative.");
+		}
+
 		LispStruct currentList = this;
 		LispStruct returnList = currentList;
 
@@ -544,6 +484,10 @@ public class ConsStruct extends BuiltInClassStruct implements ListStruct {
 
 	@Override
 	public ListStruct butLast(final long n) {
+		if (n < 0) {
+			throw new TypeErrorException("N value must be non-negative.");
+		}
+
 		final long listLength = listLength();
 		if (listLength < n) {
 			return NILStruct.INSTANCE;
@@ -567,6 +511,10 @@ public class ConsStruct extends BuiltInClassStruct implements ListStruct {
 
 	@Override
 	public ListStruct nButLast(final long n) {
+		if (n < 0) {
+			throw new TypeErrorException("N value must be non-negative.");
+		}
+
 		final long listLength = listLength();
 		if (listLength < n) {
 			return NILStruct.INSTANCE;
@@ -591,6 +539,89 @@ public class ConsStruct extends BuiltInClassStruct implements ListStruct {
 		}
 	}
 
+	/*
+	SEQUENCE
+	 */
+
+	@Override
+	public List<LispStruct> getAsJavaList() {
+		final List<LispStruct> javaList = new ArrayList<>();
+		javaList.add(car);
+		if (cdr instanceof ListStruct) {
+			final ListStruct cdrAsList = (ListStruct) cdr;
+			javaList.addAll(cdrAsList.getAsJavaList());
+		} else {
+			javaList.add(cdr);
+		}
+		return javaList;
+	}
+
+	@Override
+	public Long length() {
+		long length = 1L;
+		LispStruct obj = cdr;
+		while (!NILStruct.INSTANCE.equals(obj)) {
+			++length;
+			if (obj instanceof ConsStruct) {
+				obj = ((ConsStruct) obj).cdr;
+			} else {
+				throw new TypeErrorException("Not a proper list.");
+			}
+		}
+		return length;
+	}
+
+	@Override
+	public LispStruct elt(final long index) {
+		if (index < 0) {
+			throw new TypeErrorException("N value must be non-negative.");
+		}
+
+		long currentIndex = 0L;
+		ConsStruct cons = this;
+		while (true) {
+			if (currentIndex == index) {
+				return cons.car;
+			}
+
+			final LispStruct consCdr = cons.cdr;
+			if (consCdr instanceof ConsStruct) {
+				cons = (ConsStruct) consCdr;
+				currentIndex++;
+			} else if (NILStruct.INSTANCE.equals(consCdr)) {
+				throw new TypeErrorException("Index is too large.");
+			} else {
+				throw new TypeErrorException("Not a proper list.");
+			}
+		}
+	}
+
+	@Override
+	public void setElt(final long index, final LispStruct newValue) {
+		if (index < 0) {
+			throw new TypeErrorException("N value must be non-negative.");
+		}
+
+		long currentIndex = 0L;
+		ConsStruct cons = this;
+		while (true) {
+			if (currentIndex == index) {
+				cons.car = newValue;
+				return;
+			}
+
+			final LispStruct consCdr = cons.cdr;
+			if (consCdr instanceof ConsStruct) {
+				cons = (ConsStruct) consCdr;
+				currentIndex++;
+			} else if (NILStruct.INSTANCE.equals(consCdr)) {
+				throw new TypeErrorException("Index is too large.");
+			} else {
+				throw new TypeErrorException("Not a proper list.");
+			}
+		}
+	}
+
 	@Override
 	public ListStruct reverse() {
 		LispStruct current = this;
@@ -604,17 +635,6 @@ public class ConsStruct extends BuiltInClassStruct implements ListStruct {
 			throw new TypeErrorException("Not a proper list.");
 		}
 		return result;
-
-//		ConsStruct cons = this;
-//		ConsStruct result = new ConsStruct(cons.car);
-//		while (cons.cdr instanceof ConsStruct) {
-//			cons = (ConsStruct) cons.cdr;
-//			result = new ConsStruct(cons.car, result);
-//		}
-//		if (!NILStruct.INSTANCE.equals(cons.cdr)) {
-//			throw new TypeErrorException("Not a proper list.");
-//		}
-//		return result;
 	}
 
 	@Override
@@ -637,37 +657,11 @@ public class ConsStruct extends BuiltInClassStruct implements ListStruct {
 		}
 
 		return cons;
-
-
-//		if (cdr instanceof ConsStruct) {
-//			ConsStruct cons = (ConsStruct) cdr;
-//			if (cons.cdr instanceof ConsStruct) {
-//				final ConsStruct originalCons = cons;
-//				LispStruct list = NILStruct.INSTANCE;
-//				do {
-//					final ConsStruct temp = (ConsStruct) cons.cdr;
-//					cons.cdr = list;
-//					list = cons;
-//					cons = temp;
-//				} while (cons.cdr instanceof ConsStruct);
-//
-//				if (!NILStruct.INSTANCE.equals(cons.cdr)) {
-//					throw new TypeErrorException("Not a proper list.");
-//				}
-//				cdr = list;
-//				originalCons.cdr = cons;
-//			} else if (!NILStruct.INSTANCE.equals(cons.cdr)) {
-//				throw new TypeErrorException("Not a proper list.");
-//			}
-//			final LispStruct temp = car;
-//			car = cons.car;
-//			cons.car = temp;
-//		}
-//		if (!NILStruct.INSTANCE.equals(cdr)) {
-//			throw new TypeErrorException("Not a proper list.");
-//		}
-//		return this;
 	}
+
+	/*
+	LISP_STRUCT
+	 */
 
 	@Override
 	public boolean eql(final LispStruct object) {
@@ -701,6 +695,118 @@ public class ConsStruct extends BuiltInClassStruct implements ListStruct {
 			}
 		}
 		return false;
+	}
+
+	/*
+	ITERABLE
+	 */
+
+	@Override
+	public Iterator<LispStruct> iterator() {
+		return new ConsIterator(this);
+	}
+
+	@Override
+	public Spliterator<LispStruct> spliterator() {
+		return Spliterators.spliterator(iterator(), size(),
+		                                Spliterator.ORDERED |
+				                                Spliterator.SIZED |
+				                                Spliterator.NONNULL |
+				                                Spliterator.IMMUTABLE |
+				                                Spliterator.SUBSIZED
+		);
+	}
+
+	@Override
+	public int hashCode() {
+//		if (isCircular()) {
+//		    // TODO: we should figure out how to handle circularities here... or should we???
+//		    return new HashCodeBuilder().appendSuper(super.hashCode())
+//		                                .toHashCode();
+//		} else {
+		return new HashCodeBuilder().appendSuper(super.hashCode())
+		                            .append(car)
+		                            .append(cdr)
+		                            .toHashCode();
+//		}
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		if (obj == null) {
+			return false;
+		}
+		if (obj == this) {
+			return true;
+		}
+		if (obj.getClass() != getClass()) {
+			return false;
+		}
+		final ConsStruct rhs = (ConsStruct) obj;
+
+//		if (isCircular() || rhs.isCircular()) {
+//			// TODO: we should figure out how to handle circularities here... or should we???
+//			return false;
+//		} else {
+		return new EqualsBuilder().appendSuper(super.equals(obj))
+		                          .append(car, rhs.car)
+		                          .append(cdr, rhs.cdr)
+		                          .isEquals();
+//		}
+	}
+
+//	@Override
+//	public String toString() {
+//		if (isCircular()) {
+//			return "ConsStruct{'circular'}";
+//		} else {
+//			return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(car)
+//			                                                                .append(cdr)
+//			                                                                .toString();
+//		}
+//	}
+
+	@Override
+	public String toString() {
+		// TODO: Ignoring *PRINT-PRETTY* and the pretty printer in general right now...
+
+		if (isCircular()) {
+			return "CIRCULAR LIST PRINTING NOT YET SUPPORTED!!!";
+		}
+
+		final StringBuilder stringBuilder = new StringBuilder();
+		stringBuilder.append('(');
+
+		printElements(this, stringBuilder);
+
+		stringBuilder.append(')');
+
+		return stringBuilder.toString();
+	}
+
+	private static String printElements(final ConsStruct object, final StringBuilder stringBuilder) {
+
+		final LispStruct car = object.car;
+		final String printedCar = car.toString();
+
+		stringBuilder.append(printedCar);
+
+		if (object.cdr instanceof ConsStruct) {
+			final ConsStruct cdrAsCons = (ConsStruct) object.cdr;
+			final String innerConsPrinted = printElements(cdrAsCons, new StringBuilder());
+
+			stringBuilder.append(' ');
+			stringBuilder.append(innerConsPrinted);
+		} else if (!object.cdr.equals(NILStruct.INSTANCE)) {
+			stringBuilder.append(" . ");
+
+			final LispStruct cdr = object.cdr;
+			final String printedCdr = cdr.toString();
+
+			stringBuilder.append(printedCdr);
+		}
+
+		return stringBuilder.toString();
 	}
 
 	private static final class ConsIterator implements Iterator<LispStruct> {

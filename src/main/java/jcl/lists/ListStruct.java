@@ -23,6 +23,7 @@ public interface ListStruct extends SequenceStruct, Iterable<LispStruct> {
 	 *
 	 * @return the size of the list
 	 */
+	@Deprecated
 	int size();
 
 	LispStruct getCar();
@@ -129,6 +130,10 @@ public interface ListStruct extends SequenceStruct, Iterable<LispStruct> {
 	boolean tailp(LispStruct object);
 
 	ListStruct ldiff(LispStruct object);
+
+	LispStruct nth(long index);
+
+	void setNth(long index, LispStruct newValue);
 
 	ListStruct nthCdr(long n);
 

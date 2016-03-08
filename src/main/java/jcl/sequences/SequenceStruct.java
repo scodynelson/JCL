@@ -4,11 +4,9 @@
 
 package jcl.sequences;
 
-import java.math.BigInteger;
 import java.util.List;
 
 import jcl.LispStruct;
-import jcl.numbers.IntegerStruct;
 
 /**
  * The {@link SequenceStruct} is the object representation of a Lisp 'sequence' type.
@@ -23,12 +21,16 @@ public interface SequenceStruct extends LispStruct {
 	@Deprecated
 	List<LispStruct> getAsJavaList();
 
-	default IntegerStruct length() {
-		// TODO: Do this right later...
+	default Long length() {
+		throw new UnsupportedOperationException("Not supported yet.");
+	}
 
-		final List<LispStruct> asJavaList = getAsJavaList();
-		final int size = asJavaList.size();
-		return new IntegerStruct(BigInteger.valueOf(size));
+	default LispStruct elt(final long index) {
+		throw new UnsupportedOperationException("Not supported yet.");
+	}
+
+	default void setElt(final long index, final LispStruct newValue) {
+		throw new UnsupportedOperationException("Not supported yet.");
 	}
 
 	default SequenceStruct reverse() {

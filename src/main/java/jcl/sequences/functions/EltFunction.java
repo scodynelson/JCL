@@ -1,8 +1,4 @@
-/*
- * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
- */
-
-package jcl.lists.functions;
+package jcl.sequences.functions;
 
 import java.util.Arrays;
 import java.util.List;
@@ -10,30 +6,30 @@ import java.util.List;
 import jcl.LispStruct;
 import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
 import jcl.functions.AbstractCommonLispFunctionStruct;
-import jcl.lists.ListStruct;
 import jcl.numbers.IntegerStruct;
 import jcl.packages.GlobalPackageStruct;
+import jcl.sequences.SequenceStruct;
 import jcl.types.IntegerType;
-import jcl.types.ListType;
+import jcl.types.SequenceType;
 import jcl.types.TypeValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class NthFunction extends AbstractCommonLispFunctionStruct {
+public final class EltFunction extends AbstractCommonLispFunctionStruct {
 
 	@Autowired
 	private TypeValidator typeValidator;
 
-	public NthFunction() {
-		super("Locates the nth element of list, where the car of the list is the ``zeroth'' element.");
+	public EltFunction() {
+		super("Accesses the element of sequence specified by index.");
 	}
 
 	@Override
 	protected List<RequiredParameter> getRequiredBindings() {
 		return Arrays.asList(
-				RequiredParameter.builder(GlobalPackageStruct.COMMON_LISP, "INDEX").build(),
-				RequiredParameter.builder(GlobalPackageStruct.COMMON_LISP, "LIST").build()
+				RequiredParameter.builder(GlobalPackageStruct.COMMON_LISP, "SEQUENCE").build(),
+				RequiredParameter.builder(GlobalPackageStruct.COMMON_LISP, "INDEX").build()
 		);
 	}
 
@@ -41,17 +37,17 @@ public final class NthFunction extends AbstractCommonLispFunctionStruct {
 	public LispStruct apply(final LispStruct... lispStructs) {
 		super.apply(lispStructs);
 
+		final SequenceStruct sequence
+				= typeValidator.validateType(lispStructs[0], functionName(), "Sequence", SequenceType.INSTANCE, SequenceStruct.class);
 		final IntegerStruct index
-				= typeValidator.validateType(lispStructs[0], functionName(), "Index", IntegerType.INSTANCE, IntegerStruct.class);
-		final ListStruct list
-				= typeValidator.validateType(lispStructs[1], functionName(), "List", ListType.INSTANCE, ListStruct.class);
+				= typeValidator.validateType(lispStructs[1], functionName(), "Index", IntegerType.INSTANCE, IntegerStruct.class);
 
 		final long indexValue = index.getBigInteger().longValue();
-		return list.nth(indexValue);
+		return sequence.elt(indexValue);
 	}
 
 	@Override
 	protected String functionName() {
-		return "NTH";
+		return "ELT";
 	}
 }

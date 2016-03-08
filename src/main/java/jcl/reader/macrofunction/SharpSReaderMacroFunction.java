@@ -71,7 +71,7 @@ public class SharpSReaderMacroFunction extends ReaderMacroFunction {
 			throw new ReaderErrorException("Non-list following #S");
 		}
 
-		if (listToken.size() == 0) {
+		if (listToken.length() == 0) {
 			throw new ReaderErrorException("Structure type was not supplied");
 		}
 

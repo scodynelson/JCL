@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
+import jcl.LispStruct;
 import jcl.characters.CharacterStruct;
 import jcl.conditions.exceptions.SimpleErrorException;
 import jcl.packages.PackageStruct;
@@ -154,6 +155,15 @@ public class StringStruct extends VectorStruct<CharacterStruct> {
 			final String packageName = getAsJavaString();
 			return PackageStruct.findPackage(packageName);
 		};
+	}
+
+	@Override
+	public Long length() {
+		// TODO: Do this right later...
+
+		final List<LispStruct> asJavaList = getAsJavaList();
+		final int size = asJavaList.size();
+		return (long) size;
 	}
 
 	@Override

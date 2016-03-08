@@ -50,8 +50,8 @@ public final class PairlisFunction extends AbstractCommonLispFunctionStruct {
 		final ListStruct keys = validator.validateType(lispStructs[0], functionName(), "Keys", ListType.INSTANCE, ListStruct.class);
 		final ListStruct datums = validator.validateType(lispStructs[1], functionName(), "Datums", ListType.INSTANCE, ListStruct.class);
 
-		final int keysLength = keys.size();
-		final int datumsLength = datums.size();
+		final long keysLength = keys.length();
+		final long datumsLength = datums.length();
 		if (keysLength != datumsLength) {
 			throw new SimpleErrorException("The lists of keys and datums are not the same length.");
 		}

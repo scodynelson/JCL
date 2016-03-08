@@ -592,6 +592,84 @@ public class ConsStruct extends BuiltInClassStruct implements ListStruct {
 	}
 
 	@Override
+	public ListStruct reverse() {
+		LispStruct current = this;
+		ListStruct result = NILStruct.INSTANCE;
+		while (current instanceof ConsStruct) {
+			final ConsStruct currentCons = (ConsStruct) current;
+			result = new ConsStruct(currentCons.car, result);
+			current = currentCons.cdr;
+		}
+		if (!NILStruct.INSTANCE.equals(current)) {
+			throw new TypeErrorException("Not a proper list.");
+		}
+		return result;
+
+//		ConsStruct cons = this;
+//		ConsStruct result = new ConsStruct(cons.car);
+//		while (cons.cdr instanceof ConsStruct) {
+//			cons = (ConsStruct) cons.cdr;
+//			result = new ConsStruct(cons.car, result);
+//		}
+//		if (!NILStruct.INSTANCE.equals(cons.cdr)) {
+//			throw new TypeErrorException("Not a proper list.");
+//		}
+//		return result;
+	}
+
+	@Override
+	public ListStruct nReverse() {
+		ConsStruct cons = this;
+
+		ListStruct prevCons = NILStruct.INSTANCE;
+		LispStruct nextCons = cdr;
+		while (nextCons instanceof ConsStruct) {
+			final ConsStruct nextConsAsCons = (ConsStruct) nextCons;
+			cons.cdr = prevCons;
+			prevCons = cons;
+			cons = nextConsAsCons;
+			nextCons = nextConsAsCons.cdr;
+		}
+		cons.cdr = prevCons;
+
+		if (!NILStruct.INSTANCE.equals(nextCons)) {
+			throw new TypeErrorException("Not a proper list.");
+		}
+
+		return cons;
+
+
+//		if (cdr instanceof ConsStruct) {
+//			ConsStruct cons = (ConsStruct) cdr;
+//			if (cons.cdr instanceof ConsStruct) {
+//				final ConsStruct originalCons = cons;
+//				LispStruct list = NILStruct.INSTANCE;
+//				do {
+//					final ConsStruct temp = (ConsStruct) cons.cdr;
+//					cons.cdr = list;
+//					list = cons;
+//					cons = temp;
+//				} while (cons.cdr instanceof ConsStruct);
+//
+//				if (!NILStruct.INSTANCE.equals(cons.cdr)) {
+//					throw new TypeErrorException("Not a proper list.");
+//				}
+//				cdr = list;
+//				originalCons.cdr = cons;
+//			} else if (!NILStruct.INSTANCE.equals(cons.cdr)) {
+//				throw new TypeErrorException("Not a proper list.");
+//			}
+//			final LispStruct temp = car;
+//			car = cons.car;
+//			cons.car = temp;
+//		}
+//		if (!NILStruct.INSTANCE.equals(cdr)) {
+//			throw new TypeErrorException("Not a proper list.");
+//		}
+//		return this;
+	}
+
+	@Override
 	public boolean eql(final LispStruct object) {
 		// TODO: Fix this when we fix 'eql' for everything
 		return eq(object);

@@ -70,7 +70,7 @@ public final class NconcFunction extends AbstractCommonLispFunctionStruct {
 			lists.add(list);
 		}
 
-		return ListStruct.nconc(lists, object);
+		return ListStruct.nConc(lists, object);
 	}
 
 	@Override

@@ -30,4 +30,12 @@ public interface SequenceStruct extends LispStruct {
 		final int size = asJavaList.size();
 		return new IntegerStruct(BigInteger.valueOf(size));
 	}
+
+	default SequenceStruct reverse() {
+		throw new UnsupportedOperationException("Not supported yet.");
+	}
+
+	default SequenceStruct nReverse() {
+		throw new UnsupportedOperationException("Not supported yet.");
+	}
 }

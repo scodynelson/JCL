@@ -193,4 +193,14 @@ public final class NILStruct extends BooleanStruct implements ListStruct {
 	public ListStruct nButLast(final long n) {
 		return INSTANCE;
 	}
+
+	@Override
+	public ListStruct reverse() {
+		return INSTANCE;
+	}
+
+	@Override
+	public ListStruct nReverse() {
+		return INSTANCE;
+	}
 }

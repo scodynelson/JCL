@@ -1,6 +1,7 @@
 package jcl.lists;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Stream;
@@ -205,15 +206,15 @@ public interface ListStruct extends SequenceStruct, Iterable<LispStruct> {
 		return result;
 	}
 
-	static LispStruct nconc() {
+	static LispStruct nConc() {
 		return NILStruct.INSTANCE;
 	}
 
-	static LispStruct nconc(final LispStruct object) {
+	static LispStruct nConc(final LispStruct object) {
 		return object;
 	}
 
-	static LispStruct nconc(final List<ListStruct> lists, final LispStruct object) {
+	static LispStruct nConc(final List<ListStruct> lists, final LispStruct object) {
 		final Iterator<ListStruct> iterator = lists.iterator();
 
 		ListStruct result = NILStruct.INSTANCE;
@@ -252,6 +253,16 @@ public interface ListStruct extends SequenceStruct, Iterable<LispStruct> {
 		return result;
 	}
 
+	default LispStruct revAppend(final LispStruct tail) {
+		final ListStruct reverse = reverse();
+		return nConc(Collections.singletonList(reverse), tail);
+	}
+
+	default LispStruct nReconc(final LispStruct tail) {
+		final ListStruct nReverse = nReverse();
+		return nConc(Collections.singletonList(nReverse), tail);
+	}
+
 	static ListStruct makeList(final Long size, final LispStruct initialElement) {
 		ListStruct result = NILStruct.INSTANCE;
 		for (long l = 0; l < size; l++) {
@@ -259,6 +270,12 @@ public interface ListStruct extends SequenceStruct, Iterable<LispStruct> {
 		}
 		return result;
 	}
+
+	@Override
+	ListStruct reverse();
+
+	@Override
+	ListStruct nReverse();
 
 	// BUILDERS
 

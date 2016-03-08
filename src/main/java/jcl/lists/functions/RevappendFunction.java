@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
 public final class RevappendFunction extends AbstractCommonLispFunctionStruct {
 
 	@Autowired
-	private TypeValidator typeValidator;
+	private TypeValidator validator;
 
 	public RevappendFunction() {
 		super("Constructs a copy of list, but with the elements in reverse order. It then appends (as if by nconc) the tail to that reversed list and returns the result.");
@@ -36,7 +36,7 @@ public final class RevappendFunction extends AbstractCommonLispFunctionStruct {
 		super.apply(lispStructs);
 
 		final ListStruct list
-				= typeValidator.validateType(lispStructs[0], functionName(), "List", ListType.INSTANCE, ListStruct.class);
+				= validator.validateType(lispStructs[0], functionName(), "List", ListType.INSTANCE, ListStruct.class);
 		final LispStruct tail = lispStructs[1];
 
 		return list.revAppend(tail);

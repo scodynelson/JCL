@@ -19,7 +19,7 @@ import org.springframework.stereotype.Component;
 public final class EltFunction extends AbstractCommonLispFunctionStruct {
 
 	@Autowired
-	private TypeValidator typeValidator;
+	private TypeValidator validator;
 
 	public EltFunction() {
 		super("Accesses the element of sequence specified by index.");
@@ -38,9 +38,9 @@ public final class EltFunction extends AbstractCommonLispFunctionStruct {
 		super.apply(lispStructs);
 
 		final SequenceStruct sequence
-				= typeValidator.validateType(lispStructs[0], functionName(), "Sequence", SequenceType.INSTANCE, SequenceStruct.class);
+				= validator.validateType(lispStructs[0], functionName(), "Sequence", SequenceType.INSTANCE, SequenceStruct.class);
 		final IntegerStruct index
-				= typeValidator.validateType(lispStructs[1], functionName(), "Index", IntegerType.INSTANCE, IntegerStruct.class);
+				= validator.validateType(lispStructs[1], functionName(), "Index", IntegerType.INSTANCE, IntegerStruct.class);
 
 		final long indexValue = index.getBigInteger().longValue();
 		return sequence.elt(indexValue);

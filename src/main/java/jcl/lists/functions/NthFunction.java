@@ -23,7 +23,7 @@ import org.springframework.stereotype.Component;
 public final class NthFunction extends AbstractCommonLispFunctionStruct {
 
 	@Autowired
-	private TypeValidator typeValidator;
+	private TypeValidator validator;
 
 	public NthFunction() {
 		super("Locates the nth element of list, where the car of the list is the ``zeroth'' element.");
@@ -42,9 +42,9 @@ public final class NthFunction extends AbstractCommonLispFunctionStruct {
 		super.apply(lispStructs);
 
 		final IntegerStruct index
-				= typeValidator.validateType(lispStructs[0], functionName(), "Index", IntegerType.INSTANCE, IntegerStruct.class);
+				= validator.validateType(lispStructs[0], functionName(), "Index", IntegerType.INSTANCE, IntegerStruct.class);
 		final ListStruct list
-				= typeValidator.validateType(lispStructs[1], functionName(), "List", ListType.INSTANCE, ListStruct.class);
+				= validator.validateType(lispStructs[1], functionName(), "List", ListType.INSTANCE, ListStruct.class);
 
 		final long indexValue = index.getBigInteger().longValue();
 		return list.nth(indexValue);

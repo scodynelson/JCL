@@ -13,12 +13,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class NReverseFunction extends AbstractCommonLispFunctionStruct {
+public final class NreverseFunction extends AbstractCommonLispFunctionStruct {
 
 	@Autowired
 	private TypeValidator validator;
 
-	public NReverseFunction() {
+	public NreverseFunction() {
 		super("Returns a new sequence of the same kind as sequence, containing the same elements, but in reverse order; the original sequence may be modified.");
 	}
 

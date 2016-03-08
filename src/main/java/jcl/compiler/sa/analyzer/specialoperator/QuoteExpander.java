@@ -28,7 +28,7 @@ public class QuoteExpander extends MacroFunctionExpander<QuoteStruct> {
 
 		final ListStruct formRest = form.getRest();
 
-		final LispStruct quotedObject = formRest.getFirst();
+		final LispStruct quotedObject = formRest.getCar();
 		return new QuoteStruct(quotedObject);
 	}
 }

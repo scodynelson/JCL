@@ -32,13 +32,13 @@ public class TheExpander extends MacroFunctionExpander<TheStruct> {
 
 		final ListStruct formRest = form.getRest();
 
-		final LispStruct valueType = formRest.getFirst();
+		final LispStruct valueType = formRest.getCar();
 		validator.validateObjectTypes(valueType, "THE", "TYPE SPECIFIER", SymbolStruct.class, ListStruct.class);
 		// TODO: do we actually want to somehow factor in the 'TypeSpecifier' produced by the second value?
 
 		final ListStruct formRestRest = formRest.getRest();
 
-		final LispStruct theForm = formRestRest.getFirst();
+		final LispStruct theForm = formRestRest.getCar();
 		final LispStruct theFormAnalyzed = formAnalyzer.analyze(theForm, environment);
 
 		return new TheStruct(null, theFormAnalyzed);

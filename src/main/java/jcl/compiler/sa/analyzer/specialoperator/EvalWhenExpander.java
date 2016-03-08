@@ -58,7 +58,7 @@ public class EvalWhenExpander extends MacroFunctionExpander<LispStruct> {
 
 		final ListStruct formRest = form.getRest();
 
-		final LispStruct second = formRest.getFirst();
+		final LispStruct second = formRest.getCar();
 		final ListStruct situationList = validator.validateObjectType(second, "EVAL-WHEN", "SITUATION LIST", ListStruct.class);
 		final List<? extends LispStruct> situationJavaList = situationList.getAsJavaList();
 

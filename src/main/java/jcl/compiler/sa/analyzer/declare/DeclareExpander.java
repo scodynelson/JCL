@@ -43,7 +43,7 @@ public class DeclareExpander extends MacroFunctionExpander<DeclareStruct> {
 
 		for (final LispStruct declSpec : declSpecs) {
 			final ListStruct declSpecList = validator.validateObjectType(declSpec, "DECLARE", "DECLARATION SPECIFIER", ListStruct.class);
-			final LispStruct declIdentifier = declSpecList.getFirst();
+			final LispStruct declIdentifier = declSpecList.getCar();
 			final ListStruct declSpecBody = declSpecList.getRest();
 
 			final List<LispStruct> declSpecBodyAsJavaList = declSpecBody.getAsJavaList();

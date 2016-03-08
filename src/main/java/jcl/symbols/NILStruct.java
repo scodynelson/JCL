@@ -59,33 +59,8 @@ public final class NILStruct extends BooleanStruct implements ListStruct {
 	}
 
 	@Override
-	public LispStruct getFirst() {
-		return INSTANCE;
-	}
-
-	@Override
 	public ListStruct getRest() {
 		return INSTANCE;
-	}
-
-	@Override
-	public ListStruct getLast() {
-		return INSTANCE;
-	}
-
-	@Override
-	public ListStruct getAllButLast() {
-		return INSTANCE;
-	}
-
-	@Override
-	public LispStruct getElement(final int index) {
-		return INSTANCE;
-	}
-
-	@Override
-	public void setElement(final int index, final LispStruct newValue) {
-		throw new SimpleErrorException("Cannot set element within NIL.");
 	}
 
 	@Override

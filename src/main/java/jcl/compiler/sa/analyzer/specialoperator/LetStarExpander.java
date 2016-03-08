@@ -45,7 +45,7 @@ public class LetStarExpander extends ClosureCreationExpander<LetStarStruct.LetSt
 	@Override
 	protected LispStruct getListParameterInitForm(final ListStruct listParameter, final Environment environment) {
 		final ListStruct listParameterRest = listParameter.getRest();
-		final LispStruct parameterValue = listParameterRest.getFirst();
+		final LispStruct parameterValue = listParameterRest.getCar();
 
 		// Evaluate in the 'current' environment.
 		return formAnalyzer.analyze(parameterValue, environment);

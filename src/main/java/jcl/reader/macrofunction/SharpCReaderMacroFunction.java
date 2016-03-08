@@ -75,13 +75,13 @@ public class SharpCReaderMacroFunction extends ReaderMacroFunction {
 			throw new ReaderErrorException("Illegal complex number format: #C" + printedToken);
 		}
 
-		final LispStruct realToken = listToken.getFirst();
+		final LispStruct realToken = listToken.getCar();
 		if (!(realToken instanceof RealStruct)) {
 			final String printedRealToken = printer.print(realToken);
 			throw new ReaderErrorException("Only real numbers are valid tokens for #c. Got: " + printedRealToken);
 		}
 
-		final LispStruct imaginaryToken = listToken.getRest().getFirst();
+		final LispStruct imaginaryToken = listToken.getRest().getCar();
 		if (!(imaginaryToken instanceof RealStruct)) {
 			final String printedImaginaryToken = printer.print(imaginaryToken);
 			throw new ReaderErrorException("Only real numbers are valid tokens for #c. Got: " + printedImaginaryToken);

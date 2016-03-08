@@ -58,7 +58,7 @@ public class SymbolMacroletExpander extends MacroFunctionExpander<SymbolMacrolet
 
 		final ListStruct formRest = form.getRest();
 
-		final LispStruct second = formRest.getFirst();
+		final LispStruct second = formRest.getCar();
 		if (!(second instanceof ListStruct)) {
 			final String printedObject = printer.print(second);
 			throw new ProgramErrorException("SYMBOL-MACROLET: Parameter list must be of type ListStruct. Got: " + printedObject);
@@ -126,7 +126,7 @@ public class SymbolMacroletExpander extends MacroFunctionExpander<SymbolMacrolet
 			throw new ProgramErrorException("SYMBOL-MACROLET: Parameter list must have only 2 elements. Got: " + listParameter);
 		}
 
-		final LispStruct listParameterFirst = listParameter.getFirst();
+		final LispStruct listParameterFirst = listParameter.getCar();
 		if (!(listParameterFirst instanceof SymbolStruct)) {
 			final String printedObject = printer.print(listParameterFirst);
 			throw new ProgramErrorException("SYMBOL-MACROLET: First element of parameter list must be a symbol. Got: " + printedObject);
@@ -146,7 +146,7 @@ public class SymbolMacroletExpander extends MacroFunctionExpander<SymbolMacrolet
 	private LispStruct getSymbolMacroletParameterExpansion(final ListStruct listParameter, final Environment symbolMacroletEnvironment) {
 
 		final ListStruct listParameterRest = listParameter.getRest();
-		final LispStruct parameterValue = listParameterRest.getFirst();
+		final LispStruct parameterValue = listParameterRest.getCar();
 
 		// Evaluate in the outer environment. This is because we want to ensure we don't have references to symbols that may not exist.
 		final Environment parentEnvironment = symbolMacroletEnvironment.getParent();

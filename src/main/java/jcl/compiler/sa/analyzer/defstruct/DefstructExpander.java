@@ -37,12 +37,12 @@ public class DefstructExpander extends MacroFunctionExpander<LispStruct> {
 
 		final ListStruct formRest = form.getRest();
 
-		final LispStruct second = formRest.getFirst();
+		final LispStruct second = formRest.getCar();
 		final SymbolStruct structureSymbol = validator.validateObjectType(second, "%DEFSTRUCT", "STRUCTURE NAME", SymbolStruct.class);
 
 		final ListStruct formRestRest = formRest.getRest();
 
-		final LispStruct third = formRestRest.getFirst();
+		final LispStruct third = formRestRest.getCar();
 		final SymbolStruct includeStructureSymbol = validator.validateSymbolOrNIL(third, "%DEFSTRUCT", "INCLUDE STRUCTURE NAME");
 
 		StructureClassStruct includeStructureClass = null;
@@ -56,12 +56,12 @@ public class DefstructExpander extends MacroFunctionExpander<LispStruct> {
 
 		final ListStruct formRestRestRest = formRestRest.getRest();
 
-		final LispStruct fourth = formRestRestRest.getFirst();
+		final LispStruct fourth = formRestRestRest.getCar();
 		final SymbolStruct defaultConstructorSymbol = validator.validateSymbolOrNIL(fourth, "%DEFSTRUCT", "DEFAULT CONSTRUCTOR NAME");
 
 		final ListStruct formRestRestRestRest = formRestRestRest.getRest();
 
-		final LispStruct fifth = formRestRestRestRest.getFirst();
+		final LispStruct fifth = formRestRestRestRest.getCar();
 		final SymbolStruct printerSymbol = validator.validateSymbolOrNIL(fifth, "%DEFSTRUCT", "PRINTER NAME");
 
 		final ListStruct formRestRestRestRestRest = formRestRestRestRest.getRest();

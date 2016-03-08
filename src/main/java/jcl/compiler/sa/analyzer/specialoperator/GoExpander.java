@@ -38,7 +38,7 @@ public class GoExpander extends MacroFunctionExpander<GoStruct<?>> {
 
 		final ListStruct formRest = form.getRest();
 
-		final LispStruct second = formRest.getFirst();
+		final LispStruct second = formRest.getCar();
 		if (!isTagbodyTag(second)) {
 			final String printedObject = printer.print(second);
 			throw new ProgramErrorException("GO: Tag must be a symbol or an integer. Got: " + printedObject);

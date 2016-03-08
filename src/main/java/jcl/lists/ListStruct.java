@@ -35,60 +35,12 @@ public interface ListStruct extends SequenceStruct, Iterable<LispStruct> {
 	void setCdr(LispStruct cdr);
 
 	/**
-	 * Returns the first element in the list.
-	 *
-	 * @return the first element in the list
-	 */
-	@Deprecated
-	LispStruct getFirst();
-
-	/**
 	 * Returns all but the first element in the list.
 	 *
 	 * @return all but the first element in the list
 	 */
 	@Deprecated
 	ListStruct getRest();
-
-	/**
-	 * Returns the last element in the list.
-	 *
-	 * @return the last element in the list
-	 */
-	@Deprecated
-	ListStruct getLast();
-
-	/**
-	 * Returns all but the last element in the list.
-	 *
-	 * @return all but the last element in the list
-	 */
-	@Deprecated
-	ListStruct getAllButLast();
-
-	/**
-	 * Returns the element at the provided {@code index} location in the list.
-	 *
-	 * @param index
-	 * 		the location of the element to retrieve
-	 *
-	 * @return the element at the provided {@code index} location in the list.
-	 */
-	@Deprecated
-	LispStruct getElement(int index);
-
-	/**
-	 * Sets the value of the element at the provided {@code index} location in the list to the provided {@code
-	 * newValue}
-	 * object.
-	 *
-	 * @param index
-	 * 		the location of the element to set
-	 * @param newValue
-	 * 		the new value to set
-	 */
-	@Deprecated
-	void setElement(int index, LispStruct newValue);
 
 	/**
 	 * Determines if the list is a dotted list.

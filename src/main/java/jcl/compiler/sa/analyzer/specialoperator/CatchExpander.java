@@ -36,7 +36,7 @@ public class CatchExpander extends MacroFunctionExpander<CatchStruct> {
 
 		final ListStruct formRest = form.getRest();
 
-		final LispStruct catchTag = formRest.getFirst();
+		final LispStruct catchTag = formRest.getCar();
 		final LispStruct catchTagAnalyzed = formAnalyzer.analyze(catchTag, environment);
 
 		final ListStruct formRestRest = formRest.getRest();

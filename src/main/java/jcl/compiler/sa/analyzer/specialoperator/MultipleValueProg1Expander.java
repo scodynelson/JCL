@@ -36,7 +36,7 @@ public class MultipleValueProg1Expander extends MacroFunctionExpander<MultipleVa
 
 		final ListStruct formRest = form.getRest();
 
-		final LispStruct firstForm = formRest.getFirst();
+		final LispStruct firstForm = formRest.getCar();
 		final LispStruct firstFormAnalyzed = formAnalyzer.analyze(firstForm, environment);
 
 		final ListStruct formRestRest = formRest.getRest();

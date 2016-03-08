@@ -75,7 +75,7 @@ public class SharpSReaderMacroFunction extends ReaderMacroFunction {
 			throw new ReaderErrorException("Structure type was not supplied");
 		}
 
-		final LispStruct structureType = listToken.getFirst();
+		final LispStruct structureType = listToken.getCar();
 		if (!(structureType instanceof SymbolStruct)) {
 			throw new ReaderErrorException("Structure type is not a symbol: " + structureType);
 		}

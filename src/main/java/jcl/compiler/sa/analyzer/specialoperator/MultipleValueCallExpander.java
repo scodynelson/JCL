@@ -45,7 +45,7 @@ public class MultipleValueCallExpander extends MacroFunctionExpander<MultipleVal
 
 		final ListStruct formRest = form.getRest();
 
-		final LispStruct functionForm = formRest.getFirst();
+		final LispStruct functionForm = formRest.getCar();
 		final LispStruct functionFormAnalyzed = formAnalyzer.analyze(functionForm, environment);
 
 		final CompilerFunctionStruct functionFormAsCompilerFunction;

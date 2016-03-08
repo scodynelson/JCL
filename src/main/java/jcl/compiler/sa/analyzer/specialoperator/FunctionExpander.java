@@ -40,7 +40,7 @@ public class FunctionExpander extends MacroFunctionExpander<CompilerFunctionStru
 
 		final ListStruct formRest = form.getRest();
 
-		final LispStruct second = formRest.getFirst();
+		final LispStruct second = formRest.getCar();
 		validator.validateObjectTypes(second, "FUNCTION", "FUNCTION ARGUMENT", SymbolStruct.class, ListStruct.class);
 
 		if (second instanceof SymbolStruct) {
@@ -52,7 +52,7 @@ public class FunctionExpander extends MacroFunctionExpander<CompilerFunctionStru
 
 	private CompilerFunctionStruct analyzeFunctionList(final ListStruct functionList, final Environment environment) {
 
-		final LispStruct functionListFirst = functionList.getFirst();
+		final LispStruct functionListFirst = functionList.getCar();
 
 		if (!SpecialOperatorStruct.LAMBDA.equals(functionListFirst)) {
 			final String printedObject = printer.print(functionListFirst);

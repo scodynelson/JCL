@@ -52,7 +52,7 @@ public abstract class ClosureCreationExpander<V> extends MacroFunctionExpander<C
 
 		final ListStruct formRest = form.getRest();
 
-		final LispStruct second = formRest.getFirst();
+		final LispStruct second = formRest.getCar();
 		final ListStruct parameters = validator.validateObjectType(second, expanderName, "PARAMETER LIST", ListStruct.class);
 		final List<LispStruct> parametersAsJavaList = parameters.getAsJavaList();
 
@@ -120,7 +120,7 @@ public abstract class ClosureCreationExpander<V> extends MacroFunctionExpander<C
 	private SymbolStruct getListParameterVar(final ListStruct listParameter) {
 		validator.validateListParameterSize(listParameter, 1, 2, expanderName);
 
-		final LispStruct listParameterFirst = listParameter.getFirst();
+		final LispStruct listParameterFirst = listParameter.getCar();
 		return validator.validateObjectType(listParameterFirst, expanderName, "First element of list parameter", SymbolStruct.class);
 	}
 

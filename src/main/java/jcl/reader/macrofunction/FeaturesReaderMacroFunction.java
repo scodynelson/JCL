@@ -123,7 +123,7 @@ final class FeaturesReaderMacroFunction {
 	 * @return true if the provided {@link ConsStruct} is a feature that should be read in; false otherwise
 	 */
 	private boolean isConsFeature(final ConsStruct consToken) {
-		final LispStruct first = consToken.getFirst();
+		final LispStruct first = consToken.getCar();
 
 		if (!(first instanceof SymbolStruct)) {
 			throw new ReaderErrorException("First element of feature expression must be either: :NOT, :AND, or :OR.");
@@ -133,7 +133,7 @@ final class FeaturesReaderMacroFunction {
 
 		final SymbolStruct featureOperator = (SymbolStruct) first;
 		if (featureOperator.equals(CommonLispSymbols.NOT_KEYWORD)) {
-			final LispStruct firstOfRest = rest.getFirst();
+			final LispStruct firstOfRest = rest.getCar();
 			return !isFeature(firstOfRest);
 		} else if (featureOperator.equals(CommonLispSymbols.AND_KEYWORD)) {
 			return isAndConsFeature(rest);

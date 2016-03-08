@@ -32,12 +32,12 @@ public class ThrowExpander extends MacroFunctionExpander<ThrowStruct> {
 
 		final ListStruct formRest = form.getRest();
 
-		final LispStruct catchTag = formRest.getFirst();
+		final LispStruct catchTag = formRest.getCar();
 		final LispStruct catchTagAnalyzed = formAnalyzer.analyze(catchTag, environment);
 
 		final ListStruct formRestRest = formRest.getRest();
 
-		final LispStruct resultForm = formRestRest.getFirst();
+		final LispStruct resultForm = formRestRest.getCar();
 		final LispStruct resultFormAnalyzed = formAnalyzer.analyze(resultForm, environment);
 
 		return new ThrowStruct(catchTagAnalyzed, resultFormAnalyzed);

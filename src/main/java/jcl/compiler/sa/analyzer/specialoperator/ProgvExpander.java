@@ -38,14 +38,14 @@ public class ProgvExpander extends MacroFunctionExpander<ProgvStruct> {
 
 		final ListStruct formRest = form.getRest();
 
-		final LispStruct second = formRest.getFirst();
+		final LispStruct second = formRest.getCar();
 		final ListStruct quotedVars = ListStruct.buildProperList(SpecialOperatorStruct.QUOTE, second);
 		final ListStruct evalVars = ListStruct.buildProperList(EvalFunction.EVAL, quotedVars);
 		final LispStruct analyzedEvalVars = formAnalyzer.analyze(evalVars, environment);
 
 		final ListStruct formRestRest = formRest.getRest();
 
-		final LispStruct third = formRestRest.getFirst();
+		final LispStruct third = formRestRest.getCar();
 		final ListStruct quotedVals = ListStruct.buildProperList(SpecialOperatorStruct.QUOTE, third);
 		final ListStruct evalVals = ListStruct.buildProperList(EvalFunction.EVAL, quotedVals);
 		final LispStruct analyzedEvalVals = formAnalyzer.analyze(evalVals, environment);

@@ -36,7 +36,7 @@ public class UnwindProtectExpander extends MacroFunctionExpander<UnwindProtectSt
 
 		final ListStruct formRest = form.getRest();
 
-		final LispStruct protectedForm = formRest.getFirst();
+		final LispStruct protectedForm = formRest.getCar();
 		final LispStruct analyzedProtectedForm = formAnalyzer.analyze(protectedForm, environment);
 
 		final ListStruct formRestRest = formRest.getRest();

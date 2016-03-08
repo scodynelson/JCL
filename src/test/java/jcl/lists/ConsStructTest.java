@@ -94,101 +94,6 @@ public class ConsStructTest {
 	}
 
 	/**
-	 * Test for 'getElement' method where the index passed is zero.
-	 *
-	 * @throws Exception
-	 * 		if any error occurs
-	 */
-	@Test
-	public void testGetElement_indexZero() throws Exception {
-		final int index = 0;
-
-		final ConsStruct consStruct = new ConsStruct(TStruct.INSTANCE);
-		Assert.assertEquals(consStruct.getElement(index), TStruct.INSTANCE, "'element' value of ConsStruct at index 0 was not equal.");
-	}
-
-	/**
-	 * Test for 'getElement' method where the cdr of the ConsStruct is a ListStruct.
-	 *
-	 * @throws Exception
-	 * 		if any error occurs
-	 */
-	@Test
-	public void testGetElement_cdrListStruct() throws Exception {
-		final int index = 1;
-
-		final ConsStruct consStruct = new ConsStruct(TStruct.INSTANCE); // Null.INSTANCE is default CDR, which is a ListStruct
-		Assert.assertEquals(consStruct.getElement(index), NILStruct.INSTANCE, "'element' value of ConsStruct at index 1 was not equal.");
-	}
-
-	/**
-	 * Test for 'getElement' method where the index passed is not zero and cdr of the ConsStruct is not a ListStruct.
-	 *
-	 * @throws Exception
-	 * 		if any error occurs
-	 */
-	@Test
-	public void testGetElement_indexNotZero_cdrNotListStruct() throws Exception {
-		final int index = 1;
-
-		final ConsStruct consStruct = new ConsStruct(NILStruct.INSTANCE, TStruct.INSTANCE);
-		Assert.assertEquals(consStruct.getElement(index), TStruct.INSTANCE, "'element' value of ConsStruct at index 1 was not equal.");
-	}
-
-	/**
-	 * Test for 'setElement' method where the index passed is zero.
-	 *
-	 * @throws Exception
-	 * 		if any error occurs
-	 */
-	@Test
-	public void testSetElement_indexZero() throws Exception {
-		final int index = 0;
-		final LispStruct value = NILStruct.INSTANCE;
-
-		final ConsStruct consStruct = new ConsStruct(TStruct.INSTANCE);
-		consStruct.setElement(index, value);
-
-		Assert.assertEquals(consStruct.getElement(index), value, "'element' value of ConsStruct at index 0 was not equal.");
-	}
-
-	/**
-	 * Test for 'setElement' method where the cdr of the ConsStruct is a ListStruct.
-	 *
-	 * @throws Exception
-	 * 		if any error occurs
-	 */
-	@Test
-	public void testSetElement_cdrListStruct() throws Exception {
-		final int index = 1;
-		final LispStruct value = NILStruct.INSTANCE;
-
-		final ConsStruct innerConsStruct = new ConsStruct(TStruct.INSTANCE);
-
-		final ConsStruct consStruct = new ConsStruct(TStruct.INSTANCE, innerConsStruct);
-		consStruct.setElement(index, value);
-
-		Assert.assertEquals(consStruct.getElement(index), value, "'element' value of ConsStruct at index 1 was not equal.");
-	}
-
-	/**
-	 * Test for 'setElement' method where the index passed is not zero and cdr of the ConsStruct is not a ListStruct.
-	 *
-	 * @throws Exception
-	 * 		if any error occurs
-	 */
-	@Test
-	public void testSetElement_indexNotZero_cdrNotListStruct() throws Exception {
-		final int index = 1;
-		final LispStruct value = NILStruct.INSTANCE;
-
-		final ConsStruct consStruct = new ConsStruct(NILStruct.INSTANCE, TStruct.INSTANCE);
-		consStruct.setElement(index, value);
-
-		Assert.assertEquals(consStruct.getElement(index), value, "'element' value of ConsStruct at index 1 was not equal.");
-	}
-
-	/**
 	 * Test for 'getFirst' method.
 	 *
 	 * @throws Exception
@@ -197,7 +102,7 @@ public class ConsStructTest {
 	@Test
 	public void testGetFirst() throws Exception {
 		final ConsStruct consStruct = new ConsStruct(TStruct.INSTANCE);
-		Assert.assertEquals(consStruct.getFirst(), TStruct.INSTANCE, "'first' value of ConsStruct was not equal.");
+		Assert.assertEquals(consStruct.getCar(), TStruct.INSTANCE, "'first' value of ConsStruct was not equal.");
 	}
 
 	/**
@@ -224,7 +129,7 @@ public class ConsStructTest {
 
 		final ListStruct rest = consStruct.getRest();
 		Assert.assertTrue(rest instanceof ConsStruct, "'rest' value of ConsStruct was not an expected ConsStruct.");
-		Assert.assertEquals(rest.getFirst(), NILStruct.INSTANCE, "First value of 'rest' value of ConsStruct was not equal.");
+		Assert.assertEquals(rest.getCar(), NILStruct.INSTANCE, "First value of 'rest' value of ConsStruct was not equal.");
 	}
 
 	/**

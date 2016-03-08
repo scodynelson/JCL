@@ -72,6 +72,6 @@ public class BodyWithDeclaresAndDocStringAnalyzer {
 	}
 
 	private boolean isDeclaration(final LispStruct next) {
-		return (next instanceof ListStruct) && ((ListStruct) next).getFirst().equals(SpecialOperatorStruct.DECLARE);
+		return (next instanceof ListStruct) && ((ListStruct) next).getCar().equals(SpecialOperatorStruct.DECLARE);
 	}
 }

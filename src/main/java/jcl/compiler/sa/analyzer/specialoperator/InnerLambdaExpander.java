@@ -66,7 +66,7 @@ public abstract class InnerLambdaExpander extends MacroFunctionExpander<InnerLam
 
 		final ListStruct formRest = form.getRest();
 
-		final LispStruct second = formRest.getFirst();
+		final LispStruct second = formRest.getCar();
 		final ListStruct innerLambdas = validator.validateObjectType(second, expanderName, "FUNCTION LIST", ListStruct.class);
 		final List<LispStruct> innerLambdasAsJavaList = innerLambdas.getAsJavaList();
 
@@ -135,7 +135,7 @@ public abstract class InnerLambdaExpander extends MacroFunctionExpander<InnerLam
 		for (final LispStruct functionDefinition : functionDefinitions) {
 			final ListStruct functionList = validator.validateObjectType(functionDefinition, expanderName, "Function parameter", ListStruct.class);
 
-			final LispStruct functionListFirst = functionList.getFirst();
+			final LispStruct functionListFirst = functionList.getCar();
 			final SymbolStruct functionName = validator.validateObjectType(functionListFirst, expanderName, "First element of function parameter", SymbolStruct.class);
 
 			if (functionNames.contains(functionName)) {
@@ -151,7 +151,7 @@ public abstract class InnerLambdaExpander extends MacroFunctionExpander<InnerLam
 	                                                final Environment environment, final List<SymbolStruct> functionNames) {
 
 		final ListStruct functionList = (ListStruct) functionDefinition;
-		final SymbolStruct functionName = (SymbolStruct) functionList.getFirst();
+		final SymbolStruct functionName = (SymbolStruct) functionList.getCar();
 		final CompilerFunctionStruct functionInitForm = getFunctionParameterInitForm(functionList, environment, functionNames);
 
 		final boolean isSpecial = declare.getSpecialDeclarations()
@@ -172,8 +172,8 @@ public abstract class InnerLambdaExpander extends MacroFunctionExpander<InnerLam
 
 		final ListStruct functionListParameterRest = functionListParameter.getRest();
 
-		final LispStruct functionName = functionListParameter.getFirst();
-		final LispStruct lambdaList = functionListParameterRest.getFirst();
+		final LispStruct functionName = functionListParameter.getCar();
+		final LispStruct lambdaList = functionListParameterRest.getCar();
 		final ListStruct body = functionListParameterRest.getRest();
 
 		final List<LispStruct> forms = body.getAsJavaList();

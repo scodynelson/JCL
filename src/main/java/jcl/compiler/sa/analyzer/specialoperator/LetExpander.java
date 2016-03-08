@@ -45,7 +45,7 @@ public class LetExpander extends ClosureCreationExpander<LetStruct.LetVar> {
 	@Override
 	protected LispStruct getListParameterInitForm(final ListStruct listParameter, final Environment environment) {
 		final ListStruct listParameterRest = listParameter.getRest();
-		final LispStruct parameterValue = listParameterRest.getFirst();
+		final LispStruct parameterValue = listParameterRest.getCar();
 
 		// Evaluate in the outer environment. This is because we want to ensure we don't have references to symbols that may not exist.
 		final Environment parentEnvironment = environment.getParent();

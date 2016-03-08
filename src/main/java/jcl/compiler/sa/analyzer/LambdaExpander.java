@@ -53,7 +53,7 @@ public class LambdaExpander extends MacroFunctionExpander<LambdaStruct> {
 
 		final ListStruct formRest = form.getRest();
 
-		final LispStruct second = formRest.getFirst();
+		final LispStruct second = formRest.getCar();
 		final ListStruct parameters = validator.validateObjectType(second, "LAMBDA", "PARAMETER LIST", ListStruct.class);
 
 		final Environment lambdaEnvironment = new Environment(environment);

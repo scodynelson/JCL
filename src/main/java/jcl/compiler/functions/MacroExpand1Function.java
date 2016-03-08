@@ -94,7 +94,7 @@ public final class MacroExpand1Function extends FunctionStruct {
 
 	private static MacroExpandResult macroExpand1(final ListStruct form, final Environment environment) {
 
-		final LispStruct first = form.getFirst();
+		final LispStruct first = form.getCar();
 		if (first instanceof SymbolStruct) {
 
 			final Optional<SymbolStruct> symbolStruct = getSymbolStruct((SymbolStruct) first);

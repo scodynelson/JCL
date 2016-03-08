@@ -42,13 +42,13 @@ public class LoadTimeValueExpander extends MacroFunctionExpander<LispStruct> {
 		final ListStruct formRest = form.getRest();
 		final ListStruct formRestRest = formRest.getRest();
 
-		final LispStruct third = formRestRest.getFirst();
+		final LispStruct third = formRestRest.getCar();
 		if (!(third instanceof BooleanStruct)) {
 			final String printedObject = printer.print(third);
 			throw new ProgramErrorException("LOAD-TIME-VALUE: Read-Only-P value must be either 'T' or 'NIL'. Got: " + printedObject);
 		}
 
-		final LispStruct loadTimeValueForm = formRest.getFirst();
+		final LispStruct loadTimeValueForm = formRest.getCar();
 		final LispStruct analyzedEvalForm = formAnalyzer.analyze(loadTimeValueForm, Environment.NULL);
 		return evalFunction.eval(analyzedEvalForm, Environment.NULL);
 	}

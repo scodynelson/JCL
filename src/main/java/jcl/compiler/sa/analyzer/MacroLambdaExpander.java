@@ -57,12 +57,12 @@ public class MacroLambdaExpander extends MacroFunctionExpander<MacroLambdaStruct
 
 		final ListStruct formRest = form.getRest();
 
-		final LispStruct second = formRest.getFirst();
+		final LispStruct second = formRest.getCar();
 		final SymbolStruct macroName = validator.validateObjectType(second, "MACRO-LAMBDA", "MACRO NAME", SymbolStruct.class);
 
 		final ListStruct formRestRest = formRest.getRest();
 
-		final LispStruct third = formRestRest.getFirst();
+		final LispStruct third = formRestRest.getCar();
 		final ListStruct parameters = validator.validateObjectType(third, "MACRO-LAMBDA", "PARAMETER LIST", ListStruct.class);
 
 		final Environment macroLambdaEnvironment = new Environment(environment);

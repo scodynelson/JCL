@@ -38,7 +38,7 @@ public class ReturnFromExpander extends MacroFunctionExpander<ReturnFromStruct> 
 
 		final ListStruct formRest = form.getRest();
 
-		final LispStruct second = formRest.getFirst();
+		final LispStruct second = formRest.getCar();
 		final SymbolStruct name = validator.validateObjectType(second, "RETURN-FROM", "NAME", SymbolStruct.class);
 
 		if (environment.getBlockStack().search(name) == -1) {
@@ -50,7 +50,7 @@ public class ReturnFromExpander extends MacroFunctionExpander<ReturnFromStruct> 
 		if (formSize == 3) {
 			final ListStruct formRestRest = formRest.getRest();
 
-			final LispStruct result = formRestRest.getFirst();
+			final LispStruct result = formRestRest.getCar();
 			analyzedResult = formAnalyzer.analyze(result, environment);
 		} else {
 			analyzedResult = NILStruct.INSTANCE;

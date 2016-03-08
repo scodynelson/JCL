@@ -51,7 +51,7 @@ public class TagbodyExpander extends MacroFunctionExpander<TagbodyStruct> {
 		// temporary 'tag' for this form set.
 		// NOTE: We don't care about adding this to the TagbodyStack since it is generated just for us here and will
 		//       will never be used as a real transfer of control point.
-		if (!isTagbodyTag(formRest.getFirst())) {
+		if (!isTagbodyTag(formRest.getCar())) {
 			final SymbolStruct defaultFormsTag = new SymbolStruct("Tag-" + UUID.randomUUID());
 			formRest = new ConsStruct(defaultFormsTag, formRest);
 			forms = formRest.getAsJavaList();

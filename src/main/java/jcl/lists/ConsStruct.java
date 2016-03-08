@@ -117,54 +117,8 @@ public class ConsStruct extends BuiltInClassStruct implements ListStruct {
 	}
 
 	@Override
-	public LispStruct getFirst() {
-		return car;
-	}
-
-	@Override
 	public ListStruct getRest() {
-		return (cdr instanceof ListStruct) ? (ListStruct) cdr : new ConsStruct(car);
-	}
-
-	@Override
-	public ListStruct getLast() {
-		return (cdr instanceof ConsStruct) ? ((ConsStruct) cdr).getLast() : this;
-	}
-
-	@Override
-	public ListStruct getAllButLast() {
-		if (!(cdr instanceof ConsStruct)) {
-			return NILStruct.INSTANCE;
-		}
-
-		final ConsStruct cdrAsCons = (ConsStruct) cdr;
-		final ListStruct newCdr = cdrAsCons.getAllButLast();
-
-		return new ConsStruct(car, newCdr);
-	}
-
-	@Override
-	public LispStruct getElement(final int index) {
-		if (index == 0) {
-			return car;
-		} else if (cdr instanceof ListStruct) {
-			final ListStruct cdrAsList = (ListStruct) cdr;
-			return cdrAsList.getElement(index - 1);
-		} else {
-			return cdr;
-		}
-	}
-
-	@Override
-	public void setElement(final int index, final LispStruct newValue) {
-		if (index == 0) {
-			car = newValue;
-		} else if (cdr instanceof ListStruct) {
-			final ListStruct cdrAsList = (ListStruct) cdr;
-			cdrAsList.setElement(index - 1, newValue);
-		} else {
-			cdr = newValue;
-		}
+		return (cdr instanceof ListStruct) ? (ListStruct) cdr : new ConsStruct(cdr);
 	}
 
 	@Override

@@ -76,7 +76,7 @@ public class MacroletExpander extends MacroFunctionExpander<InnerLambdaStruct> {
 
 		final ListStruct formRest = form.getRest();
 
-		final LispStruct second = formRest.getFirst();
+		final LispStruct second = formRest.getCar();
 		if (!(second instanceof ListStruct)) {
 			final String printedObject = printer.print(second);
 			throw new ProgramErrorException("MACROLET: Parameter list must be a list. Got: " + printedObject);
@@ -139,7 +139,7 @@ public class MacroletExpander extends MacroFunctionExpander<InnerLambdaStruct> {
 			}
 			final ListStruct functionList = (ListStruct) functionDefinition;
 
-			final LispStruct functionListFirst = functionList.getFirst();
+			final LispStruct functionListFirst = functionList.getCar();
 			if (!(functionListFirst instanceof SymbolStruct)) {
 				final String printedObject = printer.print(functionListFirst);
 				throw new ProgramErrorException("MACROLET: First element of function parameter must be a symbol. Got: " + printedObject);
@@ -159,7 +159,7 @@ public class MacroletExpander extends MacroFunctionExpander<InnerLambdaStruct> {
 	                                                        final Environment macroletEnvironment) {
 
 		final ListStruct functionList = (ListStruct) functionDefinition;
-		final SymbolStruct functionName = (SymbolStruct) functionList.getFirst();
+		final SymbolStruct functionName = (SymbolStruct) functionList.getCar();
 		final CompilerFunctionStruct functionInitForm = getFunctionParameterInitForm(functionList, macroletEnvironment);
 
 		final boolean isSpecial = declare.getSpecialDeclarations()
@@ -189,8 +189,8 @@ public class MacroletExpander extends MacroFunctionExpander<InnerLambdaStruct> {
 
 		final ListStruct functionListParameterRest = functionListParameter.getRest();
 
-		final LispStruct functionName = functionListParameter.getFirst();
-		final LispStruct lambdaList = functionListParameterRest.getFirst();
+		final LispStruct functionName = functionListParameter.getCar();
+		final LispStruct lambdaList = functionListParameterRest.getCar();
 		final ListStruct body = functionListParameterRest.getRest();
 
 		final List<LispStruct> forms = body.getAsJavaList();

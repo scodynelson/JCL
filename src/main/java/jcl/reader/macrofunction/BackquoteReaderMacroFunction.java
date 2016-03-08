@@ -297,7 +297,7 @@ public class BackquoteReaderMacroFunction extends ReaderMacroFunction {
 	private static boolean expandableBackqExpressionP(final LispStruct o) {
 		if (o instanceof ConsStruct) {
 			final ConsStruct consStruct = (ConsStruct) o;
-			final LispStruct flag = consStruct.getFirst();
+			final LispStruct flag = consStruct.getCar();
 			if (CommonLispSymbols.BQ_AT_FLAG.equals(flag) || CommonLispSymbols.BQ_DOT_FLAG.equals(flag)) {
 				return true;
 			}
@@ -331,11 +331,12 @@ public class BackquoteReaderMacroFunction extends ReaderMacroFunction {
 					return new ConsStruct(CommonLispSymbols.CONS, thing);
 				}
 
-				final ListStruct lastThing = consThing.getLast();
-				final LispStruct carOfLastThing = lastThing.getFirst();
+				// NOTE: This is a safe cast, as the last() will always return a List with the last cons, even if the list is dotted
+				final ListStruct lastThing = (ListStruct) consThing.last();
+				final LispStruct carOfLastThing = lastThing.getCar();
 
 				if (expandableBackqExpressionP(carOfLastThing)) {
-					final ListStruct allButLast = consThing.getAllButLast();
+					final ListStruct allButLast = consThing.butLast();
 					final ConsStruct consStruct = new ConsStruct(CommonLispSymbols.LIST, allButLast);
 
 					return ListStruct.buildProperList(CommonLispSymbols.APPEND, consStruct, carOfLastThing);

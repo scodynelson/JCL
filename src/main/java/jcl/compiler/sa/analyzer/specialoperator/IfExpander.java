@@ -33,19 +33,19 @@ public class IfExpander extends MacroFunctionExpander<IfStruct> {
 
 		final ListStruct formRest = form.getRest();
 
-		final LispStruct testForm = formRest.getFirst();
+		final LispStruct testForm = formRest.getCar();
 		final LispStruct testFormAnalyzed = formAnalyzer.analyze(testForm, environment);
 
 		final ListStruct formRestRest = formRest.getRest();
 
-		final LispStruct thenForm = formRestRest.getFirst();
+		final LispStruct thenForm = formRestRest.getCar();
 		final LispStruct thenFormAnalyzed = formAnalyzer.analyze(thenForm, environment);
 
 		final LispStruct elseFormAnalyzed;
 		if (formSize == 4) {
 			final ListStruct formRestRestRest = formRestRest.getRest();
 
-			final LispStruct elseForm = formRestRestRest.getFirst();
+			final LispStruct elseForm = formRestRestRest.getCar();
 			elseFormAnalyzed = formAnalyzer.analyze(elseForm, environment);
 		} else {
 			elseFormAnalyzed = NILStruct.INSTANCE;

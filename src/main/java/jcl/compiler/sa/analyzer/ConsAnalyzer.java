@@ -44,7 +44,7 @@ public class ConsAnalyzer implements Analyzer<LispStruct, ConsStruct> {
 	@Override
 	public LispStruct analyze(final ConsStruct input, final Environment environment) {
 
-		final LispStruct first = input.getFirst();
+		final LispStruct first = input.getCar();
 
 		if (first instanceof SymbolStruct) {
 			return analyzeSymbolFunctionCall(input, environment);
@@ -60,7 +60,7 @@ public class ConsAnalyzer implements Analyzer<LispStruct, ConsStruct> {
 
 	private SymbolFunctionCallStruct analyzeSymbolFunctionCall(final ListStruct input, final Environment environment) {
 
-		final SymbolStruct functionSymbol = (SymbolStruct) input.getFirst();
+		final SymbolStruct functionSymbol = (SymbolStruct) input.getCar();
 		final List<LispStruct> functionArguments = input.getRest().getAsJavaList();
 
 		final Set<SymbolStruct> undefinedFunctions = environment.getUndefinedFunctions();
@@ -94,10 +94,10 @@ public class ConsAnalyzer implements Analyzer<LispStruct, ConsStruct> {
 
 	private JavaMethodCallStruct analyzeJavaMethodCall(final ListStruct input, final Environment environment) {
 
-		final JavaNameStruct methodName = (JavaNameStruct) input.getFirst();
+		final JavaNameStruct methodName = (JavaNameStruct) input.getCar();
 
 		final ListStruct inputRest = input.getRest();
-		final LispStruct second = inputRest.getFirst();
+		final LispStruct second = inputRest.getCar();
 		final LispStruct javaObject = formAnalyzer.analyze(second, environment);
 
 		final List<LispStruct> methodArguments = inputRest.getRest().getAsJavaList();
@@ -114,9 +114,9 @@ public class ConsAnalyzer implements Analyzer<LispStruct, ConsStruct> {
 	private LambdaFunctionCallStruct analyzeLambdaFunctionCall(final ListStruct input, final Environment environment) {
 
 		// ex ((lambda (x) (+ x 1)) 3)
-		final ListStruct functionList = (ListStruct) input.getFirst();
+		final ListStruct functionList = (ListStruct) input.getCar();
 
-		final LispStruct functionListFirst = functionList.getFirst();
+		final LispStruct functionListFirst = functionList.getCar();
 
 		if (!functionListFirst.equals(SpecialOperatorStruct.LAMBDA)) {
 			throw new ProgramErrorException("LIST ANALYZER: First element of a first element ListStruct must be the SpecialOperator 'LAMBDA'. Got: " + functionListFirst);

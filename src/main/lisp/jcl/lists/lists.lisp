@@ -2,201 +2,204 @@
 
 (in-package "COMMON-LISP")
 
-;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;; ACCESSOR FUNCTIONS ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defun caaaar (lst)
-  "Returns the first object of the caaar of a list. Ex: (caaaar `((((A B) C D E) (F G) (H) I J) ((K L) M N) (O P) (Q) R)) => A"
-  (declare (system::%java-class-name "jcl.lists.functions.Caaaar"))
-  (car (car (car (car lst)))))
-
-(defun caaadr (lst)
-  "Returns the first object of the caadr of a list. Ex: (caaadr `((((A B) C D E) (F G) (H) I J) ((K L) M N) (O P) (Q) R)) => K"
-  (declare (system::%java-class-name "jcl.lists.functions.Caaadr"))
-  (car (car (car (cdr lst)))))
-
-(defun caaar (lst)
-  "Returns the first object in the caar of a list. Ex: (caaar `((((A B) C D E) (F G) (H) I J) ((K L) M N) (O P) (Q) R)) => (A B)"
-  (declare (system::%java-class-name "jcl.lists.functions.Caaar"))
-  (car (car (car lst))))
-
-(defun caadar (lst)
-  "Returns the first object of the cadar of a list. Ex: (caadar `((((A B) C D E) (F G) (H) I J) ((K L) M N) (O P) (Q) R)) => F"
-  (declare (system::%java-class-name "jcl.lists.functions.Caadar"))
-  (car (car (cdr (car lst)))))
-
-(defun caaddr (lst)
-  "Returns the first object of the caddr of a list. Ex: (caaddr `((((A B) C D E) (F G) (H) I J) ((K L) M N) (O P) (Q) R)) => O"
-  (declare (system::%java-class-name "jcl.lists.functions.Caaddr"))
-  (car (car (cdr (cdr lst)))))
-
-(defun caadr (lst)
-  "Returns the first object in the cadr of a list. Ex: (caadr `((((A B) C D E) (F G) (H) I J) ((K L) M N) (O P) (Q) R)) => (K L)"
-  (declare (system::%java-class-name "jcl.lists.functions.Caadr"))
-  (car (car (cdr lst))))
-
-(defun caar (lst)
-  "Returns the first object of the car of a list. Ex: (caar `((((A B) C D E) (F G) (H) I J) ((K L) M N) (O P) (Q) R)) => ((A B) C D E)"
+(defun caar (list)
+  "Returns the first object of the car of a list."
   (declare (system::%java-class-name "jcl.lists.functions.Caar"))
-  (car (car lst)))
+  (car (car list)))
 
-(defun cadaar (lst)
-  "Returns the first object of the cdaar of a list. Ex: (cadaar `((((A B) C D E) (F G) (H) I J) ((K L) M N) (O P) (Q) R)) => C"
-  (declare (system::%java-class-name "jcl.lists.functions.Cadaar"))
-  (car (cdr (car (car lst)))))
-
-(defun cadadr (lst)
-  "Returns the first object of the cdadr of a list. Ex: (cadadr `((((A B) C D E) (F G) (H) I J) ((K L) M N) (O P) (Q) R)) => M"
-  (declare (system::%java-class-name "jcl.lists.functions.Cadadr"))
-  (car (cdr (car (cdr lst)))))
-
-(defun cadar (lst)
-  "Returns the first object of the cdar of a list. Ex: (cadar `((((A B) C D E) (F G) (H) I J) ((K L) M N) (O P) (Q) R)) => (F G)"
-  (declare (system::%java-class-name "jcl.lists.functions.Cadar"))
-  (car (cdr (car lst))))
-
-(defun caddar (lst)
-  "Returns the first object of the cddar of a list. Ex: (caddar `((((A B) C D E) (F G) (H) I J) ((K L) M N) (O P) (Q) R)) => (H)"
-  (declare (system::%java-class-name "jcl.lists.functions.Caddar"))
-  (car (cdr (cdr (car lst)))))
-
-(defun cadddr (lst)
-  "Returns the first object of the cdddr of a list. Ex: (cadddr `((((A B) C D E) (F G) (H) I J) ((K L) M N) (O P) (Q) R)) => (Q)"
-  (declare (system::%java-class-name "jcl.lists.functions.Cadddr"))
-  (car (nthcdr 3 lst)))
-
-(defun caddr (lst)
-  "Returns the first object in the cddr of a list. Ex: (caddr `((((A B) C D E) (F G) (H) I J) ((K L) M N) (O P) (Q) R)) => (O P)"
-  (declare (system::%java-class-name "jcl.lists.functions.Caddr"))
-  (car (cdr (cdr lst))))
-
-(defun cadr (lst)
-  "Returns the first object of the cdr of a list. Ex: (cadr `((((A B) C D E) (F G) (H) I J) ((K L) M N) (O P) (Q) R)) => ((K L) M N)"
+(defun cadr (list)
+  "Returns the first object of the cdr of a list."
   (declare (system::%java-class-name "jcl.lists.functions.Cadr"))
-  (car (cdr lst)))
+  (car (cdr list)))
 
-(defun cdaaar (lst)
-  "Returns the cdr of the caaar of a list. Ex: (cdaaar `((((A B) C D E) (F G) (H) I J) ((K L) M N) (O P) (Q) R)) => (B)"
-  (declare (system::%java-class-name "jcl.lists.functions.Cdaaar"))
-  (cdr (car (car (car lst)))))
-
-(defun cdaadr (lst)
-  "Returns the cdr of the caadr of a list. Ex: (cdaadr `((((A B) C D E) (F G) (H) I J) ((K L) M N) (O P) (Q) R)) => (L)"
-  (declare (system::%java-class-name "jcl.lists.functions.Cdaadr"))
-  (cdr (car (car (cdr lst)))))
-
-(defun cdaar (lst)
-  "Returns the cdr of the caar of a list. Ex: (cdaar `((((A B) C D E) (F G) (H) I J) ((K L) M N) (O P) (Q) R)) => (C D E)"
-  (declare (system::%java-class-name "jcl.lists.functions.Cdaar"))
-  (cdr (car (car lst))))
-
-(defun cdadar (lst)
-  "Returns the cdr of the cadar of a list. Ex: (cdadar `((((A B) C D E) (F G) (H) I J) ((K L) M N) (O P) (Q) R)) => (G)"
-  (declare (system::%java-class-name "jcl.lists.functions.Cdadar"))
-  (cdr (car (cdr (car lst)))))
-
-(defun cdaddr (lst)
-  "Returns the cdr of the caddr of a list. Ex: (cdaddr `((((A B) C D E) (F G) (H) I J) ((K L) M N) (O P) (Q) R)) => (P)"
-  (declare (system::%java-class-name "jcl.lists.functions.Cdaddr"))
-  (cdr (car (cdr (cdr lst)))))
-
-(defun cdadr (lst)
-  "Returns the cdr of the cadr of a list. Ex: (cdadr `((((A B) C D E) (F G) (H) I J) ((K L) M N) (O P) (Q) R)) => (M N)"
-  (declare (system::%java-class-name "jcl.lists.functions.Cdadr"))
-  (cdr (car (cdr lst))))
-
-(defun cdar (lst)
-  "Returns the cdr of the first object in a list. Ex: (cdar `((((A B) C D E) (F G) (H) I J) ((K L) M N) (O P) (Q) R)) => ((F G) (H) I J)"
+(defun cdar (list)
+  "Returns the cdr of the first object in a list."
   (declare (system::%java-class-name "jcl.lists.functions.Cdar"))
-  (cdr (car lst)))
+  (cdr (car list)))
 
-(defun cddaar (lst)
-  "Returns the cdr of the cdaar of a list. Ex: (cddaar `((((A B) C D E) (F G) (H) I J) ((K L) M N) (O P) (Q) R)) => (D E)"
-  (declare (system::%java-class-name "jcl.lists.functions.Cddaar"))
-  (cdr (cdr (car (car lst)))))
-
-(defun cddadr (lst)
-  "Returns the cdr of the cdadr of a list. Ex: (cddadr `((((A B) C D E) (F G) (H) I J) ((K L) M N) (O P) (Q) R)) => (N)"
-  (declare (system::%java-class-name "jcl.lists.functions.Cddadr"))
-  (cdr (cdr (car (cdr lst)))))
-
-(defun cddar (lst)
-  "Returns the cdr of the cdar of a list. Ex: (cddar `((((A B) C D E) (F G) (H) I J) ((K L) M N) (O P) (Q) R)) => ((H) I J)"
-  (declare (system::%java-class-name "jcl.lists.functions.Cddar"))
-  (cdr (cdr (car lst))))
-
-(defun cdddar (lst)
-  "Returns the cdr of the cddar of a list. Ex: (cdddar `((((A B) C D E) (F G) (H) I J) ((K L) M N) (O P) (Q) R)) => (I J)"
-  (declare (system::%java-class-name "jcl.lists.functions.Cdddar"))
-  (cdr (cdr (cdr (car lst)))))
-
-(defun cddddr (lst)
-  "Returns the cdr of the cdddr of a list. Ex: (cddddr `((((A B) C D E) (F G) (H) I J) ((K L) M N) (O P) (Q) R)) => (R)"
-  (declare (system::%java-class-name "jcl.lists.functions.Cddddr"))
-  (cdr (nthcdr 3 lst)))
-
-(defun cdddr (lst)
-  "Returns the cdr of the cddr of a list. Ex: (cdddr `((((A B) C D E) (F G) (H) I J) ((K L) M N) (O P) (Q) R) ) => ((Q) R)"
-  (declare (system::%java-class-name "jcl.lists.functions.Cdddr"))
-  (cdr (cdr (cdr lst))))
-
-(defun cddr (lst)
-  "Returns the cdr of all but the fist item in a list. Ex: (cddr `((((A B) C D E) (F G) (H) I J) ((K L) M N) (O P) (Q) R) ) => ((O P) (Q) R)"
+(defun cddr (list)
+  "Returns the cdr of all but the fist item in a list."
   (declare (system::%java-class-name "jcl.lists.functions.Cddr"))
-  (cdr (cdr lst)))
+  (cdr (cdr list)))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;; NUMERICAL ACCESSOR FUNCTIONS ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(defun caaar (list)
+  "Returns the first object in the caar of a list."
+  (declare (system::%java-class-name "jcl.lists.functions.Caaar"))
+  (car (car (car list))))
 
-(defun first (lst)
+(defun caadr (list)
+  "Returns the first object in the cadr of a list."
+  (declare (system::%java-class-name "jcl.lists.functions.Caadr"))
+  (car (car (cdr list))))
+
+(defun cadar (list)
+  "Returns the first object of the cdar of a list."
+  (declare (system::%java-class-name "jcl.lists.functions.Cadar"))
+  (car (cdr (car list))))
+
+(defun cdaar (list)
+  "Returns the cdr of the caar of a list."
+  (declare (system::%java-class-name "jcl.lists.functions.Cdaar"))
+  (cdr (car (car list))))
+
+(defun caddr (list)
+  "Returns the first object in the cddr of a list."
+  (declare (system::%java-class-name "jcl.lists.functions.Caddr"))
+  (car (cdr (cdr list))))
+
+(defun cdadr (list)
+  "Returns the cdr of the cadr of a list."
+  (declare (system::%java-class-name "jcl.lists.functions.Cdadr"))
+  (cdr (car (cdr list))))
+
+(defun cddar (list)
+  "Returns the cdr of the cdar of a list."
+  (declare (system::%java-class-name "jcl.lists.functions.Cddar"))
+  (cdr (cdr (car list))))
+
+(defun cdddr (list)
+  "Returns the cdr of the cddr of a list."
+  (declare (system::%java-class-name "jcl.lists.functions.Cdddr"))
+  (cdr (cdr (cdr list))))
+
+(defun caaaar (list)
+  "Returns the first object of the caaar of a list."
+  (declare (system::%java-class-name "jcl.lists.functions.Caaaar"))
+  (car (car (car (car list)))))
+
+(defun caaadr (list)
+  "Returns the first object of the caadr of a list."
+  (declare (system::%java-class-name "jcl.lists.functions.Caaadr"))
+  (car (car (car (cdr list)))))
+
+(defun caadar (list)
+  "Returns the first object of the cadar of a list."
+  (declare (system::%java-class-name "jcl.lists.functions.Caadar"))
+  (car (car (cdr (car list)))))
+
+(defun caaddr (list)
+  "Returns the first object of the caddr of a list."
+  (declare (system::%java-class-name "jcl.lists.functions.Caaddr"))
+  (car (car (cdr (cdr list)))))
+
+(defun cadaar (list)
+  "Returns the first object of the cdaar of a list."
+  (declare (system::%java-class-name "jcl.lists.functions.Cadaar"))
+  (car (cdr (car (car list)))))
+
+(defun cadadr (list)
+  "Returns the first object of the cdadr of a list."
+  (declare (system::%java-class-name "jcl.lists.functions.Cadadr"))
+  (car (cdr (car (cdr list)))))
+
+(defun caddar (list)
+  "Returns the first object of the cddar of a list."
+  (declare (system::%java-class-name "jcl.lists.functions.Caddar"))
+  (car (cdr (cdr (car list)))))
+
+(defun cadddr (list)
+  "Returns the first object of the cdddr of a list."
+  (declare (system::%java-class-name "jcl.lists.functions.Cadddr"))
+  (car (cdr (cdr (cdr list)))))
+
+(defun cdaaar (list)
+  "Returns the cdr of the caaar of a list."
+  (declare (system::%java-class-name "jcl.lists.functions.Cdaaar"))
+  (cdr (car (car (car list)))))
+
+(defun cdaadr (list)
+  "Returns the cdr of the caadr of a list."
+  (declare (system::%java-class-name "jcl.lists.functions.Cdaadr"))
+  (cdr (car (car (cdr list)))))
+
+(defun cdadar (list)
+  "Returns the cdr of the cadar of a list."
+  (declare (system::%java-class-name "jcl.lists.functions.Cdadar"))
+  (cdr (car (cdr (car list)))))
+
+(defun cdaddr (list)
+  "Returns the cdr of the caddr of a list."
+  (declare (system::%java-class-name "jcl.lists.functions.Cdaddr"))
+  (cdr (car (cdr (cdr list)))))
+
+(defun cddaar (list)
+  "Returns the cdr of the cdaar of a list."
+  (declare (system::%java-class-name "jcl.lists.functions.Cddaar"))
+  (cdr (cdr (car (car list)))))
+
+(defun cddadr (list)
+  "Returns the cdr of the cdadr of a list."
+  (declare (system::%java-class-name "jcl.lists.functions.Cddadr"))
+  (cdr (cdr (car (cdr list)))))
+
+(defun cdddar (list)
+  "Returns the cdr of the cddar of a list."
+  (declare (system::%java-class-name "jcl.lists.functions.Cdddar"))
+  (cdr (cdr (cdr (car list)))))
+
+(defun cddddr (list)
+  "Returns the cdr of the cdddr of a list."
+  (declare (system::%java-class-name "jcl.lists.functions.Cddddr"))
+  (cdr (cdr (cdr (cdr list)))))
+
+(defun first (list)
   "Returns the 1st object in a list or NIL if the list is empty."
   (declare (system::%java-class-name "jcl.lists.functions.First"))
-  (car lst))
+  (car list))
 
-(defun second (lst)
+(defun second (list)
   "Returns the 2nd object in a list or NIL if there is not 2nd object."
   (declare (system::%java-class-name "jcl.lists.functions.Second"))
-  (car (rest lst)))
+  (car (cdr list)))
 
-(defun third (lst)
+(defun third (list)
   "Returns the 3rd object in a list or NIL if there is not 3rd object."
   (declare (system::%java-class-name "jcl.lists.functions.Third"))
-  (car (nthcdr 2 lst)))
+  (car (cddr list)))
 
-(defun fourth (lst)
+(defun fourth (list)
   "Returns the 4th object in a list or NIL if there is not 4th object."
   (declare (system::%java-class-name "jcl.lists.functions.Fourth"))
-  (car (nthcdr 3 lst)))
+  (car (cdddr list)))
 
-(defun fifth (lst)
+(defun fifth (list)
   "Returns the 5th object in a list or NIL if there is not 5th object."
   (declare (system::%java-class-name "jcl.lists.functions.Fifth"))
-  (car (nthcdr 4 lst)))
+  (car (cddddr list)))
 
-(defun sixth (lst)
+(defun sixth (list)
   "Returns the 6th object in a list or NIL if there is not 6th object."
   (declare (system::%java-class-name "jcl.lists.functions.Sixth"))
-  (car (nthcdr 5 lst)))
+  (car (cdr (cddddr list))))
 
-(defun seventh(lst)
+(defun seventh(list)
   "Returns the 7th object in a list or NIL if there is not 7th object."
   (declare (system::%java-class-name "jcl.lists.functions.Seventh"))
-  (car (nthcdr 6 lst)))
+  (car (cddr (cddddr list))))
 
-(defun eighth (lst)
+(defun eighth (list)
   "Returns the 8th object in a list or NIL if there is not 8th object."
   (declare (system::%java-class-name "jcl.lists.functions.Eighth"))
-  (car (nthcdr 7 lst)))
+  (car (cdddr (cddddr list))))
 
-(defun ninth (lst)
+(defun ninth (list)
   "Returns the 9th object in a list or NIL if there is not 9th object."
   (declare (system::%java-class-name "jcl.lists.functions.Ninth"))
-  (car (nthcdr 8 lst)))
+  (car (cddddr (cddddr list))))
 
-(defun tenth (lst)
+(defun tenth (list)
   "Returns the 10th object in a list or NIL if there is not 10th object."
   (declare (system::%java-class-name "jcl.lists.functions.Tenth"))
-  (car (nthcdr 9 lst)))
+  (car (cdr (cddddr (cddddr list)))))
+
+(defun rest (list)
+  "Returns all but the first object in the list."
+  (declare (system::%java-class-name "jcl.lists.functions.Rest"))
+  (cdr list))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -245,34 +248,27 @@
 	  (assoc ,key-tmp alist :test-not test-not)
 	(assoc ,key-tmp alist :test test)))))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;; TREE-EQUAL FUNCTION ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(defun tree-equal-test-not (tree-1 tree-2 test-not)
+  (cond ((consp tree-1)
+	     (and (consp tree-2)
+	          (tree-equal-test-not (car tree-1) (car tree-2) test-not)
+	          (tree-equal-test-not (cdr tree-1) (cdr tree-2) test-not)))
+	    ((consp tree-2) nil)
+	    ((not (funcall test-not tree-1 tree-2)) t)
+	    (t nil)))
 
-
-
-
-
-
-;;; ADJOIN tests whether item is the same as an existing element of list. If the item is not an existing element,
-;;; it is then added to list (as if by cons) and returned as the resulting list; otherwise, nothing is added and
-;;; the original list is returned.
-;;; Parameters:
-;;;   item => an object.
-;;;   list => a proper list.
-;;;   test, test-not => a designator for a function of two arguments that returns a generalized boolean.
-;;;   key => a designator for a function of one argument, or nil.
-;;; Returns:
-;;;   new-list => a list.
-;;;
-(defun adjoin (item list &key key (test #'eql test-p) (test-not nil test-not-p))
-  "Tests whether item is the same as an existing element of list; if so, it is added to the list and returned;
-   otherwise, nothing is added and the original list is returned."
-  (declare (system::%java-class-name "jcl.lists.functions.Adjoin"))
-  (if (let ((key-val (apply-key key item)))
-	(if test-not-p
-	    (member key-val list :test-not test-not :key key)
-	  (member key-val list :test test :key key)))
-      list
-    (cons item list)))
+(defun tree-equal-test (tree-1 tree-2 test)
+  (cond	((consp tree-1)
+	     (and (consp tree-2)
+	          (tree-equal-test (car tree-1) (car tree-2) test)
+	          (tree-equal-test (cdr tree-1) (cdr tree-2) test)))
+	    ((consp tree-2) nil)
+	    ((funcall test tree-1 tree-2) t)
+	    (t nil)))
 
 ;;; TREE-EQUAL tests whether two trees are of the same shape and have the same leaves. It returns true if tree-1 and tree-2
 ;;; are both atoms and satisfy the test, or if they are both conses and the car of tree-1 is tree-equal to the car of tree-2
@@ -285,21 +281,14 @@
 ;;; Returns:
 ;;;   generalized-boolean => a generalized boolean.
 ;;;
-(defun tree-equal (tree1 tree2 &key (test #'eql test-p) (test-not nil test-not-p))
+(defun tree-equal (tree-1 tree-2 &key (test #'eql test-p) (test-not nil test-not-p))
   "Tests whether two trees are of the same shape and have the same leaves. It returns true if tree-1 and tree-2
    are both atoms and satisfy the test, or if they are both conses and the car of tree-1 is tree-equal to the car of tree-2
    and the cdr of tree-1 is tree-equal to the cdr of tree-2. Otherwise, it returns false."
   (declare (system::%java-class-name "jcl.lists.functions.TreeEqual"))
-  (let ((%test (if test-not-p #'(lambda (x y) (not (funcall test-not x y))) test)))
-    (labels ((tree-equal-aux (tree1 tree2 real-test)
-               (cond ((consp tree1)
-                      (and (consp tree2)
-                           (tree-equal-aux (car tree1) (car tree2) real-test)
-                           (tree-equal-aux (cdr tree1) (cdr tree2) real-test)))
-                     ((consp tree2) nil)
-                     ((funcall real-test tree1 tree2) t)
-                     (t ()))))
-      (tree-equal-aux tree1 tree2 %test))))
+  (if test-not-p
+      (tree-equal-test-not tree-1 tree-2 test-not)
+    (tree-equal-test tree-1 tree-2 test)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; MEMBER FAMILY FUNCTIONS ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -375,6 +364,28 @@
                    list
                  (member-if-not-aux (cdr list))))))
     (member-if-not-aux list)))
+
+;;; ADJOIN tests whether item is the same as an existing element of list. If the item is not an existing element,
+;;; it is then added to list (as if by cons) and returned as the resulting list; otherwise, nothing is added and
+;;; the original list is returned.
+;;; Parameters:
+;;;   item => an object.
+;;;   list => a proper list.
+;;;   test, test-not => a designator for a function of two arguments that returns a generalized boolean.
+;;;   key => a designator for a function of one argument, or nil.
+;;; Returns:
+;;;   new-list => a list.
+;;;
+(defun adjoin (item list &key key (test #'eql test-p) (test-not nil test-not-p))
+  "Tests whether item is the same as an existing element of list; if so, it is added to the list and returned;
+   otherwise, nothing is added and the original list is returned."
+  (declare (system::%java-class-name "jcl.lists.functions.Adjoin"))
+  (if (let ((key-val (apply-key key item)))
+	(if test-not-p
+	    (member key-val list :test-not test-not :key key)
+	  (member key-val list :test test :key key)))
+      list
+    (cons item list)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; ASSOC/RASSOC FAMILY FUNCTIONS ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -1240,31 +1251,6 @@ the test function `test'."
 
 
 
-(defun tree-equal-test-not (x y test-not)
-  (cond ((consp x)
-	 (and (consp y)
-	      (tree-equal-test-not (car x) (car y) test-not)
-	      (tree-equal-test-not (cdr x) (cdr y) test-not)))
-	((consp y) nil)
-	((not (funcall test-not x y)) t)
-	(t ())))
-
-(defun tree-equal-test (x y test)
-  (cond	((consp x)
-	 (and (consp y)
-	      (tree-equal-test (car x) (car y) test)
-	      (tree-equal-test (cdr x) (cdr y) test)))
-	((consp y) nil)
-	((funcall test x y) t)
-	(t ())))
-
-(defun tree-equal (x y &key (test #'eql testp) (test-not nil notp))
-  (when (and testp notp)
-    (error "test and test-not both supplied"))
-  (if test-not
-      (tree-equal-test-not x y test-not)
-      (tree-equal-test x y test)))
-
 
 
 (defun member (item list &key key test test-not)
@@ -1708,30 +1694,6 @@ the test function `test'."
       (cons item list)))
 
 
-
-(defun tree-equal-test-not (x y test-not)
-  (cond ((consp x)
-	 (and (consp y)
-	      (tree-equal-test-not (car x) (car y) test-not)
-	      (tree-equal-test-not (cdr x) (cdr y) test-not)))
-	((consp y) nil)
-	((not (funcall test-not x y)) t)
-	(t ())))
-
-(defun tree-equal-test (x y test)
-  (cond	((consp x)
-	 (and (consp y)
-	      (tree-equal-test (car x) (car y) test)
-	      (tree-equal-test (cdr x) (cdr y) test)))
-	((consp y) nil)
-	((funcall test x y) t)
-	(t ())))
-
-(defun tree-equal (x y &key (test #'eql) test-not)
-  "Returns T if X and Y are isomorphic trees with identical leaves."
-  (if test-not
-      (tree-equal-test-not x y test-not)
-      (tree-equal-test x y test)))
 
 
 

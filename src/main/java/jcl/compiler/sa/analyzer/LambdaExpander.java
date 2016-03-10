@@ -1,6 +1,8 @@
 package jcl.compiler.sa.analyzer;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import jcl.LispStruct;
@@ -17,6 +19,7 @@ import jcl.compiler.struct.specialoperator.declare.DeclareStruct;
 import jcl.compiler.struct.specialoperator.declare.JavaClassNameDeclarationStruct;
 import jcl.compiler.struct.specialoperator.declare.SpecialDeclarationStruct;
 import jcl.compiler.struct.specialoperator.lambda.LambdaStruct;
+import jcl.conditions.exceptions.ErrorException;
 import jcl.functions.expanders.MacroFunctionExpander;
 import jcl.lists.ListStruct;
 import jcl.symbols.SpecialOperatorStruct;
@@ -26,6 +29,8 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class LambdaExpander extends MacroFunctionExpander<LambdaStruct> {
+
+	private static final Pattern CLASS_SEPARATOR_PATTERN = Pattern.compile(".");
 
 	@Autowired
 	private OrdinaryLambdaListParser ordinaryLambdaListParser;
@@ -78,6 +83,28 @@ public class LambdaExpander extends MacroFunctionExpander<LambdaStruct> {
 			final String lambdaClassName = "Lambda" + '_' + System.nanoTime();
 			className = "jcl/" + lambdaClassName;
 		} else {
+			final String javaClassName = javaClassNameDeclaration.getClassName();
+			if (javaClassName.startsWith(".") || javaClassName.endsWith(".")) {
+				throw new ErrorException("Invalid class definition for Lambda: " + javaClassName);
+			}
+
+			final int lastSeparator = javaClassName.lastIndexOf('.');
+			final String packageNameString = javaClassName.substring(0, lastSeparator);
+
+			final boolean hasInvalidPackageName =
+					!Arrays.stream(CLASS_SEPARATOR_PATTERN.split(packageNameString))
+					       .map(CharSequence::chars)
+					       .allMatch(packageStringChars -> packageStringChars.allMatch(Character::isJavaIdentifierPart));
+			if (hasInvalidPackageName) {
+				throw new ErrorException("Invalid package name for Lambda: " + packageNameString);
+			}
+
+			final String classNameString = javaClassName.substring(lastSeparator + 1);
+			final boolean hasInvalidClassName = !Character.isJavaIdentifierStart(classNameString.charAt(0)) || !classNameString.chars().allMatch(Character::isJavaIdentifierPart);
+			if (hasInvalidClassName) {
+				throw new ErrorException("Invalid class name for Lambda: " + classNameString);
+			}
+
 			// TODO: Remove System.nanoTime() from here, since this breaks JAR loading. But we need it for now.
 			className = javaClassNameDeclaration.getClassName().replace('.', '/') + '_' + System.nanoTime();
 		}

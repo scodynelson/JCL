@@ -4,7 +4,9 @@
 
 package jcl.compiler.sa.analyzer;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import jcl.LispStruct;
@@ -21,6 +23,7 @@ import jcl.compiler.struct.specialoperator.declare.DeclareStruct;
 import jcl.compiler.struct.specialoperator.declare.JavaClassNameDeclarationStruct;
 import jcl.compiler.struct.specialoperator.declare.SpecialDeclarationStruct;
 import jcl.compiler.struct.specialoperator.lambda.MacroLambdaStruct;
+import jcl.conditions.exceptions.ErrorException;
 import jcl.functions.expanders.MacroFunctionExpander;
 import jcl.lists.ListStruct;
 import jcl.symbols.SpecialOperatorStruct;
@@ -30,6 +33,8 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class MacroLambdaExpander extends MacroFunctionExpander<MacroLambdaStruct> {
+
+	private static final Pattern CLASS_SEPARATOR_PATTERN = Pattern.compile(".");
 
 	@Autowired
 	private MacroLambdaListParser macroLambdaListParser;
@@ -84,11 +89,39 @@ public class MacroLambdaExpander extends MacroFunctionExpander<MacroLambdaStruct
 		final JavaClassNameDeclarationStruct javaClassNameDeclaration = declare.getJavaClassNameDeclaration();
 		final String className;
 		if (javaClassNameDeclaration == null) {
-			final String macroLambdaClassName = "MacroLambda" + '_' + macroName.getName() + '_' + System.nanoTime();
+			final String name = macroName.getName().replace('-', '_');
+			final String realName = name.chars()
+			                            .filter(Character::isJavaIdentifierPart)
+			                            .mapToObj(e -> (char) e)
+			                            .map(String::valueOf)
+			                            .collect(Collectors.joining());
+			final String macroLambdaClassName = "MacroLambda" + '_' + realName + '_' + System.nanoTime();
 			className = "jcl/" + macroLambdaClassName;
 		} else {
+			final String javaClassName = javaClassNameDeclaration.getClassName();
+			if (javaClassName.startsWith(".") || javaClassName.endsWith(".")) {
+				throw new ErrorException("Invalid class definition for Macro Lambda: " + javaClassName);
+			}
+
+			final int lastSeparator = javaClassName.lastIndexOf('.');
+			final String packageNameString = javaClassName.substring(0, lastSeparator);
+
+			final boolean hasInvalidPackageName =
+					!Arrays.stream(CLASS_SEPARATOR_PATTERN.split(packageNameString))
+					       .map(CharSequence::chars)
+					       .allMatch(packageStringChars -> packageStringChars.allMatch(Character::isJavaIdentifierPart));
+			if (hasInvalidPackageName) {
+				throw new ErrorException("Invalid package name for Macro Lambda: " + packageNameString);
+			}
+
+			final String classNameString = javaClassName.substring(lastSeparator + 1);
+			final boolean hasInvalidClassName = !Character.isJavaIdentifierStart(classNameString.charAt(0)) || !classNameString.chars().allMatch(Character::isJavaIdentifierPart);
+			if (hasInvalidClassName) {
+				throw new ErrorException("Invalid class name for Macro Lambda: " + classNameString);
+			}
+
 			// TODO: Remove System.nanoTime() from here, since this breaks JAR loading. But we need it for now.
-			className = javaClassNameDeclaration.getClassName().replace('.', '/') + '_' + System.nanoTime();
+			className = javaClassName.replace('.', '/') + '_' + System.nanoTime();
 		}
 
 		final MacroLambdaList parsedLambdaList = macroLambdaListParser.parseMacroLambdaList(macroLambdaEnvironment, parameters, declare);

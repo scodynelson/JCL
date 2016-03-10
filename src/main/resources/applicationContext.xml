@@ -15,6 +15,7 @@
 		<value>${lisp.source.dir}/compiler/base-macro-lambdas.lisp</value>
 		<value>${lisp.source.dir}/compiler/macros.lisp</value>
 		<!--<value>${lisp.source.dir}/iterators/iterators.lisp</value>-->
+		<value>${lisp.source.dir}/lists/lists.lisp</value>
 	</util:list>
 
 	<!-- Printer -->

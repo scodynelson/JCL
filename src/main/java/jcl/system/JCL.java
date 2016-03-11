@@ -4,9 +4,11 @@ import java.io.IOException;
 import java.util.List;
 import javax.annotation.Resource;
 
+import jcl.compiler.CompilerVariables;
 import jcl.compiler.functions.CompileFileFunction;
 import jcl.compiler.functions.LoadFunction;
 import jcl.conditions.exceptions.ErrorException;
+import jcl.functions.functions.FuncallFunction;
 import jcl.pathnames.PathnameName;
 import jcl.pathnames.PathnameStruct;
 import jcl.pathnames.PathnameType;
@@ -45,6 +47,9 @@ public class JCL implements ApplicationRunner {
 	@Autowired
 	private LoadFunction loadFunction;
 
+	@Autowired
+	private FuncallFunction funcallFunction;
+
 	@Resource
 	private List<String> lispFilesToLoad;
 
@@ -65,6 +70,7 @@ public class JCL implements ApplicationRunner {
 
 	@Override
 	public void run(final ApplicationArguments args) throws Exception {
+		CompilerVariables.MACROEXPAND_HOOK.setValue(funcallFunction);
 		loadLispFiles();
 
 		final boolean compileFileSrcDir = args.containsOption("compileFileSrcDir");

@@ -5,62 +5,57 @@
 package jcl.functions.functions;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
-import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
-import jcl.compiler.environment.binding.lambdalist.OrdinaryLambdaList;
 import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
 import jcl.compiler.environment.binding.lambdalist.RestParameter;
 import jcl.compiler.struct.ValuesStruct;
 import jcl.conditions.exceptions.ErrorException;
+import jcl.functions.AbstractCommonLispFunctionStruct;
 import jcl.functions.FunctionStruct;
 import jcl.lists.ListStruct;
 import jcl.packages.GlobalPackageStruct;
 import jcl.printer.Printer;
 import jcl.symbols.SymbolStruct;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class FuncallFunction extends FunctionStruct {
+public final class FuncallFunction extends AbstractCommonLispFunctionStruct {
 
-	public static final FuncallFunction INSTANCE = new FuncallFunction();
-
-	public static final SymbolStruct FUNCALL = GlobalPackageStruct.COMMON_LISP.intern("FUNCALL").getSymbol();
+	private static final Logger LOGGER = LoggerFactory.getLogger(FuncallFunction.class);
 
 	@Autowired
 	private Printer printer;
 
-	private FuncallFunction() {
-		super("Applies function to args.", getInitLambdaListBindings());
+	public FuncallFunction() {
+		super("Applies function to args.");
 	}
 
-	@PostConstruct
-	private void init() {
-		FUNCALL.setFunction(this);
-		GlobalPackageStruct.COMMON_LISP.export(FUNCALL);
+	@Override
+	protected List<RequiredParameter> getRequiredBindings() {
+		return RequiredParameter.builder(GlobalPackageStruct.COMMON_LISP, "FN").buildList();
 	}
 
-	private static OrdinaryLambdaList getInitLambdaListBindings() {
-
-		final SymbolStruct fnArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("FN").getSymbol();
-		final RequiredParameter requiredBinding = new RequiredParameter(fnArgSymbol);
-		final List<RequiredParameter> requiredBindings = Collections.singletonList(requiredBinding);
-
-		final SymbolStruct argsArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("ARGS").getSymbol();
-		final RestParameter restBinding = new RestParameter(argsArgSymbol);
-
-		return OrdinaryLambdaList.builder()
-		                         .requiredBindings(requiredBindings)
-		                         .restBinding(restBinding)
-		                         .build();
+	@Override
+	protected RestParameter getRestBinding() {
+		return RestParameter.builder(GlobalPackageStruct.COMMON_LISP, "ARGS").build();
 	}
 
 	@Override
 	public LispStruct apply(final LispStruct... lispStructs) {
-		getFunctionBindings(lispStructs);
+		super.apply(lispStructs);
+
+		/* TRACING FUNCALL */
+//		final String collect =
+//				Arrays.stream(lispStructs)
+//				      .map(lispStruct -> printer.print(lispStruct))
+//				      .collect(Collectors.joining(" "));
+//		LOGGER.error("0> Calling (FUNCALL {}", collect);
+		/* TRACING FUNCALL */
 
 		final List<LispStruct> lispStructsAsList = Arrays.asList(lispStructs);
 
@@ -86,6 +81,17 @@ public final class FuncallFunction extends FunctionStruct {
 			throw new ErrorException("Undefined function " + printedFunctionDesignator + " called with arguments " + printedArguments);
 		}
 
-		return ApplyFunction.INSTANCE.apply(functionDesignator, argsAsListStruct);
+		final LispStruct result = ApplyFunction.INSTANCE.apply(functionDesignator, argsAsListStruct);
+
+		/* TRACING FUNCALL */
+//		LOGGER.error("<0 FUNCALL returned {}", printer.print(result));
+		/* TRACING FUNCALL */
+
+		return result;
+	}
+
+	@Override
+	protected String functionName() {
+		return "FUNCALL";
 	}
 }

@@ -8,7 +8,6 @@ import java.math.BigInteger;
 
 import jcl.LispStruct;
 import jcl.functions.FunctionStruct;
-import jcl.functions.functions.FuncallFunction;
 import jcl.lists.ListStruct;
 import jcl.numbers.IntegerStruct;
 import jcl.packages.GlobalPackageStruct;
@@ -18,7 +17,7 @@ import jcl.symbols.VariableStruct;
 
 public interface CompilerVariables {
 
-	VariableStruct<FunctionStruct> MACROEXPAND_HOOK = new VariableStruct<>("*MACROEXPAND-HOOK*", GlobalPackageStruct.COMMON_LISP, FuncallFunction.INSTANCE);
+	VariableStruct<FunctionStruct> MACROEXPAND_HOOK = new VariableStruct<>("*MACROEXPAND-HOOK*", GlobalPackageStruct.COMMON_LISP, null);
 
 	VariableStruct<?> DEBUGGER_HOOK = new VariableStruct<>("*DEBUGGER-HOOK*", GlobalPackageStruct.COMMON_LISP, null);
 	VariableStruct<?> BREAK_ON_SIGNALS = new VariableStruct<>("*BREAK-ON-SIGNALS*", GlobalPackageStruct.COMMON_LISP, null);

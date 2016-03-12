@@ -6,6 +6,8 @@ package jcl.compiler.icg.generator;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
+import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import jcl.compiler.icg.GeneratorState;
@@ -68,17 +70,45 @@ final class CodeGenerators {
 		final String symbolName = input.getName();
 
 		if (pkg == null) {
+			/*
+			There is alot going on here, so let me explain:
+
+			We are storing uninterned symbols in fields to solve 2 problems I'll list below. We are dynamically creating
+			 these fields below and if necessary, setting their values when they are first created and attempted to be
+			 referenced in an actual method.
+
+			Why we are doing this:
+			     It kinda sucks to have to repeatedly create new SymbolStructs for objects that are parsed and analyzed
+			        to be the same instance. What I mean by this, is basically the Reader and the Semantic Analyzer that
+			        are Lisp-like in their nature, know how to handle values correctly. However, Java is not so smart.
+			        Thus when we create classes dynamically, we have to ensure that we create and reference the "same"
+			        object, as is done during runtime.
+			     Java does not support "Value" types. It MAY support this in Java 10, but we're not there yet. Symbols
+			        could be updated to be a "Value" type, and that could possibly take care of this 'identity' crisis.
+			     There may be a better way to do this, but I'd have to probably re-architect the entire way the compiler
+			        analyzes and generates code. I'm not about to do that any time soon, for something like this at least.
+			 */
+
+			final int symbolIdentityHashCode = System.identityHashCode(input);
+			final String symbolNameWithHashCode = symbolName + '_' + symbolIdentityHashCode;
+
 			final JavaClassBuilder currentClassBuilder = generatorState.getCurrentClassBuilder();
 
 			final String className = currentClassBuilder.getClassName();
-			final Set<String> nonPackageSymbolFields = currentClassBuilder.getNonPackageSymbolFields();
+			final Map<String, Set<Integer>> nonPackageSymbolFields = currentClassBuilder.getNonPackageSymbolFields();
 
-			if (!nonPackageSymbolFields.contains(symbolName)) {
+			Set<Integer> symbolHashCodeFields = nonPackageSymbolFields.get(symbolName);
+
+			if (symbolHashCodeFields == null) {
+				symbolHashCodeFields = new HashSet<>();
+				nonPackageSymbolFields.put(symbolName, symbolHashCodeFields);
+			}
+			if (!symbolHashCodeFields.contains(symbolIdentityHashCode)) {
 				final ClassWriter cw = currentClassBuilder.getClassWriter();
 
 				// CREATE SYMBOL FIELD
 				final FieldVisitor fv = cw.visitField(Opcodes.ACC_PRIVATE,
-				                                      symbolName,
+				                                      symbolNameWithHashCode,
 				                                      GenerationConstants.SYMBOL_STRUCT_DESC,
 				                                      null,
 				                                      null);
@@ -96,16 +126,16 @@ final class CodeGenerators {
 				                   false);
 				mv.visitFieldInsn(Opcodes.PUTFIELD,
 				                  className,
-				                  symbolName,
+				                  symbolNameWithHashCode,
 				                  GenerationConstants.SYMBOL_STRUCT_DESC);
 
-				nonPackageSymbolFields.add(symbolName);
+				symbolHashCodeFields.add(symbolIdentityHashCode);
 			}
 
 			mv.visitVarInsn(Opcodes.ALOAD, 0);
 			mv.visitFieldInsn(Opcodes.GETFIELD,
 			                  className,
-			                  symbolName,
+			                  symbolNameWithHashCode,
 			                  GenerationConstants.SYMBOL_STRUCT_DESC);
 			mv.visitVarInsn(Opcodes.ASTORE, symbolStore);
 		} else {

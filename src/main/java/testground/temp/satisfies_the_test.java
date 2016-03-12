@@ -64,11 +64,29 @@ public final class satisfies_the_test extends CompiledPrimitive {
 }
 
 /*
-(sym19398 ((symbol (sym19399 sym19400 lispobject3)))
-  (sym19401 (sym19402 (sym19403 sym19404 lispobject2 symbol))
-    (sym19405 (sym19406 (sym19403 sym19407 lispobject2 symbol))
-			  (sym19408 (sym19403 sym19404 lispobject2 symbol)))))
+symbol == (gensym)
+lispobject == (____ item elt)
+sym19398 == let
+sym19399 == apply-key
+sym19400 == key
+sym19401 == cond
+sym19402 == test-p
+sym19403 == funcall
+sym19404 == test
+sym19405 == test-not-p
+sym19406 == not
+sym19407 == test-not
+sym19408 == t
 
+(sym19398 ((symbol (sym19399 sym19400 (third lispobject))))
+  (sym19401 (sym19402 (sym19403 sym19404 (second lispobject) symbol))
+            (sym19405 (sym19406 (sym19403 sym19407 (second lispobject) symbol)))
+			(sym19408 (sym19403 sym19404 (second lispobject) symbol))))
+
+(let ((symbol (apply-key key elt)))
+  (cond (test-p (funcall test item symbol))
+        (test-not-p (not (funcall test-not item symbol)))
+		(t (funcall test item symbol))))
 
 (defmacro satisfies-the-test (item elt)
   (let ((key-tmp (gensym)))
@@ -76,5 +94,4 @@ public final class satisfies_the_test extends CompiledPrimitive {
       (cond (test-p (funcall test ,item ,key-tmp))
 	        (test-not-p (not (funcall test-not ,item ,key-tmp)))
 	        (t (funcall test ,item ,key-tmp))))))
-
  */

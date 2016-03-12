@@ -120,7 +120,7 @@ final class LetCodeGenerator extends ClosureCreationCodeGenerator<LetStruct.LetV
 		for (final LetStruct.LetVar var : vars) {
 			final SymbolStruct symbolVar = var.getVar();
 			final int symbolStore = methodBuilder.getNextAvailableStore();
-			CodeGenerators.generateSymbol(symbolVar, methodBuilder, packageStore, symbolStore);
+			CodeGenerators.generateSymbol(symbolVar, generatorState, packageStore, symbolStore);
 
 			final LispStruct initForm = var.getInitForm();
 			codeGenerator.generate(initForm, generatorState);

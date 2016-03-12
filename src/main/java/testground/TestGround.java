@@ -42,6 +42,8 @@ import org.objectweb.asm.Label;
 @SuppressWarnings("all")
 public class TestGround {
 
+	private SymbolStruct UNINTERNED_SYMBOL = new SymbolStruct("FOO");
+
 	private Object blockGen(final Closure currentClosure) {
 
 		final PackageStruct pkg = PackageStruct.findPackage("SYSTEM");
@@ -217,8 +219,7 @@ public class TestGround {
 	}
 
 	private Object uninternedSymbolGen() {
-
-		final SymbolStruct symbol = new SymbolStruct("FOO");
+		final SymbolStruct symbol = UNINTERNED_SYMBOL;
 		return symbol;
 	}
 

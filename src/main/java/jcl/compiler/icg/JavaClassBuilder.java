@@ -4,6 +4,9 @@
 
 package jcl.compiler.icg;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.objectweb.asm.ClassWriter;
 
 public class JavaClassBuilder {
@@ -13,6 +16,8 @@ public class JavaClassBuilder {
 	private final String className;
 
 	private final String fileName;
+
+	private final Set<String> nonPackageSymbolFields = new HashSet<>();
 
 	public JavaClassBuilder(final String className, final String fileName) {
 		this.className = className;
@@ -29,5 +34,9 @@ public class JavaClassBuilder {
 
 	public String getFileName() {
 		return fileName;
+	}
+
+	public Set<String> getNonPackageSymbolFields() {
+		return nonPackageSymbolFields;
 	}
 }

@@ -91,7 +91,7 @@ final class BlockCodeGenerator extends SpecialOperatorCodeGenerator<BlockStruct>
 		final int namePackageStore = methodBuilder.getNextAvailableStore();
 		final int nameSymbolStore = methodBuilder.getNextAvailableStore();
 		final SymbolStruct name = input.getName();
-		CodeGenerators.generateSymbol(name, methodBuilder, namePackageStore, nameSymbolStore);
+		CodeGenerators.generateSymbol(name, generatorState, namePackageStore, nameSymbolStore);
 
 		final Label tryBlockStart = new Label();
 		final Label tryBlockEnd = new Label();

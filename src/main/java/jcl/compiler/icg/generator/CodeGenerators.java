@@ -6,7 +6,10 @@ package jcl.compiler.icg.generator;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
+import java.util.Set;
 
+import jcl.compiler.icg.GeneratorState;
+import jcl.compiler.icg.JavaClassBuilder;
 import jcl.compiler.icg.JavaMethodBuilder;
 import jcl.packages.PackageStruct;
 import jcl.symbols.SymbolStruct;
@@ -55,23 +58,55 @@ final class CodeGenerators {
 		}
 	}
 
-	static void generateSymbol(final SymbolStruct input, final JavaMethodBuilder methodBuilder,
+	static void generateSymbol(final SymbolStruct input, final GeneratorState generatorState,
 	                           final int packageStore, final int symbolStore) {
 
+		final JavaMethodBuilder methodBuilder = generatorState.getCurrentMethodBuilder();
 		final MethodVisitor mv = methodBuilder.getMethodVisitor();
 
 		final PackageStruct pkg = input.getSymbolPackage();
 		final String symbolName = input.getName();
 
 		if (pkg == null) {
-			mv.visitTypeInsn(Opcodes.NEW, GenerationConstants.SYMBOL_STRUCT_NAME);
-			mv.visitInsn(Opcodes.DUP);
-			mv.visitLdcInsn(symbolName);
-			mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
-			                   GenerationConstants.SYMBOL_STRUCT_NAME,
-			                   GenerationConstants.INIT_METHOD_NAME,
-			                   GenerationConstants.SYMBOL_STRUCT_INIT_STRING_DESC,
-			                   false);
+			final JavaClassBuilder currentClassBuilder = generatorState.getCurrentClassBuilder();
+
+			final String className = currentClassBuilder.getClassName();
+			final Set<String> nonPackageSymbolFields = currentClassBuilder.getNonPackageSymbolFields();
+
+			if (!nonPackageSymbolFields.contains(symbolName)) {
+				final ClassWriter cw = currentClassBuilder.getClassWriter();
+
+				// CREATE SYMBOL FIELD
+				final FieldVisitor fv = cw.visitField(Opcodes.ACC_PRIVATE,
+				                                      symbolName,
+				                                      GenerationConstants.SYMBOL_STRUCT_DESC,
+				                                      null,
+				                                      null);
+				fv.visitEnd();
+
+				// INIT SYMBOL FIELD VALUE
+				mv.visitVarInsn(Opcodes.ALOAD, 0); // '0' is always 'this'
+				mv.visitTypeInsn(Opcodes.NEW, GenerationConstants.SYMBOL_STRUCT_NAME);
+				mv.visitInsn(Opcodes.DUP);
+				mv.visitLdcInsn(symbolName);
+				mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
+				                   GenerationConstants.SYMBOL_STRUCT_NAME,
+				                   GenerationConstants.INIT_METHOD_NAME,
+				                   GenerationConstants.SYMBOL_STRUCT_INIT_STRING_DESC,
+				                   false);
+				mv.visitFieldInsn(Opcodes.PUTFIELD,
+				                  className,
+				                  symbolName,
+				                  GenerationConstants.SYMBOL_STRUCT_DESC);
+
+				nonPackageSymbolFields.add(symbolName);
+			}
+
+			mv.visitVarInsn(Opcodes.ALOAD, 0);
+			mv.visitFieldInsn(Opcodes.GETFIELD,
+			                  className,
+			                  symbolName,
+			                  GenerationConstants.SYMBOL_STRUCT_DESC);
 			mv.visitVarInsn(Opcodes.ASTORE, symbolStore);
 		} else {
 			final String packageName = pkg.getName();

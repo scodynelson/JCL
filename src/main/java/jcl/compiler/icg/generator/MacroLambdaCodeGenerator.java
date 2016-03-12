@@ -363,7 +363,7 @@ class MacroLambdaCodeGenerator implements CodeGenerator<MacroLambdaStruct> {
 		final int macroNameSymbolStore = previousMethodBuilder.getNextAvailableStore();
 
 		final SymbolStruct macroName = input.getMacroName();
-		CodeGenerators.generateSymbol(macroName, previousMethodBuilder, macroNamePackageStore, macroNameSymbolStore);
+		CodeGenerators.generateSymbol(macroName, generatorState, macroNamePackageStore, macroNameSymbolStore);
 
 		previousMv.visitVarInsn(Opcodes.ALOAD, macroNameSymbolStore);
 		previousMv.visitVarInsn(Opcodes.ALOAD, expanderStore);
@@ -718,7 +718,7 @@ class MacroLambdaCodeGenerator implements CodeGenerator<MacroLambdaStruct> {
 	                              final int initFormVarSymbolStore, final SymbolStruct var, final LispStruct initForm) {
 		final MethodVisitor mv = methodBuilder.getMethodVisitor();
 
-		CodeGenerators.generateSymbol(var, methodBuilder, initFormVarPackageStore, initFormVarSymbolStore);
+		CodeGenerators.generateSymbol(var, generatorState, initFormVarPackageStore, initFormVarSymbolStore);
 
 		final Label symbolCheckIfEnd = new Label();
 
@@ -833,7 +833,7 @@ class MacroLambdaCodeGenerator implements CodeGenerator<MacroLambdaStruct> {
 
 		for (final RequiredParameter requiredBinding : requiredBindings) {
 			final SymbolStruct requiredSymbol = requiredBinding.getVar();
-			CodeGenerators.generateSymbol(requiredSymbol, methodBuilder, requiredPackageStore, requiredSymbolStore);
+			CodeGenerators.generateSymbol(requiredSymbol, generatorState, requiredPackageStore, requiredSymbolStore);
 
 			mv.visitTypeInsn(Opcodes.NEW, GenerationConstants.REQUIRED_BINDING_NAME);
 			mv.visitInsn(Opcodes.DUP);
@@ -952,13 +952,13 @@ class MacroLambdaCodeGenerator implements CodeGenerator<MacroLambdaStruct> {
 
 		for (final OptionalParameter optionalBinding : optionalBindings) {
 			final SymbolStruct optionalSymbol = optionalBinding.getVar();
-			CodeGenerators.generateSymbol(optionalSymbol, methodBuilder, optionalPackageStore, optionalSymbolStore);
+			CodeGenerators.generateSymbol(optionalSymbol, generatorState, optionalPackageStore, optionalSymbolStore);
 
 			nilCodeGenerator.generate(NILStruct.INSTANCE, generatorState);
 			mv.visitVarInsn(Opcodes.ASTORE, optionalInitFormStore);
 
 			final SuppliedPParameter suppliedPBinding = optionalBinding.getSuppliedPBinding();
-			generateSuppliedPBinding(suppliedPBinding, methodBuilder, optionalPackageStore, optionalSuppliedPSymbolStore, optionalSuppliedPStore);
+			generateSuppliedPBinding(suppliedPBinding, generatorState, optionalPackageStore, optionalSuppliedPSymbolStore, optionalSuppliedPStore);
 
 			mv.visitTypeInsn(Opcodes.NEW, GenerationConstants.OPTIONAL_BINDING_NAME);
 			mv.visitInsn(Opcodes.DUP);
@@ -1049,7 +1049,7 @@ class MacroLambdaCodeGenerator implements CodeGenerator<MacroLambdaStruct> {
 		final int restSymbolStore = methodBuilder.getNextAvailableStore();
 
 		final SymbolStruct restSymbol = restBinding.getVar();
-		CodeGenerators.generateSymbol(restSymbol, methodBuilder, restPackageStore, restSymbolStore);
+		CodeGenerators.generateSymbol(restSymbol, generatorState, restPackageStore, restSymbolStore);
 
 		mv.visitTypeInsn(Opcodes.NEW, GenerationConstants.REST_BINDING_NAME);
 		mv.visitInsn(Opcodes.DUP);
@@ -1158,16 +1158,16 @@ class MacroLambdaCodeGenerator implements CodeGenerator<MacroLambdaStruct> {
 
 		for (final KeyParameter keyBinding : keyBindings) {
 			final SymbolStruct keySymbol = keyBinding.getVar();
-			CodeGenerators.generateSymbol(keySymbol, methodBuilder, keyPackageStore, keySymbolStore);
+			CodeGenerators.generateSymbol(keySymbol, generatorState, keyPackageStore, keySymbolStore);
 
 			nilCodeGenerator.generate(NILStruct.INSTANCE, generatorState);
 			mv.visitVarInsn(Opcodes.ASTORE, keyInitFormStore);
 
 			final SymbolStruct keyName = keyBinding.getKeyName();
-			CodeGenerators.generateSymbol(keyName, methodBuilder, keyPackageStore, keyNameStore);
+			CodeGenerators.generateSymbol(keyName, generatorState, keyPackageStore, keyNameStore);
 
 			final SuppliedPParameter suppliedPBinding = keyBinding.getSuppliedPBinding();
-			generateSuppliedPBinding(suppliedPBinding, methodBuilder, keyPackageStore, keySuppliedPSymbolStore, keySuppliedPStore);
+			generateSuppliedPBinding(suppliedPBinding, generatorState, keyPackageStore, keySuppliedPSymbolStore, keySuppliedPStore);
 
 			mv.visitTypeInsn(Opcodes.NEW, GenerationConstants.KEY_BINDING_NAME);
 			mv.visitInsn(Opcodes.DUP);
@@ -1214,8 +1214,8 @@ class MacroLambdaCodeGenerator implements CodeGenerator<MacroLambdaStruct> {
 	 *
 	 * @param suppliedPBinding
 	 * 		the {@link SuppliedPParameter} to generate code for
-	 * @param methodBuilder
-	 * 		{@link JavaMethodBuilder} used for building a Java method body
+	 * @param generatorState
+	 * 		stateful object used to hold the current state of the code generation process
 	 * @param suppliedPPackageStore
 	 * 		the storage location index on the stack where the {@link PackageStruct} for the provided {@link
 	 * 		SuppliedPParameter#var} will exist
@@ -1224,9 +1224,10 @@ class MacroLambdaCodeGenerator implements CodeGenerator<MacroLambdaStruct> {
 	 * @param suppliedPStore
 	 * 		the storage location index on the stack where the generated {@link SuppliedPParameter} will exist
 	 */
-	private static void generateSuppliedPBinding(final SuppliedPParameter suppliedPBinding, final JavaMethodBuilder methodBuilder,
+	private static void generateSuppliedPBinding(final SuppliedPParameter suppliedPBinding, final GeneratorState generatorState,
 	                                             final int suppliedPPackageStore, final int suppliedPSymbolStore,
 	                                             final int suppliedPStore) {
+		final JavaMethodBuilder methodBuilder = generatorState.getCurrentMethodBuilder();
 		final MethodVisitor mv = methodBuilder.getMethodVisitor();
 
 		if (suppliedPBinding == null) {
@@ -1234,7 +1235,7 @@ class MacroLambdaCodeGenerator implements CodeGenerator<MacroLambdaStruct> {
 			mv.visitVarInsn(Opcodes.ASTORE, suppliedPStore);
 		} else {
 			final SymbolStruct keySuppliedPSymbol = suppliedPBinding.getVar();
-			CodeGenerators.generateSymbol(keySuppliedPSymbol, methodBuilder, suppliedPPackageStore, suppliedPSymbolStore);
+			CodeGenerators.generateSymbol(keySuppliedPSymbol, generatorState, suppliedPPackageStore, suppliedPSymbolStore);
 
 			mv.visitTypeInsn(Opcodes.NEW, GenerationConstants.SUPPLIED_P_BINDING_NAME);
 			mv.visitInsn(Opcodes.DUP);
@@ -1382,7 +1383,7 @@ class MacroLambdaCodeGenerator implements CodeGenerator<MacroLambdaStruct> {
 
 		for (final AuxParameter auxBinding : auxBindings) {
 			final SymbolStruct auxSymbol = auxBinding.getVar();
-			CodeGenerators.generateSymbol(auxSymbol, methodBuilder, auxPackageStore, auxSymbolStore);
+			CodeGenerators.generateSymbol(auxSymbol, generatorState, auxPackageStore, auxSymbolStore);
 
 			nilCodeGenerator.generate(NILStruct.INSTANCE, generatorState);
 			mv.visitVarInsn(Opcodes.ASTORE, auxInitFormStore);
@@ -1475,7 +1476,7 @@ class MacroLambdaCodeGenerator implements CodeGenerator<MacroLambdaStruct> {
 		final int wholeSymbolStore = methodBuilder.getNextAvailableStore();
 
 		final SymbolStruct wholeSymbol = wholeBinding.getVar();
-		CodeGenerators.generateSymbol(wholeSymbol, methodBuilder, wholePackageStore, wholeSymbolStore);
+		CodeGenerators.generateSymbol(wholeSymbol, generatorState, wholePackageStore, wholeSymbolStore);
 
 		mv.visitTypeInsn(Opcodes.NEW, GenerationConstants.WHOLE_BINDING_NAME);
 		mv.visitInsn(Opcodes.DUP);
@@ -1552,7 +1553,7 @@ class MacroLambdaCodeGenerator implements CodeGenerator<MacroLambdaStruct> {
 		final int environmentSymbolStore = methodBuilder.getNextAvailableStore();
 
 		final SymbolStruct environmentSymbol = environmentBinding.getVar();
-		CodeGenerators.generateSymbol(environmentSymbol, methodBuilder, environmentPackageStore, environmentSymbolStore);
+		CodeGenerators.generateSymbol(environmentSymbol, generatorState, environmentPackageStore, environmentSymbolStore);
 
 		mv.visitTypeInsn(Opcodes.NEW, GenerationConstants.ENVIRONMENT_BINDING_NAME);
 		mv.visitInsn(Opcodes.DUP);
@@ -1623,7 +1624,7 @@ class MacroLambdaCodeGenerator implements CodeGenerator<MacroLambdaStruct> {
 		final int bodySymbolStore = methodBuilder.getNextAvailableStore();
 
 		final SymbolStruct bodySymbol = bodyBinding.getVar();
-		CodeGenerators.generateSymbol(bodySymbol, methodBuilder, bodyPackageStore, bodySymbolStore);
+		CodeGenerators.generateSymbol(bodySymbol, generatorState, bodyPackageStore, bodySymbolStore);
 
 		mv.visitTypeInsn(Opcodes.NEW, GenerationConstants.BODY_BINDING_NAME);
 		mv.visitInsn(Opcodes.DUP);

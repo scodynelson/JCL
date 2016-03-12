@@ -4,6 +4,7 @@
 
 package jcl.streams.functions;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -59,7 +60,8 @@ public final class FileStringLengthFunction extends AbstractCommonLispFunctionSt
 		if (lispStruct2 instanceof CharacterStruct) {
 			return IntegerStruct.ONE;
 		} else if (lispStruct2 instanceof StringStruct) {
-			return ((StringStruct) lispStruct2).length();
+			final Long length = ((StringStruct) lispStruct2).length();
+			return new IntegerStruct(BigInteger.valueOf(length));
 		} else {
 			throw new TypeErrorException("UNCAUGHT TYPE ERROR.");
 		}

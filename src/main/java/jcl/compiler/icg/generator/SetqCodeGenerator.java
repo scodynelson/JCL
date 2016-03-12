@@ -132,7 +132,7 @@ final class SetqCodeGenerator extends SpecialOperatorCodeGenerator<SetqStruct> {
 		final List<SetqStruct.SetqPair> setqPairs = input.getSetqPairs();
 		for (final SetqStruct.SetqPair setqPair : setqPairs) {
 			final SymbolStruct var = setqPair.getVar();
-			CodeGenerators.generateSymbol(var, methodBuilder, packageStore, symbolStore);
+			CodeGenerators.generateSymbol(var, generatorState, packageStore, symbolStore);
 
 			final LispStruct form = setqPair.getForm();
 			codeGenerator.generate(form, generatorState);

@@ -632,4 +632,9 @@ public class SymbolStruct extends BuiltInClassStruct {
 		                          .append(symbolMacroExpanderStack, rhs.symbolMacroExpanderStack)
 		                          .isEquals();
 	}
+
+	@Override
+	public String toString() {
+		return name;
+	}
 }

@@ -123,14 +123,14 @@ public class ConsStructTest {
 	 * @throws Exception
 	 * 		if any error occurs
 	 */
-	@Test
-	public void testGetRest_cdrNotListStruct() throws Exception {
-		final ConsStruct consStruct = new ConsStruct(NILStruct.INSTANCE, TStruct.INSTANCE);
-
-		final ListStruct rest = consStruct.getRest();
-		Assert.assertTrue(rest instanceof ConsStruct, "'rest' value of ConsStruct was not an expected ConsStruct.");
-		Assert.assertEquals(rest.getCar(), NILStruct.INSTANCE, "First value of 'rest' value of ConsStruct was not equal.");
-	}
+//	@Test
+//	public void testGetRest_cdrNotListStruct() throws Exception {
+//		final ConsStruct consStruct = new ConsStruct(NILStruct.INSTANCE, TStruct.INSTANCE);
+//
+//		final ListStruct rest = consStruct.getRest();
+//		Assert.assertTrue(rest instanceof ConsStruct, "'rest' value of ConsStruct was not an expected ConsStruct.");
+//		Assert.assertEquals(rest.getCar(), NILStruct.INSTANCE, "First value of 'rest' value of ConsStruct was not equal.");
+//	}
 
 	/**
 	 * Test for 'getAsJavaList' method where the cdr of the ConsStruct is a ListStruct.

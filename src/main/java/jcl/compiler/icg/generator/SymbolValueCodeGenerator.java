@@ -24,7 +24,7 @@ class SymbolValueCodeGenerator implements CodeGenerator<SymbolStruct> {
 
 		final int packageStore = methodBuilder.getNextAvailableStore();
 		final int symbolStore = methodBuilder.getNextAvailableStore();
-		CodeGenerators.generateSymbol(input, methodBuilder, packageStore, symbolStore);
+		CodeGenerators.generateSymbol(input, generatorState, packageStore, symbolStore);
 
 		mv.visitVarInsn(Opcodes.ALOAD, symbolStore);
 

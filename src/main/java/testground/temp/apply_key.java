@@ -37,16 +37,23 @@ public final class apply_key extends CompiledPrimitive {
 
 }
 
+
+
 /*
+lispobject == (____ key element)
+sym19452 == if
+sym19453 == funcall
+
 (sym19452 (second lispobject)
   (sym19453 (second lispobject) (third lispobject))
   (third lispobject))
 
-
+(if key
+  (funcall key 1)
+  1)
 
 (defmacro apply-key (key element)
   `(if ,key
        (funcall ,key ,element)
      ,element))
-
  */

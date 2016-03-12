@@ -146,7 +146,7 @@ class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 
 			final int packageStore = previousMethodBuilder.getNextAvailableStore();
 			final int symbolStore = previousMethodBuilder.getNextAvailableStore();
-			CodeGenerators.generateSymbol(structureSymbol, previousMethodBuilder, packageStore, symbolStore);
+			CodeGenerators.generateSymbol(structureSymbol, generatorState, packageStore, symbolStore);
 
 			previousMv.visitVarInsn(Opcodes.ALOAD, symbolStore);
 			previousMv.visitInsn(Opcodes.DUP); // DUP the symbol so it will still be on the stack after we set the structure class.
@@ -1541,7 +1541,7 @@ class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 		} else {
 			final int packageStore = methodBuilder.getNextAvailableStore();
 			final int symbolStore = methodBuilder.getNextAvailableStore();
-			CodeGenerators.generateSymbol(defaultConstructorSymbol, methodBuilder, packageStore, symbolStore);
+			CodeGenerators.generateSymbol(defaultConstructorSymbol, generatorState, packageStore, symbolStore);
 
 			mv.visitVarInsn(Opcodes.ALOAD, symbolStore);
 		}
@@ -1552,7 +1552,7 @@ class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 		} else {
 			final int packageStore = methodBuilder.getNextAvailableStore();
 			final int symbolStore = methodBuilder.getNextAvailableStore();
-			CodeGenerators.generateSymbol(printerSymbol, methodBuilder, packageStore, symbolStore);
+			CodeGenerators.generateSymbol(printerSymbol, generatorState, packageStore, symbolStore);
 
 			mv.visitVarInsn(Opcodes.ALOAD, symbolStore);
 		}
@@ -1758,7 +1758,7 @@ class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 		final SymbolStruct structureSymbol = input.getStructureSymbol();
 		final int packageStore = methodBuilder.getNextAvailableStore();
 		final int symbolStore = methodBuilder.getNextAvailableStore();
-		CodeGenerators.generateSymbol(structureSymbol, methodBuilder, packageStore, symbolStore);
+		CodeGenerators.generateSymbol(structureSymbol, generatorState, packageStore, symbolStore);
 
 		mv.visitVarInsn(Opcodes.ALOAD, symbolStore);
 
@@ -1868,7 +1868,7 @@ class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 		final int slotStore = methodBuilder.getNextAvailableStore();
 
 		for (final SymbolStruct slot : slots) {
-			CodeGenerators.generateSymbol(slot, methodBuilder, packageStore, slotStore);
+			CodeGenerators.generateSymbol(slot, generatorState, packageStore, slotStore);
 
 			mv.visitVarInsn(Opcodes.ALOAD, slotsFieldStore);
 			mv.visitVarInsn(Opcodes.ALOAD, slotStore);

@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import jcl.LispStruct;
+import jcl.compiler.environment.binding.lambdalist.KeyParameter;
 import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
 import jcl.functions.AbstractCommonLispFunctionStruct;
 import jcl.lists.ListStruct;
@@ -30,6 +31,14 @@ public final class MakeListFunction extends AbstractCommonLispFunctionStruct {
 	@Override
 	protected List<RequiredParameter> getRequiredBindings() {
 		return RequiredParameter.builder(GlobalPackageStruct.COMMON_LISP, "SIZE").buildList();
+	}
+
+	@Override
+	protected List<KeyParameter> getKeyBindings() {
+		return KeyParameter.builder(GlobalPackageStruct.COMMON_LISP, "INITIAL-ELEMENT")
+		                   .suppliedPBinding()
+		                   .initForm(NILStruct.INSTANCE)
+		                   .buildList();
 	}
 
 	@Override

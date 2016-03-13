@@ -4,7 +4,7 @@
 
 package jcl.sequences;
 
-import java.util.List;
+import java.util.stream.Stream;
 
 import jcl.LispStruct;
 
@@ -13,13 +13,17 @@ import jcl.LispStruct;
  */
 public interface SequenceStruct extends LispStruct {
 
-	/**
-	 * Returns the Lisp sequence as a Java list.
-	 *
-	 * @return the Lisp sequence as a Java list
-	 */
-	@Deprecated
-	List<LispStruct> getAsJavaList();
+	default Stream<LispStruct> stream() {
+		throw new UnsupportedOperationException("Not supported yet.");
+	}
+
+	default Stream<LispStruct> parallelStream() {
+		throw new UnsupportedOperationException("Not supported yet.");
+	}
+
+	default LispStruct[] toArray() {
+		throw new UnsupportedOperationException("Not supported yet.");
+	}
 
 	default Long length() {
 		throw new UnsupportedOperationException("Not supported yet.");

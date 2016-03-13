@@ -28,9 +28,9 @@ public class BodyWithDeclaresAndDocStringAnalyzer {
 
 			while (isDeclaration(next)) {
 				final ListStruct declareStatement = (ListStruct) next;
-				final List<LispStruct> declarations = declareStatement.getRest().getAsJavaList();
-
-				declares.addAll(declarations);
+				final Iterator<LispStruct> declareIterator = declareStatement.iterator();
+				declareIterator.next(); // DECLARE SYMBOL
+				declareIterator.forEachRemaining(declares::add);
 
 				if (iterator.hasNext()) {
 					next = iterator.next();
@@ -47,9 +47,9 @@ public class BodyWithDeclaresAndDocStringAnalyzer {
 
 			while (isDeclaration(next)) {
 				final ListStruct declareStatement = (ListStruct) next;
-				final List<LispStruct> declarations = declareStatement.getRest().getAsJavaList();
-
-				declares.addAll(declarations);
+				final Iterator<LispStruct> declareIterator = declareStatement.iterator();
+				declareIterator.next(); // DECLARE SYMBOL
+				declareIterator.forEachRemaining(declares::add);
 
 				if (iterator.hasNext()) {
 					next = iterator.next();

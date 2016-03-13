@@ -1,6 +1,7 @@
 package jcl.compiler.sa.analyzer.specialoperator;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Stack;
 import java.util.function.Predicate;
@@ -22,6 +23,7 @@ import jcl.compiler.struct.specialoperator.PrognStruct;
 import jcl.compiler.struct.specialoperator.declare.DeclareStruct;
 import jcl.compiler.struct.specialoperator.declare.SpecialDeclarationStruct;
 import jcl.conditions.exceptions.ProgramErrorException;
+import jcl.conditions.exceptions.TypeErrorException;
 import jcl.functions.expanders.MacroFunctionExpander;
 import jcl.lists.ListStruct;
 import jcl.printer.Printer;
@@ -68,50 +70,46 @@ public class MacroletExpander extends MacroFunctionExpander<InnerLambdaStruct> {
 
 	@Override
 	public InnerLambdaStruct expand(final ListStruct form, final Environment environment) {
+		final Iterator<LispStruct> iterator = form.iterator();
+		iterator.next(); // MACROLET SYMBOL
 
-		final int formSize = form.size();
-		if (formSize < 2) {
-			throw new ProgramErrorException("MACROLET: Incorrect number of arguments: " + formSize + ". Expected at least 2 arguments.");
+		if (!iterator.hasNext()) {
+			throw new ProgramErrorException("MACROLET: Incorrect number of arguments: 0. Expected at least 1 argument.");
 		}
+		final LispStruct first = iterator.next();
 
-		final ListStruct formRest = form.getRest();
-
-		final LispStruct second = formRest.getCar();
-		if (!(second instanceof ListStruct)) {
-			final String printedObject = printer.print(second);
-			throw new ProgramErrorException("MACROLET: Parameter list must be a list. Got: " + printedObject);
+		if (!(first instanceof ListStruct)) {
+			final String printedObject = printer.print(first);
+			throw new TypeErrorException("MACROLET: MACRO-LIST must be a List. Got: " + printedObject);
 		}
+		final ListStruct innerMacroLambdas = (ListStruct) first;
 
 		final Environment macroletEnvironment = new Environment(environment);
 
 		final Stack<SymbolStruct> functionNameStack = macroletEnvironment.getFunctionNameStack();
-		List<SymbolStruct> functionNames = null;
+		final List<SymbolStruct> functionNames = getFunctionNames(innerMacroLambdas);
+
+		final List<LispStruct> forms = new ArrayList<>();
+		iterator.forEachRemaining(forms::add);
+
+		final BodyProcessingResult bodyProcessingResult = bodyWithDeclaresAnalyzer.analyze(forms);
+
+		final ListStruct fullDeclaration = ListStruct.buildProperList(bodyProcessingResult.getDeclares());
+		final DeclareStruct declare = declareExpander.expand(fullDeclaration, macroletEnvironment);
 
 		try {
-			final ListStruct innerLambdas = (ListStruct) second;
-			final List<LispStruct> innerLambdasAsJavaList = innerLambdas.getAsJavaList();
-			functionNames = getFunctionNames(innerLambdasAsJavaList);
-
 			// Add function names BEFORE analyzing the functions. This is one of the differences between Flet and Labels/Macrolet.
 			StackUtils.pushAll(functionNameStack, functionNames);
 
-			final ListStruct formRestRest = formRest.getRest();
-			final List<LispStruct> forms = formRestRest.getAsJavaList();
-
-			final BodyProcessingResult bodyProcessingResult = bodyWithDeclaresAnalyzer.analyze(forms);
-
-			final ListStruct fullDeclaration = ListStruct.buildProperList(bodyProcessingResult.getDeclares());
-			final DeclareStruct declare = declareExpander.expand(fullDeclaration, macroletEnvironment);
-
 			final List<InnerLambdaStruct.InnerLambdaVar> macroletVars
-					= innerLambdasAsJavaList.stream()
-					                        .map(e -> getMacroletVar(e, declare, macroletEnvironment))
-					                        .collect(Collectors.toList());
+					= innerMacroLambdas.stream()
+					                   .map(e -> getMacroletVar(e, declare, macroletEnvironment))
+					                   .collect(Collectors.toList());
 
 			final List<SpecialDeclarationStruct> specialDeclarations = declare.getSpecialDeclarations();
 			specialDeclarations.stream()
 			                   .map(SpecialDeclarationStruct::getVar)
-			                   .map(e -> new Binding(e, TType.INSTANCE))
+			                   .map(Binding::new)
 			                   .forEach(macroletEnvironment::addDynamicBinding);
 
 			final List<LispStruct> bodyForms = bodyProcessingResult.getBodyForms();
@@ -128,21 +126,22 @@ public class MacroletExpander extends MacroFunctionExpander<InnerLambdaStruct> {
 		}
 	}
 
-	private List<SymbolStruct> getFunctionNames(final List<? extends LispStruct> functionDefinitions) {
+	private List<SymbolStruct> getFunctionNames(final ListStruct innerMacroLambdas) {
 
-		final List<SymbolStruct> functionNames = new ArrayList<>(functionDefinitions.size());
+		final List<SymbolStruct> functionNames = new ArrayList<>();
 
-		for (final LispStruct functionDefinition : functionDefinitions) {
+		for (final LispStruct functionDefinition : innerMacroLambdas) {
+
 			if (!(functionDefinition instanceof ListStruct)) {
-				final String printedFunctionDefinition = printer.print(functionDefinition);
-				throw new ProgramErrorException("MACROLET: Function parameter must be a list. Got: " + printedFunctionDefinition);
+				final String printedObject = printer.print(functionDefinition);
+				throw new ProgramErrorException("MACROLET: FUNCTION PARAMETER must be a List. Got: " + printedObject);
 			}
 			final ListStruct functionList = (ListStruct) functionDefinition;
 
 			final LispStruct functionListFirst = functionList.getCar();
 			if (!(functionListFirst instanceof SymbolStruct)) {
 				final String printedObject = printer.print(functionListFirst);
-				throw new ProgramErrorException("MACROLET: First element of function parameter must be a symbol. Got: " + printedObject);
+				throw new ProgramErrorException("MACROLET: First element of function parameter must be a Symbol. Got: " + printedObject);
 			}
 			final SymbolStruct functionName = (SymbolStruct) functionListFirst;
 
@@ -182,18 +181,21 @@ public class MacroletExpander extends MacroFunctionExpander<InnerLambdaStruct> {
 
 		// TODO: This will be a MacroLambda, NOT a Lambda form!!!
 
-		final int functionListParameterSize = functionListParameter.size();
-		if (functionListParameterSize < 2) {
-			throw new ProgramErrorException("MACROLET: Incorrect number of arguments to function parameter: " + functionListParameterSize + ". Expected at least 2 arguments.");
+		final Iterator<LispStruct> iterator = functionListParameter.iterator();
+
+		if (!iterator.hasNext()) {
+			throw new ProgramErrorException("MACROLET: Function parameter must have at least 2 elements. Got: 0");
 		}
+		final LispStruct functionName = iterator.next();
 
-		final ListStruct functionListParameterRest = functionListParameter.getRest();
+		if (!iterator.hasNext()) {
+			throw new ProgramErrorException("MACROLET: Function parameter must have at least 2 elements. Got: 1");
+		}
+		final LispStruct lambdaList = iterator.next();
 
-		final LispStruct functionName = functionListParameter.getCar();
-		final LispStruct lambdaList = functionListParameterRest.getCar();
-		final ListStruct body = functionListParameterRest.getRest();
+		final List<LispStruct> forms = new ArrayList<>();
+		iterator.forEachRemaining(forms::add);
 
-		final List<LispStruct> forms = body.getAsJavaList();
 		final BodyProcessingResult bodyProcessingResult = bodyWithDeclaresAndDocStringAnalyzer.analyze(forms);
 
 		final List<LispStruct> declares = bodyProcessingResult.getDeclares();
@@ -223,7 +225,7 @@ public class MacroletExpander extends MacroFunctionExpander<InnerLambdaStruct> {
 		final ListStruct innerLambdaListStruct = ListStruct.buildProperList(SpecialOperatorStruct.LAMBDA, lambdaList, fullDeclaration, docString, innerBlockListStruct);
 		final ListStruct innerFunctionListStruct = ListStruct.buildProperList(SpecialOperatorStruct.FUNCTION, innerLambdaListStruct);
 
-		// Evaluate in the 'current' environment. This is one of the differences between Flet and Labels/Macrolet.
+		// Evaluate in the 'current' environment.
 		return functionExpander.expand(innerFunctionListStruct, macroletEnvironment);
 	}
 }

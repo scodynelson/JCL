@@ -3,7 +3,6 @@ package jcl.compiler.sa.analyzer.specialoperator;
 import java.util.List;
 import java.util.Stack;
 
-import jcl.LispStruct;
 import jcl.compiler.environment.Environment;
 import jcl.compiler.sa.analyzer.body.BodyProcessingResult;
 import jcl.compiler.struct.specialoperator.CompilerFunctionStruct;
@@ -32,7 +31,7 @@ public class LabelsExpander extends InnerLambdaExpander {
 	}
 
 	@Override
-	protected InnerLambdaStruct buildInnerLambda(final List<LispStruct> innerLambdasAsJavaList,
+	protected InnerLambdaStruct buildInnerLambda(final ListStruct innerLambdas,
 	                                             final Environment innerLambdaEnvironment,
 	                                             final BodyProcessingResult bodyProcessingResult,
 	                                             final DeclareStruct declare,
@@ -44,7 +43,7 @@ public class LabelsExpander extends InnerLambdaExpander {
 			StackUtils.pushAll(functionNameStack, functionNames);
 
 			final List<InnerLambdaStruct.InnerLambdaVar> vars
-					= getVars(innerLambdasAsJavaList, innerLambdaEnvironment, declare, functionNames);
+					= getVars(innerLambdas, innerLambdaEnvironment, declare, functionNames);
 			return getInnerLambda(vars, innerLambdaEnvironment, bodyProcessingResult, declare);
 		} finally {
 			StackUtils.popX(functionNameStack, functionNames.size());

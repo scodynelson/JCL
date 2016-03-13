@@ -1,5 +1,7 @@
 package jcl.compiler.sa.analyzer.specialoperator;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,15 +29,16 @@ public class PrognExpander extends MacroFunctionExpander<PrognStruct> {
 
 	@Override
 	public PrognStruct expand(final ListStruct form, final Environment environment) {
+		final Iterator<LispStruct> iterator = form.iterator();
+		iterator.next(); // PROGN SYMBOL
 
-		final ListStruct formRest = form.getRest();
+		final List<LispStruct> forms = new ArrayList<>();
+		iterator.forEachRemaining(forms::add);
 
-		final List<LispStruct> forms = formRest.getAsJavaList();
 		final List<LispStruct> analyzedForms =
 				forms.stream()
 				     .map(e -> formAnalyzer.analyze(e, environment))
 				     .collect(Collectors.toList());
-
 		return new PrognStruct(analyzedForms);
 	}
 }

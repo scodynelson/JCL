@@ -1,11 +1,13 @@
 package jcl.compiler.sa.analyzer.specialoperator;
 
+import java.util.Iterator;
+
 import jcl.LispStruct;
 import jcl.compiler.environment.Environment;
 import jcl.compiler.sa.FormAnalyzer;
-import jcl.compiler.sa.analyzer.LispFormValueValidator;
 import jcl.compiler.struct.specialoperator.ReturnFromStruct;
 import jcl.conditions.exceptions.ProgramErrorException;
+import jcl.conditions.exceptions.TypeErrorException;
 import jcl.functions.expanders.MacroFunctionExpander;
 import jcl.lists.ListStruct;
 import jcl.printer.Printer;
@@ -22,9 +24,6 @@ public class ReturnFromExpander extends MacroFunctionExpander<ReturnFromStruct> 
 	private FormAnalyzer formAnalyzer;
 
 	@Autowired
-	private LispFormValueValidator validator;
-
-	@Autowired
 	private Printer printer;
 
 	@Override
@@ -34,28 +33,39 @@ public class ReturnFromExpander extends MacroFunctionExpander<ReturnFromStruct> 
 
 	@Override
 	public ReturnFromStruct expand(final ListStruct form, final Environment environment) {
-		final int formSize = validator.validateListFormSize(form, 2, 3, "RETURN-FROM");
+		final Iterator<LispStruct> iterator = form.iterator();
+		iterator.next(); // RETURN-FROM SYMBOL
 
-		final ListStruct formRest = form.getRest();
+		if (!iterator.hasNext()) {
+			throw new ProgramErrorException("RETURN-FROM: Incorrect number of arguments: 0. Expected between 1 and 2 arguments.");
+		}
+		final LispStruct first = iterator.next();
 
-		final LispStruct second = formRest.getCar();
-		final SymbolStruct name = validator.validateObjectType(second, "RETURN-FROM", "NAME", SymbolStruct.class);
+		if (!(first instanceof SymbolStruct)) {
+			final String printedObject = printer.print(first);
+			throw new TypeErrorException("RETURN-FROM: NAME must be a Symbol. Got: " + printedObject);
+		}
+		final SymbolStruct name = (SymbolStruct) first;
 
 		if (environment.getBlockStack().search(name) == -1) {
-			final String printedObject = printer.print(second);
+			final String printedObject = printer.print(name);
 			throw new ProgramErrorException("RETURN-FROM: No BLOCK with name " + printedObject + " is visible.");
 		}
 
-		final LispStruct analyzedResult;
-		if (formSize == 3) {
-			final ListStruct formRestRest = formRest.getRest();
-
-			final LispStruct result = formRestRest.getCar();
-			analyzedResult = formAnalyzer.analyze(result, environment);
-		} else {
-			analyzedResult = NILStruct.INSTANCE;
+		LispStruct third = null;
+		if (iterator.hasNext()) {
+			third = iterator.next();
+		}
+		if (iterator.hasNext()) {
+			throw new ProgramErrorException("RETURN-FROM: Incorrect number of arguments: 2. Expected between 1 and 2 arguments.");
 		}
 
-		return new ReturnFromStruct(name, analyzedResult);
+		final LispStruct result;
+		if (third == null) {
+			result = NILStruct.INSTANCE;
+		} else {
+			result = formAnalyzer.analyze(third, environment);
+		}
+		return new ReturnFromStruct(name, result);
 	}
 }

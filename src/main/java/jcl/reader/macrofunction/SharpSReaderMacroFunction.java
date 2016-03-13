@@ -5,6 +5,8 @@
 package jcl.reader.macrofunction;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 import javax.annotation.PostConstruct;
@@ -74,8 +76,9 @@ public class SharpSReaderMacroFunction extends ReaderMacroFunction {
 		if (listToken.length() == 0) {
 			throw new ReaderErrorException("Structure type was not supplied");
 		}
+		final Iterator<LispStruct> iterator = listToken.iterator();
 
-		final LispStruct structureType = listToken.getCar();
+		final LispStruct structureType = iterator.next();
 		if (!(structureType instanceof SymbolStruct)) {
 			throw new ReaderErrorException("Structure type is not a symbol: " + structureType);
 		}
@@ -96,11 +99,11 @@ public class SharpSReaderMacroFunction extends ReaderMacroFunction {
 			throw new ReaderErrorException("The " + structureType + " structure default constructor is undefined.");
 		}
 
-		final ListStruct arguments = listToken.getRest();
-		final List<LispStruct> argumentsAsJavaList = arguments.getAsJavaList();
+		final List<LispStruct> arguments = new ArrayList<>();
+		iterator.forEachRemaining(arguments::add);
 
-		LispStruct[] argumentsArray = new LispStruct[argumentsAsJavaList.size()];
-		argumentsArray = argumentsAsJavaList.toArray(argumentsArray);
+		LispStruct[] argumentsArray = new LispStruct[arguments.size()];
+		argumentsArray = arguments.toArray(argumentsArray);
 		return defaultConstructor.apply(argumentsArray);
 	}
 

@@ -111,13 +111,13 @@ public final class MakePackageFunction extends AbstractCommonLispFunctionStruct 
 				= keywords.getOrDefault(CommonLispSymbols.USE_KEYWORD, ListStruct.buildProperList(GlobalPackageStruct.COMMON_LISP));
 		validator.validateTypes(usePackages, functionName(), "Use Packages", ListType.INSTANCE);
 
-		final List<LispStruct> nicknamesList = ((ListStruct) nicknames).getAsJavaList();
+		final ListStruct nicknamesList = (ListStruct) nicknames;
 		final List<String> realNicknames
 				= nicknamesList.stream()
 				               .map(e -> validator.validateStringDesignator(nicknames, functionName(), "Nickname"))
 				               .collect(Collectors.toList());
 
-		final List<LispStruct> usePackagesList = ((ListStruct) usePackages).getAsJavaList();
+		final ListStruct usePackagesList = (ListStruct) usePackages;
 		final Set<PackageStruct> realUsePackages
 				= usePackagesList.stream()
 				                 .map(e -> validator.validatePackageDesignator(e, functionName()))

@@ -36,7 +36,7 @@ public class FletExpander extends InnerLambdaExpander {
 	}
 
 	@Override
-	protected InnerLambdaStruct buildInnerLambda(final List<LispStruct> innerLambdasAsJavaList,
+	protected InnerLambdaStruct buildInnerLambda(final ListStruct innerLambdas,
 	                                             final Environment innerLambdaEnvironment,
 	                                             final BodyProcessingResult bodyProcessingResult,
 	                                             final DeclareStruct declare,
@@ -44,10 +44,10 @@ public class FletExpander extends InnerLambdaExpander {
 	                                             final List<SymbolStruct> functionNames) {
 
 		final List<InnerLambdaStruct.InnerLambdaVar> vars
-				= getVars(innerLambdasAsJavaList, innerLambdaEnvironment, declare, functionNames);
+				= getVars(innerLambdas, innerLambdaEnvironment, declare, functionNames);
 
 		try {
-			// Add function names BEFORE analyzing the functions.
+			// Add function names AFTER analyzing the functions.
 			StackUtils.pushAll(functionNameStack, functionNames);
 			return getInnerLambda(vars, innerLambdaEnvironment, bodyProcessingResult, declare);
 		} finally {

@@ -1,10 +1,11 @@
 package jcl.compiler.sa.analyzer.specialoperator;
 
+import java.util.Iterator;
+
 import jcl.LispStruct;
 import jcl.compiler.environment.Environment;
 import jcl.compiler.functions.EvalFunction;
 import jcl.compiler.sa.FormAnalyzer;
-import jcl.compiler.sa.analyzer.LispFormValueValidator;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.functions.expanders.MacroFunctionExpander;
 import jcl.lists.ListStruct;
@@ -22,9 +23,6 @@ public class LoadTimeValueExpander extends MacroFunctionExpander<LispStruct> {
 	private FormAnalyzer formAnalyzer;
 
 	@Autowired
-	private LispFormValueValidator validator;
-
-	@Autowired
 	private EvalFunction evalFunction;
 
 	@Autowired
@@ -37,19 +35,29 @@ public class LoadTimeValueExpander extends MacroFunctionExpander<LispStruct> {
 
 	@Override
 	public LispStruct expand(final ListStruct form, final Environment environment) {
-		validator.validateListFormSize(form, 2, 3, "LOAD-TIME-VALUE");
+		final Iterator<LispStruct> iterator = form.iterator();
+		iterator.next(); // LOAD-TIME-VALUE SYMBOL
 
-		final ListStruct formRest = form.getRest();
-		final ListStruct formRestRest = formRest.getRest();
+		if (!iterator.hasNext()) {
+			throw new ProgramErrorException("LOAD-TIME-VALUE: Incorrect number of arguments: 0. Expected between 1 and 2 arguments.");
+		}
+		final LispStruct loadTimeValueForm = iterator.next();
 
-		final LispStruct third = formRestRest.getCar();
-		if (!(third instanceof BooleanStruct)) {
-			final String printedObject = printer.print(third);
+		LispStruct readOnlyP = null;
+		if (iterator.hasNext()) {
+			readOnlyP = iterator.next();
+		}
+
+		if (iterator.hasNext()) {
+			throw new ProgramErrorException("LOAD-TIME-VALUE: Incorrect number of arguments: 3. Expected between 1 and 2 arguments.");
+		}
+
+		if ((readOnlyP != null) && !(readOnlyP instanceof BooleanStruct)) {
+			final String printedObject = printer.print(readOnlyP);
 			throw new ProgramErrorException("LOAD-TIME-VALUE: Read-Only-P value must be either 'T' or 'NIL'. Got: " + printedObject);
 		}
 
-		final LispStruct loadTimeValueForm = formRest.getCar();
-		final LispStruct analyzedEvalForm = formAnalyzer.analyze(loadTimeValueForm, Environment.NULL);
-		return evalFunction.eval(analyzedEvalForm, Environment.NULL);
+		final LispStruct analyzedLoadTimeValueForm = formAnalyzer.analyze(loadTimeValueForm, Environment.NULL);
+		return evalFunction.eval(analyzedLoadTimeValueForm, Environment.NULL);
 	}
 }

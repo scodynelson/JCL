@@ -33,9 +33,7 @@ public final class OrdinaryLambdaListParser extends LambdaListParser {
 	public OrdinaryLambdaList parseOrdinaryLambdaList(final Environment environment, final ListStruct lambdaList,
 	                                                  final DeclareStruct declareElement) {
 
-		final List<LispStruct> lambdaListJava = lambdaList.getAsJavaList();
-
-		final Iterator<LispStruct> iterator = lambdaListJava.iterator();
+		final Iterator<LispStruct> iterator = lambdaList.iterator();
 
 		LispStruct currentElement = null;
 

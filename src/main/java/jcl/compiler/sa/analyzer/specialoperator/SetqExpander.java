@@ -1,15 +1,18 @@
 package jcl.compiler.sa.analyzer.specialoperator;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import jcl.LispStruct;
 import jcl.compiler.environment.Environment;
 import jcl.compiler.sa.FormAnalyzer;
-import jcl.compiler.sa.analyzer.LispFormValueValidator;
 import jcl.compiler.struct.specialoperator.SetqStruct;
+import jcl.conditions.exceptions.ProgramErrorException;
+import jcl.conditions.exceptions.TypeErrorException;
 import jcl.functions.expanders.MacroFunctionExpander;
 import jcl.lists.ListStruct;
+import jcl.printer.Printer;
 import jcl.symbols.SpecialOperatorStruct;
 import jcl.symbols.SymbolStruct;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +25,7 @@ public class SetqExpander extends MacroFunctionExpander<SetqStruct> {
 	private FormAnalyzer formAnalyzer;
 
 	@Autowired
-	private LispFormValueValidator validator;
+	private Printer printer;
 
 	@Override
 	public SymbolStruct getFunctionSymbol() {
@@ -31,18 +34,27 @@ public class SetqExpander extends MacroFunctionExpander<SetqStruct> {
 
 	@Override
 	public SetqStruct expand(final ListStruct form, final Environment environment) {
+		final Iterator<LispStruct> iterator = form.iterator();
+		iterator.next(); // SETQ SYMBOL
 
-		final ListStruct formRest = form.getRest();
-		final int numberOfForms = validator.validateListFormSizeEven(formRest, "SETQ");
+		final List<LispStruct> forms = new ArrayList<>();
+		iterator.forEachRemaining(forms::add);
 
-		final List<LispStruct> forms = formRest.getAsJavaList();
+		final int numberOfForms = forms.size();
+		if ((numberOfForms % 2) != 0) {
+			throw new ProgramErrorException("SETQ: Odd number of arguments received: " + numberOfForms + ". Expected an even number of arguments.");
+		}
 
 		final List<SetqStruct.SetqPair> setqPairs = new ArrayList<>(numberOfForms / 2);
 
 		for (int index = 0; index < numberOfForms; index += 2) {
 
 			final LispStruct setqVar = forms.get(index);
-			final SymbolStruct setqVarSymbol = validator.validateObjectType(setqVar, "SETQ", "VARIABLE", SymbolStruct.class);
+			if (!(setqVar instanceof SymbolStruct)) {
+				final String printedObject = printer.print(setqVar);
+				throw new TypeErrorException("SETQ: VARIABLE must be a Symbol. Got: " + printedObject);
+			}
+			final SymbolStruct setqVarSymbol = (SymbolStruct) setqVar;
 
 			final LispStruct setqForm = forms.get(index + 1);
 			final LispStruct setqFormAnalyzed = formAnalyzer.analyze(setqForm, environment);

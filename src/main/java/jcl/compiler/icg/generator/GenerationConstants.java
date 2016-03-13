@@ -11,6 +11,9 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import jcl.LispStruct;
 import jcl.compiler.environment.binding.lambdalist.AuxParameter;
@@ -66,6 +69,18 @@ interface GenerationConstants {
 	String JAVA_HASH_CODE_METHOD_NAME = "hashCode";
 
 	String JAVA_HASH_CODE_METHOD_DESC = CodeGenerators.getMethodDescription(Object.class, JAVA_HASH_CODE_METHOD_NAME);
+
+	String JAVA_STREAM_NAME = Type.getInternalName(Stream.class);
+
+	String JAVA_STREAM_COLLECT_METHOD_NAME = "collect";
+
+	String JAVA_STREAM_COLLECT_METHOD_DESC = CodeGenerators.getMethodDescription(Stream.class, JAVA_STREAM_COLLECT_METHOD_NAME, Collector.class);
+
+	String JAVA_COLLECTORS_NAME = Type.getInternalName(Collectors.class);
+
+	String JAVA_COLLECTORS_TO_LIST_METHOD_NAME = "toList";
+
+	String JAVA_COLLECTORS_TO_LIST_METHOD_DESC = CodeGenerators.getMethodDescription(Collectors.class, JAVA_COLLECTORS_TO_LIST_METHOD_NAME);
 
 	String JAVA_LIST_NAME = Type.getInternalName(List.class);
 
@@ -377,9 +392,9 @@ interface GenerationConstants {
 
 	String LIST_STRUCT_NAME = Type.getInternalName(ListStruct.class);
 
-	String LIST_STRUCT_GET_AS_JAVA_LIST_METHOD_NAME = "getAsJavaList";
+	String LIST_STRUCT_STREAM_METHOD_NAME = "stream";
 
-	String LIST_STRUCT_GET_AS_JAVA_LIST_METHOD_DESC = CodeGenerators.getMethodDescription(ListStruct.class, LIST_STRUCT_GET_AS_JAVA_LIST_METHOD_NAME);
+	String LIST_STRUCT_STREAM_METHOD_DESC = CodeGenerators.getMethodDescription(ListStruct.class, LIST_STRUCT_STREAM_METHOD_NAME);
 
 	String STRUCTURE_OBJECT_STRUCT_NAME = Type.getInternalName(StructureObjectStruct.class);
 

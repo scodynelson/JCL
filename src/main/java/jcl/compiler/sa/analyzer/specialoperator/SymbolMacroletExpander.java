@@ -1,5 +1,7 @@
 package jcl.compiler.sa.analyzer.specialoperator;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
@@ -16,6 +18,7 @@ import jcl.compiler.struct.specialoperator.SymbolMacroletStruct;
 import jcl.compiler.struct.specialoperator.declare.DeclareStruct;
 import jcl.compiler.struct.specialoperator.declare.SpecialDeclarationStruct;
 import jcl.conditions.exceptions.ProgramErrorException;
+import jcl.conditions.exceptions.TypeErrorException;
 import jcl.functions.expanders.MacroFunctionExpander;
 import jcl.lists.ListStruct;
 import jcl.printer.Printer;
@@ -50,27 +53,24 @@ public class SymbolMacroletExpander extends MacroFunctionExpander<SymbolMacrolet
 
 	@Override
 	public SymbolMacroletStruct expand(final ListStruct form, final Environment environment) {
+		final Iterator<LispStruct> iterator = form.iterator();
+		iterator.next(); // SYMBOL-MACROLET SYMBOL
 
-		final int formSize = form.size();
-		if (formSize < 2) {
-			throw new ProgramErrorException("SYMBOL-MACROLET: Incorrect number of arguments: " + formSize + ". Expected at least 2 arguments.");
+		if (!iterator.hasNext()) {
+			throw new ProgramErrorException("SYMBOL-MACROLET: Incorrect number of arguments: 0. Expected at least 1 argument.");
 		}
+		final LispStruct first = iterator.next();
 
-		final ListStruct formRest = form.getRest();
-
-		final LispStruct second = formRest.getCar();
-		if (!(second instanceof ListStruct)) {
-			final String printedObject = printer.print(second);
-			throw new ProgramErrorException("SYMBOL-MACROLET: Parameter list must be of type ListStruct. Got: " + printedObject);
+		if (!(first instanceof ListStruct)) {
+			final String printedObject = printer.print(first);
+			throw new TypeErrorException("SYMBOL-MACROLET: PARAMETER-LIST must be a List. Got: " + printedObject);
 		}
+		final ListStruct parameters = (ListStruct) first;
 
 		final Environment symbolMacroletEnvironment = new Environment(environment);
 
-		final ListStruct parameters = (ListStruct) second;
-		final List<LispStruct> parametersAsJavaList = parameters.getAsJavaList();
-
-		final ListStruct formRestRest = formRest.getRest();
-		final List<LispStruct> forms = formRestRest.getAsJavaList();
+		final List<LispStruct> forms = new ArrayList<>();
+		iterator.forEachRemaining(forms::add);
 
 		final BodyProcessingResult bodyProcessingResult = bodyWithDeclaresAnalyzer.analyze(forms);
 
@@ -79,9 +79,9 @@ public class SymbolMacroletExpander extends MacroFunctionExpander<SymbolMacrolet
 		validateDeclares(declare);
 
 		final List<SymbolMacroletStruct.SymbolMacroletVar> symbolMacroletVars
-				= parametersAsJavaList.stream()
-				                      .map(e -> getSymbolMacroletElementVar(e, declare, symbolMacroletEnvironment))
-				                      .collect(Collectors.toList());
+				= parameters.stream()
+				            .map(e -> getSymbolMacroletElementVar(e, declare, symbolMacroletEnvironment))
+				            .collect(Collectors.toList());
 
 		final List<LispStruct> bodyForms = bodyProcessingResult.getBodyForms();
 		final List<LispStruct> analyzedBodyForms
@@ -106,50 +106,45 @@ public class SymbolMacroletExpander extends MacroFunctionExpander<SymbolMacrolet
 
 		if (!(parameter instanceof ListStruct)) {
 			final String printedParameter = printer.print(parameter);
-			throw new ProgramErrorException("SYMBOL-MACROLET: Parameter must be a list. Got: " + printedParameter);
+			throw new ProgramErrorException("SYMBOL-MACROLET: PARAMETER must be a List. Got: " + printedParameter);
 		}
 
 		final ListStruct listParameter = (ListStruct) parameter;
-		final SymbolStruct var = getSymbolMacroletParameterVar(listParameter);
-		final LispStruct expansion = getSymbolMacroletParameterExpansion(listParameter, symbolMacroletEnvironment);
+		final Iterator<LispStruct> iterator = listParameter.iterator();
+
+		if (!iterator.hasNext()) {
+			throw new ProgramErrorException("SYMBOL-MACROLET: Parameter list must have only 2 elements. Got: 0");
+		}
+		final LispStruct first = iterator.next();
+
+		if (!(first instanceof SymbolStruct)) {
+			final String printedObject = printer.print(first);
+			throw new ProgramErrorException("SYMBOL-MACROLET: First element of parameter list must be a symbol. Got: " + printedObject);
+		}
+		final SymbolStruct var = (SymbolStruct) first;
+
+		final boolean hasGlobalBinding = Environment.NULL.hasDynamicBinding(var);
+		if (hasGlobalBinding) {
+			final String printedObject = printer.print(var);
+			throw new ProgramErrorException("SYMBOL-MACROLET: Parameter list symbol must not be a dynamic binding in the global environment. Got: " + printedObject);
+		}
+
+		if (!iterator.hasNext()) {
+			throw new ProgramErrorException("SYMBOL-MACROLET: Parameter list must have only 2 elements. Got: 1");
+		}
+		final LispStruct parameterValue = iterator.next();
+
+		if (iterator.hasNext()) {
+			throw new ProgramErrorException("SYMBOL-MACROLET: Parameter list must have only 2 elements. Got: 3");
+		}
+
+		// Evaluate in the outer environment. This is because we want to ensure we don't have references to symbols that may not exist.
+		final Environment parentEnvironment = symbolMacroletEnvironment.getParent();
+		final LispStruct expansion = formAnalyzer.analyze(parameterValue, parentEnvironment);
 
 		final SymbolMacroBinding binding = new SymbolMacroBinding(var, TType.INSTANCE, expansion);
 		symbolMacroletEnvironment.addSymbolMacroBinding(binding);
 
 		return new SymbolMacroletStruct.SymbolMacroletVar(var, expansion);
-	}
-
-	private SymbolStruct getSymbolMacroletParameterVar(final ListStruct listParameter) {
-
-		final int listParameterSize = listParameter.size();
-		if (listParameterSize != 2) {
-			throw new ProgramErrorException("SYMBOL-MACROLET: Parameter list must have only 2 elements. Got: " + listParameter);
-		}
-
-		final LispStruct listParameterFirst = listParameter.getCar();
-		if (!(listParameterFirst instanceof SymbolStruct)) {
-			final String printedObject = printer.print(listParameterFirst);
-			throw new ProgramErrorException("SYMBOL-MACROLET: First element of parameter list must be a symbol. Got: " + printedObject);
-		}
-
-		final SymbolStruct parameterVar = (SymbolStruct) listParameterFirst;
-
-		final boolean hasGlobalBinding = Environment.NULL.hasDynamicBinding(parameterVar);
-		if (hasGlobalBinding) {
-			final String printedObject = printer.print(parameterVar);
-			throw new ProgramErrorException("SYMBOL-MACROLET: Parameter list symbol must not be a dynamic binding in the global environment. Got: " + printedObject);
-		}
-
-		return parameterVar;
-	}
-
-	private LispStruct getSymbolMacroletParameterExpansion(final ListStruct listParameter, final Environment symbolMacroletEnvironment) {
-
-		final ListStruct listParameterRest = listParameter.getRest();
-		final LispStruct parameterValue = listParameterRest.getCar();
-
-		// Evaluate in the outer environment. This is because we want to ensure we don't have references to symbols that may not exist.
-		final Environment parentEnvironment = symbolMacroletEnvironment.getParent();
-		return formAnalyzer.analyze(parameterValue, parentEnvironment);
 	}
 }

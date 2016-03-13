@@ -22,6 +22,7 @@
         <option name="JD_PRESERVE_LINE_FEEDS" value="true" />
         <option name="JD_PARAM_DESCRIPTION_ON_NEW_LINE" value="true" />
         <option name="ALIGN_GROUP_FIELD_DECLARATIONS" value="true" />
+        <option name="WRAP_COMMENTS" value="true" />
         <JavaCodeStyleSettings>
           <option name="ALIGN_MULTILINE_ANNOTATION_PARAMETERS" value="true" />
         </JavaCodeStyleSettings>
@@ -57,6 +58,5 @@
       </value>
     </option>
     <option name="USE_PER_PROJECT_SETTINGS" value="true" />
-    <option name="PREFERRED_PROJECT_CODE_STYLE" value="JCL" />
   </component>
 </project>

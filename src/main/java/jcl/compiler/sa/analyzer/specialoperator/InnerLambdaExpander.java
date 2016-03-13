@@ -5,6 +5,7 @@
 package jcl.compiler.sa.analyzer.specialoperator;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Stack;
 import java.util.function.Predicate;
@@ -15,7 +16,6 @@ import jcl.arrays.StringStruct;
 import jcl.compiler.environment.Environment;
 import jcl.compiler.environment.binding.Binding;
 import jcl.compiler.sa.FormAnalyzer;
-import jcl.compiler.sa.analyzer.LispFormValueValidator;
 import jcl.compiler.sa.analyzer.body.BodyProcessingResult;
 import jcl.compiler.sa.analyzer.body.BodyWithDeclaresAnalyzer;
 import jcl.compiler.sa.analyzer.body.BodyWithDeclaresAndDocStringAnalyzer;
@@ -26,8 +26,10 @@ import jcl.compiler.struct.specialoperator.PrognStruct;
 import jcl.compiler.struct.specialoperator.declare.DeclareStruct;
 import jcl.compiler.struct.specialoperator.declare.SpecialDeclarationStruct;
 import jcl.conditions.exceptions.ProgramErrorException;
+import jcl.conditions.exceptions.TypeErrorException;
 import jcl.functions.expanders.MacroFunctionExpander;
 import jcl.lists.ListStruct;
+import jcl.printer.Printer;
 import jcl.symbols.DeclarationStruct;
 import jcl.symbols.SpecialOperatorStruct;
 import jcl.symbols.SymbolStruct;
@@ -38,9 +40,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 public abstract class InnerLambdaExpander extends MacroFunctionExpander<InnerLambdaStruct> {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(InnerLambdaExpander.class);
-
-	@Autowired
-	private LispFormValueValidator validator;
 
 	@Autowired
 	private FormAnalyzer formAnalyzer;
@@ -54,6 +53,9 @@ public abstract class InnerLambdaExpander extends MacroFunctionExpander<InnerLam
 	@Autowired
 	private BodyWithDeclaresAndDocStringAnalyzer bodyWithDeclaresAndDocStringAnalyzer;
 
+	@Autowired
+	private Printer printer;
+
 	private final String expanderName;
 
 	protected InnerLambdaExpander(final String expanderName) {
@@ -62,31 +64,37 @@ public abstract class InnerLambdaExpander extends MacroFunctionExpander<InnerLam
 
 	@Override
 	public InnerLambdaStruct expand(final ListStruct form, final Environment environment) {
-		validator.validateListFormSize(form, 2, expanderName);
+		final Iterator<LispStruct> iterator = form.iterator();
+		iterator.next(); // InnerLambda Expander SYMBOL
 
-		final ListStruct formRest = form.getRest();
+		if (!iterator.hasNext()) {
+			throw new ProgramErrorException(expanderName + ": Incorrect number of arguments: 0. Expected at least 1 argument.");
+		}
+		final LispStruct first = iterator.next();
 
-		final LispStruct second = formRest.getCar();
-		final ListStruct innerLambdas = validator.validateObjectType(second, expanderName, "FUNCTION LIST", ListStruct.class);
-		final List<LispStruct> innerLambdasAsJavaList = innerLambdas.getAsJavaList();
+		if (!(first instanceof ListStruct)) {
+			final String printedObject = printer.print(first);
+			throw new TypeErrorException(expanderName + ": FUNCTION-LIST must be a List. Got: " + printedObject);
+		}
+		final ListStruct innerLambdas = (ListStruct) first;
 
 		final Environment innerLambdaEnvironment = new Environment(environment);
 
 		final Stack<SymbolStruct> functionNameStack = environment.getFunctionNameStack();
-		final List<SymbolStruct> functionNames = getFunctionNames(innerLambdasAsJavaList);
+		final List<SymbolStruct> functionNames = getFunctionNames(innerLambdas);
 
-		final ListStruct formRestRest = formRest.getRest();
-		final List<LispStruct> forms = formRestRest.getAsJavaList();
+		final List<LispStruct> forms = new ArrayList<>();
+		iterator.forEachRemaining(forms::add);
 
 		final BodyProcessingResult bodyProcessingResult = bodyWithDeclaresAnalyzer.analyze(forms);
 
 		final ListStruct fullDeclaration = ListStruct.buildProperList(bodyProcessingResult.getDeclares());
 		final DeclareStruct declare = declareExpander.expand(fullDeclaration, innerLambdaEnvironment);
 
-		return buildInnerLambda(innerLambdasAsJavaList, innerLambdaEnvironment, bodyProcessingResult, declare, functionNameStack, functionNames);
+		return buildInnerLambda(innerLambdas, innerLambdaEnvironment, bodyProcessingResult, declare, functionNameStack, functionNames);
 	}
 
-	protected abstract InnerLambdaStruct buildInnerLambda(List<LispStruct> innerLambdasAsJavaList,
+	protected abstract InnerLambdaStruct buildInnerLambda(ListStruct innerLambdas,
 	                                                      Environment innerLambdaEnvironment,
 	                                                      BodyProcessingResult bodyProcessingResult,
 	                                                      DeclareStruct declare,
@@ -99,13 +107,13 @@ public abstract class InnerLambdaExpander extends MacroFunctionExpander<InnerLam
 	protected abstract CompilerFunctionStruct expandBuiltInnerFunction(ListStruct innerFunctionListStruct,
 	                                                                   Environment environment);
 
-	protected List<InnerLambdaStruct.InnerLambdaVar> getVars(final List<LispStruct> innerLambdasAsJavaList,
+	protected List<InnerLambdaStruct.InnerLambdaVar> getVars(final ListStruct innerLambdas,
 	                                                         final Environment innerLambdaEnvironment,
 	                                                         final DeclareStruct declare,
 	                                                         final List<SymbolStruct> functionNames) {
-		return innerLambdasAsJavaList.stream()
-		                             .map(e -> getVar(e, declare, innerLambdaEnvironment, functionNames))
-		                             .collect(Collectors.toList());
+		return innerLambdas.stream()
+		                   .map(e -> getVar(e, declare, innerLambdaEnvironment, functionNames))
+		                   .collect(Collectors.toList());
 	}
 
 	protected InnerLambdaStruct getInnerLambda(final List<InnerLambdaStruct.InnerLambdaVar> vars,
@@ -128,15 +136,24 @@ public abstract class InnerLambdaExpander extends MacroFunctionExpander<InnerLam
 		return new InnerLambdaStruct(vars, new PrognStruct(analyzedBodyForms), innerLambdaEnvironment);
 	}
 
-	private List<SymbolStruct> getFunctionNames(final List<? extends LispStruct> functionDefinitions) {
+	private List<SymbolStruct> getFunctionNames(final ListStruct innerLambdas) {
 
-		final List<SymbolStruct> functionNames = new ArrayList<>(functionDefinitions.size());
+		final List<SymbolStruct> functionNames = new ArrayList<>();
 
-		for (final LispStruct functionDefinition : functionDefinitions) {
-			final ListStruct functionList = validator.validateObjectType(functionDefinition, expanderName, "Function parameter", ListStruct.class);
+		for (final LispStruct functionDefinition : innerLambdas) {
+
+			if (!(functionDefinition instanceof ListStruct)) {
+				final String printedObject = printer.print(functionDefinition);
+				throw new TypeErrorException(expanderName + ": FUNCTION PARAMETER must be a List. Got: " + printedObject);
+			}
+			final ListStruct functionList = (ListStruct) functionDefinition;
 
 			final LispStruct functionListFirst = functionList.getCar();
-			final SymbolStruct functionName = validator.validateObjectType(functionListFirst, expanderName, "First element of function parameter", SymbolStruct.class);
+			if (!(functionListFirst instanceof SymbolStruct)) {
+				final String printedObject = printer.print(functionListFirst);
+				throw new TypeErrorException(expanderName + ": First element of function parameter must be a Symbol. Got: " + printedObject);
+			}
+			final SymbolStruct functionName = (SymbolStruct) functionListFirst;
 
 			if (functionNames.contains(functionName)) {
 				LOGGER.warn("{}: Multiple bindings of {} in {} form.", expanderName, functionName.getName(), expanderName);
@@ -165,18 +182,21 @@ public abstract class InnerLambdaExpander extends MacroFunctionExpander<InnerLam
 	                                                            final Environment environment,
 	                                                            final List<SymbolStruct> functionNames) {
 
-		final int functionListParameterSize = functionListParameter.size();
-		if (functionListParameterSize < 2) {
-			throw new ProgramErrorException(expanderName + ": Incorrect number of arguments to function parameter: " + functionListParameterSize + ". Expected at least 2 arguments.");
+		final Iterator<LispStruct> iterator = functionListParameter.iterator();
+
+		if (!iterator.hasNext()) {
+			throw new ProgramErrorException(expanderName + ": Function parameter must have at least 2 elements. Got: 0");
 		}
+		final LispStruct functionName = iterator.next();
 
-		final ListStruct functionListParameterRest = functionListParameter.getRest();
+		if (!iterator.hasNext()) {
+			throw new ProgramErrorException(expanderName + ": Function parameter must have at least 2 elements. Got: 1");
+		}
+		final LispStruct lambdaList = iterator.next();
 
-		final LispStruct functionName = functionListParameter.getCar();
-		final LispStruct lambdaList = functionListParameterRest.getCar();
-		final ListStruct body = functionListParameterRest.getRest();
+		final List<LispStruct> forms = new ArrayList<>();
+		iterator.forEachRemaining(forms::add);
 
-		final List<LispStruct> forms = body.getAsJavaList();
 		final BodyProcessingResult bodyProcessingResult = bodyWithDeclaresAndDocStringAnalyzer.analyze(forms);
 
 		final List<LispStruct> declares = bodyProcessingResult.getDeclares();

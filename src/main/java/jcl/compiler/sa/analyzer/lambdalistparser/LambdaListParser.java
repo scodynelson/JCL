@@ -211,7 +211,8 @@ public class LambdaListParser {
 				optionalBindings.add(optionalBinding);
 			} else if (currentElement instanceof ListStruct) {
 				final ListStruct currentParam = (ListStruct) currentElement;
-				if ((currentParam.size() < 1) || (currentParam.size() > 3)) {
+				final long currentParamLength = currentParam.length();
+				if ((currentParamLength < 1) || (currentParamLength > 3)) {
 					if (isDestructuringAllowed) {
 						final String destructuringName = "DestructuringSymbolName-" + System.nanoTime();
 						final SymbolStruct varNameCurrent = GlobalPackageStruct.COMMON_LISP_USER.intern(destructuringName).getSymbol();
@@ -229,9 +230,11 @@ public class LambdaListParser {
 						throw new ProgramErrorException("LambdaList &optional parameters must have between 1 and 3 parameters: " + printedElement);
 					}
 				} else {
-					final LispStruct firstInCurrent = currentParam.getCar();
-					final LispStruct secondInCurrent = currentParam.getRest().getCar();
-					final LispStruct thirdInCurrent = currentParam.getRest().getRest().getCar();
+					final Iterator<LispStruct> currentIterator = currentParam.iterator();
+
+					final LispStruct firstInCurrent = currentIterator.next();
+					final LispStruct secondInCurrent = currentIterator.next();
+					final LispStruct thirdInCurrent = currentIterator.next();
 
 					final SymbolStruct varNameCurrent;
 					DestructuringLambdaList destructuringForm = null;
@@ -533,7 +536,8 @@ public class LambdaListParser {
 				keyBindings.add(keyBinding);
 			} else if (currentElement instanceof ListStruct) {
 				final ListStruct currentParam = (ListStruct) currentElement;
-				if ((currentParam.size() < 1) || (currentParam.size() > 3)) {
+				final long currentParamLength = currentParam.length();
+				if ((currentParamLength < 1) || (currentParamLength > 3)) {
 					if (isDestructuringAllowed) {
 						final String destructuringName = "DestructuringSymbolName-" + System.nanoTime();
 						final SymbolStruct varNameCurrent = GlobalPackageStruct.COMMON_LISP_USER.intern(destructuringName).getSymbol();
@@ -552,9 +556,11 @@ public class LambdaListParser {
 						throw new ProgramErrorException("LambdaList &key parameters must have between 1 and 3 parameters: " + printedElement);
 					}
 				} else {
-					final LispStruct firstInCurrent = currentParam.getCar();
-					final LispStruct secondInCurrent = currentParam.getRest().getCar();
-					final LispStruct thirdInCurrent = currentParam.getRest().getRest().getCar();
+					final Iterator<LispStruct> currentIterator = currentParam.iterator();
+
+					final LispStruct firstInCurrent = currentIterator.next();
+					final LispStruct secondInCurrent = currentIterator.next();
+					final LispStruct thirdInCurrent = currentIterator.next();
 
 					final SymbolStruct varNameCurrent;
 					final SymbolStruct varKeyNameCurrent;
@@ -564,7 +570,8 @@ public class LambdaListParser {
 						varKeyNameCurrent = getKeywordStruct(varNameCurrent.getName());
 					} else if (firstInCurrent instanceof ListStruct) {
 						final ListStruct currentVar = (ListStruct) firstInCurrent;
-						if (currentVar.size() == 2) {
+						final long currentVarLength = currentVar.length();
+						if (currentVarLength == 2) {
 							final LispStruct firstInCurrentVar = currentVar.getCar();
 							if (firstInCurrentVar instanceof SymbolStruct) {
 								varKeyNameCurrent = (SymbolStruct) firstInCurrentVar;
@@ -573,7 +580,7 @@ public class LambdaListParser {
 								throw new ProgramErrorException("LambdaList &key var name list key-name parameters must be a symbol: " + printedElement);
 							}
 
-							final LispStruct secondInCurrentVar = currentVar.getRest().getCar();
+							final LispStruct secondInCurrentVar = ((ListStruct) currentVar.getCdr()).getCar();
 							if (!(secondInCurrentVar instanceof SymbolStruct)) {
 								final String printedElement = printer.print(secondInCurrentVar);
 								throw new ProgramErrorException("LambdaList &key var name list name parameters must be a symbol: " + printedElement);
@@ -707,7 +714,8 @@ public class LambdaListParser {
 				auxBindings.add(auxBinding);
 			} else if (currentElement instanceof ListStruct) {
 				final ListStruct currentParam = (ListStruct) currentElement;
-				if ((currentParam.size() < 1) || (currentParam.size() > 2)) {
+				final long currentParamLength = currentParam.length();
+				if ((currentParamLength < 1) || (currentParamLength > 2)) {
 					if (isDestructuringAllowed) {
 						final String destructuringName = "DestructuringSymbolName-" + System.nanoTime();
 						final SymbolStruct varNameCurrent = GlobalPackageStruct.COMMON_LISP_USER.intern(destructuringName).getSymbol();
@@ -721,8 +729,10 @@ public class LambdaListParser {
 						throw new ProgramErrorException("LambdaList &aux parameters must have between 1 and 2 parameters: " + printedElement);
 					}
 				} else {
-					final LispStruct firstInCurrent = currentParam.getCar();
-					final LispStruct secondInCurrent = currentParam.getRest().getCar();
+					final Iterator<LispStruct> currentIterator = currentParam.iterator();
+
+					final LispStruct firstInCurrent = currentIterator.next();
+					final LispStruct secondInCurrent = currentIterator.next();
 
 					final SymbolStruct varNameCurrent;
 					DestructuringLambdaList destructuringForm = null;

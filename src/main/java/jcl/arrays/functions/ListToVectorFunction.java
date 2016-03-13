@@ -4,6 +4,7 @@
 
 package jcl.arrays.functions;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import javax.annotation.PostConstruct;
@@ -53,6 +54,6 @@ public final class ListToVectorFunction extends FunctionStruct {
 	}
 
 	public LispStruct listToVector(final ListStruct list) {
-		return new VectorStruct<>(list.getAsJavaList());
+		return new VectorStruct<>(Arrays.asList(list.toArray()));
 	}
 }

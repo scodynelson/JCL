@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
@@ -73,7 +74,7 @@ public class SharpAReaderMacroFunction extends ReaderMacroFunction {
 
 			final SequenceStruct contents = (SequenceStruct) token;
 			final List<Integer> dimensions = getDimensions(numberArgumentValue, contents);
-			final List<LispStruct> initialContents = contents.getAsJavaList();
+			final List<LispStruct> initialContents = contents.stream().collect(Collectors.toList());
 			return new ArrayStruct<>(dimensions, initialContents);
 		} else {
 			return new ArrayStruct<>(Collections.emptyList(), Collections.singletonList(token));
@@ -112,7 +113,7 @@ public class SharpAReaderMacroFunction extends ReaderMacroFunction {
 				throw new ReaderErrorException("#" + dimensions + "A axis " + axis + " is not a sequence: " + sequence);
 			}
 
-			final List<LispStruct> tokensAsJavaList = sequenceToken.getAsJavaList();
+			final List<LispStruct> tokensAsJavaList = sequenceToken.stream().collect(Collectors.toList());
 
 			final int dimension = tokensAsJavaList.size();
 			arrayDimensions.add(dimension);

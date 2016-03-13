@@ -2,7 +2,6 @@ package jcl.symbols;
 
 import java.util.Collections;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Spliterator;
 import java.util.Spliterators;
 import java.util.stream.Stream;
@@ -34,11 +33,6 @@ public final class NILStruct extends BooleanStruct implements ListStruct {
 	 */
 
 	@Override
-	public int size() {
-		return 0;
-	}
-
-	@Override
 	public LispStruct getCar() {
 		return INSTANCE;
 	}
@@ -56,11 +50,6 @@ public final class NILStruct extends BooleanStruct implements ListStruct {
 	@Override
 	public void setCdr(final LispStruct cdr) {
 		throw new SimpleErrorException("Cannot set element within NIL.");
-	}
-
-	@Override
-	public ListStruct getRest() {
-		return INSTANCE;
 	}
 
 	@Override
@@ -171,11 +160,6 @@ public final class NILStruct extends BooleanStruct implements ListStruct {
 	/*
 	SEQUENCE
 	 */
-
-	@Override
-	public List<LispStruct> getAsJavaList() {
-		return Collections.emptyList();
-	}
 
 	@Override
 	public Long length() {

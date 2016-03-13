@@ -7,6 +7,7 @@ package jcl.reader.macrofunction;
 import java.math.BigInteger;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
@@ -77,7 +78,7 @@ public class SharpLeftParenthesisReaderMacroFunction extends ReaderMacroFunction
 		final int backquoteLevel = reader.getBackquoteLevel();
 		if (backquoteLevel == 0) {
 			if (!numberArgument.isPresent()) {
-				final List<LispStruct> tokensAsJavaList = listToken.getAsJavaList();
+				final List<LispStruct> tokensAsJavaList = listToken.stream().collect(Collectors.toList());
 				return new VectorStruct<>(tokensAsJavaList);
 			}
 
@@ -100,7 +101,7 @@ public class SharpLeftParenthesisReaderMacroFunction extends ReaderMacroFunction
 	 * @return the properly created {@link VectorStruct} taking care of the proper vector length
 	 */
 	private VectorStruct<?> handleNumberArgument(final ListStruct listToken, final BigInteger numberArgument) {
-		final List<LispStruct> tokensAsJavaList = listToken.getAsJavaList();
+		final List<LispStruct> tokensAsJavaList = listToken.stream().collect(Collectors.toList());
 
 		final int numberOfTokens = tokensAsJavaList.size();
 		final int numberArgumentIntValue = numberArgument.intValueExact();

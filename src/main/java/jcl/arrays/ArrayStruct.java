@@ -3,6 +3,7 @@ package jcl.arrays;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import jcl.LispStruct;
 import jcl.LispType;
@@ -137,7 +138,7 @@ public class ArrayStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 
 				if (contentToCheck instanceof SequenceStruct) {
 					final SequenceStruct sequenceToken = (SequenceStruct) contentToCheck;
-					subContentsToCheck = sequenceToken.getAsJavaList();
+					subContentsToCheck = sequenceToken.stream().collect(Collectors.toList());
 				} else {
 					subContentsToCheck = Collections.singletonList(contentToCheck);
 				}

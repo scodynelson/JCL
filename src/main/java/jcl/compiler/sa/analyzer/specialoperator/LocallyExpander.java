@@ -1,5 +1,7 @@
 package jcl.compiler.sa.analyzer.specialoperator;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -11,7 +13,6 @@ import jcl.compiler.sa.analyzer.body.BodyProcessingResult;
 import jcl.compiler.sa.analyzer.body.BodyWithDeclaresAnalyzer;
 import jcl.compiler.sa.analyzer.declare.DeclareExpander;
 import jcl.compiler.struct.specialoperator.LocallyStruct;
-import jcl.compiler.struct.specialoperator.PrognStruct;
 import jcl.compiler.struct.specialoperator.declare.DeclareStruct;
 import jcl.compiler.struct.specialoperator.declare.SpecialDeclarationStruct;
 import jcl.functions.expanders.MacroFunctionExpander;
@@ -40,11 +41,13 @@ public class LocallyExpander extends MacroFunctionExpander<LocallyStruct> {
 
 	@Override
 	public LocallyStruct expand(final ListStruct form, final Environment environment) {
+		final Iterator<LispStruct> iterator = form.iterator();
+		iterator.next(); // LOCALLY SYMBOL
+
+		final List<LispStruct> forms = new ArrayList<>();
+		iterator.forEachRemaining(forms::add);
 
 		final Environment locallyEnvironment = new Environment(environment);
-
-		final ListStruct formRest = form.getRest();
-		final List<LispStruct> forms = formRest.getAsJavaList();
 
 		final BodyProcessingResult bodyProcessingResult = bodyWithDeclaresAnalyzer.analyze(forms);
 
@@ -64,6 +67,6 @@ public class LocallyExpander extends MacroFunctionExpander<LocallyStruct> {
 				           .map(e -> formAnalyzer.analyze(e, locallyEnvironment))
 				           .collect(Collectors.toList());
 
-		return new LocallyStruct(new PrognStruct(analyzedBodyForms), locallyEnvironment);
+		return new LocallyStruct(analyzedBodyForms, locallyEnvironment);
 	}
 }

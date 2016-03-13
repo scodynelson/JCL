@@ -73,7 +73,7 @@ abstract class AbstractPackageListPackageFunction extends AbstractOptionalPackag
 
 		final PackageStruct[] realPackageArray;
 		if (lispStruct instanceof ListStruct) {
-			final List<LispStruct> packages = ((ListStruct) lispStruct).getAsJavaList();
+			final ListStruct packages = (ListStruct) lispStruct;
 			final List<PackageStruct> realPackages
 					= packages.stream()
 					          .map(e -> validator.validatePackageDesignator(e, functionName()))

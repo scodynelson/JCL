@@ -1,10 +1,12 @@
 package jcl.compiler.sa.analyzer.specialoperator;
 
+import java.util.Iterator;
+
 import jcl.LispStruct;
 import jcl.compiler.environment.Environment;
 import jcl.compiler.sa.FormAnalyzer;
-import jcl.compiler.sa.analyzer.LispFormValueValidator;
 import jcl.compiler.struct.specialoperator.ThrowStruct;
+import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.functions.expanders.MacroFunctionExpander;
 import jcl.lists.ListStruct;
 import jcl.symbols.SpecialOperatorStruct;
@@ -18,9 +20,6 @@ public class ThrowExpander extends MacroFunctionExpander<ThrowStruct> {
 	@Autowired
 	private FormAnalyzer formAnalyzer;
 
-	@Autowired
-	private LispFormValueValidator validator;
-
 	@Override
 	public SymbolStruct getFunctionSymbol() {
 		return SpecialOperatorStruct.THROW;
@@ -28,18 +27,25 @@ public class ThrowExpander extends MacroFunctionExpander<ThrowStruct> {
 
 	@Override
 	public ThrowStruct expand(final ListStruct form, final Environment environment) {
-		validator.validateListFormSize(form, 3, "THROW");
+		final Iterator<LispStruct> iterator = form.iterator();
+		iterator.next(); // GO SYMBOL
 
-		final ListStruct formRest = form.getRest();
+		if (!iterator.hasNext()) {
+			throw new ProgramErrorException("THROW: Incorrect number of arguments: 0. Expected 2 arguments.");
+		}
+		final LispStruct catchTag = iterator.next();
 
-		final LispStruct catchTag = formRest.getCar();
+		if (!iterator.hasNext()) {
+			throw new ProgramErrorException("THROW: Incorrect number of arguments: 1. Expected 2 arguments.");
+		}
+		final LispStruct resultForm = iterator.next();
+
+		if (iterator.hasNext()) {
+			throw new ProgramErrorException("THROW: Incorrect number of arguments: 3. Expected 2 arguments.");
+		}
+
 		final LispStruct catchTagAnalyzed = formAnalyzer.analyze(catchTag, environment);
-
-		final ListStruct formRestRest = formRest.getRest();
-
-		final LispStruct resultForm = formRestRest.getCar();
 		final LispStruct resultFormAnalyzed = formAnalyzer.analyze(resultForm, environment);
-
 		return new ThrowStruct(catchTagAnalyzed, resultFormAnalyzed);
 	}
 }

@@ -5,6 +5,7 @@
 package jcl.reader.macrofunction;
 
 import java.math.BigInteger;
+import java.util.Iterator;
 import java.util.Optional;
 import javax.annotation.PostConstruct;
 
@@ -70,18 +71,19 @@ public class SharpCReaderMacroFunction extends ReaderMacroFunction {
 		}
 
 		final int maxNumberOfTokensForComplex = 2;
-		if (listToken.size() != maxNumberOfTokensForComplex) {
+		if (listToken.length() != maxNumberOfTokensForComplex) {
 			final String printedToken = printer.print(token);
 			throw new ReaderErrorException("Illegal complex number format: #C" + printedToken);
 		}
+		final Iterator<LispStruct> iterator = listToken.iterator();
 
-		final LispStruct realToken = listToken.getCar();
+		final LispStruct realToken = iterator.next();
 		if (!(realToken instanceof RealStruct)) {
 			final String printedRealToken = printer.print(realToken);
 			throw new ReaderErrorException("Only real numbers are valid tokens for #c. Got: " + printedRealToken);
 		}
 
-		final LispStruct imaginaryToken = listToken.getRest().getCar();
+		final LispStruct imaginaryToken = iterator.next();
 		if (!(imaginaryToken instanceof RealStruct)) {
 			final String printedImaginaryToken = printer.print(imaginaryToken);
 			throw new ReaderErrorException("Only real numbers are valid tokens for #c. Got: " + printedImaginaryToken);

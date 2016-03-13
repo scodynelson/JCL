@@ -69,8 +69,8 @@ abstract class AbstractSymbolListPackageFunction extends AbstractOptionalPackage
 
 		final SymbolStruct[] realSymbolArray;
 		if (lispStruct instanceof ListStruct) {
-			final List<LispStruct> symbols = ((ListStruct) lispStruct).getAsJavaList();
-			final List<SymbolStruct> realSymbols = new ArrayList<>(symbols.size());
+			final ListStruct symbols = (ListStruct) lispStruct;
+			final List<SymbolStruct> realSymbols = new ArrayList<>();
 			for (final LispStruct theSymbol : symbols) {
 				validator.validateTypes(theSymbol, functionName(), "Symbol", SymbolType.INSTANCE);
 				realSymbols.add((SymbolStruct) theSymbol);

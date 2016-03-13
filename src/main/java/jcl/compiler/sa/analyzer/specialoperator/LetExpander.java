@@ -8,7 +8,6 @@ import jcl.compiler.sa.FormAnalyzer;
 import jcl.compiler.struct.specialoperator.ClosureCreationStruct;
 import jcl.compiler.struct.specialoperator.LetStruct;
 import jcl.compiler.struct.specialoperator.PrognStruct;
-import jcl.lists.ListStruct;
 import jcl.symbols.SpecialOperatorStruct;
 import jcl.symbols.SymbolStruct;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,10 +42,7 @@ public class LetExpander extends ClosureCreationExpander<LetStruct.LetVar> {
 	}
 
 	@Override
-	protected LispStruct getListParameterInitForm(final ListStruct listParameter, final Environment environment) {
-		final ListStruct listParameterRest = listParameter.getRest();
-		final LispStruct parameterValue = listParameterRest.getCar();
-
+	protected LispStruct getListParameterInitForm(final LispStruct parameterValue, final Environment environment) {
 		// Evaluate in the outer environment. This is because we want to ensure we don't have references to symbols that may not exist.
 		final Environment parentEnvironment = environment.getParent();
 		return formAnalyzer.analyze(parameterValue, parentEnvironment);

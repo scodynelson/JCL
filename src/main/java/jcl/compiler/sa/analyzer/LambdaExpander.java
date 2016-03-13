@@ -1,6 +1,8 @@
 package jcl.compiler.sa.analyzer;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -20,8 +22,11 @@ import jcl.compiler.struct.specialoperator.declare.JavaClassNameDeclarationStruc
 import jcl.compiler.struct.specialoperator.declare.SpecialDeclarationStruct;
 import jcl.compiler.struct.specialoperator.lambda.LambdaStruct;
 import jcl.conditions.exceptions.ErrorException;
+import jcl.conditions.exceptions.ProgramErrorException;
+import jcl.conditions.exceptions.TypeErrorException;
 import jcl.functions.expanders.MacroFunctionExpander;
 import jcl.lists.ListStruct;
+import jcl.printer.Printer;
 import jcl.symbols.SpecialOperatorStruct;
 import jcl.symbols.SymbolStruct;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,7 +50,7 @@ public class LambdaExpander extends MacroFunctionExpander<LambdaStruct> {
 	private BodyWithDeclaresAndDocStringAnalyzer bodyWithDeclaresAndDocStringAnalyzer;
 
 	@Autowired
-	private LispFormValueValidator validator;
+	private Printer printer;
 
 	@Override
 	public SymbolStruct getFunctionSymbol() {
@@ -54,17 +59,24 @@ public class LambdaExpander extends MacroFunctionExpander<LambdaStruct> {
 
 	@Override
 	public LambdaStruct expand(final ListStruct form, final Environment environment) {
-		validator.validateListFormSize(form, 2, "LAMBDA");
+		final Iterator<LispStruct> iterator = form.iterator();
+		iterator.next(); // Closure Expander SYMBOL
 
-		final ListStruct formRest = form.getRest();
+		if (!iterator.hasNext()) {
+			throw new ProgramErrorException("LAMBDA: Incorrect number of arguments: 0. Expected at least 1 argument.");
+		}
+		final LispStruct first = iterator.next();
 
-		final LispStruct second = formRest.getCar();
-		final ListStruct parameters = validator.validateObjectType(second, "LAMBDA", "PARAMETER LIST", ListStruct.class);
+		if (!(first instanceof ListStruct)) {
+			final String printedObject = printer.print(first);
+			throw new TypeErrorException("LAMBDA: PARAMETER-LIST must be a List. Got: " + printedObject);
+		}
+		final ListStruct parameters = (ListStruct) first;
 
 		final Environment lambdaEnvironment = new Environment(environment);
 
-		final ListStruct formRestRest = formRest.getRest();
-		final List<LispStruct> forms = formRestRest.getAsJavaList();
+		final List<LispStruct> forms = new ArrayList<>();
+		iterator.forEachRemaining(forms::add);
 
 		final BodyProcessingResult bodyProcessingResult = bodyWithDeclaresAndDocStringAnalyzer.analyze(forms);
 

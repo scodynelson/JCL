@@ -324,7 +324,7 @@ public interface CommonLispSymbols {
 	SymbolStruct CLRHASH = null;
 	SymbolStruct CODE_CHAR = null;
 	SymbolStruct COERCE = null;
-	SymbolStruct COMPILE = null;
+	SymbolStruct COMPILE = GlobalPackageStruct.COMMON_LISP.intern("COMPILE").getSymbol();;
 	SymbolStruct COMPILE_FILE = null;
 	SymbolStruct COMPILE_FILE_PATHNAME = null;
 	SymbolStruct COMPILED_FUNCTION = null;

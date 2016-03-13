@@ -4,6 +4,8 @@
 
 package jcl.compiler.struct.specialoperator;
 
+import java.util.List;
+
 import jcl.LispStruct;
 import jcl.compiler.struct.CompilerSpecialOperatorStruct;
 
@@ -13,9 +15,9 @@ public class UnwindProtectStruct extends CompilerSpecialOperatorStruct {
 
 	private final PrognStruct cleanupForms;
 
-	public UnwindProtectStruct(final LispStruct protectedForm, final PrognStruct cleanupForms) {
+	public UnwindProtectStruct(final LispStruct protectedForm, final List<LispStruct> cleanupForms) {
 		this.protectedForm = protectedForm;
-		this.cleanupForms = cleanupForms;
+		this.cleanupForms = new PrognStruct(cleanupForms);
 	}
 
 	public LispStruct getProtectedForm() {

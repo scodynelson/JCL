@@ -1,12 +1,12 @@
 package jcl.compiler.sa.analyzer.specialoperator;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Stack;
 
 import jcl.LispStruct;
 import jcl.compiler.environment.Environment;
-import jcl.compiler.sa.analyzer.LispFormValueValidator;
 import jcl.compiler.struct.specialoperator.go.GoStruct;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.functions.expanders.MacroFunctionExpander;
@@ -22,9 +22,6 @@ import org.springframework.stereotype.Component;
 public class GoExpander extends MacroFunctionExpander<GoStruct<?>> {
 
 	@Autowired
-	private LispFormValueValidator validator;
-
-	@Autowired
 	private Printer printer;
 
 	@Override
@@ -34,17 +31,24 @@ public class GoExpander extends MacroFunctionExpander<GoStruct<?>> {
 
 	@Override
 	public GoStruct<?> expand(final ListStruct form, final Environment environment) {
-		validator.validateListFormSize(form, 2, "GO");
+		final Iterator<LispStruct> iterator = form.iterator();
+		iterator.next(); // GO SYMBOL
 
-		final ListStruct formRest = form.getRest();
+		if (!iterator.hasNext()) {
+			throw new ProgramErrorException("GO: Incorrect number of arguments: 0. Expected 1 argument.");
+		}
+		final LispStruct first = iterator.next();
 
-		final LispStruct second = formRest.getCar();
-		if (!isTagbodyTag(second)) {
-			final String printedObject = printer.print(second);
-			throw new ProgramErrorException("GO: Tag must be a symbol or an integer. Got: " + printedObject);
+		if (iterator.hasNext()) {
+			throw new ProgramErrorException("GO: Incorrect number of arguments: 2. Expected 1 argument.");
 		}
 
-		return getGoTag(environment, second);
+		if (!isTagbodyTag(first)) {
+			final String printedObject = printer.print(first);
+			throw new ProgramErrorException("GO: Tag must be a symbol or an integer. Got: " + printedObject);
+		}
+		return getGoTag(environment, first);
+
 	}
 
 	private static boolean isTagbodyTag(final LispStruct element) {

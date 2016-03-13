@@ -1,15 +1,11 @@
 package jcl.lists;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Objects;
 import java.util.Set;
 import java.util.Spliterator;
 import java.util.Spliterators;
-import java.util.function.Consumer;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
@@ -64,16 +60,6 @@ public class ConsStruct extends BuiltInClassStruct implements ListStruct {
 	LIST
 	 */
 
-	@Override
-	public int size() {
-		if (cdr instanceof ListStruct) {
-			final ListStruct cdrAsList = (ListStruct) cdr;
-			return 1 + cdrAsList.size();
-		} else {
-			return 2;
-		}
-	}
-
 	/**
 	 * Getter for cons {@link #car} property.
 	 *
@@ -114,11 +100,6 @@ public class ConsStruct extends BuiltInClassStruct implements ListStruct {
 	@Override
 	public void setCdr(final LispStruct cdr) {
 		this.cdr = cdr;
-	}
-
-	@Override
-	public ListStruct getRest() {
-		return (cdr instanceof ListStruct) ? (ListStruct) cdr : new ConsStruct(cdr);
 	}
 
 	@Override
@@ -194,7 +175,7 @@ public class ConsStruct extends BuiltInClassStruct implements ListStruct {
 
 	@Override
 	public LispStruct[] toArray() {
-		final LispStruct[] result = new LispStruct[size()];
+		final LispStruct[] result = new LispStruct[Math.toIntExact(length())];
 		int i = 0;
 
 		for (LispStruct x = this; x instanceof ConsStruct; x = ((ConsStruct) x).cdr) {
@@ -498,19 +479,6 @@ public class ConsStruct extends BuiltInClassStruct implements ListStruct {
 	 */
 
 	@Override
-	public List<LispStruct> getAsJavaList() {
-		final List<LispStruct> javaList = new ArrayList<>();
-		javaList.add(car);
-		if (cdr instanceof ListStruct) {
-			final ListStruct cdrAsList = (ListStruct) cdr;
-			javaList.addAll(cdrAsList.getAsJavaList());
-		} else {
-			javaList.add(cdr);
-		}
-		return javaList;
-	}
-
-	@Override
 	public Long length() {
 		long length = 1L;
 		LispStruct obj = cdr;
@@ -662,7 +630,7 @@ public class ConsStruct extends BuiltInClassStruct implements ListStruct {
 
 	@Override
 	public Spliterator<LispStruct> spliterator() {
-		return Spliterators.spliterator(iterator(), size(),
+		return Spliterators.spliterator(iterator(), length(),
 		                                Spliterator.ORDERED |
 				                                Spliterator.SIZED |
 				                                Spliterator.NONNULL |
@@ -765,14 +733,9 @@ public class ConsStruct extends BuiltInClassStruct implements ListStruct {
 
 	private static final class ConsIterator implements Iterator<LispStruct> {
 
-		private final int totalSize;
-
-		private ConsStruct previous;
-		private LispStruct current;
-		private int nextIndex;
+		private ListStruct current;
 
 		private ConsIterator(final ConsStruct cons) {
-			totalSize = cons.size();
 			current = cons;
 		}
 
@@ -788,22 +751,12 @@ public class ConsStruct extends BuiltInClassStruct implements ListStruct {
 			}
 			final ConsStruct currentAsCons = (ConsStruct) current;
 
-			previous = currentAsCons;
-			current = currentAsCons.getCdr();
-			nextIndex++;
-			return previous.getCar();
-		}
-
-		@Override
-		public void forEachRemaining(final Consumer<? super LispStruct> action) {
-			Objects.requireNonNull(action);
-			while (nextIndex < totalSize) {
-				final ConsStruct currentAsCons = (ConsStruct) current;
-				action.accept(currentAsCons.getCar());
-				previous = currentAsCons;
-				current = currentAsCons.getCdr();
-				nextIndex++;
+			final LispStruct currentCdr = currentAsCons.getCdr();
+			if (!(currentCdr instanceof ListStruct)) {
+				throw new TypeErrorException("Not a proper list.");
 			}
+			current = (ListStruct) currentCdr;
+			return currentAsCons.getCar();
 		}
 	}
 }

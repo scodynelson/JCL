@@ -1,14 +1,14 @@
 package jcl.compiler.sa.analyzer.specialoperator;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import jcl.LispStruct;
 import jcl.compiler.environment.Environment;
 import jcl.compiler.sa.FormAnalyzer;
-import jcl.compiler.sa.analyzer.LispFormValueValidator;
-import jcl.compiler.struct.specialoperator.PrognStruct;
 import jcl.compiler.struct.specialoperator.UnwindProtectStruct;
+import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.functions.expanders.MacroFunctionExpander;
 import jcl.lists.ListStruct;
 import jcl.symbols.SpecialOperatorStruct;
@@ -22,9 +22,6 @@ public class UnwindProtectExpander extends MacroFunctionExpander<UnwindProtectSt
 	@Autowired
 	private FormAnalyzer formAnalyzer;
 
-	@Autowired
-	private LispFormValueValidator validator;
-
 	@Override
 	public SymbolStruct getFunctionSymbol() {
 		return SpecialOperatorStruct.UNWIND_PROTECT;
@@ -32,21 +29,20 @@ public class UnwindProtectExpander extends MacroFunctionExpander<UnwindProtectSt
 
 	@Override
 	public UnwindProtectStruct expand(final ListStruct form, final Environment environment) {
-		validator.validateListFormSize(form, 2, "UNWIND-PROTECT");
+		final Iterator<LispStruct> iterator = form.iterator();
+		iterator.next(); // UNWIND-PROTECT SYMBOL
 
-		final ListStruct formRest = form.getRest();
+		if (!iterator.hasNext()) {
+			throw new ProgramErrorException("UNWIND-PROTECT: Incorrect number of arguments: 0. Expected at least 1 argument.");
+		}
+		final LispStruct first = iterator.next();
+		final LispStruct protectedForm = formAnalyzer.analyze(first, environment);
 
-		final LispStruct protectedForm = formRest.getCar();
-		final LispStruct analyzedProtectedForm = formAnalyzer.analyze(protectedForm, environment);
-
-		final ListStruct formRestRest = formRest.getRest();
-
-		final List<LispStruct> cleanupForms = formRestRest.getAsJavaList();
-		final List<LispStruct> analyzedCleanupForms =
-				cleanupForms.stream()
-				            .map(e -> formAnalyzer.analyze(e, environment))
-				            .collect(Collectors.toList());
-
-		return new UnwindProtectStruct(analyzedProtectedForm, new PrognStruct(analyzedCleanupForms));
+		final List<LispStruct> cleanupForms = new ArrayList<>();
+		iterator.forEachRemaining(element -> {
+			final LispStruct analyzedElement = formAnalyzer.analyze(element, environment);
+			cleanupForms.add(analyzedElement);
+		});
+		return new UnwindProtectStruct(protectedForm, cleanupForms);
 	}
 }

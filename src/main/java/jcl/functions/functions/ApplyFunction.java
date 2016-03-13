@@ -7,6 +7,7 @@ package jcl.functions.functions;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
@@ -100,13 +101,9 @@ public final class ApplyFunction extends FunctionStruct {
 			throw new ErrorException("Undefined function " + printedFunctionDesignator + " called with arguments " + printedArguments);
 		}
 
-		final LispStruct[] argsToApply = new LispStruct[argsAsListStruct.size()];
-
-		final List<LispStruct> argsAsListStructAsJavaList = argsAsListStruct.getAsJavaList();
-		for (int i = 0; i < argsAsListStructAsJavaList.size(); i++) {
-			final LispStruct currentArg = argsAsListStructAsJavaList.get(i);
-			argsToApply[i] = currentArg;
-		}
+		final List<LispStruct> collect = argsAsListStruct.stream().collect(Collectors.toList());
+		LispStruct[] argsToApply = new LispStruct[collect.size()];
+		argsToApply = collect.toArray(argsToApply);
 
 		return functionStruct.apply(argsToApply);
 	}

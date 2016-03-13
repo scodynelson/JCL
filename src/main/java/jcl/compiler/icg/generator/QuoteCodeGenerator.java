@@ -2,6 +2,7 @@ package jcl.compiler.icg.generator;
 
 import java.util.List;
 import java.util.ListIterator;
+import java.util.stream.Collectors;
 
 import jcl.LispStruct;
 import jcl.compiler.icg.CodeGenerator;
@@ -111,8 +112,8 @@ class QuoteCodeGenerator implements CodeGenerator<QuoteStruct> {
 	 * <ol>
 	 * <li>Checking whether or not {@link ConsStruct#isCircular()} is true, throwing a {@link ProgramErrorException} if
 	 * so</li>
-	 * <li>Looping throw the {@link List} produced via {@link ConsStruct#getAsJavaList()} in reverse order using a
-	 * {@link ListIterator}, generating each element into its appropriate embedded {@link ConsStruct}</li>
+	 * <li>Looping throw the {@link ConsStruct} in reverse order using a {@link ListIterator}, generating each element
+	 * into its appropriate embedded {@link ConsStruct}</li>
 	 * <li>Creating a dotted {@link ConsStruct} for the final 2 elements first if {@link ConsStruct#isDotted()} is
 	 * true</li>
 	 * </ol>
@@ -139,7 +140,7 @@ class QuoteCodeGenerator implements CodeGenerator<QuoteStruct> {
 			throw new ProgramErrorException("Generation of circular lists is not yet supported.");
 		}
 
-		final List<LispStruct> lispStructs = quotedCons.getAsJavaList();
+		final List<LispStruct> lispStructs = quotedCons.stream().collect(Collectors.toList());
 		final ListIterator<LispStruct> listIterator = lispStructs.listIterator(lispStructs.size());
 
 		LispStruct previousCdr = listIterator.previous();

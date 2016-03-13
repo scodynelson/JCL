@@ -4,7 +4,7 @@
 
 package jcl.reader.macrofunction;
 
-import java.util.List;
+import java.util.Iterator;
 
 import jcl.LispStruct;
 import jcl.compiler.CompilerVariables;
@@ -96,8 +96,7 @@ final class FeaturesReaderMacroFunction {
 		if (token instanceof ListStruct) {
 			return isListFeature((ListStruct) token);
 		} else {
-			final List<LispStruct> featuresList = CompilerVariables.FEATURES.getVariableValue().getAsJavaList();
-			return featuresList.contains(token);
+			return CompilerVariables.FEATURES.getVariableValue().stream().anyMatch(token::equals);
 		}
 	}
 
@@ -123,22 +122,21 @@ final class FeaturesReaderMacroFunction {
 	 * @return true if the provided {@link ConsStruct} is a feature that should be read in; false otherwise
 	 */
 	private boolean isConsFeature(final ConsStruct consToken) {
-		final LispStruct first = consToken.getCar();
+		final Iterator<LispStruct> iterator = consToken.iterator();
+		final LispStruct first = iterator.next();
 
 		if (!(first instanceof SymbolStruct)) {
 			throw new ReaderErrorException("First element of feature expression must be either: :NOT, :AND, or :OR.");
 		}
 
-		final ListStruct rest = consToken.getRest();
-
 		final SymbolStruct featureOperator = (SymbolStruct) first;
 		if (featureOperator.equals(CommonLispSymbols.NOT_KEYWORD)) {
-			final LispStruct firstOfRest = rest.getCar();
+			final LispStruct firstOfRest = iterator.next();
 			return !isFeature(firstOfRest);
 		} else if (featureOperator.equals(CommonLispSymbols.AND_KEYWORD)) {
-			return isAndConsFeature(rest);
+			return isAndConsFeature(iterator);
 		} else if (featureOperator.equals(CommonLispSymbols.OR_KEYWORD)) {
-			return isOrConsFeature(rest);
+			return isOrConsFeature(iterator);
 		} else {
 			throw new ReaderErrorException("Unknown operator in feature expression: " + printer.print(featureOperator));
 		}
@@ -147,16 +145,16 @@ final class FeaturesReaderMacroFunction {
 	/**
 	 * Determines if all of the elements are features.
 	 *
-	 * @param listToken
-	 * 		the elements to check are features
+	 * @param iterator
+	 * 		the an {@link Iterator} for elements to check are features
 	 *
 	 * @return true if all of the elements are features; false otherwise
 	 */
-	private boolean isAndConsFeature(final ListStruct listToken) {
-		final List<LispStruct> tokensAsJavaList = listToken.getAsJavaList();
+	private boolean isAndConsFeature(final Iterator<LispStruct> iterator) {
 
 		boolean isFeature = true;
-		for (final LispStruct token : tokensAsJavaList) {
+		while (iterator.hasNext()) {
+			final LispStruct token = iterator.next();
 			isFeature = isFeature && isFeature(token);
 		}
 		return isFeature;
@@ -165,16 +163,16 @@ final class FeaturesReaderMacroFunction {
 	/**
 	 * Determines if any of the elements are features.
 	 *
-	 * @param listToken
-	 * 		the elements to check are features
+	 * @param iterator
+	 * 		the an {@link Iterator} for elements to check are features
 	 *
 	 * @return true if any of the elements are features; false otherwise
 	 */
-	private boolean isOrConsFeature(final ListStruct listToken) {
-		final List<LispStruct> tokensAsJavaList = listToken.getAsJavaList();
+	private boolean isOrConsFeature(final Iterator<LispStruct> iterator) {
 
 		boolean isFeature = false;
-		for (final LispStruct token : tokensAsJavaList) {
+		while (iterator.hasNext()) {
+			final LispStruct token = iterator.next();
 			isFeature = isFeature || isFeature(token);
 		}
 		return isFeature;

@@ -6,6 +6,8 @@ package jcl.compiler.icg.generator;
 
 import java.util.Deque;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import jcl.LispStruct;
 import jcl.compiler.environment.Environment;
@@ -218,8 +220,8 @@ final class ProgvCodeGenerator extends SpecialOperatorCodeGenerator<ProgvStruct>
 	/**
 	 * Private method to handle the generation of a {@link LispStruct} that could possibly be a {@link ListStruct}. If
 	 * it does evaluate to a {@link ListStruct} at runtime, the code to generate the return of a {@link List} via
-	 * {@link ListStruct#getAsJavaList()} is executed. Otherwise, the code to generate a {@link ProgramErrorException}
-	 * and throw is executed.
+	 * {@link ListStruct#stream()} to produce a {@link Stream}, which is then collected into a list via {@link
+	 * Collectors#toList}. Otherwise, the code to generate a {@link ProgramErrorException} and throw is executed.
 	 *
 	 * @param possibleList
 	 * 		the {@link LispStruct} to be generated that might be a possible {@link ListStruct}
@@ -232,7 +234,7 @@ final class ProgvCodeGenerator extends SpecialOperatorCodeGenerator<ProgvStruct>
 	 * 		provided {@code possibleList} does not produce a {@link ListStruct}
 	 *
 	 * @return the storage location index on the stack where the {@link List} produced from generating the possible
-	 * {@link ListStruct} and calling its {@link ListStruct#getAsJavaList()} method produces
+	 * {@link ListStruct} and converting it to a {@link List}
 	 */
 	private int generateListAndCheck(final LispStruct possibleList, final GeneratorState generatorState,
 	                                 final JavaMethodBuilder methodBuilder, final String mustBeListErrorString) {
@@ -259,11 +261,23 @@ final class ProgvCodeGenerator extends SpecialOperatorCodeGenerator<ProgvStruct>
 		mv.visitVarInsn(Opcodes.ASTORE, inputListStore);
 
 		mv.visitVarInsn(Opcodes.ALOAD, inputListStore);
-		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
+		mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
 		                   GenerationConstants.LIST_STRUCT_NAME,
-		                   GenerationConstants.LIST_STRUCT_GET_AS_JAVA_LIST_METHOD_NAME,
-		                   GenerationConstants.LIST_STRUCT_GET_AS_JAVA_LIST_METHOD_DESC,
+		                   GenerationConstants.LIST_STRUCT_STREAM_METHOD_NAME,
+		                   GenerationConstants.LIST_STRUCT_STREAM_METHOD_DESC,
+		                   true);
+		mv.visitMethodInsn(Opcodes.INVOKESTATIC,
+		                   GenerationConstants.JAVA_COLLECTORS_NAME,
+		                   GenerationConstants.JAVA_COLLECTORS_TO_LIST_METHOD_NAME,
+		                   GenerationConstants.JAVA_COLLECTORS_TO_LIST_METHOD_DESC,
 		                   false);
+		mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
+		                   GenerationConstants.JAVA_STREAM_NAME,
+		                   GenerationConstants.JAVA_STREAM_COLLECT_METHOD_NAME,
+		                   GenerationConstants.JAVA_STREAM_COLLECT_METHOD_DESC,
+		                   true);
+		mv.visitTypeInsn(Opcodes.CHECKCAST,
+		                 GenerationConstants.JAVA_LIST_NAME);
 		final int inputJavaListStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, inputJavaListStore);
 

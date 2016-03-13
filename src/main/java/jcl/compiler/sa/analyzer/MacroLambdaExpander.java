@@ -4,7 +4,9 @@
 
 package jcl.compiler.sa.analyzer;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -24,8 +26,11 @@ import jcl.compiler.struct.specialoperator.declare.JavaClassNameDeclarationStruc
 import jcl.compiler.struct.specialoperator.declare.SpecialDeclarationStruct;
 import jcl.compiler.struct.specialoperator.lambda.MacroLambdaStruct;
 import jcl.conditions.exceptions.ErrorException;
+import jcl.conditions.exceptions.ProgramErrorException;
+import jcl.conditions.exceptions.TypeErrorException;
 import jcl.functions.expanders.MacroFunctionExpander;
 import jcl.lists.ListStruct;
+import jcl.printer.Printer;
 import jcl.symbols.SpecialOperatorStruct;
 import jcl.symbols.SymbolStruct;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,7 +54,7 @@ public class MacroLambdaExpander extends MacroFunctionExpander<MacroLambdaStruct
 	private BodyWithDeclaresAndDocStringAnalyzer bodyWithDeclaresAndDocStringAnalyzer;
 
 	@Autowired
-	private LispFormValueValidator validator;
+	private Printer printer;
 
 	@Override
 	public SymbolStruct getFunctionSymbol() {
@@ -58,22 +63,35 @@ public class MacroLambdaExpander extends MacroFunctionExpander<MacroLambdaStruct
 
 	@Override
 	public MacroLambdaStruct expand(final ListStruct form, final Environment environment) {
-		validator.validateListFormSize(form, 3, "MACRO-LAMBDA");
+		final Iterator<LispStruct> iterator = form.iterator();
+		iterator.next(); // Closure Expander SYMBOL
 
-		final ListStruct formRest = form.getRest();
+		if (!iterator.hasNext()) {
+			throw new ProgramErrorException("MACRO-LAMBDA: Incorrect number of arguments: 0. Expected at least 2 arguments.");
+		}
+		final LispStruct first = iterator.next();
 
-		final LispStruct second = formRest.getCar();
-		final SymbolStruct macroName = validator.validateObjectType(second, "MACRO-LAMBDA", "MACRO NAME", SymbolStruct.class);
+		if (!(first instanceof SymbolStruct)) {
+			final String printedObject = printer.print(first);
+			throw new TypeErrorException("MACRO-LAMBDA: MACRO-NAME must be a Symbol. Got: " + printedObject);
+		}
+		final SymbolStruct macroName = (SymbolStruct) first;
 
-		final ListStruct formRestRest = formRest.getRest();
+		if (!iterator.hasNext()) {
+			throw new ProgramErrorException("MACRO-LAMBDA: Incorrect number of arguments: 1. Expected at least 2 arguments.");
+		}
+		final LispStruct second = iterator.next();
 
-		final LispStruct third = formRestRest.getCar();
-		final ListStruct parameters = validator.validateObjectType(third, "MACRO-LAMBDA", "PARAMETER LIST", ListStruct.class);
+		if (!(second instanceof ListStruct)) {
+			final String printedObject = printer.print(second);
+			throw new TypeErrorException("MACRO-LAMBDA: PARAMETER-LIST must be a List. Got: " + printedObject);
+		}
+		final ListStruct parameters = (ListStruct) second;
 
 		final Environment macroLambdaEnvironment = new Environment(environment);
 
-		final ListStruct formRestRestRest = formRestRest.getRest();
-		final List<LispStruct> forms = formRestRestRest.getAsJavaList();
+		final List<LispStruct> forms = new ArrayList<>();
+		iterator.forEachRemaining(forms::add);
 
 		final BodyProcessingResult bodyProcessingResult = bodyWithDeclaresAndDocStringAnalyzer.analyze(forms);
 

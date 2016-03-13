@@ -1,17 +1,19 @@
 package jcl.compiler.sa.analyzer.defstruct;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import jcl.LispStruct;
 import jcl.compiler.environment.Environment;
-import jcl.compiler.sa.analyzer.LispFormValueValidator;
 import jcl.compiler.struct.specialoperator.defstruct.DefstructStruct;
 import jcl.conditions.exceptions.ProgramErrorException;
+import jcl.conditions.exceptions.TypeErrorException;
 import jcl.functions.expanders.MacroFunctionExpander;
 import jcl.lists.ListStruct;
 import jcl.printer.Printer;
 import jcl.structures.StructureClassStruct;
+import jcl.symbols.NILStruct;
 import jcl.symbols.SpecialOperatorStruct;
 import jcl.symbols.SymbolStruct;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,9 +21,6 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class DefstructExpander extends MacroFunctionExpander<LispStruct> {
-
-	@Autowired
-	private LispFormValueValidator validator;
 
 	@Autowired
 	private Printer printer;
@@ -33,46 +32,83 @@ public class DefstructExpander extends MacroFunctionExpander<LispStruct> {
 
 	@Override
 	public DefstructStruct expand(final ListStruct form, final Environment environment) {
-		validator.validateListFormSize(form, 5, "%DEFSTRUCT");
+		final Iterator<LispStruct> iterator = form.iterator();
+		iterator.next(); // %DEFSTRUCT SYMBOL
 
-		final ListStruct formRest = form.getRest();
+		if (!iterator.hasNext()) {
+			throw new ProgramErrorException("%DEFSTRUCT: Incorrect number of arguments: 0. Expected at least 4 arguments.");
+		}
+		final LispStruct first = iterator.next();
 
-		final LispStruct second = formRest.getCar();
-		final SymbolStruct structureSymbol = validator.validateObjectType(second, "%DEFSTRUCT", "STRUCTURE NAME", SymbolStruct.class);
+		if (!(first instanceof SymbolStruct)) {
+			final String printedObject = printer.print(first);
+			throw new TypeErrorException("%DEFSTRUCT: STRUCTURE-NAME must be a Symbol. Got: " + printedObject);
+		}
+		final SymbolStruct structureSymbol = (SymbolStruct) first;
 
-		final ListStruct formRestRest = formRest.getRest();
+		if (!iterator.hasNext()) {
+			throw new ProgramErrorException("%DEFSTRUCT: Incorrect number of arguments: 1. Expected at least 4 arguments.");
+		}
+		final LispStruct second = iterator.next();
 
-		final LispStruct third = formRestRest.getCar();
-		final SymbolStruct includeStructureSymbol = validator.validateSymbolOrNIL(third, "%DEFSTRUCT", "INCLUDE STRUCTURE NAME");
+		final SymbolStruct includeStructureSymbol;
+		if (NILStruct.INSTANCE.equals(second)) {
+			includeStructureSymbol = null;
+		} else if (second instanceof SymbolStruct) {
+			includeStructureSymbol = (SymbolStruct) second;
+		} else {
+			final String printedObject = printer.print(second);
+			throw new ProgramErrorException("%DEFSTRUCT: INCLUDE-STRUCTURE-NAME must be a Symbol or NIL. Got: " + printedObject);
+		}
 
 		StructureClassStruct includeStructureClass = null;
 		if (includeStructureSymbol != null) {
 			includeStructureClass = includeStructureSymbol.getStructureClass();
 			if (includeStructureClass == null) {
-				final String printedObject = printer.print(third);
+				final String printedObject = printer.print(second);
 				throw new ProgramErrorException("%DEFSTRUCT: Include structure name '" + printedObject + "' must have an already defined structure class.");
 			}
 		}
 
-		final ListStruct formRestRestRest = formRestRest.getRest();
+		if (!iterator.hasNext()) {
+			throw new ProgramErrorException("%DEFSTRUCT: Incorrect number of arguments: 2. Expected at least 4 arguments.");
+		}
+		final LispStruct third = iterator.next();
 
-		final LispStruct fourth = formRestRestRest.getCar();
-		final SymbolStruct defaultConstructorSymbol = validator.validateSymbolOrNIL(fourth, "%DEFSTRUCT", "DEFAULT CONSTRUCTOR NAME");
+		final SymbolStruct defaultConstructorSymbol;
+		if (NILStruct.INSTANCE.equals(third)) {
+			defaultConstructorSymbol = null;
+		} else if (third instanceof SymbolStruct) {
+			defaultConstructorSymbol = (SymbolStruct) third;
+		} else {
+			final String printedObject = printer.print(third);
+			throw new ProgramErrorException("%DEFSTRUCT: DEFAULT-CONSTRUCTOR-NAME must be a Symbol or NIL. Got: " + printedObject);
+		}
 
-		final ListStruct formRestRestRestRest = formRestRestRest.getRest();
+		if (!iterator.hasNext()) {
+			throw new ProgramErrorException("%DEFSTRUCT: Incorrect number of arguments: 3. Expected at least 4 arguments.");
+		}
+		final LispStruct fourth = iterator.next();
 
-		final LispStruct fifth = formRestRestRestRest.getCar();
-		final SymbolStruct printerSymbol = validator.validateSymbolOrNIL(fifth, "%DEFSTRUCT", "PRINTER NAME");
-
-		final ListStruct formRestRestRestRestRest = formRestRestRestRest.getRest();
+		final SymbolStruct printerSymbol;
+		if (NILStruct.INSTANCE.equals(fourth)) {
+			printerSymbol = null;
+		} else if (fourth instanceof SymbolStruct) {
+			printerSymbol = (SymbolStruct) fourth;
+		} else {
+			final String printedObject = printer.print(fourth);
+			throw new ProgramErrorException("%DEFSTRUCT: PRINTER-NAME must be a Symbol or NIL. Got: " + printedObject);
+		}
 
 		final List<SymbolStruct> slots = new ArrayList<>();
-
-		final List<LispStruct> slotArguments = formRestRestRestRestRest.getAsJavaList();
-		for (final LispStruct slotArgument : slotArguments) {
-			final SymbolStruct slotSymbol = validator.validateObjectType(slotArgument, "%DEFSTRUCT", "STRUCTURE SLOT NAME", SymbolStruct.class);
+		iterator.forEachRemaining(element -> {
+			if (!(element instanceof SymbolStruct)) {
+				final String printedObject = printer.print(first);
+				throw new TypeErrorException("%DEFSTRUCT: STRUCTURE-SLOT-NAME must be a Symbol. Got: " + printedObject);
+			}
+			final SymbolStruct slotSymbol = (SymbolStruct) element;
 			slots.add(slotSymbol);
-		}
+		});
 
 		return new DefstructStruct(structureSymbol, includeStructureClass, defaultConstructorSymbol, printerSymbol, slots);
 	}

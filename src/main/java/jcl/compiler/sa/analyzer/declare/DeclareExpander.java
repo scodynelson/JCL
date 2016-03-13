@@ -1,16 +1,17 @@
 package jcl.compiler.sa.analyzer.declare;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import jcl.LispStruct;
 import jcl.arrays.StringStruct;
 import jcl.compiler.environment.Environment;
-import jcl.compiler.sa.analyzer.LispFormValueValidator;
 import jcl.compiler.struct.specialoperator.declare.DeclareStruct;
 import jcl.compiler.struct.specialoperator.declare.JavaClassNameDeclarationStruct;
 import jcl.compiler.struct.specialoperator.declare.SpecialDeclarationStruct;
 import jcl.conditions.exceptions.ProgramErrorException;
+import jcl.conditions.exceptions.TypeErrorException;
 import jcl.functions.expanders.MacroFunctionExpander;
 import jcl.lists.ListStruct;
 import jcl.printer.Printer;
@@ -24,9 +25,6 @@ import org.springframework.stereotype.Component;
 public class DeclareExpander extends MacroFunctionExpander<DeclareStruct> {
 
 	@Autowired
-	private LispFormValueValidator validator;
-
-	@Autowired
 	private Printer printer;
 
 	@Override
@@ -36,17 +34,27 @@ public class DeclareExpander extends MacroFunctionExpander<DeclareStruct> {
 
 	@Override
 	public DeclareStruct expand(final ListStruct form, final Environment environment) {
+		final Iterator<LispStruct> iterator = form.iterator();
+		iterator.next(); // DECLARE SYMBOL
 
-		final List<LispStruct> declSpecs = form.getRest().getAsJavaList();
+		final List<LispStruct> declSpecs = new ArrayList<>();
+		iterator.forEachRemaining(declSpecs::add);
 
 		final DeclareStruct declareElement = new DeclareStruct();
 
 		for (final LispStruct declSpec : declSpecs) {
-			final ListStruct declSpecList = validator.validateObjectType(declSpec, "DECLARE", "DECLARATION SPECIFIER", ListStruct.class);
-			final LispStruct declIdentifier = declSpecList.getCar();
-			final ListStruct declSpecBody = declSpecList.getRest();
+			if (!(declSpec instanceof ListStruct)) {
+				final String printedObject = printer.print(declSpec);
+				throw new TypeErrorException("DECLARE: DECLARATION-SPECIFIER must be a List. Got: " + printedObject);
+			}
+			final ListStruct declSpecList = (ListStruct) declSpec;
 
-			final List<LispStruct> declSpecBodyAsJavaList = declSpecBody.getAsJavaList();
+			final Iterator<LispStruct> declSpecIterator = declSpecList.iterator();
+			final LispStruct declIdentifier = declSpecIterator.next();
+
+
+			final List<LispStruct> declSpecBody = new ArrayList<>();
+			declSpecIterator.forEachRemaining(declSpecBody::add);
 
 			// now come the various cases
 			if (declIdentifier.equals(DeclarationStruct.DECLARATION)) {
@@ -66,10 +74,10 @@ public class DeclareExpander extends MacroFunctionExpander<DeclareStruct> {
 			} else if (declIdentifier.equals(DeclarationStruct.OPTIMIZE)) {
 				//TODO: we don't do anything here yet
 			} else if (declIdentifier.equals(DeclarationStruct.JAVA_CLASS_NAME)) {
-				final JavaClassNameDeclarationStruct jclds = saJavaClassNameDeclaration(declSpecBodyAsJavaList);
+				final JavaClassNameDeclarationStruct jclds = saJavaClassNameDeclaration(declSpecBody);
 				declareElement.setJavaClassNameDeclaration(jclds);
 			} else if (declIdentifier.equals(DeclarationStruct.SPECIAL)) {
-				final List<SpecialDeclarationStruct> sds = saSpecialDeclaration(declSpecBodyAsJavaList);
+				final List<SpecialDeclarationStruct> sds = saSpecialDeclaration(declSpecBody);
 				declareElement.getSpecialDeclarations().addAll(sds);
 			} else if (declIdentifier.equals(DeclarationStruct.TYPE)) {
 				//TODO: we don't do anything here yet
@@ -89,7 +97,11 @@ public class DeclareExpander extends MacroFunctionExpander<DeclareStruct> {
 		}
 
 		final LispStruct javaClassName = declSpecBody.get(0);
-		final StringStruct javaClassNameString = validator.validateObjectType(javaClassName, "DECLARE", "JAVA-CLASS-NAME", StringStruct.class);
+		if (!(javaClassName instanceof StringStruct)) {
+			final String printedObject = printer.print(javaClassName);
+			throw new TypeErrorException("DECLARE: JAVA-CLASS-NAME must be a String. Got: " + printedObject);
+		}
+		final StringStruct javaClassNameString = (StringStruct) javaClassName;
 		return new JavaClassNameDeclarationStruct(javaClassNameString.getAsJavaString());
 	}
 

@@ -4,6 +4,9 @@
 
 package jcl.compiler.struct.specialoperator;
 
+import java.util.List;
+
+import jcl.LispStruct;
 import jcl.compiler.environment.Environment;
 import jcl.compiler.struct.CompilerSpecialOperatorStruct;
 
@@ -13,8 +16,8 @@ public class LocallyStruct extends CompilerSpecialOperatorStruct {
 
 	private final Environment locallyEnvironment;
 
-	public LocallyStruct(final PrognStruct forms, final Environment locallyEnvironment) {
-		this.forms = forms;
+	public LocallyStruct(final List<LispStruct> forms, final Environment locallyEnvironment) {
+		this.forms = new PrognStruct(forms);
 		this.locallyEnvironment = locallyEnvironment;
 	}
 

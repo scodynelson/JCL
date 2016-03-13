@@ -285,11 +285,14 @@ public abstract class MacroFunctionExpander<O extends LispStruct> extends MacroE
 		macroLambdaListBindings.getWholeBinding().setInitForm(form);
 		macroLambdaListBindings.getEnvironmentBinding().setInitForm(environment);
 
-		final ListStruct arguments = form.getRest();
-		final List<LispStruct> asJavaList = arguments.getAsJavaList();
+		final Iterator<LispStruct> iterator = form.iterator();
+		iterator.next(); // MACRO-NAME SYMBOL
 
-		final LispStruct[] argsArray = new LispStruct[asJavaList.size()];
-		asJavaList.toArray(argsArray);
+		final List<LispStruct> arguments = new ArrayList<>();
+		iterator.forEachRemaining(arguments::add);
+
+		final LispStruct[] argsArray = new LispStruct[arguments.size()];
+		arguments.toArray(argsArray);
 
 		final Map<SymbolStruct, LispStruct> closureSymbolsToBind = getClosureSymbolBindings();
 		for (final Map.Entry<SymbolStruct, LispStruct> closureSymbolToBind : closureSymbolsToBind.entrySet()) {

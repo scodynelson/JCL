@@ -1,16 +1,16 @@
 package jcl.compiler.sa.analyzer.specialoperator;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import jcl.LispStruct;
 import jcl.compiler.environment.Environment;
 import jcl.compiler.environment.ProgvEnvironment;
 import jcl.compiler.functions.EvalFunction;
 import jcl.compiler.sa.FormAnalyzer;
-import jcl.compiler.sa.analyzer.LispFormValueValidator;
-import jcl.compiler.struct.specialoperator.PrognStruct;
 import jcl.compiler.struct.specialoperator.ProgvStruct;
+import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.functions.expanders.MacroFunctionExpander;
 import jcl.lists.ListStruct;
 import jcl.symbols.SpecialOperatorStruct;
@@ -24,9 +24,6 @@ public class ProgvExpander extends MacroFunctionExpander<ProgvStruct> {
 	@Autowired
 	private FormAnalyzer formAnalyzer;
 
-	@Autowired
-	private LispFormValueValidator validator;
-
 	@Override
 	public SymbolStruct getFunctionSymbol() {
 		return SpecialOperatorStruct.PROGV;
@@ -34,33 +31,35 @@ public class ProgvExpander extends MacroFunctionExpander<ProgvStruct> {
 
 	@Override
 	public ProgvStruct expand(final ListStruct form, final Environment environment) {
-		validator.validateListFormSize(form, 3, "PROGV");
+		final Iterator<LispStruct> iterator = form.iterator();
+		iterator.next(); // PROGV SYMBOL
 
-		final ListStruct formRest = form.getRest();
+		if (!iterator.hasNext()) {
+			throw new ProgramErrorException("PROGV: Incorrect number of arguments: 0. Expected at least 2 arguments.");
+		}
+		final LispStruct first = iterator.next();
 
-		final LispStruct second = formRest.getCar();
-		final ListStruct quotedVars = ListStruct.buildProperList(SpecialOperatorStruct.QUOTE, second);
+		if (!iterator.hasNext()) {
+			throw new ProgramErrorException("PROGV: Incorrect number of arguments: 1. Expected at least 2 arguments.");
+		}
+		final LispStruct second = iterator.next();
+
+		final ListStruct quotedVars = ListStruct.buildProperList(SpecialOperatorStruct.QUOTE, first);
 		final ListStruct evalVars = ListStruct.buildProperList(EvalFunction.EVAL, quotedVars);
 		final LispStruct analyzedEvalVars = formAnalyzer.analyze(evalVars, environment);
 
-		final ListStruct formRestRest = formRest.getRest();
-
-		final LispStruct third = formRestRest.getCar();
-		final ListStruct quotedVals = ListStruct.buildProperList(SpecialOperatorStruct.QUOTE, third);
+		final ListStruct quotedVals = ListStruct.buildProperList(SpecialOperatorStruct.QUOTE, second);
 		final ListStruct evalVals = ListStruct.buildProperList(EvalFunction.EVAL, quotedVals);
 		final LispStruct analyzedEvalVals = formAnalyzer.analyze(evalVals, environment);
 
 		// Handle Progn Environment processing
 		final ProgvEnvironment progvEnvironment = new ProgvEnvironment(environment);
 
-		final ListStruct formRestRestRest = formRestRest.getRest();
-
-		final List<LispStruct> bodyForms = formRestRestRest.getAsJavaList();
-		final List<LispStruct> analyzedBodyForms =
-				bodyForms.stream()
-				         .map(e -> formAnalyzer.analyze(e, environment))
-				         .collect(Collectors.toList());
-
-		return new ProgvStruct(analyzedEvalVars, analyzedEvalVals, new PrognStruct(analyzedBodyForms), progvEnvironment);
+		final List<LispStruct> forms = new ArrayList<>();
+		iterator.forEachRemaining(element -> {
+			final LispStruct analyzedElement = formAnalyzer.analyze(element, environment);
+			forms.add(analyzedElement);
+		});
+		return new ProgvStruct(analyzedEvalVars, analyzedEvalVals, forms, progvEnvironment);
 	}
 }

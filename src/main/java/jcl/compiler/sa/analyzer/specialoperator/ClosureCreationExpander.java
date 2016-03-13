@@ -4,6 +4,8 @@
 
 package jcl.compiler.sa.analyzer.specialoperator;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -12,7 +14,6 @@ import jcl.LispStruct;
 import jcl.compiler.environment.Environment;
 import jcl.compiler.environment.binding.Binding;
 import jcl.compiler.sa.FormAnalyzer;
-import jcl.compiler.sa.analyzer.LispFormValueValidator;
 import jcl.compiler.sa.analyzer.body.BodyProcessingResult;
 import jcl.compiler.sa.analyzer.body.BodyWithDeclaresAnalyzer;
 import jcl.compiler.sa.analyzer.declare.DeclareExpander;
@@ -20,25 +21,28 @@ import jcl.compiler.struct.specialoperator.ClosureCreationStruct;
 import jcl.compiler.struct.specialoperator.PrognStruct;
 import jcl.compiler.struct.specialoperator.declare.DeclareStruct;
 import jcl.compiler.struct.specialoperator.declare.SpecialDeclarationStruct;
+import jcl.conditions.exceptions.ProgramErrorException;
+import jcl.conditions.exceptions.TypeErrorException;
 import jcl.functions.expanders.MacroFunctionExpander;
 import jcl.lists.ListStruct;
+import jcl.printer.Printer;
 import jcl.symbols.NILStruct;
 import jcl.symbols.SymbolStruct;
 import org.springframework.beans.factory.annotation.Autowired;
 
-public abstract class ClosureCreationExpander<V> extends MacroFunctionExpander<ClosureCreationStruct<V>> {
+abstract class ClosureCreationExpander<V> extends MacroFunctionExpander<ClosureCreationStruct<V>> {
 
 	@Autowired
 	private FormAnalyzer formAnalyzer;
-
-	@Autowired
-	private LispFormValueValidator validator;
 
 	@Autowired
 	private DeclareExpander declareExpander;
 
 	@Autowired
 	private BodyWithDeclaresAnalyzer bodyWithDeclaresAnalyzer;
+
+	@Autowired
+	private Printer printer;
 
 	private final String expanderName;
 
@@ -48,18 +52,24 @@ public abstract class ClosureCreationExpander<V> extends MacroFunctionExpander<C
 
 	@Override
 	public ClosureCreationStruct<V> expand(final ListStruct form, final Environment environment) {
-		validator.validateListFormSize(form, 2, expanderName);
+		final Iterator<LispStruct> iterator = form.iterator();
+		iterator.next(); // Closure Expander SYMBOL
 
-		final ListStruct formRest = form.getRest();
+		if (!iterator.hasNext()) {
+			throw new ProgramErrorException(expanderName + ": Incorrect number of arguments: 0. Expected at least 1 argument.");
+		}
+		final LispStruct first = iterator.next();
 
-		final LispStruct second = formRest.getCar();
-		final ListStruct parameters = validator.validateObjectType(second, expanderName, "PARAMETER LIST", ListStruct.class);
-		final List<LispStruct> parametersAsJavaList = parameters.getAsJavaList();
+		if (!(first instanceof ListStruct)) {
+			final String printedObject = printer.print(first);
+			throw new TypeErrorException(expanderName + ": PARAMETER-LIST must be a List. Got: " + printedObject);
+		}
+		final ListStruct parameters = (ListStruct) first;
 
 		final Environment closureEnvironment = new Environment(environment);
 
-		final ListStruct formRestRest = formRest.getRest();
-		final List<LispStruct> forms = formRestRest.getAsJavaList();
+		final List<LispStruct> forms = new ArrayList<>();
+		iterator.forEachRemaining(forms::add);
 
 		final BodyProcessingResult bodyProcessingResult = bodyWithDeclaresAnalyzer.analyze(forms);
 
@@ -67,9 +77,9 @@ public abstract class ClosureCreationExpander<V> extends MacroFunctionExpander<C
 		final DeclareStruct declare = declareExpander.expand(fullDeclaration, closureEnvironment);
 
 		final List<V> vars
-				= parametersAsJavaList.stream()
-				                      .map(e -> getVar(e, declare, closureEnvironment))
-				                      .collect(Collectors.toList());
+				= parameters.stream()
+				            .map(e -> getVar(e, declare, closureEnvironment))
+				            .collect(Collectors.toList());
 
 		final List<SpecialDeclarationStruct> specialDeclarations = declare.getSpecialDeclarations();
 		specialDeclarations.stream()
@@ -88,15 +98,39 @@ public abstract class ClosureCreationExpander<V> extends MacroFunctionExpander<C
 
 	private V getVar(final LispStruct parameter, final DeclareStruct declare, final Environment environment) {
 
-		validator.validateObjectTypes(parameter, expanderName, "PARAMETER", SymbolStruct.class, ListStruct.class);
+		if (!(parameter instanceof SymbolStruct) && !(parameter instanceof ListStruct)) {
+			final String printedObject = printer.print(parameter);
+			throw new TypeErrorException(expanderName + ": PARAMETER must be a Symbol or a List. Got: " + printedObject);
+		}
 
 		final SymbolStruct var;
 		final LispStruct initForm;
 
 		if (parameter instanceof ListStruct) {
 			final ListStruct listParameter = (ListStruct) parameter;
-			var = getListParameterVar(listParameter);
-			initForm = getListParameterInitForm(listParameter, environment);
+			final Iterator<LispStruct> iterator = listParameter.iterator();
+
+			if (!iterator.hasNext()) {
+				throw new ProgramErrorException(expanderName + ": List parameter must have either 1 or 2 elements. Got: 0");
+			}
+			final LispStruct first = iterator.next();
+
+			if (!(first instanceof SymbolStruct)) {
+				final String printedObject = printer.print(first);
+				throw new TypeErrorException(expanderName + ": First element of list parameter must be a Symbol. Got: " + printedObject);
+			}
+			var = (SymbolStruct) first;
+
+			if (iterator.hasNext()) {
+				final LispStruct value = iterator.next();
+				initForm = getListParameterInitForm(value, environment);
+
+				if (iterator.hasNext()) {
+					throw new ProgramErrorException(expanderName + ": List parameter must have either 1 or 2 elements. Got: 3");
+				}
+			} else {
+				initForm = NILStruct.INSTANCE;
+			}
 		} else {
 			var = (SymbolStruct) parameter;
 			initForm = NILStruct.INSTANCE;
@@ -117,13 +151,6 @@ public abstract class ClosureCreationExpander<V> extends MacroFunctionExpander<C
 		return getClosureCreationVar(var, initForm, isSpecial);
 	}
 
-	private SymbolStruct getListParameterVar(final ListStruct listParameter) {
-		validator.validateListParameterSize(listParameter, 1, 2, expanderName);
-
-		final LispStruct listParameterFirst = listParameter.getCar();
-		return validator.validateObjectType(listParameterFirst, expanderName, "First element of list parameter", SymbolStruct.class);
-	}
-
 	protected abstract V getClosureCreationVar(SymbolStruct var, LispStruct initForm,
 	                                           boolean isSpecial);
 
@@ -132,5 +159,5 @@ public abstract class ClosureCreationExpander<V> extends MacroFunctionExpander<C
 	                                                                     Environment environment);
 
 
-	protected abstract LispStruct getListParameterInitForm(ListStruct listParameter, Environment environment);
+	protected abstract LispStruct getListParameterInitForm(LispStruct parameterValue, Environment environment);
 }

@@ -4,6 +4,8 @@
 
 package jcl.compiler.struct.specialoperator;
 
+import java.util.List;
+
 import jcl.LispStruct;
 import jcl.compiler.struct.CompilerSpecialOperatorStruct;
 
@@ -13,9 +15,9 @@ public class CatchStruct extends CompilerSpecialOperatorStruct {
 
 	private final PrognStruct forms;
 
-	public CatchStruct(final LispStruct catchTag, final PrognStruct forms) {
+	public CatchStruct(final LispStruct catchTag, final List<LispStruct> forms) {
 		this.catchTag = catchTag;
-		this.forms = forms;
+		this.forms = new PrognStruct(forms);
 	}
 
 	public LispStruct getCatchTag() {

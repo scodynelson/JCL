@@ -93,13 +93,6 @@ public class VectorStruct<TYPE extends LispStruct> extends ArrayStruct<TYPE> imp
 		return (isAdjustable || (fillPointer != null)) ? VectorType.INSTANCE : SimpleVectorType.INSTANCE;
 	}
 
-	// TODO: FIX THIS!!!
-	@Override
-	@SuppressWarnings("unchecked")
-	public List<LispStruct> getAsJavaList() {
-		return (List<LispStruct>) contents;
-	}
-
 	/**
 	 * Getter for vector {@link #fillPointer} property.
 	 *

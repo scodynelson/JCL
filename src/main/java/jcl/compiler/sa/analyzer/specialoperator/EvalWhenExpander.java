@@ -1,7 +1,8 @@
 package jcl.compiler.sa.analyzer.specialoperator;
 
-import java.util.Collection;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -9,8 +10,8 @@ import jcl.LispStruct;
 import jcl.compiler.CompilerVariables;
 import jcl.compiler.environment.Environment;
 import jcl.compiler.functions.EvalFunction;
-import jcl.compiler.sa.analyzer.LispFormValueValidator;
 import jcl.conditions.exceptions.ProgramErrorException;
+import jcl.conditions.exceptions.TypeErrorException;
 import jcl.functions.expanders.MacroFunctionExpander;
 import jcl.lists.ConsStruct;
 import jcl.lists.ListStruct;
@@ -19,7 +20,6 @@ import jcl.symbols.NILStruct;
 import jcl.symbols.SpecialOperatorStruct;
 import jcl.symbols.SymbolStruct;
 import jcl.system.CommonLispSymbols;
-import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -42,9 +42,6 @@ public class EvalWhenExpander extends MacroFunctionExpander<LispStruct> {
 	private EvalFunction evalFunction;
 
 	@Autowired
-	private LispFormValueValidator validator;
-
-	@Autowired
 	private Printer printer;
 
 	@Override
@@ -54,57 +51,67 @@ public class EvalWhenExpander extends MacroFunctionExpander<LispStruct> {
 
 	@Override
 	public LispStruct expand(final ListStruct form, final Environment environment) {
-		validator.validateListFormSize(form, 2, "EVAL-WHEN");
+		final Iterator<LispStruct> iterator = form.iterator();
+		iterator.next(); // EVAL-WHEN SYMBOL
 
-		final ListStruct formRest = form.getRest();
+		if (!iterator.hasNext()) {
+			throw new ProgramErrorException("EVAL-WHEN: Incorrect number of arguments: 0. Expected at least 1 argument.");
+		}
+		final LispStruct first = iterator.next();
 
-		final LispStruct second = formRest.getCar();
-		final ListStruct situationList = validator.validateObjectType(second, "EVAL-WHEN", "SITUATION LIST", ListStruct.class);
-		final List<? extends LispStruct> situationJavaList = situationList.getAsJavaList();
+		if (!(first instanceof ListStruct)) {
+			final String printedObject = printer.print(first);
+			throw new TypeErrorException("EVAL-WHEN: SITUATION-LIST must be a List. Got: " + printedObject);
+		}
+		final ListStruct situationList = (ListStruct) first;
 
-		final Collection<? extends LispStruct> difference = CollectionUtils.removeAll(situationJavaList, SITUATION_KEYWORDS);
-		if (!difference.isEmpty()) {
+		final boolean nonSituationsFound = !situationList.stream().allMatch(SITUATION_KEYWORDS::contains);
+		if (nonSituationsFound) {
 			final String printedSituationList = printer.print(situationList);
-			throw new ProgramErrorException("EVAL-WHEN: Situations must be one of ':COMPILE-TOPLEVEL', ':LOAD-TIMELEVEL', ':EXECUTE', 'COMPILE', 'LOAD', or 'EVAL'. Got: " + printedSituationList);
+			throw new ProgramErrorException("EVAL-WHEN: Situations must be one of ':COMPILE-TOPLEVEL', ':LOAD-TOPLEVEL', ':EXECUTE', 'COMPILE', 'LOAD', or 'EVAL'. Got: " + printedSituationList);
 		}
 
-		final ListStruct forms = formRest.getRest();
+		final List<LispStruct> forms = new ArrayList<>();
+		iterator.forEachRemaining(forms::add);
 
 		final boolean isTopLevel = CompilerVariables.COMPILE_TOP_LEVEL.getVariableValue().booleanValue();
-		final boolean notConvertingForInterpreter = !CompilerVariables.CONVERTING_FOR_INTERPRETER.getVariableValue().booleanValue();
+		final boolean convertingForCompiler = !CompilerVariables.CONVERTING_FOR_INTERPRETER.getVariableValue().booleanValue();
 
 		if (isTopLevel) {
-			if (isCompileTopLevel(situationJavaList)) {
-				final ListStruct prognOperatorList = new ConsStruct(SpecialOperatorStruct.PROGN, forms);
+			if (isCompileTopLevel(situationList)) {
+				final ListStruct formsList = ListStruct.buildProperList(forms);
+				final ListStruct prognOperatorList = new ConsStruct(SpecialOperatorStruct.PROGN, formsList);
 				return evalFunction.eval(prognOperatorList);
 			}
 
-			if (isLoadTopLevel(situationJavaList) || (notConvertingForInterpreter && isExecute(situationJavaList))) {
-				final ListStruct prognOperatorList = new ConsStruct(SpecialOperatorStruct.PROGN, forms);
+			if (isLoadTopLevel(situationList) || (convertingForCompiler && isExecute(situationList))) {
+				final ListStruct formsList = ListStruct.buildProperList(forms);
+				final ListStruct prognOperatorList = new ConsStruct(SpecialOperatorStruct.PROGN, formsList);
 				return evalFunction.eval(prognOperatorList);
 			}
 		}
 
-		if (isExecute(situationJavaList)) {
-			final ListStruct prognOperatorList = new ConsStruct(SpecialOperatorStruct.PROGN, forms);
+		if (isExecute(situationList)) {
+			final ListStruct formsList = ListStruct.buildProperList(forms);
+			final ListStruct prognOperatorList = new ConsStruct(SpecialOperatorStruct.PROGN, formsList);
 			return evalFunction.eval(prognOperatorList);
 		}
 
 		return NILStruct.INSTANCE;
 	}
 
-	private static boolean isCompileTopLevel(final List<? extends LispStruct> situationList) {
-		return situationList.contains(CommonLispSymbols.COMPILE_TOPLEVEL)
-				|| situationList.contains(CommonLispSymbols.COMPILE);
+	private static boolean isCompileTopLevel(final ListStruct situationList) {
+		return situationList.stream()
+		                    .anyMatch(element -> CommonLispSymbols.COMPILE_TOPLEVEL.equals(element) || CommonLispSymbols.COMPILE.equals(element));
 	}
 
-	private static boolean isLoadTopLevel(final List<? extends LispStruct> situationList) {
-		return situationList.contains(CommonLispSymbols.LOAD_TOPLEVEL)
-				|| situationList.contains(CommonLispSymbols.LOAD);
+	private static boolean isLoadTopLevel(final ListStruct situationList) {
+		return situationList.stream()
+		                    .anyMatch(element -> CommonLispSymbols.LOAD_TOPLEVEL.equals(element) || CommonLispSymbols.LOAD.equals(element));
 	}
 
-	private static boolean isExecute(final List<? extends LispStruct> situationList) {
-		return situationList.contains(CommonLispSymbols.EXECUTE)
-				|| situationList.contains(CommonLispSymbols.EVAL);
+	private static boolean isExecute(final ListStruct situationList) {
+		return situationList.stream()
+		                    .anyMatch(element -> CommonLispSymbols.EXECUTE.equals(element) || CommonLispSymbols.EVAL.equals(element));
 	}
 }

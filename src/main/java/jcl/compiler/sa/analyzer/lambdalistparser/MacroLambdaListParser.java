@@ -24,6 +24,7 @@ import jcl.compiler.struct.specialoperator.declare.DeclareStruct;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.lists.ListStruct;
 import jcl.printer.Printer;
+import jcl.symbols.NILStruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -49,14 +50,12 @@ public final class MacroLambdaListParser extends LambdaListParser {
 	private MacroLambdaList getLambdaListBindings(final Environment environment, final ListStruct lambdaList,
 	                                              final DeclareStruct declareElement) {
 
-		final List<LispStruct> lambdaListJava = lambdaList.getAsJavaList();
-
-		final Iterator<LispStruct> iterator = lambdaListJava.iterator();
+		final Iterator<LispStruct> iterator = lambdaList.iterator();
 
 		// NOTE: this first peek is to ensure we don't damage the initial state of the iterator by consuming the first element early.
 		LispStruct firstElement = null;
-		if (!lambdaListJava.isEmpty()) {
-			firstElement = lambdaListJava.get(0);
+		if (!NILStruct.INSTANCE.equals(lambdaList)) {
+			firstElement = lambdaList.getCar();
 		}
 
 		LispStruct currentElement = null;
@@ -225,14 +224,12 @@ public final class MacroLambdaListParser extends LambdaListParser {
 	private MacroLambdaList getDottedLambdaListBindings(final Environment environment, final ListStruct lambdaList,
 	                                                    final DeclareStruct declareElement) {
 
-		final List<LispStruct> lambdaListJava = lambdaList.getAsJavaList();
-
-		final Iterator<LispStruct> iterator = lambdaListJava.iterator();
+		final Iterator<LispStruct> iterator = lambdaList.iterator();
 
 		// NOTE: this first peek is to ensure we don't damage the initial state of the iterator by consuming the first element early.
 		LispStruct firstElement = null;
-		if (!lambdaListJava.isEmpty()) {
-			firstElement = lambdaListJava.get(0);
+		if (!NILStruct.INSTANCE.equals(lambdaList)) {
+			firstElement = lambdaList.getCar();
 		}
 
 		LispStruct currentElement = null;

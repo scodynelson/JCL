@@ -69,7 +69,7 @@ final class TagbodyFormCollector implements Collector<LispStruct, Map<GoStruct<?
 	@Override
 	public BinaryOperator<Map<GoStruct<?>, PrognStruct>> combiner() {
 		return (tagToFormsMap1, tagToFormsMap2) -> {
-			for (Map.Entry<GoStruct<?>, PrognStruct> e : tagToFormsMap2.entrySet()) {
+			for (final Map.Entry<GoStruct<?>, PrognStruct> e : tagToFormsMap2.entrySet()) {
 				tagToFormsMap1.merge(
 						e.getKey(),
 						e.getValue(),

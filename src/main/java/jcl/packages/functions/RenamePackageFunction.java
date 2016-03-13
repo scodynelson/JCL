@@ -92,8 +92,7 @@ public final class RenamePackageFunction extends AbstractCommonLispFunctionStruc
 			final LispStruct lispStruct = lispStructs[2];
 			validator.validateTypes(lispStruct, functionName(), "New Nicknames", ListType.INSTANCE);
 
-			final List<LispStruct> newNicknamesList = ((ListStruct) lispStruct).getAsJavaList();
-
+			final ListStruct newNicknamesList = (ListStruct) lispStruct;
 			final List<String> newNicknames
 					= newNicknamesList.stream()
 					                  .map(newNickname -> validator.validateStringDesignator(newNickname, functionName(), "New Nickname"))

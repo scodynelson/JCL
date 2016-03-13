@@ -10,6 +10,7 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import jcl.LispStruct;
 import jcl.arrays.ArrayStruct;
@@ -396,7 +397,7 @@ public class TestGround {
 		}
 
 		final ListStruct varsAsList = (ListStruct) vars;
-		final List<LispStruct> varsAsJavaList = varsAsList.getAsJavaList();
+		final List<LispStruct> varsAsJavaList = varsAsList.stream().collect(Collectors.toList());
 		for (final LispStruct currentVar : varsAsJavaList) {
 			if (!(currentVar instanceof SymbolStruct)) {
 				throw new ProgramErrorException("PROGV: Elements in symbols list must be symbols. Got: " + currentVar);
@@ -409,7 +410,7 @@ public class TestGround {
 		}
 
 		final ListStruct valsAsList = (ListStruct) vals;
-		final List<LispStruct> valsAsJavaList = valsAsList.getAsJavaList();
+		final List<LispStruct> valsAsJavaList = valsAsList.stream().collect(Collectors.toList());
 
 		final int numberOfProgvVars = varsAsJavaList.size();
 		final int numberOfProgvVals = valsAsJavaList.size();

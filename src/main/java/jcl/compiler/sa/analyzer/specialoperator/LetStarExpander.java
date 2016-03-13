@@ -8,7 +8,6 @@ import jcl.compiler.sa.FormAnalyzer;
 import jcl.compiler.struct.specialoperator.ClosureCreationStruct;
 import jcl.compiler.struct.specialoperator.LetStarStruct;
 import jcl.compiler.struct.specialoperator.PrognStruct;
-import jcl.lists.ListStruct;
 import jcl.symbols.SpecialOperatorStruct;
 import jcl.symbols.SymbolStruct;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,10 +42,7 @@ public class LetStarExpander extends ClosureCreationExpander<LetStarStruct.LetSt
 	}
 
 	@Override
-	protected LispStruct getListParameterInitForm(final ListStruct listParameter, final Environment environment) {
-		final ListStruct listParameterRest = listParameter.getRest();
-		final LispStruct parameterValue = listParameterRest.getCar();
-
+	protected LispStruct getListParameterInitForm(final LispStruct parameterValue, final Environment environment) {
 		// Evaluate in the 'current' environment.
 		return formAnalyzer.analyze(parameterValue, environment);
 	}

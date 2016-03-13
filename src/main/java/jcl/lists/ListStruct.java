@@ -18,14 +18,6 @@ import org.apache.commons.collections4.CollectionUtils;
  */
 public interface ListStruct extends SequenceStruct, Iterable<LispStruct> {
 
-	/**
-	 * Returns the size of the list.
-	 *
-	 * @return the size of the list
-	 */
-	@Deprecated
-	int size();
-
 	LispStruct getCar();
 
 	void setCar(LispStruct car);
@@ -33,14 +25,6 @@ public interface ListStruct extends SequenceStruct, Iterable<LispStruct> {
 	LispStruct getCdr();
 
 	void setCdr(LispStruct cdr);
-
-	/**
-	 * Returns all but the first element in the list.
-	 *
-	 * @return all but the first element in the list
-	 */
-	@Deprecated
-	ListStruct getRest();
 
 	/**
 	 * Determines if the list is a dotted list.
@@ -64,12 +48,6 @@ public interface ListStruct extends SequenceStruct, Iterable<LispStruct> {
 	default boolean isProper() {
 		return !isDotted() && !isCircular();
 	}
-
-	Stream<LispStruct> stream();
-
-	Stream<LispStruct> parallelStream();
-
-	LispStruct[] toArray();
 
 	ListStruct copyTree();
 

@@ -70,30 +70,6 @@ public class ConsStructTest {
 	}
 
 	/**
-	 * Test for 'size' method where the cdr of the ConsStruct is a ListStruct.
-	 *
-	 * @throws Exception
-	 * 		if any error occurs
-	 */
-	@Test
-	public void testSize_cdrListStruct() throws Exception {
-		final ConsStruct consStruct = new ConsStruct(TStruct.INSTANCE); // Null.INSTANCE is default CDR, which is a ListStruct
-		Assert.assertEquals(consStruct.size(), 1, "'size' of ConsStruct was not expected value of '1'.");
-	}
-
-	/**
-	 * Test for 'size' method where the cdr of the ConsStruct is not a ListStruct.
-	 *
-	 * @throws Exception
-	 * 		if any error occurs
-	 */
-	@Test
-	public void testSize_cdrNotListStruct() throws Exception {
-		final ConsStruct consStruct = new ConsStruct(NILStruct.INSTANCE, TStruct.INSTANCE);
-		Assert.assertEquals(consStruct.size(), 2, "'size' of ConsStruct was not expected value of '2'.");
-	}
-
-	/**
 	 * Test for 'getFirst' method.
 	 *
 	 * @throws Exception
@@ -103,64 +79,6 @@ public class ConsStructTest {
 	public void testGetFirst() throws Exception {
 		final ConsStruct consStruct = new ConsStruct(TStruct.INSTANCE);
 		Assert.assertEquals(consStruct.getCar(), TStruct.INSTANCE, "'first' value of ConsStruct was not equal.");
-	}
-
-	/**
-	 * Test for 'getRest' method where the cdr of the ConsStruct is a ListStruct.
-	 *
-	 * @throws Exception
-	 * 		if any error occurs
-	 */
-	@Test
-	public void testGetRest_cdrListStruct() throws Exception {
-		final ConsStruct consStruct = new ConsStruct(TStruct.INSTANCE);
-		Assert.assertEquals(consStruct.getRest(), NILStruct.INSTANCE, "'rest' value of ConsStruct was not equal.");
-	}
-
-	/**
-	 * Test for 'getRest' method where the cdr of the ConsStruct is not a ListStruct.
-	 *
-	 * @throws Exception
-	 * 		if any error occurs
-	 */
-//	@Test
-//	public void testGetRest_cdrNotListStruct() throws Exception {
-//		final ConsStruct consStruct = new ConsStruct(NILStruct.INSTANCE, TStruct.INSTANCE);
-//
-//		final ListStruct rest = consStruct.getRest();
-//		Assert.assertTrue(rest instanceof ConsStruct, "'rest' value of ConsStruct was not an expected ConsStruct.");
-//		Assert.assertEquals(rest.getCar(), NILStruct.INSTANCE, "First value of 'rest' value of ConsStruct was not equal.");
-//	}
-
-	/**
-	 * Test for 'getAsJavaList' method where the cdr of the ConsStruct is a ListStruct.
-	 *
-	 * @throws Exception
-	 * 		if any error occurs
-	 */
-	@Test
-	public void testGetAsJavaList_cdrListStruct() throws Exception {
-		final ConsStruct consStruct = new ConsStruct(TStruct.INSTANCE);
-
-		final List<LispStruct> javaList = consStruct.getAsJavaList();
-		Assert.assertEquals(javaList.size(), 1, "Java List was not expected size of 2");
-		Assert.assertEquals(javaList.get(0), TStruct.INSTANCE, "First element of Java List was not equal.");
-	}
-
-	/**
-	 * Test for 'getAsJavaList' method where the cdr of the ConsStruct is not a ListStruct.
-	 *
-	 * @throws Exception
-	 * 		if any error occurs
-	 */
-	@Test
-	public void testGetAsJavaList_cdrNotListStruct() throws Exception {
-		final ConsStruct consStruct = new ConsStruct(NILStruct.INSTANCE, TStruct.INSTANCE);
-
-		final List<LispStruct> javaList = consStruct.getAsJavaList();
-		Assert.assertEquals(javaList.size(), 2, "Java List was not expected size of 2");
-		Assert.assertEquals(javaList.get(0), NILStruct.INSTANCE, "First element of Java List was not equal.");
-		Assert.assertEquals(javaList.get(1), TStruct.INSTANCE, "Second element of Java List was not equal.");
 	}
 
 	/**

@@ -13,6 +13,8 @@ public class Parameter extends Binding {
 
 	private LispStruct initForm;
 
+	private Class<? extends LispStruct> initFormClass;
+
 	private final DestructuringLambdaList destructuringForm;
 
 	private final boolean isSpecial;
@@ -35,6 +37,14 @@ public class Parameter extends Binding {
 
 	public void setInitForm(final LispStruct initForm) {
 		this.initForm = initForm;
+	}
+
+	public Class<? extends LispStruct> getInitFormClass() {
+		return initFormClass;
+	}
+
+	public void setInitFormClass(final Class<? extends LispStruct> initFormClass) {
+		this.initFormClass = initFormClass;
 	}
 
 	public boolean isSpecial() {

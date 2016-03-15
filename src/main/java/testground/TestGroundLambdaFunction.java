@@ -12,7 +12,7 @@ import jcl.functions.CompiledFunctionStruct;
 public class TestGroundLambdaFunction extends CompiledFunctionStruct {
 
 	public TestGroundLambdaFunction(final Closure parentClosure) {
-		closure = parentClosure;
+		super(parentClosure);
 	}
 
 	@Override

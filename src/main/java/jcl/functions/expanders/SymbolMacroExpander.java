@@ -10,6 +10,10 @@ import jcl.symbols.SymbolStruct;
 
 public abstract class SymbolMacroExpander extends MacroExpander<LispStruct, SymbolStruct> {
 
+	protected SymbolMacroExpander(final String documentation) {
+		super(documentation);
+	}
+
 	@Override
 	public LispStruct apply(final LispStruct... lispStructs) {
 		final SymbolStruct symbolStruct = (SymbolStruct) lispStructs[0];

@@ -264,8 +264,6 @@ interface GenerationConstants {
 
 	String COMPILED_FUNCTION_STRUCT_NAME = Type.getInternalName(CompiledFunctionStruct.class);
 
-	String COMPILED_FUNCTION_STRUCT_INIT_DESC = CodeGenerators.getConstructorDescription(CompiledFunctionStruct.class);
-
 	String COMPILED_FUNCTION_STRUCT_INIT_CLOSURE_DESC = CodeGenerators.getConstructorDescription(CompiledFunctionStruct.class, Closure.class);
 
 	String COMPILED_FUNCTION_STRUCT_INIT_STRING_CLOSURE_DESC = CodeGenerators.getConstructorDescription(CompiledFunctionStruct.class, String.class, Closure.class);
@@ -305,12 +303,6 @@ interface GenerationConstants {
 	String CLOSURE_GET_SYMBOL_BINDINGS_METHOD_NAME = "getSymbolBindings";
 
 	String CLOSURE_GET_SYMBOL_BINDINGS_METHOD_DESC = CodeGenerators.getMethodDescription(Closure.class, CLOSURE_GET_SYMBOL_BINDINGS_METHOD_NAME);
-
-	String ORDINARY_LAMBDA_LIST_BINDINGS_NAME = Type.getInternalName(OrdinaryLambdaList.class);
-
-	String ORDINARY_LAMBDA_LIST_BINDINGS_DESC = Type.getDescriptor(OrdinaryLambdaList.class);
-
-	String ORDINARY_LAMBDA_LIST_BINDINGS_INIT_DESC = CodeGenerators.getConstructorDescription(OrdinaryLambdaList.class, List.class, List.class, RestParameter.class, List.class, List.class, boolean.class);
 
 	String PROGRAM_ERROR_EXCEPTION_NAME = Type.getInternalName(ProgramErrorException.class);
 

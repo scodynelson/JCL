@@ -31,6 +31,11 @@ public abstract class ReaderMacroFunction extends FunctionStruct {
 	@Autowired
 	private ApplicationContext applicationContext;
 
+	protected ReaderMacroFunction() {
+		// TODO
+		super("Some Documentation");
+	}
+
 	@Override
 	public LispStruct apply(final LispStruct... lispStructs) {
 

@@ -355,7 +355,7 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 	                                             final ClassWriter cw) {
 		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PUBLIC,
 		                                        GenerationConstants.INIT_METHOD_NAME,
-		                                        GenerationConstants.COMPILED_FUNCTION_STRUCT_INIT_DESC,
+		                                        GenerationConstants.INIT_METHOD_DESC,
 		                                        null,
 		                                        null);
 

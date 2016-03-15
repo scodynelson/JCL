@@ -10,9 +10,6 @@ import jcl.functions.FunctionStruct;
 
 public abstract class MacroExpander<O extends LispStruct, I extends LispStruct> extends FunctionStruct {
 
-	protected MacroExpander() {
-	}
-
 	protected MacroExpander(final String documentation) {
 		super(documentation);
 	}

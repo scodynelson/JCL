@@ -13,6 +13,7 @@ import jcl.functions.AbstractSystemFunctionStruct;
 import jcl.functions.FunctionStruct;
 import jcl.packages.GlobalPackageStruct;
 import jcl.symbols.SymbolStruct;
+import jcl.types.CompiledFunctionType;
 import jcl.types.FunctionType;
 import jcl.types.SymbolType;
 import jcl.types.TypeValidator;
@@ -45,8 +46,8 @@ public final class SetSymbolFunctionFunction extends AbstractSystemFunctionStruc
 
 		final SymbolStruct symbol =
 				validator.validateType(lispStructs[0], functionName(), "Symbol", SymbolType.INSTANCE, SymbolStruct.class);
-		final FunctionStruct function =
-				validator.validateType(lispStructs[1], functionName(), "Function", FunctionType.INSTANCE, FunctionStruct.class);
+		validator.validateTypes(lispStructs[1], functionName(), "Function", FunctionType.INSTANCE, CompiledFunctionType.INSTANCE);
+		final FunctionStruct function = (FunctionStruct) lispStructs[1];
 
 		symbol.setFunction(function);
 		return function;

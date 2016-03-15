@@ -2,6 +2,7 @@ package jcl.functions.expanders;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -11,12 +12,12 @@ import java.util.Map;
 import java.util.Set;
 
 import jcl.LispStruct;
+import jcl.LispType;
 import jcl.compiler.environment.Environment;
 import jcl.compiler.environment.binding.lambdalist.AuxParameter;
 import jcl.compiler.environment.binding.lambdalist.BodyParameter;
 import jcl.compiler.environment.binding.lambdalist.EnvironmentParameter;
 import jcl.compiler.environment.binding.lambdalist.KeyParameter;
-import jcl.compiler.environment.binding.lambdalist.MacroLambdaList;
 import jcl.compiler.environment.binding.lambdalist.OptionalParameter;
 import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
 import jcl.compiler.environment.binding.lambdalist.RestParameter;
@@ -28,36 +29,33 @@ import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.functions.Closure;
 import jcl.functions.FunctionParameterBinding;
 import jcl.functions.FunctionStruct;
-import jcl.functions.expanders.MacroFunctionExpander;
 import jcl.lists.ListStruct;
 import jcl.symbols.NILStruct;
 import jcl.symbols.SymbolStruct;
 import jcl.symbols.TStruct;
 import jcl.system.CommonLispSymbols;
 
-public abstract class CompiledMacroFunctionExpander<O extends LispStruct> extends MacroFunctionExpander <O> {
+public abstract class CompiledMacroFunctionExpander<O extends LispStruct> extends MacroFunctionExpander<O> {
 
-	protected MacroLambdaList macroLambdaListBindings;
+	protected Closure closure;
 
-	protected CompiledMacroFunctionExpander() {
-		this(null);
-	}
+	protected static final LispStruct INIT_FORM_PLACEHOLDER = new LispStruct() {
+
+		@Override
+		public LispType getType() {
+			return null;
+		}
+	};
 
 	protected CompiledMacroFunctionExpander(final Closure closure) {
-		super(closure);
+		this("", closure);
 	}
 
 	protected CompiledMacroFunctionExpander(final String documentation, final Closure closure) {
-		super(documentation, closure);
+		super(documentation);
+		this.closure = closure;
 	}
 
-	@Override
-	public void afterPropertiesSet() throws Exception {
-		final SymbolStruct functionSymbol = getFunctionSymbol();
-		functionSymbol.setMacroFunctionExpander(this);
-	}
-
-	@Override
 	protected List<FunctionParameterBinding> getFunctionBindings(final LispStruct[] lispStructs) {
 		final WholeParameter wholeBinding = macroLambdaListBindings.getWholeBinding();
 		final EnvironmentParameter environmentBinding = macroLambdaListBindings.getEnvironmentBinding();
@@ -240,40 +238,8 @@ public abstract class CompiledMacroFunctionExpander<O extends LispStruct> extend
 		return functionParametersToBind;
 	}
 
-	protected WholeParameter getWholeBinding() {
-		return new WholeParameter(new SymbolStruct("temp_whole_" + System.nanoTime()));
-	}
-
-	protected EnvironmentParameter getEnvironmentBinding() {
-		return new EnvironmentParameter(new SymbolStruct("temp_environment_" + System.nanoTime()));
-	}
-
-	protected BodyParameter getBodyBinding() {
-		return null;
-	}
-
-	@Override
-	protected void initLambdaListBindings() {
-		final WholeParameter wholeBinding = getWholeBinding();
-		final List<RequiredParameter> requiredBindings = getRequiredBindings();
-		final List<OptionalParameter> optionalBindings = getOptionalBindings();
-		final RestParameter restBinding = getRestBinding();
-		final BodyParameter bodyBinding = getBodyBinding();
-		final List<KeyParameter> keyBindings = getKeyBindings();
-		final boolean allowOtherKeys = getAllowOtherKeys();
-		final List<AuxParameter> auxBindings = getAuxBindings();
-		final EnvironmentParameter environmentBinding = getEnvironmentBinding();
-		macroLambdaListBindings = MacroLambdaList.builder()
-		                                         .wholeBinding(wholeBinding)
-		                                         .environmentBinding(environmentBinding)
-		                                         .requiredBindings(requiredBindings)
-		                                         .optionalBindings(optionalBindings)
-		                                         .restBinding(restBinding)
-		                                         .bodyBinding(bodyBinding)
-		                                         .keyBindings(keyBindings)
-		                                         .allowOtherKeys(allowOtherKeys)
-		                                         .auxBindings(auxBindings)
-		                                         .build();
+	protected LispStruct getInitForm(final Closure currentClosure, final SymbolStruct parameter) {
+		return NILStruct.INSTANCE;
 	}
 
 	@SuppressWarnings({"unchecked", "rawtypes"})
@@ -354,15 +320,21 @@ public abstract class CompiledMacroFunctionExpander<O extends LispStruct> extend
 		return result;
 	}
 
-	@Override
-	protected O internalApply(final Closure currentClosure) {
-		return null;
+	public Map<SymbolStruct, LispStruct> getClosureSymbolBindings() {
+		if (closure == null) {
+			return Collections.emptyMap();
+		}
+		return closure.getSymbolBindings();
 	}
 
-	@Override
-	public LispStruct apply(final LispStruct... lispStructs) {
-		final ListStruct listStruct = (ListStruct) lispStructs[0];
-		final Environment environment = (Environment) lispStructs[1];
-		return expand(listStruct, environment);
+	public Map<SymbolStruct, FunctionStruct> getClosureFunctionBindings() {
+		if (closure == null) {
+			return Collections.emptyMap();
+		}
+		return closure.getFunctionBindings();
+	}
+
+	protected O internalApply(final Closure currentClosure) {
+		return null;
 	}
 }

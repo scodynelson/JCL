@@ -28,11 +28,9 @@ import jcl.symbols.NILStruct;
 import jcl.symbols.SymbolStruct;
 import jcl.symbols.TStruct;
 import jcl.system.CommonLispSymbols;
-import jcl.types.FunctionType;
+import jcl.types.CompiledFunctionType;
 
 public abstract class CompiledFunctionStruct extends FunctionStruct {
-
-	protected OrdinaryLambdaList lambdaListBindings;
 
 	protected Closure closure;
 
@@ -44,16 +42,12 @@ public abstract class CompiledFunctionStruct extends FunctionStruct {
 		}
 	};
 
-	protected CompiledFunctionStruct() {
-		super(null, FunctionType.INSTANCE, null, null);
-	}
-
 	protected CompiledFunctionStruct(final Closure closure) {
 		this("", closure);
 	}
 
 	protected CompiledFunctionStruct(final String documentation, final Closure closure) {
-		super(documentation, FunctionType.INSTANCE, null, null);
+		super(documentation, CompiledFunctionType.INSTANCE);
 		this.closure = closure;
 	}
 

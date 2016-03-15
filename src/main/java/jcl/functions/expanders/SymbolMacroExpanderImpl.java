@@ -13,6 +13,8 @@ public class SymbolMacroExpanderImpl extends SymbolMacroExpander {
 	private final LispStruct expansion;
 
 	public SymbolMacroExpanderImpl(final LispStruct expansion) {
+		// TODO: Documentation???
+		super("");
 		this.expansion = expansion;
 	}
 

@@ -13,6 +13,11 @@ import jcl.symbols.SymbolStruct;
 @SuppressWarnings({"all", "rawtypes"})
 public class TestGroundSymbolMacroExpander extends SymbolMacroExpander {
 
+	protected TestGroundSymbolMacroExpander() {
+		// TODO: Documentation???
+		super("");
+	}
+
 	@Override
 	public LispStruct expand(final SymbolStruct form, final Environment environment) {
 		return CharacterStruct.valueOf(123456789);

@@ -23,31 +23,18 @@ public abstract class FunctionStruct extends BuiltInClassStruct implements Initi
 
 	protected OrdinaryLambdaList lambdaListBindings;
 
-	protected FunctionStruct() {
-		this(null, FunctionType.INSTANCE, null, null);
-	}
-
 	protected FunctionStruct(final String documentation) {
-		this(documentation, FunctionType.INSTANCE, null, null);
+		this(documentation, FunctionType.INSTANCE);
 	}
 
 	protected FunctionStruct(final String documentation, final OrdinaryLambdaList lambdaListBindings) {
-		this(documentation, FunctionType.INSTANCE, null, null);
+		// TODO: Remove eventually
+		this(documentation, FunctionType.INSTANCE);
 		this.lambdaListBindings = lambdaListBindings;
 	}
 
-	protected FunctionStruct(final List<Class<? extends LispStruct>> directSuperClasses, final List<Class<? extends LispStruct>> subClasses) {
-		this(null, FunctionType.INSTANCE, directSuperClasses, subClasses);
-	}
-
-	protected FunctionStruct(final String documentation,
-	                         final List<Class<? extends LispStruct>> directSuperClasses, final List<Class<? extends LispStruct>> subClasses) {
-		this(documentation, FunctionType.INSTANCE, directSuperClasses, subClasses);
-	}
-
-	protected FunctionStruct(final LispType type,
-	                         final List<Class<? extends LispStruct>> directSuperClasses, final List<Class<? extends LispStruct>> subClasses) {
-		this(null, type, directSuperClasses, subClasses);
+	protected FunctionStruct(final String documentation, final FunctionType type) {
+		this(documentation, type, null, null);
 	}
 
 	protected FunctionStruct(final String documentation, final LispType type,

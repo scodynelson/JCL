@@ -64,7 +64,6 @@ public final class ATanFunction extends FunctionStruct {
 
 	@Override
 	public LispStruct apply(final LispStruct... lispStructs) {
-		getFunctionBindings(lispStructs);
 
 		if (lispStructs.length == 1) {
 			final LispStruct lispStruct = lispStructs[0];

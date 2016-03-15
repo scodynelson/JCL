@@ -47,7 +47,6 @@ public final class ListToVectorFunction extends FunctionStruct {
 
 	@Override
 	public LispStruct apply(final LispStruct... lispStructs) {
-		getFunctionBindings(lispStructs);
 
 		final ListStruct list = (ListStruct) lispStructs[0];
 		return listToVector(list);

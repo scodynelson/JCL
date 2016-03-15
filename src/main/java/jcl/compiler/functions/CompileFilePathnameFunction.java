@@ -71,7 +71,6 @@ public final class CompileFilePathnameFunction extends FunctionStruct {
 
 	@Override
 	public LispStruct apply(final LispStruct... lispStructs) {
-		getFunctionBindings(lispStructs);
 
 		final LispStruct inputFile = lispStructs[0];
 		if (lispStructs.length > 2) {

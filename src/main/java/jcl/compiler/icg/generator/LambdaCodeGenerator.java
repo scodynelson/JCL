@@ -25,7 +25,7 @@ import jcl.compiler.icg.JavaMethodBuilder;
 import jcl.compiler.struct.specialoperator.PrognStruct;
 import jcl.compiler.struct.specialoperator.lambda.LambdaStruct;
 import jcl.functions.Closure;
-import jcl.functions.FunctionStruct;
+import jcl.functions.CompiledFunctionStruct;
 import jcl.packages.PackageStruct;
 import jcl.symbols.NILStruct;
 import jcl.symbols.SymbolStruct;
@@ -52,127 +52,139 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 	private static final String COMPONENT_ANNOTATION_DESC = Type.getDescriptor(Component.class);
 
 	/**
-	 * Constant {@link String} containing the name for the {@link FunctionStruct#initLambdaListBindings()} method.
+	 * Constant {@link String} containing the name for the {@link CompiledFunctionStruct#initLambdaListBindings()}
+	 * method.
 	 */
 	private static final String INIT_LAMBDA_LIST_BINDINGS_METHOD_NAME = "initLambdaListBindings";
 
 	/**
-	 * Constant {@link String} containing the description for the {@link FunctionStruct#initLambdaListBindings()}
+	 * Constant {@link String} containing the description for the {@link CompiledFunctionStruct#initLambdaListBindings()}
 	 * method.
 	 */
 	private static final String INIT_LAMBDA_LIST_BINDINGS_METHOD_DESC = "()V";
 
 	/**
-	 * Constant {@link String} containing the name for the {@link FunctionStruct#getRequiredBindings()} method.
+	 * Constant {@link String} containing the name for the {@link CompiledFunctionStruct#getRequiredBindings()} method.
 	 */
 	private static final String GET_REQUIRED_BINDINGS_METHOD_NAME = "getRequiredBindings";
 
 	/**
-	 * Constant {@link String} containing the description for the {@link FunctionStruct#getRequiredBindings()} method.
+	 * Constant {@link String} containing the description for the {@link CompiledFunctionStruct#getRequiredBindings()}
+	 * method.
 	 */
 	private static final String GET_REQUIRED_BINDINGS_METHOD_DESC = "()Ljava/util/List;";
 
 	/**
-	 * Constant {@link String} containing the signature for the {@link FunctionStruct#getRequiredBindings()} method.
+	 * Constant {@link String} containing the signature for the {@link CompiledFunctionStruct#getRequiredBindings()}
+	 * method.
 	 */
 	private static final String GET_REQUIRED_BINDINGS_METHOD_SIGNATURE = "()Ljava/util/List<Ljcl/compiler/environment/binding/lambdalist/RequiredParameter;>;";
 
 	/**
-	 * Constant {@link String} containing the name for the {@link FunctionStruct#getOptionalBindings()} method.
+	 * Constant {@link String} containing the name for the {@link CompiledFunctionStruct#getOptionalBindings()} method.
 	 */
 	private static final String GET_OPTIONAL_BINDINGS_METHOD_NAME = "getOptionalBindings";
 
 	/**
-	 * Constant {@link String} containing the description for the {@link FunctionStruct#getOptionalBindings()} method.
+	 * Constant {@link String} containing the description for the {@link CompiledFunctionStruct#getOptionalBindings()}
+	 * method.
 	 */
 	private static final String GET_OPTIONAL_BINDINGS_METHOD_DESC = "()Ljava/util/List;";
 
 	/**
-	 * Constant {@link String} containing the signature for the {@link FunctionStruct#getOptionalBindings()} method.
+	 * Constant {@link String} containing the signature for the {@link CompiledFunctionStruct#getOptionalBindings()}
+	 * method.
 	 */
 	private static final String GET_OPTIONAL_BINDINGS_METHOD_SIGNATURE = "()Ljava/util/List<Ljcl/compiler/environment/binding/lambdalist/OptionalParameter;>;";
 
 	/**
-	 * Constant {@link String} containing the name for the {@link FunctionStruct#getRestBinding()} method.
+	 * Constant {@link String} containing the name for the {@link CompiledFunctionStruct#getRestBinding()} method.
 	 */
 	private static final String GET_REST_BINDING_METHOD_NAME = "getRestBinding";
 
 	/**
-	 * Constant {@link String} containing the description for the {@link FunctionStruct#getRestBinding()} method.
+	 * Constant {@link String} containing the description for the {@link CompiledFunctionStruct#getRestBinding()}
+	 * method.
 	 */
 	private static final String GET_REST_BINDING_METHOD_DESC = "()Ljcl/compiler/environment/binding/lambdalist/RestParameter;";
 
 	/**
-	 * Constant {@link String} containing the name for the {@link FunctionStruct#getKeyBindings()} method.
+	 * Constant {@link String} containing the name for the {@link CompiledFunctionStruct#getKeyBindings()} method.
 	 */
 	private static final String GET_KEY_BINDINGS_METHOD_NAME = "getKeyBindings";
 
 	/**
-	 * Constant {@link String} containing the description for the {@link FunctionStruct#getKeyBindings()} method.
+	 * Constant {@link String} containing the description for the {@link CompiledFunctionStruct#getKeyBindings()}
+	 * method.
 	 */
 	private static final String GET_KEY_BINDINGS_METHOD_DESC = "()Ljava/util/List;";
 
 	/**
-	 * Constant {@link String} containing the signature for the {@link FunctionStruct#getKeyBindings()} method.
+	 * Constant {@link String} containing the signature for the {@link CompiledFunctionStruct#getKeyBindings()} method.
 	 */
 	private static final String GET_KEY_BINDINGS_METHOD_SIGNATURE = "()Ljava/util/List<Ljcl/compiler/environment/binding/lambdalist/KeyParameter;>;";
 
 	/**
-	 * Constant {@link String} containing the name for the {@link FunctionStruct#getAllowOtherKeys()} method.
+	 * Constant {@link String} containing the name for the {@link CompiledFunctionStruct#getAllowOtherKeys()} method.
 	 */
 	private static final String GET_ALLOW_OTHER_KEYS_METHOD_NAME = "getAllowOtherKeys";
 
 	/**
-	 * Constant {@link String} containing the description for the {@link FunctionStruct#getAllowOtherKeys()} method.
+	 * Constant {@link String} containing the description for the {@link CompiledFunctionStruct#getAllowOtherKeys()}
+	 * method.
 	 */
 	private static final String GET_ALLOW_OTHER_KEYS_METHOD_DESC = "()Z";
 
 	/**
-	 * Constant {@link String} containing the name for the {@link FunctionStruct#getAuxBindings()} method.
+	 * Constant {@link String} containing the name for the {@link CompiledFunctionStruct#getAuxBindings()} method.
 	 */
 	private static final String GET_AUX_BINDINGS_METHOD_NAME = "getAuxBindings";
 
 	/**
-	 * Constant {@link String} containing the description for the {@link FunctionStruct#getAuxBindings()} method.
+	 * Constant {@link String} containing the description for the {@link CompiledFunctionStruct#getAuxBindings()}
+	 * method.
 	 */
 	private static final String GET_AUX_BINDINGS_METHOD_DESC = "()Ljava/util/List;";
 
 	/**
-	 * Constant {@link String} containing the signature for the {@link FunctionStruct#getAuxBindings()} method.
+	 * Constant {@link String} containing the signature for the {@link CompiledFunctionStruct#getAuxBindings()} method.
 	 */
 	private static final String GET_AUX_BINDINGS_METHOD_SIGNATURE = "()Ljava/util/List<Ljcl/compiler/environment/binding/lambdalist/AuxParameter;>;";
 
 	/**
-	 * Constant {@link String} containing the name for the {@link FunctionStruct#internalApply(Closure)} method.
+	 * Constant {@link String} containing the name for the {@link CompiledFunctionStruct#internalApply(Closure)}
+	 * method.
 	 */
 	private static final String INTERNAL_APPLY_METHOD_NAME = "internalApply";
 
 	/**
-	 * Constant {@link String} containing the description for the {@link FunctionStruct#internalApply(Closure)} method.
+	 * Constant {@link String} containing the description for the {@link CompiledFunctionStruct#internalApply(Closure)}
+	 * method.
 	 */
 	private static final String INTERNAL_APPLY_METHOD_DESC = "(Ljcl/functions/Closure;)Ljcl/LispStruct;";
 
 	/**
-	 * Constant {@link String} containing the name for the {@link FunctionStruct#getInitForm(Closure, SymbolStruct)}
+	 * Constant {@link String} containing the name for the {@link CompiledFunctionStruct#getInitForm(Closure,
+	 * SymbolStruct)}
 	 * method.
 	 */
 	private static final String GET_INIT_FORM_METHOD_NAME = "getInitForm";
 
 	/**
-	 * Constant {@link String} containing the description for the {@link FunctionStruct#getInitForm(Closure,
+	 * Constant {@link String} containing the description for the {@link CompiledFunctionStruct#getInitForm(Closure,
 	 * SymbolStruct)} method.
 	 */
 	private static final String GET_INIT_FORM_METHOD_DESC = "(Ljcl/functions/Closure;Ljcl/symbols/SymbolStruct;)Ljcl/LispStruct;";
 
 	/**
-	 * Constant {@link String} containing the signature for the {@link FunctionStruct#getInitForm(Closure,
+	 * Constant {@link String} containing the signature for the {@link CompiledFunctionStruct#getInitForm(Closure,
 	 * SymbolStruct)} method.
 	 */
 	private static final String GET_INIT_FORM_METHOD_SIGNATURE = "(Ljcl/functions/Closure;Ljcl/symbols/SymbolStruct;)Ljcl/LispStruct;";
 
 	/**
 	 * {@link IntermediateCodeGenerator} used for generating the 'optional', 'key', and 'aux' init-form values in the
-	 * {@link FunctionStruct#getInitForm(Closure, SymbolStruct)} method.
+	 * {@link CompiledFunctionStruct#getInitForm(Closure, SymbolStruct)} method.
 	 */
 	@Autowired
 	private IntermediateCodeGenerator codeGenerator;
@@ -185,7 +197,7 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 
 	/**
 	 * {@link NILCodeGenerator} used for generating {@link NILStruct#INSTANCE} constant as the default result in the
-	 * {@link FunctionStruct#getInitForm(Closure, SymbolStruct)} method and for the initial init-form value for
+	 * {@link CompiledFunctionStruct#getInitForm(Closure, SymbolStruct)} method and for the initial init-form value for
 	 * 'optional', 'key', and 'aux' keyword parameters.
 	 */
 	@Autowired
@@ -202,14 +214,14 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 	 * <li>Generating the code for the load-time-value fields</li>
 	 * <li>Generating the code for the no-argument constructor</li>
 	 * <li>Generating the code for the {@link Closure} argument constructor</li>
-	 * <li>Generating the code for the {@link FunctionStruct#getRequiredBindings()} method</li>
-	 * <li>Generating the code for the {@link FunctionStruct#getOptionalBindings()} method</li>
-	 * <li>Generating the code for the {@link FunctionStruct#getRestBinding()} method</li>
-	 * <li>Generating the code for the {@link FunctionStruct#getKeyBindings()} method</li>
-	 * <li>Generating the code for the {@link FunctionStruct#getAllowOtherKeys()} method</li>
-	 * <li>Generating the code for the {@link FunctionStruct#getAuxBindings()} method</li>
-	 * <li>Generating the code for the {@link FunctionStruct#internalApply(Closure)} method</li>
-	 * <li>Generating the code for the {@link FunctionStruct#getInitForm(Closure, SymbolStruct)} method</li>
+	 * <li>Generating the code for the {@link CompiledFunctionStruct#getRequiredBindings()} method</li>
+	 * <li>Generating the code for the {@link CompiledFunctionStruct#getOptionalBindings()} method</li>
+	 * <li>Generating the code for the {@link CompiledFunctionStruct#getRestBinding()} method</li>
+	 * <li>Generating the code for the {@link CompiledFunctionStruct#getKeyBindings()} method</li>
+	 * <li>Generating the code for the {@link CompiledFunctionStruct#getAllowOtherKeys()} method</li>
+	 * <li>Generating the code for the {@link CompiledFunctionStruct#getAuxBindings()} method</li>
+	 * <li>Generating the code for the {@link CompiledFunctionStruct#internalApply(Closure)} method</li>
+	 * <li>Generating the code for the {@link CompiledFunctionStruct#getInitForm(Closure, SymbolStruct)} method</li>
 	 * <li>Generating the code to end the new class visitation</li>
 	 * <li>If the {@link GeneratorState#classBuilderDeque} is not empty after the visitation for this new class,
 	 * performing the following operations:
@@ -224,11 +236,11 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 	 * package jcl;
 	 *
 	 * import jcl.functions.Closure;
-	 * import jcl.functions.FunctionStruct;
+	 * import jcl.functions.CompiledFunctionStruct;
 	 * import org.springframework.stereotype.Component;
 	 *
 	 * {@literal @}Component
-	 * public class Lambda_1 extends FunctionStruct {
+	 * public class Lambda_1 extends CompiledFunctionStruct {
 	 *
 	 *      public Lambda_1() {
 	 *          this((Closure)null);
@@ -264,7 +276,7 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 		cw.visit(Opcodes.V1_8, Opcodes.ACC_PUBLIC + Opcodes.ACC_SUPER,
 		         className,
 		         null,
-		         GenerationConstants.FUNCTION_STRUCT_NAME,
+		         GenerationConstants.COMPILED_FUNCTION_STRUCT_NAME,
 		         null);
 
 		cw.visitSource(fileName + GenerationConstants.JAVA_EXTENSION, null);
@@ -299,7 +311,7 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 			previousMv.visitMethodInsn(Opcodes.INVOKESPECIAL,
 			                           className,
 			                           GenerationConstants.INIT_METHOD_NAME,
-			                           GenerationConstants.FUNCTION_STRUCT_INIT_CLOSURE_DESC,
+			                           GenerationConstants.COMPILED_FUNCTION_STRUCT_INIT_CLOSURE_DESC,
 			                           false);
 		}
 	}
@@ -343,7 +355,7 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 	                                             final ClassWriter cw) {
 		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PUBLIC,
 		                                        GenerationConstants.INIT_METHOD_NAME,
-		                                        GenerationConstants.FUNCTION_STRUCT_INIT_DESC,
+		                                        GenerationConstants.COMPILED_FUNCTION_STRUCT_INIT_DESC,
 		                                        null,
 		                                        null);
 
@@ -359,7 +371,7 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 		mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
 		                   className,
 		                   GenerationConstants.INIT_METHOD_NAME,
-		                   GenerationConstants.FUNCTION_STRUCT_INIT_CLOSURE_DESC,
+		                   GenerationConstants.COMPILED_FUNCTION_STRUCT_INIT_CLOSURE_DESC,
 		                   false);
 
 		mv.visitInsn(Opcodes.RETURN);
@@ -374,10 +386,10 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 	 * Private method for generating the {@link Closure} argument constructor for the generated lambda class object
 	 * being written to via the provided {@link ClassWriter}. The generation will perform the following operations:
 	 * <ol>
-	 * <li>Generating the call to the {@link FunctionStruct#FunctionStruct(String, Closure)} argument constructor via
-	 * 'super', passing generated {@link LambdaStruct#docString} as a {@link String} constant and the provided {@link
-	 * Closure} parameter value</li>
-	 * <li>Generating the call to {@link FunctionStruct#initLambdaListBindings()}</li>
+	 * <li>Generating the call to the {@link CompiledFunctionStruct#CompiledFunctionStruct(String, Closure)} argument
+	 * constructor via 'super', passing generated {@link LambdaStruct#docString} as a {@link String} constant and the
+	 * provided {@link Closure} parameter value</li>
+	 * <li>Generating the call to {@link CompiledFunctionStruct#initLambdaListBindings()}</li>
 	 * </ol>
 	 * The following is the example Java code generated:
 	 * <pre>
@@ -403,7 +415,7 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 	                                                  final String className, final ClassWriter cw) {
 		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PUBLIC,
 		                                        GenerationConstants.INIT_METHOD_NAME,
-		                                        GenerationConstants.FUNCTION_STRUCT_INIT_CLOSURE_DESC,
+		                                        GenerationConstants.COMPILED_FUNCTION_STRUCT_INIT_CLOSURE_DESC,
 		                                        null,
 		                                        null);
 
@@ -425,9 +437,9 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 		mv.visitLdcInsn(documentation);
 		mv.visitVarInsn(Opcodes.ALOAD, closureStore);
 		mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
-		                   GenerationConstants.FUNCTION_STRUCT_NAME,
+		                   GenerationConstants.COMPILED_FUNCTION_STRUCT_NAME,
 		                   GenerationConstants.INIT_METHOD_NAME,
-		                   GenerationConstants.FUNCTION_STRUCT_INIT_STRING_CLOSURE_DESC,
+		                   GenerationConstants.COMPILED_FUNCTION_STRUCT_INIT_STRING_CLOSURE_DESC,
 		                   false);
 
 		mv.visitVarInsn(Opcodes.ALOAD, thisStore);
@@ -446,9 +458,9 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 	}
 
 	/**
-	 * Private method for generating the {@link FunctionStruct#internalApply(Closure)} method for the generated lambda
-	 * class object being written to via the provided {@link ClassWriter}. The generation will perform the following
-	 * operations:
+	 * Private method for generating the {@link CompiledFunctionStruct#internalApply(Closure)} method for the generated
+	 * lambda class object being written to via the provided {@link ClassWriter}. The generation will perform the
+	 * following operations:
 	 * <ol>
 	 * <li>Returning early and avoid generating the method unnecessarily if the {@link LambdaStruct#forms} are
 	 * empty</li>
@@ -515,9 +527,9 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 	}
 
 	/**
-	 * Private method for generating the {@link FunctionStruct#getInitForm(Closure, SymbolStruct)} method for the
-	 * generated lambda class object being written to via the provided {@link ClassWriter}. The generation will perform
-	 * the following operations:
+	 * Private method for generating the {@link CompiledFunctionStruct#getInitForm(Closure, SymbolStruct)} method for
+	 * the generated lambda class object being written to via the provided {@link ClassWriter}. The generation will
+	 * perform the following operations:
 	 * <ol>
 	 * <li>Generating a condition check using {@link SymbolStruct#equals(Object)} to determine if the provided {@link
 	 * SymbolStruct} provided to the method is equivalent to one of the 'optional', 'key', or 'aux' function
@@ -618,7 +630,7 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 	}
 
 	/**
-	 * Private method used for assisting the generation of the {@link FunctionStruct#getInitForm(Closure,
+	 * Private method used for assisting the generation of the {@link CompiledFunctionStruct#getInitForm(Closure,
 	 * SymbolStruct)} method, generating the {@link SymbolStruct} equality check as well as the {@link LispStruct}
 	 * value of the init-form.
 	 *
@@ -626,7 +638,7 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 	 * 		stateful object used to hold the current state of the code generation process
 	 * @param methodBuilder
 	 * 		{@link JavaMethodBuilder} used for building the Java method body for the {@link
-	 * 		FunctionStruct#getInitForm(Closure, SymbolStruct)} method
+	 * 		CompiledFunctionStruct#getInitForm(Closure, SymbolStruct)} method
 	 * @param symbolArgStore
 	 * 		the storage location index on the stack where the {@link SymbolStruct} parameter value is located
 	 * @param initFormVarPackageStore
@@ -689,9 +701,9 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 	*/
 
 	/**
-	 * Private method for generating the {@link FunctionStruct#getRequiredBindings()} method for the generated lambda
-	 * class object being written to via the provided {@link ClassWriter}. The generation will perform the following
-	 * operations:
+	 * Private method for generating the {@link CompiledFunctionStruct#getRequiredBindings()} method for the generated
+	 * lambda class object being written to via the provided {@link ClassWriter}. The generation will perform the
+	 * following operations:
 	 * <ol>
 	 * <li>Returning early and avoid generating the method unnecessarily if the {@link List} of {@link
 	 * OrdinaryLambdaList#requiredBindings} is empty</li>
@@ -799,9 +811,9 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 	}
 
 	/**
-	 * Private method for generating the {@link FunctionStruct#getOptionalBindings()} method for the generated lambda
-	 * class object being written to via the provided {@link ClassWriter}. The generation will perform the following
-	 * operations:
+	 * Private method for generating the {@link CompiledFunctionStruct#getOptionalBindings()} method for the generated
+	 * lambda class object being written to via the provided {@link ClassWriter}. The generation will perform the
+	 * following operations:
 	 * <ol>
 	 * <li>Returning early and avoid generating the method unnecessarily if the {@link List} of {@link
 	 * OrdinaryLambdaList#optionalBindings} is empty</li>
@@ -926,9 +938,9 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 	}
 
 	/**
-	 * Private method for generating the {@link FunctionStruct#getRestBinding()} method for the generated lambda class
-	 * object being written to via the provided {@link ClassWriter}. The generation will perform the following
-	 * operations:
+	 * Private method for generating the {@link CompiledFunctionStruct#getRestBinding()} method for the generated
+	 * lambda class object being written to via the provided {@link ClassWriter}. The generation will perform the
+	 * following operations:
 	 * <ol>
 	 * <li>Returning early and avoid generating the method unnecessarily if the {@link
 	 * OrdinaryLambdaList#restBinding} is null</li>
@@ -1002,9 +1014,9 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 	}
 
 	/**
-	 * Private method for generating the {@link FunctionStruct#getKeyBindings()} method for the generated lambda class
-	 * object being written to via the provided {@link ClassWriter}. The generation will perform the following
-	 * operations:
+	 * Private method for generating the {@link CompiledFunctionStruct#getKeyBindings()} method for the generated
+	 * lambda class object being written to via the provided {@link ClassWriter}. The generation will perform the
+	 * following operations:
 	 * <ol>
 	 * <li>Returning early and avoid generating the method unnecessarily if the {@link List} of {@link
 	 * OrdinaryLambdaList#keyBindings} is empty</li>
@@ -1136,8 +1148,9 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 
 	/**
 	 * Private method for generating a {@link SuppliedPParameter} to be used in the {@link
-	 * FunctionStruct#getOptionalBindings()} and {@link FunctionStruct#getKeyBindings()} method generation code as the
-	 * {@link OptionalParameter#suppliedPBinding} and {@link KeyParameter#suppliedPBinding} values.
+	 * CompiledFunctionStruct#getOptionalBindings()} and {@link CompiledFunctionStruct#getKeyBindings()} method
+	 * generation code as the {@link OptionalParameter#suppliedPBinding} and {@link KeyParameter#suppliedPBinding}
+	 * values.
 	 *
 	 * @param suppliedPBinding
 	 * 		the {@link SuppliedPParameter} to generate code for
@@ -1182,9 +1195,9 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 	}
 
 	/**
-	 * Private method for generating the {@link FunctionStruct#getAllowOtherKeys()} ()} method for the generated lambda
-	 * class object being written to via the provided {@link ClassWriter}. The generation will perform the following
-	 * operations:
+	 * Private method for generating the {@link CompiledFunctionStruct#getAllowOtherKeys()} ()} method for the
+	 * generated lambda class object being written to via the provided {@link ClassWriter}. The generation will perform
+	 * the following operations:
 	 * <ol>
 	 * <li>Returning early and avoid generating the method unnecessarily if the value of {@link
 	 * OrdinaryLambdaList#allowOtherKeys} is false, as this is the default return value of the overridden
@@ -1239,9 +1252,9 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 	}
 
 	/**
-	 * Private method for generating the {@link FunctionStruct#getAuxBindings()} method for the generated lambda class
-	 * object being written to via the provided {@link ClassWriter}. The generation will perform the following
-	 * operations:
+	 * Private method for generating the {@link CompiledFunctionStruct#getAuxBindings()} method for the generated
+	 * lambda class object being written to via the provided {@link ClassWriter}. The generation will perform the
+	 * following operations:
 	 * <ol>
 	 * <li>Returning early and avoid generating the method unnecessarily if the {@link List} of {@link
 	 * OrdinaryLambdaList#auxBindings} is empty</li>

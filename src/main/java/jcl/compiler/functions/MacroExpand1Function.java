@@ -67,7 +67,6 @@ public final class MacroExpand1Function extends FunctionStruct {
 
 	@Override
 	public LispStruct apply(final LispStruct... lispStructs) {
-		getFunctionBindings(lispStructs);
 
 		final LispStruct form = lispStructs[0];
 		Environment environment = Environment.NULL;

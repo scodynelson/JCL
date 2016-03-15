@@ -43,7 +43,7 @@ public abstract class MacroFunctionStruct extends FunctionStruct {
 
 	protected MacroFunctionStruct(final String documentation, final Closure closure, final MacroLambdaList macroLambdaList,
 	                              final MacroFunctionExpander<?> macroFunctionExpander) {
-		super(documentation, closure);
+//		super(documentation, closure);
 		this.macroLambdaList = macroLambdaList;
 		this.macroFunctionExpander = macroFunctionExpander;
 	}

@@ -6,10 +6,10 @@ package testground;
 
 import jcl.LispStruct;
 import jcl.functions.Closure;
-import jcl.functions.FunctionStruct;
+import jcl.functions.CompiledFunctionStruct;
 
 @SuppressWarnings("all")
-public class TestGroundLambdaFunction extends FunctionStruct {
+public class TestGroundLambdaFunction extends CompiledFunctionStruct {
 
 	public TestGroundLambdaFunction(final Closure parentClosure) {
 		closure = parentClosure;

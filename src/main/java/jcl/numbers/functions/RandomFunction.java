@@ -68,7 +68,6 @@ public final class RandomFunction extends FunctionStruct {
 
 	@Override
 	public LispStruct apply(final LispStruct... lispStructs) {
-		getFunctionBindings(lispStructs);
 
 		final RandomStateStruct randomState;
 		if (lispStructs.length == 2) {

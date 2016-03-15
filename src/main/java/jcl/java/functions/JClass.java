@@ -47,7 +47,6 @@ public final class JClass extends FunctionStruct {
 
 	@Override
 	public LispStruct apply(final LispStruct... lispStructs) {
-		getFunctionBindings(lispStructs);
 
 		final StringStruct className = (StringStruct) lispStructs[0];
 		return jClass(className.getAsJavaString());

@@ -65,7 +65,6 @@ public final class PathnameHostFunction extends FunctionStruct {
 
 	@Override
 	public LispStruct apply(final LispStruct... lispStructs) {
-		getFunctionBindings(lispStructs);
 
 		final LispStruct pathspec = lispStructs[0];
 		final PathnameHost pathnameHost = pathnameHost(pathspec);

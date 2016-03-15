@@ -58,7 +58,6 @@ public final class LessThanFunction extends FunctionStruct {
 
 	@Override
 	public LispStruct apply(final LispStruct... lispStructs) {
-		getFunctionBindings(lispStructs);
 
 		final RealStruct[] reals = getReals(lispStructs);
 		return RealStruct.isLessThan(reals) ? TStruct.INSTANCE : NILStruct.INSTANCE;

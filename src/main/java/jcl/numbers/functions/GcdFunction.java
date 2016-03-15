@@ -48,7 +48,6 @@ public final class GcdFunction extends FunctionStruct {
 
 	@Override
 	public LispStruct apply(final LispStruct... lispStructs) {
-		getFunctionBindings(lispStructs);
 
 		final IntegerStruct[] integers = getIntegers(lispStructs);
 		return IntegerStruct.gcd(integers);

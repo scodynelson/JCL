@@ -43,7 +43,6 @@ public final class VectorFunction extends FunctionStruct {
 
 	@Override
 	public LispStruct apply(final LispStruct... lispStructs) {
-		getFunctionBindings(lispStructs);
 
 		return vector(lispStructs);
 	}

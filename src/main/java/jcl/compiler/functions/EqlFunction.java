@@ -53,7 +53,6 @@ public final class EqlFunction extends EquatorFunctionStruct {
 
 	@Override
 	public LispStruct apply(final LispStruct... lispStructs) {
-		getFunctionBindings(lispStructs);
 
 		return lispStructs[0].equals(lispStructs[1]) ? TStruct.INSTANCE : NILStruct.INSTANCE;
 	}

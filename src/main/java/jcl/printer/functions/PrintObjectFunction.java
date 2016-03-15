@@ -53,7 +53,6 @@ public final class PrintObjectFunction extends FunctionStruct {
 
 	@Override
 	public LispStruct apply(final LispStruct... lispStructs) {
-		getFunctionBindings(lispStructs);
 
 		return printObject(lispStructs[0]);
 	}

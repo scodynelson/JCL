@@ -51,7 +51,6 @@ public final class TranslateLogicalPathnameFunction extends FunctionStruct {
 
 	@Override
 	public LispStruct apply(final LispStruct... lispStructs) {
-		getFunctionBindings(lispStructs);
 
 		final LispStruct pathspec = lispStructs[0];
 		return translateLogicalPathname(pathspec);

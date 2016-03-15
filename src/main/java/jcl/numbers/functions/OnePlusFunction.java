@@ -52,7 +52,6 @@ public final class OnePlusFunction extends FunctionStruct {
 
 	@Override
 	public LispStruct apply(final LispStruct... lispStructs) {
-		getFunctionBindings(lispStructs);
 
 		return onePlus(lispStructs[0]);
 	}

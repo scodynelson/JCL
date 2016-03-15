@@ -64,7 +64,6 @@ public final class CompileFunction extends FunctionStruct {
 
 	@Override
 	public LispStruct apply(final LispStruct... lispStructs) {
-		getFunctionBindings(lispStructs);
 
 		final LispStruct name = lispStructs[0];
 		LispStruct uncompiledDefinition = null;

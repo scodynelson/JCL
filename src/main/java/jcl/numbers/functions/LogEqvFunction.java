@@ -48,7 +48,6 @@ public final class LogEqvFunction extends FunctionStruct {
 
 	@Override
 	public LispStruct apply(final LispStruct... lispStructs) {
-		getFunctionBindings(lispStructs);
 
 		final IntegerStruct[] integers = getIntegers(lispStructs);
 		return IntegerStruct.logEqv(integers);

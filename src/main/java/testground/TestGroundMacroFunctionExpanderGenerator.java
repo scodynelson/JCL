@@ -19,13 +19,13 @@ import jcl.compiler.environment.binding.lambdalist.RestParameter;
 import jcl.compiler.environment.binding.lambdalist.SuppliedPParameter;
 import jcl.compiler.environment.binding.lambdalist.WholeParameter;
 import jcl.functions.Closure;
-import jcl.functions.expanders.MacroFunctionExpander;
+import jcl.functions.expanders.CompiledMacroFunctionExpander;
 import jcl.packages.PackageStruct;
 import jcl.symbols.NILStruct;
 import jcl.symbols.SymbolStruct;
 
 @SuppressWarnings("all")
-public class TestGroundMacroFunctionExpanderGenerator extends MacroFunctionExpander<LispStruct> {
+public class TestGroundMacroFunctionExpanderGenerator extends CompiledMacroFunctionExpander<LispStruct> {
 
 	public TestGroundMacroFunctionExpanderGenerator() {
 		this(null);

@@ -16,7 +16,7 @@ import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
 import jcl.compiler.environment.binding.lambdalist.RestParameter;
 import jcl.compiler.environment.binding.lambdalist.SuppliedPParameter;
 import jcl.functions.Closure;
-import jcl.functions.FunctionStruct;
+import jcl.functions.CompiledFunctionStruct;
 import jcl.packages.PackageStruct;
 import jcl.symbols.NILStruct;
 import jcl.symbols.SymbolStruct;
@@ -24,7 +24,7 @@ import org.springframework.stereotype.Component;
 
 @SuppressWarnings("all")
 @Component
-public class TestLambdaGenerator extends FunctionStruct {
+public class TestLambdaGenerator extends CompiledFunctionStruct {
 
 	public TestLambdaGenerator() {
 		this(null);

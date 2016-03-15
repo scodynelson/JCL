@@ -64,7 +64,6 @@ public final class SetStructureSlotValueFunction extends FunctionStruct {
 
 	@Override
 	public LispStruct apply(final LispStruct... lispStructs) {
-		getFunctionBindings(lispStructs);
 
 		final SymbolStruct structureClassSymbol = (SymbolStruct) lispStructs[0];
 		final StructureObjectStruct structureInstance = (StructureObjectStruct) lispStructs[1];

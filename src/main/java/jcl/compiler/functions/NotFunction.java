@@ -47,7 +47,6 @@ public final class NotFunction extends FunctionStruct {
 
 	@Override
 	public LispStruct apply(final LispStruct... lispStructs) {
-		getFunctionBindings(lispStructs);
 
 		return notFn(lispStructs[0]);
 	}

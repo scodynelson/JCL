@@ -63,7 +63,6 @@ public final class FloatSignFunction extends FunctionStruct {
 
 	@Override
 	public LispStruct apply(final LispStruct... lispStructs) {
-		getFunctionBindings(lispStructs);
 
 		final LispStruct lispStruct = lispStructs[0];
 		if (!(lispStruct instanceof FloatStruct)) {

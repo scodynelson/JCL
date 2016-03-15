@@ -71,7 +71,6 @@ public final class PathnameDirectoryFunction extends FunctionStruct {
 
 	@Override
 	public LispStruct apply(final LispStruct... lispStructs) {
-		getFunctionBindings(lispStructs);
 
 		final LispStruct pathspec = lispStructs[0];
 		final PathnameDirectory pathnameDirectory = pathnameDirectory(pathspec);

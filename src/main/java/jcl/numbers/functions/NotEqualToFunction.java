@@ -58,7 +58,6 @@ public final class NotEqualToFunction extends FunctionStruct {
 
 	@Override
 	public LispStruct apply(final LispStruct... lispStructs) {
-		getFunctionBindings(lispStructs);
 
 		final NumberStruct[] numbers = getNumbers(lispStructs);
 		return NumberStruct.isNotEqualTo(numbers) ? TStruct.INSTANCE : NILStruct.INSTANCE;

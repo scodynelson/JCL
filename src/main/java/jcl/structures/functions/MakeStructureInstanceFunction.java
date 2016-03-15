@@ -47,7 +47,6 @@ public final class MakeStructureInstanceFunction extends FunctionStruct {
 
 	@Override
 	public LispStruct apply(final LispStruct... lispStructs) {
-		getFunctionBindings(lispStructs);
 
 		final SymbolStruct structSymbol = (SymbolStruct) lispStructs[0];
 		return makeStructureInstance(structSymbol);

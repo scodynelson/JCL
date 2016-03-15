@@ -48,7 +48,6 @@ public final class MultiplyFunction extends FunctionStruct {
 
 	@Override
 	public LispStruct apply(final LispStruct... lispStructs) {
-		getFunctionBindings(lispStructs);
 
 		final NumberStruct[] numbers = getNumbers(lispStructs);
 		return NumberStruct.multiply(numbers);

@@ -56,7 +56,6 @@ public final class MaxFunction extends FunctionStruct {
 
 	@Override
 	public LispStruct apply(final LispStruct... lispStructs) {
-		getFunctionBindings(lispStructs);
 
 		final RealStruct[] reals = getReals(lispStructs);
 		return RealStruct.max(reals);

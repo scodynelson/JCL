@@ -53,7 +53,6 @@ public final class EqFunction extends FunctionStruct {
 
 	@Override
 	public LispStruct apply(final LispStruct... lispStructs) {
-		getFunctionBindings(lispStructs);
 
 		return eq(lispStructs[0], lispStructs[1]);
 	}

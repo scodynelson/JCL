@@ -28,7 +28,7 @@ import jcl.compiler.icg.JavaMethodBuilder;
 import jcl.compiler.struct.specialoperator.PrognStruct;
 import jcl.compiler.struct.specialoperator.lambda.MacroLambdaStruct;
 import jcl.functions.Closure;
-import jcl.functions.expanders.MacroFunctionExpander;
+import jcl.functions.expanders.CompiledMacroFunctionExpander;
 import jcl.packages.PackageStruct;
 import jcl.symbols.NILStruct;
 import jcl.symbols.SymbolStruct;
@@ -56,171 +56,182 @@ class MacroLambdaCodeGenerator implements CodeGenerator<MacroLambdaStruct> {
 	private static final String COMPONENT_ANNOTATION_DESC = Type.getDescriptor(Component.class);
 
 	/**
-	 * Constant {@link String} containing the name for the {@link MacroFunctionExpander#initLambdaListBindings()}
+	 * Constant {@link String} containing the name for the {@link CompiledMacroFunctionExpander#initLambdaListBindings()}
 	 * method.
 	 */
 	private static final String INIT_LAMBDA_LIST_BINDINGS_METHOD_NAME = "initLambdaListBindings";
 
 	/**
-	 * Constant {@link String} containing the description for the {@link MacroFunctionExpander#initLambdaListBindings()}
+	 * Constant {@link String} containing the description for the {@link CompiledMacroFunctionExpander#initLambdaListBindings()}
 	 * method.
 	 */
 	private static final String INIT_LAMBDA_LIST_BINDINGS_METHOD_DESC = "()V";
 
 	/**
-	 * Constant {@link String} containing the name for the {@link MacroFunctionExpander#getRequiredBindings()} method.
+	 * Constant {@link String} containing the name for the {@link CompiledMacroFunctionExpander#getRequiredBindings()}
+	 * method.
 	 */
 	private static final String GET_REQUIRED_BINDINGS_METHOD_NAME = "getRequiredBindings";
 
 	/**
-	 * Constant {@link String} containing the description for the {@link MacroFunctionExpander#getRequiredBindings()}
+	 * Constant {@link String} containing the description for the {@link CompiledMacroFunctionExpander#getRequiredBindings()}
 	 * method.
 	 */
 	private static final String GET_REQUIRED_BINDINGS_METHOD_DESC = "()Ljava/util/List;";
 
 	/**
-	 * Constant {@link String} containing the signature for the {@link MacroFunctionExpander#getRequiredBindings()}
+	 * Constant {@link String} containing the signature for the {@link CompiledMacroFunctionExpander#getRequiredBindings()}
 	 * method.
 	 */
 	private static final String GET_REQUIRED_BINDINGS_METHOD_SIGNATURE = "()Ljava/util/List<Ljcl/compiler/environment/binding/lambdalist/RequiredParameter;>;";
 
 	/**
-	 * Constant {@link String} containing the name for the {@link MacroFunctionExpander#getOptionalBindings()} method.
+	 * Constant {@link String} containing the name for the {@link CompiledMacroFunctionExpander#getOptionalBindings()}
+	 * method.
 	 */
 	private static final String GET_OPTIONAL_BINDINGS_METHOD_NAME = "getOptionalBindings";
 
 	/**
-	 * Constant {@link String} containing the description for the {@link MacroFunctionExpander#getOptionalBindings()}
+	 * Constant {@link String} containing the description for the {@link CompiledMacroFunctionExpander#getOptionalBindings()}
 	 * method.
 	 */
 	private static final String GET_OPTIONAL_BINDINGS_METHOD_DESC = "()Ljava/util/List;";
 
 	/**
-	 * Constant {@link String} containing the signature for the {@link MacroFunctionExpander#getOptionalBindings()}
+	 * Constant {@link String} containing the signature for the {@link CompiledMacroFunctionExpander#getOptionalBindings()}
 	 * method.
 	 */
 	private static final String GET_OPTIONAL_BINDINGS_METHOD_SIGNATURE = "()Ljava/util/List<Ljcl/compiler/environment/binding/lambdalist/OptionalParameter;>;";
 
 	/**
-	 * Constant {@link String} containing the name for the {@link MacroFunctionExpander#getRestBinding()} method.
+	 * Constant {@link String} containing the name for the {@link CompiledMacroFunctionExpander#getRestBinding()}
+	 * method.
 	 */
 	private static final String GET_REST_BINDING_METHOD_NAME = "getRestBinding";
 
 	/**
-	 * Constant {@link String} containing the description for the {@link MacroFunctionExpander#getRestBinding()}
+	 * Constant {@link String} containing the description for the {@link CompiledMacroFunctionExpander#getRestBinding()}
 	 * method.
 	 */
 	private static final String GET_REST_BINDING_METHOD_DESC = "()Ljcl/compiler/environment/binding/lambdalist/RestParameter;";
 
 	/**
-	 * Constant {@link String} containing the name for the {@link MacroFunctionExpander#getKeyBindings()} method.
+	 * Constant {@link String} containing the name for the {@link CompiledMacroFunctionExpander#getKeyBindings()}
+	 * method.
 	 */
 	private static final String GET_KEY_BINDINGS_METHOD_NAME = "getKeyBindings";
 
 	/**
-	 * Constant {@link String} containing the description for the {@link MacroFunctionExpander#getKeyBindings()}
+	 * Constant {@link String} containing the description for the {@link CompiledMacroFunctionExpander#getKeyBindings()}
 	 * method.
 	 */
 	private static final String GET_KEY_BINDINGS_METHOD_DESC = "()Ljava/util/List;";
 
 	/**
-	 * Constant {@link String} containing the signature for the {@link MacroFunctionExpander#getKeyBindings()} method.
+	 * Constant {@link String} containing the signature for the {@link CompiledMacroFunctionExpander#getKeyBindings()}
+	 * method.
 	 */
 	private static final String GET_KEY_BINDINGS_METHOD_SIGNATURE = "()Ljava/util/List<Ljcl/compiler/environment/binding/lambdalist/KeyParameter;>;";
 
 	/**
-	 * Constant {@link String} containing the name for the {@link MacroFunctionExpander#getAllowOtherKeys()} method.
+	 * Constant {@link String} containing the name for the {@link CompiledMacroFunctionExpander#getAllowOtherKeys()}
+	 * method.
 	 */
 	private static final String GET_ALLOW_OTHER_KEYS_METHOD_NAME = "getAllowOtherKeys";
 
 	/**
-	 * Constant {@link String} containing the description for the {@link MacroFunctionExpander#getAllowOtherKeys()}
+	 * Constant {@link String} containing the description for the {@link CompiledMacroFunctionExpander#getAllowOtherKeys()}
 	 * method.
 	 */
 	private static final String GET_ALLOW_OTHER_KEYS_METHOD_DESC = "()Z";
 
 	/**
-	 * Constant {@link String} containing the name for the {@link MacroFunctionExpander#getAuxBindings()} method.
+	 * Constant {@link String} containing the name for the {@link CompiledMacroFunctionExpander#getAuxBindings()}
+	 * method.
 	 */
 	private static final String GET_AUX_BINDINGS_METHOD_NAME = "getAuxBindings";
 
 	/**
-	 * Constant {@link String} containing the description for the {@link MacroFunctionExpander#getAuxBindings()}
+	 * Constant {@link String} containing the description for the {@link CompiledMacroFunctionExpander#getAuxBindings()}
 	 * method.
 	 */
 	private static final String GET_AUX_BINDINGS_METHOD_DESC = "()Ljava/util/List;";
 
 	/**
-	 * Constant {@link String} containing the signature for the {@link MacroFunctionExpander#getAuxBindings()} method.
+	 * Constant {@link String} containing the signature for the {@link CompiledMacroFunctionExpander#getAuxBindings()}
+	 * method.
 	 */
 	private static final String GET_AUX_BINDINGS_METHOD_SIGNATURE = "()Ljava/util/List<Ljcl/compiler/environment/binding/lambdalist/AuxParameter;>;";
 
 	/**
-	 * Constant {@link String} containing the name for the {@link MacroFunctionExpander#getWholeBinding()} method.
+	 * Constant {@link String} containing the name for the {@link CompiledMacroFunctionExpander#getWholeBinding()}
+	 * method.
 	 */
 	private static final String GET_WHOLE_BINDING_METHOD_NAME = "getWholeBinding";
 
 	/**
-	 * Constant {@link String} containing the description for the {@link MacroFunctionExpander#getWholeBinding()}
+	 * Constant {@link String} containing the description for the {@link CompiledMacroFunctionExpander#getWholeBinding()}
 	 * method.
 	 */
 	private static final String GET_WHOLE_BINDING_METHOD_DESC = "()Ljcl/compiler/environment/binding/lambdalist/WholeParameter;";
 
 	/**
-	 * Constant {@link String} containing the name for the {@link MacroFunctionExpander#getEnvironmentBinding()}
+	 * Constant {@link String} containing the name for the {@link CompiledMacroFunctionExpander#getEnvironmentBinding()}
 	 * method.
 	 */
 	private static final String GET_ENVIRONMENT_BINDING_METHOD_NAME = "getEnvironmentBinding";
 
 	/**
-	 * Constant {@link String} containing the description for the {@link MacroFunctionExpander#getEnvironmentBinding()}
+	 * Constant {@link String} containing the description for the {@link CompiledMacroFunctionExpander#getEnvironmentBinding()}
 	 * method.
 	 */
 	private static final String GET_ENVIRONMENT_BINDING_METHOD_DESC = "()Ljcl/compiler/environment/binding/lambdalist/EnvironmentParameter;";
 
 	/**
-	 * Constant {@link String} containing the name for the {@link MacroFunctionExpander#getBodyBinding()} method.
+	 * Constant {@link String} containing the name for the {@link CompiledMacroFunctionExpander#getBodyBinding()}
+	 * method.
 	 */
 	private static final String GET_BODY_BINDING_METHOD_NAME = "getBodyBinding";
 
 	/**
-	 * Constant {@link String} containing the description for the {@link MacroFunctionExpander#getBodyBinding()}
+	 * Constant {@link String} containing the description for the {@link CompiledMacroFunctionExpander#getBodyBinding()}
 	 * method.
 	 */
 	private static final String GET_BODY_BINDING_METHOD_DESC = "()Ljcl/compiler/environment/binding/lambdalist/BodyParameter;";
 
 	/**
-	 * Constant {@link String} containing the name for the {@link MacroFunctionExpander#internalApply(Closure)} method.
+	 * Constant {@link String} containing the name for the {@link CompiledMacroFunctionExpander#internalApply(Closure)}
+	 * method.
 	 */
 	private static final String INTERNAL_APPLY_METHOD_NAME = "internalApply";
 
 	/**
-	 * Constant {@link String} containing the description for the {@link MacroFunctionExpander#internalApply(Closure)}
+	 * Constant {@link String} containing the description for the {@link CompiledMacroFunctionExpander#internalApply(Closure)}
 	 * method.
 	 */
 	private static final String INTERNAL_APPLY_METHOD_DESC = "(Ljcl/functions/Closure;)Ljcl/LispStruct;";
 
 	/**
-	 * Constant {@link String} containing the name for the {@link MacroFunctionExpander#getInitForm(Closure,
+	 * Constant {@link String} containing the name for the {@link CompiledMacroFunctionExpander#getInitForm(Closure,
 	 * SymbolStruct)} method.
 	 */
 	private static final String GET_INIT_FORM_METHOD_NAME = "getInitForm";
 
 	/**
-	 * Constant {@link String} containing the description for the {@link MacroFunctionExpander#getInitForm(Closure,
+	 * Constant {@link String} containing the description for the {@link CompiledMacroFunctionExpander#getInitForm(Closure,
 	 * SymbolStruct)} method.
 	 */
 	private static final String GET_INIT_FORM_METHOD_DESC = "(Ljcl/functions/Closure;Ljcl/symbols/SymbolStruct;)Ljcl/LispStruct;";
 
 	/**
-	 * Constant {@link String} containing the signature for the {@link MacroFunctionExpander#getInitForm(Closure,
+	 * Constant {@link String} containing the signature for the {@link CompiledMacroFunctionExpander#getInitForm(Closure,
 	 * SymbolStruct)} method.
 	 */
 	private static final String GET_INIT_FORM_METHOD_SIGNATURE = "(Ljcl/functions/Closure;Ljcl/symbols/SymbolStruct;)Ljcl/LispStruct;";
 
 	/**
 	 * {@link IntermediateCodeGenerator} used for generating the 'optional', 'key', and 'aux' init-form values in the
-	 * {@link MacroFunctionExpander#getInitForm(Closure, SymbolStruct)} method.
+	 * {@link CompiledMacroFunctionExpander#getInitForm(Closure, SymbolStruct)} method.
 	 */
 	@Autowired
 	private IntermediateCodeGenerator codeGenerator;
@@ -233,8 +244,8 @@ class MacroLambdaCodeGenerator implements CodeGenerator<MacroLambdaStruct> {
 
 	/**
 	 * {@link NILCodeGenerator} used for generating {@link NILStruct#INSTANCE} constant as the default result in the
-	 * {@link MacroFunctionExpander#getInitForm(Closure, SymbolStruct)} method and for the initial init-form value for
-	 * 'optional', 'key', and 'aux' keyword parameters.
+	 * {@link CompiledMacroFunctionExpander#getInitForm(Closure, SymbolStruct)} method and for the initial init-form
+	 * value for 'optional', 'key', and 'aux' keyword parameters.
 	 */
 	@Autowired
 	private NILCodeGenerator nilCodeGenerator;
@@ -250,17 +261,18 @@ class MacroLambdaCodeGenerator implements CodeGenerator<MacroLambdaStruct> {
 	 * <li>Generating the code for the load-time-value fields</li>
 	 * <li>Generating the code for the no-argument constructor</li>
 	 * <li>Generating the code for the {@link Closure} argument constructor</li>
-	 * <li>Generating the code for the {@link MacroFunctionExpander#getRequiredBindings()} method</li>
-	 * <li>Generating the code for the {@link MacroFunctionExpander#getOptionalBindings()} method</li>
-	 * <li>Generating the code for the {@link MacroFunctionExpander#getRestBinding()} method</li>
-	 * <li>Generating the code for the {@link MacroFunctionExpander#getKeyBindings()} method</li>
-	 * <li>Generating the code for the {@link MacroFunctionExpander#getAllowOtherKeys()} method</li>
-	 * <li>Generating the code for the {@link MacroFunctionExpander#getAuxBindings()} method</li>
-	 * <li>Generating the code for the {@link MacroFunctionExpander#getWholeBinding()} method</li>
-	 * <li>Generating the code for the {@link MacroFunctionExpander#getEnvironmentBinding()} method</li>
-	 * <li>Generating the code for the {@link MacroFunctionExpander#getBodyBinding()} method</li>
-	 * <li>Generating the code for the {@link MacroFunctionExpander#internalApply(Closure)} method</li>
-	 * <li>Generating the code for the {@link MacroFunctionExpander#getInitForm(Closure, SymbolStruct)} method</li>
+	 * <li>Generating the code for the {@link CompiledMacroFunctionExpander#getRequiredBindings()} method</li>
+	 * <li>Generating the code for the {@link CompiledMacroFunctionExpander#getOptionalBindings()} method</li>
+	 * <li>Generating the code for the {@link CompiledMacroFunctionExpander#getRestBinding()} method</li>
+	 * <li>Generating the code for the {@link CompiledMacroFunctionExpander#getKeyBindings()} method</li>
+	 * <li>Generating the code for the {@link CompiledMacroFunctionExpander#getAllowOtherKeys()} method</li>
+	 * <li>Generating the code for the {@link CompiledMacroFunctionExpander#getAuxBindings()} method</li>
+	 * <li>Generating the code for the {@link CompiledMacroFunctionExpander#getWholeBinding()} method</li>
+	 * <li>Generating the code for the {@link CompiledMacroFunctionExpander#getEnvironmentBinding()} method</li>
+	 * <li>Generating the code for the {@link CompiledMacroFunctionExpander#getBodyBinding()} method</li>
+	 * <li>Generating the code for the {@link CompiledMacroFunctionExpander#internalApply(Closure)} method</li>
+	 * <li>Generating the code for the {@link CompiledMacroFunctionExpander#getInitForm(Closure, SymbolStruct)}
+	 * method</li>
 	 * <li>Generating the code to end the new class visitation</li>
 	 * <li>If the {@link GeneratorState#classBuilderDeque} is not empty after the visitation for this new class,
 	 * performing the following operations:
@@ -275,11 +287,11 @@ class MacroLambdaCodeGenerator implements CodeGenerator<MacroLambdaStruct> {
 	 * package jcl;
 	 *
 	 * import jcl.functions.Closure;
-	 * import jcl.functions.expanders.MacroFunctionExpander;
+	 * import jcl.functions.expanders.CompiledMacroFunctionExpander;
 	 * import org.springframework.stereotype.Component;
 	 *
 	 * {@literal @}Component
-	 * public class MacroLambda_1 extends MacroFunctionExpander<LispStruct> {
+	 * public class MacroLambda_1 extends CompiledMacroFunctionExpander<LispStruct> {
 	 *
 	 *      public MacroLambda_1() {
 	 *          this((Closure)null);
@@ -314,8 +326,8 @@ class MacroLambdaCodeGenerator implements CodeGenerator<MacroLambdaStruct> {
 
 		cw.visit(Opcodes.V1_8, Opcodes.ACC_PUBLIC + Opcodes.ACC_SUPER,
 		         className,
-		         GenerationConstants.MACRO_FUNCTION_EXPANDER_CLASS_SIGNATURE,
-		         GenerationConstants.MACRO_FUNCTION_EXPANDER_NAME,
+		         GenerationConstants.COMPILED_MACRO_FUNCTION_EXPANDER_CLASS_SIGNATURE,
+		         GenerationConstants.COMPILED_MACRO_FUNCTION_EXPANDER_NAME,
 		         null);
 
 		cw.visitSource(fileName + GenerationConstants.JAVA_EXTENSION, null);
@@ -353,7 +365,7 @@ class MacroLambdaCodeGenerator implements CodeGenerator<MacroLambdaStruct> {
 		previousMv.visitMethodInsn(Opcodes.INVOKESPECIAL,
 		                           className,
 		                           GenerationConstants.INIT_METHOD_NAME,
-		                           GenerationConstants.FUNCTION_STRUCT_INIT_CLOSURE_DESC,
+		                           GenerationConstants.COMPILED_FUNCTION_STRUCT_INIT_CLOSURE_DESC,
 		                           false);
 
 		final int expanderStore = previousMethodBuilder.getNextAvailableStore();
@@ -414,7 +426,7 @@ class MacroLambdaCodeGenerator implements CodeGenerator<MacroLambdaStruct> {
 	                                             final ClassWriter cw) {
 		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PUBLIC,
 		                                        GenerationConstants.INIT_METHOD_NAME,
-		                                        GenerationConstants.FUNCTION_STRUCT_INIT_DESC,
+		                                        GenerationConstants.COMPILED_FUNCTION_STRUCT_INIT_DESC,
 		                                        null,
 		                                        null);
 
@@ -430,7 +442,7 @@ class MacroLambdaCodeGenerator implements CodeGenerator<MacroLambdaStruct> {
 		mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
 		                   className,
 		                   GenerationConstants.INIT_METHOD_NAME,
-		                   GenerationConstants.FUNCTION_STRUCT_INIT_CLOSURE_DESC,
+		                   GenerationConstants.COMPILED_FUNCTION_STRUCT_INIT_CLOSURE_DESC,
 		                   false);
 
 		mv.visitInsn(Opcodes.RETURN);
@@ -446,10 +458,10 @@ class MacroLambdaCodeGenerator implements CodeGenerator<MacroLambdaStruct> {
 	 * object being written to via the provided {@link ClassWriter}. The generation will perform the following
 	 * operations:
 	 * <ol>
-	 * <li>Generating the call to the {@link MacroFunctionExpander#MacroFunctionExpander(String, Closure)} argument
-	 * constructor via 'super', passing generated {@link MacroLambdaStruct#docString} as a {@link String} constant and
-	 * the provided {@link Closure} parameter value</li>
-	 * <li>Generating the call to {@link MacroFunctionExpander#initLambdaListBindings()}</li>
+	 * <li>Generating the call to the {@link CompiledMacroFunctionExpander#CompiledMacroFunctionExpander(String,
+	 * Closure)} argument constructor via 'super', passing generated {@link MacroLambdaStruct#docString} as a {@link
+	 * String} constant and the provided {@link Closure} parameter value</li>
+	 * <li>Generating the call to {@link CompiledMacroFunctionExpander#initLambdaListBindings()}</li>
 	 * </ol>
 	 * The following is the example Java code generated:
 	 * <pre>
@@ -475,7 +487,7 @@ class MacroLambdaCodeGenerator implements CodeGenerator<MacroLambdaStruct> {
 	                                                  final String className, final ClassWriter cw) {
 		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PUBLIC,
 		                                        GenerationConstants.INIT_METHOD_NAME,
-		                                        GenerationConstants.FUNCTION_STRUCT_INIT_CLOSURE_DESC,
+		                                        GenerationConstants.COMPILED_FUNCTION_STRUCT_INIT_CLOSURE_DESC,
 		                                        null,
 		                                        null);
 
@@ -497,9 +509,9 @@ class MacroLambdaCodeGenerator implements CodeGenerator<MacroLambdaStruct> {
 		mv.visitLdcInsn(documentation);
 		mv.visitVarInsn(Opcodes.ALOAD, closureStore);
 		mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
-		                   GenerationConstants.MACRO_FUNCTION_EXPANDER_NAME,
+		                   GenerationConstants.COMPILED_MACRO_FUNCTION_EXPANDER_NAME,
 		                   GenerationConstants.INIT_METHOD_NAME,
-		                   GenerationConstants.FUNCTION_STRUCT_INIT_STRING_CLOSURE_DESC,
+		                   GenerationConstants.COMPILED_FUNCTION_STRUCT_INIT_STRING_CLOSURE_DESC,
 		                   false);
 
 		mv.visitVarInsn(Opcodes.ALOAD, thisStore);
@@ -518,9 +530,9 @@ class MacroLambdaCodeGenerator implements CodeGenerator<MacroLambdaStruct> {
 	}
 
 	/**
-	 * Private method for generating the {@link MacroFunctionExpander#internalApply(Closure)} method for the generated
-	 * macro-lambda class object being written to via the provided {@link ClassWriter}. The generation will perform the
-	 * following operations:
+	 * Private method for generating the {@link CompiledMacroFunctionExpander#internalApply(Closure)} method for the
+	 * generated macro-lambda class object being written to via the provided {@link ClassWriter}. The generation will
+	 * perform the following operations:
 	 * <ol>
 	 * <li>Returning early and avoid generating the method unnecessarily if the {@link MacroLambdaStruct#forms} are
 	 * empty</li>
@@ -586,9 +598,9 @@ class MacroLambdaCodeGenerator implements CodeGenerator<MacroLambdaStruct> {
 	}
 
 	/**
-	 * Private method for generating the {@link MacroFunctionExpander#getInitForm(Closure, SymbolStruct)} method for
-	 * the generated macro-lambda class object being written to via the provided {@link ClassWriter}. The generation
-	 * will perform the following operations:
+	 * Private method for generating the {@link CompiledMacroFunctionExpander#getInitForm(Closure, SymbolStruct)}
+	 * method for the generated macro-lambda class object being written to via the provided {@link ClassWriter}. The
+	 * generation will perform the following operations:
 	 * <ol>
 	 * <li>Generating a condition check using {@link SymbolStruct#equals(Object)} to determine if the provided {@link
 	 * SymbolStruct} provided to the method is equivalent to one of the 'optional', 'key', or 'aux' function
@@ -690,7 +702,7 @@ class MacroLambdaCodeGenerator implements CodeGenerator<MacroLambdaStruct> {
 	}
 
 	/**
-	 * Private method used for assisting the generation of the {@link MacroFunctionExpander#getInitForm(Closure,
+	 * Private method used for assisting the generation of the {@link CompiledMacroFunctionExpander#getInitForm(Closure,
 	 * SymbolStruct)} method, generating the {@link SymbolStruct} equality check as well as the {@link LispStruct}
 	 * value of the init-form.
 	 *
@@ -698,7 +710,7 @@ class MacroLambdaCodeGenerator implements CodeGenerator<MacroLambdaStruct> {
 	 * 		stateful object used to hold the current state of the code generation process
 	 * @param methodBuilder
 	 * 		{@link JavaMethodBuilder} used for building the Java method body for the {@link
-	 * 		MacroFunctionExpander#getInitForm(Closure, SymbolStruct)} method
+	 * 		CompiledMacroFunctionExpander#getInitForm(Closure, SymbolStruct)} method
 	 * @param symbolArgStore
 	 * 		the storage location index on the stack where the {@link SymbolStruct} parameter value is located
 	 * @param initFormVarPackageStore
@@ -761,9 +773,9 @@ class MacroLambdaCodeGenerator implements CodeGenerator<MacroLambdaStruct> {
 	*/
 
 	/**
-	 * Private method for generating the {@link MacroFunctionExpander#getRequiredBindings()} method for the generated
-	 * lambda class object being written to via the provided {@link ClassWriter}. The generation will perform the
-	 * following operations:
+	 * Private method for generating the {@link CompiledMacroFunctionExpander#getRequiredBindings()} method for the
+	 * generated lambda class object being written to via the provided {@link ClassWriter}. The generation will perform
+	 * the following operations:
 	 * <ol>
 	 * <li>Returning early and avoid generating the method unnecessarily if the {@link List} of {@link
 	 * MacroLambdaList#requiredBindings} is empty</li>
@@ -870,9 +882,9 @@ class MacroLambdaCodeGenerator implements CodeGenerator<MacroLambdaStruct> {
 	}
 
 	/**
-	 * Private method for generating the {@link MacroFunctionExpander#getOptionalBindings()} method for the generated
-	 * macro-lambda class object being written to via the provided {@link ClassWriter}. The generation will perform the
-	 * following operations:
+	 * Private method for generating the {@link CompiledMacroFunctionExpander#getOptionalBindings()} method for the
+	 * generated macro-lambda class object being written to via the provided {@link ClassWriter}. The generation will
+	 * perform the following operations:
 	 * <ol>
 	 * <li>Returning early and avoid generating the method unnecessarily if the {@link List} of {@link
 	 * MacroLambdaList#optionalBindings} is empty</li>
@@ -997,9 +1009,9 @@ class MacroLambdaCodeGenerator implements CodeGenerator<MacroLambdaStruct> {
 	}
 
 	/**
-	 * Private method for generating the {@link MacroFunctionExpander#getRestBinding()} method for the generated
-	 * macro-lambda class object being written to via the provided {@link ClassWriter}. The generation will perform the
-	 * following operations:
+	 * Private method for generating the {@link CompiledMacroFunctionExpander#getRestBinding()} method for the
+	 * generated macro-lambda class object being written to via the provided {@link ClassWriter}. The generation will
+	 * perform the following operations:
 	 * <ol>
 	 * <li>Returning early and avoid generating the method unnecessarily if the {@link MacroLambdaList#restBinding} is
 	 * null</li>
@@ -1073,9 +1085,9 @@ class MacroLambdaCodeGenerator implements CodeGenerator<MacroLambdaStruct> {
 	}
 
 	/**
-	 * Private method for generating the {@link MacroFunctionExpander#getKeyBindings()} method for the generated
-	 * macro-lambda class object being written to via the provided {@link ClassWriter}. The generation will perform the
-	 * following operations:
+	 * Private method for generating the {@link CompiledMacroFunctionExpander#getKeyBindings()} method for the
+	 * generated macro-lambda class object being written to via the provided {@link ClassWriter}. The generation will
+	 * perform the following operations:
 	 * <ol>
 	 * <li>Returning early and avoid generating the method unnecessarily if the {@link List} of {@link
 	 * MacroLambdaList#keyBindings} is empty</li>
@@ -1208,9 +1220,9 @@ class MacroLambdaCodeGenerator implements CodeGenerator<MacroLambdaStruct> {
 
 	/**
 	 * Private method for generating a {@link SuppliedPParameter} to be used in the {@link
-	 * MacroFunctionExpander#getOptionalBindings()} and {@link MacroFunctionExpander#getKeyBindings()} method
-	 * generation code as the {@link OptionalParameter#suppliedPBinding} and {@link KeyParameter#suppliedPBinding}
-	 * values.
+	 * CompiledMacroFunctionExpander#getOptionalBindings()} and {@link CompiledMacroFunctionExpander#getKeyBindings()}
+	 * method generation code as the {@link OptionalParameter#suppliedPBinding} and {@link
+	 * KeyParameter#suppliedPBinding} values.
 	 *
 	 * @param suppliedPBinding
 	 * 		the {@link SuppliedPParameter} to generate code for
@@ -1255,9 +1267,9 @@ class MacroLambdaCodeGenerator implements CodeGenerator<MacroLambdaStruct> {
 	}
 
 	/**
-	 * Private method for generating the {@link MacroFunctionExpander#getAllowOtherKeys()} ()} method for the generated
-	 * macro-lambda class object being written to via the provided {@link ClassWriter}. The generation will perform the
-	 * following operations:
+	 * Private method for generating the {@link CompiledMacroFunctionExpander#getAllowOtherKeys()} ()} method for the
+	 * generated macro-lambda class object being written to via the provided {@link ClassWriter}. The generation will
+	 * perform the following operations:
 	 * <ol>
 	 * <li>Returning early and avoid generating the method unnecessarily if the value of {@link
 	 * MacroLambdaList#allowOtherKeys} is false, as this is the default return value of the overridden method</li>
@@ -1311,9 +1323,9 @@ class MacroLambdaCodeGenerator implements CodeGenerator<MacroLambdaStruct> {
 	}
 
 	/**
-	 * Private method for generating the {@link MacroFunctionExpander#getAuxBindings()} method for the generated
-	 * macro-lambda class object being written to via the provided {@link ClassWriter}. The generation will perform the
-	 * following operations:
+	 * Private method for generating the {@link CompiledMacroFunctionExpander#getAuxBindings()} method for the
+	 * generated macro-lambda class object being written to via the provided {@link ClassWriter}. The generation will
+	 * perform the following operations:
 	 * <ol>
 	 * <li>Returning early and avoid generating the method unnecessarily if the {@link List} of {@link
 	 * MacroLambdaList#auxBindings} is empty</li>
@@ -1424,9 +1436,9 @@ class MacroLambdaCodeGenerator implements CodeGenerator<MacroLambdaStruct> {
 	}
 
 	/**
-	 * Private method for generating the {@link MacroFunctionExpander#getWholeBinding()} method for the generated
-	 * macro-lambda class object being written to via the provided {@link ClassWriter}. The generation will perform the
-	 * following operations:
+	 * Private method for generating the {@link CompiledMacroFunctionExpander#getWholeBinding()} method for the
+	 * generated macro-lambda class object being written to via the provided {@link ClassWriter}. The generation will
+	 * perform the following operations:
 	 * <ol>
 	 * <li>Returning early and avoid generating the method unnecessarily if the {@link MacroLambdaList#getWholeBinding}
 	 * is null</li>
@@ -1500,9 +1512,9 @@ class MacroLambdaCodeGenerator implements CodeGenerator<MacroLambdaStruct> {
 	}
 
 	/**
-	 * Private method for generating the {@link MacroFunctionExpander#getEnvironmentBinding()} method for the generated
-	 * macro-lambda class object being written to via the provided {@link ClassWriter}. The generation will perform the
-	 * following operations:
+	 * Private method for generating the {@link CompiledMacroFunctionExpander#getEnvironmentBinding()} method for the
+	 * generated macro-lambda class object being written to via the provided {@link ClassWriter}. The generation will
+	 * perform the following operations:
 	 * <ol>
 	 * <li>Returning early and avoid generating the method unnecessarily if the {@link
 	 * MacroLambdaList#environmentBinding} is null</li>
@@ -1572,9 +1584,9 @@ class MacroLambdaCodeGenerator implements CodeGenerator<MacroLambdaStruct> {
 	}
 
 	/**
-	 * Private method for generating the {@link MacroFunctionExpander#getBodyBinding()} method for the generated
-	 * macro-lambda class object being written to via the provided {@link ClassWriter}. The generation will perform the
-	 * following operations:
+	 * Private method for generating the {@link CompiledMacroFunctionExpander#getBodyBinding()} method for the
+	 * generated macro-lambda class object being written to via the provided {@link ClassWriter}. The generation will
+	 * perform the following operations:
 	 * <ol>
 	 * <li>Returning early and avoid generating the method unnecessarily if the {@link MacroLambdaList#bodyBinding} is
 	 * null</li>

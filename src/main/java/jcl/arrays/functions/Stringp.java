@@ -47,7 +47,6 @@ public final class Stringp extends FunctionStruct {
 
 	@Override
 	public LispStruct apply(final LispStruct... lispStructs) {
-		getFunctionBindings(lispStructs);
 
 		return (lispStructs[0] instanceof StringStruct) ? TStruct.INSTANCE : NILStruct.INSTANCE;
 	}

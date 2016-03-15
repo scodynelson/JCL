@@ -89,7 +89,6 @@ public final class MergePathnamesFunction extends FunctionStruct {
 
 	@Override
 	public LispStruct apply(final LispStruct... lispStructs) {
-		getFunctionBindings(lispStructs);
 
 		final LispStruct pathname = lispStructs[0];
 

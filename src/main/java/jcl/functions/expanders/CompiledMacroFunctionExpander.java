@@ -1,12 +1,7 @@
-/*
- * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
- */
-
 package jcl.functions.expanders;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -16,7 +11,6 @@ import java.util.Map;
 import java.util.Set;
 
 import jcl.LispStruct;
-import jcl.LispType;
 import jcl.compiler.environment.Environment;
 import jcl.compiler.environment.binding.lambdalist.AuxParameter;
 import jcl.compiler.environment.binding.lambdalist.BodyParameter;
@@ -34,36 +28,27 @@ import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.functions.Closure;
 import jcl.functions.FunctionParameterBinding;
 import jcl.functions.FunctionStruct;
+import jcl.functions.expanders.MacroFunctionExpander;
 import jcl.lists.ListStruct;
 import jcl.symbols.NILStruct;
 import jcl.symbols.SymbolStruct;
 import jcl.symbols.TStruct;
 import jcl.system.CommonLispSymbols;
 
-public abstract class MacroFunctionExpander<O extends LispStruct> extends MacroExpander<O, ListStruct> {
+public abstract class CompiledMacroFunctionExpander<O extends LispStruct> extends MacroFunctionExpander <O> {
 
 	protected MacroLambdaList macroLambdaListBindings;
 
-	protected Closure closure;
-
-	protected static final LispStruct INIT_FORM_PLACEHOLDER = new LispStruct() {
-
-		@Override
-		public LispType getType() {
-			return null;
-		}
-	};
-
-	protected MacroFunctionExpander() {
+	protected CompiledMacroFunctionExpander() {
+		this(null);
 	}
 
-	protected MacroFunctionExpander(final Closure closure) {
-		this.closure = closure;
+	protected CompiledMacroFunctionExpander(final Closure closure) {
+		super(closure);
 	}
 
-	protected MacroFunctionExpander(final String documentation, final Closure closure) {
-		super(documentation);
-		this.closure = closure;
+	protected CompiledMacroFunctionExpander(final String documentation, final Closure closure) {
+		super(documentation, closure);
 	}
 
 	@Override
@@ -72,6 +57,7 @@ public abstract class MacroFunctionExpander<O extends LispStruct> extends MacroE
 		functionSymbol.setMacroFunctionExpander(this);
 	}
 
+	@Override
 	protected List<FunctionParameterBinding> getFunctionBindings(final LispStruct[] lispStructs) {
 		final WholeParameter wholeBinding = macroLambdaListBindings.getWholeBinding();
 		final EnvironmentParameter environmentBinding = macroLambdaListBindings.getEnvironmentBinding();
@@ -290,10 +276,6 @@ public abstract class MacroFunctionExpander<O extends LispStruct> extends MacroE
 		                                         .build();
 	}
 
-	protected LispStruct getInitForm(final Closure currentClosure, final SymbolStruct parameter) {
-		return NILStruct.INSTANCE;
-	}
-
 	@SuppressWarnings({"unchecked", "rawtypes"})
 	@Override
 	public O expand(final ListStruct form, final Environment environment) {
@@ -372,29 +354,9 @@ public abstract class MacroFunctionExpander<O extends LispStruct> extends MacroE
 		return result;
 	}
 
-	public Map<SymbolStruct, LispStruct> getClosureSymbolBindings() {
-		if (closure == null) {
-			return Collections.emptyMap();
-		}
-		return closure.getSymbolBindings();
-	}
-
-	public Map<SymbolStruct, FunctionStruct> getClosureFunctionBindings() {
-		if (closure == null) {
-			return Collections.emptyMap();
-		}
-		return closure.getFunctionBindings();
-	}
-
+	@Override
 	protected O internalApply(final Closure currentClosure) {
 		return null;
-	}
-
-	private static final SymbolStruct DUMMY_SYMBOL = new SymbolStruct("dummySymbol");
-
-	public SymbolStruct getFunctionSymbol() {
-		// TODO: we can do this better
-		return DUMMY_SYMBOL;
 	}
 
 	@Override

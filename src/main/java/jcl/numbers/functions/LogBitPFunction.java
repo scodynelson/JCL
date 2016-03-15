@@ -58,7 +58,6 @@ public final class LogBitPFunction extends FunctionStruct {
 
 	@Override
 	public LispStruct apply(final LispStruct... lispStructs) {
-		getFunctionBindings(lispStructs);
 
 		final LispStruct lispStruct1 = lispStructs[0];
 		if (!(lispStruct1 instanceof IntegerStruct)) {

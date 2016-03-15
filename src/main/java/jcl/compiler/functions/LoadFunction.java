@@ -130,7 +130,6 @@ public final class LoadFunction extends FunctionStruct {
 
 	@Override
 	public LispStruct apply(final LispStruct... lispStructs) {
-		getFunctionBindings(lispStructs);
 
 		final LispStruct filespec = lispStructs[0];
 

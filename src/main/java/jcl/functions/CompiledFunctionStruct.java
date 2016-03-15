@@ -1,8 +1,4 @@
-/*
- * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
- */
-
-package jcl.functions.expanders;
+package jcl.functions;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -17,32 +13,26 @@ import java.util.Set;
 
 import jcl.LispStruct;
 import jcl.LispType;
-import jcl.compiler.environment.Environment;
 import jcl.compiler.environment.binding.lambdalist.AuxParameter;
-import jcl.compiler.environment.binding.lambdalist.BodyParameter;
-import jcl.compiler.environment.binding.lambdalist.EnvironmentParameter;
 import jcl.compiler.environment.binding.lambdalist.KeyParameter;
-import jcl.compiler.environment.binding.lambdalist.MacroLambdaList;
 import jcl.compiler.environment.binding.lambdalist.OptionalParameter;
+import jcl.compiler.environment.binding.lambdalist.OrdinaryLambdaList;
 import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
 import jcl.compiler.environment.binding.lambdalist.RestParameter;
 import jcl.compiler.environment.binding.lambdalist.SuppliedPParameter;
-import jcl.compiler.environment.binding.lambdalist.WholeParameter;
 import jcl.compiler.struct.ValuesStruct;
 import jcl.conditions.exceptions.ErrorException;
 import jcl.conditions.exceptions.ProgramErrorException;
-import jcl.functions.Closure;
-import jcl.functions.FunctionParameterBinding;
-import jcl.functions.FunctionStruct;
 import jcl.lists.ListStruct;
 import jcl.symbols.NILStruct;
 import jcl.symbols.SymbolStruct;
 import jcl.symbols.TStruct;
 import jcl.system.CommonLispSymbols;
+import jcl.types.FunctionType;
 
-public abstract class MacroFunctionExpander<O extends LispStruct> extends MacroExpander<O, ListStruct> {
+public abstract class CompiledFunctionStruct extends FunctionStruct {
 
-	protected MacroLambdaList macroLambdaListBindings;
+	protected OrdinaryLambdaList lambdaListBindings;
 
 	protected Closure closure;
 
@@ -54,46 +44,118 @@ public abstract class MacroFunctionExpander<O extends LispStruct> extends MacroE
 		}
 	};
 
-	protected MacroFunctionExpander() {
+	protected CompiledFunctionStruct() {
+		super(null, FunctionType.INSTANCE, null, null);
 	}
 
-	protected MacroFunctionExpander(final Closure closure) {
+	protected CompiledFunctionStruct(final Closure closure) {
+		this("", closure);
+	}
+
+	protected CompiledFunctionStruct(final String documentation, final Closure closure) {
+		super(documentation, FunctionType.INSTANCE, null, null);
 		this.closure = closure;
 	}
 
-	protected MacroFunctionExpander(final String documentation, final Closure closure) {
-		super(documentation);
-		this.closure = closure;
+	private static final SymbolStruct DUMMY_SYMBOL = new SymbolStruct("dummySymbol");
+
+	public SymbolStruct getFunctionSymbol() {
+		// TODO: we can do this better
+		return DUMMY_SYMBOL;
 	}
 
-	@Override
-	public void afterPropertiesSet() throws Exception {
-		final SymbolStruct functionSymbol = getFunctionSymbol();
-		functionSymbol.setMacroFunctionExpander(this);
+	@SuppressWarnings({"unchecked", "rawtypes"})
+	public LispStruct apply(final LispStruct... lispStructs) {
+		final Map<SymbolStruct, LispStruct> closureSymbolsToBind = getClosureSymbolBindings();
+		for (final Map.Entry<SymbolStruct, LispStruct> closureSymbolToBind : closureSymbolsToBind.entrySet()) {
+			final SymbolStruct symbol = closureSymbolToBind.getKey();
+			LispStruct value = closureSymbolToBind.getValue();
+			if (value instanceof ValuesStruct) {
+				final ValuesStruct valuesStruct = (ValuesStruct) value;
+				value = valuesStruct.getPrimaryValue();
+			}
+			symbol.bindLexicalValue(value);
+		}
+
+		final Map<SymbolStruct, FunctionStruct> closureFunctionsToBind = getClosureFunctionBindings();
+		for (final Map.Entry<SymbolStruct, FunctionStruct> closureFunctionToBind : closureFunctionsToBind.entrySet()) {
+			final SymbolStruct symbol = closureFunctionToBind.getKey();
+			final FunctionStruct function = closureFunctionToBind.getValue();
+			symbol.bindFunction(function);
+		}
+
+		final List<FunctionParameterBinding> parameterSymbolsToBind = getFunctionBindings(lispStructs);
+		for (final FunctionParameterBinding parameterSymbolToBind : parameterSymbolsToBind) {
+			final SymbolStruct symbol = parameterSymbolToBind.getParameterSymbol();
+			LispStruct value = parameterSymbolToBind.getParameterValue();
+			if (value instanceof ValuesStruct) {
+				final ValuesStruct valuesStruct = (ValuesStruct) value;
+				value = valuesStruct.getPrimaryValue();
+			} else if (INIT_FORM_PLACEHOLDER.equals(value)) {
+				value = getInitForm(closure, symbol);
+			}
+			final boolean isSpecial = parameterSymbolToBind.isSpecial();
+			if (isSpecial) {
+				symbol.bindDynamicValue(value);
+			} else {
+				symbol.bindLexicalValue(value);
+			}
+		}
+
+		final LispStruct result;
+		try {
+			result = internalApply(closure);
+		} catch (final ErrorException ex) {
+			throw ex;
+		} catch (final Throwable t) {
+			throw new ErrorException("Non-Lisp error found.", t);
+		} finally {
+			for (final FunctionParameterBinding parameterSymbolToUnbind : parameterSymbolsToBind) {
+				final SymbolStruct parameterSymbol = parameterSymbolToUnbind.getParameterSymbol();
+				final boolean isSpecial = parameterSymbolToUnbind.isSpecial();
+				if (isSpecial) {
+					parameterSymbol.unbindDynamicValue();
+				} else {
+					parameterSymbol.unbindLexicalValue();
+				}
+			}
+			for (final SymbolStruct closureFunctionToUnbind : closureFunctionsToBind.keySet()) {
+				closureFunctionToUnbind.unbindFunction();
+			}
+			for (final SymbolStruct closureSymbolToUnbind : closureSymbolsToBind.keySet()) {
+				closureSymbolToUnbind.unbindLexicalValue();
+			}
+		}
+		return result;
+	}
+
+	public Map<SymbolStruct, LispStruct> getClosureSymbolBindings() {
+		if (closure == null) {
+			return Collections.emptyMap();
+		}
+		return closure.getSymbolBindings();
+	}
+
+	public Map<SymbolStruct, FunctionStruct> getClosureFunctionBindings() {
+		if (closure == null) {
+			return Collections.emptyMap();
+		}
+		return closure.getFunctionBindings();
+	}
+
+	protected LispStruct internalApply(final Closure currentClosure) {
+		return NILStruct.INSTANCE;
 	}
 
 	protected List<FunctionParameterBinding> getFunctionBindings(final LispStruct[] lispStructs) {
-		final WholeParameter wholeBinding = macroLambdaListBindings.getWholeBinding();
-		final EnvironmentParameter environmentBinding = macroLambdaListBindings.getEnvironmentBinding();
-		final List<RequiredParameter> requiredBindings = macroLambdaListBindings.getRequiredBindings();
-		final List<OptionalParameter> optionalBindings = macroLambdaListBindings.getOptionalBindings();
-		final RestParameter restBinding = macroLambdaListBindings.getRestBinding();
-		final BodyParameter bodyBinding = macroLambdaListBindings.getBodyBinding();
-		final List<KeyParameter> keyBindings = macroLambdaListBindings.getKeyBindings();
-		boolean allowOtherKeys = macroLambdaListBindings.isAllowOtherKeys();
-		final List<AuxParameter> auxBindings = macroLambdaListBindings.getAuxBindings();
+		final List<RequiredParameter> requiredBindings = lambdaListBindings.getRequiredBindings();
+		final List<OptionalParameter> optionalBindings = lambdaListBindings.getOptionalBindings();
+		final RestParameter restBinding = lambdaListBindings.getRestBinding();
+		final List<KeyParameter> keyBindings = lambdaListBindings.getKeyBindings();
+		boolean allowOtherKeys = lambdaListBindings.isAllowOtherKeys();
+		final List<AuxParameter> auxBindings = lambdaListBindings.getAuxBindings();
 
 		final List<FunctionParameterBinding> functionParametersToBind = new ArrayList<>();
-
-		final SymbolStruct wholeSymbol = wholeBinding.getVar();
-		final LispStruct wholeInitForm = wholeBinding.getInitForm();
-		final FunctionParameterBinding wholeParameterBinding = new FunctionParameterBinding(wholeSymbol, wholeInitForm, wholeBinding.isSpecial());
-		functionParametersToBind.add(wholeParameterBinding);
-
-		final SymbolStruct environmentSymbol = environmentBinding.getVar();
-		final LispStruct environmentInitForm = environmentBinding.getInitForm();
-		final FunctionParameterBinding environmentParameterBinding = new FunctionParameterBinding(environmentSymbol, environmentInitForm, environmentBinding.isSpecial());
-		functionParametersToBind.add(environmentParameterBinding);
 
 		final List<LispStruct> functionArguments = Arrays.asList(lispStructs);
 		final int numberOfArguments = functionArguments.size();
@@ -234,14 +296,6 @@ public abstract class MacroFunctionExpander<O extends LispStruct> extends MacroE
 			functionParametersToBind.add(functionParameterBinding);
 		}
 
-		if (bodyBinding != null) {
-			final SymbolStruct bodySymbol = bodyBinding.getVar();
-			final LispStruct bodListStruct = ListStruct.buildProperList(restList);
-
-			final FunctionParameterBinding functionParameterBinding = new FunctionParameterBinding(bodySymbol, bodListStruct, bodyBinding.isSpecial());
-			functionParametersToBind.add(functionParameterBinding);
-		}
-
 		functionParametersToBind.addAll(keywordFunctionParametersToBind.values());
 
 		for (final AuxParameter auxBinding : auxBindings) {
@@ -254,153 +308,48 @@ public abstract class MacroFunctionExpander<O extends LispStruct> extends MacroE
 		return functionParametersToBind;
 	}
 
-	protected WholeParameter getWholeBinding() {
-		return new WholeParameter(new SymbolStruct("temp_whole_" + System.nanoTime()));
-	}
-
-	protected EnvironmentParameter getEnvironmentBinding() {
-		return new EnvironmentParameter(new SymbolStruct("temp_environment_" + System.nanoTime()));
-	}
-
-	protected BodyParameter getBodyBinding() {
-		return null;
-	}
-
-	@Override
 	protected void initLambdaListBindings() {
-		final WholeParameter wholeBinding = getWholeBinding();
 		final List<RequiredParameter> requiredBindings = getRequiredBindings();
 		final List<OptionalParameter> optionalBindings = getOptionalBindings();
 		final RestParameter restBinding = getRestBinding();
-		final BodyParameter bodyBinding = getBodyBinding();
 		final List<KeyParameter> keyBindings = getKeyBindings();
 		final boolean allowOtherKeys = getAllowOtherKeys();
 		final List<AuxParameter> auxBindings = getAuxBindings();
-		final EnvironmentParameter environmentBinding = getEnvironmentBinding();
-		macroLambdaListBindings = MacroLambdaList.builder()
-		                                         .wholeBinding(wholeBinding)
-		                                         .environmentBinding(environmentBinding)
-		                                         .requiredBindings(requiredBindings)
-		                                         .optionalBindings(optionalBindings)
-		                                         .restBinding(restBinding)
-		                                         .bodyBinding(bodyBinding)
-		                                         .keyBindings(keyBindings)
-		                                         .allowOtherKeys(allowOtherKeys)
-		                                         .auxBindings(auxBindings)
-		                                         .build();
+		lambdaListBindings = OrdinaryLambdaList.builder()
+		                                       .requiredBindings(requiredBindings)
+		                                       .optionalBindings(optionalBindings)
+		                                       .restBinding(restBinding)
+		                                       .keyBindings(keyBindings)
+		                                       .allowOtherKeys(allowOtherKeys)
+		                                       .auxBindings(auxBindings)
+		                                       .build();
+	}
+
+	protected List<RequiredParameter> getRequiredBindings() {
+		return Collections.emptyList();
+	}
+
+	protected List<OptionalParameter> getOptionalBindings() {
+		return Collections.emptyList();
+	}
+
+	protected RestParameter getRestBinding() {
+		return null;
+	}
+
+	protected List<KeyParameter> getKeyBindings() {
+		return Collections.emptyList();
+	}
+
+	protected boolean getAllowOtherKeys() {
+		return false;
+	}
+
+	protected List<AuxParameter> getAuxBindings() {
+		return Collections.emptyList();
 	}
 
 	protected LispStruct getInitForm(final Closure currentClosure, final SymbolStruct parameter) {
 		return NILStruct.INSTANCE;
-	}
-
-	@SuppressWarnings({"unchecked", "rawtypes"})
-	@Override
-	public O expand(final ListStruct form, final Environment environment) {
-		macroLambdaListBindings.getWholeBinding().setInitForm(form);
-		macroLambdaListBindings.getEnvironmentBinding().setInitForm(environment);
-
-		final Iterator<LispStruct> iterator = form.iterator();
-		iterator.next(); // MACRO-NAME SYMBOL
-
-		final List<LispStruct> arguments = new ArrayList<>();
-		iterator.forEachRemaining(arguments::add);
-
-		final LispStruct[] argsArray = new LispStruct[arguments.size()];
-		arguments.toArray(argsArray);
-
-		final Map<SymbolStruct, LispStruct> closureSymbolsToBind = getClosureSymbolBindings();
-		for (final Map.Entry<SymbolStruct, LispStruct> closureSymbolToBind : closureSymbolsToBind.entrySet()) {
-			final SymbolStruct symbol = closureSymbolToBind.getKey();
-			LispStruct value = closureSymbolToBind.getValue();
-			if (value instanceof ValuesStruct) {
-				final ValuesStruct valuesStruct = (ValuesStruct) value;
-				value = valuesStruct.getPrimaryValue();
-			}
-			symbol.bindLexicalValue(value);
-		}
-
-		final Map<SymbolStruct, FunctionStruct> closureFunctionsToBind = getClosureFunctionBindings();
-		for (final Map.Entry<SymbolStruct, FunctionStruct> closureFunctionToBind : closureFunctionsToBind.entrySet()) {
-			final SymbolStruct symbol = closureFunctionToBind.getKey();
-			final FunctionStruct function = closureFunctionToBind.getValue();
-			symbol.bindFunction(function);
-		}
-
-		final List<FunctionParameterBinding> parameterSymbolsToBind = getFunctionBindings(argsArray);
-		for (final FunctionParameterBinding parameterSymbolToBind : parameterSymbolsToBind) {
-			final SymbolStruct symbol = parameterSymbolToBind.getParameterSymbol();
-			LispStruct value = parameterSymbolToBind.getParameterValue();
-			if (value instanceof ValuesStruct) {
-				final ValuesStruct valuesStruct = (ValuesStruct) value;
-				value = valuesStruct.getPrimaryValue();
-			} else if (INIT_FORM_PLACEHOLDER.equals(value)) {
-				value = getInitForm(closure, symbol);
-			}
-			final boolean isSpecial = parameterSymbolToBind.isSpecial();
-			if (isSpecial) {
-				symbol.bindDynamicValue(value);
-			} else {
-				symbol.bindLexicalValue(value);
-			}
-		}
-
-		final O result;
-		try {
-			result = internalApply(closure);
-		} catch (final ErrorException ex) {
-			throw ex;
-		} catch (final Throwable t) {
-			throw new ErrorException("Non-Lisp error found.", t);
-		} finally {
-			for (final FunctionParameterBinding parameterSymbolToUnbind : parameterSymbolsToBind) {
-				final SymbolStruct parameterSymbol = parameterSymbolToUnbind.getParameterSymbol();
-				final boolean isSpecial = parameterSymbolToUnbind.isSpecial();
-				if (isSpecial) {
-					parameterSymbol.unbindDynamicValue();
-				} else {
-					parameterSymbol.unbindLexicalValue();
-				}
-			}
-			for (final SymbolStruct closureFunctionToUnbind : closureFunctionsToBind.keySet()) {
-				closureFunctionToUnbind.unbindFunction();
-			}
-			for (final SymbolStruct closureSymbolToUnbind : closureSymbolsToBind.keySet()) {
-				closureSymbolToUnbind.unbindLexicalValue();
-			}
-		}
-		return result;
-	}
-
-	public Map<SymbolStruct, LispStruct> getClosureSymbolBindings() {
-		if (closure == null) {
-			return Collections.emptyMap();
-		}
-		return closure.getSymbolBindings();
-	}
-
-	public Map<SymbolStruct, FunctionStruct> getClosureFunctionBindings() {
-		if (closure == null) {
-			return Collections.emptyMap();
-		}
-		return closure.getFunctionBindings();
-	}
-
-	protected O internalApply(final Closure currentClosure) {
-		return null;
-	}
-
-	private static final SymbolStruct DUMMY_SYMBOL = new SymbolStruct("dummySymbol");
-
-	public SymbolStruct getFunctionSymbol() {
-		// TODO: we can do this better
-		return DUMMY_SYMBOL;
-	}
-
-	@Override
-	public LispStruct apply(final LispStruct... lispStructs) {
-		final ListStruct listStruct = (ListStruct) lispStructs[0];
-		final Environment environment = (Environment) lispStructs[1];
-		return expand(listStruct, environment);
 	}
 }

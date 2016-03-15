@@ -91,7 +91,6 @@ public final class ReadPreservingWhitespaceFunction extends FunctionStruct {
 
 	@Override
 	public LispStruct apply(final LispStruct... lispStructs) {
-		getFunctionBindings(lispStructs);
 
 		final int length = lispStructs.length;
 

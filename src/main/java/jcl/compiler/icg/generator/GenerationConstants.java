@@ -29,6 +29,8 @@ import jcl.compiler.environment.binding.lambdalist.WholeParameter;
 import jcl.compiler.struct.ValuesStructs;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.functions.Closure;
+import jcl.functions.CompiledFunctionStruct;
+import jcl.functions.expanders.CompiledMacroFunctionExpander;
 import jcl.functions.FunctionStruct;
 import jcl.functions.expanders.MacroFunctionExpander;
 import jcl.lists.ConsStruct;
@@ -260,23 +262,21 @@ interface GenerationConstants {
 
 	String FUNCTION_STRUCT_NAME = Type.getInternalName(FunctionStruct.class);
 
-	String FUNCTION_STRUCT_INIT_DESC = CodeGenerators.getConstructorDescription(FunctionStruct.class);
+	String COMPILED_FUNCTION_STRUCT_NAME = Type.getInternalName(CompiledFunctionStruct.class);
 
-	/**
-	 * Constant {@link String} containing the description for the {@link FunctionStruct#FunctionStruct(Closure)}
-	 * constructor method.
-	 */
-	String FUNCTION_STRUCT_INIT_CLOSURE_DESC = CodeGenerators.getConstructorDescription(FunctionStruct.class, Closure.class);
+	String COMPILED_FUNCTION_STRUCT_INIT_DESC = CodeGenerators.getConstructorDescription(CompiledFunctionStruct.class);
 
-	String FUNCTION_STRUCT_INIT_STRING_CLOSURE_DESC = CodeGenerators.getConstructorDescription(FunctionStruct.class, String.class, Closure.class);
+	String COMPILED_FUNCTION_STRUCT_INIT_CLOSURE_DESC = CodeGenerators.getConstructorDescription(CompiledFunctionStruct.class, Closure.class);
+
+	String COMPILED_FUNCTION_STRUCT_INIT_STRING_CLOSURE_DESC = CodeGenerators.getConstructorDescription(CompiledFunctionStruct.class, String.class, Closure.class);
 
 	String FUNCTION_STRUCT_APPLY_METHOD_NAME = "apply";
 
 	String FUNCTION_STRUCT_APPLY_METHOD_DESC = CodeGenerators.getMethodDescription(FunctionStruct.class, FUNCTION_STRUCT_APPLY_METHOD_NAME, LispStruct[].class);
 
-	String MACRO_FUNCTION_EXPANDER_NAME = Type.getInternalName(MacroFunctionExpander.class);
+	String COMPILED_MACRO_FUNCTION_EXPANDER_NAME = Type.getInternalName(CompiledMacroFunctionExpander.class);
 
-	String MACRO_FUNCTION_EXPANDER_CLASS_SIGNATURE = "Ljcl/functions/expanders/MacroFunctionExpander<Ljcl/LispStruct;>;";
+	String COMPILED_MACRO_FUNCTION_EXPANDER_CLASS_SIGNATURE = "Ljcl/functions/expanders/CompiledMacroFunctionExpander<Ljcl/LispStruct;>;";
 
 	String LISP_STRUCT_NAME = Type.getInternalName(LispStruct.class);
 

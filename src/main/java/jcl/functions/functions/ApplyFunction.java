@@ -68,7 +68,6 @@ public final class ApplyFunction extends FunctionStruct {
 
 	@Override
 	public LispStruct apply(final LispStruct... lispStructs) {
-		getFunctionBindings(lispStructs);
 
 		final LispStruct lastArgument = lispStructs[lispStructs.length - 1];
 		if (!(lastArgument instanceof ListStruct) && !NILStruct.INSTANCE.equals(lastArgument)) {

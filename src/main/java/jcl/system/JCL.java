@@ -6,6 +6,7 @@ import javax.annotation.Resource;
 
 import jcl.compiler.CompilerVariables;
 import jcl.compiler.functions.CompileFileFunction;
+import jcl.compiler.functions.CompileForm;
 import jcl.compiler.functions.LoadFunction;
 import jcl.conditions.exceptions.ErrorException;
 import jcl.functions.functions.FuncallFunction;
@@ -103,9 +104,11 @@ public class JCL implements ApplicationRunner {
 	}
 
 	private void loadLispFiles() {
+		CompileForm.OUTPUT_FILE = false;
 		for (final String lispFileToLoad : lispFilesToLoad) {
 			final PathnameStruct pathname = new PathnameStruct(lispFileToLoad);
 			loadFunction.load(pathname, false, false, true);
 		}
+		CompileForm.OUTPUT_FILE = true;
 	}
 }

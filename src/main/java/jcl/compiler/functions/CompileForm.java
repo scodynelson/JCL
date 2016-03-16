@@ -37,9 +37,11 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.stereotype.Component;
 
 @Component
-class CompileForm {
+public class CompileForm {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(CompileForm.class);
+
+	public static boolean OUTPUT_FILE = true;
 
 	@Autowired
 	private SemanticAnalyzer semanticAnalyzer;
@@ -66,11 +68,13 @@ class CompileForm {
 			final byte[] byteArray = cw.toByteArray();
 
 			// TODO: Maybe set this up as a super debugging variable that we can control or something???
-			final String fileName = javaClassBuilder.getFileName();
-			try (FileOutputStream outputStream = new FileOutputStream(new File("/Volumes/Dev/repo/JCL/tmp/" + fileName + ".class"))) {
-				outputStream.write(byteArray);
-			} catch (final IOException ioe) {
-				LOGGER.info("Error writing class file.", ioe);
+			if (OUTPUT_FILE) {
+				final String fileName = javaClassBuilder.getFileName();
+				try (FileOutputStream outputStream = new FileOutputStream(new File("/Volumes/Dev/repo/JCL/tmp/" + fileName + ".class"))) {
+					outputStream.write(byteArray);
+				} catch (final IOException ioe) {
+					LOGGER.info("Error writing class file.", ioe);
+				}
 			}
 
 			final ClassReader cr = new ClassReader(byteArray);

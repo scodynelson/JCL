@@ -175,10 +175,10 @@ public final class EvalFunction extends FunctionStruct {
 			final LispStruct[] args = new LispStruct[evaluatedArguments.size()];
 			evaluatedArguments.toArray(args);
 
-			final long start = System.nanoTime();
+//			final long start = System.nanoTime();
 			final LispStruct apply = function.apply(args);
-			final long end = System.nanoTime();
-			System.out.println("EVAL: " + (end - start));
+//			final long end = System.nanoTime();
+//			System.out.println("EVAL: " + (end - start));
 			return apply;
 		}
 

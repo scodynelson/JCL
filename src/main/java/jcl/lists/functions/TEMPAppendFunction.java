@@ -10,21 +10,16 @@ import java.util.Iterator;
 import java.util.List;
 
 import jcl.LispStruct;
-import jcl.compiler.environment.binding.lambdalist.OrdinaryLambdaList;
 import jcl.compiler.environment.binding.lambdalist.RestParameter;
 import jcl.functions.BuiltInFunctionStruct;
-import jcl.functions.FunctionParams;
+import jcl.functions.parameterdsl.FunctionParameters;
 import jcl.lists.ListStruct;
 import jcl.packages.GlobalPackageStruct;
 import jcl.symbols.NILStruct;
-import jcl.symbols.SymbolStruct;
 import jcl.util.ClassUtils;
-import org.springframework.stereotype.Component;
 
 //@Component
-public final class TEMPAppendFunction extends BuiltInFunctionStruct<TEMPAppendFunction.AppendParams> {
-
-	public static final SymbolStruct APPEND = GlobalPackageStruct.COMMON_LISP.intern("APPEND").getSymbol();
+public final class TEMPAppendFunction extends BuiltInFunctionStruct {
 
 	public TEMPAppendFunction() {
 		super("Returns a new list that is the concatenation of the copies.", "APPEND");
@@ -67,39 +62,20 @@ public final class TEMPAppendFunction extends BuiltInFunctionStruct<TEMPAppendFu
 	}
 
 	@Override
-	protected LispStruct internalApply(final AppendParams params) {
-		final List<ListStruct> lists = params.getLists();
-		final LispStruct object = params.getObject();
-		return ListStruct.append(lists, object);
+	public LispStruct apply(final FunctionParameters params) {
+//		final List<ListStruct> lists = params.getLists();
+//		final LispStruct object = params.getObject();
+//		return ListStruct.append(lists, object);
+		return null;
 	}
 
 	@Override
-	protected AppendParams getParams(final OrdinaryLambdaList lambdaList) {
-		final RestParameter restParameter = lambdaList.getRestBinding();
-		final List<ListStruct> initForm = (List<ListStruct>) restParameter.getInitForm();
+	protected FunctionParameters getParams(final List<LispStruct> lispStructs) {
+//		final RestParameter restParameter = lambdaList.getRestBinding();
+//		final List<ListStruct> initForm = (List<ListStruct>) restParameter.getInitForm();
 
 //		final IntegerStruct convertInitialElement = ClassUtils.convert(restParameter.getInitFormClass(), restParameter.getInitForm());
 
-
-		return new AppendParams(initForm, null);
-	}
-
-	static class AppendParams implements FunctionParams {
-
-		private final List<ListStruct> lists;
-		private final LispStruct object;
-
-		private AppendParams(final List<ListStruct> lists, final LispStruct object) {
-			this.lists = lists;
-			this.object = object;
-		}
-
-		private List<ListStruct> getLists() {
-			return lists;
-		}
-
-		private LispStruct getObject() {
-			return object;
-		}
+		return null;
 	}
 }

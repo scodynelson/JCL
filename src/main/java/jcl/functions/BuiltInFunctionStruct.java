@@ -17,6 +17,7 @@ import jcl.compiler.environment.binding.lambdalist.Parameter;
 import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
 import jcl.compiler.environment.binding.lambdalist.RestParameter;
 import jcl.conditions.exceptions.ProgramErrorException;
+import jcl.functions.parameterdsl.FunctionParameters;
 import jcl.lists.ListStruct;
 import jcl.packages.GlobalPackageStruct;
 import jcl.packages.PackageStruct;
@@ -25,7 +26,7 @@ import jcl.symbols.SymbolStruct;
 import jcl.system.CommonLispSymbols;
 import jcl.util.ClassUtils;
 
-public abstract class BuiltInFunctionStruct<P extends FunctionParams> extends FunctionStruct {
+public abstract class BuiltInFunctionStruct extends FunctionStruct {
 
 	private final String functionName;
 
@@ -36,21 +37,13 @@ public abstract class BuiltInFunctionStruct<P extends FunctionParams> extends Fu
 
 	@Override
 	public LispStruct apply(final LispStruct... lispStructs) {
-		final OrdinaryLambdaList parsedParameters = fillInParsedParameters(lispStructs);
-		final P params = getParams(parsedParameters);
-		return internalApply(params);
+		final FunctionParameters params = getParams(Arrays.asList(lispStructs));
+		return apply(params);
 	}
 
-	protected abstract LispStruct internalApply(P params);
+	public abstract LispStruct apply(FunctionParameters params);
 
-	@Override
-	public void afterPropertiesSet() throws Exception {
-		super.afterPropertiesSet();
-		initLambdaListBindings();
-
-		final SymbolStruct functionSymbol = getFunctionSymbol();
-		functionSymbol.setFunction(this);
-	}
+	protected abstract FunctionParameters getParams(List<LispStruct> lispStructs);
 
 	@Override
 	public SymbolStruct getFunctionSymbol() {
@@ -65,7 +58,7 @@ public abstract class BuiltInFunctionStruct<P extends FunctionParams> extends Fu
 		parameter.setInitForm(ClassUtils.convert(valueClass, value));
 	}
 
-	protected OrdinaryLambdaList fillInParsedParameters(final LispStruct[] lispStructs) {
+	private OrdinaryLambdaList fillInParsedParameters(final LispStruct[] lispStructs) {
 		final List<RequiredParameter> requiredBindings = lambdaListBindings.getRequiredBindings();
 		final List<OptionalParameter> optionalBindings = lambdaListBindings.getOptionalBindings();
 		final RestParameter restBinding = lambdaListBindings.getRestBinding();
@@ -175,6 +168,4 @@ public abstract class BuiltInFunctionStruct<P extends FunctionParams> extends Fu
 		                         .keyBindings(keyBindings)
 		                         .build();
 	}
-
-	protected abstract P getParams(OrdinaryLambdaList lambdaList);
 }

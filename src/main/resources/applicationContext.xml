@@ -104,6 +104,7 @@
 
 		<entry key="jcl.pathnames.PathnameStruct" value-ref="pathnameCodeGenerator"/>
 
+		<entry key="jcl.symbols.DeclarationStruct" value-ref="symbolValueCodeGenerator"/>
 		<entry key="jcl.symbols.KeywordStruct" value-ref="keywordCodeGenerator"/>
 		<entry key="jcl.symbols.NILStruct" value-ref="NILCodeGenerator"/>
 		<entry key="jcl.symbols.SymbolStruct" value-ref="symbolValueCodeGenerator"/>

@@ -233,8 +233,18 @@ public class LambdaListParser {
 					final Iterator<LispStruct> currentIterator = currentParam.iterator();
 
 					final LispStruct firstInCurrent = currentIterator.next();
-					final LispStruct secondInCurrent = currentIterator.next();
-					final LispStruct thirdInCurrent = currentIterator.next();
+					final LispStruct secondInCurrent;
+					if (currentIterator.hasNext()) {
+						secondInCurrent = currentIterator.next();
+					} else {
+						secondInCurrent = NILStruct.INSTANCE;
+					}
+					final LispStruct thirdInCurrent;
+					if (currentIterator.hasNext()) {
+						thirdInCurrent = currentIterator.next();
+					} else {
+						thirdInCurrent = NILStruct.INSTANCE;
+					}
 
 					final SymbolStruct varNameCurrent;
 					DestructuringLambdaList destructuringForm = null;
@@ -559,8 +569,18 @@ public class LambdaListParser {
 					final Iterator<LispStruct> currentIterator = currentParam.iterator();
 
 					final LispStruct firstInCurrent = currentIterator.next();
-					final LispStruct secondInCurrent = currentIterator.next();
-					final LispStruct thirdInCurrent = currentIterator.next();
+					final LispStruct secondInCurrent;
+					if (currentIterator.hasNext()) {
+						secondInCurrent = currentIterator.next();
+					} else {
+						secondInCurrent = NILStruct.INSTANCE;
+					}
+					final LispStruct thirdInCurrent;
+					if (currentIterator.hasNext()) {
+						thirdInCurrent = currentIterator.next();
+					} else {
+						thirdInCurrent = NILStruct.INSTANCE;
+					}
 
 					final SymbolStruct varNameCurrent;
 					final SymbolStruct varKeyNameCurrent;
@@ -732,7 +752,12 @@ public class LambdaListParser {
 					final Iterator<LispStruct> currentIterator = currentParam.iterator();
 
 					final LispStruct firstInCurrent = currentIterator.next();
-					final LispStruct secondInCurrent = currentIterator.next();
+					final LispStruct secondInCurrent;
+					if (currentIterator.hasNext()) {
+						secondInCurrent = currentIterator.next();
+					} else {
+						secondInCurrent = NILStruct.INSTANCE;
+					}
 
 					final SymbolStruct varNameCurrent;
 					DestructuringLambdaList destructuringForm = null;

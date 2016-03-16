@@ -5,12 +5,14 @@
 package testground;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import jcl.LispStruct;
 import jcl.characters.CharacterStruct;
 import jcl.compiler.environment.binding.lambdalist.AuxParameter;
 import jcl.compiler.environment.binding.lambdalist.BodyParameter;
+import jcl.compiler.environment.binding.lambdalist.DestructuringLambdaList;
 import jcl.compiler.environment.binding.lambdalist.EnvironmentParameter;
 import jcl.compiler.environment.binding.lambdalist.KeyParameter;
 import jcl.compiler.environment.binding.lambdalist.OptionalParameter;
@@ -42,10 +44,29 @@ public class TestGroundMacroFunctionExpanderGenerator extends CompiledMacroFunct
 
 		final PackageStruct pkg = PackageStruct.findPackage("SYSTEM");
 		final SymbolStruct requiredSymbol = pkg.intern("REQUIRED-SYMBOL").getSymbol();
-		final RequiredParameter requiredBinding = new RequiredParameter(requiredSymbol, true);
+		final DestructuringLambdaList destructuringForm = null;
+		final RequiredParameter requiredBinding = new RequiredParameter(requiredSymbol, null, true);
 		requiredBindings.add(requiredBinding);
 
 		return requiredBindings;
+	}
+
+	// NOTE: This is NOT part of the actual object generated, but will be used in generating destructuring form objects
+	private void destructuringFormMethod(final DestructuringLambdaList destructuringForm) {
+
+		final WholeParameter wholeParameter = new WholeParameter(null);
+		final List<RequiredParameter> requiredParameters = Collections.emptyList();
+		final List<OptionalParameter> optionalParameters = Collections.emptyList();
+		final RestParameter restBinding = new RestParameter(null);
+		final BodyParameter bodyParameter = new BodyParameter(null);
+		final List<KeyParameter> keyParameters = Collections.emptyList();
+		final List<AuxParameter> auxParameters = Collections.emptyList();
+		final boolean allowOtherKeys = true;
+
+		final DestructuringLambdaList newDestructuringForm
+				= new DestructuringLambdaList(wholeParameter, requiredParameters, optionalParameters,
+				                              restBinding, bodyParameter, keyParameters,
+				                              auxParameters, allowOtherKeys);
 	}
 
 	@Override

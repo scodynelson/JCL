@@ -3,6 +3,7 @@ package jcl.compiler.sa.analyzer.declare;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import jcl.LispStruct;
 import jcl.arrays.StringStruct;
@@ -76,6 +77,9 @@ public class DeclareExpander extends MacroFunctionExpander<DeclareStruct> {
 			} else if (declIdentifier.equals(DeclarationStruct.JAVA_CLASS_NAME)) {
 				final JavaClassNameDeclarationStruct jclds = saJavaClassNameDeclaration(declSpecBody);
 				declareElement.setJavaClassNameDeclaration(jclds);
+			} else if (declIdentifier.equals(DeclarationStruct.LISP_NAME)) {
+				final JavaClassNameDeclarationStruct jclds = saLispNameDeclaration(declSpecBody);
+				declareElement.setJavaClassNameDeclaration(jclds);
 			} else if (declIdentifier.equals(DeclarationStruct.SPECIAL)) {
 				final List<SpecialDeclarationStruct> sds = saSpecialDeclaration(declSpecBody);
 				declareElement.getSpecialDeclarations().addAll(sds);
@@ -103,6 +107,31 @@ public class DeclareExpander extends MacroFunctionExpander<DeclareStruct> {
 		}
 		final StringStruct javaClassNameString = (StringStruct) javaClassName;
 		return new JavaClassNameDeclarationStruct(javaClassNameString.getAsJavaString());
+	}
+
+	private JavaClassNameDeclarationStruct saLispNameDeclaration(final List<LispStruct> declSpecBody) {
+
+		final int declSpecBodySize = declSpecBody.size();
+		if (declSpecBodySize != 1) {
+			throw new ProgramErrorException("DECLARE: Incorrect number of arguments for LISP-NAME declaration: " + declSpecBodySize + ". Expected 1 argument.");
+		}
+
+		final LispStruct lispName = declSpecBody.get(0);
+		if (!(lispName instanceof SymbolStruct)) {
+			final String printedObject = printer.print(lispName);
+			throw new TypeErrorException("DECLARE: LISP-NAME must be a Symbol. Got: " + printedObject);
+		}
+		final SymbolStruct lispNameSymbol = (SymbolStruct) lispName;
+
+		final String name = lispNameSymbol.getName().replace('-', '_');
+		final String realName = name.chars()
+		                            .filter(Character::isJavaIdentifierPart)
+		                            .mapToObj(e -> (char) e)
+		                            .map(String::valueOf)
+		                            .collect(Collectors.joining());
+		final String lispNameClassName = realName + '_' + System.nanoTime();
+
+		return new JavaClassNameDeclarationStruct(lispNameClassName);
 	}
 
 	private List<SpecialDeclarationStruct> saSpecialDeclaration(final List<LispStruct> declSpecBody) {

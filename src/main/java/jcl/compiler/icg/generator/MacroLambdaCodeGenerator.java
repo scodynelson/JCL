@@ -12,6 +12,7 @@ import jcl.arrays.StringStruct;
 import jcl.compiler.environment.Environment;
 import jcl.compiler.environment.binding.lambdalist.AuxParameter;
 import jcl.compiler.environment.binding.lambdalist.BodyParameter;
+import jcl.compiler.environment.binding.lambdalist.DestructuringLambdaList;
 import jcl.compiler.environment.binding.lambdalist.EnvironmentParameter;
 import jcl.compiler.environment.binding.lambdalist.KeyParameter;
 import jcl.compiler.environment.binding.lambdalist.MacroLambdaList;
@@ -807,8 +808,8 @@ class MacroLambdaCodeGenerator implements CodeGenerator<MacroLambdaStruct> {
 	 * @param cw
 	 * 		the current {@link ClassWriter} to generate the method code for
 	 */
-	private static void generateRequiredBindings(final GeneratorState generatorState, final MacroLambdaList lambdaListBindings,
-	                                             final ClassWriter cw) {
+	private void generateRequiredBindings(final GeneratorState generatorState, final MacroLambdaList lambdaListBindings,
+	                                      final ClassWriter cw) {
 		final List<RequiredParameter> requiredBindings = lambdaListBindings.getRequiredBindings();
 		if (requiredBindings.isEmpty()) {
 			// No need to generate this method, as there are no bindings to generate
@@ -841,15 +842,18 @@ class MacroLambdaCodeGenerator implements CodeGenerator<MacroLambdaStruct> {
 
 		final int requiredPackageStore = methodBuilder.getNextAvailableStore();
 		final int requiredSymbolStore = methodBuilder.getNextAvailableStore();
+		final int destructuringFormStore = methodBuilder.getNextAvailableStore();
 		final int requiredBindingStore = methodBuilder.getNextAvailableStore();
 
 		for (final RequiredParameter requiredBinding : requiredBindings) {
 			final SymbolStruct requiredSymbol = requiredBinding.getVar();
 			CodeGenerators.generateSymbol(requiredSymbol, generatorState, requiredPackageStore, requiredSymbolStore);
+			generateDestructuringFormBinding(generatorState, requiredBinding.getDestructuringForm(), mv, destructuringFormStore);
 
 			mv.visitTypeInsn(Opcodes.NEW, GenerationConstants.REQUIRED_BINDING_NAME);
 			mv.visitInsn(Opcodes.DUP);
 			mv.visitVarInsn(Opcodes.ALOAD, requiredSymbolStore);
+			mv.visitVarInsn(Opcodes.ALOAD, destructuringFormStore);
 			if (requiredBinding.isSpecial()) {
 				mv.visitInsn(Opcodes.ICONST_1);
 			} else {
@@ -858,7 +862,7 @@ class MacroLambdaCodeGenerator implements CodeGenerator<MacroLambdaStruct> {
 			mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
 			                   GenerationConstants.REQUIRED_BINDING_NAME,
 			                   GenerationConstants.INIT_METHOD_NAME,
-			                   GenerationConstants.REQUIRED_BINDING_INIT_DESC,
+			                   GenerationConstants.REQUIRED_BINDING_DESTRUCTURING_INIT_DESC,
 			                   false);
 			mv.visitVarInsn(Opcodes.ASTORE, requiredBindingStore);
 
@@ -957,6 +961,7 @@ class MacroLambdaCodeGenerator implements CodeGenerator<MacroLambdaStruct> {
 
 		final int optionalPackageStore = methodBuilder.getNextAvailableStore();
 		final int optionalSymbolStore = methodBuilder.getNextAvailableStore();
+		final int destructuringFormStore = methodBuilder.getNextAvailableStore();
 		final int optionalInitFormStore = methodBuilder.getNextAvailableStore();
 		final int optionalSuppliedPSymbolStore = methodBuilder.getNextAvailableStore();
 		final int optionalSuppliedPStore = methodBuilder.getNextAvailableStore();
@@ -965,6 +970,7 @@ class MacroLambdaCodeGenerator implements CodeGenerator<MacroLambdaStruct> {
 		for (final OptionalParameter optionalBinding : optionalBindings) {
 			final SymbolStruct optionalSymbol = optionalBinding.getVar();
 			CodeGenerators.generateSymbol(optionalSymbol, generatorState, optionalPackageStore, optionalSymbolStore);
+			generateDestructuringFormBinding(generatorState, optionalBinding.getDestructuringForm(), mv, destructuringFormStore);
 
 			nilCodeGenerator.generate(NILStruct.INSTANCE, generatorState);
 			mv.visitVarInsn(Opcodes.ASTORE, optionalInitFormStore);
@@ -975,6 +981,7 @@ class MacroLambdaCodeGenerator implements CodeGenerator<MacroLambdaStruct> {
 			mv.visitTypeInsn(Opcodes.NEW, GenerationConstants.OPTIONAL_BINDING_NAME);
 			mv.visitInsn(Opcodes.DUP);
 			mv.visitVarInsn(Opcodes.ALOAD, optionalSymbolStore);
+			mv.visitVarInsn(Opcodes.ALOAD, destructuringFormStore);
 			mv.visitVarInsn(Opcodes.ALOAD, optionalInitFormStore);
 			if (optionalBinding.isSpecial()) {
 				mv.visitInsn(Opcodes.ICONST_1);
@@ -985,7 +992,7 @@ class MacroLambdaCodeGenerator implements CodeGenerator<MacroLambdaStruct> {
 			mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
 			                   GenerationConstants.OPTIONAL_BINDING_NAME,
 			                   GenerationConstants.INIT_METHOD_NAME,
-			                   GenerationConstants.OPTIONAL_BINDING_INIT_DESC,
+			                   GenerationConstants.OPTIONAL_BINDING_DESTRUCTURING_INIT_DESC,
 			                   false);
 			mv.visitVarInsn(Opcodes.ASTORE, optionalBindingStore);
 
@@ -1035,8 +1042,8 @@ class MacroLambdaCodeGenerator implements CodeGenerator<MacroLambdaStruct> {
 	 * @param cw
 	 * 		the current {@link ClassWriter} to generate the method code for
 	 */
-	private static void generateRestBinding(final GeneratorState generatorState, final MacroLambdaList lambdaListBindings,
-	                                        final ClassWriter cw) {
+	private void generateRestBinding(final GeneratorState generatorState, final MacroLambdaList lambdaListBindings,
+	                                 final ClassWriter cw) {
 		final RestParameter restBinding = lambdaListBindings.getRestBinding();
 		if (restBinding == null) {
 			// No need to generate this method, as there are no bindings to generate
@@ -1059,13 +1066,16 @@ class MacroLambdaCodeGenerator implements CodeGenerator<MacroLambdaStruct> {
 
 		final int restPackageStore = methodBuilder.getNextAvailableStore();
 		final int restSymbolStore = methodBuilder.getNextAvailableStore();
+		final int destructuringFormStore = methodBuilder.getNextAvailableStore();
 
 		final SymbolStruct restSymbol = restBinding.getVar();
 		CodeGenerators.generateSymbol(restSymbol, generatorState, restPackageStore, restSymbolStore);
+		generateDestructuringFormBinding(generatorState, restBinding.getDestructuringForm(), mv, destructuringFormStore);
 
 		mv.visitTypeInsn(Opcodes.NEW, GenerationConstants.REST_BINDING_NAME);
 		mv.visitInsn(Opcodes.DUP);
 		mv.visitVarInsn(Opcodes.ALOAD, restSymbolStore);
+		mv.visitVarInsn(Opcodes.ALOAD, destructuringFormStore);
 		if (restBinding.isSpecial()) {
 			mv.visitInsn(Opcodes.ICONST_1);
 		} else {
@@ -1074,7 +1084,7 @@ class MacroLambdaCodeGenerator implements CodeGenerator<MacroLambdaStruct> {
 		mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
 		                   GenerationConstants.REST_BINDING_NAME,
 		                   GenerationConstants.INIT_METHOD_NAME,
-		                   GenerationConstants.REST_BINDING_INIT_DESC,
+		                   GenerationConstants.REST_BINDING_DESTRUCTURING_INIT_DESC,
 		                   false);
 		mv.visitInsn(Opcodes.ARETURN);
 
@@ -1162,6 +1172,7 @@ class MacroLambdaCodeGenerator implements CodeGenerator<MacroLambdaStruct> {
 
 		final int keyPackageStore = methodBuilder.getNextAvailableStore();
 		final int keySymbolStore = methodBuilder.getNextAvailableStore();
+		final int destructuringFormStore = methodBuilder.getNextAvailableStore();
 		final int keyInitFormStore = methodBuilder.getNextAvailableStore();
 		final int keyNameStore = methodBuilder.getNextAvailableStore();
 		final int keySuppliedPSymbolStore = methodBuilder.getNextAvailableStore();
@@ -1177,6 +1188,7 @@ class MacroLambdaCodeGenerator implements CodeGenerator<MacroLambdaStruct> {
 
 			final SymbolStruct keyName = keyBinding.getKeyName();
 			CodeGenerators.generateSymbol(keyName, generatorState, keyPackageStore, keyNameStore);
+			generateDestructuringFormBinding(generatorState, keyBinding.getDestructuringForm(), mv, destructuringFormStore);
 
 			final SuppliedPParameter suppliedPBinding = keyBinding.getSuppliedPBinding();
 			generateSuppliedPBinding(suppliedPBinding, generatorState, keyPackageStore, keySuppliedPSymbolStore, keySuppliedPStore);
@@ -1184,6 +1196,7 @@ class MacroLambdaCodeGenerator implements CodeGenerator<MacroLambdaStruct> {
 			mv.visitTypeInsn(Opcodes.NEW, GenerationConstants.KEY_BINDING_NAME);
 			mv.visitInsn(Opcodes.DUP);
 			mv.visitVarInsn(Opcodes.ALOAD, keySymbolStore);
+			mv.visitVarInsn(Opcodes.ALOAD, destructuringFormStore);
 			mv.visitVarInsn(Opcodes.ALOAD, keyInitFormStore);
 			if (keyBinding.isSpecial()) {
 				mv.visitInsn(Opcodes.ICONST_1);
@@ -1195,7 +1208,7 @@ class MacroLambdaCodeGenerator implements CodeGenerator<MacroLambdaStruct> {
 			mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
 			                   GenerationConstants.KEY_BINDING_NAME,
 			                   GenerationConstants.INIT_METHOD_NAME,
-			                   GenerationConstants.KEY_BINDING_INIT_DESC,
+			                   GenerationConstants.KEY_BINDING_DESTRUCTURING_INIT_DESC,
 			                   false);
 			mv.visitVarInsn(Opcodes.ASTORE, keyBindingStore);
 
@@ -1390,12 +1403,14 @@ class MacroLambdaCodeGenerator implements CodeGenerator<MacroLambdaStruct> {
 
 		final int auxPackageStore = methodBuilder.getNextAvailableStore();
 		final int auxSymbolStore = methodBuilder.getNextAvailableStore();
+		final int destructuringFormStore = methodBuilder.getNextAvailableStore();
 		final int auxInitFormStore = methodBuilder.getNextAvailableStore();
 		final int auxBindingStore = methodBuilder.getNextAvailableStore();
 
 		for (final AuxParameter auxBinding : auxBindings) {
 			final SymbolStruct auxSymbol = auxBinding.getVar();
 			CodeGenerators.generateSymbol(auxSymbol, generatorState, auxPackageStore, auxSymbolStore);
+			generateDestructuringFormBinding(generatorState, auxBinding.getDestructuringForm(), mv, destructuringFormStore);
 
 			nilCodeGenerator.generate(NILStruct.INSTANCE, generatorState);
 			mv.visitVarInsn(Opcodes.ASTORE, auxInitFormStore);
@@ -1403,6 +1418,7 @@ class MacroLambdaCodeGenerator implements CodeGenerator<MacroLambdaStruct> {
 			mv.visitTypeInsn(Opcodes.NEW, GenerationConstants.AUX_BINDING_NAME);
 			mv.visitInsn(Opcodes.DUP);
 			mv.visitVarInsn(Opcodes.ALOAD, auxSymbolStore);
+			mv.visitVarInsn(Opcodes.ALOAD, destructuringFormStore);
 			mv.visitVarInsn(Opcodes.ALOAD, auxInitFormStore);
 			if (auxBinding.isSpecial()) {
 				mv.visitInsn(Opcodes.ICONST_1);
@@ -1412,7 +1428,7 @@ class MacroLambdaCodeGenerator implements CodeGenerator<MacroLambdaStruct> {
 			mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
 			                   GenerationConstants.AUX_BINDING_NAME,
 			                   GenerationConstants.INIT_METHOD_NAME,
-			                   GenerationConstants.AUX_BINDING_INIT_DESC,
+			                   GenerationConstants.AUX_BINDING_DESTRUCTURING_INIT_DESC,
 			                   false);
 			mv.visitVarInsn(Opcodes.ASTORE, auxBindingStore);
 
@@ -1610,8 +1626,8 @@ class MacroLambdaCodeGenerator implements CodeGenerator<MacroLambdaStruct> {
 	 * @param cw
 	 * 		the current {@link ClassWriter} to generate the method code for
 	 */
-	private static void generateBodyBinding(final GeneratorState generatorState, final MacroLambdaList lambdaListBindings,
-	                                        final ClassWriter cw) {
+	private void generateBodyBinding(final GeneratorState generatorState, final MacroLambdaList lambdaListBindings,
+	                                 final ClassWriter cw) {
 		final BodyParameter bodyBinding = lambdaListBindings.getBodyBinding();
 		if (bodyBinding == null) {
 			// No need to generate this method, as there are no bindings to generate
@@ -1634,13 +1650,16 @@ class MacroLambdaCodeGenerator implements CodeGenerator<MacroLambdaStruct> {
 
 		final int bodyPackageStore = methodBuilder.getNextAvailableStore();
 		final int bodySymbolStore = methodBuilder.getNextAvailableStore();
+		final int destructuringFormStore = methodBuilder.getNextAvailableStore();
 
 		final SymbolStruct bodySymbol = bodyBinding.getVar();
 		CodeGenerators.generateSymbol(bodySymbol, generatorState, bodyPackageStore, bodySymbolStore);
+		generateDestructuringFormBinding(generatorState, bodyBinding.getDestructuringForm(), mv, destructuringFormStore);
 
 		mv.visitTypeInsn(Opcodes.NEW, GenerationConstants.BODY_BINDING_NAME);
 		mv.visitInsn(Opcodes.DUP);
 		mv.visitVarInsn(Opcodes.ALOAD, bodySymbolStore);
+		mv.visitVarInsn(Opcodes.ALOAD, destructuringFormStore);
 		if (bodyBinding.isSpecial()) {
 			mv.visitInsn(Opcodes.ICONST_1);
 		} else {
@@ -1649,7 +1668,7 @@ class MacroLambdaCodeGenerator implements CodeGenerator<MacroLambdaStruct> {
 		mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
 		                   GenerationConstants.BODY_BINDING_NAME,
 		                   GenerationConstants.INIT_METHOD_NAME,
-		                   GenerationConstants.BODY_BINDING_INIT_DESC,
+		                   GenerationConstants.BODY_BINDING_DESTRUCTURING_INIT_DESC,
 		                   false);
 		mv.visitInsn(Opcodes.ARETURN);
 
@@ -1657,5 +1676,374 @@ class MacroLambdaCodeGenerator implements CodeGenerator<MacroLambdaStruct> {
 		mv.visitEnd();
 
 		methodBuilderDeque.removeFirst();
+	}
+
+	private void generateDestructuringFormBinding(final GeneratorState generatorState, final DestructuringLambdaList destructuringForm,
+	                                              final MethodVisitor mv, final int destructuringFormStore) {
+
+		if (destructuringForm == null) {
+			mv.visitInsn(Opcodes.ACONST_NULL);
+			mv.visitVarInsn(Opcodes.ASTORE, destructuringFormStore);
+			return;
+		}
+
+		final JavaMethodBuilder methodBuilder = generatorState.getCurrentMethodBuilder();
+
+		final int parameterPackageStore = methodBuilder.getNextAvailableStore();
+		final int parameterSymbolStore = methodBuilder.getNextAvailableStore();
+		final int parameterDestructuringFormStore = methodBuilder.getNextAvailableStore();
+
+		///////////
+		// WHOLE //
+		///////////
+
+		final WholeParameter wholeBinding = destructuringForm.getWholeBinding();
+		final int wholeBindingStore = methodBuilder.getNextAvailableStore();
+		if (wholeBinding == null) {
+			mv.visitInsn(Opcodes.ACONST_NULL);
+			mv.visitVarInsn(Opcodes.ASTORE, wholeBindingStore);
+		} else {
+			final SymbolStruct wholeSymbol = wholeBinding.getVar();
+			CodeGenerators.generateSymbol(wholeSymbol, generatorState, parameterPackageStore, parameterSymbolStore);
+
+			mv.visitTypeInsn(Opcodes.NEW, GenerationConstants.WHOLE_BINDING_NAME);
+			mv.visitInsn(Opcodes.DUP);
+			mv.visitVarInsn(Opcodes.ALOAD, parameterSymbolStore);
+			if (wholeBinding.isSpecial()) {
+				mv.visitInsn(Opcodes.ICONST_1);
+			} else {
+				mv.visitInsn(Opcodes.ICONST_0);
+			}
+			mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
+			                   GenerationConstants.WHOLE_BINDING_NAME,
+			                   GenerationConstants.INIT_METHOD_NAME,
+			                   GenerationConstants.WHOLE_BINDING_INIT_DESC,
+			                   false);
+			mv.visitVarInsn(Opcodes.ASTORE, wholeBindingStore);
+		}
+
+		//////////////
+		// REQUIRED //
+		//////////////
+
+		final List<RequiredParameter> requiredBindings = destructuringForm.getRequiredBindings();
+
+		mv.visitTypeInsn(Opcodes.NEW, GenerationConstants.JAVA_ARRAY_LIST_NAME);
+		mv.visitInsn(Opcodes.DUP);
+		mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
+		                   GenerationConstants.JAVA_ARRAY_LIST_NAME,
+		                   GenerationConstants.INIT_METHOD_NAME,
+		                   GenerationConstants.JAVA_ARRAY_LIST_INIT_DESC,
+		                   false);
+		final int requiredBindingsStore = methodBuilder.getNextAvailableStore();
+		mv.visitVarInsn(Opcodes.ASTORE, requiredBindingsStore);
+
+		final int requiredBindingStore = methodBuilder.getNextAvailableStore();
+
+		for (final RequiredParameter requiredBinding : requiredBindings) {
+			final SymbolStruct requiredSymbol = requiredBinding.getVar();
+			CodeGenerators.generateSymbol(requiredSymbol, generatorState, parameterPackageStore, parameterSymbolStore);
+			generateDestructuringFormBinding(generatorState, requiredBinding.getDestructuringForm(), mv, parameterDestructuringFormStore);
+
+			mv.visitTypeInsn(Opcodes.NEW, GenerationConstants.REQUIRED_BINDING_NAME);
+			mv.visitInsn(Opcodes.DUP);
+			mv.visitVarInsn(Opcodes.ALOAD, parameterSymbolStore);
+			mv.visitVarInsn(Opcodes.ALOAD, parameterDestructuringFormStore);
+			if (requiredBinding.isSpecial()) {
+				mv.visitInsn(Opcodes.ICONST_1);
+			} else {
+				mv.visitInsn(Opcodes.ICONST_0);
+			}
+			mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
+			                   GenerationConstants.REQUIRED_BINDING_NAME,
+			                   GenerationConstants.INIT_METHOD_NAME,
+			                   GenerationConstants.REQUIRED_BINDING_DESTRUCTURING_INIT_DESC,
+			                   false);
+			mv.visitVarInsn(Opcodes.ASTORE, requiredBindingStore);
+
+			mv.visitVarInsn(Opcodes.ALOAD, requiredBindingsStore);
+			mv.visitVarInsn(Opcodes.ALOAD, requiredBindingStore);
+			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
+			                   GenerationConstants.JAVA_LIST_NAME,
+			                   GenerationConstants.JAVA_LIST_ADD_METHOD_NAME,
+			                   GenerationConstants.JAVA_LIST_ADD_METHOD_DESC,
+			                   true);
+			mv.visitInsn(Opcodes.POP);
+		}
+
+		//////////////
+		// OPTIONAL //
+		//////////////
+
+		final List<OptionalParameter> optionalBindings = destructuringForm.getOptionalBindings();
+
+		mv.visitTypeInsn(Opcodes.NEW, GenerationConstants.JAVA_ARRAY_LIST_NAME);
+		mv.visitInsn(Opcodes.DUP);
+		mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
+		                   GenerationConstants.JAVA_ARRAY_LIST_NAME,
+		                   GenerationConstants.INIT_METHOD_NAME,
+		                   GenerationConstants.JAVA_ARRAY_LIST_INIT_DESC,
+		                   false);
+		final int optionalBindingsStore = methodBuilder.getNextAvailableStore();
+		mv.visitVarInsn(Opcodes.ASTORE, optionalBindingsStore);
+
+		final int optionalInitFormStore = methodBuilder.getNextAvailableStore();
+		final int optionalSuppliedPSymbolStore = methodBuilder.getNextAvailableStore();
+		final int optionalSuppliedPStore = methodBuilder.getNextAvailableStore();
+		final int optionalBindingStore = methodBuilder.getNextAvailableStore();
+
+		for (final OptionalParameter optionalBinding : optionalBindings) {
+			final SymbolStruct optionalSymbol = optionalBinding.getVar();
+			CodeGenerators.generateSymbol(optionalSymbol, generatorState, parameterPackageStore, parameterSymbolStore);
+			generateDestructuringFormBinding(generatorState, optionalBinding.getDestructuringForm(), mv, parameterDestructuringFormStore);
+
+			nilCodeGenerator.generate(NILStruct.INSTANCE, generatorState);
+			mv.visitVarInsn(Opcodes.ASTORE, optionalInitFormStore);
+
+			final SuppliedPParameter suppliedPBinding = optionalBinding.getSuppliedPBinding();
+			generateSuppliedPBinding(suppliedPBinding, generatorState, parameterPackageStore, optionalSuppliedPSymbolStore, optionalSuppliedPStore);
+
+			mv.visitTypeInsn(Opcodes.NEW, GenerationConstants.OPTIONAL_BINDING_NAME);
+			mv.visitInsn(Opcodes.DUP);
+			mv.visitVarInsn(Opcodes.ALOAD, parameterSymbolStore);
+			mv.visitVarInsn(Opcodes.ALOAD, parameterDestructuringFormStore);
+			mv.visitVarInsn(Opcodes.ALOAD, optionalInitFormStore);
+			if (optionalBinding.isSpecial()) {
+				mv.visitInsn(Opcodes.ICONST_1);
+			} else {
+				mv.visitInsn(Opcodes.ICONST_0);
+			}
+			mv.visitVarInsn(Opcodes.ALOAD, optionalSuppliedPStore);
+			mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
+			                   GenerationConstants.OPTIONAL_BINDING_NAME,
+			                   GenerationConstants.INIT_METHOD_NAME,
+			                   GenerationConstants.OPTIONAL_BINDING_DESTRUCTURING_INIT_DESC,
+			                   false);
+			mv.visitVarInsn(Opcodes.ASTORE, optionalBindingStore);
+
+			mv.visitVarInsn(Opcodes.ALOAD, optionalBindingsStore);
+			mv.visitVarInsn(Opcodes.ALOAD, optionalBindingStore);
+			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
+			                   GenerationConstants.JAVA_LIST_NAME,
+			                   GenerationConstants.JAVA_LIST_ADD_METHOD_NAME,
+			                   GenerationConstants.JAVA_LIST_ADD_METHOD_DESC,
+			                   true);
+			mv.visitInsn(Opcodes.POP);
+		}
+
+		//////////
+		// REST //
+		//////////
+
+		final RestParameter restBinding = destructuringForm.getRestBinding();
+		final int restBindingStore = methodBuilder.getNextAvailableStore();
+		if (restBinding == null) {
+			mv.visitInsn(Opcodes.ACONST_NULL);
+			mv.visitVarInsn(Opcodes.ASTORE, restBindingStore);
+		} else {
+			final SymbolStruct restSymbol = restBinding.getVar();
+			CodeGenerators.generateSymbol(restSymbol, generatorState, parameterPackageStore, parameterSymbolStore);
+			generateDestructuringFormBinding(generatorState, restBinding.getDestructuringForm(), mv, parameterDestructuringFormStore);
+
+			mv.visitTypeInsn(Opcodes.NEW, GenerationConstants.REST_BINDING_NAME);
+			mv.visitInsn(Opcodes.DUP);
+			mv.visitVarInsn(Opcodes.ALOAD, parameterSymbolStore);
+			mv.visitVarInsn(Opcodes.ALOAD, parameterDestructuringFormStore);
+			if (restBinding.isSpecial()) {
+				mv.visitInsn(Opcodes.ICONST_1);
+			} else {
+				mv.visitInsn(Opcodes.ICONST_0);
+			}
+			mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
+			                   GenerationConstants.REST_BINDING_NAME,
+			                   GenerationConstants.INIT_METHOD_NAME,
+			                   GenerationConstants.REST_BINDING_DESTRUCTURING_INIT_DESC,
+			                   false);
+			mv.visitVarInsn(Opcodes.ASTORE, restBindingStore);
+		}
+
+		//////////
+		// BODY //
+		//////////
+
+		final BodyParameter bodyBinding = destructuringForm.getBodyBinding();
+		final int bodyBindingStore = methodBuilder.getNextAvailableStore();
+		if (bodyBinding == null) {
+			mv.visitInsn(Opcodes.ACONST_NULL);
+			mv.visitVarInsn(Opcodes.ASTORE, bodyBindingStore);
+		} else {
+			final SymbolStruct bodySymbol = bodyBinding.getVar();
+			CodeGenerators.generateSymbol(bodySymbol, generatorState, parameterPackageStore, parameterSymbolStore);
+			generateDestructuringFormBinding(generatorState, bodyBinding.getDestructuringForm(), mv, parameterDestructuringFormStore);
+
+			mv.visitTypeInsn(Opcodes.NEW, GenerationConstants.BODY_BINDING_NAME);
+			mv.visitInsn(Opcodes.DUP);
+			mv.visitVarInsn(Opcodes.ALOAD, parameterSymbolStore);
+			mv.visitVarInsn(Opcodes.ALOAD, parameterDestructuringFormStore);
+			if (bodyBinding.isSpecial()) {
+				mv.visitInsn(Opcodes.ICONST_1);
+			} else {
+				mv.visitInsn(Opcodes.ICONST_0);
+			}
+			mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
+			                   GenerationConstants.BODY_BINDING_NAME,
+			                   GenerationConstants.INIT_METHOD_NAME,
+			                   GenerationConstants.BODY_BINDING_DESTRUCTURING_INIT_DESC,
+			                   false);
+			mv.visitVarInsn(Opcodes.ASTORE, bodyBindingStore);
+		}
+
+		/////////
+		// KEY //
+		/////////
+
+		final List<KeyParameter> keyBindings = destructuringForm.getKeyBindings();
+
+		mv.visitTypeInsn(Opcodes.NEW, GenerationConstants.JAVA_ARRAY_LIST_NAME);
+		mv.visitInsn(Opcodes.DUP);
+		mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
+		                   GenerationConstants.JAVA_ARRAY_LIST_NAME,
+		                   GenerationConstants.INIT_METHOD_NAME,
+		                   GenerationConstants.JAVA_ARRAY_LIST_INIT_DESC,
+		                   false);
+		final int keyBindingsStore = methodBuilder.getNextAvailableStore();
+		mv.visitVarInsn(Opcodes.ASTORE, keyBindingsStore);
+
+		final int keyInitFormStore = methodBuilder.getNextAvailableStore();
+		final int keyNameStore = methodBuilder.getNextAvailableStore();
+		final int keySuppliedPSymbolStore = methodBuilder.getNextAvailableStore();
+		final int keySuppliedPStore = methodBuilder.getNextAvailableStore();
+		final int keyBindingStore = methodBuilder.getNextAvailableStore();
+
+		for (final KeyParameter keyBinding : keyBindings) {
+			final SymbolStruct keySymbol = keyBinding.getVar();
+			CodeGenerators.generateSymbol(keySymbol, generatorState, parameterPackageStore, parameterSymbolStore);
+
+			nilCodeGenerator.generate(NILStruct.INSTANCE, generatorState);
+			mv.visitVarInsn(Opcodes.ASTORE, keyInitFormStore);
+
+			final SymbolStruct keyName = keyBinding.getKeyName();
+			CodeGenerators.generateSymbol(keyName, generatorState, parameterPackageStore, keyNameStore);
+			generateDestructuringFormBinding(generatorState, keyBinding.getDestructuringForm(), mv, parameterDestructuringFormStore);
+
+			final SuppliedPParameter suppliedPBinding = keyBinding.getSuppliedPBinding();
+			generateSuppliedPBinding(suppliedPBinding, generatorState, parameterPackageStore, keySuppliedPSymbolStore, keySuppliedPStore);
+
+			mv.visitTypeInsn(Opcodes.NEW, GenerationConstants.KEY_BINDING_NAME);
+			mv.visitInsn(Opcodes.DUP);
+			mv.visitVarInsn(Opcodes.ALOAD, parameterSymbolStore);
+			mv.visitVarInsn(Opcodes.ALOAD, parameterDestructuringFormStore);
+			mv.visitVarInsn(Opcodes.ALOAD, keyInitFormStore);
+			if (keyBinding.isSpecial()) {
+				mv.visitInsn(Opcodes.ICONST_1);
+			} else {
+				mv.visitInsn(Opcodes.ICONST_0);
+			}
+			mv.visitVarInsn(Opcodes.ALOAD, keyNameStore);
+			mv.visitVarInsn(Opcodes.ALOAD, keySuppliedPStore);
+			mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
+			                   GenerationConstants.KEY_BINDING_NAME,
+			                   GenerationConstants.INIT_METHOD_NAME,
+			                   GenerationConstants.KEY_BINDING_DESTRUCTURING_INIT_DESC,
+			                   false);
+			mv.visitVarInsn(Opcodes.ASTORE, keyBindingStore);
+
+			mv.visitVarInsn(Opcodes.ALOAD, keyBindingsStore);
+			mv.visitVarInsn(Opcodes.ALOAD, keyBindingStore);
+			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
+			                   GenerationConstants.JAVA_LIST_NAME,
+			                   GenerationConstants.JAVA_LIST_ADD_METHOD_NAME,
+			                   GenerationConstants.JAVA_LIST_ADD_METHOD_DESC,
+			                   true);
+			mv.visitInsn(Opcodes.POP);
+		}
+
+		/////////
+		// AUX //
+		/////////
+
+		final List<AuxParameter> auxBindings = destructuringForm.getAuxBindings();
+
+		mv.visitTypeInsn(Opcodes.NEW, GenerationConstants.JAVA_ARRAY_LIST_NAME);
+		mv.visitInsn(Opcodes.DUP);
+		mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
+		                   GenerationConstants.JAVA_ARRAY_LIST_NAME,
+		                   GenerationConstants.INIT_METHOD_NAME,
+		                   GenerationConstants.JAVA_ARRAY_LIST_INIT_DESC,
+		                   false);
+		final int auxBindingsStore = methodBuilder.getNextAvailableStore();
+		mv.visitVarInsn(Opcodes.ASTORE, auxBindingsStore);
+
+		final int auxInitFormStore = methodBuilder.getNextAvailableStore();
+		final int auxBindingStore = methodBuilder.getNextAvailableStore();
+
+		for (final AuxParameter auxBinding : auxBindings) {
+			final SymbolStruct auxSymbol = auxBinding.getVar();
+			CodeGenerators.generateSymbol(auxSymbol, generatorState, parameterPackageStore, parameterSymbolStore);
+			generateDestructuringFormBinding(generatorState, auxBinding.getDestructuringForm(), mv, parameterDestructuringFormStore);
+
+			nilCodeGenerator.generate(NILStruct.INSTANCE, generatorState);
+			mv.visitVarInsn(Opcodes.ASTORE, auxInitFormStore);
+
+			mv.visitTypeInsn(Opcodes.NEW, GenerationConstants.AUX_BINDING_NAME);
+			mv.visitInsn(Opcodes.DUP);
+			mv.visitVarInsn(Opcodes.ALOAD, parameterSymbolStore);
+			mv.visitVarInsn(Opcodes.ALOAD, parameterDestructuringFormStore);
+			mv.visitVarInsn(Opcodes.ALOAD, auxInitFormStore);
+			if (auxBinding.isSpecial()) {
+				mv.visitInsn(Opcodes.ICONST_1);
+			} else {
+				mv.visitInsn(Opcodes.ICONST_0);
+			}
+			mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
+			                   GenerationConstants.AUX_BINDING_NAME,
+			                   GenerationConstants.INIT_METHOD_NAME,
+			                   GenerationConstants.AUX_BINDING_DESTRUCTURING_INIT_DESC,
+			                   false);
+			mv.visitVarInsn(Opcodes.ASTORE, auxBindingStore);
+
+			mv.visitVarInsn(Opcodes.ALOAD, auxBindingsStore);
+			mv.visitVarInsn(Opcodes.ALOAD, auxBindingStore);
+			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
+			                   GenerationConstants.JAVA_LIST_NAME,
+			                   GenerationConstants.JAVA_LIST_ADD_METHOD_NAME,
+			                   GenerationConstants.JAVA_LIST_ADD_METHOD_DESC,
+			                   true);
+			mv.visitInsn(Opcodes.POP);
+		}
+
+		//////////////////////
+		// ALLOW-OTHER-KEYS //
+		//////////////////////
+
+		final boolean allowOtherKeys = destructuringForm.isAllowOtherKeys();
+		if (allowOtherKeys) {
+			mv.visitInsn(Opcodes.ICONST_1);
+		} else {
+			mv.visitInsn(Opcodes.ICONST_0);
+		}
+		final int allowOtherKeysStore = methodBuilder.getNextAvailableStore();
+		mv.visitVarInsn(Opcodes.ISTORE, allowOtherKeysStore);
+
+		////////////////////////
+		// DESTRUCTURING-FORM //
+		////////////////////////
+
+		mv.visitTypeInsn(Opcodes.NEW, "jcl/compiler/environment/binding/lambdalist/DestructuringLambdaList");
+		mv.visitInsn(Opcodes.DUP);
+		mv.visitVarInsn(Opcodes.ALOAD, wholeBindingStore);
+		mv.visitVarInsn(Opcodes.ALOAD, requiredBindingsStore);
+		mv.visitVarInsn(Opcodes.ALOAD, optionalBindingsStore);
+		mv.visitVarInsn(Opcodes.ALOAD, restBindingStore);
+		mv.visitVarInsn(Opcodes.ALOAD, bodyBindingStore);
+		mv.visitVarInsn(Opcodes.ALOAD, keyBindingsStore);
+		mv.visitVarInsn(Opcodes.ALOAD, auxBindingsStore);
+		mv.visitVarInsn(Opcodes.ILOAD, allowOtherKeysStore);
+		mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
+		                   "jcl/compiler/environment/binding/lambdalist/DestructuringLambdaList",
+		                   "<init>",
+		                   "(Ljcl/compiler/environment/binding/lambdalist/WholeParameter;Ljava/util/List;Ljava/util/List;Ljcl/compiler/environment/binding/lambdalist/RestParameter;Ljcl/compiler/environment/binding/lambdalist/BodyParameter;Ljava/util/List;Ljava/util/List;Z)V",
+		                   false);
+		mv.visitVarInsn(Opcodes.ASTORE, destructuringFormStore);
 	}
 }

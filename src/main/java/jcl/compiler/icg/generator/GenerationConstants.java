@@ -18,10 +18,10 @@ import java.util.stream.Stream;
 import jcl.LispStruct;
 import jcl.compiler.environment.binding.lambdalist.AuxParameter;
 import jcl.compiler.environment.binding.lambdalist.BodyParameter;
+import jcl.compiler.environment.binding.lambdalist.DestructuringLambdaList;
 import jcl.compiler.environment.binding.lambdalist.EnvironmentParameter;
 import jcl.compiler.environment.binding.lambdalist.KeyParameter;
 import jcl.compiler.environment.binding.lambdalist.OptionalParameter;
-import jcl.compiler.environment.binding.lambdalist.OrdinaryLambdaList;
 import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
 import jcl.compiler.environment.binding.lambdalist.RestParameter;
 import jcl.compiler.environment.binding.lambdalist.SuppliedPParameter;
@@ -30,8 +30,8 @@ import jcl.compiler.struct.ValuesStructs;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.functions.Closure;
 import jcl.functions.CompiledFunctionStruct;
-import jcl.functions.expanders.CompiledMacroFunctionExpander;
 import jcl.functions.FunctionStruct;
+import jcl.functions.expanders.CompiledMacroFunctionExpander;
 import jcl.functions.expanders.MacroFunctionExpander;
 import jcl.lists.ConsStruct;
 import jcl.lists.ListStruct;
@@ -312,21 +312,31 @@ interface GenerationConstants {
 
 	String REQUIRED_BINDING_INIT_DESC = CodeGenerators.getConstructorDescription(RequiredParameter.class, SymbolStruct.class, boolean.class);
 
+	String REQUIRED_BINDING_DESTRUCTURING_INIT_DESC = CodeGenerators.getConstructorDescription(RequiredParameter.class, SymbolStruct.class, DestructuringLambdaList.class, boolean.class);
+
 	String OPTIONAL_BINDING_NAME = Type.getInternalName(OptionalParameter.class);
 
 	String OPTIONAL_BINDING_INIT_DESC = CodeGenerators.getConstructorDescription(OptionalParameter.class, SymbolStruct.class, LispStruct.class, boolean.class, SuppliedPParameter.class);
+
+	String OPTIONAL_BINDING_DESTRUCTURING_INIT_DESC = CodeGenerators.getConstructorDescription(OptionalParameter.class, SymbolStruct.class, DestructuringLambdaList.class, LispStruct.class, boolean.class, SuppliedPParameter.class);
 
 	String REST_BINDING_NAME = Type.getInternalName(RestParameter.class);
 
 	String REST_BINDING_INIT_DESC = CodeGenerators.getConstructorDescription(RestParameter.class, SymbolStruct.class, boolean.class);
 
+	String REST_BINDING_DESTRUCTURING_INIT_DESC = CodeGenerators.getConstructorDescription(RestParameter.class, SymbolStruct.class, DestructuringLambdaList.class, boolean.class);
+
 	String KEY_BINDING_NAME = Type.getInternalName(KeyParameter.class);
 
 	String KEY_BINDING_INIT_DESC = CodeGenerators.getConstructorDescription(KeyParameter.class, SymbolStruct.class, LispStruct.class, boolean.class, SymbolStruct.class, SuppliedPParameter.class);
 
+	String KEY_BINDING_DESTRUCTURING_INIT_DESC = CodeGenerators.getConstructorDescription(KeyParameter.class, SymbolStruct.class, DestructuringLambdaList.class, LispStruct.class, boolean.class, SymbolStruct.class, SuppliedPParameter.class);
+
 	String AUX_BINDING_NAME = Type.getInternalName(AuxParameter.class);
 
 	String AUX_BINDING_INIT_DESC = CodeGenerators.getConstructorDescription(AuxParameter.class, SymbolStruct.class, LispStruct.class, boolean.class);
+
+	String AUX_BINDING_DESTRUCTURING_INIT_DESC = CodeGenerators.getConstructorDescription(AuxParameter.class, SymbolStruct.class, DestructuringLambdaList.class, LispStruct.class, boolean.class);
 
 	String SUPPLIED_P_BINDING_NAME = Type.getInternalName(SuppliedPParameter.class);
 
@@ -343,6 +353,8 @@ interface GenerationConstants {
 	String BODY_BINDING_NAME = Type.getInternalName(BodyParameter.class);
 
 	String BODY_BINDING_INIT_DESC = CodeGenerators.getConstructorDescription(BodyParameter.class, SymbolStruct.class, boolean.class);
+
+	String BODY_BINDING_DESTRUCTURING_INIT_DESC = CodeGenerators.getConstructorDescription(BodyParameter.class, SymbolStruct.class, DestructuringLambdaList.class, boolean.class);
 
 	String RETURN_FROM_EXCEPTION_NAME = Type.getInternalName(ReturnFromException.class);
 

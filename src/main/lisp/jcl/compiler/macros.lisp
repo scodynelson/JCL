@@ -3,29 +3,7 @@
 (in-package "COMMON-LISP")
 
 ;;;;;;;;;;;;;;;;;;;;;;
-#|
-(defun parse-body (body &optional (doc-string-allowed t))
-  (let ((decls nil)
-        (doc nil)
-        (form (car body)))
-    (tagbody
-      top
-      (cond ((null body)
-             (values body decls doc))
-            ((and (stringp form) (cdr body))
-             (if doc-string-allowed
-                 (progn
-                   (setq doc form doc-string-allowed nil body (cdr body) form (car body))
-                   (go top))
-               (return-from parse-body (values body decls doc))))
-            ((not (and (consp form) (symbolp (car form))))
-		     (return-from parse-body (values body decls doc)))
-		    ((eq (car form) 'declare)
-		     (setq decls (cons form decls) body (cdr body) form (car body))
-		     (go top))
-		    (t
-		     (return-from parse-body (values body decls doc)))))))
-|#
+
 ;; Define-Compiler-Macro
 
 ;; Define-Symbol-Macro
@@ -249,7 +227,7 @@
        ,(handle-error-clauses clauses 'typep test-val t))))
 |#
 ;; Multiple-Value-Bind
-#| TODO: The reason this doesn't work is because the Symbol 'IGNORE' is a Declaration right now. :(
+
 (defmacro multiple-value-bind ((&rest vars) value-form &body body)
   (declare (system::%java-class-name "jcl.compiler.functions.MultipleValueBind"))
   (let ((ignore (gensym)))
@@ -257,7 +235,7 @@
                               (declare (ignore ,ignore))
                               ,@(if body body (list nil)))
        ,value-form)))
-|#
+
 ;; Multiple-Value-List
 
 (defmacro multiple-value-list (form)
@@ -343,6 +321,31 @@
 
 ;; Rotatef
 
+;; Parse-Body
+#|
+(defun parse-body (body &optional (doc-string-allowed t))
+  (declare (system::%java-class-name "jcl.compiler.functions.ParseBody"))
+  (let ((decls nil)
+        (doc nil)
+        (form (car body)))
+    (tagbody
+      top
+      (cond ((null body)
+             (values body decls doc))
+            ((and (stringp form) (cdr body))
+             (if doc-string-allowed
+                 (progn
+                   (setq doc form doc-string-allowed nil body (cdr body) form (car body))
+                   (go top))
+               (return-from parse-body (values body decls doc))))
+            ((not (and (consp form) (symbolp (car form))))
+		     (return-from parse-body (values body decls doc)))
+		    ((eq (car form) 'declare)
+		     (setq decls (cons form decls) body (cdr body) form (car body))
+		     (go top))
+		    (t
+		     (return-from parse-body (values body decls doc)))))))
+|#
 ;;;;;;;;;;;;;;;;;;;;;;
 
 (export '(psetq return when unless cond and or multiple-value-bind multiple-value-list multiple-value-setq nth-value

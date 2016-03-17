@@ -29,7 +29,7 @@ public final class GlobalPackageStruct {
 
 	public static final PackageStruct JCL_TYPE = new PackageStruct("JCL-TYPE");
 
-	public static final PackageStruct COMMON_LISP_USER = new PackageStruct("COMMON-LISP-USER", Collections.singletonList("CL-USER"), COMMON_LISP, EXTENSIONS, SYSTEM);
+	public static final PackageStruct COMMON_LISP_USER = new PackageStruct("COMMON-LISP-USER", Collections.singletonList("CL-USER"), COMMON_LISP, EXTENSIONS);
 
 	public static final PackageStruct KEYWORD = KeywordPackageStruct.INSTANCE;
 

@@ -27,14 +27,14 @@ import jcl.types.PackageType;
 public class PackageStruct extends BuiltInClassStruct {
 
 	/**
-	 * The {@link Set} of {@link PackageStruct}s that the package uses.
+	 * The {@link List} of {@link PackageStruct}s that the package uses.
 	 */
-	private final Set<PackageStruct> useList;
+	private final List<PackageStruct> useList = new ArrayList<>();
 
 	/**
-	 * The {@link Set} of {@link PackageStruct}s that the package is used by.
+	 * The {@link List} of {@link PackageStruct}s that the package is used by.
 	 */
-	private final Set<PackageStruct> usedByList = new HashSet<>();
+	private final List<PackageStruct> usedByList = new ArrayList<>();
 
 	/**
 	 * The {@link Map} of the packages external {@link SymbolStruct}s.
@@ -84,7 +84,7 @@ public class PackageStruct extends BuiltInClassStruct {
 	 * 		the package nicknames
 	 */
 	public PackageStruct(final String name, final List<String> nicknames) {
-		this(name, nicknames, new HashSet<>());
+		this(name, nicknames, new ArrayList<>());
 	}
 
 	/**
@@ -98,7 +98,7 @@ public class PackageStruct extends BuiltInClassStruct {
 	 * 		the packages this package will use/inherit from
 	 */
 	public PackageStruct(final String name, final List<String> nicknames, final PackageStruct... useList) {
-		this(name, nicknames, new HashSet<>(Arrays.asList(useList)));
+		this(name, nicknames, new ArrayList<>(Arrays.asList(useList)));
 	}
 
 	/**
@@ -111,12 +111,12 @@ public class PackageStruct extends BuiltInClassStruct {
 	 * @param useList
 	 * 		the packages this package will use/inherit from
 	 */
-	public PackageStruct(final String name, final List<String> nicknames, final Set<PackageStruct> useList) {
+	public PackageStruct(final String name, final List<String> nicknames, final List<PackageStruct> useList) {
 		super(PackageType.INSTANCE, null, null);
 		this.name = name;
 		this.nicknames = nicknames;
 
-		this.useList = useList;
+		this.useList.addAll(useList);
 		final PackageStruct[] useListArray = new PackageStruct[useList.size()];
 		internalUsePackage(useList.toArray(useListArray));
 

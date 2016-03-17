@@ -7,7 +7,6 @@ package jcl.packages.functions;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import jcl.LispStruct;
@@ -118,10 +117,10 @@ public final class MakePackageFunction extends AbstractCommonLispFunctionStruct 
 				               .collect(Collectors.toList());
 
 		final ListStruct usePackagesList = (ListStruct) usePackages;
-		final Set<PackageStruct> realUsePackages
+		final List<PackageStruct> realUsePackages
 				= usePackagesList.stream()
 				                 .map(e -> validator.validatePackageDesignator(e, functionName()))
-				                 .collect(Collectors.toSet());
+				                 .collect(Collectors.toList());
 
 		return new PackageStruct(packageName, realNicknames, realUsePackages);
 	}

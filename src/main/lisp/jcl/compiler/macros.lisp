@@ -88,26 +88,6 @@
 	           (progn ,@forms)
 	         (cond ,@(cdr clauses))))))))
 
-#|
-(defmacro cond (whole env)
-  (declare (system::%java-class-name "jcl.compiler.functions.Cond"))
-  (let ((clause-set (cdr whole)))
-    (let ((current-clause (car clause-set)))
-      (if (and clause-set (car clause-set))
-          (progn
-	        (if (cdr clause-set)
-	            `(if ,(car current-clause)
-	                 (progn ,@(cdr current-clause))
-	               ,(if (cdr clause-set)
-	                    (progn
-	                      `(cond ,@(cdr clause-set)))))
-	          (let ((arg (gensym))
-	                (first (car current-clause))
-	                (rest (cdr current-clause)))
-	            (if rest
-	                `(if ,first (progn ,@rest))
-	              `,first))))))))
-|#
 ;; Psetq
 
 (defun psetq-bindings (pairs)
@@ -165,7 +145,7 @@
         (when key-form ;; if the key-form is NIL, drop the entry
           (unless (listp key-form)
             (setq key-form (list key-form)))
-          `(if (or ,@(system::%mapcar #'(lambda (key) `(,key-fn ,key-test ',key)) key-form))
+          `(if (or ,@(mapcar #'(lambda (key) `(,key-fn ,key-test ',key)) key-form))
                (progn ,@forms)))))))
 
 (defun handle-most-clauses (clauses key-fn key-test last-clause-callback)
@@ -267,20 +247,11 @@
   `(nth ,index (multiple-value-list ,form)))
 
 ;; Prog,Prog*,Prog1,Prog2
-#|
-(defun parse-decls-body (decls-body)
-  (let ((first (car decls-body)))
-    (if (and (listp first)
-             (eq (car first) 'declare))
-        (multiple-value-bind (decls body)
-                             (parse-decls-body (cdr decls-body))
-          (values (cons first decls) body))
-      (values nil decls-body))))
 
 (defmacro prog (varlist &body decls-body)
   (declare (system::%java-class-name "jcl.compiler.functions.Prog"))
-  (multiple-value-bind (decls body)
-                       (parse-decls-body decls-body)
+  (multiple-value-bind (body decls)
+                       (parse-body decls-body)
     `(block nil
        (let ,varlist
          ,@decls
@@ -288,13 +259,13 @@
 
 (defmacro prog* (varlist &body decls-body)
   (declare (system::%java-class-name "jcl.compiler.functions.ProgStar"))
-  (multiple-value-bind (decls body)
-                       (parse-decls-body decls-body)
+  (multiple-value-bind (body decls)
+                       (parse-body decls-body)
     `(block nil
        (let* ,varlist
          ,@decls
          (tagbody ,@body)))))
-|#
+
 (defmacro prog1 (first-form &rest forms)
   (declare (system::%java-class-name "jcl.compiler.functions.Prog1"))
   (let ((result (gensym)))
@@ -321,31 +292,6 @@
 
 ;; Rotatef
 
-;; Parse-Body
-#|
-(defun parse-body (body &optional (doc-string-allowed t))
-  (declare (system::%java-class-name "jcl.compiler.functions.ParseBody"))
-  (let ((decls nil)
-        (doc nil)
-        (form (car body)))
-    (tagbody
-      top
-      (cond ((null body)
-             (values body decls doc))
-            ((and (stringp form) (cdr body))
-             (if doc-string-allowed
-                 (progn
-                   (setq doc form doc-string-allowed nil body (cdr body) form (car body))
-                   (go top))
-               (return-from parse-body (values body decls doc))))
-            ((not (and (consp form) (symbolp (car form))))
-		     (return-from parse-body (values body decls doc)))
-		    ((eq (car form) 'declare)
-		     (setq decls (cons form decls) body (cdr body) form (car body))
-		     (go top))
-		    (t
-		     (return-from parse-body (values body decls doc)))))))
-|#
 ;;;;;;;;;;;;;;;;;;;;;;
 
 (export '(psetq return when unless cond and or multiple-value-bind multiple-value-list multiple-value-setq nth-value

@@ -14,7 +14,7 @@
 	           value-type="java.lang.String">
 		<value>${lisp.source.dir}/compiler/base-macro-lambdas.lisp</value>
 		<value>${lisp.source.dir}/compiler/macros.lisp</value>
-		<!--<value>${lisp.source.dir}/iterators/iterators.lisp</value>-->
+		<value>${lisp.source.dir}/iterators/iterators.lisp</value>
 		<value>${lisp.source.dir}/lists/lists.lisp</value>
 	</util:list>
 
@@ -61,11 +61,18 @@
 
 		<entry key="jcl.symbols.SymbolStruct" value-ref="symbolStructPrinter"/>
 
+		<entry key="jcl.compiler.struct.specialoperator.BlockStruct" value-ref="blockStructPrinter"/>
 		<entry key="jcl.compiler.struct.specialoperator.IfStruct" value-ref="ifStructPrinter"/>
 		<entry key="jcl.compiler.struct.specialoperator.LetStruct" value-ref="letStructPrinter"/>
 		<entry key="jcl.compiler.struct.specialoperator.PrognStruct" value-ref="prognStructPrinter"/>
 		<entry key="jcl.compiler.struct.specialoperator.QuoteStruct" value-ref="quoteStructPrinter"/>
+		<entry key="jcl.compiler.struct.specialoperator.ReturnFromStruct" value-ref="returnFromStructPrinter"/>
+		<entry key="jcl.compiler.struct.specialoperator.SetqStruct" value-ref="setqStructPrinter"/>
 		<entry key="jcl.compiler.struct.specialoperator.SymbolFunctionCallStruct" value-ref="symbolFunctionCallStructPrinter"/>
+		<entry key="jcl.compiler.struct.specialoperator.TagbodyStruct" value-ref="tagbodyStructPrinter"/>
+
+		<entry key="jcl.compiler.struct.specialoperator.go.GoIntegerStruct" value-ref="goIntegerStructPrinter"/>
+		<entry key="jcl.compiler.struct.specialoperator.go.GoSymbolStruct" value-ref="goSymbolStructPrinter"/>
 
 	</util:map>
 

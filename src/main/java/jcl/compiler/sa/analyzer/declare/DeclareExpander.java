@@ -10,6 +10,7 @@ import jcl.arrays.StringStruct;
 import jcl.compiler.environment.Environment;
 import jcl.compiler.struct.specialoperator.declare.DeclareStruct;
 import jcl.compiler.struct.specialoperator.declare.JavaClassNameDeclarationStruct;
+import jcl.compiler.struct.specialoperator.declare.LispNameDeclarationStruct;
 import jcl.compiler.struct.specialoperator.declare.SpecialDeclarationStruct;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.conditions.exceptions.TypeErrorException;
@@ -78,8 +79,8 @@ public class DeclareExpander extends MacroFunctionExpander<DeclareStruct> {
 				final JavaClassNameDeclarationStruct jclds = saJavaClassNameDeclaration(declSpecBody);
 				declareElement.setJavaClassNameDeclaration(jclds);
 			} else if (declIdentifier.equals(DeclarationStruct.LISP_NAME)) {
-				final JavaClassNameDeclarationStruct jclds = saLispNameDeclaration(declSpecBody);
-				declareElement.setJavaClassNameDeclaration(jclds);
+				final LispNameDeclarationStruct lnds = saLispNameDeclaration(declSpecBody);
+				declareElement.setLispNameDeclarationStruct(lnds);
 			} else if (declIdentifier.equals(DeclarationStruct.SPECIAL)) {
 				final List<SpecialDeclarationStruct> sds = saSpecialDeclaration(declSpecBody);
 				declareElement.getSpecialDeclarations().addAll(sds);
@@ -109,7 +110,7 @@ public class DeclareExpander extends MacroFunctionExpander<DeclareStruct> {
 		return new JavaClassNameDeclarationStruct(javaClassNameString.getAsJavaString());
 	}
 
-	private JavaClassNameDeclarationStruct saLispNameDeclaration(final List<LispStruct> declSpecBody) {
+	private LispNameDeclarationStruct saLispNameDeclaration(final List<LispStruct> declSpecBody) {
 
 		final int declSpecBodySize = declSpecBody.size();
 		if (declSpecBodySize != 1) {
@@ -131,7 +132,7 @@ public class DeclareExpander extends MacroFunctionExpander<DeclareStruct> {
 		                            .collect(Collectors.joining());
 		final String lispNameClassName = realName + '_' + System.nanoTime();
 
-		return new JavaClassNameDeclarationStruct(lispNameClassName);
+		return new LispNameDeclarationStruct(lispNameClassName);
 	}
 
 	private List<SpecialDeclarationStruct> saSpecialDeclaration(final List<LispStruct> declSpecBody) {

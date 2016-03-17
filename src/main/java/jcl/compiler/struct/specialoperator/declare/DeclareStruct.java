@@ -15,6 +15,8 @@ public class DeclareStruct extends CompilerSpecialOperatorStruct {
 
 	private JavaClassNameDeclarationStruct javaClassNameDeclaration;
 
+	private LispNameDeclarationStruct lispNameDeclarationStruct;
+
 	public List<SpecialDeclarationStruct> getSpecialDeclarations() {
 		return specialDeclarations;
 	}
@@ -25,5 +27,13 @@ public class DeclareStruct extends CompilerSpecialOperatorStruct {
 
 	public void setJavaClassNameDeclaration(final JavaClassNameDeclarationStruct javaClassNameDeclaration) {
 		this.javaClassNameDeclaration = javaClassNameDeclaration;
+	}
+
+	public LispNameDeclarationStruct getLispNameDeclarationStruct() {
+		return lispNameDeclarationStruct;
+	}
+
+	public void setLispNameDeclarationStruct(final LispNameDeclarationStruct lispNameDeclarationStruct) {
+		this.lispNameDeclarationStruct = lispNameDeclarationStruct;
 	}
 }

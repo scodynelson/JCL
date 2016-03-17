@@ -9,6 +9,7 @@ import java.lang.reflect.Method;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import jcl.compiler.icg.GeneratorState;
 import jcl.compiler.icg.JavaClassBuilder;
@@ -89,8 +90,15 @@ final class CodeGenerators {
 			        analyzes and generates code. I'm not about to do that any time soon, for something like this at least.
 			 */
 
+			final String realSymbolName = symbolName.replace('-', '_')
+			                                        .chars()
+			                                        .filter(Character::isJavaIdentifierPart)
+			                                        .mapToObj(e -> (char) e)
+			                                        .map(String::valueOf)
+			                                        .collect(Collectors.joining());
+
 			final int symbolIdentityHashCode = System.identityHashCode(input);
-			final String symbolNameWithHashCode = symbolName + '_' + symbolIdentityHashCode;
+			final String symbolNameWithHashCode = realSymbolName + '_' + symbolIdentityHashCode;
 
 			final JavaClassBuilder currentClassBuilder = generatorState.getCurrentClassBuilder();
 

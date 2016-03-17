@@ -113,7 +113,7 @@ public class MacroLambdaExpander extends MacroFunctionExpander<MacroLambdaStruct
 			                            .mapToObj(e -> (char) e)
 			                            .map(String::valueOf)
 			                            .collect(Collectors.joining());
-			final String macroLambdaClassName = "MacroLambda" + '_' + realName + '_' + System.nanoTime();
+			final String macroLambdaClassName = realName + '_' + "MacroLambda" + '_' + System.nanoTime();
 			className = "jcl/" + macroLambdaClassName;
 		} else {
 			final String javaClassName = javaClassNameDeclaration.getClassName();

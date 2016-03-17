@@ -19,6 +19,7 @@ import jcl.compiler.sa.analyzer.lambdalistparser.OrdinaryLambdaListParser;
 import jcl.compiler.struct.specialoperator.PrognStruct;
 import jcl.compiler.struct.specialoperator.declare.DeclareStruct;
 import jcl.compiler.struct.specialoperator.declare.JavaClassNameDeclarationStruct;
+import jcl.compiler.struct.specialoperator.declare.LispNameDeclarationStruct;
 import jcl.compiler.struct.specialoperator.declare.SpecialDeclarationStruct;
 import jcl.compiler.struct.specialoperator.lambda.LambdaStruct;
 import jcl.conditions.exceptions.ErrorException;
@@ -92,7 +93,19 @@ public class LambdaExpander extends MacroFunctionExpander<LambdaStruct> {
 		final JavaClassNameDeclarationStruct javaClassNameDeclaration = declare.getJavaClassNameDeclaration();
 		final String className;
 		if (javaClassNameDeclaration == null) {
-			final String lambdaClassName = "Lambda" + '_' + System.nanoTime();
+			final LispNameDeclarationStruct lispNameDeclarationStruct = declare.getLispNameDeclarationStruct();
+			final String lambdaClassName;
+			if (lispNameDeclarationStruct == null) {
+				lambdaClassName = "Lambda" + '_' + System.nanoTime();
+			} else {
+				final String name = lispNameDeclarationStruct.getClassName().replace('-', '_');
+				final String realName = name.chars()
+				                            .filter(Character::isJavaIdentifierPart)
+				                            .mapToObj(e -> (char) e)
+				                            .map(String::valueOf)
+				                            .collect(Collectors.joining());
+				lambdaClassName = realName + '_' + "Lambda" + '_' + System.nanoTime();
+			}
 			className = "jcl/" + lambdaClassName;
 		} else {
 			final String javaClassName = javaClassNameDeclaration.getClassName();

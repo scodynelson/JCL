@@ -27,10 +27,8 @@ public final class TEMPButlastFunction extends BuiltInFunctionStruct {
 	@Override
 	protected FunctionParameters getParams(final List<LispStruct> lispStructs) {
 		return Parameters.forFunction("TEMP-BUTLAST")
-		                 .withParameters(lispStructs)
-		                 .requiringAtLeast(1)
 		                 .requiredParameter("list").as(ListStruct.class)
 		                 .optionalParameter("n").withInitialValue(IntegerStruct.ONE).as(IntegerStruct.class)
-		                 .build();
+		                 .build(lispStructs);
 	}
 }

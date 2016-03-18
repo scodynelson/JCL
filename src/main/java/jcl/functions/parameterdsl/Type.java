@@ -13,7 +13,7 @@ public class Type {
 	private final LispStruct value;
 
 	Type(final Parameter parameter, final Map<String, LispStruct> parameterMap,
-	            final String parameterName, final LispStruct value) {
+	     final String parameterName, final LispStruct value) {
 		this.parameter = parameter;
 		this.parameterMap = parameterMap;
 		this.parameterName = parameterName;

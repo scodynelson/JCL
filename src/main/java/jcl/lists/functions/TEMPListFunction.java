@@ -29,8 +29,7 @@ public final class TEMPListFunction extends BuiltInFunctionStruct {
 	@Override
 	protected FunctionParameters getParams(final List<LispStruct> lispStructs) {
 		return Parameters.forFunction("TEMP-LIST")
-		                 .withParameters(lispStructs)
 		                 .restParameter()
-		                 .build();
+		                 .build(lispStructs);
 	}
 }

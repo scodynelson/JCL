@@ -63,18 +63,4 @@ public class Parameter {
 //		return new InitialValue(this, optionalParameters, parameterName, iterator);
 		return null;
 	}
-
-	public FunctionParameters build() {
-		// TODO: Have this take the actual parameters and use a built up FunctionParameters to parse eveything at once,
-		// TODO:        using the BuiltIntFunctionStruct#fillInParsedParameters algorithm
-
-		if (iterator.hasNext()) {
-			final String message = String.format("Too many arguments in call to '%s'. %d arguments provided, at most %d accepted.",
-			                                     functionParameters.getFunctionName(),
-			                                     numberOfArguments,
-			                                     numberOfRequired);
-			throw new ProgramErrorException(message);
-		}
-		return functionParameters;
-	}
 }

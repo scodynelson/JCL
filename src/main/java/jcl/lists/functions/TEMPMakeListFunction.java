@@ -7,14 +7,19 @@ import jcl.compiler.environment.binding.lambdalist.KeyParameter;
 import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
 import jcl.functions.BuiltInFunctionStruct;
 import jcl.functions.parameterdsl.FunctionParameters;
+import jcl.functions.parameterdsl.Parameters;
+import jcl.lists.ListStruct;
+import jcl.numbers.IntegerStruct;
 import jcl.packages.GlobalPackageStruct;
 import jcl.symbols.NILStruct;
+import jcl.system.CommonLispSymbols;
+import org.springframework.stereotype.Component;
 
-//@Component
+@Component
 public final class TEMPMakeListFunction extends BuiltInFunctionStruct {
 
 	public TEMPMakeListFunction() {
-		super("Returns a list of length given by size, each of the elements of which is initial-element.", "MAKE-LIST");
+		super("Returns a list of length given by size, each of the elements of which is initial-element.", "TEMP-MAKE-LIST");
 	}
 
 	@Override
@@ -32,26 +37,16 @@ public final class TEMPMakeListFunction extends BuiltInFunctionStruct {
 
 	@Override
 	public LispStruct apply(final FunctionParameters params) {
-//		final IntegerStruct size = params.getSize();
-//		final LispStruct initialElement = params.getInitialElement();
-//		return ListStruct.makeList(size.getBigInteger().longValue(), initialElement);
-		return null;
+		final IntegerStruct size = (IntegerStruct) params.getRequiredParameters().get("list");
+		final LispStruct initialElement = params.getKeyParameters().get(CommonLispSymbols.INITIAL_ELEMENT_KEYWORD);
+		return ListStruct.makeList(size.getBigInteger().longValue(), initialElement);
 	}
 
 	@Override
 	protected FunctionParameters getParams(final List<LispStruct> lispStructs) {
-//		final List<RequiredParameter> requiredBindings = lambdaList.getRequiredBindings();
-//		final RequiredParameter requiredParameter = requiredBindings.get(0);
-//		final IntegerStruct convertSize = ClassUtils.convert((Class<IntegerStruct>) requiredParameter.getInitFormClass(), requiredParameter.getInitForm());
-
-//		final List<KeyParameter> keyBindings = lambdaList.getKeyBindings();
-//		final KeyParameter keyParameter =
-//				keyBindings.stream()
-//				           .filter(keyBinding -> CommonLispSymbols.INITIAL_ELEMENT_KEYWORD.equals(keyBinding.getKeyName()))
-//				           .findAny()
-//				           .get();
-//		final LispStruct convertInitialElement = ClassUtils.convert(keyParameter.getInitFormClass(), keyParameter.getInitForm());
-
-		return null;
+		return Parameters.forFunction("TEMP-MAKE-LIST")
+		                 .requiredParameter("size").as(IntegerStruct.class)
+		                 .keyParameter(CommonLispSymbols.INITIAL_ELEMENT_KEYWORD).as(LispStruct.class)
+		                 .build(lispStructs);
 	}
 }

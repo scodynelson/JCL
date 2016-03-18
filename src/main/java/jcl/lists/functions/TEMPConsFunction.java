@@ -9,6 +9,7 @@ import java.util.List;
 import jcl.LispStruct;
 import jcl.functions.BuiltInFunctionStruct;
 import jcl.functions.parameterdsl.FunctionParameters;
+import jcl.functions.parameterdsl.Parameter;
 import jcl.functions.parameterdsl.Parameters;
 import jcl.lists.ConsStruct;
 import org.springframework.stereotype.Component;
@@ -30,10 +31,8 @@ public final class TEMPConsFunction extends BuiltInFunctionStruct {
 	@Override
 	protected FunctionParameters getParams(final List<LispStruct> lispStructs) {
 		return Parameters.forFunction("TEMP-CONS")
-		                 .withParameters(lispStructs)
-		                 .requiringAtLeast(2)
 		                 .requiredParameter("object1").as(LispStruct.class)
 		                 .requiredParameter("object2").as(LispStruct.class)
-		                 .build();
+		                 .build(lispStructs);
 	}
 }

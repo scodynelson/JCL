@@ -194,7 +194,7 @@ public interface CommonLispSymbols {
 	SymbolStruct ALPHA_CHAR_P = null;
 	SymbolStruct ALPHANUMERICP = null;
 	SymbolStruct AND = null;
-	SymbolStruct APPEND = AppendFunction.APPEND;
+	SymbolStruct APPEND = GlobalPackageStruct.COMMON_LISP.intern("APPEND").getSymbol();
 	SymbolStruct APPLY = null;
 	SymbolStruct APROPOS = null;
 	SymbolStruct APROPOS_LIST = null;
@@ -324,7 +324,7 @@ public interface CommonLispSymbols {
 	SymbolStruct CLRHASH = null;
 	SymbolStruct CODE_CHAR = null;
 	SymbolStruct COERCE = null;
-	SymbolStruct COMPILE = GlobalPackageStruct.COMMON_LISP.intern("COMPILE").getSymbol();;
+	SymbolStruct COMPILE = GlobalPackageStruct.COMMON_LISP.intern("COMPILE").getSymbol();
 	SymbolStruct COMPILE_FILE = null;
 	SymbolStruct COMPILE_FILE_PATHNAME = null;
 	SymbolStruct COMPILED_FUNCTION = null;
@@ -342,7 +342,7 @@ public interface CommonLispSymbols {
 	SymbolStruct COND = null;
 	SymbolStruct CONDITION = null;
 	SymbolStruct CONJUGATE = null;
-	SymbolStruct CONS = ConsFunction.CONS;
+	SymbolStruct CONS = GlobalPackageStruct.COMMON_LISP.intern("CONS").getSymbol();
 	SymbolStruct CONSP = null;
 	SymbolStruct CONSTANTLY = null;
 	SymbolStruct CONSTANTP = null;
@@ -557,13 +557,13 @@ public interface CommonLispSymbols {
 	SymbolStruct LET_STAR = null;
 	SymbolStruct LISP_IMPLEMENTATION_TYPE = null;
 	SymbolStruct LISP_IMPLEMENTATION_VERSION = null;
-	SymbolStruct LIST = ListFunction.LIST;
-	SymbolStruct LIST_STAR = ListStarFunction.LIST_STAR;
+	SymbolStruct LIST = GlobalPackageStruct.COMMON_LISP.intern("LIST").getSymbol();
+	SymbolStruct LIST_STAR = GlobalPackageStruct.COMMON_LISP.intern("LIST*").getSymbol();
 	SymbolStruct LIST_ALL_PACKAGES = null;
 	SymbolStruct LIST_LENGTH = null;
 	SymbolStruct LISTEN = null;
 	SymbolStruct LISTP = null;
-	SymbolStruct LOAD = LoadFunction.LOAD;
+	SymbolStruct LOAD = GlobalPackageStruct.COMMON_LISP.intern("LOAD").getSymbol();
 	SymbolStruct LOAD_LOGICAL_PATHNAME_TRANSLATIONS = null;
 	SymbolStruct LOAD_TIME_VALUE = null;
 	SymbolStruct LOCALLY = null;
@@ -653,7 +653,7 @@ public interface CommonLispSymbols {
 	SymbolStruct NAME_CHAR = null;
 	SymbolStruct NAMESTRING = null;
 	SymbolStruct NBUTLAST = null;
-	SymbolStruct NCONC = NconcFunction.NCONC;
+	SymbolStruct NCONC = GlobalPackageStruct.COMMON_LISP.intern("NCONC").getSymbol();
 	SymbolStruct NEXT_METHOD_P = null;
 	SymbolStruct NINTERSECTION = null;
 	SymbolStruct NINTH = null;

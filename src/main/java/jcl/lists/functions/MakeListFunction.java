@@ -1,65 +1,38 @@
+/*
+ * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
+ */
+
 package jcl.lists.functions;
 
-import java.util.List;
-import java.util.Map;
-
 import jcl.LispStruct;
-import jcl.compiler.environment.binding.lambdalist.KeyParameter;
-import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
-import jcl.functions.AbstractCommonLispFunctionStruct;
+import jcl.functions.CommonLispBuiltInFunctionStruct;
+import jcl.functions.parameterdsl.Arguments;
+import jcl.functions.parameterdsl.Parameters;
 import jcl.lists.ListStruct;
 import jcl.numbers.IntegerStruct;
-import jcl.packages.GlobalPackageStruct;
-import jcl.symbols.KeywordStruct;
 import jcl.symbols.NILStruct;
 import jcl.system.CommonLispSymbols;
-import jcl.types.IntegerType;
-import jcl.types.TypeValidator;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class MakeListFunction extends AbstractCommonLispFunctionStruct {
+public final class MakeListFunction extends CommonLispBuiltInFunctionStruct {
 
-	@Autowired
-	private TypeValidator validator;
+	private static final String FUNCTION_NAME = "MAKE-LIST";
+	private static final String SIZE_ARGUMENT = "SIZE";
 
 	public MakeListFunction() {
-		super("Returns a list of length given by size, each of the elements of which is initial-element.");
+		super("Returns a list of length given by size, each of the elements of which is initial-element.",
+		      FUNCTION_NAME,
+		      Parameters.forFunction(FUNCTION_NAME)
+		                .requiredParameter(SIZE_ARGUMENT)
+		                .keyParameter(CommonLispSymbols.INITIAL_ELEMENT_KEYWORD).withInitialValue(NILStruct.INSTANCE)
+		);
 	}
 
 	@Override
-	protected List<RequiredParameter> getRequiredBindings() {
-		return RequiredParameter.builder(GlobalPackageStruct.COMMON_LISP, "SIZE").buildList();
-	}
-
-	@Override
-	protected List<KeyParameter> getKeyBindings() {
-		return KeyParameter.builder(GlobalPackageStruct.COMMON_LISP, "INITIAL-ELEMENT")
-		                   .suppliedPBinding()
-		                   .initForm(NILStruct.INSTANCE)
-		                   .buildList();
-	}
-
-	@Override
-	public LispStruct apply(final LispStruct... lispStructs) {
-		super.apply(lispStructs);
-
-		final IntegerStruct sizeInteger
-				= validator.validateType(lispStructs[0], functionName(), "Size", IntegerType.INSTANCE, IntegerStruct.class);
-		final long size = sizeInteger.getBigInteger().longValue();
-
-		final Map<KeywordStruct, LispStruct> keywords
-				= getKeywords(lispStructs, 1, CommonLispSymbols.INITIAL_ELEMENT_KEYWORD);
-
-		final LispStruct initialElement
-				= keywords.getOrDefault(CommonLispSymbols.INITIAL_ELEMENT_KEYWORD, NILStruct.INSTANCE);
-
-		return ListStruct.makeList(size, initialElement);
-	}
-
-	@Override
-	protected String functionName() {
-		return "MAKE-LIST";
+	public LispStruct apply(final Arguments arguments) {
+		final IntegerStruct size = arguments.getRequiredArgument(SIZE_ARGUMENT, IntegerStruct.class);
+		final LispStruct initialElement = arguments.getKeyArgument(CommonLispSymbols.INITIAL_ELEMENT_KEYWORD);
+		return ListStruct.makeList(size.getBigInteger().longValue(), initialElement);
 	}
 }

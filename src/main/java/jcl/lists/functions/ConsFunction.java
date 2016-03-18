@@ -4,45 +4,33 @@
 
 package jcl.lists.functions;
 
-import java.util.Arrays;
-import java.util.List;
-
 import jcl.LispStruct;
-import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
-import jcl.functions.AbstractCommonLispFunctionStruct;
+import jcl.functions.CommonLispBuiltInFunctionStruct;
+import jcl.functions.parameterdsl.Arguments;
+import jcl.functions.parameterdsl.Parameters;
 import jcl.lists.ConsStruct;
-import jcl.packages.GlobalPackageStruct;
-import jcl.symbols.SymbolStruct;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class ConsFunction extends AbstractCommonLispFunctionStruct {
+public final class ConsFunction extends CommonLispBuiltInFunctionStruct {
 
-	public static final SymbolStruct CONS = GlobalPackageStruct.COMMON_LISP.intern("CONS").getSymbol();
+	private static final String FUNCTION_NAME = "CONS";
+	private static final String OBJECT_1_ARGUMENT = "OBJECT1";
+	private static final String OBJECT_2_ARGUMENT = "OBJECT2";
 
 	public ConsFunction() {
-		super("Creates a fresh cons, the car of which is object-1 and the cdr of which is object-2.");
-	}
-
-	@Override
-	protected List<RequiredParameter> getRequiredBindings() {
-		return Arrays.asList(
-				RequiredParameter.builder(GlobalPackageStruct.COMMON_LISP, "OBJECT-1").build(),
-				RequiredParameter.builder(GlobalPackageStruct.COMMON_LISP, "OBJECT-2").build()
+		super("Creates a fresh cons, the car of which is object-1 and the cdr of which is object-2.",
+		      FUNCTION_NAME,
+		      Parameters.forFunction(FUNCTION_NAME)
+		                .requiredParameter(OBJECT_1_ARGUMENT)
+		                .requiredParameter(OBJECT_2_ARGUMENT)
 		);
 	}
 
 	@Override
-	public LispStruct apply(final LispStruct... lispStructs) {
-		super.apply(lispStructs);
-
-		final LispStruct object1 = lispStructs[0];
-		final LispStruct object2 = lispStructs[1];
+	public LispStruct apply(final Arguments arguments) {
+		final LispStruct object1 = arguments.getRequiredArgument(OBJECT_1_ARGUMENT);
+		final LispStruct object2 = arguments.getRequiredArgument(OBJECT_2_ARGUMENT);
 		return new ConsStruct(object1, object2);
-	}
-
-	@Override
-	protected String functionName() {
-		return "CONS";
 	}
 }

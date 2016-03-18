@@ -4,36 +4,31 @@
 
 package jcl.lists.functions;
 
+import java.util.List;
+
 import jcl.LispStruct;
-import jcl.compiler.environment.binding.lambdalist.RestParameter;
-import jcl.functions.AbstractCommonLispFunctionStruct;
+import jcl.functions.CommonLispBuiltInFunctionStruct;
+import jcl.functions.parameterdsl.Arguments;
+import jcl.functions.parameterdsl.Parameters;
 import jcl.lists.ListStruct;
-import jcl.packages.GlobalPackageStruct;
-import jcl.symbols.SymbolStruct;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class ListFunction extends AbstractCommonLispFunctionStruct {
+public final class ListFunction extends CommonLispBuiltInFunctionStruct {
 
-	public static final SymbolStruct LIST = GlobalPackageStruct.COMMON_LISP.intern("LIST").getSymbol();
+	private static final String FUNCTION_NAME = "LIST";
 
 	public ListFunction() {
-		super("Returns a list containing the supplied objects.");
+		super("Returns a list containing the supplied objects.",
+		      FUNCTION_NAME,
+		      Parameters.forFunction(FUNCTION_NAME)
+		                .restParameter()
+		);
 	}
 
 	@Override
-	protected RestParameter getRestBinding() {
-		return RestParameter.builder(GlobalPackageStruct.COMMON_LISP, "OBJECTS").build();
-	}
-
-	@Override
-	public LispStruct apply(final LispStruct... lispStructs) {
-		super.apply(lispStructs);
-		return ListStruct.buildProperList(lispStructs);
-	}
-
-	@Override
-	protected String functionName() {
-		return "LIST";
+	public LispStruct apply(final Arguments arguments) {
+		final List<LispStruct> objects = arguments.getRestArgument();
+		return ListStruct.buildProperList(objects);
 	}
 }

@@ -1,6 +1,7 @@
 package jcl.functions.parameterdsl;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -13,18 +14,19 @@ import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.symbols.KeywordStruct;
 import jcl.symbols.NILStruct;
 import jcl.system.CommonLispSymbols;
-import jcl.util.ClassUtils;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.collections4.iterators.ObjectArrayIterator;
 
 import static java.util.stream.Collectors.toMap;
 
-public class Parameters {
+public final class Parameters {
 
 	private final String functionName;
 
-	private final List<Required> requireds = new ArrayList<>();
-	private final List<Optional> optionals = new ArrayList<>();
-	private Rest rest;
-	private final List<Key> keys = new ArrayList<>();
+	private List<RequiredParameter> requiredParameters;
+	private List<OptionalParameter> optionalParameters;
+	private Object restPlaceholder;
+	private List<KeyParameter> keyParameters;
 	private boolean allowOtherKeys;
 
 	private Parameters(final String functionName) {
@@ -35,27 +37,36 @@ public class Parameters {
 		return new Parameters(functionName);
 	}
 
-	public Required requiredParameter(final String parameterName) {
-		final Required required = new Required(this, parameterName);
-		requireds.add(required);
-		return required;
-	}
-
-	public Optional optionalParameter(final String parameterName) {
-		final Optional optional = new Optional(this, parameterName);
-		optionals.add(optional);
-		return optional;
-	}
-
-	public Parameters restParameter() {
-		rest = new Rest();
+	public Parameters requiredParameter(final String parameterName) {
+		final RequiredParameter requiredParameter = new RequiredParameter(parameterName);
+		if (requiredParameters == null) {
+			requiredParameters = new ArrayList<>();
+		}
+		requiredParameters.add(requiredParameter);
 		return this;
 	}
 
-	public Key keyParameter(final KeywordStruct keyword) {
-		final Key key = new Key(this, keyword);
-		keys.add(key);
-		return key;
+	public OptionalParameter optionalParameter(final String parameterName) {
+		final OptionalParameter optionalParameter = new OptionalParameter(this, parameterName);
+		if (optionalParameters == null) {
+			optionalParameters = new ArrayList<>();
+		}
+		optionalParameters.add(optionalParameter);
+		return optionalParameter;
+	}
+
+	public Parameters restParameter() {
+		restPlaceholder = new Object();
+		return this;
+	}
+
+	public KeyParameter keyParameter(final KeywordStruct keyword) {
+		final KeyParameter keyParameter = new KeyParameter(this, keyword);
+		if (keyParameters == null) {
+			keyParameters = new ArrayList<>();
+		}
+		keyParameters.add(keyParameter);
+		return keyParameter;
 	}
 
 	public Parameters allowOtherKeys() {
@@ -63,59 +74,64 @@ public class Parameters {
 		return this;
 	}
 
-	public FunctionParameters build(final List<LispStruct> arguments) {
-		final FunctionParameters functionParameters = new FunctionParameters();
+	public Arguments build(final LispStruct... arguments) {
+		final int numberOfArguments = arguments.length;
+		final Arguments resultArguments = new Arguments();
 
-		final int numberOfArguments = arguments.size();
-		final int numberOfRequired = requireds.size();
-		final int numberOfOptionals = optionals.size();
-		final int numberOfKeys = keys.size();
+		final Iterator<LispStruct> argumentIterator = new ObjectArrayIterator<>(arguments);
 
-		final Iterator<LispStruct> argumentIterator = arguments.iterator();
+		final int numberOfRequired = CollectionUtils.size(requiredParameters);
+		final int numberOfOptionals = CollectionUtils.size(optionalParameters);
+		final int numberOfKeys = CollectionUtils.size(keyParameters);
 
-		for (final Required required : requireds) {
-			if (!argumentIterator.hasNext()) {
-				final String message = String.format("Too few arguments in call to '%s'. %d arguments provided, at least %d required.",
-				                                     functionName,
-				                                     numberOfArguments,
-				                                     numberOfRequired);
-				throw new ProgramErrorException(message);
+		if (requiredParameters != null) {
+			for (final RequiredParameter requiredParameter : requiredParameters) {
+				if (!argumentIterator.hasNext()) {
+					final String message = String.format("Too few arguments in call to '%s'. %d arguments provided, at least %d required.",
+					                                     functionName,
+					                                     numberOfArguments,
+					                                     numberOfRequired);
+					throw new ProgramErrorException(message);
+				}
+
+				final String parameterName = requiredParameter.getParameterName();
+				final LispStruct parameterValue = argumentIterator.next();
+				resultArguments.getRequiredParameters().put(parameterName, parameterValue);
 			}
-
-			final String parameterName = required.getParameterName();
-			final Class<? extends LispStruct> parameterClass = required.getClazz();
-
-			final LispStruct parameterValue = ClassUtils.convert(parameterClass, argumentIterator.next());
-			functionParameters.getRequiredParameters().put(parameterName, parameterValue);
 		}
 
-		for (final Optional optional : optionals) {
-			final String parameterName = optional.getParameterName();
-			final Class<? extends LispStruct> parameterClass = optional.getClazz();
+		if (optionalParameters != null) {
+			for (final OptionalParameter optionalParameter : optionalParameters) {
+				final String parameterName = optionalParameter.getParameterName();
 
-			final LispStruct parameterValue;
-			if (argumentIterator.hasNext()) {
-				parameterValue = ClassUtils.convert(parameterClass, argumentIterator.next());
-			} else {
-				parameterValue = optional.getInitialValue();
+				final LispStruct parameterValue;
+				if (argumentIterator.hasNext()) {
+					parameterValue = argumentIterator.next();
+				} else {
+					parameterValue = optionalParameter.getInitialValue();
+				}
+				resultArguments.getOptionalParameters().put(parameterName, parameterValue);
 			}
-			functionParameters.getOptionalParameters().put(parameterName, parameterValue);
 		}
 
-		// Need to wrap the keySet() in a new HashSet because of the remove() operation below on the 'keywordsToKeys'
-		final Set<KeywordStruct> consumedKeywords = new HashSet<>();
-
-		final Map<KeywordStruct, Key> keywordsToKeys =
-				keys.stream().collect(toMap(Key::getKeyword, Function.identity()));
-
-		final List<LispStruct> restList = new ArrayList<>();
-		argumentIterator.forEachRemaining(restList::add);
-
-		if (rest != null) {
-			functionParameters.getRestParameter().addAll(restList);
+		Map<KeywordStruct, KeyParameter> keywordsToKeys = Collections.emptyMap();
+		if (keyParameters != null) {
+			keywordsToKeys = keyParameters.stream().collect(toMap(KeyParameter::getKeyword, Function.identity()));
 		}
 
-		final List<KeywordStruct> otherKeywords = new ArrayList<>();
+		List<LispStruct> restList = Collections.emptyList();
+		if (argumentIterator.hasNext()) {
+			restList = new ArrayList<>();
+			argumentIterator.forEachRemaining(restList::add);
+		}
+
+		if (restPlaceholder != null) {
+			resultArguments.getRestParameter().addAll(restList);
+		}
+
+		List<KeywordStruct> otherKeywords = null;
+		Set<KeywordStruct> consumedKeywords = null;
+
 		boolean doNotAllowOtherKeys = !allowOtherKeys;
 
 		for (final Iterator<LispStruct> restIterator = restList.iterator(); restIterator.hasNext(); ) {
@@ -125,21 +141,23 @@ public class Parameters {
 				final KeywordStruct keywordArgument = (KeywordStruct) argument;
 
 				if (keywordsToKeys.containsKey(keywordArgument)) {
-					final Key key = keywordsToKeys.remove(keywordArgument);
+					final KeyParameter keyParameter = keywordsToKeys.remove(keywordArgument);
+					if (consumedKeywords == null) {
+						consumedKeywords = new HashSet<>();
+					}
 					consumedKeywords.add(keywordArgument);
 
 					if (restIterator.hasNext()) {
 						final LispStruct parameterValue = restIterator.next();
 
 						if (CommonLispSymbols.ALLOW_OTHER_KEYS.equals(argument)) {
-							if (!parameterValue.equals(NILStruct.INSTANCE)) {
+							if (!NILStruct.INSTANCE.equals(parameterValue)) {
 								doNotAllowOtherKeys = false;
 							}
 						}
 
-						final KeywordStruct keyword = key.getKeyword();
-						final Class<? extends LispStruct> parameterClass = key.getClazz();
-						functionParameters.getKeyParameters().put(keyword, ClassUtils.convert(parameterClass, parameterValue));
+						final KeywordStruct keyword = keyParameter.getKeyword();
+						resultArguments.getKeyParameters().put(keyword, parameterValue);
 					} else {
 						final String message = String.format("Expected argument to follow keyword name argument for call to '%s' with key name: %s.",
 						                                     functionName,
@@ -157,7 +175,13 @@ public class Parameters {
 						restIterator.next();
 					}
 					// Check in case the key was supplied twice. If it's a duplicate key, just ignore it.
+					if (consumedKeywords == null) {
+						continue;
+					}
 					if (!consumedKeywords.contains(keywordArgument)) {
+						if (otherKeywords == null) {
+							otherKeywords = new ArrayList<>();
+						}
 						otherKeywords.add(keywordArgument);
 					}
 				}
@@ -166,7 +190,7 @@ public class Parameters {
 				                                     functionName,
 				                                     argument);
 				throw new ProgramErrorException(message);
-			} else if (rest == null) {
+			} else if (restPlaceholder == null) {
 				final int maxNumberProvided = numberOfRequired + numberOfOptionals + numberOfKeys;
 				final String message = String.format("Too many arguments in call to '%s'. %d arguments provided, at most %d accepted.",
 				                                     functionName,
@@ -176,19 +200,19 @@ public class Parameters {
 			}
 		}
 
-		if (doNotAllowOtherKeys && !otherKeywords.isEmpty() && !consumedKeywords.isEmpty()) {
+		if (doNotAllowOtherKeys && CollectionUtils.isNotEmpty(otherKeywords) && CollectionUtils.isNotEmpty(consumedKeywords)) {
 			final String message = String.format("Keyword arguments not found in '%s' function definition: %s.",
 			                                     functionName,
 			                                     otherKeywords);
 			throw new ProgramErrorException(message);
 		}
 
-		for (final Key key : keywordsToKeys.values()) {
-			final KeywordStruct keyword = key.getKeyword();
-			final LispStruct parameterValue = key.getInitialValue();
-			functionParameters.getKeyParameters().put(keyword, parameterValue);
+		for (final KeyParameter keyParameter : keywordsToKeys.values()) {
+			final KeywordStruct keyword = keyParameter.getKeyword();
+			final LispStruct parameterValue = keyParameter.getInitialValue();
+			resultArguments.getKeyParameters().put(keyword, parameterValue);
 		}
 
-		return functionParameters;
+		return resultArguments;
 	}
 }

@@ -12,6 +12,6 @@ public final class ClassUtils {
 		if (org.springframework.util.ClassUtils.isAssignableValue(type, value)) {
 			return (T) value;
 		}
-		throw new TypeErrorException("Cannot convert value '" + value + "' to type '" + type.getName() + '\'');
+		throw new TypeErrorException("Cannot convert value '" + value + "' to type '" + type.getSimpleName() + '\'');
 	}
 }

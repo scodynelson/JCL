@@ -4,13 +4,13 @@ import jcl.LispStruct;
 
 public class Required {
 
-	private final String parameterName;
 	private final Parameters parameters;
-	private Class<?> clazz;
+	private final String parameterName;
+	private Class<? extends LispStruct> clazz;
 
-	Required(final String parameterName, final Parameters parameters) {
-		this.parameterName = parameterName;
+	Required(final Parameters parameters, final String parameterName) {
 		this.parameters = parameters;
+		this.parameterName = parameterName;
 	}
 
 	public <T extends LispStruct> Parameters as(final Class<T> clazz) {
@@ -22,7 +22,7 @@ public class Required {
 		return parameterName;
 	}
 
-	Class<?> getClazz() {
+	Class<? extends LispStruct> getClazz() {
 		return clazz;
 	}
 }

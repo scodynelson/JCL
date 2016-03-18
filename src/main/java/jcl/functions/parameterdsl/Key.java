@@ -6,19 +6,14 @@ import jcl.symbols.NILStruct;
 
 public class Key {
 
-	private final KeywordStruct keyword;
 	private final Parameters parameters;
-	private Class<?> clazz;
+	private final KeywordStruct keyword;
 	private LispStruct initialValue = NILStruct.INSTANCE;
+	private Class<? extends LispStruct> clazz;
 
-	Key(final KeywordStruct keyword, final Parameters parameters) {
-		this.keyword = keyword;
+	Key(final Parameters parameters, final KeywordStruct keyword) {
 		this.parameters = parameters;
-	}
-
-	public <T extends LispStruct> Parameters as(final Class<T> clazz) {
-		this.clazz = clazz;
-		return parameters;
+		this.keyword = keyword;
 	}
 
 	public Key withInitialValue(final LispStruct initialValue) {
@@ -26,11 +21,20 @@ public class Key {
 		return this;
 	}
 
+	public <T extends LispStruct> Parameters as(final Class<T> clazz) {
+		this.clazz = clazz;
+		return parameters;
+	}
+
 	KeywordStruct getKeyword() {
 		return keyword;
 	}
 
-	Class<?> getClazz() {
+	LispStruct getInitialValue() {
+		return initialValue;
+	}
+
+	Class<? extends LispStruct> getClazz() {
 		return clazz;
 	}
 }

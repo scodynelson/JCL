@@ -29,7 +29,7 @@ public class Parameter {
 	public Type requiredParameter(final String parameterName) {
 		if (!iterator.hasNext()) {
 			final String message = String.format("Too few arguments in call to '%s'. %d arguments provided, at least %d required.",
-			                                     functionParameters.getFunctionName(),
+			                                     "functionName",
 			                                     numberOfArguments,
 			                                     numberOfRequired);
 			throw new ProgramErrorException(message);

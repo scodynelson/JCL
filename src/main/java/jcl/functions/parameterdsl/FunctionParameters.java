@@ -10,20 +10,10 @@ import jcl.symbols.KeywordStruct;
 
 public final class FunctionParameters {
 
-	private final String functionName;
-
 	private Map<String, LispStruct> requiredParameters;
 	private Map<String, LispStruct> optionalParameters;
 	private List<LispStruct> restParameter;
 	private Map<KeywordStruct, LispStruct> keyParameters;
-
-	FunctionParameters(final String functionName) {
-		this.functionName = functionName;
-	}
-
-	public String getFunctionName() {
-		return functionName;
-	}
 
 	public Map<String, LispStruct> getRequiredParameters() {
 		if (requiredParameters == null) {

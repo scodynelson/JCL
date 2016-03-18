@@ -37,7 +37,7 @@ public final class TEMPMakeListFunction extends BuiltInFunctionStruct {
 
 	@Override
 	public LispStruct apply(final FunctionParameters params) {
-		final IntegerStruct size = (IntegerStruct) params.getRequiredParameters().get("list");
+		final IntegerStruct size = (IntegerStruct) params.getRequiredParameters().get("size");
 		final LispStruct initialElement = params.getKeyParameters().get(CommonLispSymbols.INITIAL_ELEMENT_KEYWORD);
 		return ListStruct.makeList(size.getBigInteger().longValue(), initialElement);
 	}

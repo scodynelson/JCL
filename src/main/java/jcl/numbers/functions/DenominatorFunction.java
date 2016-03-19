@@ -4,61 +4,30 @@
 
 package jcl.numbers.functions;
 
-import java.util.Collections;
-import java.util.List;
-import javax.annotation.PostConstruct;
-
 import jcl.LispStruct;
-import jcl.compiler.environment.binding.lambdalist.OrdinaryLambdaList;
-import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
-import jcl.conditions.exceptions.TypeErrorException;
-import jcl.functions.FunctionStruct;
+import jcl.functions.CommonLispBuiltInFunctionStruct;
+import jcl.functions.parameterdsl.Arguments;
+import jcl.functions.parameterdsl.Parameters;
 import jcl.numbers.RationalStruct;
-import jcl.packages.GlobalPackageStruct;
-import jcl.printer.Printer;
-import jcl.symbols.SymbolStruct;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class DenominatorFunction extends FunctionStruct {
+public final class DenominatorFunction extends CommonLispBuiltInFunctionStruct {
 
-	public static final SymbolStruct DENOMINATOR = GlobalPackageStruct.COMMON_LISP.intern("DENOMINATOR").getSymbol();
+	private static final String FUNCTION_NAME = "DENOMINATOR";
+	private static final String RATIONAL_ARGUMENT = "RATIONAL";
 
-	@Autowired
-	private Printer printer;
-
-	private DenominatorFunction() {
-		super("", getInitLambdaListBindings());
-	}
-
-	@PostConstruct
-	private void init() {
-		DENOMINATOR.setFunction(this);
-		GlobalPackageStruct.COMMON_LISP.export(DENOMINATOR);
-	}
-
-	private static OrdinaryLambdaList getInitLambdaListBindings() {
-
-		final SymbolStruct firstArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("RATIONAL").getSymbol();
-		final RequiredParameter requiredBinding = new RequiredParameter(firstArgSymbol);
-		final List<RequiredParameter> requiredBindings = Collections.singletonList(requiredBinding);
-
-		return OrdinaryLambdaList.builder()
-		                         .requiredBindings(requiredBindings)
-		                         .build();
+	public DenominatorFunction() {
+		super("Returns the denominator of the canonical form of rational.",
+		      FUNCTION_NAME,
+		      Parameters.forFunction(FUNCTION_NAME)
+		                .requiredParameter(RATIONAL_ARGUMENT)
+		);
 	}
 
 	@Override
-	public LispStruct apply(final LispStruct... lispStructs) {
-
-		final LispStruct lispStruct = lispStructs[0];
-		if (!(lispStruct instanceof RationalStruct)) {
-			final String printedObject = printer.print(lispStruct);
-			throw new TypeErrorException("Argument not of type Rational: " + printedObject);
-		}
-
-		final RationalStruct rational = (RationalStruct) lispStruct;
+	public LispStruct apply(final Arguments arguments) {
+		final RationalStruct rational = arguments.getRequiredArgument(RATIONAL_ARGUMENT, RationalStruct.class);
 		return rational.denominator();
 	}
 }

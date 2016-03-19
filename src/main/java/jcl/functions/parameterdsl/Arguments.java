@@ -48,6 +48,13 @@ public final class Arguments {
 		return getOptionalParameters().get(parameterName);
 	}
 
+	public boolean hasOptionalArgument(final String parameterName) {
+		if (optionalParameters == null) {
+			return false;
+		}
+		return optionalParameters.containsKey(parameterName);
+	}
+
 	public <T extends LispStruct> T getOptionalArgument(final String parameterName, final Class<T> clazz) {
 		final LispStruct parameterValue = getOptionalParameters().get(parameterName);
 		return ClassUtils.convert(clazz, parameterValue);
@@ -79,6 +86,13 @@ public final class Arguments {
 
 	public LispStruct getKeyArgument(final KeywordStruct keyword) {
 		return getKeyParameters().get(keyword);
+	}
+
+	public boolean hasKeyArgument(final KeywordStruct keyword) {
+		if (keyParameters == null) {
+			return false;
+		}
+		return keyParameters.containsKey(keyword);
 	}
 
 	public <T extends LispStruct> T getKeyArgument(final KeywordStruct keyword, final Class<T> clazz) {

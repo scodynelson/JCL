@@ -11,7 +11,6 @@ import java.math.RoundingMode;
 import java.util.List;
 
 import jcl.LispStruct;
-import jcl.conditions.exceptions.ErrorException;
 import jcl.types.RealType;
 import org.apfloat.Apcomplex;
 import org.apfloat.ApcomplexMath;
@@ -76,16 +75,11 @@ public abstract class RealStruct extends NumberStruct {
 
 	protected abstract boolean isLessThan(LessThanVisitor<?> lessThanVisitor);
 
-	public static boolean isLessThan(final RealStruct... reals) {
-		if (reals.length == 0) {
-			throw new ErrorException("At least one real required to test equality.");
-		}
-
-		RealStruct previousReal = reals[0];
+	public static boolean isLessThan(final RealStruct real, final List<RealStruct> reals) {
+		RealStruct previousReal = real;
 
 		boolean result = true;
-		for (int i = 1; i < reals.length; i++) {
-			final RealStruct currentReal = reals[i];
+		for (final RealStruct currentReal : reals) {
 			result = previousReal.isLessThan(currentReal);
 			if (!result) {
 				break;
@@ -110,16 +104,11 @@ public abstract class RealStruct extends NumberStruct {
 		return new GreaterThanVisitor<>(this);
 	}
 
-	public static boolean isGreaterThan(final RealStruct... reals) {
-		if (reals.length == 0) {
-			throw new ErrorException("At least one real required to test equality.");
-		}
-
-		RealStruct previousReal = reals[0];
+	public static boolean isGreaterThan(final RealStruct real, final List<RealStruct> reals) {
+		RealStruct previousReal = real;
 
 		boolean result = true;
-		for (int i = 1; i < reals.length; i++) {
-			final RealStruct currentReal = reals[i];
+		for (final RealStruct currentReal : reals) {
 			result = previousReal.isGreaterThan(currentReal);
 			if (!result) {
 				break;
@@ -140,16 +129,11 @@ public abstract class RealStruct extends NumberStruct {
 		return new LessThanOrEqualToVisitor<>(this);
 	}
 
-	public static boolean isLessThanOrEqualTo(final RealStruct... reals) {
-		if (reals.length == 0) {
-			throw new ErrorException("At least one real required to test equality.");
-		}
-
-		RealStruct previousReal = reals[0];
+	public static boolean isLessThanOrEqualTo(final RealStruct real, final List<RealStruct> reals) {
+		RealStruct previousReal = real;
 
 		boolean result = true;
-		for (int i = 1; i < reals.length; i++) {
-			final RealStruct currentReal = reals[i];
+		for (final RealStruct currentReal : reals) {
 			result = previousReal.isLessThanOrEqualTo(currentReal);
 			if (!result) {
 				break;
@@ -170,16 +154,11 @@ public abstract class RealStruct extends NumberStruct {
 		return new GreaterThanOrEqualToVisitor<>(this);
 	}
 
-	public static boolean isGreaterThanOrEqualTo(final RealStruct... reals) {
-		if (reals.length == 0) {
-			throw new ErrorException("At least one real required to test equality.");
-		}
-
-		RealStruct previousReal = reals[0];
+	public static boolean isGreaterThanOrEqualTo(final RealStruct real, final List<RealStruct> reals) {
+		RealStruct previousReal = real;
 
 		boolean result = true;
-		for (int i = 1; i < reals.length; i++) {
-			final RealStruct currentReal = reals[i];
+		for (final RealStruct currentReal : reals) {
 			result = previousReal.isGreaterThanOrEqualTo(currentReal);
 			if (!result) {
 				break;
@@ -193,37 +172,22 @@ public abstract class RealStruct extends NumberStruct {
 		return isGreaterThanOrEqualTo(real) ? this : real;
 	}
 
-	public static RealStruct max(final RealStruct... reals) {
-		if (reals.length == 0) {
-			throw new ErrorException("At least one real required to find max.");
+	public static RealStruct max(final RealStruct real, final List<RealStruct> reals) {
+		if (reals.isEmpty()) {
+			return real;
 		}
-
-		RealStruct result = reals[0];
-		for (int i = 1; i < reals.length; i++) {
-			final RealStruct currentReal = reals[i];
-			result = result.max(currentReal);
-		}
-		return result;
+		return reals.stream().reduce(real, RealStruct::max);
 	}
 
 	public RealStruct min(final RealStruct real) {
 		return isLessThanOrEqualTo(real) ? this : real;
 	}
 
-	public static RealStruct min(final RealStruct... reals) {
-		if (reals.length == 0) {
-			throw new ErrorException("At least one real required to find min.");
+	public static RealStruct min(final RealStruct real, final List<RealStruct> reals) {
+		if (reals.isEmpty()) {
+			return real;
 		}
-		if (reals.length == 1) {
-			return reals[0];
-		}
-
-		RealStruct result = reals[0];
-		for (int i = 1; i < reals.length; i++) {
-			final RealStruct currentReal = reals[i];
-			result = result.min(currentReal);
-		}
-		return result;
+		return reals.stream().reduce(real, RealStruct::min);
 	}
 
 	public abstract RealStruct rational();

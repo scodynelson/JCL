@@ -4,92 +4,50 @@
 
 package jcl.numbers.functions;
 
-import java.util.Collections;
-import java.util.List;
-import javax.annotation.PostConstruct;
-
 import jcl.LispStruct;
-import jcl.compiler.environment.binding.lambdalist.OptionalParameter;
-import jcl.compiler.environment.binding.lambdalist.OrdinaryLambdaList;
-import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
-import jcl.compiler.environment.binding.lambdalist.SuppliedPParameter;
-import jcl.conditions.exceptions.TypeErrorException;
-import jcl.functions.FunctionStruct;
+import jcl.functions.CommonLispBuiltInFunctionStruct;
+import jcl.functions.parameterdsl.Arguments;
+import jcl.functions.parameterdsl.Parameters;
 import jcl.numbers.ComplexStruct;
 import jcl.numbers.FloatStruct;
+import jcl.numbers.IntegerStruct;
 import jcl.numbers.RationalStruct;
 import jcl.numbers.RealStruct;
-import jcl.packages.GlobalPackageStruct;
-import jcl.printer.Printer;
-import jcl.symbols.NILStruct;
-import jcl.symbols.SymbolStruct;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class ComplexFunction extends FunctionStruct {
+public final class ComplexFunction extends CommonLispBuiltInFunctionStruct {
 
-	public static final SymbolStruct COMPLEX = GlobalPackageStruct.COMMON_LISP.intern("COMPLEX").getSymbol();
+	private static final String FUNCTION_NAME = "COMPLEX";
+	private static final String REALPART_ARGUMENT = "REALPART";
+	private static final String IMAGPART_ARGUMENT = "IMAGPART";
 
-	@Autowired
-	private Printer printer;
-
-	private ComplexFunction() {
-		super("", getInitLambdaListBindings());
-	}
-
-	@PostConstruct
-	private void init() {
-		COMPLEX.setFunction(this);
-		GlobalPackageStruct.COMMON_LISP.export(COMPLEX);
-	}
-
-	private static OrdinaryLambdaList getInitLambdaListBindings() {
-
-		final SymbolStruct firstArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("REALPART").getSymbol();
-		final RequiredParameter requiredBinding = new RequiredParameter(firstArgSymbol);
-		final List<RequiredParameter> requiredBindings = Collections.singletonList(requiredBinding);
-
-		final SymbolStruct optionalArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("IMAGPART").getSymbol();
-
-		final SymbolStruct optionalSuppliedP = GlobalPackageStruct.COMMON_LISP.intern("IMAGPART-P-" + System.nanoTime()).getSymbol();
-		final SuppliedPParameter optionalSuppliedPBinding = new SuppliedPParameter(optionalSuppliedP);
-
-		final OptionalParameter optionalBinding = new OptionalParameter(optionalArgSymbol, NILStruct.INSTANCE, optionalSuppliedPBinding);
-		final List<OptionalParameter> optionalBindings = Collections.singletonList(optionalBinding);
-
-		return OrdinaryLambdaList.builder()
-		                         .requiredBindings(requiredBindings)
-		                         .optionalBindings(optionalBindings)
-		                         .build();
+	public ComplexFunction() {
+		super("Returns a number whose real part is realpart and whose imaginary part is imagpart.",
+		      FUNCTION_NAME,
+		      Parameters.forFunction(FUNCTION_NAME)
+		                .requiredParameter(REALPART_ARGUMENT)
+		                .optionalParameter(IMAGPART_ARGUMENT).withInitialValue(IntegerStruct.ONE)
+		);
 	}
 
 	@Override
-	public LispStruct apply(final LispStruct... lispStructs) {
-
-		final LispStruct lispStruct1 = lispStructs[0];
-		if (!(lispStruct1 instanceof RealStruct)) {
-			final String printedObject = printer.print(lispStruct1);
-			throw new TypeErrorException("Argument not of type Real: " + printedObject);
-		}
-		final RealStruct real = (RealStruct) lispStruct1;
-
-		if (lispStructs.length > 1) {
-			final LispStruct lispStruct2 = lispStructs[1];
-			if (!(lispStruct2 instanceof RealStruct)) {
-				final String printedObject = printer.print(lispStruct2);
-				throw new TypeErrorException("Argument not of type Real: " + printedObject);
-			}
-			final RealStruct imaginary = (RealStruct) lispStruct2;
+	public LispStruct apply(final Arguments arguments) {
+		if (arguments.hasOptionalArgument(IMAGPART_ARGUMENT)) {
+			final RealStruct real = arguments.getRequiredArgument(REALPART_ARGUMENT, RealStruct.class);
+			final RealStruct imaginary = arguments.getOptionalArgument(IMAGPART_ARGUMENT, RealStruct.class);
 
 			if (real instanceof RationalStruct) {
 				return ComplexStruct.makeComplexOrReal(real, imaginary);
 			}
 			return new ComplexStruct(real, imaginary);
-		} else if (real instanceof RationalStruct) {
-			return real;
 		} else {
-			return new ComplexStruct(real, FloatStruct.ZERO);
+			final RealStruct real = arguments.getRequiredArgument(REALPART_ARGUMENT, RealStruct.class);
+			if (real instanceof RationalStruct) {
+				return real;
+			} else {
+				return new ComplexStruct(real, FloatStruct.ZERO);
+			}
 		}
 	}
 }

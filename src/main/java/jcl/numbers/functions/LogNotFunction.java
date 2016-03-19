@@ -4,61 +4,30 @@
 
 package jcl.numbers.functions;
 
-import java.util.Collections;
-import java.util.List;
-import javax.annotation.PostConstruct;
-
 import jcl.LispStruct;
-import jcl.compiler.environment.binding.lambdalist.OrdinaryLambdaList;
-import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
-import jcl.conditions.exceptions.TypeErrorException;
-import jcl.functions.FunctionStruct;
+import jcl.functions.CommonLispBuiltInFunctionStruct;
+import jcl.functions.parameterdsl.Arguments;
+import jcl.functions.parameterdsl.Parameters;
 import jcl.numbers.IntegerStruct;
-import jcl.packages.GlobalPackageStruct;
-import jcl.printer.Printer;
-import jcl.symbols.SymbolStruct;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class LogNotFunction extends FunctionStruct {
+public final class LogNotFunction extends CommonLispBuiltInFunctionStruct {
 
-	public static final SymbolStruct LOGNOT = GlobalPackageStruct.COMMON_LISP.intern("LOGNOT").getSymbol();
+	private static final String FUNCTION_NAME = "LOGNOT";
+	private static final String INTEGER_ARGUMENT = "INTEGER";
 
-	@Autowired
-	private Printer printer;
-
-	private LogNotFunction() {
-		super("", getInitLambdaListBindings());
-	}
-
-	@PostConstruct
-	private void init() {
-		LOGNOT.setFunction(this);
-		GlobalPackageStruct.COMMON_LISP.export(LOGNOT);
-	}
-
-	private static OrdinaryLambdaList getInitLambdaListBindings() {
-
-		final SymbolStruct integerSymbol = GlobalPackageStruct.COMMON_LISP.intern("INTEGER").getSymbol();
-		final RequiredParameter requiredBinding = new RequiredParameter(integerSymbol);
-		final List<RequiredParameter> requiredBindings = Collections.singletonList(requiredBinding);
-
-		return OrdinaryLambdaList.builder()
-		                         .requiredBindings(requiredBindings)
-		                         .build();
+	public LogNotFunction() {
+		super("Returns the COMPLEMENT of integer.",
+		      FUNCTION_NAME,
+		      Parameters.forFunction(FUNCTION_NAME)
+		                .requiredParameter(INTEGER_ARGUMENT)
+		);
 	}
 
 	@Override
-	public LispStruct apply(final LispStruct... lispStructs) {
-
-		final LispStruct lispStruct = lispStructs[0];
-		if (!(lispStruct instanceof IntegerStruct)) {
-			final String printedObject = printer.print(lispStruct);
-			throw new TypeErrorException("Argument not of type Integer: " + printedObject);
-		}
-		final IntegerStruct integer = (IntegerStruct) lispStruct;
-
+	public LispStruct apply(final Arguments arguments) {
+		final IntegerStruct integer = arguments.getRequiredArgument(INTEGER_ARGUMENT, IntegerStruct.class);
 		return integer.logNot();
 	}
 }

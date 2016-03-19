@@ -4,73 +4,33 @@
 
 package jcl.numbers.functions;
 
-import java.util.ArrayList;
-import java.util.List;
-import javax.annotation.PostConstruct;
-
 import jcl.LispStruct;
-import jcl.compiler.environment.binding.lambdalist.OrdinaryLambdaList;
-import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
-import jcl.conditions.exceptions.TypeErrorException;
-import jcl.functions.FunctionStruct;
+import jcl.functions.CommonLispBuiltInFunctionStruct;
+import jcl.functions.parameterdsl.Arguments;
+import jcl.functions.parameterdsl.Parameters;
 import jcl.numbers.RealStruct;
-import jcl.packages.GlobalPackageStruct;
-import jcl.printer.Printer;
-import jcl.symbols.SymbolStruct;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class RemFunction extends FunctionStruct {
+public final class RemFunction extends CommonLispBuiltInFunctionStruct {
 
-	public static final SymbolStruct REM = GlobalPackageStruct.COMMON_LISP.intern("REM").getSymbol();
+	private static final String FUNCTION_NAME = "REM";
+	private static final String REAL_ARGUMENT = "REAL";
+	private static final String DIVISOR_ARGUMENT = "DIVISOR";
 
-	@Autowired
-	private Printer printer;
-
-	private RemFunction() {
-		super("", getInitLambdaListBindings());
-	}
-
-	@PostConstruct
-	private void init() {
-		REM.setFunction(this);
-		GlobalPackageStruct.COMMON_LISP.export(REM);
-	}
-
-	private static OrdinaryLambdaList getInitLambdaListBindings() {
-		final List<RequiredParameter> requiredBindings = new ArrayList<>(2);
-
-		final SymbolStruct realSymbol = GlobalPackageStruct.COMMON_LISP.intern("REAL").getSymbol();
-		final RequiredParameter requiredBinding1 = new RequiredParameter(realSymbol);
-		requiredBindings.add(requiredBinding1);
-
-		final SymbolStruct divisorSymbol = GlobalPackageStruct.COMMON_LISP.intern("DIVISOR").getSymbol();
-		final RequiredParameter requiredBinding2 = new RequiredParameter(divisorSymbol);
-		requiredBindings.add(requiredBinding2);
-
-		return OrdinaryLambdaList.builder()
-		                         .requiredBindings(requiredBindings)
-		                         .build();
+	public RemFunction() {
+		super("Performs the operation truncate on number and divisor and returns the remainder of the truncate operation.",
+		      FUNCTION_NAME,
+		      Parameters.forFunction(FUNCTION_NAME)
+		                .requiredParameter(REAL_ARGUMENT)
+		                .requiredParameter(DIVISOR_ARGUMENT)
+		);
 	}
 
 	@Override
-	public LispStruct apply(final LispStruct... lispStructs) {
-
-		final LispStruct lispStruct1 = lispStructs[0];
-		if (!(lispStruct1 instanceof RealStruct)) {
-			final String printedObject = printer.print(lispStruct1);
-			throw new TypeErrorException("Argument not of type Real: " + printedObject);
-		}
-		final RealStruct real = (RealStruct) lispStruct1;
-
-		final LispStruct lispStruct2 = lispStructs[1];
-		if (!(lispStruct2 instanceof RealStruct)) {
-			final String printedObject = printer.print(lispStruct2);
-			throw new TypeErrorException("Argument not of type Real: " + printedObject);
-		}
-		final RealStruct divisor = (RealStruct) lispStruct2;
-
+	public LispStruct apply(final Arguments arguments) {
+		final RealStruct real = arguments.getRequiredArgument(REAL_ARGUMENT, RealStruct.class);
+		final RealStruct divisor = arguments.getRequiredArgument(DIVISOR_ARGUMENT, RealStruct.class);
 		return real.rem(divisor);
 	}
 }

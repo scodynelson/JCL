@@ -4,67 +4,31 @@
 
 package jcl.numbers.functions;
 
-import javax.annotation.PostConstruct;
+import java.util.List;
 
 import jcl.LispStruct;
-import jcl.compiler.environment.binding.lambdalist.OrdinaryLambdaList;
-import jcl.compiler.environment.binding.lambdalist.RestParameter;
-import jcl.conditions.exceptions.TypeErrorException;
-import jcl.functions.FunctionStruct;
+import jcl.functions.CommonLispBuiltInFunctionStruct;
+import jcl.functions.parameterdsl.Arguments;
+import jcl.functions.parameterdsl.Parameters;
 import jcl.numbers.IntegerStruct;
-import jcl.packages.GlobalPackageStruct;
-import jcl.printer.Printer;
-import jcl.symbols.SymbolStruct;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class LogXorFunction extends FunctionStruct {
+public final class LogXorFunction extends CommonLispBuiltInFunctionStruct {
 
-	public static final SymbolStruct LOGXOR = GlobalPackageStruct.COMMON_LISP.intern("LOGXOR").getSymbol();
+	private static final String FUNCTION_NAME = "LOGXOR";
 
-	@Autowired
-	private Printer printer;
-
-	private LogXorFunction() {
-		super("", getInitLambdaListBindings());
-	}
-
-	@PostConstruct
-	private void init() {
-		LOGXOR.setFunction(this);
-		GlobalPackageStruct.COMMON_LISP.export(LOGXOR);
-	}
-
-	private static OrdinaryLambdaList getInitLambdaListBindings() {
-
-		final SymbolStruct restArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("INTEGERS").getSymbol();
-		final RestParameter restBinding = new RestParameter(restArgSymbol);
-
-		return OrdinaryLambdaList.builder()
-		                         .restBinding(restBinding)
-		                         .build();
+	public LogXorFunction() {
+		super("Returns the EXCLUSIVE-OR of the integers.",
+		      FUNCTION_NAME,
+		      Parameters.forFunction(FUNCTION_NAME)
+		                .restParameter()
+		);
 	}
 
 	@Override
-	public LispStruct apply(final LispStruct... lispStructs) {
-
-		final IntegerStruct[] integers = getIntegers(lispStructs);
+	public LispStruct apply(final Arguments arguments) {
+		final List<IntegerStruct> integers = arguments.getRestArgument(IntegerStruct.class);
 		return IntegerStruct.logXor(integers);
-	}
-
-	private IntegerStruct[] getIntegers(final LispStruct... lispStructs) {
-
-		final IntegerStruct[] numbers = new IntegerStruct[lispStructs.length];
-		for (int i = 0; i < lispStructs.length; i++) {
-			final LispStruct lispStruct = lispStructs[i];
-			if (lispStruct instanceof IntegerStruct) {
-				numbers[i] = (IntegerStruct) lispStruct;
-			} else {
-				final String printedObject = printer.print(lispStruct);
-				throw new TypeErrorException("Argument not of type Integer: " + printedObject);
-			}
-		}
-		return numbers;
 	}
 }

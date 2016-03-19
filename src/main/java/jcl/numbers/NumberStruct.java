@@ -8,7 +8,6 @@ import java.util.List;
 
 import jcl.LispStruct;
 import jcl.classes.BuiltInClassStruct;
-import jcl.conditions.exceptions.ErrorException;
 import jcl.types.NumberType;
 import org.apfloat.Apcomplex;
 
@@ -94,17 +93,8 @@ public abstract class NumberStruct extends BuiltInClassStruct {
 
 	protected abstract AddVisitor<?> addVisitor();
 
-	public static NumberStruct add(final NumberStruct... numbers) {
-		if (numbers.length == 0) {
-			return IntegerStruct.ZERO;
-		}
-
-		NumberStruct result = numbers[0];
-		for (int i = 1; i < numbers.length; i++) {
-			final NumberStruct currentNumber = numbers[i];
-			result = result.add(currentNumber);
-		}
-		return result;
+	public static NumberStruct add(final List<NumberStruct> numbers) {
+		return numbers.stream().reduce(IntegerStruct.ZERO, NumberStruct::add);
 	}
 
 	public NumberStruct subtract(final NumberStruct number) {
@@ -116,20 +106,11 @@ public abstract class NumberStruct extends BuiltInClassStruct {
 
 	protected abstract SubtractVisitor<?> subtractVisitor();
 
-	public static NumberStruct subtract(final NumberStruct... numbers) {
-		if (numbers.length == 0) {
-			throw new ErrorException("At least one number required perform subtraction.");
+	public static NumberStruct subtract(final NumberStruct number, final List<NumberStruct> numbers) {
+		if (numbers.isEmpty()) {
+			return number.negation();
 		}
-		if (numbers.length == 1) {
-			return numbers[0].negation();
-		}
-
-		NumberStruct result = numbers[0];
-		for (int i = 1; i < numbers.length; i++) {
-			final NumberStruct currentNumber = numbers[i];
-			result = result.subtract(currentNumber);
-		}
-		return result;
+		return numbers.stream().reduce(number, NumberStruct::subtract);
 	}
 
 	public NumberStruct multiply(final NumberStruct number) {
@@ -141,17 +122,8 @@ public abstract class NumberStruct extends BuiltInClassStruct {
 
 	protected abstract MultiplyVisitor<?> multiplyVisitor();
 
-	public static NumberStruct multiply(final NumberStruct... numbers) {
-		if (numbers.length == 0) {
-			return IntegerStruct.ONE;
-		}
-
-		NumberStruct result = numbers[0];
-		for (int i = 1; i < numbers.length; i++) {
-			final NumberStruct currentNumber = numbers[i];
-			result = result.multiply(currentNumber);
-		}
-		return result;
+	public static NumberStruct multiply(final List<NumberStruct> numbers) {
+		return numbers.stream().reduce(IntegerStruct.ONE, NumberStruct::multiply);
 	}
 
 	public NumberStruct divide(final NumberStruct number) {
@@ -163,20 +135,11 @@ public abstract class NumberStruct extends BuiltInClassStruct {
 
 	protected abstract DivideVisitor<?> divideVisitor();
 
-	public static NumberStruct divide(final NumberStruct... numbers) {
-		if (numbers.length == 0) {
-			throw new ErrorException("At least one number required to perform division.");
+	public static NumberStruct divide(final NumberStruct number, final List<NumberStruct> numbers) {
+		if (numbers.isEmpty()) {
+			return number.reciprocal();
 		}
-		if (numbers.length == 1) {
-			return numbers[0].reciprocal();
-		}
-
-		NumberStruct result = numbers[0];
-		for (int i = 1; i < numbers.length; i++) {
-			final NumberStruct currentNumber = numbers[i];
-			result = result.divide(currentNumber);
-		}
-		return result;
+		return numbers.stream().reduce(number, NumberStruct::divide);
 	}
 
 	public boolean isEqualTo(final NumberStruct number) {
@@ -188,16 +151,11 @@ public abstract class NumberStruct extends BuiltInClassStruct {
 
 	protected abstract EqualToVisitor<?> equalToVisitor();
 
-	public static boolean isEqualTo(final NumberStruct... numbers) {
-		if (numbers.length == 0) {
-			throw new ErrorException("At least one number required to test equality.");
-		}
-
-		NumberStruct previousNumber = numbers[0];
+	public static boolean isEqualTo(final NumberStruct number, final List<NumberStruct> numbers) {
+		NumberStruct previousNumber = number;
 
 		boolean result = true;
-		for (int i = 1; i < numbers.length; i++) {
-			final NumberStruct currentNumber = numbers[i];
+		for (final NumberStruct currentNumber : numbers) {
 			result = previousNumber.isEqualTo(currentNumber);
 			if (!result) {
 				break;
@@ -211,16 +169,11 @@ public abstract class NumberStruct extends BuiltInClassStruct {
 		return !isEqualTo(number);
 	}
 
-	public static boolean isNotEqualTo(final NumberStruct... numbers) {
-		if (numbers.length == 0) {
-			throw new ErrorException("At least one number required to test equality.");
-		}
-
-		NumberStruct previousNumber = numbers[0];
+	public static boolean isNotEqualTo(final NumberStruct number, final List<NumberStruct> numbers) {
+		NumberStruct previousNumber = number;
 
 		boolean result = true;
-		for (int i = 1; i < numbers.length; i++) {
-			final NumberStruct currentNumber = numbers[i];
+		for (final NumberStruct currentNumber : numbers) {
 			result = previousNumber.isNotEqualTo(currentNumber);
 			if (!result) {
 				break;

@@ -4,74 +4,34 @@
 
 package jcl.numbers.functions;
 
-import java.util.ArrayList;
-import java.util.List;
-import javax.annotation.PostConstruct;
-
 import jcl.LispStruct;
-import jcl.compiler.environment.binding.lambdalist.OrdinaryLambdaList;
-import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
-import jcl.conditions.exceptions.TypeErrorException;
-import jcl.functions.FunctionStruct;
+import jcl.functions.CommonLispBuiltInFunctionStruct;
+import jcl.functions.parameterdsl.Arguments;
+import jcl.functions.parameterdsl.Parameters;
 import jcl.numbers.FloatStruct;
 import jcl.numbers.IntegerStruct;
-import jcl.packages.GlobalPackageStruct;
-import jcl.printer.Printer;
-import jcl.symbols.SymbolStruct;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class ScaleFloatFunction extends FunctionStruct {
+public final class ScaleFloatFunction extends CommonLispBuiltInFunctionStruct {
 
-	public static final SymbolStruct SCALE_FLOAT = GlobalPackageStruct.COMMON_LISP.intern("SCALE-FLOAT").getSymbol();
+	private static final String FUNCTION_NAME = "SCALE-FLOAT";
+	private static final String FLOAT_ARGUMENT = "FLOAT";
+	private static final String SCALE_ARGUMENT = "SCALE";
 
-	@Autowired
-	private Printer printer;
-
-	private ScaleFloatFunction() {
-		super("", getInitLambdaListBindings());
-	}
-
-	@PostConstruct
-	private void init() {
-		SCALE_FLOAT.setFunction(this);
-		GlobalPackageStruct.COMMON_LISP.export(SCALE_FLOAT);
-	}
-
-	private static OrdinaryLambdaList getInitLambdaListBindings() {
-		final List<RequiredParameter> requiredBindings = new ArrayList<>(2);
-
-		final SymbolStruct floatSymbol = GlobalPackageStruct.COMMON_LISP.intern("FLOAT").getSymbol();
-		final RequiredParameter requiredBinding1 = new RequiredParameter(floatSymbol);
-		requiredBindings.add(requiredBinding1);
-
-		final SymbolStruct integerSymbol = GlobalPackageStruct.COMMON_LISP.intern("INTEGER").getSymbol();
-		final RequiredParameter requiredBinding2 = new RequiredParameter(integerSymbol);
-		requiredBindings.add(requiredBinding2);
-
-		return OrdinaryLambdaList.builder()
-		                         .requiredBindings(requiredBindings)
-		                         .build();
+	public ScaleFloatFunction() {
+		super("Returns (* float (expt (float b float) integer)), where b is the radix of the floating-point representation. float is not necessarily between 1/b and 1.",
+		      FUNCTION_NAME,
+		      Parameters.forFunction(FUNCTION_NAME)
+		                .requiredParameter(FLOAT_ARGUMENT)
+		                .requiredParameter(SCALE_ARGUMENT)
+		);
 	}
 
 	@Override
-	public LispStruct apply(final LispStruct... lispStructs) {
-
-		final LispStruct lispStruct1 = lispStructs[0];
-		if (!(lispStruct1 instanceof FloatStruct)) {
-			final String printedObject = printer.print(lispStruct1);
-			throw new TypeErrorException("Argument not of type Float: " + printedObject);
-		}
-		final FloatStruct floatVal = (FloatStruct) lispStruct1;
-
-		final LispStruct lispStruct2 = lispStructs[1];
-		if (!(lispStruct2 instanceof IntegerStruct)) {
-			final String printedObject = printer.print(lispStruct2);
-			throw new TypeErrorException("Argument not of type Integer: " + printedObject);
-		}
-		final IntegerStruct integer = (IntegerStruct) lispStruct2;
-
-		return floatVal.scaleFloat(integer);
+	public LispStruct apply(final Arguments arguments) {
+		final FloatStruct floatVal = arguments.getRequiredArgument(FLOAT_ARGUMENT, FloatStruct.class);
+		final IntegerStruct scale = arguments.getRequiredArgument(SCALE_ARGUMENT, IntegerStruct.class);
+		return floatVal.scaleFloat(scale);
 	}
 }

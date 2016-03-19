@@ -4,83 +4,38 @@
 
 package jcl.numbers.functions;
 
-import java.util.Collections;
-import java.util.List;
-import javax.annotation.PostConstruct;
-
 import jcl.LispStruct;
-import jcl.compiler.environment.binding.lambdalist.OptionalParameter;
-import jcl.compiler.environment.binding.lambdalist.OrdinaryLambdaList;
-import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
-import jcl.compiler.environment.binding.lambdalist.SuppliedPParameter;
-import jcl.conditions.exceptions.TypeErrorException;
-import jcl.functions.FunctionStruct;
+import jcl.functions.CommonLispBuiltInFunctionStruct;
+import jcl.functions.parameterdsl.Arguments;
+import jcl.functions.parameterdsl.Parameters;
 import jcl.numbers.FloatStruct;
-import jcl.packages.GlobalPackageStruct;
-import jcl.printer.Printer;
-import jcl.symbols.NILStruct;
-import jcl.symbols.SymbolStruct;
-import org.springframework.beans.factory.annotation.Autowired;
+import jcl.numbers.IntegerStruct;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class FloatSignFunction extends FunctionStruct {
+public final class FloatSignFunction extends CommonLispBuiltInFunctionStruct {
 
-	public static final SymbolStruct FLOAT_SIGN = GlobalPackageStruct.COMMON_LISP.intern("FLOAT-SIGN").getSymbol();
+	private static final String FUNCTION_NAME = "FLOAT-SIGN";
+	private static final String FLOAT1_ARGUMENT = "FLOAT1";
+	private static final String FLOAT2_ARGUMENT = "FLOAT2";
 
-	@Autowired
-	private Printer printer;
-
-	private FloatSignFunction() {
-		super("", getInitLambdaListBindings());
-	}
-
-	@PostConstruct
-	private void init() {
-		FLOAT_SIGN.setFunction(this);
-		GlobalPackageStruct.COMMON_LISP.export(FLOAT_SIGN);
-	}
-
-	private static OrdinaryLambdaList getInitLambdaListBindings() {
-
-		final SymbolStruct firstArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("FLOAT1").getSymbol();
-		final RequiredParameter requiredBinding = new RequiredParameter(firstArgSymbol);
-		final List<RequiredParameter> requiredBindings = Collections.singletonList(requiredBinding);
-
-		final SymbolStruct optionalArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("FLOAT2").getSymbol();
-
-		final SymbolStruct optionalSuppliedP = GlobalPackageStruct.COMMON_LISP.intern("FLOAT2-P-" + System.nanoTime()).getSymbol();
-		final SuppliedPParameter optionalSuppliedPBinding = new SuppliedPParameter(optionalSuppliedP);
-
-		final OptionalParameter optionalBinding = new OptionalParameter(optionalArgSymbol, NILStruct.INSTANCE, optionalSuppliedPBinding);
-		final List<OptionalParameter> optionalBindings = Collections.singletonList(optionalBinding);
-
-		return OrdinaryLambdaList.builder()
-		                         .requiredBindings(requiredBindings)
-		                         .optionalBindings(optionalBindings)
-		                         .build();
+	public FloatSignFunction() {
+		super("Returns a number z such that z and float-1 have the same sign and also such that z and float-2 have the same absolute value.",
+		      FUNCTION_NAME,
+		      Parameters.forFunction(FUNCTION_NAME)
+		                .requiredParameter(FLOAT1_ARGUMENT)
+		                .optionalParameter(FLOAT2_ARGUMENT).withInitialValue(IntegerStruct.ONE)
+		);
 	}
 
 	@Override
-	public LispStruct apply(final LispStruct... lispStructs) {
-
-		final LispStruct lispStruct = lispStructs[0];
-		if (!(lispStruct instanceof FloatStruct)) {
-			final String printedObject = printer.print(lispStruct);
-			throw new TypeErrorException("Argument not of type Float: " + printedObject);
-		}
-		final FloatStruct float1 = (FloatStruct) lispStruct;
-
-		if (lispStructs.length > 1) {
-			final LispStruct lispStruct2 = lispStructs[1];
-			if (!(lispStruct2 instanceof FloatStruct)) {
-				final String printedObject = printer.print(lispStruct2);
-				throw new TypeErrorException("Argument not of type Float: " + printedObject);
-			}
-			final FloatStruct float2 = (FloatStruct) lispStruct2;
-
+	public LispStruct apply(final Arguments arguments) {
+		if (arguments.hasOptionalArgument(FLOAT2_ARGUMENT)) {
+			final FloatStruct float1 = arguments.getRequiredArgument(FLOAT1_ARGUMENT, FloatStruct.class);
+			final FloatStruct float2 = arguments.getOptionalArgument(FLOAT2_ARGUMENT, FloatStruct.class);
 			return float1.floatSign(float2);
 		} else {
+			final FloatStruct float1 = arguments.getRequiredArgument(FLOAT1_ARGUMENT, FloatStruct.class);
 			return float1.floatSign();
 		}
 	}

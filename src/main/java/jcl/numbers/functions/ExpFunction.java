@@ -4,61 +4,30 @@
 
 package jcl.numbers.functions;
 
-import java.util.Collections;
-import java.util.List;
-import javax.annotation.PostConstruct;
-
 import jcl.LispStruct;
-import jcl.compiler.environment.binding.lambdalist.OrdinaryLambdaList;
-import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
-import jcl.conditions.exceptions.TypeErrorException;
-import jcl.functions.FunctionStruct;
+import jcl.functions.CommonLispBuiltInFunctionStruct;
+import jcl.functions.parameterdsl.Arguments;
+import jcl.functions.parameterdsl.Parameters;
 import jcl.numbers.NumberStruct;
-import jcl.packages.GlobalPackageStruct;
-import jcl.printer.Printer;
-import jcl.symbols.SymbolStruct;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class ExpFunction extends FunctionStruct {
+public final class ExpFunction extends CommonLispBuiltInFunctionStruct {
 
-	public static final SymbolStruct EXP = GlobalPackageStruct.COMMON_LISP.intern("EXP").getSymbol();
+	private static final String FUNCTION_NAME = "EXP";
+	private static final String POWER_NUMBER_ARGUMENT = "POWER-NUMBER";
 
-	@Autowired
-	private Printer printer;
-
-	private ExpFunction() {
-		super("", getInitLambdaListBindings());
-	}
-
-	@PostConstruct
-	private void init() {
-		EXP.setFunction(this);
-		GlobalPackageStruct.COMMON_LISP.export(EXP);
-	}
-
-	private static OrdinaryLambdaList getInitLambdaListBindings() {
-
-		final SymbolStruct firstArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("NUMBER").getSymbol();
-		final RequiredParameter requiredBinding = new RequiredParameter(firstArgSymbol);
-		final List<RequiredParameter> requiredBindings = Collections.singletonList(requiredBinding);
-
-		return OrdinaryLambdaList.builder()
-		                         .requiredBindings(requiredBindings)
-		                         .build();
+	public ExpFunction() {
+		super("Returns e raised to the power power-number, where e is the base of the natural logarithms.",
+		      FUNCTION_NAME,
+		      Parameters.forFunction(FUNCTION_NAME)
+		                .requiredParameter(POWER_NUMBER_ARGUMENT)
+		);
 	}
 
 	@Override
-	public LispStruct apply(final LispStruct... lispStructs) {
-
-		final LispStruct lispStruct = lispStructs[0];
-		if (!(lispStruct instanceof NumberStruct)) {
-			final String printedObject = printer.print(lispStruct);
-			throw new TypeErrorException("Argument not of type Number: " + printedObject);
-		}
-
-		final NumberStruct number = (NumberStruct) lispStruct;
-		return number.exp();
+	public LispStruct apply(final Arguments arguments) {
+		final NumberStruct powerNumber = arguments.getRequiredArgument(POWER_NUMBER_ARGUMENT, NumberStruct.class);
+		return powerNumber.exp();
 	}
 }

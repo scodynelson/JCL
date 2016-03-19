@@ -4,67 +4,31 @@
 
 package jcl.numbers.functions;
 
-import javax.annotation.PostConstruct;
+import java.util.List;
 
 import jcl.LispStruct;
-import jcl.compiler.environment.binding.lambdalist.OrdinaryLambdaList;
-import jcl.compiler.environment.binding.lambdalist.RestParameter;
-import jcl.conditions.exceptions.TypeErrorException;
-import jcl.functions.FunctionStruct;
+import jcl.functions.CommonLispBuiltInFunctionStruct;
+import jcl.functions.parameterdsl.Arguments;
+import jcl.functions.parameterdsl.Parameters;
 import jcl.numbers.NumberStruct;
-import jcl.packages.GlobalPackageStruct;
-import jcl.printer.Printer;
-import jcl.symbols.SymbolStruct;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class MultiplyFunction extends FunctionStruct {
+public final class MultiplyFunction extends CommonLispBuiltInFunctionStruct {
 
-	public static final SymbolStruct MULTIPLY = GlobalPackageStruct.COMMON_LISP.intern("*").getSymbol();
+	private static final String FUNCTION_NAME = "*";
 
-	@Autowired
-	private Printer printer;
-
-	private MultiplyFunction() {
-		super("", getInitLambdaListBindings());
-	}
-
-	@PostConstruct
-	private void init() {
-		MULTIPLY.setFunction(this);
-		GlobalPackageStruct.COMMON_LISP.export(MULTIPLY);
-	}
-
-	private static OrdinaryLambdaList getInitLambdaListBindings() {
-
-		final SymbolStruct restArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("NUMBERS").getSymbol();
-		final RestParameter restBinding = new RestParameter(restArgSymbol);
-
-		return OrdinaryLambdaList.builder()
-		                         .restBinding(restBinding)
-		                         .build();
+	public MultiplyFunction() {
+		super("Returns the product of numbers, performing any necessary type conversions in the process. If no numbers are supplied, 1 is returned.",
+		      FUNCTION_NAME,
+		      Parameters.forFunction(FUNCTION_NAME)
+		                .restParameter()
+		);
 	}
 
 	@Override
-	public LispStruct apply(final LispStruct... lispStructs) {
-
-		final NumberStruct[] numbers = getNumbers(lispStructs);
+	public LispStruct apply(final Arguments arguments) {
+		final List<NumberStruct> numbers = arguments.getRestArgument(NumberStruct.class);
 		return NumberStruct.multiply(numbers);
-	}
-
-	private NumberStruct[] getNumbers(final LispStruct... lispStructs) {
-
-		final NumberStruct[] numbers = new NumberStruct[lispStructs.length];
-		for (int i = 0; i < lispStructs.length; i++) {
-			final LispStruct lispStruct = lispStructs[i];
-			if (lispStruct instanceof NumberStruct) {
-				numbers[i] = (NumberStruct) lispStruct;
-			} else {
-				final String printedObject = printer.print(lispStruct);
-				throw new TypeErrorException("Argument not of type Number: " + printedObject);
-			}
-		}
-		return numbers;
 	}
 }

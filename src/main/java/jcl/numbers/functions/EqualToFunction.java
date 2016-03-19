@@ -4,77 +4,37 @@
 
 package jcl.numbers.functions;
 
-import java.util.Collections;
 import java.util.List;
-import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
-import jcl.compiler.environment.binding.lambdalist.OrdinaryLambdaList;
-import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
-import jcl.compiler.environment.binding.lambdalist.RestParameter;
-import jcl.conditions.exceptions.TypeErrorException;
-import jcl.functions.FunctionStruct;
+import jcl.functions.CommonLispBuiltInFunctionStruct;
+import jcl.functions.parameterdsl.Arguments;
+import jcl.functions.parameterdsl.Parameters;
 import jcl.numbers.NumberStruct;
-import jcl.packages.GlobalPackageStruct;
-import jcl.printer.Printer;
-import jcl.symbols.NILStruct;
-import jcl.symbols.SymbolStruct;
-import jcl.symbols.TStruct;
-import org.springframework.beans.factory.annotation.Autowired;
+import jcl.symbols.BooleanStructs;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class EqualToFunction extends FunctionStruct {
+public final class EqualToFunction extends CommonLispBuiltInFunctionStruct {
 
-	public static final SymbolStruct EQUAL_TO = GlobalPackageStruct.COMMON_LISP.intern("=").getSymbol();
+	private static final String FUNCTION_NAME = "=";
+	private static final String NUMBER_ARGUMENT = "NUMBER";
 
-	@Autowired
-	private Printer printer;
-
-	private EqualToFunction() {
-		super("", getInitLambdaListBindings());
-	}
-
-	@PostConstruct
-	private void init() {
-		EQUAL_TO.setFunction(this);
-		GlobalPackageStruct.COMMON_LISP.export(EQUAL_TO);
-	}
-
-	private static OrdinaryLambdaList getInitLambdaListBindings() {
-
-		final SymbolStruct firstArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("REAL").getSymbol();
-		final RequiredParameter requiredBinding = new RequiredParameter(firstArgSymbol);
-		final List<RequiredParameter> requiredBindings = Collections.singletonList(requiredBinding);
-
-		final SymbolStruct restArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("REALS").getSymbol();
-		final RestParameter restBinding = new RestParameter(restArgSymbol);
-
-		return OrdinaryLambdaList.builder()
-		                         .requiredBindings(requiredBindings)
-		                         .restBinding(restBinding)
-		                         .build();
+	public EqualToFunction() {
+		super("Returns true if all numbers are the same in value; otherwise returns false.",
+		      FUNCTION_NAME,
+		      Parameters.forFunction(FUNCTION_NAME)
+		                .requiredParameter(NUMBER_ARGUMENT)
+		                .restParameter()
+		);
 	}
 
 	@Override
-	public LispStruct apply(final LispStruct... lispStructs) {
+	public LispStruct apply(final Arguments arguments) {
+		final NumberStruct number = arguments.getRequiredArgument(NUMBER_ARGUMENT, NumberStruct.class);
+		final List<NumberStruct> numbers = arguments.getRestArgument(NumberStruct.class);
 
-		final NumberStruct[] numbers = getNumbers(lispStructs);
-		return NumberStruct.isEqualTo(numbers) ? TStruct.INSTANCE : NILStruct.INSTANCE;
-	}
-
-	private NumberStruct[] getNumbers(final LispStruct... lispStructs) {
-
-		final NumberStruct[] numbers = new NumberStruct[lispStructs.length];
-		for (int i = 0; i < lispStructs.length; i++) {
-			final LispStruct lispStruct = lispStructs[i];
-			if (lispStruct instanceof NumberStruct) {
-				numbers[i] = (NumberStruct) lispStruct;
-			} else {
-				final String printedObject = printer.print(lispStruct);
-				throw new TypeErrorException("Argument not of type Number: " + printedObject);
-			}
-		}
-		return numbers;
+		final boolean result = NumberStruct.isEqualTo(number, numbers);
+		return BooleanStructs.toLispBoolean(result);
 	}
 }

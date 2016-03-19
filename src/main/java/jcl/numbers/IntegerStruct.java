@@ -7,6 +7,7 @@ package jcl.numbers;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.RoundingMode;
+import java.util.List;
 import java.util.stream.Stream;
 
 import jcl.types.IntegerType;
@@ -314,7 +315,8 @@ public class IntegerStruct extends RationalStruct {
 	 * @param lessThanVisitor
 	 * 		the {@link RealStruct.LessThanVisitor} to be used in the {@literal '<'} operation
 	 *
-	 * @return the {@literal '<'} comparison of {@link NumberStruct} using the provided {@link RealStruct.LessThanVisitor} and this
+	 * @return the {@literal '<'} comparison of {@link NumberStruct} using the provided {@link
+	 * RealStruct.LessThanVisitor} and this
 	 * IntegerStruct
 	 */
 	@Override
@@ -323,7 +325,8 @@ public class IntegerStruct extends RationalStruct {
 	}
 
 	/**
-	 * Returns a new {@link RealStruct.LessThanVisitor} with this IntegerStruct to be used in a {@literal '<'} operation.
+	 * Returns a new {@link RealStruct.LessThanVisitor} with this IntegerStruct to be used in a {@literal '<'}
+	 * operation.
 	 *
 	 * @return a new {@link RealStruct.LessThanVisitor} with this IntegerStruct to be used in a {@literal '<'} operation
 	 */
@@ -340,7 +343,8 @@ public class IntegerStruct extends RationalStruct {
 	 * @param greaterThanVisitor
 	 * 		the {@link RealStruct.GreaterThanVisitor} to be used in the {@literal '>'} operation
 	 *
-	 * @return the {@literal '>'} comparison of {@link NumberStruct} using the provided {@link RealStruct.GreaterThanVisitor} and
+	 * @return the {@literal '>'} comparison of {@link NumberStruct} using the provided {@link
+	 * RealStruct.GreaterThanVisitor} and
 	 * this IntegerStruct
 	 */
 	@Override
@@ -349,9 +353,11 @@ public class IntegerStruct extends RationalStruct {
 	}
 
 	/**
-	 * Returns a new {@link RealStruct.GreaterThanVisitor} with this IntegerStruct to be used in a {@literal '>'} operation.
+	 * Returns a new {@link RealStruct.GreaterThanVisitor} with this IntegerStruct to be used in a {@literal '>'}
+	 * operation.
 	 *
-	 * @return a new {@link RealStruct.GreaterThanVisitor} with this IntegerStruct to be used in a {@literal '>'} operation
+	 * @return a new {@link RealStruct.GreaterThanVisitor} with this IntegerStruct to be used in a {@literal '>'}
+	 * operation
 	 */
 	@Override
 	protected RealStruct.GreaterThanVisitor<?> greaterThanVisitor() {
@@ -361,7 +367,8 @@ public class IntegerStruct extends RationalStruct {
 	/**
 	 * {@inheritDoc}
 	 * <p>
-	 * Compares this IntegerStruct to a {@link NumberStruct} using the provided {@link RealStruct.LessThanOrEqualToVisitor}.
+	 * Compares this IntegerStruct to a {@link NumberStruct} using the provided {@link
+	 * RealStruct.LessThanOrEqualToVisitor}.
 	 *
 	 * @param lessThanOrEqualToVisitor
 	 * 		the {@link RealStruct.LessThanOrEqualToVisitor} to be used in the {@literal '<='} operation
@@ -375,10 +382,12 @@ public class IntegerStruct extends RationalStruct {
 	}
 
 	/**
-	 * Returns a new {@link RealStruct.LessThanOrEqualToVisitor} with this IntegerStruct to be used in a {@literal '<='}
+	 * Returns a new {@link RealStruct.LessThanOrEqualToVisitor} with this IntegerStruct to be used in a {@literal
+	 * '<='}
 	 * operation.
 	 *
-	 * @return a new {@link RealStruct.LessThanOrEqualToVisitor} with this IntegerStruct to be used in a {@literal '<='} operation
+	 * @return a new {@link RealStruct.LessThanOrEqualToVisitor} with this IntegerStruct to be used in a {@literal '<='}
+	 * operation
 	 */
 	@Override
 	protected RealStruct.LessThanOrEqualToVisitor<?> lessThanOrEqualToVisitor() {
@@ -388,7 +397,8 @@ public class IntegerStruct extends RationalStruct {
 	/**
 	 * {@inheritDoc}
 	 * <p>
-	 * Compares this IntegerStruct to a {@link NumberStruct} using the provided {@link RealStruct.GreaterThanOrEqualToVisitor}.
+	 * Compares this IntegerStruct to a {@link NumberStruct} using the provided {@link
+	 * RealStruct.GreaterThanOrEqualToVisitor}.
 	 *
 	 * @param greaterThanOrEqualToVisitor
 	 * 		the {@link RealStruct.GreaterThanOrEqualToVisitor} to be used in the {@literal '>='} operation
@@ -402,10 +412,12 @@ public class IntegerStruct extends RationalStruct {
 	}
 
 	/**
-	 * Returns a new {@link RealStruct.GreaterThanOrEqualToVisitor} with this IntegerStruct to be used in a {@literal '>='}
+	 * Returns a new {@link RealStruct.GreaterThanOrEqualToVisitor} with this IntegerStruct to be used in a {@literal
+	 * '>='}
 	 * operation.
 	 *
-	 * @return a new {@link RealStruct.GreaterThanOrEqualToVisitor} with this IntegerStruct to be used in a {@literal '>='}
+	 * @return a new {@link RealStruct.GreaterThanOrEqualToVisitor} with this IntegerStruct to be used in a {@literal
+	 * '>='}
 	 * operation
 	 */
 	@Override
@@ -710,9 +722,8 @@ public class IntegerStruct extends RationalStruct {
 	 *
 	 * @return the greatest common divisor of the provided IntegerStructs
 	 */
-	public static IntegerStruct gcd(final IntegerStruct... integers) {
-		return Stream.of(integers)
-		             .reduce(ZERO, (x, y) -> x.gcd(y));
+	public static IntegerStruct gcd(final List<IntegerStruct> integers) {
+		return integers.stream().reduce(ZERO, IntegerStruct::gcd);
 	}
 
 	/**
@@ -747,9 +758,8 @@ public class IntegerStruct extends RationalStruct {
 	 *
 	 * @return the least common multiple of the provided IntegerStructs
 	 */
-	public static IntegerStruct lcm(final IntegerStruct... integers) {
-		return Stream.of(integers)
-		             .reduce(ONE, (x, y) -> x.lcm(y));
+	public static IntegerStruct lcm(final List<IntegerStruct> integers) {
+		return integers.stream().reduce(ONE, IntegerStruct::lcm);
 	}
 
 	/**
@@ -796,9 +806,8 @@ public class IntegerStruct extends RationalStruct {
 	 *
 	 * @return the bit-wise logical 'and' of the provided IntegerStructs
 	 */
-	public static IntegerStruct logAnd(final IntegerStruct... integers) {
-		return Stream.of(integers)
-		             .reduce(MINUS_ONE, (x, y) -> x.logAnd(y));
+	public static IntegerStruct logAnd(final List<IntegerStruct> integers) {
+		return integers.stream().reduce(MINUS_ONE, IntegerStruct::logAnd);
 	}
 
 	/**
@@ -854,9 +863,8 @@ public class IntegerStruct extends RationalStruct {
 	 *
 	 * @return the bit-wise logical 'equivalence', or 'exclusive-nor' of the provided IntegerStructs
 	 */
-	public static IntegerStruct logEqv(final IntegerStruct... integers) {
-		return Stream.of(integers)
-		             .reduce(MINUS_ONE, (x, y) -> x.logEqv(y));
+	public static IntegerStruct logEqv(final List<IntegerStruct> integers) {
+		return integers.stream().reduce(MINUS_ONE, IntegerStruct::logEqv);
 	}
 
 	/**
@@ -881,9 +889,8 @@ public class IntegerStruct extends RationalStruct {
 	 *
 	 * @return the bit-wise logical 'inclusive-or' of the provided IntegerStructs
 	 */
-	public static IntegerStruct logIor(final IntegerStruct... integers) {
-		return Stream.of(integers)
-		             .reduce(ZERO, (x, y) -> x.logIor(y));
+	public static IntegerStruct logIor(final List<IntegerStruct> integers) {
+		return integers.stream().reduce(ZERO, IntegerStruct::logIor);
 	}
 
 	/**
@@ -974,9 +981,8 @@ public class IntegerStruct extends RationalStruct {
 	 *
 	 * @return the bit-wise logical 'exclusive-or' of the provided IntegerStructs
 	 */
-	public static IntegerStruct logXor(final IntegerStruct... integers) {
-		return Stream.of(integers)
-		             .reduce(ZERO, (x, y) -> x.logXor(y));
+	public static IntegerStruct logXor(final List<IntegerStruct> integers) {
+		return integers.stream().reduce(ZERO, IntegerStruct::logXor);
 	}
 
 	/**
@@ -1342,7 +1348,8 @@ public class IntegerStruct extends RationalStruct {
 	}
 
 	/**
-	 * {@link RealStruct.LessThanVisitor} for computing numeric {@literal '<'} equality results for {@link IntegerStruct}s.
+	 * {@link RealStruct.LessThanVisitor} for computing numeric {@literal '<'} equality results for {@link
+	 * IntegerStruct}s.
 	 */
 	private static final class IntegerLessThanVisitor extends RealStruct.LessThanVisitor<IntegerStruct> {
 
@@ -1379,7 +1386,8 @@ public class IntegerStruct extends RationalStruct {
 	}
 
 	/**
-	 * {@link RealStruct.GreaterThanVisitor} for computing numeric {@literal '>'} equality results for {@link IntegerStruct}s.
+	 * {@link RealStruct.GreaterThanVisitor} for computing numeric {@literal '>'} equality results for {@link
+	 * IntegerStruct}s.
 	 */
 	private static final class IntegerGreaterThanVisitor extends RealStruct.GreaterThanVisitor<IntegerStruct> {
 

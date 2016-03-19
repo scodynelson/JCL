@@ -4,88 +4,38 @@
 
 package jcl.numbers.functions;
 
-import java.util.Collections;
-import java.util.List;
-import javax.annotation.PostConstruct;
-
 import jcl.LispStruct;
-import jcl.compiler.environment.binding.lambdalist.OptionalParameter;
-import jcl.compiler.environment.binding.lambdalist.OrdinaryLambdaList;
-import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
-import jcl.compiler.environment.binding.lambdalist.SuppliedPParameter;
 import jcl.compiler.struct.ValuesStruct;
-import jcl.conditions.exceptions.TypeErrorException;
-import jcl.functions.FunctionStruct;
+import jcl.functions.CommonLispBuiltInFunctionStruct;
+import jcl.functions.parameterdsl.Arguments;
+import jcl.functions.parameterdsl.Parameters;
 import jcl.numbers.IntegerStruct;
 import jcl.numbers.QuotientRemainderResult;
 import jcl.numbers.RealStruct;
-import jcl.packages.GlobalPackageStruct;
-import jcl.printer.Printer;
-import jcl.symbols.SymbolStruct;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class FFloorFunction extends FunctionStruct {
+public final class FFloorFunction extends CommonLispBuiltInFunctionStruct {
 
-	public static final SymbolStruct FFLOOR = GlobalPackageStruct.COMMON_LISP.intern("FFLOOR").getSymbol();
+	private static final String FUNCTION_NAME = "FFLOOR";
+	private static final String REAL_ARGUMENT = "REAL";
+	private static final String DIVISOR_ARGUMENT = "DIVISOR";
 
-	@Autowired
-	private Printer printer;
-
-	private FFloorFunction() {
-		super("", getInitLambdaListBindings());
-	}
-
-	@PostConstruct
-	private void init() {
-		FFLOOR.setFunction(this);
-		GlobalPackageStruct.COMMON_LISP.export(FFLOOR);
-	}
-
-	private static OrdinaryLambdaList getInitLambdaListBindings() {
-
-		final SymbolStruct firstArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("REAL").getSymbol();
-		final RequiredParameter requiredBinding = new RequiredParameter(firstArgSymbol);
-		final List<RequiredParameter> requiredBindings = Collections.singletonList(requiredBinding);
-
-		final SymbolStruct divisorArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("DIVISOR").getSymbol();
-
-		final SymbolStruct divisorSuppliedP = GlobalPackageStruct.COMMON_LISP.intern("DIVISOR-P-" + System.nanoTime()).getSymbol();
-		final SuppliedPParameter divisorSuppliedPBinding = new SuppliedPParameter(divisorSuppliedP);
-
-		final OptionalParameter optionalBinding = new OptionalParameter(divisorArgSymbol, IntegerStruct.ONE, divisorSuppliedPBinding);
-		final List<OptionalParameter> optionalBindings = Collections.singletonList(optionalBinding);
-
-		return OrdinaryLambdaList.builder()
-		                         .requiredBindings(requiredBindings)
-		                         .optionalBindings(optionalBindings)
-		                         .build();
+	public FFloorFunction() {
+		super("Produces a quotient that has been truncated toward negative infinity; that is, the quotient represents the largest mathematical integer that is not larger than the mathematical quotient.",
+		      FUNCTION_NAME,
+		      Parameters.forFunction(FUNCTION_NAME)
+		                .requiredParameter(REAL_ARGUMENT)
+		                .optionalParameter(DIVISOR_ARGUMENT).withInitialValue(IntegerStruct.ONE)
+		);
 	}
 
 	@Override
-	public LispStruct apply(final LispStruct... lispStructs) {
+	public LispStruct apply(final Arguments arguments) {
+		final RealStruct real = arguments.getRequiredArgument(REAL_ARGUMENT, RealStruct.class);
+		final RealStruct divisor = arguments.getRequiredArgument(DIVISOR_ARGUMENT, RealStruct.class);
 
-		final LispStruct lispStruct = lispStructs[0];
-		if (!(lispStruct instanceof RealStruct)) {
-			final String printedObject = printer.print(lispStruct);
-			throw new TypeErrorException("Argument not of type Real: " + printedObject);
-		}
-		final RealStruct real = (RealStruct) lispStruct;
-
-		final QuotientRemainderResult ffloor;
-		if (lispStructs.length > 1) {
-			final LispStruct divisor = lispStructs[1];
-			if (!(divisor instanceof RealStruct)) {
-				final String printedObject = printer.print(divisor);
-				throw new TypeErrorException("Argument not of type Real: " + printedObject);
-			}
-			final RealStruct divisorReal = (RealStruct) divisor;
-
-			ffloor = real.ffloor(divisorReal);
-		} else {
-			ffloor = real.ffloor();
-		}
+		final QuotientRemainderResult ffloor = real.ffloor(divisor);
 		final RealStruct quotient = ffloor.getQuotient();
 		final RealStruct remainder = ffloor.getRemainder();
 		return new ValuesStruct(quotient, remainder);

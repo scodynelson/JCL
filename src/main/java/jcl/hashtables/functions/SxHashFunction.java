@@ -5,43 +5,32 @@
 package jcl.hashtables.functions;
 
 import java.math.BigInteger;
-import java.util.List;
 
 import jcl.LispStruct;
-import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
-import jcl.functions.AbstractCommonLispFunctionStruct;
+import jcl.functions.CommonLispBuiltInFunctionStruct;
+import jcl.functions.parameterdsl.Arguments;
+import jcl.functions.parameterdsl.Parameters;
 import jcl.numbers.IntegerStruct;
-import jcl.packages.GlobalPackageStruct;
-import jcl.types.TypeValidator;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class SxHashFunction extends AbstractCommonLispFunctionStruct {
+public final class SxHashFunction extends CommonLispBuiltInFunctionStruct {
 
-	@Autowired
-	private TypeValidator validator;
+	private static final String FUNCTION_NAME = "SXHASH";
+	private static final String OBJECT_ARGUMENT = "OBJECT";
 
 	public SxHashFunction() {
-		super("Returns a hash code for object");
+		super("Returns a hash code for object.",
+		      FUNCTION_NAME,
+		      Parameters.forFunction(FUNCTION_NAME)
+		                .requiredParameter(OBJECT_ARGUMENT)
+		);
 	}
 
 	@Override
-	protected List<RequiredParameter> getRequiredBindings() {
-		return RequiredParameter.builder(GlobalPackageStruct.COMMON_LISP, "HASH-TABLE").buildList();
-	}
-
-	@Override
-	public LispStruct apply(final LispStruct... lispStructs) {
-		super.apply(lispStructs);
-
-		final LispStruct lispStruct = lispStructs[0];
-		final int hashCode = lispStruct.hashCode();
+	public LispStruct apply(final Arguments arguments) {
+		final LispStruct object = arguments.getRequiredArgument(OBJECT_ARGUMENT);
+		final int hashCode = object.hashCode();
 		return new IntegerStruct(BigInteger.valueOf(hashCode));
-	}
-
-	@Override
-	protected String functionName() {
-		return "SXHASH";
 	}
 }

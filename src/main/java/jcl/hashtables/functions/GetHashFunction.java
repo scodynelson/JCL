@@ -4,71 +4,39 @@
 
 package jcl.hashtables.functions;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import jcl.LispStruct;
-import jcl.compiler.environment.binding.lambdalist.OptionalParameter;
-import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
-import jcl.functions.AbstractCommonLispFunctionStruct;
+import jcl.functions.CommonLispBuiltInFunctionStruct;
+import jcl.functions.parameterdsl.Arguments;
+import jcl.functions.parameterdsl.Parameters;
 import jcl.hashtables.HashTableStruct;
-import jcl.packages.GlobalPackageStruct;
 import jcl.symbols.NILStruct;
-import jcl.types.HashTableType;
-import jcl.types.TypeValidator;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class GetHashFunction extends AbstractCommonLispFunctionStruct {
+public final class GetHashFunction extends CommonLispBuiltInFunctionStruct {
 
-	@Autowired
-	private TypeValidator validator;
+	private static final String FUNCTION_NAME = "GETHASH";
+	private static final String KEY_ARGUMENT = "KEY";
+	private static final String HASH_TABLE_ARGUMENT = "HASH-TABLE";
+	private static final String DEFAULT_ARGUMENT = "DEFAULT";
 
 	public GetHashFunction() {
-		super("Retrieve the value in the hash-table whose key is the same as the key under the hash-table's equivalence test. If there is no such entry, the result is the default.");
+		super("Retrieve the value in the hash-table whose key is the same as the key under the hash-table's equivalence test. If there is no such entry, the result is the default.",
+		      FUNCTION_NAME,
+		      Parameters.forFunction(FUNCTION_NAME)
+		                .requiredParameter(KEY_ARGUMENT)
+		                .requiredParameter(HASH_TABLE_ARGUMENT)
+		                .optionalParameter(DEFAULT_ARGUMENT).withInitialValue(NILStruct.INSTANCE)
+		);
 	}
 
 	@Override
-	protected List<RequiredParameter> getRequiredBindings() {
-		final List<RequiredParameter> requiredParameters = new ArrayList<>(2);
-		final RequiredParameter keyParameter
-				= RequiredParameter.builder(GlobalPackageStruct.COMMON_LISP, "KEY").build();
-		requiredParameters.add(keyParameter);
-		final RequiredParameter hashTableParameter
-				= RequiredParameter.builder(GlobalPackageStruct.COMMON_LISP, "HASH-TABLE").build();
-		requiredParameters.add(hashTableParameter);
-		return requiredParameters;
-	}
+	public LispStruct apply(final Arguments arguments) {
+		final LispStruct key = arguments.getRequiredArgument(KEY_ARGUMENT);
+		final HashTableStruct hashTable = arguments.getRequiredArgument(HASH_TABLE_ARGUMENT, HashTableStruct.class);
+		final LispStruct defaultVal = arguments.getOptionalArgument(DEFAULT_ARGUMENT);
 
-	@Override
-	protected List<OptionalParameter> getOptionalBindings() {
-		return OptionalParameter.builder(GlobalPackageStruct.COMMON_LISP, "DEFAULT")
-		                        .suppliedPBinding()
-		                        .buildList();
-	}
-
-	@Override
-	public LispStruct apply(final LispStruct... lispStructs) {
-		super.apply(lispStructs);
-
-		final LispStruct key = lispStructs[0];
-
-		final LispStruct hashTable = lispStructs[1];
-		validator.validateTypes(hashTable, functionName(), "Hash-Table", HashTableType.INSTANCE);
-		final HashTableStruct hashTableValue = (HashTableStruct) hashTable;
-
-		LispStruct defaultValue = NILStruct.INSTANCE;
-		if (lispStructs.length > 2) {
-			defaultValue = lispStructs[2];
-		}
-
-		final LispStruct hash = hashTableValue.getHash(key);
-		return (hash == null) ? defaultValue : hash;
-	}
-
-	@Override
-	protected String functionName() {
-		return "GETHASH";
+		final LispStruct hash = hashTable.getHash(key);
+		return (hash == null) ? defaultVal : hash;
 	}
 }

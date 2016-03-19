@@ -4,25 +4,31 @@
 
 package jcl.hashtables.functions;
 
-import jcl.LispType;
-import jcl.functions.AbstractPredicateCommonLispFunction;
-import jcl.types.HashTableType;
+import jcl.LispStruct;
+import jcl.functions.CommonLispBuiltInFunctionStruct;
+import jcl.functions.parameterdsl.Arguments;
+import jcl.functions.parameterdsl.Parameters;
+import jcl.hashtables.HashTableStruct;
+import jcl.symbols.BooleanStructs;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class HashTablePFunction extends AbstractPredicateCommonLispFunction {
+public final class HashTablePFunction extends CommonLispBuiltInFunctionStruct {
+
+	private static final String FUNCTION_NAME = "HASH-TABLE-P";
+	private static final String OBJECT_ARGUMENT = "OBJECT";
 
 	public HashTablePFunction() {
-		super("Returns true if object is of type hash-table; otherwise, returns false.");
+		super("Returns true if object is of type hash-table; otherwise, returns false.",
+		      FUNCTION_NAME,
+		      Parameters.forFunction(FUNCTION_NAME)
+		                .requiredParameter(OBJECT_ARGUMENT)
+		);
 	}
 
 	@Override
-	protected String functionName() {
-		return "HASH-TABLE-P";
-	}
-
-	@Override
-	protected LispType testType() {
-		return HashTableType.INSTANCE;
+	public LispStruct apply(final Arguments arguments) {
+		final LispStruct object = arguments.getRequiredArgument(OBJECT_ARGUMENT);
+		return BooleanStructs.toLispBoolean(object instanceof HashTableStruct);
 	}
 }

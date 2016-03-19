@@ -4,60 +4,50 @@
 
 package jcl.hashtables.functions;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import jcl.LispStruct;
-import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
-import jcl.functions.AbstractCommonLispFunctionStruct;
+import jcl.conditions.exceptions.TypeErrorException;
+import jcl.functions.CommonLispBuiltInFunctionStruct;
 import jcl.functions.FunctionStruct;
+import jcl.functions.parameterdsl.Arguments;
+import jcl.functions.parameterdsl.Parameters;
 import jcl.hashtables.HashTableStruct;
-import jcl.packages.GlobalPackageStruct;
 import jcl.symbols.NILStruct;
-import jcl.types.HashTableType;
-import jcl.types.TypeValidator;
-import org.springframework.beans.factory.annotation.Autowired;
+import jcl.symbols.SymbolStruct;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class MapHashFunction extends AbstractCommonLispFunctionStruct {
+public final class MapHashFunction extends CommonLispBuiltInFunctionStruct {
 
-	@Autowired
-	private TypeValidator validator;
+	private static final String FUNCTION_NAME = "MAPHASH";
+	private static final String FUNCTION_ARGUMENT = "FUNCTION";
+	private static final String HASH_TABLE_ARGUMENT = "HASH-TABLE";
 
 	public MapHashFunction() {
-		super("Iterates over all entries in the hash-table. For each entry, the function is called with two arguments--the key and the value of that entry.");
+		super("Iterates over all entries in the hash-table. For each entry, the function is called with two arguments--the key and the value of that entry.",
+		      FUNCTION_NAME,
+		      Parameters.forFunction(FUNCTION_NAME)
+		                .requiredParameter(FUNCTION_ARGUMENT)
+		                .requiredParameter(HASH_TABLE_ARGUMENT)
+		);
 	}
 
 	@Override
-	protected List<RequiredParameter> getRequiredBindings() {
-		final List<RequiredParameter> requiredParameters = new ArrayList<>(2);
-		final RequiredParameter functionParameter
-				= RequiredParameter.builder(GlobalPackageStruct.COMMON_LISP, "FUNCTION").build();
-		requiredParameters.add(functionParameter);
-		final RequiredParameter hashTableParameter
-				= RequiredParameter.builder(GlobalPackageStruct.COMMON_LISP, "HASH-TABLE").build();
-		requiredParameters.add(hashTableParameter);
-		return requiredParameters;
-	}
+	public LispStruct apply(final Arguments arguments) {
+		final LispStruct function = arguments.getRequiredArgument(FUNCTION_ARGUMENT);
+		final FunctionStruct functionVal = validateFunctionDesignator(function);
+		final HashTableStruct hashTable = arguments.getRequiredArgument(HASH_TABLE_ARGUMENT, HashTableStruct.class);
 
-	@Override
-	public LispStruct apply(final LispStruct... lispStructs) {
-		super.apply(lispStructs);
-
-		final LispStruct function = lispStructs[0];
-		final FunctionStruct functionParam = validator.validateFunctionDesignator(function, functionName(), "Function");
-
-		final LispStruct hashTable = lispStructs[1];
-		validator.validateTypes(hashTable, functionName(), "Hash-Table", HashTableType.INSTANCE);
-
-		final HashTableStruct hashTableValue = (HashTableStruct) hashTable;
-		hashTableValue.mapHash(functionParam);
+		hashTable.mapHash(functionVal);
 		return NILStruct.INSTANCE;
 	}
 
-	@Override
-	protected String functionName() {
-		return "MAPHASH";
+	private FunctionStruct validateFunctionDesignator(final LispStruct functionDesignator) {
+		if (functionDesignator instanceof FunctionStruct) {
+			return (FunctionStruct) functionDesignator;
+		} else if (functionDesignator instanceof SymbolStruct) {
+			return ((SymbolStruct) functionDesignator).getFunction();
+		} else {
+			throw new TypeErrorException("UNCAUGHT TYPE ERROR.");
+		}
 	}
 }

@@ -4,47 +4,31 @@
 
 package jcl.hashtables.functions;
 
-import java.util.List;
-
 import jcl.LispStruct;
-import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
-import jcl.functions.AbstractCommonLispFunctionStruct;
+import jcl.functions.CommonLispBuiltInFunctionStruct;
+import jcl.functions.parameterdsl.Arguments;
+import jcl.functions.parameterdsl.Parameters;
 import jcl.hashtables.HashTableStruct;
-import jcl.packages.GlobalPackageStruct;
-import jcl.types.HashTableType;
-import jcl.types.TypeValidator;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class ClrHashFunction extends AbstractCommonLispFunctionStruct {
+public final class ClrHashFunction extends CommonLispBuiltInFunctionStruct {
 
-	@Autowired
-	private TypeValidator validator;
+	private static final String FUNCTION_NAME = "CLRHASH";
+	private static final String HASH_TABLE_ARGUMENT = "HASH-TABLE";
 
 	public ClrHashFunction() {
-		super("Removes all entries from hash-table, and then returns that empty hash table.");
+		super("Removes all entries from hash-table, and then returns that empty hash table.",
+		      FUNCTION_NAME,
+		      Parameters.forFunction(FUNCTION_NAME)
+		                .requiredParameter(HASH_TABLE_ARGUMENT)
+		);
 	}
 
 	@Override
-	protected List<RequiredParameter> getRequiredBindings() {
-		return RequiredParameter.builder(GlobalPackageStruct.COMMON_LISP, "HASH-TABLE").buildList();
-	}
-
-	@Override
-	public LispStruct apply(final LispStruct... lispStructs) {
-		super.apply(lispStructs);
-
-		final LispStruct lispStruct = lispStructs[0];
-		validator.validateTypes(lispStruct, functionName(), "Hash-Table", HashTableType.INSTANCE);
-
-		final HashTableStruct hashTable = (HashTableStruct) lispStruct;
+	public LispStruct apply(final Arguments arguments) {
+		final HashTableStruct hashTable = arguments.getRequiredArgument(HASH_TABLE_ARGUMENT, HashTableStruct.class);
 		hashTable.clrHash();
 		return hashTable;
-	}
-
-	@Override
-	protected String functionName() {
-		return "CLRHASH";
 	}
 }

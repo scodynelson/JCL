@@ -4,50 +4,31 @@
 
 package jcl.arrays.functions;
 
-import java.util.Arrays;
-import javax.annotation.PostConstruct;
+import java.util.List;
 
 import jcl.LispStruct;
 import jcl.arrays.VectorStruct;
-import jcl.compiler.environment.binding.lambdalist.OrdinaryLambdaList;
-import jcl.compiler.environment.binding.lambdalist.RestParameter;
-import jcl.functions.FunctionStruct;
-import jcl.packages.GlobalPackageStruct;
-import jcl.symbols.SymbolStruct;
+import jcl.functions.CommonLispBuiltInFunctionStruct;
+import jcl.functions.parameterdsl.Arguments;
+import jcl.functions.parameterdsl.Parameters;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class VectorFunction extends FunctionStruct {
+public final class VectorFunction extends CommonLispBuiltInFunctionStruct {
 
-	public static final SymbolStruct VECTOR = GlobalPackageStruct.COMMON_LISP.intern("VECTOR").getSymbol();
+	private static final String FUNCTION_NAME = "VECTOR";
 
-	private VectorFunction() {
-		super("Creates a fresh simple general vector whose size corresponds to the number of objects.", getInitLambdaListBindings());
-	}
-
-	@PostConstruct
-	private void init() {
-		VECTOR.setFunction(this);
-		GlobalPackageStruct.COMMON_LISP.export(VECTOR);
-	}
-
-	private static OrdinaryLambdaList getInitLambdaListBindings() {
-
-		final SymbolStruct objectRestArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("OBJECTS").getSymbol();
-		final RestParameter restBinding = new RestParameter(objectRestArgSymbol);
-
-		return OrdinaryLambdaList.builder()
-		                         .restBinding(restBinding)
-		                         .build();
+	public VectorFunction() {
+		super("Returns the absolute value of number.",
+		      FUNCTION_NAME,
+		      Parameters.forFunction(FUNCTION_NAME)
+		                .restParameter()
+		);
 	}
 
 	@Override
-	public LispStruct apply(final LispStruct... lispStructs) {
-
-		return vector(lispStructs);
-	}
-
-	public LispStruct vector(final LispStruct... lispStructs) {
-		return new VectorStruct<>(Arrays.asList(lispStructs));
+	public LispStruct apply(final Arguments arguments) {
+		final List<LispStruct> objects = arguments.getRestArgument();
+		return new VectorStruct<>(objects);
 	}
 }

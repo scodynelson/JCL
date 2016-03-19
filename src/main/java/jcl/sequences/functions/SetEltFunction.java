@@ -1,59 +1,39 @@
 package jcl.sequences.functions;
 
-import java.util.Arrays;
-import java.util.List;
-
 import jcl.LispStruct;
-import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
-import jcl.functions.AbstractSystemFunctionStruct;
+import jcl.functions.SystemBuiltInFunctionStruct;
+import jcl.functions.parameterdsl.Arguments;
+import jcl.functions.parameterdsl.Parameters;
 import jcl.numbers.IntegerStruct;
-import jcl.packages.GlobalPackageStruct;
 import jcl.sequences.SequenceStruct;
-import jcl.types.IntegerType;
-import jcl.types.SequenceType;
-import jcl.types.TypeValidator;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class SetEltFunction extends AbstractSystemFunctionStruct {
+public final class SetEltFunction extends SystemBuiltInFunctionStruct {
 
-	/**
-	 * The {@link TypeValidator} for validating the function parameter value types.
-	 */
-	@Autowired
-	private TypeValidator validator;
+	private static final String FUNCTION_NAME = "SET-ELT";
+	private static final String SEQUENCE_ARGUMENT = "SEQUENCE";
+	private static final String INDEX_ARGUMENT = "INDEX";
+	private static final String VALUE_ARGUMENT = "VALUE";
 
 	public SetEltFunction() {
-		super("Sets the element of sequence specified by index to the new-value provided.");
-	}
-
-	@Override
-	protected List<RequiredParameter> getRequiredBindings() {
-		return Arrays.asList(
-				RequiredParameter.builder(GlobalPackageStruct.SYSTEM, "LIST").build(),
-				RequiredParameter.builder(GlobalPackageStruct.SYSTEM, "INDEX").build(),
-				RequiredParameter.builder(GlobalPackageStruct.SYSTEM, "VALUE").build()
+		super("Sets the element of sequence specified by index to the new-value provided.",
+		      FUNCTION_NAME,
+		      Parameters.forFunction(FUNCTION_NAME)
+		                .requiredParameter(SEQUENCE_ARGUMENT)
+		                .requiredParameter(INDEX_ARGUMENT)
+		                .requiredParameter(VALUE_ARGUMENT)
 		);
 	}
 
 	@Override
-	public LispStruct apply(final LispStruct... lispStructs) {
-		super.apply(lispStructs);
-
-		final SequenceStruct sequence
-				= validator.validateType(lispStructs[0], functionName(), "Sequence", SequenceType.INSTANCE, SequenceStruct.class);
-		final IntegerStruct index
-				= validator.validateType(lispStructs[1], functionName(), "Index", IntegerType.INSTANCE, IntegerStruct.class);
-		final LispStruct value = lispStructs[2];
+	public LispStruct apply(final Arguments arguments) {
+		final SequenceStruct sequence = arguments.getRequiredArgument(SEQUENCE_ARGUMENT, SequenceStruct.class);
+		final IntegerStruct index = arguments.getRequiredArgument(INDEX_ARGUMENT, IntegerStruct.class);
+		final LispStruct value = arguments.getRequiredArgument(VALUE_ARGUMENT);
 
 		final long indexValue = index.getBigInteger().longValue();
 		sequence.setElt(indexValue, value);
 		return value;
-	}
-
-	@Override
-	protected String functionName() {
-		return "SET-ELT";
 	}
 }

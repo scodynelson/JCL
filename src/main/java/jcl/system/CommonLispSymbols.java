@@ -1015,6 +1015,7 @@ public interface CommonLispSymbols {
 
 	// System
 	SymbolStruct SET_SYMBOL_FUNCTION = null;
+	SymbolStruct LIST_TO_VECTOR = GlobalPackageStruct.SYSTEM.intern("LIST-TO-VECTOR").getSymbol();
 
 	// Backquote
 	SymbolStruct BQ_COMMA_FLAG = GlobalPackageStruct.BACKQUOTE.intern(",").getSymbol();

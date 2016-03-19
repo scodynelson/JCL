@@ -5,46 +5,33 @@
 package jcl.sequences.functions;
 
 import java.math.BigInteger;
-import java.util.List;
 
 import jcl.LispStruct;
-import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
-import jcl.functions.AbstractCommonLispFunctionStruct;
+import jcl.functions.CommonLispBuiltInFunctionStruct;
+import jcl.functions.parameterdsl.Arguments;
+import jcl.functions.parameterdsl.Parameters;
 import jcl.numbers.IntegerStruct;
-import jcl.packages.GlobalPackageStruct;
 import jcl.sequences.SequenceStruct;
-import jcl.types.ListType;
-import jcl.types.TypeValidator;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class LengthFunction extends AbstractCommonLispFunctionStruct {
+public final class LengthFunction extends CommonLispBuiltInFunctionStruct {
 
-	@Autowired
-	private TypeValidator validator;
+	private static final String FUNCTION_NAME = "LENGTH";
+	private static final String SEQUENCE_ARGUMENT = "SEQUENCE";
 
 	public LengthFunction() {
-		super("Returns the number of elements in sequence.");
+		super("Returns the number of elements in sequence",
+		      FUNCTION_NAME,
+		      Parameters.forFunction(FUNCTION_NAME)
+		                .requiredParameter(SEQUENCE_ARGUMENT)
+		);
 	}
 
 	@Override
-	protected List<RequiredParameter> getRequiredBindings() {
-		return RequiredParameter.builder(GlobalPackageStruct.COMMON_LISP, "SEQUENCE").buildList();
-	}
-
-	@Override
-	public LispStruct apply(final LispStruct... lispStructs) {
-		super.apply(lispStructs);
-
-		final SequenceStruct sequence
-				= validator.validateType(lispStructs[0], functionName(), "Sequence", ListType.INSTANCE, SequenceStruct.class);
+	public LispStruct apply(final Arguments arguments) {
+		final SequenceStruct sequence = arguments.getRequiredArgument(SEQUENCE_ARGUMENT, SequenceStruct.class);
 		final Long length = sequence.length();
 		return new IntegerStruct(BigInteger.valueOf(length));
-	}
-
-	@Override
-	protected String functionName() {
-		return "LENGTH";
 	}
 }

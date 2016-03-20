@@ -19,18 +19,9 @@ public final class CharEqualFunction extends AbstractCharacterEqualityFunction {
 	 * Public constructor passing the documentation string.
 	 */
 	public CharEqualFunction() {
-		super("Returns true if all characters are the same, ignoring differences in case; otherwise, it returns false.");
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * Returns the function name {@code char-equal} as a string.
-	 *
-	 * @return the function name {@code char-equal} as a string
-	 */
-	@Override
-	protected String functionName() {
-		return "CHAR-EQUAL";
+		super("Returns true if all characters are the same, ignoring differences in case; otherwise, it returns false.",
+		      "CHAR-EQUAL"
+		);
 	}
 
 	/**

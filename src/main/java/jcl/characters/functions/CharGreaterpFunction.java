@@ -19,18 +19,9 @@ public final class CharGreaterpFunction extends AbstractCharacterEqualityFunctio
 	 * Public constructor passing the documentation string.
 	 */
 	public CharGreaterpFunction() {
-		super("Returns true if the characters are monotonically decreasing, ignoring differences in case; otherwise, it returns false.");
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * Returns the function name {@code char-greaterp} as a string.
-	 *
-	 * @return the function name {@code char-greaterp} as a string
-	 */
-	@Override
-	protected String functionName() {
-		return "CHAR-GREATERP";
+		super("Returns true if the characters are monotonically decreasing, ignoring differences in case; otherwise, it returns false.",
+		      "CHAR-GREATERP"
+		);
 	}
 
 	/**

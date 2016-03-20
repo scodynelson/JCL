@@ -19,18 +19,9 @@ public final class StandardCharPFunction extends AbstractCharacterPredicateFunct
 	 * Public constructor passing the documentation string.
 	 */
 	public StandardCharPFunction() {
-		super("Returns true if character is a standard character; otherwise, returns false");
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * Returns the function name {@code standard-char-p} as a string.
-	 *
-	 * @return the function name {@code standard-char-p} as a string
-	 */
-	@Override
-	protected String functionName() {
-		return "STANDARD-CHAR-P";
+		super("Returns true if character is a standard character; otherwise, returns false",
+		      "STANDARD-CHAR-P"
+		);
 	}
 
 	/**

@@ -20,18 +20,9 @@ public final class CharNameFunction extends AbstractCharacterFunction {
 	 * Public constructor passing the documentation string.
 	 */
 	public CharNameFunction() {
-		super("Returns a string that is the name of the character, or nil if the character has no name.");
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * Returns the function name {@code char-name} as a string.
-	 *
-	 * @return the function name {@code char-name} as a string
-	 */
-	@Override
-	protected String functionName() {
-		return "CHAR-NAME";
+		super("Returns a string that is the name of the character, or nil if the character has no name.",
+		      "CHAR-NAME"
+		);
 	}
 
 	/**

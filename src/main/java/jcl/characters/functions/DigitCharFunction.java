@@ -4,29 +4,19 @@
 
 package jcl.characters.functions;
 
-import java.util.List;
-
 import jcl.LispStruct;
 import jcl.characters.CharacterStruct;
-import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
+import jcl.functions.CommonLispBuiltInFunctionStruct;
+import jcl.functions.parameterdsl.Arguments;
+import jcl.functions.parameterdsl.Parameters;
 import jcl.numbers.IntegerStruct;
-import jcl.packages.GlobalPackageStruct;
-import jcl.types.IntegerType;
-import jcl.types.TypeValidator;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
  * Function implementation for {@code digit-char}.
  */
 @Component
-public final class DigitCharFunction extends AbstractCharacterRadixFunction {
-
-	/**
-	 * The {@link TypeValidator} for validating the function parameter value types.
-	 */
-	@Autowired
-	private TypeValidator validator;
+public final class DigitCharFunction extends CommonLispBuiltInFunctionStruct {
 
 	/**
 	 * Public constructor passing the documentation string.
@@ -34,18 +24,12 @@ public final class DigitCharFunction extends AbstractCharacterRadixFunction {
 	public DigitCharFunction() {
 		super("If weight is less than radix, digit-char returns a character which has that weight when considered as a " +
 				      "digit in the specified radix. If the resulting character is to be an alphabetic[1] character, it will " +
-				      "be an uppercase character. If weight is greater than or equal to radix, digit-char returns false.");
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * Creates the single {@link RequiredParameter} integer object for this function.
-	 *
-	 * @return a list of a single {@link RequiredParameter} integer object
-	 */
-	@Override
-	protected List<RequiredParameter> getRequiredBindings() {
-		return RequiredParameter.builder(GlobalPackageStruct.COMMON_LISP, "WEIGHT").buildList();
+				      "be an uppercase character. If weight is greater than or equal to radix, digit-char returns false.",
+		      "DIGIT-CHAR",
+		      Parameters.forFunction("DIGIT-CHAR")
+		                .requiredParameter("WEIGHT")
+		                .optionalParameter("RADIX").withInitialValue(IntegerStruct.TEN)
+		);
 	}
 
 	/**
@@ -63,24 +47,9 @@ public final class DigitCharFunction extends AbstractCharacterRadixFunction {
 	 * value
 	 */
 	@Override
-	public LispStruct apply(final LispStruct... lispStructs) {
-		super.apply(lispStructs);
-
-		final IntegerStruct weight
-				= validator.validateType(lispStructs[0], functionName(), "Weight", IntegerType.INSTANCE, IntegerStruct.class);
-
-		final IntegerStruct radix = getRadix(lispStructs);
+	public LispStruct apply(final Arguments arguments) {
+		final IntegerStruct weight = arguments.getRequiredArgument("WEIGHT", IntegerStruct.class);
+		final IntegerStruct radix = arguments.getRequiredArgument("RADIX", IntegerStruct.class);
 		return CharacterStruct.digitChar(weight, radix);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * Returns the function name {@code digit-char} as a string.
-	 *
-	 * @return the function name {@code digit-char} as a string
-	 */
-	@Override
-	protected String functionName() {
-		return "DIGIT-CHAR";
 	}
 }

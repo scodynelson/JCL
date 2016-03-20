@@ -19,18 +19,9 @@ public final class GraphicCharPFunction extends AbstractCharacterPredicateFuncti
 	 * Public constructor passing the documentation string.
 	 */
 	public GraphicCharPFunction() {
-		super("Returns true if character is a graphic character; otherwise, returns false.");
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * Returns the function name {@code graphic-char-p} as a string.
-	 *
-	 * @return the function name {@code graphic-char-p} as a string
-	 */
-	@Override
-	protected String functionName() {
-		return "GRAPHIC-CHAR-P";
+		super("Returns true if character is a graphic character; otherwise, returns false.",
+		      "GRAPHIC-CHAR-P"
+		);
 	}
 
 	/**

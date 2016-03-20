@@ -20,18 +20,9 @@ public final class CharDowncaseFunction extends AbstractCharacterFunction {
 	 * Public constructor passing the documentation string.
 	 */
 	public CharDowncaseFunction() {
-		super("Returns the corresponding lowercase character.");
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * Returns the function name {@code char-downcase} as a string.
-	 *
-	 * @return the function name {@code char-downcase} as a string
-	 */
-	@Override
-	protected String functionName() {
-		return "CHAR-DOWNCASE";
+		super("Returns the corresponding lowercase character.",
+		      "CHAR-DOWNCASE"
+		);
 	}
 
 	/**

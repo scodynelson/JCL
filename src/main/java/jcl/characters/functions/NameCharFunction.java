@@ -21,18 +21,9 @@ public final class NameCharFunction extends AbstractCharacterDesignatorFunction 
 	 * Public constructor passing the documentation string.
 	 */
 	public NameCharFunction() {
-		super("Returns the character object whose name is name. If such a character does not exist, nil is returned.");
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * Returns the function name {@code name-char} as a string.
-	 *
-	 * @return the function name {@code name-char} as a string
-	 */
-	@Override
-	protected String functionName() {
-		return "NAME-CHAR";
+		super("Returns the character object whose name is name. If such a character does not exist, nil is returned.",
+		      "NAME-CHAR"
+		);
 	}
 
 	/**

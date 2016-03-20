@@ -21,18 +21,9 @@ public final class CharacterFunction extends AbstractCharacterDesignatorFunction
 	 * Public constructor passing the documentation string.
 	 */
 	public CharacterFunction() {
-		super("Returns the character denoted by the character designator.");
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * Returns the function name {@code character} as a string.
-	 *
-	 * @return the function name {@code character} as a string
-	 */
-	@Override
-	protected String functionName() {
-		return "CHARACTER";
+		super("Returns the character denoted by the character designator.",
+		      "CHARACTER"
+		);
 	}
 
 	/**

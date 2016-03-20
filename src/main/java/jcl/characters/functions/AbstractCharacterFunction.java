@@ -10,32 +10,22 @@ import java.util.function.Function;
 import jcl.LispStruct;
 import jcl.characters.CharacterStruct;
 import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
-import jcl.functions.AbstractCommonLispFunctionStruct;
+import jcl.functions.CommonLispBuiltInFunctionStruct;
 import jcl.functions.FunctionStruct;
+import jcl.functions.parameterdsl.Arguments;
+import jcl.functions.parameterdsl.Parameters;
 import jcl.packages.GlobalPackageStruct;
-import jcl.types.CharacterType;
-import jcl.types.TypeValidator;
-import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Abstract {@link FunctionStruct} implementation for character functions that operates on a {@link CharacterStruct}.
  */
-abstract class AbstractCharacterFunction extends AbstractCommonLispFunctionStruct {
+abstract class AbstractCharacterFunction extends CommonLispBuiltInFunctionStruct {
 
-	/**
-	 * The {@link TypeValidator} for validating the function parameter value types.
-	 */
-	@Autowired
-	private TypeValidator validator;
-
-	/**
-	 * Protected constructor passing the provided {@code documentation} string to the super constructor.
-	 *
-	 * @param documentation
-	 * 		the documentation string
-	 */
-	protected AbstractCharacterFunction(final String documentation) {
-		super(documentation);
+	protected AbstractCharacterFunction(final String documentation, final String functionName) {
+		super(documentation, functionName,
+		      Parameters.forFunction(functionName)
+		                .requiredParameter("CHARACTER")
+		);
 	}
 
 	/**
@@ -61,11 +51,8 @@ abstract class AbstractCharacterFunction extends AbstractCommonLispFunctionStruc
 	 * @return the result of the {@link #characterFunction()} applied to the {@link CharacterStruct} parameter value
 	 */
 	@Override
-	public LispStruct apply(final LispStruct... lispStructs) {
-		super.apply(lispStructs);
-
-		final CharacterStruct character
-				= validator.validateType(lispStructs[0], functionName(), "Character", CharacterType.INSTANCE, CharacterStruct.class);
+	public LispStruct apply(final Arguments arguments) {
+		final CharacterStruct character = arguments.getRequiredArgument("CHARACTER", CharacterStruct.class);
 		return characterFunction().apply(character);
 	}
 

@@ -19,18 +19,9 @@ public final class UpperCasePFunction extends AbstractCharacterPredicateFunction
 	 * Public constructor passing the documentation string.
 	 */
 	public UpperCasePFunction() {
-		super("Returns true if character is an uppercase character; otherwise, returns false.");
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * Returns the function name {@code upper-case-p} as a string.
-	 *
-	 * @return the function name {@code upper-case-p} as a string
-	 */
-	@Override
-	protected String functionName() {
-		return "UPPER-CASE-P";
+		super("Returns true if character is an uppercase character; otherwise, returns false.",
+		      "UPPER-CASE-P"
+		);
 	}
 
 	/**

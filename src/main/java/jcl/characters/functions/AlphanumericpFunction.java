@@ -19,18 +19,9 @@ public final class AlphanumericpFunction extends AbstractCharacterPredicateFunct
 	 * Public constructor passing the documentation string.
 	 */
 	public AlphanumericpFunction() {
-		super("Returns true if character is an alphabetic character or a numeric character; otherwise, returns false.");
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * Returns the function name {@code alphanumericp} as a string.
-	 *
-	 * @return the function name {@code alphanumericp} as a string
-	 */
-	@Override
-	protected String functionName() {
-		return "ALPHANUMERICP";
+		super("Returns true if character is an alphabetic character or a numeric character; otherwise, returns false.",
+		      "ALPHANUMERICP"
+		);
 	}
 
 	/**

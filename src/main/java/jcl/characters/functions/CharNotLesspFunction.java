@@ -19,18 +19,9 @@ public final class CharNotLesspFunction extends AbstractCharacterEqualityFunctio
 	 * Public constructor passing the documentation string.
 	 */
 	public CharNotLesspFunction() {
-		super("Returns true if the characters are monotonically nonincreasing, ignoring differences in case; otherwise, it returns false.");
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * Returns the function name {@code char-not-lessp} as a string.
-	 *
-	 * @return the function name {@code char-not-lessp} as a string
-	 */
-	@Override
-	protected String functionName() {
-		return "CHAR-NOT-LESSP";
+		super("Returns true if the characters are monotonically nonincreasing, ignoring differences in case; otherwise, it returns false.",
+		      "CHAR-NOT-LESSP"
+		);
 	}
 
 	/**

@@ -4,7 +4,6 @@
 
 package jcl.characters.functions;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.function.Predicate;
 
@@ -12,35 +11,26 @@ import jcl.LispStruct;
 import jcl.characters.CharacterStruct;
 import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
 import jcl.compiler.environment.binding.lambdalist.RestParameter;
-import jcl.functions.AbstractCommonLispFunctionStruct;
+import jcl.functions.CommonLispBuiltInFunctionStruct;
 import jcl.functions.FunctionStruct;
+import jcl.functions.parameterdsl.Arguments;
+import jcl.functions.parameterdsl.Parameters;
 import jcl.packages.GlobalPackageStruct;
 import jcl.symbols.NILStruct;
 import jcl.symbols.TStruct;
-import jcl.types.CharacterType;
-import jcl.types.TypeValidator;
-import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Abstract {@link FunctionStruct} implementation for character functions that operates one to many {@link
  * CharacterStruct}s to verify their equality properties.
  */
-abstract class AbstractCharacterEqualityFunction extends AbstractCommonLispFunctionStruct {
+abstract class AbstractCharacterEqualityFunction extends CommonLispBuiltInFunctionStruct {
 
-	/**
-	 * The {@link TypeValidator} for validating the function parameter value types.
-	 */
-	@Autowired
-	private TypeValidator validator;
-
-	/**
-	 * Protected constructor passing the provided {@code documentation} string to the super constructor.
-	 *
-	 * @param documentation
-	 * 		the documentation string
-	 */
-	protected AbstractCharacterEqualityFunction(final String documentation) {
-		super(documentation);
+	protected AbstractCharacterEqualityFunction(final String documentation, final String functionName) {
+		super(documentation, functionName,
+		      Parameters.forFunction(functionName)
+		                .requiredParameter("CHARACTER")
+		                .restParameter()
+		);
 	}
 
 	/**
@@ -78,26 +68,18 @@ abstract class AbstractCharacterEqualityFunction extends AbstractCommonLispFunct
 	 * value
 	 */
 	@Override
-	public LispStruct apply(final LispStruct... lispStructs) {
-		super.apply(lispStructs);
+	public LispStruct apply(final Arguments arguments) {
+		final CharacterStruct character = arguments.getRequiredArgument("CHARACTER", CharacterStruct.class);
+		final List<CharacterStruct> characters = arguments.getRestArgument(CharacterStruct.class);
 
-		final CharacterStruct[] characters = getCharacters(lispStructs);
-		return characterEqualityPredicate().test(characters) ? TStruct.INSTANCE : NILStruct.INSTANCE;
-	}
+		// TODO: Fix this nonsense
+		final CharacterStruct[] characterArray = new CharacterStruct[characters.size() + 1];
+		characterArray[0] = character;
+		for (int i = 1; i <= characters.size(); i++) {
+			characterArray[i] = characters.get(i - 1);
+		}
 
-	/**
-	 * Gets the {@link CharacterStruct[]} from the provided {@link LispStruct[]} parameters, verifying that each object
-	 * is a {@link CharacterStruct}.
-	 *
-	 * @param lispStructs
-	 * 		the parameters to validate are {@link CharacterStruct}s
-	 *
-	 * @return the {@link CharacterStruct[]} from the provided {@link LispStruct[]} parameters
-	 */
-	private CharacterStruct[] getCharacters(final LispStruct... lispStructs) {
-		return Arrays.stream(lispStructs)
-		             .map(e -> validator.validateType(e, functionName(), "Character", CharacterType.INSTANCE, CharacterStruct.class))
-		             .toArray(CharacterStruct[]::new);
+		return characterEqualityPredicate().test(characterArray) ? TStruct.INSTANCE : NILStruct.INSTANCE;
 	}
 
 	/**

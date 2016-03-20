@@ -19,18 +19,9 @@ public final class AlphaCharPFunction extends AbstractCharacterPredicateFunction
 	 * Public constructor passing the documentation string.
 	 */
 	public AlphaCharPFunction() {
-		super("Returns true if character is an alphabetic character; otherwise, returns false.");
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * Returns the function name {@code alpha-char-p} as a string.
-	 *
-	 * @return the function name {@code alpha-char-p} as a string
-	 */
-	@Override
-	protected String functionName() {
-		return "ALPHA-CHAR-P";
+		super("Returns true if character is an alphabetic character; otherwise, returns false.",
+		      "ALPHA-CHAR-P"
+		);
 	}
 
 	/**

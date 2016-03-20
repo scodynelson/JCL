@@ -20,18 +20,9 @@ public final class CharCodeFunction extends AbstractCharacterFunction {
 	 * Public constructor passing the documentation string.
 	 */
 	public CharCodeFunction() {
-		super("Returns the code attribute of character.");
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * Returns the function name {@code char-code} as a string.
-	 *
-	 * @return the function name {@code char-code} as a string
-	 */
-	@Override
-	protected String functionName() {
-		return "CHAR-CODE";
+		super("Returns the code attribute of character.",
+		      "CHAR-CODE"
+		);
 	}
 
 	/**

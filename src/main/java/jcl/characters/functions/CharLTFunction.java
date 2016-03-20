@@ -19,18 +19,9 @@ public final class CharLTFunction extends AbstractCharacterEqualityFunction {
 	 * Public constructor passing the documentation string.
 	 */
 	public CharLTFunction() {
-		super("Returns true if the characters are monotonically increasing; otherwise, it returns false.");
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * Returns the function name {@code char<} as a string.
-	 *
-	 * @return the function name {@code char<} as a string
-	 */
-	@Override
-	protected String functionName() {
-		return "CHAR<";
+		super("Returns true if the characters are monotonically increasing; otherwise, it returns false.",
+		      "CHAR<"
+		);
 	}
 
 	/**

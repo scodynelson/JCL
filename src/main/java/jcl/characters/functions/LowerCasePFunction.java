@@ -19,18 +19,9 @@ public final class LowerCasePFunction extends AbstractCharacterPredicateFunction
 	 * Public constructor passing the documentation string.
 	 */
 	public LowerCasePFunction() {
-		super("Returns true if character is a lowercase character; otherwise, returns false.");
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * Returns the function name {@code lower-case-p} as a string.
-	 *
-	 * @return the function name {@code lower-case-p} as a string
-	 */
-	@Override
-	protected String functionName() {
-		return "LOWER-CASE-P";
+		super("Returns true if character is a lowercase character; otherwise, returns false.",
+		      "LOWER-CASE-P"
+		);
 	}
 
 	/**

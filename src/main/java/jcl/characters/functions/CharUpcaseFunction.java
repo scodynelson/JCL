@@ -20,18 +20,9 @@ public final class CharUpcaseFunction extends AbstractCharacterFunction {
 	 * Public constructor passing the documentation string.
 	 */
 	public CharUpcaseFunction() {
-		super("Returns the corresponding uppercase character.");
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * Returns the function name {@code char-upcase} as a string.
-	 *
-	 * @return the function name {@code char-upcase} as a string
-	 */
-	@Override
-	protected String functionName() {
-		return "CHAR-UPCASE";
+		super("Returns the corresponding uppercase character.",
+		      "CHAR-UPCASE"
+		);
 	}
 
 	/**

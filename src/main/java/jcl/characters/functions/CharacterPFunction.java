@@ -4,43 +4,34 @@
 
 package jcl.characters.functions;
 
-import jcl.LispType;
-import jcl.functions.AbstractPredicateCommonLispFunction;
-import jcl.types.CharacterType;
+import jcl.LispStruct;
+import jcl.characters.CharacterStruct;
+import jcl.functions.CommonLispBuiltInFunctionStruct;
+import jcl.functions.parameterdsl.Arguments;
+import jcl.functions.parameterdsl.Parameters;
+import jcl.symbols.BooleanStructs;
 import org.springframework.stereotype.Component;
 
 /**
  * Function implementation for {@code characterp}.
  */
 @Component
-public final class CharacterPFunction extends AbstractPredicateCommonLispFunction {
+public final class CharacterPFunction extends CommonLispBuiltInFunctionStruct {
 
-	/**
-	 * Public constructor passing the documentation string.
-	 */
+	private static final String FUNCTION_NAME = "CHARACTERP";
+	private static final String OBJECT_ARGUMENT = "OBJECT";
+
 	public CharacterPFunction() {
-		super("Returns true if object is of type character; otherwise, returns false.");
+		super("Returns true if object is of type character; otherwise, returns false.",
+		      "CHARACTERP",
+		      Parameters.forFunction(FUNCTION_NAME)
+		                .requiredParameter(OBJECT_ARGUMENT)
+		);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * Returns the function name {@code characterp} as a string.
-	 *
-	 * @return the function name {@code characterp} as a string
-	 */
 	@Override
-	protected String functionName() {
-		return "CHARACTERP";
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * Returns {@link CharacterType#INSTANCE} as the type instance to check against.
-	 *
-	 * @return the {@link CharacterType#INSTANCE} singleton value
-	 */
-	@Override
-	protected LispType testType() {
-		return CharacterType.INSTANCE;
+	public LispStruct apply(final Arguments arguments) {
+		final LispStruct object = arguments.getRequiredArgument(OBJECT_ARGUMENT);
+		return BooleanStructs.toLispBoolean(object instanceof CharacterStruct);
 	}
 }

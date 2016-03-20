@@ -20,18 +20,9 @@ public final class CharIntFunction extends AbstractCharacterFunction {
 	 * Public constructor passing the documentation string.
 	 */
 	public CharIntFunction() {
-		super("Returns a non-negative integer encoding the character object.");
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * Returns the function name {@code char-int} as a string.
-	 *
-	 * @return the function name {@code char-int} as a string
-	 */
-	@Override
-	protected String functionName() {
-		return "CHAR-INT";
+		super("Returns a non-negative integer encoding the character object.",
+		      "CHAR-INT"
+		);
 	}
 
 	/**

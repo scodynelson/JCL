@@ -19,18 +19,9 @@ public final class CharNotEqualFunction extends AbstractCharacterEqualityFunctio
 	 * Public constructor passing the documentation string.
 	 */
 	public CharNotEqualFunction() {
-		super("Returns true if all characters are different, ignoring differences in case; otherwise, it returns false.");
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * Returns the function name {@code char-not-equal} as a string.
-	 *
-	 * @return the function name {@code char-not-equal} as a string
-	 */
-	@Override
-	protected String functionName() {
-		return "CHAR-NOT-EQUAL";
+		super("Returns true if all characters are different, ignoring differences in case; otherwise, it returns false.",
+		      "CHAR-NOT-EQUAL"
+		);
 	}
 
 	/**

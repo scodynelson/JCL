@@ -19,18 +19,9 @@ public final class CharNotGreaterpFunction extends AbstractCharacterEqualityFunc
 	 * Public constructor passing the documentation string.
 	 */
 	public CharNotGreaterpFunction() {
-		super("Returns true if the characters are monotonically nondecreasing, ignoring differences in case; otherwise, it returns false.");
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * Returns the function name {@code char-not-greaterp} as a string.
-	 *
-	 * @return the function name {@code char-not-greaterp} as a string
-	 */
-	@Override
-	protected String functionName() {
-		return "CHAR-NOT-GREATERP";
+		super("Returns true if the characters are monotonically nondecreasing, ignoring differences in case; otherwise, it returns false.",
+		      "CHAR-NOT-GREATERP"
+		);
 	}
 
 	/**

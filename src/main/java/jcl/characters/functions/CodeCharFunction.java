@@ -4,48 +4,30 @@
 
 package jcl.characters.functions;
 
-import java.util.List;
-
 import jcl.LispStruct;
 import jcl.characters.CharacterStruct;
-import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
-import jcl.functions.AbstractCommonLispFunctionStruct;
+import jcl.functions.CommonLispBuiltInFunctionStruct;
+import jcl.functions.parameterdsl.Arguments;
+import jcl.functions.parameterdsl.Parameters;
 import jcl.numbers.IntegerStruct;
-import jcl.packages.GlobalPackageStruct;
-import jcl.types.IntegerType;
-import jcl.types.TypeValidator;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
  * Function implementation for {@code code-char}.
  */
 @Component
-public final class CodeCharFunction extends AbstractCommonLispFunctionStruct {
-
-	/**
-	 * The {@link TypeValidator} for validating the function parameter value types.
-	 */
-	@Autowired
-	private TypeValidator validator;
+public final class CodeCharFunction extends CommonLispBuiltInFunctionStruct {
 
 	/**
 	 * Public constructor passing the documentation string.
 	 */
 	public CodeCharFunction() {
 		super("Returns a character with the code attribute given by code. If no such character exists and one cannot be " +
-				      "created, nil is returned.");
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * Creates the single {@link RequiredParameter} integer object for this function.
-	 *
-	 * @return a list of a single {@link RequiredParameter} integer object
-	 */
-	@Override
-	protected List<RequiredParameter> getRequiredBindings() {
-		return RequiredParameter.builder(GlobalPackageStruct.COMMON_LISP, "CODE").buildList();
+				      "created, nil is returned.",
+		      "CODE-CHAR",
+		      Parameters.forFunction("CODE-CHAR")
+		                .requiredParameter("CODE")
+		);
 	}
 
 	/**
@@ -60,22 +42,8 @@ public final class CodeCharFunction extends AbstractCommonLispFunctionStruct {
 	 * @return the {@link CharacterStruct} for the {@link IntegerStruct} parameter code value
 	 */
 	@Override
-	public LispStruct apply(final LispStruct... lispStructs) {
-		super.apply(lispStructs);
-
-		final IntegerStruct code
-				= validator.validateType(lispStructs[0], functionName(), "Code", IntegerType.INSTANCE, IntegerStruct.class);
+	public LispStruct apply(final Arguments arguments) {
+		final IntegerStruct code = arguments.getRequiredArgument("CODE", IntegerStruct.class);
 		return CharacterStruct.codeChar(code);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * Returns the function name {@code code-char} as a string.
-	 *
-	 * @return the function name {@code code-char} as a string
-	 */
-	@Override
-	protected String functionName() {
-		return "CODE-CHAR";
 	}
 }

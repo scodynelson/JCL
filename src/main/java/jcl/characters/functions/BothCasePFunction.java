@@ -19,18 +19,9 @@ public final class BothCasePFunction extends AbstractCharacterPredicateFunction 
 	 * Public constructor passing the documentation string.
 	 */
 	public BothCasePFunction() {
-		super("Returns true if character is a character with case; otherwise, returns false.");
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * Returns the function name {@code both-case-p} as a string.
-	 *
-	 * @return the function name {@code both-case-p} as a string
-	 */
-	@Override
-	protected String functionName() {
-		return "BOTH-CASE-P";
+		super("Returns true if character is a character with case; otherwise, returns false.",
+		      "BOTH-CASE-P"
+		);
 	}
 
 	/**

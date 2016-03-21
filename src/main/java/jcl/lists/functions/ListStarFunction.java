@@ -4,40 +4,31 @@
 
 package jcl.lists.functions;
 
+import java.util.List;
+
 import jcl.LispStruct;
-import jcl.compiler.environment.binding.lambdalist.RestParameter;
-import jcl.functions.AbstractCommonLispFunctionStruct;
+import jcl.functions.CommonLispBuiltInFunctionStruct;
+import jcl.functions.parameterdsl.Arguments;
+import jcl.functions.parameterdsl.Parameters;
 import jcl.lists.ListStruct;
-import jcl.packages.GlobalPackageStruct;
-import jcl.symbols.SymbolStruct;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class ListStarFunction extends AbstractCommonLispFunctionStruct {
+public final class ListStarFunction extends CommonLispBuiltInFunctionStruct {
 
-	public static final SymbolStruct LIST_STAR = GlobalPackageStruct.COMMON_LISP.intern("LIST*").getSymbol();
+	private static final String FUNCTION_NAME = "LIST*";
 
 	public ListStarFunction() {
-		super("Returns a list containing the supplied objects where the last argument becomes the cdr of the last cons constructed.");
+		super("Returns a list containing the supplied objects where the last argument becomes the cdr of the last cons constructed.",
+		      FUNCTION_NAME,
+		      Parameters.forFunction(FUNCTION_NAME)
+		                .restParameter()
+		);
 	}
 
 	@Override
-	protected RestParameter getRestBinding() {
-		return RestParameter.builder(GlobalPackageStruct.COMMON_LISP, "OBJECTS").build();
-	}
-
-	@Override
-	public LispStruct apply(final LispStruct... lispStructs) {
-		super.apply(lispStructs);
-
-		if (lispStructs.length == 1) {
-			return lispStructs[0];
-		}
-		return ListStruct.buildDottedList(lispStructs);
-	}
-
-	@Override
-	protected String functionName() {
-		return "LIST*";
+	public LispStruct apply(final Arguments arguments) {
+		final List<LispStruct> objects = arguments.getRestArgument();
+		return ListStruct.buildDottedList(objects);
 	}
 }

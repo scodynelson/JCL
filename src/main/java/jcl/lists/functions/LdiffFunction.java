@@ -1,47 +1,32 @@
 package jcl.lists.functions;
 
-import java.util.Arrays;
-import java.util.List;
-
 import jcl.LispStruct;
-import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
-import jcl.functions.AbstractCommonLispFunctionStruct;
+import jcl.functions.CommonLispBuiltInFunctionStruct;
+import jcl.functions.parameterdsl.Arguments;
+import jcl.functions.parameterdsl.Parameters;
 import jcl.lists.ListStruct;
-import jcl.packages.GlobalPackageStruct;
-import jcl.types.ListType;
-import jcl.types.TypeValidator;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class LdiffFunction extends AbstractCommonLispFunctionStruct {
+public final class LdiffFunction extends CommonLispBuiltInFunctionStruct {
 
-	@Autowired
-	private TypeValidator validator;
+	private static final String FUNCTION_NAME = "LDIFF";
+	private static final String LIST_ARGUMENT = "LIST";
+	private static final String OBJECT_ARGUMENT = "OBJECT";
 
 	public LdiffFunction() {
-		super("If object is the same as some tail of list, returns a fresh list of the elements of list that precede object in the list structure of list; otherwise, it returns a copy of list.");
-	}
-
-	@Override
-	protected List<RequiredParameter> getRequiredBindings() {
-		return Arrays.asList(
-				RequiredParameter.builder(GlobalPackageStruct.COMMON_LISP, "LIST").build(),
-				RequiredParameter.builder(GlobalPackageStruct.COMMON_LISP, "OBJECT").build()
+		super("If object is the same as some tail of list, returns a fresh list of the elements of list that precede object in the list structure of list; otherwise, it returns a copy of list.",
+		      FUNCTION_NAME,
+		      Parameters.forFunction(FUNCTION_NAME)
+		                .requiredParameter(LIST_ARGUMENT)
+		                .requiredParameter(OBJECT_ARGUMENT)
 		);
 	}
 
 	@Override
-	public LispStruct apply(final LispStruct... lispStructs) {
-		super.apply(lispStructs);
-
-		final ListStruct list = validator.validateType(lispStructs[0], functionName(), "List", ListType.INSTANCE, ListStruct.class);
-		final LispStruct object = lispStructs[1];
+	public LispStruct apply(final Arguments arguments) {
+		final ListStruct list = arguments.getRequiredArgument(LIST_ARGUMENT, ListStruct.class);
+		final LispStruct object = arguments.getRequiredArgument(OBJECT_ARGUMENT);
 		return list.ldiff(object);
-	}
-
-	@Override
-	protected String functionName() {
-		return "LDIFF";
 	}
 }

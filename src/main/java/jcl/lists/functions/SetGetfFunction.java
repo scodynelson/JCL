@@ -1,63 +1,40 @@
 package jcl.lists.functions;
 
-import java.util.Arrays;
-import java.util.List;
-
 import jcl.LispStruct;
-import jcl.compiler.environment.binding.lambdalist.OptionalParameter;
-import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
-import jcl.functions.AbstractSystemFunctionStruct;
+import jcl.functions.SystemBuiltInFunctionStruct;
+import jcl.functions.parameterdsl.Arguments;
+import jcl.functions.parameterdsl.Parameters;
 import jcl.lists.ListStruct;
-import jcl.packages.GlobalPackageStruct;
-import jcl.types.ListType;
-import jcl.types.TypeValidator;
-import org.springframework.beans.factory.annotation.Autowired;
+import jcl.symbols.NILStruct;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class SetGetfFunction extends AbstractSystemFunctionStruct {
+public final class SetGetfFunction extends SystemBuiltInFunctionStruct {
 
-	/**
-	 * The {@link TypeValidator} for validating the function parameter value types.
-	 */
-	@Autowired
-	private TypeValidator validator;
+	private static final String FUNCTION_NAME = "SET-GETF";
+	private static final String PLIST_ARGUMENT = "PLIST";
+	private static final String INDICATOR_ARGUMENT = "INDICATOR";
+	private static final String VALUE_ARGUMENT = "VALUE";
+	private static final String DEFAULT_ARGUMENT = "DEFAULT";
 
 	public SetGetfFunction() {
-		super("Finds a property on the property list whose property indicator is identical to indicator, and sets its corresponding property value with the new-value provided.");
-	}
-
-	@Override
-	protected List<RequiredParameter> getRequiredBindings() {
-		return Arrays.asList(
-				RequiredParameter.builder(GlobalPackageStruct.SYSTEM, "PLIST").build(),
-				RequiredParameter.builder(GlobalPackageStruct.SYSTEM, "INDICATOR").build(),
-				RequiredParameter.builder(GlobalPackageStruct.SYSTEM, "VALUE").build()
+		super("Finds a property on the property list whose property indicator is identical to indicator, and sets its corresponding property value with the new-value provided.",
+		      FUNCTION_NAME,
+		      Parameters.forFunction(FUNCTION_NAME)
+		                .requiredParameter(PLIST_ARGUMENT)
+		                .requiredParameter(INDICATOR_ARGUMENT)
+		                .requiredParameter(VALUE_ARGUMENT)
+		                .optionalParameter(DEFAULT_ARGUMENT).withInitialValue(NILStruct.INSTANCE)
 		);
 	}
 
 	@Override
-	protected List<OptionalParameter> getOptionalBindings() {
-		return OptionalParameter.builder(GlobalPackageStruct.SYSTEM, "DEFAULT")
-		                        .suppliedPBinding()
-		                        .buildList();
-	}
-
-	@Override
-	public LispStruct apply(final LispStruct... lispStructs) {
-		super.apply(lispStructs);
-
-		final ListStruct plist =
-				validator.validateType(lispStructs[0], functionName(), "Property List", ListType.INSTANCE, ListStruct.class);
-		final LispStruct indicator = lispStructs[1];
-		final LispStruct value = lispStructs[2];
+	public LispStruct apply(final Arguments arguments) {
+		final ListStruct plist = arguments.getRequiredArgument(PLIST_ARGUMENT, ListStruct.class);
+		final LispStruct indicator = arguments.getRequiredArgument(INDICATOR_ARGUMENT);
+		final LispStruct value = arguments.getRequiredArgument(VALUE_ARGUMENT);
 
 		plist.setProperty(indicator, value);
 		return value;
-	}
-
-	@Override
-	protected String functionName() {
-		return "SET-GETF";
 	}
 }

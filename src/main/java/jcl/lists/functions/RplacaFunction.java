@@ -1,48 +1,33 @@
 package jcl.lists.functions;
 
-import java.util.Arrays;
-import java.util.List;
-
 import jcl.LispStruct;
-import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
-import jcl.functions.AbstractCommonLispFunctionStruct;
+import jcl.functions.CommonLispBuiltInFunctionStruct;
+import jcl.functions.parameterdsl.Arguments;
+import jcl.functions.parameterdsl.Parameters;
 import jcl.lists.ConsStruct;
-import jcl.packages.GlobalPackageStruct;
-import jcl.types.ConsType;
-import jcl.types.TypeValidator;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class RplacaFunction extends AbstractCommonLispFunctionStruct {
+public final class RplacaFunction extends CommonLispBuiltInFunctionStruct {
 
-	@Autowired
-	private TypeValidator validator;
+	private static final String FUNCTION_NAME = "RPLACA";
+	private static final String CONS_ARGUMENT = "CONS";
+	private static final String OBJECT_ARGUMENT = "OBJECT";
 
 	public RplacaFunction() {
-		super("Replaces the car of the cons with object.");
-	}
-
-	@Override
-	protected List<RequiredParameter> getRequiredBindings() {
-		return Arrays.asList(
-				RequiredParameter.builder(GlobalPackageStruct.COMMON_LISP, "CONS").build(),
-				RequiredParameter.builder(GlobalPackageStruct.COMMON_LISP, "OBJECT").build()
+		super("Replaces the car of the cons with object.",
+		      FUNCTION_NAME,
+		      Parameters.forFunction(FUNCTION_NAME)
+		                .requiredParameter(CONS_ARGUMENT)
+		                .requiredParameter(OBJECT_ARGUMENT)
 		);
 	}
 
 	@Override
-	public LispStruct apply(final LispStruct... lispStructs) {
-		super.apply(lispStructs);
-
-		final ConsStruct cons = validator.validateType(lispStructs[0], functionName(), "Cons", ConsType.INSTANCE, ConsStruct.class);
-		final LispStruct object = lispStructs[1];
+	public LispStruct apply(final Arguments arguments) {
+		final ConsStruct cons = arguments.getRequiredArgument(CONS_ARGUMENT, ConsStruct.class);
+		final LispStruct object = arguments.getRequiredArgument(OBJECT_ARGUMENT);
 		cons.setCar(object);
 		return cons;
-	}
-
-	@Override
-	protected String functionName() {
-		return "RPLACA";
 	}
 }

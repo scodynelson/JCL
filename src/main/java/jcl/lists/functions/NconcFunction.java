@@ -5,76 +5,51 @@
 package jcl.lists.functions;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 
 import jcl.LispStruct;
-import jcl.compiler.environment.binding.lambdalist.RestParameter;
-import jcl.functions.AbstractCommonLispFunctionStruct;
+import jcl.functions.CommonLispBuiltInFunctionStruct;
+import jcl.functions.parameterdsl.Arguments;
+import jcl.functions.parameterdsl.Parameters;
 import jcl.lists.ListStruct;
-import jcl.packages.GlobalPackageStruct;
 import jcl.symbols.NILStruct;
-import jcl.symbols.SymbolStruct;
-import jcl.types.ListType;
-import jcl.types.TypeValidator;
-import org.springframework.beans.factory.annotation.Autowired;
+import jcl.util.ClassUtils;
+import org.apache.commons.collections4.iterators.ReverseListIterator;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class NconcFunction extends AbstractCommonLispFunctionStruct {
+public final class NconcFunction extends CommonLispBuiltInFunctionStruct {
 
-	public static final SymbolStruct NCONC = GlobalPackageStruct.COMMON_LISP.intern("NCONC").getSymbol();
-
-	/**
-	 * The {@link TypeValidator} for validating the function parameter value types.
-	 */
-	@Autowired
-	private TypeValidator validator;
+	private static final String FUNCTION_NAME = "NCONC";
 
 	public NconcFunction() {
-		super("Returns a list that is the concatenation of lists.");
+		super("Returns a list that is the concatenation of lists.",
+		      FUNCTION_NAME,
+		      Parameters.forFunction(FUNCTION_NAME)
+		                .restParameter()
+		);
 	}
 
 	@Override
-	protected RestParameter getRestBinding() {
-		return RestParameter.builder(GlobalPackageStruct.COMMON_LISP, "LISTS").build();
-	}
+	public LispStruct apply(final Arguments arguments) {
+		final List<LispStruct> restArgument = arguments.getRestArgument();
 
-	@Override
-	public LispStruct apply(final LispStruct... lispStructs) {
-		super.apply(lispStructs);
-
-		final int length = lispStructs.length;
-		if (length == 0) {
+		final int size = restArgument.size();
+		if (size == 0) {
 			return NILStruct.INSTANCE;
 		}
-		if (length == 1) {
-			return lispStructs[0];
+		if (size == 1) {
+			return restArgument.get(0);
 		}
 
-		final Iterator<LispStruct> iterator = Arrays.asList(lispStructs).iterator();
+		final ReverseListIterator<LispStruct> reverseListIterator = new ReverseListIterator<>(restArgument);
+		final LispStruct object = reverseListIterator.next();
 
-		final List<ListStruct> lists = new ArrayList<>(lispStructs.length - 1);
-		LispStruct object = NILStruct.INSTANCE;
-
-		while (iterator.hasNext()) {
-			final LispStruct next = iterator.next();
-			if (!iterator.hasNext()) {
-				object = next;
-				break;
-			}
-
-			final ListStruct list
-					= validator.validateType(next, functionName(), "List", ListType.INSTANCE, ListStruct.class);
+		final List<ListStruct> lists = new ArrayList<>();
+		reverseListIterator.forEachRemaining(argument -> {
+			final ListStruct list = ClassUtils.convert(ListStruct.class, argument);
 			lists.add(list);
-		}
-
+		});
 		return ListStruct.nConc(lists, object);
-	}
-
-	@Override
-	protected String functionName() {
-		return "NCONC";
 	}
 }

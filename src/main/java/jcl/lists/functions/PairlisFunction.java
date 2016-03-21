@@ -1,54 +1,37 @@
 package jcl.lists.functions;
 
-import java.util.Arrays;
-import java.util.List;
-
 import jcl.LispStruct;
-import jcl.compiler.environment.binding.lambdalist.OptionalParameter;
-import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
 import jcl.conditions.exceptions.SimpleErrorException;
-import jcl.functions.AbstractCommonLispFunctionStruct;
+import jcl.functions.CommonLispBuiltInFunctionStruct;
+import jcl.functions.parameterdsl.Arguments;
+import jcl.functions.parameterdsl.Parameters;
 import jcl.lists.ConsStruct;
 import jcl.lists.ListStruct;
-import jcl.packages.GlobalPackageStruct;
 import jcl.symbols.NILStruct;
-import jcl.types.ListType;
-import jcl.types.TypeValidator;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class PairlisFunction extends AbstractCommonLispFunctionStruct {
+public final class PairlisFunction extends CommonLispBuiltInFunctionStruct {
 
-	@Autowired
-	private TypeValidator validator;
+	private static final String FUNCTION_NAME = "PAIRLIS";
+	private static final String KEYS_ARGUMENT = "KEYS";
+	private static final String DATUMS_ARGUMENT = "DATUMS";
+	private static final String ALIST_ARGUMENT = "ALIST";
 
 	public PairlisFunction() {
-		super("Returns an association list that associates elements of keys to corresponding elements of data.");
-	}
-
-	@Override
-	protected List<RequiredParameter> getRequiredBindings() {
-		return Arrays.asList(
-				RequiredParameter.builder(GlobalPackageStruct.COMMON_LISP, "KEYS").build(),
-				RequiredParameter.builder(GlobalPackageStruct.COMMON_LISP, "DATUMS").build()
+		super("Returns an association list that associates elements of keys to corresponding elements of data.",
+		      FUNCTION_NAME,
+		      Parameters.forFunction(FUNCTION_NAME)
+		                .requiredParameter(KEYS_ARGUMENT)
+		                .requiredParameter(DATUMS_ARGUMENT)
+		                .optionalParameter(ALIST_ARGUMENT).withInitialValue(NILStruct.INSTANCE)
 		);
 	}
 
 	@Override
-	protected List<OptionalParameter> getOptionalBindings() {
-		return OptionalParameter.builder(GlobalPackageStruct.COMMON_LISP, "ALIST")
-		                        .suppliedPBinding()
-		                        .initForm(NILStruct.INSTANCE)
-		                        .buildList();
-	}
-
-	@Override
-	public LispStruct apply(final LispStruct... lispStructs) {
-		super.apply(lispStructs);
-
-		final ListStruct keys = validator.validateType(lispStructs[0], functionName(), "Keys", ListType.INSTANCE, ListStruct.class);
-		final ListStruct datums = validator.validateType(lispStructs[1], functionName(), "Datums", ListType.INSTANCE, ListStruct.class);
+	public LispStruct apply(final Arguments arguments) {
+		final ListStruct keys = arguments.getRequiredArgument(KEYS_ARGUMENT, ListStruct.class);
+		final ListStruct datums = arguments.getRequiredArgument(DATUMS_ARGUMENT, ListStruct.class);
 
 		final long keysLength = keys.length();
 		final long datumsLength = datums.length();
@@ -59,10 +42,7 @@ public final class PairlisFunction extends AbstractCommonLispFunctionStruct {
 		final LispStruct[] keysArray = keys.toArray();
 		final LispStruct[] datumsArray = datums.toArray();
 
-		ListStruct alist = NILStruct.INSTANCE;
-		if (lispStructs.length > 2) {
-			alist = validator.validateType(lispStructs[2], functionName(), "Association-List", ListType.INSTANCE, ListStruct.class);
-		}
+		ListStruct alist = arguments.getOptionalArgument(ALIST_ARGUMENT, ListStruct.class);
 
 		for (int i = 0; i < keysLength; i++) {
 			final LispStruct key = keysArray[i];
@@ -72,10 +52,5 @@ public final class PairlisFunction extends AbstractCommonLispFunctionStruct {
 		}
 
 		return alist;
-	}
-
-	@Override
-	protected String functionName() {
-		return "PAIRLIS";
 	}
 }

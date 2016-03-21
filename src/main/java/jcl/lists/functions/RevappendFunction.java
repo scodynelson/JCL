@@ -1,49 +1,32 @@
 package jcl.lists.functions;
 
-import java.util.Arrays;
-import java.util.List;
-
 import jcl.LispStruct;
-import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
-import jcl.functions.AbstractCommonLispFunctionStruct;
+import jcl.functions.CommonLispBuiltInFunctionStruct;
+import jcl.functions.parameterdsl.Arguments;
+import jcl.functions.parameterdsl.Parameters;
 import jcl.lists.ListStruct;
-import jcl.packages.GlobalPackageStruct;
-import jcl.types.ListType;
-import jcl.types.TypeValidator;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class RevappendFunction extends AbstractCommonLispFunctionStruct {
+public final class RevappendFunction extends CommonLispBuiltInFunctionStruct {
 
-	@Autowired
-	private TypeValidator validator;
+	private static final String FUNCTION_NAME = "REVAPPEND";
+	private static final String LIST_ARGUMENT = "LIST";
+	private static final String TAIL_ARGUMENT = "TAIL";
 
 	public RevappendFunction() {
-		super("Constructs a copy of list, but with the elements in reverse order. It then appends (as if by nconc) the tail to that reversed list and returns the result.");
-	}
-
-	@Override
-	protected List<RequiredParameter> getRequiredBindings() {
-		return Arrays.asList(
-				RequiredParameter.builder(GlobalPackageStruct.COMMON_LISP, "LIST").build(),
-				RequiredParameter.builder(GlobalPackageStruct.COMMON_LISP, "TAIL").build()
+		super("Constructs a copy of list, but with the elements in reverse order. It then appends (as if by nconc) the tail to that reversed list and returns the result.",
+		      FUNCTION_NAME,
+		      Parameters.forFunction(FUNCTION_NAME)
+		                .requiredParameter(LIST_ARGUMENT)
+		                .requiredParameter(TAIL_ARGUMENT)
 		);
 	}
 
 	@Override
-	public LispStruct apply(final LispStruct... lispStructs) {
-		super.apply(lispStructs);
-
-		final ListStruct list
-				= validator.validateType(lispStructs[0], functionName(), "List", ListType.INSTANCE, ListStruct.class);
-		final LispStruct tail = lispStructs[1];
-
+	public LispStruct apply(final Arguments arguments) {
+		final ListStruct list = arguments.getRequiredArgument(LIST_ARGUMENT, ListStruct.class);
+		final LispStruct tail = arguments.getRequiredArgument(TAIL_ARGUMENT);
 		return list.revAppend(tail);
-	}
-
-	@Override
-	protected String functionName() {
-		return "REVAPPEND";
 	}
 }

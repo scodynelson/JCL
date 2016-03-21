@@ -5,14 +5,18 @@
 package jcl.system.functions;
 
 import jcl.LispStruct;
-import jcl.functions.AbstractExtensionsFunctionStruct;
+import jcl.functions.ExtensionsBuiltInFunctionStruct;
+import jcl.functions.parameterdsl.Arguments;
+import jcl.functions.parameterdsl.Parameters;
 import jcl.symbols.TStruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class GC extends AbstractExtensionsFunctionStruct {
+public final class GC extends ExtensionsBuiltInFunctionStruct {
+
+	private static final String FUNCTION_NAME = "GC";
 
 	/**
 	 * The logger for this class.
@@ -20,24 +24,20 @@ public final class GC extends AbstractExtensionsFunctionStruct {
 	private static final Logger LOGGER = LoggerFactory.getLogger(GC.class);
 
 	public GC() {
-		super("Manually invokes the Java runtime garbage collection.");
+		super("Manually invokes the Java runtime garbage collection.",
+		      FUNCTION_NAME,
+		      Parameters.forFunction(FUNCTION_NAME)
+		);
 	}
 
 	@SuppressWarnings("all")
 	@Override
-	public LispStruct apply(final LispStruct... lispStructs) {
-		super.apply(lispStructs);
-
+	public LispStruct apply(final Arguments arguments) {
 		final long freeMemoryBefore = Runtime.getRuntime().freeMemory();
 		Runtime.getRuntime().gc();
 		final long freeMemoryAfter = Runtime.getRuntime().freeMemory();
 		LOGGER.debug("; {} bytes of garbage removed, current free memory is {} bytes.", freeMemoryAfter - freeMemoryBefore, freeMemoryAfter);
 
 		return TStruct.INSTANCE;
-	}
-
-	@Override
-	protected String functionName() {
-		return "GC";
 	}
 }

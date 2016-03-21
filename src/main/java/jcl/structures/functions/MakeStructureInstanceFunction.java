@@ -4,55 +4,32 @@
 
 package jcl.structures.functions;
 
-import java.util.Collections;
-import java.util.List;
-import javax.annotation.PostConstruct;
-
 import jcl.LispStruct;
-import jcl.compiler.environment.binding.lambdalist.OrdinaryLambdaList;
-import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
 import jcl.conditions.exceptions.ProgramErrorException;
-import jcl.functions.FunctionStruct;
-import jcl.packages.GlobalPackageStruct;
+import jcl.functions.SystemBuiltInFunctionStruct;
+import jcl.functions.parameterdsl.Arguments;
+import jcl.functions.parameterdsl.Parameters;
 import jcl.structures.StructureClassStruct;
-import jcl.structures.StructureObjectStruct;
 import jcl.symbols.SymbolStruct;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class MakeStructureInstanceFunction extends FunctionStruct {
+public final class MakeStructureInstanceFunction extends SystemBuiltInFunctionStruct {
 
-	public static final SymbolStruct MAKE_STRUCTURE_INSTANCE = GlobalPackageStruct.SYSTEM.intern("MAKE-STRUCTURE-INSTANCE").getSymbol();
+	private static final String FUNCTION_NAME = "MAKE-STRUCTURE-INSTANCE";
+	private static final String STRUCTURE_SYMBOL_ARGUMENT = "STRUCTURE-SYMBOL";
 
-	private MakeStructureInstanceFunction() {
-		super("Makes a new structure-object instance of the structure-class assigned to the provided symbol with the provided arguments as slot values.", getInitLambdaListBindings());
-	}
-
-	@PostConstruct
-	private void init() {
-		MAKE_STRUCTURE_INSTANCE.setFunction(this);
-		GlobalPackageStruct.SYSTEM.export(MAKE_STRUCTURE_INSTANCE);
-	}
-
-	private static OrdinaryLambdaList getInitLambdaListBindings() {
-
-		final SymbolStruct structSymArgSymbol = GlobalPackageStruct.SYSTEM.intern("STRUCT-SYM").getSymbol();
-		final RequiredParameter structSymArgRequiredBinding = new RequiredParameter(structSymArgSymbol);
-		final List<RequiredParameter> requiredBindings = Collections.singletonList(structSymArgRequiredBinding);
-
-		return OrdinaryLambdaList.builder()
-		                         .requiredBindings(requiredBindings)
-		                         .build();
+	public MakeStructureInstanceFunction() {
+		super("Makes a new structure-object instance of the structure-class assigned to the provided symbol with the provided arguments as slot values.",
+		      FUNCTION_NAME,
+		      Parameters.forFunction(FUNCTION_NAME)
+		                .requiredParameter(STRUCTURE_SYMBOL_ARGUMENT)
+		);
 	}
 
 	@Override
-	public LispStruct apply(final LispStruct... lispStructs) {
-
-		final SymbolStruct structSymbol = (SymbolStruct) lispStructs[0];
-		return makeStructureInstance(structSymbol);
-	}
-
-	public StructureObjectStruct makeStructureInstance(final SymbolStruct structSymbol) {
+	public LispStruct apply(final Arguments arguments) {
+		final SymbolStruct structSymbol = arguments.getRequiredArgument(STRUCTURE_SYMBOL_ARGUMENT, SymbolStruct.class);
 
 		final StructureClassStruct structureClass = structSymbol.getStructureClass();
 		if (structureClass == null) {

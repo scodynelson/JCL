@@ -6,7 +6,6 @@ package jcl.system.functions;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.List;
 import javax.help.BadIDException;
 import javax.help.HelpBroker;
 import javax.help.HelpSet;
@@ -14,38 +13,36 @@ import javax.help.HelpSetException;
 
 import jcl.LispStruct;
 import jcl.arrays.StringStruct;
-import jcl.compiler.environment.binding.lambdalist.OptionalParameter;
 import jcl.conditions.exceptions.ProgramErrorException;
-import jcl.functions.AbstractExtensionsFunctionStruct;
-import jcl.packages.GlobalPackageStruct;
+import jcl.functions.ExtensionsBuiltInFunctionStruct;
+import jcl.functions.parameterdsl.Arguments;
+import jcl.functions.parameterdsl.Parameters;
 import jcl.symbols.NILStruct;
 import jcl.system.classloaders.CompilerClassLoader;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class Help extends AbstractExtensionsFunctionStruct {
+public final class Help extends ExtensionsBuiltInFunctionStruct {
+
+	private static final String FUNCTION_NAME = "HELP";
+	private static final String SEARCH_TERM_ARGUMENT = "SEARCH-TERM";
 
 	public Help() {
-		super("Invokes Java Help.");
+		super("Invokes Java Help.",
+		      FUNCTION_NAME,
+		      Parameters.forFunction(FUNCTION_NAME)
+		                .optionalParameter(SEARCH_TERM_ARGUMENT).withInitialValue(null)
+		);
 	}
 
 	@Override
-	protected List<OptionalParameter> getOptionalBindings() {
-		return OptionalParameter.builder(GlobalPackageStruct.EXTENSIONS, "SEARCH-TERM")
-		                        .suppliedPBinding()
-		                        .buildList();
-	}
-
-	@Override
-	public LispStruct apply(final LispStruct... lispStructs) {
-		super.apply(lispStructs);
-
+	public LispStruct apply(final Arguments arguments) {
 		final String searchString;
-		if (lispStructs.length == 0) {
-			searchString = "index";
-		} else {
-			final StringStruct searchTerm = (StringStruct) lispStructs[0];
+		if (arguments.hasOptionalArgument(SEARCH_TERM_ARGUMENT)) {
+			final StringStruct searchTerm = arguments.getOptionalArgument(SEARCH_TERM_ARGUMENT, StringStruct.class);
 			searchString = searchTerm.getAsJavaString();
+		} else {
+			searchString = "index";
 		}
 
 		try {
@@ -60,10 +57,5 @@ public final class Help extends AbstractExtensionsFunctionStruct {
 		}
 
 		return NILStruct.INSTANCE;
-	}
-
-	@Override
-	protected String functionName() {
-		return "HELP";
 	}
 }

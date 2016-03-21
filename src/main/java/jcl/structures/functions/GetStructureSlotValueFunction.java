@@ -4,71 +4,42 @@
 
 package jcl.structures.functions;
 
-import java.util.ArrayList;
-import java.util.List;
-import javax.annotation.PostConstruct;
-
 import jcl.LispStruct;
 import jcl.LispType;
-import jcl.compiler.environment.binding.lambdalist.OrdinaryLambdaList;
-import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.conditions.exceptions.SimpleErrorException;
 import jcl.conditions.exceptions.TypeErrorException;
-import jcl.functions.FunctionStruct;
-import jcl.packages.GlobalPackageStruct;
+import jcl.functions.SystemBuiltInFunctionStruct;
+import jcl.functions.parameterdsl.Arguments;
+import jcl.functions.parameterdsl.Parameters;
 import jcl.structures.StructureClassStruct;
 import jcl.structures.StructureObjectStruct;
 import jcl.symbols.SymbolStruct;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class GetStructureSlotValueFunction extends FunctionStruct {
+public final class GetStructureSlotValueFunction extends SystemBuiltInFunctionStruct {
 
-	public static final SymbolStruct GET_STRUCTURE_SLOT_VALUE = GlobalPackageStruct.SYSTEM.intern("GET-STRUCTURE-SLOT-VALUE").getSymbol();
+	private static final String FUNCTION_NAME = "GET-STRUCTURE-SLOT-VALUE";
+	private static final String STRUCTURE_CLASS_ARGUMENT = "STRUCTURE-CLASS";
+	private static final String STRUCTURE_INSTANCE_ARGUMENT = "STRUCTURE-INSTANCE";
+	private static final String SLOT_NAME_ARGUMENT = "SLOT-NAME";
 
-	private GetStructureSlotValueFunction() {
-		super("Gets the slot value matching the provided symbol for the provided structure-object.", getInitLambdaListBindings());
-	}
-
-	@PostConstruct
-	private void init() {
-		GET_STRUCTURE_SLOT_VALUE.setFunction(this);
-		GlobalPackageStruct.SYSTEM.export(GET_STRUCTURE_SLOT_VALUE);
-	}
-
-	private static OrdinaryLambdaList getInitLambdaListBindings() {
-
-		final List<RequiredParameter> requiredBindings = new ArrayList<>();
-
-		final SymbolStruct structureClassArgSymbol = GlobalPackageStruct.SYSTEM.intern("STRUCTURE-CLASS").getSymbol();
-		final RequiredParameter structureClassArgRequiredBinding = new RequiredParameter(structureClassArgSymbol);
-		requiredBindings.add(structureClassArgRequiredBinding);
-
-		final SymbolStruct structureInstanceArgSymbol = GlobalPackageStruct.SYSTEM.intern("STRUCTURE-INSTANCE").getSymbol();
-		final RequiredParameter structureInstanceArgRequiredBinding = new RequiredParameter(structureInstanceArgSymbol);
-		requiredBindings.add(structureInstanceArgRequiredBinding);
-
-		final SymbolStruct slotNameArgSymbol = GlobalPackageStruct.SYSTEM.intern("SLOT-NAME").getSymbol();
-		final RequiredParameter slotNameArgRequiredBinding = new RequiredParameter(slotNameArgSymbol);
-		requiredBindings.add(slotNameArgRequiredBinding);
-
-		return OrdinaryLambdaList.builder()
-		                         .requiredBindings(requiredBindings)
-		                         .build();
+	public GetStructureSlotValueFunction() {
+		super("Gets the slot value matching the provided symbol for the provided structure-object.",
+		      FUNCTION_NAME,
+		      Parameters.forFunction(FUNCTION_NAME)
+		                .requiredParameter(STRUCTURE_CLASS_ARGUMENT)
+		                .requiredParameter(STRUCTURE_INSTANCE_ARGUMENT)
+		                .requiredParameter(SLOT_NAME_ARGUMENT)
+		);
 	}
 
 	@Override
-	public LispStruct apply(final LispStruct... lispStructs) {
-
-		final SymbolStruct structureClassSymbol = (SymbolStruct) lispStructs[0];
-		final StructureObjectStruct structureInstance = (StructureObjectStruct) lispStructs[1];
-		final SymbolStruct slotName = (SymbolStruct) lispStructs[2];
-		return getStructureSlotValue(structureClassSymbol, structureInstance, slotName);
-	}
-
-	public LispStruct getStructureSlotValue(final SymbolStruct structureClassSymbol, final StructureObjectStruct structureInstance,
-	                                        final SymbolStruct slotName) {
+	public LispStruct apply(final Arguments arguments) {
+		final SymbolStruct structureClassSymbol = arguments.getRequiredArgument(STRUCTURE_CLASS_ARGUMENT, SymbolStruct.class);
+		final StructureObjectStruct structureInstance = arguments.getRequiredArgument(STRUCTURE_INSTANCE_ARGUMENT, StructureObjectStruct.class);
+		final SymbolStruct slotName = arguments.getRequiredArgument(SLOT_NAME_ARGUMENT, SymbolStruct.class);
 
 		final StructureClassStruct symbolStructureClass = structureClassSymbol.getStructureClass();
 		if (symbolStructureClass == null) {
@@ -86,9 +57,9 @@ public final class GetStructureSlotValueFunction extends FunctionStruct {
 		return innerGetStructureSlotValue(symbolStructureClass, structureInstance, slotName);
 	}
 
-	private LispStruct innerGetStructureSlotValue(final StructureClassStruct symbolStructureClass,
-	                                              final StructureObjectStruct structureInstance,
-	                                              final SymbolStruct slotName) {
+	private static LispStruct innerGetStructureSlotValue(final StructureClassStruct symbolStructureClass,
+	                                                     final StructureObjectStruct structureInstance,
+	                                                     final SymbolStruct slotName) {
 
 		final StructureClassStruct instanceStructureClass = structureInstance.getStructureClass();
 

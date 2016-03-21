@@ -4,60 +4,39 @@
 
 package jcl.printer.functions;
 
-import java.util.Collections;
-import java.util.List;
-import javax.annotation.PostConstruct;
-
 import jcl.LispStruct;
-import jcl.compiler.environment.binding.lambdalist.OrdinaryLambdaList;
-import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
-import jcl.functions.FunctionStruct;
-import jcl.packages.GlobalPackageStruct;
+import jcl.functions.CommonLispBuiltInFunctionStruct;
+import jcl.functions.parameterdsl.Arguments;
+import jcl.functions.parameterdsl.Parameters;
 import jcl.printer.Printer;
-import jcl.symbols.SymbolStruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class PrintObjectFunction extends FunctionStruct {
+public final class PrintObjectFunction extends CommonLispBuiltInFunctionStruct {
 
-	public static final SymbolStruct PRINT_OBJECT = GlobalPackageStruct.COMMON_LISP.intern("PRINT-OBJECT").getSymbol();
+	private static final String FUNCTION_NAME = "PRINT-OBJECT";
+	private static final String OBJECT_ARGUMENT = "OBJECT";
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(PrintObjectFunction.class);
 
 	@Autowired
 	private Printer printer;
 
-	private PrintObjectFunction() {
-		super("Prints the provided object.", getInitLambdaListBindings());
-	}
-
-	@PostConstruct
-	private void init() {
-		PRINT_OBJECT.setFunction(this);
-		GlobalPackageStruct.COMMON_LISP.export(PRINT_OBJECT);
-	}
-
-	private static OrdinaryLambdaList getInitLambdaListBindings() {
-
-		final SymbolStruct listArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("OBJECT").getSymbol();
-		final RequiredParameter requiredBinding = new RequiredParameter(listArgSymbol);
-		final List<RequiredParameter> requiredBindings = Collections.singletonList(requiredBinding);
-
-		return OrdinaryLambdaList.builder()
-		                         .requiredBindings(requiredBindings)
-		                         .build();
+	public PrintObjectFunction() {
+		super("Prints the provided object.",
+		      FUNCTION_NAME,
+		      Parameters.forFunction(FUNCTION_NAME)
+		                .requiredParameter(OBJECT_ARGUMENT)
+		);
 	}
 
 	@Override
-	public LispStruct apply(final LispStruct... lispStructs) {
+	public LispStruct apply(final Arguments arguments) {
+		final LispStruct object = arguments.getRequiredArgument(OBJECT_ARGUMENT);
 
-		return printObject(lispStructs[0]);
-	}
-
-	public LispStruct printObject(final LispStruct object) {
 		final String printedObject = printer.print(object);
 		LOGGER.info(printedObject);
 		return object;

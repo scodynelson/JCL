@@ -4,58 +4,31 @@
 
 package jcl.compiler.functions;
 
-import java.util.Collections;
-import java.util.List;
-import javax.annotation.PostConstruct;
-
 import jcl.LispStruct;
-import jcl.compiler.environment.binding.lambdalist.OrdinaryLambdaList;
-import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
-import jcl.functions.FunctionStruct;
-import jcl.packages.GlobalPackageStruct;
-import jcl.symbols.BooleanStruct;
+import jcl.functions.CommonLispBuiltInFunctionStruct;
+import jcl.functions.parameterdsl.Arguments;
+import jcl.functions.parameterdsl.Parameters;
+import jcl.symbols.BooleanStructs;
 import jcl.symbols.NILStruct;
-import jcl.symbols.SymbolStruct;
-import jcl.symbols.TStruct;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class NotFunction extends FunctionStruct {
+public final class NotFunction extends CommonLispBuiltInFunctionStruct {
 
-	public static final SymbolStruct NOT = GlobalPackageStruct.COMMON_LISP.intern("NOT").getSymbol();
+	private static final String FUNCTION_NAME = "NOT";
+	private static final String OBJECT_ARGUMENT = "OBJECT";
 
-	private NotFunction() {
-		super("Returns T if x is false; otherwise, returns NIL.", getInitLambdaListBindings());
-	}
-
-	@PostConstruct
-	private void init() {
-		NOT.setFunction(this);
-		GlobalPackageStruct.COMMON_LISP.export(NOT);
-	}
-
-	private static OrdinaryLambdaList getInitLambdaListBindings() {
-
-		final SymbolStruct listArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("OBJECT").getSymbol();
-		final RequiredParameter requiredBinding = new RequiredParameter(listArgSymbol);
-		final List<RequiredParameter> requiredBindings = Collections.singletonList(requiredBinding);
-
-		return OrdinaryLambdaList.builder()
-		                         .requiredBindings(requiredBindings)
-		                         .build();
+	public NotFunction() {
+		super("Returns T if x is false; otherwise, returns NIL.",
+		      FUNCTION_NAME,
+		      Parameters.forFunction(FUNCTION_NAME)
+		                .requiredParameter(OBJECT_ARGUMENT)
+		);
 	}
 
 	@Override
-	public LispStruct apply(final LispStruct... lispStructs) {
-
-		return notFn(lispStructs[0]);
-	}
-
-	public BooleanStruct notFn(final LispStruct object) {
-		return notFnJavaBoolean(object) ? TStruct.INSTANCE : NILStruct.INSTANCE;
-	}
-
-	public boolean notFnJavaBoolean(final LispStruct object) {
-		return NILStruct.INSTANCE.equals(object);
+	public LispStruct apply(final Arguments arguments) {
+		final LispStruct object = arguments.getRequiredArgument(OBJECT_ARGUMENT);
+		return BooleanStructs.toLispBoolean(NILStruct.INSTANCE.equals(object));
 	}
 }

@@ -4,71 +4,44 @@
 
 package jcl.compiler.functions;
 
-import java.util.Collections;
-import java.util.List;
-import javax.annotation.PostConstruct;
-
 import jcl.LispStruct;
 import jcl.compiler.environment.Environment;
-import jcl.compiler.environment.binding.lambdalist.OptionalParameter;
-import jcl.compiler.environment.binding.lambdalist.OrdinaryLambdaList;
-import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
-import jcl.compiler.environment.binding.lambdalist.SuppliedPParameter;
 import jcl.compiler.struct.ValuesStruct;
-import jcl.functions.FunctionStruct;
-import jcl.packages.GlobalPackageStruct;
+import jcl.functions.CommonLispBuiltInFunctionStruct;
+import jcl.functions.parameterdsl.Arguments;
+import jcl.functions.parameterdsl.Parameters;
 import jcl.symbols.BooleanStruct;
 import jcl.symbols.NILStruct;
-import jcl.symbols.SymbolStruct;
 import jcl.symbols.TStruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class MacroExpandFunction extends FunctionStruct {
+public final class MacroExpandFunction extends CommonLispBuiltInFunctionStruct {
 
-	public static final SymbolStruct MACROEXPAND = GlobalPackageStruct.COMMON_LISP.intern("MACROEXPAND").getSymbol();
+	private static final String FUNCTION_NAME = "MACROEXPAND";
+	private static final String FORM_ARGUMENT = "FORM";
+	private static final String ENVIRONMENT_ARGUMENT = "ENVIRONMENT";
 
 	@Autowired
 	private MacroExpand1Function macroExpand1Function;
 
-	private MacroExpandFunction() {
-		super("Repeatedly expands form until it is no longer a macro form.", getInitLambdaListBindings());
-	}
-
-	@PostConstruct
-	private void init() {
-		MACROEXPAND.setFunction(this);
-		GlobalPackageStruct.COMMON_LISP.export(MACROEXPAND);
-	}
-
-	private static OrdinaryLambdaList getInitLambdaListBindings() {
-
-		final SymbolStruct formArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("FORM").getSymbol();
-		final RequiredParameter requiredBinding = new RequiredParameter(formArgSymbol);
-		final List<RequiredParameter> requiredBindings = Collections.singletonList(requiredBinding);
-
-		final SymbolStruct envArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("ENV").getSymbol();
-
-		final SymbolStruct envSuppliedPSymbol = GlobalPackageStruct.COMMON_LISP.intern("ENV-P-" + System.nanoTime()).getSymbol();
-		final SuppliedPParameter suppliedPBinding = new SuppliedPParameter(envSuppliedPSymbol);
-
-		final OptionalParameter optionalBinding = new OptionalParameter(envArgSymbol, NILStruct.INSTANCE, suppliedPBinding);
-		final List<OptionalParameter> optionalBindings = Collections.singletonList(optionalBinding);
-
-		return OrdinaryLambdaList.builder()
-		                         .requiredBindings(requiredBindings)
-		                         .optionalBindings(optionalBindings)
-		                         .build();
+	public MacroExpandFunction() {
+		super("Repeatedly expands form until it is no longer a macro form.",
+		      FUNCTION_NAME,
+		      Parameters.forFunction(FUNCTION_NAME)
+		                .requiredParameter(FORM_ARGUMENT)
+		                .optionalParameter(ENVIRONMENT_ARGUMENT).withInitialValue(NILStruct.INSTANCE)
+		);
 	}
 
 	@Override
-	public LispStruct apply(final LispStruct... lispStructs) {
+	public LispStruct apply(final Arguments arguments) {
 
-		final LispStruct form = lispStructs[0];
+		final LispStruct form = arguments.getRequiredArgument(FORM_ARGUMENT);
 		Environment environment = Environment.NULL;
-		if (lispStructs.length == 2) {
-			environment = (Environment) lispStructs[1];
+		if (arguments.hasOptionalArgument(ENVIRONMENT_ARGUMENT)) {
+			environment = arguments.getOptionalArgument(ENVIRONMENT_ARGUMENT, Environment.class);
 		}
 
 		final MacroExpandResult macroExpandResult = macroExpand(form, environment);

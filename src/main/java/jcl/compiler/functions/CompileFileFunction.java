@@ -11,7 +11,6 @@ import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Deque;
 import java.util.List;
 import java.util.jar.Attributes;
@@ -19,24 +18,20 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarOutputStream;
 import java.util.jar.Manifest;
 import java.util.regex.Pattern;
-import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
 import jcl.arrays.StringStruct;
 import jcl.compiler.CompilerVariables;
-import jcl.compiler.environment.binding.lambdalist.KeyParameter;
-import jcl.compiler.environment.binding.lambdalist.OrdinaryLambdaList;
-import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
-import jcl.compiler.environment.binding.lambdalist.SuppliedPParameter;
 import jcl.compiler.icg.IntermediateCodeGenerator;
 import jcl.compiler.icg.JavaClassBuilder;
 import jcl.compiler.sa.SemanticAnalyzer;
 import jcl.compiler.struct.ValuesStruct;
 import jcl.compiler.struct.specialoperator.lambda.LambdaStruct;
 import jcl.conditions.exceptions.FileErrorException;
-import jcl.functions.FunctionStruct;
+import jcl.functions.CommonLispBuiltInFunctionStruct;
+import jcl.functions.parameterdsl.Arguments;
+import jcl.functions.parameterdsl.Parameters;
 import jcl.lists.ListStruct;
-import jcl.packages.GlobalPackageStruct;
 import jcl.packages.PackageStruct;
 import jcl.packages.PackageVariables;
 import jcl.pathnames.PathnameStruct;
@@ -50,7 +45,6 @@ import jcl.symbols.BooleanStruct;
 import jcl.symbols.DeclarationStruct;
 import jcl.symbols.NILStruct;
 import jcl.symbols.SpecialOperatorStruct;
-import jcl.symbols.SymbolStruct;
 import jcl.symbols.TStruct;
 import jcl.system.CommonLispSymbols;
 import org.apache.commons.io.FilenameUtils;
@@ -65,9 +59,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class CompileFileFunction extends FunctionStruct {
+public final class CompileFileFunction extends CommonLispBuiltInFunctionStruct {
 
-	public static final SymbolStruct COMPILE_FILE = GlobalPackageStruct.COMMON_LISP.intern("COMPILE-FILE").getSymbol();
+	private static final String FUNCTION_NAME = "COMPILE-FILE";
+	private static final String INPUT_FILE_ARGUMENT = "INPUT-FILE";
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(CompileFileFunction.class);
 
@@ -91,119 +86,37 @@ public final class CompileFileFunction extends FunctionStruct {
 	@Autowired
 	private Printer printer;
 
-	private CompileFileFunction() {
-		super("Compiles the provided input-file.", getInitLambdaListBindings());
-	}
-
-	@PostConstruct
-	private void init() {
-		COMPILE_FILE.setFunction(this);
-		GlobalPackageStruct.COMMON_LISP.export(COMPILE_FILE);
-	}
-
-	private static OrdinaryLambdaList getInitLambdaListBindings() {
-
-		final SymbolStruct inputFileArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("INPUT-FILE").getSymbol();
-		final RequiredParameter requiredBinding = new RequiredParameter(inputFileArgSymbol);
-		final List<RequiredParameter> requiredBindings = Collections.singletonList(requiredBinding);
-
-		final List<KeyParameter> keyBindings = new ArrayList<>(4);
-
-		final SymbolStruct outputFileArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("OUTPUT-FILE").getSymbol();
-
-		final SymbolStruct outputFileSuppliedP = GlobalPackageStruct.COMMON_LISP.intern("OUTPUT-FILE-P-" + System.nanoTime()).getSymbol();
-		final SuppliedPParameter outputFileSuppliedPBinding = new SuppliedPParameter(outputFileSuppliedP);
-
-		final KeyParameter outputFileKeyBinding = new KeyParameter(outputFileArgSymbol, NILStruct.INSTANCE, CommonLispSymbols.OUTPUT_FILE_KEYWORD, outputFileSuppliedPBinding);
-		keyBindings.add(outputFileKeyBinding);
-
-		final SymbolStruct verboseArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("VERBOSE").getSymbol();
-
-		final SymbolStruct verboseSuppliedP = GlobalPackageStruct.COMMON_LISP.intern("VERBOSE-P-" + System.nanoTime()).getSymbol();
-		final SuppliedPParameter verboseSuppliedPBinding = new SuppliedPParameter(verboseSuppliedP);
-
-		final KeyParameter verboseKeyBinding = new KeyParameter(verboseArgSymbol, NILStruct.INSTANCE, CommonLispSymbols.VERBOSE_KEYWORD, verboseSuppliedPBinding);
-		keyBindings.add(verboseKeyBinding);
-
-		final SymbolStruct printArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("PRINT").getSymbol();
-
-		final SymbolStruct printSuppliedP = GlobalPackageStruct.COMMON_LISP.intern("PRINT-P-" + System.nanoTime()).getSymbol();
-		final SuppliedPParameter printSuppliedPBinding = new SuppliedPParameter(printSuppliedP);
-
-		final KeyParameter printKeyBinding = new KeyParameter(printArgSymbol, NILStruct.INSTANCE, CommonLispSymbols.PRINT_KEYWORD, printSuppliedPBinding);
-		keyBindings.add(printKeyBinding);
-
-		final SymbolStruct externalFormatArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("EXTERNAL-FORMAT").getSymbol();
-
-		final SymbolStruct externalFormatSuppliedP = GlobalPackageStruct.COMMON_LISP.intern("EXTERNAL-FORMAT-P-" + System.nanoTime()).getSymbol();
-		final SuppliedPParameter externalFormatSuppliedPBinding = new SuppliedPParameter(externalFormatSuppliedP);
-
-		final KeyParameter externalFormatKeyBinding = new KeyParameter(externalFormatArgSymbol, NILStruct.INSTANCE, CommonLispSymbols.EXTERNAL_FORMAT_KEYWORD, externalFormatSuppliedPBinding);
-		keyBindings.add(externalFormatKeyBinding);
-
-		return OrdinaryLambdaList.builder()
-		                         .requiredBindings(requiredBindings)
-		                         .keyBindings(keyBindings)
-		                         .build();
+	public CompileFileFunction() {
+		super("Compiles the provided input-file.",
+		      FUNCTION_NAME,
+		      Parameters.forFunction(FUNCTION_NAME)
+		                .requiredParameter(INPUT_FILE_ARGUMENT)
+		                .keyParameter(CommonLispSymbols.OUTPUT_FILE_KEYWORD).withInitialValue(NILStruct.INSTANCE)
+		                .keyParameter(CommonLispSymbols.VERBOSE_KEYWORD).withInitialValue(NILStruct.INSTANCE)
+		                .keyParameter(CommonLispSymbols.PRINT_KEYWORD).withInitialValue(NILStruct.INSTANCE)
+		                .keyParameter(CommonLispSymbols.EXTERNAL_FORMAT_KEYWORD).withInitialValue(NILStruct.INSTANCE)
+		);
 	}
 
 	@Override
-	public LispStruct apply(final LispStruct... lispStructs) {
-
-		final LispStruct inputFile = lispStructs[0];
-
-		final BooleanStruct currentCompileVerbose = CompilerVariables.COMPILE_VERBOSE.getVariableValue();
-		final BooleanStruct currentCompilePrint = CompilerVariables.COMPILE_PRINT.getVariableValue();
-
-		LispStruct outputFile = null;
-		boolean verbose = currentCompileVerbose.booleanValue();
-		boolean print = currentCompilePrint.booleanValue();
-
-		final int length = lispStructs.length;
-		if (length >= 3) {
-			// 1 keyword
-			final LispStruct firstKeyword = lispStructs[1];
-			if (CommonLispSymbols.OUTPUT_FILE_KEYWORD.equals(firstKeyword)) {
-				outputFile = lispStructs[2];
-			} else if (CommonLispSymbols.VERBOSE_KEYWORD.equals(firstKeyword)) {
-				verbose = ((BooleanStruct) lispStructs[2]).booleanValue();
-			} else if (CommonLispSymbols.PRINT_KEYWORD.equals(firstKeyword)) {
-				print = ((BooleanStruct) lispStructs[2]).booleanValue();
-			}
+	public LispStruct apply(final Arguments arguments) {
+		final LispStruct inputFile = arguments.getRequiredArgument(INPUT_FILE_ARGUMENT);
+		final LispStruct outputFile = arguments.getKeyArgument(CommonLispSymbols.OUTPUT_FILE_KEYWORD);
+		final boolean verbose;
+		if (arguments.hasKeyArgument(CommonLispSymbols.VERBOSE_KEYWORD)) {
+			verbose = arguments.getKeyArgument(CommonLispSymbols.VERBOSE_KEYWORD, BooleanStruct.class).booleanValue();
+		} else {
+			final BooleanStruct currentCompileVerbose = CompilerVariables.COMPILE_VERBOSE.getVariableValue();
+			verbose = currentCompileVerbose.booleanValue();
 		}
-		if (length >= 5) {
-			// 2 keywords
-			final LispStruct secondKeyword = lispStructs[3];
-			if (CommonLispSymbols.OUTPUT_FILE_KEYWORD.equals(secondKeyword)) {
-				outputFile = lispStructs[4];
-			} else if (CommonLispSymbols.VERBOSE_KEYWORD.equals(secondKeyword)) {
-				verbose = ((BooleanStruct) lispStructs[4]).booleanValue();
-			} else if (CommonLispSymbols.PRINT_KEYWORD.equals(secondKeyword)) {
-				print = ((BooleanStruct) lispStructs[4]).booleanValue();
-			}
+		final boolean print;
+		if (arguments.hasKeyArgument(CommonLispSymbols.PRINT_KEYWORD)) {
+			print = arguments.getKeyArgument(CommonLispSymbols.PRINT_KEYWORD, BooleanStruct.class).booleanValue();
+		} else {
+			final BooleanStruct currentCompilePrint = CompilerVariables.COMPILE_PRINT.getVariableValue();
+			print = currentCompilePrint.booleanValue();
 		}
-		if (length >= 7) {
-			// 3 keywords
-			final LispStruct thirdKeyword = lispStructs[5];
-			if (CommonLispSymbols.OUTPUT_FILE_KEYWORD.equals(thirdKeyword)) {
-				outputFile = lispStructs[6];
-			} else if (CommonLispSymbols.VERBOSE_KEYWORD.equals(thirdKeyword)) {
-				verbose = ((BooleanStruct) lispStructs[6]).booleanValue();
-			} else if (CommonLispSymbols.PRINT_KEYWORD.equals(thirdKeyword)) {
-				print = ((BooleanStruct) lispStructs[6]).booleanValue();
-			}
-		}
-		if (length >= 9) {
-			// 4 keywords
-			final LispStruct fourthKeyword = lispStructs[7];
-			if (CommonLispSymbols.OUTPUT_FILE_KEYWORD.equals(fourthKeyword)) {
-				outputFile = lispStructs[8];
-			} else if (CommonLispSymbols.VERBOSE_KEYWORD.equals(fourthKeyword)) {
-				verbose = ((BooleanStruct) lispStructs[8]).booleanValue();
-			} else if (CommonLispSymbols.PRINT_KEYWORD.equals(fourthKeyword)) {
-				print = ((BooleanStruct) lispStructs[8]).booleanValue();
-			}
-		}
+		final LispStruct externalFormat = arguments.getKeyArgument(CommonLispSymbols.EXTERNAL_FORMAT_KEYWORD);
 		return compileFile(inputFile, outputFile, verbose, print);
 	}
 

@@ -432,7 +432,7 @@ public interface CommonLispSymbols {
 	SymbolStruct EQUALP = GlobalPackageStruct.COMMON_LISP.intern("EQUALP").getSymbol();
 	SymbolStruct ERROR = null;
 	SymbolStruct ETYPECASE = null;
-	SymbolStruct EVAL = EvalFunction.EVAL;
+	SymbolStruct EVAL = GlobalPackageStruct.COMMON_LISP.intern("EVAL").getSymbol();
 	SymbolStruct EVAL_WHEN = null;
 	SymbolStruct EVENP = null;
 	SymbolStruct EVERY = null;

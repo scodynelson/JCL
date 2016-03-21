@@ -4,17 +4,10 @@
 
 package jcl.compiler.functions;
 
-import java.util.Collections;
-import java.util.List;
-import javax.annotation.PostConstruct;
-
 import jcl.LispStruct;
-import jcl.compiler.environment.binding.lambdalist.KeyParameter;
-import jcl.compiler.environment.binding.lambdalist.OrdinaryLambdaList;
-import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
-import jcl.compiler.environment.binding.lambdalist.SuppliedPParameter;
-import jcl.functions.FunctionStruct;
-import jcl.packages.GlobalPackageStruct;
+import jcl.functions.CommonLispBuiltInFunctionStruct;
+import jcl.functions.parameterdsl.Arguments;
+import jcl.functions.parameterdsl.Parameters;
 import jcl.pathnames.LogicalPathnameStruct;
 import jcl.pathnames.PathnameStruct;
 import jcl.pathnames.PathnameType;
@@ -22,15 +15,15 @@ import jcl.pathnames.PathnameVariables;
 import jcl.pathnames.functions.MergePathnamesFunction;
 import jcl.pathnames.functions.TranslateLogicalPathnameFunction;
 import jcl.symbols.NILStruct;
-import jcl.symbols.SymbolStruct;
 import jcl.system.CommonLispSymbols;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class CompileFilePathnameFunction extends FunctionStruct {
+public final class CompileFilePathnameFunction extends CommonLispBuiltInFunctionStruct {
 
-	public static final SymbolStruct COMPILE_FILE_PATHNAME = GlobalPackageStruct.COMMON_LISP.intern("COMPILE-FILE-PATHNAME").getSymbol();
+	private static final String FUNCTION_NAME = "COMPILE-FILE-PATHNAME";
+	private static final String INPUT_FILE_ARGUMENT = "INPUT-FILE";
 
 	@Autowired
 	private MergePathnamesFunction mergePathnamesFunction;
@@ -38,43 +31,22 @@ public final class CompileFilePathnameFunction extends FunctionStruct {
 	@Autowired
 	private TranslateLogicalPathnameFunction translateLogicalPathnameFunction;
 
-	private CompileFilePathnameFunction() {
-		super("Returns the pathname that compile-file would write into, if given the same arguments.", getInitLambdaListBindings());
-	}
-
-	@PostConstruct
-	private void init() {
-		COMPILE_FILE_PATHNAME.setFunction(this);
-		GlobalPackageStruct.COMMON_LISP.export(COMPILE_FILE_PATHNAME);
-	}
-
-	private static OrdinaryLambdaList getInitLambdaListBindings() {
-
-		final SymbolStruct inputFileArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("INPUT-FILE").getSymbol();
-		final RequiredParameter requiredBinding = new RequiredParameter(inputFileArgSymbol);
-		final List<RequiredParameter> requiredBindings = Collections.singletonList(requiredBinding);
-
-		final SymbolStruct outputFileArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("OUTPUT-FILE").getSymbol();
-
-		final SymbolStruct outputSuppliedPSymbol = GlobalPackageStruct.COMMON_LISP.intern("OUTPUT-FILE-P-" + System.nanoTime()).getSymbol();
-		final SuppliedPParameter suppliedPBinding = new SuppliedPParameter(outputSuppliedPSymbol);
-
-		final KeyParameter keyBinding = new KeyParameter(outputFileArgSymbol, NILStruct.INSTANCE, CommonLispSymbols.OUTPUT_FILE_KEYWORD, suppliedPBinding);
-		final List<KeyParameter> keyBindings = Collections.singletonList(keyBinding);
-
-		return OrdinaryLambdaList.builder()
-		                         .requiredBindings(requiredBindings)
-		                         .keyBindings(keyBindings)
-		                         .allowOtherKeys(true)
-		                         .build();
+	public CompileFilePathnameFunction() {
+		super("Returns the pathname that compile-file would write into, if given the same arguments.",
+		      FUNCTION_NAME,
+		      Parameters.forFunction(FUNCTION_NAME)
+		                .requiredParameter(INPUT_FILE_ARGUMENT)
+		                .keyParameter(CommonLispSymbols.OUTPUT_FILE_KEYWORD).withInitialValue(NILStruct.INSTANCE)
+		                .allowOtherKeys()
+		);
 	}
 
 	@Override
-	public LispStruct apply(final LispStruct... lispStructs) {
+	public LispStruct apply(final Arguments arguments) {
 
-		final LispStruct inputFile = lispStructs[0];
-		if (lispStructs.length > 2) {
-			final LispStruct outputFile = lispStructs[2];
+		final LispStruct inputFile = arguments.getRequiredArgument(INPUT_FILE_ARGUMENT);
+		if (arguments.hasKeyArgument(CommonLispSymbols.OUTPUT_FILE_KEYWORD)) {
+			final LispStruct outputFile = arguments.getKeyArgument(CommonLispSymbols.OUTPUT_FILE_KEYWORD);
 			return compileFilePathname(inputFile, outputFile);
 		} else {
 			return compileFilePathname(inputFile, null);

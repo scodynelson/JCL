@@ -2,15 +2,11 @@ package jcl.compiler.functions;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
 import jcl.compiler.CompilerVariables;
 import jcl.compiler.environment.Environment;
-import jcl.compiler.environment.binding.lambdalist.OrdinaryLambdaList;
-import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
 import jcl.compiler.sa.FormAnalyzer;
 import jcl.compiler.struct.CompilerSpecialOperatorStruct;
 import jcl.compiler.struct.specialoperator.JavaMethodCallStruct;
@@ -23,13 +19,15 @@ import jcl.compiler.struct.specialoperator.SymbolCompilerFunctionStruct;
 import jcl.compiler.struct.specialoperator.SymbolFunctionCallStruct;
 import jcl.compiler.struct.specialoperator.lambda.LambdaStruct;
 import jcl.conditions.exceptions.ProgramErrorException;
+import jcl.functions.CommonLispBuiltInFunctionStruct;
 import jcl.functions.FunctionStruct;
+import jcl.functions.parameterdsl.Arguments;
+import jcl.functions.parameterdsl.Parameters;
 import jcl.java.JavaMethodStruct;
 import jcl.java.JavaNameStruct;
 import jcl.java.JavaObjectStruct;
 import jcl.java.functions.JInvoke;
 import jcl.java.functions.JMethod;
-import jcl.packages.GlobalPackageStruct;
 import jcl.printer.Printer;
 import jcl.symbols.BooleanStruct;
 import jcl.symbols.NILStruct;
@@ -39,9 +37,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class EvalFunction extends FunctionStruct {
+public final class EvalFunction extends CommonLispBuiltInFunctionStruct {
 
-	public static final SymbolStruct EVAL = GlobalPackageStruct.COMMON_LISP.intern("EVAL").getSymbol();
+	private static final String FUNCTION_NAME = "EVAL";
+	private static final String FORM_ARGUMENT = "FORM";
 
 	@Autowired
 	private CompileForm compileForm;
@@ -58,31 +57,18 @@ public final class EvalFunction extends FunctionStruct {
 	@Autowired
 	private Printer printer;
 
-	private EvalFunction() {
-		super("Evaluates form in the current dynamic environment and the null lexical environment.", getInitLambdaListBindings());
-	}
-
-	@PostConstruct
-	private void init() {
-		EVAL.setFunction(this);
-		GlobalPackageStruct.COMMON_LISP.export(EVAL);
-	}
-
-	private static OrdinaryLambdaList getInitLambdaListBindings() {
-
-		final SymbolStruct listArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("FORM").getSymbol();
-		final RequiredParameter requiredBinding = new RequiredParameter(listArgSymbol);
-		final List<RequiredParameter> requiredBindings = Collections.singletonList(requiredBinding);
-
-		return OrdinaryLambdaList.builder()
-		                         .requiredBindings(requiredBindings)
-		                         .build();
+	public EvalFunction() {
+		super("Evaluates form in the current dynamic environment and the null lexical environment.",
+		      FUNCTION_NAME,
+		      Parameters.forFunction(FUNCTION_NAME)
+		                .requiredParameter(FORM_ARGUMENT)
+		);
 	}
 
 	@Override
-	public LispStruct apply(final LispStruct... lispStructs) {
-
-		return eval(lispStructs[0]);
+	public LispStruct apply(final Arguments arguments) {
+		final LispStruct form = arguments.getRequiredArgument(FORM_ARGUMENT);
+		return eval(form);
 	}
 
 	public LispStruct eval(final LispStruct originalExp) {

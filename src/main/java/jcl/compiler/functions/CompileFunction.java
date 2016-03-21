@@ -1,20 +1,14 @@
 package jcl.compiler.functions;
 
-import java.util.Collections;
-import java.util.List;
-import javax.annotation.PostConstruct;
-
 import jcl.LispStruct;
-import jcl.compiler.environment.binding.lambdalist.OptionalParameter;
-import jcl.compiler.environment.binding.lambdalist.OrdinaryLambdaList;
-import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
-import jcl.compiler.environment.binding.lambdalist.SuppliedPParameter;
 import jcl.compiler.struct.ValuesStruct;
 import jcl.conditions.exceptions.ErrorException;
 import jcl.conditions.exceptions.ProgramErrorException;
+import jcl.functions.CommonLispBuiltInFunctionStruct;
 import jcl.functions.FunctionStruct;
 import jcl.functions.expanders.MacroFunctionExpander;
-import jcl.packages.GlobalPackageStruct;
+import jcl.functions.parameterdsl.Arguments;
+import jcl.functions.parameterdsl.Parameters;
 import jcl.printer.Printer;
 import jcl.symbols.NILStruct;
 import jcl.symbols.SymbolStruct;
@@ -22,9 +16,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class CompileFunction extends FunctionStruct {
+public final class CompileFunction extends CommonLispBuiltInFunctionStruct {
 
-	public static final SymbolStruct COMPILE = GlobalPackageStruct.COMMON_LISP.intern("COMPILE").getSymbol();
+	private static final String FUNCTION_NAME = "COMPILE";
+	private static final String NAME_ARGUMENT = "NAME";
+	private static final String DEFINITION_ARGUMENT = "DEFINITION";
 
 	@Autowired
 	private CompileForm compileForm;
@@ -32,49 +28,28 @@ public final class CompileFunction extends FunctionStruct {
 	@Autowired
 	private Printer printer;
 
-	private CompileFunction() {
-		super("Produces a compiled function from definition.", getInitLambdaListBindings());
-	}
-
-	@PostConstruct
-	private void init() {
-		COMPILE.setFunction(this);
-		GlobalPackageStruct.COMMON_LISP.export(COMPILE);
-	}
-
-	private static OrdinaryLambdaList getInitLambdaListBindings() {
-
-		final SymbolStruct nameArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("NAME").getSymbol();
-		final RequiredParameter requiredBinding = new RequiredParameter(nameArgSymbol);
-		final List<RequiredParameter> requiredBindings = Collections.singletonList(requiredBinding);
-
-		final SymbolStruct definitionArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("DEFINITION").getSymbol();
-
-		final SymbolStruct definitionSuppliedP = GlobalPackageStruct.COMMON_LISP.intern("DEFINITION-P-" + System.nanoTime()).getSymbol();
-		final SuppliedPParameter suppliedPBinding = new SuppliedPParameter(definitionSuppliedP);
-
-		final OptionalParameter optionalBinding = new OptionalParameter(definitionArgSymbol, NILStruct.INSTANCE, suppliedPBinding);
-		final List<OptionalParameter> optionalBindings = Collections.singletonList(optionalBinding);
-
-		return OrdinaryLambdaList.builder()
-		                         .requiredBindings(requiredBindings)
-		                         .optionalBindings(optionalBindings)
-		                         .build();
+	public CompileFunction() {
+		super("Produces a compiled function from definition.",
+		      FUNCTION_NAME,
+		      Parameters.forFunction(FUNCTION_NAME)
+		                .requiredParameter(NAME_ARGUMENT)
+		                .optionalParameter(DEFINITION_ARGUMENT).withInitialValue(NILStruct.INSTANCE)
+		);
 	}
 
 	@Override
-	public LispStruct apply(final LispStruct... lispStructs) {
+	public LispStruct apply(final Arguments arguments) {
 
-		final LispStruct name = lispStructs[0];
+		final LispStruct name = arguments.getRequiredArgument(NAME_ARGUMENT);
 		LispStruct uncompiledDefinition = null;
-		if (lispStructs.length == 2) {
-			uncompiledDefinition = lispStructs[1];
+		if (arguments.hasOptionalArgument(DEFINITION_ARGUMENT)) {
+			uncompiledDefinition = arguments.getOptionalArgument(DEFINITION_ARGUMENT);
 		}
 
 		return compile(name, uncompiledDefinition);
 	}
 
-	public LispStruct compile(final LispStruct name, final LispStruct uncompiledDefinition) {
+	private LispStruct compile(final LispStruct name, final LispStruct uncompiledDefinition) {
 
 		if (uncompiledDefinition != null) {
 			CompileResult compiledDefinition = null;

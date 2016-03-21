@@ -7,20 +7,14 @@ package jcl.compiler.functions;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
 import jcl.compiler.CompilerVariables;
-import jcl.compiler.environment.binding.lambdalist.KeyParameter;
-import jcl.compiler.environment.binding.lambdalist.OrdinaryLambdaList;
-import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
-import jcl.compiler.environment.binding.lambdalist.SuppliedPParameter;
 import jcl.conditions.exceptions.FileErrorException;
+import jcl.functions.CommonLispBuiltInFunctionStruct;
 import jcl.functions.FunctionStruct;
-import jcl.packages.GlobalPackageStruct;
+import jcl.functions.parameterdsl.Arguments;
+import jcl.functions.parameterdsl.Parameters;
 import jcl.packages.PackageStruct;
 import jcl.packages.PackageVariables;
 import jcl.pathnames.PathnameStruct;
@@ -35,7 +29,6 @@ import jcl.reader.struct.ReadtableStruct;
 import jcl.streams.FileStreamStruct;
 import jcl.symbols.BooleanStruct;
 import jcl.symbols.NILStruct;
-import jcl.symbols.SymbolStruct;
 import jcl.symbols.TStruct;
 import jcl.system.CommonLispSymbols;
 import jcl.system.classloaders.LoaderClassLoader;
@@ -51,9 +44,10 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class LoadFunction extends FunctionStruct {
+public final class LoadFunction extends CommonLispBuiltInFunctionStruct {
 
-	public static final SymbolStruct LOAD = GlobalPackageStruct.COMMON_LISP.intern("LOAD").getSymbol();
+	private static final String FUNCTION_NAME = "LOAD";
+	private static final String FILESPEC_ARGUMENT = "FILESPEC";
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(LoadFunction.class);
 
@@ -72,119 +66,39 @@ public final class LoadFunction extends FunctionStruct {
 	@Autowired
 	private ConfigurableApplicationContext applicationContext;
 
-	private LoadFunction() {
-		super("Loads the file named by filespec into the Lisp environment.", getInitLambdaListBindings());
-	}
-
-	@PostConstruct
-	private void init() {
-		LOAD.setFunction(this);
-		GlobalPackageStruct.COMMON_LISP.export(LOAD);
-	}
-
-	private static OrdinaryLambdaList getInitLambdaListBindings() {
-
-		final SymbolStruct filespecArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("FILESPEC").getSymbol();
-		final RequiredParameter requiredBinding = new RequiredParameter(filespecArgSymbol);
-		final List<RequiredParameter> requiredBindings = Collections.singletonList(requiredBinding);
-
-		final List<KeyParameter> keyBindings = new ArrayList<>(4);
-
-		final SymbolStruct verboseArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("VERBOSE").getSymbol();
-
-		final SymbolStruct verboseSuppliedP = GlobalPackageStruct.COMMON_LISP.intern("VERBOSE-P-" + System.nanoTime()).getSymbol();
-		final SuppliedPParameter verboseSuppliedPBinding = new SuppliedPParameter(verboseSuppliedP);
-
-		final KeyParameter verboseKeyBinding = new KeyParameter(verboseArgSymbol, NILStruct.INSTANCE, CommonLispSymbols.VERBOSE_KEYWORD, verboseSuppliedPBinding);
-		keyBindings.add(verboseKeyBinding);
-
-		final SymbolStruct printArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("PRINT").getSymbol();
-
-		final SymbolStruct printSuppliedP = GlobalPackageStruct.COMMON_LISP.intern("PRINT-P-" + System.nanoTime()).getSymbol();
-		final SuppliedPParameter printSuppliedPBinding = new SuppliedPParameter(printSuppliedP);
-
-		final KeyParameter printKeyBinding = new KeyParameter(printArgSymbol, NILStruct.INSTANCE, CommonLispSymbols.PRINT_KEYWORD, printSuppliedPBinding);
-		keyBindings.add(printKeyBinding);
-
-		final SymbolStruct ifDoesNotExistArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("IF-DOES-NOT-EXIST").getSymbol();
-
-		final SymbolStruct ifDoesNotExistSuppliedP = GlobalPackageStruct.COMMON_LISP.intern("IF-DOES-NOT-EXIST-P-" + System.nanoTime()).getSymbol();
-		final SuppliedPParameter ifDoesNotExistSuppliedPBinding = new SuppliedPParameter(ifDoesNotExistSuppliedP);
-
-		final KeyParameter ifDoesNotExistKeyBinding = new KeyParameter(ifDoesNotExistArgSymbol, NILStruct.INSTANCE, CommonLispSymbols.IF_DOES_NOT_EXIST_KEYWORD, ifDoesNotExistSuppliedPBinding);
-		keyBindings.add(ifDoesNotExistKeyBinding);
-
-		final SymbolStruct externalFormatArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("EXTERNAL-FORMAT").getSymbol();
-
-		final SymbolStruct externalFormatSuppliedP = GlobalPackageStruct.COMMON_LISP.intern("EXTERNAL-FORMAT-P-" + System.nanoTime()).getSymbol();
-		final SuppliedPParameter externalFormatSuppliedPBinding = new SuppliedPParameter(externalFormatSuppliedP);
-
-		final KeyParameter externalFormatKeyBinding = new KeyParameter(externalFormatArgSymbol, NILStruct.INSTANCE, CommonLispSymbols.EXTERNAL_FORMAT_KEYWORD, externalFormatSuppliedPBinding);
-		keyBindings.add(externalFormatKeyBinding);
-
-		return OrdinaryLambdaList.builder()
-		                         .requiredBindings(requiredBindings)
-		                         .keyBindings(keyBindings)
-		                         .build();
+	public LoadFunction() {
+		super("Loads the file named by filespec into the Lisp environment.",
+		      FUNCTION_NAME,
+		      Parameters.forFunction(FUNCTION_NAME)
+		                .requiredParameter(FILESPEC_ARGUMENT)
+		                .keyParameter(CommonLispSymbols.VERBOSE_KEYWORD).withInitialValue(NILStruct.INSTANCE)
+		                .keyParameter(CommonLispSymbols.PRINT_KEYWORD).withInitialValue(NILStruct.INSTANCE)
+		                .keyParameter(CommonLispSymbols.IF_DOES_NOT_EXIST_KEYWORD).withInitialValue(TStruct.INSTANCE)
+		                .keyParameter(CommonLispSymbols.EXTERNAL_FORMAT_KEYWORD).withInitialValue(NILStruct.INSTANCE)
+		);
 	}
 
 	@Override
-	public LispStruct apply(final LispStruct... lispStructs) {
+	public LispStruct apply(final Arguments arguments) {
 
-		final LispStruct filespec = lispStructs[0];
 
-		final BooleanStruct currentLoadVerbose = CompilerVariables.LOAD_VERBOSE.getVariableValue();
-		final BooleanStruct currentLoadPrint = CompilerVariables.LOAD_PRINT.getVariableValue();
-
-		boolean verbose = currentLoadVerbose.booleanValue();
-		boolean print = currentLoadPrint.booleanValue();
-		boolean ifDoesNotExist = true;
-
-		final int length = lispStructs.length;
-		if (length >= 3) {
-			// 1 keyword
-			final LispStruct firstKeyword = lispStructs[1];
-			if (CommonLispSymbols.VERBOSE_KEYWORD.equals(firstKeyword)) {
-				verbose = ((BooleanStruct) lispStructs[2]).booleanValue();
-			} else if (CommonLispSymbols.PRINT_KEYWORD.equals(firstKeyword)) {
-				print = ((BooleanStruct) lispStructs[2]).booleanValue();
-			} else if (CommonLispSymbols.IF_DOES_NOT_EXIST_KEYWORD.equals(firstKeyword)) {
-				ifDoesNotExist = ((BooleanStruct) lispStructs[2]).booleanValue();
-			}
+		final LispStruct filespec = arguments.getRequiredArgument(FILESPEC_ARGUMENT);
+		final boolean verbose;
+		if (arguments.hasKeyArgument(CommonLispSymbols.VERBOSE_KEYWORD)) {
+			verbose = arguments.getKeyArgument(CommonLispSymbols.VERBOSE_KEYWORD, BooleanStruct.class).booleanValue();
+		} else {
+			final BooleanStruct currentLoadVerbose = CompilerVariables.LOAD_VERBOSE.getVariableValue();
+			verbose = currentLoadVerbose.booleanValue();
 		}
-		if (length >= 5) {
-			// 2 keywords
-			final LispStruct secondKeyword = lispStructs[3];
-			if (CommonLispSymbols.VERBOSE_KEYWORD.equals(secondKeyword)) {
-				verbose = ((BooleanStruct) lispStructs[4]).booleanValue();
-			} else if (CommonLispSymbols.PRINT_KEYWORD.equals(secondKeyword)) {
-				print = ((BooleanStruct) lispStructs[4]).booleanValue();
-			} else if (CommonLispSymbols.IF_DOES_NOT_EXIST_KEYWORD.equals(secondKeyword)) {
-				ifDoesNotExist = ((BooleanStruct) lispStructs[4]).booleanValue();
-			}
+		final boolean print;
+		if (arguments.hasKeyArgument(CommonLispSymbols.PRINT_KEYWORD)) {
+			print = arguments.getKeyArgument(CommonLispSymbols.PRINT_KEYWORD, BooleanStruct.class).booleanValue();
+		} else {
+			final BooleanStruct currentLoadPrint = CompilerVariables.LOAD_PRINT.getVariableValue();
+			print = currentLoadPrint.booleanValue();
 		}
-		if (length >= 7) {
-			// 3 keywords
-			final LispStruct thirdKeyword = lispStructs[5];
-			if (CommonLispSymbols.VERBOSE_KEYWORD.equals(thirdKeyword)) {
-				verbose = ((BooleanStruct) lispStructs[6]).booleanValue();
-			} else if (CommonLispSymbols.PRINT_KEYWORD.equals(thirdKeyword)) {
-				print = ((BooleanStruct) lispStructs[6]).booleanValue();
-			} else if (CommonLispSymbols.IF_DOES_NOT_EXIST_KEYWORD.equals(thirdKeyword)) {
-				ifDoesNotExist = ((BooleanStruct) lispStructs[6]).booleanValue();
-			}
-		}
-		if (length >= 9) {
-			// 4 keywords
-			final LispStruct fourthKeyword = lispStructs[7];
-			if (CommonLispSymbols.VERBOSE_KEYWORD.equals(fourthKeyword)) {
-				verbose = ((BooleanStruct) lispStructs[8]).booleanValue();
-			} else if (CommonLispSymbols.PRINT_KEYWORD.equals(fourthKeyword)) {
-				print = ((BooleanStruct) lispStructs[8]).booleanValue();
-			} else if (CommonLispSymbols.IF_DOES_NOT_EXIST_KEYWORD.equals(fourthKeyword)) {
-				ifDoesNotExist = ((BooleanStruct) lispStructs[8]).booleanValue();
-			}
-		}
+		final boolean ifDoesNotExist = arguments.getKeyArgument(CommonLispSymbols.IF_DOES_NOT_EXIST_KEYWORD, BooleanStruct.class).booleanValue();
+		final LispStruct externalFormat = arguments.getKeyArgument(CommonLispSymbols.EXTERNAL_FORMAT_KEYWORD);
 		return load(filespec, verbose, print, ifDoesNotExist);
 	}
 

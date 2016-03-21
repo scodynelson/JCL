@@ -4,18 +4,16 @@
 
 package jcl.packages.functions;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import jcl.LispStruct;
-import jcl.compiler.environment.binding.lambdalist.OptionalParameter;
-import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
-import jcl.functions.AbstractCommonLispFunctionStruct;
+import jcl.functions.CommonLispBuiltInFunctionStruct;
+import jcl.functions.parameterdsl.Arguments;
+import jcl.functions.parameterdsl.Parameters;
 import jcl.lists.ListStruct;
-import jcl.packages.GlobalPackageStruct;
 import jcl.packages.PackageStruct;
-import jcl.types.ListType;
+import jcl.symbols.NILStruct;
 import jcl.types.TypeValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -24,7 +22,12 @@ import org.springframework.stereotype.Component;
  * Function implementation for {@code rename-package}.
  */
 @Component
-public final class RenamePackageFunction extends AbstractCommonLispFunctionStruct {
+public final class RenamePackageFunction extends CommonLispBuiltInFunctionStruct {
+
+	private static final String FUNCTION_NAME = "RENAME-PACKAGE";
+	private static final String PACKAGE_ARGUMENT = "PACKAGE";
+	private static final String NEW_NAME_ARGUMENT = "NEW-NAME";
+	private static final String NEW_NICKNAMES_ARGUMENT = "NEW-NICKNAMES";
 
 	/**
 	 * The {@link TypeValidator} for validating the function parameter value types.
@@ -36,39 +39,13 @@ public final class RenamePackageFunction extends AbstractCommonLispFunctionStruc
 	 * Public constructor passing the documentation string.
 	 */
 	public RenamePackageFunction() {
-		super("Replaces the name and nicknames of package.");
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * Creates the {@link RequiredParameter} list with the {@link PackageStruct} package-designator to be renamed and
-	 * the package-designator new package name value.
-	 *
-	 * @return the list of {@link RequiredParameter} objects
-	 */
-	@Override
-	protected List<RequiredParameter> getRequiredBindings() {
-		final List<RequiredParameter> requiredParameters = new ArrayList<>(2);
-		final RequiredParameter packageParam
-				= RequiredParameter.builder(GlobalPackageStruct.COMMON_LISP, "PACKAGE").build();
-		requiredParameters.add(packageParam);
-		final RequiredParameter newNameParam
-				= RequiredParameter.builder(GlobalPackageStruct.COMMON_LISP, "NEW-NAME").build();
-		requiredParameters.add(newNameParam);
-		return requiredParameters;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * Creates the single {@link OptionalParameter} list of package nicknames for this function.
-	 *
-	 * @return a list of a single {@link OptionalParameter} list of package nicknames
-	 */
-	@Override
-	protected List<OptionalParameter> getOptionalBindings() {
-		return OptionalParameter.builder(GlobalPackageStruct.COMMON_LISP, "NEW-NICKNAMES")
-		                        .suppliedPBinding()
-		                        .buildList();
+		super("Replaces the name and nicknames of package.",
+		      FUNCTION_NAME,
+		      Parameters.forFunction(FUNCTION_NAME)
+		                .requiredParameter(PACKAGE_ARGUMENT)
+		                .requiredParameter(NEW_NAME_ARGUMENT)
+		                .optionalParameter(NEW_NICKNAMES_ARGUMENT).withInitialValue(NILStruct.INSTANCE)
+		);
 	}
 
 	/**
@@ -82,20 +59,15 @@ public final class RenamePackageFunction extends AbstractCommonLispFunctionStruc
 	 * @return the renamed {@link PackageStruct}
 	 */
 	@Override
-	public LispStruct apply(final LispStruct... lispStructs) {
-		super.apply(lispStructs);
+	public LispStruct apply(final Arguments arguments) {
+		final PackageStruct aPackage = validator.validatePackageDesignator(arguments.getRequiredArgument(PACKAGE_ARGUMENT), functionName);
+		final String newName = validator.validatePackageDesignatorAsString(arguments.getRequiredArgument(NEW_NAME_ARGUMENT), functionName, "New Name");
 
-		final PackageStruct aPackage = validator.validatePackageDesignator(lispStructs[0], functionName());
-		final String newName = validator.validatePackageDesignatorAsString(lispStructs[1], functionName(), "New Name");
-
-		if (lispStructs.length > 2) {
-			final LispStruct lispStruct = lispStructs[2];
-			validator.validateTypes(lispStruct, functionName(), "New Nicknames", ListType.INSTANCE);
-
-			final ListStruct newNicknamesList = (ListStruct) lispStruct;
+		if (arguments.hasOptionalArgument(NEW_NICKNAMES_ARGUMENT)) {
+			final ListStruct newNicknamesList = arguments.getOptionalArgument(NEW_NICKNAMES_ARGUMENT, ListStruct.class);
 			final List<String> newNicknames
 					= newNicknamesList.stream()
-					                  .map(newNickname -> validator.validateStringDesignator(newNickname, functionName(), "New Nickname"))
+					                  .map(newNickname -> validator.validateStringDesignator(newNickname, functionName, "New Nickname"))
 					                  .collect(Collectors.toList());
 			aPackage.renamePackage(newName, newNicknames);
 		} else {
@@ -103,16 +75,5 @@ public final class RenamePackageFunction extends AbstractCommonLispFunctionStruc
 		}
 
 		return aPackage;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * Returns the function name {@code rename-package} as a string.
-	 *
-	 * @return the function name {@code rename-package} as a string
-	 */
-	@Override
-	protected String functionName() {
-		return "RENAME-PACKAGE";
 	}
 }

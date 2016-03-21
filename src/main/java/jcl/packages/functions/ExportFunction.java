@@ -20,7 +20,9 @@ public final class ExportFunction extends AbstractSymbolListPackageFunction {
 	 * Public constructor passing the documentation string.
 	 */
 	public ExportFunction() {
-		super("Makes one or more symbols that are accessible in package (whether directly or by inheritance) be external symbols of that package.");
+		super("Makes one or more symbols that are accessible in package (whether directly or by inheritance) be external symbols of that package.",
+		      "EXPORT"
+		);
 	}
 
 	/**
@@ -32,16 +34,5 @@ public final class ExportFunction extends AbstractSymbolListPackageFunction {
 	@Override
 	protected BiConsumer<PackageStruct, SymbolStruct[]> symbolListFunction() {
 		return PackageStruct::export;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * Returns the function name {@code export} as a string.
-	 *
-	 * @return the function name {@code export} as a string
-	 */
-	@Override
-	protected String functionName() {
-		return "EXPORT";
 	}
 }

@@ -7,10 +7,10 @@ package jcl.packages.functions;
 import java.util.List;
 
 import jcl.LispStruct;
-import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
-import jcl.functions.AbstractCommonLispFunctionStruct;
+import jcl.functions.CommonLispBuiltInFunctionStruct;
+import jcl.functions.parameterdsl.Arguments;
+import jcl.functions.parameterdsl.Parameters;
 import jcl.lists.ListStruct;
-import jcl.packages.GlobalPackageStruct;
 import jcl.packages.PackageStruct;
 import jcl.types.TypeValidator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +20,10 @@ import org.springframework.stereotype.Component;
  * Function implementation for {@code package-used-by-list}.
  */
 @Component
-public final class PackageUsedByListFunction extends AbstractCommonLispFunctionStruct {
+public final class PackageUsedByListFunction extends CommonLispBuiltInFunctionStruct {
+
+	private static final String FUNCTION_NAME = "PACKAGE-USED-BY-LIST";
+	private static final String PACKAGE_ARGUMENT = "PACKAGE";
 
 	/**
 	 * The {@link TypeValidator} for validating the function parameter value types.
@@ -32,18 +35,11 @@ public final class PackageUsedByListFunction extends AbstractCommonLispFunctionS
 	 * Public constructor passing the documentation string.
 	 */
 	public PackageUsedByListFunction() {
-		super("Returns a list of other packages used by package.");
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * Creates the single {@link RequiredParameter} package object for this function.
-	 *
-	 * @return a list of a single {@link RequiredParameter} package object
-	 */
-	@Override
-	protected List<RequiredParameter> getRequiredBindings() {
-		return RequiredParameter.builder(GlobalPackageStruct.COMMON_LISP, "PACKAGE").buildList();
+		super("Returns a list of other packages used by package.",
+		      FUNCTION_NAME,
+		      Parameters.forFunction(FUNCTION_NAME)
+		                .requiredParameter(PACKAGE_ARGUMENT)
+		);
 	}
 
 	/**
@@ -57,24 +53,11 @@ public final class PackageUsedByListFunction extends AbstractCommonLispFunctionS
 	 * @return the {@link PackageStruct#usedByList} as a {@link ListStruct}
 	 */
 	@Override
-	public LispStruct apply(final LispStruct... lispStructs) {
-		super.apply(lispStructs);
-
-		final LispStruct lispStruct = lispStructs[0];
-		final PackageStruct aPackage = validator.validatePackageDesignator(lispStruct, functionName());
+	public LispStruct apply(final Arguments arguments) {
+		final LispStruct lispStruct = arguments.getRequiredArgument(PACKAGE_ARGUMENT);
+		final PackageStruct aPackage = validator.validatePackageDesignator(lispStruct, functionName);
 
 		final List<PackageStruct> usedByList = aPackage.getUsedByList();
 		return ListStruct.buildProperList(usedByList);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * Returns the function name {@code package-used-by-list} as a string.
-	 *
-	 * @return the function name {@code package-used-by-list} as a string
-	 */
-	@Override
-	protected String functionName() {
-		return "PACKAGE-USED-BY-LIST";
 	}
 }

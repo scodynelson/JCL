@@ -8,39 +8,43 @@ import java.util.ArrayList;
 import java.util.List;
 
 import jcl.LispStruct;
-import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
+import jcl.functions.CommonLispBuiltInFunctionStruct;
+import jcl.functions.parameterdsl.Arguments;
+import jcl.functions.parameterdsl.Parameters;
 import jcl.lists.ListStruct;
-import jcl.packages.GlobalPackageStruct;
 import jcl.packages.PackageStruct;
+import jcl.packages.PackageVariables;
 import jcl.symbols.TStruct;
-import jcl.types.CharacterType;
-import jcl.types.ListType;
-import jcl.types.StringType;
-import jcl.types.SymbolType;
+import jcl.types.TypeValidator;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
  * Function implementation for {@code shadow}.
  */
 @Component
-public final class ShadowFunction extends AbstractOptionalPackageFunction {
+public final class ShadowFunction extends CommonLispBuiltInFunctionStruct {
+
+	private static final String FUNCTION_NAME = "SHADOW";
+	private static final String SYMBOL_NAMES_ARGUMENT = "SYMBOL-NAMES";
+	private static final String PACKAGE_ARGUMENT = "PACKAGE";
+
+	/**
+	 * The {@link TypeValidator} for validating the function parameter value types.
+	 */
+	@Autowired
+	protected TypeValidator validator;
 
 	/**
 	 * Public constructor passing the documentation string.
 	 */
 	public ShadowFunction() {
-		super("Assures that symbols with names given by symbol-names are present in the package.");
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * Creates the single {@link RequiredParameter} symbol names list or string-designator object for this function.
-	 *
-	 * @return a list of a single {@link RequiredParameter} symbol names list or string-designator object
-	 */
-	@Override
-	protected List<RequiredParameter> getRequiredBindings() {
-		return RequiredParameter.builder(GlobalPackageStruct.COMMON_LISP, "SYMBOL-NAMES").buildList();
+		super("Assures that symbols with names given by symbol-names are present in the package.",
+		      FUNCTION_NAME,
+		      Parameters.forFunction(FUNCTION_NAME)
+		                .requiredParameter(SYMBOL_NAMES_ARGUMENT)
+		                .optionalParameter(PACKAGE_ARGUMENT).withInitialValue(PackageVariables.PACKAGE.getVariableValue())
+		);
 	}
 
 	/**
@@ -53,41 +57,26 @@ public final class ShadowFunction extends AbstractOptionalPackageFunction {
 	 * @return {@link TStruct#INSTANCE}
 	 */
 	@Override
-	public LispStruct apply(final LispStruct... lispStructs) {
-		super.apply(lispStructs);
-
-		final LispStruct lispStruct = lispStructs[0];
-		validator.validateTypes(lispStruct, functionName(), "Symbol names to shadow", ListType.INSTANCE, StringType.INSTANCE, SymbolType.INSTANCE, CharacterType.INSTANCE);
-
-		final PackageStruct aPackage = getPackage(lispStructs);
+	public LispStruct apply(final Arguments arguments) {
+		final LispStruct lispStruct = arguments.getRequiredArgument(SYMBOL_NAMES_ARGUMENT);
+		final PackageStruct aPackage = arguments.getOptionalArgument(PACKAGE_ARGUMENT, PackageStruct.class);
 
 		final String[] symbolNameArray;
 		if (lispStruct instanceof ListStruct) {
 			final ListStruct symbolNames = (ListStruct) lispStruct;
 			final List<String> realSymbolNames = new ArrayList<>();
 			for (final LispStruct theSymbolName : symbolNames) {
-				final String realSymbolName = validator.validateStringDesignator(theSymbolName, functionName(), "Symbol Name");
+				final String realSymbolName = validator.validateStringDesignator(theSymbolName, functionName, "Symbol Name");
 				realSymbolNames.add(realSymbolName);
 			}
 			symbolNameArray = realSymbolNames.toArray(new String[realSymbolNames.size()]);
 		} else {
 			symbolNameArray = new String[1];
-			symbolNameArray[0] = validator.validateStringDesignator(lispStruct, functionName(), "Symbol Name");
+			symbolNameArray[0] = validator.validateStringDesignator(lispStruct, functionName, "Symbol Name");
 		}
 
 		aPackage.shadow(symbolNameArray);
 
 		return TStruct.INSTANCE;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * Returns the function name {@code shadow} as a string.
-	 *
-	 * @return the function name {@code shadow} as a string
-	 */
-	@Override
-	protected String functionName() {
-		return "SHADOW";
 	}
 }

@@ -4,12 +4,10 @@
 
 package jcl.packages.functions;
 
-import java.util.List;
-
 import jcl.LispStruct;
-import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
-import jcl.functions.AbstractCommonLispFunctionStruct;
-import jcl.packages.GlobalPackageStruct;
+import jcl.functions.CommonLispBuiltInFunctionStruct;
+import jcl.functions.parameterdsl.Arguments;
+import jcl.functions.parameterdsl.Parameters;
 import jcl.packages.PackageStruct;
 import jcl.symbols.NILStruct;
 import jcl.symbols.TStruct;
@@ -21,7 +19,10 @@ import org.springframework.stereotype.Component;
  * Function implementation for {@code delete-package}.
  */
 @Component
-public final class DeletePackageFunction extends AbstractCommonLispFunctionStruct {
+public final class DeletePackageFunction extends CommonLispBuiltInFunctionStruct {
+
+	private static final String FUNCTION_NAME = "DELETE-PACKAGE";
+	private static final String PACKAGE_ARGUMENT = "PACKAGE";
 
 	/**
 	 * The {@link TypeValidator} for validating the function parameter value types.
@@ -33,18 +34,11 @@ public final class DeletePackageFunction extends AbstractCommonLispFunctionStruc
 	 * Public constructor passing the documentation string.
 	 */
 	public DeletePackageFunction() {
-		super("Deletes package from all package system data structures. If the operation is successful, returns true, otherwise nil.");
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * Creates the single {@link RequiredParameter} package object for this function.
-	 *
-	 * @return a list of a single {@link RequiredParameter} package object
-	 */
-	@Override
-	protected List<RequiredParameter> getRequiredBindings() {
-		return RequiredParameter.builder(GlobalPackageStruct.COMMON_LISP, "PACKAGE").buildList();
+		super("Deletes package from all package system data structures. If the operation is successful, returns true, otherwise nil.",
+		      FUNCTION_NAME,
+		      Parameters.forFunction(FUNCTION_NAME)
+		                .requiredParameter(PACKAGE_ARGUMENT)
+		);
 	}
 
 	/**
@@ -58,11 +52,9 @@ public final class DeletePackageFunction extends AbstractCommonLispFunctionStruc
 	 * @return {@link TStruct#INSTANCE}
 	 */
 	@Override
-	public LispStruct apply(final LispStruct... lispStructs) {
-		super.apply(lispStructs);
-
-		final LispStruct lispStruct = lispStructs[0];
-		final PackageStruct aPackage = validator.validatePackageDesignator(lispStruct, functionName());
+	public LispStruct apply(final Arguments arguments) {
+		final LispStruct lispStruct = arguments.getRequiredArgument(PACKAGE_ARGUMENT);
+		final PackageStruct aPackage = validator.validatePackageDesignator(lispStruct, functionName);
 
 		if (aPackage.getName() == null) {
 			return NILStruct.INSTANCE;
@@ -70,16 +62,5 @@ public final class DeletePackageFunction extends AbstractCommonLispFunctionStruc
 
 		aPackage.deletePackage();
 		return TStruct.INSTANCE;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * Returns the function name {@code delete-package} as a string.
-	 *
-	 * @return the function name {@code delete-package} as a string
-	 */
-	@Override
-	protected String functionName() {
-		return "DELETE-PACKAGE";
 	}
 }

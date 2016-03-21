@@ -4,12 +4,10 @@
 
 package jcl.packages.functions;
 
-import java.util.List;
-
 import jcl.LispStruct;
-import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
-import jcl.functions.AbstractCommonLispFunctionStruct;
-import jcl.packages.GlobalPackageStruct;
+import jcl.functions.CommonLispBuiltInFunctionStruct;
+import jcl.functions.parameterdsl.Arguments;
+import jcl.functions.parameterdsl.Parameters;
 import jcl.packages.PackageStruct;
 import jcl.symbols.NILStruct;
 import jcl.types.TypeValidator;
@@ -20,13 +18,20 @@ import org.springframework.stereotype.Component;
  * Function implementation for {@code find-package}.
  */
 @Component
-public final class FindPackageFunction extends AbstractCommonLispFunctionStruct {
+public final class FindPackageFunction extends CommonLispBuiltInFunctionStruct {
+
+	private static final String FUNCTION_NAME = "FIND-PACKAGE";
+	private static final String NAME_ARGUMENT = "NAME";
 
 	/**
 	 * Public constructor passing the documentation string.
 	 */
 	public FindPackageFunction() {
-		super("Locates and returns the package whose name or nickname is name.");
+		super("Locates and returns the package whose name or nickname is name.",
+		      FUNCTION_NAME,
+		      Parameters.forFunction(FUNCTION_NAME)
+		                .requiredParameter(NAME_ARGUMENT)
+		);
 	}
 
 	/**
@@ -34,17 +39,6 @@ public final class FindPackageFunction extends AbstractCommonLispFunctionStruct 
 	 */
 	@Autowired
 	private TypeValidator validator;
-
-	/**
-	 * {@inheritDoc}
-	 * Creates the single {@link RequiredParameter} package-designator object for this function.
-	 *
-	 * @return a list of a single {@link RequiredParameter} package-designator object
-	 */
-	@Override
-	protected List<RequiredParameter> getRequiredBindings() {
-		return RequiredParameter.builder(GlobalPackageStruct.COMMON_LISP, "NAME").buildList();
-	}
 
 	/**
 	 * {@inheritDoc}
@@ -57,22 +51,9 @@ public final class FindPackageFunction extends AbstractCommonLispFunctionStruct 
 	 * @return {@link PackageStruct} with the provided package-designator parameter
 	 */
 	@Override
-	public LispStruct apply(final LispStruct... lispStructs) {
-		super.apply(lispStructs);
-
-		final LispStruct packageDesignator = lispStructs[0];
-		final PackageStruct aPackage = validator.validatePackageDesignator(packageDesignator, functionName());
+	public LispStruct apply(final Arguments arguments) {
+		final LispStruct packageDesignator = arguments.getRequiredArgument(NAME_ARGUMENT);
+		final PackageStruct aPackage = validator.validatePackageDesignator(packageDesignator, functionName);
 		return (aPackage == null) ? NILStruct.INSTANCE : aPackage;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * Returns the function name {@code find-package} as a string.
-	 *
-	 * @return the function name {@code find-package} as a string
-	 */
-	@Override
-	protected String functionName() {
-		return "FIND-PACKAGE";
 	}
 }

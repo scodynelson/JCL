@@ -19,7 +19,9 @@ public final class UnusePackageFunction extends AbstractPackageListPackageFuncti
 	 * Public constructor passing the documentation string.
 	 */
 	public UnusePackageFunction() {
-		super("Causes package to cease inheriting all the external symbols of packages-to-unuse.");
+		super("Causes package to cease inheriting all the external symbols of packages-to-unuse.",
+		      "UNUSE-PACKAGE"
+		);
 	}
 
 	/**
@@ -42,16 +44,5 @@ public final class UnusePackageFunction extends AbstractPackageListPackageFuncti
 	 */
 	@Override
 	protected void validatePackages(final PackageStruct... packageStructs) {
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * Returns the function name {@code unuse-package} as a string.
-	 *
-	 * @return the function name {@code unuse-package} as a string
-	 */
-	@Override
-	protected String functionName() {
-		return "UNUSE-PACKAGE";
 	}
 }

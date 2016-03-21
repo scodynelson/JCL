@@ -10,42 +10,38 @@ import java.util.function.BiConsumer;
 import java.util.function.Function;
 
 import jcl.LispStruct;
-import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
 import jcl.conditions.exceptions.TypeErrorException;
+import jcl.functions.CommonLispBuiltInFunctionStruct;
 import jcl.functions.FunctionStruct;
+import jcl.functions.parameterdsl.Arguments;
+import jcl.functions.parameterdsl.Parameters;
 import jcl.lists.ListStruct;
-import jcl.packages.GlobalPackageStruct;
 import jcl.packages.PackageStruct;
+import jcl.packages.PackageVariables;
 import jcl.symbols.SymbolStruct;
 import jcl.symbols.TStruct;
-import jcl.types.ListType;
 import jcl.types.SymbolType;
+import jcl.types.TypeValidator;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Abstract {@link FunctionStruct} implementation for package functions that take symbol objects. This {@link
  * FunctionStruct} also has an optional package parameter value.
  */
-abstract class AbstractSymbolListPackageFunction extends AbstractOptionalPackageFunction {
+abstract class AbstractSymbolListPackageFunction extends CommonLispBuiltInFunctionStruct {
 
 	/**
-	 * Protected constructor passing the provided {@code documentation} string to the super constructor.
-	 *
-	 * @param documentation
-	 * 		the documentation string
+	 * The {@link TypeValidator} for validating the function parameter value types.
 	 */
-	protected AbstractSymbolListPackageFunction(final String documentation) {
-		super(documentation);
-	}
+	@Autowired
+	protected TypeValidator validator;
 
-	/**
-	 * {@inheritDoc}
-	 * Creates the single {@link RequiredParameter} list of symbol objects for this function.
-	 *
-	 * @return a list of a single {@link RequiredParameter} list of symbol objects
-	 */
-	@Override
-	protected List<RequiredParameter> getRequiredBindings() {
-		return RequiredParameter.builder(GlobalPackageStruct.COMMON_LISP, "SYMBOLS").buildList();
+	protected AbstractSymbolListPackageFunction(final String documentation, final String functionName) {
+		super(documentation, functionName,
+		      Parameters.forFunction(functionName)
+		                .requiredParameter("SYMBOLS")
+		                .optionalParameter("PACKAGE").withInitialValue(PackageVariables.PACKAGE.getVariableValue())
+		);
 	}
 
 	/**
@@ -59,20 +55,16 @@ abstract class AbstractSymbolListPackageFunction extends AbstractOptionalPackage
 	 * @return {@link TStruct#INSTANCE}
 	 */
 	@Override
-	public LispStruct apply(final LispStruct... lispStructs) {
-		super.apply(lispStructs);
-
-		final LispStruct lispStruct = lispStructs[0];
-		validator.validateTypes(lispStruct, functionName(), "Symbols", ListType.INSTANCE, SymbolType.INSTANCE);
-
-		final PackageStruct aPackage = getPackage(lispStructs);
+	public LispStruct apply(final Arguments arguments) {
+		final LispStruct lispStruct = arguments.getRequiredArgument("SYMBOLS");
+		final PackageStruct aPackage = arguments.getOptionalArgument("PACKAGE", PackageStruct.class);
 
 		final SymbolStruct[] realSymbolArray;
 		if (lispStruct instanceof ListStruct) {
 			final ListStruct symbols = (ListStruct) lispStruct;
 			final List<SymbolStruct> realSymbols = new ArrayList<>();
 			for (final LispStruct theSymbol : symbols) {
-				validator.validateTypes(theSymbol, functionName(), "Symbol", SymbolType.INSTANCE);
+				validator.validateTypes(theSymbol, functionName, "Symbol", SymbolType.INSTANCE);
 				realSymbols.add((SymbolStruct) theSymbol);
 			}
 			realSymbolArray = realSymbols.toArray(new SymbolStruct[realSymbols.size()]);

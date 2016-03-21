@@ -160,7 +160,7 @@
 		       (1 (push (first v) inits))
 		       (2 (push v inits))
 		       (3 (push (list (first v) (second v)) inits)
-			  (setq steps (list* (third v) (first v) steps)))
+			      (setq steps (list* (third v) (first v) steps)))
 		       (t (error "~S is an illegal form for a ~S varlist." v name))))
 		    (t
 		     (error "~S is an illegal form for a ~S varlist." v name))))

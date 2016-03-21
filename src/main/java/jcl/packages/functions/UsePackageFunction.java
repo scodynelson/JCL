@@ -21,7 +21,9 @@ public final class UsePackageFunction extends AbstractPackageListPackageFunction
 	 * Public constructor passing the documentation string.
 	 */
 	public UsePackageFunction() {
-		super("Causes package to inherit all the external symbols of packages-to-use.");
+		super("Causes package to inherit all the external symbols of packages-to-use.",
+		      "USE-PACKAGE"
+		);
 	}
 
 	/**
@@ -50,16 +52,5 @@ public final class UsePackageFunction extends AbstractPackageListPackageFunction
 				throw new ErrorException("Cannot use KEYWORD Package.");
 			}
 		}
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * Returns the function name {@code use-package} as a string.
-	 *
-	 * @return the function name {@code use-package} as a string
-	 */
-	@Override
-	protected String functionName() {
-		return "USE-PACKAGE";
 	}
 }

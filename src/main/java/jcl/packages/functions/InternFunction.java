@@ -20,7 +20,9 @@ public final class InternFunction extends AbstractStringPackageFunction {
 	 * Public constructor passing the documentation string.
 	 */
 	public InternFunction() {
-		super("Enters a symbol named string into package.");
+		super("Enters a symbol named string into package.",
+		      "INTERN"
+		);
 	}
 
 	/**
@@ -32,16 +34,5 @@ public final class InternFunction extends AbstractStringPackageFunction {
 	@Override
 	protected BiFunction<PackageStruct, String, PackageSymbolStruct> packageFunction() {
 		return PackageStruct::intern;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * Returns the function name {@code intern} as a string.
-	 *
-	 * @return the function name {@code intern} as a string
-	 */
-	@Override
-	protected String functionName() {
-		return "INTERN";
 	}
 }

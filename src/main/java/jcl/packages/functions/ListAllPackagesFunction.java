@@ -7,7 +7,9 @@ package jcl.packages.functions;
 import java.util.List;
 
 import jcl.LispStruct;
-import jcl.functions.AbstractCommonLispFunctionStruct;
+import jcl.functions.CommonLispBuiltInFunctionStruct;
+import jcl.functions.parameterdsl.Arguments;
+import jcl.functions.parameterdsl.Parameters;
 import jcl.lists.ListStruct;
 import jcl.packages.PackageStruct;
 import org.springframework.stereotype.Component;
@@ -16,13 +18,18 @@ import org.springframework.stereotype.Component;
  * Function implementation for {@code list-all-packages}.
  */
 @Component
-public final class ListAllPackagesFunction extends AbstractCommonLispFunctionStruct {
+public final class ListAllPackagesFunction extends CommonLispBuiltInFunctionStruct {
+
+	private static final String FUNCTION_NAME = "LIST-ALL-PACKAGES";
 
 	/**
 	 * Public constructor passing the documentation string.
 	 */
 	public ListAllPackagesFunction() {
-		super("Returns a fresh list of all registered packages.");
+		super("Returns a fresh list of all registered packages.",
+		      FUNCTION_NAME,
+		      Parameters.forFunction(FUNCTION_NAME)
+		);
 	}
 
 	/**
@@ -36,21 +43,8 @@ public final class ListAllPackagesFunction extends AbstractCommonLispFunctionStr
 	 * @return the result of {@link PackageStruct#listAllPackages()} as a {@link ListStruct}
 	 */
 	@Override
-	public LispStruct apply(final LispStruct... lispStructs) {
-		super.apply(lispStructs);
-
+	public LispStruct apply(final Arguments arguments) {
 		final List<PackageStruct> allPackages = PackageStruct.listAllPackages();
 		return ListStruct.buildProperList(allPackages);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * Returns the function name {@code list-all-packages} as a string.
-	 *
-	 * @return the function name {@code list-all-packages} as a string
-	 */
-	@Override
-	protected String functionName() {
-		return "LIST-ALL-PACKAGES";
 	}
 }

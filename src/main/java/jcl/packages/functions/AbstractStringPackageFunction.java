@@ -4,48 +4,43 @@
 
 package jcl.packages.functions;
 
-import java.util.List;
 import java.util.function.BiFunction;
 
 import jcl.LispStruct;
 import jcl.arrays.StringStruct;
-import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
 import jcl.compiler.struct.ValuesStruct;
+import jcl.functions.CommonLispBuiltInFunctionStruct;
 import jcl.functions.FunctionStruct;
-import jcl.packages.GlobalPackageStruct;
+import jcl.functions.parameterdsl.Arguments;
+import jcl.functions.parameterdsl.Parameters;
 import jcl.packages.PackageStruct;
 import jcl.packages.PackageSymbolStruct;
+import jcl.packages.PackageVariables;
 import jcl.symbols.KeywordStruct;
 import jcl.symbols.NILStruct;
 import jcl.symbols.SymbolStruct;
-import jcl.types.StringType;
+import jcl.types.TypeValidator;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Abstract {@link FunctionStruct} implementation for package functions that operate on string-designators representing
  * symbol names and return {@link ValuesStruct}s based on that symbol's existence. This {@link FunctionStruct} also has
  * an optional package parameter value.
  */
-abstract class AbstractStringPackageFunction extends AbstractOptionalPackageFunction {
+abstract class AbstractStringPackageFunction extends CommonLispBuiltInFunctionStruct {
 
 	/**
-	 * Protected constructor passing the provided {@code documentation} string to the super constructor.
-	 *
-	 * @param documentation
-	 * 		the documentation string
+	 * The {@link TypeValidator} for validating the function parameter value types.
 	 */
-	protected AbstractStringPackageFunction(final String documentation) {
-		super(documentation);
-	}
+	@Autowired
+	protected TypeValidator validator;
 
-	/**
-	 * {@inheritDoc}
-	 * Creates the single {@link RequiredParameter} string object for this function.
-	 *
-	 * @return a list of a single {@link RequiredParameter} string object
-	 */
-	@Override
-	protected List<RequiredParameter> getRequiredBindings() {
-		return RequiredParameter.builder(GlobalPackageStruct.COMMON_LISP, "STRING").buildList();
+	protected AbstractStringPackageFunction(final String documentation, final String functionName) {
+		super(documentation, functionName,
+		      Parameters.forFunction(functionName)
+		                .requiredParameter("STRING")
+		                .optionalParameter("PACKAGE").withInitialValue(PackageVariables.PACKAGE.getVariableValue())
+		);
 	}
 
 	/**
@@ -61,14 +56,9 @@ abstract class AbstractStringPackageFunction extends AbstractOptionalPackageFunc
 	 * package type, or {@link NILStruct} if the result of the {@link #packageFunction()} operation is {@code null}
 	 */
 	@Override
-	public LispStruct apply(final LispStruct... lispStructs) {
-		super.apply(lispStructs);
-
-		final LispStruct lispStruct = lispStructs[0];
-		validator.validateTypes(lispStruct, functionName(), "String", StringType.INSTANCE);
-		final StringStruct aString = (StringStruct) lispStruct;
-
-		final PackageStruct aPackage = getPackage(lispStructs);
+	public LispStruct apply(final Arguments arguments) {
+		final StringStruct aString = arguments.getRequiredArgument("STRING", StringStruct.class);
+		final PackageStruct aPackage = arguments.getOptionalArgument("PACKAGE", PackageStruct.class);
 		final PackageSymbolStruct packageSymbol = packageFunction().apply(aPackage, aString.getAsJavaString());
 		if (packageSymbol == null) {
 			return new ValuesStruct(NILStruct.INSTANCE, NILStruct.INSTANCE);

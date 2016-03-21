@@ -7,10 +7,10 @@ package jcl.packages.functions;
 import java.util.List;
 
 import jcl.LispStruct;
-import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
-import jcl.functions.AbstractCommonLispFunctionStruct;
+import jcl.functions.CommonLispBuiltInFunctionStruct;
+import jcl.functions.parameterdsl.Arguments;
+import jcl.functions.parameterdsl.Parameters;
 import jcl.lists.ListStruct;
-import jcl.packages.GlobalPackageStruct;
 import jcl.packages.PackageStruct;
 import jcl.symbols.SymbolStruct;
 import jcl.types.TypeValidator;
@@ -21,7 +21,10 @@ import org.springframework.stereotype.Component;
  * Function implementation for {@code find-all-symbols}.
  */
 @Component
-public final class FindAllSymbolsFunction extends AbstractCommonLispFunctionStruct {
+public final class FindAllSymbolsFunction extends CommonLispBuiltInFunctionStruct {
+
+	private static final String FUNCTION_NAME = "FIND-ALL-SYMBOLS";
+	private static final String SYMBOL_NAME_ARGUMENT = "SYMBOL-NAME";
 
 	/**
 	 * The {@link TypeValidator} for validating the function parameter value types.
@@ -33,18 +36,11 @@ public final class FindAllSymbolsFunction extends AbstractCommonLispFunctionStru
 	 * Public constructor passing the documentation string.
 	 */
 	public FindAllSymbolsFunction() {
-		super("Searches every registered package for symbols that have a name that is the same as string.");
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * Creates the single {@link RequiredParameter} string-designator object for this function.
-	 *
-	 * @return a list of a single {@link RequiredParameter} string-designator object
-	 */
-	@Override
-	protected List<RequiredParameter> getRequiredBindings() {
-		return RequiredParameter.builder(GlobalPackageStruct.COMMON_LISP, "SYMBOL-NAME").buildList();
+		super("Searches every registered package for symbols that have a name that is the same as string.",
+		      FUNCTION_NAME,
+		      Parameters.forFunction(FUNCTION_NAME)
+		                .requiredParameter(SYMBOL_NAME_ARGUMENT)
+		);
 	}
 
 	/**
@@ -59,24 +55,11 @@ public final class FindAllSymbolsFunction extends AbstractCommonLispFunctionStru
 	 * {@link PackageStruct}
 	 */
 	@Override
-	public LispStruct apply(final LispStruct... lispStructs) {
-		super.apply(lispStructs);
-
-		final LispStruct lispStruct = lispStructs[0];
-		final String name = validator.validateStringDesignator(lispStruct, functionName(), "Symbol Name");
+	public LispStruct apply(final Arguments arguments) {
+		final LispStruct lispStruct = arguments.getRequiredArgument(SYMBOL_NAME_ARGUMENT);
+		final String name = validator.validateStringDesignator(lispStruct, functionName, "Symbol Name");
 
 		final List<SymbolStruct> allSymbols = PackageStruct.findAllSymbols(name);
 		return ListStruct.buildProperList(allSymbols);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * Returns the function name {@code find-all-symbols} as a string.
-	 *
-	 * @return the function name {@code find-all-symbols} as a string
-	 */
-	@Override
-	protected String functionName() {
-		return "FIND-ALL-SYMBOLS";
 	}
 }

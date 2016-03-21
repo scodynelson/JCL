@@ -10,45 +10,35 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import jcl.LispStruct;
-import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
+import jcl.functions.CommonLispBuiltInFunctionStruct;
 import jcl.functions.FunctionStruct;
+import jcl.functions.parameterdsl.Arguments;
+import jcl.functions.parameterdsl.Parameters;
 import jcl.lists.ListStruct;
-import jcl.packages.GlobalPackageStruct;
 import jcl.packages.PackageStruct;
+import jcl.packages.PackageVariables;
 import jcl.symbols.TStruct;
-import jcl.types.CharacterType;
-import jcl.types.ListType;
-import jcl.types.PackageType;
-import jcl.types.StringType;
-import jcl.types.SymbolType;
+import jcl.types.TypeValidator;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Abstract {@link FunctionStruct} implementation for package functions that take package-designator objects. This
  * {@link FunctionStruct} also has an optional package parameter value.
  */
-abstract class AbstractPackageListPackageFunction extends AbstractOptionalPackageFunction {
+abstract class AbstractPackageListPackageFunction extends CommonLispBuiltInFunctionStruct {
 
 	/**
-	 * Protected constructor passing the provided {@code documentation} string to the super constructor.
-	 *
-	 * @param documentation
-	 * 		the documentation string
+	 * The {@link TypeValidator} for validating the function parameter value types.
 	 */
-	protected AbstractPackageListPackageFunction(final String documentation) {
-		super(documentation);
-	}
+	@Autowired
+	protected TypeValidator validator;
 
-	/**
-	 * {@inheritDoc}
-	 * Creates the single {@link RequiredParameter} package-designator (character, string, symbol, or package) list
-	 * object for this function.
-	 *
-	 * @return a list of a single {@link RequiredParameter} package-designator (character, string, symbol, or package)
-	 * list object
-	 */
-	@Override
-	protected List<RequiredParameter> getRequiredBindings() {
-		return RequiredParameter.builder(GlobalPackageStruct.COMMON_LISP, "PACKAGES").buildList();
+	protected AbstractPackageListPackageFunction(final String documentation, final String functionName) {
+		super(documentation, functionName,
+		      Parameters.forFunction(functionName)
+		                .requiredParameter("PACKAGES")
+		                .optionalParameter("PACKAGE").withInitialValue(PackageVariables.PACKAGE.getVariableValue())
+		);
 	}
 
 	/**
@@ -62,13 +52,9 @@ abstract class AbstractPackageListPackageFunction extends AbstractOptionalPackag
 	 * @return {@link TStruct#INSTANCE}
 	 */
 	@Override
-	public LispStruct apply(final LispStruct... lispStructs) {
-		super.apply(lispStructs);
-
-		final LispStruct lispStruct = lispStructs[0];
-		validator.validateTypes(lispStruct, functionName(), "Packages", ListType.INSTANCE, StringType.INSTANCE, SymbolType.INSTANCE, CharacterType.INSTANCE, PackageType.INSTANCE);
-
-		final PackageStruct aPackage = getPackage(lispStructs);
+	public LispStruct apply(final Arguments arguments) {
+		final LispStruct lispStruct = arguments.getRequiredArgument("PACKAGES");
+		final PackageStruct aPackage = arguments.getOptionalArgument("PACKAGE", PackageStruct.class);
 		validatePackages(aPackage);
 
 		final PackageStruct[] realPackageArray;
@@ -76,12 +62,12 @@ abstract class AbstractPackageListPackageFunction extends AbstractOptionalPackag
 			final ListStruct packages = (ListStruct) lispStruct;
 			final List<PackageStruct> realPackages
 					= packages.stream()
-					          .map(e -> validator.validatePackageDesignator(e, functionName()))
+					          .map(e -> validator.validatePackageDesignator(e, functionName))
 					          .collect(Collectors.toList());
 			realPackageArray = realPackages.toArray(new PackageStruct[realPackages.size()]);
 		} else {
 			realPackageArray = new PackageStruct[1];
-			realPackageArray[0] = validator.validatePackageDesignator(lispStruct, functionName());
+			realPackageArray[0] = validator.validatePackageDesignator(lispStruct, functionName);
 		}
 
 		validatePackages(realPackageArray);

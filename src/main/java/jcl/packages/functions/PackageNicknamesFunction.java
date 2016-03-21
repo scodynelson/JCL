@@ -9,10 +9,10 @@ import java.util.stream.Collectors;
 
 import jcl.LispStruct;
 import jcl.arrays.StringStruct;
-import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
-import jcl.functions.AbstractCommonLispFunctionStruct;
+import jcl.functions.CommonLispBuiltInFunctionStruct;
+import jcl.functions.parameterdsl.Arguments;
+import jcl.functions.parameterdsl.Parameters;
 import jcl.lists.ListStruct;
-import jcl.packages.GlobalPackageStruct;
 import jcl.packages.PackageStruct;
 import jcl.types.TypeValidator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +22,10 @@ import org.springframework.stereotype.Component;
  * Function implementation for {@code package-nicknames}.
  */
 @Component
-public final class PackageNicknamesFunction extends AbstractCommonLispFunctionStruct {
+public final class PackageNicknamesFunction extends CommonLispBuiltInFunctionStruct {
+
+	private static final String FUNCTION_NAME = "PACKAGE-NICKNAMES";
+	private static final String PACKAGE_ARGUMENT = "PACKAGE";
 
 	/**
 	 * The {@link TypeValidator} for validating the function parameter value types.
@@ -34,18 +37,11 @@ public final class PackageNicknamesFunction extends AbstractCommonLispFunctionSt
 	 * Public constructor passing the documentation string.
 	 */
 	public PackageNicknamesFunction() {
-		super("Returns the list of nickname strings for package, not including the name of package.");
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * Creates the single {@link RequiredParameter} package object for this function.
-	 *
-	 * @return a list of a single {@link RequiredParameter} package object
-	 */
-	@Override
-	protected List<RequiredParameter> getRequiredBindings() {
-		return RequiredParameter.builder(GlobalPackageStruct.COMMON_LISP, "PACKAGE").buildList();
+		super("Returns the list of nickname strings for package, not including the name of package.",
+		      FUNCTION_NAME,
+		      Parameters.forFunction(FUNCTION_NAME)
+		                .requiredParameter(PACKAGE_ARGUMENT)
+		);
 	}
 
 	/**
@@ -59,11 +55,9 @@ public final class PackageNicknamesFunction extends AbstractCommonLispFunctionSt
 	 * @return the {@link PackageStruct#nicknames} as a {@link ListStruct} of {@link StringStruct}s
 	 */
 	@Override
-	public LispStruct apply(final LispStruct... lispStructs) {
-		super.apply(lispStructs);
-
-		final LispStruct lispStruct = lispStructs[0];
-		final PackageStruct aPackage = validator.validatePackageDesignator(lispStruct, functionName());
+	public LispStruct apply(final Arguments arguments) {
+		final LispStruct lispStruct = arguments.getRequiredArgument(PACKAGE_ARGUMENT);
+		final PackageStruct aPackage = validator.validatePackageDesignator(lispStruct, functionName);
 
 		final List<String> nicknames = aPackage.getNicknames();
 		final List<LispStruct> nicknamesStructs =
@@ -71,16 +65,5 @@ public final class PackageNicknamesFunction extends AbstractCommonLispFunctionSt
 				         .map(StringStruct::new)
 				         .collect(Collectors.toList());
 		return ListStruct.buildProperList(nicknamesStructs);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * Returns the function name {@code package-nicknames} as a string.
-	 *
-	 * @return the function name {@code package-nicknames} as a string
-	 */
-	@Override
-	protected String functionName() {
-		return "PACKAGE-NICKNAMES";
 	}
 }

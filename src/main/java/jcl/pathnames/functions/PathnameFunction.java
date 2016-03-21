@@ -6,57 +6,40 @@ package jcl.pathnames.functions;
 
 import java.io.File;
 import java.nio.file.Path;
-import java.util.Collections;
-import java.util.List;
-import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
 import jcl.arrays.StringStruct;
-import jcl.compiler.environment.binding.lambdalist.OrdinaryLambdaList;
-import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
 import jcl.conditions.exceptions.TypeErrorException;
-import jcl.functions.FunctionStruct;
-import jcl.packages.GlobalPackageStruct;
+import jcl.functions.CommonLispBuiltInFunctionStruct;
+import jcl.functions.parameterdsl.Arguments;
+import jcl.functions.parameterdsl.Parameters;
 import jcl.pathnames.PathnameStruct;
 import jcl.printer.Printer;
 import jcl.streams.FileStreamStruct;
-import jcl.symbols.SymbolStruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class PathnameFunction extends FunctionStruct {
+public final class PathnameFunction extends CommonLispBuiltInFunctionStruct {
 
-	public static final SymbolStruct PATHNAME = GlobalPackageStruct.COMMON_LISP.intern("PATHNAME").getSymbol();
+	private static final String FUNCTION_NAME = "PATHNAME";
+	private static final String PATHSPEC_ARGUMENT = "PATHSPEC";
 
 	@Autowired
 	private Printer printer;
 
-	private PathnameFunction() {
-		super("Returns the pathname denoted by pathspec.", getInitLambdaListBindings());
-	}
-
-	@PostConstruct
-	private void init() {
-		PATHNAME.setFunction(this);
-		GlobalPackageStruct.COMMON_LISP.export(PATHNAME);
-	}
-
-	private static OrdinaryLambdaList getInitLambdaListBindings() {
-
-		final SymbolStruct pathspecArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("PATHSPEC").getSymbol();
-		final RequiredParameter requiredBinding = new RequiredParameter(pathspecArgSymbol);
-		final List<RequiredParameter> requiredBindings = Collections.singletonList(requiredBinding);
-
-		return OrdinaryLambdaList.builder()
-		                         .requiredBindings(requiredBindings)
-		                         .build();
+	public PathnameFunction() {
+		super("Returns the pathname denoted by pathspec.",
+		      FUNCTION_NAME,
+		      Parameters.forFunction(FUNCTION_NAME)
+		                .requiredParameter(PATHSPEC_ARGUMENT)
+		);
 	}
 
 	@Override
-	public LispStruct apply(final LispStruct... lispStructs) {
+	public LispStruct apply(final Arguments arguments) {
 
-		final LispStruct pathspec = lispStructs[0];
+		final LispStruct pathspec = arguments.getRequiredArgument(PATHSPEC_ARGUMENT);
 		return pathname(pathspec);
 	}
 

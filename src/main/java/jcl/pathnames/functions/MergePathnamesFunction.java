@@ -5,20 +5,13 @@
 package jcl.pathnames.functions;
 
 import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
-import jcl.compiler.environment.binding.lambdalist.OptionalParameter;
-import jcl.compiler.environment.binding.lambdalist.OrdinaryLambdaList;
-import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
-import jcl.compiler.environment.binding.lambdalist.SuppliedPParameter;
 import jcl.conditions.exceptions.ErrorException;
-import jcl.functions.FunctionStruct;
+import jcl.functions.CommonLispBuiltInFunctionStruct;
+import jcl.functions.parameterdsl.Arguments;
+import jcl.functions.parameterdsl.Parameters;
 import jcl.numbers.IntegerStruct;
-import jcl.packages.GlobalPackageStruct;
 import jcl.pathnames.LogicalPathnameStruct;
 import jcl.pathnames.PathnameComponentType;
 import jcl.pathnames.PathnameDevice;
@@ -32,14 +25,16 @@ import jcl.pathnames.PathnameVersion;
 import jcl.pathnames.PathnameVersionComponentType;
 import jcl.printer.Printer;
 import jcl.symbols.NILStruct;
-import jcl.symbols.SymbolStruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class MergePathnamesFunction extends FunctionStruct {
+public final class MergePathnamesFunction extends CommonLispBuiltInFunctionStruct {
 
-	public static final SymbolStruct MERGE_PATHNAMES = GlobalPackageStruct.COMMON_LISP.intern("MERGE-PATHNAMES").getSymbol();
+	private static final String FUNCTION_NAME = "MERGE-PATHNAMES";
+	private static final String PATHNAME_ARGUMENT = "PATHNAME";
+	private static final String DEFAULT_PATHNAME_ARGUMENT = "DEFAULT-PATHNAME";
+	private static final String DEFAULT_VERSION_ARGUMENT = "DEFAULT-VERSION";
 
 	@Autowired
 	private PathnameFunction pathnameFunction;
@@ -47,68 +42,29 @@ public final class MergePathnamesFunction extends FunctionStruct {
 	@Autowired
 	private Printer printer;
 
-	private MergePathnamesFunction() {
-		super("Constructs a pathname from pathname by filling in any unsupplied components with the corresponding values from default-pathname and default-version.", getInitLambdaListBindings());
-	}
-
-	@PostConstruct
-	private void init() {
-		MERGE_PATHNAMES.setFunction(this);
-		GlobalPackageStruct.COMMON_LISP.export(MERGE_PATHNAMES);
-	}
-
-	private static OrdinaryLambdaList getInitLambdaListBindings() {
-
-		final SymbolStruct pathnameArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("PATHNAME").getSymbol();
-		final RequiredParameter requiredBinding = new RequiredParameter(pathnameArgSymbol);
-		final List<RequiredParameter> requiredBindings = Collections.singletonList(requiredBinding);
-
-		final List<OptionalParameter> optionalBindings = new ArrayList<>(2);
-
-		final SymbolStruct defaultPathnameArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("DEFAULT-PATHNAME").getSymbol();
-
-		final SymbolStruct defaultPathnameSuppliedPSymbol = GlobalPackageStruct.COMMON_LISP.intern("DEFAULT-PATHNAME-P-" + System.nanoTime()).getSymbol();
-		final SuppliedPParameter defaultPathnameSuppliedPBinding = new SuppliedPParameter(defaultPathnameSuppliedPSymbol);
-
-		final OptionalParameter defaultPathnameOptionalBinding = new OptionalParameter(defaultPathnameArgSymbol, NILStruct.INSTANCE, defaultPathnameSuppliedPBinding);
-		optionalBindings.add(defaultPathnameOptionalBinding);
-
-		final SymbolStruct defaultVersionArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("DEFAULT-VERSION").getSymbol();
-
-		final SymbolStruct defaultVersionSuppliedPSymbol = GlobalPackageStruct.COMMON_LISP.intern("DEFAULT-VERSION-P-" + System.nanoTime()).getSymbol();
-		final SuppliedPParameter defaultVersionSuppliedPBinding = new SuppliedPParameter(defaultVersionSuppliedPSymbol);
-
-		final OptionalParameter defaultVersionOptionalBinding = new OptionalParameter(defaultVersionArgSymbol, NILStruct.INSTANCE, defaultVersionSuppliedPBinding);
-		optionalBindings.add(defaultVersionOptionalBinding);
-
-		return OrdinaryLambdaList.builder()
-		                         .requiredBindings(requiredBindings)
-		                         .optionalBindings(optionalBindings)
-		                         .build();
+	public MergePathnamesFunction() {
+		super("Constructs a pathname from pathname by filling in any unsupplied components with the corresponding values from default-pathname and default-version.",
+		      FUNCTION_NAME,
+		      Parameters.forFunction(FUNCTION_NAME)
+		                .requiredParameter(PATHNAME_ARGUMENT)
+		                .optionalParameter(DEFAULT_PATHNAME_ARGUMENT).withInitialValue(PathnameVariables.DEFAULT_PATHNAME_DEFAULTS.getValue())
+		                .optionalParameter(DEFAULT_VERSION_ARGUMENT).withInitialValue(NILStruct.INSTANCE)
+		);
 	}
 
 	@Override
-	public LispStruct apply(final LispStruct... lispStructs) {
+	public LispStruct apply(final Arguments arguments) {
 
-		final LispStruct pathname = lispStructs[0];
+		final LispStruct pathname = arguments.getRequiredArgument(PATHNAME_ARGUMENT);
 
-		LispStruct defaultPathspec = PathnameVariables.DEFAULT_PATHNAME_DEFAULTS.getValue();
+		LispStruct defaultPathspec = arguments.getOptionalArgument(DEFAULT_PATHNAME_ARGUMENT);
 		PathnameVersion defaultVersion = new PathnameVersion(PathnameVersionComponentType.NEWEST);
 
-		final int length = lispStructs.length;
-		if (length >= 1) {
-			defaultPathspec = lispStructs[1];
-		}
-		if (length >= 2) {
-			defaultVersion = getPathnameVersion(lispStructs[2]);
+		if (arguments.hasOptionalArgument(DEFAULT_VERSION_ARGUMENT)) {
+			defaultVersion = getPathnameVersion(arguments.getOptionalArgument(DEFAULT_VERSION_ARGUMENT));
 		}
 
 		return mergePathnames(pathname, defaultPathspec, defaultVersion);
-	}
-
-	public PathnameStruct mergePathnames(final LispStruct pathSpec) {
-		final PathnameStruct defaultPathspec = PathnameVariables.DEFAULT_PATHNAME_DEFAULTS.getVariableValue();
-		return mergePathnames(pathSpec, defaultPathspec);
 	}
 
 	public PathnameStruct mergePathnames(final LispStruct pathSpec, final LispStruct defaultPathspec) {

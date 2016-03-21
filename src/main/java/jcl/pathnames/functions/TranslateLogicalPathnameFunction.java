@@ -4,15 +4,10 @@
 
 package jcl.pathnames.functions;
 
-import java.util.Collections;
-import java.util.List;
-import javax.annotation.PostConstruct;
-
 import jcl.LispStruct;
-import jcl.compiler.environment.binding.lambdalist.OrdinaryLambdaList;
-import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
-import jcl.functions.FunctionStruct;
-import jcl.packages.GlobalPackageStruct;
+import jcl.functions.CommonLispBuiltInFunctionStruct;
+import jcl.functions.parameterdsl.Arguments;
+import jcl.functions.parameterdsl.Parameters;
 import jcl.pathnames.LogicalPathnameStruct;
 import jcl.pathnames.PathnameStruct;
 import jcl.streams.SynonymStreamStruct;
@@ -21,38 +16,25 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class TranslateLogicalPathnameFunction extends FunctionStruct {
+public final class TranslateLogicalPathnameFunction extends CommonLispBuiltInFunctionStruct {
 
-	public static final SymbolStruct TRANSLATE_LOGICAL_PATHNAME = GlobalPackageStruct.COMMON_LISP.intern("TRANSLATE-LOGICAL-PATHNAME").getSymbol();
+	private static final String FUNCTION_NAME = "TRANSLATE-LOGICAL-PATHNAME";
+	private static final String PATHSPEC_ARGUMENT = "PATHSPEC";
 
 	@Autowired
 	private PathnameFunction pathnameFunction;
 
-	private TranslateLogicalPathnameFunction() {
-		super("Translates pathname to a physical pathname, which it returns.", getInitLambdaListBindings());
-	}
-
-	@PostConstruct
-	private void init() {
-		TRANSLATE_LOGICAL_PATHNAME.setFunction(this);
-		GlobalPackageStruct.COMMON_LISP.export(TRANSLATE_LOGICAL_PATHNAME);
-	}
-
-	private static OrdinaryLambdaList getInitLambdaListBindings() {
-
-		final SymbolStruct pathspecArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("PATHSPEC").getSymbol();
-		final RequiredParameter requiredBinding = new RequiredParameter(pathspecArgSymbol);
-		final List<RequiredParameter> requiredBindings = Collections.singletonList(requiredBinding);
-
-		return OrdinaryLambdaList.builder()
-		                         .requiredBindings(requiredBindings)
-		                         .build();
+	public TranslateLogicalPathnameFunction() {
+		super("Translates pathname to a physical pathname, which it returns.",
+		      FUNCTION_NAME,
+		      Parameters.forFunction(FUNCTION_NAME)
+		                .requiredParameter(PATHSPEC_ARGUMENT)
+		);
 	}
 
 	@Override
-	public LispStruct apply(final LispStruct... lispStructs) {
-
-		final LispStruct pathspec = lispStructs[0];
+	public LispStruct apply(final Arguments arguments) {
+		final LispStruct pathspec = arguments.getRequiredArgument(PATHSPEC_ARGUMENT);
 		return translateLogicalPathname(pathspec);
 	}
 

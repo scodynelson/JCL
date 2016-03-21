@@ -7,6 +7,7 @@ package jcl.packages.functions;
 import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import jcl.LispStruct;
@@ -18,20 +19,12 @@ import jcl.lists.ListStruct;
 import jcl.packages.PackageStruct;
 import jcl.packages.PackageVariables;
 import jcl.symbols.TStruct;
-import jcl.types.TypeValidator;
-import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Abstract {@link FunctionStruct} implementation for package functions that take package-designator objects. This
  * {@link FunctionStruct} also has an optional package parameter value.
  */
 abstract class AbstractPackageListPackageFunction extends CommonLispBuiltInFunctionStruct {
-
-	/**
-	 * The {@link TypeValidator} for validating the function parameter value types.
-	 */
-	@Autowired
-	protected TypeValidator validator;
 
 	protected AbstractPackageListPackageFunction(final String documentation, final String functionName) {
 		super(documentation, functionName,
@@ -62,12 +55,13 @@ abstract class AbstractPackageListPackageFunction extends CommonLispBuiltInFunct
 			final ListStruct packages = (ListStruct) lispStruct;
 			final List<PackageStruct> realPackages
 					= packages.stream()
-					          .map(e -> validator.validatePackageDesignator(e, functionName))
+					          .map(LispStruct::asPackage)
+					          .map(Supplier::get)
 					          .collect(Collectors.toList());
 			realPackageArray = realPackages.toArray(new PackageStruct[realPackages.size()]);
 		} else {
 			realPackageArray = new PackageStruct[1];
-			realPackageArray[0] = validator.validatePackageDesignator(lispStruct, functionName);
+			realPackageArray[0] = lispStruct.asPackage().get();
 		}
 
 		validatePackages(realPackageArray);

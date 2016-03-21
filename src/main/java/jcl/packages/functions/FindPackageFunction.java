@@ -10,8 +10,6 @@ import jcl.functions.parameterdsl.Arguments;
 import jcl.functions.parameterdsl.Parameters;
 import jcl.packages.PackageStruct;
 import jcl.symbols.NILStruct;
-import jcl.types.TypeValidator;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -35,12 +33,6 @@ public final class FindPackageFunction extends CommonLispBuiltInFunctionStruct {
 	}
 
 	/**
-	 * The {@link TypeValidator} for validating the function parameter value types.
-	 */
-	@Autowired
-	private TypeValidator validator;
-
-	/**
 	 * {@inheritDoc}
 	 * Application method for {@code find-package} package function that returns the {@link PackageStruct} with the
 	 * provided package-designator parameter.
@@ -53,7 +45,7 @@ public final class FindPackageFunction extends CommonLispBuiltInFunctionStruct {
 	@Override
 	public LispStruct apply(final Arguments arguments) {
 		final LispStruct packageDesignator = arguments.getRequiredArgument(NAME_ARGUMENT);
-		final PackageStruct aPackage = validator.validatePackageDesignator(packageDesignator, functionName);
+		final PackageStruct aPackage = packageDesignator.asPackage().get();
 		return (aPackage == null) ? NILStruct.INSTANCE : aPackage;
 	}
 }

@@ -19,8 +19,6 @@ import jcl.packages.PackageVariables;
 import jcl.symbols.KeywordStruct;
 import jcl.symbols.NILStruct;
 import jcl.symbols.SymbolStruct;
-import jcl.types.TypeValidator;
-import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Abstract {@link FunctionStruct} implementation for package functions that operate on string-designators representing
@@ -28,12 +26,6 @@ import org.springframework.beans.factory.annotation.Autowired;
  * an optional package parameter value.
  */
 abstract class AbstractStringPackageFunction extends CommonLispBuiltInFunctionStruct {
-
-	/**
-	 * The {@link TypeValidator} for validating the function parameter value types.
-	 */
-	@Autowired
-	protected TypeValidator validator;
 
 	protected AbstractStringPackageFunction(final String documentation, final String functionName) {
 		super(documentation, functionName,

@@ -11,8 +11,6 @@ import jcl.functions.parameterdsl.Arguments;
 import jcl.functions.parameterdsl.Parameters;
 import jcl.packages.PackageStruct;
 import jcl.packages.PackageVariables;
-import jcl.types.TypeValidator;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -36,12 +34,6 @@ public final class InPackageFunction extends CommonLispBuiltInFunctionStruct {
 	}
 
 	/**
-	 * The {@link TypeValidator} for validating the function parameter value types.
-	 */
-	@Autowired
-	private TypeValidator validator;
-
-	/**
 	 * {@inheritDoc}
 	 * Application method for {@code in-package} package function that gets the package name to set the global {@code
 	 * *package*} variable to. An {@link ErrorException} is thrown when the package cannot be found.
@@ -54,7 +46,7 @@ public final class InPackageFunction extends CommonLispBuiltInFunctionStruct {
 	@Override
 	public LispStruct apply(final Arguments arguments) {
 		final LispStruct lispStruct = arguments.getRequiredArgument(NAME_ARGUMENT);
-		final String name = validator.validateStringDesignator(lispStruct, functionName, "Package Name");
+		final String name = lispStruct.asString().get().getAsJavaString();
 
 		final PackageStruct newCurrentPackage = PackageStruct.findPackage(name);
 		if (newCurrentPackage == null) {

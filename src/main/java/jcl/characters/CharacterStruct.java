@@ -156,6 +156,11 @@ public class CharacterStruct extends BuiltInClassStruct {
 		};
 	}
 
+	@Override
+	public Supplier<StringStruct> asString() {
+		return () -> new StringStruct(getCharacter().toString());
+	}
+
 	/**
 	 * Returns the '=' comparison of this CharacterStruct and the provided CharacterStruct.
 	 *

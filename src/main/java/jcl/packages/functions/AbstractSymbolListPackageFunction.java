@@ -20,21 +20,13 @@ import jcl.packages.PackageStruct;
 import jcl.packages.PackageVariables;
 import jcl.symbols.SymbolStruct;
 import jcl.symbols.TStruct;
-import jcl.types.SymbolType;
-import jcl.types.TypeValidator;
-import org.springframework.beans.factory.annotation.Autowired;
+import jcl.util.ClassUtils;
 
 /**
  * Abstract {@link FunctionStruct} implementation for package functions that take symbol objects. This {@link
  * FunctionStruct} also has an optional package parameter value.
  */
 abstract class AbstractSymbolListPackageFunction extends CommonLispBuiltInFunctionStruct {
-
-	/**
-	 * The {@link TypeValidator} for validating the function parameter value types.
-	 */
-	@Autowired
-	protected TypeValidator validator;
 
 	protected AbstractSymbolListPackageFunction(final String documentation, final String functionName) {
 		super(documentation, functionName,
@@ -64,8 +56,7 @@ abstract class AbstractSymbolListPackageFunction extends CommonLispBuiltInFuncti
 			final ListStruct symbols = (ListStruct) lispStruct;
 			final List<SymbolStruct> realSymbols = new ArrayList<>();
 			for (final LispStruct theSymbol : symbols) {
-				validator.validateTypes(theSymbol, functionName, "Symbol", SymbolType.INSTANCE);
-				realSymbols.add((SymbolStruct) theSymbol);
+				realSymbols.add(ClassUtils.convert(SymbolStruct.class, theSymbol));
 			}
 			realSymbolArray = realSymbols.toArray(new SymbolStruct[realSymbols.size()]);
 		} else if (lispStruct instanceof SymbolStruct) {

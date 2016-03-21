@@ -14,8 +14,6 @@ import jcl.functions.parameterdsl.Parameters;
 import jcl.lists.ListStruct;
 import jcl.packages.PackageStruct;
 import jcl.symbols.SymbolStruct;
-import jcl.types.TypeValidator;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -26,12 +24,6 @@ public final class PackageShadowingSymbolsFunction extends CommonLispBuiltInFunc
 
 	private static final String FUNCTION_NAME = "PACKAGE-SHADOWING-SYMBOLS";
 	private static final String PACKAGE_ARGUMENT = "PACKAGE";
-
-	/**
-	 * The {@link TypeValidator} for validating the function parameter value types.
-	 */
-	@Autowired
-	private TypeValidator validator;
 
 	/**
 	 * Public constructor passing the documentation string.
@@ -57,7 +49,7 @@ public final class PackageShadowingSymbolsFunction extends CommonLispBuiltInFunc
 	@Override
 	public LispStruct apply(final Arguments arguments) {
 		final LispStruct lispStruct = arguments.getRequiredArgument(PACKAGE_ARGUMENT);
-		final PackageStruct aPackage = validator.validatePackageDesignator(lispStruct, functionName);
+		final PackageStruct aPackage = lispStruct.asPackage().get();
 
 		final Collection<SymbolStruct> shadowingSymbols = aPackage.getShadowingSymbols().values();
 		return ListStruct.buildProperList(new ArrayList<>(shadowingSymbols));

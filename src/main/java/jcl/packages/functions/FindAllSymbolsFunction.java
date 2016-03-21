@@ -13,8 +13,6 @@ import jcl.functions.parameterdsl.Parameters;
 import jcl.lists.ListStruct;
 import jcl.packages.PackageStruct;
 import jcl.symbols.SymbolStruct;
-import jcl.types.TypeValidator;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -25,12 +23,6 @@ public final class FindAllSymbolsFunction extends CommonLispBuiltInFunctionStruc
 
 	private static final String FUNCTION_NAME = "FIND-ALL-SYMBOLS";
 	private static final String SYMBOL_NAME_ARGUMENT = "SYMBOL-NAME";
-
-	/**
-	 * The {@link TypeValidator} for validating the function parameter value types.
-	 */
-	@Autowired
-	private TypeValidator validator;
 
 	/**
 	 * Public constructor passing the documentation string.
@@ -57,7 +49,7 @@ public final class FindAllSymbolsFunction extends CommonLispBuiltInFunctionStruc
 	@Override
 	public LispStruct apply(final Arguments arguments) {
 		final LispStruct lispStruct = arguments.getRequiredArgument(SYMBOL_NAME_ARGUMENT);
-		final String name = validator.validateStringDesignator(lispStruct, functionName, "Symbol Name");
+		final String name = lispStruct.asString().get().getAsJavaString();
 
 		final List<SymbolStruct> allSymbols = PackageStruct.findAllSymbols(name);
 		return ListStruct.buildProperList(allSymbols);

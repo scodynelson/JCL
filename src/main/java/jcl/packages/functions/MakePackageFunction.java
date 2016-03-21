@@ -5,9 +5,11 @@
 package jcl.packages.functions;
 
 import java.util.List;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import jcl.LispStruct;
+import jcl.arrays.StringStruct;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.functions.CommonLispBuiltInFunctionStruct;
 import jcl.functions.parameterdsl.Arguments;
@@ -16,8 +18,6 @@ import jcl.lists.ListStruct;
 import jcl.packages.PackageStruct;
 import jcl.symbols.NILStruct;
 import jcl.system.CommonLispSymbols;
-import jcl.types.TypeValidator;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -28,12 +28,6 @@ public final class MakePackageFunction extends CommonLispBuiltInFunctionStruct {
 
 	private static final String FUNCTION_NAME = "MAKE-PACKAGE";
 	private static final String PACKAGE_NAME_ARGUMENT = "PACKAGE-NAME";
-
-	/**
-	 * The {@link TypeValidator} for validating the function parameter value types.
-	 */
-	@Autowired
-	private TypeValidator validator;
 
 	/**
 	 * Public constructor passing the documentation string.
@@ -61,7 +55,7 @@ public final class MakePackageFunction extends CommonLispBuiltInFunctionStruct {
 	@Override
 	public LispStruct apply(final Arguments arguments) {
 		final LispStruct lispStruct = arguments.getRequiredArgument(PACKAGE_NAME_ARGUMENT);
-		final String packageName = validator.validateStringDesignator(lispStruct, functionName, "Package Name");
+		final String packageName = lispStruct.asString().get().getAsJavaString();
 
 		if (PackageStruct.findPackage(packageName) != null) {
 			throw new ProgramErrorException("Package name " + packageName + " is already in use.");
@@ -70,13 +64,16 @@ public final class MakePackageFunction extends CommonLispBuiltInFunctionStruct {
 		final ListStruct nicknamesList = arguments.getKeyArgument(CommonLispSymbols.NICKNAMES_KEYWORD, ListStruct.class);
 		final List<String> realNicknames
 				= nicknamesList.stream()
-				               .map(e -> validator.validateStringDesignator(e, functionName, "Nickname"))
+				               .map(LispStruct::asString)
+				               .map(Supplier::get)
+				               .map(StringStruct::getAsJavaString)
 				               .collect(Collectors.toList());
 
 		final ListStruct usePackagesList = arguments.getKeyArgument(CommonLispSymbols.USE_KEYWORD, ListStruct.class);
 		final List<PackageStruct> realUsePackages
 				= usePackagesList.stream()
-				                 .map(e -> validator.validatePackageDesignator(e, functionName))
+				                 .map(LispStruct::asPackage)
+				                 .map(Supplier::get)
 				                 .collect(Collectors.toList());
 
 		return new PackageStruct(packageName, realNicknames, realUsePackages);

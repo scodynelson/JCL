@@ -5,17 +5,20 @@
 package jcl.packages.functions;
 
 import java.util.List;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import jcl.LispStruct;
+import jcl.arrays.StringStruct;
+import jcl.characters.CharacterStruct;
+import jcl.conditions.exceptions.TypeErrorException;
 import jcl.functions.CommonLispBuiltInFunctionStruct;
 import jcl.functions.parameterdsl.Arguments;
 import jcl.functions.parameterdsl.Parameters;
 import jcl.lists.ListStruct;
 import jcl.packages.PackageStruct;
 import jcl.symbols.NILStruct;
-import jcl.types.TypeValidator;
-import org.springframework.beans.factory.annotation.Autowired;
+import jcl.symbols.SymbolStruct;
 import org.springframework.stereotype.Component;
 
 /**
@@ -28,12 +31,6 @@ public final class RenamePackageFunction extends CommonLispBuiltInFunctionStruct
 	private static final String PACKAGE_ARGUMENT = "PACKAGE";
 	private static final String NEW_NAME_ARGUMENT = "NEW-NAME";
 	private static final String NEW_NICKNAMES_ARGUMENT = "NEW-NICKNAMES";
-
-	/**
-	 * The {@link TypeValidator} for validating the function parameter value types.
-	 */
-	@Autowired
-	private TypeValidator validator;
 
 	/**
 	 * Public constructor passing the documentation string.
@@ -60,14 +57,29 @@ public final class RenamePackageFunction extends CommonLispBuiltInFunctionStruct
 	 */
 	@Override
 	public LispStruct apply(final Arguments arguments) {
-		final PackageStruct aPackage = validator.validatePackageDesignator(arguments.getRequiredArgument(PACKAGE_ARGUMENT), functionName);
-		final String newName = validator.validatePackageDesignatorAsString(arguments.getRequiredArgument(NEW_NAME_ARGUMENT), functionName, "New Name");
+		final PackageStruct aPackage = arguments.getRequiredArgument(PACKAGE_ARGUMENT).asPackage().get();
+
+		final LispStruct packageDesignator = arguments.getRequiredArgument(NEW_NAME_ARGUMENT);
+		final String newName;
+		if (packageDesignator instanceof StringStruct) {
+			newName = ((StringStruct) packageDesignator).getAsJavaString();
+		} else if (packageDesignator instanceof SymbolStruct) {
+			newName = ((SymbolStruct) packageDesignator).getName();
+		} else if (packageDesignator instanceof CharacterStruct) {
+			newName = ((CharacterStruct) packageDesignator).getCharacter().toString();
+		} else if (packageDesignator instanceof PackageStruct) {
+			newName = ((PackageStruct) packageDesignator).getName();
+		} else {
+			throw new TypeErrorException("UNCAUGHT TYPE ERROR.");
+		}
 
 		if (arguments.hasOptionalArgument(NEW_NICKNAMES_ARGUMENT)) {
 			final ListStruct newNicknamesList = arguments.getOptionalArgument(NEW_NICKNAMES_ARGUMENT, ListStruct.class);
 			final List<String> newNicknames
 					= newNicknamesList.stream()
-					                  .map(newNickname -> validator.validateStringDesignator(newNickname, functionName, "New Nickname"))
+					                  .map(LispStruct::asString)
+					                  .map(Supplier::get)
+					                  .map(StringStruct::getAsJavaString)
 					                  .collect(Collectors.toList());
 			aPackage.renamePackage(newName, newNicknames);
 		} else {

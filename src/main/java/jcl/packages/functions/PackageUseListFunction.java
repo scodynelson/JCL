@@ -12,8 +12,6 @@ import jcl.functions.parameterdsl.Arguments;
 import jcl.functions.parameterdsl.Parameters;
 import jcl.lists.ListStruct;
 import jcl.packages.PackageStruct;
-import jcl.types.TypeValidator;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -24,12 +22,6 @@ public final class PackageUseListFunction extends CommonLispBuiltInFunctionStruc
 
 	private static final String FUNCTION_NAME = "PACKAGE-USE-LIST";
 	private static final String PACKAGE_ARGUMENT = "PACKAGE";
-
-	/**
-	 * The {@link TypeValidator} for validating the function parameter value types.
-	 */
-	@Autowired
-	private TypeValidator validator;
 
 	/**
 	 * Public constructor passing the documentation string.
@@ -55,7 +47,7 @@ public final class PackageUseListFunction extends CommonLispBuiltInFunctionStruc
 	@Override
 	public LispStruct apply(final Arguments arguments) {
 		final LispStruct lispStruct = arguments.getRequiredArgument(PACKAGE_ARGUMENT);
-		final PackageStruct aPackage = validator.validatePackageDesignator(lispStruct, functionName);
+		final PackageStruct aPackage = lispStruct.asPackage().get();
 
 		final List<PackageStruct> useList = aPackage.getUseList();
 		return ListStruct.buildProperList(useList);

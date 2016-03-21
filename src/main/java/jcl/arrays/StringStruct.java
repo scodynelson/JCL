@@ -157,6 +157,11 @@ public class StringStruct extends VectorStruct<CharacterStruct> {
 	}
 
 	@Override
+	public Supplier<StringStruct> asString() {
+		return () -> this;
+	}
+
+	@Override
 	public Long length() {
 		// TODO: Do this right later...
 

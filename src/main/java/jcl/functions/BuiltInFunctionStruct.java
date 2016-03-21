@@ -22,4 +22,8 @@ abstract class BuiltInFunctionStruct extends FunctionStruct {
 	}
 
 	public abstract LispStruct apply(Arguments arguments);
+
+	public Parameters getParameters() {
+		return parameters;
+	}
 }

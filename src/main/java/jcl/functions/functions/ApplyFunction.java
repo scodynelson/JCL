@@ -4,84 +4,43 @@
 
 package jcl.functions.functions;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
-import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
-import jcl.compiler.environment.binding.lambdalist.OrdinaryLambdaList;
-import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
-import jcl.compiler.environment.binding.lambdalist.RestParameter;
-import jcl.compiler.struct.ValuesStruct;
 import jcl.conditions.exceptions.ErrorException;
+import jcl.functions.CommonLispBuiltInFunctionStruct;
 import jcl.functions.FunctionStruct;
+import jcl.functions.parameterdsl.Arguments;
+import jcl.functions.parameterdsl.Parameters;
 import jcl.lists.ListStruct;
-import jcl.packages.GlobalPackageStruct;
 import jcl.printer.Printer;
-import jcl.symbols.NILStruct;
 import jcl.symbols.SymbolStruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class ApplyFunction extends FunctionStruct {
+public final class ApplyFunction extends CommonLispBuiltInFunctionStruct {
 
-	public static final ApplyFunction INSTANCE = new ApplyFunction();
-
-	public static final SymbolStruct APPLY = GlobalPackageStruct.COMMON_LISP.intern("APPLY").getSymbol();
+	private static final String FUNCTION_NAME = "APPLY";
+	private static final String FN_ARGUMENT = "FN";
+	private static final String ARG_ARGUMENT = "ARG";
 
 	@Autowired
 	private Printer printer;
 
 	private ApplyFunction() {
-		super("Applies the function to the args.", getInitLambdaListBindings());
-	}
-
-	@PostConstruct
-	private void init() {
-		APPLY.setFunction(this);
-		GlobalPackageStruct.COMMON_LISP.export(APPLY);
-	}
-
-	private static OrdinaryLambdaList getInitLambdaListBindings() {
-
-		final List<RequiredParameter> requiredBindings = new ArrayList<>(2);
-
-		final SymbolStruct fnArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("FN").getSymbol();
-		final RequiredParameter functionRequiredBinding = new RequiredParameter(fnArgSymbol);
-		requiredBindings.add(functionRequiredBinding);
-
-		final SymbolStruct argArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("ARG").getSymbol();
-		final RequiredParameter argRequiredBinding = new RequiredParameter(argArgSymbol);
-		requiredBindings.add(argRequiredBinding);
-
-		final SymbolStruct argsArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("ARGS").getSymbol();
-		final RestParameter restBinding = new RestParameter(argsArgSymbol);
-
-		return OrdinaryLambdaList.builder()
-		                         .requiredBindings(requiredBindings)
-		                         .restBinding(restBinding)
-		                         .build();
+		super("Applies the function to the args.",
+		      FUNCTION_NAME,
+		      Parameters.forFunction(FUNCTION_NAME)
+		                .requiredParameter(FN_ARGUMENT)
+		                .requiredParameter(ARG_ARGUMENT)
+		                .restParameter()
+		);
 	}
 
 	@Override
-	public LispStruct apply(final LispStruct... lispStructs) {
-
-		final LispStruct lastArgument = lispStructs[lispStructs.length - 1];
-		if (!(lastArgument instanceof ListStruct) && !NILStruct.INSTANCE.equals(lastArgument)) {
-			final String printedObject = printer.print(lastArgument);
-			throw new ErrorException("Can't construct argument list from " + printedObject + '.');
-		}
-
-		final List<LispStruct> lispStructsAsList = Arrays.asList(lispStructs);
-
-		LispStruct functionDesignator = lispStructsAsList.get(0);
-		if (functionDesignator instanceof ValuesStruct) {
-			final ValuesStruct values = (ValuesStruct) functionDesignator;
-			functionDesignator = values.getPrimaryValue();
-		}
+	public LispStruct apply(final Arguments arguments) {
+		final LispStruct functionDesignator = arguments.getRequiredArgument(FN_ARGUMENT);
 
 		FunctionStruct functionStruct = null;
 		if (functionDesignator instanceof SymbolStruct) {
@@ -90,20 +49,45 @@ public final class ApplyFunction extends FunctionStruct {
 			functionStruct = (FunctionStruct) functionDesignator;
 		}
 
-		final List<LispStruct> args = lispStructsAsList.subList(1, lispStructsAsList.size());
-		// NOTE: Build dotted list here since we've verified that the last element is a List.
-		final ListStruct argsAsListStruct = ListStruct.buildDottedList(args);
+		final LispStruct arg = arguments.getRequiredArgument(ARG_ARGUMENT);
+		final List<LispStruct> args = arguments.getRestArgument();
 
 		if (functionStruct == null) {
 			final String printedFunctionDesignator = printer.print(functionDesignator);
-			final String printedArguments = printer.print(argsAsListStruct);
+//			final String printedArguments = printer.print(functionList);
+			final String printedArguments = arg + " " + args;
 			throw new ErrorException("Undefined function " + printedFunctionDesignator + " called with arguments " + printedArguments);
 		}
 
-		final List<LispStruct> collect = argsAsListStruct.stream().collect(Collectors.toList());
-		LispStruct[] argsToApply = new LispStruct[collect.size()];
-		argsToApply = collect.toArray(argsToApply);
+		if (args.isEmpty()) {
+			if (!(arg instanceof ListStruct)) {
+				final String printedObject = printer.print(arg);
+				throw new ErrorException("Can't construct argument list from " + printedObject + '.');
+			}
 
-		return functionStruct.apply(argsToApply);
+			final ListStruct argAsList = (ListStruct) arg;
+			final LispStruct[] lispStructs = argAsList.toArray();
+			return functionStruct.apply(lispStructs);
+		}
+		final int argsSize = args.size();
+
+		final LispStruct lastElement = args.get(argsSize - 1);
+		if (!(lastElement instanceof ListStruct)) {
+			final String printedObject = printer.print(lastElement);
+			throw new ErrorException("Can't construct argument list from " + printedObject + '.');
+		}
+		final ListStruct lastElementList = (ListStruct) lastElement;
+		final LispStruct[] lastElementArray = lastElementList.toArray();
+		final int lastElementSize = lastElementArray.length;
+
+		// NOTE: We add 1 for the required argument, but also subtract 1 for the last element being a list
+		final LispStruct[] argumentsArrays = new LispStruct[argsSize + lastElementSize];
+		argumentsArrays[0] = arg;
+		for (int i = 0; i < (argsSize - 1); i++) {
+			argumentsArrays[i + 1] = args.get(i);
+		}
+		System.arraycopy(lastElementArray, 0, argumentsArrays, argsSize, lastElementSize);
+
+		return functionStruct.apply(argumentsArrays);
 	}
 }

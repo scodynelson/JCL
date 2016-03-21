@@ -4,113 +4,74 @@
 
 package jcl.streams.functions;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import jcl.LispStruct;
 import jcl.arrays.StringStruct;
-import jcl.compiler.environment.binding.lambdalist.OptionalParameter;
-import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
 import jcl.conditions.exceptions.TypeErrorException;
-import jcl.functions.AbstractCommonLispFunctionStruct;
+import jcl.functions.CommonLispBuiltInFunctionStruct;
+import jcl.functions.parameterdsl.Arguments;
+import jcl.functions.parameterdsl.Parameters;
 import jcl.numbers.IntegerStruct;
-import jcl.packages.GlobalPackageStruct;
 import jcl.printer.Printer;
 import jcl.streams.StringInputStreamStruct;
 import jcl.symbols.NILStruct;
-import jcl.types.IntegerType;
-import jcl.types.NILType;
-import jcl.types.NullType;
-import jcl.types.StringType;
-import jcl.types.TypeValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class MakeStringInputStreamFunction extends AbstractCommonLispFunctionStruct {
+public final class MakeStringInputStreamFunction extends CommonLispBuiltInFunctionStruct {
 
-	@Autowired
-	private TypeValidator validator;
+	private static final String FUNCTION_NAME = "MAKE-STRING-INPUT-STREAM";
+	private static final String STRING_ARGUMENT = "STRING";
+	private static final String START_ARGUMENT = "START";
+	private static final String END_ARGUMENT = "END";
 
 	@Autowired
 	private Printer printer;
 
 	public MakeStringInputStreamFunction() {
-		super("Returns an input string stream.");
+		super("Returns an input string stream.",
+		      FUNCTION_NAME,
+		      Parameters.forFunction(FUNCTION_NAME)
+		                .requiredParameter(STRING_ARGUMENT)
+		                .optionalParameter(START_ARGUMENT).withInitialValue(IntegerStruct.ZERO)
+		                .optionalParameter(END_ARGUMENT).withInitialValue(NILStruct.INSTANCE)
+		);
 	}
 
 	@Override
-	protected List<RequiredParameter> getRequiredBindings() {
-		return RequiredParameter.builder(GlobalPackageStruct.COMMON_LISP, "STRING").buildList();
-	}
-
-	@Override
-	protected List<OptionalParameter> getOptionalBindings() {
-		final List<OptionalParameter> optionalParameters = new ArrayList<>(2);
-
-		final OptionalParameter start =
-				OptionalParameter.builder(GlobalPackageStruct.COMMON_LISP, "START")
-				                 .suppliedPBinding()
-				                 .initForm(IntegerStruct.ZERO)
-				                 .build();
-		optionalParameters.add(start);
-
-		final OptionalParameter end =
-				OptionalParameter.builder(GlobalPackageStruct.COMMON_LISP, "END")
-				                 .suppliedPBinding()
-				                 .initForm(NILStruct.INSTANCE)
-				                 .build();
-		optionalParameters.add(end);
-
-		return optionalParameters;
-	}
-
-	@Override
-	public LispStruct apply(final LispStruct... lispStructs) {
-		super.apply(lispStructs);
-
-		final LispStruct lispStruct = lispStructs[0];
-		validator.validateTypes(lispStruct, functionName(), "String", StringType.INSTANCE);
-
-		final StringStruct aString = (StringStruct) lispStruct;
+	public LispStruct apply(final Arguments arguments) {
+		final StringStruct aString = arguments.getRequiredArgument(STRING_ARGUMENT, StringStruct.class);
 		final String javaString = aString.getAsJavaString();
 
 		int start = 0;
 		int end = javaString.length();
 
-		if (lispStructs.length > 1) {
-			final LispStruct startParam = lispStructs[1];
-			validator.validateTypes(startParam, functionName(), "Start", IntegerType.INSTANCE, NILType.INSTANCE, NullType.INSTANCE);
+		if (arguments.hasOptionalArgument(START_ARGUMENT)) {
+			final LispStruct startParam = arguments.getOptionalArgument(START_ARGUMENT);
 
 			if (startParam instanceof IntegerStruct) {
 				final int possibleStartValue = ((IntegerStruct) startParam).getBigInteger().intValue();
 				if (possibleStartValue > end) {
 					final String printedObject = printer.print(startParam);
-					throw new TypeErrorException(functionName() + ": Start value must be less than or equal to the length of the String. Got: " + printedObject);
+					throw new TypeErrorException(functionName + ": Start value must be less than or equal to the length of the String. Got: " + printedObject);
 				}
 				start = possibleStartValue;
 			}
 		}
 
-		if (lispStructs.length > 2) {
-			final LispStruct endParam = lispStructs[2];
-			validator.validateTypes(endParam, functionName(), "End", IntegerType.INSTANCE, NILType.INSTANCE, NullType.INSTANCE);
+		if (arguments.hasOptionalArgument(END_ARGUMENT)) {
+			final LispStruct endParam = arguments.getOptionalArgument(END_ARGUMENT);
 
 			if (endParam instanceof IntegerStruct) {
 				final int possibleEndValue = ((IntegerStruct) endParam).getBigInteger().intValue();
 				if (possibleEndValue > end) {
 					final String printedObject = printer.print(endParam);
-					throw new TypeErrorException(functionName() + ": End value must be less than or equal to the length of the String. Got: " + printedObject);
+					throw new TypeErrorException(functionName + ": End value must be less than or equal to the length of the String. Got: " + printedObject);
 				}
 				end = possibleEndValue;
 			}
 		}
 
 		return new StringInputStreamStruct(javaString, start, end);
-	}
-
-	@Override
-	protected String functionName() {
-		return "MAKE-STRING-INPUT-STREAM";
 	}
 }

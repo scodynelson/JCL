@@ -5,60 +5,41 @@
 package jcl.streams.functions;
 
 import java.math.BigInteger;
-import java.util.List;
 
 import jcl.LispStruct;
-import jcl.compiler.environment.binding.lambdalist.OptionalParameter;
-import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
 import jcl.conditions.exceptions.TypeErrorException;
-import jcl.functions.AbstractCommonLispFunctionStruct;
+import jcl.functions.CommonLispBuiltInFunctionStruct;
+import jcl.functions.parameterdsl.Arguments;
+import jcl.functions.parameterdsl.Parameters;
 import jcl.numbers.IntegerStruct;
-import jcl.packages.GlobalPackageStruct;
 import jcl.streams.StreamStruct;
 import jcl.symbols.BooleanStructs;
 import jcl.symbols.NILStruct;
 import jcl.system.CommonLispSymbols;
-import jcl.types.IntegerType;
-import jcl.types.StreamType;
-import jcl.types.SymbolType;
-import jcl.types.TypeValidator;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class FilePositionFunction extends AbstractCommonLispFunctionStruct {
+public final class FilePositionFunction extends CommonLispBuiltInFunctionStruct {
 
-	@Autowired
-	private TypeValidator validator;
+	private static final String FUNCTION_NAME = "FILE-POSITION";
+	private static final String STREAM_ARGUMENT = "STREAM";
+	private static final String POSITION_ARGUMENT = "POSITION";
 
 	public FilePositionFunction() {
-		super("Returns the length of stream, or nil if the length cannot be determined.");
+		super("Returns the length of stream, or nil if the length cannot be determined.",
+		      FUNCTION_NAME,
+		      Parameters.forFunction(FUNCTION_NAME)
+		                .requiredParameter(STREAM_ARGUMENT)
+		                .optionalParameter(POSITION_ARGUMENT).withInitialValue(NILStruct.INSTANCE)
+		);
 	}
 
 	@Override
-	protected List<RequiredParameter> getRequiredBindings() {
-		return RequiredParameter.builder(GlobalPackageStruct.COMMON_LISP, "STREAM").buildList();
-	}
+	public LispStruct apply(final Arguments arguments) {
+		final StreamStruct stream = arguments.getRequiredArgument(STREAM_ARGUMENT, StreamStruct.class);
 
-	@Override
-	protected List<OptionalParameter> getOptionalBindings() {
-		return OptionalParameter.builder(GlobalPackageStruct.COMMON_LISP, "POSITION")
-		                        .suppliedPBinding()
-		                        .initForm(NILStruct.INSTANCE)
-		                        .buildList();
-	}
-
-	@Override
-	public LispStruct apply(final LispStruct... lispStructs) {
-		super.apply(lispStructs);
-
-		final LispStruct lispStruct1 = lispStructs[0];
-		validator.validateTypes(lispStruct1, functionName(), "Stream", StreamType.INSTANCE);
-
-		final LispStruct lispStruct2 = lispStructs[1];
-		validator.validateTypes(lispStruct2, functionName(), "File Position", IntegerType.INSTANCE, SymbolType.INSTANCE);
-
-		final StreamStruct stream = (StreamStruct) lispStruct1;
+		final LispStruct lispStruct2 = arguments.getOptionalArgument(POSITION_ARGUMENT);
+//		validator.validateTypes(lispStruct2, functionName, "File Position", IntegerType.INSTANCE, SymbolType.INSTANCE);
 
 		final Long position;
 		if (lispStruct2 instanceof IntegerStruct) {
@@ -80,10 +61,5 @@ public final class FilePositionFunction extends AbstractCommonLispFunctionStruct
 			final Long newPosition = stream.filePosition(position);
 			return BooleanStructs.toLispBoolean(newPosition != null);
 		}
-	}
-
-	@Override
-	protected String functionName() {
-		return "FILE-POSITION";
 	}
 }

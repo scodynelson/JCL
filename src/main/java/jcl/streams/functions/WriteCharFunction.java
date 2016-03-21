@@ -4,77 +4,37 @@
 
 package jcl.streams.functions;
 
-import java.util.List;
-
 import jcl.LispStruct;
 import jcl.characters.CharacterStruct;
-import jcl.compiler.environment.binding.lambdalist.OptionalParameter;
-import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
-import jcl.conditions.exceptions.TypeErrorException;
-import jcl.functions.AbstractCommonLispFunctionStruct;
-import jcl.packages.GlobalPackageStruct;
-import jcl.printer.Printer;
+import jcl.functions.CommonLispBuiltInFunctionStruct;
+import jcl.functions.parameterdsl.Arguments;
+import jcl.functions.parameterdsl.Parameters;
 import jcl.streams.OutputStream;
 import jcl.streams.StreamVariables;
-import jcl.types.CharacterType;
-import jcl.types.StreamType;
-import jcl.types.TypeValidator;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class WriteCharFunction extends AbstractCommonLispFunctionStruct {
+public final class WriteCharFunction extends CommonLispBuiltInFunctionStruct {
 
-	@Autowired
-	private TypeValidator validator;
-
-	@Autowired
-	private Printer printer;
+	private static final String FUNCTION_NAME = "WRITE-CHAR";
+	private static final String CHARACTER_ARGUMENT = "CHARACTER";
+	private static final String OUTPUT_STREAM_ARGUMENT = "OUTPUT-STREAM";
 
 	public WriteCharFunction() {
-		super("Outputs character to output-stream.");
+		super("Outputs character to output-stream.",
+		      FUNCTION_NAME,
+		      Parameters.forFunction(FUNCTION_NAME)
+		                .requiredParameter(CHARACTER_ARGUMENT)
+		                .optionalParameter(OUTPUT_STREAM_ARGUMENT).withInitialValue(StreamVariables.STANDARD_OUTPUT.getVariableValue())
+		);
 	}
 
 	@Override
-	protected List<RequiredParameter> getRequiredBindings() {
-		return RequiredParameter.builder(GlobalPackageStruct.COMMON_LISP, "CHARACTER").buildList();
-	}
-
-	@Override
-	protected List<OptionalParameter> getOptionalBindings() {
-		return OptionalParameter.builder(GlobalPackageStruct.COMMON_LISP, "OUTPUT-STREAM")
-		                        .suppliedPBinding()
-		                        .initForm(StreamVariables.STANDARD_OUTPUT.getVariableValue())
-		                        .buildList();
-	}
-
-	@Override
-	public LispStruct apply(final LispStruct... lispStructs) {
-		super.apply(lispStructs);
-
-		final LispStruct lispStruct1 = lispStructs[0];
-		validator.validateTypes(lispStruct1, functionName(), "Character", CharacterType.INSTANCE);
-		final CharacterStruct character = (CharacterStruct) lispStruct1;
-
-		OutputStream outputStream = StreamVariables.STANDARD_OUTPUT.getVariableValue();
-		if (lispStructs.length > 1) {
-			final LispStruct lispStruct2 = lispStructs[1];
-			validator.validateTypes(lispStruct2, functionName(), "Output Stream", StreamType.INSTANCE);
-
-			if (!(lispStruct2 instanceof OutputStream)) {
-				final String printedObject = printer.print(lispStruct2);
-				throw new TypeErrorException(functionName() + ": Output Stream must be an actual OUTPUT-STREAM. Got: " + printedObject);
-			}
-
-			outputStream = (OutputStream) lispStruct2;
-		}
+	public LispStruct apply(final Arguments arguments) {
+		final CharacterStruct character = arguments.getRequiredArgument(CHARACTER_ARGUMENT, CharacterStruct.class);
+		final OutputStream outputStream = arguments.getOptionalArgument(OUTPUT_STREAM_ARGUMENT, OutputStream.class);
 
 		outputStream.writeChar(character.getCodePoint());
 		return character;
-	}
-
-	@Override
-	protected String functionName() {
-		return "WRITE-CHAR";
 	}
 }

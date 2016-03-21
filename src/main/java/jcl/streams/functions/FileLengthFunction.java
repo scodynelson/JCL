@@ -5,53 +5,38 @@
 package jcl.streams.functions;
 
 import java.math.BigInteger;
-import java.util.List;
 
 import jcl.LispStruct;
-import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
-import jcl.functions.AbstractCommonLispFunctionStruct;
+import jcl.functions.CommonLispBuiltInFunctionStruct;
+import jcl.functions.parameterdsl.Arguments;
+import jcl.functions.parameterdsl.Parameters;
 import jcl.numbers.IntegerStruct;
-import jcl.packages.GlobalPackageStruct;
 import jcl.streams.StreamStruct;
 import jcl.symbols.NILStruct;
-import jcl.types.StreamType;
-import jcl.types.TypeValidator;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class FileLengthFunction extends AbstractCommonLispFunctionStruct {
+public final class FileLengthFunction extends CommonLispBuiltInFunctionStruct {
 
-	@Autowired
-	private TypeValidator validator;
+	private static final String FUNCTION_NAME = "FILE-LENGTH";
+	private static final String STREAM_ARGUMENT = "STREAM";
 
 	public FileLengthFunction() {
-		super("Returns the length of stream, or nil if the length cannot be determined.");
+		super("Returns the length of stream, or nil if the length cannot be determined.",
+		      FUNCTION_NAME,
+		      Parameters.forFunction(FUNCTION_NAME)
+		                .requiredParameter(STREAM_ARGUMENT)
+		);
 	}
 
 	@Override
-	protected List<RequiredParameter> getRequiredBindings() {
-		return RequiredParameter.builder(GlobalPackageStruct.COMMON_LISP, "STREAM").buildList();
-	}
-
-	@Override
-	public LispStruct apply(final LispStruct... lispStructs) {
-		super.apply(lispStructs);
-
-		final LispStruct lispStruct = lispStructs[0];
-		validator.validateTypes(lispStruct, functionName(), "Stream", StreamType.INSTANCE);
-
-		final StreamStruct streamStruct = (StreamStruct) lispStruct;
+	public LispStruct apply(final Arguments arguments) {
+		final StreamStruct streamStruct = arguments.getRequiredArgument(STREAM_ARGUMENT, StreamStruct.class);
 		final Long fileLength = streamStruct.fileLength();
 		if (fileLength == null) {
 			return NILStruct.INSTANCE;
 		} else {
 			return new IntegerStruct(BigInteger.valueOf(fileLength));
 		}
-	}
-
-	@Override
-	protected String functionName() {
-		return "FILE-LENGTH";
 	}
 }

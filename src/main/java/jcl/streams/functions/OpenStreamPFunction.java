@@ -4,47 +4,31 @@
 
 package jcl.streams.functions;
 
-import java.util.List;
-
 import jcl.LispStruct;
-import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
-import jcl.functions.AbstractCommonLispFunctionStruct;
-import jcl.packages.GlobalPackageStruct;
+import jcl.functions.CommonLispBuiltInFunctionStruct;
+import jcl.functions.parameterdsl.Arguments;
+import jcl.functions.parameterdsl.Parameters;
 import jcl.streams.StreamStruct;
 import jcl.symbols.BooleanStructs;
-import jcl.types.StreamType;
-import jcl.types.TypeValidator;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class OpenStreamPFunction extends AbstractCommonLispFunctionStruct {
+public final class OpenStreamPFunction extends CommonLispBuiltInFunctionStruct {
 
-	@Autowired
-	private TypeValidator validator;
+	private static final String FUNCTION_NAME = "OPEN-STREAM-P";
+	private static final String STREAM_ARGUMENT = "STREAM";
 
 	public OpenStreamPFunction() {
-		super("Returns true if stream is an open stream; otherwise, returns false.");
+		super("Returns true if stream is an open stream; otherwise, returns false.",
+		      FUNCTION_NAME,
+		      Parameters.forFunction(FUNCTION_NAME)
+		                .requiredParameter(STREAM_ARGUMENT)
+		);
 	}
 
 	@Override
-	protected List<RequiredParameter> getRequiredBindings() {
-		return RequiredParameter.builder(GlobalPackageStruct.COMMON_LISP, "STREAM").buildList();
-	}
-
-	@Override
-	public LispStruct apply(final LispStruct... lispStructs) {
-		super.apply(lispStructs);
-
-		final LispStruct lispStruct = lispStructs[0];
-		validator.validateTypes(lispStruct, functionName(), "STREAM", StreamType.INSTANCE);
-
-		final StreamStruct stream = (StreamStruct) lispStruct;
+	public LispStruct apply(final Arguments arguments) {
+		final StreamStruct stream = arguments.getRequiredArgument(STREAM_ARGUMENT, StreamStruct.class);
 		return BooleanStructs.toLispBoolean(!stream.isClosed());
-	}
-
-	@Override
-	protected String functionName() {
-		return "OPEN-STREAM-P";
 	}
 }

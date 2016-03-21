@@ -6,49 +6,34 @@ package jcl.streams.functions;
 
 import java.util.ArrayList;
 import java.util.Deque;
-import java.util.List;
 
 import jcl.LispStruct;
-import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
-import jcl.functions.AbstractCommonLispFunctionStruct;
+import jcl.functions.CommonLispBuiltInFunctionStruct;
+import jcl.functions.parameterdsl.Arguments;
+import jcl.functions.parameterdsl.Parameters;
 import jcl.lists.ListStruct;
-import jcl.packages.GlobalPackageStruct;
 import jcl.streams.ConcatenatedStreamStruct;
 import jcl.streams.InputStream;
-import jcl.types.ConcatenatedStreamType;
-import jcl.types.TypeValidator;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class ConcatenatedStreamStreamsFunction extends AbstractCommonLispFunctionStruct {
+public final class ConcatenatedStreamStreamsFunction extends CommonLispBuiltInFunctionStruct {
 
-	@Autowired
-	private TypeValidator validator;
+	private static final String FUNCTION_NAME = "CONCATENATED-STREAM-STREAMS";
+	private static final String CONCATENATED_STREAM_ARGUMENT = "CONCATENATED-STREAM";
 
 	public ConcatenatedStreamStreamsFunction() {
-		super("Returns a list of input streams that constitute the ordered set of streams the concatenated-stream still has to read from, starting with the current one it is reading from.");
+		super("Returns a list of input streams that constitute the ordered set of streams the concatenated-stream still has to read from, starting with the current one it is reading from.",
+		      FUNCTION_NAME,
+		      Parameters.forFunction(FUNCTION_NAME)
+		                .requiredParameter(CONCATENATED_STREAM_ARGUMENT)
+		);
 	}
 
 	@Override
-	protected List<RequiredParameter> getRequiredBindings() {
-		return RequiredParameter.builder(GlobalPackageStruct.COMMON_LISP, "CONCATENATED-STREAM").buildList();
-	}
-
-	@Override
-	public LispStruct apply(final LispStruct... lispStructs) {
-		super.apply(lispStructs);
-
-		final LispStruct lispStruct = lispStructs[0];
-		validator.validateTypes(lispStruct, functionName(), "Concatenated Stream", ConcatenatedStreamType.INSTANCE);
-
-		final ConcatenatedStreamStruct concatenatedStream = (ConcatenatedStreamStruct) lispStruct;
+	public LispStruct apply(final Arguments arguments) {
+		final ConcatenatedStreamStruct concatenatedStream = arguments.getRequiredArgument(CONCATENATED_STREAM_ARGUMENT, ConcatenatedStreamStruct.class);
 		final Deque<InputStream> inputStreams = concatenatedStream.getInputStreams();
 		return ListStruct.buildProperList(new ArrayList<LispStruct>(inputStreams));
-	}
-
-	@Override
-	protected String functionName() {
-		return "CONCATENATED-STREAM-STREAMS";
 	}
 }

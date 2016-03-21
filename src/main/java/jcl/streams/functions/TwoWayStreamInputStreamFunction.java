@@ -4,46 +4,30 @@
 
 package jcl.streams.functions;
 
-import java.util.List;
-
 import jcl.LispStruct;
-import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
-import jcl.functions.AbstractCommonLispFunctionStruct;
-import jcl.packages.GlobalPackageStruct;
+import jcl.functions.CommonLispBuiltInFunctionStruct;
+import jcl.functions.parameterdsl.Arguments;
+import jcl.functions.parameterdsl.Parameters;
 import jcl.streams.TwoWayStreamStruct;
-import jcl.types.TwoWayStreamType;
-import jcl.types.TypeValidator;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class TwoWayStreamInputStreamFunction extends AbstractCommonLispFunctionStruct {
+public final class TwoWayStreamInputStreamFunction extends CommonLispBuiltInFunctionStruct {
 
-	@Autowired
-	private TypeValidator validator;
+	private static final String FUNCTION_NAME = "TWO-WAY-STREAM-INPUT-STREAM";
+	private static final String TWO_WAY_STREAM_ARGUMENT = "TWO-WAY-STREAM";
 
 	public TwoWayStreamInputStreamFunction() {
-		super("Returns the input stream from which two-way-stream receives input.");
+		super("Returns the input stream from which two-way-stream receives input.",
+		      FUNCTION_NAME,
+		      Parameters.forFunction(FUNCTION_NAME)
+		                .requiredParameter(TWO_WAY_STREAM_ARGUMENT)
+		);
 	}
 
 	@Override
-	protected List<RequiredParameter> getRequiredBindings() {
-		return RequiredParameter.builder(GlobalPackageStruct.COMMON_LISP, "TWO-WAY-STREAM").buildList();
-	}
-
-	@Override
-	public LispStruct apply(final LispStruct... lispStructs) {
-		super.apply(lispStructs);
-
-		final LispStruct lispStruct = lispStructs[0];
-		validator.validateTypes(lispStruct, functionName(), "Two-Way Stream", TwoWayStreamType.INSTANCE);
-
-		final TwoWayStreamStruct twoWayStream = (TwoWayStreamStruct) lispStruct;
+	public LispStruct apply(final Arguments arguments) {
+		final TwoWayStreamStruct twoWayStream = arguments.getRequiredArgument(TWO_WAY_STREAM_ARGUMENT, TwoWayStreamStruct.class);
 		return twoWayStream.getInputStream();
-	}
-
-	@Override
-	protected String functionName() {
-		return "TWO-WAY-STREAM-INPUT-STREAM";
 	}
 }

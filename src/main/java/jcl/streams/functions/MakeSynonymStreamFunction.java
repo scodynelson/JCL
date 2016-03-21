@@ -4,47 +4,31 @@
 
 package jcl.streams.functions;
 
-import java.util.List;
-
 import jcl.LispStruct;
-import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
-import jcl.functions.AbstractCommonLispFunctionStruct;
-import jcl.packages.GlobalPackageStruct;
+import jcl.functions.CommonLispBuiltInFunctionStruct;
+import jcl.functions.parameterdsl.Arguments;
+import jcl.functions.parameterdsl.Parameters;
 import jcl.streams.SynonymStreamStruct;
 import jcl.symbols.SymbolStruct;
-import jcl.types.SymbolType;
-import jcl.types.TypeValidator;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class MakeSynonymStreamFunction extends AbstractCommonLispFunctionStruct {
+public final class MakeSynonymStreamFunction extends CommonLispBuiltInFunctionStruct {
 
-	@Autowired
-	private TypeValidator validator;
+	private static final String FUNCTION_NAME = "MAKE-SYNONYM-STREAM";
+	private static final String SYMBOL_ARGUMENT = "SYMBOL";
 
 	public MakeSynonymStreamFunction() {
-		super("Returns a synonym stream whose synonym stream symbol is symbol.");
+		super("Returns a synonym stream whose synonym stream symbol is symbol.",
+		      FUNCTION_NAME,
+		      Parameters.forFunction(FUNCTION_NAME)
+		                .requiredParameter(SYMBOL_ARGUMENT)
+		);
 	}
 
 	@Override
-	protected List<RequiredParameter> getRequiredBindings() {
-		return RequiredParameter.builder(GlobalPackageStruct.COMMON_LISP, "SYMBOL").buildList();
-	}
-
-	@Override
-	public LispStruct apply(final LispStruct... lispStructs) {
-		super.apply(lispStructs);
-
-		final LispStruct lispStruct = lispStructs[0];
-		validator.validateTypes(lispStruct, functionName(), "Symbol", SymbolType.INSTANCE);
-
-		final SymbolStruct symbol = (SymbolStruct) lispStruct;
+	public LispStruct apply(final Arguments arguments) {
+		final SymbolStruct symbol = arguments.getRequiredArgument(SYMBOL_ARGUMENT, SymbolStruct.class);
 		return new SynonymStreamStruct(symbol);
-	}
-
-	@Override
-	protected String functionName() {
-		return "MAKE-SYNONYM-STREAM";
 	}
 }

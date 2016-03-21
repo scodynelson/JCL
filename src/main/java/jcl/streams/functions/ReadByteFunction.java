@@ -5,16 +5,13 @@
 package jcl.streams.functions;
 
 import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.List;
 
 import jcl.LispStruct;
-import jcl.compiler.environment.binding.lambdalist.OptionalParameter;
-import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
 import jcl.conditions.exceptions.TypeErrorException;
-import jcl.functions.AbstractCommonLispFunctionStruct;
+import jcl.functions.CommonLispBuiltInFunctionStruct;
+import jcl.functions.parameterdsl.Arguments;
+import jcl.functions.parameterdsl.Parameters;
 import jcl.numbers.IntegerStruct;
-import jcl.packages.GlobalPackageStruct;
 import jcl.printer.Printer;
 import jcl.streams.InputStream;
 import jcl.streams.ReadPeekResult;
@@ -22,89 +19,50 @@ import jcl.streams.StreamVariables;
 import jcl.symbols.BooleanStruct;
 import jcl.symbols.NILStruct;
 import jcl.symbols.TStruct;
-import jcl.types.BooleanType;
-import jcl.types.StreamType;
-import jcl.types.TypeValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class ReadByteFunction extends AbstractCommonLispFunctionStruct {
+public final class ReadByteFunction extends CommonLispBuiltInFunctionStruct {
 
-	@Autowired
-	private TypeValidator validator;
+	private static final String FUNCTION_NAME = "READ-BYTE";
+	private static final String INPUT_STREAM_ARGUMENT = "INPUT-STREAM";
+	private static final String EOF_ERROR_ARGUMENT = "EOF-ERROR";
+	private static final String EOF_VALUE_ARGUMENT = "EOF-VALUE";
 
 	@Autowired
 	private Printer printer;
 
 	public ReadByteFunction() {
-		super("Returns the next byte from input-stream.");
+		super("Returns the next byte from input-stream.",
+		      FUNCTION_NAME,
+		      Parameters.forFunction(FUNCTION_NAME)
+		                .requiredParameter(INPUT_STREAM_ARGUMENT)
+		                .optionalParameter(EOF_ERROR_ARGUMENT).withInitialValue(TStruct.INSTANCE)
+		                .optionalParameter(EOF_VALUE_ARGUMENT).withInitialValue(NILStruct.INSTANCE)
+		);
 	}
 
 	@Override
-	protected List<RequiredParameter> getRequiredBindings() {
-		return RequiredParameter.builder(GlobalPackageStruct.COMMON_LISP, "INPUT-STREAM").buildList();
-	}
-
-	@Override
-	protected List<OptionalParameter> getOptionalBindings() {
-		final List<OptionalParameter> optionalParameters = new ArrayList<>(2);
-
-		final OptionalParameter eofErrorPOptionalBinding =
-				OptionalParameter.builder(GlobalPackageStruct.COMMON_LISP, "EOF-ERROR")
-				                 .suppliedPBinding()
-				                 .initForm(TStruct.INSTANCE)
-				                 .build();
-		optionalParameters.add(eofErrorPOptionalBinding);
-		final OptionalParameter eofValueOptionalBinding =
-				OptionalParameter.builder(GlobalPackageStruct.COMMON_LISP, "EOF-VALUE")
-				                 .suppliedPBinding()
-				                 .initForm(NILStruct.INSTANCE)
-				                 .build();
-		optionalParameters.add(eofValueOptionalBinding);
-
-		return optionalParameters;
-	}
-
-	@Override
-	public LispStruct apply(final LispStruct... lispStructs) {
-		super.apply(lispStructs);
-
-		final LispStruct inputStreamArg = lispStructs[0];
-		validator.validateTypes(inputStreamArg, functionName(), "Input Stream", BooleanType.INSTANCE, StreamType.INSTANCE);
+	public LispStruct apply(final Arguments arguments) {
+		final LispStruct lispStruct = arguments.getOptionalArgument(INPUT_STREAM_ARGUMENT);
 
 		final InputStream inputStream;
-		if (TStruct.INSTANCE.equals(inputStreamArg)) {
+		if (TStruct.INSTANCE.equals(lispStruct)) {
 			inputStream = StreamVariables.STANDARD_INPUT.getVariableValue();
-		} else if (NILStruct.INSTANCE.equals(inputStreamArg)) {
+		} else if (NILStruct.INSTANCE.equals(lispStruct)) {
 			inputStream = StreamVariables.STANDARD_INPUT.getVariableValue();
-		} else if (inputStreamArg instanceof InputStream) {
-			inputStream = (InputStream) inputStreamArg;
+		} else if (lispStruct instanceof InputStream) {
+			inputStream = (InputStream) lispStruct;
 		} else {
-			final String printedObject = printer.print(inputStreamArg);
+			final String printedObject = printer.print(lispStruct);
 			throw new TypeErrorException("The value " + printedObject + " is not either T, NIL, or an Input Stream.");
 		}
 
-		final int length = lispStructs.length;
-
-		BooleanStruct eofErrorP = TStruct.INSTANCE;
-		if (length > 1) {
-			final LispStruct lispStruct = lispStructs[1];
-			validator.validateTypes(lispStruct, functionName(), "EOF Error Predicate", BooleanType.INSTANCE);
-			eofErrorP = (BooleanStruct) lispStruct;
-		}
-
-		LispStruct eofValue = NILStruct.INSTANCE;
-		if (length > 2) {
-			eofValue = lispStructs[2];
-		}
+		final BooleanStruct eofErrorP = arguments.getOptionalArgument(EOF_ERROR_ARGUMENT, BooleanStruct.class);
+		final LispStruct eofValue = arguments.getOptionalArgument(EOF_VALUE_ARGUMENT);
 
 		final ReadPeekResult readPeekResult = inputStream.readByte(eofErrorP.booleanValue(), eofValue);
 		return readPeekResult.isEof() ? eofValue : new IntegerStruct(BigInteger.valueOf(readPeekResult.getResult()));
-	}
-
-	@Override
-	protected String functionName() {
-		return "READ-BYTE";
 	}
 }

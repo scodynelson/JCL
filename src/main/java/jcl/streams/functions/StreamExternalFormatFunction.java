@@ -4,44 +4,30 @@
 
 package jcl.streams.functions;
 
-import java.util.List;
-
 import jcl.LispStruct;
-import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
-import jcl.functions.AbstractCommonLispFunctionStruct;
-import jcl.packages.GlobalPackageStruct;
+import jcl.functions.CommonLispBuiltInFunctionStruct;
+import jcl.functions.parameterdsl.Arguments;
+import jcl.functions.parameterdsl.Parameters;
 import jcl.streams.FileStreamStruct;
-import jcl.types.StreamType;
-import jcl.types.TypeValidator;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class StreamExternalFormatFunction extends AbstractCommonLispFunctionStruct {
+public final class StreamExternalFormatFunction extends CommonLispBuiltInFunctionStruct {
 
-	@Autowired
-	private TypeValidator validator;
+	private static final String FUNCTION_NAME = "STREAM-EXTERNAL-FORMAT";
+	private static final String FILE_STREAM_ARGUMENT = "FILE-STREAM";
 
 	public StreamExternalFormatFunction() {
-		super("Returns an external file format designator for the stream.");
+		super("Returns an external file format designator for the stream.",
+		      FUNCTION_NAME,
+		      Parameters.forFunction(FUNCTION_NAME)
+		                .requiredParameter(FILE_STREAM_ARGUMENT)
+		);
 	}
 
 	@Override
-	protected List<RequiredParameter> getRequiredBindings() {
-		return RequiredParameter.builder(GlobalPackageStruct.COMMON_LISP, "FILE-STREAM").buildList();
-	}
-
-	@Override
-	public LispStruct apply(final LispStruct... lispStructs) {
-		super.apply(lispStructs);
-
-		final FileStreamStruct fileStream
-				= validator.validateType(lispStructs[0], functionName(), "File Stream", StreamType.INSTANCE, FileStreamStruct.class);
+	public LispStruct apply(final Arguments arguments) {
+		final FileStreamStruct fileStream = arguments.getRequiredArgument(FILE_STREAM_ARGUMENT, FileStreamStruct.class);
 		return fileStream.getExternalFormat();
-	}
-
-	@Override
-	protected String functionName() {
-		return "STREAM-EXTERNAL-FORMAT";
 	}
 }

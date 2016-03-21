@@ -49,7 +49,7 @@ abstract class AbstractSymbolListPackageFunction extends CommonLispBuiltInFuncti
 	@Override
 	public LispStruct apply(final Arguments arguments) {
 		final LispStruct lispStruct = arguments.getRequiredArgument("SYMBOLS");
-		final PackageStruct aPackage = arguments.getOptionalArgument("PACKAGE", PackageStruct.class);
+		final PackageStruct aPackage = arguments.getOptionalArgument("PACKAGE").asPackage().get();
 
 		final SymbolStruct[] realSymbolArray;
 		if (lispStruct instanceof ListStruct) {

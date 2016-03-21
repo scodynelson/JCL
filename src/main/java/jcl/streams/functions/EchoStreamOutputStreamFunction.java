@@ -4,46 +4,30 @@
 
 package jcl.streams.functions;
 
-import java.util.List;
-
 import jcl.LispStruct;
-import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
-import jcl.functions.AbstractCommonLispFunctionStruct;
-import jcl.packages.GlobalPackageStruct;
+import jcl.functions.CommonLispBuiltInFunctionStruct;
+import jcl.functions.parameterdsl.Arguments;
+import jcl.functions.parameterdsl.Parameters;
 import jcl.streams.EchoStreamStruct;
-import jcl.types.EchoStreamType;
-import jcl.types.TypeValidator;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class EchoStreamOutputStreamFunction extends AbstractCommonLispFunctionStruct {
+public final class EchoStreamOutputStreamFunction extends CommonLispBuiltInFunctionStruct {
 
-	@Autowired
-	private TypeValidator validator;
+	private static final String FUNCTION_NAME = "ECHO-STREAM-OUTPUT-STREAM";
+	private static final String ECHO_STREAM_ARGUMENT = "ECHO-STREAM";
 
 	public EchoStreamOutputStreamFunction() {
-		super("Returns the output stream to which echo-stream sends output.");
+		super("Returns the output stream to which echo-stream sends output.",
+		      FUNCTION_NAME,
+		      Parameters.forFunction(FUNCTION_NAME)
+		                .requiredParameter(ECHO_STREAM_ARGUMENT)
+		);
 	}
 
 	@Override
-	protected List<RequiredParameter> getRequiredBindings() {
-		return RequiredParameter.builder(GlobalPackageStruct.COMMON_LISP, "ECHO-STREAM").buildList();
-	}
-
-	@Override
-	public LispStruct apply(final LispStruct... lispStructs) {
-		super.apply(lispStructs);
-
-		final LispStruct lispStruct = lispStructs[0];
-		validator.validateTypes(lispStruct, functionName(), "Echo Stream", EchoStreamType.INSTANCE);
-
-		final EchoStreamStruct echoStream = (EchoStreamStruct) lispStruct;
+	public LispStruct apply(final Arguments arguments) {
+		final EchoStreamStruct echoStream = arguments.getRequiredArgument(ECHO_STREAM_ARGUMENT, EchoStreamStruct.class);
 		return echoStream.getOutputStream();
-	}
-
-	@Override
-	protected String functionName() {
-		return "ECHO-STREAM-OUTPUT-STREAM";
 	}
 }

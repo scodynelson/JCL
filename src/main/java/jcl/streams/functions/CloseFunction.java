@@ -4,71 +4,38 @@
 
 package jcl.streams.functions;
 
-import java.util.List;
-import java.util.Map;
-
 import jcl.LispStruct;
-import jcl.compiler.environment.binding.lambdalist.KeyParameter;
-import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
-import jcl.functions.AbstractCommonLispFunctionStruct;
-import jcl.packages.GlobalPackageStruct;
+import jcl.functions.CommonLispBuiltInFunctionStruct;
+import jcl.functions.parameterdsl.Arguments;
+import jcl.functions.parameterdsl.Parameters;
 import jcl.streams.StreamStruct;
 import jcl.symbols.BooleanStruct;
 import jcl.symbols.BooleanStructs;
-import jcl.symbols.KeywordStruct;
 import jcl.symbols.NILStruct;
 import jcl.system.CommonLispSymbols;
-import jcl.types.BooleanType;
-import jcl.types.StreamType;
-import jcl.types.TypeValidator;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class CloseFunction extends AbstractCommonLispFunctionStruct {
+public final class CloseFunction extends CommonLispBuiltInFunctionStruct {
 
-	@Autowired
-	private TypeValidator validator;
+	private static final String FUNCTION_NAME = "CLOSE";
+	private static final String STREAM_ARGUMENT = "STREAM";
 
 	public CloseFunction() {
-		super("Closes Stream.");
+		super("Closes Stream.",
+		      FUNCTION_NAME,
+		      Parameters.forFunction(FUNCTION_NAME)
+		                .requiredParameter(STREAM_ARGUMENT)
+		                .keyParameter(CommonLispSymbols.ABORT_KEYWORD).withInitialValue(NILStruct.INSTANCE)
+		);
 	}
 
 	@Override
-	protected List<RequiredParameter> getRequiredBindings() {
-		return RequiredParameter.builder(GlobalPackageStruct.COMMON_LISP, "STREAM").buildList();
-	}
+	public LispStruct apply(final Arguments arguments) {
+		final StreamStruct stream = arguments.getRequiredArgument(STREAM_ARGUMENT, StreamStruct.class);
+		final BooleanStruct abortValue = arguments.getKeyArgument(CommonLispSymbols.ELEMENT_TYPE_KEYWORD, BooleanStruct.class);
 
-	@Override
-	protected List<KeyParameter> getKeyBindings() {
-		return KeyParameter.builder(GlobalPackageStruct.COMMON_LISP, "ABORT")
-		                   .suppliedPBinding()
-		                   .initForm(NILStruct.INSTANCE)
-		                   .buildList();
-	}
-
-	@Override
-	public LispStruct apply(final LispStruct... lispStructs) {
-		super.apply(lispStructs);
-
-		final Map<KeywordStruct, LispStruct> keywords = getKeywords(lispStructs, 1, CommonLispSymbols.ABORT_KEYWORD);
-
-		final LispStruct abort
-				= keywords.getOrDefault(CommonLispSymbols.ABORT_KEYWORD, NILStruct.INSTANCE);
-		validator.validateTypes(abort, functionName(), "Abort", BooleanType.INSTANCE);
-
-		final LispStruct lispStruct = lispStructs[0];
-		validator.validateTypes(lispStruct, functionName(), "Stream", StreamType.INSTANCE);
-
-		final StreamStruct streamStruct = (StreamStruct) lispStruct;
-		final BooleanStruct abortValue = (BooleanStruct) abort;
-
-		final boolean wasClosed = streamStruct.close(abortValue.booleanValue());
+		final boolean wasClosed = stream.close(abortValue.booleanValue());
 		return BooleanStructs.toLispBoolean(wasClosed);
-	}
-
-	@Override
-	protected String functionName() {
-		return "CLOSE";
 	}
 }

@@ -57,6 +57,14 @@ public abstract class CompiledMacroFunctionExpander<O extends LispStruct> extend
 		this.closure = closure;
 	}
 
+	private static final SymbolStruct DUMMY_SYMBOL = new SymbolStruct("dummySymbol");
+
+	@Override
+	public SymbolStruct getFunctionSymbol() {
+		// TODO: we can do this better
+		return DUMMY_SYMBOL;
+	}
+
 	protected List<FunctionParameterBinding> getDestructuringFunctionBindings(final DestructuringLambdaList destructuringLambdaList,
 	                                                                          final ListStruct destructuredForm) {
 		final WholeParameter wholeBinding = destructuringLambdaList.getWholeBinding();

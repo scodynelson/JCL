@@ -12,6 +12,7 @@ import jcl.characters.CharacterStruct;
 import jcl.functions.FunctionStruct;
 import jcl.numbers.IntegerStruct;
 import jcl.streams.InputStream;
+import jcl.symbols.SymbolStruct;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -34,6 +35,14 @@ public abstract class ReaderMacroFunction extends FunctionStruct {
 	protected ReaderMacroFunction() {
 		// TODO
 		super("Some Documentation");
+	}
+
+	private static final SymbolStruct DUMMY_SYMBOL = new SymbolStruct("dummySymbol");
+
+	@Override
+	public SymbolStruct getFunctionSymbol() {
+		// TODO: we can do this better
+		return DUMMY_SYMBOL;
 	}
 
 	@Override

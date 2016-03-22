@@ -4,6 +4,7 @@
 
 package jcl.functions.expanders;
 
+import java.util.Collections;
 import java.util.List;
 
 import jcl.LispStruct;
@@ -39,6 +40,30 @@ public abstract class MacroFunctionExpander<O extends LispStruct> extends MacroE
 		functionSymbol.setMacroFunctionExpander(this);
 	}
 
+	protected List<RequiredParameter> getRequiredBindings() {
+		return Collections.emptyList();
+	}
+
+	protected List<OptionalParameter> getOptionalBindings() {
+		return Collections.emptyList();
+	}
+
+	protected RestParameter getRestBinding() {
+		return null;
+	}
+
+	protected List<KeyParameter> getKeyBindings() {
+		return Collections.emptyList();
+	}
+
+	protected boolean getAllowOtherKeys() {
+		return false;
+	}
+
+	protected List<AuxParameter> getAuxBindings() {
+		return Collections.emptyList();
+	}
+
 	protected WholeParameter getWholeBinding() {
 		return new WholeParameter(new SymbolStruct("temp_whole_" + System.nanoTime()));
 	}
@@ -51,7 +76,6 @@ public abstract class MacroFunctionExpander<O extends LispStruct> extends MacroE
 		return null;
 	}
 
-	@Override
 	protected void initLambdaListBindings() {
 		final WholeParameter wholeBinding = getWholeBinding();
 		final List<RequiredParameter> requiredBindings = getRequiredBindings();

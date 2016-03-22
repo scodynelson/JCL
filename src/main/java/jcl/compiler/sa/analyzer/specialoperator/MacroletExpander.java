@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Stack;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
-import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
 import jcl.arrays.StringStruct;
@@ -60,12 +59,9 @@ public class MacroletExpander extends MacroFunctionExpander<InnerLambdaStruct> {
 	@Autowired
 	private Printer printer;
 
-	/**
-	 * Initializes the macrolet macro function and adds it to the special operator 'macrolet'.
-	 */
-	@PostConstruct
-	private void init() {
-		SpecialOperatorStruct.MACROLET.setMacroFunctionExpander(this);
+	@Override
+	public SymbolStruct getFunctionSymbol() {
+		return SpecialOperatorStruct.MACROLET;
 	}
 
 	@Override

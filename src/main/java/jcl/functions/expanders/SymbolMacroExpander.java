@@ -15,6 +15,16 @@ public abstract class SymbolMacroExpander extends MacroExpander<LispStruct, Symb
 	}
 
 	@Override
+	public SymbolStruct getFunctionSymbol() {
+		return null;
+	}
+
+	@Override
+	public void afterPropertiesSet() throws Exception {
+	}
+
+
+	@Override
 	public LispStruct apply(final LispStruct... lispStructs) {
 		final SymbolStruct symbolStruct = (SymbolStruct) lispStructs[0];
 		final Environment environment = (Environment) lispStructs[1];

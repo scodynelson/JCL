@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
-import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
 import jcl.compiler.environment.Environment;
@@ -43,12 +42,9 @@ public class SymbolMacroletExpander extends MacroFunctionExpander<SymbolMacrolet
 	@Autowired
 	private Printer printer;
 
-	/**
-	 * Initializes the symbol-macrolet macro function and adds it to the special operator 'symbol-macrolet'.
-	 */
-	@PostConstruct
-	private void init() {
-		SpecialOperatorStruct.SYMBOL_MACROLET.setMacroFunctionExpander(this);
+	@Override
+	public SymbolStruct getFunctionSymbol() {
+		return SpecialOperatorStruct.SYMBOL_MACROLET;
 	}
 
 	@Override

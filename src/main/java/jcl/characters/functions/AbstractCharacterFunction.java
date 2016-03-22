@@ -4,17 +4,14 @@
 
 package jcl.characters.functions;
 
-import java.util.List;
 import java.util.function.Function;
 
 import jcl.LispStruct;
 import jcl.characters.CharacterStruct;
-import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
 import jcl.functions.CommonLispBuiltInFunctionStruct;
 import jcl.functions.FunctionStruct;
 import jcl.functions.parameterdsl.Arguments;
 import jcl.functions.parameterdsl.Parameters;
-import jcl.packages.GlobalPackageStruct;
 
 /**
  * Abstract {@link FunctionStruct} implementation for character functions that operates on a {@link CharacterStruct}.
@@ -26,17 +23,6 @@ abstract class AbstractCharacterFunction extends CommonLispBuiltInFunctionStruct
 		      Parameters.forFunction(functionName)
 		                .requiredParameter("CHARACTER")
 		);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * Creates the single {@link RequiredParameter} character object for this function.
-	 *
-	 * @return a list of a single {@link RequiredParameter} character object
-	 */
-	@Override
-	protected List<RequiredParameter> getRequiredBindings() {
-		return RequiredParameter.builder(GlobalPackageStruct.COMMON_LISP, "CHARACTER").buildList();
 	}
 
 	/**

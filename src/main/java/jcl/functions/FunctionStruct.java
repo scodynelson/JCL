@@ -1,17 +1,10 @@
 package jcl.functions;
 
-import java.util.Collections;
 import java.util.List;
 
 import jcl.LispStruct;
 import jcl.LispType;
 import jcl.classes.BuiltInClassStruct;
-import jcl.compiler.environment.binding.lambdalist.AuxParameter;
-import jcl.compiler.environment.binding.lambdalist.KeyParameter;
-import jcl.compiler.environment.binding.lambdalist.OptionalParameter;
-import jcl.compiler.environment.binding.lambdalist.OrdinaryLambdaList;
-import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
-import jcl.compiler.environment.binding.lambdalist.RestParameter;
 import jcl.symbols.SymbolStruct;
 import jcl.types.FunctionType;
 import org.springframework.beans.factory.InitializingBean;
@@ -21,16 +14,8 @@ import org.springframework.beans.factory.InitializingBean;
  */
 public abstract class FunctionStruct extends BuiltInClassStruct implements InitializingBean {
 
-	protected OrdinaryLambdaList lambdaListBindings;
-
 	protected FunctionStruct(final String documentation) {
 		this(documentation, FunctionType.INSTANCE);
-	}
-
-	protected FunctionStruct(final String documentation, final OrdinaryLambdaList lambdaListBindings) {
-		// TODO: Remove eventually
-		this(documentation, FunctionType.INSTANCE);
-		this.lambdaListBindings = lambdaListBindings;
 	}
 
 	protected FunctionStruct(final String documentation, final FunctionType type) {
@@ -48,53 +33,7 @@ public abstract class FunctionStruct extends BuiltInClassStruct implements Initi
 		functionSymbol.setFunction(this);
 	}
 
-	private static final SymbolStruct DUMMY_SYMBOL = new SymbolStruct("dummySymbol");
-
-	public SymbolStruct getFunctionSymbol() {
-		// TODO: we can do this better
-		return DUMMY_SYMBOL;
-	}
+	public abstract SymbolStruct getFunctionSymbol();
 
 	public abstract LispStruct apply(LispStruct... lispStructs);
-
-	protected void initLambdaListBindings() {
-		final List<RequiredParameter> requiredBindings = getRequiredBindings();
-		final List<OptionalParameter> optionalBindings = getOptionalBindings();
-		final RestParameter restBinding = getRestBinding();
-		final List<KeyParameter> keyBindings = getKeyBindings();
-		final boolean allowOtherKeys = getAllowOtherKeys();
-		final List<AuxParameter> auxBindings = getAuxBindings();
-		lambdaListBindings = OrdinaryLambdaList.builder()
-		                                       .requiredBindings(requiredBindings)
-		                                       .optionalBindings(optionalBindings)
-		                                       .restBinding(restBinding)
-		                                       .keyBindings(keyBindings)
-		                                       .allowOtherKeys(allowOtherKeys)
-		                                       .auxBindings(auxBindings)
-		                                       .build();
-	}
-
-	protected List<RequiredParameter> getRequiredBindings() {
-		return Collections.emptyList();
-	}
-
-	protected List<OptionalParameter> getOptionalBindings() {
-		return Collections.emptyList();
-	}
-
-	protected RestParameter getRestBinding() {
-		return null;
-	}
-
-	protected List<KeyParameter> getKeyBindings() {
-		return Collections.emptyList();
-	}
-
-	protected boolean getAllowOtherKeys() {
-		return false;
-	}
-
-	protected List<AuxParameter> getAuxBindings() {
-		return Collections.emptyList();
-	}
 }

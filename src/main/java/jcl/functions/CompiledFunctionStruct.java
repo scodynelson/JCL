@@ -32,6 +32,8 @@ import jcl.types.CompiledFunctionType;
 
 public abstract class CompiledFunctionStruct extends FunctionStruct {
 
+	protected OrdinaryLambdaList lambdaListBindings;
+
 	protected Closure closure;
 
 	protected static final LispStruct INIT_FORM_PLACEHOLDER = new LispStruct() {
@@ -53,11 +55,13 @@ public abstract class CompiledFunctionStruct extends FunctionStruct {
 
 	private static final SymbolStruct DUMMY_SYMBOL = new SymbolStruct("dummySymbol");
 
+	@Override
 	public SymbolStruct getFunctionSymbol() {
 		// TODO: we can do this better
 		return DUMMY_SYMBOL;
 	}
 
+	@Override
 	@SuppressWarnings({"unchecked", "rawtypes"})
 	public LispStruct apply(final LispStruct... lispStructs) {
 		final Map<SymbolStruct, LispStruct> closureSymbolsToBind = getClosureSymbolBindings();

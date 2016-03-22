@@ -1075,7 +1075,7 @@ public interface RealStruct extends NumberStruct {
 				quotientReal = getFloatQuotient(divisor, quotient);
 			} else {
 				final BigInteger quotientBigInteger = quotient.toBigInteger();
-				quotientReal = new IntIntegerStruct(quotientBigInteger);
+				quotientReal = IntegerStruct.valueOf(quotientBigInteger);
 			}
 
 			final FloatStruct remainderFloat = new SingleFloatStruct(remainder);

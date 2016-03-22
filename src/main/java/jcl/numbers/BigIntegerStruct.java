@@ -59,7 +59,7 @@ public class BigIntegerStruct extends BuiltInClassStruct implements IntegerStruc
 	 * @param bigInteger
 	 * 		the value of the IntegerStruct
 	 */
-	public BigIntegerStruct(final BigInteger bigInteger) {
+	private BigIntegerStruct(final BigInteger bigInteger) {
 		this(IntegerType.INSTANCE, bigInteger);
 	}
 
@@ -71,7 +71,7 @@ public class BigIntegerStruct extends BuiltInClassStruct implements IntegerStruc
 	 * @param bigInteger
 	 * 		the value of the IntegerStruct
 	 */
-	public BigIntegerStruct(final IntegerType integerType, final BigInteger bigInteger) {
+	private BigIntegerStruct(final IntegerType integerType, final BigInteger bigInteger) {
 		super(integerType, null, null);
 		this.bigInteger = bigInteger;
 	}
@@ -82,7 +82,7 @@ public class BigIntegerStruct extends BuiltInClassStruct implements IntegerStruc
 	 * @param apint
 	 * 		the value of the IntegerStruct
 	 */
-	BigIntegerStruct(final Apint apint) {
+	private BigIntegerStruct(final Apint apint) {
 		this(apint.toBigInteger());
 	}
 
@@ -92,7 +92,7 @@ public class BigIntegerStruct extends BuiltInClassStruct implements IntegerStruc
 	 * @param apfloat
 	 * 		the value of the IntegerStruct
 	 */
-	BigIntegerStruct(final Apfloat apfloat) {
+	private BigIntegerStruct(final Apfloat apfloat) {
 		this(apfloat.longValue());
 	}
 
@@ -104,6 +104,10 @@ public class BigIntegerStruct extends BuiltInClassStruct implements IntegerStruc
 	 */
 	private BigIntegerStruct(final long longValue) {
 		this(BigInteger.valueOf(longValue));
+	}
+
+	public static BigIntegerStruct valueOf(final BigInteger bigInteger) {
+		return new BigIntegerStruct(bigInteger);
 	}
 
 	/**

@@ -9,7 +9,6 @@ import java.math.BigInteger;
 import jcl.compiler.icg.CodeGenerator;
 import jcl.compiler.icg.GeneratorState;
 import jcl.compiler.icg.JavaMethodBuilder;
-import jcl.numbers.IntIntegerStruct;
 import jcl.numbers.IntegerStruct;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
@@ -29,11 +28,15 @@ class IntegerCodeGenerator implements CodeGenerator<IntegerStruct> {
 	private static final String INTEGER_STRUCT_NAME = Type.getInternalName(IntegerStruct.class);
 
 	/**
-	 * Constant {@link String} containing the description for the {@link IntegerStruct#IntegerStruct(BigInteger)}
-	 * constructor method.
+	 * Constant {@link String} containing the name for the {@link IntegerStruct#valueOf(BigInteger)} method.
 	 */
-	private static final String INTEGER_STRUCT_INIT_DESC
-			= CodeGenerators.getConstructorDescription(IntIntegerStruct.class, BigInteger.class);
+	private static final String INTEGER_STRUCT_VALUE_OF_METHOD_NAME = "valueOf";
+
+	/**
+	 * Constant {@link String} containing the description for the {@link IntegerStruct#valueOf(BigInteger)} method.
+	 */
+	private static final String INTEGER_STRUCT_VALUE_OF_METHOD_DESC
+			= CodeGenerators.getMethodDescription(IntegerStruct.class, INTEGER_STRUCT_VALUE_OF_METHOD_NAME, BigInteger.class);
 
 	/**
 	 * {@inheritDoc}
@@ -65,17 +68,10 @@ class IntegerCodeGenerator implements CodeGenerator<IntegerStruct> {
 		                   GenerationConstants.INIT_METHOD_NAME,
 		                   GenerationConstants.JAVA_BIG_INTEGER_INIT_DESC,
 		                   false);
-		final int bigIntegerStore = methodBuilder.getNextAvailableStore();
-		mv.visitVarInsn(Opcodes.ASTORE, bigIntegerStore);
-
-		mv.visitTypeInsn(Opcodes.NEW, INTEGER_STRUCT_NAME);
-		mv.visitInsn(Opcodes.DUP);
-
-		mv.visitVarInsn(Opcodes.ALOAD, bigIntegerStore);
-		mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
+		mv.visitMethodInsn(Opcodes.INVOKESTATIC,
 		                   INTEGER_STRUCT_NAME,
-		                   GenerationConstants.INIT_METHOD_NAME,
-		                   INTEGER_STRUCT_INIT_DESC,
-		                   false);
+		                   INTEGER_STRUCT_VALUE_OF_METHOD_NAME,
+		                   INTEGER_STRUCT_VALUE_OF_METHOD_DESC,
+		                   true);
 	}
 }

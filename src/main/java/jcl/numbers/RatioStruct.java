@@ -613,7 +613,7 @@ public class RatioStruct extends BuiltInClassStruct implements RationalStruct {
 	 */
 	@Override
 	public IntegerStruct numerator() {
-		return new IntIntegerStruct(bigFraction.getNumerator());
+		return IntegerStruct.valueOf(bigFraction.getNumerator());
 	}
 
 	/**
@@ -623,7 +623,7 @@ public class RatioStruct extends BuiltInClassStruct implements RationalStruct {
 	 */
 	@Override
 	public IntegerStruct denominator() {
-		return new IntIntegerStruct(bigFraction.getDenominator());
+		return IntegerStruct.valueOf(bigFraction.getDenominator());
 	}
 
 	// Comparison Visitor Helpers

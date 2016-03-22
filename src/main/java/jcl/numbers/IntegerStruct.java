@@ -37,6 +37,33 @@ public interface IntegerStruct extends RationalStruct {
 	 */
 	IntegerStruct MINUS_ONE = IntIntegerStruct.MINUS_ONE;
 
+	static IntegerStruct valueOf(final int i) {
+		return IntIntegerStruct.valueOf(i);
+	}
+
+	static IntegerStruct valueOf(final long l) {
+		return LongIntegerStruct.valueOf(l);
+	}
+
+	static IntegerStruct valueOf(final BigInteger bigInteger) {
+		return BigIntegerStruct.valueOf(bigInteger);
+	}
+
+	static IntegerStruct valueOf(final String s) {
+		try {
+			final int i = Integer.parseInt(s);
+			return valueOf(i);
+		} catch (final NumberFormatException ignore) {
+		}
+		try {
+			final long l = Long.parseLong(s);
+			return valueOf(l);
+		} catch (final NumberFormatException ignore) {
+		}
+		final BigInteger bigInteger = new BigInteger(s);
+		return valueOf(bigInteger);
+	}
+
 	BigInteger getBigInteger();
 
 	/**

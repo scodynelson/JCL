@@ -15,22 +15,22 @@ public interface NumberConstants {
 	ConstantStruct<IntegerStruct> BOOLE_1 = new ConstantStruct<>("BOOLE-1", GlobalPackageStruct.COMMON_LISP, IntegerStruct.ZERO);
 	ConstantStruct<IntegerStruct> BOOLE_2 = new ConstantStruct<>("BOOLE-2", GlobalPackageStruct.COMMON_LISP, IntegerStruct.ONE);
 	ConstantStruct<IntegerStruct> BOOLE_AND = new ConstantStruct<>("BOOLE-AND", GlobalPackageStruct.COMMON_LISP, IntegerStruct.TWO);
-	ConstantStruct<IntegerStruct> BOOLE_ANDC1 = new ConstantStruct<>("BOOLE-ANDC1", GlobalPackageStruct.COMMON_LISP, new IntIntegerStruct(BigInteger.valueOf(3)));
-	ConstantStruct<IntegerStruct> BOOLE_ANDC2 = new ConstantStruct<>("BOOLE-ANDC2", GlobalPackageStruct.COMMON_LISP, new IntIntegerStruct(BigInteger.valueOf(4)));
-	ConstantStruct<IntegerStruct> BOOLE_C1 = new ConstantStruct<>("BOOLE-C1", GlobalPackageStruct.COMMON_LISP, new IntIntegerStruct(BigInteger.valueOf(5)));
-	ConstantStruct<IntegerStruct> BOOLE_C2 = new ConstantStruct<>("BOOLE-C2", GlobalPackageStruct.COMMON_LISP, new IntIntegerStruct(BigInteger.valueOf(6)));
-	ConstantStruct<IntegerStruct> BOOLE_CLR = new ConstantStruct<>("BOOLE-CLR", GlobalPackageStruct.COMMON_LISP, new IntIntegerStruct(BigInteger.valueOf(7)));
-	ConstantStruct<IntegerStruct> BOOLE_EQV = new ConstantStruct<>("BOOLE-EQV", GlobalPackageStruct.COMMON_LISP, new IntIntegerStruct(BigInteger.valueOf(8)));
-	ConstantStruct<IntegerStruct> BOOLE_IOR = new ConstantStruct<>("BOOLE-IOR", GlobalPackageStruct.COMMON_LISP, new IntIntegerStruct(BigInteger.valueOf(9)));
-	ConstantStruct<IntegerStruct> BOOLE_NAND = new ConstantStruct<>("BOOLE-NAND", GlobalPackageStruct.COMMON_LISP, new IntIntegerStruct(BigInteger.TEN));
-	ConstantStruct<IntegerStruct> BOOLE_NOR = new ConstantStruct<>("BOOLE-NOR", GlobalPackageStruct.COMMON_LISP, new IntIntegerStruct(BigInteger.valueOf(11)));
-	ConstantStruct<IntegerStruct> BOOLE_ORC1 = new ConstantStruct<>("BOOLE-ORC1", GlobalPackageStruct.COMMON_LISP, new IntIntegerStruct(BigInteger.valueOf(12)));
-	ConstantStruct<IntegerStruct> BOOLE_ORC2 = new ConstantStruct<>("BOOLE-ORC2", GlobalPackageStruct.COMMON_LISP, new IntIntegerStruct(BigInteger.valueOf(13)));
-	ConstantStruct<IntegerStruct> BOOLE_SET = new ConstantStruct<>("BOOLE-SET", GlobalPackageStruct.COMMON_LISP, new IntIntegerStruct(BigInteger.valueOf(14)));
-	ConstantStruct<IntegerStruct> BOOLE_XOR = new ConstantStruct<>("BOOLE-XOR", GlobalPackageStruct.COMMON_LISP, new IntIntegerStruct(BigInteger.valueOf(15)));
+	ConstantStruct<IntegerStruct> BOOLE_ANDC1 = new ConstantStruct<>("BOOLE-ANDC1", GlobalPackageStruct.COMMON_LISP, IntegerStruct.valueOf(BigInteger.valueOf(3)));
+	ConstantStruct<IntegerStruct> BOOLE_ANDC2 = new ConstantStruct<>("BOOLE-ANDC2", GlobalPackageStruct.COMMON_LISP, IntegerStruct.valueOf(BigInteger.valueOf(4)));
+	ConstantStruct<IntegerStruct> BOOLE_C1 = new ConstantStruct<>("BOOLE-C1", GlobalPackageStruct.COMMON_LISP, IntegerStruct.valueOf(BigInteger.valueOf(5)));
+	ConstantStruct<IntegerStruct> BOOLE_C2 = new ConstantStruct<>("BOOLE-C2", GlobalPackageStruct.COMMON_LISP, IntegerStruct.valueOf(BigInteger.valueOf(6)));
+	ConstantStruct<IntegerStruct> BOOLE_CLR = new ConstantStruct<>("BOOLE-CLR", GlobalPackageStruct.COMMON_LISP, IntegerStruct.valueOf(BigInteger.valueOf(7)));
+	ConstantStruct<IntegerStruct> BOOLE_EQV = new ConstantStruct<>("BOOLE-EQV", GlobalPackageStruct.COMMON_LISP, IntegerStruct.valueOf(BigInteger.valueOf(8)));
+	ConstantStruct<IntegerStruct> BOOLE_IOR = new ConstantStruct<>("BOOLE-IOR", GlobalPackageStruct.COMMON_LISP, IntegerStruct.valueOf(BigInteger.valueOf(9)));
+	ConstantStruct<IntegerStruct> BOOLE_NAND = new ConstantStruct<>("BOOLE-NAND", GlobalPackageStruct.COMMON_LISP, IntegerStruct.valueOf(BigInteger.TEN));
+	ConstantStruct<IntegerStruct> BOOLE_NOR = new ConstantStruct<>("BOOLE-NOR", GlobalPackageStruct.COMMON_LISP, IntegerStruct.valueOf(BigInteger.valueOf(11)));
+	ConstantStruct<IntegerStruct> BOOLE_ORC1 = new ConstantStruct<>("BOOLE-ORC1", GlobalPackageStruct.COMMON_LISP, IntegerStruct.valueOf(BigInteger.valueOf(12)));
+	ConstantStruct<IntegerStruct> BOOLE_ORC2 = new ConstantStruct<>("BOOLE-ORC2", GlobalPackageStruct.COMMON_LISP, IntegerStruct.valueOf(BigInteger.valueOf(13)));
+	ConstantStruct<IntegerStruct> BOOLE_SET = new ConstantStruct<>("BOOLE-SET", GlobalPackageStruct.COMMON_LISP, IntegerStruct.valueOf(BigInteger.valueOf(14)));
+	ConstantStruct<IntegerStruct> BOOLE_XOR = new ConstantStruct<>("BOOLE-XOR", GlobalPackageStruct.COMMON_LISP, IntegerStruct.valueOf(BigInteger.valueOf(15)));
 
-	ConstantStruct<IntegerStruct> MOST_POSITIVE_FIXNUM = new ConstantStruct<>("MOST-POSITIVE-FIXNUM", GlobalPackageStruct.COMMON_LISP, new IntIntegerStruct(BigInteger.valueOf(Integer.MAX_VALUE)));
-	ConstantStruct<IntegerStruct> MOST_NEGATIVE_FIXNUM = new ConstantStruct<>("MOST-NEGATIVE-FIXNUM", GlobalPackageStruct.COMMON_LISP, new IntIntegerStruct(BigInteger.valueOf(Integer.MIN_VALUE)));
+	ConstantStruct<IntegerStruct> MOST_POSITIVE_FIXNUM = new ConstantStruct<>("MOST-POSITIVE-FIXNUM", GlobalPackageStruct.COMMON_LISP, IntegerStruct.valueOf(BigInteger.valueOf(Integer.MAX_VALUE)));
+	ConstantStruct<IntegerStruct> MOST_NEGATIVE_FIXNUM = new ConstantStruct<>("MOST-NEGATIVE-FIXNUM", GlobalPackageStruct.COMMON_LISP, IntegerStruct.valueOf(BigInteger.valueOf(Integer.MIN_VALUE)));
 
 	ConstantStruct<FloatStruct> MOST_POSITIVE_SHORT_FLOAT = new ConstantStruct<>("MOST-POSITIVE-SHORT-FLOAT", GlobalPackageStruct.COMMON_LISP, new SingleFloatStruct(BigDecimal.valueOf(Double.MAX_VALUE)));
 	ConstantStruct<FloatStruct> LEAST_POSITIVE_SHORT_FLOAT = new ConstantStruct<>("LEAST-POSITIVE-SHORT-FLOAT", GlobalPackageStruct.COMMON_LISP, new SingleFloatStruct(BigDecimal.valueOf(Double.MIN_VALUE)));

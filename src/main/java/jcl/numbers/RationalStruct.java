@@ -66,7 +66,7 @@ public interface RationalStruct extends RealStruct {
 
 		// If reduced Denominator is '1', return an Integer; otherwise, return the Ratio with the Numerator and Denominator
 		if (BigInteger.ONE.compareTo(realDenominator) == 0) {
-			return new IntIntegerStruct(realNumerator);
+			return IntegerStruct.valueOf(realNumerator);
 		} else {
 			return new RatioStruct(realNumerator, realDenominator);
 		}
@@ -112,7 +112,7 @@ public interface RationalStruct extends RealStruct {
 			if (isFloatResult) {
 				quotientReal = new SingleFloatStruct(quotient);
 			} else {
-				quotientReal = new IntIntegerStruct(quotientBigInteger);
+				quotientReal = IntegerStruct.valueOf(quotientBigInteger);
 			}
 
 			// Multiply divisor by quotient

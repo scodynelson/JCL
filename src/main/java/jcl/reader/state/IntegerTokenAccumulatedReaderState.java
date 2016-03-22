@@ -9,7 +9,6 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
-import jcl.numbers.IntIntegerStruct;
 import jcl.numbers.IntegerStruct;
 import jcl.numbers.NumberStruct;
 import jcl.reader.AttributeType;
@@ -51,6 +50,6 @@ public class IntegerTokenAccumulatedReaderState implements ReaderState {
 		final int currentRadix = ReaderVariables.READ_BASE.getVariableValue().getBigInteger().intValueExact();
 
 		final BigInteger bigInteger = new BigInteger(tokenString, currentRadix);
-		return new IntIntegerStruct(bigInteger);
+		return IntegerStruct.valueOf(bigInteger);
 	}
 }

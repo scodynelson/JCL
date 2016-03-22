@@ -9,7 +9,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import jcl.numbers.IntIntegerStruct;
 import jcl.numbers.IntegerStruct;
 import jcl.packages.GlobalPackageStruct;
 import jcl.symbols.ConstantStruct;
@@ -706,7 +705,7 @@ public final class CharacterConstants {
 
 	// Char-Code-Limit Constant
 
-	public static final ConstantStruct<IntegerStruct> CHAR_CODE_LIMIT = new ConstantStruct<>("CHAR-CODE-LIMIT", GlobalPackageStruct.COMMON_LISP, new IntIntegerStruct(BigInteger.valueOf(Character.MAX_VALUE)));
+	public static final ConstantStruct<IntegerStruct> CHAR_CODE_LIMIT = new ConstantStruct<>("CHAR-CODE-LIMIT", GlobalPackageStruct.COMMON_LISP, IntegerStruct.valueOf(BigInteger.valueOf(Character.MAX_VALUE)));
 
 	private CharacterConstants() {
 	}

@@ -607,7 +607,7 @@ public class DoubleFloatStruct extends BuiltInClassStruct implements FloatStruct
 		final long storedExponent = decodedDoubleRaw.getStoredExponent();
 		final long exponent = (storedExponent - decodedExponentDiffer) + doubleFloatingPointPrecision;
 		final BigInteger exponentBigInteger = BigInteger.valueOf(exponent);
-		final IntegerStruct exponentInteger = new IntIntegerStruct(exponentBigInteger);
+		final IntegerStruct exponentInteger = IntegerStruct.valueOf(exponentBigInteger);
 
 		final long sign = decodedDoubleRaw.getSign();
 		final BigDecimal signBigDecimal = BigDecimal.valueOf(sign);
@@ -654,7 +654,7 @@ public class DoubleFloatStruct extends BuiltInClassStruct implements FloatStruct
 //		final int binary32Precision = 24;
 //		final int binary64Precision = 53;
 		final int binary128Precision = 113;
-		return new IntIntegerStruct(BigInteger.valueOf(binary128Precision));
+		return IntegerStruct.valueOf(BigInteger.valueOf(binary128Precision));
 	}
 
 	/**
@@ -681,16 +681,16 @@ public class DoubleFloatStruct extends BuiltInClassStruct implements FloatStruct
 
 		final long mantissa = decodedDoubleRaw.getMantissa();
 		final BigInteger mantissaBigInteger = BigInteger.valueOf(mantissa);
-		final IntegerStruct significandInteger = new IntIntegerStruct(mantissaBigInteger);
+		final IntegerStruct significandInteger = IntegerStruct.valueOf(mantissaBigInteger);
 
 		final long storedExponent = decodedDoubleRaw.getStoredExponent();
 		final long exponent = storedExponent - decodedExponentDiffer;
 		final BigInteger exponentBigInteger = BigInteger.valueOf(exponent);
-		final IntegerStruct exponentInteger = new IntIntegerStruct(exponentBigInteger);
+		final IntegerStruct exponentInteger = IntegerStruct.valueOf(exponentBigInteger);
 
 		final long sign = decodedDoubleRaw.getSign();
 		final BigInteger signBigInteger = BigInteger.valueOf(sign);
-		final IntegerStruct signInteger = new IntIntegerStruct(signBigInteger);
+		final IntegerStruct signInteger = IntegerStruct.valueOf(signBigInteger);
 
 		return new DecodeFloatResult(significandInteger, exponentInteger, signInteger);
 	}

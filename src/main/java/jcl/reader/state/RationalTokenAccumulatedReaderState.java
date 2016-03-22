@@ -7,7 +7,6 @@ package jcl.reader.state;
 import java.math.BigInteger;
 import java.util.LinkedList;
 
-import jcl.numbers.IntIntegerStruct;
 import jcl.numbers.IntegerStruct;
 import jcl.numbers.NumberStruct;
 import jcl.numbers.RatioStruct;
@@ -57,7 +56,7 @@ public class RationalTokenAccumulatedReaderState implements ReaderState {
 		final BigInteger fractionDenominator = rational.getDenominator();
 		if (BigInteger.ONE.equals(fractionDenominator)) {
 			final BigInteger fractionNumerator = rational.getNumerator();
-			return new IntIntegerStruct(fractionNumerator);
+			return IntegerStruct.valueOf(fractionNumerator);
 		}
 
 		return new RatioStruct(rational);

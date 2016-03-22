@@ -59,7 +59,7 @@ public class IntIntegerStruct extends BuiltInClassStruct implements IntegerStruc
 	 * @param bigInteger
 	 * 		the value of the IntegerStruct
 	 */
-	public IntIntegerStruct(final BigInteger bigInteger) {
+	private IntIntegerStruct(final BigInteger bigInteger) {
 		this(IntegerType.INSTANCE, bigInteger);
 	}
 
@@ -71,7 +71,7 @@ public class IntIntegerStruct extends BuiltInClassStruct implements IntegerStruc
 	 * @param bigInteger
 	 * 		the value of the IntegerStruct
 	 */
-	public IntIntegerStruct(final IntegerType integerType, final BigInteger bigInteger) {
+	private IntIntegerStruct(final IntegerType integerType, final BigInteger bigInteger) {
 		super(integerType, null, null);
 		this.bigInteger = bigInteger;
 	}
@@ -82,7 +82,7 @@ public class IntIntegerStruct extends BuiltInClassStruct implements IntegerStruc
 	 * @param apint
 	 * 		the value of the IntegerStruct
 	 */
-	IntIntegerStruct(final Apint apint) {
+	private IntIntegerStruct(final Apint apint) {
 		this(apint.toBigInteger());
 	}
 
@@ -104,6 +104,10 @@ public class IntIntegerStruct extends BuiltInClassStruct implements IntegerStruc
 	 */
 	private IntIntegerStruct(final long longValue) {
 		this(BigInteger.valueOf(longValue));
+	}
+
+	public static IntIntegerStruct valueOf(final int i) {
+		return new IntIntegerStruct(BigInteger.valueOf(i));
 	}
 
 	/**
@@ -1340,7 +1344,8 @@ public class IntIntegerStruct extends BuiltInClassStruct implements IntegerStruc
 		/**
 		 * {@inheritDoc}
 		 * <p>
-		 * Computes the numeric {@literal '<'} equality result for an {@link IntIntegerStruct} and a {@link RatioStruct}.
+		 * Computes the numeric {@literal '<'} equality result for an {@link IntIntegerStruct} and a {@link
+		 * RatioStruct}.
 		 */
 		@Override
 		public boolean lessThan(final RatioStruct real2) {
@@ -1378,7 +1383,8 @@ public class IntIntegerStruct extends BuiltInClassStruct implements IntegerStruc
 		/**
 		 * {@inheritDoc}
 		 * <p>
-		 * Computes the numeric {@literal '>'} equality result for an {@link IntIntegerStruct} and a {@link RatioStruct}.
+		 * Computes the numeric {@literal '>'} equality result for an {@link IntIntegerStruct} and a {@link
+		 * RatioStruct}.
 		 */
 		@Override
 		public boolean greaterThan(final RatioStruct real2) {
@@ -1416,7 +1422,8 @@ public class IntIntegerStruct extends BuiltInClassStruct implements IntegerStruc
 		/**
 		 * {@inheritDoc}
 		 * <p>
-		 * Computes the numeric {@literal '<='} equality result for an {@link IntIntegerStruct} and a {@link RatioStruct}.
+		 * Computes the numeric {@literal '<='} equality result for an {@link IntIntegerStruct} and a {@link
+		 * RatioStruct}.
 		 */
 		@Override
 		public boolean lessThanOrEqualTo(final RatioStruct real2) {
@@ -1454,7 +1461,8 @@ public class IntIntegerStruct extends BuiltInClassStruct implements IntegerStruc
 		/**
 		 * {@inheritDoc}
 		 * <p>
-		 * Computes the numeric {@literal '>='} equality result for an {@link IntIntegerStruct} and a {@link RatioStruct}.
+		 * Computes the numeric {@literal '>='} equality result for an {@link IntIntegerStruct} and a {@link
+		 * RatioStruct}.
 		 */
 		@Override
 		public boolean greaterThanOrEqualTo(final RatioStruct real2) {
@@ -1539,7 +1547,8 @@ public class IntIntegerStruct extends BuiltInClassStruct implements IntegerStruc
 		/**
 		 * {@inheritDoc}
 		 * <p>
-		 * Computes the exponential function result for {@link IntIntegerStruct}s as the {@code base} and {@code power}.
+		 * Computes the exponential function result for {@link IntIntegerStruct}s as the {@code base} and {@code
+		 * power}.
 		 */
 		@Override
 		public NumberStruct expt(final IntIntegerStruct power) {

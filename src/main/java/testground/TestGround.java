@@ -30,10 +30,10 @@ import jcl.functions.expanders.SymbolMacroExpander;
 import jcl.lists.ConsStruct;
 import jcl.lists.ListStruct;
 import jcl.numbers.ComplexStruct;
-import jcl.numbers.FloatStruct;
 import jcl.numbers.IntIntegerStruct;
 import jcl.numbers.IntegerStruct;
 import jcl.numbers.RatioStruct;
+import jcl.numbers.SingleFloatStruct;
 import jcl.packages.PackageStruct;
 import jcl.pathnames.PathnameStruct;
 import jcl.symbols.NILStruct;
@@ -129,7 +129,7 @@ public class TestGround {
 
 	private Object floatGen() {
 		final BigDecimal bigDecimal = new BigDecimal("12345.0");
-		return new FloatStruct(bigDecimal);
+		return new SingleFloatStruct(bigDecimal);
 	}
 
 	private Object integerGen() {

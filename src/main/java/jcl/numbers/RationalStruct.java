@@ -33,7 +33,7 @@ public interface RationalStruct extends RealStruct {
 	@Override
 	default FloatStruct coerceRealToFloat() {
 		final BigDecimal bigDecimal = bigDecimalValue();
-		return new FloatStruct(bigDecimal);
+		return new SingleFloatStruct(bigDecimal);
 	}
 
 	static RationalStruct makeRational(final BigFraction bigFraction) {
@@ -110,7 +110,7 @@ public interface RationalStruct extends RealStruct {
 
 			final RealStruct quotientReal;
 			if (isFloatResult) {
-				quotientReal = new FloatStruct(quotient);
+				quotientReal = new SingleFloatStruct(quotient);
 			} else {
 				quotientReal = new IntIntegerStruct(quotientBigInteger);
 			}

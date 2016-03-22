@@ -581,7 +581,25 @@ public class ComplexStruct extends BuiltInClassStruct implements NumberStruct {
 		}
 
 		@Override
-		public NumberStruct add(final FloatStruct number2) {
+		public NumberStruct add(final SingleFloatStruct number2) {
+			final Apcomplex apcomplex1 = number1.apcomplexValue();
+			final Apcomplex apfloat2 = number2.apfloatValue();
+
+			final Apcomplex add = apcomplex1.add(apfloat2);
+			return makeComplexOrReal(add);
+		}
+
+		@Override
+		public NumberStruct add(final DoubleFloatStruct number2) {
+			final Apcomplex apcomplex1 = number1.apcomplexValue();
+			final Apcomplex apfloat2 = number2.apfloatValue();
+
+			final Apcomplex add = apcomplex1.add(apfloat2);
+			return makeComplexOrReal(add);
+		}
+
+		@Override
+		public NumberStruct add(final BigFloatStruct number2) {
 			final Apcomplex apcomplex1 = number1.apcomplexValue();
 			final Apcomplex apfloat2 = number2.apfloatValue();
 
@@ -645,7 +663,25 @@ public class ComplexStruct extends BuiltInClassStruct implements NumberStruct {
 		}
 
 		@Override
-		public NumberStruct subtract(final FloatStruct number2) {
+		public NumberStruct subtract(final SingleFloatStruct number2) {
+			final Apcomplex apcomplex1 = number1.apcomplexValue();
+			final Apcomplex apfloat2 = number2.apfloatValue();
+
+			final Apcomplex subtract = apcomplex1.subtract(apfloat2);
+			return makeComplexOrReal(subtract);
+		}
+
+		@Override
+		public NumberStruct subtract(final DoubleFloatStruct number2) {
+			final Apcomplex apcomplex1 = number1.apcomplexValue();
+			final Apcomplex apfloat2 = number2.apfloatValue();
+
+			final Apcomplex subtract = apcomplex1.subtract(apfloat2);
+			return makeComplexOrReal(subtract);
+		}
+
+		@Override
+		public NumberStruct subtract(final BigFloatStruct number2) {
 			final Apcomplex apcomplex1 = number1.apcomplexValue();
 			final Apcomplex apfloat2 = number2.apfloatValue();
 
@@ -709,7 +745,25 @@ public class ComplexStruct extends BuiltInClassStruct implements NumberStruct {
 		}
 
 		@Override
-		public NumberStruct multiply(final FloatStruct number2) {
+		public NumberStruct multiply(final SingleFloatStruct number2) {
+			final Apcomplex apcomplex1 = number1.apcomplexValue();
+			final Apcomplex apfloat2 = number2.apfloatValue();
+
+			final Apcomplex multiply = apcomplex1.multiply(apfloat2);
+			return makeComplexOrReal(multiply);
+		}
+
+		@Override
+		public NumberStruct multiply(final DoubleFloatStruct number2) {
+			final Apcomplex apcomplex1 = number1.apcomplexValue();
+			final Apcomplex apfloat2 = number2.apfloatValue();
+
+			final Apcomplex multiply = apcomplex1.multiply(apfloat2);
+			return makeComplexOrReal(multiply);
+		}
+
+		@Override
+		public NumberStruct multiply(final BigFloatStruct number2) {
 			final Apcomplex apcomplex1 = number1.apcomplexValue();
 			final Apcomplex apfloat2 = number2.apfloatValue();
 
@@ -773,7 +827,25 @@ public class ComplexStruct extends BuiltInClassStruct implements NumberStruct {
 		}
 
 		@Override
-		public NumberStruct divide(final FloatStruct number2) {
+		public NumberStruct divide(final SingleFloatStruct number2) {
+			final Apcomplex apcomplex1 = number1.apcomplexValue();
+			final Apcomplex apfloat2 = number2.apfloatValue();
+
+			final Apcomplex divide = apcomplex1.divide(apfloat2);
+			return makeComplexOrReal(divide);
+		}
+
+		@Override
+		public NumberStruct divide(final DoubleFloatStruct number2) {
+			final Apcomplex apcomplex1 = number1.apcomplexValue();
+			final Apcomplex apfloat2 = number2.apfloatValue();
+
+			final Apcomplex divide = apcomplex1.divide(apfloat2);
+			return makeComplexOrReal(divide);
+		}
+
+		@Override
+		public NumberStruct divide(final BigFloatStruct number2) {
 			final Apcomplex apcomplex1 = number1.apcomplexValue();
 			final Apcomplex apfloat2 = number2.apfloatValue();
 
@@ -825,7 +897,17 @@ public class ComplexStruct extends BuiltInClassStruct implements NumberStruct {
 		}
 
 		@Override
-		public boolean equalTo(final FloatStruct number2) {
+		public boolean equalTo(final SingleFloatStruct number2) {
+			return equalToReal(number1, number2);
+		}
+
+		@Override
+		public boolean equalTo(final DoubleFloatStruct number2) {
+			return equalToReal(number1, number2);
+		}
+
+		@Override
+		public boolean equalTo(final BigFloatStruct number2) {
 			return equalToReal(number1, number2);
 		}
 
@@ -904,7 +986,17 @@ public class ComplexStruct extends BuiltInClassStruct implements NumberStruct {
 		}
 
 		@Override
-		public NumberStruct expt(final FloatStruct power) {
+		public NumberStruct expt(final SingleFloatStruct power) {
+			return exptComplex(base, power);
+		}
+
+		@Override
+		public NumberStruct expt(final DoubleFloatStruct power) {
+			return exptComplex(base, power);
+		}
+
+		@Override
+		public NumberStruct expt(final BigFloatStruct power) {
 			return exptComplex(base, power);
 		}
 

@@ -18,6 +18,7 @@ import jcl.numbers.IntegerStruct;
 import jcl.numbers.NumberVariables;
 import jcl.numbers.RandomStateStruct;
 import jcl.numbers.RealStruct;
+import jcl.numbers.SingleFloatStruct;
 import jcl.printer.Printer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -55,7 +56,7 @@ public final class RandomFunction extends CommonLispBuiltInFunctionStruct {
 			final FloatStruct number = (FloatStruct) real;
 			final BigDecimal bigDecimal = number.getBigDecimal();
 			final BigDecimal randomFloat = randomState.randomFloat(bigDecimal);
-			return new FloatStruct(randomFloat);
+			return new SingleFloatStruct(randomFloat);
 		} else {
 			final String printedObject = printer.print(real);
 			throw new TypeErrorException("Argument not of type Integer or Float: " + printedObject);

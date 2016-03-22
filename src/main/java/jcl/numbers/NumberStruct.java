@@ -176,7 +176,7 @@ public interface NumberStruct extends LispStruct {
 //		if (pow instanceof Apint) {
 //			return new IntIntegerStruct((Apint) pow);
 //		} else if (pow instanceof Apfloat) {
-//			return new FloatStruct((Apfloat) pow);
+//			return new SingleFloatStruct((Apfloat) pow);
 //		} else {
 //			return new ComplexStruct(pow);
 //		}
@@ -236,7 +236,11 @@ public interface NumberStruct extends LispStruct {
 
 		public abstract NumberStruct add(BigIntegerStruct number2);
 
-		public abstract NumberStruct add(FloatStruct number2);
+		public abstract NumberStruct add(SingleFloatStruct number2);
+
+		public abstract NumberStruct add(DoubleFloatStruct number2);
+
+		public abstract NumberStruct add(BigFloatStruct number2);
 
 		public abstract NumberStruct add(RatioStruct number2);
 
@@ -257,7 +261,11 @@ public interface NumberStruct extends LispStruct {
 
 		public abstract NumberStruct subtract(BigIntegerStruct number2);
 
-		public abstract NumberStruct subtract(FloatStruct number2);
+		public abstract NumberStruct subtract(SingleFloatStruct number2);
+
+		public abstract NumberStruct subtract(DoubleFloatStruct number2);
+
+		public abstract NumberStruct subtract(BigFloatStruct number2);
 
 		public abstract NumberStruct subtract(RatioStruct number2);
 
@@ -278,7 +286,11 @@ public interface NumberStruct extends LispStruct {
 
 		public abstract NumberStruct multiply(BigIntegerStruct number2);
 
-		public abstract NumberStruct multiply(FloatStruct number2);
+		public abstract NumberStruct multiply(SingleFloatStruct number2);
+
+		public abstract NumberStruct multiply(DoubleFloatStruct number2);
+
+		public abstract NumberStruct multiply(BigFloatStruct number2);
 
 		public abstract NumberStruct multiply(RatioStruct number2);
 
@@ -299,7 +311,11 @@ public interface NumberStruct extends LispStruct {
 
 		public abstract NumberStruct divide(BigIntegerStruct number2);
 
-		public abstract NumberStruct divide(FloatStruct number2);
+		public abstract NumberStruct divide(SingleFloatStruct number2);
+
+		public abstract NumberStruct divide(DoubleFloatStruct number2);
+
+		public abstract NumberStruct divide(BigFloatStruct number2);
 
 		public abstract NumberStruct divide(RatioStruct number2);
 
@@ -320,7 +336,11 @@ public interface NumberStruct extends LispStruct {
 
 		public abstract boolean equalTo(BigIntegerStruct number2);
 
-		public abstract boolean equalTo(FloatStruct number2);
+		public abstract boolean equalTo(SingleFloatStruct number2);
+
+		public abstract boolean equalTo(DoubleFloatStruct number2);
+
+		public abstract boolean equalTo(BigFloatStruct number2);
 
 		public abstract boolean equalTo(RatioStruct number2);
 
@@ -341,7 +361,11 @@ public interface NumberStruct extends LispStruct {
 
 		public abstract NumberStruct expt(BigIntegerStruct power);
 
-		public abstract NumberStruct expt(FloatStruct power);
+		public abstract NumberStruct expt(SingleFloatStruct power);
+
+		public abstract NumberStruct expt(DoubleFloatStruct power);
+
+		public abstract NumberStruct expt(BigFloatStruct power);
 
 		public abstract NumberStruct expt(RatioStruct power);
 

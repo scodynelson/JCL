@@ -1497,7 +1497,7 @@ public class IntIntegerStruct extends BuiltInClassStruct implements IntegerStruc
 
 			final RealStruct quotientReal;
 			if (isQuotientFloat) {
-				quotientReal = new FloatStruct(quotient);
+				quotientReal = new SingleFloatStruct(quotient);
 			} else {
 				final BigInteger quotientBigInteger = quotient.toBigInteger();
 				quotientReal = new IntIntegerStruct(quotientBigInteger);

@@ -10,6 +10,7 @@ import jcl.compiler.icg.CodeGenerator;
 import jcl.compiler.icg.GeneratorState;
 import jcl.compiler.icg.JavaMethodBuilder;
 import jcl.numbers.FloatStruct;
+import jcl.numbers.SingleFloatStruct;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
@@ -32,7 +33,7 @@ class FloatCodeGenerator implements CodeGenerator<FloatStruct> {
 	 * constructor method.
 	 */
 	private static final String FLOAT_STRUCT_INIT_DESC
-			= CodeGenerators.getConstructorDescription(FloatStruct.class, BigDecimal.class);
+			= CodeGenerators.getConstructorDescription(SingleFloatStruct.class, BigDecimal.class);
 
 	/**
 	 * {@inheritDoc}

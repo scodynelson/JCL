@@ -69,7 +69,7 @@ final class LetStarCodeGenerator extends ClosureCreationCodeGenerator<LetStarStr
 	 *      SymbolStruct var4 = var3.findSymbol("X").getSymbol();
 	 *
 	 *      BigInteger var5 = new BigInteger("1");
-	 *      LispStruct var6 = new IntegerStruct(var5);
+	 *      LispStruct var6 = new IntIntegerStruct(var5);
 	 *
 	 *      if(var6 instanceof ValuesStruct) {
 	 *          ValuesStruct var7 = (ValuesStruct)var6;

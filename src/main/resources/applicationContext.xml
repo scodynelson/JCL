@@ -106,7 +106,9 @@
 
 		<entry key="jcl.numbers.ComplexStruct" value-ref="complexCodeGenerator"/>
 		<entry key="jcl.numbers.FloatStruct" value-ref="floatCodeGenerator"/>
-		<entry key="jcl.numbers.IntegerStruct" value-ref="integerCodeGenerator"/>
+		<entry key="jcl.numbers.IntIntegerStruct" value-ref="integerCodeGenerator"/>
+		<entry key="jcl.numbers.LongIntegerStruct" value-ref="integerCodeGenerator"/>
+		<entry key="jcl.numbers.BigIntegerStruct" value-ref="integerCodeGenerator"/>
 		<entry key="jcl.numbers.RatioStruct" value-ref="ratioCodeGenerator"/>
 
 		<entry key="jcl.pathnames.PathnameStruct" value-ref="pathnameCodeGenerator"/>

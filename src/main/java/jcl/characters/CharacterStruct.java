@@ -13,6 +13,7 @@ import jcl.LispStruct;
 import jcl.arrays.StringStruct;
 import jcl.classes.BuiltInClassStruct;
 import jcl.conditions.exceptions.ErrorException;
+import jcl.numbers.IntIntegerStruct;
 import jcl.numbers.IntegerStruct;
 import jcl.packages.PackageStruct;
 import jcl.symbols.NILStruct;
@@ -717,7 +718,7 @@ public class CharacterStruct extends BuiltInClassStruct {
 	 * @return the {@link #codePoint} of this CharacterStruct as an {@link IntegerStruct}
 	 */
 	public IntegerStruct charCode() {
-		return new IntegerStruct(BigInteger.valueOf(codePoint));
+		return new IntIntegerStruct(BigInteger.valueOf(codePoint));
 	}
 
 	/**
@@ -784,7 +785,7 @@ public class CharacterStruct extends BuiltInClassStruct {
 		if (digit == -1) {
 			return NILStruct.INSTANCE;
 		}
-		return new IntegerStruct(BigInteger.valueOf(digit));
+		return new IntIntegerStruct(BigInteger.valueOf(digit));
 	}
 
 	/**

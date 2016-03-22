@@ -4,6 +4,7 @@
 
 package jcl.printer.impl;
 
+import jcl.numbers.IntIntegerStruct;
 import jcl.numbers.IntegerStruct;
 import jcl.numbers.RatioStruct;
 import jcl.printer.LispPrinter;
@@ -22,8 +23,8 @@ public class RatioStructPrinter implements LispPrinter<RatioStruct> {
 
 	@Override
 	public String print(final RatioStruct object) {
-		final IntegerStruct numerator = new IntegerStruct(object.getBigFraction().getNumerator());
-		final IntegerStruct denominator = new IntegerStruct(object.getBigFraction().getDenominator());
+		final IntegerStruct numerator = new IntIntegerStruct(object.getBigFraction().getNumerator());
+		final IntegerStruct denominator = new IntIntegerStruct(object.getBigFraction().getDenominator());
 
 		return integerStructPrinter.print(numerator) + '/' + integerStructPrinter.print(denominator);
 	}

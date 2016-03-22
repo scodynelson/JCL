@@ -1,6 +1,5 @@
 package jcl.arrays;
 
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -17,10 +16,6 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  * The {@link BitVectorStruct} is the object representation of a Lisp 'bit-vector' type.
  */
 public class BitVectorStruct extends VectorStruct<IntegerStruct> {
-
-	private static final IntegerStruct ZERO = new IntegerStruct(BigInteger.ZERO);
-
-	private static final IntegerStruct ONE = new IntegerStruct(BigInteger.ONE);
 
 	private static final Pattern BIT_PATTERN = Pattern.compile("[0|1]+");
 
@@ -90,9 +85,9 @@ public class BitVectorStruct extends VectorStruct<IntegerStruct> {
 		final List<IntegerStruct> bitList = new ArrayList<>(bitString.length());
 		for (final char character : bitString.toCharArray()) {
 			if (character == '0') {
-				bitList.add(ZERO);
+				bitList.add(IntegerStruct.ZERO);
 			} else if (character == '1') {
-				bitList.add(ONE);
+				bitList.add(IntegerStruct.ONE);
 			}
 		}
 		return bitList;

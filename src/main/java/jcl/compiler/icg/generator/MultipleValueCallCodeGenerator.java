@@ -78,11 +78,11 @@ final class MultipleValueCallCodeGenerator extends SpecialOperatorCodeGenerator<
 	 *          List var6 = new ArrayList();
 	 *
 	 *          BigInteger var8 = new BigInteger("1");
-	 *          IntegerStruct var7 = new IntegerStruct(var8);
+	 *          IntegerStruct var7 = new IntIntegerStruct(var8);
 	 *          ValuesStructs.addValuesToList(var6, var7);
 	 *
 	 *          BigInteger var9 = new BigInteger("2");
-	 *          var7 = new IntegerStruct(var9);
+	 *          var7 = new IntIntegerStruct(var9);
 	 *          ValuesStructs.addValuesToList(var6, var7);
 	 *
 	 *          LispStruct[] var10 = new LispStruct[var6.size()];

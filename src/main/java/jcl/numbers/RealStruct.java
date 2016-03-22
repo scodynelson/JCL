@@ -425,7 +425,7 @@ public interface RealStruct extends NumberStruct {
 
 	static RealStruct toRealStruct(final Apfloat apfloat) {
 		// TODO: Not quite right here either!!!
-		return (apfloat.doubleValue() == apfloat.intValue()) ? new IntegerStruct(apfloat) : new FloatStruct(apfloat);
+		return (apfloat.doubleValue() == apfloat.intValue()) ? new IntIntegerStruct(apfloat) : new FloatStruct(apfloat);
 	}
 
 	// Visitor Implementations
@@ -437,7 +437,13 @@ public interface RealStruct extends NumberStruct {
 		}
 
 		@Override
-		public abstract RealStruct add(IntegerStruct number2);
+		public abstract RealStruct add(IntIntegerStruct number2);
+
+		@Override
+		public abstract RealStruct add(LongIntegerStruct number2);
+
+		@Override
+		public abstract RealStruct add(BigIntegerStruct number2);
 
 		@Override
 		public RealStruct add(final FloatStruct number2) {
@@ -482,7 +488,13 @@ public interface RealStruct extends NumberStruct {
 		}
 
 		@Override
-		public abstract RealStruct subtract(IntegerStruct number2);
+		public abstract RealStruct subtract(IntIntegerStruct number2);
+
+		@Override
+		public abstract RealStruct subtract(LongIntegerStruct number2);
+
+		@Override
+		public abstract RealStruct subtract(BigIntegerStruct number2);
 
 		@Override
 		public RealStruct subtract(final FloatStruct number2) {
@@ -512,7 +524,13 @@ public interface RealStruct extends NumberStruct {
 		}
 
 		@Override
-		public abstract RealStruct multiply(IntegerStruct number2);
+		public abstract RealStruct multiply(IntIntegerStruct number2);
+
+		@Override
+		public abstract RealStruct multiply(LongIntegerStruct number2);
+
+		@Override
+		public abstract RealStruct multiply(BigIntegerStruct number2);
 
 		@Override
 		public RealStruct multiply(final FloatStruct number2) {
@@ -564,7 +582,13 @@ public interface RealStruct extends NumberStruct {
 		}
 
 		@Override
-		public abstract RealStruct divide(IntegerStruct number2);
+		public abstract RealStruct divide(IntIntegerStruct number2);
+
+		@Override
+		public abstract RealStruct divide(LongIntegerStruct number2);
+
+		@Override
+		public abstract RealStruct divide(BigIntegerStruct number2);
 
 		@Override
 		public RealStruct divide(final FloatStruct number2) {
@@ -605,7 +629,15 @@ public interface RealStruct extends NumberStruct {
 		 * Computes the numeric '=' equality result for an {@link FloatStruct} and a {@link IntegerStruct}.
 		 */
 		@Override
-		public boolean equalTo(final IntegerStruct number2) {
+		public boolean equalTo(final IntIntegerStruct number2) {
+			return getComparisonResult(number1, number2) == 0;
+		}
+		@Override
+		public boolean equalTo(final LongIntegerStruct number2) {
+			return getComparisonResult(number1, number2) == 0;
+		}
+		@Override
+		public boolean equalTo(final BigIntegerStruct number2) {
 			return getComparisonResult(number1, number2) == 0;
 		}
 
@@ -638,7 +670,15 @@ public interface RealStruct extends NumberStruct {
 			this.real1 = real1;
 		}
 
-		public boolean lessThan(final IntegerStruct real2) {
+		public boolean lessThan(final IntIntegerStruct real2) {
+			return getComparisonResult(real1, real2) < 0;
+		}
+
+		public boolean lessThan(final LongIntegerStruct real2) {
+			return getComparisonResult(real1, real2) < 0;
+		}
+
+		public boolean lessThan(final BigIntegerStruct real2) {
 			return getComparisonResult(real1, real2) < 0;
 		}
 
@@ -659,7 +699,15 @@ public interface RealStruct extends NumberStruct {
 			this.real1 = real1;
 		}
 
-		public boolean greaterThan(final IntegerStruct real2) {
+		public boolean greaterThan(final IntIntegerStruct real2) {
+			return getComparisonResult(real1, real2) > 0;
+		}
+
+		public boolean greaterThan(final LongIntegerStruct real2) {
+			return getComparisonResult(real1, real2) > 0;
+		}
+
+		public boolean greaterThan(final BigIntegerStruct real2) {
 			return getComparisonResult(real1, real2) > 0;
 		}
 
@@ -680,7 +728,15 @@ public interface RealStruct extends NumberStruct {
 			this.real1 = real1;
 		}
 
-		public boolean lessThanOrEqualTo(final IntegerStruct real2) {
+		public boolean lessThanOrEqualTo(final IntIntegerStruct real2) {
+			return getComparisonResult(real1, real2) <= 0;
+		}
+
+		public boolean lessThanOrEqualTo(final LongIntegerStruct real2) {
+			return getComparisonResult(real1, real2) <= 0;
+		}
+
+		public boolean lessThanOrEqualTo(final BigIntegerStruct real2) {
 			return getComparisonResult(real1, real2) <= 0;
 		}
 
@@ -701,7 +757,15 @@ public interface RealStruct extends NumberStruct {
 			this.real1 = real1;
 		}
 
-		public boolean greaterThanOrEqualTo(final IntegerStruct real2) {
+		public boolean greaterThanOrEqualTo(final IntIntegerStruct real2) {
+			return getComparisonResult(real1, real2) >= 0;
+		}
+
+		public boolean greaterThanOrEqualTo(final LongIntegerStruct real2) {
+			return getComparisonResult(real1, real2) >= 0;
+		}
+
+		public boolean greaterThanOrEqualTo(final BigIntegerStruct real2) {
 			return getComparisonResult(real1, real2) >= 0;
 		}
 
@@ -722,7 +786,15 @@ public interface RealStruct extends NumberStruct {
 			this.real = real;
 		}
 
-		public QuotientRemainderResult floor(final IntegerStruct divisor) {
+		public QuotientRemainderResult floor(final IntIntegerStruct divisor) {
+			return quotientRemainder(divisor, RoundingMode.FLOOR, false);
+		}
+
+		public QuotientRemainderResult floor(final LongIntegerStruct divisor) {
+			return quotientRemainder(divisor, RoundingMode.FLOOR, false);
+		}
+
+		public QuotientRemainderResult floor(final BigIntegerStruct divisor) {
 			return quotientRemainder(divisor, RoundingMode.FLOOR, false);
 		}
 
@@ -734,7 +806,15 @@ public interface RealStruct extends NumberStruct {
 			return quotientRemainder(divisor, RoundingMode.FLOOR, false);
 		}
 
-		public QuotientRemainderResult ffloor(final IntegerStruct divisor) {
+		public QuotientRemainderResult ffloor(final IntIntegerStruct divisor) {
+			return quotientRemainder(divisor, RoundingMode.FLOOR, true);
+		}
+
+		public QuotientRemainderResult ffloor(final LongIntegerStruct divisor) {
+			return quotientRemainder(divisor, RoundingMode.FLOOR, true);
+		}
+
+		public QuotientRemainderResult ffloor(final BigIntegerStruct divisor) {
 			return quotientRemainder(divisor, RoundingMode.FLOOR, true);
 		}
 
@@ -746,7 +826,15 @@ public interface RealStruct extends NumberStruct {
 			return quotientRemainder(divisor, RoundingMode.FLOOR, true);
 		}
 
-		public QuotientRemainderResult ceiling(final IntegerStruct divisor) {
+		public QuotientRemainderResult ceiling(final IntIntegerStruct divisor) {
+			return quotientRemainder(divisor, RoundingMode.CEILING, false);
+		}
+
+		public QuotientRemainderResult ceiling(final LongIntegerStruct divisor) {
+			return quotientRemainder(divisor, RoundingMode.CEILING, false);
+		}
+
+		public QuotientRemainderResult ceiling(final BigIntegerStruct divisor) {
 			return quotientRemainder(divisor, RoundingMode.CEILING, false);
 		}
 
@@ -758,7 +846,15 @@ public interface RealStruct extends NumberStruct {
 			return quotientRemainder(divisor, RoundingMode.CEILING, false);
 		}
 
-		public QuotientRemainderResult fceiling(final IntegerStruct divisor) {
+		public QuotientRemainderResult fceiling(final IntIntegerStruct divisor) {
+			return quotientRemainder(divisor, RoundingMode.CEILING, true);
+		}
+
+		public QuotientRemainderResult fceiling(final LongIntegerStruct divisor) {
+			return quotientRemainder(divisor, RoundingMode.CEILING, true);
+		}
+
+		public QuotientRemainderResult fceiling(final BigIntegerStruct divisor) {
 			return quotientRemainder(divisor, RoundingMode.CEILING, true);
 		}
 
@@ -770,7 +866,15 @@ public interface RealStruct extends NumberStruct {
 			return quotientRemainder(divisor, RoundingMode.CEILING, true);
 		}
 
-		public QuotientRemainderResult round(final IntegerStruct divisor) {
+		public QuotientRemainderResult round(final IntIntegerStruct divisor) {
+			return quotientRemainder(divisor, RoundingMode.HALF_EVEN, false);
+		}
+
+		public QuotientRemainderResult round(final LongIntegerStruct divisor) {
+			return quotientRemainder(divisor, RoundingMode.HALF_EVEN, false);
+		}
+
+		public QuotientRemainderResult round(final BigIntegerStruct divisor) {
 			return quotientRemainder(divisor, RoundingMode.HALF_EVEN, false);
 		}
 
@@ -782,7 +886,15 @@ public interface RealStruct extends NumberStruct {
 			return quotientRemainder(divisor, RoundingMode.HALF_EVEN, false);
 		}
 
-		public QuotientRemainderResult fround(final IntegerStruct divisor) {
+		public QuotientRemainderResult fround(final IntIntegerStruct divisor) {
+			return quotientRemainder(divisor, RoundingMode.HALF_EVEN, true);
+		}
+
+		public QuotientRemainderResult fround(final LongIntegerStruct divisor) {
+			return quotientRemainder(divisor, RoundingMode.HALF_EVEN, true);
+		}
+
+		public QuotientRemainderResult fround(final BigIntegerStruct divisor) {
 			return quotientRemainder(divisor, RoundingMode.HALF_EVEN, true);
 		}
 
@@ -794,7 +906,13 @@ public interface RealStruct extends NumberStruct {
 			return quotientRemainder(divisor, RoundingMode.HALF_EVEN, true);
 		}
 
-		public abstract QuotientRemainderResult quotientRemainder(IntegerStruct divisor, RoundingMode roundingMode,
+		public abstract QuotientRemainderResult quotientRemainder(IntIntegerStruct divisor, RoundingMode roundingMode,
+		                                                          boolean isQuotientFloat);
+
+		public abstract QuotientRemainderResult quotientRemainder(LongIntegerStruct divisor, RoundingMode roundingMode,
+		                                                          boolean isQuotientFloat);
+
+		public abstract QuotientRemainderResult quotientRemainder(BigIntegerStruct divisor, RoundingMode roundingMode,
 		                                                          boolean isQuotientFloat);
 
 		public QuotientRemainderResult quotientRemainder(final FloatStruct divisor, final RoundingMode roundingMode,
@@ -815,7 +933,7 @@ public interface RealStruct extends NumberStruct {
 				quotientReal = getFloatQuotient(divisor, quotient);
 			} else {
 				final BigInteger quotientBigInteger = quotient.toBigInteger();
-				quotientReal = new IntegerStruct(quotientBigInteger);
+				quotientReal = new IntIntegerStruct(quotientBigInteger);
 			}
 
 			final FloatStruct remainderFloat = new FloatStruct(remainder);
@@ -854,7 +972,17 @@ public interface RealStruct extends NumberStruct {
 		}
 
 		@Override
-		public NumberStruct expt(final IntegerStruct power) {
+		public NumberStruct expt(final IntIntegerStruct power) {
+			return exptInteger(base, power);
+		}
+
+		@Override
+		public NumberStruct expt(final LongIntegerStruct power) {
+			return exptInteger(base, power);
+		}
+
+		@Override
+		public NumberStruct expt(final BigIntegerStruct power) {
 			return exptInteger(base, power);
 		}
 

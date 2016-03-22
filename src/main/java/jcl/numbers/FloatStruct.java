@@ -607,7 +607,7 @@ public class FloatStruct extends BuiltInClassStruct implements RealStruct {
 		final long storedExponent = decodedDoubleRaw.getStoredExponent();
 		final long exponent = (storedExponent - decodedExponentDiffer) + doubleFloatingPointPrecision;
 		final BigInteger exponentBigInteger = BigInteger.valueOf(exponent);
-		final IntegerStruct exponentInteger = new IntegerStruct(exponentBigInteger);
+		final IntegerStruct exponentInteger = new IntIntegerStruct(exponentBigInteger);
 
 		final long sign = decodedDoubleRaw.getSign();
 		final BigDecimal signBigDecimal = BigDecimal.valueOf(sign);
@@ -654,7 +654,7 @@ public class FloatStruct extends BuiltInClassStruct implements RealStruct {
 //		final int binary32Precision = 24;
 //		final int binary64Precision = 53;
 		final int binary128Precision = 113;
-		return new IntegerStruct(BigInteger.valueOf(binary128Precision));
+		return new IntIntegerStruct(BigInteger.valueOf(binary128Precision));
 	}
 
 	/**
@@ -681,16 +681,16 @@ public class FloatStruct extends BuiltInClassStruct implements RealStruct {
 
 		final long mantissa = decodedDoubleRaw.getMantissa();
 		final BigInteger mantissaBigInteger = BigInteger.valueOf(mantissa);
-		final IntegerStruct significandInteger = new IntegerStruct(mantissaBigInteger);
+		final IntegerStruct significandInteger = new IntIntegerStruct(mantissaBigInteger);
 
 		final long storedExponent = decodedDoubleRaw.getStoredExponent();
 		final long exponent = storedExponent - decodedExponentDiffer;
 		final BigInteger exponentBigInteger = BigInteger.valueOf(exponent);
-		final IntegerStruct exponentInteger = new IntegerStruct(exponentBigInteger);
+		final IntegerStruct exponentInteger = new IntIntegerStruct(exponentBigInteger);
 
 		final long sign = decodedDoubleRaw.getSign();
 		final BigInteger signBigInteger = BigInteger.valueOf(sign);
-		final IntegerStruct signInteger = new IntegerStruct(signBigInteger);
+		final IntegerStruct signInteger = new IntIntegerStruct(signBigInteger);
 
 		return new DecodeFloatResult(significandInteger, exponentInteger, signInteger);
 	}
@@ -854,7 +854,27 @@ public class FloatStruct extends BuiltInClassStruct implements RealStruct {
 		 * Computes the addition function result for an {@link FloatStruct} and a {@link IntegerStruct}.
 		 */
 		@Override
-		public RealStruct add(final IntegerStruct number2) {
+		public RealStruct add(final IntIntegerStruct number2) {
+			return addFloat(number1, number2);
+		}
+
+		/**
+		 * {@inheritDoc}
+		 * <p>
+		 * Computes the addition function result for an {@link FloatStruct} and a {@link IntegerStruct}.
+		 */
+		@Override
+		public RealStruct add(final LongIntegerStruct number2) {
+			return addFloat(number1, number2);
+		}
+
+		/**
+		 * {@inheritDoc}
+		 * <p>
+		 * Computes the addition function result for an {@link FloatStruct} and a {@link IntegerStruct}.
+		 */
+		@Override
+		public RealStruct add(final BigIntegerStruct number2) {
 			return addFloat(number1, number2);
 		}
 
@@ -891,7 +911,27 @@ public class FloatStruct extends BuiltInClassStruct implements RealStruct {
 		 * Computes the subtraction function result for an {@link FloatStruct} and a {@link IntegerStruct}.
 		 */
 		@Override
-		public RealStruct subtract(final IntegerStruct number2) {
+		public RealStruct subtract(final IntIntegerStruct number2) {
+			return subtractFloat(number1, number2);
+		}
+
+		/**
+		 * {@inheritDoc}
+		 * <p>
+		 * Computes the subtraction function result for an {@link FloatStruct} and a {@link IntegerStruct}.
+		 */
+		@Override
+		public RealStruct subtract(final LongIntegerStruct number2) {
+			return subtractFloat(number1, number2);
+		}
+
+		/**
+		 * {@inheritDoc}
+		 * <p>
+		 * Computes the subtraction function result for an {@link FloatStruct} and a {@link IntegerStruct}.
+		 */
+		@Override
+		public RealStruct subtract(final BigIntegerStruct number2) {
 			return subtractFloat(number1, number2);
 		}
 
@@ -946,7 +986,27 @@ public class FloatStruct extends BuiltInClassStruct implements RealStruct {
 		 * Computes the multiplication function result for an {@link FloatStruct} and a {@link IntegerStruct}.
 		 */
 		@Override
-		public RealStruct multiply(final IntegerStruct number2) {
+		public RealStruct multiply(final IntIntegerStruct number2) {
+			return multiplyFloat(number1, number2);
+		}
+
+		/**
+		 * {@inheritDoc}
+		 * <p>
+		 * Computes the multiplication function result for an {@link FloatStruct} and a {@link IntegerStruct}.
+		 */
+		@Override
+		public RealStruct multiply(final LongIntegerStruct number2) {
+			return multiplyFloat(number1, number2);
+		}
+
+		/**
+		 * {@inheritDoc}
+		 * <p>
+		 * Computes the multiplication function result for an {@link FloatStruct} and a {@link IntegerStruct}.
+		 */
+		@Override
+		public RealStruct multiply(final BigIntegerStruct number2) {
 			return multiplyFloat(number1, number2);
 		}
 
@@ -983,7 +1043,27 @@ public class FloatStruct extends BuiltInClassStruct implements RealStruct {
 		 * Computes the division function result for an {@link FloatStruct} and a {@link IntegerStruct}.
 		 */
 		@Override
-		public RealStruct divide(final IntegerStruct number2) {
+		public RealStruct divide(final IntIntegerStruct number2) {
+			return divideFloat(number1, number2);
+		}
+
+		/**
+		 * {@inheritDoc}
+		 * <p>
+		 * Computes the division function result for an {@link FloatStruct} and a {@link IntegerStruct}.
+		 */
+		@Override
+		public RealStruct divide(final LongIntegerStruct number2) {
+			return divideFloat(number1, number2);
+		}
+
+		/**
+		 * {@inheritDoc}
+		 * <p>
+		 * Computes the division function result for an {@link FloatStruct} and a {@link IntegerStruct}.
+		 */
+		@Override
+		public RealStruct divide(final BigIntegerStruct number2) {
 			return divideFloat(number1, number2);
 		}
 
@@ -1040,8 +1120,29 @@ public class FloatStruct extends BuiltInClassStruct implements RealStruct {
 		 * IntegerStruct} as the {@code divisor}.
 		 */
 		@Override
-		public QuotientRemainderResult quotientRemainder(final IntegerStruct divisor, final RoundingMode roundingMode,
-		                                                 final boolean isQuotientFloat) {
+		public QuotientRemainderResult quotientRemainder(final IntIntegerStruct divisor, final RoundingMode roundingMode, final boolean isQuotientFloat) {
+			return floatQuotientRemainder(divisor, roundingMode, isQuotientFloat);
+		}
+
+		/**
+		 * {@inheritDoc}
+		 * <p>
+		 * Computes the quotient and remainder results for a {@link FloatStruct} as the {@code real} and an {@link
+		 * IntegerStruct} as the {@code divisor}.
+		 */
+		@Override
+		public QuotientRemainderResult quotientRemainder(final LongIntegerStruct divisor, final RoundingMode roundingMode, final boolean isQuotientFloat) {
+			return floatQuotientRemainder(divisor, roundingMode, isQuotientFloat);
+		}
+
+		/**
+		 * {@inheritDoc}
+		 * <p>
+		 * Computes the quotient and remainder results for a {@link FloatStruct} as the {@code real} and an {@link
+		 * IntegerStruct} as the {@code divisor}.
+		 */
+		@Override
+		public QuotientRemainderResult quotientRemainder(final BigIntegerStruct divisor, final RoundingMode roundingMode, final boolean isQuotientFloat) {
 			return floatQuotientRemainder(divisor, roundingMode, isQuotientFloat);
 		}
 

@@ -11,7 +11,7 @@ import jcl.functions.CommonLispBuiltInFunctionStruct;
 import jcl.functions.parameterdsl.Arguments;
 import jcl.functions.parameterdsl.Parameters;
 import jcl.hashtables.HashTableStruct;
-import jcl.numbers.IntegerStruct;
+import jcl.numbers.IntIntegerStruct;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -32,6 +32,6 @@ public final class HashTableCountFunction extends CommonLispBuiltInFunctionStruc
 	public LispStruct apply(final Arguments arguments) {
 		final HashTableStruct hashTable = arguments.getRequiredArgument(HASH_TABLE_ARGUMENT, HashTableStruct.class);
 		final BigInteger count = hashTable.getCount();
-		return new IntegerStruct(count);
+		return new IntIntegerStruct(count);
 	}
 }

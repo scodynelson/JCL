@@ -11,6 +11,7 @@ import jcl.conditions.exceptions.TypeErrorException;
 import jcl.functions.CommonLispBuiltInFunctionStruct;
 import jcl.functions.parameterdsl.Arguments;
 import jcl.functions.parameterdsl.Parameters;
+import jcl.numbers.IntIntegerStruct;
 import jcl.numbers.IntegerStruct;
 import jcl.streams.StreamStruct;
 import jcl.symbols.BooleanStructs;
@@ -56,7 +57,7 @@ public final class FilePositionFunction extends CommonLispBuiltInFunctionStruct 
 
 		if (position == null) {
 			final Long currentPosition = stream.filePosition(null);
-			return new IntegerStruct(BigInteger.valueOf(currentPosition));
+			return new IntIntegerStruct(BigInteger.valueOf(currentPosition));
 		} else {
 			final Long newPosition = stream.filePosition(position);
 			return BooleanStructs.toLispBoolean(newPosition != null);

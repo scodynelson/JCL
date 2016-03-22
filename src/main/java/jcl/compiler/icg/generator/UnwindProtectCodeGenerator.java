@@ -60,10 +60,10 @@ final class UnwindProtectCodeGenerator extends SpecialOperatorCodeGenerator<Unwi
 	 * private LispStruct unwindProtect_1(Closure var1) {*
 	 *      try {
 	 *          BigInteger var2 = new BigInteger("1");
-	 *          return new IntegerStruct(var2);
+	 *          return new IntIntegerStruct(var2);
 	 *      } finally {
 	 *          BigInteger var3 = new BigInteger("2");
-	 *          new IntegerStruct(var3);
+	 *          new IntIntegerStruct(var3);
 	 *      }
 	 * }
 	 * }

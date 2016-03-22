@@ -546,7 +546,7 @@ class MacroLambdaCodeGenerator implements CodeGenerator<MacroLambdaStruct> {
 	 * {@code
 	 * protected LispStruct internalApply(Closure var1) {
 	 *      BigInteger var2 = new BigInteger("1");
-	 *      return new IntegerStruct(var2);
+	 *      return new IntIntegerStruct(var2);
 	 * }
 	 * }
 	 * </pre>
@@ -620,7 +620,7 @@ class MacroLambdaCodeGenerator implements CodeGenerator<MacroLambdaStruct> {
 	 *      SymbolStruct var4 = var3.intern("Y").getSymbol();
 	 *      if(var2.equals(var4)) {
 	 *          BigInteger var5 = new BigInteger("2");
-	 *          return new IntegerStruct(var5);
+	 *          return new IntIntegerStruct(var5);
 	 *      } else {
 	 *          return NILStruct.INSTANCE;
 	 *      }

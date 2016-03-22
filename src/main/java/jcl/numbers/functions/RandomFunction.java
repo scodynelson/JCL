@@ -13,6 +13,7 @@ import jcl.functions.CommonLispBuiltInFunctionStruct;
 import jcl.functions.parameterdsl.Arguments;
 import jcl.functions.parameterdsl.Parameters;
 import jcl.numbers.FloatStruct;
+import jcl.numbers.IntIntegerStruct;
 import jcl.numbers.IntegerStruct;
 import jcl.numbers.NumberVariables;
 import jcl.numbers.RandomStateStruct;
@@ -49,7 +50,7 @@ public final class RandomFunction extends CommonLispBuiltInFunctionStruct {
 			final IntegerStruct number = (IntegerStruct) real;
 			final BigInteger bigInteger = number.getBigInteger();
 			final BigInteger randomInteger = randomState.randomInteger(bigInteger);
-			return new IntegerStruct(randomInteger);
+			return new IntIntegerStruct(randomInteger);
 		} else if (real instanceof FloatStruct) {
 			final FloatStruct number = (FloatStruct) real;
 			final BigDecimal bigDecimal = number.getBigDecimal();

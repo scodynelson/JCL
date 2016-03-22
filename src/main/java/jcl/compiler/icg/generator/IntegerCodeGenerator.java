@@ -9,6 +9,7 @@ import java.math.BigInteger;
 import jcl.compiler.icg.CodeGenerator;
 import jcl.compiler.icg.GeneratorState;
 import jcl.compiler.icg.JavaMethodBuilder;
+import jcl.numbers.IntIntegerStruct;
 import jcl.numbers.IntegerStruct;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
@@ -32,7 +33,7 @@ class IntegerCodeGenerator implements CodeGenerator<IntegerStruct> {
 	 * constructor method.
 	 */
 	private static final String INTEGER_STRUCT_INIT_DESC
-			= CodeGenerators.getConstructorDescription(IntegerStruct.class, BigInteger.class);
+			= CodeGenerators.getConstructorDescription(IntIntegerStruct.class, BigInteger.class);
 
 	/**
 	 * {@inheritDoc}

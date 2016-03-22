@@ -4,8 +4,6 @@
 
 package jcl.compiler;
 
-import java.math.BigInteger;
-
 import jcl.LispStruct;
 import jcl.functions.FunctionStruct;
 import jcl.lists.ListStruct;
@@ -22,7 +20,7 @@ public interface CompilerVariables {
 	VariableStruct<?> DEBUGGER_HOOK = new VariableStruct<>("*DEBUGGER-HOOK*", GlobalPackageStruct.COMMON_LISP, null);
 	VariableStruct<?> BREAK_ON_SIGNALS = new VariableStruct<>("*BREAK-ON-SIGNALS*", GlobalPackageStruct.COMMON_LISP, null);
 
-	VariableStruct<IntegerStruct> GENSYM_COUNTER = new VariableStruct<>("*GENSYM-COUNTER*", GlobalPackageStruct.COMMON_LISP, new IntegerStruct(BigInteger.ONE));
+	VariableStruct<IntegerStruct> GENSYM_COUNTER = new VariableStruct<>("*GENSYM-COUNTER*", GlobalPackageStruct.COMMON_LISP, IntegerStruct.ONE);
 
 	VariableStruct<ListStruct> FEATURES = new ProperListVariable("*FEATURES*", GlobalPackageStruct.COMMON_LISP);
 	VariableStruct<LispStruct> COMPILE_FILE_PATHNAME = new VariableStruct<>("*COMPILE-FILE-PATHNAME*", GlobalPackageStruct.COMMON_LISP, NILStruct.INSTANCE);

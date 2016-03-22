@@ -174,7 +174,7 @@ public interface NumberStruct extends LispStruct {
 //		final Apcomplex pow = ApcomplexMath.pow(baseApcomplex, powerApcomplex);
 //
 //		if (pow instanceof Apint) {
-//			return new IntegerStruct((Apint) pow);
+//			return new IntIntegerStruct((Apint) pow);
 //		} else if (pow instanceof Apfloat) {
 //			return new FloatStruct((Apfloat) pow);
 //		} else {
@@ -230,7 +230,11 @@ public interface NumberStruct extends LispStruct {
 			this.number1 = number1;
 		}
 
-		public abstract NumberStruct add(IntegerStruct number2);
+		public abstract NumberStruct add(IntIntegerStruct number2);
+
+		public abstract NumberStruct add(LongIntegerStruct number2);
+
+		public abstract NumberStruct add(BigIntegerStruct number2);
 
 		public abstract NumberStruct add(FloatStruct number2);
 
@@ -247,7 +251,11 @@ public interface NumberStruct extends LispStruct {
 			this.number1 = number1;
 		}
 
-		public abstract NumberStruct subtract(IntegerStruct number2);
+		public abstract NumberStruct subtract(IntIntegerStruct number2);
+
+		public abstract NumberStruct subtract(LongIntegerStruct number2);
+
+		public abstract NumberStruct subtract(BigIntegerStruct number2);
 
 		public abstract NumberStruct subtract(FloatStruct number2);
 
@@ -264,7 +272,11 @@ public interface NumberStruct extends LispStruct {
 			this.number1 = number1;
 		}
 
-		public abstract NumberStruct multiply(IntegerStruct number2);
+		public abstract NumberStruct multiply(IntIntegerStruct number2);
+
+		public abstract NumberStruct multiply(LongIntegerStruct number2);
+
+		public abstract NumberStruct multiply(BigIntegerStruct number2);
 
 		public abstract NumberStruct multiply(FloatStruct number2);
 
@@ -281,7 +293,11 @@ public interface NumberStruct extends LispStruct {
 			this.number1 = number1;
 		}
 
-		public abstract NumberStruct divide(IntegerStruct number2);
+		public abstract NumberStruct divide(IntIntegerStruct number2);
+
+		public abstract NumberStruct divide(LongIntegerStruct number2);
+
+		public abstract NumberStruct divide(BigIntegerStruct number2);
 
 		public abstract NumberStruct divide(FloatStruct number2);
 
@@ -298,7 +314,11 @@ public interface NumberStruct extends LispStruct {
 			this.number1 = number1;
 		}
 
-		public abstract boolean equalTo(IntegerStruct number2);
+		public abstract boolean equalTo(IntIntegerStruct number2);
+
+		public abstract boolean equalTo(LongIntegerStruct number2);
+
+		public abstract boolean equalTo(BigIntegerStruct number2);
 
 		public abstract boolean equalTo(FloatStruct number2);
 
@@ -315,7 +335,11 @@ public interface NumberStruct extends LispStruct {
 			this.base = base;
 		}
 
-		public abstract NumberStruct expt(IntegerStruct power);
+		public abstract NumberStruct expt(IntIntegerStruct power);
+
+		public abstract NumberStruct expt(LongIntegerStruct power);
+
+		public abstract NumberStruct expt(BigIntegerStruct power);
 
 		public abstract NumberStruct expt(FloatStruct power);
 

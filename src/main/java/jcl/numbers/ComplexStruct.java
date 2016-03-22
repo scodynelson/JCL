@@ -554,7 +554,25 @@ public class ComplexStruct extends BuiltInClassStruct implements NumberStruct {
 		}
 
 		@Override
-		public NumberStruct add(final IntegerStruct number2) {
+		public NumberStruct add(final IntIntegerStruct number2) {
+			final Apcomplex apcomplex1 = number1.apcomplexValue();
+			final Apcomplex apfloat2 = number2.apfloatValue();
+
+			final Apcomplex add = apcomplex1.add(apfloat2);
+			return makeComplexOrReal(add);
+		}
+
+		@Override
+		public NumberStruct add(final LongIntegerStruct number2) {
+			final Apcomplex apcomplex1 = number1.apcomplexValue();
+			final Apcomplex apfloat2 = number2.apfloatValue();
+
+			final Apcomplex add = apcomplex1.add(apfloat2);
+			return makeComplexOrReal(add);
+		}
+
+		@Override
+		public NumberStruct add(final BigIntegerStruct number2) {
 			final Apcomplex apcomplex1 = number1.apcomplexValue();
 			final Apcomplex apfloat2 = number2.apfloatValue();
 
@@ -600,7 +618,25 @@ public class ComplexStruct extends BuiltInClassStruct implements NumberStruct {
 		}
 
 		@Override
-		public NumberStruct subtract(final IntegerStruct number2) {
+		public NumberStruct subtract(final IntIntegerStruct number2) {
+			final Apcomplex apcomplex1 = number1.apcomplexValue();
+			final Apcomplex apfloat2 = number2.apfloatValue();
+
+			final Apcomplex subtract = apcomplex1.subtract(apfloat2);
+			return makeComplexOrReal(subtract);
+		}
+
+		@Override
+		public NumberStruct subtract(final LongIntegerStruct number2) {
+			final Apcomplex apcomplex1 = number1.apcomplexValue();
+			final Apcomplex apfloat2 = number2.apfloatValue();
+
+			final Apcomplex subtract = apcomplex1.subtract(apfloat2);
+			return makeComplexOrReal(subtract);
+		}
+
+		@Override
+		public NumberStruct subtract(final BigIntegerStruct number2) {
 			final Apcomplex apcomplex1 = number1.apcomplexValue();
 			final Apcomplex apfloat2 = number2.apfloatValue();
 
@@ -646,7 +682,25 @@ public class ComplexStruct extends BuiltInClassStruct implements NumberStruct {
 		}
 
 		@Override
-		public NumberStruct multiply(final IntegerStruct number2) {
+		public NumberStruct multiply(final IntIntegerStruct number2) {
+			final Apcomplex apcomplex1 = number1.apcomplexValue();
+			final Apcomplex apfloat2 = number2.apfloatValue();
+
+			final Apcomplex multiply = apcomplex1.multiply(apfloat2);
+			return makeComplexOrReal(multiply);
+		}
+
+		@Override
+		public NumberStruct multiply(final LongIntegerStruct number2) {
+			final Apcomplex apcomplex1 = number1.apcomplexValue();
+			final Apcomplex apfloat2 = number2.apfloatValue();
+
+			final Apcomplex multiply = apcomplex1.multiply(apfloat2);
+			return makeComplexOrReal(multiply);
+		}
+
+		@Override
+		public NumberStruct multiply(final BigIntegerStruct number2) {
 			final Apcomplex apcomplex1 = number1.apcomplexValue();
 			final Apcomplex apfloat2 = number2.apfloatValue();
 
@@ -692,7 +746,25 @@ public class ComplexStruct extends BuiltInClassStruct implements NumberStruct {
 		}
 
 		@Override
-		public NumberStruct divide(final IntegerStruct number2) {
+		public NumberStruct divide(final IntIntegerStruct number2) {
+			final Apcomplex apcomplex1 = number1.apcomplexValue();
+			final Apcomplex apfloat2 = number2.apfloatValue();
+
+			final Apcomplex divide = apcomplex1.divide(apfloat2);
+			return makeComplexOrReal(divide);
+		}
+
+		@Override
+		public NumberStruct divide(final LongIntegerStruct number2) {
+			final Apcomplex apcomplex1 = number1.apcomplexValue();
+			final Apcomplex apfloat2 = number2.apfloatValue();
+
+			final Apcomplex divide = apcomplex1.divide(apfloat2);
+			return makeComplexOrReal(divide);
+		}
+
+		@Override
+		public NumberStruct divide(final BigIntegerStruct number2) {
 			final Apcomplex apcomplex1 = number1.apcomplexValue();
 			final Apcomplex apfloat2 = number2.apfloatValue();
 
@@ -738,7 +810,17 @@ public class ComplexStruct extends BuiltInClassStruct implements NumberStruct {
 		}
 
 		@Override
-		public boolean equalTo(final IntegerStruct number2) {
+		public boolean equalTo(final IntIntegerStruct number2) {
+			return equalToReal(number1, number2);
+		}
+
+		@Override
+		public boolean equalTo(final LongIntegerStruct number2) {
+			return equalToReal(number1, number2);
+		}
+
+		@Override
+		public boolean equalTo(final BigIntegerStruct number2) {
 			return equalToReal(number1, number2);
 		}
 
@@ -792,7 +874,27 @@ public class ComplexStruct extends BuiltInClassStruct implements NumberStruct {
 		}
 
 		@Override
-		public NumberStruct expt(final IntegerStruct power) {
+		public NumberStruct expt(final IntIntegerStruct power) {
+			if (base.getReal() instanceof RationalStruct) {
+				return exptInteger(base, power);
+			}
+			final NumberStruct logOfBase = base.log();
+			final NumberStruct powerComplexLogOfBaseProduct = power.multiply(logOfBase);
+			return powerComplexLogOfBaseProduct.exp();
+		}
+
+		@Override
+		public NumberStruct expt(final LongIntegerStruct power) {
+			if (base.getReal() instanceof RationalStruct) {
+				return exptInteger(base, power);
+			}
+			final NumberStruct logOfBase = base.log();
+			final NumberStruct powerComplexLogOfBaseProduct = power.multiply(logOfBase);
+			return powerComplexLogOfBaseProduct.exp();
+		}
+
+		@Override
+		public NumberStruct expt(final BigIntegerStruct power) {
 			if (base.getReal() instanceof RationalStruct) {
 				return exptInteger(base, power);
 			}

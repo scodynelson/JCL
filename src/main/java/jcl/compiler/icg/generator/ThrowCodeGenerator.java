@@ -51,7 +51,7 @@ final class ThrowCodeGenerator extends SpecialOperatorCodeGenerator<ThrowStruct>
 	 *      PackageStruct var2 = PackageStruct.findPackage("COMMON-LISP-USER");
 	 *      SymbolStruct var3 = var2.findSymbol("FOO").getSymbol();
 	 *      BigInteger var5 = new BigInteger("1");
-	 *      IntegerStruct var6 = new IntegerStruct(var5);
+	 *      IntegerStruct var6 = new IntIntegerStruct(var5);
 	 *      throw new ThrowException(var3, var6);
 	 * }
 	 * }

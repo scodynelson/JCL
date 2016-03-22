@@ -13,8 +13,6 @@ import org.slf4j.LoggerFactory;
 
 public class RadixVariable extends VariableStruct<IntegerStruct> {
 
-	private static final IntegerStruct TEN = new IntegerStruct(BigInteger.TEN);
-
 	private static final int lowerBound = 2;
 
 	private static final int upperBound = 32;
@@ -24,7 +22,7 @@ public class RadixVariable extends VariableStruct<IntegerStruct> {
 	private static final Logger LOGGER = LoggerFactory.getLogger(RadixVariable.class);
 
 	public RadixVariable(final String name, final PackageStruct symbolPackage) {
-		super(name, symbolPackage, TEN);
+		super(name, symbolPackage, IntegerStruct.TEN);
 	}
 
 	@Override
@@ -41,7 +39,7 @@ public class RadixVariable extends VariableStruct<IntegerStruct> {
 		} else {
 			LOGGER.warn("Error: {} had illegal value {}. Reset to 10", name, variableValue);
 
-			super.setValue(TEN);
+			super.setValue(IntegerStruct.TEN);
 		}
 	}
 }

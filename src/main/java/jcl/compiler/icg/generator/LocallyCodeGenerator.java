@@ -37,7 +37,7 @@ class LocallyCodeGenerator implements CodeGenerator<LocallyStruct> {
 	 * <pre>
 	 * {@code
 	 *      BigInteger var2 = new BigInteger("1");
-	 *      new IntegerStruct(var2);
+	 *      new IntIntegerStruct(var2);
 	 * }
 	 * </pre>
 	 *

@@ -11,7 +11,7 @@ import jcl.conditions.exceptions.TypeErrorException;
 import jcl.functions.CommonLispBuiltInFunctionStruct;
 import jcl.functions.parameterdsl.Arguments;
 import jcl.functions.parameterdsl.Parameters;
-import jcl.numbers.IntegerStruct;
+import jcl.numbers.IntIntegerStruct;
 import jcl.printer.Printer;
 import jcl.streams.InputStream;
 import jcl.streams.ReadPeekResult;
@@ -63,6 +63,6 @@ public final class ReadByteFunction extends CommonLispBuiltInFunctionStruct {
 		final LispStruct eofValue = arguments.getOptionalArgument(EOF_VALUE_ARGUMENT);
 
 		final ReadPeekResult readPeekResult = inputStream.readByte(eofErrorP.booleanValue(), eofValue);
-		return readPeekResult.isEof() ? eofValue : new IntegerStruct(BigInteger.valueOf(readPeekResult.getResult()));
+		return readPeekResult.isEof() ? eofValue : new IntIntegerStruct(BigInteger.valueOf(readPeekResult.getResult()));
 	}
 }

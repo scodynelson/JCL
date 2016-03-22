@@ -74,7 +74,7 @@ final class SetqCodeGenerator extends SpecialOperatorCodeGenerator<SetqStruct> {
 	 *      PackageStruct var3 = PackageStruct.findPackage("COMMON-LISP-USER");
 	 *      SymbolStruct var4 = var3.findSymbol("X").getSymbol();
 	 *      BigInteger var6 = new BigInteger("1");
-	 *      LispStruct var5 = new IntegerStruct(var6);
+	 *      LispStruct var5 = new IntIntegerStruct(var6);
 	 *      if(var5 instanceof ValuesStruct) {
 	 *          ValuesStruct var7 = (ValuesStruct)var5;
 	 *          var5 = var7.getPrimaryValue();

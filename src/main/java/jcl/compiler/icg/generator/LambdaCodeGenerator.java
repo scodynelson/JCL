@@ -474,7 +474,7 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 	 * {@code
 	 * protected LispStruct internalApply(Closure var1) {
 	 *      BigInteger var2 = new BigInteger("1");
-	 *      return new IntegerStruct(var2);
+	 *      return new IntIntegerStruct(var2);
 	 * }
 	 * }
 	 * </pre>
@@ -547,7 +547,7 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 	 *      SymbolStruct var4 = var3.intern("Y").getSymbol();
 	 *      if(var2.equals(var4)) {
 	 *          BigInteger var5 = new BigInteger("2");
-	 *          return new IntegerStruct(var5);
+	 *          return new IntIntegerStruct(var5);
 	 *      } else {
 	 *          return NILStruct.INSTANCE;
 	 *      }

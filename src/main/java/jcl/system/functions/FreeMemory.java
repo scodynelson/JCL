@@ -10,7 +10,7 @@ import jcl.LispStruct;
 import jcl.functions.ExtensionsBuiltInFunctionStruct;
 import jcl.functions.parameterdsl.Arguments;
 import jcl.functions.parameterdsl.Parameters;
-import jcl.numbers.IntegerStruct;
+import jcl.numbers.IntIntegerStruct;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -28,6 +28,6 @@ public final class FreeMemory extends ExtensionsBuiltInFunctionStruct {
 	@Override
 	public LispStruct apply(final Arguments arguments) {
 		final long freeMemory = Runtime.getRuntime().freeMemory();
-		return new IntegerStruct(BigInteger.valueOf(freeMemory));
+		return new IntIntegerStruct(BigInteger.valueOf(freeMemory));
 	}
 }

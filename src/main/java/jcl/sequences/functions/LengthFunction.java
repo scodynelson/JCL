@@ -10,7 +10,7 @@ import jcl.LispStruct;
 import jcl.functions.CommonLispBuiltInFunctionStruct;
 import jcl.functions.parameterdsl.Arguments;
 import jcl.functions.parameterdsl.Parameters;
-import jcl.numbers.IntegerStruct;
+import jcl.numbers.IntIntegerStruct;
 import jcl.sequences.SequenceStruct;
 import org.springframework.stereotype.Component;
 
@@ -32,6 +32,6 @@ public final class LengthFunction extends CommonLispBuiltInFunctionStruct {
 	public LispStruct apply(final Arguments arguments) {
 		final SequenceStruct sequence = arguments.getRequiredArgument(SEQUENCE_ARGUMENT, SequenceStruct.class);
 		final Long length = sequence.length();
-		return new IntegerStruct(BigInteger.valueOf(length));
+		return new IntIntegerStruct(BigInteger.valueOf(length));
 	}
 }

@@ -67,10 +67,10 @@ final class IfCodeGenerator extends SpecialOperatorCodeGenerator<IfStruct> {
 	 *      IntegerStruct var4;
 	 *      if(!var2.equals(NILStruct.INSTANCE)) {
 	 *          BigInteger var5 = new BigInteger("1");
-	 *          var4 = new IntegerStruct(var5);
+	 *          var4 = new IntIntegerStruct(var5);
 	 *      } else {
 	 *          BigInteger var6 = new BigInteger("2");
-	 *          var4 = new IntegerStruct(var6);
+	 *          var4 = new IntIntegerStruct(var6);
 	 *      }
 	 *      return var4;
 	 * }

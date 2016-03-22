@@ -54,7 +54,7 @@ final class ReturnFromCodeGenerator extends SpecialOperatorCodeGenerator<ReturnF
 	 *      PackageStruct var2 = PackageStruct.findPackage("COMMON-LISP-USER");
 	 *      SymbolStruct var3 = var2.findSymbol("FOO").getSymbol();
 	 *      BigInteger var4 = new BigInteger("1");
-	 *      IntegerStruct var5 = new IntegerStruct(var4);
+	 *      IntegerStruct var5 = new IntIntegerStruct(var4);
 	 *      throw new ReturnFromException(var3, var5);
 	 * }
 	 * }

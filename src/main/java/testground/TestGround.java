@@ -31,6 +31,7 @@ import jcl.lists.ConsStruct;
 import jcl.lists.ListStruct;
 import jcl.numbers.ComplexStruct;
 import jcl.numbers.FloatStruct;
+import jcl.numbers.IntIntegerStruct;
 import jcl.numbers.IntegerStruct;
 import jcl.numbers.RatioStruct;
 import jcl.packages.PackageStruct;
@@ -133,7 +134,7 @@ public class TestGround {
 
 	private Object integerGen() {
 		final BigInteger bigInteger = new BigInteger("12345");
-		return new IntegerStruct(bigInteger);
+		return new IntIntegerStruct(bigInteger);
 	}
 
 	private Object ratioGen() {
@@ -151,8 +152,8 @@ public class TestGround {
 	}
 
 	private Object complexGen() {
-		final IntegerStruct real = new IntegerStruct(BigInteger.ONE);
-		final IntegerStruct imaginary = new IntegerStruct(BigInteger.ZERO);
+		final IntegerStruct real = new IntIntegerStruct(BigInteger.ONE);
+		final IntegerStruct imaginary = new IntIntegerStruct(BigInteger.ZERO);
 		return new ComplexStruct(real, imaginary);
 	}
 
@@ -169,7 +170,7 @@ public class TestGround {
 
 	private Object bitVectorGen() {
 		final List<IntegerStruct> contents = new ArrayList<>();
-		final IntegerStruct content = new IntegerStruct(BigInteger.ZERO);
+		final IntegerStruct content = new IntIntegerStruct(BigInteger.ZERO);
 		contents.add(content);
 
 		return new BitVectorStruct(contents);
@@ -177,7 +178,7 @@ public class TestGround {
 
 	private Object vectorGen() {
 		final List<LispStruct> contents = new ArrayList<>();
-		final IntegerStruct content = new IntegerStruct(BigInteger.ZERO);
+		final IntegerStruct content = new IntIntegerStruct(BigInteger.ZERO);
 		contents.add(content);
 
 		return new VectorStruct<>(contents);
@@ -189,7 +190,7 @@ public class TestGround {
 		dimensions.add(dimension);
 
 		final List<LispStruct> contents = new ArrayList<>();
-		final IntegerStruct content = new IntegerStruct(BigInteger.ZERO);
+		final IntegerStruct content = new IntIntegerStruct(BigInteger.ZERO);
 		contents.add(content);
 
 		return new ArrayStruct<>(dimensions, contents);

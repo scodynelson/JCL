@@ -55,9 +55,9 @@ final class MultipleValueProg1CodeGenerator extends SpecialOperatorCodeGenerator
 	 * {@code
 	 * private LispStruct multipleValueProg1_1(Closure var1) {
 	 *      BigInteger var2 = new BigInteger("1");
-	 *      IntegerStruct var3 = new IntegerStruct(var2);
+	 *      IntegerStruct var3 = new IntIntegerStruct(var2);
 	 *      BigInteger var4 = new BigInteger("2");
-	 *      new IntegerStruct(var4);
+	 *      new IntIntegerStruct(var4);
 	 *      return var3;
 	 * }
 	 * }

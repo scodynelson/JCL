@@ -9,6 +9,7 @@ import java.math.BigInteger;
 import java.math.MathContext;
 import java.math.RoundingMode;
 
+import jcl.classes.BuiltInClassStruct;
 import jcl.types.FloatType;
 import jcl.types.SingleFloatType;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -19,7 +20,7 @@ import org.apfloat.Apfloat;
 /**
  * The {@link FloatStruct} is the object representation of a Lisp 'float' type.
  */
-public class FloatStruct extends RealStruct {
+public class FloatStruct extends BuiltInClassStruct implements RealStruct {
 
 	/**
 	 * {@link FloatStruct} constant representing 0.0.
@@ -153,7 +154,7 @@ public class FloatStruct extends RealStruct {
 	 * @return the addition of {@link NumberStruct} using the provided {@link AddVisitor} and this FloatStruct
 	 */
 	@Override
-	protected NumberStruct add(final AddVisitor<?> addVisitor) {
+	public NumberStruct add(final AddVisitor<?> addVisitor) {
 		return addVisitor.add(this);
 	}
 
@@ -163,7 +164,7 @@ public class FloatStruct extends RealStruct {
 	 * @return a new {@link AddVisitor} with this FloatStruct to be used in an addition operation
 	 */
 	@Override
-	protected AddVisitor<?> addVisitor() {
+	public AddVisitor<?> addVisitor() {
 		return new FloatAddVisitor(this);
 	}
 
@@ -178,7 +179,7 @@ public class FloatStruct extends RealStruct {
 	 * @return the subtraction of {@link NumberStruct} using the provided {@link SubtractVisitor} and this FloatStruct
 	 */
 	@Override
-	protected NumberStruct subtract(final SubtractVisitor<?> subtractVisitor) {
+	public NumberStruct subtract(final SubtractVisitor<?> subtractVisitor) {
 		return subtractVisitor.subtract(this);
 	}
 
@@ -188,7 +189,7 @@ public class FloatStruct extends RealStruct {
 	 * @return a new {@link SubtractVisitor} with this FloatStruct to be used in a subtraction operation
 	 */
 	@Override
-	protected SubtractVisitor<?> subtractVisitor() {
+	public SubtractVisitor<?> subtractVisitor() {
 		return new FloatSubtractVisitor(this);
 	}
 
@@ -204,7 +205,7 @@ public class FloatStruct extends RealStruct {
 	 * FloatStruct
 	 */
 	@Override
-	protected NumberStruct multiply(final MultiplyVisitor<?> multiplyVisitor) {
+	public NumberStruct multiply(final MultiplyVisitor<?> multiplyVisitor) {
 		return multiplyVisitor.multiply(this);
 	}
 
@@ -214,7 +215,7 @@ public class FloatStruct extends RealStruct {
 	 * @return a new {@link MultiplyVisitor} with this FloatStruct to be used in a multiplication operation
 	 */
 	@Override
-	protected MultiplyVisitor<?> multiplyVisitor() {
+	public MultiplyVisitor<?> multiplyVisitor() {
 		return new FloatMultiplyVisitor(this);
 	}
 
@@ -229,7 +230,7 @@ public class FloatStruct extends RealStruct {
 	 * @return the division of {@link NumberStruct} using the provided {@link DivideVisitor} and this FloatStruct
 	 */
 	@Override
-	protected NumberStruct divide(final DivideVisitor<?> divideVisitor) {
+	public NumberStruct divide(final DivideVisitor<?> divideVisitor) {
 		return divideVisitor.divide(this);
 	}
 
@@ -239,7 +240,7 @@ public class FloatStruct extends RealStruct {
 	 * @return a new {@link DivideVisitor} with this FloatStruct to be used in a division operation
 	 */
 	@Override
-	protected DivideVisitor<?> divideVisitor() {
+	public DivideVisitor<?> divideVisitor() {
 		return new FloatDivideVisitor(this);
 	}
 
@@ -255,7 +256,7 @@ public class FloatStruct extends RealStruct {
 	 * FloatStruct
 	 */
 	@Override
-	protected boolean isEqualTo(final EqualToVisitor<?> equalToVisitor) {
+	public boolean isEqualTo(final EqualToVisitor<?> equalToVisitor) {
 		return equalToVisitor.equalTo(this);
 	}
 
@@ -271,7 +272,7 @@ public class FloatStruct extends RealStruct {
 	 * FloatStruct
 	 */
 	@Override
-	protected boolean isLessThan(final LessThanVisitor<?> lessThanVisitor) {
+	public boolean isLessThan(final LessThanVisitor<?> lessThanVisitor) {
 		return lessThanVisitor.lessThan(this);
 	}
 
@@ -287,7 +288,7 @@ public class FloatStruct extends RealStruct {
 	 * this IntegerStruct
 	 */
 	@Override
-	protected boolean isGreaterThan(final GreaterThanVisitor<?> greaterThanVisitor) {
+	public boolean isGreaterThan(final GreaterThanVisitor<?> greaterThanVisitor) {
 		return greaterThanVisitor.greaterThan(this);
 	}
 
@@ -303,7 +304,7 @@ public class FloatStruct extends RealStruct {
 	 * LessThanOrEqualToVisitor} and this FloatStruct
 	 */
 	@Override
-	protected boolean isLessThanOrEqualTo(final LessThanOrEqualToVisitor<?> lessThanOrEqualToVisitor) {
+	public boolean isLessThanOrEqualTo(final LessThanOrEqualToVisitor<?> lessThanOrEqualToVisitor) {
 		return lessThanOrEqualToVisitor.lessThanOrEqualTo(this);
 	}
 
@@ -319,7 +320,7 @@ public class FloatStruct extends RealStruct {
 	 * GreaterThanOrEqualToVisitor} and this FloatStruct
 	 */
 	@Override
-	protected boolean isGreaterThanOrEqualTo(final GreaterThanOrEqualToVisitor<?> greaterThanOrEqualToVisitor) {
+	public boolean isGreaterThanOrEqualTo(final GreaterThanOrEqualToVisitor<?> greaterThanOrEqualToVisitor) {
 		return greaterThanOrEqualToVisitor.greaterThanOrEqualTo(this);
 	}
 
@@ -396,7 +397,8 @@ public class FloatStruct extends RealStruct {
 			return this;
 		}
 
-		return super.expt(power);
+		final ExptVisitor<?> exptVisitor = exptVisitor();
+		return power.expt(exptVisitor);
 	}
 
 	/**
@@ -412,7 +414,7 @@ public class FloatStruct extends RealStruct {
 	 * {@link ExptVisitor}
 	 */
 	@Override
-	protected NumberStruct expt(final ExptVisitor<?> exptVisitor) {
+	public NumberStruct expt(final ExptVisitor<?> exptVisitor) {
 		return exptVisitor.expt(this);
 	}
 
@@ -471,7 +473,7 @@ public class FloatStruct extends RealStruct {
 	 * using the provided {@link RealStruct.QuotientRemainderVisitor}
 	 */
 	@Override
-	protected QuotientRemainderResult floor(final RealStruct.QuotientRemainderVisitor<?> quotientRemainderVisitor) {
+	public QuotientRemainderResult floor(final RealStruct.QuotientRemainderVisitor<?> quotientRemainderVisitor) {
 		return quotientRemainderVisitor.floor(this);
 	}
 
@@ -488,7 +490,7 @@ public class FloatStruct extends RealStruct {
 	 * using the provided {@link RealStruct.QuotientRemainderVisitor}
 	 */
 	@Override
-	protected QuotientRemainderResult ffloor(final RealStruct.QuotientRemainderVisitor<?> quotientRemainderVisitor) {
+	public QuotientRemainderResult ffloor(final RealStruct.QuotientRemainderVisitor<?> quotientRemainderVisitor) {
 		return quotientRemainderVisitor.ffloor(this);
 	}
 
@@ -505,7 +507,7 @@ public class FloatStruct extends RealStruct {
 	 * using the provided {@link RealStruct.QuotientRemainderVisitor}
 	 */
 	@Override
-	protected QuotientRemainderResult ceiling(final RealStruct.QuotientRemainderVisitor<?> quotientRemainderVisitor) {
+	public QuotientRemainderResult ceiling(final RealStruct.QuotientRemainderVisitor<?> quotientRemainderVisitor) {
 		return quotientRemainderVisitor.ceiling(this);
 	}
 
@@ -522,7 +524,7 @@ public class FloatStruct extends RealStruct {
 	 * using the provided {@link RealStruct.QuotientRemainderVisitor}
 	 */
 	@Override
-	protected QuotientRemainderResult fceiling(final RealStruct.QuotientRemainderVisitor<?> quotientRemainderVisitor) {
+	public QuotientRemainderResult fceiling(final RealStruct.QuotientRemainderVisitor<?> quotientRemainderVisitor) {
 		return quotientRemainderVisitor.fceiling(this);
 	}
 
@@ -539,7 +541,7 @@ public class FloatStruct extends RealStruct {
 	 * using the provided {@link RealStruct.QuotientRemainderVisitor}
 	 */
 	@Override
-	protected QuotientRemainderResult round(final RealStruct.QuotientRemainderVisitor<?> quotientRemainderVisitor) {
+	public QuotientRemainderResult round(final RealStruct.QuotientRemainderVisitor<?> quotientRemainderVisitor) {
 		return quotientRemainderVisitor.round(this);
 	}
 
@@ -556,19 +558,19 @@ public class FloatStruct extends RealStruct {
 	 * using the provided {@link RealStruct.QuotientRemainderVisitor}
 	 */
 	@Override
-	protected QuotientRemainderResult fround(final RealStruct.QuotientRemainderVisitor<?> quotientRemainderVisitor) {
+	public QuotientRemainderResult fround(final RealStruct.QuotientRemainderVisitor<?> quotientRemainderVisitor) {
 		return quotientRemainderVisitor.fround(this);
 	}
 
 	/**
-	 * Returns a new {@link RealStruct.QuotientRemainderVisitor} with this FloatStruct to be used in a 'quotient' and 'remainder'
-	 * calculation operation.
+	 * Returns a new {@link RealStruct.QuotientRemainderVisitor} with this FloatStruct to be used in a 'quotient' and
+	 * 'remainder' calculation operation.
 	 *
-	 * @return a new {@link RealStruct.QuotientRemainderVisitor} with this FloatStruct to be used in a 'quotient' and 'remainder'
-	 * calculation operation
+	 * @return a new {@link RealStruct.QuotientRemainderVisitor} with this FloatStruct to be used in a 'quotient' and
+	 * 'remainder' calculation operation
 	 */
 	@Override
-	protected RealStruct.QuotientRemainderVisitor<?> quotientRemainderVisitor() {
+	public RealStruct.QuotientRemainderVisitor<?> quotientRemainderVisitor() {
 		return new FloatQuotientRemainderVisitor(this);
 	}
 

@@ -7,6 +7,7 @@ package jcl.numbers;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
+import jcl.classes.BuiltInClassStruct;
 import jcl.types.ComplexType;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -18,7 +19,7 @@ import org.apfloat.Apfloat;
 /**
  * The {@link ComplexStruct} is the object representation of a Lisp 'complex' type.
  */
-public class ComplexStruct extends NumberStruct {
+public class ComplexStruct extends BuiltInClassStruct implements NumberStruct {
 
 	/**
 	 * {@link ComplexStruct} constant representing I.
@@ -279,52 +280,52 @@ public class ComplexStruct extends NumberStruct {
 	}
 
 	@Override
-	protected NumberStruct add(final NumberStruct.AddVisitor<?> addVisitor) {
+	public NumberStruct add(final NumberStruct.AddVisitor<?> addVisitor) {
 		return addVisitor.add(this);
 	}
 
 	@Override
-	protected NumberStruct.AddVisitor<?> addVisitor() {
+	public NumberStruct.AddVisitor<?> addVisitor() {
 		return new ComplexAddVisitor(this);
 	}
 
 	@Override
-	protected NumberStruct subtract(final NumberStruct.SubtractVisitor<?> subtractVisitor) {
+	public NumberStruct subtract(final NumberStruct.SubtractVisitor<?> subtractVisitor) {
 		return subtractVisitor.subtract(this);
 	}
 
 	@Override
-	protected NumberStruct.SubtractVisitor<?> subtractVisitor() {
+	public NumberStruct.SubtractVisitor<?> subtractVisitor() {
 		return new ComplexSubtractVisitor(this);
 	}
 
 	@Override
-	protected NumberStruct multiply(final NumberStruct.MultiplyVisitor<?> multiplyVisitor) {
+	public NumberStruct multiply(final NumberStruct.MultiplyVisitor<?> multiplyVisitor) {
 		return multiplyVisitor.multiply(this);
 	}
 
 	@Override
-	protected NumberStruct.MultiplyVisitor<?> multiplyVisitor() {
+	public NumberStruct.MultiplyVisitor<?> multiplyVisitor() {
 		return new ComplexMultiplyVisitor(this);
 	}
 
 	@Override
-	protected NumberStruct divide(final NumberStruct.DivideVisitor<?> divideVisitor) {
+	public NumberStruct divide(final NumberStruct.DivideVisitor<?> divideVisitor) {
 		return divideVisitor.divide(this);
 	}
 
 	@Override
-	protected NumberStruct.DivideVisitor<?> divideVisitor() {
+	public NumberStruct.DivideVisitor<?> divideVisitor() {
 		return new ComplexDivideVisitor(this);
 	}
 
 	@Override
-	protected boolean isEqualTo(final NumberStruct.EqualToVisitor<?> equalToVisitor) {
+	public boolean isEqualTo(final NumberStruct.EqualToVisitor<?> equalToVisitor) {
 		return equalToVisitor.equalTo(this);
 	}
 
 	@Override
-	protected NumberStruct.EqualToVisitor<?> equalToVisitor() {
+	public NumberStruct.EqualToVisitor<?> equalToVisitor() {
 		return new ComplexEqualToVisitor(this);
 	}
 
@@ -390,16 +391,17 @@ public class ComplexStruct extends NumberStruct {
 			return this;
 		}
 
-		return super.expt(power);
+		final ExptVisitor<?> exptVisitor = exptVisitor();
+		return power.expt(exptVisitor);
 	}
 
 	@Override
-	protected NumberStruct expt(final NumberStruct.ExptVisitor<?> exptVisitor) {
+	public NumberStruct expt(final NumberStruct.ExptVisitor<?> exptVisitor) {
 		return exptVisitor.expt(this);
 	}
 
 	@Override
-	protected NumberStruct.ExptVisitor<?> exptVisitor() {
+	public NumberStruct.ExptVisitor<?> exptVisitor() {
 		return new ComplexExptVisitor(this);
 	}
 

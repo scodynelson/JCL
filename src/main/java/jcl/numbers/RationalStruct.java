@@ -7,48 +7,18 @@ package jcl.numbers;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.RoundingMode;
-import java.util.List;
 
-import jcl.LispStruct;
 import jcl.conditions.exceptions.DivisionByZeroException;
-import jcl.types.RationalType;
 import org.apache.commons.math3.fraction.BigFraction;
 
 /**
  * The {@link RationalStruct} is the object representation of a Lisp 'rational' type.
  */
-public abstract class RationalStruct extends RealStruct {
+public interface RationalStruct extends RealStruct {
 
-	/**
-	 * Protected constructor.
-	 *
-	 * @param directSuperClasses
-	 * 		the direct super classes
-	 * @param subClasses
-	 * 		the subclasses
-	 */
-	protected RationalStruct(final List<Class<? extends LispStruct>> directSuperClasses, final List<Class<? extends LispStruct>> subClasses) {
-		super(RationalType.INSTANCE, directSuperClasses, subClasses);
-	}
+	IntegerStruct numerator();
 
-	/**
-	 * Protected constructor.
-	 *
-	 * @param type
-	 * 		the type of the rational object
-	 * @param directSuperClasses
-	 * 		the direct super classes
-	 * @param subClasses
-	 * 		the subclasses
-	 */
-	protected RationalStruct(final RationalType type,
-	                         final List<Class<? extends LispStruct>> directSuperClasses, final List<Class<? extends LispStruct>> subClasses) {
-		super(type, directSuperClasses, subClasses);
-	}
-
-	public abstract IntegerStruct numerator();
-
-	public abstract IntegerStruct denominator();
+	IntegerStruct denominator();
 
 	/**
 	 * {@inheritDoc}
@@ -56,23 +26,23 @@ public abstract class RationalStruct extends RealStruct {
 	 * Returns {@code this} as any RationalStruct is already in rational form.
 	 */
 	@Override
-	public RationalStruct rational() {
+	default RationalStruct rational() {
 		return this;
 	}
 
 	@Override
-	public FloatStruct coerceRealToFloat() {
+	default FloatStruct coerceRealToFloat() {
 		final BigDecimal bigDecimal = bigDecimalValue();
 		return new FloatStruct(bigDecimal);
 	}
 
-	public static RationalStruct makeRational(final BigFraction bigFraction) {
+	static RationalStruct makeRational(final BigFraction bigFraction) {
 		final BigInteger numerator = bigFraction.getNumerator();
 		final BigInteger denominator = bigFraction.getDenominator();
 		return makeRational(numerator, denominator);
 	}
 
-	public static RationalStruct makeRational(final BigInteger numerator, final BigInteger denominator) {
+	static RationalStruct makeRational(final BigInteger numerator, final BigInteger denominator) {
 		if (BigInteger.ZERO.compareTo(denominator) == 0) {
 			// TODO: what do we pass to this exception???
 			throw new DivisionByZeroException("Division By Zero");
@@ -104,7 +74,7 @@ public abstract class RationalStruct extends RealStruct {
 
 	// Visitor Implementations
 
-	protected abstract static class RationalQuotientRemainderVisitor<S extends RationalStruct> extends RealStruct.QuotientRemainderVisitor<S> {
+	abstract class RationalQuotientRemainderVisitor<S extends RationalStruct> extends RealStruct.QuotientRemainderVisitor<S> {
 
 		protected RationalQuotientRemainderVisitor(final S real) {
 			super(real);

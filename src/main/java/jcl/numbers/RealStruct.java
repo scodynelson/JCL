@@ -10,8 +10,6 @@ import java.math.MathContext;
 import java.math.RoundingMode;
 import java.util.List;
 
-import jcl.LispStruct;
-import jcl.types.RealType;
 import org.apfloat.Apcomplex;
 import org.apfloat.ApcomplexMath;
 import org.apfloat.Apfloat;
@@ -20,62 +18,35 @@ import org.apfloat.ApfloatMath;
 /**
  * The {@link RealStruct} is the object representation of a Lisp 'real' type.
  */
-public abstract class RealStruct extends NumberStruct {
+public interface RealStruct extends NumberStruct {
 
-	/**
-	 * Protected constructor.
-	 *
-	 * @param directSuperClasses
-	 * 		the direct super classes
-	 * @param subClasses
-	 * 		the subclasses
-	 */
-	protected RealStruct(final List<Class<? extends LispStruct>> directSuperClasses, final List<Class<? extends LispStruct>> subClasses) {
-		super(RealType.INSTANCE, directSuperClasses, subClasses);
-	}
+	BigDecimal bigDecimalValue();
 
-	/**
-	 * Protected constructor.
-	 *
-	 * @param type
-	 * 		the type of the real object
-	 * @param directSuperClasses
-	 * 		the direct super classes
-	 * @param subClasses
-	 * 		the subclasses
-	 */
-	protected RealStruct(final RealType type,
-	                     final List<Class<? extends LispStruct>> directSuperClasses, final List<Class<? extends LispStruct>> subClasses) {
-		super(type, directSuperClasses, subClasses);
-	}
-
-	public abstract BigDecimal bigDecimalValue();
-
-	public Apfloat apfloatValue() {
+	default Apfloat apfloatValue() {
 		return new Apfloat(bigDecimalValue());
 	}
 
-	public abstract FloatStruct coerceRealToFloat();
+	FloatStruct coerceRealToFloat();
 
-	public abstract RealStruct zeroValue();
+	RealStruct zeroValue();
 
-	public abstract boolean plusp();
+	boolean plusp();
 
-	public abstract boolean minusp();
+	boolean minusp();
 
 	@Override
-	protected NumberStruct.EqualToVisitor<?> equalToVisitor() {
+	default NumberStruct.EqualToVisitor<?> equalToVisitor() {
 		return new RealEqualToVisitor<>(this);
 	}
 
-	public boolean isLessThan(final RealStruct real) {
+	default boolean isLessThan(final RealStruct real) {
 		final LessThanVisitor<?> lessThanVisitor = lessThanVisitor();
 		return real.isLessThan(lessThanVisitor);
 	}
 
-	protected abstract boolean isLessThan(LessThanVisitor<?> lessThanVisitor);
+	boolean isLessThan(LessThanVisitor<?> lessThanVisitor);
 
-	public static boolean isLessThan(final RealStruct real, final List<RealStruct> reals) {
+	static boolean isLessThan(final RealStruct real, final List<RealStruct> reals) {
 		RealStruct previousReal = real;
 
 		boolean result = true;
@@ -89,22 +60,22 @@ public abstract class RealStruct extends NumberStruct {
 		return result;
 	}
 
-	protected LessThanVisitor<?> lessThanVisitor() {
+	default LessThanVisitor<?> lessThanVisitor() {
 		return new LessThanVisitor<>(this);
 	}
 
-	public boolean isGreaterThan(final RealStruct real) {
+	default boolean isGreaterThan(final RealStruct real) {
 		final GreaterThanVisitor<?> greaterThanVisitor = greaterThanVisitor();
 		return real.isGreaterThan(greaterThanVisitor);
 	}
 
-	protected abstract boolean isGreaterThan(GreaterThanVisitor<?> greaterThanVisitor);
+	boolean isGreaterThan(GreaterThanVisitor<?> greaterThanVisitor);
 
-	protected GreaterThanVisitor<?> greaterThanVisitor() {
+	default GreaterThanVisitor<?> greaterThanVisitor() {
 		return new GreaterThanVisitor<>(this);
 	}
 
-	public static boolean isGreaterThan(final RealStruct real, final List<RealStruct> reals) {
+	static boolean isGreaterThan(final RealStruct real, final List<RealStruct> reals) {
 		RealStruct previousReal = real;
 
 		boolean result = true;
@@ -118,18 +89,18 @@ public abstract class RealStruct extends NumberStruct {
 		return result;
 	}
 
-	public boolean isLessThanOrEqualTo(final RealStruct real) {
+	default boolean isLessThanOrEqualTo(final RealStruct real) {
 		final LessThanOrEqualToVisitor<?> lessThanOrEqualToVisitor = lessThanOrEqualToVisitor();
 		return real.isLessThanOrEqualTo(lessThanOrEqualToVisitor);
 	}
 
-	protected abstract boolean isLessThanOrEqualTo(LessThanOrEqualToVisitor<?> lessThanOrEqualToVisitor);
+	boolean isLessThanOrEqualTo(LessThanOrEqualToVisitor<?> lessThanOrEqualToVisitor);
 
-	protected LessThanOrEqualToVisitor<?> lessThanOrEqualToVisitor() {
+	default LessThanOrEqualToVisitor<?> lessThanOrEqualToVisitor() {
 		return new LessThanOrEqualToVisitor<>(this);
 	}
 
-	public static boolean isLessThanOrEqualTo(final RealStruct real, final List<RealStruct> reals) {
+	static boolean isLessThanOrEqualTo(final RealStruct real, final List<RealStruct> reals) {
 		RealStruct previousReal = real;
 
 		boolean result = true;
@@ -143,18 +114,18 @@ public abstract class RealStruct extends NumberStruct {
 		return result;
 	}
 
-	public boolean isGreaterThanOrEqualTo(final RealStruct real) {
+	default boolean isGreaterThanOrEqualTo(final RealStruct real) {
 		final GreaterThanOrEqualToVisitor<?> greaterThanOrEqualToVisitor = greaterThanOrEqualToVisitor();
 		return real.isGreaterThanOrEqualTo(greaterThanOrEqualToVisitor);
 	}
 
-	protected abstract boolean isGreaterThanOrEqualTo(GreaterThanOrEqualToVisitor<?> greaterThanOrEqualToVisitor);
+	boolean isGreaterThanOrEqualTo(GreaterThanOrEqualToVisitor<?> greaterThanOrEqualToVisitor);
 
-	protected GreaterThanOrEqualToVisitor<?> greaterThanOrEqualToVisitor() {
+	default GreaterThanOrEqualToVisitor<?> greaterThanOrEqualToVisitor() {
 		return new GreaterThanOrEqualToVisitor<>(this);
 	}
 
-	public static boolean isGreaterThanOrEqualTo(final RealStruct real, final List<RealStruct> reals) {
+	static boolean isGreaterThanOrEqualTo(final RealStruct real, final List<RealStruct> reals) {
 		RealStruct previousReal = real;
 
 		boolean result = true;
@@ -168,93 +139,93 @@ public abstract class RealStruct extends NumberStruct {
 		return result;
 	}
 
-	public RealStruct max(final RealStruct real) {
+	default RealStruct max(final RealStruct real) {
 		return isGreaterThanOrEqualTo(real) ? this : real;
 	}
 
-	public static RealStruct max(final RealStruct real, final List<RealStruct> reals) {
+	static RealStruct max(final RealStruct real, final List<RealStruct> reals) {
 		if (reals.isEmpty()) {
 			return real;
 		}
 		return reals.stream().reduce(real, RealStruct::max);
 	}
 
-	public RealStruct min(final RealStruct real) {
+	default RealStruct min(final RealStruct real) {
 		return isLessThanOrEqualTo(real) ? this : real;
 	}
 
-	public static RealStruct min(final RealStruct real, final List<RealStruct> reals) {
+	static RealStruct min(final RealStruct real, final List<RealStruct> reals) {
 		if (reals.isEmpty()) {
 			return real;
 		}
 		return reals.stream().reduce(real, RealStruct::min);
 	}
 
-	public abstract RealStruct rational();
+	RealStruct rational();
 
-	public RealStruct mod(final RealStruct divisor) {
+	default RealStruct mod(final RealStruct divisor) {
 		final QuotientRemainderResult floor = floor(divisor);
 		return floor.getRemainder();
 	}
 
-	public RealStruct rem(final RealStruct divisor) {
+	default RealStruct rem(final RealStruct divisor) {
 		final QuotientRemainderResult truncate = truncate(divisor);
 		return truncate.getRemainder();
 	}
 
-	public ComplexStruct cis() {
+	default ComplexStruct cis() {
 		return new ComplexStruct(cos(), sin());
 	}
 
-	public QuotientRemainderResult floor() {
+	default QuotientRemainderResult floor() {
 		return floor(IntegerStruct.ONE);
 	}
 
-	public QuotientRemainderResult floor(final RealStruct divisor) {
+	default QuotientRemainderResult floor(final RealStruct divisor) {
 		final QuotientRemainderVisitor<?> quotientRemainderVisitor = quotientRemainderVisitor();
 		return divisor.floor(quotientRemainderVisitor);
 	}
 
-	protected abstract QuotientRemainderResult floor(QuotientRemainderVisitor<?> quotientRemainderVisitor);
+	QuotientRemainderResult floor(QuotientRemainderVisitor<?> quotientRemainderVisitor);
 
-	public QuotientRemainderResult ffloor() {
+	default QuotientRemainderResult ffloor() {
 		return ffloor(IntegerStruct.ONE);
 	}
 
-	public QuotientRemainderResult ffloor(final RealStruct divisor) {
+	default QuotientRemainderResult ffloor(final RealStruct divisor) {
 		final QuotientRemainderVisitor<?> quotientRemainderVisitor = quotientRemainderVisitor();
 		return divisor.ffloor(quotientRemainderVisitor);
 	}
 
-	protected abstract QuotientRemainderResult ffloor(QuotientRemainderVisitor<?> quotientRemainderVisitor);
+	QuotientRemainderResult ffloor(QuotientRemainderVisitor<?> quotientRemainderVisitor);
 
-	public QuotientRemainderResult ceiling() {
+	default QuotientRemainderResult ceiling() {
 		return ceiling(IntegerStruct.ONE);
 	}
 
-	public QuotientRemainderResult ceiling(final RealStruct divisor) {
+	default QuotientRemainderResult ceiling(final RealStruct divisor) {
 		final QuotientRemainderVisitor<?> quotientRemainderVisitor = quotientRemainderVisitor();
 		return divisor.ceiling(quotientRemainderVisitor);
 	}
 
-	protected abstract QuotientRemainderResult ceiling(QuotientRemainderVisitor<?> quotientRemainderVisitor);
+	QuotientRemainderResult ceiling(QuotientRemainderVisitor<?> quotientRemainderVisitor);
 
-	public QuotientRemainderResult fceiling() {
+	default QuotientRemainderResult fceiling() {
 		return fceiling(IntegerStruct.ONE);
 	}
 
-	public QuotientRemainderResult fceiling(final RealStruct divisor) {
+	default QuotientRemainderResult fceiling(final RealStruct divisor) {
 		final QuotientRemainderVisitor<?> quotientRemainderVisitor = quotientRemainderVisitor();
 		return divisor.fceiling(quotientRemainderVisitor);
 	}
 
-	protected abstract QuotientRemainderResult fceiling(QuotientRemainderVisitor<?> quotientRemainderVisitor);
+	QuotientRemainderResult fceiling(QuotientRemainderVisitor<?> quotientRemainderVisitor);
 
-	public QuotientRemainderResult truncate() {
+	default QuotientRemainderResult truncate() {
 		return truncate(IntegerStruct.ONE);
 	}
 
-	public QuotientRemainderResult truncate(final RealStruct divisor) {
+	default QuotientRemainderResult truncate(final RealStruct divisor) {
 		if ((plusp() && divisor.plusp()) || (minusp() && divisor.minusp())) {
 			return floor(divisor);
 		} else {
@@ -262,11 +233,11 @@ public abstract class RealStruct extends NumberStruct {
 		}
 	}
 
-	public QuotientRemainderResult ftruncate() {
+	default QuotientRemainderResult ftruncate() {
 		return ftruncate(IntegerStruct.ONE);
 	}
 
-	public QuotientRemainderResult ftruncate(final RealStruct divisor) {
+	default QuotientRemainderResult ftruncate(final RealStruct divisor) {
 		if (plusp()) {
 			return ffloor(divisor);
 		} else {
@@ -274,59 +245,59 @@ public abstract class RealStruct extends NumberStruct {
 		}
 	}
 
-	public QuotientRemainderResult round() {
+	default QuotientRemainderResult round() {
 		return round(IntegerStruct.ONE);
 	}
 
-	public QuotientRemainderResult round(final RealStruct divisor) {
+	default QuotientRemainderResult round(final RealStruct divisor) {
 		final QuotientRemainderVisitor<?> quotientRemainderVisitor = quotientRemainderVisitor();
 		return divisor.round(quotientRemainderVisitor);
 	}
 
-	protected abstract QuotientRemainderResult round(QuotientRemainderVisitor<?> quotientRemainderVisitor);
+	QuotientRemainderResult round(QuotientRemainderVisitor<?> quotientRemainderVisitor);
 
-	public QuotientRemainderResult fround() {
+	default QuotientRemainderResult fround() {
 		return fround(IntegerStruct.ONE);
 	}
 
-	public QuotientRemainderResult fround(final RealStruct divisor) {
+	default QuotientRemainderResult fround(final RealStruct divisor) {
 		final QuotientRemainderVisitor<?> quotientRemainderVisitor = quotientRemainderVisitor();
 		return divisor.fround(quotientRemainderVisitor);
 	}
 
-	protected abstract QuotientRemainderResult fround(QuotientRemainderVisitor<?> quotientRemainderVisitor);
+	QuotientRemainderResult fround(QuotientRemainderVisitor<?> quotientRemainderVisitor);
 
-	protected abstract QuotientRemainderVisitor<?> quotientRemainderVisitor();
+	QuotientRemainderVisitor<?> quotientRemainderVisitor();
 
 	@Override
-	public Apcomplex apcomplexValue() {
+	default Apcomplex apcomplexValue() {
 		return apfloatValue();
 	}
 
 	@Override
-	public RealStruct realPart() {
+	default RealStruct realPart() {
 		return this;
 	}
 
 	@Override
-	public RealStruct conjugate() {
+	default RealStruct conjugate() {
 		return this;
 	}
 
 	@Override
-	public RealStruct exp() {
+	default RealStruct exp() {
 		final Apfloat apfloat = apfloatValue();
 		final Apfloat exp = ApfloatMath.exp(apfloat);
 		return new FloatStruct(exp);
 	}
 
 	@Override
-	protected NumberStruct.ExptVisitor<?> exptVisitor() {
+	default NumberStruct.ExptVisitor<?> exptVisitor() {
 		return new RealExptVisitor<>(this);
 	}
 
 	@Override
-	public NumberStruct log() {
+	default NumberStruct log() {
 		final Apfloat apfloat = apfloatValue();
 		if (apfloat.signum() < 0) {
 			final Apcomplex log = ApcomplexMath.log(apfloat);
@@ -337,7 +308,7 @@ public abstract class RealStruct extends NumberStruct {
 	}
 
 	@Override
-	public NumberStruct log(final NumberStruct base) {
+	default NumberStruct log(final NumberStruct base) {
 		final Apfloat apfloat = apfloatValue();
 		if ((apfloat.signum() < 0) || (base instanceof ComplexStruct)) {
 			final Apcomplex baseVal = base.apcomplexValue();
@@ -350,7 +321,7 @@ public abstract class RealStruct extends NumberStruct {
 	}
 
 	@Override
-	public NumberStruct sqrt() {
+	default NumberStruct sqrt() {
 		final Apfloat apfloat = apfloatValue();
 		if (apfloat.signum() < 0) {
 			final Apcomplex sqrt = ApcomplexMath.sqrt(apfloat);
@@ -361,48 +332,48 @@ public abstract class RealStruct extends NumberStruct {
 	}
 
 	@Override
-	public RealStruct sin() {
+	default RealStruct sin() {
 		final Apfloat apfloat = apfloatValue();
 		final Apfloat sin = ApfloatMath.sin(apfloat);
 		return new FloatStruct(sin);
 	}
 
 	@Override
-	public RealStruct cos() {
+	default RealStruct cos() {
 		final Apfloat apfloat = apfloatValue();
 		final Apfloat cos = ApfloatMath.cos(apfloat);
 		return new FloatStruct(cos);
 	}
 
 	@Override
-	public RealStruct tan() {
+	default RealStruct tan() {
 		final Apfloat apfloat = apfloatValue();
 		final Apfloat tan = ApfloatMath.tan(apfloat);
 		return new FloatStruct(tan);
 	}
 
 	@Override
-	public RealStruct asin() {
+	default RealStruct asin() {
 		final Apfloat apfloat = apfloatValue();
 		final Apfloat asin = ApfloatMath.asin(apfloat);
 		return new FloatStruct(asin);
 	}
 
 	@Override
-	public RealStruct acos() {
+	default RealStruct acos() {
 		final Apfloat apfloat = apfloatValue();
 		final Apfloat acos = ApfloatMath.acos(apfloat);
 		return new FloatStruct(acos);
 	}
 
 	@Override
-	public RealStruct atan() {
+	default RealStruct atan() {
 		final Apfloat apfloat = apfloatValue();
 		final Apfloat atan = ApfloatMath.atan(apfloat);
 		return new FloatStruct(atan);
 	}
 
-	public RealStruct atan(final RealStruct real) {
+	default RealStruct atan(final RealStruct real) {
 		final Apfloat apfloat1 = apfloatValue();
 		final Apfloat apfloat2 = real.apfloatValue();
 
@@ -411,57 +382,57 @@ public abstract class RealStruct extends NumberStruct {
 	}
 
 	@Override
-	public RealStruct sinh() {
+	default RealStruct sinh() {
 		final Apfloat apfloat = apfloatValue();
 		final Apfloat sinh = ApfloatMath.sinh(apfloat);
 		return new FloatStruct(sinh);
 	}
 
 	@Override
-	public RealStruct cosh() {
+	default RealStruct cosh() {
 		final Apfloat apfloat = apfloatValue();
 		final Apfloat cosh = ApfloatMath.cosh(apfloat);
 		return new FloatStruct(cosh);
 	}
 
 	@Override
-	public RealStruct tanh() {
+	default RealStruct tanh() {
 		final Apfloat apfloat = apfloatValue();
 		final Apfloat tanh = ApfloatMath.tanh(apfloat);
 		return new FloatStruct(tanh);
 	}
 
 	@Override
-	public RealStruct asinh() {
+	default RealStruct asinh() {
 		final Apfloat apfloat = apfloatValue();
 		final Apfloat asinh = ApfloatMath.asinh(apfloat);
 		return new FloatStruct(asinh);
 	}
 
 	@Override
-	public RealStruct acosh() {
+	default RealStruct acosh() {
 		final Apfloat apfloat = apfloatValue();
 		final Apfloat acosh = ApfloatMath.acosh(apfloat);
 		return new FloatStruct(acosh);
 	}
 
 	@Override
-	public RealStruct atanh() {
+	default RealStruct atanh() {
 		final Apfloat apfloat = apfloatValue();
 		final Apfloat atanh = ApfloatMath.atanh(apfloat);
 		return new FloatStruct(atanh);
 	}
 
-	public static RealStruct toRealStruct(final Apfloat apfloat) {
+	static RealStruct toRealStruct(final Apfloat apfloat) {
 		// TODO: Not quite right here either!!!
 		return (apfloat.doubleValue() == apfloat.intValue()) ? new IntegerStruct(apfloat) : new FloatStruct(apfloat);
 	}
 
 	// Visitor Implementations
 
-	protected abstract static class RealAddVisitor<S extends RealStruct> extends NumberStruct.AddVisitor<S> {
+	abstract class RealAddVisitor<S extends RealStruct> extends NumberStruct.AddVisitor<S> {
 
-		protected RealAddVisitor(final S number1) {
+		RealAddVisitor(final S number1) {
 			super(number1);
 		}
 
@@ -496,7 +467,7 @@ public abstract class RealStruct extends NumberStruct {
 		 *
 		 * @return a new {@link FloatStruct} as the result of the addition operation
 		 */
-		protected static RealStruct addFloat(final FloatStruct number1, final RealStruct number2) {
+		static RealStruct addFloat(final FloatStruct number1, final RealStruct number2) {
 			final BigDecimal bigDecimal1 = number1.bigDecimalValue();
 			final BigDecimal bigDecimal2 = number2.bigDecimalValue();
 			final BigDecimal add = bigDecimal1.add(bigDecimal2);
@@ -504,9 +475,9 @@ public abstract class RealStruct extends NumberStruct {
 		}
 	}
 
-	protected abstract static class RealSubtractVisitor<S extends RealStruct> extends NumberStruct.SubtractVisitor<S> {
+	abstract class RealSubtractVisitor<S extends RealStruct> extends NumberStruct.SubtractVisitor<S> {
 
-		protected RealSubtractVisitor(final S number1) {
+		RealSubtractVisitor(final S number1) {
 			super(number1);
 		}
 
@@ -534,9 +505,9 @@ public abstract class RealStruct extends NumberStruct {
 		}
 	}
 
-	protected abstract static class RealMultiplyVisitor<S extends RealStruct> extends NumberStruct.MultiplyVisitor<S> {
+	abstract class RealMultiplyVisitor<S extends RealStruct> extends NumberStruct.MultiplyVisitor<S> {
 
-		protected RealMultiplyVisitor(final S number1) {
+		RealMultiplyVisitor(final S number1) {
 			super(number1);
 		}
 
@@ -571,7 +542,7 @@ public abstract class RealStruct extends NumberStruct {
 		 *
 		 * @return a new {@link FloatStruct} as the result of the multiplication operation
 		 */
-		protected static RealStruct multiplyFloat(final FloatStruct number1, final RealStruct number2) {
+		static RealStruct multiplyFloat(final FloatStruct number1, final RealStruct number2) {
 			final BigDecimal bigDecimal1 = number1.bigDecimalValue();
 			final BigDecimal bigDecimal2 = number2.bigDecimalValue();
 			final BigDecimal multiply = bigDecimal1.multiply(bigDecimal2);
@@ -586,9 +557,9 @@ public abstract class RealStruct extends NumberStruct {
 		}
 	}
 
-	protected abstract static class RealDivideVisitor<S extends RealStruct> extends NumberStruct.DivideVisitor<S> {
+	abstract class RealDivideVisitor<S extends RealStruct> extends NumberStruct.DivideVisitor<S> {
 
-		protected RealDivideVisitor(final S number1) {
+		RealDivideVisitor(final S number1) {
 			super(number1);
 		}
 
@@ -616,15 +587,15 @@ public abstract class RealStruct extends NumberStruct {
 		}
 	}
 
-	protected static int getComparisonResult(final RealStruct real1, final RealStruct real2) {
+	static int getComparisonResult(final RealStruct real1, final RealStruct real2) {
 		final BigDecimal bigDecimal1 = real1.bigDecimalValue();
 		final BigDecimal bigDecimal2 = real2.bigDecimalValue();
 		return bigDecimal1.compareTo(bigDecimal2);
 	}
 
-	protected static class RealEqualToVisitor<S extends RealStruct> extends NumberStruct.EqualToVisitor<S> {
+	class RealEqualToVisitor<S extends RealStruct> extends NumberStruct.EqualToVisitor<S> {
 
-		protected RealEqualToVisitor(final S number1) {
+		RealEqualToVisitor(final S number1) {
 			super(number1);
 		}
 
@@ -659,11 +630,11 @@ public abstract class RealStruct extends NumberStruct {
 		}
 	}
 
-	protected static class LessThanVisitor<S extends RealStruct> {
+	class LessThanVisitor<S extends RealStruct> {
 
-		protected final S real1;
+		final S real1;
 
-		protected LessThanVisitor(final S real1) {
+		LessThanVisitor(final S real1) {
 			this.real1 = real1;
 		}
 
@@ -680,11 +651,11 @@ public abstract class RealStruct extends NumberStruct {
 		}
 	}
 
-	protected static class GreaterThanVisitor<S extends RealStruct> {
+	class GreaterThanVisitor<S extends RealStruct> {
 
-		protected final S real1;
+		final S real1;
 
-		protected GreaterThanVisitor(final S real1) {
+		GreaterThanVisitor(final S real1) {
 			this.real1 = real1;
 		}
 
@@ -701,11 +672,11 @@ public abstract class RealStruct extends NumberStruct {
 		}
 	}
 
-	protected static class LessThanOrEqualToVisitor<S extends RealStruct> {
+	class LessThanOrEqualToVisitor<S extends RealStruct> {
 
-		protected final S real1;
+		final S real1;
 
-		protected LessThanOrEqualToVisitor(final S real1) {
+		LessThanOrEqualToVisitor(final S real1) {
 			this.real1 = real1;
 		}
 
@@ -722,11 +693,11 @@ public abstract class RealStruct extends NumberStruct {
 		}
 	}
 
-	protected static class GreaterThanOrEqualToVisitor<S extends RealStruct> {
+	class GreaterThanOrEqualToVisitor<S extends RealStruct> {
 
-		protected final S real1;
+		final S real1;
 
-		protected GreaterThanOrEqualToVisitor(final S real1) {
+		GreaterThanOrEqualToVisitor(final S real1) {
 			this.real1 = real1;
 		}
 
@@ -743,11 +714,11 @@ public abstract class RealStruct extends NumberStruct {
 		}
 	}
 
-	protected abstract static class QuotientRemainderVisitor<S extends RealStruct> {
+	abstract class QuotientRemainderVisitor<S extends RealStruct> {
 
-		protected final S real;
+		final S real;
 
-		protected QuotientRemainderVisitor(final S real) {
+		QuotientRemainderVisitor(final S real) {
 			this.real = real;
 		}
 
@@ -831,8 +802,8 @@ public abstract class RealStruct extends NumberStruct {
 			return floatQuotientRemainder(divisor, roundingMode, isQuotientFloat);
 		}
 
-		protected QuotientRemainderResult floatQuotientRemainder(final RealStruct divisor, final RoundingMode roundingMode,
-		                                                         final boolean isQuotientFloat) {
+		QuotientRemainderResult floatQuotientRemainder(final RealStruct divisor, final RoundingMode roundingMode,
+		                                               final boolean isQuotientFloat) {
 			final BigDecimal realBigDecimal = real.bigDecimalValue();
 			final BigDecimal divisorBigDecimal = divisor.bigDecimalValue();
 
@@ -876,9 +847,9 @@ public abstract class RealStruct extends NumberStruct {
 		                                                          boolean isQuotientFloat);
 	}
 
-	protected static class RealExptVisitor<S extends RealStruct> extends NumberStruct.ExptVisitor<S> {
+	class RealExptVisitor<S extends RealStruct> extends NumberStruct.ExptVisitor<S> {
 
-		protected RealExptVisitor(final S base) {
+		RealExptVisitor(final S base) {
 			super(base);
 		}
 

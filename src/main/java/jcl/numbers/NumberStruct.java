@@ -7,41 +7,12 @@ package jcl.numbers;
 import java.util.List;
 
 import jcl.LispStruct;
-import jcl.classes.BuiltInClassStruct;
-import jcl.types.NumberType;
 import org.apfloat.Apcomplex;
 
 /**
  * The {@link NumberStruct} is the object representation of a Lisp 'number' type.
  */
-public abstract class NumberStruct extends BuiltInClassStruct {
-
-	/**
-	 * Protected constructor.
-	 *
-	 * @param directSuperClasses
-	 * 		the direct super classes
-	 * @param subClasses
-	 * 		the subclasses
-	 */
-	protected NumberStruct(final List<Class<? extends LispStruct>> directSuperClasses, final List<Class<? extends LispStruct>> subClasses) {
-		super(NumberType.INSTANCE, directSuperClasses, subClasses);
-	}
-
-	/**
-	 * Protected constructor.
-	 *
-	 * @param type
-	 * 		the type of the number object
-	 * @param directSuperClasses
-	 * 		the direct super classes
-	 * @param subClasses
-	 * 		the subclasses
-	 */
-	protected NumberStruct(final NumberType type,
-	                       final List<Class<? extends LispStruct>> directSuperClasses, final List<Class<? extends LispStruct>> subClasses) {
-		super(type, directSuperClasses, subClasses);
-	}
+public interface NumberStruct extends LispStruct {
 
 	// TODO: move the following 3 up
 
@@ -52,7 +23,7 @@ public abstract class NumberStruct extends BuiltInClassStruct {
 	 * that if 'x' and 'y' are both numbers of the same type and the same value, then they are equal.
 	 */
 //	@Override
-	public boolean lispEql(final LispStruct lispStruct) {
+	default boolean lispEql(final LispStruct lispStruct) {
 		return equals(lispStruct);
 	}
 
@@ -63,7 +34,7 @@ public abstract class NumberStruct extends BuiltInClassStruct {
 	 * that if 'x' and 'y' are 'EQL', then they are equal.
 	 */
 //	@Override
-	public boolean lispEqual(final LispStruct lispStruct) {
+	default boolean lispEqual(final LispStruct lispStruct) {
 		return equals(lispStruct);
 	}
 
@@ -74,84 +45,84 @@ public abstract class NumberStruct extends BuiltInClassStruct {
 	 * that if 'x' and 'y' are 'EQL', then they are equal.
 	 */
 //	@Override
-	public boolean lispEqualp(final LispStruct lispStruct) {
+	default boolean lispEqualp(final LispStruct lispStruct) {
 		return (lispStruct instanceof NumberStruct) && isEqualTo((NumberStruct) lispStruct);
 	}
 
-	public abstract Apcomplex apcomplexValue();
+	Apcomplex apcomplexValue();
 
-	public abstract RealStruct abs();
+	RealStruct abs();
 
-	public abstract boolean zerop();
+	boolean zerop();
 
-	public NumberStruct add(final NumberStruct number) {
+	default NumberStruct add(final NumberStruct number) {
 		final AddVisitor<?> addVisitor = addVisitor();
 		return number.add(addVisitor);
 	}
 
-	protected abstract NumberStruct add(AddVisitor<?> addVisitor);
+	NumberStruct add(AddVisitor<?> addVisitor);
 
-	protected abstract AddVisitor<?> addVisitor();
+	AddVisitor<?> addVisitor();
 
-	public static NumberStruct add(final List<NumberStruct> numbers) {
+	static NumberStruct add(final List<NumberStruct> numbers) {
 		return numbers.stream().reduce(IntegerStruct.ZERO, NumberStruct::add);
 	}
 
-	public NumberStruct subtract(final NumberStruct number) {
+	default NumberStruct subtract(final NumberStruct number) {
 		final SubtractVisitor<?> subtractVisitor = subtractVisitor();
 		return number.subtract(subtractVisitor);
 	}
 
-	protected abstract NumberStruct subtract(SubtractVisitor<?> subtractVisitor);
+	NumberStruct subtract(SubtractVisitor<?> subtractVisitor);
 
-	protected abstract SubtractVisitor<?> subtractVisitor();
+	SubtractVisitor<?> subtractVisitor();
 
-	public static NumberStruct subtract(final NumberStruct number, final List<NumberStruct> numbers) {
+	static NumberStruct subtract(final NumberStruct number, final List<NumberStruct> numbers) {
 		if (numbers.isEmpty()) {
 			return number.negation();
 		}
 		return numbers.stream().reduce(number, NumberStruct::subtract);
 	}
 
-	public NumberStruct multiply(final NumberStruct number) {
+	default NumberStruct multiply(final NumberStruct number) {
 		final MultiplyVisitor<?> multiplyVisitor = multiplyVisitor();
 		return number.multiply(multiplyVisitor);
 	}
 
-	protected abstract NumberStruct multiply(MultiplyVisitor<?> multiplyVisitor);
+	NumberStruct multiply(MultiplyVisitor<?> multiplyVisitor);
 
-	protected abstract MultiplyVisitor<?> multiplyVisitor();
+	MultiplyVisitor<?> multiplyVisitor();
 
-	public static NumberStruct multiply(final List<NumberStruct> numbers) {
+	static NumberStruct multiply(final List<NumberStruct> numbers) {
 		return numbers.stream().reduce(IntegerStruct.ONE, NumberStruct::multiply);
 	}
 
-	public NumberStruct divide(final NumberStruct number) {
+	default NumberStruct divide(final NumberStruct number) {
 		final DivideVisitor<?> divideVisitor = divideVisitor();
 		return number.divide(divideVisitor);
 	}
 
-	protected abstract NumberStruct divide(DivideVisitor<?> divideVisitor);
+	NumberStruct divide(DivideVisitor<?> divideVisitor);
 
-	protected abstract DivideVisitor<?> divideVisitor();
+	DivideVisitor<?> divideVisitor();
 
-	public static NumberStruct divide(final NumberStruct number, final List<NumberStruct> numbers) {
+	static NumberStruct divide(final NumberStruct number, final List<NumberStruct> numbers) {
 		if (numbers.isEmpty()) {
 			return number.reciprocal();
 		}
 		return numbers.stream().reduce(number, NumberStruct::divide);
 	}
 
-	public boolean isEqualTo(final NumberStruct number) {
+	default boolean isEqualTo(final NumberStruct number) {
 		final EqualToVisitor<?> equalToVisitor = equalToVisitor();
 		return number.isEqualTo(equalToVisitor);
 	}
 
-	protected abstract boolean isEqualTo(EqualToVisitor<?> equalToVisitor);
+	boolean isEqualTo(EqualToVisitor<?> equalToVisitor);
 
-	protected abstract EqualToVisitor<?> equalToVisitor();
+	EqualToVisitor<?> equalToVisitor();
 
-	public static boolean isEqualTo(final NumberStruct number, final List<NumberStruct> numbers) {
+	static boolean isEqualTo(final NumberStruct number, final List<NumberStruct> numbers) {
 		NumberStruct previousNumber = number;
 
 		boolean result = true;
@@ -165,11 +136,11 @@ public abstract class NumberStruct extends BuiltInClassStruct {
 		return result;
 	}
 
-	public boolean isNotEqualTo(final NumberStruct number) {
+	default boolean isNotEqualTo(final NumberStruct number) {
 		return !isEqualTo(number);
 	}
 
-	public static boolean isNotEqualTo(final NumberStruct number, final List<NumberStruct> numbers) {
+	static boolean isNotEqualTo(final NumberStruct number, final List<NumberStruct> numbers) {
 		NumberStruct previousNumber = number;
 
 		boolean result = true;
@@ -183,21 +154,21 @@ public abstract class NumberStruct extends BuiltInClassStruct {
 		return result;
 	}
 
-	public abstract NumberStruct signum();
+	NumberStruct signum();
 
-	public abstract NumberStruct realPart();
+	NumberStruct realPart();
 
-	public abstract NumberStruct imagPart();
+	NumberStruct imagPart();
 
-	public abstract NumberStruct conjugate();
+	NumberStruct conjugate();
 
-	public abstract NumberStruct negation();
+	NumberStruct negation();
 
-	public abstract NumberStruct reciprocal();
+	NumberStruct reciprocal();
 
-	public abstract NumberStruct exp();
+	NumberStruct exp();
 
-	public NumberStruct expt(final NumberStruct power) {
+	default NumberStruct expt(final NumberStruct power) {
 //		final Apcomplex baseApcomplex = apcomplexValue();
 //		final Apcomplex powerApcomplex = power.apcomplexValue();
 //		final Apcomplex pow = ApcomplexMath.pow(baseApcomplex, powerApcomplex);
@@ -213,49 +184,49 @@ public abstract class NumberStruct extends BuiltInClassStruct {
 		return power.expt(exptVisitor);
 	}
 
-	protected abstract NumberStruct expt(ExptVisitor<?> exptVisitor);
+	NumberStruct expt(ExptVisitor<?> exptVisitor);
 
-	protected abstract ExptVisitor<?> exptVisitor();
+	ExptVisitor<?> exptVisitor();
 
-	public abstract NumberStruct log();
+	NumberStruct log();
 
-	public NumberStruct log(final NumberStruct base) {
+	default NumberStruct log(final NumberStruct base) {
 		return log().divide(base.log());
 	}
 
-	public abstract NumberStruct sqrt();
+	NumberStruct sqrt();
 
-	public abstract NumberStruct sin();
+	NumberStruct sin();
 
-	public abstract NumberStruct cos();
+	NumberStruct cos();
 
-	public abstract NumberStruct tan();
+	NumberStruct tan();
 
-	public abstract NumberStruct asin();
+	NumberStruct asin();
 
-	public abstract NumberStruct acos();
+	NumberStruct acos();
 
-	public abstract NumberStruct atan();
+	NumberStruct atan();
 
-	public abstract NumberStruct sinh();
+	NumberStruct sinh();
 
-	public abstract NumberStruct cosh();
+	NumberStruct cosh();
 
-	public abstract NumberStruct tanh();
+	NumberStruct tanh();
 
-	public abstract NumberStruct asinh();
+	NumberStruct asinh();
 
-	public abstract NumberStruct acosh();
+	NumberStruct acosh();
 
-	public abstract NumberStruct atanh();
+	NumberStruct atanh();
 
 	// Visitor Implementations
 
-	protected abstract static class AddVisitor<S extends NumberStruct> {
+	abstract class AddVisitor<S extends NumberStruct> {
 
-		protected final S number1;
+		final S number1;
 
-		protected AddVisitor(final S number1) {
+		AddVisitor(final S number1) {
 			this.number1 = number1;
 		}
 
@@ -268,11 +239,11 @@ public abstract class NumberStruct extends BuiltInClassStruct {
 		public abstract NumberStruct add(ComplexStruct number2);
 	}
 
-	protected abstract static class SubtractVisitor<S extends NumberStruct> {
+	abstract class SubtractVisitor<S extends NumberStruct> {
 
-		protected final S number1;
+		final S number1;
 
-		protected SubtractVisitor(final S number1) {
+		SubtractVisitor(final S number1) {
 			this.number1 = number1;
 		}
 
@@ -285,11 +256,11 @@ public abstract class NumberStruct extends BuiltInClassStruct {
 		public abstract NumberStruct subtract(ComplexStruct number2);
 	}
 
-	protected abstract static class MultiplyVisitor<S extends NumberStruct> {
+	abstract class MultiplyVisitor<S extends NumberStruct> {
 
-		protected final S number1;
+		final S number1;
 
-		protected MultiplyVisitor(final S number1) {
+		MultiplyVisitor(final S number1) {
 			this.number1 = number1;
 		}
 
@@ -302,11 +273,11 @@ public abstract class NumberStruct extends BuiltInClassStruct {
 		public abstract NumberStruct multiply(ComplexStruct number2);
 	}
 
-	protected abstract static class DivideVisitor<S extends NumberStruct> {
+	abstract class DivideVisitor<S extends NumberStruct> {
 
-		protected final S number1;
+		final S number1;
 
-		protected DivideVisitor(final S number1) {
+		DivideVisitor(final S number1) {
 			this.number1 = number1;
 		}
 
@@ -319,11 +290,11 @@ public abstract class NumberStruct extends BuiltInClassStruct {
 		public abstract NumberStruct divide(ComplexStruct number2);
 	}
 
-	protected abstract static class EqualToVisitor<S extends NumberStruct> {
+	abstract class EqualToVisitor<S extends NumberStruct> {
 
-		protected final S number1;
+		final S number1;
 
-		protected EqualToVisitor(final S number1) {
+		EqualToVisitor(final S number1) {
 			this.number1 = number1;
 		}
 
@@ -336,11 +307,11 @@ public abstract class NumberStruct extends BuiltInClassStruct {
 		public abstract boolean equalTo(ComplexStruct number2);
 	}
 
-	protected abstract static class ExptVisitor<S extends NumberStruct> {
+	abstract class ExptVisitor<S extends NumberStruct> {
 
-		protected final S base;
+		final S base;
 
-		protected ExptVisitor(final S base) {
+		ExptVisitor(final S base) {
 			this.base = base;
 		}
 
@@ -352,7 +323,7 @@ public abstract class NumberStruct extends BuiltInClassStruct {
 
 		public abstract NumberStruct expt(ComplexStruct power);
 
-		protected static NumberStruct exptInteger(final NumberStruct base, final IntegerStruct power) {
+		static NumberStruct exptInteger(final NumberStruct base, final IntegerStruct power) {
 			// TODO: simplify this!!!
 			if (power.isEqualTo(IntegerStruct.ZERO)) {
 				return IntegerStruct.ONE;

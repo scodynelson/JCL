@@ -9,6 +9,7 @@ import java.math.BigInteger;
 import java.math.MathContext;
 import java.math.RoundingMode;
 
+import jcl.classes.BuiltInClassStruct;
 import jcl.types.RatioType;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -22,7 +23,7 @@ import org.slf4j.LoggerFactory;
 /**
  * The {@link RatioStruct} is the object representation of a Lisp 'ratio' type.
  */
-public class RatioStruct extends RationalStruct {
+public class RatioStruct extends BuiltInClassStruct implements RationalStruct {
 
 	/**
 	 * {@link RatioStruct} constant representing 0.
@@ -129,7 +130,7 @@ public class RatioStruct extends RationalStruct {
 	 * @return the addition of {@link NumberStruct} using the provided {@link AddVisitor} and this RatioStruct
 	 */
 	@Override
-	protected NumberStruct add(final AddVisitor<?> addVisitor) {
+	public NumberStruct add(final AddVisitor<?> addVisitor) {
 		return addVisitor.add(this);
 	}
 
@@ -139,7 +140,7 @@ public class RatioStruct extends RationalStruct {
 	 * @return a new {@link AddVisitor} with this RatioStruct to be used in an addition operation
 	 */
 	@Override
-	protected AddVisitor<?> addVisitor() {
+	public AddVisitor<?> addVisitor() {
 		return new RatioAddVisitor(this);
 	}
 
@@ -154,7 +155,7 @@ public class RatioStruct extends RationalStruct {
 	 * @return the subtraction of {@link NumberStruct} using the provided {@link SubtractVisitor} and this RatioStruct
 	 */
 	@Override
-	protected NumberStruct subtract(final SubtractVisitor<?> subtractVisitor) {
+	public NumberStruct subtract(final SubtractVisitor<?> subtractVisitor) {
 		return subtractVisitor.subtract(this);
 	}
 
@@ -164,7 +165,7 @@ public class RatioStruct extends RationalStruct {
 	 * @return a new {@link SubtractVisitor} with this RatioStruct to be used in a subtraction operation
 	 */
 	@Override
-	protected SubtractVisitor<?> subtractVisitor() {
+	public SubtractVisitor<?> subtractVisitor() {
 		return new RatioSubtractVisitor(this);
 	}
 
@@ -180,7 +181,7 @@ public class RatioStruct extends RationalStruct {
 	 * RatioStruct
 	 */
 	@Override
-	protected NumberStruct multiply(final MultiplyVisitor<?> multiplyVisitor) {
+	public NumberStruct multiply(final MultiplyVisitor<?> multiplyVisitor) {
 		return multiplyVisitor.multiply(this);
 	}
 
@@ -190,7 +191,7 @@ public class RatioStruct extends RationalStruct {
 	 * @return a new {@link MultiplyVisitor} with this RatioStruct to be used in a multiplication operation
 	 */
 	@Override
-	protected MultiplyVisitor<?> multiplyVisitor() {
+	public MultiplyVisitor<?> multiplyVisitor() {
 		return new RatioMultiplyVisitor(this);
 	}
 
@@ -205,7 +206,7 @@ public class RatioStruct extends RationalStruct {
 	 * @return the division of {@link NumberStruct} using the provided {@link DivideVisitor} and this RatioStruct
 	 */
 	@Override
-	protected NumberStruct divide(final DivideVisitor<?> divideVisitor) {
+	public NumberStruct divide(final DivideVisitor<?> divideVisitor) {
 		return divideVisitor.divide(this);
 	}
 
@@ -215,7 +216,7 @@ public class RatioStruct extends RationalStruct {
 	 * @return a new {@link DivideVisitor} with this RatioStruct to be used in a division operation
 	 */
 	@Override
-	protected DivideVisitor<?> divideVisitor() {
+	public DivideVisitor<?> divideVisitor() {
 		return new RatioDivideVisitor(this);
 	}
 
@@ -231,7 +232,7 @@ public class RatioStruct extends RationalStruct {
 	 * RatioStruct
 	 */
 	@Override
-	protected boolean isEqualTo(final EqualToVisitor<?> equalToVisitor) {
+	public boolean isEqualTo(final EqualToVisitor<?> equalToVisitor) {
 		return equalToVisitor.equalTo(this);
 	}
 
@@ -241,7 +242,7 @@ public class RatioStruct extends RationalStruct {
 	 * @return a new {@link EqualToVisitor} with this RatioStruct to be used in an '=' operation
 	 */
 	@Override
-	protected EqualToVisitor<?> equalToVisitor() {
+	public EqualToVisitor<?> equalToVisitor() {
 		return new RatioEqualToVisitor(this);
 	}
 
@@ -253,11 +254,11 @@ public class RatioStruct extends RationalStruct {
 	 * @param lessThanVisitor
 	 * 		the {@link RealStruct.LessThanVisitor} to be used in the {@literal '<'} operation
 	 *
-	 * @return the {@literal '<'} comparison of {@link NumberStruct} using the provided {@link RealStruct.LessThanVisitor} and this
-	 * RatioStruct
+	 * @return the {@literal '<'} comparison of {@link NumberStruct} using the provided {@link
+	 * RealStruct.LessThanVisitor} and this RatioStruct
 	 */
 	@Override
-	protected boolean isLessThan(final RealStruct.LessThanVisitor<?> lessThanVisitor) {
+	public boolean isLessThan(final RealStruct.LessThanVisitor<?> lessThanVisitor) {
 		return lessThanVisitor.lessThan(this);
 	}
 
@@ -267,7 +268,7 @@ public class RatioStruct extends RationalStruct {
 	 * @return a new {@link RealStruct.LessThanVisitor} with this RatioStruct to be used in a {@literal '<'} operation
 	 */
 	@Override
-	protected RealStruct.LessThanVisitor<?> lessThanVisitor() {
+	public RealStruct.LessThanVisitor<?> lessThanVisitor() {
 		return new RatioLessThanVisitor(this);
 	}
 
@@ -279,28 +280,31 @@ public class RatioStruct extends RationalStruct {
 	 * @param greaterThanVisitor
 	 * 		the {@link RealStruct.GreaterThanVisitor} to be used in the {@literal '>'} operation
 	 *
-	 * @return the {@literal '>'} comparison of {@link NumberStruct} using the provided {@link RealStruct.GreaterThanVisitor} and
-	 * this RatioStruct
+	 * @return the {@literal '>'} comparison of {@link NumberStruct} using the provided {@link
+	 * RealStruct.GreaterThanVisitor} and this RatioStruct
 	 */
 	@Override
-	protected boolean isGreaterThan(final RealStruct.GreaterThanVisitor<?> greaterThanVisitor) {
+	public boolean isGreaterThan(final RealStruct.GreaterThanVisitor<?> greaterThanVisitor) {
 		return greaterThanVisitor.greaterThan(this);
 	}
 
 	/**
-	 * Returns a new {@link RealStruct.GreaterThanVisitor} with this RatioStruct to be used in a {@literal '>'} operation.
+	 * Returns a new {@link RealStruct.GreaterThanVisitor} with this RatioStruct to be used in a {@literal '>'}
+	 * operation.
 	 *
-	 * @return a new {@link RealStruct.GreaterThanVisitor} with this RatioStruct to be used in a {@literal '>'} operation
+	 * @return a new {@link RealStruct.GreaterThanVisitor} with this RatioStruct to be used in a {@literal '>'}
+	 * operation
 	 */
 	@Override
-	protected RealStruct.GreaterThanVisitor<?> greaterThanVisitor() {
+	public RealStruct.GreaterThanVisitor<?> greaterThanVisitor() {
 		return new RatioGreaterThanVisitor(this);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 * <p>
-	 * Compares this RatioStruct to a {@link NumberStruct} using the provided {@link RealStruct.LessThanOrEqualToVisitor}.
+	 * Compares this RatioStruct to a {@link NumberStruct} using the provided {@link
+	 * RealStruct.LessThanOrEqualToVisitor}.
 	 *
 	 * @param lessThanOrEqualToVisitor
 	 * 		the {@link RealStruct.LessThanOrEqualToVisitor} to be used in the {@literal '<='} operation
@@ -309,24 +313,27 @@ public class RatioStruct extends RationalStruct {
 	 * RealStruct.LessThanOrEqualToVisitor} and this RatioStruct
 	 */
 	@Override
-	protected boolean isLessThanOrEqualTo(final RealStruct.LessThanOrEqualToVisitor<?> lessThanOrEqualToVisitor) {
+	public boolean isLessThanOrEqualTo(final RealStruct.LessThanOrEqualToVisitor<?> lessThanOrEqualToVisitor) {
 		return lessThanOrEqualToVisitor.lessThanOrEqualTo(this);
 	}
 
 	/**
-	 * Returns a new {@link RealStruct.LessThanOrEqualToVisitor} with this RatioStruct to be used in a {@literal '<='} operation.
+	 * Returns a new {@link RealStruct.LessThanOrEqualToVisitor} with this RatioStruct to be used in a {@literal '<='}
+	 * operation.
 	 *
-	 * @return a new {@link RealStruct.LessThanOrEqualToVisitor} with this RatioStruct to be used in a {@literal '<='} operation
+	 * @return a new {@link RealStruct.LessThanOrEqualToVisitor} with this RatioStruct to be used in a {@literal '<='}
+	 * operation
 	 */
 	@Override
-	protected RealStruct.LessThanOrEqualToVisitor<?> lessThanOrEqualToVisitor() {
+	public RealStruct.LessThanOrEqualToVisitor<?> lessThanOrEqualToVisitor() {
 		return new RatioLessThanOrEqualToVisitor(this);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 * <p>
-	 * Compares this RatioStruct to a {@link NumberStruct} using the provided {@link RealStruct.GreaterThanOrEqualToVisitor}.
+	 * Compares this RatioStruct to a {@link NumberStruct} using the provided {@link
+	 * RealStruct.GreaterThanOrEqualToVisitor}.
 	 *
 	 * @param greaterThanOrEqualToVisitor
 	 * 		the {@link RealStruct.GreaterThanOrEqualToVisitor} to be used in the {@literal '>='} operation
@@ -335,18 +342,19 @@ public class RatioStruct extends RationalStruct {
 	 * RealStruct.GreaterThanOrEqualToVisitor} and this RatioStruct
 	 */
 	@Override
-	protected boolean isGreaterThanOrEqualTo(final RealStruct.GreaterThanOrEqualToVisitor<?> greaterThanOrEqualToVisitor) {
+	public boolean isGreaterThanOrEqualTo(final RealStruct.GreaterThanOrEqualToVisitor<?> greaterThanOrEqualToVisitor) {
 		return greaterThanOrEqualToVisitor.greaterThanOrEqualTo(this);
 	}
 
 	/**
-	 * Returns a new {@link RealStruct.GreaterThanOrEqualToVisitor} with this RatioStruct to be used in a {@literal '>='}
-	 * operation.
+	 * Returns a new {@link RealStruct.GreaterThanOrEqualToVisitor} with this RatioStruct to be used in a {@literal
+	 * '>='} operation.
 	 *
-	 * @return a new {@link RealStruct.GreaterThanOrEqualToVisitor} with this RatioStruct to be used in a {@literal '>='} operation
+	 * @return a new {@link RealStruct.GreaterThanOrEqualToVisitor} with this RatioStruct to be used in a {@literal
+	 * '>='} operation
 	 */
 	@Override
-	protected RealStruct.GreaterThanOrEqualToVisitor<?> greaterThanOrEqualToVisitor() {
+	public RealStruct.GreaterThanOrEqualToVisitor<?> greaterThanOrEqualToVisitor() {
 		return new RatioGreaterThanOrEqualToVisitor(this);
 	}
 
@@ -397,7 +405,7 @@ public class RatioStruct extends RationalStruct {
 	 */
 	@Override
 	public NumberStruct reciprocal() {
-		return makeRational(bigFraction.getDenominator(), bigFraction.getNumerator());
+		return RationalStruct.makeRational(bigFraction.getDenominator(), bigFraction.getNumerator());
 	}
 
 	/**
@@ -421,7 +429,8 @@ public class RatioStruct extends RationalStruct {
 			return this;
 		}
 
-		return super.expt(power);
+		final ExptVisitor<?> exptVisitor = exptVisitor();
+		return power.expt(exptVisitor);
 	}
 
 	/**
@@ -437,7 +446,7 @@ public class RatioStruct extends RationalStruct {
 	 * {@link ExptVisitor}
 	 */
 	@Override
-	protected NumberStruct expt(final ExptVisitor<?> exptVisitor) {
+	public NumberStruct expt(final ExptVisitor<?> exptVisitor) {
 		return exptVisitor.expt(this);
 	}
 
@@ -495,7 +504,7 @@ public class RatioStruct extends RationalStruct {
 	 * using the provided {@link QuotientRemainderVisitor}
 	 */
 	@Override
-	protected QuotientRemainderResult floor(final QuotientRemainderVisitor<?> quotientRemainderVisitor) {
+	public QuotientRemainderResult floor(final QuotientRemainderVisitor<?> quotientRemainderVisitor) {
 		return quotientRemainderVisitor.floor(this);
 	}
 
@@ -512,7 +521,7 @@ public class RatioStruct extends RationalStruct {
 	 * using the provided {@link QuotientRemainderVisitor}
 	 */
 	@Override
-	protected QuotientRemainderResult ffloor(final QuotientRemainderVisitor<?> quotientRemainderVisitor) {
+	public QuotientRemainderResult ffloor(final QuotientRemainderVisitor<?> quotientRemainderVisitor) {
 		return quotientRemainderVisitor.ffloor(this);
 	}
 
@@ -529,7 +538,7 @@ public class RatioStruct extends RationalStruct {
 	 * using the provided {@link QuotientRemainderVisitor}
 	 */
 	@Override
-	protected QuotientRemainderResult ceiling(final QuotientRemainderVisitor<?> quotientRemainderVisitor) {
+	public QuotientRemainderResult ceiling(final QuotientRemainderVisitor<?> quotientRemainderVisitor) {
 		return quotientRemainderVisitor.ceiling(this);
 	}
 
@@ -547,7 +556,7 @@ public class RatioStruct extends RationalStruct {
 	 * using the provided {@link QuotientRemainderVisitor}
 	 */
 	@Override
-	protected QuotientRemainderResult fceiling(final QuotientRemainderVisitor<?> quotientRemainderVisitor) {
+	public QuotientRemainderResult fceiling(final QuotientRemainderVisitor<?> quotientRemainderVisitor) {
 		return quotientRemainderVisitor.fceiling(this);
 	}
 
@@ -564,7 +573,7 @@ public class RatioStruct extends RationalStruct {
 	 * using the provided {@link QuotientRemainderVisitor}
 	 */
 	@Override
-	protected QuotientRemainderResult round(final QuotientRemainderVisitor<?> quotientRemainderVisitor) {
+	public QuotientRemainderResult round(final QuotientRemainderVisitor<?> quotientRemainderVisitor) {
 		return quotientRemainderVisitor.round(this);
 	}
 
@@ -581,7 +590,7 @@ public class RatioStruct extends RationalStruct {
 	 * using the provided {@link QuotientRemainderVisitor}
 	 */
 	@Override
-	protected QuotientRemainderResult fround(final QuotientRemainderVisitor<?> quotientRemainderVisitor) {
+	public QuotientRemainderResult fround(final QuotientRemainderVisitor<?> quotientRemainderVisitor) {
 		return quotientRemainderVisitor.fround(this);
 	}
 
@@ -593,7 +602,7 @@ public class RatioStruct extends RationalStruct {
 	 * calculation operation
 	 */
 	@Override
-	protected QuotientRemainderVisitor<?> quotientRemainderVisitor() {
+	public QuotientRemainderVisitor<?> quotientRemainderVisitor() {
 		return new RatioQuotientRemainderVisitor(this);
 	}
 
@@ -726,7 +735,7 @@ public class RatioStruct extends RationalStruct {
 			final BigFraction bigFraction1 = number1.getBigFraction();
 			final BigInteger bigInteger2 = number2.getBigInteger();
 			final BigFraction add = bigFraction1.add(bigInteger2);
-			return makeRational(add);
+			return RationalStruct.makeRational(add);
 		}
 
 		/**
@@ -739,7 +748,7 @@ public class RatioStruct extends RationalStruct {
 			final BigFraction bigFraction1 = number1.getBigFraction();
 			final BigFraction bigFraction2 = number2.getBigFraction();
 			final BigFraction add = bigFraction1.add(bigFraction2);
-			return makeRational(add);
+			return RationalStruct.makeRational(add);
 		}
 	}
 
@@ -769,7 +778,7 @@ public class RatioStruct extends RationalStruct {
 			final BigFraction bigFraction1 = number1.getBigFraction();
 			final BigInteger bigInteger2 = number2.getBigInteger();
 			final BigFraction subtract = bigFraction1.subtract(bigInteger2);
-			return makeRational(subtract);
+			return RationalStruct.makeRational(subtract);
 		}
 
 		/**
@@ -782,7 +791,7 @@ public class RatioStruct extends RationalStruct {
 			final BigFraction bigFraction1 = number1.getBigFraction();
 			final BigFraction bigFraction2 = number2.getBigFraction();
 			final BigFraction subtract = bigFraction1.subtract(bigFraction2);
-			return makeRational(subtract);
+			return RationalStruct.makeRational(subtract);
 		}
 	}
 
@@ -812,7 +821,7 @@ public class RatioStruct extends RationalStruct {
 			final BigFraction bigFraction1 = number1.getBigFraction();
 			final BigInteger bigInteger2 = number2.getBigInteger();
 			final BigFraction multiply = bigFraction1.multiply(bigInteger2);
-			return makeRational(multiply);
+			return RationalStruct.makeRational(multiply);
 		}
 
 		/**
@@ -825,7 +834,7 @@ public class RatioStruct extends RationalStruct {
 			final BigFraction bigFraction1 = number1.getBigFraction();
 			final BigFraction bigFraction2 = number2.getBigFraction();
 			final BigFraction multiply = bigFraction1.multiply(bigFraction2);
-			return makeRational(multiply);
+			return RationalStruct.makeRational(multiply);
 		}
 	}
 
@@ -855,7 +864,7 @@ public class RatioStruct extends RationalStruct {
 			final BigFraction bigFraction1 = number1.getBigFraction();
 			final BigInteger bigInteger2 = number2.getBigInteger();
 			final BigFraction divide = bigFraction1.divide(bigInteger2);
-			return makeRational(divide);
+			return RationalStruct.makeRational(divide);
 		}
 
 		/**
@@ -868,7 +877,7 @@ public class RatioStruct extends RationalStruct {
 			final BigFraction bigFraction1 = number1.getBigFraction();
 			final BigFraction bigFraction2 = number2.getBigFraction();
 			final BigFraction divide = bigFraction1.divide(bigFraction2);
-			return makeRational(divide);
+			return RationalStruct.makeRational(divide);
 		}
 	}
 
@@ -910,7 +919,8 @@ public class RatioStruct extends RationalStruct {
 	}
 
 	/**
-	 * {@link RealStruct.LessThanVisitor} for computing numeric {@literal '<'} equality results for {@link RatioStruct}s.
+	 * {@link RealStruct.LessThanVisitor} for computing numeric {@literal '<'} equality results for {@link
+	 * RatioStruct}s.
 	 */
 	private static final class RatioLessThanVisitor extends RealStruct.LessThanVisitor<RatioStruct> {
 
@@ -947,7 +957,8 @@ public class RatioStruct extends RationalStruct {
 	}
 
 	/**
-	 * {@link RealStruct.GreaterThanVisitor} for computing numeric {@literal '>'} equality results for {@link RatioStruct}s.
+	 * {@link RealStruct.GreaterThanVisitor} for computing numeric {@literal '>'} equality results for {@link
+	 * RatioStruct}s.
 	 */
 	private static final class RatioGreaterThanVisitor extends RealStruct.GreaterThanVisitor<RatioStruct> {
 
@@ -1060,7 +1071,8 @@ public class RatioStruct extends RationalStruct {
 	}
 
 	/**
-	 * {@link RationalStruct.RationalQuotientRemainderVisitor} for computing quotient and remainder results for {@link RatioStruct}s.
+	 * {@link RationalStruct.RationalQuotientRemainderVisitor} for computing quotient and remainder results for {@link
+	 * RatioStruct}s.
 	 */
 	private static final class RatioQuotientRemainderVisitor extends RationalStruct.RationalQuotientRemainderVisitor<RatioStruct> {
 

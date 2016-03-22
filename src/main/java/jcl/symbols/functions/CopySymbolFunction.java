@@ -4,68 +4,35 @@
 
 package jcl.symbols.functions;
 
-import java.util.List;
-
 import jcl.LispStruct;
-import jcl.compiler.environment.binding.lambdalist.OptionalParameter;
-import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
-import jcl.functions.AbstractCommonLispFunctionStruct;
-import jcl.packages.GlobalPackageStruct;
+import jcl.functions.CommonLispBuiltInFunctionStruct;
+import jcl.functions.parameterdsl.Arguments;
+import jcl.functions.parameterdsl.Parameters;
 import jcl.symbols.BooleanStruct;
 import jcl.symbols.NILStruct;
 import jcl.symbols.SymbolStruct;
-import jcl.types.BooleanType;
-import jcl.types.SymbolType;
-import jcl.types.TypeValidator;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class CopySymbolFunction extends AbstractCommonLispFunctionStruct {
+public final class CopySymbolFunction extends CommonLispBuiltInFunctionStruct {
 
-	/**
-	 * The {@link TypeValidator} for validating the function parameter value types.
-	 */
-	@Autowired
-	private TypeValidator validator;
+	private static final String FUNCTION_NAME = "COPY-SYMBOL";
+	private static final String SYMBOL_ARGUMENT = "SYMBOL";
+	private static final String COPY_PROPERTIES_ARGUMENT = "COPY-PROPERTIES";
 
 	public CopySymbolFunction() {
-		super("Returns a fresh, uninterned symbol, the name of which is equal to and possibly the same as the name of the given symbol.");
+		super("Returns a fresh, uninterned symbol, the name of which is equal to and possibly the same as the name of the given symbol.",
+		      FUNCTION_NAME,
+		      Parameters.forFunction(FUNCTION_NAME)
+		                .requiredParameter(SYMBOL_ARGUMENT)
+		                .optionalParameter(COPY_PROPERTIES_ARGUMENT).withInitialValue(NILStruct.INSTANCE)
+		);
 	}
 
 	@Override
-	protected List<RequiredParameter> getRequiredBindings() {
-		return RequiredParameter.builder(GlobalPackageStruct.COMMON_LISP, "SYMBOL").buildList();
-	}
-
-	@Override
-	protected List<OptionalParameter> getOptionalBindings() {
-		return OptionalParameter.builder(GlobalPackageStruct.COMMON_LISP, "COPY-PROPERTIES")
-		                        .initForm(NILStruct.INSTANCE)
-		                        .suppliedPBinding()
-		                        .buildList();
-	}
-
-	@Override
-	public LispStruct apply(final LispStruct... lispStructs) {
-		super.apply(lispStructs);
-
-		final SymbolStruct symbol
-				= validator.validateType(lispStructs[0], functionName(), "Symbol", SymbolType.INSTANCE, SymbolStruct.class);
-
-		boolean copyProperties = false;
-		if (lispStructs.length > 1) {
-			final BooleanStruct shouldCopy
-					= validator.validateType(lispStructs[1], functionName(), "Copy-Properties", BooleanType.INSTANCE, BooleanStruct.class);
-
-			copyProperties = shouldCopy.booleanValue();
-		}
-
+	public LispStruct apply(final Arguments arguments) {
+		final SymbolStruct symbol = arguments.getRequiredArgument(SYMBOL_ARGUMENT, SymbolStruct.class);
+		final boolean copyProperties = arguments.getOptionalArgument(COPY_PROPERTIES_ARGUMENT, BooleanStruct.class).booleanValue();
 		return symbol.copySymbol(copyProperties);
-	}
-
-	@Override
-	protected String functionName() {
-		return "COPY-SYMBOL";
 	}
 }

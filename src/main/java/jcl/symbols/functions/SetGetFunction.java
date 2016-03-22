@@ -4,63 +4,41 @@
 
 package jcl.symbols.functions;
 
-import java.util.Arrays;
-import java.util.List;
-
 import jcl.LispStruct;
-import jcl.compiler.environment.binding.lambdalist.OptionalParameter;
-import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
-import jcl.functions.AbstractSystemFunctionStruct;
-import jcl.packages.GlobalPackageStruct;
+import jcl.functions.SystemBuiltInFunctionStruct;
+import jcl.functions.parameterdsl.Arguments;
+import jcl.functions.parameterdsl.Parameters;
+import jcl.symbols.NILStruct;
 import jcl.symbols.SymbolStruct;
-import jcl.types.SymbolType;
-import jcl.types.TypeValidator;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class SetGetFunction extends AbstractSystemFunctionStruct {
+public final class SetGetFunction extends SystemBuiltInFunctionStruct {
 
-	/**
-	 * The {@link TypeValidator} for validating the function parameter value types.
-	 */
-	@Autowired
-	private TypeValidator validator;
+	private static final String FUNCTION_NAME = "SET-GET";
+	private static final String SYMBOL_ARGUMENT = "SYMBOL";
+	private static final String INDICATOR_ARGUMENT = "INDICATOR";
+	private static final String VALUE_ARGUMENT = "VALUE";
+	private static final String DEFAULT_ARGUMENT = "DEFAULT";
 
 	public SetGetFunction() {
-		super("Finds a property on the property list of symbol whose property indicator is identical to indicator, and sets its corresponding property value with the new-value provided.");
+		super("Finds a property on the property list of symbol whose property indicator is identical to indicator, and sets its corresponding property value with the new-value provided.",
+		      FUNCTION_NAME,
+		      Parameters.forFunction(FUNCTION_NAME)
+		                .requiredParameter(SYMBOL_ARGUMENT)
+		                .requiredParameter(INDICATOR_ARGUMENT)
+		                .requiredParameter(VALUE_ARGUMENT)
+		                .optionalParameter(DEFAULT_ARGUMENT).withInitialValue(NILStruct.INSTANCE)
+		);
 	}
 
 	@Override
-	protected List<RequiredParameter> getRequiredBindings() {
-		final RequiredParameter symbol = RequiredParameter.builder(GlobalPackageStruct.COMMON_LISP, "SYMBOL").build();
-		final RequiredParameter indicator = RequiredParameter.builder(GlobalPackageStruct.COMMON_LISP, "INDICATOR").build();
-		final RequiredParameter value = RequiredParameter.builder(GlobalPackageStruct.SYSTEM, "VALUE").build();
-		return Arrays.asList(symbol, indicator, value);
-	}
-
-	@Override
-	protected List<OptionalParameter> getOptionalBindings() {
-		return OptionalParameter.builder(GlobalPackageStruct.COMMON_LISP, "DEFAULT")
-		                        .suppliedPBinding()
-		                        .buildList();
-	}
-
-	@Override
-	public LispStruct apply(final LispStruct... lispStructs) {
-		super.apply(lispStructs);
-
-		final SymbolStruct symbol =
-				validator.validateType(lispStructs[0], functionName(), "Symbol", SymbolType.INSTANCE, SymbolStruct.class);
-		final LispStruct indicator = lispStructs[1];
-		final LispStruct value = lispStructs[2];
+	public LispStruct apply(final Arguments arguments) {
+		final SymbolStruct symbol = arguments.getRequiredArgument(SYMBOL_ARGUMENT, SymbolStruct.class);
+		final LispStruct indicator = arguments.getRequiredArgument(INDICATOR_ARGUMENT);
+		final LispStruct value = arguments.getRequiredArgument(VALUE_ARGUMENT);
 
 		symbol.setProperty(indicator, value);
 		return value;
-	}
-
-	@Override
-	protected String functionName() {
-		return "SET-GET";
 	}
 }

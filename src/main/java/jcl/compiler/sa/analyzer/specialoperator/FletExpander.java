@@ -14,8 +14,7 @@ import jcl.lists.ListStruct;
 import jcl.packages.GlobalPackageStruct;
 import jcl.symbols.SpecialOperatorStruct;
 import jcl.symbols.SymbolStruct;
-import jcl.symbols.functions.BindSymbolFunctionFunction;
-import jcl.symbols.functions.UnbindSymbolFunctionFunction;
+import jcl.system.CommonLispSymbols;
 import jcl.system.StackUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -70,12 +69,12 @@ public class FletExpander extends InnerLambdaExpander {
 			             final ListStruct quoteName = ListStruct.buildProperList(SpecialOperatorStruct.QUOTE, name);
 
 			             // Unbinding of the function
-			             final ListStruct unbindFunction = ListStruct.buildProperList(UnbindSymbolFunctionFunction.UNBIND_SYMBOL_FUNCTION, quoteName);
+			             final ListStruct unbindFunction = ListStruct.buildProperList(CommonLispSymbols.UNBIND_SYMBOL_FUNCTION, quoteName);
 			             final ListStruct letFunctionBindVar = ListStruct.buildProperList(tempFunctionBindVar, unbindFunction);
 			             letFunctionBindVars.add(letFunctionBindVar);
 
 			             // Rebinding of the function
-			             final ListStruct rebindFunction = ListStruct.buildProperList(BindSymbolFunctionFunction.BIND_SYMBOL_FUNCTION, quoteName, tempFunctionBindVar);
+			             final ListStruct rebindFunction = ListStruct.buildProperList(CommonLispSymbols.BIND_SYMBOL_FUNCTION, quoteName, tempFunctionBindVar);
 			             rebindFunctions.add(rebindFunction);
 		             });
 		final ListStruct letFunctionBindVarList = ListStruct.buildProperList(letFunctionBindVars);

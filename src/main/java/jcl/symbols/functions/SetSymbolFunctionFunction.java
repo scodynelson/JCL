@@ -4,57 +4,36 @@
 
 package jcl.symbols.functions;
 
-import java.util.Arrays;
-import java.util.List;
-
 import jcl.LispStruct;
-import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
-import jcl.functions.AbstractSystemFunctionStruct;
 import jcl.functions.FunctionStruct;
-import jcl.packages.GlobalPackageStruct;
+import jcl.functions.SystemBuiltInFunctionStruct;
+import jcl.functions.parameterdsl.Arguments;
+import jcl.functions.parameterdsl.Parameters;
 import jcl.symbols.SymbolStruct;
-import jcl.types.CompiledFunctionType;
-import jcl.types.FunctionType;
-import jcl.types.SymbolType;
-import jcl.types.TypeValidator;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class SetSymbolFunctionFunction extends AbstractSystemFunctionStruct {
+public final class SetSymbolFunctionFunction extends SystemBuiltInFunctionStruct {
 
-	/**
-	 * The {@link TypeValidator} for validating the function parameter value types.
-	 */
-	@Autowired
-	private TypeValidator validator;
+	private static final String FUNCTION_NAME = "SET-SYMBOL-FUNCTION";
+	private static final String SYMBOL_ARGUMENT = "SYMBOL";
+	private static final String FUNCTION_ARGUMENT = "FUNCTION";
 
 	public SetSymbolFunctionFunction() {
-		super("Sets the function value of the provided symbol to the provided function value.");
+		super("Sets the function value of the provided symbol to the provided function value.",
+		      FUNCTION_NAME,
+		      Parameters.forFunction(FUNCTION_NAME)
+		                .requiredParameter(SYMBOL_ARGUMENT)
+		                .requiredParameter(FUNCTION_ARGUMENT)
+		);
 	}
 
 	@Override
-	protected List<RequiredParameter> getRequiredBindings() {
-		final RequiredParameter symbolArg = RequiredParameter.builder(GlobalPackageStruct.SYSTEM, "SYMBOL").build();
-		final RequiredParameter functionArg = RequiredParameter.builder(GlobalPackageStruct.SYSTEM, "FUNCTION").build();
-		return Arrays.asList(symbolArg, functionArg);
-	}
-
-	@Override
-	public LispStruct apply(final LispStruct... lispStructs) {
-		super.apply(lispStructs);
-
-		final SymbolStruct symbol =
-				validator.validateType(lispStructs[0], functionName(), "Symbol", SymbolType.INSTANCE, SymbolStruct.class);
-		validator.validateTypes(lispStructs[1], functionName(), "Function", FunctionType.INSTANCE, CompiledFunctionType.INSTANCE);
-		final FunctionStruct function = (FunctionStruct) lispStructs[1];
+	public LispStruct apply(final Arguments arguments) {
+		final SymbolStruct symbol = arguments.getRequiredArgument(SYMBOL_ARGUMENT, SymbolStruct.class);
+		final FunctionStruct function = arguments.getRequiredArgument(FUNCTION_ARGUMENT, FunctionStruct.class);
 
 		symbol.setFunction(function);
 		return function;
-	}
-
-	@Override
-	protected String functionName() {
-		return "SET-SYMBOL-FUNCTION";
 	}
 }

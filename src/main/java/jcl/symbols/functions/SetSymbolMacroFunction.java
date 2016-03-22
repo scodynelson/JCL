@@ -4,56 +4,38 @@
 
 package jcl.symbols.functions;
 
-import java.util.Arrays;
-import java.util.List;
-
 import jcl.LispStruct;
-import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
-import jcl.functions.AbstractSystemFunctionStruct;
+import jcl.functions.SystemBuiltInFunctionStruct;
 import jcl.functions.expanders.SymbolMacroExpander;
 import jcl.functions.expanders.SymbolMacroExpanderImpl;
-import jcl.packages.GlobalPackageStruct;
+import jcl.functions.parameterdsl.Arguments;
+import jcl.functions.parameterdsl.Parameters;
 import jcl.symbols.SymbolStruct;
-import jcl.types.SymbolType;
-import jcl.types.TypeValidator;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class SetSymbolMacroFunction extends AbstractSystemFunctionStruct {
+public final class SetSymbolMacroFunction extends SystemBuiltInFunctionStruct {
 
-	/**
-	 * The {@link TypeValidator} for validating the function parameter value types.
-	 */
-	@Autowired
-	private TypeValidator validator;
+	private static final String FUNCTION_NAME = "SET-SYMBOL-MACRO";
+	private static final String SYMBOL_ARGUMENT = "SYMBOL";
+	private static final String EXPANSION_ARGUMENT = "EXPANSION";
 
 	public SetSymbolMacroFunction() {
-		super("Creates a new symbol-macro with the provided expansion and sets the symbol-macro value of the provided symbol to it.");
+		super("Creates a new symbol-macro with the provided expansion and sets the symbol-macro value of the provided symbol to it.",
+		      FUNCTION_NAME,
+		      Parameters.forFunction(FUNCTION_NAME)
+		                .requiredParameter(SYMBOL_ARGUMENT)
+		                .requiredParameter(EXPANSION_ARGUMENT)
+		);
 	}
 
 	@Override
-	protected List<RequiredParameter> getRequiredBindings() {
-		final RequiredParameter symbolArg = RequiredParameter.builder(GlobalPackageStruct.SYSTEM, "SYMBOL").build();
-		final RequiredParameter functionArg = RequiredParameter.builder(GlobalPackageStruct.SYSTEM, "EXPANSION").build();
-		return Arrays.asList(symbolArg, functionArg);
-	}
-
-	@Override
-	public LispStruct apply(final LispStruct... lispStructs) {
-		super.apply(lispStructs);
-
-		final SymbolStruct symbol =
-				validator.validateType(lispStructs[0], functionName(), "Symbol", SymbolType.INSTANCE, SymbolStruct.class);
-		final LispStruct expansion = lispStructs[1];
+	public LispStruct apply(final Arguments arguments) {
+		final SymbolStruct symbol = arguments.getRequiredArgument(SYMBOL_ARGUMENT, SymbolStruct.class);
+		final LispStruct expansion = arguments.getRequiredArgument(EXPANSION_ARGUMENT);
 
 		final SymbolMacroExpander symbolMacroExpander = new SymbolMacroExpanderImpl(expansion);
 		symbol.setSymbolMacroExpander(symbolMacroExpander);
 		return symbol;
-	}
-
-	@Override
-	protected String functionName() {
-		return "SET-SYMBOL-MACRO";
 	}
 }

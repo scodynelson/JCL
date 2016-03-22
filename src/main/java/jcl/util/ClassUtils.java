@@ -8,7 +8,7 @@ public final class ClassUtils {
 	}
 
 	@SuppressWarnings("unchecked")
-	public static <T> T convert(final Class<T> type, final Object value) {
+	public static <T> T convert(final Object value, final Class<T> type) {
 		if (org.springframework.util.ClassUtils.isAssignableValue(type, value)) {
 			return (T) value;
 		}

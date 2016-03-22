@@ -34,7 +34,7 @@ public final class Arguments {
 
 	public <T extends LispStruct> T getRequiredArgument(final String parameterName, final Class<T> clazz) {
 		final LispStruct parameterValue = getRequiredParameters().get(parameterName);
-		return ClassUtils.convert(clazz, parameterValue);
+		return ClassUtils.convert(parameterValue, clazz);
 	}
 
 	Map<String, LispStruct> getOptionalParameters() {
@@ -57,7 +57,7 @@ public final class Arguments {
 
 	public <T extends LispStruct> T getOptionalArgument(final String parameterName, final Class<T> clazz) {
 		final LispStruct parameterValue = getOptionalParameters().get(parameterName);
-		return ClassUtils.convert(clazz, parameterValue);
+		return ClassUtils.convert(parameterValue, clazz);
 	}
 
 	List<LispStruct> getRestParameter() {
@@ -73,7 +73,7 @@ public final class Arguments {
 
 	public <T extends LispStruct> List<T> getRestArgument(final Class<T> clazz) {
 		return getRestParameter().stream()
-		                         .map(parameterValue -> ClassUtils.convert(clazz, parameterValue))
+		                         .map(parameterValue -> ClassUtils.convert(parameterValue, clazz))
 		                         .collect(toList());
 	}
 
@@ -97,6 +97,6 @@ public final class Arguments {
 
 	public <T extends LispStruct> T getKeyArgument(final KeywordStruct keyword, final Class<T> clazz) {
 		final LispStruct parameterValue = getKeyParameters().get(keyword);
-		return ClassUtils.convert(clazz, parameterValue);
+		return ClassUtils.convert(parameterValue, clazz);
 	}
 }

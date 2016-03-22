@@ -56,7 +56,7 @@ abstract class AbstractSymbolListPackageFunction extends CommonLispBuiltInFuncti
 			final ListStruct symbols = (ListStruct) lispStruct;
 			final List<SymbolStruct> realSymbols = new ArrayList<>();
 			for (final LispStruct theSymbol : symbols) {
-				realSymbols.add(ClassUtils.convert(SymbolStruct.class, theSymbol));
+				realSymbols.add(ClassUtils.convert(theSymbol, SymbolStruct.class));
 			}
 			realSymbolArray = realSymbols.toArray(new SymbolStruct[realSymbols.size()]);
 		} else if (lispStruct instanceof SymbolStruct) {

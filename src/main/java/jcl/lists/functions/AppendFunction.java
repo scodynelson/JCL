@@ -47,7 +47,7 @@ public final class AppendFunction extends CommonLispBuiltInFunctionStruct {
 
 		final List<ListStruct> lists = new ArrayList<>();
 		reverseListIterator.forEachRemaining(argument -> {
-			final ListStruct list = ClassUtils.convert(ListStruct.class, argument);
+			final ListStruct list = ClassUtils.convert(argument, ListStruct.class);
 			lists.add(list);
 		});
 		return ListStruct.append(lists, object);

@@ -104,7 +104,19 @@ public interface FloatStruct extends RealStruct {
 	BigDecimal bigDecimalValue();
 
 	@Deprecated
-	BigDecimal getBigDecimal();
+	default BigDecimal getBigDecimal() {
+		return bigDecimalValue();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Returns {@code this} as it is already a FloatStruct.
+	 */
+	@Override
+	default FloatStruct coerceRealToFloat() {
+		return this;
+	}
 
 	/**
 	 * Computes the three main values that characterize this FloatStruct: the significand, exponent, and sign. The

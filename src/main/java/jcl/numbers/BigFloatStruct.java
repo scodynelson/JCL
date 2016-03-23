@@ -10,17 +10,15 @@ import java.math.MathContext;
 import java.math.RoundingMode;
 
 import jcl.classes.BuiltInClassStruct;
-import jcl.types.FloatType;
-import jcl.types.SingleFloatType;
+import jcl.types.LongFloatType;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.math3.fraction.BigFraction;
-import org.apfloat.Apfloat;
 
 /**
  * The {@link BigFloatStruct} is the object representation of a Lisp 'float' type.
  */
-public class BigFloatStruct extends BuiltInClassStruct implements FloatStruct {
+public final class BigFloatStruct extends BuiltInClassStruct implements FloatStruct {
 
 	/**
 	 * {@link BigFloatStruct} constant representing 0.0.
@@ -54,53 +52,12 @@ public class BigFloatStruct extends BuiltInClassStruct implements FloatStruct {
 	 * 		the value of the FloatStruct
 	 */
 	private BigFloatStruct(final BigDecimal bigDecimal) {
-		this(SingleFloatType.INSTANCE, bigDecimal);
-	}
-
-	/**
-	 * Public constructor.
-	 *
-	 * @param floatType
-	 * 		a {@link FloatType} that represents the type of {@link FloatType}
-	 * @param bigDecimal
-	 * 		the value of the FloatStruct
-	 */
-	private BigFloatStruct(final FloatType floatType, final BigDecimal bigDecimal) {
-		super(floatType, null, null);
+		super(LongFloatType.INSTANCE, null, null);
 		this.bigDecimal = bigDecimal;
-	}
-
-	/**
-	 * Public constructor.
-	 *
-	 * @param apfloat
-	 * 		the value of the FloatStruct
-	 */
-	private BigFloatStruct(final Apfloat apfloat) {
-		this(apfloat.doubleValue());
-	}
-
-	/**
-	 * Public constructor.
-	 *
-	 * @param doubleValue
-	 * 		the value of the FloatStruct
-	 */
-	private BigFloatStruct(final double doubleValue) {
-		this(BigDecimal.valueOf(doubleValue));
 	}
 
 	public static BigFloatStruct valueOf(final BigDecimal bigDecimal) {
 		return new BigFloatStruct(bigDecimal);
-	}
-
-	/**
-	 * Getter for float {@link #bigDecimal} property.
-	 *
-	 * @return float {@link #bigDecimal} property
-	 */
-	public BigDecimal getBigDecimal() {
-		return bigDecimal;
 	}
 
 	/**
@@ -424,12 +381,14 @@ public class BigFloatStruct extends BuiltInClassStruct implements FloatStruct {
 
 	@Override
 	public float floatValue() {
-		return 0;
+		// TODO: Warn loss of precision
+		return bigDecimal.floatValue();
 	}
 
 	@Override
 	public double doubleValue() {
-		return 0;
+		// TODO: Warn loss of precision
+		return bigDecimal.doubleValue();
 	}
 
 	/**
@@ -440,16 +399,6 @@ public class BigFloatStruct extends BuiltInClassStruct implements FloatStruct {
 	@Override
 	public BigDecimal bigDecimalValue() {
 		return bigDecimal;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * <p>
-	 * Returns {@code this} as it is already a FloatStruct.
-	 */
-	@Override
-	public BigFloatStruct coerceRealToFloat() {
-		return this;
 	}
 
 	/**
@@ -478,16 +427,16 @@ public class BigFloatStruct extends BuiltInClassStruct implements FloatStruct {
 	 * {@inheritDoc}
 	 * <p>
 	 * Calculates the {@link QuotientRemainderResult} for a 'FLOOR' operation with this FloatStruct as the 'divisor'
-	 * using the provided {@link QuotientRemainderVisitor}.
+	 * using the provided {@link RealStruct.QuotientRemainderVisitor}.
 	 *
 	 * @param quotientRemainderVisitor
-	 * 		the {@link QuotientRemainderVisitor} to be used in the 'FLOOR' operation
+	 * 		the {@link RealStruct.QuotientRemainderVisitor} to be used in the 'FLOOR' operation
 	 *
 	 * @return the {@link QuotientRemainderResult} for a 'FLOOR' operation with this FloatStruct as the 'divisor'
-	 * using the provided {@link QuotientRemainderVisitor}
+	 * using the provided {@link RealStruct.QuotientRemainderVisitor}
 	 */
 	@Override
-	public QuotientRemainderResult floor(final QuotientRemainderVisitor<?> quotientRemainderVisitor) {
+	public QuotientRemainderResult floor(final RealStruct.QuotientRemainderVisitor<?> quotientRemainderVisitor) {
 		return quotientRemainderVisitor.floor(this);
 	}
 
@@ -495,16 +444,16 @@ public class BigFloatStruct extends BuiltInClassStruct implements FloatStruct {
 	 * {@inheritDoc}
 	 * <p>
 	 * Calculates the {@link QuotientRemainderResult} for a 'FLOOR' operation with this FloatStruct as the 'divisor'
-	 * using the provided {@link QuotientRemainderVisitor}. The resulting 'quotient' will be a FloatStruct.
+	 * using the provided {@link RealStruct.QuotientRemainderVisitor}. The resulting 'quotient' will be a FloatStruct.
 	 *
 	 * @param quotientRemainderVisitor
-	 * 		the {@link QuotientRemainderVisitor} to be used in the 'FLOOR' operation
+	 * 		the {@link RealStruct.QuotientRemainderVisitor} to be used in the 'FLOOR' operation
 	 *
 	 * @return the {@link QuotientRemainderResult} for a 'FLOOR' operation with this FloatStruct as the 'divisor'
-	 * using the provided {@link QuotientRemainderVisitor}
+	 * using the provided {@link RealStruct.QuotientRemainderVisitor}
 	 */
 	@Override
-	public QuotientRemainderResult ffloor(final QuotientRemainderVisitor<?> quotientRemainderVisitor) {
+	public QuotientRemainderResult ffloor(final RealStruct.QuotientRemainderVisitor<?> quotientRemainderVisitor) {
 		return quotientRemainderVisitor.ffloor(this);
 	}
 
@@ -512,16 +461,16 @@ public class BigFloatStruct extends BuiltInClassStruct implements FloatStruct {
 	 * {@inheritDoc}
 	 * <p>
 	 * Calculates the {@link QuotientRemainderResult} for a 'CEILING' operation with this FloatStruct as the 'divisor'
-	 * using the provided {@link QuotientRemainderVisitor}.
+	 * using the provided {@link RealStruct.QuotientRemainderVisitor}.
 	 *
 	 * @param quotientRemainderVisitor
-	 * 		the {@link QuotientRemainderVisitor} to be used in the 'CEILING' operation
+	 * 		the {@link RealStruct.QuotientRemainderVisitor} to be used in the 'CEILING' operation
 	 *
 	 * @return the {@link QuotientRemainderResult} for a 'CEILING' operation with this FloatStruct as the 'divisor'
-	 * using the provided {@link QuotientRemainderVisitor}
+	 * using the provided {@link RealStruct.QuotientRemainderVisitor}
 	 */
 	@Override
-	public QuotientRemainderResult ceiling(final QuotientRemainderVisitor<?> quotientRemainderVisitor) {
+	public QuotientRemainderResult ceiling(final RealStruct.QuotientRemainderVisitor<?> quotientRemainderVisitor) {
 		return quotientRemainderVisitor.ceiling(this);
 	}
 
@@ -529,16 +478,16 @@ public class BigFloatStruct extends BuiltInClassStruct implements FloatStruct {
 	 * {@inheritDoc}
 	 * <p>
 	 * Calculates the {@link QuotientRemainderResult} for a 'CEILING' operation with this FloatStruct as the 'divisor'
-	 * using the provided {@link QuotientRemainderVisitor}. The resulting 'quotient' will be a FloatStruct.
+	 * using the provided {@link RealStruct.QuotientRemainderVisitor}. The resulting 'quotient' will be a FloatStruct.
 	 *
 	 * @param quotientRemainderVisitor
-	 * 		the {@link QuotientRemainderVisitor} to be used in the 'CEILING' operation
+	 * 		the {@link RealStruct.QuotientRemainderVisitor} to be used in the 'CEILING' operation
 	 *
 	 * @return the {@link QuotientRemainderResult} for a 'CEILING' operation with this FloatStruct as the 'divisor'
-	 * using the provided {@link QuotientRemainderVisitor}
+	 * using the provided {@link RealStruct.QuotientRemainderVisitor}
 	 */
 	@Override
-	public QuotientRemainderResult fceiling(final QuotientRemainderVisitor<?> quotientRemainderVisitor) {
+	public QuotientRemainderResult fceiling(final RealStruct.QuotientRemainderVisitor<?> quotientRemainderVisitor) {
 		return quotientRemainderVisitor.fceiling(this);
 	}
 
@@ -546,16 +495,16 @@ public class BigFloatStruct extends BuiltInClassStruct implements FloatStruct {
 	 * {@inheritDoc}
 	 * <p>
 	 * Calculates the {@link QuotientRemainderResult} for a 'ROUND' operation with this FloatStruct as the 'divisor'
-	 * using the provided {@link QuotientRemainderVisitor}.
+	 * using the provided {@link RealStruct.QuotientRemainderVisitor}.
 	 *
 	 * @param quotientRemainderVisitor
-	 * 		the {@link QuotientRemainderVisitor} to be used in the 'ROUND' operation
+	 * 		the {@link RealStruct.QuotientRemainderVisitor} to be used in the 'ROUND' operation
 	 *
 	 * @return the {@link QuotientRemainderResult} for a 'ROUND' operation with this FloatStruct as the 'divisor'
-	 * using the provided {@link QuotientRemainderVisitor}
+	 * using the provided {@link RealStruct.QuotientRemainderVisitor}
 	 */
 	@Override
-	public QuotientRemainderResult round(final QuotientRemainderVisitor<?> quotientRemainderVisitor) {
+	public QuotientRemainderResult round(final RealStruct.QuotientRemainderVisitor<?> quotientRemainderVisitor) {
 		return quotientRemainderVisitor.round(this);
 	}
 
@@ -563,28 +512,28 @@ public class BigFloatStruct extends BuiltInClassStruct implements FloatStruct {
 	 * {@inheritDoc}
 	 * <p>
 	 * Calculates the {@link QuotientRemainderResult} for a 'ROUND' operation with this FloatStruct as the 'divisor'
-	 * using the provided {@link QuotientRemainderVisitor}. The resulting 'quotient' will be a FloatStruct.
+	 * using the provided {@link RealStruct.QuotientRemainderVisitor}. The resulting 'quotient' will be a FloatStruct.
 	 *
 	 * @param quotientRemainderVisitor
-	 * 		the {@link QuotientRemainderVisitor} to be used in the 'ROUND' operation
+	 * 		the {@link RealStruct.QuotientRemainderVisitor} to be used in the 'ROUND' operation
 	 *
 	 * @return the {@link QuotientRemainderResult} for a 'ROUND' operation with this FloatStruct as the 'divisor'
-	 * using the provided {@link QuotientRemainderVisitor}
+	 * using the provided {@link RealStruct.QuotientRemainderVisitor}
 	 */
 	@Override
-	public QuotientRemainderResult fround(final QuotientRemainderVisitor<?> quotientRemainderVisitor) {
+	public QuotientRemainderResult fround(final RealStruct.QuotientRemainderVisitor<?> quotientRemainderVisitor) {
 		return quotientRemainderVisitor.fround(this);
 	}
 
 	/**
-	 * Returns a new {@link QuotientRemainderVisitor} with this FloatStruct to be used in a 'quotient' and
+	 * Returns a new {@link RealStruct.QuotientRemainderVisitor} with this FloatStruct to be used in a 'quotient' and
 	 * 'remainder' calculation operation.
 	 *
-	 * @return a new {@link QuotientRemainderVisitor} with this FloatStruct to be used in a 'quotient' and
+	 * @return a new {@link RealStruct.QuotientRemainderVisitor} with this FloatStruct to be used in a 'quotient' and
 	 * 'remainder' calculation operation
 	 */
 	@Override
-	public QuotientRemainderVisitor<?> quotientRemainderVisitor() {
+	public RealStruct.QuotientRemainderVisitor<?> quotientRemainderVisitor() {
 		return new FloatQuotientRemainderVisitor(this);
 	}
 
@@ -595,6 +544,7 @@ public class BigFloatStruct extends BuiltInClassStruct implements FloatStruct {
 	 *
 	 * @return a {@link DecodeFloatResult} containing the decoded significand, exponent, and sign for this FloatStruct
 	 */
+	@Override
 	public DecodeFloatResult decodeFloat() {
 //		if (ZERO.isEqualTo(this)) {
 //			return new DecodeFloatResult(ZERO, IntegerStruct.ZERO, ONE);
@@ -630,20 +580,24 @@ public class BigFloatStruct extends BuiltInClassStruct implements FloatStruct {
 		return new DecodeFloatResult(significandFloat, exponentInteger, signFloat);
 	}
 
+	@Override
 	public NumberStruct scaleFloat(final IntegerStruct scale) {
 		final IntegerStruct radix = floatRadix();
 		final NumberStruct expt = radix.expt(scale);
 		return multiply(expt);
 	}
 
+	@Override
 	public IntegerStruct floatRadix() {
 		return IntegerStruct.TWO;
 	}
 
+	@Override
 	public FloatStruct floatSign() {
 		return floatSign(ONE);
 	}
 
+	@Override
 	public FloatStruct floatSign(final FloatStruct float2) {
 		if (minusp()) {
 			if (float2.minusp()) {
@@ -657,6 +611,7 @@ public class BigFloatStruct extends BuiltInClassStruct implements FloatStruct {
 		}
 	}
 
+	@Override
 	public IntegerStruct floatDigits() {
 		return floatPrecision();
 	}
@@ -664,6 +619,7 @@ public class BigFloatStruct extends BuiltInClassStruct implements FloatStruct {
 	/*
 	 * http://en.wikipedia.org/wiki/Quadruple-precision_floating-point_format
 	 */
+	@Override
 	public IntegerStruct floatPrecision() {
 //		final int binary32Precision = 24;
 //		final int binary64Precision = 53;
@@ -680,6 +636,7 @@ public class BigFloatStruct extends BuiltInClassStruct implements FloatStruct {
 	 *
 	 * @return a {@link DecodeFloatResult} containing the decoded significand, exponent, and sign for this FloatStruct
 	 */
+	@Override
 	public DecodeFloatResult integerDecodeFloat() {
 //		if (ZERO.isEqualTo(this)) {
 //			return new DecodeFloatResult(IntegerStruct.ZERO, IntegerStruct.ZERO, IntegerStruct.ONE);
@@ -847,9 +804,9 @@ public class BigFloatStruct extends BuiltInClassStruct implements FloatStruct {
 	// Visitor Implementations
 
 	/**
-	 * {@link RealAddVisitor} for computing addition results for {@link BigFloatStruct}s.
+	 * {@link RealStruct.RealAddVisitor} for computing addition results for {@link BigFloatStruct}s.
 	 */
-	private static final class FloatAddVisitor extends RealAddVisitor<BigFloatStruct> {
+	private static final class FloatAddVisitor extends RealStruct.RealAddVisitor<BigFloatStruct> {
 
 		/**
 		 * Package private constructor to make a new instance of an FloatAddVisitor with the provided {@link
@@ -892,6 +849,21 @@ public class BigFloatStruct extends BuiltInClassStruct implements FloatStruct {
 			return addFloat(number1, number2);
 		}
 
+		@Override
+		public RealStruct add(final SingleFloatStruct number2) {
+			return super.add(number2);
+		}
+
+		@Override
+		public RealStruct add(final DoubleFloatStruct number2) {
+			return super.add(number2);
+		}
+
+		@Override
+		public RealStruct add(final BigFloatStruct number2) {
+			return super.add(number2);
+		}
+
 		/**
 		 * {@inheritDoc}
 		 * <p>
@@ -901,12 +873,17 @@ public class BigFloatStruct extends BuiltInClassStruct implements FloatStruct {
 		public RealStruct add(final RatioStruct number2) {
 			return addFloat(number1, number2);
 		}
+
+		@Override
+		public NumberStruct add(final ComplexStruct number2) {
+			return super.add(number2);
+		}
 	}
 
 	/**
-	 * {@link RealSubtractVisitor} for computing subtraction function results for {@link BigFloatStruct}s.
+	 * {@link RealStruct.RealSubtractVisitor} for computing subtraction function results for {@link BigFloatStruct}s.
 	 */
-	private static final class FloatSubtractVisitor extends RealSubtractVisitor<BigFloatStruct> {
+	private static final class FloatSubtractVisitor extends RealStruct.RealSubtractVisitor<BigFloatStruct> {
 
 		/**
 		 * Package private constructor to make a new instance of an FloatSubtractVisitor with the provided {@link
@@ -949,6 +926,21 @@ public class BigFloatStruct extends BuiltInClassStruct implements FloatStruct {
 			return subtractFloat(number1, number2);
 		}
 
+		@Override
+		public RealStruct subtract(final SingleFloatStruct number2) {
+			return super.subtract(number2);
+		}
+
+		@Override
+		public RealStruct subtract(final DoubleFloatStruct number2) {
+			return super.subtract(number2);
+		}
+
+		@Override
+		public RealStruct subtract(final BigFloatStruct number2) {
+			return super.subtract(number2);
+		}
+
 		/**
 		 * {@inheritDoc}
 		 * <p>
@@ -957,6 +949,11 @@ public class BigFloatStruct extends BuiltInClassStruct implements FloatStruct {
 		@Override
 		public RealStruct subtract(final RatioStruct number2) {
 			return subtractFloat(number1, number2);
+		}
+
+		@Override
+		public NumberStruct subtract(final ComplexStruct number2) {
+			return super.subtract(number2);
 		}
 
 		/**
@@ -979,9 +976,10 @@ public class BigFloatStruct extends BuiltInClassStruct implements FloatStruct {
 	}
 
 	/**
-	 * {@link RealMultiplyVisitor} for computing multiplication function results for {@link BigFloatStruct}s.
+	 * {@link RealStruct.RealMultiplyVisitor} for computing multiplication function results for {@link
+	 * BigFloatStruct}s.
 	 */
-	private static final class FloatMultiplyVisitor extends RealMultiplyVisitor<BigFloatStruct> {
+	private static final class FloatMultiplyVisitor extends RealStruct.RealMultiplyVisitor<BigFloatStruct> {
 
 		/**
 		 * Package private constructor to make a new instance of an FloatMultiplyVisitor with the provided {@link
@@ -1024,6 +1022,21 @@ public class BigFloatStruct extends BuiltInClassStruct implements FloatStruct {
 			return multiplyFloat(number1, number2);
 		}
 
+		@Override
+		public RealStruct multiply(final SingleFloatStruct number2) {
+			return super.multiply(number2);
+		}
+
+		@Override
+		public RealStruct multiply(final DoubleFloatStruct number2) {
+			return super.multiply(number2);
+		}
+
+		@Override
+		public RealStruct multiply(final BigFloatStruct number2) {
+			return super.multiply(number2);
+		}
+
 		/**
 		 * {@inheritDoc}
 		 * <p>
@@ -1033,12 +1046,17 @@ public class BigFloatStruct extends BuiltInClassStruct implements FloatStruct {
 		public RealStruct multiply(final RatioStruct number2) {
 			return multiplyFloat(number1, number2);
 		}
+
+		@Override
+		public NumberStruct multiply(final ComplexStruct number2) {
+			return super.multiply(number2);
+		}
 	}
 
 	/**
-	 * {@link RealDivideVisitor} for computing division function results for {@link BigFloatStruct}s.
+	 * {@link RealStruct.RealDivideVisitor} for computing division function results for {@link BigFloatStruct}s.
 	 */
-	private static final class FloatDivideVisitor extends RealDivideVisitor<BigFloatStruct> {
+	private static final class FloatDivideVisitor extends RealStruct.RealDivideVisitor<BigFloatStruct> {
 
 		/**
 		 * Package private constructor to make a new instance of an FloatDivideVisitor with the provided {@link
@@ -1081,6 +1099,21 @@ public class BigFloatStruct extends BuiltInClassStruct implements FloatStruct {
 			return divideFloat(number1, number2);
 		}
 
+		@Override
+		public RealStruct divide(final SingleFloatStruct number2) {
+			return super.divide(number2);
+		}
+
+		@Override
+		public RealStruct divide(final DoubleFloatStruct number2) {
+			return super.divide(number2);
+		}
+
+		@Override
+		public RealStruct divide(final BigFloatStruct number2) {
+			return super.divide(number2);
+		}
+
 		/**
 		 * {@inheritDoc}
 		 * <p>
@@ -1089,6 +1122,11 @@ public class BigFloatStruct extends BuiltInClassStruct implements FloatStruct {
 		@Override
 		public RealStruct divide(final RatioStruct number2) {
 			return divideFloat(number1, number2);
+		}
+
+		@Override
+		public NumberStruct divide(final ComplexStruct number2) {
+			return super.divide(number2);
 		}
 
 		/**
@@ -1114,7 +1152,7 @@ public class BigFloatStruct extends BuiltInClassStruct implements FloatStruct {
 	 * {@link FloatQuotientRemainderVisitor} for computing quotient and remainder results for {@link
 	 * BigFloatStruct}s.
 	 */
-	private static final class FloatQuotientRemainderVisitor extends QuotientRemainderVisitor<BigFloatStruct> {
+	private static final class FloatQuotientRemainderVisitor extends RealStruct.QuotientRemainderVisitor<BigFloatStruct> {
 
 		/**
 		 * Package private constructor to make a new instance of an FloatQuotientRemainderVisitor with the provided
@@ -1158,6 +1196,11 @@ public class BigFloatStruct extends BuiltInClassStruct implements FloatStruct {
 		@Override
 		public QuotientRemainderResult quotientRemainder(final BigIntegerStruct divisor, final RoundingMode roundingMode, final boolean isQuotientFloat) {
 			return floatQuotientRemainder(divisor, roundingMode, isQuotientFloat);
+		}
+
+		@Override
+		public QuotientRemainderResult quotientRemainder(final FloatStruct divisor, final RoundingMode roundingMode, final boolean isQuotientFloat) {
+			return super.quotientRemainder(divisor, roundingMode, isQuotientFloat);
 		}
 
 		/**

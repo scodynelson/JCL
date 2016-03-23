@@ -290,7 +290,7 @@ public interface RealStruct extends NumberStruct {
 	default RealStruct exp() {
 		final Apfloat apfloat = apfloatValue();
 		final Apfloat exp = ApfloatMath.exp(apfloat);
-		return new SingleFloatStruct(exp);
+		return FloatStruct.valueOf(exp);
 	}
 
 	@Override
@@ -306,7 +306,7 @@ public interface RealStruct extends NumberStruct {
 			return ComplexStruct.makeComplexOrReal(log);
 		}
 		final Apfloat log = ApfloatMath.log(apfloat);
-		return new SingleFloatStruct(log);
+		return FloatStruct.valueOf(log);
 	}
 
 	@Override
@@ -319,7 +319,7 @@ public interface RealStruct extends NumberStruct {
 		}
 		final Apfloat baseVal = ((RealStruct) base).apfloatValue();
 		final Apfloat log = ApfloatMath.log(apfloat, baseVal);
-		return new SingleFloatStruct(log);
+		return FloatStruct.valueOf(log);
 	}
 
 	@Override
@@ -330,49 +330,49 @@ public interface RealStruct extends NumberStruct {
 			return ComplexStruct.makeComplexOrReal(sqrt);
 		}
 		final Apfloat sqrt = ApfloatMath.sqrt(apfloat);
-		return new SingleFloatStruct(sqrt);
+		return FloatStruct.valueOf(sqrt);
 	}
 
 	@Override
 	default RealStruct sin() {
 		final Apfloat apfloat = apfloatValue();
 		final Apfloat sin = ApfloatMath.sin(apfloat);
-		return new SingleFloatStruct(sin);
+		return FloatStruct.valueOf(sin);
 	}
 
 	@Override
 	default RealStruct cos() {
 		final Apfloat apfloat = apfloatValue();
 		final Apfloat cos = ApfloatMath.cos(apfloat);
-		return new SingleFloatStruct(cos);
+		return FloatStruct.valueOf(cos);
 	}
 
 	@Override
 	default RealStruct tan() {
 		final Apfloat apfloat = apfloatValue();
 		final Apfloat tan = ApfloatMath.tan(apfloat);
-		return new SingleFloatStruct(tan);
+		return FloatStruct.valueOf(tan);
 	}
 
 	@Override
 	default RealStruct asin() {
 		final Apfloat apfloat = apfloatValue();
 		final Apfloat asin = ApfloatMath.asin(apfloat);
-		return new SingleFloatStruct(asin);
+		return FloatStruct.valueOf(asin);
 	}
 
 	@Override
 	default RealStruct acos() {
 		final Apfloat apfloat = apfloatValue();
 		final Apfloat acos = ApfloatMath.acos(apfloat);
-		return new SingleFloatStruct(acos);
+		return FloatStruct.valueOf(acos);
 	}
 
 	@Override
 	default RealStruct atan() {
 		final Apfloat apfloat = apfloatValue();
 		final Apfloat atan = ApfloatMath.atan(apfloat);
-		return new SingleFloatStruct(atan);
+		return FloatStruct.valueOf(atan);
 	}
 
 	default RealStruct atan(final RealStruct real) {
@@ -380,54 +380,54 @@ public interface RealStruct extends NumberStruct {
 		final Apfloat apfloat2 = real.apfloatValue();
 
 		final Apfloat atan = ApfloatMath.atan2(apfloat1, apfloat2);
-		return new SingleFloatStruct(atan);
+		return FloatStruct.valueOf(atan);
 	}
 
 	@Override
 	default RealStruct sinh() {
 		final Apfloat apfloat = apfloatValue();
 		final Apfloat sinh = ApfloatMath.sinh(apfloat);
-		return new SingleFloatStruct(sinh);
+		return FloatStruct.valueOf(sinh);
 	}
 
 	@Override
 	default RealStruct cosh() {
 		final Apfloat apfloat = apfloatValue();
 		final Apfloat cosh = ApfloatMath.cosh(apfloat);
-		return new SingleFloatStruct(cosh);
+		return FloatStruct.valueOf(cosh);
 	}
 
 	@Override
 	default RealStruct tanh() {
 		final Apfloat apfloat = apfloatValue();
 		final Apfloat tanh = ApfloatMath.tanh(apfloat);
-		return new SingleFloatStruct(tanh);
+		return FloatStruct.valueOf(tanh);
 	}
 
 	@Override
 	default RealStruct asinh() {
 		final Apfloat apfloat = apfloatValue();
 		final Apfloat asinh = ApfloatMath.asinh(apfloat);
-		return new SingleFloatStruct(asinh);
+		return FloatStruct.valueOf(asinh);
 	}
 
 	@Override
 	default RealStruct acosh() {
 		final Apfloat apfloat = apfloatValue();
 		final Apfloat acosh = ApfloatMath.acosh(apfloat);
-		return new SingleFloatStruct(acosh);
+		return FloatStruct.valueOf(acosh);
 	}
 
 	@Override
 	default RealStruct atanh() {
 		final Apfloat apfloat = apfloatValue();
 		final Apfloat atanh = ApfloatMath.atanh(apfloat);
-		return new SingleFloatStruct(atanh);
+		return FloatStruct.valueOf(atanh);
 	}
 
 	static RealStruct toRealStruct(final Apfloat apfloat) {
 		// TODO: Not quite right here either!!!
-		return (apfloat.doubleValue() == apfloat.intValue()) ? new IntIntegerStruct(apfloat) : new SingleFloatStruct(apfloat);
+		return (apfloat.doubleValue() == apfloat.intValue()) ? new IntIntegerStruct(apfloat) : FloatStruct.valueOf(apfloat);
 	}
 
 	// Visitor Implementations
@@ -489,7 +489,7 @@ public interface RealStruct extends NumberStruct {
 			final BigDecimal bigDecimal1 = number1.bigDecimalValue();
 			final BigDecimal bigDecimal2 = number2.bigDecimalValue();
 			final BigDecimal add = bigDecimal1.add(bigDecimal2);
-			return new SingleFloatStruct(add);
+			return FloatStruct.valueOf(add);
 		}
 	}
 
@@ -513,7 +513,7 @@ public interface RealStruct extends NumberStruct {
 			final BigDecimal bigDecimal1 = number1.bigDecimalValue();
 			final BigDecimal bigDecimal2 = number2.bigDecimalValue();
 			final BigDecimal subtract = bigDecimal1.subtract(bigDecimal2);
-			return new SingleFloatStruct(subtract);
+			return FloatStruct.valueOf(subtract);
 		}
 
 		@Override
@@ -521,7 +521,7 @@ public interface RealStruct extends NumberStruct {
 			final BigDecimal bigDecimal1 = number1.bigDecimalValue();
 			final BigDecimal bigDecimal2 = number2.bigDecimalValue();
 			final BigDecimal subtract = bigDecimal1.subtract(bigDecimal2);
-			return new SingleFloatStruct(subtract);
+			return FloatStruct.valueOf(subtract);
 		}
 
 		@Override
@@ -529,7 +529,7 @@ public interface RealStruct extends NumberStruct {
 			final BigDecimal bigDecimal1 = number1.bigDecimalValue();
 			final BigDecimal bigDecimal2 = number2.bigDecimalValue();
 			final BigDecimal subtract = bigDecimal1.subtract(bigDecimal2);
-			return new SingleFloatStruct(subtract);
+			return FloatStruct.valueOf(subtract);
 		}
 
 		@Override
@@ -609,7 +609,7 @@ public interface RealStruct extends NumberStruct {
 				preppedBigDecimal = preppedBigDecimal.setScale(1, RoundingMode.UNNECESSARY);
 			}
 
-			return new SingleFloatStruct(preppedBigDecimal);
+			return FloatStruct.valueOf(preppedBigDecimal);
 		}
 	}
 
@@ -633,7 +633,7 @@ public interface RealStruct extends NumberStruct {
 			final BigDecimal bigDecimal1 = number1.bigDecimalValue();
 			final BigDecimal bigDecimal2 = number2.bigDecimalValue();
 			final BigDecimal divide = bigDecimal1.divide(bigDecimal2, MathContext.DECIMAL128);
-			return new SingleFloatStruct(divide);
+			return FloatStruct.valueOf(divide);
 		}
 
 		@Override
@@ -641,7 +641,7 @@ public interface RealStruct extends NumberStruct {
 			final BigDecimal bigDecimal1 = number1.bigDecimalValue();
 			final BigDecimal bigDecimal2 = number2.bigDecimalValue();
 			final BigDecimal divide = bigDecimal1.divide(bigDecimal2, MathContext.DECIMAL128);
-			return new SingleFloatStruct(divide);
+			return FloatStruct.valueOf(divide);
 		}
 
 		@Override
@@ -649,7 +649,7 @@ public interface RealStruct extends NumberStruct {
 			final BigDecimal bigDecimal1 = number1.bigDecimalValue();
 			final BigDecimal bigDecimal2 = number2.bigDecimalValue();
 			final BigDecimal divide = bigDecimal1.divide(bigDecimal2, MathContext.DECIMAL128);
-			return new SingleFloatStruct(divide);
+			return FloatStruct.valueOf(divide);
 		}
 
 		@Override
@@ -1080,7 +1080,7 @@ public interface RealStruct extends NumberStruct {
 				quotientReal = IntegerStruct.valueOf(quotientBigInteger);
 			}
 
-			final FloatStruct remainderFloat = new SingleFloatStruct(remainder);
+			final FloatStruct remainderFloat = FloatStruct.valueOf(remainder);
 			return new QuotientRemainderResult(quotientReal, remainderFloat);
 		}
 
@@ -1099,7 +1099,7 @@ public interface RealStruct extends NumberStruct {
 					floatQuotient = FloatStruct.ZERO;
 				}
 			} else {
-				floatQuotient = new SingleFloatStruct(quotient);
+				floatQuotient = FloatStruct.valueOf(quotient);
 			}
 			return floatQuotient;
 		}
@@ -1162,30 +1162,30 @@ public interface RealStruct extends NumberStruct {
 					final double imagPart = result * StrictMath.sin(y * Math.PI);
 
 					final BigDecimal realBigDecimal = BigDecimal.valueOf(realPart);
-					final FloatStruct real = new SingleFloatStruct(realBigDecimal);
+					final FloatStruct real = FloatStruct.valueOf(realBigDecimal);
 					final BigDecimal imagBigDecimal = BigDecimal.valueOf(imagPart);
-					final FloatStruct imaginary = new SingleFloatStruct(imagBigDecimal);
+					final FloatStruct imaginary = FloatStruct.valueOf(imagBigDecimal);
 					return ComplexStruct.makeComplexOrReal(real, imaginary);
 				}
 			}
 			final BigDecimal resultBigDecimal = BigDecimal.valueOf(result);
-			return new SingleFloatStruct(resultBigDecimal);
+			return FloatStruct.valueOf(resultBigDecimal);
 		}
 
 		@Override
 		public NumberStruct expt(final ComplexStruct power) {
 			final RealStruct powerComplexReal = power.getReal();
 			final BigDecimal powerComplexRealBigDecimal = powerComplexReal.bigDecimalValue();
-			final FloatStruct real = new SingleFloatStruct(powerComplexRealBigDecimal);
+			final FloatStruct real = FloatStruct.valueOf(powerComplexRealBigDecimal);
 
 			final RealStruct powerComplexImaginary = power.getImaginary();
 			final BigDecimal powerComplexImaginaryBigDecimal = powerComplexImaginary.bigDecimalValue();
-			final FloatStruct imaginary = new SingleFloatStruct(powerComplexImaginaryBigDecimal);
+			final FloatStruct imaginary = FloatStruct.valueOf(powerComplexImaginaryBigDecimal);
 
 			final NumberStruct newPowerComplex = ComplexStruct.makeComplexOrReal(real, imaginary);
 
 			final BigDecimal bigDecimal1 = base.bigDecimalValue();
-			final RealStruct newBase = new SingleFloatStruct(bigDecimal1);
+			final RealStruct newBase = FloatStruct.valueOf(bigDecimal1);
 			final NumberStruct logOfNewBase = newBase.log();
 			final NumberStruct powerComplexLogOfNewBaseProduct = newPowerComplex.multiply(logOfNewBase);
 			return powerComplexLogOfNewBaseProduct.exp();

@@ -6,6 +6,8 @@ package jcl.numbers;
 
 import java.math.BigDecimal;
 
+import org.apfloat.Apfloat;
+
 /**
  * The {@link FloatStruct} is the object representation of a Lisp 'float' type.
  */
@@ -31,11 +33,77 @@ public interface FloatStruct extends RealStruct {
 	 */
 	FloatStruct MINUS_ONE = SingleFloatStruct.MINUS_ONE;
 
-	/**
-	 * Getter for float {@link #bigDecimal} property.
-	 *
-	 * @return float {@link #bigDecimal} property
-	 */
+	static boolean canDoubleBeFloat(final Double d) {
+		final Float f = new Float(d);
+		if (f.isInfinite()) {
+			return false;
+		}
+		final BigDecimal floatBigDecimal = new BigDecimal(String.valueOf(f));
+		final BigDecimal doubleBigDecimal = new BigDecimal(String.valueOf(d));
+		return doubleBigDecimal.compareTo(floatBigDecimal) == 0;
+	}
+
+	static boolean canBigDecimalBeDouble(final BigDecimal bigDecimal) {
+		final double d = bigDecimal.doubleValue();
+		final BigDecimal doubleBigDecimal = new BigDecimal(String.valueOf(d));
+		return doubleBigDecimal.compareTo(bigDecimal) == 0;
+	}
+
+	static boolean canBigDecimalBeFloat(final BigDecimal bigDecimal) {
+		return canBigDecimalBeDouble(bigDecimal) && canDoubleBeFloat(bigDecimal.doubleValue());
+	}
+
+	@Deprecated
+	static FloatStruct valueOf(final Apfloat apfloat) {
+		return SingleFloatStruct.valueOf(apfloat.floatValue());
+	}
+
+	static FloatStruct valueOf(final Float f) {
+		return SingleFloatStruct.valueOf(f);
+	}
+
+	static FloatStruct valueOf(final Double d) {
+		if (canDoubleBeFloat(d)) {
+			final float f = new Float(d);
+			return SingleFloatStruct.valueOf(f);
+		}
+		return DoubleFloatStruct.valueOf(d);
+	}
+
+	static FloatStruct valueOf(final BigDecimal bigDecimal) {
+		if (canBigDecimalBeFloat(bigDecimal)) {
+			final float f = bigDecimal.floatValue();
+			return valueOf(f);
+		}
+		if (canBigDecimalBeFloat(bigDecimal)) {
+			final double d = bigDecimal.doubleValue();
+			return valueOf(d);
+		}
+		return BigFloatStruct.valueOf(bigDecimal);
+	}
+
+	static FloatStruct valueOf(final String s) {
+		try {
+			final float f = Float.parseFloat(s);
+			return valueOf(f);
+		} catch (final NumberFormatException ignore) {
+		}
+		try {
+			final double d = Double.parseDouble(s);
+			return valueOf(d);
+		} catch (final NumberFormatException ignore) {
+		}
+		final BigDecimal bigDecimal = new BigDecimal(s);
+		return valueOf(bigDecimal);
+	}
+
+	float floatValue();
+
+	double doubleValue();
+
+	BigDecimal bigDecimalValue();
+
+	@Deprecated
 	BigDecimal getBigDecimal();
 
 	/**

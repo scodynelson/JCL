@@ -53,7 +53,7 @@ public class BigFloatStruct extends BuiltInClassStruct implements FloatStruct {
 	 * @param bigDecimal
 	 * 		the value of the FloatStruct
 	 */
-	public BigFloatStruct(final BigDecimal bigDecimal) {
+	private BigFloatStruct(final BigDecimal bigDecimal) {
 		this(SingleFloatType.INSTANCE, bigDecimal);
 	}
 
@@ -65,7 +65,7 @@ public class BigFloatStruct extends BuiltInClassStruct implements FloatStruct {
 	 * @param bigDecimal
 	 * 		the value of the FloatStruct
 	 */
-	public BigFloatStruct(final FloatType floatType, final BigDecimal bigDecimal) {
+	private BigFloatStruct(final FloatType floatType, final BigDecimal bigDecimal) {
 		super(floatType, null, null);
 		this.bigDecimal = bigDecimal;
 	}
@@ -76,7 +76,7 @@ public class BigFloatStruct extends BuiltInClassStruct implements FloatStruct {
 	 * @param apfloat
 	 * 		the value of the FloatStruct
 	 */
-	BigFloatStruct(final Apfloat apfloat) {
+	private BigFloatStruct(final Apfloat apfloat) {
 		this(apfloat.doubleValue());
 	}
 
@@ -88,6 +88,10 @@ public class BigFloatStruct extends BuiltInClassStruct implements FloatStruct {
 	 */
 	private BigFloatStruct(final double doubleValue) {
 		this(BigDecimal.valueOf(doubleValue));
+	}
+
+	public static BigFloatStruct valueOf(final BigDecimal bigDecimal) {
+		return new BigFloatStruct(bigDecimal);
 	}
 
 	/**
@@ -416,6 +420,16 @@ public class BigFloatStruct extends BuiltInClassStruct implements FloatStruct {
 	@Override
 	public NumberStruct expt(final ExptVisitor<?> exptVisitor) {
 		return exptVisitor.expt(this);
+	}
+
+	@Override
+	public float floatValue() {
+		return 0;
+	}
+
+	@Override
+	public double doubleValue() {
+		return 0;
 	}
 
 	/**

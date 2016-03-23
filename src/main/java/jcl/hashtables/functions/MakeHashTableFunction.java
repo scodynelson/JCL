@@ -17,7 +17,6 @@ import jcl.hashtables.HashTableStruct;
 import jcl.numbers.FloatStruct;
 import jcl.numbers.IntegerStruct;
 import jcl.numbers.RealStruct;
-import jcl.numbers.SingleFloatStruct;
 import jcl.symbols.KeywordStruct;
 import jcl.symbols.SymbolStruct;
 import jcl.system.CommonLispSymbols;
@@ -31,7 +30,7 @@ public final class MakeHashTableFunction extends CommonLispBuiltInFunctionStruct
 	private static final KeywordStruct SIZE = new KeywordStruct("SIZE");
 	private static final KeywordStruct REHASH_SIZE = new KeywordStruct("REHASH-SIZE");
 	private static final KeywordStruct REHASH_THRESHOLD = new KeywordStruct("REHASH-THRESHOLD");
-	private static final FloatStruct DEFAULT_REHASH_THRESHOLD = new SingleFloatStruct(BigDecimal.valueOf(0.75F));
+	private static final FloatStruct DEFAULT_REHASH_THRESHOLD = FloatStruct.valueOf(BigDecimal.valueOf(0.75F));
 
 	public MakeHashTableFunction() {
 		super("Creates and returns a new hash table.",

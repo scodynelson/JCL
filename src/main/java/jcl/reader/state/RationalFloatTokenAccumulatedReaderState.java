@@ -11,7 +11,6 @@ import java.util.LinkedList;
 
 import jcl.numbers.FloatStruct;
 import jcl.numbers.NumberStruct;
-import jcl.numbers.SingleFloatStruct;
 import jcl.reader.AttributeType;
 import jcl.reader.TokenAttribute;
 import jcl.reader.TokenBuilder;
@@ -78,6 +77,8 @@ public class RationalFloatTokenAccumulatedReaderState extends FloatTokenAccumula
 		}
 
 		final FloatType floatType = getFloatType(exponentTokenCodePoint);
-		return new SingleFloatStruct(floatType, bigDecimal);
+		// TODO: support floatType
+//		return FloatStruct.valueOf(floatType, bigDecimal);
+		return FloatStruct.valueOf(bigDecimal);
 	}
 }

@@ -12,7 +12,6 @@ import jcl.functions.parameterdsl.Arguments;
 import jcl.functions.parameterdsl.Parameters;
 import jcl.numbers.FloatStruct;
 import jcl.numbers.RealStruct;
-import jcl.numbers.SingleFloatStruct;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -39,6 +38,6 @@ public final class FloatFunction extends CommonLispBuiltInFunctionStruct {
 		}
 
 		final BigDecimal bigDecimal = real.bigDecimalValue();
-		return new SingleFloatStruct(bigDecimal);
+		return FloatStruct.valueOf(bigDecimal);
 	}
 }

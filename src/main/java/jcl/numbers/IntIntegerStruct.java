@@ -60,6 +60,7 @@ public final class IntIntegerStruct extends BuiltInClassStruct implements Intege
 	 * @param apfloat
 	 * 		the value of the IntegerStruct
 	 */
+	@Deprecated
 	IntIntegerStruct(final Apfloat apfloat) {
 		this(apfloat.intValue());
 	}
@@ -1499,7 +1500,7 @@ public final class IntIntegerStruct extends BuiltInClassStruct implements Intege
 
 			final RealStruct quotientReal;
 			if (isQuotientFloat) {
-				quotientReal = new SingleFloatStruct(quotient);
+				quotientReal = FloatStruct.valueOf(quotient);
 			} else {
 				final BigInteger quotientBigInteger = quotient.toBigInteger();
 				quotientReal = IntegerStruct.valueOf(quotientBigInteger);

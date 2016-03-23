@@ -1468,7 +1468,7 @@ public final class LongIntegerStruct extends BuiltInClassStruct implements Integ
 
 			final RealStruct quotientReal;
 			if (isQuotientFloat) {
-				quotientReal = new SingleFloatStruct(quotient);
+				quotientReal = FloatStruct.valueOf(quotient);
 			} else {
 				final BigInteger quotientBigInteger = quotient.toBigInteger();
 				quotientReal = IntegerStruct.valueOf(quotientBigInteger);

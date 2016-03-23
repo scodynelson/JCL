@@ -11,7 +11,7 @@ import jcl.functions.CommonLispBuiltInFunctionStruct;
 import jcl.functions.parameterdsl.Arguments;
 import jcl.functions.parameterdsl.Parameters;
 import jcl.hashtables.HashTableStruct;
-import jcl.numbers.SingleFloatStruct;
+import jcl.numbers.FloatStruct;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -32,6 +32,6 @@ public final class HashTableRehashSizeFunction extends CommonLispBuiltInFunction
 	public LispStruct apply(final Arguments arguments) {
 		final HashTableStruct hashTable = arguments.getRequiredArgument(HASH_TABLE_ARGUMENT, HashTableStruct.class);
 		final BigDecimal rehashSize = HashTableStruct.getRehashSize();
-		return new SingleFloatStruct(rehashSize);
+		return FloatStruct.valueOf(rehashSize);
 	}
 }

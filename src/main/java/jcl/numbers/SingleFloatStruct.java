@@ -43,7 +43,7 @@ public final class SingleFloatStruct extends BuiltInClassStruct implements Float
 	/**
 	 * The internal {@link BigDecimal} containing the float contents.
 	 */
-	private final float f;
+	final float f;
 
 	/**
 	 * Public constructor.

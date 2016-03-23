@@ -38,7 +38,7 @@ public class RatioStruct extends BuiltInClassStruct implements RationalStruct {
 	/**
 	 * The internal {@link BigFraction} containing the ratio contents.
 	 */
-	private final BigFraction bigFraction;
+	final BigFraction bigFraction;
 
 	/**
 	 * Public constructor.

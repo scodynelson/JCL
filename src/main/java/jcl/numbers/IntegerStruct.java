@@ -86,6 +86,11 @@ public interface IntegerStruct extends RationalStruct {
 		return bigIntegerValue();
 	}
 
+	@Deprecated
+	static IntegerStruct valueOf(final Apfloat apfloat) {
+		return IntIntegerStruct.valueOf(apfloat.intValue());
+	}
+
 	@Override
 	@Deprecated
 	default BigDecimal bigDecimalValue() {

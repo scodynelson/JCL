@@ -43,7 +43,7 @@ public final class BigFloatStruct extends BuiltInClassStruct implements FloatStr
 	/**
 	 * The internal {@link BigDecimal} containing the float contents.
 	 */
-	private final BigDecimal bigDecimal;
+	final BigDecimal bigDecimal;
 
 	/**
 	 * Public constructor.

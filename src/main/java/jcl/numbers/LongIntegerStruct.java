@@ -21,7 +21,7 @@ import org.apache.commons.math3.util.FastMath;
  */
 public final class LongIntegerStruct extends BuiltInClassStruct implements IntegerStruct {
 
-	private final long l;
+	final long l;
 
 	private LongIntegerStruct(final long l) {
 		super(BignumType.INSTANCE, null, null);

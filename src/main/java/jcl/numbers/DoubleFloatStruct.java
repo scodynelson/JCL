@@ -43,7 +43,7 @@ public final class DoubleFloatStruct extends BuiltInClassStruct implements Float
 	/**
 	 * The internal {@link BigDecimal} containing the float contents.
 	 */
-	private final double d;
+	final double d;
 
 	/**
 	 * Public constructor.

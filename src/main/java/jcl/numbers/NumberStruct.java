@@ -22,9 +22,9 @@ public interface NumberStruct extends LispStruct {
 	 * Determines the object equality of this NumberStruct with the provided {@link LispStruct}. 'EQL' rules state
 	 * that if 'x' and 'y' are both numbers of the same type and the same value, then they are equal.
 	 */
-//	@Override
-	default boolean lispEql(final LispStruct lispStruct) {
-		return equals(lispStruct);
+	@Override
+	default boolean eql(final LispStruct object) {
+		return equals(object);
 	}
 
 	/**
@@ -33,9 +33,9 @@ public interface NumberStruct extends LispStruct {
 	 * Determines the object equality of this NumberStruct with the provided {@link LispStruct}. 'EQUAL' rules state
 	 * that if 'x' and 'y' are 'EQL', then they are equal.
 	 */
-//	@Override
-	default boolean lispEqual(final LispStruct lispStruct) {
-		return equals(lispStruct);
+	@Override
+	default boolean equal(final LispStruct object) {
+		return eql(object);
 	}
 
 	/**
@@ -44,9 +44,9 @@ public interface NumberStruct extends LispStruct {
 	 * Determines the object equality of this NumberStruct with the provided {@link LispStruct}. 'EQUALP' rules state
 	 * that if 'x' and 'y' are 'EQL', then they are equal.
 	 */
-//	@Override
-	default boolean lispEqualp(final LispStruct lispStruct) {
-		return (lispStruct instanceof NumberStruct) && isEqualTo((NumberStruct) lispStruct);
+	@Override
+	default boolean equalp(final LispStruct object) {
+		return (object instanceof NumberStruct) && isEqualTo((NumberStruct) object);
 	}
 
 	Apcomplex apcomplexValue();
@@ -388,7 +388,7 @@ public interface NumberStruct extends LispStruct {
 				realPower = (IntegerStruct) IntegerStruct.ZERO.subtract(realPower);
 				return IntegerStruct.ONE.divide(exptInteger(base, realPower));
 			}
-			if (base.lispEql(IntegerStruct.TWO)) {
+			if (base.eql(IntegerStruct.TWO)) {
 				return IntegerStruct.ONE.ash(realPower);
 			}
 

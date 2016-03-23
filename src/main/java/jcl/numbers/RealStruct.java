@@ -427,7 +427,7 @@ public interface RealStruct extends NumberStruct {
 
 	static RealStruct toRealStruct(final Apfloat apfloat) {
 		// TODO: Not quite right here either!!!
-		return (apfloat.doubleValue() == apfloat.intValue()) ? new IntIntegerStruct(apfloat) : FloatStruct.valueOf(apfloat);
+		return (apfloat.doubleValue() == apfloat.intValue()) ? IntegerStruct.valueOf(apfloat) : FloatStruct.valueOf(apfloat);
 	}
 
 	// Visitor Implementations

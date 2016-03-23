@@ -51,7 +51,7 @@ public final class BigIntegerStruct extends BuiltInClassStruct implements Intege
 	/**
 	 * The internal {@link BigInteger} containing the float contents.
 	 */
-	private final BigInteger bigInteger;
+	final BigInteger bigInteger;
 
 	/**
 	 * Public constructor.

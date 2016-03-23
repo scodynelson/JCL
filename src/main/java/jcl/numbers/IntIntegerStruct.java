@@ -9,19 +9,18 @@ import java.math.BigInteger;
 import java.math.RoundingMode;
 
 import jcl.classes.BuiltInClassStruct;
-import jcl.types.IntegerType;
+import jcl.types.FixnumType;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.math3.fraction.BigFraction;
 import org.apache.commons.math3.util.ArithmeticUtils;
 import org.apache.commons.math3.util.FastMath;
 import org.apfloat.Apfloat;
-import org.apfloat.Apint;
 
 /**
  * The {@link IntIntegerStruct} is the object representation of a Lisp 'integer' type.
  */
-public class IntIntegerStruct extends BuiltInClassStruct implements IntegerStruct {
+public final class IntIntegerStruct extends BuiltInClassStruct implements IntegerStruct {
 
 	/**
 	 * {@link IntIntegerStruct} constant representing 0.
@@ -51,7 +50,7 @@ public class IntIntegerStruct extends BuiltInClassStruct implements IntegerStruc
 	private final int i;
 
 	private IntIntegerStruct(final int i) {
-		super(IntegerType.INSTANCE, null, null);
+		super(FixnumType.INSTANCE, null, null);
 		this.i = i;
 	}
 
@@ -67,12 +66,6 @@ public class IntIntegerStruct extends BuiltInClassStruct implements IntegerStruc
 
 	public static IntIntegerStruct valueOf(final int i) {
 		return new IntIntegerStruct(i);
-	}
-
-	@Override
-	@Deprecated
-	public BigInteger getBigInteger() {
-		return bigIntegerValue();
 	}
 
 	@Override
@@ -403,33 +396,6 @@ public class IntIntegerStruct extends BuiltInClassStruct implements IntegerStruc
 	/**
 	 * {@inheritDoc}
 	 * <p>
-	 * Determines the whether or not the numerical value of this IntegerStruct is zero, positive, or negative,
-	 * returning {@code this}, {@link #ONE}, or {@link #MINUS_ONE} respectively.
-	 */
-	@Override
-	public NumberStruct signum() {
-		if (zerop()) {
-			return this;
-		} else if (plusp()) {
-			return ONE;
-		} else {
-			return MINUS_ONE;
-		}
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * <p>
-	 * Returns {@link #ZERO} as the imaginary part of IntegerStructs is always '0'.
-	 */
-	@Override
-	public RealStruct imagPart() {
-		return ZERO;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * <p>
 	 * Computes the negation with {@link BigInteger#negate()} on {@link #i} and the creating a new
 	 * IntegerStruct to wrap it.
 	 */
@@ -448,31 +414,6 @@ public class IntIntegerStruct extends BuiltInClassStruct implements IntegerStruc
 	public NumberStruct reciprocal() {
 		// TODO: BigInteger needed?
 		return RationalStruct.makeRational(BigInteger.ONE, bigIntegerValue());
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * <p>
-	 * Computes the exponential function result for this IntegerStruct as this {@code base} and the provided {@link
-	 * NumberStruct} as the {@code power}. If {@code power} is '0' and power is an IntegerStruct, {@link #ONE} is
-	 * returned. If {@code power} is '0' and power is not an IntegerStruct, {@link FloatStruct#ONE} is returned. If
-	 * this IntegerStruct is either '0' or '1', {@code this} is returned.
-	 */
-	@Override
-	public NumberStruct expt(final NumberStruct power) {
-		if (power.zerop()) {
-			if (power instanceof IntIntegerStruct) {
-				return ONE;
-			}
-			return FloatStruct.ONE;
-		}
-
-		if (zerop() || isEqualTo(ONE)) {
-			return this;
-		}
-
-		final ExptVisitor<?> exptVisitor = exptVisitor();
-		return power.expt(exptVisitor);
 	}
 
 	/**
@@ -532,34 +473,6 @@ public class IntIntegerStruct extends BuiltInClassStruct implements IntegerStruc
 	@Override
 	public IntegerStruct.LcmVisitor<?> lcmVisitor() {
 		return new IntIntegerLcmVisitor(this);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * <p>
-	 * Computes a {@link BigDecimal} value from the {@link #i} by altering its scale when creating a new
-	 * {@link BigDecimal} and then further multiplying it by {@link BigDecimal#TEN}.
-	 */
-	@Deprecated
-	@Override
-	public BigDecimal bigDecimalValue() {
-		return new BigDecimal(bigIntegerValue(), 1).multiply(BigDecimal.TEN);
-	}
-
-	@Deprecated
-	@Override
-	public Apfloat apfloatValue() {
-		return new Apint(bigIntegerValue());
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * <p>
-	 * Returns {@link #ZERO} as a '0' IntegerStruct value.
-	 */
-	@Override
-	public RealStruct zeroValue() {
-		return ZERO;
 	}
 
 	/**
@@ -675,26 +588,6 @@ public class IntIntegerStruct extends BuiltInClassStruct implements IntegerStruc
 	@Override
 	public QuotientRemainderVisitor<?> quotientRemainderVisitor() {
 		return new IntegerQuotientRemainderVisitor(this);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * <p>
-	 * Returns {@code this} as the numerator.
-	 */
-	@Override
-	public IntIntegerStruct numerator() {
-		return this;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * <p>
-	 * Returns {@link #ONE} as the denominator of IntegerStructs is always '1'.
-	 */
-	@Override
-	public IntIntegerStruct denominator() {
-		return ONE;
 	}
 
 	@Override
@@ -950,7 +843,7 @@ public class IntIntegerStruct extends BuiltInClassStruct implements IntegerStruc
 		 * @param number1
 		 * 		the first argument in the addition operation
 		 */
-		IntegerAddVisitor(final IntIntegerStruct number1) {
+		private IntegerAddVisitor(final IntIntegerStruct number1) {
 			super(number1);
 		}
 
@@ -977,6 +870,21 @@ public class IntIntegerStruct extends BuiltInClassStruct implements IntegerStruc
 			return null;
 		}
 
+		@Override
+		public RealStruct add(final SingleFloatStruct number2) {
+			return super.add(number2);
+		}
+
+		@Override
+		public RealStruct add(final DoubleFloatStruct number2) {
+			return super.add(number2);
+		}
+
+		@Override
+		public RealStruct add(final BigFloatStruct number2) {
+			return super.add(number2);
+		}
+
 		/**
 		 * {@inheritDoc}
 		 * <p>
@@ -993,6 +901,11 @@ public class IntIntegerStruct extends BuiltInClassStruct implements IntegerStruc
 			final BigInteger multiply = bigInteger1.multiply(denominator);
 			final BigInteger add = multiply.add(numerator);
 			return RationalStruct.makeRational(add, denominator);
+		}
+
+		@Override
+		public NumberStruct add(final ComplexStruct number2) {
+			return super.add(number2);
 		}
 	}
 
@@ -1035,6 +948,21 @@ public class IntIntegerStruct extends BuiltInClassStruct implements IntegerStruc
 			return null;
 		}
 
+		@Override
+		public RealStruct subtract(final SingleFloatStruct number2) {
+			return super.subtract(number2);
+		}
+
+		@Override
+		public RealStruct subtract(final DoubleFloatStruct number2) {
+			return super.subtract(number2);
+		}
+
+		@Override
+		public RealStruct subtract(final BigFloatStruct number2) {
+			return super.subtract(number2);
+		}
+
 		/**
 		 * {@inheritDoc}
 		 * <p>
@@ -1052,10 +980,16 @@ public class IntIntegerStruct extends BuiltInClassStruct implements IntegerStruc
 			final BigInteger subtract = multiply.subtract(numerator);
 			return RationalStruct.makeRational(subtract, denominator);
 		}
+
+		@Override
+		public NumberStruct subtract(final ComplexStruct number2) {
+			return super.subtract(number2);
+		}
 	}
 
 	/**
-	 * {@link RealStruct.RealMultiplyVisitor} for computing multiplication function results for {@link IntIntegerStruct}s.
+	 * {@link RealStruct.RealMultiplyVisitor} for computing multiplication function results for {@link
+	 * IntIntegerStruct}s.
 	 */
 	private static final class IntegerMultiplyVisitor extends RealStruct.RealMultiplyVisitor<IntIntegerStruct> {
 
@@ -1093,6 +1027,21 @@ public class IntIntegerStruct extends BuiltInClassStruct implements IntegerStruc
 			return null;
 		}
 
+		@Override
+		public RealStruct multiply(final SingleFloatStruct number2) {
+			return super.multiply(number2);
+		}
+
+		@Override
+		public RealStruct multiply(final DoubleFloatStruct number2) {
+			return super.multiply(number2);
+		}
+
+		@Override
+		public RealStruct multiply(final BigFloatStruct number2) {
+			return super.multiply(number2);
+		}
+
 		/**
 		 * {@inheritDoc}
 		 * <p>
@@ -1108,6 +1057,11 @@ public class IntIntegerStruct extends BuiltInClassStruct implements IntegerStruc
 
 			final BigInteger multiply = bigInteger1.multiply(numerator);
 			return RationalStruct.makeRational(multiply, denominator);
+		}
+
+		@Override
+		public NumberStruct multiply(final ComplexStruct number2) {
+			return super.multiply(number2);
 		}
 	}
 
@@ -1149,6 +1103,21 @@ public class IntIntegerStruct extends BuiltInClassStruct implements IntegerStruc
 			return null;
 		}
 
+		@Override
+		public RealStruct divide(final SingleFloatStruct number2) {
+			return super.divide(number2);
+		}
+
+		@Override
+		public RealStruct divide(final DoubleFloatStruct number2) {
+			return super.divide(number2);
+		}
+
+		@Override
+		public RealStruct divide(final BigFloatStruct number2) {
+			return super.divide(number2);
+		}
+
 		/**
 		 * {@inheritDoc}
 		 * <p>
@@ -1164,6 +1133,11 @@ public class IntIntegerStruct extends BuiltInClassStruct implements IntegerStruc
 
 			final BigInteger multiply = bigInteger1.multiply(denominator);
 			return RationalStruct.makeRational(multiply, numerator);
+		}
+
+		@Override
+		public NumberStruct divide(final ComplexStruct number2) {
+			return super.divide(number2);
 		}
 	}
 
@@ -1193,6 +1167,31 @@ public class IntIntegerStruct extends BuiltInClassStruct implements IntegerStruc
 			return getComparisonResult(number1, number2) == 0;
 		}
 
+		@Override
+		public boolean equalTo(final LongIntegerStruct number2) {
+			return super.equalTo(number2);
+		}
+
+		@Override
+		public boolean equalTo(final BigIntegerStruct number2) {
+			return super.equalTo(number2);
+		}
+
+		@Override
+		public boolean equalTo(final SingleFloatStruct number2) {
+			return super.equalTo(number2);
+		}
+
+		@Override
+		public boolean equalTo(final DoubleFloatStruct number2) {
+			return super.equalTo(number2);
+		}
+
+		@Override
+		public boolean equalTo(final BigFloatStruct number2) {
+			return super.equalTo(number2);
+		}
+
 		/**
 		 * {@inheritDoc}
 		 * <p>
@@ -1201,6 +1200,11 @@ public class IntIntegerStruct extends BuiltInClassStruct implements IntegerStruc
 		@Override
 		public boolean equalTo(final RatioStruct number2) {
 			return getComparisonResult(number1, number2) == 0;
+		}
+
+		@Override
+		public boolean equalTo(final ComplexStruct number2) {
+			return super.equalTo(number2);
 		}
 	}
 
@@ -1229,6 +1233,31 @@ public class IntIntegerStruct extends BuiltInClassStruct implements IntegerStruc
 		@Override
 		public boolean lessThan(final IntIntegerStruct real2) {
 			return getComparisonResult(real1, real2) < 0;
+		}
+
+		@Override
+		public boolean lessThan(final LongIntegerStruct real2) {
+			return super.lessThan(real2);
+		}
+
+		@Override
+		public boolean lessThan(final BigIntegerStruct real2) {
+			return super.lessThan(real2);
+		}
+
+		@Override
+		public boolean lessThan(final SingleFloatStruct real2) {
+			return super.lessThan(real2);
+		}
+
+		@Override
+		public boolean lessThan(final DoubleFloatStruct real2) {
+			return super.lessThan(real2);
+		}
+
+		@Override
+		public boolean lessThan(final BigFloatStruct real2) {
+			return super.lessThan(real2);
 		}
 
 		/**
@@ -1270,6 +1299,31 @@ public class IntIntegerStruct extends BuiltInClassStruct implements IntegerStruc
 			return getComparisonResult(real1, real2) > 0;
 		}
 
+		@Override
+		public boolean greaterThan(final LongIntegerStruct real2) {
+			return super.greaterThan(real2);
+		}
+
+		@Override
+		public boolean greaterThan(final BigIntegerStruct real2) {
+			return super.greaterThan(real2);
+		}
+
+		@Override
+		public boolean greaterThan(final SingleFloatStruct real2) {
+			return super.greaterThan(real2);
+		}
+
+		@Override
+		public boolean greaterThan(final DoubleFloatStruct real2) {
+			return super.greaterThan(real2);
+		}
+
+		@Override
+		public boolean greaterThan(final BigFloatStruct real2) {
+			return super.greaterThan(real2);
+		}
+
 		/**
 		 * {@inheritDoc}
 		 * <p>
@@ -1309,6 +1363,31 @@ public class IntIntegerStruct extends BuiltInClassStruct implements IntegerStruc
 			return getComparisonResult(real1, real2) <= 0;
 		}
 
+		@Override
+		public boolean lessThanOrEqualTo(final LongIntegerStruct real2) {
+			return super.lessThanOrEqualTo(real2);
+		}
+
+		@Override
+		public boolean lessThanOrEqualTo(final BigIntegerStruct real2) {
+			return super.lessThanOrEqualTo(real2);
+		}
+
+		@Override
+		public boolean lessThanOrEqualTo(final SingleFloatStruct real2) {
+			return super.lessThanOrEqualTo(real2);
+		}
+
+		@Override
+		public boolean lessThanOrEqualTo(final DoubleFloatStruct real2) {
+			return super.lessThanOrEqualTo(real2);
+		}
+
+		@Override
+		public boolean lessThanOrEqualTo(final BigFloatStruct real2) {
+			return super.lessThanOrEqualTo(real2);
+		}
+
 		/**
 		 * {@inheritDoc}
 		 * <p>
@@ -1346,6 +1425,31 @@ public class IntIntegerStruct extends BuiltInClassStruct implements IntegerStruc
 		@Override
 		public boolean greaterThanOrEqualTo(final IntIntegerStruct real2) {
 			return getComparisonResult(real1, real2) >= 0;
+		}
+
+		@Override
+		public boolean greaterThanOrEqualTo(final LongIntegerStruct real2) {
+			return super.greaterThanOrEqualTo(real2);
+		}
+
+		@Override
+		public boolean greaterThanOrEqualTo(final BigIntegerStruct real2) {
+			return super.greaterThanOrEqualTo(real2);
+		}
+
+		@Override
+		public boolean greaterThanOrEqualTo(final SingleFloatStruct real2) {
+			return super.greaterThanOrEqualTo(real2);
+		}
+
+		@Override
+		public boolean greaterThanOrEqualTo(final DoubleFloatStruct real2) {
+			return super.greaterThanOrEqualTo(real2);
+		}
+
+		@Override
+		public boolean greaterThanOrEqualTo(final BigFloatStruct real2) {
+			return super.greaterThanOrEqualTo(real2);
 		}
 
 		/**
@@ -1416,6 +1520,11 @@ public class IntIntegerStruct extends BuiltInClassStruct implements IntegerStruc
 		public QuotientRemainderResult quotientRemainder(final BigIntegerStruct divisor, final RoundingMode roundingMode, final boolean isQuotientFloat) {
 			return null;
 		}
+
+		@Override
+		public QuotientRemainderResult quotientRemainder(final RatioStruct divisor, final RoundingMode roundingMode, final boolean isQuotientFloat) {
+			return super.quotientRemainder(divisor, roundingMode, isQuotientFloat);
+		}
 	}
 
 	/**
@@ -1450,6 +1559,41 @@ public class IntIntegerStruct extends BuiltInClassStruct implements IntegerStruc
 				final BigInteger pow = ArithmeticUtils.pow(baseBigInteger, powerBigInteger);
 				return IntegerStruct.valueOf(pow);
 			}
+		}
+
+		@Override
+		public NumberStruct expt(final LongIntegerStruct power) {
+			return super.expt(power);
+		}
+
+		@Override
+		public NumberStruct expt(final BigIntegerStruct power) {
+			return super.expt(power);
+		}
+
+		@Override
+		public NumberStruct expt(final SingleFloatStruct power) {
+			return super.expt(power);
+		}
+
+		@Override
+		public NumberStruct expt(final DoubleFloatStruct power) {
+			return super.expt(power);
+		}
+
+		@Override
+		public NumberStruct expt(final BigFloatStruct power) {
+			return super.expt(power);
+		}
+
+		@Override
+		public NumberStruct expt(final RatioStruct power) {
+			return super.expt(power);
+		}
+
+		@Override
+		public NumberStruct expt(final ComplexStruct power) {
+			return super.expt(power);
 		}
 	}
 
@@ -1499,22 +1643,22 @@ public class IntIntegerStruct extends BuiltInClassStruct implements IntegerStruc
 
 	private static final class IntIntegerAshVisitor extends IntegerStruct.AshVisitor<IntIntegerStruct> {
 
-		IntIntegerAshVisitor(final IntIntegerStruct integer1) {
-			super(integer1);
+		IntIntegerAshVisitor(final IntIntegerStruct integer) {
+			super(integer);
 		}
 
 		@Override
-		public IntegerStruct ash(final IntIntegerStruct integer2) {
+		public IntegerStruct ash(final IntIntegerStruct count) {
 			return null;
 		}
 
 		@Override
-		public IntegerStruct ash(final LongIntegerStruct integer2) {
+		public IntegerStruct ash(final LongIntegerStruct count) {
 			return null;
 		}
 
 		@Override
-		public IntegerStruct ash(final BigIntegerStruct integer2) {
+		public IntegerStruct ash(final BigIntegerStruct count) {
 			return null;
 		}
 	}

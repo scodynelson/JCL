@@ -21,7 +21,7 @@ import org.apfloat.Apint;
 /**
  * The {@link BigIntegerStruct} is the object representation of a Lisp 'integer' type.
  */
-public class BigIntegerStruct extends BuiltInClassStruct implements IntegerStruct {
+public final class BigIntegerStruct extends BuiltInClassStruct implements IntegerStruct {
 
 	/**
 	 * {@link BigIntegerStruct} constant representing 0.
@@ -115,6 +115,7 @@ public class BigIntegerStruct extends BuiltInClassStruct implements IntegerStruc
 	 *
 	 * @return integer {@link #bigInteger} property
 	 */
+	@Override
 	public BigInteger getBigInteger() {
 		return bigInteger;
 	}
@@ -185,6 +186,7 @@ public class BigIntegerStruct extends BuiltInClassStruct implements IntegerStruc
 	 *
 	 * @return true if this IntegerStruct is even (divisible by two); otherwise, false
 	 */
+	@Override
 	public boolean evenp() {
 		return !bigInteger.testBit(0);
 	}
@@ -194,6 +196,7 @@ public class BigIntegerStruct extends BuiltInClassStruct implements IntegerStruc
 	 *
 	 * @return true if this IntegerStruct is odd (not divisible by two); otherwise, false
 	 */
+	@Override
 	public boolean oddp() {
 		return bigInteger.testBit(0);
 	}
@@ -328,57 +331,57 @@ public class BigIntegerStruct extends BuiltInClassStruct implements IntegerStruc
 	/**
 	 * {@inheritDoc}
 	 * <p>
-	 * Compares this IntegerStruct to a {@link NumberStruct} using the provided {@link LessThanVisitor}.
+	 * Compares this IntegerStruct to a {@link NumberStruct} using the provided {@link RealStruct.LessThanVisitor}.
 	 *
 	 * @param lessThanVisitor
-	 * 		the {@link LessThanVisitor} to be used in the {@literal '<'} operation
+	 * 		the {@link RealStruct.LessThanVisitor} to be used in the {@literal '<'} operation
 	 *
 	 * @return the {@literal '<'} comparison of {@link NumberStruct} using the provided {@link
-	 * LessThanVisitor} and this
+	 * RealStruct.LessThanVisitor} and this
 	 * IntegerStruct
 	 */
 	@Override
-	public boolean isLessThan(final LessThanVisitor<?> lessThanVisitor) {
+	public boolean isLessThan(final RealStruct.LessThanVisitor<?> lessThanVisitor) {
 		return lessThanVisitor.lessThan(this);
 	}
 
 	/**
-	 * Returns a new {@link LessThanVisitor} with this IntegerStruct to be used in a {@literal '<'}
+	 * Returns a new {@link RealStruct.LessThanVisitor} with this IntegerStruct to be used in a {@literal '<'}
 	 * operation.
 	 *
-	 * @return a new {@link LessThanVisitor} with this IntegerStruct to be used in a {@literal '<'} operation
+	 * @return a new {@link RealStruct.LessThanVisitor} with this IntegerStruct to be used in a {@literal '<'} operation
 	 */
 	@Override
-	public LessThanVisitor<?> lessThanVisitor() {
+	public RealStruct.LessThanVisitor<?> lessThanVisitor() {
 		return new IntegerLessThanVisitor(this);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 * <p>
-	 * Compares this IntegerStruct to a {@link NumberStruct} using the provided {@link GreaterThanVisitor}.
+	 * Compares this IntegerStruct to a {@link NumberStruct} using the provided {@link RealStruct.GreaterThanVisitor}.
 	 *
 	 * @param greaterThanVisitor
-	 * 		the {@link GreaterThanVisitor} to be used in the {@literal '>'} operation
+	 * 		the {@link RealStruct.GreaterThanVisitor} to be used in the {@literal '>'} operation
 	 *
 	 * @return the {@literal '>'} comparison of {@link NumberStruct} using the provided {@link
-	 * GreaterThanVisitor} and
+	 * RealStruct.GreaterThanVisitor} and
 	 * this IntegerStruct
 	 */
 	@Override
-	public boolean isGreaterThan(final GreaterThanVisitor<?> greaterThanVisitor) {
+	public boolean isGreaterThan(final RealStruct.GreaterThanVisitor<?> greaterThanVisitor) {
 		return greaterThanVisitor.greaterThan(this);
 	}
 
 	/**
-	 * Returns a new {@link GreaterThanVisitor} with this IntegerStruct to be used in a {@literal '>'}
+	 * Returns a new {@link RealStruct.GreaterThanVisitor} with this IntegerStruct to be used in a {@literal '>'}
 	 * operation.
 	 *
-	 * @return a new {@link GreaterThanVisitor} with this IntegerStruct to be used in a {@literal '>'}
+	 * @return a new {@link RealStruct.GreaterThanVisitor} with this IntegerStruct to be used in a {@literal '>'}
 	 * operation
 	 */
 	@Override
-	public GreaterThanVisitor<?> greaterThanVisitor() {
+	public RealStruct.GreaterThanVisitor<?> greaterThanVisitor() {
 		return new IntegerGreaterThanVisitor(this);
 	}
 
@@ -386,29 +389,29 @@ public class BigIntegerStruct extends BuiltInClassStruct implements IntegerStruc
 	 * {@inheritDoc}
 	 * <p>
 	 * Compares this IntegerStruct to a {@link NumberStruct} using the provided {@link
-	 * LessThanOrEqualToVisitor}.
+	 * RealStruct.LessThanOrEqualToVisitor}.
 	 *
 	 * @param lessThanOrEqualToVisitor
-	 * 		the {@link LessThanOrEqualToVisitor} to be used in the {@literal '<='} operation
+	 * 		the {@link RealStruct.LessThanOrEqualToVisitor} to be used in the {@literal '<='} operation
 	 *
 	 * @return the {@literal '<='} comparison of {@link NumberStruct} using the provided {@link
-	 * LessThanOrEqualToVisitor} and this IntegerStruct
+	 * RealStruct.LessThanOrEqualToVisitor} and this IntegerStruct
 	 */
 	@Override
-	public boolean isLessThanOrEqualTo(final LessThanOrEqualToVisitor<?> lessThanOrEqualToVisitor) {
+	public boolean isLessThanOrEqualTo(final RealStruct.LessThanOrEqualToVisitor<?> lessThanOrEqualToVisitor) {
 		return lessThanOrEqualToVisitor.lessThanOrEqualTo(this);
 	}
 
 	/**
-	 * Returns a new {@link LessThanOrEqualToVisitor} with this IntegerStruct to be used in a {@literal
+	 * Returns a new {@link RealStruct.LessThanOrEqualToVisitor} with this IntegerStruct to be used in a {@literal
 	 * '<='}
 	 * operation.
 	 *
-	 * @return a new {@link LessThanOrEqualToVisitor} with this IntegerStruct to be used in a {@literal '<='}
+	 * @return a new {@link RealStruct.LessThanOrEqualToVisitor} with this IntegerStruct to be used in a {@literal '<='}
 	 * operation
 	 */
 	@Override
-	public LessThanOrEqualToVisitor<?> lessThanOrEqualToVisitor() {
+	public RealStruct.LessThanOrEqualToVisitor<?> lessThanOrEqualToVisitor() {
 		return new IntegerLessThanOrEqualToVisitor(this);
 	}
 
@@ -416,30 +419,30 @@ public class BigIntegerStruct extends BuiltInClassStruct implements IntegerStruc
 	 * {@inheritDoc}
 	 * <p>
 	 * Compares this IntegerStruct to a {@link NumberStruct} using the provided {@link
-	 * GreaterThanOrEqualToVisitor}.
+	 * RealStruct.GreaterThanOrEqualToVisitor}.
 	 *
 	 * @param greaterThanOrEqualToVisitor
-	 * 		the {@link GreaterThanOrEqualToVisitor} to be used in the {@literal '>='} operation
+	 * 		the {@link RealStruct.GreaterThanOrEqualToVisitor} to be used in the {@literal '>='} operation
 	 *
 	 * @return the {@literal '>='} comparison of {@link NumberStruct} using the provided {@link
-	 * GreaterThanOrEqualToVisitor} and this IntegerStruct
+	 * RealStruct.GreaterThanOrEqualToVisitor} and this IntegerStruct
 	 */
 	@Override
-	public boolean isGreaterThanOrEqualTo(final GreaterThanOrEqualToVisitor<?> greaterThanOrEqualToVisitor) {
+	public boolean isGreaterThanOrEqualTo(final RealStruct.GreaterThanOrEqualToVisitor<?> greaterThanOrEqualToVisitor) {
 		return greaterThanOrEqualToVisitor.greaterThanOrEqualTo(this);
 	}
 
 	/**
-	 * Returns a new {@link GreaterThanOrEqualToVisitor} with this IntegerStruct to be used in a {@literal
+	 * Returns a new {@link RealStruct.GreaterThanOrEqualToVisitor} with this IntegerStruct to be used in a {@literal
 	 * '>='}
 	 * operation.
 	 *
-	 * @return a new {@link GreaterThanOrEqualToVisitor} with this IntegerStruct to be used in a {@literal
+	 * @return a new {@link RealStruct.GreaterThanOrEqualToVisitor} with this IntegerStruct to be used in a {@literal
 	 * '>='}
 	 * operation
 	 */
 	@Override
-	public GreaterThanOrEqualToVisitor<?> greaterThanOrEqualToVisitor() {
+	public RealStruct.GreaterThanOrEqualToVisitor<?> greaterThanOrEqualToVisitor() {
 		return new IntegerGreaterThanOrEqualToVisitor(this);
 	}
 
@@ -550,6 +553,7 @@ public class BigIntegerStruct extends BuiltInClassStruct implements IntegerStruc
 	 *
 	 * @return the greatest IntegerStruct less than or equal to this IntegerStructs exact positive square root
 	 */
+	@Override
 	public BigIntegerStruct isqrt() {
 		final Apfloat apfloat = apfloatValue();
 		final Apfloat sqrt = ApfloatMath.sqrt(apfloat);
@@ -720,22 +724,22 @@ public class BigIntegerStruct extends BuiltInClassStruct implements IntegerStruc
 	}
 
 	@Override
-	public IntegerStruct gcd(final GcdVisitor<?> gcdVisitor) {
+	public IntegerStruct gcd(final IntegerStruct.GcdVisitor<?> gcdVisitor) {
 		return gcdVisitor.gcd(this);
 	}
 
 	@Override
-	public GcdVisitor<?> gcdVisitor() {
+	public IntegerStruct.GcdVisitor<?> gcdVisitor() {
 		return new BigIntegerGcdVisitor(this);
 	}
 
 	@Override
-	public IntegerStruct lcm(final LcmVisitor<?> lcmVisitor) {
+	public IntegerStruct lcm(final IntegerStruct.LcmVisitor<?> lcmVisitor) {
 		return lcmVisitor.lcm(this);
 	}
 
 	@Override
-	public LcmVisitor<?> lcmVisitor() {
+	public IntegerStruct.LcmVisitor<?> lcmVisitor() {
 		return new BigIntegerLcmVisitor(this);
 	}
 
@@ -749,6 +753,7 @@ public class BigIntegerStruct extends BuiltInClassStruct implements IntegerStruc
 	 *
 	 * @return the arithmetic shift operation on the binary representation of this IntegerStruct
 	 */
+	@Override
 	public BigIntegerStruct ash(final IntegerStruct count) {
 		if (count.zerop()) {
 			return this;
@@ -779,6 +784,7 @@ public class BigIntegerStruct extends BuiltInClassStruct implements IntegerStruc
 	 *
 	 * @return the bit-wise logical 'and' of this IntegerStruct and the provided IntegerStruct
 	 */
+	@Override
 	public BigIntegerStruct logAnd(final IntegerStruct integer) {
 		final BigInteger and = bigInteger.and(integer.getBigInteger());
 		return new BigIntegerStruct(and);
@@ -802,6 +808,7 @@ public class BigIntegerStruct extends BuiltInClassStruct implements IntegerStruc
 	 *
 	 * @return the bit-wise logical 'and' of this IntegerStruct and the provided IntegerStruct
 	 */
+	@Override
 	public BigIntegerStruct logAndC1(final IntegerStruct integer) {
 		final BigInteger not = bigInteger.not();
 		final BigInteger and = not.and(integer.getBigInteger());
@@ -826,6 +833,7 @@ public class BigIntegerStruct extends BuiltInClassStruct implements IntegerStruc
 	 *
 	 * @return the bit-wise logical 'and' of this IntegerStruct and the provided IntegerStruct
 	 */
+	@Override
 	public BigIntegerStruct logAndC2(final IntegerStruct integer) {
 		final BigInteger not = integer.getBigInteger().not();
 		final BigInteger and = bigInteger.and(not);
@@ -852,6 +860,7 @@ public class BigIntegerStruct extends BuiltInClassStruct implements IntegerStruc
 	 * @return the bit-wise logical 'equivalence', or 'exclusive-nor' of this IntegerStruct and the provided
 	 * IntegerStruct
 	 */
+	@Override
 	public BigIntegerStruct logEqv(final IntegerStruct integer) {
 		final BigInteger xor = bigInteger.xor(integer.getBigInteger());
 		final BigInteger not = xor.not();
@@ -876,6 +885,7 @@ public class BigIntegerStruct extends BuiltInClassStruct implements IntegerStruc
 	 *
 	 * @return the bit-wise logical 'inclusive-or' of this IntegerStruct and the provided IntegerStruct
 	 */
+	@Override
 	public BigIntegerStruct logIor(final IntegerStruct integer) {
 		final BigInteger or = bigInteger.or(integer.getBigInteger());
 		return new BigIntegerStruct(or);
@@ -899,6 +909,7 @@ public class BigIntegerStruct extends BuiltInClassStruct implements IntegerStruc
 	 *
 	 * @return the bit-wise logical compliment 'and' of this IntegerStruct and the provided IntegerStruct
 	 */
+	@Override
 	public BigIntegerStruct logNand(final IntegerStruct integer) {
 		final BigInteger and = bigInteger.and(integer.getBigInteger());
 		final BigInteger not = and.not();
@@ -923,6 +934,7 @@ public class BigIntegerStruct extends BuiltInClassStruct implements IntegerStruc
 	 *
 	 * @return the bit-wise logical compliment 'or' of this IntegerStruct and the provided IntegerStruct
 	 */
+	@Override
 	public BigIntegerStruct logNor(final IntegerStruct integer) {
 		final BigInteger or = bigInteger.or(integer.getBigInteger());
 		final BigInteger not = or.not();
@@ -944,6 +956,7 @@ public class BigIntegerStruct extends BuiltInClassStruct implements IntegerStruc
 	 *
 	 * @return the bit-wise logical 'not' of this IntegerStruct
 	 */
+	@Override
 	public BigIntegerStruct logNot() {
 		final BigInteger not = bigInteger.not();
 		return new BigIntegerStruct(not);
@@ -957,6 +970,7 @@ public class BigIntegerStruct extends BuiltInClassStruct implements IntegerStruc
 	 *
 	 * @return the bit-wise logical 'or' of the compliment of this IntegerStruct and the provided IntegerStruct
 	 */
+	@Override
 	public BigIntegerStruct logOrC1(final IntegerStruct integer) {
 		final BigInteger not = bigInteger.not();
 		final BigInteger or = not.or(integer.getBigInteger());
@@ -981,6 +995,7 @@ public class BigIntegerStruct extends BuiltInClassStruct implements IntegerStruc
 	 *
 	 * @return the bit-wise logical 'or' of this IntegerStruct and the compliment of provided IntegerStruct
 	 */
+	@Override
 	public BigIntegerStruct logOrC2(final IntegerStruct integer) {
 		final BigInteger not = integer.getBigInteger().not();
 		final BigInteger or = bigInteger.or(not);
@@ -1005,6 +1020,7 @@ public class BigIntegerStruct extends BuiltInClassStruct implements IntegerStruc
 	 *
 	 * @return the bit-wise logical 'exclusive-or' of this IntegerStruct and the provided IntegerStruct
 	 */
+	@Override
 	public BigIntegerStruct logXor(final IntegerStruct integer) {
 		final BigInteger xor = bigInteger.xor(integer.getBigInteger());
 		return new BigIntegerStruct(xor);
@@ -1025,6 +1041,7 @@ public class BigIntegerStruct extends BuiltInClassStruct implements IntegerStruc
 	 *
 	 * @return the number of bits needed to represent this IntegerStruct in binary two's-complement format
 	 */
+	@Override
 	public BigIntegerStruct integerLength() {
 		final int bitLength = bigInteger.bitLength();
 		final BigInteger bitLengthBigInteger = BigInteger.valueOf(bitLength);
@@ -1040,6 +1057,7 @@ public class BigIntegerStruct extends BuiltInClassStruct implements IntegerStruc
 	 *
 	 * @return true if the bit in this IntegerStruct whose index is {@code index} is a one-bit; otherwise, false
 	 */
+	@Override
 	public boolean logBitP(final IntegerStruct index) {
 		final int indexInt = index.getBigInteger().intValue();
 		return bigInteger.testBit(indexInt);
@@ -1062,6 +1080,7 @@ public class BigIntegerStruct extends BuiltInClassStruct implements IntegerStruc
 	 * @return Computes and returns the number of bits in the two's-complement binary representation of this
 	 * IntegerStruct that are 'on' or 'set'
 	 */
+	@Override
 	public BigIntegerStruct logCount() {
 		final int bitCount = bigInteger.bitCount();
 		final BigInteger bitCountBigInteger = BigInteger.valueOf(bitCount);
@@ -1078,6 +1097,7 @@ public class BigIntegerStruct extends BuiltInClassStruct implements IntegerStruc
 	 * @return true if any of the bits designated by the 1's in this IntegerStruct are 1 in the provided IntegerStruct;
 	 * otherwise, false.
 	 */
+	@Override
 	public boolean logTest(final IntegerStruct integer) {
 		final BigInteger and = bigInteger.and(integer.getBigInteger());
 		return and.signum() != 0;
@@ -1167,9 +1187,9 @@ public class BigIntegerStruct extends BuiltInClassStruct implements IntegerStruc
 	// Visitor Implementations
 
 	/**
-	 * {@link RealAddVisitor} for computing addition results for {@link BigIntegerStruct}s.
+	 * {@link RealStruct.RealAddVisitor} for computing addition results for {@link BigIntegerStruct}s.
 	 */
-	private static final class IntegerAddVisitor extends RealAddVisitor<BigIntegerStruct> {
+	private static final class IntegerAddVisitor extends RealStruct.RealAddVisitor<BigIntegerStruct> {
 
 		/**
 		 * Package private constructor to make a new instance of an IntegerAddVisitor with the provided {@link
@@ -1225,9 +1245,9 @@ public class BigIntegerStruct extends BuiltInClassStruct implements IntegerStruc
 	}
 
 	/**
-	 * {@link RealSubtractVisitor} for computing subtraction function results for {@link BigIntegerStruct}s.
+	 * {@link RealStruct.RealSubtractVisitor} for computing subtraction function results for {@link BigIntegerStruct}s.
 	 */
-	private static final class IntegerSubtractVisitor extends RealSubtractVisitor<BigIntegerStruct> {
+	private static final class IntegerSubtractVisitor extends RealStruct.RealSubtractVisitor<BigIntegerStruct> {
 
 		/**
 		 * Package private constructor to make a new instance of an IntegerSubtractVisitor with the provided {@link
@@ -1283,9 +1303,9 @@ public class BigIntegerStruct extends BuiltInClassStruct implements IntegerStruc
 	}
 
 	/**
-	 * {@link RealMultiplyVisitor} for computing multiplication function results for {@link BigIntegerStruct}s.
+	 * {@link RealStruct.RealMultiplyVisitor} for computing multiplication function results for {@link BigIntegerStruct}s.
 	 */
-	private static final class IntegerMultiplyVisitor extends RealMultiplyVisitor<BigIntegerStruct> {
+	private static final class IntegerMultiplyVisitor extends RealStruct.RealMultiplyVisitor<BigIntegerStruct> {
 
 		/**
 		 * Package private constructor to make a new instance of an IntegerMultiplyVisitor with the provided {@link
@@ -1340,9 +1360,9 @@ public class BigIntegerStruct extends BuiltInClassStruct implements IntegerStruc
 	}
 
 	/**
-	 * {@link RealDivideVisitor} for computing division function results for {@link BigIntegerStruct}s.
+	 * {@link RealStruct.RealDivideVisitor} for computing division function results for {@link BigIntegerStruct}s.
 	 */
-	private static final class IntegerDivideVisitor extends RealDivideVisitor<BigIntegerStruct> {
+	private static final class IntegerDivideVisitor extends RealStruct.RealDivideVisitor<BigIntegerStruct> {
 
 		/**
 		 * Package private constructor to make a new instance of an IntegerDivideVisitor with the provided {@link
@@ -1396,9 +1416,9 @@ public class BigIntegerStruct extends BuiltInClassStruct implements IntegerStruc
 	}
 
 	/**
-	 * {@link RealEqualToVisitor} for computing numeric '=' equality results for {@link BigIntegerStruct}s.
+	 * {@link RealStruct.RealEqualToVisitor} for computing numeric '=' equality results for {@link BigIntegerStruct}s.
 	 */
-	private static final class IntegerEqualToVisitor extends RealEqualToVisitor<BigIntegerStruct> {
+	private static final class IntegerEqualToVisitor extends RealStruct.RealEqualToVisitor<BigIntegerStruct> {
 
 		/**
 		 * Package private constructor to make a new instance of an IntegerEqualToVisitor with the provided {@link
@@ -1433,10 +1453,10 @@ public class BigIntegerStruct extends BuiltInClassStruct implements IntegerStruc
 	}
 
 	/**
-	 * {@link LessThanVisitor} for computing numeric {@literal '<'} equality results for {@link
+	 * {@link RealStruct.LessThanVisitor} for computing numeric {@literal '<'} equality results for {@link
 	 * BigIntegerStruct}s.
 	 */
-	private static final class IntegerLessThanVisitor extends LessThanVisitor<BigIntegerStruct> {
+	private static final class IntegerLessThanVisitor extends RealStruct.LessThanVisitor<BigIntegerStruct> {
 
 		/**
 		 * Package private constructor to make a new instance of an IntegerLessThanVisitor with the provided {@link
@@ -1472,10 +1492,10 @@ public class BigIntegerStruct extends BuiltInClassStruct implements IntegerStruc
 	}
 
 	/**
-	 * {@link GreaterThanVisitor} for computing numeric {@literal '>'} equality results for {@link
+	 * {@link RealStruct.GreaterThanVisitor} for computing numeric {@literal '>'} equality results for {@link
 	 * BigIntegerStruct}s.
 	 */
-	private static final class IntegerGreaterThanVisitor extends GreaterThanVisitor<BigIntegerStruct> {
+	private static final class IntegerGreaterThanVisitor extends RealStruct.GreaterThanVisitor<BigIntegerStruct> {
 
 		/**
 		 * Package private constructor to make a new instance of an IntegerGreaterThanVisitor with the provided {@link
@@ -1511,10 +1531,10 @@ public class BigIntegerStruct extends BuiltInClassStruct implements IntegerStruc
 	}
 
 	/**
-	 * {@link LessThanOrEqualToVisitor} for computing numeric {@literal '<='} equality results for {@link
+	 * {@link RealStruct.LessThanOrEqualToVisitor} for computing numeric {@literal '<='} equality results for {@link
 	 * BigIntegerStruct}s.
 	 */
-	private static final class IntegerLessThanOrEqualToVisitor extends LessThanOrEqualToVisitor<BigIntegerStruct> {
+	private static final class IntegerLessThanOrEqualToVisitor extends RealStruct.LessThanOrEqualToVisitor<BigIntegerStruct> {
 
 		/**
 		 * Package private constructor to make a new instance of an IntegerLessThanOrEqualToVisitor with the provided
@@ -1550,10 +1570,10 @@ public class BigIntegerStruct extends BuiltInClassStruct implements IntegerStruc
 	}
 
 	/**
-	 * {@link GreaterThanOrEqualToVisitor} for computing numeric {@literal '>='} equality results for {@link
+	 * {@link RealStruct.GreaterThanOrEqualToVisitor} for computing numeric {@literal '>='} equality results for {@link
 	 * BigIntegerStruct}s.
 	 */
-	private static final class IntegerGreaterThanOrEqualToVisitor extends GreaterThanOrEqualToVisitor<BigIntegerStruct> {
+	private static final class IntegerGreaterThanOrEqualToVisitor extends RealStruct.GreaterThanOrEqualToVisitor<BigIntegerStruct> {
 
 		/**
 		 * Package private constructor to make a new instance of an IntegerGreaterThanOrEqualToVisitor with the
@@ -1592,7 +1612,7 @@ public class BigIntegerStruct extends BuiltInClassStruct implements IntegerStruc
 	 * {@link IntegerQuotientRemainderVisitor} for computing quotient and remainder results for {@link
 	 * BigIntegerStruct}s.
 	 */
-	private static final class IntegerQuotientRemainderVisitor extends RationalQuotientRemainderVisitor<BigIntegerStruct> {
+	private static final class IntegerQuotientRemainderVisitor extends RationalStruct.RationalQuotientRemainderVisitor<BigIntegerStruct> {
 
 		/**
 		 * Package private constructor to make a new instance of an IntegerQuotientRemainderVisitor with the provided
@@ -1647,9 +1667,9 @@ public class BigIntegerStruct extends BuiltInClassStruct implements IntegerStruc
 	}
 
 	/**
-	 * {@link RealExptVisitor} for computing exponential function results for {@link BigIntegerStruct}s.
+	 * {@link RealStruct.RealExptVisitor} for computing exponential function results for {@link BigIntegerStruct}s.
 	 */
-	private static final class IntegerExptVisitor extends RealExptVisitor<BigIntegerStruct> {
+	private static final class IntegerExptVisitor extends RealStruct.RealExptVisitor<BigIntegerStruct> {
 
 		/**
 		 * Package private constructor to make a new instance of an IntegerExptVisitor with the provided {@link
@@ -1681,7 +1701,7 @@ public class BigIntegerStruct extends BuiltInClassStruct implements IntegerStruc
 		}
 	}
 
-	private static final class BigIntegerGcdVisitor extends GcdVisitor<BigIntegerStruct> {
+	private static final class BigIntegerGcdVisitor extends IntegerStruct.GcdVisitor<BigIntegerStruct> {
 
 		BigIntegerGcdVisitor(final BigIntegerStruct integer1) {
 			super(integer1);
@@ -1703,7 +1723,7 @@ public class BigIntegerStruct extends BuiltInClassStruct implements IntegerStruc
 		}
 	}
 
-	private static final class BigIntegerLcmVisitor extends LcmVisitor<BigIntegerStruct> {
+	private static final class BigIntegerLcmVisitor extends IntegerStruct.LcmVisitor<BigIntegerStruct> {
 
 		BigIntegerLcmVisitor(final BigIntegerStruct integer1) {
 			super(integer1);
@@ -1722,6 +1742,279 @@ public class BigIntegerStruct extends BuiltInClassStruct implements IntegerStruc
 		@Override
 		public IntegerStruct lcm(final BigIntegerStruct integer2) {
 			return null;
+		}
+	}
+
+	private static final class BigIntegerAshVisitor extends IntegerStruct.AshVisitor<BigIntegerStruct> {
+
+		BigIntegerAshVisitor(final BigIntegerStruct integer) {
+			super(integer);
+		}
+
+		@Override
+		public IntegerStruct ash(final IntIntegerStruct count) {
+			return null;
+		}
+
+		@Override
+		public IntegerStruct ash(final LongIntegerStruct count) {
+			return null;
+		}
+
+		@Override
+		public IntegerStruct ash(final BigIntegerStruct count) {
+//			if (count.zerop()) {
+//				return this;
+//			}
+//
+//			final int countInt = count.getBigInteger().intValue();
+//
+//			// NOTE: shiftLeft will automatically take care of shiftRight based on the sign of countInt
+//			final BigInteger shiftLeft = bigInteger.shiftLeft(countInt);
+//			return new LongIntegerStruct(shiftLeft);
+			return null;
+		}
+	}
+
+	private static final class BigIntegerLogAndVisitor extends IntegerStruct.LogAndVisitor<BigIntegerStruct> {
+
+		BigIntegerLogAndVisitor(final BigIntegerStruct integer1) {
+			super(integer1);
+		}
+
+		@Override
+		public IntegerStruct logAnd(final IntIntegerStruct integer2) {
+			return null;
+		}
+
+		@Override
+		public IntegerStruct logAnd(final LongIntegerStruct integer2) {
+			return null;
+		}
+
+		@Override
+		public IntegerStruct logAnd(final BigIntegerStruct integer2) {
+			return null;
+		}
+	}
+
+	private static final class BigIntegerLogAndC1Visitor extends IntegerStruct.LogAndC1Visitor<BigIntegerStruct> {
+
+		BigIntegerLogAndC1Visitor(final BigIntegerStruct integer1) {
+			super(integer1);
+		}
+
+		@Override
+		public IntegerStruct logAndC1(final IntIntegerStruct integer2) {
+			return null;
+		}
+
+		@Override
+		public IntegerStruct logAndC1(final LongIntegerStruct integer2) {
+			return null;
+		}
+
+		@Override
+		public IntegerStruct logAndC1(final BigIntegerStruct integer2) {
+			return null;
+		}
+	}
+
+	private static final class BigIntegerLogAndC2Visitor extends IntegerStruct.LogAndC2Visitor<BigIntegerStruct> {
+
+		BigIntegerLogAndC2Visitor(final BigIntegerStruct integer1) {
+			super(integer1);
+		}
+
+		@Override
+		public IntegerStruct logAndC2(final IntIntegerStruct integer2) {
+			return null;
+		}
+
+		@Override
+		public IntegerStruct logAndC2(final LongIntegerStruct integer2) {
+			return null;
+		}
+
+		@Override
+		public IntegerStruct logAndC2(final BigIntegerStruct integer2) {
+			return null;
+		}
+	}
+
+	private static final class BigIntegerLogEqvVisitor extends IntegerStruct.LogEqvVisitor<BigIntegerStruct> {
+
+		BigIntegerLogEqvVisitor(final BigIntegerStruct integer1) {
+			super(integer1);
+		}
+
+		@Override
+		public IntegerStruct logEqv(final IntIntegerStruct integer2) {
+			return null;
+		}
+
+		@Override
+		public IntegerStruct logEqv(final LongIntegerStruct integer2) {
+			return null;
+		}
+
+		@Override
+		public IntegerStruct logEqv(final BigIntegerStruct integer2) {
+			return null;
+		}
+	}
+
+	private static final class BigIntegerLogIorVisitor extends IntegerStruct.LogIorVisitor<BigIntegerStruct> {
+
+		BigIntegerLogIorVisitor(final BigIntegerStruct integer1) {
+			super(integer1);
+		}
+
+		@Override
+		public IntegerStruct logIor(final IntIntegerStruct integer2) {
+			return null;
+		}
+
+		@Override
+		public IntegerStruct logIor(final LongIntegerStruct integer2) {
+			return null;
+		}
+
+		@Override
+		public IntegerStruct logIor(final BigIntegerStruct integer2) {
+			return null;
+		}
+	}
+
+	private static final class BigIntegerLogNandVisitor extends IntegerStruct.LogNandVisitor<BigIntegerStruct> {
+
+		BigIntegerLogNandVisitor(final BigIntegerStruct integer1) {
+			super(integer1);
+		}
+
+		@Override
+		public IntegerStruct logNand(final IntIntegerStruct integer2) {
+			return null;
+		}
+
+		@Override
+		public IntegerStruct logNand(final LongIntegerStruct integer2) {
+			return null;
+		}
+
+		@Override
+		public IntegerStruct logNand(final BigIntegerStruct integer2) {
+			return null;
+		}
+	}
+
+	private static final class BigIntegerLogNorVisitor extends IntegerStruct.LogNorVisitor<BigIntegerStruct> {
+
+		BigIntegerLogNorVisitor(final BigIntegerStruct integer1) {
+			super(integer1);
+		}
+
+		@Override
+		public IntegerStruct logNor(final IntIntegerStruct integer2) {
+			return null;
+		}
+
+		@Override
+		public IntegerStruct logNor(final LongIntegerStruct integer2) {
+			return null;
+		}
+
+		@Override
+		public IntegerStruct logNor(final BigIntegerStruct integer2) {
+			return null;
+		}
+	}
+
+	private static final class BigIntegerLogOrC1Visitor extends IntegerStruct.LogOrC1Visitor<BigIntegerStruct> {
+
+		BigIntegerLogOrC1Visitor(final BigIntegerStruct integer1) {
+			super(integer1);
+		}
+
+		@Override
+		public IntegerStruct logOrC1(final IntIntegerStruct integer2) {
+			return null;
+		}
+
+		@Override
+		public IntegerStruct logOrC1(final LongIntegerStruct integer2) {
+			return null;
+		}
+
+		@Override
+		public IntegerStruct logOrC1(final BigIntegerStruct integer2) {
+			return null;
+		}
+	}
+
+	private static final class BigIntegerLogOrC2Visitor extends IntegerStruct.LogOrC2Visitor<BigIntegerStruct> {
+
+		BigIntegerLogOrC2Visitor(final BigIntegerStruct integer1) {
+			super(integer1);
+		}
+
+		@Override
+		public IntegerStruct logOrC2(final IntIntegerStruct integer2) {
+			return null;
+		}
+
+		@Override
+		public IntegerStruct logOrC2(final LongIntegerStruct integer2) {
+			return null;
+		}
+
+		@Override
+		public IntegerStruct logOrC2(final BigIntegerStruct integer2) {
+			return null;
+		}
+	}
+
+	private static final class BigIntegerLogXorVisitor extends IntegerStruct.LogXorVisitor<BigIntegerStruct> {
+
+		BigIntegerLogXorVisitor(final BigIntegerStruct integer1) {
+			super(integer1);
+		}
+
+		@Override
+		public IntegerStruct logXor(final IntIntegerStruct integer2) {
+			return null;
+		}
+
+		@Override
+		public IntegerStruct logXor(final LongIntegerStruct integer2) {
+			return null;
+		}
+
+		@Override
+		public IntegerStruct logXor(final BigIntegerStruct integer2) {
+			return null;
+		}
+	}
+
+	private static final class BigIntegerLogBitPVisitor extends IntegerStruct.LogBitPVisitor<BigIntegerStruct> {
+
+		BigIntegerLogBitPVisitor(final BigIntegerStruct integer) {
+			super(integer);
+		}
+
+		@Override
+		public boolean logBitP(final IntIntegerStruct index) {
+			return false;
+		}
+
+		@Override
+		public boolean logBitP(final LongIntegerStruct index) {
+			return false;
+		}
+
+		@Override
+		public boolean logBitP(final BigIntegerStruct index) {
+			return false;
 		}
 	}
 }

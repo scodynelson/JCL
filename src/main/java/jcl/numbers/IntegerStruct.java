@@ -4,8 +4,12 @@
 
 package jcl.numbers;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.List;
+
+import org.apfloat.Apfloat;
+import org.apfloat.Apint;
 
 /**
  * The {@link IntegerStruct} is the object representation of a Lisp 'integer' type.
@@ -78,7 +82,26 @@ public interface IntegerStruct extends RationalStruct {
 	}
 
 	@Deprecated
-	BigInteger getBigInteger();
+	default BigInteger getBigInteger() {
+		return bigIntegerValue();
+	}
+
+	@Override
+	@Deprecated
+	default BigDecimal bigDecimalValue() {
+		return new BigDecimal(bigIntegerValue(), 1).multiply(BigDecimal.TEN);
+	}
+
+	@Deprecated
+	@Override
+	default Apfloat apfloatValue() {
+		return new Apint(bigIntegerValue());
+	}
+
+	@Override
+	default RealStruct zeroValue() {
+		return ZERO;
+	}
 
 	int intValue();
 
@@ -107,6 +130,72 @@ public interface IntegerStruct extends RationalStruct {
 	 */
 	IntegerStruct isqrt();
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Determines the whether or not the numerical value of this IntegerStruct is zero, positive, or negative,
+	 * returning {@code this}, {@link #ONE}, or {@link #MINUS_ONE} respectively.
+	 */
+	@Override
+	default NumberStruct signum() {
+		if (zerop()) {
+			return this;
+		} else if (plusp()) {
+			return ONE;
+		} else {
+			return MINUS_ONE;
+		}
+	}
+
+	@Override
+	default RealStruct imagPart() {
+		return ZERO;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Computes the exponential function result for this IntegerStruct as this {@code base} and the provided {@link
+	 * NumberStruct} as the {@code power}. If {@code power} is '0' and power is an IntegerStruct, {@link #ONE} is
+	 * returned. If {@code power} is '0' and power is not an IntegerStruct, {@link FloatStruct#ONE} is returned. If
+	 * this IntegerStruct is either '0' or '1', {@code this} is returned.
+	 */
+	@Override
+	default NumberStruct expt(final NumberStruct power) {
+		if (power.zerop()) {
+			if (power instanceof IntegerStruct) {
+				return ONE;
+			}
+			return FloatStruct.ONE;
+		}
+
+		if (zerop() || isEqualTo(ONE)) {
+			return this;
+		}
+
+		final ExptVisitor<?> exptVisitor = exptVisitor();
+		return power.expt(exptVisitor);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Returns {@code this} as the numerator.
+	 */
+	@Override
+	default IntegerStruct numerator() {
+		return this;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Returns {@link #ONE} as the denominator of IntegerStructs is always '1'.
+	 */
+	@Override
+	default IntegerStruct denominator() {
+		return ONE;
+	}
 
 	/**
 	 * Returns the greatest common divisor between this IntegerStruct and the provided IntegerStruct.

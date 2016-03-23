@@ -20,8 +20,10 @@ import org.apfloat.ApfloatMath;
  */
 public interface RealStruct extends NumberStruct {
 
+	@Deprecated
 	BigDecimal bigDecimalValue();
 
+	@Deprecated
 	default Apfloat apfloatValue() {
 		return new Apfloat(bigDecimalValue());
 	}

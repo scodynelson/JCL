@@ -83,7 +83,9 @@
 	          value-type="jcl.compiler.struct.specialoperator.go.GoStructFactory">
 
 		<entry key="jcl.symbols.SymbolStruct" value-ref="goSymbolStructFactory"/>
-		<entry key="jcl.numbers.IntegerStruct" value-ref="goIntegerStructFactory"/>
+		<entry key="jcl.numbers.IntIntegerStruct" value-ref="goIntegerStructFactory"/>
+		<entry key="jcl.numbers.LongIntegerStruct" value-ref="goIntegerStructFactory"/>
+		<entry key="jcl.numbers.BigIntegerStruct" value-ref="goIntegerStructFactory"/>
 
 	</util:map>
 

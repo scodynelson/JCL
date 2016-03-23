@@ -119,6 +119,21 @@ public class BigIntegerStruct extends BuiltInClassStruct implements IntegerStruc
 		return bigInteger;
 	}
 
+	@Override
+	public int intValue() {
+		return bigInteger.intValue();
+	}
+
+	@Override
+	public long longValue() {
+		return bigInteger.longValue();
+	}
+
+	@Override
+	public BigInteger bigIntegerValue() {
+		return bigInteger;
+	}
+
 	/**
 	 * {@inheritDoc}
 	 * <p>
@@ -704,40 +719,24 @@ public class BigIntegerStruct extends BuiltInClassStruct implements IntegerStruc
 		return ONE;
 	}
 
-	/**
-	 * Returns the greatest common divisor between this IntegerStruct and the provided IntegerStruct.
-	 *
-	 * @param integer
-	 * 		the IntegerStruct in comparison to this IntegerStruct to determine the greatest common divisor
-	 *
-	 * @return the greatest common divisor between this IntegerStruct and the provided IntegerStruct
-	 */
-	public BigIntegerStruct gcd(final IntegerStruct integer) {
-		final BigInteger gcd = bigInteger.gcd(integer.getBigInteger());
-		return new BigIntegerStruct(gcd);
+	@Override
+	public IntegerStruct gcd(final GcdVisitor<?> gcdVisitor) {
+		return gcdVisitor.gcd(this);
 	}
 
-	/**
-	 * Returns the least common multiple between this IntegerStruct and the provided IntegerStruct. If this or the
-	 * provided IntegerStruct are '0', the result is {@link #ZERO}.
-	 *
-	 * @param integer
-	 * 		the IntegerStruct in comparison to this IntegerStruct to determine the least common multiple
-	 *
-	 * @return the least common multiple between this IntegerStruct and the provided IntegerStruct
-	 */
-	public BigIntegerStruct lcm(final IntegerStruct integer) {
-		if (zerop() || integer.zerop()) {
-			return ZERO;
-		}
+	@Override
+	public GcdVisitor<?> gcdVisitor() {
+		return new BigIntegerGcdVisitor(this);
+	}
 
-		// lcm(x y) = abs(x * y) / gcd(x y)
-		final BigInteger multiply = bigInteger.multiply(integer.getBigInteger());
-		final BigInteger abs = multiply.abs();
-		final BigInteger gcd = bigInteger.gcd(integer.getBigInteger());
-		final BigInteger divide = abs.divide(gcd);
+	@Override
+	public IntegerStruct lcm(final LcmVisitor<?> lcmVisitor) {
+		return lcmVisitor.lcm(this);
+	}
 
-		return new BigIntegerStruct(divide);
+	@Override
+	public LcmVisitor<?> lcmVisitor() {
+		return new BigIntegerLcmVisitor(this);
 	}
 
 	/**
@@ -762,6 +761,16 @@ public class BigIntegerStruct extends BuiltInClassStruct implements IntegerStruc
 		return new BigIntegerStruct(shiftLeft);
 	}
 
+	@Override
+	public IntegerStruct ash(final AshVisitor<?> ashVisitor) {
+		return null;
+	}
+
+	@Override
+	public AshVisitor<?> ashVisitor() {
+		return null;
+	}
+
 	/**
 	 * Returns the bit-wise logical 'and' of this IntegerStruct and the provided IntegerStruct.
 	 *
@@ -773,6 +782,16 @@ public class BigIntegerStruct extends BuiltInClassStruct implements IntegerStruc
 	public BigIntegerStruct logAnd(final IntegerStruct integer) {
 		final BigInteger and = bigInteger.and(integer.getBigInteger());
 		return new BigIntegerStruct(and);
+	}
+
+	@Override
+	public IntegerStruct logAnd(final LogAndVisitor<?> logAndVisitor) {
+		return null;
+	}
+
+	@Override
+	public LogAndVisitor<?> logAndVisitor() {
+		return null;
 	}
 
 	/**
@@ -789,6 +808,16 @@ public class BigIntegerStruct extends BuiltInClassStruct implements IntegerStruc
 		return new BigIntegerStruct(and);
 	}
 
+	@Override
+	public IntegerStruct logAndC1(final LogAndC1Visitor<?> logAndC1Visitor) {
+		return null;
+	}
+
+	@Override
+	public LogAndC1Visitor<?> logAndC1Visitor() {
+		return null;
+	}
+
 	/**
 	 * Returns the bit-wise logical 'and' of this IntegerStruct and the compliment of provided IntegerStruct.
 	 *
@@ -801,6 +830,16 @@ public class BigIntegerStruct extends BuiltInClassStruct implements IntegerStruc
 		final BigInteger not = integer.getBigInteger().not();
 		final BigInteger and = bigInteger.and(not);
 		return new BigIntegerStruct(and);
+	}
+
+	@Override
+	public IntegerStruct logAndC2(final LogAndC2Visitor<?> logAndC2Visitor) {
+		return null;
+	}
+
+	@Override
+	public LogAndC2Visitor<?> logAndC2Visitor() {
+		return null;
 	}
 
 	/**
@@ -819,6 +858,16 @@ public class BigIntegerStruct extends BuiltInClassStruct implements IntegerStruc
 		return new BigIntegerStruct(not);
 	}
 
+	@Override
+	public IntegerStruct logEqv(final LogEqvVisitor<?> logEqvVisitor) {
+		return null;
+	}
+
+	@Override
+	public LogEqvVisitor<?> logEqvVisitor() {
+		return null;
+	}
+
 	/**
 	 * Returns the bit-wise logical 'inclusive-or' of this IntegerStruct and the provided IntegerStruct.
 	 *
@@ -830,6 +879,16 @@ public class BigIntegerStruct extends BuiltInClassStruct implements IntegerStruc
 	public BigIntegerStruct logIor(final IntegerStruct integer) {
 		final BigInteger or = bigInteger.or(integer.getBigInteger());
 		return new BigIntegerStruct(or);
+	}
+
+	@Override
+	public IntegerStruct logIor(final LogIorVisitor<?> logIorVisitor) {
+		return null;
+	}
+
+	@Override
+	public LogIorVisitor<?> logIorVisitor() {
+		return null;
 	}
 
 	/**
@@ -846,6 +905,16 @@ public class BigIntegerStruct extends BuiltInClassStruct implements IntegerStruc
 		return new BigIntegerStruct(not);
 	}
 
+	@Override
+	public IntegerStruct logNand(final LogNandVisitor<?> logNandVisitor) {
+		return null;
+	}
+
+	@Override
+	public LogNandVisitor<?> logNandVisitor() {
+		return null;
+	}
+
 	/**
 	 * Returns the bit-wise logical compliment 'or' of this IntegerStruct and the provided IntegerStruct.
 	 *
@@ -858,6 +927,16 @@ public class BigIntegerStruct extends BuiltInClassStruct implements IntegerStruc
 		final BigInteger or = bigInteger.or(integer.getBigInteger());
 		final BigInteger not = or.not();
 		return new BigIntegerStruct(not);
+	}
+
+	@Override
+	public IntegerStruct logNor(final LogNorVisitor<?> logNorVisitor) {
+		return null;
+	}
+
+	@Override
+	public LogNorVisitor<?> logNorVisitor() {
+		return null;
 	}
 
 	/**
@@ -884,6 +963,16 @@ public class BigIntegerStruct extends BuiltInClassStruct implements IntegerStruc
 		return new BigIntegerStruct(or);
 	}
 
+	@Override
+	public IntegerStruct logOrC1(final LogOrC1Visitor<?> logOrC1Visitor) {
+		return null;
+	}
+
+	@Override
+	public LogOrC1Visitor<?> logOrC1Visitor() {
+		return null;
+	}
+
 	/**
 	 * Returns the bit-wise logical 'or' of this IntegerStruct and the compliment of provided IntegerStruct.
 	 *
@@ -898,6 +987,16 @@ public class BigIntegerStruct extends BuiltInClassStruct implements IntegerStruc
 		return new BigIntegerStruct(or);
 	}
 
+	@Override
+	public IntegerStruct logOrC2(final LogOrC2Visitor<?> logOrC2Visitor) {
+		return null;
+	}
+
+	@Override
+	public LogOrC2Visitor<?> logOrC2Visitor() {
+		return null;
+	}
+
 	/**
 	 * Returns the bit-wise logical 'exclusive-or' of this IntegerStruct and the provided IntegerStruct.
 	 *
@@ -909,6 +1008,16 @@ public class BigIntegerStruct extends BuiltInClassStruct implements IntegerStruc
 	public BigIntegerStruct logXor(final IntegerStruct integer) {
 		final BigInteger xor = bigInteger.xor(integer.getBigInteger());
 		return new BigIntegerStruct(xor);
+	}
+
+	@Override
+	public IntegerStruct logXor(final LogXorVisitor<?> logXorVisitor) {
+		return null;
+	}
+
+	@Override
+	public LogXorVisitor<?> logXorVisitor() {
+		return null;
 	}
 
 	/**
@@ -934,6 +1043,16 @@ public class BigIntegerStruct extends BuiltInClassStruct implements IntegerStruc
 	public boolean logBitP(final IntegerStruct index) {
 		final int indexInt = index.getBigInteger().intValue();
 		return bigInteger.testBit(indexInt);
+	}
+
+	@Override
+	public boolean logBitP(final LogBitPVisitor<?> logBitPVisitor) {
+		return false;
+	}
+
+	@Override
+	public LogBitPVisitor<?> logBitPVisitor() {
+		return null;
 	}
 
 	/**
@@ -1559,6 +1678,50 @@ public class BigIntegerStruct extends BuiltInClassStruct implements IntegerStruc
 				final BigInteger pow = ArithmeticUtils.pow(baseBigInteger, powerBigInteger);
 				return new BigIntegerStruct(pow);
 			}
+		}
+	}
+
+	private static final class BigIntegerGcdVisitor extends GcdVisitor<BigIntegerStruct> {
+
+		BigIntegerGcdVisitor(final BigIntegerStruct integer1) {
+			super(integer1);
+		}
+
+		@Override
+		public IntegerStruct gcd(final IntIntegerStruct integer2) {
+			return null;
+		}
+
+		@Override
+		public IntegerStruct gcd(final LongIntegerStruct integer2) {
+			return null;
+		}
+
+		@Override
+		public IntegerStruct gcd(final BigIntegerStruct integer2) {
+			return null;
+		}
+	}
+
+	private static final class BigIntegerLcmVisitor extends LcmVisitor<BigIntegerStruct> {
+
+		BigIntegerLcmVisitor(final BigIntegerStruct integer1) {
+			super(integer1);
+		}
+
+		@Override
+		public IntegerStruct lcm(final IntIntegerStruct integer2) {
+			return null;
+		}
+
+		@Override
+		public IntegerStruct lcm(final LongIntegerStruct integer2) {
+			return null;
+		}
+
+		@Override
+		public IntegerStruct lcm(final BigIntegerStruct integer2) {
+			return null;
 		}
 	}
 }

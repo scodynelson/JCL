@@ -31,16 +31,54 @@ public final class IntIntegerStruct extends BuiltInClassStruct implements Intege
 	 */
 	private static final Logger LOGGER = LoggerFactory.getLogger(IntIntegerStruct.class);
 
+	/**
+	 * IntIntegerStruct cache array size.
+	 */
 	private static final int INT_INTEGER_STRUCT_CACHE_SIZE = 256;
+
+	/**
+	 * {@link IntIntegerAddVisitor} cache array size.
+	 */
 	private static final int INT_INTEGER_STRUCT_ADD_CACHE_SIZE = 50;
+
+	/**
+	 * {@link IntIntegerSubtractVisitor} cache array size.
+	 */
 	private static final int INT_INTEGER_STRUCT_SUBTRACT_CACHE_SIZE = 20;
+
+	/**
+	 * {@link IntIntegerMultiplyVisitor} cache array size.
+	 */
 	private static final int INT_INTEGER_STRUCT_MULTIPLY_CACHE_SIZE = 50;
+
+	/**
+	 * {@link IntIntegerDivideVisitor} cache array size.
+	 */
 	private static final int INT_INTEGER_STRUCT_DIVIDE_CACHE_SIZE = 20;
 
+	/**
+	 * IntIntegerStruct cache for reducing object creation.
+	 */
 	private static final IntIntegerStruct[] INT_INTEGER_STRUCT_CACHE = new IntIntegerStruct[INT_INTEGER_STRUCT_CACHE_SIZE];
+
+	/**
+	 * {@link IntIntegerAddVisitor} cache for reducing object creation.
+	 */
 	private static final IntIntegerAddVisitor[] INT_INTEGER_ADD_CACHE = new IntIntegerAddVisitor[INT_INTEGER_STRUCT_ADD_CACHE_SIZE];
+
+	/**
+	 * {@link IntIntegerSubtractVisitor} cache for reducing object creation.
+	 */
 	private static final IntIntegerSubtractVisitor[] INT_INTEGER_SUBTRACT_CACHE = new IntIntegerSubtractVisitor[INT_INTEGER_STRUCT_SUBTRACT_CACHE_SIZE];
+
+	/**
+	 * {@link IntIntegerMultiplyVisitor} cache for reducing object creation.
+	 */
 	private static final IntIntegerMultiplyVisitor[] INT_INTEGER_MULTIPLY_CACHE = new IntIntegerMultiplyVisitor[INT_INTEGER_STRUCT_MULTIPLY_CACHE_SIZE];
+
+	/**
+	 * {@link IntIntegerDivideVisitor} cache for reducing object creation.
+	 */
 	private static final IntIntegerDivideVisitor[] INT_INTEGER_DIVIDE_CACHE = new IntIntegerDivideVisitor[INT_INTEGER_STRUCT_DIVIDE_CACHE_SIZE];
 
 	static {
@@ -95,7 +133,7 @@ public final class IntIntegerStruct extends BuiltInClassStruct implements Intege
 	 * @return a IntIntegerStruct object with the provided {@code int} value
 	 */
 	public static IntIntegerStruct valueOf(final int i) {
-		if ((i > 0) && (i <= INT_INTEGER_STRUCT_CACHE_SIZE)) {
+		if ((i >= 0) && (i < INT_INTEGER_STRUCT_CACHE_SIZE)) {
 			return INT_INTEGER_STRUCT_CACHE[i];
 		}
 		return new IntIntegerStruct(i);
@@ -221,9 +259,9 @@ public final class IntIntegerStruct extends BuiltInClassStruct implements Intege
 	}
 
 	@Override
-	public IntIntegerStruct logNot() {
+	public IntegerStruct logNot() {
 		final int not = ~i;
-		return valueOf(not);
+		return IntegerStruct.valueOf(not);
 	}
 
 	@Override
@@ -267,7 +305,7 @@ public final class IntIntegerStruct extends BuiltInClassStruct implements Intege
 	}
 
 	@Override
-	public IntIntegerStruct logCount() {
+	public IntegerStruct logCount() {
 		final int bitCount = Integer.bitCount(i);
 		return valueOf(bitCount);
 	}
@@ -291,7 +329,7 @@ public final class IntIntegerStruct extends BuiltInClassStruct implements Intege
 	}
 
 	@Override
-	public IntIntegerStruct isqrt() {
+	public IntegerStruct isqrt() {
 		final double sqrt = StrictMath.sqrt(i);
 		final Double floor = StrictMath.floor(sqrt);
 		// NOTE: a root can only be less than the original value. Since the original value was an int,
@@ -369,6 +407,9 @@ public final class IntIntegerStruct extends BuiltInClassStruct implements Intege
 
 	@Override
 	public AddVisitor<?> addVisitor() {
+		if ((i >= 0) && (i < INT_INTEGER_STRUCT_ADD_CACHE_SIZE)) {
+			return INT_INTEGER_ADD_CACHE[i];
+		}
 		return new IntIntegerAddVisitor(this);
 	}
 
@@ -379,6 +420,9 @@ public final class IntIntegerStruct extends BuiltInClassStruct implements Intege
 
 	@Override
 	public SubtractVisitor<?> subtractVisitor() {
+		if ((i >= 0) && (i < INT_INTEGER_STRUCT_SUBTRACT_CACHE_SIZE)) {
+			return INT_INTEGER_SUBTRACT_CACHE[i];
+		}
 		return new IntIntegerSubtractVisitor(this);
 	}
 
@@ -389,6 +433,9 @@ public final class IntIntegerStruct extends BuiltInClassStruct implements Intege
 
 	@Override
 	public MultiplyVisitor<?> multiplyVisitor() {
+		if ((i >= 0) && (i < INT_INTEGER_STRUCT_MULTIPLY_CACHE_SIZE)) {
+			return INT_INTEGER_MULTIPLY_CACHE[i];
+		}
 		return new IntIntegerMultiplyVisitor(this);
 	}
 
@@ -399,6 +446,9 @@ public final class IntIntegerStruct extends BuiltInClassStruct implements Intege
 
 	@Override
 	public DivideVisitor<?> divideVisitor() {
+		if ((i >= 0) && (i < INT_INTEGER_STRUCT_DIVIDE_CACHE_SIZE)) {
+			return INT_INTEGER_DIVIDE_CACHE[i];
+		}
 		return new IntIntegerDivideVisitor(this);
 	}
 
@@ -1277,7 +1327,7 @@ public final class IntIntegerStruct extends BuiltInClassStruct implements Intege
 		}
 
 		@Override
-		public IntIntegerStruct ash(final IntIntegerStruct count) {
+		public IntegerStruct ash(final IntIntegerStruct count) {
 			if (count.zerop()) {
 				return integer;
 			}
@@ -1295,7 +1345,7 @@ public final class IntIntegerStruct extends BuiltInClassStruct implements Intege
 		}
 
 		@Override
-		public IntIntegerStruct ash(final LongIntegerStruct count) {
+		public IntegerStruct ash(final LongIntegerStruct count) {
 			if (count.zerop()) {
 				return integer;
 			}
@@ -1313,7 +1363,7 @@ public final class IntIntegerStruct extends BuiltInClassStruct implements Intege
 		}
 
 		@Override
-		public IntIntegerStruct ash(final BigIntegerStruct count) {
+		public IntegerStruct ash(final BigIntegerStruct count) {
 			if (count.zerop()) {
 				return integer;
 			}

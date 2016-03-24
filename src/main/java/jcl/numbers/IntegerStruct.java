@@ -20,27 +20,27 @@ public interface IntegerStruct extends RationalStruct {
 	/**
 	 * {@link IntegerStruct} constant representing 0.
 	 */
-	IntegerStruct ZERO = IntIntegerStruct.ZERO;
+	IntegerStruct ZERO = IntIntegerStruct.valueOf(0);
 
 	/**
 	 * {@link IntegerStruct} constant representing 1.
 	 */
-	IntegerStruct ONE = IntIntegerStruct.ONE;
+	IntegerStruct ONE = IntIntegerStruct.valueOf(1);
 
 	/**
 	 * {@link IntegerStruct} constant representing 2.
 	 */
-	IntegerStruct TWO = IntIntegerStruct.TWO;
+	IntegerStruct TWO = IntIntegerStruct.valueOf(2);
 
 	/**
 	 * {@link IntegerStruct} constant representing 10.
 	 */
-	IntegerStruct TEN = IntIntegerStruct.TEN;
+	IntegerStruct TEN = IntIntegerStruct.valueOf(10);
 
 	/**
 	 * {@link IntegerStruct} constant representing -1.
 	 */
-	IntegerStruct MINUS_ONE = IntIntegerStruct.MINUS_ONE;
+	IntegerStruct MINUS_ONE = IntIntegerStruct.valueOf(-1);
 
 	static IntegerStruct valueOf(final int i) {
 		return IntIntegerStruct.valueOf(i);

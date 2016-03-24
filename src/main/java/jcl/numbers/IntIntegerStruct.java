@@ -71,32 +71,7 @@ public final class IntIntegerStruct extends BuiltInClassStruct implements Intege
 	}
 
 	/**
-	 * {@link IntIntegerStruct} constant representing 0.
-	 */
-	public static final IntIntegerStruct ZERO = valueOf(0);
-
-	/**
-	 * {@link IntIntegerStruct} constant representing 1.
-	 */
-	public static final IntIntegerStruct ONE = valueOf(1);
-
-	/**
-	 * {@link IntIntegerStruct} constant representing 2.
-	 */
-	public static final IntIntegerStruct TWO = valueOf(2);
-
-	/**
-	 * {@link IntIntegerStruct} constant representing 10.
-	 */
-	public static final IntIntegerStruct TEN = valueOf(10);
-
-	/**
-	 * {@link IntIntegerStruct} constant representing -1.
-	 */
-	public static final IntIntegerStruct MINUS_ONE = valueOf(-1);
-
-	/**
-	 * The internal {@code int} containing the int contents.
+	 * The internal {@code int} containing the IntIntegerStruct contents.
 	 */
 	final int i;
 

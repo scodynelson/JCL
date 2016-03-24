@@ -30,8 +30,6 @@ public interface RealStruct extends NumberStruct {
 
 	FloatStruct coerceRealToFloat();
 
-	RealStruct zeroValue();
-
 	boolean plusp();
 
 	boolean minusp();
@@ -272,6 +270,7 @@ public interface RealStruct extends NumberStruct {
 	QuotientRemainderVisitor<?> quotientRemainderVisitor();
 
 	@Override
+	@Deprecated
 	default Apcomplex apcomplexValue() {
 		return apfloatValue();
 	}
@@ -686,10 +685,12 @@ public interface RealStruct extends NumberStruct {
 		public boolean equalTo(final IntIntegerStruct number2) {
 			return getComparisonResult(number1, number2) == 0;
 		}
+
 		@Override
 		public boolean equalTo(final LongIntegerStruct number2) {
 			return getComparisonResult(number1, number2) == 0;
 		}
+
 		@Override
 		public boolean equalTo(final BigIntegerStruct number2) {
 			return getComparisonResult(number1, number2) == 0;
@@ -882,27 +883,11 @@ public interface RealStruct extends NumberStruct {
 			this.real = real;
 		}
 
-		public QuotientRemainderResult floor(final IntIntegerStruct divisor) {
+		public QuotientRemainderResult floor(final IntegerStruct divisor) {
 			return quotientRemainder(divisor, RoundingMode.FLOOR, false);
 		}
 
-		public QuotientRemainderResult floor(final LongIntegerStruct divisor) {
-			return quotientRemainder(divisor, RoundingMode.FLOOR, false);
-		}
-
-		public QuotientRemainderResult floor(final BigIntegerStruct divisor) {
-			return quotientRemainder(divisor, RoundingMode.FLOOR, false);
-		}
-
-		public QuotientRemainderResult floor(final SingleFloatStruct divisor) {
-			return quotientRemainder(divisor, RoundingMode.FLOOR, false);
-		}
-
-		public QuotientRemainderResult floor(final DoubleFloatStruct divisor) {
-			return quotientRemainder(divisor, RoundingMode.FLOOR, false);
-		}
-
-		public QuotientRemainderResult floor(final BigFloatStruct divisor) {
+		public QuotientRemainderResult floor(final FloatStruct divisor) {
 			return quotientRemainder(divisor, RoundingMode.FLOOR, false);
 		}
 
@@ -910,27 +895,11 @@ public interface RealStruct extends NumberStruct {
 			return quotientRemainder(divisor, RoundingMode.FLOOR, false);
 		}
 
-		public QuotientRemainderResult ffloor(final IntIntegerStruct divisor) {
+		public QuotientRemainderResult ffloor(final IntegerStruct divisor) {
 			return quotientRemainder(divisor, RoundingMode.FLOOR, true);
 		}
 
-		public QuotientRemainderResult ffloor(final LongIntegerStruct divisor) {
-			return quotientRemainder(divisor, RoundingMode.FLOOR, true);
-		}
-
-		public QuotientRemainderResult ffloor(final BigIntegerStruct divisor) {
-			return quotientRemainder(divisor, RoundingMode.FLOOR, true);
-		}
-
-		public QuotientRemainderResult ffloor(final SingleFloatStruct divisor) {
-			return quotientRemainder(divisor, RoundingMode.FLOOR, true);
-		}
-
-		public QuotientRemainderResult ffloor(final DoubleFloatStruct divisor) {
-			return quotientRemainder(divisor, RoundingMode.FLOOR, true);
-		}
-
-		public QuotientRemainderResult ffloor(final BigFloatStruct divisor) {
+		public QuotientRemainderResult ffloor(final FloatStruct divisor) {
 			return quotientRemainder(divisor, RoundingMode.FLOOR, true);
 		}
 
@@ -938,27 +907,11 @@ public interface RealStruct extends NumberStruct {
 			return quotientRemainder(divisor, RoundingMode.FLOOR, true);
 		}
 
-		public QuotientRemainderResult ceiling(final IntIntegerStruct divisor) {
+		public QuotientRemainderResult ceiling(final IntegerStruct divisor) {
 			return quotientRemainder(divisor, RoundingMode.CEILING, false);
 		}
 
-		public QuotientRemainderResult ceiling(final LongIntegerStruct divisor) {
-			return quotientRemainder(divisor, RoundingMode.CEILING, false);
-		}
-
-		public QuotientRemainderResult ceiling(final BigIntegerStruct divisor) {
-			return quotientRemainder(divisor, RoundingMode.CEILING, false);
-		}
-
-		public QuotientRemainderResult ceiling(final SingleFloatStruct divisor) {
-			return quotientRemainder(divisor, RoundingMode.CEILING, false);
-		}
-
-		public QuotientRemainderResult ceiling(final DoubleFloatStruct divisor) {
-			return quotientRemainder(divisor, RoundingMode.CEILING, false);
-		}
-
-		public QuotientRemainderResult ceiling(final BigFloatStruct divisor) {
+		public QuotientRemainderResult ceiling(final FloatStruct divisor) {
 			return quotientRemainder(divisor, RoundingMode.CEILING, false);
 		}
 
@@ -966,27 +919,11 @@ public interface RealStruct extends NumberStruct {
 			return quotientRemainder(divisor, RoundingMode.CEILING, false);
 		}
 
-		public QuotientRemainderResult fceiling(final IntIntegerStruct divisor) {
+		public QuotientRemainderResult fceiling(final IntegerStruct divisor) {
 			return quotientRemainder(divisor, RoundingMode.CEILING, true);
 		}
 
-		public QuotientRemainderResult fceiling(final LongIntegerStruct divisor) {
-			return quotientRemainder(divisor, RoundingMode.CEILING, true);
-		}
-
-		public QuotientRemainderResult fceiling(final BigIntegerStruct divisor) {
-			return quotientRemainder(divisor, RoundingMode.CEILING, true);
-		}
-
-		public QuotientRemainderResult fceiling(final SingleFloatStruct divisor) {
-			return quotientRemainder(divisor, RoundingMode.CEILING, true);
-		}
-
-		public QuotientRemainderResult fceiling(final DoubleFloatStruct divisor) {
-			return quotientRemainder(divisor, RoundingMode.CEILING, true);
-		}
-
-		public QuotientRemainderResult fceiling(final BigFloatStruct divisor) {
+		public QuotientRemainderResult fceiling(final FloatStruct divisor) {
 			return quotientRemainder(divisor, RoundingMode.CEILING, true);
 		}
 
@@ -994,27 +931,11 @@ public interface RealStruct extends NumberStruct {
 			return quotientRemainder(divisor, RoundingMode.CEILING, true);
 		}
 
-		public QuotientRemainderResult round(final IntIntegerStruct divisor) {
+		public QuotientRemainderResult round(final IntegerStruct divisor) {
 			return quotientRemainder(divisor, RoundingMode.HALF_EVEN, false);
 		}
 
-		public QuotientRemainderResult round(final LongIntegerStruct divisor) {
-			return quotientRemainder(divisor, RoundingMode.HALF_EVEN, false);
-		}
-
-		public QuotientRemainderResult round(final BigIntegerStruct divisor) {
-			return quotientRemainder(divisor, RoundingMode.HALF_EVEN, false);
-		}
-
-		public QuotientRemainderResult round(final SingleFloatStruct divisor) {
-			return quotientRemainder(divisor, RoundingMode.HALF_EVEN, false);
-		}
-
-		public QuotientRemainderResult round(final DoubleFloatStruct divisor) {
-			return quotientRemainder(divisor, RoundingMode.HALF_EVEN, false);
-		}
-
-		public QuotientRemainderResult round(final BigFloatStruct divisor) {
+		public QuotientRemainderResult round(final FloatStruct divisor) {
 			return quotientRemainder(divisor, RoundingMode.HALF_EVEN, false);
 		}
 
@@ -1022,27 +943,11 @@ public interface RealStruct extends NumberStruct {
 			return quotientRemainder(divisor, RoundingMode.HALF_EVEN, false);
 		}
 
-		public QuotientRemainderResult fround(final IntIntegerStruct divisor) {
+		public QuotientRemainderResult fround(final IntegerStruct divisor) {
 			return quotientRemainder(divisor, RoundingMode.HALF_EVEN, true);
 		}
 
-		public QuotientRemainderResult fround(final LongIntegerStruct divisor) {
-			return quotientRemainder(divisor, RoundingMode.HALF_EVEN, true);
-		}
-
-		public QuotientRemainderResult fround(final BigIntegerStruct divisor) {
-			return quotientRemainder(divisor, RoundingMode.HALF_EVEN, true);
-		}
-
-		public QuotientRemainderResult fround(final SingleFloatStruct divisor) {
-			return quotientRemainder(divisor, RoundingMode.HALF_EVEN, true);
-		}
-
-		public QuotientRemainderResult fround(final DoubleFloatStruct divisor) {
-			return quotientRemainder(divisor, RoundingMode.HALF_EVEN, true);
-		}
-
-		public QuotientRemainderResult fround(final BigFloatStruct divisor) {
+		public QuotientRemainderResult fround(final FloatStruct divisor) {
 			return quotientRemainder(divisor, RoundingMode.HALF_EVEN, true);
 		}
 
@@ -1050,13 +955,7 @@ public interface RealStruct extends NumberStruct {
 			return quotientRemainder(divisor, RoundingMode.HALF_EVEN, true);
 		}
 
-		public abstract QuotientRemainderResult quotientRemainder(IntIntegerStruct divisor, RoundingMode roundingMode,
-		                                                          boolean isQuotientFloat);
-
-		public abstract QuotientRemainderResult quotientRemainder(LongIntegerStruct divisor, RoundingMode roundingMode,
-		                                                          boolean isQuotientFloat);
-
-		public abstract QuotientRemainderResult quotientRemainder(BigIntegerStruct divisor, RoundingMode roundingMode,
+		public abstract QuotientRemainderResult quotientRemainder(IntegerStruct divisor, RoundingMode roundingMode,
 		                                                          boolean isQuotientFloat);
 
 		public QuotientRemainderResult quotientRemainder(final FloatStruct divisor, final RoundingMode roundingMode,
@@ -1084,7 +983,7 @@ public interface RealStruct extends NumberStruct {
 			return new QuotientRemainderResult(quotientReal, remainderFloat);
 		}
 
-		private RealStruct getFloatQuotient(final RealStruct divisor, final BigDecimal quotient) {
+		protected RealStruct getFloatQuotient(final RealStruct divisor, final BigDecimal quotient) {
 			final RealStruct floatQuotient;
 			if (BigDecimal.ZERO.compareTo(quotient) == 0) {
 				if (real.minusp()) {
@@ -1150,10 +1049,7 @@ public interface RealStruct extends NumberStruct {
 			return exptFloatRatio(base, power);
 		}
 
-		private static NumberStruct exptFloatRatio(final RealStruct base, final RealStruct power) {
-			final double x = base.apfloatValue().doubleValue();
-			final double y = power.apfloatValue().doubleValue();
-
+		protected static NumberStruct exptFloatRatioNew(final double x, final double y) {
 			double result = StrictMath.pow(x, y);
 			if (Double.isNaN(result)) {
 				if (x < 0) {
@@ -1172,20 +1068,23 @@ public interface RealStruct extends NumberStruct {
 			return FloatStruct.valueOf(resultBigDecimal);
 		}
 
+		private static NumberStruct exptFloatRatio(final RealStruct base, final RealStruct power) {
+			final double x = base.apfloatValue().doubleValue();
+			final double y = power.apfloatValue().doubleValue();
+			return exptFloatRatioNew(x, y);
+		}
+
 		@Override
 		public NumberStruct expt(final ComplexStruct power) {
 			final RealStruct powerComplexReal = power.getReal();
-			final BigDecimal powerComplexRealBigDecimal = powerComplexReal.bigDecimalValue();
-			final FloatStruct real = FloatStruct.valueOf(powerComplexRealBigDecimal);
+			final FloatStruct real = powerComplexReal.coerceRealToFloat();
 
 			final RealStruct powerComplexImaginary = power.getImaginary();
-			final BigDecimal powerComplexImaginaryBigDecimal = powerComplexImaginary.bigDecimalValue();
-			final FloatStruct imaginary = FloatStruct.valueOf(powerComplexImaginaryBigDecimal);
+			final FloatStruct imaginary = powerComplexImaginary.coerceRealToFloat();
 
 			final NumberStruct newPowerComplex = ComplexStruct.makeComplexOrReal(real, imaginary);
 
-			final BigDecimal bigDecimal1 = base.bigDecimalValue();
-			final RealStruct newBase = FloatStruct.valueOf(bigDecimal1);
+			final RealStruct newBase = base.coerceRealToFloat();
 			final NumberStruct logOfNewBase = newBase.log();
 			final NumberStruct powerComplexLogOfNewBaseProduct = newPowerComplex.multiply(logOfNewBase);
 			return powerComplexLogOfNewBaseProduct.exp();

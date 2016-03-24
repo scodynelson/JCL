@@ -6,6 +6,7 @@ package jcl.numbers;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.math.RoundingMode;
 import java.util.List;
 
 import org.apfloat.Apfloat;
@@ -91,8 +92,8 @@ public interface IntegerStruct extends RationalStruct {
 		return IntIntegerStruct.valueOf(apfloat.intValue());
 	}
 
-	@Override
 	@Deprecated
+	@Override
 	default BigDecimal bigDecimalValue() {
 		return new BigDecimal(bigIntegerValue(), 1).multiply(BigDecimal.TEN);
 	}
@@ -101,11 +102,6 @@ public interface IntegerStruct extends RationalStruct {
 	@Override
 	default Apfloat apfloatValue() {
 		return new Apint(bigIntegerValue());
-	}
-
-	@Override
-	default RealStruct zeroValue() {
-		return ZERO;
 	}
 
 	int intValue();
@@ -560,6 +556,213 @@ public interface IntegerStruct extends RationalStruct {
 	default boolean logTest(final IntegerStruct integer) {
 		final IntegerStruct and = logAnd(integer);
 		return !and.zerop();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Calculates the {@link QuotientRemainderResult} for a 'FLOOR' operation with this IntegerStruct as the 'divisor'
+	 * using the provided {@link QuotientRemainderVisitor}.
+	 *
+	 * @param quotientRemainderVisitor
+	 * 		the {@link QuotientRemainderVisitor} to be used in the 'FLOOR' operation
+	 *
+	 * @return the {@link QuotientRemainderResult} for a 'FLOOR' operation with this IntegerStruct as the 'divisor'
+	 * using the provided {@link QuotientRemainderVisitor}
+	 */
+	@Override
+	default QuotientRemainderResult floor(final QuotientRemainderVisitor<?> quotientRemainderVisitor) {
+		return quotientRemainderVisitor.floor(this);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Calculates the {@link QuotientRemainderResult} for a 'FLOOR' operation with this IntegerStruct as the 'divisor'
+	 * using the provided {@link QuotientRemainderVisitor}. The resulting 'quotient' will be a {@link FloatStruct}.
+	 *
+	 * @param quotientRemainderVisitor
+	 * 		the {@link QuotientRemainderVisitor} to be used in the 'FLOOR' operation
+	 *
+	 * @return the {@link QuotientRemainderResult} for a 'FLOOR' operation with this IntegerStruct as the 'divisor'
+	 * using the provided {@link QuotientRemainderVisitor}
+	 */
+	@Override
+	default QuotientRemainderResult ffloor(final QuotientRemainderVisitor<?> quotientRemainderVisitor) {
+		return quotientRemainderVisitor.ffloor(this);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Calculates the {@link QuotientRemainderResult} for a 'CEILING' operation with this IntegerStruct as the
+	 * 'divisor' using the provided {@link QuotientRemainderVisitor}.
+	 *
+	 * @param quotientRemainderVisitor
+	 * 		the {@link QuotientRemainderVisitor} to be used in the 'CEILING' operation
+	 *
+	 * @return the {@link QuotientRemainderResult} for a 'CEILING' operation with this IntegerStruct as the 'divisor'
+	 * using the provided {@link QuotientRemainderVisitor}
+	 */
+	@Override
+	default QuotientRemainderResult ceiling(final QuotientRemainderVisitor<?> quotientRemainderVisitor) {
+		return quotientRemainderVisitor.ceiling(this);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Calculates the {@link QuotientRemainderResult} for a 'CEILING' operation with this IntegerStruct as the
+	 * 'divisor' using the provided {@link QuotientRemainderVisitor}. The resulting 'quotient' will be a {@link
+	 * FloatStruct}.
+	 *
+	 * @param quotientRemainderVisitor
+	 * 		the {@link QuotientRemainderVisitor} to be used in the 'CEILING' operation
+	 *
+	 * @return the {@link QuotientRemainderResult} for a 'CEILING' operation with this IntegerStruct as the 'divisor'
+	 * using the provided {@link QuotientRemainderVisitor}
+	 */
+	@Override
+	default QuotientRemainderResult fceiling(final QuotientRemainderVisitor<?> quotientRemainderVisitor) {
+		return quotientRemainderVisitor.fceiling(this);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Calculates the {@link QuotientRemainderResult} for a 'ROUND' operation with this IntegerStruct as the 'divisor'
+	 * using the provided {@link QuotientRemainderVisitor}.
+	 *
+	 * @param quotientRemainderVisitor
+	 * 		the {@link QuotientRemainderVisitor} to be used in the 'ROUND' operation
+	 *
+	 * @return the {@link QuotientRemainderResult} for a 'ROUND' operation with this IntegerStruct as the 'divisor'
+	 * using the provided {@link QuotientRemainderVisitor}
+	 */
+	@Override
+	default QuotientRemainderResult round(final QuotientRemainderVisitor<?> quotientRemainderVisitor) {
+		return quotientRemainderVisitor.round(this);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Calculates the {@link QuotientRemainderResult} for a 'ROUND' operation with this IntegerStruct as the 'divisor'
+	 * using the provided {@link QuotientRemainderVisitor}. The resulting 'quotient' will be a {@link FloatStruct}.
+	 *
+	 * @param quotientRemainderVisitor
+	 * 		the {@link QuotientRemainderVisitor} to be used in the 'ROUND' operation
+	 *
+	 * @return the {@link QuotientRemainderResult} for a 'ROUND' operation with this IntegerStruct as the 'divisor'
+	 * using the provided {@link QuotientRemainderVisitor}
+	 */
+	@Override
+	default QuotientRemainderResult fround(final QuotientRemainderVisitor<?> quotientRemainderVisitor) {
+		return quotientRemainderVisitor.fround(this);
+	}
+
+	@Override
+	default QuotientRemainderVisitor<?> quotientRemainderVisitor() {
+		return new IntegerQuotientRemainderVisitor(this);
+	}
+
+	/**
+	 * {@link IntegerQuotientRemainderVisitor} for computing quotient and remainder results for {@link
+	 * IntegerStruct}s.
+	 */
+	final class IntegerQuotientRemainderVisitor extends RationalStruct.RationalQuotientRemainderVisitor<IntegerStruct> {
+
+		/**
+		 * Private constructor to make a new instance of an IntegerQuotientRemainderVisitor with the provided
+		 * {@link IntegerStruct}.
+		 *
+		 * @param real
+		 * 		the real argument in the computational quotient and remainder operation
+		 */
+		private IntegerQuotientRemainderVisitor(final IntegerStruct real) {
+			super(real);
+		}
+
+		@Override
+		public QuotientRemainderResult quotientRemainder(final IntegerStruct divisor, final RoundingMode roundingMode, final boolean isQuotientFloat) {
+			final BigDecimal realBigDecimal = real.bigDecimalValue();
+			final BigDecimal divisorBigDecimal = divisor.bigDecimalValue();
+
+			final BigDecimal quotient = realBigDecimal.divide(divisorBigDecimal, 0, roundingMode);
+			final BigDecimal remainder = realBigDecimal.subtract(divisorBigDecimal.multiply(quotient));
+
+			final RealStruct quotientReal;
+			if (isQuotientFloat) {
+				quotientReal = FloatStruct.valueOf(quotient);
+			} else {
+				final BigInteger quotientBigInteger = quotient.toBigInteger();
+				quotientReal = IntegerStruct.valueOf(quotientBigInteger);
+			}
+
+			final BigInteger remainderBigInteger = remainder.toBigInteger();
+			final IntegerStruct remainderInteger = IntegerStruct.valueOf(remainderBigInteger);
+
+			return new QuotientRemainderResult(quotientReal, remainderInteger);
+		}
+
+		@Override
+		public QuotientRemainderResult quotientRemainder(final FloatStruct divisor, final RoundingMode roundingMode, final boolean isQuotientFloat) {
+			final BigDecimal realBigDecimal = real.bigDecimalValue();
+			final BigDecimal divisorBigDecimal = divisor.bigDecimalValue();
+
+			final BigDecimal quotient = realBigDecimal.divide(divisorBigDecimal, 0, roundingMode);
+			final BigDecimal remainder = realBigDecimal.subtract(divisorBigDecimal.multiply(quotient));
+
+			final RealStruct quotientReal;
+			if (isQuotientFloat) {
+				quotientReal = getFloatQuotient(divisor, quotient);
+			} else {
+				final BigInteger quotientBigInteger = quotient.toBigInteger();
+				quotientReal = IntegerStruct.valueOf(quotientBigInteger);
+			}
+
+			final FloatStruct remainderFloat = FloatStruct.valueOf(remainder);
+			return new QuotientRemainderResult(quotientReal, remainderFloat);
+		}
+
+		@Override
+		public QuotientRemainderResult quotientRemainder(final RatioStruct divisor, final RoundingMode roundingMode, final boolean isQuotientFloat) {
+			final IntegerStruct rationalNumerator = real.numerator();
+			final BigInteger rationalNumeratorBigInteger = rationalNumerator.getBigInteger();
+			final IntegerStruct rationalDenominator = real.denominator();
+			final BigInteger rationalDenominatorBigInteger = rationalDenominator.getBigInteger();
+
+			final IntegerStruct divisorNumerator = divisor.numerator();
+			final BigInteger divisorNumeratorBigInteger = divisorNumerator.getBigInteger();
+			final IntegerStruct divisorDenominator = divisor.denominator();
+			final BigInteger divisorDenominatorBigInteger = divisorDenominator.getBigInteger();
+
+			// Invert and multiply
+			final BigInteger multipliedNumerator = rationalNumeratorBigInteger.multiply(divisorDenominatorBigInteger);
+			final BigInteger multipliedDenominator = rationalDenominatorBigInteger.multiply(divisorNumeratorBigInteger);
+
+			// Divide to get quotient
+			final BigDecimal multipliedNumeratorBigDecimal = new BigDecimal(multipliedNumerator);
+			final BigDecimal multipliedDenominatorBigDecimal = new BigDecimal(multipliedDenominator);
+			final BigDecimal quotient = multipliedNumeratorBigDecimal.divide(multipliedDenominatorBigDecimal, 0, roundingMode);
+			final BigInteger quotientBigInteger = quotient.toBigInteger();
+
+			final RealStruct quotientReal;
+			if (isQuotientFloat) {
+				quotientReal = FloatStruct.valueOf(quotient);
+			} else {
+				quotientReal = IntegerStruct.valueOf(quotientBigInteger);
+			}
+
+			// Multiply divisor by quotient
+			final BigInteger multiply = divisorNumeratorBigInteger.multiply(quotientBigInteger);
+			final RationalStruct product = RationalStruct.makeRational(multiply, divisorDenominatorBigInteger);
+
+			// Subtract to get remainder: (Rational - Rational) produces Rational
+			final NumberStruct remainder = real.subtract(product);
+
+			return new QuotientRemainderResult(quotientReal, (RealStruct) remainder);
+		}
 	}
 
 	abstract class GcdVisitor<S extends IntegerStruct> {

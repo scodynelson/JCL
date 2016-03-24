@@ -392,16 +392,6 @@ public final class SingleFloatStruct extends BuiltInClassStruct implements Float
 		return new BigDecimal(String.valueOf(f));
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * <p>
-	 * Returns {@link #ZERO} as a '0' FloatStruct value.
-	 */
-	@Override
-	public RealStruct zeroValue() {
-		return ZERO;
-	}
-
 	@Override
 	public RationalStruct rational() {
 		final BigFraction bigFraction = new BigFraction(f);
@@ -1160,31 +1150,7 @@ public final class SingleFloatStruct extends BuiltInClassStruct implements Float
 		 * IntegerStruct} as the {@code divisor}.
 		 */
 		@Override
-		public QuotientRemainderResult quotientRemainder(final IntIntegerStruct divisor, final RoundingMode roundingMode, final boolean isQuotientFloat) {
-			return floatQuotientRemainder(divisor, roundingMode, isQuotientFloat);
-		}
-
-		/**
-		 * {@inheritDoc}
-		 * <p>
-		 * Computes the quotient and remainder results for a {@link SingleFloatStruct} as the {@code real} and an
-		 * {@link
-		 * IntegerStruct} as the {@code divisor}.
-		 */
-		@Override
-		public QuotientRemainderResult quotientRemainder(final LongIntegerStruct divisor, final RoundingMode roundingMode, final boolean isQuotientFloat) {
-			return floatQuotientRemainder(divisor, roundingMode, isQuotientFloat);
-		}
-
-		/**
-		 * {@inheritDoc}
-		 * <p>
-		 * Computes the quotient and remainder results for a {@link SingleFloatStruct} as the {@code real} and an
-		 * {@link
-		 * IntegerStruct} as the {@code divisor}.
-		 */
-		@Override
-		public QuotientRemainderResult quotientRemainder(final BigIntegerStruct divisor, final RoundingMode roundingMode, final boolean isQuotientFloat) {
+		public QuotientRemainderResult quotientRemainder(final IntegerStruct divisor, final RoundingMode roundingMode, final boolean isQuotientFloat) {
 			return floatQuotientRemainder(divisor, roundingMode, isQuotientFloat);
 		}
 

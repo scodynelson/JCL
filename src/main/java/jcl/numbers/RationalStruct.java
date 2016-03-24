@@ -30,12 +30,6 @@ public interface RationalStruct extends RealStruct {
 		return this;
 	}
 
-	@Override
-	default FloatStruct coerceRealToFloat() {
-		final BigDecimal bigDecimal = bigDecimalValue();
-		return FloatStruct.valueOf(bigDecimal);
-	}
-
 	static RationalStruct makeRational(final BigFraction bigFraction) {
 		final BigInteger numerator = bigFraction.getNumerator();
 		final BigInteger denominator = bigFraction.getDenominator();
@@ -76,7 +70,7 @@ public interface RationalStruct extends RealStruct {
 
 	abstract class RationalQuotientRemainderVisitor<S extends RationalStruct> extends RealStruct.QuotientRemainderVisitor<S> {
 
-		protected RationalQuotientRemainderVisitor(final S real) {
+		RationalQuotientRemainderVisitor(final S real) {
 			super(real);
 		}
 
@@ -86,8 +80,8 @@ public interface RationalStruct extends RealStruct {
 			return ratioQuotientRemainder(divisor, roundingMode, isQuotientFloat);
 		}
 
-		protected QuotientRemainderResult ratioQuotientRemainder(final RationalStruct divisor, final RoundingMode roundingMode,
-		                                                         final boolean isFloatResult) {
+		QuotientRemainderResult ratioQuotientRemainder(final RationalStruct divisor, final RoundingMode roundingMode,
+		                                               final boolean isFloatResult) {
 			final IntegerStruct rationalNumerator = real.numerator();
 			final BigInteger rationalNumeratorBigInteger = rationalNumerator.getBigInteger();
 			final IntegerStruct rationalDenominator = real.denominator();

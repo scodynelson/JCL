@@ -58,8 +58,16 @@ public interface FloatStruct extends RealStruct {
 		return SingleFloatStruct.valueOf(apfloat.floatValue());
 	}
 
+	static FloatStruct valueOf(final float f) {
+		return valueOf(Float.valueOf(f));
+	}
+
 	static FloatStruct valueOf(final Float f) {
 		return SingleFloatStruct.valueOf(f);
+	}
+
+	static FloatStruct valueOf(final double d) {
+		return valueOf(Double.valueOf(d));
 	}
 
 	static FloatStruct valueOf(final Double d) {

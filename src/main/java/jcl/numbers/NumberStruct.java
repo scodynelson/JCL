@@ -49,6 +49,7 @@ public interface NumberStruct extends LispStruct {
 		return (object instanceof NumberStruct) && isEqualTo((NumberStruct) object);
 	}
 
+	@Deprecated
 	Apcomplex apcomplexValue();
 
 	RealStruct abs();

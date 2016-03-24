@@ -7,12 +7,13 @@ package jcl.numbers;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.MathContext;
-import java.math.RoundingMode;
+import java.util.stream.IntStream;
 
 import jcl.classes.BuiltInClassStruct;
 import jcl.types.FixnumType;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.math3.exception.MathArithmeticException;
 import org.apache.commons.math3.fraction.BigFraction;
 import org.apache.commons.math3.util.ArithmeticUtils;
 import org.apache.commons.math3.util.FastMath;
@@ -25,7 +26,49 @@ import org.slf4j.LoggerFactory;
  */
 public final class IntIntegerStruct extends BuiltInClassStruct implements IntegerStruct {
 
+	/**
+	 * The logger for this class.
+	 */
 	private static final Logger LOGGER = LoggerFactory.getLogger(IntIntegerStruct.class);
+
+	private static final int INT_INTEGER_STRUCT_CACHE_SIZE = 256;
+	private static final int INT_INTEGER_STRUCT_ADD_CACHE_SIZE = 50;
+	private static final int INT_INTEGER_STRUCT_SUBTRACT_CACHE_SIZE = 20;
+	private static final int INT_INTEGER_STRUCT_MULTIPLY_CACHE_SIZE = 50;
+	private static final int INT_INTEGER_STRUCT_DIVIDE_CACHE_SIZE = 20;
+
+	private static final IntIntegerStruct[] INT_INTEGER_STRUCT_CACHE = new IntIntegerStruct[INT_INTEGER_STRUCT_CACHE_SIZE];
+	private static final IntIntegerAddVisitor[] INT_INTEGER_ADD_CACHE = new IntIntegerAddVisitor[INT_INTEGER_STRUCT_ADD_CACHE_SIZE];
+	private static final IntIntegerSubtractVisitor[] INT_INTEGER_SUBTRACT_CACHE = new IntIntegerSubtractVisitor[INT_INTEGER_STRUCT_SUBTRACT_CACHE_SIZE];
+	private static final IntIntegerMultiplyVisitor[] INT_INTEGER_MULTIPLY_CACHE = new IntIntegerMultiplyVisitor[INT_INTEGER_STRUCT_MULTIPLY_CACHE_SIZE];
+	private static final IntIntegerDivideVisitor[] INT_INTEGER_DIVIDE_CACHE = new IntIntegerDivideVisitor[INT_INTEGER_STRUCT_DIVIDE_CACHE_SIZE];
+
+	static {
+		IntStream.range(0, INT_INTEGER_STRUCT_CACHE_SIZE).forEach(value -> {
+			final IntIntegerStruct struct = new IntIntegerStruct(value);
+			INT_INTEGER_STRUCT_CACHE[value] = struct;
+		});
+		IntStream.range(0, INT_INTEGER_STRUCT_ADD_CACHE_SIZE).forEach(value -> {
+			final IntIntegerStruct struct = INT_INTEGER_STRUCT_CACHE[value];
+			final IntIntegerAddVisitor visitor = new IntIntegerAddVisitor(struct);
+			INT_INTEGER_ADD_CACHE[value] = visitor;
+		});
+		IntStream.range(0, INT_INTEGER_STRUCT_SUBTRACT_CACHE_SIZE).forEach(value -> {
+			final IntIntegerStruct struct = INT_INTEGER_STRUCT_CACHE[value];
+			final IntIntegerSubtractVisitor visitor = new IntIntegerSubtractVisitor(struct);
+			INT_INTEGER_SUBTRACT_CACHE[value] = visitor;
+		});
+		IntStream.range(0, INT_INTEGER_STRUCT_MULTIPLY_CACHE_SIZE).forEach(value -> {
+			final IntIntegerStruct struct = INT_INTEGER_STRUCT_CACHE[value];
+			final IntIntegerMultiplyVisitor visitor = new IntIntegerMultiplyVisitor(struct);
+			INT_INTEGER_MULTIPLY_CACHE[value] = visitor;
+		});
+		IntStream.range(0, INT_INTEGER_STRUCT_DIVIDE_CACHE_SIZE).forEach(value -> {
+			final IntIntegerStruct struct = INT_INTEGER_STRUCT_CACHE[value];
+			final IntIntegerDivideVisitor visitor = new IntIntegerDivideVisitor(struct);
+			INT_INTEGER_DIVIDE_CACHE[value] = visitor;
+		});
+	}
 
 	/**
 	 * {@link IntIntegerStruct} constant representing 0.
@@ -77,6 +120,9 @@ public final class IntIntegerStruct extends BuiltInClassStruct implements Intege
 	 * @return a IntIntegerStruct object with the provided {@code int} value
 	 */
 	public static IntIntegerStruct valueOf(final int i) {
+		if ((i > 0) && (i <= INT_INTEGER_STRUCT_CACHE_SIZE)) {
+			return INT_INTEGER_STRUCT_CACHE[i];
+		}
 		return new IntIntegerStruct(i);
 	}
 
@@ -97,25 +143,6 @@ public final class IntIntegerStruct extends BuiltInClassStruct implements Intege
 	@Override
 	public BigInteger bigIntegerValue() {
 		return BigInteger.valueOf(i);
-	}
-
-	@Override
-	public boolean evenp() {
-		return (i % 2) == 0;
-	}
-
-	@Override
-	public boolean oddp() {
-		return (i % 2) != 0;
-	}
-
-	@Override
-	public IntIntegerStruct isqrt() {
-		final double sqrt = StrictMath.sqrt(i);
-		final Double floor = StrictMath.floor(sqrt);
-		// NOTE: a root can only be less than the original value. Since the original value was an int,
-		//          the result will be an int.
-		return valueOf(floor.intValue());
 	}
 
 	@Override
@@ -278,9 +305,73 @@ public final class IntIntegerStruct extends BuiltInClassStruct implements Intege
 		return IntegerStruct.valueOf(ceil.longValue());
 	}
 
+	@Override
+	public boolean evenp() {
+		return (i % 2) == 0;
+	}
+
+	@Override
+	public boolean oddp() {
+		return (i % 2) != 0;
+	}
+
+	@Override
+	public IntIntegerStruct isqrt() {
+		final double sqrt = StrictMath.sqrt(i);
+		final Double floor = StrictMath.floor(sqrt);
+		// NOTE: a root can only be less than the original value. Since the original value was an int,
+		//          the result will be an int.
+		return valueOf(floor.intValue());
+	}
+
 	/*
 		RealStruct
 	 */
+
+	@Override
+	public FloatStruct coerceRealToFloat() {
+		return FloatStruct.valueOf(i);
+	}
+
+	@Override
+	public boolean isLessThan(final RealStruct.LessThanVisitor<?> lessThanVisitor) {
+		return lessThanVisitor.lessThan(this);
+	}
+
+	@Override
+	public RealStruct.LessThanVisitor<?> lessThanVisitor() {
+		return new IntIntegerLessThanVisitor(this);
+	}
+
+	@Override
+	public boolean isGreaterThan(final RealStruct.GreaterThanVisitor<?> greaterThanVisitor) {
+		return greaterThanVisitor.greaterThan(this);
+	}
+
+	@Override
+	public RealStruct.GreaterThanVisitor<?> greaterThanVisitor() {
+		return new IntIntegerGreaterThanVisitor(this);
+	}
+
+	@Override
+	public boolean isLessThanOrEqualTo(final RealStruct.LessThanOrEqualToVisitor<?> lessThanOrEqualToVisitor) {
+		return lessThanOrEqualToVisitor.lessThanOrEqualTo(this);
+	}
+
+	@Override
+	public RealStruct.LessThanOrEqualToVisitor<?> lessThanOrEqualToVisitor() {
+		return new IntIntegerLessThanOrEqualToVisitor(this);
+	}
+
+	@Override
+	public boolean isGreaterThanOrEqualTo(final RealStruct.GreaterThanOrEqualToVisitor<?> greaterThanOrEqualToVisitor) {
+		return greaterThanOrEqualToVisitor.greaterThanOrEqualTo(this);
+	}
+
+	@Override
+	public RealStruct.GreaterThanOrEqualToVisitor<?> greaterThanOrEqualToVisitor() {
+		return new IntIntegerGreaterThanOrEqualToVisitor(this);
+	}
 
 	@Override
 	public boolean plusp() {
@@ -292,84 +383,74 @@ public final class IntIntegerStruct extends BuiltInClassStruct implements Intege
 		return i < 0;
 	}
 
-	@Override
-	public boolean isLessThan(final RealStruct.LessThanVisitor<?> lessThanVisitor) {
-		return lessThanVisitor.lessThan(this);
-	}
-
-	@Override
-	public RealStruct.LessThanVisitor<?> lessThanVisitor() {
-		return new IntegerLessThanVisitor(this);
-	}
-
-	@Override
-	public boolean isGreaterThan(final RealStruct.GreaterThanVisitor<?> greaterThanVisitor) {
-		return greaterThanVisitor.greaterThan(this);
-	}
-
-	@Override
-	public RealStruct.GreaterThanVisitor<?> greaterThanVisitor() {
-		return new IntegerGreaterThanVisitor(this);
-	}
-
-	@Override
-	public boolean isLessThanOrEqualTo(final RealStruct.LessThanOrEqualToVisitor<?> lessThanOrEqualToVisitor) {
-		return lessThanOrEqualToVisitor.lessThanOrEqualTo(this);
-	}
-
-	@Override
-	public RealStruct.LessThanOrEqualToVisitor<?> lessThanOrEqualToVisitor() {
-		return new IntegerLessThanOrEqualToVisitor(this);
-	}
-
-	@Override
-	public boolean isGreaterThanOrEqualTo(final RealStruct.GreaterThanOrEqualToVisitor<?> greaterThanOrEqualToVisitor) {
-		return greaterThanOrEqualToVisitor.greaterThanOrEqualTo(this);
-	}
-
-	@Override
-	public RealStruct.GreaterThanOrEqualToVisitor<?> greaterThanOrEqualToVisitor() {
-		return new IntegerGreaterThanOrEqualToVisitor(this);
-	}
-
-	@Override
-	public QuotientRemainderResult floor(final QuotientRemainderVisitor<?> quotientRemainderVisitor) {
-		return quotientRemainderVisitor.floor(this);
-	}
-
-	@Override
-	public QuotientRemainderResult ffloor(final QuotientRemainderVisitor<?> quotientRemainderVisitor) {
-		return quotientRemainderVisitor.ffloor(this);
-	}
-
-	@Override
-	public QuotientRemainderResult ceiling(final QuotientRemainderVisitor<?> quotientRemainderVisitor) {
-		return quotientRemainderVisitor.ceiling(this);
-	}
-
-	@Override
-	public QuotientRemainderResult fceiling(final QuotientRemainderVisitor<?> quotientRemainderVisitor) {
-		return quotientRemainderVisitor.fceiling(this);
-	}
-
-	@Override
-	public QuotientRemainderResult round(final QuotientRemainderVisitor<?> quotientRemainderVisitor) {
-		return quotientRemainderVisitor.round(this);
-	}
-
-	@Override
-	public QuotientRemainderResult fround(final QuotientRemainderVisitor<?> quotientRemainderVisitor) {
-		return quotientRemainderVisitor.fround(this);
-	}
-
-	@Override
-	public QuotientRemainderVisitor<?> quotientRemainderVisitor() {
-		return new IntIntegerQuotientRemainderVisitor(this);
-	}
-
 	/*
 		NumberStruct
 	 */
+
+	@Override
+	public NumberStruct add(final AddVisitor<?> addVisitor) {
+		return addVisitor.add(this);
+	}
+
+	@Override
+	public AddVisitor<?> addVisitor() {
+		return new IntIntegerAddVisitor(this);
+	}
+
+	@Override
+	public NumberStruct subtract(final SubtractVisitor<?> subtractVisitor) {
+		return subtractVisitor.subtract(this);
+	}
+
+	@Override
+	public SubtractVisitor<?> subtractVisitor() {
+		return new IntIntegerSubtractVisitor(this);
+	}
+
+	@Override
+	public NumberStruct multiply(final MultiplyVisitor<?> multiplyVisitor) {
+		return multiplyVisitor.multiply(this);
+	}
+
+	@Override
+	public MultiplyVisitor<?> multiplyVisitor() {
+		return new IntIntegerMultiplyVisitor(this);
+	}
+
+	@Override
+	public NumberStruct divide(final DivideVisitor<?> divideVisitor) {
+		return divideVisitor.divide(this);
+	}
+
+	@Override
+	public DivideVisitor<?> divideVisitor() {
+		return new IntIntegerDivideVisitor(this);
+	}
+
+	@Override
+	public boolean isEqualTo(final EqualToVisitor<?> equalToVisitor) {
+		return equalToVisitor.equalTo(this);
+	}
+
+	@Override
+	public EqualToVisitor<?> equalToVisitor() {
+		return new IntIntegerEqualToVisitor(this);
+	}
+
+	@Override
+	public NumberStruct expt(final ExptVisitor<?> exptVisitor) {
+		return exptVisitor.expt(this);
+	}
+
+	@Override
+	public ExptVisitor<?> exptVisitor() {
+		return new IntIntegerExptVisitor(this);
+	}
+
+	@Override
+	public boolean zerop() {
+		return i == 0;
+	}
 
 	@Override
 	public RealStruct abs() {
@@ -380,71 +461,6 @@ public final class IntIntegerStruct extends BuiltInClassStruct implements Intege
 	}
 
 	@Override
-	public boolean zerop() {
-		return i == 0;
-	}
-
-	@Override
-	public NumberStruct add(final AddVisitor<?> addVisitor) {
-		return addVisitor.add(this);
-	}
-
-	@Override
-	public AddVisitor<?> addVisitor() {
-		return new IntegerAddVisitor(this);
-	}
-
-	@Override
-	public NumberStruct subtract(final SubtractVisitor<?> subtractVisitor) {
-		return subtractVisitor.subtract(this);
-	}
-
-	@Override
-	public SubtractVisitor<?> subtractVisitor() {
-		return new IntegerSubtractVisitor(this);
-	}
-
-	@Override
-	public NumberStruct multiply(final MultiplyVisitor<?> multiplyVisitor) {
-		return multiplyVisitor.multiply(this);
-	}
-
-	@Override
-	public MultiplyVisitor<?> multiplyVisitor() {
-		return new IntegerMultiplyVisitor(this);
-	}
-
-	@Override
-	public NumberStruct divide(final DivideVisitor<?> divideVisitor) {
-		return divideVisitor.divide(this);
-	}
-
-	@Override
-	public DivideVisitor<?> divideVisitor() {
-		return new IntegerDivideVisitor(this);
-	}
-
-	@Override
-	public boolean isEqualTo(final EqualToVisitor<?> equalToVisitor) {
-		return equalToVisitor.equalTo(this);
-	}
-
-	@Override
-	public EqualToVisitor<?> equalToVisitor() {
-		return new IntegerEqualToVisitor(this);
-	}
-
-	@Override
-	public NumberStruct expt(final ExptVisitor<?> exptVisitor) {
-		return exptVisitor.expt(this);
-	}
-
-	@Override
-	public ExptVisitor<?> exptVisitor() {
-		return new IntegerExptVisitor(this);
-	}
-
-	@Override
 	public IntegerStruct negation() {
 		return valueOf(-i);
 	}
@@ -452,46 +468,6 @@ public final class IntIntegerStruct extends BuiltInClassStruct implements Intege
 	@Override
 	public NumberStruct reciprocal() {
 		return new RatioStruct(BigInteger.ONE, bigIntegerValue());
-	}
-
-	// Comparison Visitor Helpers
-
-	/**
-	 * Determines numeric comparison result between the provided IntegerStructs.
-	 *
-	 * @param number1
-	 * 		the first IntegerStruct in the comparison operation
-	 * @param number2
-	 * 		the second IntegerStruct in the comparison operation
-	 *
-	 * @return numeric comparison result between the provided IntegerStructs
-	 */
-	private static int getComparisonResult(final IntIntegerStruct number1, final IntIntegerStruct number2) {
-		final BigInteger bigInteger1 = number1.getBigInteger();
-		final BigInteger bigInteger2 = number2.getBigInteger();
-		return bigInteger1.compareTo(bigInteger2);
-	}
-
-	/**
-	 * Determines numeric comparison result between the provided IntegerStruct and {@link RatioStruct}.
-	 *
-	 * @param number1
-	 * 		the IntegerStruct in the comparison operation
-	 * @param number2
-	 * 		the {@link RatioStruct} in the comparison operation
-	 *
-	 * @return numeric comparison result between the provided IntegerStruct and {@link RatioStruct}
-	 */
-	private static int getComparisonResult(final IntIntegerStruct number1, final RatioStruct number2) {
-		final BigInteger bigInteger1 = number1.getBigInteger();
-
-		final BigFraction bigFraction2 = number2.getBigFraction();
-		final BigFraction bigFraction2Reduced = bigFraction2.reduce();
-		final BigInteger numerator = bigFraction2Reduced.getNumerator();
-		final BigInteger denominator = bigFraction2Reduced.getDenominator();
-
-		final BigInteger multiply = bigInteger1.multiply(denominator);
-		return multiply.compareTo(numerator);
 	}
 
 	// HashCode / Equals
@@ -528,16 +504,16 @@ public final class IntIntegerStruct extends BuiltInClassStruct implements Intege
 	/**
 	 * {@link RealStruct.RealAddVisitor} for computing addition results for {@link IntIntegerStruct}s.
 	 */
-	private static final class IntegerAddVisitor extends RealStruct.RealAddVisitor<IntIntegerStruct> {
+	private static final class IntIntegerAddVisitor extends RealStruct.RealAddVisitor<IntIntegerStruct> {
 
 		/**
-		 * Package private constructor to make a new instance of an IntegerAddVisitor with the provided {@link
+		 * Private constructor to make a new instance of an IntIntegerAddVisitor with the provided {@link
 		 * IntIntegerStruct}.
 		 *
 		 * @param number1
 		 * 		the first argument in the addition operation
 		 */
-		private IntegerAddVisitor(final IntIntegerStruct number1) {
+		private IntIntegerAddVisitor(final IntIntegerStruct number1) {
 			super(number1);
 		}
 
@@ -603,16 +579,16 @@ public final class IntIntegerStruct extends BuiltInClassStruct implements Intege
 	/**
 	 * {@link RealStruct.RealSubtractVisitor} for computing subtraction function results for {@link IntIntegerStruct}s.
 	 */
-	private static final class IntegerSubtractVisitor extends RealStruct.RealSubtractVisitor<IntIntegerStruct> {
+	private static final class IntIntegerSubtractVisitor extends RealStruct.RealSubtractVisitor<IntIntegerStruct> {
 
 		/**
-		 * Package private constructor to make a new instance of an IntegerSubtractVisitor with the provided {@link
+		 * Private constructor to make a new instance of an IntIntegerSubtractVisitor with the provided {@link
 		 * IntIntegerStruct}.
 		 *
 		 * @param number1
 		 * 		the first argument in the subtraction operation
 		 */
-		IntegerSubtractVisitor(final IntIntegerStruct number1) {
+		private IntIntegerSubtractVisitor(final IntIntegerStruct number1) {
 			super(number1);
 		}
 
@@ -679,16 +655,16 @@ public final class IntIntegerStruct extends BuiltInClassStruct implements Intege
 	 * {@link RealStruct.RealMultiplyVisitor} for computing multiplication function results for {@link
 	 * IntIntegerStruct}s.
 	 */
-	private static final class IntegerMultiplyVisitor extends RealStruct.RealMultiplyVisitor<IntIntegerStruct> {
+	private static final class IntIntegerMultiplyVisitor extends RealStruct.RealMultiplyVisitor<IntIntegerStruct> {
 
 		/**
-		 * Package private constructor to make a new instance of an IntegerMultiplyVisitor with the provided {@link
+		 * Private constructor to make a new instance of an IntIntegerMultiplyVisitor with the provided {@link
 		 * IntIntegerStruct}.
 		 *
 		 * @param number1
 		 * 		the first argument in the multiplication operation
 		 */
-		IntegerMultiplyVisitor(final IntIntegerStruct number1) {
+		private IntIntegerMultiplyVisitor(final IntIntegerStruct number1) {
 			super(number1);
 		}
 
@@ -754,16 +730,16 @@ public final class IntIntegerStruct extends BuiltInClassStruct implements Intege
 	/**
 	 * {@link RealStruct.RealDivideVisitor} for computing division function results for {@link IntIntegerStruct}s.
 	 */
-	private static final class IntegerDivideVisitor extends RealStruct.RealDivideVisitor<IntIntegerStruct> {
+	private static final class IntIntegerDivideVisitor extends RealStruct.RealDivideVisitor<IntIntegerStruct> {
 
 		/**
-		 * Package private constructor to make a new instance of an IntegerDivideVisitor with the provided {@link
+		 * Private constructor to make a new instance of an IntIntegerDivideVisitor with the provided {@link
 		 * IntIntegerStruct}.
 		 *
 		 * @param number1
 		 * 		the first argument in the division operation
 		 */
-		IntegerDivideVisitor(final IntIntegerStruct number1) {
+		private IntIntegerDivideVisitor(final IntIntegerStruct number1) {
 			super(number1);
 		}
 
@@ -828,16 +804,16 @@ public final class IntIntegerStruct extends BuiltInClassStruct implements Intege
 	/**
 	 * {@link RealStruct.RealEqualToVisitor} for computing numeric '=' equality results for {@link IntIntegerStruct}s.
 	 */
-	private static final class IntegerEqualToVisitor extends RealStruct.RealEqualToVisitor<IntIntegerStruct> {
+	private static final class IntIntegerEqualToVisitor extends RealStruct.RealEqualToVisitor<IntIntegerStruct> {
 
 		/**
-		 * Package private constructor to make a new instance of an IntegerEqualToVisitor with the provided {@link
+		 * Private constructor to make a new instance of an IntIntegerEqualToVisitor with the provided {@link
 		 * IntIntegerStruct}.
 		 *
 		 * @param number1
 		 * 		the first argument in the numeric '=' equality operation
 		 */
-		IntegerEqualToVisitor(final IntIntegerStruct number1) {
+		private IntIntegerEqualToVisitor(final IntIntegerStruct number1) {
 			super(number1);
 		}
 
@@ -891,16 +867,16 @@ public final class IntIntegerStruct extends BuiltInClassStruct implements Intege
 	 * {@link RealStruct.LessThanVisitor} for computing numeric {@literal '<'} equality results for {@link
 	 * IntIntegerStruct}s.
 	 */
-	private static final class IntegerLessThanVisitor extends RealStruct.LessThanVisitor<IntIntegerStruct> {
+	private static final class IntIntegerLessThanVisitor extends RealStruct.LessThanVisitor<IntIntegerStruct> {
 
 		/**
-		 * Package private constructor to make a new instance of an IntegerLessThanVisitor with the provided {@link
+		 * Private constructor to make a new instance of an IntIntegerLessThanVisitor with the provided {@link
 		 * IntIntegerStruct}.
 		 *
 		 * @param real1
 		 * 		the first argument in the numeric {@literal '<'} equality operation
 		 */
-		IntegerLessThanVisitor(final IntIntegerStruct real1) {
+		private IntIntegerLessThanVisitor(final IntIntegerStruct real1) {
 			super(real1);
 		}
 
@@ -950,16 +926,16 @@ public final class IntIntegerStruct extends BuiltInClassStruct implements Intege
 	 * {@link RealStruct.GreaterThanVisitor} for computing numeric {@literal '>'} equality results for {@link
 	 * IntIntegerStruct}s.
 	 */
-	private static final class IntegerGreaterThanVisitor extends RealStruct.GreaterThanVisitor<IntIntegerStruct> {
+	private static final class IntIntegerGreaterThanVisitor extends RealStruct.GreaterThanVisitor<IntIntegerStruct> {
 
 		/**
-		 * Package private constructor to make a new instance of an IntegerGreaterThanVisitor with the provided {@link
+		 * Private constructor to make a new instance of an IntIntegerGreaterThanVisitor with the provided {@link
 		 * IntIntegerStruct}.
 		 *
 		 * @param real1
 		 * 		the first argument in the numeric {@literal '>'} equality operation
 		 */
-		IntegerGreaterThanVisitor(final IntIntegerStruct real1) {
+		private IntIntegerGreaterThanVisitor(final IntIntegerStruct real1) {
 			super(real1);
 		}
 
@@ -1009,16 +985,16 @@ public final class IntIntegerStruct extends BuiltInClassStruct implements Intege
 	 * {@link RealStruct.LessThanOrEqualToVisitor} for computing numeric {@literal '<='} equality results for {@link
 	 * IntIntegerStruct}s.
 	 */
-	private static final class IntegerLessThanOrEqualToVisitor extends RealStruct.LessThanOrEqualToVisitor<IntIntegerStruct> {
+	private static final class IntIntegerLessThanOrEqualToVisitor extends RealStruct.LessThanOrEqualToVisitor<IntIntegerStruct> {
 
 		/**
-		 * Package private constructor to make a new instance of an IntegerLessThanOrEqualToVisitor with the provided
-		 * {@link IntIntegerStruct}.
+		 * Private constructor to make a new instance of an IntIntegerLessThanOrEqualToVisitor with the provided {@link
+		 * IntIntegerStruct}.
 		 *
 		 * @param real1
 		 * 		the first argument in the numeric {@literal '<='} equality operation
 		 */
-		IntegerLessThanOrEqualToVisitor(final IntIntegerStruct real1) {
+		private IntIntegerLessThanOrEqualToVisitor(final IntIntegerStruct real1) {
 			super(real1);
 		}
 
@@ -1072,16 +1048,16 @@ public final class IntIntegerStruct extends BuiltInClassStruct implements Intege
 	 * {@link RealStruct.GreaterThanOrEqualToVisitor} for computing numeric {@literal '>='} equality results for {@link
 	 * IntIntegerStruct}s.
 	 */
-	private static final class IntegerGreaterThanOrEqualToVisitor extends RealStruct.GreaterThanOrEqualToVisitor<IntIntegerStruct> {
+	private static final class IntIntegerGreaterThanOrEqualToVisitor extends RealStruct.GreaterThanOrEqualToVisitor<IntIntegerStruct> {
 
 		/**
-		 * Package private constructor to make a new instance of an IntegerGreaterThanOrEqualToVisitor with the
-		 * provided {@link IntIntegerStruct}.
+		 * Private constructor to make a new instance of an IntIntegerGreaterThanOrEqualToVisitor with the provided
+		 * {@link IntIntegerStruct}.
 		 *
 		 * @param real1
 		 * 		the first argument in the numeric {@literal '>='} equality operation
 		 */
-		IntegerGreaterThanOrEqualToVisitor(final IntIntegerStruct real1) {
+		private IntIntegerGreaterThanOrEqualToVisitor(final IntIntegerStruct real1) {
 			super(real1);
 		}
 
@@ -1132,76 +1108,18 @@ public final class IntIntegerStruct extends BuiltInClassStruct implements Intege
 	}
 
 	/**
-	 * {@link IntIntegerQuotientRemainderVisitor} for computing quotient and remainder results for {@link
-	 * IntIntegerStruct}s.
-	 */
-	private static final class IntIntegerQuotientRemainderVisitor extends RationalStruct.RationalQuotientRemainderVisitor<IntIntegerStruct> {
-
-		/**
-		 * Package private constructor to make a new instance of an IntegerQuotientRemainderVisitor with the provided
-		 * {@link IntIntegerStruct}.
-		 *
-		 * @param real
-		 * 		the real argument in the computational quotient and remainder operation
-		 */
-		IntIntegerQuotientRemainderVisitor(final IntIntegerStruct real) {
-			super(real);
-		}
-
-		@Override
-		public QuotientRemainderResult quotientRemainder(final IntIntegerStruct divisor, final RoundingMode roundingMode,
-		                                                 final boolean isQuotientFloat) {
-
-			final BigDecimal realBigDecimal = real.bigDecimalValue();
-			final BigDecimal divisorBigDecimal = divisor.bigDecimalValue();
-
-			final BigDecimal quotient = realBigDecimal.divide(divisorBigDecimal, 0, roundingMode);
-			final BigDecimal remainder = realBigDecimal.subtract(divisorBigDecimal.multiply(quotient));
-
-			final RealStruct quotientReal;
-			if (isQuotientFloat) {
-				quotientReal = FloatStruct.valueOf(quotient);
-			} else {
-				final BigInteger quotientBigInteger = quotient.toBigInteger();
-				quotientReal = IntegerStruct.valueOf(quotientBigInteger);
-			}
-
-			final BigInteger remainderBigInteger = remainder.toBigInteger();
-			final IntegerStruct remainderInteger = IntegerStruct.valueOf(remainderBigInteger);
-
-			return new QuotientRemainderResult(quotientReal, remainderInteger);
-		}
-
-		@Override
-		public QuotientRemainderResult quotientRemainder(final LongIntegerStruct divisor, final RoundingMode roundingMode, final boolean isQuotientFloat) {
-			return null;
-		}
-
-		@Override
-		public QuotientRemainderResult quotientRemainder(final BigIntegerStruct divisor, final RoundingMode roundingMode, final boolean isQuotientFloat) {
-			return null;
-		}
-
-		@Override
-		public QuotientRemainderResult quotientRemainder(final RatioStruct divisor, final RoundingMode roundingMode, final boolean isQuotientFloat) {
-			return super.quotientRemainder(divisor, roundingMode, isQuotientFloat);
-		}
-	}
-
-	/**
 	 * {@link RealStruct.RealExptVisitor} for computing exponential function results for {@link IntIntegerStruct}s.
 	 */
-	private static final class IntegerExptVisitor extends RealStruct.RealExptVisitor<IntIntegerStruct> {
-		// TODO: Do all this...
+	private static final class IntIntegerExptVisitor extends RealStruct.RealExptVisitor<IntIntegerStruct> {
 
 		/**
-		 * Package private constructor to make a new instance of an IntegerExptVisitor with the provided {@link
+		 * Private constructor to make a new instance of an IntIntegerExptVisitor with the provided {@link
 		 * IntIntegerStruct}.
 		 *
 		 * @param base
 		 * 		the base argument in the exponential operation
 		 */
-		IntegerExptVisitor(final IntIntegerStruct base) {
+		private IntIntegerExptVisitor(final IntIntegerStruct base) {
 			super(base);
 		}
 
@@ -1209,53 +1127,93 @@ public final class IntIntegerStruct extends BuiltInClassStruct implements Intege
 		public NumberStruct expt(final IntIntegerStruct power) {
 			if (power.minusp()) {
 				return exptInteger(base, power);
-			} else {
-				final BigInteger baseBigInteger = base.getBigInteger();
-				final BigInteger powerBigInteger = power.getBigInteger();
-				final BigInteger pow = ArithmeticUtils.pow(baseBigInteger, powerBigInteger);
-				return IntegerStruct.valueOf(pow);
 			}
+
+			try {
+				final int pow = ArithmeticUtils.pow(base.i, power.i);
+				return valueOf(pow);
+			} catch (final MathArithmeticException ignore) {
+			}
+			try {
+				final long pow = ArithmeticUtils.pow((long) base.i, power.i);
+				return IntegerStruct.valueOf(pow);
+			} catch (final MathArithmeticException ignore) {
+			}
+
+			final BigInteger baseBigInteger = base.bigIntegerValue();
+			final BigInteger pow = ArithmeticUtils.pow(baseBigInteger, power.i);
+			return IntegerStruct.valueOf(pow);
 		}
 
 		@Override
+		@SuppressWarnings("deprecation")
 		public NumberStruct expt(final LongIntegerStruct power) {
-			return super.expt(power);
+			if (power.minusp()) {
+				return exptInteger(base, power);
+			}
+
+			try {
+				final int pow = ArithmeticUtils.pow(base.i, power.l);
+				return valueOf(pow);
+			} catch (final MathArithmeticException ignore) {
+			}
+			try {
+				final long pow = ArithmeticUtils.pow((long) base.i, power.l);
+				return IntegerStruct.valueOf(pow);
+			} catch (final MathArithmeticException ignore) {
+			}
+
+			final BigInteger baseBigInteger = base.bigIntegerValue();
+			final BigInteger pow = ArithmeticUtils.pow(baseBigInteger, power.l);
+			return IntegerStruct.valueOf(pow);
 		}
 
 		@Override
 		public NumberStruct expt(final BigIntegerStruct power) {
-			return super.expt(power);
+			if (power.minusp()) {
+				return exptInteger(base, power);
+			}
+
+			final BigInteger baseBigInteger = base.bigIntegerValue();
+			final BigInteger powerBigInteger = power.bigInteger;
+			final BigInteger pow = ArithmeticUtils.pow(baseBigInteger, powerBigInteger);
+			return IntegerStruct.valueOf(pow);
 		}
 
 		@Override
 		public NumberStruct expt(final SingleFloatStruct power) {
-			return super.expt(power);
+			return exptFloatRatioNew(base.i, power.f);
 		}
 
 		@Override
 		public NumberStruct expt(final DoubleFloatStruct power) {
-			return super.expt(power);
+			return exptFloatRatioNew(base.i, power.d);
 		}
 
 		@Override
 		public NumberStruct expt(final BigFloatStruct power) {
-			return super.expt(power);
+			return exptFloatRatioNew(base.i, power.doubleValue());
 		}
 
 		@Override
 		public NumberStruct expt(final RatioStruct power) {
-			return super.expt(power);
-		}
-
-		@Override
-		public NumberStruct expt(final ComplexStruct power) {
-			return super.expt(power);
+			return exptFloatRatioNew(base.i, power.doubleValue());
 		}
 	}
 
+	/**
+	 * {@link IntegerStruct.GcdVisitor} for computing greatest-common-denominator for {@link IntIntegerStruct}s.
+	 */
 	private static final class IntIntegerGcdVisitor extends IntegerStruct.GcdVisitor<IntIntegerStruct> {
 
-		IntIntegerGcdVisitor(final IntIntegerStruct integer1) {
+		/**
+		 * Private constructor to make a new instance of an IntIntegerGcdVisitor with the provided {@link
+		 * IntIntegerStruct}.
+		 *
+		 * @param integer1
+		 * 		the first argument in the greatest-common-denominator operation
+		 */
+		private IntIntegerGcdVisitor(final IntIntegerStruct integer1) {
 			super(integer1);
 		}
 
@@ -1280,9 +1238,19 @@ public final class IntIntegerStruct extends BuiltInClassStruct implements Intege
 		}
 	}
 
+	/**
+	 * {@link IntegerStruct.LcmVisitor} for computing least-common-multiple for {@link IntIntegerStruct}s.
+	 */
 	private static final class IntIntegerLcmVisitor extends IntegerStruct.LcmVisitor<IntIntegerStruct> {
 
-		IntIntegerLcmVisitor(final IntIntegerStruct integer1) {
+		/**
+		 * Private constructor to make a new instance of an IntIntegerLcmVisitor with the provided {@link
+		 * IntIntegerStruct}.
+		 *
+		 * @param integer1
+		 * 		the first argument in the least-common-multiple operation
+		 */
+		private IntIntegerLcmVisitor(final IntIntegerStruct integer1) {
 			super(integer1);
 		}
 
@@ -1317,9 +1285,19 @@ public final class IntIntegerStruct extends BuiltInClassStruct implements Intege
 		}
 	}
 
+	/**
+	 * {@link IntegerStruct.AshVisitor} for performing bit-shifting operations for {@link IntIntegerStruct}s.
+	 */
 	private static final class IntIntegerAshVisitor extends IntegerStruct.AshVisitor<IntIntegerStruct> {
 
-		IntIntegerAshVisitor(final IntIntegerStruct integer) {
+		/**
+		 * Private constructor to make a new instance of an IntIntegerAshVisitor with the provided {@link
+		 * IntIntegerStruct}.
+		 *
+		 * @param integer
+		 * 		the integer argument in the bit-shifting operation
+		 */
+		private IntIntegerAshVisitor(final IntIntegerStruct integer) {
 			super(integer);
 		}
 
@@ -1386,9 +1364,19 @@ public final class IntIntegerStruct extends BuiltInClassStruct implements Intege
 		}
 	}
 
+	/**
+	 * {@link IntegerStruct.LogAndVisitor} for computing bitwise and results for {@link IntIntegerStruct}s.
+	 */
 	private static final class IntIntegerLogAndVisitor extends IntegerStruct.LogAndVisitor<IntIntegerStruct> {
 
-		IntIntegerLogAndVisitor(final IntIntegerStruct integer1) {
+		/**
+		 * Private constructor to make a new instance of an IntIntegerLogAndVisitor with the provided {@link
+		 * IntIntegerStruct}.
+		 *
+		 * @param integer1
+		 * 		the first argument in the bitwise and operation
+		 */
+		private IntIntegerLogAndVisitor(final IntIntegerStruct integer1) {
 			super(integer1);
 		}
 
@@ -1414,9 +1402,20 @@ public final class IntIntegerStruct extends BuiltInClassStruct implements Intege
 		}
 	}
 
+	/**
+	 * {@link IntegerStruct.LogAndC1Visitor} for computing bitwise and, with complementary first, results for {@link
+	 * IntIntegerStruct}s.
+	 */
 	private static final class IntIntegerLogAndC1Visitor extends IntegerStruct.LogAndC1Visitor<IntIntegerStruct> {
 
-		IntIntegerLogAndC1Visitor(final IntIntegerStruct integer1) {
+		/**
+		 * Private constructor to make a new instance of an IntIntegerLogAndC1Visitor with the provided {@link
+		 * IntIntegerStruct}.
+		 *
+		 * @param integer1
+		 * 		the first argument, to be complementary, in the bitwise and operation
+		 */
+		private IntIntegerLogAndC1Visitor(final IntIntegerStruct integer1) {
 			super(integer1);
 		}
 
@@ -1442,9 +1441,20 @@ public final class IntIntegerStruct extends BuiltInClassStruct implements Intege
 		}
 	}
 
+	/**
+	 * {@link IntegerStruct.LogAndC2Visitor} for computing bitwise and, with complementary second, results for {@link
+	 * IntIntegerStruct}s.
+	 */
 	private static final class IntIntegerLogAndC2Visitor extends IntegerStruct.LogAndC2Visitor<IntIntegerStruct> {
 
-		IntIntegerLogAndC2Visitor(final IntIntegerStruct integer1) {
+		/**
+		 * Private constructor to make a new instance of an IntIntegerLogAndC2Visitor with the provided {@link
+		 * IntIntegerStruct}.
+		 *
+		 * @param integer1
+		 * 		the first argument in the bitwise and, with complementary second, operation
+		 */
+		private IntIntegerLogAndC2Visitor(final IntIntegerStruct integer1) {
 			super(integer1);
 		}
 
@@ -1470,9 +1480,19 @@ public final class IntIntegerStruct extends BuiltInClassStruct implements Intege
 		}
 	}
 
+	/**
+	 * {@link IntegerStruct.LogEqvVisitor} for computing bitwise exclusive-nor results for {@link IntIntegerStruct}s.
+	 */
 	private static final class IntIntegerLogEqvVisitor extends IntegerStruct.LogEqvVisitor<IntIntegerStruct> {
 
-		IntIntegerLogEqvVisitor(final IntIntegerStruct integer1) {
+		/**
+		 * Private constructor to make a new instance of an IntIntegerLogEqvVisitor with the provided {@link
+		 * IntIntegerStruct}.
+		 *
+		 * @param integer1
+		 * 		the first argument in the bitwise exclusive-nor operation
+		 */
+		private IntIntegerLogEqvVisitor(final IntIntegerStruct integer1) {
 			super(integer1);
 		}
 
@@ -1501,9 +1521,19 @@ public final class IntIntegerStruct extends BuiltInClassStruct implements Intege
 		}
 	}
 
+	/**
+	 * {@link IntegerStruct.LogIorVisitor} for computing bitwise inclusive-or results for {@link IntIntegerStruct}s.
+	 */
 	private static final class IntIntegerLogIorVisitor extends IntegerStruct.LogIorVisitor<IntIntegerStruct> {
 
-		IntIntegerLogIorVisitor(final IntIntegerStruct integer1) {
+		/**
+		 * Private constructor to make a new instance of an IntIntegerLogIorVisitor with the provided {@link
+		 * IntIntegerStruct}.
+		 *
+		 * @param integer1
+		 * 		the first argument in the bitwise inclusive-or operation
+		 */
+		private IntIntegerLogIorVisitor(final IntIntegerStruct integer1) {
 			super(integer1);
 		}
 
@@ -1529,9 +1559,19 @@ public final class IntIntegerStruct extends BuiltInClassStruct implements Intege
 		}
 	}
 
+	/**
+	 * {@link IntegerStruct.LogNandVisitor} for computing bitwise nand results for {@link IntIntegerStruct}s.
+	 */
 	private static final class IntIntegerLogNandVisitor extends IntegerStruct.LogNandVisitor<IntIntegerStruct> {
 
-		IntIntegerLogNandVisitor(final IntIntegerStruct integer1) {
+		/**
+		 * Private constructor to make a new instance of an IntIntegerLogNandVisitor with the provided {@link
+		 * IntIntegerStruct}.
+		 *
+		 * @param integer1
+		 * 		the first argument in the bitwise nand operation
+		 */
+		private IntIntegerLogNandVisitor(final IntIntegerStruct integer1) {
 			super(integer1);
 		}
 
@@ -1560,9 +1600,19 @@ public final class IntIntegerStruct extends BuiltInClassStruct implements Intege
 		}
 	}
 
+	/**
+	 * {@link IntegerStruct.LogNorVisitor} for computing bitwise inclusive-nor results for {@link IntIntegerStruct}s.
+	 */
 	private static final class IntIntegerLogNorVisitor extends IntegerStruct.LogNorVisitor<IntIntegerStruct> {
 
-		IntIntegerLogNorVisitor(final IntIntegerStruct integer1) {
+		/**
+		 * Private constructor to make a new instance of an IntIntegerLogNorVisitor with the provided {@link
+		 * IntIntegerStruct}.
+		 *
+		 * @param integer1
+		 * 		the first argument in the bitwise inclusive-nor operation
+		 */
+		private IntIntegerLogNorVisitor(final IntIntegerStruct integer1) {
 			super(integer1);
 		}
 
@@ -1591,9 +1641,20 @@ public final class IntIntegerStruct extends BuiltInClassStruct implements Intege
 		}
 	}
 
+	/**
+	 * {@link IntegerStruct.LogOrC1Visitor} for computing bitwise inclusive-or, with complementary first, results for
+	 * {@link IntIntegerStruct}s.
+	 */
 	private static final class IntIntegerLogOrC1Visitor extends IntegerStruct.LogOrC1Visitor<IntIntegerStruct> {
 
-		IntIntegerLogOrC1Visitor(final IntIntegerStruct integer1) {
+		/**
+		 * Private constructor to make a new instance of an IntIntegerLogOrC1Visitor with the provided {@link
+		 * IntIntegerStruct}.
+		 *
+		 * @param integer1
+		 * 		the first argument, to be complementary, in the bitwise inclusive-or operation
+		 */
+		private IntIntegerLogOrC1Visitor(final IntIntegerStruct integer1) {
 			super(integer1);
 		}
 
@@ -1619,9 +1680,20 @@ public final class IntIntegerStruct extends BuiltInClassStruct implements Intege
 		}
 	}
 
+	/**
+	 * {@link IntegerStruct.LogOrC2Visitor} for computing bitwise inclusive-or, with complementary second, results for
+	 * {@link IntIntegerStruct}s.
+	 */
 	private static final class IntIntegerLogOrC2Visitor extends IntegerStruct.LogOrC2Visitor<IntIntegerStruct> {
 
-		IntIntegerLogOrC2Visitor(final IntIntegerStruct integer1) {
+		/**
+		 * Private constructor to make a new instance of an IntIntegerLogOrC2Visitor with the provided {@link
+		 * IntIntegerStruct}.
+		 *
+		 * @param integer1
+		 * 		the first argument in the bitwise inclusive-or, with complementary second, operation
+		 */
+		private IntIntegerLogOrC2Visitor(final IntIntegerStruct integer1) {
 			super(integer1);
 		}
 
@@ -1647,9 +1719,19 @@ public final class IntIntegerStruct extends BuiltInClassStruct implements Intege
 		}
 	}
 
+	/**
+	 * {@link IntegerStruct.LogXorVisitor} for computing bitwise exclusive-or results for {@link IntIntegerStruct}s.
+	 */
 	private static final class IntIntegerLogXorVisitor extends IntegerStruct.LogXorVisitor<IntIntegerStruct> {
 
-		IntIntegerLogXorVisitor(final IntIntegerStruct integer1) {
+		/**
+		 * Private constructor to make a new instance of an IntIntegerLogXorVisitor with the provided {@link
+		 * IntIntegerStruct}.
+		 *
+		 * @param integer1
+		 * 		the first argument in the bitwise exclusive-or operation
+		 */
+		private IntIntegerLogXorVisitor(final IntIntegerStruct integer1) {
 			super(integer1);
 		}
 
@@ -1675,9 +1757,19 @@ public final class IntIntegerStruct extends BuiltInClassStruct implements Intege
 		}
 	}
 
+	/**
+	 * {@link IntegerStruct.LogBitPVisitor} for testing the active bit by index for {@link IntIntegerStruct}s.
+	 */
 	private static final class IntIntegerLogBitPVisitor extends IntegerStruct.LogBitPVisitor<IntIntegerStruct> {
 
-		IntIntegerLogBitPVisitor(final IntIntegerStruct integer) {
+		/**
+		 * Private constructor to make a new instance of an IntIntegerLogBitPVisitor with the provided {@link
+		 * IntIntegerStruct}.
+		 *
+		 * @param integer
+		 * 		the {@link IntIntegerStruct} to perform the active bit by index test
+		 */
+		private IntIntegerLogBitPVisitor(final IntIntegerStruct integer) {
 			super(integer);
 		}
 

@@ -72,6 +72,10 @@ public class RatioStruct extends BuiltInClassStruct implements RationalStruct {
 		return bigFraction;
 	}
 
+	public double doubleValue() {
+		return bigFraction.doubleValue();
+	}
+
 	/**
 	 * {@inheritDoc}
 	 * <p>
@@ -481,14 +485,9 @@ public class RatioStruct extends BuiltInClassStruct implements RationalStruct {
 		return new Aprational(apintNumerator, apintDenominator);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * <p>
-	 * Returns {@link #ZERO} as a '0' RatioStruct value.
-	 */
 	@Override
-	public RealStruct zeroValue() {
-		return ZERO;
+	public FloatStruct coerceRealToFloat() {
+		return FloatStruct.valueOf(bigDecimalValue());
 	}
 
 	/**
@@ -1298,31 +1297,7 @@ public class RatioStruct extends BuiltInClassStruct implements RationalStruct {
 		 * IntegerStruct} as the {@code divisor}.
 		 */
 		@Override
-		public QuotientRemainderResult quotientRemainder(final IntIntegerStruct divisor, final RoundingMode roundingMode,
-		                                                 final boolean isQuotientFloat) {
-			return ratioQuotientRemainder(divisor, roundingMode, isQuotientFloat);
-		}
-
-		/**
-		 * {@inheritDoc}
-		 * <p>
-		 * Computes the quotient and remainder results for a {@link RatioStruct} as the {@code real} and an {@link
-		 * IntegerStruct} as the {@code divisor}.
-		 */
-		@Override
-		public QuotientRemainderResult quotientRemainder(final LongIntegerStruct divisor, final RoundingMode roundingMode,
-		                                                 final boolean isQuotientFloat) {
-			return ratioQuotientRemainder(divisor, roundingMode, isQuotientFloat);
-		}
-
-		/**
-		 * {@inheritDoc}
-		 * <p>
-		 * Computes the quotient and remainder results for a {@link RatioStruct} as the {@code real} and an {@link
-		 * IntegerStruct} as the {@code divisor}.
-		 */
-		@Override
-		public QuotientRemainderResult quotientRemainder(final BigIntegerStruct divisor, final RoundingMode roundingMode,
+		public QuotientRemainderResult quotientRemainder(final IntegerStruct divisor, final RoundingMode roundingMode,
 		                                                 final boolean isQuotientFloat) {
 			return ratioQuotientRemainder(divisor, roundingMode, isQuotientFloat);
 		}

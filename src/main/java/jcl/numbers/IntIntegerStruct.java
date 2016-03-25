@@ -492,6 +492,9 @@ public final class IntIntegerStruct extends BuiltInClassStruct implements Intege
 
 	@Override
 	public NumberStruct reciprocal() {
+		if (i == 1) {
+			return this;
+		}
 		return new RatioStruct(BigInteger.ONE, bigIntegerValue());
 	}
 

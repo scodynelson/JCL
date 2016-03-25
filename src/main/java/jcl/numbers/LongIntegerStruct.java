@@ -399,6 +399,9 @@ public final class LongIntegerStruct extends BuiltInClassStruct implements Integ
 
 	@Override
 	public NumberStruct reciprocal() {
+		if (l == 1L) {
+			return this;
+		}
 		return new RatioStruct(BigInteger.ONE, bigIntegerValue());
 	}
 

@@ -31,8 +31,9 @@ public interface RationalStruct extends RealStruct {
 	}
 
 	static RationalStruct makeRational(final BigFraction bigFraction) {
-		final BigInteger numerator = bigFraction.getNumerator();
-		final BigInteger denominator = bigFraction.getDenominator();
+		final BigFraction reduced = bigFraction.reduce();
+		final BigInteger numerator = reduced.getNumerator();
+		final BigInteger denominator = reduced.getDenominator();
 		return makeRational(numerator, denominator);
 	}
 

@@ -1050,6 +1050,8 @@ public interface RealStruct extends NumberStruct {
 		}
 
 		protected static NumberStruct exptFloatRatioNew(final double x, final double y) {
+			// TODO: BigDecimal version???
+
 			double result = StrictMath.pow(x, y);
 			if (Double.isNaN(result)) {
 				if (x < 0) {

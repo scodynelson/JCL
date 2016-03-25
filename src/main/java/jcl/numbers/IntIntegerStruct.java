@@ -495,7 +495,7 @@ public final class IntIntegerStruct extends BuiltInClassStruct implements Intege
 		if (i == 1) {
 			return this;
 		}
-		return new RatioStruct(BigInteger.ONE, bigIntegerValue());
+		return new RatioStruct(BigInteger.ONE, BigInteger.valueOf(i));
 	}
 
 	// HashCode / Equals
@@ -773,22 +773,22 @@ public final class IntIntegerStruct extends BuiltInClassStruct implements Intege
 
 		@Override
 		public RealStruct divide(final IntIntegerStruct number2) {
-			final BigInteger bigInteger1 = number1.bigIntegerValue();
-			final BigInteger bigInteger2 = number2.bigIntegerValue();
+			final BigInteger bigInteger1 = BigInteger.valueOf(number1.i);
+			final BigInteger bigInteger2 = BigInteger.valueOf(number2.i);
 			return RationalStruct.makeRational(bigInteger1, bigInteger2);
 		}
 
 		@Override
 		public RealStruct divide(final LongIntegerStruct number2) {
-			final BigInteger bigInteger1 = number1.bigIntegerValue();
-			final BigInteger bigInteger2 = number2.bigIntegerValue();
+			final BigInteger bigInteger1 = BigInteger.valueOf(number1.i);
+			final BigInteger bigInteger2 = BigInteger.valueOf(number2.l);
 			return RationalStruct.makeRational(bigInteger1, bigInteger2);
 		}
 
 		@Override
 		public RealStruct divide(final BigIntegerStruct number2) {
-			final BigInteger bigInteger1 = number1.bigIntegerValue();
-			final BigInteger bigInteger2 = number2.bigIntegerValue();
+			final BigInteger bigInteger1 = BigInteger.valueOf(number1.i);
+			final BigInteger bigInteger2 = number2.bigInteger;
 			return RationalStruct.makeRational(bigInteger1, bigInteger2);
 		}
 
@@ -1168,7 +1168,7 @@ public final class IntIntegerStruct extends BuiltInClassStruct implements Intege
 			} catch (final MathArithmeticException ignore) {
 			}
 
-			final BigInteger baseBigInteger = base.bigIntegerValue();
+			final BigInteger baseBigInteger = BigInteger.valueOf(base.i);
 			final BigInteger pow = ArithmeticUtils.pow(baseBigInteger, power.i);
 			return IntegerStruct.valueOf(pow);
 		}
@@ -1191,7 +1191,7 @@ public final class IntIntegerStruct extends BuiltInClassStruct implements Intege
 			} catch (final MathArithmeticException ignore) {
 			}
 
-			final BigInteger baseBigInteger = base.bigIntegerValue();
+			final BigInteger baseBigInteger = BigInteger.valueOf(base.i);
 			final BigInteger pow = ArithmeticUtils.pow(baseBigInteger, power.l);
 			return IntegerStruct.valueOf(pow);
 		}
@@ -1202,7 +1202,7 @@ public final class IntIntegerStruct extends BuiltInClassStruct implements Intege
 				return exptInteger(base, power);
 			}
 
-			final BigInteger baseBigInteger = base.bigIntegerValue();
+			final BigInteger baseBigInteger = BigInteger.valueOf(base.i);
 			final BigInteger powerBigInteger = power.bigInteger;
 			final BigInteger pow = ArithmeticUtils.pow(baseBigInteger, powerBigInteger);
 			return IntegerStruct.valueOf(pow);
@@ -1284,12 +1284,20 @@ public final class IntIntegerStruct extends BuiltInClassStruct implements Intege
 
 		@Override
 		public IntegerStruct lcm(final IntIntegerStruct integer2) {
+			if (integer1.zerop() || integer2.zerop()) {
+				return ZERO;
+			}
+
 			final int lcm = ArithmeticUtils.lcm(integer1.i, integer2.i);
 			return valueOf(lcm);
 		}
 
 		@Override
 		public IntegerStruct lcm(final LongIntegerStruct integer2) {
+			if (integer1.zerop() || integer2.zerop()) {
+				return ZERO;
+			}
+
 			final long lcm = ArithmeticUtils.lcm(integer1.i, integer2.l);
 			return IntegerStruct.valueOf(lcm);
 		}

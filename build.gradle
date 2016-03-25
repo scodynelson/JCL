@@ -94,6 +94,8 @@ String commonsCollectionsVersion = '4.1'
 String commonsIoVersion = '2.4'
 String commonsPrimitivesVersion = '1.0'
 
+String guavaVersion = '19.0'
+
 String lombokVersion = '1.16.6'
 
 String apfloatVersion = '1.8.2'
@@ -114,6 +116,8 @@ dependencies {
 	compile("org.apache.commons:commons-collections4:${commonsCollectionsVersion}")
 	compile("commons-io:commons-io:${commonsIoVersion}")
 	compile("commons-primitives:commons-primitives:${commonsPrimitivesVersion}")
+
+	compile("com.google.guava:guava:${guavaVersion}")
 
 	compile("org.projectlombok:lombok:${lombokVersion}")
 

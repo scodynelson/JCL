@@ -23,6 +23,7 @@
     <orderEntry type="library" name="Gradle: org.apache.commons:commons-collections4:4.1" level="project" />
     <orderEntry type="library" name="Gradle: commons-io:commons-io:2.4" level="project" />
     <orderEntry type="library" name="Gradle: commons-primitives:commons-primitives:1.0" level="project" />
+    <orderEntry type="library" name="Gradle: com.google.guava:guava:19.0" level="project" />
     <orderEntry type="library" name="Gradle: org.projectlombok:lombok:1.16.6" level="project" />
     <orderEntry type="library" name="Gradle: org.apfloat:apfloat:1.8.2" level="project" />
     <orderEntry type="library" name="Gradle: com.ibm.icu:icu4j:56.1" level="project" />

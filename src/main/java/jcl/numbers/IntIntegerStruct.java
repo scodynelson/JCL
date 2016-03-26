@@ -7,16 +7,18 @@ package jcl.numbers;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.MathContext;
+import java.math.RoundingMode;
 import java.util.stream.IntStream;
 
+import com.google.common.math.IntMath;
 import jcl.classes.BuiltInClassStruct;
+import jcl.conditions.exceptions.DivisionByZeroException;
 import jcl.types.FixnumType;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.math3.exception.MathArithmeticException;
 import org.apache.commons.math3.fraction.BigFraction;
 import org.apache.commons.math3.util.ArithmeticUtils;
-import org.apache.commons.math3.util.FastMath;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -260,8 +262,7 @@ public final class IntIntegerStruct extends BuiltInClassStruct implements Intege
 
 	@Override
 	public IntegerStruct logNot() {
-		final int not = ~i;
-		return IntegerStruct.valueOf(not);
+		return IntegerStruct.valueOf(~i);
 	}
 
 	@Override
@@ -312,10 +313,9 @@ public final class IntIntegerStruct extends BuiltInClassStruct implements Intege
 
 	@Override
 	public IntegerStruct integerLength() {
-		// TODO: is this the best way??
-		final double log2 = FastMath.log(i, 2);
-		final Double ceil = StrictMath.ceil(log2);
-		return IntegerStruct.valueOf(ceil.longValue());
+		final int correctedI = (i < 0) ? -i : (i + 1);
+		final int bitLength = IntMath.log2(correctedI, RoundingMode.CEILING);
+		return valueOf(bitLength);
 	}
 
 	@Override
@@ -330,11 +330,8 @@ public final class IntIntegerStruct extends BuiltInClassStruct implements Intege
 
 	@Override
 	public IntegerStruct isqrt() {
-		final double sqrt = StrictMath.sqrt(i);
-		final Double floor = StrictMath.floor(sqrt);
-		// NOTE: a root can only be less than the original value. Since the original value was an int,
-		//          the result will be an int.
-		return valueOf(floor.intValue());
+		final int sqrtFloor = IntMath.sqrt(i, RoundingMode.FLOOR);
+		return valueOf(sqrtFloor);
 	}
 
 	/*
@@ -492,6 +489,9 @@ public final class IntIntegerStruct extends BuiltInClassStruct implements Intege
 
 	@Override
 	public NumberStruct reciprocal() {
+		if (i == 0) {
+			throw new DivisionByZeroException("Division by zero.");
+		}
 		if (i == 1) {
 			return this;
 		}
@@ -1203,8 +1203,7 @@ public final class IntIntegerStruct extends BuiltInClassStruct implements Intege
 			}
 
 			final BigInteger baseBigInteger = BigInteger.valueOf(base.i);
-			final BigInteger powerBigInteger = power.bigInteger;
-			final BigInteger pow = ArithmeticUtils.pow(baseBigInteger, powerBigInteger);
+			final BigInteger pow = ArithmeticUtils.pow(baseBigInteger, power.bigInteger);
 			return IntegerStruct.valueOf(pow);
 		}
 

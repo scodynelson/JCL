@@ -7,15 +7,18 @@ package jcl.numbers;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.MathContext;
+import java.math.RoundingMode;
 
+import com.google.common.math.LongMath;
 import jcl.classes.BuiltInClassStruct;
+import jcl.conditions.exceptions.DivisionByZeroException;
 import jcl.types.BignumType;
+import jcl.util.NumberUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.math3.exception.MathArithmeticException;
 import org.apache.commons.math3.fraction.BigFraction;
 import org.apache.commons.math3.util.ArithmeticUtils;
-import org.apache.commons.math3.util.FastMath;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -64,9 +67,10 @@ public final class LongIntegerStruct extends BuiltInClassStruct implements Integ
 
 	@Override
 	public int intValue() {
-		LOGGER.warn("Possible loss of precision.");
-		final Long val = l;
-		return val.intValue();
+		if (!NumberUtils.longFitsInInt(l)) {
+			LOGGER.warn("Possible loss of precision.");
+		}
+		return NumberUtils.longToInt(l);
 	}
 
 	@Override
@@ -181,8 +185,7 @@ public final class LongIntegerStruct extends BuiltInClassStruct implements Integ
 
 	@Override
 	public IntegerStruct logNot() {
-		final long not = ~l;
-		return IntegerStruct.valueOf(not);
+		return IntegerStruct.valueOf(~l);
 	}
 
 	@Override
@@ -233,10 +236,9 @@ public final class LongIntegerStruct extends BuiltInClassStruct implements Integ
 
 	@Override
 	public IntegerStruct integerLength() {
-		// TODO: is this the best way??
-		final double log2 = FastMath.log(l, 2);
-		final Double ceil = Math.ceil(log2);
-		return IntegerStruct.valueOf(ceil.longValue());
+		final long correctedL = (l < 0) ? -l : (l + 1L);
+		final long bitLength = LongMath.log2(correctedL, RoundingMode.CEILING);
+		return IntegerStruct.valueOf(bitLength);
 	}
 
 	@Override
@@ -251,9 +253,8 @@ public final class LongIntegerStruct extends BuiltInClassStruct implements Integ
 
 	@Override
 	public IntegerStruct isqrt() {
-		final double sqrt = Math.sqrt(l);
-		final Double floor = Math.floor(sqrt);
-		return IntegerStruct.valueOf(floor.longValue());
+		final long sqrtFloor = LongMath.sqrt(l, RoundingMode.FLOOR);
+		return IntegerStruct.valueOf(sqrtFloor);
 	}
 
 	/*
@@ -307,12 +308,12 @@ public final class LongIntegerStruct extends BuiltInClassStruct implements Integ
 
 	@Override
 	public boolean plusp() {
-		return l > 0;
+		return l > 0L;
 	}
 
 	@Override
 	public boolean minusp() {
-		return l < 0;
+		return l < 0L;
 	}
 
 	/*
@@ -381,12 +382,12 @@ public final class LongIntegerStruct extends BuiltInClassStruct implements Integ
 
 	@Override
 	public boolean zerop() {
-		return l == 0;
+		return l == 0L;
 	}
 
 	@Override
 	public RealStruct abs() {
-		if (l >= 0) {
+		if (l >= 0L) {
 			return this;
 		}
 		return negation();
@@ -399,6 +400,9 @@ public final class LongIntegerStruct extends BuiltInClassStruct implements Integ
 
 	@Override
 	public NumberStruct reciprocal() {
+		if (l == 0L) {
+			throw new DivisionByZeroException("Division by zero.");
+		}
 		if (l == 1L) {
 			return this;
 		}
@@ -1101,8 +1105,7 @@ public final class LongIntegerStruct extends BuiltInClassStruct implements Integ
 			}
 
 			final BigInteger baseBigInteger = BigInteger.valueOf(base.l);
-			final BigInteger powerBigInteger = power.bigInteger;
-			final BigInteger pow = ArithmeticUtils.pow(baseBigInteger, powerBigInteger);
+			final BigInteger pow = ArithmeticUtils.pow(baseBigInteger, power.bigInteger);
 			return IntegerStruct.valueOf(pow);
 		}
 

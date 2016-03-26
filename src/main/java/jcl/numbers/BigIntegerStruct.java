@@ -7,16 +7,17 @@ package jcl.numbers;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.MathContext;
+import java.math.RoundingMode;
 
+import com.google.common.math.BigIntegerMath;
 import jcl.classes.BuiltInClassStruct;
+import jcl.conditions.exceptions.DivisionByZeroException;
 import jcl.types.BignumType;
+import jcl.util.NumberUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.math3.fraction.BigFraction;
 import org.apache.commons.math3.util.ArithmeticUtils;
-import org.apfloat.Apfloat;
-import org.apfloat.ApfloatMath;
-import org.apfloat.Apint;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -256,13 +257,9 @@ public final class BigIntegerStruct extends BuiltInClassStruct implements Intege
 	}
 
 	@Override
-	public BigIntegerStruct isqrt() {
-		// TODO
-		final Apfloat apfloat = apfloatValue();
-		final Apfloat sqrt = ApfloatMath.sqrt(apfloat);
-		final Apint floor = sqrt.floor();
-		final BigInteger floorBigInteger = floor.toBigInteger();
-		return valueOf(floorBigInteger);
+	public IntegerStruct isqrt() {
+		final BigInteger sqrtFloor = BigIntegerMath.sqrt(bigInteger, RoundingMode.FLOOR);
+		return IntegerStruct.valueOf(sqrtFloor);
 	}
 
 	/*
@@ -271,8 +268,8 @@ public final class BigIntegerStruct extends BuiltInClassStruct implements Intege
 
 	@Override
 	public FloatStruct coerceRealToFloat() {
-		// TODO
-		return FloatStruct.valueOf(bigDecimalValue());
+		final BigDecimal bigDecimal = NumberUtils.bigDecimalValue(bigIntegerValue());
+		return FloatStruct.valueOf(bigDecimal);
 	}
 
 	@Override
@@ -409,6 +406,9 @@ public final class BigIntegerStruct extends BuiltInClassStruct implements Intege
 
 	@Override
 	public NumberStruct reciprocal() {
+		if (BigInteger.ZERO.equals(bigInteger)) {
+			throw new DivisionByZeroException("Division by zero.");
+		}
 		if (BigInteger.ONE.equals(bigInteger)) {
 			return this;
 		}
@@ -1312,9 +1312,7 @@ public final class BigIntegerStruct extends BuiltInClassStruct implements Intege
 			if (count.zerop()) {
 				return integer;
 			}
-			LOGGER.warn("Possible loss of precision.");
-			final Long val = count.l;
-			final int countI = val.intValue();
+			final int countI = count.intValue();
 
 			// NOTE: shiftLeft will automatically take care of shiftRight based on the sign of countInt
 			final BigInteger shiftedBigInteger = integer.bigInteger.shiftLeft(countI);

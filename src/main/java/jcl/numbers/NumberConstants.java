@@ -9,6 +9,7 @@ import java.math.BigInteger;
 
 import jcl.packages.GlobalPackageStruct;
 import jcl.symbols.ConstantStruct;
+import org.apache.commons.math3.util.Precision;
 
 public interface NumberConstants {
 
@@ -31,6 +32,8 @@ public interface NumberConstants {
 
 	ConstantStruct<IntegerStruct> MOST_POSITIVE_FIXNUM = new ConstantStruct<>("MOST-POSITIVE-FIXNUM", GlobalPackageStruct.COMMON_LISP, IntegerStruct.valueOf(BigInteger.valueOf(Integer.MAX_VALUE)));
 	ConstantStruct<IntegerStruct> MOST_NEGATIVE_FIXNUM = new ConstantStruct<>("MOST-NEGATIVE-FIXNUM", GlobalPackageStruct.COMMON_LISP, IntegerStruct.valueOf(BigInteger.valueOf(Integer.MIN_VALUE)));
+
+	Object EPSILON_PLACEHOLDER = Precision.EPSILON;
 
 	ConstantStruct<FloatStruct> MOST_POSITIVE_SHORT_FLOAT = new ConstantStruct<>("MOST-POSITIVE-SHORT-FLOAT", GlobalPackageStruct.COMMON_LISP, FloatStruct.valueOf(Double.MAX_VALUE));
 	ConstantStruct<FloatStruct> LEAST_POSITIVE_SHORT_FLOAT = new ConstantStruct<>("LEAST-POSITIVE-SHORT-FLOAT", GlobalPackageStruct.COMMON_LISP, FloatStruct.valueOf(Double.MIN_VALUE));

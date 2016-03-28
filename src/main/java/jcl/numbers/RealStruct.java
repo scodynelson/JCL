@@ -955,8 +955,26 @@ public interface RealStruct extends NumberStruct {
 			return quotientRemainder(divisor, RoundingMode.HALF_EVEN, true);
 		}
 
-		public abstract QuotientRemainderResult quotientRemainder(IntegerStruct divisor, RoundingMode roundingMode,
-		                                                          boolean isQuotientFloat);
+		public QuotientRemainderResult quotientRemainder(final IntegerStruct divisor, final RoundingMode roundingMode, final boolean isQuotientFloat) {
+			final BigDecimal realBigDecimal = real.bigDecimalValue();
+			final BigDecimal divisorBigDecimal = divisor.bigDecimalValue();
+
+			final BigDecimal quotient = realBigDecimal.divide(divisorBigDecimal, 0, roundingMode);
+			final BigDecimal remainder = realBigDecimal.subtract(divisorBigDecimal.multiply(quotient));
+
+			final RealStruct quotientReal;
+			if (isQuotientFloat) {
+				quotientReal = FloatStruct.valueOf(quotient);
+			} else {
+				final BigInteger quotientBigInteger = quotient.toBigInteger();
+				quotientReal = IntegerStruct.valueOf(quotientBigInteger);
+			}
+
+			final BigInteger remainderBigInteger = remainder.toBigInteger();
+			final IntegerStruct remainderInteger = IntegerStruct.valueOf(remainderBigInteger);
+
+			return new QuotientRemainderResult(quotientReal, remainderInteger);
+		}
 
 		public QuotientRemainderResult quotientRemainder(final FloatStruct divisor, final RoundingMode roundingMode,
 		                                                 final boolean isQuotientFloat) {

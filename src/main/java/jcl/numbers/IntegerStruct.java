@@ -6,9 +6,9 @@ package jcl.numbers;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.math.RoundingMode;
 import java.util.List;
 
+import jcl.util.NumberUtils;
 import org.apfloat.Apfloat;
 import org.apfloat.Apint;
 
@@ -42,17 +42,44 @@ public interface IntegerStruct extends RationalStruct {
 	 */
 	IntegerStruct MINUS_ONE = IntIntegerStruct.valueOf(-1);
 
+	/**
+	 * Returns a new IntegerStruct representing the provided {@code int}. This will subclass appropriately to an {@link
+	 * IntIntegerStruct}, which is the best data structure to hold an {@code int} value.
+	 *
+	 * @param i
+	 * 		the {@link int} representing the new IntegerStruct
+	 *
+	 * @return a new IntegerStruct representing the provided {@link int}
+	 */
 	static IntegerStruct valueOf(final int i) {
 		return IntIntegerStruct.valueOf(i);
 	}
 
+	/**
+	 * Returns a new IntegerStruct representing the provided {@code long}. This will subclass appropriately to the
+	 * IntegerStruct implementation that would most accurately hold the integer data structure.
+	 *
+	 * @param l
+	 * 		the {@code long} representing the new IntegerStruct
+	 *
+	 * @return a new IntegerStruct representing the provided {@code String}
+	 */
 	static IntegerStruct valueOf(final long l) {
-		if ((l <= Integer.MAX_VALUE) || (l >= Integer.MIN_VALUE)) {
-			return IntIntegerStruct.valueOf(Long.valueOf(l).intValue());
+		if (NumberUtils.longFitsInInt(l)) {
+			return IntIntegerStruct.valueOf(NumberUtils.longToInt(l));
 		}
 		return LongIntegerStruct.valueOf(l);
 	}
 
+	/**
+	 * Returns a new IntegerStruct representing the provided {@link BigInteger}. This will subclass appropriately to
+	 * the IntegerStruct implementation that would most accurately hold the integer data structure.
+	 *
+	 * @param bigInteger
+	 * 		the {@link BigInteger} representing the new IntegerStruct
+	 *
+	 * @return a new IntegerStruct representing the provided {@link BigInteger}
+	 */
 	static IntegerStruct valueOf(final BigInteger bigInteger) {
 		try {
 			final int i = bigInteger.intValueExact();
@@ -67,6 +94,15 @@ public interface IntegerStruct extends RationalStruct {
 		return BigIntegerStruct.valueOf(bigInteger);
 	}
 
+	/**
+	 * Returns a new IntegerStruct representing the provided {@link String}. This will subclass appropriately to the
+	 * IntegerStruct implementation that would most accurately hold the integer data structure.
+	 *
+	 * @param s
+	 * 		the {@link String} representing the new IntegerStruct
+	 *
+	 * @return a new IntegerStruct representing the provided {@link String}
+	 */
 	static IntegerStruct valueOf(final String s) {
 		try {
 			final int i = Integer.parseInt(s);
@@ -82,120 +118,38 @@ public interface IntegerStruct extends RationalStruct {
 		return valueOf(bigInteger);
 	}
 
-	@Deprecated
-	default BigInteger getBigInteger() {
-		return bigIntegerValue();
-	}
-
-	@Deprecated
-	static IntegerStruct valueOf(final Apfloat apfloat) {
-		return IntIntegerStruct.valueOf(apfloat.intValue());
-	}
-
-	@Deprecated
-	@Override
-	default BigDecimal bigDecimalValue() {
-		return new BigDecimal(bigIntegerValue(), 1).multiply(BigDecimal.TEN);
-	}
-
-	@Deprecated
-	@Override
-	default Apfloat apfloatValue() {
-		return new Apint(bigIntegerValue());
-	}
-
+	/**
+	 * Returns this IntegerStruct as a {@code int} value.
+	 *
+	 * @return this IntegerStruct as a {@code int} value
+	 */
 	int intValue();
 
+	/**
+	 * Returns this IntegerStruct as a {@code long} value.
+	 *
+	 * @return this IntegerStruct as a {@code long} value
+	 */
 	long longValue();
 
+	/**
+	 * Returns this IntegerStruct as a {@link BigInteger} value.
+	 *
+	 * @return this IntegerStruct as a {@link BigInteger} value
+	 */
 	BigInteger bigIntegerValue();
 
 	/**
-	 * Returns true if this IntegerStruct is even (divisible by two); otherwise, returns false.
+	 * Returns the greatest common divisor of the provided IntegerStructs. If the number of IntegerStructs provided is
+	 * 0, {@link #ZERO} is returned.
 	 *
-	 * @return true if this IntegerStruct is even (divisible by two); otherwise, false
-	 */
-	boolean evenp();
-
-	/**
-	 * Returns true if this IntegerStruct is odd (not divisible by two); otherwise, returns false.
+	 * @param integers
+	 * 		the IntegerStructs used to determine the greatest common divisor
 	 *
-	 * @return true if this IntegerStruct is odd (not divisible by two); otherwise, false
+	 * @return the greatest common divisor of the provided IntegerStructs
 	 */
-	boolean oddp();
-
-	/**
-	 * Returns the greatest IntegerStruct less than or equal to this IntegerStructs exact positive square root.
-	 *
-	 * @return the greatest IntegerStruct less than or equal to this IntegerStructs exact positive square root
-	 */
-	IntegerStruct isqrt();
-
-	/**
-	 * {@inheritDoc}
-	 * <p>
-	 * Determines the whether or not the numerical value of this IntegerStruct is zero, positive, or negative,
-	 * returning {@code this}, {@link #ONE}, or {@link #MINUS_ONE} respectively.
-	 */
-	@Override
-	default NumberStruct signum() {
-		if (zerop()) {
-			return this;
-		} else if (plusp()) {
-			return ONE;
-		} else {
-			return MINUS_ONE;
-		}
-	}
-
-	@Override
-	default RealStruct imagPart() {
-		return ZERO;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * <p>
-	 * Computes the exponential function result for this IntegerStruct as this {@code base} and the provided {@link
-	 * NumberStruct} as the {@code power}. If {@code power} is '0' and power is an IntegerStruct, {@link #ONE} is
-	 * returned. If {@code power} is '0' and power is not an IntegerStruct, {@link FloatStruct#ONE} is returned. If
-	 * this IntegerStruct is either '0' or '1', {@code this} is returned.
-	 */
-	@Override
-	default NumberStruct expt(final NumberStruct power) {
-		if (power.zerop()) {
-			if (power instanceof IntegerStruct) {
-				return ONE;
-			}
-			return FloatStruct.ONE;
-		}
-
-		if (zerop() || isEqualTo(ONE)) {
-			return this;
-		}
-
-		final ExptVisitor<?> exptVisitor = exptVisitor();
-		return power.expt(exptVisitor);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * <p>
-	 * Returns {@code this} as the numerator.
-	 */
-	@Override
-	default IntegerStruct numerator() {
-		return this;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * <p>
-	 * Returns {@link #ONE} as the denominator of IntegerStructs is always '1'.
-	 */
-	@Override
-	default IntegerStruct denominator() {
-		return ONE;
+	static IntegerStruct gcd(final List<IntegerStruct> integers) {
+		return integers.stream().reduce(ZERO, IntegerStruct::gcd);
 	}
 
 	/**
@@ -211,21 +165,34 @@ public interface IntegerStruct extends RationalStruct {
 		return integer.gcd(gcdVisitor);
 	}
 
+	/**
+	 * Returns the greatest common divisor for this IntegerStruct using the provided {@link GcdVisitor}.
+	 *
+	 * @param gcdVisitor
+	 * 		the {@link GcdVisitor} to be used in the greatest common divisor operation
+	 *
+	 * @return the greatest common divisor for this IntegerStruct using the provided {@link GcdVisitor}
+	 */
 	IntegerStruct gcd(GcdVisitor<?> gcdVisitor);
 
+	/**
+	 * Returns a new {@link GcdVisitor} with this IntegerStruct to be used in a greatest common divisor operation.
+	 *
+	 * @return a new {@link GcdVisitor} with this IntegerStruct to be used in a greatest common divisor operation
+	 */
 	GcdVisitor<?> gcdVisitor();
 
 	/**
-	 * Returns the greatest common divisor of the provided IntegerStructs. If the number of IntegerStructs provided is
-	 * 0, {@link #ZERO} is returned.
+	 * Returns the least common multiple of the provided IntegerStructs. If the number of IntegerStructs provided is 0,
+	 * {@link #ONE} is returned.
 	 *
 	 * @param integers
-	 * 		the IntegerStructs used to determine the greatest common divisor
+	 * 		the IntegerStructs used to determine the least common multiple
 	 *
-	 * @return the greatest common divisor of the provided IntegerStructs
+	 * @return the least common multiple of the provided IntegerStructs
 	 */
-	static IntegerStruct gcd(final List<IntegerStruct> integers) {
-		return integers.stream().reduce(ZERO, IntegerStruct::gcd);
+	static IntegerStruct lcm(final List<IntegerStruct> integers) {
+		return integers.stream().reduce(ONE, IntegerStruct::lcm);
 	}
 
 	/**
@@ -242,22 +209,22 @@ public interface IntegerStruct extends RationalStruct {
 		return integer.lcm(lcmVisitor);
 	}
 
+	/**
+	 * Returns the least common multiple for this IntegerStruct using the provided {@link LcmVisitor}.
+	 *
+	 * @param lcmVisitor
+	 * 		the {@link LcmVisitor} to be used in the least common multiple operation
+	 *
+	 * @return the least common multiple for this IntegerStruct using the provided {@link LcmVisitor}
+	 */
 	IntegerStruct lcm(LcmVisitor<?> lcmVisitor);
 
-	LcmVisitor<?> lcmVisitor();
-
 	/**
-	 * Returns the least common multiple of the provided IntegerStructs. If the number of IntegerStructs provided is 0,
-	 * {@link #ONE} is returned.
+	 * Returns a new {@link LcmVisitor} with this IntegerStruct to be used in a least common multiple operation.
 	 *
-	 * @param integers
-	 * 		the IntegerStructs used to determine the least common multiple
-	 *
-	 * @return the least common multiple of the provided IntegerStructs
+	 * @return a new {@link LcmVisitor} with this IntegerStruct to be used in a least common multiple operation
 	 */
-	static IntegerStruct lcm(final List<IntegerStruct> integers) {
-		return integers.stream().reduce(ONE, IntegerStruct::lcm);
-	}
+	LcmVisitor<?> lcmVisitor();
 
 	/**
 	 * Performs the arithmetic shift operation on the binary representation of this IntegerStruct, shifting the bits
@@ -274,8 +241,23 @@ public interface IntegerStruct extends RationalStruct {
 		return count.ash(ashVisitor);
 	}
 
+	/**
+	 * Returns the arithmetic shift operation on the binary representation of this IntegerStruct using the provided
+	 * {@link AshVisitor}.
+	 *
+	 * @param ashVisitor
+	 * 		the {@link AshVisitor} to be used in the arithmetic shift operation
+	 *
+	 * @return the arithmetic shift operation on the binary representation of this IntegerStruct using the provided
+	 * {@link AshVisitor}
+	 */
 	IntegerStruct ash(AshVisitor<?> ashVisitor);
 
+	/**
+	 * Returns a new {@link AshVisitor} with this IntegerStruct to be used in an arithmetic shift operation.
+	 *
+	 * @return a new {@link AshVisitor} with this IntegerStruct to be used in an arithmetic shift operation
+	 */
 	AshVisitor<?> ashVisitor();
 
 	/**
@@ -291,8 +273,21 @@ public interface IntegerStruct extends RationalStruct {
 		return integer.logAnd(logAndVisitor);
 	}
 
+	/**
+	 * Returns the bit-wise logical 'and' of this IntegerStruct using the provided {@link LogAndVisitor}.
+	 *
+	 * @param logAndVisitor
+	 * 		the {@link LogAndVisitor} to be used in the bit-wise logical operation
+	 *
+	 * @return the bit-wise logical 'and' of this IntegerStruct using the provided {@link LogAndVisitor}
+	 */
 	IntegerStruct logAnd(LogAndVisitor<?> logAndVisitor);
 
+	/**
+	 * Returns a new {@link LogAndVisitor} with this IntegerStruct to be used in a bit-wise logical 'and' operation.
+	 *
+	 * @return a new {@link LogAndVisitor} with this IntegerStruct to be used in a bit-wise logical 'and' operation
+	 */
 	LogAndVisitor<?> logAndVisitor();
 
 	/**
@@ -321,8 +316,21 @@ public interface IntegerStruct extends RationalStruct {
 		return integer.logAndC1(logAndC1Visitor);
 	}
 
+	/**
+	 * Returns the bit-wise logical 'and' of this IntegerStruct using the provided {@link LogAndC1Visitor}.
+	 *
+	 * @param logAndC1Visitor
+	 * 		the {@link LogAndC1Visitor} to be used in the bit-wise logical operation
+	 *
+	 * @return the bit-wise logical 'and' of this IntegerStruct using the provided {@link LogAndC1Visitor}
+	 */
 	IntegerStruct logAndC1(LogAndC1Visitor<?> logAndC1Visitor);
 
+	/**
+	 * Returns a new {@link LogAndC1Visitor} with this IntegerStruct to be used in a bit-wise logical 'and' operation.
+	 *
+	 * @return a new {@link LogAndC1Visitor} with this IntegerStruct to be used in a bit-wise logical 'and' operation
+	 */
 	LogAndC1Visitor<?> logAndC1Visitor();
 
 	/**
@@ -338,9 +346,35 @@ public interface IntegerStruct extends RationalStruct {
 		return integer.logAndC2(logAndC2Visitor);
 	}
 
+	/**
+	 * Returns the bit-wise logical 'and' of this IntegerStruct using the provided {@link LogAndC2Visitor}.
+	 *
+	 * @param logAndC2Visitor
+	 * 		the {@link LogAndC2Visitor} to be used in the bit-wise logical operation
+	 *
+	 * @return the bit-wise logical 'and' of this IntegerStruct using the provided {@link LogAndC2Visitor}
+	 */
 	IntegerStruct logAndC2(LogAndC2Visitor<?> logAndC2Visitor);
 
+	/**
+	 * Returns a new {@link LogAndC2Visitor} with this IntegerStruct to be used in a bit-wise logical 'and' operation.
+	 *
+	 * @return a new {@link LogAndC2Visitor} with this IntegerStruct to be used in a bit-wise logical 'and' operation
+	 */
 	LogAndC2Visitor<?> logAndC2Visitor();
+
+	/**
+	 * Returns the bit-wise logical 'equivalence', or 'exclusive-nor' of the provided IntegerStructs. If the number
+	 * of IntegerStructs provided is 0, {@link #MINUS_ONE} is returned.
+	 *
+	 * @param integers
+	 * 		the IntegerStructs used in performing the bit-wise logical operation
+	 *
+	 * @return the bit-wise logical 'equivalence', or 'exclusive-nor' of the provided IntegerStructs
+	 */
+	static IntegerStruct logEqv(final List<IntegerStruct> integers) {
+		return integers.stream().reduce(MINUS_ONE, IntegerStruct::logEqv);
+	}
 
 	/**
 	 * Returns the bit-wise logical 'equivalence', or 'exclusive-nor' of this IntegerStruct and the provided
@@ -357,39 +391,26 @@ public interface IntegerStruct extends RationalStruct {
 		return integer.logEqv(logEqvVisitor);
 	}
 
+	/**
+	 * Returns the bit-wise logical 'equivalence', or 'exclusive-nor' of this IntegerStruct using the provided {@link
+	 * LogEqvVisitor}.
+	 *
+	 * @param logEqvVisitor
+	 * 		the {@link LogEqvVisitor} to be used in the bit-wise logical operation
+	 *
+	 * @return the bit-wise logical 'equivalence', or 'exclusive-nor' of this IntegerStruct using the provided {@link
+	 * LogEqvVisitor}
+	 */
 	IntegerStruct logEqv(LogEqvVisitor<?> logEqvVisitor);
 
+	/**
+	 * Returns a new {@link LogEqvVisitor} with this IntegerStruct to be used in a bit-wise logical 'equivalence', or
+	 * 'exclusive-nor' operation.
+	 *
+	 * @return a new {@link LogEqvVisitor} with this IntegerStruct to be used in a bit-wise logical 'equivalence', or
+	 * 'exclusive-nor' operation
+	 */
 	LogEqvVisitor<?> logEqvVisitor();
-
-	/**
-	 * Returns the bit-wise logical 'equivalence', or 'exclusive-nor' of the provided IntegerStructs. If the number
-	 * of IntegerStructs provided is 0, {@link #MINUS_ONE} is returned.
-	 *
-	 * @param integers
-	 * 		the IntegerStructs used in performing the bit-wise logical operation
-	 *
-	 * @return the bit-wise logical 'equivalence', or 'exclusive-nor' of the provided IntegerStructs
-	 */
-	static IntegerStruct logEqv(final List<IntegerStruct> integers) {
-		return integers.stream().reduce(MINUS_ONE, IntegerStruct::logEqv);
-	}
-
-	/**
-	 * Returns the bit-wise logical 'inclusive-or' of this IntegerStruct and the provided IntegerStruct.
-	 *
-	 * @param integer
-	 * 		the IntegerStruct used in performing the bit-wise logical operation
-	 *
-	 * @return the bit-wise logical 'inclusive-or' of this IntegerStruct and the provided IntegerStruct
-	 */
-	default IntegerStruct logIor(final IntegerStruct integer) {
-		final LogIorVisitor<?> logIorVisitor = logIorVisitor();
-		return integer.logIor(logIorVisitor);
-	}
-
-	IntegerStruct logIor(LogIorVisitor<?> logIorVisitor);
-
-	LogIorVisitor<?> logIorVisitor();
 
 	/**
 	 * Returns the bit-wise logical 'inclusive-or' of the provided IntegerStructs. If the number of IntegerStructs
@@ -405,6 +426,38 @@ public interface IntegerStruct extends RationalStruct {
 	}
 
 	/**
+	 * Returns the bit-wise logical 'inclusive-or' of this IntegerStruct and the provided IntegerStruct.
+	 *
+	 * @param integer
+	 * 		the IntegerStruct used in performing the bit-wise logical operation
+	 *
+	 * @return the bit-wise logical 'inclusive-or' of this IntegerStruct and the provided IntegerStruct
+	 */
+	default IntegerStruct logIor(final IntegerStruct integer) {
+		final LogIorVisitor<?> logIorVisitor = logIorVisitor();
+		return integer.logIor(logIorVisitor);
+	}
+
+	/**
+	 * Returns the bit-wise logical 'inclusive-or' of this IntegerStruct using the provided {@link LogIorVisitor}.
+	 *
+	 * @param logIorVisitor
+	 * 		the {@link LogIorVisitor} to be used in the bit-wise logical operation
+	 *
+	 * @return the bit-wise logical 'inclusive-or' of this IntegerStruct using the provided {@link LogIorVisitor}
+	 */
+	IntegerStruct logIor(LogIorVisitor<?> logIorVisitor);
+
+	/**
+	 * Returns a new {@link LogIorVisitor} with this IntegerStruct to be used in a bit-wise logical 'inclusive-or'
+	 * operation.
+	 *
+	 * @return a new {@link LogIorVisitor} with this IntegerStruct to be used in a bit-wise logical 'inclusive-or'
+	 * operation
+	 */
+	LogIorVisitor<?> logIorVisitor();
+
+	/**
 	 * Returns the bit-wise logical compliment 'and' of this IntegerStruct and the provided IntegerStruct.
 	 *
 	 * @param integer
@@ -417,8 +470,23 @@ public interface IntegerStruct extends RationalStruct {
 		return integer.logNand(logNandVisitor);
 	}
 
+	/**
+	 * Returns the bit-wise logical compliment 'and' of this IntegerStruct using the provided {@link LogNandVisitor}.
+	 *
+	 * @param logNandVisitor
+	 * 		the {@link LogNandVisitor} to be used in the bit-wise logical operation
+	 *
+	 * @return the bit-wise logical compliment 'and' of this IntegerStruct using the provided {@link LogNandVisitor}
+	 */
 	IntegerStruct logNand(LogNandVisitor<?> logNandVisitor);
 
+	/**
+	 * Returns a new {@link LogNandVisitor} with this IntegerStruct to be used in a bit-wise logical compliment 'and'
+	 * operation.
+	 *
+	 * @return a new {@link LogNandVisitor} with this IntegerStruct to be used in a bit-wise logical compliment 'and'
+	 * operation
+	 */
 	LogNandVisitor<?> logNandVisitor();
 
 	/**
@@ -434,8 +502,23 @@ public interface IntegerStruct extends RationalStruct {
 		return integer.logNor(logNorVisitor);
 	}
 
+	/**
+	 * Returns the bit-wise logical compliment 'or' of this IntegerStruct using the provided {@link LogNorVisitor}.
+	 *
+	 * @param logNorVisitor
+	 * 		the {@link LogNorVisitor} to be used in the bit-wise logical operation
+	 *
+	 * @return the bit-wise logical compliment 'or' of this IntegerStruct using the provided {@link LogNorVisitor}
+	 */
 	IntegerStruct logNor(LogNorVisitor<?> logNorVisitor);
 
+	/**
+	 * Returns a new {@link LogNorVisitor} with this IntegerStruct to be used in a bit-wise logical compliment 'or'
+	 * operation.
+	 *
+	 * @return a new {@link LogNorVisitor} with this IntegerStruct to be used in a bit-wise logical compliment 'or'
+	 * operation
+	 */
 	LogNorVisitor<?> logNorVisitor();
 
 	/**
@@ -458,8 +541,21 @@ public interface IntegerStruct extends RationalStruct {
 		return integer.logOrC1(logOrC1Visitor);
 	}
 
+	/**
+	 * Returns the bit-wise logical 'or' of this IntegerStruct using the provided {@link LogOrC1Visitor}.
+	 *
+	 * @param logOrC1Visitor
+	 * 		the {@link LogOrC1Visitor} to be used in the bit-wise logical operation
+	 *
+	 * @return the bit-wise logical 'or' of this IntegerStruct using the provided {@link LogOrC1Visitor}
+	 */
 	IntegerStruct logOrC1(LogOrC1Visitor<?> logOrC1Visitor);
 
+	/**
+	 * Returns a new {@link LogOrC1Visitor} with this IntegerStruct to be used in a bit-wise logical 'or' operation.
+	 *
+	 * @return a new {@link LogOrC1Visitor} with this IntegerStruct to be used in a bit-wise logical 'or' operation
+	 */
 	LogOrC1Visitor<?> logOrC1Visitor();
 
 	/**
@@ -475,26 +571,22 @@ public interface IntegerStruct extends RationalStruct {
 		return integer.logOrC2(logOrC2Visitor);
 	}
 
+	/**
+	 * Returns the bit-wise logical 'or' of this IntegerStruct using the provided {@link LogOrC2Visitor}.
+	 *
+	 * @param logOrC2Visitor
+	 * 		the {@link LogOrC2Visitor} to be used in the bit-wise logical operation
+	 *
+	 * @return the bit-wise logical 'or' of this IntegerStruct using the provided {@link LogOrC2Visitor}
+	 */
 	IntegerStruct logOrC2(LogOrC2Visitor<?> logOrC2Visitor);
 
-	LogOrC2Visitor<?> logOrC2Visitor();
-
 	/**
-	 * Returns the bit-wise logical 'exclusive-or' of this IntegerStruct and the provided IntegerStruct.
+	 * Returns a new {@link LogOrC2Visitor} with this IntegerStruct to be used in a bit-wise logical 'or' operation.
 	 *
-	 * @param integer
-	 * 		the IntegerStruct used in performing the bit-wise logical operation
-	 *
-	 * @return the bit-wise logical 'exclusive-or' of this IntegerStruct and the provided IntegerStruct
+	 * @return a new {@link LogOrC2Visitor} with this IntegerStruct to be used in a bit-wise logical 'or' operation
 	 */
-	default IntegerStruct logXor(final IntegerStruct integer) {
-		final LogXorVisitor<?> logXorVisitor = logXorVisitor();
-		return integer.logXor(logXorVisitor);
-	}
-
-	IntegerStruct logXor(LogXorVisitor<?> logXorVisitor);
-
-	LogXorVisitor<?> logXorVisitor();
+	LogOrC2Visitor<?> logOrC2Visitor();
 
 	/**
 	 * Returns the bit-wise logical 'exclusive-or' of the provided IntegerStructs. If the number of IntegerStructs
@@ -510,11 +602,36 @@ public interface IntegerStruct extends RationalStruct {
 	}
 
 	/**
-	 * Returns the number of bits needed to represent this IntegerStruct in binary two's-complement format.
+	 * Returns the bit-wise logical 'exclusive-or' of this IntegerStruct and the provided IntegerStruct.
 	 *
-	 * @return the number of bits needed to represent this IntegerStruct in binary two's-complement format
+	 * @param integer
+	 * 		the IntegerStruct used in performing the bit-wise logical operation
+	 *
+	 * @return the bit-wise logical 'exclusive-or' of this IntegerStruct and the provided IntegerStruct
 	 */
-	IntegerStruct integerLength();
+	default IntegerStruct logXor(final IntegerStruct integer) {
+		final LogXorVisitor<?> logXorVisitor = logXorVisitor();
+		return integer.logXor(logXorVisitor);
+	}
+
+	/**
+	 * Returns the bit-wise logical 'exclusive-or' of this IntegerStruct using the provided {@link LogXorVisitor}.
+	 *
+	 * @param logXorVisitor
+	 * 		the {@link LogXorVisitor} to be used in the bit-wise logical operation
+	 *
+	 * @return the bit-wise logical 'exclusive-or' of this IntegerStruct using the provided {@link LogXorVisitor}
+	 */
+	IntegerStruct logXor(LogXorVisitor<?> logXorVisitor);
+
+	/**
+	 * Returns a new {@link LogXorVisitor} with this IntegerStruct to be used in a bit-wise logical 'exclusive-or'
+	 * operation.
+	 *
+	 * @return a new {@link LogXorVisitor} with this IntegerStruct to be used in a bit-wise logical 'exclusive-or'
+	 * operation
+	 */
+	LogXorVisitor<?> logXorVisitor();
 
 	/**
 	 * Returns true if the bit in this IntegerStruct whose index is {@code index} is a one-bit; otherwise, returns
@@ -530,8 +647,24 @@ public interface IntegerStruct extends RationalStruct {
 		return index.logBitP(logBitPVisitor);
 	}
 
+	/**
+	 * Returns true if the bit in this IntegerStruct whose index is {@code index} is a one-bit using the provided
+	 * {@link
+	 * LogBitPVisitor}.
+	 *
+	 * @param logBitPVisitor
+	 * 		the {@link LogBitPVisitor} to be used in the active bit test operation
+	 *
+	 * @return true if the bit in this IntegerStruct whose index is {@code index} is a one-bit using the provided {@link
+	 * LogBitPVisitor}
+	 */
 	boolean logBitP(LogBitPVisitor<?> logBitPVisitor);
 
+	/**
+	 * Returns a new {@link LogBitPVisitor} with this IntegerStruct to be used in an active bit test operation.
+	 *
+	 * @return a new {@link LogBitPVisitor} with this IntegerStruct to be used in an active bit test' operation
+	 */
 	LogBitPVisitor<?> logBitPVisitor();
 
 	/**
@@ -557,6 +690,62 @@ public interface IntegerStruct extends RationalStruct {
 		final IntegerStruct and = logAnd(integer);
 		return !and.zerop();
 	}
+
+	/**
+	 * Returns the number of bits needed to represent this IntegerStruct in binary two's-complement format.
+	 *
+	 * @return the number of bits needed to represent this IntegerStruct in binary two's-complement format
+	 */
+	IntegerStruct integerLength();
+
+	/**
+	 * Returns true if this IntegerStruct is even (divisible by two); otherwise, returns false.
+	 *
+	 * @return true if this IntegerStruct is even (divisible by two); otherwise, false
+	 */
+	boolean evenp();
+
+	/**
+	 * Returns true if this IntegerStruct is odd (not divisible by two); otherwise, returns false.
+	 *
+	 * @return true if this IntegerStruct is odd (not divisible by two); otherwise, false
+	 */
+	boolean oddp();
+
+	/**
+	 * Returns the greatest IntegerStruct less than or equal to this IntegerStructs exact positive square root.
+	 *
+	 * @return the greatest IntegerStruct less than or equal to this IntegerStructs exact positive square root
+	 */
+	IntegerStruct isqrt();
+
+	/*
+		RationalStruct
+	 */
+
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Returns {@code this} as the numerator.
+	 */
+	@Override
+	default IntegerStruct numerator() {
+		return this;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Returns {@link #ONE} as the denominator of IntegerStructs is always '1'.
+	 */
+	@Override
+	default IntegerStruct denominator() {
+		return ONE;
+	}
+
+	/*
+		RealStruct
+	 */
 
 	/**
 	 * {@inheritDoc}
@@ -663,120 +852,115 @@ public interface IntegerStruct extends RationalStruct {
 
 	@Override
 	default QuotientRemainderVisitor<?> quotientRemainderVisitor() {
-		return new IntegerQuotientRemainderVisitor(this);
+		return new RationalQuotientRemainderVisitor<>(this);
+	}
+
+	/*
+		NumberStruct
+	 */
+
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Returns {@link #ONE} as the imaginary part of IntegerStructs is always '1'.
+	 */
+	@Override
+	default RealStruct imagPart() {
+		return ZERO;
 	}
 
 	/**
-	 * {@link IntegerQuotientRemainderVisitor} for computing quotient and remainder results for {@link
-	 * IntegerStruct}s.
+	 * {@inheritDoc}
+	 * <p>
+	 * Determines the whether or not the numerical value of this IntegerStruct is zero, positive, or negative,
+	 * returning {@code this}, {@link #ONE}, or {@link #MINUS_ONE} respectively.
 	 */
-	final class IntegerQuotientRemainderVisitor extends RationalStruct.RationalQuotientRemainderVisitor<IntegerStruct> {
-
-		/**
-		 * Private constructor to make a new instance of an IntegerQuotientRemainderVisitor with the provided
-		 * {@link IntegerStruct}.
-		 *
-		 * @param real
-		 * 		the real argument in the computational quotient and remainder operation
-		 */
-		private IntegerQuotientRemainderVisitor(final IntegerStruct real) {
-			super(real);
-		}
-
-		@Override
-		public QuotientRemainderResult quotientRemainder(final IntegerStruct divisor, final RoundingMode roundingMode, final boolean isQuotientFloat) {
-			final BigDecimal realBigDecimal = real.bigDecimalValue();
-			final BigDecimal divisorBigDecimal = divisor.bigDecimalValue();
-
-			final BigDecimal quotient = realBigDecimal.divide(divisorBigDecimal, 0, roundingMode);
-			final BigDecimal remainder = realBigDecimal.subtract(divisorBigDecimal.multiply(quotient));
-
-			final RealStruct quotientReal;
-			if (isQuotientFloat) {
-				quotientReal = FloatStruct.valueOf(quotient);
-			} else {
-				final BigInteger quotientBigInteger = quotient.toBigInteger();
-				quotientReal = IntegerStruct.valueOf(quotientBigInteger);
-			}
-
-			final BigInteger remainderBigInteger = remainder.toBigInteger();
-			final IntegerStruct remainderInteger = IntegerStruct.valueOf(remainderBigInteger);
-
-			return new QuotientRemainderResult(quotientReal, remainderInteger);
-		}
-
-		@Override
-		public QuotientRemainderResult quotientRemainder(final FloatStruct divisor, final RoundingMode roundingMode, final boolean isQuotientFloat) {
-			final BigDecimal realBigDecimal = real.bigDecimalValue();
-			final BigDecimal divisorBigDecimal = divisor.bigDecimalValue();
-
-			final BigDecimal quotient = realBigDecimal.divide(divisorBigDecimal, 0, roundingMode);
-			final BigDecimal remainder = realBigDecimal.subtract(divisorBigDecimal.multiply(quotient));
-
-			final RealStruct quotientReal;
-			if (isQuotientFloat) {
-				quotientReal = getFloatQuotient(divisor, quotient);
-			} else {
-				final BigInteger quotientBigInteger = quotient.toBigInteger();
-				quotientReal = IntegerStruct.valueOf(quotientBigInteger);
-			}
-
-			final FloatStruct remainderFloat = FloatStruct.valueOf(remainder);
-			return new QuotientRemainderResult(quotientReal, remainderFloat);
-		}
-
-		@Override
-		public QuotientRemainderResult quotientRemainder(final RatioStruct divisor, final RoundingMode roundingMode, final boolean isQuotientFloat) {
-			final IntegerStruct rationalNumerator = real.numerator();
-			final BigInteger rationalNumeratorBigInteger = rationalNumerator.getBigInteger();
-			final IntegerStruct rationalDenominator = real.denominator();
-			final BigInteger rationalDenominatorBigInteger = rationalDenominator.getBigInteger();
-
-			final IntegerStruct divisorNumerator = divisor.numerator();
-			final BigInteger divisorNumeratorBigInteger = divisorNumerator.getBigInteger();
-			final IntegerStruct divisorDenominator = divisor.denominator();
-			final BigInteger divisorDenominatorBigInteger = divisorDenominator.getBigInteger();
-
-			// Invert and multiply
-			final BigInteger multipliedNumerator = rationalNumeratorBigInteger.multiply(divisorDenominatorBigInteger);
-			final BigInteger multipliedDenominator = rationalDenominatorBigInteger.multiply(divisorNumeratorBigInteger);
-
-			// Divide to get quotient
-			final BigDecimal multipliedNumeratorBigDecimal = new BigDecimal(multipliedNumerator);
-			final BigDecimal multipliedDenominatorBigDecimal = new BigDecimal(multipliedDenominator);
-			final BigDecimal quotient = multipliedNumeratorBigDecimal.divide(multipliedDenominatorBigDecimal, 0, roundingMode);
-			final BigInteger quotientBigInteger = quotient.toBigInteger();
-
-			final RealStruct quotientReal;
-			if (isQuotientFloat) {
-				quotientReal = FloatStruct.valueOf(quotient);
-			} else {
-				quotientReal = IntegerStruct.valueOf(quotientBigInteger);
-			}
-
-			// Multiply divisor by quotient
-			final BigInteger multiply = divisorNumeratorBigInteger.multiply(quotientBigInteger);
-			final RationalStruct product = RationalStruct.makeRational(multiply, divisorDenominatorBigInteger);
-
-			// Subtract to get remainder: (Rational - Rational) produces Rational
-			final NumberStruct remainder = real.subtract(product);
-
-			return new QuotientRemainderResult(quotientReal, (RealStruct) remainder);
+	@Override
+	default NumberStruct signum() {
+		if (zerop()) {
+			return this;
+		} else if (plusp()) {
+			return ONE;
+		} else {
+			return MINUS_ONE;
 		}
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Computes the exponential function result for this IntegerStruct as this {@code base} and the provided {@link
+	 * NumberStruct} as the {@code power}. If {@code power} is '0' and power is an IntegerStruct, {@link #ONE} is
+	 * returned. If {@code power} is '0' and power is not an IntegerStruct, {@link FloatStruct#ONE} is returned. If
+	 * this IntegerStruct is either '0' or '1', {@code this} is returned.
+	 */
+	@Override
+	default NumberStruct expt(final NumberStruct power) {
+		if (power.zerop()) {
+			if (power instanceof IntegerStruct) {
+				return ONE;
+			}
+			return FloatStruct.ONE;
+		}
+
+		if (zerop() || isEqualTo(ONE)) {
+			return this;
+		}
+
+		final ExptVisitor<?> exptVisitor = exptVisitor();
+		return power.expt(exptVisitor);
+	}
+
+	// Visitor Implementations
+
+	/**
+	 * {@link GcdVisitor} for computing greatest common divisor for {@link IntegerStruct}s.
+	 */
 	abstract class GcdVisitor<S extends IntegerStruct> {
 
+		/**
+		 * The {@link S} as the first argument in the greatest common divisor operation.
+		 */
 		final S integer1;
 
+		/**
+		 * Package private constructor.
+		 *
+		 * @param integer1
+		 * 		the first argument in the greatest common divisor operation
+		 */
 		GcdVisitor(final S integer1) {
 			this.integer1 = integer1;
 		}
 
+		/**
+		 * Computes the greatest common divisor for an {@link S} and a {@link IntIntegerStruct}.
+		 *
+		 * @param integer2
+		 * 		the second argument in the greatest common divisor operation
+		 *
+		 * @return the greatest common divisor result
+		 */
 		public abstract IntegerStruct gcd(IntIntegerStruct integer2);
 
+		/**
+		 * Computes the greatest common divisor for an {@link S} and a {@link LongIntegerStruct}.
+		 *
+		 * @param integer2
+		 * 		the second argument in the greatest common divisor operation
+		 *
+		 * @return the greatest common divisor result
+		 */
 		public abstract IntegerStruct gcd(LongIntegerStruct integer2);
 
+		/**
+		 * Computes the greatest common divisor for an {@link S} and a {@link BigIntegerStruct}.
+		 *
+		 * @param integer2
+		 * 		the second argument in the greatest common divisor operation
+		 *
+		 * @return the greatest common divisor result
+		 */
 		public abstract IntegerStruct gcd(BigIntegerStruct integer2);
 	}
 
@@ -973,5 +1157,31 @@ public interface IntegerStruct extends RationalStruct {
 		public abstract boolean logBitP(LongIntegerStruct index);
 
 		public abstract boolean logBitP(BigIntegerStruct index);
+	}
+
+	/*
+		Deprecated
+	 */
+
+	@Deprecated
+	default BigInteger getBigInteger() {
+		return bigIntegerValue();
+	}
+
+	@Deprecated
+	static IntegerStruct valueOf(final Apfloat apfloat) {
+		return IntIntegerStruct.valueOf(apfloat.intValue());
+	}
+
+	@Deprecated
+	@Override
+	default BigDecimal bigDecimalValue() {
+		return new BigDecimal(bigIntegerValue(), 1).multiply(BigDecimal.TEN);
+	}
+
+	@Deprecated
+	@Override
+	default Apfloat apfloatValue() {
+		return new Apint(bigIntegerValue());
 	}
 }

@@ -69,7 +69,7 @@ public interface RationalStruct extends RealStruct {
 
 	// Visitor Implementations
 
-	abstract class RationalQuotientRemainderVisitor<S extends RationalStruct> extends RealStruct.QuotientRemainderVisitor<S> {
+	class RationalQuotientRemainderVisitor<S extends RationalStruct> extends RealStruct.QuotientRemainderVisitor<S> {
 
 		RationalQuotientRemainderVisitor(final S real) {
 			super(real);

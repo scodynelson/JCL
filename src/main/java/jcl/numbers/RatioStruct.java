@@ -689,9 +689,10 @@ public final class RatioStruct extends BuiltInClassStruct implements RationalStr
 	}
 
 	/**
-	 * {@link RealStruct.RealEqualToVisitor} for computing numeric '=' equality results for {@link RatioStruct}s.
+	 * {@link RationalStruct.RationalEqualToVisitor} for computing numeric '=' equality results for {@link
+	 * RatioStruct}s.
 	 */
-	private static final class RatioEqualToVisitor extends RealStruct.RealEqualToVisitor<RatioStruct> {
+	private static final class RatioEqualToVisitor extends RationalStruct.RationalEqualToVisitor<RatioStruct> {
 
 		/**
 		 * Package private constructor to make a new instance of an RatioEqualToVisitor with the provided {@link
@@ -720,37 +721,16 @@ public final class RatioStruct extends BuiltInClassStruct implements RationalStr
 		}
 
 		@Override
-		public boolean equalTo(final SingleFloatStruct number2) {
-			final BigDecimal bBigDecimal = number1.bigDecimalValue();
-			final BigDecimal bigDecimal = number2.bigDecimalValue();
-			return bBigDecimal.compareTo(bigDecimal) == 0;
-		}
-
-		@Override
-		public boolean equalTo(final DoubleFloatStruct number2) {
-			final BigDecimal bBigDecimal = number1.bigDecimalValue();
-			final BigDecimal bigDecimal = number2.bigDecimalValue();
-			return bBigDecimal.compareTo(bigDecimal) == 0;
-		}
-
-		@Override
-		public boolean equalTo(final BigFloatStruct number2) {
-			final BigDecimal bBigDecimal = number1.bigDecimalValue();
-			final BigDecimal bigDecimal = number2.bigDecimal;
-			return bBigDecimal.compareTo(bigDecimal) == 0;
-		}
-
-		@Override
 		public boolean equalTo(final RatioStruct number2) {
 			return getComparisonResult(number1, number2) == 0;
 		}
 	}
 
 	/**
-	 * {@link RealStruct.LessThanVisitor} for computing numeric {@literal '<'} equality results for {@link
+	 * {@link RationalStruct.RationalLessThanVisitor} for computing numeric {@literal '<'} equality results for {@link
 	 * RatioStruct}s.
 	 */
-	private static final class RatioLessThanVisitor extends RealStruct.LessThanVisitor<RatioStruct> {
+	private static final class RatioLessThanVisitor extends RationalStruct.RationalLessThanVisitor<RatioStruct> {
 
 		/**
 		 * Package private constructor to make a new instance of an RatioLessThanVisitor with the provided {@link
@@ -779,37 +759,16 @@ public final class RatioStruct extends BuiltInClassStruct implements RationalStr
 		}
 
 		@Override
-		public boolean lessThan(final SingleFloatStruct real2) {
-			final BigDecimal bBigDecimal = real1.bigDecimalValue();
-			final BigDecimal bigDecimal = real2.bigDecimalValue();
-			return bBigDecimal.compareTo(bigDecimal) < 0;
-		}
-
-		@Override
-		public boolean lessThan(final DoubleFloatStruct real2) {
-			final BigDecimal bBigDecimal = real1.bigDecimalValue();
-			final BigDecimal bigDecimal = real2.bigDecimalValue();
-			return bBigDecimal.compareTo(bigDecimal) < 0;
-		}
-
-		@Override
-		public boolean lessThan(final BigFloatStruct real2) {
-			final BigDecimal bBigDecimal = real1.bigDecimalValue();
-			final BigDecimal bigDecimal = real2.bigDecimal;
-			return bBigDecimal.compareTo(bigDecimal) < 0;
-		}
-
-		@Override
 		public boolean lessThan(final RatioStruct real2) {
 			return getComparisonResult(real1, real2) < 0;
 		}
 	}
 
 	/**
-	 * {@link RealStruct.GreaterThanVisitor} for computing numeric {@literal '>'} equality results for {@link
-	 * RatioStruct}s.
+	 * {@link RationalStruct.RationalGreaterThanVisitor} for computing numeric {@literal '>'} equality results for
+	 * {@link RatioStruct}s.
 	 */
-	private static final class RatioGreaterThanVisitor extends RealStruct.GreaterThanVisitor<RatioStruct> {
+	private static final class RatioGreaterThanVisitor extends RationalStruct.RationalGreaterThanVisitor<RatioStruct> {
 
 		/**
 		 * Package private constructor to make a new instance of an RatioGreaterThanVisitor with the provided {@link
@@ -838,37 +797,16 @@ public final class RatioStruct extends BuiltInClassStruct implements RationalStr
 		}
 
 		@Override
-		public boolean greaterThan(final SingleFloatStruct real2) {
-			final BigDecimal bBigDecimal = real1.bigDecimalValue();
-			final BigDecimal bigDecimal = real2.bigDecimalValue();
-			return bBigDecimal.compareTo(bigDecimal) > 0;
-		}
-
-		@Override
-		public boolean greaterThan(final DoubleFloatStruct real2) {
-			final BigDecimal bBigDecimal = real1.bigDecimalValue();
-			final BigDecimal bigDecimal = real2.bigDecimalValue();
-			return bBigDecimal.compareTo(bigDecimal) > 0;
-		}
-
-		@Override
-		public boolean greaterThan(final BigFloatStruct real2) {
-			final BigDecimal bBigDecimal = real1.bigDecimalValue();
-			final BigDecimal bigDecimal = real2.bigDecimal;
-			return bBigDecimal.compareTo(bigDecimal) > 0;
-		}
-
-		@Override
 		public boolean greaterThan(final RatioStruct real2) {
 			return getComparisonResult(real1, real2) > 0;
 		}
 	}
 
 	/**
-	 * {@link RealStruct.LessThanOrEqualToVisitor} for computing numeric {@literal '<='} equality results for {@link
-	 * RatioStruct}s.
+	 * {@link RationalStruct.RationalLessThanOrEqualToVisitor} for computing numeric {@literal '<='} equality results
+	 * for {@link RatioStruct}s.
 	 */
-	private static final class RatioLessThanOrEqualToVisitor extends RealStruct.LessThanOrEqualToVisitor<RatioStruct> {
+	private static final class RatioLessThanOrEqualToVisitor extends RationalStruct.RationalLessThanOrEqualToVisitor<RatioStruct> {
 
 		/**
 		 * Package private constructor to make a new instance of an RatioLessThanOrEqualToVisitor with the provided
@@ -897,37 +835,16 @@ public final class RatioStruct extends BuiltInClassStruct implements RationalStr
 		}
 
 		@Override
-		public boolean lessThanOrEqualTo(final SingleFloatStruct real2) {
-			final BigDecimal bBigDecimal = real1.bigDecimalValue();
-			final BigDecimal bigDecimal = real2.bigDecimalValue();
-			return bBigDecimal.compareTo(bigDecimal) <= 0;
-		}
-
-		@Override
-		public boolean lessThanOrEqualTo(final DoubleFloatStruct real2) {
-			final BigDecimal bBigDecimal = real1.bigDecimalValue();
-			final BigDecimal bigDecimal = real2.bigDecimalValue();
-			return bBigDecimal.compareTo(bigDecimal) <= 0;
-		}
-
-		@Override
-		public boolean lessThanOrEqualTo(final BigFloatStruct real2) {
-			final BigDecimal bBigDecimal = real1.bigDecimalValue();
-			final BigDecimal bigDecimal = real2.bigDecimal;
-			return bBigDecimal.compareTo(bigDecimal) <= 0;
-		}
-
-		@Override
 		public boolean lessThanOrEqualTo(final RatioStruct real2) {
 			return getComparisonResult(real1, real2) <= 0;
 		}
 	}
 
 	/**
-	 * {@link RealStruct.GreaterThanOrEqualToVisitor} for computing numeric {@literal '>='} equality results for {@link
-	 * RatioStruct}s.
+	 * {@link RationalStruct.RationalGreaterThanOrEqualToVisitor} for computing numeric {@literal '>='} equality results
+	 * for {@link RatioStruct}s.
 	 */
-	private static final class RatioGreaterThanOrEqualToVisitor extends RealStruct.GreaterThanOrEqualToVisitor<RatioStruct> {
+	private static final class RatioGreaterThanOrEqualToVisitor extends RationalStruct.RationalGreaterThanOrEqualToVisitor<RatioStruct> {
 
 		/**
 		 * Package private constructor to make a new instance of an RatioGreaterThanOrEqualToVisitor with the provided
@@ -953,27 +870,6 @@ public final class RatioStruct extends BuiltInClassStruct implements RationalStr
 		@Override
 		public boolean greaterThanOrEqualTo(final BigIntegerStruct real2) {
 			return getComparisonResult(real1, real2) >= 0;
-		}
-
-		@Override
-		public boolean greaterThanOrEqualTo(final SingleFloatStruct real2) {
-			final BigDecimal bBigDecimal = real1.bigDecimalValue();
-			final BigDecimal bigDecimal = real2.bigDecimalValue();
-			return bBigDecimal.compareTo(bigDecimal) >= 0;
-		}
-
-		@Override
-		public boolean greaterThanOrEqualTo(final DoubleFloatStruct real2) {
-			final BigDecimal bBigDecimal = real1.bigDecimalValue();
-			final BigDecimal bigDecimal = real2.bigDecimalValue();
-			return bBigDecimal.compareTo(bigDecimal) >= 0;
-		}
-
-		@Override
-		public boolean greaterThanOrEqualTo(final BigFloatStruct real2) {
-			final BigDecimal bBigDecimal = real1.bigDecimalValue();
-			final BigDecimal bigDecimal = real2.bigDecimal;
-			return bBigDecimal.compareTo(bigDecimal) >= 0;
 		}
 
 		@Override

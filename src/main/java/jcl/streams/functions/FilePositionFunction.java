@@ -43,7 +43,7 @@ public final class FilePositionFunction extends CommonLispBuiltInFunctionStruct 
 
 		final Long position;
 		if (lispStruct2 instanceof IntegerStruct) {
-			position = ((IntegerStruct) lispStruct2).getBigInteger().longValue();
+			position = ((IntegerStruct) lispStruct2).longValue();
 		} else if (CommonLispSymbols.START_KEYWORD.equals(lispStruct2)) {
 			position = 0L;
 		} else if (CommonLispSymbols.END_KEYWORD.equals(lispStruct2)) {

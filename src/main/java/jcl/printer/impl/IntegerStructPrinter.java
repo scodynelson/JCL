@@ -37,7 +37,7 @@ public class IntegerStructPrinter implements LispPrinter<IntegerStruct> {
 	@Override
 	public String print(final IntegerStruct object) {
 		final boolean printRadix = PrinterVariables.PRINT_RADIX.getVariableValue().booleanValue();
-		final int printBase = PrinterVariables.PRINT_BASE.getVariableValue().getBigInteger().intValue();
+		final int printBase = PrinterVariables.PRINT_BASE.getVariableValue().intValue();
 
 		final StringBuilder stringBuilder = new StringBuilder();
 
@@ -55,7 +55,7 @@ public class IntegerStructPrinter implements LispPrinter<IntegerStruct> {
 			}
 		}
 
-		final BigInteger bigInteger = object.getBigInteger();
+		final BigInteger bigInteger = object.bigIntegerValue();
 		stringBuilder.append(bigInteger.toString(printBase));
 
 		if (printRadix && (printBase == TEN)) {

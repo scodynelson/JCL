@@ -4,8 +4,6 @@
 
 package jcl.streams.functions;
 
-import java.math.BigInteger;
-
 import jcl.LispStruct;
 import jcl.functions.CommonLispBuiltInFunctionStruct;
 import jcl.functions.parameterdsl.Arguments;
@@ -35,8 +33,8 @@ public final class WriteByteFunction extends CommonLispBuiltInFunctionStruct {
 		final IntegerStruct byteVal = arguments.getRequiredArgument(BYTE_ARGUMENT, IntegerStruct.class);
 		final OutputStream outputStream = arguments.getRequiredArgument(OUTPUT_STREAM_ARGUMENT, OutputStream.class);
 
-		final BigInteger bigInteger = byteVal.getBigInteger();
-		outputStream.writeByte(bigInteger.intValue());
+		final int byteValue = byteVal.intValue();
+		outputStream.writeByte(byteValue);
 
 		return byteVal;
 	}

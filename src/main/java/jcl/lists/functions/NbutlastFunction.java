@@ -28,6 +28,6 @@ public final class NbutlastFunction extends CommonLispBuiltInFunctionStruct {
 	public LispStruct apply(final Arguments arguments) {
 		final ListStruct list = arguments.getRequiredArgument(LIST_ARGUMENT, ListStruct.class);
 		final IntegerStruct n = arguments.getOptionalArgument(N_ARGUMENT, IntegerStruct.class);
-		return list.nButLast(n.getBigInteger().longValue());
+		return list.nButLast(n.longValue());
 	}
 }

@@ -26,7 +26,8 @@ class NonNegNilVariable extends VariableStruct<IntegerStruct> {
 		}
 		final IntegerStruct variableValue = (IntegerStruct) value;
 
-		final BigInteger bigIntegerValue = variableValue.getBigInteger();
+		// TODO: optimize??
+		final BigInteger bigIntegerValue = variableValue.bigIntegerValue();
 		if (bigIntegerValue.compareTo(BigInteger.ZERO) >= 0) {
 			super.setValue(variableValue);
 		} else {

@@ -32,7 +32,7 @@ public final class SetNthFunction extends SystemBuiltInFunctionStruct {
 		final ListStruct list = arguments.getRequiredArgument(LIST_ARGUMENT, ListStruct.class);
 		final LispStruct value = arguments.getRequiredArgument(VALUE_ARGUMENT);
 
-		final long indexValue = index.getBigInteger().longValue();
+		final long indexValue = index.longValue();
 		list.setNth(indexValue, value);
 		return value;
 	}

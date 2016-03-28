@@ -4,8 +4,6 @@
 
 package jcl.pathnames.functions;
 
-import java.math.BigInteger;
-
 import jcl.LispStruct;
 import jcl.conditions.exceptions.ErrorException;
 import jcl.functions.CommonLispBuiltInFunctionStruct;
@@ -119,12 +117,12 @@ public final class MergePathnamesFunction extends CommonLispBuiltInFunctionStruc
 		if (componentType == null) {
 			if (defaultVersion instanceof IntegerStruct) {
 				final IntegerStruct integer = (IntegerStruct) defaultVersion;
-				final BigInteger bigInteger = integer.getBigInteger();
-				if (bigInteger.compareTo(BigInteger.ZERO) < 0) {
+				final int intValue = integer.intValue();
+				if (intValue < 0) {
 					final String printedInteger = printer.print(integer);
 					throw new ErrorException("Integer versions must be non-negative. Got: " + printedInteger);
 				}
-				return new PathnameVersion(bigInteger.intValueExact());
+				return new PathnameVersion(intValue);
 			} else {
 				final String printedDefaultVersion = printer.print(defaultVersion);
 				throw new ErrorException("Pathname versions must be either a non-negative integer, :WILD, :NEWEST, :UNSPECIFIC, or NIL. Got: " + printedDefaultVersion);

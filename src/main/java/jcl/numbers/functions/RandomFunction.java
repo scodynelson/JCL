@@ -47,7 +47,7 @@ public final class RandomFunction extends CommonLispBuiltInFunctionStruct {
 
 		if (real instanceof IntegerStruct) {
 			final IntegerStruct number = (IntegerStruct) real;
-			final BigInteger bigInteger = number.getBigInteger();
+			final BigInteger bigInteger = number.bigIntegerValue();
 			final BigInteger randomInteger = randomState.randomInteger(bigInteger);
 			return IntegerStruct.valueOf(randomInteger);
 		} else if (real instanceof FloatStruct) {

@@ -60,7 +60,7 @@ class IntegerCodeGenerator implements CodeGenerator<IntegerStruct> {
 		mv.visitTypeInsn(Opcodes.NEW, GenerationConstants.JAVA_BIG_INTEGER_NAME);
 		mv.visitInsn(Opcodes.DUP);
 
-		final BigInteger bigInteger = input.getBigInteger();
+		final BigInteger bigInteger = input.bigIntegerValue();
 		final String integerString = bigInteger.toString();
 		mv.visitLdcInsn(integerString);
 		mv.visitMethodInsn(Opcodes.INVOKESPECIAL,

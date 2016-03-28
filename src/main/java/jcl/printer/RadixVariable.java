@@ -33,7 +33,8 @@ public class RadixVariable extends VariableStruct<IntegerStruct> {
 		}
 		final IntegerStruct variableValue = (IntegerStruct) value;
 
-		final BigInteger bigIntegerValue = variableValue.getBigInteger();
+		// TODO: optimize??
+		final BigInteger bigIntegerValue = variableValue.bigIntegerValue();
 		if (RADIX_RANGE.contains(bigIntegerValue)) {
 			super.setValue(variableValue);
 		} else {

@@ -644,7 +644,7 @@ public class RatioStruct extends BuiltInClassStruct implements RationalStruct {
 		final BigInteger numerator = bigFraction1Reduced.getNumerator();
 		final BigInteger denominator = bigFraction1Reduced.getDenominator();
 
-		final BigInteger bigInteger2 = number2.getBigInteger();
+		final BigInteger bigInteger2 = number2.bigIntegerValue();
 		final BigInteger multiply = bigInteger2.multiply(denominator);
 		return numerator.compareTo(multiply);
 	}
@@ -732,7 +732,7 @@ public class RatioStruct extends BuiltInClassStruct implements RationalStruct {
 		@Override
 		public RealStruct add(final IntIntegerStruct number2) {
 			final BigFraction bigFraction1 = number1.getBigFraction();
-			final BigInteger bigInteger2 = number2.getBigInteger();
+			final BigInteger bigInteger2 = number2.bigIntegerValue();
 			final BigFraction add = bigFraction1.add(bigInteger2);
 			return RationalStruct.makeRational(add);
 		}
@@ -745,7 +745,7 @@ public class RatioStruct extends BuiltInClassStruct implements RationalStruct {
 		@Override
 		public RealStruct add(final LongIntegerStruct number2) {
 			final BigFraction bigFraction1 = number1.getBigFraction();
-			final BigInteger bigInteger2 = number2.getBigInteger();
+			final BigInteger bigInteger2 = number2.bigIntegerValue();
 			final BigFraction add = bigFraction1.add(bigInteger2);
 			return RationalStruct.makeRational(add);
 		}
@@ -758,7 +758,7 @@ public class RatioStruct extends BuiltInClassStruct implements RationalStruct {
 		@Override
 		public RealStruct add(final BigIntegerStruct number2) {
 			final BigFraction bigFraction1 = number1.getBigFraction();
-			final BigInteger bigInteger2 = number2.getBigInteger();
+			final BigInteger bigInteger2 = number2.bigInteger;
 			final BigFraction add = bigFraction1.add(bigInteger2);
 			return RationalStruct.makeRational(add);
 		}
@@ -801,7 +801,7 @@ public class RatioStruct extends BuiltInClassStruct implements RationalStruct {
 		@Override
 		public RealStruct subtract(final IntIntegerStruct number2) {
 			final BigFraction bigFraction1 = number1.getBigFraction();
-			final BigInteger bigInteger2 = number2.getBigInteger();
+			final BigInteger bigInteger2 = number2.bigIntegerValue();
 			final BigFraction subtract = bigFraction1.subtract(bigInteger2);
 			return RationalStruct.makeRational(subtract);
 		}
@@ -814,7 +814,7 @@ public class RatioStruct extends BuiltInClassStruct implements RationalStruct {
 		@Override
 		public RealStruct subtract(final LongIntegerStruct number2) {
 			final BigFraction bigFraction1 = number1.getBigFraction();
-			final BigInteger bigInteger2 = number2.getBigInteger();
+			final BigInteger bigInteger2 = number2.bigIntegerValue();
 			final BigFraction subtract = bigFraction1.subtract(bigInteger2);
 			return RationalStruct.makeRational(subtract);
 		}
@@ -827,7 +827,7 @@ public class RatioStruct extends BuiltInClassStruct implements RationalStruct {
 		@Override
 		public RealStruct subtract(final BigIntegerStruct number2) {
 			final BigFraction bigFraction1 = number1.getBigFraction();
-			final BigInteger bigInteger2 = number2.getBigInteger();
+			final BigInteger bigInteger2 = number2.bigInteger;
 			final BigFraction subtract = bigFraction1.subtract(bigInteger2);
 			return RationalStruct.makeRational(subtract);
 		}
@@ -870,7 +870,7 @@ public class RatioStruct extends BuiltInClassStruct implements RationalStruct {
 		@Override
 		public RealStruct multiply(final IntIntegerStruct number2) {
 			final BigFraction bigFraction1 = number1.getBigFraction();
-			final BigInteger bigInteger2 = number2.getBigInteger();
+			final BigInteger bigInteger2 = number2.bigIntegerValue();
 			final BigFraction multiply = bigFraction1.multiply(bigInteger2);
 			return RationalStruct.makeRational(multiply);
 		}
@@ -883,7 +883,7 @@ public class RatioStruct extends BuiltInClassStruct implements RationalStruct {
 		@Override
 		public RealStruct multiply(final LongIntegerStruct number2) {
 			final BigFraction bigFraction1 = number1.getBigFraction();
-			final BigInteger bigInteger2 = number2.getBigInteger();
+			final BigInteger bigInteger2 = number2.bigIntegerValue();
 			final BigFraction multiply = bigFraction1.multiply(bigInteger2);
 			return RationalStruct.makeRational(multiply);
 		}
@@ -896,7 +896,7 @@ public class RatioStruct extends BuiltInClassStruct implements RationalStruct {
 		@Override
 		public RealStruct multiply(final BigIntegerStruct number2) {
 			final BigFraction bigFraction1 = number1.getBigFraction();
-			final BigInteger bigInteger2 = number2.getBigInteger();
+			final BigInteger bigInteger2 = number2.bigInteger;
 			final BigFraction multiply = bigFraction1.multiply(bigInteger2);
 			return RationalStruct.makeRational(multiply);
 		}
@@ -939,7 +939,7 @@ public class RatioStruct extends BuiltInClassStruct implements RationalStruct {
 		@Override
 		public RealStruct divide(final IntIntegerStruct number2) {
 			final BigFraction bigFraction1 = number1.getBigFraction();
-			final BigInteger bigInteger2 = number2.getBigInteger();
+			final BigInteger bigInteger2 = number2.bigIntegerValue();
 			final BigFraction divide = bigFraction1.divide(bigInteger2);
 			return RationalStruct.makeRational(divide);
 		}
@@ -952,7 +952,7 @@ public class RatioStruct extends BuiltInClassStruct implements RationalStruct {
 		@Override
 		public RealStruct divide(final LongIntegerStruct number2) {
 			final BigFraction bigFraction1 = number1.getBigFraction();
-			final BigInteger bigInteger2 = number2.getBigInteger();
+			final BigInteger bigInteger2 = number2.bigIntegerValue();
 			final BigFraction divide = bigFraction1.divide(bigInteger2);
 			return RationalStruct.makeRational(divide);
 		}
@@ -965,7 +965,7 @@ public class RatioStruct extends BuiltInClassStruct implements RationalStruct {
 		@Override
 		public RealStruct divide(final BigIntegerStruct number2) {
 			final BigFraction bigFraction1 = number1.getBigFraction();
-			final BigInteger bigInteger2 = number2.getBigInteger();
+			final BigInteger bigInteger2 = number2.bigInteger;
 			final BigFraction divide = bigFraction1.divide(bigInteger2);
 			return RationalStruct.makeRational(divide);
 		}

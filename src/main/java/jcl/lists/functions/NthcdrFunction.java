@@ -29,7 +29,7 @@ public final class NthcdrFunction extends CommonLispBuiltInFunctionStruct {
 		final IntegerStruct nVal = arguments.getRequiredArgument(N_ARGUMENT, IntegerStruct.class);
 		final ListStruct list = arguments.getRequiredArgument(LIST_ARGUMENT, ListStruct.class);
 
-		final long nLong = nVal.getBigInteger().longValue();
+		final long nLong = nVal.longValue();
 		return list.nthCdr(nLong);
 	}
 }

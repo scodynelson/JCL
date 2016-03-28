@@ -46,7 +46,7 @@ public class RationalTokenAccumulatedReaderState implements ReaderState {
 		final int numberOfRationalParts = 2;
 		final String[] rationalParts = tokenString.split("/", numberOfRationalParts);
 
-		final int currentRadix = ReaderVariables.READ_BASE.getVariableValue().getBigInteger().intValueExact();
+		final int currentRadix = ReaderVariables.READ_BASE.getVariableValue().intValue();
 
 		final BigInteger numerator = new BigInteger(rationalParts[0], currentRadix);
 		final BigInteger denominator = new BigInteger(rationalParts[1], currentRadix);

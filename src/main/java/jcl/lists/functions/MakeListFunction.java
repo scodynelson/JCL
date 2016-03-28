@@ -33,6 +33,6 @@ public final class MakeListFunction extends CommonLispBuiltInFunctionStruct {
 	public LispStruct apply(final Arguments arguments) {
 		final IntegerStruct size = arguments.getRequiredArgument(SIZE_ARGUMENT, IntegerStruct.class);
 		final LispStruct initialElement = arguments.getKeyArgument(CommonLispSymbols.INITIAL_ELEMENT_KEYWORD);
-		return ListStruct.makeList(size.getBigInteger().longValue(), initialElement);
+		return ListStruct.makeList(size.longValue(), initialElement);
 	}
 }

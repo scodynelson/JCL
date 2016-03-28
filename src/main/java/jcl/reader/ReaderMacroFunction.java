@@ -56,7 +56,8 @@ public abstract class ReaderMacroFunction extends FunctionStruct {
 		final Optional<BigInteger> numberArgument;
 		if (isDispatch()) {
 			final IntegerStruct macroNumberArgument = (IntegerStruct) lispStructs[2];
-			final BigInteger bigInteger = macroNumberArgument.getBigInteger();
+			// TODO: optimize??
+			final BigInteger bigInteger = macroNumberArgument.bigIntegerValue();
 			numberArgument = Optional.of(bigInteger);
 		} else {
 			numberArgument = Optional.empty();

@@ -1652,11 +1652,6 @@ public interface IntegerStruct extends RationalStruct {
 	 */
 
 	@Deprecated
-	default BigInteger getBigInteger() {
-		return bigIntegerValue();
-	}
-
-	@Deprecated
 	static IntegerStruct valueOf(final Apfloat apfloat) {
 		return IntIntegerStruct.valueOf(apfloat.intValue());
 	}
@@ -1664,7 +1659,7 @@ public interface IntegerStruct extends RationalStruct {
 	@Deprecated
 	@Override
 	default BigDecimal bigDecimalValue() {
-		return new BigDecimal(bigIntegerValue(), 1).multiply(BigDecimal.TEN);
+		return NumberUtils.bigDecimalValue(bigIntegerValue());
 	}
 
 	@Deprecated

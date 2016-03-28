@@ -32,6 +32,6 @@ public final class ButlastFunction extends CommonLispBuiltInFunctionStruct {
 	public LispStruct apply(final Arguments arguments) {
 		final ListStruct list = arguments.getRequiredArgument(LIST_ARGUMENT, ListStruct.class);
 		final IntegerStruct n = arguments.getOptionalArgument(N_ARGUMENT, IntegerStruct.class);
-		return list.butLast(n.getBigInteger().longValue());
+		return list.butLast(n.longValue());
 	}
 }

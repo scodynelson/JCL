@@ -175,7 +175,7 @@ class AttributeTable {
 		if (attributeTypeMap.containsKey(codePoint)) {
 			AttributeType attributeType = attributeTypeMap.get(codePoint);
 
-			final boolean hasHighRadix = readBase.getBigInteger().intValueExact() > 13;
+			final boolean hasHighRadix = readBase.intValue() > 13;
 			if (hasHighRadix && (attributeType == AttributeType.EXPONENTMARKER)) {
 				attributeType = AttributeType.ALPHADIGIT;
 			}

@@ -84,14 +84,14 @@ public interface RationalStruct extends RealStruct {
 		QuotientRemainderResult ratioQuotientRemainder(final RationalStruct divisor, final RoundingMode roundingMode,
 		                                               final boolean isFloatResult) {
 			final IntegerStruct rationalNumerator = real.numerator();
-			final BigInteger rationalNumeratorBigInteger = rationalNumerator.getBigInteger();
+			final BigInteger rationalNumeratorBigInteger = rationalNumerator.bigIntegerValue();
 			final IntegerStruct rationalDenominator = real.denominator();
-			final BigInteger rationalDenominatorBigInteger = rationalDenominator.getBigInteger();
+			final BigInteger rationalDenominatorBigInteger = rationalDenominator.bigIntegerValue();
 
 			final IntegerStruct divisorNumerator = divisor.numerator();
-			final BigInteger divisorNumeratorBigInteger = divisorNumerator.getBigInteger();
+			final BigInteger divisorNumeratorBigInteger = divisorNumerator.bigIntegerValue();
 			final IntegerStruct divisorDenominator = divisor.denominator();
-			final BigInteger divisorDenominatorBigInteger = divisorDenominator.getBigInteger();
+			final BigInteger divisorDenominatorBigInteger = divisorDenominator.bigIntegerValue();
 
 			// Invert and multiply
 			final BigInteger multipliedNumerator = rationalNumeratorBigInteger.multiply(divisorDenominatorBigInteger);

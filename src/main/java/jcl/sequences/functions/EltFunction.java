@@ -29,7 +29,7 @@ public final class EltFunction extends CommonLispBuiltInFunctionStruct {
 		final SequenceStruct sequence = arguments.getRequiredArgument(SEQUENCE_ARGUMENT, SequenceStruct.class);
 		final IntegerStruct index = arguments.getRequiredArgument(INDEX_ARGUMENT, IntegerStruct.class);
 
-		final long indexValue = index.getBigInteger().longValue();
+		final long indexValue = index.longValue();
 		return sequence.elt(indexValue);
 	}
 }

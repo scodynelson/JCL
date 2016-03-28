@@ -32,7 +32,7 @@ public final class SetEltFunction extends SystemBuiltInFunctionStruct {
 		final IntegerStruct index = arguments.getRequiredArgument(INDEX_ARGUMENT, IntegerStruct.class);
 		final LispStruct value = arguments.getRequiredArgument(VALUE_ARGUMENT);
 
-		final long indexValue = index.getBigInteger().longValue();
+		final long indexValue = index.longValue();
 		sequence.setElt(indexValue, value);
 		return value;
 	}

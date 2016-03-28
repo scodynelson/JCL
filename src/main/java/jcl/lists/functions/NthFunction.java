@@ -33,7 +33,7 @@ public final class NthFunction extends CommonLispBuiltInFunctionStruct {
 		final IntegerStruct index = arguments.getRequiredArgument(INDEX_ARGUMENT, IntegerStruct.class);
 		final ListStruct list = arguments.getRequiredArgument(LIST_ARGUMENT, ListStruct.class);
 
-		final long indexValue = index.getBigInteger().longValue();
+		final long indexValue = index.longValue();
 		return list.nth(indexValue);
 	}
 }

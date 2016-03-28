@@ -27,7 +27,7 @@ public final class LastFunction extends CommonLispBuiltInFunctionStruct {
 	@Override
 	public LispStruct apply(final Arguments arguments) {
 		final ListStruct list = arguments.getRequiredArgument(LIST_ARGUMENT, ListStruct.class);
-		final long nVal = arguments.getOptionalArgument(N_ARGUMENT, IntegerStruct.class).getBigInteger().longValue();
+		final long nVal = arguments.getOptionalArgument(N_ARGUMENT, IntegerStruct.class).longValue();
 		return list.last(nVal);
 	}
 }

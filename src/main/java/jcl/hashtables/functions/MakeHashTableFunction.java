@@ -58,7 +58,7 @@ public final class MakeHashTableFunction extends CommonLispBuiltInFunctionStruct
 		final RealStruct rehashThreshold = arguments.getKeyArgument(REHASH_THRESHOLD, RealStruct.class);
 //		RealType.Factory.getInstance(BigInteger.ZERO, BigInteger.ONE)
 
-		return new HashTableStruct(equatorTestFunction, size.getBigInteger(), rehashThreshold.bigDecimalValue());
+		return new HashTableStruct(equatorTestFunction, size.bigIntegerValue(), rehashThreshold.bigDecimalValue());
 	}
 
 	private FunctionStruct validateFunctionDesignator(final LispStruct functionDesignator) {

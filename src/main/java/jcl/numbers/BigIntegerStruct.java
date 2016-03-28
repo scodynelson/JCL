@@ -757,9 +757,10 @@ public final class BigIntegerStruct extends BuiltInClassStruct implements Intege
 	}
 
 	/**
-	 * {@link RealStruct.RealEqualToVisitor} for computing numeric '=' equality results for {@link BigIntegerStruct}s.
+	 * {@link RationalStruct.RationalEqualToVisitor} for computing numeric '=' equality results for {@link
+	 * BigIntegerStruct}s.
 	 */
-	private static final class BigIntegerEqualToVisitor extends RealStruct.RealEqualToVisitor<BigIntegerStruct> {
+	private static final class BigIntegerEqualToVisitor extends RationalStruct.RationalEqualToVisitor<BigIntegerStruct> {
 
 		/**
 		 * Private constructor to make a new instance of an BigIntegerEqualToVisitor with the provided {@link
@@ -794,27 +795,6 @@ public final class BigIntegerStruct extends BuiltInClassStruct implements Intege
 		}
 
 		@Override
-		public boolean equalTo(final SingleFloatStruct number2) {
-			final BigDecimal bBigDecimal = new BigDecimal(number1.bigInteger);
-			final BigDecimal bigDecimal = number2.bigDecimalValue();
-			return bBigDecimal.compareTo(bigDecimal) == 0;
-		}
-
-		@Override
-		public boolean equalTo(final DoubleFloatStruct number2) {
-			final BigDecimal bBigDecimal = new BigDecimal(number1.bigInteger);
-			final BigDecimal bigDecimal = number2.bigDecimalValue();
-			return bBigDecimal.compareTo(bigDecimal) == 0;
-		}
-
-		@Override
-		public boolean equalTo(final BigFloatStruct number2) {
-			final BigDecimal bBigDecimal = new BigDecimal(number1.bigInteger);
-			final BigDecimal bigDecimal = number2.bigDecimal;
-			return bBigDecimal.compareTo(bigDecimal) == 0;
-		}
-
-		@Override
 		public boolean equalTo(final RatioStruct number2) {
 			final BigFraction bBigFraction = new BigFraction(number1.bigInteger);
 			final BigFraction bigFraction = number2.bigFraction;
@@ -823,10 +803,10 @@ public final class BigIntegerStruct extends BuiltInClassStruct implements Intege
 	}
 
 	/**
-	 * {@link RealStruct.LessThanVisitor} for computing numeric {@literal '<'} equality results for {@link
+	 * {@link RationalStruct.RationalLessThanVisitor} for computing numeric {@literal '<'} equality results for {@link
 	 * BigIntegerStruct}s.
 	 */
-	private static final class BigIntegerLessThanVisitor extends RealStruct.LessThanVisitor<BigIntegerStruct> {
+	private static final class BigIntegerLessThanVisitor extends RationalStruct.RationalLessThanVisitor<BigIntegerStruct> {
 
 		/**
 		 * Private constructor to make a new instance of an BigIntegerLessThanVisitor with the provided {@link
@@ -861,27 +841,6 @@ public final class BigIntegerStruct extends BuiltInClassStruct implements Intege
 		}
 
 		@Override
-		public boolean lessThan(final SingleFloatStruct real2) {
-			final BigDecimal bBigDecimal = new BigDecimal(real1.bigInteger);
-			final BigDecimal bigDecimal = real2.bigDecimalValue();
-			return bBigDecimal.compareTo(bigDecimal) < 0;
-		}
-
-		@Override
-		public boolean lessThan(final DoubleFloatStruct real2) {
-			final BigDecimal bBigDecimal = new BigDecimal(real1.bigInteger);
-			final BigDecimal bigDecimal = real2.bigDecimalValue();
-			return bBigDecimal.compareTo(bigDecimal) < 0;
-		}
-
-		@Override
-		public boolean lessThan(final BigFloatStruct real2) {
-			final BigDecimal bBigDecimal = new BigDecimal(real1.bigInteger);
-			final BigDecimal bigDecimal = real2.bigDecimal;
-			return bBigDecimal.compareTo(bigDecimal) < 0;
-		}
-
-		@Override
 		public boolean lessThan(final RatioStruct real2) {
 			final BigFraction bBigFraction = new BigFraction(real1.bigInteger);
 			final BigFraction bigFraction = real2.bigFraction;
@@ -890,10 +849,10 @@ public final class BigIntegerStruct extends BuiltInClassStruct implements Intege
 	}
 
 	/**
-	 * {@link RealStruct.GreaterThanVisitor} for computing numeric {@literal '>'} equality results for {@link
-	 * BigIntegerStruct}s.
+	 * {@link RationalStruct.RationalGreaterThanVisitor} for computing numeric {@literal '>'} equality results for
+	 * {@link BigIntegerStruct}s.
 	 */
-	private static final class BigIntegerGreaterThanVisitor extends RealStruct.GreaterThanVisitor<BigIntegerStruct> {
+	private static final class BigIntegerGreaterThanVisitor extends RationalStruct.RationalGreaterThanVisitor<BigIntegerStruct> {
 
 		/**
 		 * Private constructor to make a new instance of an BigIntegerGreaterThanVisitor with the provided {@link
@@ -928,27 +887,6 @@ public final class BigIntegerStruct extends BuiltInClassStruct implements Intege
 		}
 
 		@Override
-		public boolean greaterThan(final SingleFloatStruct real2) {
-			final BigDecimal bBigDecimal = new BigDecimal(real1.bigInteger);
-			final BigDecimal bigDecimal = real2.bigDecimalValue();
-			return bBigDecimal.compareTo(bigDecimal) > 0;
-		}
-
-		@Override
-		public boolean greaterThan(final DoubleFloatStruct real2) {
-			final BigDecimal bBigDecimal = new BigDecimal(real1.bigInteger);
-			final BigDecimal bigDecimal = real2.bigDecimalValue();
-			return bBigDecimal.compareTo(bigDecimal) > 0;
-		}
-
-		@Override
-		public boolean greaterThan(final BigFloatStruct real2) {
-			final BigDecimal bBigDecimal = new BigDecimal(real1.bigInteger);
-			final BigDecimal bigDecimal = real2.bigDecimal;
-			return bBigDecimal.compareTo(bigDecimal) > 0;
-		}
-
-		@Override
 		public boolean greaterThan(final RatioStruct real2) {
 			final BigFraction bBigFraction = new BigFraction(real1.bigInteger);
 			final BigFraction bigFraction = real2.bigFraction;
@@ -957,10 +895,10 @@ public final class BigIntegerStruct extends BuiltInClassStruct implements Intege
 	}
 
 	/**
-	 * {@link RealStruct.LessThanOrEqualToVisitor} for computing numeric {@literal '<='} equality results for {@link
-	 * BigIntegerStruct}s.
+	 * {@link RationalStruct.RationalLessThanOrEqualToVisitor} for computing numeric {@literal '<='} equality results
+	 * for {@link BigIntegerStruct}s.
 	 */
-	private static final class BigIntegerLessThanOrEqualToVisitor extends RealStruct.LessThanOrEqualToVisitor<BigIntegerStruct> {
+	private static final class BigIntegerLessThanOrEqualToVisitor extends RationalStruct.RationalLessThanOrEqualToVisitor<BigIntegerStruct> {
 
 		/**
 		 * Private constructor to make a new instance of an BigIntegerLessThanOrEqualToVisitor with the provided
@@ -995,27 +933,6 @@ public final class BigIntegerStruct extends BuiltInClassStruct implements Intege
 		}
 
 		@Override
-		public boolean lessThanOrEqualTo(final SingleFloatStruct real2) {
-			final BigDecimal bBigDecimal = new BigDecimal(real1.bigInteger);
-			final BigDecimal bigDecimal = real2.bigDecimalValue();
-			return bBigDecimal.compareTo(bigDecimal) <= 0;
-		}
-
-		@Override
-		public boolean lessThanOrEqualTo(final DoubleFloatStruct real2) {
-			final BigDecimal bBigDecimal = new BigDecimal(real1.bigInteger);
-			final BigDecimal bigDecimal = real2.bigDecimalValue();
-			return bBigDecimal.compareTo(bigDecimal) <= 0;
-		}
-
-		@Override
-		public boolean lessThanOrEqualTo(final BigFloatStruct real2) {
-			final BigDecimal bBigDecimal = new BigDecimal(real1.bigInteger);
-			final BigDecimal bigDecimal = real2.bigDecimal;
-			return bBigDecimal.compareTo(bigDecimal) <= 0;
-		}
-
-		@Override
 		public boolean lessThanOrEqualTo(final RatioStruct real2) {
 			final BigFraction bBigFraction = new BigFraction(real1.bigInteger);
 			final BigFraction bigFraction = real2.bigFraction;
@@ -1024,10 +941,10 @@ public final class BigIntegerStruct extends BuiltInClassStruct implements Intege
 	}
 
 	/**
-	 * {@link RealStruct.GreaterThanOrEqualToVisitor} for computing numeric {@literal '>='} equality results for {@link
-	 * BigIntegerStruct}s.
+	 * {@link RationalStruct.RationalGreaterThanOrEqualToVisitor} for computing numeric {@literal '>='} equality
+	 * results for {@link BigIntegerStruct}s.
 	 */
-	private static final class BigIntegerGreaterThanOrEqualToVisitor extends RealStruct.GreaterThanOrEqualToVisitor<BigIntegerStruct> {
+	private static final class BigIntegerGreaterThanOrEqualToVisitor extends RationalStruct.RationalGreaterThanOrEqualToVisitor<BigIntegerStruct> {
 
 		/**
 		 * Private constructor to make a new instance of an BigIntegerGreaterThanOrEqualToVisitor with the
@@ -1059,27 +976,6 @@ public final class BigIntegerStruct extends BuiltInClassStruct implements Intege
 			final BigInteger bBigInteger1 = real1.bigInteger;
 			final BigInteger bBigInteger2 = real2.bigInteger;
 			return bBigInteger1.compareTo(bBigInteger2) >= 0;
-		}
-
-		@Override
-		public boolean greaterThanOrEqualTo(final SingleFloatStruct real2) {
-			final BigDecimal bBigDecimal = new BigDecimal(real1.bigInteger);
-			final BigDecimal bigDecimal = real2.bigDecimalValue();
-			return bBigDecimal.compareTo(bigDecimal) >= 0;
-		}
-
-		@Override
-		public boolean greaterThanOrEqualTo(final DoubleFloatStruct real2) {
-			final BigDecimal bBigDecimal = new BigDecimal(real1.bigInteger);
-			final BigDecimal bigDecimal = real2.bigDecimalValue();
-			return bBigDecimal.compareTo(bigDecimal) >= 0;
-		}
-
-		@Override
-		public boolean greaterThanOrEqualTo(final BigFloatStruct real2) {
-			final BigDecimal bBigDecimal = new BigDecimal(real1.bigInteger);
-			final BigDecimal bigDecimal = real2.bigDecimal;
-			return bBigDecimal.compareTo(bigDecimal) >= 0;
 		}
 
 		@Override

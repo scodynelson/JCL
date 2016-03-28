@@ -744,9 +744,10 @@ public final class LongIntegerStruct extends BuiltInClassStruct implements Integ
 	}
 
 	/**
-	 * {@link RealStruct.RealEqualToVisitor} for computing numeric '=' equality results for {@link LongIntegerStruct}s.
+	 * {@link RationalStruct.RationalEqualToVisitor} for computing numeric '=' equality results for {@link
+	 * LongIntegerStruct}s.
 	 */
-	private static final class LongIntegerEqualToVisitor extends RealStruct.RealEqualToVisitor<LongIntegerStruct> {
+	private static final class LongIntegerEqualToVisitor extends RationalStruct.RationalEqualToVisitor<LongIntegerStruct> {
 
 		/**
 		 * Private constructor to make a new instance of an LongIntegerEqualToVisitor with the provided {@link
@@ -777,27 +778,6 @@ public final class LongIntegerStruct extends BuiltInClassStruct implements Integ
 		}
 
 		@Override
-		public boolean equalTo(final SingleFloatStruct number2) {
-			final BigDecimal lBigDecimal = BigDecimal.valueOf(number1.l);
-			final BigDecimal bigDecimal = number2.bigDecimalValue();
-			return lBigDecimal.compareTo(bigDecimal) == 0;
-		}
-
-		@Override
-		public boolean equalTo(final DoubleFloatStruct number2) {
-			final BigDecimal lBigDecimal = BigDecimal.valueOf(number1.l);
-			final BigDecimal bigDecimal = number2.bigDecimalValue();
-			return lBigDecimal.compareTo(bigDecimal) == 0;
-		}
-
-		@Override
-		public boolean equalTo(final BigFloatStruct number2) {
-			final BigDecimal lBigDecimal = BigDecimal.valueOf(number1.l);
-			final BigDecimal bigDecimal = number2.bigDecimal;
-			return lBigDecimal.compareTo(bigDecimal) == 0;
-		}
-
-		@Override
 		public boolean equalTo(final RatioStruct number2) {
 			final BigFraction lBigFraction = new BigFraction(number1.l);
 			final BigFraction bigFraction = number2.bigFraction;
@@ -806,10 +786,10 @@ public final class LongIntegerStruct extends BuiltInClassStruct implements Integ
 	}
 
 	/**
-	 * {@link RealStruct.LessThanVisitor} for computing numeric {@literal '<'} equality results for {@link
+	 * {@link RationalStruct.RationalLessThanVisitor} for computing numeric {@literal '<'} equality results for {@link
 	 * LongIntegerStruct}s.
 	 */
-	private static final class LongIntegerLessThanVisitor extends RealStruct.LessThanVisitor<LongIntegerStruct> {
+	private static final class LongIntegerLessThanVisitor extends RationalStruct.RationalLessThanVisitor<LongIntegerStruct> {
 
 		/**
 		 * Private constructor to make a new instance of an LongIntegerLessThanVisitor with the provided {@link
@@ -840,23 +820,6 @@ public final class LongIntegerStruct extends BuiltInClassStruct implements Integ
 		}
 
 		@Override
-		public boolean lessThan(final SingleFloatStruct real2) {
-			return real1.l < real2.f;
-		}
-
-		@Override
-		public boolean lessThan(final DoubleFloatStruct real2) {
-			return real1.l < real2.d;
-		}
-
-		@Override
-		public boolean lessThan(final BigFloatStruct real2) {
-			final BigDecimal lBigDecimal = BigDecimal.valueOf(real1.l);
-			final BigDecimal bigDecimal = real2.bigDecimal;
-			return lBigDecimal.compareTo(bigDecimal) < 0;
-		}
-
-		@Override
 		public boolean lessThan(final RatioStruct real2) {
 			final BigFraction lBigFraction = new BigFraction(real1.l);
 			final BigFraction bigFraction = real2.bigFraction;
@@ -865,10 +828,10 @@ public final class LongIntegerStruct extends BuiltInClassStruct implements Integ
 	}
 
 	/**
-	 * {@link RealStruct.GreaterThanVisitor} for computing numeric {@literal '>'} equality results for {@link
-	 * LongIntegerStruct}s.
+	 * {@link RationalStruct.RationalGreaterThanVisitor} for computing numeric {@literal '>'} equality results for
+	 * {@link LongIntegerStruct}s.
 	 */
-	private static final class LongIntegerGreaterThanVisitor extends RealStruct.GreaterThanVisitor<LongIntegerStruct> {
+	private static final class LongIntegerGreaterThanVisitor extends RationalStruct.RationalGreaterThanVisitor<LongIntegerStruct> {
 
 		/**
 		 * Private constructor to make a new instance of an LongIntegerGreaterThanVisitor with the provided {@link
@@ -899,23 +862,6 @@ public final class LongIntegerStruct extends BuiltInClassStruct implements Integ
 		}
 
 		@Override
-		public boolean greaterThan(final SingleFloatStruct real2) {
-			return real1.l > real2.f;
-		}
-
-		@Override
-		public boolean greaterThan(final DoubleFloatStruct real2) {
-			return real1.l > real2.d;
-		}
-
-		@Override
-		public boolean greaterThan(final BigFloatStruct real2) {
-			final BigDecimal lBigDecimal = BigDecimal.valueOf(real1.l);
-			final BigDecimal bigDecimal = real2.bigDecimal;
-			return lBigDecimal.compareTo(bigDecimal) > 0;
-		}
-
-		@Override
 		public boolean greaterThan(final RatioStruct real2) {
 			final BigFraction lBigFraction = new BigFraction(real1.l);
 			final BigFraction bigFraction = real2.bigFraction;
@@ -924,10 +870,10 @@ public final class LongIntegerStruct extends BuiltInClassStruct implements Integ
 	}
 
 	/**
-	 * {@link RealStruct.LessThanOrEqualToVisitor} for computing numeric {@literal '<='} equality results for {@link
-	 * LongIntegerStruct}s.
+	 * {@link RationalStruct.RationalLessThanOrEqualToVisitor} for computing numeric {@literal '<='} equality results
+	 * for {@link LongIntegerStruct}s.
 	 */
-	private static final class LongIntegerLessThanOrEqualToVisitor extends RealStruct.LessThanOrEqualToVisitor<LongIntegerStruct> {
+	private static final class LongIntegerLessThanOrEqualToVisitor extends RationalStruct.RationalLessThanOrEqualToVisitor<LongIntegerStruct> {
 
 		/**
 		 * Private constructor to make a new instance of an LongIntegerLessThanOrEqualToVisitor with the provided
@@ -958,27 +904,6 @@ public final class LongIntegerStruct extends BuiltInClassStruct implements Integ
 		}
 
 		@Override
-		public boolean lessThanOrEqualTo(final SingleFloatStruct real2) {
-			final BigDecimal lBigDecimal = BigDecimal.valueOf(real1.l);
-			final BigDecimal bigDecimal = real2.bigDecimalValue();
-			return lBigDecimal.compareTo(bigDecimal) <= 0;
-		}
-
-		@Override
-		public boolean lessThanOrEqualTo(final DoubleFloatStruct real2) {
-			final BigDecimal lBigDecimal = BigDecimal.valueOf(real1.l);
-			final BigDecimal bigDecimal = real2.bigDecimalValue();
-			return lBigDecimal.compareTo(bigDecimal) <= 0;
-		}
-
-		@Override
-		public boolean lessThanOrEqualTo(final BigFloatStruct real2) {
-			final BigDecimal lBigDecimal = BigDecimal.valueOf(real1.l);
-			final BigDecimal bigDecimal = real2.bigDecimal;
-			return lBigDecimal.compareTo(bigDecimal) <= 0;
-		}
-
-		@Override
 		public boolean lessThanOrEqualTo(final RatioStruct real2) {
 			final BigFraction lBigFraction = new BigFraction(real1.l);
 			final BigFraction bigFraction = real2.bigFraction;
@@ -987,10 +912,10 @@ public final class LongIntegerStruct extends BuiltInClassStruct implements Integ
 	}
 
 	/**
-	 * {@link RealStruct.GreaterThanOrEqualToVisitor} for computing numeric {@literal '>='} equality results for {@link
-	 * LongIntegerStruct}s.
+	 * {@link RationalStruct.RationalGreaterThanOrEqualToVisitor} for computing numeric {@literal '>='} equality
+	 * results for {@link LongIntegerStruct}s.
 	 */
-	private static final class LongIntegerGreaterThanOrEqualToVisitor extends RealStruct.GreaterThanOrEqualToVisitor<LongIntegerStruct> {
+	private static final class LongIntegerGreaterThanOrEqualToVisitor extends RationalStruct.RationalGreaterThanOrEqualToVisitor<LongIntegerStruct> {
 
 		/**
 		 * Private constructor to make a new instance of an LongIntegerGreaterThanOrEqualToVisitor with the
@@ -1018,27 +943,6 @@ public final class LongIntegerStruct extends BuiltInClassStruct implements Integ
 			final BigInteger lBigInteger = BigInteger.valueOf(real1.l);
 			final BigInteger bigInteger = real2.bigInteger;
 			return lBigInteger.compareTo(bigInteger) >= 0;
-		}
-
-		@Override
-		public boolean greaterThanOrEqualTo(final SingleFloatStruct real2) {
-			final BigDecimal lBigDecimal = BigDecimal.valueOf(real1.l);
-			final BigDecimal bigDecimal = real2.bigDecimalValue();
-			return lBigDecimal.compareTo(bigDecimal) >= 0;
-		}
-
-		@Override
-		public boolean greaterThanOrEqualTo(final DoubleFloatStruct real2) {
-			final BigDecimal lBigDecimal = BigDecimal.valueOf(real1.l);
-			final BigDecimal bigDecimal = real2.bigDecimalValue();
-			return lBigDecimal.compareTo(bigDecimal) >= 0;
-		}
-
-		@Override
-		public boolean greaterThanOrEqualTo(final BigFloatStruct real2) {
-			final BigDecimal lBigDecimal = BigDecimal.valueOf(real1.l);
-			final BigDecimal bigDecimal = real2.bigDecimal;
-			return lBigDecimal.compareTo(bigDecimal) >= 0;
 		}
 
 		@Override

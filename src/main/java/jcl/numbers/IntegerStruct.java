@@ -232,7 +232,7 @@ public interface IntegerStruct extends RationalStruct {
 	 * the result is {@code this}.
 	 *
 	 * @param count
-	 * 		the bit positions to shift this IntegerStruct left or right.
+	 * 		the bit positions to shift this IntegerStruct left or right
 	 *
 	 * @return the arithmetic shift operation on the binary representation of this IntegerStruct
 	 */
@@ -458,12 +458,12 @@ public interface IntegerStruct extends RationalStruct {
 	LogIorVisitor<?> logIorVisitor();
 
 	/**
-	 * Returns the bit-wise logical compliment 'and' of this IntegerStruct and the provided IntegerStruct.
+	 * Returns the bit-wise logical 'nand' of this IntegerStruct and the provided IntegerStruct.
 	 *
 	 * @param integer
 	 * 		the IntegerStruct used in performing the bit-wise logical operation
 	 *
-	 * @return the bit-wise logical compliment 'and' of this IntegerStruct and the provided IntegerStruct
+	 * @return the bit-wise logical 'nand' of this IntegerStruct and the provided IntegerStruct
 	 */
 	default IntegerStruct logNand(final IntegerStruct integer) {
 		final LogNandVisitor<?> logNandVisitor = logNandVisitor();
@@ -471,31 +471,29 @@ public interface IntegerStruct extends RationalStruct {
 	}
 
 	/**
-	 * Returns the bit-wise logical compliment 'and' of this IntegerStruct using the provided {@link LogNandVisitor}.
+	 * Returns the bit-wise logical 'nand' of this IntegerStruct using the provided {@link LogNandVisitor}.
 	 *
 	 * @param logNandVisitor
 	 * 		the {@link LogNandVisitor} to be used in the bit-wise logical operation
 	 *
-	 * @return the bit-wise logical compliment 'and' of this IntegerStruct using the provided {@link LogNandVisitor}
+	 * @return the bit-wise logical 'nand' of this IntegerStruct using the provided {@link LogNandVisitor}
 	 */
 	IntegerStruct logNand(LogNandVisitor<?> logNandVisitor);
 
 	/**
-	 * Returns a new {@link LogNandVisitor} with this IntegerStruct to be used in a bit-wise logical compliment 'and'
-	 * operation.
+	 * Returns a new {@link LogNandVisitor} with this IntegerStruct to be used in a bit-wise logical 'nand' operation.
 	 *
-	 * @return a new {@link LogNandVisitor} with this IntegerStruct to be used in a bit-wise logical compliment 'and'
-	 * operation
+	 * @return a new {@link LogNandVisitor} with this IntegerStruct to be used in a bit-wise logical 'and' operation
 	 */
 	LogNandVisitor<?> logNandVisitor();
 
 	/**
-	 * Returns the bit-wise logical compliment 'or' of this IntegerStruct and the provided IntegerStruct.
+	 * Returns the bit-wise logical 'nor' of this IntegerStruct and the provided IntegerStruct.
 	 *
 	 * @param integer
 	 * 		the IntegerStruct used in performing the bit-wise logical operation
 	 *
-	 * @return the bit-wise logical compliment 'or' of this IntegerStruct and the provided IntegerStruct
+	 * @return the bit-wise logical 'nor' of this IntegerStruct and the provided IntegerStruct
 	 */
 	default IntegerStruct logNor(final IntegerStruct integer) {
 		final LogNorVisitor<?> logNorVisitor = logNorVisitor();
@@ -503,21 +501,19 @@ public interface IntegerStruct extends RationalStruct {
 	}
 
 	/**
-	 * Returns the bit-wise logical compliment 'or' of this IntegerStruct using the provided {@link LogNorVisitor}.
+	 * Returns the bit-wise logical 'nor' of this IntegerStruct using the provided {@link LogNorVisitor}.
 	 *
 	 * @param logNorVisitor
 	 * 		the {@link LogNorVisitor} to be used in the bit-wise logical operation
 	 *
-	 * @return the bit-wise logical compliment 'or' of this IntegerStruct using the provided {@link LogNorVisitor}
+	 * @return the bit-wise logical 'nor' of this IntegerStruct using the provided {@link LogNorVisitor}
 	 */
 	IntegerStruct logNor(LogNorVisitor<?> logNorVisitor);
 
 	/**
-	 * Returns a new {@link LogNorVisitor} with this IntegerStruct to be used in a bit-wise logical compliment 'or'
-	 * operation.
+	 * Returns a new {@link LogNorVisitor} with this IntegerStruct to be used in a bit-wise logical 'nor' operation.
 	 *
-	 * @return a new {@link LogNorVisitor} with this IntegerStruct to be used in a bit-wise logical compliment 'or'
-	 * operation
+	 * @return a new {@link LogNorVisitor} with this IntegerStruct to be used in a bit-wise logical 'nor' operation
 	 */
 	LogNorVisitor<?> logNorVisitor();
 
@@ -529,12 +525,14 @@ public interface IntegerStruct extends RationalStruct {
 	IntegerStruct logNot();
 
 	/**
-	 * Returns the bit-wise logical 'or' of the compliment of this IntegerStruct and the provided IntegerStruct.
+	 * Returns the bit-wise logical 'inclusive-or' of the compliment of this IntegerStruct and the provided
+	 * IntegerStruct.
 	 *
 	 * @param integer
 	 * 		the IntegerStruct used in performing the bit-wise logical operation
 	 *
-	 * @return the bit-wise logical 'or' of the compliment of this IntegerStruct and the provided IntegerStruct
+	 * @return the bit-wise logical 'inclusive-or' of the compliment of this IntegerStruct and the provided
+	 * IntegerStruct
 	 */
 	default IntegerStruct logOrC1(final IntegerStruct integer) {
 		final LogOrC1Visitor<?> logOrC1Visitor = logOrC1Visitor();
@@ -542,29 +540,31 @@ public interface IntegerStruct extends RationalStruct {
 	}
 
 	/**
-	 * Returns the bit-wise logical 'or' of this IntegerStruct using the provided {@link LogOrC1Visitor}.
+	 * Returns the bit-wise logical 'inclusive-or' of this IntegerStruct using the provided {@link LogOrC1Visitor}.
 	 *
 	 * @param logOrC1Visitor
 	 * 		the {@link LogOrC1Visitor} to be used in the bit-wise logical operation
 	 *
-	 * @return the bit-wise logical 'or' of this IntegerStruct using the provided {@link LogOrC1Visitor}
+	 * @return the bit-wise logical 'inclusive-or' of this IntegerStruct using the provided {@link LogOrC1Visitor}
 	 */
 	IntegerStruct logOrC1(LogOrC1Visitor<?> logOrC1Visitor);
 
 	/**
-	 * Returns a new {@link LogOrC1Visitor} with this IntegerStruct to be used in a bit-wise logical 'or' operation.
+	 * Returns a new {@link LogOrC1Visitor} with this IntegerStruct to be used in a bit-wise logical 'inclusive-or'
+	 * operation.
 	 *
-	 * @return a new {@link LogOrC1Visitor} with this IntegerStruct to be used in a bit-wise logical 'or' operation
+	 * @return a new {@link LogOrC1Visitor} with this IntegerStruct to be used in a bit-wise logical 'inclusive-or'
+	 * operation
 	 */
 	LogOrC1Visitor<?> logOrC1Visitor();
 
 	/**
-	 * Returns the bit-wise logical 'or' of this IntegerStruct and the compliment of provided IntegerStruct.
+	 * Returns the bit-wise logical 'inclusive-or' of this IntegerStruct and the compliment of provided IntegerStruct.
 	 *
 	 * @param integer
 	 * 		the IntegerStruct used in performing the bit-wise logical operation
 	 *
-	 * @return the bit-wise logical 'or' of this IntegerStruct and the compliment of provided IntegerStruct
+	 * @return the bit-wise logical 'inclusive-or' of this IntegerStruct and the compliment of provided IntegerStruct
 	 */
 	default IntegerStruct logOrC2(final IntegerStruct integer) {
 		final LogOrC2Visitor<?> logOrC2Visitor = logOrC2Visitor();
@@ -572,19 +572,21 @@ public interface IntegerStruct extends RationalStruct {
 	}
 
 	/**
-	 * Returns the bit-wise logical 'or' of this IntegerStruct using the provided {@link LogOrC2Visitor}.
+	 * Returns the bit-wise logical 'inclusive-or' of this IntegerStruct using the provided {@link LogOrC2Visitor}.
 	 *
 	 * @param logOrC2Visitor
 	 * 		the {@link LogOrC2Visitor} to be used in the bit-wise logical operation
 	 *
-	 * @return the bit-wise logical 'or' of this IntegerStruct using the provided {@link LogOrC2Visitor}
+	 * @return the bit-wise logical 'inclusive-or' of this IntegerStruct using the provided {@link LogOrC2Visitor}
 	 */
 	IntegerStruct logOrC2(LogOrC2Visitor<?> logOrC2Visitor);
 
 	/**
-	 * Returns a new {@link LogOrC2Visitor} with this IntegerStruct to be used in a bit-wise logical 'or' operation.
+	 * Returns a new {@link LogOrC2Visitor} with this IntegerStruct to be used in a bit-wise logical 'inclusive-or'
+	 * operation.
 	 *
-	 * @return a new {@link LogOrC2Visitor} with this IntegerStruct to be used in a bit-wise logical 'or' operation
+	 * @return a new {@link LogOrC2Visitor} with this IntegerStruct to be used in a bit-wise logical 'inclusive-or'
+	 * operation
 	 */
 	LogOrC2Visitor<?> logOrC2Visitor();
 
@@ -934,7 +936,7 @@ public interface IntegerStruct extends RationalStruct {
 		}
 
 		/**
-		 * Computes the greatest common divisor for an {@link S} and a {@link IntIntegerStruct}.
+		 * Computes the greatest common divisor for an {@link S} and an {@link IntIntegerStruct}.
 		 *
 		 * @param integer2
 		 * 		the second argument in the greatest common divisor operation
@@ -964,198 +966,684 @@ public interface IntegerStruct extends RationalStruct {
 		public abstract IntegerStruct gcd(BigIntegerStruct integer2);
 	}
 
+	/**
+	 * {@link LcmVisitor} for computing least common multiple for {@link IntegerStruct}s.
+	 */
 	abstract class LcmVisitor<S extends IntegerStruct> {
 
+		/**
+		 * The {@link S} as the first argument in the least common multiple operation.
+		 */
 		final S integer1;
 
+		/**
+		 * Package private constructor.
+		 *
+		 * @param integer1
+		 * 		the first argument in the least common multiple operation
+		 */
 		LcmVisitor(final S integer1) {
 			this.integer1 = integer1;
 		}
 
+		/**
+		 * Computes the least common multiple for an {@link S} and an {@link IntIntegerStruct}.
+		 *
+		 * @param integer2
+		 * 		the second argument in the least common multiple operation
+		 *
+		 * @return the least common multiple result
+		 */
 		public abstract IntegerStruct lcm(IntIntegerStruct integer2);
 
+		/**
+		 * Computes the least common multiple for an {@link S} and a {@link LongIntegerStruct}.
+		 *
+		 * @param integer2
+		 * 		the second argument in the least common multiple operation
+		 *
+		 * @return the least common multiple result
+		 */
 		public abstract IntegerStruct lcm(LongIntegerStruct integer2);
 
+		/**
+		 * Computes the least common multiple for an {@link S} and a {@link BigIntegerStruct}.
+		 *
+		 * @param integer2
+		 * 		the second argument in the least common multiple operation
+		 *
+		 * @return the least common multiple result
+		 */
 		public abstract IntegerStruct lcm(BigIntegerStruct integer2);
 	}
 
+	/**
+	 * {@link AshVisitor} for performing the arithmetic shift operation on the binary representation for {@link
+	 * IntegerStruct}s.
+	 */
 	abstract class AshVisitor<S extends IntegerStruct> {
 
+		/**
+		 * The {@link S} as the {@link IntegerStruct} to shift.
+		 */
 		final S integer;
 
+		/**
+		 * Package private constructor.
+		 *
+		 * @param integer
+		 * 		the {@link IntegerStruct} to shift
+		 */
 		AshVisitor(final S integer) {
 			this.integer = integer;
 		}
 
+		/**
+		 * Performs the arithmetic shift operation on the binary representation for an {@link S} with an {@link
+		 * IntIntegerStruct} for bit shifting.
+		 *
+		 * @param count
+		 * 		the bit positions to shift an {@link IntegerStruct} left or right
+		 *
+		 * @return the arithmetic shift result
+		 */
 		public abstract IntegerStruct ash(IntIntegerStruct count);
 
+		/**
+		 * Performs the arithmetic shift operation on the binary representation for an {@link S} with a {@link
+		 * LongIntegerStruct} for bit shifting.
+		 *
+		 * @param count
+		 * 		the bit positions to shift an {@link IntegerStruct} left or right
+		 *
+		 * @return the arithmetic shift result
+		 */
 		public abstract IntegerStruct ash(LongIntegerStruct count);
 
+		/**
+		 * Performs the arithmetic shift operation on the binary representation for an {@link S} with a {@link
+		 * BigIntegerStruct} for bit shifting.
+		 *
+		 * @param count
+		 * 		the bit positions to shift an {@link IntegerStruct} left or right
+		 *
+		 * @return the arithmetic shift result
+		 */
 		public abstract IntegerStruct ash(BigIntegerStruct count);
 	}
 
+	/**
+	 * {@link LogAndVisitor} for computing bit-wise logical 'and' for {@link IntegerStruct}s.
+	 */
 	abstract class LogAndVisitor<S extends IntegerStruct> {
 
+		/**
+		 * The {@link S} as the first argument in the bit-wise logical operation.
+		 */
 		final S integer1;
 
+		/**
+		 * Package private constructor.
+		 *
+		 * @param integer1
+		 * 		the first argument in the bit-wise logical operation
+		 */
 		LogAndVisitor(final S integer1) {
 			this.integer1 = integer1;
 		}
 
+		/**
+		 * Computes the bit-wise logical 'and' for an {@link S} and an {@link IntIntegerStruct}.
+		 *
+		 * @param integer2
+		 * 		the second argument in the bit-wise logical operation
+		 *
+		 * @return the bit-wise logical result
+		 */
 		public abstract IntegerStruct logAnd(IntIntegerStruct integer2);
 
+		/**
+		 * Computes the bit-wise logical 'and' for an {@link S} and a {@link LongIntegerStruct}.
+		 *
+		 * @param integer2
+		 * 		the second argument in the bit-wise logical operation
+		 *
+		 * @return the bit-wise logical result
+		 */
 		public abstract IntegerStruct logAnd(LongIntegerStruct integer2);
 
+		/**
+		 * Computes the bit-wise logical 'and' for an {@link S} and a {@link BigIntegerStruct}.
+		 *
+		 * @param integer2
+		 * 		the second argument in the bit-wise logical operation
+		 *
+		 * @return the bit-wise logical result
+		 */
 		public abstract IntegerStruct logAnd(BigIntegerStruct integer2);
 	}
 
+	/**
+	 * {@link LogAndC1Visitor} for computing bit-wise logical 'and' for an {@link IntegerStruct} and the complement of
+	 * another {@link IntegerStruct}.
+	 */
 	abstract class LogAndC1Visitor<S extends IntegerStruct> {
 
+		/**
+		 * The {@link S} as the first argument in the bit-wise logical operation.
+		 */
 		final S integer1;
 
+		/**
+		 * Package private constructor.
+		 *
+		 * @param integer1
+		 * 		the first argument in the bit-wise logical operation
+		 */
 		LogAndC1Visitor(final S integer1) {
 			this.integer1 = integer1;
 		}
 
+		/**
+		 * Computes the bit-wise logical 'and' for the complement of {@link S} and an {@link IntIntegerStruct}.
+		 *
+		 * @param integer2
+		 * 		the second argument in the bit-wise logical operation
+		 *
+		 * @return the bit-wise logical result
+		 */
 		public abstract IntegerStruct logAndC1(IntIntegerStruct integer2);
 
+		/**
+		 * Computes the bit-wise logical 'and' for the complement of {@link S} and a {@link LongIntegerStruct}.
+		 *
+		 * @param integer2
+		 * 		the second argument in the bit-wise logical operation
+		 *
+		 * @return the bit-wise logical result
+		 */
 		public abstract IntegerStruct logAndC1(LongIntegerStruct integer2);
 
+		/**
+		 * Computes the bit-wise logical 'and' for the complement of {@link S} and a {@link BigIntegerStruct}.
+		 *
+		 * @param integer2
+		 * 		the second argument in the bit-wise logical operation
+		 *
+		 * @return the bit-wise logical result
+		 */
 		public abstract IntegerStruct logAndC1(BigIntegerStruct integer2);
 	}
 
+	/**
+	 * {@link LogAndC2Visitor} for computing bit-wise logical 'and' for the complement of an {@link IntegerStruct} and
+	 * another {@link IntegerStruct}.
+	 */
 	abstract class LogAndC2Visitor<S extends IntegerStruct> {
 
+		/**
+		 * The {@link S} as the first argument in the bit-wise logical operation.
+		 */
 		final S integer1;
 
+		/**
+		 * Package private constructor.
+		 *
+		 * @param integer1
+		 * 		the first argument in the bit-wise logical operation
+		 */
 		LogAndC2Visitor(final S integer1) {
 			this.integer1 = integer1;
 		}
 
+		/**
+		 * Computes the bit-wise logical 'and' for an {@link S} and the complement of an {@link IntIntegerStruct}.
+		 *
+		 * @param integer2
+		 * 		the second argument in the bit-wise logical operation
+		 *
+		 * @return the bit-wise logical result
+		 */
 		public abstract IntegerStruct logAndC2(IntIntegerStruct integer2);
 
+		/**
+		 * Computes the bit-wise logical 'and' for an {@link S} and the complement of a {@link LongIntegerStruct}.
+		 *
+		 * @param integer2
+		 * 		the second argument in the bit-wise logical operation
+		 *
+		 * @return the bit-wise logical result
+		 */
 		public abstract IntegerStruct logAndC2(LongIntegerStruct integer2);
 
+		/**
+		 * Computes the bit-wise logical 'and' for an {@link S} and the complement of a {@link BigIntegerStruct}.
+		 *
+		 * @param integer2
+		 * 		the second argument in the bit-wise logical operation
+		 *
+		 * @return the bit-wise logical result
+		 */
 		public abstract IntegerStruct logAndC2(BigIntegerStruct integer2);
 	}
 
+	/**
+	 * {@link LogEqvVisitor} for computing bit-wise logical 'equivalence', or 'exclusive-nor' for {@link
+	 * IntegerStruct}s.
+	 */
 	abstract class LogEqvVisitor<S extends IntegerStruct> {
 
+		/**
+		 * The {@link S} as the first argument in the bit-wise logical operation.
+		 */
 		final S integer1;
 
+		/**
+		 * Package private constructor.
+		 *
+		 * @param integer1
+		 * 		the first argument in the bit-wise logical operation
+		 */
 		LogEqvVisitor(final S integer1) {
 			this.integer1 = integer1;
 		}
 
+		/**
+		 * Computes the bit-wise logical 'equivalence', or 'exclusive-nor' for an {@link S} and an {@link
+		 * IntIntegerStruct}.
+		 *
+		 * @param integer2
+		 * 		the second argument in the bit-wise logical operation
+		 *
+		 * @return the bit-wise logical result
+		 */
 		public abstract IntegerStruct logEqv(IntIntegerStruct integer2);
 
+		/**
+		 * Computes the bit-wise logical 'equivalence', or 'exclusive-nor' for an {@link S} and a {@link
+		 * LongIntegerStruct}.
+		 *
+		 * @param integer2
+		 * 		the second argument in the bit-wise logical operation
+		 *
+		 * @return the bit-wise logical result
+		 */
 		public abstract IntegerStruct logEqv(LongIntegerStruct integer2);
 
+		/**
+		 * Computes the bit-wise logical 'equivalence', or 'exclusive-nor' for an {@link S} and a {@link
+		 * BigIntegerStruct}.
+		 *
+		 * @param integer2
+		 * 		the second argument in the bit-wise logical operation
+		 *
+		 * @return the bit-wise logical result
+		 */
 		public abstract IntegerStruct logEqv(BigIntegerStruct integer2);
 	}
 
+	/**
+	 * {@link LogIorVisitor} for computing bit-wise logical 'inclusive-or' for {@link IntegerStruct}s.
+	 */
 	abstract class LogIorVisitor<S extends IntegerStruct> {
 
+		/**
+		 * The {@link S} as the first argument in the bit-wise logical operation.
+		 */
 		final S integer1;
 
+		/**
+		 * Package private constructor.
+		 *
+		 * @param integer1
+		 * 		the first argument in the bit-wise logical operation
+		 */
 		LogIorVisitor(final S integer1) {
 			this.integer1 = integer1;
 		}
 
+		/**
+		 * Computes the bit-wise logical 'inclusive-or' for an {@link S} and an {@link IntIntegerStruct}.
+		 *
+		 * @param integer2
+		 * 		the second argument in the bit-wise logical operation
+		 *
+		 * @return the bit-wise logical result
+		 */
 		public abstract IntegerStruct logIor(IntIntegerStruct integer2);
 
+		/**
+		 * Computes the bit-wise logical 'inclusive-or' for an {@link S} and a {@link LongIntegerStruct}.
+		 *
+		 * @param integer2
+		 * 		the second argument in the bit-wise logical operation
+		 *
+		 * @return the bit-wise logical result
+		 */
 		public abstract IntegerStruct logIor(LongIntegerStruct integer2);
 
+		/**
+		 * Computes the bit-wise logical 'inclusive-or' for an {@link S} and a {@link BigIntegerStruct}.
+		 *
+		 * @param integer2
+		 * 		the second argument in the bit-wise logical operation
+		 *
+		 * @return the bit-wise logical result
+		 */
 		public abstract IntegerStruct logIor(BigIntegerStruct integer2);
 	}
 
+	/**
+	 * {@link LogNandVisitor} for computing bit-wise logical 'nand' for {@link IntegerStruct}s.
+	 */
 	abstract class LogNandVisitor<S extends IntegerStruct> {
 
+		/**
+		 * The {@link S} as the first argument in the bit-wise logical operation.
+		 */
 		final S integer1;
 
+		/**
+		 * Package private constructor.
+		 *
+		 * @param integer1
+		 * 		the first argument in the bit-wise logical operation
+		 */
 		LogNandVisitor(final S integer1) {
 			this.integer1 = integer1;
 		}
 
+		/**
+		 * Computes the bit-wise logical 'nand' for an {@link S} and an {@link IntIntegerStruct}.
+		 *
+		 * @param integer2
+		 * 		the second argument in the bit-wise logical operation
+		 *
+		 * @return the bit-wise logical result
+		 */
 		public abstract IntegerStruct logNand(IntIntegerStruct integer2);
 
+		/**
+		 * Computes the bit-wise logical 'nand' for an {@link S} and a {@link LongIntegerStruct}.
+		 *
+		 * @param integer2
+		 * 		the second argument in the bit-wise logical operation
+		 *
+		 * @return the bit-wise logical result
+		 */
 		public abstract IntegerStruct logNand(LongIntegerStruct integer2);
 
+		/**
+		 * Computes the bit-wise logical 'nand' for an {@link S} and a {@link BigIntegerStruct}.
+		 *
+		 * @param integer2
+		 * 		the second argument in the bit-wise logical operation
+		 *
+		 * @return the bit-wise logical result
+		 */
 		public abstract IntegerStruct logNand(BigIntegerStruct integer2);
 	}
 
+	/**
+	 * {@link LogNorVisitor} for computing bit-wise logical 'nor' for {@link IntegerStruct}s.
+	 */
 	abstract class LogNorVisitor<S extends IntegerStruct> {
 
+		/**
+		 * The {@link S} as the first argument in the bit-wise logical operation.
+		 */
 		final S integer1;
 
+		/**
+		 * Package private constructor.
+		 *
+		 * @param integer1
+		 * 		the first argument in the bit-wise logical operation
+		 */
 		LogNorVisitor(final S integer1) {
 			this.integer1 = integer1;
 		}
 
+		/**
+		 * Computes the bit-wise logical 'nor' for an {@link S} and an {@link IntIntegerStruct}.
+		 *
+		 * @param integer2
+		 * 		the second argument in the bit-wise logical operation
+		 *
+		 * @return the bit-wise logical result
+		 */
 		public abstract IntegerStruct logNor(IntIntegerStruct integer2);
 
+		/**
+		 * Computes the bit-wise logical 'nor' for an {@link S} and a {@link LongIntegerStruct}.
+		 *
+		 * @param integer2
+		 * 		the second argument in the bit-wise logical operation
+		 *
+		 * @return the bit-wise logical result
+		 */
 		public abstract IntegerStruct logNor(LongIntegerStruct integer2);
 
+		/**
+		 * Computes the bit-wise logical 'nor' for an {@link S} and a {@link BigIntegerStruct}.
+		 *
+		 * @param integer2
+		 * 		the second argument in the bit-wise logical operation
+		 *
+		 * @return the bit-wise logical result
+		 */
 		public abstract IntegerStruct logNor(BigIntegerStruct integer2);
 	}
 
+	/**
+	 * {@link LogOrC1Visitor} for computing bit-wise logical 'inclusive-or' for an {@link IntegerStruct} and the
+	 * complement of
+	 * another {@link IntegerStruct}.
+	 */
 	abstract class LogOrC1Visitor<S extends IntegerStruct> {
 
+		/**
+		 * The {@link S} as the first argument in the bit-wise logical operation.
+		 */
 		final S integer1;
 
+		/**
+		 * Package private constructor.
+		 *
+		 * @param integer1
+		 * 		the first argument in the bit-wise logical operation
+		 */
 		LogOrC1Visitor(final S integer1) {
 			this.integer1 = integer1;
 		}
 
+		/**
+		 * Computes the bit-wise logical 'inclusive-or' for the complement of {@link S} and an {@link
+		 * IntIntegerStruct}.
+		 *
+		 * @param integer2
+		 * 		the second argument in the bit-wise logical operation
+		 *
+		 * @return the bit-wise logical result
+		 */
 		public abstract IntegerStruct logOrC1(IntIntegerStruct integer2);
 
+		/**
+		 * Computes the bit-wise logical 'inclusive-or' for the complement of {@link S} and a {@link
+		 * LongIntegerStruct}.
+		 *
+		 * @param integer2
+		 * 		the second argument in the bit-wise logical operation
+		 *
+		 * @return the bit-wise logical result
+		 */
 		public abstract IntegerStruct logOrC1(LongIntegerStruct integer2);
 
+		/**
+		 * Computes the bit-wise logical 'inclusive-or' for the complement of {@link S} and a {@link BigIntegerStruct}.
+		 *
+		 * @param integer2
+		 * 		the second argument in the bit-wise logical operation
+		 *
+		 * @return the bit-wise logical result
+		 */
 		public abstract IntegerStruct logOrC1(BigIntegerStruct integer2);
 	}
 
+	/**
+	 * {@link LogOrC2Visitor} for computing bit-wise logical 'inclusive-or' for the complement of an {@link
+	 * IntegerStruct} and another {@link IntegerStruct}.
+	 */
 	abstract class LogOrC2Visitor<S extends IntegerStruct> {
 
+		/**
+		 * The {@link S} as the first argument in the bit-wise logical operation.
+		 */
 		final S integer1;
 
+		/**
+		 * Package private constructor.
+		 *
+		 * @param integer1
+		 * 		the first argument in the bit-wise logical operation
+		 */
 		LogOrC2Visitor(final S integer1) {
 			this.integer1 = integer1;
 		}
 
+		/**
+		 * Computes the bit-wise logical 'inclusive-or' for an {@link S} and the complement of an {@link
+		 * IntIntegerStruct}.
+		 *
+		 * @param integer2
+		 * 		the second argument in the bit-wise logical operation
+		 *
+		 * @return the bit-wise logical result
+		 */
 		public abstract IntegerStruct logOrC2(IntIntegerStruct integer2);
 
+		/**
+		 * Computes the bit-wise logical 'inclusive-or' for an {@link S} and the complement of a {@link
+		 * LongIntegerStruct}.
+		 *
+		 * @param integer2
+		 * 		the second argument in the bit-wise logical operation
+		 *
+		 * @return the bit-wise logical result
+		 */
 		public abstract IntegerStruct logOrC2(LongIntegerStruct integer2);
 
+		/**
+		 * Computes the bit-wise logical 'inclusive-or' for an {@link S} and the complement of a {@link
+		 * BigIntegerStruct}.
+		 *
+		 * @param integer2
+		 * 		the second argument in the bit-wise logical operation
+		 *
+		 * @return the bit-wise logical result
+		 */
 		public abstract IntegerStruct logOrC2(BigIntegerStruct integer2);
 	}
 
+	/**
+	 * {@link LogXorVisitor} for computing bit-wise logical 'exclusive-or' for {@link IntegerStruct}s.
+	 */
 	abstract class LogXorVisitor<S extends IntegerStruct> {
 
+		/**
+		 * The {@link S} as the first argument in the bit-wise logical operation.
+		 */
 		final S integer1;
 
+		/**
+		 * Package private constructor.
+		 *
+		 * @param integer1
+		 * 		the first argument in the bit-wise logical operation
+		 */
 		LogXorVisitor(final S integer1) {
 			this.integer1 = integer1;
 		}
 
+		/**
+		 * Computes the bit-wise logical 'exclusive-or' for an {@link S} and an {@link IntIntegerStruct}.
+		 *
+		 * @param integer2
+		 * 		the second argument in the bit-wise logical operation
+		 *
+		 * @return the bit-wise logical result
+		 */
 		public abstract IntegerStruct logXor(IntIntegerStruct integer2);
 
+		/**
+		 * Computes the bit-wise logical 'exclusive-or' for an {@link S} and a {@link LongIntegerStruct}.
+		 *
+		 * @param integer2
+		 * 		the second argument in the bit-wise logical operation
+		 *
+		 * @return the bit-wise logical result
+		 */
 		public abstract IntegerStruct logXor(LongIntegerStruct integer2);
 
+		/**
+		 * Computes the bit-wise logical 'exclusive-or' for an {@link S} and a {@link BigIntegerStruct}.
+		 *
+		 * @param integer2
+		 * 		the second argument in the bit-wise logical operation
+		 *
+		 * @return the bit-wise logical result
+		 */
 		public abstract IntegerStruct logXor(BigIntegerStruct integer2);
 	}
 
+	/**
+	 * {@link LogBitPVisitor} for active bit testing for {@link IntegerStruct}s.
+	 */
 	abstract class LogBitPVisitor<S extends IntegerStruct> {
 
+		/**
+		 * The {@link S} as the {@link IntegerStruct} for active bit testing.
+		 */
 		final S integer;
 
+		/**
+		 * Package private constructor.
+		 *
+		 * @param integer
+		 * 		the {@link IntegerStruct} for active bit testing
+		 */
 		LogBitPVisitor(final S integer) {
 			this.integer = integer;
 		}
 
+		/**
+		 * Returns true if the bit whose index is {@code index} is a one-bit; otherwise, returns false.
+		 *
+		 * @param index
+		 * 		the index value to test for a one-bit
+		 *
+		 * @return true if the bit whose index is {@code index} is a one-bit; otherwise, false
+		 */
 		public abstract boolean logBitP(IntIntegerStruct index);
 
+		/**
+		 * Returns true if the bit whose index is {@code index} is a one-bit; otherwise, returns false.
+		 *
+		 * @param index
+		 * 		the index value to test for a one-bit
+		 *
+		 * @return true if the bit whose index is {@code index} is a one-bit; otherwise, false
+		 */
 		public abstract boolean logBitP(LongIntegerStruct index);
 
+		/**
+		 * Returns true if the bit whose index is {@code index} is a one-bit; otherwise, returns false.
+		 *
+		 * @param index
+		 * 		the index value to test for a one-bit
+		 *
+		 * @return true if the bit whose index is {@code index} is a one-bit; otherwise, false
+		 */
 		public abstract boolean logBitP(BigIntegerStruct index);
 	}
 

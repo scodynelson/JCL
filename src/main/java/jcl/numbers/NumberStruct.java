@@ -7,6 +7,7 @@ package jcl.numbers;
 import java.util.List;
 
 import jcl.LispStruct;
+import org.apache.commons.math3.fraction.BigFraction;
 import org.apfloat.Apcomplex;
 
 /**
@@ -52,8 +53,19 @@ public interface NumberStruct extends LispStruct {
 	@Deprecated
 	Apcomplex apcomplexValue();
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Determines the absolute value of this RatioStruct.
+	 */
 	RealStruct abs();
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Determines whether or not this RatioStruct is zero by comparing {@link #bigFraction} to {@link
+	 * BigFraction#ZERO}.
+	 */
 	boolean zerop();
 
 	default NumberStruct add(final NumberStruct number) {
@@ -61,8 +73,23 @@ public interface NumberStruct extends LispStruct {
 		return number.add(addVisitor);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Adds this RatioStruct to a {@link NumberStruct} using the provided {@link AddVisitor}.
+	 *
+	 * @param addVisitor
+	 * 		the {@link AddVisitor} to be used in the addition operation
+	 *
+	 * @return the addition of {@link NumberStruct} using the provided {@link AddVisitor} and this RatioStruct
+	 */
 	NumberStruct add(AddVisitor<?> addVisitor);
 
+	/**
+	 * Returns a new {@link AddVisitor} with this RatioStruct to be used in an addition operation.
+	 *
+	 * @return a new {@link AddVisitor} with this RatioStruct to be used in an addition operation
+	 */
 	AddVisitor<?> addVisitor();
 
 	static NumberStruct add(final List<NumberStruct> numbers) {
@@ -74,8 +101,23 @@ public interface NumberStruct extends LispStruct {
 		return number.subtract(subtractVisitor);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Adds this RatioStruct to a {@link NumberStruct} using the provided {@link SubtractVisitor}.
+	 *
+	 * @param subtractVisitor
+	 * 		the {@link SubtractVisitor} to be used in the subtraction operation
+	 *
+	 * @return the subtraction of {@link NumberStruct} using the provided {@link SubtractVisitor} and this RatioStruct
+	 */
 	NumberStruct subtract(SubtractVisitor<?> subtractVisitor);
 
+	/**
+	 * Returns a new {@link SubtractVisitor} with this RatioStruct to be used in a subtraction operation.
+	 *
+	 * @return a new {@link SubtractVisitor} with this RatioStruct to be used in a subtraction operation
+	 */
 	SubtractVisitor<?> subtractVisitor();
 
 	static NumberStruct subtract(final NumberStruct number, final List<NumberStruct> numbers) {
@@ -90,8 +132,24 @@ public interface NumberStruct extends LispStruct {
 		return number.multiply(multiplyVisitor);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Adds this RatioStruct to a {@link NumberStruct} using the provided {@link MultiplyVisitor}.
+	 *
+	 * @param multiplyVisitor
+	 * 		the {@link MultiplyVisitor} to be used in the multiplication operation
+	 *
+	 * @return the multiplication of {@link NumberStruct} using the provided {@link MultiplyVisitor} and this
+	 * RatioStruct
+	 */
 	NumberStruct multiply(MultiplyVisitor<?> multiplyVisitor);
 
+	/**
+	 * Returns a new {@link MultiplyVisitor} with this RatioStruct to be used in a multiplication operation.
+	 *
+	 * @return a new {@link MultiplyVisitor} with this RatioStruct to be used in a multiplication operation
+	 */
 	MultiplyVisitor<?> multiplyVisitor();
 
 	static NumberStruct multiply(final List<NumberStruct> numbers) {
@@ -103,8 +161,23 @@ public interface NumberStruct extends LispStruct {
 		return number.divide(divideVisitor);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Adds this RatioStruct to a {@link NumberStruct} using the provided {@link DivideVisitor}.
+	 *
+	 * @param divideVisitor
+	 * 		the {@link DivideVisitor} to be used in the division operation
+	 *
+	 * @return the division of {@link NumberStruct} using the provided {@link DivideVisitor} and this RatioStruct
+	 */
 	NumberStruct divide(DivideVisitor<?> divideVisitor);
 
+	/**
+	 * Returns a new {@link DivideVisitor} with this RatioStruct to be used in a division operation.
+	 *
+	 * @return a new {@link DivideVisitor} with this RatioStruct to be used in a division operation
+	 */
 	DivideVisitor<?> divideVisitor();
 
 	static NumberStruct divide(final NumberStruct number, final List<NumberStruct> numbers) {
@@ -119,8 +192,24 @@ public interface NumberStruct extends LispStruct {
 		return number.isEqualTo(equalToVisitor);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Compares this RatioStruct to a {@link NumberStruct} using the provided {@link EqualToVisitor}.
+	 *
+	 * @param equalToVisitor
+	 * 		the {@link EqualToVisitor} to be used in the '=' operation
+	 *
+	 * @return the '=' comparison of {@link NumberStruct} using the provided {@link EqualToVisitor} and this
+	 * RatioStruct
+	 */
 	boolean isEqualTo(EqualToVisitor<?> equalToVisitor);
 
+	/**
+	 * Returns a new {@link EqualToVisitor} with this RatioStruct to be used in an '=' operation.
+	 *
+	 * @return a new {@link EqualToVisitor} with this RatioStruct to be used in an '=' operation
+	 */
 	EqualToVisitor<?> equalToVisitor();
 
 	static boolean isEqualTo(final NumberStruct number, final List<NumberStruct> numbers) {
@@ -163,12 +252,32 @@ public interface NumberStruct extends LispStruct {
 
 	NumberStruct conjugate();
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Computes the negation with {@link BigFraction#negate()} on {@link #bigFraction} and then creating a new
+	 * RatioStruct to wrap it.
+	 */
 	NumberStruct negation();
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Creates a new {@link RationalStruct} with {@link BigFraction#denominator} as the numerator and {@link
+	 * BigFraction#numerator} as the denominator from {@link #bigFraction}.
+	 */
 	NumberStruct reciprocal();
 
 	NumberStruct exp();
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Computes the exponential function result for this RatioStruct as this {@code base} and the provided {@link
+	 * NumberStruct} as the {@code power}. If {@code power} is '0' and power is an {@link IntegerStruct}, {@link
+	 * IntegerStruct#ONE} is returned. If {@code power} is '0' and power is not an {@link IntegerStruct}, {@link
+	 * FloatStruct#ONE} is returned. If this RatioStruct is either '0' or '1', {@code this} is returned.
+	 */
 	default NumberStruct expt(final NumberStruct power) {
 //		final Apcomplex baseApcomplex = apcomplexValue();
 //		final Apcomplex powerApcomplex = power.apcomplexValue();
@@ -185,6 +294,18 @@ public interface NumberStruct extends LispStruct {
 		return power.expt(exptVisitor);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Performs the exponential operation with this RatioStruct as the power value using the provided {@link
+	 * ExptVisitor}.
+	 *
+	 * @param exptVisitor
+	 * 		the {@link ExptVisitor} to be used in the exponential operation
+	 *
+	 * @return the result of the exponential operation with this RatioStruct as the power value using the provided
+	 * {@link ExptVisitor}
+	 */
 	NumberStruct expt(ExptVisitor<?> exptVisitor);
 
 	ExptVisitor<?> exptVisitor();

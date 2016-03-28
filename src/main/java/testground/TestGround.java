@@ -139,7 +139,7 @@ public class TestGround {
 	private Object ratioGen() {
 		final BigInteger numerator = new BigInteger("1");
 		final BigInteger denominator = new BigInteger("2");
-		return new RatioStruct(numerator, denominator);
+		return RatioStruct.valueOf(numerator, denominator);
 	}
 
 	private Object valuesGen() {

@@ -495,7 +495,7 @@ public final class IntIntegerStruct extends BuiltInClassStruct implements Intege
 		if (i == 1) {
 			return this;
 		}
-		return new RatioStruct(BigInteger.ONE, BigInteger.valueOf(i));
+		return RatioStruct.valueOf(BigInteger.ONE, BigInteger.valueOf(i));
 	}
 
 	// HashCode / Equals
@@ -1383,7 +1383,9 @@ public final class IntIntegerStruct extends BuiltInClassStruct implements Intege
 			try {
 				countL = countBigInteger.longValueExact();
 			} catch (final ArithmeticException ignore) {
-				LOGGER.warn("Forcibly migrated {} to a long for bit-shifting.", countBigInteger);
+				if (LOGGER.isWarnEnabled()) {
+					LOGGER.warn("Forcibly migrated {} to a long for bit-shifting.", countBigInteger);
+				}
 				countL = countBigInteger.longValue();
 			}
 

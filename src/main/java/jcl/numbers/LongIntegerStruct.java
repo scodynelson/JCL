@@ -68,7 +68,9 @@ public final class LongIntegerStruct extends BuiltInClassStruct implements Integ
 	@Override
 	public int intValue() {
 		if (!NumberUtils.longFitsInInt(l)) {
-			LOGGER.warn("Possible loss of precision.");
+			if (LOGGER.isWarnEnabled()) {
+				LOGGER.warn("Possible loss of precision.");
+			}
 		}
 		return NumberUtils.longToInt(l);
 	}
@@ -406,7 +408,7 @@ public final class LongIntegerStruct extends BuiltInClassStruct implements Integ
 		if (l == 1L) {
 			return this;
 		}
-		return new RatioStruct(BigInteger.ONE, BigInteger.valueOf(l));
+		return RatioStruct.valueOf(BigInteger.ONE, BigInteger.valueOf(l));
 	}
 
 	// HashCode / Equals
@@ -1285,7 +1287,9 @@ public final class LongIntegerStruct extends BuiltInClassStruct implements Integ
 			try {
 				countL = countBigInteger.longValueExact();
 			} catch (final ArithmeticException ignore) {
-				LOGGER.warn("Forcibly migrated {} to a long for bit-shifting.", countBigInteger);
+				if (LOGGER.isWarnEnabled()) {
+					LOGGER.warn("Forcibly migrated {} to a long for bit-shifting.", countBigInteger);
+				}
 				countL = countBigInteger.longValue();
 			}
 

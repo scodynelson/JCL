@@ -864,33 +864,6 @@ public interface IntegerStruct extends RationalStruct {
 	/**
 	 * {@inheritDoc}
 	 * <p>
-	 * Returns {@link #ONE} as the imaginary part of IntegerStructs is always '1'.
-	 */
-	@Override
-	default RealStruct imagPart() {
-		return ZERO;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * <p>
-	 * Determines the whether or not the numerical value of this IntegerStruct is zero, positive, or negative,
-	 * returning {@code this}, {@link #ONE}, or {@link #MINUS_ONE} respectively.
-	 */
-	@Override
-	default NumberStruct signum() {
-		if (zerop()) {
-			return this;
-		} else if (plusp()) {
-			return ONE;
-		} else {
-			return MINUS_ONE;
-		}
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * <p>
 	 * Computes the exponential function result for this IntegerStruct as this {@code base} and the provided {@link
 	 * NumberStruct} as the {@code power}. If {@code power} is '0' and power is an IntegerStruct, {@link #ONE} is
 	 * returned. If {@code power} is '0' and power is not an IntegerStruct, {@link FloatStruct#ONE} is returned. If

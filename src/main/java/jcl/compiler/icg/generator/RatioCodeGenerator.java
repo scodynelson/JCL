@@ -29,11 +29,16 @@ class RatioCodeGenerator implements CodeGenerator<RatioStruct> {
 	private static final String RATIO_STRUCT_NAME = Type.getInternalName(RatioStruct.class);
 
 	/**
-	 * Constant {@link String} containing the description for the {@link RatioStruct#RatioStruct(BigInteger,
-	 * BigInteger)} constructor method.
+	 * Constant {@link String} containing the name for the {@link RatioStruct#valueOf(BigInteger, BigInteger)} method.
 	 */
-	private static final String RATIO_STRUCT_INIT_DESC
-			= CodeGenerators.getConstructorDescription(RatioStruct.class, BigInteger.class, BigInteger.class);
+	private static final String RATIO_STRUCT_VALUE_OF_METHOD_NAME = "valueOf";
+
+	/**
+	 * Constant {@link String} containing the description for the {@link RatioStruct#valueOf(BigInteger, BigInteger)}
+	 * method.
+	 */
+	private static final String RATIO_STRUCT_VALUE_OF_METHOD_DESC
+			= CodeGenerators.getMethodDescription(RatioStruct.class, RATIO_STRUCT_VALUE_OF_METHOD_NAME, BigInteger.class, BigInteger.class);
 
 	/**
 	 * {@inheritDoc}
@@ -85,15 +90,12 @@ class RatioCodeGenerator implements CodeGenerator<RatioStruct> {
 		final int denominatorStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, denominatorStore);
 
-		mv.visitTypeInsn(Opcodes.NEW, RATIO_STRUCT_NAME);
-		mv.visitInsn(Opcodes.DUP);
-
 		mv.visitVarInsn(Opcodes.ALOAD, numeratorStore);
 		mv.visitVarInsn(Opcodes.ALOAD, denominatorStore);
-		mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
+		mv.visitMethodInsn(Opcodes.INVOKESTATIC,
 		                   RATIO_STRUCT_NAME,
-		                   GenerationConstants.INIT_METHOD_NAME,
-		                   RATIO_STRUCT_INIT_DESC,
+		                   RATIO_STRUCT_VALUE_OF_METHOD_NAME,
+		                   RATIO_STRUCT_VALUE_OF_METHOD_DESC,
 		                   false);
 	}
 }

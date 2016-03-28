@@ -10,6 +10,7 @@ import java.math.MathContext;
 import java.math.RoundingMode;
 import java.util.List;
 
+import org.apache.commons.math3.fraction.BigFraction;
 import org.apfloat.Apcomplex;
 import org.apfloat.ApcomplexMath;
 import org.apfloat.Apfloat;
@@ -30,8 +31,20 @@ public interface RealStruct extends NumberStruct {
 
 	FloatStruct coerceRealToFloat();
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Determines whether or not this RatioStruct is positive by comparing {@link #bigFraction} to {@link
+	 * BigFraction#ZERO}.
+	 */
 	boolean plusp();
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Determines whether or not this RatioStruct is negative by comparing {@link #bigFraction} to {@link
+	 * BigFraction#ZERO}.
+	 */
 	boolean minusp();
 
 	@Override
@@ -44,6 +57,17 @@ public interface RealStruct extends NumberStruct {
 		return real.isLessThan(lessThanVisitor);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Compares this RatioStruct to a {@link NumberStruct} using the provided {@link RealStruct.LessThanVisitor}.
+	 *
+	 * @param lessThanVisitor
+	 * 		the {@link RealStruct.LessThanVisitor} to be used in the {@literal '<'} operation
+	 *
+	 * @return the {@literal '<'} comparison of {@link NumberStruct} using the provided {@link
+	 * RealStruct.LessThanVisitor} and this RatioStruct
+	 */
 	boolean isLessThan(LessThanVisitor<?> lessThanVisitor);
 
 	static boolean isLessThan(final RealStruct real, final List<RealStruct> reals) {
@@ -60,6 +84,11 @@ public interface RealStruct extends NumberStruct {
 		return result;
 	}
 
+	/**
+	 * Returns a new {@link RealStruct.LessThanVisitor} with this RatioStruct to be used in a {@literal '<'} operation.
+	 *
+	 * @return a new {@link RealStruct.LessThanVisitor} with this RatioStruct to be used in a {@literal '<'} operation
+	 */
 	default LessThanVisitor<?> lessThanVisitor() {
 		return new LessThanVisitor<>(this);
 	}
@@ -69,8 +98,26 @@ public interface RealStruct extends NumberStruct {
 		return real.isGreaterThan(greaterThanVisitor);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Compares this RatioStruct to a {@link NumberStruct} using the provided {@link RealStruct.GreaterThanVisitor}.
+	 *
+	 * @param greaterThanVisitor
+	 * 		the {@link RealStruct.GreaterThanVisitor} to be used in the {@literal '>'} operation
+	 *
+	 * @return the {@literal '>'} comparison of {@link NumberStruct} using the provided {@link
+	 * RealStruct.GreaterThanVisitor} and this RatioStruct
+	 */
 	boolean isGreaterThan(GreaterThanVisitor<?> greaterThanVisitor);
 
+	/**
+	 * Returns a new {@link RealStruct.GreaterThanVisitor} with this RatioStruct to be used in a {@literal '>'}
+	 * operation.
+	 *
+	 * @return a new {@link RealStruct.GreaterThanVisitor} with this RatioStruct to be used in a {@literal '>'}
+	 * operation
+	 */
 	default GreaterThanVisitor<?> greaterThanVisitor() {
 		return new GreaterThanVisitor<>(this);
 	}
@@ -94,8 +141,27 @@ public interface RealStruct extends NumberStruct {
 		return real.isLessThanOrEqualTo(lessThanOrEqualToVisitor);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Compares this RatioStruct to a {@link NumberStruct} using the provided {@link
+	 * RealStruct.LessThanOrEqualToVisitor}.
+	 *
+	 * @param lessThanOrEqualToVisitor
+	 * 		the {@link RealStruct.LessThanOrEqualToVisitor} to be used in the {@literal '<='} operation
+	 *
+	 * @return the {@literal '<='} comparison of {@link NumberStruct} using the provided {@link
+	 * RealStruct.LessThanOrEqualToVisitor} and this RatioStruct
+	 */
 	boolean isLessThanOrEqualTo(LessThanOrEqualToVisitor<?> lessThanOrEqualToVisitor);
 
+	/**
+	 * Returns a new {@link RealStruct.LessThanOrEqualToVisitor} with this RatioStruct to be used in a {@literal '<='}
+	 * operation.
+	 *
+	 * @return a new {@link RealStruct.LessThanOrEqualToVisitor} with this RatioStruct to be used in a {@literal '<='}
+	 * operation
+	 */
 	default LessThanOrEqualToVisitor<?> lessThanOrEqualToVisitor() {
 		return new LessThanOrEqualToVisitor<>(this);
 	}
@@ -119,8 +185,27 @@ public interface RealStruct extends NumberStruct {
 		return real.isGreaterThanOrEqualTo(greaterThanOrEqualToVisitor);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Compares this RatioStruct to a {@link NumberStruct} using the provided {@link
+	 * RealStruct.GreaterThanOrEqualToVisitor}.
+	 *
+	 * @param greaterThanOrEqualToVisitor
+	 * 		the {@link RealStruct.GreaterThanOrEqualToVisitor} to be used in the {@literal '>='} operation
+	 *
+	 * @return the {@literal '>='} comparison of {@link NumberStruct} using the provided {@link
+	 * RealStruct.GreaterThanOrEqualToVisitor} and this RatioStruct
+	 */
 	boolean isGreaterThanOrEqualTo(GreaterThanOrEqualToVisitor<?> greaterThanOrEqualToVisitor);
 
+	/**
+	 * Returns a new {@link RealStruct.GreaterThanOrEqualToVisitor} with this RatioStruct to be used in a {@literal
+	 * '>='} operation.
+	 *
+	 * @return a new {@link RealStruct.GreaterThanOrEqualToVisitor} with this RatioStruct to be used in a {@literal
+	 * '>='} operation
+	 */
 	default GreaterThanOrEqualToVisitor<?> greaterThanOrEqualToVisitor() {
 		return new GreaterThanOrEqualToVisitor<>(this);
 	}
@@ -186,6 +271,18 @@ public interface RealStruct extends NumberStruct {
 		return divisor.floor(quotientRemainderVisitor);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Calculates the {@link QuotientRemainderResult} for a 'FLOOR' operation with this RatioStruct as the 'divisor'
+	 * using the provided {@link QuotientRemainderVisitor}.
+	 *
+	 * @param quotientRemainderVisitor
+	 * 		the {@link QuotientRemainderVisitor} to be used in the 'FLOOR' operation
+	 *
+	 * @return the {@link QuotientRemainderResult} for a 'FLOOR' operation with this RatioStruct as the 'divisor'
+	 * using the provided {@link QuotientRemainderVisitor}
+	 */
 	QuotientRemainderResult floor(QuotientRemainderVisitor<?> quotientRemainderVisitor);
 
 	default QuotientRemainderResult ffloor() {
@@ -197,6 +294,18 @@ public interface RealStruct extends NumberStruct {
 		return divisor.ffloor(quotientRemainderVisitor);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Calculates the {@link QuotientRemainderResult} for a 'FLOOR' operation with this RatioStruct as the 'divisor'
+	 * using the provided {@link QuotientRemainderVisitor}. The resulting 'quotient' will be a {@link FloatStruct}.
+	 *
+	 * @param quotientRemainderVisitor
+	 * 		the {@link QuotientRemainderVisitor} to be used in the 'FLOOR' operation
+	 *
+	 * @return the {@link QuotientRemainderResult} for a 'FLOOR' operation with this RatioStruct as the 'divisor'
+	 * using the provided {@link QuotientRemainderVisitor}
+	 */
 	QuotientRemainderResult ffloor(QuotientRemainderVisitor<?> quotientRemainderVisitor);
 
 	default QuotientRemainderResult ceiling() {
@@ -208,6 +317,18 @@ public interface RealStruct extends NumberStruct {
 		return divisor.ceiling(quotientRemainderVisitor);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Calculates the {@link QuotientRemainderResult} for a 'CEILING' operation with this RatioStruct as the
+	 * 'divisor' using the provided {@link QuotientRemainderVisitor}.
+	 *
+	 * @param quotientRemainderVisitor
+	 * 		the {@link QuotientRemainderVisitor} to be used in the 'CEILING' operation
+	 *
+	 * @return the {@link QuotientRemainderResult} for a 'CEILING' operation with this RatioStruct as the 'divisor'
+	 * using the provided {@link QuotientRemainderVisitor}
+	 */
 	QuotientRemainderResult ceiling(QuotientRemainderVisitor<?> quotientRemainderVisitor);
 
 	default QuotientRemainderResult fceiling() {
@@ -219,6 +340,19 @@ public interface RealStruct extends NumberStruct {
 		return divisor.fceiling(quotientRemainderVisitor);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Calculates the {@link QuotientRemainderResult} for a 'CEILING' operation with this RatioStruct as the
+	 * 'divisor' using the provided {@link QuotientRemainderVisitor}. The resulting 'quotient' will be a {@link
+	 * FloatStruct}.
+	 *
+	 * @param quotientRemainderVisitor
+	 * 		the {@link QuotientRemainderVisitor} to be used in the 'CEILING' operation
+	 *
+	 * @return the {@link QuotientRemainderResult} for a 'CEILING' operation with this RatioStruct as the 'divisor'
+	 * using the provided {@link QuotientRemainderVisitor}
+	 */
 	QuotientRemainderResult fceiling(QuotientRemainderVisitor<?> quotientRemainderVisitor);
 
 	default QuotientRemainderResult truncate() {
@@ -254,6 +388,18 @@ public interface RealStruct extends NumberStruct {
 		return divisor.round(quotientRemainderVisitor);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Calculates the {@link QuotientRemainderResult} for a 'ROUND' operation with this RatioStruct as the 'divisor'
+	 * using the provided {@link QuotientRemainderVisitor}.
+	 *
+	 * @param quotientRemainderVisitor
+	 * 		the {@link QuotientRemainderVisitor} to be used in the 'ROUND' operation
+	 *
+	 * @return the {@link QuotientRemainderResult} for a 'ROUND' operation with this RatioStruct as the 'divisor'
+	 * using the provided {@link QuotientRemainderVisitor}
+	 */
 	QuotientRemainderResult round(QuotientRemainderVisitor<?> quotientRemainderVisitor);
 
 	default QuotientRemainderResult fround() {
@@ -265,8 +411,27 @@ public interface RealStruct extends NumberStruct {
 		return divisor.fround(quotientRemainderVisitor);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Calculates the {@link QuotientRemainderResult} for a 'ROUND' operation with this RatioStruct as the 'divisor'
+	 * using the provided {@link QuotientRemainderVisitor}. The resulting 'quotient' will be a {@link FloatStruct}.
+	 *
+	 * @param quotientRemainderVisitor
+	 * 		the {@link QuotientRemainderVisitor} to be used in the 'ROUND' operation
+	 *
+	 * @return the {@link QuotientRemainderResult} for a 'ROUND' operation with this RatioStruct as the 'divisor'
+	 * using the provided {@link QuotientRemainderVisitor}
+	 */
 	QuotientRemainderResult fround(QuotientRemainderVisitor<?> quotientRemainderVisitor);
 
+	/**
+	 * Returns a new {@link QuotientRemainderVisitor} with this RatioStruct to be used in a 'quotient' and 'remainder'
+	 * calculation operation.
+	 *
+	 * @return a new {@link QuotientRemainderVisitor} with this RatioStruct to be used in a 'quotient' and 'remainder'
+	 * calculation operation
+	 */
 	QuotientRemainderVisitor<?> quotientRemainderVisitor();
 
 	@Override
@@ -437,12 +602,27 @@ public interface RealStruct extends NumberStruct {
 			super(number1);
 		}
 
+		/**
+		 * {@inheritDoc}
+		 * <p>
+		 * Computes the addition function result for an {@link RatioStruct} and a {@link IntegerStruct}.
+		 */
 		@Override
 		public abstract RealStruct add(IntIntegerStruct number2);
 
+		/**
+		 * {@inheritDoc}
+		 * <p>
+		 * Computes the addition function result for an {@link RatioStruct} and a {@link IntegerStruct}.
+		 */
 		@Override
 		public abstract RealStruct add(LongIntegerStruct number2);
 
+		/**
+		 * {@inheritDoc}
+		 * <p>
+		 * Computes the addition function result for an {@link RatioStruct} and a {@link IntegerStruct}.
+		 */
 		@Override
 		public abstract RealStruct add(BigIntegerStruct number2);
 
@@ -461,6 +641,11 @@ public interface RealStruct extends NumberStruct {
 			return addFloat(number2, number1);
 		}
 
+		/**
+		 * {@inheritDoc}
+		 * <p>
+		 * Computes the addition function result for {@link RatioStruct}s.
+		 */
 		@Override
 		public abstract RealStruct add(RatioStruct number2);
 
@@ -498,12 +683,27 @@ public interface RealStruct extends NumberStruct {
 			super(number1);
 		}
 
+		/**
+		 * {@inheritDoc}
+		 * <p>
+		 * Computes the subtraction function result for an {@link RatioStruct} and a {@link IntegerStruct}.
+		 */
 		@Override
 		public abstract RealStruct subtract(IntIntegerStruct number2);
 
+		/**
+		 * {@inheritDoc}
+		 * <p>
+		 * Computes the subtraction function result for an {@link RatioStruct} and a {@link IntegerStruct}.
+		 */
 		@Override
 		public abstract RealStruct subtract(LongIntegerStruct number2);
 
+		/**
+		 * {@inheritDoc}
+		 * <p>
+		 * Computes the subtraction function result for an {@link RatioStruct} and a {@link IntegerStruct}.
+		 */
 		@Override
 		public abstract RealStruct subtract(BigIntegerStruct number2);
 
@@ -531,6 +731,11 @@ public interface RealStruct extends NumberStruct {
 			return FloatStruct.valueOf(subtract);
 		}
 
+		/**
+		 * {@inheritDoc}
+		 * <p>
+		 * Computes the subtraction function result for {@link RatioStruct}s.
+		 */
 		@Override
 		public abstract RealStruct subtract(RatioStruct number2);
 
@@ -550,12 +755,27 @@ public interface RealStruct extends NumberStruct {
 			super(number1);
 		}
 
+		/**
+		 * {@inheritDoc}
+		 * <p>
+		 * Computes the multiplication function result for an {@link RatioStruct} and a {@link IntegerStruct}.
+		 */
 		@Override
 		public abstract RealStruct multiply(IntIntegerStruct number2);
 
+		/**
+		 * {@inheritDoc}
+		 * <p>
+		 * Computes the multiplication function result for an {@link RatioStruct} and a {@link IntegerStruct}.
+		 */
 		@Override
 		public abstract RealStruct multiply(LongIntegerStruct number2);
 
+		/**
+		 * {@inheritDoc}
+		 * <p>
+		 * Computes the multiplication function result for an {@link RatioStruct} and a {@link IntegerStruct}.
+		 */
 		@Override
 		public abstract RealStruct multiply(BigIntegerStruct number2);
 
@@ -574,6 +794,11 @@ public interface RealStruct extends NumberStruct {
 			return multiplyFloat(number2, number1);
 		}
 
+		/**
+		 * {@inheritDoc}
+		 * <p>
+		 * Computes the multiplication function result for {@link RatioStruct}s.
+		 */
 		@Override
 		public abstract RealStruct multiply(RatioStruct number2);
 
@@ -618,12 +843,27 @@ public interface RealStruct extends NumberStruct {
 			super(number1);
 		}
 
+		/**
+		 * {@inheritDoc}
+		 * <p>
+		 * Computes the division function result for an {@link RatioStruct} and a {@link IntegerStruct}.
+		 */
 		@Override
 		public abstract RealStruct divide(IntIntegerStruct number2);
 
+		/**
+		 * {@inheritDoc}
+		 * <p>
+		 * Computes the division function result for an {@link RatioStruct} and a {@link IntegerStruct}.
+		 */
 		@Override
 		public abstract RealStruct divide(LongIntegerStruct number2);
 
+		/**
+		 * {@inheritDoc}
+		 * <p>
+		 * Computes the division function result for an {@link RatioStruct} and a {@link IntegerStruct}.
+		 */
 		@Override
 		public abstract RealStruct divide(BigIntegerStruct number2);
 
@@ -651,6 +891,11 @@ public interface RealStruct extends NumberStruct {
 			return FloatStruct.valueOf(divide);
 		}
 
+		/**
+		 * {@inheritDoc}
+		 * <p>
+		 * Computes the division function result for {@link RatioStruct}s.
+		 */
 		@Override
 		public abstract RealStruct divide(RatioStruct number2);
 
@@ -679,18 +924,28 @@ public interface RealStruct extends NumberStruct {
 		/**
 		 * {@inheritDoc}
 		 * <p>
-		 * Computes the numeric '=' equality result for an {@link FloatStruct} and a {@link IntegerStruct}.
+		 * Computes the numeric '=' equality result for an {@link RatioStruct} and a {@link IntegerStruct}.
 		 */
 		@Override
 		public boolean equalTo(final IntIntegerStruct number2) {
 			return getComparisonResult(number1, number2) == 0;
 		}
 
+		/**
+		 * {@inheritDoc}
+		 * <p>
+		 * Computes the numeric '=' equality result for an {@link RatioStruct} and a {@link IntegerStruct}.
+		 */
 		@Override
 		public boolean equalTo(final LongIntegerStruct number2) {
 			return getComparisonResult(number1, number2) == 0;
 		}
 
+		/**
+		 * {@inheritDoc}
+		 * <p>
+		 * Computes the numeric '=' equality result for an {@link RatioStruct} and a {@link IntegerStruct}.
+		 */
 		@Override
 		public boolean equalTo(final BigIntegerStruct number2) {
 			return getComparisonResult(number1, number2) == 0;
@@ -714,7 +969,7 @@ public interface RealStruct extends NumberStruct {
 		/**
 		 * {@inheritDoc}
 		 * <p>
-		 * Computes the numeric '=' equality result for an {@link FloatStruct} and a {@link RatioStruct}.
+		 * Computes the numeric '=' equality result for {@link RatioStruct}s.
 		 */
 		@Override
 		public boolean equalTo(final RatioStruct number2) {
@@ -735,14 +990,29 @@ public interface RealStruct extends NumberStruct {
 			this.real1 = real1;
 		}
 
+		/**
+		 * {@inheritDoc}
+		 * <p>
+		 * Computes the numeric {@literal '<'} equality result for an {@link RatioStruct} and a {@link IntegerStruct}.
+		 */
 		public boolean lessThan(final IntIntegerStruct real2) {
 			return getComparisonResult(real1, real2) < 0;
 		}
 
+		/**
+		 * {@inheritDoc}
+		 * <p>
+		 * Computes the numeric {@literal '<'} equality result for an {@link RatioStruct} and a {@link IntegerStruct}.
+		 */
 		public boolean lessThan(final LongIntegerStruct real2) {
 			return getComparisonResult(real1, real2) < 0;
 		}
 
+		/**
+		 * {@inheritDoc}
+		 * <p>
+		 * Computes the numeric {@literal '<'} equality result for an {@link RatioStruct} and a {@link IntegerStruct}.
+		 */
 		public boolean lessThan(final BigIntegerStruct real2) {
 			return getComparisonResult(real1, real2) < 0;
 		}
@@ -759,6 +1029,11 @@ public interface RealStruct extends NumberStruct {
 			return getComparisonResult(real1, real2) < 0;
 		}
 
+		/**
+		 * {@inheritDoc}
+		 * <p>
+		 * Computes the numeric {@literal '<'} equality result for {@link RatioStruct}s.
+		 */
 		public boolean lessThan(final RatioStruct real2) {
 			return getComparisonResult(real1, real2) < 0;
 		}
@@ -772,14 +1047,29 @@ public interface RealStruct extends NumberStruct {
 			this.real1 = real1;
 		}
 
+		/**
+		 * {@inheritDoc}
+		 * <p>
+		 * Computes the numeric {@literal '>'} equality result for an {@link RatioStruct} and a {@link IntegerStruct}.
+		 */
 		public boolean greaterThan(final IntIntegerStruct real2) {
 			return getComparisonResult(real1, real2) > 0;
 		}
 
+		/**
+		 * {@inheritDoc}
+		 * <p>
+		 * Computes the numeric {@literal '>'} equality result for an {@link RatioStruct} and a {@link IntegerStruct}.
+		 */
 		public boolean greaterThan(final LongIntegerStruct real2) {
 			return getComparisonResult(real1, real2) > 0;
 		}
 
+		/**
+		 * {@inheritDoc}
+		 * <p>
+		 * Computes the numeric {@literal '>'} equality result for an {@link RatioStruct} and a {@link IntegerStruct}.
+		 */
 		public boolean greaterThan(final BigIntegerStruct real2) {
 			return getComparisonResult(real1, real2) > 0;
 		}
@@ -796,6 +1086,11 @@ public interface RealStruct extends NumberStruct {
 			return getComparisonResult(real1, real2) > 0;
 		}
 
+		/**
+		 * {@inheritDoc}
+		 * <p>
+		 * Computes the numeric {@literal '>'} equality result for {@link RatioStruct}s.
+		 */
 		public boolean greaterThan(final RatioStruct real2) {
 			return getComparisonResult(real1, real2) > 0;
 		}
@@ -809,14 +1104,29 @@ public interface RealStruct extends NumberStruct {
 			this.real1 = real1;
 		}
 
+		/**
+		 * {@inheritDoc}
+		 * <p>
+		 * Computes the numeric {@literal '<='} equality result for an {@link RatioStruct} and a {@link IntegerStruct}.
+		 */
 		public boolean lessThanOrEqualTo(final IntIntegerStruct real2) {
 			return getComparisonResult(real1, real2) <= 0;
 		}
 
+		/**
+		 * {@inheritDoc}
+		 * <p>
+		 * Computes the numeric {@literal '<='} equality result for an {@link RatioStruct} and a {@link IntegerStruct}.
+		 */
 		public boolean lessThanOrEqualTo(final LongIntegerStruct real2) {
 			return getComparisonResult(real1, real2) <= 0;
 		}
 
+		/**
+		 * {@inheritDoc}
+		 * <p>
+		 * Computes the numeric {@literal '<='} equality result for an {@link RatioStruct} and a {@link IntegerStruct}.
+		 */
 		public boolean lessThanOrEqualTo(final BigIntegerStruct real2) {
 			return getComparisonResult(real1, real2) <= 0;
 		}
@@ -833,6 +1143,11 @@ public interface RealStruct extends NumberStruct {
 			return getComparisonResult(real1, real2) <= 0;
 		}
 
+		/**
+		 * {@inheritDoc}
+		 * <p>
+		 * Computes the numeric {@literal '<='} equality result for {@link RatioStruct}s.
+		 */
 		public boolean lessThanOrEqualTo(final RatioStruct real2) {
 			return getComparisonResult(real1, real2) <= 0;
 		}
@@ -846,14 +1161,29 @@ public interface RealStruct extends NumberStruct {
 			this.real1 = real1;
 		}
 
+		/**
+		 * {@inheritDoc}
+		 * <p>
+		 * Computes the numeric {@literal '>='} equality result for an {@link RatioStruct} and a {@link IntegerStruct}.
+		 */
 		public boolean greaterThanOrEqualTo(final IntIntegerStruct real2) {
 			return getComparisonResult(real1, real2) >= 0;
 		}
 
+		/**
+		 * {@inheritDoc}
+		 * <p>
+		 * Computes the numeric {@literal '>='} equality result for an {@link RatioStruct} and a {@link IntegerStruct}.
+		 */
 		public boolean greaterThanOrEqualTo(final LongIntegerStruct real2) {
 			return getComparisonResult(real1, real2) >= 0;
 		}
 
+		/**
+		 * {@inheritDoc}
+		 * <p>
+		 * Computes the numeric {@literal '>='} equality result for an {@link RatioStruct} and a {@link IntegerStruct}.
+		 */
 		public boolean greaterThanOrEqualTo(final BigIntegerStruct real2) {
 			return getComparisonResult(real1, real2) >= 0;
 		}
@@ -870,6 +1200,11 @@ public interface RealStruct extends NumberStruct {
 			return getComparisonResult(real1, real2) >= 0;
 		}
 
+		/**
+		 * {@inheritDoc}
+		 * <p>
+		 * Computes the numeric {@literal '>='} equality result for {@link RatioStruct}s.
+		 */
 		public boolean greaterThanOrEqualTo(final RatioStruct real2) {
 			return getComparisonResult(real1, real2) >= 0;
 		}
@@ -955,6 +1290,12 @@ public interface RealStruct extends NumberStruct {
 			return quotientRemainder(divisor, RoundingMode.HALF_EVEN, true);
 		}
 
+		/**
+		 * {@inheritDoc}
+		 * <p>
+		 * Computes the quotient and remainder results for a {@link RatioStruct} as the {@code real} and an {@link
+		 * IntegerStruct} as the {@code divisor}.
+		 */
 		public QuotientRemainderResult quotientRemainder(final IntegerStruct divisor, final RoundingMode roundingMode, final boolean isQuotientFloat) {
 			final BigDecimal realBigDecimal = real.bigDecimalValue();
 			final BigDecimal divisorBigDecimal = divisor.bigDecimalValue();

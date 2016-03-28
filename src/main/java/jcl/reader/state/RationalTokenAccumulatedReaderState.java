@@ -10,11 +10,11 @@ import java.util.LinkedList;
 import jcl.numbers.IntegerStruct;
 import jcl.numbers.NumberStruct;
 import jcl.numbers.RatioStruct;
+import jcl.numbers.RationalStruct;
 import jcl.reader.AttributeType;
 import jcl.reader.TokenAttribute;
 import jcl.reader.TokenBuilder;
 import jcl.reader.struct.ReaderVariables;
-import org.apache.commons.math3.fraction.BigFraction;
 import org.springframework.stereotype.Component;
 
 /**
@@ -51,14 +51,6 @@ public class RationalTokenAccumulatedReaderState implements ReaderState {
 		final BigInteger numerator = new BigInteger(rationalParts[0], currentRadix);
 		final BigInteger denominator = new BigInteger(rationalParts[1], currentRadix);
 
-		final BigFraction rational = new BigFraction(numerator, denominator);
-
-		final BigInteger fractionDenominator = rational.getDenominator();
-		if (BigInteger.ONE.equals(fractionDenominator)) {
-			final BigInteger fractionNumerator = rational.getNumerator();
-			return IntegerStruct.valueOf(fractionNumerator);
-		}
-
-		return new RatioStruct(rational);
+		return RationalStruct.valueOf(numerator, denominator);
 	}
 }

@@ -16,9 +16,91 @@ import org.apache.commons.math3.fraction.BigFraction;
  */
 public interface RationalStruct extends RealStruct {
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Returns {@link BigFraction#numerator} from {@link #bigFraction} as a new {@link IntegerStruct}.
+	 */
 	IntegerStruct numerator();
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Returns {@link BigFraction#denominator} from {@link #bigFraction} as a new {@link IntegerStruct}.
+	 */
 	IntegerStruct denominator();
+
+	static RationalStruct valueOf(final BigFraction bigFraction) {
+		final BigInteger denominator = bigFraction.getDenominator();
+		if (denominator.compareTo(BigInteger.ONE) == 0) {
+			final BigInteger numerator = bigFraction.getNumerator();
+			return IntegerStruct.valueOf(numerator);
+		}
+		return RatioStruct.valueOf(bigFraction);
+	}
+
+	static RationalStruct valueOf(final int numerator) {
+		return IntegerStruct.valueOf(numerator);
+	}
+
+	static RationalStruct valueOf(final int numerator, final int denominator) {
+		if (denominator == 1) {
+			return IntegerStruct.valueOf(numerator);
+		}
+		final BigFraction bigFraction = new BigFraction(numerator, denominator);
+		return RatioStruct.valueOf(bigFraction);
+	}
+
+	static RationalStruct valueOf(final long numerator) {
+		return IntegerStruct.valueOf(numerator);
+	}
+
+	static RationalStruct valueOf(final long numerator, final long denominator) {
+		if (denominator == 1L) {
+			return IntegerStruct.valueOf(numerator);
+		}
+		final BigFraction bigFraction = new BigFraction(numerator, denominator);
+		return RatioStruct.valueOf(bigFraction);
+	}
+
+	static RationalStruct valueOf(final BigInteger numerator) {
+		return IntegerStruct.valueOf(numerator);
+	}
+
+	static RationalStruct valueOf(final BigInteger numerator, final BigInteger denominator) {
+		if (BigInteger.ONE.compareTo(denominator) == 0) {
+			return IntegerStruct.valueOf(numerator);
+		}
+		final BigFraction bigFraction = new BigFraction(numerator, denominator);
+		return RatioStruct.valueOf(bigFraction);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Returns {@link IntegerStruct#ONE} as the imaginary part of IntegerStructs is always '1'.
+	 */
+	@Override
+	default RealStruct imagPart() {
+		return IntegerStruct.ZERO;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Determines the whether or not the numerical value of this RatioStruct is zero, positive, or negative,
+	 * returning {@code this}, {@link IntegerStruct#ONE}, or {@link IntegerStruct#MINUS_ONE} respectively.
+	 */
+	@Override
+	default NumberStruct signum() {
+		if (zerop()) {
+			return this;
+		} else if (plusp()) {
+			return IntegerStruct.ONE;
+		} else {
+			return IntegerStruct.MINUS_ONE;
+		}
+	}
 
 	/**
 	 * {@inheritDoc}
@@ -63,7 +145,7 @@ public interface RationalStruct extends RealStruct {
 		if (BigInteger.ONE.compareTo(realDenominator) == 0) {
 			return IntegerStruct.valueOf(realNumerator);
 		} else {
-			return new RatioStruct(realNumerator, realDenominator);
+			return valueOf(realNumerator, realDenominator);
 		}
 	}
 

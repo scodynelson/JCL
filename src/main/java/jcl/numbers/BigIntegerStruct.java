@@ -69,7 +69,9 @@ public final class BigIntegerStruct extends BuiltInClassStruct implements Intege
 		try {
 			return bigInteger.intValueExact();
 		} catch (final ArithmeticException ignore) {
-			LOGGER.warn("Loss of precision when converting BigInteger to int.");
+			if (LOGGER.isWarnEnabled()) {
+				LOGGER.warn("Loss of precision when converting BigInteger to int.");
+			}
 			return bigInteger.intValue();
 		}
 	}
@@ -79,7 +81,9 @@ public final class BigIntegerStruct extends BuiltInClassStruct implements Intege
 		try {
 			return bigInteger.longValueExact();
 		} catch (final ArithmeticException ignore) {
-			LOGGER.warn("Loss of precision when converting BigInteger to long.");
+			if (LOGGER.isWarnEnabled()) {
+				LOGGER.warn("Loss of precision when converting BigInteger to long.");
+			}
 			return bigInteger.longValue();
 		}
 	}
@@ -412,7 +416,7 @@ public final class BigIntegerStruct extends BuiltInClassStruct implements Intege
 		if (BigInteger.ONE.equals(bigInteger)) {
 			return this;
 		}
-		return new RatioStruct(BigInteger.ONE, bigInteger);
+		return RatioStruct.valueOf(BigInteger.ONE, bigInteger);
 	}
 
 	// HashCode / Equals
@@ -1146,25 +1150,33 @@ public final class BigIntegerStruct extends BuiltInClassStruct implements Intege
 
 		@Override
 		public NumberStruct expt(final SingleFloatStruct power) {
-			LOGGER.warn("Possible loss of precision.");
+			if (LOGGER.isWarnEnabled()) {
+				LOGGER.warn("Possible loss of precision.");
+			}
 			return exptFloatRatioNew(base.bigInteger.doubleValue(), power.f);
 		}
 
 		@Override
 		public NumberStruct expt(final DoubleFloatStruct power) {
-			LOGGER.warn("Possible loss of precision.");
+			if (LOGGER.isWarnEnabled()) {
+				LOGGER.warn("Possible loss of precision.");
+			}
 			return exptFloatRatioNew(base.bigInteger.doubleValue(), power.d);
 		}
 
 		@Override
 		public NumberStruct expt(final BigFloatStruct power) {
-			LOGGER.warn("Possible loss of precision.");
+			if (LOGGER.isWarnEnabled()) {
+				LOGGER.warn("Possible loss of precision.");
+			}
 			return exptFloatRatioNew(base.bigInteger.doubleValue(), power.doubleValue());
 		}
 
 		@Override
 		public NumberStruct expt(final RatioStruct power) {
-			LOGGER.warn("Possible loss of precision.");
+			if (LOGGER.isWarnEnabled()) {
+				LOGGER.warn("Possible loss of precision.");
+			}
 			return exptFloatRatioNew(base.bigInteger.doubleValue(), power.doubleValue());
 		}
 	}
@@ -1330,7 +1342,9 @@ public final class BigIntegerStruct extends BuiltInClassStruct implements Intege
 			try {
 				countI = countBigInteger.intValueExact();
 			} catch (final ArithmeticException ignore) {
-				LOGGER.warn("Forcibly migrated {} to an int for bit-shifting.", countBigInteger);
+				if (LOGGER.isWarnEnabled()) {
+					LOGGER.warn("Forcibly migrated {} to an int for bit-shifting.", countBigInteger);
+				}
 				countI = countBigInteger.intValue();
 			}
 

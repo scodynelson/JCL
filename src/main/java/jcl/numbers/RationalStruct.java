@@ -149,6 +149,35 @@ public interface RationalStruct extends RealStruct {
 		}
 	}
 
+	/*
+		NumberStruct
+	 */
+
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Computes the exponential function result for this IntegerStruct as this {@code base} and the provided {@link
+	 * NumberStruct} as the {@code power}. If {@code power} is '0' and power is an IntegerStruct, {@link
+	 * IntegerStruct#ONE} is returned. If {@code power} is '0' and power is not an IntegerStruct, {@link
+	 * FloatStruct#ONE} is returned. If this IntegerStruct is either '0' or '1', {@code this} is returned.
+	 */
+	@Override
+	default NumberStruct expt(final NumberStruct power) {
+		if (power.zerop()) {
+			if (power instanceof IntegerStruct) {
+				return IntegerStruct.ONE;
+			}
+			return FloatStruct.ONE;
+		}
+
+		if (zerop() || isEqualTo(IntegerStruct.ONE)) {
+			return this;
+		}
+
+		final ExptVisitor<?> exptVisitor = exptVisitor();
+		return power.expt(exptVisitor);
+	}
+
 	// Visitor Implementations
 
 	class RationalQuotientRemainderVisitor<S extends RationalStruct> extends RealStruct.QuotientRemainderVisitor<S> {

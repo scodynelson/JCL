@@ -504,9 +504,9 @@ public final class LongIntegerStruct extends BuiltInClassStruct implements Integ
 
 		@Override
 		public RealStruct add(final RatioStruct number2) {
-			final BigFraction lBigFraction = new BigFraction(number1.l);
+			final long l1 = number1.l;
 			final BigFraction bigFraction = number2.bigFraction;
-			final BigFraction add = lBigFraction.add(bigFraction);
+			final BigFraction add = bigFraction.add(l1);
 			return RationalStruct.makeRational(add);
 		}
 
@@ -656,9 +656,9 @@ public final class LongIntegerStruct extends BuiltInClassStruct implements Integ
 
 		@Override
 		public RealStruct multiply(final RatioStruct number2) {
-			final BigFraction lBigFraction = new BigFraction(number1.l);
+			final long l1 = number1.l;
 			final BigFraction bigFraction = number2.bigFraction;
-			final BigFraction multiply = lBigFraction.multiply(bigFraction);
+			final BigFraction multiply = bigFraction.multiply(l1);
 			return RationalStruct.makeRational(multiply);
 		}
 
@@ -1068,6 +1068,7 @@ public final class LongIntegerStruct extends BuiltInClassStruct implements Integ
 		@Override
 		public NumberStruct expt(final IntIntegerStruct power) {
 			if (power.minusp()) {
+				// TODO: more efficient?
 				return exptInteger(base, power);
 			}
 
@@ -1086,6 +1087,7 @@ public final class LongIntegerStruct extends BuiltInClassStruct implements Integ
 		@SuppressWarnings("deprecation")
 		public NumberStruct expt(final LongIntegerStruct power) {
 			if (power.minusp()) {
+				// TODO: more efficient?
 				return exptInteger(base, power);
 			}
 
@@ -1103,6 +1105,7 @@ public final class LongIntegerStruct extends BuiltInClassStruct implements Integ
 		@Override
 		public NumberStruct expt(final BigIntegerStruct power) {
 			if (power.minusp()) {
+				// TODO: more efficient?
 				return exptInteger(base, power);
 			}
 
@@ -1113,21 +1116,25 @@ public final class LongIntegerStruct extends BuiltInClassStruct implements Integ
 
 		@Override
 		public NumberStruct expt(final SingleFloatStruct power) {
+			// TODO: more efficient?
 			return exptFloatRatioNew(base.l, power.f);
 		}
 
 		@Override
 		public NumberStruct expt(final DoubleFloatStruct power) {
+			// TODO: more efficient?
 			return exptFloatRatioNew(base.l, power.d);
 		}
 
 		@Override
 		public NumberStruct expt(final BigFloatStruct power) {
+			// TODO: more efficient?
 			return exptFloatRatioNew(base.l, power.doubleValue());
 		}
 
 		@Override
 		public NumberStruct expt(final RatioStruct power) {
+			// TODO: more efficient?
 			return exptFloatRatioNew(base.l, power.doubleValue());
 		}
 	}

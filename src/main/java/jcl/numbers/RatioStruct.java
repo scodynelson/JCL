@@ -10,6 +10,7 @@ import java.math.MathContext;
 import java.math.RoundingMode;
 
 import jcl.classes.BuiltInClassStruct;
+import jcl.conditions.exceptions.DivisionByZeroException;
 import jcl.types.RatioType;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -90,18 +91,68 @@ public final class RatioStruct extends BuiltInClassStruct implements RationalStr
 		}
 	}
 
+	/*
+		RationalStruct
+	 */
+
 	@Override
-	public RealStruct abs() {
-		final BigInteger numerator = bigFraction.getNumerator();
-		if (numerator.signum() >= 0) {
-			return this;
-		}
-		return negation();
+	public IntegerStruct numerator() {
+		return IntegerStruct.valueOf(bigFraction.getNumerator());
 	}
 
 	@Override
-	public boolean zerop() {
-		return BigFraction.ZERO.compareTo(bigFraction) == 0;
+	public IntegerStruct denominator() {
+		return IntegerStruct.valueOf(bigFraction.getDenominator());
+	}
+
+	/*
+		RealStruct
+	 */
+
+	@Override
+	public FloatStruct coerceRealToFloat() {
+		// TODO: precision??
+		return FloatStruct.valueOf(bigDecimalValue());
+	}
+
+	@Override
+	public boolean isLessThan(final RealStruct.LessThanVisitor<?> lessThanVisitor) {
+		return lessThanVisitor.lessThan(this);
+	}
+
+	@Override
+	public RealStruct.LessThanVisitor<?> lessThanVisitor() {
+		return new RatioLessThanVisitor(this);
+	}
+
+	@Override
+	public boolean isGreaterThan(final RealStruct.GreaterThanVisitor<?> greaterThanVisitor) {
+		return greaterThanVisitor.greaterThan(this);
+	}
+
+	@Override
+	public RealStruct.GreaterThanVisitor<?> greaterThanVisitor() {
+		return new RatioGreaterThanVisitor(this);
+	}
+
+	@Override
+	public boolean isLessThanOrEqualTo(final RealStruct.LessThanOrEqualToVisitor<?> lessThanOrEqualToVisitor) {
+		return lessThanOrEqualToVisitor.lessThanOrEqualTo(this);
+	}
+
+	@Override
+	public RealStruct.LessThanOrEqualToVisitor<?> lessThanOrEqualToVisitor() {
+		return new RatioLessThanOrEqualToVisitor(this);
+	}
+
+	@Override
+	public boolean isGreaterThanOrEqualTo(final RealStruct.GreaterThanOrEqualToVisitor<?> greaterThanOrEqualToVisitor) {
+		return greaterThanOrEqualToVisitor.greaterThanOrEqualTo(this);
+	}
+
+	@Override
+	public RealStruct.GreaterThanOrEqualToVisitor<?> greaterThanOrEqualToVisitor() {
+		return new RatioGreaterThanOrEqualToVisitor(this);
 	}
 
 	@Override
@@ -113,6 +164,45 @@ public final class RatioStruct extends BuiltInClassStruct implements RationalStr
 	public boolean minusp() {
 		return BigFraction.ZERO.compareTo(bigFraction) < 0;
 	}
+
+	@Override
+	public QuotientRemainderResult floor(final QuotientRemainderVisitor<?> quotientRemainderVisitor) {
+		return quotientRemainderVisitor.floor(this);
+	}
+
+	@Override
+	public QuotientRemainderResult ffloor(final QuotientRemainderVisitor<?> quotientRemainderVisitor) {
+		return quotientRemainderVisitor.ffloor(this);
+	}
+
+	@Override
+	public QuotientRemainderResult ceiling(final QuotientRemainderVisitor<?> quotientRemainderVisitor) {
+		return quotientRemainderVisitor.ceiling(this);
+	}
+
+	@Override
+	public QuotientRemainderResult fceiling(final QuotientRemainderVisitor<?> quotientRemainderVisitor) {
+		return quotientRemainderVisitor.fceiling(this);
+	}
+
+	@Override
+	public QuotientRemainderResult round(final QuotientRemainderVisitor<?> quotientRemainderVisitor) {
+		return quotientRemainderVisitor.round(this);
+	}
+
+	@Override
+	public QuotientRemainderResult fround(final QuotientRemainderVisitor<?> quotientRemainderVisitor) {
+		return quotientRemainderVisitor.fround(this);
+	}
+
+	@Override
+	public QuotientRemainderVisitor<?> quotientRemainderVisitor() {
+		return new RatioQuotientRemainderVisitor(this);
+	}
+
+	/*
+		NumberStruct
+	 */
 
 	@Override
 	public NumberStruct add(final AddVisitor<?> addVisitor) {
@@ -165,150 +255,46 @@ public final class RatioStruct extends BuiltInClassStruct implements RationalStr
 	}
 
 	@Override
-	public boolean isLessThan(final RealStruct.LessThanVisitor<?> lessThanVisitor) {
-		return lessThanVisitor.lessThan(this);
-	}
-
-	@Override
-	public RealStruct.LessThanVisitor<?> lessThanVisitor() {
-		return new RatioLessThanVisitor(this);
-	}
-
-	@Override
-	public boolean isGreaterThan(final RealStruct.GreaterThanVisitor<?> greaterThanVisitor) {
-		return greaterThanVisitor.greaterThan(this);
-	}
-
-	@Override
-	public RealStruct.GreaterThanVisitor<?> greaterThanVisitor() {
-		return new RatioGreaterThanVisitor(this);
-	}
-
-	@Override
-	public boolean isLessThanOrEqualTo(final RealStruct.LessThanOrEqualToVisitor<?> lessThanOrEqualToVisitor) {
-		return lessThanOrEqualToVisitor.lessThanOrEqualTo(this);
-	}
-
-	@Override
-	public RealStruct.LessThanOrEqualToVisitor<?> lessThanOrEqualToVisitor() {
-		return new RatioLessThanOrEqualToVisitor(this);
-	}
-
-	@Override
-	public boolean isGreaterThanOrEqualTo(final RealStruct.GreaterThanOrEqualToVisitor<?> greaterThanOrEqualToVisitor) {
-		return greaterThanOrEqualToVisitor.greaterThanOrEqualTo(this);
-	}
-
-	@Override
-	public RealStruct.GreaterThanOrEqualToVisitor<?> greaterThanOrEqualToVisitor() {
-		return new RatioGreaterThanOrEqualToVisitor(this);
-	}
-
-	@Override
-	public RatioStruct negation() {
-		final BigFraction negate = bigFraction.negate();
-		return new RatioStruct(negate);
-	}
-
-	@Override
-	public NumberStruct reciprocal() {
-		return RationalStruct.makeRational(bigFraction.getDenominator(), bigFraction.getNumerator());
-	}
-
-	@Override
-	public NumberStruct expt(final NumberStruct power) {
-		if (power.zerop()) {
-			if (power instanceof IntegerStruct) {
-				return IntegerStruct.ONE;
-			}
-			return FloatStruct.ONE;
-		}
-
-		if (zerop() || isEqualTo(IntegerStruct.ONE)) {
-			return this;
-		}
-
-		final ExptVisitor<?> exptVisitor = exptVisitor();
-		return power.expt(exptVisitor);
-	}
-
-	@Override
 	public NumberStruct expt(final ExptVisitor<?> exptVisitor) {
 		return exptVisitor.expt(this);
 	}
 
 	@Override
-	@Deprecated
-	public BigDecimal bigDecimalValue() {
-		try {
-			return bigFraction.bigDecimalValue();
-		} catch (final ArithmeticException ignore) {
-			if (LOGGER.isWarnEnabled()) {
-				LOGGER.warn("Loss of precision when converting BigFraction to BigDecimal.");
-			}
-			// This means that we have to round the fraction.
-			final int scale = MathContext.DECIMAL128.getPrecision();
-			final int roundingMode = RoundingMode.HALF_EVEN.ordinal();
-			return bigFraction.bigDecimalValue(scale, roundingMode);
+	public ExptVisitor<?> exptVisitor() {
+		return new RatioExptVisitor(this);
+	}
+
+	@Override
+	public boolean zerop() {
+		return BigFraction.ZERO.compareTo(bigFraction) == 0;
+	}
+
+	@Override
+	public RealStruct abs() {
+		final BigInteger numerator = bigFraction.getNumerator();
+		if (numerator.signum() >= 0) {
+			return this;
 		}
+		return negation();
 	}
 
 	@Override
-	@Deprecated
-	public Apfloat apfloatValue() {
-		final Apint apintNumerator = new Apint(bigFraction.getNumerator());
-		final Apint apintDenominator = new Apint(bigFraction.getDenominator());
-		return new Aprational(apintNumerator, apintDenominator);
+	public RatioStruct negation() {
+		return valueOf(bigFraction.negate());
 	}
 
 	@Override
-	public FloatStruct coerceRealToFloat() {
-		return FloatStruct.valueOf(bigDecimalValue());
-	}
+	public NumberStruct reciprocal() {
+		final BigInteger numerator = bigFraction.getNumerator();
+		if (BigInteger.ZERO.equals(numerator)) {
+			throw new DivisionByZeroException("Division by zero.");
+		}
 
-	@Override
-	public QuotientRemainderResult floor(final QuotientRemainderVisitor<?> quotientRemainderVisitor) {
-		return quotientRemainderVisitor.floor(this);
-	}
-
-	@Override
-	public QuotientRemainderResult ffloor(final QuotientRemainderVisitor<?> quotientRemainderVisitor) {
-		return quotientRemainderVisitor.ffloor(this);
-	}
-
-	@Override
-	public QuotientRemainderResult ceiling(final QuotientRemainderVisitor<?> quotientRemainderVisitor) {
-		return quotientRemainderVisitor.ceiling(this);
-	}
-
-	@Override
-	public QuotientRemainderResult fceiling(final QuotientRemainderVisitor<?> quotientRemainderVisitor) {
-		return quotientRemainderVisitor.fceiling(this);
-	}
-
-	@Override
-	public QuotientRemainderResult round(final QuotientRemainderVisitor<?> quotientRemainderVisitor) {
-		return quotientRemainderVisitor.round(this);
-	}
-
-	@Override
-	public QuotientRemainderResult fround(final QuotientRemainderVisitor<?> quotientRemainderVisitor) {
-		return quotientRemainderVisitor.fround(this);
-	}
-
-	@Override
-	public QuotientRemainderVisitor<?> quotientRemainderVisitor() {
-		return new RatioQuotientRemainderVisitor(this);
-	}
-
-	@Override
-	public IntegerStruct numerator() {
-		return IntegerStruct.valueOf(bigFraction.getNumerator());
-	}
-
-	@Override
-	public IntegerStruct denominator() {
-		return IntegerStruct.valueOf(bigFraction.getDenominator());
+		final BigInteger denominator = bigFraction.getDenominator();
+		if (BigInteger.ONE.equals(numerator)) {
+			return IntegerStruct.valueOf(denominator);
+		}
+		return RationalStruct.valueOf(denominator, numerator);
 	}
 
 	// Comparison Visitor Helpers
@@ -768,6 +754,103 @@ public final class RatioStruct extends BuiltInClassStruct implements RationalStr
 	}
 
 	/**
+	 * {@link RealStruct.RealExptVisitor} for computing exponential function results for {@link RatioStruct}s.
+	 */
+	private static final class RatioExptVisitor extends RealStruct.RealExptVisitor<RatioStruct> {
+
+		/**
+		 * Private constructor to make a new instance of an IntegerExptVisitor with the provided {@link
+		 * RatioStruct}.
+		 *
+		 * @param base
+		 * 		the base argument in the exponential operation
+		 */
+		private RatioExptVisitor(final RatioStruct base) {
+			super(base);
+		}
+
+		@Override
+		public NumberStruct expt(final IntIntegerStruct power) {
+			return super.expt(power);
+//			if (power.minusp()) {
+//				// TODO: more efficient?
+//				return exptInteger(base, power);
+//			}
+//
+//			final BigInteger baseBigInteger = base.bigInteger;
+//			final BigInteger pow = ArithmeticUtils.pow(baseBigInteger, power.i);
+//			return IntegerStruct.valueOf(pow);
+		}
+
+		@Override
+		public NumberStruct expt(final LongIntegerStruct power) {
+			return super.expt(power);
+//			if (power.minusp()) {
+//				// TODO: more efficient?
+//				return exptInteger(base, power);
+//			}
+//
+//			final BigInteger baseBigInteger = base.bigInteger;
+//			final BigInteger pow = ArithmeticUtils.pow(baseBigInteger, power.l);
+//			return IntegerStruct.valueOf(pow);
+		}
+
+		@Override
+		public NumberStruct expt(final BigIntegerStruct power) {
+			return super.expt(power);
+//			if (power.minusp()) {
+//				// TODO: more efficient?
+//				return exptInteger(base, power);
+//			}
+//
+//			final BigInteger baseBigInteger = base.bigInteger;
+//			final BigInteger powerBigInteger = power.bigInteger;
+//			final BigInteger pow = ArithmeticUtils.pow(baseBigInteger, powerBigInteger);
+//			return IntegerStruct.valueOf(pow);
+		}
+
+		@Override
+		public NumberStruct expt(final SingleFloatStruct power) {
+			return super.expt(power);
+//			// TODO: more efficient?
+//			if (LOGGER.isWarnEnabled()) {
+//				LOGGER.warn("Possible loss of precision.");
+//			}
+//			return exptFloatRatioNew(base.bigInteger.doubleValue(), power.f);
+		}
+
+		@Override
+		public NumberStruct expt(final DoubleFloatStruct power) {
+			return super.expt(power);
+//			// TODO: more efficient?
+//			if (LOGGER.isWarnEnabled()) {
+//				LOGGER.warn("Possible loss of precision.");
+//			}
+//			return exptFloatRatioNew(base.bigInteger.doubleValue(), power.d);
+		}
+
+		@Override
+		public NumberStruct expt(final BigFloatStruct power) {
+			return super.expt(power);
+//			// TODO: more efficient?
+//			if (LOGGER.isWarnEnabled()) {
+//				LOGGER.warn("Possible loss of precision.");
+//			}
+//			return exptFloatRatioNew(base.bigInteger.doubleValue(), power.doubleValue());
+		}
+
+		@Override
+		public NumberStruct expt(final RatioStruct power) {
+			return super.expt(power);
+//			// TODO: more efficient?
+//			if (LOGGER.isWarnEnabled()) {
+//				LOGGER.warn("Possible loss of precision.");
+//			}
+//			return exptFloatRatioNew(base.bigInteger.doubleValue(), power.doubleValue());
+		}
+	}
+
+	/**
 	 * {@link RationalStruct.RationalQuotientRemainderVisitor} for computing quotient and remainder results for {@link
 	 * RatioStruct}s.
 	 */
@@ -789,5 +872,29 @@ public final class RatioStruct extends BuiltInClassStruct implements RationalStr
 		                                                 final boolean isQuotientFloat) {
 			return ratioQuotientRemainder(divisor, roundingMode, isQuotientFloat);
 		}
+	}
+
+	@Override
+	@Deprecated
+	public BigDecimal bigDecimalValue() {
+		try {
+			return bigFraction.bigDecimalValue();
+		} catch (final ArithmeticException ignore) {
+			if (LOGGER.isWarnEnabled()) {
+				LOGGER.warn("Loss of precision when converting BigFraction to BigDecimal.");
+			}
+			// This means that we have to round the fraction.
+			final int scale = MathContext.DECIMAL128.getPrecision();
+			final int roundingMode = RoundingMode.HALF_EVEN.ordinal();
+			return bigFraction.bigDecimalValue(scale, roundingMode);
+		}
+	}
+
+	@Override
+	@Deprecated
+	public Apfloat apfloatValue() {
+		final Apint apintNumerator = new Apint(bigFraction.getNumerator());
+		final Apint apintDenominator = new Apint(bigFraction.getDenominator());
+		return new Aprational(apintNumerator, apintDenominator);
 	}
 }

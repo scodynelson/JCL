@@ -456,7 +456,7 @@ public final class BigIntegerStruct extends BuiltInClassStruct implements Intege
 	private static final class BigIntegerAddVisitor extends RealStruct.RealAddVisitor<BigIntegerStruct> {
 
 		/**
-		 * Private constructor to make a new instance of an IntegerAddVisitor with the provided {@link
+		 * Private constructor to make a new instance of an BigIntegerAddVisitor with the provided {@link
 		 * BigIntegerStruct}.
 		 *
 		 * @param number1
@@ -516,9 +516,9 @@ public final class BigIntegerStruct extends BuiltInClassStruct implements Intege
 
 		@Override
 		public RealStruct add(final RatioStruct number2) {
-			final BigFraction bBigFraction = new BigFraction(number1.bigInteger);
+			final BigInteger bBigInteger = number1.bigInteger;
 			final BigFraction bigFraction = number2.bigFraction;
-			final BigFraction add = bBigFraction.add(bigFraction);
+			final BigFraction add = bigFraction.add(bBigInteger);
 			return RationalStruct.makeRational(add);
 		}
 
@@ -535,7 +535,7 @@ public final class BigIntegerStruct extends BuiltInClassStruct implements Intege
 	private static final class BigIntegerSubtractVisitor extends RealStruct.RealSubtractVisitor<BigIntegerStruct> {
 
 		/**
-		 * Private constructor to make a new instance of an IntegerSubtractVisitor with the provided {@link
+		 * Private constructor to make a new instance of an BigIntegerSubtractVisitor with the provided {@link
 		 * BigIntegerStruct}.
 		 *
 		 * @param number1
@@ -615,7 +615,7 @@ public final class BigIntegerStruct extends BuiltInClassStruct implements Intege
 	private static final class BigIntegerMultiplyVisitor extends RealStruct.RealMultiplyVisitor<BigIntegerStruct> {
 
 		/**
-		 * Private constructor to make a new instance of an IntegerMultiplyVisitor with the provided {@link
+		 * Private constructor to make a new instance of an BigIntegerMultiplyVisitor with the provided {@link
 		 * BigIntegerStruct}.
 		 *
 		 * @param number1
@@ -675,9 +675,9 @@ public final class BigIntegerStruct extends BuiltInClassStruct implements Intege
 
 		@Override
 		public RealStruct multiply(final RatioStruct number2) {
-			final BigFraction bBigFraction = new BigFraction(number1.bigInteger);
+			final BigInteger bBigInteger = number1.bigInteger;
 			final BigFraction bigFraction = number2.bigFraction;
-			final BigFraction multiply = bBigFraction.multiply(bigFraction);
+			final BigFraction multiply = bigFraction.multiply(bBigInteger);
 			return RationalStruct.makeRational(multiply);
 		}
 
@@ -694,7 +694,7 @@ public final class BigIntegerStruct extends BuiltInClassStruct implements Intege
 	private static final class BigIntegerDivideVisitor extends RealStruct.RealDivideVisitor<BigIntegerStruct> {
 
 		/**
-		 * Private constructor to make a new instance of an IntegerDivideVisitor with the provided {@link
+		 * Private constructor to make a new instance of an BigIntegerDivideVisitor with the provided {@link
 		 * BigIntegerStruct}.
 		 *
 		 * @param number1
@@ -770,7 +770,7 @@ public final class BigIntegerStruct extends BuiltInClassStruct implements Intege
 	private static final class BigIntegerEqualToVisitor extends RealStruct.RealEqualToVisitor<BigIntegerStruct> {
 
 		/**
-		 * Private constructor to make a new instance of an IntegerEqualToVisitor with the provided {@link
+		 * Private constructor to make a new instance of an BigIntegerEqualToVisitor with the provided {@link
 		 * BigIntegerStruct}.
 		 *
 		 * @param number1
@@ -837,7 +837,7 @@ public final class BigIntegerStruct extends BuiltInClassStruct implements Intege
 	private static final class BigIntegerLessThanVisitor extends RealStruct.LessThanVisitor<BigIntegerStruct> {
 
 		/**
-		 * Private constructor to make a new instance of an IntegerLessThanVisitor with the provided {@link
+		 * Private constructor to make a new instance of an BigIntegerLessThanVisitor with the provided {@link
 		 * BigIntegerStruct}.
 		 *
 		 * @param real1
@@ -904,7 +904,7 @@ public final class BigIntegerStruct extends BuiltInClassStruct implements Intege
 	private static final class BigIntegerGreaterThanVisitor extends RealStruct.GreaterThanVisitor<BigIntegerStruct> {
 
 		/**
-		 * Private constructor to make a new instance of an IntegerGreaterThanVisitor with the provided {@link
+		 * Private constructor to make a new instance of an BigIntegerGreaterThanVisitor with the provided {@link
 		 * BigIntegerStruct}.
 		 *
 		 * @param real1
@@ -971,7 +971,7 @@ public final class BigIntegerStruct extends BuiltInClassStruct implements Intege
 	private static final class BigIntegerLessThanOrEqualToVisitor extends RealStruct.LessThanOrEqualToVisitor<BigIntegerStruct> {
 
 		/**
-		 * Private constructor to make a new instance of an IntegerLessThanOrEqualToVisitor with the provided
+		 * Private constructor to make a new instance of an BigIntegerLessThanOrEqualToVisitor with the provided
 		 * {@link BigIntegerStruct}.
 		 *
 		 * @param real1
@@ -1038,7 +1038,7 @@ public final class BigIntegerStruct extends BuiltInClassStruct implements Intege
 	private static final class BigIntegerGreaterThanOrEqualToVisitor extends RealStruct.GreaterThanOrEqualToVisitor<BigIntegerStruct> {
 
 		/**
-		 * Private constructor to make a new instance of an IntegerGreaterThanOrEqualToVisitor with the
+		 * Private constructor to make a new instance of an BigIntegerGreaterThanOrEqualToVisitor with the
 		 * provided {@link BigIntegerStruct}.
 		 *
 		 * @param real1
@@ -1104,7 +1104,7 @@ public final class BigIntegerStruct extends BuiltInClassStruct implements Intege
 	private static final class BigIntegerExptVisitor extends RealStruct.RealExptVisitor<BigIntegerStruct> {
 
 		/**
-		 * Private constructor to make a new instance of an IntegerExptVisitor with the provided {@link
+		 * Private constructor to make a new instance of an BigIntegerExptVisitor with the provided {@link
 		 * BigIntegerStruct}.
 		 *
 		 * @param base
@@ -1117,6 +1117,7 @@ public final class BigIntegerStruct extends BuiltInClassStruct implements Intege
 		@Override
 		public NumberStruct expt(final IntIntegerStruct power) {
 			if (power.minusp()) {
+				// TODO: more efficient?
 				return exptInteger(base, power);
 			}
 
@@ -1128,6 +1129,7 @@ public final class BigIntegerStruct extends BuiltInClassStruct implements Intege
 		@Override
 		public NumberStruct expt(final LongIntegerStruct power) {
 			if (power.minusp()) {
+				// TODO: more efficient?
 				return exptInteger(base, power);
 			}
 
@@ -1139,6 +1141,7 @@ public final class BigIntegerStruct extends BuiltInClassStruct implements Intege
 		@Override
 		public NumberStruct expt(final BigIntegerStruct power) {
 			if (power.minusp()) {
+				// TODO: more efficient?
 				return exptInteger(base, power);
 			}
 
@@ -1150,6 +1153,7 @@ public final class BigIntegerStruct extends BuiltInClassStruct implements Intege
 
 		@Override
 		public NumberStruct expt(final SingleFloatStruct power) {
+			// TODO: more efficient?
 			if (LOGGER.isWarnEnabled()) {
 				LOGGER.warn("Possible loss of precision.");
 			}
@@ -1158,6 +1162,7 @@ public final class BigIntegerStruct extends BuiltInClassStruct implements Intege
 
 		@Override
 		public NumberStruct expt(final DoubleFloatStruct power) {
+			// TODO: more efficient?
 			if (LOGGER.isWarnEnabled()) {
 				LOGGER.warn("Possible loss of precision.");
 			}
@@ -1166,6 +1171,7 @@ public final class BigIntegerStruct extends BuiltInClassStruct implements Intege
 
 		@Override
 		public NumberStruct expt(final BigFloatStruct power) {
+			// TODO: more efficient?
 			if (LOGGER.isWarnEnabled()) {
 				LOGGER.warn("Possible loss of precision.");
 			}
@@ -1174,6 +1180,7 @@ public final class BigIntegerStruct extends BuiltInClassStruct implements Intege
 
 		@Override
 		public NumberStruct expt(final RatioStruct power) {
+			// TODO: more efficient?
 			if (LOGGER.isWarnEnabled()) {
 				LOGGER.warn("Possible loss of precision.");
 			}

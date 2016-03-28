@@ -571,14 +571,14 @@ public final class IntIntegerStruct extends BuiltInClassStruct implements Intege
 		public RealStruct add(final SingleFloatStruct number2) {
 			final int i1 = number1.i;
 			final float f = number2.f;
-			return FloatStruct.valueOf(i1 + f);
+			return SingleFloatStruct.valueOf(i1 + f);
 		}
 
 		@Override
 		public RealStruct add(final DoubleFloatStruct number2) {
 			final int i1 = number1.i;
 			final double d = number2.d;
-			return FloatStruct.valueOf(i1 + d);
+			return DoubleFloatStruct.valueOf(i1 + d);
 		}
 
 		@Override
@@ -646,14 +646,14 @@ public final class IntIntegerStruct extends BuiltInClassStruct implements Intege
 		public RealStruct subtract(final SingleFloatStruct number2) {
 			final int i1 = number1.i;
 			final float f = number2.f;
-			return FloatStruct.valueOf(i1 - f);
+			return SingleFloatStruct.valueOf(i1 - f);
 		}
 
 		@Override
 		public RealStruct subtract(final DoubleFloatStruct number2) {
 			final int i1 = number1.i;
 			final double d = number2.d;
-			return FloatStruct.valueOf(i1 - d);
+			return DoubleFloatStruct.valueOf(i1 - d);
 		}
 
 		@Override
@@ -661,7 +661,7 @@ public final class IntIntegerStruct extends BuiltInClassStruct implements Intege
 			final BigDecimal iBigDecimal = BigDecimal.valueOf(number1.i);
 			final BigDecimal bigDecimal = number2.bigDecimal;
 			final BigDecimal subtract = iBigDecimal.subtract(bigDecimal);
-			return FloatStruct.valueOf(subtract);
+			return BigFloatStruct.valueOf(subtract);
 		}
 
 		@Override
@@ -722,14 +722,14 @@ public final class IntIntegerStruct extends BuiltInClassStruct implements Intege
 		public RealStruct multiply(final SingleFloatStruct number2) {
 			final int i1 = number1.i;
 			final float f = number2.f;
-			return FloatStruct.valueOf(i1 * f);
+			return SingleFloatStruct.valueOf(i1 * f);
 		}
 
 		@Override
 		public RealStruct multiply(final DoubleFloatStruct number2) {
 			final int i1 = number1.i;
 			final double d = number2.d;
-			return FloatStruct.valueOf(i1 * d);
+			return DoubleFloatStruct.valueOf(i1 * d);
 		}
 
 		@Override
@@ -796,14 +796,14 @@ public final class IntIntegerStruct extends BuiltInClassStruct implements Intege
 		public RealStruct divide(final SingleFloatStruct number2) {
 			final int i1 = number1.i;
 			final float f = number2.f;
-			return FloatStruct.valueOf(i1 / f);
+			return SingleFloatStruct.valueOf(i1 / f);
 		}
 
 		@Override
 		public RealStruct divide(final DoubleFloatStruct number2) {
 			final int i1 = number1.i;
 			final double d = number2.d;
-			return FloatStruct.valueOf(i1 / d);
+			return DoubleFloatStruct.valueOf(i1 / d);
 		}
 
 		@Override
@@ -811,7 +811,7 @@ public final class IntIntegerStruct extends BuiltInClassStruct implements Intege
 			final BigDecimal iBigDecimal = BigDecimal.valueOf(number1.i);
 			final BigDecimal bigDecimal = number2.bigDecimal;
 			final BigDecimal divide = iBigDecimal.divide(bigDecimal, MathContext.DECIMAL128);
-			return FloatStruct.valueOf(divide);
+			return BigFloatStruct.valueOf(divide);
 		}
 
 		@Override

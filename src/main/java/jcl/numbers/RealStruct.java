@@ -251,7 +251,7 @@ public interface RealStruct extends NumberStruct {
 	 * <p>
 	 * Returns {@code this} as any RationalStruct is already in rational form.
 	 */
-	RealStruct rational();
+	RationalStruct rational();
 
 	default RealStruct mod(final RealStruct divisor) {
 		final QuotientRemainderResult floor = floor(divisor);

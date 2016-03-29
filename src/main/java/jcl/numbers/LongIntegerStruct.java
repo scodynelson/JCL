@@ -53,7 +53,7 @@ public final class LongIntegerStruct extends BuiltInClassStruct implements Integ
 	 * Returns a LongIntegerStruct object with the provided {@code long} value.
 	 *
 	 * @param l
-	 * 		the int value of the resulting LongIntegerStruct
+	 * 		the {@code long} value of the resulting LongIntegerStruct
 	 *
 	 * @return a LongIntegerStruct object with the provided {@code long} value
 	 */

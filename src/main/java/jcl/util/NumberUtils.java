@@ -16,4 +16,8 @@ public class NumberUtils {
 	public static int longToInt(final long l) {
 		return (int) l;
 	}
+
+	public static float doubleToFloat(final double d) {
+		return (float) d;
+	}
 }

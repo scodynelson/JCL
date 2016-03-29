@@ -5,14 +5,15 @@
 package jcl.numbers;
 
 import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.math.MathContext;
 
 import jcl.classes.BuiltInClassStruct;
 import jcl.types.SingleFloatType;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.math3.fraction.BigFraction;
+import org.apache.commons.math3.util.ArithmeticUtils;
+
+import static java.math.MathContext.DECIMAL128;
 
 /**
  * The {@link SingleFloatStruct} is the object representation of a Lisp 'float' type.
@@ -38,6 +39,8 @@ public final class SingleFloatStruct extends BuiltInClassStruct implements Float
 	 * {@link SingleFloatStruct} constant representing -1.0.
 	 */
 	public static final SingleFloatStruct MINUS_ONE = valueOf(-1.0F);
+
+	private static final int FLOAT_PRECISION = 24;
 
 	/**
 	 * The internal {@code float} containing the SingleFloatStruct contents.
@@ -90,79 +93,45 @@ public final class SingleFloatStruct extends BuiltInClassStruct implements Float
 
 	@Override
 	public DecodeFloatResult decodeFloat() {
-//		if (ZERO.isEqualTo(this)) {
-//			return new DecodeFloatResult(ZERO, IntegerStruct.ZERO, ONE);
-//		}
-//		if (MINUS_ZERO.isEqualTo(this)) {
-//			return new DecodeFloatResult(ZERO, IntegerStruct.ZERO, MINUS_ONE);
-//		}
+		final int bits = Float.floatToRawIntBits(f);
+		final DecodedFloat decodedFloat = getDecodedFloat(bits);
 
-		final int decodedExponentDiffer = 1075;
-		final int doubleFloatingPointPrecision = 53;
+		final int mantissa = decodedFloat.getMantissa();
+		final int expt = ArithmeticUtils.pow(2, FLOAT_PRECISION);
+		final int significand = mantissa / expt;
+		final SingleFloatStruct significandFloat = new SingleFloatStruct(significand);
 
-		final int bits = Float.floatToRawIntBits(apfloatValue().floatValue());
-		final DecodedDoubleRaw decodedDoubleRaw = getDecodedFloatRaw(bits);
+		final int storedExponent = decodedFloat.getStoredExponent();
+		final int exponent = (storedExponent - 150) + FLOAT_PRECISION;
+		final IntegerStruct exponentInteger = IntegerStruct.valueOf(exponent);
 
-		final long mantissa = decodedDoubleRaw.getMantissa();
-		final BigDecimal mantissaBigDecimal = BigDecimal.valueOf(mantissa);
-
-		final double expt = StrictMath.pow(2, doubleFloatingPointPrecision);
-		final BigDecimal exptBigDecimal = BigDecimal.valueOf(expt);
-
-		final BigDecimal significand = mantissaBigDecimal.divide(exptBigDecimal, MathContext.DECIMAL128);
-		final SingleFloatStruct significandFloat = new SingleFloatStruct(significand.floatValue());
-
-		final long storedExponent = decodedDoubleRaw.getStoredExponent();
-		final long exponent = (storedExponent - decodedExponentDiffer) + doubleFloatingPointPrecision;
-		final BigInteger exponentBigInteger = BigInteger.valueOf(exponent);
-		final IntegerStruct exponentInteger = IntegerStruct.valueOf(exponentBigInteger);
-
-		final long sign = decodedDoubleRaw.getSign();
-		final BigDecimal signBigDecimal = BigDecimal.valueOf(sign);
-		final SingleFloatStruct signFloat = new SingleFloatStruct(signBigDecimal.floatValue());
+		final int sign = decodedFloat.getSign();
+		final SingleFloatStruct signFloat = (sign == 1) ? ONE : MINUS_ONE;
 
 		return new DecodeFloatResult(significandFloat, exponentInteger, signFloat);
 	}
 
 	@Override
 	public DecodeFloatResult integerDecodeFloat() {
-//		if (ZERO.isEqualTo(this)) {
-//			return new DecodeFloatResult(IntegerStruct.ZERO, IntegerStruct.ZERO, IntegerStruct.ONE);
-//		}
-//		if (MINUS_ZERO.isEqualTo(this)) {
-//			return new DecodeFloatResult(IntegerStruct.ZERO, IntegerStruct.ZERO, IntegerStruct.MINUS_ONE);
-//		}
+		final int bits = Float.floatToRawIntBits(f);
+		final DecodedFloat decodedFloat = getDecodedFloat(bits);
 
-		final int decodedExponentDiffer = 1075;
+		final int mantissa = decodedFloat.getMantissa();
+		final IntegerStruct significandInteger = IntegerStruct.valueOf(mantissa);
 
-		final int bits = Float.floatToRawIntBits(apfloatValue().floatValue());
-		final DecodedDoubleRaw decodedDoubleRaw = getDecodedFloatRaw(bits);
+		final int storedExponent = decodedFloat.getStoredExponent();
+		final int exponent = storedExponent - 150;
+		final IntegerStruct exponentInteger = IntegerStruct.valueOf(exponent);
 
-		final long mantissa = decodedDoubleRaw.getMantissa();
-		final BigInteger mantissaBigInteger = BigInteger.valueOf(mantissa);
-		final IntegerStruct significandInteger = IntegerStruct.valueOf(mantissaBigInteger);
-
-		final long storedExponent = decodedDoubleRaw.getStoredExponent();
-		final long exponent = storedExponent - decodedExponentDiffer;
-		final BigInteger exponentBigInteger = BigInteger.valueOf(exponent);
-		final IntegerStruct exponentInteger = IntegerStruct.valueOf(exponentBigInteger);
-
-		final long sign = decodedDoubleRaw.getSign();
-		final BigInteger signBigInteger = BigInteger.valueOf(sign);
-		final IntegerStruct signInteger = IntegerStruct.valueOf(signBigInteger);
+		final int sign = decodedFloat.getSign();
+		final IntegerStruct signInteger = (sign == 1) ? IntegerStruct.ONE : IntegerStruct.MINUS_ONE;
 
 		return new DecodeFloatResult(significandInteger, exponentInteger, signInteger);
 	}
 
-	/*
-	 * http://en.wikipedia.org/wiki/Quadruple-precision_floating-point_format
-	 */
 	@Override
 	public IntegerStruct floatPrecision() {
-		final int binary32Precision = 24;
-//		final int binary64Precision = 53;
-//		final int binary128Precision = 113;
-		return IntegerStruct.valueOf(BigInteger.valueOf(binary32Precision));
+		return IntegerStruct.valueOf(FLOAT_PRECISION);
 	}
 
 	@Override
@@ -190,21 +159,40 @@ public final class SingleFloatStruct extends BuiltInClassStruct implements Float
 	 * <p>
 	 * The following is per the JVM spec section 4.4.5
 	 */
-	@SuppressWarnings("all")
-	private static DecodedDoubleRaw getDecodedFloatRaw(final int bits) {
+	private static DecodedFloat getDecodedFloat(final int bits) {
 		final int sign = ((bits >> 31) == 0) ? 1 : -1;
-		// 0xff == 255 == exponent max
 		final int exponent = (bits >> 23) & 0xff;
-		final int mantissa;
-		if (exponent == 0) {
-			// 0x7fffff == 8388607 == 2^23 - 1
-			mantissa = (bits & 0x7fffff) << 1;
-		} else {
-			// 0x7fffff == 8388607 == 2^23 - 1
-			// 0x800000 == 8388608 == 2^23
-			mantissa = (bits & 0x7fffff) | 0x800000;
+		final int mantissa = (exponent == 0) ?
+		                     ((bits & 0x7fffff) << 1) :
+		                     ((bits & 0x7fffff) | 0x800000);
+		return new DecodedFloat(mantissa, exponent, sign);
+	}
+
+	private static class DecodedFloat {
+
+		private final int mantissa;
+
+		private final int storedExponent;
+
+		private final int sign;
+
+		private DecodedFloat(final int mantissa, final int storedExponent, final int sign) {
+			this.mantissa = mantissa;
+			this.storedExponent = storedExponent;
+			this.sign = sign;
 		}
-		return new DecodedDoubleRaw(mantissa, exponent, sign);
+
+		private int getMantissa() {
+			return mantissa;
+		}
+
+		private int getStoredExponent() {
+			return storedExponent;
+		}
+
+		private int getSign() {
+			return sign;
+		}
 	}
 
 	/*
@@ -217,8 +205,18 @@ public final class SingleFloatStruct extends BuiltInClassStruct implements Float
 	}
 
 	@Override
+	public RealStruct.LessThanVisitor<?> lessThanVisitor() {
+		return new SingleFloatLessThanVisitor(this);
+	}
+
+	@Override
 	public boolean isGreaterThan(final GreaterThanVisitor<?> greaterThanVisitor) {
 		return greaterThanVisitor.greaterThan(this);
+	}
+
+	@Override
+	public RealStruct.GreaterThanVisitor<?> greaterThanVisitor() {
+		return new SingleFloatGreaterThanVisitor(this);
 	}
 
 	@Override
@@ -227,8 +225,18 @@ public final class SingleFloatStruct extends BuiltInClassStruct implements Float
 	}
 
 	@Override
+	public RealStruct.LessThanOrEqualToVisitor<?> lessThanOrEqualToVisitor() {
+		return new SingleFloatLessThanOrEqualToVisitor(this);
+	}
+
+	@Override
 	public boolean isGreaterThanOrEqualTo(final GreaterThanOrEqualToVisitor<?> greaterThanOrEqualToVisitor) {
 		return greaterThanOrEqualToVisitor.greaterThanOrEqualTo(this);
+	}
+
+	@Override
+	public RealStruct.GreaterThanOrEqualToVisitor<?> greaterThanOrEqualToVisitor() {
+		return new SingleFloatGreaterThanOrEqualToVisitor(this);
 	}
 
 	@Override
@@ -259,7 +267,7 @@ public final class SingleFloatStruct extends BuiltInClassStruct implements Float
 
 	@Override
 	public AddVisitor<?> addVisitor() {
-		return new FloatAddVisitor(this);
+		return new SingleFloatAddVisitor(this);
 	}
 
 	@Override
@@ -269,7 +277,7 @@ public final class SingleFloatStruct extends BuiltInClassStruct implements Float
 
 	@Override
 	public SubtractVisitor<?> subtractVisitor() {
-		return new FloatSubtractVisitor(this);
+		return new SingleFloatSubtractVisitor(this);
 	}
 
 	@Override
@@ -279,7 +287,7 @@ public final class SingleFloatStruct extends BuiltInClassStruct implements Float
 
 	@Override
 	public MultiplyVisitor<?> multiplyVisitor() {
-		return new FloatMultiplyVisitor(this);
+		return new SingleFloatMultiplyVisitor(this);
 	}
 
 	@Override
@@ -289,12 +297,17 @@ public final class SingleFloatStruct extends BuiltInClassStruct implements Float
 
 	@Override
 	public DivideVisitor<?> divideVisitor() {
-		return new FloatDivideVisitor(this);
+		return new SingleFloatDivideVisitor(this);
 	}
 
 	@Override
 	public boolean isEqualTo(final EqualToVisitor<?> equalToVisitor) {
 		return equalToVisitor.equalTo(this);
+	}
+
+	@Override
+	public EqualToVisitor<?> equalToVisitor() {
+		return new SingleFloatEqualToVisitor(this);
 	}
 
 	@Override
@@ -390,44 +403,29 @@ public final class SingleFloatStruct extends BuiltInClassStruct implements Float
 	/**
 	 * {@link RealStruct.RealAddVisitor} for computing addition results for {@link SingleFloatStruct}s.
 	 */
-	private static final class FloatAddVisitor extends RealStruct.RealAddVisitor<SingleFloatStruct> {
+	private static final class SingleFloatAddVisitor extends RealStruct.RealAddVisitor<SingleFloatStruct> {
 
 		/**
-		 * Private constructor to make a new instance of an FloatAddVisitor with the provided {@link
+		 * Private constructor to make a new instance of an SingleFloatAddVisitor with the provided {@link
 		 * SingleFloatStruct}.
 		 *
 		 * @param number1
 		 * 		the first argument in the addition operation
 		 */
-		private FloatAddVisitor(final SingleFloatStruct number1) {
+		private SingleFloatAddVisitor(final SingleFloatStruct number1) {
 			super(number1);
 		}
 
-		/**
-		 * {@inheritDoc}
-		 * <p>
-		 * Computes the addition function result for an {@link SingleFloatStruct} and a {@link IntegerStruct}.
-		 */
 		@Override
 		public RealStruct add(final IntIntegerStruct number2) {
 			return addFloat(number1, number2);
 		}
 
-		/**
-		 * {@inheritDoc}
-		 * <p>
-		 * Computes the addition function result for an {@link SingleFloatStruct} and a {@link IntegerStruct}.
-		 */
 		@Override
 		public RealStruct add(final LongIntegerStruct number2) {
 			return addFloat(number1, number2);
 		}
 
-		/**
-		 * {@inheritDoc}
-		 * <p>
-		 * Computes the addition function result for an {@link SingleFloatStruct} and a {@link IntegerStruct}.
-		 */
 		@Override
 		public RealStruct add(final BigIntegerStruct number2) {
 			return addFloat(number1, number2);
@@ -448,19 +446,9 @@ public final class SingleFloatStruct extends BuiltInClassStruct implements Float
 			return super.add(number2);
 		}
 
-		/**
-		 * {@inheritDoc}
-		 * <p>
-		 * Computes the addition function result for an {@link SingleFloatStruct} and a {@link RatioStruct}.
-		 */
 		@Override
 		public RealStruct add(final RatioStruct number2) {
 			return addFloat(number1, number2);
-		}
-
-		@Override
-		public NumberStruct add(final ComplexStruct number2) {
-			return super.add(number2);
 		}
 	}
 
@@ -468,44 +456,29 @@ public final class SingleFloatStruct extends BuiltInClassStruct implements Float
 	 * {@link RealStruct.RealSubtractVisitor} for computing subtraction function results for {@link
 	 * SingleFloatStruct}s.
 	 */
-	private static final class FloatSubtractVisitor extends RealStruct.RealSubtractVisitor<SingleFloatStruct> {
+	private static final class SingleFloatSubtractVisitor extends RealStruct.RealSubtractVisitor<SingleFloatStruct> {
 
 		/**
-		 * Private constructor to make a new instance of an FloatSubtractVisitor with the provided {@link
+		 * Private constructor to make a new instance of an SingleFloatSubtractVisitor with the provided {@link
 		 * SingleFloatStruct}.
 		 *
 		 * @param number1
 		 * 		the first argument in the subtraction operation
 		 */
-		private FloatSubtractVisitor(final SingleFloatStruct number1) {
+		private SingleFloatSubtractVisitor(final SingleFloatStruct number1) {
 			super(number1);
 		}
 
-		/**
-		 * {@inheritDoc}
-		 * <p>
-		 * Computes the subtraction function result for an {@link SingleFloatStruct} and a {@link IntegerStruct}.
-		 */
 		@Override
 		public RealStruct subtract(final IntIntegerStruct number2) {
 			return subtractFloat(number1, number2);
 		}
 
-		/**
-		 * {@inheritDoc}
-		 * <p>
-		 * Computes the subtraction function result for an {@link SingleFloatStruct} and a {@link IntegerStruct}.
-		 */
 		@Override
 		public RealStruct subtract(final LongIntegerStruct number2) {
 			return subtractFloat(number1, number2);
 		}
 
-		/**
-		 * {@inheritDoc}
-		 * <p>
-		 * Computes the subtraction function result for an {@link SingleFloatStruct} and a {@link IntegerStruct}.
-		 */
 		@Override
 		public RealStruct subtract(final BigIntegerStruct number2) {
 			return subtractFloat(number1, number2);
@@ -526,32 +499,11 @@ public final class SingleFloatStruct extends BuiltInClassStruct implements Float
 			return super.subtract(number2);
 		}
 
-		/**
-		 * {@inheritDoc}
-		 * <p>
-		 * Computes the subtraction function result for an {@link SingleFloatStruct} and a {@link RatioStruct}.
-		 */
 		@Override
 		public RealStruct subtract(final RatioStruct number2) {
 			return subtractFloat(number1, number2);
 		}
 
-		@Override
-		public NumberStruct subtract(final ComplexStruct number2) {
-			return super.subtract(number2);
-		}
-
-		/**
-		 * Computes the subtraction for the provided {@link SingleFloatStruct} and {@link RealStruct} using {@link
-		 * BigDecimal#subtract(BigDecimal)} with the {@link RealStruct#bigDecimalValue()} values.
-		 *
-		 * @param number1
-		 * 		the {@link SingleFloatStruct} as the first argument of the subtraction operation
-		 * @param number2
-		 * 		the {@link RealStruct} as the second argument of the subtraction operation
-		 *
-		 * @return a new {@link SingleFloatStruct} as the result of the subtraction operation
-		 */
 		private static RealStruct subtractFloat(final SingleFloatStruct number1, final RealStruct number2) {
 			final BigDecimal bigDecimal1 = number1.bigDecimalValue();
 			final BigDecimal bigDecimal2 = number2.bigDecimalValue();
@@ -564,44 +516,29 @@ public final class SingleFloatStruct extends BuiltInClassStruct implements Float
 	 * {@link RealStruct.RealMultiplyVisitor} for computing multiplication function results for {@link
 	 * SingleFloatStruct}s.
 	 */
-	private static final class FloatMultiplyVisitor extends RealStruct.RealMultiplyVisitor<SingleFloatStruct> {
+	private static final class SingleFloatMultiplyVisitor extends RealStruct.RealMultiplyVisitor<SingleFloatStruct> {
 
 		/**
-		 * Private constructor to make a new instance of an FloatMultiplyVisitor with the provided {@link
+		 * Private constructor to make a new instance of an SingleFloatMultiplyVisitor with the provided {@link
 		 * SingleFloatStruct}.
 		 *
 		 * @param number1
 		 * 		the first argument in the multiplication operation
 		 */
-		private FloatMultiplyVisitor(final SingleFloatStruct number1) {
+		private SingleFloatMultiplyVisitor(final SingleFloatStruct number1) {
 			super(number1);
 		}
 
-		/**
-		 * {@inheritDoc}
-		 * <p>
-		 * Computes the multiplication function result for an {@link SingleFloatStruct} and a {@link IntegerStruct}.
-		 */
 		@Override
 		public RealStruct multiply(final IntIntegerStruct number2) {
 			return multiplyFloat(number1, number2);
 		}
 
-		/**
-		 * {@inheritDoc}
-		 * <p>
-		 * Computes the multiplication function result for an {@link SingleFloatStruct} and a {@link IntegerStruct}.
-		 */
 		@Override
 		public RealStruct multiply(final LongIntegerStruct number2) {
 			return multiplyFloat(number1, number2);
 		}
 
-		/**
-		 * {@inheritDoc}
-		 * <p>
-		 * Computes the multiplication function result for an {@link SingleFloatStruct} and a {@link IntegerStruct}.
-		 */
 		@Override
 		public RealStruct multiply(final BigIntegerStruct number2) {
 			return multiplyFloat(number1, number2);
@@ -622,63 +559,38 @@ public final class SingleFloatStruct extends BuiltInClassStruct implements Float
 			return super.multiply(number2);
 		}
 
-		/**
-		 * {@inheritDoc}
-		 * <p>
-		 * Computes the multiplication function result for an {@link SingleFloatStruct} and a {@link RatioStruct}.
-		 */
 		@Override
 		public RealStruct multiply(final RatioStruct number2) {
 			return multiplyFloat(number1, number2);
-		}
-
-		@Override
-		public NumberStruct multiply(final ComplexStruct number2) {
-			return super.multiply(number2);
 		}
 	}
 
 	/**
 	 * {@link RealStruct.RealDivideVisitor} for computing division function results for {@link SingleFloatStruct}s.
 	 */
-	private static final class FloatDivideVisitor extends RealStruct.RealDivideVisitor<SingleFloatStruct> {
+	private static final class SingleFloatDivideVisitor extends RealStruct.RealDivideVisitor<SingleFloatStruct> {
 
 		/**
-		 * Private constructor to make a new instance of an FloatDivideVisitor with the provided {@link
+		 * Private constructor to make a new instance of an SingleFloatDivideVisitor with the provided {@link
 		 * SingleFloatStruct}.
 		 *
 		 * @param number1
 		 * 		the first argument in the division operation
 		 */
-		private FloatDivideVisitor(final SingleFloatStruct number1) {
+		private SingleFloatDivideVisitor(final SingleFloatStruct number1) {
 			super(number1);
 		}
 
-		/**
-		 * {@inheritDoc}
-		 * <p>
-		 * Computes the division function result for an {@link SingleFloatStruct} and a {@link IntegerStruct}.
-		 */
 		@Override
 		public RealStruct divide(final IntIntegerStruct number2) {
 			return divideFloat(number1, number2);
 		}
 
-		/**
-		 * {@inheritDoc}
-		 * <p>
-		 * Computes the division function result for an {@link SingleFloatStruct} and a {@link IntegerStruct}.
-		 */
 		@Override
 		public RealStruct divide(final LongIntegerStruct number2) {
 			return divideFloat(number1, number2);
 		}
 
-		/**
-		 * {@inheritDoc}
-		 * <p>
-		 * Computes the division function result for an {@link SingleFloatStruct} and a {@link IntegerStruct}.
-		 */
 		@Override
 		public RealStruct divide(final BigIntegerStruct number2) {
 			return divideFloat(number1, number2);
@@ -699,37 +611,192 @@ public final class SingleFloatStruct extends BuiltInClassStruct implements Float
 			return super.divide(number2);
 		}
 
-		/**
-		 * {@inheritDoc}
-		 * <p>
-		 * Computes the division function result for an {@link SingleFloatStruct} and a {@link RatioStruct}.
-		 */
 		@Override
 		public RealStruct divide(final RatioStruct number2) {
 			return divideFloat(number1, number2);
 		}
 
-		@Override
-		public NumberStruct divide(final ComplexStruct number2) {
-			return super.divide(number2);
-		}
-
-		/**
-		 * Computes the division for the provided {@link SingleFloatStruct} and {@link RealStruct} using {@link
-		 * BigDecimal#divide(BigDecimal, MathContext)} with the {@link RealStruct#bigDecimalValue()} values.
-		 *
-		 * @param number1
-		 * 		the {@link SingleFloatStruct} as the first argument of the division operation
-		 * @param number2
-		 * 		the {@link RealStruct} as the second argument of the division operation
-		 *
-		 * @return a new {@link SingleFloatStruct} as the result of the division operation
-		 */
 		private static RealStruct divideFloat(final SingleFloatStruct number1, final RealStruct number2) {
 			final BigDecimal bigDecimal1 = number1.bigDecimalValue();
 			final BigDecimal bigDecimal2 = number2.bigDecimalValue();
-			final BigDecimal divide = bigDecimal1.divide(bigDecimal2, MathContext.DECIMAL128);
+			final BigDecimal divide = bigDecimal1.divide(bigDecimal2, DECIMAL128);
 			return new SingleFloatStruct(divide.floatValue());
+		}
+	}
+
+	/**
+	 * {@link FloatStruct.FloatEqualToVisitor} for computing numeric '=' equality results for {@link
+	 * SingleFloatStruct}s.
+	 */
+	private static final class SingleFloatEqualToVisitor extends FloatStruct.FloatEqualToVisitor<SingleFloatStruct> {
+
+		/**
+		 * Private constructor to make a new instance of an SingleFloatEqualToVisitor with the provided {@link
+		 * SingleFloatStruct}.
+		 *
+		 * @param number1
+		 * 		the first argument in the numeric '=' equality operation
+		 */
+		private SingleFloatEqualToVisitor(final SingleFloatStruct number1) {
+			super(number1);
+		}
+
+		@Override
+		public boolean equalTo(final SingleFloatStruct number2) {
+			return Float.compare(number1.f, number2.f) == 0;
+		}
+
+		@Override
+		public boolean equalTo(final DoubleFloatStruct number2) {
+			return Double.compare(number1.f, number2.d) == 0;
+		}
+
+		@Override
+		public boolean equalTo(final BigFloatStruct number2) {
+			final BigDecimal bigDecimal1 = number1.bigDecimalValue();
+			final BigDecimal bigDecimal2 = number2.bigDecimal;
+			return bigDecimal1.compareTo(bigDecimal2) == 0;
+		}
+	}
+
+	/**
+	 * {@link FloatStruct.FloatLessThanVisitor} for computing numeric {@literal '<'} equality results for {@link
+	 * SingleFloatStruct}s.
+	 */
+	private static final class SingleFloatLessThanVisitor extends FloatStruct.FloatLessThanVisitor<SingleFloatStruct> {
+
+		/**
+		 * Private constructor to make a new instance of an SingleFloatLessThanVisitor with the provided {@link
+		 * SingleFloatStruct}.
+		 *
+		 * @param real1
+		 * 		the first argument in the numeric {@literal '<'} equality operation
+		 */
+		private SingleFloatLessThanVisitor(final SingleFloatStruct real1) {
+			super(real1);
+		}
+
+		@Override
+		public boolean lessThan(final SingleFloatStruct real2) {
+			return Float.compare(real1.f, real2.f) < 0;
+		}
+
+		@Override
+		public boolean lessThan(final DoubleFloatStruct real2) {
+			return Double.compare(real1.f, real2.d) < 0;
+		}
+
+		@Override
+		public boolean lessThan(final BigFloatStruct real2) {
+			final BigDecimal bigDecimal1 = real1.bigDecimalValue();
+			final BigDecimal bigDecimal2 = real2.bigDecimal;
+			return bigDecimal1.compareTo(bigDecimal2) < 0;
+		}
+	}
+
+	/**
+	 * {@link FloatStruct.FloatGreaterThanVisitor} for computing numeric {@literal '>'} equality results for {@link
+	 * SingleFloatStruct}s.
+	 */
+	private static final class SingleFloatGreaterThanVisitor extends FloatStruct.FloatGreaterThanVisitor<SingleFloatStruct> {
+
+		/**
+		 * Private constructor to make a new instance of an SingleFloatGreaterThanVisitor with the provided {@link
+		 * SingleFloatStruct}.
+		 *
+		 * @param real1
+		 * 		the first argument in the numeric {@literal '>'} equality operation
+		 */
+		private SingleFloatGreaterThanVisitor(final SingleFloatStruct real1) {
+			super(real1);
+		}
+
+		@Override
+		public boolean greaterThan(final SingleFloatStruct real2) {
+			return Float.compare(real1.f, real2.f) > 0;
+		}
+
+		@Override
+		public boolean greaterThan(final DoubleFloatStruct real2) {
+			return Double.compare(real1.f, real2.d) > 0;
+		}
+
+		@Override
+		public boolean greaterThan(final BigFloatStruct real2) {
+			final BigDecimal bigDecimal1 = real1.bigDecimalValue();
+			final BigDecimal bigDecimal2 = real2.bigDecimal;
+			return bigDecimal1.compareTo(bigDecimal2) > 0;
+		}
+	}
+
+	/**
+	 * {@link FloatStruct.FloatLessThanOrEqualToVisitor} for computing numeric {@literal '<='} equality results for
+	 * {@link SingleFloatStruct}s.
+	 */
+	private static final class SingleFloatLessThanOrEqualToVisitor extends FloatStruct.FloatLessThanOrEqualToVisitor<SingleFloatStruct> {
+
+		/**
+		 * Private constructor to make a new instance of an SingleFloatLessThanOrEqualToVisitor with the provided
+		 * {@link
+		 * SingleFloatStruct}.
+		 *
+		 * @param real1
+		 * 		the first argument in the numeric {@literal '<='} equality operation
+		 */
+		private SingleFloatLessThanOrEqualToVisitor(final SingleFloatStruct real1) {
+			super(real1);
+		}
+
+		@Override
+		public boolean lessThanOrEqualTo(final SingleFloatStruct real2) {
+			return Float.compare(real1.f, real2.f) <= 0;
+		}
+
+		@Override
+		public boolean lessThanOrEqualTo(final DoubleFloatStruct real2) {
+			return Double.compare(real1.f, real2.d) <= 0;
+		}
+
+		@Override
+		public boolean lessThanOrEqualTo(final BigFloatStruct real2) {
+			final BigDecimal bigDecimal1 = real1.bigDecimalValue();
+			final BigDecimal bigDecimal2 = real2.bigDecimal;
+			return bigDecimal1.compareTo(bigDecimal2) <= 0;
+		}
+	}
+
+	/**
+	 * {@link FloatStruct.FloatGreaterThanOrEqualToVisitor} for computing numeric {@literal '>='} equality results for
+	 * {@link SingleFloatStruct}s.
+	 */
+	private static final class SingleFloatGreaterThanOrEqualToVisitor extends FloatStruct.FloatGreaterThanOrEqualToVisitor<SingleFloatStruct> {
+
+		/**
+		 * Private constructor to make a new instance of an SingleFloatGreaterThanOrEqualToVisitor with the provided
+		 * {@link SingleFloatStruct}.
+		 *
+		 * @param real1
+		 * 		the first argument in the numeric {@literal '>='} equality operation
+		 */
+		private SingleFloatGreaterThanOrEqualToVisitor(final SingleFloatStruct real1) {
+			super(real1);
+		}
+
+		@Override
+		public boolean greaterThanOrEqualTo(final SingleFloatStruct real2) {
+			return Float.compare(real1.f, real2.f) >= 0;
+		}
+
+		@Override
+		public boolean greaterThanOrEqualTo(final DoubleFloatStruct real2) {
+			return Double.compare(real1.f, real2.d) >= 0;
+		}
+
+		@Override
+		public boolean greaterThanOrEqualTo(final BigFloatStruct real2) {
+			final BigDecimal bigDecimal1 = real1.bigDecimalValue();
+			final BigDecimal bigDecimal2 = real2.bigDecimal;
+			return bigDecimal1.compareTo(bigDecimal2) >= 0;
 		}
 	}
 }

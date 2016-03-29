@@ -225,6 +225,217 @@ public interface FloatStruct extends RealStruct {
 		return new FloatQuotientRemainderVisitor(this);
 	}
 
+	// Visitor Implementations
+
+	/**
+	 * {@link RealStruct.RealEqualToVisitor} for computing numeric '=' equality results for {@link FloatStruct}s.
+	 */
+	abstract class FloatEqualToVisitor<R extends FloatStruct> extends RealStruct.RealEqualToVisitor<R> {
+
+		/**
+		 * Package private constructor to make a new instance of an FloatEqualToVisitor with the provided {@link
+		 * FloatStruct}.
+		 *
+		 * @param number1
+		 * 		the first argument in the numeric '=' equality operation
+		 */
+		FloatEqualToVisitor(final R number1) {
+			super(number1);
+		}
+
+		@Override
+		public boolean equalTo(final IntIntegerStruct number2) {
+			final RationalStruct number1Rational = number1.rational();
+			return number1Rational.isEqualTo(number2);
+		}
+
+		@Override
+		public boolean equalTo(final LongIntegerStruct number2) {
+			final RationalStruct number1Rational = number1.rational();
+			return number1Rational.isEqualTo(number2);
+		}
+
+		@Override
+		public boolean equalTo(final BigIntegerStruct number2) {
+			final RationalStruct number1Rational = number1.rational();
+			return number1Rational.isEqualTo(number2);
+		}
+
+		@Override
+		public boolean equalTo(final RatioStruct number2) {
+			final RationalStruct number1Rational = number1.rational();
+			return number1Rational.isEqualTo(number2);
+		}
+	}
+
+	/**
+	 * {@link RealStruct.LessThanVisitor} for computing numeric {@literal '<'} equality results for {@link
+	 * FloatStruct}s.
+	 */
+	class FloatLessThanVisitor<R extends FloatStruct> extends RealStruct.LessThanVisitor<R> {
+
+		/**
+		 * Package private constructor to make a new instance of an FloatLessThanVisitor with the provided {@link
+		 * FloatStruct}.
+		 *
+		 * @param real1
+		 * 		the first argument in the numeric {@literal '<'} equality operation
+		 */
+		FloatLessThanVisitor(final R real1) {
+			super(real1);
+		}
+
+		@Override
+		public boolean lessThan(final IntIntegerStruct real2) {
+			final RationalStruct real1Rational = real1.rational();
+			return real1Rational.isLessThan(real2);
+		}
+
+		@Override
+		public boolean lessThan(final LongIntegerStruct real2) {
+			final RationalStruct real1Rational = real1.rational();
+			return real1Rational.isLessThan(real2);
+		}
+
+		@Override
+		public boolean lessThan(final BigIntegerStruct real2) {
+			final RationalStruct real1Rational = real1.rational();
+			return real1Rational.isLessThan(real2);
+		}
+
+		@Override
+		public boolean lessThan(final RatioStruct real2) {
+			final RationalStruct real1Rational = real1.rational();
+			return real1Rational.isLessThan(real2);
+		}
+	}
+
+	/**
+	 * {@link RealStruct.GreaterThanVisitor} for computing numeric {@literal '>'} equality results for {@link
+	 * FloatStruct}s.
+	 */
+	class FloatGreaterThanVisitor<R extends FloatStruct> extends RealStruct.GreaterThanVisitor<R> {
+
+		/**
+		 * Package private constructor to make a new instance of an FloatGreaterThanVisitor with the provided {@link
+		 * FloatStruct}.
+		 *
+		 * @param real1
+		 * 		the first argument in the numeric {@literal '>'} equality operation
+		 */
+		FloatGreaterThanVisitor(final R real1) {
+			super(real1);
+		}
+
+		@Override
+		public boolean greaterThan(final IntIntegerStruct real2) {
+			final RationalStruct real1Rational = real1.rational();
+			return real1Rational.isGreaterThan(real2);
+		}
+
+		@Override
+		public boolean greaterThan(final LongIntegerStruct real2) {
+			final RationalStruct real1Rational = real1.rational();
+			return real1Rational.isGreaterThan(real2);
+		}
+
+		@Override
+		public boolean greaterThan(final BigIntegerStruct real2) {
+			final RationalStruct real1Rational = real1.rational();
+			return real1Rational.isGreaterThan(real2);
+		}
+
+		@Override
+		public boolean greaterThan(final RatioStruct real2) {
+			final RationalStruct real1Rational = real1.rational();
+			return real1Rational.isGreaterThan(real2);
+		}
+	}
+
+	/**
+	 * {@link RealStruct.LessThanOrEqualToVisitor} for computing numeric {@literal '<='} equality results for {@link
+	 * FloatStruct}s.
+	 */
+	class FloatLessThanOrEqualToVisitor<R extends FloatStruct> extends RealStruct.LessThanOrEqualToVisitor<R> {
+
+		/**
+		 * Package private constructor to make a new instance of an FloatLessThanOrEqualToVisitor with the provided
+		 * {@link FloatStruct}.
+		 *
+		 * @param real1
+		 * 		the first argument in the numeric {@literal '<='} equality operation
+		 */
+		FloatLessThanOrEqualToVisitor(final R real1) {
+			super(real1);
+		}
+
+		@Override
+		public boolean lessThanOrEqualTo(final IntIntegerStruct real2) {
+			final RationalStruct real1Rational = real1.rational();
+			return real1Rational.isLessThanOrEqualTo(real2);
+		}
+
+		@Override
+		public boolean lessThanOrEqualTo(final LongIntegerStruct real2) {
+			final RationalStruct real1Rational = real1.rational();
+			return real1Rational.isLessThanOrEqualTo(real2);
+		}
+
+		@Override
+		public boolean lessThanOrEqualTo(final BigIntegerStruct real2) {
+			final RationalStruct real1Rational = real1.rational();
+			return real1Rational.isLessThanOrEqualTo(real2);
+		}
+
+		@Override
+		public boolean lessThanOrEqualTo(final RatioStruct real2) {
+			final RationalStruct real1Rational = real1.rational();
+			return real1Rational.isLessThanOrEqualTo(real2);
+		}
+	}
+
+	/**
+	 * {@link RealStruct.GreaterThanOrEqualToVisitor} for computing numeric {@literal '>='} equality results for {@link
+	 * FloatStruct}s.
+	 */
+	class FloatGreaterThanOrEqualToVisitor<R extends FloatStruct> extends RealStruct.GreaterThanOrEqualToVisitor<R> {
+
+		/**
+		 * Package private constructor to make a new instance of an FloatGreaterThanOrEqualToVisitor with the
+		 * provided {@link FloatStruct}.
+		 *
+		 * @param real1
+		 * 		the first argument in the numeric {@literal '>='} equality operation
+		 */
+		FloatGreaterThanOrEqualToVisitor(final R real1) {
+			super(real1);
+		}
+
+		@Override
+		public boolean greaterThanOrEqualTo(final IntIntegerStruct real2) {
+			final RationalStruct real1Rational = real1.rational();
+			return real1Rational.isGreaterThanOrEqualTo(real2);
+		}
+
+		@Override
+		public boolean greaterThanOrEqualTo(final LongIntegerStruct real2) {
+			final RationalStruct real1Rational = real1.rational();
+			return real1Rational.isGreaterThanOrEqualTo(real2);
+		}
+
+		@Override
+		public boolean greaterThanOrEqualTo(final BigIntegerStruct real2) {
+			final RationalStruct real1Rational = real1.rational();
+			return real1Rational.isGreaterThanOrEqualTo(real2);
+		}
+
+		@Override
+		public boolean greaterThanOrEqualTo(final RatioStruct real2) {
+			final RationalStruct real1Rational = real1.rational();
+			return real1Rational.isGreaterThanOrEqualTo(real2);
+		}
+	}
+
 	/**
 	 * {@link FloatQuotientRemainderVisitor} for computing quotient and remainder results for {@link FloatStruct}s.
 	 */

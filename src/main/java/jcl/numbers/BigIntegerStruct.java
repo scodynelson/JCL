@@ -468,25 +468,25 @@ public final class BigIntegerStruct extends BuiltInClassStruct implements Intege
 
 		@Override
 		public RealStruct add(final IntIntegerStruct number2) {
-			final BigInteger bBigInteger = number1.bigInteger;
-			final BigInteger iBigInteger = BigInteger.valueOf(number2.i);
-			final BigInteger add = bBigInteger.add(iBigInteger);
+			final BigInteger bigInteger1 = number1.bigInteger;
+			final BigInteger bigInteger2 = BigInteger.valueOf(number2.i);
+			final BigInteger add = bigInteger1.add(bigInteger2);
 			return valueOf(add);
 		}
 
 		@Override
 		public RealStruct add(final LongIntegerStruct number2) {
-			final BigInteger bBigInteger = number1.bigInteger;
-			final BigInteger lBigInteger = BigInteger.valueOf(number2.l);
-			final BigInteger add = bBigInteger.add(lBigInteger);
+			final BigInteger bigInteger1 = number1.bigInteger;
+			final BigInteger bigInteger2 = BigInteger.valueOf(number2.l);
+			final BigInteger add = bigInteger1.add(bigInteger2);
 			return valueOf(add);
 		}
 
 		@Override
 		public RealStruct add(final BigIntegerStruct number2) {
-			final BigInteger bBigInteger1 = number1.bigInteger;
-			final BigInteger bBigInteger2 = number2.bigInteger;
-			final BigInteger add = bBigInteger1.add(bBigInteger2);
+			final BigInteger bigInteger1 = number1.bigInteger;
+			final BigInteger bigInteger2 = number2.bigInteger;
+			final BigInteger add = bigInteger1.add(bigInteger2);
 			return valueOf(add);
 		}
 
@@ -506,18 +506,18 @@ public final class BigIntegerStruct extends BuiltInClassStruct implements Intege
 
 		@Override
 		public RealStruct add(final BigFloatStruct number2) {
-			final BigDecimal bBigDecimal = new BigDecimal(number1.bigInteger);
-			final BigDecimal bigDecimal = number2.bigDecimal;
-			final BigDecimal add = bBigDecimal.add(bigDecimal);
+			final BigDecimal bigDecimal1 = new BigDecimal(number1.bigInteger);
+			final BigDecimal bigDecimal2 = number2.bigDecimal;
+			final BigDecimal add = bigDecimal1.add(bigDecimal2);
 			return BigFloatStruct.valueOf(add);
 		}
 
 		@Override
 		public RealStruct add(final RatioStruct number2) {
-			final BigInteger bBigInteger = number1.bigInteger;
+			final BigInteger bigInteger1 = number1.bigInteger;
 			final BigFraction bigFraction = number2.bigFraction;
-			final BigFraction add = bigFraction.add(bBigInteger);
-			return RationalStruct.makeRational(add);
+			final BigFraction add = bigFraction.add(bigInteger1);
+			return RationalStruct.valueOf(add);
 		}
 
 		@Override
@@ -545,25 +545,25 @@ public final class BigIntegerStruct extends BuiltInClassStruct implements Intege
 
 		@Override
 		public RealStruct subtract(final IntIntegerStruct number2) {
-			final BigInteger bBigInteger = number1.bigInteger;
-			final BigInteger iBigInteger = BigInteger.valueOf(number2.i);
-			final BigInteger subtract = bBigInteger.subtract(iBigInteger);
+			final BigInteger bigInteger1 = number1.bigInteger;
+			final BigInteger bigInteger2 = BigInteger.valueOf(number2.i);
+			final BigInteger subtract = bigInteger1.subtract(bigInteger2);
 			return IntegerStruct.valueOf(subtract);
 		}
 
 		@Override
 		public RealStruct subtract(final LongIntegerStruct number2) {
-			final BigInteger bBigInteger = number1.bigInteger;
-			final BigInteger lBigInteger = BigInteger.valueOf(number2.l);
-			final BigInteger subtract = bBigInteger.subtract(lBigInteger);
+			final BigInteger bigInteger1 = number1.bigInteger;
+			final BigInteger bigInteger2 = BigInteger.valueOf(number2.l);
+			final BigInteger subtract = bigInteger1.subtract(bigInteger2);
 			return IntegerStruct.valueOf(subtract);
 		}
 
 		@Override
 		public RealStruct subtract(final BigIntegerStruct number2) {
-			final BigInteger bBigInteger1 = number1.bigInteger;
-			final BigInteger bBigInteger2 = number2.bigInteger;
-			final BigInteger subtract = bBigInteger1.subtract(bBigInteger2);
+			final BigInteger bigInteger1 = number1.bigInteger;
+			final BigInteger bigInteger2 = number2.bigInteger;
+			final BigInteger subtract = bigInteger1.subtract(bigInteger2);
 			return IntegerStruct.valueOf(subtract);
 		}
 
@@ -583,18 +583,18 @@ public final class BigIntegerStruct extends BuiltInClassStruct implements Intege
 
 		@Override
 		public RealStruct subtract(final BigFloatStruct number2) {
-			final BigDecimal bBigDecimal = new BigDecimal(number1.bigInteger);
-			final BigDecimal bigDecimal = number2.bigDecimal;
-			final BigDecimal subtract = bBigDecimal.subtract(bigDecimal);
+			final BigDecimal bigDecimal1 = new BigDecimal(number1.bigInteger);
+			final BigDecimal bigDecimal2 = number2.bigDecimal;
+			final BigDecimal subtract = bigDecimal1.subtract(bigDecimal2);
 			return BigFloatStruct.valueOf(subtract);
 		}
 
 		@Override
 		public RealStruct subtract(final RatioStruct number2) {
-			final BigFraction bBigFraction = new BigFraction(number1.bigInteger);
-			final BigFraction bigFraction = number2.bigFraction;
-			final BigFraction subtract = bBigFraction.subtract(bigFraction);
-			return RationalStruct.makeRational(subtract);
+			final BigFraction bigFraction1 = new BigFraction(number1.bigInteger);
+			final BigFraction bigFraction2 = number2.bigFraction;
+			final BigFraction subtract = bigFraction1.subtract(bigFraction2);
+			return RationalStruct.valueOf(subtract);
 		}
 
 		@Override
@@ -623,25 +623,25 @@ public final class BigIntegerStruct extends BuiltInClassStruct implements Intege
 
 		@Override
 		public RealStruct multiply(final IntIntegerStruct number2) {
-			final BigInteger bBigInteger = number1.bigInteger;
-			final BigInteger iBigInteger = BigInteger.valueOf(number2.i);
-			final BigInteger multiply = bBigInteger.multiply(iBigInteger);
+			final BigInteger bigInteger1 = number1.bigInteger;
+			final BigInteger bigInteger2 = BigInteger.valueOf(number2.i);
+			final BigInteger multiply = bigInteger1.multiply(bigInteger2);
 			return valueOf(multiply);
 		}
 
 		@Override
 		public RealStruct multiply(final LongIntegerStruct number2) {
-			final BigInteger bBigInteger = number1.bigInteger;
-			final BigInteger lBigInteger = BigInteger.valueOf(number2.l);
-			final BigInteger multiply = bBigInteger.multiply(lBigInteger);
+			final BigInteger bigInteger1 = number1.bigInteger;
+			final BigInteger bigInteger2 = BigInteger.valueOf(number2.l);
+			final BigInteger multiply = bigInteger1.multiply(bigInteger2);
 			return valueOf(multiply);
 		}
 
 		@Override
 		public RealStruct multiply(final BigIntegerStruct number2) {
-			final BigInteger bBigInteger1 = number1.bigInteger;
-			final BigInteger bBigInteger2 = number2.bigInteger;
-			final BigInteger multiply = bBigInteger1.multiply(bBigInteger2);
+			final BigInteger bigInteger1 = number1.bigInteger;
+			final BigInteger bigInteger2 = number2.bigInteger;
+			final BigInteger multiply = bigInteger1.multiply(bigInteger2);
 			return valueOf(multiply);
 		}
 
@@ -661,18 +661,18 @@ public final class BigIntegerStruct extends BuiltInClassStruct implements Intege
 
 		@Override
 		public RealStruct multiply(final BigFloatStruct number2) {
-			final BigDecimal bBigDecimal = new BigDecimal(number1.bigInteger);
-			final BigDecimal bigDecimal = number2.bigDecimal;
-			final BigDecimal multiply = bBigDecimal.multiply(bigDecimal);
+			final BigDecimal bigDecimal1 = new BigDecimal(number1.bigInteger);
+			final BigDecimal bigDecimal2 = number2.bigDecimal;
+			final BigDecimal multiply = bigDecimal1.multiply(bigDecimal2);
 			return BigFloatStruct.valueOf(multiply);
 		}
 
 		@Override
 		public RealStruct multiply(final RatioStruct number2) {
-			final BigInteger bBigInteger = number1.bigInteger;
+			final BigInteger bigInteger1 = number1.bigInteger;
 			final BigFraction bigFraction = number2.bigFraction;
-			final BigFraction multiply = bigFraction.multiply(bBigInteger);
-			return RationalStruct.makeRational(multiply);
+			final BigFraction multiply = bigFraction.multiply(bigInteger1);
+			return RationalStruct.valueOf(multiply);
 		}
 
 		@Override
@@ -700,23 +700,23 @@ public final class BigIntegerStruct extends BuiltInClassStruct implements Intege
 
 		@Override
 		public RealStruct divide(final IntIntegerStruct number2) {
-			final BigInteger bBigInteger = number1.bigInteger;
-			final BigInteger iBigInteger = BigInteger.valueOf(number2.i);
-			return RationalStruct.makeRational(bBigInteger, iBigInteger);
+			final BigInteger bigInteger1 = number1.bigInteger;
+			final BigInteger bigInteger2 = BigInteger.valueOf(number2.i);
+			return RationalStruct.valueOf(bigInteger1, bigInteger2);
 		}
 
 		@Override
 		public RealStruct divide(final LongIntegerStruct number2) {
-			final BigInteger bBigInteger = number1.bigInteger;
-			final BigInteger lBigInteger = BigInteger.valueOf(number2.l);
-			return RationalStruct.makeRational(bBigInteger, lBigInteger);
+			final BigInteger bigInteger1 = number1.bigInteger;
+			final BigInteger bigInteger2 = BigInteger.valueOf(number2.l);
+			return RationalStruct.valueOf(bigInteger1, bigInteger2);
 		}
 
 		@Override
 		public RealStruct divide(final BigIntegerStruct number2) {
-			final BigInteger bBigInteger1 = number1.bigInteger;
-			final BigInteger bBigInteger2 = number2.bigInteger;
-			return RationalStruct.makeRational(bBigInteger1, bBigInteger2);
+			final BigInteger bigInteger1 = number1.bigInteger;
+			final BigInteger bigInteger2 = number2.bigInteger;
+			return RationalStruct.valueOf(bigInteger1, bigInteger2);
 		}
 
 		@Override
@@ -735,18 +735,18 @@ public final class BigIntegerStruct extends BuiltInClassStruct implements Intege
 
 		@Override
 		public RealStruct divide(final BigFloatStruct number2) {
-			final BigDecimal bBigDecimal = new BigDecimal(number1.bigInteger);
-			final BigDecimal bigDecimal = number2.bigDecimal;
-			final BigDecimal divide = bBigDecimal.divide(bigDecimal, MathContext.DECIMAL128);
+			final BigDecimal bigDecimal1 = new BigDecimal(number1.bigInteger);
+			final BigDecimal bigDecimal2 = number2.bigDecimal;
+			final BigDecimal divide = bigDecimal1.divide(bigDecimal2, MathContext.DECIMAL128);
 			return BigFloatStruct.valueOf(divide);
 		}
 
 		@Override
 		public RealStruct divide(final RatioStruct number2) {
-			final BigFraction bBigFraction = new BigFraction(number1.bigInteger);
-			final BigFraction bigFraction = number2.bigFraction;
-			final BigFraction divide = bBigFraction.divide(bigFraction);
-			return RationalStruct.makeRational(divide);
+			final BigFraction bigFraction1 = new BigFraction(number1.bigInteger);
+			final BigFraction bigFraction2 = number2.bigFraction;
+			final BigFraction divide = bigFraction1.divide(bigFraction2);
+			return RationalStruct.valueOf(divide);
 		}
 
 		@Override
@@ -775,30 +775,30 @@ public final class BigIntegerStruct extends BuiltInClassStruct implements Intege
 
 		@Override
 		public boolean equalTo(final IntIntegerStruct number2) {
-			final BigInteger bBigInteger = number1.bigInteger;
-			final BigInteger iBigInteger = BigInteger.valueOf(number2.i);
-			return bBigInteger.compareTo(iBigInteger) == 0;
+			final BigInteger bigInteger1 = number1.bigInteger;
+			final BigInteger bigInteger2 = BigInteger.valueOf(number2.i);
+			return bigInteger1.compareTo(bigInteger2) == 0;
 		}
 
 		@Override
 		public boolean equalTo(final LongIntegerStruct number2) {
-			final BigInteger bBigInteger = number1.bigInteger;
-			final BigInteger lBigInteger = BigInteger.valueOf(number2.l);
-			return bBigInteger.compareTo(lBigInteger) == 0;
+			final BigInteger bigInteger1 = number1.bigInteger;
+			final BigInteger bigInteger2 = BigInteger.valueOf(number2.l);
+			return bigInteger1.compareTo(bigInteger2) == 0;
 		}
 
 		@Override
 		public boolean equalTo(final BigIntegerStruct number2) {
-			final BigInteger bBigInteger1 = number1.bigInteger;
-			final BigInteger bBigInteger2 = number2.bigInteger;
-			return bBigInteger1.compareTo(bBigInteger2) == 0;
+			final BigInteger bigInteger1 = number1.bigInteger;
+			final BigInteger bigInteger2 = number2.bigInteger;
+			return bigInteger1.compareTo(bigInteger2) == 0;
 		}
 
 		@Override
 		public boolean equalTo(final RatioStruct number2) {
-			final BigFraction bBigFraction = new BigFraction(number1.bigInteger);
-			final BigFraction bigFraction = number2.bigFraction;
-			return bBigFraction.equals(bigFraction);
+			final BigFraction bigFraction1 = new BigFraction(number1.bigInteger);
+			final BigFraction bigFraction2 = number2.bigFraction;
+			return bigFraction1.equals(bigFraction2);
 		}
 	}
 
@@ -821,30 +821,30 @@ public final class BigIntegerStruct extends BuiltInClassStruct implements Intege
 
 		@Override
 		public boolean lessThan(final IntIntegerStruct real2) {
-			final BigInteger bBigInteger = real1.bigInteger;
-			final BigInteger iBigInteger = BigInteger.valueOf(real2.i);
-			return bBigInteger.compareTo(iBigInteger) < 0;
+			final BigInteger bigInteger1 = real1.bigInteger;
+			final BigInteger bigInteger2 = BigInteger.valueOf(real2.i);
+			return bigInteger1.compareTo(bigInteger2) < 0;
 		}
 
 		@Override
 		public boolean lessThan(final LongIntegerStruct real2) {
-			final BigInteger bBigInteger = real1.bigInteger;
-			final BigInteger lBigInteger = BigInteger.valueOf(real2.l);
-			return bBigInteger.compareTo(lBigInteger) < 0;
+			final BigInteger bigInteger1 = real1.bigInteger;
+			final BigInteger bigInteger2 = BigInteger.valueOf(real2.l);
+			return bigInteger1.compareTo(bigInteger2) < 0;
 		}
 
 		@Override
 		public boolean lessThan(final BigIntegerStruct real2) {
-			final BigInteger bBigInteger1 = real1.bigInteger;
-			final BigInteger bBigInteger2 = real2.bigInteger;
-			return bBigInteger1.compareTo(bBigInteger2) < 0;
+			final BigInteger bigInteger1 = real1.bigInteger;
+			final BigInteger bigInteger2 = real2.bigInteger;
+			return bigInteger1.compareTo(bigInteger2) < 0;
 		}
 
 		@Override
 		public boolean lessThan(final RatioStruct real2) {
-			final BigFraction bBigFraction = new BigFraction(real1.bigInteger);
-			final BigFraction bigFraction = real2.bigFraction;
-			return bBigFraction.compareTo(bigFraction) < 0;
+			final BigFraction bigFraction1 = new BigFraction(real1.bigInteger);
+			final BigFraction bigFraction2 = real2.bigFraction;
+			return bigFraction1.compareTo(bigFraction2) < 0;
 		}
 	}
 
@@ -867,30 +867,30 @@ public final class BigIntegerStruct extends BuiltInClassStruct implements Intege
 
 		@Override
 		public boolean greaterThan(final IntIntegerStruct real2) {
-			final BigInteger bBigInteger = real1.bigInteger;
-			final BigInteger iBigInteger = BigInteger.valueOf(real2.i);
-			return bBigInteger.compareTo(iBigInteger) > 0;
+			final BigInteger bigInteger1 = real1.bigInteger;
+			final BigInteger bigInteger2 = BigInteger.valueOf(real2.i);
+			return bigInteger1.compareTo(bigInteger2) > 0;
 		}
 
 		@Override
 		public boolean greaterThan(final LongIntegerStruct real2) {
-			final BigInteger bBigInteger = real1.bigInteger;
-			final BigInteger lBigInteger = BigInteger.valueOf(real2.l);
-			return bBigInteger.compareTo(lBigInteger) > 0;
+			final BigInteger bigInteger1 = real1.bigInteger;
+			final BigInteger bigInteger2 = BigInteger.valueOf(real2.l);
+			return bigInteger1.compareTo(bigInteger2) > 0;
 		}
 
 		@Override
 		public boolean greaterThan(final BigIntegerStruct real2) {
-			final BigInteger bBigInteger1 = real1.bigInteger;
-			final BigInteger bBigInteger2 = real2.bigInteger;
-			return bBigInteger1.compareTo(bBigInteger2) > 0;
+			final BigInteger bigInteger1 = real1.bigInteger;
+			final BigInteger bigInteger2 = real2.bigInteger;
+			return bigInteger1.compareTo(bigInteger2) > 0;
 		}
 
 		@Override
 		public boolean greaterThan(final RatioStruct real2) {
-			final BigFraction bBigFraction = new BigFraction(real1.bigInteger);
-			final BigFraction bigFraction = real2.bigFraction;
-			return bBigFraction.compareTo(bigFraction) > 0;
+			final BigFraction bigFraction1 = new BigFraction(real1.bigInteger);
+			final BigFraction bigFraction2 = real2.bigFraction;
+			return bigFraction1.compareTo(bigFraction2) > 0;
 		}
 	}
 
@@ -913,30 +913,30 @@ public final class BigIntegerStruct extends BuiltInClassStruct implements Intege
 
 		@Override
 		public boolean lessThanOrEqualTo(final IntIntegerStruct real2) {
-			final BigInteger bBigInteger = real1.bigInteger;
-			final BigInteger iBigInteger = BigInteger.valueOf(real2.i);
-			return bBigInteger.compareTo(iBigInteger) <= 0;
+			final BigInteger bigInteger1 = real1.bigInteger;
+			final BigInteger bigInteger2 = BigInteger.valueOf(real2.i);
+			return bigInteger1.compareTo(bigInteger2) <= 0;
 		}
 
 		@Override
 		public boolean lessThanOrEqualTo(final LongIntegerStruct real2) {
-			final BigInteger bBigInteger = real1.bigInteger;
-			final BigInteger lBigInteger = BigInteger.valueOf(real2.l);
-			return bBigInteger.compareTo(lBigInteger) <= 0;
+			final BigInteger bigInteger1 = real1.bigInteger;
+			final BigInteger bigInteger2 = BigInteger.valueOf(real2.l);
+			return bigInteger1.compareTo(bigInteger2) <= 0;
 		}
 
 		@Override
 		public boolean lessThanOrEqualTo(final BigIntegerStruct real2) {
-			final BigInteger bBigInteger1 = real1.bigInteger;
-			final BigInteger bBigInteger2 = real2.bigInteger;
-			return bBigInteger1.compareTo(bBigInteger2) <= 0;
+			final BigInteger bigInteger1 = real1.bigInteger;
+			final BigInteger bigInteger2 = real2.bigInteger;
+			return bigInteger1.compareTo(bigInteger2) <= 0;
 		}
 
 		@Override
 		public boolean lessThanOrEqualTo(final RatioStruct real2) {
-			final BigFraction bBigFraction = new BigFraction(real1.bigInteger);
-			final BigFraction bigFraction = real2.bigFraction;
-			return bBigFraction.compareTo(bigFraction) <= 0;
+			final BigFraction bigFraction1 = new BigFraction(real1.bigInteger);
+			final BigFraction bigFraction2 = real2.bigFraction;
+			return bigFraction1.compareTo(bigFraction2) <= 0;
 		}
 	}
 
@@ -959,30 +959,30 @@ public final class BigIntegerStruct extends BuiltInClassStruct implements Intege
 
 		@Override
 		public boolean greaterThanOrEqualTo(final IntIntegerStruct real2) {
-			final BigInteger bBigInteger = real1.bigInteger;
-			final BigInteger iBigInteger = BigInteger.valueOf(real2.i);
-			return bBigInteger.compareTo(iBigInteger) >= 0;
+			final BigInteger bigInteger1 = real1.bigInteger;
+			final BigInteger bigInteger2 = BigInteger.valueOf(real2.i);
+			return bigInteger1.compareTo(bigInteger2) >= 0;
 		}
 
 		@Override
 		public boolean greaterThanOrEqualTo(final LongIntegerStruct real2) {
-			final BigInteger bBigInteger = real1.bigInteger;
-			final BigInteger lBigInteger = BigInteger.valueOf(real2.l);
-			return bBigInteger.compareTo(lBigInteger) >= 0;
+			final BigInteger bigInteger1 = real1.bigInteger;
+			final BigInteger bigInteger2 = BigInteger.valueOf(real2.l);
+			return bigInteger1.compareTo(bigInteger2) >= 0;
 		}
 
 		@Override
 		public boolean greaterThanOrEqualTo(final BigIntegerStruct real2) {
-			final BigInteger bBigInteger1 = real1.bigInteger;
-			final BigInteger bBigInteger2 = real2.bigInteger;
-			return bBigInteger1.compareTo(bBigInteger2) >= 0;
+			final BigInteger bigInteger1 = real1.bigInteger;
+			final BigInteger bigInteger2 = real2.bigInteger;
+			return bigInteger1.compareTo(bigInteger2) >= 0;
 		}
 
 		@Override
 		public boolean greaterThanOrEqualTo(final RatioStruct real2) {
-			final BigFraction bBigFraction = new BigFraction(real1.bigInteger);
-			final BigFraction bigFraction = real2.bigFraction;
-			return bBigFraction.compareTo(bigFraction) >= 0;
+			final BigFraction bigFraction1 = new BigFraction(real1.bigInteger);
+			final BigFraction bigFraction2 = real2.bigFraction;
+			return bigFraction1.compareTo(bigFraction2) >= 0;
 		}
 	}
 
@@ -1072,7 +1072,7 @@ public final class BigIntegerStruct extends BuiltInClassStruct implements Intege
 			if (LOGGER.isWarnEnabled()) {
 				LOGGER.warn("Possible loss of precision.");
 			}
-			return exptFloatRatioNew(base.bigInteger.doubleValue(), power.doubleValue());
+			return exptFloatRatioNew(base.bigInteger.doubleValue(), power.bigFraction.doubleValue());
 		}
 	}
 
@@ -1094,25 +1094,25 @@ public final class BigIntegerStruct extends BuiltInClassStruct implements Intege
 
 		@Override
 		public IntegerStruct gcd(final IntIntegerStruct integer2) {
-			final BigInteger bBigInteger = integer1.bigInteger;
-			final BigInteger iBigInteger = BigInteger.valueOf(integer2.i);
-			final BigInteger gcd = bBigInteger.gcd(iBigInteger);
+			final BigInteger bigInteger1 = integer1.bigInteger;
+			final BigInteger bigInteger2 = BigInteger.valueOf(integer2.i);
+			final BigInteger gcd = bigInteger1.gcd(bigInteger2);
 			return IntegerStruct.valueOf(gcd);
 		}
 
 		@Override
 		public IntegerStruct gcd(final LongIntegerStruct integer2) {
-			final BigInteger bBigInteger = integer1.bigInteger;
-			final BigInteger lBigInteger = BigInteger.valueOf(integer2.l);
-			final BigInteger gcd = bBigInteger.gcd(lBigInteger);
+			final BigInteger bigInteger1 = integer1.bigInteger;
+			final BigInteger bigInteger2 = BigInteger.valueOf(integer2.l);
+			final BigInteger gcd = bigInteger1.gcd(bigInteger2);
 			return IntegerStruct.valueOf(gcd);
 		}
 
 		@Override
 		public IntegerStruct gcd(final BigIntegerStruct integer2) {
-			final BigInteger bBigInteger1 = integer1.bigInteger;
-			final BigInteger bBigInteger2 = integer2.bigInteger;
-			final BigInteger gcd = bBigInteger1.gcd(bBigInteger2);
+			final BigInteger bigInteger1 = integer1.bigInteger;
+			final BigInteger bigInteger2 = integer2.bigInteger;
+			final BigInteger gcd = bigInteger1.gcd(bigInteger2);
 			return IntegerStruct.valueOf(gcd);
 		}
 	}
@@ -1139,12 +1139,12 @@ public final class BigIntegerStruct extends BuiltInClassStruct implements Intege
 				return ZERO;
 			}
 
-			final BigInteger bBigInteger = integer1.bigInteger;
-			final BigInteger iBigInteger = BigInteger.valueOf(integer2.i);
+			final BigInteger bigInteger1 = integer1.bigInteger;
+			final BigInteger bigInteger2 = BigInteger.valueOf(integer2.i);
 
-			final BigInteger multiply = bBigInteger.multiply(iBigInteger);
+			final BigInteger multiply = bigInteger1.multiply(bigInteger2);
 			final BigInteger abs = multiply.abs();
-			final BigInteger gcd = bBigInteger.gcd(iBigInteger);
+			final BigInteger gcd = bigInteger1.gcd(bigInteger2);
 			final BigInteger divide = abs.divide(gcd);
 
 			return IntegerStruct.valueOf(divide);
@@ -1156,12 +1156,12 @@ public final class BigIntegerStruct extends BuiltInClassStruct implements Intege
 				return ZERO;
 			}
 
-			final BigInteger bBigInteger = integer1.bigInteger;
-			final BigInteger lBigInteger = BigInteger.valueOf(integer2.l);
+			final BigInteger bigInteger1 = integer1.bigInteger;
+			final BigInteger bigInteger2 = BigInteger.valueOf(integer2.l);
 
-			final BigInteger multiply = bBigInteger.multiply(lBigInteger);
+			final BigInteger multiply = bigInteger1.multiply(bigInteger2);
 			final BigInteger abs = multiply.abs();
-			final BigInteger gcd = bBigInteger.gcd(lBigInteger);
+			final BigInteger gcd = bigInteger1.gcd(bigInteger2);
 			final BigInteger divide = abs.divide(gcd);
 
 			return IntegerStruct.valueOf(divide);
@@ -1174,12 +1174,12 @@ public final class BigIntegerStruct extends BuiltInClassStruct implements Intege
 			}
 
 			// lcm(x y) = abs(x * y) / gcd(x y)
-			final BigInteger bBigInteger1 = integer1.bigInteger;
-			final BigInteger bBigInteger2 = integer2.bigInteger;
+			final BigInteger bigInteger1 = integer1.bigInteger;
+			final BigInteger bigInteger2 = integer2.bigInteger;
 
-			final BigInteger multiply = bBigInteger1.multiply(bBigInteger2);
+			final BigInteger multiply = bigInteger1.multiply(bigInteger2);
 			final BigInteger abs = multiply.abs();
-			final BigInteger gcd = bBigInteger1.gcd(bBigInteger2);
+			final BigInteger gcd = bigInteger1.gcd(bigInteger2);
 			final BigInteger divide = abs.divide(gcd);
 
 			return IntegerStruct.valueOf(divide);
@@ -1267,23 +1267,23 @@ public final class BigIntegerStruct extends BuiltInClassStruct implements Intege
 
 		@Override
 		public IntegerStruct logAnd(final IntIntegerStruct integer2) {
-			final BigInteger bBigInteger = integer1.bigInteger;
-			final BigInteger iBigInteger = BigInteger.valueOf(integer2.i);
-			return IntegerStruct.valueOf(bBigInteger.and(iBigInteger));
+			final BigInteger bigInteger1 = integer1.bigInteger;
+			final BigInteger bigInteger2 = BigInteger.valueOf(integer2.i);
+			return IntegerStruct.valueOf(bigInteger1.and(bigInteger2));
 		}
 
 		@Override
 		public IntegerStruct logAnd(final LongIntegerStruct integer2) {
-			final BigInteger bBigInteger = integer1.bigInteger;
-			final BigInteger lBigInteger = BigInteger.valueOf(integer2.l);
-			return IntegerStruct.valueOf(bBigInteger.and(lBigInteger));
+			final BigInteger bigInteger1 = integer1.bigInteger;
+			final BigInteger bigInteger2 = BigInteger.valueOf(integer2.l);
+			return IntegerStruct.valueOf(bigInteger1.and(bigInteger2));
 		}
 
 		@Override
 		public IntegerStruct logAnd(final BigIntegerStruct integer2) {
-			final BigInteger bBigInteger1 = integer1.bigInteger;
-			final BigInteger bBigInteger2 = integer2.bigInteger;
-			return IntegerStruct.valueOf(bBigInteger1.and(bBigInteger2));
+			final BigInteger bigInteger1 = integer1.bigInteger;
+			final BigInteger bigInteger2 = integer2.bigInteger;
+			return IntegerStruct.valueOf(bigInteger1.and(bigInteger2));
 		}
 	}
 
@@ -1306,23 +1306,23 @@ public final class BigIntegerStruct extends BuiltInClassStruct implements Intege
 
 		@Override
 		public IntegerStruct logAndC1(final IntIntegerStruct integer2) {
-			final BigInteger bBigInteger = integer1.bigInteger;
-			final BigInteger iBigInteger = BigInteger.valueOf(integer2.i);
-			return IntegerStruct.valueOf(bBigInteger.not().and(iBigInteger));
+			final BigInteger bigInteger1 = integer1.bigInteger;
+			final BigInteger bigInteger2 = BigInteger.valueOf(integer2.i);
+			return IntegerStruct.valueOf(bigInteger1.not().and(bigInteger2));
 		}
 
 		@Override
 		public IntegerStruct logAndC1(final LongIntegerStruct integer2) {
-			final BigInteger bBigInteger = integer1.bigInteger;
-			final BigInteger lBigInteger = BigInteger.valueOf(integer2.l);
-			return IntegerStruct.valueOf(bBigInteger.not().and(lBigInteger));
+			final BigInteger bigInteger1 = integer1.bigInteger;
+			final BigInteger bigInteger2 = BigInteger.valueOf(integer2.l);
+			return IntegerStruct.valueOf(bigInteger1.not().and(bigInteger2));
 		}
 
 		@Override
 		public IntegerStruct logAndC1(final BigIntegerStruct integer2) {
-			final BigInteger bBigInteger1 = integer1.bigInteger;
-			final BigInteger bBigInteger2 = integer2.bigInteger;
-			return IntegerStruct.valueOf(bBigInteger1.not().and(bBigInteger2));
+			final BigInteger bigInteger1 = integer1.bigInteger;
+			final BigInteger bigInteger2 = integer2.bigInteger;
+			return IntegerStruct.valueOf(bigInteger1.not().and(bigInteger2));
 		}
 	}
 
@@ -1345,23 +1345,23 @@ public final class BigIntegerStruct extends BuiltInClassStruct implements Intege
 
 		@Override
 		public IntegerStruct logAndC2(final IntIntegerStruct integer2) {
-			final BigInteger bBigInteger = integer1.bigInteger;
-			final BigInteger iBigInteger = BigInteger.valueOf(integer2.i);
-			return IntegerStruct.valueOf(bBigInteger.and(iBigInteger.not()));
+			final BigInteger bigInteger1 = integer1.bigInteger;
+			final BigInteger bigInteger2 = BigInteger.valueOf(integer2.i);
+			return IntegerStruct.valueOf(bigInteger1.and(bigInteger2.not()));
 		}
 
 		@Override
 		public IntegerStruct logAndC2(final LongIntegerStruct integer2) {
-			final BigInteger bBigInteger = integer1.bigInteger;
-			final BigInteger lBigInteger = BigInteger.valueOf(integer2.l);
-			return IntegerStruct.valueOf(bBigInteger.and(lBigInteger.not()));
+			final BigInteger bigInteger1 = integer1.bigInteger;
+			final BigInteger bigInteger2 = BigInteger.valueOf(integer2.l);
+			return IntegerStruct.valueOf(bigInteger1.and(bigInteger2.not()));
 		}
 
 		@Override
 		public IntegerStruct logAndC2(final BigIntegerStruct integer2) {
-			final BigInteger bBigInteger1 = integer1.bigInteger;
-			final BigInteger bBigInteger2 = integer2.bigInteger;
-			return IntegerStruct.valueOf(bBigInteger1.and(bBigInteger2.not()));
+			final BigInteger bigInteger1 = integer1.bigInteger;
+			final BigInteger bigInteger2 = integer2.bigInteger;
+			return IntegerStruct.valueOf(bigInteger1.and(bigInteger2.not()));
 		}
 	}
 
@@ -1383,25 +1383,25 @@ public final class BigIntegerStruct extends BuiltInClassStruct implements Intege
 
 		@Override
 		public IntegerStruct logEqv(final IntIntegerStruct integer2) {
-			final BigInteger bBigInteger = integer1.bigInteger;
-			final BigInteger iBigInteger = BigInteger.valueOf(integer2.i);
-			final BigInteger xor = bBigInteger.xor(iBigInteger);
+			final BigInteger bigInteger1 = integer1.bigInteger;
+			final BigInteger bigInteger2 = BigInteger.valueOf(integer2.i);
+			final BigInteger xor = bigInteger1.xor(bigInteger2);
 			return IntegerStruct.valueOf(xor.not());
 		}
 
 		@Override
 		public IntegerStruct logEqv(final LongIntegerStruct integer2) {
-			final BigInteger bBigInteger = integer1.bigInteger;
-			final BigInteger lBigInteger = BigInteger.valueOf(integer2.l);
-			final BigInteger xor = bBigInteger.xor(lBigInteger);
+			final BigInteger bigInteger1 = integer1.bigInteger;
+			final BigInteger bigInteger2 = BigInteger.valueOf(integer2.l);
+			final BigInteger xor = bigInteger1.xor(bigInteger2);
 			return IntegerStruct.valueOf(xor.not());
 		}
 
 		@Override
 		public IntegerStruct logEqv(final BigIntegerStruct integer2) {
-			final BigInteger bBigInteger1 = integer1.bigInteger;
-			final BigInteger bBigInteger2 = integer2.bigInteger;
-			final BigInteger xor = bBigInteger1.xor(bBigInteger2);
+			final BigInteger bigInteger1 = integer1.bigInteger;
+			final BigInteger bigInteger2 = integer2.bigInteger;
+			final BigInteger xor = bigInteger1.xor(bigInteger2);
 			return IntegerStruct.valueOf(xor.not());
 		}
 	}
@@ -1424,23 +1424,23 @@ public final class BigIntegerStruct extends BuiltInClassStruct implements Intege
 
 		@Override
 		public IntegerStruct logIor(final IntIntegerStruct integer2) {
-			final BigInteger bBigInteger = integer1.bigInteger;
-			final BigInteger iBigInteger = BigInteger.valueOf(integer2.i);
-			return IntegerStruct.valueOf(bBigInteger.or(iBigInteger));
+			final BigInteger bigInteger1 = integer1.bigInteger;
+			final BigInteger bigInteger2 = BigInteger.valueOf(integer2.i);
+			return IntegerStruct.valueOf(bigInteger1.or(bigInteger2));
 		}
 
 		@Override
 		public IntegerStruct logIor(final LongIntegerStruct integer2) {
-			final BigInteger bBigInteger = integer1.bigInteger;
-			final BigInteger lBigInteger = BigInteger.valueOf(integer2.l);
-			return IntegerStruct.valueOf(bBigInteger.or(lBigInteger));
+			final BigInteger bigInteger1 = integer1.bigInteger;
+			final BigInteger bigInteger2 = BigInteger.valueOf(integer2.l);
+			return IntegerStruct.valueOf(bigInteger1.or(bigInteger2));
 		}
 
 		@Override
 		public IntegerStruct logIor(final BigIntegerStruct integer2) {
-			final BigInteger bBigInteger1 = integer1.bigInteger;
-			final BigInteger bBigInteger2 = integer2.bigInteger;
-			return IntegerStruct.valueOf(bBigInteger1.or(bBigInteger2));
+			final BigInteger bigInteger1 = integer1.bigInteger;
+			final BigInteger bigInteger2 = integer2.bigInteger;
+			return IntegerStruct.valueOf(bigInteger1.or(bigInteger2));
 		}
 	}
 
@@ -1462,25 +1462,25 @@ public final class BigIntegerStruct extends BuiltInClassStruct implements Intege
 
 		@Override
 		public IntegerStruct logNand(final IntIntegerStruct integer2) {
-			final BigInteger bBigInteger = integer1.bigInteger;
-			final BigInteger iBigInteger = BigInteger.valueOf(integer2.i);
-			final BigInteger and = bBigInteger.and(iBigInteger);
+			final BigInteger bigInteger1 = integer1.bigInteger;
+			final BigInteger bigInteger2 = BigInteger.valueOf(integer2.i);
+			final BigInteger and = bigInteger1.and(bigInteger2);
 			return IntegerStruct.valueOf(and.not());
 		}
 
 		@Override
 		public IntegerStruct logNand(final LongIntegerStruct integer2) {
-			final BigInteger bBigInteger = integer1.bigInteger;
-			final BigInteger lBigInteger = BigInteger.valueOf(integer2.l);
-			final BigInteger and = bBigInteger.and(lBigInteger);
+			final BigInteger bigInteger1 = integer1.bigInteger;
+			final BigInteger bigInteger2 = BigInteger.valueOf(integer2.l);
+			final BigInteger and = bigInteger1.and(bigInteger2);
 			return IntegerStruct.valueOf(and.not());
 		}
 
 		@Override
 		public IntegerStruct logNand(final BigIntegerStruct integer2) {
-			final BigInteger bBigInteger1 = integer1.bigInteger;
-			final BigInteger bBigInteger2 = integer2.bigInteger;
-			final BigInteger and = bBigInteger1.and(bBigInteger2);
+			final BigInteger bigInteger1 = integer1.bigInteger;
+			final BigInteger bigInteger2 = integer2.bigInteger;
+			final BigInteger and = bigInteger1.and(bigInteger2);
 			return IntegerStruct.valueOf(and.not());
 		}
 	}
@@ -1503,25 +1503,25 @@ public final class BigIntegerStruct extends BuiltInClassStruct implements Intege
 
 		@Override
 		public IntegerStruct logNor(final IntIntegerStruct integer2) {
-			final BigInteger bBigInteger = integer1.bigInteger;
-			final BigInteger iBigInteger = BigInteger.valueOf(integer2.i);
-			final BigInteger or = bBigInteger.or(iBigInteger);
+			final BigInteger bigInteger1 = integer1.bigInteger;
+			final BigInteger bigInteger2 = BigInteger.valueOf(integer2.i);
+			final BigInteger or = bigInteger1.or(bigInteger2);
 			return IntegerStruct.valueOf(or.not());
 		}
 
 		@Override
 		public IntegerStruct logNor(final LongIntegerStruct integer2) {
-			final BigInteger bBigInteger = integer1.bigInteger;
-			final BigInteger lBigInteger = BigInteger.valueOf(integer2.l);
-			final BigInteger or = bBigInteger.or(lBigInteger);
+			final BigInteger bigInteger1 = integer1.bigInteger;
+			final BigInteger bigInteger2 = BigInteger.valueOf(integer2.l);
+			final BigInteger or = bigInteger1.or(bigInteger2);
 			return IntegerStruct.valueOf(or.not());
 		}
 
 		@Override
 		public IntegerStruct logNor(final BigIntegerStruct integer2) {
-			final BigInteger bBigInteger1 = integer1.bigInteger;
-			final BigInteger bBigInteger2 = integer2.bigInteger;
-			final BigInteger or = bBigInteger1.or(bBigInteger2);
+			final BigInteger bigInteger1 = integer1.bigInteger;
+			final BigInteger bigInteger2 = integer2.bigInteger;
+			final BigInteger or = bigInteger1.or(bigInteger2);
 			return IntegerStruct.valueOf(or.not());
 		}
 	}
@@ -1545,23 +1545,23 @@ public final class BigIntegerStruct extends BuiltInClassStruct implements Intege
 
 		@Override
 		public IntegerStruct logOrC1(final IntIntegerStruct integer2) {
-			final BigInteger bBigInteger = integer1.bigInteger;
-			final BigInteger iBigInteger = BigInteger.valueOf(integer2.i);
-			return IntegerStruct.valueOf(bBigInteger.not().or(iBigInteger));
+			final BigInteger bigInteger1 = integer1.bigInteger;
+			final BigInteger bigInteger2 = BigInteger.valueOf(integer2.i);
+			return IntegerStruct.valueOf(bigInteger1.not().or(bigInteger2));
 		}
 
 		@Override
 		public IntegerStruct logOrC1(final LongIntegerStruct integer2) {
-			final BigInteger bBigInteger = integer1.bigInteger;
-			final BigInteger lBigInteger = BigInteger.valueOf(integer2.l);
-			return IntegerStruct.valueOf(bBigInteger.not().or(lBigInteger));
+			final BigInteger bigInteger1 = integer1.bigInteger;
+			final BigInteger bigInteger2 = BigInteger.valueOf(integer2.l);
+			return IntegerStruct.valueOf(bigInteger1.not().or(bigInteger2));
 		}
 
 		@Override
 		public IntegerStruct logOrC1(final BigIntegerStruct integer2) {
-			final BigInteger bBigInteger1 = integer1.bigInteger;
-			final BigInteger bBigInteger2 = integer2.bigInteger;
-			return IntegerStruct.valueOf(bBigInteger1.not().or(bBigInteger2));
+			final BigInteger bigInteger1 = integer1.bigInteger;
+			final BigInteger bigInteger2 = integer2.bigInteger;
+			return IntegerStruct.valueOf(bigInteger1.not().or(bigInteger2));
 		}
 	}
 
@@ -1584,23 +1584,23 @@ public final class BigIntegerStruct extends BuiltInClassStruct implements Intege
 
 		@Override
 		public IntegerStruct logOrC2(final IntIntegerStruct integer2) {
-			final BigInteger bBigInteger = integer1.bigInteger;
-			final BigInteger iBigInteger = BigInteger.valueOf(integer2.i);
-			return IntegerStruct.valueOf(bBigInteger.or(iBigInteger.not()));
+			final BigInteger bigInteger1 = integer1.bigInteger;
+			final BigInteger bigInteger2 = BigInteger.valueOf(integer2.i);
+			return IntegerStruct.valueOf(bigInteger1.or(bigInteger2.not()));
 		}
 
 		@Override
 		public IntegerStruct logOrC2(final LongIntegerStruct integer2) {
-			final BigInteger bBigInteger = integer1.bigInteger;
-			final BigInteger lBigInteger = BigInteger.valueOf(integer2.l);
-			return IntegerStruct.valueOf(bBigInteger.or(lBigInteger.not()));
+			final BigInteger bigInteger1 = integer1.bigInteger;
+			final BigInteger bigInteger2 = BigInteger.valueOf(integer2.l);
+			return IntegerStruct.valueOf(bigInteger1.or(bigInteger2.not()));
 		}
 
 		@Override
 		public IntegerStruct logOrC2(final BigIntegerStruct integer2) {
-			final BigInteger bBigInteger1 = integer1.bigInteger;
-			final BigInteger bBigInteger2 = integer2.bigInteger;
-			return IntegerStruct.valueOf(bBigInteger1.or(bBigInteger2.not()));
+			final BigInteger bigInteger1 = integer1.bigInteger;
+			final BigInteger bigInteger2 = integer2.bigInteger;
+			return IntegerStruct.valueOf(bigInteger1.or(bigInteger2.not()));
 		}
 	}
 
@@ -1622,23 +1622,23 @@ public final class BigIntegerStruct extends BuiltInClassStruct implements Intege
 
 		@Override
 		public IntegerStruct logXor(final IntIntegerStruct integer2) {
-			final BigInteger bBigInteger = integer1.bigInteger;
-			final BigInteger iBigInteger = BigInteger.valueOf(integer2.i);
-			return IntegerStruct.valueOf(bBigInteger.xor(iBigInteger));
+			final BigInteger bigInteger1 = integer1.bigInteger;
+			final BigInteger bigInteger2 = BigInteger.valueOf(integer2.i);
+			return IntegerStruct.valueOf(bigInteger1.xor(bigInteger2));
 		}
 
 		@Override
 		public IntegerStruct logXor(final LongIntegerStruct integer2) {
-			final BigInteger bBigInteger = integer1.bigInteger;
-			final BigInteger lBigInteger = BigInteger.valueOf(integer2.l);
-			return IntegerStruct.valueOf(bBigInteger.xor(lBigInteger));
+			final BigInteger bigInteger1 = integer1.bigInteger;
+			final BigInteger bigInteger2 = BigInteger.valueOf(integer2.l);
+			return IntegerStruct.valueOf(bigInteger1.xor(bigInteger2));
 		}
 
 		@Override
 		public IntegerStruct logXor(final BigIntegerStruct integer2) {
-			final BigInteger bBigInteger1 = integer1.bigInteger;
-			final BigInteger bBigInteger2 = integer2.bigInteger;
-			return IntegerStruct.valueOf(bBigInteger1.xor(bBigInteger2));
+			final BigInteger bigInteger1 = integer1.bigInteger;
+			final BigInteger bigInteger2 = integer2.bigInteger;
+			return IntegerStruct.valueOf(bigInteger1.xor(bigInteger2));
 		}
 	}
 
@@ -1660,23 +1660,23 @@ public final class BigIntegerStruct extends BuiltInClassStruct implements Intege
 
 		@Override
 		public boolean logBitP(final IntIntegerStruct index) {
-			final BigInteger bBigInteger = integer.bigInteger;
+			final BigInteger bigInteger = integer.bigInteger;
 			final int indexInt = index.intValue();
-			return bBigInteger.testBit(indexInt);
+			return bigInteger.testBit(indexInt);
 		}
 
 		@Override
 		public boolean logBitP(final LongIntegerStruct index) {
-			final BigInteger bBigInteger = integer.bigInteger;
+			final BigInteger bigInteger = integer.bigInteger;
 			final int indexInt = index.intValue();
-			return bBigInteger.testBit(indexInt);
+			return bigInteger.testBit(indexInt);
 		}
 
 		@Override
 		public boolean logBitP(final BigIntegerStruct index) {
-			final BigInteger bBigInteger = integer.bigInteger;
+			final BigInteger bigInteger = integer.bigInteger;
 			final int indexInt = index.intValue();
-			return bBigInteger.testBit(indexInt);
+			return bigInteger.testBit(indexInt);
 		}
 	}
 }

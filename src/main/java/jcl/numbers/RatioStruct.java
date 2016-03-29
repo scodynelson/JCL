@@ -47,10 +47,28 @@ public final class RatioStruct extends BuiltInClassStruct implements RationalStr
 		this.bigFraction = bigFraction;
 	}
 
+	/**
+	 * Returns a RatioStruct object with the provided {@link BigFraction} value.
+	 *
+	 * @param bigFraction
+	 * 		the {@link BigFraction} value of the resulting RatioStruct
+	 *
+	 * @return a RatioStruct object with the provided {@link BigFraction} value
+	 */
 	public static RatioStruct valueOf(final BigFraction bigFraction) {
 		return new RatioStruct(bigFraction);
 	}
 
+	/**
+	 * Returns a RatioStruct object with the provided numerator and denominator {@link BigFraction} values.
+	 *
+	 * @param numerator
+	 * 		the {@link BigInteger} value of the numerator of the resulting RatioStruct
+	 * @param denominator
+	 * 		the {@link BigInteger} value of the denominator of the resulting RatioStruct
+	 *
+	 * @return a RatioStruct object with the provided numerator and denominator {@link BigFraction} values
+	 */
 	public static RatioStruct valueOf(final BigInteger numerator, final BigInteger denominator) {
 		final BigFraction bigFraction = new BigFraction(numerator, denominator);
 		return new RatioStruct(bigFraction);
@@ -64,31 +82,6 @@ public final class RatioStruct extends BuiltInClassStruct implements RationalStr
 	@Deprecated
 	public BigFraction getBigFraction() {
 		return bigFraction;
-	}
-
-	public float floatValue() {
-		// TODO: should we use this? possible precision loss?
-		return bigFraction.floatValue();
-	}
-
-	public double doubleValue() {
-		// TODO: should we use this? possible precision loss?
-		return bigFraction.doubleValue();
-	}
-
-	public BigDecimal bigDecimalValue2() {
-		// TODO: make this the main one later
-		try {
-			return bigFraction.bigDecimalValue();
-		} catch (final ArithmeticException ignore) {
-			if (LOGGER.isWarnEnabled()) {
-				LOGGER.warn("Loss of precision when converting BigFraction to BigDecimal.");
-			}
-			// This means that we have to round the fraction.
-			final int scale = MathContext.DECIMAL128.getPrecision();
-			final int roundingMode = RoundingMode.HALF_EVEN.ordinal();
-			return bigFraction.bigDecimalValue(scale, roundingMode);
-		}
 	}
 
 	/*
@@ -111,8 +104,11 @@ public final class RatioStruct extends BuiltInClassStruct implements RationalStr
 
 	@Override
 	public FloatStruct coerceRealToFloat() {
-		// TODO: precision??
-		return FloatStruct.valueOf(bigDecimalValue());
+		final BigDecimal bigDecimal = bigFraction.bigDecimalValue(
+				MathContext.DECIMAL128.getPrecision(),
+				RoundingMode.HALF_EVEN.ordinal()
+		);
+		return FloatStruct.valueOf(bigDecimal);
 	}
 
 	@Override
@@ -297,46 +293,6 @@ public final class RatioStruct extends BuiltInClassStruct implements RationalStr
 		return RationalStruct.valueOf(denominator, numerator);
 	}
 
-	// Comparison Visitor Helpers
-
-	/**
-	 * Determines numeric comparison result between the provided RatioStruct and {@link IntegerStruct}.
-	 *
-	 * @param number1
-	 * 		the RatioStruct in the comparison operation
-	 * @param number2
-	 * 		the {@link IntegerStruct} in the comparison operation
-	 *
-	 * @return numeric comparison result between the provided RatioStruct and {@link IntegerStruct}
-	 */
-	private static int getComparisonResult(final RatioStruct number1, final IntegerStruct number2) {
-
-		final BigFraction bigFraction1 = number1.bigFraction;
-		final BigFraction bigFraction1Reduced = bigFraction1.reduce();
-		final BigInteger numerator = bigFraction1Reduced.getNumerator();
-		final BigInteger denominator = bigFraction1Reduced.getDenominator();
-
-		final BigInteger bigInteger2 = number2.bigIntegerValue();
-		final BigInteger multiply = bigInteger2.multiply(denominator);
-		return numerator.compareTo(multiply);
-	}
-
-	/**
-	 * Determines numeric comparison result between the provided RatioStructs.
-	 *
-	 * @param number1
-	 * 		the first RatioStruct in the comparison operation
-	 * @param number2
-	 * 		the second RatioStruct in the comparison operation
-	 *
-	 * @return numeric comparison result between the provided RatioStructs
-	 */
-	private static int getComparisonResult(final RatioStruct number1, final RatioStruct number2) {
-		final BigFraction bigFraction1 = number1.bigFraction;
-		final BigFraction bigFraction2 = number2.bigFraction;
-		return bigFraction1.compareTo(bigFraction2);
-	}
-
 	// HashCode / Equals
 
 	@Override
@@ -380,46 +336,46 @@ public final class RatioStruct extends BuiltInClassStruct implements RationalStr
 		 * @param number1
 		 * 		the first argument in the addition operation
 		 */
-		RatioAddVisitor(final RatioStruct number1) {
+		private RatioAddVisitor(final RatioStruct number1) {
 			super(number1);
 		}
 
 		@Override
 		public RealStruct add(final IntIntegerStruct number2) {
-			final BigFraction rBigFraction = number1.bigFraction;
+			final BigFraction bigFraction1 = number1.bigFraction;
 			final int i = number2.i;
-			final BigFraction add = rBigFraction.add(i);
-			return RationalStruct.makeRational(add);
+			final BigFraction add = bigFraction1.add(i);
+			return RationalStruct.valueOf(add);
 		}
 
 		@Override
 		public RealStruct add(final LongIntegerStruct number2) {
-			final BigFraction rBigFraction = number1.bigFraction;
+			final BigFraction bigFraction1 = number1.bigFraction;
 			final long l = number2.l;
-			final BigFraction add = rBigFraction.add(l);
-			return RationalStruct.makeRational(add);
+			final BigFraction add = bigFraction1.add(l);
+			return RationalStruct.valueOf(add);
 		}
 
 		@Override
 		public RealStruct add(final BigIntegerStruct number2) {
-			final BigFraction rBigFraction = number1.bigFraction;
+			final BigFraction bigFraction1 = number1.bigFraction;
 			final BigInteger bigInteger = number2.bigInteger;
-			final BigFraction add = rBigFraction.add(bigInteger);
-			return RationalStruct.makeRational(add);
+			final BigFraction add = bigFraction1.add(bigInteger);
+			return RationalStruct.valueOf(add);
 		}
 
 		@Override
 		public RealStruct add(final SingleFloatStruct number2) {
 			final float f1 = number1.bigFraction.floatValue();
 			final float f2 = number2.f;
-			return FloatStruct.valueOf(f1 + f2);
+			return SingleFloatStruct.valueOf(f1 + f2);
 		}
 
 		@Override
 		public RealStruct add(final DoubleFloatStruct number2) {
 			final double d1 = number1.bigFraction.doubleValue();
 			final double d2 = number2.d;
-			return FloatStruct.valueOf(d1 + d2);
+			return DoubleFloatStruct.valueOf(d1 + d2);
 		}
 
 		@Override
@@ -438,7 +394,7 @@ public final class RatioStruct extends BuiltInClassStruct implements RationalStr
 			final BigFraction bigFraction1 = number1.bigFraction;
 			final BigFraction bigFraction2 = number2.bigFraction;
 			final BigFraction add = bigFraction1.add(bigFraction2);
-			return RationalStruct.makeRational(add);
+			return RationalStruct.valueOf(add);
 		}
 
 		@Override
@@ -460,46 +416,46 @@ public final class RatioStruct extends BuiltInClassStruct implements RationalStr
 		 * @param number1
 		 * 		the first argument in the subtraction operation
 		 */
-		RatioSubtractVisitor(final RatioStruct number1) {
+		private RatioSubtractVisitor(final RatioStruct number1) {
 			super(number1);
 		}
 
 		@Override
 		public RealStruct subtract(final IntIntegerStruct number2) {
-			final BigFraction rBigFraction = number1.bigFraction;
+			final BigFraction bigFraction1 = number1.bigFraction;
 			final int i = number2.i;
-			final BigFraction subtract = rBigFraction.subtract(i);
-			return RationalStruct.makeRational(subtract);
+			final BigFraction subtract = bigFraction1.subtract(i);
+			return RationalStruct.valueOf(subtract);
 		}
 
 		@Override
 		public RealStruct subtract(final LongIntegerStruct number2) {
-			final BigFraction rBigFraction = number1.bigFraction;
+			final BigFraction bigFraction1 = number1.bigFraction;
 			final long l = number2.l;
-			final BigFraction subtract = rBigFraction.subtract(l);
-			return RationalStruct.makeRational(subtract);
+			final BigFraction subtract = bigFraction1.subtract(l);
+			return RationalStruct.valueOf(subtract);
 		}
 
 		@Override
 		public RealStruct subtract(final BigIntegerStruct number2) {
-			final BigFraction rBigFraction = number1.bigFraction;
+			final BigFraction bigFraction1 = number1.bigFraction;
 			final BigInteger bigInteger = number2.bigInteger;
-			final BigFraction subtract = rBigFraction.subtract(bigInteger);
-			return RationalStruct.makeRational(subtract);
+			final BigFraction subtract = bigFraction1.subtract(bigInteger);
+			return RationalStruct.valueOf(subtract);
 		}
 
 		@Override
 		public RealStruct subtract(final SingleFloatStruct number2) {
 			final float f1 = number1.bigFraction.floatValue();
 			final float f2 = number2.f;
-			return FloatStruct.valueOf(f1 - f2);
+			return SingleFloatStruct.valueOf(f1 - f2);
 		}
 
 		@Override
 		public RealStruct subtract(final DoubleFloatStruct number2) {
 			final double d1 = number1.bigFraction.doubleValue();
 			final double d2 = number2.d;
-			return FloatStruct.valueOf(d1 - d2);
+			return DoubleFloatStruct.valueOf(d1 - d2);
 		}
 
 		@Override
@@ -510,7 +466,7 @@ public final class RatioStruct extends BuiltInClassStruct implements RationalStr
 			);
 			final BigDecimal bigDecimal2 = number2.bigDecimal;
 			final BigDecimal subtract = bigDecimal1.subtract(bigDecimal2);
-			return FloatStruct.valueOf(subtract);
+			return BigFloatStruct.valueOf(subtract);
 		}
 
 		@Override
@@ -518,7 +474,7 @@ public final class RatioStruct extends BuiltInClassStruct implements RationalStr
 			final BigFraction bigFraction1 = number1.bigFraction;
 			final BigFraction bigFraction2 = number2.bigFraction;
 			final BigFraction subtract = bigFraction1.subtract(bigFraction2);
-			return RationalStruct.makeRational(subtract);
+			return RationalStruct.valueOf(subtract);
 		}
 
 		@Override
@@ -540,46 +496,46 @@ public final class RatioStruct extends BuiltInClassStruct implements RationalStr
 		 * @param number1
 		 * 		the first argument in the multiplication operation
 		 */
-		RatioMultiplyVisitor(final RatioStruct number1) {
+		private RatioMultiplyVisitor(final RatioStruct number1) {
 			super(number1);
 		}
 
 		@Override
 		public RealStruct multiply(final IntIntegerStruct number2) {
-			final BigFraction rBigFraction = number1.bigFraction;
+			final BigFraction bigFraction1 = number1.bigFraction;
 			final int i = number2.i;
-			final BigFraction multiply = rBigFraction.multiply(i);
-			return RationalStruct.makeRational(multiply);
+			final BigFraction multiply = bigFraction1.multiply(i);
+			return RationalStruct.valueOf(multiply);
 		}
 
 		@Override
 		public RealStruct multiply(final LongIntegerStruct number2) {
-			final BigFraction rBigFraction = number1.bigFraction;
+			final BigFraction bigFraction1 = number1.bigFraction;
 			final long l = number2.l;
-			final BigFraction multiply = rBigFraction.multiply(l);
-			return RationalStruct.makeRational(multiply);
+			final BigFraction multiply = bigFraction1.multiply(l);
+			return RationalStruct.valueOf(multiply);
 		}
 
 		@Override
 		public RealStruct multiply(final BigIntegerStruct number2) {
-			final BigFraction rBigFraction = number1.bigFraction;
+			final BigFraction bigFraction1 = number1.bigFraction;
 			final BigInteger bigInteger = number2.bigInteger;
-			final BigFraction multiply = rBigFraction.multiply(bigInteger);
-			return RationalStruct.makeRational(multiply);
+			final BigFraction multiply = bigFraction1.multiply(bigInteger);
+			return RationalStruct.valueOf(multiply);
 		}
 
 		@Override
 		public RealStruct multiply(final SingleFloatStruct number2) {
 			final float f1 = number1.bigFraction.floatValue();
 			final float f2 = number2.f;
-			return FloatStruct.valueOf(f1 * f2);
+			return SingleFloatStruct.valueOf(f1 * f2);
 		}
 
 		@Override
 		public RealStruct multiply(final DoubleFloatStruct number2) {
 			final double d1 = number1.bigFraction.doubleValue();
 			final double d2 = number2.d;
-			return FloatStruct.valueOf(d1 * d2);
+			return DoubleFloatStruct.valueOf(d1 * d2);
 		}
 
 		@Override
@@ -598,7 +554,7 @@ public final class RatioStruct extends BuiltInClassStruct implements RationalStr
 			final BigFraction bigFraction1 = number1.bigFraction;
 			final BigFraction bigFraction2 = number2.bigFraction;
 			final BigFraction multiply = bigFraction1.multiply(bigFraction2);
-			return RationalStruct.makeRational(multiply);
+			return RationalStruct.valueOf(multiply);
 		}
 
 		@Override
@@ -620,46 +576,46 @@ public final class RatioStruct extends BuiltInClassStruct implements RationalStr
 		 * @param number1
 		 * 		the first argument in the division operation
 		 */
-		RatioDivideVisitor(final RatioStruct number1) {
+		private RatioDivideVisitor(final RatioStruct number1) {
 			super(number1);
 		}
 
 		@Override
 		public RealStruct divide(final IntIntegerStruct number2) {
-			final BigFraction rBigFraction = number1.bigFraction;
+			final BigFraction bigFraction1 = number1.bigFraction;
 			final int i = number2.i;
-			final BigFraction divide = rBigFraction.divide(i);
-			return RationalStruct.makeRational(divide);
+			final BigFraction divide = bigFraction1.divide(i);
+			return RationalStruct.valueOf(divide);
 		}
 
 		@Override
 		public RealStruct divide(final LongIntegerStruct number2) {
-			final BigFraction rBigFraction = number1.bigFraction;
+			final BigFraction bigFraction1 = number1.bigFraction;
 			final long l = number2.l;
-			final BigFraction divide = rBigFraction.divide(l);
-			return RationalStruct.makeRational(divide);
+			final BigFraction divide = bigFraction1.divide(l);
+			return RationalStruct.valueOf(divide);
 		}
 
 		@Override
 		public RealStruct divide(final BigIntegerStruct number2) {
-			final BigFraction rBigFraction = number1.bigFraction;
+			final BigFraction bigFraction1 = number1.bigFraction;
 			final BigInteger bigInteger = number2.bigInteger;
-			final BigFraction divide = rBigFraction.divide(bigInteger);
-			return RationalStruct.makeRational(divide);
+			final BigFraction divide = bigFraction1.divide(bigInteger);
+			return RationalStruct.valueOf(divide);
 		}
 
 		@Override
 		public RealStruct divide(final SingleFloatStruct number2) {
 			final float f1 = number1.bigFraction.floatValue();
 			final float f2 = number2.f;
-			return FloatStruct.valueOf(f1 / f2);
+			return SingleFloatStruct.valueOf(f1 / f2);
 		}
 
 		@Override
 		public RealStruct divide(final DoubleFloatStruct number2) {
 			final double d1 = number1.bigFraction.doubleValue();
 			final double d2 = number2.d;
-			return FloatStruct.valueOf(d1 / d2);
+			return DoubleFloatStruct.valueOf(d1 / d2);
 		}
 
 		@Override
@@ -670,7 +626,7 @@ public final class RatioStruct extends BuiltInClassStruct implements RationalStr
 			);
 			final BigDecimal bigDecimal2 = number2.bigDecimal;
 			final BigDecimal divide = bigDecimal1.divide(bigDecimal2, MathContext.DECIMAL128);
-			return FloatStruct.valueOf(divide);
+			return BigFloatStruct.valueOf(divide);
 		}
 
 		@Override
@@ -678,7 +634,7 @@ public final class RatioStruct extends BuiltInClassStruct implements RationalStr
 			final BigFraction bigFraction1 = number1.bigFraction;
 			final BigFraction bigFraction2 = number2.bigFraction;
 			final BigFraction divide = bigFraction1.divide(bigFraction2);
-			return RationalStruct.makeRational(divide);
+			return RationalStruct.valueOf(divide);
 		}
 
 		@Override
@@ -701,28 +657,36 @@ public final class RatioStruct extends BuiltInClassStruct implements RationalStr
 		 * @param number1
 		 * 		the first argument in the numeric '=' equality operation
 		 */
-		RatioEqualToVisitor(final RatioStruct number1) {
+		private RatioEqualToVisitor(final RatioStruct number1) {
 			super(number1);
 		}
 
 		@Override
 		public boolean equalTo(final IntIntegerStruct number2) {
-			return getComparisonResult(number1, number2) == 0;
+			final BigFraction bigFraction1 = number1.bigFraction;
+			final BigFraction bigFraction2 = new BigFraction(number2.i);
+			return bigFraction1.compareTo(bigFraction2) == 0;
 		}
 
 		@Override
 		public boolean equalTo(final LongIntegerStruct number2) {
-			return getComparisonResult(number1, number2) == 0;
+			final BigFraction bigFraction1 = number1.bigFraction;
+			final BigFraction bigFraction2 = new BigFraction(number2.l);
+			return bigFraction1.compareTo(bigFraction2) == 0;
 		}
 
 		@Override
 		public boolean equalTo(final BigIntegerStruct number2) {
-			return getComparisonResult(number1, number2) == 0;
+			final BigFraction bigFraction1 = number1.bigFraction;
+			final BigFraction bigFraction2 = new BigFraction(number2.bigInteger);
+			return bigFraction1.compareTo(bigFraction2) == 0;
 		}
 
 		@Override
 		public boolean equalTo(final RatioStruct number2) {
-			return getComparisonResult(number1, number2) == 0;
+			final BigFraction bigFraction1 = number1.bigFraction;
+			final BigFraction bigFraction2 = number2.bigFraction;
+			return bigFraction1.compareTo(bigFraction2) == 0;
 		}
 	}
 
@@ -739,28 +703,36 @@ public final class RatioStruct extends BuiltInClassStruct implements RationalStr
 		 * @param real1
 		 * 		the first argument in the numeric {@literal '<'} equality operation
 		 */
-		RatioLessThanVisitor(final RatioStruct real1) {
+		private RatioLessThanVisitor(final RatioStruct real1) {
 			super(real1);
 		}
 
 		@Override
 		public boolean lessThan(final IntIntegerStruct real2) {
-			return getComparisonResult(real1, real2) < 0;
+			final BigFraction bigFraction1 = real1.bigFraction;
+			final BigFraction bigFraction2 = new BigFraction(real2.i);
+			return bigFraction1.compareTo(bigFraction2) < 0;
 		}
 
 		@Override
 		public boolean lessThan(final LongIntegerStruct real2) {
-			return getComparisonResult(real1, real2) < 0;
+			final BigFraction bigFraction1 = real1.bigFraction;
+			final BigFraction bigFraction2 = new BigFraction(real2.l);
+			return bigFraction1.compareTo(bigFraction2) < 0;
 		}
 
 		@Override
 		public boolean lessThan(final BigIntegerStruct real2) {
-			return getComparisonResult(real1, real2) < 0;
+			final BigFraction bigFraction1 = real1.bigFraction;
+			final BigFraction bigFraction2 = new BigFraction(real2.bigInteger);
+			return bigFraction1.compareTo(bigFraction2) < 0;
 		}
 
 		@Override
 		public boolean lessThan(final RatioStruct real2) {
-			return getComparisonResult(real1, real2) < 0;
+			final BigFraction bigFraction1 = real1.bigFraction;
+			final BigFraction bigFraction2 = real2.bigFraction;
+			return bigFraction1.compareTo(bigFraction2) < 0;
 		}
 	}
 
@@ -777,28 +749,36 @@ public final class RatioStruct extends BuiltInClassStruct implements RationalStr
 		 * @param real1
 		 * 		the first argument in the numeric {@literal '>'} equality operation
 		 */
-		RatioGreaterThanVisitor(final RatioStruct real1) {
+		private RatioGreaterThanVisitor(final RatioStruct real1) {
 			super(real1);
 		}
 
 		@Override
 		public boolean greaterThan(final IntIntegerStruct real2) {
-			return getComparisonResult(real1, real2) > 0;
+			final BigFraction bigFraction1 = real1.bigFraction;
+			final BigFraction bigFraction2 = new BigFraction(real2.i);
+			return bigFraction1.compareTo(bigFraction2) > 0;
 		}
 
 		@Override
 		public boolean greaterThan(final LongIntegerStruct real2) {
-			return getComparisonResult(real1, real2) > 0;
+			final BigFraction bigFraction1 = real1.bigFraction;
+			final BigFraction bigFraction2 = new BigFraction(real2.l);
+			return bigFraction1.compareTo(bigFraction2) > 0;
 		}
 
 		@Override
 		public boolean greaterThan(final BigIntegerStruct real2) {
-			return getComparisonResult(real1, real2) > 0;
+			final BigFraction bigFraction1 = real1.bigFraction;
+			final BigFraction bigFraction2 = new BigFraction(real2.bigInteger);
+			return bigFraction1.compareTo(bigFraction2) > 0;
 		}
 
 		@Override
 		public boolean greaterThan(final RatioStruct real2) {
-			return getComparisonResult(real1, real2) > 0;
+			final BigFraction bigFraction1 = real1.bigFraction;
+			final BigFraction bigFraction2 = real2.bigFraction;
+			return bigFraction1.compareTo(bigFraction2) > 0;
 		}
 	}
 
@@ -815,33 +795,42 @@ public final class RatioStruct extends BuiltInClassStruct implements RationalStr
 		 * @param real1
 		 * 		the first argument in the numeric {@literal '<='} equality operation
 		 */
-		RatioLessThanOrEqualToVisitor(final RatioStruct real1) {
+		private RatioLessThanOrEqualToVisitor(final RatioStruct real1) {
 			super(real1);
 		}
 
 		@Override
 		public boolean lessThanOrEqualTo(final IntIntegerStruct real2) {
-			return getComparisonResult(real1, real2) <= 0;
+			final BigFraction bigFraction1 = real1.bigFraction;
+			final BigFraction bigFraction2 = new BigFraction(real2.i);
+			return bigFraction1.compareTo(bigFraction2) <= 0;
 		}
 
 		@Override
 		public boolean lessThanOrEqualTo(final LongIntegerStruct real2) {
-			return getComparisonResult(real1, real2) <= 0;
+			final BigFraction bigFraction1 = real1.bigFraction;
+			final BigFraction bigFraction2 = new BigFraction(real2.l);
+			return bigFraction1.compareTo(bigFraction2) <= 0;
 		}
 
 		@Override
 		public boolean lessThanOrEqualTo(final BigIntegerStruct real2) {
-			return getComparisonResult(real1, real2) <= 0;
+			final BigFraction bigFraction1 = real1.bigFraction;
+			final BigFraction bigFraction2 = new BigFraction(real2.bigInteger);
+			return bigFraction1.compareTo(bigFraction2) <= 0;
 		}
 
 		@Override
 		public boolean lessThanOrEqualTo(final RatioStruct real2) {
-			return getComparisonResult(real1, real2) <= 0;
+			final BigFraction bigFraction1 = real1.bigFraction;
+			final BigFraction bigFraction2 = real2.bigFraction;
+			return bigFraction1.compareTo(bigFraction2) <= 0;
 		}
 	}
 
 	/**
-	 * {@link RationalStruct.RationalGreaterThanOrEqualToVisitor} for computing numeric {@literal '>='} equality results
+	 * {@link RationalStruct.RationalGreaterThanOrEqualToVisitor} for computing numeric {@literal '>='} equality
+	 * results
 	 * for {@link RatioStruct}s.
 	 */
 	private static final class RatioGreaterThanOrEqualToVisitor extends RationalStruct.RationalGreaterThanOrEqualToVisitor<RatioStruct> {
@@ -853,28 +842,36 @@ public final class RatioStruct extends BuiltInClassStruct implements RationalStr
 		 * @param real1
 		 * 		the first argument in the numeric {@literal '>='} equality operation
 		 */
-		RatioGreaterThanOrEqualToVisitor(final RatioStruct real1) {
+		private RatioGreaterThanOrEqualToVisitor(final RatioStruct real1) {
 			super(real1);
 		}
 
 		@Override
 		public boolean greaterThanOrEqualTo(final IntIntegerStruct real2) {
-			return getComparisonResult(real1, real2) >= 0;
+			final BigFraction bigFraction1 = real1.bigFraction;
+			final BigFraction bigFraction2 = new BigFraction(real2.i);
+			return bigFraction1.compareTo(bigFraction2) >= 0;
 		}
 
 		@Override
 		public boolean greaterThanOrEqualTo(final LongIntegerStruct real2) {
-			return getComparisonResult(real1, real2) >= 0;
+			final BigFraction bigFraction1 = real1.bigFraction;
+			final BigFraction bigFraction2 = new BigFraction(real2.l);
+			return bigFraction1.compareTo(bigFraction2) >= 0;
 		}
 
 		@Override
 		public boolean greaterThanOrEqualTo(final BigIntegerStruct real2) {
-			return getComparisonResult(real1, real2) >= 0;
+			final BigFraction bigFraction1 = real1.bigFraction;
+			final BigFraction bigFraction2 = new BigFraction(real2.bigInteger);
+			return bigFraction1.compareTo(bigFraction2) >= 0;
 		}
 
 		@Override
 		public boolean greaterThanOrEqualTo(final RatioStruct real2) {
-			return getComparisonResult(real1, real2) >= 0;
+			final BigFraction bigFraction1 = real1.bigFraction;
+			final BigFraction bigFraction2 = real2.bigFraction;
+			return bigFraction1.compareTo(bigFraction2) >= 0;
 		}
 	}
 
@@ -896,82 +893,74 @@ public final class RatioStruct extends BuiltInClassStruct implements RationalStr
 
 		@Override
 		public NumberStruct expt(final IntIntegerStruct power) {
-			return super.expt(power);
-//			if (power.minusp()) {
-//				// TODO: more efficient?
-//				return exptInteger(base, power);
-//			}
-//
-//			final BigInteger baseBigInteger = base.bigInteger;
-//			final BigInteger pow = ArithmeticUtils.pow(baseBigInteger, power.i);
-//			return IntegerStruct.valueOf(pow);
+			if (power.minusp()) {
+				// TODO: more efficient?
+				return exptInteger(base, power);
+			}
+
+			final BigFraction baseBigFraction = base.bigFraction;
+			final BigFraction pow = baseBigFraction.pow(power.i);
+			return RationalStruct.valueOf(pow);
 		}
 
 		@Override
 		public NumberStruct expt(final LongIntegerStruct power) {
-			return super.expt(power);
-//			if (power.minusp()) {
-//				// TODO: more efficient?
-//				return exptInteger(base, power);
-//			}
-//
-//			final BigInteger baseBigInteger = base.bigInteger;
-//			final BigInteger pow = ArithmeticUtils.pow(baseBigInteger, power.l);
-//			return IntegerStruct.valueOf(pow);
+			if (power.minusp()) {
+				// TODO: more efficient?
+				return exptInteger(base, power);
+			}
+
+			final BigFraction baseBigFraction = base.bigFraction;
+			final BigFraction pow = baseBigFraction.pow(power.l);
+			return RationalStruct.valueOf(pow);
 		}
 
 		@Override
 		public NumberStruct expt(final BigIntegerStruct power) {
-			return super.expt(power);
-//			if (power.minusp()) {
-//				// TODO: more efficient?
-//				return exptInteger(base, power);
-//			}
-//
-//			final BigInteger baseBigInteger = base.bigInteger;
-//			final BigInteger powerBigInteger = power.bigInteger;
-//			final BigInteger pow = ArithmeticUtils.pow(baseBigInteger, powerBigInteger);
-//			return IntegerStruct.valueOf(pow);
+			if (power.minusp()) {
+				// TODO: more efficient?
+				return exptInteger(base, power);
+			}
+
+			final BigFraction baseBigFraction = base.bigFraction;
+			final BigFraction pow = baseBigFraction.pow(power.bigInteger);
+			return RationalStruct.valueOf(pow);
 		}
 
 		@Override
 		public NumberStruct expt(final SingleFloatStruct power) {
-			return super.expt(power);
 //			// TODO: more efficient?
-//			if (LOGGER.isWarnEnabled()) {
-//				LOGGER.warn("Possible loss of precision.");
-//			}
-//			return exptFloatRatioNew(base.bigInteger.doubleValue(), power.f);
+			if (LOGGER.isWarnEnabled()) {
+				LOGGER.warn("Possible loss of precision.");
+			}
+			return exptFloatRatioNew(base.bigFraction.doubleValue(), power.f);
 		}
 
 		@Override
 		public NumberStruct expt(final DoubleFloatStruct power) {
-			return super.expt(power);
 //			// TODO: more efficient?
-//			if (LOGGER.isWarnEnabled()) {
-//				LOGGER.warn("Possible loss of precision.");
-//			}
-//			return exptFloatRatioNew(base.bigInteger.doubleValue(), power.d);
+			if (LOGGER.isWarnEnabled()) {
+				LOGGER.warn("Possible loss of precision.");
+			}
+			return exptFloatRatioNew(base.bigFraction.doubleValue(), power.d);
 		}
 
 		@Override
 		public NumberStruct expt(final BigFloatStruct power) {
-			return super.expt(power);
 //			// TODO: more efficient?
-//			if (LOGGER.isWarnEnabled()) {
-//				LOGGER.warn("Possible loss of precision.");
-//			}
-//			return exptFloatRatioNew(base.bigInteger.doubleValue(), power.doubleValue());
+			if (LOGGER.isWarnEnabled()) {
+				LOGGER.warn("Possible loss of precision.");
+			}
+			return exptFloatRatioNew(base.bigFraction.doubleValue(), power.doubleValue());
 		}
 
 		@Override
 		public NumberStruct expt(final RatioStruct power) {
-			return super.expt(power);
 //			// TODO: more efficient?
-//			if (LOGGER.isWarnEnabled()) {
-//				LOGGER.warn("Possible loss of precision.");
-//			}
-//			return exptFloatRatioNew(base.bigInteger.doubleValue(), power.doubleValue());
+			if (LOGGER.isWarnEnabled()) {
+				LOGGER.warn("Possible loss of precision.");
+			}
+			return exptFloatRatioNew(base.bigFraction.doubleValue(), power.bigFraction.doubleValue());
 		}
 	}
 
@@ -988,7 +977,7 @@ public final class RatioStruct extends BuiltInClassStruct implements RationalStr
 		 * @param real
 		 * 		the real argument in the computational quotient and remainder operation
 		 */
-		RatioQuotientRemainderVisitor(final RatioStruct real) {
+		private RatioQuotientRemainderVisitor(final RatioStruct real) {
 			super(real);
 		}
 

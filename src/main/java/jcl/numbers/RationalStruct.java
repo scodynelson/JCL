@@ -108,6 +108,7 @@ public interface RationalStruct extends RealStruct {
 		return this;
 	}
 
+	@Deprecated
 	static RationalStruct makeRational(final BigFraction bigFraction) {
 		final BigFraction reduced = bigFraction.reduce();
 		final BigInteger numerator = reduced.getNumerator();
@@ -115,6 +116,7 @@ public interface RationalStruct extends RealStruct {
 		return makeRational(numerator, denominator);
 	}
 
+	@Deprecated
 	static RationalStruct makeRational(final BigInteger numerator, final BigInteger denominator) {
 		if (BigInteger.ZERO.compareTo(denominator) == 0) {
 			// TODO: what do we pass to this exception???

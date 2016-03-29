@@ -244,10 +244,21 @@ public interface NumberStruct extends LispStruct {
 		return result;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Determines the whether or not the numerical value of this RationalStruct is zero, positive, or negative,
+	 * returning {@code this}, {@link IntegerStruct#ONE}, or {@link IntegerStruct#MINUS_ONE} respectively.
+	 */
 	NumberStruct signum();
 
 	NumberStruct realPart();
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Returns {@link IntegerStruct#ONE} as the imaginary part of RationalStructs is always '1'.
+	 */
 	NumberStruct imagPart();
 
 	NumberStruct conjugate();

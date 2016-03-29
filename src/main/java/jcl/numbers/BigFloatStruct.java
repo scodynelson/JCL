@@ -410,7 +410,7 @@ public final class BigFloatStruct extends BuiltInClassStruct implements FloatStr
 
 		final BigFraction bigFraction = new BigFraction(movedDecimalPlaceBigInteger, BigInteger.TEN.pow(scale));
 		final BigFraction bigFractionReduced = bigFraction.reduce();
-		return RationalStruct.makeRational(bigFractionReduced);
+		return RationalStruct.valueOf(bigFractionReduced);
 	}
 
 	/**

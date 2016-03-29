@@ -290,7 +290,7 @@ public final class RatioStruct extends BuiltInClassStruct implements RationalStr
 		if (BigInteger.ONE.equals(numerator)) {
 			return IntegerStruct.valueOf(denominator);
 		}
-		return RationalStruct.valueOf(denominator, numerator);
+		return new RatioStruct(bigFraction.reciprocal());
 	}
 
 	// HashCode / Equals
@@ -330,8 +330,7 @@ public final class RatioStruct extends BuiltInClassStruct implements RationalStr
 	private static final class RatioAddVisitor extends RealStruct.RealAddVisitor<RatioStruct> {
 
 		/**
-		 * Package private constructor to make a new instance of an RatioAddVisitor with the provided {@link
-		 * RatioStruct}.
+		 * Private constructor to make a new instance of an RatioAddVisitor with the provided {@link RatioStruct}.
 		 *
 		 * @param number1
 		 * 		the first argument in the addition operation
@@ -410,8 +409,7 @@ public final class RatioStruct extends BuiltInClassStruct implements RationalStr
 	private static final class RatioSubtractVisitor extends RealStruct.RealSubtractVisitor<RatioStruct> {
 
 		/**
-		 * Package private constructor to make a new instance of an RatioSubtractVisitor with the provided {@link
-		 * RatioStruct}.
+		 * Private constructor to make a new instance of an RatioSubtractVisitor with the provided {@link RatioStruct}.
 		 *
 		 * @param number1
 		 * 		the first argument in the subtraction operation
@@ -490,8 +488,7 @@ public final class RatioStruct extends BuiltInClassStruct implements RationalStr
 	private static final class RatioMultiplyVisitor extends RealStruct.RealMultiplyVisitor<RatioStruct> {
 
 		/**
-		 * Package private constructor to make a new instance of an RatioMultiplyVisitor with the provided {@link
-		 * RatioStruct}.
+		 * Private constructor to make a new instance of an RatioMultiplyVisitor with the provided {@link RatioStruct}.
 		 *
 		 * @param number1
 		 * 		the first argument in the multiplication operation
@@ -570,8 +567,7 @@ public final class RatioStruct extends BuiltInClassStruct implements RationalStr
 	private static final class RatioDivideVisitor extends RealStruct.RealDivideVisitor<RatioStruct> {
 
 		/**
-		 * Package private constructor to make a new instance of an RatioDivideVisitor with the provided {@link
-		 * RatioStruct}.
+		 * Private constructor to make a new instance of an RatioDivideVisitor with the provided {@link RatioStruct}.
 		 *
 		 * @param number1
 		 * 		the first argument in the division operation
@@ -651,8 +647,7 @@ public final class RatioStruct extends BuiltInClassStruct implements RationalStr
 	private static final class RatioEqualToVisitor extends RationalStruct.RationalEqualToVisitor<RatioStruct> {
 
 		/**
-		 * Package private constructor to make a new instance of an RatioEqualToVisitor with the provided {@link
-		 * RatioStruct}.
+		 * Private constructor to make a new instance of an RatioEqualToVisitor with the provided {@link RatioStruct}.
 		 *
 		 * @param number1
 		 * 		the first argument in the numeric '=' equality operation
@@ -697,8 +692,7 @@ public final class RatioStruct extends BuiltInClassStruct implements RationalStr
 	private static final class RatioLessThanVisitor extends RationalStruct.RationalLessThanVisitor<RatioStruct> {
 
 		/**
-		 * Package private constructor to make a new instance of an RatioLessThanVisitor with the provided {@link
-		 * RatioStruct}.
+		 * Private constructor to make a new instance of an RatioLessThanVisitor with the provided {@link RatioStruct}.
 		 *
 		 * @param real1
 		 * 		the first argument in the numeric {@literal '<'} equality operation
@@ -743,7 +737,7 @@ public final class RatioStruct extends BuiltInClassStruct implements RationalStr
 	private static final class RatioGreaterThanVisitor extends RationalStruct.RationalGreaterThanVisitor<RatioStruct> {
 
 		/**
-		 * Package private constructor to make a new instance of an RatioGreaterThanVisitor with the provided {@link
+		 * Private constructor to make a new instance of an RatioGreaterThanVisitor with the provided {@link
 		 * RatioStruct}.
 		 *
 		 * @param real1
@@ -789,8 +783,8 @@ public final class RatioStruct extends BuiltInClassStruct implements RationalStr
 	private static final class RatioLessThanOrEqualToVisitor extends RationalStruct.RationalLessThanOrEqualToVisitor<RatioStruct> {
 
 		/**
-		 * Package private constructor to make a new instance of an RatioLessThanOrEqualToVisitor with the provided
-		 * {@link RatioStruct}.
+		 * Private constructor to make a new instance of an RatioLessThanOrEqualToVisitor with the provided {@link
+		 * RatioStruct}.
 		 *
 		 * @param real1
 		 * 		the first argument in the numeric {@literal '<='} equality operation
@@ -830,14 +824,13 @@ public final class RatioStruct extends BuiltInClassStruct implements RationalStr
 
 	/**
 	 * {@link RationalStruct.RationalGreaterThanOrEqualToVisitor} for computing numeric {@literal '>='} equality
-	 * results
-	 * for {@link RatioStruct}s.
+	 * results for {@link RatioStruct}s.
 	 */
 	private static final class RatioGreaterThanOrEqualToVisitor extends RationalStruct.RationalGreaterThanOrEqualToVisitor<RatioStruct> {
 
 		/**
-		 * Package private constructor to make a new instance of an RatioGreaterThanOrEqualToVisitor with the provided
-		 * {@link RatioStruct}.
+		 * Private constructor to make a new instance of an RatioGreaterThanOrEqualToVisitor with the provided {@link
+		 * RatioStruct}.
 		 *
 		 * @param real1
 		 * 		the first argument in the numeric {@literal '>='} equality operation
@@ -881,8 +874,7 @@ public final class RatioStruct extends BuiltInClassStruct implements RationalStr
 	private static final class RatioExptVisitor extends RealStruct.RealExptVisitor<RatioStruct> {
 
 		/**
-		 * Private constructor to make a new instance of an IntegerExptVisitor with the provided {@link
-		 * RatioStruct}.
+		 * Private constructor to make a new instance of an IntegerExptVisitor with the provided {@link RatioStruct}.
 		 *
 		 * @param base
 		 * 		the base argument in the exponential operation
@@ -969,10 +961,11 @@ public final class RatioStruct extends BuiltInClassStruct implements RationalStr
 	 * RatioStruct}s.
 	 */
 	private static final class RatioQuotientRemainderVisitor extends RationalStruct.RationalQuotientRemainderVisitor<RatioStruct> {
+		// TODO: need to flush these out after fixing Float types.
 
 		/**
-		 * Package private constructor to make a new instance of an RatioQuotientRemainderVisitor with the provided
-		 * {@link RatioStruct}.
+		 * Private constructor to make a new instance of an RatioQuotientRemainderVisitor with the provided {@link
+		 * RatioStruct}.
 		 *
 		 * @param real
 		 * 		the real argument in the computational quotient and remainder operation

@@ -246,6 +246,11 @@ public interface RealStruct extends NumberStruct {
 		return reals.stream().reduce(real, RealStruct::min);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Returns {@code this} as any RationalStruct is already in rational form.
+	 */
 	RealStruct rational();
 
 	default RealStruct mod(final RealStruct divisor) {

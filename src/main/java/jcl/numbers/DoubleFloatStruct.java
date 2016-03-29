@@ -402,7 +402,7 @@ public final class DoubleFloatStruct extends BuiltInClassStruct implements Float
 	public RationalStruct rational() {
 		final BigFraction bigFraction = new BigFraction(d);
 		final BigFraction bigFractionReduced = bigFraction.reduce();
-		return RationalStruct.makeRational(bigFractionReduced);
+		return RationalStruct.valueOf(bigFractionReduced);
 	}
 
 	/**

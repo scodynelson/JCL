@@ -51,7 +51,7 @@ public interface IntegerStruct extends RationalStruct {
 	 *
 	 * @return a new IntegerStruct representing the provided {@link int}
 	 */
-	static IntegerStruct valueOf(final int i) {
+	static IntegerStruct valueOf(final Integer i) {
 		return IntIntegerStruct.valueOf(i);
 	}
 
@@ -64,7 +64,7 @@ public interface IntegerStruct extends RationalStruct {
 	 *
 	 * @return a new IntegerStruct representing the provided {@code String}
 	 */
-	static IntegerStruct valueOf(final long l) {
+	static IntegerStruct valueOf(final Long l) {
 		if (NumberUtils.longFitsInInt(l)) {
 			return IntIntegerStruct.valueOf(NumberUtils.longToInt(l));
 		}

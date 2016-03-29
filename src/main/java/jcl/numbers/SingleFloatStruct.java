@@ -396,7 +396,7 @@ public final class SingleFloatStruct extends BuiltInClassStruct implements Float
 	public RationalStruct rational() {
 		final BigFraction bigFraction = new BigFraction(f);
 		final BigFraction bigFractionReduced = bigFraction.reduce();
-		return RationalStruct.makeRational(bigFractionReduced);
+		return RationalStruct.valueOf(bigFractionReduced);
 	}
 
 	/**

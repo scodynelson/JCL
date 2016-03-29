@@ -8,7 +8,6 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.RoundingMode;
 
-import jcl.conditions.exceptions.DivisionByZeroException;
 import org.apache.commons.math3.fraction.BigFraction;
 
 /**
@@ -18,28 +17,43 @@ public interface RationalStruct extends RealStruct {
 
 	/**
 	 * Returns numerator of this RationalStruct as an {@link IntegerStruct}.
+	 *
+	 * @return the numerator value
 	 */
 	IntegerStruct numerator();
 
 	/**
 	 * Returns denominator of this RationalStruct as an {@link IntegerStruct}.
+	 *
+	 * @return the denominator value
 	 */
 	IntegerStruct denominator();
 
-	static RationalStruct valueOf(final BigFraction bigFraction) {
-		final BigInteger denominator = bigFraction.getDenominator();
-		if (denominator.compareTo(BigInteger.ONE) == 0) {
-			final BigInteger numerator = bigFraction.getNumerator();
-			return IntegerStruct.valueOf(numerator);
-		}
-		return RatioStruct.valueOf(bigFraction);
-	}
-
-	static RationalStruct valueOf(final int numerator) {
+	/**
+	 * Returns a new RationalStruct with the provided {@code int} as a numerator. Because the default denominator value
+	 * is {@code 1}, the result will be an {@link IntegerStruct}.
+	 *
+	 * @param numerator
+	 * 		the {@code int} numerator of the new RationalStruct
+	 *
+	 * @return a new RationalStruct with the provided {@code int} as a numerator
+	 */
+	static RationalStruct valueOf(final Integer numerator) {
 		return IntegerStruct.valueOf(numerator);
 	}
 
-	static RationalStruct valueOf(final int numerator, final int denominator) {
+	/**
+	 * Returns a new RationalStruct with the numerator and denominator values. If the denominator value is {@code 1},
+	 * the result will be an {@link IntegerStruct}.
+	 *
+	 * @param numerator
+	 * 		the {@code int} numerator of the new RationalStruct
+	 * @param denominator
+	 * 		the {@code int} denominator of the new RationalStruct
+	 *
+	 * @return a new RationalStruct with the provided numerator and denominator values
+	 */
+	static RationalStruct valueOf(final Integer numerator, final Integer denominator) {
 		if (denominator == 1) {
 			return IntegerStruct.valueOf(numerator);
 		}
@@ -47,11 +61,31 @@ public interface RationalStruct extends RealStruct {
 		return RatioStruct.valueOf(bigFraction);
 	}
 
-	static RationalStruct valueOf(final long numerator) {
+	/**
+	 * Returns a new RationalStruct with the provided {@code long} as a numerator. Because the default denominator
+	 * value is {@code 1}, the result will be an {@link IntegerStruct}.
+	 *
+	 * @param numerator
+	 * 		the {@code long} numerator of the new RationalStruct
+	 *
+	 * @return a new RationalStruct with the provided {@code long} as a numerator
+	 */
+	static RationalStruct valueOf(final Long numerator) {
 		return IntegerStruct.valueOf(numerator);
 	}
 
-	static RationalStruct valueOf(final long numerator, final long denominator) {
+	/**
+	 * Returns a new RationalStruct with the numerator and denominator values. If the denominator value is {@code 1},
+	 * the result will be an {@link IntegerStruct}.
+	 *
+	 * @param numerator
+	 * 		the {@code long} numerator of the new RationalStruct
+	 * @param denominator
+	 * 		the {@code long} denominator of the new RationalStruct
+	 *
+	 * @return a new RationalStruct with the provided numerator and denominator values
+	 */
+	static RationalStruct valueOf(final Long numerator, final Long denominator) {
 		if (denominator == 1L) {
 			return IntegerStruct.valueOf(numerator);
 		}
@@ -59,10 +93,31 @@ public interface RationalStruct extends RealStruct {
 		return RatioStruct.valueOf(bigFraction);
 	}
 
+	/**
+	 * Returns a new RationalStruct with the provided {@link BigInteger} as a numerator. Because the default
+	 * denominator
+	 * value is {@code 1}, the result will be an {@link IntegerStruct}.
+	 *
+	 * @param numerator
+	 * 		the {@link BigInteger} numerator of the new RationalStruct
+	 *
+	 * @return a new RationalStruct with the provided {@link BigInteger} as a numerator
+	 */
 	static RationalStruct valueOf(final BigInteger numerator) {
 		return IntegerStruct.valueOf(numerator);
 	}
 
+	/**
+	 * Returns a new RationalStruct with the numerator and denominator values. If the denominator value is {@code 1},
+	 * the result will be an {@link IntegerStruct}.
+	 *
+	 * @param numerator
+	 * 		the {@link BigInteger} numerator of the new RationalStruct
+	 * @param denominator
+	 * 		the {@link BigInteger} denominator of the new RationalStruct
+	 *
+	 * @return a new RationalStruct with the provided numerator and denominator values
+	 */
 	static RationalStruct valueOf(final BigInteger numerator, final BigInteger denominator) {
 		if (BigInteger.ONE.compareTo(denominator) == 0) {
 			return IntegerStruct.valueOf(numerator);
@@ -72,21 +127,28 @@ public interface RationalStruct extends RealStruct {
 	}
 
 	/**
-	 * {@inheritDoc}
-	 * <p>
-	 * Returns {@link IntegerStruct#ONE} as the imaginary part of IntegerStructs is always '1'.
+	 * Returns a new RationalStruct representing the provided {@link BigFraction}. If the {@link
+	 * BigFraction#denominator} value is equal to {@link BigInteger#ONE}, the result will be an {@link IntegerStruct}.
+	 *
+	 * @param bigFraction
+	 * 		the {@link BigFraction} used to create the resulting RationalStruct
+	 *
+	 * @return a new RationalStruct representing the provided {@link BigFraction}
 	 */
+	static RationalStruct valueOf(final BigFraction bigFraction) {
+		final BigInteger denominator = bigFraction.getDenominator();
+		if (denominator.compareTo(BigInteger.ONE) == 0) {
+			final BigInteger numerator = bigFraction.getNumerator();
+			return IntegerStruct.valueOf(numerator);
+		}
+		return RatioStruct.valueOf(bigFraction);
+	}
+
 	@Override
 	default RealStruct imagPart() {
 		return IntegerStruct.ZERO;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * <p>
-	 * Determines the whether or not the numerical value of this RatioStruct is zero, positive, or negative,
-	 * returning {@code this}, {@link IntegerStruct#ONE}, or {@link IntegerStruct#MINUS_ONE} respectively.
-	 */
 	@Override
 	default NumberStruct signum() {
 		if (zerop()) {
@@ -98,67 +160,15 @@ public interface RationalStruct extends RealStruct {
 		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * <p>
-	 * Returns {@code this} as any RationalStruct is already in rational form.
-	 */
 	@Override
 	default RationalStruct rational() {
 		return this;
-	}
-
-	@Deprecated
-	static RationalStruct makeRational(final BigFraction bigFraction) {
-		final BigFraction reduced = bigFraction.reduce();
-		final BigInteger numerator = reduced.getNumerator();
-		final BigInteger denominator = reduced.getDenominator();
-		return makeRational(numerator, denominator);
-	}
-
-	@Deprecated
-	static RationalStruct makeRational(final BigInteger numerator, final BigInteger denominator) {
-		if (BigInteger.ZERO.compareTo(denominator) == 0) {
-			// TODO: what do we pass to this exception???
-			throw new DivisionByZeroException("Division By Zero");
-		}
-
-		BigInteger realNumerator = numerator;
-		BigInteger realDenominator = denominator;
-
-		// Possibly flip Numerator and Denominator signs
-		if (realDenominator.signum() < 0) {
-			realNumerator = realNumerator.negate();
-			realDenominator = realDenominator.negate();
-		}
-
-		// Reduce Numerator and Denominator
-		final BigInteger gcd = realNumerator.gcd(realDenominator);
-		if (BigInteger.ONE.compareTo(gcd) != 0) {
-			realNumerator = realNumerator.divide(gcd);
-			realDenominator = realDenominator.divide(gcd);
-		}
-
-		// If reduced Denominator is '1', return an Integer; otherwise, return the Ratio with the Numerator and Denominator
-		if (BigInteger.ONE.compareTo(realDenominator) == 0) {
-			return IntegerStruct.valueOf(realNumerator);
-		} else {
-			return valueOf(realNumerator, realDenominator);
-		}
 	}
 
 	/*
 		NumberStruct
 	 */
 
-	/**
-	 * {@inheritDoc}
-	 * <p>
-	 * Computes the exponential function result for this IntegerStruct as this {@code base} and the provided {@link
-	 * NumberStruct} as the {@code power}. If {@code power} is '0' and power is an IntegerStruct, {@link
-	 * IntegerStruct#ONE} is returned. If {@code power} is '0' and power is not an IntegerStruct, {@link
-	 * FloatStruct#ONE} is returned. If this IntegerStruct is either '0' or '1', {@code this} is returned.
-	 */
 	@Override
 	default NumberStruct expt(final NumberStruct power) {
 		if (power.zerop()) {
@@ -183,6 +193,13 @@ public interface RationalStruct extends RealStruct {
 	 */
 	abstract class RationalEqualToVisitor<R extends RationalStruct> extends RealStruct.RealEqualToVisitor<R> {
 
+		/**
+		 * Package private constructor to make a new instance of an RationalEqualToVisitor with the provided {@link
+		 * RationalStruct}.
+		 *
+		 * @param number1
+		 * 		the first argument in the numeric '=' equality operation
+		 */
 		RationalEqualToVisitor(final R number1) {
 			super(number1);
 		}
@@ -212,6 +229,13 @@ public interface RationalStruct extends RealStruct {
 	 */
 	class RationalLessThanVisitor<R extends RationalStruct> extends RealStruct.LessThanVisitor<R> {
 
+		/**
+		 * Package private constructor to make a new instance of an RationalLessThanVisitor with the provided {@link
+		 * RationalStruct}.
+		 *
+		 * @param real1
+		 * 		the first argument in the numeric {@literal '<'} equality operation
+		 */
 		RationalLessThanVisitor(final R real1) {
 			super(real1);
 		}
@@ -241,6 +265,13 @@ public interface RationalStruct extends RealStruct {
 	 */
 	class RationalGreaterThanVisitor<R extends RationalStruct> extends RealStruct.GreaterThanVisitor<R> {
 
+		/**
+		 * Package private constructor to make a new instance of an RationalGreaterThanVisitor with the provided {@link
+		 * RationalStruct}.
+		 *
+		 * @param real1
+		 * 		the first argument in the numeric {@literal '>'} equality operation
+		 */
 		RationalGreaterThanVisitor(final R real1) {
 			super(real1);
 		}
@@ -270,6 +301,13 @@ public interface RationalStruct extends RealStruct {
 	 */
 	class RationalLessThanOrEqualToVisitor<R extends RationalStruct> extends RealStruct.LessThanOrEqualToVisitor<R> {
 
+		/**
+		 * Package private constructor to make a new instance of an RationalLessThanOrEqualToVisitor with the provided
+		 * {@link RationalStruct}.
+		 *
+		 * @param real1
+		 * 		the first argument in the numeric {@literal '<='} equality operation
+		 */
 		RationalLessThanOrEqualToVisitor(final R real1) {
 			super(real1);
 		}
@@ -299,6 +337,13 @@ public interface RationalStruct extends RealStruct {
 	 */
 	class RationalGreaterThanOrEqualToVisitor<R extends RationalStruct> extends RealStruct.GreaterThanOrEqualToVisitor<R> {
 
+		/**
+		 * Package private constructor to make a new instance of an RationalGreaterThanOrEqualToVisitor with the
+		 * provided {@link RationalStruct}.
+		 *
+		 * @param real1
+		 * 		the first argument in the numeric {@literal '>='} equality operation
+		 */
 		RationalGreaterThanOrEqualToVisitor(final R real1) {
 			super(real1);
 		}
@@ -323,6 +368,7 @@ public interface RationalStruct extends RealStruct {
 	}
 
 	class RationalQuotientRemainderVisitor<S extends RationalStruct> extends RealStruct.QuotientRemainderVisitor<S> {
+		// TODO: need to flush these out after fixing Float types.
 
 		RationalQuotientRemainderVisitor(final S real) {
 			super(real);
@@ -365,7 +411,7 @@ public interface RationalStruct extends RealStruct {
 
 			// Multiply divisor by quotient
 			final BigInteger multiply = divisorNumeratorBigInteger.multiply(quotientBigInteger);
-			final RationalStruct product = makeRational(multiply, divisorDenominatorBigInteger);
+			final RationalStruct product = RationalStruct.valueOf(multiply, divisorDenominatorBigInteger);
 
 			// Subtract to get remainder: (Rational - Rational) produces Rational
 			final NumberStruct remainder = real.subtract(product);

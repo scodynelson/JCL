@@ -5,6 +5,7 @@
 package jcl.numbers;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 import org.apfloat.Apfloat;
 
@@ -116,11 +117,6 @@ public interface FloatStruct extends RealStruct {
 		return bigDecimalValue();
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * <p>
-	 * Returns {@code this} as it is already a FloatStruct.
-	 */
 	@Override
 	default FloatStruct coerceRealToFloat() {
 		return this;
@@ -135,28 +131,6 @@ public interface FloatStruct extends RealStruct {
 	 */
 	DecodeFloatResult decodeFloat();
 
-	default NumberStruct scaleFloat(final IntegerStruct scale) {
-		final IntegerStruct radix = floatRadix();
-		final NumberStruct expt = radix.expt(scale);
-		return multiply(expt);
-	}
-
-	default IntegerStruct floatRadix() {
-		return IntegerStruct.TWO;
-	}
-
-	default FloatStruct floatSign() {
-		return floatSign(ONE);
-	}
-
-	FloatStruct floatSign(final FloatStruct float2);
-
-	default IntegerStruct floatDigits() {
-		return floatPrecision();
-	}
-
-	IntegerStruct floatPrecision();
-
 	/**
 	 * Computes the three main values that characterize this FloatStruct: the significand, exponent, and sign. The
 	 * calculation for these values are based on the decoding for Java {@link Double} values from the algorithm defined
@@ -167,4 +141,120 @@ public interface FloatStruct extends RealStruct {
 	 * @return a {@link DecodeFloatResult} containing the decoded significand, exponent, and sign for this FloatStruct
 	 */
 	DecodeFloatResult integerDecodeFloat();
+
+	default NumberStruct scaleFloat(final IntegerStruct scale) {
+		final IntegerStruct radix = floatRadix();
+		final NumberStruct expt = radix.expt(scale);
+		return multiply(expt);
+	}
+
+	default IntegerStruct floatDigits() {
+		return floatPrecision();
+	}
+
+	IntegerStruct floatPrecision();
+
+	default IntegerStruct floatRadix() {
+		return IntegerStruct.TWO;
+	}
+
+	FloatStruct floatSign();
+
+	// TODO: Visitor implementations??
+	FloatStruct floatSign(final FloatStruct float2);
+
+	class DecodedDoubleRaw {
+
+		private final long mantissa;
+
+		private final long storedExponent;
+
+		private final long sign;
+
+		DecodedDoubleRaw(final long mantissa, final long storedExponent, final long sign) {
+			this.mantissa = mantissa;
+			this.storedExponent = storedExponent;
+			this.sign = sign;
+		}
+
+		long getMantissa() {
+			return mantissa;
+		}
+
+		long getStoredExponent() {
+			return storedExponent;
+		}
+
+		long getSign() {
+			return sign;
+		}
+	}
+
+	@Override
+	default QuotientRemainderResult floor(final RealStruct.QuotientRemainderVisitor<?> quotientRemainderVisitor) {
+		return quotientRemainderVisitor.floor(this);
+	}
+
+	@Override
+	default QuotientRemainderResult ffloor(final RealStruct.QuotientRemainderVisitor<?> quotientRemainderVisitor) {
+		return quotientRemainderVisitor.ffloor(this);
+	}
+
+	@Override
+	default QuotientRemainderResult ceiling(final RealStruct.QuotientRemainderVisitor<?> quotientRemainderVisitor) {
+		return quotientRemainderVisitor.ceiling(this);
+	}
+
+	@Override
+	default QuotientRemainderResult fceiling(final RealStruct.QuotientRemainderVisitor<?> quotientRemainderVisitor) {
+		return quotientRemainderVisitor.fceiling(this);
+	}
+
+	@Override
+	default QuotientRemainderResult round(final RealStruct.QuotientRemainderVisitor<?> quotientRemainderVisitor) {
+		return quotientRemainderVisitor.round(this);
+	}
+
+	@Override
+	default QuotientRemainderResult fround(final RealStruct.QuotientRemainderVisitor<?> quotientRemainderVisitor) {
+		return quotientRemainderVisitor.fround(this);
+	}
+
+	@Override
+	default RealStruct.QuotientRemainderVisitor<?> quotientRemainderVisitor() {
+		return new FloatQuotientRemainderVisitor(this);
+	}
+
+	/**
+	 * {@link FloatQuotientRemainderVisitor} for computing quotient and remainder results for {@link FloatStruct}s.
+	 */
+	final class FloatQuotientRemainderVisitor extends RealStruct.QuotientRemainderVisitor<FloatStruct> {
+
+		/**
+		 * Private constructor to make a new instance of an FloatQuotientRemainderVisitor with the provided {@link
+		 * FloatStruct}.
+		 *
+		 * @param real
+		 * 		the real argument in the computational quotient and remainder operation
+		 */
+		FloatQuotientRemainderVisitor(final FloatStruct real) {
+			super(real);
+		}
+
+		@Override
+		public QuotientRemainderResult quotientRemainder(final IntegerStruct divisor, final RoundingMode roundingMode, final boolean isQuotientFloat) {
+			return floatQuotientRemainder(divisor, roundingMode, isQuotientFloat);
+		}
+
+		@Override
+		public QuotientRemainderResult quotientRemainder(final FloatStruct divisor, final RoundingMode roundingMode, final boolean isQuotientFloat) {
+			return super.quotientRemainder(divisor, roundingMode, isQuotientFloat);
+		}
+
+		@Override
+		public QuotientRemainderResult quotientRemainder(final RatioStruct divisor, final RoundingMode roundingMode,
+		                                                 final boolean isQuotientFloat) {
+			return floatQuotientRemainder(divisor, roundingMode, isQuotientFloat);
+		}
+	}
 }

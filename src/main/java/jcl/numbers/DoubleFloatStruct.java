@@ -7,7 +7,6 @@ package jcl.numbers;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.MathContext;
-import java.math.RoundingMode;
 
 import jcl.classes.BuiltInClassStruct;
 import jcl.types.DoubleFloatType;
@@ -406,120 +405,6 @@ public final class DoubleFloatStruct extends BuiltInClassStruct implements Float
 	}
 
 	/**
-	 * {@inheritDoc}
-	 * <p>
-	 * Calculates the {@link QuotientRemainderResult} for a 'FLOOR' operation with this FloatStruct as the 'divisor'
-	 * using the provided {@link RealStruct.QuotientRemainderVisitor}.
-	 *
-	 * @param quotientRemainderVisitor
-	 * 		the {@link RealStruct.QuotientRemainderVisitor} to be used in the 'FLOOR' operation
-	 *
-	 * @return the {@link QuotientRemainderResult} for a 'FLOOR' operation with this FloatStruct as the 'divisor'
-	 * using the provided {@link RealStruct.QuotientRemainderVisitor}
-	 */
-	@Override
-	public QuotientRemainderResult floor(final RealStruct.QuotientRemainderVisitor<?> quotientRemainderVisitor) {
-		return quotientRemainderVisitor.floor(this);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * <p>
-	 * Calculates the {@link QuotientRemainderResult} for a 'FLOOR' operation with this FloatStruct as the 'divisor'
-	 * using the provided {@link RealStruct.QuotientRemainderVisitor}. The resulting 'quotient' will be a FloatStruct.
-	 *
-	 * @param quotientRemainderVisitor
-	 * 		the {@link RealStruct.QuotientRemainderVisitor} to be used in the 'FLOOR' operation
-	 *
-	 * @return the {@link QuotientRemainderResult} for a 'FLOOR' operation with this FloatStruct as the 'divisor'
-	 * using the provided {@link RealStruct.QuotientRemainderVisitor}
-	 */
-	@Override
-	public QuotientRemainderResult ffloor(final RealStruct.QuotientRemainderVisitor<?> quotientRemainderVisitor) {
-		return quotientRemainderVisitor.ffloor(this);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * <p>
-	 * Calculates the {@link QuotientRemainderResult} for a 'CEILING' operation with this FloatStruct as the 'divisor'
-	 * using the provided {@link RealStruct.QuotientRemainderVisitor}.
-	 *
-	 * @param quotientRemainderVisitor
-	 * 		the {@link RealStruct.QuotientRemainderVisitor} to be used in the 'CEILING' operation
-	 *
-	 * @return the {@link QuotientRemainderResult} for a 'CEILING' operation with this FloatStruct as the 'divisor'
-	 * using the provided {@link RealStruct.QuotientRemainderVisitor}
-	 */
-	@Override
-	public QuotientRemainderResult ceiling(final RealStruct.QuotientRemainderVisitor<?> quotientRemainderVisitor) {
-		return quotientRemainderVisitor.ceiling(this);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * <p>
-	 * Calculates the {@link QuotientRemainderResult} for a 'CEILING' operation with this FloatStruct as the 'divisor'
-	 * using the provided {@link RealStruct.QuotientRemainderVisitor}. The resulting 'quotient' will be a FloatStruct.
-	 *
-	 * @param quotientRemainderVisitor
-	 * 		the {@link RealStruct.QuotientRemainderVisitor} to be used in the 'CEILING' operation
-	 *
-	 * @return the {@link QuotientRemainderResult} for a 'CEILING' operation with this FloatStruct as the 'divisor'
-	 * using the provided {@link RealStruct.QuotientRemainderVisitor}
-	 */
-	@Override
-	public QuotientRemainderResult fceiling(final RealStruct.QuotientRemainderVisitor<?> quotientRemainderVisitor) {
-		return quotientRemainderVisitor.fceiling(this);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * <p>
-	 * Calculates the {@link QuotientRemainderResult} for a 'ROUND' operation with this FloatStruct as the 'divisor'
-	 * using the provided {@link RealStruct.QuotientRemainderVisitor}.
-	 *
-	 * @param quotientRemainderVisitor
-	 * 		the {@link RealStruct.QuotientRemainderVisitor} to be used in the 'ROUND' operation
-	 *
-	 * @return the {@link QuotientRemainderResult} for a 'ROUND' operation with this FloatStruct as the 'divisor'
-	 * using the provided {@link RealStruct.QuotientRemainderVisitor}
-	 */
-	@Override
-	public QuotientRemainderResult round(final RealStruct.QuotientRemainderVisitor<?> quotientRemainderVisitor) {
-		return quotientRemainderVisitor.round(this);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * <p>
-	 * Calculates the {@link QuotientRemainderResult} for a 'ROUND' operation with this FloatStruct as the 'divisor'
-	 * using the provided {@link RealStruct.QuotientRemainderVisitor}. The resulting 'quotient' will be a FloatStruct.
-	 *
-	 * @param quotientRemainderVisitor
-	 * 		the {@link RealStruct.QuotientRemainderVisitor} to be used in the 'ROUND' operation
-	 *
-	 * @return the {@link QuotientRemainderResult} for a 'ROUND' operation with this FloatStruct as the 'divisor'
-	 * using the provided {@link RealStruct.QuotientRemainderVisitor}
-	 */
-	@Override
-	public QuotientRemainderResult fround(final RealStruct.QuotientRemainderVisitor<?> quotientRemainderVisitor) {
-		return quotientRemainderVisitor.fround(this);
-	}
-
-	/**
-	 * Returns a new {@link RealStruct.QuotientRemainderVisitor} with this FloatStruct to be used in a 'quotient' and
-	 * 'remainder' calculation operation.
-	 *
-	 * @return a new {@link RealStruct.QuotientRemainderVisitor} with this FloatStruct to be used in a 'quotient' and
-	 * 'remainder' calculation operation
-	 */
-	@Override
-	public RealStruct.QuotientRemainderVisitor<?> quotientRemainderVisitor() {
-		return new FloatQuotientRemainderVisitor(this);
-	}
-
-	/**
 	 * Computes the three main values that characterize this FloatStruct: the significand, exponent, and sign. The
 	 * calculation for these values are based on the decoding for Java {@link Double} values from the algorithm defined
 	 * in {@link Double#longBitsToDouble}.
@@ -713,33 +598,6 @@ public final class DoubleFloatStruct extends BuiltInClassStruct implements Float
 		}
 		return null;
 //		return new DecodedDoubleRaw(mantissa, exponent, sign);
-	}
-
-	private static class DecodedDoubleRaw {
-
-		private final long mantissa;
-
-		private final long storedExponent;
-
-		private final long sign;
-
-		private DecodedDoubleRaw(final long mantissa, final long storedExponent, final long sign) {
-			this.mantissa = mantissa;
-			this.storedExponent = storedExponent;
-			this.sign = sign;
-		}
-
-		private long getMantissa() {
-			return mantissa;
-		}
-
-		private long getStoredExponent() {
-			return storedExponent;
-		}
-
-		private long getSign() {
-			return sign;
-		}
 	}
 
 	// HashCode / Equals
@@ -1128,54 +986,6 @@ public final class DoubleFloatStruct extends BuiltInClassStruct implements Float
 			final BigDecimal bigDecimal2 = number2.bigDecimalValue();
 			final BigDecimal divide = bigDecimal1.divide(bigDecimal2, MathContext.DECIMAL128);
 			return new DoubleFloatStruct(divide.doubleValue());
-		}
-	}
-
-	/**
-	 * {@link FloatQuotientRemainderVisitor} for computing quotient and remainder results for {@link
-	 * DoubleFloatStruct}s.
-	 */
-	private static final class FloatQuotientRemainderVisitor extends RealStruct.QuotientRemainderVisitor<DoubleFloatStruct> {
-
-		/**
-		 * Package private constructor to make a new instance of an FloatQuotientRemainderVisitor with the provided
-		 * {@link DoubleFloatStruct}.
-		 *
-		 * @param real
-		 * 		the real argument in the computational quotient and remainder operation
-		 */
-		FloatQuotientRemainderVisitor(final DoubleFloatStruct real) {
-			super(real);
-		}
-
-		/**
-		 * {@inheritDoc}
-		 * <p>
-		 * Computes the quotient and remainder results for a {@link DoubleFloatStruct} as the {@code real} and an
-		 * {@link
-		 * IntegerStruct} as the {@code divisor}.
-		 */
-		@Override
-		public QuotientRemainderResult quotientRemainder(final IntegerStruct divisor, final RoundingMode roundingMode, final boolean isQuotientFloat) {
-			return floatQuotientRemainder(divisor, roundingMode, isQuotientFloat);
-		}
-
-		@Override
-		public QuotientRemainderResult quotientRemainder(final FloatStruct divisor, final RoundingMode roundingMode, final boolean isQuotientFloat) {
-			return super.quotientRemainder(divisor, roundingMode, isQuotientFloat);
-		}
-
-		/**
-		 * {@inheritDoc}
-		 * <p>
-		 * Computes the quotient and remainder results for a {@link DoubleFloatStruct} as the {@code real} and an
-		 * {@link
-		 * RatioStruct} as the {@code divisor}.
-		 */
-		@Override
-		public QuotientRemainderResult quotientRemainder(final RatioStruct divisor, final RoundingMode roundingMode,
-		                                                 final boolean isQuotientFloat) {
-			return floatQuotientRemainder(divisor, roundingMode, isQuotientFloat);
 		}
 	}
 }

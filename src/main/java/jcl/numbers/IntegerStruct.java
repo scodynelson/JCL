@@ -725,21 +725,11 @@ public interface IntegerStruct extends RationalStruct {
 		RationalStruct
 	 */
 
-	/**
-	 * {@inheritDoc}
-	 * <p>
-	 * Returns {@code this} as the numerator.
-	 */
 	@Override
 	default IntegerStruct numerator() {
 		return this;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * <p>
-	 * Returns {@link #ONE} as the denominator of IntegerStructs is always '1'.
-	 */
 	@Override
 	default IntegerStruct denominator() {
 		return ONE;
@@ -749,104 +739,31 @@ public interface IntegerStruct extends RationalStruct {
 		RealStruct
 	 */
 
-	/**
-	 * {@inheritDoc}
-	 * <p>
-	 * Calculates the {@link QuotientRemainderResult} for a 'FLOOR' operation with this IntegerStruct as the 'divisor'
-	 * using the provided {@link QuotientRemainderVisitor}.
-	 *
-	 * @param quotientRemainderVisitor
-	 * 		the {@link QuotientRemainderVisitor} to be used in the 'FLOOR' operation
-	 *
-	 * @return the {@link QuotientRemainderResult} for a 'FLOOR' operation with this IntegerStruct as the 'divisor'
-	 * using the provided {@link QuotientRemainderVisitor}
-	 */
 	@Override
 	default QuotientRemainderResult floor(final QuotientRemainderVisitor<?> quotientRemainderVisitor) {
 		return quotientRemainderVisitor.floor(this);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * <p>
-	 * Calculates the {@link QuotientRemainderResult} for a 'FLOOR' operation with this IntegerStruct as the 'divisor'
-	 * using the provided {@link QuotientRemainderVisitor}. The resulting 'quotient' will be a {@link FloatStruct}.
-	 *
-	 * @param quotientRemainderVisitor
-	 * 		the {@link QuotientRemainderVisitor} to be used in the 'FLOOR' operation
-	 *
-	 * @return the {@link QuotientRemainderResult} for a 'FLOOR' operation with this IntegerStruct as the 'divisor'
-	 * using the provided {@link QuotientRemainderVisitor}
-	 */
 	@Override
 	default QuotientRemainderResult ffloor(final QuotientRemainderVisitor<?> quotientRemainderVisitor) {
 		return quotientRemainderVisitor.ffloor(this);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * <p>
-	 * Calculates the {@link QuotientRemainderResult} for a 'CEILING' operation with this IntegerStruct as the
-	 * 'divisor' using the provided {@link QuotientRemainderVisitor}.
-	 *
-	 * @param quotientRemainderVisitor
-	 * 		the {@link QuotientRemainderVisitor} to be used in the 'CEILING' operation
-	 *
-	 * @return the {@link QuotientRemainderResult} for a 'CEILING' operation with this IntegerStruct as the 'divisor'
-	 * using the provided {@link QuotientRemainderVisitor}
-	 */
 	@Override
 	default QuotientRemainderResult ceiling(final QuotientRemainderVisitor<?> quotientRemainderVisitor) {
 		return quotientRemainderVisitor.ceiling(this);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * <p>
-	 * Calculates the {@link QuotientRemainderResult} for a 'CEILING' operation with this IntegerStruct as the
-	 * 'divisor' using the provided {@link QuotientRemainderVisitor}. The resulting 'quotient' will be a {@link
-	 * FloatStruct}.
-	 *
-	 * @param quotientRemainderVisitor
-	 * 		the {@link QuotientRemainderVisitor} to be used in the 'CEILING' operation
-	 *
-	 * @return the {@link QuotientRemainderResult} for a 'CEILING' operation with this IntegerStruct as the 'divisor'
-	 * using the provided {@link QuotientRemainderVisitor}
-	 */
 	@Override
 	default QuotientRemainderResult fceiling(final QuotientRemainderVisitor<?> quotientRemainderVisitor) {
 		return quotientRemainderVisitor.fceiling(this);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * <p>
-	 * Calculates the {@link QuotientRemainderResult} for a 'ROUND' operation with this IntegerStruct as the 'divisor'
-	 * using the provided {@link QuotientRemainderVisitor}.
-	 *
-	 * @param quotientRemainderVisitor
-	 * 		the {@link QuotientRemainderVisitor} to be used in the 'ROUND' operation
-	 *
-	 * @return the {@link QuotientRemainderResult} for a 'ROUND' operation with this IntegerStruct as the 'divisor'
-	 * using the provided {@link QuotientRemainderVisitor}
-	 */
 	@Override
 	default QuotientRemainderResult round(final QuotientRemainderVisitor<?> quotientRemainderVisitor) {
 		return quotientRemainderVisitor.round(this);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * <p>
-	 * Calculates the {@link QuotientRemainderResult} for a 'ROUND' operation with this IntegerStruct as the 'divisor'
-	 * using the provided {@link QuotientRemainderVisitor}. The resulting 'quotient' will be a {@link FloatStruct}.
-	 *
-	 * @param quotientRemainderVisitor
-	 * 		the {@link QuotientRemainderVisitor} to be used in the 'ROUND' operation
-	 *
-	 * @return the {@link QuotientRemainderResult} for a 'ROUND' operation with this IntegerStruct as the 'divisor'
-	 * using the provided {@link QuotientRemainderVisitor}
-	 */
 	@Override
 	default QuotientRemainderResult fround(final QuotientRemainderVisitor<?> quotientRemainderVisitor) {
 		return quotientRemainderVisitor.fround(this);

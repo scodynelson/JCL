@@ -130,7 +130,7 @@ public final class IntIntegerStruct extends BuiltInClassStruct implements Intege
 	 * Returns a IntIntegerStruct object with the provided {@code int} value.
 	 *
 	 * @param i
-	 * 		the int value of the resulting IntIntegerStruct
+	 * 		the {@code int} value of the resulting IntIntegerStruct
 	 *
 	 * @return a IntIntegerStruct object with the provided {@code int} value
 	 */

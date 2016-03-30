@@ -156,8 +156,9 @@ public final class SingleFloatStruct extends BuiltInClassStruct implements Float
 	}
 
 	/**
-	 * Decodes the float by the provided {@code int} bit into its sign, exponent, and mantissa according to the details
-	 * in the JVM spec section 4.4.5.
+	 * Decodes the float by the provided {@code int} bits into its sign, exponent, and mantissa according to the
+	 * details in the JVM spec section 4.4.5.
+	 * TODO: check spec section
 	 *
 	 * @param bits
 	 * 		the {@code int} bits representing the {@code float} value
@@ -356,6 +357,7 @@ public final class SingleFloatStruct extends BuiltInClassStruct implements Float
 
 	@Override
 	public NumberStruct expt(final NumberStruct power) {
+		// TODO: customized visitor???
 		if (power.zerop()) {
 			return ONE;
 		}

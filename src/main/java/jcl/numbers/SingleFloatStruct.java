@@ -5,6 +5,7 @@
 package jcl.numbers;
 
 import java.math.BigDecimal;
+import java.math.MathContext;
 
 import jcl.classes.BuiltInClassStruct;
 import jcl.types.SingleFloatType;
@@ -12,8 +13,6 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.math3.fraction.BigFraction;
 import org.apache.commons.math3.util.ArithmeticUtils;
-
-import static java.math.MathContext.DECIMAL128;
 
 /**
  * The {@link SingleFloatStruct} is the object representation of a Lisp 'float' type.
@@ -40,6 +39,9 @@ public final class SingleFloatStruct extends BuiltInClassStruct implements Float
 	 */
 	public static final SingleFloatStruct MINUS_ONE = valueOf(-1.0F);
 
+	/**
+	 * The floating-point precision of a SingleFloatStruct object.
+	 */
 	private static final int FLOAT_PRECISION = 24;
 
 	/**
@@ -154,10 +156,16 @@ public final class SingleFloatStruct extends BuiltInClassStruct implements Float
 		}
 	}
 
-	/*
-	 * See {@link https://docs.oracle.com/javase/8/docs/api/java/lang/Float.html} for details.
-	 * <p>
-	 * The following is per the JVM spec section 4.4.5
+	/**
+	 * Decodes the float by the provided {@code int} bit into its sign, exponent, and mantissa according to the details
+	 * in the JVM spec section 4.4.5.
+	 *
+	 * @param bits
+	 * 		the {@code int} bits representing the {@code float} value
+	 *
+	 * @return the {@link DecodedFloat} wrapping the decoded sign, exponent, and mantissa values
+	 *
+	 * @see <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Float.html">Java Float</a>
 	 */
 	private static DecodedFloat getDecodedFloat(final int bits) {
 		final int sign = ((bits >> 31) == 0) ? 1 : -1;
@@ -168,28 +176,65 @@ public final class SingleFloatStruct extends BuiltInClassStruct implements Float
 		return new DecodedFloat(mantissa, exponent, sign);
 	}
 
-	private static class DecodedFloat {
+	/**
+	 * Decoded wrapper for {@code float} sign, exponent, and mantissa values.
+	 */
+	private static final class DecodedFloat {
 
+		/**
+		 * The part of the {@code float} that represents the significant digits.
+		 */
 		private final int mantissa;
 
+		/**
+		 * The part of the {@code float} that represents the exponent.
+		 */
 		private final int storedExponent;
 
+		/**
+		 * The part of the {@code float} that represents the sign bit.
+		 */
 		private final int sign;
 
+		/**
+		 * Private constructor.
+		 *
+		 * @param mantissa
+		 * 		the part of the {@code float} that represents the significant digits
+		 * @param storedExponent
+		 * 		the part of the {@code float} that represents the exponent
+		 * @param sign
+		 * 		the part of the {@code float} that represents the sign bit
+		 */
 		private DecodedFloat(final int mantissa, final int storedExponent, final int sign) {
 			this.mantissa = mantissa;
 			this.storedExponent = storedExponent;
 			this.sign = sign;
 		}
 
+		/**
+		 * Getter for {@link #mantissa} property value.
+		 *
+		 * @return {@link #mantissa} property value
+		 */
 		private int getMantissa() {
 			return mantissa;
 		}
 
+		/**
+		 * Getter for {@link #storedExponent} property value.
+		 *
+		 * @return {@link #storedExponent} property value
+		 */
 		private int getStoredExponent() {
 			return storedExponent;
 		}
 
+		/**
+		 * Getter for {@link #sign} property value.
+		 *
+		 * @return {@link #sign} property value
+		 */
 		private int getSign() {
 			return sign;
 		}
@@ -418,37 +463,52 @@ public final class SingleFloatStruct extends BuiltInClassStruct implements Float
 
 		@Override
 		public RealStruct add(final IntIntegerStruct number2) {
-			return addFloat(number1, number2);
+			final float f1 = number1.f;
+			final int i = number2.i;
+			return valueOf(f1 + i);
 		}
 
 		@Override
 		public RealStruct add(final LongIntegerStruct number2) {
-			return addFloat(number1, number2);
+			final float f1 = number1.f;
+			final long l = number2.l;
+			return valueOf(f1 + l);
 		}
 
 		@Override
 		public RealStruct add(final BigIntegerStruct number2) {
-			return addFloat(number1, number2);
+			final float f1 = number1.f;
+			final float f2 = number2.bigInteger.floatValue();
+			return valueOf(f1 + f2);
 		}
 
 		@Override
 		public RealStruct add(final SingleFloatStruct number2) {
-			return super.add(number2);
+			final float f1 = number1.f;
+			final float f2 = number2.f;
+			return valueOf(f1 + f2);
 		}
 
 		@Override
 		public RealStruct add(final DoubleFloatStruct number2) {
-			return super.add(number2);
+			final float f1 = number1.f;
+			final double d = number2.d;
+			return DoubleFloatStruct.valueOf(f1 + d);
 		}
 
 		@Override
 		public RealStruct add(final BigFloatStruct number2) {
-			return super.add(number2);
+			final BigDecimal bigDecimal1 = number1.bigDecimalValue();
+			final BigDecimal bigDecimal2 = number2.bigDecimal;
+			final BigDecimal add = bigDecimal1.add(bigDecimal2);
+			return BigFloatStruct.valueOf(add);
 		}
 
 		@Override
 		public RealStruct add(final RatioStruct number2) {
-			return addFloat(number1, number2);
+			final float f1 = number1.f;
+			final float f2 = number2.bigFraction.floatValue();
+			return valueOf(f1 + f2);
 		}
 	}
 
@@ -471,44 +531,52 @@ public final class SingleFloatStruct extends BuiltInClassStruct implements Float
 
 		@Override
 		public RealStruct subtract(final IntIntegerStruct number2) {
-			return subtractFloat(number1, number2);
+			final float f1 = number1.f;
+			final int i = number2.i;
+			return valueOf(f1 - i);
 		}
 
 		@Override
 		public RealStruct subtract(final LongIntegerStruct number2) {
-			return subtractFloat(number1, number2);
+			final float f1 = number1.f;
+			final long l = number2.l;
+			return valueOf(f1 - l);
 		}
 
 		@Override
 		public RealStruct subtract(final BigIntegerStruct number2) {
-			return subtractFloat(number1, number2);
+			final float f1 = number1.f;
+			final float f2 = number2.bigInteger.floatValue();
+			return valueOf(f1 - f2);
 		}
 
 		@Override
 		public RealStruct subtract(final SingleFloatStruct number2) {
-			return super.subtract(number2);
+			final float f1 = number1.f;
+			final float f2 = number2.f;
+			return valueOf(f1 - f2);
 		}
 
 		@Override
 		public RealStruct subtract(final DoubleFloatStruct number2) {
-			return super.subtract(number2);
+			final float f1 = number1.f;
+			final double d = number2.d;
+			return DoubleFloatStruct.valueOf(f1 - d);
 		}
 
 		@Override
 		public RealStruct subtract(final BigFloatStruct number2) {
-			return super.subtract(number2);
+			final BigDecimal bigDecimal1 = number1.bigDecimalValue();
+			final BigDecimal bigDecimal2 = number2.bigDecimal;
+			final BigDecimal subtract = bigDecimal1.subtract(bigDecimal2);
+			return BigFloatStruct.valueOf(subtract);
 		}
 
 		@Override
 		public RealStruct subtract(final RatioStruct number2) {
-			return subtractFloat(number1, number2);
-		}
-
-		private static RealStruct subtractFloat(final SingleFloatStruct number1, final RealStruct number2) {
-			final BigDecimal bigDecimal1 = number1.bigDecimalValue();
-			final BigDecimal bigDecimal2 = number2.bigDecimalValue();
-			final BigDecimal subtract = bigDecimal1.subtract(bigDecimal2);
-			return new SingleFloatStruct(subtract.floatValue());
+			final float f1 = number1.f;
+			final float f2 = number2.bigFraction.floatValue();
+			return valueOf(f1 - f2);
 		}
 	}
 
@@ -531,37 +599,52 @@ public final class SingleFloatStruct extends BuiltInClassStruct implements Float
 
 		@Override
 		public RealStruct multiply(final IntIntegerStruct number2) {
-			return multiplyFloat(number1, number2);
+			final float f1 = number1.f;
+			final int i = number2.i;
+			return valueOf(f1 * i);
 		}
 
 		@Override
 		public RealStruct multiply(final LongIntegerStruct number2) {
-			return multiplyFloat(number1, number2);
+			final float f1 = number1.f;
+			final long l = number2.l;
+			return valueOf(f1 * l);
 		}
 
 		@Override
 		public RealStruct multiply(final BigIntegerStruct number2) {
-			return multiplyFloat(number1, number2);
+			final float f1 = number1.f;
+			final float f2 = number2.bigInteger.floatValue();
+			return valueOf(f1 * f2);
 		}
 
 		@Override
 		public RealStruct multiply(final SingleFloatStruct number2) {
-			return super.multiply(number2);
+			final float f1 = number1.f;
+			final float f2 = number2.f;
+			return valueOf(f1 * f2);
 		}
 
 		@Override
 		public RealStruct multiply(final DoubleFloatStruct number2) {
-			return super.multiply(number2);
+			final float f1 = number1.f;
+			final double d = number2.d;
+			return DoubleFloatStruct.valueOf(f1 * d);
 		}
 
 		@Override
 		public RealStruct multiply(final BigFloatStruct number2) {
-			return super.multiply(number2);
+			final BigDecimal bigDecimal1 = number1.bigDecimalValue();
+			final BigDecimal bigDecimal2 = number2.bigDecimal;
+			final BigDecimal multiply = bigDecimal1.multiply(bigDecimal2);
+			return BigFloatStruct.valueOf(multiply);
 		}
 
 		@Override
 		public RealStruct multiply(final RatioStruct number2) {
-			return multiplyFloat(number1, number2);
+			final float f1 = number1.f;
+			final float f2 = number2.bigFraction.floatValue();
+			return valueOf(f1 * f2);
 		}
 	}
 
@@ -583,44 +666,52 @@ public final class SingleFloatStruct extends BuiltInClassStruct implements Float
 
 		@Override
 		public RealStruct divide(final IntIntegerStruct number2) {
-			return divideFloat(number1, number2);
+			final float f1 = number1.f;
+			final int i = number2.i;
+			return valueOf(f1 / i);
 		}
 
 		@Override
 		public RealStruct divide(final LongIntegerStruct number2) {
-			return divideFloat(number1, number2);
+			final float f1 = number1.f;
+			final long l = number2.l;
+			return valueOf(f1 / l);
 		}
 
 		@Override
 		public RealStruct divide(final BigIntegerStruct number2) {
-			return divideFloat(number1, number2);
+			final float f1 = number1.f;
+			final float f2 = number2.bigInteger.floatValue();
+			return valueOf(f1 / f2);
 		}
 
 		@Override
 		public RealStruct divide(final SingleFloatStruct number2) {
-			return super.divide(number2);
+			final float f1 = number1.f;
+			final float f2 = number2.f;
+			return valueOf(f1 / f2);
 		}
 
 		@Override
 		public RealStruct divide(final DoubleFloatStruct number2) {
-			return super.divide(number2);
+			final float f1 = number1.f;
+			final double d = number2.d;
+			return DoubleFloatStruct.valueOf(f1 / d);
 		}
 
 		@Override
 		public RealStruct divide(final BigFloatStruct number2) {
-			return super.divide(number2);
+			final BigDecimal bigDecimal1 = number1.bigDecimalValue();
+			final BigDecimal bigDecimal2 = number2.bigDecimal;
+			final BigDecimal divide = bigDecimal1.divide(bigDecimal2, MathContext.DECIMAL128);
+			return BigFloatStruct.valueOf(divide);
 		}
 
 		@Override
 		public RealStruct divide(final RatioStruct number2) {
-			return divideFloat(number1, number2);
-		}
-
-		private static RealStruct divideFloat(final SingleFloatStruct number1, final RealStruct number2) {
-			final BigDecimal bigDecimal1 = number1.bigDecimalValue();
-			final BigDecimal bigDecimal2 = number2.bigDecimalValue();
-			final BigDecimal divide = bigDecimal1.divide(bigDecimal2, DECIMAL128);
-			return new SingleFloatStruct(divide.floatValue());
+			final float f1 = number1.f;
+			final float f2 = number2.bigFraction.floatValue();
+			return valueOf(f1 / f2);
 		}
 	}
 

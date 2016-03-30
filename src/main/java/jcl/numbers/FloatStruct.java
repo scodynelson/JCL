@@ -60,51 +60,16 @@ public interface FloatStruct extends RealStruct {
 		return SingleFloatStruct.valueOf(apfloat.floatValue());
 	}
 
-	static FloatStruct valueOf(final float f) {
-		return valueOf(Float.valueOf(f));
-	}
-
-	static FloatStruct valueOf(final Float f) {
-		return SingleFloatStruct.valueOf(f);
-	}
-
-	static FloatStruct valueOf(final double d) {
-		return valueOf(Double.valueOf(d));
-	}
-
-	static FloatStruct valueOf(final Double d) {
-		if (canDoubleBeFloat(d)) {
-			final float f = new Float(d);
-			return SingleFloatStruct.valueOf(f);
-		}
-		return DoubleFloatStruct.valueOf(d);
-	}
-
 	static FloatStruct valueOf(final BigDecimal bigDecimal) {
 		if (canBigDecimalBeFloat(bigDecimal)) {
 			final float f = bigDecimal.floatValue();
-			return valueOf(f);
+			return SingleFloatStruct.valueOf(f);
 		}
 		if (canBigDecimalBeDouble(bigDecimal)) {
 			final double d = bigDecimal.doubleValue();
-			return valueOf(d);
+			return DoubleFloatStruct.valueOf(d);
 		}
 		return BigFloatStruct.valueOf(bigDecimal);
-	}
-
-	static FloatStruct valueOf(final String s) {
-		try {
-			final float f = Float.parseFloat(s);
-			return valueOf(f);
-		} catch (final NumberFormatException ignore) {
-		}
-		try {
-			final double d = Double.parseDouble(s);
-			return valueOf(d);
-		} catch (final NumberFormatException ignore) {
-		}
-		final BigDecimal bigDecimal = NumberUtils.bigDecimalValue(s);
-		return valueOf(bigDecimal);
 	}
 
 	float floatValue();

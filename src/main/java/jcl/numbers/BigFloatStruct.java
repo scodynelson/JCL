@@ -10,6 +10,7 @@ import java.math.MathContext;
 
 import jcl.classes.BuiltInClassStruct;
 import jcl.types.LongFloatType;
+import jcl.util.NumberUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.math3.fraction.BigFraction;
@@ -22,22 +23,22 @@ public final class BigFloatStruct extends BuiltInClassStruct implements FloatStr
 	/**
 	 * {@link BigFloatStruct} constant representing 0.0.
 	 */
-	public static final BigFloatStruct ZERO = new BigFloatStruct(BigDecimal.valueOf(0.0));
+	public static final BigFloatStruct ZERO = new BigFloatStruct(NumberUtils.bigDecimalValue(0.0));
 
 	/**
 	 * {@link BigFloatStruct} constant representing -0.0.
 	 */
-	public static final BigFloatStruct MINUS_ZERO = new BigFloatStruct(BigDecimal.valueOf(-0.0));
+	public static final BigFloatStruct MINUS_ZERO = new BigFloatStruct(NumberUtils.bigDecimalValue(-0.0));
 
 	/**
 	 * {@link BigFloatStruct} constant representing 1.0.
 	 */
-	public static final BigFloatStruct ONE = new BigFloatStruct(BigDecimal.valueOf(1.0));
+	public static final BigFloatStruct ONE = new BigFloatStruct(NumberUtils.bigDecimalValue(1.0));
 
 	/**
 	 * {@link BigFloatStruct} constant representing -1.0.
 	 */
-	public static final BigFloatStruct MINUS_ONE = new BigFloatStruct(BigDecimal.valueOf(-1.0));
+	public static final BigFloatStruct MINUS_ONE = new BigFloatStruct(NumberUtils.bigDecimalValue(-1.0));
 
 	/**
 	 * The internal {@link BigDecimal} containing the float contents.
@@ -435,10 +436,10 @@ public final class BigFloatStruct extends BuiltInClassStruct implements FloatStr
 		final DecodedDoubleRaw decodedDoubleRaw = getDecodedDoubleRaw(bits);
 
 		final long mantissa = decodedDoubleRaw.getMantissa();
-		final BigDecimal mantissaBigDecimal = BigDecimal.valueOf(mantissa);
+		final BigDecimal mantissaBigDecimal = NumberUtils.bigDecimalValue(mantissa);
 
 		final double expt = StrictMath.pow(2, doubleFloatingPointPrecision);
-		final BigDecimal exptBigDecimal = BigDecimal.valueOf(expt);
+		final BigDecimal exptBigDecimal = NumberUtils.bigDecimalValue(expt);
 
 		final BigDecimal significand = mantissaBigDecimal.divide(exptBigDecimal, MathContext.DECIMAL128);
 		final BigFloatStruct significandFloat = new BigFloatStruct(significand);
@@ -449,7 +450,7 @@ public final class BigFloatStruct extends BuiltInClassStruct implements FloatStr
 		final IntegerStruct exponentInteger = IntegerStruct.valueOf(exponentBigInteger);
 
 		final long sign = decodedDoubleRaw.getSign();
-		final BigDecimal signBigDecimal = BigDecimal.valueOf(sign);
+		final BigDecimal signBigDecimal = NumberUtils.bigDecimalValue(sign);
 		final BigFloatStruct signFloat = new BigFloatStruct(signBigDecimal);
 
 		return new DecodeFloatResult(significandFloat, exponentInteger, signFloat);

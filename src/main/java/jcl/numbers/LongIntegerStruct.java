@@ -496,7 +496,7 @@ public final class LongIntegerStruct extends BuiltInClassStruct implements Integ
 
 		@Override
 		public RealStruct add(final BigFloatStruct number2) {
-			final BigDecimal bigDecimal1 = BigDecimal.valueOf(number1.l);
+			final BigDecimal bigDecimal1 = NumberUtils.bigDecimalValue(number1.l);
 			final BigDecimal bigDecimal2 = number2.bigDecimal;
 			final BigDecimal add = bigDecimal1.add(bigDecimal2);
 			return BigFloatStruct.valueOf(add);
@@ -572,7 +572,7 @@ public final class LongIntegerStruct extends BuiltInClassStruct implements Integ
 
 		@Override
 		public RealStruct subtract(final BigFloatStruct number2) {
-			final BigDecimal bigDecimal1 = BigDecimal.valueOf(number1.l);
+			final BigDecimal bigDecimal1 = NumberUtils.bigDecimalValue(number1.l);
 			final BigDecimal bigDecimal2 = number2.bigDecimal;
 			final BigDecimal subtract = bigDecimal1.subtract(bigDecimal2);
 			return BigFloatStruct.valueOf(subtract);
@@ -648,7 +648,7 @@ public final class LongIntegerStruct extends BuiltInClassStruct implements Integ
 
 		@Override
 		public RealStruct multiply(final BigFloatStruct number2) {
-			final BigDecimal bigDecimal1 = BigDecimal.valueOf(number1.l);
+			final BigDecimal bigDecimal1 = NumberUtils.bigDecimalValue(number1.l);
 			final BigDecimal bigDecimal2 = number2.bigDecimal;
 			final BigDecimal multiply = bigDecimal1.multiply(bigDecimal2);
 			return BigFloatStruct.valueOf(multiply);
@@ -722,7 +722,7 @@ public final class LongIntegerStruct extends BuiltInClassStruct implements Integ
 
 		@Override
 		public RealStruct divide(final BigFloatStruct number2) {
-			final BigDecimal bigDecimal1 = BigDecimal.valueOf(number1.l);
+			final BigDecimal bigDecimal1 = NumberUtils.bigDecimalValue(number1.l);
 			final BigDecimal bigDecimal2 = number2.bigDecimal;
 			final BigDecimal divide = bigDecimal1.divide(bigDecimal2, MathContext.DECIMAL128);
 			return BigFloatStruct.valueOf(divide);

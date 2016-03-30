@@ -8,6 +8,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.RoundingMode;
 
+import jcl.util.NumberUtils;
 import org.apache.commons.math3.fraction.BigFraction;
 
 /**
@@ -397,8 +398,8 @@ public interface RationalStruct extends RealStruct {
 			final BigInteger multipliedDenominator = rationalDenominatorBigInteger.multiply(divisorNumeratorBigInteger);
 
 			// Divide to get quotient
-			final BigDecimal multipliedNumeratorBigDecimal = new BigDecimal(multipliedNumerator);
-			final BigDecimal multipliedDenominatorBigDecimal = new BigDecimal(multipliedDenominator);
+			final BigDecimal multipliedNumeratorBigDecimal = NumberUtils.bigDecimalValue(multipliedNumerator);
+			final BigDecimal multipliedDenominatorBigDecimal = NumberUtils.bigDecimalValue(multipliedDenominator);
 			final BigDecimal quotient = multipliedNumeratorBigDecimal.divide(multipliedDenominatorBigDecimal, 0, roundingMode);
 			final BigInteger quotientBigInteger = quotient.toBigInteger();
 

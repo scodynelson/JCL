@@ -7,6 +7,7 @@ package jcl.numbers;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
+import jcl.util.NumberUtils;
 import org.apfloat.Apfloat;
 
 /**
@@ -39,14 +40,14 @@ public interface FloatStruct extends RealStruct {
 		if (f.isInfinite()) {
 			return false;
 		}
-		final BigDecimal floatBigDecimal = new BigDecimal(String.valueOf(f));
-		final BigDecimal doubleBigDecimal = new BigDecimal(String.valueOf(d));
+		final BigDecimal floatBigDecimal = NumberUtils.bigDecimalValue(f);
+		final BigDecimal doubleBigDecimal = NumberUtils.bigDecimalValue(d);
 		return doubleBigDecimal.compareTo(floatBigDecimal) == 0;
 	}
 
 	static boolean canBigDecimalBeDouble(final BigDecimal bigDecimal) {
 		final double d = bigDecimal.doubleValue();
-		final BigDecimal doubleBigDecimal = new BigDecimal(String.valueOf(d));
+		final BigDecimal doubleBigDecimal = NumberUtils.bigDecimalValue(d);
 		return doubleBigDecimal.compareTo(bigDecimal) == 0;
 	}
 
@@ -102,7 +103,7 @@ public interface FloatStruct extends RealStruct {
 			return valueOf(d);
 		} catch (final NumberFormatException ignore) {
 		}
-		final BigDecimal bigDecimal = new BigDecimal(s);
+		final BigDecimal bigDecimal = NumberUtils.bigDecimalValue(s);
 		return valueOf(bigDecimal);
 	}
 

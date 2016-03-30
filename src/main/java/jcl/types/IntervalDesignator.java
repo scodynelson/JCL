@@ -9,6 +9,7 @@ import java.math.BigInteger;
 import java.math.MathContext;
 import java.math.RoundingMode;
 
+import jcl.util.NumberUtils;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.math3.fraction.BigFraction;
 
@@ -121,11 +122,11 @@ public class IntervalDesignator<N extends Number> {
 		} else if ((num1 instanceof BigInteger) && (num2 instanceof BigInteger)) {
 			return ((BigInteger) num1).compareTo((BigInteger) num2);
 		} else if ((num1 instanceof BigInteger) && (num2 instanceof BigDecimal)) {
-			return new BigDecimal((BigInteger) num1).compareTo((BigDecimal) num2);
+			return NumberUtils.bigDecimalValue((BigInteger) num1).compareTo((BigDecimal) num2);
 		} else if ((num1 instanceof BigInteger) && (num2 instanceof BigFraction)) {
 			return new BigFraction((BigInteger) num1).compareTo((BigFraction) num2);
 		} else if ((num1 instanceof BigDecimal) && (num2 instanceof BigInteger)) {
-			return ((BigDecimal) num1).compareTo(new BigDecimal((BigInteger) num2));
+			return ((BigDecimal) num1).compareTo(NumberUtils.bigDecimalValue((BigInteger) num2));
 		} else if ((num1 instanceof BigDecimal) && (num2 instanceof BigDecimal)) {
 			return ((BigDecimal) num1).compareTo((BigDecimal) num2);
 		} else if ((num1 instanceof BigDecimal) && (num2 instanceof BigFraction)) {

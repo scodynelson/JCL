@@ -14,6 +14,7 @@ import com.google.common.math.IntMath;
 import jcl.classes.BuiltInClassStruct;
 import jcl.conditions.exceptions.DivisionByZeroException;
 import jcl.types.FixnumType;
+import jcl.util.NumberUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.math3.exception.MathArithmeticException;
@@ -583,7 +584,7 @@ public final class IntIntegerStruct extends BuiltInClassStruct implements Intege
 
 		@Override
 		public RealStruct add(final BigFloatStruct number2) {
-			final BigDecimal bigDecimal1 = BigDecimal.valueOf(number1.i);
+			final BigDecimal bigDecimal1 = NumberUtils.bigDecimalValue(number1.i);
 			final BigDecimal bigDecimal2 = number2.bigDecimal;
 			final BigDecimal add = bigDecimal1.add(bigDecimal2);
 			return BigFloatStruct.valueOf(add);
@@ -658,7 +659,7 @@ public final class IntIntegerStruct extends BuiltInClassStruct implements Intege
 
 		@Override
 		public RealStruct subtract(final BigFloatStruct number2) {
-			final BigDecimal bigDecimal1 = BigDecimal.valueOf(number1.i);
+			final BigDecimal bigDecimal1 = NumberUtils.bigDecimalValue(number1.i);
 			final BigDecimal bigDecimal2 = number2.bigDecimal;
 			final BigDecimal subtract = bigDecimal1.subtract(bigDecimal2);
 			return BigFloatStruct.valueOf(subtract);
@@ -734,7 +735,7 @@ public final class IntIntegerStruct extends BuiltInClassStruct implements Intege
 
 		@Override
 		public RealStruct multiply(final BigFloatStruct number2) {
-			final BigDecimal bigDecimal1 = BigDecimal.valueOf(number1.i);
+			final BigDecimal bigDecimal1 = NumberUtils.bigDecimalValue(number1.i);
 			final BigDecimal bigDecimal2 = number2.bigDecimal;
 			final BigDecimal multiply = bigDecimal1.multiply(bigDecimal2);
 			return BigFloatStruct.valueOf(multiply);
@@ -808,7 +809,7 @@ public final class IntIntegerStruct extends BuiltInClassStruct implements Intege
 
 		@Override
 		public RealStruct divide(final BigFloatStruct number2) {
-			final BigDecimal bigDecimal1 = BigDecimal.valueOf(number1.i);
+			final BigDecimal bigDecimal1 = NumberUtils.bigDecimalValue(number1.i);
 			final BigDecimal bigDecimal2 = number2.bigDecimal;
 			final BigDecimal divide = bigDecimal1.divide(bigDecimal2, MathContext.DECIMAL128);
 			return BigFloatStruct.valueOf(divide);

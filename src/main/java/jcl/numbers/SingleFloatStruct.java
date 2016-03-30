@@ -9,6 +9,7 @@ import java.math.MathContext;
 
 import jcl.classes.BuiltInClassStruct;
 import jcl.types.SingleFloatType;
+import jcl.util.NumberUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.math3.fraction.BigFraction;
@@ -88,9 +89,7 @@ public final class SingleFloatStruct extends BuiltInClassStruct implements Float
 
 	@Override
 	public BigDecimal bigDecimalValue() {
-		// NOTE: Using 'String.valueOf' since the BigDecimal#valueOf(double) does some floating point rounding crap that
-		//          changes the actual value since it stores it as a 'long' under the hood.
-		return new BigDecimal(String.valueOf(f));
+		return NumberUtils.bigDecimalValue(f);
 	}
 
 	@Override

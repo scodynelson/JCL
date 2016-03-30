@@ -10,6 +10,7 @@ import java.math.MathContext;
 
 import jcl.classes.BuiltInClassStruct;
 import jcl.types.DoubleFloatType;
+import jcl.util.NumberUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.math3.fraction.BigFraction;
@@ -394,7 +395,7 @@ public final class DoubleFloatStruct extends BuiltInClassStruct implements Float
 	 */
 	@Override
 	public BigDecimal bigDecimalValue() {
-		return new BigDecimal(String.valueOf(d));
+		return NumberUtils.bigDecimalValue(d);
 	}
 
 	@Override
@@ -427,10 +428,10 @@ public final class DoubleFloatStruct extends BuiltInClassStruct implements Float
 		final DecodedDoubleRaw decodedDoubleRaw = getDecodedDoubleRaw(bits);
 
 		final long mantissa = decodedDoubleRaw.getMantissa();
-		final BigDecimal mantissaBigDecimal = BigDecimal.valueOf(mantissa);
+		final BigDecimal mantissaBigDecimal = NumberUtils.bigDecimalValue(mantissa);
 
 		final double expt = StrictMath.pow(2, doubleFloatingPointPrecision);
-		final BigDecimal exptBigDecimal = BigDecimal.valueOf(expt);
+		final BigDecimal exptBigDecimal = NumberUtils.bigDecimalValue(expt);
 
 		final BigDecimal significand = mantissaBigDecimal.divide(exptBigDecimal, MathContext.DECIMAL128);
 		final DoubleFloatStruct significandFloat = new DoubleFloatStruct(significand.doubleValue());
@@ -441,7 +442,7 @@ public final class DoubleFloatStruct extends BuiltInClassStruct implements Float
 		final IntegerStruct exponentInteger = IntegerStruct.valueOf(exponentBigInteger);
 
 		final long sign = decodedDoubleRaw.getSign();
-		final BigDecimal signBigDecimal = BigDecimal.valueOf(sign);
+		final BigDecimal signBigDecimal = NumberUtils.bigDecimalValue(sign);
 		final DoubleFloatStruct signFloat = new DoubleFloatStruct(signBigDecimal.doubleValue());
 
 		return new DecodeFloatResult(significandFloat, exponentInteger, signFloat);

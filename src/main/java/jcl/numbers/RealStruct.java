@@ -10,6 +10,7 @@ import java.math.MathContext;
 import java.math.RoundingMode;
 import java.util.List;
 
+import jcl.util.NumberUtils;
 import org.apache.commons.math3.fraction.BigFraction;
 import org.apfloat.Apcomplex;
 import org.apfloat.ApcomplexMath;
@@ -1423,14 +1424,14 @@ public interface RealStruct extends NumberStruct {
 					final double realPart = result * StrictMath.cos(y * Math.PI);
 					final double imagPart = result * StrictMath.sin(y * Math.PI);
 
-					final BigDecimal realBigDecimal = BigDecimal.valueOf(realPart);
+					final BigDecimal realBigDecimal = NumberUtils.bigDecimalValue(realPart);
 					final FloatStruct real = FloatStruct.valueOf(realBigDecimal);
-					final BigDecimal imagBigDecimal = BigDecimal.valueOf(imagPart);
+					final BigDecimal imagBigDecimal = NumberUtils.bigDecimalValue(imagPart);
 					final FloatStruct imaginary = FloatStruct.valueOf(imagBigDecimal);
 					return ComplexStruct.makeComplexOrReal(real, imaginary);
 				}
 			}
-			final BigDecimal resultBigDecimal = BigDecimal.valueOf(result);
+			final BigDecimal resultBigDecimal = NumberUtils.bigDecimalValue(result);
 			return FloatStruct.valueOf(resultBigDecimal);
 		}
 

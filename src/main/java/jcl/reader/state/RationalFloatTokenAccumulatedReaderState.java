@@ -15,6 +15,7 @@ import jcl.reader.AttributeType;
 import jcl.reader.TokenAttribute;
 import jcl.reader.TokenBuilder;
 import jcl.types.FloatType;
+import jcl.util.NumberUtils;
 import org.springframework.stereotype.Component;
 
 /**
@@ -57,12 +58,12 @@ public class RationalFloatTokenAccumulatedReaderState extends FloatTokenAccumula
 		final Integer exponentTokenCodePoint = ReaderState.getTokenCodePointByAttribute(tokenAttributes, AttributeType.EXPONENTMARKER);
 
 		final String numeratorTokenString = getFloatTokenString(numeratorPart, exponentTokenCodePoint);
-		final BigDecimal numeratorBigDecimal = new BigDecimal(numeratorTokenString);
+		final BigDecimal numeratorBigDecimal = NumberUtils.bigDecimalValue(numeratorTokenString);
 
 		final String denominatorTokenString = getFloatTokenString(rationalParts[1], exponentTokenCodePoint);
 		final BigDecimal denominatorBigDecimal;
 		try {
-			denominatorBigDecimal = new BigDecimal(denominatorTokenString);
+			denominatorBigDecimal = NumberUtils.bigDecimalValue(denominatorTokenString);
 		} catch (final NumberFormatException ignore) {
 			// NOTE: we don't check the 'numeratorBigDecimal' because it MUST be an integer token, therefore we won't
 			//       have the issues with the BigDecimal creations

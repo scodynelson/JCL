@@ -9,6 +9,7 @@ import java.math.BigInteger;
 
 import jcl.classes.BuiltInClassStruct;
 import jcl.types.RandomStateType;
+import jcl.util.NumberUtils;
 import org.apache.commons.lang3.RandomUtils;
 
 /**
@@ -50,6 +51,6 @@ public class RandomStateStruct extends BuiltInClassStruct {
 
 		final double limitDouble = limit.doubleValue();
 		final double randomDouble = RandomUtils.nextDouble(0.0D, limitDouble);
-		return BigDecimal.valueOf(randomDouble);
+		return NumberUtils.bigDecimalValue(randomDouble);
 	}
 }

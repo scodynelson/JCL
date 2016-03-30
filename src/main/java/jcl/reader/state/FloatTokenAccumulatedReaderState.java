@@ -20,6 +20,7 @@ import jcl.types.FloatType;
 import jcl.types.LongFloatType;
 import jcl.types.ShortFloatType;
 import jcl.types.SingleFloatType;
+import jcl.util.NumberUtils;
 import org.springframework.stereotype.Component;
 
 /**
@@ -41,7 +42,7 @@ public class FloatTokenAccumulatedReaderState implements ReaderState {
 
 		BigDecimal bigDecimal;
 		try {
-			bigDecimal = new BigDecimal(tokenString);
+			bigDecimal = NumberUtils.bigDecimalValue(tokenString);
 		} catch (final NumberFormatException ignore) {
 			return null;
 		}

@@ -4,8 +4,6 @@
 
 package jcl.hashtables.functions;
 
-import java.math.BigDecimal;
-
 import jcl.LispStruct;
 import jcl.conditions.exceptions.TypeErrorException;
 import jcl.functions.CommonLispBuiltInFunctionStruct;
@@ -30,7 +28,7 @@ public final class MakeHashTableFunction extends CommonLispBuiltInFunctionStruct
 	private static final KeywordStruct SIZE = new KeywordStruct("SIZE");
 	private static final KeywordStruct REHASH_SIZE = new KeywordStruct("REHASH-SIZE");
 	private static final KeywordStruct REHASH_THRESHOLD = new KeywordStruct("REHASH-THRESHOLD");
-	private static final FloatStruct DEFAULT_REHASH_THRESHOLD = FloatStruct.valueOf(BigDecimal.valueOf(0.75F));
+	private static final FloatStruct DEFAULT_REHASH_THRESHOLD = FloatStruct.valueOf(0.75F);
 
 	public MakeHashTableFunction() {
 		super("Creates and returns a new hash table.",

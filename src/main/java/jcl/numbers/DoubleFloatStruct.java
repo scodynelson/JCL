@@ -23,11 +23,6 @@ import org.slf4j.LoggerFactory;
 public final class DoubleFloatStruct extends BuiltInClassStruct implements FloatStruct {
 
 	/**
-	 * The logger for this class.
-	 */
-	private static final Logger LOGGER = LoggerFactory.getLogger(DoubleFloatStruct.class);
-
-	/**
 	 * {@link DoubleFloatStruct} constant representing 0.0.
 	 */
 	public static final DoubleFloatStruct ZERO = valueOf(0.0D);
@@ -46,6 +41,11 @@ public final class DoubleFloatStruct extends BuiltInClassStruct implements Float
 	 * {@link DoubleFloatStruct} constant representing -1.0.
 	 */
 	public static final DoubleFloatStruct MINUS_ONE = valueOf(-1.0D);
+
+	/**
+	 * The logger for this class.
+	 */
+	private static final Logger LOGGER = LoggerFactory.getLogger(DoubleFloatStruct.class);
 
 	/**
 	 * The floating-point precision of a DoubleFloatStruct object.
@@ -105,7 +105,7 @@ public final class DoubleFloatStruct extends BuiltInClassStruct implements Float
 	@Override
 	public DecodeFloatResult decodeFloat() {
 		final long bits = Double.doubleToRawLongBits(d);
-		final DecodedDouble decodedDouble = getDecodedDoubleRaw(bits);
+		final DecodedDouble decodedDouble = getDecodedDouble(bits);
 
 		final long mantissa = decodedDouble.getMantissa();
 		final int expt = ArithmeticUtils.pow(2, DOUBLE_PRECISION);
@@ -125,13 +125,13 @@ public final class DoubleFloatStruct extends BuiltInClassStruct implements Float
 	@Override
 	public DecodeFloatResult integerDecodeFloat() {
 		final long bits = Double.doubleToRawLongBits(d);
-		final DecodedDouble decodedDouble = getDecodedDoubleRaw(bits);
+		final DecodedDouble decodedDouble = getDecodedDouble(bits);
 
 		final long mantissa = decodedDouble.getMantissa();
 		final IntegerStruct significandInteger = IntegerStruct.valueOf(mantissa);
 
 		final long storedExponent = decodedDouble.getStoredExponent();
-		final long exponent = storedExponent - 150;
+		final long exponent = storedExponent - 1075;
 		final IntegerStruct exponentInteger = IntegerStruct.valueOf(exponent);
 
 		final int sign = decodedDouble.getSign();
@@ -177,7 +177,7 @@ public final class DoubleFloatStruct extends BuiltInClassStruct implements Float
 	 *
 	 * @see <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Double.html">Java Double</a>
 	 */
-	private static DecodedDouble getDecodedDoubleRaw(final long bits) {
+	private static DecodedDouble getDecodedDouble(final long bits) {
 		final int sign = ((bits >> 63) == 0) ? 1 : -1;
 		final long exponent = (bits >> 52) & 0x7ffL;
 		final long mantissa = (exponent == 0) ?

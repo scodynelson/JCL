@@ -85,7 +85,7 @@ public interface FloatStruct extends RealStruct {
 			final float f = bigDecimal.floatValue();
 			return valueOf(f);
 		}
-		if (canBigDecimalBeFloat(bigDecimal)) {
+		if (canBigDecimalBeDouble(bigDecimal)) {
 			final double d = bigDecimal.doubleValue();
 			return valueOf(d);
 		}

@@ -272,8 +272,8 @@ public final class BigIntegerStruct extends BuiltInClassStruct implements Intege
 
 	@Override
 	public FloatStruct coerceRealToFloat() {
-		final BigDecimal bigDecimal = NumberUtils.bigDecimalValue(bigIntegerValue());
-		return FloatStruct.valueOf(bigDecimal);
+		// TODO: Default to SingleFloat; Need to devise class/type override
+		return SingleFloatStruct.valueOf(bigInteger.floatValue());
 	}
 
 	@Override
@@ -1005,8 +1005,9 @@ public final class BigIntegerStruct extends BuiltInClassStruct implements Intege
 		@Override
 		public NumberStruct expt(final IntIntegerStruct power) {
 			if (power.minusp()) {
-				// TODO: more efficient?
-				return exptInteger(base, power);
+				final IntegerStruct negation = power.negation();
+				final IntegerStruct expt = (IntegerStruct) base.expt(negation);
+				return RationalStruct.valueOf(BigInteger.ONE, expt.bigIntegerValue());
 			}
 
 			final BigInteger baseBigInteger = base.bigInteger;
@@ -1017,8 +1018,9 @@ public final class BigIntegerStruct extends BuiltInClassStruct implements Intege
 		@Override
 		public NumberStruct expt(final LongIntegerStruct power) {
 			if (power.minusp()) {
-				// TODO: more efficient?
-				return exptInteger(base, power);
+				final IntegerStruct negation = power.negation();
+				final IntegerStruct expt = (IntegerStruct) base.expt(negation);
+				return RationalStruct.valueOf(BigInteger.ONE, expt.bigIntegerValue());
 			}
 
 			final BigInteger baseBigInteger = base.bigInteger;
@@ -1029,8 +1031,9 @@ public final class BigIntegerStruct extends BuiltInClassStruct implements Intege
 		@Override
 		public NumberStruct expt(final BigIntegerStruct power) {
 			if (power.minusp()) {
-				// TODO: more efficient?
-				return exptInteger(base, power);
+				final IntegerStruct negation = power.negation();
+				final IntegerStruct expt = (IntegerStruct) base.expt(negation);
+				return RationalStruct.valueOf(BigInteger.ONE, expt.bigIntegerValue());
 			}
 
 			final BigInteger baseBigInteger = base.bigInteger;

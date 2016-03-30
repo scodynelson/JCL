@@ -104,11 +104,12 @@ public final class RatioStruct extends BuiltInClassStruct implements RationalStr
 
 	@Override
 	public FloatStruct coerceRealToFloat() {
-		final BigDecimal bigDecimal = bigFraction.bigDecimalValue(
-				MathContext.DECIMAL128.getPrecision(),
-				RoundingMode.HALF_EVEN.ordinal()
-		);
-		return FloatStruct.valueOf(bigDecimal);
+//		final BigDecimal bigDecimal = bigFraction.bigDecimalValue(
+//				MathContext.DECIMAL128.getPrecision(),
+//				RoundingMode.HALF_EVEN.ordinal()
+//		);
+		// TODO: Default to SingleFloat; Need to devise class/type override
+		return SingleFloatStruct.valueOf(bigFraction.floatValue());
 	}
 
 	@Override

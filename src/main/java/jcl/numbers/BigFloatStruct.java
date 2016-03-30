@@ -14,6 +14,9 @@ import jcl.util.NumberUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.math3.fraction.BigFraction;
+import org.apache.commons.math3.util.ArithmeticUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The {@link BigFloatStruct} is the object representation of a Lisp 'float' type.
@@ -41,7 +44,12 @@ public final class BigFloatStruct extends BuiltInClassStruct implements FloatStr
 	public static final BigFloatStruct MINUS_ONE = valueOf(NumberUtils.bigDecimalValue(-1.0));
 
 	/**
-	 * The floating-point precision of a SingleFloatStruct object.
+	 * The logger for this class.
+	 */
+	private static final Logger LOGGER = LoggerFactory.getLogger(BigFloatStruct.class);
+
+	/**
+	 * The floating-point precision of a BigFloatStruct object.
 	 */
 	private static final int FLOAT_PRECISION = 113;
 
@@ -79,13 +87,17 @@ public final class BigFloatStruct extends BuiltInClassStruct implements FloatStr
 
 	@Override
 	public float floatValue() {
-		// TODO: Warn loss of precision
+		if (LOGGER.isWarnEnabled()) {
+			LOGGER.warn("Possible loss of precision.");
+		}
 		return bigDecimal.floatValue();
 	}
 
 	@Override
 	public double doubleValue() {
-		// TODO: Warn loss of precision
+		if (LOGGER.isWarnEnabled()) {
+			LOGGER.warn("Possible loss of precision.");
+		}
 		return bigDecimal.doubleValue();
 	}
 
@@ -96,43 +108,51 @@ public final class BigFloatStruct extends BuiltInClassStruct implements FloatStr
 
 	@Override
 	public DecodeFloatResult decodeFloat() {
-		final int decodedExponentDiffer = 1075;
-		final int doubleFloatingPointPrecision = 53;
+		final BigInteger bits = bigDecimal.unscaledValue();
+//		final long bits = Double.doubleToRawLongBits(bigDecimal.doubleValue());
 
-		final long bits = Double.doubleToRawLongBits(apfloatValue().doubleValue());
-		final DecodedDoubleRaw decodedDoubleRaw = getDecodedQuadrupleRaw(BigInteger.valueOf(bits));
+		final DecodedQuadruple decodedQuadruple = getDecodedQuadruple(bits);
 
-		final long mantissa = decodedDoubleRaw.getMantissa();
-		final BigDecimal mantissaBigDecimal = NumberUtils.bigDecimalValue(mantissa);
+		final BigInteger mantissa = decodedQuadruple.getMantissa();
+		final BigInteger expt = ArithmeticUtils.pow(BigInteger.valueOf(2), FLOAT_PRECISION);
+		final BigInteger significand = mantissa.divide(expt);
+		final BigFloatStruct significandFloat = new BigFloatStruct(NumberUtils.bigDecimalValue(significand));
 
-		final double expt = StrictMath.pow(2, doubleFloatingPointPrecision);
-		final BigDecimal exptBigDecimal = NumberUtils.bigDecimalValue(expt);
+		final BigInteger storedExponent = decodedQuadruple.getStoredExponent();
+		final BigInteger exponent = storedExponent.subtract(BigInteger.valueOf(16495)).add(BigInteger.valueOf(FLOAT_PRECISION));
+		final IntegerStruct exponentInteger = IntegerStruct.valueOf(exponent);
 
-		final BigDecimal significand = mantissaBigDecimal.divide(exptBigDecimal, MathContext.DECIMAL128);
-		final BigFloatStruct significandFloat = new BigFloatStruct(significand);
-
-		final long storedExponent = decodedDoubleRaw.getStoredExponent();
-		final long exponent = (storedExponent - decodedExponentDiffer) + doubleFloatingPointPrecision;
-		final BigInteger exponentBigInteger = BigInteger.valueOf(exponent);
-		final IntegerStruct exponentInteger = IntegerStruct.valueOf(exponentBigInteger);
-
-		final long sign = decodedDoubleRaw.getSign();
-		final BigDecimal signBigDecimal = NumberUtils.bigDecimalValue(sign);
-		final BigFloatStruct signFloat = new BigFloatStruct(signBigDecimal);
+		final int sign = decodedQuadruple.getSign();
+		final BigFloatStruct signFloat = (sign == 1) ? ONE : MINUS_ONE;
 
 		return new DecodeFloatResult(significandFloat, exponentInteger, signFloat);
 	}
 
 	@Override
-	public NumberStruct scaleFloat(final IntegerStruct scale) {
-		final IntegerStruct radix = floatRadix();
-		final NumberStruct expt = radix.expt(scale);
-		return multiply(expt);
+	public DecodeFloatResult integerDecodeFloat() {
+		final BigInteger bits = bigDecimal.unscaledValue();
+//		final long bits = Double.doubleToRawLongBits(doubleValue());
+		final DecodedQuadruple decodedQuadruple = getDecodedQuadruple(bits);
+
+		final BigInteger mantissa = decodedQuadruple.getMantissa();
+		final IntegerStruct significandInteger = IntegerStruct.valueOf(mantissa);
+
+		final BigInteger storedExponent = decodedQuadruple.getStoredExponent();
+		final BigInteger exponent = storedExponent.subtract(BigInteger.valueOf(16495));
+		final IntegerStruct exponentInteger = IntegerStruct.valueOf(exponent);
+
+		final int sign = decodedQuadruple.getSign();
+		final IntegerStruct signInteger = (sign == 1) ? IntegerStruct.ONE : IntegerStruct.MINUS_ONE;
+
+		return new DecodeFloatResult(significandInteger, exponentInteger, signInteger);
 	}
 
+	/*
+	 * http://en.wikipedia.org/wiki/Quadruple-precision_floating-point_format
+	 */
 	@Override
-	public IntegerStruct floatRadix() {
-		return IntegerStruct.TWO;
+	public IntegerStruct floatPrecision() {
+		return IntegerStruct.valueOf(FLOAT_PRECISION);
 	}
 
 	@Override
@@ -142,6 +162,7 @@ public final class BigFloatStruct extends BuiltInClassStruct implements FloatStr
 
 	@Override
 	public FloatStruct floatSign(final FloatStruct float2) {
+		// TODO: Visitor implementations??
 		if (minusp()) {
 			if (float2.minusp()) {
 				return float2;
@@ -154,62 +175,21 @@ public final class BigFloatStruct extends BuiltInClassStruct implements FloatStr
 		}
 	}
 
-	@Override
-	public IntegerStruct floatDigits() {
-		return floatPrecision();
-	}
-
-	/*
-	 * http://en.wikipedia.org/wiki/Quadruple-precision_floating-point_format
-	 */
-	@Override
-	public IntegerStruct floatPrecision() {
-//		final int binary32Precision = 24;
-//		final int binary64Precision = 53;
-		final int binary128Precision = 113;
-		return IntegerStruct.valueOf(BigInteger.valueOf(binary128Precision));
-	}
-
 	/**
-	 * Computes the three main values that characterize this FloatStruct: the significand, exponent, and sign. The
-	 * calculation for these values are based on the decoding for Java {@link Double} values from the algorithm defined
-	 * in {@link Double#longBitsToDouble}. The difference between this method an {@link #decodeFloat()} is that the
-	 * significand and sign will both be {@link IntegerStruct}s with a special weighting between the significand and
-	 * exponent based on the scaling needed for the significand to produce an {@link IntegerStruct}.
+	 * Decodes the float by the provided {@code int} bits into its sign, exponent, and mantissa according to the
+	 * details in the JVM spec section 4.4.5.
+	 * TODO: check spec section
 	 *
-	 * @return a {@link DecodeFloatResult} containing the decoded significand, exponent, and sign for this FloatStruct
-	 */
-	@Override
-	public DecodeFloatResult integerDecodeFloat() {
-		final int decodedExponentDiffer = 1075;
-
-		final long bits = Double.doubleToRawLongBits(doubleValue());
-		final DecodedDoubleRaw decodedDoubleRaw = getDecodedQuadrupleRaw(BigInteger.valueOf(bits));
-
-		final long mantissa = decodedDoubleRaw.getMantissa();
-		final BigInteger mantissaBigInteger = BigInteger.valueOf(mantissa);
-		final IntegerStruct significandInteger = IntegerStruct.valueOf(mantissaBigInteger);
-
-		final long storedExponent = decodedDoubleRaw.getStoredExponent();
-		final long exponent = storedExponent - decodedExponentDiffer;
-		final BigInteger exponentBigInteger = BigInteger.valueOf(exponent);
-		final IntegerStruct exponentInteger = IntegerStruct.valueOf(exponentBigInteger);
-
-		final long sign = decodedDoubleRaw.getSign();
-		final BigInteger signBigInteger = BigInteger.valueOf(sign);
-		final IntegerStruct signInteger = IntegerStruct.valueOf(signBigInteger);
-
-		return new DecodeFloatResult(significandInteger, exponentInteger, signInteger);
-	}
-
-	/*
-	 * See {@link https://docs.oracle.com/javase/8/docs/api/java/lang/Quadruple.html} for details.
-	 * <p>
-	 * The following is per the JVM spec section 4.4.5
+	 * @param bits
+	 * 		the {@code int} bits representing the {@code float} value
+	 *
+	 * @return the {@link DecodedFloat} wrapping the decoded sign, exponent, and mantissa values
+	 *
+	 * @see <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Float.html">Java Float</a>
 	 */
 	@SuppressWarnings("all")
-	private static DecodedDoubleRaw getDecodedQuadrupleRaw(final BigInteger bits) {
-		final BigInteger sign = BigInteger.ZERO.equals(bits.shiftRight(127)) ? BigInteger.ONE : BigInteger.valueOf(-1);
+	private static DecodedQuadruple getDecodedQuadruple(final BigInteger bits) {
+		final int sign = BigInteger.ZERO.equals(bits.shiftRight(127)) ? 1 : -1;
 //		 16382 == exponent max
 		final BigInteger exponent = bits.shiftRight(112).and(BigInteger.valueOf(16382));
 		final BigInteger mantissa;
@@ -221,8 +201,71 @@ public final class BigFloatStruct extends BuiltInClassStruct implements FloatStr
 			BigInteger twoToOneTwelve = new BigInteger("5192296858534827628530496329220096");
 			mantissa = (bits.and(twoToOneTwelveMinusOne)).or(twoToOneTwelve);
 		}
-		return null;
-//		return new DecodedDoubleRaw(mantissa, exponent, sign);
+		return new DecodedQuadruple(mantissa, exponent, sign);
+	}
+
+	/**
+	 * Decoded wrapper for {@link BigDecimal} sign, exponent, and mantissa values.
+	 */
+	private static final class DecodedQuadruple {
+
+		/**
+		 * The part of the {@link BigDecimal} that represents the significant digits.
+		 */
+		private final BigInteger mantissa;
+
+		/**
+		 * The part of the {@link BigDecimal} that represents the exponent.
+		 */
+		private final BigInteger storedExponent;
+
+		/**
+		 * The part of the {@link BigDecimal} that represents the sign bit.
+		 */
+		private final int sign;
+
+		/**
+		 * Private constructor.
+		 *
+		 * @param mantissa
+		 * 		the part of the {@link BigDecimal} that represents the significant digits
+		 * @param storedExponent
+		 * 		the part of the {@link BigDecimal} that represents the exponent
+		 * @param sign
+		 * 		the part of the {@link BigDecimal} that represents the sign bit
+		 */
+		private DecodedQuadruple(final BigInteger mantissa, final BigInteger storedExponent, final int sign) {
+			this.mantissa = mantissa;
+			this.storedExponent = storedExponent;
+			this.sign = sign;
+		}
+
+		/**
+		 * Getter for {@link #mantissa} property value.
+		 *
+		 * @return {@link #mantissa} property value
+		 */
+		private BigInteger getMantissa() {
+			return mantissa;
+		}
+
+		/**
+		 * Getter for {@link #storedExponent} property value.
+		 *
+		 * @return {@link #storedExponent} property value
+		 */
+		private BigInteger getStoredExponent() {
+			return storedExponent;
+		}
+
+		/**
+		 * Getter for {@link #sign} property value.
+		 *
+		 * @return {@link #sign} property value
+		 */
+		private int getSign() {
+			return sign;
+		}
 	}
 
 	/*

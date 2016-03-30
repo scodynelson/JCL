@@ -4,13 +4,10 @@
 
 package jcl.numbers.functions;
 
-import java.math.BigDecimal;
-
 import jcl.LispStruct;
 import jcl.functions.CommonLispBuiltInFunctionStruct;
 import jcl.functions.parameterdsl.Arguments;
 import jcl.functions.parameterdsl.Parameters;
-import jcl.numbers.FloatStruct;
 import jcl.numbers.RealStruct;
 import org.springframework.stereotype.Component;
 
@@ -33,11 +30,6 @@ public final class FloatFunction extends CommonLispBuiltInFunctionStruct {
 	@Override
 	public LispStruct apply(final Arguments arguments) {
 		final RealStruct real = arguments.getRequiredArgument(REAL_ARGUMENT, RealStruct.class);
-		if (real instanceof FloatStruct) {
-			return real;
-		}
-
-		final BigDecimal bigDecimal = real.bigDecimalValue();
-		return FloatStruct.valueOf(bigDecimal);
+		return real.coerceRealToFloat();
 	}
 }

@@ -2,9 +2,19 @@ package jcl.util;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.math.MathContext;
 import java.math.RoundingMode;
 
+import org.apache.commons.math3.fraction.BigFraction;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class NumberUtils {
+
+	/**
+	 * The logger for this class.
+	 */
+	private static final Logger LOGGER = LoggerFactory.getLogger(NumberUtils.class);
 
 	public static BigDecimal bigDecimalValue(final int i) {
 		return BigDecimal.valueOf(i).setScale(1, RoundingMode.HALF_EVEN);
@@ -16,6 +26,21 @@ public class NumberUtils {
 
 	public static BigDecimal bigDecimalValue(final BigInteger bigInteger) {
 		return new BigDecimal(bigInteger).setScale(1, RoundingMode.HALF_EVEN);
+	}
+
+	public static BigDecimal bigDecimalValue(final BigFraction bigFraction) {
+		try {
+			return bigFraction.bigDecimalValue();
+		} catch (final ArithmeticException ignore) {
+			if (LOGGER.isTraceEnabled()) {
+				LOGGER.trace("Loss of precision when converting BigFraction to BigDecimal.");
+			}
+			// This means that we have to round the fraction.
+			return bigFraction.bigDecimalValue(
+					MathContext.DECIMAL128.getPrecision(),
+					RoundingMode.HALF_EVEN.ordinal()
+			);
+		}
 	}
 
 	public static BigDecimal bigDecimalValue(final float f) {

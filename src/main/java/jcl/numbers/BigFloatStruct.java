@@ -183,23 +183,22 @@ public final class BigFloatStruct extends BuiltInClassStruct implements FloatStr
 	 * @param bits
 	 * 		the {@code int} bits representing the {@code float} value
 	 *
-	 * @return the {@link DecodedFloat} wrapping the decoded sign, exponent, and mantissa values
+	 * @return the {@link DecodedQuadruple} wrapping the decoded sign, exponent, and mantissa values
 	 *
 	 * @see <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Float.html">Java Float</a>
 	 */
-	@SuppressWarnings("all")
 	private static DecodedQuadruple getDecodedQuadruple(final BigInteger bits) {
 		final int sign = BigInteger.ZERO.equals(bits.shiftRight(127)) ? 1 : -1;
 //		 16382 == exponent max
 		final BigInteger exponent = bits.shiftRight(112).and(BigInteger.valueOf(16382));
 		final BigInteger mantissa;
 		if (BigInteger.ZERO.equals(exponent)) {
-			BigInteger twoToOneTwelveMinusOne = new BigInteger("5192296858534827628530496329220095");
-			mantissa = (bits.and(twoToOneTwelveMinusOne)).shiftLeft(1);
+			final BigInteger twoToOneTwelveMinusOne = new BigInteger("5192296858534827628530496329220095");
+			mantissa = bits.and(twoToOneTwelveMinusOne).shiftLeft(1);
 		} else {
-			BigInteger twoToOneTwelveMinusOne = new BigInteger("5192296858534827628530496329220095");
-			BigInteger twoToOneTwelve = new BigInteger("5192296858534827628530496329220096");
-			mantissa = (bits.and(twoToOneTwelveMinusOne)).or(twoToOneTwelve);
+			final BigInteger twoToOneTwelveMinusOne = new BigInteger("5192296858534827628530496329220095");
+			final BigInteger twoToOneTwelve = new BigInteger("5192296858534827628530496329220096");
+			mantissa = bits.and(twoToOneTwelveMinusOne).or(twoToOneTwelve);
 		}
 		return new DecodedQuadruple(mantissa, exponent, sign);
 	}
@@ -278,8 +277,18 @@ public final class BigFloatStruct extends BuiltInClassStruct implements FloatStr
 	}
 
 	@Override
+	public RealStruct.LessThanVisitor<?> lessThanVisitor() {
+		return new BigFloatLessThanVisitor(this);
+	}
+
+	@Override
 	public boolean isGreaterThan(final GreaterThanVisitor<?> greaterThanVisitor) {
 		return greaterThanVisitor.greaterThan(this);
+	}
+
+	@Override
+	public RealStruct.GreaterThanVisitor<?> greaterThanVisitor() {
+		return new BigFloatGreaterThanVisitor(this);
 	}
 
 	@Override
@@ -288,8 +297,18 @@ public final class BigFloatStruct extends BuiltInClassStruct implements FloatStr
 	}
 
 	@Override
+	public RealStruct.LessThanOrEqualToVisitor<?> lessThanOrEqualToVisitor() {
+		return new BigFloatLessThanOrEqualToVisitor(this);
+	}
+
+	@Override
 	public boolean isGreaterThanOrEqualTo(final GreaterThanOrEqualToVisitor<?> greaterThanOrEqualToVisitor) {
 		return greaterThanOrEqualToVisitor.greaterThanOrEqualTo(this);
+	}
+
+	@Override
+	public RealStruct.GreaterThanOrEqualToVisitor<?> greaterThanOrEqualToVisitor() {
+		return new BigFloatGreaterThanOrEqualToVisitor(this);
 	}
 
 	@Override
@@ -310,8 +329,7 @@ public final class BigFloatStruct extends BuiltInClassStruct implements FloatStr
 		final BigInteger movedDecimalPlaceBigInteger = movedDecimalPlace.toBigInteger();
 
 		final BigFraction bigFraction = new BigFraction(movedDecimalPlaceBigInteger, BigInteger.TEN.pow(scale));
-		final BigFraction bigFractionReduced = bigFraction.reduce();
-		return RationalStruct.valueOf(bigFractionReduced);
+		return RationalStruct.valueOf(bigFraction);
 	}
 
 	/*
@@ -325,7 +343,7 @@ public final class BigFloatStruct extends BuiltInClassStruct implements FloatStr
 
 	@Override
 	public AddVisitor<?> addVisitor() {
-		return new FloatAddVisitor(this);
+		return new BigFloatAddVisitor(this);
 	}
 
 	@Override
@@ -335,7 +353,7 @@ public final class BigFloatStruct extends BuiltInClassStruct implements FloatStr
 
 	@Override
 	public SubtractVisitor<?> subtractVisitor() {
-		return new FloatSubtractVisitor(this);
+		return new BigFloatSubtractVisitor(this);
 	}
 
 	@Override
@@ -345,7 +363,7 @@ public final class BigFloatStruct extends BuiltInClassStruct implements FloatStr
 
 	@Override
 	public MultiplyVisitor<?> multiplyVisitor() {
-		return new FloatMultiplyVisitor(this);
+		return new BigFloatMultiplyVisitor(this);
 	}
 
 	@Override
@@ -355,12 +373,17 @@ public final class BigFloatStruct extends BuiltInClassStruct implements FloatStr
 
 	@Override
 	public DivideVisitor<?> divideVisitor() {
-		return new FloatDivideVisitor(this);
+		return new BigFloatDivideVisitor(this);
 	}
 
 	@Override
 	public boolean isEqualTo(final EqualToVisitor<?> equalToVisitor) {
 		return equalToVisitor.equalTo(this);
+	}
+
+	@Override
+	public EqualToVisitor<?> equalToVisitor() {
+		return new BigFloatEqualToVisitor(this);
 	}
 
 	@Override
@@ -458,7 +481,7 @@ public final class BigFloatStruct extends BuiltInClassStruct implements FloatStr
 	/**
 	 * {@link RealStruct.RealAddVisitor} for computing addition results for {@link BigFloatStruct}s.
 	 */
-	private static final class FloatAddVisitor extends RealStruct.RealAddVisitor<BigFloatStruct> {
+	private static final class BigFloatAddVisitor extends RealStruct.RealAddVisitor<BigFloatStruct> {
 
 		/**
 		 * Package private constructor to make a new instance of an FloatAddVisitor with the provided {@link
@@ -467,50 +490,71 @@ public final class BigFloatStruct extends BuiltInClassStruct implements FloatStr
 		 * @param number1
 		 * 		the first argument in the addition operation
 		 */
-		private FloatAddVisitor(final BigFloatStruct number1) {
+		private BigFloatAddVisitor(final BigFloatStruct number1) {
 			super(number1);
 		}
 
 		@Override
 		public RealStruct add(final IntIntegerStruct number2) {
-			return addFloat(number1, number2);
+			final BigDecimal bigDecimal1 = number1.bigDecimal;
+			final BigDecimal bigDecimal2 = NumberUtils.bigDecimalValue(number2.i);
+			final BigDecimal add = bigDecimal1.add(bigDecimal2);
+			return valueOf(add);
 		}
 
 		@Override
 		public RealStruct add(final LongIntegerStruct number2) {
-			return addFloat(number1, number2);
+			final BigDecimal bigDecimal1 = number1.bigDecimal;
+			final BigDecimal bigDecimal2 = NumberUtils.bigDecimalValue(number2.l);
+			final BigDecimal add = bigDecimal1.add(bigDecimal2);
+			return valueOf(add);
 		}
 
 		@Override
 		public RealStruct add(final BigIntegerStruct number2) {
-			return addFloat(number1, number2);
+			final BigDecimal bigDecimal1 = number1.bigDecimal;
+			final BigDecimal bigDecimal2 = NumberUtils.bigDecimalValue(number2.bigInteger);
+			final BigDecimal add = bigDecimal1.add(bigDecimal2);
+			return valueOf(add);
 		}
 
 		@Override
 		public RealStruct add(final SingleFloatStruct number2) {
-			return super.add(number2);
+			final BigDecimal bigDecimal1 = number1.bigDecimal;
+			final BigDecimal bigDecimal2 = NumberUtils.bigDecimalValue(number2.f);
+			final BigDecimal add = bigDecimal1.add(bigDecimal2);
+			return valueOf(add);
 		}
 
 		@Override
 		public RealStruct add(final DoubleFloatStruct number2) {
-			return super.add(number2);
+			final BigDecimal bigDecimal1 = number1.bigDecimal;
+			final BigDecimal bigDecimal2 = NumberUtils.bigDecimalValue(number2.d);
+			final BigDecimal add = bigDecimal1.add(bigDecimal2);
+			return valueOf(add);
 		}
 
 		@Override
 		public RealStruct add(final BigFloatStruct number2) {
-			return super.add(number2);
+			final BigDecimal bigDecimal1 = number1.bigDecimal;
+			final BigDecimal bigDecimal2 = number2.bigDecimal;
+			final BigDecimal add = bigDecimal1.add(bigDecimal2);
+			return valueOf(add);
 		}
 
 		@Override
 		public RealStruct add(final RatioStruct number2) {
-			return addFloat(number1, number2);
+			final BigDecimal bigDecimal1 = number1.bigDecimal;
+			final BigDecimal bigDecimal2 = NumberUtils.bigDecimalValue(number2.bigFraction);
+			final BigDecimal add = bigDecimal1.add(bigDecimal2);
+			return valueOf(add);
 		}
 	}
 
 	/**
 	 * {@link RealStruct.RealSubtractVisitor} for computing subtraction function results for {@link BigFloatStruct}s.
 	 */
-	private static final class FloatSubtractVisitor extends RealStruct.RealSubtractVisitor<BigFloatStruct> {
+	private static final class BigFloatSubtractVisitor extends RealStruct.RealSubtractVisitor<BigFloatStruct> {
 
 		/**
 		 * Package private constructor to make a new instance of an FloatSubtractVisitor with the provided {@link
@@ -519,50 +563,64 @@ public final class BigFloatStruct extends BuiltInClassStruct implements FloatStr
 		 * @param number1
 		 * 		the first argument in the subtraction operation
 		 */
-		private FloatSubtractVisitor(final BigFloatStruct number1) {
+		private BigFloatSubtractVisitor(final BigFloatStruct number1) {
 			super(number1);
 		}
 
 		@Override
 		public RealStruct subtract(final IntIntegerStruct number2) {
-			return subtractFloat(number1, number2);
+			final BigDecimal bigDecimal1 = number1.bigDecimal;
+			final BigDecimal bigDecimal2 = NumberUtils.bigDecimalValue(number2.i);
+			final BigDecimal subtract = bigDecimal1.subtract(bigDecimal2);
+			return valueOf(subtract);
 		}
 
 		@Override
 		public RealStruct subtract(final LongIntegerStruct number2) {
-			return subtractFloat(number1, number2);
+			final BigDecimal bigDecimal1 = number1.bigDecimal;
+			final BigDecimal bigDecimal2 = NumberUtils.bigDecimalValue(number2.l);
+			final BigDecimal subtract = bigDecimal1.subtract(bigDecimal2);
+			return valueOf(subtract);
 		}
 
 		@Override
 		public RealStruct subtract(final BigIntegerStruct number2) {
-			return subtractFloat(number1, number2);
+			final BigDecimal bigDecimal1 = number1.bigDecimal;
+			final BigDecimal bigDecimal2 = NumberUtils.bigDecimalValue(number2.bigInteger);
+			final BigDecimal subtract = bigDecimal1.subtract(bigDecimal2);
+			return valueOf(subtract);
 		}
 
 		@Override
 		public RealStruct subtract(final SingleFloatStruct number2) {
-			return super.subtract(number2);
+			final BigDecimal bigDecimal1 = number1.bigDecimal;
+			final BigDecimal bigDecimal2 = NumberUtils.bigDecimalValue(number2.f);
+			final BigDecimal subtract = bigDecimal1.subtract(bigDecimal2);
+			return valueOf(subtract);
 		}
 
 		@Override
 		public RealStruct subtract(final DoubleFloatStruct number2) {
-			return super.subtract(number2);
+			final BigDecimal bigDecimal1 = number1.bigDecimal;
+			final BigDecimal bigDecimal2 = NumberUtils.bigDecimalValue(number2.d);
+			final BigDecimal subtract = bigDecimal1.subtract(bigDecimal2);
+			return valueOf(subtract);
 		}
 
 		@Override
 		public RealStruct subtract(final BigFloatStruct number2) {
-			return super.subtract(number2);
+			final BigDecimal bigDecimal1 = number1.bigDecimal;
+			final BigDecimal bigDecimal2 = number2.bigDecimal;
+			final BigDecimal subtract = bigDecimal1.subtract(bigDecimal2);
+			return valueOf(subtract);
 		}
 
 		@Override
 		public RealStruct subtract(final RatioStruct number2) {
-			return subtractFloat(number1, number2);
-		}
-
-		private static RealStruct subtractFloat(final BigFloatStruct number1, final RealStruct number2) {
-			final BigDecimal bigDecimal1 = number1.bigDecimalValue();
-			final BigDecimal bigDecimal2 = number2.bigDecimalValue();
+			final BigDecimal bigDecimal1 = number1.bigDecimal;
+			final BigDecimal bigDecimal2 = NumberUtils.bigDecimalValue(number2.bigFraction);
 			final BigDecimal subtract = bigDecimal1.subtract(bigDecimal2);
-			return new BigFloatStruct(subtract);
+			return valueOf(subtract);
 		}
 	}
 
@@ -570,7 +628,7 @@ public final class BigFloatStruct extends BuiltInClassStruct implements FloatStr
 	 * {@link RealStruct.RealMultiplyVisitor} for computing multiplication function results for {@link
 	 * BigFloatStruct}s.
 	 */
-	private static final class FloatMultiplyVisitor extends RealStruct.RealMultiplyVisitor<BigFloatStruct> {
+	private static final class BigFloatMultiplyVisitor extends RealStruct.RealMultiplyVisitor<BigFloatStruct> {
 
 		/**
 		 * Package private constructor to make a new instance of an FloatMultiplyVisitor with the provided {@link
@@ -579,50 +637,71 @@ public final class BigFloatStruct extends BuiltInClassStruct implements FloatStr
 		 * @param number1
 		 * 		the first argument in the multiplication operation
 		 */
-		private FloatMultiplyVisitor(final BigFloatStruct number1) {
+		private BigFloatMultiplyVisitor(final BigFloatStruct number1) {
 			super(number1);
 		}
 
 		@Override
 		public RealStruct multiply(final IntIntegerStruct number2) {
-			return multiplyFloat(number1, number2);
+			final BigDecimal bigDecimal1 = number1.bigDecimal;
+			final BigDecimal bigDecimal2 = NumberUtils.bigDecimalValue(number2.i);
+			final BigDecimal multiply = bigDecimal1.multiply(bigDecimal2);
+			return valueOf(multiply);
 		}
 
 		@Override
 		public RealStruct multiply(final LongIntegerStruct number2) {
-			return multiplyFloat(number1, number2);
+			final BigDecimal bigDecimal1 = number1.bigDecimal;
+			final BigDecimal bigDecimal2 = NumberUtils.bigDecimalValue(number2.l);
+			final BigDecimal multiply = bigDecimal1.multiply(bigDecimal2);
+			return valueOf(multiply);
 		}
 
 		@Override
 		public RealStruct multiply(final BigIntegerStruct number2) {
-			return multiplyFloat(number1, number2);
+			final BigDecimal bigDecimal1 = number1.bigDecimal;
+			final BigDecimal bigDecimal2 = NumberUtils.bigDecimalValue(number2.bigInteger);
+			final BigDecimal multiply = bigDecimal1.multiply(bigDecimal2);
+			return valueOf(multiply);
 		}
 
 		@Override
 		public RealStruct multiply(final SingleFloatStruct number2) {
-			return super.multiply(number2);
+			final BigDecimal bigDecimal1 = number1.bigDecimal;
+			final BigDecimal bigDecimal2 = NumberUtils.bigDecimalValue(number2.f);
+			final BigDecimal multiply = bigDecimal1.multiply(bigDecimal2);
+			return valueOf(multiply);
 		}
 
 		@Override
 		public RealStruct multiply(final DoubleFloatStruct number2) {
-			return super.multiply(number2);
+			final BigDecimal bigDecimal1 = number1.bigDecimal;
+			final BigDecimal bigDecimal2 = NumberUtils.bigDecimalValue(number2.d);
+			final BigDecimal multiply = bigDecimal1.multiply(bigDecimal2);
+			return valueOf(multiply);
 		}
 
 		@Override
 		public RealStruct multiply(final BigFloatStruct number2) {
-			return super.multiply(number2);
+			final BigDecimal bigDecimal1 = number1.bigDecimal;
+			final BigDecimal bigDecimal2 = number2.bigDecimal;
+			final BigDecimal multiply = bigDecimal1.multiply(bigDecimal2);
+			return valueOf(multiply);
 		}
 
 		@Override
 		public RealStruct multiply(final RatioStruct number2) {
-			return multiplyFloat(number1, number2);
+			final BigDecimal bigDecimal1 = number1.bigDecimal;
+			final BigDecimal bigDecimal2 = NumberUtils.bigDecimalValue(number2.bigFraction);
+			final BigDecimal multiply = bigDecimal1.multiply(bigDecimal2);
+			return valueOf(multiply);
 		}
 	}
 
 	/**
 	 * {@link RealStruct.RealDivideVisitor} for computing division function results for {@link BigFloatStruct}s.
 	 */
-	private static final class FloatDivideVisitor extends RealStruct.RealDivideVisitor<BigFloatStruct> {
+	private static final class BigFloatDivideVisitor extends RealStruct.RealDivideVisitor<BigFloatStruct> {
 
 		/**
 		 * Package private constructor to make a new instance of an FloatDivideVisitor with the provided {@link
@@ -631,50 +710,259 @@ public final class BigFloatStruct extends BuiltInClassStruct implements FloatStr
 		 * @param number1
 		 * 		the first argument in the division operation
 		 */
-		private FloatDivideVisitor(final BigFloatStruct number1) {
+		private BigFloatDivideVisitor(final BigFloatStruct number1) {
 			super(number1);
 		}
 
 		@Override
 		public RealStruct divide(final IntIntegerStruct number2) {
-			return divideFloat(number1, number2);
+			final BigDecimal bigDecimal1 = number1.bigDecimal;
+			final BigDecimal bigDecimal2 = NumberUtils.bigDecimalValue(number2.i);
+			final BigDecimal divide = bigDecimal1.divide(bigDecimal2, MathContext.DECIMAL128);
+			return valueOf(divide);
 		}
 
 		@Override
 		public RealStruct divide(final LongIntegerStruct number2) {
-			return divideFloat(number1, number2);
+			final BigDecimal bigDecimal1 = number1.bigDecimal;
+			final BigDecimal bigDecimal2 = NumberUtils.bigDecimalValue(number2.l);
+			final BigDecimal divide = bigDecimal1.divide(bigDecimal2, MathContext.DECIMAL128);
+			return valueOf(divide);
 		}
 
 		@Override
 		public RealStruct divide(final BigIntegerStruct number2) {
-			return divideFloat(number1, number2);
+			final BigDecimal bigDecimal1 = number1.bigDecimal;
+			final BigDecimal bigDecimal2 = NumberUtils.bigDecimalValue(number2.bigInteger);
+			final BigDecimal divide = bigDecimal1.divide(bigDecimal2, MathContext.DECIMAL128);
+			return valueOf(divide);
 		}
 
 		@Override
 		public RealStruct divide(final SingleFloatStruct number2) {
-			return super.divide(number2);
+			final BigDecimal bigDecimal1 = number1.bigDecimal;
+			final BigDecimal bigDecimal2 = NumberUtils.bigDecimalValue(number2.f);
+			final BigDecimal divide = bigDecimal1.divide(bigDecimal2, MathContext.DECIMAL128);
+			return valueOf(divide);
 		}
 
 		@Override
 		public RealStruct divide(final DoubleFloatStruct number2) {
-			return super.divide(number2);
+			final BigDecimal bigDecimal1 = number1.bigDecimal;
+			final BigDecimal bigDecimal2 = NumberUtils.bigDecimalValue(number2.d);
+			final BigDecimal divide = bigDecimal1.divide(bigDecimal2, MathContext.DECIMAL128);
+			return valueOf(divide);
 		}
 
 		@Override
 		public RealStruct divide(final BigFloatStruct number2) {
-			return super.divide(number2);
+			final BigDecimal bigDecimal1 = number1.bigDecimal;
+			final BigDecimal bigDecimal2 = number2.bigDecimal;
+			final BigDecimal divide = bigDecimal1.divide(bigDecimal2, MathContext.DECIMAL128);
+			return valueOf(divide);
 		}
 
 		@Override
 		public RealStruct divide(final RatioStruct number2) {
-			return divideFloat(number1, number2);
+			final BigDecimal bigDecimal1 = number1.bigDecimal;
+			final BigDecimal bigDecimal2 = NumberUtils.bigDecimalValue(number2.bigFraction);
+			final BigDecimal divide = bigDecimal1.divide(bigDecimal2, MathContext.DECIMAL128);
+			return valueOf(divide);
+		}
+	}
+
+	/**
+	 * {@link FloatStruct.FloatEqualToVisitor} for computing numeric '=' equality results for {@link
+	 * BigFloatStruct}s.
+	 */
+	private static final class BigFloatEqualToVisitor extends FloatStruct.FloatEqualToVisitor<BigFloatStruct> {
+
+		/**
+		 * Private constructor to make a new instance of an BigFloatEqualToVisitor with the provided {@link
+		 * BigFloatStruct}.
+		 *
+		 * @param number1
+		 * 		the first argument in the numeric '=' equality operation
+		 */
+		private BigFloatEqualToVisitor(final BigFloatStruct number1) {
+			super(number1);
 		}
 
-		private static RealStruct divideFloat(final BigFloatStruct number1, final RealStruct number2) {
-			final BigDecimal bigDecimal1 = number1.bigDecimalValue();
+		@Override
+		public boolean equalTo(final SingleFloatStruct number2) {
+			final BigDecimal bigDecimal1 = number1.bigDecimal;
 			final BigDecimal bigDecimal2 = number2.bigDecimalValue();
-			final BigDecimal divide = bigDecimal1.divide(bigDecimal2, MathContext.DECIMAL128);
-			return new BigFloatStruct(divide);
+			return bigDecimal1.compareTo(bigDecimal2) == 0;
+		}
+
+		@Override
+		public boolean equalTo(final DoubleFloatStruct number2) {
+			final BigDecimal bigDecimal1 = number1.bigDecimal;
+			final BigDecimal bigDecimal2 = number2.bigDecimalValue();
+			return bigDecimal1.compareTo(bigDecimal2) == 0;
+		}
+
+		@Override
+		public boolean equalTo(final BigFloatStruct number2) {
+			final BigDecimal bigDecimal1 = number1.bigDecimal;
+			final BigDecimal bigDecimal2 = number2.bigDecimal;
+			return bigDecimal1.compareTo(bigDecimal2) == 0;
+		}
+	}
+
+	/**
+	 * {@link FloatStruct.FloatLessThanVisitor} for computing numeric {@literal '<'} equality results for {@link
+	 * BigFloatStruct}s.
+	 */
+	private static final class BigFloatLessThanVisitor extends FloatStruct.FloatLessThanVisitor<BigFloatStruct> {
+
+		/**
+		 * Private constructor to make a new instance of an BigFloatLessThanVisitor with the provided {@link
+		 * BigFloatStruct}.
+		 *
+		 * @param real1
+		 * 		the first argument in the numeric {@literal '<'} equality operation
+		 */
+		private BigFloatLessThanVisitor(final BigFloatStruct real1) {
+			super(real1);
+		}
+
+		@Override
+		public boolean lessThan(final SingleFloatStruct real2) {
+			final BigDecimal bigDecimal1 = real1.bigDecimal;
+			final BigDecimal bigDecimal2 = real2.bigDecimalValue();
+			return bigDecimal1.compareTo(bigDecimal2) < 0;
+		}
+
+		@Override
+		public boolean lessThan(final DoubleFloatStruct real2) {
+			final BigDecimal bigDecimal1 = real1.bigDecimal;
+			final BigDecimal bigDecimal2 = real2.bigDecimalValue();
+			return bigDecimal1.compareTo(bigDecimal2) < 0;
+		}
+
+		@Override
+		public boolean lessThan(final BigFloatStruct real2) {
+			final BigDecimal bigDecimal1 = real1.bigDecimal;
+			final BigDecimal bigDecimal2 = real2.bigDecimal;
+			return bigDecimal1.compareTo(bigDecimal2) < 0;
+		}
+	}
+
+	/**
+	 * {@link FloatStruct.FloatGreaterThanVisitor} for computing numeric {@literal '>'} equality results for {@link
+	 * BigFloatStruct}s.
+	 */
+	private static final class BigFloatGreaterThanVisitor extends FloatStruct.FloatGreaterThanVisitor<BigFloatStruct> {
+
+		/**
+		 * Private constructor to make a new instance of an BigFloatGreaterThanVisitor with the provided {@link
+		 * BigFloatStruct}.
+		 *
+		 * @param real1
+		 * 		the first argument in the numeric {@literal '>'} equality operation
+		 */
+		private BigFloatGreaterThanVisitor(final BigFloatStruct real1) {
+			super(real1);
+		}
+
+		@Override
+		public boolean greaterThan(final SingleFloatStruct real2) {
+			final BigDecimal bigDecimal1 = real1.bigDecimal;
+			final BigDecimal bigDecimal2 = real2.bigDecimalValue();
+			return bigDecimal1.compareTo(bigDecimal2) > 0;
+		}
+
+		@Override
+		public boolean greaterThan(final DoubleFloatStruct real2) {
+			final BigDecimal bigDecimal1 = real1.bigDecimal;
+			final BigDecimal bigDecimal2 = real2.bigDecimalValue();
+			return bigDecimal1.compareTo(bigDecimal2) > 0;
+		}
+
+		@Override
+		public boolean greaterThan(final BigFloatStruct real2) {
+			final BigDecimal bigDecimal1 = real1.bigDecimal;
+			final BigDecimal bigDecimal2 = real2.bigDecimal;
+			return bigDecimal1.compareTo(bigDecimal2) > 0;
+		}
+	}
+
+	/**
+	 * {@link FloatStruct.FloatLessThanOrEqualToVisitor} for computing numeric {@literal '<='} equality results for
+	 * {@link BigFloatStruct}s.
+	 */
+	private static final class BigFloatLessThanOrEqualToVisitor extends FloatStruct.FloatLessThanOrEqualToVisitor<BigFloatStruct> {
+
+		/**
+		 * Private constructor to make a new instance of an BigFloatLessThanOrEqualToVisitor with the provided {@link
+		 * BigFloatStruct}.
+		 *
+		 * @param real1
+		 * 		the first argument in the numeric {@literal '<='} equality operation
+		 */
+		private BigFloatLessThanOrEqualToVisitor(final BigFloatStruct real1) {
+			super(real1);
+		}
+
+		@Override
+		public boolean lessThanOrEqualTo(final SingleFloatStruct real2) {
+			final BigDecimal bigDecimal1 = real1.bigDecimal;
+			final BigDecimal bigDecimal2 = real2.bigDecimalValue();
+			return bigDecimal1.compareTo(bigDecimal2) <= 0;
+		}
+
+		@Override
+		public boolean lessThanOrEqualTo(final DoubleFloatStruct real2) {
+			final BigDecimal bigDecimal1 = real1.bigDecimal;
+			final BigDecimal bigDecimal2 = real2.bigDecimalValue();
+			return bigDecimal1.compareTo(bigDecimal2) <= 0;
+		}
+
+		@Override
+		public boolean lessThanOrEqualTo(final BigFloatStruct real2) {
+			final BigDecimal bigDecimal1 = real1.bigDecimal;
+			final BigDecimal bigDecimal2 = real2.bigDecimal;
+			return bigDecimal1.compareTo(bigDecimal2) <= 0;
+		}
+	}
+
+	/**
+	 * {@link FloatStruct.FloatGreaterThanOrEqualToVisitor} for computing numeric {@literal '>='} equality results for
+	 * {@link BigFloatStruct}s.
+	 */
+	private static final class BigFloatGreaterThanOrEqualToVisitor extends FloatStruct.FloatGreaterThanOrEqualToVisitor<BigFloatStruct> {
+
+		/**
+		 * Private constructor to make a new instance of an BigFloatGreaterThanOrEqualToVisitor with the provided
+		 * {@link BigFloatStruct}.
+		 *
+		 * @param real1
+		 * 		the first argument in the numeric {@literal '>='} equality operation
+		 */
+		private BigFloatGreaterThanOrEqualToVisitor(final BigFloatStruct real1) {
+			super(real1);
+		}
+
+		@Override
+		public boolean greaterThanOrEqualTo(final SingleFloatStruct real2) {
+			final BigDecimal bigDecimal1 = real1.bigDecimal;
+			final BigDecimal bigDecimal2 = real2.bigDecimalValue();
+			return bigDecimal1.compareTo(bigDecimal2) >= 0;
+		}
+
+		@Override
+		public boolean greaterThanOrEqualTo(final DoubleFloatStruct real2) {
+			final BigDecimal bigDecimal1 = real1.bigDecimal;
+			final BigDecimal bigDecimal2 = real2.bigDecimalValue();
+			return bigDecimal1.compareTo(bigDecimal2) >= 0;
+		}
+
+		@Override
+		public boolean greaterThanOrEqualTo(final BigFloatStruct real2) {
+			final BigDecimal bigDecimal1 = real1.bigDecimal;
+			final BigDecimal bigDecimal2 = real2.bigDecimal;
+			return bigDecimal1.compareTo(bigDecimal2) >= 0;
 		}
 	}
 }

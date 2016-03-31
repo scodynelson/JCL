@@ -829,8 +829,7 @@ public final class SingleFloatStruct extends BuiltInClassStruct implements Float
 
 		/**
 		 * Private constructor to make a new instance of an SingleFloatLessThanOrEqualToVisitor with the provided
-		 * {@link
-		 * SingleFloatStruct}.
+		 * {@link SingleFloatStruct}.
 		 *
 		 * @param real1
 		 * 		the first argument in the numeric {@literal '<='} equality operation

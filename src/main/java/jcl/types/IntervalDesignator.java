@@ -6,8 +6,6 @@ package jcl.types;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.math.MathContext;
-import java.math.RoundingMode;
 
 import jcl.util.NumberUtils;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -130,37 +128,15 @@ public class IntervalDesignator<N extends Number> {
 		} else if ((num1 instanceof BigDecimal) && (num2 instanceof BigDecimal)) {
 			return ((BigDecimal) num1).compareTo((BigDecimal) num2);
 		} else if ((num1 instanceof BigDecimal) && (num2 instanceof BigFraction)) {
-			return ((BigDecimal) num1).compareTo(getBigDecimalFromBigFraction((BigFraction) num2));
+			return ((BigDecimal) num1).compareTo(NumberUtils.bigDecimalValue((BigFraction) num2));
 		} else if ((num1 instanceof BigFraction) && (num2 instanceof BigInteger)) {
 			return ((BigFraction) num1).compareTo(new BigFraction((BigInteger) num2));
 		} else if ((num1 instanceof BigFraction) && (num2 instanceof BigDecimal)) {
-			return getBigDecimalFromBigFraction((BigFraction) num1).compareTo((BigDecimal) num2);
+			return NumberUtils.bigDecimalValue((BigFraction) num1).compareTo((BigDecimal) num2);
 		} else if ((num1 instanceof BigFraction) && (num2 instanceof BigFraction)) {
 			return ((BigFraction) num1).compareTo((BigFraction) num2);
 		} else {
 			return -1;
-		}
-	}
-
-	/**
-	 * Computes a {@link BigDecimal} value from the {@link BigFraction} by first attempting {@link
-	 * BigFraction#bigDecimalValue()}. If that fails with an {@link ArithmeticException}, the {@link BigDecimal} is
-	 * then attempted to be computed with {@link BigFraction#bigDecimalValue(int, int)} passing {@link
-	 * MathContext#DECIMAL128} as the scale and {@link RoundingMode#HALF_EVEN} as the rounding mode.
-	 *
-	 * @param bigFraction
-	 * 		the {@link BigFraction} to convert to approximately equivalent {@link BigDecimal}
-	 *
-	 * @return approximately equivalent {@link BigDecimal} to the provided {@link BigFraction}
-	 */
-	private static BigDecimal getBigDecimalFromBigFraction(final BigFraction bigFraction) {
-		try {
-			return bigFraction.bigDecimalValue();
-		} catch (final ArithmeticException ignore) {
-			// This means that we have to round the fraction.
-			final int scale = MathContext.DECIMAL128.getPrecision();
-			final int roundingMode = RoundingMode.HALF_EVEN.ordinal();
-			return bigFraction.bigDecimalValue(scale, roundingMode);
 		}
 	}
 

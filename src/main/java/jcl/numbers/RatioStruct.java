@@ -12,6 +12,7 @@ import java.math.RoundingMode;
 import jcl.classes.BuiltInClassStruct;
 import jcl.conditions.exceptions.DivisionByZeroException;
 import jcl.types.RatioType;
+import jcl.util.NumberUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.math3.fraction.BigFraction;
@@ -380,10 +381,7 @@ public final class RatioStruct extends BuiltInClassStruct implements RationalStr
 
 		@Override
 		public RealStruct add(final BigFloatStruct number2) {
-			final BigDecimal bigDecimal1 = number1.bigFraction.bigDecimalValue(
-					MathContext.DECIMAL128.getPrecision(),
-					RoundingMode.HALF_EVEN.ordinal()
-			);
+			final BigDecimal bigDecimal1 = NumberUtils.bigDecimalValue(number1.bigFraction);
 			final BigDecimal bigDecimal2 = number2.bigDecimal;
 			final BigDecimal add = bigDecimal1.add(bigDecimal2);
 			return BigFloatStruct.valueOf(add);
@@ -459,10 +457,7 @@ public final class RatioStruct extends BuiltInClassStruct implements RationalStr
 
 		@Override
 		public RealStruct subtract(final BigFloatStruct number2) {
-			final BigDecimal bigDecimal1 = number1.bigFraction.bigDecimalValue(
-					MathContext.DECIMAL128.getPrecision(),
-					RoundingMode.HALF_EVEN.ordinal()
-			);
+			final BigDecimal bigDecimal1 = NumberUtils.bigDecimalValue(number1.bigFraction);
 			final BigDecimal bigDecimal2 = number2.bigDecimal;
 			final BigDecimal subtract = bigDecimal1.subtract(bigDecimal2);
 			return BigFloatStruct.valueOf(subtract);
@@ -538,10 +533,7 @@ public final class RatioStruct extends BuiltInClassStruct implements RationalStr
 
 		@Override
 		public RealStruct multiply(final BigFloatStruct number2) {
-			final BigDecimal bigDecimal1 = number1.bigFraction.bigDecimalValue(
-					MathContext.DECIMAL128.getPrecision(),
-					RoundingMode.HALF_EVEN.ordinal()
-			);
+			final BigDecimal bigDecimal1 = NumberUtils.bigDecimalValue(number1.bigFraction);
 			final BigDecimal bigDecimal2 = number2.bigDecimal;
 			final BigDecimal multiply = bigDecimal1.multiply(bigDecimal2);
 			return BigFloatStruct.valueOf(multiply);
@@ -617,10 +609,7 @@ public final class RatioStruct extends BuiltInClassStruct implements RationalStr
 
 		@Override
 		public RealStruct divide(final BigFloatStruct number2) {
-			final BigDecimal bigDecimal1 = number1.bigFraction.bigDecimalValue(
-					MathContext.DECIMAL128.getPrecision(),
-					RoundingMode.HALF_EVEN.ordinal()
-			);
+			final BigDecimal bigDecimal1 = NumberUtils.bigDecimalValue(number1.bigFraction);
 			final BigDecimal bigDecimal2 = number2.bigDecimal;
 			final BigDecimal divide = bigDecimal1.divide(bigDecimal2, MathContext.DECIMAL128);
 			return BigFloatStruct.valueOf(divide);
@@ -985,17 +974,7 @@ public final class RatioStruct extends BuiltInClassStruct implements RationalStr
 	@Override
 	@Deprecated
 	public BigDecimal bigDecimalValue() {
-		try {
-			return bigFraction.bigDecimalValue();
-		} catch (final ArithmeticException ignore) {
-			if (LOGGER.isWarnEnabled()) {
-				LOGGER.warn("Loss of precision when converting BigFraction to BigDecimal.");
-			}
-			// This means that we have to round the fraction.
-			final int scale = MathContext.DECIMAL128.getPrecision();
-			final int roundingMode = RoundingMode.HALF_EVEN.ordinal();
-			return bigFraction.bigDecimalValue(scale, roundingMode);
-		}
+		return NumberUtils.bigDecimalValue(bigFraction);
 	}
 
 	@Override

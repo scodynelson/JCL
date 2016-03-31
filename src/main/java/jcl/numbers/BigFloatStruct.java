@@ -107,7 +107,7 @@ public final class BigFloatStruct extends BuiltInClassStruct implements FloatStr
 	}
 
 	@Override
-	public FloatingPointVisitor<?> floatingPointVisitor() {
+	public RealStruct.FloatingPointVisitor<?> floatingPointVisitor() {
 		return new BigFloatFloatingPointVisitor(this);
 	}
 
@@ -330,7 +330,7 @@ public final class BigFloatStruct extends BuiltInClassStruct implements FloatStr
 	}
 
 	@Override
-	public FloatStruct floatingPoint(final FloatingPointVisitor<?> floatingPointVisitor) {
+	public FloatStruct floatingPoint(final RealStruct.FloatingPointVisitor<?> floatingPointVisitor) {
 		return floatingPointVisitor.floatingPoint(this);
 	}
 
@@ -1053,8 +1053,19 @@ public final class BigFloatStruct extends BuiltInClassStruct implements FloatStr
 		}
 	}
 
-	private static final class BigFloatFloatingPointVisitor extends FloatingPointVisitor<BigFloatStruct> {
+	/**
+	 * {@link RealStruct.FloatingPointVisitor} for converting a {@link RealStruct} to the {@link BigFloatStruct}
+	 * type of {@link #prototype}.
+	 */
+	private static final class BigFloatFloatingPointVisitor extends RealStruct.FloatingPointVisitor<BigFloatStruct> {
 
+		/**
+		 * Private constructor to make a new instance of an BigFloatFloatingPointVisitor with the provided {@link
+		 * BigFloatStruct}.
+		 *
+		 * @param prototype
+		 * 		the prototype argument in the floating-point conversion operation
+		 */
 		private BigFloatFloatingPointVisitor(final BigFloatStruct prototype) {
 			super(prototype);
 		}

@@ -93,7 +93,7 @@ public final class SingleFloatStruct extends BuiltInClassStruct implements Float
 	}
 
 	@Override
-	public FloatingPointVisitor<?> floatingPointVisitor() {
+	public RealStruct.FloatingPointVisitor<?> floatingPointVisitor() {
 		return new SingleFloatFloatingPointVisitor(this);
 	}
 
@@ -150,8 +150,7 @@ public final class SingleFloatStruct extends BuiltInClassStruct implements Float
 
 	/**
 	 * Decodes the float by the provided {@code int} bits into its sign, exponent, and mantissa according to the
-	 * details in the JVM spec section 4.4.5.
-	 * TODO: check spec section
+	 * details in the JVM spec section 4.4.4.
 	 *
 	 * @param bits
 	 * 		the {@code int} bits representing the {@code float} value
@@ -295,7 +294,7 @@ public final class SingleFloatStruct extends BuiltInClassStruct implements Float
 	}
 
 	@Override
-	public FloatStruct floatingPoint(final FloatingPointVisitor<?> floatingPointVisitor) {
+	public FloatStruct floatingPoint(final RealStruct.FloatingPointVisitor<?> floatingPointVisitor) {
 		return floatingPointVisitor.floatingPoint(this);
 	}
 
@@ -954,8 +953,19 @@ public final class SingleFloatStruct extends BuiltInClassStruct implements Float
 		}
 	}
 
-	private static final class SingleFloatFloatingPointVisitor extends FloatingPointVisitor<SingleFloatStruct> {
+	/**
+	 * {@link RealStruct.FloatingPointVisitor} for converting a {@link RealStruct} to the {@link SingleFloatStruct}
+	 * type of {@link #prototype}.
+	 */
+	private static final class SingleFloatFloatingPointVisitor extends RealStruct.FloatingPointVisitor<SingleFloatStruct> {
 
+		/**
+		 * Private constructor to make a new instance of an SingleFloatFloatingPointVisitor with the provided {@link
+		 * SingleFloatStruct}.
+		 *
+		 * @param prototype
+		 * 		the prototype argument in the floating-point conversion operation
+		 */
 		private SingleFloatFloatingPointVisitor(final SingleFloatStruct prototype) {
 			super(prototype);
 		}

@@ -103,7 +103,7 @@ public final class DoubleFloatStruct extends BuiltInClassStruct implements Float
 	}
 
 	@Override
-	public FloatingPointVisitor<?> floatingPointVisitor() {
+	public RealStruct.FloatingPointVisitor<?> floatingPointVisitor() {
 		return new DoubleFloatFloatingPointVisitor(this);
 	}
 
@@ -161,7 +161,6 @@ public final class DoubleFloatStruct extends BuiltInClassStruct implements Float
 	/**
 	 * Decodes the double by the provided {@code long} bits into its sign, exponent, and mantissa according to the
 	 * details in the JVM spec section 4.4.5.
-	 * TODO: check spec section
 	 *
 	 * @param bits
 	 * 		the {@code long} bits representing the {@code double} value
@@ -305,7 +304,7 @@ public final class DoubleFloatStruct extends BuiltInClassStruct implements Float
 	}
 
 	@Override
-	public FloatStruct floatingPoint(final FloatingPointVisitor<?> floatingPointVisitor) {
+	public FloatStruct floatingPoint(final RealStruct.FloatingPointVisitor<?> floatingPointVisitor) {
 		return floatingPointVisitor.floatingPoint(this);
 	}
 
@@ -964,8 +963,19 @@ public final class DoubleFloatStruct extends BuiltInClassStruct implements Float
 		}
 	}
 
-	private static final class DoubleFloatFloatingPointVisitor extends FloatingPointVisitor<DoubleFloatStruct> {
+	/**
+	 * {@link RealStruct.FloatingPointVisitor} for converting a {@link RealStruct} to the {@link DoubleFloatStruct}
+	 * type of {@link #prototype}.
+	 */
+	private static final class DoubleFloatFloatingPointVisitor extends RealStruct.FloatingPointVisitor<DoubleFloatStruct> {
 
+		/**
+		 * Private constructor to make a new instance of an DoubleFloatFloatingPointVisitor with the provided {@link
+		 * DoubleFloatStruct}.
+		 *
+		 * @param prototype
+		 * 		the prototype argument in the floating-point conversion operation
+		 */
 		private DoubleFloatFloatingPointVisitor(final DoubleFloatStruct prototype) {
 			super(prototype);
 		}

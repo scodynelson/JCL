@@ -99,8 +99,8 @@ public class ComplexStruct extends BuiltInClassStruct implements NumberStruct {
 		RealStruct coercedReal = real;
 		RealStruct coercedImaginary = imaginary;
 		if ((real instanceof FloatStruct) || (imaginary instanceof FloatStruct)) {
-			coercedReal = real.coerceRealToFloat();
-			coercedImaginary = imaginary.coerceRealToFloat();
+			coercedReal = real.floatingPoint();
+			coercedImaginary = imaginary.floatingPoint();
 		}
 		this.real = coercedReal;
 		this.imaginary = coercedImaginary;
@@ -130,7 +130,7 @@ public class ComplexStruct extends BuiltInClassStruct implements NumberStruct {
 	 */
 	public ComplexStruct(final IntegerStruct real, final FloatStruct imaginary) {
 		super(ComplexType.INSTANCE, null, null);
-		this.real = real.coerceRealToFloat();
+		this.real = real.floatingPoint();
 		this.imaginary = imaginary;
 	}
 
@@ -159,7 +159,7 @@ public class ComplexStruct extends BuiltInClassStruct implements NumberStruct {
 	public ComplexStruct(final FloatStruct real, final IntegerStruct imaginary) {
 		super(ComplexType.INSTANCE, null, null);
 		this.real = real;
-		this.imaginary = imaginary.coerceRealToFloat();
+		this.imaginary = imaginary.floatingPoint();
 	}
 
 	/**
@@ -187,7 +187,7 @@ public class ComplexStruct extends BuiltInClassStruct implements NumberStruct {
 	public ComplexStruct(final FloatStruct real, final RatioStruct imaginary) {
 		super(ComplexType.INSTANCE, null, null);
 		this.real = real;
-		this.imaginary = imaginary.coerceRealToFloat();
+		this.imaginary = imaginary.floatingPoint();
 	}
 
 	/**
@@ -214,7 +214,7 @@ public class ComplexStruct extends BuiltInClassStruct implements NumberStruct {
 	 */
 	public ComplexStruct(final RatioStruct real, final FloatStruct imaginary) {
 		super(ComplexType.INSTANCE, null, null);
-		this.real = real.coerceRealToFloat();
+		this.real = real.floatingPoint();
 		this.imaginary = imaginary;
 	}
 

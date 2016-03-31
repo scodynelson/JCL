@@ -271,9 +271,13 @@ public final class BigIntegerStruct extends BuiltInClassStruct implements Intege
 	 */
 
 	@Override
-	public FloatStruct coerceRealToFloat() {
-		// TODO: Default to SingleFloat; Need to devise class/type override
+	public FloatStruct floatingPoint() {
 		return SingleFloatStruct.valueOf(bigInteger.floatValue());
+	}
+
+	@Override
+	public FloatStruct floatingPoint(final FloatingPointVisitor<?> floatingPointVisitor) {
+		return floatingPointVisitor.floatingPoint(this);
 	}
 
 	@Override

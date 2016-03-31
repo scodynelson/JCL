@@ -107,6 +107,11 @@ public final class BigFloatStruct extends BuiltInClassStruct implements FloatStr
 	}
 
 	@Override
+	public FloatingPointVisitor<?> floatingPointVisitor() {
+		return new BigFloatFloatingPointVisitor(this);
+	}
+
+	@Override
 	public DecodeFloatResult decodeFloat() {
 		final BigInteger bits = bigDecimal.unscaledValue();
 //		final long bits = Double.doubleToRawLongBits(bigDecimal.doubleValue());
@@ -322,6 +327,11 @@ public final class BigFloatStruct extends BuiltInClassStruct implements FloatStr
 
 		final BigFraction bigFraction = new BigFraction(movedDecimalPlaceBigInteger, BigInteger.TEN.pow(scale));
 		return RationalStruct.valueOf(bigFraction);
+	}
+
+	@Override
+	public FloatStruct floatingPoint(final FloatingPointVisitor<?> floatingPointVisitor) {
+		return floatingPointVisitor.floatingPoint(this);
 	}
 
 	/*
@@ -1040,6 +1050,48 @@ public final class BigFloatStruct extends BuiltInClassStruct implements FloatStr
 				LOGGER.warn("Possible loss of precision.");
 			}
 			return exptFloatRatioNew(base.bigDecimal.doubleValue(), power.bigFraction.doubleValue());
+		}
+	}
+
+	private static final class BigFloatFloatingPointVisitor extends FloatingPointVisitor<BigFloatStruct> {
+
+		private BigFloatFloatingPointVisitor(final BigFloatStruct prototype) {
+			super(prototype);
+		}
+
+		@Override
+		public FloatStruct floatingPoint(final IntIntegerStruct real) {
+			return valueOf(NumberUtils.bigDecimalValue(real.i));
+		}
+
+		@Override
+		public FloatStruct floatingPoint(final LongIntegerStruct real) {
+			return valueOf(NumberUtils.bigDecimalValue(real.l));
+		}
+
+		@Override
+		public FloatStruct floatingPoint(final BigIntegerStruct real) {
+			return valueOf(NumberUtils.bigDecimalValue(real.bigInteger));
+		}
+
+		@Override
+		public FloatStruct floatingPoint(final SingleFloatStruct real) {
+			return valueOf(NumberUtils.bigDecimalValue(real.f));
+		}
+
+		@Override
+		public FloatStruct floatingPoint(final DoubleFloatStruct real) {
+			return valueOf(NumberUtils.bigDecimalValue(real.d));
+		}
+
+		@Override
+		public FloatStruct floatingPoint(final BigFloatStruct real) {
+			return real;
+		}
+
+		@Override
+		public FloatStruct floatingPoint(final RatioStruct real) {
+			return valueOf(NumberUtils.bigDecimalValue(real.bigFraction));
 		}
 	}
 }

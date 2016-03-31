@@ -21,9 +21,11 @@ public interface FloatStruct extends RealStruct {
 	BigDecimal bigDecimalValue();
 
 	@Override
-	default FloatStruct coerceRealToFloat() {
+	default FloatStruct floatingPoint() {
 		return this;
 	}
+
+	FloatingPointVisitor<?> floatingPointVisitor();
 
 	/**
 	 * Computes the three main values that characterize this FloatStruct: the significand, exponent, and sign. The

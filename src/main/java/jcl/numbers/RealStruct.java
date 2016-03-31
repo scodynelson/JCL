@@ -30,12 +30,42 @@ public interface RealStruct extends NumberStruct {
 		return new Apfloat(bigDecimalValue());
 	}
 
-	FloatStruct coerceRealToFloat();
+	FloatStruct floatingPoint();
+
+	default FloatStruct floatingPoint(final FloatStruct prototype) {
+		final FloatingPointVisitor<?> floatingPointVisitor = prototype.floatingPointVisitor();
+		return floatingPoint(floatingPointVisitor);
+	}
+
+	FloatStruct floatingPoint(FloatingPointVisitor<?> floatingPointVisitor);
+
+	abstract class FloatingPointVisitor<S extends FloatStruct> {
+
+		final S prototype;
+
+		FloatingPointVisitor(final S prototype) {
+			this.prototype = prototype;
+		}
+
+		public abstract FloatStruct floatingPoint(IntIntegerStruct real);
+
+		public abstract FloatStruct floatingPoint(LongIntegerStruct real);
+
+		public abstract FloatStruct floatingPoint(BigIntegerStruct real);
+
+		public abstract FloatStruct floatingPoint(SingleFloatStruct real);
+
+		public abstract FloatStruct floatingPoint(DoubleFloatStruct real);
+
+		public abstract FloatStruct floatingPoint(BigFloatStruct real);
+
+		public abstract FloatStruct floatingPoint(RatioStruct real);
+	}
 
 	/**
 	 * {@inheritDoc}
 	 * <p>
-	 * Determines whether or not this RatioStruct is positive by comparing {@link #bigFraction} to {@link
+	 * Determines whether or not this RatioStruct is positive by comparing {@code #bigFraction} to {@link
 	 * BigFraction#ZERO}.
 	 */
 	boolean plusp();
@@ -43,7 +73,7 @@ public interface RealStruct extends NumberStruct {
 	/**
 	 * {@inheritDoc}
 	 * <p>
-	 * Determines whether or not this RatioStruct is negative by comparing {@link #bigFraction} to {@link
+	 * Determines whether or not this RatioStruct is negative by comparing {@code #bigFraction} to {@link
 	 * BigFraction#ZERO}.
 	 */
 	boolean minusp();
@@ -1444,14 +1474,14 @@ public interface RealStruct extends NumberStruct {
 		@Override
 		public NumberStruct expt(final ComplexStruct power) {
 			final RealStruct powerComplexReal = power.getReal();
-			final FloatStruct real = powerComplexReal.coerceRealToFloat();
+			final FloatStruct real = powerComplexReal.floatingPoint();
 
 			final RealStruct powerComplexImaginary = power.getImaginary();
-			final FloatStruct imaginary = powerComplexImaginary.coerceRealToFloat();
+			final FloatStruct imaginary = powerComplexImaginary.floatingPoint();
 
 			final NumberStruct newPowerComplex = ComplexStruct.makeComplexOrReal(real, imaginary);
 
-			final RealStruct newBase = base.coerceRealToFloat();
+			final RealStruct newBase = base.floatingPoint();
 			final NumberStruct logOfNewBase = newBase.log();
 			final NumberStruct powerComplexLogOfNewBaseProduct = newPowerComplex.multiply(logOfNewBase);
 			return powerComplexLogOfNewBaseProduct.exp();

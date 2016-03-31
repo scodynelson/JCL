@@ -679,7 +679,7 @@ public interface RealStruct extends NumberStruct {
 			final BigDecimal bigDecimal1 = number1.bigDecimalValue();
 			final BigDecimal bigDecimal2 = number2.bigDecimalValue();
 			final BigDecimal add = bigDecimal1.add(bigDecimal2);
-			return FloatStruct.valueOf(add);
+			return BigFloatStruct.valueOf(add);
 		}
 	}
 
@@ -718,7 +718,7 @@ public interface RealStruct extends NumberStruct {
 			final BigDecimal bigDecimal1 = number1.bigDecimalValue();
 			final BigDecimal bigDecimal2 = number2.bigDecimalValue();
 			final BigDecimal subtract = bigDecimal1.subtract(bigDecimal2);
-			return FloatStruct.valueOf(subtract);
+			return BigFloatStruct.valueOf(subtract);
 		}
 
 		@Override
@@ -726,7 +726,7 @@ public interface RealStruct extends NumberStruct {
 			final BigDecimal bigDecimal1 = number1.bigDecimalValue();
 			final BigDecimal bigDecimal2 = number2.bigDecimalValue();
 			final BigDecimal subtract = bigDecimal1.subtract(bigDecimal2);
-			return FloatStruct.valueOf(subtract);
+			return BigFloatStruct.valueOf(subtract);
 		}
 
 		@Override
@@ -734,7 +734,7 @@ public interface RealStruct extends NumberStruct {
 			final BigDecimal bigDecimal1 = number1.bigDecimalValue();
 			final BigDecimal bigDecimal2 = number2.bigDecimalValue();
 			final BigDecimal subtract = bigDecimal1.subtract(bigDecimal2);
-			return FloatStruct.valueOf(subtract);
+			return BigFloatStruct.valueOf(subtract);
 		}
 
 		/**
@@ -839,7 +839,7 @@ public interface RealStruct extends NumberStruct {
 				preppedBigDecimal = preppedBigDecimal.setScale(1, RoundingMode.UNNECESSARY);
 			}
 
-			return FloatStruct.valueOf(preppedBigDecimal);
+			return BigFloatStruct.valueOf(preppedBigDecimal);
 		}
 	}
 
@@ -878,7 +878,7 @@ public interface RealStruct extends NumberStruct {
 			final BigDecimal bigDecimal1 = number1.bigDecimalValue();
 			final BigDecimal bigDecimal2 = number2.bigDecimalValue();
 			final BigDecimal divide = bigDecimal1.divide(bigDecimal2, MathContext.DECIMAL128);
-			return FloatStruct.valueOf(divide);
+			return BigFloatStruct.valueOf(divide);
 		}
 
 		@Override
@@ -886,7 +886,7 @@ public interface RealStruct extends NumberStruct {
 			final BigDecimal bigDecimal1 = number1.bigDecimalValue();
 			final BigDecimal bigDecimal2 = number2.bigDecimalValue();
 			final BigDecimal divide = bigDecimal1.divide(bigDecimal2, MathContext.DECIMAL128);
-			return FloatStruct.valueOf(divide);
+			return BigFloatStruct.valueOf(divide);
 		}
 
 		@Override
@@ -894,7 +894,7 @@ public interface RealStruct extends NumberStruct {
 			final BigDecimal bigDecimal1 = number1.bigDecimalValue();
 			final BigDecimal bigDecimal2 = number2.bigDecimalValue();
 			final BigDecimal divide = bigDecimal1.divide(bigDecimal2, MathContext.DECIMAL128);
-			return FloatStruct.valueOf(divide);
+			return BigFloatStruct.valueOf(divide);
 		}
 
 		/**
@@ -1311,7 +1311,7 @@ public interface RealStruct extends NumberStruct {
 
 			final RealStruct quotientReal;
 			if (isQuotientFloat) {
-				quotientReal = FloatStruct.valueOf(quotient);
+				quotientReal = BigFloatStruct.valueOf(quotient);
 			} else {
 				final BigInteger quotientBigInteger = quotient.toBigInteger();
 				quotientReal = IntegerStruct.valueOf(quotientBigInteger);
@@ -1344,7 +1344,7 @@ public interface RealStruct extends NumberStruct {
 				quotientReal = IntegerStruct.valueOf(quotientBigInteger);
 			}
 
-			final FloatStruct remainderFloat = FloatStruct.valueOf(remainder);
+			final FloatStruct remainderFloat = BigFloatStruct.valueOf(remainder);
 			return new QuotientRemainderResult(quotientReal, remainderFloat);
 		}
 
@@ -1363,7 +1363,7 @@ public interface RealStruct extends NumberStruct {
 					floatQuotient = FloatStruct.ZERO;
 				}
 			} else {
-				floatQuotient = FloatStruct.valueOf(quotient);
+				floatQuotient = BigFloatStruct.valueOf(quotient);
 			}
 			return floatQuotient;
 		}
@@ -1425,14 +1425,14 @@ public interface RealStruct extends NumberStruct {
 					final double imagPart = result * StrictMath.sin(y * Math.PI);
 
 					final BigDecimal realBigDecimal = NumberUtils.bigDecimalValue(realPart);
-					final FloatStruct real = FloatStruct.valueOf(realBigDecimal);
+					final FloatStruct real = BigFloatStruct.valueOf(realBigDecimal);
 					final BigDecimal imagBigDecimal = NumberUtils.bigDecimalValue(imagPart);
-					final FloatStruct imaginary = FloatStruct.valueOf(imagBigDecimal);
+					final FloatStruct imaginary = BigFloatStruct.valueOf(imagBigDecimal);
 					return ComplexStruct.makeComplexOrReal(real, imaginary);
 				}
 			}
 			final BigDecimal resultBigDecimal = NumberUtils.bigDecimalValue(result);
-			return FloatStruct.valueOf(resultBigDecimal);
+			return BigFloatStruct.valueOf(resultBigDecimal);
 		}
 
 		private static NumberStruct exptFloatRatio(final RealStruct base, final RealStruct power) {

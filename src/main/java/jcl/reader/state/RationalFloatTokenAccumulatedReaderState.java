@@ -9,12 +9,17 @@ import java.math.MathContext;
 import java.math.RoundingMode;
 import java.util.LinkedList;
 
+import jcl.numbers.BigFloatStruct;
+import jcl.numbers.DoubleFloatStruct;
 import jcl.numbers.FloatStruct;
 import jcl.numbers.NumberStruct;
+import jcl.numbers.SingleFloatStruct;
 import jcl.reader.AttributeType;
 import jcl.reader.TokenAttribute;
 import jcl.reader.TokenBuilder;
+import jcl.types.DoubleFloatType;
 import jcl.types.FloatType;
+import jcl.types.LongFloatType;
 import jcl.util.NumberUtils;
 import org.springframework.stereotype.Component;
 
@@ -70,16 +75,30 @@ public class RationalFloatTokenAccumulatedReaderState extends FloatTokenAccumula
 			return null;
 		}
 
-		BigDecimal bigDecimal = numeratorBigDecimal.divide(denominatorBigDecimal, MathContext.DECIMAL128);
+		final BigDecimal bigDecimal = numeratorBigDecimal.divide(denominatorBigDecimal, MathContext.DECIMAL128);
 
-		final int scale = bigDecimal.scale();
-		if (scale < 1) {
-			bigDecimal = bigDecimal.setScale(1, RoundingMode.HALF_UP);
-		}
-
+		// TODO: Not sure this is the best way to handle rational floats for the read algorithm. Might be a better way.
 		final FloatType floatType = getFloatType(exponentTokenCodePoint);
-		// TODO: support floatType
-//		return FloatStruct.valueOf(floatType, bigDecimal);
-		return FloatStruct.valueOf(bigDecimal);
+		if (DoubleFloatType.INSTANCE.equals(floatType)) {
+			try {
+				final Double d = bigDecimal.doubleValue();
+				return DoubleFloatStruct.valueOf(d);
+			} catch (final NumberFormatException ignore) {
+				return null;
+			}
+		} else if (LongFloatType.INSTANCE.equals(floatType)) {
+			try {
+				return BigFloatStruct.valueOf(bigDecimal);
+			} catch (final NumberFormatException ignore) {
+				return null;
+			}
+		} else {
+			try {
+				final Float f = bigDecimal.floatValue();
+				return SingleFloatStruct.valueOf(f);
+			} catch (final NumberFormatException ignore) {
+				return null;
+			}
+		}
 	}
 }

@@ -60,18 +60,6 @@ public interface FloatStruct extends RealStruct {
 		return SingleFloatStruct.valueOf(apfloat.floatValue());
 	}
 
-	static FloatStruct valueOf(final BigDecimal bigDecimal) {
-		if (canBigDecimalBeFloat(bigDecimal)) {
-			final float f = bigDecimal.floatValue();
-			return SingleFloatStruct.valueOf(f);
-		}
-		if (canBigDecimalBeDouble(bigDecimal)) {
-			final double d = bigDecimal.doubleValue();
-			return DoubleFloatStruct.valueOf(d);
-		}
-		return BigFloatStruct.valueOf(bigDecimal);
-	}
-
 	float floatValue();
 
 	double doubleValue();

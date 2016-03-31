@@ -9,8 +9,11 @@ import java.math.RoundingMode;
 import java.util.LinkedList;
 
 import jcl.characters.CharacterConstants;
+import jcl.numbers.BigFloatStruct;
+import jcl.numbers.DoubleFloatStruct;
 import jcl.numbers.FloatStruct;
 import jcl.numbers.NumberStruct;
+import jcl.numbers.SingleFloatStruct;
 import jcl.reader.AttributeType;
 import jcl.reader.TokenAttribute;
 import jcl.reader.TokenBuilder;
@@ -40,22 +43,29 @@ public class FloatTokenAccumulatedReaderState implements ReaderState {
 		String tokenString = ReaderState.convertTokenAttributesToString(tokenAttributes);
 		tokenString = getFloatTokenString(tokenString, exponentTokenCodePoint);
 
-		BigDecimal bigDecimal;
-		try {
-			bigDecimal = NumberUtils.bigDecimalValue(tokenString);
-		} catch (final NumberFormatException ignore) {
-			return null;
-		}
-
-		final int scale = bigDecimal.scale();
-		if (scale < 1) {
-			bigDecimal = bigDecimal.setScale(1, RoundingMode.HALF_UP);
-		}
-
 		final FloatType floatType = getFloatType(exponentTokenCodePoint);
-		// TODO: support floatType
-//		return FloatStruct.valueOf(floatType, bigDecimal);
-		return FloatStruct.valueOf(bigDecimal);
+		if (DoubleFloatType.INSTANCE.equals(floatType)) {
+			try {
+				final Double d = Double.parseDouble(tokenString);
+				return DoubleFloatStruct.valueOf(d);
+			} catch (final NumberFormatException ignore) {
+				return null;
+			}
+		} else if (LongFloatType.INSTANCE.equals(floatType)) {
+			try {
+				final BigDecimal bigDecimal = NumberUtils.bigDecimalValue(tokenString);
+				return BigFloatStruct.valueOf(bigDecimal);
+			} catch (final NumberFormatException ignore) {
+				return null;
+			}
+		} else {
+			try {
+				final Float f = Float.parseFloat(tokenString);
+				return SingleFloatStruct.valueOf(f);
+			} catch (final NumberFormatException ignore) {
+				return null;
+			}
+		}
 	}
 
 	/**

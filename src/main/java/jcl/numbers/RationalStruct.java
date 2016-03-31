@@ -405,7 +405,7 @@ public interface RationalStruct extends RealStruct {
 
 			final RealStruct quotientReal;
 			if (isFloatResult) {
-				quotientReal = FloatStruct.valueOf(quotient);
+				quotientReal = BigFloatStruct.valueOf(quotient);
 			} else {
 				quotientReal = IntegerStruct.valueOf(quotientBigInteger);
 			}

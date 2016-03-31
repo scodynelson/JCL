@@ -51,7 +51,7 @@ public final class BigFloatStruct extends BuiltInClassStruct implements FloatStr
 	/**
 	 * The floating-point precision of a BigFloatStruct object.
 	 */
-	private static final int FLOAT_PRECISION = 113;
+	private static final int QUADRUPLE_PRECISION = 113;
 
 	/**
 	 * The internal {@link BigDecimal} containing the BigFloatStruct contents.
@@ -114,12 +114,14 @@ public final class BigFloatStruct extends BuiltInClassStruct implements FloatStr
 		final DecodedQuadruple decodedQuadruple = getDecodedQuadruple(bits);
 
 		final BigInteger mantissa = decodedQuadruple.getMantissa();
-		final BigInteger expt = ArithmeticUtils.pow(BigInteger.valueOf(2), FLOAT_PRECISION);
+		final BigInteger expt = ArithmeticUtils.pow(BigInteger.valueOf(2), QUADRUPLE_PRECISION);
 		final BigInteger significand = mantissa.divide(expt);
 		final BigFloatStruct significandFloat = new BigFloatStruct(NumberUtils.bigDecimalValue(significand));
 
 		final BigInteger storedExponent = decodedQuadruple.getStoredExponent();
-		final BigInteger exponent = storedExponent.subtract(BigInteger.valueOf(16495)).add(BigInteger.valueOf(FLOAT_PRECISION));
+		// 16383 + 112 = 16495
+		final BigInteger exponent = storedExponent.subtract(BigInteger.valueOf(16495))
+		                                          .add(BigInteger.valueOf(QUADRUPLE_PRECISION));
 		final IntegerStruct exponentInteger = IntegerStruct.valueOf(exponent);
 
 		final int sign = decodedQuadruple.getSign();
@@ -131,13 +133,13 @@ public final class BigFloatStruct extends BuiltInClassStruct implements FloatStr
 	@Override
 	public DecodeFloatResult integerDecodeFloat() {
 		final BigInteger bits = bigDecimal.unscaledValue();
-//		final long bits = Double.doubleToRawLongBits(doubleValue());
 		final DecodedQuadruple decodedQuadruple = getDecodedQuadruple(bits);
 
 		final BigInteger mantissa = decodedQuadruple.getMantissa();
 		final IntegerStruct significandInteger = IntegerStruct.valueOf(mantissa);
 
 		final BigInteger storedExponent = decodedQuadruple.getStoredExponent();
+		// 16383 + 112 = 16495
 		final BigInteger exponent = storedExponent.subtract(BigInteger.valueOf(16495));
 		final IntegerStruct exponentInteger = IntegerStruct.valueOf(exponent);
 
@@ -147,58 +149,48 @@ public final class BigFloatStruct extends BuiltInClassStruct implements FloatStr
 		return new DecodeFloatResult(significandInteger, exponentInteger, signInteger);
 	}
 
-	/*
-	 * http://en.wikipedia.org/wiki/Quadruple-precision_floating-point_format
-	 */
 	@Override
 	public IntegerStruct floatPrecision() {
-		return IntegerStruct.valueOf(FLOAT_PRECISION);
+		return IntegerStruct.valueOf(QUADRUPLE_PRECISION);
 	}
 
 	@Override
 	public FloatStruct floatSign() {
-		return floatSign(ONE);
-	}
-
-	@Override
-	public FloatStruct floatSign(final FloatStruct float2) {
-		// TODO: Visitor implementations??
-		if (minusp()) {
-			if (float2.minusp()) {
-				return float2;
-			} else {
-				final BigDecimal subtract = BigDecimal.ZERO.subtract(float2.getBigDecimal());
-				return new BigFloatStruct(subtract);
-			}
-		} else {
-			return (BigFloatStruct) float2.abs();
-		}
+		// TODO: right?
+		final BigInteger bits = bigDecimal.unscaledValue();
+		return (bits.compareTo(BigInteger.ZERO) < 0) ? MINUS_ONE : ONE;
 	}
 
 	/**
-	 * Decodes the float by the provided {@code int} bits into its sign, exponent, and mantissa according to the
-	 * details in the JVM spec section 4.4.5.
-	 * TODO: check spec section
+	 * Decodes the bigDecimal by the provided {@link BigInteger} bits into its sign, exponent, and mantissa.
 	 *
 	 * @param bits
-	 * 		the {@code int} bits representing the {@code float} value
+	 * 		the {@link BigInteger} bits representing the {@link BigDecimal} value
 	 *
 	 * @return the {@link DecodedQuadruple} wrapping the decoded sign, exponent, and mantissa values
-	 *
-	 * @see <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Float.html">Java Float</a>
 	 */
 	private static DecodedQuadruple getDecodedQuadruple(final BigInteger bits) {
 		final int sign = BigInteger.ZERO.equals(bits.shiftRight(127)) ? 1 : -1;
-//		 16382 == exponent max
-		final BigInteger exponent = bits.shiftRight(112).and(BigInteger.valueOf(16382));
+		final BigInteger exponent = bits.shiftRight(112)
+		                                .and(BigInteger.valueOf(0x7fffL));
 		final BigInteger mantissa;
 		if (BigInteger.ZERO.equals(exponent)) {
-			final BigInteger twoToOneTwelveMinusOne = new BigInteger("5192296858534827628530496329220095");
-			mantissa = bits.and(twoToOneTwelveMinusOne).shiftLeft(1);
+			final BigInteger twoToOneTwelveMinusOne =
+					BigInteger.valueOf(2)
+					          .pow(112)
+					          .subtract(BigInteger.ONE);
+			mantissa = bits.and(twoToOneTwelveMinusOne)
+			               .shiftLeft(1);
 		} else {
-			final BigInteger twoToOneTwelveMinusOne = new BigInteger("5192296858534827628530496329220095");
-			final BigInteger twoToOneTwelve = new BigInteger("5192296858534827628530496329220096");
-			mantissa = bits.and(twoToOneTwelveMinusOne).or(twoToOneTwelve);
+			final BigInteger twoToOneTwelveMinusOne =
+					BigInteger.valueOf(2)
+					          .pow(112)
+					          .subtract(BigInteger.ONE);
+			final BigInteger twoToOneTwelve =
+					BigInteger.valueOf(2)
+					          .pow(112);
+			mantissa = bits.and(twoToOneTwelveMinusOne)
+			               .or(twoToOneTwelve);
 		}
 		return new DecodedQuadruple(mantissa, exponent, sign);
 	}
@@ -388,7 +380,6 @@ public final class BigFloatStruct extends BuiltInClassStruct implements FloatStr
 
 	@Override
 	public NumberStruct expt(final NumberStruct power) {
-		// TODO: customized visitor???
 		if (power.zerop()) {
 			return ONE;
 		}
@@ -404,6 +395,11 @@ public final class BigFloatStruct extends BuiltInClassStruct implements FloatStr
 	@Override
 	public NumberStruct expt(final ExptVisitor<?> exptVisitor) {
 		return exptVisitor.expt(this);
+	}
+
+	@Override
+	public ExptVisitor<?> exptVisitor() {
+		return new BigFloatExptVisitor(this);
 	}
 
 	@Override
@@ -963,6 +959,87 @@ public final class BigFloatStruct extends BuiltInClassStruct implements FloatStr
 			final BigDecimal bigDecimal1 = real1.bigDecimal;
 			final BigDecimal bigDecimal2 = real2.bigDecimal;
 			return bigDecimal1.compareTo(bigDecimal2) >= 0;
+		}
+	}
+
+	/**
+	 * {@link RealStruct.RealExptVisitor} for computing exponential function results for {@link BigFloatStruct}s.
+	 */
+	private static final class BigFloatExptVisitor extends RealStruct.RealExptVisitor<BigFloatStruct> {
+		// TODO: fix
+
+		/**
+		 * Private constructor to make a new instance of an BigFloatExptVisitor with the provided {@link
+		 * BigFloatStruct}.
+		 *
+		 * @param base
+		 * 		the base argument in the exponential operation
+		 */
+		private BigFloatExptVisitor(final BigFloatStruct base) {
+			super(base);
+		}
+
+		@Override
+		public NumberStruct expt(final IntIntegerStruct power) {
+			// TODO: more efficient?
+			if (LOGGER.isWarnEnabled()) {
+				LOGGER.warn("Possible loss of precision.");
+			}
+			return exptFloatRatioNew(base.bigDecimal.doubleValue(), power.i);
+		}
+
+		@Override
+		public NumberStruct expt(final LongIntegerStruct power) {
+			// TODO: more efficient?
+			if (LOGGER.isWarnEnabled()) {
+				LOGGER.warn("Possible loss of precision.");
+			}
+			return exptFloatRatioNew(base.bigDecimal.doubleValue(), power.l);
+		}
+
+		@Override
+		public NumberStruct expt(final BigIntegerStruct power) {
+			// TODO: more efficient?
+			if (LOGGER.isWarnEnabled()) {
+				LOGGER.warn("Possible loss of precision.");
+			}
+			return exptFloatRatioNew(base.bigDecimal.doubleValue(), power.bigInteger.doubleValue());
+		}
+
+		@Override
+		public NumberStruct expt(final SingleFloatStruct power) {
+			// TODO: more efficient?
+			if (LOGGER.isWarnEnabled()) {
+				LOGGER.warn("Possible loss of precision.");
+			}
+			return exptFloatRatioNew(base.bigDecimal.doubleValue(), power.f);
+		}
+
+		@Override
+		public NumberStruct expt(final DoubleFloatStruct power) {
+			// TODO: more efficient?
+			if (LOGGER.isWarnEnabled()) {
+				LOGGER.warn("Possible loss of precision.");
+			}
+			return exptFloatRatioNew(base.bigDecimal.doubleValue(), power.d);
+		}
+
+		@Override
+		public NumberStruct expt(final BigFloatStruct power) {
+			// TODO: more efficient?
+			if (LOGGER.isWarnEnabled()) {
+				LOGGER.warn("Possible loss of precision.");
+			}
+			return exptFloatRatioNew(base.bigDecimal.doubleValue(), power.doubleValue());
+		}
+
+		@Override
+		public NumberStruct expt(final RatioStruct power) {
+			// TODO: more efficient?
+			if (LOGGER.isWarnEnabled()) {
+				LOGGER.warn("Possible loss of precision.");
+			}
+			return exptFloatRatioNew(base.bigDecimal.doubleValue(), power.bigFraction.doubleValue());
 		}
 	}
 }

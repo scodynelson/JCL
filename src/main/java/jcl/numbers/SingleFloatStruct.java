@@ -103,6 +103,7 @@ public final class SingleFloatStruct extends BuiltInClassStruct implements Float
 		final SingleFloatStruct significandFloat = new SingleFloatStruct(significand);
 
 		final int storedExponent = decodedFloat.getStoredExponent();
+		// 127 + 23 = 150
 		final int exponent = (storedExponent - 150) + FLOAT_PRECISION;
 		final IntegerStruct exponentInteger = IntegerStruct.valueOf(exponent);
 
@@ -121,6 +122,7 @@ public final class SingleFloatStruct extends BuiltInClassStruct implements Float
 		final IntegerStruct significandInteger = IntegerStruct.valueOf(mantissa);
 
 		final int storedExponent = decodedFloat.getStoredExponent();
+		// 127 + 23 = 150
 		final int exponent = storedExponent - 150;
 		final IntegerStruct exponentInteger = IntegerStruct.valueOf(exponent);
 
@@ -137,22 +139,8 @@ public final class SingleFloatStruct extends BuiltInClassStruct implements Float
 
 	@Override
 	public FloatStruct floatSign() {
-		return floatSign(ONE);
-	}
-
-	@Override
-	public FloatStruct floatSign(final FloatStruct float2) {
-		// TODO: Visitor implementations??
-		if (minusp()) {
-			if (float2.minusp()) {
-				return float2;
-			} else {
-				final BigDecimal subtract = BigDecimal.ZERO.subtract(float2.getBigDecimal());
-				return new SingleFloatStruct(subtract.floatValue());
-			}
-		} else {
-			return (SingleFloatStruct) float2.abs();
-		}
+		final int bits = Float.floatToRawIntBits(f);
+		return (bits < 0) ? MINUS_ONE : ONE;
 	}
 
 	/**
@@ -357,7 +345,6 @@ public final class SingleFloatStruct extends BuiltInClassStruct implements Float
 
 	@Override
 	public NumberStruct expt(final NumberStruct power) {
-		// TODO: customized visitor???
 		if (power.zerop()) {
 			return ONE;
 		}
@@ -373,6 +360,11 @@ public final class SingleFloatStruct extends BuiltInClassStruct implements Float
 	@Override
 	public NumberStruct expt(final ExptVisitor<?> exptVisitor) {
 		return exptVisitor.expt(this);
+	}
+
+	@Override
+	public ExptVisitor<?> exptVisitor() {
+		return new SingleFloatExptVisitor(this);
 	}
 
 	@Override
@@ -888,6 +880,67 @@ public final class SingleFloatStruct extends BuiltInClassStruct implements Float
 			final BigDecimal bigDecimal1 = real1.bigDecimalValue();
 			final BigDecimal bigDecimal2 = real2.bigDecimal;
 			return bigDecimal1.compareTo(bigDecimal2) >= 0;
+		}
+	}
+
+	/**
+	 * {@link RealStruct.RealExptVisitor} for computing exponential function results for {@link SingleFloatStruct}s.
+	 */
+	private static final class SingleFloatExptVisitor extends RealStruct.RealExptVisitor<SingleFloatStruct> {
+		// TODO: fix
+
+		/**
+		 * Private constructor to make a new instance of an SingleFloatExptVisitor with the provided {@link
+		 * SingleFloatStruct}.
+		 *
+		 * @param base
+		 * 		the base argument in the exponential operation
+		 */
+		private SingleFloatExptVisitor(final SingleFloatStruct base) {
+			super(base);
+		}
+
+		@Override
+		public NumberStruct expt(final IntIntegerStruct power) {
+			// TODO: more efficient?
+			return exptFloatRatioNew(base.f, power.i);
+		}
+
+		@Override
+		@SuppressWarnings("deprecation")
+		public NumberStruct expt(final LongIntegerStruct power) {
+			// TODO: more efficient?
+			return exptFloatRatioNew(base.f, power.l);
+		}
+
+		@Override
+		public NumberStruct expt(final BigIntegerStruct power) {
+			// TODO: more efficient?
+			return exptFloatRatioNew(base.f, power.bigInteger.doubleValue());
+		}
+
+		@Override
+		public NumberStruct expt(final SingleFloatStruct power) {
+			// TODO: more efficient?
+			return exptFloatRatioNew(base.f, power.f);
+		}
+
+		@Override
+		public NumberStruct expt(final DoubleFloatStruct power) {
+			// TODO: more efficient?
+			return exptFloatRatioNew(base.f, power.d);
+		}
+
+		@Override
+		public NumberStruct expt(final BigFloatStruct power) {
+			// TODO: more efficient?
+			return exptFloatRatioNew(base.f, power.doubleValue());
+		}
+
+		@Override
+		public NumberStruct expt(final RatioStruct power) {
+			// TODO: more efficient?
+			return exptFloatRatioNew(base.f, power.bigFraction.doubleValue());
 		}
 	}
 }

@@ -9,10 +9,10 @@ import jcl.functions.CommonLispBuiltInFunctionStruct;
 import jcl.functions.parameterdsl.Arguments;
 import jcl.functions.parameterdsl.Parameters;
 import jcl.numbers.ComplexStruct;
-import jcl.numbers.FloatStruct;
 import jcl.numbers.IntegerStruct;
 import jcl.numbers.RationalStruct;
 import jcl.numbers.RealStruct;
+import jcl.numbers.SingleFloatStruct;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -46,7 +46,7 @@ public final class ComplexFunction extends CommonLispBuiltInFunctionStruct {
 			if (real instanceof RationalStruct) {
 				return real;
 			} else {
-				return new ComplexStruct(real, FloatStruct.ZERO);
+				return new ComplexStruct(real, SingleFloatStruct.ZERO);
 			}
 		}
 	}

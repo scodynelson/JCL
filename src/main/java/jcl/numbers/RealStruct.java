@@ -1353,14 +1353,14 @@ public interface RealStruct extends NumberStruct {
 			if (BigDecimal.ZERO.compareTo(quotient) == 0) {
 				if (real.minusp()) {
 					if (divisor.minusp()) {
-						floatQuotient = FloatStruct.ZERO;
+						floatQuotient = SingleFloatStruct.ZERO;
 					} else {
-						floatQuotient = FloatStruct.MINUS_ZERO;
+						floatQuotient = SingleFloatStruct.MINUS_ZERO;
 					}
 				} else if (divisor.minusp()) {
-					floatQuotient = FloatStruct.MINUS_ZERO;
+					floatQuotient = SingleFloatStruct.MINUS_ZERO;
 				} else {
-					floatQuotient = FloatStruct.ZERO;
+					floatQuotient = SingleFloatStruct.ZERO;
 				}
 			} else {
 				floatQuotient = BigFloatStruct.valueOf(quotient);

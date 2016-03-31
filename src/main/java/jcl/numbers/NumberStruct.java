@@ -287,7 +287,7 @@ public interface NumberStruct extends LispStruct {
 	 * Computes the exponential function result for this RatioStruct as this {@code base} and the provided {@link
 	 * NumberStruct} as the {@code power}. If {@code power} is '0' and power is an {@link IntegerStruct}, {@link
 	 * IntegerStruct#ONE} is returned. If {@code power} is '0' and power is not an {@link IntegerStruct}, {@link
-	 * FloatStruct#ONE} is returned. If this RatioStruct is either '0' or '1', {@code this} is returned.
+	 * SingleFloatStruct#ONE} is returned. If this RatioStruct is either '0' or '1', {@code this} is returned.
 	 */
 	default NumberStruct expt(final NumberStruct power) {
 //		final Apcomplex baseApcomplex = apcomplexValue();

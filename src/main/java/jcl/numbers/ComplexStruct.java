@@ -39,7 +39,7 @@ public class ComplexStruct extends BuiltInClassStruct implements NumberStruct {
 	/**
 	 * {@link ComplexStruct} constant representing 0.0.
 	 */
-	public static final ComplexStruct ZERO_FLOAT = new ComplexStruct(FloatStruct.ZERO, FloatStruct.ZERO);
+	public static final ComplexStruct ZERO_FLOAT = new ComplexStruct(SingleFloatStruct.ZERO, SingleFloatStruct.ZERO);
 
 	/**
 	 * {@link ComplexStruct} constant representing 1.
@@ -49,7 +49,7 @@ public class ComplexStruct extends BuiltInClassStruct implements NumberStruct {
 	/**
 	 * {@link ComplexStruct} constant representing 1.0.
 	 */
-	public static final ComplexStruct ONE_FLOAT = new ComplexStruct(FloatStruct.ONE, FloatStruct.ZERO);
+	public static final ComplexStruct ONE_FLOAT = new ComplexStruct(SingleFloatStruct.ONE, SingleFloatStruct.ZERO);
 
 	/**
 	 * The {@link RealStruct} that comprises the real value of the complex.
@@ -368,7 +368,7 @@ public class ComplexStruct extends BuiltInClassStruct implements NumberStruct {
 	@Override
 	public NumberStruct exp() {
 		if (real.zerop() && imaginary.zerop()) {
-			return FloatStruct.ONE;
+			return SingleFloatStruct.ONE;
 		}
 
 		final Apcomplex apcomplex = apcomplexValue();
@@ -408,7 +408,7 @@ public class ComplexStruct extends BuiltInClassStruct implements NumberStruct {
 	@Override
 	public NumberStruct log() {
 		if (isEqualTo(ONE) || isEqualTo(ONE_FLOAT)) {
-			return FloatStruct.ZERO;
+			return SingleFloatStruct.ZERO;
 		}
 
 		final Apcomplex apcomplex = apcomplexValue();

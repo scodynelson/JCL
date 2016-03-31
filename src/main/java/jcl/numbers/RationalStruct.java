@@ -176,7 +176,7 @@ public interface RationalStruct extends RealStruct {
 			if (power instanceof IntegerStruct) {
 				return IntegerStruct.ONE;
 			}
-			return FloatStruct.ONE;
+			return SingleFloatStruct.ONE;
 		}
 
 		if (zerop() || isEqualTo(IntegerStruct.ONE)) {

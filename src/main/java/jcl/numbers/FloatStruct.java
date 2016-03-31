@@ -7,7 +7,6 @@ package jcl.numbers;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
-import jcl.util.NumberUtils;
 import org.apfloat.Apfloat;
 
 /**
@@ -15,61 +14,11 @@ import org.apfloat.Apfloat;
  */
 public interface FloatStruct extends RealStruct {
 
-	/**
-	 * {@link FloatStruct} constant representing 0.0.
-	 */
-	FloatStruct ZERO = SingleFloatStruct.ZERO;
-
-	/**
-	 * {@link FloatStruct} constant representing -0.0.
-	 */
-	FloatStruct MINUS_ZERO = SingleFloatStruct.MINUS_ZERO;
-
-	/**
-	 * {@link FloatStruct} constant representing 1.0.
-	 */
-	FloatStruct ONE = SingleFloatStruct.ONE;
-
-	/**
-	 * {@link FloatStruct} constant representing -1.0.
-	 */
-	FloatStruct MINUS_ONE = SingleFloatStruct.MINUS_ONE;
-
-	static boolean canDoubleBeFloat(final Double d) {
-		final Float f = new Float(d);
-		if (f.isInfinite()) {
-			return false;
-		}
-		final BigDecimal floatBigDecimal = NumberUtils.bigDecimalValue(f);
-		final BigDecimal doubleBigDecimal = NumberUtils.bigDecimalValue(d);
-		return doubleBigDecimal.compareTo(floatBigDecimal) == 0;
-	}
-
-	static boolean canBigDecimalBeDouble(final BigDecimal bigDecimal) {
-		final double d = bigDecimal.doubleValue();
-		final BigDecimal doubleBigDecimal = NumberUtils.bigDecimalValue(d);
-		return doubleBigDecimal.compareTo(bigDecimal) == 0;
-	}
-
-	static boolean canBigDecimalBeFloat(final BigDecimal bigDecimal) {
-		return canBigDecimalBeDouble(bigDecimal) && canDoubleBeFloat(bigDecimal.doubleValue());
-	}
-
-	@Deprecated
-	static FloatStruct valueOf(final Apfloat apfloat) {
-		return SingleFloatStruct.valueOf(apfloat.floatValue());
-	}
-
 	float floatValue();
 
 	double doubleValue();
 
 	BigDecimal bigDecimalValue();
-
-	@Deprecated
-	default BigDecimal getBigDecimal() {
-		return bigDecimalValue();
-	}
 
 	@Override
 	default FloatStruct coerceRealToFloat() {
@@ -115,32 +64,15 @@ public interface FloatStruct extends RealStruct {
 	FloatStruct floatSign();
 
 	// TODO: Visitor implementations??
-	FloatStruct floatSign(final FloatStruct float2);
-
-	class DecodedDoubleRaw {
-
-		private final long mantissa;
-
-		private final long storedExponent;
-
-		private final long sign;
-
-		DecodedDoubleRaw(final long mantissa, final long storedExponent, final long sign) {
-			this.mantissa = mantissa;
-			this.storedExponent = storedExponent;
-			this.sign = sign;
-		}
-
-		long getMantissa() {
-			return mantissa;
-		}
-
-		long getStoredExponent() {
-			return storedExponent;
-		}
-
-		long getSign() {
-			return sign;
+	default FloatStruct floatSign(final FloatStruct float2) {
+		if (minusp()) {
+			if (float2.minusp()) {
+				return float2;
+			} else {
+				return (FloatStruct) float2.negation();
+			}
+		} else {
+			return (FloatStruct) float2.abs();
 		}
 	}
 
@@ -421,5 +353,19 @@ public interface FloatStruct extends RealStruct {
 		                                                 final boolean isQuotientFloat) {
 			return floatQuotientRemainder(divisor, roundingMode, isQuotientFloat);
 		}
+	}
+
+	/*
+		Deprecated
+	 */
+
+	@Deprecated
+	static FloatStruct valueOf(final Apfloat apfloat) {
+		return SingleFloatStruct.valueOf(apfloat.floatValue());
+	}
+
+	@Deprecated
+	default BigDecimal getBigDecimal() {
+		return bigDecimalValue();
 	}
 }

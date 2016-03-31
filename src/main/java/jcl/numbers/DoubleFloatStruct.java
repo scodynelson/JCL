@@ -113,6 +113,7 @@ public final class DoubleFloatStruct extends BuiltInClassStruct implements Float
 		final DoubleFloatStruct significandFloat = new DoubleFloatStruct(significand);
 
 		final long storedExponent = decodedDouble.getStoredExponent();
+		// 1023 + 52 = 1075
 		final long exponent = (storedExponent - 1075) + DOUBLE_PRECISION;
 		final IntegerStruct exponentInteger = IntegerStruct.valueOf(exponent);
 
@@ -131,6 +132,7 @@ public final class DoubleFloatStruct extends BuiltInClassStruct implements Float
 		final IntegerStruct significandInteger = IntegerStruct.valueOf(mantissa);
 
 		final long storedExponent = decodedDouble.getStoredExponent();
+		// 1023 + 52 = 1075
 		final long exponent = storedExponent - 1075;
 		final IntegerStruct exponentInteger = IntegerStruct.valueOf(exponent);
 
@@ -147,22 +149,8 @@ public final class DoubleFloatStruct extends BuiltInClassStruct implements Float
 
 	@Override
 	public FloatStruct floatSign() {
-		return floatSign(ONE);
-	}
-
-	@Override
-	public FloatStruct floatSign(final FloatStruct float2) {
-		// TODO: Visitor implementations??
-		if (minusp()) {
-			if (float2.minusp()) {
-				return float2;
-			} else {
-				final BigDecimal subtract = BigDecimal.ZERO.subtract(float2.getBigDecimal());
-				return new DoubleFloatStruct(subtract.doubleValue());
-			}
-		} else {
-			return (DoubleFloatStruct) float2.abs();
-		}
+		final long bits = Double.doubleToRawLongBits(d);
+		return (bits < 0) ? MINUS_ONE : ONE;
 	}
 
 	/**
@@ -367,7 +355,6 @@ public final class DoubleFloatStruct extends BuiltInClassStruct implements Float
 
 	@Override
 	public NumberStruct expt(final NumberStruct power) {
-		// TODO: customized visitor???
 		if (power.zerop()) {
 			return ONE;
 		}
@@ -383,6 +370,11 @@ public final class DoubleFloatStruct extends BuiltInClassStruct implements Float
 	@Override
 	public NumberStruct expt(final ExptVisitor<?> exptVisitor) {
 		return exptVisitor.expt(this);
+	}
+
+	@Override
+	public ExptVisitor<?> exptVisitor() {
+		return new DoubleFloatExptVisitor(this);
 	}
 
 	@Override
@@ -898,6 +890,67 @@ public final class DoubleFloatStruct extends BuiltInClassStruct implements Float
 			final BigDecimal bigDecimal1 = real1.bigDecimalValue();
 			final BigDecimal bigDecimal2 = real2.bigDecimal;
 			return bigDecimal1.compareTo(bigDecimal2) >= 0;
+		}
+	}
+
+	/**
+	 * {@link RealStruct.RealExptVisitor} for computing exponential function results for {@link DoubleFloatStruct}s.
+	 */
+	private static final class DoubleFloatExptVisitor extends RealStruct.RealExptVisitor<DoubleFloatStruct> {
+		// TODO: fix
+
+		/**
+		 * Private constructor to make a new instance of an DoubleFloatExptVisitor with the provided {@link
+		 * DoubleFloatStruct}.
+		 *
+		 * @param base
+		 * 		the base argument in the exponential operation
+		 */
+		private DoubleFloatExptVisitor(final DoubleFloatStruct base) {
+			super(base);
+		}
+
+		@Override
+		public NumberStruct expt(final IntIntegerStruct power) {
+			// TODO: more efficient?
+			return exptFloatRatioNew(base.d, power.i);
+		}
+
+		@Override
+		@SuppressWarnings("deprecation")
+		public NumberStruct expt(final LongIntegerStruct power) {
+			// TODO: more efficient?
+			return exptFloatRatioNew(base.d, power.l);
+		}
+
+		@Override
+		public NumberStruct expt(final BigIntegerStruct power) {
+			// TODO: more efficient?
+			return exptFloatRatioNew(base.d, power.bigInteger.doubleValue());
+		}
+
+		@Override
+		public NumberStruct expt(final SingleFloatStruct power) {
+			// TODO: more efficient?
+			return exptFloatRatioNew(base.d, power.f);
+		}
+
+		@Override
+		public NumberStruct expt(final DoubleFloatStruct power) {
+			// TODO: more efficient?
+			return exptFloatRatioNew(base.d, power.d);
+		}
+
+		@Override
+		public NumberStruct expt(final BigFloatStruct power) {
+			// TODO: more efficient?
+			return exptFloatRatioNew(base.d, power.doubleValue());
+		}
+
+		@Override
+		public NumberStruct expt(final RatioStruct power) {
+			// TODO: more efficient?
+			return exptFloatRatioNew(base.d, power.bigFraction.doubleValue());
 		}
 	}
 }

@@ -29,10 +29,15 @@ import jcl.functions.FunctionStruct;
 import jcl.functions.expanders.SymbolMacroExpander;
 import jcl.lists.ConsStruct;
 import jcl.lists.ListStruct;
+import jcl.numbers.BigFloatStruct;
+import jcl.numbers.BigIntegerStruct;
 import jcl.numbers.ComplexStruct;
-import jcl.numbers.FloatStruct;
+import jcl.numbers.DoubleFloatStruct;
+import jcl.numbers.IntIntegerStruct;
 import jcl.numbers.IntegerStruct;
+import jcl.numbers.LongIntegerStruct;
 import jcl.numbers.RatioStruct;
+import jcl.numbers.SingleFloatStruct;
 import jcl.packages.PackageStruct;
 import jcl.pathnames.PathnameStruct;
 import jcl.symbols.NILStruct;
@@ -126,14 +131,34 @@ public class TestGround {
 		return CharacterStruct.valueOf(66544564);
 	}
 
-	private Object floatGen() {
-		final BigDecimal bigDecimal = new BigDecimal("12345.0");
-		return FloatStruct.valueOf(bigDecimal);
+	private Object singleFloatGen() {
+		final float f = 12345.0F;
+		return SingleFloatStruct.valueOf(f);
 	}
 
-	private Object integerGen() {
+	private Object doubleFloatGen() {
+		final double d = 12345.0D;
+		return DoubleFloatStruct.valueOf(d);
+	}
+
+	private Object bigFloatGen() {
+		final BigDecimal bigDecimal = new BigDecimal("12345.0");
+		return BigFloatStruct.valueOf(bigDecimal);
+	}
+
+	private Object intIntegerGen() {
+		final int i = 12345;
+		return IntIntegerStruct.valueOf(i);
+	}
+
+	private Object longIntegerGen() {
+		final long l = 12345L;
+		return LongIntegerStruct.valueOf(l);
+	}
+
+	private Object bigIntegerGen() {
 		final BigInteger bigInteger = new BigInteger("12345");
-		return IntegerStruct.valueOf(bigInteger);
+		return BigIntegerStruct.valueOf(bigInteger);
 	}
 
 	private Object ratioGen() {

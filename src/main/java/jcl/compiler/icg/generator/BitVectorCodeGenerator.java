@@ -9,6 +9,7 @@ import java.util.List;
 import jcl.arrays.BitVectorStruct;
 import jcl.compiler.icg.CodeGenerator;
 import jcl.compiler.icg.GeneratorState;
+import jcl.compiler.icg.IntermediateCodeGenerator;
 import jcl.compiler.icg.JavaMethodBuilder;
 import jcl.numbers.IntegerStruct;
 import org.objectweb.asm.MethodVisitor;
@@ -37,11 +38,11 @@ class BitVectorCodeGenerator implements CodeGenerator<BitVectorStruct> {
 			= CodeGenerators.getConstructorDescription(BitVectorStruct.class, List.class);
 
 	/**
-	 * {@link IntegerCodeGenerator} used for generating the {@link BitVectorStruct} {@link IntegerStruct} content
+	 * {@link IntermediateCodeGenerator} used for generating the {@link BitVectorStruct} {@link IntegerStruct} content
 	 * values.
 	 */
 	@Autowired
-	private IntegerCodeGenerator integerCodeGenerator;
+	private IntermediateCodeGenerator codeGenerator;
 
 	/**
 	 * {@inheritDoc}
@@ -77,7 +78,7 @@ class BitVectorCodeGenerator implements CodeGenerator<BitVectorStruct> {
 
 		final List<IntegerStruct> contents = input.getContents();
 		for (final IntegerStruct content : contents) {
-			integerCodeGenerator.generate(content, generatorState);
+			codeGenerator.generate(content, generatorState);
 			mv.visitVarInsn(Opcodes.ASTORE, contentStore);
 
 			mv.visitVarInsn(Opcodes.ALOAD, contentsStore);

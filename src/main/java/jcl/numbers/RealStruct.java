@@ -6,7 +6,6 @@ package jcl.numbers;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.math.MathContext;
 import java.math.RoundingMode;
 import java.util.List;
 
@@ -21,67 +20,6 @@ import org.apfloat.ApfloatMath;
  * The {@link RealStruct} is the object representation of a Lisp 'real' type.
  */
 public interface RealStruct extends NumberStruct {
-
-	@Deprecated
-	BigDecimal bigDecimalValue();
-
-	@Deprecated
-	default Apfloat apfloatValue() {
-		return new Apfloat(bigDecimalValue());
-	}
-
-	FloatStruct floatingPoint();
-
-	default FloatStruct floatingPoint(final FloatStruct prototype) {
-		final FloatingPointVisitor<?> floatingPointVisitor = prototype.floatingPointVisitor();
-		return floatingPoint(floatingPointVisitor);
-	}
-
-	FloatStruct floatingPoint(FloatingPointVisitor<?> floatingPointVisitor);
-
-	abstract class FloatingPointVisitor<S extends FloatStruct> {
-
-		final S prototype;
-
-		FloatingPointVisitor(final S prototype) {
-			this.prototype = prototype;
-		}
-
-		public abstract FloatStruct floatingPoint(IntIntegerStruct real);
-
-		public abstract FloatStruct floatingPoint(LongIntegerStruct real);
-
-		public abstract FloatStruct floatingPoint(BigIntegerStruct real);
-
-		public abstract FloatStruct floatingPoint(SingleFloatStruct real);
-
-		public abstract FloatStruct floatingPoint(DoubleFloatStruct real);
-
-		public abstract FloatStruct floatingPoint(BigFloatStruct real);
-
-		public abstract FloatStruct floatingPoint(RatioStruct real);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * <p>
-	 * Determines whether or not this RatioStruct is positive by comparing {@code #bigFraction} to {@link
-	 * BigFraction#ZERO}.
-	 */
-	boolean plusp();
-
-	/**
-	 * {@inheritDoc}
-	 * <p>
-	 * Determines whether or not this RatioStruct is negative by comparing {@code #bigFraction} to {@link
-	 * BigFraction#ZERO}.
-	 */
-	boolean minusp();
-
-	@Override
-	default NumberStruct.EqualToVisitor<?> equalToVisitor() {
-		return new RealEqualToVisitor<>(this);
-	}
 
 	default boolean isLessThan(final RealStruct real) {
 		final LessThanVisitor<?> lessThanVisitor = lessThanVisitor();
@@ -101,6 +39,13 @@ public interface RealStruct extends NumberStruct {
 	 */
 	boolean isLessThan(LessThanVisitor<?> lessThanVisitor);
 
+	/**
+	 * Returns a new {@link RealStruct.LessThanVisitor} with this RatioStruct to be used in a {@literal '<'} operation.
+	 *
+	 * @return a new {@link RealStruct.LessThanVisitor} with this RatioStruct to be used in a {@literal '<'} operation
+	 */
+	LessThanVisitor<?> lessThanVisitor();
+
 	static boolean isLessThan(final RealStruct real, final List<RealStruct> reals) {
 		RealStruct previousReal = real;
 
@@ -113,15 +58,6 @@ public interface RealStruct extends NumberStruct {
 			previousReal = currentReal;
 		}
 		return result;
-	}
-
-	/**
-	 * Returns a new {@link RealStruct.LessThanVisitor} with this RatioStruct to be used in a {@literal '<'} operation.
-	 *
-	 * @return a new {@link RealStruct.LessThanVisitor} with this RatioStruct to be used in a {@literal '<'} operation
-	 */
-	default LessThanVisitor<?> lessThanVisitor() {
-		return new LessThanVisitor<>(this);
 	}
 
 	default boolean isGreaterThan(final RealStruct real) {
@@ -149,9 +85,7 @@ public interface RealStruct extends NumberStruct {
 	 * @return a new {@link RealStruct.GreaterThanVisitor} with this RatioStruct to be used in a {@literal '>'}
 	 * operation
 	 */
-	default GreaterThanVisitor<?> greaterThanVisitor() {
-		return new GreaterThanVisitor<>(this);
-	}
+	GreaterThanVisitor<?> greaterThanVisitor();
 
 	static boolean isGreaterThan(final RealStruct real, final List<RealStruct> reals) {
 		RealStruct previousReal = real;
@@ -193,9 +127,7 @@ public interface RealStruct extends NumberStruct {
 	 * @return a new {@link RealStruct.LessThanOrEqualToVisitor} with this RatioStruct to be used in a {@literal '<='}
 	 * operation
 	 */
-	default LessThanOrEqualToVisitor<?> lessThanOrEqualToVisitor() {
-		return new LessThanOrEqualToVisitor<>(this);
-	}
+	LessThanOrEqualToVisitor<?> lessThanOrEqualToVisitor();
 
 	static boolean isLessThanOrEqualTo(final RealStruct real, final List<RealStruct> reals) {
 		RealStruct previousReal = real;
@@ -237,9 +169,7 @@ public interface RealStruct extends NumberStruct {
 	 * @return a new {@link RealStruct.GreaterThanOrEqualToVisitor} with this RatioStruct to be used in a {@literal
 	 * '>='} operation
 	 */
-	default GreaterThanOrEqualToVisitor<?> greaterThanOrEqualToVisitor() {
-		return new GreaterThanOrEqualToVisitor<>(this);
-	}
+	GreaterThanOrEqualToVisitor<?> greaterThanOrEqualToVisitor();
 
 	static boolean isGreaterThanOrEqualTo(final RealStruct real, final List<RealStruct> reals) {
 		RealStruct previousReal = real;
@@ -254,6 +184,22 @@ public interface RealStruct extends NumberStruct {
 		}
 		return result;
 	}
+
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Determines whether or not this RatioStruct is positive by comparing {@code #bigFraction} to {@link
+	 * BigFraction#ZERO}.
+	 */
+	boolean plusp();
+
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Determines whether or not this RatioStruct is negative by comparing {@code #bigFraction} to {@link
+	 * BigFraction#ZERO}.
+	 */
+	boolean minusp();
 
 	default RealStruct max(final RealStruct real) {
 		return isGreaterThanOrEqualTo(real) ? this : real;
@@ -283,6 +229,15 @@ public interface RealStruct extends NumberStruct {
 	 * Returns {@code this} as any RationalStruct is already in rational form.
 	 */
 	RationalStruct rational();
+
+	FloatStruct floatingPoint();
+
+	default FloatStruct floatingPoint(final FloatStruct prototype) {
+		final FloatingPointVisitor<?> floatingPointVisitor = prototype.floatingPointVisitor();
+		return floatingPoint(floatingPointVisitor);
+	}
+
+	FloatStruct floatingPoint(FloatingPointVisitor<?> floatingPointVisitor);
 
 	default RealStruct mod(final RealStruct divisor) {
 		final QuotientRemainderResult floor = floor(divisor);
@@ -470,11 +425,9 @@ public interface RealStruct extends NumberStruct {
 	 */
 	QuotientRemainderVisitor<?> quotientRemainderVisitor();
 
-	@Override
-	@Deprecated
-	default Apcomplex apcomplexValue() {
-		return apfloatValue();
-	}
+	/*
+		NumberStruct
+	 */
 
 	@Override
 	default RealStruct realPart() {
@@ -491,11 +444,6 @@ public interface RealStruct extends NumberStruct {
 		final Apfloat apfloat = apfloatValue();
 		final Apfloat exp = ApfloatMath.exp(apfloat);
 		return FloatStruct.valueOf(exp);
-	}
-
-	@Override
-	default NumberStruct.ExptVisitor<?> exptVisitor() {
-		return new RealExptVisitor<>(this);
 	}
 
 	@Override
@@ -625,11 +573,6 @@ public interface RealStruct extends NumberStruct {
 		return FloatStruct.valueOf(atanh);
 	}
 
-	static RealStruct toRealStruct(final Apfloat apfloat) {
-		// TODO: Not quite right here either!!!
-		return (apfloat.doubleValue() == apfloat.intValue()) ? IntegerStruct.valueOf(apfloat) : FloatStruct.valueOf(apfloat);
-	}
-
 	// Visitor Implementations
 
 	abstract class RealAddVisitor<S extends RealStruct> extends NumberStruct.AddVisitor<S> {
@@ -637,53 +580,6 @@ public interface RealStruct extends NumberStruct {
 		RealAddVisitor(final S number1) {
 			super(number1);
 		}
-
-		/**
-		 * {@inheritDoc}
-		 * <p>
-		 * Computes the addition function result for an {@link RatioStruct} and a {@link IntegerStruct}.
-		 */
-		@Override
-		public abstract RealStruct add(IntIntegerStruct number2);
-
-		/**
-		 * {@inheritDoc}
-		 * <p>
-		 * Computes the addition function result for an {@link RatioStruct} and a {@link IntegerStruct}.
-		 */
-		@Override
-		public abstract RealStruct add(LongIntegerStruct number2);
-
-		/**
-		 * {@inheritDoc}
-		 * <p>
-		 * Computes the addition function result for an {@link RatioStruct} and a {@link IntegerStruct}.
-		 */
-		@Override
-		public abstract RealStruct add(BigIntegerStruct number2);
-
-		@Override
-		public RealStruct add(final SingleFloatStruct number2) {
-			return addFloat(number2, number1);
-		}
-
-		@Override
-		public RealStruct add(final DoubleFloatStruct number2) {
-			return addFloat(number2, number1);
-		}
-
-		@Override
-		public RealStruct add(final BigFloatStruct number2) {
-			return addFloat(number2, number1);
-		}
-
-		/**
-		 * {@inheritDoc}
-		 * <p>
-		 * Computes the addition function result for {@link RatioStruct}s.
-		 */
-		@Override
-		public abstract RealStruct add(RatioStruct number2);
 
 		@Override
 		public NumberStruct add(final ComplexStruct number2) {
@@ -693,24 +589,6 @@ public interface RealStruct extends NumberStruct {
 			final Apcomplex add = apfloat1.add(apcomplex2);
 			return ComplexStruct.makeComplexOrReal(add);
 		}
-
-		/**
-		 * Computes the addition for the provided {@link FloatStruct} and {@link RealStruct} using {@link
-		 * BigDecimal#add(BigDecimal)} with the {@link RealStruct#bigDecimalValue()} values.
-		 *
-		 * @param number1
-		 * 		the {@link FloatStruct} as the first argument of the addition operation
-		 * @param number2
-		 * 		the {@link RealStruct} as the second argument of the addition operation
-		 *
-		 * @return a new {@link FloatStruct} as the result of the addition operation
-		 */
-		static RealStruct addFloat(final FloatStruct number1, final RealStruct number2) {
-			final BigDecimal bigDecimal1 = number1.bigDecimalValue();
-			final BigDecimal bigDecimal2 = number2.bigDecimalValue();
-			final BigDecimal add = bigDecimal1.add(bigDecimal2);
-			return BigFloatStruct.valueOf(add);
-		}
 	}
 
 	abstract class RealSubtractVisitor<S extends RealStruct> extends NumberStruct.SubtractVisitor<S> {
@@ -718,62 +596,6 @@ public interface RealStruct extends NumberStruct {
 		RealSubtractVisitor(final S number1) {
 			super(number1);
 		}
-
-		/**
-		 * {@inheritDoc}
-		 * <p>
-		 * Computes the subtraction function result for an {@link RatioStruct} and a {@link IntegerStruct}.
-		 */
-		@Override
-		public abstract RealStruct subtract(IntIntegerStruct number2);
-
-		/**
-		 * {@inheritDoc}
-		 * <p>
-		 * Computes the subtraction function result for an {@link RatioStruct} and a {@link IntegerStruct}.
-		 */
-		@Override
-		public abstract RealStruct subtract(LongIntegerStruct number2);
-
-		/**
-		 * {@inheritDoc}
-		 * <p>
-		 * Computes the subtraction function result for an {@link RatioStruct} and a {@link IntegerStruct}.
-		 */
-		@Override
-		public abstract RealStruct subtract(BigIntegerStruct number2);
-
-		@Override
-		public RealStruct subtract(final SingleFloatStruct number2) {
-			final BigDecimal bigDecimal1 = number1.bigDecimalValue();
-			final BigDecimal bigDecimal2 = number2.bigDecimalValue();
-			final BigDecimal subtract = bigDecimal1.subtract(bigDecimal2);
-			return BigFloatStruct.valueOf(subtract);
-		}
-
-		@Override
-		public RealStruct subtract(final DoubleFloatStruct number2) {
-			final BigDecimal bigDecimal1 = number1.bigDecimalValue();
-			final BigDecimal bigDecimal2 = number2.bigDecimalValue();
-			final BigDecimal subtract = bigDecimal1.subtract(bigDecimal2);
-			return BigFloatStruct.valueOf(subtract);
-		}
-
-		@Override
-		public RealStruct subtract(final BigFloatStruct number2) {
-			final BigDecimal bigDecimal1 = number1.bigDecimalValue();
-			final BigDecimal bigDecimal2 = number2.bigDecimalValue();
-			final BigDecimal subtract = bigDecimal1.subtract(bigDecimal2);
-			return BigFloatStruct.valueOf(subtract);
-		}
-
-		/**
-		 * {@inheritDoc}
-		 * <p>
-		 * Computes the subtraction function result for {@link RatioStruct}s.
-		 */
-		@Override
-		public abstract RealStruct subtract(RatioStruct number2);
 
 		@Override
 		public NumberStruct subtract(final ComplexStruct number2) {
@@ -791,53 +613,6 @@ public interface RealStruct extends NumberStruct {
 			super(number1);
 		}
 
-		/**
-		 * {@inheritDoc}
-		 * <p>
-		 * Computes the multiplication function result for an {@link RatioStruct} and a {@link IntegerStruct}.
-		 */
-		@Override
-		public abstract RealStruct multiply(IntIntegerStruct number2);
-
-		/**
-		 * {@inheritDoc}
-		 * <p>
-		 * Computes the multiplication function result for an {@link RatioStruct} and a {@link IntegerStruct}.
-		 */
-		@Override
-		public abstract RealStruct multiply(LongIntegerStruct number2);
-
-		/**
-		 * {@inheritDoc}
-		 * <p>
-		 * Computes the multiplication function result for an {@link RatioStruct} and a {@link IntegerStruct}.
-		 */
-		@Override
-		public abstract RealStruct multiply(BigIntegerStruct number2);
-
-		@Override
-		public RealStruct multiply(final SingleFloatStruct number2) {
-			return multiplyFloat(number2, number1);
-		}
-
-		@Override
-		public RealStruct multiply(final DoubleFloatStruct number2) {
-			return multiplyFloat(number2, number1);
-		}
-
-		@Override
-		public RealStruct multiply(final BigFloatStruct number2) {
-			return multiplyFloat(number2, number1);
-		}
-
-		/**
-		 * {@inheritDoc}
-		 * <p>
-		 * Computes the multiplication function result for {@link RatioStruct}s.
-		 */
-		@Override
-		public abstract RealStruct multiply(RatioStruct number2);
-
 		@Override
 		public NumberStruct multiply(final ComplexStruct number2) {
 			final Apcomplex apfloat1 = number1.apfloatValue();
@@ -846,31 +621,6 @@ public interface RealStruct extends NumberStruct {
 			final Apcomplex multiply = apfloat1.multiply(apcomplex2);
 			return ComplexStruct.makeComplexOrReal(multiply);
 		}
-
-		/**
-		 * Computes the multiplication for the provided {@link FloatStruct} and {@link RealStruct} using {@link
-		 * BigDecimal#multiply(BigDecimal)} with the {@link RealStruct#bigDecimalValue()} values.
-		 *
-		 * @param number1
-		 * 		the {@link FloatStruct} as the first argument of the multiplication operation
-		 * @param number2
-		 * 		the {@link RealStruct} as the second argument of the multiplication operation
-		 *
-		 * @return a new {@link FloatStruct} as the result of the multiplication operation
-		 */
-		static RealStruct multiplyFloat(final FloatStruct number1, final RealStruct number2) {
-			final BigDecimal bigDecimal1 = number1.bigDecimalValue();
-			final BigDecimal bigDecimal2 = number2.bigDecimalValue();
-			final BigDecimal multiply = bigDecimal1.multiply(bigDecimal2);
-
-			// NOTE: We must both strip the trailing zeros and possibly reset the scale to 1 if there were only trailing zeros
-			BigDecimal preppedBigDecimal = multiply.stripTrailingZeros();
-			if (preppedBigDecimal.scale() == 0) {
-				preppedBigDecimal = preppedBigDecimal.setScale(1, RoundingMode.UNNECESSARY);
-			}
-
-			return BigFloatStruct.valueOf(preppedBigDecimal);
-		}
 	}
 
 	abstract class RealDivideVisitor<S extends RealStruct> extends NumberStruct.DivideVisitor<S> {
@@ -878,62 +628,6 @@ public interface RealStruct extends NumberStruct {
 		RealDivideVisitor(final S number1) {
 			super(number1);
 		}
-
-		/**
-		 * {@inheritDoc}
-		 * <p>
-		 * Computes the division function result for an {@link RatioStruct} and a {@link IntegerStruct}.
-		 */
-		@Override
-		public abstract RealStruct divide(IntIntegerStruct number2);
-
-		/**
-		 * {@inheritDoc}
-		 * <p>
-		 * Computes the division function result for an {@link RatioStruct} and a {@link IntegerStruct}.
-		 */
-		@Override
-		public abstract RealStruct divide(LongIntegerStruct number2);
-
-		/**
-		 * {@inheritDoc}
-		 * <p>
-		 * Computes the division function result for an {@link RatioStruct} and a {@link IntegerStruct}.
-		 */
-		@Override
-		public abstract RealStruct divide(BigIntegerStruct number2);
-
-		@Override
-		public RealStruct divide(final SingleFloatStruct number2) {
-			final BigDecimal bigDecimal1 = number1.bigDecimalValue();
-			final BigDecimal bigDecimal2 = number2.bigDecimalValue();
-			final BigDecimal divide = bigDecimal1.divide(bigDecimal2, MathContext.DECIMAL128);
-			return BigFloatStruct.valueOf(divide);
-		}
-
-		@Override
-		public RealStruct divide(final DoubleFloatStruct number2) {
-			final BigDecimal bigDecimal1 = number1.bigDecimalValue();
-			final BigDecimal bigDecimal2 = number2.bigDecimalValue();
-			final BigDecimal divide = bigDecimal1.divide(bigDecimal2, MathContext.DECIMAL128);
-			return BigFloatStruct.valueOf(divide);
-		}
-
-		@Override
-		public RealStruct divide(final BigFloatStruct number2) {
-			final BigDecimal bigDecimal1 = number1.bigDecimalValue();
-			final BigDecimal bigDecimal2 = number2.bigDecimalValue();
-			final BigDecimal divide = bigDecimal1.divide(bigDecimal2, MathContext.DECIMAL128);
-			return BigFloatStruct.valueOf(divide);
-		}
-
-		/**
-		 * {@inheritDoc}
-		 * <p>
-		 * Computes the division function result for {@link RatioStruct}s.
-		 */
-		@Override
-		public abstract RealStruct divide(RatioStruct number2);
 
 		@Override
 		public NumberStruct divide(final ComplexStruct number2) {
@@ -945,71 +639,10 @@ public interface RealStruct extends NumberStruct {
 		}
 	}
 
-	static int getComparisonResult(final RealStruct real1, final RealStruct real2) {
-		final BigDecimal bigDecimal1 = real1.bigDecimalValue();
-		final BigDecimal bigDecimal2 = real2.bigDecimalValue();
-		return bigDecimal1.compareTo(bigDecimal2);
-	}
-
-	class RealEqualToVisitor<S extends RealStruct> extends NumberStruct.EqualToVisitor<S> {
+	abstract class RealEqualToVisitor<S extends RealStruct> extends NumberStruct.EqualToVisitor<S> {
 
 		RealEqualToVisitor(final S number1) {
 			super(number1);
-		}
-
-		/**
-		 * {@inheritDoc}
-		 * <p>
-		 * Computes the numeric '=' equality result for an {@link RatioStruct} and a {@link IntegerStruct}.
-		 */
-		@Override
-		public boolean equalTo(final IntIntegerStruct number2) {
-			return getComparisonResult(number1, number2) == 0;
-		}
-
-		/**
-		 * {@inheritDoc}
-		 * <p>
-		 * Computes the numeric '=' equality result for an {@link RatioStruct} and a {@link IntegerStruct}.
-		 */
-		@Override
-		public boolean equalTo(final LongIntegerStruct number2) {
-			return getComparisonResult(number1, number2) == 0;
-		}
-
-		/**
-		 * {@inheritDoc}
-		 * <p>
-		 * Computes the numeric '=' equality result for an {@link RatioStruct} and a {@link IntegerStruct}.
-		 */
-		@Override
-		public boolean equalTo(final BigIntegerStruct number2) {
-			return getComparisonResult(number1, number2) == 0;
-		}
-
-		@Override
-		public boolean equalTo(final SingleFloatStruct number2) {
-			return getComparisonResult(number1, number2) == 0;
-		}
-
-		@Override
-		public boolean equalTo(final DoubleFloatStruct number2) {
-			return getComparisonResult(number1, number2) == 0;
-		}
-
-		@Override
-		public boolean equalTo(final BigFloatStruct number2) {
-			return getComparisonResult(number1, number2) == 0;
-		}
-
-		/**
-		 * {@inheritDoc}
-		 * <p>
-		 * Computes the numeric '=' equality result for {@link RatioStruct}s.
-		 */
-		@Override
-		public boolean equalTo(final RatioStruct number2) {
-			return getComparisonResult(number1, number2) == 0;
 		}
 
 		@Override
@@ -1018,7 +651,7 @@ public interface RealStruct extends NumberStruct {
 		}
 	}
 
-	class LessThanVisitor<S extends RealStruct> {
+	abstract class LessThanVisitor<S extends RealStruct> {
 
 		final S real1;
 
@@ -1031,51 +664,37 @@ public interface RealStruct extends NumberStruct {
 		 * <p>
 		 * Computes the numeric {@literal '<'} equality result for an {@link RatioStruct} and a {@link IntegerStruct}.
 		 */
-		public boolean lessThan(final IntIntegerStruct real2) {
-			return getComparisonResult(real1, real2) < 0;
-		}
+		public abstract boolean lessThan(final IntIntegerStruct real2);
 
 		/**
 		 * {@inheritDoc}
 		 * <p>
 		 * Computes the numeric {@literal '<'} equality result for an {@link RatioStruct} and a {@link IntegerStruct}.
 		 */
-		public boolean lessThan(final LongIntegerStruct real2) {
-			return getComparisonResult(real1, real2) < 0;
-		}
+		public abstract boolean lessThan(final LongIntegerStruct real2);
 
 		/**
 		 * {@inheritDoc}
 		 * <p>
 		 * Computes the numeric {@literal '<'} equality result for an {@link RatioStruct} and a {@link IntegerStruct}.
 		 */
-		public boolean lessThan(final BigIntegerStruct real2) {
-			return getComparisonResult(real1, real2) < 0;
-		}
+		public abstract boolean lessThan(final BigIntegerStruct real2);
 
-		public boolean lessThan(final SingleFloatStruct real2) {
-			return getComparisonResult(real1, real2) < 0;
-		}
+		public abstract boolean lessThan(final SingleFloatStruct real2);
 
-		public boolean lessThan(final DoubleFloatStruct real2) {
-			return getComparisonResult(real1, real2) < 0;
-		}
+		public abstract boolean lessThan(final DoubleFloatStruct real2);
 
-		public boolean lessThan(final BigFloatStruct real2) {
-			return getComparisonResult(real1, real2) < 0;
-		}
+		public abstract boolean lessThan(final BigFloatStruct real2);
 
 		/**
 		 * {@inheritDoc}
 		 * <p>
 		 * Computes the numeric {@literal '<'} equality result for {@link RatioStruct}s.
 		 */
-		public boolean lessThan(final RatioStruct real2) {
-			return getComparisonResult(real1, real2) < 0;
-		}
+		public abstract boolean lessThan(final RatioStruct real2);
 	}
 
-	class GreaterThanVisitor<S extends RealStruct> {
+	abstract class GreaterThanVisitor<S extends RealStruct> {
 
 		final S real1;
 
@@ -1088,51 +707,37 @@ public interface RealStruct extends NumberStruct {
 		 * <p>
 		 * Computes the numeric {@literal '>'} equality result for an {@link RatioStruct} and a {@link IntegerStruct}.
 		 */
-		public boolean greaterThan(final IntIntegerStruct real2) {
-			return getComparisonResult(real1, real2) > 0;
-		}
+		public abstract boolean greaterThan(final IntIntegerStruct real2);
 
 		/**
 		 * {@inheritDoc}
 		 * <p>
 		 * Computes the numeric {@literal '>'} equality result for an {@link RatioStruct} and a {@link IntegerStruct}.
 		 */
-		public boolean greaterThan(final LongIntegerStruct real2) {
-			return getComparisonResult(real1, real2) > 0;
-		}
+		public abstract boolean greaterThan(final LongIntegerStruct real2);
 
 		/**
 		 * {@inheritDoc}
 		 * <p>
 		 * Computes the numeric {@literal '>'} equality result for an {@link RatioStruct} and a {@link IntegerStruct}.
 		 */
-		public boolean greaterThan(final BigIntegerStruct real2) {
-			return getComparisonResult(real1, real2) > 0;
-		}
+		public abstract boolean greaterThan(final BigIntegerStruct real2);
 
-		public boolean greaterThan(final SingleFloatStruct real2) {
-			return getComparisonResult(real1, real2) > 0;
-		}
+		public abstract boolean greaterThan(final SingleFloatStruct real2);
 
-		public boolean greaterThan(final DoubleFloatStruct real2) {
-			return getComparisonResult(real1, real2) > 0;
-		}
+		public abstract boolean greaterThan(final DoubleFloatStruct real2);
 
-		public boolean greaterThan(final BigFloatStruct real2) {
-			return getComparisonResult(real1, real2) > 0;
-		}
+		public abstract boolean greaterThan(final BigFloatStruct real2);
 
 		/**
 		 * {@inheritDoc}
 		 * <p>
 		 * Computes the numeric {@literal '>'} equality result for {@link RatioStruct}s.
 		 */
-		public boolean greaterThan(final RatioStruct real2) {
-			return getComparisonResult(real1, real2) > 0;
-		}
+		public abstract boolean greaterThan(final RatioStruct real2);
 	}
 
-	class LessThanOrEqualToVisitor<S extends RealStruct> {
+	abstract class LessThanOrEqualToVisitor<S extends RealStruct> {
 
 		final S real1;
 
@@ -1145,51 +750,37 @@ public interface RealStruct extends NumberStruct {
 		 * <p>
 		 * Computes the numeric {@literal '<='} equality result for an {@link RatioStruct} and a {@link IntegerStruct}.
 		 */
-		public boolean lessThanOrEqualTo(final IntIntegerStruct real2) {
-			return getComparisonResult(real1, real2) <= 0;
-		}
+		public abstract boolean lessThanOrEqualTo(final IntIntegerStruct real2);
 
 		/**
 		 * {@inheritDoc}
 		 * <p>
 		 * Computes the numeric {@literal '<='} equality result for an {@link RatioStruct} and a {@link IntegerStruct}.
 		 */
-		public boolean lessThanOrEqualTo(final LongIntegerStruct real2) {
-			return getComparisonResult(real1, real2) <= 0;
-		}
+		public abstract boolean lessThanOrEqualTo(final LongIntegerStruct real2);
 
 		/**
 		 * {@inheritDoc}
 		 * <p>
 		 * Computes the numeric {@literal '<='} equality result for an {@link RatioStruct} and a {@link IntegerStruct}.
 		 */
-		public boolean lessThanOrEqualTo(final BigIntegerStruct real2) {
-			return getComparisonResult(real1, real2) <= 0;
-		}
+		public abstract boolean lessThanOrEqualTo(final BigIntegerStruct real2);
 
-		public boolean lessThanOrEqualTo(final SingleFloatStruct real2) {
-			return getComparisonResult(real1, real2) <= 0;
-		}
+		public abstract boolean lessThanOrEqualTo(final SingleFloatStruct real2);
 
-		public boolean lessThanOrEqualTo(final DoubleFloatStruct real2) {
-			return getComparisonResult(real1, real2) <= 0;
-		}
+		public abstract boolean lessThanOrEqualTo(final DoubleFloatStruct real2);
 
-		public boolean lessThanOrEqualTo(final BigFloatStruct real2) {
-			return getComparisonResult(real1, real2) <= 0;
-		}
+		public abstract boolean lessThanOrEqualTo(final BigFloatStruct real2);
 
 		/**
 		 * {@inheritDoc}
 		 * <p>
 		 * Computes the numeric {@literal '<='} equality result for {@link RatioStruct}s.
 		 */
-		public boolean lessThanOrEqualTo(final RatioStruct real2) {
-			return getComparisonResult(real1, real2) <= 0;
-		}
+		public abstract boolean lessThanOrEqualTo(final RatioStruct real2);
 	}
 
-	class GreaterThanOrEqualToVisitor<S extends RealStruct> {
+	abstract class GreaterThanOrEqualToVisitor<S extends RealStruct> {
 
 		final S real1;
 
@@ -1202,48 +793,57 @@ public interface RealStruct extends NumberStruct {
 		 * <p>
 		 * Computes the numeric {@literal '>='} equality result for an {@link RatioStruct} and a {@link IntegerStruct}.
 		 */
-		public boolean greaterThanOrEqualTo(final IntIntegerStruct real2) {
-			return getComparisonResult(real1, real2) >= 0;
-		}
+		public abstract boolean greaterThanOrEqualTo(final IntIntegerStruct real2);
 
 		/**
 		 * {@inheritDoc}
 		 * <p>
 		 * Computes the numeric {@literal '>='} equality result for an {@link RatioStruct} and a {@link IntegerStruct}.
 		 */
-		public boolean greaterThanOrEqualTo(final LongIntegerStruct real2) {
-			return getComparisonResult(real1, real2) >= 0;
-		}
+		public abstract boolean greaterThanOrEqualTo(final LongIntegerStruct real2);
 
 		/**
 		 * {@inheritDoc}
 		 * <p>
 		 * Computes the numeric {@literal '>='} equality result for an {@link RatioStruct} and a {@link IntegerStruct}.
 		 */
-		public boolean greaterThanOrEqualTo(final BigIntegerStruct real2) {
-			return getComparisonResult(real1, real2) >= 0;
-		}
+		public abstract boolean greaterThanOrEqualTo(final BigIntegerStruct real2);
 
-		public boolean greaterThanOrEqualTo(final SingleFloatStruct real2) {
-			return getComparisonResult(real1, real2) >= 0;
-		}
+		public abstract boolean greaterThanOrEqualTo(final SingleFloatStruct real2);
 
-		public boolean greaterThanOrEqualTo(final DoubleFloatStruct real2) {
-			return getComparisonResult(real1, real2) >= 0;
-		}
+		public abstract boolean greaterThanOrEqualTo(final DoubleFloatStruct real2);
 
-		public boolean greaterThanOrEqualTo(final BigFloatStruct real2) {
-			return getComparisonResult(real1, real2) >= 0;
-		}
+		public abstract boolean greaterThanOrEqualTo(final BigFloatStruct real2);
 
 		/**
 		 * {@inheritDoc}
 		 * <p>
 		 * Computes the numeric {@literal '>='} equality result for {@link RatioStruct}s.
 		 */
-		public boolean greaterThanOrEqualTo(final RatioStruct real2) {
-			return getComparisonResult(real1, real2) >= 0;
+		public abstract boolean greaterThanOrEqualTo(final RatioStruct real2);
+	}
+
+	abstract class FloatingPointVisitor<S extends FloatStruct> {
+
+		final S prototype;
+
+		FloatingPointVisitor(final S prototype) {
+			this.prototype = prototype;
 		}
+
+		public abstract FloatStruct floatingPoint(IntIntegerStruct real);
+
+		public abstract FloatStruct floatingPoint(LongIntegerStruct real);
+
+		public abstract FloatStruct floatingPoint(BigIntegerStruct real);
+
+		public abstract FloatStruct floatingPoint(SingleFloatStruct real);
+
+		public abstract FloatStruct floatingPoint(DoubleFloatStruct real);
+
+		public abstract FloatStruct floatingPoint(BigFloatStruct real);
+
+		public abstract FloatStruct floatingPoint(RatioStruct real);
 	}
 
 	abstract class QuotientRemainderVisitor<S extends RealStruct> {
@@ -1378,7 +978,7 @@ public interface RealStruct extends NumberStruct {
 			return new QuotientRemainderResult(quotientReal, remainderFloat);
 		}
 
-		protected RealStruct getFloatQuotient(final RealStruct divisor, final BigDecimal quotient) {
+		RealStruct getFloatQuotient(final RealStruct divisor, final BigDecimal quotient) {
 			final RealStruct floatQuotient;
 			if (BigDecimal.ZERO.compareTo(quotient) == 0) {
 				if (real.minusp()) {
@@ -1403,48 +1003,34 @@ public interface RealStruct extends NumberStruct {
 		                                                          boolean isQuotientFloat);
 	}
 
-	class RealExptVisitor<S extends RealStruct> extends NumberStruct.ExptVisitor<S> {
+	abstract class RealExptVisitor<S extends RealStruct> extends NumberStruct.ExptVisitor<S> {
 
 		RealExptVisitor(final S base) {
 			super(base);
 		}
 
 		@Override
-		public NumberStruct expt(final IntIntegerStruct power) {
-			return exptInteger(base, power);
-		}
+		public abstract NumberStruct expt(final IntIntegerStruct power);
 
 		@Override
-		public NumberStruct expt(final LongIntegerStruct power) {
-			return exptInteger(base, power);
-		}
+		public abstract NumberStruct expt(final LongIntegerStruct power);
 
 		@Override
-		public NumberStruct expt(final BigIntegerStruct power) {
-			return exptInteger(base, power);
-		}
+		public abstract NumberStruct expt(final BigIntegerStruct power);
 
 		@Override
-		public NumberStruct expt(final SingleFloatStruct power) {
-			return exptFloatRatio(base, power);
-		}
+		public abstract NumberStruct expt(final SingleFloatStruct power);
 
 		@Override
-		public NumberStruct expt(final DoubleFloatStruct power) {
-			return exptFloatRatio(base, power);
-		}
+		public abstract NumberStruct expt(final DoubleFloatStruct power);
 
 		@Override
-		public NumberStruct expt(final BigFloatStruct power) {
-			return exptFloatRatio(base, power);
-		}
+		public abstract NumberStruct expt(final BigFloatStruct power);
 
 		@Override
-		public NumberStruct expt(final RatioStruct power) {
-			return exptFloatRatio(base, power);
-		}
+		public abstract NumberStruct expt(final RatioStruct power);
 
-		protected static NumberStruct exptFloatRatioNew(final double x, final double y) {
+		static NumberStruct exptFloatRatioNew(final double x, final double y) {
 			// TODO: BigDecimal version???
 
 			double result = StrictMath.pow(x, y);
@@ -1465,12 +1051,6 @@ public interface RealStruct extends NumberStruct {
 			return BigFloatStruct.valueOf(resultBigDecimal);
 		}
 
-		private static NumberStruct exptFloatRatio(final RealStruct base, final RealStruct power) {
-			final double x = base.apfloatValue().doubleValue();
-			final double y = power.apfloatValue().doubleValue();
-			return exptFloatRatioNew(x, y);
-		}
-
 		@Override
 		public NumberStruct expt(final ComplexStruct power) {
 			final RealStruct powerComplexReal = power.getReal();
@@ -1486,5 +1066,23 @@ public interface RealStruct extends NumberStruct {
 			final NumberStruct powerComplexLogOfNewBaseProduct = newPowerComplex.multiply(logOfNewBase);
 			return powerComplexLogOfNewBaseProduct.exp();
 		}
+	}
+
+	/*
+		Deprecated
+	 */
+
+	@Deprecated
+	BigDecimal bigDecimalValue();
+
+	@Deprecated
+	default Apfloat apfloatValue() {
+		return new Apfloat(bigDecimalValue());
+	}
+
+	@Override
+	@Deprecated
+	default Apcomplex apcomplexValue() {
+		return apfloatValue();
 	}
 }

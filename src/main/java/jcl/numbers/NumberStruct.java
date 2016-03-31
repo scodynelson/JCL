@@ -15,8 +15,6 @@ import org.apfloat.Apcomplex;
  */
 public interface NumberStruct extends LispStruct {
 
-	// TODO: move the following 3 up
-
 	/**
 	 * {@inheritDoc}
 	 * <p>
@@ -50,9 +48,6 @@ public interface NumberStruct extends LispStruct {
 		return (object instanceof NumberStruct) && isEqualTo((NumberStruct) object);
 	}
 
-	@Deprecated
-	Apcomplex apcomplexValue();
-
 	/**
 	 * {@inheritDoc}
 	 * <p>
@@ -63,7 +58,7 @@ public interface NumberStruct extends LispStruct {
 	/**
 	 * {@inheritDoc}
 	 * <p>
-	 * Determines whether or not this RatioStruct is zero by comparing {@link #bigFraction} to {@link
+	 * Determines whether or not this RatioStruct is zero by comparing {@code #bigFraction} to {@link
 	 * BigFraction#ZERO}.
 	 */
 	boolean zerop();
@@ -266,7 +261,7 @@ public interface NumberStruct extends LispStruct {
 	/**
 	 * {@inheritDoc}
 	 * <p>
-	 * Computes the negation with {@link BigFraction#negate()} on {@link #bigFraction} and then creating a new
+	 * Computes the negation with {@link BigFraction#negate()} on {@code #bigFraction} and then creating a new
 	 * RatioStruct to wrap it.
 	 */
 	NumberStruct negation();
@@ -275,7 +270,7 @@ public interface NumberStruct extends LispStruct {
 	 * {@inheritDoc}
 	 * <p>
 	 * Creates a new {@link RationalStruct} with {@link BigFraction#denominator} as the numerator and {@link
-	 * BigFraction#numerator} as the denominator from {@link #bigFraction}.
+	 * BigFraction#numerator} as the denominator from {@code #bigFraction}.
 	 */
 	NumberStruct reciprocal();
 
@@ -547,4 +542,11 @@ public interface NumberStruct extends LispStruct {
 			}
 		}
 	}
+
+	/*
+		Deprecated
+	 */
+
+	@Deprecated
+	Apcomplex apcomplexValue();
 }

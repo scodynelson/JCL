@@ -20,11 +20,6 @@ public interface FloatStruct extends RealStruct {
 
 	BigDecimal bigDecimalValue();
 
-	@Override
-	default FloatStruct floatingPoint() {
-		return this;
-	}
-
 	FloatingPointVisitor<?> floatingPointVisitor();
 
 	/**
@@ -65,7 +60,6 @@ public interface FloatStruct extends RealStruct {
 
 	FloatStruct floatSign();
 
-	// TODO: Visitor implementations??
 	default FloatStruct floatSign(final FloatStruct float2) {
 		if (minusp()) {
 			if (float2.minusp()) {
@@ -76,6 +70,15 @@ public interface FloatStruct extends RealStruct {
 		} else {
 			return (FloatStruct) float2.abs();
 		}
+	}
+
+	/*
+		RealStruct
+	 */
+
+	@Override
+	default FloatStruct floatingPoint() {
+		return this;
 	}
 
 	@Override
@@ -160,7 +163,7 @@ public interface FloatStruct extends RealStruct {
 	 * {@link RealStruct.LessThanVisitor} for computing numeric {@literal '<'} equality results for {@link
 	 * FloatStruct}s.
 	 */
-	class FloatLessThanVisitor<R extends FloatStruct> extends RealStruct.LessThanVisitor<R> {
+	abstract class FloatLessThanVisitor<R extends FloatStruct> extends RealStruct.LessThanVisitor<R> {
 
 		/**
 		 * Package private constructor to make a new instance of an FloatLessThanVisitor with the provided {@link
@@ -202,7 +205,7 @@ public interface FloatStruct extends RealStruct {
 	 * {@link RealStruct.GreaterThanVisitor} for computing numeric {@literal '>'} equality results for {@link
 	 * FloatStruct}s.
 	 */
-	class FloatGreaterThanVisitor<R extends FloatStruct> extends RealStruct.GreaterThanVisitor<R> {
+	abstract class FloatGreaterThanVisitor<R extends FloatStruct> extends RealStruct.GreaterThanVisitor<R> {
 
 		/**
 		 * Package private constructor to make a new instance of an FloatGreaterThanVisitor with the provided {@link
@@ -244,7 +247,7 @@ public interface FloatStruct extends RealStruct {
 	 * {@link RealStruct.LessThanOrEqualToVisitor} for computing numeric {@literal '<='} equality results for {@link
 	 * FloatStruct}s.
 	 */
-	class FloatLessThanOrEqualToVisitor<R extends FloatStruct> extends RealStruct.LessThanOrEqualToVisitor<R> {
+	abstract class FloatLessThanOrEqualToVisitor<R extends FloatStruct> extends RealStruct.LessThanOrEqualToVisitor<R> {
 
 		/**
 		 * Package private constructor to make a new instance of an FloatLessThanOrEqualToVisitor with the provided
@@ -286,7 +289,7 @@ public interface FloatStruct extends RealStruct {
 	 * {@link RealStruct.GreaterThanOrEqualToVisitor} for computing numeric {@literal '>='} equality results for {@link
 	 * FloatStruct}s.
 	 */
-	class FloatGreaterThanOrEqualToVisitor<R extends FloatStruct> extends RealStruct.GreaterThanOrEqualToVisitor<R> {
+	abstract class FloatGreaterThanOrEqualToVisitor<R extends FloatStruct> extends RealStruct.GreaterThanOrEqualToVisitor<R> {
 
 		/**
 		 * Package private constructor to make a new instance of an FloatGreaterThanOrEqualToVisitor with the

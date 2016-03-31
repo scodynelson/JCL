@@ -82,7 +82,7 @@ public class ComplexStruct extends BuiltInClassStruct implements NumberStruct {
 //	 * 		a {@link RealStruct} that represents the value of imaginary part ComplexStruct
 //	 */
 	ComplexStruct(final Apfloat real, final Apfloat imaginary) {
-		this(RealStruct.toRealStruct(real), RealStruct.toRealStruct(imaginary));
+		this(toRealStruct(real), toRealStruct(imaginary));
 	}
 
 	/**
@@ -232,6 +232,11 @@ public class ComplexStruct extends BuiltInClassStruct implements NumberStruct {
 		this.imaginary = imaginary;
 	}
 
+	private static RealStruct toRealStruct(final Apfloat apfloat) {
+		// TODO: Not quite right here either!!!
+		return (apfloat.doubleValue() == apfloat.intValue()) ? IntegerStruct.valueOf(apfloat) : FloatStruct.valueOf(apfloat);
+	}
+
 	/**
 	 * Getter for complex {@link #imaginary} property.
 	 *
@@ -265,7 +270,7 @@ public class ComplexStruct extends BuiltInClassStruct implements NumberStruct {
 
 		final Apcomplex apcomplex = apcomplexValue();
 		final Apfloat abs = ApcomplexMath.abs(apcomplex);
-		return RealStruct.toRealStruct(abs);
+		return toRealStruct(abs);
 	}
 
 	/**
@@ -537,7 +542,7 @@ public class ComplexStruct extends BuiltInClassStruct implements NumberStruct {
 		final Apfloat real = apcomplex.real();
 		final Apfloat imag = apcomplex.imag();
 		if (Apcomplex.ZERO.equals(imag)) {
-			return RealStruct.toRealStruct(real);
+			return toRealStruct(real);
 		}
 		return new ComplexStruct(apcomplex);
 	}

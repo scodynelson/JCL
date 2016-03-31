@@ -228,7 +228,7 @@ public interface RationalStruct extends RealStruct {
 	 * {@link RealStruct.LessThanVisitor} for computing numeric {@literal '<'} equality results for {@link
 	 * RationalStruct}s.
 	 */
-	class RationalLessThanVisitor<R extends RationalStruct> extends RealStruct.LessThanVisitor<R> {
+	abstract class RationalLessThanVisitor<R extends RationalStruct> extends RealStruct.LessThanVisitor<R> {
 
 		/**
 		 * Package private constructor to make a new instance of an RationalLessThanVisitor with the provided {@link
@@ -264,7 +264,7 @@ public interface RationalStruct extends RealStruct {
 	 * {@link RealStruct.GreaterThanVisitor} for computing numeric {@literal '>'} equality results for {@link
 	 * RationalStruct}s.
 	 */
-	class RationalGreaterThanVisitor<R extends RationalStruct> extends RealStruct.GreaterThanVisitor<R> {
+	abstract class RationalGreaterThanVisitor<R extends RationalStruct> extends RealStruct.GreaterThanVisitor<R> {
 
 		/**
 		 * Package private constructor to make a new instance of an RationalGreaterThanVisitor with the provided {@link
@@ -300,7 +300,7 @@ public interface RationalStruct extends RealStruct {
 	 * {@link RealStruct.LessThanOrEqualToVisitor} for computing numeric {@literal '<='} equality results for {@link
 	 * RationalStruct}s.
 	 */
-	class RationalLessThanOrEqualToVisitor<R extends RationalStruct> extends RealStruct.LessThanOrEqualToVisitor<R> {
+	abstract class RationalLessThanOrEqualToVisitor<R extends RationalStruct> extends RealStruct.LessThanOrEqualToVisitor<R> {
 
 		/**
 		 * Package private constructor to make a new instance of an RationalLessThanOrEqualToVisitor with the provided
@@ -336,7 +336,7 @@ public interface RationalStruct extends RealStruct {
 	 * {@link RealStruct.GreaterThanOrEqualToVisitor} for computing numeric {@literal '>='} equality results for {@link
 	 * RationalStruct}s.
 	 */
-	class RationalGreaterThanOrEqualToVisitor<R extends RationalStruct> extends RealStruct.GreaterThanOrEqualToVisitor<R> {
+	abstract class RationalGreaterThanOrEqualToVisitor<R extends RationalStruct> extends RealStruct.GreaterThanOrEqualToVisitor<R> {
 
 		/**
 		 * Package private constructor to make a new instance of an RationalGreaterThanOrEqualToVisitor with the

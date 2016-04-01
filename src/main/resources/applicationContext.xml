@@ -45,7 +45,6 @@
 		<entry key="jcl.numbers.ComplexStruct" value-ref="complexStructPrinter"/>
 		<entry key="jcl.numbers.SingleFloatStruct" value-ref="floatStructPrinter"/>
 		<entry key="jcl.numbers.DoubleFloatStruct" value-ref="floatStructPrinter"/>
-		<entry key="jcl.numbers.BigFloatStruct" value-ref="floatStructPrinter"/>
 		<entry key="jcl.numbers.IntIntegerStruct" value-ref="integerStructPrinter"/>
 		<entry key="jcl.numbers.LongIntegerStruct" value-ref="integerStructPrinter"/>
 		<entry key="jcl.numbers.BigIntegerStruct" value-ref="integerStructPrinter"/>
@@ -113,7 +112,6 @@
 		<entry key="jcl.numbers.ComplexStruct" value-ref="complexCodeGenerator"/>
 		<entry key="jcl.numbers.SingleFloatStruct" value-ref="singleFloatCodeGenerator"/>
 		<entry key="jcl.numbers.DoubleFloatStruct" value-ref="doubleFloatCodeGenerator"/>
-		<entry key="jcl.numbers.BigFloatStruct" value-ref="bigFloatCodeGenerator"/>
 		<entry key="jcl.numbers.IntIntegerStruct" value-ref="intIntegerCodeGenerator"/>
 		<entry key="jcl.numbers.LongIntegerStruct" value-ref="longIntegerCodeGenerator"/>
 		<entry key="jcl.numbers.BigIntegerStruct" value-ref="bigIntegerCodeGenerator"/>

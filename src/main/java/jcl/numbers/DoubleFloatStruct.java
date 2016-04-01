@@ -5,7 +5,6 @@
 package jcl.numbers;
 
 import java.math.BigDecimal;
-import java.math.MathContext;
 
 import jcl.classes.BuiltInClassStruct;
 import jcl.types.DoubleFloatType;
@@ -509,18 +508,16 @@ public final class DoubleFloatStruct extends BuiltInClassStruct implements Float
 		}
 
 		@Override
-		public RealStruct add(final BigFloatStruct number2) {
-			final BigDecimal bigDecimal1 = number1.bigDecimalValue();
-			final BigDecimal bigDecimal2 = number2.bigDecimal;
-			final BigDecimal add = bigDecimal1.add(bigDecimal2);
-			return BigFloatStruct.valueOf(add);
-		}
-
-		@Override
 		public RealStruct add(final RatioStruct number2) {
 			final double d1 = number1.d;
 			final double d2 = number2.bigFraction.doubleValue();
 			return valueOf(d1 + d2);
+		}
+
+		@Override
+		public NumberStruct add(final ComplexStruct number2) {
+			// TODO
+			return super.add(number2);
 		}
 	}
 
@@ -577,18 +574,16 @@ public final class DoubleFloatStruct extends BuiltInClassStruct implements Float
 		}
 
 		@Override
-		public RealStruct subtract(final BigFloatStruct number2) {
-			final BigDecimal bigDecimal1 = number1.bigDecimalValue();
-			final BigDecimal bigDecimal2 = number2.bigDecimal;
-			final BigDecimal subtract = bigDecimal1.subtract(bigDecimal2);
-			return BigFloatStruct.valueOf(subtract);
-		}
-
-		@Override
 		public RealStruct subtract(final RatioStruct number2) {
 			final double d1 = number1.d;
 			final double d2 = number2.bigFraction.doubleValue();
 			return valueOf(d1 - d2);
+		}
+
+		@Override
+		public NumberStruct subtract(final ComplexStruct number2) {
+			// TODO
+			return super.subtract(number2);
 		}
 	}
 
@@ -645,18 +640,16 @@ public final class DoubleFloatStruct extends BuiltInClassStruct implements Float
 		}
 
 		@Override
-		public RealStruct multiply(final BigFloatStruct number2) {
-			final BigDecimal bigDecimal1 = number1.bigDecimalValue();
-			final BigDecimal bigDecimal2 = number2.bigDecimal;
-			final BigDecimal multiply = bigDecimal1.multiply(bigDecimal2);
-			return BigFloatStruct.valueOf(multiply);
-		}
-
-		@Override
 		public RealStruct multiply(final RatioStruct number2) {
 			final double d1 = number1.d;
 			final double d2 = number2.bigFraction.doubleValue();
 			return valueOf(d1 * d2);
+		}
+
+		@Override
+		public NumberStruct multiply(final ComplexStruct number2) {
+			// TODO
+			return super.multiply(number2);
 		}
 	}
 
@@ -712,18 +705,16 @@ public final class DoubleFloatStruct extends BuiltInClassStruct implements Float
 		}
 
 		@Override
-		public RealStruct divide(final BigFloatStruct number2) {
-			final BigDecimal bigDecimal1 = number1.bigDecimalValue();
-			final BigDecimal bigDecimal2 = number2.bigDecimal;
-			final BigDecimal divide = bigDecimal1.divide(bigDecimal2, MathContext.DECIMAL128);
-			return BigFloatStruct.valueOf(divide);
-		}
-
-		@Override
 		public RealStruct divide(final RatioStruct number2) {
 			final double d1 = number1.d;
 			final double d2 = number2.bigFraction.doubleValue();
 			return valueOf(d1 / d2);
+		}
+
+		@Override
+		public NumberStruct divide(final ComplexStruct number2) {
+			// TODO
+			return super.divide(number2);
 		}
 	}
 
@@ -755,10 +746,9 @@ public final class DoubleFloatStruct extends BuiltInClassStruct implements Float
 		}
 
 		@Override
-		public boolean equalTo(final BigFloatStruct number2) {
-			final BigDecimal bigDecimal1 = number1.bigDecimalValue();
-			final BigDecimal bigDecimal2 = number2.bigDecimal;
-			return bigDecimal1.compareTo(bigDecimal2) == 0;
+		public boolean equalTo(final ComplexStruct number2) {
+			// TODO
+			return super.equalTo(number2);
 		}
 	}
 
@@ -788,13 +778,6 @@ public final class DoubleFloatStruct extends BuiltInClassStruct implements Float
 		public boolean lessThan(final DoubleFloatStruct real2) {
 			return Double.compare(real1.d, real2.d) < 0;
 		}
-
-		@Override
-		public boolean lessThan(final BigFloatStruct real2) {
-			final BigDecimal bigDecimal1 = real1.bigDecimalValue();
-			final BigDecimal bigDecimal2 = real2.bigDecimal;
-			return bigDecimal1.compareTo(bigDecimal2) < 0;
-		}
 	}
 
 	/**
@@ -822,13 +805,6 @@ public final class DoubleFloatStruct extends BuiltInClassStruct implements Float
 		@Override
 		public boolean greaterThan(final DoubleFloatStruct real2) {
 			return Double.compare(real1.d, real2.d) > 0;
-		}
-
-		@Override
-		public boolean greaterThan(final BigFloatStruct real2) {
-			final BigDecimal bigDecimal1 = real1.bigDecimalValue();
-			final BigDecimal bigDecimal2 = real2.bigDecimal;
-			return bigDecimal1.compareTo(bigDecimal2) > 0;
 		}
 	}
 
@@ -858,13 +834,6 @@ public final class DoubleFloatStruct extends BuiltInClassStruct implements Float
 		public boolean lessThanOrEqualTo(final DoubleFloatStruct real2) {
 			return Double.compare(real1.d, real2.d) <= 0;
 		}
-
-		@Override
-		public boolean lessThanOrEqualTo(final BigFloatStruct real2) {
-			final BigDecimal bigDecimal1 = real1.bigDecimalValue();
-			final BigDecimal bigDecimal2 = real2.bigDecimal;
-			return bigDecimal1.compareTo(bigDecimal2) <= 0;
-		}
 	}
 
 	/**
@@ -893,20 +862,12 @@ public final class DoubleFloatStruct extends BuiltInClassStruct implements Float
 		public boolean greaterThanOrEqualTo(final DoubleFloatStruct real2) {
 			return Double.compare(real1.d, real2.d) >= 0;
 		}
-
-		@Override
-		public boolean greaterThanOrEqualTo(final BigFloatStruct real2) {
-			final BigDecimal bigDecimal1 = real1.bigDecimalValue();
-			final BigDecimal bigDecimal2 = real2.bigDecimal;
-			return bigDecimal1.compareTo(bigDecimal2) >= 0;
-		}
 	}
 
 	/**
 	 * {@link RealStruct.RealExptVisitor} for computing exponential function results for {@link DoubleFloatStruct}s.
 	 */
 	private static final class DoubleFloatExptVisitor extends RealStruct.RealExptVisitor<DoubleFloatStruct> {
-		// TODO: fix
 
 		/**
 		 * Private constructor to make a new instance of an DoubleFloatExptVisitor with the provided {@link
@@ -951,15 +912,15 @@ public final class DoubleFloatStruct extends BuiltInClassStruct implements Float
 		}
 
 		@Override
-		public NumberStruct expt(final BigFloatStruct power) {
-			// TODO: more efficient?
-			return exptFloatRatioNew(base.d, power.doubleValue());
-		}
-
-		@Override
 		public NumberStruct expt(final RatioStruct power) {
 			// TODO: more efficient?
 			return exptFloatRatioNew(base.d, power.bigFraction.doubleValue());
+		}
+
+		@Override
+		public NumberStruct expt(final ComplexStruct power) {
+			// TODO
+			return super.expt(power);
 		}
 	}
 
@@ -1003,11 +964,6 @@ public final class DoubleFloatStruct extends BuiltInClassStruct implements Float
 		@Override
 		public FloatStruct floatingPoint(final DoubleFloatStruct real) {
 			return real;
-		}
-
-		@Override
-		public FloatStruct floatingPoint(final BigFloatStruct real) {
-			return valueOf(real.bigDecimal.doubleValue());
 		}
 
 		@Override

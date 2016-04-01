@@ -4,12 +4,10 @@
 
 package jcl.reader.state;
 
-import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.LinkedList;
 
 import jcl.characters.CharacterConstants;
-import jcl.numbers.BigFloatStruct;
 import jcl.numbers.DoubleFloatStruct;
 import jcl.numbers.FloatStruct;
 import jcl.numbers.NumberStruct;
@@ -23,7 +21,6 @@ import jcl.types.FloatType;
 import jcl.types.LongFloatType;
 import jcl.types.ShortFloatType;
 import jcl.types.SingleFloatType;
-import jcl.util.NumberUtils;
 import org.springframework.stereotype.Component;
 
 /**
@@ -44,17 +41,10 @@ public class FloatTokenAccumulatedReaderState implements ReaderState {
 		tokenString = getFloatTokenString(tokenString, exponentTokenCodePoint);
 
 		final FloatType floatType = getFloatType(exponentTokenCodePoint);
-		if (DoubleFloatType.INSTANCE.equals(floatType)) {
+		if (DoubleFloatType.INSTANCE.equals(floatType) || LongFloatType.INSTANCE.equals(floatType)) {
 			try {
 				final Double d = Double.parseDouble(tokenString);
 				return DoubleFloatStruct.valueOf(d);
-			} catch (final NumberFormatException ignore) {
-				return null;
-			}
-		} else if (LongFloatType.INSTANCE.equals(floatType)) {
-			try {
-				final BigDecimal bigDecimal = NumberUtils.bigDecimalValue(tokenString);
-				return BigFloatStruct.valueOf(bigDecimal);
 			} catch (final NumberFormatException ignore) {
 				return null;
 			}

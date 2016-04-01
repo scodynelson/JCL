@@ -8,7 +8,6 @@ import java.math.BigInteger;
 
 import jcl.packages.GlobalPackageStruct;
 import jcl.symbols.ConstantStruct;
-import jcl.util.NumberUtils;
 import org.apache.commons.math3.util.Precision;
 
 public interface NumberConstants {
@@ -62,14 +61,14 @@ public interface NumberConstants {
 	ConstantStruct<FloatStruct> DOUBLE_FLOAT_EPSILON = new ConstantStruct<>("DOUBLE-FLOAT-EPSILON", GlobalPackageStruct.COMMON_LISP, DoubleFloatStruct.valueOf(1.1102230246251568E-16));
 	ConstantStruct<FloatStruct> DOUBLE_FLOAT_NEGATIVE_EPSILON = new ConstantStruct<>("DOUBLE-FLOAT-NEGATIVE-EPSILON", GlobalPackageStruct.COMMON_LISP, DoubleFloatStruct.valueOf(5.551115123125784E-17));
 
-	ConstantStruct<FloatStruct> MOST_POSITIVE_LONG_FLOAT = new ConstantStruct<>("MOST-POSITIVE-LONG-FLOAT", GlobalPackageStruct.COMMON_LISP, BigFloatStruct.valueOf(NumberUtils.bigDecimalValue(Double.MAX_VALUE)));
-	ConstantStruct<FloatStruct> LEAST_POSITIVE_LONG_FLOAT = new ConstantStruct<>("LEAST-POSITIVE-LONG-FLOAT", GlobalPackageStruct.COMMON_LISP, BigFloatStruct.valueOf(NumberUtils.bigDecimalValue(Double.MIN_VALUE)));
-	ConstantStruct<FloatStruct> LEAST_POSITIVE_NORMALIZED_LONG_FLOAT = new ConstantStruct<>("LEAST-POSITIVE-NORMALIZED-LONG-FLOAT", GlobalPackageStruct.COMMON_LISP, BigFloatStruct.valueOf(NumberUtils.bigDecimalValue(Double.MIN_NORMAL)));
-	ConstantStruct<FloatStruct> MOST_NEGATIVE_LONG_FLOAT = new ConstantStruct<>("MOST-NEGATIVE-LONG-FLOAT", GlobalPackageStruct.COMMON_LISP, BigFloatStruct.valueOf(NumberUtils.bigDecimalValue(-Double.MAX_VALUE)));
-	ConstantStruct<FloatStruct> LEAST_NEGATIVE_LONG_FLOAT = new ConstantStruct<>("LEAST-NEGATIVE-LONG-FLOAT", GlobalPackageStruct.COMMON_LISP, BigFloatStruct.valueOf(NumberUtils.bigDecimalValue(-Double.MIN_VALUE)));
-	ConstantStruct<FloatStruct> LEAST_NEGATIVE_NORMALIZED_LONG_FLOAT = new ConstantStruct<>("LEAST-NEGATIVE-NORMALIZED-LONG-FLOAT", GlobalPackageStruct.COMMON_LISP, BigFloatStruct.valueOf(NumberUtils.bigDecimalValue(-Double.MIN_NORMAL)));
-	ConstantStruct<FloatStruct> LONG_FLOAT_EPSILON = new ConstantStruct<>("LONG-FLOAT-EPSILON", GlobalPackageStruct.COMMON_LISP, BigFloatStruct.valueOf(NumberUtils.bigDecimalValue(1.1102230246251568E-16)));
-	ConstantStruct<FloatStruct> LONG_FLOAT_NEGATIVE_EPSILON = new ConstantStruct<>("LONG-FLOAT-NEGATIVE-EPSILON", GlobalPackageStruct.COMMON_LISP, BigFloatStruct.valueOf(NumberUtils.bigDecimalValue(5.551115123125784E-17)));
+	ConstantStruct<FloatStruct> MOST_POSITIVE_LONG_FLOAT = new ConstantStruct<>("MOST-POSITIVE-LONG-FLOAT", GlobalPackageStruct.COMMON_LISP, DoubleFloatStruct.valueOf(Double.MAX_VALUE));
+	ConstantStruct<FloatStruct> LEAST_POSITIVE_LONG_FLOAT = new ConstantStruct<>("LEAST-POSITIVE-LONG-FLOAT", GlobalPackageStruct.COMMON_LISP, DoubleFloatStruct.valueOf(Double.MIN_VALUE));
+	ConstantStruct<FloatStruct> LEAST_POSITIVE_NORMALIZED_LONG_FLOAT = new ConstantStruct<>("LEAST-POSITIVE-NORMALIZED-LONG-FLOAT", GlobalPackageStruct.COMMON_LISP, DoubleFloatStruct.valueOf(Double.MIN_NORMAL));
+	ConstantStruct<FloatStruct> MOST_NEGATIVE_LONG_FLOAT = new ConstantStruct<>("MOST-NEGATIVE-LONG-FLOAT", GlobalPackageStruct.COMMON_LISP, DoubleFloatStruct.valueOf(-Double.MAX_VALUE));
+	ConstantStruct<FloatStruct> LEAST_NEGATIVE_LONG_FLOAT = new ConstantStruct<>("LEAST-NEGATIVE-LONG-FLOAT", GlobalPackageStruct.COMMON_LISP, DoubleFloatStruct.valueOf(-Double.MIN_VALUE));
+	ConstantStruct<FloatStruct> LEAST_NEGATIVE_NORMALIZED_LONG_FLOAT = new ConstantStruct<>("LEAST-NEGATIVE-NORMALIZED-LONG-FLOAT", GlobalPackageStruct.COMMON_LISP, DoubleFloatStruct.valueOf(-Double.MIN_NORMAL));
+	ConstantStruct<FloatStruct> LONG_FLOAT_EPSILON = new ConstantStruct<>("LONG-FLOAT-EPSILON", GlobalPackageStruct.COMMON_LISP, DoubleFloatStruct.valueOf(1.1102230246251568E-16));
+	ConstantStruct<FloatStruct> LONG_FLOAT_NEGATIVE_EPSILON = new ConstantStruct<>("LONG-FLOAT-NEGATIVE-EPSILON", GlobalPackageStruct.COMMON_LISP, DoubleFloatStruct.valueOf(5.551115123125784E-17));
 
-	ConstantStruct<FloatStruct> PI = new ConstantStruct<>("PI", GlobalPackageStruct.COMMON_LISP, BigFloatStruct.valueOf(NumberUtils.bigDecimalValue(Math.PI)));
+	ConstantStruct<FloatStruct> PI = new ConstantStruct<>("PI", GlobalPackageStruct.COMMON_LISP, DoubleFloatStruct.valueOf(Math.PI));
 }

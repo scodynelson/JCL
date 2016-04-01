@@ -216,12 +216,6 @@ public interface RationalStruct extends RealStruct {
 			final RationalStruct number2Rational = number2.rational();
 			return number1.isEqualTo(number2Rational);
 		}
-
-		@Override
-		public boolean equalTo(final BigFloatStruct number2) {
-			final RationalStruct number2Rational = number2.rational();
-			return number1.isEqualTo(number2Rational);
-		}
 	}
 
 	/**
@@ -249,12 +243,6 @@ public interface RationalStruct extends RealStruct {
 
 		@Override
 		public boolean lessThan(final DoubleFloatStruct real2) {
-			final RationalStruct number2Rational = real2.rational();
-			return real1.isLessThan(number2Rational);
-		}
-
-		@Override
-		public boolean lessThan(final BigFloatStruct real2) {
 			final RationalStruct number2Rational = real2.rational();
 			return real1.isLessThan(number2Rational);
 		}
@@ -288,12 +276,6 @@ public interface RationalStruct extends RealStruct {
 			final RationalStruct number2Rational = real2.rational();
 			return real1.isGreaterThan(number2Rational);
 		}
-
-		@Override
-		public boolean greaterThan(final BigFloatStruct real2) {
-			final RationalStruct number2Rational = real2.rational();
-			return real1.isGreaterThan(number2Rational);
-		}
 	}
 
 	/**
@@ -324,12 +306,6 @@ public interface RationalStruct extends RealStruct {
 			final RationalStruct number2Rational = real2.rational();
 			return real1.isLessThanOrEqualTo(number2Rational);
 		}
-
-		@Override
-		public boolean lessThanOrEqualTo(final BigFloatStruct real2) {
-			final RationalStruct number2Rational = real2.rational();
-			return real1.isLessThanOrEqualTo(number2Rational);
-		}
 	}
 
 	/**
@@ -357,12 +333,6 @@ public interface RationalStruct extends RealStruct {
 
 		@Override
 		public boolean greaterThanOrEqualTo(final DoubleFloatStruct real2) {
-			final RationalStruct number2Rational = real2.rational();
-			return real1.isGreaterThanOrEqualTo(number2Rational);
-		}
-
-		@Override
-		public boolean greaterThanOrEqualTo(final BigFloatStruct real2) {
 			final RationalStruct number2Rational = real2.rational();
 			return real1.isGreaterThanOrEqualTo(number2Rational);
 		}
@@ -405,7 +375,7 @@ public interface RationalStruct extends RealStruct {
 
 			final RealStruct quotientReal;
 			if (isFloatResult) {
-				quotientReal = BigFloatStruct.valueOf(quotient);
+				quotientReal = DoubleFloatStruct.valueOf(quotient.doubleValue());
 			} else {
 				quotientReal = IntegerStruct.valueOf(quotientBigInteger);
 			}

@@ -9,7 +9,6 @@ import java.math.MathContext;
 import java.math.RoundingMode;
 import java.util.LinkedList;
 
-import jcl.numbers.BigFloatStruct;
 import jcl.numbers.DoubleFloatStruct;
 import jcl.numbers.FloatStruct;
 import jcl.numbers.NumberStruct;
@@ -79,16 +78,10 @@ public class RationalFloatTokenAccumulatedReaderState extends FloatTokenAccumula
 
 		// TODO: Not sure this is the best way to handle rational floats for the read algorithm. Might be a better way.
 		final FloatType floatType = getFloatType(exponentTokenCodePoint);
-		if (DoubleFloatType.INSTANCE.equals(floatType)) {
+		if (DoubleFloatType.INSTANCE.equals(floatType) || LongFloatType.INSTANCE.equals(floatType)) {
 			try {
 				final Double d = bigDecimal.doubleValue();
 				return DoubleFloatStruct.valueOf(d);
-			} catch (final NumberFormatException ignore) {
-				return null;
-			}
-		} else if (LongFloatType.INSTANCE.equals(floatType)) {
-			try {
-				return BigFloatStruct.valueOf(bigDecimal);
 			} catch (final NumberFormatException ignore) {
 				return null;
 			}

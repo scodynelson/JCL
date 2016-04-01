@@ -29,7 +29,6 @@ import jcl.functions.FunctionStruct;
 import jcl.functions.expanders.SymbolMacroExpander;
 import jcl.lists.ConsStruct;
 import jcl.lists.ListStruct;
-import jcl.numbers.BigFloatStruct;
 import jcl.numbers.BigIntegerStruct;
 import jcl.numbers.ComplexStruct;
 import jcl.numbers.DoubleFloatStruct;
@@ -139,11 +138,6 @@ public class TestGround {
 	private Object doubleFloatGen() {
 		final double d = 12345.0D;
 		return DoubleFloatStruct.valueOf(d);
-	}
-
-	private Object bigFloatGen() {
-		final BigDecimal bigDecimal = new BigDecimal("12345.0");
-		return BigFloatStruct.valueOf(bigDecimal);
 	}
 
 	private Object intIntegerGen() {

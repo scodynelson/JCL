@@ -6,7 +6,6 @@ package jcl.numbers;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.math.MathContext;
 import java.math.RoundingMode;
 
 import jcl.classes.BuiltInClassStruct;
@@ -380,14 +379,6 @@ public final class RatioStruct extends BuiltInClassStruct implements RationalStr
 		}
 
 		@Override
-		public RealStruct add(final BigFloatStruct number2) {
-			final BigDecimal bigDecimal1 = NumberUtils.bigDecimalValue(number1.bigFraction);
-			final BigDecimal bigDecimal2 = number2.bigDecimal;
-			final BigDecimal add = bigDecimal1.add(bigDecimal2);
-			return BigFloatStruct.valueOf(add);
-		}
-
-		@Override
 		public RealStruct add(final RatioStruct number2) {
 			final BigFraction bigFraction1 = number1.bigFraction;
 			final BigFraction bigFraction2 = number2.bigFraction;
@@ -453,14 +444,6 @@ public final class RatioStruct extends BuiltInClassStruct implements RationalStr
 			final double d1 = number1.bigFraction.doubleValue();
 			final double d2 = number2.d;
 			return DoubleFloatStruct.valueOf(d1 - d2);
-		}
-
-		@Override
-		public RealStruct subtract(final BigFloatStruct number2) {
-			final BigDecimal bigDecimal1 = NumberUtils.bigDecimalValue(number1.bigFraction);
-			final BigDecimal bigDecimal2 = number2.bigDecimal;
-			final BigDecimal subtract = bigDecimal1.subtract(bigDecimal2);
-			return BigFloatStruct.valueOf(subtract);
 		}
 
 		@Override
@@ -532,14 +515,6 @@ public final class RatioStruct extends BuiltInClassStruct implements RationalStr
 		}
 
 		@Override
-		public RealStruct multiply(final BigFloatStruct number2) {
-			final BigDecimal bigDecimal1 = NumberUtils.bigDecimalValue(number1.bigFraction);
-			final BigDecimal bigDecimal2 = number2.bigDecimal;
-			final BigDecimal multiply = bigDecimal1.multiply(bigDecimal2);
-			return BigFloatStruct.valueOf(multiply);
-		}
-
-		@Override
 		public RealStruct multiply(final RatioStruct number2) {
 			final BigFraction bigFraction1 = number1.bigFraction;
 			final BigFraction bigFraction2 = number2.bigFraction;
@@ -608,14 +583,6 @@ public final class RatioStruct extends BuiltInClassStruct implements RationalStr
 		}
 
 		@Override
-		public RealStruct divide(final BigFloatStruct number2) {
-			final BigDecimal bigDecimal1 = NumberUtils.bigDecimalValue(number1.bigFraction);
-			final BigDecimal bigDecimal2 = number2.bigDecimal;
-			final BigDecimal divide = bigDecimal1.divide(bigDecimal2, MathContext.DECIMAL128);
-			return BigFloatStruct.valueOf(divide);
-		}
-
-		@Override
 		public RealStruct divide(final RatioStruct number2) {
 			final BigFraction bigFraction1 = number1.bigFraction;
 			final BigFraction bigFraction2 = number2.bigFraction;
@@ -672,6 +639,12 @@ public final class RatioStruct extends BuiltInClassStruct implements RationalStr
 			final BigFraction bigFraction1 = number1.bigFraction;
 			final BigFraction bigFraction2 = number2.bigFraction;
 			return bigFraction1.compareTo(bigFraction2) == 0;
+		}
+
+		@Override
+		public boolean equalTo(final ComplexStruct number2) {
+			// TODO
+			return super.equalTo(number2);
 		}
 	}
 
@@ -928,21 +901,18 @@ public final class RatioStruct extends BuiltInClassStruct implements RationalStr
 		}
 
 		@Override
-		public NumberStruct expt(final BigFloatStruct power) {
-//			// TODO: more efficient?
-			if (LOGGER.isWarnEnabled()) {
-				LOGGER.warn("Possible loss of precision.");
-			}
-			return exptFloatRatioNew(base.bigFraction.doubleValue(), power.doubleValue());
-		}
-
-		@Override
 		public NumberStruct expt(final RatioStruct power) {
 //			// TODO: more efficient?
 			if (LOGGER.isWarnEnabled()) {
 				LOGGER.warn("Possible loss of precision.");
 			}
 			return exptFloatRatioNew(base.bigFraction.doubleValue(), power.bigFraction.doubleValue());
+		}
+
+		@Override
+		public NumberStruct expt(final ComplexStruct power) {
+			// TODO
+			return super.expt(power);
 		}
 	}
 

@@ -4,9 +4,7 @@
 
 package jcl.numbers;
 
-import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.math.MathContext;
 import java.math.RoundingMode;
 
 import com.google.common.math.LongMath;
@@ -500,14 +498,6 @@ public final class LongIntegerStruct extends BuiltInClassStruct implements Integ
 		}
 
 		@Override
-		public RealStruct add(final BigFloatStruct number2) {
-			final BigDecimal bigDecimal1 = NumberUtils.bigDecimalValue(number1.l);
-			final BigDecimal bigDecimal2 = number2.bigDecimal;
-			final BigDecimal add = bigDecimal1.add(bigDecimal2);
-			return BigFloatStruct.valueOf(add);
-		}
-
-		@Override
 		public RealStruct add(final RatioStruct number2) {
 			final long l1 = number1.l;
 			final BigFraction bigFraction = number2.bigFraction;
@@ -573,14 +563,6 @@ public final class LongIntegerStruct extends BuiltInClassStruct implements Integ
 			final long l1 = number1.l;
 			final double d = number2.d;
 			return DoubleFloatStruct.valueOf(l1 - d);
-		}
-
-		@Override
-		public RealStruct subtract(final BigFloatStruct number2) {
-			final BigDecimal bigDecimal1 = NumberUtils.bigDecimalValue(number1.l);
-			final BigDecimal bigDecimal2 = number2.bigDecimal;
-			final BigDecimal subtract = bigDecimal1.subtract(bigDecimal2);
-			return BigFloatStruct.valueOf(subtract);
 		}
 
 		@Override
@@ -652,14 +634,6 @@ public final class LongIntegerStruct extends BuiltInClassStruct implements Integ
 		}
 
 		@Override
-		public RealStruct multiply(final BigFloatStruct number2) {
-			final BigDecimal bigDecimal1 = NumberUtils.bigDecimalValue(number1.l);
-			final BigDecimal bigDecimal2 = number2.bigDecimal;
-			final BigDecimal multiply = bigDecimal1.multiply(bigDecimal2);
-			return BigFloatStruct.valueOf(multiply);
-		}
-
-		@Override
 		public RealStruct multiply(final RatioStruct number2) {
 			final long l1 = number1.l;
 			final BigFraction bigFraction = number2.bigFraction;
@@ -726,14 +700,6 @@ public final class LongIntegerStruct extends BuiltInClassStruct implements Integ
 		}
 
 		@Override
-		public RealStruct divide(final BigFloatStruct number2) {
-			final BigDecimal bigDecimal1 = NumberUtils.bigDecimalValue(number1.l);
-			final BigDecimal bigDecimal2 = number2.bigDecimal;
-			final BigDecimal divide = bigDecimal1.divide(bigDecimal2, MathContext.DECIMAL128);
-			return BigFloatStruct.valueOf(divide);
-		}
-
-		@Override
 		public RealStruct divide(final RatioStruct number2) {
 			final BigFraction bigFraction1 = new BigFraction(number1.l);
 			final BigFraction bigFraction2 = number2.bigFraction;
@@ -787,6 +753,12 @@ public final class LongIntegerStruct extends BuiltInClassStruct implements Integ
 			final BigFraction bigFraction1 = new BigFraction(number1.l);
 			final BigFraction bigFraction2 = number2.bigFraction;
 			return bigFraction1.equals(bigFraction2);
+		}
+
+		@Override
+		public boolean equalTo(final ComplexStruct number2) {
+			// TODO
+			return super.equalTo(number2);
 		}
 	}
 
@@ -1039,15 +1011,15 @@ public final class LongIntegerStruct extends BuiltInClassStruct implements Integ
 		}
 
 		@Override
-		public NumberStruct expt(final BigFloatStruct power) {
-			// TODO: more efficient?
-			return exptFloatRatioNew(base.l, power.doubleValue());
-		}
-
-		@Override
 		public NumberStruct expt(final RatioStruct power) {
 			// TODO: more efficient?
 			return exptFloatRatioNew(base.l, power.bigFraction.doubleValue());
+		}
+
+		@Override
+		public NumberStruct expt(final ComplexStruct power) {
+			// TODO
+			return super.expt(power);
 		}
 	}
 

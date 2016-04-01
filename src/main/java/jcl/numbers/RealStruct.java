@@ -684,8 +684,6 @@ public interface RealStruct extends NumberStruct {
 
 		public abstract boolean lessThan(final DoubleFloatStruct real2);
 
-		public abstract boolean lessThan(final BigFloatStruct real2);
-
 		/**
 		 * {@inheritDoc}
 		 * <p>
@@ -726,8 +724,6 @@ public interface RealStruct extends NumberStruct {
 		public abstract boolean greaterThan(final SingleFloatStruct real2);
 
 		public abstract boolean greaterThan(final DoubleFloatStruct real2);
-
-		public abstract boolean greaterThan(final BigFloatStruct real2);
 
 		/**
 		 * {@inheritDoc}
@@ -770,8 +766,6 @@ public interface RealStruct extends NumberStruct {
 
 		public abstract boolean lessThanOrEqualTo(final DoubleFloatStruct real2);
 
-		public abstract boolean lessThanOrEqualTo(final BigFloatStruct real2);
-
 		/**
 		 * {@inheritDoc}
 		 * <p>
@@ -813,8 +807,6 @@ public interface RealStruct extends NumberStruct {
 
 		public abstract boolean greaterThanOrEqualTo(final DoubleFloatStruct real2);
 
-		public abstract boolean greaterThanOrEqualTo(final BigFloatStruct real2);
-
 		/**
 		 * {@inheritDoc}
 		 * <p>
@@ -840,8 +832,6 @@ public interface RealStruct extends NumberStruct {
 		public abstract FloatStruct floatingPoint(SingleFloatStruct real);
 
 		public abstract FloatStruct floatingPoint(DoubleFloatStruct real);
-
-		public abstract FloatStruct floatingPoint(BigFloatStruct real);
 
 		public abstract FloatStruct floatingPoint(RatioStruct real);
 	}
@@ -941,7 +931,7 @@ public interface RealStruct extends NumberStruct {
 
 			final RealStruct quotientReal;
 			if (isQuotientFloat) {
-				quotientReal = BigFloatStruct.valueOf(quotient);
+				quotientReal = DoubleFloatStruct.valueOf(quotient.doubleValue());
 			} else {
 				final BigInteger quotientBigInteger = quotient.toBigInteger();
 				quotientReal = IntegerStruct.valueOf(quotientBigInteger);
@@ -974,7 +964,7 @@ public interface RealStruct extends NumberStruct {
 				quotientReal = IntegerStruct.valueOf(quotientBigInteger);
 			}
 
-			final FloatStruct remainderFloat = BigFloatStruct.valueOf(remainder);
+			final FloatStruct remainderFloat = DoubleFloatStruct.valueOf(remainder.doubleValue());
 			return new QuotientRemainderResult(quotientReal, remainderFloat);
 		}
 
@@ -993,7 +983,7 @@ public interface RealStruct extends NumberStruct {
 					floatQuotient = SingleFloatStruct.ZERO;
 				}
 			} else {
-				floatQuotient = BigFloatStruct.valueOf(quotient);
+				floatQuotient = DoubleFloatStruct.valueOf(quotient.doubleValue());
 			}
 			return floatQuotient;
 		}
@@ -1025,9 +1015,6 @@ public interface RealStruct extends NumberStruct {
 		public abstract NumberStruct expt(final DoubleFloatStruct power);
 
 		@Override
-		public abstract NumberStruct expt(final BigFloatStruct power);
-
-		@Override
 		public abstract NumberStruct expt(final RatioStruct power);
 
 		static NumberStruct exptFloatRatioNew(final double x, final double y) {
@@ -1041,14 +1028,14 @@ public interface RealStruct extends NumberStruct {
 					final double imagPart = result * StrictMath.sin(y * Math.PI);
 
 					final BigDecimal realBigDecimal = NumberUtils.bigDecimalValue(realPart);
-					final FloatStruct real = BigFloatStruct.valueOf(realBigDecimal);
+					final FloatStruct real = DoubleFloatStruct.valueOf(realBigDecimal.doubleValue());
 					final BigDecimal imagBigDecimal = NumberUtils.bigDecimalValue(imagPart);
-					final FloatStruct imaginary = BigFloatStruct.valueOf(imagBigDecimal);
+					final FloatStruct imaginary = DoubleFloatStruct.valueOf(imagBigDecimal.doubleValue());
 					return ComplexStruct.makeComplexOrReal(real, imaginary);
 				}
 			}
 			final BigDecimal resultBigDecimal = NumberUtils.bigDecimalValue(result);
-			return BigFloatStruct.valueOf(resultBigDecimal);
+			return DoubleFloatStruct.valueOf(resultBigDecimal.doubleValue());
 		}
 
 		@Override

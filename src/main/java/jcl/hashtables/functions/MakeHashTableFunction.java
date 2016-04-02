@@ -54,10 +54,11 @@ public final class MakeHashTableFunction extends CommonLispBuiltInFunctionStruct
 //				IntegerType.Factory.getInstance(BigInteger.ONE, null),
 //				FloatType.Factory.getInstance(BigDecimal.ONE, null)
 //		)
-		final RealStruct rehashThreshold = arguments.getKeyArgument(REHASH_THRESHOLD, RealStruct.class);
+		// TODO: Float??
+		final FloatStruct rehashThreshold = arguments.getKeyArgument(REHASH_THRESHOLD, FloatStruct.class);
 //		RealType.Factory.getInstance(BigInteger.ZERO, BigInteger.ONE)
 
-		return new HashTableStruct(equatorTestFunction, size.bigIntegerValue(), rehashThreshold.bigDecimalValue());
+		return new HashTableStruct(equatorTestFunction, size.bigIntegerValue(), rehashThreshold.floatValue());
 	}
 
 	private FunctionStruct validateFunctionDesignator(final LispStruct functionDesignator) {

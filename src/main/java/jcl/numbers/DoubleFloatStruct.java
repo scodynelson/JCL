@@ -454,6 +454,11 @@ public final class DoubleFloatStruct extends BuiltInClassStruct implements Float
 		                          .isEquals();
 	}
 
+	@Override
+	public String toString() {
+		return String.valueOf(d);
+	}
+
 	// Visitor Implementations
 
 	/**

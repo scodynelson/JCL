@@ -5,6 +5,7 @@
 package jcl.numbers;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.math.RoundingMode;
 
 import org.apfloat.Apfloat;
@@ -14,11 +15,19 @@ import org.apfloat.Apfloat;
  */
 public interface FloatStruct extends RealStruct {
 
+	/**
+	 * Returns this FloatStruct as a {@code float} value.
+	 *
+	 * @return this FloatStruct as a {@code float} value
+	 */
 	float floatValue();
 
+	/**
+	 * Returns this FloatStruct as a {@code double} value.
+	 *
+	 * @return this FloatStruct as a {@code double} value
+	 */
 	double doubleValue();
-
-	BigDecimal bigDecimalValue();
 
 	FloatingPointVisitor<?> floatingPointVisitor();
 
@@ -370,7 +379,5 @@ public interface FloatStruct extends RealStruct {
 	}
 
 	@Deprecated
-	default BigDecimal getBigDecimal() {
-		return bigDecimalValue();
-	}
+	BigDecimal bigDecimalValue();
 }

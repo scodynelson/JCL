@@ -456,6 +456,11 @@ public final class SingleFloatStruct extends BuiltInClassStruct implements Float
 		                          .isEquals();
 	}
 
+	@Override
+	public String toString() {
+		return String.valueOf(f);
+	}
+
 	// Visitor Implementations
 
 	/**

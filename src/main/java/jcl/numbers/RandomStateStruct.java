@@ -26,31 +26,29 @@ public class RandomStateStruct extends BuiltInClassStruct {
 
 	/**
 	 * Retrieves a random {@link BigInteger} from the internal random seed.
+	 * TODO: fix??
 	 *
 	 * @param limit
 	 * 		the upper limit of the random {@link BigInteger}
 	 *
 	 * @return the random {@link BigInteger}
 	 */
-	public BigInteger randomInteger(final BigInteger limit) {
-
-		final long limitLong = limit.longValue();
-		final long randomLong = RandomUtils.nextLong(0L, limitLong);
+	public BigInteger randomInteger(final long limit) {
+		final long randomLong = RandomUtils.nextLong(0L, limit);
 		return BigInteger.valueOf(randomLong);
 	}
 
 	/**
 	 * Retrieves a random {@link BigDecimal} from the internal random seed.
+	 * TODO: fix??
 	 *
 	 * @param limit
 	 * 		the upper limit of the random {@link BigDecimal}
 	 *
 	 * @return the random {@link BigDecimal}
 	 */
-	public BigDecimal randomFloat(final BigDecimal limit) {
-
-		final double limitDouble = limit.doubleValue();
-		final double randomDouble = RandomUtils.nextDouble(0.0D, limitDouble);
+	public BigDecimal randomFloat(final double limit) {
+		final double randomDouble = RandomUtils.nextDouble(0.0D, limit);
 		return NumberUtils.bigDecimalValue(randomDouble);
 	}
 }

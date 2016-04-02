@@ -32,7 +32,7 @@ public class HashTableStruct extends BuiltInClassStruct {
 	/**
 	 * The threshold used in the rehashing of the {@link #map}.
 	 */
-	private final BigDecimal rehashThreshold;
+	private final float rehashThreshold;
 
 	/**
 	 * The internal {@link Map} containing the {@link LispStruct} keys and values.
@@ -49,12 +49,12 @@ public class HashTableStruct extends BuiltInClassStruct {
 	 * @param rehashThreshold
 	 * 		the threshold amount when resizing the table
 	 */
-	public HashTableStruct(final EquatorFunctionStruct test, final BigInteger size, final BigDecimal rehashThreshold) {
+	public HashTableStruct(final EquatorFunctionStruct test, final BigInteger size, final float rehashThreshold) {
 		super(HashTableType.INSTANCE, null, null);
 		this.test = test;
 		this.rehashThreshold = rehashThreshold;
 
-		map = new ConcurrentHashMap<>(size.intValue(), rehashThreshold.floatValue());
+		map = new ConcurrentHashMap<>(size.intValue(), rehashThreshold);
 	}
 
 	/**
@@ -80,7 +80,7 @@ public class HashTableStruct extends BuiltInClassStruct {
 	 *
 	 * @return hash-table {@link #rehashThreshold} property
 	 */
-	public BigDecimal getRehashThreshold() {
+	public float getRehashThreshold() {
 		return rehashThreshold;
 	}
 

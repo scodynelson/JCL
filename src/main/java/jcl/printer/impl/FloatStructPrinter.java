@@ -4,8 +4,6 @@
 
 package jcl.printer.impl;
 
-import java.math.BigDecimal;
-
 import jcl.numbers.FloatStruct;
 import jcl.printer.LispPrinter;
 import jcl.reader.struct.ReaderVariables;
@@ -24,20 +22,19 @@ public class FloatStructPrinter implements LispPrinter<FloatStruct> {
 		final FloatType floatType = (FloatType) object.getType();
 		final FloatType defaultFloatFormat = ReaderVariables.READ_DEFAULT_FLOAT_FORMAT.getVariableValue();
 
-		final BigDecimal bigDecimal = object.getBigDecimal();
-		String bigDecimalString = bigDecimal.toString();
+		String floatString = object.toString();
 		if (!floatType.equals(defaultFloatFormat)) {
 			if (floatType.equals(ShortFloatType.INSTANCE)) {
-				bigDecimalString = bigDecimalString.replace('E', 'S');
+				floatString = floatString.replace('E', 'S');
 			} else if (floatType.equals(SingleFloatType.INSTANCE)) {
-				bigDecimalString = bigDecimalString.replace('E', 'F');
+				floatString = floatString.replace('E', 'F');
 			} else if (floatType.equals(DoubleFloatType.INSTANCE)) {
-				bigDecimalString = bigDecimalString.replace('E', 'D');
+				floatString = floatString.replace('E', 'D');
 			} else if (floatType.equals(LongFloatType.INSTANCE)) {
-				bigDecimalString = bigDecimalString.replace('E', 'L');
+				floatString = floatString.replace('E', 'L');
 			}
 		}
 
-		return bigDecimalString;
+		return floatString;
 	}
 }

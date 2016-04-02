@@ -4,14 +4,12 @@
 
 package jcl.hashtables.functions;
 
-import java.math.BigDecimal;
-
 import jcl.LispStruct;
 import jcl.functions.CommonLispBuiltInFunctionStruct;
 import jcl.functions.parameterdsl.Arguments;
 import jcl.functions.parameterdsl.Parameters;
 import jcl.hashtables.HashTableStruct;
-import jcl.numbers.DoubleFloatStruct;
+import jcl.numbers.SingleFloatStruct;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -31,7 +29,7 @@ public final class HashTableRehashThresholdFunction extends CommonLispBuiltInFun
 	@Override
 	public LispStruct apply(final Arguments arguments) {
 		final HashTableStruct hashTable = arguments.getRequiredArgument(HASH_TABLE_ARGUMENT, HashTableStruct.class);
-		final BigDecimal rehashThreshold = hashTable.getRehashThreshold();
-		return DoubleFloatStruct.valueOf(rehashThreshold.doubleValue());
+		final float rehashThreshold = hashTable.getRehashThreshold();
+		return SingleFloatStruct.valueOf(rehashThreshold);
 	}
 }

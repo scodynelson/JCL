@@ -1000,20 +1000,23 @@ public final class LongIntegerStruct extends BuiltInClassStruct implements Integ
 
 		@Override
 		public NumberStruct expt(final SingleFloatStruct power) {
-			// TODO: more efficient?
-			return exptFloatRatioNew(base.l, power.f);
+			final float x = base.l;
+			final float y = power.f;
+			return exptSingleFloat(x, y);
 		}
 
 		@Override
 		public NumberStruct expt(final DoubleFloatStruct power) {
-			// TODO: more efficient?
-			return exptFloatRatioNew(base.l, power.d);
+			final double x = base.l;
+			final double y = power.d;
+			return exptDoubleFloat(x, y);
 		}
 
 		@Override
 		public NumberStruct expt(final RatioStruct power) {
-			// TODO: more efficient?
-			return exptFloatRatioNew(base.l, power.bigFraction.doubleValue());
+			final double x = base.l;
+			final double y = power.bigFraction.doubleValue();
+			return exptDoubleFloat(x, y);
 		}
 
 		@Override

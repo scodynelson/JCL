@@ -72,6 +72,18 @@ public final class SingleFloatStruct extends BuiltInClassStruct implements Float
 		return new SingleFloatStruct(f);
 	}
 
+	/**
+	 * Returns a SingleFloatStruct object with the provided {@code double} value converted to a {@code float}.
+	 *
+	 * @param d
+	 * 		the {@code double} value of the resulting SingleFloatStruct
+	 *
+	 * @return a SingleFloatStruct object with the provided {@code double} value converted to a {@code float}
+	 */
+	public static SingleFloatStruct valueOf(final Double d) {
+		return new SingleFloatStruct(NumberUtils.doubleToFloat(d));
+	}
+
 	/*
 		FloatStruct
 	 */
@@ -872,39 +884,44 @@ public final class SingleFloatStruct extends BuiltInClassStruct implements Float
 
 		@Override
 		public NumberStruct expt(final IntIntegerStruct power) {
-			// TODO: more efficient?
-			return exptFloatRatioNew(base.f, power.i);
+			final float x = base.f;
+			final float y = power.i;
+			return exptSingleFloat(x, y);
 		}
 
 		@Override
-		@SuppressWarnings("deprecation")
 		public NumberStruct expt(final LongIntegerStruct power) {
-			// TODO: more efficient?
-			return exptFloatRatioNew(base.f, power.l);
+			final float x = base.f;
+			final float y = power.l;
+			return exptSingleFloat(x, y);
 		}
 
 		@Override
 		public NumberStruct expt(final BigIntegerStruct power) {
-			// TODO: more efficient?
-			return exptFloatRatioNew(base.f, power.bigInteger.doubleValue());
+			final float x = base.f;
+			final float y = power.bigInteger.floatValue();
+			return exptSingleFloat(x, y);
 		}
 
 		@Override
 		public NumberStruct expt(final SingleFloatStruct power) {
-			// TODO: more efficient?
-			return exptFloatRatioNew(base.f, power.f);
+			final float x = base.f;
+			final float y = power.f;
+			return exptSingleFloat(x, y);
 		}
 
 		@Override
 		public NumberStruct expt(final DoubleFloatStruct power) {
-			// TODO: more efficient?
-			return exptFloatRatioNew(base.f, power.d);
+			final double x = base.f;
+			final double y = power.d;
+			return exptDoubleFloat(x, y);
 		}
 
 		@Override
 		public NumberStruct expt(final RatioStruct power) {
-			// TODO: more efficient?
-			return exptFloatRatioNew(base.f, power.bigFraction.doubleValue());
+			final float x = base.f;
+			final float y = power.bigFraction.floatValue();
+			return exptSingleFloat(x, y);
 		}
 
 		@Override

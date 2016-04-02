@@ -1017,8 +1017,24 @@ public interface RealStruct extends NumberStruct {
 		@Override
 		public abstract NumberStruct expt(final RatioStruct power);
 
-		static NumberStruct exptFloatRatioNew(final double x, final double y) {
-			// TODO: BigDecimal version???
+		static NumberStruct exptSingleFloat(final float x, final float y) {
+
+			float result = NumberUtils.pow(x, y);
+			if (Float.isNaN(result)) {
+				if (x < 0) {
+					result = NumberUtils.pow(-x, y);
+					final double realPart = result * StrictMath.cos(y * Math.PI);
+					final double imagPart = result * StrictMath.sin(y * Math.PI);
+
+					final SingleFloatStruct real = SingleFloatStruct.valueOf(realPart);
+					final SingleFloatStruct imaginary = SingleFloatStruct.valueOf(imagPart);
+					return ComplexStruct.makeComplexOrReal(real, imaginary);
+				}
+			}
+			return SingleFloatStruct.valueOf(result);
+		}
+
+		static NumberStruct exptDoubleFloat(final double x, final double y) {
 
 			double result = StrictMath.pow(x, y);
 			if (Double.isNaN(result)) {
@@ -1027,15 +1043,12 @@ public interface RealStruct extends NumberStruct {
 					final double realPart = result * StrictMath.cos(y * Math.PI);
 					final double imagPart = result * StrictMath.sin(y * Math.PI);
 
-					final BigDecimal realBigDecimal = NumberUtils.bigDecimalValue(realPart);
-					final FloatStruct real = DoubleFloatStruct.valueOf(realBigDecimal.doubleValue());
-					final BigDecimal imagBigDecimal = NumberUtils.bigDecimalValue(imagPart);
-					final FloatStruct imaginary = DoubleFloatStruct.valueOf(imagBigDecimal.doubleValue());
+					final FloatStruct real = DoubleFloatStruct.valueOf(realPart);
+					final FloatStruct imaginary = DoubleFloatStruct.valueOf(imagPart);
 					return ComplexStruct.makeComplexOrReal(real, imaginary);
 				}
 			}
-			final BigDecimal resultBigDecimal = NumberUtils.bigDecimalValue(result);
-			return DoubleFloatStruct.valueOf(resultBigDecimal.doubleValue());
+			return DoubleFloatStruct.valueOf(result);
 		}
 
 		@Override

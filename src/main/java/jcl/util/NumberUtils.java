@@ -77,4 +77,8 @@ public class NumberUtils {
 	public static float doubleToFloat(final double d) {
 		return (float) d;
 	}
+
+	public static float pow(final float x, final float y) {
+		return (float) StrictMath.pow(x, y);
+	}
 }

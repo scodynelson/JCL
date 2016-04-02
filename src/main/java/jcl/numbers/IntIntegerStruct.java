@@ -1096,20 +1096,23 @@ public final class IntIntegerStruct extends BuiltInClassStruct implements Intege
 
 		@Override
 		public NumberStruct expt(final SingleFloatStruct power) {
-			// TODO: more efficient?
-			return exptFloatRatioNew(base.i, power.f);
+			final float x = base.i;
+			final float y = power.f;
+			return exptSingleFloat(x, y);
 		}
 
 		@Override
 		public NumberStruct expt(final DoubleFloatStruct power) {
-			// TODO: more efficient?
-			return exptFloatRatioNew(base.i, power.d);
+			final double x = base.i;
+			final double y = power.d;
+			return exptDoubleFloat(x, y);
 		}
 
 		@Override
 		public NumberStruct expt(final RatioStruct power) {
-			// TODO: more efficient?
-			return exptFloatRatioNew(base.i, power.bigFraction.doubleValue());
+			final double x = base.i;
+			final double y = power.bigFraction.doubleValue();
+			return exptDoubleFloat(x, y);
 		}
 
 		@Override

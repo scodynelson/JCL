@@ -1019,29 +1019,23 @@ public final class BigIntegerStruct extends BuiltInClassStruct implements Intege
 
 		@Override
 		public NumberStruct expt(final SingleFloatStruct power) {
-			// TODO: more efficient?
-			if (LOGGER.isWarnEnabled()) {
-				LOGGER.warn("Possible loss of precision.");
-			}
-			return exptFloatRatioNew(base.bigInteger.doubleValue(), power.f);
+			final float x = base.bigInteger.floatValue();
+			final float y = power.f;
+			return exptSingleFloat(x, y);
 		}
 
 		@Override
 		public NumberStruct expt(final DoubleFloatStruct power) {
-			// TODO: more efficient?
-			if (LOGGER.isWarnEnabled()) {
-				LOGGER.warn("Possible loss of precision.");
-			}
-			return exptFloatRatioNew(base.bigInteger.doubleValue(), power.d);
+			final double x = base.bigInteger.doubleValue();
+			final double y = power.d;
+			return exptDoubleFloat(x, y);
 		}
 
 		@Override
 		public NumberStruct expt(final RatioStruct power) {
-			// TODO: more efficient?
-			if (LOGGER.isWarnEnabled()) {
-				LOGGER.warn("Possible loss of precision.");
-			}
-			return exptFloatRatioNew(base.bigInteger.doubleValue(), power.bigFraction.doubleValue());
+			final double x = base.bigInteger.doubleValue();
+			final double y = power.bigFraction.doubleValue();
+			return exptDoubleFloat(x, y);
 		}
 
 		@Override

@@ -882,39 +882,44 @@ public final class DoubleFloatStruct extends BuiltInClassStruct implements Float
 
 		@Override
 		public NumberStruct expt(final IntIntegerStruct power) {
-			// TODO: more efficient?
-			return exptFloatRatioNew(base.d, power.i);
+			final double x = base.d;
+			final double y = power.i;
+			return exptDoubleFloat(x, y);
 		}
 
 		@Override
-		@SuppressWarnings("deprecation")
 		public NumberStruct expt(final LongIntegerStruct power) {
-			// TODO: more efficient?
-			return exptFloatRatioNew(base.d, power.l);
+			final double x = base.d;
+			final double y = power.l;
+			return exptDoubleFloat(x, y);
 		}
 
 		@Override
 		public NumberStruct expt(final BigIntegerStruct power) {
-			// TODO: more efficient?
-			return exptFloatRatioNew(base.d, power.bigInteger.doubleValue());
+			final double x = base.d;
+			final double y = power.bigInteger.doubleValue();
+			return exptDoubleFloat(x, y);
 		}
 
 		@Override
 		public NumberStruct expt(final SingleFloatStruct power) {
-			// TODO: more efficient?
-			return exptFloatRatioNew(base.d, power.f);
+			final double x = base.d;
+			final double y = power.f;
+			return exptDoubleFloat(x, y);
 		}
 
 		@Override
 		public NumberStruct expt(final DoubleFloatStruct power) {
-			// TODO: more efficient?
-			return exptFloatRatioNew(base.d, power.d);
+			final double x = base.d;
+			final double y = power.d;
+			return exptDoubleFloat(x, y);
 		}
 
 		@Override
 		public NumberStruct expt(final RatioStruct power) {
-			// TODO: more efficient?
-			return exptFloatRatioNew(base.d, power.bigFraction.doubleValue());
+			final double x = base.d;
+			final double y = power.bigFraction.doubleValue();
+			return exptDoubleFloat(x, y);
 		}
 
 		@Override

@@ -884,29 +884,23 @@ public final class RatioStruct extends BuiltInClassStruct implements RationalStr
 
 		@Override
 		public NumberStruct expt(final SingleFloatStruct power) {
-//			// TODO: more efficient?
-			if (LOGGER.isWarnEnabled()) {
-				LOGGER.warn("Possible loss of precision.");
-			}
-			return exptFloatRatioNew(base.bigFraction.doubleValue(), power.f);
+			final float x = base.bigFraction.floatValue();
+			final float y = power.f;
+			return exptSingleFloat(x, y);
 		}
 
 		@Override
 		public NumberStruct expt(final DoubleFloatStruct power) {
-//			// TODO: more efficient?
-			if (LOGGER.isWarnEnabled()) {
-				LOGGER.warn("Possible loss of precision.");
-			}
-			return exptFloatRatioNew(base.bigFraction.doubleValue(), power.d);
+			final double x = base.bigFraction.doubleValue();
+			final double y = power.d;
+			return exptDoubleFloat(x, y);
 		}
 
 		@Override
 		public NumberStruct expt(final RatioStruct power) {
-//			// TODO: more efficient?
-			if (LOGGER.isWarnEnabled()) {
-				LOGGER.warn("Possible loss of precision.");
-			}
-			return exptFloatRatioNew(base.bigFraction.doubleValue(), power.bigFraction.doubleValue());
+			final double x = base.bigFraction.doubleValue();
+			final double y = power.bigFraction.doubleValue();
+			return exptDoubleFloat(x, y);
 		}
 
 		@Override

@@ -10,7 +10,6 @@ import java.math.RoundingMode;
 import java.util.List;
 
 import jcl.util.NumberUtils;
-import org.apache.commons.math3.fraction.BigFraction;
 import org.apfloat.Apcomplex;
 import org.apfloat.ApcomplexMath;
 import org.apfloat.Apfloat;
@@ -21,31 +20,48 @@ import org.apfloat.ApfloatMath;
  */
 public interface RealStruct extends NumberStruct {
 
+	/**
+	 * Performs a {@literal '<'} comparison of this RealStruct and the provided RealStruct.
+	 *
+	 * @param real
+	 * 		the RealStruct to be used in the {@literal '<'} operation
+	 *
+	 * @return the {@literal '<'} comparison of this RealStruct and the provided RealStruct
+	 */
 	default boolean isLessThan(final RealStruct real) {
 		final LessThanVisitor<?> lessThanVisitor = lessThanVisitor();
 		return real.isLessThan(lessThanVisitor);
 	}
 
 	/**
-	 * {@inheritDoc}
-	 * <p>
-	 * Compares this RatioStruct to a {@link NumberStruct} using the provided {@link RealStruct.LessThanVisitor}.
+	 * Performs a {@literal '<'} comparison of this RealStruct using the provided {@link LessThanVisitor}.
 	 *
 	 * @param lessThanVisitor
-	 * 		the {@link RealStruct.LessThanVisitor} to be used in the {@literal '<'} operation
+	 * 		the {@link LessThanVisitor} to be used in the {@literal '<'} operation
 	 *
-	 * @return the {@literal '<'} comparison of {@link NumberStruct} using the provided {@link
-	 * RealStruct.LessThanVisitor} and this RatioStruct
+	 * @return the {@literal '<'} comparison of this RealStruct using the provided {@link LessThanVisitor}
 	 */
 	boolean isLessThan(LessThanVisitor<?> lessThanVisitor);
 
 	/**
-	 * Returns a new {@link RealStruct.LessThanVisitor} with this RatioStruct to be used in a {@literal '<'} operation.
+	 * Returns a new {@link LessThanVisitor} with this RealStruct to be used in a {@literal '<'} comparison.
 	 *
-	 * @return a new {@link RealStruct.LessThanVisitor} with this RatioStruct to be used in a {@literal '<'} operation
+	 * @return a new {@link LessThanVisitor} with this RealStruct to be used in a {@literal '<'} comparison
 	 */
 	LessThanVisitor<?> lessThanVisitor();
 
+	/**
+	 * Performs a {@literal '<'} comparison of the provided RealStructs in order, using the single {@code real} as the
+	 * starting point in the comparison. If at any point a value does not follow the expected comparison, the
+	 * comparison loop with short-circuit.
+	 *
+	 * @param real
+	 * 		the initial RealStruct used in the {@literal '<'} comparison
+	 * @param reals
+	 * 		the RealStructs used in the {@literal '<'} comparison
+	 *
+	 * @return the {@literal '<'} comparison provided RealStruct
+	 */
 	static boolean isLessThan(final RealStruct real, final List<RealStruct> reals) {
 		RealStruct previousReal = real;
 
@@ -60,33 +76,48 @@ public interface RealStruct extends NumberStruct {
 		return result;
 	}
 
+	/**
+	 * Performs a {@literal '>'} comparison of this RealStruct and the provided RealStruct.
+	 *
+	 * @param real
+	 * 		the RealStruct to be used in the {@literal '>'} operation
+	 *
+	 * @return the {@literal '>'} comparison of this RealStruct and the provided RealStruct
+	 */
 	default boolean isGreaterThan(final RealStruct real) {
 		final GreaterThanVisitor<?> greaterThanVisitor = greaterThanVisitor();
 		return real.isGreaterThan(greaterThanVisitor);
 	}
 
 	/**
-	 * {@inheritDoc}
-	 * <p>
-	 * Compares this RatioStruct to a {@link NumberStruct} using the provided {@link RealStruct.GreaterThanVisitor}.
+	 * Performs a {@literal '>'} comparison of this RealStruct using the provided {@link GreaterThanVisitor}.
 	 *
 	 * @param greaterThanVisitor
-	 * 		the {@link RealStruct.GreaterThanVisitor} to be used in the {@literal '>'} operation
+	 * 		the {@link GreaterThanVisitor} to be used in the {@literal '>'} operation
 	 *
-	 * @return the {@literal '>'} comparison of {@link NumberStruct} using the provided {@link
-	 * RealStruct.GreaterThanVisitor} and this RatioStruct
+	 * @return the {@literal '>'} comparison of this RealStruct using the provided {@link GreaterThanVisitor}
 	 */
 	boolean isGreaterThan(GreaterThanVisitor<?> greaterThanVisitor);
 
 	/**
-	 * Returns a new {@link RealStruct.GreaterThanVisitor} with this RatioStruct to be used in a {@literal '>'}
-	 * operation.
+	 * Returns a new {@link GreaterThanVisitor} with this RealStruct to be used in a {@literal '>'} comparison.
 	 *
-	 * @return a new {@link RealStruct.GreaterThanVisitor} with this RatioStruct to be used in a {@literal '>'}
-	 * operation
+	 * @return a new {@link GreaterThanVisitor} with this RealStruct to be used in a {@literal '>'} comparison
 	 */
 	GreaterThanVisitor<?> greaterThanVisitor();
 
+	/**
+	 * Performs a {@literal '>'} comparison of the provided RealStructs in order, using the single {@code real} as the
+	 * starting point in the comparison. If at any point a value does not follow the expected comparison, the
+	 * comparison loop with short-circuit.
+	 *
+	 * @param real
+	 * 		the initial RealStruct used in the {@literal '>'} comparison
+	 * @param reals
+	 * 		the RealStructs used in the {@literal '>'} comparison
+	 *
+	 * @return the {@literal '>'} comparison provided RealStruct
+	 */
 	static boolean isGreaterThan(final RealStruct real, final List<RealStruct> reals) {
 		RealStruct previousReal = real;
 
@@ -101,34 +132,48 @@ public interface RealStruct extends NumberStruct {
 		return result;
 	}
 
+	/**
+	 * Performs a {@literal '<='} comparison of this RealStruct and the provided RealStruct.
+	 *
+	 * @param real
+	 * 		the RealStruct to be used in the {@literal '<='} operation
+	 *
+	 * @return the {@literal '<='} comparison of this RealStruct and the provided RealStruct
+	 */
 	default boolean isLessThanOrEqualTo(final RealStruct real) {
 		final LessThanOrEqualToVisitor<?> lessThanOrEqualToVisitor = lessThanOrEqualToVisitor();
 		return real.isLessThanOrEqualTo(lessThanOrEqualToVisitor);
 	}
 
 	/**
-	 * {@inheritDoc}
-	 * <p>
-	 * Compares this RatioStruct to a {@link NumberStruct} using the provided {@link
-	 * RealStruct.LessThanOrEqualToVisitor}.
+	 * Performs a {@literal '<='} comparison of this RealStruct using the provided {@link LessThanOrEqualToVisitor}.
 	 *
 	 * @param lessThanOrEqualToVisitor
-	 * 		the {@link RealStruct.LessThanOrEqualToVisitor} to be used in the {@literal '<='} operation
+	 * 		the {@link LessThanOrEqualToVisitor} to be used in the {@literal '<='} operation
 	 *
-	 * @return the {@literal '<='} comparison of {@link NumberStruct} using the provided {@link
-	 * RealStruct.LessThanOrEqualToVisitor} and this RatioStruct
+	 * @return the {@literal '<='} comparison of this RealStruct using the provided {@link LessThanOrEqualToVisitor}
 	 */
 	boolean isLessThanOrEqualTo(LessThanOrEqualToVisitor<?> lessThanOrEqualToVisitor);
 
 	/**
-	 * Returns a new {@link RealStruct.LessThanOrEqualToVisitor} with this RatioStruct to be used in a {@literal '<='}
-	 * operation.
+	 * Returns a new {@link LessThanOrEqualToVisitor} with this RealStruct to be used in a {@literal '<='} comparison.
 	 *
-	 * @return a new {@link RealStruct.LessThanOrEqualToVisitor} with this RatioStruct to be used in a {@literal '<='}
-	 * operation
+	 * @return a new {@link LessThanOrEqualToVisitor} with this RealStruct to be used in a {@literal '<='} comparison
 	 */
 	LessThanOrEqualToVisitor<?> lessThanOrEqualToVisitor();
 
+	/**
+	 * Performs a {@literal '<='} comparison of the provided RealStructs in order, using the single {@code real} as the
+	 * starting point in the comparison. If at any point a value does not follow the expected comparison, the
+	 * comparison loop with short-circuit.
+	 *
+	 * @param real
+	 * 		the initial RealStruct used in the {@literal '<='} comparison
+	 * @param reals
+	 * 		the RealStructs used in the {@literal '<='} comparison
+	 *
+	 * @return the {@literal '<='} comparison provided RealStruct
+	 */
 	static boolean isLessThanOrEqualTo(final RealStruct real, final List<RealStruct> reals) {
 		RealStruct previousReal = real;
 
@@ -143,34 +188,49 @@ public interface RealStruct extends NumberStruct {
 		return result;
 	}
 
+	/**
+	 * Performs a {@literal '>='} comparison of this RealStruct and the provided RealStruct.
+	 *
+	 * @param real
+	 * 		the RealStruct to be used in the {@literal '>='} operation
+	 *
+	 * @return the {@literal '>='} comparison of this RealStruct and the provided RealStruct
+	 */
 	default boolean isGreaterThanOrEqualTo(final RealStruct real) {
 		final GreaterThanOrEqualToVisitor<?> greaterThanOrEqualToVisitor = greaterThanOrEqualToVisitor();
 		return real.isGreaterThanOrEqualTo(greaterThanOrEqualToVisitor);
 	}
 
 	/**
-	 * {@inheritDoc}
-	 * <p>
-	 * Compares this RatioStruct to a {@link NumberStruct} using the provided {@link
-	 * RealStruct.GreaterThanOrEqualToVisitor}.
+	 * Performs a {@literal '>='} comparison of this RealStruct using the provided {@link GreaterThanOrEqualToVisitor}.
 	 *
 	 * @param greaterThanOrEqualToVisitor
-	 * 		the {@link RealStruct.GreaterThanOrEqualToVisitor} to be used in the {@literal '>='} operation
+	 * 		the {@link GreaterThanOrEqualToVisitor} to be used in the {@literal '>='} operation
 	 *
-	 * @return the {@literal '>='} comparison of {@link NumberStruct} using the provided {@link
-	 * RealStruct.GreaterThanOrEqualToVisitor} and this RatioStruct
+	 * @return the {@literal '>='} comparison of this RealStruct using the provided {@link GreaterThanOrEqualToVisitor}
 	 */
 	boolean isGreaterThanOrEqualTo(GreaterThanOrEqualToVisitor<?> greaterThanOrEqualToVisitor);
 
 	/**
-	 * Returns a new {@link RealStruct.GreaterThanOrEqualToVisitor} with this RatioStruct to be used in a {@literal
-	 * '>='} operation.
+	 * Returns a new {@link GreaterThanOrEqualToVisitor} with this RealStruct to be used in a {@literal '>='}
+	 * comparison.
 	 *
-	 * @return a new {@link RealStruct.GreaterThanOrEqualToVisitor} with this RatioStruct to be used in a {@literal
-	 * '>='} operation
+	 * @return a new {@link GreaterThanOrEqualToVisitor} with this RealStruct to be used in a {@literal '>='} comparison
 	 */
 	GreaterThanOrEqualToVisitor<?> greaterThanOrEqualToVisitor();
 
+	/**
+	 * Performs a {@literal '>='} comparison of the provided RealStructs in order, using the single {@code real} as the
+	 * starting point in the comparison. If at any point a value does not follow the expected comparison, the
+	 * comparison loop with short-circuit.
+	 *
+	 * @param real
+	 * 		the initial RealStruct used in the {@literal '>='} comparison
+	 * @param reals
+	 * 		the RealStructs used in the {@literal '>='} comparison
+	 *
+	 * @return the {@literal '>='} comparison provided RealStruct
+	 */
 	static boolean isGreaterThanOrEqualTo(final RealStruct real, final List<RealStruct> reals) {
 		RealStruct previousReal = real;
 
@@ -186,25 +246,44 @@ public interface RealStruct extends NumberStruct {
 	}
 
 	/**
-	 * {@inheritDoc}
-	 * <p>
-	 * Determines whether or not this RatioStruct is positive by comparing {@code #bigFraction} to {@link
-	 * BigFraction#ZERO}.
+	 * Determines whether or not this RealStruct is positive.
+	 *
+	 * @return true if this RealStruct is positive; false otherwise
 	 */
 	boolean plusp();
 
 	/**
-	 * {@inheritDoc}
-	 * <p>
-	 * Determines whether or not this RatioStruct is negative by comparing {@code #bigFraction} to {@link
-	 * BigFraction#ZERO}.
+	 * Determines whether or not this RealStruct is negative.
+	 *
+	 * @return true if this RealStruct is negative; false otherwise
 	 */
 	boolean minusp();
 
+	/**
+	 * Returns the most positive value when comparing the value of this RealStruct and the provided RealStruct.
+	 *
+	 * @param real
+	 * 		the RealStruct used and possibly returned if it is greater than this RealStruct
+	 *
+	 * @return the most positive value when comparing the value of this RealStruct and the provided RealStruct
+	 */
 	default RealStruct max(final RealStruct real) {
 		return isGreaterThanOrEqualTo(real) ? this : real;
 	}
 
+	/**
+	 * Returns the most positive value when comparing the values of the provided RealStructs in order, using the single
+	 * {@code real} as the starting point in the comparison.
+	 *
+	 * @param real
+	 * 		the initial RealStruct used in the comparison, and possibly returned if the {@link List} of RealStructs is
+	 * 		empty
+	 * @param reals
+	 * 		the RealStructs used in the comparison in determining the greatest value
+	 *
+	 * @return the most positive value when comparing the value of the initial RealStruct and the provided {@link List}
+	 * of RealStructs
+	 */
 	static RealStruct max(final RealStruct real, final List<RealStruct> reals) {
 		if (reals.isEmpty()) {
 			return real;
@@ -212,10 +291,31 @@ public interface RealStruct extends NumberStruct {
 		return reals.stream().reduce(real, RealStruct::max);
 	}
 
+	/**
+	 * Returns the least positive value when comparing the value of this RealStruct and the provided RealStruct.
+	 *
+	 * @param real
+	 * 		the RealStruct used and possibly returned if it is less than this RealStruct
+	 *
+	 * @return the least positive value when comparing the value of this RealStruct and the provided RealStruct
+	 */
 	default RealStruct min(final RealStruct real) {
 		return isLessThanOrEqualTo(real) ? this : real;
 	}
 
+	/**
+	 * Returns the least positive value when comparing the values of the provided RealStructs in order, using the
+	 * single {@code real} as the starting point in the comparison.
+	 *
+	 * @param real
+	 * 		the initial RealStruct used in the comparison, and possibly returned if the {@link List} of RealStructs is
+	 * 		empty
+	 * @param reals
+	 * 		the RealStructs used in the comparison in determining the least greatest value
+	 *
+	 * @return the least positive value when comparing the value of the initial RealStruct and the provided {@link List}
+	 * of RealStructs
+	 */
 	static RealStruct min(final RealStruct real, final List<RealStruct> reals) {
 		if (reals.isEmpty()) {
 			return real;
@@ -224,19 +324,42 @@ public interface RealStruct extends NumberStruct {
 	}
 
 	/**
-	 * {@inheritDoc}
-	 * <p>
-	 * Returns {@code this} as any RationalStruct is already in rational form.
+	 * Returns this RealStruct as a representational {@link RationalStruct}.
+	 *
+	 * @return this RealStruct as a representational {@link RationalStruct}
 	 */
 	RationalStruct rational();
 
+	/**
+	 * Returns this RealStruct as a representational {@link FloatStruct}.
+	 *
+	 * @return this RealStruct as a representational {@link FloatStruct}
+	 */
 	FloatStruct floatingPoint();
 
+	/**
+	 * Returns this RealStruct as a representational {@link FloatStruct}, using the prototype as the type of {@link
+	 * FloatStruct} to return.
+	 *
+	 * @param prototype
+	 * 		an object representing the type of {@link FloatStruct} to return
+	 *
+	 * @return this RealStruct as a representational {@link FloatStruct}
+	 */
 	default FloatStruct floatingPoint(final FloatStruct prototype) {
 		final FloatingPointVisitor<?> floatingPointVisitor = prototype.floatingPointVisitor();
 		return floatingPoint(floatingPointVisitor);
 	}
 
+	/**
+	 * Returns this RealStruct as a representational {@link FloatStruct} using the provided {@link
+	 * FloatingPointVisitor}.
+	 *
+	 * @param floatingPointVisitor
+	 * 		the {@link FloatingPointVisitor} to be used in the {@link FloatStruct} conversion
+	 *
+	 * @return this RealStruct as a representational {@link FloatStruct} using the provided {@link FloatingPointVisitor}
+	 */
 	FloatStruct floatingPoint(FloatingPointVisitor<?> floatingPointVisitor);
 
 	default RealStruct mod(final RealStruct divisor) {

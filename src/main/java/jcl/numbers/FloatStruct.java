@@ -5,7 +5,6 @@
 package jcl.numbers;
 
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.math.RoundingMode;
 
 import org.apfloat.Apfloat;
@@ -29,12 +28,15 @@ public interface FloatStruct extends RealStruct {
 	 */
 	double doubleValue();
 
+	/**
+	 * Returns a new {@link FloatingPointVisitor} with this FloatStruct to be used as the prototype for conversion.
+	 *
+	 * @return a new {@link FloatingPointVisitor} with this FloatStruct to be used as the prototype for conversion
+	 */
 	FloatingPointVisitor<?> floatingPointVisitor();
 
 	/**
-	 * Computes the three main values that characterize this FloatStruct: the significand, exponent, and sign. The
-	 * calculation for these values are based on the decoding for Java {@link Double} values from the algorithm defined
-	 * in {@link Double#longBitsToDouble}.
+	 * Computes the three main values that characterize this FloatStruct: the significand, exponent, and sign..
 	 *
 	 * @return a {@link DecodeFloatResult} containing the decoded significand, exponent, and sign for this FloatStruct
 	 */
@@ -42,33 +44,71 @@ public interface FloatStruct extends RealStruct {
 
 	/**
 	 * Computes the three main values that characterize this FloatStruct: the significand, exponent, and sign. The
-	 * calculation for these values are based on the decoding for Java {@link Double} values from the algorithm defined
-	 * in {@link Double#longBitsToDouble}. The difference between this method an {@link #decodeFloat()} is that the
-	 * significand and sign will both be {@link IntegerStruct}s with a special weighting between the significand and
-	 * exponent based on the scaling needed for the significand to produce an {@link IntegerStruct}.
+	 * difference between this method an {@link #decodeFloat()} is that the significand and sign will both be {@link
+	 * IntegerStruct}s with a special weighting between the significand and exponent based on the scaling needed for
+	 * the
+	 * significand to produce an {@link IntegerStruct}.
 	 *
 	 * @return a {@link DecodeFloatResult} containing the decoded significand, exponent, and sign for this FloatStruct
 	 */
 	DecodeFloatResult integerDecodeFloat();
 
+	/**
+	 * Returns (* float (expt (float b float) scale)), where b is the radix of the floating-point representation.
+	 *
+	 * @param scale
+	 * 		the
+	 *
+	 * @return this FloatStruct scaled to the provided scale value
+	 */
 	default NumberStruct scaleFloat(final IntegerStruct scale) {
 		final IntegerStruct radix = floatRadix();
 		final NumberStruct expt = radix.expt(scale);
 		return multiply(expt);
 	}
 
+	/**
+	 * Returns the number of radix b digits used in the representation of this FloatStruct.
+	 *
+	 * @return the number of radix b digits used in the representation of this FloatStruct
+	 */
 	default IntegerStruct floatDigits() {
 		return floatPrecision();
 	}
 
+	/**
+	 * Returns the number of significant radix b digits present in this FloatStruct.
+	 *
+	 * @return the number of significant radix b digits present in this FloatStruct
+	 */
 	IntegerStruct floatPrecision();
 
+	/**
+	 * The radix of the FloatStruct.
+	 *
+	 * @return the radix of the FloatStruct
+	 */
 	default IntegerStruct floatRadix() {
 		return IntegerStruct.TWO;
 	}
 
+	/**
+	 * Returns either a {@code 1} or a {@code -1} value based on the sign of the FloatStruct.
+	 *
+	 * @return a {@code 1} or a {@code -1} value based on the sign of the FloatStruct
+	 */
 	FloatStruct floatSign();
 
+	/**
+	 * Returns a number z such that z and this FloatStruct have the same sign and also such that z and float2 have the
+	 * same absolute value.
+	 *
+	 * @param float2
+	 * 		the value of the resulting FloatStruct
+	 *
+	 * @return a number z such that z and this FloatStruct have the same sign and also such that z and float2 have the
+	 * same absolute value
+	 */
 	default FloatStruct floatSign(final FloatStruct float2) {
 		if (minusp()) {
 			if (float2.minusp()) {

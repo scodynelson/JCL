@@ -145,21 +145,9 @@ public interface RationalStruct extends RealStruct {
 		return RatioStruct.valueOf(bigFraction);
 	}
 
-	@Override
-	default RealStruct imagPart() {
-		return IntegerStruct.ZERO;
-	}
-
-	@Override
-	default NumberStruct signum() {
-		if (zerop()) {
-			return this;
-		} else if (plusp()) {
-			return IntegerStruct.ONE;
-		} else {
-			return IntegerStruct.MINUS_ONE;
-		}
-	}
+	/*
+		RealStruct
+	 */
 
 	@Override
 	default RationalStruct rational() {
@@ -185,6 +173,22 @@ public interface RationalStruct extends RealStruct {
 
 		final ExptVisitor<?> exptVisitor = exptVisitor();
 		return power.expt(exptVisitor);
+	}
+
+	@Override
+	default NumberStruct signum() {
+		if (zerop()) {
+			return this;
+		} else if (plusp()) {
+			return IntegerStruct.ONE;
+		} else {
+			return IntegerStruct.MINUS_ONE;
+		}
+	}
+
+	@Override
+	default RealStruct imagPart() {
+		return IntegerStruct.ZERO;
 	}
 
 	// Visitor Implementations

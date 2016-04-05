@@ -774,166 +774,326 @@ public interface RealStruct extends NumberStruct {
 		}
 	}
 
+	/**
+	 * {@link LessThanVisitor} for computing numeric {@literal '<'} equality for {@link RealStruct}s.
+	 */
 	abstract class LessThanVisitor<S extends RealStruct> {
 
+		/**
+		 * The {@link S} as the first argument in the equality operation.
+		 */
 		final S real1;
 
+		/**
+		 * Package private constructor.
+		 *
+		 * @param real1
+		 * 		the first argument in the equality operation
+		 */
 		LessThanVisitor(final S real1) {
 			this.real1 = real1;
 		}
 
 		/**
-		 * {@inheritDoc}
-		 * <p>
-		 * Computes the numeric {@literal '<'} equality result for an {@link RatioStruct} and a {@link IntegerStruct}.
+		 * Computes the numeric {@literal '<'} equality for an {@link S} and an {@link IntIntegerStruct}.
+		 *
+		 * @param real2
+		 * 		the second argument in the equality operation
+		 *
+		 * @return true if {@link #real1} is less than the provided {@link IntIntegerStruct}
 		 */
 		public abstract boolean lessThan(final IntIntegerStruct real2);
 
 		/**
-		 * {@inheritDoc}
-		 * <p>
-		 * Computes the numeric {@literal '<'} equality result for an {@link RatioStruct} and a {@link IntegerStruct}.
+		 * Computes the numeric {@literal '<'} equality for an {@link S} and an {@link LongIntegerStruct}.
+		 *
+		 * @param real2
+		 * 		the second argument in the equality operation
+		 *
+		 * @return true if {@link #real1} is less than the provided {@link LongIntegerStruct}
 		 */
 		public abstract boolean lessThan(final LongIntegerStruct real2);
 
 		/**
-		 * {@inheritDoc}
-		 * <p>
-		 * Computes the numeric {@literal '<'} equality result for an {@link RatioStruct} and a {@link IntegerStruct}.
+		 * Computes the numeric {@literal '<'} equality for an {@link S} and an {@link BigIntegerStruct}.
+		 *
+		 * @param real2
+		 * 		the second argument in the equality operation
+		 *
+		 * @return true if {@link #real1} is less than the provided {@link BigIntegerStruct}
 		 */
 		public abstract boolean lessThan(final BigIntegerStruct real2);
 
+		/**
+		 * Computes the numeric {@literal '<'} equality for an {@link S} and an {@link SingleFloatStruct}.
+		 *
+		 * @param real2
+		 * 		the second argument in the equality operation
+		 *
+		 * @return true if {@link #real1} is less than the provided {@link SingleFloatStruct}
+		 */
 		public abstract boolean lessThan(final SingleFloatStruct real2);
 
+		/**
+		 * Computes the numeric {@literal '<'} equality for an {@link S} and an {@link DoubleFloatStruct}.
+		 *
+		 * @param real2
+		 * 		the second argument in the equality operation
+		 *
+		 * @return true if {@link #real1} is less than the provided {@link DoubleFloatStruct}
+		 */
 		public abstract boolean lessThan(final DoubleFloatStruct real2);
 
 		/**
-		 * {@inheritDoc}
-		 * <p>
-		 * Computes the numeric {@literal '<'} equality result for {@link RatioStruct}s.
+		 * Computes the numeric {@literal '<'} equality for an {@link S} and an {@link RatioStruct}.
+		 *
+		 * @param real2
+		 * 		the second argument in the equality operation
+		 *
+		 * @return true if {@link #real1} is less than the provided {@link RatioStruct}
 		 */
 		public abstract boolean lessThan(final RatioStruct real2);
 	}
 
+	/**
+	 * {@link GreaterThanVisitor} for computing numeric {@literal '>'} equality for {@link RealStruct}s.
+	 */
 	abstract class GreaterThanVisitor<S extends RealStruct> {
 
+		/**
+		 * The {@link S} as the first argument in the equality operation.
+		 */
 		final S real1;
 
+		/**
+		 * Package private constructor.
+		 *
+		 * @param real1
+		 * 		the first argument in the equality operation
+		 */
 		GreaterThanVisitor(final S real1) {
 			this.real1 = real1;
 		}
 
 		/**
-		 * {@inheritDoc}
-		 * <p>
-		 * Computes the numeric {@literal '>'} equality result for an {@link RatioStruct} and a {@link IntegerStruct}.
+		 * Computes the numeric {@literal '>'} equality for an {@link S} and an {@link IntIntegerStruct}.
+		 *
+		 * @param real2
+		 * 		the second argument in the equality operation
+		 *
+		 * @return true if {@link #real1} is greater than the provided {@link IntIntegerStruct}
 		 */
 		public abstract boolean greaterThan(final IntIntegerStruct real2);
 
 		/**
-		 * {@inheritDoc}
-		 * <p>
-		 * Computes the numeric {@literal '>'} equality result for an {@link RatioStruct} and a {@link IntegerStruct}.
+		 * Computes the numeric {@literal '>'} equality for an {@link S} and an {@link LongIntegerStruct}.
+		 *
+		 * @param real2
+		 * 		the second argument in the equality operation
+		 *
+		 * @return true if {@link #real1} is greater than the provided {@link LongIntegerStruct}
 		 */
 		public abstract boolean greaterThan(final LongIntegerStruct real2);
 
 		/**
-		 * {@inheritDoc}
-		 * <p>
-		 * Computes the numeric {@literal '>'} equality result for an {@link RatioStruct} and a {@link IntegerStruct}.
+		 * Computes the numeric {@literal '>'} equality for an {@link S} and an {@link BigIntegerStruct}.
+		 *
+		 * @param real2
+		 * 		the second argument in the equality operation
+		 *
+		 * @return true if {@link #real1} is greater than the provided {@link BigIntegerStruct}
 		 */
 		public abstract boolean greaterThan(final BigIntegerStruct real2);
 
+		/**
+		 * Computes the numeric {@literal '>'} equality for an {@link S} and an {@link SingleFloatStruct}.
+		 *
+		 * @param real2
+		 * 		the second argument in the equality operation
+		 *
+		 * @return true if {@link #real1} is greater than the provided {@link SingleFloatStruct}
+		 */
 		public abstract boolean greaterThan(final SingleFloatStruct real2);
 
+		/**
+		 * Computes the numeric {@literal '>'} equality for an {@link S} and an {@link DoubleFloatStruct}.
+		 *
+		 * @param real2
+		 * 		the second argument in the equality operation
+		 *
+		 * @return true if {@link #real1} is greater than the provided {@link DoubleFloatStruct}
+		 */
 		public abstract boolean greaterThan(final DoubleFloatStruct real2);
 
 		/**
-		 * {@inheritDoc}
-		 * <p>
-		 * Computes the numeric {@literal '>'} equality result for {@link RatioStruct}s.
+		 * Computes the numeric {@literal '>'} equality for an {@link S} and an {@link RatioStruct}.
+		 *
+		 * @param real2
+		 * 		the second argument in the equality operation
+		 *
+		 * @return true if {@link #real1} is greater than the provided {@link RatioStruct}
 		 */
 		public abstract boolean greaterThan(final RatioStruct real2);
 	}
 
+	/**
+	 * {@link LessThanOrEqualToVisitor} for computing numeric {@literal '<='} equality for {@link RealStruct}s.
+	 */
 	abstract class LessThanOrEqualToVisitor<S extends RealStruct> {
 
+		/**
+		 * The {@link S} as the first argument in the equality operation.
+		 */
 		final S real1;
 
+		/**
+		 * Package private constructor.
+		 *
+		 * @param real1
+		 * 		the first argument in the equality operation
+		 */
 		LessThanOrEqualToVisitor(final S real1) {
 			this.real1 = real1;
 		}
 
 		/**
-		 * {@inheritDoc}
-		 * <p>
-		 * Computes the numeric {@literal '<='} equality result for an {@link RatioStruct} and a {@link IntegerStruct}.
+		 * Computes the numeric {@literal '<='} equality for an {@link S} and an {@link IntIntegerStruct}.
+		 *
+		 * @param real2
+		 * 		the second argument in the equality operation
+		 *
+		 * @return true if {@link #real1} is less than or equal to the provided {@link IntIntegerStruct}
 		 */
 		public abstract boolean lessThanOrEqualTo(final IntIntegerStruct real2);
 
 		/**
-		 * {@inheritDoc}
-		 * <p>
-		 * Computes the numeric {@literal '<='} equality result for an {@link RatioStruct} and a {@link IntegerStruct}.
+		 * Computes the numeric {@literal '<='} equality for an {@link S} and an {@link LongIntegerStruct}.
+		 *
+		 * @param real2
+		 * 		the second argument in the equality operation
+		 *
+		 * @return true if {@link #real1} is less than or equal to the provided {@link LongIntegerStruct}
 		 */
 		public abstract boolean lessThanOrEqualTo(final LongIntegerStruct real2);
 
 		/**
-		 * {@inheritDoc}
-		 * <p>
-		 * Computes the numeric {@literal '<='} equality result for an {@link RatioStruct} and a {@link IntegerStruct}.
+		 * Computes the numeric {@literal '<='} equality for an {@link S} and an {@link BigIntegerStruct}.
+		 *
+		 * @param real2
+		 * 		the second argument in the equality operation
+		 *
+		 * @return true if {@link #real1} is less than or equal to the provided {@link BigIntegerStruct}
 		 */
 		public abstract boolean lessThanOrEqualTo(final BigIntegerStruct real2);
 
+		/**
+		 * Computes the numeric {@literal '<='} equality for an {@link S} and an {@link SingleFloatStruct}.
+		 *
+		 * @param real2
+		 * 		the second argument in the equality operation
+		 *
+		 * @return true if {@link #real1} is less than or equal to the provided {@link SingleFloatStruct}
+		 */
 		public abstract boolean lessThanOrEqualTo(final SingleFloatStruct real2);
 
+		/**
+		 * Computes the numeric {@literal '<='} equality for an {@link S} and an {@link DoubleFloatStruct}.
+		 *
+		 * @param real2
+		 * 		the second argument in the equality operation
+		 *
+		 * @return true if {@link #real1} is less than or equal to the provided {@link DoubleFloatStruct}
+		 */
 		public abstract boolean lessThanOrEqualTo(final DoubleFloatStruct real2);
 
 		/**
-		 * {@inheritDoc}
-		 * <p>
-		 * Computes the numeric {@literal '<='} equality result for {@link RatioStruct}s.
+		 * Computes the numeric {@literal '<='} equality for an {@link S} and an {@link RatioStruct}.
+		 *
+		 * @param real2
+		 * 		the second argument in the equality operation
+		 *
+		 * @return true if {@link #real1} is less than or equal to the provided {@link RatioStruct}
 		 */
 		public abstract boolean lessThanOrEqualTo(final RatioStruct real2);
 	}
 
+	/**
+	 * {@link GreaterThanOrEqualToVisitor} for computing numeric {@literal '>='} equality for {@link RealStruct}s.
+	 */
 	abstract class GreaterThanOrEqualToVisitor<S extends RealStruct> {
 
+		/**
+		 * The {@link S} as the first argument in the equality operation.
+		 */
 		final S real1;
 
+		/**
+		 * Package private constructor.
+		 *
+		 * @param real1
+		 * 		the first argument in the equality operation
+		 */
 		GreaterThanOrEqualToVisitor(final S real1) {
 			this.real1 = real1;
 		}
 
 		/**
-		 * {@inheritDoc}
-		 * <p>
-		 * Computes the numeric {@literal '>='} equality result for an {@link RatioStruct} and a {@link IntegerStruct}.
+		 * Computes the numeric {@literal '>='} equality for an {@link S} and an {@link IntIntegerStruct}.
+		 *
+		 * @param real2
+		 * 		the second argument in the equality operation
+		 *
+		 * @return true if {@link #real1} is greater than or equal to the provided {@link IntIntegerStruct}
 		 */
 		public abstract boolean greaterThanOrEqualTo(final IntIntegerStruct real2);
 
 		/**
-		 * {@inheritDoc}
-		 * <p>
-		 * Computes the numeric {@literal '>='} equality result for an {@link RatioStruct} and a {@link IntegerStruct}.
+		 * Computes the numeric {@literal '>='} equality for an {@link S} and an {@link LongIntegerStruct}.
+		 *
+		 * @param real2
+		 * 		the second argument in the equality operation
+		 *
+		 * @return true if {@link #real1} is greater than or equal to the provided {@link LongIntegerStruct}
 		 */
 		public abstract boolean greaterThanOrEqualTo(final LongIntegerStruct real2);
 
 		/**
-		 * {@inheritDoc}
-		 * <p>
-		 * Computes the numeric {@literal '>='} equality result for an {@link RatioStruct} and a {@link IntegerStruct}.
+		 * Computes the numeric {@literal '>='} equality for an {@link S} and an {@link BigIntegerStruct}.
+		 *
+		 * @param real2
+		 * 		the second argument in the equality operation
+		 *
+		 * @return true if {@link #real1} is greater than or equal to the provided {@link BigIntegerStruct}
 		 */
 		public abstract boolean greaterThanOrEqualTo(final BigIntegerStruct real2);
 
+		/**
+		 * Computes the numeric {@literal '>='} equality for an {@link S} and an {@link SingleFloatStruct}.
+		 *
+		 * @param real2
+		 * 		the second argument in the equality operation
+		 *
+		 * @return true if {@link #real1} is greater than or equal to the provided {@link SingleFloatStruct}
+		 */
 		public abstract boolean greaterThanOrEqualTo(final SingleFloatStruct real2);
 
+		/**
+		 * Computes the numeric {@literal '>='} equality for an {@link S} and an {@link DoubleFloatStruct}.
+		 *
+		 * @param real2
+		 * 		the second argument in the equality operation
+		 *
+		 * @return true if {@link #real1} is greater than or equal to the provided {@link DoubleFloatStruct}
+		 */
 		public abstract boolean greaterThanOrEqualTo(final DoubleFloatStruct real2);
 
 		/**
-		 * {@inheritDoc}
-		 * <p>
-		 * Computes the numeric {@literal '>='} equality result for {@link RatioStruct}s.
+		 * Computes the numeric {@literal '>='} equality for an {@link S} and an {@link RatioStruct}.
+		 *
+		 * @param real2
+		 * 		the second argument in the equality operation
+		 *
+		 * @return true if {@link #real1} is greater than or equal to the provided {@link RatioStruct}
 		 */
 		public abstract boolean greaterThanOrEqualTo(final RatioStruct real2);
 	}

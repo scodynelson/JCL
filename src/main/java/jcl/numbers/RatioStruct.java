@@ -193,6 +193,16 @@ public final class RatioStruct extends BuiltInClassStruct implements RationalStr
 	}
 
 	@Override
+	public QuotientRemainderResult truncate(final QuotientRemainderVisitor<?> quotientRemainderVisitor) {
+		return quotientRemainderVisitor.truncate(this);
+	}
+
+	@Override
+	public QuotientRemainderResult ftruncate(final QuotientRemainderVisitor<?> quotientRemainderVisitor) {
+		return quotientRemainderVisitor.ftruncate(this);
+	}
+
+	@Override
 	public QuotientRemainderVisitor<?> quotientRemainderVisitor() {
 		return new RatioQuotientRemainderVisitor(this);
 	}
@@ -915,7 +925,6 @@ public final class RatioStruct extends BuiltInClassStruct implements RationalStr
 	 * RatioStruct}s.
 	 */
 	private static final class RatioQuotientRemainderVisitor extends RationalStruct.RationalQuotientRemainderVisitor<RatioStruct> {
-		// TODO: need to flush these out after fixing Float types.
 
 		/**
 		 * Private constructor to make a new instance of an RatioQuotientRemainderVisitor with the provided {@link
@@ -931,7 +940,27 @@ public final class RatioStruct extends BuiltInClassStruct implements RationalStr
 		@Override
 		public QuotientRemainderResult quotientRemainder(final IntegerStruct divisor, final RoundingMode roundingMode,
 		                                                 final boolean isQuotientFloat) {
-			return ratioQuotientRemainder(divisor, roundingMode, isQuotientFloat);
+			final BigInteger realNumerator = real.bigFraction.getNumerator();
+			final BigInteger realDenominator = real.bigFraction.getDenominator();
+
+			final BigInteger divisorNumerator = divisor.bigIntegerValue();
+			final BigInteger divisorDenominator = BigInteger.ONE;
+
+			return getQuotientRemainderResult(realNumerator, realDenominator, divisorNumerator, divisorDenominator,
+			                                  roundingMode, isQuotientFloat);
+		}
+
+		@Override
+		public QuotientRemainderResult quotientRemainder(final RatioStruct divisor, final RoundingMode roundingMode,
+		                                                 final boolean isQuotientFloat) {
+			final BigInteger realNumerator = real.bigFraction.getNumerator();
+			final BigInteger realDenominator = real.bigFraction.getDenominator();
+
+			final BigInteger divisorNumerator = divisor.bigFraction.getNumerator();
+			final BigInteger divisorDenominator = divisor.bigFraction.getDenominator();
+
+			return getQuotientRemainderResult(realNumerator, realDenominator, divisorNumerator, divisorDenominator,
+			                                  roundingMode, isQuotientFloat);
 		}
 	}
 

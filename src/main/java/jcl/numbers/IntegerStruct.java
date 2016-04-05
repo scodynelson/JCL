@@ -6,6 +6,7 @@ package jcl.numbers;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.math.RoundingMode;
 import java.util.List;
 
 import jcl.util.NumberUtils;
@@ -770,8 +771,18 @@ public interface IntegerStruct extends RationalStruct {
 	}
 
 	@Override
+	default QuotientRemainderResult truncate(final QuotientRemainderVisitor<?> quotientRemainderVisitor) {
+		return quotientRemainderVisitor.truncate(this);
+	}
+
+	@Override
+	default QuotientRemainderResult ftruncate(final QuotientRemainderVisitor<?> quotientRemainderVisitor) {
+		return quotientRemainderVisitor.ftruncate(this);
+	}
+
+	@Override
 	default QuotientRemainderVisitor<?> quotientRemainderVisitor() {
-		return new RationalQuotientRemainderVisitor<>(this);
+		return new IntegerQuotientRemainderVisitor(this);
 	}
 
 	// Visitor Implementations
@@ -1506,6 +1517,60 @@ public interface IntegerStruct extends RationalStruct {
 		 * @return true if the bit whose index is {@code index} is a one-bit; otherwise, false
 		 */
 		public abstract boolean logBitP(BigIntegerStruct index);
+	}
+
+	/**
+	 * {@link RationalStruct.RationalQuotientRemainderVisitor} for computing quotient and remainder results for {@link
+	 * IntegerStruct}s.
+	 */
+	final class IntegerQuotientRemainderVisitor extends RationalStruct.RationalQuotientRemainderVisitor<IntegerStruct> {
+
+		/**
+		 * Private constructor to make a new instance of an IntegerQuotientRemainderVisitor with the provided {@link
+		 * IntegerStruct}.
+		 *
+		 * @param real
+		 * 		the real argument in the computational quotient and remainder operation
+		 */
+		private IntegerQuotientRemainderVisitor(final IntegerStruct real) {
+			super(real);
+		}
+
+		@Override
+		public QuotientRemainderResult quotientRemainder(final IntegerStruct divisor, final RoundingMode roundingMode,
+		                                                 final boolean isQuotientFloat) {
+			final BigDecimal realBD = NumberUtils.bigDecimalValue(real.bigIntegerValue());
+			final BigDecimal divisorBD = NumberUtils.bigDecimalValue(divisor.bigIntegerValue());
+
+			final BigDecimal quotient = realBD.divide(divisorBD, 0, roundingMode);
+			final BigDecimal remainder = realBD.subtract(quotient.multiply(divisorBD));
+
+			final RealStruct quotientReal;
+			if (isQuotientFloat) {
+				quotientReal = SingleFloatStruct.valueOf(quotient.doubleValue());
+			} else {
+				final BigInteger quotientBigInteger = quotient.toBigInteger();
+				quotientReal = IntegerStruct.valueOf(quotientBigInteger);
+			}
+
+			final BigInteger remainderBigInteger = remainder.toBigInteger();
+			final IntegerStruct remainderInteger = IntegerStruct.valueOf(remainderBigInteger);
+
+			return new QuotientRemainderResult(quotientReal, remainderInteger);
+		}
+
+		@Override
+		public QuotientRemainderResult quotientRemainder(final RatioStruct divisor, final RoundingMode roundingMode,
+		                                                 final boolean isQuotientFloat) {
+			final BigInteger realNumerator = real.bigIntegerValue();
+			final BigInteger realDenominator = BigInteger.ONE;
+
+			final BigInteger divisorNumerator = divisor.bigFraction.getNumerator();
+			final BigInteger divisorDenominator = divisor.bigFraction.getDenominator();
+
+			return getQuotientRemainderResult(realNumerator, realDenominator, divisorNumerator, divisorDenominator,
+			                                  roundingMode, isQuotientFloat);
+		}
 	}
 
 	/*

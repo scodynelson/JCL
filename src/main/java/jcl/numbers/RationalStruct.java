@@ -342,56 +342,59 @@ public interface RationalStruct extends RealStruct {
 		}
 	}
 
-	class RationalQuotientRemainderVisitor<S extends RationalStruct> extends RealStruct.QuotientRemainderVisitor<S> {
-		// TODO: need to flush these out after fixing Float types.
+	/**
+	 * {@link RealStruct.QuotientRemainderVisitor} for computing quotient and remainder results for {@link
+	 * RationalStruct}s.
+	 */
+	abstract class RationalQuotientRemainderVisitor<S extends RationalStruct> extends RealStruct.QuotientRemainderVisitor<S> {
 
+		/**
+		 * Package private constructor to make a new instance of an RationalQuotientRemainderVisitor with the provided
+		 * {@link RationalStruct}.
+		 *
+		 * @param real
+		 * 		the real argument in the computational quotient and remainder operation
+		 */
 		RationalQuotientRemainderVisitor(final S real) {
 			super(real);
 		}
 
 		@Override
-		public QuotientRemainderResult quotientRemainder(final RatioStruct divisor, final RoundingMode roundingMode,
+		public QuotientRemainderResult quotientRemainder(final FloatStruct divisor, final RoundingMode roundingMode,
 		                                                 final boolean isQuotientFloat) {
-			return ratioQuotientRemainder(divisor, roundingMode, isQuotientFloat);
+			final FloatStruct realFloat = real.floatingPoint();
+			final RealStruct.QuotientRemainderVisitor<?> quotientRemainderVisitor = realFloat.quotientRemainderVisitor();
+			return quotientRemainderVisitor.quotientRemainder(divisor, roundingMode, isQuotientFloat);
 		}
 
-		QuotientRemainderResult ratioQuotientRemainder(final RationalStruct divisor, final RoundingMode roundingMode,
-		                                               final boolean isFloatResult) {
-			final IntegerStruct rationalNumerator = real.numerator();
-			final BigInteger rationalNumeratorBigInteger = rationalNumerator.bigIntegerValue();
-			final IntegerStruct rationalDenominator = real.denominator();
-			final BigInteger rationalDenominatorBigInteger = rationalDenominator.bigIntegerValue();
-
-			final IntegerStruct divisorNumerator = divisor.numerator();
-			final BigInteger divisorNumeratorBigInteger = divisorNumerator.bigIntegerValue();
-			final IntegerStruct divisorDenominator = divisor.denominator();
-			final BigInteger divisorDenominatorBigInteger = divisorDenominator.bigIntegerValue();
-
+		QuotientRemainderResult getQuotientRemainderResult(final BigInteger realNumerator, final BigInteger realDenominator,
+		                                                   final BigInteger divisorNumerator, final BigInteger divisorDenominator,
+		                                                   final RoundingMode roundingMode, final boolean isQuotientFloat) {
 			// Invert and multiply
-			final BigInteger multipliedNumerator = rationalNumeratorBigInteger.multiply(divisorDenominatorBigInteger);
-			final BigInteger multipliedDenominator = rationalDenominatorBigInteger.multiply(divisorNumeratorBigInteger);
+			final BigInteger multipliedNumerator = realNumerator.multiply(divisorDenominator);
+			final BigInteger multipliedDenominator = realDenominator.multiply(divisorNumerator);
+			final BigDecimal multipliedNumeratorBD = NumberUtils.bigDecimalValue(multipliedNumerator);
+			final BigDecimal multipliedDenominatorBD = NumberUtils.bigDecimalValue(multipliedDenominator);
 
 			// Divide to get quotient
-			final BigDecimal multipliedNumeratorBigDecimal = NumberUtils.bigDecimalValue(multipliedNumerator);
-			final BigDecimal multipliedDenominatorBigDecimal = NumberUtils.bigDecimalValue(multipliedDenominator);
-			final BigDecimal quotient = multipliedNumeratorBigDecimal.divide(multipliedDenominatorBigDecimal, 0, roundingMode);
-			final BigInteger quotientBigInteger = quotient.toBigInteger();
+			final BigDecimal quotient = multipliedNumeratorBD.divide(multipliedDenominatorBD, 0, roundingMode);
+			final BigInteger quotientBI = quotient.toBigInteger();
 
 			final RealStruct quotientReal;
-			if (isFloatResult) {
-				quotientReal = DoubleFloatStruct.valueOf(quotient.doubleValue());
+			if (isQuotientFloat) {
+				quotientReal = SingleFloatStruct.valueOf(quotient.doubleValue());
 			} else {
-				quotientReal = IntegerStruct.valueOf(quotientBigInteger);
+				quotientReal = IntegerStruct.valueOf(quotientBI);
 			}
 
 			// Multiply divisor by quotient
-			final BigInteger multiply = divisorNumeratorBigInteger.multiply(quotientBigInteger);
-			final RationalStruct product = RationalStruct.valueOf(multiply, divisorDenominatorBigInteger);
+			final BigInteger multiply = divisorNumerator.multiply(quotientBI);
+			final RationalStruct product = RationalStruct.valueOf(multiply, divisorDenominator);
 
 			// Subtract to get remainder: (Rational - Rational) produces Rational
-			final NumberStruct remainder = real.subtract(product);
+			final RationalStruct remainder = (RationalStruct) real.subtract(product);
 
-			return new QuotientRemainderResult(quotientReal, (RealStruct) remainder);
+			return new QuotientRemainderResult(quotientReal, remainder);
 		}
 	}
 }

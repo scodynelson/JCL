@@ -337,7 +337,7 @@ public final class IntIntegerStruct extends BuiltInClassStruct implements Intege
 	 */
 
 	@Override
-	public FloatStruct floatingPoint() {
+	public SingleFloatStruct floatingPoint() {
 		return SingleFloatStruct.valueOf(i);
 	}
 

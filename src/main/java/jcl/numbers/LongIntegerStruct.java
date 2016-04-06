@@ -262,7 +262,7 @@ public final class LongIntegerStruct extends BuiltInClassStruct implements Integ
 	 */
 
 	@Override
-	public FloatStruct floatingPoint() {
+	public SingleFloatStruct floatingPoint() {
 		return SingleFloatStruct.valueOf(l);
 	}
 

@@ -1128,7 +1128,11 @@ public interface RealStruct extends NumberStruct {
 			return quotientRemainder(divisor, RoundingMode.FLOOR, false);
 		}
 
-		public QuotientRemainderResult floor(final FloatStruct divisor) {
+		public QuotientRemainderResult floor(final SingleFloatStruct divisor) {
+			return quotientRemainder(divisor, RoundingMode.FLOOR, false);
+		}
+
+		public QuotientRemainderResult floor(final DoubleFloatStruct divisor) {
 			return quotientRemainder(divisor, RoundingMode.FLOOR, false);
 		}
 
@@ -1140,7 +1144,11 @@ public interface RealStruct extends NumberStruct {
 			return quotientRemainder(divisor, RoundingMode.FLOOR, true);
 		}
 
-		public QuotientRemainderResult ffloor(final FloatStruct divisor) {
+		public QuotientRemainderResult ffloor(final SingleFloatStruct divisor) {
+			return quotientRemainder(divisor, RoundingMode.FLOOR, true);
+		}
+
+		public QuotientRemainderResult ffloor(final DoubleFloatStruct divisor) {
 			return quotientRemainder(divisor, RoundingMode.FLOOR, true);
 		}
 
@@ -1152,7 +1160,11 @@ public interface RealStruct extends NumberStruct {
 			return quotientRemainder(divisor, RoundingMode.CEILING, false);
 		}
 
-		public QuotientRemainderResult ceiling(final FloatStruct divisor) {
+		public QuotientRemainderResult ceiling(final SingleFloatStruct divisor) {
+			return quotientRemainder(divisor, RoundingMode.CEILING, false);
+		}
+
+		public QuotientRemainderResult ceiling(final DoubleFloatStruct divisor) {
 			return quotientRemainder(divisor, RoundingMode.CEILING, false);
 		}
 
@@ -1164,7 +1176,11 @@ public interface RealStruct extends NumberStruct {
 			return quotientRemainder(divisor, RoundingMode.CEILING, true);
 		}
 
-		public QuotientRemainderResult fceiling(final FloatStruct divisor) {
+		public QuotientRemainderResult fceiling(final SingleFloatStruct divisor) {
+			return quotientRemainder(divisor, RoundingMode.CEILING, true);
+		}
+
+		public QuotientRemainderResult fceiling(final DoubleFloatStruct divisor) {
 			return quotientRemainder(divisor, RoundingMode.CEILING, true);
 		}
 
@@ -1176,7 +1192,11 @@ public interface RealStruct extends NumberStruct {
 			return quotientRemainder(divisor, RoundingMode.HALF_EVEN, false);
 		}
 
-		public QuotientRemainderResult round(final FloatStruct divisor) {
+		public QuotientRemainderResult round(final SingleFloatStruct divisor) {
+			return quotientRemainder(divisor, RoundingMode.HALF_EVEN, false);
+		}
+
+		public QuotientRemainderResult round(final DoubleFloatStruct divisor) {
 			return quotientRemainder(divisor, RoundingMode.HALF_EVEN, false);
 		}
 
@@ -1188,7 +1208,11 @@ public interface RealStruct extends NumberStruct {
 			return quotientRemainder(divisor, RoundingMode.HALF_EVEN, true);
 		}
 
-		public QuotientRemainderResult fround(final FloatStruct divisor) {
+		public QuotientRemainderResult fround(final SingleFloatStruct divisor) {
+			return quotientRemainder(divisor, RoundingMode.HALF_EVEN, true);
+		}
+
+		public QuotientRemainderResult fround(final DoubleFloatStruct divisor) {
 			return quotientRemainder(divisor, RoundingMode.HALF_EVEN, true);
 		}
 
@@ -1200,7 +1224,11 @@ public interface RealStruct extends NumberStruct {
 			return quotientRemainder(divisor, RoundingMode.DOWN, false);
 		}
 
-		public QuotientRemainderResult truncate(final FloatStruct divisor) {
+		public QuotientRemainderResult truncate(final SingleFloatStruct divisor) {
+			return quotientRemainder(divisor, RoundingMode.DOWN, false);
+		}
+
+		public QuotientRemainderResult truncate(final DoubleFloatStruct divisor) {
 			return quotientRemainder(divisor, RoundingMode.DOWN, false);
 		}
 
@@ -1212,7 +1240,11 @@ public interface RealStruct extends NumberStruct {
 			return quotientRemainder(divisor, RoundingMode.DOWN, true);
 		}
 
-		public QuotientRemainderResult ftruncate(final FloatStruct divisor) {
+		public QuotientRemainderResult ftruncate(final SingleFloatStruct divisor) {
+			return quotientRemainder(divisor, RoundingMode.DOWN, true);
+		}
+
+		public QuotientRemainderResult ftruncate(final DoubleFloatStruct divisor) {
 			return quotientRemainder(divisor, RoundingMode.DOWN, true);
 		}
 
@@ -1229,11 +1261,14 @@ public interface RealStruct extends NumberStruct {
 		public abstract QuotientRemainderResult quotientRemainder(final IntegerStruct divisor, final RoundingMode roundingMode,
 		                                                          final boolean isQuotientFloat);
 
-		public abstract QuotientRemainderResult quotientRemainder(final FloatStruct divisor, final RoundingMode roundingMode,
+		public abstract QuotientRemainderResult quotientRemainder(final SingleFloatStruct divisor, final RoundingMode roundingMode,
 		                                                          final boolean isQuotientFloat);
 
-		public abstract QuotientRemainderResult quotientRemainder(RatioStruct divisor, RoundingMode roundingMode,
-		                                                          boolean isQuotientFloat);
+		public abstract QuotientRemainderResult quotientRemainder(final DoubleFloatStruct divisor, final RoundingMode roundingMode,
+		                                                          final boolean isQuotientFloat);
+
+		public abstract QuotientRemainderResult quotientRemainder(final RatioStruct divisor, final RoundingMode roundingMode,
+		                                                          final boolean isQuotientFloat);
 	}
 
 	abstract class RealExptVisitor<S extends RealStruct> extends NumberStruct.ExptVisitor<S> {

@@ -18,18 +18,11 @@ import org.apache.commons.math3.fraction.BigFraction;
 import org.apfloat.Apfloat;
 import org.apfloat.Apint;
 import org.apfloat.Aprational;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * The {@link RatioStruct} is the object representation of a Lisp 'ratio' type.
  */
 public final class RatioStruct extends BuiltInClassStruct implements RationalStruct {
-
-	/**
-	 * The logger for this class.
-	 */
-	private static final Logger LOGGER = LoggerFactory.getLogger(RatioStruct.class);
 
 	/**
 	 * The internal {@link BigFraction} containing the ratio contents.
@@ -103,7 +96,7 @@ public final class RatioStruct extends BuiltInClassStruct implements RationalStr
 	 */
 
 	@Override
-	public FloatStruct floatingPoint() {
+	public SingleFloatStruct floatingPoint() {
 		return SingleFloatStruct.valueOf(bigFraction.floatValue());
 	}
 

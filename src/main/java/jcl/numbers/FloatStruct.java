@@ -5,10 +5,8 @@
 package jcl.numbers;
 
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.math.RoundingMode;
 
-import jcl.util.NumberUtils;
 import org.apfloat.Apfloat;
 
 /**
@@ -130,51 +128,6 @@ public interface FloatStruct extends RealStruct {
 	@Override
 	default FloatStruct floatingPoint() {
 		return this;
-	}
-
-	@Override
-	default QuotientRemainderResult floor(final RealStruct.QuotientRemainderVisitor<?> quotientRemainderVisitor) {
-		return quotientRemainderVisitor.floor(this);
-	}
-
-	@Override
-	default QuotientRemainderResult ffloor(final RealStruct.QuotientRemainderVisitor<?> quotientRemainderVisitor) {
-		return quotientRemainderVisitor.ffloor(this);
-	}
-
-	@Override
-	default QuotientRemainderResult ceiling(final RealStruct.QuotientRemainderVisitor<?> quotientRemainderVisitor) {
-		return quotientRemainderVisitor.ceiling(this);
-	}
-
-	@Override
-	default QuotientRemainderResult fceiling(final RealStruct.QuotientRemainderVisitor<?> quotientRemainderVisitor) {
-		return quotientRemainderVisitor.fceiling(this);
-	}
-
-	@Override
-	default QuotientRemainderResult round(final RealStruct.QuotientRemainderVisitor<?> quotientRemainderVisitor) {
-		return quotientRemainderVisitor.round(this);
-	}
-
-	@Override
-	default QuotientRemainderResult fround(final RealStruct.QuotientRemainderVisitor<?> quotientRemainderVisitor) {
-		return quotientRemainderVisitor.fround(this);
-	}
-
-	@Override
-	default QuotientRemainderResult truncate(final QuotientRemainderVisitor<?> quotientRemainderVisitor) {
-		return quotientRemainderVisitor.truncate(this);
-	}
-
-	@Override
-	default QuotientRemainderResult ftruncate(final QuotientRemainderVisitor<?> quotientRemainderVisitor) {
-		return quotientRemainderVisitor.ftruncate(this);
-	}
-
-	@Override
-	default RealStruct.QuotientRemainderVisitor<?> quotientRemainderVisitor() {
-		return new FloatQuotientRemainderVisitor(this);
 	}
 
 	// Visitor Implementations
@@ -392,7 +345,7 @@ public interface FloatStruct extends RealStruct {
 	 * {@link RealStruct.QuotientRemainderVisitor} for computing quotient and remainder results for {@link
 	 * FloatStruct}s.
 	 */
-	final class FloatQuotientRemainderVisitor extends RealStruct.QuotientRemainderVisitor<FloatStruct> {
+	abstract class FloatQuotientRemainderVisitor<S extends FloatStruct> extends RealStruct.QuotientRemainderVisitor<S> {
 
 		/**
 		 * Private constructor to make a new instance of an FloatQuotientRemainderVisitor with the provided {@link
@@ -401,63 +354,21 @@ public interface FloatStruct extends RealStruct {
 		 * @param real
 		 * 		the real argument in the computational quotient and remainder operation
 		 */
-		private FloatQuotientRemainderVisitor(final FloatStruct real) {
+		FloatQuotientRemainderVisitor(final S real) {
 			super(real);
 		}
 
 		@Override
 		public QuotientRemainderResult quotientRemainder(final IntegerStruct divisor, final RoundingMode roundingMode,
 		                                                 final boolean isQuotientFloat) {
-			final FloatStruct divisorFloat = divisor.floatingPoint();
+			final SingleFloatStruct divisorFloat = divisor.floatingPoint();
 			return quotientRemainder(divisorFloat, roundingMode, isQuotientFloat);
-		}
-
-		@Override
-		public QuotientRemainderResult quotientRemainder(final FloatStruct divisor, final RoundingMode roundingMode,
-		                                                 final boolean isQuotientFloat) {
-			final BigDecimal realBD = NumberUtils.bigDecimalValue(real.doubleValue());
-			final BigDecimal divisorBD = NumberUtils.bigDecimalValue(divisor.doubleValue());
-
-			final BigDecimal quotient = realBD.divide(divisorBD, 0, roundingMode);
-			final BigDecimal remainder = realBD.subtract(quotient.multiply(divisorBD));
-
-			final RealStruct quotientReal;
-			if (isQuotientFloat) {
-				quotientReal = getFloatQuotient(real, divisor, quotient);
-			} else {
-				final BigInteger quotientBigInteger = quotient.toBigInteger();
-				quotientReal = IntegerStruct.valueOf(quotientBigInteger);
-			}
-
-			final FloatStruct remainderFloat = DoubleFloatStruct.valueOf(remainder.doubleValue());
-			return new QuotientRemainderResult(quotientReal, remainderFloat);
-		}
-
-		private static FloatStruct getFloatQuotient(final FloatStruct real, final FloatStruct divisor,
-		                                            final BigDecimal quotient) {
-			final FloatStruct floatQuotient;
-			if (BigDecimal.ZERO.compareTo(quotient) == 0) {
-				if (real.minusp()) {
-					if (divisor.minusp()) {
-						floatQuotient = DoubleFloatStruct.ZERO;
-					} else {
-						floatQuotient = DoubleFloatStruct.MINUS_ZERO;
-					}
-				} else if (divisor.minusp()) {
-					floatQuotient = DoubleFloatStruct.MINUS_ZERO;
-				} else {
-					floatQuotient = DoubleFloatStruct.ZERO;
-				}
-			} else {
-				floatQuotient = DoubleFloatStruct.valueOf(quotient.doubleValue());
-			}
-			return floatQuotient;
 		}
 
 		@Override
 		public QuotientRemainderResult quotientRemainder(final RatioStruct divisor, final RoundingMode roundingMode,
 		                                                 final boolean isQuotientFloat) {
-			final FloatStruct divisorFloat = divisor.floatingPoint();
+			final SingleFloatStruct divisorFloat = divisor.floatingPoint();
 			return quotientRemainder(divisorFloat, roundingMode, isQuotientFloat);
 		}
 	}

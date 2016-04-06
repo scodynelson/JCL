@@ -268,7 +268,7 @@ public final class BigIntegerStruct extends BuiltInClassStruct implements Intege
 	 */
 
 	@Override
-	public FloatStruct floatingPoint() {
+	public SingleFloatStruct floatingPoint() {
 		return SingleFloatStruct.valueOf(bigInteger.floatValue());
 	}
 

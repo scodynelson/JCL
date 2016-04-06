@@ -154,6 +154,9 @@ public interface RationalStruct extends RealStruct {
 		return this;
 	}
 
+	@Override
+	SingleFloatStruct floatingPoint();
+
 	/*
 		NumberStruct
 	 */
@@ -360,9 +363,17 @@ public interface RationalStruct extends RealStruct {
 		}
 
 		@Override
-		public QuotientRemainderResult quotientRemainder(final FloatStruct divisor, final RoundingMode roundingMode,
+		public QuotientRemainderResult quotientRemainder(final SingleFloatStruct divisor, final RoundingMode roundingMode,
 		                                                 final boolean isQuotientFloat) {
-			final FloatStruct realFloat = real.floatingPoint();
+			final SingleFloatStruct realFloat = real.floatingPoint();
+			final RealStruct.QuotientRemainderVisitor<?> quotientRemainderVisitor = realFloat.quotientRemainderVisitor();
+			return quotientRemainderVisitor.quotientRemainder(divisor, roundingMode, isQuotientFloat);
+		}
+
+		@Override
+		public QuotientRemainderResult quotientRemainder(final DoubleFloatStruct divisor, final RoundingMode roundingMode,
+		                                                 final boolean isQuotientFloat) {
+			final SingleFloatStruct realFloat = real.floatingPoint();
 			final RealStruct.QuotientRemainderVisitor<?> quotientRemainderVisitor = realFloat.quotientRemainderVisitor();
 			return quotientRemainderVisitor.quotientRemainder(divisor, roundingMode, isQuotientFloat);
 		}

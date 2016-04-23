@@ -89,20 +89,20 @@ repositories {
 }
 
 String commonsLangVersion = '3.4'
-String commonsMathVersion = '3.6'
+String commonsMathVersion = '3.6.1'
 String commonsCollectionsVersion = '4.1'
 String commonsIoVersion = '2.4'
 String commonsPrimitivesVersion = '1.0'
 
 String guavaVersion = '19.0'
 
-String lombokVersion = '1.16.6'
+String lombokVersion = '1.16.8'
 
 String apfloatVersion = '1.8.2'
 
-String icu4jVersion = "56.1"
+String icu4jVersion = "57.1"
 
-String asmAllVersion = '5.0.4'
+String asmAllVersion = '5.1'
 
 String springBootVersion = '1.3.3.RELEASE'
 

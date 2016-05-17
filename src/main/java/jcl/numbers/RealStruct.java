@@ -19,6 +19,9 @@ import org.apfloat.ApfloatMath;
  */
 public interface RealStruct extends NumberStruct {
 
+	@Override
+	Apfloat getAp();
+
 	/**
 	 * Performs a {@literal '<'} comparison of this RealStruct and the provided RealStruct.
 	 *

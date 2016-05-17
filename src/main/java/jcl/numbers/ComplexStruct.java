@@ -61,6 +61,8 @@ public class ComplexStruct extends BuiltInClassStruct implements NumberStruct {
 	 */
 	private final RealStruct imaginary;
 
+	private final Apcomplex apcomplex;
+
 	//	/**
 //	 * Public constructor.
 //	 *
@@ -104,6 +106,8 @@ public class ComplexStruct extends BuiltInClassStruct implements NumberStruct {
 		}
 		this.real = coercedReal;
 		this.imaginary = coercedImaginary;
+
+		this.apcomplex = null;
 	}
 
 	/**
@@ -118,6 +122,7 @@ public class ComplexStruct extends BuiltInClassStruct implements NumberStruct {
 		super(ComplexType.INSTANCE, null, null);
 		this.real = real;
 		this.imaginary = imaginary;
+		this.apcomplex = null;
 	}
 
 	/**
@@ -132,6 +137,7 @@ public class ComplexStruct extends BuiltInClassStruct implements NumberStruct {
 		super(ComplexType.INSTANCE, null, null);
 		this.real = real.floatingPoint();
 		this.imaginary = imaginary;
+		this.apcomplex = null;
 	}
 
 	/**
@@ -146,6 +152,7 @@ public class ComplexStruct extends BuiltInClassStruct implements NumberStruct {
 		super(ComplexType.INSTANCE, null, null);
 		this.real = real;
 		this.imaginary = imaginary;
+		this.apcomplex = null;
 	}
 
 	/**
@@ -160,6 +167,7 @@ public class ComplexStruct extends BuiltInClassStruct implements NumberStruct {
 		super(ComplexType.INSTANCE, null, null);
 		this.real = real;
 		this.imaginary = imaginary.floatingPoint();
+		this.apcomplex = null;
 	}
 
 	/**
@@ -174,6 +182,7 @@ public class ComplexStruct extends BuiltInClassStruct implements NumberStruct {
 		super(ComplexType.INSTANCE, null, null);
 		this.real = real;
 		this.imaginary = imaginary;
+		this.apcomplex = null;
 	}
 
 	/**
@@ -188,6 +197,7 @@ public class ComplexStruct extends BuiltInClassStruct implements NumberStruct {
 		super(ComplexType.INSTANCE, null, null);
 		this.real = real;
 		this.imaginary = imaginary.floatingPoint();
+		this.apcomplex = null;
 	}
 
 	/**
@@ -202,6 +212,7 @@ public class ComplexStruct extends BuiltInClassStruct implements NumberStruct {
 		super(ComplexType.INSTANCE, null, null);
 		this.real = real;
 		this.imaginary = imaginary;
+		this.apcomplex = null;
 	}
 
 	/**
@@ -216,6 +227,7 @@ public class ComplexStruct extends BuiltInClassStruct implements NumberStruct {
 		super(ComplexType.INSTANCE, null, null);
 		this.real = real.floatingPoint();
 		this.imaginary = imaginary;
+		this.apcomplex = null;
 	}
 
 	/**
@@ -230,6 +242,7 @@ public class ComplexStruct extends BuiltInClassStruct implements NumberStruct {
 		super(ComplexType.INSTANCE, null, null);
 		this.real = real;
 		this.imaginary = imaginary;
+		this.apcomplex = null;
 	}
 
 	private static RealStruct toRealStruct(final Apfloat apfloat) {
@@ -260,6 +273,11 @@ public class ComplexStruct extends BuiltInClassStruct implements NumberStruct {
 		final Apfloat apfloatReal = real.apfloatValue();
 		final Apfloat apfloatImag = imaginary.apfloatValue();
 		return new Apcomplex(apfloatReal, apfloatImag);
+	}
+
+	@Override
+	public Apcomplex getAp() {
+		return apcomplex;
 	}
 
 	@Override

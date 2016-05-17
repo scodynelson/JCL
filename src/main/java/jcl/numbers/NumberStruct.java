@@ -48,6 +48,8 @@ public interface NumberStruct extends LispStruct {
 		return (object instanceof NumberStruct) && isEqualTo((NumberStruct) object);
 	}
 
+	Apcomplex getAp();
+
 	/**
 	 * {@inheritDoc}
 	 * <p>

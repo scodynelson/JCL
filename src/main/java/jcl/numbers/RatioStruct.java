@@ -29,6 +29,8 @@ public final class RatioStruct extends BuiltInClassStruct implements RationalStr
 	 */
 	final BigFraction bigFraction;
 
+	private final Aprational aprational;
+
 	/**
 	 * Private constructor.
 	 *
@@ -38,6 +40,13 @@ public final class RatioStruct extends BuiltInClassStruct implements RationalStr
 	private RatioStruct(final BigFraction bigFraction) {
 		super(RatioType.INSTANCE, null, null);
 		this.bigFraction = bigFraction;
+
+		this.aprational = null;
+	}
+
+	@Override
+	public Aprational getAp() {
+		return aprational;
 	}
 
 	/**

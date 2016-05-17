@@ -14,6 +14,12 @@ import org.apfloat.Apfloat;
  */
 public interface FloatStruct extends RealStruct {
 
+	@Override
+	default Apfloat getAp() {
+		// TODO: Not always this way!!
+		return null;
+	}
+
 	/**
 	 * Returns this FloatStruct as a {@code float} value.
 	 *

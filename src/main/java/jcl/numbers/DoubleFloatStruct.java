@@ -15,6 +15,7 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.math3.fraction.BigFraction;
 import org.apache.commons.math3.util.ArithmeticUtils;
+import org.apfloat.Apfloat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -58,6 +59,8 @@ public final class DoubleFloatStruct extends BuiltInClassStruct implements Float
 	 */
 	final double d;
 
+	private final Apfloat apfloat;
+
 	/**
 	 * Private constructor.
 	 *
@@ -67,6 +70,8 @@ public final class DoubleFloatStruct extends BuiltInClassStruct implements Float
 	private DoubleFloatStruct(final double d) {
 		super(DoubleFloatType.INSTANCE, null, null);
 		this.d = d;
+
+		apfloat = null;
 	}
 
 	/**
@@ -79,6 +84,11 @@ public final class DoubleFloatStruct extends BuiltInClassStruct implements Float
 	 */
 	public static DoubleFloatStruct valueOf(final double d) {
 		return new DoubleFloatStruct(d);
+	}
+
+	@Override
+	public Apfloat getAp() {
+		return apfloat;
 	}
 
 	/*

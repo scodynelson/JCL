@@ -15,6 +15,7 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.math3.fraction.BigFraction;
 import org.apache.commons.math3.util.ArithmeticUtils;
+import org.apfloat.Apint;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,6 +35,8 @@ public final class BigIntegerStruct extends BuiltInClassStruct implements Intege
 	 */
 	final BigInteger bigInteger;
 
+	private final Apint apint;
+
 	/**
 	 * Private constructor.
 	 *
@@ -43,6 +46,13 @@ public final class BigIntegerStruct extends BuiltInClassStruct implements Intege
 	private BigIntegerStruct(final BigInteger bigInteger) {
 		super(BignumType.INSTANCE, null, null);
 		this.bigInteger = bigInteger;
+
+		this.apint = null;
+	}
+
+	@Override
+	public Apint getAp() {
+		return apint;
 	}
 
 	/**

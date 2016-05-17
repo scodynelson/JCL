@@ -18,6 +18,12 @@ import org.apfloat.Apint;
  */
 public interface IntegerStruct extends RationalStruct {
 
+	@Override
+	default Apint getAp() {
+		// TODO: Not always this way!!
+		return null;
+	}
+
 	/**
 	 * {@link IntegerStruct} constant representing 0.
 	 */

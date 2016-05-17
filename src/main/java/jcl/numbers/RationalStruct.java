@@ -10,11 +10,15 @@ import java.math.RoundingMode;
 
 import jcl.util.NumberUtils;
 import org.apache.commons.math3.fraction.BigFraction;
+import org.apfloat.Aprational;
 
 /**
  * The {@link RationalStruct} is the object representation of a Lisp 'rational' type.
  */
 public interface RationalStruct extends RealStruct {
+
+	@Override
+	Aprational getAp();
 
 	/**
 	 * Returns numerator of this RationalStruct as an {@link IntegerStruct}.

@@ -269,6 +269,11 @@ public class ComplexStruct2 extends InternalNumberStruct<Apcomplex> implements N
 	}
 
 	@Override
+	public Apcomplex ap() {
+		return ap;
+	}
+
+	@Override
 	public RealStruct2 abs() {
 //		if (real.zerop()) {
 //			return imaginary.abs();

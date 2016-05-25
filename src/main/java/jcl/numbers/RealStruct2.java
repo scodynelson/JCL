@@ -6,6 +6,8 @@ package jcl.numbers;
 
 import java.util.List;
 
+import org.apfloat.Apfloat;
+
 /**
  * The {@link RealStruct2} is the object representation of a Lisp 'real' type.
  */
@@ -260,71 +262,84 @@ public interface RealStruct2 extends NumberStruct2 {
 	 */
 	FloatStruct2 floatingPoint(final FloatStruct2 prototype);
 
-	RealStruct2 mod(final RealStruct2 divisor);
+	default RealStruct2 mod(final RealStruct2 divisor) {
+//		final QuotientRemainderResult2 floor = floor(divisor);
+//		return floor.getRemainder();
+		return null;
+	}
 
-	RealStruct2 rem(final RealStruct2 divisor);
+	default RealStruct2 rem(final RealStruct2 divisor) {
+//		final QuotientRemainderResult2 truncate = truncate(divisor);
+//		return truncate.getRemainder();
+		return null;
+	}
 
-	ComplexStruct cis();
+	default ComplexStruct2 cis() {
+		return new ComplexStruct2(cos(), sin());
+	}
 
-	default QuotientRemainderResult floor() {
+	default QuotientRemainderResult2 floor() {
 		// TODO: better internally computed by Apfloat library???
 		return floor(IntegerStruct2.ONE);
 	}
 
-	QuotientRemainderResult floor(final RealStruct2 divisor);
+	QuotientRemainderResult2 floor(final RealStruct2 divisor);
 
-	default QuotientRemainderResult ffloor() {
+	default QuotientRemainderResult2 ffloor() {
 		// TODO: better internally computed by Apfloat library???
 		return ffloor(IntegerStruct2.ONE);
 	}
 
-	QuotientRemainderResult ffloor(final RealStruct2 divisor);
+	QuotientRemainderResult2 ffloor(final RealStruct2 divisor);
 
-	default QuotientRemainderResult ceiling() {
+	default QuotientRemainderResult2 ceiling() {
 		// TODO: better internally computed by Apfloat library???
 		return ceiling(IntegerStruct2.ONE);
 	}
 
-	QuotientRemainderResult ceiling(final RealStruct2 divisor);
+	QuotientRemainderResult2 ceiling(final RealStruct2 divisor);
 
-	default QuotientRemainderResult fceiling() {
+	default QuotientRemainderResult2 fceiling() {
 		// TODO: better internally computed by Apfloat library???
 		return fceiling(IntegerStruct2.ONE);
 	}
 
-	QuotientRemainderResult fceiling(final RealStruct2 divisor);
+	QuotientRemainderResult2 fceiling(final RealStruct2 divisor);
 
-	default QuotientRemainderResult truncate() {
+	default QuotientRemainderResult2 truncate() {
 		// TODO: better internally computed by Apfloat library???
 		return truncate(IntegerStruct2.ONE);
 	}
 
-	QuotientRemainderResult truncate(final RealStruct2 divisor);
+	QuotientRemainderResult2 truncate(final RealStruct2 divisor);
 
-	default QuotientRemainderResult ftruncate() {
+	default QuotientRemainderResult2 ftruncate() {
 		// TODO: better internally computed by Apfloat library???
 		return ftruncate(IntegerStruct2.ONE);
 	}
 
-	QuotientRemainderResult ftruncate(final RealStruct2 divisor);
+	QuotientRemainderResult2 ftruncate(final RealStruct2 divisor);
 
-	default QuotientRemainderResult round() {
+	default QuotientRemainderResult2 round() {
 		// TODO: better internally computed by Apfloat library???
 		return round(IntegerStruct2.ONE);
 	}
 
-	QuotientRemainderResult round(final RealStruct2 divisor);
+	QuotientRemainderResult2 round(final RealStruct2 divisor);
 
-	default QuotientRemainderResult fround() {
+	default QuotientRemainderResult2 fround() {
 		// TODO: better internally computed by Apfloat library???
 		return fround(IntegerStruct2.ONE);
 	}
 
-	QuotientRemainderResult fround(final RealStruct2 divisor);
+	QuotientRemainderResult2 fround(final RealStruct2 divisor);
 
 	/*
 		NumberStruct
 	 */
+
+	@Override
+	Apfloat ap();
 
 	@Override
 	default RealStruct2 realPart() {
@@ -334,5 +349,46 @@ public interface RealStruct2 extends NumberStruct2 {
 	@Override
 	default RealStruct2 conjugate() {
 		return this;
+	}
+
+	@Override
+	RealStruct2 sin();
+
+	@Override
+	RealStruct2 cos();
+
+	@Override
+	RealStruct2 tan();
+
+	@Override
+	RealStruct2 asin();
+
+	@Override
+	RealStruct2 acos();
+
+	@Override
+	RealStruct2 atan();
+
+	@Override
+	RealStruct2 sinh();
+
+	@Override
+	RealStruct2 cosh();
+
+	@Override
+	RealStruct2 tanh();
+
+	@Override
+	RealStruct2 asinh();
+
+	@Override
+	RealStruct2 acosh();
+
+	@Override
+	RealStruct2 atanh();
+
+	static RealStruct2 valueOf(Apfloat mod) {
+		// TODO: do this!!!
+		return null;
 	}
 }

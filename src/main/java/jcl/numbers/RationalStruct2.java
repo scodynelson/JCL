@@ -7,6 +7,7 @@ package jcl.numbers;
 import java.math.BigInteger;
 
 import org.apache.commons.math3.fraction.BigFraction;
+import org.apfloat.Aprational;
 
 /**
  * The {@link RationalStruct2} is the object representation of a Lisp 'rational' type.
@@ -158,6 +159,9 @@ public interface RationalStruct2 extends RealStruct2 {
 	/*
 		NumberStruct
 	 */
+
+	@Override
+	Aprational ap();
 
 	@Override
 	default NumberStruct2 signum() {

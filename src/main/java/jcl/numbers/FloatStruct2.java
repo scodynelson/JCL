@@ -125,6 +125,18 @@ public class FloatStruct2 extends InternalNumberStruct<Apfloat> implements RealS
 		return valueOf(apfloat);
 	}
 
+	/**
+	 * Returns a BigIntegerStruct object with the provided {@link Apfloat} value.
+	 *
+	 * @param apfloat
+	 * 		the {@link Apfloat} value of the resulting BigIntegerStruct
+	 *
+	 * @return a BigIntegerStruct object with the provided {@link Apfloat} value
+	 */
+	public static FloatStruct2 valueOf(final Apfloat apfloat, final FloatStruct2 prototype) {
+		return new FloatStruct2(apfloat);
+	}
+
 	public Apfloat getAp() {
 		return apfloat;
 	}
@@ -379,62 +391,62 @@ public class FloatStruct2 extends InternalNumberStruct<Apfloat> implements RealS
 	}
 
 	@Override
-	public NumberStruct2 sin() {
+	public RealStruct2 sin() {
 		return null;
 	}
 
 	@Override
-	public NumberStruct2 cos() {
+	public RealStruct2 cos() {
 		return null;
 	}
 
 	@Override
-	public NumberStruct2 tan() {
+	public RealStruct2 tan() {
 		return null;
 	}
 
 	@Override
-	public NumberStruct2 asin() {
+	public RealStruct2 asin() {
 		return null;
 	}
 
 	@Override
-	public NumberStruct2 acos() {
+	public RealStruct2 acos() {
 		return null;
 	}
 
 	@Override
-	public NumberStruct2 atan() {
+	public RealStruct2 atan() {
 		return null;
 	}
 
 	@Override
-	public NumberStruct2 sinh() {
+	public RealStruct2 sinh() {
 		return null;
 	}
 
 	@Override
-	public NumberStruct2 cosh() {
+	public RealStruct2 cosh() {
 		return null;
 	}
 
 	@Override
-	public NumberStruct2 tanh() {
+	public RealStruct2 tanh() {
 		return null;
 	}
 
 	@Override
-	public NumberStruct2 asinh() {
+	public RealStruct2 asinh() {
 		return null;
 	}
 
 	@Override
-	public NumberStruct2 acosh() {
+	public RealStruct2 acosh() {
 		return null;
 	}
 
 	@Override
-	public NumberStruct2 atanh() {
+	public RealStruct2 atanh() {
 		return null;
 	}
 
@@ -562,47 +574,47 @@ public class FloatStruct2 extends InternalNumberStruct<Apfloat> implements RealS
 	}
 
 	@Override
-	public ComplexStruct cis() {
+	public QuotientRemainderResult2 floor(final RealStruct2 divisor) {
 		return null;
 	}
 
 	@Override
-	public QuotientRemainderResult floor(final RealStruct2 divisor) {
+	public QuotientRemainderResult2 ffloor(final RealStruct2 divisor) {
 		return null;
 	}
 
 	@Override
-	public QuotientRemainderResult ffloor(final RealStruct2 divisor) {
+	public QuotientRemainderResult2 ceiling(final RealStruct2 divisor) {
 		return null;
 	}
 
 	@Override
-	public QuotientRemainderResult ceiling(final RealStruct2 divisor) {
+	public QuotientRemainderResult2 fceiling(final RealStruct2 divisor) {
 		return null;
 	}
 
 	@Override
-	public QuotientRemainderResult fceiling(final RealStruct2 divisor) {
+	public QuotientRemainderResult2 truncate(final RealStruct2 divisor) {
 		return null;
 	}
 
 	@Override
-	public QuotientRemainderResult truncate(final RealStruct2 divisor) {
+	public QuotientRemainderResult2 ftruncate(final RealStruct2 divisor) {
 		return null;
 	}
 
 	@Override
-	public QuotientRemainderResult ftruncate(final RealStruct2 divisor) {
+	public QuotientRemainderResult2 round(final RealStruct2 divisor) {
 		return null;
 	}
 
 	@Override
-	public QuotientRemainderResult round(final RealStruct2 divisor) {
+	public QuotientRemainderResult2 fround(final RealStruct2 divisor) {
 		return null;
 	}
 
 	@Override
-	public QuotientRemainderResult fround(final RealStruct2 divisor) {
-		return null;
+	public Apfloat ap() {
+		return ap;
 	}
 }

@@ -356,7 +356,7 @@ public class FloatStruct2 extends RealStruct2Impl<Apfloat> {
 	}
 
 	@Override
-	public NumberStruct2 imagPart() {
+	public RealStruct2 imagPart() {
 		return null;
 	}
 

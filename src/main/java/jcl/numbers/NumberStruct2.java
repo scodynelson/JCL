@@ -65,13 +65,13 @@ public interface NumberStruct2 extends LispStruct {
 	 */
 	boolean zerop();
 
-	NumberStruct2 add(final NumberStruct2 number);
+	NumberStruct2 add(NumberStruct2 number);
 
 	static NumberStruct2 add(final List<NumberStruct2> numbers) {
 		return numbers.stream().reduce(IntegerStruct2.ZERO, NumberStruct2::add);
 	}
 
-	NumberStruct2 subtract(final NumberStruct2 number);
+	NumberStruct2 subtract(NumberStruct2 number);
 
 	static NumberStruct2 subtract(final NumberStruct2 number, final List<NumberStruct2> numbers) {
 		if (numbers.isEmpty()) {
@@ -80,13 +80,13 @@ public interface NumberStruct2 extends LispStruct {
 		return numbers.stream().reduce(number, NumberStruct2::subtract);
 	}
 
-	NumberStruct2 multiply(final NumberStruct2 number);
+	NumberStruct2 multiply(NumberStruct2 number);
 
 	static NumberStruct2 multiply(final List<NumberStruct2> numbers) {
 		return numbers.stream().reduce(IntegerStruct2.ONE, NumberStruct2::multiply);
 	}
 
-	NumberStruct2 divide(final NumberStruct2 number);
+	NumberStruct2 divide(NumberStruct2 number);
 
 	static NumberStruct2 divide(final NumberStruct2 number, final List<NumberStruct2> numbers) {
 		if (numbers.isEmpty()) {
@@ -95,7 +95,7 @@ public interface NumberStruct2 extends LispStruct {
 		return numbers.stream().reduce(number, NumberStruct2::divide);
 	}
 
-	boolean isEqualTo(final NumberStruct2 number);
+	boolean isEqualTo(NumberStruct2 number);
 
 	static boolean isEqualTo(final NumberStruct2 number, final List<NumberStruct2> numbers) {
 		NumberStruct2 previousNumber = number;
@@ -137,14 +137,14 @@ public interface NumberStruct2 extends LispStruct {
 	 */
 	NumberStruct2 signum();
 
-	NumberStruct2 realPart();
+	RealStruct2 realPart();
 
 	/**
 	 * {@inheritDoc}
 	 * <p>
 	 * Returns {@link IntegerStruct#ONE} as the imaginary part of RationalStructs is always '1'.
 	 */
-	NumberStruct2 imagPart();
+	RealStruct2 imagPart();
 
 	NumberStruct2 conjugate();
 
@@ -174,14 +174,11 @@ public interface NumberStruct2 extends LispStruct {
 	 * IntegerStruct#ONE} is returned. If {@code power} is '0' and power is not an {@link IntegerStruct}, {@link
 	 * SingleFloatStruct#ONE} is returned. If this RatioStruct is either '0' or '1', {@code this} is returned.
 	 */
-	NumberStruct2 expt(final NumberStruct2 power);
+	NumberStruct2 expt(NumberStruct2 power);
 
 	NumberStruct2 log();
 
-	default NumberStruct2 log(final NumberStruct2 base) {
-		// TODO: better internally computed by Apfloat library???
-		return log().divide(base.log());
-	}
+	NumberStruct2 log(NumberStruct2 base);
 
 	NumberStruct2 sqrt();
 

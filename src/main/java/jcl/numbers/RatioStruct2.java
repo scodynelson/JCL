@@ -17,7 +17,7 @@ import org.apfloat.AprationalMath;
 /**
  * The {@link RatioStruct2} is the object representation of a Lisp 'ratio' type.
  */
-public final class RatioStruct2 extends InternalNumberStruct<Aprational> implements RationalStruct2 {
+public final class RatioStruct2 extends RationalStruct2Impl<Aprational> {
 
 	/**
 	 * Private constructor.
@@ -330,6 +330,11 @@ public final class RatioStruct2 extends InternalNumberStruct<Aprational> impleme
 
 	@Override
 	public RealStruct2 atan() {
+		return null;
+	}
+
+	@Override
+	public RealStruct2 atan(final RealStruct2 real) {
 		return null;
 	}
 

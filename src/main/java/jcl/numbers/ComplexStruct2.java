@@ -18,7 +18,7 @@ import org.apfloat.Apfloat;
 /**
  * The {@link ComplexStruct2} is the object representation of a Lisp 'complex' type.
  */
-public class ComplexStruct2 extends InternalNumberStruct<Apcomplex> implements NumberStruct2 {
+public class ComplexStruct2 extends NumberStruct2Impl<Apcomplex> {
 
 	/**
 	 * {@link ComplexStruct2} constant representing I.

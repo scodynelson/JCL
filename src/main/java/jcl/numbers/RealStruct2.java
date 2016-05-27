@@ -369,6 +369,8 @@ public interface RealStruct2 extends NumberStruct2 {
 	@Override
 	RealStruct2 atan();
 
+	RealStruct2 atan(RealStruct2 real);
+
 	@Override
 	RealStruct2 sinh();
 

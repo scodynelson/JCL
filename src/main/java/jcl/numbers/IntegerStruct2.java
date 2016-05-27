@@ -9,7 +9,12 @@ import java.math.RoundingMode;
 import java.util.List;
 
 import com.google.common.math.BigIntegerMath;
+import jcl.conditions.exceptions.DivisionByZeroException;
 import jcl.types.IntegerType;
+import org.apfloat.Apcomplex;
+import org.apfloat.ApcomplexMath;
+import org.apfloat.Apfloat;
+import org.apfloat.ApfloatMath;
 import org.apfloat.Apint;
 import org.apfloat.ApintMath;
 import org.slf4j.Logger;
@@ -18,7 +23,7 @@ import org.slf4j.LoggerFactory;
 /**
  * The {@link IntegerStruct2} is the object representation of a Lisp 'integer' type.
  */
-public class IntegerStruct2 extends InternalNumberStruct<Apint> implements RationalStruct2 {
+public class IntegerStruct2 extends RationalStruct2Impl<Apint> {
 
 	/**
 	 * {@link IntegerStruct2} constant representing 0.
@@ -102,9 +107,18 @@ public class IntegerStruct2 extends InternalNumberStruct<Apint> implements Ratio
 		return valueOf(apint);
 	}
 
-	@Override
-	public Apint ap() {
-		return ap;
+	/**
+	 * Returns a new IntegerStruct representing the provided {@link String}. This will subclass appropriately to the
+	 * IntegerStruct implementation that would most accurately hold the integer data structure.
+	 *
+	 * @param s
+	 * 		the {@link String} representing the new IntegerStruct
+	 *
+	 * @return a new IntegerStruct representing the provided {@link String}
+	 */
+	public static IntegerStruct2 valueOf(final String s) {
+		final Apint apint = new Apint(s);
+		return valueOf(apint);
 	}
 
 	/**
@@ -119,18 +133,9 @@ public class IntegerStruct2 extends InternalNumberStruct<Apint> implements Ratio
 		return new IntegerStruct2(apint);
 	}
 
-	/**
-	 * Returns a new IntegerStruct representing the provided {@link String}. This will subclass appropriately to the
-	 * IntegerStruct implementation that would most accurately hold the integer data structure.
-	 *
-	 * @param s
-	 * 		the {@link String} representing the new IntegerStruct
-	 *
-	 * @return a new IntegerStruct representing the provided {@link String}
-	 */
-	public static IntegerStruct2 valueOf(final String s) {
-		final Apint apint = new Apint(s);
-		return valueOf(apint);
+	@Override
+	public Apint ap() {
+		return ap;
 	}
 
 	/**
@@ -182,8 +187,7 @@ public class IntegerStruct2 extends InternalNumberStruct<Apint> implements Ratio
 	 * @return the greatest common divisor between this IntegerStruct and the provided IntegerStruct
 	 */
 	public IntegerStruct2 gcd(final IntegerStruct2 integer) {
-		final Apint apint1 = integer.ap;
-		final Apint gcd = ApintMath.gcd(ap, apint1);
+		final Apint gcd = ApintMath.gcd(ap, integer.ap);
 		return valueOf(gcd);
 	}
 
@@ -210,8 +214,7 @@ public class IntegerStruct2 extends InternalNumberStruct<Apint> implements Ratio
 	 * @return the least common multiple between this IntegerStruct and the provided IntegerStruct
 	 */
 	public IntegerStruct2 lcm(final IntegerStruct2 integer) {
-		final Apint apint1 = integer.ap;
-		final Apint lcm = ApintMath.lcm(ap, apint1);
+		final Apint lcm = ApintMath.lcm(ap, integer.ap);
 		return valueOf(lcm);
 	}
 
@@ -226,20 +229,11 @@ public class IntegerStruct2 extends InternalNumberStruct<Apint> implements Ratio
 	 * @return the arithmetic shift operation on the binary representation of this IntegerStruct
 	 */
 	public IntegerStruct2 ash(final IntegerStruct2 count) {
-		if (count.zerop()) {
+		final Apint countAp = count.ap;
+		if (countAp.signum() == 0) {
 			return this;
 		}
-		final BigInteger countBigInteger = count.ap.toBigInteger();
-
-		int countI;
-		try {
-			countI = countBigInteger.intValueExact();
-		} catch (final ArithmeticException ignore) {
-			if (LOGGER.isWarnEnabled()) {
-				LOGGER.warn("Forcibly migrated {} to an int for bit-shifting.", countBigInteger);
-			}
-			countI = countBigInteger.intValue();
-		}
+		final int countI = countAp.intValue();
 
 		// NOTE: shiftLeft will automatically take care of shiftRight based on the sign of countInt
 		final BigInteger shiftedBigInteger = ap.toBigInteger().shiftLeft(countI);
@@ -495,7 +489,7 @@ public class IntegerStruct2 extends InternalNumberStruct<Apint> implements Ratio
 	 */
 	public boolean logTest(final IntegerStruct2 integer) {
 		final IntegerStruct2 and = logAnd(integer);
-		return !and.zerop();
+		return and.ap.signum() != 0;
 	}
 
 	/**
@@ -515,8 +509,11 @@ public class IntegerStruct2 extends InternalNumberStruct<Apint> implements Ratio
 	 * @return true if this IntegerStruct is even (divisible by two); otherwise, false
 	 */
 	public boolean evenp() {
-		final BigInteger bigInteger = ap.toBigInteger();
-		return !bigInteger.testBit(0);
+		// TODO: Apint(2) constant??
+		// TODO: performance over biginteger
+		return ap.mod(new Apint(2)).equals(Apcomplex.ZERO);
+//		final BigInteger bigInteger = ap.toBigInteger();
+//		return !bigInteger.testBit(0);
 	}
 
 	/**
@@ -525,8 +522,10 @@ public class IntegerStruct2 extends InternalNumberStruct<Apint> implements Ratio
 	 * @return true if this IntegerStruct is odd (not divisible by two); otherwise, false
 	 */
 	public boolean oddp() {
-		final BigInteger bigInteger = ap.toBigInteger();
-		return bigInteger.testBit(0);
+		return !evenp();
+		// TODO: performance over biginteger
+//		final BigInteger bigInteger = ap.toBigInteger();
+//		return bigInteger.testBit(0);
 	}
 
 	/**
@@ -535,6 +534,8 @@ public class IntegerStruct2 extends InternalNumberStruct<Apint> implements Ratio
 	 * @return the greatest IntegerStruct less than or equal to this IntegerStructs exact positive square root
 	 */
 	public IntegerStruct2 isqrt() {
+		ApintMath.sqrt(ap);
+
 		final BigInteger bigInteger = ap.toBigInteger();
 		final BigInteger sqrtFloor = BigIntegerMath.sqrt(bigInteger, RoundingMode.FLOOR);
 		return valueOf(sqrtFloor);
@@ -554,124 +555,181 @@ public class IntegerStruct2 extends InternalNumberStruct<Apint> implements Ratio
 		return ONE;
 	}
 
-	@Override
-	public boolean isLessThan(final RealStruct2 real) {
-		return false;
-	}
-
-	@Override
-	public boolean isGreaterThan(final RealStruct2 real) {
-		return false;
-	}
-
-	@Override
-	public boolean isLessThanOrEqualTo(final RealStruct2 real) {
-		return false;
-	}
-
-	@Override
-	public boolean isGreaterThanOrEqualTo(final RealStruct2 real) {
-		return false;
-	}
-
-	@Override
-	public boolean plusp() {
-		return false;
-	}
-
-	@Override
-	public boolean minusp() {
-		return false;
-	}
+	/*
+		RealStruct
+	 */
 
 	@Override
 	public FloatStruct2 floatingPoint() {
-		return null;
+		return FloatStruct2.valueOf(ap);
 	}
 
 	@Override
 	public FloatStruct2 floatingPoint(final FloatStruct2 prototype) {
-		return null;
+		return FloatStruct2.valueOf(ap, prototype);
 	}
 
-	@Override
-	public RealStruct2 mod(final RealStruct2 divisor) {
-		return null;
-	}
-
-	@Override
-	public RealStruct2 rem(final RealStruct2 divisor) {
-		return null;
+	private static RealStruct2 getRemainder(final Apfloat remainder, final RealStruct2 divisor) {
+		if (divisor instanceof RationalStruct2) {
+			// TODO: Aprational from Apfloat???
+			return null;
+		}
+		return FloatStruct2.valueOf(remainder);
 	}
 
 	@Override
 	public QuotientRemainderResult2 floor(final RealStruct2 divisor) {
-		return null;
+		final Apfloat divide = ap.divide(divisor.ap());
+
+		final Apint quotient = divide.floor();
+		final Apfloat remainder = (divide.signum() >= 0) ? divide.frac() : divide.subtract(quotient);
+		return new QuotientRemainderResult2(valueOf(quotient), getRemainder(remainder, divisor));
 	}
 
 	@Override
 	public QuotientRemainderResult2 ffloor(final RealStruct2 divisor) {
-		return null;
+		final Apfloat divide = ap.divide(divisor.ap());
+
+		final Apint quotient = divide.floor();
+		final Apfloat remainder = (divide.signum() >= 0) ? divide.frac() : divide.subtract(quotient);
+		return new QuotientRemainderResult2(FloatStruct2.valueOf(quotient), getRemainder(remainder, divisor));
 	}
 
 	@Override
 	public QuotientRemainderResult2 ceiling(final RealStruct2 divisor) {
-		return null;
+		final Apfloat divide = ap.divide(divisor.ap());
+
+		final Apint quotient = divide.ceil();
+		final Apfloat remainder = (divide.signum() >= 0) ? divide.frac() : divide.subtract(quotient);
+		return new QuotientRemainderResult2(valueOf(quotient), getRemainder(remainder, divisor));
 	}
 
 	@Override
 	public QuotientRemainderResult2 fceiling(final RealStruct2 divisor) {
-		return null;
+		final Apfloat divide = ap.divide(divisor.ap());
+
+		final Apint quotient = divide.ceil();
+		final Apfloat remainder = (divide.signum() >= 0) ? divide.frac() : divide.subtract(quotient);
+		return new QuotientRemainderResult2(FloatStruct2.valueOf(quotient), getRemainder(remainder, divisor));
 	}
 
 	@Override
 	public QuotientRemainderResult2 truncate(final RealStruct2 divisor) {
-		return null;
+		final Apfloat divide = ap.divide(divisor.ap());
+
+		final Apint quotient = divide.truncate();
+		final Apfloat remainder = (divide.signum() >= 0) ? divide.frac() : divide.subtract(quotient);
+		return new QuotientRemainderResult2(valueOf(quotient), getRemainder(remainder, divisor));
 	}
 
 	@Override
 	public QuotientRemainderResult2 ftruncate(final RealStruct2 divisor) {
-		return null;
+		final Apfloat divide = ap.divide(divisor.ap());
+
+		final Apint quotient = divide.truncate();
+		final Apfloat remainder = (divide.signum() >= 0) ? divide.frac() : divide.subtract(quotient);
+		return new QuotientRemainderResult2(FloatStruct2.valueOf(quotient), getRemainder(remainder, divisor));
 	}
 
 	@Override
 	public QuotientRemainderResult2 round(final RealStruct2 divisor) {
-		return null;
+		final Apfloat divide = ap.divide(divisor.ap());
+
+		final Apint quotient = divide.floor();
+		final Apfloat remainder = (divide.signum() >= 0) ? divide.frac() : divide.subtract(quotient);
+		return new QuotientRemainderResult2(valueOf(quotient), getRemainder(remainder, divisor));
 	}
 
 	@Override
 	public QuotientRemainderResult2 fround(final RealStruct2 divisor) {
-		return null;
+		final Apfloat divide = ap.divide(divisor.ap());
+
+		final Apint quotient = divide.floor();
+		final Apfloat remainder = (divide.signum() >= 0) ? divide.frac() : divide.subtract(quotient);
+		return new QuotientRemainderResult2(FloatStruct2.valueOf(quotient), getRemainder(remainder, divisor));
 	}
 
 	@Override
-	public RealStruct2 abs() {
-		return null;
+	public boolean isLessThan(final RealStruct2 real) {
+		final Apfloat realAp = real.ap();
+		final boolean preferCompare = ap.preferCompare(realAp);
+
+		final int compareResult = preferCompare ? -realAp.compareTo(ap) : ap.compareTo(realAp);
+		return compareResult < 0;
 	}
+
+	@Override
+	public boolean isGreaterThan(final RealStruct2 real) {
+		final Apfloat realAp = real.ap();
+		final boolean preferCompare = ap.preferCompare(realAp);
+
+		final int compareResult = preferCompare ? -realAp.compareTo(ap) : ap.compareTo(realAp);
+		return compareResult <= 0;
+	}
+
+	@Override
+	public boolean isLessThanOrEqualTo(final RealStruct2 real) {
+		final Apfloat realAp = real.ap();
+		final boolean preferCompare = ap.preferCompare(realAp);
+
+		final int compareResult = preferCompare ? -realAp.compareTo(ap) : ap.compareTo(realAp);
+		return compareResult > 0;
+	}
+
+	@Override
+	public boolean isGreaterThanOrEqualTo(final RealStruct2 real) {
+		final Apfloat realAp = real.ap();
+		final boolean preferCompare = ap.preferCompare(realAp);
+
+		final int compareResult = preferCompare ? -realAp.compareTo(ap) : ap.compareTo(realAp);
+		return compareResult >= 0;
+	}
+
+	@Override
+	public boolean plusp() {
+		return Apcomplex.ZERO.compareTo(ap) > 0;
+	}
+
+	@Override
+	public boolean minusp() {
+		return Apcomplex.ZERO.compareTo(ap) < 0;
+	}
+
+	/*
+		NumberStruct
+	 */
 
 	@Override
 	public boolean zerop() {
-		return false;
+		return ap.signum() == 0;
 	}
 
 	@Override
 	public NumberStruct2 add(final NumberStruct2 number) {
-		return null;
+		final Apcomplex numberAp = number.ap();
+		final Apcomplex add = ap.add(numberAp);
+		return NumberStruct2.valueOf(add);
 	}
 
 	@Override
 	public NumberStruct2 subtract(final NumberStruct2 number) {
-		return null;
+		final Apcomplex numberAp = number.ap();
+		final Apcomplex subtract = ap.subtract(numberAp);
+		return NumberStruct2.valueOf(subtract);
 	}
 
 	@Override
 	public NumberStruct2 multiply(final NumberStruct2 number) {
-		return null;
+		final Apcomplex numberAp = number.ap();
+		final Apcomplex multiply = ap.multiply(numberAp);
+		return NumberStruct2.valueOf(multiply);
 	}
 
 	@Override
 	public NumberStruct2 divide(final NumberStruct2 number) {
-		return null;
+		final Apcomplex numberAp = number.ap();
+		final Apcomplex divide = ap.divide(numberAp);
+		return NumberStruct2.valueOf(divide);
 	}
 
 	@Override
@@ -681,32 +739,43 @@ public class IntegerStruct2 extends InternalNumberStruct<Apint> implements Ratio
 
 	@Override
 	public NumberStruct2 negation() {
-		return null;
+		final Apint negate = ap.negate();
+		return valueOf(negate);
 	}
 
 	@Override
 	public NumberStruct2 reciprocal() {
-		return null;
+		if (Apcomplex.ZERO.equals(ap)) {
+			throw new DivisionByZeroException("Division by zero.");
+		}
+		if (Apcomplex.ONE.equals(ap)) {
+			return this;
+		}
+		return RatioStruct2.valueOf(Apcomplex.ONE, ap);
 	}
 
 	@Override
 	public NumberStruct2 exp() {
-		return null;
+		final Apfloat exp = ApfloatMath.exp(ap);
+		return RealStruct2.valueOf(exp);
 	}
 
 	@Override
 	public NumberStruct2 expt(final NumberStruct2 power) {
-		return null;
+		final Apcomplex pow = ApcomplexMath.pow(ap, power.ap());
+		return NumberStruct2.valueOf(pow);
 	}
 
 	@Override
 	public NumberStruct2 log() {
-		return null;
+		final Apfloat log = ApfloatMath.log(ap);
+		return RealStruct2.valueOf(log);
 	}
 
 	@Override
 	public NumberStruct2 sqrt() {
-		return null;
+		final Apfloat sqrt = ApfloatMath.sqrt(ap);
+		return RealStruct2.valueOf(sqrt);
 	}
 
 	@Override
@@ -740,6 +809,11 @@ public class IntegerStruct2 extends InternalNumberStruct<Apint> implements Ratio
 	}
 
 	@Override
+	public RealStruct2 atan(final RealStruct2 real) {
+		return null;
+	}
+
+	@Override
 	public RealStruct2 sinh() {
 		return null;
 	}
@@ -767,5 +841,11 @@ public class IntegerStruct2 extends InternalNumberStruct<Apint> implements Ratio
 	@Override
 	public RealStruct2 atanh() {
 		return null;
+	}
+
+	@Override
+	public RealStruct2 abs() {
+		final Apint abs = ApintMath.abs(ap);
+		return valueOf(abs);
 	}
 }

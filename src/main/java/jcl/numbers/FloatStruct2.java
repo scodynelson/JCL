@@ -15,7 +15,7 @@ import org.slf4j.LoggerFactory;
 /**
  * The {@link FloatStruct2} is the object representation of a Lisp 'float' type.
  */
-public class FloatStruct2 extends InternalNumberStruct<Apfloat> implements RealStruct2 {
+public class FloatStruct2 extends RealStruct2Impl<Apfloat> {
 
 	/**
 	 * {@link DoubleFloatStruct} constant representing 0.0.
@@ -417,6 +417,11 @@ public class FloatStruct2 extends InternalNumberStruct<Apfloat> implements RealS
 
 	@Override
 	public RealStruct2 atan() {
+		return null;
+	}
+
+	@Override
+	public RealStruct2 atan(final RealStruct2 real) {
 		return null;
 	}
 

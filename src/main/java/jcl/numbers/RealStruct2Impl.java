@@ -9,9 +9,6 @@ import org.apfloat.Apfloat;
 import org.apfloat.ApfloatMath;
 import org.apfloat.Apint;
 
-/**
- * Created by codynelson on 5/27/16.
- */
 class RealStruct2Impl<A extends Apfloat> extends NumberStruct2Impl<A> implements RealStruct2 {
 
 	RealStruct2Impl(final LispType type, final A ap) {
@@ -21,67 +18,57 @@ class RealStruct2Impl<A extends Apfloat> extends NumberStruct2Impl<A> implements
 	@Override
 	public boolean isLessThan(final RealStruct2 real) {
 		final Apfloat realAp = real.ap();
-		final boolean preferCompare = ap.preferCompare(realAp);
+		final boolean shouldReverseCompare = ap.preferCompare(realAp);
 
-		final int compareResult = preferCompare ? -realAp.compareTo(ap) : ap.compareTo(realAp);
+		final int compareResult = shouldReverseCompare ? -realAp.compareTo(ap) : ap.compareTo(realAp);
 		return compareResult < 0;
 	}
 
 	@Override
 	public boolean isGreaterThan(final RealStruct2 real) {
 		final Apfloat realAp = real.ap();
-		final boolean preferCompare = ap.preferCompare(realAp);
+		final boolean shouldReverseCompare = ap.preferCompare(realAp);
 
-		final int compareResult = preferCompare ? -realAp.compareTo(ap) : ap.compareTo(realAp);
+		final int compareResult = shouldReverseCompare ? -realAp.compareTo(ap) : ap.compareTo(realAp);
 		return compareResult <= 0;
 	}
 
 	@Override
 	public boolean isLessThanOrEqualTo(final RealStruct2 real) {
 		final Apfloat realAp = real.ap();
-		final boolean preferCompare = ap.preferCompare(realAp);
+		final boolean shouldReverseCompare = ap.preferCompare(realAp);
 
-		final int compareResult = preferCompare ? -realAp.compareTo(ap) : ap.compareTo(realAp);
+		final int compareResult = shouldReverseCompare ? -realAp.compareTo(ap) : ap.compareTo(realAp);
 		return compareResult > 0;
 	}
 
 	@Override
 	public boolean isGreaterThanOrEqualTo(final RealStruct2 real) {
 		final Apfloat realAp = real.ap();
-		final boolean preferCompare = ap.preferCompare(realAp);
+		final boolean shouldReverseCompare = ap.preferCompare(realAp);
 
-		final int compareResult = preferCompare ? -realAp.compareTo(ap) : ap.compareTo(realAp);
+		final int compareResult = shouldReverseCompare ? -realAp.compareTo(ap) : ap.compareTo(realAp);
 		return compareResult >= 0;
 	}
 
 	@Override
 	public boolean plusp() {
-		final Apint zero = Apcomplex.ZERO;
-		final boolean preferCompare = ap.preferCompare(zero);
-
-		final int compareResult = preferCompare ? -zero.compareTo(ap) : ap.compareTo(zero);
-		return compareResult > 0;
+		return ap.signum() == 1;
 	}
 
 	@Override
 	public boolean minusp() {
-		final Apint zero = Apcomplex.ZERO;
-		final boolean preferCompare = ap.preferCompare(zero);
-
-		final int compareResult = preferCompare ? -zero.compareTo(ap) : ap.compareTo(zero);
-		return compareResult < 0;
+		return ap.signum() == -1;
 	}
 
 	@Override
 	public RealStruct2 max(final RealStruct2 real) {
-		// TODO
-		return null;
+		return isGreaterThanOrEqualTo(real) ? this : real;
 	}
 
 	@Override
 	public RealStruct2 min(final RealStruct2 real) {
-		// TODO
-		return null;
+		return isLessThanOrEqualTo(real) ? this : real;
 	}
 
 	@Override
@@ -103,13 +90,15 @@ class RealStruct2Impl<A extends Apfloat> extends NumberStruct2Impl<A> implements
 	@Override
 	public RealStruct2 mod(final RealStruct2 divisor) {
 		// TODO
-		return null;
+		final QuotientRemainderResult2 floor = floor(divisor);
+		return floor.getRemainder();
 	}
 
 	@Override
 	public RealStruct2 rem(final RealStruct2 divisor) {
 		// TODO
-		return null;
+		final QuotientRemainderResult2 truncate = truncate(divisor);
+		return truncate.getRemainder();
 	}
 
 	private QuotientRemainderResult2 quotientRemainderCalculator(final RealStruct2 divisor,
@@ -163,26 +152,22 @@ class RealStruct2Impl<A extends Apfloat> extends NumberStruct2Impl<A> implements
 		return quotientRemainderCalculator(divisor, Apfloat::truncate, FloatStruct2::valueOf);
 	}
 
+	private Function<Apfloat, Apint> roundOpFn(final RealStruct2 divisor) {
+		return apfloat -> {
+			final Apfloat divisorAp = divisor.ap();
+			final long precision = Math.min(ap.precision(), divisorAp.precision());
+			return (Apint) ApfloatMath.round(apfloat, precision, RoundingMode.HALF_EVEN);
+		};
+	}
+
 	@Override
 	public QuotientRemainderResult2 round(final RealStruct2 divisor) {
-		return quotientRemainderCalculator(divisor,
-		                                   apfloat -> {
-			                                   final Apfloat divisorAp = divisor.ap();
-			                                   final long precision = Math.min(ap.precision(), divisorAp.precision());
-			                                   return (Apint) ApfloatMath.round(apfloat, precision, RoundingMode.HALF_EVEN);
-		                                   },
-		                                   IntegerStruct2::valueOf);
+		return quotientRemainderCalculator(divisor, roundOpFn(divisor), IntegerStruct2::valueOf);
 	}
 
 	@Override
 	public QuotientRemainderResult2 fround(final RealStruct2 divisor) {
-		return quotientRemainderCalculator(divisor,
-		                                   apfloat -> {
-			                                   final Apfloat divisorAp = divisor.ap();
-			                                   final long precision = Math.min(ap.precision(), divisorAp.precision());
-			                                   return (Apint) ApfloatMath.round(apfloat, precision, RoundingMode.HALF_EVEN);
-		                                   },
-		                                   FloatStruct2::valueOf);
+		return quotientRemainderCalculator(divisor, roundOpFn(divisor), FloatStruct2::valueOf);
 	}
 
 	@Override
@@ -257,8 +242,8 @@ class RealStruct2Impl<A extends Apfloat> extends NumberStruct2Impl<A> implements
 		final Apcomplex numberAp = number.ap();
 		if (numberAp instanceof Apfloat) {
 			final Apfloat realAp = (Apfloat) numberAp;
-			final boolean preferCompare = ap.preferCompare(realAp);
-			return preferCompare ? realAp.equals(ap) : ap.equals(realAp);
+			final boolean shouldReverseCompare = ap.preferCompare(realAp);
+			return shouldReverseCompare ? realAp.equals(ap) : ap.equals(realAp);
 		}
 		return super.isEqualTo(number);
 	}

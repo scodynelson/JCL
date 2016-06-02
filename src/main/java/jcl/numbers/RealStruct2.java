@@ -7,6 +7,7 @@ package jcl.numbers;
 import java.util.List;
 
 import org.apfloat.Apfloat;
+import org.apfloat.Aprational;
 
 /**
  * The {@link RealStruct2} is the object representation of a Lisp 'real' type.
@@ -389,8 +390,10 @@ public interface RealStruct2 extends NumberStruct2 {
 	@Override
 	RealStruct2 atanh();
 
-	static RealStruct2 valueOf(Apfloat mod) {
-		// TODO: do this!!!
-		return null;
+	static RealStruct2 valueOf(final Apfloat apfloat) {
+		if (apfloat instanceof Aprational) {
+			return RationalStruct2.valueOf((Aprational) apfloat);
+		}
+		return FloatStruct2.valueOf(apfloat);
 	}
 }

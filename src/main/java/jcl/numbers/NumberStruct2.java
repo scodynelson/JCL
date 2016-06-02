@@ -9,6 +9,7 @@ import java.util.List;
 import jcl.LispStruct;
 import org.apache.commons.math3.fraction.BigFraction;
 import org.apfloat.Apcomplex;
+import org.apfloat.Apfloat;
 
 /**
  * The {@link NumberStruct2} is the object representation of a Lisp 'number' type.
@@ -206,7 +207,10 @@ public interface NumberStruct2 extends LispStruct {
 
 	NumberStruct2 atanh();
 
-	static NumberStruct2 valueOf(Apcomplex add) {
-		return null;
+	static NumberStruct2 valueOf(final Apcomplex apcomplex) {
+		if (apcomplex instanceof Apfloat) {
+			return RealStruct2.valueOf((Apfloat) apcomplex);
+		}
+		return ComplexStruct2.valueOf(apcomplex);
 	}
 }

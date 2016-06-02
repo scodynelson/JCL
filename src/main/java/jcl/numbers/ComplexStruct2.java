@@ -250,6 +250,10 @@ public class ComplexStruct2 extends NumberStruct2Impl<Apcomplex> {
 		return null;
 	}
 
+	public static ComplexStruct2 valueOf(final Apcomplex apcomplex) {
+		return new ComplexStruct2(apcomplex);
+	}
+
 	/**
 	 * Getter for complex {@link #imaginary} property.
 	 *

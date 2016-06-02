@@ -5,9 +5,6 @@ import org.apfloat.Apcomplex;
 import org.apfloat.ApcomplexMath;
 import org.apfloat.Apfloat;
 
-/**
- * Created by codynelson on 5/27/16.
- */
 class NumberStruct2Impl<A extends Apcomplex> extends InternalNumberStruct<A> implements NumberStruct2 {
 
 	NumberStruct2Impl(final LispType type, final A ap) {

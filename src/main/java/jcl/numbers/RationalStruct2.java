@@ -7,6 +7,7 @@ package jcl.numbers;
 import java.math.BigInteger;
 
 import org.apache.commons.math3.fraction.BigFraction;
+import org.apfloat.Apint;
 import org.apfloat.Aprational;
 
 /**
@@ -145,6 +146,13 @@ public interface RationalStruct2 extends RealStruct2 {
 //		}
 //		return RatioStruct.valueOf(bigFraction);
 		return null;
+	}
+
+	static RationalStruct2 valueOf(final Aprational aprational) {
+		if (aprational instanceof Apint) {
+			return IntegerStruct2.valueOf((Apint) aprational);
+		}
+		return RatioStruct2.valueOf(aprational);
 	}
 
 	/*

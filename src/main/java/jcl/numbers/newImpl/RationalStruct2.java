@@ -2,7 +2,7 @@
  * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
  */
 
-package jcl.numbers;
+package jcl.numbers.newImpl;
 
 import java.math.BigInteger;
 
@@ -16,14 +16,14 @@ import org.apfloat.Aprational;
 public interface RationalStruct2 extends RealStruct2 {
 
 	/**
-	 * Returns numerator of this RationalStruct as an {@link IntegerStruct}.
+	 * Returns numerator of this RationalStruct as an {@link IntegerStruct2}.
 	 *
 	 * @return the numerator value
 	 */
 	IntegerStruct2 numerator();
 
 	/**
-	 * Returns denominator of this RationalStruct as an {@link IntegerStruct}.
+	 * Returns denominator of this RationalStruct as an {@link IntegerStruct2}.
 	 *
 	 * @return the denominator value
 	 */
@@ -31,7 +31,7 @@ public interface RationalStruct2 extends RealStruct2 {
 
 	/**
 	 * Returns a new RationalStruct with the provided {@code int} as a numerator. Because the default denominator value
-	 * is {@code 1}, the result will be an {@link IntegerStruct}.
+	 * is {@code 1}, the result will be an {@link IntegerStruct2}.
 	 *
 	 * @param numerator
 	 * 		the {@code int} numerator of the new RationalStruct
@@ -44,7 +44,7 @@ public interface RationalStruct2 extends RealStruct2 {
 
 	/**
 	 * Returns a new RationalStruct with the numerator and denominator values. If the denominator value is {@code 1},
-	 * the result will be an {@link IntegerStruct}.
+	 * the result will be an {@link IntegerStruct2}.
 	 *
 	 * @param numerator
 	 * 		the {@code int} numerator of the new RationalStruct
@@ -64,7 +64,7 @@ public interface RationalStruct2 extends RealStruct2 {
 
 	/**
 	 * Returns a new RationalStruct with the provided {@code long} as a numerator. Because the default denominator
-	 * value is {@code 1}, the result will be an {@link IntegerStruct}.
+	 * value is {@code 1}, the result will be an {@link IntegerStruct2}.
 	 *
 	 * @param numerator
 	 * 		the {@code long} numerator of the new RationalStruct
@@ -77,7 +77,7 @@ public interface RationalStruct2 extends RealStruct2 {
 
 	/**
 	 * Returns a new RationalStruct with the numerator and denominator values. If the denominator value is {@code 1},
-	 * the result will be an {@link IntegerStruct}.
+	 * the result will be an {@link IntegerStruct2}.
 	 *
 	 * @param numerator
 	 * 		the {@code long} numerator of the new RationalStruct
@@ -98,7 +98,7 @@ public interface RationalStruct2 extends RealStruct2 {
 	/**
 	 * Returns a new RationalStruct with the provided {@link BigInteger} as a numerator. Because the default
 	 * denominator
-	 * value is {@code 1}, the result will be an {@link IntegerStruct}.
+	 * value is {@code 1}, the result will be an {@link IntegerStruct2}.
 	 *
 	 * @param numerator
 	 * 		the {@link BigInteger} numerator of the new RationalStruct
@@ -111,7 +111,7 @@ public interface RationalStruct2 extends RealStruct2 {
 
 	/**
 	 * Returns a new RationalStruct with the numerator and denominator values. If the denominator value is {@code 1},
-	 * the result will be an {@link IntegerStruct}.
+	 * the result will be an {@link IntegerStruct2}.
 	 *
 	 * @param numerator
 	 * 		the {@link BigInteger} numerator of the new RationalStruct
@@ -131,7 +131,7 @@ public interface RationalStruct2 extends RealStruct2 {
 
 	/**
 	 * Returns a new RationalStruct representing the provided {@link BigFraction}. If the {@link
-	 * BigFraction#denominator} value is equal to {@link BigInteger#ONE}, the result will be an {@link IntegerStruct}.
+	 * BigFraction#denominator} value is equal to {@link BigInteger#ONE}, the result will be an {@link IntegerStruct2}.
 	 *
 	 * @param bigFraction
 	 * 		the {@link BigFraction} used to create the resulting RationalStruct

@@ -2,7 +2,7 @@
  * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
  */
 
-package jcl.numbers;
+package jcl.numbers.newImpl;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -51,12 +51,12 @@ public class ComplexStruct2 extends NumberStruct2Impl<Apcomplex> {
 	public static final ComplexStruct2 ONE_FLOAT = new ComplexStruct2(FloatStruct2.ONE, FloatStruct2.ZERO);
 
 	/**
-	 * The {@link RealStruct} that comprises the real value of the complex.
+	 * The {@link RealStruct2} that comprises the real value of the complex.
 	 */
 	private final RealStruct2 real;
 
 	/**
-	 * The {@link RealStruct} that comprises the imaginary value of the complex.
+	 * The {@link RealStruct2} that comprises the imaginary value of the complex.
 	 */
 	private final RealStruct2 imaginary;
 
@@ -90,16 +90,16 @@ public class ComplexStruct2 extends NumberStruct2Impl<Apcomplex> {
 	 * Public constructor.
 	 *
 	 * @param real
-	 * 		a {@link RealStruct} that represents the value of real part of the ComplexStruct
+	 * 		a {@link RealStruct2} that represents the value of real part of the ComplexStruct
 	 * @param imaginary
-	 * 		a {@link RealStruct} that represents the value of imaginary part ComplexStruct
+	 * 		a {@link RealStruct2} that represents the value of imaginary part ComplexStruct
 	 */
 	public ComplexStruct2(final RealStruct2 real, final RealStruct2 imaginary) {
 		super(ComplexType.INSTANCE, null);
 
 		RealStruct2 coercedReal = real;
 		RealStruct2 coercedImaginary = imaginary;
-		if ((real instanceof FloatStruct) || (imaginary instanceof FloatStruct)) {
+		if ((real instanceof FloatStruct2) || (imaginary instanceof FloatStruct2)) {
 			coercedReal = real.floatingPoint();
 			coercedImaginary = imaginary.floatingPoint();
 		}
@@ -292,7 +292,7 @@ public class ComplexStruct2 extends NumberStruct2Impl<Apcomplex> {
 	/**
 	 * {@inheritDoc}
 	 * <p>
-	 * Determines whether or not this ComplexStruct is zero using {@link RealStruct#zerop} on {@link #real} and {@link
+	 * Determines whether or not this ComplexStruct is zero using {@link RealStruct2#zerop} on {@link #real} and {@link
 	 * #imaginary}.
 	 */
 	@Override

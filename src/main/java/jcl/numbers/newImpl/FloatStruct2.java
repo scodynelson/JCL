@@ -2,7 +2,7 @@
  * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
  */
 
-package jcl.numbers;
+package jcl.numbers.newImpl;
 
 import java.math.BigDecimal;
 
@@ -18,22 +18,22 @@ import org.slf4j.LoggerFactory;
 public class FloatStruct2 extends RealStruct2Impl<Apfloat> {
 
 	/**
-	 * {@link DoubleFloatStruct} constant representing 0.0.
+	 * {@link FloatStruct2} constant representing 0.0.
 	 */
 	public static final FloatStruct2 ZERO = valueOf(0.0D);
 
 	/**
-	 * {@link DoubleFloatStruct} constant representing -0.0.
+	 * {@link FloatStruct2} constant representing -0.0.
 	 */
 	public static final FloatStruct2 MINUS_ZERO = valueOf(-0.0D);
 
 	/**
-	 * {@link DoubleFloatStruct} constant representing 1.0.
+	 * {@link FloatStruct2} constant representing 1.0.
 	 */
 	public static final FloatStruct2 ONE = valueOf(1.0D);
 
 	/**
-	 * {@link DoubleFloatStruct} constant representing -1.0.
+	 * {@link FloatStruct2} constant representing -1.0.
 	 */
 	public static final FloatStruct2 MINUS_ONE = valueOf(-1.0D);
 
@@ -162,9 +162,9 @@ public class FloatStruct2 extends RealStruct2Impl<Apfloat> {
 	/**
 	 * Computes the three main values that characterize this FloatStruct: the significand, exponent, and sign..
 	 *
-	 * @return a {@link DecodeFloatResult} containing the decoded significand, exponent, and sign for this FloatStruct
+	 * @return a {@link DecodeFloatResult2} containing the decoded significand, exponent, and sign for this FloatStruct
 	 */
-	public DecodeFloatResult decodeFloat() {
+	public DecodeFloatResult2 decodeFloat() {
 		// TODO
 		final double d = apfloat.doubleValue();
 		// TODO
@@ -184,20 +184,19 @@ public class FloatStruct2 extends RealStruct2Impl<Apfloat> {
 		final int sign = decodedDouble.getSign();
 		final FloatStruct2 signFloat = (sign == 1) ? ONE : MINUS_ONE;
 
-//		return new DecodeFloatResult(significandFloat, exponentInteger, signFloat);
-		return null;
+		return new DecodeFloatResult2(significandFloat, exponentInteger, signFloat);
 	}
 
 	/**
 	 * Computes the three main values that characterize this FloatStruct: the significand, exponent, and sign. The
 	 * difference between this method an {@link #decodeFloat()} is that the significand and sign will both be {@link
-	 * IntegerStruct}s with a special weighting between the significand and exponent based on the scaling needed for
+	 * IntegerStruct2}s with a special weighting between the significand and exponent based on the scaling needed for
 	 * the
-	 * significand to produce an {@link IntegerStruct}.
+	 * significand to produce an {@link IntegerStruct2}.
 	 *
-	 * @return a {@link DecodeFloatResult} containing the decoded significand, exponent, and sign for this FloatStruct
+	 * @return a {@link DecodeFloatResult2} containing the decoded significand, exponent, and sign for this FloatStruct
 	 */
-	public DecodeFloatResult integerDecodeFloat() {
+	public DecodeFloatResult2 integerDecodeFloat() {
 		// TODO
 		final double d = apfloat.doubleValue();
 		// TODO
@@ -215,8 +214,7 @@ public class FloatStruct2 extends RealStruct2Impl<Apfloat> {
 		final int sign = decodedDouble.getSign();
 		final IntegerStruct2 signInteger = (sign == 1) ? IntegerStruct2.ONE : IntegerStruct2.MINUS_ONE;
 
-//		return new DecodeFloatResult(significandInteger, exponentInteger, signInteger);
-		return null;
+		return new DecodeFloatResult2(significandInteger, exponentInteger, signInteger);
 	}
 
 	/**
@@ -302,7 +300,7 @@ public class FloatStruct2 extends RealStruct2Impl<Apfloat> {
 	 * @param bits
 	 * 		the {@code long} bits representing the {@code double} value
 	 *
-	 * @return the {@link DoubleFloatStruct.DecodedDouble} wrapping the decoded sign, exponent, and mantissa values
+	 * @return the {@link FloatStruct2.DecodedDouble} wrapping the decoded sign, exponent, and mantissa values
 	 *
 	 * @see <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Double.html">Java Double</a>
 	 */
@@ -361,17 +359,17 @@ public class FloatStruct2 extends RealStruct2Impl<Apfloat> {
 	}
 
 	@Override
-	public NumberStruct2 negation() {
+	public RealStruct2 negation() {
 		return null;
 	}
 
 	@Override
-	public NumberStruct2 reciprocal() {
+	public RealStruct2 reciprocal() {
 		return null;
 	}
 
 	@Override
-	public NumberStruct2 exp() {
+	public RealStruct2 exp() {
 		return null;
 	}
 
@@ -381,12 +379,12 @@ public class FloatStruct2 extends RealStruct2Impl<Apfloat> {
 	}
 
 	@Override
-	public NumberStruct2 log() {
+	public RealStruct2 log() {
 		return null;
 	}
 
 	@Override
-	public NumberStruct2 sqrt() {
+	public RealStruct2 sqrt() {
 		return null;
 	}
 

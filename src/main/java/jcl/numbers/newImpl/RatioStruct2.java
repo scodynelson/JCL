@@ -2,7 +2,7 @@
  * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
  */
 
-package jcl.numbers;
+package jcl.numbers.newImpl;
 
 import jcl.conditions.exceptions.DivisionByZeroException;
 import jcl.types.RatioType;
@@ -269,7 +269,7 @@ public final class RatioStruct2 extends RationalStruct2Impl<Aprational> {
 	}
 
 	@Override
-	public NumberStruct2 reciprocal() {
+	public RealStruct2 reciprocal() {
 		final Apint numerator = ap.numerator();
 		if (Apcomplex.ZERO.equals(numerator)) {
 			throw new DivisionByZeroException("Division by zero.");
@@ -284,7 +284,7 @@ public final class RatioStruct2 extends RationalStruct2Impl<Aprational> {
 	}
 
 	@Override
-	public NumberStruct2 exp() {
+	public RealStruct2 exp() {
 		return null;
 	}
 
@@ -294,12 +294,12 @@ public final class RatioStruct2 extends RationalStruct2Impl<Aprational> {
 	}
 
 	@Override
-	public NumberStruct2 log() {
+	public RealStruct2 log() {
 		return null;
 	}
 
 	@Override
-	public NumberStruct2 sqrt() {
+	public RealStruct2 sqrt() {
 		return null;
 	}
 

@@ -1,4 +1,4 @@
-package jcl.numbers;
+package jcl.numbers.newImpl;
 
 import java.math.RoundingMode;
 import java.util.function.Function;
@@ -265,19 +265,19 @@ class RealStruct2Impl<A extends Apfloat> extends NumberStruct2Impl<A> implements
 	}
 
 	@Override
-	public NumberStruct2 negation() {
+	public RealStruct2 negation() {
 		final Apfloat negate = ap.negate();
 		return RealStruct2.valueOf(negate);
 	}
 
 	@Override
-	public NumberStruct2 reciprocal() {
+	public RealStruct2 reciprocal() {
 		final Apfloat reciprocal = Apcomplex.ONE.divide(ap);
 		return RealStruct2.valueOf(reciprocal);
 	}
 
 	@Override
-	public NumberStruct2 exp() {
+	public RealStruct2 exp() {
 		final Apfloat exp = ApfloatMath.exp(ap);
 		return RealStruct2.valueOf(exp);
 	}
@@ -293,7 +293,7 @@ class RealStruct2Impl<A extends Apfloat> extends NumberStruct2Impl<A> implements
 	}
 
 	@Override
-	public NumberStruct2 log() {
+	public RealStruct2 log() {
 		final Apfloat log = ApfloatMath.log(ap);
 		return RealStruct2.valueOf(log);
 	}
@@ -309,7 +309,7 @@ class RealStruct2Impl<A extends Apfloat> extends NumberStruct2Impl<A> implements
 	}
 
 	@Override
-	public NumberStruct2 sqrt() {
+	public RealStruct2 sqrt() {
 		final Apfloat sqrt = ApfloatMath.sqrt(ap);
 		return RealStruct2.valueOf(sqrt);
 	}

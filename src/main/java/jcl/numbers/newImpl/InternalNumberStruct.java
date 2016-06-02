@@ -1,4 +1,4 @@
-package jcl.numbers;
+package jcl.numbers.newImpl;
 
 import jcl.LispType;
 import jcl.classes.BuiltInClassStruct;

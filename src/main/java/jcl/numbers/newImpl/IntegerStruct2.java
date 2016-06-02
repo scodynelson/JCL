@@ -2,7 +2,7 @@
  * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
  */
 
-package jcl.numbers;
+package jcl.numbers.newImpl;
 
 import java.math.BigInteger;
 import java.math.RoundingMode;
@@ -67,7 +67,7 @@ public class IntegerStruct2 extends RationalStruct2Impl<Apint> {
 
 	/**
 	 * Returns a new IntegerStruct representing the provided {@code int}. This will subclass appropriately to an {@link
-	 * IntIntegerStruct}, which is the best data structure to hold an {@code int} value.
+	 * IntegerStruct2}, which is the best data structure to hold an {@code int} value.
 	 *
 	 * @param i
 	 * 		the {@link int} representing the new IntegerStruct
@@ -738,13 +738,13 @@ public class IntegerStruct2 extends RationalStruct2Impl<Apint> {
 	}
 
 	@Override
-	public NumberStruct2 negation() {
+	public RealStruct2 negation() {
 		final Apint negate = ap.negate();
 		return valueOf(negate);
 	}
 
 	@Override
-	public NumberStruct2 reciprocal() {
+	public RealStruct2 reciprocal() {
 		if (Apcomplex.ZERO.equals(ap)) {
 			throw new DivisionByZeroException("Division by zero.");
 		}
@@ -755,7 +755,7 @@ public class IntegerStruct2 extends RationalStruct2Impl<Apint> {
 	}
 
 	@Override
-	public NumberStruct2 exp() {
+	public RealStruct2 exp() {
 		final Apfloat exp = ApfloatMath.exp(ap);
 		return RealStruct2.valueOf(exp);
 	}
@@ -767,13 +767,13 @@ public class IntegerStruct2 extends RationalStruct2Impl<Apint> {
 	}
 
 	@Override
-	public NumberStruct2 log() {
+	public RealStruct2 log() {
 		final Apfloat log = ApfloatMath.log(ap);
 		return RealStruct2.valueOf(log);
 	}
 
 	@Override
-	public NumberStruct2 sqrt() {
+	public RealStruct2 sqrt() {
 		final Apfloat sqrt = ApfloatMath.sqrt(ap);
 		return RealStruct2.valueOf(sqrt);
 	}

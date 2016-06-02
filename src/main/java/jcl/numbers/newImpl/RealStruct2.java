@@ -2,7 +2,7 @@
  * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
  */
 
-package jcl.numbers;
+package jcl.numbers.newImpl;
 
 import java.util.List;
 
@@ -239,27 +239,27 @@ public interface RealStruct2 extends NumberStruct2 {
 	}
 
 	/**
-	 * Returns this RealStruct as a representational {@link RationalStruct}.
+	 * Returns this RealStruct as a representational {@link RationalStruct2}.
 	 *
-	 * @return this RealStruct as a representational {@link RationalStruct}
+	 * @return this RealStruct as a representational {@link RationalStruct2}
 	 */
 	RationalStruct2 rational();
 
 	/**
-	 * Returns this RealStruct as a representational {@link FloatStruct}.
+	 * Returns this RealStruct as a representational {@link FloatStruct2}.
 	 *
-	 * @return this RealStruct as a representational {@link FloatStruct}
+	 * @return this RealStruct as a representational {@link FloatStruct2}
 	 */
 	FloatStruct2 floatingPoint();
 
 	/**
-	 * Returns this RealStruct as a representational {@link FloatStruct}, using the prototype as the type of {@link
-	 * FloatStruct} to return.
+	 * Returns this RealStruct as a representational {@link FloatStruct2}, using the prototype as the type of {@link
+	 * FloatStruct2} to return.
 	 *
 	 * @param prototype
-	 * 		an object representing the type of {@link FloatStruct} to return
+	 * 		an object representing the type of {@link FloatStruct2} to return
 	 *
-	 * @return this RealStruct as a representational {@link FloatStruct}
+	 * @return this RealStruct as a representational {@link FloatStruct2}
 	 */
 	FloatStruct2 floatingPoint(final FloatStruct2 prototype);
 

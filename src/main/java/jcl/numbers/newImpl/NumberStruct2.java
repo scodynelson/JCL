@@ -2,7 +2,7 @@
  * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
  */
 
-package jcl.numbers;
+package jcl.numbers.newImpl;
 
 import java.util.List;
 
@@ -134,7 +134,7 @@ public interface NumberStruct2 extends LispStruct {
 	 * {@inheritDoc}
 	 * <p>
 	 * Determines the whether or not the numerical value of this RationalStruct is zero, positive, or negative,
-	 * returning {@code this}, {@link IntegerStruct#ONE}, or {@link IntegerStruct#MINUS_ONE} respectively.
+	 * returning {@code this}, {@link IntegerStruct2#ONE}, or {@link IntegerStruct2#MINUS_ONE} respectively.
 	 */
 	NumberStruct2 signum();
 
@@ -143,7 +143,7 @@ public interface NumberStruct2 extends LispStruct {
 	/**
 	 * {@inheritDoc}
 	 * <p>
-	 * Returns {@link IntegerStruct#ONE} as the imaginary part of RationalStructs is always '1'.
+	 * Returns {@link IntegerStruct2#ONE} as the imaginary part of RationalStructs is always '1'.
 	 */
 	RealStruct2 imagPart();
 
@@ -160,7 +160,7 @@ public interface NumberStruct2 extends LispStruct {
 	/**
 	 * {@inheritDoc}
 	 * <p>
-	 * Creates a new {@link RationalStruct} with {@link BigFraction#denominator} as the numerator and {@link
+	 * Creates a new {@link RationalStruct2} with {@link BigFraction#denominator} as the numerator and {@link
 	 * BigFraction#numerator} as the denominator from {@code #bigFraction}.
 	 */
 	NumberStruct2 reciprocal();
@@ -171,9 +171,9 @@ public interface NumberStruct2 extends LispStruct {
 	 * {@inheritDoc}
 	 * <p>
 	 * Computes the exponential function result for this RatioStruct as this {@code base} and the provided {@link
-	 * NumberStruct2} as the {@code power}. If {@code power} is '0' and power is an {@link IntegerStruct}, {@link
-	 * IntegerStruct#ONE} is returned. If {@code power} is '0' and power is not an {@link IntegerStruct}, {@link
-	 * SingleFloatStruct#ONE} is returned. If this RatioStruct is either '0' or '1', {@code this} is returned.
+	 * NumberStruct2} as the {@code power}. If {@code power} is '0' and power is an {@link IntegerStruct2}, {@link
+	 * IntegerStruct2#ONE} is returned. If {@code power} is '0' and power is not an {@link IntegerStruct2}, {@link
+	 * FloatStruct2#ONE} is returned. If this RatioStruct is either '0' or '1', {@code this} is returned.
 	 */
 	NumberStruct2 expt(NumberStruct2 power);
 

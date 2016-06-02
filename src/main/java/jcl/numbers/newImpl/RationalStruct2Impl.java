@@ -38,6 +38,16 @@ class RationalStruct2Impl<A extends Aprational> extends RealStruct2Impl<A> imple
 	}
 
 	@Override
+	public FloatStruct2 floatingPoint() {
+		return FloatStruct2.valueOf(ap);
+	}
+
+	@Override
+	public FloatStruct2 floatingPoint(final FloatStruct2 prototype) {
+		return FloatStruct2.valueOf(ap, prototype);
+	}
+
+	@Override
 	public RealStruct2 mod(final RealStruct2 divisor) {
 		// TODO
 		final QuotientRemainderResult2 floor = floor(divisor);
@@ -124,8 +134,18 @@ class RationalStruct2Impl<A extends Aprational> extends RealStruct2Impl<A> imple
 	}
 
 	@Override
+	public RationalStruct2 realPart() {
+		return this;
+	}
+
+	@Override
 	public IntegerStruct2 imagPart() {
 		return IntegerStruct2.ZERO;
+	}
+
+	@Override
+	public RationalStruct2 conjugate() {
+		return this;
 	}
 
 	@Override

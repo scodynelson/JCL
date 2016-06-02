@@ -84,6 +84,16 @@ public final class RatioStruct2 extends RationalStruct2Impl<Aprational> {
 	}
 
 	@Override
+	public RatioStruct2 realPart() {
+		return this;
+	}
+
+	@Override
+	public RatioStruct2 conjugate() {
+		return this;
+	}
+
+	@Override
 	public RatioStruct2 negation() {
 		final Aprational negate = ap.negate();
 		return valueOf(negate);

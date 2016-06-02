@@ -54,12 +54,12 @@ public final class IntegerStruct2 extends RationalStruct2Impl<Apint> {
 	}
 
 	/**
-	 * Returns a new IntegerStruct2 representing the provided {@code int}.
+	 * Returns a new IntegerStruct2 representing the provided {@link Integer}.
 	 *
 	 * @param i
-	 * 		the {@code int} representing the new IntegerStruct2
+	 * 		the {@link Integer} representing the new IntegerStruct2
 	 *
-	 * @return a new IntegerStruct2 representing the provided {@code int}
+	 * @return a new IntegerStruct2 representing the provided {@link Integer}
 	 */
 	public static IntegerStruct2 valueOf(final Integer i) {
 		final Apint apint = new Apint(i);
@@ -67,12 +67,12 @@ public final class IntegerStruct2 extends RationalStruct2Impl<Apint> {
 	}
 
 	/**
-	 * Returns a new IntegerStruct2 representing the provided {@code long}.
+	 * Returns a new IntegerStruct2 representing the provided {@link Long}.
 	 *
 	 * @param l
-	 * 		the {@code long} representing the new IntegerStruct2
+	 * 		the {@link Long} representing the new IntegerStruct2
 	 *
-	 * @return a new IntegerStruct2 representing the provided {@code long}
+	 * @return a new IntegerStruct2 representing the provided {@link Long}
 	 */
 	public static IntegerStruct2 valueOf(final Long l) {
 		final Apint apint = new Apint(l);
@@ -624,6 +624,16 @@ public final class IntegerStruct2 extends RationalStruct2Impl<Apint> {
 	public NumberStruct2 signum() {
 		// TODO
 		return super.signum();
+	}
+
+	@Override
+	public IntegerStruct2 realPart() {
+		return this;
+	}
+
+	@Override
+	public IntegerStruct2 conjugate() {
+		return this;
 	}
 
 	@Override

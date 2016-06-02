@@ -6,7 +6,6 @@ package jcl.numbers.newImpl;
 
 import java.math.BigInteger;
 
-import org.apache.commons.math3.fraction.BigFraction;
 import org.apfloat.Apint;
 import org.apfloat.Aprational;
 
@@ -121,31 +120,13 @@ public interface RationalStruct2 extends RealStruct2 {
 	 * @return a new RationalStruct with the provided numerator and denominator values
 	 */
 	static RationalStruct2 valueOf(final BigInteger numerator, final BigInteger denominator) {
-//		if (BigInteger.ONE.compareTo(denominator) == 0) {
-//			return IntegerStruct.valueOf(numerator);
-//		}
-//		final BigFraction bigFraction = new BigFraction(numerator, denominator);
-//		return RatioStruct.valueOf(bigFraction);
-		return null;
-	}
+		if (BigInteger.ONE.equals(denominator)) {
+			return IntegerStruct2.valueOf(numerator);
+		}
 
-	/**
-	 * Returns a new RationalStruct representing the provided {@link BigFraction}. If the {@link
-	 * BigFraction#denominator} value is equal to {@link BigInteger#ONE}, the result will be an {@link IntegerStruct2}.
-	 *
-	 * @param bigFraction
-	 * 		the {@link BigFraction} used to create the resulting RationalStruct
-	 *
-	 * @return a new RationalStruct representing the provided {@link BigFraction}
-	 */
-	static RationalStruct2 valueOf(final BigFraction bigFraction) {
-//		final BigInteger denominator = bigFraction.getDenominator();
-//		if (denominator.compareTo(BigInteger.ONE) == 0) {
-//			final BigInteger numerator = bigFraction.getNumerator();
-//			return IntegerStruct.valueOf(numerator);
-//		}
-//		return RatioStruct.valueOf(bigFraction);
-		return null;
+		final Apint numeratorAp = new Apint(numerator);
+		final Apint denominatorAp = new Apint(denominator);
+		return RatioStruct2.valueOf(numeratorAp, denominatorAp);
 	}
 
 	static RationalStruct2 valueOf(final Aprational aprational) {

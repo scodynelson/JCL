@@ -5,8 +5,10 @@
 package jcl.numbers.newImpl;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 
 import jcl.types.FloatType;
+import org.apache.commons.math3.fraction.BigFraction;
 import org.apache.commons.math3.util.ArithmeticUtils;
 import org.apfloat.Apcomplex;
 import org.apfloat.Apfloat;
@@ -60,27 +62,27 @@ public final class FloatStruct2 extends RealStruct2Impl<Apfloat> {
 	}
 
 	/**
-	 * Returns a FloatStruct2 object with the provided {@code float} value.
+	 * Returns a FloatStruct2 object with the provided {@link Float} value.
 	 *
 	 * @param f
-	 * 		the {@code float} value of the resulting FloatStruct2
+	 * 		the {@link Float} value of the resulting FloatStruct2
 	 *
-	 * @return a FloatStruct2 object with the provided {@code float} value
+	 * @return a FloatStruct2 object with the provided {@link Float} value
 	 */
-	public static FloatStruct2 valueOf(final float f) {
+	public static FloatStruct2 valueOf(final Float f) {
 		final Apfloat apfloat = new Apfloat(f);
 		return valueOf(apfloat);
 	}
 
 	/**
-	 * Returns a FloatStruct2 object with the provided {@code double} value.
+	 * Returns a FloatStruct2 object with the provided {@link Double} value.
 	 *
 	 * @param d
-	 * 		the {@code double} value of the resulting FloatStruct2
+	 * 		the {@link Double} value of the resulting FloatStruct2
 	 *
-	 * @return a FloatStruct2 object with the provided {@code double} value
+	 * @return a FloatStruct2 object with the provided {@link Double} value
 	 */
-	public static FloatStruct2 valueOf(final double d) {
+	public static FloatStruct2 valueOf(final Double d) {
 		final Apfloat apfloat = new Apfloat(d);
 		return valueOf(apfloat);
 	}
@@ -172,7 +174,7 @@ public final class FloatStruct2 extends RealStruct2Impl<Apfloat> {
 		final long mantissa = decodedDouble.getMantissa();
 		final int expt = ArithmeticUtils.pow(2, DOUBLE_PRECISION);
 		final long significand = mantissa / expt;
-		final FloatStruct2 significandFloat = valueOf(significand);
+		final FloatStruct2 significandFloat = valueOf(Double.valueOf(significand));
 
 		final long storedExponent = decodedDouble.getStoredExponent();
 		// 1023 + 52 = 1075
@@ -376,6 +378,46 @@ public final class FloatStruct2 extends RealStruct2Impl<Apfloat> {
 	}
 
 	/*
+		RealStruct
+	 */
+
+	@Override
+	public RationalStruct2 rational() {
+		final double d = ap.doubleValue();
+		final BigFraction bigFraction = new BigFraction(d);
+		final BigFraction bigFractionReduced = bigFraction.reduce();
+
+		final BigInteger numerator = bigFractionReduced.getNumerator();
+		final BigInteger denominator = bigFractionReduced.getDenominator();
+		return RationalStruct2.valueOf(numerator, denominator);
+	}
+
+	@Override
+	public FloatStruct2 floatingPoint() {
+		return this;
+	}
+
+	@Override
+	public FloatStruct2 floatingPoint(final FloatStruct2 prototype) {
+		// TODO
+		return valueOf(ap, prototype);
+	}
+
+	@Override
+	public RealStruct2 mod(final RealStruct2 divisor) {
+		// TODO
+		final QuotientRemainderResult2 floor = floor(divisor);
+		return floor.getRemainder();
+	}
+
+	@Override
+	public RealStruct2 rem(final RealStruct2 divisor) {
+		// TODO
+		final QuotientRemainderResult2 truncate = truncate(divisor);
+		return truncate.getRemainder();
+	}
+
+	/*
 		NumberStruct
 	 */
 
@@ -386,14 +428,64 @@ public final class FloatStruct2 extends RealStruct2Impl<Apfloat> {
 	}
 
 	@Override
+	public NumberStruct2 add(final NumberStruct2 number) {
+		final Apcomplex numberAp = number.ap();
+		if (numberAp instanceof Apfloat) {
+			final Apfloat add = ap.add((Apfloat) numberAp);
+			return valueOf(add);
+		}
+		return super.add(number);
+	}
+
+	@Override
+	public NumberStruct2 subtract(final NumberStruct2 number) {
+		final Apcomplex numberAp = number.ap();
+		if (numberAp instanceof Apfloat) {
+			final Apfloat subtract = ap.subtract((Apfloat) numberAp);
+			return valueOf(subtract);
+		}
+		return super.subtract(number);
+	}
+
+	@Override
+	public NumberStruct2 multiply(final NumberStruct2 number) {
+		final Apcomplex numberAp = number.ap();
+		if (numberAp instanceof Apfloat) {
+			final Apfloat multiply = ap.multiply((Apfloat) numberAp);
+			return valueOf(multiply);
+		}
+		return super.multiply(number);
+	}
+
+	@Override
+	public NumberStruct2 divide(final NumberStruct2 number) {
+		final Apcomplex numberAp = number.ap();
+		if (numberAp instanceof Apfloat) {
+			final Apfloat divide = ap.divide((Apfloat) numberAp);
+			return valueOf(divide);
+		}
+		return super.divide(number);
+	}
+
+	@Override
 	public NumberStruct2 signum() {
 		// TODO
 		return super.signum();
 	}
 
 	@Override
+	public FloatStruct2 realPart() {
+		return this;
+	}
+
+	@Override
 	public FloatStruct2 imagPart() {
 		return ZERO;
+	}
+
+	@Override
+	public FloatStruct2 conjugate() {
+		return this;
 	}
 
 	@Override

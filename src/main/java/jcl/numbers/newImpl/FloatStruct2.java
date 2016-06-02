@@ -8,14 +8,16 @@ import java.math.BigDecimal;
 
 import jcl.types.FloatType;
 import org.apache.commons.math3.util.ArithmeticUtils;
+import org.apfloat.Apcomplex;
 import org.apfloat.Apfloat;
+import org.apfloat.ApfloatMath;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
  * The {@link FloatStruct2} is the object representation of a Lisp 'float' type.
  */
-public class FloatStruct2 extends RealStruct2Impl<Apfloat> {
+public final class FloatStruct2 extends RealStruct2Impl<Apfloat> {
 
 	/**
 	 * {@link FloatStruct2} constant representing 0.0.
@@ -43,30 +45,27 @@ public class FloatStruct2 extends RealStruct2Impl<Apfloat> {
 	private static final Logger LOGGER = LoggerFactory.getLogger(FloatStruct2.class);
 
 	/**
-	 * The floating-point precision of a DoubleFloatStruct object.
+	 * The floating-point precision of a FloatStruct2 object.
 	 */
 	private static final int DOUBLE_PRECISION = 53;
-
-	private final Apfloat apfloat;
 
 	/**
 	 * Private constructor.
 	 *
 	 * @param apfloat
-	 * 		the value of the BigIntegerStruct
+	 * 		the value of the FloatStruct2
 	 */
 	private FloatStruct2(final Apfloat apfloat) {
-		super(FloatType.INSTANCE, null);
-		this.apfloat = apfloat;
+		super(FloatType.INSTANCE, apfloat);
 	}
 
 	/**
-	 * Returns a DoubleFloatStruct object with the provided {@code double} value.
+	 * Returns a FloatStruct2 object with the provided {@code float} value.
 	 *
 	 * @param f
-	 * 		the {@code double} value of the resulting DoubleFloatStruct
+	 * 		the {@code float} value of the resulting FloatStruct2
 	 *
-	 * @return a DoubleFloatStruct object with the provided {@code double} value
+	 * @return a FloatStruct2 object with the provided {@code float} value
 	 */
 	public static FloatStruct2 valueOf(final float f) {
 		final Apfloat apfloat = new Apfloat(f);
@@ -74,12 +73,12 @@ public class FloatStruct2 extends RealStruct2Impl<Apfloat> {
 	}
 
 	/**
-	 * Returns a DoubleFloatStruct object with the provided {@code double} value.
+	 * Returns a FloatStruct2 object with the provided {@code double} value.
 	 *
 	 * @param d
-	 * 		the {@code double} value of the resulting DoubleFloatStruct
+	 * 		the {@code double} value of the resulting FloatStruct2
 	 *
-	 * @return a DoubleFloatStruct object with the provided {@code double} value
+	 * @return a FloatStruct2 object with the provided {@code double} value
 	 */
 	public static FloatStruct2 valueOf(final double d) {
 		final Apfloat apfloat = new Apfloat(d);
@@ -87,12 +86,12 @@ public class FloatStruct2 extends RealStruct2Impl<Apfloat> {
 	}
 
 	/**
-	 * Returns a DoubleFloatStruct object with the provided {@code double} value.
+	 * Returns a FloatStruct2 object with the provided {@link BigDecimal} value.
 	 *
 	 * @param bigDecimal
-	 * 		the {@code double} value of the resulting DoubleFloatStruct
+	 * 		the {@link BigDecimal} value of the resulting FloatStruct2
 	 *
-	 * @return a DoubleFloatStruct object with the provided {@code double} value
+	 * @return a FloatStruct2 object with the provided {@link BigDecimal} value
 	 */
 	public static FloatStruct2 valueOf(final BigDecimal bigDecimal) {
 		final Apfloat apfloat = new Apfloat(bigDecimal);
@@ -100,25 +99,12 @@ public class FloatStruct2 extends RealStruct2Impl<Apfloat> {
 	}
 
 	/**
-	 * Returns a BigIntegerStruct object with the provided {@link Apfloat} value.
-	 *
-	 * @param apfloat
-	 * 		the {@link Apfloat} value of the resulting BigIntegerStruct
-	 *
-	 * @return a BigIntegerStruct object with the provided {@link Apfloat} value
-	 */
-	public static FloatStruct2 valueOf(final Apfloat apfloat) {
-		return new FloatStruct2(apfloat);
-	}
-
-	/**
-	 * Returns a new IntegerStruct representing the provided {@link String}. This will subclass appropriately to the
-	 * IntegerStruct implementation that would most accurately hold the integer data structure.
+	 * Returns a new FloatStruct2 representing the provided {@link String}.
 	 *
 	 * @param s
-	 * 		the {@link String} representing the new IntegerStruct
+	 * 		the {@link String} representing the new FloatStruct2
 	 *
-	 * @return a new IntegerStruct representing the provided {@link String}
+	 * @return a new FloatStruct2 representing the provided {@link String}
 	 */
 	public static FloatStruct2 valueOf(final String s) {
 		final Apfloat apfloat = new Apfloat(s);
@@ -126,19 +112,31 @@ public class FloatStruct2 extends RealStruct2Impl<Apfloat> {
 	}
 
 	/**
-	 * Returns a BigIntegerStruct object with the provided {@link Apfloat} value.
+	 * Returns a FloatStruct2 object with the provided {@link Apfloat} value.
 	 *
 	 * @param apfloat
-	 * 		the {@link Apfloat} value of the resulting BigIntegerStruct
+	 * 		the {@link Apfloat} value of the resulting FloatStruct2
 	 *
-	 * @return a BigIntegerStruct object with the provided {@link Apfloat} value
+	 * @return a FloatStruct2 object with the provided {@link Apfloat} value
 	 */
-	public static FloatStruct2 valueOf(final Apfloat apfloat, final FloatStruct2 prototype) {
+	public static FloatStruct2 valueOf(final Apfloat apfloat) {
 		return new FloatStruct2(apfloat);
 	}
 
-	public Apfloat getAp() {
-		return apfloat;
+	/**
+	 * Returns a FloatStruct2 object with the provided {@link Apfloat} value.
+	 *
+	 * @param apfloat
+	 * 		the {@link Apfloat} value of the resulting FloatStruct2
+	 * @param prototype
+	 * 		the FloatStruct2 to use as a prototype for the resulting floating point precision
+	 * 		precision
+	 *
+	 * @return a FloatStruct2 object with the provided {@link Apfloat} value
+	 */
+	public static FloatStruct2 valueOf(final Apfloat apfloat, final FloatStruct2 prototype) {
+		// TODO
+		return new FloatStruct2(apfloat);
 	}
 
 	/**
@@ -147,7 +145,7 @@ public class FloatStruct2 extends RealStruct2Impl<Apfloat> {
 	 * @return this FloatStruct as a {@code float} value
 	 */
 	public float floatValue() {
-		return apfloat.floatValue();
+		return ap.floatValue();
 	}
 
 	/**
@@ -156,7 +154,7 @@ public class FloatStruct2 extends RealStruct2Impl<Apfloat> {
 	 * @return this FloatStruct as a {@code double} value
 	 */
 	public double doubleValue() {
-		return apfloat.doubleValue();
+		return ap.doubleValue();
 	}
 
 	/**
@@ -166,7 +164,7 @@ public class FloatStruct2 extends RealStruct2Impl<Apfloat> {
 	 */
 	public DecodeFloatResult2 decodeFloat() {
 		// TODO
-		final double d = apfloat.doubleValue();
+		final double d = ap.doubleValue();
 		// TODO
 		final long bits = Double.doubleToRawLongBits(d);
 		final DecodedDouble decodedDouble = getDecodedDouble(bits);
@@ -198,7 +196,7 @@ public class FloatStruct2 extends RealStruct2Impl<Apfloat> {
 	 */
 	public DecodeFloatResult2 integerDecodeFloat() {
 		// TODO
-		final double d = apfloat.doubleValue();
+		final double d = ap.doubleValue();
 		// TODO
 		final long bits = Double.doubleToRawLongBits(d);
 		final DecodedDouble decodedDouble = getDecodedDouble(bits);
@@ -265,7 +263,7 @@ public class FloatStruct2 extends RealStruct2Impl<Apfloat> {
 	 */
 	public FloatStruct2 floatSign() {
 		// TODO
-		final double d = apfloat.doubleValue();
+		final double d = ap.doubleValue();
 		// TODO
 		final long bits = Double.doubleToRawLongBits(d);
 		return (bits < 0) ? MINUS_ONE : ONE;
@@ -311,146 +309,6 @@ public class FloatStruct2 extends RealStruct2Impl<Apfloat> {
 		                      ((bits & 0xfffffffffffffL) << 1) :
 		                      ((bits & 0xfffffffffffffL) | 0x10000000000000L);
 		return new DecodedDouble(mantissa, exponent, sign);
-	}
-
-	@Override
-	public RealStruct2 abs() {
-		return null;
-	}
-
-	@Override
-	public boolean zerop() {
-		return false;
-	}
-
-	@Override
-	public NumberStruct2 add(final NumberStruct2 number) {
-		return null;
-	}
-
-	@Override
-	public NumberStruct2 subtract(final NumberStruct2 number) {
-		return null;
-	}
-
-	@Override
-	public NumberStruct2 multiply(final NumberStruct2 number) {
-		return null;
-	}
-
-	@Override
-	public NumberStruct2 divide(final NumberStruct2 number) {
-		return null;
-	}
-
-	@Override
-	public boolean isEqualTo(final NumberStruct2 number) {
-		return false;
-	}
-
-	@Override
-	public NumberStruct2 signum() {
-		return null;
-	}
-
-	@Override
-	public RealStruct2 imagPart() {
-		return null;
-	}
-
-	@Override
-	public RealStruct2 negation() {
-		return null;
-	}
-
-	@Override
-	public RealStruct2 reciprocal() {
-		return null;
-	}
-
-	@Override
-	public RealStruct2 exp() {
-		return null;
-	}
-
-	@Override
-	public NumberStruct2 expt(final NumberStruct2 power) {
-		return null;
-	}
-
-	@Override
-	public RealStruct2 log() {
-		return null;
-	}
-
-	@Override
-	public RealStruct2 sqrt() {
-		return null;
-	}
-
-	@Override
-	public RealStruct2 sin() {
-		return null;
-	}
-
-	@Override
-	public RealStruct2 cos() {
-		return null;
-	}
-
-	@Override
-	public RealStruct2 tan() {
-		return null;
-	}
-
-	@Override
-	public RealStruct2 asin() {
-		return null;
-	}
-
-	@Override
-	public RealStruct2 acos() {
-		return null;
-	}
-
-	@Override
-	public RealStruct2 atan() {
-		return null;
-	}
-
-	@Override
-	public RealStruct2 atan(final RealStruct2 real) {
-		return null;
-	}
-
-	@Override
-	public RealStruct2 sinh() {
-		return null;
-	}
-
-	@Override
-	public RealStruct2 cosh() {
-		return null;
-	}
-
-	@Override
-	public RealStruct2 tanh() {
-		return null;
-	}
-
-	@Override
-	public RealStruct2 asinh() {
-		return null;
-	}
-
-	@Override
-	public RealStruct2 acosh() {
-		return null;
-	}
-
-	@Override
-	public RealStruct2 atanh() {
-		return null;
 	}
 
 	/**
@@ -518,106 +376,35 @@ public class FloatStruct2 extends RealStruct2Impl<Apfloat> {
 	}
 
 	/*
-		RealStruct
+		NumberStruct
 	 */
 
 	@Override
-	public boolean isLessThan(final RealStruct2 real) {
-		return false;
+	public FloatStruct2 abs() {
+		final Apfloat abs = ApfloatMath.abs(ap);
+		return valueOf(abs);
 	}
 
 	@Override
-	public boolean isGreaterThan(final RealStruct2 real) {
-		return false;
+	public NumberStruct2 signum() {
+		// TODO
+		return super.signum();
 	}
 
 	@Override
-	public boolean isLessThanOrEqualTo(final RealStruct2 real) {
-		return false;
+	public FloatStruct2 imagPart() {
+		return ZERO;
 	}
 
 	@Override
-	public boolean isGreaterThanOrEqualTo(final RealStruct2 real) {
-		return false;
+	public FloatStruct2 negation() {
+		final Apfloat negate = ap.negate();
+		return valueOf(negate);
 	}
 
 	@Override
-	public boolean plusp() {
-		return false;
-	}
-
-	@Override
-	public boolean minusp() {
-		return false;
-	}
-
-	@Override
-	public RationalStruct2 rational() {
-		return null;
-	}
-
-	@Override
-	public FloatStruct2 floatingPoint() {
-		return this;
-	}
-
-	@Override
-	public FloatStruct2 floatingPoint(final FloatStruct2 prototype) {
-		return null;
-	}
-
-	@Override
-	public RealStruct2 mod(final RealStruct2 divisor) {
-		return null;
-	}
-
-	@Override
-	public RealStruct2 rem(final RealStruct2 divisor) {
-		return null;
-	}
-
-	@Override
-	public QuotientRemainderResult2 floor(final RealStruct2 divisor) {
-		return null;
-	}
-
-	@Override
-	public QuotientRemainderResult2 ffloor(final RealStruct2 divisor) {
-		return null;
-	}
-
-	@Override
-	public QuotientRemainderResult2 ceiling(final RealStruct2 divisor) {
-		return null;
-	}
-
-	@Override
-	public QuotientRemainderResult2 fceiling(final RealStruct2 divisor) {
-		return null;
-	}
-
-	@Override
-	public QuotientRemainderResult2 truncate(final RealStruct2 divisor) {
-		return null;
-	}
-
-	@Override
-	public QuotientRemainderResult2 ftruncate(final RealStruct2 divisor) {
-		return null;
-	}
-
-	@Override
-	public QuotientRemainderResult2 round(final RealStruct2 divisor) {
-		return null;
-	}
-
-	@Override
-	public QuotientRemainderResult2 fround(final RealStruct2 divisor) {
-		return null;
-	}
-
-	@Override
-	public Apfloat ap() {
-		return ap;
+	public FloatStruct2 reciprocal() {
+		final Apfloat reciprocal = Apcomplex.ONE.divide(ap);
+		return valueOf(reciprocal);
 	}
 }

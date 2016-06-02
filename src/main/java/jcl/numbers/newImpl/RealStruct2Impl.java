@@ -1,3 +1,7 @@
+/*
+ * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
+ */
+
 package jcl.numbers.newImpl;
 
 import java.math.RoundingMode;
@@ -79,11 +83,13 @@ class RealStruct2Impl<A extends Apfloat> extends NumberStruct2Impl<A> implements
 
 	@Override
 	public FloatStruct2 floatingPoint() {
+		// TODO
 		return FloatStruct2.valueOf(ap);
 	}
 
 	@Override
 	public FloatStruct2 floatingPoint(final FloatStruct2 prototype) {
+		// TODO
 		return FloatStruct2.valueOf(ap, prototype);
 	}
 

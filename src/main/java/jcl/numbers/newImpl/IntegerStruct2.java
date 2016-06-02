@@ -5,25 +5,18 @@
 package jcl.numbers.newImpl;
 
 import java.math.BigInteger;
-import java.math.RoundingMode;
 import java.util.List;
 
-import com.google.common.math.BigIntegerMath;
-import jcl.conditions.exceptions.DivisionByZeroException;
 import jcl.types.IntegerType;
 import org.apfloat.Apcomplex;
-import org.apfloat.ApcomplexMath;
-import org.apfloat.Apfloat;
-import org.apfloat.ApfloatMath;
 import org.apfloat.Apint;
 import org.apfloat.ApintMath;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apfloat.Aprational;
 
 /**
  * The {@link IntegerStruct2} is the object representation of a Lisp 'integer' type.
  */
-public class IntegerStruct2 extends RationalStruct2Impl<Apint> {
+public final class IntegerStruct2 extends RationalStruct2Impl<Apint> {
 
 	/**
 	 * {@link IntegerStruct2} constant representing 0.
@@ -51,11 +44,6 @@ public class IntegerStruct2 extends RationalStruct2Impl<Apint> {
 	public static final IntegerStruct2 MINUS_ONE = valueOf(-1);
 
 	/**
-	 * The logger for this class.
-	 */
-	private static final Logger LOGGER = LoggerFactory.getLogger(IntegerStruct2.class);
-
-	/**
 	 * Private constructor.
 	 *
 	 * @param apint
@@ -66,13 +54,12 @@ public class IntegerStruct2 extends RationalStruct2Impl<Apint> {
 	}
 
 	/**
-	 * Returns a new IntegerStruct representing the provided {@code int}. This will subclass appropriately to an {@link
-	 * IntegerStruct2}, which is the best data structure to hold an {@code int} value.
+	 * Returns a new IntegerStruct2 representing the provided {@code int}.
 	 *
 	 * @param i
-	 * 		the {@link int} representing the new IntegerStruct
+	 * 		the {@code int} representing the new IntegerStruct2
 	 *
-	 * @return a new IntegerStruct representing the provided {@link int}
+	 * @return a new IntegerStruct2 representing the provided {@code int}
 	 */
 	public static IntegerStruct2 valueOf(final Integer i) {
 		final Apint apint = new Apint(i);
@@ -80,13 +67,12 @@ public class IntegerStruct2 extends RationalStruct2Impl<Apint> {
 	}
 
 	/**
-	 * Returns a new IntegerStruct representing the provided {@code long}. This will subclass appropriately to the
-	 * IntegerStruct implementation that would most accurately hold the integer data structure.
+	 * Returns a new IntegerStruct2 representing the provided {@code long}.
 	 *
 	 * @param l
-	 * 		the {@code long} representing the new IntegerStruct
+	 * 		the {@code long} representing the new IntegerStruct2
 	 *
-	 * @return a new IntegerStruct representing the provided {@code String}
+	 * @return a new IntegerStruct2 representing the provided {@code long}
 	 */
 	public static IntegerStruct2 valueOf(final Long l) {
 		final Apint apint = new Apint(l);
@@ -94,13 +80,12 @@ public class IntegerStruct2 extends RationalStruct2Impl<Apint> {
 	}
 
 	/**
-	 * Returns a new IntegerStruct representing the provided {@link BigInteger}. This will subclass appropriately to
-	 * the IntegerStruct implementation that would most accurately hold the integer data structure.
+	 * Returns a new IntegerStruct2 representing the provided {@link BigInteger}.
 	 *
 	 * @param bigInteger
-	 * 		the {@link BigInteger} representing the new IntegerStruct
+	 * 		the {@link BigInteger} representing the new IntegerStruct2
 	 *
-	 * @return a new IntegerStruct representing the provided {@link BigInteger}
+	 * @return a new IntegerStruct2 representing the provided {@link BigInteger}
 	 */
 	public static IntegerStruct2 valueOf(final BigInteger bigInteger) {
 		final Apint apint = new Apint(bigInteger);
@@ -108,13 +93,12 @@ public class IntegerStruct2 extends RationalStruct2Impl<Apint> {
 	}
 
 	/**
-	 * Returns a new IntegerStruct representing the provided {@link String}. This will subclass appropriately to the
-	 * IntegerStruct implementation that would most accurately hold the integer data structure.
+	 * Returns a new IntegerStruct2 representing the provided {@link String}.
 	 *
 	 * @param s
-	 * 		the {@link String} representing the new IntegerStruct
+	 * 		the {@link String} representing the new IntegerStruct2
 	 *
-	 * @return a new IntegerStruct representing the provided {@link String}
+	 * @return a new IntegerStruct2 representing the provided {@link String}
 	 */
 	public static IntegerStruct2 valueOf(final String s) {
 		final Apint apint = new Apint(s);
@@ -122,44 +106,39 @@ public class IntegerStruct2 extends RationalStruct2Impl<Apint> {
 	}
 
 	/**
-	 * Returns a BigIntegerStruct object with the provided {@link BigInteger} value.
+	 * Returns a IntegerStruct2 object with the provided {@link Apint} value.
 	 *
 	 * @param apint
-	 * 		the {@link BigInteger} value of the resulting BigIntegerStruct
+	 * 		the {@link Apint} value of the resulting IntegerStruct2
 	 *
-	 * @return a BigIntegerStruct object with the provided {@link BigInteger} value
+	 * @return a IntegerStruct2 object with the provided {@link Apint} value
 	 */
 	public static IntegerStruct2 valueOf(final Apint apint) {
 		return new IntegerStruct2(apint);
 	}
 
-	@Override
-	public Apint ap() {
-		return ap;
-	}
-
 	/**
-	 * Returns this IntegerStruct as a {@code int} value.
+	 * Returns this IntegerStruct2 as a {@code int} value.
 	 *
-	 * @return this IntegerStruct as a {@code int} value
+	 * @return this IntegerStruct2 as a {@code int} value
 	 */
 	public int intValue() {
 		return ap.intValue();
 	}
 
 	/**
-	 * Returns this IntegerStruct as a {@code long} value.
+	 * Returns this IntegerStruct2 as a {@code long} value.
 	 *
-	 * @return this IntegerStruct as a {@code long} value
+	 * @return this IntegerStruct2 as a {@code long} value
 	 */
 	public long longValue() {
 		return ap.longValue();
 	}
 
 	/**
-	 * Returns this IntegerStruct as a {@link BigInteger} value.
+	 * Returns this IntegerStruct2 as a {@link BigInteger} value.
 	 *
-	 * @return this IntegerStruct as a {@link BigInteger} value
+	 * @return this IntegerStruct2 as a {@link BigInteger} value
 	 */
 	public BigInteger bigIntegerValue() {
 		return ap.toBigInteger();
@@ -179,12 +158,12 @@ public class IntegerStruct2 extends RationalStruct2Impl<Apint> {
 	}
 
 	/**
-	 * Returns the greatest common divisor between this IntegerStruct and the provided IntegerStruct.
+	 * Returns the greatest common divisor between this IntegerStruct2 and the provided IntegerStruct2.
 	 *
 	 * @param integer
-	 * 		the IntegerStruct in comparison to this IntegerStruct to determine the greatest common divisor
+	 * 		the IntegerStruct2 in comparison to this IntegerStruct2 to determine the greatest common divisor
 	 *
-	 * @return the greatest common divisor between this IntegerStruct and the provided IntegerStruct
+	 * @return the greatest common divisor between this IntegerStruct2 and the provided IntegerStruct2
 	 */
 	public IntegerStruct2 gcd(final IntegerStruct2 integer) {
 		final Apint gcd = ApintMath.gcd(ap, integer.ap);
@@ -200,18 +179,18 @@ public class IntegerStruct2 extends RationalStruct2Impl<Apint> {
 	 *
 	 * @return the least common multiple of the provided IntegerStructs
 	 */
-	static IntegerStruct2 lcm(final List<IntegerStruct2> integers) {
+	public static IntegerStruct2 lcm(final List<IntegerStruct2> integers) {
 		return integers.stream().reduce(ONE, IntegerStruct2::lcm);
 	}
 
 	/**
-	 * Returns the least common multiple between this IntegerStruct and the provided IntegerStruct. If this or the
-	 * provided IntegerStruct are '0', the result is {@link #ZERO}.
+	 * Returns the least common multiple between this IntegerStruct2 and the provided IntegerStruct2. If this or the
+	 * provided IntegerStruct2 are '0', the result is {@link #ZERO}.
 	 *
 	 * @param integer
-	 * 		the IntegerStruct in comparison to this IntegerStruct to determine the least common multiple
+	 * 		the IntegerStruct2 in comparison to this IntegerStruct2 to determine the least common multiple
 	 *
-	 * @return the least common multiple between this IntegerStruct and the provided IntegerStruct
+	 * @return the least common multiple between this IntegerStruct2 and the provided IntegerStruct2
 	 */
 	public IntegerStruct2 lcm(final IntegerStruct2 integer) {
 		final Apint lcm = ApintMath.lcm(ap, integer.ap);
@@ -219,14 +198,14 @@ public class IntegerStruct2 extends RationalStruct2Impl<Apint> {
 	}
 
 	/**
-	 * Performs the arithmetic shift operation on the binary representation of this IntegerStruct, shifting the bits
-	 * left or right by the provided {@code count} IntegerStruct based on its sign. If the {@code count} value is '0',
+	 * Performs the arithmetic shift operation on the binary representation of this IntegerStruct2, shifting the bits
+	 * left or right by the provided {@code count} IntegerStruct2 based on its sign. If the {@code count} value is '0',
 	 * the result is {@code this}.
 	 *
 	 * @param count
-	 * 		the bit positions to shift this IntegerStruct left or right
+	 * 		the bit positions to shift this IntegerStruct2 left or right
 	 *
-	 * @return the arithmetic shift operation on the binary representation of this IntegerStruct
+	 * @return the arithmetic shift operation on the binary representation of this IntegerStruct2
 	 */
 	public IntegerStruct2 ash(final IntegerStruct2 count) {
 		final Apint countAp = count.ap;
@@ -241,12 +220,12 @@ public class IntegerStruct2 extends RationalStruct2Impl<Apint> {
 	}
 
 	/**
-	 * Returns the bit-wise logical 'and' of this IntegerStruct and the provided IntegerStruct.
+	 * Returns the bit-wise logical 'and' of this IntegerStruct2 and the provided IntegerStruct2.
 	 *
 	 * @param integer
-	 * 		the IntegerStruct used in performing the bit-wise logical operation
+	 * 		the IntegerStruct2 used in performing the bit-wise logical operation
 	 *
-	 * @return the bit-wise logical 'and' of this IntegerStruct and the provided IntegerStruct
+	 * @return the bit-wise logical 'and' of this IntegerStruct2 and the provided IntegerStruct2
 	 */
 	public IntegerStruct2 logAnd(final IntegerStruct2 integer) {
 		final BigInteger bigInteger1 = ap.toBigInteger();
@@ -268,12 +247,12 @@ public class IntegerStruct2 extends RationalStruct2Impl<Apint> {
 	}
 
 	/**
-	 * Returns the bit-wise logical 'and' of the compliment of this IntegerStruct and the provided IntegerStruct.
+	 * Returns the bit-wise logical 'and' of the compliment of this IntegerStruct2 and the provided IntegerStruct2.
 	 *
 	 * @param integer
-	 * 		the IntegerStruct used in performing the bit-wise logical operation
+	 * 		the IntegerStruct2 used in performing the bit-wise logical operation
 	 *
-	 * @return the bit-wise logical 'and' of this IntegerStruct and the provided IntegerStruct
+	 * @return the bit-wise logical 'and' of this IntegerStruct2 and the provided IntegerStruct2
 	 */
 	public IntegerStruct2 logAndC1(final IntegerStruct2 integer) {
 		final BigInteger bigInteger1 = ap.toBigInteger();
@@ -282,12 +261,12 @@ public class IntegerStruct2 extends RationalStruct2Impl<Apint> {
 	}
 
 	/**
-	 * Returns the bit-wise logical 'and' of this IntegerStruct and the compliment of provided IntegerStruct.
+	 * Returns the bit-wise logical 'and' of this IntegerStruct2 and the compliment of provided IntegerStruct2.
 	 *
 	 * @param integer
-	 * 		the IntegerStruct used in performing the bit-wise logical operation
+	 * 		the IntegerStruct2 used in performing the bit-wise logical operation
 	 *
-	 * @return the bit-wise logical 'and' of this IntegerStruct and the provided IntegerStruct
+	 * @return the bit-wise logical 'and' of this IntegerStruct2 and the provided IntegerStruct2
 	 */
 	public IntegerStruct2 logAndC2(final IntegerStruct2 integer) {
 		final BigInteger bigInteger1 = ap.toBigInteger();
@@ -309,14 +288,14 @@ public class IntegerStruct2 extends RationalStruct2Impl<Apint> {
 	}
 
 	/**
-	 * Returns the bit-wise logical 'equivalence', or 'exclusive-nor' of this IntegerStruct and the provided
-	 * IntegerStruct.
+	 * Returns the bit-wise logical 'equivalence', or 'exclusive-nor' of this IntegerStruct2 and the provided
+	 * IntegerStruct2.
 	 *
 	 * @param integer
-	 * 		the IntegerStruct used in performing the bit-wise logical operation
+	 * 		the IntegerStruct2 used in performing the bit-wise logical operation
 	 *
-	 * @return the bit-wise logical 'equivalence', or 'exclusive-nor' of this IntegerStruct and the provided
-	 * IntegerStruct
+	 * @return the bit-wise logical 'equivalence', or 'exclusive-nor' of this IntegerStruct2 and the provided
+	 * IntegerStruct2
 	 */
 	public IntegerStruct2 logEqv(final IntegerStruct2 integer) {
 		final BigInteger bigInteger1 = ap.toBigInteger();
@@ -339,12 +318,12 @@ public class IntegerStruct2 extends RationalStruct2Impl<Apint> {
 	}
 
 	/**
-	 * Returns the bit-wise logical 'inclusive-or' of this IntegerStruct and the provided IntegerStruct.
+	 * Returns the bit-wise logical 'inclusive-or' of this IntegerStruct2 and the provided IntegerStruct2.
 	 *
 	 * @param integer
-	 * 		the IntegerStruct used in performing the bit-wise logical operation
+	 * 		the IntegerStruct2 used in performing the bit-wise logical operation
 	 *
-	 * @return the bit-wise logical 'inclusive-or' of this IntegerStruct and the provided IntegerStruct
+	 * @return the bit-wise logical 'inclusive-or' of this IntegerStruct2 and the provided IntegerStruct2
 	 */
 	public IntegerStruct2 logIor(final IntegerStruct2 integer) {
 		final BigInteger bigInteger1 = ap.toBigInteger();
@@ -353,12 +332,12 @@ public class IntegerStruct2 extends RationalStruct2Impl<Apint> {
 	}
 
 	/**
-	 * Returns the bit-wise logical 'nand' of this IntegerStruct and the provided IntegerStruct.
+	 * Returns the bit-wise logical 'nand' of this IntegerStruct2 and the provided IntegerStruct2.
 	 *
 	 * @param integer
-	 * 		the IntegerStruct used in performing the bit-wise logical operation
+	 * 		the IntegerStruct2 used in performing the bit-wise logical operation
 	 *
-	 * @return the bit-wise logical 'nand' of this IntegerStruct and the provided IntegerStruct
+	 * @return the bit-wise logical 'nand' of this IntegerStruct2 and the provided IntegerStruct2
 	 */
 	public IntegerStruct2 logNand(final IntegerStruct2 integer) {
 		final BigInteger bigInteger1 = ap.toBigInteger();
@@ -368,12 +347,12 @@ public class IntegerStruct2 extends RationalStruct2Impl<Apint> {
 	}
 
 	/**
-	 * Returns the bit-wise logical 'nor' of this IntegerStruct and the provided IntegerStruct.
+	 * Returns the bit-wise logical 'nor' of this IntegerStruct2 and the provided IntegerStruct2.
 	 *
 	 * @param integer
-	 * 		the IntegerStruct used in performing the bit-wise logical operation
+	 * 		the IntegerStruct2 used in performing the bit-wise logical operation
 	 *
-	 * @return the bit-wise logical 'nor' of this IntegerStruct and the provided IntegerStruct
+	 * @return the bit-wise logical 'nor' of this IntegerStruct2 and the provided IntegerStruct2
 	 */
 	public IntegerStruct2 logNor(final IntegerStruct2 integer) {
 		final BigInteger bigInteger1 = ap.toBigInteger();
@@ -383,9 +362,9 @@ public class IntegerStruct2 extends RationalStruct2Impl<Apint> {
 	}
 
 	/**
-	 * Returns the bit-wise logical 'not' of this IntegerStruct.
+	 * Returns the bit-wise logical 'not' of this IntegerStruct2.
 	 *
-	 * @return the bit-wise logical 'not' of this IntegerStruct
+	 * @return the bit-wise logical 'not' of this IntegerStruct2
 	 */
 	public IntegerStruct2 logNot() {
 		final BigInteger bigInteger = ap.toBigInteger();
@@ -393,14 +372,14 @@ public class IntegerStruct2 extends RationalStruct2Impl<Apint> {
 	}
 
 	/**
-	 * Returns the bit-wise logical 'inclusive-or' of the compliment of this IntegerStruct and the provided
-	 * IntegerStruct.
+	 * Returns the bit-wise logical 'inclusive-or' of the compliment of this IntegerStruct2 and the provided
+	 * IntegerStruct2.
 	 *
 	 * @param integer
-	 * 		the IntegerStruct used in performing the bit-wise logical operation
+	 * 		the IntegerStruct2 used in performing the bit-wise logical operation
 	 *
-	 * @return the bit-wise logical 'inclusive-or' of the compliment of this IntegerStruct and the provided
-	 * IntegerStruct
+	 * @return the bit-wise logical 'inclusive-or' of the compliment of this IntegerStruct2 and the provided
+	 * IntegerStruct2
 	 */
 	public IntegerStruct2 logOrC1(final IntegerStruct2 integer) {
 		final BigInteger bigInteger1 = ap.toBigInteger();
@@ -409,12 +388,12 @@ public class IntegerStruct2 extends RationalStruct2Impl<Apint> {
 	}
 
 	/**
-	 * Returns the bit-wise logical 'inclusive-or' of this IntegerStruct and the compliment of provided IntegerStruct.
+	 * Returns the bit-wise logical 'inclusive-or' of this IntegerStruct2 and the compliment of provided IntegerStruct2.
 	 *
 	 * @param integer
-	 * 		the IntegerStruct used in performing the bit-wise logical operation
+	 * 		the IntegerStruct2 used in performing the bit-wise logical operation
 	 *
-	 * @return the bit-wise logical 'inclusive-or' of this IntegerStruct and the compliment of provided IntegerStruct
+	 * @return the bit-wise logical 'inclusive-or' of this IntegerStruct2 and the compliment of provided IntegerStruct2
 	 */
 	public IntegerStruct2 logOrC2(final IntegerStruct2 integer) {
 		final BigInteger bigInteger1 = ap.toBigInteger();
@@ -436,12 +415,12 @@ public class IntegerStruct2 extends RationalStruct2Impl<Apint> {
 	}
 
 	/**
-	 * Returns the bit-wise logical 'exclusive-or' of this IntegerStruct and the provided IntegerStruct.
+	 * Returns the bit-wise logical 'exclusive-or' of this IntegerStruct2 and the provided IntegerStruct2.
 	 *
 	 * @param integer
-	 * 		the IntegerStruct used in performing the bit-wise logical operation
+	 * 		the IntegerStruct2 used in performing the bit-wise logical operation
 	 *
-	 * @return the bit-wise logical 'exclusive-or' of this IntegerStruct and the provided IntegerStruct
+	 * @return the bit-wise logical 'exclusive-or' of this IntegerStruct2 and the provided IntegerStruct2
 	 */
 	public IntegerStruct2 logXor(final IntegerStruct2 integer) {
 		final BigInteger bigInteger1 = ap.toBigInteger();
@@ -450,13 +429,13 @@ public class IntegerStruct2 extends RationalStruct2Impl<Apint> {
 	}
 
 	/**
-	 * Returns true if the bit in this IntegerStruct whose index is {@code index} is a one-bit; otherwise, returns
+	 * Returns true if the bit in this IntegerStruct2 whose index is {@code index} is a one-bit; otherwise, returns
 	 * false.
 	 *
 	 * @param index
-	 * 		the index value to test this IntegerStruct for a one-bit
+	 * 		the index value to test this IntegerStruct2 for a one-bit
 	 *
-	 * @return true if the bit in this IntegerStruct whose index is {@code index} is a one-bit; otherwise, false
+	 * @return true if the bit in this IntegerStruct2 whose index is {@code index} is a one-bit; otherwise, false
 	 */
 	public boolean logBitP(final IntegerStruct2 index) {
 		final BigInteger bigInteger = ap.toBigInteger();
@@ -465,11 +444,11 @@ public class IntegerStruct2 extends RationalStruct2Impl<Apint> {
 	}
 
 	/**
-	 * Computes and returns the number of bits in the two's-complement binary representation of this IntegerStruct that
-	 * are 'on' or 'set'. If this IntegerStruct is negative, the 0 bits are counted; otherwise, the 1 bits are counted.
+	 * Computes and returns the number of bits in the two's-complement binary representation of this IntegerStruct2 that
+	 * are 'on' or 'set'. If this IntegerStruct2 is negative, the 0 bits are counted; otherwise, the 1 bits are counted.
 	 *
 	 * @return Computes and returns the number of bits in the two's-complement binary representation of this
-	 * IntegerStruct that are 'on' or 'set'
+	 * IntegerStruct2 that are 'on' or 'set'
 	 */
 	public IntegerStruct2 logCount() {
 		final BigInteger bigInteger = ap.toBigInteger();
@@ -478,14 +457,14 @@ public class IntegerStruct2 extends RationalStruct2Impl<Apint> {
 	}
 
 	/**
-	 * Returns true if any of the bits designated by the 1's in this IntegerStruct are 1 in the provided IntegerStruct;
-	 * otherwise, returns false.
+	 * Returns true if any of the bits designated by the 1's in this IntegerStruct2 are 1 in the provided
+	 * IntegerStruct2; otherwise, returns false.
 	 *
 	 * @param integer
-	 * 		the IntegerStruct used in the test comparison to this IntegerStruct
+	 * 		the IntegerStruct2 used in the test comparison to this IntegerStruct2
 	 *
-	 * @return true if any of the bits designated by the 1's in this IntegerStruct are 1 in the provided IntegerStruct;
-	 * otherwise, false.
+	 * @return true if any of the bits designated by the 1's in this IntegerStruct2 are 1 in the provided
+	 * IntegerStruct2; otherwise, false.
 	 */
 	public boolean logTest(final IntegerStruct2 integer) {
 		final IntegerStruct2 and = logAnd(integer);
@@ -493,9 +472,9 @@ public class IntegerStruct2 extends RationalStruct2Impl<Apint> {
 	}
 
 	/**
-	 * Returns the number of bits needed to represent this IntegerStruct in binary two's-complement format.
+	 * Returns the number of bits needed to represent this IntegerStruct2 in binary two's-complement format.
 	 *
-	 * @return the number of bits needed to represent this IntegerStruct in binary two's-complement format
+	 * @return the number of bits needed to represent this IntegerStruct2 in binary two's-complement format
 	 */
 	public IntegerStruct2 integerLength() {
 		final BigInteger bigInteger = ap.toBigInteger();
@@ -504,9 +483,9 @@ public class IntegerStruct2 extends RationalStruct2Impl<Apint> {
 	}
 
 	/**
-	 * Returns true if this IntegerStruct is even (divisible by two); otherwise, returns false.
+	 * Returns true if this IntegerStruct2 is even (divisible by two); otherwise, returns false.
 	 *
-	 * @return true if this IntegerStruct is even (divisible by two); otherwise, false
+	 * @return true if this IntegerStruct2 is even (divisible by two); otherwise, false
 	 */
 	public boolean evenp() {
 		// TODO: Apint(2) constant??
@@ -517,9 +496,9 @@ public class IntegerStruct2 extends RationalStruct2Impl<Apint> {
 	}
 
 	/**
-	 * Returns true if this IntegerStruct is odd (not divisible by two); otherwise, returns false.
+	 * Returns true if this IntegerStruct2 is odd (not divisible by two); otherwise, returns false.
 	 *
-	 * @return true if this IntegerStruct is odd (not divisible by two); otherwise, false
+	 * @return true if this IntegerStruct2 is odd (not divisible by two); otherwise, false
 	 */
 	public boolean oddp() {
 		return !evenp();
@@ -529,16 +508,13 @@ public class IntegerStruct2 extends RationalStruct2Impl<Apint> {
 	}
 
 	/**
-	 * Returns the greatest IntegerStruct less than or equal to this IntegerStructs exact positive square root.
+	 * Returns the greatest IntegerStruct2 less than or equal to this IntegerStructs exact positive square root.
 	 *
-	 * @return the greatest IntegerStruct less than or equal to this IntegerStructs exact positive square root
+	 * @return the greatest IntegerStruct2 less than or equal to this IntegerStructs exact positive square root
 	 */
 	public IntegerStruct2 isqrt() {
-		ApintMath.sqrt(ap);
-
-		final BigInteger bigInteger = ap.toBigInteger();
-		final BigInteger sqrtFloor = BigIntegerMath.sqrt(bigInteger, RoundingMode.FLOOR);
-		return valueOf(sqrtFloor);
+		final Apint[] sqrt = ApintMath.sqrt(ap);
+		return valueOf(sqrt[0]);
 	}
 
 	/*
@@ -560,139 +536,22 @@ public class IntegerStruct2 extends RationalStruct2Impl<Apint> {
 	 */
 
 	@Override
-	public FloatStruct2 floatingPoint() {
-		return FloatStruct2.valueOf(ap);
+	public IntegerStruct2 rational() {
+		return this;
 	}
 
 	@Override
-	public FloatStruct2 floatingPoint(final FloatStruct2 prototype) {
-		return FloatStruct2.valueOf(ap, prototype);
-	}
-
-	private static RealStruct2 getRemainder(final Apfloat remainder, final RealStruct2 divisor) {
-		if (divisor instanceof RationalStruct2) {
-			// TODO: Aprational from Apfloat???
-			return null;
-		}
-		return FloatStruct2.valueOf(remainder);
+	public RealStruct2 mod(final RealStruct2 divisor) {
+		// TODO
+		final QuotientRemainderResult2 floor = floor(divisor);
+		return floor.getRemainder();
 	}
 
 	@Override
-	public QuotientRemainderResult2 floor(final RealStruct2 divisor) {
-		final Apfloat divide = ap.divide(divisor.ap());
-
-		final Apint quotient = divide.floor();
-		final Apfloat remainder = (divide.signum() >= 0) ? divide.frac() : divide.subtract(quotient);
-		return new QuotientRemainderResult2(valueOf(quotient), getRemainder(remainder, divisor));
-	}
-
-	@Override
-	public QuotientRemainderResult2 ffloor(final RealStruct2 divisor) {
-		final Apfloat divide = ap.divide(divisor.ap());
-
-		final Apint quotient = divide.floor();
-		final Apfloat remainder = (divide.signum() >= 0) ? divide.frac() : divide.subtract(quotient);
-		return new QuotientRemainderResult2(FloatStruct2.valueOf(quotient), getRemainder(remainder, divisor));
-	}
-
-	@Override
-	public QuotientRemainderResult2 ceiling(final RealStruct2 divisor) {
-		final Apfloat divide = ap.divide(divisor.ap());
-
-		final Apint quotient = divide.ceil();
-		final Apfloat remainder = (divide.signum() >= 0) ? divide.frac() : divide.subtract(quotient);
-		return new QuotientRemainderResult2(valueOf(quotient), getRemainder(remainder, divisor));
-	}
-
-	@Override
-	public QuotientRemainderResult2 fceiling(final RealStruct2 divisor) {
-		final Apfloat divide = ap.divide(divisor.ap());
-
-		final Apint quotient = divide.ceil();
-		final Apfloat remainder = (divide.signum() >= 0) ? divide.frac() : divide.subtract(quotient);
-		return new QuotientRemainderResult2(FloatStruct2.valueOf(quotient), getRemainder(remainder, divisor));
-	}
-
-	@Override
-	public QuotientRemainderResult2 truncate(final RealStruct2 divisor) {
-		final Apfloat divide = ap.divide(divisor.ap());
-
-		final Apint quotient = divide.truncate();
-		final Apfloat remainder = (divide.signum() >= 0) ? divide.frac() : divide.subtract(quotient);
-		return new QuotientRemainderResult2(valueOf(quotient), getRemainder(remainder, divisor));
-	}
-
-	@Override
-	public QuotientRemainderResult2 ftruncate(final RealStruct2 divisor) {
-		final Apfloat divide = ap.divide(divisor.ap());
-
-		final Apint quotient = divide.truncate();
-		final Apfloat remainder = (divide.signum() >= 0) ? divide.frac() : divide.subtract(quotient);
-		return new QuotientRemainderResult2(FloatStruct2.valueOf(quotient), getRemainder(remainder, divisor));
-	}
-
-	@Override
-	public QuotientRemainderResult2 round(final RealStruct2 divisor) {
-		final Apfloat divide = ap.divide(divisor.ap());
-
-		final Apint quotient = divide.floor();
-		final Apfloat remainder = (divide.signum() >= 0) ? divide.frac() : divide.subtract(quotient);
-		return new QuotientRemainderResult2(valueOf(quotient), getRemainder(remainder, divisor));
-	}
-
-	@Override
-	public QuotientRemainderResult2 fround(final RealStruct2 divisor) {
-		final Apfloat divide = ap.divide(divisor.ap());
-
-		final Apint quotient = divide.floor();
-		final Apfloat remainder = (divide.signum() >= 0) ? divide.frac() : divide.subtract(quotient);
-		return new QuotientRemainderResult2(FloatStruct2.valueOf(quotient), getRemainder(remainder, divisor));
-	}
-
-	@Override
-	public boolean isLessThan(final RealStruct2 real) {
-		final Apfloat realAp = real.ap();
-		final boolean preferCompare = ap.preferCompare(realAp);
-
-		final int compareResult = preferCompare ? -realAp.compareTo(ap) : ap.compareTo(realAp);
-		return compareResult < 0;
-	}
-
-	@Override
-	public boolean isGreaterThan(final RealStruct2 real) {
-		final Apfloat realAp = real.ap();
-		final boolean preferCompare = ap.preferCompare(realAp);
-
-		final int compareResult = preferCompare ? -realAp.compareTo(ap) : ap.compareTo(realAp);
-		return compareResult <= 0;
-	}
-
-	@Override
-	public boolean isLessThanOrEqualTo(final RealStruct2 real) {
-		final Apfloat realAp = real.ap();
-		final boolean preferCompare = ap.preferCompare(realAp);
-
-		final int compareResult = preferCompare ? -realAp.compareTo(ap) : ap.compareTo(realAp);
-		return compareResult > 0;
-	}
-
-	@Override
-	public boolean isGreaterThanOrEqualTo(final RealStruct2 real) {
-		final Apfloat realAp = real.ap();
-		final boolean preferCompare = ap.preferCompare(realAp);
-
-		final int compareResult = preferCompare ? -realAp.compareTo(ap) : ap.compareTo(realAp);
-		return compareResult >= 0;
-	}
-
-	@Override
-	public boolean plusp() {
-		return Apcomplex.ZERO.compareTo(ap) > 0;
-	}
-
-	@Override
-	public boolean minusp() {
-		return Apcomplex.ZERO.compareTo(ap) < 0;
+	public RealStruct2 rem(final RealStruct2 divisor) {
+		// TODO
+		final QuotientRemainderResult2 truncate = truncate(divisor);
+		return truncate.getRemainder();
 	}
 
 	/*
@@ -700,152 +559,91 @@ public class IntegerStruct2 extends RationalStruct2Impl<Apint> {
 	 */
 
 	@Override
-	public boolean zerop() {
-		return ap.signum() == 0;
+	public Apint ap() {
+		return ap;
+	}
+
+	@Override
+	public IntegerStruct2 abs() {
+		final Apint abs = ApintMath.abs(ap);
+		return valueOf(abs);
 	}
 
 	@Override
 	public NumberStruct2 add(final NumberStruct2 number) {
 		final Apcomplex numberAp = number.ap();
-		final Apcomplex add = ap.add(numberAp);
-		return NumberStruct2.valueOf(add);
+		if (numberAp instanceof Apint) {
+			final Apint add = ap.add((Apint) numberAp);
+			return valueOf(add);
+		}
+		return super.add(number);
 	}
 
 	@Override
 	public NumberStruct2 subtract(final NumberStruct2 number) {
 		final Apcomplex numberAp = number.ap();
-		final Apcomplex subtract = ap.subtract(numberAp);
-		return NumberStruct2.valueOf(subtract);
+		if (numberAp instanceof Apint) {
+			final Apint subtract = ap.subtract((Apint) numberAp);
+			return valueOf(subtract);
+		}
+		return super.subtract(number);
 	}
 
 	@Override
 	public NumberStruct2 multiply(final NumberStruct2 number) {
 		final Apcomplex numberAp = number.ap();
-		final Apcomplex multiply = ap.multiply(numberAp);
-		return NumberStruct2.valueOf(multiply);
+		if (numberAp instanceof Apint) {
+			final Apint multiply = ap.multiply((Apint) numberAp);
+			return valueOf(multiply);
+		}
+		return super.multiply(number);
 	}
 
 	@Override
 	public NumberStruct2 divide(final NumberStruct2 number) {
 		final Apcomplex numberAp = number.ap();
-		final Apcomplex divide = ap.divide(numberAp);
-		return NumberStruct2.valueOf(divide);
+		if (numberAp instanceof Apint) {
+			final Apint divide = ap.divide((Apint) numberAp);
+			return valueOf(divide);
+		}
+		return super.divide(number);
 	}
 
 	@Override
 	public boolean isEqualTo(final NumberStruct2 number) {
-		return false;
+		final Apcomplex numberAp = number.ap();
+		if (numberAp instanceof Apint) {
+			final Apint integerAp = (Apint) numberAp;
+			final boolean shouldReverseCompare = ap.preferCompare(integerAp);
+			return shouldReverseCompare ? integerAp.equals(ap) : ap.equals(integerAp);
+		}
+		return super.isEqualTo(number);
 	}
 
 	@Override
-	public RationalStruct2 negation() {
+	public NumberStruct2 signum() {
+		// TODO
+		return super.signum();
+	}
+
+	@Override
+	public IntegerStruct2 negation() {
 		final Apint negate = ap.negate();
 		return valueOf(negate);
 	}
 
 	@Override
 	public RationalStruct2 reciprocal() {
-		if (Apcomplex.ZERO.equals(ap)) {
-			throw new DivisionByZeroException("Division by zero.");
-		}
-		if (Apcomplex.ONE.equals(ap)) {
-			return this;
-		}
-		return RatioStruct2.valueOf(Apcomplex.ONE, ap);
+		final Aprational reciprocal = new Aprational(Apcomplex.ONE, ap);
+		return RationalStruct2.valueOf(reciprocal);
 	}
 
-	@Override
-	public RealStruct2 exp() {
-		final Apfloat exp = ApfloatMath.exp(ap);
-		return RealStruct2.valueOf(exp);
-	}
+	/*
+		ToString
+	 */
 
 	@Override
-	public NumberStruct2 expt(final NumberStruct2 power) {
-		final Apcomplex pow = ApcomplexMath.pow(ap, power.ap());
-		return NumberStruct2.valueOf(pow);
-	}
-
-	@Override
-	public RealStruct2 log() {
-		final Apfloat log = ApfloatMath.log(ap);
-		return RealStruct2.valueOf(log);
-	}
-
-	@Override
-	public RealStruct2 sqrt() {
-		final Apfloat sqrt = ApfloatMath.sqrt(ap);
-		return RealStruct2.valueOf(sqrt);
-	}
-
-	@Override
-	public RealStruct2 sin() {
-		return null;
-	}
-
-	@Override
-	public RealStruct2 cos() {
-		return null;
-	}
-
-	@Override
-	public RealStruct2 tan() {
-		return null;
-	}
-
-	@Override
-	public RealStruct2 asin() {
-		return null;
-	}
-
-	@Override
-	public RealStruct2 acos() {
-		return null;
-	}
-
-	@Override
-	public RealStruct2 atan() {
-		return null;
-	}
-
-	@Override
-	public RealStruct2 atan(final RealStruct2 real) {
-		return null;
-	}
-
-	@Override
-	public RealStruct2 sinh() {
-		return null;
-	}
-
-	@Override
-	public RealStruct2 cosh() {
-		return null;
-	}
-
-	@Override
-	public RealStruct2 tanh() {
-		return null;
-	}
-
-	@Override
-	public RealStruct2 asinh() {
-		return null;
-	}
-
-	@Override
-	public RealStruct2 acosh() {
-		return null;
-	}
-
-	@Override
-	public RealStruct2 atanh() {
-		return null;
-	}
-
-	@Override
-	public RationalStruct2 abs() {
-		final Apint abs = ApintMath.abs(ap);
-		return valueOf(abs);
+	public String toString() {
+		return ap.toString();
 	}
 }

@@ -1,3 +1,7 @@
+/*
+ * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
+ */
+
 package jcl.numbers.newImpl;
 
 import jcl.LispType;
@@ -120,7 +124,7 @@ class RationalStruct2Impl<A extends Aprational> extends RealStruct2Impl<A> imple
 	}
 
 	@Override
-	public RealStruct2 imagPart() {
+	public IntegerStruct2 imagPart() {
 		return IntegerStruct2.ZERO;
 	}
 

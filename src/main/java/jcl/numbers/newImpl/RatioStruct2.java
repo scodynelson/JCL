@@ -259,7 +259,7 @@ public final class RatioStruct2 extends RationalStruct2Impl<Aprational> {
 	}
 
 	@Override
-	public RealStruct2 abs() {
+	public RationalStruct2 abs() {
 		return valueOf(AprationalMath.abs(ap));
 	}
 
@@ -269,7 +269,7 @@ public final class RatioStruct2 extends RationalStruct2Impl<Aprational> {
 	}
 
 	@Override
-	public RealStruct2 reciprocal() {
+	public RationalStruct2 reciprocal() {
 		final Apint numerator = ap.numerator();
 		if (Apcomplex.ZERO.equals(numerator)) {
 			throw new DivisionByZeroException("Division by zero.");

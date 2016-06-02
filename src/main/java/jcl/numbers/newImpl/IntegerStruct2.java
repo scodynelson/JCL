@@ -738,13 +738,13 @@ public class IntegerStruct2 extends RationalStruct2Impl<Apint> {
 	}
 
 	@Override
-	public RealStruct2 negation() {
+	public RationalStruct2 negation() {
 		final Apint negate = ap.negate();
 		return valueOf(negate);
 	}
 
 	@Override
-	public RealStruct2 reciprocal() {
+	public RationalStruct2 reciprocal() {
 		if (Apcomplex.ZERO.equals(ap)) {
 			throw new DivisionByZeroException("Division by zero.");
 		}
@@ -844,7 +844,7 @@ public class IntegerStruct2 extends RationalStruct2Impl<Apint> {
 	}
 
 	@Override
-	public RealStruct2 abs() {
+	public RationalStruct2 abs() {
 		final Apint abs = ApintMath.abs(ap);
 		return valueOf(abs);
 	}

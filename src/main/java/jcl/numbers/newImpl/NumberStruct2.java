@@ -309,93 +309,93 @@ public interface NumberStruct2 extends LispStruct {
 	NumberStruct2 log(NumberStruct2 base);
 
 	/**
-	 * Returns the square-root of the this NumberStruct2.
+	 * Returns the square-root of this NumberStruct2.
 	 *
-	 * @return the square-root of the this NumberStruct2
+	 * @return the square-root of this NumberStruct2
 	 */
 	NumberStruct2 sqrt();
 
 	/**
-	 * Returns the 'sine' of the this NumberStruct2.
+	 * Returns the 'sine' of this NumberStruct2.
 	 *
-	 * @return the 'sine' of the this NumberStruct2
+	 * @return the 'sine' of this NumberStruct2
 	 */
 	NumberStruct2 sin();
 
 	/**
-	 * Returns the 'cosine' of the this NumberStruct2.
+	 * Returns the 'cosine' of this NumberStruct2.
 	 *
-	 * @return the 'cosine' of the this NumberStruct2
+	 * @return the 'cosine' of this NumberStruct2
 	 */
 	NumberStruct2 cos();
 
 	/**
-	 * Returns the 'tangent' of the this NumberStruct2.
+	 * Returns the 'tangent' of this NumberStruct2.
 	 *
-	 * @return the 'tangent' of the this NumberStruct2
+	 * @return the 'tangent' of this NumberStruct2
 	 */
 	NumberStruct2 tan();
 
 	/**
-	 * Returns the 'Inverse sine' of the this NumberStruct2.
+	 * Returns the 'Inverse sine' of this NumberStruct2.
 	 *
-	 * @return the 'Inverse sine' of the this NumberStruct2
+	 * @return the 'Inverse sine' of this NumberStruct2
 	 */
 	NumberStruct2 asin();
 
 	/**
-	 * Returns the 'Inverse cosine' of the this NumberStruct2.
+	 * Returns the 'Inverse cosine' of this NumberStruct2.
 	 *
-	 * @return the 'Inverse cosine' of the this NumberStruct2
+	 * @return the 'Inverse cosine' of this NumberStruct2
 	 */
 	NumberStruct2 acos();
 
 	/**
-	 * Returns the 'Inverse tangent' of the this NumberStruct2.
+	 * Returns the 'Inverse tangent' of this NumberStruct2.
 	 *
-	 * @return the 'Inverse tangent' of the this NumberStruct2
+	 * @return the 'Inverse tangent' of this NumberStruct2
 	 */
 	NumberStruct2 atan();
 
 	/**
-	 * Returns the 'Hyperbolic sine' of the this NumberStruct2.
+	 * Returns the 'Hyperbolic sine' of this NumberStruct2.
 	 *
-	 * @return the 'Hyperbolic sine' of the this NumberStruct2
+	 * @return the 'Hyperbolic sine' of this NumberStruct2
 	 */
 	NumberStruct2 sinh();
 
 	/**
-	 * Returns the 'Hyperbolic cosine' of the this NumberStruct2.
+	 * Returns the 'Hyperbolic cosine' of this NumberStruct2.
 	 *
-	 * @return the 'Hyperbolic cosine' of the this NumberStruct2
+	 * @return the 'Hyperbolic cosine' of this NumberStruct2
 	 */
 	NumberStruct2 cosh();
 
 	/**
-	 * Returns the 'Hyperbolic tangent' of the this NumberStruct2.
+	 * Returns the 'Hyperbolic tangent' of this NumberStruct2.
 	 *
-	 * @return the 'Hyperbolic tangent' of the this NumberStruct2
+	 * @return the 'Hyperbolic tangent' of this NumberStruct2
 	 */
 	NumberStruct2 tanh();
 
 	/**
-	 * Returns the 'Inverse hyperbolic sine' of the this NumberStruct2.
+	 * Returns the 'Inverse hyperbolic sine' of this NumberStruct2.
 	 *
-	 * @return the 'Inverse hyperbolic sine' of the this NumberStruct2
+	 * @return the 'Inverse hyperbolic sine' of this NumberStruct2
 	 */
 	NumberStruct2 asinh();
 
 	/**
-	 * Returns the 'Inverse hyperbolic cosine' of the this NumberStruct2.
+	 * Returns the 'Inverse hyperbolic cosine' of this NumberStruct2.
 	 *
-	 * @return the 'Inverse hyperbolic cosine' of the this NumberStruct2
+	 * @return the 'Inverse hyperbolic cosine' of this NumberStruct2
 	 */
 	NumberStruct2 acosh();
 
 	/**
-	 * Returns the 'Inverse hyperbolic tangent' of the this NumberStruct2.
+	 * Returns the 'Inverse hyperbolic tangent' of this NumberStruct2.
 	 *
-	 * @return the 'Inverse hyperbolic tangent' of the this NumberStruct2
+	 * @return the 'Inverse hyperbolic tangent' of this NumberStruct2
 	 */
 	NumberStruct2 atanh();
 

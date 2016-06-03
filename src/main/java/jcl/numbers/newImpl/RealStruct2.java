@@ -286,7 +286,7 @@ public interface RealStruct2 extends NumberStruct2 {
 	 * @return the modulus of this RealStruct2 and the provided RealStruct2 divisor
 	 */
 	default RealStruct2 mod(final RealStruct2 divisor) {
-		final QuotientRemainderResult2 floor = floor(divisor);
+		final QuotientRemainder2 floor = floor(divisor);
 		return floor.getRemainder();
 	}
 
@@ -299,7 +299,7 @@ public interface RealStruct2 extends NumberStruct2 {
 	 * @return the remainder of this RealStruct2 and the provided RealStruct2 divisor
 	 */
 	default RealStruct2 rem(final RealStruct2 divisor) {
-		final QuotientRemainderResult2 truncate = truncate(divisor);
+		final QuotientRemainder2 truncate = truncate(divisor);
 		return truncate.getRemainder();
 	}
 
@@ -315,38 +315,162 @@ public interface RealStruct2 extends NumberStruct2 {
 		return ComplexStruct2.valueOf(cos.ap(), sin.ap());
 	}
 
-	QuotientRemainderResult2 floor();
+	/**
+	 * Calculates the 'quotient' and 'remainder' for the 'FLOOR' operation for this RealStruct2.
+	 *
+	 * @return the {@link QuotientRemainder2} for the 'FLOOR' operation
+	 */
+	QuotientRemainder2 floor();
 
-	QuotientRemainderResult2 floor(RealStruct2 divisor);
+	/**
+	 * Calculates the 'quotient' and 'remainder' for the 'FLOOR' operation for this RealStruct2 with the provided
+	 * RealStruct2 divisor.
+	 *
+	 * @param divisor
+	 * 		the RealStruct2 to be used to be used as the divisor in the 'FLOOR' operation
+	 *
+	 * @return the {@link QuotientRemainder2} for the 'FLOOR' operation with the provided RealStruct2 divisor
+	 */
+	QuotientRemainder2 floor(RealStruct2 divisor);
 
-	QuotientRemainderResult2 ffloor();
+	/**
+	 * Calculates the 'quotient' and 'remainder' for the 'FLOOR' operation for this RealStruct2. The resulting
+	 * 'quotient' will be a {@link FloatStruct2}.
+	 *
+	 * @return the {@link QuotientRemainder2} for the 'FLOOR' operation with the provided RealStruct2 divisor
+	 */
+	QuotientRemainder2 ffloor();
 
-	QuotientRemainderResult2 ffloor(RealStruct2 divisor);
+	/**
+	 * Calculates the 'quotient' and 'remainder' for the 'FLOOR' operation for this RealStruct2 with the provided
+	 * RealStruct2 divisor. The resulting 'quotient' will be a {@link FloatStruct2}.
+	 *
+	 * @param divisor
+	 * 		the RealStruct2 to be used to be used as the divisor in the 'FLOOR' operation
+	 *
+	 * @return the {@link QuotientRemainder2} for the 'FLOOR' operation with the provided RealStruct2 divisor
+	 */
+	QuotientRemainder2 ffloor(RealStruct2 divisor);
 
-	QuotientRemainderResult2 ceiling();
+	/**
+	 * Calculates the 'quotient' and 'remainder' for the 'CEILING' operation for this RealStruct2.
+	 *
+	 * @return the {@link QuotientRemainder2} for the 'CEILING' operation
+	 */
+	QuotientRemainder2 ceiling();
 
-	QuotientRemainderResult2 ceiling(RealStruct2 divisor);
+	/**
+	 * Calculates the 'quotient' and 'remainder' for the 'CEILING' operation for this RealStruct2 with the provided
+	 * RealStruct2 divisor.
+	 *
+	 * @param divisor
+	 * 		the RealStruct2 to be used to be used as the divisor in the 'CEILING' operation
+	 *
+	 * @return the {@link QuotientRemainder2} for the 'CEILING' operation with the provided RealStruct2 divisor
+	 */
+	QuotientRemainder2 ceiling(RealStruct2 divisor);
 
-	QuotientRemainderResult2 fceiling();
+	/**
+	 * Calculates the 'quotient' and 'remainder' for the 'CEILING' operation for this RealStruct2. The resulting
+	 * 'quotient' will be a {@link FloatStruct2}.
+	 *
+	 * @return the {@link QuotientRemainder2} for the 'CEILING' operation with the provided RealStruct2 divisor
+	 */
+	QuotientRemainder2 fceiling();
 
-	QuotientRemainderResult2 fceiling(RealStruct2 divisor);
+	/**
+	 * Calculates the 'quotient' and 'remainder' for the 'CEILING' operation for this RealStruct2 with the provided
+	 * RealStruct2 divisor. The resulting 'quotient' will be a {@link FloatStruct2}.
+	 *
+	 * @param divisor
+	 * 		the RealStruct2 to be used to be used as the divisor in the 'CEILING' operation
+	 *
+	 * @return the {@link QuotientRemainder2} for the 'CEILING' operation with the provided RealStruct2 divisor
+	 */
+	QuotientRemainder2 fceiling(RealStruct2 divisor);
 
-	QuotientRemainderResult2 truncate();
+	/**
+	 * Calculates the 'quotient' and 'remainder' for the 'TRUNCATE' operation for this RealStruct2.
+	 *
+	 * @return the {@link QuotientRemainder2} for the 'TRUNCATE' operation
+	 */
+	QuotientRemainder2 truncate();
 
-	QuotientRemainderResult2 truncate(RealStruct2 divisor);
+	/**
+	 * Calculates the 'quotient' and 'remainder' for the 'TRUNCATE' operation for this RealStruct2 with the provided
+	 * RealStruct2 divisor.
+	 *
+	 * @param divisor
+	 * 		the RealStruct2 to be used to be used as the divisor in the 'TRUNCATE' operation
+	 *
+	 * @return the {@link QuotientRemainder2} for the 'TRUNCATE' operation with the provided RealStruct2 divisor
+	 */
+	QuotientRemainder2 truncate(RealStruct2 divisor);
 
-	QuotientRemainderResult2 ftruncate();
+	/**
+	 * Calculates the 'quotient' and 'remainder' for the 'TRUNCATE' operation for this RealStruct2. The resulting
+	 * 'quotient' will be a {@link FloatStruct2}.
+	 *
+	 * @return the {@link QuotientRemainder2} for the 'TRUNCATE' operation with the provided RealStruct2 divisor
+	 */
+	QuotientRemainder2 ftruncate();
 
-	QuotientRemainderResult2 ftruncate(RealStruct2 divisor);
+	/**
+	 * Calculates the 'quotient' and 'remainder' for the 'TRUNCATE' operation for this RealStruct2 with the provided
+	 * RealStruct2 divisor. The resulting 'quotient' will be a {@link FloatStruct2}.
+	 *
+	 * @param divisor
+	 * 		the RealStruct2 to be used to be used as the divisor in the 'TRUNCATE' operation
+	 *
+	 * @return the {@link QuotientRemainder2} for the 'TRUNCATE' operation with the provided RealStruct2 divisor
+	 */
+	QuotientRemainder2 ftruncate(RealStruct2 divisor);
 
-	QuotientRemainderResult2 round();
+	/**
+	 * Calculates the 'quotient' and 'remainder' for the 'ROUND' operation for this RealStruct2.
+	 *
+	 * @return the {@link QuotientRemainder2} for the 'ROUND' operation
+	 */
+	QuotientRemainder2 round();
 
-	QuotientRemainderResult2 round(RealStruct2 divisor);
+	/**
+	 * Calculates the 'quotient' and 'remainder' for the 'ROUND' operation for this RealStruct2 with the provided
+	 * RealStruct2 divisor.
+	 *
+	 * @param divisor
+	 * 		the RealStruct2 to be used to be used as the divisor in the 'ROUND' operation
+	 *
+	 * @return the {@link QuotientRemainder2} for the 'ROUND' operation with the provided RealStruct2 divisor
+	 */
+	QuotientRemainder2 round(RealStruct2 divisor);
 
-	QuotientRemainderResult2 fround();
+	/**
+	 * Calculates the 'quotient' and 'remainder' for the 'ROUND' operation for this RealStruct2. The resulting
+	 * 'quotient' will be a {@link FloatStruct2}.
+	 *
+	 * @return the {@link QuotientRemainder2} for the 'ROUND' operation with the provided RealStruct2 divisor
+	 */
+	QuotientRemainder2 fround();
 
-	QuotientRemainderResult2 fround(RealStruct2 divisor);
+	/**
+	 * Calculates the 'quotient' and 'remainder' for the 'ROUND' operation for this RealStruct2 with the provided
+	 * RealStruct2 divisor. The resulting 'quotient' will be a {@link FloatStruct2}.
+	 *
+	 * @param divisor
+	 * 		the RealStruct2 to be used to be used as the divisor in the 'ROUND' operation
+	 *
+	 * @return the {@link QuotientRemainder2} for the 'ROUND' operation with the provided RealStruct2 divisor
+	 */
+	QuotientRemainder2 fround(RealStruct2 divisor);
 
+	/**
+	 * Returns the 'Inverse tangent' of this RealStruct2 divided by the provided RealStruct2.
+	 *
+	 * @param real
+	 * 		the RealStruct2 to divide this RealStruct2 by
+	 *
+	 * @return the 'Inverse tangent' of this RealStruct2 divided by the provided RealStruct2
+	 */
 	RealStruct2 atan(RealStruct2 real);
 
 	/*

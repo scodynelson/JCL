@@ -70,7 +70,7 @@ public class ComplexStruct2 extends NumberStruct2Impl<Apcomplex> {
 //	 * @param imaginary
 //	 * 		a {@link RealStruct} that represents the value of imaginary part ComplexStruct
 //	 */
-	ComplexStruct2(final Apcomplex apcomplex) {
+	private ComplexStruct2(final Apcomplex apcomplex) {
 		this(apcomplex.real(), apcomplex.imag());
 	}
 
@@ -82,7 +82,7 @@ public class ComplexStruct2 extends NumberStruct2Impl<Apcomplex> {
 //	 * @param imaginary2
 //	 * 		a {@link RealStruct} that represents the value of imaginary part ComplexStruct
 //	 */
-	ComplexStruct2(final Apfloat real, final Apfloat imaginary) {
+	private ComplexStruct2(final Apfloat real, final Apfloat imaginary) {
 		this(toRealStruct(real), toRealStruct(imaginary));
 	}
 
@@ -94,7 +94,7 @@ public class ComplexStruct2 extends NumberStruct2Impl<Apcomplex> {
 	 * @param imaginary
 	 * 		a {@link RealStruct2} that represents the value of imaginary part ComplexStruct
 	 */
-	public ComplexStruct2(final RealStruct2 real, final RealStruct2 imaginary) {
+	private ComplexStruct2(final RealStruct2 real, final RealStruct2 imaginary) {
 		super(ComplexType.INSTANCE, null);
 
 		RealStruct2 coercedReal = real;
@@ -117,7 +117,7 @@ public class ComplexStruct2 extends NumberStruct2Impl<Apcomplex> {
 	 * @param imaginary
 	 * 		a {@link BigInteger} that represents the value of imaginary part ComplexStruct
 	 */
-	public ComplexStruct2(final IntegerStruct2 real, final IntegerStruct2 imaginary) {
+	private ComplexStruct2(final IntegerStruct2 real, final IntegerStruct2 imaginary) {
 		super(ComplexType.INSTANCE, null);
 		this.real = real;
 		this.imaginary = imaginary;
@@ -132,7 +132,7 @@ public class ComplexStruct2 extends NumberStruct2Impl<Apcomplex> {
 	 * @param imaginary
 	 * 		a {@link BigDecimal} that represents the value of imaginary part ComplexStruct
 	 */
-	public ComplexStruct2(final IntegerStruct2 real, final FloatStruct2 imaginary) {
+	private ComplexStruct2(final IntegerStruct2 real, final FloatStruct2 imaginary) {
 		super(ComplexType.INSTANCE, null);
 		this.real = real.floatingPoint();
 		this.imaginary = imaginary;
@@ -147,7 +147,7 @@ public class ComplexStruct2 extends NumberStruct2Impl<Apcomplex> {
 	 * @param imaginary
 	 * 		a {@link BigFraction} that represents the value of imaginary part ComplexStruct
 	 */
-	public ComplexStruct2(final IntegerStruct2 real, final RatioStruct2 imaginary) {
+	private ComplexStruct2(final IntegerStruct2 real, final RatioStruct2 imaginary) {
 		super(ComplexType.INSTANCE, null);
 		this.real = real;
 		this.imaginary = imaginary;
@@ -162,7 +162,7 @@ public class ComplexStruct2 extends NumberStruct2Impl<Apcomplex> {
 	 * @param imaginary
 	 * 		a {@link BigInteger} that represents the value of imaginary part ComplexStruct
 	 */
-	public ComplexStruct2(final FloatStruct2 real, final IntegerStruct2 imaginary) {
+	private ComplexStruct2(final FloatStruct2 real, final IntegerStruct2 imaginary) {
 		super(ComplexType.INSTANCE, null);
 		this.real = real;
 		this.imaginary = imaginary.floatingPoint();
@@ -177,7 +177,7 @@ public class ComplexStruct2 extends NumberStruct2Impl<Apcomplex> {
 	 * @param imaginary
 	 * 		a {@link BigDecimal} that represents the value of imaginary part ComplexStruct
 	 */
-	public ComplexStruct2(final FloatStruct2 real, final FloatStruct2 imaginary) {
+	private ComplexStruct2(final FloatStruct2 real, final FloatStruct2 imaginary) {
 		super(ComplexType.INSTANCE, null);
 		this.real = real;
 		this.imaginary = imaginary;
@@ -192,7 +192,7 @@ public class ComplexStruct2 extends NumberStruct2Impl<Apcomplex> {
 	 * @param imaginary
 	 * 		a {@link BigFraction} that represents the value of imaginary part ComplexStruct
 	 */
-	public ComplexStruct2(final FloatStruct2 real, final RatioStruct2 imaginary) {
+	private ComplexStruct2(final FloatStruct2 real, final RatioStruct2 imaginary) {
 		super(ComplexType.INSTANCE, null);
 		this.real = real;
 		this.imaginary = imaginary.floatingPoint();
@@ -207,7 +207,7 @@ public class ComplexStruct2 extends NumberStruct2Impl<Apcomplex> {
 	 * @param imaginary
 	 * 		a {@link BigInteger} that represents the value of imaginary part ComplexStruct
 	 */
-	public ComplexStruct2(final RatioStruct2 real, final IntegerStruct2 imaginary) {
+	private ComplexStruct2(final RatioStruct2 real, final IntegerStruct2 imaginary) {
 		super(ComplexType.INSTANCE, null);
 		this.real = real;
 		this.imaginary = imaginary;
@@ -222,7 +222,7 @@ public class ComplexStruct2 extends NumberStruct2Impl<Apcomplex> {
 	 * @param imaginary
 	 * 		a {@link BigDecimal} that represents the value of imaginary part ComplexStruct
 	 */
-	public ComplexStruct2(final RatioStruct2 real, final FloatStruct2 imaginary) {
+	private ComplexStruct2(final RatioStruct2 real, final FloatStruct2 imaginary) {
 		super(ComplexType.INSTANCE, null);
 		this.real = real.floatingPoint();
 		this.imaginary = imaginary;
@@ -237,7 +237,7 @@ public class ComplexStruct2 extends NumberStruct2Impl<Apcomplex> {
 	 * @param imaginary
 	 * 		a {@link BigFraction} that represents the value of imaginary part ComplexStruct
 	 */
-	public ComplexStruct2(final RatioStruct2 real, final RatioStruct2 imaginary) {
+	private ComplexStruct2(final RatioStruct2 real, final RatioStruct2 imaginary) {
 		super(ComplexType.INSTANCE, null);
 		this.real = real;
 		this.imaginary = imaginary;
@@ -248,6 +248,11 @@ public class ComplexStruct2 extends NumberStruct2Impl<Apcomplex> {
 		// TODO: Not quite right here either!!!
 //		return (apfloat.doubleValue() == apfloat.intValue()) ? IntegerStruct2.valueOf(apfloat) : FloatStruct2.valueOf(apfloat);
 		return null;
+	}
+
+	public static ComplexStruct2 valueOf(final Apfloat real, final Apfloat imaginary) {
+		final Apcomplex apcomplex = new Apcomplex(real, imaginary);
+		return new ComplexStruct2(apcomplex);
 	}
 
 	public static ComplexStruct2 valueOf(final Apcomplex apcomplex) {

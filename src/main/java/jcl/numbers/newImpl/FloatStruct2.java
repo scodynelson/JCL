@@ -403,20 +403,6 @@ public final class FloatStruct2 extends RealStruct2Impl<Apfloat> {
 		return valueOf(ap, prototype);
 	}
 
-	@Override
-	public RealStruct2 mod(final RealStruct2 divisor) {
-		// TODO
-		final QuotientRemainderResult2 floor = floor(divisor);
-		return floor.getRemainder();
-	}
-
-	@Override
-	public RealStruct2 rem(final RealStruct2 divisor) {
-		// TODO
-		final QuotientRemainderResult2 truncate = truncate(divisor);
-		return truncate.getRemainder();
-	}
-
 	/*
 		NumberStruct
 	 */
@@ -468,9 +454,15 @@ public final class FloatStruct2 extends RealStruct2Impl<Apfloat> {
 	}
 
 	@Override
-	public NumberStruct2 signum() {
-		// TODO
-		return super.signum();
+	public FloatStruct2 signum() {
+		final int signum = ap.signum();
+		if (signum == 0) {
+			return ZERO;
+		}
+		if (signum > 0) {
+			return ONE;
+		}
+		return MINUS_ONE;
 	}
 
 	@Override

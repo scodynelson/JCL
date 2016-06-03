@@ -6,11 +6,12 @@ package jcl.numbers.newImpl;
 
 import jcl.LispType;
 import org.apfloat.Apcomplex;
+import org.apfloat.Apfloat;
 import org.apfloat.Apint;
 import org.apfloat.Aprational;
 import org.apfloat.AprationalMath;
 
-class RationalStruct2Impl<A extends Aprational> extends RealStruct2Impl<A> implements RationalStruct2 {
+abstract class RationalStruct2Impl<A extends Aprational> extends RealStruct2Impl<A> implements RationalStruct2 {
 
 	RationalStruct2Impl(final LispType type, final A ap) {
 		super(type, ap);
@@ -48,17 +49,11 @@ class RationalStruct2Impl<A extends Aprational> extends RealStruct2Impl<A> imple
 	}
 
 	@Override
-	public RealStruct2 mod(final RealStruct2 divisor) {
-		// TODO
-		final QuotientRemainderResult2 floor = floor(divisor);
-		return floor.getRemainder();
-	}
-
-	@Override
-	public RealStruct2 rem(final RealStruct2 divisor) {
-		// TODO
-		final QuotientRemainderResult2 truncate = truncate(divisor);
-		return truncate.getRemainder();
+	protected RealStruct2 getRemainderReal(final RealStruct2 divisor, final Apfloat remainder) {
+		if (divisor instanceof RationalStruct2) {
+			return RationalStruct2.valueOf((Aprational) remainder);
+		}
+		return super.getRemainderReal(divisor, remainder);
 	}
 
 	/*
@@ -128,9 +123,15 @@ class RationalStruct2Impl<A extends Aprational> extends RealStruct2Impl<A> imple
 	}
 
 	@Override
-	public NumberStruct2 signum() {
-		// TODO
-		return super.signum();
+	public IntegerStruct2 signum() {
+		final int signum = ap.signum();
+		if (signum == 0) {
+			return IntegerStruct2.ZERO;
+		}
+		if (signum > 0) {
+			return IntegerStruct2.ONE;
+		}
+		return IntegerStruct2.MINUS_ONE;
 	}
 
 	@Override

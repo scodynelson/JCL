@@ -159,27 +159,26 @@ public interface NumberStruct2 extends LispStruct {
 	}
 
 	/**
-	 * Performs a numerical value equality comparison to determine if this NumberStruct2 and the provided NumberStruct2
-	 * are equal ('==').
+	 * Performs a {@literal '=='} comparison of this NumberStruct2 and the provided NumberStruct2.
 	 *
 	 * @param number
-	 * 		the NumberStruct2 to use in the equality comparison
+	 * 		the NumberStruct2 to be used in the {@literal '=='} operation
 	 *
-	 * @return the result of the equality comparison between this NumberStruct2 and the provided NumberStruct2
+	 * @return the {@literal '=='} comparison of this NumberStruct2 and the provided NumberStruct2
 	 */
 	boolean isEqualTo(NumberStruct2 number);
 
 	/**
-	 * Performs a numerical value equality comparison on the the single provided NumberStruct2 and the {@link List} of
-	 * NumberStruct2 objects to determine if they are all equal ('==').
+	 * Performs a {@literal '=='} comparison of the provided NumberStruct2 objects in order, using the single
+	 * NumberStruct2 as the starting point in the comparison. If at any point a value does not follow the expected
+	 * comparison, the comparison loop with short-circuit.
 	 *
 	 * @param number
-	 * 		the NumberStruct2 to use in the equality comparison
+	 * 		the initial NumberStruct2 used in the {@literal '=='} comparison
 	 * @param numbers
-	 * 		the {@link List} of NumberStruct2 objects to use in the equality comparison
+	 * 		the {@link List} of NumberStruct2 objects used in the {@literal '=='} comparison
 	 *
-	 * @return the result of the equality comparison between the provided NumberStruct2 and the {@link List} of
-	 * NumberStruct2 objects
+	 * @return the {@literal '=='} comparison provided NumberStruct2 objects
 	 */
 	static boolean isEqualTo(final NumberStruct2 number, final List<NumberStruct2> numbers) {
 		NumberStruct2 previousNumber = number;
@@ -196,29 +195,28 @@ public interface NumberStruct2 extends LispStruct {
 	}
 
 	/**
-	 * Performs a numerical value equality comparison to determine if this NumberStruct2 and the provided NumberStruct2
-	 * are not equal ('!=').
+	 * Performs a {@literal '!='} comparison of this NumberStruct2 and the provided NumberStruct2.
 	 *
 	 * @param number
-	 * 		the NumberStruct2 to use in the equality comparison
+	 * 		the NumberStruct2 to be used in the {@literal '!='} operation
 	 *
-	 * @return the result of the equality comparison between this NumberStruct2 and the provided NumberStruct2
+	 * @return the {@literal '!='} comparison of this NumberStruct2 and the provided NumberStruct2
 	 */
 	default boolean isNotEqualTo(final NumberStruct2 number) {
 		return !isEqualTo(number);
 	}
 
 	/**
-	 * Performs a numerical value equality comparison on the the single provided NumberStruct2 and the {@link List} of
-	 * NumberStruct2 objects to determine if they are all not equal ('!=').
+	 * Performs a {@literal '!='} comparison of the provided NumberStruct2 objects in order, using the single
+	 * NumberStruct2 as the starting point in the comparison. If at any point a value does not follow the expected
+	 * comparison, the comparison loop with short-circuit.
 	 *
 	 * @param number
-	 * 		the NumberStruct2 to use in the equality comparison
+	 * 		the initial NumberStruct2 used in the {@literal '!='} comparison
 	 * @param numbers
-	 * 		the {@link List} of NumberStruct2 objects to use in the equality comparison
+	 * 		the {@link List} of NumberStruct2 objects used in the {@literal '!='} comparison
 	 *
-	 * @return the result of the equality comparison between the provided NumberStruct2 and the {@link List} of
-	 * NumberStruct2 objects
+	 * @return the {@literal '!='} comparison provided NumberStruct2 objects
 	 */
 	static boolean isNotEqualTo(final NumberStruct2 number, final List<NumberStruct2> numbers) {
 		NumberStruct2 previousNumber = number;

@@ -15,26 +15,42 @@ import org.apfloat.Aprational;
 public interface RealStruct2 extends NumberStruct2 {
 
 	/**
-	 * Performs a {@literal '<'} comparison of this RealStruct and the provided RealStruct.
+	 * Returns a RealStruct2 from the provided {@link Apfloat} value. If the {@link Apfloat} is an {@link Aprational},
+	 * {@link RationalStruct2#valueOf(Aprational)} is invoked to create the appropriate {@link RationalStruct2} instead.
 	 *
-	 * @param real
-	 * 		the RealStruct to be used in the {@literal '<'} operation
+	 * @param apfloat
+	 * 		the {@link Apfloat} to be used as the value of the resulting RealStruct2
 	 *
-	 * @return the {@literal '<'} comparison of this RealStruct and the provided RealStruct
+	 * @return a RealStruct2 with the provided {@link Apfloat} as its value
 	 */
-	boolean isLessThan(final RealStruct2 real);
+	static RealStruct2 valueOf(final Apfloat apfloat) {
+		if (apfloat instanceof Aprational) {
+			return RationalStruct2.valueOf((Aprational) apfloat);
+		}
+		return FloatStruct2.valueOf(apfloat);
+	}
 
 	/**
-	 * Performs a {@literal '<'} comparison of the provided RealStructs in order, using the single {@code real} as the
-	 * starting point in the comparison. If at any point a value does not follow the expected comparison, the
+	 * Performs a {@literal '<'} comparison of this RealStruct2 and the provided RealStruct2.
+	 *
+	 * @param real
+	 * 		the RealStruct2 to be used in the {@literal '<'} operation
+	 *
+	 * @return the {@literal '<'} comparison of this RealStruct2 and the provided RealStruct2
+	 */
+	boolean isLessThan(RealStruct2 real);
+
+	/**
+	 * Performs a {@literal '<'} comparison of the provided RealStruct2 objects in order, using the single RealStruct2
+	 * as the starting point in the comparison. If at any point a value does not follow the expected comparison, the
 	 * comparison loop with short-circuit.
 	 *
 	 * @param real
-	 * 		the initial RealStruct used in the {@literal '<'} comparison
+	 * 		the initial RealStruct2 used in the {@literal '<'} comparison
 	 * @param reals
-	 * 		the RealStructs used in the {@literal '<'} comparison
+	 * 		the {@link List} of RealStruct2 objects used in the {@literal '<'} comparison
 	 *
-	 * @return the {@literal '<'} comparison provided RealStruct
+	 * @return the {@literal '<'} comparison provided RealStruct2 objects
 	 */
 	static boolean isLessThan(final RealStruct2 real, final List<RealStruct2> reals) {
 		RealStruct2 previousReal = real;
@@ -51,26 +67,26 @@ public interface RealStruct2 extends NumberStruct2 {
 	}
 
 	/**
-	 * Performs a {@literal '>'} comparison of this RealStruct and the provided RealStruct.
+	 * Performs a {@literal '>'} comparison of this RealStruct2 and the provided RealStruct2.
 	 *
 	 * @param real
-	 * 		the RealStruct to be used in the {@literal '>'} operation
+	 * 		the RealStruct2 to be used in the {@literal '>'} operation
 	 *
-	 * @return the {@literal '>'} comparison of this RealStruct and the provided RealStruct
+	 * @return the {@literal '>'} comparison of this RealStruct2 and the provided RealStruct2
 	 */
-	boolean isGreaterThan(final RealStruct2 real);
+	boolean isGreaterThan(RealStruct2 real);
 
 	/**
-	 * Performs a {@literal '>'} comparison of the provided RealStructs in order, using the single {@code real} as the
-	 * starting point in the comparison. If at any point a value does not follow the expected comparison, the
+	 * Performs a {@literal '>'} comparison of the provided RealStruct2 objects in order, using the single RealStruct2
+	 * as the starting point in the comparison. If at any point a value does not follow the expected comparison, the
 	 * comparison loop with short-circuit.
 	 *
 	 * @param real
-	 * 		the initial RealStruct used in the {@literal '>'} comparison
+	 * 		the initial RealStruct2 used in the {@literal '>'} comparison
 	 * @param reals
-	 * 		the RealStructs used in the {@literal '>'} comparison
+	 * 		the {@link List} of RealStruct2 objects used in the {@literal '>'} comparison
 	 *
-	 * @return the {@literal '>'} comparison provided RealStruct
+	 * @return the {@literal '>'} comparison provided RealStruct2 objects
 	 */
 	static boolean isGreaterThan(final RealStruct2 real, final List<RealStruct2> reals) {
 		RealStruct2 previousReal = real;
@@ -87,26 +103,26 @@ public interface RealStruct2 extends NumberStruct2 {
 	}
 
 	/**
-	 * Performs a {@literal '<='} comparison of this RealStruct and the provided RealStruct.
+	 * Performs a {@literal '<='} comparison of this RealStruct2 and the provided RealStruct2.
 	 *
 	 * @param real
-	 * 		the RealStruct to be used in the {@literal '<='} operation
+	 * 		the RealStruct2 to be used in the {@literal '<='} operation
 	 *
-	 * @return the {@literal '<='} comparison of this RealStruct and the provided RealStruct
+	 * @return the {@literal '<='} comparison of this RealStruct2 and the provided RealStruct2
 	 */
-	boolean isLessThanOrEqualTo(final RealStruct2 real);
+	boolean isLessThanOrEqualTo(RealStruct2 real);
 
 	/**
-	 * Performs a {@literal '<='} comparison of the provided RealStructs in order, using the single {@code real} as the
-	 * starting point in the comparison. If at any point a value does not follow the expected comparison, the
+	 * Performs a {@literal '<='} comparison of the provided RealStruct2 objects in order, using the single RealStruct2
+	 * as the starting point in the comparison. If at any point a value does not follow the expected comparison, the
 	 * comparison loop with short-circuit.
 	 *
 	 * @param real
-	 * 		the initial RealStruct used in the {@literal '<='} comparison
+	 * 		the initial RealStruct2 used in the {@literal '<='} comparison
 	 * @param reals
-	 * 		the RealStructs used in the {@literal '<='} comparison
+	 * 		the {@link List} of RealStruct2 objects used in the {@literal '<='} comparison
 	 *
-	 * @return the {@literal '<='} comparison provided RealStruct
+	 * @return the {@literal '<='} comparison provided RealStruct2 objects
 	 */
 	static boolean isLessThanOrEqualTo(final RealStruct2 real, final List<RealStruct2> reals) {
 		RealStruct2 previousReal = real;
@@ -123,26 +139,26 @@ public interface RealStruct2 extends NumberStruct2 {
 	}
 
 	/**
-	 * Performs a {@literal '>='} comparison of this RealStruct and the provided RealStruct.
+	 * Performs a {@literal '>='} comparison of this RealStruct2 and the provided RealStruct2.
 	 *
 	 * @param real
-	 * 		the RealStruct to be used in the {@literal '>='} operation
+	 * 		the RealStruct2 to be used in the {@literal '>='} operation
 	 *
-	 * @return the {@literal '>='} comparison of this RealStruct and the provided RealStruct
+	 * @return the {@literal '>='} comparison of this RealStruct2 and the provided RealStruct2
 	 */
-	boolean isGreaterThanOrEqualTo(final RealStruct2 real);
+	boolean isGreaterThanOrEqualTo(RealStruct2 real);
 
 	/**
-	 * Performs a {@literal '>='} comparison of the provided RealStructs in order, using the single {@code real} as the
-	 * starting point in the comparison. If at any point a value does not follow the expected comparison, the
+	 * Performs a {@literal '>='} comparison of the provided RealStruct2 objects in order, using the single RealStruct2
+	 * as the starting point in the comparison. If at any point a value does not follow the expected comparison, the
 	 * comparison loop with short-circuit.
 	 *
 	 * @param real
-	 * 		the initial RealStruct used in the {@literal '>='} comparison
+	 * 		the initial RealStruct2 used in the {@literal '>='} comparison
 	 * @param reals
-	 * 		the RealStructs used in the {@literal '>='} comparison
+	 * 		the {@link List} of RealStruct2 objects used in the {@literal '>='} comparison
 	 *
-	 * @return the {@literal '>='} comparison provided RealStruct
+	 * @return the {@literal '>='} comparison provided RealStruct2 objects
 	 */
 	static boolean isGreaterThanOrEqualTo(final RealStruct2 real, final List<RealStruct2> reals) {
 		RealStruct2 previousReal = real;
@@ -159,44 +175,43 @@ public interface RealStruct2 extends NumberStruct2 {
 	}
 
 	/**
-	 * Determines whether or not this RealStruct is positive.
+	 * Returns {@code true} if this RealStruct2 is positive; false otherwise.
 	 *
-	 * @return true if this RealStruct is positive; false otherwise
+	 * @return {@code true} if this RealStruct2 is positive; false otherwise
 	 */
 	boolean plusp();
 
 	/**
-	 * Determines whether or not this RealStruct is negative.
+	 * Returns {@code true} if this RealStruct2 is negative; false otherwise.
 	 *
-	 * @return true if this RealStruct is negative; false otherwise
+	 * @return {@code true} if this RealStruct2 is negative; false otherwise
 	 */
 	boolean minusp();
 
 	/**
-	 * Returns the most positive value when comparing the value of this RealStruct and the provided RealStruct.
+	 * Returns the most positive value when comparing the value of this RealStruct2 and the provided RealStruct2.
 	 *
 	 * @param real
-	 * 		the RealStruct used and possibly returned if it is greater than this RealStruct
+	 * 		the RealStruct2 used and possibly returned if it is greater than this RealStruct2
 	 *
-	 * @return the most positive value when comparing the value of this RealStruct and the provided RealStruct
+	 * @return the most positive value when comparing the value of this RealStruct2 and the provided RealStruct2
 	 */
 	default RealStruct2 max(final RealStruct2 real) {
-		// TODO: better internally computed by Apfloat library???
 		return isGreaterThanOrEqualTo(real) ? this : real;
 	}
 
 	/**
-	 * Returns the most positive value when comparing the values of the provided RealStructs in order, using the single
-	 * {@code real} as the starting point in the comparison.
+	 * Returns the most positive value when comparing the values of the provided RealStruct2 objects in order, using the
+	 * single RealStruct2 as the starting point in the comparison.
 	 *
 	 * @param real
-	 * 		the initial RealStruct used in the comparison, and possibly returned if the {@link List} of RealStructs is
-	 * 		empty
+	 * 		the initial RealStruct2 used in the comparison, and possibly returned if the {@link List} of RealStruct2
+	 * 		objects is empty
 	 * @param reals
-	 * 		the RealStructs used in the comparison in determining the greatest value
+	 * 		the {@link List} of RealStruct2 objects used in the comparison in determining the greatest value
 	 *
-	 * @return the most positive value when comparing the value of the initial RealStruct and the provided {@link List}
-	 * of RealStructs
+	 * @return the most positive value when comparing the value of the initial RealStruct2 and the provided {@link List}
+	 * of RealStruct2 objects
 	 */
 	static RealStruct2 max(final RealStruct2 real, final List<RealStruct2> reals) {
 		if (reals.isEmpty()) {
@@ -206,30 +221,29 @@ public interface RealStruct2 extends NumberStruct2 {
 	}
 
 	/**
-	 * Returns the least positive value when comparing the value of this RealStruct and the provided RealStruct.
+	 * Returns the least positive value when comparing the value of this RealStruct2 and the provided RealStruct2.
 	 *
 	 * @param real
-	 * 		the RealStruct used and possibly returned if it is less than this RealStruct
+	 * 		the RealStruct2 used and possibly returned if it is less than this RealStruct2
 	 *
-	 * @return the least positive value when comparing the value of this RealStruct and the provided RealStruct
+	 * @return the least positive value when comparing the value of this RealStruct2 and the provided RealStruct2
 	 */
 	default RealStruct2 min(final RealStruct2 real) {
-		// TODO: better internally computed by Apfloat library???
 		return isLessThanOrEqualTo(real) ? this : real;
 	}
 
 	/**
-	 * Returns the least positive value when comparing the values of the provided RealStructs in order, using the
-	 * single {@code real} as the starting point in the comparison.
+	 * Returns the least positive value when comparing the values of the provided RealStruct2 objects in order, using
+	 * the single RealStruct2 as the starting point in the comparison.
 	 *
 	 * @param real
-	 * 		the initial RealStruct used in the comparison, and possibly returned if the {@link List} of RealStructs is
-	 * 		empty
+	 * 		the initial RealStruct2 used in the comparison, and possibly returned if the {@link List} of RealStruct2
+	 * 		objects is empty
 	 * @param reals
-	 * 		the RealStructs used in the comparison in determining the least greatest value
+	 * 		the {@link List} of RealStruct2 objects used in the comparison in determining the least value
 	 *
-	 * @return the least positive value when comparing the value of the initial RealStruct and the provided {@link List}
-	 * of RealStructs
+	 * @return the least positive value when comparing the value of the initial RealStruct2 and the provided {@link
+	 * List} of RealStruct2 objects
 	 */
 	static RealStruct2 min(final RealStruct2 real, final List<RealStruct2> reals) {
 		if (reals.isEmpty()) {
@@ -239,101 +253,101 @@ public interface RealStruct2 extends NumberStruct2 {
 	}
 
 	/**
-	 * Returns this RealStruct as a representational {@link RationalStruct2}.
+	 * Returns this RealStruct2 as a representational {@link RationalStruct2}.
 	 *
-	 * @return this RealStruct as a representational {@link RationalStruct2}
+	 * @return this RealStruct2 as a representational {@link RationalStruct2}
 	 */
 	RationalStruct2 rational();
 
 	/**
-	 * Returns this RealStruct as a representational {@link FloatStruct2}.
+	 * Returns this RealStruct2 as a representational {@link FloatStruct2}.
 	 *
-	 * @return this RealStruct as a representational {@link FloatStruct2}
+	 * @return this RealStruct2 as a representational {@link FloatStruct2}
 	 */
 	FloatStruct2 floatingPoint();
 
 	/**
-	 * Returns this RealStruct as a representational {@link FloatStruct2}, using the prototype as the type of {@link
-	 * FloatStruct2} to return.
+	 * Returns this RealStruct2 as a representational {@link FloatStruct2}, using the prototype as the precision
+	 * representation for the {@link FloatStruct2} to return.
 	 *
 	 * @param prototype
-	 * 		an object representing the type of {@link FloatStruct2} to return
+	 * 		an object representing the precision of {@link FloatStruct2} to return
 	 *
-	 * @return this RealStruct as a representational {@link FloatStruct2}
+	 * @return this RealStruct2 as a representational {@link FloatStruct2}
 	 */
-	FloatStruct2 floatingPoint(final FloatStruct2 prototype);
+	FloatStruct2 floatingPoint(FloatStruct2 prototype);
 
+	/**
+	 * Returns the modulus of this RealStruct2 and the provided RealStruct2 divisor.
+	 *
+	 * @param divisor
+	 * 		the RealStruct2 to use as the divisor in the modulus operation
+	 *
+	 * @return the modulus of this RealStruct2 and the provided RealStruct2 divisor
+	 */
 	default RealStruct2 mod(final RealStruct2 divisor) {
-//		final QuotientRemainderResult2 floor = floor(divisor);
-//		return floor.getRemainder();
-		return null;
+		final QuotientRemainderResult2 floor = floor(divisor);
+		return floor.getRemainder();
 	}
 
+	/**
+	 * Returns the remainder of this RealStruct2 and the provided RealStruct2 divisor.
+	 *
+	 * @param divisor
+	 * 		the RealStruct2 to use as the divisor in the remainder operation
+	 *
+	 * @return the remainder of this RealStruct2 and the provided RealStruct2 divisor
+	 */
 	default RealStruct2 rem(final RealStruct2 divisor) {
-//		final QuotientRemainderResult2 truncate = truncate(divisor);
-//		return truncate.getRemainder();
-		return null;
+		final QuotientRemainderResult2 truncate = truncate(divisor);
+		return truncate.getRemainder();
 	}
 
+	/**
+	 * Returns the value of e^i* radians, which is a complex in which the real part is equal to the cosine of radians,
+	 * and the imaginary part is equal to the sine of radians.
+	 *
+	 * @return the value of e^i* radians
+	 */
 	default ComplexStruct2 cis() {
-		return new ComplexStruct2(cos(), sin());
+		final RealStruct2 cos = cos();
+		final RealStruct2 sin = sin();
+		return ComplexStruct2.valueOf(cos.ap(), sin.ap());
 	}
 
-	default QuotientRemainderResult2 floor() {
-		// TODO: better internally computed by Apfloat library???
-		return floor(IntegerStruct2.ONE);
-	}
+	QuotientRemainderResult2 floor();
 
-	QuotientRemainderResult2 floor(final RealStruct2 divisor);
+	QuotientRemainderResult2 floor(RealStruct2 divisor);
 
-	default QuotientRemainderResult2 ffloor() {
-		// TODO: better internally computed by Apfloat library???
-		return ffloor(IntegerStruct2.ONE);
-	}
+	QuotientRemainderResult2 ffloor();
 
-	QuotientRemainderResult2 ffloor(final RealStruct2 divisor);
+	QuotientRemainderResult2 ffloor(RealStruct2 divisor);
 
-	default QuotientRemainderResult2 ceiling() {
-		// TODO: better internally computed by Apfloat library???
-		return ceiling(IntegerStruct2.ONE);
-	}
+	QuotientRemainderResult2 ceiling();
 
-	QuotientRemainderResult2 ceiling(final RealStruct2 divisor);
+	QuotientRemainderResult2 ceiling(RealStruct2 divisor);
 
-	default QuotientRemainderResult2 fceiling() {
-		// TODO: better internally computed by Apfloat library???
-		return fceiling(IntegerStruct2.ONE);
-	}
+	QuotientRemainderResult2 fceiling();
 
-	QuotientRemainderResult2 fceiling(final RealStruct2 divisor);
+	QuotientRemainderResult2 fceiling(RealStruct2 divisor);
 
-	default QuotientRemainderResult2 truncate() {
-		// TODO: better internally computed by Apfloat library???
-		return truncate(IntegerStruct2.ONE);
-	}
+	QuotientRemainderResult2 truncate();
 
-	QuotientRemainderResult2 truncate(final RealStruct2 divisor);
+	QuotientRemainderResult2 truncate(RealStruct2 divisor);
 
-	default QuotientRemainderResult2 ftruncate() {
-		// TODO: better internally computed by Apfloat library???
-		return ftruncate(IntegerStruct2.ONE);
-	}
+	QuotientRemainderResult2 ftruncate();
 
-	QuotientRemainderResult2 ftruncate(final RealStruct2 divisor);
+	QuotientRemainderResult2 ftruncate(RealStruct2 divisor);
 
-	default QuotientRemainderResult2 round() {
-		// TODO: better internally computed by Apfloat library???
-		return round(IntegerStruct2.ONE);
-	}
+	QuotientRemainderResult2 round();
 
-	QuotientRemainderResult2 round(final RealStruct2 divisor);
+	QuotientRemainderResult2 round(RealStruct2 divisor);
 
-	default QuotientRemainderResult2 fround() {
-		// TODO: better internally computed by Apfloat library???
-		return fround(IntegerStruct2.ONE);
-	}
+	QuotientRemainderResult2 fround();
 
-	QuotientRemainderResult2 fround(final RealStruct2 divisor);
+	QuotientRemainderResult2 fround(RealStruct2 divisor);
+
+	RealStruct2 atan(RealStruct2 real);
 
 	/*
 		NumberStruct
@@ -370,8 +384,6 @@ public interface RealStruct2 extends NumberStruct2 {
 	@Override
 	RealStruct2 atan();
 
-	RealStruct2 atan(RealStruct2 real);
-
 	@Override
 	RealStruct2 sinh();
 
@@ -389,11 +401,4 @@ public interface RealStruct2 extends NumberStruct2 {
 
 	@Override
 	RealStruct2 atanh();
-
-	static RealStruct2 valueOf(final Apfloat apfloat) {
-		if (apfloat instanceof Aprational) {
-			return RationalStruct2.valueOf((Aprational) apfloat);
-		}
-		return FloatStruct2.valueOf(apfloat);
-	}
 }

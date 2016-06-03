@@ -9,7 +9,7 @@ import org.apfloat.Apcomplex;
 import org.apfloat.ApcomplexMath;
 import org.apfloat.Apfloat;
 
-class NumberStruct2Impl<A extends Apcomplex> extends InternalNumberStruct<A> implements NumberStruct2 {
+abstract class NumberStruct2Impl<A extends Apcomplex> extends InternalNumberStruct<A> implements NumberStruct2 {
 
 	NumberStruct2Impl(final LispType type, final A ap) {
 		super(type, ap);

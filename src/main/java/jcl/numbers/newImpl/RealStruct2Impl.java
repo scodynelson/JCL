@@ -13,7 +13,7 @@ import org.apfloat.Apfloat;
 import org.apfloat.ApfloatMath;
 import org.apfloat.Apint;
 
-class RealStruct2Impl<A extends Apfloat> extends NumberStruct2Impl<A> implements RealStruct2 {
+abstract class RealStruct2Impl<A extends Apfloat> extends NumberStruct2Impl<A> implements RealStruct2 {
 
 	RealStruct2Impl(final LispType type, final A ap) {
 		super(type, ap);
@@ -65,97 +65,93 @@ class RealStruct2Impl<A extends Apfloat> extends NumberStruct2Impl<A> implements
 		return ap.signum() == -1;
 	}
 
-	@Override
-	public RealStruct2 max(final RealStruct2 real) {
-		return isGreaterThanOrEqualTo(real) ? this : real;
+	protected RealStruct2 getRemainderReal(final RealStruct2 divisor, final Apfloat remainder) {
+		return FloatStruct2.valueOf(remainder);
 	}
 
-	@Override
-	public RealStruct2 min(final RealStruct2 real) {
-		return isLessThanOrEqualTo(real) ? this : real;
-	}
-
-	@Override
-	public RationalStruct2 rational() {
-		// TODO
-		return null;
-	}
-
-	@Override
-	public FloatStruct2 floatingPoint() {
-		// TODO
-		return FloatStruct2.valueOf(ap);
-	}
-
-	@Override
-	public FloatStruct2 floatingPoint(final FloatStruct2 prototype) {
-		// TODO
-		return FloatStruct2.valueOf(ap, prototype);
-	}
-
-	@Override
-	public RealStruct2 mod(final RealStruct2 divisor) {
-		// TODO
-		final QuotientRemainderResult2 floor = floor(divisor);
-		return floor.getRemainder();
-	}
-
-	@Override
-	public RealStruct2 rem(final RealStruct2 divisor) {
-		// TODO
-		final QuotientRemainderResult2 truncate = truncate(divisor);
-		return truncate.getRemainder();
-	}
-
-	private QuotientRemainderResult2 quotientRemainderCalculator(final RealStruct2 divisor,
+	private QuotientRemainderResult2 quotientRemainderCalculator(final Apfloat number, final RealStruct2 divisor,
 	                                                             final Function<Apfloat, Apint> operation,
 	                                                             final Function<Apint, ? extends RealStruct2> quotientCreator) {
+		final Apint quotient = operation.apply(number);
+		final Apfloat remainder = (number.signum() >= 0) ? number.frac() : number.subtract(quotient);
 
+		final RealStruct2 quotientReal = quotientCreator.apply(quotient);
+		final RealStruct2 remainderReal = getRemainderReal(divisor, remainder);
+
+		return new QuotientRemainderResult2(quotientReal, remainderReal);
+	}
+
+	private QuotientRemainderResult2 quotientRemainder(final Function<Apfloat, Apint> operation,
+	                                                   final Function<Apint, ? extends RealStruct2> quotientCreator) {
+		return quotientRemainderCalculator(ap, IntegerStruct2.ONE, operation, quotientCreator);
+	}
+
+	private QuotientRemainderResult2 quotientRemainderWithDivisor(final RealStruct2 divisor,
+	                                                              final Function<Apfloat, Apint> operation,
+	                                                              final Function<Apint, ? extends RealStruct2> quotientCreator) {
 		final Apfloat divisorAp = divisor.ap();
-		final Apfloat divide = ap.divide(divisorAp);
+		final Apfloat number = ap.divide(divisorAp);
+		return quotientRemainderCalculator(number, divisor, operation, quotientCreator);
+	}
 
-		final Apint quotient = operation.apply(divide);
-		final Apfloat remainder = (divide.signum() >= 0) ? divide.frac() : divide.subtract(quotient);
-
-		final RealStruct2 remainderReal;
-		if (divisor instanceof RationalStruct2) {
-			// TODO: Aprational from Apfloat???
-			remainderReal = null;
-		} else {
-			remainderReal = FloatStruct2.valueOf(remainder);
-		}
-
-		return new QuotientRemainderResult2(quotientCreator.apply(quotient), remainderReal);
+	@Override
+	public QuotientRemainderResult2 floor() {
+		return quotientRemainder(Apfloat::floor, IntegerStruct2::valueOf);
 	}
 
 	@Override
 	public QuotientRemainderResult2 floor(final RealStruct2 divisor) {
-		return quotientRemainderCalculator(divisor, Apfloat::floor, IntegerStruct2::valueOf);
+		return quotientRemainderWithDivisor(divisor, Apfloat::floor, IntegerStruct2::valueOf);
+	}
+
+	@Override
+	public QuotientRemainderResult2 ffloor() {
+		return quotientRemainder(Apfloat::floor, FloatStruct2::valueOf);
 	}
 
 	@Override
 	public QuotientRemainderResult2 ffloor(final RealStruct2 divisor) {
-		return quotientRemainderCalculator(divisor, Apfloat::floor, FloatStruct2::valueOf);
+		return quotientRemainderWithDivisor(divisor, Apfloat::floor, FloatStruct2::valueOf);
+	}
+
+	@Override
+	public QuotientRemainderResult2 ceiling() {
+		return quotientRemainder(Apfloat::ceil, IntegerStruct2::valueOf);
 	}
 
 	@Override
 	public QuotientRemainderResult2 ceiling(final RealStruct2 divisor) {
-		return quotientRemainderCalculator(divisor, Apfloat::ceil, IntegerStruct2::valueOf);
+		return quotientRemainderWithDivisor(divisor, Apfloat::ceil, IntegerStruct2::valueOf);
+	}
+
+	@Override
+	public QuotientRemainderResult2 fceiling() {
+		return quotientRemainder(Apfloat::ceil, FloatStruct2::valueOf);
 	}
 
 	@Override
 	public QuotientRemainderResult2 fceiling(final RealStruct2 divisor) {
-		return quotientRemainderCalculator(divisor, Apfloat::ceil, FloatStruct2::valueOf);
+		return quotientRemainderWithDivisor(divisor, Apfloat::ceil, FloatStruct2::valueOf);
+	}
+
+	@Override
+	public QuotientRemainderResult2 truncate() {
+		return quotientRemainder(Apfloat::truncate, IntegerStruct2::valueOf);
 	}
 
 	@Override
 	public QuotientRemainderResult2 truncate(final RealStruct2 divisor) {
-		return quotientRemainderCalculator(divisor, Apfloat::truncate, IntegerStruct2::valueOf);
+		return quotientRemainderWithDivisor(divisor, Apfloat::truncate, IntegerStruct2::valueOf);
+	}
+
+	@Override
+	public QuotientRemainderResult2 ftruncate() {
+		return quotientRemainder(Apfloat::truncate, FloatStruct2::valueOf);
 	}
 
 	@Override
 	public QuotientRemainderResult2 ftruncate(final RealStruct2 divisor) {
-		return quotientRemainderCalculator(divisor, Apfloat::truncate, FloatStruct2::valueOf);
+		return quotientRemainderWithDivisor(divisor, Apfloat::truncate, FloatStruct2::valueOf);
 	}
 
 	private Function<Apfloat, Apint> roundOpFn(final RealStruct2 divisor) {
@@ -167,13 +163,23 @@ class RealStruct2Impl<A extends Apfloat> extends NumberStruct2Impl<A> implements
 	}
 
 	@Override
+	public QuotientRemainderResult2 round() {
+		return quotientRemainder(roundOpFn(IntegerStruct2.ONE), IntegerStruct2::valueOf);
+	}
+
+	@Override
 	public QuotientRemainderResult2 round(final RealStruct2 divisor) {
-		return quotientRemainderCalculator(divisor, roundOpFn(divisor), IntegerStruct2::valueOf);
+		return quotientRemainderWithDivisor(divisor, roundOpFn(divisor), IntegerStruct2::valueOf);
+	}
+
+	@Override
+	public QuotientRemainderResult2 fround() {
+		return quotientRemainder(roundOpFn(IntegerStruct2.ONE), FloatStruct2::valueOf);
 	}
 
 	@Override
 	public QuotientRemainderResult2 fround(final RealStruct2 divisor) {
-		return quotientRemainderCalculator(divisor, roundOpFn(divisor), FloatStruct2::valueOf);
+		return quotientRemainderWithDivisor(divisor, roundOpFn(divisor), FloatStruct2::valueOf);
 	}
 
 	@Override
@@ -252,12 +258,6 @@ class RealStruct2Impl<A extends Apfloat> extends NumberStruct2Impl<A> implements
 			return shouldReverseCompare ? realAp.equals(ap) : ap.equals(realAp);
 		}
 		return super.isEqualTo(number);
-	}
-
-	@Override
-	public NumberStruct2 signum() {
-		// TODO
-		return super.signum();
 	}
 
 	@Override

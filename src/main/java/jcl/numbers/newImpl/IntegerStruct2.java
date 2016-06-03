@@ -9,6 +9,7 @@ import java.util.List;
 
 import jcl.types.IntegerType;
 import org.apfloat.Apcomplex;
+import org.apfloat.Apfloat;
 import org.apfloat.Apint;
 import org.apfloat.ApintMath;
 import org.apfloat.Aprational;
@@ -541,17 +542,11 @@ public final class IntegerStruct2 extends RationalStruct2Impl<Apint> {
 	}
 
 	@Override
-	public RealStruct2 mod(final RealStruct2 divisor) {
-		// TODO
-		final QuotientRemainderResult2 floor = floor(divisor);
-		return floor.getRemainder();
-	}
-
-	@Override
-	public RealStruct2 rem(final RealStruct2 divisor) {
-		// TODO
-		final QuotientRemainderResult2 truncate = truncate(divisor);
-		return truncate.getRemainder();
+	protected RealStruct2 getRemainderReal(final RealStruct2 divisor, final Apfloat remainder) {
+		if (divisor instanceof IntegerStruct2) {
+			return valueOf((Apint) remainder);
+		}
+		return super.getRemainderReal(divisor, remainder);
 	}
 
 	/*
@@ -618,12 +613,6 @@ public final class IntegerStruct2 extends RationalStruct2Impl<Apint> {
 			return shouldReverseCompare ? integerAp.equals(ap) : ap.equals(integerAp);
 		}
 		return super.isEqualTo(number);
-	}
-
-	@Override
-	public NumberStruct2 signum() {
-		// TODO
-		return super.signum();
 	}
 
 	@Override

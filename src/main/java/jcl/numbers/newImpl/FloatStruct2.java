@@ -14,8 +14,6 @@ import org.apfloat.Apcomplex;
 import org.apfloat.Apfloat;
 import org.apfloat.ApfloatMath;
 import org.apfloat.Apint;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * The {@link FloatStruct2} is the object representation of a Lisp 'float' type.
@@ -41,11 +39,6 @@ public final class FloatStruct2 extends RealStruct2Impl<Apfloat> {
 	 * {@link FloatStruct2} constant representing -1.0.
 	 */
 	public static final FloatStruct2 MINUS_ONE = valueOf(-1.0D);
-
-	/**
-	 * The logger for this class.
-	 */
-	private static final Logger LOGGER = LoggerFactory.getLogger(FloatStruct2.class);
 
 	/**
 	 * The floating-point precision of a FloatStruct2 object.

@@ -105,6 +105,6 @@ public final class RatioStruct2 extends RationalStruct2Impl<Aprational> {
 
 	@Override
 	public String toString() {
-		return ap.toString();
+		return ap.toString(true);
 	}
 }

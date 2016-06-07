@@ -488,4 +488,13 @@ public final class FloatStruct2 extends RealStruct2Impl<Apfloat> {
 		final Apfloat reciprocal = Apcomplex.ONE.divide(ap);
 		return valueOf(reciprocal);
 	}
+
+	/*
+		ToString
+	 */
+
+	@Override
+	public String toString() {
+		return ap.toString(true);
+	}
 }

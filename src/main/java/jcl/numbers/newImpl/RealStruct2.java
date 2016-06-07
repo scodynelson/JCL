@@ -312,7 +312,8 @@ public interface RealStruct2 extends NumberStruct2 {
 	default ComplexStruct2 cis() {
 		final RealStruct2 cos = cos();
 		final RealStruct2 sin = sin();
-		return ComplexStruct2.valueOf(cos.ap(), sin.ap());
+		// TODO
+		return ComplexStruct2.valueOf(cos.ap(), sin.ap(), ComplexStruct2.ComplexValueType.INTEGER);
 	}
 
 	/**

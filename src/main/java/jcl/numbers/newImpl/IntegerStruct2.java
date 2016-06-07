@@ -641,6 +641,6 @@ public final class IntegerStruct2 extends RationalStruct2Impl<Apint> {
 
 	@Override
 	public String toString() {
-		return ap.toString();
+		return ap.toString(true);
 	}
 }

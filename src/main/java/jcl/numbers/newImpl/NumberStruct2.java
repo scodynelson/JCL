@@ -28,7 +28,8 @@ public interface NumberStruct2 extends LispStruct {
 		if (apcomplex instanceof Apfloat) {
 			return RealStruct2.valueOf((Apfloat) apcomplex);
 		}
-		return ComplexStruct2.valueOf(apcomplex);
+		// TODO
+		return ComplexStruct2.valueOf(apcomplex, ComplexStruct2.ComplexValueType.INTEGER);
 	}
 
 	/**

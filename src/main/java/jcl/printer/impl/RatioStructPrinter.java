@@ -22,8 +22,8 @@ public class RatioStructPrinter implements LispPrinter<RatioStruct> {
 
 	@Override
 	public String print(final RatioStruct object) {
-		final IntegerStruct numerator = IntegerStruct.valueOf(object.getBigFraction().getNumerator());
-		final IntegerStruct denominator = IntegerStruct.valueOf(object.getBigFraction().getDenominator());
+		final IntegerStruct numerator = object.numerator();
+		final IntegerStruct denominator = object.denominator();
 
 		return integerStructPrinter.print(numerator) + '/' + integerStructPrinter.print(denominator);
 	}

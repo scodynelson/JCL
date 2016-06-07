@@ -89,7 +89,7 @@ public class SharpCReaderMacroFunction extends ReaderMacroFunction {
 			throw new ReaderErrorException("Only real numbers are valid tokens for #c. Got: " + printedImaginaryToken);
 		}
 
-		return new ComplexStruct((RealStruct) realToken, (RealStruct) imaginaryToken);
+		return ComplexStruct.valueOf((RealStruct) realToken, (RealStruct) imaginaryToken);
 	}
 
 	@Override

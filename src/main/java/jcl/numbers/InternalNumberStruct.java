@@ -2,7 +2,7 @@
  * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
  */
 
-package jcl.numbers.newImpl;
+package jcl.numbers;
 
 import jcl.LispType;
 import jcl.classes.BuiltInClassStruct;

@@ -2,7 +2,7 @@
  * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
  */
 
-package jcl.numbers.newImpl;
+package jcl.numbers;
 
 import jcl.LispType;
 import org.apfloat.Apcomplex;
@@ -12,36 +12,36 @@ import org.apfloat.Aprational;
 import org.apfloat.AprationalMath;
 
 /**
- * Internal implementation class for {@link RationalStruct2} objects.
+ * Internal implementation class for {@link RationalStruct} objects.
  *
  * @param <A>
- * 		the type of {@link Aprational} the {@link RationalStruct2} object will use for its value
+ * 		the type of {@link Aprational} the {@link RationalStruct} object will use for its value
  */
-abstract class RationalStruct2Impl<A extends Aprational> extends RealStruct2Impl<A> implements RationalStruct2 {
+abstract class RationalStructImpl<A extends Aprational> extends RealStructImpl<A> implements RationalStruct {
 
 	/**
 	 * Package level constructor that passes the provided {@link LispType} and {@link A} {@link Aprational} value to the
-	 * {@link RealStruct2Impl} superclass constructor.
+	 * {@link RealStructImpl} superclass constructor.
 	 *
 	 * @param type
-	 * 		the {@link LispType} of the {@link RationalStruct2}
+	 * 		the {@link LispType} of the {@link RationalStruct}
 	 * @param ap
-	 * 		the internal {@link Aprational} implementation value of the {@link RationalStruct2}
+	 * 		the internal {@link Aprational} implementation value of the {@link RationalStruct}
 	 */
-	RationalStruct2Impl(final LispType type, final A ap) {
+	RationalStructImpl(final LispType type, final A ap) {
 		super(type, ap);
 	}
 
 	@Override
-	public IntegerStruct2 numerator() {
+	public IntegerStruct numerator() {
 		final Apint numerator = ap.numerator();
-		return IntegerStruct2.valueOf(numerator);
+		return IntegerStruct.valueOf(numerator);
 	}
 
 	@Override
-	public IntegerStruct2 denominator() {
+	public IntegerStruct denominator() {
 		final Apint denominator = ap.denominator();
-		return IntegerStruct2.valueOf(denominator);
+		return IntegerStruct.valueOf(denominator);
 	}
 
 	/*
@@ -49,24 +49,24 @@ abstract class RationalStruct2Impl<A extends Aprational> extends RealStruct2Impl
 	 */
 
 	@Override
-	public RationalStruct2 rational() {
+	public RationalStruct rational() {
 		return this;
 	}
 
 	@Override
-	public FloatStruct2 floatingPoint() {
-		return FloatStruct2.valueOf(ap);
+	public FloatStruct floatingPoint() {
+		return FloatStruct.valueOf(ap);
 	}
 
 	@Override
-	public FloatStruct2 floatingPoint(final FloatStruct2 prototype) {
-		return FloatStruct2.valueOf(ap, prototype);
+	public FloatStruct floatingPoint(final FloatStruct prototype) {
+		return FloatStruct.valueOf(ap, prototype);
 	}
 
 	@Override
-	protected RealStruct2 getRemainderReal(final RealStruct2 divisor, final Apfloat remainder) {
-		if (divisor instanceof RationalStruct2) {
-			return RationalStruct2.valueOf((Aprational) remainder);
+	protected RealStruct getRemainderReal(final RealStruct divisor, final Apfloat remainder) {
+		if (divisor instanceof RationalStruct) {
+			return RationalStruct.valueOf((Aprational) remainder);
 		}
 		return super.getRemainderReal(divisor, remainder);
 	}
@@ -81,53 +81,53 @@ abstract class RationalStruct2Impl<A extends Aprational> extends RealStruct2Impl
 	}
 
 	@Override
-	public RationalStruct2 abs() {
+	public RationalStruct abs() {
 		final Aprational abs = AprationalMath.abs(ap);
-		return RationalStruct2.valueOf(abs);
+		return RationalStruct.valueOf(abs);
 	}
 
 	@Override
-	public NumberStruct2 add(final NumberStruct2 number) {
+	public NumberStruct add(final NumberStruct number) {
 		final Apcomplex numberAp = number.ap();
 		if (numberAp instanceof Aprational) {
 			final Aprational add = ap.add((Aprational) numberAp);
-			return RationalStruct2.valueOf(add);
+			return RationalStruct.valueOf(add);
 		}
 		return super.add(number);
 	}
 
 	@Override
-	public NumberStruct2 subtract(final NumberStruct2 number) {
+	public NumberStruct subtract(final NumberStruct number) {
 		final Apcomplex numberAp = number.ap();
 		if (numberAp instanceof Aprational) {
 			final Aprational subtract = ap.subtract((Aprational) numberAp);
-			return RationalStruct2.valueOf(subtract);
+			return RationalStruct.valueOf(subtract);
 		}
 		return super.subtract(number);
 	}
 
 	@Override
-	public NumberStruct2 multiply(final NumberStruct2 number) {
+	public NumberStruct multiply(final NumberStruct number) {
 		final Apcomplex numberAp = number.ap();
 		if (numberAp instanceof Aprational) {
 			final Aprational multiply = ap.multiply((Aprational) numberAp);
-			return RationalStruct2.valueOf(multiply);
+			return RationalStruct.valueOf(multiply);
 		}
 		return super.multiply(number);
 	}
 
 	@Override
-	public NumberStruct2 divide(final NumberStruct2 number) {
+	public NumberStruct divide(final NumberStruct number) {
 		final Apcomplex numberAp = number.ap();
 		if (numberAp instanceof Aprational) {
 			final Aprational divide = ap.divide((Aprational) numberAp);
-			return RationalStruct2.valueOf(divide);
+			return RationalStruct.valueOf(divide);
 		}
 		return super.divide(number);
 	}
 
 	@Override
-	public boolean isEqualTo(final NumberStruct2 number) {
+	public boolean isEqualTo(final NumberStruct number) {
 		final Apcomplex numberAp = number.ap();
 		if (numberAp instanceof Aprational) {
 			final Aprational rationalAp = (Aprational) numberAp;
@@ -138,41 +138,41 @@ abstract class RationalStruct2Impl<A extends Aprational> extends RealStruct2Impl
 	}
 
 	@Override
-	public IntegerStruct2 signum() {
+	public IntegerStruct signum() {
 		final int signum = ap.signum();
 		if (signum == 0) {
-			return IntegerStruct2.ZERO;
+			return IntegerStruct.ZERO;
 		}
 		if (signum > 0) {
-			return IntegerStruct2.ONE;
+			return IntegerStruct.ONE;
 		}
-		return IntegerStruct2.MINUS_ONE;
+		return IntegerStruct.MINUS_ONE;
 	}
 
 	@Override
-	public RationalStruct2 realPart() {
+	public RationalStruct realPart() {
 		return this;
 	}
 
 	@Override
-	public IntegerStruct2 imagPart() {
-		return IntegerStruct2.ZERO;
+	public IntegerStruct imagPart() {
+		return IntegerStruct.ZERO;
 	}
 
 	@Override
-	public RationalStruct2 conjugate() {
+	public RationalStruct conjugate() {
 		return this;
 	}
 
 	@Override
-	public RationalStruct2 negation() {
+	public RationalStruct negation() {
 		final Aprational negate = ap.negate();
-		return RationalStruct2.valueOf(negate);
+		return RationalStruct.valueOf(negate);
 	}
 
 	@Override
-	public RationalStruct2 reciprocal() {
+	public RationalStruct reciprocal() {
 		final Aprational reciprocal = new Aprational(ap.denominator(), ap.numerator());
-		return RationalStruct2.valueOf(reciprocal);
+		return RationalStruct.valueOf(reciprocal);
 	}
 }

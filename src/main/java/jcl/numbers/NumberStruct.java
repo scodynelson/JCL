@@ -7,13 +7,402 @@ package jcl.numbers;
 import java.util.List;
 
 import jcl.LispStruct;
-import org.apache.commons.math3.fraction.BigFraction;
 import org.apfloat.Apcomplex;
+import org.apfloat.Apfloat;
 
 /**
  * The {@link NumberStruct} is the object representation of a Lisp 'number' type.
  */
 public interface NumberStruct extends LispStruct {
+
+	/**
+	 * Returns a NumberStruct from the provided {@link Apcomplex} value. If the {@link Apcomplex} is an {@link
+	 * Apfloat}, {@link RealStruct#valueOf(Apfloat)} is invoked to create the appropriate {@link RealStruct} instead.
+	 *
+	 * @param apcomplex
+	 * 		the {@link Apcomplex} to be used as the value of the resulting NumberStruct
+	 *
+	 * @return a NumberStruct with the provided {@link Apcomplex} as its value
+	 */
+	static NumberStruct valueOf(final Apcomplex apcomplex) {
+		if (apcomplex instanceof Apfloat) {
+			return RealStruct.valueOf((Apfloat) apcomplex);
+		}
+		// TODO
+		return ComplexStruct.valueOf(apcomplex, ComplexStruct.ValueType.RATIONAL);
+	}
+
+	/**
+	 * Returns the {@link Apcomplex} that is used for NumberStruct calculations.
+	 *
+	 * @return the {@link Apcomplex} that is used for NumberStruct calculations
+	 */
+	Apcomplex ap();
+
+	/**
+	 * Returns the absolute value of this NumberStruct.
+	 *
+	 * @return the absolute value of this NumberStruct
+	 */
+	RealStruct abs();
+
+	/**
+	 * Returns {@code true} if this NumberStruct is zero; false otherwise.
+	 *
+	 * @return {@code true} if this NumberStruct is zero; false otherwise
+	 */
+	boolean zerop();
+
+	/**
+	 * Performs the addition operation on this NumberStruct to the provided NumberStruct.
+	 *
+	 * @param number
+	 * 		the NumberStruct to use in the addition operation
+	 *
+	 * @return the result of the addition operation on this NumberStruct to the provided NumberStruct
+	 */
+	NumberStruct add(NumberStruct number);
+
+	/**
+	 * Performs the addition operation on the {@link List} of NumberStruct objects in order. {@link
+	 * IntegerStruct#ZERO} is returned if the list is empty.
+	 *
+	 * @param numbers
+	 * 		the {@link List} of NumberStruct objects to performs the addition operation on
+	 *
+	 * @return the result of the addition operation against the {@link List} of NumberStruct objects
+	 */
+	static NumberStruct add(final List<NumberStruct> numbers) {
+		return numbers.stream().reduce(IntegerStruct.ZERO, NumberStruct::add);
+	}
+
+	/**
+	 * Performs the subtraction operation on the provided NumberStruct from this NumberStruct.
+	 *
+	 * @param number
+	 * 		the NumberStruct to use in the subtraction operation
+	 *
+	 * @return the result of the subtraction operation on the provided NumberStruct from this NumberStruct
+	 */
+	NumberStruct subtract(NumberStruct number);
+
+	/**
+	 * Performs the subtraction operation on the {@link List} of NumberStruct objects in order, using the single
+	 * provided NumberStruct as the starting point. The {@link #negation()} of the single provided NumberStruct is
+	 * returned if the list is empty.
+	 *
+	 * @param number
+	 * 		the single NumberStruct to use as the starting point of the subtraction operation, or as the base of the
+	 * 		{@link #negation()} result if the {@link List} of NumberStruct objects is empty
+	 * @param numbers
+	 * 		the {@link List} of NumberStruct objects to performs the subtraction operation on
+	 *
+	 * @return the result of the subtraction operation against the {@link List} of NumberStruct objects
+	 */
+	static NumberStruct subtract(final NumberStruct number, final List<NumberStruct> numbers) {
+		if (numbers.isEmpty()) {
+			return number.negation();
+		}
+		return numbers.stream().reduce(number, NumberStruct::subtract);
+	}
+
+	/**
+	 * Performs the multiplication operation on this NumberStruct to the provided NumberStruct.
+	 *
+	 * @param number
+	 * 		the NumberStruct to use in the multiplication operation
+	 *
+	 * @return the result of the multiplication operation on this NumberStruct to the provided NumberStruct
+	 */
+	NumberStruct multiply(NumberStruct number);
+
+	/**
+	 * Performs the multiplication operation on the {@link List} of NumberStruct objects in order. {@link
+	 * IntegerStruct#ONE} is returned if the list is empty.
+	 *
+	 * @param numbers
+	 * 		the {@link List} of NumberStruct objects to performs the multiplication operation on
+	 *
+	 * @return the result of the multiplication operation against the {@link List} of NumberStruct objects
+	 */
+	static NumberStruct multiply(final List<NumberStruct> numbers) {
+		return numbers.stream().reduce(IntegerStruct.ONE, NumberStruct::multiply);
+	}
+
+	/**
+	 * Performs the division operation on the provided NumberStruct from this NumberStruct.
+	 *
+	 * @param number
+	 * 		the NumberStruct to use in the division operation
+	 *
+	 * @return the result of the division operation on the provided NumberStruct from this NumberStruct
+	 */
+	NumberStruct divide(NumberStruct number);
+
+	/**
+	 * Performs the division operation on the {@link List} of NumberStruct objects in order, using the single
+	 * provided NumberStruct as the starting point. The {@link #reciprocal()} of the single provided NumberStruct is
+	 * returned if the list is empty.
+	 *
+	 * @param number
+	 * 		the single NumberStruct to use as the starting point of the division operation, or as the base of the
+	 * 		{@link #reciprocal()} result if the {@link List} of NumberStruct objects is empty
+	 * @param numbers
+	 * 		the {@link List} of NumberStruct objects to performs the division operation on
+	 *
+	 * @return the result of the division operation against the {@link List} of NumberStruct objects
+	 */
+	static NumberStruct divide(final NumberStruct number, final List<NumberStruct> numbers) {
+		if (numbers.isEmpty()) {
+			return number.reciprocal();
+		}
+		return numbers.stream().reduce(number, NumberStruct::divide);
+	}
+
+	/**
+	 * Performs a {@literal '=='} comparison of this NumberStruct and the provided NumberStruct.
+	 *
+	 * @param number
+	 * 		the NumberStruct to be used in the {@literal '=='} operation
+	 *
+	 * @return the {@literal '=='} comparison of this NumberStruct and the provided NumberStruct
+	 */
+	boolean isEqualTo(NumberStruct number);
+
+	/**
+	 * Performs a {@literal '=='} comparison of the provided NumberStruct objects in order, using the single
+	 * NumberStruct as the starting point in the comparison. If at any point a value does not follow the expected
+	 * comparison, the comparison loop with short-circuit.
+	 *
+	 * @param number
+	 * 		the initial NumberStruct used in the {@literal '=='} comparison
+	 * @param numbers
+	 * 		the {@link List} of NumberStruct objects used in the {@literal '=='} comparison
+	 *
+	 * @return the {@literal '=='} comparison provided NumberStruct objects
+	 */
+	static boolean isEqualTo(final NumberStruct number, final List<NumberStruct> numbers) {
+		NumberStruct previousNumber = number;
+
+		boolean result = true;
+		for (final NumberStruct currentNumber : numbers) {
+			result = previousNumber.isEqualTo(currentNumber);
+			if (!result) {
+				break;
+			}
+			previousNumber = currentNumber;
+		}
+		return result;
+	}
+
+	/**
+	 * Performs a {@literal '!='} comparison of this NumberStruct and the provided NumberStruct.
+	 *
+	 * @param number
+	 * 		the NumberStruct to be used in the {@literal '!='} operation
+	 *
+	 * @return the {@literal '!='} comparison of this NumberStruct and the provided NumberStruct
+	 */
+	default boolean isNotEqualTo(final NumberStruct number) {
+		return !isEqualTo(number);
+	}
+
+	/**
+	 * Performs a {@literal '!='} comparison of the provided NumberStruct objects in order, using the single
+	 * NumberStruct as the starting point in the comparison. If at any point a value does not follow the expected
+	 * comparison, the comparison loop with short-circuit.
+	 *
+	 * @param number
+	 * 		the initial NumberStruct used in the {@literal '!='} comparison
+	 * @param numbers
+	 * 		the {@link List} of NumberStruct objects used in the {@literal '!='} comparison
+	 *
+	 * @return the {@literal '!='} comparison provided NumberStruct objects
+	 */
+	static boolean isNotEqualTo(final NumberStruct number, final List<NumberStruct> numbers) {
+		NumberStruct previousNumber = number;
+
+		boolean result = true;
+		for (final NumberStruct currentNumber : numbers) {
+			result = previousNumber.isNotEqualTo(currentNumber);
+			if (!result) {
+				break;
+			}
+			previousNumber = currentNumber;
+		}
+		return result;
+	}
+
+	/**
+	 * Determines the numerical values that indicates whether this NumberStruct is negative, zero, or positive.
+	 *
+	 * @return the numerical values that indicates whether this NumberStruct is negative, zero, or positive
+	 */
+	NumberStruct signum();
+
+	/**
+	 * Returns the 'real' part of this NumberStruct.
+	 *
+	 * @return the 'real' part of this NumberStruct
+	 */
+	RealStruct realPart();
+
+	/**
+	 * Returns the 'imaginary' part of this NumberStruct.
+	 *
+	 * @return the 'imaginary' part of this NumberStruct
+	 */
+	RealStruct imagPart();
+
+	/**
+	 * Returns the complex conjugate of this NumberStruct.
+	 *
+	 * @return the complex conjugate of this NumberStruct
+	 */
+	NumberStruct conjugate();
+
+	/**
+	 * Returns the negation of this NumberStruct.
+	 *
+	 * @return the negation of this NumberStruct
+	 */
+	NumberStruct negation();
+
+	/**
+	 * Returns the reciprocal of this NumberStruct.
+	 *
+	 * @return the reciprocal of this NumberStruct
+	 */
+	NumberStruct reciprocal();
+
+	/**
+	 * Returns 'e' raised to the power of this NumberStruct, where 'e' is the base of the natural logarithms.
+	 *
+	 * @return 'e' raised to the power of this NumberStruct
+	 */
+	NumberStruct exp();
+
+	/**
+	 * Returns the result of this NumberStruct raised to the power of the provided NumberStruct.
+	 *
+	 * @param power
+	 * 		the NumberStruct to use as the power value of the exponential operation
+	 *
+	 * @return this NumberStruct raised to the power of the provided NumberStruct
+	 */
+	NumberStruct expt(NumberStruct power);
+
+	/**
+	 * Returns the logarithm of this NumberStruct with the base value of 'e', the base of the natural logarithms.
+	 *
+	 * @return the logarithm of this NumberStruct with the base value of 'e'
+	 */
+	NumberStruct log();
+
+	/**
+	 * Returns the logarithm of this NumberStruct with the provided NumberStruct base.
+	 *
+	 * @param base
+	 * 		the NumberStruct to be used as the base of the logarithmic operation
+	 *
+	 * @return the logarithm of this NumberStruct with the provided NumberStruct base
+	 */
+	NumberStruct log(NumberStruct base);
+
+	/**
+	 * Returns the square-root of this NumberStruct.
+	 *
+	 * @return the square-root of this NumberStruct
+	 */
+	NumberStruct sqrt();
+
+	/**
+	 * Returns the 'sine' of this NumberStruct.
+	 *
+	 * @return the 'sine' of this NumberStruct
+	 */
+	NumberStruct sin();
+
+	/**
+	 * Returns the 'cosine' of this NumberStruct.
+	 *
+	 * @return the 'cosine' of this NumberStruct
+	 */
+	NumberStruct cos();
+
+	/**
+	 * Returns the 'tangent' of this NumberStruct.
+	 *
+	 * @return the 'tangent' of this NumberStruct
+	 */
+	NumberStruct tan();
+
+	/**
+	 * Returns the 'Inverse sine' of this NumberStruct.
+	 *
+	 * @return the 'Inverse sine' of this NumberStruct
+	 */
+	NumberStruct asin();
+
+	/**
+	 * Returns the 'Inverse cosine' of this NumberStruct.
+	 *
+	 * @return the 'Inverse cosine' of this NumberStruct
+	 */
+	NumberStruct acos();
+
+	/**
+	 * Returns the 'Inverse tangent' of this NumberStruct.
+	 *
+	 * @return the 'Inverse tangent' of this NumberStruct
+	 */
+	NumberStruct atan();
+
+	/**
+	 * Returns the 'Hyperbolic sine' of this NumberStruct.
+	 *
+	 * @return the 'Hyperbolic sine' of this NumberStruct
+	 */
+	NumberStruct sinh();
+
+	/**
+	 * Returns the 'Hyperbolic cosine' of this NumberStruct.
+	 *
+	 * @return the 'Hyperbolic cosine' of this NumberStruct
+	 */
+	NumberStruct cosh();
+
+	/**
+	 * Returns the 'Hyperbolic tangent' of this NumberStruct.
+	 *
+	 * @return the 'Hyperbolic tangent' of this NumberStruct
+	 */
+	NumberStruct tanh();
+
+	/**
+	 * Returns the 'Inverse hyperbolic sine' of this NumberStruct.
+	 *
+	 * @return the 'Inverse hyperbolic sine' of this NumberStruct
+	 */
+	NumberStruct asinh();
+
+	/**
+	 * Returns the 'Inverse hyperbolic cosine' of this NumberStruct.
+	 *
+	 * @return the 'Inverse hyperbolic cosine' of this NumberStruct
+	 */
+	NumberStruct acosh();
+
+	/**
+	 * Returns the 'Inverse hyperbolic tangent' of this NumberStruct.
+	 *
+	 * @return the 'Inverse hyperbolic tangent' of this NumberStruct
+	 */
+	NumberStruct atanh();
+
+	/*
+		LispStruct
+	 */
 
 	/**
 	 * {@inheritDoc}
@@ -47,496 +436,4 @@ public interface NumberStruct extends LispStruct {
 	default boolean equalp(final LispStruct object) {
 		return (object instanceof NumberStruct) && isEqualTo((NumberStruct) object);
 	}
-
-	Apcomplex getAp();
-
-	/**
-	 * {@inheritDoc}
-	 * <p>
-	 * Determines the absolute value of this RatioStruct.
-	 */
-	RealStruct abs();
-
-	/**
-	 * {@inheritDoc}
-	 * <p>
-	 * Determines whether or not this RatioStruct is zero by comparing {@code #bigFraction} to {@link
-	 * BigFraction#ZERO}.
-	 */
-	boolean zerop();
-
-	default NumberStruct add(final NumberStruct number) {
-		final AddVisitor<?> addVisitor = addVisitor();
-		return number.add(addVisitor);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * <p>
-	 * Adds this RatioStruct to a {@link NumberStruct} using the provided {@link AddVisitor}.
-	 *
-	 * @param addVisitor
-	 * 		the {@link AddVisitor} to be used in the addition operation
-	 *
-	 * @return the addition of {@link NumberStruct} using the provided {@link AddVisitor} and this RatioStruct
-	 */
-	NumberStruct add(AddVisitor<?> addVisitor);
-
-	/**
-	 * Returns a new {@link AddVisitor} with this RatioStruct to be used in an addition operation.
-	 *
-	 * @return a new {@link AddVisitor} with this RatioStruct to be used in an addition operation
-	 */
-	AddVisitor<?> addVisitor();
-
-	static NumberStruct add(final List<NumberStruct> numbers) {
-		return numbers.stream().reduce(IntegerStruct.ZERO, NumberStruct::add);
-	}
-
-	default NumberStruct subtract(final NumberStruct number) {
-		final SubtractVisitor<?> subtractVisitor = subtractVisitor();
-		return number.subtract(subtractVisitor);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * <p>
-	 * Adds this RatioStruct to a {@link NumberStruct} using the provided {@link SubtractVisitor}.
-	 *
-	 * @param subtractVisitor
-	 * 		the {@link SubtractVisitor} to be used in the subtraction operation
-	 *
-	 * @return the subtraction of {@link NumberStruct} using the provided {@link SubtractVisitor} and this RatioStruct
-	 */
-	NumberStruct subtract(SubtractVisitor<?> subtractVisitor);
-
-	/**
-	 * Returns a new {@link SubtractVisitor} with this RatioStruct to be used in a subtraction operation.
-	 *
-	 * @return a new {@link SubtractVisitor} with this RatioStruct to be used in a subtraction operation
-	 */
-	SubtractVisitor<?> subtractVisitor();
-
-	static NumberStruct subtract(final NumberStruct number, final List<NumberStruct> numbers) {
-		if (numbers.isEmpty()) {
-			return number.negation();
-		}
-		return numbers.stream().reduce(number, NumberStruct::subtract);
-	}
-
-	default NumberStruct multiply(final NumberStruct number) {
-		final MultiplyVisitor<?> multiplyVisitor = multiplyVisitor();
-		return number.multiply(multiplyVisitor);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * <p>
-	 * Adds this RatioStruct to a {@link NumberStruct} using the provided {@link MultiplyVisitor}.
-	 *
-	 * @param multiplyVisitor
-	 * 		the {@link MultiplyVisitor} to be used in the multiplication operation
-	 *
-	 * @return the multiplication of {@link NumberStruct} using the provided {@link MultiplyVisitor} and this
-	 * RatioStruct
-	 */
-	NumberStruct multiply(MultiplyVisitor<?> multiplyVisitor);
-
-	/**
-	 * Returns a new {@link MultiplyVisitor} with this RatioStruct to be used in a multiplication operation.
-	 *
-	 * @return a new {@link MultiplyVisitor} with this RatioStruct to be used in a multiplication operation
-	 */
-	MultiplyVisitor<?> multiplyVisitor();
-
-	static NumberStruct multiply(final List<NumberStruct> numbers) {
-		return numbers.stream().reduce(IntegerStruct.ONE, NumberStruct::multiply);
-	}
-
-	default NumberStruct divide(final NumberStruct number) {
-		final DivideVisitor<?> divideVisitor = divideVisitor();
-		return number.divide(divideVisitor);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * <p>
-	 * Adds this RatioStruct to a {@link NumberStruct} using the provided {@link DivideVisitor}.
-	 *
-	 * @param divideVisitor
-	 * 		the {@link DivideVisitor} to be used in the division operation
-	 *
-	 * @return the division of {@link NumberStruct} using the provided {@link DivideVisitor} and this RatioStruct
-	 */
-	NumberStruct divide(DivideVisitor<?> divideVisitor);
-
-	/**
-	 * Returns a new {@link DivideVisitor} with this RatioStruct to be used in a division operation.
-	 *
-	 * @return a new {@link DivideVisitor} with this RatioStruct to be used in a division operation
-	 */
-	DivideVisitor<?> divideVisitor();
-
-	static NumberStruct divide(final NumberStruct number, final List<NumberStruct> numbers) {
-		if (numbers.isEmpty()) {
-			return number.reciprocal();
-		}
-		return numbers.stream().reduce(number, NumberStruct::divide);
-	}
-
-	default boolean isEqualTo(final NumberStruct number) {
-		final EqualToVisitor<?> equalToVisitor = equalToVisitor();
-		return number.isEqualTo(equalToVisitor);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * <p>
-	 * Compares this RatioStruct to a {@link NumberStruct} using the provided {@link EqualToVisitor}.
-	 *
-	 * @param equalToVisitor
-	 * 		the {@link EqualToVisitor} to be used in the '=' operation
-	 *
-	 * @return the '=' comparison of {@link NumberStruct} using the provided {@link EqualToVisitor} and this
-	 * RatioStruct
-	 */
-	boolean isEqualTo(EqualToVisitor<?> equalToVisitor);
-
-	/**
-	 * Returns a new {@link EqualToVisitor} with this RatioStruct to be used in an '=' operation.
-	 *
-	 * @return a new {@link EqualToVisitor} with this RatioStruct to be used in an '=' operation
-	 */
-	EqualToVisitor<?> equalToVisitor();
-
-	static boolean isEqualTo(final NumberStruct number, final List<NumberStruct> numbers) {
-		NumberStruct previousNumber = number;
-
-		boolean result = true;
-		for (final NumberStruct currentNumber : numbers) {
-			result = previousNumber.isEqualTo(currentNumber);
-			if (!result) {
-				break;
-			}
-			previousNumber = currentNumber;
-		}
-		return result;
-	}
-
-	default boolean isNotEqualTo(final NumberStruct number) {
-		return !isEqualTo(number);
-	}
-
-	static boolean isNotEqualTo(final NumberStruct number, final List<NumberStruct> numbers) {
-		NumberStruct previousNumber = number;
-
-		boolean result = true;
-		for (final NumberStruct currentNumber : numbers) {
-			result = previousNumber.isNotEqualTo(currentNumber);
-			if (!result) {
-				break;
-			}
-			previousNumber = currentNumber;
-		}
-		return result;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * <p>
-	 * Determines the whether or not the numerical value of this RationalStruct is zero, positive, or negative,
-	 * returning {@code this}, {@link IntegerStruct#ONE}, or {@link IntegerStruct#MINUS_ONE} respectively.
-	 */
-	NumberStruct signum();
-
-	NumberStruct realPart();
-
-	/**
-	 * {@inheritDoc}
-	 * <p>
-	 * Returns {@link IntegerStruct#ONE} as the imaginary part of RationalStructs is always '1'.
-	 */
-	NumberStruct imagPart();
-
-	NumberStruct conjugate();
-
-	/**
-	 * {@inheritDoc}
-	 * <p>
-	 * Computes the negation with {@link BigFraction#negate()} on {@code #bigFraction} and then creating a new
-	 * RatioStruct to wrap it.
-	 */
-	NumberStruct negation();
-
-	/**
-	 * {@inheritDoc}
-	 * <p>
-	 * Creates a new {@link RationalStruct} with {@link BigFraction#denominator} as the numerator and {@link
-	 * BigFraction#numerator} as the denominator from {@code #bigFraction}.
-	 */
-	NumberStruct reciprocal();
-
-	NumberStruct exp();
-
-	/**
-	 * {@inheritDoc}
-	 * <p>
-	 * Computes the exponential function result for this RatioStruct as this {@code base} and the provided {@link
-	 * NumberStruct} as the {@code power}. If {@code power} is '0' and power is an {@link IntegerStruct}, {@link
-	 * IntegerStruct#ONE} is returned. If {@code power} is '0' and power is not an {@link IntegerStruct}, {@link
-	 * SingleFloatStruct#ONE} is returned. If this RatioStruct is either '0' or '1', {@code this} is returned.
-	 */
-	default NumberStruct expt(final NumberStruct power) {
-//		final Apcomplex baseApcomplex = apcomplexValue();
-//		final Apcomplex powerApcomplex = power.apcomplexValue();
-//		final Apcomplex pow = ApcomplexMath.pow(baseApcomplex, powerApcomplex);
-//
-//		if (pow instanceof Apint) {
-//			return new IntIntegerStruct((Apint) pow);
-//		} else if (pow instanceof Apfloat) {
-//			return new SingleFloatStruct((Apfloat) pow);
-//		} else {
-//			return new ComplexStruct(pow);
-//		}
-		final ExptVisitor<?> exptVisitor = exptVisitor();
-		return power.expt(exptVisitor);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * <p>
-	 * Performs the exponential operation with this RatioStruct as the power value using the provided {@link
-	 * ExptVisitor}.
-	 *
-	 * @param exptVisitor
-	 * 		the {@link ExptVisitor} to be used in the exponential operation
-	 *
-	 * @return the result of the exponential operation with this RatioStruct as the power value using the provided
-	 * {@link ExptVisitor}
-	 */
-	NumberStruct expt(ExptVisitor<?> exptVisitor);
-
-	ExptVisitor<?> exptVisitor();
-
-	NumberStruct log();
-
-	default NumberStruct log(final NumberStruct base) {
-		return log().divide(base.log());
-	}
-
-	NumberStruct sqrt();
-
-	NumberStruct sin();
-
-	NumberStruct cos();
-
-	NumberStruct tan();
-
-	NumberStruct asin();
-
-	NumberStruct acos();
-
-	NumberStruct atan();
-
-	NumberStruct sinh();
-
-	NumberStruct cosh();
-
-	NumberStruct tanh();
-
-	NumberStruct asinh();
-
-	NumberStruct acosh();
-
-	NumberStruct atanh();
-
-	// Visitor Implementations
-
-	abstract class AddVisitor<S extends NumberStruct> {
-
-		final S number1;
-
-		AddVisitor(final S number1) {
-			this.number1 = number1;
-		}
-
-		public abstract NumberStruct add(IntIntegerStruct number2);
-
-		public abstract NumberStruct add(LongIntegerStruct number2);
-
-		public abstract NumberStruct add(BigIntegerStruct number2);
-
-		public abstract NumberStruct add(SingleFloatStruct number2);
-
-		public abstract NumberStruct add(DoubleFloatStruct number2);
-
-		public abstract NumberStruct add(RatioStruct number2);
-
-		public abstract NumberStruct add(ComplexStruct number2);
-	}
-
-	abstract class SubtractVisitor<S extends NumberStruct> {
-
-		final S number1;
-
-		SubtractVisitor(final S number1) {
-			this.number1 = number1;
-		}
-
-		public abstract NumberStruct subtract(IntIntegerStruct number2);
-
-		public abstract NumberStruct subtract(LongIntegerStruct number2);
-
-		public abstract NumberStruct subtract(BigIntegerStruct number2);
-
-		public abstract NumberStruct subtract(SingleFloatStruct number2);
-
-		public abstract NumberStruct subtract(DoubleFloatStruct number2);
-
-		public abstract NumberStruct subtract(RatioStruct number2);
-
-		public abstract NumberStruct subtract(ComplexStruct number2);
-	}
-
-	abstract class MultiplyVisitor<S extends NumberStruct> {
-
-		final S number1;
-
-		MultiplyVisitor(final S number1) {
-			this.number1 = number1;
-		}
-
-		public abstract NumberStruct multiply(IntIntegerStruct number2);
-
-		public abstract NumberStruct multiply(LongIntegerStruct number2);
-
-		public abstract NumberStruct multiply(BigIntegerStruct number2);
-
-		public abstract NumberStruct multiply(SingleFloatStruct number2);
-
-		public abstract NumberStruct multiply(DoubleFloatStruct number2);
-
-		public abstract NumberStruct multiply(RatioStruct number2);
-
-		public abstract NumberStruct multiply(ComplexStruct number2);
-	}
-
-	abstract class DivideVisitor<S extends NumberStruct> {
-
-		final S number1;
-
-		DivideVisitor(final S number1) {
-			this.number1 = number1;
-		}
-
-		public abstract NumberStruct divide(IntIntegerStruct number2);
-
-		public abstract NumberStruct divide(LongIntegerStruct number2);
-
-		public abstract NumberStruct divide(BigIntegerStruct number2);
-
-		public abstract NumberStruct divide(SingleFloatStruct number2);
-
-		public abstract NumberStruct divide(DoubleFloatStruct number2);
-
-		public abstract NumberStruct divide(RatioStruct number2);
-
-		public abstract NumberStruct divide(ComplexStruct number2);
-	}
-
-	abstract class EqualToVisitor<S extends NumberStruct> {
-
-		final S number1;
-
-		EqualToVisitor(final S number1) {
-			this.number1 = number1;
-		}
-
-		public abstract boolean equalTo(IntIntegerStruct number2);
-
-		public abstract boolean equalTo(LongIntegerStruct number2);
-
-		public abstract boolean equalTo(BigIntegerStruct number2);
-
-		public abstract boolean equalTo(SingleFloatStruct number2);
-
-		public abstract boolean equalTo(DoubleFloatStruct number2);
-
-		public abstract boolean equalTo(RatioStruct number2);
-
-		public abstract boolean equalTo(ComplexStruct number2);
-	}
-
-	abstract class ExptVisitor<S extends NumberStruct> {
-
-		final S base;
-
-		ExptVisitor(final S base) {
-			this.base = base;
-		}
-
-		public abstract NumberStruct expt(IntIntegerStruct power);
-
-		public abstract NumberStruct expt(LongIntegerStruct power);
-
-		public abstract NumberStruct expt(BigIntegerStruct power);
-
-		public abstract NumberStruct expt(SingleFloatStruct power);
-
-		public abstract NumberStruct expt(DoubleFloatStruct power);
-
-		public abstract NumberStruct expt(RatioStruct power);
-
-		public abstract NumberStruct expt(ComplexStruct power);
-
-		static NumberStruct exptInteger(final NumberStruct base, final IntegerStruct power) {
-			// TODO: simplify this!!!
-			if (power.isEqualTo(IntegerStruct.ZERO)) {
-				return IntegerStruct.ONE;
-			}
-			if (base.isEqualTo(IntegerStruct.ONE)) {
-				return base;
-			}
-			if (base.isEqualTo(IntegerStruct.ZERO)) {
-				return base;
-			}
-
-			IntegerStruct realPower = power;
-			if (realPower.minusp()) {
-				realPower = (IntegerStruct) IntegerStruct.ZERO.subtract(realPower);
-				return IntegerStruct.ONE.divide(exptInteger(base, realPower));
-			}
-			if (base.eql(IntegerStruct.TWO)) {
-				return IntegerStruct.ONE.ash(realPower);
-			}
-
-			IntegerStruct nextn = realPower.ash(IntegerStruct.MINUS_ONE);
-			NumberStruct total;
-			if (realPower.oddp()) {
-				total = base;
-			} else {
-				total = IntegerStruct.ONE;
-			}
-
-			NumberStruct realBase = base;
-			while (true) {
-				if (nextn.zerop()) {
-					return total;
-				}
-				realBase = realBase.multiply(realBase);
-
-				if (nextn.oddp()) {
-					total = realBase.multiply(total);
-				}
-				nextn = nextn.ash(IntegerStruct.MINUS_ONE);
-			}
-		}
-	}
-
-	/*
-		Deprecated
-	 */
-
-	@Deprecated
-	Apcomplex apcomplexValue();
 }

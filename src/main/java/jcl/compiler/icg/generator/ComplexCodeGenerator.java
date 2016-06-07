@@ -6,19 +6,17 @@ package jcl.compiler.icg.generator;
 
 import jcl.compiler.icg.CodeGenerator;
 import jcl.compiler.icg.GeneratorState;
-import jcl.compiler.icg.IntermediateCodeGenerator;
 import jcl.compiler.icg.JavaMethodBuilder;
 import jcl.numbers.ComplexStruct;
-import jcl.numbers.RealStruct;
+import org.apfloat.Apcomplex;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
- * Class to generate {@link ComplexStruct} objects dynamically by utilizing the {@link ComplexStruct#real} and {@link
- * ComplexStruct#imaginary} of the provided {@link ComplexStruct} input value.
+ * Class to generate {@link ComplexStruct} objects dynamically by utilizing the {@link ComplexStruct#ap} and {@link
+ * ComplexStruct#valueType} of the provided {@link ComplexStruct} input value.
  */
 @Component
 class ComplexCodeGenerator implements CodeGenerator<ComplexStruct> {
@@ -29,25 +27,49 @@ class ComplexCodeGenerator implements CodeGenerator<ComplexStruct> {
 	private static final String COMPLEX_STRUCT_NAME = Type.getInternalName(ComplexStruct.class);
 
 	/**
-	 * Constant {@link String} containing the description for the {@link ComplexStruct#ComplexStruct(RealStruct,
-	 * RealStruct)} constructor method.
+	 * Constant {@link String} containing the name for the {@link ComplexStruct#valueOf(Apcomplex,
+	 * ComplexStruct.ValueType)} method.
 	 */
-	private static final String COMPLEX_STRUCT_INIT_DESC
-			= CodeGenerators.getConstructorDescription(ComplexStruct.class, RealStruct.class, RealStruct.class);
+	private static final String COMPLEX_STRUCT_VALUE_OF_METHOD_NAME = "valueOf";
 
 	/**
-	 * {@link IntermediateCodeGenerator} used for generating the {@link ComplexStruct} real and imaginary values.
+	 * Constant {@link String} containing the description for the {@link ComplexStruct#valueOf(Apcomplex,
+	 * ComplexStruct.ValueType)} method.
 	 */
-	@Autowired
-	private IntermediateCodeGenerator codeGenerator;
+	private static final String COMPLEX_STRUCT_VALUE_OF_METHOD_DESC
+			= CodeGenerators.getMethodDescription(ComplexStruct.class, COMPLEX_STRUCT_VALUE_OF_METHOD_NAME, Apcomplex.class, ComplexStruct.ValueType.class);
+
+	/**
+	 * Constant {@link String} containing the name for the {@link ComplexStruct.ValueType} class.
+	 */
+	private static final String VALUE_TYPE_NAME = Type.getInternalName(ComplexStruct.ValueType.class);
+
+	/**
+	 * Constant {@link String} containing the descriptor for the {@link ComplexStruct.ValueType} class.
+	 */
+	private static final String VALUE_TYPE_DESC = Type.getDescriptor(ComplexStruct.ValueType.class);
+
+	/**
+	 * Constant {@link String} containing the name for the {@link Apcomplex} class.
+	 */
+	private static final String APCOMPLEX_NAME = Type.getInternalName(Apcomplex.class);
+
+	/**
+	 * Constant {@link String} containing the description for the {@link Apcomplex#Apcomplex(String)} constructor
+	 * method.
+	 */
+	private static final String APCOMPLEX_INIT_METHOD_DESC
+			= CodeGenerators.getConstructorDescription(Apcomplex.class, String.class);
 
 	/**
 	 * {@inheritDoc}
 	 * Generation method for {@link ComplexStruct} objects, by performing the following operations:
 	 * <ol>
-	 * <li>Building the {@link ComplexStruct#real} value</li>
-	 * <li>Building the {@link ComplexStruct#imaginary} value</li>
-	 * <li>Constructing a new {@link ComplexStruct} with the built real and imaginary values</li>
+	 * <li>Constructing a new {@link Apcomplex} from the {@link String} representation of the {@link ComplexStruct#ap}
+	 * value</li>
+	 * <li>Loading the {@link ComplexStruct.ValueType} from the provided {@link ComplexStruct#valueType} value</li>
+	 * <li>Retrieving a {@link ComplexStruct} via {@link ComplexStruct#valueOf(Apcomplex, ComplexStruct.ValueType)} with
+	 * the created {@link Apcomplex} and loaded {@link ComplexStruct.ValueType} values</li>
 	 * </ol>
 	 *
 	 * @param input
@@ -61,25 +83,36 @@ class ComplexCodeGenerator implements CodeGenerator<ComplexStruct> {
 		final JavaMethodBuilder methodBuilder = generatorState.getCurrentMethodBuilder();
 		final MethodVisitor mv = methodBuilder.getMethodVisitor();
 
-		final RealStruct real = input.getReal();
-		codeGenerator.generate(real, generatorState);
-		final int realStore = methodBuilder.getNextAvailableStore();
-		mv.visitVarInsn(Opcodes.ASTORE, realStore);
-
-		final RealStruct imaginary = input.getImaginary();
-		codeGenerator.generate(imaginary, generatorState);
-		final int imaginaryStore = methodBuilder.getNextAvailableStore();
-		mv.visitVarInsn(Opcodes.ASTORE, imaginaryStore);
-
-		mv.visitTypeInsn(Opcodes.NEW, COMPLEX_STRUCT_NAME);
+		mv.visitTypeInsn(Opcodes.NEW, APCOMPLEX_NAME);
 		mv.visitInsn(Opcodes.DUP);
 
-		mv.visitVarInsn(Opcodes.ALOAD, realStore);
-		mv.visitVarInsn(Opcodes.ALOAD, imaginaryStore);
+		final String apString = input.ap().toString();
+		mv.visitLdcInsn(apString);
+
 		mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
-		                   COMPLEX_STRUCT_NAME,
+		                   APCOMPLEX_NAME,
 		                   GenerationConstants.INIT_METHOD_NAME,
-		                   COMPLEX_STRUCT_INIT_DESC,
+		                   APCOMPLEX_INIT_METHOD_DESC,
+		                   false);
+		final int apComplexStore = methodBuilder.getNextAvailableStore();
+		mv.visitVarInsn(Opcodes.ASTORE, apComplexStore);
+
+		final ComplexStruct.ValueType valueType = input.getValueType();
+		final String name = valueType.name();
+
+		mv.visitFieldInsn(Opcodes.GETSTATIC,
+		                  VALUE_TYPE_NAME,
+		                  name,
+		                  VALUE_TYPE_DESC);
+		final int valueTypeStore = methodBuilder.getNextAvailableStore();
+		mv.visitVarInsn(Opcodes.ASTORE, valueTypeStore);
+
+		mv.visitVarInsn(Opcodes.ALOAD, apComplexStore);
+		mv.visitVarInsn(Opcodes.ALOAD, valueTypeStore);
+		mv.visitMethodInsn(Opcodes.INVOKESTATIC,
+		                   COMPLEX_STRUCT_NAME,
+		                   COMPLEX_STRUCT_VALUE_OF_METHOD_NAME,
+		                   COMPLEX_STRUCT_VALUE_OF_METHOD_DESC,
 		                   false);
 	}
 }

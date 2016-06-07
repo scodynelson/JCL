@@ -34,41 +34,41 @@ public interface NumberConstants {
 
 	Object EPSILON_PLACEHOLDER = Precision.EPSILON;
 
-	ConstantStruct<FloatStruct> MOST_POSITIVE_SHORT_FLOAT = new ConstantStruct<>("MOST-POSITIVE-SHORT-FLOAT", GlobalPackageStruct.COMMON_LISP, SingleFloatStruct.valueOf(Float.MAX_VALUE));
-	ConstantStruct<FloatStruct> LEAST_POSITIVE_SHORT_FLOAT = new ConstantStruct<>("LEAST-POSITIVE-SHORT-FLOAT", GlobalPackageStruct.COMMON_LISP, SingleFloatStruct.valueOf(Float.MIN_VALUE));
-	ConstantStruct<FloatStruct> LEAST_POSITIVE_NORMALIZED_SHORT_FLOAT = new ConstantStruct<>("LEAST-POSITIVE-NORMALIZED-SHORT-FLOAT", GlobalPackageStruct.COMMON_LISP, SingleFloatStruct.valueOf(Float.MIN_NORMAL));
-	ConstantStruct<FloatStruct> MOST_NEGATIVE_SHORT_FLOAT = new ConstantStruct<>("MOST-NEGATIVE-SHORT-FLOAT", GlobalPackageStruct.COMMON_LISP, SingleFloatStruct.valueOf(-Float.MAX_VALUE));
-	ConstantStruct<FloatStruct> LEAST_NEGATIVE_SHORT_FLOAT = new ConstantStruct<>("LEAST-NEGATIVE-SHORT-FLOAT", GlobalPackageStruct.COMMON_LISP, SingleFloatStruct.valueOf(-Float.MIN_VALUE));
-	ConstantStruct<FloatStruct> LEAST_NEGATIVE_NORMALIZED_SHORT_FLOAT = new ConstantStruct<>("LEAST-NEGATIVE-NORMALIZED-SHORT-FLOAT", GlobalPackageStruct.COMMON_LISP, SingleFloatStruct.valueOf(-Float.MIN_NORMAL));
-	ConstantStruct<FloatStruct> SHORT_FLOAT_EPSILON = new ConstantStruct<>("SHORT-FLOAT-EPSILON", GlobalPackageStruct.COMMON_LISP, SingleFloatStruct.valueOf(5.960465E-8F));
-	ConstantStruct<FloatStruct> SHORT_FLOAT_NEGATIVE_EPSILON = new ConstantStruct<>("SHORT-FLOAT-NEGATIVE-EPSILON", GlobalPackageStruct.COMMON_LISP, SingleFloatStruct.valueOf(2.9802326e-8F));
+	ConstantStruct<FloatStruct> MOST_POSITIVE_SHORT_FLOAT = new ConstantStruct<>("MOST-POSITIVE-SHORT-FLOAT", GlobalPackageStruct.COMMON_LISP, FloatStruct.valueOf(Float.MAX_VALUE));
+	ConstantStruct<FloatStruct> LEAST_POSITIVE_SHORT_FLOAT = new ConstantStruct<>("LEAST-POSITIVE-SHORT-FLOAT", GlobalPackageStruct.COMMON_LISP, FloatStruct.valueOf(Float.MIN_VALUE));
+	ConstantStruct<FloatStruct> LEAST_POSITIVE_NORMALIZED_SHORT_FLOAT = new ConstantStruct<>("LEAST-POSITIVE-NORMALIZED-SHORT-FLOAT", GlobalPackageStruct.COMMON_LISP, FloatStruct.valueOf(Float.MIN_NORMAL));
+	ConstantStruct<FloatStruct> MOST_NEGATIVE_SHORT_FLOAT = new ConstantStruct<>("MOST-NEGATIVE-SHORT-FLOAT", GlobalPackageStruct.COMMON_LISP, FloatStruct.valueOf(-Float.MAX_VALUE));
+	ConstantStruct<FloatStruct> LEAST_NEGATIVE_SHORT_FLOAT = new ConstantStruct<>("LEAST-NEGATIVE-SHORT-FLOAT", GlobalPackageStruct.COMMON_LISP, FloatStruct.valueOf(-Float.MIN_VALUE));
+	ConstantStruct<FloatStruct> LEAST_NEGATIVE_NORMALIZED_SHORT_FLOAT = new ConstantStruct<>("LEAST-NEGATIVE-NORMALIZED-SHORT-FLOAT", GlobalPackageStruct.COMMON_LISP, FloatStruct.valueOf(-Float.MIN_NORMAL));
+	ConstantStruct<FloatStruct> SHORT_FLOAT_EPSILON = new ConstantStruct<>("SHORT-FLOAT-EPSILON", GlobalPackageStruct.COMMON_LISP, FloatStruct.valueOf(5.960465E-8F));
+	ConstantStruct<FloatStruct> SHORT_FLOAT_NEGATIVE_EPSILON = new ConstantStruct<>("SHORT-FLOAT-NEGATIVE-EPSILON", GlobalPackageStruct.COMMON_LISP, FloatStruct.valueOf(2.9802326e-8F));
 
-	ConstantStruct<FloatStruct> MOST_POSITIVE_SINGLE_FLOAT = new ConstantStruct<>("MOST-POSITIVE-SINGLE-FLOAT", GlobalPackageStruct.COMMON_LISP, SingleFloatStruct.valueOf(Float.MAX_VALUE));
-	ConstantStruct<FloatStruct> LEAST_POSITIVE_SINGLE_FLOAT = new ConstantStruct<>("LEAST-POSITIVE-SINGLE-FLOAT", GlobalPackageStruct.COMMON_LISP, SingleFloatStruct.valueOf(Float.MIN_VALUE));
-	ConstantStruct<FloatStruct> LEAST_POSITIVE_NORMALIZED_SINGLE_FLOAT = new ConstantStruct<>("LEAST-POSITIVE-NORMALIZED-SINGLE-FLOAT", GlobalPackageStruct.COMMON_LISP, SingleFloatStruct.valueOf(Float.MIN_NORMAL));
-	ConstantStruct<FloatStruct> MOST_NEGATIVE_SINGLE_FLOAT = new ConstantStruct<>("MOST-NEGATIVE-SINGLE-FLOAT", GlobalPackageStruct.COMMON_LISP, SingleFloatStruct.valueOf(-Float.MAX_VALUE));
-	ConstantStruct<FloatStruct> LEAST_NEGATIVE_SINGLE_FLOAT = new ConstantStruct<>("LEAST-NEGATIVE-SINGLE-FLOAT", GlobalPackageStruct.COMMON_LISP, SingleFloatStruct.valueOf(-Float.MIN_VALUE));
-	ConstantStruct<FloatStruct> LEAST_NEGATIVE_NORMALIZED_SINGLE_FLOAT = new ConstantStruct<>("LEAST-NEGATIVE-NORMALIZED-SINGLE-FLOAT", GlobalPackageStruct.COMMON_LISP, SingleFloatStruct.valueOf(-Float.MIN_NORMAL));
-	ConstantStruct<FloatStruct> SINGLE_FLOAT_EPSILON = new ConstantStruct<>("SINGLE-FLOAT-EPSILON", GlobalPackageStruct.COMMON_LISP, SingleFloatStruct.valueOf(5.960465E-8F));
-	ConstantStruct<FloatStruct> SINGLE_FLOAT_NEGATIVE_EPSILON = new ConstantStruct<>("SINGLE-FLOAT-NEGATIVE-EPSILON", GlobalPackageStruct.COMMON_LISP, SingleFloatStruct.valueOf(2.9802326e-8F));
+	ConstantStruct<FloatStruct> MOST_POSITIVE_SINGLE_FLOAT = new ConstantStruct<>("MOST-POSITIVE-SINGLE-FLOAT", GlobalPackageStruct.COMMON_LISP, FloatStruct.valueOf(Float.MAX_VALUE));
+	ConstantStruct<FloatStruct> LEAST_POSITIVE_SINGLE_FLOAT = new ConstantStruct<>("LEAST-POSITIVE-SINGLE-FLOAT", GlobalPackageStruct.COMMON_LISP, FloatStruct.valueOf(Float.MIN_VALUE));
+	ConstantStruct<FloatStruct> LEAST_POSITIVE_NORMALIZED_SINGLE_FLOAT = new ConstantStruct<>("LEAST-POSITIVE-NORMALIZED-SINGLE-FLOAT", GlobalPackageStruct.COMMON_LISP, FloatStruct.valueOf(Float.MIN_NORMAL));
+	ConstantStruct<FloatStruct> MOST_NEGATIVE_SINGLE_FLOAT = new ConstantStruct<>("MOST-NEGATIVE-SINGLE-FLOAT", GlobalPackageStruct.COMMON_LISP, FloatStruct.valueOf(-Float.MAX_VALUE));
+	ConstantStruct<FloatStruct> LEAST_NEGATIVE_SINGLE_FLOAT = new ConstantStruct<>("LEAST-NEGATIVE-SINGLE-FLOAT", GlobalPackageStruct.COMMON_LISP, FloatStruct.valueOf(-Float.MIN_VALUE));
+	ConstantStruct<FloatStruct> LEAST_NEGATIVE_NORMALIZED_SINGLE_FLOAT = new ConstantStruct<>("LEAST-NEGATIVE-NORMALIZED-SINGLE-FLOAT", GlobalPackageStruct.COMMON_LISP, FloatStruct.valueOf(-Float.MIN_NORMAL));
+	ConstantStruct<FloatStruct> SINGLE_FLOAT_EPSILON = new ConstantStruct<>("SINGLE-FLOAT-EPSILON", GlobalPackageStruct.COMMON_LISP, FloatStruct.valueOf(5.960465E-8F));
+	ConstantStruct<FloatStruct> SINGLE_FLOAT_NEGATIVE_EPSILON = new ConstantStruct<>("SINGLE-FLOAT-NEGATIVE-EPSILON", GlobalPackageStruct.COMMON_LISP, FloatStruct.valueOf(2.9802326e-8F));
 
-	ConstantStruct<FloatStruct> MOST_POSITIVE_DOUBLE_FLOAT = new ConstantStruct<>("MOST-POSITIVE-DOUBLE-FLOAT", GlobalPackageStruct.COMMON_LISP, DoubleFloatStruct.valueOf(Double.MAX_VALUE));
-	ConstantStruct<FloatStruct> LEAST_POSITIVE_DOUBLE_FLOAT = new ConstantStruct<>("LEAST-POSITIVE-DOUBLE-FLOAT", GlobalPackageStruct.COMMON_LISP, DoubleFloatStruct.valueOf(Double.MIN_VALUE));
-	ConstantStruct<FloatStruct> LEAST_POSITIVE_NORMALIZED_DOUBLE_FLOAT = new ConstantStruct<>("LEAST-POSITIVE-NORMALIZED-DOUBLE-FLOAT", GlobalPackageStruct.COMMON_LISP, DoubleFloatStruct.valueOf(Double.MIN_NORMAL));
-	ConstantStruct<FloatStruct> MOST_NEGATIVE_DOUBLE_FLOAT = new ConstantStruct<>("MOST-NEGATIVE-DOUBLE-FLOAT", GlobalPackageStruct.COMMON_LISP, DoubleFloatStruct.valueOf(-Double.MAX_VALUE));
-	ConstantStruct<FloatStruct> LEAST_NEGATIVE_DOUBLE_FLOAT = new ConstantStruct<>("LEAST-NEGATIVE-DOUBLE-FLOAT", GlobalPackageStruct.COMMON_LISP, DoubleFloatStruct.valueOf(-Double.MIN_VALUE));
-	ConstantStruct<FloatStruct> LEAST_NEGATIVE_NORMALIZED_DOUBLE_FLOAT = new ConstantStruct<>("LEAST-NEGATIVE-NORMALIZED-DOUBLE-FLOAT", GlobalPackageStruct.COMMON_LISP, DoubleFloatStruct.valueOf(-Double.MIN_NORMAL));
-	ConstantStruct<FloatStruct> DOUBLE_FLOAT_EPSILON = new ConstantStruct<>("DOUBLE-FLOAT-EPSILON", GlobalPackageStruct.COMMON_LISP, DoubleFloatStruct.valueOf(1.1102230246251568E-16));
-	ConstantStruct<FloatStruct> DOUBLE_FLOAT_NEGATIVE_EPSILON = new ConstantStruct<>("DOUBLE-FLOAT-NEGATIVE-EPSILON", GlobalPackageStruct.COMMON_LISP, DoubleFloatStruct.valueOf(5.551115123125784E-17));
+	ConstantStruct<FloatStruct> MOST_POSITIVE_DOUBLE_FLOAT = new ConstantStruct<>("MOST-POSITIVE-DOUBLE-FLOAT", GlobalPackageStruct.COMMON_LISP, FloatStruct.valueOf(Double.MAX_VALUE));
+	ConstantStruct<FloatStruct> LEAST_POSITIVE_DOUBLE_FLOAT = new ConstantStruct<>("LEAST-POSITIVE-DOUBLE-FLOAT", GlobalPackageStruct.COMMON_LISP, FloatStruct.valueOf(Double.MIN_VALUE));
+	ConstantStruct<FloatStruct> LEAST_POSITIVE_NORMALIZED_DOUBLE_FLOAT = new ConstantStruct<>("LEAST-POSITIVE-NORMALIZED-DOUBLE-FLOAT", GlobalPackageStruct.COMMON_LISP, FloatStruct.valueOf(Double.MIN_NORMAL));
+	ConstantStruct<FloatStruct> MOST_NEGATIVE_DOUBLE_FLOAT = new ConstantStruct<>("MOST-NEGATIVE-DOUBLE-FLOAT", GlobalPackageStruct.COMMON_LISP, FloatStruct.valueOf(-Double.MAX_VALUE));
+	ConstantStruct<FloatStruct> LEAST_NEGATIVE_DOUBLE_FLOAT = new ConstantStruct<>("LEAST-NEGATIVE-DOUBLE-FLOAT", GlobalPackageStruct.COMMON_LISP, FloatStruct.valueOf(-Double.MIN_VALUE));
+	ConstantStruct<FloatStruct> LEAST_NEGATIVE_NORMALIZED_DOUBLE_FLOAT = new ConstantStruct<>("LEAST-NEGATIVE-NORMALIZED-DOUBLE-FLOAT", GlobalPackageStruct.COMMON_LISP, FloatStruct.valueOf(-Double.MIN_NORMAL));
+	ConstantStruct<FloatStruct> DOUBLE_FLOAT_EPSILON = new ConstantStruct<>("DOUBLE-FLOAT-EPSILON", GlobalPackageStruct.COMMON_LISP, FloatStruct.valueOf(1.1102230246251568E-16));
+	ConstantStruct<FloatStruct> DOUBLE_FLOAT_NEGATIVE_EPSILON = new ConstantStruct<>("DOUBLE-FLOAT-NEGATIVE-EPSILON", GlobalPackageStruct.COMMON_LISP, FloatStruct.valueOf(5.551115123125784E-17));
 
-	ConstantStruct<FloatStruct> MOST_POSITIVE_LONG_FLOAT = new ConstantStruct<>("MOST-POSITIVE-LONG-FLOAT", GlobalPackageStruct.COMMON_LISP, DoubleFloatStruct.valueOf(Double.MAX_VALUE));
-	ConstantStruct<FloatStruct> LEAST_POSITIVE_LONG_FLOAT = new ConstantStruct<>("LEAST-POSITIVE-LONG-FLOAT", GlobalPackageStruct.COMMON_LISP, DoubleFloatStruct.valueOf(Double.MIN_VALUE));
-	ConstantStruct<FloatStruct> LEAST_POSITIVE_NORMALIZED_LONG_FLOAT = new ConstantStruct<>("LEAST-POSITIVE-NORMALIZED-LONG-FLOAT", GlobalPackageStruct.COMMON_LISP, DoubleFloatStruct.valueOf(Double.MIN_NORMAL));
-	ConstantStruct<FloatStruct> MOST_NEGATIVE_LONG_FLOAT = new ConstantStruct<>("MOST-NEGATIVE-LONG-FLOAT", GlobalPackageStruct.COMMON_LISP, DoubleFloatStruct.valueOf(-Double.MAX_VALUE));
-	ConstantStruct<FloatStruct> LEAST_NEGATIVE_LONG_FLOAT = new ConstantStruct<>("LEAST-NEGATIVE-LONG-FLOAT", GlobalPackageStruct.COMMON_LISP, DoubleFloatStruct.valueOf(-Double.MIN_VALUE));
-	ConstantStruct<FloatStruct> LEAST_NEGATIVE_NORMALIZED_LONG_FLOAT = new ConstantStruct<>("LEAST-NEGATIVE-NORMALIZED-LONG-FLOAT", GlobalPackageStruct.COMMON_LISP, DoubleFloatStruct.valueOf(-Double.MIN_NORMAL));
-	ConstantStruct<FloatStruct> LONG_FLOAT_EPSILON = new ConstantStruct<>("LONG-FLOAT-EPSILON", GlobalPackageStruct.COMMON_LISP, DoubleFloatStruct.valueOf(1.1102230246251568E-16));
-	ConstantStruct<FloatStruct> LONG_FLOAT_NEGATIVE_EPSILON = new ConstantStruct<>("LONG-FLOAT-NEGATIVE-EPSILON", GlobalPackageStruct.COMMON_LISP, DoubleFloatStruct.valueOf(5.551115123125784E-17));
+	ConstantStruct<FloatStruct> MOST_POSITIVE_LONG_FLOAT = new ConstantStruct<>("MOST-POSITIVE-LONG-FLOAT", GlobalPackageStruct.COMMON_LISP, FloatStruct.valueOf(Double.MAX_VALUE));
+	ConstantStruct<FloatStruct> LEAST_POSITIVE_LONG_FLOAT = new ConstantStruct<>("LEAST-POSITIVE-LONG-FLOAT", GlobalPackageStruct.COMMON_LISP, FloatStruct.valueOf(Double.MIN_VALUE));
+	ConstantStruct<FloatStruct> LEAST_POSITIVE_NORMALIZED_LONG_FLOAT = new ConstantStruct<>("LEAST-POSITIVE-NORMALIZED-LONG-FLOAT", GlobalPackageStruct.COMMON_LISP, FloatStruct.valueOf(Double.MIN_NORMAL));
+	ConstantStruct<FloatStruct> MOST_NEGATIVE_LONG_FLOAT = new ConstantStruct<>("MOST-NEGATIVE-LONG-FLOAT", GlobalPackageStruct.COMMON_LISP, FloatStruct.valueOf(-Double.MAX_VALUE));
+	ConstantStruct<FloatStruct> LEAST_NEGATIVE_LONG_FLOAT = new ConstantStruct<>("LEAST-NEGATIVE-LONG-FLOAT", GlobalPackageStruct.COMMON_LISP, FloatStruct.valueOf(-Double.MIN_VALUE));
+	ConstantStruct<FloatStruct> LEAST_NEGATIVE_NORMALIZED_LONG_FLOAT = new ConstantStruct<>("LEAST-NEGATIVE-NORMALIZED-LONG-FLOAT", GlobalPackageStruct.COMMON_LISP, FloatStruct.valueOf(-Double.MIN_NORMAL));
+	ConstantStruct<FloatStruct> LONG_FLOAT_EPSILON = new ConstantStruct<>("LONG-FLOAT-EPSILON", GlobalPackageStruct.COMMON_LISP, FloatStruct.valueOf(1.1102230246251568E-16));
+	ConstantStruct<FloatStruct> LONG_FLOAT_NEGATIVE_EPSILON = new ConstantStruct<>("LONG-FLOAT-NEGATIVE-EPSILON", GlobalPackageStruct.COMMON_LISP, FloatStruct.valueOf(5.551115123125784E-17));
 
-	ConstantStruct<FloatStruct> PI = new ConstantStruct<>("PI", GlobalPackageStruct.COMMON_LISP, DoubleFloatStruct.valueOf(Math.PI));
+	ConstantStruct<FloatStruct> PI = new ConstantStruct<>("PI", GlobalPackageStruct.COMMON_LISP, FloatStruct.valueOf(Math.PI));
 }

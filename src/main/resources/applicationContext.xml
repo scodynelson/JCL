@@ -43,11 +43,8 @@
 		<entry key="jcl.lists.ConsStruct" value-ref="consStructPrinter"/>
 
 		<entry key="jcl.numbers.ComplexStruct" value-ref="complexStructPrinter"/>
-		<entry key="jcl.numbers.SingleFloatStruct" value-ref="floatStructPrinter"/>
-		<entry key="jcl.numbers.DoubleFloatStruct" value-ref="floatStructPrinter"/>
-		<entry key="jcl.numbers.IntIntegerStruct" value-ref="integerStructPrinter"/>
-		<entry key="jcl.numbers.LongIntegerStruct" value-ref="integerStructPrinter"/>
-		<entry key="jcl.numbers.BigIntegerStruct" value-ref="integerStructPrinter"/>
+		<entry key="jcl.numbers.FloatStruct" value-ref="floatStructPrinter"/>
+		<entry key="jcl.numbers.IntegerStruct" value-ref="integerStructPrinter"/>
 		<entry key="jcl.numbers.RatioStruct" value-ref="ratioStructPrinter"/>
 
 		<entry key="jcl.packages.PackageStruct" value-ref="packageStructPrinter"/>
@@ -86,9 +83,7 @@
 	          value-type="jcl.compiler.struct.specialoperator.go.GoStructFactory">
 
 		<entry key="jcl.symbols.SymbolStruct" value-ref="goSymbolStructFactory"/>
-		<entry key="jcl.numbers.IntIntegerStruct" value-ref="goIntegerStructFactory"/>
-		<entry key="jcl.numbers.LongIntegerStruct" value-ref="goIntegerStructFactory"/>
-		<entry key="jcl.numbers.BigIntegerStruct" value-ref="goIntegerStructFactory"/>
+		<entry key="jcl.numbers.IntegerStruct" value-ref="goIntegerStructFactory"/>
 
 	</util:map>
 
@@ -110,11 +105,8 @@
 		<entry key="jcl.lists.ConsStruct" value-ref="consCodeGenerator"/>
 
 		<entry key="jcl.numbers.ComplexStruct" value-ref="complexCodeGenerator"/>
-		<entry key="jcl.numbers.SingleFloatStruct" value-ref="singleFloatCodeGenerator"/>
-		<entry key="jcl.numbers.DoubleFloatStruct" value-ref="doubleFloatCodeGenerator"/>
-		<entry key="jcl.numbers.IntIntegerStruct" value-ref="intIntegerCodeGenerator"/>
-		<entry key="jcl.numbers.LongIntegerStruct" value-ref="longIntegerCodeGenerator"/>
-		<entry key="jcl.numbers.BigIntegerStruct" value-ref="bigIntegerCodeGenerator"/>
+		<entry key="jcl.numbers.FloatStruct" value-ref="floatCodeGenerator"/>
+		<entry key="jcl.numbers.IntegerStruct" value-ref="integerCodeGenerator"/>
 		<entry key="jcl.numbers.RatioStruct" value-ref="ratioCodeGenerator"/>
 
 		<entry key="jcl.pathnames.PathnameStruct" value-ref="pathnameCodeGenerator"/>

@@ -23,10 +23,10 @@ public class ComplexStructPrinter implements LispPrinter<ComplexStruct> {
 
 	@Override
 	public String print(final ComplexStruct object) {
-		final RealStruct real = object.getReal();
+		final RealStruct real = object.realPart();
 		final String printedReal = printer.print(real);
 
-		final RealStruct imaginary = object.getImaginary();
+		final RealStruct imaginary = object.imagPart();
 		final String printedImaginary = printer.print(imaginary);
 
 		return "#C(" + printedReal + ' ' + printedImaginary + ')';

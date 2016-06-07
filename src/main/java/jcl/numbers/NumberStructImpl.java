@@ -2,7 +2,7 @@
  * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
  */
 
-package jcl.numbers.newImpl;
+package jcl.numbers;
 
 import jcl.LispType;
 import org.apfloat.Apcomplex;
@@ -10,23 +10,23 @@ import org.apfloat.ApcomplexMath;
 import org.apfloat.Apfloat;
 
 /**
- * Internal implementation class for {@link NumberStruct2} objects.
+ * Internal implementation class for {@link NumberStruct} objects.
  *
  * @param <A>
- * 		the type of {@link Apcomplex} the {@link NumberStruct2} object will use for its value
+ * 		the type of {@link Apcomplex} the {@link NumberStruct} object will use for its value
  */
-abstract class NumberStruct2Impl<A extends Apcomplex> extends InternalNumberStruct<A> implements NumberStruct2 {
+abstract class NumberStructImpl<A extends Apcomplex> extends InternalNumberStruct<A> implements NumberStruct {
 
 	/**
 	 * Package level constructor that passes the provided {@link LispType} and {@link A} {@link Apcomplex} value to the
 	 * {@link InternalNumberStruct} superclass constructor.
 	 *
 	 * @param type
-	 * 		the {@link LispType} of the {@link NumberStruct2}
+	 * 		the {@link LispType} of the {@link NumberStruct}
 	 * @param ap
-	 * 		the internal {@link Apcomplex} implementation value of the {@link NumberStruct2}
+	 * 		the internal {@link Apcomplex} implementation value of the {@link NumberStruct}
 	 */
-	NumberStruct2Impl(final LispType type, final A ap) {
+	NumberStructImpl(final LispType type, final A ap) {
 		super(type, ap);
 	}
 
@@ -36,9 +36,9 @@ abstract class NumberStruct2Impl<A extends Apcomplex> extends InternalNumberStru
 	}
 
 	@Override
-	public RealStruct2 abs() {
+	public RealStruct abs() {
 		final Apfloat abs = ApcomplexMath.abs(ap);
-		return RealStruct2.valueOf(abs);
+		return RealStruct.valueOf(abs);
 	}
 
 	@Override
@@ -47,181 +47,181 @@ abstract class NumberStruct2Impl<A extends Apcomplex> extends InternalNumberStru
 	}
 
 	@Override
-	public NumberStruct2 add(final NumberStruct2 number) {
+	public NumberStruct add(final NumberStruct number) {
 		final Apcomplex numberAp = number.ap();
 		final Apcomplex add = ap.add(numberAp);
-		return NumberStruct2.valueOf(add);
+		return NumberStruct.valueOf(add);
 	}
 
 	@Override
-	public NumberStruct2 subtract(final NumberStruct2 number) {
+	public NumberStruct subtract(final NumberStruct number) {
 		final Apcomplex numberAp = number.ap();
 		final Apcomplex subtract = ap.subtract(numberAp);
-		return NumberStruct2.valueOf(subtract);
+		return NumberStruct.valueOf(subtract);
 	}
 
 	@Override
-	public NumberStruct2 multiply(final NumberStruct2 number) {
+	public NumberStruct multiply(final NumberStruct number) {
 		final Apcomplex numberAp = number.ap();
 		final Apcomplex multiply = ap.multiply(numberAp);
-		return NumberStruct2.valueOf(multiply);
+		return NumberStruct.valueOf(multiply);
 	}
 
 	@Override
-	public NumberStruct2 divide(final NumberStruct2 number) {
+	public NumberStruct divide(final NumberStruct number) {
 		final Apcomplex numberAp = number.ap();
 		final Apcomplex divide = ap.divide(numberAp);
-		return NumberStruct2.valueOf(divide);
+		return NumberStruct.valueOf(divide);
 	}
 
 	@Override
-	public boolean isEqualTo(final NumberStruct2 number) {
+	public boolean isEqualTo(final NumberStruct number) {
 		final Apcomplex numberAp = number.ap();
 		return ap.equals(numberAp);
 	}
 
 	@Override
-	public NumberStruct2 signum() {
+	public NumberStruct signum() {
 		if (Apcomplex.ZERO.equals(ap)) {
 			return this;
 		}
 
 		final Apfloat abs = ApcomplexMath.abs(ap);
 		final Apcomplex signum = ap.divide(abs);
-		return NumberStruct2.valueOf(signum);
+		return NumberStruct.valueOf(signum);
 	}
 
 	@Override
-	public RealStruct2 realPart() {
+	public RealStruct realPart() {
 		final Apfloat real = ap.real();
-		return RealStruct2.valueOf(real);
+		return RealStruct.valueOf(real);
 	}
 
 	@Override
-	public RealStruct2 imagPart() {
+	public RealStruct imagPart() {
 		final Apfloat imag = ap.imag();
-		return RealStruct2.valueOf(imag);
+		return RealStruct.valueOf(imag);
 	}
 
 	@Override
-	public NumberStruct2 conjugate() {
+	public NumberStruct conjugate() {
 		final Apcomplex conj = ap.conj();
-		return NumberStruct2.valueOf(conj);
+		return NumberStruct.valueOf(conj);
 	}
 
 	@Override
-	public NumberStruct2 negation() {
+	public NumberStruct negation() {
 		final Apcomplex negate = ap.negate();
-		return NumberStruct2.valueOf(negate);
+		return NumberStruct.valueOf(negate);
 	}
 
 	@Override
-	public NumberStruct2 reciprocal() {
+	public NumberStruct reciprocal() {
 		final Apcomplex reciprocal = Apcomplex.ONE.divide(ap);
-		return NumberStruct2.valueOf(reciprocal);
+		return NumberStruct.valueOf(reciprocal);
 	}
 
 	@Override
-	public NumberStruct2 exp() {
+	public NumberStruct exp() {
 		final Apcomplex exp = ApcomplexMath.exp(ap);
-		return NumberStruct2.valueOf(exp);
+		return NumberStruct.valueOf(exp);
 	}
 
 	@Override
-	public NumberStruct2 expt(final NumberStruct2 power) {
+	public NumberStruct expt(final NumberStruct power) {
 		final Apcomplex powerAp = power.ap();
 		final Apcomplex pow = ApcomplexMath.pow(ap, powerAp);
-		return NumberStruct2.valueOf(pow);
+		return NumberStruct.valueOf(pow);
 	}
 
 	@Override
-	public NumberStruct2 log() {
+	public NumberStruct log() {
 		final Apcomplex log = ApcomplexMath.log(ap);
-		return NumberStruct2.valueOf(log);
+		return NumberStruct.valueOf(log);
 	}
 
 	@Override
-	public NumberStruct2 log(final NumberStruct2 base) {
+	public NumberStruct log(final NumberStruct base) {
 		final Apcomplex baseAp = base.ap();
 		final Apcomplex log = ApcomplexMath.log(ap, baseAp);
-		return NumberStruct2.valueOf(log);
+		return NumberStruct.valueOf(log);
 	}
 
 	@Override
-	public NumberStruct2 sqrt() {
+	public NumberStruct sqrt() {
 		final Apcomplex sqrt = ApcomplexMath.sqrt(ap);
-		return NumberStruct2.valueOf(sqrt);
+		return NumberStruct.valueOf(sqrt);
 	}
 
 	@Override
-	public NumberStruct2 sin() {
+	public NumberStruct sin() {
 		final Apcomplex sin = ApcomplexMath.sin(ap);
-		return NumberStruct2.valueOf(sin);
+		return NumberStruct.valueOf(sin);
 	}
 
 	@Override
-	public NumberStruct2 cos() {
+	public NumberStruct cos() {
 		final Apcomplex cos = ApcomplexMath.cos(ap);
-		return NumberStruct2.valueOf(cos);
+		return NumberStruct.valueOf(cos);
 	}
 
 	@Override
-	public NumberStruct2 tan() {
+	public NumberStruct tan() {
 		final Apcomplex tan = ApcomplexMath.tan(ap);
-		return NumberStruct2.valueOf(tan);
+		return NumberStruct.valueOf(tan);
 	}
 
 	@Override
-	public NumberStruct2 asin() {
+	public NumberStruct asin() {
 		final Apcomplex asin = ApcomplexMath.asin(ap);
-		return NumberStruct2.valueOf(asin);
+		return NumberStruct.valueOf(asin);
 	}
 
 	@Override
-	public NumberStruct2 acos() {
+	public NumberStruct acos() {
 		final Apcomplex acos = ApcomplexMath.acos(ap);
-		return NumberStruct2.valueOf(acos);
+		return NumberStruct.valueOf(acos);
 	}
 
 	@Override
-	public NumberStruct2 atan() {
+	public NumberStruct atan() {
 		final Apcomplex atan = ApcomplexMath.atan(ap);
-		return NumberStruct2.valueOf(atan);
+		return NumberStruct.valueOf(atan);
 	}
 
 	@Override
-	public NumberStruct2 sinh() {
+	public NumberStruct sinh() {
 		final Apcomplex sinh = ApcomplexMath.sinh(ap);
-		return NumberStruct2.valueOf(sinh);
+		return NumberStruct.valueOf(sinh);
 	}
 
 	@Override
-	public NumberStruct2 cosh() {
+	public NumberStruct cosh() {
 		final Apcomplex cosh = ApcomplexMath.cosh(ap);
-		return NumberStruct2.valueOf(cosh);
+		return NumberStruct.valueOf(cosh);
 	}
 
 	@Override
-	public NumberStruct2 tanh() {
+	public NumberStruct tanh() {
 		final Apcomplex tanh = ApcomplexMath.tanh(ap);
-		return NumberStruct2.valueOf(tanh);
+		return NumberStruct.valueOf(tanh);
 	}
 
 	@Override
-	public NumberStruct2 asinh() {
+	public NumberStruct asinh() {
 		final Apcomplex asinh = ApcomplexMath.asinh(ap);
-		return NumberStruct2.valueOf(asinh);
+		return NumberStruct.valueOf(asinh);
 	}
 
 	@Override
-	public NumberStruct2 acosh() {
+	public NumberStruct acosh() {
 		final Apcomplex acosh = ApcomplexMath.acosh(ap);
-		return NumberStruct2.valueOf(acosh);
+		return NumberStruct.valueOf(acosh);
 	}
 
 	@Override
-	public NumberStruct2 atanh() {
+	public NumberStruct atanh() {
 		final Apcomplex atanh = ApcomplexMath.atanh(ap);
-		return NumberStruct2.valueOf(atanh);
+		return NumberStruct.valueOf(atanh);
 	}
 }

@@ -4,21 +4,19 @@
 
 package jcl.compiler.icg.generator;
 
-import java.math.BigInteger;
-
 import jcl.compiler.icg.CodeGenerator;
 import jcl.compiler.icg.GeneratorState;
 import jcl.compiler.icg.JavaMethodBuilder;
 import jcl.numbers.RatioStruct;
-import org.apache.commons.math3.fraction.BigFraction;
+import org.apfloat.Aprational;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
 import org.springframework.stereotype.Component;
 
 /**
- * Class to generate {@link RatioStruct} objects dynamically by utilizing the {@link RatioStruct#bigFraction} of the
- * provided {@link RatioStruct} input value.
+ * Class to generate {@link RatioStruct} objects dynamically by utilizing the {@link RatioStruct#ap} of the provided
+ * {@link RatioStruct} input value.
  */
 @Component
 class RatioCodeGenerator implements CodeGenerator<RatioStruct> {
@@ -29,24 +27,36 @@ class RatioCodeGenerator implements CodeGenerator<RatioStruct> {
 	private static final String RATIO_STRUCT_NAME = Type.getInternalName(RatioStruct.class);
 
 	/**
-	 * Constant {@link String} containing the name for the {@link RatioStruct#valueOf(BigInteger, BigInteger)} method.
+	 * Constant {@link String} containing the name for the {@link RatioStruct#valueOf(Aprational)} method.
 	 */
 	private static final String RATIO_STRUCT_VALUE_OF_METHOD_NAME = "valueOf";
 
 	/**
-	 * Constant {@link String} containing the description for the {@link RatioStruct#valueOf(BigInteger, BigInteger)}
-	 * method.
+	 * Constant {@link String} containing the description for the {@link RatioStruct#valueOf(Aprational)} method.
 	 */
 	private static final String RATIO_STRUCT_VALUE_OF_METHOD_DESC
-			= CodeGenerators.getMethodDescription(RatioStruct.class, RATIO_STRUCT_VALUE_OF_METHOD_NAME, BigInteger.class, BigInteger.class);
+			= CodeGenerators.getMethodDescription(RatioStruct.class, RATIO_STRUCT_VALUE_OF_METHOD_NAME, Aprational.class);
+
+	/**
+	 * Constant {@link String} containing the name for the {@link Aprational} class.
+	 */
+	private static final String APRATIONAL_NAME = Type.getInternalName(Aprational.class);
+
+	/**
+	 * Constant {@link String} containing the description for the {@link Aprational#Aprational(String)} constructor
+	 * method.
+	 */
+	private static final String APRATIONAL_INIT_METHOD_DESC
+			= CodeGenerators.getConstructorDescription(Aprational.class, String.class);
 
 	/**
 	 * {@inheritDoc}
 	 * Generation method for {@link RatioStruct} objects, by performing the following operations:
 	 * <ol>
-	 * <li>Building the {@link RatioStruct} numerator value</li>
-	 * <li>Building the {@link RatioStruct} denominator value</li>
-	 * <li>Constructing a new {@link RatioStruct} with the built numerator and denominator values</li>
+	 * <li>Constructing a new {@link Aprational} from the {@link String} representation of the {@link RatioStruct#ap}
+	 * value</li>
+	 * <li>Retrieving a {@link RatioStruct} via {@link RatioStruct#valueOf(Aprational)} with the created {@link
+	 * Aprational} value</li>
 	 * </ol>
 	 *
 	 * @param input
@@ -60,38 +70,17 @@ class RatioCodeGenerator implements CodeGenerator<RatioStruct> {
 		final JavaMethodBuilder methodBuilder = generatorState.getCurrentMethodBuilder();
 		final MethodVisitor mv = methodBuilder.getMethodVisitor();
 
-		final BigFraction bigFraction = input.getBigFraction();
-
-		mv.visitTypeInsn(Opcodes.NEW, GenerationConstants.JAVA_BIG_INTEGER_NAME);
+		mv.visitTypeInsn(Opcodes.NEW, APRATIONAL_NAME);
 		mv.visitInsn(Opcodes.DUP);
 
-		final BigInteger numerator = bigFraction.getNumerator();
-		final String numeratorString = numerator.toString();
-		mv.visitLdcInsn(numeratorString);
+		final String apString = input.ap().toString();
+		mv.visitLdcInsn(apString);
+
 		mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
-		                   GenerationConstants.JAVA_BIG_INTEGER_NAME,
+		                   APRATIONAL_NAME,
 		                   GenerationConstants.INIT_METHOD_NAME,
-		                   GenerationConstants.JAVA_BIG_INTEGER_INIT_DESC,
+		                   APRATIONAL_INIT_METHOD_DESC,
 		                   false);
-		final int numeratorStore = methodBuilder.getNextAvailableStore();
-		mv.visitVarInsn(Opcodes.ASTORE, numeratorStore);
-
-		mv.visitTypeInsn(Opcodes.NEW, GenerationConstants.JAVA_BIG_INTEGER_NAME);
-		mv.visitInsn(Opcodes.DUP);
-
-		final BigInteger denominator = bigFraction.getDenominator();
-		final String denominatorString = denominator.toString();
-		mv.visitLdcInsn(denominatorString);
-		mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
-		                   GenerationConstants.JAVA_BIG_INTEGER_NAME,
-		                   GenerationConstants.INIT_METHOD_NAME,
-		                   GenerationConstants.JAVA_BIG_INTEGER_INIT_DESC,
-		                   false);
-		final int denominatorStore = methodBuilder.getNextAvailableStore();
-		mv.visitVarInsn(Opcodes.ASTORE, denominatorStore);
-
-		mv.visitVarInsn(Opcodes.ALOAD, numeratorStore);
-		mv.visitVarInsn(Opcodes.ALOAD, denominatorStore);
 		mv.visitMethodInsn(Opcodes.INVOKESTATIC,
 		                   RATIO_STRUCT_NAME,
 		                   RATIO_STRUCT_VALUE_OF_METHOD_NAME,

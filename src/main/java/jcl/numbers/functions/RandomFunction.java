@@ -12,7 +12,6 @@ import jcl.conditions.exceptions.TypeErrorException;
 import jcl.functions.CommonLispBuiltInFunctionStruct;
 import jcl.functions.parameterdsl.Arguments;
 import jcl.functions.parameterdsl.Parameters;
-import jcl.numbers.DoubleFloatStruct;
 import jcl.numbers.FloatStruct;
 import jcl.numbers.IntegerStruct;
 import jcl.numbers.NumberVariables;
@@ -55,7 +54,7 @@ public final class RandomFunction extends CommonLispBuiltInFunctionStruct {
 			// TODO: fix??
 			final FloatStruct number = (FloatStruct) real;
 			final BigDecimal randomFloat = randomState.randomFloat(number.doubleValue());
-			return DoubleFloatStruct.valueOf(randomFloat.doubleValue());
+			return FloatStruct.valueOf(randomFloat.doubleValue());
 		} else {
 			final String printedObject = printer.print(real);
 			throw new TypeErrorException("Argument not of type Integer or Float: " + printedObject);

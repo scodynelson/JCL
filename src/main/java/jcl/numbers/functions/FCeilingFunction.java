@@ -10,7 +10,7 @@ import jcl.functions.CommonLispBuiltInFunctionStruct;
 import jcl.functions.parameterdsl.Arguments;
 import jcl.functions.parameterdsl.Parameters;
 import jcl.numbers.IntegerStruct;
-import jcl.numbers.QuotientRemainderResult;
+import jcl.numbers.QuotientRemainder;
 import jcl.numbers.RealStruct;
 import org.springframework.stereotype.Component;
 
@@ -35,7 +35,7 @@ public final class FCeilingFunction extends CommonLispBuiltInFunctionStruct {
 		final RealStruct real = arguments.getRequiredArgument(REAL_ARGUMENT, RealStruct.class);
 		final RealStruct divisor = arguments.getRequiredArgument(DIVISOR_ARGUMENT, RealStruct.class);
 
-		final QuotientRemainderResult fceiling = real.fceiling(divisor);
+		final QuotientRemainder fceiling = real.fceiling(divisor);
 		final RealStruct quotient = fceiling.getQuotient();
 		final RealStruct remainder = fceiling.getRemainder();
 		return new ValuesStruct(quotient, remainder);

@@ -8,10 +8,8 @@ import java.math.RoundingMode;
 import java.util.LinkedList;
 
 import jcl.characters.CharacterConstants;
-import jcl.numbers.DoubleFloatStruct;
 import jcl.numbers.FloatStruct;
 import jcl.numbers.NumberStruct;
-import jcl.numbers.SingleFloatStruct;
 import jcl.reader.AttributeType;
 import jcl.reader.TokenAttribute;
 import jcl.reader.TokenBuilder;
@@ -40,22 +38,25 @@ public class FloatTokenAccumulatedReaderState implements ReaderState {
 		String tokenString = ReaderState.convertTokenAttributesToString(tokenAttributes);
 		tokenString = getFloatTokenString(tokenString, exponentTokenCodePoint);
 
+		// TODO: FloatType???
 		final FloatType floatType = getFloatType(exponentTokenCodePoint);
-		if (DoubleFloatType.INSTANCE.equals(floatType) || LongFloatType.INSTANCE.equals(floatType)) {
-			try {
-				final Double d = Double.parseDouble(tokenString);
-				return DoubleFloatStruct.valueOf(d);
-			} catch (final NumberFormatException ignore) {
-				return null;
-			}
-		} else {
-			try {
-				final Float f = Float.parseFloat(tokenString);
-				return SingleFloatStruct.valueOf(f);
-			} catch (final NumberFormatException ignore) {
-				return null;
-			}
-		}
+		return FloatStruct.valueOf(tokenString);
+
+//		if (DoubleFloatType.INSTANCE.equals(floatType) || LongFloatType.INSTANCE.equals(floatType)) {
+//			try {
+//				final Double d = Double.parseDouble(tokenString);
+//				return DoubleFloatStruct.valueOf(d);
+//			} catch (final NumberFormatException ignore) {
+//				return null;
+//			}
+//		} else {
+//			try {
+//				final Float f = Float.parseFloat(tokenString);
+//				return SingleFloatStruct.valueOf(f);
+//			} catch (final NumberFormatException ignore) {
+//				return null;
+//			}
+//		}
 	}
 
 	/**

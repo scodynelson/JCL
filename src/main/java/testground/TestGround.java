@@ -4,7 +4,6 @@
 
 package testground;
 
-import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.net.URI;
 import java.util.ArrayList;
@@ -29,19 +28,19 @@ import jcl.functions.FunctionStruct;
 import jcl.functions.expanders.SymbolMacroExpander;
 import jcl.lists.ConsStruct;
 import jcl.lists.ListStruct;
-import jcl.numbers.BigIntegerStruct;
 import jcl.numbers.ComplexStruct;
-import jcl.numbers.DoubleFloatStruct;
-import jcl.numbers.IntIntegerStruct;
+import jcl.numbers.FloatStruct;
 import jcl.numbers.IntegerStruct;
-import jcl.numbers.LongIntegerStruct;
 import jcl.numbers.RatioStruct;
-import jcl.numbers.SingleFloatStruct;
 import jcl.packages.PackageStruct;
 import jcl.pathnames.PathnameStruct;
 import jcl.symbols.NILStruct;
 import jcl.symbols.SymbolStruct;
 import jcl.symbols.TStruct;
+import org.apfloat.Apcomplex;
+import org.apfloat.Apfloat;
+import org.apfloat.Apint;
+import org.apfloat.Aprational;
 import org.objectweb.asm.Label;
 
 @SuppressWarnings("all")
@@ -130,35 +129,25 @@ public class TestGround {
 		return CharacterStruct.valueOf(66544564);
 	}
 
-	private Object singleFloatGen() {
-		final float f = 12345.0F;
-		return SingleFloatStruct.valueOf(f);
+	private Object floatGen() {
+		final Apfloat apfloat = new Apfloat("0");
+		return FloatStruct.valueOf(apfloat);
 	}
 
-	private Object doubleFloatGen() {
-		final double d = 12345.0D;
-		return DoubleFloatStruct.valueOf(d);
-	}
-
-	private Object intIntegerGen() {
-		final int i = 12345;
-		return IntIntegerStruct.valueOf(i);
-	}
-
-	private Object longIntegerGen() {
-		final long l = 12345L;
-		return LongIntegerStruct.valueOf(l);
-	}
-
-	private Object bigIntegerGen() {
-		final BigInteger bigInteger = new BigInteger("12345");
-		return BigIntegerStruct.valueOf(bigInteger);
+	private Object integerGen() {
+		final Apint apint = new Apint("0");
+		return IntegerStruct.valueOf(apint);
 	}
 
 	private Object ratioGen() {
-		final BigInteger numerator = new BigInteger("1");
-		final BigInteger denominator = new BigInteger("2");
-		return RatioStruct.valueOf(numerator, denominator);
+		final Aprational aprational = new Aprational("0");
+		return RatioStruct.valueOf(aprational);
+	}
+
+	private Object complexGen() {
+		final Apcomplex apcomplex = new Apcomplex("0");
+		final ComplexStruct.ValueType valueType = ComplexStruct.ValueType.FLOAT;
+		return ComplexStruct.valueOf(apcomplex, valueType);
 	}
 
 	private Object valuesGen() {
@@ -167,12 +156,6 @@ public class TestGround {
 		valuesList.add(value);
 
 		return new ValuesStruct(valuesList);
-	}
-
-	private Object complexGen() {
-		final IntegerStruct real = IntegerStruct.valueOf(BigInteger.ONE);
-		final IntegerStruct imaginary = IntegerStruct.valueOf(BigInteger.ZERO);
-		return new ComplexStruct(real, imaginary);
 	}
 
 	private Object consGen() {

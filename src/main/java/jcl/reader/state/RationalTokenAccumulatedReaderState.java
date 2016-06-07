@@ -15,6 +15,7 @@ import jcl.reader.AttributeType;
 import jcl.reader.TokenAttribute;
 import jcl.reader.TokenBuilder;
 import jcl.reader.struct.ReaderVariables;
+import org.apfloat.Apint;
 import org.springframework.stereotype.Component;
 
 /**
@@ -51,6 +52,8 @@ public class RationalTokenAccumulatedReaderState implements ReaderState {
 		final BigInteger numerator = new BigInteger(rationalParts[0], currentRadix);
 		final BigInteger denominator = new BigInteger(rationalParts[1], currentRadix);
 
-		return RationalStruct.valueOf(numerator, denominator);
+		final Apint numeratorAp = new Apint(numerator);
+		final Apint denominatorAp = new Apint(denominator);
+		return RationalStruct.valueOf(numeratorAp, denominatorAp);
 	}
 }

@@ -45,6 +45,11 @@ public final class IntegerStruct2 extends RationalStruct2Impl<Apint> {
 	public static final IntegerStruct2 MINUS_ONE = valueOf(-1);
 
 	/**
+	 * {@link Apint} constant for calculating whether an {@link IntegerStruct2} is even or odd.
+	 */
+	private static final Apint APINT_2 = new Apint(2);
+
+	/**
 	 * Private constructor.
 	 *
 	 * @param apint
@@ -489,11 +494,7 @@ public final class IntegerStruct2 extends RationalStruct2Impl<Apint> {
 	 * @return true if this IntegerStruct2 is even (divisible by two); otherwise, false
 	 */
 	public boolean evenp() {
-		// TODO: Apint(2) constant??
-		// TODO: performance over biginteger
-		return ap.mod(new Apint(2)).equals(Apcomplex.ZERO);
-//		final BigInteger bigInteger = ap.toBigInteger();
-//		return !bigInteger.testBit(0);
+		return Apcomplex.ZERO.equals(ap.mod(APINT_2));
 	}
 
 	/**
@@ -503,9 +504,6 @@ public final class IntegerStruct2 extends RationalStruct2Impl<Apint> {
 	 */
 	public boolean oddp() {
 		return !evenp();
-		// TODO: performance over biginteger
-//		final BigInteger bigInteger = ap.toBigInteger();
-//		return bigInteger.testBit(0);
 	}
 
 	/**

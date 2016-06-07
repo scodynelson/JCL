@@ -131,37 +131,37 @@ public final class FloatStruct2 extends RealStruct2Impl<Apfloat> {
 	 * @return a FloatStruct2 object with the provided {@link Apfloat} value
 	 */
 	public static FloatStruct2 valueOf(final Apfloat apfloat, final FloatStruct2 prototype) {
-		// TODO
-		return new FloatStruct2(apfloat);
+		final long precision = prototype.ap.precision();
+		final Apfloat preciseApfloat = apfloat.precision(precision);
+		return valueOf(preciseApfloat);
 	}
 
 	/**
-	 * Returns this FloatStruct as a {@code float} value.
+	 * Returns this FloatStruct2 as a {@code float} value.
 	 *
-	 * @return this FloatStruct as a {@code float} value
+	 * @return this FloatStruct2 as a {@code float} value
 	 */
 	public float floatValue() {
 		return ap.floatValue();
 	}
 
 	/**
-	 * Returns this FloatStruct as a {@code double} value.
+	 * Returns this FloatStruct2 as a {@code double} value.
 	 *
-	 * @return this FloatStruct as a {@code double} value
+	 * @return this FloatStruct2 as a {@code double} value
 	 */
 	public double doubleValue() {
 		return ap.doubleValue();
 	}
 
 	/**
-	 * Computes the three main values that characterize this FloatStruct: the significand, exponent, and sign..
+	 * Computes the three main values that characterize this FloatStruct2: the significand, exponent, and sign..
 	 *
-	 * @return a {@link DecodeFloatResult2} containing the decoded significand, exponent, and sign for this FloatStruct
+	 * @return a {@link DecodeFloatResult2} containing the decoded significand, exponent, and sign for this FloatStruct2
 	 */
 	public DecodeFloatResult2 decodeFloat() {
-		// TODO
 		final double d = ap.doubleValue();
-		// TODO
+
 		final long bits = Double.doubleToRawLongBits(d);
 		final DecodedDouble decodedDouble = getDecodedDouble(bits);
 
@@ -182,18 +182,16 @@ public final class FloatStruct2 extends RealStruct2Impl<Apfloat> {
 	}
 
 	/**
-	 * Computes the three main values that characterize this FloatStruct: the significand, exponent, and sign. The
+	 * Computes the three main values that characterize this FloatStruct2: the significand, exponent, and sign. The
 	 * difference between this method an {@link #decodeFloat()} is that the significand and sign will both be {@link
 	 * IntegerStruct2}s with a special weighting between the significand and exponent based on the scaling needed for
-	 * the
-	 * significand to produce an {@link IntegerStruct2}.
+	 * the significand to produce an {@link IntegerStruct2}.
 	 *
-	 * @return a {@link DecodeFloatResult2} containing the decoded significand, exponent, and sign for this FloatStruct
+	 * @return a {@link DecodeFloatResult2} containing the decoded significand, exponent, and sign for this FloatStruct2
 	 */
 	public DecodeFloatResult2 integerDecodeFloat() {
-		// TODO
 		final double d = ap.doubleValue();
-		// TODO
+
 		final long bits = Double.doubleToRawLongBits(d);
 		final DecodedDouble decodedDouble = getDecodedDouble(bits);
 
@@ -217,7 +215,7 @@ public final class FloatStruct2 extends RealStruct2Impl<Apfloat> {
 	 * @param scale
 	 * 		the
 	 *
-	 * @return this FloatStruct scaled to the provided scale value
+	 * @return this FloatStruct2 scaled to the provided scale value
 	 */
 	public NumberStruct2 scaleFloat(final IntegerStruct2 scale) {
 		final IntegerStruct2 radix = floatRadix();
@@ -226,53 +224,52 @@ public final class FloatStruct2 extends RealStruct2Impl<Apfloat> {
 	}
 
 	/**
-	 * Returns the number of radix b digits used in the representation of this FloatStruct.
+	 * Returns the number of radix b digits used in the representation of this FloatStruct2.
 	 *
-	 * @return the number of radix b digits used in the representation of this FloatStruct
+	 * @return the number of radix b digits used in the representation of this FloatStruct2
 	 */
 	public IntegerStruct2 floatDigits() {
 		return floatPrecision();
 	}
 
 	/**
-	 * Returns the number of significant radix b digits present in this FloatStruct.
+	 * Returns the number of significant radix b digits present in this FloatStruct2.
 	 *
-	 * @return the number of significant radix b digits present in this FloatStruct
+	 * @return the number of significant radix b digits present in this FloatStruct2
 	 */
 	public IntegerStruct2 floatPrecision() {
 		return IntegerStruct2.valueOf(DOUBLE_PRECISION);
 	}
 
 	/**
-	 * The radix of the FloatStruct.
+	 * The radix of the FloatStruct2.
 	 *
-	 * @return the radix of the FloatStruct
+	 * @return the radix of the FloatStruct2
 	 */
 	public IntegerStruct2 floatRadix() {
 		return IntegerStruct2.TWO;
 	}
 
 	/**
-	 * Returns either a {@code 1} or a {@code -1} value based on the sign of the FloatStruct.
+	 * Returns either a {@code 1} or a {@code -1} value based on the sign of the FloatStruct2.
 	 *
-	 * @return a {@code 1} or a {@code -1} value based on the sign of the FloatStruct
+	 * @return a {@code 1} or a {@code -1} value based on the sign of the FloatStruct2
 	 */
 	public FloatStruct2 floatSign() {
-		// TODO
 		final double d = ap.doubleValue();
-		// TODO
+
 		final long bits = Double.doubleToRawLongBits(d);
 		return (bits < 0) ? MINUS_ONE : ONE;
 	}
 
 	/**
-	 * Returns a number z such that z and this FloatStruct have the same sign and also such that z and float2 have the
+	 * Returns a number z such that z and this FloatStruct2 have the same sign and also such that z and float2 have the
 	 * same absolute value.
 	 *
 	 * @param float2
-	 * 		the value of the resulting FloatStruct
+	 * 		the value of the resulting FloatStruct2
 	 *
-	 * @return a number z such that z and this FloatStruct have the same sign and also such that z and float2 have the
+	 * @return a number z such that z and this FloatStruct2 have the same sign and also such that z and float2 have the
 	 * same absolute value
 	 */
 	public FloatStruct2 floatSign(final FloatStruct2 float2) {
@@ -280,10 +277,10 @@ public final class FloatStruct2 extends RealStruct2Impl<Apfloat> {
 			if (float2.minusp()) {
 				return float2;
 			} else {
-				return (FloatStruct2) float2.negation();
+				return float2.negation();
 			}
 		} else {
-			return (FloatStruct2) float2.abs();
+			return float2.abs();
 		}
 	}
 
@@ -400,7 +397,6 @@ public final class FloatStruct2 extends RealStruct2Impl<Apfloat> {
 
 	@Override
 	public FloatStruct2 floatingPoint(final FloatStruct2 prototype) {
-		// TODO
 		return valueOf(ap, prototype);
 	}
 

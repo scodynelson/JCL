@@ -13,6 +13,7 @@ import org.apache.commons.math3.util.ArithmeticUtils;
 import org.apfloat.Apcomplex;
 import org.apfloat.Apfloat;
 import org.apfloat.ApfloatMath;
+import org.apfloat.Apint;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -389,7 +390,14 @@ public final class FloatStruct2 extends RealStruct2Impl<Apfloat> {
 
 		final BigInteger numerator = bigFractionReduced.getNumerator();
 		final BigInteger denominator = bigFractionReduced.getDenominator();
-		return RationalStruct2.valueOf(numerator, denominator);
+
+		if (BigInteger.ONE.equals(denominator)) {
+			return IntegerStruct2.valueOf(numerator);
+		}
+
+		final Apint numeratorAp = new Apint(numerator);
+		final Apint denominatorAp = new Apint(denominator);
+		return RatioStruct2.valueOf(numeratorAp, denominatorAp);
 	}
 
 	@Override

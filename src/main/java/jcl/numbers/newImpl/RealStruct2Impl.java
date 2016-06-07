@@ -13,8 +13,23 @@ import org.apfloat.Apfloat;
 import org.apfloat.ApfloatMath;
 import org.apfloat.Apint;
 
+/**
+ * Internal implementation class for {@link RealStruct2} objects.
+ *
+ * @param <A>
+ * 		the type of {@link Apfloat} the {@link RealStruct2} object will use for its value
+ */
 abstract class RealStruct2Impl<A extends Apfloat> extends NumberStruct2Impl<A> implements RealStruct2 {
 
+	/**
+	 * Package level constructor that passes the provided {@link LispType} and {@link A} {@link Apfloat} value to the
+	 * {@link NumberStruct2Impl} superclass constructor.
+	 *
+	 * @param type
+	 * 		the {@link LispType} of the {@link RealStruct2}
+	 * @param ap
+	 * 		the internal {@link Apfloat} implementation value of the {@link RealStruct2}
+	 */
 	RealStruct2Impl(final LispType type, final A ap) {
 		super(type, ap);
 	}
@@ -65,10 +80,41 @@ abstract class RealStruct2Impl<A extends Apfloat> extends NumberStruct2Impl<A> i
 		return ap.signum() == -1;
 	}
 
+	/**
+	 * Returns the {@link RealStruct2} that represents the {@link QuotientRemainder2#remainder} value based on {@code
+	 * this} class and the class of the provided {@code divisor}.
+	 *
+	 * @param divisor
+	 * 		the {@link RealStruct2} used as the divisor in the quotient-remainder operation, and used in determining the
+	 * 		resulting {@link RealStruct2} instance type
+	 * @param remainder
+	 * 		the implementation value of the remainder
+	 *
+	 * @return the {@link RealStruct2} that represents the appropriate {@link QuotientRemainder2#remainder} value
+	 */
 	protected RealStruct2 getRemainderReal(final RealStruct2 divisor, final Apfloat remainder) {
 		return FloatStruct2.valueOf(remainder);
 	}
 
+	/**
+	 * Calculates the resulting {@link QuotientRemainder2} from the provided {@link Apfloat} number and {@link
+	 * RealStruct2} divisor, using the {@link Function} operation as the quotient-remainder operation to perform and
+	 * the {@link Function} quotientCreator for the creation of the {@link QuotientRemainder2#quotient} value. The
+	 * {@link QuotientRemainder2#remainder} value is retrieved via the possibly overridden {@link
+	 * #getRemainderReal(RealStruct2, Apfloat)} method.
+	 *
+	 * @param number
+	 * 		the implementation value to perform the quotient-remainder operation on
+	 * @param divisor
+	 * 		the divisor used in calculating the {@code number} parameter
+	 * @param operation
+	 * 		the quotient-remainder operation to perform on the {@code number} parameter
+	 * @param quotientCreator
+	 * 		the {@link Function} to be used for the creation of the {@link QuotientRemainder2#quotient} value
+	 *
+	 * @return the resulting {@link QuotientRemainder2} calculated from the quotient-remainder operation and the
+	 * appropriately calculated remainder value
+	 */
 	private QuotientRemainder2 quotientRemainderCalculator(final Apfloat number, final RealStruct2 divisor,
 	                                                       final Function<Apfloat, Apint> operation,
 	                                                       final Function<Apint, ? extends RealStruct2> quotientCreator) {
@@ -81,11 +127,38 @@ abstract class RealStruct2Impl<A extends Apfloat> extends NumberStruct2Impl<A> i
 		return new QuotientRemainder2(quotientReal, remainderReal);
 	}
 
+	/**
+	 * Performs the default quotient-remainder calculation against the {@link #ap} value, using {@link
+	 * IntegerStruct2#ONE} as the divisor. The {@code operation} and {@code quotientCreator} parameters are further
+	 * passed to the {@link #quotientRemainderCalculator(Apfloat, RealStruct2, Function, Function)} method.
+	 *
+	 * @param operation
+	 * 		the quotient-remainder operation to perform on the {@link #ap} value
+	 * @param quotientCreator
+	 * 		the {@link Function} to be used for the creation of the {@link QuotientRemainder2#quotient} value
+	 *
+	 * @return the resulting {@link QuotientRemainder2} calculated from the quotient-remainder operation
+	 */
 	private QuotientRemainder2 quotientRemainder(final Function<Apfloat, Apint> operation,
 	                                             final Function<Apint, ? extends RealStruct2> quotientCreator) {
 		return quotientRemainderCalculator(ap, IntegerStruct2.ONE, operation, quotientCreator);
 	}
 
+	/**
+	 * Performs the default quotient-remainder calculation against the result of dividing {@link #ap} by the divisor
+	 * parameter. The {@code divisor}, {@code operation}, and {@code quotientCreator} parameters are further passed to
+	 * the {@link #quotientRemainderCalculator(Apfloat, RealStruct2, Function, Function)} method.
+	 *
+	 * @param divisor
+	 * 		the divisor used in calculating the {@code number} parameter
+	 * @param operation
+	 * 		the quotient-remainder operation to perform on the calculated number from dividing {@link #ap} by the divisor
+	 * 		parameter
+	 * @param quotientCreator
+	 * 		the {@link Function} to be used for the creation of the {@link QuotientRemainder2#quotient} value
+	 *
+	 * @return the resulting {@link QuotientRemainder2} calculated from the quotient-remainder operation
+	 */
 	private QuotientRemainder2 quotientRemainderWithDivisor(final RealStruct2 divisor,
 	                                                        final Function<Apfloat, Apint> operation,
 	                                                        final Function<Apint, ? extends RealStruct2> quotientCreator) {
@@ -154,6 +227,16 @@ abstract class RealStruct2Impl<A extends Apfloat> extends NumberStruct2Impl<A> i
 		return quotientRemainderWithDivisor(divisor, Apfloat::truncate, FloatStruct2::valueOf);
 	}
 
+	/**
+	 * Creates the {@link Function} operation to be used for the ROUND and FROUND quotient-remainder calculations. This
+	 * rounding method uses {@link RoundingMode#HALF_EVEN} and rounds according to the least precise of the {@link
+	 * Apfloat#precision()} of {@link #ap} and the {@link RealStruct2#ap()} of the provided divisor.
+	 *
+	 * @param divisor
+	 * 		the divisor used in determining the rounding precision to be used
+	 *
+	 * @return the {@link Function} operation to be used for the ROUND and FROUND quotient-remainder calculation
+	 */
 	private Function<Apfloat, Apint> roundOpFn(final RealStruct2 divisor) {
 		return apfloat -> {
 			final Apfloat divisorAp = divisor.ap();
@@ -259,6 +342,9 @@ abstract class RealStruct2Impl<A extends Apfloat> extends NumberStruct2Impl<A> i
 		}
 		return super.isEqualTo(number);
 	}
+
+	@Override
+	public abstract RealStruct2 signum();
 
 	@Override
 	public RealStruct2 realPart() {

@@ -9,8 +9,23 @@ import org.apfloat.Apcomplex;
 import org.apfloat.ApcomplexMath;
 import org.apfloat.Apfloat;
 
+/**
+ * Internal implementation class for {@link NumberStruct2} objects.
+ *
+ * @param <A>
+ * 		the type of {@link Apcomplex} the {@link NumberStruct2} object will use for its value
+ */
 abstract class NumberStruct2Impl<A extends Apcomplex> extends InternalNumberStruct<A> implements NumberStruct2 {
 
+	/**
+	 * Package level constructor that passes the provided {@link LispType} and {@link A} {@link Apcomplex} value to the
+	 * {@link InternalNumberStruct} superclass constructor.
+	 *
+	 * @param type
+	 * 		the {@link LispType} of the {@link NumberStruct2}
+	 * @param ap
+	 * 		the internal {@link Apcomplex} implementation value of the {@link NumberStruct2}
+	 */
 	NumberStruct2Impl(final LispType type, final A ap) {
 		super(type, ap);
 	}

@@ -11,8 +11,23 @@ import org.apfloat.Apint;
 import org.apfloat.Aprational;
 import org.apfloat.AprationalMath;
 
+/**
+ * Internal implementation class for {@link RationalStruct2} objects.
+ *
+ * @param <A>
+ * 		the type of {@link Aprational} the {@link RationalStruct2} object will use for its value
+ */
 abstract class RationalStruct2Impl<A extends Aprational> extends RealStruct2Impl<A> implements RationalStruct2 {
 
+	/**
+	 * Package level constructor that passes the provided {@link LispType} and {@link A} {@link Aprational} value to the
+	 * {@link RealStruct2Impl} superclass constructor.
+	 *
+	 * @param type
+	 * 		the {@link LispType} of the {@link RationalStruct2}
+	 * @param ap
+	 * 		the internal {@link Aprational} implementation value of the {@link RationalStruct2}
+	 */
 	RationalStruct2Impl(final LispType type, final A ap) {
 		super(type, ap);
 	}

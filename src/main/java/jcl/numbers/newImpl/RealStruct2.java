@@ -481,6 +481,9 @@ public interface RealStruct2 extends NumberStruct2 {
 	Apfloat ap();
 
 	@Override
+	RealStruct2 signum();
+
+	@Override
 	default RealStruct2 realPart() {
 		return this;
 	}
@@ -489,6 +492,21 @@ public interface RealStruct2 extends NumberStruct2 {
 	default RealStruct2 conjugate() {
 		return this;
 	}
+
+	@Override
+	RealStruct2 negation();
+
+	@Override
+	RealStruct2 reciprocal();
+
+	@Override
+	RealStruct2 exp();
+
+	@Override
+	RealStruct2 log();
+
+	@Override
+	RealStruct2 sqrt();
 
 	@Override
 	RealStruct2 sin();

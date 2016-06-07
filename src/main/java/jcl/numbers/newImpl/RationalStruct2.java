@@ -4,8 +4,6 @@
 
 package jcl.numbers.newImpl;
 
-import java.math.BigInteger;
-
 import org.apfloat.Apint;
 import org.apfloat.Aprational;
 
@@ -15,126 +13,36 @@ import org.apfloat.Aprational;
 public interface RationalStruct2 extends RealStruct2 {
 
 	/**
-	 * Returns numerator of this RationalStruct as an {@link IntegerStruct2}.
+	 * Returns a RationalStruct2 from the provided {@link Aprational} value. If the {@link Aprational} is an {@link
+	 * Apint}, {@link IntegerStruct2#valueOf(Apint)} is invoked to create the appropriate {@link IntegerStruct2}
+	 * instead. Otherwise, {@link RatioStruct2#valueOf(Aprational)} is invoked to create the appropriate {@link
+	 * RatioStruct2}
 	 *
-	 * @return the numerator value
+	 * @param aprational
+	 * 		the {@link Aprational} to be used as the value of the resulting RationalStruct2
+	 *
+	 * @return a RationalStruct2 with the provided {@link Aprational} as its value
 	 */
-	IntegerStruct2 numerator();
-
-	/**
-	 * Returns denominator of this RationalStruct as an {@link IntegerStruct2}.
-	 *
-	 * @return the denominator value
-	 */
-	IntegerStruct2 denominator();
-
-	/**
-	 * Returns a new RationalStruct with the provided {@code int} as a numerator. Because the default denominator value
-	 * is {@code 1}, the result will be an {@link IntegerStruct2}.
-	 *
-	 * @param numerator
-	 * 		the {@code int} numerator of the new RationalStruct
-	 *
-	 * @return a new RationalStruct with the provided {@code int} as a numerator
-	 */
-	static RationalStruct2 valueOf(final Integer numerator) {
-		return IntegerStruct2.valueOf(numerator);
-	}
-
-	/**
-	 * Returns a new RationalStruct with the numerator and denominator values. If the denominator value is {@code 1},
-	 * the result will be an {@link IntegerStruct2}.
-	 *
-	 * @param numerator
-	 * 		the {@code int} numerator of the new RationalStruct
-	 * @param denominator
-	 * 		the {@code int} denominator of the new RationalStruct
-	 *
-	 * @return a new RationalStruct with the provided numerator and denominator values
-	 */
-	static RationalStruct2 valueOf(final Integer numerator, final Integer denominator) {
-//		if (denominator == 1) {
-//			return IntegerStruct.valueOf(numerator);
-//		}
-//		final BigFraction bigFraction = new BigFraction(numerator, denominator);
-//		return RatioStruct.valueOf(bigFraction);
-		return null;
-	}
-
-	/**
-	 * Returns a new RationalStruct with the provided {@code long} as a numerator. Because the default denominator
-	 * value is {@code 1}, the result will be an {@link IntegerStruct2}.
-	 *
-	 * @param numerator
-	 * 		the {@code long} numerator of the new RationalStruct
-	 *
-	 * @return a new RationalStruct with the provided {@code long} as a numerator
-	 */
-	static RationalStruct2 valueOf(final Long numerator) {
-		return IntegerStruct2.valueOf(numerator);
-	}
-
-	/**
-	 * Returns a new RationalStruct with the numerator and denominator values. If the denominator value is {@code 1},
-	 * the result will be an {@link IntegerStruct2}.
-	 *
-	 * @param numerator
-	 * 		the {@code long} numerator of the new RationalStruct
-	 * @param denominator
-	 * 		the {@code long} denominator of the new RationalStruct
-	 *
-	 * @return a new RationalStruct with the provided numerator and denominator values
-	 */
-	static RationalStruct2 valueOf(final Long numerator, final Long denominator) {
-//		if (denominator == 1L) {
-//			return IntegerStruct.valueOf(numerator);
-//		}
-//		final BigFraction bigFraction = new BigFraction(numerator, denominator);
-//		return RatioStruct.valueOf(bigFraction);
-		return null;
-	}
-
-	/**
-	 * Returns a new RationalStruct with the provided {@link BigInteger} as a numerator. Because the default
-	 * denominator
-	 * value is {@code 1}, the result will be an {@link IntegerStruct2}.
-	 *
-	 * @param numerator
-	 * 		the {@link BigInteger} numerator of the new RationalStruct
-	 *
-	 * @return a new RationalStruct with the provided {@link BigInteger} as a numerator
-	 */
-	static RationalStruct2 valueOf(final BigInteger numerator) {
-		return IntegerStruct2.valueOf(numerator);
-	}
-
-	/**
-	 * Returns a new RationalStruct with the numerator and denominator values. If the denominator value is {@code 1},
-	 * the result will be an {@link IntegerStruct2}.
-	 *
-	 * @param numerator
-	 * 		the {@link BigInteger} numerator of the new RationalStruct
-	 * @param denominator
-	 * 		the {@link BigInteger} denominator of the new RationalStruct
-	 *
-	 * @return a new RationalStruct with the provided numerator and denominator values
-	 */
-	static RationalStruct2 valueOf(final BigInteger numerator, final BigInteger denominator) {
-		if (BigInteger.ONE.equals(denominator)) {
-			return IntegerStruct2.valueOf(numerator);
-		}
-
-		final Apint numeratorAp = new Apint(numerator);
-		final Apint denominatorAp = new Apint(denominator);
-		return RatioStruct2.valueOf(numeratorAp, denominatorAp);
-	}
-
 	static RationalStruct2 valueOf(final Aprational aprational) {
 		if (aprational instanceof Apint) {
 			return IntegerStruct2.valueOf((Apint) aprational);
 		}
 		return RatioStruct2.valueOf(aprational);
 	}
+
+	/**
+	 * Returns the numerator of this RationalStruct2.
+	 *
+	 * @return the numerator of this RationalStruct2
+	 */
+	IntegerStruct2 numerator();
+
+	/**
+	 * Returns the denominator of this RationalStruct2.
+	 *
+	 * @return the denominator of this RationalStruct2
+	 */
+	IntegerStruct2 denominator();
 
 	/*
 		RealStruct
@@ -153,18 +61,26 @@ public interface RationalStruct2 extends RealStruct2 {
 	Aprational ap();
 
 	@Override
-	default NumberStruct2 signum() {
-		if (zerop()) {
-			return this;
-		} else if (plusp()) {
-			return IntegerStruct2.ONE;
-		} else {
-			return IntegerStruct2.MINUS_ONE;
-		}
+	IntegerStruct2 signum();
+
+	@Override
+	default RationalStruct2 realPart() {
+		return this;
 	}
 
 	@Override
-	default RealStruct2 imagPart() {
+	default IntegerStruct2 imagPart() {
 		return IntegerStruct2.ZERO;
 	}
+
+	@Override
+	default RationalStruct2 conjugate() {
+		return this;
+	}
+
+	@Override
+	RationalStruct2 negation();
+
+	@Override
+	RationalStruct2 reciprocal();
 }

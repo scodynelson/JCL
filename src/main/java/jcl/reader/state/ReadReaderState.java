@@ -13,10 +13,6 @@ import jcl.reader.struct.ReadtableStruct;
 import jcl.reader.struct.SyntaxType;
 import jcl.streams.ReadPeekResult;
 import jcl.symbols.NILStruct;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -87,33 +83,5 @@ class ReadReaderState implements ReaderState {
 			return NILStruct.INSTANCE;
 		}
 		return token;
-	}
-
-	@Override
-	public int hashCode() {
-		return new HashCodeBuilder().append(readerStateMediator)
-		                            .toHashCode();
-	}
-
-	@Override
-	public boolean equals(final Object obj) {
-		if (obj == null) {
-			return false;
-		}
-		if (obj == this) {
-			return true;
-		}
-		if (obj.getClass() != getClass()) {
-			return false;
-		}
-		final ReadReaderState rhs = (ReadReaderState) obj;
-		return new EqualsBuilder().append(readerStateMediator, rhs.readerStateMediator)
-		                          .isEquals();
-	}
-
-	@Override
-	public String toString() {
-		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(readerStateMediator)
-		                                                                .toString();
 	}
 }

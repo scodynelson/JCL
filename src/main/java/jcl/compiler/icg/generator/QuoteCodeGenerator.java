@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import jcl.LispStruct;
 import jcl.compiler.icg.CodeGenerator;
+import jcl.compiler.icg.GeneratorEvent;
 import jcl.compiler.icg.GeneratorState;
 import jcl.compiler.icg.IntermediateCodeGenerator;
 import jcl.compiler.icg.JavaMethodBuilder;
@@ -16,13 +17,14 @@ import jcl.symbols.SymbolStruct;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 /**
  * Class to perform 'quote' special operator code generation.
  */
 @Component
-class QuoteCodeGenerator implements CodeGenerator<QuoteStruct> {
+final class QuoteCodeGenerator implements CodeGenerator<QuoteStruct> {
 
 	/**
 	 * {@link IntermediateCodeGenerator} used for generating the {@link QuoteStruct#object} value.
@@ -42,8 +44,10 @@ class QuoteCodeGenerator implements CodeGenerator<QuoteStruct> {
 	 * @param generatorState
 	 * 		stateful object used to hold the current state of the code generation process
 	 */
-	@Override
-	public void generate(final QuoteStruct input, final GeneratorState generatorState) {
+	@EventListener
+	public void onGeneratorEvent(final GeneratorEvent<QuoteStruct> event) {
+		final QuoteStruct input = event.getSource();
+		final GeneratorState generatorState = event.getGeneratorState();
 		final LispStruct quotedObject = input.getObject();
 		generateQuotedObject(quotedObject, generatorState);
 	}

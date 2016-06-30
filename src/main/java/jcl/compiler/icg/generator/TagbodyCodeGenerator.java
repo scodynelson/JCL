@@ -10,7 +10,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import jcl.compiler.icg.GeneratorEvent;
 import jcl.compiler.icg.GeneratorState;
+import jcl.compiler.icg.IntermediateCodeGenerator;
 import jcl.compiler.icg.JavaMethodBuilder;
 import jcl.compiler.struct.specialoperator.PrognStruct;
 import jcl.compiler.struct.specialoperator.TagbodyStruct;
@@ -21,6 +23,7 @@ import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 /**
@@ -33,14 +36,7 @@ final class TagbodyCodeGenerator extends SpecialOperatorCodeGenerator<TagbodyStr
 	 * {@link PrognCodeGenerator} used for generating the values of the {@link TagbodyStruct#tagbodyForms}.
 	 */
 	@Autowired
-	private PrognCodeGenerator prognCodeGenerator;
-
-	/**
-	 * {@link NILCodeGenerator} used for generating a {@link NILStruct} at the end of the created 'tagbody' method as
-	 * the result.
-	 */
-	@Autowired
-	private NILCodeGenerator nilCodeGenerator;
+	private IntermediateCodeGenerator codeGenerator;
 
 	/**
 	 * Private constructor which passes 'tagbody' as the prefix value to be set in it's {@link #methodNamePrefix}
@@ -48,6 +44,12 @@ final class TagbodyCodeGenerator extends SpecialOperatorCodeGenerator<TagbodyStr
 	 */
 	private TagbodyCodeGenerator() {
 		super("tagbody");
+	}
+
+	@Override
+	@EventListener
+	public void onGeneratorEvent(final GeneratorEvent<TagbodyStruct> event) {
+		super.onGeneratorEvent(event);
 	}
 
 	/**
@@ -128,7 +130,7 @@ final class TagbodyCodeGenerator extends SpecialOperatorCodeGenerator<TagbodyStr
 			final Label tagLabel = tagbodyLabel.getLabel();
 			mv.visitLabel(tagLabel);
 
-			prognCodeGenerator.generate(forms, generatorState);
+			codeGenerator.generate(forms, generatorState);
 			mv.visitInsn(Opcodes.POP);
 		}
 
@@ -178,7 +180,7 @@ final class TagbodyCodeGenerator extends SpecialOperatorCodeGenerator<TagbodyStr
 
 		// End 'catch(GoException ge){}'
 		mv.visitLabel(catchBlockEnd);
-		nilCodeGenerator.generate(NILStruct.INSTANCE, generatorState);
+		codeGenerator.generate(NILStruct.INSTANCE, generatorState);
 
 		mv.visitInsn(Opcodes.ARETURN);
 	}

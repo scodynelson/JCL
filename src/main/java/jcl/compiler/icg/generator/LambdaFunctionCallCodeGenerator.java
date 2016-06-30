@@ -7,6 +7,7 @@ package jcl.compiler.icg.generator;
 import java.util.List;
 
 import jcl.LispStruct;
+import jcl.compiler.icg.GeneratorEvent;
 import jcl.compiler.icg.GeneratorState;
 import jcl.compiler.icg.IntermediateCodeGenerator;
 import jcl.compiler.icg.JavaMethodBuilder;
@@ -17,6 +18,7 @@ import jcl.functions.Closure;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 /**
@@ -24,13 +26,6 @@ import org.springframework.stereotype.Component;
  */
 @Component
 final class LambdaFunctionCallCodeGenerator extends SpecialOperatorCodeGenerator<LambdaFunctionCallStruct> {
-
-	/**
-	 * {@link LambdaFunctionCodeGenerator} used for generating the {@link LambdaFunctionCallStruct#lambdaCompilerFunction}
-	 * value.
-	 */
-	@Autowired
-	private LambdaFunctionCodeGenerator lambdaFunctionCodeGenerator;
 
 	/**
 	 * {@link IntermediateCodeGenerator} used for generating the {@link LambdaFunctionCallStruct#arguments} values.
@@ -44,6 +39,12 @@ final class LambdaFunctionCallCodeGenerator extends SpecialOperatorCodeGenerator
 	 */
 	private LambdaFunctionCallCodeGenerator() {
 		super("lambdaFunctionCall");
+	}
+
+	@Override
+	@EventListener
+	public void onGeneratorEvent(final GeneratorEvent<LambdaFunctionCallStruct> event) {
+		super.onGeneratorEvent(event);
 	}
 
 	/**
@@ -85,7 +86,7 @@ final class LambdaFunctionCallCodeGenerator extends SpecialOperatorCodeGenerator
 		final MethodVisitor mv = methodBuilder.getMethodVisitor();
 
 		final LambdaCompilerFunctionStruct lambdaCompilerFunction = input.getLambdaCompilerFunction();
-		lambdaFunctionCodeGenerator.generate(lambdaCompilerFunction, generatorState);
+		codeGenerator.generate(lambdaCompilerFunction, generatorState);
 
 		final int functionStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, functionStore);

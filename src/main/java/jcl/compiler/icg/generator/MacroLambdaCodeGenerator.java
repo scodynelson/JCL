@@ -22,6 +22,7 @@ import jcl.compiler.environment.binding.lambdalist.RestParameter;
 import jcl.compiler.environment.binding.lambdalist.SuppliedPParameter;
 import jcl.compiler.environment.binding.lambdalist.WholeParameter;
 import jcl.compiler.icg.CodeGenerator;
+import jcl.compiler.icg.GeneratorEvent;
 import jcl.compiler.icg.GeneratorState;
 import jcl.compiler.icg.IntermediateCodeGenerator;
 import jcl.compiler.icg.JavaClassBuilder;
@@ -40,6 +41,7 @@ import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 /**
@@ -49,7 +51,7 @@ import org.springframework.stereotype.Component;
  * values.
  */
 @Component
-class MacroLambdaCodeGenerator implements CodeGenerator<MacroLambdaStruct> {
+final class MacroLambdaCodeGenerator implements CodeGenerator<MacroLambdaStruct> {
 
 	/**
 	 * Constant {@link String} containing the description for the {@link Component} annotation.
@@ -238,20 +240,6 @@ class MacroLambdaCodeGenerator implements CodeGenerator<MacroLambdaStruct> {
 	private IntermediateCodeGenerator codeGenerator;
 
 	/**
-	 * {@link PrognCodeGenerator} used for generating the {@link MacroLambdaStruct#forms}.
-	 */
-	@Autowired
-	private PrognCodeGenerator prognCodeGenerator;
-
-	/**
-	 * {@link NILCodeGenerator} used for generating {@link NILStruct#INSTANCE} constant as the default result in the
-	 * {@link CompiledMacroFunctionExpander#getInitForm(Closure, SymbolStruct)} method and for the initial init-form
-	 * value for 'optional', 'key', and 'aux' keyword parameters.
-	 */
-	@Autowired
-	private NILCodeGenerator nilCodeGenerator;
-
-	/**
 	 * {@inheritDoc}
 	 * Generation method for {@link MacroLambdaStruct} objects, by performing the following operations:
 	 * <ol>
@@ -311,8 +299,10 @@ class MacroLambdaCodeGenerator implements CodeGenerator<MacroLambdaStruct> {
 	 * @param generatorState
 	 * 		stateful object used to hold the current state of the code generation process
 	 */
-	@Override
-	public void generate(final MacroLambdaStruct input, final GeneratorState generatorState) {
+	@EventListener
+	public void onGeneratorEvent(final GeneratorEvent<MacroLambdaStruct> event) {
+		final MacroLambdaStruct input = event.getSource();
+		final GeneratorState generatorState = event.getGeneratorState();
 
 		final String className = input.getClassName();
 		final String fileName = CodeGenerators.getFileNameFromClassName(className);
@@ -587,7 +577,7 @@ class MacroLambdaCodeGenerator implements CodeGenerator<MacroLambdaStruct> {
 		final Deque<Environment> environmentDeque = generatorState.getEnvironmentDeque();
 
 		environmentDeque.addFirst(environment);
-		prognCodeGenerator.generate(forms, generatorState);
+		codeGenerator.generate(forms, generatorState);
 		environmentDeque.removeFirst();
 
 		mv.visitInsn(Opcodes.ARETURN);
@@ -693,7 +683,7 @@ class MacroLambdaCodeGenerator implements CodeGenerator<MacroLambdaStruct> {
 			                 initFormVarPackageStore, initFormVarSymbolStore, var, initForm);
 		}
 
-		nilCodeGenerator.generate(NILStruct.INSTANCE, generatorState);
+		codeGenerator.generate(NILStruct.INSTANCE, generatorState);
 		mv.visitInsn(Opcodes.ARETURN);
 
 		mv.visitMaxs(-1, -1);
@@ -972,7 +962,7 @@ class MacroLambdaCodeGenerator implements CodeGenerator<MacroLambdaStruct> {
 			CodeGenerators.generateSymbol(optionalSymbol, generatorState, optionalPackageStore, optionalSymbolStore);
 			generateDestructuringFormBinding(generatorState, optionalBinding.getDestructuringForm(), mv, destructuringFormStore);
 
-			nilCodeGenerator.generate(NILStruct.INSTANCE, generatorState);
+			codeGenerator.generate(NILStruct.INSTANCE, generatorState);
 			mv.visitVarInsn(Opcodes.ASTORE, optionalInitFormStore);
 
 			final SuppliedPParameter suppliedPBinding = optionalBinding.getSuppliedPBinding();
@@ -1183,7 +1173,7 @@ class MacroLambdaCodeGenerator implements CodeGenerator<MacroLambdaStruct> {
 			final SymbolStruct keySymbol = keyBinding.getVar();
 			CodeGenerators.generateSymbol(keySymbol, generatorState, keyPackageStore, keySymbolStore);
 
-			nilCodeGenerator.generate(NILStruct.INSTANCE, generatorState);
+			codeGenerator.generate(NILStruct.INSTANCE, generatorState);
 			mv.visitVarInsn(Opcodes.ASTORE, keyInitFormStore);
 
 			final SymbolStruct keyName = keyBinding.getKeyName();
@@ -1412,7 +1402,7 @@ class MacroLambdaCodeGenerator implements CodeGenerator<MacroLambdaStruct> {
 			CodeGenerators.generateSymbol(auxSymbol, generatorState, auxPackageStore, auxSymbolStore);
 			generateDestructuringFormBinding(generatorState, auxBinding.getDestructuringForm(), mv, destructuringFormStore);
 
-			nilCodeGenerator.generate(NILStruct.INSTANCE, generatorState);
+			codeGenerator.generate(NILStruct.INSTANCE, generatorState);
 			mv.visitVarInsn(Opcodes.ASTORE, auxInitFormStore);
 
 			mv.visitTypeInsn(Opcodes.NEW, GenerationConstants.AUX_BINDING_NAME);
@@ -1797,7 +1787,7 @@ class MacroLambdaCodeGenerator implements CodeGenerator<MacroLambdaStruct> {
 			CodeGenerators.generateSymbol(optionalSymbol, generatorState, parameterPackageStore, parameterSymbolStore);
 			generateDestructuringFormBinding(generatorState, optionalBinding.getDestructuringForm(), mv, parameterDestructuringFormStore);
 
-			nilCodeGenerator.generate(NILStruct.INSTANCE, generatorState);
+			codeGenerator.generate(NILStruct.INSTANCE, generatorState);
 			mv.visitVarInsn(Opcodes.ASTORE, optionalInitFormStore);
 
 			final SuppliedPParameter suppliedPBinding = optionalBinding.getSuppliedPBinding();
@@ -1919,7 +1909,7 @@ class MacroLambdaCodeGenerator implements CodeGenerator<MacroLambdaStruct> {
 			final SymbolStruct keySymbol = keyBinding.getVar();
 			CodeGenerators.generateSymbol(keySymbol, generatorState, parameterPackageStore, parameterSymbolStore);
 
-			nilCodeGenerator.generate(NILStruct.INSTANCE, generatorState);
+			codeGenerator.generate(NILStruct.INSTANCE, generatorState);
 			mv.visitVarInsn(Opcodes.ASTORE, keyInitFormStore);
 
 			final SymbolStruct keyName = keyBinding.getKeyName();
@@ -1982,7 +1972,7 @@ class MacroLambdaCodeGenerator implements CodeGenerator<MacroLambdaStruct> {
 			CodeGenerators.generateSymbol(auxSymbol, generatorState, parameterPackageStore, parameterSymbolStore);
 			generateDestructuringFormBinding(generatorState, auxBinding.getDestructuringForm(), mv, parameterDestructuringFormStore);
 
-			nilCodeGenerator.generate(NILStruct.INSTANCE, generatorState);
+			codeGenerator.generate(NILStruct.INSTANCE, generatorState);
 			mv.visitVarInsn(Opcodes.ASTORE, auxInitFormStore);
 
 			mv.visitTypeInsn(Opcodes.NEW, GenerationConstants.AUX_BINDING_NAME);

@@ -4,7 +4,9 @@
 
 package jcl.compiler.icg.generator;
 
+import jcl.compiler.icg.GeneratorEvent;
 import jcl.compiler.icg.GeneratorState;
+import jcl.compiler.icg.IntermediateCodeGenerator;
 import jcl.compiler.icg.JavaMethodBuilder;
 import jcl.compiler.struct.specialoperator.BlockStruct;
 import jcl.compiler.struct.specialoperator.PrognStruct;
@@ -14,6 +16,7 @@ import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 /**
@@ -26,13 +29,19 @@ final class BlockCodeGenerator extends SpecialOperatorCodeGenerator<BlockStruct>
 	 * {@link PrognCodeGenerator} used for generating the {@link BlockStruct#forms}.
 	 */
 	@Autowired
-	private PrognCodeGenerator prognCodeGenerator;
+	private IntermediateCodeGenerator codeGenerator;
 
 	/**
 	 * Private constructor which passes 'block' as the prefix value to be set in it's {@link #methodNamePrefix} value.
 	 */
 	private BlockCodeGenerator() {
 		super("block");
+	}
+
+	@Override
+	@EventListener
+	public void onGeneratorEvent(final GeneratorEvent<BlockStruct> event) {
+		super.onGeneratorEvent(event);
 	}
 
 	/**
@@ -103,7 +112,7 @@ final class BlockCodeGenerator extends SpecialOperatorCodeGenerator<BlockStruct>
 		mv.visitLabel(tryBlockStart);
 
 		final PrognStruct forms = input.getForms();
-		prognCodeGenerator.generate(forms, generatorState);
+		codeGenerator.generate(forms, generatorState);
 
 		final int resultStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, resultStore);

@@ -1,19 +1,22 @@
 package jcl.compiler.icg;
 
 import java.util.Deque;
-import java.util.Map;
-import javax.annotation.Resource;
 
 import jcl.LispStruct;
 import jcl.compiler.struct.specialoperator.lambda.LambdaStruct;
-import jcl.conditions.exceptions.ProgramErrorException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 
 @Component
 class IntermediateCodeGeneratorImpl implements IntermediateCodeGenerator {
 
-	@Resource
-	private Map<Class<? extends LispStruct>, CodeGenerator<LispStruct>> codeGeneratorStrategies;
+	private final ApplicationEventPublisher eventPublisher;
+
+	@Autowired
+	IntermediateCodeGeneratorImpl(final ApplicationEventPublisher eventPublisher) {
+		this.eventPublisher = eventPublisher;
+	}
 
 	@Override
 	public Deque<JavaClassBuilder> generate(final LambdaStruct lambdaStruct) {
@@ -24,11 +27,6 @@ class IntermediateCodeGeneratorImpl implements IntermediateCodeGenerator {
 
 	@Override
 	public void generate(final LispStruct input, final GeneratorState generatorState) {
-
-		final CodeGenerator<LispStruct> codeGenerator = codeGeneratorStrategies.get(input.getClass());
-		if (codeGenerator == null) {
-			throw new ProgramErrorException("ICG: Found thing I can't generate code for class: " + input.getClass().getName());
-		}
-		codeGenerator.generate(input, generatorState);
+		eventPublisher.publishEvent(GeneratorEvent.of(input, generatorState));
 	}
 }

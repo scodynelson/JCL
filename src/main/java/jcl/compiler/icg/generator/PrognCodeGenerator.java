@@ -9,6 +9,7 @@ import java.util.List;
 
 import jcl.LispStruct;
 import jcl.compiler.icg.CodeGenerator;
+import jcl.compiler.icg.GeneratorEvent;
 import jcl.compiler.icg.GeneratorState;
 import jcl.compiler.icg.IntermediateCodeGenerator;
 import jcl.compiler.icg.JavaMethodBuilder;
@@ -17,26 +18,20 @@ import jcl.symbols.NILStruct;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 /**
  * Class to perform 'progn' special operator code generation.
  */
 @Component
-class PrognCodeGenerator implements CodeGenerator<PrognStruct> {
+final class PrognCodeGenerator implements CodeGenerator<PrognStruct> {
 
 	/**
 	 * {@link IntermediateCodeGenerator} used for generating each of the {@link PrognStruct#forms} values.
 	 */
 	@Autowired
 	private IntermediateCodeGenerator codeGenerator;
-
-	/**
-	 * {@link NILCodeGenerator} used for generating a {@link NILStruct} when the {@link PrognStruct#forms} {@link
-	 * List} is empty.
-	 */
-	@Autowired
-	private NILCodeGenerator nilCodeGenerator;
 
 	/**
 	 * {@inheritDoc}
@@ -50,15 +45,17 @@ class PrognCodeGenerator implements CodeGenerator<PrognStruct> {
 	 * @param generatorState
 	 * 		stateful object used to hold the current state of the code generation process
 	 */
-	@Override
-	public void generate(final PrognStruct input, final GeneratorState generatorState) {
+	@EventListener
+	public void onGeneratorEvent(final GeneratorEvent<PrognStruct> event) {
+		final PrognStruct input = event.getSource();
+		final GeneratorState generatorState = event.getGeneratorState();
 
 		final JavaMethodBuilder methodBuilder = generatorState.getCurrentMethodBuilder();
 		final MethodVisitor mv = methodBuilder.getMethodVisitor();
 
 		final List<LispStruct> forms = input.getForms();
 		if (forms.isEmpty()) {
-			nilCodeGenerator.generate(NILStruct.INSTANCE, generatorState);
+			codeGenerator.generate(NILStruct.INSTANCE, generatorState);
 		} else {
 			for (final Iterator<LispStruct> iterator = forms.iterator(); iterator.hasNext(); ) {
 

@@ -6,7 +6,6 @@ package jcl.compiler.icg.generator;
 
 import jcl.LispStruct;
 import jcl.compiler.icg.CodeGenerator;
-import jcl.compiler.icg.GeneratorState;
 import jcl.compiler.icg.JCLClassWriter;
 import org.objectweb.asm.Opcodes;
 
@@ -44,18 +43,18 @@ public abstract class JavaClassCodeGenerator<I extends LispStruct> implements Co
 		this.interfaces = interfaces;
 	}
 
-	@Override
-	public void generate(final I input, final GeneratorState generatorState) {
-		final String fileName = CodeGenerators.getFileNameFromClassName(name);
-		final JCLClassWriter cw = new JCLClassWriter(generatorState, name, fileName);
-
-		cw.visit(Opcodes.V1_8, access, name, signature, superName, interfaces);
-		cw.visitSource(fileName + GenerationConstants.JAVA_EXTENSION, null);
-
-		generateClassContent(cw);
-
-		cw.visitEnd();
-	}
+//	@Override
+//	public void generate(final I input, final GeneratorState generatorState) {
+//		final String fileName = CodeGenerators.getFileNameFromClassName(name);
+//		final JCLClassWriter cw = new JCLClassWriter(generatorState, name, fileName);
+//
+//		cw.visit(Opcodes.V1_8, access, name, signature, superName, interfaces);
+//		cw.visitSource(fileName + GenerationConstants.JAVA_EXTENSION, null);
+//
+//		generateClassContent(cw);
+//
+//		cw.visitEnd();
+//	}
 
 	protected abstract void generateClassContent(JCLClassWriter cw);
 }

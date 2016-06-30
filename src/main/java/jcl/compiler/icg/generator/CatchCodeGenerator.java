@@ -5,6 +5,7 @@
 package jcl.compiler.icg.generator;
 
 import jcl.LispStruct;
+import jcl.compiler.icg.GeneratorEvent;
 import jcl.compiler.icg.GeneratorState;
 import jcl.compiler.icg.IntermediateCodeGenerator;
 import jcl.compiler.icg.JavaMethodBuilder;
@@ -15,6 +16,7 @@ import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 /**
@@ -30,16 +32,16 @@ final class CatchCodeGenerator extends SpecialOperatorCodeGenerator<CatchStruct>
 	private IntermediateCodeGenerator codeGenerator;
 
 	/**
-	 * {@link PrognCodeGenerator} used for generating the {@link CatchStruct#forms}.
-	 */
-	@Autowired
-	private PrognCodeGenerator prognCodeGenerator;
-
-	/**
 	 * Private constructor which passes 'catch' as the prefix value to be set in it's {@link #methodNamePrefix} value.
 	 */
 	private CatchCodeGenerator() {
 		super("catch");
+	}
+
+	@Override
+	@EventListener
+	public void onGeneratorEvent(final GeneratorEvent<CatchStruct> event) {
+		super.onGeneratorEvent(event);
 	}
 
 	/**
@@ -108,7 +110,7 @@ final class CatchCodeGenerator extends SpecialOperatorCodeGenerator<CatchStruct>
 		mv.visitLabel(tryBlockStart);
 
 		final PrognStruct forms = input.getForms();
-		prognCodeGenerator.generate(forms, generatorState);
+		codeGenerator.generate(forms, generatorState);
 
 		final int resultFormStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, resultFormStore);

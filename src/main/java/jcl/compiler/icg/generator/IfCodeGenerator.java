@@ -5,6 +5,7 @@
 package jcl.compiler.icg.generator;
 
 import jcl.LispStruct;
+import jcl.compiler.icg.GeneratorEvent;
 import jcl.compiler.icg.GeneratorState;
 import jcl.compiler.icg.IntermediateCodeGenerator;
 import jcl.compiler.icg.JavaMethodBuilder;
@@ -16,6 +17,7 @@ import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 /**
@@ -32,16 +34,16 @@ final class IfCodeGenerator extends SpecialOperatorCodeGenerator<IfStruct> {
 	private IntermediateCodeGenerator codeGenerator;
 
 	/**
-	 * {@link NILCodeGenerator} used for generating a {@link NILStruct} when comparing the {@link IfStruct#testForm}.
-	 */
-	@Autowired
-	private NILCodeGenerator nilCodeGenerator;
-
-	/**
 	 * Private constructor which passes 'if' as the prefix value to be set in it's {@link #methodNamePrefix} value.
 	 */
 	private IfCodeGenerator() {
 		super("if");
+	}
+
+	@Override
+	@EventListener
+	public void onGeneratorEvent(final GeneratorEvent<IfStruct> event) {
+		super.onGeneratorEvent(event);
 	}
 
 	/**
@@ -110,7 +112,7 @@ final class IfCodeGenerator extends SpecialOperatorCodeGenerator<IfStruct> {
 		final Label elseEnd = new Label();
 
 		mv.visitVarInsn(Opcodes.ALOAD, testFormStore);
-		nilCodeGenerator.generate(NILStruct.INSTANCE, generatorState);
+		codeGenerator.generate(NILStruct.INSTANCE, generatorState);
 		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
 		                   GenerationConstants.JAVA_OBJECT_NAME,
 		                   GenerationConstants.JAVA_EQUALS_METHOD_NAME,

@@ -11,6 +11,7 @@ import java.util.Map;
 import jcl.LispType;
 import jcl.classes.StandardClassStruct;
 import jcl.compiler.icg.CodeGenerator;
+import jcl.compiler.icg.GeneratorEvent;
 import jcl.compiler.icg.GeneratorState;
 import jcl.compiler.icg.JavaClassBuilder;
 import jcl.compiler.icg.JavaMethodBuilder;
@@ -27,10 +28,11 @@ import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 @Component
-class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
+final class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 
 	private static final String STRUCT_TYPES_PACKAGE = "jcl/structures/struct/types/";
 
@@ -84,8 +86,10 @@ class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 
 	private static final String STRUCTURE_CLASS_NEW_INSTANCE_METHOD_DESC = "()Ljcl/structures/StructureObjectStruct;";
 
-	@Override
-	public void generate(final DefstructStruct input, final GeneratorState generatorState) {
+	@EventListener
+	public void onGeneratorEvent(final GeneratorEvent<DefstructStruct> event) {
+		final DefstructStruct input = event.getSource();
+		final GeneratorState generatorState = event.getGeneratorState();
 
 		final SymbolStruct structureSymbol = input.getStructureSymbol();
 		final String structureName = structureSymbol.getName();

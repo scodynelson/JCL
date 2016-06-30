@@ -5,6 +5,7 @@
 package jcl.compiler.icg.generator;
 
 import jcl.compiler.icg.CodeGenerator;
+import jcl.compiler.icg.GeneratorEvent;
 import jcl.compiler.icg.GeneratorState;
 import jcl.compiler.icg.JavaMethodBuilder;
 import jcl.compiler.struct.specialoperator.SymbolCompilerFunctionStruct;
@@ -12,13 +13,14 @@ import jcl.functions.FunctionStruct;
 import jcl.symbols.SymbolStruct;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 /**
  * Class to perform the generation of the code for anonymous lambda function objects, such as '#'(lambda ())'.
  */
 @Component
-class SymbolFunctionCodeGenerator implements CodeGenerator<SymbolCompilerFunctionStruct> {
+final class SymbolFunctionCodeGenerator implements CodeGenerator<SymbolCompilerFunctionStruct> {
 
 	/**
 	 * {@inheritDoc}
@@ -42,8 +44,10 @@ class SymbolFunctionCodeGenerator implements CodeGenerator<SymbolCompilerFunctio
 	 * @param generatorState
 	 * 		stateful object used to hold the current state of the code generation process
 	 */
-	@Override
-	public void generate(final SymbolCompilerFunctionStruct input, final GeneratorState generatorState) {
+	@EventListener
+	public void onGeneratorEvent(final GeneratorEvent<SymbolCompilerFunctionStruct> event) {
+		final SymbolCompilerFunctionStruct input = event.getSource();
+		final GeneratorState generatorState = event.getGeneratorState();
 
 		final JavaMethodBuilder methodBuilder = generatorState.getCurrentMethodBuilder();
 		final MethodVisitor mv = methodBuilder.getMethodVisitor();

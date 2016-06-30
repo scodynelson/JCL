@@ -9,13 +9,16 @@ import java.util.List;
 import jcl.LispStruct;
 import jcl.arrays.VectorStruct;
 import jcl.compiler.icg.CodeGenerator;
+import jcl.compiler.icg.GeneratorEvent;
 import jcl.compiler.icg.GeneratorState;
+import jcl.compiler.icg.IntermediateCodeGenerator;
 import jcl.compiler.icg.JavaMethodBuilder;
 import jcl.compiler.struct.specialoperator.QuoteStruct;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 /**
@@ -23,7 +26,7 @@ import org.springframework.stereotype.Component;
  * the provided {@link VectorStruct} input value.
  */
 @Component
-class VectorCodeGenerator implements CodeGenerator<VectorStruct<LispStruct>> {
+final class VectorCodeGenerator implements CodeGenerator<VectorStruct<LispStruct>> {
 
 	/**
 	 * Constant {@link String} containing the name for the {@link VectorStruct} class.
@@ -41,7 +44,7 @@ class VectorCodeGenerator implements CodeGenerator<VectorStruct<LispStruct>> {
 	 * {@link QuoteCodeGenerator} used for generating the {@link VectorStruct} contents as if they were quoted values.
 	 */
 	@Autowired
-	private QuoteCodeGenerator quoteCodeGenerator;
+	private IntermediateCodeGenerator codeGenerator;
 
 	/**
 	 * {@inheritDoc}
@@ -57,8 +60,10 @@ class VectorCodeGenerator implements CodeGenerator<VectorStruct<LispStruct>> {
 	 * @param generatorState
 	 * 		stateful object used to hold the current state of the code generation process
 	 */
-	@Override
-	public void generate(final VectorStruct<LispStruct> input, final GeneratorState generatorState) {
+	@EventListener
+	public void onGeneratorEvent(final GeneratorEvent<VectorStruct<LispStruct>> event) {
+		final VectorStruct<LispStruct> input = event.getSource();
+		final GeneratorState generatorState = event.getGeneratorState();
 
 		final JavaMethodBuilder methodBuilder = generatorState.getCurrentMethodBuilder();
 		final MethodVisitor mv = methodBuilder.getMethodVisitor();
@@ -78,7 +83,7 @@ class VectorCodeGenerator implements CodeGenerator<VectorStruct<LispStruct>> {
 		final List<LispStruct> contents = input.getContents();
 		for (final LispStruct content : contents) {
 			final QuoteStruct quotedContent = new QuoteStruct(content);
-			quoteCodeGenerator.generate(quotedContent, generatorState);
+			codeGenerator.generate(quotedContent, generatorState);
 			mv.visitVarInsn(Opcodes.ASTORE, contentStore);
 
 			mv.visitVarInsn(Opcodes.ALOAD, contentsStore);

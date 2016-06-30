@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.Set;
 
 import jcl.compiler.environment.Environment;
+import jcl.compiler.icg.GeneratorEvent;
 import jcl.compiler.icg.GeneratorState;
 import jcl.compiler.icg.IntermediateCodeGenerator;
 import jcl.compiler.icg.JavaMethodBuilder;
@@ -24,6 +25,7 @@ import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 /**
@@ -42,17 +44,17 @@ final class InnerLambdaCodeGenerator extends SpecialOperatorCodeGenerator<InnerL
 	private IntermediateCodeGenerator codeGenerator;
 
 	/**
-	 * {@link PrognCodeGenerator} used for generating the {@link InnerLambdaStruct#forms}.
-	 */
-	@Autowired
-	private PrognCodeGenerator prognCodeGenerator;
-
-	/**
 	 * Private constructor which passes 'innerLambda' as the prefix value to be set in it's {@link #methodNamePrefix}
 	 * value.
 	 */
 	private InnerLambdaCodeGenerator() {
 		super("innerLambda");
+	}
+
+	@Override
+	@EventListener
+	public void onGeneratorEvent(final GeneratorEvent<InnerLambdaStruct> event) {
+		super.onGeneratorEvent(event);
 	}
 
 	/**
@@ -204,7 +206,7 @@ final class InnerLambdaCodeGenerator extends SpecialOperatorCodeGenerator<InnerL
 		final Deque<Environment> environmentDeque = generatorState.getEnvironmentDeque();
 
 		environmentDeque.addFirst(environment);
-		prognCodeGenerator.generate(forms, generatorState);
+		codeGenerator.generate(forms, generatorState);
 		environmentDeque.removeFirst();
 
 		final int resultStore = methodBuilder.getNextAvailableStore();

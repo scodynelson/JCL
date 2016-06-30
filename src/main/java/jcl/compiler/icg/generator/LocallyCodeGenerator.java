@@ -8,23 +8,26 @@ import java.util.Deque;
 
 import jcl.compiler.environment.Environment;
 import jcl.compiler.icg.CodeGenerator;
+import jcl.compiler.icg.GeneratorEvent;
 import jcl.compiler.icg.GeneratorState;
+import jcl.compiler.icg.IntermediateCodeGenerator;
 import jcl.compiler.struct.specialoperator.LocallyStruct;
 import jcl.compiler.struct.specialoperator.PrognStruct;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 /**
  * Class to perform 'locally' special operator code generation.
  */
 @Component
-class LocallyCodeGenerator implements CodeGenerator<LocallyStruct> {
+final class LocallyCodeGenerator implements CodeGenerator<LocallyStruct> {
 
 	/**
 	 * {@link PrognCodeGenerator} used for generating the {@link LocallyStruct#forms}.
 	 */
 	@Autowired
-	private PrognCodeGenerator prognCodeGenerator;
+	private IntermediateCodeGenerator codeGenerator;
 
 	/**
 	 * {@inheritDoc}
@@ -46,8 +49,10 @@ class LocallyCodeGenerator implements CodeGenerator<LocallyStruct> {
 	 * @param generatorState
 	 * 		stateful object used to hold the current state of the code generation process
 	 */
-	@Override
-	public void generate(final LocallyStruct input, final GeneratorState generatorState) {
+	@EventListener
+	public void onGeneratorEvent(final GeneratorEvent<LocallyStruct> event) {
+		final LocallyStruct input = event.getSource();
+		final GeneratorState generatorState = event.getGeneratorState();
 
 		final PrognStruct forms = input.getForms();
 		final Environment locallyEnvironment = input.getLocallyEnvironment();
@@ -55,7 +60,7 @@ class LocallyCodeGenerator implements CodeGenerator<LocallyStruct> {
 		final Deque<Environment> environmentDeque = generatorState.getEnvironmentDeque();
 
 		environmentDeque.addFirst(locallyEnvironment);
-		prognCodeGenerator.generate(forms, generatorState);
+		codeGenerator.generate(forms, generatorState);
 		environmentDeque.removeFirst();
 	}
 }

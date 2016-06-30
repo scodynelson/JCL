@@ -21,5 +21,5 @@ public interface CodeGenerator<I extends LispStruct> {
 	 * @param generatorState
 	 * 		stateful object used to hold the current state of the code generation process
 	 */
-	void generate(I input, GeneratorState generatorState);
+	void onGeneratorEvent(GeneratorEvent<I> event);
 }

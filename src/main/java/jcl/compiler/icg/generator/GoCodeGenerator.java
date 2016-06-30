@@ -14,18 +14,16 @@ import jcl.compiler.struct.specialoperator.go.GoStruct;
 import jcl.functions.Closure;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
-import org.springframework.stereotype.Component;
 
 /**
  * Class to perform 'go' special operator code generation.
  */
-@Component
-final class GoCodeGenerator extends SpecialOperatorCodeGenerator<GoStruct<?>> {
+class GoCodeGenerator<T extends GoStruct<?>> extends SpecialOperatorCodeGenerator<T> {
 
 	/**
 	 * Private constructor which passes 'go' as the prefix value to be set in it's {@link #methodNamePrefix} value.
 	 */
-	private GoCodeGenerator() {
+	protected GoCodeGenerator() {
 		super("go");
 	}
 
@@ -57,7 +55,7 @@ final class GoCodeGenerator extends SpecialOperatorCodeGenerator<GoStruct<?>> {
 	 * 		the storage location index on the stack where the {@link Closure} argument exists
 	 */
 	@Override
-	protected void generateSpecialOperator(final GoStruct<?> input, final GeneratorState generatorState,
+	protected void generateSpecialOperator(final T input, final GeneratorState generatorState,
 	                                       final JavaMethodBuilder methodBuilder, final int closureArgStore) {
 
 		final MethodVisitor mv = methodBuilder.getMethodVisitor();

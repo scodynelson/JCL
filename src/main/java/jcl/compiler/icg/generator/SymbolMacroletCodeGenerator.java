@@ -8,6 +8,7 @@ import java.util.Set;
 import jcl.LispStruct;
 import jcl.compiler.environment.Environment;
 import jcl.compiler.icg.CodeGenerator;
+import jcl.compiler.icg.GeneratorEvent;
 import jcl.compiler.icg.GeneratorState;
 import jcl.compiler.icg.IntermediateCodeGenerator;
 import jcl.compiler.icg.JavaClassBuilder;
@@ -20,19 +21,19 @@ import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 @Component
-class SymbolMacroletCodeGenerator implements CodeGenerator<SymbolMacroletStruct> {
+final class SymbolMacroletCodeGenerator implements CodeGenerator<SymbolMacroletStruct> {
 
 	@Autowired
 	private IntermediateCodeGenerator codeGenerator;
 
-	@Autowired
-	private PrognCodeGenerator prognCodeGenerator;
-
-	@Override
-	public void generate(final SymbolMacroletStruct input, final GeneratorState generatorState) {
+	@EventListener
+	public void onGeneratorEvent(final GeneratorEvent<SymbolMacroletStruct> event) {
+		final SymbolMacroletStruct input = event.getSource();
+		final GeneratorState generatorState = event.getGeneratorState();
 
 		final List<SymbolMacroletStruct.SymbolMacroletVar> vars = input.getVars();
 		final PrognStruct forms = input.getForms();
@@ -79,7 +80,7 @@ class SymbolMacroletCodeGenerator implements CodeGenerator<SymbolMacroletStruct>
 		final Deque<Environment> environmentDeque = generatorState.getEnvironmentDeque();
 
 		environmentDeque.addFirst(symbolMacroletEnvironment);
-		prognCodeGenerator.generate(forms, generatorState);
+		codeGenerator.generate(forms, generatorState);
 		environmentDeque.removeFirst();
 
 		final int resultStore = methodBuilder.getNextAvailableStore();

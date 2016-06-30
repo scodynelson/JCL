@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Set;
 
 import jcl.LispStruct;
+import jcl.compiler.icg.GeneratorEvent;
 import jcl.compiler.icg.GeneratorState;
 import jcl.compiler.icg.IntermediateCodeGenerator;
 import jcl.compiler.icg.JavaMethodBuilder;
@@ -18,6 +19,7 @@ import jcl.symbols.SymbolStruct;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 /**
@@ -41,6 +43,12 @@ final class LetStarCodeGenerator extends ClosureCreationCodeGenerator<LetStarStr
 	 */
 	private LetStarCodeGenerator() {
 		super("letStar");
+	}
+
+	@Override
+	@EventListener
+	public void onGeneratorEvent(final GeneratorEvent<LetStarStruct> event) {
+		super.onGeneratorEvent(event);
 	}
 
 	/**

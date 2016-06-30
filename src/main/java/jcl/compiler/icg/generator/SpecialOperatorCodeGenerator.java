@@ -7,6 +7,7 @@ package jcl.compiler.icg.generator;
 import java.util.Deque;
 
 import jcl.compiler.icg.CodeGenerator;
+import jcl.compiler.icg.GeneratorEvent;
 import jcl.compiler.icg.GeneratorState;
 import jcl.compiler.icg.JavaClassBuilder;
 import jcl.compiler.icg.JavaMethodBuilder;
@@ -66,7 +67,9 @@ abstract class SpecialOperatorCodeGenerator<I extends CompilerSpecialOperatorStr
 	 * 		stateful object used to hold the current state of the code generation process
 	 */
 	@Override
-	public void generate(final I input, final GeneratorState generatorState) {
+	public void onGeneratorEvent(final GeneratorEvent<I> event) {
+		final I input = event.getSource();
+		final GeneratorState generatorState = event.getGeneratorState();
 
 		final JavaClassBuilder currentClass = generatorState.getCurrentClassBuilder();
 		final String className = currentClass.getClassName();

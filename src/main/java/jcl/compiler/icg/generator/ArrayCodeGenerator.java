@@ -9,13 +9,16 @@ import java.util.List;
 import jcl.LispStruct;
 import jcl.arrays.ArrayStruct;
 import jcl.compiler.icg.CodeGenerator;
+import jcl.compiler.icg.GeneratorEvent;
 import jcl.compiler.icg.GeneratorState;
+import jcl.compiler.icg.IntermediateCodeGenerator;
 import jcl.compiler.icg.JavaMethodBuilder;
 import jcl.compiler.struct.specialoperator.QuoteStruct;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 /**
@@ -41,7 +44,7 @@ class ArrayCodeGenerator implements CodeGenerator<ArrayStruct<LispStruct>> {
 	 * {@link QuoteCodeGenerator} used for generating the {@link ArrayStruct} contents as if they were quoted values.
 	 */
 	@Autowired
-	private QuoteCodeGenerator quoteCodeGenerator;
+	private IntermediateCodeGenerator codeGenerator;
 
 	/**
 	 * {@inheritDoc}
@@ -59,7 +62,10 @@ class ArrayCodeGenerator implements CodeGenerator<ArrayStruct<LispStruct>> {
 	 * 		stateful object used to hold the current state of the code generation process
 	 */
 	@Override
-	public void generate(final ArrayStruct<LispStruct> input, final GeneratorState generatorState) {
+	@EventListener
+	public void onGeneratorEvent(final GeneratorEvent<ArrayStruct<LispStruct>> event) {
+		final ArrayStruct<LispStruct> input = event.getSource();
+		final GeneratorState generatorState = event.getGeneratorState();
 
 		final JavaMethodBuilder methodBuilder = generatorState.getCurrentMethodBuilder();
 		final MethodVisitor mv = methodBuilder.getMethodVisitor();
@@ -106,7 +112,7 @@ class ArrayCodeGenerator implements CodeGenerator<ArrayStruct<LispStruct>> {
 		final List<LispStruct> contents = input.getContents();
 		for (final LispStruct content : contents) {
 			final QuoteStruct quotedContent = new QuoteStruct(content);
-			quoteCodeGenerator.generate(quotedContent, generatorState);
+			codeGenerator.generate(quotedContent, generatorState);
 			mv.visitVarInsn(Opcodes.ASTORE, contentStore);
 
 			mv.visitVarInsn(Opcodes.ALOAD, contentsStore);

@@ -6,6 +6,7 @@ package jcl.compiler.icg.generator;
 
 import jcl.LispStruct;
 import jcl.compiler.icg.CodeGenerator;
+import jcl.compiler.icg.GeneratorEvent;
 import jcl.compiler.icg.GeneratorState;
 import jcl.compiler.icg.IntermediateCodeGenerator;
 import jcl.compiler.icg.JavaMethodBuilder;
@@ -13,6 +14,7 @@ import jcl.lists.ConsStruct;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 /**
@@ -20,7 +22,7 @@ import org.springframework.stereotype.Component;
  * ConsStruct#cdr} of the provided {@link ConsStruct} input value.
  */
 @Component
-class ConsCodeGenerator implements CodeGenerator<ConsStruct> {
+final class ConsCodeGenerator implements CodeGenerator<ConsStruct> {
 
 	/**
 	 * {@link IntermediateCodeGenerator} used for generating the {@link ConsStruct} car and cdr values.
@@ -42,8 +44,10 @@ class ConsCodeGenerator implements CodeGenerator<ConsStruct> {
 	 * @param generatorState
 	 * 		stateful object used to hold the current state of the code generation process
 	 */
-	@Override
-	public void generate(final ConsStruct input, final GeneratorState generatorState) {
+	@EventListener
+	public void onGeneratorEvent(final GeneratorEvent<ConsStruct> event) {
+		final ConsStruct input = event.getSource();
+		final GeneratorState generatorState = event.getGeneratorState();
 
 		final JavaMethodBuilder methodBuilder = generatorState.getCurrentMethodBuilder();
 		final MethodVisitor mv = methodBuilder.getMethodVisitor();

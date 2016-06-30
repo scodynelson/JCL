@@ -5,12 +5,14 @@
 package jcl.compiler.icg.generator;
 
 import jcl.compiler.icg.CodeGenerator;
+import jcl.compiler.icg.GeneratorEvent;
 import jcl.compiler.icg.GeneratorState;
 import jcl.compiler.icg.JavaMethodBuilder;
 import jcl.symbols.TStruct;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 /**
@@ -18,7 +20,7 @@ import org.springframework.stereotype.Component;
  * value.
  */
 @Component
-class TCodeGenerator implements CodeGenerator<TStruct> {
+final class TCodeGenerator implements CodeGenerator<TStruct> {
 
 	/**
 	 * Constant {@link String} containing the name for the {@link TStruct} class.
@@ -39,8 +41,9 @@ class TCodeGenerator implements CodeGenerator<TStruct> {
 	 * @param generatorState
 	 * 		stateful object used to hold the current state of the code generation process
 	 */
-	@Override
-	public void generate(final TStruct input, final GeneratorState generatorState) {
+	@EventListener
+	public void onGeneratorEvent(final GeneratorEvent<TStruct> event) {
+		final GeneratorState generatorState = event.getGeneratorState();
 
 		final JavaMethodBuilder methodBuilder = generatorState.getCurrentMethodBuilder();
 		final MethodVisitor mv = methodBuilder.getMethodVisitor();

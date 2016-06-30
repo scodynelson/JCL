@@ -6,10 +6,12 @@ package jcl.compiler.icg.generator;
 
 import jcl.LispStruct;
 import jcl.compiler.icg.CodeGenerator;
+import jcl.compiler.icg.GeneratorEvent;
 import jcl.compiler.icg.GeneratorState;
 import jcl.compiler.icg.IntermediateCodeGenerator;
 import jcl.compiler.struct.ValuesStruct;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 /**
@@ -17,7 +19,7 @@ import org.springframework.stereotype.Component;
  * value.
  */
 @Component
-class ValuesCodeGenerator implements CodeGenerator<ValuesStruct> {
+final class ValuesCodeGenerator implements CodeGenerator<ValuesStruct> {
 
 	/**
 	 * {@link IntermediateCodeGenerator} used for generating the {@link ValuesStruct#getPrimaryValue()} value.
@@ -35,8 +37,10 @@ class ValuesCodeGenerator implements CodeGenerator<ValuesStruct> {
 	 * @param generatorState
 	 * 		stateful object used to hold the current state of the code generation process
 	 */
-	@Override
-	public void generate(final ValuesStruct input, final GeneratorState generatorState) {
+	@EventListener
+	public void onGeneratorEvent(final GeneratorEvent<ValuesStruct> event) {
+		final ValuesStruct input = event.getSource();
+		final GeneratorState generatorState = event.getGeneratorState();
 
 		final LispStruct value = input.getPrimaryValue();
 		codeGenerator.generate(value, generatorState);

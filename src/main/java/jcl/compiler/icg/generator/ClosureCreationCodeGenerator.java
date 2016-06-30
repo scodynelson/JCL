@@ -12,6 +12,7 @@ import java.util.Set;
 
 import jcl.compiler.environment.Environment;
 import jcl.compiler.icg.GeneratorState;
+import jcl.compiler.icg.IntermediateCodeGenerator;
 import jcl.compiler.icg.JavaMethodBuilder;
 import jcl.compiler.struct.specialoperator.ClosureCreationStruct;
 import jcl.compiler.struct.specialoperator.PrognStruct;
@@ -38,7 +39,7 @@ abstract class ClosureCreationCodeGenerator<V, I extends ClosureCreationStruct<V
 	 * {@link PrognCodeGenerator} used for generating the {@link ClosureCreationStruct#forms}.
 	 */
 	@Autowired
-	private PrognCodeGenerator prognCodeGenerator;
+	private IntermediateCodeGenerator codeGenerator;
 
 	/**
 	 * Protected constructor.
@@ -123,7 +124,7 @@ abstract class ClosureCreationCodeGenerator<V, I extends ClosureCreationStruct<V
 		final Deque<Environment> environmentDeque = generatorState.getEnvironmentDeque();
 
 		environmentDeque.addFirst(environment);
-		prognCodeGenerator.generate(forms, generatorState);
+		codeGenerator.generate(forms, generatorState);
 		environmentDeque.removeFirst();
 
 		final int resultStore = methodBuilder.getNextAvailableStore();

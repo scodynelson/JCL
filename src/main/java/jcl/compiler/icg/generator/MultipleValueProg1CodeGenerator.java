@@ -5,6 +5,7 @@
 package jcl.compiler.icg.generator;
 
 import jcl.LispStruct;
+import jcl.compiler.icg.GeneratorEvent;
 import jcl.compiler.icg.GeneratorState;
 import jcl.compiler.icg.IntermediateCodeGenerator;
 import jcl.compiler.icg.JavaMethodBuilder;
@@ -14,6 +15,7 @@ import jcl.functions.Closure;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 /**
@@ -29,17 +31,17 @@ final class MultipleValueProg1CodeGenerator extends SpecialOperatorCodeGenerator
 	private IntermediateCodeGenerator codeGenerator;
 
 	/**
-	 * {@link PrognCodeGenerator} used for generating the values of the {@link MultipleValueProg1Struct#forms}.
-	 */
-	@Autowired
-	private PrognCodeGenerator prognCodeGenerator;
-
-	/**
 	 * Private constructor which passes 'multipleValueProg1' as the prefix value to be set in it's {@link
 	 * #methodNamePrefix} value.
 	 */
 	private MultipleValueProg1CodeGenerator() {
 		super("multipleValueProg1");
+	}
+
+	@Override
+	@EventListener
+	public void onGeneratorEvent(final GeneratorEvent<MultipleValueProg1Struct> event) {
+		super.onGeneratorEvent(event);
 	}
 
 	/**
@@ -85,7 +87,7 @@ final class MultipleValueProg1CodeGenerator extends SpecialOperatorCodeGenerator
 		mv.visitVarInsn(Opcodes.ASTORE, firstFormStore);
 
 		final PrognStruct forms = input.getForms();
-		prognCodeGenerator.generate(forms, generatorState);
+		codeGenerator.generate(forms, generatorState);
 		mv.visitInsn(Opcodes.POP);
 
 		mv.visitVarInsn(Opcodes.ALOAD, firstFormStore);

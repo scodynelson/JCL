@@ -5,6 +5,7 @@
 package jcl.compiler.icg.generator;
 
 import jcl.compiler.icg.CodeGenerator;
+import jcl.compiler.icg.GeneratorEvent;
 import jcl.compiler.icg.GeneratorState;
 import jcl.compiler.icg.JavaMethodBuilder;
 import jcl.numbers.IntegerStruct;
@@ -12,6 +13,7 @@ import org.apfloat.Apint;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 /**
@@ -19,7 +21,7 @@ import org.springframework.stereotype.Component;
  * {@link IntegerStruct} input value.
  */
 @Component
-class IntegerCodeGenerator implements CodeGenerator<IntegerStruct> {
+final class IntegerCodeGenerator implements CodeGenerator<IntegerStruct> {
 
 	/**
 	 * Constant {@link String} containing the name for the {@link IntegerStruct} class.
@@ -63,8 +65,10 @@ class IntegerCodeGenerator implements CodeGenerator<IntegerStruct> {
 	 * @param generatorState
 	 * 		stateful object used to hold the current state of the code generation process
 	 */
-	@Override
-	public void generate(final IntegerStruct input, final GeneratorState generatorState) {
+	@EventListener
+	public void onGeneratorEvent(final GeneratorEvent<IntegerStruct> event) {
+		final IntegerStruct input = event.getSource();
+		final GeneratorState generatorState = event.getGeneratorState();
 
 		final JavaMethodBuilder methodBuilder = generatorState.getCurrentMethodBuilder();
 		final MethodVisitor mv = methodBuilder.getMethodVisitor();

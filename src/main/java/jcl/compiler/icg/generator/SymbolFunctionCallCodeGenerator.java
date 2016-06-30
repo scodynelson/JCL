@@ -7,6 +7,7 @@ package jcl.compiler.icg.generator;
 import java.util.List;
 
 import jcl.LispStruct;
+import jcl.compiler.icg.GeneratorEvent;
 import jcl.compiler.icg.GeneratorState;
 import jcl.compiler.icg.IntermediateCodeGenerator;
 import jcl.compiler.icg.JavaMethodBuilder;
@@ -17,6 +18,7 @@ import jcl.symbols.SymbolStruct;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 /**
@@ -24,13 +26,6 @@ import org.springframework.stereotype.Component;
  */
 @Component
 final class SymbolFunctionCallCodeGenerator extends SpecialOperatorCodeGenerator<SymbolFunctionCallStruct> {
-
-	/**
-	 * {@link SymbolFunctionCodeGenerator} for generating the {@link SymbolFunctionCallStruct#symbolCompilerFunction}
-	 * when the value of {@link SymbolFunctionCallStruct#isRecursiveCall} is false.
-	 */
-	@Autowired
-	private SymbolFunctionCodeGenerator symbolFunctionCodeGenerator;
 
 	/**
 	 * {@link IntermediateCodeGenerator} used for generating the {@link SymbolFunctionCallStruct#arguments} values.
@@ -44,6 +39,12 @@ final class SymbolFunctionCallCodeGenerator extends SpecialOperatorCodeGenerator
 	 */
 	private SymbolFunctionCallCodeGenerator() {
 		super("symbolFunctionCall");
+	}
+
+	@Override
+	@EventListener
+	public void onGeneratorEvent(final GeneratorEvent<SymbolFunctionCallStruct> event) {
+		super.onGeneratorEvent(event);
 	}
 
 	/**
@@ -99,7 +100,7 @@ final class SymbolFunctionCallCodeGenerator extends SpecialOperatorCodeGenerator
 			functionStore = 0;
 		} else {
 			final SymbolCompilerFunctionStruct functionSymbol = input.getSymbolCompilerFunction();
-			symbolFunctionCodeGenerator.generate(functionSymbol, generatorState);
+			codeGenerator.generate(functionSymbol, generatorState);
 
 			functionStore = methodBuilder.getNextAvailableStore();
 			mv.visitVarInsn(Opcodes.ASTORE, functionStore);

@@ -5,23 +5,26 @@
 package jcl.compiler.icg.generator;
 
 import jcl.compiler.icg.CodeGenerator;
+import jcl.compiler.icg.GeneratorEvent;
 import jcl.compiler.icg.GeneratorState;
+import jcl.compiler.icg.IntermediateCodeGenerator;
 import jcl.compiler.struct.specialoperator.LambdaCompilerFunctionStruct;
 import jcl.compiler.struct.specialoperator.lambda.LambdaStruct;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 /**
  * Class to perform the generation of the code for anonymous lambda function objects, such as '#'(lambda ())'.
  */
 @Component
-class LambdaFunctionCodeGenerator implements CodeGenerator<LambdaCompilerFunctionStruct> {
+final class LambdaFunctionCodeGenerator implements CodeGenerator<LambdaCompilerFunctionStruct> {
 
 	/**
 	 * {@link LambdaCodeGenerator} used for generating the {@link LambdaCompilerFunctionStruct#lambdaStruct} value.
 	 */
 	@Autowired
-	private LambdaCodeGenerator lambdaCodeGenerator;
+	private IntermediateCodeGenerator codeGenerator;
 
 	/**
 	 * {@inheritDoc}
@@ -43,10 +46,12 @@ class LambdaFunctionCodeGenerator implements CodeGenerator<LambdaCompilerFunctio
 	 * @param generatorState
 	 * 		stateful object used to hold the current state of the code generation process
 	 */
-	@Override
-	public void generate(final LambdaCompilerFunctionStruct input, final GeneratorState generatorState) {
+	@EventListener
+	public void onGeneratorEvent(final GeneratorEvent<LambdaCompilerFunctionStruct> event) {
+		final LambdaCompilerFunctionStruct input = event.getSource();
+		final GeneratorState generatorState = event.getGeneratorState();
 
 		final LambdaStruct lambdaStruct = input.getLambdaStruct();
-		lambdaCodeGenerator.generate(lambdaStruct, generatorState);
+		codeGenerator.generate(lambdaStruct, generatorState);
 	}
 }

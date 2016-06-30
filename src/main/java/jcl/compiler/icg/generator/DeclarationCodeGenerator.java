@@ -9,6 +9,7 @@ import jcl.compiler.icg.CodeGenerator;
 import jcl.compiler.icg.GeneratorEvent;
 import jcl.compiler.icg.GeneratorState;
 import jcl.compiler.icg.JavaMethodBuilder;
+import jcl.symbols.DeclarationStruct;
 import jcl.symbols.SymbolStruct;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
@@ -16,10 +17,10 @@ import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 @Component
-final class SymbolValueCodeGenerator implements CodeGenerator<SymbolStruct> {
+final class DeclarationCodeGenerator implements CodeGenerator<DeclarationStruct> {
 
 	@EventListener
-	public void onGeneratorEvent(final GeneratorEvent<SymbolStruct> event) {
+	public void onGeneratorEvent(final GeneratorEvent<DeclarationStruct> event) {
 		final SymbolStruct input = event.getSource();
 		final GeneratorState generatorState = event.getGeneratorState();
 

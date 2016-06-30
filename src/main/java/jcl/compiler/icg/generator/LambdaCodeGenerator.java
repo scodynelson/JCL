@@ -18,6 +18,7 @@ import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
 import jcl.compiler.environment.binding.lambdalist.RestParameter;
 import jcl.compiler.environment.binding.lambdalist.SuppliedPParameter;
 import jcl.compiler.icg.CodeGenerator;
+import jcl.compiler.icg.GeneratorEvent;
 import jcl.compiler.icg.GeneratorState;
 import jcl.compiler.icg.IntermediateCodeGenerator;
 import jcl.compiler.icg.JavaClassBuilder;
@@ -36,6 +37,7 @@ import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 /**
@@ -44,7 +46,7 @@ import org.springframework.stereotype.Component;
  * values, and the execution body containing the {@link LambdaStruct#forms} values.
  */
 @Component
-class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
+final class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 
 	/**
 	 * Constant {@link String} containing the description for the {@link Component} annotation.
@@ -190,20 +192,6 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 	private IntermediateCodeGenerator codeGenerator;
 
 	/**
-	 * {@link PrognCodeGenerator} used for generating the {@link LambdaStruct#forms}.
-	 */
-	@Autowired
-	private PrognCodeGenerator prognCodeGenerator;
-
-	/**
-	 * {@link NILCodeGenerator} used for generating {@link NILStruct#INSTANCE} constant as the default result in the
-	 * {@link CompiledFunctionStruct#getInitForm(Closure, SymbolStruct)} method and for the initial init-form value for
-	 * 'optional', 'key', and 'aux' keyword parameters.
-	 */
-	@Autowired
-	private NILCodeGenerator nilCodeGenerator;
-
-	/**
 	 * {@inheritDoc}
 	 * Generation method for {@link LambdaStruct} objects, by performing the following operations:
 	 * <ol>
@@ -259,8 +247,10 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 	 * @param generatorState
 	 * 		stateful object used to hold the current state of the code generation process
 	 */
-	@Override
-	public void generate(final LambdaStruct input, final GeneratorState generatorState) {
+	@EventListener
+	public void onGeneratorEvent(final GeneratorEvent<LambdaStruct> event) {
+		final LambdaStruct input = event.getSource();
+		final GeneratorState generatorState = event.getGeneratorState();
 
 		final String className = input.getClassName();
 		final String fileName = CodeGenerators.getFileNameFromClassName(className);
@@ -515,7 +505,7 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 		final Deque<Environment> environmentDeque = generatorState.getEnvironmentDeque();
 
 		environmentDeque.addFirst(environment);
-		prognCodeGenerator.generate(forms, generatorState);
+		codeGenerator.generate(forms, generatorState);
 		environmentDeque.removeFirst();
 
 		mv.visitInsn(Opcodes.ARETURN);
@@ -620,7 +610,7 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 			                 initFormVarPackageStore, initFormVarSymbolStore, var, initForm);
 		}
 
-		nilCodeGenerator.generate(NILStruct.INSTANCE, generatorState);
+		codeGenerator.generate(NILStruct.INSTANCE, generatorState);
 		mv.visitInsn(Opcodes.ARETURN);
 
 		mv.visitMaxs(-1, -1);
@@ -895,7 +885,7 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 			final SymbolStruct optionalSymbol = optionalBinding.getVar();
 			CodeGenerators.generateSymbol(optionalSymbol, generatorState, optionalPackageStore, optionalSymbolStore);
 
-			nilCodeGenerator.generate(NILStruct.INSTANCE, generatorState);
+			codeGenerator.generate(NILStruct.INSTANCE, generatorState);
 			mv.visitVarInsn(Opcodes.ASTORE, optionalInitFormStore);
 
 			final SuppliedPParameter suppliedPBinding = optionalBinding.getSuppliedPBinding();
@@ -1100,7 +1090,7 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 			final SymbolStruct keySymbol = keyBinding.getVar();
 			CodeGenerators.generateSymbol(keySymbol, generatorState, keyPackageStore, keySymbolStore);
 
-			nilCodeGenerator.generate(NILStruct.INSTANCE, generatorState);
+			codeGenerator.generate(NILStruct.INSTANCE, generatorState);
 			mv.visitVarInsn(Opcodes.ASTORE, keyInitFormStore);
 
 			final SymbolStruct keyName = keyBinding.getKeyName();
@@ -1326,7 +1316,7 @@ class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 			final SymbolStruct auxSymbol = auxBinding.getVar();
 			CodeGenerators.generateSymbol(auxSymbol, generatorState, auxPackageStore, auxSymbolStore);
 
-			nilCodeGenerator.generate(NILStruct.INSTANCE, generatorState);
+			codeGenerator.generate(NILStruct.INSTANCE, generatorState);
 			mv.visitVarInsn(Opcodes.ASTORE, auxInitFormStore);
 
 			mv.visitTypeInsn(Opcodes.NEW, GenerationConstants.AUX_BINDING_NAME);

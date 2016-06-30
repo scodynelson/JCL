@@ -4,9 +4,8 @@ buildscript {
 		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
 	}
 }
-
 plugins {
-	id "org.sonarqube" version "1.0"
+	id "org.sonarqube" version "2.0.1"
 }
 
 description = "JCL"
@@ -14,73 +13,19 @@ group = 'jcl'
 version = '1.0-SNAPSHOT'
 
 apply plugin: 'java'
+apply plugin: 'application'
 apply plugin: 'spring-boot'
+
+compileJava {
+	options.compilerArgs << "-Xlint"
+}
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
 
 jar {
 	baseName = 'jcl'
 	version = '1.0-SNAPSHOT'
 }
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
-
-def lispSourceTree = fileTree(dir:'src/main/lisp/jcl/compiler', include: '**/*.lisp')
-def lispCompiledTree = fileTree(dir:'compiled-lisp', include: '**/*.jar')
-
-task cleanLispJars {
-	def compiledLispDirectory = "$projectDir/compiled-lisp"
-	new File(compiledLispDirectory).mkdirs();
-
-	lispCompiledTree.each { file ->
-		doLast {
-			println("Removing Lisp Jar")
-			println(file.absolutePath)
-
-			file.delete()
-		}
-	}
-}
-
-task generateLispJars {
-	def compiledLispDirectory = "$projectDir/compiled-lisp"
-	new File(compiledLispDirectory).mkdirs();
-
-	lispSourceTree.each { file ->
-		doLast {
-			println("Generating Lisp Jar")
-			println(file.absolutePath)
-
-			javaexec {
-				main = 'jcl.system.JCL'
-				classpath sourceSets.main.runtimeClasspath
-				args "--compileFileSrcDir=$file.absolutePath"
-				args "--compileFileDestDir=$compiledLispDirectory/"
-			}
-			// TODO: Fix the need to prepend a '/' to the directory name. This is a problem with the Pathname object.
-			println()
-		}
-	}
-}
-
-task unpackLispJars {
-	lispCompiledTree.each { file ->
-		doLast {
-			println("Unpacking Lisp Jar")
-			println(file.absolutePath)
-
-			copy {
-				from zipTree(file)
-				into compileJava.destinationDir
-			}
-		}
-	}
-}
-jar.dependsOn(unpackLispJars)
-
-compileJava {
-	options.compilerArgs << "-Xlint"
-}
-
-apply plugin: 'application'
 
 //********* DEPENDENCIES *********//
 
@@ -133,34 +78,85 @@ dependencies {
 	testCompile("org.springframework.boot:spring-boot-starter-test")
 }
 
-//********* TEST *********//
+//********* LISP JAR GENERATION *********//
+
+def lispSourceTree = fileTree(dir: 'src/main/lisp/jcl/compiler', include: '**/*.lisp')
+def lispCompiledTree = fileTree(dir: 'compiled-lisp', include: '**/*.jar')
+
+task cleanLispJars {
+	def compiledLispDirectory = "$projectDir/compiled-lisp"
+	new File(compiledLispDirectory).mkdirs();
+
+	lispCompiledTree.each { file ->
+		doLast {
+			println("Removing Lisp Jar")
+			println(file.absolutePath)
+
+			file.delete()
+		}
+	}
+}
+
+task generateLispJars {
+	def compiledLispDirectory = "$projectDir/compiled-lisp"
+	new File(compiledLispDirectory).mkdirs();
+
+	lispSourceTree.each { file ->
+		doLast {
+			println("Generating Lisp Jar")
+			println(file.absolutePath)
+
+			javaexec {
+				main = 'jcl.system.JCL'
+				classpath sourceSets.main.runtimeClasspath
+				args "--compileFileSrcDir=$file.absolutePath"
+				args "--compileFileDestDir=$compiledLispDirectory/"
+			}
+			// TODO: Fix the need to prepend a '/' to the directory name. This is a problem with the Pathname object.
+			println()
+		}
+	}
+}
+
+task unpackLispJars {
+	lispCompiledTree.each { file ->
+		doLast {
+			println("Unpacking Lisp Jar")
+			println(file.absolutePath)
+
+			copy {
+				from zipTree(file)
+				into compileJava.destinationDir
+			}
+		}
+	}
+}
+jar.dependsOn(unpackLispJars)
+
+//********* JACOCO *********//
 
 apply plugin: 'jacoco'
 jacoco {
-	toolVersion = '0.7.6.201602180812'
+	toolVersion = '0.7.7.201606060606'
 }
 test {
-	useTestNG()
-
 	jacoco {
-		append = true
 		destinationFile = file("$buildDir/jacoco/jacocoTest.exec")
 		classDumpFile = file("$buildDir/jacoco/classpathdumps")
 	}
 }
 jacocoTestReport {
-	group = "Reporting"
-	description = "Generate Jacoco coverage reports after running tests."
-	additionalSourceDirs = files(sourceSets.main.allJava.srcDirs)
 	reports {
 		xml.enabled false
 		csv.enabled false
 		html.destination "$buildDir/jacocoHtml"
 	}
 }
+jacocoTestReport.dependsOn(test)
 
 //********* SONAR *********//
 
+apply plugin: 'org.sonarqube'
 sonarqube {
 	properties {
 		property "sonar.host.url", "http://localhost:9000"

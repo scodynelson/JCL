@@ -7,7 +7,12 @@ package jcl.numbers;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
+import jcl.reader.struct.ReaderVariables;
+import jcl.types.DoubleFloatType;
 import jcl.types.FloatType;
+import jcl.types.LongFloatType;
+import jcl.types.ShortFloatType;
+import jcl.types.SingleFloatType;
 import org.apache.commons.math3.fraction.BigFraction;
 import org.apache.commons.math3.util.ArithmeticUtils;
 import org.apfloat.Apcomplex;
@@ -495,6 +500,23 @@ public final class FloatStruct extends RealStructImpl<Apfloat> {
 
 	@Override
 	public String toString() {
-		return ap.toString(true);
+
+		final FloatType floatType = (FloatType) getType();
+		final FloatType defaultFloatFormat = ReaderVariables.READ_DEFAULT_FLOAT_FORMAT.getVariableValue();
+
+		String floatString = ap.toString(true);
+		if (!floatType.equals(defaultFloatFormat)) {
+			if (floatType.equals(ShortFloatType.INSTANCE)) {
+				floatString = floatString.replace('E', 'S');
+			} else if (floatType.equals(SingleFloatType.INSTANCE)) {
+				floatString = floatString.replace('E', 'F');
+			} else if (floatType.equals(DoubleFloatType.INSTANCE)) {
+				floatString = floatString.replace('E', 'D');
+			} else if (floatType.equals(LongFloatType.INSTANCE)) {
+				floatString = floatString.replace('E', 'L');
+			}
+		}
+
+		return floatString;
 	}
 }

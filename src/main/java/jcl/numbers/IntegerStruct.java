@@ -7,6 +7,7 @@ package jcl.numbers;
 import java.math.BigInteger;
 import java.util.List;
 
+import jcl.printer.PrinterVariables;
 import jcl.types.IntegerType;
 import org.apfloat.Apcomplex;
 import org.apfloat.Apfloat;
@@ -639,8 +640,54 @@ public final class IntegerStruct extends RationalStructImpl<Apint> {
 		ToString
 	 */
 
+	/**
+	 * Int constant for the value '2'.
+	 */
+	private static final int TWO_PRINTER = 2;
+
+	/**
+	 * Int constant for the value '8'.
+	 */
+	private static final int EIGHT_PRINTER = 8;
+
+	/**
+	 * Int constant for the value '10'.
+	 */
+	private static final int TEN_PRINTER = 10;
+
+	/**
+	 * Int constant for the value '16'.
+	 */
+	private static final int SIXTEEN_PRINTER = 16;
+
 	@Override
 	public String toString() {
-		return ap.toString(true);
+		final boolean printRadix = PrinterVariables.PRINT_RADIX.getVariableValue().booleanValue();
+		final int printBase = PrinterVariables.PRINT_BASE.getVariableValue().intValue();
+
+		final StringBuilder stringBuilder = new StringBuilder();
+
+		if (printRadix) {
+			if (printBase == TWO_PRINTER) {
+				stringBuilder.append("#b");
+			} else if (printBase == EIGHT_PRINTER) {
+				stringBuilder.append("#o");
+			} else if (printBase == SIXTEEN_PRINTER) {
+				stringBuilder.append("#x");
+			} else {
+				stringBuilder.append('#');
+				stringBuilder.append(printBase);
+				stringBuilder.append('r');
+			}
+		}
+
+		final BigInteger bigInteger = bigIntegerValue();
+		stringBuilder.append(bigInteger.toString(printBase));
+
+		if (printRadix && (printBase == TEN_PRINTER)) {
+			stringBuilder.append('.');
+		}
+
+		return stringBuilder.toString();
 	}
 }

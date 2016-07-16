@@ -6,6 +6,7 @@ import java.util.regex.Pattern;
 
 import jcl.conditions.exceptions.TypeErrorException;
 import jcl.numbers.IntegerStruct;
+import jcl.printer.PrinterVariables;
 import jcl.types.BitType;
 import jcl.types.BitVectorType;
 import jcl.types.SimpleBitVectorType;
@@ -112,5 +113,46 @@ public class BitVectorStruct extends VectorStruct<IntegerStruct> {
 		}
 		return new EqualsBuilder().appendSuper(super.equals(obj))
 		                          .isEquals();
+	}
+
+	@Override
+	public String toString() {
+		final boolean printArray = PrinterVariables.PRINT_ARRAY.getVariableValue().booleanValue();
+
+		final StringBuilder stringBuilder = new StringBuilder();
+
+		if (printArray) {
+			stringBuilder.append("#*");
+
+			final int amountToPrint = (fillPointer == null) ? contents.size() : fillPointer;
+
+			for (int i = 0; i < amountToPrint; i++) {
+				final IntegerStruct integerStruct = contents.get(i);
+				final String printedIntegerStruct = integerStruct.toString();
+
+				stringBuilder.append(printedIntegerStruct);
+			}
+		} else {
+			final String typeClassName = getType().getClass().getSimpleName().toUpperCase();
+
+			stringBuilder.append("#<");
+			stringBuilder.append(typeClassName);
+			stringBuilder.append(' ');
+
+			stringBuilder.append(totalSize);
+
+			if (fillPointer != null) {
+				stringBuilder.append(" fill-pointer ");
+				stringBuilder.append(fillPointer);
+			}
+
+			if (isAdjustable) {
+				stringBuilder.append(" adjustable");
+			}
+
+			stringBuilder.append('>');
+		}
+
+		return stringBuilder.toString();
 	}
 }

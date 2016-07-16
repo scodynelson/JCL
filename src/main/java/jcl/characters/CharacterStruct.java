@@ -15,6 +15,7 @@ import jcl.classes.BuiltInClassStruct;
 import jcl.conditions.exceptions.ErrorException;
 import jcl.numbers.IntegerStruct;
 import jcl.packages.PackageStruct;
+import jcl.printer.PrinterVariables;
 import jcl.symbols.NILStruct;
 import jcl.types.BaseCharType;
 import jcl.types.CharacterType;
@@ -810,5 +811,23 @@ public class CharacterStruct extends BuiltInClassStruct {
 
 		final Character result = Character.toUpperCase(digit);
 		return new CharacterStruct((int) result);
+	}
+
+	@Override
+	public String toString() {
+		final boolean printEscape = PrinterVariables.PRINT_ESCAPE.getVariableValue().booleanValue();
+
+		final StringBuilder stringBuilder = new StringBuilder();
+		if (printEscape) {
+			stringBuilder.append("#\\");
+		}
+
+		if (Character.isWhitespace(codePoint)) {
+			stringBuilder.append(Character.getName(codePoint));
+		} else {
+			stringBuilder.appendCodePoint(codePoint);
+		}
+
+		return stringBuilder.toString();
 	}
 }

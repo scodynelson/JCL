@@ -7,14 +7,13 @@ import jcl.LispStruct;
 import jcl.LispType;
 import jcl.conditions.exceptions.ErrorException;
 import jcl.conditions.exceptions.TypeErrorException;
+import jcl.printer.PrinterVariables;
 import jcl.sequences.SequenceStruct;
 import jcl.types.SimpleVectorType;
 import jcl.types.TType;
 import jcl.types.VectorType;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
  * The {@link VectorStruct} is the object representation of a Lisp 'vector' type.
@@ -207,13 +206,56 @@ public class VectorStruct<TYPE extends LispStruct> extends ArrayStruct<TYPE> imp
 
 	@Override
 	public String toString() {
-		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(isAdjustable)
-		                                                                .append(rank)
-		                                                                .append(totalSize)
-		                                                                .append(contents)
-		                                                                .append(dimensions)
-		                                                                .append(elementType)
-		                                                                .append(fillPointer)
-		                                                                .toString();
+		// TODO: Ignoring *PRINT-LEVEL* and *PRINT-LENGTH*
+
+		final boolean printArray = PrinterVariables.PRINT_ARRAY.getVariableValue().booleanValue();
+		final boolean printReadably = PrinterVariables.PRINT_READABLY.getVariableValue().booleanValue();
+
+		final StringBuilder stringBuilder = new StringBuilder();
+
+		if (printArray || printReadably) {
+			stringBuilder.append("#(");
+
+			final int amountToPrint = (fillPointer == null) ? contents.size() : fillPointer;
+
+			for (int i = 0; i < amountToPrint; i++) {
+				final TYPE lispStruct = contents.get(i);
+				final String printedLispStruct = lispStruct.toString();
+
+				stringBuilder.append(printedLispStruct);
+
+				if (i < (amountToPrint - 1)) {
+					stringBuilder.append(' ');
+				}
+			}
+
+			stringBuilder.append(')');
+		} else {
+			final String typeClassName = getType().getClass().getSimpleName().toUpperCase();
+
+			stringBuilder.append("#<");
+			stringBuilder.append(typeClassName);
+			stringBuilder.append(' ');
+
+			stringBuilder.append(totalSize);
+
+			stringBuilder.append(" type ");
+
+			final String elementTypeClassName = elementType.getClass().getName().toUpperCase();
+			stringBuilder.append(elementTypeClassName);
+
+			if (fillPointer != null) {
+				stringBuilder.append(" fill-pointer ");
+				stringBuilder.append(fillPointer);
+			}
+
+			if (isAdjustable) {
+				stringBuilder.append(" adjustable");
+			}
+
+			stringBuilder.append('>');
+		}
+
+		return stringBuilder.toString();
 	}
 }

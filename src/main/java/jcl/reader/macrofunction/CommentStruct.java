@@ -7,8 +7,6 @@ package jcl.reader.macrofunction;
 import jcl.LispStruct;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
  * The object representation of a Lisp 'comment' type.
@@ -63,7 +61,8 @@ public class CommentStruct implements LispStruct {
 
 	@Override
 	public String toString() {
-		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(commentString)
-		                                                                .toString();
+//		return object.getCommentString();
+		// NOTE: disabling comment printing for now.
+		return "";
 	}
 }

@@ -9,8 +9,6 @@ import java.lang.reflect.Method;
 import jcl.classes.BuiltInClassStruct;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 public class JavaMethodStruct extends BuiltInClassStruct {
 
@@ -52,7 +50,6 @@ public class JavaMethodStruct extends BuiltInClassStruct {
 
 	@Override
 	public String toString() {
-		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(javaMethod)
-		                                                                .toString();
+		return javaMethod.toString();
 	}
 }

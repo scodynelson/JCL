@@ -5,6 +5,7 @@
 package jcl.compiler.struct.specialoperator;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import jcl.LispStruct;
 import jcl.compiler.struct.CompilerSpecialOperatorStruct;
@@ -19,5 +20,12 @@ public class PrognStruct extends CompilerSpecialOperatorStruct {
 
 	public List<LispStruct> getForms() {
 		return forms;
+	}
+
+	@Override
+	public String toString() {
+		return forms.stream()
+		            .map(Object::toString)
+		            .collect(Collectors.joining(" "));
 	}
 }

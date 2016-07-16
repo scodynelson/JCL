@@ -3,11 +3,16 @@ package jcl.arrays;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 import jcl.characters.CharacterStruct;
 import jcl.conditions.exceptions.SimpleErrorException;
 import jcl.packages.PackageStruct;
 import jcl.pathnames.PathnameStruct;
+import jcl.printer.PrinterVariables;
+import jcl.reader.struct.ReaderVariables;
+import jcl.reader.struct.ReadtableStruct;
+import jcl.reader.struct.SyntaxType;
 import jcl.symbols.SymbolStruct;
 import jcl.types.BaseCharType;
 import jcl.types.BaseStringType;
@@ -189,5 +194,40 @@ public class StringStruct extends VectorStruct<CharacterStruct> {
 		}
 		return new EqualsBuilder().appendSuper(super.equals(obj))
 		                          .isEquals();
+	}
+
+	@Override
+	public String toString() {
+		final boolean printEscape = PrinterVariables.PRINT_ESCAPE.getVariableValue().booleanValue();
+
+		final ReadtableStruct readtable = ReaderVariables.READTABLE.getVariableValue();
+
+		final StringBuilder stringBuilder = new StringBuilder();
+		if (printEscape) {
+			stringBuilder.append('"');
+		}
+
+		final List<Integer> codePointContents =
+				getContents().stream()
+				             .map(CharacterStruct::getCodePoint)
+				             .collect(Collectors.toList());
+
+		final int amountToPrint = (fillPointer == null) ? codePointContents.size() : fillPointer;
+
+		for (int i = 0; i < amountToPrint; i++) {
+			final int codePoint = codePointContents.get(i);
+
+			final SyntaxType syntaxType = readtable.getSyntaxType(codePoint);
+			if ((codePoint == '"') || (syntaxType == SyntaxType.SINGLE_ESCAPE)) {
+				stringBuilder.append('\\');
+			}
+			stringBuilder.appendCodePoint(codePoint);
+		}
+
+		if (printEscape) {
+			stringBuilder.append('"');
+		}
+
+		return stringBuilder.toString();
 	}
 }

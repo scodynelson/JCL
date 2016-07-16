@@ -119,4 +119,12 @@ public class EchoStreamStruct extends AbstractDualStreamStruct {
 	public Long filePosition(final Long filePosition) {
 		return null;
 	}
+
+	@Override
+	public String toString() {
+		final String typeClassName = getType().getClass().getSimpleName().toUpperCase();
+		final String printedInputStream = inputStream.toString();
+		final String printedOutputStream = outputStream.toString();
+		return "#<" + typeClassName + " input " + printedInputStream + ", output " + printedOutputStream + '>';
+	}
 }

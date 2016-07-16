@@ -11,8 +11,6 @@ import jcl.LispStruct;
 import jcl.symbols.NILStruct;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 public class ValuesStruct implements LispStruct {
 
@@ -61,7 +59,22 @@ public class ValuesStruct implements LispStruct {
 
 	@Override
 	public String toString() {
-		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(valuesList)
-		                                                                .toString();
+
+		final StringBuilder stringBuilder = new StringBuilder();
+
+		final int numberOfValues = valuesList.size();
+
+		for (int i = 0; i < numberOfValues; i++) {
+			final LispStruct value = valuesList.get(i);
+
+			final String printedValue = value.toString();
+			stringBuilder.append(printedValue);
+
+			if (i < (numberOfValues - 1)) {
+				stringBuilder.append('\n');
+			}
+		}
+
+		return stringBuilder.toString();
 	}
 }

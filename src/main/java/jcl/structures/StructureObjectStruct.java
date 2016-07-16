@@ -11,8 +11,6 @@ import jcl.conditions.exceptions.SimpleErrorException;
 import jcl.symbols.SymbolStruct;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -118,10 +116,29 @@ public class StructureObjectStruct implements LispStruct {
 
 	@Override
 	public String toString() {
-		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(structureClass)
-		                                                                .append(structureSymbol)
-		                                                                .append(parentStructure)
-		                                                                .append(slots)
-		                                                                .toString();
+		final StringBuilder stringBuilder = new StringBuilder();
+
+		stringBuilder.append("#S(");
+
+		final String printedStructureSymbol = structureSymbol.toString();
+		stringBuilder.append(printedStructureSymbol);
+
+		final List<Pair<SymbolStruct, LispStruct>> allSlots = getSlots();
+		for (final Pair<SymbolStruct, LispStruct> slot : allSlots) {
+			final SymbolStruct slotSymbol = slot.getLeft();
+			final LispStruct slotValue = slot.getRight();
+
+			stringBuilder.append(" :");
+			final String printedSlotSymbol = slotSymbol.toString();
+			stringBuilder.append(printedSlotSymbol);
+
+			stringBuilder.append(' ');
+			final String printedSlotValue = slotValue.toString();
+			stringBuilder.append(printedSlotValue);
+		}
+
+		stringBuilder.append(')');
+
+		return stringBuilder.toString();
 	}
 }

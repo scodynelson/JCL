@@ -649,4 +649,10 @@ public class PackageStruct extends BuiltInClassStruct {
 
 		return foundSymbol;
 	}
+
+	@Override
+	public String toString() {
+//		final String typeClassName = getType().getClass().getSimpleName().toUpperCase();
+		return "#<PACKAGE \"" + name + "\">";
+	}
 }

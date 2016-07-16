@@ -21,6 +21,8 @@ import java.util.regex.Pattern;
 import jcl.classes.BuiltInClassStruct;
 import jcl.conditions.exceptions.ErrorException;
 import jcl.conditions.exceptions.FileErrorException;
+import jcl.printer.PrinterVariables;
+import jcl.symbols.BooleanStruct;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.SystemUtils;
@@ -961,6 +963,22 @@ public class PathnameStruct extends BuiltInClassStruct {
 			}
 			stringBuilder.append(File.separatorChar);
 		}
+
+		return stringBuilder.toString();
+	}
+
+	@Override
+	public String toString() {
+		final BooleanStruct printEscape = PrinterVariables.PRINT_ESCAPE.getVariableValue();
+
+		final StringBuilder stringBuilder = new StringBuilder();
+
+		if (printEscape.booleanValue()) {
+			stringBuilder.append("#P");
+		}
+		stringBuilder.append('"');
+		stringBuilder.append(getNamestring());
+		stringBuilder.append('"');
 
 		return stringBuilder.toString();
 	}

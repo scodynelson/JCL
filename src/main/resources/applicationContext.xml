@@ -18,64 +18,6 @@
 		<value>${lisp.source.dir}/lists/lists.lisp</value>
 	</util:list>
 
-	<!-- Printer -->
-
-	<util:map id="printerStrategies"
-	          key-type="java.lang.Class"
-	          value-type="jcl.printer.LispPrinter">
-
-		<entry key="jcl.arrays.ArrayStruct" value-ref="arrayStructPrinter"/>
-		<entry key="jcl.arrays.BitVectorStruct" value-ref="bitVectorStructPrinter"/>
-		<entry key="jcl.arrays.StringStruct" value-ref="stringStructPrinter"/>
-		<entry key="jcl.arrays.VectorStruct" value-ref="vectorStructPrinter"/>
-
-		<entry key="jcl.characters.CharacterStruct" value-ref="characterStructPrinter"/>
-
-		<entry key="jcl.compiler.struct.ValuesStruct" value-ref="valuesStructPrinter"/>
-
-		<entry key="jcl.hashtables.HashTableStruct" value-ref="hashTableStructPrinter"/>
-		<entry key="jcl.hashtables.HashTableStruct.KeyWrapper" value-ref="hashTableKeyWrapperPrinter"/>
-
-		<entry key="jcl.java.JavaClassStruct" value-ref="javaClassStructPrinter"/>
-		<entry key="jcl.java.JavaMethodStruct" value-ref="javaMethodStructPrinter"/>
-		<entry key="jcl.java.JavaObjectStruct" value-ref="javaObjectStructPrinter"/>
-
-		<entry key="jcl.lists.ConsStruct" value-ref="consStructPrinter"/>
-
-		<entry key="jcl.numbers.ComplexStruct" value-ref="complexStructPrinter"/>
-		<entry key="jcl.numbers.FloatStruct" value-ref="floatStructPrinter"/>
-		<entry key="jcl.numbers.IntegerStruct" value-ref="integerStructPrinter"/>
-		<entry key="jcl.numbers.RatioStruct" value-ref="ratioStructPrinter"/>
-
-		<entry key="jcl.packages.PackageStruct" value-ref="packageStructPrinter"/>
-
-		<entry key="jcl.pathnames.PathnameStruct" value-ref="pathnameStructPrinter"/>
-
-		<entry key="jcl.reader.macrofunction.CommentStruct" value-ref="commentStructPrinter"/>
-
-		<entry key="jcl.streams.EchoStreamStruct" value-ref="echoStreamStructPrinter"/>
-		<entry key="jcl.streams.SynonymStreamStruct" value-ref="synonymStreamStructPrinter"/>
-		<entry key="jcl.streams.TwoWayStreamStruct" value-ref="twoWayStreamStructPrinter"/>
-
-		<entry key="jcl.structures.StructureObjectStruct" value-ref="structureObjectStructPrinter"/>
-
-		<entry key="jcl.symbols.SymbolStruct" value-ref="symbolStructPrinter"/>
-
-		<entry key="jcl.compiler.struct.specialoperator.BlockStruct" value-ref="blockStructPrinter"/>
-		<entry key="jcl.compiler.struct.specialoperator.IfStruct" value-ref="ifStructPrinter"/>
-		<entry key="jcl.compiler.struct.specialoperator.LetStruct" value-ref="letStructPrinter"/>
-		<entry key="jcl.compiler.struct.specialoperator.PrognStruct" value-ref="prognStructPrinter"/>
-		<entry key="jcl.compiler.struct.specialoperator.QuoteStruct" value-ref="quoteStructPrinter"/>
-		<entry key="jcl.compiler.struct.specialoperator.ReturnFromStruct" value-ref="returnFromStructPrinter"/>
-		<entry key="jcl.compiler.struct.specialoperator.SetqStruct" value-ref="setqStructPrinter"/>
-		<entry key="jcl.compiler.struct.specialoperator.SymbolFunctionCallStruct" value-ref="symbolFunctionCallStructPrinter"/>
-		<entry key="jcl.compiler.struct.specialoperator.TagbodyStruct" value-ref="tagbodyStructPrinter"/>
-
-		<entry key="jcl.compiler.struct.specialoperator.go.GoIntegerStruct" value-ref="goIntegerStructPrinter"/>
-		<entry key="jcl.compiler.struct.specialoperator.go.GoSymbolStruct" value-ref="goSymbolStructPrinter"/>
-
-	</util:map>
-
 	<!-- Semantic Analyzer -->
 
 	<util:map id="goStructFactoryStrategies"

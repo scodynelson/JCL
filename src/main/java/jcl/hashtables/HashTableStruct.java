@@ -161,6 +161,17 @@ public class HashTableStruct extends BuiltInClassStruct {
 		}
 	}
 
+	@Override
+	public String toString() {
+//		final String typeClassName = getType().getClass().getSimpleName().toUpperCase();
+
+		final String printedTest = test.toString();
+
+		final BigInteger mapSize = getCount();
+
+		return "#<" + "HASH-TABLE" + " :TEST " + printedTest + " :SIZE " + mapSize + '>';
+	}
+
 	/**
 	 * Private inner class that acts as a wrapper around hash keys for proper equality testing.
 	 */
@@ -216,6 +227,11 @@ public class HashTableStruct extends BuiltInClassStruct {
 
 			final LispStruct lispStruct = (LispStruct) obj;
 			return equator.equate(key, lispStruct);
+		}
+
+		@Override
+		public String toString() {
+			return key.toString();
 		}
 
 		/**

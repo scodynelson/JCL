@@ -15,9 +15,12 @@ import jcl.functions.expanders.CompilerMacroFunctionExpander;
 import jcl.functions.expanders.MacroFunctionExpander;
 import jcl.functions.expanders.SymbolMacroExpander;
 import jcl.lists.ListStruct;
+import jcl.packages.GlobalPackageStruct;
 import jcl.packages.PackageStruct;
+import jcl.packages.PackageSymbolStruct;
 import jcl.packages.PackageVariables;
 import jcl.structures.StructureClassStruct;
+import jcl.system.CommonLispSymbols;
 import jcl.types.SymbolType;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -635,6 +638,39 @@ public class SymbolStruct extends BuiltInClassStruct {
 
 	@Override
 	public String toString() {
+//		final BooleanStruct printEscape = PrinterVariables.PRINT_ESCAPE.getVariableValue();
+
+		// TODO: deal with *PRINT-CASE* and *PRINT-ESCAPE*
+
+		if (symbolPackage == null) {
+			return "#:" + name;
+		}
+
+		// TODO: look into symbols with '|x| pattern...
+
+		if (GlobalPackageStruct.KEYWORD.equals(symbolPackage)) {
+			return ':' + name;
+		}
+
+		// TODO: the following isn't right. It's more like the symbol is not "accessible" in the current package...
+		// TODO: probably by use of 'findSymbol'
+
+		final PackageStruct currentPackage = PackageVariables.PACKAGE.getVariableValue();
+
+		PackageSymbolStruct symbol = currentPackage.findSymbol(name);
+		if (symbol == null) {
+			symbol = symbolPackage.findSymbol(name);
+
+			final String packageName = symbolPackage.getName();
+
+			final boolean externalSymbol = CommonLispSymbols.EXTERNAL_KEYWORD.equals(symbol.getPackageSymbolType());
+			if (externalSymbol) {
+				// TODO: verify it is a single colon for external symbols when printing...
+				return packageName + ':' + name;
+			} else {
+				return packageName + "::" + name;
+			}
+		}
 		return name;
 	}
 }

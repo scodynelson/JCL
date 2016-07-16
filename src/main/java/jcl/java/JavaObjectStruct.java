@@ -7,8 +7,6 @@ package jcl.java;
 import jcl.classes.BuiltInClassStruct;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 public class JavaObjectStruct extends BuiltInClassStruct {
 
@@ -50,7 +48,6 @@ public class JavaObjectStruct extends BuiltInClassStruct {
 
 	@Override
 	public String toString() {
-		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(javaObject)
-		                                                                .toString();
+		return javaObject.toString();
 	}
 }

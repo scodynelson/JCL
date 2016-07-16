@@ -18,4 +18,14 @@ public class QuoteStruct extends CompilerSpecialOperatorStruct {
 	public LispStruct getObject() {
 		return object;
 	}
+
+	@Override
+	public String toString() {
+		final StringBuilder builder = new StringBuilder("'");
+
+		final String objectPrinted = object.toString();
+		builder.append(objectPrinted);
+
+		return builder.toString();
+	}
 }

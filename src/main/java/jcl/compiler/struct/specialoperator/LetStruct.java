@@ -5,6 +5,7 @@
 package jcl.compiler.struct.specialoperator;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import jcl.LispStruct;
 import jcl.compiler.environment.Environment;
@@ -14,6 +15,30 @@ public class LetStruct extends ClosureCreationStruct<LetStruct.LetVar> {
 
 	public LetStruct(final List<LetVar> vars, final PrognStruct forms, final Environment letEnvironment) {
 		super(vars, forms, letEnvironment);
+	}
+
+	@Override
+	public String toString() {
+		final StringBuilder builder = new StringBuilder("(LET (");
+
+		final List<LetStruct.LetVar> vars = getVars();
+		final String varsPrinted =
+				vars.stream()
+				    .map(var -> '(' + var.getVar().toString() + ' ' + var.getInitForm().toString() + ')')
+				    .collect(Collectors.joining(" "));
+		builder.append(varsPrinted);
+		builder.append(") ");
+
+		final PrognStruct forms = getForms();
+		final List<LispStruct> formsList = forms.getForms();
+		for (final LispStruct form : formsList) {
+			final String formPrint = form.toString();
+			builder.append(formPrint);
+		}
+
+		builder.append(')');
+
+		return builder.toString();
 	}
 
 	public static class LetVar {

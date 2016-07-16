@@ -22,6 +22,29 @@ public class SetqStruct extends CompilerSpecialOperatorStruct {
 		return setqPairs;
 	}
 
+	@Override
+	public String toString() {
+		final StringBuilder builder = new StringBuilder("(SETQ");
+
+		for (final SetqStruct.SetqPair setqPair : setqPairs) {
+			builder.append(' ');
+
+			final SymbolStruct var = setqPair.getVar();
+			final String varPrinted = var.toString();
+			builder.append(varPrinted);
+
+			builder.append(' ');
+
+			final LispStruct form = setqPair.getForm();
+			final String formPrinted = form.toString();
+			builder.append(formPrinted);
+		}
+
+		builder.append(')');
+
+		return builder.toString();
+	}
+
 	public static class SetqPair {
 
 		private final SymbolStruct var;

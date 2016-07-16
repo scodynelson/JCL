@@ -26,4 +26,21 @@ public class ReturnFromStruct extends CompilerSpecialOperatorStruct {
 	public LispStruct getResult() {
 		return result;
 	}
+
+	@Override
+	public String toString() {
+		final StringBuilder builder = new StringBuilder("(RETURN-FROM ");
+
+		final String namePrinted = name.toString();
+		builder.append(namePrinted);
+
+		builder.append(' ');
+
+		final String formsPrinted = result.toString();
+		builder.append(formsPrinted);
+
+		builder.append(')');
+
+		return builder.toString();
+	}
 }

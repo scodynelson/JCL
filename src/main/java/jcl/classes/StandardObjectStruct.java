@@ -5,8 +5,6 @@ import jcl.LispType;
 import jcl.types.StandardObjectType;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
  * The {@link StandardObjectStruct} is the object representation of a Lisp 'standard-object' type.
@@ -80,7 +78,7 @@ public abstract class StandardObjectStruct implements LispStruct {
 
 	@Override
 	public String toString() {
-		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(documentation)
-		                                                                .toString();
+		final String typeClassName = getClass().getSimpleName();
+		return "#<" + typeClassName + '>';
 	}
 }

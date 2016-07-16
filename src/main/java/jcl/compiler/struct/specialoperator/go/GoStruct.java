@@ -46,4 +46,16 @@ public class GoStruct<T extends LispStruct> extends CompilerSpecialOperatorStruc
 				.append(tag)
 				.toHashCode();
 	}
+
+	@Override
+	public String toString() {
+		final StringBuilder builder = new StringBuilder("(GO ");
+
+		final String printedTag = tag.toString();
+		builder.append(printedTag);
+
+		builder.append(')');
+
+		return builder.toString();
+	}
 }

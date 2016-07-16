@@ -216,4 +216,11 @@ public class SynonymStreamStruct extends StreamStruct implements IOStream {
 		final StreamStruct stream = (StreamStruct) symbol.getValue();
 		return stream.filePosition(filePosition);
 	}
+
+	@Override
+	public String toString() {
+		final String typeClassName = getType().getClass().getSimpleName().toUpperCase();
+		final String printedSymbol = symbol.toString();
+		return "#<" + typeClassName + " to " + printedSymbol + '>';
+	}
 }

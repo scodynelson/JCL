@@ -5,9 +5,11 @@
 package jcl.compiler.struct.specialoperator;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import jcl.LispStruct;
 import jcl.compiler.struct.CompilerSpecialOperatorStruct;
+import jcl.symbols.SymbolStruct;
 
 public class SymbolFunctionCallStruct extends CompilerSpecialOperatorStruct {
 
@@ -34,5 +36,25 @@ public class SymbolFunctionCallStruct extends CompilerSpecialOperatorStruct {
 
 	public boolean isRecursiveCall() {
 		return isRecursiveCall;
+	}
+
+	@Override
+	public String toString() {
+
+		final StringBuilder builder = new StringBuilder("(");
+
+		final SymbolStruct functionSymbol = symbolCompilerFunction.getFunctionSymbol();
+		final String functionSymbolPrinted = functionSymbol.toString();
+		builder.append(functionSymbolPrinted);
+		builder.append(' ');
+
+		final String printedArguments =
+				arguments.stream()
+				         .map(Object::toString)
+				         .collect(Collectors.joining(" "));
+		builder.append(printedArguments);
+		builder.append(')');
+
+		return builder.toString();
 	}
 }

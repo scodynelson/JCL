@@ -27,8 +27,8 @@
       <module name="jcl-core_test" target="1.8" />
       <module name="jcl-functions_main" target="1.8" />
       <module name="jcl-functions_test" target="1.8" />
-      <module name="JCL_main" target="1.8" />
-      <module name="JCL_test" target="1.8" />
+      <module name="jcl_main" target="1.8" />
+      <module name="jcl_test" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>

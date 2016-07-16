@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.BinaryOperator;
@@ -17,16 +16,13 @@ import java.util.function.Supplier;
 import java.util.stream.Collector;
 
 import jcl.LispStruct;
+import jcl.compiler.struct.specialoperator.go.GoIntegerStruct;
 import jcl.compiler.struct.specialoperator.go.GoStruct;
-import jcl.compiler.struct.specialoperator.go.GoStructFactory;
+import jcl.compiler.struct.specialoperator.go.GoSymbolStruct;
+import jcl.numbers.IntegerStruct;
+import jcl.symbols.SymbolStruct;
 
 final class TagbodyTagSetCollector implements Collector<LispStruct, List<GoStruct<?>>, List<GoStruct<?>>> {
-
-	private final Map<Class<? extends LispStruct>, GoStructFactory<LispStruct>> goStructGeneratorStrategies;
-
-	TagbodyTagSetCollector(final Map<Class<? extends LispStruct>, GoStructFactory<LispStruct>> goStructGeneratorStrategies) {
-		this.goStructGeneratorStrategies = goStructGeneratorStrategies;
-	}
 
 	@Override
 	public Supplier<List<GoStruct<?>>> supplier() {
@@ -38,9 +34,11 @@ final class TagbodyTagSetCollector implements Collector<LispStruct, List<GoStruc
 	public BiConsumer<List<GoStruct<?>>, LispStruct> accumulator() {
 		return (tagSet, current) -> {
 
-			final GoStructFactory<LispStruct> goStructFactory = goStructGeneratorStrategies.get(current.getClass());
-			if (goStructFactory != null) {
-				final GoStruct<?> goTag = goStructFactory.getGoElement(current);
+			if (current instanceof SymbolStruct) {
+				final GoStruct<?> goTag = new GoSymbolStruct((SymbolStruct) current);
+				tagSet.add(goTag);
+			} else if (current instanceof IntegerStruct) {
+				final GoStruct<?> goTag = new GoIntegerStruct((IntegerStruct) current);
 				tagSet.add(goTag);
 			}
 		};

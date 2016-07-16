@@ -18,15 +18,4 @@
 		<value>${lisp.source.dir}/lists/lists.lisp</value>
 	</util:list>
 
-	<!-- Semantic Analyzer -->
-
-	<util:map id="goStructFactoryStrategies"
-	          key-type="java.lang.Class"
-	          value-type="jcl.compiler.struct.specialoperator.go.GoStructFactory">
-
-		<entry key="jcl.symbols.SymbolStruct" value-ref="goSymbolStructFactory"/>
-		<entry key="jcl.numbers.IntegerStruct" value-ref="goIntegerStructFactory"/>
-
-	</util:map>
-
 </beans>

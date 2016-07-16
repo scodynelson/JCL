@@ -20,8 +20,11 @@ import jcl.LispStruct;
 import jcl.compiler.environment.Environment;
 import jcl.compiler.sa.FormAnalyzer;
 import jcl.compiler.struct.specialoperator.PrognStruct;
+import jcl.compiler.struct.specialoperator.go.GoIntegerStruct;
 import jcl.compiler.struct.specialoperator.go.GoStruct;
-import jcl.compiler.struct.specialoperator.go.GoStructFactory;
+import jcl.compiler.struct.specialoperator.go.GoSymbolStruct;
+import jcl.numbers.IntegerStruct;
+import jcl.symbols.SymbolStruct;
 
 final class TagbodyFormCollector implements Collector<LispStruct, Map<GoStruct<?>, PrognStruct>, Map<GoStruct<?>, PrognStruct>> {
 
@@ -29,15 +32,11 @@ final class TagbodyFormCollector implements Collector<LispStruct, Map<GoStruct<?
 
 	private final Environment environment;
 
-	private final Map<Class<? extends LispStruct>, GoStructFactory<LispStruct>> goStructGeneratorStrategies;
-
 	private GoStruct<?> currentTag;
 
-	TagbodyFormCollector(final FormAnalyzer formAnalyzer, final Environment environment,
-	                     final Map<Class<? extends LispStruct>, GoStructFactory<LispStruct>> goStructGeneratorStrategies) {
+	TagbodyFormCollector(final FormAnalyzer formAnalyzer, final Environment environment) {
 		this.formAnalyzer = formAnalyzer;
 		this.environment = environment;
-		this.goStructGeneratorStrategies = goStructGeneratorStrategies;
 		currentTag = null;
 	}
 
@@ -51,12 +50,14 @@ final class TagbodyFormCollector implements Collector<LispStruct, Map<GoStruct<?
 	public BiConsumer<Map<GoStruct<?>, PrognStruct>, LispStruct> accumulator() {
 		return (tagToFormsMap, current) -> {
 
-			final GoStructFactory<LispStruct> goStructFactory = goStructGeneratorStrategies.get(current.getClass());
-			if (goStructFactory == null) {
-				handleOtherwise(tagToFormsMap, current);
-			} else {
-				currentTag = goStructFactory.getGoElement(current);
+			if (current instanceof SymbolStruct) {
+				currentTag = new GoSymbolStruct((SymbolStruct) current);
 				tagToFormsMap.put(currentTag, new PrognStruct(new ArrayList<>()));
+			} else if (current instanceof IntegerStruct) {
+				currentTag = new GoIntegerStruct((IntegerStruct) current);
+				tagToFormsMap.put(currentTag, new PrognStruct(new ArrayList<>()));
+			} else {
+				handleOtherwise(tagToFormsMap, current);
 			}
 		};
 	}

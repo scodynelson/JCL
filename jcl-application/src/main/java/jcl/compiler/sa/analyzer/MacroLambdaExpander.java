@@ -24,7 +24,7 @@ import jcl.compiler.struct.specialoperator.declare.DeclareStruct;
 import jcl.compiler.struct.specialoperator.declare.JavaClassNameDeclarationStruct;
 import jcl.compiler.struct.specialoperator.declare.SpecialDeclarationStruct;
 import jcl.compiler.struct.specialoperator.lambda.MacroLambdaStruct;
-import jcl.functions.expanders.MacroFunctionExpander;
+import jcl.compiler.function.expanders.MacroFunctionExpander;
 import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
 import jcl.lang.SpecialOperatorStruct;

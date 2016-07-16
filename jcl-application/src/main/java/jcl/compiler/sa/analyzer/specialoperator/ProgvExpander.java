@@ -8,7 +8,7 @@ import jcl.compiler.environment.Environment;
 import jcl.compiler.environment.ProgvEnvironment;
 import jcl.compiler.sa.FormAnalyzer;
 import jcl.compiler.struct.specialoperator.ProgvStruct;
-import jcl.functions.expanders.MacroFunctionExpander;
+import jcl.compiler.function.expanders.MacroFunctionExpander;
 import jcl.lang.CommonLispSymbols;
 import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;

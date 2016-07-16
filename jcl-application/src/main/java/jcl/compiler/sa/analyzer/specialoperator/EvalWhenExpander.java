@@ -8,7 +8,7 @@ import java.util.Set;
 
 import jcl.compiler.environment.Environment;
 import jcl.compiler.functions.EvalFunction;
-import jcl.functions.expanders.MacroFunctionExpander;
+import jcl.compiler.function.expanders.MacroFunctionExpander;
 import jcl.lang.CommonLispSymbols;
 import jcl.lang.CompilerVariables;
 import jcl.lang.ConsStruct;

@@ -12,7 +12,7 @@ import jcl.compiler.icg.IntermediateCodeGenerator;
 import jcl.compiler.icg.JavaMethodBuilder;
 import jcl.compiler.struct.specialoperator.SymbolCompilerFunctionStruct;
 import jcl.compiler.struct.specialoperator.SymbolFunctionCallStruct;
-import jcl.functions.Closure;
+import jcl.compiler.function.Closure;
 import jcl.lang.LispStruct;
 import jcl.lang.SymbolStruct;
 import org.objectweb.asm.MethodVisitor;

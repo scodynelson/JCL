@@ -7,7 +7,7 @@ import java.util.List;
 import jcl.compiler.environment.Environment;
 import jcl.compiler.sa.FormAnalyzer;
 import jcl.compiler.struct.specialoperator.CatchStruct;
-import jcl.functions.expanders.MacroFunctionExpander;
+import jcl.compiler.function.expanders.MacroFunctionExpander;
 import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
 import jcl.lang.SpecialOperatorStruct;

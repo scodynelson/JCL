@@ -2,7 +2,7 @@
  * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
  */
 
-package jcl.functions.expanders;
+package jcl.compiler.function.expanders;
 
 import jcl.compiler.environment.Environment;
 import jcl.lang.LispStruct;

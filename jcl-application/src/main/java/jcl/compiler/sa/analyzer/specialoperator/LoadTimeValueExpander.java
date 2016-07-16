@@ -5,7 +5,7 @@ import java.util.Iterator;
 import jcl.compiler.environment.Environment;
 import jcl.compiler.functions.EvalFunction;
 import jcl.compiler.sa.FormAnalyzer;
-import jcl.functions.expanders.MacroFunctionExpander;
+import jcl.compiler.function.expanders.MacroFunctionExpander;
 import jcl.lang.BooleanStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;

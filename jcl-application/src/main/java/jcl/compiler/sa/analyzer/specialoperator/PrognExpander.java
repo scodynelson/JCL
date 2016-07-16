@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 import jcl.compiler.environment.Environment;
 import jcl.compiler.sa.FormAnalyzer;
 import jcl.compiler.struct.specialoperator.PrognStruct;
-import jcl.functions.expanders.MacroFunctionExpander;
+import jcl.compiler.function.expanders.MacroFunctionExpander;
 import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
 import jcl.lang.SpecialOperatorStruct;

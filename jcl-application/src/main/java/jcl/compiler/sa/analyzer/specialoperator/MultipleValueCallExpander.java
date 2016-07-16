@@ -9,7 +9,7 @@ import jcl.compiler.sa.FormAnalyzer;
 import jcl.compiler.struct.specialoperator.CompilerFunctionStruct;
 import jcl.compiler.struct.specialoperator.MultipleValueCallStruct;
 import jcl.compiler.struct.specialoperator.QuoteStruct;
-import jcl.functions.expanders.MacroFunctionExpander;
+import jcl.compiler.function.expanders.MacroFunctionExpander;
 import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
 import jcl.lang.SpecialOperatorStruct;

@@ -6,7 +6,7 @@ import java.util.List;
 
 import jcl.compiler.environment.Environment;
 import jcl.compiler.struct.specialoperator.defstruct.DefstructStruct;
-import jcl.functions.expanders.MacroFunctionExpander;
+import jcl.compiler.function.expanders.MacroFunctionExpander;
 import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
 import jcl.lang.NILStruct;

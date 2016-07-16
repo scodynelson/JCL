@@ -4,8 +4,8 @@
 
 package jcl.symbols.functions;
 
-import jcl.functions.expanders.SymbolMacroExpander;
-import jcl.functions.expanders.SymbolMacroExpanderImpl;
+import jcl.compiler.function.expanders.SymbolMacroExpander;
+import jcl.compiler.function.expanders.SymbolMacroExpanderImpl;
 import jcl.lang.LispStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.function.SystemBuiltInFunctionStruct;

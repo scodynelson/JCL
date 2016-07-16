@@ -9,7 +9,7 @@ import jcl.compiler.icg.GeneratorState;
 import jcl.compiler.icg.IntermediateCodeGenerator;
 import jcl.compiler.icg.JavaMethodBuilder;
 import jcl.compiler.struct.specialoperator.IfStruct;
-import jcl.functions.Closure;
+import jcl.compiler.function.Closure;
 import jcl.lang.LispStruct;
 import jcl.lang.NILStruct;
 import jcl.lang.ValuesStruct;

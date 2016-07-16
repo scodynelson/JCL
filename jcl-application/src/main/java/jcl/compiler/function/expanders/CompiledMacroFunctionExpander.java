@@ -1,4 +1,4 @@
-package jcl.functions.expanders;
+package jcl.compiler.function.expanders;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -22,8 +22,8 @@ import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
 import jcl.compiler.environment.binding.lambdalist.RestParameter;
 import jcl.compiler.environment.binding.lambdalist.SuppliedPParameter;
 import jcl.compiler.environment.binding.lambdalist.WholeParameter;
-import jcl.functions.Closure;
-import jcl.functions.FunctionParameterBinding;
+import jcl.compiler.function.Closure;
+import jcl.compiler.function.FunctionParameterBinding;
 import jcl.lang.CommonLispSymbols;
 import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;

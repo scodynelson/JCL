@@ -17,7 +17,7 @@ import jcl.compiler.icg.JavaMethodBuilder;
 import jcl.compiler.struct.specialoperator.PrognStruct;
 import jcl.compiler.struct.specialoperator.TagbodyStruct;
 import jcl.compiler.struct.specialoperator.go.GoStruct;
-import jcl.functions.Closure;
+import jcl.compiler.function.Closure;
 import jcl.lang.NILStruct;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;

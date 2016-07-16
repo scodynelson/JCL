@@ -1,4 +1,4 @@
-package jcl.functions;
+package jcl.compiler.function;
 
 import java.util.ArrayList;
 import java.util.Arrays;

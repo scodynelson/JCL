@@ -12,7 +12,7 @@ import jcl.compiler.icg.GeneratorState;
 import jcl.compiler.icg.JavaClassBuilder;
 import jcl.compiler.icg.JavaMethodBuilder;
 import jcl.compiler.struct.CompilerSpecialOperatorStruct;
-import jcl.functions.Closure;
+import jcl.compiler.function.Closure;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;

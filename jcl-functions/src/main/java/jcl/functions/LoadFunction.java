@@ -2,12 +2,13 @@
  * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
  */
 
-package jcl.compiler.functions;
+package jcl.functions;
 
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+import jcl.compiler.functions.EvalFunction;
 import jcl.functions.pathname.MergePathnamesFunction;
 import jcl.functions.readtable.ReadFunction;
 import jcl.lang.BooleanStruct;

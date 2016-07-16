@@ -194,7 +194,6 @@ project("jcl-compiler") {
 
 	dependencies {
 		compile(project(":jcl-lang"))
-		compile(project(":jcl-functions"))
 
 		compile("org.apache.commons:commons-lang3:${commonsLangVersion}")
 		compile("org.apache.commons:commons-math3:${commonsMathVersion}")
@@ -253,6 +252,7 @@ project("jcl-functions") {
 
 	dependencies {
 		compile(project(":jcl-lang"))
+		compile(project(":jcl-compiler"))
 
 		compile("org.apache.commons:commons-lang3:${commonsLangVersion}")
 		compile("org.apache.commons:commons-math3:${commonsMathVersion}")

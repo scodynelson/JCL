@@ -2,7 +2,7 @@
  * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
  */
 
-package jcl.system.functions;
+package jcl.functions.system;
 
 import java.math.BigInteger;
 
@@ -14,12 +14,12 @@ import jcl.lang.number.IntegerStruct;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class TotalMemory extends ExtensionsBuiltInFunctionStruct {
+public final class MaxMemory extends ExtensionsBuiltInFunctionStruct {
 
-	private static final String FUNCTION_NAME = "TOTAL-MEMORY";
+	private static final String FUNCTION_NAME = "MAX-MEMORY";
 
-	public TotalMemory() {
-		super("Returns the current total runtime memory usage.",
+	public MaxMemory() {
+		super("Returns the current max runtime memory usage.",
 		      FUNCTION_NAME,
 		      Parameters.forFunction(FUNCTION_NAME)
 		);
@@ -27,7 +27,7 @@ public final class TotalMemory extends ExtensionsBuiltInFunctionStruct {
 
 	@Override
 	public LispStruct apply(final Arguments arguments) {
-		final long totalMemory = Runtime.getRuntime().totalMemory();
-		return IntegerStruct.valueOf(BigInteger.valueOf(totalMemory));
+		final long maxMemory = Runtime.getRuntime().maxMemory();
+		return IntegerStruct.valueOf(BigInteger.valueOf(maxMemory));
 	}
 }

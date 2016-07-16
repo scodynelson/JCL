@@ -2,7 +2,7 @@
  * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
  */
 
-package jcl.functions.functions;
+package jcl.functions;
 
 import java.util.List;
 
@@ -14,7 +14,6 @@ import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.FunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
-import jcl.printer.Printer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -28,9 +27,6 @@ public final class FuncallFunction extends CommonLispBuiltInFunctionStruct {
 
 	@Autowired
 	private ApplyFunction applyFunction;
-
-	@Autowired
-	private Printer printer;
 
 	public FuncallFunction() {
 		super("Applies function to args.",
@@ -64,9 +60,7 @@ public final class FuncallFunction extends CommonLispBuiltInFunctionStruct {
 		final ListStruct argumentList = ListStruct.buildProperList(functionArguments);
 
 		if (functionStruct == null) {
-			final String printedFunctionDesignator = printer.print(functionDesignator);
-			final String printedArguments = printer.print(argumentList);
-			throw new ErrorException("Undefined function " + printedFunctionDesignator + " called with arguments " + printedArguments);
+			throw new ErrorException("Undefined function " + functionDesignator + " called with arguments " + argumentList);
 		}
 
 		final LispStruct[] argumentsArrays = new LispStruct[2];

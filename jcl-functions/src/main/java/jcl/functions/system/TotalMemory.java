@@ -2,7 +2,7 @@
  * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
  */
 
-package jcl.system.functions;
+package jcl.functions.system;
 
 import java.math.BigInteger;
 
@@ -14,12 +14,12 @@ import jcl.lang.number.IntegerStruct;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class FreeMemory extends ExtensionsBuiltInFunctionStruct {
+public final class TotalMemory extends ExtensionsBuiltInFunctionStruct {
 
-	private static final String FUNCTION_NAME = "FREE-MEMORY";
+	private static final String FUNCTION_NAME = "TOTAL-MEMORY";
 
-	public FreeMemory() {
-		super("Returns the current free runtime memory usage.",
+	public TotalMemory() {
+		super("Returns the current total runtime memory usage.",
 		      FUNCTION_NAME,
 		      Parameters.forFunction(FUNCTION_NAME)
 		);
@@ -27,7 +27,7 @@ public final class FreeMemory extends ExtensionsBuiltInFunctionStruct {
 
 	@Override
 	public LispStruct apply(final Arguments arguments) {
-		final long freeMemory = Runtime.getRuntime().freeMemory();
-		return IntegerStruct.valueOf(BigInteger.valueOf(freeMemory));
+		final long totalMemory = Runtime.getRuntime().totalMemory();
+		return IntegerStruct.valueOf(BigInteger.valueOf(totalMemory));
 	}
 }

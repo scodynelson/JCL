@@ -1,5 +1,7 @@
-package jcl.compiler.functions;
+package jcl.functions;
 
+import jcl.compiler.functions.CompileForm;
+import jcl.compiler.functions.CompileResult;
 import jcl.lang.LispStruct;
 import jcl.lang.NILStruct;
 import jcl.lang.SymbolStruct;

@@ -2,7 +2,7 @@
  * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
  */
 
-package jcl.functions.java;
+package jcl.compiler.functions;
 
 import java.lang.reflect.Method;
 import java.util.Arrays;

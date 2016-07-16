@@ -16,8 +16,6 @@ import jcl.compiler.struct.specialoperator.SetqStruct;
 import jcl.compiler.struct.specialoperator.SymbolCompilerFunctionStruct;
 import jcl.compiler.struct.specialoperator.SymbolFunctionCallStruct;
 import jcl.compiler.struct.specialoperator.lambda.LambdaStruct;
-import jcl.functions.java.JInvoke;
-import jcl.functions.java.JMethod;
 import jcl.lang.BooleanStruct;
 import jcl.lang.CompilerVariables;
 import jcl.lang.LispStruct;

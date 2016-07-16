@@ -2,7 +2,7 @@
  * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
  */
 
-package jcl.functions.functions;
+package jcl.functions;
 
 import java.util.List;
 
@@ -14,8 +14,6 @@ import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.FunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
-import jcl.printer.Printer;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -24,9 +22,6 @@ public final class ApplyFunction extends CommonLispBuiltInFunctionStruct {
 	private static final String FUNCTION_NAME = "APPLY";
 	private static final String FN_ARGUMENT = "FN";
 	private static final String ARG_ARGUMENT = "ARG";
-
-	@Autowired
-	private Printer printer;
 
 	private ApplyFunction() {
 		super("Applies the function to the args.",
@@ -53,16 +48,14 @@ public final class ApplyFunction extends CommonLispBuiltInFunctionStruct {
 		final List<LispStruct> args = arguments.getRestArgument();
 
 		if (functionStruct == null) {
-			final String printedFunctionDesignator = printer.print(functionDesignator);
 //			final String printedArguments = printer.print(functionList);
 			final String printedArguments = arg + " " + args;
-			throw new ErrorException("Undefined function " + printedFunctionDesignator + " called with arguments " + printedArguments);
+			throw new ErrorException("Undefined function " + functionDesignator + " called with arguments " + printedArguments);
 		}
 
 		if (args.isEmpty()) {
 			if (!(arg instanceof ListStruct)) {
-				final String printedObject = printer.print(arg);
-				throw new ErrorException("Can't construct argument list from " + printedObject + '.');
+				throw new ErrorException("Can't construct argument list from " + arg + '.');
 			}
 
 			final ListStruct argAsList = (ListStruct) arg;
@@ -73,8 +66,7 @@ public final class ApplyFunction extends CommonLispBuiltInFunctionStruct {
 
 		final LispStruct lastElement = args.get(argsSize - 1);
 		if (!(lastElement instanceof ListStruct)) {
-			final String printedObject = printer.print(lastElement);
-			throw new ErrorException("Can't construct argument list from " + printedObject + '.');
+			throw new ErrorException("Can't construct argument list from " + lastElement + '.');
 		}
 		final ListStruct lastElementList = (ListStruct) lastElement;
 		final LispStruct[] lastElementArray = lastElementList.toArray();

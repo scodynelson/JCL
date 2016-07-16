@@ -2,7 +2,7 @@
  * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
  */
 
-package jcl.system.functions;
+package jcl.functions.system;
 
 import java.net.MalformedURLException;
 import java.net.URL;

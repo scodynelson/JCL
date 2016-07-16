@@ -4,10 +4,10 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
-import jcl.compiler.functions.CompileFileFunction;
 import jcl.compiler.functions.CompileForm;
-import jcl.compiler.functions.LoadFunction;
-import jcl.functions.functions.FuncallFunction;
+import jcl.functions.CompileFileFunction;
+import jcl.functions.FuncallFunction;
+import jcl.functions.LoadFunction;
 import jcl.functions.pathname.MergePathnamesFunction;
 import jcl.lang.CompilerVariables;
 import jcl.lang.condition.exception.ErrorException;

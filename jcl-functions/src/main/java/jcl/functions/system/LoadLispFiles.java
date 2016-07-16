@@ -1,10 +1,10 @@
-package jcl.system.functions;
+package jcl.functions.system;
 
 import java.util.Arrays;
 import java.util.List;
 
 import jcl.compiler.functions.CompileForm;
-import jcl.compiler.functions.LoadFunction;
+import jcl.functions.LoadFunction;
 import jcl.lang.LispStruct;
 import jcl.lang.TStruct;
 import jcl.lang.function.ExtensionsBuiltInFunctionStruct;

@@ -7,8 +7,8 @@ package jcl.compiler.struct.specialoperator;
 import java.util.List;
 
 import jcl.compiler.struct.CompilerSpecialOperatorStruct;
-import jcl.java.JavaNameStruct;
 import jcl.lang.LispStruct;
+import jcl.lang.java.JavaNameStruct;
 
 public class JavaMethodCallStruct extends CompilerSpecialOperatorStruct {
 

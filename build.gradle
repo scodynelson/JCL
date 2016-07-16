@@ -163,6 +163,7 @@ project("jcl-application") {
 		compile(project(":jcl-lang"))
 		compile(project(":jcl-functions"))
 		compile(project(":jcl-compiler"))
+		compile(project(":jcl-reader"))
 
 		compile("org.apache.commons:commons-lang3:${commonsLangVersion}")
 		compile("org.apache.commons:commons-math3:${commonsMathVersion}")
@@ -252,6 +253,38 @@ project("jcl-functions") {
 
 	dependencies {
 		compile(project(":jcl-lang"))
+
+		compile("org.apache.commons:commons-lang3:${commonsLangVersion}")
+		compile("org.apache.commons:commons-math3:${commonsMathVersion}")
+		compile("org.apache.commons:commons-collections4:${commonsCollectionsVersion}")
+		compile("commons-io:commons-io:${commonsIoVersion}")
+
+		compile("com.google.guava:guava:${guavaVersion}")
+
+		compile("org.projectlombok:lombok:${lombokVersion}")
+
+		compile("org.apfloat:apfloat:${apfloatVersion}")
+
+		compile("com.ibm.icu:icu4j:${icu4jVersion}")
+
+		compile("org.ow2.asm:asm-all:${asmAllVersion}")
+
+		compile("org.springframework.boot:spring-boot-starter:${springBootVersion}")
+		compile("org.springframework.boot:spring-boot-loader:${springBootVersion}")
+
+		compile("javax.help:javahelp:${javaHelpVersion}")
+
+		testCompile("org.springframework.boot:spring-boot-starter-test:${springBootVersion}")
+	}
+}
+
+project("jcl-reader") {
+	description = "JCL Reader"
+
+	dependencies {
+		compile(project(":jcl-lang"))
+		compile(project(":jcl-functions"))
+		compile(project(":jcl-compiler"))
 
 		compile("org.apache.commons:commons-lang3:${commonsLangVersion}")
 		compile("org.apache.commons:commons-math3:${commonsMathVersion}")

@@ -27,6 +27,8 @@
       <module name="jcl-functions_test" target="1.8" />
       <module name="jcl-lang_main" target="1.8" />
       <module name="jcl-lang_test" target="1.8" />
+      <module name="jcl-reader_main" target="1.8" />
+      <module name="jcl-reader_test" target="1.8" />
       <module name="jcl_main" target="1.8" />
       <module name="jcl_test" target="1.8" />
     </bytecodeTargetLevel>

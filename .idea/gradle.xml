@@ -12,6 +12,7 @@
             <option value="$PROJECT_DIR$/jcl-compiler" />
             <option value="$PROJECT_DIR$/jcl-functions" />
             <option value="$PROJECT_DIR$/jcl-lang" />
+            <option value="$PROJECT_DIR$/jcl-reader" />
           </set>
         </option>
       </GradleProjectSettings>

@@ -23,10 +23,10 @@
       <module name="jcl-application_test" target="1.8" />
       <module name="jcl-compiler_main" target="1.8" />
       <module name="jcl-compiler_test" target="1.8" />
-      <module name="jcl-core_main" target="1.8" />
-      <module name="jcl-core_test" target="1.8" />
       <module name="jcl-functions_main" target="1.8" />
       <module name="jcl-functions_test" target="1.8" />
+      <module name="jcl-lang_main" target="1.8" />
+      <module name="jcl-lang_test" target="1.8" />
       <module name="jcl_main" target="1.8" />
       <module name="jcl_test" target="1.8" />
     </bytecodeTargetLevel>

@@ -10,8 +10,8 @@
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/jcl-application" />
             <option value="$PROJECT_DIR$/jcl-compiler" />
-            <option value="$PROJECT_DIR$/jcl-core" />
             <option value="$PROJECT_DIR$/jcl-functions" />
+            <option value="$PROJECT_DIR$/jcl-lang" />
           </set>
         </option>
       </GradleProjectSettings>

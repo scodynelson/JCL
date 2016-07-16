@@ -8,6 +8,7 @@ import java.math.BigInteger;
 import java.util.Optional;
 import javax.annotation.PostConstruct;
 
+import jcl.functions.pathname.PathnameFunction;
 import jcl.lang.CharacterConstants;
 import jcl.lang.LispStruct;
 import jcl.lang.NILStruct;
@@ -18,7 +19,6 @@ import jcl.lang.pathname.PathnameStruct;
 import jcl.lang.readtable.Reader;
 import jcl.lang.readtable.ReaderVariables;
 import jcl.lang.readtable.ReadtableStruct;
-import jcl.pathnames.functions.PathnameFunction;
 import jcl.printer.Printer;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;

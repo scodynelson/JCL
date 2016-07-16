@@ -1,6 +1,7 @@
 package jcl.system.repl;
 
 import jcl.compiler.functions.EvalFunction;
+import jcl.functions.readtable.ReadFunction;
 import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
 import jcl.lang.NILStruct;
@@ -15,7 +16,6 @@ import jcl.lang.readtable.Reader;
 import jcl.lang.stream.ReadPeekResult;
 import jcl.lang.stream.StreamVariables;
 import jcl.printer.Printer;
-import jcl.reader.functions.ReadFunction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

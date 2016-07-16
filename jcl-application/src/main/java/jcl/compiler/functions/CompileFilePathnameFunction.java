@@ -4,6 +4,8 @@
 
 package jcl.compiler.functions;
 
+import jcl.functions.pathname.MergePathnamesFunction;
+import jcl.functions.pathname.TranslateLogicalPathnameFunction;
 import jcl.lang.CommonLispSymbols;
 import jcl.lang.LispStruct;
 import jcl.lang.NILStruct;
@@ -14,8 +16,6 @@ import jcl.lang.pathname.LogicalPathnameStruct;
 import jcl.lang.pathname.PathnameStruct;
 import jcl.lang.pathname.PathnameType;
 import jcl.lang.pathname.PathnameVariables;
-import jcl.pathnames.functions.MergePathnamesFunction;
-import jcl.pathnames.functions.TranslateLogicalPathnameFunction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

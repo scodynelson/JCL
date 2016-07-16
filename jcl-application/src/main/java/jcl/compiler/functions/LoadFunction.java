@@ -8,6 +8,8 @@ import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+import jcl.functions.pathname.MergePathnamesFunction;
+import jcl.functions.readtable.ReadFunction;
 import jcl.lang.BooleanStruct;
 import jcl.lang.CommonLispSymbols;
 import jcl.lang.CompilerVariables;
@@ -28,9 +30,7 @@ import jcl.lang.pathname.PathnameVersionComponentType;
 import jcl.lang.readtable.ReaderVariables;
 import jcl.lang.readtable.ReadtableStruct;
 import jcl.lang.stream.FileStreamStruct;
-import jcl.pathnames.functions.MergePathnamesFunction;
 import jcl.printer.Printer;
-import jcl.reader.functions.ReadFunction;
 import jcl.system.classloaders.LoaderClassLoader;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;

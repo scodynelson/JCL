@@ -1,3 +1,5 @@
+rootProject.name = "jcl"
+
 include 'jcl-core'
 include 'jcl-functions'
 include 'jcl-compiler'

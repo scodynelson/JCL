@@ -1,7 +1,6 @@
 buildscript {
-	String springBootVersion = '1.3.5.RELEASE'
 	dependencies {
-		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+		classpath("org.springframework.boot:spring-boot-gradle-plugin:1.3.5.RELEASE")
 	}
 }
 plugins {

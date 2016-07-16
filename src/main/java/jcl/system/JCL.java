@@ -1,8 +1,8 @@
 package jcl.system;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
-import javax.annotation.Resource;
 
 import jcl.compiler.CompilerVariables;
 import jcl.compiler.functions.CompileFileFunction;
@@ -26,11 +26,7 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.context.annotation.ImportResource;
-import org.springframework.context.annotation.PropertySource;
 
-@PropertySource("classpath:jcl.properties")
-@ImportResource("classpath:applicationContext.xml")
 @SpringBootApplication(scanBasePackages = "jcl")
 public class JCL implements ApplicationRunner {
 
@@ -51,8 +47,7 @@ public class JCL implements ApplicationRunner {
 	@Autowired
 	private FuncallFunction funcallFunction;
 
-	@Resource
-	private List<String> lispFilesToLoad;
+	private final List<String> lispFilesToLoad;
 
 	public JCL() throws IOException {
 		try (LoggerOutputStream loggerOutputStream = new LoggerOutputStream(LOGGER)) {
@@ -61,6 +56,13 @@ public class JCL implements ApplicationRunner {
 			final TwoWayStreamStruct terminalIoStream = new TwoWayStreamStruct(true, characterStream, characterStream);
 			StreamVariables.TERMINAL_IO.setValue(terminalIoStream);
 		}
+		
+		lispFilesToLoad = Arrays.asList(
+				"src/main/lisp/jcl/compiler/base-macro-lambdas.lisp",
+				"src/main/lisp/jcl/compiler/macros.lisp",
+				"src/main/lisp/jcl/iterators/iterators.lisp",
+				"src/main/lisp/jcl/lists/lists.lisp"
+		);
 	}
 
 	public static void main(final String... args) {

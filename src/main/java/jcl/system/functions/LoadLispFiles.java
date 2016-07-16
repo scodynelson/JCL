@@ -1,7 +1,7 @@
 package jcl.system.functions;
 
+import java.util.Arrays;
 import java.util.List;
-import javax.annotation.Resource;
 
 import jcl.LispStruct;
 import jcl.compiler.functions.CompileForm;
@@ -22,13 +22,19 @@ public final class LoadLispFiles extends ExtensionsBuiltInFunctionStruct {
 	@Autowired
 	private LoadFunction loadFunction;
 
-	@Resource
-	private List<String> lispFilesToLoad;
+	private final List<String> lispFilesToLoad;
 
 	public LoadLispFiles() {
 		super("",
 		      FUNCTION_NAME,
 		      Parameters.forFunction(FUNCTION_NAME)
+		);
+
+		lispFilesToLoad = Arrays.asList(
+				"src/main/lisp/jcl/compiler/base-macro-lambdas.lisp",
+				"src/main/lisp/jcl/compiler/macros.lisp",
+				"src/main/lisp/jcl/iterators/iterators.lisp",
+				"src/main/lisp/jcl/lists/lists.lisp"
 		);
 	}
 

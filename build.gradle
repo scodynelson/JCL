@@ -42,7 +42,6 @@ configure(allprojects) { project ->
 	ext.asmAllVersion = "5.1"
 
 	ext.springBootVersion = "1.3.5.RELEASE"
-	ext.springStatemachineVersion = "1.1.0.RELEASE"
 
 	ext.javaHelpVersion = "2.0.05"
 
@@ -90,33 +89,6 @@ configure(allprojects) { project ->
 
 	repositories {
 		mavenCentral()
-	}
-
-	dependencies {
-//******************//
-//		compile("org.apache.commons:commons-lang3:${commonsLangVersion}")
-//		compile("org.apache.commons:commons-math3:${commonsMathVersion}")
-//		compile("org.apache.commons:commons-collections4:${commonsCollectionsVersion}")
-//		compile("commons-io:commons-io:${commonsIoVersion}")
-//
-//		compile("com.google.guava:guava:${guavaVersion}")
-//
-//		compile("org.projectlombok:lombok:${lombokVersion}")
-//
-//		compile("org.apfloat:apfloat:${apfloatVersion}")
-//
-//		compile("com.ibm.icu:icu4j:${icu4jVersion}")
-//
-//		compile("org.ow2.asm:asm-all:${asmAllVersion}")
-//
-//		compile("org.springframework.boot:spring-boot-starter:${springBootVersion}")
-//		compile("org.springframework.boot:spring-boot-loader:${springBootVersion}")
-//		compile("org.springframework.statemachine:spring-statemachine-core:${springStatemachineVersion}")
-//
-//		compile("javax.help:javahelp:${javaHelpVersion}")
-//
-//		testCompile("org.springframework.boot:spring-boot-starter-test:${springBootVersion}")
-//******************//
 	}
 
 	ext.javadocLinks = [
@@ -188,7 +160,7 @@ project("jcl-application") {
 	description = "JCL Application"
 
 	dependencies {
-		compile(project(":jcl-core"))
+		compile(project(":jcl-lang"))
 		compile(project(":jcl-functions"))
 		compile(project(":jcl-compiler"))
 
@@ -209,7 +181,6 @@ project("jcl-application") {
 
 		compile("org.springframework.boot:spring-boot-starter:${springBootVersion}")
 		compile("org.springframework.boot:spring-boot-loader:${springBootVersion}")
-		compile("org.springframework.statemachine:spring-statemachine-core:${springStatemachineVersion}")
 
 		compile("javax.help:javahelp:${javaHelpVersion}")
 
@@ -221,7 +192,7 @@ project("jcl-compiler") {
 	description = "JCL Compiler"
 
 	dependencies {
-		compile(project(":jcl-core"))
+		compile(project(":jcl-lang"))
 		compile(project(":jcl-functions"))
 
 		compile("org.apache.commons:commons-lang3:${commonsLangVersion}")
@@ -241,7 +212,6 @@ project("jcl-compiler") {
 
 		compile("org.springframework.boot:spring-boot-starter:${springBootVersion}")
 		compile("org.springframework.boot:spring-boot-loader:${springBootVersion}")
-		compile("org.springframework.statemachine:spring-statemachine-core:${springStatemachineVersion}")
 
 		compile("javax.help:javahelp:${javaHelpVersion}")
 
@@ -249,8 +219,8 @@ project("jcl-compiler") {
 	}
 }
 
-project("jcl-core") {
-	description = "JCL Core"
+project("jcl-lang") {
+	description = "JCL Language"
 
 	dependencies {
 		compile("org.apache.commons:commons-lang3:${commonsLangVersion}")
@@ -270,7 +240,6 @@ project("jcl-core") {
 
 		compile("org.springframework.boot:spring-boot-starter:${springBootVersion}")
 		compile("org.springframework.boot:spring-boot-loader:${springBootVersion}")
-		compile("org.springframework.statemachine:spring-statemachine-core:${springStatemachineVersion}")
 
 		compile("javax.help:javahelp:${javaHelpVersion}")
 
@@ -282,7 +251,7 @@ project("jcl-functions") {
 	description = "JCL Functions"
 
 	dependencies {
-		compile(project(":jcl-core"))
+		compile(project(":jcl-lang"))
 
 		compile("org.apache.commons:commons-lang3:${commonsLangVersion}")
 		compile("org.apache.commons:commons-math3:${commonsMathVersion}")
@@ -301,7 +270,6 @@ project("jcl-functions") {
 
 		compile("org.springframework.boot:spring-boot-starter:${springBootVersion}")
 		compile("org.springframework.boot:spring-boot-loader:${springBootVersion}")
-		compile("org.springframework.statemachine:spring-statemachine-core:${springStatemachineVersion}")
 
 		compile("javax.help:javahelp:${javaHelpVersion}")
 

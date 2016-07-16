@@ -4,9 +4,9 @@
 
 package jcl.compiler.environment.binding;
 
-import jcl.LispStruct;
-import jcl.LispType;
-import jcl.symbols.SymbolStruct;
+import jcl.lang.LispStruct;
+import jcl.lang.SymbolStruct;
+import jcl.type.LispType;
 
 public class SymbolMacroBinding extends Binding {
 

@@ -6,8 +6,8 @@ package jcl.packages.functions;
 
 import java.util.function.BiConsumer;
 
-import jcl.packages.PackageStruct;
-import jcl.symbols.SymbolStruct;
+import jcl.lang.PackageStruct;
+import jcl.lang.SymbolStruct;
 import org.springframework.stereotype.Component;
 
 /**

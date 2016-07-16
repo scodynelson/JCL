@@ -4,7 +4,7 @@
 
 package jcl.reader.state;
 
-import jcl.LispStruct;
+import jcl.lang.LispStruct;
 import jcl.reader.ReaderStateMediator;
 import jcl.reader.TokenBuilder;
 import org.springframework.beans.factory.annotation.Autowired;

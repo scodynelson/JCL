@@ -10,15 +10,15 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-import jcl.LispStruct;
-import jcl.functions.CommonLispBuiltInFunctionStruct;
-import jcl.functions.FunctionStruct;
-import jcl.functions.parameterdsl.Arguments;
-import jcl.functions.parameterdsl.Parameters;
-import jcl.lists.ListStruct;
-import jcl.packages.PackageStruct;
-import jcl.packages.PackageVariables;
-import jcl.symbols.TStruct;
+import jcl.lang.LispStruct;
+import jcl.lang.ListStruct;
+import jcl.lang.PackageStruct;
+import jcl.lang.PackageVariables;
+import jcl.lang.TStruct;
+import jcl.lang.function.CommonLispBuiltInFunctionStruct;
+import jcl.lang.function.FunctionStruct;
+import jcl.lang.function.parameterdsl.Arguments;
+import jcl.lang.function.parameterdsl.Parameters;
 
 /**
  * Abstract {@link FunctionStruct} implementation for package functions that take package-designator objects. This

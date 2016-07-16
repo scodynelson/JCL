@@ -4,9 +4,9 @@
 
 package jcl.compiler.environment.binding.lambdalist;
 
-import jcl.LispStruct;
-import jcl.symbols.SymbolStruct;
-import jcl.types.TType;
+import jcl.lang.LispStruct;
+import jcl.lang.SymbolStruct;
+import jcl.type.TType;
 
 public class AuxParameter extends Parameter {
 

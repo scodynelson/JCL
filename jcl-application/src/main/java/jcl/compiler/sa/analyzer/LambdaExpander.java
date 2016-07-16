@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import jcl.LispStruct;
 import jcl.compiler.environment.Environment;
 import jcl.compiler.environment.binding.Binding;
 import jcl.compiler.environment.binding.lambdalist.OrdinaryLambdaList;
@@ -22,14 +21,15 @@ import jcl.compiler.struct.specialoperator.declare.JavaClassNameDeclarationStruc
 import jcl.compiler.struct.specialoperator.declare.LispNameDeclarationStruct;
 import jcl.compiler.struct.specialoperator.declare.SpecialDeclarationStruct;
 import jcl.compiler.struct.specialoperator.lambda.LambdaStruct;
-import jcl.conditions.exceptions.ErrorException;
-import jcl.conditions.exceptions.ProgramErrorException;
-import jcl.conditions.exceptions.TypeErrorException;
 import jcl.functions.expanders.MacroFunctionExpander;
-import jcl.lists.ListStruct;
+import jcl.lang.LispStruct;
+import jcl.lang.ListStruct;
+import jcl.lang.SpecialOperatorStruct;
+import jcl.lang.SymbolStruct;
+import jcl.lang.condition.exception.ErrorException;
+import jcl.lang.condition.exception.ProgramErrorException;
+import jcl.lang.condition.exception.TypeErrorException;
 import jcl.printer.Printer;
-import jcl.symbols.SpecialOperatorStruct;
-import jcl.symbols.SymbolStruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

@@ -8,15 +8,15 @@ import java.math.BigInteger;
 import java.util.Optional;
 import javax.annotation.PostConstruct;
 
-import jcl.LispStruct;
-import jcl.characters.CharacterConstants;
-import jcl.conditions.exceptions.ReaderErrorException;
-import jcl.lists.ListStruct;
-import jcl.reader.Reader;
-import jcl.reader.ReaderMacroFunction;
-import jcl.reader.struct.ReaderVariables;
-import jcl.symbols.NILStruct;
-import jcl.system.CommonLispSymbols;
+import jcl.lang.CharacterConstants;
+import jcl.lang.CommonLispSymbols;
+import jcl.lang.LispStruct;
+import jcl.lang.ListStruct;
+import jcl.lang.NILStruct;
+import jcl.lang.condition.exception.ReaderErrorException;
+import jcl.lang.function.ReaderMacroFunction;
+import jcl.lang.readtable.Reader;
+import jcl.lang.readtable.ReaderVariables;
 import org.springframework.stereotype.Component;
 
 /**

@@ -4,9 +4,9 @@
 
 package jcl.functions.expanders;
 
-import jcl.LispStruct;
 import jcl.compiler.environment.Environment;
-import jcl.symbols.SymbolStruct;
+import jcl.lang.LispStruct;
+import jcl.lang.SymbolStruct;
 
 public class SymbolMacroExpanderImpl extends SymbolMacroExpander {
 
@@ -16,6 +16,13 @@ public class SymbolMacroExpanderImpl extends SymbolMacroExpander {
 		// TODO: Documentation???
 		super("");
 		this.expansion = expansion;
+	}
+
+	@Override
+	public LispStruct apply(final LispStruct... lispStructs) {
+		final SymbolStruct symbolStruct = (SymbolStruct) lispStructs[0];
+		final Environment environment = (Environment) lispStructs[1];
+		return expand(symbolStruct, environment);
 	}
 
 	@Override

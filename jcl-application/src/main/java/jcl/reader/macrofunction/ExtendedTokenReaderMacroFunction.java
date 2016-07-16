@@ -4,13 +4,13 @@
 
 package jcl.reader.macrofunction;
 
-import jcl.reader.AttributeType;
-import jcl.reader.Reader;
-import jcl.reader.struct.ReaderVariables;
-import jcl.reader.struct.ReadtableCase;
-import jcl.reader.struct.SyntaxType;
-import jcl.streams.ReadPeekResult;
-import jcl.symbols.NILStruct;
+import jcl.lang.NILStruct;
+import jcl.lang.readtable.AttributeType;
+import jcl.lang.readtable.Reader;
+import jcl.lang.readtable.ReaderVariables;
+import jcl.lang.readtable.ReadtableCase;
+import jcl.lang.readtable.SyntaxType;
+import jcl.lang.stream.ReadPeekResult;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;

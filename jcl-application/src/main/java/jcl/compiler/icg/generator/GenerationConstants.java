@@ -15,7 +15,6 @@ import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import jcl.LispStruct;
 import jcl.compiler.environment.binding.lambdalist.AuxParameter;
 import jcl.compiler.environment.binding.lambdalist.BodyParameter;
 import jcl.compiler.environment.binding.lambdalist.DestructuringLambdaList;
@@ -26,25 +25,26 @@ import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
 import jcl.compiler.environment.binding.lambdalist.RestParameter;
 import jcl.compiler.environment.binding.lambdalist.SuppliedPParameter;
 import jcl.compiler.environment.binding.lambdalist.WholeParameter;
-import jcl.compiler.struct.ValuesStructs;
-import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.functions.Closure;
 import jcl.functions.CompiledFunctionStruct;
-import jcl.functions.FunctionStruct;
 import jcl.functions.expanders.CompiledMacroFunctionExpander;
-import jcl.functions.expanders.MacroFunctionExpander;
-import jcl.lists.ConsStruct;
-import jcl.lists.ListStruct;
-import jcl.packages.GlobalPackageStruct;
-import jcl.packages.PackageStruct;
-import jcl.packages.PackageSymbolStruct;
-import jcl.structures.StructureClassStruct;
-import jcl.structures.StructureObjectStruct;
-import jcl.symbols.KeywordStruct;
-import jcl.symbols.SymbolStruct;
-import jcl.types.TypeBaseClass;
-import jcl.types.TypeFactory;
-import jcl.types.typespecifiers.AtomicTypeSpecifier;
+import jcl.lang.ConsStruct;
+import jcl.lang.GlobalPackageStruct;
+import jcl.lang.KeywordStruct;
+import jcl.lang.LispStruct;
+import jcl.lang.ListStruct;
+import jcl.lang.PackageStruct;
+import jcl.lang.PackageSymbolStruct;
+import jcl.lang.StructureClassStruct;
+import jcl.lang.StructureObjectStruct;
+import jcl.lang.SymbolStruct;
+import jcl.lang.ValuesStructs;
+import jcl.lang.condition.exception.ProgramErrorException;
+import jcl.lang.function.FunctionStruct;
+import jcl.lang.function.expander.MacroFunctionExpanderInter;
+import jcl.type.TypeBaseClass;
+import jcl.type.TypeFactory;
+import jcl.type.typespecifier.AtomicTypeSpecifier;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.objectweb.asm.Type;
 
@@ -236,7 +236,7 @@ interface GenerationConstants {
 
 	String SYMBOL_STRUCT_SET_MACRO_FUNCTION_EXPANDER_METHOD_NAME = "setMacroFunctionExpander";
 
-	String SYMBOL_STRUCT_SET_MACRO_FUNCTION_EXPANDER_METHOD_DESC = CodeGenerators.getMethodDescription(SymbolStruct.class, SYMBOL_STRUCT_SET_MACRO_FUNCTION_EXPANDER_METHOD_NAME, MacroFunctionExpander.class);
+	String SYMBOL_STRUCT_SET_MACRO_FUNCTION_EXPANDER_METHOD_DESC = CodeGenerators.getMethodDescription(SymbolStruct.class, SYMBOL_STRUCT_SET_MACRO_FUNCTION_EXPANDER_METHOD_NAME, MacroFunctionExpanderInter.class);
 
 	String PACKAGE_STRUCT_NAME = Type.getInternalName(PackageStruct.class);
 
@@ -274,7 +274,7 @@ interface GenerationConstants {
 
 	String COMPILED_MACRO_FUNCTION_EXPANDER_NAME = Type.getInternalName(CompiledMacroFunctionExpander.class);
 
-	String COMPILED_MACRO_FUNCTION_EXPANDER_CLASS_SIGNATURE = "Ljcl/functions/expanders/CompiledMacroFunctionExpander<Ljcl/LispStruct;>;";
+	String COMPILED_MACRO_FUNCTION_EXPANDER_CLASS_SIGNATURE = "Ljcl/functions/expanders/CompiledMacroFunctionExpander<Ljcl/lang/LispStruct;>;";
 
 	String LISP_STRUCT_NAME = Type.getInternalName(LispStruct.class);
 

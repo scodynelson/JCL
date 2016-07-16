@@ -4,13 +4,13 @@
 
 package jcl.symbols.functions;
 
-import jcl.LispStruct;
-import jcl.functions.SystemBuiltInFunctionStruct;
 import jcl.functions.expanders.SymbolMacroExpander;
 import jcl.functions.expanders.SymbolMacroExpanderImpl;
-import jcl.functions.parameterdsl.Arguments;
-import jcl.functions.parameterdsl.Parameters;
-import jcl.symbols.SymbolStruct;
+import jcl.lang.LispStruct;
+import jcl.lang.SymbolStruct;
+import jcl.lang.function.SystemBuiltInFunctionStruct;
+import jcl.lang.function.parameterdsl.Arguments;
+import jcl.lang.function.parameterdsl.Parameters;
 import org.springframework.stereotype.Component;
 
 @Component

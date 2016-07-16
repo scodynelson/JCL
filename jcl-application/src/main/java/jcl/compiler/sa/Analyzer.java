@@ -1,7 +1,7 @@
 package jcl.compiler.sa;
 
-import jcl.LispStruct;
 import jcl.compiler.environment.Environment;
+import jcl.lang.LispStruct;
 
 @FunctionalInterface
 public interface Analyzer<O extends LispStruct, I extends LispStruct> {

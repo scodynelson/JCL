@@ -7,14 +7,14 @@ package jcl.compiler.icg.generator;
 import java.util.Iterator;
 import java.util.List;
 
-import jcl.LispStruct;
 import jcl.compiler.icg.CodeGenerator;
 import jcl.compiler.icg.GeneratorEvent;
 import jcl.compiler.icg.GeneratorState;
 import jcl.compiler.icg.IntermediateCodeGenerator;
 import jcl.compiler.icg.JavaMethodBuilder;
 import jcl.compiler.struct.specialoperator.PrognStruct;
-import jcl.symbols.NILStruct;
+import jcl.lang.LispStruct;
+import jcl.lang.NILStruct;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.springframework.beans.factory.annotation.Autowired;

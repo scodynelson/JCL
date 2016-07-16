@@ -6,13 +6,13 @@ package jcl.characters.functions;
 
 import java.util.function.Predicate;
 
-import jcl.LispStruct;
-import jcl.characters.CharacterStruct;
-import jcl.functions.CommonLispBuiltInFunctionStruct;
-import jcl.functions.FunctionStruct;
-import jcl.functions.parameterdsl.Arguments;
-import jcl.functions.parameterdsl.Parameters;
-import jcl.symbols.BooleanStructs;
+import jcl.lang.BooleanStructs;
+import jcl.lang.CharacterStruct;
+import jcl.lang.LispStruct;
+import jcl.lang.function.CommonLispBuiltInFunctionStruct;
+import jcl.lang.function.FunctionStruct;
+import jcl.lang.function.parameterdsl.Arguments;
+import jcl.lang.function.parameterdsl.Parameters;
 
 /**
  * Abstract {@link FunctionStruct} implementation for character functions that operates on a {@link CharacterStruct} to

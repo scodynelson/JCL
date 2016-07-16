@@ -6,14 +6,14 @@ package jcl.reader.macrofunction;
 
 import java.math.BigInteger;
 
-import jcl.LispStruct;
-import jcl.conditions.exceptions.ReaderErrorException;
-import jcl.numbers.IntegerStruct;
-import jcl.numbers.RationalStruct;
+import jcl.lang.LispStruct;
+import jcl.lang.NILStruct;
+import jcl.lang.condition.exception.ReaderErrorException;
+import jcl.lang.number.IntegerStruct;
+import jcl.lang.number.RationalStruct;
+import jcl.lang.readtable.Reader;
+import jcl.lang.readtable.ReaderVariables;
 import jcl.printer.Printer;
-import jcl.reader.Reader;
-import jcl.reader.struct.ReaderVariables;
-import jcl.symbols.NILStruct;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;

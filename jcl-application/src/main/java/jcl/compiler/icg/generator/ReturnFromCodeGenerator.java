@@ -4,13 +4,13 @@
 
 package jcl.compiler.icg.generator;
 
-import jcl.LispStruct;
 import jcl.compiler.icg.GeneratorEvent;
 import jcl.compiler.icg.GeneratorState;
 import jcl.compiler.icg.IntermediateCodeGenerator;
 import jcl.compiler.icg.JavaMethodBuilder;
 import jcl.compiler.struct.specialoperator.ReturnFromStruct;
-import jcl.symbols.SymbolStruct;
+import jcl.lang.LispStruct;
+import jcl.lang.SymbolStruct;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.springframework.beans.factory.annotation.Autowired;

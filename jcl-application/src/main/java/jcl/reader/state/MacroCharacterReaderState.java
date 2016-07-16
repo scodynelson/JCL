@@ -7,16 +7,16 @@ package jcl.reader.state;
 import java.math.BigInteger;
 import java.util.Optional;
 
-import jcl.LispStruct;
-import jcl.conditions.exceptions.ReaderErrorException;
-import jcl.reader.Reader;
-import jcl.reader.ReaderMacroFunction;
+import jcl.lang.LispStruct;
+import jcl.lang.NILStruct;
+import jcl.lang.condition.exception.ReaderErrorException;
+import jcl.lang.function.ReaderMacroFunction;
+import jcl.lang.readtable.Reader;
+import jcl.lang.readtable.ReaderVariables;
+import jcl.lang.readtable.ReadtableStruct;
+import jcl.lang.stream.ReadPeekResult;
 import jcl.reader.ReaderStateMediator;
 import jcl.reader.TokenBuilder;
-import jcl.reader.struct.ReaderVariables;
-import jcl.reader.struct.ReadtableStruct;
-import jcl.streams.ReadPeekResult;
-import jcl.symbols.NILStruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

@@ -4,9 +4,9 @@
 
 package jcl.compiler.environment.binding.lambdalist;
 
-import jcl.packages.PackageStruct;
-import jcl.symbols.SymbolStruct;
-import jcl.types.TType;
+import jcl.lang.PackageStruct;
+import jcl.lang.SymbolStruct;
+import jcl.type.TType;
 
 public class SuppliedPParameter extends Parameter {
 

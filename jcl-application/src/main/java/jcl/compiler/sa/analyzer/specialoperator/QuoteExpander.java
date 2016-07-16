@@ -2,14 +2,14 @@ package jcl.compiler.sa.analyzer.specialoperator;
 
 import java.util.Iterator;
 
-import jcl.LispStruct;
 import jcl.compiler.environment.Environment;
 import jcl.compiler.struct.specialoperator.QuoteStruct;
-import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.functions.expanders.MacroFunctionExpander;
-import jcl.lists.ListStruct;
-import jcl.symbols.SpecialOperatorStruct;
-import jcl.symbols.SymbolStruct;
+import jcl.lang.LispStruct;
+import jcl.lang.ListStruct;
+import jcl.lang.SpecialOperatorStruct;
+import jcl.lang.SymbolStruct;
+import jcl.lang.condition.exception.ProgramErrorException;
 import org.springframework.stereotype.Component;
 
 @Component

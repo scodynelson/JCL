@@ -1,17 +1,17 @@
 package jcl.compiler.functions;
 
-import jcl.LispStruct;
-import jcl.compiler.struct.ValuesStruct;
-import jcl.conditions.exceptions.ErrorException;
-import jcl.conditions.exceptions.ProgramErrorException;
-import jcl.functions.CommonLispBuiltInFunctionStruct;
-import jcl.functions.FunctionStruct;
-import jcl.functions.expanders.MacroFunctionExpander;
-import jcl.functions.parameterdsl.Arguments;
-import jcl.functions.parameterdsl.Parameters;
+import jcl.lang.LispStruct;
+import jcl.lang.NILStruct;
+import jcl.lang.SymbolStruct;
+import jcl.lang.ValuesStruct;
+import jcl.lang.condition.exception.ErrorException;
+import jcl.lang.condition.exception.ProgramErrorException;
+import jcl.lang.function.CommonLispBuiltInFunctionStruct;
+import jcl.lang.function.FunctionStruct;
+import jcl.lang.function.expander.MacroFunctionExpanderInter;
+import jcl.lang.function.parameterdsl.Arguments;
+import jcl.lang.function.parameterdsl.Parameters;
 import jcl.printer.Printer;
-import jcl.symbols.NILStruct;
-import jcl.symbols.SymbolStruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -88,7 +88,7 @@ public final class CompileFunction extends CommonLispBuiltInFunctionStruct {
 		}
 		final SymbolStruct nameSymbol = (SymbolStruct) name;
 
-		final MacroFunctionExpander<?> macroFunction = nameSymbol.getMacroFunctionExpander();
+		final MacroFunctionExpanderInter macroFunction = nameSymbol.getMacroFunctionExpander();
 		if (macroFunction != null) {
 			return new ValuesStruct(macroFunction, NILStruct.INSTANCE, NILStruct.INSTANCE);
 		}

@@ -6,9 +6,9 @@ package jcl.compiler.struct.specialoperator;
 
 import java.util.List;
 
-import jcl.LispStruct;
 import jcl.compiler.environment.Environment;
 import jcl.compiler.struct.CompilerSpecialOperatorStruct;
+import jcl.lang.LispStruct;
 
 public class LocallyStruct extends CompilerSpecialOperatorStruct {
 

@@ -6,15 +6,15 @@ package jcl.functions.functions;
 
 import java.util.List;
 
-import jcl.LispStruct;
-import jcl.conditions.exceptions.ErrorException;
-import jcl.functions.CommonLispBuiltInFunctionStruct;
-import jcl.functions.FunctionStruct;
-import jcl.functions.parameterdsl.Arguments;
-import jcl.functions.parameterdsl.Parameters;
-import jcl.lists.ListStruct;
+import jcl.lang.LispStruct;
+import jcl.lang.ListStruct;
+import jcl.lang.SymbolStruct;
+import jcl.lang.condition.exception.ErrorException;
+import jcl.lang.function.CommonLispBuiltInFunctionStruct;
+import jcl.lang.function.FunctionStruct;
+import jcl.lang.function.parameterdsl.Arguments;
+import jcl.lang.function.parameterdsl.Parameters;
 import jcl.printer.Printer;
-import jcl.symbols.SymbolStruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

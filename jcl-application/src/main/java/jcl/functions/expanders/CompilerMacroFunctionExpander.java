@@ -4,8 +4,9 @@
 
 package jcl.functions.expanders;
 
-import jcl.LispStruct;
+import jcl.lang.LispStruct;
+import jcl.lang.function.expander.CompilerMacroFunctionExpanderInter;
 
-public abstract class CompilerMacroFunctionExpander<O extends LispStruct> extends MacroFunctionExpander<O> {
+public abstract class CompilerMacroFunctionExpander<O extends LispStruct> extends MacroFunctionExpander<O> implements CompilerMacroFunctionExpanderInter {
 
 }

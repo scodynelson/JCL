@@ -4,10 +4,10 @@
 
 package jcl.system.functions;
 
-import jcl.LispStruct;
-import jcl.functions.ExtensionsBuiltInFunctionStruct;
-import jcl.functions.parameterdsl.Arguments;
-import jcl.functions.parameterdsl.Parameters;
+import jcl.lang.LispStruct;
+import jcl.lang.function.ExtensionsBuiltInFunctionStruct;
+import jcl.lang.function.parameterdsl.Arguments;
+import jcl.lang.function.parameterdsl.Parameters;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;

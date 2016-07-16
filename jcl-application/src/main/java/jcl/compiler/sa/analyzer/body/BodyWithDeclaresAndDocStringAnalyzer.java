@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import jcl.LispStruct;
-import jcl.arrays.StringStruct;
-import jcl.lists.ListStruct;
-import jcl.symbols.SpecialOperatorStruct;
+import jcl.lang.LispStruct;
+import jcl.lang.ListStruct;
+import jcl.lang.SpecialOperatorStruct;
+import jcl.lang.array.StringStruct;
 import org.springframework.stereotype.Component;
 
 @Component

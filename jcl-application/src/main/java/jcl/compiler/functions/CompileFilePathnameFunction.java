@@ -4,18 +4,18 @@
 
 package jcl.compiler.functions;
 
-import jcl.LispStruct;
-import jcl.functions.CommonLispBuiltInFunctionStruct;
-import jcl.functions.parameterdsl.Arguments;
-import jcl.functions.parameterdsl.Parameters;
-import jcl.pathnames.LogicalPathnameStruct;
-import jcl.pathnames.PathnameStruct;
-import jcl.pathnames.PathnameType;
-import jcl.pathnames.PathnameVariables;
+import jcl.lang.CommonLispSymbols;
+import jcl.lang.LispStruct;
+import jcl.lang.NILStruct;
+import jcl.lang.function.CommonLispBuiltInFunctionStruct;
+import jcl.lang.function.parameterdsl.Arguments;
+import jcl.lang.function.parameterdsl.Parameters;
+import jcl.lang.pathname.LogicalPathnameStruct;
+import jcl.lang.pathname.PathnameStruct;
+import jcl.lang.pathname.PathnameType;
+import jcl.lang.pathname.PathnameVariables;
 import jcl.pathnames.functions.MergePathnamesFunction;
 import jcl.pathnames.functions.TranslateLogicalPathnameFunction;
-import jcl.symbols.NILStruct;
-import jcl.system.CommonLispSymbols;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

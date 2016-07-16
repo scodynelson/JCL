@@ -1,6 +1,6 @@
 package jcl.compiler.icg;
 
-import jcl.LispStruct;
+import jcl.lang.LispStruct;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.core.ResolvableType;
 import org.springframework.core.ResolvableTypeProvider;

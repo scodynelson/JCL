@@ -4,11 +4,11 @@
 
 package jcl.hashtables.functions;
 
-import jcl.LispStruct;
-import jcl.functions.CommonLispBuiltInFunctionStruct;
-import jcl.functions.parameterdsl.Arguments;
-import jcl.functions.parameterdsl.Parameters;
-import jcl.hashtables.HashTableStruct;
+import jcl.lang.HashTableStruct;
+import jcl.lang.LispStruct;
+import jcl.lang.function.CommonLispBuiltInFunctionStruct;
+import jcl.lang.function.parameterdsl.Arguments;
+import jcl.lang.function.parameterdsl.Parameters;
 import org.springframework.stereotype.Component;
 
 @Component

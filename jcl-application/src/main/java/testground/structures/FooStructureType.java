@@ -4,10 +4,10 @@
 
 package testground.structures;
 
-import jcl.types.StructureObjectType;
-import jcl.types.TypeBaseClass;
-import jcl.types.TypeFactory;
-import jcl.types.typespecifiers.AtomicTypeSpecifier;
+import jcl.type.StructureObjectType;
+import jcl.type.TypeBaseClass;
+import jcl.type.TypeFactory;
+import jcl.type.typespecifier.AtomicTypeSpecifier;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 @SuppressWarnings("all")

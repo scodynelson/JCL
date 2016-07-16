@@ -30,7 +30,7 @@ abstract class SpecialOperatorCodeGenerator<I extends CompilerSpecialOperatorStr
 	 * Constant {@link String} containing the method description to be used for the creation and invocation of the new
 	 * method. Its signature is equivalent to {@code LispStruct methodName(Closure var1)}.
 	 */
-	private static final String SPECIAL_OPERATOR_METHOD_DESC = "(Ljcl/functions/Closure;)Ljcl/LispStruct;";
+	private static final String SPECIAL_OPERATOR_METHOD_DESC = "(Ljcl/functions/Closure;)Ljcl/lang/LispStruct;";
 
 	/**
 	 * {@link String} to be used as the method name prefix when creating the new method via {@link

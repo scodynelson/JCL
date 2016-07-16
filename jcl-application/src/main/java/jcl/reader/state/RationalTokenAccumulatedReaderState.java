@@ -7,14 +7,14 @@ package jcl.reader.state;
 import java.math.BigInteger;
 import java.util.LinkedList;
 
-import jcl.numbers.IntegerStruct;
-import jcl.numbers.NumberStruct;
-import jcl.numbers.RatioStruct;
-import jcl.numbers.RationalStruct;
-import jcl.reader.AttributeType;
+import jcl.lang.number.IntegerStruct;
+import jcl.lang.number.NumberStruct;
+import jcl.lang.number.RatioStruct;
+import jcl.lang.number.RationalStruct;
+import jcl.lang.readtable.AttributeType;
+import jcl.lang.readtable.ReaderVariables;
 import jcl.reader.TokenAttribute;
 import jcl.reader.TokenBuilder;
-import jcl.reader.struct.ReaderVariables;
 import org.apfloat.Apint;
 import org.springframework.stereotype.Component;
 

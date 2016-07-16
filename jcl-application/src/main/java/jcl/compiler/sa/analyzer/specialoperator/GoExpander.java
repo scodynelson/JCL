@@ -5,16 +5,16 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Stack;
 
-import jcl.LispStruct;
 import jcl.compiler.environment.Environment;
 import jcl.compiler.struct.specialoperator.go.GoStruct;
-import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.functions.expanders.MacroFunctionExpander;
-import jcl.lists.ListStruct;
-import jcl.numbers.IntegerStruct;
+import jcl.lang.LispStruct;
+import jcl.lang.ListStruct;
+import jcl.lang.SpecialOperatorStruct;
+import jcl.lang.SymbolStruct;
+import jcl.lang.condition.exception.ProgramErrorException;
+import jcl.lang.number.IntegerStruct;
 import jcl.printer.Printer;
-import jcl.symbols.SpecialOperatorStruct;
-import jcl.symbols.SymbolStruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

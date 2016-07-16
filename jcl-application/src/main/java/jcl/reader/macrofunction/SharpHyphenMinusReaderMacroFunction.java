@@ -8,11 +8,11 @@ import java.math.BigInteger;
 import java.util.Optional;
 import javax.annotation.PostConstruct;
 
-import jcl.LispStruct;
-import jcl.characters.CharacterConstants;
-import jcl.reader.Reader;
-import jcl.reader.ReaderMacroFunction;
-import jcl.reader.struct.ReaderVariables;
+import jcl.lang.CharacterConstants;
+import jcl.lang.LispStruct;
+import jcl.lang.function.ReaderMacroFunction;
+import jcl.lang.readtable.Reader;
+import jcl.lang.readtable.ReaderVariables;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;

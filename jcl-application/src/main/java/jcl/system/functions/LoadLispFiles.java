@@ -3,14 +3,14 @@ package jcl.system.functions;
 import java.util.Arrays;
 import java.util.List;
 
-import jcl.LispStruct;
 import jcl.compiler.functions.CompileForm;
 import jcl.compiler.functions.LoadFunction;
-import jcl.functions.ExtensionsBuiltInFunctionStruct;
-import jcl.functions.parameterdsl.Arguments;
-import jcl.functions.parameterdsl.Parameters;
-import jcl.pathnames.PathnameStruct;
-import jcl.symbols.TStruct;
+import jcl.lang.LispStruct;
+import jcl.lang.TStruct;
+import jcl.lang.function.ExtensionsBuiltInFunctionStruct;
+import jcl.lang.function.parameterdsl.Arguments;
+import jcl.lang.function.parameterdsl.Parameters;
+import jcl.lang.pathname.PathnameStruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

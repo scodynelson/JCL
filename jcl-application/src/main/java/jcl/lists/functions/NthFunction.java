@@ -4,12 +4,12 @@
 
 package jcl.lists.functions;
 
-import jcl.LispStruct;
-import jcl.functions.CommonLispBuiltInFunctionStruct;
-import jcl.functions.parameterdsl.Arguments;
-import jcl.functions.parameterdsl.Parameters;
-import jcl.lists.ListStruct;
-import jcl.numbers.IntegerStruct;
+import jcl.lang.LispStruct;
+import jcl.lang.ListStruct;
+import jcl.lang.function.CommonLispBuiltInFunctionStruct;
+import jcl.lang.function.parameterdsl.Arguments;
+import jcl.lang.function.parameterdsl.Parameters;
+import jcl.lang.number.IntegerStruct;
 import org.springframework.stereotype.Component;
 
 @Component

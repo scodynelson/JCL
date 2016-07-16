@@ -6,9 +6,9 @@ package jcl.packages.functions;
 
 import java.util.function.BiConsumer;
 
-import jcl.conditions.exceptions.ErrorException;
-import jcl.packages.GlobalPackageStruct;
-import jcl.packages.PackageStruct;
+import jcl.lang.GlobalPackageStruct;
+import jcl.lang.PackageStruct;
+import jcl.lang.condition.exception.ErrorException;
 import org.springframework.stereotype.Component;
 
 /**

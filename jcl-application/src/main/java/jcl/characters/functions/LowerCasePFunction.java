@@ -6,7 +6,7 @@ package jcl.characters.functions;
 
 import java.util.function.Predicate;
 
-import jcl.characters.CharacterStruct;
+import jcl.lang.CharacterStruct;
 import org.springframework.stereotype.Component;
 
 /**

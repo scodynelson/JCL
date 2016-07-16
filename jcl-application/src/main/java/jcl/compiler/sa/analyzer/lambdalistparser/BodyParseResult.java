@@ -4,8 +4,8 @@
 
 package jcl.compiler.sa.analyzer.lambdalistparser;
 
-import jcl.LispStruct;
 import jcl.compiler.environment.binding.lambdalist.BodyParameter;
+import jcl.lang.LispStruct;
 
 final class BodyParseResult extends ParseResult {
 

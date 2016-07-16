@@ -4,12 +4,12 @@
 
 package jcl.compiler.struct.specialoperator.lambda;
 
-import jcl.arrays.StringStruct;
 import jcl.compiler.environment.Environment;
 import jcl.compiler.environment.binding.lambdalist.MacroLambdaList;
 import jcl.compiler.struct.CompilerSpecialOperatorStruct;
 import jcl.compiler.struct.specialoperator.PrognStruct;
-import jcl.symbols.SymbolStruct;
+import jcl.lang.SymbolStruct;
+import jcl.lang.array.StringStruct;
 
 public class MacroLambdaStruct extends CompilerSpecialOperatorStruct {
 

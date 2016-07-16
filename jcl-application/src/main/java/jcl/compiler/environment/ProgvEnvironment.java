@@ -4,7 +4,7 @@
 
 package jcl.compiler.environment;
 
-import jcl.symbols.SymbolStruct;
+import jcl.lang.SymbolStruct;
 
 public class ProgvEnvironment extends Environment {
 

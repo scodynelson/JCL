@@ -4,8 +4,8 @@
 
 package jcl.compiler.functions;
 
-import jcl.functions.FunctionStruct;
-import jcl.symbols.BooleanStruct;
+import jcl.lang.BooleanStruct;
+import jcl.lang.function.FunctionStruct;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;

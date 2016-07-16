@@ -12,8 +12,8 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 
-import jcl.conditions.exceptions.ErrorException;
-import jcl.conditions.exceptions.FileErrorException;
+import jcl.lang.condition.exception.ErrorException;
+import jcl.lang.condition.exception.FileErrorException;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;

@@ -1,6 +1,6 @@
 package jcl.compiler.icg;
 
-import jcl.LispStruct;
+import jcl.lang.LispStruct;
 
 /**
  * Defines the code generation interface with a single method {@link #generate(LispStruct, GeneratorState)} used for

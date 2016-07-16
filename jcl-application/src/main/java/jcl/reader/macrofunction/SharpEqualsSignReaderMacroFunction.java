@@ -13,15 +13,15 @@ import java.util.Set;
 import java.util.UUID;
 import javax.annotation.PostConstruct;
 
-import jcl.LispStruct;
-import jcl.characters.CharacterConstants;
-import jcl.conditions.exceptions.ReaderErrorException;
-import jcl.lists.ConsStruct;
-import jcl.reader.Reader;
-import jcl.reader.ReaderMacroFunction;
-import jcl.reader.struct.ReaderVariables;
-import jcl.symbols.NILStruct;
-import jcl.symbols.SymbolStruct;
+import jcl.lang.CharacterConstants;
+import jcl.lang.ConsStruct;
+import jcl.lang.LispStruct;
+import jcl.lang.NILStruct;
+import jcl.lang.SymbolStruct;
+import jcl.lang.condition.exception.ReaderErrorException;
+import jcl.lang.function.ReaderMacroFunction;
+import jcl.lang.readtable.Reader;
+import jcl.lang.readtable.ReaderVariables;
 import org.springframework.stereotype.Component;
 
 /**

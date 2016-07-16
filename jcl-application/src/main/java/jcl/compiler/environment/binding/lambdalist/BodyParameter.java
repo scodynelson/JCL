@@ -4,8 +4,8 @@
 
 package jcl.compiler.environment.binding.lambdalist;
 
-import jcl.symbols.SymbolStruct;
-import jcl.types.ListType;
+import jcl.lang.SymbolStruct;
+import jcl.type.ListType;
 
 public class BodyParameter extends Parameter {
 

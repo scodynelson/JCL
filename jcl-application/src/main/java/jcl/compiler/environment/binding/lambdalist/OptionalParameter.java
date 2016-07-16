@@ -7,11 +7,11 @@ package jcl.compiler.environment.binding.lambdalist;
 import java.util.Collections;
 import java.util.List;
 
-import jcl.LispStruct;
-import jcl.packages.PackageStruct;
-import jcl.symbols.NILStruct;
-import jcl.symbols.SymbolStruct;
-import jcl.types.TType;
+import jcl.lang.LispStruct;
+import jcl.lang.NILStruct;
+import jcl.lang.PackageStruct;
+import jcl.lang.SymbolStruct;
+import jcl.type.TType;
 
 public class OptionalParameter extends Parameter {
 

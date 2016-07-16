@@ -4,7 +4,7 @@
 
 package testground;
 
-import jcl.LispStruct;
+import jcl.lang.LispStruct;
 import jcl.functions.Closure;
 import jcl.functions.CompiledFunctionStruct;
 

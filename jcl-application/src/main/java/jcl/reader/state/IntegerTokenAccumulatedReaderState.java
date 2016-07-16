@@ -9,12 +9,12 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
-import jcl.numbers.IntegerStruct;
-import jcl.numbers.NumberStruct;
-import jcl.reader.AttributeType;
+import jcl.lang.number.IntegerStruct;
+import jcl.lang.number.NumberStruct;
+import jcl.lang.readtable.AttributeType;
+import jcl.lang.readtable.ReaderVariables;
 import jcl.reader.TokenAttribute;
 import jcl.reader.TokenBuilder;
-import jcl.reader.struct.ReaderVariables;
 import org.springframework.stereotype.Component;
 
 /**

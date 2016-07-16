@@ -1,5 +1,6 @@
 package jcl;
 
+import jcl.lang.LispStruct;
 import org.junit.Test;
 
 /**

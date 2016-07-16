@@ -11,11 +11,11 @@ import java.util.List;
 import java.util.Set;
 import java.util.Stack;
 
-import jcl.classes.StandardObjectStruct;
 import jcl.compiler.environment.binding.Binding;
 import jcl.compiler.environment.binding.SymbolMacroBinding;
 import jcl.compiler.struct.specialoperator.go.GoStruct;
-import jcl.symbols.SymbolStruct;
+import jcl.lang.StandardObjectStruct;
+import jcl.lang.SymbolStruct;
 
 public class Environment extends StandardObjectStruct {
 

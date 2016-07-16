@@ -7,8 +7,8 @@ package testground;
 import java.util.ArrayList;
 import java.util.List;
 
-import jcl.LispStruct;
-import jcl.characters.CharacterStruct;
+import jcl.lang.LispStruct;
+import jcl.lang.CharacterStruct;
 import jcl.compiler.environment.binding.lambdalist.AuxParameter;
 import jcl.compiler.environment.binding.lambdalist.KeyParameter;
 import jcl.compiler.environment.binding.lambdalist.OptionalParameter;
@@ -17,9 +17,9 @@ import jcl.compiler.environment.binding.lambdalist.RestParameter;
 import jcl.compiler.environment.binding.lambdalist.SuppliedPParameter;
 import jcl.functions.Closure;
 import jcl.functions.CompiledFunctionStruct;
-import jcl.packages.PackageStruct;
-import jcl.symbols.NILStruct;
-import jcl.symbols.SymbolStruct;
+import jcl.lang.PackageStruct;
+import jcl.lang.NILStruct;
+import jcl.lang.SymbolStruct;
 import org.springframework.stereotype.Component;
 
 @SuppressWarnings("all")

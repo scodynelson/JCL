@@ -6,19 +6,19 @@ package jcl.streams.functions;
 
 import java.math.BigInteger;
 
-import jcl.LispStruct;
-import jcl.conditions.exceptions.TypeErrorException;
-import jcl.functions.CommonLispBuiltInFunctionStruct;
-import jcl.functions.parameterdsl.Arguments;
-import jcl.functions.parameterdsl.Parameters;
-import jcl.numbers.IntegerStruct;
+import jcl.lang.BooleanStruct;
+import jcl.lang.LispStruct;
+import jcl.lang.NILStruct;
+import jcl.lang.TStruct;
+import jcl.lang.condition.exception.TypeErrorException;
+import jcl.lang.function.CommonLispBuiltInFunctionStruct;
+import jcl.lang.function.parameterdsl.Arguments;
+import jcl.lang.function.parameterdsl.Parameters;
+import jcl.lang.number.IntegerStruct;
+import jcl.lang.stream.InputStream;
+import jcl.lang.stream.ReadPeekResult;
+import jcl.lang.stream.StreamVariables;
 import jcl.printer.Printer;
-import jcl.streams.InputStream;
-import jcl.streams.ReadPeekResult;
-import jcl.streams.StreamVariables;
-import jcl.symbols.BooleanStruct;
-import jcl.symbols.NILStruct;
-import jcl.symbols.TStruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

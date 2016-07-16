@@ -12,12 +12,12 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import jcl.LispStruct;
-import jcl.numbers.NumberStruct;
-import jcl.reader.AttributeType;
+import jcl.lang.LispStruct;
+import jcl.lang.number.NumberStruct;
+import jcl.lang.readtable.AttributeType;
+import jcl.lang.readtable.ReaderVariables;
 import jcl.reader.TokenAttribute;
 import jcl.reader.TokenBuilder;
-import jcl.reader.struct.ReaderVariables;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

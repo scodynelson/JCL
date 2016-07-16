@@ -6,11 +6,11 @@ package jcl.reader.state;
 
 import java.util.List;
 
-import jcl.LispStruct;
-import jcl.reader.AttributeType;
+import jcl.lang.LispStruct;
+import jcl.lang.readtable.AttributeType;
+import jcl.lang.readtable.ReadtableCase;
 import jcl.reader.TokenAttribute;
 import jcl.reader.TokenBuilder;
-import jcl.reader.struct.ReadtableCase;
 import org.apache.commons.collections4.CollectionUtils;
 
 /**

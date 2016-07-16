@@ -6,11 +6,11 @@ package jcl.reader.state;
 
 import java.util.List;
 
-import jcl.LispStruct;
-import jcl.conditions.exceptions.ReaderErrorException;
+import jcl.lang.LispStruct;
+import jcl.lang.condition.exception.ReaderErrorException;
+import jcl.lang.readtable.ReaderVariables;
 import jcl.reader.TokenAttribute;
 import jcl.reader.TokenBuilder;
-import jcl.reader.struct.ReaderVariables;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

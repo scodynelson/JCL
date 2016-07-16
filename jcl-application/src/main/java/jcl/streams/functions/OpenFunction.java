@@ -4,21 +4,21 @@
 
 package jcl.streams.functions;
 
-import jcl.LispStruct;
-import jcl.LispType;
-import jcl.functions.CommonLispBuiltInFunctionStruct;
-import jcl.functions.parameterdsl.Arguments;
-import jcl.functions.parameterdsl.Parameters;
-import jcl.numbers.IntegerStruct;
-import jcl.pathnames.PathnameStruct;
-import jcl.streams.DirectionType;
-import jcl.streams.ExternalFormat;
-import jcl.streams.FileStreamStructs;
-import jcl.streams.IfDoesNotExistType;
-import jcl.streams.IfExistsType;
-import jcl.symbols.NILStruct;
-import jcl.symbols.SymbolStruct;
-import jcl.system.CommonLispSymbols;
+import jcl.lang.CommonLispSymbols;
+import jcl.lang.LispStruct;
+import jcl.lang.NILStruct;
+import jcl.lang.SymbolStruct;
+import jcl.lang.function.CommonLispBuiltInFunctionStruct;
+import jcl.lang.function.parameterdsl.Arguments;
+import jcl.lang.function.parameterdsl.Parameters;
+import jcl.lang.number.IntegerStruct;
+import jcl.lang.pathname.PathnameStruct;
+import jcl.lang.stream.DirectionType;
+import jcl.lang.stream.ExternalFormat;
+import jcl.lang.stream.FileStreamStructs;
+import jcl.lang.stream.IfDoesNotExistType;
+import jcl.lang.stream.IfExistsType;
+import jcl.type.LispType;
 import org.springframework.stereotype.Component;
 
 @Component

@@ -4,8 +4,8 @@
 
 package jcl.compiler.icg.generator;
 
-import jcl.LispStruct;
-import jcl.conditions.exceptions.ProgramErrorException;
+import jcl.lang.LispStruct;
+import jcl.lang.condition.exception.ProgramErrorException;
 
 /**
  * Exception used to facilitate the catch/throw dynamic control-flow transfer-of-control (ToC) statements.

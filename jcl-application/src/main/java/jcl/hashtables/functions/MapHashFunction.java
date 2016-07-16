@@ -4,15 +4,15 @@
 
 package jcl.hashtables.functions;
 
-import jcl.LispStruct;
-import jcl.conditions.exceptions.TypeErrorException;
-import jcl.functions.CommonLispBuiltInFunctionStruct;
-import jcl.functions.FunctionStruct;
-import jcl.functions.parameterdsl.Arguments;
-import jcl.functions.parameterdsl.Parameters;
-import jcl.hashtables.HashTableStruct;
-import jcl.symbols.NILStruct;
-import jcl.symbols.SymbolStruct;
+import jcl.lang.HashTableStruct;
+import jcl.lang.LispStruct;
+import jcl.lang.NILStruct;
+import jcl.lang.SymbolStruct;
+import jcl.lang.condition.exception.TypeErrorException;
+import jcl.lang.function.CommonLispBuiltInFunctionStruct;
+import jcl.lang.function.FunctionStruct;
+import jcl.lang.function.parameterdsl.Arguments;
+import jcl.lang.function.parameterdsl.Parameters;
 import org.springframework.stereotype.Component;
 
 @Component

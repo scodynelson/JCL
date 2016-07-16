@@ -11,8 +11,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import jcl.LispStruct;
-import jcl.LispType;
 import jcl.compiler.environment.binding.lambdalist.AuxParameter;
 import jcl.compiler.environment.binding.lambdalist.KeyParameter;
 import jcl.compiler.environment.binding.lambdalist.OptionalParameter;
@@ -20,15 +18,18 @@ import jcl.compiler.environment.binding.lambdalist.OrdinaryLambdaList;
 import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
 import jcl.compiler.environment.binding.lambdalist.RestParameter;
 import jcl.compiler.environment.binding.lambdalist.SuppliedPParameter;
-import jcl.compiler.struct.ValuesStruct;
-import jcl.conditions.exceptions.ErrorException;
-import jcl.conditions.exceptions.ProgramErrorException;
-import jcl.lists.ListStruct;
-import jcl.symbols.NILStruct;
-import jcl.symbols.SymbolStruct;
-import jcl.symbols.TStruct;
-import jcl.system.CommonLispSymbols;
-import jcl.types.CompiledFunctionType;
+import jcl.lang.CommonLispSymbols;
+import jcl.lang.LispStruct;
+import jcl.lang.ListStruct;
+import jcl.lang.NILStruct;
+import jcl.lang.SymbolStruct;
+import jcl.lang.TStruct;
+import jcl.lang.ValuesStruct;
+import jcl.lang.condition.exception.ErrorException;
+import jcl.lang.condition.exception.ProgramErrorException;
+import jcl.lang.function.FunctionStruct;
+import jcl.type.CompiledFunctionType;
+import jcl.type.LispType;
 
 public abstract class CompiledFunctionStruct extends FunctionStruct {
 

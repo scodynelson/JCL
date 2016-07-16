@@ -4,11 +4,11 @@
 
 package jcl.system.functions;
 
-import jcl.LispStruct;
-import jcl.functions.ExtensionsBuiltInFunctionStruct;
-import jcl.functions.parameterdsl.Arguments;
-import jcl.functions.parameterdsl.Parameters;
-import jcl.symbols.TStruct;
+import jcl.lang.LispStruct;
+import jcl.lang.TStruct;
+import jcl.lang.function.ExtensionsBuiltInFunctionStruct;
+import jcl.lang.function.parameterdsl.Arguments;
+import jcl.lang.function.parameterdsl.Parameters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;

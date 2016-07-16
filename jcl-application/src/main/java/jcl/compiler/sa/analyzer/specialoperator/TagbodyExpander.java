@@ -6,17 +6,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import jcl.LispStruct;
 import jcl.compiler.environment.Environment;
 import jcl.compiler.sa.FormAnalyzer;
 import jcl.compiler.struct.specialoperator.PrognStruct;
 import jcl.compiler.struct.specialoperator.TagbodyStruct;
 import jcl.compiler.struct.specialoperator.go.GoStruct;
 import jcl.functions.expanders.MacroFunctionExpander;
-import jcl.lists.ListStruct;
-import jcl.numbers.IntegerStruct;
-import jcl.symbols.SpecialOperatorStruct;
-import jcl.symbols.SymbolStruct;
+import jcl.lang.LispStruct;
+import jcl.lang.ListStruct;
+import jcl.lang.SpecialOperatorStruct;
+import jcl.lang.SymbolStruct;
+import jcl.lang.number.IntegerStruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

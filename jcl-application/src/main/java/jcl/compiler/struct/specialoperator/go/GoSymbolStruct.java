@@ -4,7 +4,7 @@
 
 package jcl.compiler.struct.specialoperator.go;
 
-import jcl.symbols.SymbolStruct;
+import jcl.lang.SymbolStruct;
 
 public class GoSymbolStruct extends GoStruct<SymbolStruct> {
 

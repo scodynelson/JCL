@@ -7,9 +7,9 @@ package jcl.compiler.environment.binding.lambdalist;
 import java.util.Collections;
 import java.util.List;
 
-import jcl.packages.PackageStruct;
-import jcl.symbols.SymbolStruct;
-import jcl.types.TType;
+import jcl.lang.PackageStruct;
+import jcl.lang.SymbolStruct;
+import jcl.type.TType;
 
 public class RequiredParameter extends Parameter {
 

@@ -10,10 +10,11 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
-import jcl.LispStruct;
-import jcl.streams.InputStream;
-import jcl.streams.ReadPeekResult;
-import jcl.symbols.SymbolStruct;
+import jcl.lang.LispStruct;
+import jcl.lang.SymbolStruct;
+import jcl.lang.readtable.Reader;
+import jcl.lang.stream.InputStream;
+import jcl.lang.stream.ReadPeekResult;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;

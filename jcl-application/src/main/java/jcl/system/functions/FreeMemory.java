@@ -6,11 +6,11 @@ package jcl.system.functions;
 
 import java.math.BigInteger;
 
-import jcl.LispStruct;
-import jcl.functions.ExtensionsBuiltInFunctionStruct;
-import jcl.functions.parameterdsl.Arguments;
-import jcl.functions.parameterdsl.Parameters;
-import jcl.numbers.IntegerStruct;
+import jcl.lang.LispStruct;
+import jcl.lang.function.ExtensionsBuiltInFunctionStruct;
+import jcl.lang.function.parameterdsl.Arguments;
+import jcl.lang.function.parameterdsl.Parameters;
+import jcl.lang.number.IntegerStruct;
 import org.springframework.stereotype.Component;
 
 @Component

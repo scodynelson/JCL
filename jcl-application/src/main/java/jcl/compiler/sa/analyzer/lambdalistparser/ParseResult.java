@@ -4,7 +4,7 @@
 
 package jcl.compiler.sa.analyzer.lambdalistparser;
 
-import jcl.LispStruct;
+import jcl.lang.LispStruct;
 
 class ParseResult {
 

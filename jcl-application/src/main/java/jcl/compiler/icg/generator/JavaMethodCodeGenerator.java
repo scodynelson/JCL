@@ -4,9 +4,9 @@
 
 package jcl.compiler.icg.generator;
 
-import jcl.LispStruct;
 import jcl.compiler.icg.CodeGenerator;
 import jcl.compiler.icg.JCLMethodWriter;
+import jcl.lang.LispStruct;
 
 @SuppressWarnings("all")
 public abstract class JavaMethodCodeGenerator<I extends LispStruct> implements CodeGenerator<I> {
@@ -37,7 +37,7 @@ public abstract class JavaMethodCodeGenerator<I extends LispStruct> implements C
 //	@Override
 //	public void generate(final I input, final GeneratorState generatorState) {
 //		final JCLClassWriter cw = null; //generatorState.getCurrentCw();
-//		final JCLMethodWriter mw = cw.visitMethod(access, name, desc, signature, exceptions);
+//		final JCLMethodWriter mw = cw.visitMethod(access, name, desc, signature, exception);
 //
 //		mw.visitCode();
 //

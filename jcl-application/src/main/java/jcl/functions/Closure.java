@@ -7,8 +7,9 @@ package jcl.functions;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import jcl.LispStruct;
-import jcl.symbols.SymbolStruct;
+import jcl.lang.LispStruct;
+import jcl.lang.SymbolStruct;
+import jcl.lang.function.FunctionStruct;
 
 public class Closure {
 

@@ -4,9 +4,9 @@
 
 package jcl.compiler.environment.binding;
 
-import jcl.LispType;
-import jcl.symbols.SymbolStruct;
-import jcl.types.TType;
+import jcl.lang.SymbolStruct;
+import jcl.type.LispType;
+import jcl.type.TType;
 
 public class Binding {
 

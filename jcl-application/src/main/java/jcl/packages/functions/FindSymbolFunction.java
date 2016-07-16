@@ -6,8 +6,8 @@ package jcl.packages.functions;
 
 import java.util.function.BiFunction;
 
-import jcl.packages.PackageStruct;
-import jcl.packages.PackageSymbolStruct;
+import jcl.lang.PackageStruct;
+import jcl.lang.PackageSymbolStruct;
 import org.springframework.stereotype.Component;
 
 /**

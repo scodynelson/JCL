@@ -6,8 +6,10 @@ package jcl.reader;
 
 import java.util.LinkedList;
 
-import jcl.LispStruct;
-import jcl.streams.ReadPeekResult;
+import jcl.lang.LispStruct;
+import jcl.lang.readtable.AttributeType;
+import jcl.lang.readtable.Reader;
+import jcl.lang.stream.ReadPeekResult;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;

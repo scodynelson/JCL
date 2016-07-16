@@ -4,12 +4,12 @@
 
 package jcl.compiler.icg.generator;
 
-import jcl.LispStruct;
 import jcl.compiler.icg.CodeGenerator;
 import jcl.compiler.icg.GeneratorEvent;
 import jcl.compiler.icg.GeneratorState;
 import jcl.compiler.icg.IntermediateCodeGenerator;
 import jcl.compiler.struct.specialoperator.TheStruct;
+import jcl.lang.LispStruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;

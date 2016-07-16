@@ -8,14 +8,14 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
 
-import jcl.LispStruct;
-import jcl.arrays.StringStruct;
-import jcl.conditions.exceptions.ErrorException;
-import jcl.functions.ExtensionsBuiltInFunctionStruct;
-import jcl.functions.parameterdsl.Arguments;
-import jcl.functions.parameterdsl.Parameters;
 import jcl.java.JavaClassStruct;
 import jcl.java.JavaMethodStruct;
+import jcl.lang.LispStruct;
+import jcl.lang.array.StringStruct;
+import jcl.lang.condition.exception.ErrorException;
+import jcl.lang.function.ExtensionsBuiltInFunctionStruct;
+import jcl.lang.function.parameterdsl.Arguments;
+import jcl.lang.function.parameterdsl.Parameters;
 import org.springframework.stereotype.Component;
 
 @Component

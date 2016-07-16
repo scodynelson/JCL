@@ -4,13 +4,13 @@
 
 package jcl.streams.functions;
 
-import jcl.LispStruct;
-import jcl.characters.CharacterStruct;
-import jcl.functions.CommonLispBuiltInFunctionStruct;
-import jcl.functions.parameterdsl.Arguments;
-import jcl.functions.parameterdsl.Parameters;
-import jcl.streams.OutputStream;
-import jcl.streams.StreamVariables;
+import jcl.lang.CharacterStruct;
+import jcl.lang.LispStruct;
+import jcl.lang.function.CommonLispBuiltInFunctionStruct;
+import jcl.lang.function.parameterdsl.Arguments;
+import jcl.lang.function.parameterdsl.Parameters;
+import jcl.lang.stream.OutputStream;
+import jcl.lang.stream.StreamVariables;
 import org.springframework.stereotype.Component;
 
 @Component

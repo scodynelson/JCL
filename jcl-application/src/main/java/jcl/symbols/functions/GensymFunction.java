@@ -4,15 +4,15 @@
 
 package jcl.symbols.functions;
 
-import jcl.LispStruct;
-import jcl.arrays.StringStruct;
-import jcl.conditions.exceptions.TypeErrorException;
-import jcl.functions.CommonLispBuiltInFunctionStruct;
-import jcl.functions.parameterdsl.Arguments;
-import jcl.functions.parameterdsl.Parameters;
-import jcl.numbers.IntegerStruct;
-import jcl.symbols.SymbolStruct;
-import jcl.symbols.SymbolVariables;
+import jcl.lang.LispStruct;
+import jcl.lang.SymbolStruct;
+import jcl.lang.SymbolVariables;
+import jcl.lang.array.StringStruct;
+import jcl.lang.condition.exception.TypeErrorException;
+import jcl.lang.function.CommonLispBuiltInFunctionStruct;
+import jcl.lang.function.parameterdsl.Arguments;
+import jcl.lang.function.parameterdsl.Parameters;
+import jcl.lang.number.IntegerStruct;
 import org.springframework.stereotype.Component;
 
 @Component

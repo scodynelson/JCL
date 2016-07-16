@@ -9,13 +9,13 @@ import java.math.MathContext;
 import java.math.RoundingMode;
 import java.util.LinkedList;
 
-import jcl.numbers.FloatStruct;
-import jcl.numbers.NumberStruct;
-import jcl.reader.AttributeType;
+import jcl.lang.number.FloatStruct;
+import jcl.lang.number.NumberStruct;
+import jcl.lang.number.NumberUtils;
+import jcl.lang.readtable.AttributeType;
 import jcl.reader.TokenAttribute;
 import jcl.reader.TokenBuilder;
-import jcl.types.FloatType;
-import jcl.util.NumberUtils;
+import jcl.type.FloatType;
 import org.springframework.stereotype.Component;
 
 /**

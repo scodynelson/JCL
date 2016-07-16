@@ -4,7 +4,8 @@
 
 package jcl.reader;
 
-import jcl.LispStruct;
+import jcl.lang.LispStruct;
+import jcl.lang.readtable.Reader;
 
 /**
  * Mediator for {@link Reader} state algorithm invocations throughout the read process.

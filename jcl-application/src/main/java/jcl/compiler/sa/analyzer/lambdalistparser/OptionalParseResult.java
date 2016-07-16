@@ -6,8 +6,8 @@ package jcl.compiler.sa.analyzer.lambdalistparser;
 
 import java.util.List;
 
-import jcl.LispStruct;
 import jcl.compiler.environment.binding.lambdalist.OptionalParameter;
+import jcl.lang.LispStruct;
 
 final class OptionalParseResult extends ParseResult {
 

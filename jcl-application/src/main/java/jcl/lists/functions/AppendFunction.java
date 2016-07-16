@@ -7,12 +7,12 @@ package jcl.lists.functions;
 import java.util.ArrayList;
 import java.util.List;
 
-import jcl.LispStruct;
-import jcl.functions.CommonLispBuiltInFunctionStruct;
-import jcl.functions.parameterdsl.Arguments;
-import jcl.functions.parameterdsl.Parameters;
-import jcl.lists.ListStruct;
-import jcl.symbols.NILStruct;
+import jcl.lang.LispStruct;
+import jcl.lang.ListStruct;
+import jcl.lang.NILStruct;
+import jcl.lang.function.CommonLispBuiltInFunctionStruct;
+import jcl.lang.function.parameterdsl.Arguments;
+import jcl.lang.function.parameterdsl.Parameters;
 import jcl.util.ClassUtils;
 import org.apache.commons.collections4.iterators.ReverseListIterator;
 import org.springframework.stereotype.Component;

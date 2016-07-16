@@ -7,8 +7,6 @@ package jcl.compiler.icg.generator;
 import java.util.Deque;
 import java.util.List;
 
-import jcl.LispStruct;
-import jcl.arrays.StringStruct;
 import jcl.compiler.environment.Environment;
 import jcl.compiler.environment.binding.lambdalist.AuxParameter;
 import jcl.compiler.environment.binding.lambdalist.BodyParameter;
@@ -31,9 +29,11 @@ import jcl.compiler.struct.specialoperator.PrognStruct;
 import jcl.compiler.struct.specialoperator.lambda.MacroLambdaStruct;
 import jcl.functions.Closure;
 import jcl.functions.expanders.CompiledMacroFunctionExpander;
-import jcl.packages.PackageStruct;
-import jcl.symbols.NILStruct;
-import jcl.symbols.SymbolStruct;
+import jcl.lang.LispStruct;
+import jcl.lang.NILStruct;
+import jcl.lang.PackageStruct;
+import jcl.lang.SymbolStruct;
+import jcl.lang.array.StringStruct;
 import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Label;
@@ -212,7 +212,7 @@ final class MacroLambdaCodeGenerator implements CodeGenerator<MacroLambdaStruct>
 	 * Constant {@link String} containing the description for the {@link CompiledMacroFunctionExpander#internalApply(Closure)}
 	 * method.
 	 */
-	private static final String INTERNAL_APPLY_METHOD_DESC = "(Ljcl/functions/Closure;)Ljcl/LispStruct;";
+	private static final String INTERNAL_APPLY_METHOD_DESC = "(Ljcl/functions/Closure;)Ljcl/lang/LispStruct;";
 
 	/**
 	 * Constant {@link String} containing the name for the {@link CompiledMacroFunctionExpander#getInitForm(Closure,
@@ -224,13 +224,13 @@ final class MacroLambdaCodeGenerator implements CodeGenerator<MacroLambdaStruct>
 	 * Constant {@link String} containing the description for the {@link CompiledMacroFunctionExpander#getInitForm(Closure,
 	 * SymbolStruct)} method.
 	 */
-	private static final String GET_INIT_FORM_METHOD_DESC = "(Ljcl/functions/Closure;Ljcl/symbols/SymbolStruct;)Ljcl/LispStruct;";
+	private static final String GET_INIT_FORM_METHOD_DESC = "(Ljcl/functions/Closure;Ljcl/lang/SymbolStruct;)Ljcl/lang/LispStruct;";
 
 	/**
 	 * Constant {@link String} containing the signature for the {@link CompiledMacroFunctionExpander#getInitForm(Closure,
 	 * SymbolStruct)} method.
 	 */
-	private static final String GET_INIT_FORM_METHOD_SIGNATURE = "(Ljcl/functions/Closure;Ljcl/symbols/SymbolStruct;)Ljcl/LispStruct;";
+	private static final String GET_INIT_FORM_METHOD_SIGNATURE = "(Ljcl/functions/Closure;Ljcl/lang/SymbolStruct;)Ljcl/lang/LispStruct;";
 
 	/**
 	 * {@link IntermediateCodeGenerator} used for generating the 'optional', 'key', and 'aux' init-form values in the

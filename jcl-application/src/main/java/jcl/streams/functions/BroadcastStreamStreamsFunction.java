@@ -7,13 +7,13 @@ package jcl.streams.functions;
 import java.util.ArrayList;
 import java.util.Deque;
 
-import jcl.LispStruct;
-import jcl.functions.CommonLispBuiltInFunctionStruct;
-import jcl.functions.parameterdsl.Arguments;
-import jcl.functions.parameterdsl.Parameters;
-import jcl.lists.ListStruct;
-import jcl.streams.BroadcastStreamStruct;
-import jcl.streams.OutputStream;
+import jcl.lang.LispStruct;
+import jcl.lang.ListStruct;
+import jcl.lang.function.CommonLispBuiltInFunctionStruct;
+import jcl.lang.function.parameterdsl.Arguments;
+import jcl.lang.function.parameterdsl.Parameters;
+import jcl.lang.stream.BroadcastStreamStruct;
+import jcl.lang.stream.OutputStream;
 import org.springframework.stereotype.Component;
 
 @Component

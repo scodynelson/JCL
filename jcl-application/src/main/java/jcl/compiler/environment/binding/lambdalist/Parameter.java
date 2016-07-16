@@ -4,10 +4,10 @@
 
 package jcl.compiler.environment.binding.lambdalist;
 
-import jcl.LispStruct;
-import jcl.LispType;
 import jcl.compiler.environment.binding.Binding;
-import jcl.symbols.SymbolStruct;
+import jcl.lang.LispStruct;
+import jcl.lang.SymbolStruct;
+import jcl.type.LispType;
 
 public class Parameter extends Binding {
 

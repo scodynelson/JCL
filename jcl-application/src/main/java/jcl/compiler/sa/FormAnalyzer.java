@@ -4,7 +4,7 @@
 
 package jcl.compiler.sa;
 
-import jcl.LispStruct;
+import jcl.lang.LispStruct;
 
 @FunctionalInterface
 public interface FormAnalyzer extends Analyzer<LispStruct, LispStruct> {

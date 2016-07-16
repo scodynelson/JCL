@@ -6,10 +6,10 @@ package jcl.compiler.struct.specialoperator;
 
 import java.util.List;
 
-import jcl.LispStruct;
 import jcl.compiler.environment.Environment;
 import jcl.compiler.struct.CompilerSpecialOperatorStruct;
-import jcl.symbols.SymbolStruct;
+import jcl.lang.LispStruct;
+import jcl.lang.SymbolStruct;
 
 public class SymbolMacroletStruct extends CompilerSpecialOperatorStruct {
 

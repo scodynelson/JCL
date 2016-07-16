@@ -4,15 +4,15 @@
 
 package jcl.streams.functions;
 
-import jcl.LispStruct;
-import jcl.functions.CommonLispBuiltInFunctionStruct;
-import jcl.functions.parameterdsl.Arguments;
-import jcl.functions.parameterdsl.Parameters;
-import jcl.streams.StreamStruct;
-import jcl.symbols.BooleanStruct;
-import jcl.symbols.BooleanStructs;
-import jcl.symbols.NILStruct;
-import jcl.system.CommonLispSymbols;
+import jcl.lang.BooleanStruct;
+import jcl.lang.BooleanStructs;
+import jcl.lang.CommonLispSymbols;
+import jcl.lang.LispStruct;
+import jcl.lang.NILStruct;
+import jcl.lang.function.CommonLispBuiltInFunctionStruct;
+import jcl.lang.function.parameterdsl.Arguments;
+import jcl.lang.function.parameterdsl.Parameters;
+import jcl.lang.stream.StreamStruct;
 import org.springframework.stereotype.Component;
 
 @Component

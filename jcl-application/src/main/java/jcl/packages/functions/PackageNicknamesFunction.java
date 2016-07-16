@@ -7,13 +7,13 @@ package jcl.packages.functions;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import jcl.LispStruct;
-import jcl.arrays.StringStruct;
-import jcl.functions.CommonLispBuiltInFunctionStruct;
-import jcl.functions.parameterdsl.Arguments;
-import jcl.functions.parameterdsl.Parameters;
-import jcl.lists.ListStruct;
-import jcl.packages.PackageStruct;
+import jcl.lang.LispStruct;
+import jcl.lang.ListStruct;
+import jcl.lang.PackageStruct;
+import jcl.lang.array.StringStruct;
+import jcl.lang.function.CommonLispBuiltInFunctionStruct;
+import jcl.lang.function.parameterdsl.Arguments;
+import jcl.lang.function.parameterdsl.Parameters;
 import org.springframework.stereotype.Component;
 
 /**

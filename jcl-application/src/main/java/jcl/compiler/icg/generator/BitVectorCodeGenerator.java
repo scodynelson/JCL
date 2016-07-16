@@ -6,13 +6,13 @@ package jcl.compiler.icg.generator;
 
 import java.util.List;
 
-import jcl.arrays.BitVectorStruct;
 import jcl.compiler.icg.CodeGenerator;
 import jcl.compiler.icg.GeneratorEvent;
 import jcl.compiler.icg.GeneratorState;
 import jcl.compiler.icg.IntermediateCodeGenerator;
 import jcl.compiler.icg.JavaMethodBuilder;
-import jcl.numbers.IntegerStruct;
+import jcl.lang.array.BitVectorStruct;
+import jcl.lang.number.IntegerStruct;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;

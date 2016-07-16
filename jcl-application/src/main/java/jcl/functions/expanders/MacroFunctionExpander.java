@@ -7,7 +7,6 @@ package jcl.functions.expanders;
 import java.util.Collections;
 import java.util.List;
 
-import jcl.LispStruct;
 import jcl.compiler.environment.Environment;
 import jcl.compiler.environment.binding.lambdalist.AuxParameter;
 import jcl.compiler.environment.binding.lambdalist.BodyParameter;
@@ -18,10 +17,12 @@ import jcl.compiler.environment.binding.lambdalist.OptionalParameter;
 import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
 import jcl.compiler.environment.binding.lambdalist.RestParameter;
 import jcl.compiler.environment.binding.lambdalist.WholeParameter;
-import jcl.lists.ListStruct;
-import jcl.symbols.SymbolStruct;
+import jcl.lang.LispStruct;
+import jcl.lang.ListStruct;
+import jcl.lang.SymbolStruct;
+import jcl.lang.function.expander.MacroFunctionExpanderInter;
 
-public abstract class MacroFunctionExpander<O extends LispStruct> extends MacroExpander<O, ListStruct> {
+public abstract class MacroFunctionExpander<O extends LispStruct> extends MacroExpander<O, ListStruct> implements MacroFunctionExpanderInter {
 
 	protected MacroLambdaList macroLambdaListBindings;
 

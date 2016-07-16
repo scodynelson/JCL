@@ -4,18 +4,18 @@
 
 package jcl.reader.functions;
 
-import jcl.LispStruct;
-import jcl.conditions.exceptions.TypeErrorException;
-import jcl.functions.CommonLispBuiltInFunctionStruct;
-import jcl.functions.parameterdsl.Arguments;
-import jcl.functions.parameterdsl.Parameters;
+import jcl.lang.BooleanStruct;
+import jcl.lang.LispStruct;
+import jcl.lang.NILStruct;
+import jcl.lang.TStruct;
+import jcl.lang.condition.exception.TypeErrorException;
+import jcl.lang.function.CommonLispBuiltInFunctionStruct;
+import jcl.lang.function.parameterdsl.Arguments;
+import jcl.lang.function.parameterdsl.Parameters;
+import jcl.lang.readtable.Reader;
+import jcl.lang.stream.InputStream;
+import jcl.lang.stream.StreamVariables;
 import jcl.printer.Printer;
-import jcl.reader.Reader;
-import jcl.streams.InputStream;
-import jcl.streams.StreamVariables;
-import jcl.symbols.BooleanStruct;
-import jcl.symbols.NILStruct;
-import jcl.symbols.TStruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;

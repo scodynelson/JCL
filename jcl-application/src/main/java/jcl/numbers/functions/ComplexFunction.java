@@ -4,15 +4,15 @@
 
 package jcl.numbers.functions;
 
-import jcl.LispStruct;
-import jcl.functions.CommonLispBuiltInFunctionStruct;
-import jcl.functions.parameterdsl.Arguments;
-import jcl.functions.parameterdsl.Parameters;
-import jcl.numbers.ComplexStruct;
-import jcl.numbers.FloatStruct;
-import jcl.numbers.IntegerStruct;
-import jcl.numbers.RationalStruct;
-import jcl.numbers.RealStruct;
+import jcl.lang.LispStruct;
+import jcl.lang.function.CommonLispBuiltInFunctionStruct;
+import jcl.lang.function.parameterdsl.Arguments;
+import jcl.lang.function.parameterdsl.Parameters;
+import jcl.lang.number.ComplexStruct;
+import jcl.lang.number.FloatStruct;
+import jcl.lang.number.IntegerStruct;
+import jcl.lang.number.RationalStruct;
+import jcl.lang.number.RealStruct;
 import org.springframework.stereotype.Component;
 
 @Component

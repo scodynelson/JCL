@@ -7,13 +7,13 @@ package jcl.java.functions;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
-import jcl.LispStruct;
-import jcl.conditions.exceptions.ErrorException;
-import jcl.functions.ExtensionsBuiltInFunctionStruct;
-import jcl.functions.parameterdsl.Arguments;
-import jcl.functions.parameterdsl.Parameters;
 import jcl.java.JavaClassStruct;
 import jcl.java.JavaObjectStruct;
+import jcl.lang.LispStruct;
+import jcl.lang.condition.exception.ErrorException;
+import jcl.lang.function.ExtensionsBuiltInFunctionStruct;
+import jcl.lang.function.parameterdsl.Arguments;
+import jcl.lang.function.parameterdsl.Parameters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;

@@ -4,11 +4,11 @@
 
 package testground;
 
-import jcl.LispStruct;
-import jcl.characters.CharacterStruct;
+import jcl.lang.LispStruct;
+import jcl.lang.CharacterStruct;
 import jcl.compiler.environment.Environment;
 import jcl.functions.expanders.SymbolMacroExpander;
-import jcl.symbols.SymbolStruct;
+import jcl.lang.SymbolStruct;
 
 @SuppressWarnings({"all", "rawtypes"})
 public class TestGroundSymbolMacroExpander extends SymbolMacroExpander {
@@ -21,5 +21,11 @@ public class TestGroundSymbolMacroExpander extends SymbolMacroExpander {
 	@Override
 	public LispStruct expand(final SymbolStruct form, final Environment environment) {
 		return CharacterStruct.valueOf(123456789);
+	}
+
+	// TODO: COMMENTED OUT?!?!?!?
+	@Override
+	public LispStruct apply(final LispStruct... lispStructs) {
+		return null;
 	}
 }

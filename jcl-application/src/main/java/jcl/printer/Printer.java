@@ -4,7 +4,7 @@
 
 package jcl.printer;
 
-import jcl.LispStruct;
+import jcl.lang.LispStruct;
 
 @FunctionalInterface
 public interface Printer {

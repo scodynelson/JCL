@@ -2,14 +2,14 @@ package jcl.compiler.sa.analyzer.specialoperator;
 
 import java.util.List;
 
-import jcl.LispStruct;
 import jcl.compiler.environment.Environment;
 import jcl.compiler.sa.FormAnalyzer;
 import jcl.compiler.struct.specialoperator.ClosureCreationStruct;
 import jcl.compiler.struct.specialoperator.LetStarStruct;
 import jcl.compiler.struct.specialoperator.PrognStruct;
-import jcl.symbols.SpecialOperatorStruct;
-import jcl.symbols.SymbolStruct;
+import jcl.lang.LispStruct;
+import jcl.lang.SpecialOperatorStruct;
+import jcl.lang.SymbolStruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

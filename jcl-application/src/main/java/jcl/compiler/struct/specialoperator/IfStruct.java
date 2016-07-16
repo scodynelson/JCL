@@ -4,8 +4,8 @@
 
 package jcl.compiler.struct.specialoperator;
 
-import jcl.LispStruct;
 import jcl.compiler.struct.CompilerSpecialOperatorStruct;
+import jcl.lang.LispStruct;
 
 public class IfStruct extends CompilerSpecialOperatorStruct {
 

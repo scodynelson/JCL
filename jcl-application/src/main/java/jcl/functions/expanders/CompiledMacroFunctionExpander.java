@@ -11,8 +11,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import jcl.LispStruct;
-import jcl.LispType;
 import jcl.compiler.environment.Environment;
 import jcl.compiler.environment.binding.lambdalist.AuxParameter;
 import jcl.compiler.environment.binding.lambdalist.BodyParameter;
@@ -24,17 +22,19 @@ import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
 import jcl.compiler.environment.binding.lambdalist.RestParameter;
 import jcl.compiler.environment.binding.lambdalist.SuppliedPParameter;
 import jcl.compiler.environment.binding.lambdalist.WholeParameter;
-import jcl.compiler.struct.ValuesStruct;
-import jcl.conditions.exceptions.ErrorException;
-import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.functions.Closure;
 import jcl.functions.FunctionParameterBinding;
-import jcl.functions.FunctionStruct;
-import jcl.lists.ListStruct;
-import jcl.symbols.NILStruct;
-import jcl.symbols.SymbolStruct;
-import jcl.symbols.TStruct;
-import jcl.system.CommonLispSymbols;
+import jcl.lang.CommonLispSymbols;
+import jcl.lang.LispStruct;
+import jcl.lang.ListStruct;
+import jcl.lang.NILStruct;
+import jcl.lang.SymbolStruct;
+import jcl.lang.TStruct;
+import jcl.lang.ValuesStruct;
+import jcl.lang.condition.exception.ErrorException;
+import jcl.lang.condition.exception.ProgramErrorException;
+import jcl.lang.function.FunctionStruct;
+import jcl.type.LispType;
 
 public abstract class CompiledMacroFunctionExpander<O extends LispStruct> extends MacroFunctionExpander<O> {
 

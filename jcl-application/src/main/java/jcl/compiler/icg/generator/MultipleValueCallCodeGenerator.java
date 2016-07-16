@@ -6,16 +6,16 @@ package jcl.compiler.icg.generator;
 
 import java.util.List;
 
-import jcl.LispStruct;
 import jcl.compiler.icg.GeneratorEvent;
 import jcl.compiler.icg.GeneratorState;
 import jcl.compiler.icg.IntermediateCodeGenerator;
 import jcl.compiler.icg.JavaMethodBuilder;
 import jcl.compiler.struct.specialoperator.CompilerFunctionStruct;
 import jcl.compiler.struct.specialoperator.MultipleValueCallStruct;
-import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.functions.Closure;
-import jcl.functions.FunctionStruct;
+import jcl.lang.LispStruct;
+import jcl.lang.condition.exception.ProgramErrorException;
+import jcl.lang.function.FunctionStruct;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;

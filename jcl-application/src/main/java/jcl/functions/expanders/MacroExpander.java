@@ -4,11 +4,12 @@
 
 package jcl.functions.expanders;
 
-import jcl.LispStruct;
 import jcl.compiler.environment.Environment;
-import jcl.functions.FunctionStruct;
+import jcl.lang.LispStruct;
+import jcl.lang.function.FunctionStruct;
+import jcl.lang.function.expander.MacroExpanderInter;
 
-public abstract class MacroExpander<O extends LispStruct, I extends LispStruct> extends FunctionStruct {
+public abstract class MacroExpander<O extends LispStruct, I extends LispStruct> extends FunctionStruct implements MacroExpanderInter {
 
 	protected MacroExpander(final String documentation) {
 		super(documentation);

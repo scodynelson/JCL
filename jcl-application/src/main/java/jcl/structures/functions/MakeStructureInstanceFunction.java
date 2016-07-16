@@ -4,13 +4,13 @@
 
 package jcl.structures.functions;
 
-import jcl.LispStruct;
-import jcl.conditions.exceptions.ProgramErrorException;
-import jcl.functions.SystemBuiltInFunctionStruct;
-import jcl.functions.parameterdsl.Arguments;
-import jcl.functions.parameterdsl.Parameters;
-import jcl.structures.StructureClassStruct;
-import jcl.symbols.SymbolStruct;
+import jcl.lang.LispStruct;
+import jcl.lang.StructureClassStruct;
+import jcl.lang.SymbolStruct;
+import jcl.lang.condition.exception.ProgramErrorException;
+import jcl.lang.function.SystemBuiltInFunctionStruct;
+import jcl.lang.function.parameterdsl.Arguments;
+import jcl.lang.function.parameterdsl.Parameters;
 import org.springframework.stereotype.Component;
 
 @Component

@@ -6,11 +6,11 @@ package jcl.arrays.functions;
 
 import java.util.List;
 
-import jcl.LispStruct;
-import jcl.arrays.VectorStruct;
-import jcl.functions.CommonLispBuiltInFunctionStruct;
-import jcl.functions.parameterdsl.Arguments;
-import jcl.functions.parameterdsl.Parameters;
+import jcl.lang.LispStruct;
+import jcl.lang.array.VectorStruct;
+import jcl.lang.function.CommonLispBuiltInFunctionStruct;
+import jcl.lang.function.parameterdsl.Arguments;
+import jcl.lang.function.parameterdsl.Parameters;
 import org.springframework.stereotype.Component;
 
 @Component

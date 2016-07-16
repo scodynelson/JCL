@@ -6,7 +6,7 @@ package jcl.java;
 
 import java.lang.reflect.Method;
 
-import jcl.classes.BuiltInClassStruct;
+import jcl.lang.BuiltInClassStruct;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 

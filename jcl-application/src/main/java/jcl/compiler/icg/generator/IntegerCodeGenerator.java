@@ -8,7 +8,7 @@ import jcl.compiler.icg.CodeGenerator;
 import jcl.compiler.icg.GeneratorEvent;
 import jcl.compiler.icg.GeneratorState;
 import jcl.compiler.icg.JavaMethodBuilder;
-import jcl.numbers.IntegerStruct;
+import jcl.lang.number.IntegerStruct;
 import org.apfloat.Apint;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;

@@ -8,20 +8,20 @@ import java.util.Deque;
 import java.util.List;
 import java.util.Map;
 
-import jcl.LispType;
-import jcl.classes.StandardClassStruct;
 import jcl.compiler.icg.CodeGenerator;
 import jcl.compiler.icg.GeneratorEvent;
 import jcl.compiler.icg.GeneratorState;
 import jcl.compiler.icg.JavaClassBuilder;
 import jcl.compiler.icg.JavaMethodBuilder;
 import jcl.compiler.struct.specialoperator.defstruct.DefstructStruct;
-import jcl.structures.StructureClassStruct;
-import jcl.structures.StructureObjectStruct;
-import jcl.symbols.SymbolStruct;
-import jcl.types.StructureObjectType;
-import jcl.types.TypeBaseClass;
-import jcl.types.TypeFactory;
+import jcl.lang.StandardClassStruct;
+import jcl.lang.StructureClassStruct;
+import jcl.lang.StructureObjectStruct;
+import jcl.lang.SymbolStruct;
+import jcl.type.LispType;
+import jcl.type.StructureObjectType;
+import jcl.type.TypeBaseClass;
+import jcl.type.TypeFactory;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Label;
@@ -62,7 +62,7 @@ final class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 
 	private static final String SLOTS_FIELD = "slots";
 
-	private static final String STRUCTURE_TYPE_FACTORY_SIGNATURE_PREFIX = "Ljava/lang/Object;Ljcl/types/TypeFactory<L";
+	private static final String STRUCTURE_TYPE_FACTORY_SIGNATURE_PREFIX = "Ljava/lang/Object;Ljcl/type/TypeFactory<L";
 
 	private static final String STRUCTURE_TYPE_FACTORY_SIGNATURE_POSTFIX = ";>;";
 
@@ -70,21 +70,21 @@ final class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 
 	private static final String GET_INSTANCE_METHOD_NAME = "getInstance";
 
-	private static final String GET_INSTANCE_BRIDGE_METHOD_DESC = "()Ljcl/LispType;";
+	private static final String GET_INSTANCE_BRIDGE_METHOD_DESC = "()Ljcl/type/LispType;";
 
-	private static final String STRUCTURE_OBJECT_INIT_SCS_SS_SOS_METHOD_DESC = "(Ljcl/structures/StructureClassStruct;Ljcl/symbols/SymbolStruct;Ljcl/structures/StructureObjectStruct;)V";
+	private static final String STRUCTURE_OBJECT_INIT_SCS_SS_SOS_METHOD_DESC = "(Ljcl/lang/StructureClassStruct;Ljcl/lang/SymbolStruct;Ljcl/lang/StructureObjectStruct;)V";
 
-	private static final String STRUCTURE_CLASS_INIT_SS_SS_LIST_LIST_METHOD_DESC = "(Ljcl/symbols/SymbolStruct;Ljcl/symbols/SymbolStruct;Ljava/util/List;Ljava/util/List;)V";
+	private static final String STRUCTURE_CLASS_INIT_SS_SS_LIST_LIST_METHOD_DESC = "(Ljcl/lang/SymbolStruct;Ljcl/lang/SymbolStruct;Ljava/util/List;Ljava/util/List;)V";
 
-	private static final String STRUCTURE_CLASS_INIT_SS_SS_LIST_LIST_METHOD_SIGNATURE = "(Ljcl/symbols/SymbolStruct;Ljcl/symbols/SymbolStruct;Ljava/util/List<Ljava/lang/Class<+Ljcl/LispStruct;>;>;Ljava/util/List<Ljava/lang/Class<+Ljcl/LispStruct;>;>;)V";
+	private static final String STRUCTURE_CLASS_INIT_SS_SS_LIST_LIST_METHOD_SIGNATURE = "(Ljcl/lang/SymbolStruct;Ljcl/lang/SymbolStruct;Ljava/util/List<Ljava/lang/Class<+Ljcl/lang/LispStruct;>;>;Ljava/util/List<Ljava/lang/Class<+Ljcl/lang/LispStruct;>;>;)V";
 
-	private static final String STRUCTURE_CLASS_INIT_LISP_TYPE_SS_SS_LIST_LIST_METHOD_DESC = "(Ljcl/LispType;Ljcl/symbols/SymbolStruct;Ljcl/symbols/SymbolStruct;Ljava/util/List;Ljava/util/List;)V";
+	private static final String STRUCTURE_CLASS_INIT_LISP_TYPE_SS_SS_LIST_LIST_METHOD_DESC = "(Ljcl/type/LispType;Ljcl/lang/SymbolStruct;Ljcl/lang/SymbolStruct;Ljava/util/List;Ljava/util/List;)V";
 
-	private static final String STRUCTURE_CLASS_INIT_LISP_TYPE_SS_SS_LIST_LIST_METHOD_SIGNATURE = "(Ljcl/LispType;Ljcl/symbols/SymbolStruct;Ljcl/symbols/SymbolStruct;Ljava/util/List<Ljava/lang/Class<+Ljcl/LispStruct;>;>;Ljava/util/List<Ljava/lang/Class<+Ljcl/LispStruct;>;>;)V";
+	private static final String STRUCTURE_CLASS_INIT_LISP_TYPE_SS_SS_LIST_LIST_METHOD_SIGNATURE = "(Ljcl/type/LispType;Ljcl/lang/SymbolStruct;Ljcl/lang/SymbolStruct;Ljava/util/List<Ljava/lang/Class<+Ljcl/lang/LispStruct;>;>;Ljava/util/List<Ljava/lang/Class<+Ljcl/lang/LispStruct;>;>;)V";
 
 	private static final String STRUCTURE_CLASS_NEW_INSTANCE_METHOD_NAME = "newInstance";
 
-	private static final String STRUCTURE_CLASS_NEW_INSTANCE_METHOD_DESC = "()Ljcl/structures/StructureObjectStruct;";
+	private static final String STRUCTURE_CLASS_NEW_INSTANCE_METHOD_DESC = "()Ljcl/lang/StructureObjectStruct;";
 
 	@EventListener
 	public void onGeneratorEvent(final GeneratorEvent<DefstructStruct> event) {

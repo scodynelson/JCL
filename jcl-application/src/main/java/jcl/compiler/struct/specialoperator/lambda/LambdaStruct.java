@@ -4,11 +4,11 @@
 
 package jcl.compiler.struct.specialoperator.lambda;
 
-import jcl.arrays.StringStruct;
 import jcl.compiler.environment.Environment;
 import jcl.compiler.environment.binding.lambdalist.OrdinaryLambdaList;
 import jcl.compiler.struct.CompilerSpecialOperatorStruct;
 import jcl.compiler.struct.specialoperator.PrognStruct;
+import jcl.lang.array.StringStruct;
 
 public class LambdaStruct extends CompilerSpecialOperatorStruct {
 

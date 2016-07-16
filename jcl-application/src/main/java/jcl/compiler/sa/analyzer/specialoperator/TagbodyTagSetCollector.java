@@ -15,12 +15,12 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collector;
 
-import jcl.LispStruct;
 import jcl.compiler.struct.specialoperator.go.GoIntegerStruct;
 import jcl.compiler.struct.specialoperator.go.GoStruct;
 import jcl.compiler.struct.specialoperator.go.GoSymbolStruct;
-import jcl.numbers.IntegerStruct;
-import jcl.symbols.SymbolStruct;
+import jcl.lang.LispStruct;
+import jcl.lang.SymbolStruct;
+import jcl.lang.number.IntegerStruct;
 
 final class TagbodyTagSetCollector implements Collector<LispStruct, List<GoStruct<?>>, List<GoStruct<?>>> {
 

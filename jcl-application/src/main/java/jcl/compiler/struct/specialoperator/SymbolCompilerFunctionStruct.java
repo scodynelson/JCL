@@ -4,7 +4,7 @@
 
 package jcl.compiler.struct.specialoperator;
 
-import jcl.symbols.SymbolStruct;
+import jcl.lang.SymbolStruct;
 
 public class SymbolCompilerFunctionStruct implements CompilerFunctionStruct {
 

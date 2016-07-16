@@ -4,9 +4,9 @@
 
 package jcl.compiler.struct.specialoperator;
 
-import jcl.LispStruct;
 import jcl.compiler.struct.CompilerSpecialOperatorStruct;
-import jcl.types.typespecifiers.TypeSpecifier;
+import jcl.lang.LispStruct;
+import jcl.type.typespecifier.TypeSpecifier;
 
 public class TheStruct extends CompilerSpecialOperatorStruct {
 

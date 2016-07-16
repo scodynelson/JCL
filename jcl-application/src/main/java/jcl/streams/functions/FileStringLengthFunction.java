@@ -6,15 +6,15 @@ package jcl.streams.functions;
 
 import java.math.BigInteger;
 
-import jcl.LispStruct;
-import jcl.arrays.StringStruct;
-import jcl.characters.CharacterStruct;
-import jcl.conditions.exceptions.TypeErrorException;
-import jcl.functions.CommonLispBuiltInFunctionStruct;
-import jcl.functions.parameterdsl.Arguments;
-import jcl.functions.parameterdsl.Parameters;
-import jcl.numbers.IntegerStruct;
-import jcl.streams.StreamStruct;
+import jcl.lang.CharacterStruct;
+import jcl.lang.LispStruct;
+import jcl.lang.array.StringStruct;
+import jcl.lang.condition.exception.TypeErrorException;
+import jcl.lang.function.CommonLispBuiltInFunctionStruct;
+import jcl.lang.function.parameterdsl.Arguments;
+import jcl.lang.function.parameterdsl.Parameters;
+import jcl.lang.number.IntegerStruct;
+import jcl.lang.stream.StreamStruct;
 import org.springframework.stereotype.Component;
 
 @Component

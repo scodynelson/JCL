@@ -7,15 +7,15 @@ package jcl.pathnames.functions;
 import java.io.File;
 import java.nio.file.Path;
 
-import jcl.LispStruct;
-import jcl.arrays.StringStruct;
-import jcl.conditions.exceptions.TypeErrorException;
-import jcl.functions.CommonLispBuiltInFunctionStruct;
-import jcl.functions.parameterdsl.Arguments;
-import jcl.functions.parameterdsl.Parameters;
-import jcl.pathnames.PathnameStruct;
+import jcl.lang.LispStruct;
+import jcl.lang.array.StringStruct;
+import jcl.lang.condition.exception.TypeErrorException;
+import jcl.lang.function.CommonLispBuiltInFunctionStruct;
+import jcl.lang.function.parameterdsl.Arguments;
+import jcl.lang.function.parameterdsl.Parameters;
+import jcl.lang.pathname.PathnameStruct;
+import jcl.lang.stream.FileStreamStruct;
 import jcl.printer.Printer;
-import jcl.streams.FileStreamStruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

@@ -6,23 +6,23 @@ package jcl.compiler.functions;
 
 import java.util.Optional;
 
-import jcl.LispStruct;
-import jcl.compiler.CompilerVariables;
 import jcl.compiler.environment.Environment;
-import jcl.compiler.struct.ValuesStruct;
-import jcl.functions.CommonLispBuiltInFunctionStruct;
-import jcl.functions.FunctionStruct;
-import jcl.functions.expanders.MacroFunctionExpander;
-import jcl.functions.expanders.SymbolMacroExpander;
-import jcl.functions.parameterdsl.Arguments;
-import jcl.functions.parameterdsl.Parameters;
-import jcl.lists.ListStruct;
-import jcl.packages.PackageStruct;
-import jcl.packages.PackageSymbolStruct;
-import jcl.symbols.BooleanStruct;
-import jcl.symbols.NILStruct;
-import jcl.symbols.SymbolStruct;
-import jcl.symbols.TStruct;
+import jcl.lang.BooleanStruct;
+import jcl.lang.CompilerVariables;
+import jcl.lang.LispStruct;
+import jcl.lang.ListStruct;
+import jcl.lang.NILStruct;
+import jcl.lang.PackageStruct;
+import jcl.lang.PackageSymbolStruct;
+import jcl.lang.SymbolStruct;
+import jcl.lang.TStruct;
+import jcl.lang.ValuesStruct;
+import jcl.lang.function.CommonLispBuiltInFunctionStruct;
+import jcl.lang.function.FunctionStruct;
+import jcl.lang.function.expander.MacroFunctionExpanderInter;
+import jcl.lang.function.expander.SymbolMacroExpanderInter;
+import jcl.lang.function.parameterdsl.Arguments;
+import jcl.lang.function.parameterdsl.Parameters;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -76,7 +76,7 @@ public final class MacroExpand1Function extends CommonLispBuiltInFunctionStruct 
 			if (symbolStruct.isPresent()) {
 				final SymbolStruct theSymbol = symbolStruct.get();
 
-				final MacroFunctionExpander<?> macroFunctionExpander = theSymbol.getMacroFunctionExpander();
+				final MacroFunctionExpanderInter macroFunctionExpander = theSymbol.getMacroFunctionExpander();
 
 				if (macroFunctionExpander != null) {
 					final FunctionStruct macroExpandHook = CompilerVariables.MACROEXPAND_HOOK.getVariableValue();
@@ -97,7 +97,7 @@ public final class MacroExpand1Function extends CommonLispBuiltInFunctionStruct 
 		if (symbolStruct.isPresent()) {
 			final SymbolStruct theSymbol = symbolStruct.get();
 
-			final SymbolMacroExpander symbolMacroExpander = theSymbol.getSymbolMacroExpander();
+			final SymbolMacroExpanderInter symbolMacroExpander = theSymbol.getSymbolMacroExpander();
 
 			if (symbolMacroExpander != null) {
 				final FunctionStruct macroExpandHook = CompilerVariables.MACROEXPAND_HOOK.getVariableValue();

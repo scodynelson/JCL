@@ -4,7 +4,7 @@
 
 package jcl.compiler.struct.specialoperator;
 
-import jcl.LispStruct;
+import jcl.lang.LispStruct;
 
 public interface CompilerFunctionStruct extends LispStruct {
 }

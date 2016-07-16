@@ -4,7 +4,7 @@
 
 package jcl.compiler.struct.specialoperator.declare;
 
-import jcl.symbols.SymbolStruct;
+import jcl.lang.SymbolStruct;
 
 public class SpecialDeclarationStruct implements DeclarationStruct {
 

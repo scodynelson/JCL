@@ -4,12 +4,12 @@
 
 package jcl.reader.state;
 
-import jcl.LispStruct;
-import jcl.characters.CharacterConstants;
-import jcl.conditions.exceptions.ReaderErrorException;
+import jcl.lang.CharacterConstants;
+import jcl.lang.LispStruct;
+import jcl.lang.NILStruct;
+import jcl.lang.condition.exception.ReaderErrorException;
+import jcl.lang.stream.ReadPeekResult;
 import jcl.reader.TokenBuilder;
-import jcl.streams.ReadPeekResult;
-import jcl.symbols.NILStruct;
 import org.springframework.stereotype.Component;
 
 /**

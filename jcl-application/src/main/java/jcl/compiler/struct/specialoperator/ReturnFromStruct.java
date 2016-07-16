@@ -4,9 +4,9 @@
 
 package jcl.compiler.struct.specialoperator;
 
-import jcl.LispStruct;
 import jcl.compiler.struct.CompilerSpecialOperatorStruct;
-import jcl.symbols.SymbolStruct;
+import jcl.lang.LispStruct;
+import jcl.lang.SymbolStruct;
 
 public class ReturnFromStruct extends CompilerSpecialOperatorStruct {
 

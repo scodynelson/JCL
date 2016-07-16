@@ -8,7 +8,7 @@ import java.util.List;
 
 import jcl.compiler.environment.Environment;
 import jcl.compiler.struct.CompilerSpecialOperatorStruct;
-import jcl.symbols.SymbolStruct;
+import jcl.lang.SymbolStruct;
 
 public class InnerLambdaStruct extends CompilerSpecialOperatorStruct {
 

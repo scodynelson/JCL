@@ -4,7 +4,7 @@
 
 package jcl.compiler.struct.specialoperator.go;
 
-import jcl.numbers.IntegerStruct;
+import jcl.lang.number.IntegerStruct;
 
 public class GoIntegerStruct extends GoStruct<IntegerStruct> {
 

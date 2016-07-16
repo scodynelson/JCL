@@ -11,7 +11,7 @@ import jcl.compiler.icg.JavaMethodBuilder;
 import jcl.compiler.struct.specialoperator.BlockStruct;
 import jcl.compiler.struct.specialoperator.PrognStruct;
 import jcl.functions.Closure;
-import jcl.symbols.SymbolStruct;
+import jcl.lang.SymbolStruct;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;

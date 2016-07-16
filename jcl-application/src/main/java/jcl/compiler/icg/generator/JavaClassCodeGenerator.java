@@ -4,9 +4,9 @@
 
 package jcl.compiler.icg.generator;
 
-import jcl.LispStruct;
 import jcl.compiler.icg.CodeGenerator;
 import jcl.compiler.icg.JCLClassWriter;
+import jcl.lang.LispStruct;
 import org.objectweb.asm.Opcodes;
 
 @SuppressWarnings("all")

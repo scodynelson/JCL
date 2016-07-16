@@ -4,8 +4,8 @@
 
 package testground.structures;
 
-import jcl.structures.StructureObjectStruct;
-import jcl.symbols.SymbolStruct;
+import jcl.lang.StructureObjectStruct;
+import jcl.lang.SymbolStruct;
 
 @SuppressWarnings("all")
 public class FooStructureObject extends StructureObjectStruct {

@@ -7,8 +7,8 @@ package jcl.compiler.struct.specialoperator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import jcl.LispStruct;
 import jcl.compiler.struct.CompilerSpecialOperatorStruct;
+import jcl.lang.LispStruct;
 
 public class PrognStruct extends CompilerSpecialOperatorStruct {
 

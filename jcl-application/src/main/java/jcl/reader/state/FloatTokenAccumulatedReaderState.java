@@ -7,18 +7,18 @@ package jcl.reader.state;
 import java.math.RoundingMode;
 import java.util.LinkedList;
 
-import jcl.characters.CharacterConstants;
-import jcl.numbers.FloatStruct;
-import jcl.numbers.NumberStruct;
-import jcl.reader.AttributeType;
+import jcl.lang.CharacterConstants;
+import jcl.lang.number.FloatStruct;
+import jcl.lang.number.NumberStruct;
+import jcl.lang.readtable.AttributeType;
+import jcl.lang.readtable.ReaderVariables;
 import jcl.reader.TokenAttribute;
 import jcl.reader.TokenBuilder;
-import jcl.reader.struct.ReaderVariables;
-import jcl.types.DoubleFloatType;
-import jcl.types.FloatType;
-import jcl.types.LongFloatType;
-import jcl.types.ShortFloatType;
-import jcl.types.SingleFloatType;
+import jcl.type.DoubleFloatType;
+import jcl.type.FloatType;
+import jcl.type.LongFloatType;
+import jcl.type.ShortFloatType;
+import jcl.type.SingleFloatType;
 import org.springframework.stereotype.Component;
 
 /**

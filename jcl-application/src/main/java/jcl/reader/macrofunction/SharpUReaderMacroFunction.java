@@ -8,14 +8,14 @@ import java.math.BigInteger;
 import java.util.Optional;
 import javax.annotation.PostConstruct;
 
-import jcl.LispStruct;
-import jcl.characters.CharacterConstants;
-import jcl.characters.CharacterStruct;
-import jcl.reader.Reader;
-import jcl.reader.ReaderMacroFunction;
-import jcl.reader.struct.ReaderVariables;
-import jcl.reader.struct.ReadtableStruct;
-import jcl.symbols.NILStruct;
+import jcl.lang.CharacterConstants;
+import jcl.lang.CharacterStruct;
+import jcl.lang.LispStruct;
+import jcl.lang.NILStruct;
+import jcl.lang.function.ReaderMacroFunction;
+import jcl.lang.readtable.Reader;
+import jcl.lang.readtable.ReaderVariables;
+import jcl.lang.readtable.ReadtableStruct;
 import org.springframework.stereotype.Component;
 
 /**

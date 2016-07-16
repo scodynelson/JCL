@@ -2,8 +2,8 @@ package jcl.compiler.sa.analyzer.body;
 
 import java.util.List;
 
-import jcl.LispStruct;
-import jcl.arrays.StringStruct;
+import jcl.lang.LispStruct;
+import jcl.lang.array.StringStruct;
 
 public class BodyProcessingResult {
 

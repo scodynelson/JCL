@@ -4,11 +4,11 @@
 
 package jcl.reader.macrofunction;
 
-import jcl.numbers.IntegerStruct;
-import jcl.reader.AttributeType;
-import jcl.reader.ReaderMacroFunction;
-import jcl.reader.struct.ReaderVariables;
-import jcl.reader.struct.SyntaxType;
+import jcl.lang.function.ReaderMacroFunction;
+import jcl.lang.number.IntegerStruct;
+import jcl.lang.readtable.AttributeType;
+import jcl.lang.readtable.ReaderVariables;
+import jcl.lang.readtable.SyntaxType;
 
 /**
  * Utility class for common operations for {@link ReaderMacroFunction}s.

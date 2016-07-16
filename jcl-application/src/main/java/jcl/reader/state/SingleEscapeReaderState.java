@@ -4,12 +4,12 @@
 
 package jcl.reader.state;
 
-import jcl.LispStruct;
-import jcl.reader.AttributeType;
-import jcl.reader.Reader;
+import jcl.lang.LispStruct;
+import jcl.lang.readtable.AttributeType;
+import jcl.lang.readtable.Reader;
+import jcl.lang.stream.ReadPeekResult;
 import jcl.reader.ReaderStateMediator;
 import jcl.reader.TokenBuilder;
-import jcl.streams.ReadPeekResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

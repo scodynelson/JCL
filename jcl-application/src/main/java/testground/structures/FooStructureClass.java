@@ -6,11 +6,11 @@ package testground.structures;
 
 import java.util.List;
 
-import jcl.LispStruct;
-import jcl.LispType;
-import jcl.structures.StructureClassStruct;
-import jcl.structures.StructureObjectStruct;
-import jcl.symbols.SymbolStruct;
+import jcl.lang.LispStruct;
+import jcl.type.LispType;
+import jcl.lang.StructureClassStruct;
+import jcl.lang.StructureObjectStruct;
+import jcl.lang.SymbolStruct;
 
 @SuppressWarnings("all")
 public class FooStructureClass extends StructureClassStruct {

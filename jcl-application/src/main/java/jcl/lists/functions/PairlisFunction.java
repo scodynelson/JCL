@@ -1,13 +1,13 @@
 package jcl.lists.functions;
 
-import jcl.LispStruct;
-import jcl.conditions.exceptions.SimpleErrorException;
-import jcl.functions.CommonLispBuiltInFunctionStruct;
-import jcl.functions.parameterdsl.Arguments;
-import jcl.functions.parameterdsl.Parameters;
-import jcl.lists.ConsStruct;
-import jcl.lists.ListStruct;
-import jcl.symbols.NILStruct;
+import jcl.lang.ConsStruct;
+import jcl.lang.LispStruct;
+import jcl.lang.ListStruct;
+import jcl.lang.NILStruct;
+import jcl.lang.condition.exception.SimpleErrorException;
+import jcl.lang.function.CommonLispBuiltInFunctionStruct;
+import jcl.lang.function.parameterdsl.Arguments;
+import jcl.lang.function.parameterdsl.Parameters;
 import org.springframework.stereotype.Component;
 
 @Component

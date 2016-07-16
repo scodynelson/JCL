@@ -8,8 +8,6 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-import jcl.LispStruct;
-import jcl.compiler.CompilerConstants;
 import jcl.compiler.environment.Environment;
 import jcl.compiler.environment.binding.lambdalist.AuxParameter;
 import jcl.compiler.environment.binding.lambdalist.BodyParameter;
@@ -20,10 +18,12 @@ import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
 import jcl.compiler.environment.binding.lambdalist.RestParameter;
 import jcl.compiler.environment.binding.lambdalist.WholeParameter;
 import jcl.compiler.struct.specialoperator.declare.DeclareStruct;
-import jcl.conditions.exceptions.ProgramErrorException;
-import jcl.lists.ListStruct;
+import jcl.lang.CompilerConstants;
+import jcl.lang.LispStruct;
+import jcl.lang.ListStruct;
+import jcl.lang.NILStruct;
+import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.printer.Printer;
-import jcl.symbols.NILStruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

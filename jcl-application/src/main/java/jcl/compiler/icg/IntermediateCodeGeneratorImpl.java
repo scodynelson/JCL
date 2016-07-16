@@ -2,8 +2,8 @@ package jcl.compiler.icg;
 
 import java.util.Deque;
 
-import jcl.LispStruct;
 import jcl.compiler.struct.specialoperator.lambda.LambdaStruct;
+import jcl.lang.LispStruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;

@@ -5,7 +5,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import jcl.LispStruct;
 import jcl.compiler.environment.Environment;
 import jcl.compiler.icg.CodeGenerator;
 import jcl.compiler.icg.GeneratorEvent;
@@ -15,7 +14,8 @@ import jcl.compiler.icg.JavaClassBuilder;
 import jcl.compiler.icg.JavaMethodBuilder;
 import jcl.compiler.struct.specialoperator.PrognStruct;
 import jcl.compiler.struct.specialoperator.SymbolMacroletStruct;
-import jcl.symbols.SymbolStruct;
+import jcl.lang.LispStruct;
+import jcl.lang.SymbolStruct;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
@@ -72,7 +72,7 @@ final class SymbolMacroletCodeGenerator implements CodeGenerator<SymbolMacroletS
 
 			mv.visitVarInsn(Opcodes.ALOAD, symbolStore);
 			mv.visitVarInsn(Opcodes.ALOAD, expansionStore);
-			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/symbols/SymbolStruct", "bindSymbolMacroExpander", "(Ljcl/compiler/sa/analyzer/expander/SymbolMacroExpander;)V", false);
+			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/lang/SymbolStruct", "bindSymbolMacroExpander", "(Ljcl/lang/function/expander/SymbolMacroExpanderInter;)V", false);
 		}
 
 		mv.visitLabel(tryBlockStart);
@@ -106,7 +106,7 @@ final class SymbolMacroletCodeGenerator implements CodeGenerator<SymbolMacroletS
 	private static void generateFinallyCode(final MethodVisitor mv, final Set<Integer> varSymbolStores) {
 		for (final Integer varSymbolStore : varSymbolStores) {
 			mv.visitVarInsn(Opcodes.ALOAD, varSymbolStore);
-			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/symbols/SymbolStruct", "unbindSymbolMacroExpander", "()V", false);
+			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/lang/SymbolStruct", "unbindSymbolMacroExpander", "()V", false);
 		}
 	}
 
@@ -122,7 +122,7 @@ final class SymbolMacroletCodeGenerator implements CodeGenerator<SymbolMacroletS
 		classBuilder.getFinalClassBuilderDeque().addFirst(currentClass);
 
 		final ClassWriter cw = currentClass.getClassWriter();
-		cw.visit(Opcodes.V1_8, Opcodes.ACC_PUBLIC + Opcodes.ACC_SUPER, className, null, "jcl/compiler/sa/analyzer/expander/SymbolMacroExpander", null);
+		cw.visit(Opcodes.V1_8, Opcodes.ACC_PUBLIC + Opcodes.ACC_SUPER, className, null, "jcl/functions/expander/SymbolMacroExpander", null);
 
 		cw.visitSource(fileName + ".java", null);
 
@@ -137,7 +137,7 @@ final class SymbolMacroletCodeGenerator implements CodeGenerator<SymbolMacroletS
 			final int thisStore = methodBuilder.getNextAvailableStore();
 
 			mv.visitVarInsn(Opcodes.ALOAD, thisStore);
-			mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "jcl/compiler/sa/analyzer/expander/SymbolMacroExpander", "<init>", "()V", false);
+			mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "jcl/functions/expander/SymbolMacroExpander", "<init>", "()V", false);
 
 			mv.visitInsn(Opcodes.RETURN);
 
@@ -147,7 +147,7 @@ final class SymbolMacroletCodeGenerator implements CodeGenerator<SymbolMacroletS
 			methodBuilderDeque.removeFirst();
 		}
 		{
-			final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PUBLIC, "expand", "(Ljcl/LispStruct;Ljcl/compiler/environment/Environment;)Ljcl/LispStruct;", null, null);
+			final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PUBLIC, "expand", "(Ljcl/lang/LispStruct;Ljcl/compiler/environment/Environment;)Ljcl/lang/LispStruct;", null, null);
 
 			final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
 			final Deque<JavaMethodBuilder> methodBuilderDeque = classBuilder.getMethodBuilderDeque();

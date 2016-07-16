@@ -5,7 +5,7 @@
 package jcl.compiler.icg.generator;
 
 import jcl.compiler.struct.specialoperator.go.GoStruct;
-import jcl.conditions.exceptions.ProgramErrorException;
+import jcl.lang.condition.exception.ProgramErrorException;
 
 /**
  * Exception used to facilitate the tagbody/go transfer-of-control (ToC) strategy.

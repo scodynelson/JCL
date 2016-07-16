@@ -9,8 +9,8 @@ import java.util.Map;
 import jcl.compiler.struct.CompilerSpecialOperatorStruct;
 import jcl.compiler.struct.specialoperator.go.GoIntegerStruct;
 import jcl.compiler.struct.specialoperator.go.GoStruct;
-import jcl.numbers.IntegerStruct;
-import jcl.symbols.SymbolStruct;
+import jcl.lang.SymbolStruct;
+import jcl.lang.number.IntegerStruct;
 
 public class TagbodyStruct extends CompilerSpecialOperatorStruct {
 

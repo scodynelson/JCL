@@ -5,8 +5,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.function.Predicate;
 
-import jcl.LispStruct;
-import jcl.compiler.CompilerConstants;
 import jcl.compiler.environment.Environment;
 import jcl.compiler.environment.binding.Binding;
 import jcl.compiler.environment.binding.lambdalist.AuxParameter;
@@ -22,16 +20,18 @@ import jcl.compiler.environment.binding.lambdalist.WholeParameter;
 import jcl.compiler.sa.FormAnalyzer;
 import jcl.compiler.struct.specialoperator.declare.DeclareStruct;
 import jcl.compiler.struct.specialoperator.declare.SpecialDeclarationStruct;
-import jcl.conditions.exceptions.ProgramErrorException;
-import jcl.lists.ListStruct;
-import jcl.packages.GlobalPackageStruct;
-import jcl.packages.PackageStruct;
-import jcl.packages.PackageSymbolStruct;
+import jcl.lang.CompilerConstants;
+import jcl.lang.GlobalPackageStruct;
+import jcl.lang.KeywordStruct;
+import jcl.lang.LispStruct;
+import jcl.lang.ListStruct;
+import jcl.lang.NILStruct;
+import jcl.lang.PackageStruct;
+import jcl.lang.PackageSymbolStruct;
+import jcl.lang.SymbolStruct;
+import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.printer.Printer;
-import jcl.symbols.KeywordStruct;
-import jcl.symbols.NILStruct;
-import jcl.symbols.SymbolStruct;
-import jcl.types.TType;
+import jcl.type.TType;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class LambdaListParser {

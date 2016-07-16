@@ -8,8 +8,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import jcl.LispStruct;
-import jcl.characters.CharacterStruct;
+import jcl.lang.LispStruct;
+import jcl.lang.CharacterStruct;
 import jcl.compiler.environment.binding.lambdalist.AuxParameter;
 import jcl.compiler.environment.binding.lambdalist.BodyParameter;
 import jcl.compiler.environment.binding.lambdalist.DestructuringLambdaList;
@@ -22,9 +22,9 @@ import jcl.compiler.environment.binding.lambdalist.SuppliedPParameter;
 import jcl.compiler.environment.binding.lambdalist.WholeParameter;
 import jcl.functions.Closure;
 import jcl.functions.expanders.CompiledMacroFunctionExpander;
-import jcl.packages.PackageStruct;
-import jcl.symbols.NILStruct;
-import jcl.symbols.SymbolStruct;
+import jcl.lang.PackageStruct;
+import jcl.lang.NILStruct;
+import jcl.lang.SymbolStruct;
 
 @SuppressWarnings("all")
 public class TestGroundMacroFunctionExpanderGenerator extends CompiledMacroFunctionExpander<LispStruct> {

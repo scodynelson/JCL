@@ -7,6 +7,8 @@ import org.springframework.core.ResolvableTypeProvider;
 
 public class GeneratorEvent<T extends LispStruct> extends ApplicationEvent implements ResolvableTypeProvider {
 
+	private static final long serialVersionUID = -5938308196500763237L;
+
 	private final GeneratorState generatorState;
 
 	/**

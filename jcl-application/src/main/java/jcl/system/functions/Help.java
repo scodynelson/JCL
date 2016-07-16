@@ -18,7 +18,7 @@ import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.function.ExtensionsBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
-import jcl.system.classloaders.CompilerClassLoader;
+import jcl.compiler.classloaders.CompilerClassLoader;
 import org.springframework.stereotype.Component;
 
 @Component

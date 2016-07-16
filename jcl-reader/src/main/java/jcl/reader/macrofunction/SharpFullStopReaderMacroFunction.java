@@ -8,6 +8,7 @@ import java.math.BigInteger;
 import java.util.Optional;
 import javax.annotation.PostConstruct;
 
+import jcl.compiler.functions.EvalFunction;
 import jcl.lang.CharacterConstants;
 import jcl.lang.LispStruct;
 import jcl.lang.NILStruct;
@@ -15,6 +16,7 @@ import jcl.lang.condition.exception.ReaderErrorException;
 import jcl.lang.function.ReaderMacroFunction;
 import jcl.lang.readtable.Reader;
 import jcl.lang.readtable.ReaderVariables;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -26,8 +28,8 @@ public class SharpFullStopReaderMacroFunction extends ReaderMacroFunction {
 	/**
 	 * {@link EvalFunction} singleton used to evaluate the expression passed to '#.'.
 	 */
-//	@Autowired
-//	private EvalFunction evalFunction;
+	@Autowired
+	private EvalFunction evalFunction;
 
 	/**
 	 * Initializes the reader macro function and adds it to the global readtable.
@@ -50,8 +52,6 @@ public class SharpFullStopReaderMacroFunction extends ReaderMacroFunction {
 			throw new ReaderErrorException("Attempt to read #. while *READ-EVAL* is bound to NIL.");
 		}
 
-//		return evalFunction.eval(token);
-		// TODO: temp
-		return null;
+		return evalFunction.eval(token);
 	}
 }

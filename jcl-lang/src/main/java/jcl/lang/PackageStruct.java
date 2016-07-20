@@ -22,6 +22,10 @@ import jcl.type.PackageType;
  */
 public class PackageStruct extends BuiltInClassStruct {
 
+	public static final KeywordStruct INTERNAL_KEYWORD = new KeywordStruct("INTERNAL");
+	public static final KeywordStruct EXTERNAL_KEYWORD = new KeywordStruct("EXTERNAL");
+	public static final KeywordStruct INHERITED_KEYWORD = new KeywordStruct("INHERITED");
+
 	/**
 	 * The {@link List} of {@link PackageStruct}s that the package uses.
 	 */
@@ -303,7 +307,7 @@ public class PackageStruct extends BuiltInClassStruct {
 
 		final SymbolStruct foundSymbol = findInheritedSymbol(symbolName);
 		if (foundSymbol != null) {
-			return new PackageSymbolStruct(foundSymbol, CommonLispSymbols.INHERITED_KEYWORD);
+			return new PackageSymbolStruct(foundSymbol, INHERITED_KEYWORD);
 		}
 
 		return null;
@@ -485,7 +489,7 @@ public class PackageStruct extends BuiltInClassStruct {
 		final SymbolStruct symbolStruct = new SymbolStruct(symbolName);
 		internalSymbols.put(symbolName, symbolStruct);
 		symbolStruct.setSymbolPackage(this);
-		return new PackageSymbolStruct(symbolStruct, CommonLispSymbols.INTERNAL_KEYWORD);
+		return new PackageSymbolStruct(symbolStruct, INTERNAL_KEYWORD);
 	}
 
 	/**
@@ -602,17 +606,17 @@ public class PackageStruct extends BuiltInClassStruct {
 
 		SymbolStruct foundSymbol = externalSymbols.get(symbolName);
 		if (foundSymbol != null) {
-			return new PackageSymbolStruct(foundSymbol, CommonLispSymbols.EXTERNAL_KEYWORD);
+			return new PackageSymbolStruct(foundSymbol, EXTERNAL_KEYWORD);
 		}
 
 		foundSymbol = shadowingSymbols.get(symbolName);
 		if (foundSymbol != null) {
-			return new PackageSymbolStruct(foundSymbol, CommonLispSymbols.INTERNAL_KEYWORD);
+			return new PackageSymbolStruct(foundSymbol, INTERNAL_KEYWORD);
 		}
 
 		foundSymbol = internalSymbols.get(symbolName);
 		if (foundSymbol != null) {
-			return new PackageSymbolStruct(foundSymbol, CommonLispSymbols.INTERNAL_KEYWORD);
+			return new PackageSymbolStruct(foundSymbol, INTERNAL_KEYWORD);
 		}
 
 		return null;
@@ -637,7 +641,7 @@ public class PackageStruct extends BuiltInClassStruct {
 			}
 
 			final KeywordStruct packageSymbolType = inheritedPackageSymbol.getPackageSymbolType();
-			if (CommonLispSymbols.EXTERNAL_KEYWORD.equals(packageSymbolType)) {
+			if (EXTERNAL_KEYWORD.equals(packageSymbolType)) {
 				foundSymbol = inheritedPackageSymbol.getSymbol();
 				break;
 			}

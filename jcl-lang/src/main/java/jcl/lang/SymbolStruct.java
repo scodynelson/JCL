@@ -653,7 +653,7 @@ public class SymbolStruct extends BuiltInClassStruct {
 
 			final String packageName = symbolPackage.getName();
 
-			final boolean externalSymbol = CommonLispSymbols.EXTERNAL_KEYWORD.equals(symbol.getPackageSymbolType());
+			final boolean externalSymbol = PackageStruct.EXTERNAL_KEYWORD.equals(symbol.getPackageSymbolType());
 			if (externalSymbol) {
 				// TODO: verify it is a single colon for external symbols when printing...
 				return packageName + ':' + name;

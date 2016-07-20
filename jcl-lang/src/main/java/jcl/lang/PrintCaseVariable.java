@@ -13,16 +13,21 @@ final class PrintCaseVariable extends VariableStruct<KeywordStruct> {
 
 	private static final Set<KeywordStruct> CASE_KEYWORDS = new HashSet<>();
 
+	private static final KeywordStruct UPCASE_KEYWORD = new KeywordStruct("UPCASE");
+	private static final KeywordStruct DOWNCASE_KEYWORD = new KeywordStruct("DOWNCASE");
+	private static final KeywordStruct CAPITALIZE_KEYWORD = new KeywordStruct("CAPITALIZE");
+
+
 	static {
-		CASE_KEYWORDS.add(CommonLispSymbols.UPCASE_KEYWORD);
-		CASE_KEYWORDS.add(CommonLispSymbols.DOWNCASE_KEYWORD);
-		CASE_KEYWORDS.add(CommonLispSymbols.CAPITALIZE_KEYWORD);
+		CASE_KEYWORDS.add(UPCASE_KEYWORD);
+		CASE_KEYWORDS.add(DOWNCASE_KEYWORD);
+		CASE_KEYWORDS.add(CAPITALIZE_KEYWORD);
 	}
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(PrintCaseVariable.class);
 
 	private PrintCaseVariable() {
-		super("*PRINT-CASE*", GlobalPackageStruct.COMMON_LISP, CommonLispSymbols.UPCASE_KEYWORD);
+		super("*PRINT-CASE*", GlobalPackageStruct.COMMON_LISP, UPCASE_KEYWORD);
 	}
 
 	@Override
@@ -38,7 +43,7 @@ final class PrintCaseVariable extends VariableStruct<KeywordStruct> {
 		} else {
 			LOGGER.warn("Error: *PRINT-CASE* had illegal value {}. Reset to :UPCASE", variableValue);
 
-			super.setValue(CommonLispSymbols.UPCASE_KEYWORD);
+			super.setValue(UPCASE_KEYWORD);
 		}
 	}
 }

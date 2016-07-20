@@ -2,9 +2,11 @@
  * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
  */
 
-package jcl.lang;
+package jcl.lang.sequence;
 
 import java.util.stream.Stream;
+
+import jcl.lang.LispStruct;
 
 /**
  * The {@link SequenceStruct} is the object representation of a Lisp 'sequence' type.

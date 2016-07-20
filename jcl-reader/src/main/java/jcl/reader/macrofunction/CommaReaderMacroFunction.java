@@ -9,7 +9,6 @@ import java.util.Optional;
 import javax.annotation.PostConstruct;
 
 import jcl.lang.CharacterConstants;
-import jcl.lang.CommonLispSymbols;
 import jcl.lang.ConsStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.NILStruct;
@@ -56,14 +55,14 @@ public class CommaReaderMacroFunction extends ReaderMacroFunction {
 
 			if (nextCodePoint == CharacterConstants.AT_SIGN) {
 				final LispStruct token = reader.read(true, NILStruct.INSTANCE, true);
-				commaCons = new ConsStruct(CommonLispSymbols.BQ_AT_FLAG, token);
+				commaCons = new ConsStruct(BackquoteReaderMacroFunction.BQ_AT_FLAG, token);
 			} else if (nextCodePoint == CharacterConstants.FULL_STOP) {
 				final LispStruct token = reader.read(true, NILStruct.INSTANCE, true);
-				commaCons = new ConsStruct(CommonLispSymbols.BQ_DOT_FLAG, token);
+				commaCons = new ConsStruct(BackquoteReaderMacroFunction.BQ_DOT_FLAG, token);
 			} else {
 				reader.unreadChar(nextCodePoint);
 				final LispStruct token = reader.read(true, NILStruct.INSTANCE, true);
-				commaCons = new ConsStruct(CommonLispSymbols.BQ_COMMA_FLAG, token);
+				commaCons = new ConsStruct(BackquoteReaderMacroFunction.BQ_COMMA_FLAG, token);
 			}
 			return commaCons;
 		} finally {

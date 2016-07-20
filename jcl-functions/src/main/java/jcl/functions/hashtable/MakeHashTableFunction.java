@@ -5,7 +5,7 @@
 package jcl.functions.hashtable;
 
 import jcl.lang.CommonLispSymbols;
-import jcl.lang.HashTableStruct;
+import jcl.lang.hashtable.HashTableStruct;
 import jcl.lang.KeywordStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.SymbolStruct;

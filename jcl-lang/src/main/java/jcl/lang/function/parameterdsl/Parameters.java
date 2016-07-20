@@ -9,7 +9,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
 
-import jcl.lang.CommonLispSymbols;
 import jcl.lang.KeywordStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.NILStruct;
@@ -20,6 +19,8 @@ import org.apache.commons.collections4.iterators.ObjectArrayIterator;
 import static java.util.stream.Collectors.toMap;
 
 public final class Parameters {
+
+	public static final KeywordStruct ALLOW_OTHER_KEYS = new KeywordStruct("ALLOW-OTHER-KEYS");
 
 	private final String functionName;
 
@@ -150,7 +151,7 @@ public final class Parameters {
 					if (restIterator.hasNext()) {
 						final LispStruct parameterValue = restIterator.next();
 
-						if (CommonLispSymbols.ALLOW_OTHER_KEYS.equals(argument)) {
+						if (ALLOW_OTHER_KEYS.equals(argument)) {
 							if (!NILStruct.INSTANCE.equals(parameterValue)) {
 								doNotAllowOtherKeys = false;
 							}
@@ -164,7 +165,7 @@ public final class Parameters {
 						                                     keywordArgument);
 						throw new ProgramErrorException(message);
 					}
-				} else if (CommonLispSymbols.ALLOW_OTHER_KEYS.equals(argument)) {
+				} else if (ALLOW_OTHER_KEYS.equals(argument)) {
 					final LispStruct allowOtherKeysValue = restIterator.next();
 					if (!NILStruct.INSTANCE.equals(allowOtherKeysValue)) {
 						doNotAllowOtherKeys = false;

@@ -15,7 +15,7 @@ import javax.annotation.PostConstruct;
 import jcl.lang.CharacterConstants;
 import jcl.lang.LispStruct;
 import jcl.lang.NILStruct;
-import jcl.lang.SequenceStruct;
+import jcl.lang.sequence.SequenceStruct;
 import jcl.lang.array.ArrayStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
 import jcl.lang.function.ReaderMacroFunction;

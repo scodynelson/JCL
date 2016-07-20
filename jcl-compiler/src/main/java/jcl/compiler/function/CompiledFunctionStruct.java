@@ -28,6 +28,7 @@ import jcl.lang.ValuesStruct;
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.function.FunctionStruct;
+import jcl.lang.function.parameterdsl.Parameters;
 import jcl.type.CompiledFunctionType;
 import jcl.type.LispType;
 
@@ -241,7 +242,7 @@ public abstract class CompiledFunctionStruct extends FunctionStruct {
 					if (iterator.hasNext()) {
 						final SymbolStruct keySymbol = keyBinding.getVar();
 						final LispStruct keyInitForm = iterator.next();
-						if (CommonLispSymbols.ALLOW_OTHER_KEYS.equals(nextArgument)) {
+						if (Parameters.ALLOW_OTHER_KEYS.equals(nextArgument)) {
 							if (!keyInitForm.equals(NILStruct.INSTANCE)) {
 								allowOtherKeys = true;
 							}
@@ -259,7 +260,7 @@ public abstract class CompiledFunctionStruct extends FunctionStruct {
 					} else {
 						throw new ProgramErrorException("Expected argument to follow keyword name argument for call to '" + functionClassName + " with key name: " + keywordArgument);
 					}
-				} else if (CommonLispSymbols.ALLOW_OTHER_KEYS.equals(nextArgument)) {
+				} else if (Parameters.ALLOW_OTHER_KEYS.equals(nextArgument)) {
 					final LispStruct allowOtherKeysValue = iterator.next();
 					if (!allowOtherKeysValue.equals(NILStruct.INSTANCE)) {
 						allowOtherKeys = true;

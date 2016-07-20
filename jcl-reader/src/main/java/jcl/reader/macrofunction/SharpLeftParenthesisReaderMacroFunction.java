@@ -11,7 +11,6 @@ import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 
 import jcl.lang.CharacterConstants;
-import jcl.lang.CommonLispSymbols;
 import jcl.lang.ConsStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
@@ -74,7 +73,7 @@ public class SharpLeftParenthesisReaderMacroFunction extends ReaderMacroFunction
 			return handleNumberArgument(listToken, numberArgumentValue);
 		}
 
-		return new ConsStruct(CommonLispSymbols.BQ_VECTOR_FLAG, listToken);
+		return new ConsStruct(BackquoteReaderMacroFunction.BQ_VECTOR_FLAG, listToken);
 	}
 
 	/**
@@ -88,7 +87,7 @@ public class SharpLeftParenthesisReaderMacroFunction extends ReaderMacroFunction
 	 *
 	 * @return the properly created {@link VectorStruct} taking care of the proper vector length
 	 */
-	private VectorStruct<?> handleNumberArgument(final ListStruct listToken, final BigInteger numberArgument) {
+	private static VectorStruct<?> handleNumberArgument(final ListStruct listToken, final BigInteger numberArgument) {
 		final List<LispStruct> tokensAsJavaList = listToken.stream().collect(Collectors.toList());
 
 		final int numberOfTokens = tokensAsJavaList.size();

@@ -8,7 +8,7 @@ import jcl.type.LispType;
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.PrinterVariables;
-import jcl.lang.SequenceStruct;
+import jcl.lang.sequence.SequenceStruct;
 import jcl.type.SimpleVectorType;
 import jcl.type.TType;
 import jcl.type.VectorType;

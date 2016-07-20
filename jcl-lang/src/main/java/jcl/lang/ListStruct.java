@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import jcl.lang.condition.exception.TypeErrorException;
+import jcl.lang.sequence.SequenceStruct;
 import org.apache.commons.collections4.CollectionUtils;
 
 /**

@@ -11,7 +11,7 @@ import jcl.lang.BuiltInClassStruct;
 import jcl.lang.condition.exception.SimpleErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.PrinterVariables;
-import jcl.lang.SequenceStruct;
+import jcl.lang.sequence.SequenceStruct;
 import jcl.type.ArrayType;
 import jcl.type.SimpleArrayType;
 import jcl.type.TType;

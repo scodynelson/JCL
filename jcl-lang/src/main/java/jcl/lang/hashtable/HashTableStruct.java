@@ -2,13 +2,15 @@
  * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
  */
 
-package jcl.lang;
+package jcl.lang.hashtable;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import jcl.lang.BuiltInClassStruct;
+import jcl.lang.LispStruct;
 import jcl.lang.function.EquatorFunctionStruct;
 import jcl.lang.function.FunctionStruct;
 import jcl.type.HashTableType;

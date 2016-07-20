@@ -9,10 +9,10 @@ import java.util.Optional;
 import javax.annotation.PostConstruct;
 
 import jcl.lang.CharacterConstants;
-import jcl.lang.CommonLispSymbols;
 import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
 import jcl.lang.NILStruct;
+import jcl.lang.SpecialOperatorStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
 import jcl.lang.function.ReaderMacroFunction;
 import jcl.lang.readtable.Reader;
@@ -46,6 +46,6 @@ public class ApostropheReaderMacroFunction extends ReaderMacroFunction {
 			throw new ReaderErrorException("Missing expression.");
 		}
 
-		return ListStruct.buildProperList(CommonLispSymbols.QUOTE, token);
+		return ListStruct.buildProperList(SpecialOperatorStruct.QUOTE, token);
 	}
 }

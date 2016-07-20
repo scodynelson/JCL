@@ -4,7 +4,7 @@
 
 package jcl.functions.hashtable;
 
-import jcl.lang.HashTableStruct;
+import jcl.lang.hashtable.HashTableStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;

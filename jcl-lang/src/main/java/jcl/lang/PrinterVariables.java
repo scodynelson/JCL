@@ -4,6 +4,7 @@
 
 package jcl.lang;
 
+import jcl.lang.list.NILStruct;
 import jcl.lang.number.IntegerStruct;
 
 public interface PrinterVariables {

@@ -13,7 +13,7 @@ import jcl.compiler.struct.specialoperator.declare.DeclareStruct;
 import jcl.lang.CommonLispSymbols;
 import jcl.lang.GlobalPackageStruct;
 import jcl.lang.LispStruct;
-import jcl.lang.ListStruct;
+import jcl.lang.list.ListStruct;
 import jcl.lang.SpecialOperatorStruct;
 import jcl.lang.SymbolStruct;
 import org.springframework.beans.factory.annotation.Autowired;

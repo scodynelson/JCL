@@ -8,8 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import jcl.lang.LispStruct;
-import jcl.lang.ListStruct;
-import jcl.lang.NILStruct;
+import jcl.lang.list.ListStruct;
+import jcl.lang.list.NILStruct;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;

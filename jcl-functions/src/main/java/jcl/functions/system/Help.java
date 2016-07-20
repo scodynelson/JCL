@@ -12,7 +12,7 @@ import javax.help.HelpSet;
 import javax.help.HelpSetException;
 
 import jcl.lang.LispStruct;
-import jcl.lang.NILStruct;
+import jcl.lang.list.NILStruct;
 import jcl.lang.array.StringStruct;
 import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.function.ExtensionsBuiltInFunctionStruct;

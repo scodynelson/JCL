@@ -11,7 +11,7 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import jcl.lang.LispStruct;
-import jcl.lang.ListStruct;
+import jcl.lang.list.ListStruct;
 import jcl.lang.PackageStruct;
 import jcl.lang.PackageVariables;
 import jcl.lang.TStruct;

@@ -6,6 +6,7 @@ package jcl.lang;
 
 import java.math.BigInteger;
 
+import jcl.lang.list.ListStruct;
 import jcl.lang.number.IntegerStruct;
 
 public interface CompilerConstants {

@@ -10,7 +10,7 @@ import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 import jcl.lang.LispStruct;
-import jcl.lang.CharacterConstants;
+import jcl.lang.character.CharacterConstants;
 import jcl.lang.BuiltInClassStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
 import jcl.lang.number.IntegerStruct;

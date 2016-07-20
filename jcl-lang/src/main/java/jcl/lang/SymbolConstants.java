@@ -4,6 +4,8 @@
 
 package jcl.lang;
 
+import jcl.lang.list.NILStruct;
+
 public interface SymbolConstants {
 
 	NILStruct NIL = NILStruct.INSTANCE;

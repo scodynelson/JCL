@@ -8,7 +8,7 @@ import java.math.BigInteger;
 
 import jcl.lang.BooleanStruct;
 import jcl.lang.LispStruct;
-import jcl.lang.NILStruct;
+import jcl.lang.list.NILStruct;
 import jcl.lang.TStruct;
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;

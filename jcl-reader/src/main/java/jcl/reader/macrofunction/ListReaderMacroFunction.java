@@ -7,10 +7,10 @@ package jcl.reader.macrofunction;
 import java.util.ArrayList;
 import java.util.List;
 
-import jcl.lang.CharacterConstants;
+import jcl.lang.character.CharacterConstants;
 import jcl.lang.LispStruct;
-import jcl.lang.ListStruct;
-import jcl.lang.NILStruct;
+import jcl.lang.list.ListStruct;
+import jcl.lang.list.NILStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
 import jcl.lang.readtable.Reader;
 import jcl.lang.readtable.ReaderVariables;

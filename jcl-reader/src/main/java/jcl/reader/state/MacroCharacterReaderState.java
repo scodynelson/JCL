@@ -8,7 +8,7 @@ import java.math.BigInteger;
 import java.util.Optional;
 
 import jcl.lang.LispStruct;
-import jcl.lang.NILStruct;
+import jcl.lang.list.NILStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
 import jcl.lang.function.ReaderMacroFunction;
 import jcl.lang.readtable.Reader;

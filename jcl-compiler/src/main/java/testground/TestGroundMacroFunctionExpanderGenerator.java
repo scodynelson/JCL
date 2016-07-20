@@ -9,7 +9,7 @@ import java.util.Collections;
 import java.util.List;
 
 import jcl.lang.LispStruct;
-import jcl.lang.CharacterStruct;
+import jcl.lang.character.CharacterStruct;
 import jcl.compiler.environment.binding.lambdalist.AuxParameter;
 import jcl.compiler.environment.binding.lambdalist.BodyParameter;
 import jcl.compiler.environment.binding.lambdalist.DestructuringLambdaList;
@@ -23,7 +23,7 @@ import jcl.compiler.environment.binding.lambdalist.WholeParameter;
 import jcl.compiler.function.Closure;
 import jcl.compiler.function.expanders.CompiledMacroFunctionExpander;
 import jcl.lang.PackageStruct;
-import jcl.lang.NILStruct;
+import jcl.lang.list.NILStruct;
 import jcl.lang.SymbolStruct;
 
 @SuppressWarnings("all")

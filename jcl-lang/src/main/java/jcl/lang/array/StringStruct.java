@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-import jcl.lang.CharacterStruct;
+import jcl.lang.character.CharacterStruct;
 import jcl.lang.condition.exception.SimpleErrorException;
 import jcl.lang.PackageStruct;
 import jcl.lang.pathname.PathnameStruct;

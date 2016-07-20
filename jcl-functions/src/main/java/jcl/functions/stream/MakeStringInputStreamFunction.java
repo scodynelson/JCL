@@ -5,7 +5,7 @@
 package jcl.functions.stream;
 
 import jcl.lang.LispStruct;
-import jcl.lang.NILStruct;
+import jcl.lang.list.NILStruct;
 import jcl.lang.array.StringStruct;
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;

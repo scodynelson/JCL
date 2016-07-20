@@ -18,7 +18,7 @@ import jcl.compiler.struct.specialoperator.PrognStruct;
 import jcl.compiler.struct.specialoperator.TagbodyStruct;
 import jcl.compiler.struct.specialoperator.go.GoStruct;
 import jcl.compiler.function.Closure;
-import jcl.lang.NILStruct;
+import jcl.lang.list.NILStruct;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;

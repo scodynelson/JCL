@@ -1,10 +1,12 @@
-package jcl.lang;
+package jcl.lang.list;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
+import jcl.lang.LispStruct;
+import jcl.lang.ValuesStruct;
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.sequence.SequenceStruct;
 import org.apache.commons.collections4.CollectionUtils;

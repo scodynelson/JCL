@@ -4,7 +4,7 @@
 
 package jcl.functions.stream;
 
-import jcl.lang.CharacterStruct;
+import jcl.lang.character.CharacterStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;

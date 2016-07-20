@@ -6,7 +6,7 @@ package jcl.functions.stream;
 
 import jcl.lang.BooleanStruct;
 import jcl.lang.LispStruct;
-import jcl.lang.NILStruct;
+import jcl.lang.list.NILStruct;
 import jcl.lang.TStruct;
 import jcl.lang.ValuesStruct;
 import jcl.lang.array.StringStruct;

@@ -3,6 +3,7 @@ package jcl.lang;
 import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.function.FunctionStruct;
 import jcl.lang.function.expander.SymbolMacroExpanderInter;
+import jcl.lang.list.ListStruct;
 import jcl.type.LispType;
 
 public class ConstantStruct<TYPE extends LispStruct> extends SymbolStruct {

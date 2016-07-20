@@ -2,13 +2,18 @@
  * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
  */
 
-package jcl.lang;
+package jcl.lang.character;
 
 import java.math.BigInteger;
 import java.util.Map;
 import java.util.function.Supplier;
 
 import com.ibm.icu.lang.UCharacter;
+import jcl.lang.BuiltInClassStruct;
+import jcl.lang.LispStruct;
+import jcl.lang.list.NILStruct;
+import jcl.lang.PackageStruct;
+import jcl.lang.PrinterVariables;
 import jcl.lang.array.StringStruct;
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.number.IntegerStruct;

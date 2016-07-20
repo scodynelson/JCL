@@ -19,7 +19,7 @@ import jcl.compiler.struct.specialoperator.lambda.LambdaStruct;
 import jcl.lang.BooleanStruct;
 import jcl.lang.CompilerVariables;
 import jcl.lang.LispStruct;
-import jcl.lang.NILStruct;
+import jcl.lang.list.NILStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.TStruct;
 import jcl.lang.condition.exception.ProgramErrorException;

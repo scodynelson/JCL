@@ -4,7 +4,7 @@
 
 package jcl.functions.list;
 
-import jcl.lang.ConsStruct;
+import jcl.lang.list.ConsStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;

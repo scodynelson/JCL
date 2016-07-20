@@ -8,7 +8,7 @@ import jcl.lang.number.IntegerStruct;
 import jcl.lang.GlobalPackageStruct;
 import jcl.lang.RadixVariable;
 import jcl.lang.BooleanStruct;
-import jcl.lang.NILStruct;
+import jcl.lang.list.NILStruct;
 import jcl.lang.TStruct;
 import jcl.lang.VariableStruct;
 import jcl.type.FloatType;

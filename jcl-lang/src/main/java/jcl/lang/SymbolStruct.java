@@ -4,12 +4,15 @@ import java.util.Stack;
 import java.util.function.Supplier;
 
 import jcl.lang.array.StringStruct;
+import jcl.lang.character.CharacterStruct;
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.condition.exception.SimpleErrorException;
 import jcl.lang.function.FunctionStruct;
 import jcl.lang.function.expander.CompilerMacroFunctionExpanderInter;
 import jcl.lang.function.expander.MacroFunctionExpanderInter;
 import jcl.lang.function.expander.SymbolMacroExpanderInter;
+import jcl.lang.list.ListStruct;
+import jcl.lang.list.NILStruct;
 import jcl.type.LispType;
 import jcl.type.SymbolType;
 import org.apache.commons.lang3.builder.EqualsBuilder;

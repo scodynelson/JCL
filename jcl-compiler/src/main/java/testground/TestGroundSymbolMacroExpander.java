@@ -5,7 +5,7 @@
 package testground;
 
 import jcl.lang.LispStruct;
-import jcl.lang.CharacterStruct;
+import jcl.lang.character.CharacterStruct;
 import jcl.compiler.environment.Environment;
 import jcl.compiler.function.expanders.SymbolMacroExpander;
 import jcl.lang.SymbolStruct;

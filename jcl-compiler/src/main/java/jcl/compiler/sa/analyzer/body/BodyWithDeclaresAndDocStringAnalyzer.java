@@ -5,7 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import jcl.lang.LispStruct;
-import jcl.lang.ListStruct;
+import jcl.lang.list.ListStruct;
 import jcl.lang.SpecialOperatorStruct;
 import jcl.lang.array.StringStruct;
 import org.springframework.stereotype.Component;

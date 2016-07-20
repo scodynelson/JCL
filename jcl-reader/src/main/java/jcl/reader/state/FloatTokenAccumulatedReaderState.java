@@ -7,7 +7,7 @@ package jcl.reader.state;
 import java.math.RoundingMode;
 import java.util.LinkedList;
 
-import jcl.lang.CharacterConstants;
+import jcl.lang.character.CharacterConstants;
 import jcl.lang.number.FloatStruct;
 import jcl.lang.number.NumberStruct;
 import jcl.lang.readtable.AttributeType;

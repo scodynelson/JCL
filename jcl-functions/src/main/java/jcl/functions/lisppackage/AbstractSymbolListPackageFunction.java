@@ -10,7 +10,7 @@ import java.util.function.BiConsumer;
 import java.util.function.Function;
 
 import jcl.lang.LispStruct;
-import jcl.lang.ListStruct;
+import jcl.lang.list.ListStruct;
 import jcl.lang.PackageStruct;
 import jcl.lang.PackageVariables;
 import jcl.lang.SymbolStruct;

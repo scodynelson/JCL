@@ -5,7 +5,7 @@
 package jcl.functions.lisppackage;
 
 import jcl.lang.LispStruct;
-import jcl.lang.NILStruct;
+import jcl.lang.list.NILStruct;
 import jcl.lang.PackageStruct;
 import jcl.lang.PackageVariables;
 import jcl.lang.SymbolStruct;

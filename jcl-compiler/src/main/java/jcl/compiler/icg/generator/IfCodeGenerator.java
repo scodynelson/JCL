@@ -11,7 +11,7 @@ import jcl.compiler.icg.JavaMethodBuilder;
 import jcl.compiler.struct.specialoperator.IfStruct;
 import jcl.compiler.function.Closure;
 import jcl.lang.LispStruct;
-import jcl.lang.NILStruct;
+import jcl.lang.list.NILStruct;
 import jcl.lang.ValuesStruct;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;

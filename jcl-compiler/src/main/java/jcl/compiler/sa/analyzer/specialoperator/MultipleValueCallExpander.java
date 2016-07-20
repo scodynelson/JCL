@@ -11,7 +11,7 @@ import jcl.compiler.struct.specialoperator.MultipleValueCallStruct;
 import jcl.compiler.struct.specialoperator.QuoteStruct;
 import jcl.compiler.function.expanders.MacroFunctionExpander;
 import jcl.lang.LispStruct;
-import jcl.lang.ListStruct;
+import jcl.lang.list.ListStruct;
 import jcl.lang.SpecialOperatorStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.ProgramErrorException;

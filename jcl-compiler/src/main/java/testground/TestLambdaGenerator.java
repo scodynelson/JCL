@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import jcl.lang.LispStruct;
-import jcl.lang.CharacterStruct;
+import jcl.lang.character.CharacterStruct;
 import jcl.compiler.environment.binding.lambdalist.AuxParameter;
 import jcl.compiler.environment.binding.lambdalist.KeyParameter;
 import jcl.compiler.environment.binding.lambdalist.OptionalParameter;
@@ -18,7 +18,7 @@ import jcl.compiler.environment.binding.lambdalist.SuppliedPParameter;
 import jcl.compiler.function.Closure;
 import jcl.compiler.function.CompiledFunctionStruct;
 import jcl.lang.PackageStruct;
-import jcl.lang.NILStruct;
+import jcl.lang.list.NILStruct;
 import jcl.lang.SymbolStruct;
 import org.springframework.stereotype.Component;
 

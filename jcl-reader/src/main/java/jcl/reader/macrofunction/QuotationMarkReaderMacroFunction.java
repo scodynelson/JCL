@@ -8,9 +8,9 @@ import java.math.BigInteger;
 import java.util.Optional;
 import javax.annotation.PostConstruct;
 
-import jcl.lang.CharacterConstants;
+import jcl.lang.character.CharacterConstants;
 import jcl.lang.LispStruct;
-import jcl.lang.NILStruct;
+import jcl.lang.list.NILStruct;
 import jcl.lang.array.StringStruct;
 import jcl.lang.function.ReaderMacroFunction;
 import jcl.lang.readtable.Reader;

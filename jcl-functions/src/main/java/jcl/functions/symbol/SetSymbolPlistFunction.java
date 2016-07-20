@@ -5,7 +5,7 @@
 package jcl.functions.symbol;
 
 import jcl.lang.LispStruct;
-import jcl.lang.ListStruct;
+import jcl.lang.list.ListStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.function.SystemBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;

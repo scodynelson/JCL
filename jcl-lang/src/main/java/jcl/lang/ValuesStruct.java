@@ -7,6 +7,7 @@ package jcl.lang;
 import java.util.Arrays;
 import java.util.List;
 
+import jcl.lang.list.NILStruct;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 

@@ -18,10 +18,9 @@ import jcl.compiler.environment.binding.lambdalist.RestParameter;
 import jcl.compiler.struct.specialoperator.declare.DeclareStruct;
 import jcl.lang.CompilerConstants;
 import jcl.lang.LispStruct;
-import jcl.lang.ListStruct;
+import jcl.lang.list.ListStruct;
 import jcl.lang.condition.exception.ProgramErrorException;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component

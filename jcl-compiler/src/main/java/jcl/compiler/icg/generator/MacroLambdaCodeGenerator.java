@@ -30,7 +30,7 @@ import jcl.compiler.struct.specialoperator.lambda.MacroLambdaStruct;
 import jcl.compiler.function.Closure;
 import jcl.compiler.function.expanders.CompiledMacroFunctionExpander;
 import jcl.lang.LispStruct;
-import jcl.lang.NILStruct;
+import jcl.lang.list.NILStruct;
 import jcl.lang.PackageStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.array.StringStruct;

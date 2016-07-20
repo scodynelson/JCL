@@ -9,7 +9,7 @@ import java.util.Set;
 import jcl.compiler.environment.Environment;
 import jcl.compiler.sa.analyzer.LambdaExpander;
 import jcl.compiler.struct.specialoperator.lambda.LambdaStruct;
-import jcl.lang.ListStruct;
+import jcl.lang.list.ListStruct;
 import jcl.lang.SymbolStruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

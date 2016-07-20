@@ -10,7 +10,7 @@ import javax.annotation.PostConstruct;
 
 import jcl.functions.java.JClass;
 import jcl.functions.java.JNew;
-import jcl.lang.CharacterConstants;
+import jcl.lang.character.CharacterConstants;
 import jcl.lang.LispStruct;
 import jcl.lang.function.ReaderMacroFunction;
 import jcl.lang.java.JavaClassStruct;

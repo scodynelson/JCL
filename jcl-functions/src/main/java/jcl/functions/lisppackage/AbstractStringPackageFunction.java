@@ -8,7 +8,7 @@ import java.util.function.BiFunction;
 
 import jcl.lang.KeywordStruct;
 import jcl.lang.LispStruct;
-import jcl.lang.NILStruct;
+import jcl.lang.list.NILStruct;
 import jcl.lang.PackageStruct;
 import jcl.lang.PackageSymbolStruct;
 import jcl.lang.PackageVariables;

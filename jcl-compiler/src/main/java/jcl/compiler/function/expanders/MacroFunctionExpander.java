@@ -18,7 +18,7 @@ import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
 import jcl.compiler.environment.binding.lambdalist.RestParameter;
 import jcl.compiler.environment.binding.lambdalist.WholeParameter;
 import jcl.lang.LispStruct;
-import jcl.lang.ListStruct;
+import jcl.lang.list.ListStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.function.expander.MacroFunctionExpanderInter;
 

@@ -10,8 +10,8 @@ import java.util.stream.Collectors;
 
 import jcl.lang.CommonLispSymbols;
 import jcl.lang.LispStruct;
-import jcl.lang.ListStruct;
-import jcl.lang.NILStruct;
+import jcl.lang.list.ListStruct;
+import jcl.lang.list.NILStruct;
 import jcl.lang.PackageStruct;
 import jcl.lang.array.StringStruct;
 import jcl.lang.condition.exception.ProgramErrorException;

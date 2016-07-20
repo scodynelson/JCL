@@ -5,7 +5,7 @@
 package jcl.lang.stream;
 
 import jcl.lang.condition.exception.TypeErrorException;
-import jcl.lang.NILStruct;
+import jcl.lang.list.NILStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.CommonLispSymbols;
 

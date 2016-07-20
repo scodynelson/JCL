@@ -7,7 +7,7 @@ package jcl.functions.character;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-import jcl.lang.CharacterStruct;
+import jcl.lang.character.CharacterStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.array.StringStruct;

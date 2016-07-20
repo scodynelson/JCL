@@ -9,10 +9,10 @@ import java.util.Optional;
 import javax.annotation.PostConstruct;
 
 import com.ibm.icu.lang.UCharacter;
-import jcl.lang.CharacterConstants;
-import jcl.lang.CharacterStruct;
+import jcl.lang.character.CharacterConstants;
+import jcl.lang.character.CharacterStruct;
 import jcl.lang.LispStruct;
-import jcl.lang.NILStruct;
+import jcl.lang.list.NILStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
 import jcl.lang.function.ReaderMacroFunction;
 import jcl.lang.readtable.Reader;

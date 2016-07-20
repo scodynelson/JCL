@@ -8,7 +8,7 @@ import jcl.compiler.environment.Environment;
 import jcl.compiler.functions.MacroExpandFunction;
 import jcl.compiler.functions.MacroExpandResult;
 import jcl.compiler.sa.FormAnalyzer;
-import jcl.lang.ConsStruct;
+import jcl.lang.list.ConsStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.SymbolStruct;
 import org.springframework.beans.factory.annotation.Autowired;

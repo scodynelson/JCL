@@ -23,7 +23,7 @@ import jcl.compiler.struct.specialoperator.declare.SpecialDeclarationStruct;
 import jcl.compiler.struct.specialoperator.lambda.LambdaStruct;
 import jcl.compiler.function.expanders.MacroFunctionExpander;
 import jcl.lang.LispStruct;
-import jcl.lang.ListStruct;
+import jcl.lang.list.ListStruct;
 import jcl.lang.SpecialOperatorStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.ErrorException;

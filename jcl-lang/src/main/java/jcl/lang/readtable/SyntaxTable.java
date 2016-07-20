@@ -7,7 +7,7 @@ package jcl.lang.readtable;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import jcl.lang.CharacterConstants;
+import jcl.lang.character.CharacterConstants;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;

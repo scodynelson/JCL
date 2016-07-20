@@ -8,12 +8,12 @@ import java.math.BigInteger;
 import java.util.Optional;
 import javax.annotation.PostConstruct;
 
-import jcl.lang.CharacterConstants;
-import jcl.lang.ConsStruct;
+import jcl.lang.character.CharacterConstants;
+import jcl.lang.list.ConsStruct;
 import jcl.lang.GlobalPackageStruct;
 import jcl.lang.LispStruct;
-import jcl.lang.ListStruct;
-import jcl.lang.NILStruct;
+import jcl.lang.list.ListStruct;
+import jcl.lang.list.NILStruct;
 import jcl.lang.SpecialOperatorStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.TStruct;

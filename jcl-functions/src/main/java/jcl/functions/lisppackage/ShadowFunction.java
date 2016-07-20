@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import jcl.lang.LispStruct;
-import jcl.lang.ListStruct;
+import jcl.lang.list.ListStruct;
 import jcl.lang.PackageStruct;
 import jcl.lang.PackageVariables;
 import jcl.lang.TStruct;

@@ -8,10 +8,10 @@ import java.util.List;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-import jcl.lang.CharacterStruct;
+import jcl.lang.character.CharacterStruct;
 import jcl.lang.LispStruct;
-import jcl.lang.ListStruct;
-import jcl.lang.NILStruct;
+import jcl.lang.list.ListStruct;
+import jcl.lang.list.NILStruct;
 import jcl.lang.PackageStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.array.StringStruct;

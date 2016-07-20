@@ -7,7 +7,7 @@ package jcl.functions;
 import java.util.List;
 
 import jcl.lang.LispStruct;
-import jcl.lang.ListStruct;
+import jcl.lang.list.ListStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;

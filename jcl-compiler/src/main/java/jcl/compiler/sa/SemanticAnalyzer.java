@@ -5,7 +5,7 @@
 package jcl.compiler.sa;
 
 import jcl.compiler.struct.specialoperator.lambda.LambdaStruct;
-import jcl.lang.ListStruct;
+import jcl.lang.list.ListStruct;
 
 @FunctionalInterface
 public interface SemanticAnalyzer {

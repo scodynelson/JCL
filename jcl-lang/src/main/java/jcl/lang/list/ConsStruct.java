@@ -1,4 +1,4 @@
-package jcl.lang;
+package jcl.lang.list;
 
 import java.util.HashSet;
 import java.util.Iterator;
@@ -9,6 +9,9 @@ import java.util.Spliterators;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
+import jcl.lang.BuiltInClassStruct;
+import jcl.lang.LispStruct;
+import jcl.lang.ValuesStruct;
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.type.ConsType;

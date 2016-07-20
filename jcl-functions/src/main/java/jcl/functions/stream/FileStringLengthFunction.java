@@ -6,7 +6,7 @@ package jcl.functions.stream;
 
 import java.math.BigInteger;
 
-import jcl.lang.CharacterStruct;
+import jcl.lang.character.CharacterStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.array.StringStruct;
 import jcl.lang.condition.exception.TypeErrorException;

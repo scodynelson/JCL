@@ -7,6 +7,7 @@ package jcl.lang;
 import java.util.function.Supplier;
 
 import jcl.lang.array.StringStruct;
+import jcl.lang.character.CharacterStruct;
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.pathname.PathnameStruct;
 import jcl.type.LispType;

@@ -11,7 +11,7 @@ import java.util.function.Function;
 
 import jcl.lang.KeywordStruct;
 import jcl.lang.LispStruct;
-import jcl.lang.NILStruct;
+import jcl.lang.list.NILStruct;
 import jcl.lang.condition.exception.ProgramErrorException;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.iterators.ObjectArrayIterator;

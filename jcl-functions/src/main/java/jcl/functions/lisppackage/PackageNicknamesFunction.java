@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import jcl.lang.LispStruct;
-import jcl.lang.ListStruct;
+import jcl.lang.list.ListStruct;
 import jcl.lang.PackageStruct;
 import jcl.lang.array.StringStruct;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;

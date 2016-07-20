@@ -4,7 +4,7 @@
 
 package jcl.functions;
 
-import jcl.lang.BooleanStructs;
+import jcl.lang.BooleanStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.function.EquatorFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
@@ -31,6 +31,6 @@ public final class EqlFunction extends EquatorFunctionStruct {
 	public LispStruct apply(final Arguments arguments) {
 		final LispStruct object1 = arguments.getRequiredArgument(OBJECT1_ARGUMENT);
 		final LispStruct object2 = arguments.getRequiredArgument(OBJECT2_ARGUMENT);
-		return BooleanStructs.toLispBoolean(object1.eql(object2));
+		return BooleanStruct.toLispBoolean(object1.eql(object2));
 	}
 }

@@ -23,4 +23,11 @@ public abstract class BooleanStruct extends ConstantStruct<BooleanStruct> {
 	public boolean booleanValue() {
 		return booleanValue;
 	}
+
+	public static BooleanStruct toLispBoolean(final Boolean aBoolean) {
+		if (aBoolean == null) {
+			return NILStruct.INSTANCE;
+		}
+		return aBoolean ? TStruct.INSTANCE : NILStruct.INSTANCE;
+	}
 }

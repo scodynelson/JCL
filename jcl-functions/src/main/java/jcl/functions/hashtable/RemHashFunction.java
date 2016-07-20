@@ -4,7 +4,7 @@
 
 package jcl.functions.hashtable;
 
-import jcl.lang.BooleanStructs;
+import jcl.lang.BooleanStruct;
 import jcl.lang.hashtable.HashTableStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
@@ -34,6 +34,6 @@ public final class RemHashFunction extends CommonLispBuiltInFunctionStruct {
 		final HashTableStruct hashTable = arguments.getRequiredArgument(HASH_TABLE_ARGUMENT, HashTableStruct.class);
 
 		final LispStruct removedValue = hashTable.remHash(key);
-		return BooleanStructs.toLispBoolean(removedValue == null);
+		return BooleanStruct.toLispBoolean(removedValue == null);
 	}
 }

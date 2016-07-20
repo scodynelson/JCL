@@ -87,11 +87,11 @@ final class MultipleValueCallCodeGenerator extends SpecialOperatorCodeGenerator<
 	 *
 	 *          BigInteger var8 = new BigInteger("1");
 	 *          IntegerStruct var7 = new IntIntegerStruct(var8);
-	 *          ValuesStructs.addValuesToList(var6, var7);
+	 *          ValuesStruct.addValuesToList(var6, var7);
 	 *
 	 *          BigInteger var9 = new BigInteger("2");
 	 *          var7 = new IntIntegerStruct(var9);
-	 *          ValuesStructs.addValuesToList(var6, var7);
+	 *          ValuesStruct.addValuesToList(var6, var7);
 	 *
 	 *          LispStruct[] var10 = new LispStruct[var6.size()];
 	 *          var10 = (LispStruct[])var6.toArray(var10);
@@ -157,9 +157,9 @@ final class MultipleValueCallCodeGenerator extends SpecialOperatorCodeGenerator<
 			mv.visitVarInsn(Opcodes.ALOAD, argsListStore);
 			mv.visitVarInsn(Opcodes.ALOAD, formStore);
 			mv.visitMethodInsn(Opcodes.INVOKESTATIC,
-			                   GenerationConstants.VALUES_STRUCTS_NAME,
-			                   GenerationConstants.VALUES_STRUCTS_ADD_VALUES_TO_LIST_METHOD_NAME,
-			                   GenerationConstants.VALUES_STRUCTS_ADD_VALUES_TO_LIST_METHOD_DESC,
+			                   GenerationConstants.VALUES_STRUCT_NAME,
+			                   GenerationConstants.VALUES_STRUCT_ADD_VALUES_TO_LIST_METHOD_NAME,
+			                   GenerationConstants.VALUES_STRUCT_ADD_VALUES_TO_LIST_METHOD_DESC,
 			                   false);
 		}
 

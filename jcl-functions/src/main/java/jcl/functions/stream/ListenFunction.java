@@ -4,7 +4,7 @@
 
 package jcl.functions.stream;
 
-import jcl.lang.BooleanStructs;
+import jcl.lang.BooleanStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
@@ -31,6 +31,6 @@ public final class ListenFunction extends CommonLispBuiltInFunctionStruct {
 	public LispStruct apply(final Arguments arguments) {
 		final InputStream inputStream = arguments.getOptionalArgument(INPUT_STREAM_ARGUMENT, InputStream.class);
 		final boolean listen = inputStream.listen();
-		return BooleanStructs.toLispBoolean(listen);
+		return BooleanStruct.toLispBoolean(listen);
 	}
 }

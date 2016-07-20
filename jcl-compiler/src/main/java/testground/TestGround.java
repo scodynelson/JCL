@@ -21,7 +21,6 @@ import jcl.compiler.icg.generator.GoException;
 import jcl.compiler.icg.generator.ReturnFromException;
 import jcl.compiler.icg.generator.ThrowException;
 import jcl.lang.ValuesStruct;
-import jcl.lang.ValuesStructs;
 import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.compiler.function.Closure;
 import jcl.lang.function.FunctionStruct;
@@ -80,7 +79,7 @@ public class TestGround {
 	private Object ifGen(final Closure currentClosure) {
 
 		LispStruct testObj = CharacterStruct.valueOf(97);
-		testObj = ValuesStructs.extractPrimaryValue(testObj);
+		testObj = ValuesStruct.extractPrimaryValue(testObj);
 
 		final LispStruct result;
 		if (!testObj.equals(NILStruct.INSTANCE)) {
@@ -238,7 +237,7 @@ public class TestGround {
 		final SymbolStruct symbol = pkg.findSymbol("FOO").getSymbol();
 
 		LispStruct value = CharacterStruct.valueOf(97);
-		value = ValuesStructs.extractPrimaryValue(value);
+		value = ValuesStruct.extractPrimaryValue(value);
 		symbol.setValue(value);
 		if (closureBindings != null) {
 			closureBindings.put(symbol, value);
@@ -271,7 +270,7 @@ public class TestGround {
 		final SymbolStruct symbol = pkg.findSymbol("FOO").getSymbol();
 
 		LispStruct initForm = CharacterStruct.valueOf(97);
-		initForm = ValuesStructs.extractPrimaryValue(initForm);
+		initForm = ValuesStruct.extractPrimaryValue(initForm);
 		symbol.bindLexicalValue(initForm);
 		closureBindings.put(symbol, initForm);
 
@@ -383,7 +382,7 @@ public class TestGround {
 
 		final List<LispStruct> argsList = new ArrayList<>();
 		final LispStruct form1 = CharacterStruct.valueOf(197);
-		ValuesStructs.addValuesToList(argsList, form1);
+		ValuesStruct.addValuesToList(argsList, form1);
 
 		LispStruct[] args = new LispStruct[argsList.size()];
 		args = argsList.toArray(args);
@@ -425,7 +424,7 @@ public class TestGround {
 			if (i < numberOfProgvVals) {
 				val = valsAsJavaList.get(i);
 			}
-			val = ValuesStructs.extractPrimaryValue(val);
+			val = ValuesStruct.extractPrimaryValue(val);
 
 			var.bindDynamicValue(val);
 		}

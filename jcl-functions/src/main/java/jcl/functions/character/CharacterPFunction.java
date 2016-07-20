@@ -4,7 +4,7 @@
 
 package jcl.functions.character;
 
-import jcl.lang.BooleanStructs;
+import jcl.lang.BooleanStruct;
 import jcl.lang.CharacterStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
@@ -32,6 +32,6 @@ public final class CharacterPFunction extends CommonLispBuiltInFunctionStruct {
 	@Override
 	public LispStruct apply(final Arguments arguments) {
 		final LispStruct object = arguments.getRequiredArgument(OBJECT_ARGUMENT);
-		return BooleanStructs.toLispBoolean(object instanceof CharacterStruct);
+		return BooleanStruct.toLispBoolean(object instanceof CharacterStruct);
 	}
 }

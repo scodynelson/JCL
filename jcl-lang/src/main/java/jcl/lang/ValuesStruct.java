@@ -75,4 +75,20 @@ public class ValuesStruct implements LispStruct {
 
 		return stringBuilder.toString();
 	}
+
+	public static LispStruct extractPrimaryValue(final LispStruct lispStruct) {
+		if (lispStruct instanceof ValuesStruct) {
+			return ((ValuesStruct) lispStruct).getPrimaryValue();
+		}
+		return lispStruct;
+	}
+
+	public static void addValuesToList(final List<LispStruct> lispStructs, final LispStruct lispStruct) {
+		if (lispStruct instanceof ValuesStruct) {
+			final List<LispStruct> valuesList = ((ValuesStruct) lispStruct).valuesList;
+			lispStructs.addAll(valuesList);
+		} else {
+			lispStructs.add(lispStruct);
+		}
+	}
 }

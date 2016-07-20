@@ -4,7 +4,7 @@
 
 package jcl.functions.symbol;
 
-import jcl.lang.BooleanStructs;
+import jcl.lang.BooleanStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
@@ -30,6 +30,6 @@ public final class BoundpFunction extends CommonLispBuiltInFunctionStruct {
 	public LispStruct apply(final Arguments arguments) {
 		final SymbolStruct symbol = arguments.getRequiredArgument(SYMBOL_ARGUMENT, SymbolStruct.class);
 		final boolean hasValue = symbol.hasValue();
-		return BooleanStructs.toLispBoolean(hasValue);
+		return BooleanStruct.toLispBoolean(hasValue);
 	}
 }

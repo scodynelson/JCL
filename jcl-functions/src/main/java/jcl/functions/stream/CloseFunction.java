@@ -5,7 +5,6 @@
 package jcl.functions.stream;
 
 import jcl.lang.BooleanStruct;
-import jcl.lang.BooleanStructs;
 import jcl.lang.CommonLispSymbols;
 import jcl.lang.LispStruct;
 import jcl.lang.NILStruct;
@@ -36,6 +35,6 @@ public final class CloseFunction extends CommonLispBuiltInFunctionStruct {
 		final BooleanStruct abortValue = arguments.getKeyArgument(CommonLispSymbols.ELEMENT_TYPE_KEYWORD, BooleanStruct.class);
 
 		final boolean wasClosed = stream.close(abortValue.booleanValue());
-		return BooleanStructs.toLispBoolean(wasClosed);
+		return BooleanStruct.toLispBoolean(wasClosed);
 	}
 }

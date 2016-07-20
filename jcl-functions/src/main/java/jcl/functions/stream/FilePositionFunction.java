@@ -6,7 +6,7 @@ package jcl.functions.stream;
 
 import java.math.BigInteger;
 
-import jcl.lang.BooleanStructs;
+import jcl.lang.BooleanStruct;
 import jcl.lang.CommonLispSymbols;
 import jcl.lang.LispStruct;
 import jcl.lang.NILStruct;
@@ -59,7 +59,7 @@ public final class FilePositionFunction extends CommonLispBuiltInFunctionStruct 
 			return IntegerStruct.valueOf(BigInteger.valueOf(currentPosition));
 		} else {
 			final Long newPosition = stream.filePosition(position);
-			return BooleanStructs.toLispBoolean(newPosition != null);
+			return BooleanStruct.toLispBoolean(newPosition != null);
 		}
 	}
 }

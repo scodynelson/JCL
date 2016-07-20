@@ -1,6 +1,6 @@
 package jcl.functions.list;
 
-import jcl.lang.BooleanStructs;
+import jcl.lang.BooleanStruct;
 import jcl.lang.ConsStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
@@ -28,6 +28,6 @@ public final class ConsPFunction extends CommonLispBuiltInFunctionStruct {
 	@Override
 	public LispStruct apply(final Arguments arguments) {
 		final LispStruct object = arguments.getRequiredArgument(OBJECT_ARGUMENT);
-		return BooleanStructs.toLispBoolean(object instanceof ConsStruct);
+		return BooleanStruct.toLispBoolean(object instanceof ConsStruct);
 	}
 }

@@ -38,7 +38,7 @@ import jcl.lang.PackageSymbolStruct;
 import jcl.lang.StructureClassStruct;
 import jcl.lang.StructureObjectStruct;
 import jcl.lang.SymbolStruct;
-import jcl.lang.ValuesStructs;
+import jcl.lang.ValuesStruct;
 import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.function.FunctionStruct;
 import jcl.lang.function.expander.MacroFunctionExpanderInter;
@@ -282,15 +282,15 @@ interface GenerationConstants {
 
 	String LISP_STRUCT_ARRAY_DESC = Type.getDescriptor(LispStruct[].class);
 
-	String VALUES_STRUCTS_NAME = Type.getInternalName(ValuesStructs.class);
+	String VALUES_STRUCT_NAME = Type.getInternalName(ValuesStruct.class);
 
-	String VALUES_STRUCTS_ADD_VALUES_TO_LIST_METHOD_NAME = "addValuesToList";
+	String VALUES_STRUCT_ADD_VALUES_TO_LIST_METHOD_NAME = "addValuesToList";
 
-	String VALUES_STRUCTS_ADD_VALUES_TO_LIST_METHOD_DESC = CodeGenerators.getMethodDescription(ValuesStructs.class, VALUES_STRUCTS_ADD_VALUES_TO_LIST_METHOD_NAME, List.class, LispStruct.class);
+	String VALUES_STRUCT_ADD_VALUES_TO_LIST_METHOD_DESC = CodeGenerators.getMethodDescription(ValuesStruct.class, VALUES_STRUCT_ADD_VALUES_TO_LIST_METHOD_NAME, List.class, LispStruct.class);
 
-	String VALUES_STRUCTS_EXTRACT_PRIMARY_VALUE_METHOD_NAME = "extractPrimaryValue";
+	String VALUES_STRUCT_EXTRACT_PRIMARY_VALUE_METHOD_NAME = "extractPrimaryValue";
 
-	String VALUES_STRUCTS_EXTRACT_PRIMARY_VALUE_METHOD_DESC = CodeGenerators.getMethodDescription(ValuesStructs.class, VALUES_STRUCTS_EXTRACT_PRIMARY_VALUE_METHOD_NAME, LispStruct.class);
+	String VALUES_STRUCT_EXTRACT_PRIMARY_VALUE_METHOD_DESC = CodeGenerators.getMethodDescription(ValuesStruct.class, VALUES_STRUCT_EXTRACT_PRIMARY_VALUE_METHOD_NAME, LispStruct.class);
 
 	String CLOSURE_NAME = Type.getInternalName(Closure.class);
 

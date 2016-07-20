@@ -6,7 +6,7 @@ package jcl.functions.number;
 
 import java.util.List;
 
-import jcl.lang.BooleanStructs;
+import jcl.lang.BooleanStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
@@ -35,6 +35,6 @@ public final class EqualToFunction extends CommonLispBuiltInFunctionStruct {
 		final List<NumberStruct> numbers = arguments.getRestArgument(NumberStruct.class);
 
 		final boolean result = NumberStruct.isEqualTo(number, numbers);
-		return BooleanStructs.toLispBoolean(result);
+		return BooleanStruct.toLispBoolean(result);
 	}
 }

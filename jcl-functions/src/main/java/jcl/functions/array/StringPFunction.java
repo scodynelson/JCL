@@ -4,7 +4,7 @@
 
 package jcl.functions.array;
 
-import jcl.lang.BooleanStructs;
+import jcl.lang.BooleanStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.array.StringStruct;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
@@ -29,6 +29,6 @@ public final class StringPFunction extends CommonLispBuiltInFunctionStruct {
 	@Override
 	public LispStruct apply(final Arguments arguments) {
 		final LispStruct object = arguments.getRequiredArgument(OBJECT_ARGUMENT);
-		return BooleanStructs.toLispBoolean(object instanceof StringStruct);
+		return BooleanStruct.toLispBoolean(object instanceof StringStruct);
 	}
 }

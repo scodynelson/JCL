@@ -6,7 +6,7 @@ package jcl.functions.character;
 
 import java.util.function.Predicate;
 
-import jcl.lang.BooleanStructs;
+import jcl.lang.BooleanStruct;
 import jcl.lang.CharacterStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
@@ -40,7 +40,7 @@ abstract class AbstractCharacterPredicateFunction extends CommonLispBuiltInFunct
 	@Override
 	public LispStruct apply(final Arguments arguments) {
 		final CharacterStruct character = arguments.getRequiredArgument("CHARACTER", CharacterStruct.class);
-		return BooleanStructs.toLispBoolean(predicate().test(character));
+		return BooleanStruct.toLispBoolean(predicate().test(character));
 	}
 
 	/**

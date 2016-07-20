@@ -5,7 +5,6 @@
 package jcl.functions.stream;
 
 import jcl.lang.BooleanStruct;
-import jcl.lang.BooleanStructs;
 import jcl.lang.LispStruct;
 import jcl.lang.NILStruct;
 import jcl.lang.TStruct;
@@ -62,6 +61,6 @@ public final class ReadLineFunction extends CommonLispBuiltInFunctionStruct {
 		final ReadLineResult readLineResult = inputStream.readLine(eofErrorP.booleanValue(), eofValue, recursiveP.booleanValue());
 		final String result = readLineResult.getResult();
 		final boolean eof = readLineResult.isEof();
-		return new ValuesStruct(new StringStruct(result), BooleanStructs.toLispBoolean(eof));
+		return new ValuesStruct(new StringStruct(result), BooleanStruct.toLispBoolean(eof));
 	}
 }

@@ -137,9 +137,9 @@ final class LetStarCodeGenerator extends ClosureCreationCodeGenerator<LetStarStr
 
 			mv.visitVarInsn(Opcodes.ALOAD, initFormStore);
 			mv.visitMethodInsn(Opcodes.INVOKESTATIC,
-			                   GenerationConstants.VALUES_STRUCTS_NAME,
-			                   GenerationConstants.VALUES_STRUCTS_EXTRACT_PRIMARY_VALUE_METHOD_NAME,
-			                   GenerationConstants.VALUES_STRUCTS_EXTRACT_PRIMARY_VALUE_METHOD_DESC,
+			                   GenerationConstants.VALUES_STRUCT_NAME,
+			                   GenerationConstants.VALUES_STRUCT_EXTRACT_PRIMARY_VALUE_METHOD_NAME,
+			                   GenerationConstants.VALUES_STRUCT_EXTRACT_PRIMARY_VALUE_METHOD_DESC,
 			                   false);
 			mv.visitVarInsn(Opcodes.ASTORE, initFormStore);
 

@@ -4,7 +4,7 @@
 
 package jcl.functions.number;
 
-import jcl.lang.BooleanStructs;
+import jcl.lang.BooleanStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
@@ -30,6 +30,6 @@ public final class EvenPFunction extends CommonLispBuiltInFunctionStruct {
 	public LispStruct apply(final Arguments arguments) {
 		final IntegerStruct integer = arguments.getRequiredArgument(INTEGER_ARGUMENT, IntegerStruct.class);
 		final boolean result = integer.evenp();
-		return BooleanStructs.toLispBoolean(result);
+		return BooleanStruct.toLispBoolean(result);
 	}
 }

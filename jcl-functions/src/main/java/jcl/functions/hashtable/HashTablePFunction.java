@@ -4,7 +4,7 @@
 
 package jcl.functions.hashtable;
 
-import jcl.lang.BooleanStructs;
+import jcl.lang.BooleanStruct;
 import jcl.lang.hashtable.HashTableStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
@@ -29,6 +29,6 @@ public final class HashTablePFunction extends CommonLispBuiltInFunctionStruct {
 	@Override
 	public LispStruct apply(final Arguments arguments) {
 		final LispStruct object = arguments.getRequiredArgument(OBJECT_ARGUMENT);
-		return BooleanStructs.toLispBoolean(object instanceof HashTableStruct);
+		return BooleanStruct.toLispBoolean(object instanceof HashTableStruct);
 	}
 }

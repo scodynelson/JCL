@@ -4,9 +4,9 @@
 
 package jcl.lang.stream;
 
-import jcl.lang.condition.exception.TypeErrorException;
-import jcl.lang.SymbolStruct;
 import jcl.lang.CommonLispSymbols;
+import jcl.lang.SymbolStruct;
+import jcl.lang.condition.exception.TypeErrorException;
 
 /**
  * Created by codynelson on 2/15/16.

@@ -8,12 +8,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import jcl.compiler.function.Closure;
 import jcl.compiler.icg.GeneratorEvent;
 import jcl.compiler.icg.GeneratorState;
 import jcl.compiler.icg.IntermediateCodeGenerator;
 import jcl.compiler.icg.JavaMethodBuilder;
 import jcl.compiler.struct.specialoperator.LetStarStruct;
-import jcl.compiler.function.Closure;
 import jcl.lang.LispStruct;
 import jcl.lang.SymbolStruct;
 import org.objectweb.asm.MethodVisitor;

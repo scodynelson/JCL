@@ -8,12 +8,12 @@ import java.math.BigInteger;
 
 import jcl.lang.BooleanStruct;
 import jcl.lang.LispStruct;
-import jcl.lang.list.NILStruct;
 import jcl.lang.TStruct;
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
+import jcl.lang.list.NILStruct;
 import jcl.lang.number.IntegerStruct;
 import jcl.lang.stream.InputStream;
 import jcl.lang.stream.ReadPeekResult;

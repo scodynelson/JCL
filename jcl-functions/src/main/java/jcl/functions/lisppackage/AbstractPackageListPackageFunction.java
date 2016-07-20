@@ -11,7 +11,6 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import jcl.lang.LispStruct;
-import jcl.lang.list.ListStruct;
 import jcl.lang.PackageStruct;
 import jcl.lang.PackageVariables;
 import jcl.lang.TStruct;
@@ -19,6 +18,7 @@ import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.FunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
+import jcl.lang.list.ListStruct;
 
 /**
  * Abstract {@link FunctionStruct} implementation for package functions that take package-designator objects. This

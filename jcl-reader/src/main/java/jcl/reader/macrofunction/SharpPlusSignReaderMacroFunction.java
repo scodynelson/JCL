@@ -8,11 +8,11 @@ import java.math.BigInteger;
 import java.util.Optional;
 import javax.annotation.PostConstruct;
 
-import jcl.lang.character.CharacterConstants;
 import jcl.lang.LispStruct;
 import jcl.lang.function.ReaderMacroFunction;
 import jcl.lang.readtable.Reader;
 import jcl.lang.readtable.ReaderVariables;
+import jcl.util.CodePointConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -34,12 +34,12 @@ public class SharpPlusSignReaderMacroFunction extends ReaderMacroFunction {
 	 */
 	@PostConstruct
 	private void init() {
-		ReaderVariables.READTABLE.getVariableValue().setDispatchMacroCharacter(CharacterConstants.NUMBER_SIGN, CharacterConstants.PLUS_SIGN, this);
+		ReaderVariables.READTABLE.getVariableValue().setDispatchMacroCharacter(CodePointConstants.NUMBER_SIGN, CodePointConstants.PLUS_SIGN, this);
 	}
 
 	@Override
 	public LispStruct readMacro(final int codePoint, final Reader reader, final Optional<BigInteger> numberArgument) {
-		assert codePoint == CharacterConstants.PLUS_SIGN;
+		assert codePoint == CodePointConstants.PLUS_SIGN;
 
 		featuresReaderMacroFunction.readFeatures(reader, false);
 		return null;

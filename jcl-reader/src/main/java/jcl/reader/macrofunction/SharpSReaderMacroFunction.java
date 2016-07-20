@@ -11,19 +11,19 @@ import java.util.List;
 import java.util.Optional;
 import javax.annotation.PostConstruct;
 
-import jcl.lang.character.CharacterConstants;
 import jcl.lang.LispStruct;
-import jcl.lang.list.ListStruct;
-import jcl.lang.list.NILStruct;
 import jcl.lang.StructureClassStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
 import jcl.lang.function.FunctionStruct;
 import jcl.lang.function.ReaderMacroFunction;
+import jcl.lang.list.ListStruct;
+import jcl.lang.list.NILStruct;
 import jcl.lang.readtable.Reader;
 import jcl.lang.readtable.ReaderVariables;
 import jcl.lang.readtable.ReadtableStruct;
 import jcl.lang.stream.ReadPeekResult;
+import jcl.util.CodePointConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -45,13 +45,13 @@ public class SharpSReaderMacroFunction extends ReaderMacroFunction {
 	@PostConstruct
 	private void init() {
 		final ReadtableStruct readtable = ReaderVariables.READTABLE.getVariableValue();
-		readtable.setDispatchMacroCharacter(CharacterConstants.NUMBER_SIGN, CharacterConstants.LATIN_SMALL_LETTER_S, this);
-		readtable.setDispatchMacroCharacter(CharacterConstants.NUMBER_SIGN, CharacterConstants.LATIN_CAPITAL_LETTER_S, this);
+		readtable.setDispatchMacroCharacter(CodePointConstants.NUMBER_SIGN, CodePointConstants.LATIN_SMALL_LETTER_S, this);
+		readtable.setDispatchMacroCharacter(CodePointConstants.NUMBER_SIGN, CodePointConstants.LATIN_CAPITAL_LETTER_S, this);
 	}
 
 	@Override
 	public LispStruct readMacro(final int codePoint, final Reader reader, final Optional<BigInteger> numberArgument) {
-		assert (codePoint == CharacterConstants.LATIN_SMALL_LETTER_S) || (codePoint == CharacterConstants.LATIN_CAPITAL_LETTER_S);
+		assert (codePoint == CodePointConstants.LATIN_SMALL_LETTER_S) || (codePoint == CodePointConstants.LATIN_CAPITAL_LETTER_S);
 
 		if (ReaderVariables.READ_SUPPRESS.getVariableValue().booleanValue()) {
 			reader.read(true, NILStruct.INSTANCE, true);
@@ -60,7 +60,7 @@ public class SharpSReaderMacroFunction extends ReaderMacroFunction {
 
 		final ReadPeekResult readResult = reader.readChar(true, NILStruct.INSTANCE, false);
 		final int nextCodePoint = readResult.getResult();
-		if (nextCodePoint != CharacterConstants.LEFT_PARENTHESIS) {
+		if (nextCodePoint != CodePointConstants.LEFT_PARENTHESIS) {
 			throw new ReaderErrorException("Non-list following #S");
 		}
 

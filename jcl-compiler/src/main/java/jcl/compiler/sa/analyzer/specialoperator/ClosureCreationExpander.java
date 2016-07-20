@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 
 import jcl.compiler.environment.Environment;
 import jcl.compiler.environment.binding.Binding;
+import jcl.compiler.function.expanders.MacroFunctionExpander;
 import jcl.compiler.sa.FormAnalyzer;
 import jcl.compiler.sa.analyzer.body.BodyProcessingResult;
 import jcl.compiler.sa.analyzer.body.BodyWithDeclaresAnalyzer;
@@ -20,13 +21,12 @@ import jcl.compiler.struct.specialoperator.ClosureCreationStruct;
 import jcl.compiler.struct.specialoperator.PrognStruct;
 import jcl.compiler.struct.specialoperator.declare.DeclareStruct;
 import jcl.compiler.struct.specialoperator.declare.SpecialDeclarationStruct;
-import jcl.compiler.function.expanders.MacroFunctionExpander;
 import jcl.lang.LispStruct;
-import jcl.lang.list.ListStruct;
-import jcl.lang.list.NILStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
+import jcl.lang.list.ListStruct;
+import jcl.lang.list.NILStruct;
 import org.springframework.beans.factory.annotation.Autowired;
 
 abstract class ClosureCreationExpander<V> extends MacroFunctionExpander<ClosureCreationStruct<V>> {

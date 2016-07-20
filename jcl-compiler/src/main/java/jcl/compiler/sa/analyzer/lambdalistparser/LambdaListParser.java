@@ -24,12 +24,12 @@ import jcl.lang.CompilerConstants;
 import jcl.lang.GlobalPackageStruct;
 import jcl.lang.KeywordStruct;
 import jcl.lang.LispStruct;
-import jcl.lang.list.ListStruct;
-import jcl.lang.list.NILStruct;
 import jcl.lang.PackageStruct;
 import jcl.lang.PackageSymbolStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.ProgramErrorException;
+import jcl.lang.list.ListStruct;
+import jcl.lang.list.NILStruct;
 import jcl.type.TType;
 import org.springframework.beans.factory.annotation.Autowired;
 

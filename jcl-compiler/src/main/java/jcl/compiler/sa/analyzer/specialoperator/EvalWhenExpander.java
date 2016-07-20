@@ -7,18 +7,18 @@ import java.util.List;
 import java.util.Set;
 
 import jcl.compiler.environment.Environment;
-import jcl.compiler.functions.EvalFunction;
 import jcl.compiler.function.expanders.MacroFunctionExpander;
+import jcl.compiler.functions.EvalFunction;
 import jcl.lang.CommonLispSymbols;
 import jcl.lang.CompilerVariables;
-import jcl.lang.list.ConsStruct;
 import jcl.lang.LispStruct;
-import jcl.lang.list.ListStruct;
-import jcl.lang.list.NILStruct;
 import jcl.lang.SpecialOperatorStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
+import jcl.lang.list.ConsStruct;
+import jcl.lang.list.ListStruct;
+import jcl.lang.list.NILStruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

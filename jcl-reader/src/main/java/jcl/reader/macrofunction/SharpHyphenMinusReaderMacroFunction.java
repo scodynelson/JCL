@@ -8,11 +8,11 @@ import java.math.BigInteger;
 import java.util.Optional;
 import javax.annotation.PostConstruct;
 
-import jcl.lang.character.CharacterConstants;
 import jcl.lang.LispStruct;
 import jcl.lang.function.ReaderMacroFunction;
 import jcl.lang.readtable.Reader;
 import jcl.lang.readtable.ReaderVariables;
+import jcl.util.CodePointConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -34,12 +34,12 @@ public class SharpHyphenMinusReaderMacroFunction extends ReaderMacroFunction {
 	 */
 	@PostConstruct
 	private void init() {
-		ReaderVariables.READTABLE.getVariableValue().setDispatchMacroCharacter(CharacterConstants.NUMBER_SIGN, CharacterConstants.HYPHEN_MINUS, this);
+		ReaderVariables.READTABLE.getVariableValue().setDispatchMacroCharacter(CodePointConstants.NUMBER_SIGN, CodePointConstants.HYPHEN_MINUS, this);
 	}
 
 	@Override
 	public LispStruct readMacro(final int codePoint, final Reader reader, final Optional<BigInteger> numberArgument) {
-		assert codePoint == CharacterConstants.HYPHEN_MINUS;
+		assert codePoint == CodePointConstants.HYPHEN_MINUS;
 
 		featuresReaderMacroFunction.readFeatures(reader, true);
 		return null;

@@ -8,10 +8,10 @@ import java.util.ArrayDeque;
 import java.util.Deque;
 
 import jcl.lang.LispStruct;
-import jcl.type.LispType;
 import jcl.lang.condition.exception.EndOfFileException;
 import jcl.lang.condition.exception.ErrorException;
 import jcl.type.ConcatenatedStreamType;
+import jcl.type.LispType;
 import jcl.type.TType;
 
 /**

@@ -6,19 +6,19 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import jcl.compiler.environment.Environment;
+import jcl.compiler.function.expanders.MacroFunctionExpander;
 import jcl.compiler.struct.specialoperator.declare.DeclareStruct;
 import jcl.compiler.struct.specialoperator.declare.JavaClassNameDeclarationStruct;
 import jcl.compiler.struct.specialoperator.declare.LispNameDeclarationStruct;
 import jcl.compiler.struct.specialoperator.declare.SpecialDeclarationStruct;
-import jcl.compiler.function.expanders.MacroFunctionExpander;
 import jcl.lang.DeclarationStruct;
 import jcl.lang.LispStruct;
-import jcl.lang.list.ListStruct;
 import jcl.lang.SpecialOperatorStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.array.StringStruct;
 import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
+import jcl.lang.list.ListStruct;
 import org.springframework.stereotype.Component;
 
 @Component

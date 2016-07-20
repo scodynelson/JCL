@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.Set;
 
 import jcl.compiler.environment.Environment;
+import jcl.compiler.function.Closure;
 import jcl.compiler.icg.GeneratorEvent;
 import jcl.compiler.icg.GeneratorState;
 import jcl.compiler.icg.IntermediateCodeGenerator;
@@ -18,7 +19,6 @@ import jcl.compiler.icg.JavaMethodBuilder;
 import jcl.compiler.struct.specialoperator.CompilerFunctionStruct;
 import jcl.compiler.struct.specialoperator.InnerLambdaStruct;
 import jcl.compiler.struct.specialoperator.PrognStruct;
-import jcl.compiler.function.Closure;
 import jcl.lang.SymbolStruct;
 import jcl.lang.function.FunctionStruct;
 import org.objectweb.asm.Label;

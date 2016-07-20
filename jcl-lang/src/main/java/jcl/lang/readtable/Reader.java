@@ -8,9 +8,9 @@ import java.math.BigInteger;
 import java.util.Map;
 
 import jcl.lang.LispStruct;
+import jcl.lang.SymbolStruct;
 import jcl.lang.stream.InputStream;
 import jcl.lang.stream.ReadPeekResult;
-import jcl.lang.SymbolStruct;
 
 /**
  * JCL Reader that handles reading in lisp tokens and parsing them as {@link LispStruct}s.

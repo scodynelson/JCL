@@ -5,14 +5,14 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import jcl.lang.LispStruct;
-import jcl.type.LispType;
 import jcl.lang.BuiltInClassStruct;
+import jcl.lang.LispStruct;
+import jcl.lang.PrinterVariables;
 import jcl.lang.condition.exception.SimpleErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
-import jcl.lang.PrinterVariables;
 import jcl.lang.sequence.SequenceStruct;
 import jcl.type.ArrayType;
+import jcl.type.LispType;
 import jcl.type.SimpleArrayType;
 import jcl.type.TType;
 import org.apache.commons.lang3.builder.EqualsBuilder;

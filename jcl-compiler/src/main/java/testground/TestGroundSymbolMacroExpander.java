@@ -4,11 +4,11 @@
 
 package testground;
 
-import jcl.lang.LispStruct;
-import jcl.lang.character.CharacterStruct;
 import jcl.compiler.environment.Environment;
 import jcl.compiler.function.expanders.SymbolMacroExpander;
+import jcl.lang.LispStruct;
 import jcl.lang.SymbolStruct;
+import jcl.lang.character.CharacterStruct;
 
 @SuppressWarnings({"all", "rawtypes"})
 public class TestGroundSymbolMacroExpander extends SymbolMacroExpander {

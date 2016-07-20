@@ -3,7 +3,6 @@ package jcl.functions;
 import jcl.compiler.functions.CompileForm;
 import jcl.compiler.functions.CompileResult;
 import jcl.lang.LispStruct;
-import jcl.lang.list.NILStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.ValuesStruct;
 import jcl.lang.condition.exception.ErrorException;
@@ -13,6 +12,7 @@ import jcl.lang.function.FunctionStruct;
 import jcl.lang.function.expander.MacroFunctionExpanderInter;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
+import jcl.lang.list.NILStruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

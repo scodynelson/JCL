@@ -5,7 +5,6 @@
 package jcl.functions.hashtable;
 
 import jcl.lang.CommonLispSymbols;
-import jcl.lang.hashtable.HashTableStruct;
 import jcl.lang.KeywordStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.SymbolStruct;
@@ -15,6 +14,7 @@ import jcl.lang.function.EquatorFunctionStruct;
 import jcl.lang.function.FunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
+import jcl.lang.hashtable.HashTableStruct;
 import jcl.lang.number.FloatStruct;
 import jcl.lang.number.IntegerStruct;
 import jcl.lang.number.RealStruct;

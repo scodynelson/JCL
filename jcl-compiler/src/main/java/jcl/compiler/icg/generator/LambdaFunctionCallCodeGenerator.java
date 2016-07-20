@@ -6,6 +6,7 @@ package jcl.compiler.icg.generator;
 
 import java.util.List;
 
+import jcl.compiler.function.Closure;
 import jcl.compiler.icg.GeneratorEvent;
 import jcl.compiler.icg.GeneratorState;
 import jcl.compiler.icg.IntermediateCodeGenerator;
@@ -13,7 +14,6 @@ import jcl.compiler.icg.JavaMethodBuilder;
 import jcl.compiler.struct.specialoperator.LambdaCompilerFunctionStruct;
 import jcl.compiler.struct.specialoperator.LambdaFunctionCallStruct;
 import jcl.compiler.struct.specialoperator.lambda.LambdaStruct;
-import jcl.compiler.function.Closure;
 import jcl.lang.LispStruct;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;

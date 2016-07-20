@@ -7,9 +7,9 @@ package jcl.lang.stream;
 import java.util.ArrayDeque;
 import java.util.Deque;
 
-import jcl.type.LispType;
 import jcl.lang.condition.exception.ErrorException;
 import jcl.type.BroadcastStreamType;
+import jcl.type.LispType;
 import jcl.type.TType;
 
 /**

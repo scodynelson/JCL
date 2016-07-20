@@ -7,9 +7,9 @@ package jcl.lang.function;
 import java.math.BigInteger;
 import java.util.Optional;
 
-import jcl.lang.character.CharacterStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.SymbolStruct;
+import jcl.lang.character.CharacterStruct;
 import jcl.lang.number.IntegerStruct;
 import jcl.lang.readtable.Reader;
 import jcl.lang.stream.InputStream;

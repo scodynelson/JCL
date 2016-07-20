@@ -8,15 +8,15 @@ import java.math.BigInteger;
 import java.util.Optional;
 import javax.annotation.PostConstruct;
 
-import jcl.lang.character.CharacterConstants;
-import jcl.lang.list.ConsStruct;
 import jcl.lang.LispStruct;
-import jcl.lang.list.NILStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
 import jcl.lang.function.ReaderMacroFunction;
+import jcl.lang.list.ConsStruct;
+import jcl.lang.list.NILStruct;
 import jcl.lang.readtable.Reader;
 import jcl.lang.readtable.ReaderVariables;
 import jcl.lang.stream.ReadPeekResult;
+import jcl.util.CodePointConstants;
 import org.springframework.stereotype.Component;
 
 /**
@@ -30,12 +30,12 @@ public class CommaReaderMacroFunction extends ReaderMacroFunction {
 	 */
 	@PostConstruct
 	private void init() {
-		ReaderVariables.READTABLE.getVariableValue().setMacroCharacter(CharacterConstants.COMMA, this, false);
+		ReaderVariables.READTABLE.getVariableValue().setMacroCharacter(CodePointConstants.COMMA, this, false);
 	}
 
 	@Override
 	public LispStruct readMacro(final int codePoint, final Reader reader, final Optional<BigInteger> numberArgument) {
-		assert codePoint == CharacterConstants.GRAVE_ACCENT;
+		assert codePoint == CodePointConstants.GRAVE_ACCENT;
 
 		final int currentBackquoteLevel = reader.getBackquoteLevel();
 		if (currentBackquoteLevel <= 0) {
@@ -53,10 +53,10 @@ public class CommaReaderMacroFunction extends ReaderMacroFunction {
 		try {
 			final ConsStruct commaCons;
 
-			if (nextCodePoint == CharacterConstants.AT_SIGN) {
+			if (nextCodePoint == CodePointConstants.AT_SIGN) {
 				final LispStruct token = reader.read(true, NILStruct.INSTANCE, true);
 				commaCons = new ConsStruct(BackquoteReaderMacroFunction.BQ_AT_FLAG, token);
-			} else if (nextCodePoint == CharacterConstants.FULL_STOP) {
+			} else if (nextCodePoint == CodePointConstants.FULL_STOP) {
 				final LispStruct token = reader.read(true, NILStruct.INSTANCE, true);
 				commaCons = new ConsStruct(BackquoteReaderMacroFunction.BQ_DOT_FLAG, token);
 			} else {

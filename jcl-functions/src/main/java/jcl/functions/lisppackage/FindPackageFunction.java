@@ -5,11 +5,11 @@
 package jcl.functions.lisppackage;
 
 import jcl.lang.LispStruct;
-import jcl.lang.list.NILStruct;
 import jcl.lang.PackageStruct;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
+import jcl.lang.list.NILStruct;
 import org.springframework.stereotype.Component;
 
 /**

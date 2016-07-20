@@ -4,8 +4,8 @@
 
 package jcl.functions.character;
 
-import jcl.lang.character.CharacterStruct;
 import jcl.lang.LispStruct;
+import jcl.lang.character.CharacterStruct;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;

@@ -6,11 +6,11 @@ package jcl.functions.hashtable;
 
 import java.math.BigDecimal;
 
-import jcl.lang.hashtable.HashTableStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
+import jcl.lang.hashtable.HashTableStruct;
 import jcl.lang.number.FloatStruct;
 import org.springframework.stereotype.Component;
 

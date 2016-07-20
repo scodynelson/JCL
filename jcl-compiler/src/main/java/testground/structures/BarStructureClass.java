@@ -7,9 +7,9 @@ package testground.structures;
 import java.util.List;
 
 import jcl.lang.LispStruct;
-import jcl.type.LispType;
 import jcl.lang.StructureObjectStruct;
 import jcl.lang.SymbolStruct;
+import jcl.type.LispType;
 
 @SuppressWarnings("all")
 public class BarStructureClass extends FooStructureClass {

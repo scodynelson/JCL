@@ -8,10 +8,10 @@ import java.util.Deque;
 import java.util.Iterator;
 import java.util.Set;
 
+import jcl.compiler.function.Closure;
 import jcl.compiler.icg.GeneratorState;
 import jcl.compiler.icg.JavaMethodBuilder;
 import jcl.compiler.struct.specialoperator.go.GoStruct;
-import jcl.compiler.function.Closure;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 

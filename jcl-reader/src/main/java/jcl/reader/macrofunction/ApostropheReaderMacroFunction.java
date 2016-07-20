@@ -8,15 +8,15 @@ import java.math.BigInteger;
 import java.util.Optional;
 import javax.annotation.PostConstruct;
 
-import jcl.lang.character.CharacterConstants;
 import jcl.lang.LispStruct;
-import jcl.lang.list.ListStruct;
-import jcl.lang.list.NILStruct;
 import jcl.lang.SpecialOperatorStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
 import jcl.lang.function.ReaderMacroFunction;
+import jcl.lang.list.ListStruct;
+import jcl.lang.list.NILStruct;
 import jcl.lang.readtable.Reader;
 import jcl.lang.readtable.ReaderVariables;
+import jcl.util.CodePointConstants;
 import org.springframework.stereotype.Component;
 
 /**
@@ -30,12 +30,12 @@ public class ApostropheReaderMacroFunction extends ReaderMacroFunction {
 	 */
 	@PostConstruct
 	private void init() {
-		ReaderVariables.READTABLE.getVariableValue().setMacroCharacter(CharacterConstants.APOSTROPHE, this, false);
+		ReaderVariables.READTABLE.getVariableValue().setMacroCharacter(CodePointConstants.APOSTROPHE, this, false);
 	}
 
 	@Override
 	public LispStruct readMacro(final int codePoint, final Reader reader, final Optional<BigInteger> numberArgument) {
-		assert codePoint == CharacterConstants.APOSTROPHE;
+		assert codePoint == CodePointConstants.APOSTROPHE;
 
 		final LispStruct token = reader.read(true, NILStruct.INSTANCE, true);
 		if (ReaderVariables.READ_SUPPRESS.getVariableValue().booleanValue()) {

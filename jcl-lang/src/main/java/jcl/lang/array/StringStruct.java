@@ -5,15 +5,15 @@ import java.util.List;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+import jcl.lang.PackageStruct;
+import jcl.lang.PrinterVariables;
+import jcl.lang.SymbolStruct;
 import jcl.lang.character.CharacterStruct;
 import jcl.lang.condition.exception.SimpleErrorException;
-import jcl.lang.PackageStruct;
 import jcl.lang.pathname.PathnameStruct;
-import jcl.lang.PrinterVariables;
 import jcl.lang.readtable.ReaderVariables;
 import jcl.lang.readtable.ReadtableStruct;
 import jcl.lang.readtable.SyntaxType;
-import jcl.lang.SymbolStruct;
 import jcl.type.BaseCharType;
 import jcl.type.BaseStringType;
 import jcl.type.CharacterType;

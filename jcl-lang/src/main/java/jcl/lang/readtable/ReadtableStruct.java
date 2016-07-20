@@ -9,14 +9,14 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
-import jcl.lang.LispStruct;
-import jcl.lang.character.CharacterConstants;
 import jcl.lang.BuiltInClassStruct;
+import jcl.lang.LispStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
-import jcl.lang.number.IntegerStruct;
 import jcl.lang.function.ReaderMacroFunction;
+import jcl.lang.number.IntegerStruct;
 import jcl.lang.stream.ReadPeekResult;
 import jcl.type.ReadtableType;
+import jcl.util.CodePointConstants;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -78,7 +78,7 @@ public class ReadtableStruct extends BuiltInClassStruct {
 	 */
 	private void init() {
 		// Initialize '#' DispatchTable
-		makeDispatchMacroCharacter(CharacterConstants.NUMBER_SIGN, false);
+		makeDispatchMacroCharacter(CodePointConstants.NUMBER_SIGN, false);
 	}
 
 	/**

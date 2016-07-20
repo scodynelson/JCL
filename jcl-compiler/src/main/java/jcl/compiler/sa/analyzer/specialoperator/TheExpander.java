@@ -3,15 +3,15 @@ package jcl.compiler.sa.analyzer.specialoperator;
 import java.util.Iterator;
 
 import jcl.compiler.environment.Environment;
+import jcl.compiler.function.expanders.MacroFunctionExpander;
 import jcl.compiler.sa.FormAnalyzer;
 import jcl.compiler.struct.specialoperator.TheStruct;
-import jcl.compiler.function.expanders.MacroFunctionExpander;
 import jcl.lang.LispStruct;
-import jcl.lang.list.ListStruct;
 import jcl.lang.SpecialOperatorStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
+import jcl.lang.list.ListStruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

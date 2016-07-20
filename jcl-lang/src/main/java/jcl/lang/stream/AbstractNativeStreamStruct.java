@@ -4,9 +4,9 @@
 
 package jcl.lang.stream;
 
-import jcl.type.LispType;
 import jcl.lang.condition.exception.EndOfFileException;
 import jcl.lang.condition.exception.StreamErrorException;
+import jcl.type.LispType;
 import jcl.type.StreamType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

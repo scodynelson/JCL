@@ -8,7 +8,6 @@ import java.util.function.BiFunction;
 
 import jcl.lang.KeywordStruct;
 import jcl.lang.LispStruct;
-import jcl.lang.list.NILStruct;
 import jcl.lang.PackageStruct;
 import jcl.lang.PackageSymbolStruct;
 import jcl.lang.PackageVariables;
@@ -19,6 +18,7 @@ import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.FunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
+import jcl.lang.list.NILStruct;
 
 /**
  * Abstract {@link FunctionStruct} implementation for package functions that operate on string-designators representing

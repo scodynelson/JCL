@@ -7,15 +7,15 @@ import java.util.Map;
 import java.util.UUID;
 
 import jcl.compiler.environment.Environment;
+import jcl.compiler.function.expanders.MacroFunctionExpander;
 import jcl.compiler.sa.FormAnalyzer;
 import jcl.compiler.struct.specialoperator.PrognStruct;
 import jcl.compiler.struct.specialoperator.TagbodyStruct;
 import jcl.compiler.struct.specialoperator.go.GoStruct;
-import jcl.compiler.function.expanders.MacroFunctionExpander;
 import jcl.lang.LispStruct;
-import jcl.lang.list.ListStruct;
 import jcl.lang.SpecialOperatorStruct;
 import jcl.lang.SymbolStruct;
+import jcl.lang.list.ListStruct;
 import jcl.lang.number.IntegerStruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

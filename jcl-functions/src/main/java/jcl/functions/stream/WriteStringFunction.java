@@ -6,13 +6,13 @@ package jcl.functions.stream;
 
 import jcl.lang.CommonLispSymbols;
 import jcl.lang.LispStruct;
-import jcl.lang.list.NILStruct;
 import jcl.lang.TStruct;
 import jcl.lang.array.StringStruct;
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
+import jcl.lang.list.NILStruct;
 import jcl.lang.number.IntegerStruct;
 import jcl.lang.stream.OutputStream;
 import jcl.lang.stream.StreamVariables;

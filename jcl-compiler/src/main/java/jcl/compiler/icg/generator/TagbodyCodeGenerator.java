@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import jcl.compiler.function.Closure;
 import jcl.compiler.icg.GeneratorEvent;
 import jcl.compiler.icg.GeneratorState;
 import jcl.compiler.icg.IntermediateCodeGenerator;
@@ -17,7 +18,6 @@ import jcl.compiler.icg.JavaMethodBuilder;
 import jcl.compiler.struct.specialoperator.PrognStruct;
 import jcl.compiler.struct.specialoperator.TagbodyStruct;
 import jcl.compiler.struct.specialoperator.go.GoStruct;
-import jcl.compiler.function.Closure;
 import jcl.lang.list.NILStruct;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;

@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import jcl.lang.PrinterVariables;
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.number.IntegerStruct;
-import jcl.lang.PrinterVariables;
 import jcl.type.BitType;
 import jcl.type.BitVectorType;
 import jcl.type.SimpleBitVectorType;

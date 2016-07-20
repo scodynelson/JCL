@@ -4,9 +4,9 @@
 
 package testground;
 
-import jcl.lang.LispStruct;
 import jcl.compiler.function.Closure;
 import jcl.compiler.function.CompiledFunctionStruct;
+import jcl.lang.LispStruct;
 
 @SuppressWarnings("all")
 public class TestGroundLambdaFunction extends CompiledFunctionStruct {

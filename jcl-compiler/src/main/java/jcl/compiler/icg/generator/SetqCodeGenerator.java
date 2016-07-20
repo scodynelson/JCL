@@ -8,12 +8,12 @@ import java.util.List;
 import java.util.Map;
 
 import jcl.compiler.environment.Environment;
+import jcl.compiler.function.Closure;
 import jcl.compiler.icg.GeneratorEvent;
 import jcl.compiler.icg.GeneratorState;
 import jcl.compiler.icg.IntermediateCodeGenerator;
 import jcl.compiler.icg.JavaMethodBuilder;
 import jcl.compiler.struct.specialoperator.SetqStruct;
-import jcl.compiler.function.Closure;
 import jcl.lang.LispStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.ValuesStruct;

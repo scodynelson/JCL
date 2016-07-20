@@ -6,8 +6,8 @@ package jcl.lang.stream;
 
 import java.nio.file.Path;
 
-import jcl.type.LispType;
 import jcl.lang.pathname.PathnameStruct;
+import jcl.type.LispType;
 
 /**
  * Created by codynelson on 2/15/16.

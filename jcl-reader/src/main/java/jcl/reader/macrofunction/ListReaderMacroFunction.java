@@ -7,14 +7,14 @@ package jcl.reader.macrofunction;
 import java.util.ArrayList;
 import java.util.List;
 
-import jcl.lang.character.CharacterConstants;
 import jcl.lang.LispStruct;
+import jcl.lang.condition.exception.ReaderErrorException;
 import jcl.lang.list.ListStruct;
 import jcl.lang.list.NILStruct;
-import jcl.lang.condition.exception.ReaderErrorException;
 import jcl.lang.readtable.Reader;
 import jcl.lang.readtable.ReaderVariables;
 import jcl.lang.stream.ReadPeekResult;
+import jcl.util.CodePointConstants;
 import org.springframework.stereotype.Component;
 
 /**
@@ -40,9 +40,9 @@ final class ListReaderMacroFunction {
 		boolean isDottedList = false;
 
 		int codePoint = flushWhitespace(reader);
-		while (codePoint != CharacterConstants.RIGHT_PARENTHESIS) {
+		while (codePoint != CodePointConstants.RIGHT_PARENTHESIS) {
 
-			if (codePoint == CharacterConstants.FULL_STOP) {
+			if (codePoint == CodePointConstants.FULL_STOP) {
 				isDottedList = processDot(reader, currentTokenList);
 				if (isDottedList) {
 					break;
@@ -125,7 +125,7 @@ final class ListReaderMacroFunction {
 
 		while (token == null) {
 
-			if (firstCodePoint == CharacterConstants.RIGHT_PARENTHESIS) {
+			if (firstCodePoint == CodePointConstants.RIGHT_PARENTHESIS) {
 				throw new ReaderErrorException("Nothing appears after . in list.");
 			}
 			reader.unreadChar(firstCodePoint);
@@ -136,7 +136,7 @@ final class ListReaderMacroFunction {
 		}
 		currentTokenList.add(token);
 
-		while (firstCodePoint != CharacterConstants.RIGHT_PARENTHESIS) {
+		while (firstCodePoint != CodePointConstants.RIGHT_PARENTHESIS) {
 			reader.unreadChar(firstCodePoint);
 
 			// NOTE: This will throw errors when it reaches an EOF

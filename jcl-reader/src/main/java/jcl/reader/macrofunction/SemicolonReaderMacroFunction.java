@@ -8,13 +8,13 @@ import java.math.BigInteger;
 import java.util.Optional;
 import javax.annotation.PostConstruct;
 
-import jcl.lang.character.CharacterConstants;
 import jcl.lang.LispStruct;
-import jcl.lang.list.NILStruct;
 import jcl.lang.function.ReaderMacroFunction;
+import jcl.lang.list.NILStruct;
 import jcl.lang.readtable.Reader;
 import jcl.lang.readtable.ReaderVariables;
 import jcl.lang.stream.ReadPeekResult;
+import jcl.util.CodePointConstants;
 import org.springframework.stereotype.Component;
 
 /**
@@ -28,18 +28,18 @@ public class SemicolonReaderMacroFunction extends ReaderMacroFunction {
 	 */
 	@PostConstruct
 	private void init() {
-		ReaderVariables.READTABLE.getVariableValue().setMacroCharacter(CharacterConstants.SEMICOLON, this, false);
+		ReaderVariables.READTABLE.getVariableValue().setMacroCharacter(CodePointConstants.SEMICOLON, this, false);
 	}
 
 	@Override
 	public LispStruct readMacro(final int codePoint, final Reader reader, final Optional<BigInteger> numberArgument) {
-		assert codePoint == CharacterConstants.SEMICOLON;
+		assert codePoint == CodePointConstants.SEMICOLON;
 
 		final StringBuilder stringBuilder = new StringBuilder();
 
 		ReadPeekResult readResult = reader.readChar(false, null, false);
 		Integer nextCodePoint = readResult.getResult();
-		while (!readResult.isEof() && (nextCodePoint.intValue() != CharacterConstants.NEWLINE)) {
+		while (!readResult.isEof() && (nextCodePoint.intValue() != CodePointConstants.NEWLINE)) {
 			stringBuilder.appendCodePoint(nextCodePoint);
 
 			readResult = reader.readChar(false, null, false);

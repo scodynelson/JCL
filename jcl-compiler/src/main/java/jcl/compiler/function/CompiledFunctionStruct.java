@@ -19,8 +19,6 @@ import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
 import jcl.compiler.environment.binding.lambdalist.RestParameter;
 import jcl.compiler.environment.binding.lambdalist.SuppliedPParameter;
 import jcl.lang.LispStruct;
-import jcl.lang.list.ListStruct;
-import jcl.lang.list.NILStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.TStruct;
 import jcl.lang.ValuesStruct;
@@ -28,6 +26,8 @@ import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.function.FunctionStruct;
 import jcl.lang.function.parameterdsl.Parameters;
+import jcl.lang.list.ListStruct;
+import jcl.lang.list.NILStruct;
 import jcl.type.CompiledFunctionType;
 import jcl.type.LispType;
 

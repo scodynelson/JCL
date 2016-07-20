@@ -8,17 +8,17 @@ import java.util.List;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-import jcl.lang.character.CharacterStruct;
 import jcl.lang.LispStruct;
-import jcl.lang.list.ListStruct;
-import jcl.lang.list.NILStruct;
 import jcl.lang.PackageStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.array.StringStruct;
+import jcl.lang.character.CharacterStruct;
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
+import jcl.lang.list.ListStruct;
+import jcl.lang.list.NILStruct;
 import org.springframework.stereotype.Component;
 
 /**

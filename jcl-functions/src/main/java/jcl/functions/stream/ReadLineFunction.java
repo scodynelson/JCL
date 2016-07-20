@@ -6,7 +6,6 @@ package jcl.functions.stream;
 
 import jcl.lang.BooleanStruct;
 import jcl.lang.LispStruct;
-import jcl.lang.list.NILStruct;
 import jcl.lang.TStruct;
 import jcl.lang.ValuesStruct;
 import jcl.lang.array.StringStruct;
@@ -14,6 +13,7 @@ import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
+import jcl.lang.list.NILStruct;
 import jcl.lang.stream.InputStream;
 import jcl.lang.stream.ReadLineResult;
 import jcl.lang.stream.StreamVariables;

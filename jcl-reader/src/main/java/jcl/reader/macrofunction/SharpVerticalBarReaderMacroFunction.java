@@ -8,13 +8,13 @@ import java.math.BigInteger;
 import java.util.Optional;
 import javax.annotation.PostConstruct;
 
-import jcl.lang.character.CharacterConstants;
 import jcl.lang.LispStruct;
-import jcl.lang.list.NILStruct;
 import jcl.lang.function.ReaderMacroFunction;
+import jcl.lang.list.NILStruct;
 import jcl.lang.readtable.Reader;
 import jcl.lang.readtable.ReaderVariables;
 import jcl.lang.stream.ReadPeekResult;
+import jcl.util.CodePointConstants;
 import org.springframework.stereotype.Component;
 
 /**
@@ -28,12 +28,12 @@ public class SharpVerticalBarReaderMacroFunction extends ReaderMacroFunction {
 	 */
 	@PostConstruct
 	private void init() {
-		ReaderVariables.READTABLE.getVariableValue().setDispatchMacroCharacter(CharacterConstants.NUMBER_SIGN, CharacterConstants.VERTICAL_LINE, this);
+		ReaderVariables.READTABLE.getVariableValue().setDispatchMacroCharacter(CodePointConstants.NUMBER_SIGN, CodePointConstants.VERTICAL_LINE, this);
 	}
 
 	@Override
 	public LispStruct readMacro(final int codePoint, final Reader reader, final Optional<BigInteger> numberArgument) {
-		assert codePoint == CharacterConstants.VERTICAL_LINE;
+		assert codePoint == CodePointConstants.VERTICAL_LINE;
 
 		final int baseLevel = 0;
 		int currentLevel = 1;
@@ -47,14 +47,14 @@ public class SharpVerticalBarReaderMacroFunction extends ReaderMacroFunction {
 
 			final int previousCodePoint = previousReadResult.getResult();
 			final int nextCodePoint = nextReadResult.getResult();
-			if ((previousCodePoint == CharacterConstants.VERTICAL_LINE) && (nextCodePoint == CharacterConstants.NUMBER_SIGN)) {
+			if ((previousCodePoint == CodePointConstants.VERTICAL_LINE) && (nextCodePoint == CodePointConstants.NUMBER_SIGN)) {
 				currentLevel -= 1;
 				if (currentLevel == baseLevel) {
 					break;
 				} else {
 					stringBuilder.appendCodePoint(previousCodePoint);
 				}
-			} else if ((previousCodePoint == CharacterConstants.NUMBER_SIGN) && (nextCodePoint == CharacterConstants.VERTICAL_LINE)) {
+			} else if ((previousCodePoint == CodePointConstants.NUMBER_SIGN) && (nextCodePoint == CodePointConstants.VERTICAL_LINE)) {
 				stringBuilder.appendCodePoint(previousCodePoint);
 				stringBuilder.appendCodePoint(nextCodePoint);
 

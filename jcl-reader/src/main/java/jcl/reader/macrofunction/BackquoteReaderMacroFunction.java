@@ -8,20 +8,20 @@ import java.math.BigInteger;
 import java.util.Optional;
 import javax.annotation.PostConstruct;
 
-import jcl.lang.character.CharacterConstants;
-import jcl.lang.list.ConsStruct;
 import jcl.lang.GlobalPackageStruct;
 import jcl.lang.LispStruct;
-import jcl.lang.list.ListStruct;
-import jcl.lang.list.NILStruct;
 import jcl.lang.SpecialOperatorStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.TStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
 import jcl.lang.function.ReaderMacroFunction;
+import jcl.lang.list.ConsStruct;
+import jcl.lang.list.ListStruct;
+import jcl.lang.list.NILStruct;
 import jcl.lang.number.NumberStruct;
 import jcl.lang.readtable.Reader;
 import jcl.lang.readtable.ReaderVariables;
+import jcl.util.CodePointConstants;
 import org.springframework.stereotype.Component;
 
 /**
@@ -48,12 +48,12 @@ public class BackquoteReaderMacroFunction extends ReaderMacroFunction {
 	 */
 	@PostConstruct
 	private void init() {
-		ReaderVariables.READTABLE.getVariableValue().setMacroCharacter(CharacterConstants.GRAVE_ACCENT, this, false);
+		ReaderVariables.READTABLE.getVariableValue().setMacroCharacter(CodePointConstants.GRAVE_ACCENT, this, false);
 	}
 
 	@Override
 	public LispStruct readMacro(final int codePoint, final Reader reader, final Optional<BigInteger> numberArgument) {
-		assert codePoint == CharacterConstants.GRAVE_ACCENT;
+		assert codePoint == CodePointConstants.GRAVE_ACCENT;
 
 		reader.incrementBackquoteLevel();
 		try {

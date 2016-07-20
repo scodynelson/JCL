@@ -6,9 +6,9 @@ package jcl.functions.stream;
 
 import java.math.BigInteger;
 
-import jcl.lang.character.CharacterStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.array.StringStruct;
+import jcl.lang.character.CharacterStruct;
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;

@@ -4,13 +4,13 @@
 
 package jcl.lang.readtable;
 
-import jcl.lang.number.IntegerStruct;
+import jcl.lang.BooleanStruct;
 import jcl.lang.GlobalPackageStruct;
 import jcl.lang.RadixVariable;
-import jcl.lang.BooleanStruct;
-import jcl.lang.list.NILStruct;
 import jcl.lang.TStruct;
 import jcl.lang.VariableStruct;
+import jcl.lang.list.NILStruct;
+import jcl.lang.number.IntegerStruct;
 import jcl.type.FloatType;
 import jcl.type.SingleFloatType;
 

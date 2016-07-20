@@ -7,7 +7,6 @@ package jcl.reader.state;
 import java.math.RoundingMode;
 import java.util.LinkedList;
 
-import jcl.lang.character.CharacterConstants;
 import jcl.lang.number.FloatStruct;
 import jcl.lang.number.NumberStruct;
 import jcl.lang.readtable.AttributeType;
@@ -19,6 +18,7 @@ import jcl.type.FloatType;
 import jcl.type.LongFloatType;
 import jcl.type.ShortFloatType;
 import jcl.type.SingleFloatType;
+import jcl.util.CodePointConstants;
 import org.springframework.stereotype.Component;
 
 /**
@@ -73,7 +73,7 @@ public class FloatTokenAccumulatedReaderState implements ReaderState {
 	static String getFloatTokenString(final String tokenString, final Integer exponentTokenCodePoint) {
 		if (exponentTokenCodePoint != null) {
 			final String exponentTokenString = String.valueOf(Character.toChars(exponentTokenCodePoint));
-			final String eCapitalLetterString = CharacterConstants.LATIN_CAPITAL_LETTER_E.toString();
+			final String eCapitalLetterString = CodePointConstants.LATIN_CAPITAL_LETTER_E.toString();
 			return tokenString.replace(exponentTokenString, eCapitalLetterString);
 		}
 		return tokenString;
@@ -92,15 +92,15 @@ public class FloatTokenAccumulatedReaderState implements ReaderState {
 
 		if (exponentTokenCodePoint != null) {
 			final int exponentTokenInt = exponentTokenCodePoint;
-			if ((exponentTokenInt == CharacterConstants.LATIN_SMALL_LETTER_S) || (exponentTokenInt == CharacterConstants.LATIN_CAPITAL_LETTER_S)) {
+			if ((exponentTokenInt == CodePointConstants.LATIN_SMALL_LETTER_S) || (exponentTokenInt == CodePointConstants.LATIN_CAPITAL_LETTER_S)) {
 				floatType = ShortFloatType.INSTANCE;
-			} else if ((exponentTokenInt == CharacterConstants.LATIN_SMALL_LETTER_F) || (exponentTokenInt == CharacterConstants.LATIN_CAPITAL_LETTER_F)) {
+			} else if ((exponentTokenInt == CodePointConstants.LATIN_SMALL_LETTER_F) || (exponentTokenInt == CodePointConstants.LATIN_CAPITAL_LETTER_F)) {
 				floatType = SingleFloatType.INSTANCE;
-			} else if ((exponentTokenInt == CharacterConstants.LATIN_SMALL_LETTER_D) || (exponentTokenInt == CharacterConstants.LATIN_CAPITAL_LETTER_D)) {
+			} else if ((exponentTokenInt == CodePointConstants.LATIN_SMALL_LETTER_D) || (exponentTokenInt == CodePointConstants.LATIN_CAPITAL_LETTER_D)) {
 				floatType = DoubleFloatType.INSTANCE;
-			} else if ((exponentTokenInt == CharacterConstants.LATIN_SMALL_LETTER_L) || (exponentTokenInt == CharacterConstants.LATIN_CAPITAL_LETTER_L)) {
+			} else if ((exponentTokenInt == CodePointConstants.LATIN_SMALL_LETTER_L) || (exponentTokenInt == CodePointConstants.LATIN_CAPITAL_LETTER_L)) {
 				floatType = LongFloatType.INSTANCE;
-			} else if ((exponentTokenInt == CharacterConstants.LATIN_SMALL_LETTER_E) || (exponentTokenInt == CharacterConstants.LATIN_CAPITAL_LETTER_E)) {
+			} else if ((exponentTokenInt == CodePointConstants.LATIN_SMALL_LETTER_E) || (exponentTokenInt == CodePointConstants.LATIN_CAPITAL_LETTER_E)) {
 				floatType = ReaderVariables.READ_DEFAULT_FLOAT_FORMAT.getVariableValue();
 			}
 		}

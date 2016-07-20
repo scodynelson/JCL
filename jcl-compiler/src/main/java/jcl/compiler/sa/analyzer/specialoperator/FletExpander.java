@@ -13,9 +13,9 @@ import jcl.compiler.struct.specialoperator.declare.DeclareStruct;
 import jcl.lang.CommonLispSymbols;
 import jcl.lang.GlobalPackageStruct;
 import jcl.lang.LispStruct;
-import jcl.lang.list.ListStruct;
 import jcl.lang.SpecialOperatorStruct;
 import jcl.lang.SymbolStruct;
+import jcl.lang.list.ListStruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

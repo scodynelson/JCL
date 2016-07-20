@@ -5,11 +5,11 @@
 package jcl.lang.stream;
 
 import jcl.lang.LispStruct;
-import jcl.type.LispType;
-import jcl.lang.condition.exception.ErrorException;
-import jcl.lang.condition.exception.StreamErrorException;
 import jcl.lang.SymbolStruct;
 import jcl.lang.VariableStruct;
+import jcl.lang.condition.exception.ErrorException;
+import jcl.lang.condition.exception.StreamErrorException;
+import jcl.type.LispType;
 import jcl.type.SynonymStreamType;
 
 /**

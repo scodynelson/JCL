@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 
 import jcl.compiler.environment.Environment;
 import jcl.compiler.environment.binding.Binding;
+import jcl.compiler.function.expanders.MacroFunctionExpander;
 import jcl.compiler.sa.FormAnalyzer;
 import jcl.compiler.sa.analyzer.body.BodyProcessingResult;
 import jcl.compiler.sa.analyzer.body.BodyWithDeclaresAnalyzer;
@@ -14,11 +15,10 @@ import jcl.compiler.sa.analyzer.declare.DeclareExpander;
 import jcl.compiler.struct.specialoperator.LocallyStruct;
 import jcl.compiler.struct.specialoperator.declare.DeclareStruct;
 import jcl.compiler.struct.specialoperator.declare.SpecialDeclarationStruct;
-import jcl.compiler.function.expanders.MacroFunctionExpander;
 import jcl.lang.LispStruct;
-import jcl.lang.list.ListStruct;
 import jcl.lang.SpecialOperatorStruct;
 import jcl.lang.SymbolStruct;
+import jcl.lang.list.ListStruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

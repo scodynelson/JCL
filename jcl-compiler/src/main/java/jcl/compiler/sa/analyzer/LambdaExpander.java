@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 import jcl.compiler.environment.Environment;
 import jcl.compiler.environment.binding.Binding;
 import jcl.compiler.environment.binding.lambdalist.OrdinaryLambdaList;
+import jcl.compiler.function.expanders.MacroFunctionExpander;
 import jcl.compiler.sa.FormAnalyzer;
 import jcl.compiler.sa.analyzer.body.BodyProcessingResult;
 import jcl.compiler.sa.analyzer.body.BodyWithDeclaresAndDocStringAnalyzer;
@@ -21,14 +22,13 @@ import jcl.compiler.struct.specialoperator.declare.JavaClassNameDeclarationStruc
 import jcl.compiler.struct.specialoperator.declare.LispNameDeclarationStruct;
 import jcl.compiler.struct.specialoperator.declare.SpecialDeclarationStruct;
 import jcl.compiler.struct.specialoperator.lambda.LambdaStruct;
-import jcl.compiler.function.expanders.MacroFunctionExpander;
 import jcl.lang.LispStruct;
-import jcl.lang.list.ListStruct;
 import jcl.lang.SpecialOperatorStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
+import jcl.lang.list.ListStruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

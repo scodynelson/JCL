@@ -10,16 +10,16 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 
-import jcl.lang.character.CharacterConstants;
-import jcl.lang.list.ConsStruct;
 import jcl.lang.LispStruct;
-import jcl.lang.list.ListStruct;
-import jcl.lang.list.NILStruct;
 import jcl.lang.array.VectorStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
 import jcl.lang.function.ReaderMacroFunction;
+import jcl.lang.list.ConsStruct;
+import jcl.lang.list.ListStruct;
+import jcl.lang.list.NILStruct;
 import jcl.lang.readtable.Reader;
 import jcl.lang.readtable.ReaderVariables;
+import jcl.util.CodePointConstants;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -41,12 +41,12 @@ public class SharpLeftParenthesisReaderMacroFunction extends ReaderMacroFunction
 	 */
 	@PostConstruct
 	private void init() {
-		ReaderVariables.READTABLE.getVariableValue().setDispatchMacroCharacter(CharacterConstants.NUMBER_SIGN, CharacterConstants.LEFT_PARENTHESIS, this);
+		ReaderVariables.READTABLE.getVariableValue().setDispatchMacroCharacter(CodePointConstants.NUMBER_SIGN, CodePointConstants.LEFT_PARENTHESIS, this);
 	}
 
 	@Override
 	public LispStruct readMacro(final int codePoint, final Reader reader, final Optional<BigInteger> numberArgument) {
-		assert codePoint == CharacterConstants.LEFT_PARENTHESIS;
+		assert codePoint == CodePointConstants.LEFT_PARENTHESIS;
 
 		final ListStruct listToken = listReaderMacroFunction.readList(reader);
 

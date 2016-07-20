@@ -7,8 +7,8 @@ package jcl.reader.macrofunction;
 import java.math.BigInteger;
 
 import jcl.lang.LispStruct;
-import jcl.lang.list.NILStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
+import jcl.lang.list.NILStruct;
 import jcl.lang.number.IntegerStruct;
 import jcl.lang.number.RationalStruct;
 import jcl.lang.readtable.Reader;

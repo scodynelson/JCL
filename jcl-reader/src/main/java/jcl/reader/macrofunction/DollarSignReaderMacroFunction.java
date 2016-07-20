@@ -8,7 +8,6 @@ import java.math.BigInteger;
 import java.util.Optional;
 import javax.annotation.PostConstruct;
 
-import jcl.lang.character.CharacterConstants;
 import jcl.lang.LispStruct;
 import jcl.lang.function.ReaderMacroFunction;
 import jcl.lang.java.JavaNameStruct;
@@ -16,6 +15,7 @@ import jcl.lang.readtable.Reader;
 import jcl.lang.readtable.ReaderVariables;
 import jcl.lang.readtable.ReadtableCase;
 import jcl.lang.readtable.ReadtableStruct;
+import jcl.util.CodePointConstants;
 import org.springframework.stereotype.Component;
 
 /**
@@ -29,12 +29,12 @@ public class DollarSignReaderMacroFunction extends ReaderMacroFunction {
 	 */
 	@PostConstruct
 	private void init() {
-		ReaderVariables.READTABLE.getVariableValue().setMacroCharacter(CharacterConstants.DOLLAR_SIGN, this, false);
+		ReaderVariables.READTABLE.getVariableValue().setMacroCharacter(CodePointConstants.DOLLAR_SIGN, this, false);
 	}
 
 	@Override
 	public LispStruct readMacro(final int codePoint, final Reader reader, final Optional<BigInteger> numberArgument) {
-		assert codePoint == CharacterConstants.DOLLAR_SIGN;
+		assert codePoint == CodePointConstants.DOLLAR_SIGN;
 
 		final ReadtableStruct readtable = ReaderVariables.READTABLE.getVariableValue();
 		final ReadtableCase previousCase = readtable.getReadtableCase();

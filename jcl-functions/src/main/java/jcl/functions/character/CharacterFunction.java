@@ -7,8 +7,8 @@ package jcl.functions.character;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-import jcl.lang.character.CharacterStruct;
 import jcl.lang.LispStruct;
+import jcl.lang.character.CharacterStruct;
 import org.springframework.stereotype.Component;
 
 /**

@@ -7,8 +7,8 @@ package jcl.functions.character;
 import java.util.function.Predicate;
 
 import jcl.lang.BooleanStruct;
-import jcl.lang.character.CharacterStruct;
 import jcl.lang.LispStruct;
+import jcl.lang.character.CharacterStruct;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.FunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;

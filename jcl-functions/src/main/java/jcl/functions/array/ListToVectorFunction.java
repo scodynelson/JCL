@@ -8,11 +8,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import jcl.lang.LispStruct;
-import jcl.lang.list.ListStruct;
 import jcl.lang.array.VectorStruct;
 import jcl.lang.function.SystemBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
+import jcl.lang.list.ListStruct;
 import org.springframework.stereotype.Component;
 
 @Component

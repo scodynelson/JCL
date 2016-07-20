@@ -4,15 +4,15 @@
 
 package jcl.compiler.icg.generator;
 
+import jcl.compiler.function.Closure;
 import jcl.compiler.icg.GeneratorEvent;
 import jcl.compiler.icg.GeneratorState;
 import jcl.compiler.icg.IntermediateCodeGenerator;
 import jcl.compiler.icg.JavaMethodBuilder;
 import jcl.compiler.struct.specialoperator.IfStruct;
-import jcl.compiler.function.Closure;
 import jcl.lang.LispStruct;
-import jcl.lang.list.NILStruct;
 import jcl.lang.ValuesStruct;
+import jcl.lang.list.NILStruct;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;

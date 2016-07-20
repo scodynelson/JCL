@@ -12,16 +12,16 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 
-import jcl.lang.character.CharacterConstants;
 import jcl.lang.LispStruct;
-import jcl.lang.list.NILStruct;
-import jcl.lang.sequence.SequenceStruct;
 import jcl.lang.array.ArrayStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
 import jcl.lang.function.ReaderMacroFunction;
+import jcl.lang.list.NILStruct;
 import jcl.lang.readtable.Reader;
 import jcl.lang.readtable.ReaderVariables;
 import jcl.lang.readtable.ReadtableStruct;
+import jcl.lang.sequence.SequenceStruct;
+import jcl.util.CodePointConstants;
 import org.springframework.stereotype.Component;
 
 /**
@@ -36,13 +36,13 @@ public class SharpAReaderMacroFunction extends ReaderMacroFunction {
 	@PostConstruct
 	private void init() {
 		final ReadtableStruct readtable = ReaderVariables.READTABLE.getVariableValue();
-		readtable.setDispatchMacroCharacter(CharacterConstants.NUMBER_SIGN, CharacterConstants.LATIN_SMALL_LETTER_A, this);
-		readtable.setDispatchMacroCharacter(CharacterConstants.NUMBER_SIGN, CharacterConstants.LATIN_CAPITAL_LETTER_A, this);
+		readtable.setDispatchMacroCharacter(CodePointConstants.NUMBER_SIGN, CodePointConstants.LATIN_SMALL_LETTER_A, this);
+		readtable.setDispatchMacroCharacter(CodePointConstants.NUMBER_SIGN, CodePointConstants.LATIN_CAPITAL_LETTER_A, this);
 	}
 
 	@Override
 	public LispStruct readMacro(final int codePoint, final Reader reader, final Optional<BigInteger> numberArgument) {
-		assert (codePoint == CharacterConstants.LATIN_SMALL_LETTER_A) || (codePoint == CharacterConstants.LATIN_CAPITAL_LETTER_A);
+		assert (codePoint == CodePointConstants.LATIN_SMALL_LETTER_A) || (codePoint == CodePointConstants.LATIN_CAPITAL_LETTER_A);
 
 		final LispStruct token = reader.read(true, NILStruct.INSTANCE, true);
 		if (ReaderVariables.READ_SUPPRESS.getVariableValue().booleanValue()) {

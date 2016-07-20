@@ -4,9 +4,9 @@
 
 package jcl.lang.stream;
 
-import jcl.type.LispType;
 import jcl.lang.condition.exception.StreamErrorException;
 import jcl.type.BaseCharType;
+import jcl.type.LispType;
 import jcl.type.StringStreamType;
 
 /**

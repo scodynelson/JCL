@@ -7,7 +7,7 @@ package jcl.lang.readtable;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import jcl.lang.character.CharacterConstants;
+import jcl.util.CodePointConstants;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -192,7 +192,7 @@ class SyntaxTable {
 			}
 		}
 
-		if (codePoint != CharacterConstants.EXIT_CHAR) {
+		if (codePoint != CodePointConstants.EXIT_CHAR) {
 			LOGGER.error("Not defined and illegal: {}", codePoint);
 		}
 		return SyntaxType.INVALID;

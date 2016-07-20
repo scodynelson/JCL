@@ -11,12 +11,12 @@ import java.util.Map;
 import java.util.Set;
 
 import jcl.compiler.environment.Environment;
+import jcl.compiler.function.Closure;
 import jcl.compiler.icg.GeneratorState;
 import jcl.compiler.icg.IntermediateCodeGenerator;
 import jcl.compiler.icg.JavaMethodBuilder;
 import jcl.compiler.struct.specialoperator.ClosureCreationStruct;
 import jcl.compiler.struct.specialoperator.PrognStruct;
-import jcl.compiler.function.Closure;
 import jcl.lang.SymbolStruct;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;

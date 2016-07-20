@@ -5,11 +5,11 @@
 package jcl.functions.symbol;
 
 import jcl.lang.LispStruct;
-import jcl.lang.list.NILStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.function.SystemBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
+import jcl.lang.list.NILStruct;
 import org.springframework.stereotype.Component;
 
 @Component

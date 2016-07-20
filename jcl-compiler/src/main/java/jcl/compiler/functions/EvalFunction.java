@@ -19,7 +19,6 @@ import jcl.compiler.struct.specialoperator.lambda.LambdaStruct;
 import jcl.lang.BooleanStruct;
 import jcl.lang.CompilerVariables;
 import jcl.lang.LispStruct;
-import jcl.lang.list.NILStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.TStruct;
 import jcl.lang.condition.exception.ProgramErrorException;
@@ -30,6 +29,7 @@ import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.java.JavaMethodStruct;
 import jcl.lang.java.JavaNameStruct;
 import jcl.lang.java.JavaObjectStruct;
+import jcl.lang.list.NILStruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

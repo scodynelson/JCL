@@ -4,13 +4,13 @@
 
 package jcl.compiler.icg.generator;
 
+import jcl.compiler.function.Closure;
 import jcl.compiler.icg.GeneratorEvent;
 import jcl.compiler.icg.GeneratorState;
 import jcl.compiler.icg.IntermediateCodeGenerator;
 import jcl.compiler.icg.JavaMethodBuilder;
 import jcl.compiler.struct.specialoperator.PrognStruct;
 import jcl.compiler.struct.specialoperator.UnwindProtectStruct;
-import jcl.compiler.function.Closure;
 import jcl.lang.LispStruct;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;

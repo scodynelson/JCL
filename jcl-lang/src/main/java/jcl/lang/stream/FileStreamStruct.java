@@ -16,11 +16,11 @@ import java.nio.file.StandardOpenOption;
 import java.util.function.Supplier;
 
 import jcl.lang.LispStruct;
-import jcl.type.LispType;
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.condition.exception.StreamErrorException;
 import jcl.lang.pathname.PathnameStruct;
 import jcl.type.FileStreamType;
+import jcl.type.LispType;
 import jcl.type.SignedByteType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

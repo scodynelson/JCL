@@ -8,10 +8,10 @@ import java.util.ArrayList;
 import java.util.Deque;
 
 import jcl.lang.LispStruct;
-import jcl.lang.list.ListStruct;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
+import jcl.lang.list.ListStruct;
 import jcl.lang.stream.ConcatenatedStreamStruct;
 import jcl.lang.stream.InputStream;
 import org.springframework.stereotype.Component;

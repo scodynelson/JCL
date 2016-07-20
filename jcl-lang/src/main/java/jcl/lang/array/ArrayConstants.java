@@ -6,9 +6,9 @@ package jcl.lang.array;
 
 import java.math.BigInteger;
 
-import jcl.lang.number.IntegerStruct;
-import jcl.lang.GlobalPackageStruct;
 import jcl.lang.ConstantStruct;
+import jcl.lang.GlobalPackageStruct;
+import jcl.lang.number.IntegerStruct;
 
 public interface ArrayConstants {
 

@@ -6,13 +6,13 @@ import java.util.ListIterator;
 import java.util.Stack;
 
 import jcl.compiler.environment.Environment;
-import jcl.compiler.struct.specialoperator.go.GoStruct;
 import jcl.compiler.function.expanders.MacroFunctionExpander;
+import jcl.compiler.struct.specialoperator.go.GoStruct;
 import jcl.lang.LispStruct;
-import jcl.lang.list.ListStruct;
 import jcl.lang.SpecialOperatorStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.ProgramErrorException;
+import jcl.lang.list.ListStruct;
 import jcl.lang.number.IntegerStruct;
 import org.springframework.stereotype.Component;
 

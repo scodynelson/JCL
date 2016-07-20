@@ -1,8 +1,8 @@
 package jcl.lang.condition.exception;
 
-import jcl.type.LispType;
 import jcl.lang.condition.ConditionType;
 import jcl.lang.stream.LispStream;
+import jcl.type.LispType;
 
 public class StreamErrorException extends ErrorException {
 

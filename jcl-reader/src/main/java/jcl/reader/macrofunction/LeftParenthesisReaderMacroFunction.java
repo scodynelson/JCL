@@ -8,11 +8,11 @@ import java.math.BigInteger;
 import java.util.Optional;
 import javax.annotation.PostConstruct;
 
-import jcl.lang.character.CharacterConstants;
-import jcl.lang.list.ListStruct;
 import jcl.lang.function.ReaderMacroFunction;
+import jcl.lang.list.ListStruct;
 import jcl.lang.readtable.Reader;
 import jcl.lang.readtable.ReaderVariables;
+import jcl.util.CodePointConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -33,12 +33,12 @@ public class LeftParenthesisReaderMacroFunction extends ReaderMacroFunction {
 	 */
 	@PostConstruct
 	private void init() {
-		ReaderVariables.READTABLE.getVariableValue().setMacroCharacter(CharacterConstants.LEFT_PARENTHESIS, this, false);
+		ReaderVariables.READTABLE.getVariableValue().setMacroCharacter(CodePointConstants.LEFT_PARENTHESIS, this, false);
 	}
 
 	@Override
 	public ListStruct readMacro(final int codePoint, final Reader reader, final Optional<BigInteger> numberArgument) {
-		assert codePoint == CharacterConstants.LEFT_PARENTHESIS;
+		assert codePoint == CodePointConstants.LEFT_PARENTHESIS;
 
 		return listReaderMacroFunction.readList(reader);
 	}

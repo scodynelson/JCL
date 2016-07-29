@@ -7,7 +7,7 @@ package jcl.functions.array;
 import java.util.List;
 
 import jcl.lang.LispStruct;
-import jcl.lang.array.VectorStruct;
+import jcl.lang.factory.LispStructFactory;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
@@ -29,6 +29,6 @@ public final class VectorFunction extends CommonLispBuiltInFunctionStruct {
 	@Override
 	public LispStruct apply(final Arguments arguments) {
 		final List<LispStruct> objects = arguments.getRestArgument();
-		return new VectorStruct<>(objects);
+		return LispStructFactory.toVector(objects);
 	}
 }

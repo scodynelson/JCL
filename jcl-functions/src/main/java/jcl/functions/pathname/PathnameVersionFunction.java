@@ -5,7 +5,7 @@
 package jcl.functions.pathname;
 
 import jcl.lang.LispStruct;
-import jcl.lang.array.StringStruct;
+import jcl.lang.factory.LispStructFactory;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
@@ -51,7 +51,7 @@ public final class PathnameVersionFunction extends CommonLispBuiltInFunctionStru
 			returnValue = componentType.getValue();
 		} else {
 			final String versionString = version.toString();
-			returnValue = new StringStruct(versionString);
+			returnValue = LispStructFactory.toString(versionString);
 		}
 
 		return returnValue;

@@ -159,7 +159,7 @@ public class CharacterStruct extends BuiltInClassStruct {
 
 	@Override
 	public Supplier<StringStruct> asString() {
-		return () -> new StringStruct(getCharacter().toString());
+		return () -> StringStruct.valueOf(getCharacter().toString());
 	}
 
 	/**
@@ -745,7 +745,7 @@ public class CharacterStruct extends BuiltInClassStruct {
 	 * @return the {@link StringStruct} representing the name of this CharacterStruc
 	 */
 	public StringStruct charName() {
-		return new StringStruct(Character.getName(codePoint));
+		return StringStruct.valueOf(Character.getName(codePoint));
 	}
 
 	/**

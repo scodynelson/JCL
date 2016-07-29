@@ -11,6 +11,7 @@ import javax.annotation.PostConstruct;
 import jcl.lang.LispStruct;
 import jcl.lang.array.BitVectorStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
+import jcl.lang.factory.LispStructFactory;
 import jcl.lang.function.ReaderMacroFunction;
 import jcl.lang.list.NILStruct;
 import jcl.lang.readtable.Reader;
@@ -56,7 +57,7 @@ public class SharpAsteriskReaderMacroFunction extends ReaderMacroFunction {
 		}
 
 		if (!numberArgument.isPresent()) {
-			return new BitVectorStruct(tokenString);
+			return LispStructFactory.toBitVector(tokenString);
 		}
 
 		final BigInteger numberArgumentValue = numberArgument.get();
@@ -99,7 +100,7 @@ public class SharpAsteriskReaderMacroFunction extends ReaderMacroFunction {
 		}
 
 		final String bitString = bitStringBuilder.toString();
-		return new BitVectorStruct(bitString);
+		return LispStructFactory.toBitVector(bitString);
 	}
 
 	/**

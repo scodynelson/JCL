@@ -28,6 +28,7 @@ import jcl.lang.SymbolStruct;
 import jcl.lang.array.StringStruct;
 import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
+import jcl.lang.factory.LispStructFactory;
 import jcl.lang.list.ListStruct;
 import jcl.type.TType;
 import org.slf4j.Logger;
@@ -205,7 +206,7 @@ public class MacroletExpander extends MacroFunctionExpander<InnerLambdaStruct> {
 		                                                          .toString();
 
 		final String macroletParamName = "jcl.MACROLET_" + properFunctionNameString + "_MacroLambda_" + System.nanoTime();
-		final StringStruct macroletParamJavaClassName = new StringStruct(macroletParamName);
+		final StringStruct macroletParamJavaClassName = LispStructFactory.toString(macroletParamName);
 		final ListStruct macroletParamJavaClassNameDeclaration = ListStruct.buildProperList(DeclarationStruct.JAVA_CLASS_NAME, macroletParamJavaClassName);
 		declares.add(macroletParamJavaClassNameDeclaration);
 

@@ -7,6 +7,7 @@ package jcl.functions.lisppackage;
 import jcl.lang.LispStruct;
 import jcl.lang.PackageStruct;
 import jcl.lang.array.StringStruct;
+import jcl.lang.factory.LispStructFactory;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
@@ -49,6 +50,6 @@ public final class PackageNameFunction extends CommonLispBuiltInFunctionStruct {
 		final PackageStruct aPackage = lispStruct.asPackage().get();
 
 		final String name = aPackage.getName();
-		return (name == null) ? NILStruct.INSTANCE : new StringStruct(name);
+		return (name == null) ? NILStruct.INSTANCE : LispStructFactory.toString(name);
 	}
 }

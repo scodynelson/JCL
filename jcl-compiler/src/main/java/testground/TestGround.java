@@ -22,11 +22,9 @@ import jcl.lang.PackageStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.TStruct;
 import jcl.lang.ValuesStruct;
-import jcl.lang.array.ArrayStruct;
-import jcl.lang.array.BitVectorStruct;
-import jcl.lang.array.VectorStruct;
 import jcl.lang.character.CharacterStruct;
 import jcl.lang.condition.exception.ProgramErrorException;
+import jcl.lang.factory.LispStructFactory;
 import jcl.lang.function.FunctionStruct;
 import jcl.lang.list.ConsStruct;
 import jcl.lang.list.ListStruct;
@@ -173,7 +171,7 @@ public class TestGround {
 		final IntegerStruct content = IntegerStruct.valueOf(BigInteger.ZERO);
 		contents.add(content);
 
-		return new BitVectorStruct(contents);
+		return LispStructFactory.toBitVector(contents);
 	}
 
 	private Object vectorGen() {
@@ -181,7 +179,7 @@ public class TestGround {
 		final IntegerStruct content = IntegerStruct.valueOf(BigInteger.ZERO);
 		contents.add(content);
 
-		return new VectorStruct<>(contents);
+		return LispStructFactory.toVector(contents);
 	}
 
 	private Object arrayGen() {
@@ -193,7 +191,7 @@ public class TestGround {
 		final IntegerStruct content = IntegerStruct.valueOf(BigInteger.ZERO);
 		contents.add(content);
 
-		return new ArrayStruct<>(dimensions, contents);
+		return LispStructFactory.toArray(dimensions, contents);
 	}
 
 	private Object unwindProtectGen(final Closure currentClosure) {

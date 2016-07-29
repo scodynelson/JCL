@@ -31,7 +31,7 @@ public class VectorStruct<TYPE extends LispStruct> extends ArrayStruct<TYPE> imp
 	 * @param contents
 	 * 		the vector contents
 	 */
-	public VectorStruct(final List<TYPE> contents) {
+	protected VectorStruct(final List<TYPE> contents) {
 		this(contents.size(), contents, TType.INSTANCE, false, null);
 	}
 
@@ -49,7 +49,7 @@ public class VectorStruct<TYPE extends LispStruct> extends ArrayStruct<TYPE> imp
 	 * @param fillPointer
 	 * 		the vector fillPointer
 	 */
-	public VectorStruct(final int size, final List<TYPE> contents, final LispType elementType,
+	protected VectorStruct(final int size, final List<TYPE> contents, final LispType elementType,
 	                    final boolean isAdjustable, final Integer fillPointer) {
 		this(getVectorType(isAdjustable, fillPointer), size, contents, elementType, isAdjustable, fillPointer);
 	}
@@ -90,6 +90,10 @@ public class VectorStruct<TYPE extends LispStruct> extends ArrayStruct<TYPE> imp
 	 */
 	private static VectorType getVectorType(final boolean isAdjustable, final Integer fillPointer) {
 		return (isAdjustable || (fillPointer != null)) ? VectorType.INSTANCE : SimpleVectorType.INSTANCE;
+	}
+
+	public static <T extends LispStruct> VectorStruct<T> valueOf(final List<T> contents) {
+		return new VectorStruct<>(contents);
 	}
 
 	/**

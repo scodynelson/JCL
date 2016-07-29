@@ -31,6 +31,7 @@ import jcl.lang.SymbolStruct;
 import jcl.lang.array.StringStruct;
 import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
+import jcl.lang.factory.LispStructFactory;
 import jcl.lang.list.ListStruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -212,7 +213,7 @@ public abstract class InnerLambdaExpander extends MacroFunctionExpander<InnerLam
 		                                                          .toString();
 
 		final String paramName = "jcl." + expanderName + '_' + properFunctionNameString + "_Lambda_" + System.nanoTime();
-		final StringStruct paramJavaClassName = new StringStruct(paramName);
+		final StringStruct paramJavaClassName = LispStructFactory.toString(paramName);
 		final ListStruct paramJavaClassNameDeclaration = ListStruct.buildProperList(DeclarationStruct.JAVA_CLASS_NAME, paramJavaClassName);
 		declares.add(paramJavaClassNameDeclaration);
 

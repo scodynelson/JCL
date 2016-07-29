@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import jcl.lang.LispStruct;
-import jcl.lang.array.VectorStruct;
+import jcl.lang.factory.LispStructFactory;
 import jcl.lang.function.SystemBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
@@ -33,6 +33,6 @@ public final class ListToVectorFunction extends SystemBuiltInFunctionStruct {
 	public LispStruct apply(final Arguments arguments) {
 		final ListStruct list = arguments.getRequiredArgument(LIST_ARGUMENT, ListStruct.class);
 		final List<LispStruct> collect = list.stream().collect(Collectors.toList());
-		return new VectorStruct<>(collect);
+		return LispStructFactory.toVector(collect);
 	}
 }

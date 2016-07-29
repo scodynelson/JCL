@@ -9,7 +9,7 @@ import java.util.Optional;
 import javax.annotation.PostConstruct;
 
 import jcl.lang.LispStruct;
-import jcl.lang.array.StringStruct;
+import jcl.lang.factory.LispStructFactory;
 import jcl.lang.function.ReaderMacroFunction;
 import jcl.lang.list.NILStruct;
 import jcl.lang.readtable.Reader;
@@ -59,7 +59,7 @@ public class QuotationMarkReaderMacroFunction extends ReaderMacroFunction {
 		}
 
 		final String stringValue = stringBuilder.toString();
-		return new StringStruct(stringValue);
+		return LispStructFactory.toString(stringValue);
 	}
 
 	/**

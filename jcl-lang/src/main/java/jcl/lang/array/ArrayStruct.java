@@ -46,7 +46,7 @@ public class ArrayStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 	 * @param contents
 	 * 		the array contents
 	 */
-	public ArrayStruct(final List<Integer> dimensions, final List<TYPE> contents) {
+	protected ArrayStruct(final List<Integer> dimensions, final List<TYPE> contents) {
 		this(SimpleArrayType.INSTANCE, dimensions, contents, TType.INSTANCE, false);
 	}
 
@@ -62,7 +62,7 @@ public class ArrayStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 	 * @param isAdjustable
 	 * 		whether or not the array is adjustable
 	 */
-	public ArrayStruct(final List<Integer> dimensions, final List<TYPE> contents, final LispType elementType, final boolean isAdjustable) {
+	protected ArrayStruct(final List<Integer> dimensions, final List<TYPE> contents, final LispType elementType, final boolean isAdjustable) {
 		this(getArrayType(isAdjustable), dimensions, contents, elementType, isAdjustable);
 	}
 
@@ -162,6 +162,10 @@ public class ArrayStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 		for (final Integer dimension : dimensions) {
 			totalSize += dimension;
 		}
+	}
+
+	public static <T extends LispStruct> ArrayStruct<T> valueOf(final List<Integer> dimensions, final List<T> contents) {
+		return new ArrayStruct<>(dimensions, contents);
 	}
 
 	/**

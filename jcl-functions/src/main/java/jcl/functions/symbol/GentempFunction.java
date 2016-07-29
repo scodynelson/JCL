@@ -8,6 +8,7 @@ import jcl.lang.LispStruct;
 import jcl.lang.PackageStruct;
 import jcl.lang.PackageVariables;
 import jcl.lang.array.StringStruct;
+import jcl.lang.factory.LispStructFactory;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
@@ -26,7 +27,7 @@ public final class GentempFunction extends CommonLispBuiltInFunctionStruct {
 		super("Creates and returns a fresh symbol, interned in the indicated package.",
 		      FUNCTION_NAME,
 		      Parameters.forFunction(FUNCTION_NAME)
-		                .optionalParameter(PREFIX_ARGUMENT).withInitialValue(new StringStruct("T"))
+		                .optionalParameter(PREFIX_ARGUMENT).withInitialValue(LispStructFactory.toString("T"))
 		                .optionalParameter(PACKAGE_ARGUMENT).withInitialValue(PackageVariables.PACKAGE.getVariableValue())
 		);
 	}

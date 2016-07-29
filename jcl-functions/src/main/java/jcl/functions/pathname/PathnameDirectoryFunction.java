@@ -9,7 +9,7 @@ import java.util.List;
 
 import jcl.lang.CommonLispSymbols;
 import jcl.lang.LispStruct;
-import jcl.lang.array.StringStruct;
+import jcl.lang.factory.LispStructFactory;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
@@ -83,7 +83,7 @@ public final class PathnameDirectoryFunction extends CommonLispBuiltInFunctionSt
 						break;
 					case NULL:
 						final String directoryLevelString = directoryLevel.getDirectoryLevel();
-						directoryLevelValue = new StringStruct(directoryLevelString);
+						directoryLevelValue = LispStructFactory.toString(directoryLevelString);
 						break;
 				}
 

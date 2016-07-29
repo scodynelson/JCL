@@ -218,7 +218,7 @@ public class SymbolStruct extends BuiltInClassStruct {
 
 	@Override
 	public Supplier<StringStruct> asString() {
-		return () -> new StringStruct(name);
+		return () -> StringStruct.valueOf(name);
 	}
 
 	public boolean hasValue() {

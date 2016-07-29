@@ -26,7 +26,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 /**
  * The {@link StringStruct} is the object representation of a Lisp 'string' type.
  */
-public class StringStruct extends VectorStruct<CharacterStruct> {
+public final class StringStruct extends VectorStruct<CharacterStruct> {
 
 	/**
 	 * Public constructor.
@@ -34,7 +34,7 @@ public class StringStruct extends VectorStruct<CharacterStruct> {
 	 * @param stringValue
 	 * 		a Java string used for the string contents
 	 */
-	public StringStruct(final String stringValue) {
+	private StringStruct(final String stringValue) {
 		this(stringValue.length(), getCharList(stringValue), CharacterType.INSTANCE, false, null);
 	}
 
@@ -52,8 +52,8 @@ public class StringStruct extends VectorStruct<CharacterStruct> {
 	 * @param fillPointer
 	 * 		the string fillPointer
 	 */
-	public StringStruct(final int size, final List<CharacterStruct> contents, final CharacterType elementType,
-	                    final boolean isAdjustable, final Integer fillPointer) {
+	private StringStruct(final int size, final List<CharacterStruct> contents, final CharacterType elementType,
+	                     final boolean isAdjustable, final Integer fillPointer) {
 		super(getStringType(isAdjustable, fillPointer, elementType), size, contents, elementType, isAdjustable, fillPointer);
 	}
 
@@ -92,6 +92,10 @@ public class StringStruct extends VectorStruct<CharacterStruct> {
 			charList.add(characterStruct);
 		}
 		return charList;
+	}
+
+	public static StringStruct valueOf(final String stringValue) {
+		return new StringStruct(stringValue);
 	}
 
 	/**

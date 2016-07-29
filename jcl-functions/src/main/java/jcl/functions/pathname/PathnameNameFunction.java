@@ -6,7 +6,7 @@ package jcl.functions.pathname;
 
 import jcl.lang.CommonLispSymbols;
 import jcl.lang.LispStruct;
-import jcl.lang.array.StringStruct;
+import jcl.lang.factory.LispStructFactory;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
@@ -52,7 +52,7 @@ public final class PathnameNameFunction extends CommonLispBuiltInFunctionStruct 
 			final PathnameComponentType componentType = pathnameName.getComponentType();
 			returnValue = componentType.getValue();
 		} else {
-			returnValue = new StringStruct(name);
+			returnValue = LispStructFactory.toString(name);
 		}
 
 		return returnValue;

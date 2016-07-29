@@ -13,6 +13,7 @@ import javax.annotation.PostConstruct;
 import jcl.lang.LispStruct;
 import jcl.lang.array.VectorStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
+import jcl.lang.factory.LispStructFactory;
 import jcl.lang.function.ReaderMacroFunction;
 import jcl.lang.list.ConsStruct;
 import jcl.lang.list.ListStruct;
@@ -66,7 +67,7 @@ public class SharpLeftParenthesisReaderMacroFunction extends ReaderMacroFunction
 		if (backquoteLevel == 0) {
 			if (!numberArgument.isPresent()) {
 				final List<LispStruct> tokensAsJavaList = listToken.stream().collect(Collectors.toList());
-				return new VectorStruct<>(tokensAsJavaList);
+				return LispStructFactory.toVector(tokensAsJavaList);
 			}
 
 			final BigInteger numberArgumentValue = numberArgument.get();
@@ -106,6 +107,6 @@ public class SharpLeftParenthesisReaderMacroFunction extends ReaderMacroFunction
 			tokensAsJavaList.add(lastToken);
 		}
 
-		return new VectorStruct<>(tokensAsJavaList);
+		return LispStructFactory.toVector(tokensAsJavaList);
 	}
 }

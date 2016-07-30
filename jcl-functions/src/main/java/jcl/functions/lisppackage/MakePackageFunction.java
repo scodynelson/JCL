@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 import jcl.lang.CommonLispSymbols;
 import jcl.lang.LispStruct;
 import jcl.lang.PackageStruct;
-import jcl.lang.array.StringStruct;
+import jcl.lang.array.StringStructImpl;
 import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
@@ -66,7 +66,7 @@ public final class MakePackageFunction extends CommonLispBuiltInFunctionStruct {
 				= nicknamesList.stream()
 				               .map(LispStruct::asString)
 				               .map(Supplier::get)
-				               .map(StringStruct::getAsJavaString)
+				               .map(StringStructImpl::getAsJavaString)
 				               .collect(Collectors.toList());
 
 		final ListStruct usePackagesList = arguments.getKeyArgument(CommonLispSymbols.USE_KEYWORD, ListStruct.class);

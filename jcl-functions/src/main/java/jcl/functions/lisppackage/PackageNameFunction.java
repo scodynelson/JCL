@@ -6,7 +6,7 @@ package jcl.functions.lisppackage;
 
 import jcl.lang.LispStruct;
 import jcl.lang.PackageStruct;
-import jcl.lang.array.StringStruct;
+import jcl.lang.array.StringStructImpl;
 import jcl.lang.factory.LispStructFactory;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
@@ -37,12 +37,12 @@ public final class PackageNameFunction extends CommonLispBuiltInFunctionStruct {
 	/**
 	 * {@inheritDoc}
 	 * Application method for {@code package-name} package function that returns the {@link PackageStruct#name} as a
-	 * {@link StringStruct}.
+	 * {@link StringStructImpl}.
 	 *
 	 * @param lispStructs
 	 * 		the function parameters
 	 *
-	 * @return the {@link PackageStruct#name} as a {@link StringStruct}
+	 * @return the {@link PackageStruct#name} as a {@link StringStructImpl}
 	 */
 	@Override
 	public LispStruct apply(final Arguments arguments) {

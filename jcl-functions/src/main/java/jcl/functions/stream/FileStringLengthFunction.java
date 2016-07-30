@@ -8,7 +8,7 @@ import java.math.BigInteger;
 
 import jcl.lang.CharacterStruct;
 import jcl.lang.LispStruct;
-import jcl.lang.array.StringStruct;
+import jcl.lang.array.StringStructImpl;
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
@@ -40,8 +40,8 @@ public final class FileStringLengthFunction extends CommonLispBuiltInFunctionStr
 
 		if (lispStruct2 instanceof CharacterStruct) {
 			return IntegerStruct.ONE;
-		} else if (lispStruct2 instanceof StringStruct) {
-			final Long length = ((StringStruct) lispStruct2).length();
+		} else if (lispStruct2 instanceof StringStructImpl) {
+			final Long length = ((StringStructImpl) lispStruct2).length();
 			return IntegerStruct.valueOf(BigInteger.valueOf(length));
 		} else {
 			throw new TypeErrorException("UNCAUGHT TYPE ERROR.");

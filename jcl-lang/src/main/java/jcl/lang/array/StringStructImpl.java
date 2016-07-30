@@ -26,9 +26,9 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
- * The {@link StringStruct} is the object representation of a Lisp 'string' type.
+ * The {@link StringStructImpl} is the object representation of a Lisp 'string' type.
  */
-public final class StringStruct extends VectorStruct<CharacterStruct> {
+public final class StringStructImpl extends VectorStructImpl<CharacterStruct> {
 
 	/**
 	 * Public constructor.
@@ -36,7 +36,7 @@ public final class StringStruct extends VectorStruct<CharacterStruct> {
 	 * @param stringValue
 	 * 		a Java string used for the string contents
 	 */
-	private StringStruct(final String stringValue) {
+	private StringStructImpl(final String stringValue) {
 		this(stringValue.length(), getCharList(stringValue), CharacterType.INSTANCE, false, null);
 	}
 
@@ -54,8 +54,8 @@ public final class StringStruct extends VectorStruct<CharacterStruct> {
 	 * @param fillPointer
 	 * 		the string fillPointer
 	 */
-	private StringStruct(final int size, final List<CharacterStruct> contents, final CharacterType elementType,
-	                     final boolean isAdjustable, final Integer fillPointer) {
+	private StringStructImpl(final int size, final List<CharacterStruct> contents, final CharacterType elementType,
+	                         final boolean isAdjustable, final Integer fillPointer) {
 		super(getStringType(isAdjustable, fillPointer, elementType), size, contents, elementType, isAdjustable, fillPointer);
 	}
 
@@ -96,8 +96,8 @@ public final class StringStruct extends VectorStruct<CharacterStruct> {
 		return charList;
 	}
 
-	public static StringStruct valueOf(final String stringValue) {
-		return new StringStruct(stringValue);
+	public static StringStructImpl valueOf(final String stringValue) {
+		return new StringStructImpl(stringValue);
 	}
 
 	/**
@@ -168,7 +168,7 @@ public final class StringStruct extends VectorStruct<CharacterStruct> {
 	}
 
 	@Override
-	public Supplier<StringStruct> asString() {
+	public Supplier<StringStructImpl> asString() {
 		return () -> this;
 	}
 

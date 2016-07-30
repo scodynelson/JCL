@@ -7,7 +7,7 @@ package jcl.functions.stream;
 import jcl.lang.CommonLispSymbols;
 import jcl.lang.LispStruct;
 import jcl.lang.TStruct;
-import jcl.lang.array.StringStruct;
+import jcl.lang.array.StringStructImpl;
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
@@ -38,7 +38,7 @@ public final class WriteStringFunction extends CommonLispBuiltInFunctionStruct {
 
 	@Override
 	public LispStruct apply(final Arguments arguments) {
-		final StringStruct stringParam = arguments.getRequiredArgument(STRING_ARGUMENT, StringStruct.class);
+		final StringStructImpl stringParam = arguments.getRequiredArgument(STRING_ARGUMENT, StringStructImpl.class);
 		final LispStruct lispStruct = arguments.getOptionalArgument(OUTPUT_STREAM_ARGUMENT);
 
 		final OutputStream outputStream;

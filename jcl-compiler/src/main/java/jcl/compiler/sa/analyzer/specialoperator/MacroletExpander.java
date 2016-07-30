@@ -25,7 +25,7 @@ import jcl.lang.DeclarationStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.SpecialOperatorStruct;
 import jcl.lang.SymbolStruct;
-import jcl.lang.array.StringStruct;
+import jcl.lang.array.StringStructImpl;
 import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.factory.LispStructFactory;
@@ -189,7 +189,7 @@ public class MacroletExpander extends MacroFunctionExpander<InnerLambdaStruct> {
 		final BodyProcessingResult bodyProcessingResult = bodyWithDeclaresAndDocStringAnalyzer.analyze(forms);
 
 		final List<LispStruct> declares = bodyProcessingResult.getDeclares();
-		final StringStruct docString = bodyProcessingResult.getDocString();
+		final StringStructImpl docString = bodyProcessingResult.getDocString();
 		final List<LispStruct> bodyForms = bodyProcessingResult.getBodyForms();
 
 		// NOTE: Make Dotted list here so the 'contents' of the body get added to the block
@@ -206,7 +206,7 @@ public class MacroletExpander extends MacroFunctionExpander<InnerLambdaStruct> {
 		                                                          .toString();
 
 		final String macroletParamName = "jcl.MACROLET_" + properFunctionNameString + "_MacroLambda_" + System.nanoTime();
-		final StringStruct macroletParamJavaClassName = LispStructFactory.toString(macroletParamName);
+		final StringStructImpl macroletParamJavaClassName = LispStructFactory.toString(macroletParamName);
 		final ListStruct macroletParamJavaClassNameDeclaration = LispStructFactory.toProperList(DeclarationStruct.JAVA_CLASS_NAME, macroletParamJavaClassName);
 		declares.add(macroletParamJavaClassNameDeclaration);
 

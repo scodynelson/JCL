@@ -8,7 +8,7 @@ import jcl.compiler.environment.Environment;
 import jcl.compiler.environment.binding.lambdalist.OrdinaryLambdaList;
 import jcl.compiler.struct.CompilerSpecialOperatorStruct;
 import jcl.compiler.struct.specialoperator.PrognStruct;
-import jcl.lang.array.StringStruct;
+import jcl.lang.array.StringStructImpl;
 
 public class LambdaStruct extends CompilerSpecialOperatorStruct {
 
@@ -16,13 +16,13 @@ public class LambdaStruct extends CompilerSpecialOperatorStruct {
 
 	private final OrdinaryLambdaList lambdaListBindings;
 
-	private final StringStruct docString;
+	private final StringStructImpl docString;
 
 	private final PrognStruct forms;
 
 	private final Environment lambdaEnvironment;
 
-	public LambdaStruct(final String className, final OrdinaryLambdaList lambdaListBindings, final StringStruct docString,
+	public LambdaStruct(final String className, final OrdinaryLambdaList lambdaListBindings, final StringStructImpl docString,
 	                    final PrognStruct forms, final Environment lambdaEnvironment) {
 		this.className = className;
 		this.lambdaListBindings = lambdaListBindings;
@@ -39,7 +39,7 @@ public class LambdaStruct extends CompilerSpecialOperatorStruct {
 		return lambdaListBindings;
 	}
 
-	public StringStruct getDocString() {
+	public StringStructImpl getDocString() {
 		return docString;
 	}
 

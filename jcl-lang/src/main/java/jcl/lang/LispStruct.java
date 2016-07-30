@@ -6,7 +6,7 @@ package jcl.lang;
 
 import java.util.function.Supplier;
 
-import jcl.lang.array.StringStruct;
+import jcl.lang.array.StringStructImpl;
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.pathname.PathnameStruct;
 import jcl.type.LispType;
@@ -98,7 +98,7 @@ public interface LispStruct {
 	 *
 	 * @return a converted string, or a throw {@link TypeErrorException}
 	 */
-	default Supplier<StringStruct> asString() {
+	default Supplier<StringStructImpl> asString() {
 		throw new TypeErrorException("Type cannot be converted to String.");
 	}
 }

@@ -7,7 +7,7 @@ package jcl.functions.symbol;
 import jcl.lang.LispStruct;
 import jcl.lang.PackageStruct;
 import jcl.lang.PackageVariables;
-import jcl.lang.array.StringStruct;
+import jcl.lang.array.StringStructImpl;
 import jcl.lang.factory.LispStructFactory;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
@@ -34,7 +34,7 @@ public final class GentempFunction extends CommonLispBuiltInFunctionStruct {
 
 	@Override
 	public LispStruct apply(final Arguments arguments) {
-		String prefix = arguments.getOptionalArgument(PREFIX_ARGUMENT, StringStruct.class).getAsJavaString();
+		String prefix = arguments.getOptionalArgument(PREFIX_ARGUMENT, StringStructImpl.class).getAsJavaString();
 		PackageStruct aPackage = arguments.getOptionalArgument(PACKAGE_ARGUMENT).asPackage().get();
 
 		String symbolName = prefix + gentempCounter++;

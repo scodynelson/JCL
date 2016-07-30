@@ -13,7 +13,7 @@ import jcl.lang.CharacterStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.PackageStruct;
 import jcl.lang.PrinterVariables;
-import jcl.lang.array.StringStruct;
+import jcl.lang.array.StringStructImpl;
 import jcl.lang.list.NILStruct;
 import jcl.lang.number.IntegerStruct;
 import jcl.type.BaseCharType;
@@ -130,8 +130,8 @@ public final class CharacterStructImpl extends BuiltInClassStruct implements Cha
 	}
 
 	@Override
-	public Supplier<StringStruct> asString() {
-		return () -> StringStruct.valueOf(getCharacter().toString());
+	public Supplier<StringStructImpl> asString() {
+		return () -> StringStructImpl.valueOf(getCharacter().toString());
 	}
 
 	@Override
@@ -245,8 +245,8 @@ public final class CharacterStructImpl extends BuiltInClassStruct implements Cha
 	}
 
 	@Override
-	public StringStruct charName() {
-		return StringStruct.valueOf(Character.getName(codePoint));
+	public StringStructImpl charName() {
+		return StringStructImpl.valueOf(Character.getName(codePoint));
 	}
 
 	@Override

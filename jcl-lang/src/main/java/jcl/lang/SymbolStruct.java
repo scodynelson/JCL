@@ -4,7 +4,7 @@ import java.util.Stack;
 import java.util.function.Supplier;
 
 import com.ibm.icu.lang.UCharacter;
-import jcl.lang.array.StringStruct;
+import jcl.lang.array.StringStructImpl;
 import jcl.lang.character.CharacterStructImpl;
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.condition.exception.SimpleErrorException;
@@ -222,8 +222,8 @@ public class SymbolStruct extends BuiltInClassStruct {
 	}
 
 	@Override
-	public Supplier<StringStruct> asString() {
-		return () -> StringStruct.valueOf(name);
+	public Supplier<StringStructImpl> asString() {
+		return () -> StringStructImpl.valueOf(name);
 	}
 
 	public boolean hasValue() {

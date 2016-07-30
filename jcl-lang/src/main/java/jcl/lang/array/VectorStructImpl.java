@@ -16,12 +16,12 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
- * The {@link VectorStruct} is the object representation of a Lisp 'vector' type.
+ * The {@link VectorStructImpl} is the object representation of a Lisp 'vector' type.
  *
  * @param <TYPE>
  * 		the type of the vector contents
  */
-public class VectorStruct<TYPE extends LispStruct> extends ArrayStruct<TYPE> implements SequenceStruct {
+public class VectorStructImpl<TYPE extends LispStruct> extends ArrayStructImpl<TYPE> implements SequenceStruct {
 
 	protected Integer fillPointer;
 
@@ -31,7 +31,7 @@ public class VectorStruct<TYPE extends LispStruct> extends ArrayStruct<TYPE> imp
 	 * @param contents
 	 * 		the vector contents
 	 */
-	protected VectorStruct(final List<TYPE> contents) {
+	protected VectorStructImpl(final List<TYPE> contents) {
 		this(contents.size(), contents, TType.INSTANCE, false, null);
 	}
 
@@ -49,8 +49,8 @@ public class VectorStruct<TYPE extends LispStruct> extends ArrayStruct<TYPE> imp
 	 * @param fillPointer
 	 * 		the vector fillPointer
 	 */
-	protected VectorStruct(final int size, final List<TYPE> contents, final LispType elementType,
-	                    final boolean isAdjustable, final Integer fillPointer) {
+	protected VectorStructImpl(final int size, final List<TYPE> contents, final LispType elementType,
+	                           final boolean isAdjustable, final Integer fillPointer) {
 		this(getVectorType(isAdjustable, fillPointer), size, contents, elementType, isAdjustable, fillPointer);
 	}
 
@@ -70,9 +70,9 @@ public class VectorStruct<TYPE extends LispStruct> extends ArrayStruct<TYPE> imp
 	 * @param fillPointer
 	 * 		the vector fillPointer
 	 */
-	protected VectorStruct(final VectorType vectorType,
-	                       final int size, final List<TYPE> contents, final LispType elementType,
-	                       final boolean isAdjustable, final Integer fillPointer) {
+	protected VectorStructImpl(final VectorType vectorType,
+	                           final int size, final List<TYPE> contents, final LispType elementType,
+	                           final boolean isAdjustable, final Integer fillPointer) {
 		super(vectorType, Collections.singletonList(size), contents, elementType, isAdjustable);
 
 		this.fillPointer = fillPointer;
@@ -92,8 +92,8 @@ public class VectorStruct<TYPE extends LispStruct> extends ArrayStruct<TYPE> imp
 		return (isAdjustable || (fillPointer != null)) ? VectorType.INSTANCE : SimpleVectorType.INSTANCE;
 	}
 
-	public static <T extends LispStruct> VectorStruct<T> valueOf(final List<T> contents) {
-		return new VectorStruct<>(contents);
+	public static <T extends LispStruct> VectorStructImpl<T> valueOf(final List<T> contents) {
+		return new VectorStructImpl<>(contents);
 	}
 
 	/**
@@ -202,7 +202,7 @@ public class VectorStruct<TYPE extends LispStruct> extends ArrayStruct<TYPE> imp
 		if (obj.getClass() != getClass()) {
 			return false;
 		}
-		final VectorStruct<?> rhs = (VectorStruct) obj;
+		final VectorStructImpl<?> rhs = (VectorStructImpl) obj;
 		return new EqualsBuilder().appendSuper(super.equals(obj))
 		                          .append(fillPointer, rhs.fillPointer)
 		                          .isEquals();

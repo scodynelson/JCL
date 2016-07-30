@@ -12,10 +12,10 @@ import jcl.lang.CharacterStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.PackageStruct;
 import jcl.lang.SymbolStruct;
-import jcl.lang.array.ArrayStruct;
-import jcl.lang.array.BitVectorStruct;
-import jcl.lang.array.StringStruct;
-import jcl.lang.array.VectorStruct;
+import jcl.lang.array.ArrayStructImpl;
+import jcl.lang.array.BitVectorStructImpl;
+import jcl.lang.array.StringStructImpl;
+import jcl.lang.array.VectorStructImpl;
 import jcl.lang.character.CharacterStructImpl;
 import jcl.lang.function.EquatorFunctionStruct;
 import jcl.lang.hashtable.HashTableStruct;
@@ -53,20 +53,20 @@ public final class LispStructFactory {
 	 * Array
 	 */
 
-	public static <T extends LispStruct> ArrayStruct<T> toArray(final List<Integer> dimensions, final List<T> contents) {
-		return ArrayStruct.valueOf(dimensions, contents);
+	public static <T extends LispStruct> ArrayStructImpl<T> toArray(final List<Integer> dimensions, final List<T> contents) {
+		return ArrayStructImpl.valueOf(dimensions, contents);
 	}
 
 	/*
 	 * BitVector
 	 */
 
-	public static BitVectorStruct toBitVector(final String bitString) {
-		return BitVectorStruct.valueOf(bitString);
+	public static BitVectorStructImpl toBitVector(final String bitString) {
+		return BitVectorStructImpl.valueOf(bitString);
 	}
 
-	public static BitVectorStruct toBitVector(final List<IntegerStruct> contents) {
-		return BitVectorStruct.valueOfCont(contents);
+	public static BitVectorStructImpl toBitVector(final List<IntegerStruct> contents) {
+		return BitVectorStructImpl.valueOfCont(contents);
 	}
 
 	/*
@@ -512,8 +512,8 @@ public final class LispStructFactory {
 	 * String
 	 */
 
-	public static StringStruct toString(final String stringValue) {
-		return StringStruct.valueOf(stringValue);
+	public static StringStructImpl toString(final String stringValue) {
+		return StringStructImpl.valueOf(stringValue);
 	}
 
 	/*
@@ -528,7 +528,7 @@ public final class LispStructFactory {
 	 * Vector
 	 */
 
-	public static <T extends LispStruct> VectorStruct<T> toVector(final List<T> contents) {
-		return VectorStruct.valueOf(contents);
+	public static <T extends LispStruct> VectorStructImpl<T> toVector(final List<T> contents) {
+		return VectorStructImpl.valueOf(contents);
 	}
 }

@@ -28,7 +28,7 @@ import jcl.lang.DeclarationStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.SpecialOperatorStruct;
 import jcl.lang.SymbolStruct;
-import jcl.lang.array.StringStruct;
+import jcl.lang.array.StringStructImpl;
 import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.factory.LispStructFactory;
@@ -194,7 +194,7 @@ public abstract class InnerLambdaExpander extends MacroFunctionExpander<InnerLam
 		final BodyProcessingResult bodyProcessingResult = bodyWithDeclaresAndDocStringAnalyzer.analyze(forms);
 
 		final List<LispStruct> declares = bodyProcessingResult.getDeclares();
-		final StringStruct docString = bodyProcessingResult.getDocString();
+		final StringStructImpl docString = bodyProcessingResult.getDocString();
 		final List<LispStruct> bodyForms = bodyProcessingResult.getBodyForms();
 
 		// NOTE: Make Dotted list here so the 'contents' of the body get added to the block
@@ -213,7 +213,7 @@ public abstract class InnerLambdaExpander extends MacroFunctionExpander<InnerLam
 		                                                          .toString();
 
 		final String paramName = "jcl." + expanderName + '_' + properFunctionNameString + "_Lambda_" + System.nanoTime();
-		final StringStruct paramJavaClassName = LispStructFactory.toString(paramName);
+		final StringStructImpl paramJavaClassName = LispStructFactory.toString(paramName);
 		final ListStruct paramJavaClassNameDeclaration = LispStructFactory.toProperList(DeclarationStruct.JAVA_CLASS_NAME, paramJavaClassName);
 		declares.add(paramJavaClassNameDeclaration);
 

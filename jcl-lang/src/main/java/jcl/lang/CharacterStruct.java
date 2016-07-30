@@ -1,6 +1,6 @@
 package jcl.lang;
 
-import jcl.lang.array.StringStruct;
+import jcl.lang.array.StringStructImpl;
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.list.NILStruct;
 import jcl.lang.number.IntegerStruct;
@@ -540,11 +540,11 @@ public interface CharacterStruct extends LispStruct {
 	IntegerStruct charCode();
 
 	/**
-	 * Returns the {@link StringStruct} representing the name of this CharacterStruct.
+	 * Returns the {@link StringStructImpl} representing the name of this CharacterStruct.
 	 *
-	 * @return the {@link StringStruct} representing the name of this CharacterStruc
+	 * @return the {@link StringStructImpl} representing the name of this CharacterStruc
 	 */
-	StringStruct charName();
+	StringStructImpl charName();
 
 	/**
 	 * Returns the character encoding of the CharacterStruct. This defaults to {@link #charCode()}, as the

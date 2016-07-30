@@ -9,7 +9,7 @@ import java.util.Optional;
 import javax.annotation.PostConstruct;
 
 import jcl.lang.LispStruct;
-import jcl.lang.array.BitVectorStruct;
+import jcl.lang.array.BitVectorStructImpl;
 import jcl.lang.condition.exception.ReaderErrorException;
 import jcl.lang.factory.LispStructFactory;
 import jcl.lang.function.ReaderMacroFunction;
@@ -66,16 +66,16 @@ public class SharpAsteriskReaderMacroFunction extends ReaderMacroFunction {
 
 	/**
 	 * Handles the processing of the number argument when parsing the provided {@code token} string into a {@link
-	 * BitVectorStruct}.
+	 * BitVectorStructImpl}.
 	 *
 	 * @param tokenString
 	 * 		the bit-vector contents
 	 * @param numberArgument
 	 * 		the number argument passed to be used as the bit-vector length
 	 *
-	 * @return the properly created {@link BitVectorStruct} taking care of the proper bit-vector length
+	 * @return the properly created {@link BitVectorStructImpl} taking care of the proper bit-vector length
 	 */
-	private static BitVectorStruct handleNumberArgument(final String tokenString, final BigInteger numberArgument) {
+	private static BitVectorStructImpl handleNumberArgument(final String tokenString, final BigInteger numberArgument) {
 
 		if (StringUtils.isEmpty(tokenString) && (numberArgument.compareTo(BigInteger.ZERO) > 0)) {
 			throw new ReaderErrorException("At least one bit must be supplied for non-zero #* bit-vectors.");

@@ -19,12 +19,12 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
- * The {@link ArrayStruct} is the object representation of a Lisp 'array' type.
+ * The {@link ArrayStructImpl} is the object representation of a Lisp 'array' type.
  *
  * @param <TYPE>
  * 		the type of the array contents
  */
-public class ArrayStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
+public class ArrayStructImpl<TYPE extends LispStruct> extends BuiltInClassStruct {
 
 	protected List<TYPE> contents;
 
@@ -46,7 +46,7 @@ public class ArrayStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 	 * @param contents
 	 * 		the array contents
 	 */
-	protected ArrayStruct(final List<Integer> dimensions, final List<TYPE> contents) {
+	protected ArrayStructImpl(final List<Integer> dimensions, final List<TYPE> contents) {
 		this(SimpleArrayType.INSTANCE, dimensions, contents, TType.INSTANCE, false);
 	}
 
@@ -62,7 +62,7 @@ public class ArrayStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 	 * @param isAdjustable
 	 * 		whether or not the array is adjustable
 	 */
-	protected ArrayStruct(final List<Integer> dimensions, final List<TYPE> contents, final LispType elementType, final boolean isAdjustable) {
+	protected ArrayStructImpl(final List<Integer> dimensions, final List<TYPE> contents, final LispType elementType, final boolean isAdjustable) {
 		this(getArrayType(isAdjustable), dimensions, contents, elementType, isAdjustable);
 	}
 
@@ -80,8 +80,8 @@ public class ArrayStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 	 * @param isAdjustable
 	 * 		whether or not the array is adjustable
 	 */
-	protected ArrayStruct(final ArrayType arrayType,
-	                      final List<Integer> dimensions, final List<TYPE> contents, final LispType elementType, final boolean isAdjustable) {
+	protected ArrayStructImpl(final ArrayType arrayType,
+	                          final List<Integer> dimensions, final List<TYPE> contents, final LispType elementType, final boolean isAdjustable) {
 		super(arrayType, null, null);
 
 		// Check input data
@@ -164,8 +164,8 @@ public class ArrayStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 		}
 	}
 
-	public static <T extends LispStruct> ArrayStruct<T> valueOf(final List<Integer> dimensions, final List<T> contents) {
-		return new ArrayStruct<>(dimensions, contents);
+	public static <T extends LispStruct> ArrayStructImpl<T> valueOf(final List<Integer> dimensions, final List<T> contents) {
+		return new ArrayStructImpl<>(dimensions, contents);
 	}
 
 	/**
@@ -323,7 +323,7 @@ public class ArrayStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 		if (obj.getClass() != getClass()) {
 			return false;
 		}
-		final ArrayStruct<?> rhs = (ArrayStruct) obj;
+		final ArrayStructImpl<?> rhs = (ArrayStructImpl) obj;
 		return new EqualsBuilder().appendSuper(super.equals(obj))
 		                          .append(contents, rhs.contents)
 		                          .append(dimensions, rhs.dimensions)

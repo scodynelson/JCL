@@ -23,7 +23,7 @@ import jcl.compiler.function.expanders.CompiledMacroFunctionExpander;
 import jcl.lang.LispStruct;
 import jcl.lang.PackageStruct;
 import jcl.lang.SymbolStruct;
-import jcl.lang.character.CharacterStruct;
+import jcl.lang.character.CharacterStructImpl;
 import jcl.lang.list.NILStruct;
 
 @SuppressWarnings("all")
@@ -157,7 +157,7 @@ public class TestGroundMacroFunctionExpanderGenerator extends CompiledMacroFunct
 
 	@Override
 	protected LispStruct internalApply(final Closure currentClosure) {
-		return CharacterStruct.valueOf(97);
+		return CharacterStructImpl.valueOf(97);
 	}
 
 	@Override
@@ -166,13 +166,13 @@ public class TestGroundMacroFunctionExpanderGenerator extends CompiledMacroFunct
 		final PackageStruct pkg1 = PackageStruct.findPackage("SYSTEM");
 		final SymbolStruct symbol1 = pkg1.findSymbol("SYMBOL1").getSymbol();
 		if (symbolBinding.equals(symbol1)) {
-			return CharacterStruct.valueOf(100);
+			return CharacterStructImpl.valueOf(100);
 		}
 
 		final PackageStruct pkg2 = PackageStruct.findPackage("SYSTEM");
 		final SymbolStruct symbol2 = pkg2.findSymbol("SYMBOL2").getSymbol();
 		if (symbolBinding.equals(symbol2)) {
-			return CharacterStruct.valueOf(200);
+			return CharacterStructImpl.valueOf(200);
 		}
 
 		return NILStruct.INSTANCE;

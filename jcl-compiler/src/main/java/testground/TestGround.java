@@ -22,7 +22,7 @@ import jcl.lang.PackageStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.TStruct;
 import jcl.lang.ValuesStruct;
-import jcl.lang.character.CharacterStruct;
+import jcl.lang.character.CharacterStructImpl;
 import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.factory.LispStructFactory;
 import jcl.lang.function.FunctionStruct;
@@ -51,7 +51,7 @@ public class TestGround {
 
 		LispStruct result;
 		try {
-			result = CharacterStruct.valueOf(97);
+			result = CharacterStructImpl.valueOf(97);
 		} catch (final ReturnFromException rte) {
 			final SymbolStruct rteName = rte.getName();
 			if (rteName.equals(name)) {
@@ -68,32 +68,32 @@ public class TestGround {
 		final PackageStruct pkg = PackageStruct.findPackage("SYSTEM");
 		final SymbolStruct name = pkg.findSymbol("FOO").getSymbol();
 
-		final LispStruct result = CharacterStruct.valueOf(97);
+		final LispStruct result = CharacterStructImpl.valueOf(97);
 
 		throw new ReturnFromException(name, result);
 	}
 
 	private Object ifGen(final Closure currentClosure) {
 
-		LispStruct testObj = CharacterStruct.valueOf(97);
+		LispStruct testObj = CharacterStructImpl.valueOf(97);
 		testObj = ValuesStruct.extractPrimaryValue(testObj);
 
 		final LispStruct result;
 		if (!testObj.equals(NILStruct.INSTANCE)) {
-			result = CharacterStruct.valueOf(197);
+			result = CharacterStructImpl.valueOf(197);
 		} else {
-			result = CharacterStruct.valueOf(297);
+			result = CharacterStructImpl.valueOf(297);
 		}
 		return result;
 	}
 
 	private Object catchGen(final Closure currentClosure) {
 
-		final LispStruct catchTag = CharacterStruct.valueOf(97);
+		final LispStruct catchTag = CharacterStructImpl.valueOf(97);
 
 		LispStruct resultForm;
 		try {
-			resultForm = CharacterStruct.valueOf(197);
+			resultForm = CharacterStructImpl.valueOf(197);
 		} catch (final ThrowException te) {
 			final LispStruct teCatchTag = te.getCatchTag();
 			if (teCatchTag.equals(catchTag)) {
@@ -107,8 +107,8 @@ public class TestGround {
 
 	private Object throwGen(final Closure currentClosure) {
 
-		final LispStruct catchTag = CharacterStruct.valueOf(97);
-		final LispStruct resultForm = CharacterStruct.valueOf(197);
+		final LispStruct catchTag = CharacterStructImpl.valueOf(97);
+		final LispStruct resultForm = CharacterStructImpl.valueOf(197);
 
 		throw new ThrowException(catchTag, resultForm);
 	}
@@ -122,7 +122,7 @@ public class TestGround {
 	}
 
 	private Object characterGen() {
-		return CharacterStruct.valueOf(66544564);
+		return CharacterStructImpl.valueOf(66544564);
 	}
 
 	private Object floatGen() {
@@ -148,15 +148,15 @@ public class TestGround {
 
 	private Object valuesGen() {
 		final List<LispStruct> valuesList = new ArrayList<>();
-		final LispStruct value = CharacterStruct.valueOf(97);
+		final LispStruct value = CharacterStructImpl.valueOf(97);
 		valuesList.add(value);
 
 		return ValuesStruct.valueOf(valuesList);
 	}
 
 	private Object consGen() {
-		final LispStruct car = CharacterStruct.valueOf(97);
-		final LispStruct cdr = CharacterStruct.valueOf(197);
+		final LispStruct car = CharacterStructImpl.valueOf(97);
+		final LispStruct cdr = CharacterStructImpl.valueOf(197);
 		return ConsStruct.valueOf(car, cdr);
 	}
 
@@ -196,9 +196,9 @@ public class TestGround {
 	private Object unwindProtectGen(final Closure currentClosure) {
 		final LispStruct result;
 		try {
-			result = CharacterStruct.valueOf(97);
+			result = CharacterStructImpl.valueOf(97);
 		} finally {
-			CharacterStruct.valueOf(197);
+			CharacterStructImpl.valueOf(197);
 		}
 		return result;
 	}
@@ -233,7 +233,7 @@ public class TestGround {
 		final PackageStruct pkg = PackageStruct.findPackage("SYSTEM");
 		final SymbolStruct symbol = pkg.findSymbol("FOO").getSymbol();
 
-		LispStruct value = CharacterStruct.valueOf(97);
+		LispStruct value = CharacterStructImpl.valueOf(97);
 		value = ValuesStruct.extractPrimaryValue(value);
 		symbol.setValue(value);
 		if (closureBindings != null) {
@@ -252,8 +252,8 @@ public class TestGround {
 
 	private Object quoteListGen() {
 
-		final LispStruct element1 = CharacterStruct.valueOf(97);
-		final LispStruct element2 = CharacterStruct.valueOf(197);
+		final LispStruct element1 = CharacterStructImpl.valueOf(97);
+		final LispStruct element2 = CharacterStructImpl.valueOf(197);
 		return ConsStruct.valueOf(element1, element2);
 	}
 
@@ -266,14 +266,14 @@ public class TestGround {
 		final PackageStruct pkg = PackageStruct.findPackage("SYSTEM");
 		final SymbolStruct symbol = pkg.findSymbol("FOO").getSymbol();
 
-		LispStruct initForm = CharacterStruct.valueOf(97);
+		LispStruct initForm = CharacterStructImpl.valueOf(97);
 		initForm = ValuesStruct.extractPrimaryValue(initForm);
 		symbol.bindLexicalValue(initForm);
 		closureBindings.put(symbol, initForm);
 
 		final LispStruct result;
 		try {
-			result = CharacterStruct.valueOf(197);
+			result = CharacterStructImpl.valueOf(197);
 		} finally {
 			symbol.unbindLexicalValue();
 		}
@@ -290,7 +290,7 @@ public class TestGround {
 
 		final LispStruct result;
 		try {
-			result = CharacterStruct.valueOf(197);
+			result = CharacterStructImpl.valueOf(197);
 		} finally {
 			symbol.unbindSymbolMacroExpander();
 		}
@@ -319,7 +319,7 @@ public class TestGround {
 		final FunctionStruct function = symbol.getFunction();
 
 		final LispStruct[] args = new LispStruct[12345678];
-		final CharacterStruct arg1 = CharacterStruct.valueOf(97);
+		final CharacterStructImpl arg1 = CharacterStructImpl.valueOf(97);
 		args[1234677] = arg1;
 
 		return function.apply(args);
@@ -330,7 +330,7 @@ public class TestGround {
 		final FunctionStruct function = new TestGroundLambdaFunction(currentClosure);
 
 		final LispStruct[] args = new LispStruct[12345678];
-		final CharacterStruct arg1 = CharacterStruct.valueOf(97);
+		final CharacterStructImpl arg1 = CharacterStructImpl.valueOf(97);
 		args[1234677] = arg1;
 
 		return function.apply(args);
@@ -354,7 +354,7 @@ public class TestGround {
 
 		final LispStruct result;
 		try {
-			result = CharacterStruct.valueOf(197);
+			result = CharacterStructImpl.valueOf(197);
 		} finally {
 			symbol.unbindFunction();
 		}
@@ -363,14 +363,14 @@ public class TestGround {
 
 	private Object multipleValueProg1Gen(final Closure currentClosure) {
 
-		final LispStruct firstForm = CharacterStruct.valueOf(97);
-		final LispStruct forms = CharacterStruct.valueOf(197);
+		final LispStruct firstForm = CharacterStructImpl.valueOf(97);
+		final LispStruct forms = CharacterStructImpl.valueOf(197);
 		return firstForm;
 	}
 
 	private Object multipleValueCallGen(final Closure currentClosure) {
 
-		final LispStruct firstForm = CharacterStruct.valueOf(97);
+		final LispStruct firstForm = CharacterStructImpl.valueOf(97);
 		if (!(firstForm instanceof FunctionStruct)) {
 			throw new ProgramErrorException("MULTIPLE-VALUE-CALL: Invalid function form: " + firstForm);
 		}
@@ -378,7 +378,7 @@ public class TestGround {
 		final FunctionStruct functionForm = (FunctionStruct) firstForm;
 
 		final List<LispStruct> argsList = new ArrayList<>();
-		final LispStruct form1 = CharacterStruct.valueOf(197);
+		final LispStruct form1 = CharacterStructImpl.valueOf(197);
 		ValuesStruct.addValuesToList(argsList, form1);
 
 		LispStruct[] args = new LispStruct[argsList.size()];
@@ -428,7 +428,7 @@ public class TestGround {
 
 		final LispStruct result;
 		try {
-			result = CharacterStruct.valueOf(197);
+			result = CharacterStructImpl.valueOf(197);
 		} finally {
 			for (final LispStruct var : varsAsJavaList) {
 				// NOTE: We can safely cast here since we checked the type earlier

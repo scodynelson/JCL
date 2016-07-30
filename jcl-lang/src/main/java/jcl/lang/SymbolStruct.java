@@ -4,7 +4,7 @@ import java.util.Stack;
 import java.util.function.Supplier;
 
 import jcl.lang.array.StringStruct;
-import jcl.lang.character.CharacterStruct;
+import jcl.lang.character.CharacterStructImpl;
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.condition.exception.SimpleErrorException;
 import jcl.lang.function.FunctionStruct;
@@ -193,18 +193,18 @@ public class SymbolStruct extends BuiltInClassStruct {
 	}
 
 	@Override
-	public Supplier<CharacterStruct> asCharacter() {
+	public Supplier<CharacterStructImpl> asCharacter() {
 		return () -> {
 			if (name.length() != 1) {
 				throw new SimpleErrorException("Symbol name is not of length one: " + name);
 			}
-			return CharacterStruct.valueOf(name.charAt(0));
+			return CharacterStructImpl.valueOf(name.charAt(0));
 		};
 	}
 
 	@Override
-	public Supplier<CharacterStruct> asNamedCharacter() {
-		return () -> CharacterStruct.nameChar(name);
+	public Supplier<CharacterStructImpl> asNamedCharacter() {
+		return () -> CharacterStructImpl.nameChar(name);
 	}
 
 	/**

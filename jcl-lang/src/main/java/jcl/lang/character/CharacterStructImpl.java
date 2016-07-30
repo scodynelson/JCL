@@ -24,9 +24,9 @@ import jcl.type.StandardCharType;
 import org.apache.commons.lang3.CharUtils;
 
 /**
- * The {@link CharacterStruct} is the object representation of a Lisp 'character' type.
+ * The {@link CharacterStructImpl} is the object representation of a Lisp 'character' type.
  */
-public class CharacterStruct extends BuiltInClassStruct {
+public class CharacterStructImpl extends BuiltInClassStruct {
 
 	/**
 	 * The code point of the character.
@@ -39,7 +39,7 @@ public class CharacterStruct extends BuiltInClassStruct {
 	 * @param codePoint
 	 * 		the character {@link #codePoint} value
 	 */
-	protected CharacterStruct(final int codePoint) {
+	protected CharacterStructImpl(final int codePoint) {
 		super(getCharacterType(codePoint), null, null);
 		this.codePoint = codePoint;
 	}
@@ -76,7 +76,7 @@ public class CharacterStruct extends BuiltInClassStruct {
 	 *
 	 * @return a CharacterStruct object with the provided {@code character} value
 	 */
-	public static CharacterStruct valueOf(final Character character) {
+	public static CharacterStructImpl valueOf(final Character character) {
 		return valueOf((int) character);
 	}
 
@@ -88,18 +88,18 @@ public class CharacterStruct extends BuiltInClassStruct {
 	 *
 	 * @return a CharacterStruct object with the provided {@code codePoint} value
 	 */
-	public static CharacterStruct valueOf(final Integer codePoint) {
-		final Map<Integer, CharacterStruct> standardCharMap = CharacterConstants.STANDARD_CHAR_MAP;
+	public static CharacterStructImpl valueOf(final Integer codePoint) {
+		final Map<Integer, CharacterStructImpl> standardCharMap = CharacterConstants.STANDARD_CHAR_MAP;
 		if (standardCharMap == null) {
 			// This will occur on the initial load only.
-			return new CharacterStruct(codePoint);
+			return new CharacterStructImpl(codePoint);
 		}
 
-		final CharacterStruct possibleStandardChar = CharacterConstants.STANDARD_CHAR_MAP.get(codePoint);
+		final CharacterStructImpl possibleStandardChar = CharacterConstants.STANDARD_CHAR_MAP.get(codePoint);
 		if (possibleStandardChar != null) {
 			return possibleStandardChar;
 		}
-		return new CharacterStruct(codePoint);
+		return new CharacterStructImpl(codePoint);
 	}
 
 	/**
@@ -127,7 +127,7 @@ public class CharacterStruct extends BuiltInClassStruct {
 	 * @return the instance, as it is already a character
 	 */
 	@Override
-	public Supplier<CharacterStruct> asCharacter() {
+	public Supplier<CharacterStructImpl> asCharacter() {
 		return () -> this;
 	}
 
@@ -138,7 +138,7 @@ public class CharacterStruct extends BuiltInClassStruct {
 	 * @return the instance, as it is already a character
 	 */
 	@Override
-	public Supplier<CharacterStruct> asNamedCharacter() {
+	public Supplier<CharacterStructImpl> asNamedCharacter() {
 		return () -> this;
 	}
 
@@ -170,7 +170,7 @@ public class CharacterStruct extends BuiltInClassStruct {
 	 *
 	 * @return the '=' comparison of this CharacterStruct and the provided CharacterStruct
 	 */
-	private boolean isEqualTo(final CharacterStruct character) {
+	private boolean isEqualTo(final CharacterStructImpl character) {
 		return codePoint.compareTo(character.codePoint) == 0;
 	}
 
@@ -182,16 +182,16 @@ public class CharacterStruct extends BuiltInClassStruct {
 	 *
 	 * @return the '=' comparison of the provided IntegerStructs
 	 */
-	public static boolean isEqualTo(final CharacterStruct... characters) {
+	public static boolean isEqualTo(final CharacterStructImpl... characters) {
 		if (characters.length == 0) {
 			throw new ErrorException("At least one character required to test equality.");
 		}
 
-		CharacterStruct previousCharacter = characters[0];
+		CharacterStructImpl previousCharacter = characters[0];
 
 		boolean result = true;
 		for (int i = 1; i < characters.length; i++) {
-			final CharacterStruct currentCharacter = characters[i];
+			final CharacterStructImpl currentCharacter = characters[i];
 			result = previousCharacter.isEqualTo(currentCharacter);
 			if (!result) {
 				break;
@@ -209,7 +209,7 @@ public class CharacterStruct extends BuiltInClassStruct {
 	 *
 	 * @return the '!=' comparison of this CharacterStruct and the provided CharacterStruct
 	 */
-	private boolean isNotEqualTo(final CharacterStruct character) {
+	private boolean isNotEqualTo(final CharacterStructImpl character) {
 		return codePoint.compareTo(character.codePoint) != 0;
 	}
 
@@ -221,16 +221,16 @@ public class CharacterStruct extends BuiltInClassStruct {
 	 *
 	 * @return the '!=' comparison of the provided IntegerStructs
 	 */
-	public static boolean isNotEqualTo(final CharacterStruct... characters) {
+	public static boolean isNotEqualTo(final CharacterStructImpl... characters) {
 		if (characters.length == 0) {
 			throw new ErrorException("At least one character required to test equality.");
 		}
 
-		CharacterStruct previousCharacter = characters[0];
+		CharacterStructImpl previousCharacter = characters[0];
 
 		boolean result = true;
 		for (int i = 1; i < characters.length; i++) {
-			final CharacterStruct currentCharacter = characters[i];
+			final CharacterStructImpl currentCharacter = characters[i];
 			result = previousCharacter.isNotEqualTo(currentCharacter);
 			if (!result) {
 				break;
@@ -248,7 +248,7 @@ public class CharacterStruct extends BuiltInClassStruct {
 	 *
 	 * @return the {@literal '<'} comparison of this CharacterStruct and the provided CharacterStruct
 	 */
-	private boolean isLessThan(final CharacterStruct character) {
+	private boolean isLessThan(final CharacterStructImpl character) {
 		return codePoint.compareTo(character.codePoint) < 0;
 	}
 
@@ -260,16 +260,16 @@ public class CharacterStruct extends BuiltInClassStruct {
 	 *
 	 * @return the {@literal '<'} comparison of the provided IntegerStructs
 	 */
-	public static boolean isLessThan(final CharacterStruct... characters) {
+	public static boolean isLessThan(final CharacterStructImpl... characters) {
 		if (characters.length == 0) {
 			throw new ErrorException("At least one character required to test equality.");
 		}
 
-		CharacterStruct previousCharacter = characters[0];
+		CharacterStructImpl previousCharacter = characters[0];
 
 		boolean result = true;
 		for (int i = 1; i < characters.length; i++) {
-			final CharacterStruct currentCharacter = characters[i];
+			final CharacterStructImpl currentCharacter = characters[i];
 			result = previousCharacter.isLessThan(currentCharacter);
 			if (!result) {
 				break;
@@ -287,7 +287,7 @@ public class CharacterStruct extends BuiltInClassStruct {
 	 *
 	 * @return the {@literal '>'} comparison of this CharacterStruct and the provided CharacterStruct
 	 */
-	private boolean isGreaterThan(final CharacterStruct character) {
+	private boolean isGreaterThan(final CharacterStructImpl character) {
 		return codePoint.compareTo(character.codePoint) > 0;
 	}
 
@@ -299,16 +299,16 @@ public class CharacterStruct extends BuiltInClassStruct {
 	 *
 	 * @return the {@literal '>'} comparison of the provided IntegerStructs
 	 */
-	public static boolean isGreaterThan(final CharacterStruct... characters) {
+	public static boolean isGreaterThan(final CharacterStructImpl... characters) {
 		if (characters.length == 0) {
 			throw new ErrorException("At least one character required to test equality.");
 		}
 
-		CharacterStruct previousCharacter = characters[0];
+		CharacterStructImpl previousCharacter = characters[0];
 
 		boolean result = true;
 		for (int i = 1; i < characters.length; i++) {
-			final CharacterStruct currentCharacter = characters[i];
+			final CharacterStructImpl currentCharacter = characters[i];
 			result = previousCharacter.isGreaterThan(currentCharacter);
 			if (!result) {
 				break;
@@ -326,7 +326,7 @@ public class CharacterStruct extends BuiltInClassStruct {
 	 *
 	 * @return the {@literal '<='} comparison of this CharacterStruct and the provided CharacterStruct
 	 */
-	private boolean isLessThanOrEqualTo(final CharacterStruct character) {
+	private boolean isLessThanOrEqualTo(final CharacterStructImpl character) {
 		return codePoint.compareTo(character.codePoint) <= 0;
 	}
 
@@ -338,16 +338,16 @@ public class CharacterStruct extends BuiltInClassStruct {
 	 *
 	 * @return the {@literal '<='} comparison of the provided IntegerStructs
 	 */
-	public static boolean isLessThanOrEqualTo(final CharacterStruct... characters) {
+	public static boolean isLessThanOrEqualTo(final CharacterStructImpl... characters) {
 		if (characters.length == 0) {
 			throw new ErrorException("At least one character required to test equality.");
 		}
 
-		CharacterStruct previousCharacter = characters[0];
+		CharacterStructImpl previousCharacter = characters[0];
 
 		boolean result = true;
 		for (int i = 1; i < characters.length; i++) {
-			final CharacterStruct currentCharacter = characters[i];
+			final CharacterStructImpl currentCharacter = characters[i];
 			result = previousCharacter.isLessThanOrEqualTo(currentCharacter);
 			if (!result) {
 				break;
@@ -365,7 +365,7 @@ public class CharacterStruct extends BuiltInClassStruct {
 	 *
 	 * @return the {@literal '>='} comparison of this CharacterStruct and the provided CharacterStruct
 	 */
-	private boolean isGreaterThanOrEqualTo(final CharacterStruct character) {
+	private boolean isGreaterThanOrEqualTo(final CharacterStructImpl character) {
 		return codePoint.compareTo(character.codePoint) >= 0;
 	}
 
@@ -377,16 +377,16 @@ public class CharacterStruct extends BuiltInClassStruct {
 	 *
 	 * @return the {@literal '>='} comparison of the provided IntegerStructs
 	 */
-	public static boolean isGreaterThanOrEqualTo(final CharacterStruct... characters) {
+	public static boolean isGreaterThanOrEqualTo(final CharacterStructImpl... characters) {
 		if (characters.length == 0) {
 			throw new ErrorException("At least one character required to test equality.");
 		}
 
-		CharacterStruct previousCharacter = characters[0];
+		CharacterStructImpl previousCharacter = characters[0];
 
 		boolean result = true;
 		for (int i = 1; i < characters.length; i++) {
-			final CharacterStruct currentCharacter = characters[i];
+			final CharacterStructImpl currentCharacter = characters[i];
 			result = previousCharacter.isGreaterThanOrEqualTo(currentCharacter);
 			if (!result) {
 				break;
@@ -404,7 +404,7 @@ public class CharacterStruct extends BuiltInClassStruct {
 	 *
 	 * @return the '=' comparison of this CharacterStruct and the provided CharacterStruct
 	 */
-	private boolean isEqualToIgnoreCase(final CharacterStruct character) {
+	private boolean isEqualToIgnoreCase(final CharacterStructImpl character) {
 		return Character.toLowerCase(codePoint) == Character.toLowerCase(character.codePoint);
 	}
 
@@ -416,16 +416,16 @@ public class CharacterStruct extends BuiltInClassStruct {
 	 *
 	 * @return the '=' comparison of the provided IntegerStructs
 	 */
-	public static boolean isEqualToIgnoreCase(final CharacterStruct... characters) {
+	public static boolean isEqualToIgnoreCase(final CharacterStructImpl... characters) {
 		if (characters.length == 0) {
 			throw new ErrorException("At least one character required to test equality.");
 		}
 
-		CharacterStruct previousCharacter = characters[0];
+		CharacterStructImpl previousCharacter = characters[0];
 
 		boolean result = true;
 		for (int i = 1; i < characters.length; i++) {
-			final CharacterStruct currentCharacter = characters[i];
+			final CharacterStructImpl currentCharacter = characters[i];
 			result = previousCharacter.isEqualToIgnoreCase(currentCharacter);
 			if (!result) {
 				break;
@@ -443,7 +443,7 @@ public class CharacterStruct extends BuiltInClassStruct {
 	 *
 	 * @return the '!=' comparison of this CharacterStruct and the provided CharacterStruct
 	 */
-	private boolean isNotEqualToIgnoreCase(final CharacterStruct character) {
+	private boolean isNotEqualToIgnoreCase(final CharacterStructImpl character) {
 		return Character.toLowerCase(codePoint) != Character.toLowerCase(character.codePoint);
 	}
 
@@ -455,16 +455,16 @@ public class CharacterStruct extends BuiltInClassStruct {
 	 *
 	 * @return the '!=' comparison of the provided IntegerStructs
 	 */
-	public static boolean isNotEqualToIgnoreCase(final CharacterStruct... characters) {
+	public static boolean isNotEqualToIgnoreCase(final CharacterStructImpl... characters) {
 		if (characters.length == 0) {
 			throw new ErrorException("At least one character required to test equality.");
 		}
 
-		CharacterStruct previousCharacter = characters[0];
+		CharacterStructImpl previousCharacter = characters[0];
 
 		boolean result = true;
 		for (int i = 1; i < characters.length; i++) {
-			final CharacterStruct currentCharacter = characters[i];
+			final CharacterStructImpl currentCharacter = characters[i];
 			result = previousCharacter.isNotEqualToIgnoreCase(currentCharacter);
 			if (!result) {
 				break;
@@ -482,7 +482,7 @@ public class CharacterStruct extends BuiltInClassStruct {
 	 *
 	 * @return the {@literal '<'} comparison of this CharacterStruct and the provided CharacterStruct
 	 */
-	private boolean isLessThanIgnoreCase(final CharacterStruct character) {
+	private boolean isLessThanIgnoreCase(final CharacterStructImpl character) {
 		return Character.toLowerCase(codePoint) < Character.toLowerCase(character.codePoint);
 	}
 
@@ -494,16 +494,16 @@ public class CharacterStruct extends BuiltInClassStruct {
 	 *
 	 * @return the {@literal '<'} comparison of the provided IntegerStructs
 	 */
-	public static boolean isLessThanIgnoreCase(final CharacterStruct... characters) {
+	public static boolean isLessThanIgnoreCase(final CharacterStructImpl... characters) {
 		if (characters.length == 0) {
 			throw new ErrorException("At least one character required to test equality.");
 		}
 
-		CharacterStruct previousCharacter = characters[0];
+		CharacterStructImpl previousCharacter = characters[0];
 
 		boolean result = true;
 		for (int i = 1; i < characters.length; i++) {
-			final CharacterStruct currentCharacter = characters[i];
+			final CharacterStructImpl currentCharacter = characters[i];
 			result = previousCharacter.isLessThanIgnoreCase(currentCharacter);
 			if (!result) {
 				break;
@@ -521,7 +521,7 @@ public class CharacterStruct extends BuiltInClassStruct {
 	 *
 	 * @return the {@literal '>'} comparison of this CharacterStruct and the provided CharacterStruct
 	 */
-	private boolean isGreaterThanIgnoreCase(final CharacterStruct character) {
+	private boolean isGreaterThanIgnoreCase(final CharacterStructImpl character) {
 		return Character.toLowerCase(codePoint) > Character.toLowerCase(character.codePoint);
 	}
 
@@ -533,16 +533,16 @@ public class CharacterStruct extends BuiltInClassStruct {
 	 *
 	 * @return the {@literal '>'} comparison of the provided IntegerStructs
 	 */
-	public static boolean isGreaterThanIgnoreCase(final CharacterStruct... characters) {
+	public static boolean isGreaterThanIgnoreCase(final CharacterStructImpl... characters) {
 		if (characters.length == 0) {
 			throw new ErrorException("At least one character required to test equality.");
 		}
 
-		CharacterStruct previousCharacter = characters[0];
+		CharacterStructImpl previousCharacter = characters[0];
 
 		boolean result = true;
 		for (int i = 1; i < characters.length; i++) {
-			final CharacterStruct currentCharacter = characters[i];
+			final CharacterStructImpl currentCharacter = characters[i];
 			result = previousCharacter.isGreaterThanIgnoreCase(currentCharacter);
 			if (!result) {
 				break;
@@ -560,7 +560,7 @@ public class CharacterStruct extends BuiltInClassStruct {
 	 *
 	 * @return the {@literal '<='} comparison of this CharacterStruct and the provided CharacterStruct
 	 */
-	private boolean isLessThanOrEqualToIgnoreCase(final CharacterStruct character) {
+	private boolean isLessThanOrEqualToIgnoreCase(final CharacterStructImpl character) {
 		return Character.toLowerCase(codePoint) <= Character.toLowerCase(character.codePoint);
 	}
 
@@ -572,16 +572,16 @@ public class CharacterStruct extends BuiltInClassStruct {
 	 *
 	 * @return the {@literal '<='} comparison of the provided IntegerStructs
 	 */
-	public static boolean isLessThanOrEqualToIgnoreCase(final CharacterStruct... characters) {
+	public static boolean isLessThanOrEqualToIgnoreCase(final CharacterStructImpl... characters) {
 		if (characters.length == 0) {
 			throw new ErrorException("At least one character required to test equality.");
 		}
 
-		CharacterStruct previousCharacter = characters[0];
+		CharacterStructImpl previousCharacter = characters[0];
 
 		boolean result = true;
 		for (int i = 1; i < characters.length; i++) {
-			final CharacterStruct currentCharacter = characters[i];
+			final CharacterStructImpl currentCharacter = characters[i];
 			result = previousCharacter.isLessThanOrEqualToIgnoreCase(currentCharacter);
 			if (!result) {
 				break;
@@ -599,7 +599,7 @@ public class CharacterStruct extends BuiltInClassStruct {
 	 *
 	 * @return the {@literal '>='} comparison of this CharacterStruct and the provided CharacterStruct
 	 */
-	private boolean isGreaterThanOrEqualToIgnoreCase(final CharacterStruct character) {
+	private boolean isGreaterThanOrEqualToIgnoreCase(final CharacterStructImpl character) {
 		return Character.toLowerCase(codePoint) >= Character.toLowerCase(character.codePoint);
 	}
 
@@ -611,16 +611,16 @@ public class CharacterStruct extends BuiltInClassStruct {
 	 *
 	 * @return the {@literal '>='} comparison of the provided IntegerStructs
 	 */
-	public static boolean isGreaterThanOrEqualToIgnoreCase(final CharacterStruct... characters) {
+	public static boolean isGreaterThanOrEqualToIgnoreCase(final CharacterStructImpl... characters) {
 		if (characters.length == 0) {
 			throw new ErrorException("At least one character required to test equality.");
 		}
 
-		CharacterStruct previousCharacter = characters[0];
+		CharacterStructImpl previousCharacter = characters[0];
 
 		boolean result = true;
 		for (int i = 1; i < characters.length; i++) {
-			final CharacterStruct currentCharacter = characters[i];
+			final CharacterStructImpl currentCharacter = characters[i];
 			result = previousCharacter.isGreaterThanOrEqualToIgnoreCase(currentCharacter);
 			if (!result) {
 				break;
@@ -672,8 +672,8 @@ public class CharacterStruct extends BuiltInClassStruct {
 	 *
 	 * @return the equivalent uppercase CharacterStruct
 	 */
-	public CharacterStruct toUpperCase() {
-		return new CharacterStruct(Character.toUpperCase(codePoint));
+	public CharacterStructImpl toUpperCase() {
+		return new CharacterStructImpl(Character.toUpperCase(codePoint));
 	}
 
 	/**
@@ -681,8 +681,8 @@ public class CharacterStruct extends BuiltInClassStruct {
 	 *
 	 * @return the equivalent lowercase CharacterStruct
 	 */
-	public CharacterStruct toLowerCase() {
-		return new CharacterStruct(Character.toLowerCase(codePoint));
+	public CharacterStructImpl toLowerCase() {
+		return new CharacterStructImpl(Character.toLowerCase(codePoint));
 	}
 
 	/**
@@ -736,7 +736,7 @@ public class CharacterStruct extends BuiltInClassStruct {
 		if (!Character.isDefined(codePoint)) {
 			return NILStruct.INSTANCE;
 		}
-		return new CharacterStruct(codePoint);
+		return new CharacterStructImpl(codePoint);
 	}
 
 	/**
@@ -756,8 +756,8 @@ public class CharacterStruct extends BuiltInClassStruct {
 	 *
 	 * @return the CharacterStruct with the name value of the provided {@link String}
 	 */
-	public static CharacterStruct nameChar(final String name) {
-		return new CharacterStruct(UCharacter.getCharFromName(name));
+	public static CharacterStructImpl nameChar(final String name) {
+		return new CharacterStructImpl(UCharacter.getCharFromName(name));
 	}
 
 	/**
@@ -810,7 +810,7 @@ public class CharacterStruct extends BuiltInClassStruct {
 		}
 
 		final Character result = Character.toUpperCase(digit);
-		return new CharacterStruct((int) result);
+		return new CharacterStructImpl((int) result);
 	}
 
 	@Override

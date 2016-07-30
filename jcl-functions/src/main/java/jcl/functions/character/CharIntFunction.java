@@ -7,7 +7,7 @@ package jcl.functions.character;
 import java.util.function.Function;
 
 import jcl.lang.LispStruct;
-import jcl.lang.character.CharacterStruct;
+import jcl.lang.character.CharacterStructImpl;
 import org.springframework.stereotype.Component;
 
 /**
@@ -27,12 +27,12 @@ public final class CharIntFunction extends AbstractCharacterFunction {
 
 	/**
 	 * {@inheritDoc}
-	 * Returns {@link CharacterStruct#charInt()} as a method reference function.
+	 * Returns {@link CharacterStructImpl#charInt()} as a method reference function.
 	 *
-	 * @return returns {@link CharacterStruct#charInt()} as a method reference function
+	 * @return returns {@link CharacterStructImpl#charInt()} as a method reference function
 	 */
 	@Override
-	protected Function<CharacterStruct, LispStruct> characterFunction() {
-		return CharacterStruct::charInt;
+	protected Function<CharacterStructImpl, LispStruct> characterFunction() {
+		return CharacterStructImpl::charInt;
 	}
 }

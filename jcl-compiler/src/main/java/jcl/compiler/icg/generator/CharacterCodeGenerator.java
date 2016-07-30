@@ -8,7 +8,7 @@ import jcl.compiler.icg.CodeGenerator;
 import jcl.compiler.icg.GeneratorEvent;
 import jcl.compiler.icg.GeneratorState;
 import jcl.compiler.icg.JavaMethodBuilder;
-import jcl.lang.character.CharacterStruct;
+import jcl.lang.character.CharacterStructImpl;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
@@ -16,44 +16,44 @@ import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 /**
- * Class to generate {@link CharacterStruct} objects dynamically by utilizing the {@link CharacterStruct#codePoint} of
- * the provided {@link CharacterStruct} input value.
+ * Class to generate {@link CharacterStructImpl} objects dynamically by utilizing the {@link CharacterStructImpl#codePoint} of
+ * the provided {@link CharacterStructImpl} input value.
  */
 @Component
-final class CharacterCodeGenerator implements CodeGenerator<CharacterStruct> {
+final class CharacterCodeGenerator implements CodeGenerator<CharacterStructImpl> {
 
 	/**
-	 * Constant {@link String} containing the name for the {@link CharacterStruct} class.
+	 * Constant {@link String} containing the name for the {@link CharacterStructImpl} class.
 	 */
-	private static final String CHARACTER_STRUCT_NAME = Type.getInternalName(CharacterStruct.class);
+	private static final String CHARACTER_STRUCT_NAME = Type.getInternalName(CharacterStructImpl.class);
 
 	/**
-	 * Constant {@link String} containing the name for the {@link CharacterStruct#valueOf(Integer)} method.
+	 * Constant {@link String} containing the name for the {@link CharacterStructImpl#valueOf(Integer)} method.
 	 */
 	private static final String CHARACTER_STRUCT_VALUE_OF_METHOD_NAME = "valueOf";
 
 	/**
-	 * Constant {@link String} containing the description for the {@link CharacterStruct#valueOf(Integer)} method.
+	 * Constant {@link String} containing the description for the {@link CharacterStructImpl#valueOf(Integer)} method.
 	 */
 	private static final String CHARACTER_STRUCT_VALUE_OF_METHOD_DESC
-			= CodeGenerators.getMethodDescription(CharacterStruct.class, CHARACTER_STRUCT_VALUE_OF_METHOD_NAME, Integer.class);
+			= CodeGenerators.getMethodDescription(CharacterStructImpl.class, CHARACTER_STRUCT_VALUE_OF_METHOD_NAME, Integer.class);
 
 	/**
 	 * {@inheritDoc}
-	 * Generation method for {@link CharacterStruct} objects, by performing the following operations:
+	 * Generation method for {@link CharacterStructImpl} objects, by performing the following operations:
 	 * <ol>
-	 * <li>Loading the {@link CharacterStruct#codePoint} constant</li>
-	 * <li>Retrieving a {@link CharacterStruct} with the loaded code point value</li>
+	 * <li>Loading the {@link CharacterStructImpl#codePoint} constant</li>
+	 * <li>Retrieving a {@link CharacterStructImpl} with the loaded code point value</li>
 	 * </ol>
 	 *
 	 * @param input
-	 * 		the {@link CharacterStruct} input value to generate code for
+	 * 		the {@link CharacterStructImpl} input value to generate code for
 	 * @param generatorState
 	 * 		stateful object used to hold the current state of the code generation process
 	 */
 	@EventListener
-	public void onGeneratorEvent(final GeneratorEvent<CharacterStruct> event) {
-		final CharacterStruct input = event.getSource();
+	public void onGeneratorEvent(final GeneratorEvent<CharacterStructImpl> event) {
+		final CharacterStructImpl input = event.getSource();
 		final GeneratorState generatorState = event.getGeneratorState();
 
 		final JavaMethodBuilder methodBuilder = generatorState.getCurrentMethodBuilder();

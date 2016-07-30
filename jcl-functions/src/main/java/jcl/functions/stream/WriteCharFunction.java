@@ -5,7 +5,7 @@
 package jcl.functions.stream;
 
 import jcl.lang.LispStruct;
-import jcl.lang.character.CharacterStruct;
+import jcl.lang.character.CharacterStructImpl;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
@@ -31,7 +31,7 @@ public final class WriteCharFunction extends CommonLispBuiltInFunctionStruct {
 
 	@Override
 	public LispStruct apply(final Arguments arguments) {
-		final CharacterStruct character = arguments.getRequiredArgument(CHARACTER_ARGUMENT, CharacterStruct.class);
+		final CharacterStructImpl character = arguments.getRequiredArgument(CHARACTER_ARGUMENT, CharacterStructImpl.class);
 		final OutputStream outputStream = arguments.getOptionalArgument(OUTPUT_STREAM_ARGUMENT, OutputStream.class);
 
 		outputStream.writeChar(character.getCodePoint());

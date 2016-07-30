@@ -6,7 +6,7 @@ package jcl.functions.character;
 
 import java.util.function.Predicate;
 
-import jcl.lang.character.CharacterStruct;
+import jcl.lang.character.CharacterStructImpl;
 import org.springframework.stereotype.Component;
 
 /**
@@ -26,12 +26,12 @@ public final class AlphaCharPFunction extends AbstractCharacterPredicateFunction
 
 	/**
 	 * {@inheritDoc}
-	 * Returns {@link CharacterStruct#isAlphaChar()} as a method reference predicate.
+	 * Returns {@link CharacterStructImpl#isAlphaChar()} as a method reference predicate.
 	 *
-	 * @return returns {@link CharacterStruct#isAlphaChar()} as a method reference predicate
+	 * @return returns {@link CharacterStructImpl#isAlphaChar()} as a method reference predicate
 	 */
 	@Override
-	protected Predicate<CharacterStruct> predicate() {
-		return CharacterStruct::isAlphaChar;
+	protected Predicate<CharacterStructImpl> predicate() {
+		return CharacterStructImpl::isAlphaChar;
 	}
 }

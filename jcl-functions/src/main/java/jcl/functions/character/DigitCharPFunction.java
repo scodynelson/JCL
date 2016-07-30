@@ -5,7 +5,7 @@
 package jcl.functions.character;
 
 import jcl.lang.LispStruct;
-import jcl.lang.character.CharacterStruct;
+import jcl.lang.character.CharacterStructImpl;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
@@ -33,21 +33,21 @@ public final class DigitCharPFunction extends CommonLispBuiltInFunctionStruct {
 
 	/**
 	 * {@inheritDoc}
-	 * Application method for the {@code digit-char-p} character function that expects an {@link CharacterStruct}
+	 * Application method for the {@code digit-char-p} character function that expects an {@link CharacterStructImpl}
 	 * parameter object with an optional {@link IntegerStruct} radix parameter object and applies {@link
-	 * CharacterStruct#charDigit(IntegerStruct)} against the value and the radix value retrieved from the parameters
+	 * CharacterStructImpl#charDigit(IntegerStruct)} against the value and the radix value retrieved from the parameters
 	 * passed to the {@link #getRadix(LispStruct...)} method to retrieve the weighted {@link IntegerStruct} character
-	 * code for the {@link CharacterStruct} parameter and optional radix value.
+	 * code for the {@link CharacterStructImpl} parameter and optional radix value.
 	 *
 	 * @param lispStructs
 	 * 		the function parameters
 	 *
-	 * @return the weighted {@link IntegerStruct} character code for the {@link CharacterStruct} parameter and optional
+	 * @return the weighted {@link IntegerStruct} character code for the {@link CharacterStructImpl} parameter and optional
 	 * radix value
 	 */
 	@Override
 	public LispStruct apply(final Arguments arguments) {
-		final CharacterStruct character = arguments.getRequiredArgument("CHARACTER", CharacterStruct.class);
+		final CharacterStructImpl character = arguments.getRequiredArgument("CHARACTER", CharacterStructImpl.class);
 		final IntegerStruct radix = arguments.getRequiredArgument("RADIX", IntegerStruct.class);
 		return character.charDigit(radix);
 	}

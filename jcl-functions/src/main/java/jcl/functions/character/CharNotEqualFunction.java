@@ -6,7 +6,7 @@ package jcl.functions.character;
 
 import java.util.function.Predicate;
 
-import jcl.lang.character.CharacterStruct;
+import jcl.lang.character.CharacterStructImpl;
 import org.springframework.stereotype.Component;
 
 /**
@@ -26,13 +26,13 @@ public final class CharNotEqualFunction extends AbstractCharacterEqualityFunctio
 
 	/**
 	 * {@inheritDoc}
-	 * Returns {@link CharacterStruct#isNotEqualToIgnoreCase(CharacterStruct...)} as a method reference predicate.
+	 * Returns {@link CharacterStructImpl#isNotEqualToIgnoreCase(CharacterStructImpl...)} as a method reference predicate.
 	 *
-	 * @return returns {@link CharacterStruct#isNotEqualToIgnoreCase(CharacterStruct...)} as a method reference
+	 * @return returns {@link CharacterStructImpl#isNotEqualToIgnoreCase(CharacterStructImpl...)} as a method reference
 	 * predicate
 	 */
 	@Override
-	protected Predicate<CharacterStruct[]> characterEqualityPredicate() {
-		return CharacterStruct::isNotEqualToIgnoreCase;
+	protected Predicate<CharacterStructImpl[]> characterEqualityPredicate() {
+		return CharacterStructImpl::isNotEqualToIgnoreCase;
 	}
 }

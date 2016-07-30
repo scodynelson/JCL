@@ -10,7 +10,7 @@ import java.util.function.Supplier;
 import jcl.lang.LispStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.array.StringStruct;
-import jcl.lang.character.CharacterStruct;
+import jcl.lang.character.CharacterStructImpl;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.FunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
@@ -18,7 +18,7 @@ import jcl.lang.function.parameterdsl.Parameters;
 
 /**
  * Abstract {@link FunctionStruct} implementation for character functions that operate on character designators, namely
- * {@link CharacterStruct}s, {@link StringStruct}s, and {@link SymbolStruct}s.
+ * {@link CharacterStructImpl}s, {@link StringStruct}s, and {@link SymbolStruct}s.
  */
 abstract class AbstractCharacterDesignatorFunction extends CommonLispBuiltInFunctionStruct {
 
@@ -52,10 +52,10 @@ abstract class AbstractCharacterDesignatorFunction extends CommonLispBuiltInFunc
 
 	/**
 	 * Abstract method to return a {@link Function} that consumes a {@link LispStruct} and returns a {@link
-	 * CharacterStruct} as a result.
+	 * CharacterStructImpl} as a result.
 	 *
-	 * @return returns a {@link Function} that consumes a {@link LispStruct} and returns a {@link CharacterStruct} as a
+	 * @return returns a {@link Function} that consumes a {@link LispStruct} and returns a {@link CharacterStructImpl} as a
 	 * result
 	 */
-	protected abstract Function<LispStruct, Supplier<CharacterStruct>> characterFunction();
+	protected abstract Function<LispStruct, Supplier<CharacterStructImpl>> characterFunction();
 }

@@ -7,7 +7,7 @@ package jcl.functions.stream;
 import jcl.lang.BooleanStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.TStruct;
-import jcl.lang.character.CharacterStruct;
+import jcl.lang.character.CharacterStructImpl;
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
@@ -58,6 +58,6 @@ public final class ReadCharNoHangFunction extends CommonLispBuiltInFunctionStruc
 		final BooleanStruct recursiveP = arguments.getOptionalArgument(RECURSIVE_P_ARGUMENT, BooleanStruct.class);
 
 		final ReadPeekResult readPeekResult = inputStream.readChar(eofErrorP.booleanValue(), eofValue, recursiveP.booleanValue());
-		return readPeekResult.isEof() ? eofValue : CharacterStruct.valueOf(readPeekResult.getResult());
+		return readPeekResult.isEof() ? eofValue : CharacterStructImpl.valueOf(readPeekResult.getResult());
 	}
 }

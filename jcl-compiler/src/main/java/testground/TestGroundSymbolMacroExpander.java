@@ -8,7 +8,7 @@ import jcl.compiler.environment.Environment;
 import jcl.compiler.function.expanders.SymbolMacroExpander;
 import jcl.lang.LispStruct;
 import jcl.lang.SymbolStruct;
-import jcl.lang.character.CharacterStruct;
+import jcl.lang.character.CharacterStructImpl;
 
 @SuppressWarnings({"all", "rawtypes"})
 public class TestGroundSymbolMacroExpander extends SymbolMacroExpander {
@@ -20,7 +20,7 @@ public class TestGroundSymbolMacroExpander extends SymbolMacroExpander {
 
 	@Override
 	public LispStruct expand(final SymbolStruct form, final Environment environment) {
-		return CharacterStruct.valueOf(123456789);
+		return CharacterStructImpl.valueOf(123456789);
 	}
 
 	// TODO: COMMENTED OUT?!?!?!?

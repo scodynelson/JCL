@@ -9,7 +9,7 @@ import java.util.Optional;
 import javax.annotation.PostConstruct;
 
 import jcl.lang.LispStruct;
-import jcl.lang.character.CharacterStruct;
+import jcl.lang.character.CharacterStructImpl;
 import jcl.lang.function.ReaderMacroFunction;
 import jcl.lang.list.NILStruct;
 import jcl.lang.readtable.Reader;
@@ -43,6 +43,6 @@ public class SharpUReaderMacroFunction extends ReaderMacroFunction {
 		}
 
 		final int unicodeCodePoint = UnicodeCharacterReaderMacroFunction.readUnicodeCharacter(reader);
-		return CharacterStruct.valueOf(unicodeCodePoint);
+		return CharacterStructImpl.valueOf(unicodeCodePoint);
 	}
 }

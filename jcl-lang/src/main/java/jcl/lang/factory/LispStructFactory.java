@@ -15,7 +15,7 @@ import jcl.lang.array.ArrayStruct;
 import jcl.lang.array.BitVectorStruct;
 import jcl.lang.array.StringStruct;
 import jcl.lang.array.VectorStruct;
-import jcl.lang.character.CharacterStruct;
+import jcl.lang.character.CharacterStructImpl;
 import jcl.lang.function.EquatorFunctionStruct;
 import jcl.lang.hashtable.HashTableStruct;
 import jcl.lang.list.ConsStruct;
@@ -76,24 +76,24 @@ public final class LispStructFactory {
 	 * Returns a CharacterStruct object with the provided {@code character} value.
 	 *
 	 * @param character
-	 * 		the character value used to derive the {@link CharacterStruct#codePoint} of the resulting CharacterStruct
+	 * 		the character value used to derive the {@link CharacterStructImpl#codePoint} of the resulting CharacterStruct
 	 *
 	 * @return a CharacterStruct object with the provided {@code character} value
 	 */
-	public static CharacterStruct toCharacter(final Character character) {
-		return CharacterStruct.valueOf(character);
+	public static CharacterStructImpl toCharacter(final Character character) {
+		return CharacterStructImpl.valueOf(character);
 	}
 
 	/**
 	 * Returns a CharacterStruct object with the provided {@code codePoint} value.
 	 *
 	 * @param codePoint
-	 * 		the {@link CharacterStruct#codePoint} value of the resulting CharacterStruct
+	 * 		the {@link CharacterStructImpl#codePoint} value of the resulting CharacterStruct
 	 *
 	 * @return a CharacterStruct object with the provided {@code codePoint} value
 	 */
-	public static CharacterStruct toCharacter(final Integer codePoint) {
-		return CharacterStruct.valueOf(codePoint);
+	public static CharacterStructImpl toCharacter(final Integer codePoint) {
+		return CharacterStructImpl.valueOf(codePoint);
 	}
 
 	/*

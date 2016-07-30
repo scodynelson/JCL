@@ -7,7 +7,7 @@ package jcl.functions.stream;
 import jcl.lang.BooleanStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.TStruct;
-import jcl.lang.character.CharacterStruct;
+import jcl.lang.character.CharacterStructImpl;
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
@@ -50,8 +50,8 @@ public final class PeekCharFunction extends CommonLispBuiltInFunctionStruct {
 			peekType = PeekType.T_PEEK_TYPE;
 		} else if (NILStruct.INSTANCE.equals(lispStruct1)) {
 			peekType = PeekType.NIL_PEEK_TYPE;
-		} else if (lispStruct1 instanceof CharacterStruct) {
-			final CharacterStruct character = (CharacterStruct) lispStruct1;
+		} else if (lispStruct1 instanceof CharacterStructImpl) {
+			final CharacterStructImpl character = (CharacterStructImpl) lispStruct1;
 			peekType = PeekType.getCharacterPeekType(character.getCodePoint());
 		} else {
 			throw new TypeErrorException("UNCAUGHT TYPE ERROR.");
@@ -74,6 +74,6 @@ public final class PeekCharFunction extends CommonLispBuiltInFunctionStruct {
 		final BooleanStruct recursiveP = arguments.getOptionalArgument(RECURSIVE_P_ARGUMENT, BooleanStruct.class);
 
 		final ReadPeekResult readPeekResult = inputStream.peekChar(peekType, eofErrorP.booleanValue(), eofValue, recursiveP.booleanValue());
-		return readPeekResult.isEof() ? eofValue : CharacterStruct.valueOf(readPeekResult.getResult());
+		return readPeekResult.isEof() ? eofValue : CharacterStructImpl.valueOf(readPeekResult.getResult());
 	}
 }

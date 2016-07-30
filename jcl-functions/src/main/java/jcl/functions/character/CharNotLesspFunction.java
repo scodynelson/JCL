@@ -6,7 +6,7 @@ package jcl.functions.character;
 
 import java.util.function.Predicate;
 
-import jcl.lang.character.CharacterStruct;
+import jcl.lang.character.CharacterStructImpl;
 import org.springframework.stereotype.Component;
 
 /**
@@ -26,14 +26,14 @@ public final class CharNotLesspFunction extends AbstractCharacterEqualityFunctio
 
 	/**
 	 * {@inheritDoc}
-	 * Returns {@link CharacterStruct#isGreaterThanOrEqualToIgnoreCase(CharacterStruct...)} as a method reference
+	 * Returns {@link CharacterStructImpl#isGreaterThanOrEqualToIgnoreCase(CharacterStructImpl...)} as a method reference
 	 * function.
 	 *
-	 * @return returns {@link CharacterStruct#isGreaterThanOrEqualToIgnoreCase(CharacterStruct...)} as a method
+	 * @return returns {@link CharacterStructImpl#isGreaterThanOrEqualToIgnoreCase(CharacterStructImpl...)} as a method
 	 * reference function
 	 */
 	@Override
-	protected Predicate<CharacterStruct[]> characterEqualityPredicate() {
-		return CharacterStruct::isGreaterThanOrEqualToIgnoreCase;
+	protected Predicate<CharacterStructImpl[]> characterEqualityPredicate() {
+		return CharacterStructImpl::isGreaterThanOrEqualToIgnoreCase;
 	}
 }

@@ -6,7 +6,7 @@ package jcl.functions.character;
 
 import java.util.function.Predicate;
 
-import jcl.lang.character.CharacterStruct;
+import jcl.lang.character.CharacterStructImpl;
 import org.springframework.stereotype.Component;
 
 /**
@@ -26,12 +26,12 @@ public final class CharEqFunction extends AbstractCharacterEqualityFunction {
 
 	/**
 	 * {@inheritDoc}
-	 * Returns {@link CharacterStruct#isEqualTo(CharacterStruct...)} as a method reference predicate.
+	 * Returns {@link CharacterStructImpl#isEqualTo(CharacterStructImpl...)} as a method reference predicate.
 	 *
-	 * @return returns {@link CharacterStruct#isEqualTo(CharacterStruct...)} as a method reference predicate
+	 * @return returns {@link CharacterStructImpl#isEqualTo(CharacterStructImpl...)} as a method reference predicate
 	 */
 	@Override
-	protected Predicate<CharacterStruct[]> characterEqualityPredicate() {
-		return CharacterStruct::isEqualTo;
+	protected Predicate<CharacterStructImpl[]> characterEqualityPredicate() {
+		return CharacterStructImpl::isEqualTo;
 	}
 }

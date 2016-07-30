@@ -10,8 +10,8 @@ import javax.annotation.PostConstruct;
 
 import com.ibm.icu.lang.UCharacter;
 import jcl.lang.LispStruct;
-import jcl.lang.character.CharacterStructImpl;
 import jcl.lang.condition.exception.ReaderErrorException;
+import jcl.lang.factory.LispStructFactory;
 import jcl.lang.function.ReaderMacroFunction;
 import jcl.lang.list.NILStruct;
 import jcl.lang.readtable.Reader;
@@ -48,7 +48,7 @@ public class SharpBackslashReaderMacroFunction extends ReaderMacroFunction {
 		final int maxTokenStringLength = 1;
 		if (StringUtils.length(tokenString) == maxTokenStringLength) {
 			final char characterToken = tokenString.charAt(0);
-			return CharacterStructImpl.valueOf(characterToken);
+			return LispStructFactory.toCharacter(characterToken);
 		}
 
 		Integer nameCodePoint = null;
@@ -68,6 +68,6 @@ public class SharpBackslashReaderMacroFunction extends ReaderMacroFunction {
 			throw new ReaderErrorException("Unrecognized character name: " + tokenString);
 		}
 
-		return CharacterStructImpl.valueOf(nameCodePoint);
+		return LispStructFactory.toCharacter(nameCodePoint);
 	}
 }

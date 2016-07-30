@@ -4,11 +4,13 @@
 
 package jcl.functions.character;
 
+import jcl.lang.CharacterStruct;
 import jcl.lang.LispStruct;
-import jcl.lang.character.CharacterStructImpl;
+import jcl.lang.factory.LispStructFactory;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
+import jcl.lang.list.NILStruct;
 import jcl.lang.number.IntegerStruct;
 import org.springframework.stereotype.Component;
 
@@ -36,20 +38,30 @@ public final class DigitCharFunction extends CommonLispBuiltInFunctionStruct {
 	 * {@inheritDoc}
 	 * Application method for the {@code digit-char} character function that expects an {@link IntegerStruct} weight
 	 * parameter object with an optional {@link IntegerStruct} radix parameter object and applies {@link
-	 * CharacterStructImpl#digitChar(IntegerStruct, IntegerStruct)} against the value and the radix value retrieved from
+	 * CharacterStruct#digitChar(IntegerStruct, IntegerStruct)} against the value and the radix value retrieved from
 	 * the parameters passed to the {@link #getRadix(LispStruct...)} method to retrieve the weighted {@link
-	 * CharacterStructImpl} for the {@link IntegerStruct} parameter weight and optional radix value.
+	 * CharacterStruct} for the {@link IntegerStruct} parameter weight and optional radix value.
 	 *
 	 * @param lispStructs
 	 * 		the function parameters
 	 *
-	 * @return the weighted {@link CharacterStructImpl} for the {@link IntegerStruct} parameter weight and optional radix
+	 * @return the weighted {@link CharacterStruct} for the {@link IntegerStruct} parameter weight and optional radix
 	 * value
 	 */
 	@Override
 	public LispStruct apply(final Arguments arguments) {
 		final IntegerStruct weight = arguments.getRequiredArgument("WEIGHT", IntegerStruct.class);
 		final IntegerStruct radix = arguments.getRequiredArgument("RADIX", IntegerStruct.class);
-		return CharacterStructImpl.digitChar(weight, radix);
+
+		final int weightInt = weight.intValue();
+		final int radixInt = radix.intValue();
+
+		final Character digit = Character.forDigit(weightInt, radixInt);
+		if (digit == '\0') {
+			return NILStruct.INSTANCE;
+		}
+
+		final Character result = Character.toUpperCase(digit);
+		return LispStructFactory.toCharacter((int) result);
 	}
 }

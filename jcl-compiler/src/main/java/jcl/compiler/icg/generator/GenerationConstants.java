@@ -175,6 +175,10 @@ interface GenerationConstants {
 
 	String LISP_STRUCT_FACTORY_NAME = Type.getInternalName(LispStructFactory.class);
 
+	String LISP_STRUCT_FACTORY_TO_CHARACTER_METHOD_NAME = "toCharacter";
+
+	String LISP_STRUCT_FACTORY_TO_CHARACTER_METHOD_DESC = CodeGenerators.getMethodDescription(LispStructFactory.class, LISP_STRUCT_FACTORY_TO_CHARACTER_METHOD_NAME, int.class);
+
 	String LISP_STRUCT_FACTORY_TO_PATHNAME_URI_METHOD_NAME = "toPathname";
 
 	String LISP_STRUCT_FACTORY_TO_PATHNAME_URI_METHOD_DESC = CodeGenerators.getMethodDescription(LispStructFactory.class, LISP_STRUCT_FACTORY_TO_PATHNAME_URI_METHOD_NAME, URI.class);

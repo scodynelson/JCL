@@ -8,11 +8,11 @@ import java.util.List;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+import jcl.lang.CharacterStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.PackageStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.array.StringStruct;
-import jcl.lang.character.CharacterStructImpl;
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
@@ -65,8 +65,8 @@ public final class RenamePackageFunction extends CommonLispBuiltInFunctionStruct
 			newName = ((StringStruct) packageDesignator).getAsJavaString();
 		} else if (packageDesignator instanceof SymbolStruct) {
 			newName = ((SymbolStruct) packageDesignator).getName();
-		} else if (packageDesignator instanceof CharacterStructImpl) {
-			newName = ((CharacterStructImpl) packageDesignator).getCharacter().toString();
+		} else if (packageDesignator instanceof CharacterStruct) {
+			newName = ((CharacterStruct) packageDesignator).getCharacter().toString();
 		} else if (packageDesignator instanceof PackageStruct) {
 			newName = ((PackageStruct) packageDesignator).getName();
 		} else {

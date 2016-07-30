@@ -6,8 +6,8 @@ package jcl.functions.character;
 
 import java.util.function.Function;
 
+import jcl.lang.CharacterStruct;
 import jcl.lang.LispStruct;
-import jcl.lang.character.CharacterStructImpl;
 import org.springframework.stereotype.Component;
 
 /**
@@ -27,12 +27,12 @@ public final class CharNameFunction extends AbstractCharacterFunction {
 
 	/**
 	 * {@inheritDoc}
-	 * Returns {@link CharacterStructImpl#charName()} as a method reference function.
+	 * Returns {@link CharacterStruct#charName()} as a method reference function.
 	 *
-	 * @return returns {@link CharacterStructImpl#charName()} as a method reference function
+	 * @return returns {@link CharacterStruct#charName()} as a method reference function
 	 */
 	@Override
-	protected Function<CharacterStructImpl, LispStruct> characterFunction() {
-		return CharacterStructImpl::charName;
+	protected Function<CharacterStruct, LispStruct> characterFunction() {
+		return CharacterStruct::charName;
 	}
 }

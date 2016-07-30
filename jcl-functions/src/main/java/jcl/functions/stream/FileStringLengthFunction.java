@@ -6,9 +6,9 @@ package jcl.functions.stream;
 
 import java.math.BigInteger;
 
+import jcl.lang.CharacterStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.array.StringStruct;
-import jcl.lang.character.CharacterStructImpl;
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
@@ -38,7 +38,7 @@ public final class FileStringLengthFunction extends CommonLispBuiltInFunctionStr
 		arguments.getRequiredArgument(STREAM_ARGUMENT, StreamStruct.class);
 		final LispStruct lispStruct2 = arguments.getRequiredArgument(OBJECT_ARGUMENT);
 
-		if (lispStruct2 instanceof CharacterStructImpl) {
+		if (lispStruct2 instanceof CharacterStruct) {
 			return IntegerStruct.ONE;
 		} else if (lispStruct2 instanceof StringStruct) {
 			final Long length = ((StringStruct) lispStruct2).length();

@@ -6,7 +6,7 @@ package jcl.functions.character;
 
 import java.util.function.Predicate;
 
-import jcl.lang.character.CharacterStructImpl;
+import jcl.lang.CharacterStruct;
 import org.springframework.stereotype.Component;
 
 /**
@@ -26,12 +26,12 @@ public final class GraphicCharPFunction extends AbstractCharacterPredicateFuncti
 
 	/**
 	 * {@inheritDoc}
-	 * Returns {@link CharacterStructImpl#isGraphicChar()} as a method reference predicate.
+	 * Returns {@link CharacterStruct#isGraphicChar()} as a method reference predicate.
 	 *
-	 * @return returns {@link CharacterStructImpl#isGraphicChar()} as a method reference predicate
+	 * @return returns {@link CharacterStruct#isGraphicChar()} as a method reference predicate
 	 */
 	@Override
-	protected Predicate<CharacterStructImpl> predicate() {
-		return CharacterStructImpl::isGraphicChar;
+	protected Predicate<CharacterStruct> predicate() {
+		return CharacterStruct::isGraphicChar;
 	}
 }

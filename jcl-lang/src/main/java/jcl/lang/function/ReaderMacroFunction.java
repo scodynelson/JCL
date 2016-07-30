@@ -7,9 +7,9 @@ package jcl.lang.function;
 import java.math.BigInteger;
 import java.util.Optional;
 
+import jcl.lang.CharacterStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.SymbolStruct;
-import jcl.lang.character.CharacterStructImpl;
 import jcl.lang.number.IntegerStruct;
 import jcl.lang.readtable.Reader;
 import jcl.lang.stream.InputStream;
@@ -50,7 +50,7 @@ public abstract class ReaderMacroFunction extends FunctionStruct {
 
 		final InputStream stream = (InputStream) lispStructs[0];
 
-		final CharacterStructImpl macroCharacter = (CharacterStructImpl) lispStructs[1];
+		final CharacterStruct macroCharacter = (CharacterStruct) lispStructs[1];
 		final int codePoint = macroCharacter.getCodePoint();
 
 		final Optional<BigInteger> numberArgument;

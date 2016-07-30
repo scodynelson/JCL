@@ -8,6 +8,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import jcl.lang.CharacterStruct;
 import jcl.lang.ConstantStruct;
 import jcl.lang.GlobalPackageStruct;
 import jcl.lang.number.IntegerStruct;
@@ -21,280 +22,280 @@ public final class CharacterConstants {
 
 	// CharacterStruct Standard-Char Constants
 
-	public static final CharacterStructImpl EOF_CHAR = CharacterStructImpl.valueOf(CodePointConstants.EOF);
+	public static final CharacterStruct EOF_CHAR = CharacterStructImpl.valueOf(CodePointConstants.EOF);
 
-	public static final CharacterStructImpl NULL_CHAR = CharacterStructImpl.valueOf(CodePointConstants.NULL);
+	public static final CharacterStruct NULL_CHAR = CharacterStructImpl.valueOf(CodePointConstants.NULL);
 
-	public static final CharacterStructImpl START_OF_HEADER_CHAR = CharacterStructImpl.valueOf(CodePointConstants.START_OF_HEADER);
+	public static final CharacterStruct START_OF_HEADER_CHAR = CharacterStructImpl.valueOf(CodePointConstants.START_OF_HEADER);
 
-	public static final CharacterStructImpl START_OF_TEXT_CHAR = CharacterStructImpl.valueOf(CodePointConstants.START_OF_TEXT);
+	public static final CharacterStruct START_OF_TEXT_CHAR = CharacterStructImpl.valueOf(CodePointConstants.START_OF_TEXT);
 
-	public static final CharacterStructImpl END_OF_TEXT_CHAR = CharacterStructImpl.valueOf(CodePointConstants.END_OF_TEXT);
+	public static final CharacterStruct END_OF_TEXT_CHAR = CharacterStructImpl.valueOf(CodePointConstants.END_OF_TEXT);
 
-	public static final CharacterStructImpl END_OF_TRANSMISSION_CHAR = CharacterStructImpl.valueOf(CodePointConstants.END_OF_TRANSMISSION);
+	public static final CharacterStruct END_OF_TRANSMISSION_CHAR = CharacterStructImpl.valueOf(CodePointConstants.END_OF_TRANSMISSION);
 
-	public static final CharacterStructImpl ENQUIRY_CHAR = CharacterStructImpl.valueOf(CodePointConstants.ENQUIRY);
+	public static final CharacterStruct ENQUIRY_CHAR = CharacterStructImpl.valueOf(CodePointConstants.ENQUIRY);
 
-	public static final CharacterStructImpl ACKNOWLEDGE_CHAR = CharacterStructImpl.valueOf(CodePointConstants.ACKNOWLEDGE);
+	public static final CharacterStruct ACKNOWLEDGE_CHAR = CharacterStructImpl.valueOf(CodePointConstants.ACKNOWLEDGE);
 
-	public static final CharacterStructImpl BELL_CHAR = CharacterStructImpl.valueOf(CodePointConstants.BELL);
+	public static final CharacterStruct BELL_CHAR = CharacterStructImpl.valueOf(CodePointConstants.BELL);
 
-	public static final CharacterStructImpl BACKSPACE_CHAR = CharacterStructImpl.valueOf(CodePointConstants.BACKSPACE);
+	public static final CharacterStruct BACKSPACE_CHAR = CharacterStructImpl.valueOf(CodePointConstants.BACKSPACE);
 
-	public static final CharacterStructImpl TAB_CHAR = CharacterStructImpl.valueOf(CodePointConstants.TAB);
+	public static final CharacterStruct TAB_CHAR = CharacterStructImpl.valueOf(CodePointConstants.TAB);
 
-	public static final CharacterStructImpl LINE_FEED_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LINE_FEED);
+	public static final CharacterStruct LINE_FEED_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LINE_FEED);
 
-	public static final CharacterStructImpl NEWLINE_CHAR = CharacterStructImpl.valueOf(CodePointConstants.NEWLINE);
+	public static final CharacterStruct NEWLINE_CHAR = CharacterStructImpl.valueOf(CodePointConstants.NEWLINE);
 
-	public static final CharacterStructImpl VERTICAL_TAB_CHAR = CharacterStructImpl.valueOf(CodePointConstants.VERTICAL_TAB);
+	public static final CharacterStruct VERTICAL_TAB_CHAR = CharacterStructImpl.valueOf(CodePointConstants.VERTICAL_TAB);
 
-	public static final CharacterStructImpl FORM_FEED_CHAR = CharacterStructImpl.valueOf(CodePointConstants.FORM_FEED);
+	public static final CharacterStruct FORM_FEED_CHAR = CharacterStructImpl.valueOf(CodePointConstants.FORM_FEED);
 
-	public static final CharacterStructImpl PAGE_CHAR = CharacterStructImpl.valueOf(CodePointConstants.PAGE);
+	public static final CharacterStruct PAGE_CHAR = CharacterStructImpl.valueOf(CodePointConstants.PAGE);
 
-	public static final CharacterStructImpl CARRIAGE_RETURN_CHAR = CharacterStructImpl.valueOf(CodePointConstants.CARRIAGE_RETURN);
+	public static final CharacterStruct CARRIAGE_RETURN_CHAR = CharacterStructImpl.valueOf(CodePointConstants.CARRIAGE_RETURN);
 
-	public static final CharacterStructImpl RETURN_CHAR = CharacterStructImpl.valueOf(CodePointConstants.RETURN);
+	public static final CharacterStruct RETURN_CHAR = CharacterStructImpl.valueOf(CodePointConstants.RETURN);
 
-	public static final CharacterStructImpl SHIFT_OUT_CHAR = CharacterStructImpl.valueOf(CodePointConstants.SHIFT_OUT);
+	public static final CharacterStruct SHIFT_OUT_CHAR = CharacterStructImpl.valueOf(CodePointConstants.SHIFT_OUT);
 
-	public static final CharacterStructImpl SHIFT_IN_CHAR = CharacterStructImpl.valueOf(CodePointConstants.SHIFT_IN);
+	public static final CharacterStruct SHIFT_IN_CHAR = CharacterStructImpl.valueOf(CodePointConstants.SHIFT_IN);
 
-	public static final CharacterStructImpl DATA_LINK_ESCAPE_CHAR = CharacterStructImpl.valueOf(CodePointConstants.DATA_LINK_ESCAPE);
+	public static final CharacterStruct DATA_LINK_ESCAPE_CHAR = CharacterStructImpl.valueOf(CodePointConstants.DATA_LINK_ESCAPE);
 
-	public static final CharacterStructImpl DEVICE_CONTROL_1_CHAR = CharacterStructImpl.valueOf(CodePointConstants.DEVICE_CONTROL_1);
+	public static final CharacterStruct DEVICE_CONTROL_1_CHAR = CharacterStructImpl.valueOf(CodePointConstants.DEVICE_CONTROL_1);
 
-	public static final CharacterStructImpl DEVICE_CONTROL_2_CHAR = CharacterStructImpl.valueOf(CodePointConstants.DEVICE_CONTROL_2);
+	public static final CharacterStruct DEVICE_CONTROL_2_CHAR = CharacterStructImpl.valueOf(CodePointConstants.DEVICE_CONTROL_2);
 
-	public static final CharacterStructImpl DEVICE_CONTROL_3_CHAR = CharacterStructImpl.valueOf(CodePointConstants.DEVICE_CONTROL_3);
+	public static final CharacterStruct DEVICE_CONTROL_3_CHAR = CharacterStructImpl.valueOf(CodePointConstants.DEVICE_CONTROL_3);
 
-	public static final CharacterStructImpl DEVICE_CONTROL_4_CHAR = CharacterStructImpl.valueOf(CodePointConstants.DEVICE_CONTROL_4);
+	public static final CharacterStruct DEVICE_CONTROL_4_CHAR = CharacterStructImpl.valueOf(CodePointConstants.DEVICE_CONTROL_4);
 
-	public static final CharacterStructImpl NEGATIVE_ACKNOWLEDGE_CHAR = CharacterStructImpl.valueOf(CodePointConstants.NEGATIVE_ACKNOWLEDGE);
+	public static final CharacterStruct NEGATIVE_ACKNOWLEDGE_CHAR = CharacterStructImpl.valueOf(CodePointConstants.NEGATIVE_ACKNOWLEDGE);
 
-	public static final CharacterStructImpl SYNCHRONOUS_IDLE_CHAR = CharacterStructImpl.valueOf(CodePointConstants.SYNCHRONOUS_IDLE);
+	public static final CharacterStruct SYNCHRONOUS_IDLE_CHAR = CharacterStructImpl.valueOf(CodePointConstants.SYNCHRONOUS_IDLE);
 
-	public static final CharacterStructImpl END_OF_TRANSMISSION_BLOCK_CHAR = CharacterStructImpl.valueOf(CodePointConstants.END_OF_TRANSMISSION_BLOCK);
+	public static final CharacterStruct END_OF_TRANSMISSION_BLOCK_CHAR = CharacterStructImpl.valueOf(CodePointConstants.END_OF_TRANSMISSION_BLOCK);
 
-	public static final CharacterStructImpl CANCEL_CHAR = CharacterStructImpl.valueOf(CodePointConstants.CANCEL);
+	public static final CharacterStruct CANCEL_CHAR = CharacterStructImpl.valueOf(CodePointConstants.CANCEL);
 
-	public static final CharacterStructImpl END_OF_MEDIUM_CHAR = CharacterStructImpl.valueOf(CodePointConstants.END_OF_MEDIUM);
+	public static final CharacterStruct END_OF_MEDIUM_CHAR = CharacterStructImpl.valueOf(CodePointConstants.END_OF_MEDIUM);
 
-	public static final CharacterStructImpl SUBSTITUTE_CHAR = CharacterStructImpl.valueOf(CodePointConstants.SUBSTITUTE);
+	public static final CharacterStruct SUBSTITUTE_CHAR = CharacterStructImpl.valueOf(CodePointConstants.SUBSTITUTE);
 
-	public static final CharacterStructImpl ESCAPE_CHAR = CharacterStructImpl.valueOf(CodePointConstants.ESCAPE);
+	public static final CharacterStruct ESCAPE_CHAR = CharacterStructImpl.valueOf(CodePointConstants.ESCAPE);
 
-	public static final CharacterStructImpl FILE_SEPARATOR_CHAR = CharacterStructImpl.valueOf(CodePointConstants.FILE_SEPARATOR);
+	public static final CharacterStruct FILE_SEPARATOR_CHAR = CharacterStructImpl.valueOf(CodePointConstants.FILE_SEPARATOR);
 
-	public static final CharacterStructImpl GROUP_SEPARATOR_CHAR = CharacterStructImpl.valueOf(CodePointConstants.GROUP_SEPARATOR);
+	public static final CharacterStruct GROUP_SEPARATOR_CHAR = CharacterStructImpl.valueOf(CodePointConstants.GROUP_SEPARATOR);
 
-	public static final CharacterStructImpl RECORD_SEPARATOR_CHAR = CharacterStructImpl.valueOf(CodePointConstants.RECORD_SEPARATOR);
+	public static final CharacterStruct RECORD_SEPARATOR_CHAR = CharacterStructImpl.valueOf(CodePointConstants.RECORD_SEPARATOR);
 
-	public static final CharacterStructImpl UNIT_SEPARATOR_CHAR = CharacterStructImpl.valueOf(CodePointConstants.UNIT_SEPARATOR);
+	public static final CharacterStruct UNIT_SEPARATOR_CHAR = CharacterStructImpl.valueOf(CodePointConstants.UNIT_SEPARATOR);
 
-	public static final CharacterStructImpl SPACE_CHAR = CharacterStructImpl.valueOf(CodePointConstants.SPACE);
+	public static final CharacterStruct SPACE_CHAR = CharacterStructImpl.valueOf(CodePointConstants.SPACE);
 
-	public static final CharacterStructImpl EXCLAMATION_MARK_CHAR = CharacterStructImpl.valueOf(CodePointConstants.EXCLAMATION_MARK);
+	public static final CharacterStruct EXCLAMATION_MARK_CHAR = CharacterStructImpl.valueOf(CodePointConstants.EXCLAMATION_MARK);
 
-	public static final CharacterStructImpl QUOTATION_MARK_CHAR = CharacterStructImpl.valueOf(CodePointConstants.QUOTATION_MARK);
+	public static final CharacterStruct QUOTATION_MARK_CHAR = CharacterStructImpl.valueOf(CodePointConstants.QUOTATION_MARK);
 
-	public static final CharacterStructImpl NUMBER_SIGN_CHAR = CharacterStructImpl.valueOf(CodePointConstants.NUMBER_SIGN);
+	public static final CharacterStruct NUMBER_SIGN_CHAR = CharacterStructImpl.valueOf(CodePointConstants.NUMBER_SIGN);
 
-	public static final CharacterStructImpl DOLLAR_SIGN_CHAR = CharacterStructImpl.valueOf(CodePointConstants.DOLLAR_SIGN);
+	public static final CharacterStruct DOLLAR_SIGN_CHAR = CharacterStructImpl.valueOf(CodePointConstants.DOLLAR_SIGN);
 
-	public static final CharacterStructImpl PERCENT_SIGN_CHAR = CharacterStructImpl.valueOf(CodePointConstants.PERCENT_SIGN);
+	public static final CharacterStruct PERCENT_SIGN_CHAR = CharacterStructImpl.valueOf(CodePointConstants.PERCENT_SIGN);
 
-	public static final CharacterStructImpl AMPERSAND_CHAR = CharacterStructImpl.valueOf(CodePointConstants.AMPERSAND);
+	public static final CharacterStruct AMPERSAND_CHAR = CharacterStructImpl.valueOf(CodePointConstants.AMPERSAND);
 
-	public static final CharacterStructImpl APOSTROPHE_CHAR = CharacterStructImpl.valueOf(CodePointConstants.APOSTROPHE);
+	public static final CharacterStruct APOSTROPHE_CHAR = CharacterStructImpl.valueOf(CodePointConstants.APOSTROPHE);
 
-	public static final CharacterStructImpl LEFT_PARENTHESIS_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LEFT_PARENTHESIS);
+	public static final CharacterStruct LEFT_PARENTHESIS_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LEFT_PARENTHESIS);
 
-	public static final CharacterStructImpl RIGHT_PARENTHESIS_CHAR = CharacterStructImpl.valueOf(CodePointConstants.RIGHT_PARENTHESIS);
+	public static final CharacterStruct RIGHT_PARENTHESIS_CHAR = CharacterStructImpl.valueOf(CodePointConstants.RIGHT_PARENTHESIS);
 
-	public static final CharacterStructImpl ASTERISK_CHAR = CharacterStructImpl.valueOf(CodePointConstants.ASTERISK);
+	public static final CharacterStruct ASTERISK_CHAR = CharacterStructImpl.valueOf(CodePointConstants.ASTERISK);
 
-	public static final CharacterStructImpl PLUS_SIGN_CHAR = CharacterStructImpl.valueOf(CodePointConstants.PLUS_SIGN);
+	public static final CharacterStruct PLUS_SIGN_CHAR = CharacterStructImpl.valueOf(CodePointConstants.PLUS_SIGN);
 
-	public static final CharacterStructImpl COMMA_CHAR = CharacterStructImpl.valueOf(CodePointConstants.COMMA);
+	public static final CharacterStruct COMMA_CHAR = CharacterStructImpl.valueOf(CodePointConstants.COMMA);
 
-	public static final CharacterStructImpl HYPHEN_MINUS_CHAR = CharacterStructImpl.valueOf(CodePointConstants.HYPHEN_MINUS);
+	public static final CharacterStruct HYPHEN_MINUS_CHAR = CharacterStructImpl.valueOf(CodePointConstants.HYPHEN_MINUS);
 
-	public static final CharacterStructImpl FULL_STOP_CHAR = CharacterStructImpl.valueOf(CodePointConstants.FULL_STOP);
+	public static final CharacterStruct FULL_STOP_CHAR = CharacterStructImpl.valueOf(CodePointConstants.FULL_STOP);
 
-	public static final CharacterStructImpl SLASH_CHAR = CharacterStructImpl.valueOf(CodePointConstants.SLASH);
+	public static final CharacterStruct SLASH_CHAR = CharacterStructImpl.valueOf(CodePointConstants.SLASH);
 
-	public static final CharacterStructImpl DIGIT_ZERO_CHAR = CharacterStructImpl.valueOf(CodePointConstants.DIGIT_ZERO);
+	public static final CharacterStruct DIGIT_ZERO_CHAR = CharacterStructImpl.valueOf(CodePointConstants.DIGIT_ZERO);
 
-	public static final CharacterStructImpl DIGIT_ONE_CHAR = CharacterStructImpl.valueOf(CodePointConstants.DIGIT_ONE);
+	public static final CharacterStruct DIGIT_ONE_CHAR = CharacterStructImpl.valueOf(CodePointConstants.DIGIT_ONE);
 
-	public static final CharacterStructImpl DIGIT_TWO_CHAR = CharacterStructImpl.valueOf(CodePointConstants.DIGIT_TWO);
+	public static final CharacterStruct DIGIT_TWO_CHAR = CharacterStructImpl.valueOf(CodePointConstants.DIGIT_TWO);
 
-	public static final CharacterStructImpl DIGIT_THREE_CHAR = CharacterStructImpl.valueOf(CodePointConstants.DIGIT_THREE);
+	public static final CharacterStruct DIGIT_THREE_CHAR = CharacterStructImpl.valueOf(CodePointConstants.DIGIT_THREE);
 
-	public static final CharacterStructImpl DIGIT_FOUR_CHAR = CharacterStructImpl.valueOf(CodePointConstants.DIGIT_FOUR);
+	public static final CharacterStruct DIGIT_FOUR_CHAR = CharacterStructImpl.valueOf(CodePointConstants.DIGIT_FOUR);
 
-	public static final CharacterStructImpl DIGIT_FIVE_CHAR = CharacterStructImpl.valueOf(CodePointConstants.DIGIT_FIVE);
+	public static final CharacterStruct DIGIT_FIVE_CHAR = CharacterStructImpl.valueOf(CodePointConstants.DIGIT_FIVE);
 
-	public static final CharacterStructImpl DIGIT_SIX_CHAR = CharacterStructImpl.valueOf(CodePointConstants.DIGIT_SIX);
+	public static final CharacterStruct DIGIT_SIX_CHAR = CharacterStructImpl.valueOf(CodePointConstants.DIGIT_SIX);
 
-	public static final CharacterStructImpl DIGIT_SEVEN_CHAR = CharacterStructImpl.valueOf(CodePointConstants.DIGIT_SEVEN);
+	public static final CharacterStruct DIGIT_SEVEN_CHAR = CharacterStructImpl.valueOf(CodePointConstants.DIGIT_SEVEN);
 
-	public static final CharacterStructImpl DIGIT_EIGHT_CHAR = CharacterStructImpl.valueOf(CodePointConstants.DIGIT_EIGHT);
+	public static final CharacterStruct DIGIT_EIGHT_CHAR = CharacterStructImpl.valueOf(CodePointConstants.DIGIT_EIGHT);
 
-	public static final CharacterStructImpl DIGIT_NINE_CHAR = CharacterStructImpl.valueOf(CodePointConstants.DIGIT_NINE);
+	public static final CharacterStruct DIGIT_NINE_CHAR = CharacterStructImpl.valueOf(CodePointConstants.DIGIT_NINE);
 
-	public static final CharacterStructImpl COLON_CHAR = CharacterStructImpl.valueOf(CodePointConstants.COLON);
+	public static final CharacterStruct COLON_CHAR = CharacterStructImpl.valueOf(CodePointConstants.COLON);
 
-	public static final CharacterStructImpl SEMICOLON_CHAR = CharacterStructImpl.valueOf(CodePointConstants.SEMICOLON);
+	public static final CharacterStruct SEMICOLON_CHAR = CharacterStructImpl.valueOf(CodePointConstants.SEMICOLON);
 
-	public static final CharacterStructImpl LESS_THAN_SIGN_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LESS_THAN_SIGN);
+	public static final CharacterStruct LESS_THAN_SIGN_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LESS_THAN_SIGN);
 
-	public static final CharacterStructImpl EQUALS_SIGN_CHAR = CharacterStructImpl.valueOf(CodePointConstants.EQUALS_SIGN);
+	public static final CharacterStruct EQUALS_SIGN_CHAR = CharacterStructImpl.valueOf(CodePointConstants.EQUALS_SIGN);
 
-	public static final CharacterStructImpl GREATER_THAN_SIGN_CHAR = CharacterStructImpl.valueOf(CodePointConstants.GREATER_THAN_SIGN);
+	public static final CharacterStruct GREATER_THAN_SIGN_CHAR = CharacterStructImpl.valueOf(CodePointConstants.GREATER_THAN_SIGN);
 
-	public static final CharacterStructImpl QUESTION_MARK_CHAR = CharacterStructImpl.valueOf(CodePointConstants.QUESTION_MARK);
+	public static final CharacterStruct QUESTION_MARK_CHAR = CharacterStructImpl.valueOf(CodePointConstants.QUESTION_MARK);
 
-	public static final CharacterStructImpl AT_SIGN_CHAR = CharacterStructImpl.valueOf(CodePointConstants.AT_SIGN);
+	public static final CharacterStruct AT_SIGN_CHAR = CharacterStructImpl.valueOf(CodePointConstants.AT_SIGN);
 
-	public static final CharacterStructImpl LATIN_CAPITAL_LETTER_A_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_CAPITAL_LETTER_A);
+	public static final CharacterStruct LATIN_CAPITAL_LETTER_A_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_CAPITAL_LETTER_A);
 
-	public static final CharacterStructImpl LATIN_CAPITAL_LETTER_B_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_CAPITAL_LETTER_B);
+	public static final CharacterStruct LATIN_CAPITAL_LETTER_B_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_CAPITAL_LETTER_B);
 
-	public static final CharacterStructImpl LATIN_CAPITAL_LETTER_C_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_CAPITAL_LETTER_C);
+	public static final CharacterStruct LATIN_CAPITAL_LETTER_C_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_CAPITAL_LETTER_C);
 
-	public static final CharacterStructImpl LATIN_CAPITAL_LETTER_D_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_CAPITAL_LETTER_D);
+	public static final CharacterStruct LATIN_CAPITAL_LETTER_D_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_CAPITAL_LETTER_D);
 
-	public static final CharacterStructImpl LATIN_CAPITAL_LETTER_E_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_CAPITAL_LETTER_E);
+	public static final CharacterStruct LATIN_CAPITAL_LETTER_E_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_CAPITAL_LETTER_E);
 
-	public static final CharacterStructImpl LATIN_CAPITAL_LETTER_F_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_CAPITAL_LETTER_F);
+	public static final CharacterStruct LATIN_CAPITAL_LETTER_F_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_CAPITAL_LETTER_F);
 
-	public static final CharacterStructImpl LATIN_CAPITAL_LETTER_G_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_CAPITAL_LETTER_G);
+	public static final CharacterStruct LATIN_CAPITAL_LETTER_G_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_CAPITAL_LETTER_G);
 
-	public static final CharacterStructImpl LATIN_CAPITAL_LETTER_H_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_CAPITAL_LETTER_H);
+	public static final CharacterStruct LATIN_CAPITAL_LETTER_H_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_CAPITAL_LETTER_H);
 
-	public static final CharacterStructImpl LATIN_CAPITAL_LETTER_I_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_CAPITAL_LETTER_I);
+	public static final CharacterStruct LATIN_CAPITAL_LETTER_I_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_CAPITAL_LETTER_I);
 
-	public static final CharacterStructImpl LATIN_CAPITAL_LETTER_J_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_CAPITAL_LETTER_J);
+	public static final CharacterStruct LATIN_CAPITAL_LETTER_J_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_CAPITAL_LETTER_J);
 
-	public static final CharacterStructImpl LATIN_CAPITAL_LETTER_K_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_CAPITAL_LETTER_K);
+	public static final CharacterStruct LATIN_CAPITAL_LETTER_K_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_CAPITAL_LETTER_K);
 
-	public static final CharacterStructImpl LATIN_CAPITAL_LETTER_L_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_CAPITAL_LETTER_L);
+	public static final CharacterStruct LATIN_CAPITAL_LETTER_L_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_CAPITAL_LETTER_L);
 
-	public static final CharacterStructImpl LATIN_CAPITAL_LETTER_M_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_CAPITAL_LETTER_M);
+	public static final CharacterStruct LATIN_CAPITAL_LETTER_M_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_CAPITAL_LETTER_M);
 
-	public static final CharacterStructImpl LATIN_CAPITAL_LETTER_N_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_CAPITAL_LETTER_N);
+	public static final CharacterStruct LATIN_CAPITAL_LETTER_N_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_CAPITAL_LETTER_N);
 
-	public static final CharacterStructImpl LATIN_CAPITAL_LETTER_O_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_CAPITAL_LETTER_O);
+	public static final CharacterStruct LATIN_CAPITAL_LETTER_O_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_CAPITAL_LETTER_O);
 
-	public static final CharacterStructImpl LATIN_CAPITAL_LETTER_P_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_CAPITAL_LETTER_P);
+	public static final CharacterStruct LATIN_CAPITAL_LETTER_P_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_CAPITAL_LETTER_P);
 
-	public static final CharacterStructImpl LATIN_CAPITAL_LETTER_Q_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_CAPITAL_LETTER_Q);
+	public static final CharacterStruct LATIN_CAPITAL_LETTER_Q_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_CAPITAL_LETTER_Q);
 
-	public static final CharacterStructImpl LATIN_CAPITAL_LETTER_R_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_CAPITAL_LETTER_R);
+	public static final CharacterStruct LATIN_CAPITAL_LETTER_R_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_CAPITAL_LETTER_R);
 
-	public static final CharacterStructImpl LATIN_CAPITAL_LETTER_S_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_CAPITAL_LETTER_S);
+	public static final CharacterStruct LATIN_CAPITAL_LETTER_S_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_CAPITAL_LETTER_S);
 
-	public static final CharacterStructImpl LATIN_CAPITAL_LETTER_T_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_CAPITAL_LETTER_T);
+	public static final CharacterStruct LATIN_CAPITAL_LETTER_T_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_CAPITAL_LETTER_T);
 
-	public static final CharacterStructImpl LATIN_CAPITAL_LETTER_U_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_CAPITAL_LETTER_U);
+	public static final CharacterStruct LATIN_CAPITAL_LETTER_U_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_CAPITAL_LETTER_U);
 
-	public static final CharacterStructImpl LATIN_CAPITAL_LETTER_V_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_CAPITAL_LETTER_V);
+	public static final CharacterStruct LATIN_CAPITAL_LETTER_V_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_CAPITAL_LETTER_V);
 
-	public static final CharacterStructImpl LATIN_CAPITAL_LETTER_W_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_CAPITAL_LETTER_W);
+	public static final CharacterStruct LATIN_CAPITAL_LETTER_W_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_CAPITAL_LETTER_W);
 
-	public static final CharacterStructImpl LATIN_CAPITAL_LETTER_X_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_CAPITAL_LETTER_X);
+	public static final CharacterStruct LATIN_CAPITAL_LETTER_X_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_CAPITAL_LETTER_X);
 
-	public static final CharacterStructImpl LATIN_CAPITAL_LETTER_Y_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_CAPITAL_LETTER_Y);
+	public static final CharacterStruct LATIN_CAPITAL_LETTER_Y_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_CAPITAL_LETTER_Y);
 
-	public static final CharacterStructImpl LATIN_CAPITAL_LETTER_Z_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_CAPITAL_LETTER_Z);
+	public static final CharacterStruct LATIN_CAPITAL_LETTER_Z_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_CAPITAL_LETTER_Z);
 
-	public static final CharacterStructImpl LEFT_SQUARE_BRACKET_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LEFT_SQUARE_BRACKET);
+	public static final CharacterStruct LEFT_SQUARE_BRACKET_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LEFT_SQUARE_BRACKET);
 
-	public static final CharacterStructImpl BACKSLASH_CHAR = CharacterStructImpl.valueOf(CodePointConstants.BACKSLASH);
+	public static final CharacterStruct BACKSLASH_CHAR = CharacterStructImpl.valueOf(CodePointConstants.BACKSLASH);
 
-	public static final CharacterStructImpl RIGHT_SQUARE_BRACKET_CHAR = CharacterStructImpl.valueOf(CodePointConstants.RIGHT_SQUARE_BRACKET);
+	public static final CharacterStruct RIGHT_SQUARE_BRACKET_CHAR = CharacterStructImpl.valueOf(CodePointConstants.RIGHT_SQUARE_BRACKET);
 
-	public static final CharacterStructImpl CIRCUMFLEX_ACCENT_CHAR = CharacterStructImpl.valueOf(CodePointConstants.CIRCUMFLEX_ACCENT);
+	public static final CharacterStruct CIRCUMFLEX_ACCENT_CHAR = CharacterStructImpl.valueOf(CodePointConstants.CIRCUMFLEX_ACCENT);
 
-	public static final CharacterStructImpl LOW_LINE_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LOW_LINE);
+	public static final CharacterStruct LOW_LINE_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LOW_LINE);
 
-	public static final CharacterStructImpl GRAVE_ACCENT_CHAR = CharacterStructImpl.valueOf(CodePointConstants.GRAVE_ACCENT);
+	public static final CharacterStruct GRAVE_ACCENT_CHAR = CharacterStructImpl.valueOf(CodePointConstants.GRAVE_ACCENT);
 
-	public static final CharacterStructImpl LATIN_SMALL_LETTER_A_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_SMALL_LETTER_A);
+	public static final CharacterStruct LATIN_SMALL_LETTER_A_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_SMALL_LETTER_A);
 
-	public static final CharacterStructImpl LATIN_SMALL_LETTER_B_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_SMALL_LETTER_B);
+	public static final CharacterStruct LATIN_SMALL_LETTER_B_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_SMALL_LETTER_B);
 
-	public static final CharacterStructImpl LATIN_SMALL_LETTER_C_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_SMALL_LETTER_C);
+	public static final CharacterStruct LATIN_SMALL_LETTER_C_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_SMALL_LETTER_C);
 
-	public static final CharacterStructImpl LATIN_SMALL_LETTER_D_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_SMALL_LETTER_D);
+	public static final CharacterStruct LATIN_SMALL_LETTER_D_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_SMALL_LETTER_D);
 
-	public static final CharacterStructImpl LATIN_SMALL_LETTER_E_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_SMALL_LETTER_E);
+	public static final CharacterStruct LATIN_SMALL_LETTER_E_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_SMALL_LETTER_E);
 
-	public static final CharacterStructImpl LATIN_SMALL_LETTER_F_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_SMALL_LETTER_F);
+	public static final CharacterStruct LATIN_SMALL_LETTER_F_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_SMALL_LETTER_F);
 
-	public static final CharacterStructImpl LATIN_SMALL_LETTER_G_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_SMALL_LETTER_G);
+	public static final CharacterStruct LATIN_SMALL_LETTER_G_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_SMALL_LETTER_G);
 
-	public static final CharacterStructImpl LATIN_SMALL_LETTER_H_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_SMALL_LETTER_H);
+	public static final CharacterStruct LATIN_SMALL_LETTER_H_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_SMALL_LETTER_H);
 
-	public static final CharacterStructImpl LATIN_SMALL_LETTER_I_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_SMALL_LETTER_I);
+	public static final CharacterStruct LATIN_SMALL_LETTER_I_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_SMALL_LETTER_I);
 
-	public static final CharacterStructImpl LATIN_SMALL_LETTER_J_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_SMALL_LETTER_J);
+	public static final CharacterStruct LATIN_SMALL_LETTER_J_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_SMALL_LETTER_J);
 
-	public static final CharacterStructImpl LATIN_SMALL_LETTER_K_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_SMALL_LETTER_K);
+	public static final CharacterStruct LATIN_SMALL_LETTER_K_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_SMALL_LETTER_K);
 
-	public static final CharacterStructImpl LATIN_SMALL_LETTER_L_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_SMALL_LETTER_L);
+	public static final CharacterStruct LATIN_SMALL_LETTER_L_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_SMALL_LETTER_L);
 
-	public static final CharacterStructImpl LATIN_SMALL_LETTER_M_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_SMALL_LETTER_M);
+	public static final CharacterStruct LATIN_SMALL_LETTER_M_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_SMALL_LETTER_M);
 
-	public static final CharacterStructImpl LATIN_SMALL_LETTER_N_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_SMALL_LETTER_N);
+	public static final CharacterStruct LATIN_SMALL_LETTER_N_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_SMALL_LETTER_N);
 
-	public static final CharacterStructImpl LATIN_SMALL_LETTER_O_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_SMALL_LETTER_O);
+	public static final CharacterStruct LATIN_SMALL_LETTER_O_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_SMALL_LETTER_O);
 
-	public static final CharacterStructImpl LATIN_SMALL_LETTER_P_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_SMALL_LETTER_P);
+	public static final CharacterStruct LATIN_SMALL_LETTER_P_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_SMALL_LETTER_P);
 
-	public static final CharacterStructImpl LATIN_SMALL_LETTER_Q_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_SMALL_LETTER_Q);
+	public static final CharacterStruct LATIN_SMALL_LETTER_Q_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_SMALL_LETTER_Q);
 
-	public static final CharacterStructImpl LATIN_SMALL_LETTER_R_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_SMALL_LETTER_R);
+	public static final CharacterStruct LATIN_SMALL_LETTER_R_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_SMALL_LETTER_R);
 
-	public static final CharacterStructImpl LATIN_SMALL_LETTER_S_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_SMALL_LETTER_S);
+	public static final CharacterStruct LATIN_SMALL_LETTER_S_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_SMALL_LETTER_S);
 
-	public static final CharacterStructImpl LATIN_SMALL_LETTER_T_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_SMALL_LETTER_T);
+	public static final CharacterStruct LATIN_SMALL_LETTER_T_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_SMALL_LETTER_T);
 
-	public static final CharacterStructImpl LATIN_SMALL_LETTER_U_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_SMALL_LETTER_U);
+	public static final CharacterStruct LATIN_SMALL_LETTER_U_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_SMALL_LETTER_U);
 
-	public static final CharacterStructImpl LATIN_SMALL_LETTER_V_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_SMALL_LETTER_V);
+	public static final CharacterStruct LATIN_SMALL_LETTER_V_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_SMALL_LETTER_V);
 
-	public static final CharacterStructImpl LATIN_SMALL_LETTER_W_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_SMALL_LETTER_W);
+	public static final CharacterStruct LATIN_SMALL_LETTER_W_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_SMALL_LETTER_W);
 
-	public static final CharacterStructImpl LATIN_SMALL_LETTER_X_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_SMALL_LETTER_X);
+	public static final CharacterStruct LATIN_SMALL_LETTER_X_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_SMALL_LETTER_X);
 
-	public static final CharacterStructImpl LATIN_SMALL_LETTER_Y_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_SMALL_LETTER_Y);
+	public static final CharacterStruct LATIN_SMALL_LETTER_Y_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_SMALL_LETTER_Y);
 
-	public static final CharacterStructImpl LATIN_SMALL_LETTER_Z_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_SMALL_LETTER_Z);
+	public static final CharacterStruct LATIN_SMALL_LETTER_Z_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_SMALL_LETTER_Z);
 
-	public static final CharacterStructImpl LEFT_CURLY_BRACKET_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LEFT_CURLY_BRACKET);
+	public static final CharacterStruct LEFT_CURLY_BRACKET_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LEFT_CURLY_BRACKET);
 
-	public static final CharacterStructImpl VERTICAL_LINE_CHAR = CharacterStructImpl.valueOf(CodePointConstants.VERTICAL_LINE);
+	public static final CharacterStruct VERTICAL_LINE_CHAR = CharacterStructImpl.valueOf(CodePointConstants.VERTICAL_LINE);
 
-	public static final CharacterStructImpl RIGHT_CURLY_BRACKET_CHAR = CharacterStructImpl.valueOf(CodePointConstants.RIGHT_CURLY_BRACKET);
+	public static final CharacterStruct RIGHT_CURLY_BRACKET_CHAR = CharacterStructImpl.valueOf(CodePointConstants.RIGHT_CURLY_BRACKET);
 
-	public static final CharacterStructImpl TILDE_CHAR = CharacterStructImpl.valueOf(CodePointConstants.TILDE);
+	public static final CharacterStruct TILDE_CHAR = CharacterStructImpl.valueOf(CodePointConstants.TILDE);
 
-	public static final CharacterStructImpl DELETE_CHAR = CharacterStructImpl.valueOf(CodePointConstants.DELETE);
+	public static final CharacterStruct DELETE_CHAR = CharacterStructImpl.valueOf(CodePointConstants.DELETE);
 
-	public static final CharacterStructImpl RUBOUT_CHAR = CharacterStructImpl.valueOf(CodePointConstants.RUBOUT);
+	public static final CharacterStruct RUBOUT_CHAR = CharacterStructImpl.valueOf(CodePointConstants.RUBOUT);
 
-	public static final CharacterStructImpl EXIT_CHAR_CHAR = CharacterStructImpl.valueOf(CodePointConstants.EXIT_CHAR);
+	public static final CharacterStruct EXIT_CHAR_CHAR = CharacterStructImpl.valueOf(CodePointConstants.EXIT_CHAR);
 
 	// Standard-Char Map Constant
 
-	public static final Map<Integer, CharacterStructImpl> STANDARD_CHAR_MAP;
+	public static final Map<Integer, CharacterStruct> STANDARD_CHAR_MAP;
 
 	static {
-		final Map<Integer, CharacterStructImpl> tempStandardCharMap = new HashMap<>();
+		final Map<Integer, CharacterStruct> tempStandardCharMap = new HashMap<>();
 		tempStandardCharMap.put(CodePointConstants.EOF, EOF_CHAR);
 		tempStandardCharMap.put((int) CodePointConstants.NULL, NULL_CHAR);
 		tempStandardCharMap.put((int) CodePointConstants.START_OF_HEADER, START_OF_HEADER_CHAR);

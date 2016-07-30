@@ -6,7 +6,7 @@ package jcl.functions.character;
 
 import java.util.function.Predicate;
 
-import jcl.lang.character.CharacterStructImpl;
+import jcl.lang.CharacterStruct;
 import org.springframework.stereotype.Component;
 
 /**
@@ -26,13 +26,13 @@ public final class CharGTEqFunction extends AbstractCharacterEqualityFunction {
 
 	/**
 	 * {@inheritDoc}
-	 * Returns {@link CharacterStructImpl#isGreaterThanOrEqualTo(CharacterStructImpl...)} as a method reference predicate.
+	 * Returns {@link CharacterStruct#isGreaterThanOrEqualTo(CharacterStruct...)} as a method reference predicate.
 	 *
-	 * @return returns {@link CharacterStructImpl#isGreaterThanOrEqualTo(CharacterStructImpl...)} as a method reference
+	 * @return returns {@link CharacterStruct#isGreaterThanOrEqualTo(CharacterStruct...)} as a method reference
 	 * predicate
 	 */
 	@Override
-	protected Predicate<CharacterStructImpl[]> characterEqualityPredicate() {
-		return CharacterStructImpl::isGreaterThanOrEqualTo;
+	protected Predicate<CharacterStruct[]> characterEqualityPredicate() {
+		return CharacterStruct::isGreaterThanOrEqualTo;
 	}
 }

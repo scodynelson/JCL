@@ -4,11 +4,13 @@
 
 package jcl.functions.character;
 
+import jcl.lang.CharacterStruct;
 import jcl.lang.LispStruct;
-import jcl.lang.character.CharacterStructImpl;
+import jcl.lang.factory.LispStructFactory;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
+import jcl.lang.list.NILStruct;
 import jcl.lang.number.IntegerStruct;
 import org.springframework.stereotype.Component;
 
@@ -33,17 +35,21 @@ public final class CodeCharFunction extends CommonLispBuiltInFunctionStruct {
 	/**
 	 * {@inheritDoc}
 	 * Application method for the {@code code-char} character function that expects a single {@link IntegerStruct}
-	 * parameter object and applies {@link CharacterStructImpl#codeChar(IntegerStruct)} against the value to retrieve the
-	 * {@link CharacterStructImpl} for the {@link IntegerStruct} parameter code value.
+	 * parameter object and applies {@link CharacterStruct#codeChar(IntegerStruct)} against the value to retrieve the
+	 * {@link CharacterStruct} for the {@link IntegerStruct} parameter code value.
 	 *
 	 * @param lispStructs
 	 * 		the function parameters
 	 *
-	 * @return the {@link CharacterStructImpl} for the {@link IntegerStruct} parameter code value
+	 * @return the {@link CharacterStruct} for the {@link IntegerStruct} parameter code value
 	 */
 	@Override
 	public LispStruct apply(final Arguments arguments) {
 		final IntegerStruct code = arguments.getRequiredArgument("CODE", IntegerStruct.class);
-		return CharacterStructImpl.codeChar(code);
+		final int codeValue = code.intValue();
+		if (!Character.isDefined(codeValue)) {
+			return NILStruct.INSTANCE;
+		}
+		return LispStructFactory.toCharacter(codeValue);
 	}
 }

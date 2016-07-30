@@ -18,7 +18,7 @@ import jcl.compiler.function.CompiledFunctionStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.PackageStruct;
 import jcl.lang.SymbolStruct;
-import jcl.lang.character.CharacterStructImpl;
+import jcl.lang.factory.LispStructFactory;
 import jcl.lang.list.NILStruct;
 import org.springframework.stereotype.Component;
 
@@ -124,13 +124,13 @@ public class TestLambdaGenerator extends CompiledFunctionStruct {
 		final PackageStruct pkg1 = PackageStruct.findPackage("SYSTEM");
 		final SymbolStruct symbol1 = pkg1.findSymbol("SYMBOL1").getSymbol();
 		if (symbolBinding.equals(symbol1)) {
-			return CharacterStructImpl.valueOf(100);
+			return LispStructFactory.toCharacter(100);
 		}
 
 		final PackageStruct pkg2 = PackageStruct.findPackage("SYSTEM");
 		final SymbolStruct symbol2 = pkg2.findSymbol("SYMBOL2").getSymbol();
 		if (symbolBinding.equals(symbol2)) {
-			return CharacterStructImpl.valueOf(200);
+			return LispStructFactory.toCharacter(200);
 		}
 
 		return NILStruct.INSTANCE;

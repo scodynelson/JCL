@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+import com.ibm.icu.lang.UCharacter;
+import jcl.lang.CharacterStruct;
 import jcl.lang.PackageStruct;
 import jcl.lang.PrinterVariables;
 import jcl.lang.SymbolStruct;
@@ -26,7 +28,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 /**
  * The {@link StringStruct} is the object representation of a Lisp 'string' type.
  */
-public final class StringStruct extends VectorStruct<CharacterStructImpl> {
+public final class StringStruct extends VectorStruct<CharacterStruct> {
 
 	/**
 	 * Public constructor.
@@ -52,7 +54,7 @@ public final class StringStruct extends VectorStruct<CharacterStructImpl> {
 	 * @param fillPointer
 	 * 		the string fillPointer
 	 */
-	private StringStruct(final int size, final List<CharacterStructImpl> contents, final CharacterType elementType,
+	private StringStruct(final int size, final List<CharacterStruct> contents, final CharacterType elementType,
 	                     final boolean isAdjustable, final Integer fillPointer) {
 		super(getStringType(isAdjustable, fillPointer, elementType), size, contents, elementType, isAdjustable, fillPointer);
 	}
@@ -78,17 +80,17 @@ public final class StringStruct extends VectorStruct<CharacterStructImpl> {
 	}
 
 	/**
-	 * Gets a list of {@link CharacterStructImpl}s from the provided {@link String} value.
+	 * Gets a list of {@link CharacterStruct}s from the provided {@link String} value.
 	 *
 	 * @param stringValue
-	 * 		the Java string to convert to a list of {@link CharacterStructImpl}s
+	 * 		the Java string to convert to a list of {@link CharacterStruct}s
 	 *
-	 * @return a list of {@link CharacterStructImpl}s from the provided {@link String} value
+	 * @return a list of {@link CharacterStruct}s from the provided {@link String} value
 	 */
-	private static List<CharacterStructImpl> getCharList(final String stringValue) {
-		final List<CharacterStructImpl> charList = new ArrayList<>(stringValue.length());
+	private static List<CharacterStruct> getCharList(final String stringValue) {
+		final List<CharacterStruct> charList = new ArrayList<>(stringValue.length());
 		for (final char character : stringValue.toCharArray()) {
-			final CharacterStructImpl characterStruct = CharacterStructImpl.valueOf(character);
+			final CharacterStruct characterStruct = CharacterStructImpl.valueOf(character);
 			charList.add(characterStruct);
 		}
 		return charList;
@@ -106,7 +108,7 @@ public final class StringStruct extends VectorStruct<CharacterStructImpl> {
 	public String getAsJavaString() {
 		final StringBuilder stringBuilder = new StringBuilder(contents.size());
 
-		for (final CharacterStructImpl characterStruct : contents) {
+		for (final CharacterStruct characterStruct : contents) {
 			final int codePoint = characterStruct.getCodePoint();
 			stringBuilder.appendCodePoint(codePoint);
 		}
@@ -115,7 +117,7 @@ public final class StringStruct extends VectorStruct<CharacterStructImpl> {
 	}
 
 	@Override
-	public Supplier<CharacterStructImpl> asCharacter() {
+	public Supplier<CharacterStruct> asCharacter() {
 		return () -> {
 			// TODO: Can improve this
 			final String javaString = getAsJavaString();
@@ -127,10 +129,10 @@ public final class StringStruct extends VectorStruct<CharacterStructImpl> {
 	}
 
 	@Override
-	public Supplier<CharacterStructImpl> asNamedCharacter() {
+	public Supplier<CharacterStruct> asNamedCharacter() {
 		return () -> {
 			final String javaString = getAsJavaString();
-			return CharacterStructImpl.nameChar(javaString);
+			return CharacterStructImpl.valueOf(UCharacter.getCharFromName(javaString));
 		};
 	}
 
@@ -174,7 +176,7 @@ public final class StringStruct extends VectorStruct<CharacterStructImpl> {
 	public Long length() {
 		// TODO: Do this right later...
 
-		final List<CharacterStructImpl> asJavaList = contents;
+		final List<CharacterStruct> asJavaList = contents;
 		final int size = asJavaList.size();
 		return (long) size;
 	}
@@ -213,7 +215,7 @@ public final class StringStruct extends VectorStruct<CharacterStructImpl> {
 
 		final List<Integer> codePointContents =
 				getContents().stream()
-				             .map(CharacterStructImpl::getCodePoint)
+				             .map(CharacterStruct::getCodePoint)
 				             .collect(Collectors.toList());
 
 		final int amountToPrint = (fillPointer == null) ? codePointContents.size() : fillPointer;

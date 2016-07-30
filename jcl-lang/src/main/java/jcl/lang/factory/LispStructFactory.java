@@ -8,6 +8,7 @@ import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
 
+import jcl.lang.CharacterStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.PackageStruct;
 import jcl.lang.SymbolStruct;
@@ -76,11 +77,11 @@ public final class LispStructFactory {
 	 * Returns a CharacterStruct object with the provided {@code character} value.
 	 *
 	 * @param character
-	 * 		the character value used to derive the {@link CharacterStructImpl#codePoint} of the resulting CharacterStruct
+	 * 		the character value used to derive the {@link CharacterStruct#getCodePoint()} of the resulting CharacterStruct
 	 *
 	 * @return a CharacterStruct object with the provided {@code character} value
 	 */
-	public static CharacterStructImpl toCharacter(final Character character) {
+	public static CharacterStruct toCharacter(final Character character) {
 		return CharacterStructImpl.valueOf(character);
 	}
 
@@ -88,11 +89,11 @@ public final class LispStructFactory {
 	 * Returns a CharacterStruct object with the provided {@code codePoint} value.
 	 *
 	 * @param codePoint
-	 * 		the {@link CharacterStructImpl#codePoint} value of the resulting CharacterStruct
+	 * 		the {@link CharacterStruct#getCodePoint()} value of the resulting CharacterStruct
 	 *
 	 * @return a CharacterStruct object with the provided {@code codePoint} value
 	 */
-	public static CharacterStructImpl toCharacter(final Integer codePoint) {
+	public static CharacterStruct toCharacter(final Integer codePoint) {
 		return CharacterStructImpl.valueOf(codePoint);
 	}
 

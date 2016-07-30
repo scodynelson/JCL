@@ -7,8 +7,8 @@ package jcl.functions.character;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+import jcl.lang.CharacterStruct;
 import jcl.lang.LispStruct;
-import jcl.lang.character.CharacterStructImpl;
 import org.springframework.stereotype.Component;
 
 /**
@@ -34,7 +34,7 @@ public final class NameCharFunction extends AbstractCharacterDesignatorFunction 
 	 * @return a {@link Function} applying {@link LispStruct#asNamedCharacter()} against a {@link LispStruct}
 	 */
 	@Override
-	protected Function<LispStruct, Supplier<CharacterStructImpl>> characterFunction() {
+	protected Function<LispStruct, Supplier<CharacterStruct>> characterFunction() {
 		return LispStruct::asNamedCharacter;
 	}
 }

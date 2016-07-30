@@ -7,7 +7,6 @@ package jcl.lang;
 import java.util.function.Supplier;
 
 import jcl.lang.array.StringStruct;
-import jcl.lang.character.CharacterStructImpl;
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.pathname.PathnameStruct;
 import jcl.type.LispType;
@@ -49,7 +48,7 @@ public interface LispStruct {
 	 *
 	 * @return a converted character, or a throw {@link TypeErrorException}
 	 */
-	default Supplier<CharacterStructImpl> asCharacter() {
+	default Supplier<CharacterStruct> asCharacter() {
 		throw new TypeErrorException("Type cannot be converted to Character.");
 	}
 
@@ -59,7 +58,7 @@ public interface LispStruct {
 	 *
 	 * @return a converted character, or a throw {@link TypeErrorException}
 	 */
-	default Supplier<CharacterStructImpl> asNamedCharacter() {
+	default Supplier<CharacterStruct> asNamedCharacter() {
 		throw new TypeErrorException("Type cannot be converted to Character.");
 	}
 

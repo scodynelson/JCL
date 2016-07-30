@@ -6,7 +6,7 @@ package jcl.functions.character;
 
 import java.util.function.Predicate;
 
-import jcl.lang.character.CharacterStructImpl;
+import jcl.lang.CharacterStruct;
 import org.springframework.stereotype.Component;
 
 /**
@@ -26,12 +26,12 @@ public final class LowerCasePFunction extends AbstractCharacterPredicateFunction
 
 	/**
 	 * {@inheritDoc}
-	 * Returns {@link CharacterStructImpl#isLowerCase()} as a method reference predicate.
+	 * Returns {@link CharacterStruct#isLowerCase()} as a method reference predicate.
 	 *
-	 * @return returns {@link CharacterStructImpl#isLowerCase()} as a method reference predicate
+	 * @return returns {@link CharacterStruct#isLowerCase()} as a method reference predicate
 	 */
 	@Override
-	protected Predicate<CharacterStructImpl> predicate() {
-		return CharacterStructImpl::isLowerCase;
+	protected Predicate<CharacterStruct> predicate() {
+		return CharacterStruct::isLowerCase;
 	}
 }

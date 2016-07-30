@@ -146,7 +146,7 @@ public final class StringStruct extends VectorStruct<CharacterStruct> {
 	public Supplier<SymbolStruct> asSymbol() {
 		return () -> {
 			final String namestring = getAsJavaString();
-			return new SymbolStruct(namestring);
+			return SymbolStruct.valueOf(namestring);
 		};
 	}
 

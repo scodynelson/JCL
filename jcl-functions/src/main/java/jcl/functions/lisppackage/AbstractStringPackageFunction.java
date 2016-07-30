@@ -53,12 +53,12 @@ abstract class AbstractStringPackageFunction extends CommonLispBuiltInFunctionSt
 		final PackageStruct aPackage = arguments.getOptionalArgument("PACKAGE", PackageStruct.class);
 		final PackageSymbolStruct packageSymbol = packageFunction().apply(aPackage, aString.getAsJavaString());
 		if (packageSymbol == null) {
-			return new ValuesStruct(NILStruct.INSTANCE, NILStruct.INSTANCE);
+			return ValuesStruct.valueOf(NILStruct.INSTANCE, NILStruct.INSTANCE);
 		}
 
 		final SymbolStruct symbol = packageSymbol.getSymbol();
 		final KeywordStruct packageSymbolType = packageSymbol.getPackageSymbolType();
-		return new ValuesStruct(symbol, packageSymbolType);
+		return ValuesStruct.valueOf(symbol, packageSymbolType);
 	}
 
 	/**

@@ -8,19 +8,25 @@ import java.util.Arrays;
 import java.util.List;
 
 import jcl.lang.list.NILStruct;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 public class ValuesStruct implements LispStruct {
 
 	private final List<LispStruct> valuesList;
 
-	public ValuesStruct(final LispStruct... values) {
+	private ValuesStruct(final LispStruct... values) {
 		this(Arrays.asList(values));
 	}
 
-	public ValuesStruct(final List<LispStruct> valuesList) {
+	private ValuesStruct(final List<LispStruct> valuesList) {
 		this.valuesList = valuesList;
+	}
+
+	public static ValuesStruct valueOf(final LispStruct... values) {
+		return new ValuesStruct(values);
+	}
+
+	public static ValuesStruct valueOf(final List<LispStruct> valuesList) {
+		return new ValuesStruct(valuesList);
 	}
 
 	public List<LispStruct> getValuesList() {
@@ -32,28 +38,6 @@ public class ValuesStruct implements LispStruct {
 			return NILStruct.INSTANCE;
 		}
 		return valuesList.get(0);
-	}
-
-	@Override
-	public int hashCode() {
-		return new HashCodeBuilder().append(valuesList)
-		                            .toHashCode();
-	}
-
-	@Override
-	public boolean equals(final Object obj) {
-		if (obj == null) {
-			return false;
-		}
-		if (obj == this) {
-			return true;
-		}
-		if (obj.getClass() != getClass()) {
-			return false;
-		}
-		final ValuesStruct rhs = (ValuesStruct) obj;
-		return new EqualsBuilder().append(valuesList, rhs.valuesList)
-		                          .isEquals();
 	}
 
 	@Override

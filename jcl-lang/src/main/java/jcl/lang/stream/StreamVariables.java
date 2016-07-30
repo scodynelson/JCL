@@ -9,13 +9,13 @@ import jcl.lang.VariableStruct;
 
 public interface StreamVariables {
 
-	VariableStruct<TwoWayStreamStruct> TERMINAL_IO = new VariableStruct<>("*TERMINAL-IO*", GlobalPackageStruct.COMMON_LISP,
+	VariableStruct<TwoWayStreamStruct> TERMINAL_IO = VariableStruct.valueOf("*TERMINAL-IO*", GlobalPackageStruct.COMMON_LISP,
 	                                                                      new TwoWayStreamStruct(true, EmptyStreamStruct.INSTANCE, EmptyStreamStruct.INSTANCE));
 
-	VariableStruct<IOStream> DEBUG_IO = new VariableStruct<>("*DEBUG-IO*", GlobalPackageStruct.COMMON_LISP, new SynonymStreamStruct(TERMINAL_IO));
-	VariableStruct<OutputStream> ERROR_OUTPUT = new VariableStruct<>("*ERROR-OUTPUT*", GlobalPackageStruct.COMMON_LISP, new SynonymStreamStruct(TERMINAL_IO));
-	VariableStruct<IOStream> QUERY_IO = new VariableStruct<>("*QUERY-IO*", GlobalPackageStruct.COMMON_LISP, new SynonymStreamStruct(TERMINAL_IO));
-	VariableStruct<InputStream> STANDARD_INPUT = new VariableStruct<>("*STANDARD-INPUT*", GlobalPackageStruct.COMMON_LISP, new SynonymStreamStruct(TERMINAL_IO));
-	VariableStruct<OutputStream> STANDARD_OUTPUT = new VariableStruct<>("*STANDARD-OUTPUT*", GlobalPackageStruct.COMMON_LISP, new SynonymStreamStruct(TERMINAL_IO));
-	VariableStruct<OutputStream> TRACE_OUTPUT = new VariableStruct<>("*TRACE-OUTPUT*", GlobalPackageStruct.COMMON_LISP, new SynonymStreamStruct(TERMINAL_IO));
+	VariableStruct<IOStream> DEBUG_IO = VariableStruct.valueOf("*DEBUG-IO*", GlobalPackageStruct.COMMON_LISP, new SynonymStreamStruct(TERMINAL_IO));
+	VariableStruct<OutputStream> ERROR_OUTPUT = VariableStruct.valueOf("*ERROR-OUTPUT*", GlobalPackageStruct.COMMON_LISP, new SynonymStreamStruct(TERMINAL_IO));
+	VariableStruct<IOStream> QUERY_IO = VariableStruct.valueOf("*QUERY-IO*", GlobalPackageStruct.COMMON_LISP, new SynonymStreamStruct(TERMINAL_IO));
+	VariableStruct<InputStream> STANDARD_INPUT = VariableStruct.valueOf("*STANDARD-INPUT*", GlobalPackageStruct.COMMON_LISP, new SynonymStreamStruct(TERMINAL_IO));
+	VariableStruct<OutputStream> STANDARD_OUTPUT = VariableStruct.valueOf("*STANDARD-OUTPUT*", GlobalPackageStruct.COMMON_LISP, new SynonymStreamStruct(TERMINAL_IO));
+	VariableStruct<OutputStream> TRACE_OUTPUT = VariableStruct.valueOf("*TRACE-OUTPUT*", GlobalPackageStruct.COMMON_LISP, new SynonymStreamStruct(TERMINAL_IO));
 }

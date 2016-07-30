@@ -38,6 +38,6 @@ public final class TruncateFunction extends CommonLispBuiltInFunctionStruct {
 		final QuotientRemainder truncate = real.truncate(divisor);
 		final RealStruct quotient = truncate.getQuotient();
 		final RealStruct remainder = truncate.getRemainder();
-		return new ValuesStruct(quotient, remainder);
+		return ValuesStruct.valueOf(quotient, remainder);
 	}
 }

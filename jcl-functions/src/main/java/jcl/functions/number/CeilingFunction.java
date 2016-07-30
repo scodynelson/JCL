@@ -38,6 +38,6 @@ public final class CeilingFunction extends CommonLispBuiltInFunctionStruct {
 		final QuotientRemainder ceiling = real.ceiling(divisor);
 		final RealStruct quotient = ceiling.getQuotient();
 		final RealStruct remainder = ceiling.getRemainder();
-		return new ValuesStruct(quotient, remainder);
+		return ValuesStruct.valueOf(quotient, remainder);
 	}
 }

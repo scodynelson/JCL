@@ -35,6 +35,6 @@ public final class BindSymbolFunctionFunction extends SystemBuiltInFunctionStruc
 		final FunctionStruct function = arguments.getRequiredArgument(FUNCTION_ARGUMENT, FunctionStruct.class);
 
 		symbol.bindFunction(function);
-		return new ValuesStruct();
+		return ValuesStruct.valueOf();
 	}
 }

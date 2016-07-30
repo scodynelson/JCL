@@ -7,8 +7,6 @@ import java.util.Map;
 
 import jcl.lang.condition.exception.SimpleErrorException;
 import jcl.type.LispType;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -82,34 +80,6 @@ public class StructureObjectStruct implements LispStruct {
 	@Override
 	public LispType getType() {
 		return structureClass.getType();
-	}
-
-	@Override
-	public int hashCode() {
-		return new HashCodeBuilder().append(structureClass)
-		                            .append(structureSymbol)
-		                            .append(parentStructure)
-		                            .append(slots)
-		                            .toHashCode();
-	}
-
-	@Override
-	public boolean equals(final Object obj) {
-		if (obj == null) {
-			return false;
-		}
-		if (obj == this) {
-			return true;
-		}
-		if (obj.getClass() != getClass()) {
-			return false;
-		}
-		final StructureObjectStruct rhs = (StructureObjectStruct) obj;
-		return new EqualsBuilder().append(structureClass, rhs.structureClass)
-		                          .append(structureSymbol, rhs.structureSymbol)
-		                          .append(parentStructure, rhs.parentStructure)
-		                          .append(slots, rhs.slots)
-		                          .isEquals();
 	}
 
 	@Override

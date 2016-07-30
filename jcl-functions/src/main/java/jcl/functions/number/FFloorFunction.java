@@ -38,6 +38,6 @@ public final class FFloorFunction extends CommonLispBuiltInFunctionStruct {
 		final QuotientRemainder ffloor = real.ffloor(divisor);
 		final RealStruct quotient = ffloor.getQuotient();
 		final RealStruct remainder = ffloor.getRemainder();
-		return new ValuesStruct(quotient, remainder);
+		return ValuesStruct.valueOf(quotient, remainder);
 	}
 }

@@ -16,9 +16,13 @@ public class ConstantStruct<TYPE extends LispStruct> extends SymbolStruct {
 		constantValue = value;
 	}
 
-	public ConstantStruct(final String name, final PackageStruct symbolPackage, final TYPE value) {
+	protected ConstantStruct(final String name, final PackageStruct symbolPackage, final TYPE value) {
 		super(name, symbolPackage, value);
 		constantValue = value;
+	}
+
+	public static <T extends LispStruct> ConstantStruct<T> valueOf(final String name, final PackageStruct symbolPackage, final T value) {
+		return new ConstantStruct<T>(name, symbolPackage, value);
 	}
 
 	@Override

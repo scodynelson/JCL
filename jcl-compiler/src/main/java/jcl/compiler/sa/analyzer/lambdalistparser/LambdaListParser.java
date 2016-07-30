@@ -793,7 +793,7 @@ public class LambdaListParser {
 
 		final PackageSymbolStruct symbol = GlobalPackageStruct.KEYWORD.findSymbol(symbolName);
 		if (symbol == null) {
-			return new KeywordStruct(symbolName);
+			return KeywordStruct.valueOf(symbolName);
 		}
 		// NOTE: This should be a safe cast because we're finding the symbol in the Keyword Package and they are only
 		//       this type of symbol.

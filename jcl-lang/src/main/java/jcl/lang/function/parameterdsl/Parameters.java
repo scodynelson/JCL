@@ -20,7 +20,7 @@ import static java.util.stream.Collectors.toMap;
 
 public final class Parameters {
 
-	public static final KeywordStruct ALLOW_OTHER_KEYS = new KeywordStruct("ALLOW-OTHER-KEYS");
+	public static final KeywordStruct ALLOW_OTHER_KEYS = KeywordStruct.valueOf("ALLOW-OTHER-KEYS");
 
 	private final String functionName;
 

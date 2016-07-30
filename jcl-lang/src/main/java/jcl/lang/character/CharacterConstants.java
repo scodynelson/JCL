@@ -435,7 +435,7 @@ public final class CharacterConstants {
 
 	// Char-Code-Limit Constant
 
-	public static final ConstantStruct<IntegerStruct> CHAR_CODE_LIMIT = new ConstantStruct<>("CHAR-CODE-LIMIT", GlobalPackageStruct.COMMON_LISP, IntegerStruct.valueOf((int) Character.MAX_VALUE));
+	public static final ConstantStruct<IntegerStruct> CHAR_CODE_LIMIT = ConstantStruct.valueOf("CHAR-CODE-LIMIT", GlobalPackageStruct.COMMON_LISP, IntegerStruct.valueOf((int) Character.MAX_VALUE));
 
 	private CharacterConstants() {
 	}

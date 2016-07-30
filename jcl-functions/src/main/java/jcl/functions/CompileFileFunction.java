@@ -200,13 +200,13 @@ public final class CompileFileFunction extends CommonLispBuiltInFunctionStruct {
 			writeToJar(javaClassBuilderDeque, outputFilePath, inputFileName, inputClassName, print);
 			compiledSuccessfully = true;
 
-			return new ValuesStruct(outputFileTruename, compiledWithWarnings, NILStruct.INSTANCE);
+			return ValuesStruct.valueOf(outputFileTruename, compiledWithWarnings, NILStruct.INSTANCE);
 		} catch (final IOException e) {
 			compiledSuccessfully = false;
 
 			LOGGER.error("Error in COMPILE-FILE for file: '{}'", inputFilePath, e);
 
-			return new ValuesStruct(NILStruct.INSTANCE, compiledWithWarnings, TStruct.INSTANCE);
+			return ValuesStruct.valueOf(NILStruct.INSTANCE, compiledWithWarnings, TStruct.INSTANCE);
 		} finally {
 			if (compiledSuccessfully && verbose) {
 				LOGGER.info("\n; '{}' written", outputFilePath);

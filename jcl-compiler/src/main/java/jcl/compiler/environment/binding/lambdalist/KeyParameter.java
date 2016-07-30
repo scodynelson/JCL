@@ -80,7 +80,7 @@ public class KeyParameter extends Parameter {
 
 			final PackageSymbolStruct symbol = GlobalPackageStruct.KEYWORD.findSymbol(symbolName);
 			if (symbol == null) {
-				keyName = new KeywordStruct(symbolName);
+				keyName = KeywordStruct.valueOf(symbolName);
 			} else {
 				keyName = symbol.getSymbol();
 			}

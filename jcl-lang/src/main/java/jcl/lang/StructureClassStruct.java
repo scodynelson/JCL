@@ -4,10 +4,6 @@ import java.util.List;
 
 import jcl.type.LispType;
 import jcl.type.StructureClassType;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
  * The {@link StructureClassStruct} is the object representation of a Lisp 'structure-class' type.
@@ -61,37 +57,4 @@ public abstract class StructureClassStruct extends ClassStruct {
 	}
 
 	public abstract StructureObjectStruct newInstance();
-
-	@Override
-	public int hashCode() {
-		return new HashCodeBuilder().appendSuper(super.hashCode())
-		                            .append(defaultConstructorSymbol)
-		                            .append(printerSymbol)
-		                            .toHashCode();
-	}
-
-	@Override
-	public boolean equals(final Object obj) {
-		if (obj == null) {
-			return false;
-		}
-		if (obj == this) {
-			return true;
-		}
-		if (obj.getClass() != getClass()) {
-			return false;
-		}
-		final StructureClassStruct rhs = (StructureClassStruct) obj;
-		return new EqualsBuilder().appendSuper(super.equals(obj))
-		                          .append(defaultConstructorSymbol, rhs.defaultConstructorSymbol)
-		                          .append(printerSymbol, rhs.printerSymbol)
-		                          .isEquals();
-	}
-
-	@Override
-	public String toString() {
-		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(defaultConstructorSymbol)
-		                                                                .append(printerSymbol)
-		                                                                .toString();
-	}
 }

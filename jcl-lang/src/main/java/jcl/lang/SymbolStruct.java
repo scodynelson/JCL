@@ -49,7 +49,7 @@ public class SymbolStruct extends BuiltInClassStruct {
 	 * @param name
 	 * 		the symbol name
 	 */
-	public SymbolStruct(final String name) {
+	private SymbolStruct(final String name) {
 		this(name, null, null, null);
 	}
 
@@ -158,6 +158,10 @@ public class SymbolStruct extends BuiltInClassStruct {
 			// TODO: we REALLY shouldn't be exporting here, BUT so we can test things right now, we will.
 			symbolPackage.export(this);
 		}
+	}
+
+	public static SymbolStruct valueOf(final String name) {
+		return new SymbolStruct(name);
 	}
 
 	/**

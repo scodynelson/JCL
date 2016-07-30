@@ -54,7 +54,7 @@ public final class MacroExpand1Function extends CommonLispBuiltInFunctionStruct 
 		final LispStruct expandedForm = macroExpandResult.getExpandedForm();
 		final boolean wasExpanded = macroExpandResult.wasExpanded();
 		final BooleanStruct wasExpandedBoolean = wasExpanded ? TStruct.INSTANCE : NILStruct.INSTANCE;
-		return new ValuesStruct(expandedForm, wasExpandedBoolean);
+		return ValuesStruct.valueOf(expandedForm, wasExpandedBoolean);
 	}
 
 	public MacroExpandResult macroExpand1(final LispStruct element, final Environment environment) {

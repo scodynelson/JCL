@@ -74,9 +74,9 @@ public final class CompileFunction extends CommonLispBuiltInFunctionStruct {
 			}
 
 			if (compiledDefinition == null) {
-				return new ValuesStruct(function, NILStruct.INSTANCE, NILStruct.INSTANCE);
+				return ValuesStruct.valueOf(function, NILStruct.INSTANCE, NILStruct.INSTANCE);
 			} else {
-				return new ValuesStruct(function, compiledDefinition.isCompiledWithWarnings(), compiledDefinition.isFailedToCompile());
+				return ValuesStruct.valueOf(function, compiledDefinition.isCompiledWithWarnings(), compiledDefinition.isFailedToCompile());
 			}
 		}
 
@@ -87,13 +87,13 @@ public final class CompileFunction extends CommonLispBuiltInFunctionStruct {
 
 		final MacroFunctionExpanderInter macroFunction = nameSymbol.getMacroFunctionExpander();
 		if (macroFunction != null) {
-			return new ValuesStruct(macroFunction, NILStruct.INSTANCE, NILStruct.INSTANCE);
+			return ValuesStruct.valueOf(macroFunction, NILStruct.INSTANCE, NILStruct.INSTANCE);
 		}
 
 		final boolean hasFunction = nameSymbol.hasFunction();
 		if (hasFunction) {
 			final FunctionStruct function = nameSymbol.getFunction();
-			return new ValuesStruct(function, NILStruct.INSTANCE, NILStruct.INSTANCE);
+			return ValuesStruct.valueOf(function, NILStruct.INSTANCE, NILStruct.INSTANCE);
 		}
 
 		throw new ErrorException("No definition found for " + nameSymbol);

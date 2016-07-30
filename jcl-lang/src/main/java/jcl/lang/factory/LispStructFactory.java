@@ -9,6 +9,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import jcl.lang.LispStruct;
+import jcl.lang.PackageStruct;
+import jcl.lang.SymbolStruct;
 import jcl.lang.array.ArrayStruct;
 import jcl.lang.array.BitVectorStruct;
 import jcl.lang.array.StringStruct;
@@ -399,6 +401,26 @@ public final class LispStructFactory {
 	}
 
 	/*
+	 * Package
+	 */
+
+	public static PackageStruct toPackage(final String name) {
+		return PackageStruct.valueOf(name);
+	}
+
+	public static PackageStruct toPackage(final String name, final List<String> nicknames) {
+		return PackageStruct.valueOf(name, nicknames);
+	}
+
+	public static PackageStruct toPackage(final String name, final List<String> nicknames, final PackageStruct... useList) {
+		return PackageStruct.valueOf(name, nicknames, useList);
+	}
+
+	public static PackageStruct toPackage(final String name, final List<String> nicknames, final List<PackageStruct> useList) {
+		return PackageStruct.valueOf(name, nicknames, useList);
+	}
+
+	/*
 	 * Pathname
 	 */
 
@@ -491,6 +513,14 @@ public final class LispStructFactory {
 
 	public static StringStruct toString(final String stringValue) {
 		return StringStruct.valueOf(stringValue);
+	}
+
+	/*
+	 * Symbol
+	 */
+
+	public static SymbolStruct toSymbol(final String name) {
+		return SymbolStruct.valueOf(name);
 	}
 
 	/*

@@ -389,7 +389,7 @@ public class ConsStruct extends BuiltInClassStruct implements ListStruct {
 
 		final ConsStruct cdrCons = (ConsStruct) cdr;
 		if (carIsIndicator) {
-			return new ValuesStruct(car, cdrCons.car, this);
+			return ValuesStruct.valueOf(car, cdrCons.car, this);
 		} else if (!(cdrCons.cdr instanceof ListStruct)) {
 			throw new ErrorException("List is not a valid property list.");
 		} else {

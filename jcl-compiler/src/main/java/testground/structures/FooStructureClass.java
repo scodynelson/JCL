@@ -16,7 +16,7 @@ import jcl.type.LispType;
 public class FooStructureClass extends StructureClassStruct {
 
 	public static final FooStructureClass INSTANCE
-			= new FooStructureClass(new SymbolStruct("MAKE-FOO"), null, null, null);
+			= new FooStructureClass(SymbolStruct.valueOf("MAKE-FOO"), null, null, null);
 
 	protected FooStructureClass(final SymbolStruct defaultConstructorSymbol, final SymbolStruct printerSymbol,
 	                            final List<Class<? extends LispStruct>> directSuperClasses, final List<Class<? extends LispStruct>> subClasses) {
@@ -26,7 +26,7 @@ public class FooStructureClass extends StructureClassStruct {
 	protected FooStructureClass(final LispType type, final SymbolStruct defaultConstructorSymbol, final SymbolStruct printerSymbol,
 	                            final List<Class<? extends LispStruct>> directSuperClasses, final List<Class<? extends LispStruct>> subClasses) {
 		super(type, defaultConstructorSymbol, printerSymbol, directSuperClasses, subClasses);
-		new SymbolStruct("FOO").setStructureClass(INSTANCE);
+		SymbolStruct.valueOf("FOO").setStructureClass(INSTANCE);
 	}
 
 	@Override

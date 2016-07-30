@@ -61,6 +61,6 @@ public final class ReadLineFunction extends CommonLispBuiltInFunctionStruct {
 		final ReadLineResult readLineResult = inputStream.readLine(eofErrorP.booleanValue(), eofValue, recursiveP.booleanValue());
 		final String result = readLineResult.getResult();
 		final boolean eof = readLineResult.isEof();
-		return new ValuesStruct(LispStructFactory.toString(result), BooleanStruct.toLispBoolean(eof));
+		return ValuesStruct.valueOf(LispStructFactory.toString(result), BooleanStruct.toLispBoolean(eof));
 	}
 }

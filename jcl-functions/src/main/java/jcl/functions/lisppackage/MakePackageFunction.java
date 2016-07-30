@@ -76,6 +76,6 @@ public final class MakePackageFunction extends CommonLispBuiltInFunctionStruct {
 				                 .map(Supplier::get)
 				                 .collect(Collectors.toList());
 
-		return new PackageStruct(packageName, realNicknames, realUsePackages);
+		return PackageStruct.valueOf(packageName, realNicknames, realUsePackages);
 	}
 }

@@ -29,6 +29,6 @@ public final class ValuesFunction extends CommonLispBuiltInFunctionStruct {
 	@Override
 	public LispStruct apply(final Arguments arguments) {
 		final List<LispStruct> valuesList = arguments.getRestArgument();
-		return new ValuesStruct(valuesList);
+		return ValuesStruct.valueOf(valuesList);
 	}
 }

@@ -124,13 +124,11 @@ final class CodeGenerators {
 
 				// INIT SYMBOL FIELD VALUE
 				mv.visitVarInsn(Opcodes.ALOAD, 0); // '0' is always 'this'
-				mv.visitTypeInsn(Opcodes.NEW, GenerationConstants.SYMBOL_STRUCT_NAME);
-				mv.visitInsn(Opcodes.DUP);
 				mv.visitLdcInsn(symbolName);
-				mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
+				mv.visitMethodInsn(Opcodes.INVOKESTATIC,
 				                   GenerationConstants.SYMBOL_STRUCT_NAME,
-				                   GenerationConstants.INIT_METHOD_NAME,
-				                   GenerationConstants.SYMBOL_STRUCT_INIT_STRING_DESC,
+				                   GenerationConstants.SYMBOL_STRUCT_VALUE_OF_STRING_NAME,
+				                   GenerationConstants.SYMBOL_STRUCT_VALUE_OF_STRING_DESC,
 				                   false);
 				mv.visitFieldInsn(Opcodes.PUTFIELD,
 				                  className,

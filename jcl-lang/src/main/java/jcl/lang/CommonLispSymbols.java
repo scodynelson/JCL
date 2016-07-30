@@ -1008,86 +1008,86 @@ public interface CommonLispSymbols {
 	SymbolStruct BQ_VECTOR_FLAG = GlobalPackageStruct.BACKQUOTE.intern("bqv").getSymbol();
 
 	// Standard Keywords
-	KeywordStruct ELEMENT_TYPE_KEYWORD = new KeywordStruct("ELEMENT-TYPE");
-	KeywordStruct INITIAL_ELEMENT_KEYWORD = new KeywordStruct("INITIAL-ELEMENT");
-	KeywordStruct INITIAL_CONTENTS_KEYWORD = new KeywordStruct("INITIAL-CONTENTS");
+	KeywordStruct ELEMENT_TYPE_KEYWORD = KeywordStruct.valueOf("ELEMENT-TYPE");
+	KeywordStruct INITIAL_ELEMENT_KEYWORD = KeywordStruct.valueOf("INITIAL-ELEMENT");
+	KeywordStruct INITIAL_CONTENTS_KEYWORD = KeywordStruct.valueOf("INITIAL-CONTENTS");
 
 	// Package Keywords
-	KeywordStruct INTERNAL_KEYWORD = new KeywordStruct("INTERNAL");
-	KeywordStruct EXTERNAL_KEYWORD = new KeywordStruct("EXTERNAL");
-	KeywordStruct INHERITED_KEYWORD = new KeywordStruct("INHERITED");
+	KeywordStruct INTERNAL_KEYWORD = KeywordStruct.valueOf("INTERNAL");
+	KeywordStruct EXTERNAL_KEYWORD = KeywordStruct.valueOf("EXTERNAL");
+	KeywordStruct INHERITED_KEYWORD = KeywordStruct.valueOf("INHERITED");
 
 	// Stream Keywords
-	KeywordStruct DEFAULT_KEYWORD = new KeywordStruct("DEFAULT");
-	KeywordStruct ABORT_KEYWORD = new KeywordStruct("ABORT");
-	KeywordStruct START_KEYWORD = new KeywordStruct("START");
-	KeywordStruct END_KEYWORD = new KeywordStruct("END");
-	KeywordStruct DIRECTION_KEYWORD = new KeywordStruct("DIRECTION");
-	KeywordStruct INPUT_KEYWORD = new KeywordStruct("INPUT");
-	KeywordStruct OUTPUT_KEYWORD = new KeywordStruct("OUTPUT");
-	KeywordStruct IO_KEYWORD = new KeywordStruct("IO");
-	KeywordStruct PROBE_KEYWORD = new KeywordStruct("PROBE");
-	KeywordStruct IF_EXISTS_KEYWORD = new KeywordStruct("IF-EXISTS");
-	KeywordStruct ERROR_KEYWORD = new KeywordStruct("ERROR");
-	KeywordStruct NEW_VERSION_KEYWORD = new KeywordStruct("NEW-VERSION");
-	KeywordStruct RENAME_KEYWORD = new KeywordStruct("RENAME");
-	KeywordStruct RENAME_AND_DELETE_KEYWORD = new KeywordStruct("RENAME-AND-DELETE");
-	KeywordStruct OVERWRITE_KEYWORD = new KeywordStruct("OVERWRITE");
-	KeywordStruct APPEND_KEYWORD = new KeywordStruct("APPEND");
-	KeywordStruct SUPERSEDE_KEYWORD = new KeywordStruct("SUPERSEDE");
-	KeywordStruct CREATE_KEYWORD = new KeywordStruct("CREATE");
+	KeywordStruct DEFAULT_KEYWORD = KeywordStruct.valueOf("DEFAULT");
+	KeywordStruct ABORT_KEYWORD = KeywordStruct.valueOf("ABORT");
+	KeywordStruct START_KEYWORD = KeywordStruct.valueOf("START");
+	KeywordStruct END_KEYWORD = KeywordStruct.valueOf("END");
+	KeywordStruct DIRECTION_KEYWORD = KeywordStruct.valueOf("DIRECTION");
+	KeywordStruct INPUT_KEYWORD = KeywordStruct.valueOf("INPUT");
+	KeywordStruct OUTPUT_KEYWORD = KeywordStruct.valueOf("OUTPUT");
+	KeywordStruct IO_KEYWORD = KeywordStruct.valueOf("IO");
+	KeywordStruct PROBE_KEYWORD = KeywordStruct.valueOf("PROBE");
+	KeywordStruct IF_EXISTS_KEYWORD = KeywordStruct.valueOf("IF-EXISTS");
+	KeywordStruct ERROR_KEYWORD = KeywordStruct.valueOf("ERROR");
+	KeywordStruct NEW_VERSION_KEYWORD = KeywordStruct.valueOf("NEW-VERSION");
+	KeywordStruct RENAME_KEYWORD = KeywordStruct.valueOf("RENAME");
+	KeywordStruct RENAME_AND_DELETE_KEYWORD = KeywordStruct.valueOf("RENAME-AND-DELETE");
+	KeywordStruct OVERWRITE_KEYWORD = KeywordStruct.valueOf("OVERWRITE");
+	KeywordStruct APPEND_KEYWORD = KeywordStruct.valueOf("APPEND");
+	KeywordStruct SUPERSEDE_KEYWORD = KeywordStruct.valueOf("SUPERSEDE");
+	KeywordStruct CREATE_KEYWORD = KeywordStruct.valueOf("CREATE");
 
 	// Features Keywords
 	/**
 	 * NOT {@link KeywordStruct} for processing features that should 'not' be included.
 	 */
-	KeywordStruct NOT_KEYWORD = new KeywordStruct("NOT");
+	KeywordStruct NOT_KEYWORD = KeywordStruct.valueOf("NOT");
 
 	/**
 	 * AND {@link KeywordStruct} for processing features that should be included via 'and' operation.
 	 */
-	KeywordStruct AND_KEYWORD = new KeywordStruct("AND");
+	KeywordStruct AND_KEYWORD = KeywordStruct.valueOf("AND");
 
 	/**
 	 * OR {@link KeywordStruct} for processing features that should be included via 'or' operation.
 	 */
-	KeywordStruct OR_KEYWORD = new KeywordStruct("OR");
+	KeywordStruct OR_KEYWORD = KeywordStruct.valueOf("OR");
 
 	// Eval-When Keywords
-	KeywordStruct COMPILE_TOPLEVEL = new KeywordStruct("COMPILE-TOPLEVEL");
-	KeywordStruct LOAD_TOPLEVEL = new KeywordStruct("LOAD-TOPLEVEL");
-	KeywordStruct EXECUTE = new KeywordStruct("EXECUTE");
+	KeywordStruct COMPILE_TOPLEVEL = KeywordStruct.valueOf("COMPILE-TOPLEVEL");
+	KeywordStruct LOAD_TOPLEVEL = KeywordStruct.valueOf("LOAD-TOPLEVEL");
+	KeywordStruct EXECUTE = KeywordStruct.valueOf("EXECUTE");
 
 	// Print-Case Keywords
-	KeywordStruct UPCASE_KEYWORD = new KeywordStruct("UPCASE");
-	KeywordStruct DOWNCASE_KEYWORD = new KeywordStruct("DOWNCASE");
-	KeywordStruct CAPITALIZE_KEYWORD = new KeywordStruct("CAPITALIZE");
+	KeywordStruct UPCASE_KEYWORD = KeywordStruct.valueOf("UPCASE");
+	KeywordStruct DOWNCASE_KEYWORD = KeywordStruct.valueOf("DOWNCASE");
+	KeywordStruct CAPITALIZE_KEYWORD = KeywordStruct.valueOf("CAPITALIZE");
 
 	// Pathname Keywords
-	KeywordStruct WILD_KEYWORD = new KeywordStruct("WILD");
-	KeywordStruct WILD_INFERIORS_KEYWORD = new KeywordStruct("WILD-INFERIORS");
-	KeywordStruct UNSPECIFIC_KEYWORD = new KeywordStruct("UNSPECIFIC");
-	KeywordStruct COMMON_KEYWORD = new KeywordStruct("COMMON");
-	KeywordStruct LOCAL_KEYWORD = new KeywordStruct("LOCAL");
-	KeywordStruct RELATIVE_KEYWORD = new KeywordStruct("RELATIVE");
-	KeywordStruct ABSOLUTE_KEYWORD = new KeywordStruct("ABSOLUTE");
-	KeywordStruct BACK_KEYWORD = new KeywordStruct("BACK");
-	KeywordStruct UP_KEYWORD = new KeywordStruct("UP");
-	KeywordStruct NEWEST_KEYWORD = new KeywordStruct("NEWEST");
-	KeywordStruct OLDEST_KEYWORD = new KeywordStruct("OLDEST");
-	KeywordStruct CASE_KEYWORD = new KeywordStruct("CASE");
+	KeywordStruct WILD_KEYWORD = KeywordStruct.valueOf("WILD");
+	KeywordStruct WILD_INFERIORS_KEYWORD = KeywordStruct.valueOf("WILD-INFERIORS");
+	KeywordStruct UNSPECIFIC_KEYWORD = KeywordStruct.valueOf("UNSPECIFIC");
+	KeywordStruct COMMON_KEYWORD = KeywordStruct.valueOf("COMMON");
+	KeywordStruct LOCAL_KEYWORD = KeywordStruct.valueOf("LOCAL");
+	KeywordStruct RELATIVE_KEYWORD = KeywordStruct.valueOf("RELATIVE");
+	KeywordStruct ABSOLUTE_KEYWORD = KeywordStruct.valueOf("ABSOLUTE");
+	KeywordStruct BACK_KEYWORD = KeywordStruct.valueOf("BACK");
+	KeywordStruct UP_KEYWORD = KeywordStruct.valueOf("UP");
+	KeywordStruct NEWEST_KEYWORD = KeywordStruct.valueOf("NEWEST");
+	KeywordStruct OLDEST_KEYWORD = KeywordStruct.valueOf("OLDEST");
+	KeywordStruct CASE_KEYWORD = KeywordStruct.valueOf("CASE");
 
 	// Compile-File/Load Keywords
-	KeywordStruct OUTPUT_FILE_KEYWORD = new KeywordStruct("OUTPUT-FILE");
-	KeywordStruct VERBOSE_KEYWORD = new KeywordStruct("VERBOSE");
-	KeywordStruct PRINT_KEYWORD = new KeywordStruct("PRINT");
-	KeywordStruct IF_DOES_NOT_EXIST_KEYWORD = new KeywordStruct("IF-DOES-NOT-EXIST");
-	KeywordStruct EXTERNAL_FORMAT_KEYWORD = new KeywordStruct("EXTERNAL-FORMAT");
+	KeywordStruct OUTPUT_FILE_KEYWORD = KeywordStruct.valueOf("OUTPUT-FILE");
+	KeywordStruct VERBOSE_KEYWORD = KeywordStruct.valueOf("VERBOSE");
+	KeywordStruct PRINT_KEYWORD = KeywordStruct.valueOf("PRINT");
+	KeywordStruct IF_DOES_NOT_EXIST_KEYWORD = KeywordStruct.valueOf("IF-DOES-NOT-EXIST");
+	KeywordStruct EXTERNAL_FORMAT_KEYWORD = KeywordStruct.valueOf("EXTERNAL-FORMAT");
 
 	// Make-Package Keywords
-	KeywordStruct NICKNAMES_KEYWORD = new KeywordStruct("NICKNAMES");
-	KeywordStruct USE_KEYWORD = new KeywordStruct("USE");
+	KeywordStruct NICKNAMES_KEYWORD = KeywordStruct.valueOf("NICKNAMES");
+	KeywordStruct USE_KEYWORD = KeywordStruct.valueOf("USE");
 
 	// Lambda List Keywords
-	KeywordStruct ALLOW_OTHER_KEYS = new KeywordStruct("ALLOW-OTHER-KEYS");
+	KeywordStruct ALLOW_OTHER_KEYS = KeywordStruct.valueOf("ALLOW-OTHER-KEYS");
 }

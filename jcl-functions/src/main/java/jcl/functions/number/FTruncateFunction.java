@@ -38,6 +38,6 @@ public final class FTruncateFunction extends CommonLispBuiltInFunctionStruct {
 		final QuotientRemainder ftruncate = real.ftruncate(divisor);
 		final RealStruct quotient = ftruncate.getQuotient();
 		final RealStruct remainder = ftruncate.getRemainder();
-		return new ValuesStruct(quotient, remainder);
+		return ValuesStruct.valueOf(quotient, remainder);
 	}
 }

@@ -13,9 +13,9 @@ final class PrintCaseVariable extends VariableStruct<KeywordStruct> {
 
 	private static final Set<KeywordStruct> CASE_KEYWORDS = new HashSet<>();
 
-	private static final KeywordStruct UPCASE_KEYWORD = new KeywordStruct("UPCASE");
-	private static final KeywordStruct DOWNCASE_KEYWORD = new KeywordStruct("DOWNCASE");
-	private static final KeywordStruct CAPITALIZE_KEYWORD = new KeywordStruct("CAPITALIZE");
+	private static final KeywordStruct UPCASE_KEYWORD = KeywordStruct.valueOf("UPCASE");
+	private static final KeywordStruct DOWNCASE_KEYWORD = KeywordStruct.valueOf("DOWNCASE");
+	private static final KeywordStruct CAPITALIZE_KEYWORD = KeywordStruct.valueOf("CAPITALIZE");
 
 
 	static {

@@ -39,7 +39,7 @@ final class KeywordPackageStruct extends PackageStruct {
 			return foundPackageSymbol;
 		}
 
-		final KeywordStruct symbolStruct = new KeywordStruct(symbolName);
+		final KeywordStruct symbolStruct = KeywordStruct.valueOf(symbolName);
 		externalSymbols.put(symbolName, symbolStruct);
 		symbolStruct.setSymbolPackage(this);
 		return new PackageSymbolStruct(symbolStruct, INTERNAL_KEYWORD);

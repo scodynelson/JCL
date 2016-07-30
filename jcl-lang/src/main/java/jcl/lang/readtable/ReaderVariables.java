@@ -27,20 +27,20 @@ public interface ReaderVariables {
 	/**
 	 * Determine the format in which to read float numeric values.
 	 */
-	VariableStruct<FloatType> READ_DEFAULT_FLOAT_FORMAT = new VariableStruct<>("*READ-DEFAULT-FLOAT-FORMAT*", GlobalPackageStruct.COMMON_LISP, SingleFloatType.INSTANCE);
+	VariableStruct<FloatType> READ_DEFAULT_FLOAT_FORMAT = VariableStruct.valueOf("*READ-DEFAULT-FLOAT-FORMAT*", GlobalPackageStruct.COMMON_LISP, SingleFloatType.INSTANCE);
 
 	/**
 	 * Determines whether or not the read operation should be evaluated where *read-eval* is used.
 	 */
-	VariableStruct<BooleanStruct> READ_EVAL = new VariableStruct<>("*READ-EVAL*", GlobalPackageStruct.COMMON_LISP, TStruct.INSTANCE);
+	VariableStruct<BooleanStruct> READ_EVAL = VariableStruct.valueOf("*READ-EVAL*", GlobalPackageStruct.COMMON_LISP, TStruct.INSTANCE);
 
 	/**
 	 * Determines whether or not the read operation should suppress the read in lisp tokens.
 	 */
-	VariableStruct<BooleanStruct> READ_SUPPRESS = new VariableStruct<>("*READ-SUPPRESS*", GlobalPackageStruct.COMMON_LISP, NILStruct.INSTANCE);
+	VariableStruct<BooleanStruct> READ_SUPPRESS = VariableStruct.valueOf("*READ-SUPPRESS*", GlobalPackageStruct.COMMON_LISP, NILStruct.INSTANCE);
 
 	/**
 	 * The global {@link ReadtableStruct} denoting the default readtable to be used throughout the JCL system.
 	 */
-	VariableStruct<ReadtableStruct> READTABLE = new VariableStruct<>("*READTABLE*", GlobalPackageStruct.COMMON_LISP, ReadtableStruct.valueOf());
+	VariableStruct<ReadtableStruct> READTABLE = VariableStruct.valueOf("*READTABLE*", GlobalPackageStruct.COMMON_LISP, ReadtableStruct.valueOf());
 }

@@ -38,6 +38,6 @@ public final class FRoundFunction extends CommonLispBuiltInFunctionStruct {
 		final QuotientRemainder fround = real.fround(divisor);
 		final RealStruct quotient = fround.getQuotient();
 		final RealStruct remainder = fround.getRemainder();
-		return new ValuesStruct(quotient, remainder);
+		return ValuesStruct.valueOf(quotient, remainder);
 	}
 }

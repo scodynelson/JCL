@@ -37,7 +37,7 @@ public abstract class ReaderMacroFunction extends FunctionStruct {
 		super("Some Documentation");
 	}
 
-	private static final SymbolStruct DUMMY_SYMBOL = new SymbolStruct("dummySymbol");
+	private static final SymbolStruct DUMMY_SYMBOL = SymbolStruct.valueOf("dummySymbol");
 
 	@Override
 	public SymbolStruct getFunctionSymbol() {

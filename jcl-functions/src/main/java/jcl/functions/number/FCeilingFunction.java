@@ -38,6 +38,6 @@ public final class FCeilingFunction extends CommonLispBuiltInFunctionStruct {
 		final QuotientRemainder fceiling = real.fceiling(divisor);
 		final RealStruct quotient = fceiling.getQuotient();
 		final RealStruct remainder = fceiling.getRemainder();
-		return new ValuesStruct(quotient, remainder);
+		return ValuesStruct.valueOf(quotient, remainder);
 	}
 }

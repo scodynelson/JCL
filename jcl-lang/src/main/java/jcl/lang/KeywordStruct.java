@@ -5,7 +5,7 @@ import jcl.type.KeywordType;
 /**
  * The {@link KeywordStruct} is the object representation of a Lisp 'keyword' type.
  */
-public class KeywordStruct extends ConstantStruct<KeywordStruct> {
+public final class KeywordStruct extends ConstantStruct<KeywordStruct> {
 
 	/**
 	 * Public constructor.
@@ -13,9 +13,13 @@ public class KeywordStruct extends ConstantStruct<KeywordStruct> {
 	 * @param name
 	 * 		the symbol name
 	 */
-	public KeywordStruct(final String name) {
+	private KeywordStruct(final String name) {
 		super(KeywordType.INSTANCE, name, GlobalPackageStruct.KEYWORD, null, null);
 		init();
+	}
+
+	public static KeywordStruct valueOf(final String name) {
+		return new KeywordStruct(name);
 	}
 
 	/**

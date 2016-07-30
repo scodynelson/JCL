@@ -38,6 +38,6 @@ public final class RoundFunction extends CommonLispBuiltInFunctionStruct {
 		final QuotientRemainder round = real.round(divisor);
 		final RealStruct quotient = round.getQuotient();
 		final RealStruct remainder = round.getRemainder();
-		return new ValuesStruct(quotient, remainder);
+		return ValuesStruct.valueOf(quotient, remainder);
 	}
 }

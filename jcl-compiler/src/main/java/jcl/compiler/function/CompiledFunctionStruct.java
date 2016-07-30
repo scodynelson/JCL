@@ -54,7 +54,7 @@ public abstract class CompiledFunctionStruct extends FunctionStruct {
 		this.closure = closure;
 	}
 
-	private static final SymbolStruct DUMMY_SYMBOL = new SymbolStruct("dummySymbol");
+	private static final SymbolStruct DUMMY_SYMBOL = SymbolStruct.valueOf("dummySymbol");
 
 	@Override
 	public SymbolStruct getFunctionSymbol() {

@@ -24,10 +24,10 @@ import org.springframework.stereotype.Component;
 public final class MakeHashTableFunction extends CommonLispBuiltInFunctionStruct {
 
 	private static final String FUNCTION_NAME = "MAKE-HASH-TABLE";
-	private static final KeywordStruct TEST = new KeywordStruct("TEST");
-	private static final KeywordStruct SIZE = new KeywordStruct("SIZE");
-	private static final KeywordStruct REHASH_SIZE = new KeywordStruct("REHASH-SIZE");
-	private static final KeywordStruct REHASH_THRESHOLD = new KeywordStruct("REHASH-THRESHOLD");
+	private static final KeywordStruct TEST = KeywordStruct.valueOf("TEST");
+	private static final KeywordStruct SIZE =  KeywordStruct.valueOf("SIZE");
+	private static final KeywordStruct REHASH_SIZE = KeywordStruct.valueOf("REHASH-SIZE");
+	private static final KeywordStruct REHASH_THRESHOLD = KeywordStruct.valueOf("REHASH-THRESHOLD");
 	private static final FloatStruct DEFAULT_REHASH_THRESHOLD = FloatStruct.valueOf(0.75F);
 
 	public MakeHashTableFunction() {

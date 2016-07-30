@@ -66,11 +66,11 @@ public abstract class MacroFunctionExpander<O extends LispStruct> extends MacroE
 	}
 
 	protected WholeParameter getWholeBinding() {
-		return new WholeParameter(new SymbolStruct("temp_whole_" + System.nanoTime()));
+		return new WholeParameter(SymbolStruct.valueOf("temp_whole_" + System.nanoTime()));
 	}
 
 	protected EnvironmentParameter getEnvironmentBinding() {
-		return new EnvironmentParameter(new SymbolStruct("temp_environment_" + System.nanoTime()));
+		return new EnvironmentParameter(SymbolStruct.valueOf("temp_environment_" + System.nanoTime()));
 	}
 
 	protected BodyParameter getBodyBinding() {

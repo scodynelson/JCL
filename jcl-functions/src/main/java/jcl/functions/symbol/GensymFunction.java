@@ -51,6 +51,6 @@ public final class GensymFunction extends CommonLispBuiltInFunctionStruct {
 		}
 
 		final String symbolName = gensymPrefix + gensymPostfix.bigIntegerValue();
-		return new SymbolStruct(symbolName);
+		return SymbolStruct.valueOf(symbolName);
 	}
 }

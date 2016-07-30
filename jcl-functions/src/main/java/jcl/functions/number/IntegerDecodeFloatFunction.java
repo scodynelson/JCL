@@ -27,7 +27,7 @@ public final class IntegerDecodeFloatFunction extends CommonLispBuiltInFunctionS
 	public LispStruct apply(final Arguments arguments) {
 		final FloatStruct floatVal = arguments.getRequiredArgument(FLOAT_ARGUMENT, FloatStruct.class);
 		final DecodeFloatResult decodeFloatResult = floatVal.integerDecodeFloat();
-		return new ValuesStruct(
+		return ValuesStruct.valueOf(
 				decodeFloatResult.getSignificand(),
 				decodeFloatResult.getExponent(),
 				decodeFloatResult.getSign()

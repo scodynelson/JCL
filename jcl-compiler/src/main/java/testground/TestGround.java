@@ -33,7 +33,6 @@ import jcl.lang.number.ComplexStruct;
 import jcl.lang.number.FloatStruct;
 import jcl.lang.number.IntegerStruct;
 import jcl.lang.number.RatioStruct;
-import jcl.lang.pathname.PathnameStruct;
 import org.apfloat.Apcomplex;
 import org.apfloat.Apfloat;
 import org.apfloat.Apint;
@@ -43,7 +42,7 @@ import org.objectweb.asm.Label;
 @SuppressWarnings("all")
 public class TestGround {
 
-	private SymbolStruct UNINTERNED_SYMBOL = new SymbolStruct("FOO");
+	private SymbolStruct UNINTERNED_SYMBOL = SymbolStruct.valueOf("FOO");
 
 	private Object blockGen(final Closure currentClosure) {
 
@@ -152,7 +151,7 @@ public class TestGround {
 		final LispStruct value = CharacterStruct.valueOf(97);
 		valuesList.add(value);
 
-		return new ValuesStruct(valuesList);
+		return ValuesStruct.valueOf(valuesList);
 	}
 
 	private Object consGen() {

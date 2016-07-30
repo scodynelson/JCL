@@ -50,7 +50,7 @@ public class TagbodyExpander extends MacroFunctionExpander<TagbodyStruct> {
 		// NOTE: We don't care about adding this to the TagbodyStack since it is generated just for us here and will
 		//       will never be used as a real transfer of control point.
 		if (!forms.isEmpty() && !isTagbodyTag(forms.get(0))) {
-			final SymbolStruct defaultFormsTag = new SymbolStruct("Tag-" + UUID.randomUUID());
+			final SymbolStruct defaultFormsTag = SymbolStruct.valueOf("Tag-" + UUID.randomUUID());
 			forms.push(defaultFormsTag);
 		}
 

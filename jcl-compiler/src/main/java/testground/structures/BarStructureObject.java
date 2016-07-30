@@ -11,13 +11,13 @@ import jcl.lang.SymbolStruct;
 public class BarStructureObject extends StructureObjectStruct {
 
 	public BarStructureObject() {
-		super(BarStructureClass.INSTANCE, new SymbolStruct("BAR"), FooStructureClass.INSTANCE.newInstance());
+		super(BarStructureClass.INSTANCE, SymbolStruct.valueOf("BAR"), FooStructureClass.INSTANCE.newInstance());
 		initSlotsMap();
 	}
 
 	private void initSlotsMap() {
-		slots.put(new SymbolStruct("C"), null);
-		slots.put(new SymbolStruct("D"), null);
-		slots.put(new SymbolStruct("E"), null);
+		slots.put(SymbolStruct.valueOf("C"), null);
+		slots.put(SymbolStruct.valueOf("D"), null);
+		slots.put(SymbolStruct.valueOf("E"), null);
 	}
 }

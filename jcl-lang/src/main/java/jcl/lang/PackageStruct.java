@@ -22,9 +22,9 @@ import jcl.type.PackageType;
  */
 public class PackageStruct extends BuiltInClassStruct {
 
-	public static final KeywordStruct INTERNAL_KEYWORD = new KeywordStruct("INTERNAL");
-	public static final KeywordStruct EXTERNAL_KEYWORD = new KeywordStruct("EXTERNAL");
-	public static final KeywordStruct INHERITED_KEYWORD = new KeywordStruct("INHERITED");
+	public static final KeywordStruct INTERNAL_KEYWORD = KeywordStruct.valueOf("INTERNAL");
+	public static final KeywordStruct EXTERNAL_KEYWORD = KeywordStruct.valueOf("EXTERNAL");
+	public static final KeywordStruct INHERITED_KEYWORD = KeywordStruct.valueOf("INHERITED");
 
 	/**
 	 * The {@link List} of {@link PackageStruct}s that the package uses.
@@ -71,7 +71,7 @@ public class PackageStruct extends BuiltInClassStruct {
 	 * @param name
 	 * 		the package name
 	 */
-	public PackageStruct(final String name) {
+	protected PackageStruct(final String name) {
 		this(name, new ArrayList<>());
 	}
 
@@ -83,7 +83,7 @@ public class PackageStruct extends BuiltInClassStruct {
 	 * @param nicknames
 	 * 		the package nicknames
 	 */
-	public PackageStruct(final String name, final List<String> nicknames) {
+	private PackageStruct(final String name, final List<String> nicknames) {
 		this(name, nicknames, new ArrayList<>());
 	}
 
@@ -97,7 +97,7 @@ public class PackageStruct extends BuiltInClassStruct {
 	 * @param useList
 	 * 		the packages this package will use/inherit from
 	 */
-	public PackageStruct(final String name, final List<String> nicknames, final PackageStruct... useList) {
+	private PackageStruct(final String name, final List<String> nicknames, final PackageStruct... useList) {
 		this(name, nicknames, new ArrayList<>(Arrays.asList(useList)));
 	}
 
@@ -111,7 +111,7 @@ public class PackageStruct extends BuiltInClassStruct {
 	 * @param useList
 	 * 		the packages this package will use/inherit from
 	 */
-	public PackageStruct(final String name, final List<String> nicknames, final List<PackageStruct> useList) {
+	private PackageStruct(final String name, final List<String> nicknames, final List<PackageStruct> useList) {
 		super(PackageType.INSTANCE, null, null);
 		this.name = name;
 		this.nicknames = nicknames;
@@ -131,6 +131,22 @@ public class PackageStruct extends BuiltInClassStruct {
 		for (final String nickname : nicknames) {
 			GlobalPackageStruct.ALL_PACKAGES.put(nickname, this);
 		}
+	}
+
+	public static PackageStruct valueOf(final String name) {
+		return new PackageStruct(name);
+	}
+
+	public static PackageStruct valueOf(final String name, final List<String> nicknames) {
+		return new PackageStruct(name, nicknames);
+	}
+
+	public static PackageStruct valueOf(final String name, final List<String> nicknames, final PackageStruct... useList) {
+		return new PackageStruct(name, nicknames, useList);
+	}
+
+	public static PackageStruct valueOf(final String name, final List<String> nicknames, final List<PackageStruct> useList) {
+		return new PackageStruct(name, nicknames, useList);
 	}
 
 	@Override
@@ -461,7 +477,7 @@ public class PackageStruct extends BuiltInClassStruct {
 
 			final SymbolStruct nonInheritedSymbol;
 			if (nonInheritedPackageSymbol == null) {
-				nonInheritedSymbol = new SymbolStruct(symbolName);
+				nonInheritedSymbol = SymbolStruct.valueOf(symbolName);
 				internalSymbols.put(symbolName, nonInheritedSymbol);
 				nonInheritedSymbol.setSymbolPackage(this);
 			} else {
@@ -486,7 +502,7 @@ public class PackageStruct extends BuiltInClassStruct {
 			return foundPackageSymbol;
 		}
 
-		final SymbolStruct symbolStruct = new SymbolStruct(symbolName);
+		final SymbolStruct symbolStruct = SymbolStruct.valueOf(symbolName);
 		internalSymbols.put(symbolName, symbolStruct);
 		symbolStruct.setSymbolPackage(this);
 		return new PackageSymbolStruct(symbolStruct, INTERNAL_KEYWORD);

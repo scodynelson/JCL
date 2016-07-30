@@ -38,6 +38,6 @@ public final class FloorFunction extends CommonLispBuiltInFunctionStruct {
 		final QuotientRemainder floor = real.floor(divisor);
 		final RealStruct quotient = floor.getQuotient();
 		final RealStruct remainder = floor.getRemainder();
-		return new ValuesStruct(quotient, remainder);
+		return ValuesStruct.valueOf(quotient, remainder);
 	}
 }

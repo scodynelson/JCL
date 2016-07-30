@@ -60,7 +60,7 @@ public class SharpEqualsSignReaderMacroFunction extends ReaderMacroFunction {
 		}
 
 		final String labelTagName = UUID.randomUUID().toString();
-		final SymbolStruct labelTag = new SymbolStruct(labelTagName);
+		final SymbolStruct labelTag = SymbolStruct.valueOf(labelTagName);
 		sharpEqualTempTable.put(numberArgumentValue, labelTag);
 
 		final LispStruct token = reader.read(true, NILStruct.INSTANCE, true);

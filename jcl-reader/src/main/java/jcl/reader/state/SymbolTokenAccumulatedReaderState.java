@@ -197,7 +197,7 @@ class SymbolTokenAccumulatedReaderState implements ReaderState {
 		if (foundSymbol == null) {
 			final boolean isKeyword = GlobalPackageStruct.KEYWORD.equals(symbolPackage);
 			if (isKeyword) {
-				return new KeywordStruct(symbolName);
+				return KeywordStruct.valueOf(symbolName);
 			}
 			return symbolPackage.intern(symbolName).getSymbol();
 		} else {

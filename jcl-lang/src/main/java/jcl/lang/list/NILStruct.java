@@ -138,7 +138,7 @@ public final class NILStruct extends BooleanStruct implements ListStruct {
 
 	@Override
 	public ValuesStruct getProperties(final ListStruct indicators) {
-		return new ValuesStruct(INSTANCE, INSTANCE, INSTANCE);
+		return ValuesStruct.valueOf(INSTANCE, INSTANCE, INSTANCE);
 	}
 
 	@Override

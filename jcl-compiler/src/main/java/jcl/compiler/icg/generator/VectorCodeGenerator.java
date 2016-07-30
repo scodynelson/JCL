@@ -16,7 +16,6 @@ import jcl.lang.LispStruct;
 import jcl.lang.array.VectorStruct;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
-import org.objectweb.asm.Type;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
@@ -27,18 +26,6 @@ import org.springframework.stereotype.Component;
  */
 @Component
 final class VectorCodeGenerator implements CodeGenerator<VectorStruct<LispStruct>> {
-
-	/**
-	 * Constant {@link String} containing the name for the {@link VectorStruct} class.
-	 */
-	private static final String VECTOR_STRUCT_NAME = Type.getInternalName(VectorStruct.class);
-
-	/**
-	 * Constant {@link String} containing the description for the {@link VectorStruct#VectorStruct(List)}
-	 * constructor method.
-	 */
-	private static final String VECTOR_STRUCT_INIT_DESC
-			= CodeGenerators.getConstructorDescription(VectorStruct.class, List.class);
 
 	/**
 	 * {@link QuoteCodeGenerator} used for generating the {@link VectorStruct} contents as if they were quoted values.
@@ -96,14 +83,11 @@ final class VectorCodeGenerator implements CodeGenerator<VectorStruct<LispStruct
 			mv.visitInsn(Opcodes.POP);
 		}
 
-		mv.visitTypeInsn(Opcodes.NEW, VECTOR_STRUCT_NAME);
-		mv.visitInsn(Opcodes.DUP);
-
 		mv.visitVarInsn(Opcodes.ALOAD, contentsStore);
-		mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
-		                   VECTOR_STRUCT_NAME,
-		                   GenerationConstants.INIT_METHOD_NAME,
-		                   VECTOR_STRUCT_INIT_DESC,
+		mv.visitMethodInsn(Opcodes.INVOKESTATIC,
+		                   GenerationConstants.LISP_STRUCT_FACTORY_NAME,
+		                   GenerationConstants.LISP_STRUCT_FACTORY_TO_VECTOR_METHOD_NAME,
+		                   GenerationConstants.LISP_STRUCT_FACTORY_TO_VECTOR_METHOD_DESC,
 		                   false);
 	}
 }

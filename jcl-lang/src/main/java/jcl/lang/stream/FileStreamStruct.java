@@ -106,7 +106,7 @@ public class FileStreamStruct extends AbstractNativeStreamStruct {
 		return () -> {
 			final File file = path.toFile();
 			final String namestring = file.getAbsolutePath();
-			return new PathnameStruct(namestring);
+			return PathnameStruct.valueOf(namestring);
 		};
 	}
 

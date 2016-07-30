@@ -15,7 +15,6 @@ import jcl.lang.array.BitVectorStruct;
 import jcl.lang.number.IntegerStruct;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
-import org.objectweb.asm.Type;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
@@ -26,18 +25,6 @@ import org.springframework.stereotype.Component;
  */
 @Component
 final class BitVectorCodeGenerator implements CodeGenerator<BitVectorStruct> {
-
-	/**
-	 * Constant {@link String} containing the name for the {@link BitVectorStruct} class.
-	 */
-	private static final String BIT_VECTOR_STRUCT_NAME = Type.getInternalName(BitVectorStruct.class);
-
-	/**
-	 * Constant {@link String} containing the description for the {@link BitVectorStruct#BitVectorStruct(List)}
-	 * constructor method.
-	 */
-	private static final String BIT_VECTOR_STRUCT_INIT_DESC
-			= CodeGenerators.getConstructorDescription(BitVectorStruct.class, List.class);
 
 	/**
 	 * {@link IntermediateCodeGenerator} used for generating the {@link BitVectorStruct} {@link IntegerStruct} content
@@ -95,14 +82,11 @@ final class BitVectorCodeGenerator implements CodeGenerator<BitVectorStruct> {
 			mv.visitInsn(Opcodes.POP);
 		}
 
-		mv.visitTypeInsn(Opcodes.NEW, BIT_VECTOR_STRUCT_NAME);
-		mv.visitInsn(Opcodes.DUP);
-
 		mv.visitVarInsn(Opcodes.ALOAD, contentsStore);
-		mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
-		                   BIT_VECTOR_STRUCT_NAME,
-		                   GenerationConstants.INIT_METHOD_NAME,
-		                   BIT_VECTOR_STRUCT_INIT_DESC,
+		mv.visitMethodInsn(Opcodes.INVOKESTATIC,
+		                   GenerationConstants.LISP_STRUCT_FACTORY_NAME,
+		                   GenerationConstants.LISP_STRUCT_FACTORY_TO_BIT_VECTOR_LIST_METHOD_NAME,
+		                   GenerationConstants.LISP_STRUCT_FACTORY_TO_BIT_VECTOR_LIST_METHOD_DESC,
 		                   false);
 	}
 }

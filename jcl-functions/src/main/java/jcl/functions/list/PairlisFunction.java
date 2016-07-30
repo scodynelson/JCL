@@ -2,6 +2,7 @@ package jcl.functions.list;
 
 import jcl.lang.LispStruct;
 import jcl.lang.condition.exception.SimpleErrorException;
+import jcl.lang.factory.LispStructFactory;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
@@ -47,8 +48,8 @@ public final class PairlisFunction extends CommonLispBuiltInFunctionStruct {
 		for (int i = 0; i < keysLength; i++) {
 			final LispStruct key = keysArray[i];
 			final LispStruct datum = datumsArray[i];
-			final ConsStruct pair = new ConsStruct(key, datum);
-			alist = new ConsStruct(pair, alist);
+			final ConsStruct pair = LispStructFactory.toCons(key, datum);
+			alist = LispStructFactory.toCons(pair, alist);
 		}
 
 		return alist;

@@ -11,8 +11,8 @@ import javax.annotation.PostConstruct;
 import jcl.lang.LispStruct;
 import jcl.lang.SpecialOperatorStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
+import jcl.lang.factory.LispStructFactory;
 import jcl.lang.function.ReaderMacroFunction;
-import jcl.lang.list.ListStruct;
 import jcl.lang.list.NILStruct;
 import jcl.lang.readtable.Reader;
 import jcl.lang.readtable.ReaderVariables;
@@ -44,7 +44,7 @@ public class SharpApostropheReaderMacroFunction extends ReaderMacroFunction {
 			throw new ReaderErrorException("Missing expression.");
 		}
 
-		return ListStruct.buildProperList(SpecialOperatorStruct.FUNCTION, token);
+		return LispStructFactory.toProperList(SpecialOperatorStruct.FUNCTION, token);
 	}
 
 	@Override

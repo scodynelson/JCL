@@ -57,6 +57,6 @@ public final class PackageNicknamesFunction extends CommonLispBuiltInFunctionStr
 				nicknames.stream()
 				         .map(LispStructFactory::toString)
 				         .collect(Collectors.toList());
-		return ListStruct.buildProperList(nicknamesStructs);
+		return LispStructFactory.toProperList(nicknamesStructs);
 	}
 }

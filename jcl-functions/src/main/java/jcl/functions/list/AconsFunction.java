@@ -1,6 +1,7 @@
 package jcl.functions.list;
 
 import jcl.lang.LispStruct;
+import jcl.lang.factory.LispStructFactory;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
@@ -32,7 +33,7 @@ public final class AconsFunction extends CommonLispBuiltInFunctionStruct {
 		final LispStruct datum = arguments.getRequiredArgument(DATUM_ARGUMENT);
 		final ListStruct alist = arguments.getRequiredArgument(ALIST_ARGUMENT, ListStruct.class);
 
-		final ConsStruct pair = new ConsStruct(key, datum);
-		return new ConsStruct(pair, alist);
+		final ConsStruct pair = LispStructFactory.toCons(key, datum);
+		return LispStructFactory.toCons(pair, alist);
 	}
 }

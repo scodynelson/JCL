@@ -13,7 +13,6 @@ import jcl.compiler.icg.JavaMethodBuilder;
 import jcl.lang.pathname.PathnameStruct;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
-import org.objectweb.asm.Type;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
@@ -23,18 +22,6 @@ import org.springframework.stereotype.Component;
  */
 @Component
 final class PathnameCodeGenerator implements CodeGenerator<PathnameStruct> {
-
-	/**
-	 * Constant {@link String} containing the name for the {@link PathnameStruct} class.
-	 */
-	private static final String PATHNAME_STRUCT_NAME = Type.getInternalName(PathnameStruct.class);
-
-	/**
-	 * Constant {@link String} containing the description for the {@link PathnameStruct#PathnameStruct(URI)}
-	 * constructor method.
-	 */
-	private static final String PATHNAME_STRUCT_NAME_INIT_DESC
-			= CodeGenerators.getConstructorDescription(PathnameStruct.class, URI.class);
 
 	/**
 	 * {@inheritDoc}
@@ -68,14 +55,11 @@ final class PathnameCodeGenerator implements CodeGenerator<PathnameStruct> {
 		final int uriStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, uriStore);
 
-		mv.visitTypeInsn(Opcodes.NEW, PATHNAME_STRUCT_NAME);
-		mv.visitInsn(Opcodes.DUP);
-
 		mv.visitVarInsn(Opcodes.ALOAD, uriStore);
-		mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
-		                   PATHNAME_STRUCT_NAME,
-		                   GenerationConstants.INIT_METHOD_NAME,
-		                   PATHNAME_STRUCT_NAME_INIT_DESC,
+		mv.visitMethodInsn(Opcodes.INVOKESTATIC,
+		                   GenerationConstants.LISP_STRUCT_FACTORY_NAME,
+		                   GenerationConstants.LISP_STRUCT_FACTORY_TO_PATHNAME_URI_METHOD_NAME,
+		                   GenerationConstants.LISP_STRUCT_FACTORY_TO_PATHNAME_URI_METHOD_DESC,
 		                   false);
 	}
 }

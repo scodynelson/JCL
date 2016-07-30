@@ -5,10 +5,10 @@
 package jcl.functions.list;
 
 import jcl.lang.LispStruct;
+import jcl.lang.factory.LispStructFactory;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
-import jcl.lang.list.ConsStruct;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -31,6 +31,6 @@ public final class ConsFunction extends CommonLispBuiltInFunctionStruct {
 	public LispStruct apply(final Arguments arguments) {
 		final LispStruct object1 = arguments.getRequiredArgument(OBJECT_1_ARGUMENT);
 		final LispStruct object2 = arguments.getRequiredArgument(OBJECT_2_ARGUMENT);
-		return new ConsStruct(object1, object2);
+		return LispStructFactory.toCons(object1, object2);
 	}
 }

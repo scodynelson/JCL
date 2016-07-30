@@ -42,5 +42,5 @@ public interface ReaderVariables {
 	/**
 	 * The global {@link ReadtableStruct} denoting the default readtable to be used throughout the JCL system.
 	 */
-	VariableStruct<ReadtableStruct> READTABLE = new VariableStruct<>("*READTABLE*", GlobalPackageStruct.COMMON_LISP, new ReadtableStruct());
+	VariableStruct<ReadtableStruct> READTABLE = new VariableStruct<>("*READTABLE*", GlobalPackageStruct.COMMON_LISP, ReadtableStruct.valueOf());
 }

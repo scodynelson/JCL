@@ -160,25 +160,19 @@ final class QuoteCodeGenerator implements CodeGenerator<QuoteStruct> {
 			final int secondToLastElementStore = methodBuilder.getNextAvailableStore();
 			mv.visitVarInsn(Opcodes.ASTORE, secondToLastElementStore);
 
-			mv.visitTypeInsn(Opcodes.NEW, GenerationConstants.CONS_STRUCT_NAME);
-			mv.visitInsn(Opcodes.DUP);
-
 			mv.visitVarInsn(Opcodes.ALOAD, secondToLastElementStore);
 			mv.visitVarInsn(Opcodes.ALOAD, lastElementStore);
-			mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
+			mv.visitMethodInsn(Opcodes.INVOKESTATIC,
 			                   GenerationConstants.CONS_STRUCT_NAME,
-			                   GenerationConstants.INIT_METHOD_NAME,
-			                   GenerationConstants.CONS_STRUCT_INIT_CAR_CDR_DESC,
+			                   GenerationConstants.CONS_STRUCT_VALUE_OF_CAR_CDR_METHOD_NAME,
+			                   GenerationConstants.CONS_STRUCT_VALUE_OF_CAR_CDR_METHOD_DESC,
 			                   false);
 		} else {
-			mv.visitTypeInsn(Opcodes.NEW, GenerationConstants.CONS_STRUCT_NAME);
-			mv.visitInsn(Opcodes.DUP);
-
 			mv.visitVarInsn(Opcodes.ALOAD, lastElementStore);
-			mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
+			mv.visitMethodInsn(Opcodes.INVOKESTATIC,
 			                   GenerationConstants.CONS_STRUCT_NAME,
-			                   GenerationConstants.INIT_METHOD_NAME,
-			                   GenerationConstants.CONS_STRUCT_INIT_CAR_DESC,
+			                   GenerationConstants.CONS_STRUCT_VALUE_OF_CAR_METHOD_NAME,
+			                   GenerationConstants.CONS_STRUCT_VALUE_OF_CAR_METHOD_DESC,
 			                   false);
 		}
 		final int previousConsStore = methodBuilder.getNextAvailableStore();
@@ -192,15 +186,12 @@ final class QuoteCodeGenerator implements CodeGenerator<QuoteStruct> {
 
 			mv.visitVarInsn(Opcodes.ASTORE, nextElementStore);
 
-			mv.visitTypeInsn(Opcodes.NEW, GenerationConstants.CONS_STRUCT_NAME);
-			mv.visitInsn(Opcodes.DUP);
-
 			mv.visitVarInsn(Opcodes.ALOAD, nextElementStore);
 			mv.visitVarInsn(Opcodes.ALOAD, previousConsStore);
-			mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
+			mv.visitMethodInsn(Opcodes.INVOKESTATIC,
 			                   GenerationConstants.CONS_STRUCT_NAME,
-			                   GenerationConstants.INIT_METHOD_NAME,
-			                   GenerationConstants.CONS_STRUCT_INIT_CAR_CDR_DESC,
+			                   GenerationConstants.CONS_STRUCT_VALUE_OF_CAR_CDR_METHOD_NAME,
+			                   GenerationConstants.CONS_STRUCT_VALUE_OF_CAR_CDR_METHOD_DESC,
 			                   false);
 			mv.visitVarInsn(Opcodes.ASTORE, previousConsStore);
 		}

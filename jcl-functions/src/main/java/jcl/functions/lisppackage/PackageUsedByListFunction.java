@@ -8,6 +8,7 @@ import java.util.List;
 
 import jcl.lang.LispStruct;
 import jcl.lang.PackageStruct;
+import jcl.lang.factory.LispStructFactory;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
@@ -50,6 +51,6 @@ public final class PackageUsedByListFunction extends CommonLispBuiltInFunctionSt
 		final PackageStruct aPackage = lispStruct.asPackage().get();
 
 		final List<PackageStruct> usedByList = aPackage.getUsedByList();
-		return ListStruct.buildProperList(usedByList);
+		return LispStructFactory.toProperList(usedByList);
 	}
 }

@@ -15,7 +15,6 @@ import jcl.lang.array.VectorStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
 import jcl.lang.factory.LispStructFactory;
 import jcl.lang.function.ReaderMacroFunction;
-import jcl.lang.list.ConsStruct;
 import jcl.lang.list.ListStruct;
 import jcl.lang.list.NILStruct;
 import jcl.lang.readtable.Reader;
@@ -74,7 +73,7 @@ public class SharpLeftParenthesisReaderMacroFunction extends ReaderMacroFunction
 			return handleNumberArgument(listToken, numberArgumentValue);
 		}
 
-		return new ConsStruct(BackquoteReaderMacroFunction.BQ_VECTOR_FLAG, listToken);
+		return LispStructFactory.toCons(BackquoteReaderMacroFunction.BQ_VECTOR_FLAG, listToken);
 	}
 
 	/**

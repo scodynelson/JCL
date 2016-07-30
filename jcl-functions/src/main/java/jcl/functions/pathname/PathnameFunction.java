@@ -10,6 +10,7 @@ import java.nio.file.Path;
 import jcl.lang.LispStruct;
 import jcl.lang.array.StringStruct;
 import jcl.lang.condition.exception.TypeErrorException;
+import jcl.lang.factory.LispStructFactory;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
@@ -47,13 +48,13 @@ public final class PathnameFunction extends CommonLispBuiltInFunctionStruct {
 		} else if (pathnameDesignator instanceof StringStruct) {
 			final StringStruct namestringStruct = (StringStruct) pathnameDesignator;
 			namestring = namestringStruct.getAsJavaString();
-			pathname = new PathnameStruct(namestring);
+			pathname = LispStructFactory.toPathname(namestring);
 		} else if (pathnameDesignator instanceof FileStreamStruct) {
 			final FileStreamStruct fileStream = (FileStreamStruct) pathnameDesignator;
 			final Path path = fileStream.getPath();
 			final File file = path.toFile();
 			namestring = file.getAbsolutePath();
-			pathname = new PathnameStruct(namestring);
+			pathname = LispStructFactory.toPathname(namestring);
 		} else {
 			throw new TypeErrorException("Illegal pathname designator argument provided: " + pathnameDesignator);
 		}

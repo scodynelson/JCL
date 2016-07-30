@@ -67,10 +67,10 @@ final class ConsCodeGenerator implements CodeGenerator<ConsStruct> {
 
 		mv.visitVarInsn(Opcodes.ALOAD, carStore);
 		mv.visitVarInsn(Opcodes.ALOAD, cdrStore);
-		mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
+		mv.visitMethodInsn(Opcodes.INVOKESTATIC,
 		                   GenerationConstants.CONS_STRUCT_NAME,
-		                   GenerationConstants.INIT_METHOD_NAME,
-		                   GenerationConstants.CONS_STRUCT_INIT_CAR_CDR_DESC,
+		                   GenerationConstants.CONS_STRUCT_VALUE_OF_CAR_CDR_METHOD_NAME,
+		                   GenerationConstants.CONS_STRUCT_VALUE_OF_CAR_CDR_METHOD_DESC,
 		                   false);
 	}
 }

@@ -10,6 +10,7 @@ import javax.annotation.PostConstruct;
 
 import jcl.lang.LispStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
+import jcl.lang.factory.LispStructFactory;
 import jcl.lang.function.ReaderMacroFunction;
 import jcl.lang.list.ConsStruct;
 import jcl.lang.list.NILStruct;
@@ -55,14 +56,14 @@ public class CommaReaderMacroFunction extends ReaderMacroFunction {
 
 			if (nextCodePoint == CodePointConstants.AT_SIGN) {
 				final LispStruct token = reader.read(true, NILStruct.INSTANCE, true);
-				commaCons = new ConsStruct(BackquoteReaderMacroFunction.BQ_AT_FLAG, token);
+				commaCons = LispStructFactory.toCons(BackquoteReaderMacroFunction.BQ_AT_FLAG, token);
 			} else if (nextCodePoint == CodePointConstants.FULL_STOP) {
 				final LispStruct token = reader.read(true, NILStruct.INSTANCE, true);
-				commaCons = new ConsStruct(BackquoteReaderMacroFunction.BQ_DOT_FLAG, token);
+				commaCons = LispStructFactory.toCons(BackquoteReaderMacroFunction.BQ_DOT_FLAG, token);
 			} else {
 				reader.unreadChar(nextCodePoint);
 				final LispStruct token = reader.read(true, NILStruct.INSTANCE, true);
-				commaCons = new ConsStruct(BackquoteReaderMacroFunction.BQ_COMMA_FLAG, token);
+				commaCons = LispStructFactory.toCons(BackquoteReaderMacroFunction.BQ_COMMA_FLAG, token);
 			}
 			return commaCons;
 		} finally {

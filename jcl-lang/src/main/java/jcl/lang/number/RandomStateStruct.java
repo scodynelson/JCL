@@ -14,13 +14,17 @@ import org.apache.commons.lang3.RandomUtils;
 /**
  * The {@link RandomStateStruct} is the object representation of a Lisp 'random-state' type.
  */
-public class RandomStateStruct extends BuiltInClassStruct {
+public final class RandomStateStruct extends BuiltInClassStruct {
 
 	/**
 	 * Public constructor.
 	 */
-	public RandomStateStruct() {
+	private RandomStateStruct() {
 		super(RandomStateType.INSTANCE, null, null);
+	}
+
+	public static RandomStateStruct valueOf() {
+		return new RandomStateStruct();
 	}
 
 	/**

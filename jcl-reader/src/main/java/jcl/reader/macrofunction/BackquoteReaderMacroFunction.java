@@ -14,6 +14,7 @@ import jcl.lang.SpecialOperatorStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.TStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
+import jcl.lang.factory.LispStructFactory;
 import jcl.lang.function.ReaderMacroFunction;
 import jcl.lang.list.ConsStruct;
 import jcl.lang.list.ListStruct;
@@ -151,12 +152,12 @@ public class BackquoteReaderMacroFunction extends ReaderMacroFunction {
 						|| TStruct.INSTANCE.equals(carBqtifyFlag)
 						|| NILStruct.INSTANCE.equals(carBqtifyFlag)) {
 
-					final ListStruct bqReturnThing = ListStruct.buildProperList(carBqtifyThing);
+					final ListStruct bqReturnThing = LispStructFactory.toProperList(carBqtifyThing);
 					return new BackquoteReturn(SpecialOperatorStruct.QUOTE, bqReturnThing);
 				} else {
 
 					final LispStruct backquotify_1 = backquotify_1(carBqtifyFlag, carBqtifyThing);
-					final ListStruct bqReturnThing = ListStruct.buildProperList(backquotify_1);
+					final ListStruct bqReturnThing = LispStructFactory.toProperList(backquotify_1);
 
 					return new BackquoteReturn(LIST, bqReturnThing);
 				}
@@ -169,13 +170,13 @@ public class BackquoteReaderMacroFunction extends ReaderMacroFunction {
 						|| TStruct.INSTANCE.equals(carBqtifyFlag)
 						|| NILStruct.INSTANCE.equals(carBqtifyFlag)) {
 
-					final ConsStruct bqReturnThing = new ConsStruct(carBqtifyThing, cdrBqtifyThing);
+					final ConsStruct bqReturnThing = LispStructFactory.toCons(carBqtifyThing, cdrBqtifyThing);
 					return new BackquoteReturn(SpecialOperatorStruct.QUOTE, bqReturnThing);
 				} else {
 
 					final LispStruct backquotify_1_a = backquotify_1(carBqtifyFlag, carBqtifyThing);
 					final LispStruct backquotify_1_d = backquotify_1(cdrBqtifyFlag, cdrBqtifyThing);
-					final ListStruct bqReturnThing = ListStruct.buildProperList(backquotify_1_a, backquotify_1_d);
+					final ListStruct bqReturnThing = LispStructFactory.toProperList(backquotify_1_a, backquotify_1_d);
 
 					return new BackquoteReturn(LIST_STAR, bqReturnThing);
 				}
@@ -185,12 +186,12 @@ public class BackquoteReaderMacroFunction extends ReaderMacroFunction {
 
 			if (LIST.equals(cdrBqtifyFlag)
 					|| LIST_STAR.equals(cdrBqtifyFlag)) {
-				final ListStruct bqReturnThing = new ConsStruct(nextCarBqtifyThing, cdrBqtifyThing);
+				final ListStruct bqReturnThing = LispStructFactory.toCons(nextCarBqtifyThing, cdrBqtifyThing);
 				return new BackquoteReturn(cdrBqtifyFlag, bqReturnThing);
 			}
 
 			final LispStruct backquotify_1_d = backquotify_1(cdrBqtifyFlag, cdrBqtifyThing);
-			final ListStruct bqReturnThing = ListStruct.buildProperList(nextCarBqtifyThing, backquotify_1_d);
+			final ListStruct bqReturnThing = LispStructFactory.toProperList(nextCarBqtifyThing, backquotify_1_d);
 
 			return new BackquoteReturn(LIST_STAR, bqReturnThing);
 		}
@@ -201,7 +202,7 @@ public class BackquoteReaderMacroFunction extends ReaderMacroFunction {
 	private BackquoteReturn backquotifyAtFlag(final LispStruct carBqtifyThing, final SymbolStruct cdrBqtifyFlag, final LispStruct cdrBqtifyThing) {
 		if (NILStruct.INSTANCE.equals(cdrBqtifyFlag)) {
 			if (expandableBackqExpressionP(carBqtifyThing)) {
-				final ListStruct bqReturnThing = ListStruct.buildProperList(carBqtifyThing);
+				final ListStruct bqReturnThing = LispStructFactory.toProperList(carBqtifyThing);
 				return new BackquoteReturn(APPEND, bqReturnThing);
 			} else {
 				return comma(carBqtifyThing);
@@ -210,10 +211,10 @@ public class BackquoteReaderMacroFunction extends ReaderMacroFunction {
 
 			final ListStruct bqReturnThing;
 			if (APPEND.equals(cdrBqtifyFlag)) {
-				bqReturnThing = new ConsStruct(carBqtifyThing, cdrBqtifyThing);
+				bqReturnThing = LispStructFactory.toCons(carBqtifyThing, cdrBqtifyThing);
 			} else {
 				final LispStruct backquotify_1 = backquotify_1(cdrBqtifyFlag, cdrBqtifyThing);
-				bqReturnThing = ListStruct.buildProperList(carBqtifyThing, backquotify_1);
+				bqReturnThing = LispStructFactory.toProperList(carBqtifyThing, backquotify_1);
 			}
 
 			return new BackquoteReturn(APPEND, bqReturnThing);
@@ -223,7 +224,7 @@ public class BackquoteReaderMacroFunction extends ReaderMacroFunction {
 	private BackquoteReturn backquotifyDotFlag(final LispStruct carBqtifyThing, final SymbolStruct cdrBqtifyFlag, final LispStruct cdrBqtifyThing) {
 		if (NILStruct.INSTANCE.equals(cdrBqtifyFlag)) {
 			if (expandableBackqExpressionP(carBqtifyThing)) {
-				final ListStruct bqReturnThing = ListStruct.buildProperList(carBqtifyThing);
+				final ListStruct bqReturnThing = LispStructFactory.toProperList(carBqtifyThing);
 				return new BackquoteReturn(NCONC, bqReturnThing);
 			} else {
 				return comma(carBqtifyThing);
@@ -232,10 +233,10 @@ public class BackquoteReaderMacroFunction extends ReaderMacroFunction {
 
 			final ListStruct bqReturnThing;
 			if (NCONC.equals(cdrBqtifyFlag)) {
-				bqReturnThing = new ConsStruct(carBqtifyThing, cdrBqtifyThing);
+				bqReturnThing = LispStructFactory.toCons(carBqtifyThing, cdrBqtifyThing);
 			} else {
 				final LispStruct backquotify_1 = backquotify_1(cdrBqtifyFlag, cdrBqtifyThing);
-				bqReturnThing = ListStruct.buildProperList(carBqtifyThing, backquotify_1);
+				bqReturnThing = LispStructFactory.toProperList(carBqtifyThing, backquotify_1);
 			}
 
 			return new BackquoteReturn(NCONC, bqReturnThing);
@@ -313,7 +314,7 @@ public class BackquoteReaderMacroFunction extends ReaderMacroFunction {
 		}
 
 		if (SpecialOperatorStruct.QUOTE.equals(flag)) {
-			return ListStruct.buildProperList(SpecialOperatorStruct.QUOTE, thing);
+			return LispStructFactory.toProperList(SpecialOperatorStruct.QUOTE, thing);
 		}
 
 		if (LIST_STAR.equals(flag)) {
@@ -329,7 +330,7 @@ public class BackquoteReaderMacroFunction extends ReaderMacroFunction {
 
 				if (NILStruct.INSTANCE.equals(cddrThing) && !expandableBackqExpressionP(cadrThing)) {
 					// Basically if there are only 2 items in the list, just use Cons function
-					return new ConsStruct(CONS, thing);
+					return LispStructFactory.toCons(CONS, thing);
 				}
 
 				// NOTE: This is a safe cast, as the last() will always return a List with the last cons, even if the list is dotted
@@ -338,20 +339,20 @@ public class BackquoteReaderMacroFunction extends ReaderMacroFunction {
 
 				if (expandableBackqExpressionP(carOfLastThing)) {
 					final ListStruct allButLast = consThing.butLast();
-					final ConsStruct consStruct = new ConsStruct(LIST, allButLast);
+					final ConsStruct consStruct = LispStructFactory.toCons(LIST, allButLast);
 
-					return ListStruct.buildProperList(APPEND, consStruct, carOfLastThing);
+					return LispStructFactory.toProperList(APPEND, consStruct, carOfLastThing);
 				}
 			}
 
-			return new ConsStruct(LIST_STAR, thing);
+			return LispStructFactory.toCons(LIST_STAR, thing);
 		}
 
 		if (LIST_TO_VECTOR.equals(flag)) {
-			return ListStruct.buildProperList(LIST_TO_VECTOR, thing);
+			return LispStructFactory.toProperList(LIST_TO_VECTOR, thing);
 		}
 
-		return new ConsStruct(flag, thing);
+		return LispStructFactory.toCons(flag, thing);
 	}
 
 	private static final class BackquoteReturn {

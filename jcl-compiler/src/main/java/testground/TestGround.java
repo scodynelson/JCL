@@ -158,12 +158,12 @@ public class TestGround {
 	private Object consGen() {
 		final LispStruct car = CharacterStruct.valueOf(97);
 		final LispStruct cdr = CharacterStruct.valueOf(197);
-		return new ConsStruct(car, cdr);
+		return ConsStruct.valueOf(car, cdr);
 	}
 
 	private Object pathnameGen() {
 		final URI uri = URI.create("");
-		return new PathnameStruct(uri);
+		return LispStructFactory.toPathname(uri);
 	}
 
 	private Object bitVectorGen() {
@@ -255,7 +255,7 @@ public class TestGround {
 
 		final LispStruct element1 = CharacterStruct.valueOf(97);
 		final LispStruct element2 = CharacterStruct.valueOf(197);
-		return new ConsStruct(element1, element2);
+		return ConsStruct.valueOf(element1, element2);
 	}
 
 	@SuppressWarnings({"unchecked", "rawtypes"})

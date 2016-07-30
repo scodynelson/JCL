@@ -7,6 +7,7 @@ import jcl.compiler.functions.CompileForm;
 import jcl.functions.LoadFunction;
 import jcl.lang.LispStruct;
 import jcl.lang.TStruct;
+import jcl.lang.factory.LispStructFactory;
 import jcl.lang.function.ExtensionsBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
@@ -42,7 +43,7 @@ public final class LoadLispFiles extends ExtensionsBuiltInFunctionStruct {
 	public LispStruct apply(final Arguments arguments) {
 		CompileForm.OUTPUT_FILE = false;
 		for (final String lispFileToLoad : lispFilesToLoad) {
-			final PathnameStruct pathname = new PathnameStruct(lispFileToLoad);
+			final PathnameStruct pathname = LispStructFactory.toPathname(lispFileToLoad);
 			loadFunction.load(pathname, false, false, true);
 		}
 		CompileForm.OUTPUT_FILE = true;

@@ -49,12 +49,16 @@ public class HashTableStruct extends BuiltInClassStruct {
 	 * @param rehashThreshold
 	 * 		the threshold amount when resizing the table
 	 */
-	public HashTableStruct(final EquatorFunctionStruct test, final BigInteger size, final float rehashThreshold) {
+	private HashTableStruct(final EquatorFunctionStruct test, final BigInteger size, final float rehashThreshold) {
 		super(HashTableType.INSTANCE, null, null);
 		this.test = test;
 		this.rehashThreshold = rehashThreshold;
 
 		map = new ConcurrentHashMap<>(size.intValue(), rehashThreshold);
+	}
+
+	public static HashTableStruct valueOf(final EquatorFunctionStruct test, final BigInteger size, final float rehashThreshold) {
+		return new HashTableStruct(test, size, rehashThreshold);
 	}
 
 	/**

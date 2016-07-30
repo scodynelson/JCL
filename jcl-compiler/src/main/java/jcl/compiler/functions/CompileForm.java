@@ -20,6 +20,7 @@ import jcl.lang.BooleanStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.SpecialOperatorStruct;
 import jcl.lang.TStruct;
+import jcl.lang.factory.LispStructFactory;
 import jcl.lang.function.FunctionStruct;
 import jcl.lang.list.ListStruct;
 import jcl.lang.list.NILStruct;
@@ -117,6 +118,6 @@ public class CompileForm {
 		lambdaFormList.add(NILStruct.INSTANCE);
 		lambdaFormList.add(form);
 
-		return ListStruct.buildProperList(lambdaFormList);
+		return LispStructFactory.toProperList(lambdaFormList);
 	}
 }

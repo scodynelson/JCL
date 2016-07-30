@@ -38,6 +38,7 @@ import jcl.lang.StructureObjectStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.ValuesStruct;
 import jcl.lang.condition.exception.ProgramErrorException;
+import jcl.lang.factory.LispStructFactory;
 import jcl.lang.function.FunctionStruct;
 import jcl.lang.function.expander.MacroFunctionExpanderInter;
 import jcl.lang.list.ConsStruct;
@@ -171,6 +172,24 @@ interface GenerationConstants {
 	String HASH_CODE_BUILDER_TO_HASH_CODE_METHOD_NAME = "toHashCode";
 
 	String HASH_CODE_BUILDER_TO_HASH_CODE_METHOD_DESC = CodeGenerators.getMethodDescription(HashCodeBuilder.class, HASH_CODE_BUILDER_TO_HASH_CODE_METHOD_NAME);
+
+	String LISP_STRUCT_FACTORY_NAME = Type.getInternalName(LispStructFactory.class);
+
+	String LISP_STRUCT_FACTORY_TO_PATHNAME_URI_METHOD_NAME = "toPathname";
+
+	String LISP_STRUCT_FACTORY_TO_PATHNAME_URI_METHOD_DESC = CodeGenerators.getMethodDescription(LispStructFactory.class, LISP_STRUCT_FACTORY_TO_PATHNAME_URI_METHOD_NAME, URI.class);
+
+	String LISP_STRUCT_FACTORY_TO_BIT_VECTOR_LIST_METHOD_NAME = "toBitVector";
+
+	String LISP_STRUCT_FACTORY_TO_BIT_VECTOR_LIST_METHOD_DESC = CodeGenerators.getMethodDescription(LispStructFactory.class, LISP_STRUCT_FACTORY_TO_BIT_VECTOR_LIST_METHOD_NAME, List.class);
+
+	String LISP_STRUCT_FACTORY_TO_ARRAY_METHOD_NAME = "toArray";
+
+	String LISP_STRUCT_FACTORY_TO_ARRAY_METHOD_DESC = CodeGenerators.getMethodDescription(LispStructFactory.class, LISP_STRUCT_FACTORY_TO_ARRAY_METHOD_NAME, List.class, List.class);
+
+	String LISP_STRUCT_FACTORY_TO_VECTOR_METHOD_NAME = "toVector";
+
+	String LISP_STRUCT_FACTORY_TO_VECTOR_METHOD_DESC = CodeGenerators.getMethodDescription(LispStructFactory.class, LISP_STRUCT_FACTORY_TO_VECTOR_METHOD_NAME, List.class);
 
 	String SYMBOL_STRUCT_NAME = Type.getInternalName(SymbolStruct.class);
 
@@ -390,9 +409,13 @@ interface GenerationConstants {
 
 	String CONS_STRUCT_NAME = Type.getInternalName(ConsStruct.class);
 
-	String CONS_STRUCT_INIT_CAR_DESC = CodeGenerators.getConstructorDescription(ConsStruct.class, LispStruct.class);
+	String CONS_STRUCT_VALUE_OF_CAR_METHOD_NAME = "valueOf";
 
-	String CONS_STRUCT_INIT_CAR_CDR_DESC = CodeGenerators.getConstructorDescription(ConsStruct.class, LispStruct.class, LispStruct.class);
+	String CONS_STRUCT_VALUE_OF_CAR_METHOD_DESC = CodeGenerators.getMethodDescription(ConsStruct.class, CONS_STRUCT_VALUE_OF_CAR_METHOD_NAME, LispStruct.class);
+
+	String CONS_STRUCT_VALUE_OF_CAR_CDR_METHOD_NAME = "valueOf";
+
+	String CONS_STRUCT_VALUE_OF_CAR_CDR_METHOD_DESC = CodeGenerators.getMethodDescription(ConsStruct.class, CONS_STRUCT_VALUE_OF_CAR_CDR_METHOD_NAME, LispStruct.class, LispStruct.class);
 
 	String LIST_STRUCT_NAME = Type.getInternalName(ListStruct.class);
 

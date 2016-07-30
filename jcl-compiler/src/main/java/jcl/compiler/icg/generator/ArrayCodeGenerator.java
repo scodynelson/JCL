@@ -16,7 +16,6 @@ import jcl.lang.LispStruct;
 import jcl.lang.array.ArrayStruct;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
-import org.objectweb.asm.Type;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
@@ -27,18 +26,6 @@ import org.springframework.stereotype.Component;
  */
 @Component
 class ArrayCodeGenerator implements CodeGenerator<ArrayStruct<LispStruct>> {
-
-	/**
-	 * Constant {@link String} containing the name for the {@link ArrayStruct} class.
-	 */
-	private static final String ARRAY_STRUCT_NAME = Type.getInternalName(ArrayStruct.class);
-
-	/**
-	 * Constant {@link String} containing the description for the {@link ArrayStruct#ArrayStruct(List, List)}
-	 * constructor method.
-	 */
-	private static final String ARRAY_STRUCT_INIT_DESC
-			= CodeGenerators.getConstructorDescription(ArrayStruct.class, List.class, List.class);
 
 	/**
 	 * {@link QuoteCodeGenerator} used for generating the {@link ArrayStruct} contents as if they were quoted values.
@@ -125,15 +112,12 @@ class ArrayCodeGenerator implements CodeGenerator<ArrayStruct<LispStruct>> {
 			mv.visitInsn(Opcodes.POP);
 		}
 
-		mv.visitTypeInsn(Opcodes.NEW, ARRAY_STRUCT_NAME);
-		mv.visitInsn(Opcodes.DUP);
-
 		mv.visitVarInsn(Opcodes.ALOAD, dimensionsStore);
 		mv.visitVarInsn(Opcodes.ALOAD, contentsStore);
-		mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
-		                   ARRAY_STRUCT_NAME,
-		                   GenerationConstants.INIT_METHOD_NAME,
-		                   ARRAY_STRUCT_INIT_DESC,
+		mv.visitMethodInsn(Opcodes.INVOKESTATIC,
+		                   GenerationConstants.LISP_STRUCT_FACTORY_NAME,
+		                   GenerationConstants.LISP_STRUCT_FACTORY_TO_ARRAY_METHOD_NAME,
+		                   GenerationConstants.LISP_STRUCT_FACTORY_TO_ARRAY_METHOD_DESC,
 		                   false);
 	}
 }

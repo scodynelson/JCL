@@ -56,7 +56,7 @@ public class ReadtableStruct extends BuiltInClassStruct {
 	/**
 	 * Public constructor.
 	 */
-	public ReadtableStruct() {
+	private ReadtableStruct() {
 		this(ReadtableCase.UPCASE);
 	}
 
@@ -66,11 +66,19 @@ public class ReadtableStruct extends BuiltInClassStruct {
 	 * @param readtableCase
 	 * 		the readtable case
 	 */
-	public ReadtableStruct(final ReadtableCase readtableCase) {
+	private ReadtableStruct(final ReadtableCase readtableCase) {
 		super(ReadtableType.INSTANCE, null, null);
 		this.readtableCase = readtableCase;
 
 		init();
+	}
+
+	public static ReadtableStruct valueOf() {
+		return new ReadtableStruct();
+	}
+
+	public static ReadtableStruct valueOf(final ReadtableCase readtableCase) {
+		return new ReadtableStruct(readtableCase);
 	}
 
 	/**

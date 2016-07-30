@@ -9,12 +9,12 @@ import jcl.lang.KeywordStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.TypeErrorException;
+import jcl.lang.factory.LispStructFactory;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.EquatorFunctionStruct;
 import jcl.lang.function.FunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
-import jcl.lang.hashtable.HashTableStruct;
 import jcl.lang.number.FloatStruct;
 import jcl.lang.number.IntegerStruct;
 import jcl.lang.number.RealStruct;
@@ -57,7 +57,7 @@ public final class MakeHashTableFunction extends CommonLispBuiltInFunctionStruct
 		final FloatStruct rehashThreshold = arguments.getKeyArgument(REHASH_THRESHOLD, FloatStruct.class);
 //		RealType.Factory.getInstance(BigInteger.ZERO, BigInteger.ONE)
 
-		return new HashTableStruct(equatorTestFunction, size.bigIntegerValue(), rehashThreshold.floatValue());
+		return LispStructFactory.toHashTable(equatorTestFunction, size.bigIntegerValue(), rehashThreshold.floatValue());
 	}
 
 	private FunctionStruct validateFunctionDesignator(final LispStruct functionDesignator) {

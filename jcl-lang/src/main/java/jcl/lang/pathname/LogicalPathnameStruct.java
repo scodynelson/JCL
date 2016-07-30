@@ -75,7 +75,7 @@ public class LogicalPathnameStruct extends PathnameStruct {
 	 * @param pathname
 	 * 		the pathname string to parse into the logical-pathname object elements
 	 */
-	public LogicalPathnameStruct(final String pathname) {
+	private LogicalPathnameStruct(final String pathname) {
 		this(getHost(pathname), getDirectory(pathname), getName(pathname), getType(pathname), getVersion(pathname));
 	}
 
@@ -93,9 +93,18 @@ public class LogicalPathnameStruct extends PathnameStruct {
 	 * @param version
 	 * 		the logical-pathname version
 	 */
-	public LogicalPathnameStruct(final PathnameHost host, final PathnameDirectory directory, final PathnameName name,
+	private LogicalPathnameStruct(final PathnameHost host, final PathnameDirectory directory, final PathnameName name,
 	                             final PathnameType type, final PathnameVersion version) {
 		super(LogicalPathnameType.INSTANCE, host, null, directory, name, type, version, getURIFromComponents(host, null, directory, name, type, version));
+	}
+
+	public static LogicalPathnameStruct valueOf(final String pathname) {
+		return new LogicalPathnameStruct(pathname);
+	}
+
+	public static LogicalPathnameStruct valueOf(final PathnameHost host, final PathnameDirectory directory, final PathnameName name,
+	                                            final PathnameType type, final PathnameVersion version) {
+		return new LogicalPathnameStruct(host, directory, name, type, version);
 	}
 
 	/**

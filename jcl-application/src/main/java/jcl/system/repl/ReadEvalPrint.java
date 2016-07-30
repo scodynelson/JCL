@@ -10,7 +10,7 @@ import jcl.lang.ValuesStruct;
 import jcl.lang.VariableStruct;
 import jcl.lang.condition.exception.ConditionException;
 import jcl.lang.condition.exception.ReaderErrorException;
-import jcl.lang.list.ListStruct;
+import jcl.lang.factory.LispStructFactory;
 import jcl.lang.list.NILStruct;
 import jcl.lang.readtable.Reader;
 import jcl.lang.stream.ReadPeekResult;
@@ -87,11 +87,11 @@ public class ReadEvalPrint {
 					if (value instanceof ValuesStruct) {
 						final ValuesStruct values = (ValuesStruct) value;
 						REPLVariables.STAR.setDynamicValue(values.getPrimaryValue());
-						REPLVariables.SLASH.setDynamicValue(ListStruct.buildProperList(values.getValuesList()));
+						REPLVariables.SLASH.setDynamicValue(LispStructFactory.toProperList(values.getValuesList()));
 					} else {
 						REPLVariables.STAR.setDynamicValue(value);
 						// null check
-						REPLVariables.SLASH.setDynamicValue(ListStruct.buildProperList(value));
+						REPLVariables.SLASH.setDynamicValue(LispStructFactory.toProperList(value));
 					}
 
 					// bind '+' to the form just evaluated and '++' and '+++' to their appropriate values

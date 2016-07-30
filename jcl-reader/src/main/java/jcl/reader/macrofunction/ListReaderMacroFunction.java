@@ -9,6 +9,7 @@ import java.util.List;
 
 import jcl.lang.LispStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
+import jcl.lang.factory.LispStructFactory;
 import jcl.lang.list.ListStruct;
 import jcl.lang.list.NILStruct;
 import jcl.lang.readtable.Reader;
@@ -67,7 +68,7 @@ final class ListReaderMacroFunction {
 			return NILStruct.INSTANCE;
 		}
 
-		return isDottedList ? ListStruct.buildDottedList(currentTokenList) : ListStruct.buildProperList(currentTokenList);
+		return isDottedList ? LispStructFactory.toDottedList(currentTokenList) : LispStructFactory.toProperList(currentTokenList);
 	}
 
 	/**

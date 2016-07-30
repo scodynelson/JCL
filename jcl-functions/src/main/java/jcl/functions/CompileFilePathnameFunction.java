@@ -8,6 +8,7 @@ import jcl.functions.pathname.MergePathnamesFunction;
 import jcl.functions.pathname.TranslateLogicalPathnameFunction;
 import jcl.lang.CommonLispSymbols;
 import jcl.lang.LispStruct;
+import jcl.lang.factory.LispStructFactory;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
@@ -65,7 +66,7 @@ public final class CompileFilePathnameFunction extends CommonLispBuiltInFunction
 
 		if ((outputFile == null) && isLogicalInputFile) {
 			final PathnameStruct translatedMergedInputFile = translateLogicalPathnameFunction.translateLogicalPathname(mergedInputFile);
-			return new LogicalPathnameStruct(
+			return LispStructFactory.toLogicalPathname(
 					translatedMergedInputFile.getPathnameHost(),
 					translatedMergedInputFile.getPathnameDirectory(),
 					translatedMergedInputFile.getPathnameName(),
@@ -75,7 +76,7 @@ public final class CompileFilePathnameFunction extends CommonLispBuiltInFunction
 		} else if (isLogicalInputFile) {
 			final PathnameStruct translatedMergedInputFile = translateLogicalPathnameFunction.translateLogicalPathname(mergedInputFile);
 			final PathnameStruct mergedOutputFile = mergePathnamesFunction.mergePathnames(outputFile, translatedMergedInputFile);
-			return new PathnameStruct(
+			return LispStructFactory.toPathname(
 					mergedOutputFile.getPathnameHost(),
 					mergedOutputFile.getPathnameDevice(),
 					mergedOutputFile.getPathnameDirectory(),
@@ -84,7 +85,7 @@ public final class CompileFilePathnameFunction extends CommonLispBuiltInFunction
 					mergedOutputFile.getPathnameVersion()
 			);
 		} else if (outputFile == null) {
-			return new PathnameStruct(
+			return LispStructFactory.toPathname(
 					mergedInputFile.getPathnameHost(),
 					mergedInputFile.getPathnameDevice(),
 					mergedInputFile.getPathnameDirectory(),
@@ -94,7 +95,7 @@ public final class CompileFilePathnameFunction extends CommonLispBuiltInFunction
 			);
 		} else {
 			final PathnameStruct mergedOutputFile = mergePathnamesFunction.mergePathnames(outputFile, mergedInputFile);
-			return new PathnameStruct(
+			return LispStructFactory.toPathname(
 					mergedOutputFile.getPathnameHost(),
 					mergedOutputFile.getPathnameDevice(),
 					mergedOutputFile.getPathnameDirectory(),

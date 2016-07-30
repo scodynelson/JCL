@@ -90,7 +90,7 @@ public final class PathnameDirectoryFunction extends CommonLispBuiltInFunctionSt
 				directoryList.add(directoryLevelValue);
 			}
 
-			returnValue = ListStruct.buildProperList(directoryList);
+			returnValue = LispStructFactory.toProperList(directoryList);
 		}
 
 		return returnValue;

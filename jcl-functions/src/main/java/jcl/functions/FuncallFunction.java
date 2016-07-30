@@ -9,6 +9,7 @@ import java.util.List;
 import jcl.lang.LispStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.ErrorException;
+import jcl.lang.factory.LispStructFactory;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.FunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
@@ -57,7 +58,7 @@ public final class FuncallFunction extends CommonLispBuiltInFunctionStruct {
 		}
 
 		final List<LispStruct> functionArguments = arguments.getRestArgument();
-		final ListStruct argumentList = ListStruct.buildProperList(functionArguments);
+		final ListStruct argumentList = LispStructFactory.toProperList(functionArguments);
 
 		if (functionStruct == null) {
 			throw new ErrorException("Undefined function " + functionDesignator + " called with arguments " + argumentList);

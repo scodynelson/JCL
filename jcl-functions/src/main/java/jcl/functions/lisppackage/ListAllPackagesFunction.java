@@ -8,6 +8,7 @@ import java.util.List;
 
 import jcl.lang.LispStruct;
 import jcl.lang.PackageStruct;
+import jcl.lang.factory.LispStructFactory;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
@@ -45,6 +46,6 @@ public final class ListAllPackagesFunction extends CommonLispBuiltInFunctionStru
 	@Override
 	public LispStruct apply(final Arguments arguments) {
 		final List<PackageStruct> allPackages = PackageStruct.listAllPackages();
-		return ListStruct.buildProperList(allPackages);
+		return LispStructFactory.toProperList(allPackages);
 	}
 }

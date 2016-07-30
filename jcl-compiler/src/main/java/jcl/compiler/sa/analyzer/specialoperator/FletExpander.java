@@ -15,6 +15,7 @@ import jcl.lang.GlobalPackageStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.SpecialOperatorStruct;
 import jcl.lang.SymbolStruct;
+import jcl.lang.factory.LispStructFactory;
 import jcl.lang.list.ListStruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -66,23 +67,23 @@ public class FletExpander extends InnerLambdaExpander {
 			             final String tempFunctionBindName = "temp_" + name.getName() + "_bind_" + System.nanoTime();
 			             final SymbolStruct tempFunctionBindVar = GlobalPackageStruct.COMMON_LISP_USER.intern(tempFunctionBindName).getSymbol();
 
-			             final ListStruct quoteName = ListStruct.buildProperList(SpecialOperatorStruct.QUOTE, name);
+			             final ListStruct quoteName = LispStructFactory.toProperList(SpecialOperatorStruct.QUOTE, name);
 
 			             // Unbinding of the function
-			             final ListStruct unbindFunction = ListStruct.buildProperList(CommonLispSymbols.UNBIND_SYMBOL_FUNCTION, quoteName);
-			             final ListStruct letFunctionBindVar = ListStruct.buildProperList(tempFunctionBindVar, unbindFunction);
+			             final ListStruct unbindFunction = LispStructFactory.toProperList(CommonLispSymbols.UNBIND_SYMBOL_FUNCTION, quoteName);
+			             final ListStruct letFunctionBindVar = LispStructFactory.toProperList(tempFunctionBindVar, unbindFunction);
 			             letFunctionBindVars.add(letFunctionBindVar);
 
 			             // Rebinding of the function
-			             final ListStruct rebindFunction = ListStruct.buildProperList(CommonLispSymbols.BIND_SYMBOL_FUNCTION, quoteName, tempFunctionBindVar);
+			             final ListStruct rebindFunction = LispStructFactory.toProperList(CommonLispSymbols.BIND_SYMBOL_FUNCTION, quoteName, tempFunctionBindVar);
 			             rebindFunctions.add(rebindFunction);
 		             });
-		final ListStruct letFunctionBindVarList = ListStruct.buildProperList(letFunctionBindVars);
-		final ListStruct rebindFunctionList = ListStruct.buildProperList(rebindFunctions);
+		final ListStruct letFunctionBindVarList = LispStructFactory.toProperList(letFunctionBindVars);
+		final ListStruct rebindFunctionList = LispStructFactory.toProperList(rebindFunctions);
 
 		// NOTE: Make Dotted list here so the 'rebind functions' are added each as a separate cleanup-form
-		final ListStruct unwindProtect = ListStruct.buildDottedList(SpecialOperatorStruct.UNWIND_PROTECT, innerBlockListStruct, rebindFunctionList);
-		return ListStruct.buildProperList(SpecialOperatorStruct.LET, letFunctionBindVarList, unwindProtect);
+		final ListStruct unwindProtect = LispStructFactory.toDottedList(SpecialOperatorStruct.UNWIND_PROTECT, innerBlockListStruct, rebindFunctionList);
+		return LispStructFactory.toProperList(SpecialOperatorStruct.LET, letFunctionBindVarList, unwindProtect);
 	}
 
 	@Override

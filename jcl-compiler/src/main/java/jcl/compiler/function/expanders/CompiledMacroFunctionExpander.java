@@ -30,6 +30,7 @@ import jcl.lang.TStruct;
 import jcl.lang.ValuesStruct;
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.condition.exception.ProgramErrorException;
+import jcl.lang.factory.LispStructFactory;
 import jcl.lang.function.FunctionStruct;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.list.ListStruct;
@@ -250,7 +251,7 @@ public abstract class CompiledMacroFunctionExpander<O extends LispStruct> extend
 
 		if (restBinding != null) {
 			final SymbolStruct restSymbol = restBinding.getVar();
-			final LispStruct restListStruct = ListStruct.buildProperList(restList);
+			final LispStruct restListStruct = LispStructFactory.toProperList(restList);
 
 			final FunctionParameterBinding functionParameterBinding = new FunctionParameterBinding(restSymbol, restListStruct, restBinding.isSpecial());
 			functionParametersToBind.add(functionParameterBinding);
@@ -258,7 +259,7 @@ public abstract class CompiledMacroFunctionExpander<O extends LispStruct> extend
 
 		if (bodyBinding != null) {
 			final SymbolStruct bodySymbol = bodyBinding.getVar();
-			final LispStruct bodyListStruct = ListStruct.buildProperList(restList);
+			final LispStruct bodyListStruct = LispStructFactory.toProperList(restList);
 
 			final FunctionParameterBinding functionParameterBinding = new FunctionParameterBinding(bodySymbol, bodyListStruct, bodyBinding.isSpecial());
 			functionParametersToBind.add(functionParameterBinding);
@@ -465,7 +466,7 @@ public abstract class CompiledMacroFunctionExpander<O extends LispStruct> extend
 
 		if (restBinding != null) {
 			final SymbolStruct restSymbol = restBinding.getVar();
-			final LispStruct restListStruct = ListStruct.buildProperList(restList);
+			final LispStruct restListStruct = LispStructFactory.toProperList(restList);
 
 			final FunctionParameterBinding functionParameterBinding = new FunctionParameterBinding(restSymbol, restListStruct, restBinding.isSpecial());
 			functionParametersToBind.add(functionParameterBinding);
@@ -473,7 +474,7 @@ public abstract class CompiledMacroFunctionExpander<O extends LispStruct> extend
 
 		if (bodyBinding != null) {
 			final SymbolStruct bodySymbol = bodyBinding.getVar();
-			final LispStruct bodyListStruct = ListStruct.buildProperList(restList);
+			final LispStruct bodyListStruct = LispStructFactory.toProperList(restList);
 
 			final FunctionParameterBinding functionParameterBinding = new FunctionParameterBinding(bodySymbol, bodyListStruct, bodyBinding.isSpecial());
 			functionParametersToBind.add(functionParameterBinding);

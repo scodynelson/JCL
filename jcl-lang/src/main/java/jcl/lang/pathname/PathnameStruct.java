@@ -128,7 +128,7 @@ public class PathnameStruct extends BuiltInClassStruct {
 	 * @param path
 	 * 		the path to parse into the pathname object elements
 	 */
-	public PathnameStruct(final Path path) {
+	private PathnameStruct(final Path path) {
 		// TODO: This doesn't work correctly!!!
 		this(path.toUri());
 	}
@@ -139,7 +139,7 @@ public class PathnameStruct extends BuiltInClassStruct {
 	 * @param file
 	 * 		the file to parse into the pathname object elements
 	 */
-	public PathnameStruct(final File file) {
+	private PathnameStruct(final File file) {
 		// TODO: This doesn't work correctly!!!
 		this(file.toURI());
 	}
@@ -150,7 +150,7 @@ public class PathnameStruct extends BuiltInClassStruct {
 	 * @param pathname
 	 * 		the pathname string to parse into the pathname object elements
 	 */
-	public PathnameStruct(final String pathname) {
+	private PathnameStruct(final String pathname) {
 		this(getURIFromPathname(pathname));
 //		init(pathnameString);
 	}
@@ -161,7 +161,7 @@ public class PathnameStruct extends BuiltInClassStruct {
 	 * @param uri
 	 * 		the {@link URI} to parse into the pathname object elements
 	 */
-	public PathnameStruct(final URI uri) {
+	private PathnameStruct(final URI uri) {
 		this(jcl.type.PathnameType.INSTANCE, getHost(uri), getDevice(uri), getDirectory(uri), getName(uri), getType(uri), getVersion(), uri);
 	}
 
@@ -181,7 +181,7 @@ public class PathnameStruct extends BuiltInClassStruct {
 	 * @param version
 	 * 		the pathname version
 	 */
-	public PathnameStruct(final PathnameHost host, final PathnameDevice device, final PathnameDirectory directory,
+	private PathnameStruct(final PathnameHost host, final PathnameDevice device, final PathnameDirectory directory,
 	                      final PathnameName name, final PathnameType type, final PathnameVersion version) {
 		this(jcl.type.PathnameType.INSTANCE, host, device, directory, name, type, version, getURIFromComponents(host, device, directory, name, type, version));
 	}
@@ -218,6 +218,27 @@ public class PathnameStruct extends BuiltInClassStruct {
 		this.type = type;
 		this.version = version;
 		this.uri = uri;
+	}
+
+	public static PathnameStruct valueOf(final Path path) {
+		return new PathnameStruct(path);
+	}
+
+	public static PathnameStruct valueOf(final File file) {
+		return new PathnameStruct(file);
+	}
+
+	public static PathnameStruct valueOf(final String pathname) {
+		return new PathnameStruct(pathname);
+	}
+
+	public static PathnameStruct valueOf(final URI uri) {
+		return new PathnameStruct(uri);
+	}
+
+	public static PathnameStruct valueOf(final PathnameHost host, final PathnameDevice device, final PathnameDirectory directory,
+	                                               final PathnameName name, final PathnameType type, final PathnameVersion version) {
+		return new PathnameStruct(host, device, directory, name, type, version);
 	}
 
 	@Override

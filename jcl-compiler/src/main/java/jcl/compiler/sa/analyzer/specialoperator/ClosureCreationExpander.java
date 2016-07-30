@@ -25,6 +25,7 @@ import jcl.lang.LispStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
+import jcl.lang.factory.LispStructFactory;
 import jcl.lang.list.ListStruct;
 import jcl.lang.list.NILStruct;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,7 +69,7 @@ abstract class ClosureCreationExpander<V> extends MacroFunctionExpander<ClosureC
 
 		final BodyProcessingResult bodyProcessingResult = bodyWithDeclaresAnalyzer.analyze(forms);
 
-		final ListStruct fullDeclaration = ListStruct.buildProperList(bodyProcessingResult.getDeclares());
+		final ListStruct fullDeclaration = LispStructFactory.toProperList(bodyProcessingResult.getDeclares());
 		final DeclareStruct declare = declareExpander.expand(fullDeclaration, closureEnvironment);
 
 		final List<V> vars

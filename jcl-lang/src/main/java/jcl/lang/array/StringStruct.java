@@ -138,7 +138,7 @@ public final class StringStruct extends VectorStruct<CharacterStruct> {
 	public Supplier<PathnameStruct> asPathname() {
 		return () -> {
 			final String namestring = getAsJavaString();
-			return new PathnameStruct(namestring);
+			return PathnameStruct.valueOf(namestring);
 		};
 	}
 

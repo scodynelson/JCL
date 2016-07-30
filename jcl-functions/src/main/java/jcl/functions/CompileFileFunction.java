@@ -155,7 +155,7 @@ public final class CompileFileFunction extends CommonLispBuiltInFunctionStruct {
 
 		CompilerVariables.COMPILE_FILE_PATHNAME.setValue(outputFilePathname);
 		final Path outputFileAbsolutePath = outputFilePath.toAbsolutePath();
-		final PathnameStruct outputFileTruename = new PathnameStruct(outputFileAbsolutePath);
+		final PathnameStruct outputFileTruename = LispStructFactory.toPathname(outputFileAbsolutePath);
 		CompilerVariables.COMPILE_FILE_TRUENAME.setValue(outputFileTruename);
 
 		final ReadtableStruct previousReadtable = ReaderVariables.READTABLE.getVariableValue();
@@ -230,11 +230,11 @@ public final class CompileFileFunction extends CommonLispBuiltInFunctionStruct {
 
 	private static ListStruct buildFileLambda(final List<LispStruct> forms, final String inputClassName) {
 		final StringStruct newJavaClassName = LispStructFactory.toString("jcl." + inputClassName);
-		final ListStruct javaClassNameDeclaration = ListStruct.buildProperList(DeclarationStruct.JAVA_CLASS_NAME, newJavaClassName);
-		final ListStruct declareBlock = ListStruct.buildProperList(SpecialOperatorStruct.DECLARE, javaClassNameDeclaration);
+		final ListStruct javaClassNameDeclaration = LispStructFactory.toProperList(DeclarationStruct.JAVA_CLASS_NAME, newJavaClassName);
+		final ListStruct declareBlock = LispStructFactory.toProperList(SpecialOperatorStruct.DECLARE, javaClassNameDeclaration);
 
-		final ListStruct formsToCompile = ListStruct.buildProperList(forms);
-		return ListStruct.buildDottedList(SpecialOperatorStruct.LAMBDA, NILStruct.INSTANCE, declareBlock, formsToCompile);
+		final ListStruct formsToCompile = LispStructFactory.toProperList(forms);
+		return LispStructFactory.toDottedList(SpecialOperatorStruct.LAMBDA, NILStruct.INSTANCE, declareBlock, formsToCompile);
 	}
 
 	private static void writeToJar(final Deque<JavaClassBuilder> javaClassBuilderDeque, final Path outputFilePath, final String inputFileName,

@@ -8,10 +8,10 @@ import java.util.ArrayList;
 import java.util.Deque;
 
 import jcl.lang.LispStruct;
+import jcl.lang.factory.LispStructFactory;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
-import jcl.lang.list.ListStruct;
 import jcl.lang.stream.BroadcastStreamStruct;
 import jcl.lang.stream.OutputStream;
 import org.springframework.stereotype.Component;
@@ -34,6 +34,6 @@ public final class BroadcastStreamStreamsFunction extends CommonLispBuiltInFunct
 	public LispStruct apply(final Arguments arguments) {
 		final BroadcastStreamStruct broadcastStream = arguments.getRequiredArgument(BROADCAST_STREAM_ARGUMENT, BroadcastStreamStruct.class);
 		final Deque<OutputStream> outputStreams = broadcastStream.getOutputStreams();
-		return ListStruct.buildProperList(new ArrayList<LispStruct>(outputStreams));
+		return LispStructFactory.toProperList(new ArrayList<LispStruct>(outputStreams));
 	}
 }

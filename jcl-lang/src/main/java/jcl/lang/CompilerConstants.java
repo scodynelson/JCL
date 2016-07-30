@@ -6,7 +6,7 @@ package jcl.lang;
 
 import java.math.BigInteger;
 
-import jcl.lang.list.ListStruct;
+import jcl.lang.factory.LispStructFactory;
 import jcl.lang.number.IntegerStruct;
 
 public interface CompilerConstants {
@@ -24,7 +24,7 @@ public interface CompilerConstants {
 	ConstantStruct<?> WHOLE = new ConstantStruct<>("&WHOLE", GlobalPackageStruct.COMMON_LISP, null);
 
 	ConstantStruct<?> LAMBDA_LIST_KEYWORDS = new ConstantStruct<>("LAMBDA-LIST-KEYWORDS", GlobalPackageStruct.COMMON_LISP,
-	                                                              ListStruct.buildProperList(
+	                                                              LispStructFactory.toProperList(
 			                                                              ALLOW_OTHER_KEYS,
 			                                                              AUX,
 			                                                              BODY,

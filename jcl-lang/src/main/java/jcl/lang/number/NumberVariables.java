@@ -9,5 +9,5 @@ import jcl.lang.VariableStruct;
 
 public interface NumberVariables {
 
-	VariableStruct<RandomStateStruct> RANDOM_STATE = new VariableStruct<>("*RANDOM-STATE*", GlobalPackageStruct.COMMON_LISP, new RandomStateStruct());
+	VariableStruct<RandomStateStruct> RANDOM_STATE = new VariableStruct<>("*RANDOM-STATE*", GlobalPackageStruct.COMMON_LISP, RandomStateStruct.valueOf());
 }

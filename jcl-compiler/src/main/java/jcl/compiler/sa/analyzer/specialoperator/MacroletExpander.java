@@ -86,7 +86,7 @@ public class MacroletExpander extends MacroFunctionExpander<InnerLambdaStruct> {
 
 		final BodyProcessingResult bodyProcessingResult = bodyWithDeclaresAnalyzer.analyze(forms);
 
-		final ListStruct fullDeclaration = ListStruct.buildProperList(bodyProcessingResult.getDeclares());
+		final ListStruct fullDeclaration = LispStructFactory.toProperList(bodyProcessingResult.getDeclares());
 		final DeclareStruct declare = declareExpander.expand(fullDeclaration, macroletEnvironment);
 
 		try {
@@ -193,8 +193,8 @@ public class MacroletExpander extends MacroFunctionExpander<InnerLambdaStruct> {
 		final List<LispStruct> bodyForms = bodyProcessingResult.getBodyForms();
 
 		// NOTE: Make Dotted list here so the 'contents' of the body get added to the block
-		final ListStruct blockBody = ListStruct.buildProperList(bodyForms);
-		final ListStruct innerBlockListStruct = ListStruct.buildDottedList(SpecialOperatorStruct.BLOCK, functionName, blockBody);
+		final ListStruct blockBody = LispStructFactory.toProperList(bodyForms);
+		final ListStruct innerBlockListStruct = LispStructFactory.toDottedList(SpecialOperatorStruct.BLOCK, functionName, blockBody);
 
 		// NOTE: This will be a safe cast since we verify it is a symbol earlier
 		final SymbolStruct functionNameSymbol = (SymbolStruct) functionName;
@@ -207,13 +207,13 @@ public class MacroletExpander extends MacroFunctionExpander<InnerLambdaStruct> {
 
 		final String macroletParamName = "jcl.MACROLET_" + properFunctionNameString + "_MacroLambda_" + System.nanoTime();
 		final StringStruct macroletParamJavaClassName = LispStructFactory.toString(macroletParamName);
-		final ListStruct macroletParamJavaClassNameDeclaration = ListStruct.buildProperList(DeclarationStruct.JAVA_CLASS_NAME, macroletParamJavaClassName);
+		final ListStruct macroletParamJavaClassNameDeclaration = LispStructFactory.toProperList(DeclarationStruct.JAVA_CLASS_NAME, macroletParamJavaClassName);
 		declares.add(macroletParamJavaClassNameDeclaration);
 
-		final ListStruct fullDeclaration = ListStruct.buildProperList(declares);
+		final ListStruct fullDeclaration = LispStructFactory.toProperList(declares);
 
-		final ListStruct innerLambdaListStruct = ListStruct.buildProperList(SpecialOperatorStruct.LAMBDA, lambdaList, fullDeclaration, docString, innerBlockListStruct);
-		final ListStruct innerFunctionListStruct = ListStruct.buildProperList(SpecialOperatorStruct.FUNCTION, innerLambdaListStruct);
+		final ListStruct innerLambdaListStruct = LispStructFactory.toProperList(SpecialOperatorStruct.LAMBDA, lambdaList, fullDeclaration, docString, innerBlockListStruct);
+		final ListStruct innerFunctionListStruct = LispStructFactory.toProperList(SpecialOperatorStruct.FUNCTION, innerLambdaListStruct);
 
 		// Evaluate in the 'current' environment.
 		return functionExpander.expand(innerFunctionListStruct, macroletEnvironment);

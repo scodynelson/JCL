@@ -84,7 +84,7 @@ public abstract class InnerLambdaExpander extends MacroFunctionExpander<InnerLam
 
 		final BodyProcessingResult bodyProcessingResult = bodyWithDeclaresAnalyzer.analyze(forms);
 
-		final ListStruct fullDeclaration = ListStruct.buildProperList(bodyProcessingResult.getDeclares());
+		final ListStruct fullDeclaration = LispStructFactory.toProperList(bodyProcessingResult.getDeclares());
 		final DeclareStruct declare = declareExpander.expand(fullDeclaration, innerLambdaEnvironment);
 
 		return buildInnerLambda(innerLambdas, innerLambdaEnvironment, bodyProcessingResult, declare, functionNameStack, functionNames);
@@ -198,8 +198,8 @@ public abstract class InnerLambdaExpander extends MacroFunctionExpander<InnerLam
 		final List<LispStruct> bodyForms = bodyProcessingResult.getBodyForms();
 
 		// NOTE: Make Dotted list here so the 'contents' of the body get added to the block
-		final ListStruct blockBody = ListStruct.buildProperList(bodyForms);
-		final ListStruct innerBlockListStruct = ListStruct.buildDottedList(SpecialOperatorStruct.BLOCK, functionName, blockBody);
+		final ListStruct blockBody = LispStructFactory.toProperList(bodyForms);
+		final ListStruct innerBlockListStruct = LispStructFactory.toDottedList(SpecialOperatorStruct.BLOCK, functionName, blockBody);
 
 		// NOTE: This will be a safe cast since we verify it is a symbol earlier
 		final SymbolStruct functionNameSymbol = (SymbolStruct) functionName;
@@ -214,13 +214,13 @@ public abstract class InnerLambdaExpander extends MacroFunctionExpander<InnerLam
 
 		final String paramName = "jcl." + expanderName + '_' + properFunctionNameString + "_Lambda_" + System.nanoTime();
 		final StringStruct paramJavaClassName = LispStructFactory.toString(paramName);
-		final ListStruct paramJavaClassNameDeclaration = ListStruct.buildProperList(DeclarationStruct.JAVA_CLASS_NAME, paramJavaClassName);
+		final ListStruct paramJavaClassNameDeclaration = LispStructFactory.toProperList(DeclarationStruct.JAVA_CLASS_NAME, paramJavaClassName);
 		declares.add(paramJavaClassNameDeclaration);
 
-		final ListStruct fullDeclaration = ListStruct.buildProperList(declares);
+		final ListStruct fullDeclaration = LispStructFactory.toProperList(declares);
 
-		final ListStruct innerLambdaListStruct = ListStruct.buildProperList(SpecialOperatorStruct.LAMBDA, lambdaList, fullDeclaration, docString, innerLambdaBody);
-		final ListStruct innerFunctionListStruct = ListStruct.buildProperList(SpecialOperatorStruct.FUNCTION, innerLambdaListStruct);
+		final ListStruct innerLambdaListStruct = LispStructFactory.toProperList(SpecialOperatorStruct.LAMBDA, lambdaList, fullDeclaration, docString, innerLambdaBody);
+		final ListStruct innerFunctionListStruct = LispStructFactory.toProperList(SpecialOperatorStruct.FUNCTION, innerLambdaListStruct);
 
 		return expandBuiltInnerFunction(innerFunctionListStruct, environment);
 	}

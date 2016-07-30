@@ -16,6 +16,7 @@ import jcl.lang.SpecialOperatorStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
+import jcl.lang.factory.LispStructFactory;
 import jcl.lang.list.ConsStruct;
 import jcl.lang.list.ListStruct;
 import jcl.lang.list.NILStruct;
@@ -73,21 +74,21 @@ public class EvalWhenExpander extends MacroFunctionExpander<LispStruct> {
 
 		if (isTopLevel) {
 			if (isCompileTopLevel(situationList)) {
-				final ListStruct formsList = ListStruct.buildProperList(forms);
-				final ListStruct prognOperatorList = new ConsStruct(SpecialOperatorStruct.PROGN, formsList);
+				final ListStruct formsList = LispStructFactory.toProperList(forms);
+				final ListStruct prognOperatorList = ConsStruct.valueOf(SpecialOperatorStruct.PROGN, formsList);
 				return evalFunction.eval(prognOperatorList);
 			}
 
 			if (isLoadTopLevel(situationList) || (convertingForCompiler && isExecute(situationList))) {
-				final ListStruct formsList = ListStruct.buildProperList(forms);
-				final ListStruct prognOperatorList = new ConsStruct(SpecialOperatorStruct.PROGN, formsList);
+				final ListStruct formsList = LispStructFactory.toProperList(forms);
+				final ListStruct prognOperatorList = ConsStruct.valueOf(SpecialOperatorStruct.PROGN, formsList);
 				return evalFunction.eval(prognOperatorList);
 			}
 		}
 
 		if (isExecute(situationList)) {
-			final ListStruct formsList = ListStruct.buildProperList(forms);
-			final ListStruct prognOperatorList = new ConsStruct(SpecialOperatorStruct.PROGN, formsList);
+			final ListStruct formsList = LispStructFactory.toProperList(forms);
+			final ListStruct prognOperatorList = ConsStruct.valueOf(SpecialOperatorStruct.PROGN, formsList);
 			return evalFunction.eval(prognOperatorList);
 		}
 

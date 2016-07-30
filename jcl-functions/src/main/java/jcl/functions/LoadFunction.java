@@ -20,6 +20,7 @@ import jcl.lang.PackageStruct;
 import jcl.lang.PackageVariables;
 import jcl.lang.TStruct;
 import jcl.lang.condition.exception.FileErrorException;
+import jcl.lang.factory.LispStructFactory;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.FunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
@@ -110,7 +111,7 @@ public final class LoadFunction extends CommonLispBuiltInFunctionStruct {
 		if (filespec instanceof FileStreamStruct) {
 			filespecFileStream = (FileStreamStruct) filespec;
 			filespecPath = filespecFileStream.getPath();
-			filespecPathname = new PathnameStruct(filespecPath);
+			filespecPathname = LispStructFactory.toPathname(filespecPath);
 		} else {
 			final PathnameStruct defaultPathspec = PathnameVariables.DEFAULT_PATHNAME_DEFAULTS.getVariableValue();
 			final PathnameVersion nilVersion = new PathnameVersion(PathnameVersionComponentType.NIL);
@@ -132,7 +133,7 @@ public final class LoadFunction extends CommonLispBuiltInFunctionStruct {
 
 		CompilerVariables.COMPILE_FILE_PATHNAME.setValue(filespecPathname);
 		final Path filespecAbsolutePath = filespecPath.toAbsolutePath();
-		final PathnameStruct filespecTruename = new PathnameStruct(filespecAbsolutePath);
+		final PathnameStruct filespecTruename = LispStructFactory.toPathname(filespecAbsolutePath);
 		CompilerVariables.COMPILE_FILE_TRUENAME.setValue(filespecTruename);
 
 		final ReadtableStruct previousReadtable = ReaderVariables.READTABLE.getVariableValue();

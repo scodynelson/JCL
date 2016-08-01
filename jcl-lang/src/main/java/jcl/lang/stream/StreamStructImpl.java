@@ -14,7 +14,7 @@ import jcl.type.StreamType;
 /**
  * The {@link StreamStructImpl} is the object representation of a Lisp 'stream' type.
  */
-public abstract class StreamStructImpl extends BuiltInClassStruct implements LispStream {
+public abstract class StreamStructImpl extends BuiltInClassStruct implements StreamStruct {
 
 	/**
 	 * Whether or not the StreamStruct is interactive.

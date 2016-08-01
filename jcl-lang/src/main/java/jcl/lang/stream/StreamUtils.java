@@ -59,7 +59,7 @@ final class StreamUtils {
 	 *
 	 * @return the resulting {@link ReadPeekResult} object
 	 */
-	static ReadPeekResult getReadPeekResult(final LispStream stream, final int readPeekVal, final boolean eofErrorP,
+	static ReadPeekResult getReadPeekResult(final StreamStruct stream, final int readPeekVal, final boolean eofErrorP,
 	                                        final LispStruct eofValue) {
 		if (readPeekVal == -1) {
 			if (eofErrorP) {

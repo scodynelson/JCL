@@ -7,7 +7,7 @@ package jcl.lang.stream;
 /**
  * The {@link OutputStreamStruct} is the representation for all Lisp output 'stream' types.
  */
-public interface OutputStreamStruct extends LispStream {
+public interface OutputStreamStruct extends StreamStruct {
 
 	@Override
 	default boolean close(final boolean abort) {

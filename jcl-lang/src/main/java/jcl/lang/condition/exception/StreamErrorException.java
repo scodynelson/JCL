@@ -1,26 +1,26 @@
 package jcl.lang.condition.exception;
 
 import jcl.lang.condition.ConditionType;
-import jcl.lang.stream.LispStream;
+import jcl.lang.stream.StreamStruct;
 import jcl.type.LispType;
 
 public class StreamErrorException extends ErrorException {
 
 	private static final long serialVersionUID = -3552853955037901071L;
 
-	private final LispStream streamWithError;
+	private final StreamStruct streamWithError;
 
-	public StreamErrorException(final String message, final LispStream streamWithError) {
+	public StreamErrorException(final String message, final StreamStruct streamWithError) {
 		super(message);
 		this.streamWithError = streamWithError;
 	}
 
-	public StreamErrorException(final String message, final Throwable cause, final LispStream streamWithError) {
+	public StreamErrorException(final String message, final Throwable cause, final StreamStruct streamWithError) {
 		super(message, cause);
 		this.streamWithError = streamWithError;
 	}
 
-	public LispStream getStreamWithError() {
+	public StreamStruct getStreamWithError() {
 		return streamWithError;
 	}
 

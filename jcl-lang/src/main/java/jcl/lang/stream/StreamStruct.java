@@ -8,9 +8,9 @@ import jcl.lang.LispStruct;
 import jcl.type.LispType;
 
 /**
- * The {@link LispStream} is the representation for all Lisp 'stream' types.
+ * The {@link StreamStruct} is the representation for all Lisp 'stream' types.
  */
-public interface LispStream extends LispStruct {
+public interface StreamStruct extends LispStruct {
 
 	/**
 	 * Closes the stream.

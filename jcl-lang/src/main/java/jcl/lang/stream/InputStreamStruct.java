@@ -9,7 +9,7 @@ import jcl.lang.LispStruct;
 /**
  * The {@link InputStreamStruct} is the representation for all Lisp input 'stream' types.
  */
-public interface InputStreamStruct extends LispStream {
+public interface InputStreamStruct extends StreamStruct {
 
 	/**
 	 * Reads a character from the stream.

@@ -13,6 +13,7 @@ import java.util.List;
 import jcl.lang.ArrayStruct;
 import jcl.lang.BitVectorStruct;
 import jcl.lang.CharacterStruct;
+import jcl.lang.HashTableStruct;
 import jcl.lang.InputStreamStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
@@ -311,7 +312,7 @@ public final class LispStructFactory {
 	 * HashTable
 	 */
 
-	public static HashTableStructImpl toHashTable(final EquatorFunctionStruct test, final BigInteger size, final float rehashThreshold) {
+	public static HashTableStruct toHashTable(final EquatorFunctionStruct test, final BigInteger size, final float rehashThreshold) {
 		return HashTableStructImpl.valueOf(test, size, rehashThreshold);
 	}
 

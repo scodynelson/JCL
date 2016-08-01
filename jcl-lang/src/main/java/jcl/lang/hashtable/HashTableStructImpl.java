@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import jcl.lang.BuiltInClassStruct;
+import jcl.lang.HashTableStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.function.EquatorFunctionStruct;
 import jcl.lang.function.FunctionStruct;
@@ -22,7 +23,7 @@ import jcl.type.LispType;
  * NOTE: This implementation does NOT support size tracking or rehash-size customization. These are handled internally
  * by Java.
  */
-public class HashTableStructImpl extends BuiltInClassStruct {
+public final class HashTableStructImpl extends BuiltInClassStruct implements HashTableStruct {
 
 	/**
 	 * The test function for verifying equivalence of a key.
@@ -66,6 +67,7 @@ public class HashTableStructImpl extends BuiltInClassStruct {
 	 *
 	 * @return hash-table {@link #test} property
 	 */
+	@Override
 	public FunctionStruct getTest() {
 		return test;
 	}
@@ -75,7 +77,8 @@ public class HashTableStructImpl extends BuiltInClassStruct {
 	 *
 	 * @return {@link BigDecimal#ONE} for the hash-table rehash size
 	 */
-	public static BigDecimal getRehashSize() {
+	@Override
+	public BigDecimal getRehashSize() {
 		return BigDecimal.ONE;
 	}
 
@@ -84,6 +87,7 @@ public class HashTableStructImpl extends BuiltInClassStruct {
 	 *
 	 * @return hash-table {@link #rehashThreshold} property
 	 */
+	@Override
 	public float getRehashThreshold() {
 		return rehashThreshold;
 	}
@@ -93,6 +97,7 @@ public class HashTableStructImpl extends BuiltInClassStruct {
 	 *
 	 * @return the current size of the internal map
 	 */
+	@Override
 	public BigInteger getSize() {
 		return getCount();
 	}
@@ -102,6 +107,7 @@ public class HashTableStructImpl extends BuiltInClassStruct {
 	 *
 	 * @return the current number of items in the internal map
 	 */
+	@Override
 	public BigInteger getCount() {
 		return BigInteger.valueOf(map.size());
 	}
@@ -114,6 +120,7 @@ public class HashTableStructImpl extends BuiltInClassStruct {
 	 *
 	 * @return the matching stored value for the provided key
 	 */
+	@Override
 	public LispStruct getHash(final LispStruct key) {
 		final LispStruct keyWrapper = KeyWrapper.getInstance(key, test);
 		return map.get(keyWrapper);
@@ -127,6 +134,7 @@ public class HashTableStructImpl extends BuiltInClassStruct {
 	 * @param value
 	 * 		the value to be stored in the table
 	 */
+	@Override
 	public void setHash(final LispStruct key, final LispStruct value) {
 		final LispStruct keyWrapper = KeyWrapper.getInstance(key, test);
 		map.put(keyWrapper, value);
@@ -140,6 +148,7 @@ public class HashTableStructImpl extends BuiltInClassStruct {
 	 *
 	 * @return the removed value or {@code null} if no value existed
 	 */
+	@Override
 	public LispStruct remHash(final LispStruct key) {
 		final LispStruct keyWrapper = KeyWrapper.getInstance(key, test);
 		return map.remove(keyWrapper);
@@ -148,6 +157,7 @@ public class HashTableStructImpl extends BuiltInClassStruct {
 	/**
 	 * Clears the internal map.
 	 */
+	@Override
 	public void clrHash() {
 		map.clear();
 	}
@@ -158,6 +168,7 @@ public class HashTableStructImpl extends BuiltInClassStruct {
 	 * @param function
 	 * 		the mapping function
 	 */
+	@Override
 	public void mapHash(final FunctionStruct function) {
 		for (final Map.Entry<LispStruct, LispStruct> entry : map.entrySet()) {
 			final LispStruct keyWrapper = KeyWrapper.getInstance(entry.getKey(), test);
@@ -179,7 +190,7 @@ public class HashTableStructImpl extends BuiltInClassStruct {
 	/**
 	 * Private inner class that acts as a wrapper around hash keys for proper equality testing.
 	 */
-	public static final class KeyWrapper implements LispStruct {
+	private static final class KeyWrapper implements LispStruct {
 
 		/**
 		 * The {@link LispStruct} key to wrap.

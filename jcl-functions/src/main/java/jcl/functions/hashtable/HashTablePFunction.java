@@ -5,11 +5,11 @@
 package jcl.functions.hashtable;
 
 import jcl.lang.BooleanStruct;
+import jcl.lang.HashTableStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
-import jcl.lang.hashtable.HashTableStructImpl;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -29,6 +29,6 @@ public final class HashTablePFunction extends CommonLispBuiltInFunctionStruct {
 	@Override
 	public LispStruct apply(final Arguments arguments) {
 		final LispStruct object = arguments.getRequiredArgument(OBJECT_ARGUMENT);
-		return BooleanStruct.toLispBoolean(object instanceof HashTableStructImpl);
+		return BooleanStruct.toLispBoolean(object instanceof HashTableStruct);
 	}
 }

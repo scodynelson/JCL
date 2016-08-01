@@ -16,7 +16,7 @@ import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
-import jcl.lang.list.ListStruct;
+import jcl.lang.ListStruct;
 import jcl.lang.list.NILStruct;
 import org.springframework.stereotype.Component;
 

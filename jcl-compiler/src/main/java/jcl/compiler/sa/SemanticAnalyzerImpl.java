@@ -10,7 +10,7 @@ import jcl.compiler.environment.Environment;
 import jcl.compiler.sa.analyzer.LambdaExpander;
 import jcl.compiler.struct.specialoperator.lambda.LambdaStruct;
 import jcl.lang.SymbolStruct;
-import jcl.lang.list.ListStruct;
+import jcl.lang.ListStruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

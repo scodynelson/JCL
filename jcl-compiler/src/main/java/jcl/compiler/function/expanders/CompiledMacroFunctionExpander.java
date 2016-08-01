@@ -33,7 +33,7 @@ import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.factory.LispStructFactory;
 import jcl.lang.function.FunctionStruct;
 import jcl.lang.function.parameterdsl.Parameters;
-import jcl.lang.list.ListStruct;
+import jcl.lang.ListStruct;
 import jcl.lang.list.NILStruct;
 import jcl.type.LispType;
 

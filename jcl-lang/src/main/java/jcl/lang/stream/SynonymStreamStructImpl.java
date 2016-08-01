@@ -4,7 +4,10 @@
 
 package jcl.lang.stream;
 
+import jcl.lang.IOStreamStruct;
+import jcl.lang.InputStreamStruct;
 import jcl.lang.LispStruct;
+import jcl.lang.OutputStreamStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.VariableStruct;
 import jcl.lang.condition.exception.ErrorException;

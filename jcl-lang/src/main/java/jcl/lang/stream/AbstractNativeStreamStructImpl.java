@@ -4,6 +4,7 @@
 
 package jcl.lang.stream;
 
+import jcl.lang.IOStreamStruct;
 import jcl.lang.condition.exception.EndOfFileException;
 import jcl.lang.condition.exception.StreamErrorException;
 import jcl.type.LispType;

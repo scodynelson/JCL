@@ -5,7 +5,6 @@
 package jcl.lang;
 
 import jcl.lang.condition.exception.TypeErrorException;
-import jcl.lang.list.ListStruct;
 import jcl.lang.list.NILStruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

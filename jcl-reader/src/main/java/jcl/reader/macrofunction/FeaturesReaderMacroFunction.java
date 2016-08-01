@@ -17,7 +17,7 @@ import jcl.lang.SymbolStruct;
 import jcl.lang.TStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
 import jcl.lang.list.ConsStruct;
-import jcl.lang.list.ListStruct;
+import jcl.lang.ListStruct;
 import jcl.lang.list.NILStruct;
 import jcl.lang.readtable.Reader;
 import jcl.lang.readtable.ReaderVariables;

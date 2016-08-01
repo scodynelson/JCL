@@ -4,7 +4,9 @@
 
 package jcl.lang.stream;
 
+import jcl.lang.InputStreamStruct;
 import jcl.lang.LispStruct;
+import jcl.lang.OutputStreamStruct;
 import jcl.type.TwoWayStreamType;
 
 /**

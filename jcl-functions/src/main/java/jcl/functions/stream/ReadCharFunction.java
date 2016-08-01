@@ -13,7 +13,7 @@ import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.list.NILStruct;
-import jcl.lang.stream.InputStreamStruct;
+import jcl.lang.InputStreamStruct;
 import jcl.lang.stream.ReadPeekResult;
 import jcl.lang.stream.StreamVariables;
 import org.springframework.stereotype.Component;

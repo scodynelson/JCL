@@ -20,7 +20,7 @@ import jcl.compiler.environment.binding.lambdalist.WholeParameter;
 import jcl.lang.LispStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.function.expander.MacroFunctionExpanderInter;
-import jcl.lang.list.ListStruct;
+import jcl.lang.ListStruct;
 
 public abstract class MacroFunctionExpander<O extends LispStruct> extends MacroExpander<O, ListStruct> implements MacroFunctionExpanderInter {
 

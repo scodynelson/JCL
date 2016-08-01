@@ -19,7 +19,7 @@ import jcl.lang.LispStruct;
 import jcl.lang.SpecialOperatorStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.factory.LispStructFactory;
-import jcl.lang.list.ListStruct;
+import jcl.lang.ListStruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

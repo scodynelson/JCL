@@ -2,7 +2,7 @@
  * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
  */
 
-package jcl.lang.stream;
+package jcl.lang;
 
 /**
  * The {@link OutputStreamStruct} is the representation for all Lisp output 'stream' types.

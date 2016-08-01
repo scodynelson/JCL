@@ -9,7 +9,7 @@ import java.util.Optional;
 import javax.annotation.PostConstruct;
 
 import jcl.lang.function.ReaderMacroFunction;
-import jcl.lang.list.ListStruct;
+import jcl.lang.ListStruct;
 import jcl.lang.readtable.Reader;
 import jcl.lang.readtable.ReaderVariables;
 import jcl.util.CodePointConstants;

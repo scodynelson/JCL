@@ -5,6 +5,7 @@
 package jcl.lang.stream;
 
 import jcl.lang.LispStruct;
+import jcl.lang.StreamStruct;
 import jcl.lang.condition.exception.EndOfFileException;
 
 /**

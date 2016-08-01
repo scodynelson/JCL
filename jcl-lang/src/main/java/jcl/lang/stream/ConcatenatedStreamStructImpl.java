@@ -7,6 +7,7 @@ package jcl.lang.stream;
 import java.util.ArrayDeque;
 import java.util.Deque;
 
+import jcl.lang.InputStreamStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.condition.exception.EndOfFileException;
 import jcl.lang.condition.exception.ErrorException;

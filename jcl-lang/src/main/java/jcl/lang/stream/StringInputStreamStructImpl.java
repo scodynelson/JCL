@@ -4,6 +4,7 @@
 
 package jcl.lang.stream;
 
+import jcl.lang.InputStreamStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.condition.exception.StreamErrorException;

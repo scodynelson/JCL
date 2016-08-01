@@ -9,7 +9,7 @@ import java.util.Map;
 
 import jcl.lang.LispStruct;
 import jcl.lang.SymbolStruct;
-import jcl.lang.stream.InputStreamStruct;
+import jcl.lang.InputStreamStruct;
 import jcl.lang.stream.ReadPeekResult;
 
 /**

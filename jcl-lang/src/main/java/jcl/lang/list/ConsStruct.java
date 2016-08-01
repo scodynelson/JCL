@@ -11,6 +11,7 @@ import java.util.stream.StreamSupport;
 
 import jcl.lang.BuiltInClassStruct;
 import jcl.lang.LispStruct;
+import jcl.lang.ListStruct;
 import jcl.lang.ValuesStruct;
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.condition.exception.TypeErrorException;

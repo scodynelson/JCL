@@ -25,7 +25,7 @@ import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.java.JavaNameStruct;
 import jcl.lang.list.ConsStruct;
-import jcl.lang.list.ListStruct;
+import jcl.lang.ListStruct;
 import jcl.lang.list.NILStruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

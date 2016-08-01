@@ -22,7 +22,7 @@ import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.factory.LispStructFactory;
-import jcl.lang.list.ListStruct;
+import jcl.lang.ListStruct;
 import jcl.type.TType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

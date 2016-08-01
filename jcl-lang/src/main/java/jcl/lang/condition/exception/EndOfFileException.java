@@ -1,6 +1,6 @@
 package jcl.lang.condition.exception;
 
-import jcl.lang.stream.StreamStruct;
+import jcl.lang.StreamStruct;
 
 public class EndOfFileException extends StreamErrorException {
 

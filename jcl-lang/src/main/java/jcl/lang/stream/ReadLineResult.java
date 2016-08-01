@@ -13,7 +13,7 @@ public class ReadLineResult {
 
 	private final boolean eof;
 
-	ReadLineResult(final String result, final boolean wasEof) {
+	public ReadLineResult(final String result, final boolean wasEof) {
 		this.result = result;
 		eof = wasEof;
 	}

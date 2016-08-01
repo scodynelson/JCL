@@ -20,7 +20,7 @@ import jcl.lang.list.NILStruct;
 import jcl.lang.readtable.Reader;
 import jcl.lang.readtable.ReaderVariables;
 import jcl.lang.readtable.ReadtableStruct;
-import jcl.lang.sequence.SequenceStruct;
+import jcl.lang.SequenceStruct;
 import jcl.util.CodePointConstants;
 import org.springframework.stereotype.Component;
 

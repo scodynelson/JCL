@@ -1,13 +1,12 @@
-package jcl.lang.list;
+package jcl.lang;
 
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-import jcl.lang.LispStruct;
-import jcl.lang.ValuesStruct;
 import jcl.lang.condition.exception.TypeErrorException;
-import jcl.lang.sequence.SequenceStruct;
+import jcl.lang.list.ConsStruct;
+import jcl.lang.list.NILStruct;
 
 /**
  * The {@link ListStruct} is the object representation of a Lisp 'list' type.

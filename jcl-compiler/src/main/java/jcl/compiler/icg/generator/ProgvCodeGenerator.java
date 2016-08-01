@@ -21,7 +21,7 @@ import jcl.compiler.struct.specialoperator.ProgvStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.ProgramErrorException;
-import jcl.lang.list.ListStruct;
+import jcl.lang.ListStruct;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;

@@ -14,7 +14,7 @@ import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.list.NILStruct;
 import jcl.lang.number.IntegerStruct;
-import jcl.lang.stream.OutputStreamStruct;
+import jcl.lang.OutputStreamStruct;
 import jcl.lang.stream.StreamVariables;
 import org.springframework.stereotype.Component;
 

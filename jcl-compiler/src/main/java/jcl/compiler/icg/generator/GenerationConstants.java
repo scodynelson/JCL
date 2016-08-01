@@ -42,7 +42,7 @@ import jcl.lang.factory.LispStructFactory;
 import jcl.lang.function.FunctionStruct;
 import jcl.lang.function.expander.MacroFunctionExpanderInter;
 import jcl.lang.list.ConsStruct;
-import jcl.lang.list.ListStruct;
+import jcl.lang.ListStruct;
 import jcl.type.TypeBaseClass;
 import jcl.type.TypeFactory;
 import jcl.type.typespecifier.AtomicTypeSpecifier;

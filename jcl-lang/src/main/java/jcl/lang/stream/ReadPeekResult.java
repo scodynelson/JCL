@@ -4,6 +4,7 @@
 
 package jcl.lang.stream;
 
+import jcl.lang.InputStreamStruct;
 import jcl.lang.LispStruct;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;

@@ -4,8 +4,6 @@
 
 package jcl.lang;
 
-import jcl.lang.list.ListStruct;
-
 public interface REPLVariables {
 
 	VariableStruct<LispStruct> DASH = new VariableStruct<>("-", GlobalPackageStruct.COMMON_LISP, null);

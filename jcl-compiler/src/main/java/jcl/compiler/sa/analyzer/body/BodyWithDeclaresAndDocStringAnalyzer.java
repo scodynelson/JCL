@@ -7,7 +7,7 @@ import java.util.List;
 import jcl.lang.LispStruct;
 import jcl.lang.SpecialOperatorStruct;
 import jcl.lang.StringStruct;
-import jcl.lang.list.ListStruct;
+import jcl.lang.ListStruct;
 import org.springframework.stereotype.Component;
 
 @Component

@@ -12,7 +12,7 @@ import jcl.lang.LispStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.number.IntegerStruct;
 import jcl.lang.readtable.Reader;
-import jcl.lang.stream.InputStreamStruct;
+import jcl.lang.InputStreamStruct;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;

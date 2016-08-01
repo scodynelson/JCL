@@ -19,7 +19,7 @@ import jcl.compiler.struct.specialoperator.declare.DeclareStruct;
 import jcl.lang.CompilerConstants;
 import jcl.lang.LispStruct;
 import jcl.lang.condition.exception.ProgramErrorException;
-import jcl.lang.list.ListStruct;
+import jcl.lang.ListStruct;
 import org.springframework.stereotype.Component;
 
 @Component

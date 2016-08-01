@@ -5,6 +5,9 @@
 package jcl.lang.stream;
 
 import jcl.lang.GlobalPackageStruct;
+import jcl.lang.IOStreamStruct;
+import jcl.lang.InputStreamStruct;
+import jcl.lang.OutputStreamStruct;
 import jcl.lang.VariableStruct;
 
 public interface StreamVariables {

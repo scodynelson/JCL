@@ -2,9 +2,11 @@
  * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
  */
 
-package jcl.lang.stream;
+package jcl.lang;
 
-import jcl.lang.LispStruct;
+import jcl.lang.stream.PeekType;
+import jcl.lang.stream.ReadLineResult;
+import jcl.lang.stream.ReadPeekResult;
 
 /**
  * The {@link InputStreamStruct} is the representation for all Lisp input 'stream' types.

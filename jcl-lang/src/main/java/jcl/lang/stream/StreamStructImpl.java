@@ -8,6 +8,7 @@ import java.util.List;
 
 import jcl.lang.BuiltInClassStruct;
 import jcl.lang.LispStruct;
+import jcl.lang.StreamStruct;
 import jcl.type.LispType;
 import jcl.type.StreamType;
 

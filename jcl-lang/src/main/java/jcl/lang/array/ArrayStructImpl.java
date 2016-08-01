@@ -11,7 +11,7 @@ import jcl.lang.LispStruct;
 import jcl.lang.PrinterVariables;
 import jcl.lang.condition.exception.SimpleErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
-import jcl.lang.sequence.SequenceStruct;
+import jcl.lang.SequenceStruct;
 import jcl.type.ArrayType;
 import jcl.type.LispType;
 import jcl.type.SimpleArrayType;

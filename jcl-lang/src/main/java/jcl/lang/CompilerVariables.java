@@ -5,7 +5,6 @@
 package jcl.lang;
 
 import jcl.lang.function.FunctionStruct;
-import jcl.lang.list.ListStruct;
 import jcl.lang.list.NILStruct;
 import jcl.lang.number.IntegerStruct;
 

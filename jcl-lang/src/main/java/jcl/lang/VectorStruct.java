@@ -2,7 +2,6 @@ package jcl.lang;
 
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
-import jcl.lang.sequence.SequenceStruct;
 
 /**
  * The {@link VectorStruct} is the object representation of a Lisp 'vector' type.

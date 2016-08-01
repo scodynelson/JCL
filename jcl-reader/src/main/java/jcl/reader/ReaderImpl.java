@@ -13,7 +13,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import jcl.lang.LispStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.readtable.Reader;
-import jcl.lang.stream.InputStreamStruct;
+import jcl.lang.InputStreamStruct;
 import jcl.lang.stream.ReadPeekResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;

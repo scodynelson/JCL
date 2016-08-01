@@ -8,6 +8,7 @@ import java.util.stream.Stream;
 
 import jcl.lang.BooleanStruct;
 import jcl.lang.LispStruct;
+import jcl.lang.ListStruct;
 import jcl.lang.ValuesStruct;
 import jcl.lang.condition.exception.SimpleErrorException;
 import jcl.type.NILType;

@@ -28,7 +28,7 @@ import jcl.lang.array.StringStructImpl;
 import jcl.lang.array.VectorStructImpl;
 import jcl.lang.character.CharacterStructImpl;
 import jcl.lang.function.EquatorFunctionStruct;
-import jcl.lang.hashtable.HashTableStruct;
+import jcl.lang.hashtable.HashTableStructImpl;
 import jcl.lang.list.ConsStruct;
 import jcl.lang.list.NILStruct;
 import jcl.lang.number.ComplexStruct;
@@ -311,8 +311,8 @@ public final class LispStructFactory {
 	 * HashTable
 	 */
 
-	public static HashTableStruct toHashTable(final EquatorFunctionStruct test, final BigInteger size, final float rehashThreshold) {
-		return HashTableStruct.valueOf(test, size, rehashThreshold);
+	public static HashTableStructImpl toHashTable(final EquatorFunctionStruct test, final BigInteger size, final float rehashThreshold) {
+		return HashTableStructImpl.valueOf(test, size, rehashThreshold);
 	}
 
 	/*

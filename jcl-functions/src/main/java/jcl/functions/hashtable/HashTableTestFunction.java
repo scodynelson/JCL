@@ -8,7 +8,7 @@ import jcl.lang.LispStruct;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
-import jcl.lang.hashtable.HashTableStruct;
+import jcl.lang.hashtable.HashTableStructImpl;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -27,7 +27,7 @@ public final class HashTableTestFunction extends CommonLispBuiltInFunctionStruct
 
 	@Override
 	public LispStruct apply(final Arguments arguments) {
-		final HashTableStruct hashTable = arguments.getRequiredArgument(HASH_TABLE_ARGUMENT, HashTableStruct.class);
+		final HashTableStructImpl hashTable = arguments.getRequiredArgument(HASH_TABLE_ARGUMENT, HashTableStructImpl.class);
 		return hashTable.getTest();
 	}
 }

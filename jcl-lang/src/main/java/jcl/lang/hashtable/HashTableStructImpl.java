@@ -17,12 +17,12 @@ import jcl.type.HashTableType;
 import jcl.type.LispType;
 
 /**
- * The {@link HashTableStruct} is the object representation of a Lisp 'hash-table' type.
+ * The {@link HashTableStructImpl} is the object representation of a Lisp 'hash-table' type.
  * <p>
  * NOTE: This implementation does NOT support size tracking or rehash-size customization. These are handled internally
  * by Java.
  */
-public class HashTableStruct extends BuiltInClassStruct {
+public class HashTableStructImpl extends BuiltInClassStruct {
 
 	/**
 	 * The test function for verifying equivalence of a key.
@@ -49,7 +49,7 @@ public class HashTableStruct extends BuiltInClassStruct {
 	 * @param rehashThreshold
 	 * 		the threshold amount when resizing the table
 	 */
-	private HashTableStruct(final EquatorFunctionStruct test, final BigInteger size, final float rehashThreshold) {
+	private HashTableStructImpl(final EquatorFunctionStruct test, final BigInteger size, final float rehashThreshold) {
 		super(HashTableType.INSTANCE, null, null);
 		this.test = test;
 		this.rehashThreshold = rehashThreshold;
@@ -57,8 +57,8 @@ public class HashTableStruct extends BuiltInClassStruct {
 		map = new ConcurrentHashMap<>(size.intValue(), rehashThreshold);
 	}
 
-	public static HashTableStruct valueOf(final EquatorFunctionStruct test, final BigInteger size, final float rehashThreshold) {
-		return new HashTableStruct(test, size, rehashThreshold);
+	public static HashTableStructImpl valueOf(final EquatorFunctionStruct test, final BigInteger size, final float rehashThreshold) {
+		return new HashTableStructImpl(test, size, rehashThreshold);
 	}
 
 	/**

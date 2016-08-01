@@ -26,7 +26,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  * The {@link JavaStreamStruct} is the object representation of a character reading and writing system level Lisp
  * stream.
  */
-public class JavaStreamStruct extends AbstractNativeStreamStruct {
+public final class JavaStreamStruct extends AbstractNativeStreamStruct {
 
 	/**
 	 * The maximum size of internal buffer array to allocate in the {@link PushbackReader} {@link #inputStream}.
@@ -51,7 +51,7 @@ public class JavaStreamStruct extends AbstractNativeStreamStruct {
 	 * @param outputStream
 	 * 		the {@link OutputStream} to create a CharacterStreamStruct from
 	 */
-	public JavaStreamStruct(final InputStream inputStream, final OutputStream outputStream) {
+	private JavaStreamStruct(final InputStream inputStream, final OutputStream outputStream) {
 		this(false, inputStream, outputStream);
 	}
 
@@ -65,12 +65,20 @@ public class JavaStreamStruct extends AbstractNativeStreamStruct {
 	 * @param outputStream
 	 * 		the {@link OutputStream} to create a CharacterStreamStruct from
 	 */
-	public JavaStreamStruct(final boolean interactive, final InputStream inputStream, final OutputStream outputStream) {
+	private JavaStreamStruct(final boolean interactive, final InputStream inputStream, final OutputStream outputStream) {
 		super(StreamType.INSTANCE, interactive, CharacterType.INSTANCE);
 
 		final Charset defaultCharset = Charset.defaultCharset();
 		this.inputStream = new PushbackReader(new InputStreamReader(inputStream, defaultCharset), PUSHBACK_BUFFER_SIZE);
 		this.outputStream = new PrintWriter(new OutputStreamWriter(outputStream, defaultCharset));
+	}
+
+	public static JavaStreamStruct valueOf(final InputStream inputStream, final OutputStream outputStream) {
+		return new JavaStreamStruct(inputStream, outputStream);
+	}
+
+	public static JavaStreamStruct valueOf(final boolean interactive, final InputStream inputStream, final OutputStream outputStream) {
+		return new JavaStreamStruct(interactive, inputStream, outputStream);
 	}
 
 	@Override

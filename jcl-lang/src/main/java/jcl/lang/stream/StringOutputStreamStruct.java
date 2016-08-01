@@ -12,7 +12,7 @@ import jcl.type.StringStreamType;
 /**
  * The {@link StringOutputStreamStruct} is the object representation of a Lisp 'string-stream' output type.
  */
-public class StringOutputStreamStruct extends StreamStruct implements OutputStream {
+public final class StringOutputStreamStruct extends StreamStruct implements OutputStream {
 
 	/**
 	 * The {@link StringBuffer} to use for this stream to accept characters and bytes.
@@ -22,7 +22,7 @@ public class StringOutputStreamStruct extends StreamStruct implements OutputStre
 	/**
 	 * Public constructor.
 	 */
-	public StringOutputStreamStruct() {
+	private StringOutputStreamStruct() {
 		this(false);
 	}
 
@@ -32,7 +32,7 @@ public class StringOutputStreamStruct extends StreamStruct implements OutputStre
 	 * @param interactive
 	 * 		whether or not the struct created is 'interactive'
 	 */
-	public StringOutputStreamStruct(final boolean interactive) {
+	private StringOutputStreamStruct(final boolean interactive) {
 		this(interactive, BaseCharType.INSTANCE);
 	}
 
@@ -42,7 +42,7 @@ public class StringOutputStreamStruct extends StreamStruct implements OutputStre
 	 * @param elementType
 	 * 		the type of character elements in the stream
 	 */
-	public StringOutputStreamStruct(final LispType elementType) {
+	private StringOutputStreamStruct(final LispType elementType) {
 		this(false, elementType);
 	}
 
@@ -54,8 +54,24 @@ public class StringOutputStreamStruct extends StreamStruct implements OutputStre
 	 * @param elementType
 	 * 		the type of character elements in the stream
 	 */
-	public StringOutputStreamStruct(final boolean interactive, final LispType elementType) {
+	private StringOutputStreamStruct(final boolean interactive, final LispType elementType) {
 		super(StringStreamType.INSTANCE, null, null, interactive, elementType);
+	}
+
+	public static StringOutputStreamStruct valueOf() {
+		return new StringOutputStreamStruct();
+	}
+
+	public static StringOutputStreamStruct valueOf(final boolean interactive) {
+		return new StringOutputStreamStruct(interactive);
+	}
+
+	public static StringOutputStreamStruct valueOf(final LispType elementType) {
+		return new StringOutputStreamStruct(elementType);
+	}
+
+	public static StringOutputStreamStruct valueOf(final boolean interactive, final LispType elementType) {
+		return new StringOutputStreamStruct(interactive, elementType);
 	}
 
 	public String getStreamString() {

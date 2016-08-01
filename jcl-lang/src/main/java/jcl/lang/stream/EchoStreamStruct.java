@@ -14,7 +14,7 @@ import jcl.type.EchoStreamType;
 /**
  * The {@link EchoStreamStruct} is the object representation of a Lisp 'echo-stream' type.
  */
-public class EchoStreamStruct extends AbstractDualStreamStruct {
+public final class EchoStreamStruct extends AbstractDualStreamStruct {
 
 	/**
 	 * The {@link Integer} tokens that have been unread so far.
@@ -29,7 +29,7 @@ public class EchoStreamStruct extends AbstractDualStreamStruct {
 	 * @param outputStream
 	 * 		the {@link OutputStream} to create a EchoStreamStruct from
 	 */
-	public EchoStreamStruct(final InputStream inputStream, final OutputStream outputStream) {
+	private EchoStreamStruct(final InputStream inputStream, final OutputStream outputStream) {
 		this(false, inputStream, outputStream);
 	}
 
@@ -43,8 +43,16 @@ public class EchoStreamStruct extends AbstractDualStreamStruct {
 	 * @param outputStream
 	 * 		the {@link OutputStream} to create a EchoStreamStruct from
 	 */
-	public EchoStreamStruct(final boolean interactive, final InputStream inputStream, final OutputStream outputStream) {
+	private EchoStreamStruct(final boolean interactive, final InputStream inputStream, final OutputStream outputStream) {
 		super(EchoStreamType.INSTANCE, interactive, inputStream, outputStream);
+	}
+
+	public static EchoStreamStruct valueOf(final InputStream inputStream, final OutputStream outputStream) {
+		return new EchoStreamStruct(inputStream, outputStream);
+	}
+
+	public static EchoStreamStruct valueOf(final boolean interactive, final InputStream inputStream, final OutputStream outputStream) {
+		return new EchoStreamStruct(interactive, inputStream, outputStream);
 	}
 
 	@Override

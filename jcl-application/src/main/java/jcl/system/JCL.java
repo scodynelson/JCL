@@ -55,9 +55,9 @@ public class JCL implements ApplicationRunner {
 
 	public JCL() throws IOException {
 		try (LoggerOutputStream loggerOutputStream = new LoggerOutputStream(LOGGER)) {
-			final JavaStreamStruct characterStream = new JavaStreamStruct(System.in, loggerOutputStream);
+			final JavaStreamStruct characterStream = LispStructFactory.toJavaStream(System.in, loggerOutputStream);
 
-			final TwoWayStreamStruct terminalIoStream = new TwoWayStreamStruct(true, characterStream, characterStream);
+			final TwoWayStreamStruct terminalIoStream = LispStructFactory.toTwoWayStream(true, characterStream, characterStream);
 			StreamVariables.TERMINAL_IO.setValue(terminalIoStream);
 		}
 		

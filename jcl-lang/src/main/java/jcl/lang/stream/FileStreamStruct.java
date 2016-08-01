@@ -28,7 +28,7 @@ import org.slf4j.LoggerFactory;
 /**
  * The {@link FileStreamStruct} is the object representation of a Lisp 'file-stream' type.
  */
-public class FileStreamStruct extends AbstractNativeStreamStruct {
+public final class FileStreamStruct extends AbstractNativeStreamStruct {
 
 	/**
 	 * The logger for this class.
@@ -51,7 +51,7 @@ public class FileStreamStruct extends AbstractNativeStreamStruct {
 	 * @param path
 	 * 		the file to create a FileStreamStruct from
 	 */
-	public FileStreamStruct(final Path path) {
+	private FileStreamStruct(final Path path) {
 		this(false, path);
 	}
 
@@ -63,7 +63,7 @@ public class FileStreamStruct extends AbstractNativeStreamStruct {
 	 * @param path
 	 * 		the {@link Path} to create a FileStreamStruct from
 	 */
-	public FileStreamStruct(final boolean interactive, final Path path) {
+	private FileStreamStruct(final boolean interactive, final Path path) {
 		super(FileStreamType.INSTANCE, interactive, getElementType2(path));
 
 		this.path = path;
@@ -90,6 +90,14 @@ public class FileStreamStruct extends AbstractNativeStreamStruct {
 		} catch (final IOException ioe) {
 			throw new ErrorException("Failed to open provided file.", ioe);
 		}
+	}
+
+	public static FileStreamStruct valueOf(final Path path) {
+		return new FileStreamStruct(path);
+	}
+
+	public static FileStreamStruct valueOf(final boolean interactive, final Path path) {
+		return new FileStreamStruct(interactive, path);
 	}
 
 	/**

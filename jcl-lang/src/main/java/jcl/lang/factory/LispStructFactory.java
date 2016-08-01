@@ -4,8 +4,10 @@ import java.io.File;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.net.URI;
+import java.net.URL;
 import java.nio.file.Path;
 import java.util.Arrays;
+import java.util.Deque;
 import java.util.List;
 
 import jcl.lang.ArrayStruct;
@@ -15,6 +17,7 @@ import jcl.lang.LispStruct;
 import jcl.lang.PackageStruct;
 import jcl.lang.StringStruct;
 import jcl.lang.SymbolStruct;
+import jcl.lang.VariableStruct;
 import jcl.lang.VectorStruct;
 import jcl.lang.array.ArrayStructImpl;
 import jcl.lang.array.BitVectorStructImpl;
@@ -42,6 +45,22 @@ import jcl.lang.pathname.PathnameType;
 import jcl.lang.pathname.PathnameVersion;
 import jcl.lang.readtable.ReadtableCase;
 import jcl.lang.readtable.ReadtableStruct;
+import jcl.lang.stream.BinaryNativeStreamStruct;
+import jcl.lang.stream.BroadcastStreamStruct;
+import jcl.lang.stream.CharacterNativeStreamStruct;
+import jcl.lang.stream.ConcatenatedStreamStruct;
+import jcl.lang.stream.EchoStreamStruct;
+import jcl.lang.stream.EmptyStreamStruct;
+import jcl.lang.stream.FileStreamStruct;
+import jcl.lang.stream.InputStream;
+import jcl.lang.stream.JavaStreamStruct;
+import jcl.lang.stream.OutputStream;
+import jcl.lang.stream.StringInputStreamStruct;
+import jcl.lang.stream.StringOutputStreamStruct;
+import jcl.lang.stream.SynonymStreamStruct;
+import jcl.lang.stream.TwoWayStreamStruct;
+import jcl.lang.stream.URLStreamStruct;
+import jcl.type.LispType;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apfloat.Apcomplex;
 import org.apfloat.Apfloat;
@@ -62,6 +81,18 @@ public final class LispStructFactory {
 	}
 
 	/*
+	 * BinaryNativeStream
+	 */
+
+	public static BinaryNativeStreamStruct toBinaryNativeStream(final java.io.InputStream inputStream, final java.io.OutputStream outputStream) {
+		return BinaryNativeStreamStruct.valueOf(inputStream, outputStream);
+	}
+
+	public static BinaryNativeStreamStruct toBinaryNativeStream(final boolean interactive, final java.io.InputStream inputStream, final java.io.OutputStream outputStream) {
+		return BinaryNativeStreamStruct.valueOf(interactive, inputStream, outputStream);
+	}
+
+	/*
 	 * BitVector
 	 */
 
@@ -71,6 +102,18 @@ public final class LispStructFactory {
 
 	public static BitVectorStruct toBitVector(final List<IntegerStruct> contents) {
 		return BitVectorStructImpl.valueOfCont(contents);
+	}
+
+	/*
+	 * BroadcastStream
+	 */
+
+	public static BroadcastStreamStruct toBroadcastStream(final Deque<OutputStream> outputStreams) {
+		return BroadcastStreamStruct.valueOf(outputStreams);
+	}
+
+	public static BroadcastStreamStruct toBroadcastStream(final boolean interactive, final Deque<OutputStream> outputStreams) {
+		return BroadcastStreamStruct.valueOf(interactive, outputStreams);
 	}
 
 	/*
@@ -102,6 +145,18 @@ public final class LispStructFactory {
 	}
 
 	/*
+	 * CharacterNativeStream
+	 */
+
+	public static CharacterNativeStreamStruct toCharacterNativeStream(final java.io.InputStream inputStream, final java.io.OutputStream outputStream) {
+		return CharacterNativeStreamStruct.valueOf(inputStream, outputStream);
+	}
+
+	public static CharacterNativeStreamStruct toCharacterNativeStream(final boolean interactive, final java.io.InputStream inputStream, final java.io.OutputStream outputStream) {
+		return CharacterNativeStreamStruct.valueOf(interactive, inputStream, outputStream);
+	}
+
+	/*
 	 * Complex
 	 */
 
@@ -118,6 +173,18 @@ public final class LispStructFactory {
 	}
 
 	/*
+	 * ConcatenatedStream
+	 */
+
+	public static ConcatenatedStreamStruct toConcatenatedStream(final Deque<InputStream> inputStreams) {
+		return ConcatenatedStreamStruct.valueOf(inputStreams);
+	}
+
+	public static ConcatenatedStreamStruct toConcatenatedStream(final boolean interactive, final Deque<InputStream> inputStreams) {
+		return ConcatenatedStreamStruct.valueOf(interactive, inputStreams);
+	}
+
+	/*
 	 * Cons
 	 */
 
@@ -127,6 +194,38 @@ public final class LispStructFactory {
 
 	public static ConsStruct toCons(final LispStruct car, final LispStruct cdr) {
 		return ConsStruct.valueOf(car, cdr);
+	}
+
+	/*
+	 * EchoStream
+	 */
+
+	public static EchoStreamStruct toEchoStream(final InputStream inputStream, final OutputStream outputStream) {
+		return EchoStreamStruct.valueOf(inputStream, outputStream);
+	}
+
+	public static EchoStreamStruct toEchoStream(final boolean interactive, final InputStream inputStream, final OutputStream outputStream) {
+		return EchoStreamStruct.valueOf(interactive, inputStream, outputStream);
+	}
+
+	/*
+	 * EmptyStream
+	 */
+
+	public static EmptyStreamStruct toEmptyStream() {
+		return EmptyStreamStruct.INSTANCE;
+	}
+
+	/*
+	 * FileStream
+	 */
+
+	public static FileStreamStruct toFileStream(final Path path) {
+		return FileStreamStruct.valueOf(path);
+	}
+
+	public static FileStreamStruct toFileStream(final boolean interactive, final Path path) {
+		return FileStreamStruct.valueOf(interactive, path);
 	}
 
 	/*
@@ -278,6 +377,18 @@ public final class LispStructFactory {
 	 */
 	public static IntegerStruct toInteger(final Apint apint) {
 		return IntegerStruct.valueOf(apint);
+	}
+
+	/*
+	 * JavaStream
+	 */
+
+	public static JavaStreamStruct toJavaStream(final java.io.InputStream inputStream, final java.io.OutputStream outputStream) {
+		return JavaStreamStruct.valueOf(inputStream, outputStream);
+	}
+
+	public static JavaStreamStruct toJavaStream(final boolean interactive, final java.io.InputStream inputStream, final java.io.OutputStream outputStream) {
+		return JavaStreamStruct.valueOf(interactive, inputStream, outputStream);
 	}
 
 	/*
@@ -521,11 +632,91 @@ public final class LispStructFactory {
 	}
 
 	/*
+	 * StringInputStream
+	 */
+
+	public static StringInputStreamStruct toStringInputStream(final String inputString) {
+		return StringInputStreamStruct.valueOf(inputString);
+	}
+
+	public static StringInputStreamStruct toStringInputStream(final boolean interactive, final String inputString) {
+		return StringInputStreamStruct.valueOf(interactive, inputString);
+	}
+
+	public static StringInputStreamStruct toStringInputStream(final String inputString, final int current, final int end) {
+		return StringInputStreamStruct.valueOf(inputString, current, end);
+	}
+
+	public static StringInputStreamStruct toStringInputStream(final boolean interactive, final String inputString, final int current, final int end) {
+		return StringInputStreamStruct.valueOf(interactive, inputString, current, end);
+	}
+
+	/*
+	 * StringOutputStream
+	 */
+
+	public static StringOutputStreamStruct toStringOutputStream() {
+		return StringOutputStreamStruct.valueOf();
+	}
+
+	public static StringOutputStreamStruct toStringOutputStream(final boolean interactive) {
+		return StringOutputStreamStruct.valueOf(interactive);
+	}
+
+	public static StringOutputStreamStruct toStringOutputStream(final LispType elementType) {
+		return StringOutputStreamStruct.valueOf(elementType);
+	}
+
+	public static StringOutputStreamStruct toStringOutputStream(final boolean interactive, final LispType elementType) {
+		return StringOutputStreamStruct.valueOf(interactive, elementType);
+	}
+
+	/*
 	 * Symbol
 	 */
 
 	public static SymbolStruct toSymbol(final String name) {
 		return SymbolStruct.valueOf(name);
+	}
+
+	/*
+	 * SynonymStream
+	 */
+
+	public static SynonymStreamStruct toSynonymStream(final VariableStruct<?> variable) {
+		return SynonymStreamStruct.valueOf(variable);
+	}
+
+	public static SynonymStreamStruct toSynonymStream(final SymbolStruct symbol) {
+		return SynonymStreamStruct.valueOf(symbol);
+	}
+
+	public static SynonymStreamStruct toSynonymStream(final boolean interactive, final SymbolStruct symbol) {
+		return SynonymStreamStruct.valueOf(interactive, symbol);
+	}
+
+	/*
+	 * TwoWayStream
+	 */
+
+	public static TwoWayStreamStruct toTwoWayStream(final InputStream inputStream, final OutputStream outputStream) {
+		return TwoWayStreamStruct.valueOf(inputStream, outputStream);
+	}
+
+	public static TwoWayStreamStruct toTwoWayStream(final boolean interactive, final InputStream inputStream, final OutputStream outputStream) {
+		return TwoWayStreamStruct.valueOf(interactive, inputStream, outputStream);
+	}
+
+	/*
+	 * URLStream
+	 */
+
+	public static URLStreamStruct toURLStream(final URL url) {
+		return URLStreamStruct.valueOf(url);
+	}
+
+	public static URLStreamStruct toURLStream(final boolean interactive, final URL url) {
+		return URLStreamStruct.valueOf(interactive, url);
 	}
 
 	/*

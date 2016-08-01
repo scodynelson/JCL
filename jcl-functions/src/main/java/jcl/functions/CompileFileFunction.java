@@ -164,7 +164,7 @@ public final class CompileFileFunction extends CommonLispBuiltInFunctionStruct {
 		BooleanStruct compiledWithWarnings = NILStruct.INSTANCE;
 		boolean compiledSuccessfully = false;
 		try {
-			final FileStreamStruct inputFileStream = new FileStreamStruct(inputFilePath);
+			final FileStreamStruct inputFileStream = LispStructFactory.toFileStream(inputFilePath);
 			final List<LispStruct> forms = new ArrayList<>();
 
 			LispStruct form;

@@ -25,7 +25,7 @@ import org.apache.commons.lang3.SystemUtils;
  * The {@link CharacterNativeStreamStruct} is the object representation of a character reading and writing system level Lisp
  * stream.
  */
-public class CharacterNativeStreamStruct extends AbstractNativeStreamStruct {
+public final class CharacterNativeStreamStruct extends AbstractNativeStreamStruct {
 
 	/**
 	 * The maximum size of internal buffer array to allocate in the {@link PushbackReader} {@link #inputStream}.
@@ -55,7 +55,7 @@ public class CharacterNativeStreamStruct extends AbstractNativeStreamStruct {
 	 * @param outputStream
 	 * 		the {@link java.io.OutputStream} to create a CharacterStreamStruct from
 	 */
-	public CharacterNativeStreamStruct(final InputStream inputStream, final OutputStream outputStream) {
+	private CharacterNativeStreamStruct(final InputStream inputStream, final OutputStream outputStream) {
 		this(false, inputStream, outputStream);
 	}
 
@@ -69,12 +69,20 @@ public class CharacterNativeStreamStruct extends AbstractNativeStreamStruct {
 	 * @param outputStream
 	 * 		the {@link java.io.OutputStream} to create a CharacterStreamStruct from
 	 */
-	public CharacterNativeStreamStruct(final boolean interactive, final InputStream inputStream, final OutputStream outputStream) {
+	private CharacterNativeStreamStruct(final boolean interactive, final InputStream inputStream, final OutputStream outputStream) {
 		super(StreamType.INSTANCE, interactive, CharacterType.INSTANCE);
 
 		final Charset defaultCharset = Charset.defaultCharset();
 		this.inputStream = new PushbackReader(new InputStreamReader(inputStream, defaultCharset), PUSHBACK_BUFFER_SIZE);
 		this.outputStream = new PrintWriter(new OutputStreamWriter(outputStream, defaultCharset));
+	}
+
+	public static CharacterNativeStreamStruct valueOf(final InputStream inputStream, final OutputStream outputStream) {
+		return new CharacterNativeStreamStruct(inputStream, outputStream);
+	}
+
+	public static CharacterNativeStreamStruct valueOf(final boolean interactive, final InputStream inputStream, final OutputStream outputStream) {
+		return new CharacterNativeStreamStruct(interactive, inputStream, outputStream);
 	}
 
 	@Override

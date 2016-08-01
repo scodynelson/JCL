@@ -15,7 +15,7 @@ import jcl.type.SynonymStreamType;
 /**
  * The {@link SynonymStreamStruct} is the object representation of a Lisp 'synonym-stream' type.
  */
-public class SynonymStreamStruct extends StreamStruct implements IOStream {
+public final class SynonymStreamStruct extends StreamStruct implements IOStream {
 
 	/**
 	 * The {@link SymbolStruct} that contains the value for the {@link StreamStruct} to use.
@@ -28,7 +28,7 @@ public class SynonymStreamStruct extends StreamStruct implements IOStream {
 	 * @param variable
 	 * 		the variable to create a SynonymStreamStruct from
 	 */
-	public SynonymStreamStruct(final VariableStruct<?> variable) {
+	private SynonymStreamStruct(final VariableStruct<?> variable) {
 		this(false, variable);
 	}
 
@@ -38,7 +38,7 @@ public class SynonymStreamStruct extends StreamStruct implements IOStream {
 	 * @param symbol
 	 * 		the symbol to create a SynonymStreamStruct from
 	 */
-	public SynonymStreamStruct(final SymbolStruct symbol) {
+	private SynonymStreamStruct(final SymbolStruct symbol) {
 		this(false, symbol);
 	}
 
@@ -50,7 +50,7 @@ public class SynonymStreamStruct extends StreamStruct implements IOStream {
 	 * @param symbol
 	 * 		the symbol to create a SynonymStreamStruct from
 	 */
-	public SynonymStreamStruct(final boolean interactive, final SymbolStruct symbol) {
+	private SynonymStreamStruct(final boolean interactive, final SymbolStruct symbol) {
 		super(SynonymStreamType.INSTANCE, null, null, interactive, getElementType(symbol));
 		this.symbol = symbol;
 	}
@@ -68,6 +68,18 @@ public class SynonymStreamStruct extends StreamStruct implements IOStream {
 			throw new ErrorException("Provided Symbol must not be null.");
 		}
 		return ((StreamStruct) symbol.getValue()).getElementType();
+	}
+
+	public static SynonymStreamStruct valueOf(final VariableStruct<?> variable) {
+		return new SynonymStreamStruct(variable);
+	}
+
+	public static SynonymStreamStruct valueOf(final SymbolStruct symbol) {
+		return new SynonymStreamStruct(symbol);
+	}
+
+	public static SynonymStreamStruct valueOf(final boolean interactive, final SymbolStruct symbol) {
+		return new SynonymStreamStruct(interactive, symbol);
 	}
 
 	/**

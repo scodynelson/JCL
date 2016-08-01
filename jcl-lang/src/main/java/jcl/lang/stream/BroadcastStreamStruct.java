@@ -15,7 +15,7 @@ import jcl.type.TType;
 /**
  * The {@link BroadcastStreamStruct} is the object representation of a Lisp 'broadcast-stream' type.
  */
-public class BroadcastStreamStruct extends StreamStruct implements OutputStream {
+public final class BroadcastStreamStruct extends StreamStruct implements OutputStream {
 
 	/**
 	 * This {@link OutputStream}s in the BroadcastStreamStruct.
@@ -28,7 +28,7 @@ public class BroadcastStreamStruct extends StreamStruct implements OutputStream 
 	 * @param outputStreams
 	 * 		the {@link OutputStream}s to create a BroadcastStreamStruct from
 	 */
-	public BroadcastStreamStruct(final Deque<OutputStream> outputStreams) {
+	private BroadcastStreamStruct(final Deque<OutputStream> outputStreams) {
 		this(false, outputStreams);
 	}
 
@@ -40,9 +40,17 @@ public class BroadcastStreamStruct extends StreamStruct implements OutputStream 
 	 * @param outputStreams
 	 * 		the {@link OutputStream}s to create a BroadcastStreamStruct from
 	 */
-	public BroadcastStreamStruct(final boolean interactive, final Deque<OutputStream> outputStreams) {
+	private BroadcastStreamStruct(final boolean interactive, final Deque<OutputStream> outputStreams) {
 		super(BroadcastStreamType.INSTANCE, null, null, interactive, getElementType2(outputStreams));
 		this.outputStreams = new ArrayDeque<>(outputStreams);
+	}
+
+	public static BroadcastStreamStruct valueOf(final Deque<OutputStream> outputStreams) {
+		return new BroadcastStreamStruct(outputStreams);
+	}
+
+	public static BroadcastStreamStruct valueOf(final boolean interactive, final Deque<OutputStream> outputStreams) {
+		return new BroadcastStreamStruct(interactive, outputStreams);
 	}
 
 	/**

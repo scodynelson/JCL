@@ -21,7 +21,7 @@ import org.slf4j.LoggerFactory;
 /**
  * The {@link URLStreamStruct} is the object representation of a Lisp 'url-stream' type.
  */
-public class URLStreamStruct extends AbstractNativeStreamStruct {
+public final class URLStreamStruct extends AbstractNativeStreamStruct {
 
 	/**
 	 * The logger for this class.
@@ -49,7 +49,7 @@ public class URLStreamStruct extends AbstractNativeStreamStruct {
 	 * @param url
 	 * 		the {@link URL} to create a URLStreamStruct from
 	 */
-	public URLStreamStruct(final URL url) {
+	private URLStreamStruct(final URL url) {
 		this(false, url);
 	}
 
@@ -61,7 +61,7 @@ public class URLStreamStruct extends AbstractNativeStreamStruct {
 	 * @param url
 	 * 		the {@link URL} to create a URLStreamStruct from
 	 */
-	public URLStreamStruct(final boolean interactive, final URL url) {
+	private URLStreamStruct(final boolean interactive, final URL url) {
 		// TODO: Character Type Stream???
 		super(FileStreamType.INSTANCE, interactive, CharacterType.INSTANCE);
 
@@ -72,6 +72,14 @@ public class URLStreamStruct extends AbstractNativeStreamStruct {
 		} catch (final IOException ioe) {
 			throw new ErrorException("Failed to open provided url.", ioe);
 		}
+	}
+
+	public static URLStreamStruct valueOf(final URL url) {
+		return new URLStreamStruct(url);
+	}
+
+	public static URLStreamStruct valueOf(final boolean interactive, final URL url) {
+		return new URLStreamStruct(interactive, url);
 	}
 
 	/**

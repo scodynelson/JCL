@@ -17,7 +17,7 @@ import jcl.type.TType;
 /**
  * The {@link ConcatenatedStreamStruct} is the object representation of a Lisp 'concatenated-stream' type.
  */
-public class ConcatenatedStreamStruct extends StreamStruct implements InputStream {
+public final class ConcatenatedStreamStruct extends StreamStruct implements InputStream {
 
 	/**
 	 * This {@link InputStream}s in the ConcatenatedStreamStruct.
@@ -30,7 +30,7 @@ public class ConcatenatedStreamStruct extends StreamStruct implements InputStrea
 	 * @param inputStreams
 	 * 		the {@link InputStream}s to create a ConcatenatedStreamStruct from
 	 */
-	public ConcatenatedStreamStruct(final Deque<InputStream> inputStreams) {
+	private ConcatenatedStreamStruct(final Deque<InputStream> inputStreams) {
 		this(false, inputStreams);
 	}
 
@@ -42,7 +42,7 @@ public class ConcatenatedStreamStruct extends StreamStruct implements InputStrea
 	 * @param inputStreams
 	 * 		the {@link InputStream}s to create a ConcatenatedStreamStruct from
 	 */
-	public ConcatenatedStreamStruct(final boolean interactive, final Deque<InputStream> inputStreams) {
+	private ConcatenatedStreamStruct(final boolean interactive, final Deque<InputStream> inputStreams) {
 		super(ConcatenatedStreamType.INSTANCE, null, null, interactive, getElementType2(inputStreams));
 		this.inputStreams = new ArrayDeque<>(inputStreams);
 	}
@@ -77,6 +77,14 @@ public class ConcatenatedStreamStruct extends StreamStruct implements InputStrea
 
 		final InputStream last = inputStreams.getLast();
 		return last.getElementType();
+	}
+
+	public static ConcatenatedStreamStruct valueOf(final Deque<InputStream> inputStreams) {
+		return new ConcatenatedStreamStruct(inputStreams);
+	}
+
+	public static ConcatenatedStreamStruct valueOf(final boolean interactive, final Deque<InputStream> inputStreams) {
+		return new ConcatenatedStreamStruct(interactive, inputStreams);
 	}
 
 	public Deque<InputStream> getInputStreams() {

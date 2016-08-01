@@ -5,10 +5,10 @@
 package jcl.functions.stream;
 
 import jcl.lang.LispStruct;
+import jcl.lang.factory.LispStructFactory;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
-import jcl.lang.stream.EchoStreamStruct;
 import jcl.lang.stream.InputStream;
 import jcl.lang.stream.OutputStream;
 import org.springframework.stereotype.Component;
@@ -33,6 +33,6 @@ public final class MakeEchoStreamFunction extends CommonLispBuiltInFunctionStruc
 	public LispStruct apply(final Arguments arguments) {
 		final InputStream inputStream = arguments.getRequiredArgument(INPUT_STREAM_ARGUMENT, InputStream.class);
 		final OutputStream outputStream = arguments.getRequiredArgument(OUTPUT_STREAM_ARGUMENT, OutputStream.class);
-		return new EchoStreamStruct(inputStream, outputStream);
+		return LispStructFactory.toEchoStream(inputStream, outputStream);
 	}
 }

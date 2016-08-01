@@ -10,7 +10,7 @@ import jcl.type.TwoWayStreamType;
 /**
  * The {@link TwoWayStreamStruct} is the object representation of a Lisp 'two-way-stream' type.
  */
-public class TwoWayStreamStruct extends AbstractDualStreamStruct {
+public final class TwoWayStreamStruct extends AbstractDualStreamStruct {
 
 	/**
 	 * Public constructor.
@@ -20,7 +20,7 @@ public class TwoWayStreamStruct extends AbstractDualStreamStruct {
 	 * @param outputStream
 	 * 		the {@link OutputStream} to create a TwoWayStreamStruct from
 	 */
-	public TwoWayStreamStruct(final InputStream inputStream, final OutputStream outputStream) {
+	private TwoWayStreamStruct(final InputStream inputStream, final OutputStream outputStream) {
 		this(false, inputStream, outputStream);
 	}
 
@@ -34,8 +34,16 @@ public class TwoWayStreamStruct extends AbstractDualStreamStruct {
 	 * @param outputStream
 	 * 		the {@link OutputStream} to create a TwoWayStreamStruct from
 	 */
-	public TwoWayStreamStruct(final boolean interactive, final InputStream inputStream, final OutputStream outputStream) {
+	private TwoWayStreamStruct(final boolean interactive, final InputStream inputStream, final OutputStream outputStream) {
 		super(TwoWayStreamType.INSTANCE, interactive, inputStream, outputStream);
+	}
+
+	public static TwoWayStreamStruct valueOf(final InputStream inputStream, final OutputStream outputStream) {
+		return new TwoWayStreamStruct(inputStream, outputStream);
+	}
+
+	public static TwoWayStreamStruct valueOf(final boolean interactive, final InputStream inputStream, final OutputStream outputStream) {
+		return new TwoWayStreamStruct(interactive, inputStream, outputStream);
 	}
 
 	@Override

@@ -8,7 +8,7 @@ import jcl.lang.LispStruct;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
-import jcl.lang.stream.SynonymStreamStruct;
+import jcl.lang.stream.SynonymStreamStructImpl;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -27,7 +27,7 @@ public final class SynonymStreamSymbolFunction extends CommonLispBuiltInFunction
 
 	@Override
 	public LispStruct apply(final Arguments arguments) {
-		final SynonymStreamStruct synonymStream = arguments.getRequiredArgument(SYNONYM_STREAM_ARGUMENT, SynonymStreamStruct.class);
+		final SynonymStreamStructImpl synonymStream = arguments.getRequiredArgument(SYNONYM_STREAM_ARGUMENT, SynonymStreamStructImpl.class);
 		return synonymStream.getSymbol();
 	}
 }

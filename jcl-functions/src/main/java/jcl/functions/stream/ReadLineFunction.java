@@ -14,7 +14,7 @@ import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.list.NILStruct;
-import jcl.lang.stream.InputStream;
+import jcl.lang.stream.InputStreamStruct;
 import jcl.lang.stream.ReadLineResult;
 import jcl.lang.stream.StreamVariables;
 import org.springframework.stereotype.Component;
@@ -43,13 +43,13 @@ public final class ReadLineFunction extends CommonLispBuiltInFunctionStruct {
 	public LispStruct apply(final Arguments arguments) {
 		final LispStruct lispStruct = arguments.getOptionalArgument(INPUT_STREAM_ARGUMENT);
 
-		final InputStream inputStream;
+		final InputStreamStruct inputStreamStruct;
 		if (TStruct.INSTANCE.equals(lispStruct)) {
-			inputStream = StreamVariables.STANDARD_INPUT.getVariableValue();
+			inputStreamStruct = StreamVariables.STANDARD_INPUT.getVariableValue();
 		} else if (NILStruct.INSTANCE.equals(lispStruct)) {
-			inputStream = StreamVariables.STANDARD_INPUT.getVariableValue();
-		} else if (lispStruct instanceof InputStream) {
-			inputStream = (InputStream) lispStruct;
+			inputStreamStruct = StreamVariables.STANDARD_INPUT.getVariableValue();
+		} else if (lispStruct instanceof InputStreamStruct) {
+			inputStreamStruct = (InputStreamStruct) lispStruct;
 		} else {
 			throw new TypeErrorException("The value " + lispStruct + " is not either T, NIL, or an Input Stream.");
 		}
@@ -58,7 +58,7 @@ public final class ReadLineFunction extends CommonLispBuiltInFunctionStruct {
 		final LispStruct eofValue = arguments.getOptionalArgument(EOF_VALUE_ARGUMENT);
 		final BooleanStruct recursiveP = arguments.getOptionalArgument(RECURSIVE_P_ARGUMENT, BooleanStruct.class);
 
-		final ReadLineResult readLineResult = inputStream.readLine(eofErrorP.booleanValue(), eofValue, recursiveP.booleanValue());
+		final ReadLineResult readLineResult = inputStreamStruct.readLine(eofErrorP.booleanValue(), eofValue, recursiveP.booleanValue());
 		final String result = readLineResult.getResult();
 		final boolean eof = readLineResult.isEof();
 		return ValuesStruct.valueOf(LispStructFactory.toString(result), BooleanStruct.toLispBoolean(eof));

@@ -9,7 +9,7 @@ import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.number.IntegerStruct;
-import jcl.lang.stream.OutputStream;
+import jcl.lang.stream.OutputStreamStruct;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -31,10 +31,10 @@ public final class WriteByteFunction extends CommonLispBuiltInFunctionStruct {
 	@Override
 	public LispStruct apply(final Arguments arguments) {
 		final IntegerStruct byteVal = arguments.getRequiredArgument(BYTE_ARGUMENT, IntegerStruct.class);
-		final OutputStream outputStream = arguments.getRequiredArgument(OUTPUT_STREAM_ARGUMENT, OutputStream.class);
+		final OutputStreamStruct outputStreamStruct = arguments.getRequiredArgument(OUTPUT_STREAM_ARGUMENT, OutputStreamStruct.class);
 
 		final int byteValue = byteVal.intValue();
-		outputStream.writeByte(byteValue);
+		outputStreamStruct.writeByte(byteValue);
 
 		return byteVal;
 	}

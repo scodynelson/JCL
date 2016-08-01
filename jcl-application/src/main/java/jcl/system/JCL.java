@@ -15,9 +15,9 @@ import jcl.lang.factory.LispStructFactory;
 import jcl.lang.pathname.PathnameName;
 import jcl.lang.pathname.PathnameStruct;
 import jcl.lang.pathname.PathnameType;
-import jcl.lang.stream.JavaStreamStruct;
+import jcl.lang.stream.JavaStreamStructImpl;
 import jcl.lang.stream.StreamVariables;
-import jcl.lang.stream.TwoWayStreamStruct;
+import jcl.lang.stream.TwoWayStreamStructImpl;
 import jcl.system.repl.ReadEvalPrint;
 import jcl.util.SimpleThreadScope;
 import org.slf4j.Logger;
@@ -55,9 +55,9 @@ public class JCL implements ApplicationRunner {
 
 	public JCL() throws IOException {
 		try (LoggerOutputStream loggerOutputStream = new LoggerOutputStream(LOGGER)) {
-			final JavaStreamStruct characterStream = LispStructFactory.toJavaStream(System.in, loggerOutputStream);
+			final JavaStreamStructImpl characterStream = LispStructFactory.toJavaStream(System.in, loggerOutputStream);
 
-			final TwoWayStreamStruct terminalIoStream = LispStructFactory.toTwoWayStream(true, characterStream, characterStream);
+			final TwoWayStreamStructImpl terminalIoStream = LispStructFactory.toTwoWayStream(true, characterStream, characterStream);
 			StreamVariables.TERMINAL_IO.setValue(terminalIoStream);
 		}
 		

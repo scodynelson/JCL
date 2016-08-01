@@ -17,13 +17,13 @@ public final class FileStreamStructs {
 	private FileStreamStructs() {
 	}
 
-	public static FileStreamStruct open(final PathnameStruct pathname, final DirectionType directionType, final LispType elementType,
-	                                    final IfExistsType ifExistsType, final IfDoesNotExistType ifDoesNotExistType,
-	                                    final ExternalFormat externalFormat) {
+	public static FileStreamStructImpl open(final PathnameStruct pathname, final DirectionType directionType, final LispType elementType,
+	                                        final IfExistsType ifExistsType, final IfDoesNotExistType ifDoesNotExistType,
+	                                        final ExternalFormat externalFormat) {
 
 		final Path filePath = pathname.getPath();
 
-		final FileStreamStruct fileStream = FileStreamStruct.valueOf(filePath);
+		final FileStreamStructImpl fileStream = FileStreamStructImpl.valueOf(filePath);
 		if (directionType == DirectionType.PROBE) {
 			fileStream.close();
 		}

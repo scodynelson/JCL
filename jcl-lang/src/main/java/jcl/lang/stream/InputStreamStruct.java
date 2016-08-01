@@ -7,9 +7,9 @@ package jcl.lang.stream;
 import jcl.lang.LispStruct;
 
 /**
- * The {@link InputStream} is the representation for all Lisp input 'stream' types.
+ * The {@link InputStreamStruct} is the representation for all Lisp input 'stream' types.
  */
-public interface InputStream extends LispStream {
+public interface InputStreamStruct extends LispStream {
 
 	/**
 	 * Reads a character from the stream.

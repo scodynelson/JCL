@@ -8,7 +8,7 @@ import jcl.lang.LispStruct;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
-import jcl.lang.stream.EchoStreamStruct;
+import jcl.lang.stream.EchoStreamStructImpl;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -27,7 +27,7 @@ public final class EchoStreamInputStreamFunction extends CommonLispBuiltInFuncti
 
 	@Override
 	public LispStruct apply(final Arguments arguments) {
-		final EchoStreamStruct echoStream = arguments.getRequiredArgument(ECHO_STREAM_ARGUMENT, EchoStreamStruct.class);
-		return echoStream.getInputStream();
+		final EchoStreamStructImpl echoStream = arguments.getRequiredArgument(ECHO_STREAM_ARGUMENT, EchoStreamStructImpl.class);
+		return echoStream.getInputStreamStruct();
 	}
 }

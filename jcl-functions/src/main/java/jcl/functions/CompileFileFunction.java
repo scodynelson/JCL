@@ -46,7 +46,7 @@ import jcl.lang.list.NILStruct;
 import jcl.lang.pathname.PathnameStruct;
 import jcl.lang.readtable.ReaderVariables;
 import jcl.lang.readtable.ReadtableStruct;
-import jcl.lang.stream.FileStreamStruct;
+import jcl.lang.stream.FileStreamStructImpl;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.SystemUtils;
@@ -164,7 +164,7 @@ public final class CompileFileFunction extends CommonLispBuiltInFunctionStruct {
 		BooleanStruct compiledWithWarnings = NILStruct.INSTANCE;
 		boolean compiledSuccessfully = false;
 		try {
-			final FileStreamStruct inputFileStream = LispStructFactory.toFileStream(inputFilePath);
+			final FileStreamStructImpl inputFileStream = LispStructFactory.toFileStream(inputFilePath);
 			final List<LispStruct> forms = new ArrayList<>();
 
 			LispStruct form;

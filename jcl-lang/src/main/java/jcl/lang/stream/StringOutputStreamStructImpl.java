@@ -10,9 +10,9 @@ import jcl.type.LispType;
 import jcl.type.StringStreamType;
 
 /**
- * The {@link StringOutputStreamStruct} is the object representation of a Lisp 'string-stream' output type.
+ * The {@link StringOutputStreamStructImpl} is the object representation of a Lisp 'string-stream' output type.
  */
-public final class StringOutputStreamStruct extends StreamStruct implements OutputStream {
+public final class StringOutputStreamStructImpl extends StreamStructImpl implements OutputStreamStruct {
 
 	/**
 	 * The {@link StringBuffer} to use for this stream to accept characters and bytes.
@@ -22,7 +22,7 @@ public final class StringOutputStreamStruct extends StreamStruct implements Outp
 	/**
 	 * Public constructor.
 	 */
-	private StringOutputStreamStruct() {
+	private StringOutputStreamStructImpl() {
 		this(false);
 	}
 
@@ -32,7 +32,7 @@ public final class StringOutputStreamStruct extends StreamStruct implements Outp
 	 * @param interactive
 	 * 		whether or not the struct created is 'interactive'
 	 */
-	private StringOutputStreamStruct(final boolean interactive) {
+	private StringOutputStreamStructImpl(final boolean interactive) {
 		this(interactive, BaseCharType.INSTANCE);
 	}
 
@@ -42,7 +42,7 @@ public final class StringOutputStreamStruct extends StreamStruct implements Outp
 	 * @param elementType
 	 * 		the type of character elements in the stream
 	 */
-	private StringOutputStreamStruct(final LispType elementType) {
+	private StringOutputStreamStructImpl(final LispType elementType) {
 		this(false, elementType);
 	}
 
@@ -54,24 +54,24 @@ public final class StringOutputStreamStruct extends StreamStruct implements Outp
 	 * @param elementType
 	 * 		the type of character elements in the stream
 	 */
-	private StringOutputStreamStruct(final boolean interactive, final LispType elementType) {
+	private StringOutputStreamStructImpl(final boolean interactive, final LispType elementType) {
 		super(StringStreamType.INSTANCE, null, null, interactive, elementType);
 	}
 
-	public static StringOutputStreamStruct valueOf() {
-		return new StringOutputStreamStruct();
+	public static StringOutputStreamStructImpl valueOf() {
+		return new StringOutputStreamStructImpl();
 	}
 
-	public static StringOutputStreamStruct valueOf(final boolean interactive) {
-		return new StringOutputStreamStruct(interactive);
+	public static StringOutputStreamStructImpl valueOf(final boolean interactive) {
+		return new StringOutputStreamStructImpl(interactive);
 	}
 
-	public static StringOutputStreamStruct valueOf(final LispType elementType) {
-		return new StringOutputStreamStruct(elementType);
+	public static StringOutputStreamStructImpl valueOf(final LispType elementType) {
+		return new StringOutputStreamStructImpl(elementType);
 	}
 
-	public static StringOutputStreamStruct valueOf(final boolean interactive, final LispType elementType) {
-		return new StringOutputStreamStruct(interactive, elementType);
+	public static StringOutputStreamStructImpl valueOf(final boolean interactive, final LispType elementType) {
+		return new StringOutputStreamStructImpl(interactive, elementType);
 	}
 
 	public String getStreamString() {

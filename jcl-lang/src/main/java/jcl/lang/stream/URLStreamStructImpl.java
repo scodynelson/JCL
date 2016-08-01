@@ -19,14 +19,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * The {@link URLStreamStruct} is the object representation of a Lisp 'url-stream' type.
+ * The {@link URLStreamStructImpl} is the object representation of a Lisp 'url-stream' type.
  */
-public final class URLStreamStruct extends AbstractNativeStreamStruct {
+public final class URLStreamStructImpl extends AbstractNativeStreamStructImpl {
 
 	/**
 	 * The logger for this class.
 	 */
-	private static final Logger LOGGER = LoggerFactory.getLogger(URLStreamStruct.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(URLStreamStructImpl.class);
 
 	/**
 	 * The {@link URL} of the http resource that the {@link #urlConnection} interacts with.
@@ -49,7 +49,7 @@ public final class URLStreamStruct extends AbstractNativeStreamStruct {
 	 * @param url
 	 * 		the {@link URL} to create a URLStreamStruct from
 	 */
-	private URLStreamStruct(final URL url) {
+	private URLStreamStructImpl(final URL url) {
 		this(false, url);
 	}
 
@@ -61,7 +61,7 @@ public final class URLStreamStruct extends AbstractNativeStreamStruct {
 	 * @param url
 	 * 		the {@link URL} to create a URLStreamStruct from
 	 */
-	private URLStreamStruct(final boolean interactive, final URL url) {
+	private URLStreamStructImpl(final boolean interactive, final URL url) {
 		// TODO: Character Type Stream???
 		super(FileStreamType.INSTANCE, interactive, CharacterType.INSTANCE);
 
@@ -74,12 +74,12 @@ public final class URLStreamStruct extends AbstractNativeStreamStruct {
 		}
 	}
 
-	public static URLStreamStruct valueOf(final URL url) {
-		return new URLStreamStruct(url);
+	public static URLStreamStructImpl valueOf(final URL url) {
+		return new URLStreamStructImpl(url);
 	}
 
-	public static URLStreamStruct valueOf(final boolean interactive, final URL url) {
-		return new URLStreamStruct(interactive, url);
+	public static URLStreamStructImpl valueOf(final boolean interactive, final URL url) {
+		return new URLStreamStructImpl(interactive, url);
 	}
 
 	/**

@@ -12,14 +12,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * The {@link AbstractNativeStreamStruct} is an abstraction for native stream types.
+ * The {@link AbstractNativeStreamStructImpl} is an abstraction for native stream types.
  */
-abstract class AbstractNativeStreamStruct extends StreamStruct implements IOStream {
+abstract class AbstractNativeStreamStructImpl extends StreamStructImpl implements IOStreamStruct {
 
 	/**
 	 * The logger for this class.
 	 */
-	private static final Logger LOGGER = LoggerFactory.getLogger(AbstractNativeStreamStruct.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(AbstractNativeStreamStructImpl.class);
 
 	/**
 	 * Protected constructor.
@@ -31,8 +31,8 @@ abstract class AbstractNativeStreamStruct extends StreamStruct implements IOStre
 	 * @param elementType
 	 * 		the stream elementType
 	 */
-	protected AbstractNativeStreamStruct(final StreamType type,
-	                                     final boolean interactive, final LispType elementType) {
+	protected AbstractNativeStreamStructImpl(final StreamType type,
+	                                         final boolean interactive, final LispType elementType) {
 		super(type, null, null, interactive, elementType);
 	}
 

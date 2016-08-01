@@ -10,19 +10,19 @@ import jcl.type.CharacterType;
 import jcl.type.StreamType;
 
 /**
- * The {@link EmptyStreamStruct} is the object representation of an empty reading and writing system level Lisp stream.
+ * The {@link EmptyStreamStructImpl} is the object representation of an empty reading and writing system level Lisp stream.
  */
-public final class EmptyStreamStruct extends AbstractNativeStreamStruct {
+public final class EmptyStreamStructImpl extends AbstractNativeStreamStructImpl {
 
 	/**
-	 * Singleton instance of the {@link EmptyStreamStruct} Lisp stream.
+	 * Singleton instance of the {@link EmptyStreamStructImpl} Lisp stream.
 	 */
-	public static final EmptyStreamStruct INSTANCE = new EmptyStreamStruct();
+	public static final EmptyStreamStructImpl INSTANCE = new EmptyStreamStructImpl();
 
 	/**
 	 * Private constructor.
 	 */
-	private EmptyStreamStruct() {
+	private EmptyStreamStructImpl() {
 		super(StreamType.INSTANCE, false, CharacterType.INSTANCE);
 	}
 

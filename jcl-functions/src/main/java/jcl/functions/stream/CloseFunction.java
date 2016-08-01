@@ -11,7 +11,7 @@ import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.list.NILStruct;
-import jcl.lang.stream.StreamStruct;
+import jcl.lang.stream.StreamStructImpl;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -31,7 +31,7 @@ public final class CloseFunction extends CommonLispBuiltInFunctionStruct {
 
 	@Override
 	public LispStruct apply(final Arguments arguments) {
-		final StreamStruct stream = arguments.getRequiredArgument(STREAM_ARGUMENT, StreamStruct.class);
+		final StreamStructImpl stream = arguments.getRequiredArgument(STREAM_ARGUMENT, StreamStructImpl.class);
 		final BooleanStruct abortValue = arguments.getKeyArgument(CommonLispSymbols.ELEMENT_TYPE_KEYWORD, BooleanStruct.class);
 
 		final boolean wasClosed = stream.close(abortValue.booleanValue());

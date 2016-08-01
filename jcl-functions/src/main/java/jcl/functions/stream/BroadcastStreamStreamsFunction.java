@@ -12,8 +12,8 @@ import jcl.lang.factory.LispStructFactory;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
-import jcl.lang.stream.BroadcastStreamStruct;
-import jcl.lang.stream.OutputStream;
+import jcl.lang.stream.BroadcastStreamStructImpl;
+import jcl.lang.stream.OutputStreamStruct;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -32,8 +32,8 @@ public final class BroadcastStreamStreamsFunction extends CommonLispBuiltInFunct
 
 	@Override
 	public LispStruct apply(final Arguments arguments) {
-		final BroadcastStreamStruct broadcastStream = arguments.getRequiredArgument(BROADCAST_STREAM_ARGUMENT, BroadcastStreamStruct.class);
-		final Deque<OutputStream> outputStreams = broadcastStream.getOutputStreams();
-		return LispStructFactory.toProperList(new ArrayList<LispStruct>(outputStreams));
+		final BroadcastStreamStructImpl broadcastStream = arguments.getRequiredArgument(BROADCAST_STREAM_ARGUMENT, BroadcastStreamStructImpl.class);
+		final Deque<OutputStreamStruct> outputStreamStructs = broadcastStream.getOutputStreamStructs();
+		return LispStructFactory.toProperList(new ArrayList<LispStruct>(outputStreamStructs));
 	}
 }

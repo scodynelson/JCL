@@ -12,9 +12,9 @@ import jcl.type.LispType;
 import jcl.type.StreamType;
 
 /**
- * The {@link StreamStruct} is the object representation of a Lisp 'stream' type.
+ * The {@link StreamStructImpl} is the object representation of a Lisp 'stream' type.
  */
-public abstract class StreamStruct extends BuiltInClassStruct implements LispStream {
+public abstract class StreamStructImpl extends BuiltInClassStruct implements LispStream {
 
 	/**
 	 * Whether or not the StreamStruct is interactive.
@@ -45,8 +45,8 @@ public abstract class StreamStruct extends BuiltInClassStruct implements LispStr
 	 * @param elementType
 	 * 		the stream elementType
 	 */
-	protected StreamStruct(final List<Class<? extends LispStruct>> directSuperClasses, final List<Class<? extends LispStruct>> subClasses,
-	                       final boolean interactive, final LispType elementType) {
+	protected StreamStructImpl(final List<Class<? extends LispStruct>> directSuperClasses, final List<Class<? extends LispStruct>> subClasses,
+	                           final boolean interactive, final LispType elementType) {
 		super(StreamType.INSTANCE, directSuperClasses, subClasses);
 		this.interactive = interactive;
 		this.elementType = elementType;
@@ -66,9 +66,9 @@ public abstract class StreamStruct extends BuiltInClassStruct implements LispStr
 	 * @param elementType
 	 * 		the stream elementType
 	 */
-	StreamStruct(final StreamType type,
-	             final List<Class<? extends LispStruct>> directSuperClasses, final List<Class<? extends LispStruct>> subClasses,
-	             final boolean interactive, final LispType elementType) {
+	StreamStructImpl(final StreamType type,
+	                 final List<Class<? extends LispStruct>> directSuperClasses, final List<Class<? extends LispStruct>> subClasses,
+	                 final boolean interactive, final LispType elementType) {
 		super(type, directSuperClasses, subClasses);
 		this.interactive = interactive;
 		this.elementType = elementType;

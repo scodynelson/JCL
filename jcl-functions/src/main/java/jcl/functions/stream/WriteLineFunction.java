@@ -14,7 +14,7 @@ import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.list.NILStruct;
 import jcl.lang.number.IntegerStruct;
-import jcl.lang.stream.OutputStream;
+import jcl.lang.stream.OutputStreamStruct;
 import jcl.lang.stream.StreamVariables;
 import org.springframework.stereotype.Component;
 
@@ -41,13 +41,13 @@ public final class WriteLineFunction extends CommonLispBuiltInFunctionStruct {
 		final StringStruct stringParam = arguments.getRequiredArgument(STRING_ARGUMENT, StringStruct.class);
 		final LispStruct lispStruct = arguments.getOptionalArgument(OUTPUT_STREAM_ARGUMENT);
 
-		final OutputStream outputStream;
+		final OutputStreamStruct outputStreamStruct;
 		if (TStruct.INSTANCE.equals(lispStruct)) {
-			outputStream = StreamVariables.STANDARD_OUTPUT.getVariableValue();
+			outputStreamStruct = StreamVariables.STANDARD_OUTPUT.getVariableValue();
 		} else if (NILStruct.INSTANCE.equals(lispStruct)) {
-			outputStream = StreamVariables.STANDARD_OUTPUT.getVariableValue();
-		} else if (lispStruct instanceof OutputStream) {
-			outputStream = (OutputStream) lispStruct;
+			outputStreamStruct = StreamVariables.STANDARD_OUTPUT.getVariableValue();
+		} else if (lispStruct instanceof OutputStreamStruct) {
+			outputStreamStruct = (OutputStreamStruct) lispStruct;
 		} else {
 			throw new TypeErrorException("The value " + lispStruct + " is not either T, NIL, or an Output Stream.");
 		}
@@ -60,9 +60,9 @@ public final class WriteLineFunction extends CommonLispBuiltInFunctionStruct {
 		final String javaString = stringParam.getAsJavaString();
 		if (endParam instanceof IntegerStruct) {
 			final int end = ((IntegerStruct) endParam).intValue();
-			outputStream.writeLine(javaString, start, end);
+			outputStreamStruct.writeLine(javaString, start, end);
 		} else {
-			outputStream.writeLine(javaString, start);
+			outputStreamStruct.writeLine(javaString, start);
 		}
 
 		return startParam;

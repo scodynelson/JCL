@@ -26,14 +26,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * The {@link FileStreamStruct} is the object representation of a Lisp 'file-stream' type.
+ * The {@link FileStreamStructImpl} is the object representation of a Lisp 'file-stream' type.
  */
-public final class FileStreamStruct extends AbstractNativeStreamStruct {
+public final class FileStreamStructImpl extends AbstractNativeStreamStructImpl {
 
 	/**
 	 * The logger for this class.
 	 */
-	private static final Logger LOGGER = LoggerFactory.getLogger(FileStreamStruct.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(FileStreamStructImpl.class);
 
 	/**
 	 * The {@link Path} of the file that the {@link #randomAccessFile} interacts with.
@@ -51,7 +51,7 @@ public final class FileStreamStruct extends AbstractNativeStreamStruct {
 	 * @param path
 	 * 		the file to create a FileStreamStruct from
 	 */
-	private FileStreamStruct(final Path path) {
+	private FileStreamStructImpl(final Path path) {
 		this(false, path);
 	}
 
@@ -63,7 +63,7 @@ public final class FileStreamStruct extends AbstractNativeStreamStruct {
 	 * @param path
 	 * 		the {@link Path} to create a FileStreamStruct from
 	 */
-	private FileStreamStruct(final boolean interactive, final Path path) {
+	private FileStreamStructImpl(final boolean interactive, final Path path) {
 		super(FileStreamType.INSTANCE, interactive, getElementType2(path));
 
 		this.path = path;
@@ -92,12 +92,12 @@ public final class FileStreamStruct extends AbstractNativeStreamStruct {
 		}
 	}
 
-	public static FileStreamStruct valueOf(final Path path) {
-		return new FileStreamStruct(path);
+	public static FileStreamStructImpl valueOf(final Path path) {
+		return new FileStreamStructImpl(path);
 	}
 
-	public static FileStreamStruct valueOf(final boolean interactive, final Path path) {
-		return new FileStreamStruct(interactive, path);
+	public static FileStreamStructImpl valueOf(final boolean interactive, final Path path) {
+		return new FileStreamStructImpl(interactive, path);
 	}
 
 	/**

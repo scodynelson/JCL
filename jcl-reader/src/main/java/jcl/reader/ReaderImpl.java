@@ -13,7 +13,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import jcl.lang.LispStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.readtable.Reader;
-import jcl.lang.stream.InputStream;
+import jcl.lang.stream.InputStreamStruct;
 import jcl.lang.stream.ReadPeekResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -28,9 +28,9 @@ import org.springframework.stereotype.Component;
 class ReaderImpl implements Reader {
 
 	/**
-	 * The {@link InputStream} the ReaderImpl reads lisp tokens from.
+	 * The {@link InputStreamStruct} the ReaderImpl reads lisp tokens from.
 	 */
-	private final InputStream inputStream;
+	private final InputStreamStruct inputStreamStruct;
 
 	/**
 	 * Map containing the number argument to #= to parsed {@link LispStruct}s produced by the #= reader macro function.
@@ -64,11 +64,11 @@ class ReaderImpl implements Reader {
 	/**
 	 * Public constructor for creating a new JCL Reader.
 	 *
-	 * @param inputStream
-	 * 		the {@link InputStream} used to read lisp tokens
+	 * @param inputStreamStruct
+	 * 		the {@link InputStreamStruct} used to read lisp tokens
 	 */
-	ReaderImpl(final InputStream inputStream) {
-		this.inputStream = inputStream;
+	ReaderImpl(final InputStreamStruct inputStreamStruct) {
+		this.inputStreamStruct = inputStreamStruct;
 	}
 
 	@Override
@@ -116,17 +116,17 @@ class ReaderImpl implements Reader {
 
 	@Override
 	public ReadPeekResult readChar(final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP) {
-		return inputStream.readChar(eofErrorP, eofValue, recursiveP);
+		return inputStreamStruct.readChar(eofErrorP, eofValue, recursiveP);
 	}
 
 	@Override
 	public void unreadChar(final int codePoint) {
-		inputStream.unreadChar(codePoint);
+		inputStreamStruct.unreadChar(codePoint);
 	}
 
 	@Override
-	public InputStream getInputStream() {
-		return inputStream;
+	public InputStreamStruct getInputStreamStruct() {
+		return inputStreamStruct;
 	}
 
 	@Override

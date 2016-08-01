@@ -9,8 +9,8 @@ import jcl.lang.factory.LispStructFactory;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
-import jcl.lang.stream.InputStream;
-import jcl.lang.stream.OutputStream;
+import jcl.lang.stream.InputStreamStruct;
+import jcl.lang.stream.OutputStreamStruct;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -31,8 +31,8 @@ public final class MakeTwoWayStreamFunction extends CommonLispBuiltInFunctionStr
 
 	@Override
 	public LispStruct apply(final Arguments arguments) {
-		final InputStream inputStream = arguments.getRequiredArgument(INPUT_STREAM_ARGUMENT, InputStream.class);
-		final OutputStream outputStream = arguments.getRequiredArgument(OUTPUT_STREAM_ARGUMENT, OutputStream.class);
-		return LispStructFactory.toTwoWayStream(inputStream, outputStream);
+		final InputStreamStruct inputStreamStruct = arguments.getRequiredArgument(INPUT_STREAM_ARGUMENT, InputStreamStruct.class);
+		final OutputStreamStruct outputStreamStruct = arguments.getRequiredArgument(OUTPUT_STREAM_ARGUMENT, OutputStreamStruct.class);
+		return LispStructFactory.toTwoWayStream(inputStreamStruct, outputStreamStruct);
 	}
 }

@@ -15,7 +15,7 @@ import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.list.NILStruct;
 import jcl.lang.number.IntegerStruct;
-import jcl.lang.stream.InputStream;
+import jcl.lang.stream.InputStreamStruct;
 import jcl.lang.stream.ReadPeekResult;
 import jcl.lang.stream.StreamVariables;
 import org.springframework.stereotype.Component;
@@ -42,13 +42,13 @@ public final class ReadByteFunction extends CommonLispBuiltInFunctionStruct {
 	public LispStruct apply(final Arguments arguments) {
 		final LispStruct lispStruct = arguments.getOptionalArgument(INPUT_STREAM_ARGUMENT);
 
-		final InputStream inputStream;
+		final InputStreamStruct inputStreamStruct;
 		if (TStruct.INSTANCE.equals(lispStruct)) {
-			inputStream = StreamVariables.STANDARD_INPUT.getVariableValue();
+			inputStreamStruct = StreamVariables.STANDARD_INPUT.getVariableValue();
 		} else if (NILStruct.INSTANCE.equals(lispStruct)) {
-			inputStream = StreamVariables.STANDARD_INPUT.getVariableValue();
-		} else if (lispStruct instanceof InputStream) {
-			inputStream = (InputStream) lispStruct;
+			inputStreamStruct = StreamVariables.STANDARD_INPUT.getVariableValue();
+		} else if (lispStruct instanceof InputStreamStruct) {
+			inputStreamStruct = (InputStreamStruct) lispStruct;
 		} else {
 			throw new TypeErrorException("The value " + lispStruct + " is not either T, NIL, or an Input Stream.");
 		}
@@ -56,7 +56,7 @@ public final class ReadByteFunction extends CommonLispBuiltInFunctionStruct {
 		final BooleanStruct eofErrorP = arguments.getOptionalArgument(EOF_ERROR_ARGUMENT, BooleanStruct.class);
 		final LispStruct eofValue = arguments.getOptionalArgument(EOF_VALUE_ARGUMENT);
 
-		final ReadPeekResult readPeekResult = inputStream.readByte(eofErrorP.booleanValue(), eofValue);
+		final ReadPeekResult readPeekResult = inputStreamStruct.readByte(eofErrorP.booleanValue(), eofValue);
 		return readPeekResult.isEof() ? eofValue : IntegerStruct.valueOf(BigInteger.valueOf(readPeekResult.getResult()));
 	}
 }

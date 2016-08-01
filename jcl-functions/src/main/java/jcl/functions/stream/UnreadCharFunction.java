@@ -9,7 +9,7 @@ import jcl.lang.LispStruct;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
-import jcl.lang.stream.InputStream;
+import jcl.lang.stream.InputStreamStruct;
 import jcl.lang.stream.StreamVariables;
 import org.springframework.stereotype.Component;
 
@@ -32,9 +32,9 @@ public final class UnreadCharFunction extends CommonLispBuiltInFunctionStruct {
 	@Override
 	public LispStruct apply(final Arguments arguments) {
 		final CharacterStruct character = arguments.getRequiredArgument(CHARACTER_ARGUMENT, CharacterStruct.class);
-		final InputStream inputStream = arguments.getOptionalArgument(INPUT_STREAM_ARGUMENT, InputStream.class);
+		final InputStreamStruct inputStreamStruct = arguments.getOptionalArgument(INPUT_STREAM_ARGUMENT, InputStreamStruct.class);
 
-		inputStream.unreadChar(character.getCodePoint());
+		inputStreamStruct.unreadChar(character.getCodePoint());
 		return character;
 	}
 }

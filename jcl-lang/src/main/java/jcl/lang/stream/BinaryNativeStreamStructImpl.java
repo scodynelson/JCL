@@ -16,10 +16,10 @@ import jcl.type.StreamType;
 import jcl.type.UnsignedByteType;
 
 /**
- * The {@link BinaryNativeStreamStruct} is the object representation of a binary reading and writing system level Lisp
+ * The {@link BinaryNativeStreamStructImpl} is the object representation of a binary reading and writing system level Lisp
  * stream.
  */
-public final class BinaryNativeStreamStruct extends AbstractNativeStreamStruct {
+public final class BinaryNativeStreamStructImpl extends AbstractNativeStreamStructImpl {
 
 	/**
 	 * The {@link InputStream} for reading input.
@@ -39,7 +39,7 @@ public final class BinaryNativeStreamStruct extends AbstractNativeStreamStruct {
 	 * @param outputStream
 	 * 		the {@link OutputStream} to create a BinaryStreamStruct from
 	 */
-	private BinaryNativeStreamStruct(final InputStream inputStream, final OutputStream outputStream) {
+	private BinaryNativeStreamStructImpl(final InputStream inputStream, final OutputStream outputStream) {
 		this(false, inputStream, outputStream);
 	}
 
@@ -53,19 +53,19 @@ public final class BinaryNativeStreamStruct extends AbstractNativeStreamStruct {
 	 * @param outputStream
 	 * 		the {@link OutputStream} to create a BinaryStreamStruct from
 	 */
-	private BinaryNativeStreamStruct(final boolean interactive, final InputStream inputStream, final OutputStream outputStream) {
+	private BinaryNativeStreamStructImpl(final boolean interactive, final InputStream inputStream, final OutputStream outputStream) {
 		super(StreamType.INSTANCE, interactive, UnsignedByteType.INSTANCE);
 
 		this.inputStream = new BufferedInputStream(inputStream);
 		this.outputStream = new BufferedOutputStream(outputStream);
 	}
 
-	public static BinaryNativeStreamStruct valueOf(final InputStream inputStream, final OutputStream outputStream) {
-		return new BinaryNativeStreamStruct(inputStream, outputStream);
+	public static BinaryNativeStreamStructImpl valueOf(final InputStream inputStream, final OutputStream outputStream) {
+		return new BinaryNativeStreamStructImpl(inputStream, outputStream);
 	}
 
-	public static BinaryNativeStreamStruct valueOf(final boolean interactive, final InputStream inputStream, final OutputStream outputStream) {
-		return new BinaryNativeStreamStruct(interactive, inputStream, outputStream);
+	public static BinaryNativeStreamStructImpl valueOf(final boolean interactive, final InputStream inputStream, final OutputStream outputStream) {
+		return new BinaryNativeStreamStructImpl(interactive, inputStream, outputStream);
 	}
 
 	@Override

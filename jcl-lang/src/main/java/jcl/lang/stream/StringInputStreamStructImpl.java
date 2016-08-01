@@ -11,9 +11,9 @@ import jcl.type.BaseCharType;
 import jcl.type.StringStreamType;
 
 /**
- * The {@link StringInputStreamStruct} is the object representation of a Lisp 'string-stream' input type.
+ * The {@link StringInputStreamStructImpl} is the object representation of a Lisp 'string-stream' input type.
  */
-public final class StringInputStreamStruct extends StreamStruct implements InputStream {
+public final class StringInputStreamStructImpl extends StreamStructImpl implements InputStreamStruct {
 
 	/**
 	 * The {@link String} input value to read characters from.
@@ -36,7 +36,7 @@ public final class StringInputStreamStruct extends StreamStruct implements Input
 	 * @param inputString
 	 * 		the input to create a StringInputStreamStruct from
 	 */
-	private StringInputStreamStruct(final String inputString) {
+	private StringInputStreamStructImpl(final String inputString) {
 		this(false, inputString);
 	}
 
@@ -48,7 +48,7 @@ public final class StringInputStreamStruct extends StreamStruct implements Input
 	 * @param inputString
 	 * 		the input to create a StringInputStreamStruct from
 	 */
-	private StringInputStreamStruct(final boolean interactive, final String inputString) {
+	private StringInputStreamStructImpl(final boolean interactive, final String inputString) {
 		this(interactive, inputString, 0, inputString.length());
 	}
 
@@ -62,7 +62,7 @@ public final class StringInputStreamStruct extends StreamStruct implements Input
 	 * @param end
 	 * 		the ending position to read up to in the string
 	 */
-	private StringInputStreamStruct(final String inputString, final int current, final int end) {
+	private StringInputStreamStructImpl(final String inputString, final int current, final int end) {
 		this(false, inputString, current, end);
 	}
 
@@ -78,7 +78,7 @@ public final class StringInputStreamStruct extends StreamStruct implements Input
 	 * @param end
 	 * 		the ending position to read up to in the string
 	 */
-	private StringInputStreamStruct(final boolean interactive, final String inputString, final int current, final int end) {
+	private StringInputStreamStructImpl(final boolean interactive, final String inputString, final int current, final int end) {
 		super(StringStreamType.INSTANCE, null, null, interactive, BaseCharType.INSTANCE);
 
 		if (inputString == null) {
@@ -90,20 +90,20 @@ public final class StringInputStreamStruct extends StreamStruct implements Input
 		this.current = current;
 	}
 
-	public static StringInputStreamStruct valueOf(final String inputString) {
-		return new StringInputStreamStruct(inputString);
+	public static StringInputStreamStructImpl valueOf(final String inputString) {
+		return new StringInputStreamStructImpl(inputString);
 	}
 
-	public static StringInputStreamStruct valueOf(final boolean interactive, final String inputString) {
-		return new StringInputStreamStruct(interactive, inputString);
+	public static StringInputStreamStructImpl valueOf(final boolean interactive, final String inputString) {
+		return new StringInputStreamStructImpl(interactive, inputString);
 	}
 
-	public static StringInputStreamStruct valueOf(final String inputString, final int current, final int end) {
-		return new StringInputStreamStruct(inputString, current, end);
+	public static StringInputStreamStructImpl valueOf(final String inputString, final int current, final int end) {
+		return new StringInputStreamStructImpl(inputString, current, end);
 	}
 
-	public static StringInputStreamStruct valueOf(final boolean interactive, final String inputString, final int current, final int end) {
-		return new StringInputStreamStruct(interactive, inputString, current, end);
+	public static StringInputStreamStructImpl valueOf(final boolean interactive, final String inputString, final int current, final int end) {
+		return new StringInputStreamStructImpl(interactive, inputString, current, end);
 	}
 
 	@Override

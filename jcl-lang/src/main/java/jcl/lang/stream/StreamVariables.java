@@ -9,13 +9,13 @@ import jcl.lang.VariableStruct;
 
 public interface StreamVariables {
 
-	VariableStruct<TwoWayStreamStruct> TERMINAL_IO = VariableStruct.valueOf("*TERMINAL-IO*", GlobalPackageStruct.COMMON_LISP,
-	                                                                        TwoWayStreamStruct.valueOf(true, EmptyStreamStruct.INSTANCE, EmptyStreamStruct.INSTANCE));
+	VariableStruct<TwoWayStreamStructImpl> TERMINAL_IO = VariableStruct.valueOf("*TERMINAL-IO*", GlobalPackageStruct.COMMON_LISP,
+	                                                                            TwoWayStreamStructImpl.valueOf(true, EmptyStreamStructImpl.INSTANCE, EmptyStreamStructImpl.INSTANCE));
 
-	VariableStruct<IOStream> DEBUG_IO = VariableStruct.valueOf("*DEBUG-IO*", GlobalPackageStruct.COMMON_LISP, SynonymStreamStruct.valueOf(TERMINAL_IO));
-	VariableStruct<OutputStream> ERROR_OUTPUT = VariableStruct.valueOf("*ERROR-OUTPUT*", GlobalPackageStruct.COMMON_LISP, SynonymStreamStruct.valueOf(TERMINAL_IO));
-	VariableStruct<IOStream> QUERY_IO = VariableStruct.valueOf("*QUERY-IO*", GlobalPackageStruct.COMMON_LISP, SynonymStreamStruct.valueOf(TERMINAL_IO));
-	VariableStruct<InputStream> STANDARD_INPUT = VariableStruct.valueOf("*STANDARD-INPUT*", GlobalPackageStruct.COMMON_LISP, SynonymStreamStruct.valueOf(TERMINAL_IO));
-	VariableStruct<OutputStream> STANDARD_OUTPUT = VariableStruct.valueOf("*STANDARD-OUTPUT*", GlobalPackageStruct.COMMON_LISP, SynonymStreamStruct.valueOf(TERMINAL_IO));
-	VariableStruct<OutputStream> TRACE_OUTPUT = VariableStruct.valueOf("*TRACE-OUTPUT*", GlobalPackageStruct.COMMON_LISP, SynonymStreamStruct.valueOf(TERMINAL_IO));
+	VariableStruct<IOStreamStruct> DEBUG_IO = VariableStruct.valueOf("*DEBUG-IO*", GlobalPackageStruct.COMMON_LISP, SynonymStreamStructImpl.valueOf(TERMINAL_IO));
+	VariableStruct<OutputStreamStruct> ERROR_OUTPUT = VariableStruct.valueOf("*ERROR-OUTPUT*", GlobalPackageStruct.COMMON_LISP, SynonymStreamStructImpl.valueOf(TERMINAL_IO));
+	VariableStruct<IOStreamStruct> QUERY_IO = VariableStruct.valueOf("*QUERY-IO*", GlobalPackageStruct.COMMON_LISP, SynonymStreamStructImpl.valueOf(TERMINAL_IO));
+	VariableStruct<InputStreamStruct> STANDARD_INPUT = VariableStruct.valueOf("*STANDARD-INPUT*", GlobalPackageStruct.COMMON_LISP, SynonymStreamStructImpl.valueOf(TERMINAL_IO));
+	VariableStruct<OutputStreamStruct> STANDARD_OUTPUT = VariableStruct.valueOf("*STANDARD-OUTPUT*", GlobalPackageStruct.COMMON_LISP, SynonymStreamStructImpl.valueOf(TERMINAL_IO));
+	VariableStruct<OutputStreamStruct> TRACE_OUTPUT = VariableStruct.valueOf("*TRACE-OUTPUT*", GlobalPackageStruct.COMMON_LISP, SynonymStreamStructImpl.valueOf(TERMINAL_IO));
 }

@@ -8,7 +8,7 @@ import jcl.lang.LispStruct;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
-import jcl.lang.stream.TwoWayStreamStruct;
+import jcl.lang.stream.TwoWayStreamStructImpl;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -27,7 +27,7 @@ public final class TwoWayStreamInputStreamFunction extends CommonLispBuiltInFunc
 
 	@Override
 	public LispStruct apply(final Arguments arguments) {
-		final TwoWayStreamStruct twoWayStream = arguments.getRequiredArgument(TWO_WAY_STREAM_ARGUMENT, TwoWayStreamStruct.class);
-		return twoWayStream.getInputStream();
+		final TwoWayStreamStructImpl twoWayStream = arguments.getRequiredArgument(TWO_WAY_STREAM_ARGUMENT, TwoWayStreamStructImpl.class);
+		return twoWayStream.getInputStreamStruct();
 	}
 }

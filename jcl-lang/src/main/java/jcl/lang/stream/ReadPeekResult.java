@@ -10,7 +10,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Result object from a 'read' or 'peek' operation performed via 'read-char', 'peek-char', or 'read-byte' from an
- * {@link InputStream}.
+ * {@link InputStreamStruct}.
  */
 public class ReadPeekResult {
 

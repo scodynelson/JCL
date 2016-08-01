@@ -5,10 +5,10 @@
 package jcl.lang.stream;
 
 /**
- * The {@link IOStream} is the representation for all Lisp 'stream' types that are both input 'streams' and output
+ * The {@link IOStreamStruct} is the representation for all Lisp 'stream' types that are both input 'streams' and output
  * 'streams'.
  */
-public interface IOStream extends InputStream, OutputStream {
+public interface IOStreamStruct extends InputStreamStruct, OutputStreamStruct {
 
 	@Override
 	default boolean isInputStream() {

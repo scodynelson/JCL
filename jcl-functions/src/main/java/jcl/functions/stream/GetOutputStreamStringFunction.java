@@ -9,7 +9,7 @@ import jcl.lang.factory.LispStructFactory;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
-import jcl.lang.stream.StringOutputStreamStruct;
+import jcl.lang.stream.StringOutputStreamStructImpl;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -28,7 +28,7 @@ public final class GetOutputStreamStringFunction extends CommonLispBuiltInFuncti
 
 	@Override
 	public LispStruct apply(final Arguments arguments) {
-		final StringOutputStreamStruct stringOutputStream = arguments.getRequiredArgument(STRING_OUTPUT_STREAM_ARGUMENT, StringOutputStreamStruct.class);
+		final StringOutputStreamStructImpl stringOutputStream = arguments.getRequiredArgument(STRING_OUTPUT_STREAM_ARGUMENT, StringOutputStreamStructImpl.class);
 		final String streamString = stringOutputStream.getStreamString();
 		stringOutputStream.clearStream();
 

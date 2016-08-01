@@ -13,7 +13,7 @@ import jcl.lang.factory.LispStructFactory;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
-import jcl.lang.stream.InputStream;
+import jcl.lang.stream.InputStreamStruct;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -31,8 +31,8 @@ public final class MakeConcatenatedStreamFunction extends CommonLispBuiltInFunct
 
 	@Override
 	public LispStruct apply(final Arguments arguments) {
-		final List<InputStream> rest = arguments.getRestArgument(InputStream.class);
-		final Deque<InputStream> inputStreams = new ArrayDeque<>(rest);
-		return LispStructFactory.toConcatenatedStream(inputStreams);
+		final List<InputStreamStruct> rest = arguments.getRestArgument(InputStreamStruct.class);
+		final Deque<InputStreamStruct> inputStreamStructs = new ArrayDeque<>(rest);
+		return LispStructFactory.toConcatenatedStream(inputStreamStructs);
 	}
 }

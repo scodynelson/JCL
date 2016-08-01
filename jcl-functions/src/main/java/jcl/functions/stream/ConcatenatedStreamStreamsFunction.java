@@ -12,8 +12,8 @@ import jcl.lang.factory.LispStructFactory;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
-import jcl.lang.stream.ConcatenatedStreamStruct;
-import jcl.lang.stream.InputStream;
+import jcl.lang.stream.ConcatenatedStreamStructImpl;
+import jcl.lang.stream.InputStreamStruct;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -32,8 +32,8 @@ public final class ConcatenatedStreamStreamsFunction extends CommonLispBuiltInFu
 
 	@Override
 	public LispStruct apply(final Arguments arguments) {
-		final ConcatenatedStreamStruct concatenatedStream = arguments.getRequiredArgument(CONCATENATED_STREAM_ARGUMENT, ConcatenatedStreamStruct.class);
-		final Deque<InputStream> inputStreams = concatenatedStream.getInputStreams();
-		return LispStructFactory.toProperList(new ArrayList<LispStruct>(inputStreams));
+		final ConcatenatedStreamStructImpl concatenatedStream = arguments.getRequiredArgument(CONCATENATED_STREAM_ARGUMENT, ConcatenatedStreamStructImpl.class);
+		final Deque<InputStreamStruct> inputStreamStructs = concatenatedStream.getInputStreamStructs();
+		return LispStructFactory.toProperList(new ArrayList<LispStruct>(inputStreamStructs));
 	}
 }

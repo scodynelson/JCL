@@ -13,7 +13,7 @@ import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.list.NILStruct;
 import jcl.lang.readtable.Reader;
-import jcl.lang.stream.InputStream;
+import jcl.lang.stream.InputStreamStruct;
 import jcl.lang.stream.StreamVariables;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -46,13 +46,13 @@ public final class ReadPreservingWhitespaceFunction extends CommonLispBuiltInFun
 	public LispStruct apply(final Arguments arguments) {
 
 		final LispStruct inputStreamArg = arguments.getRequiredArgument(INPUT_STREAM_ARGUMENT);
-		final InputStream inputStream;
+		final InputStreamStruct inputStreamStruct;
 		if (TStruct.INSTANCE.equals(inputStreamArg)) {
-			inputStream = StreamVariables.TERMINAL_IO.getVariableValue();
+			inputStreamStruct = StreamVariables.TERMINAL_IO.getVariableValue();
 		} else if (NILStruct.INSTANCE.equals(inputStreamArg)) {
-			inputStream = StreamVariables.STANDARD_INPUT.getVariableValue();
-		} else if (inputStreamArg instanceof InputStream) {
-			inputStream = (InputStream) inputStreamArg;
+			inputStreamStruct = StreamVariables.STANDARD_INPUT.getVariableValue();
+		} else if (inputStreamArg instanceof InputStreamStruct) {
+			inputStreamStruct = (InputStreamStruct) inputStreamArg;
 		} else {
 			throw new TypeErrorException("The value " + inputStreamArg + " is not either T, NIL, or a STREAM.");
 		}
@@ -60,19 +60,19 @@ public final class ReadPreservingWhitespaceFunction extends CommonLispBuiltInFun
 		final BooleanStruct eofErrorP = arguments.getOptionalArgument(EOF_ERROR_ARGUMENT, BooleanStruct.class);
 		final LispStruct eofValue = arguments.getOptionalArgument(EOF_VALUE_ARGUMENT);
 		final BooleanStruct recursiveP = arguments.getOptionalArgument(RECURSIVE_P_ARGUMENT, BooleanStruct.class);
-		return readPreservingWhitespace(inputStream, eofErrorP, eofValue, recursiveP);
+		return readPreservingWhitespace(inputStreamStruct, eofErrorP, eofValue, recursiveP);
 	}
 
-	public LispStruct readPreservingWhitespace(final InputStream inputStream, final BooleanStruct eofErrorP, final LispStruct eofValue,
+	public LispStruct readPreservingWhitespace(final InputStreamStruct inputStreamStruct, final BooleanStruct eofErrorP, final LispStruct eofValue,
 	                                           final BooleanStruct recursiveP) {
 
-		return readPreservingWhitespace(inputStream, eofErrorP.booleanValue(), eofValue, recursiveP.booleanValue());
+		return readPreservingWhitespace(inputStreamStruct, eofErrorP.booleanValue(), eofValue, recursiveP.booleanValue());
 	}
 
-	public LispStruct readPreservingWhitespace(final InputStream inputStream, final boolean eofErrorP, final LispStruct eofValue,
+	public LispStruct readPreservingWhitespace(final InputStreamStruct inputStreamStruct, final boolean eofErrorP, final LispStruct eofValue,
 	                                           final boolean recursiveP) {
 
-		final Reader reader = context.getBean(Reader.class, inputStream);
+		final Reader reader = context.getBean(Reader.class, inputStreamStruct);
 		return reader.readPreservingWhitespace(eofErrorP, eofValue, recursiveP);
 	}
 

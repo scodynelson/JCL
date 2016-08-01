@@ -9,7 +9,7 @@ import jcl.lang.LispStruct;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
-import jcl.lang.stream.OutputStream;
+import jcl.lang.stream.OutputStreamStruct;
 import jcl.lang.stream.StreamVariables;
 import org.springframework.stereotype.Component;
 
@@ -32,9 +32,9 @@ public final class WriteCharFunction extends CommonLispBuiltInFunctionStruct {
 	@Override
 	public LispStruct apply(final Arguments arguments) {
 		final CharacterStruct character = arguments.getRequiredArgument(CHARACTER_ARGUMENT, CharacterStruct.class);
-		final OutputStream outputStream = arguments.getOptionalArgument(OUTPUT_STREAM_ARGUMENT, OutputStream.class);
+		final OutputStreamStruct outputStreamStruct = arguments.getOptionalArgument(OUTPUT_STREAM_ARGUMENT, OutputStreamStruct.class);
 
-		outputStream.writeChar(character.getCodePoint());
+		outputStreamStruct.writeChar(character.getCodePoint());
 		return character;
 	}
 }

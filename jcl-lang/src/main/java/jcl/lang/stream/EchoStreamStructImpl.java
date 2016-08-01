@@ -12,9 +12,9 @@ import jcl.lang.condition.exception.EndOfFileException;
 import jcl.type.EchoStreamType;
 
 /**
- * The {@link EchoStreamStruct} is the object representation of a Lisp 'echo-stream' type.
+ * The {@link EchoStreamStructImpl} is the object representation of a Lisp 'echo-stream' type.
  */
-public final class EchoStreamStruct extends AbstractDualStreamStruct {
+public final class EchoStreamStructImpl extends AbstractDualStreamStructImpl {
 
 	/**
 	 * The {@link Integer} tokens that have been unread so far.
@@ -24,13 +24,13 @@ public final class EchoStreamStruct extends AbstractDualStreamStruct {
 	/**
 	 * Public constructor.
 	 *
-	 * @param inputStream
-	 * 		the {@link InputStream} to create a EchoStreamStruct from
-	 * @param outputStream
-	 * 		the {@link OutputStream} to create a EchoStreamStruct from
+	 * @param inputStreamStruct
+	 * 		the {@link InputStreamStruct} to create a EchoStreamStruct from
+	 * @param outputStreamStruct
+	 * 		the {@link OutputStreamStruct} to create a EchoStreamStruct from
 	 */
-	private EchoStreamStruct(final InputStream inputStream, final OutputStream outputStream) {
-		this(false, inputStream, outputStream);
+	private EchoStreamStructImpl(final InputStreamStruct inputStreamStruct, final OutputStreamStruct outputStreamStruct) {
+		this(false, inputStreamStruct, outputStreamStruct);
 	}
 
 	/**
@@ -38,21 +38,21 @@ public final class EchoStreamStruct extends AbstractDualStreamStruct {
 	 *
 	 * @param interactive
 	 * 		whether or not the struct created is 'interactive'
-	 * @param inputStream
-	 * 		the {@link InputStream} to create a EchoStreamStruct from
-	 * @param outputStream
-	 * 		the {@link OutputStream} to create a EchoStreamStruct from
+	 * @param inputStreamStruct
+	 * 		the {@link InputStreamStruct} to create a EchoStreamStruct from
+	 * @param outputStreamStruct
+	 * 		the {@link OutputStreamStruct} to create a EchoStreamStruct from
 	 */
-	private EchoStreamStruct(final boolean interactive, final InputStream inputStream, final OutputStream outputStream) {
-		super(EchoStreamType.INSTANCE, interactive, inputStream, outputStream);
+	private EchoStreamStructImpl(final boolean interactive, final InputStreamStruct inputStreamStruct, final OutputStreamStruct outputStreamStruct) {
+		super(EchoStreamType.INSTANCE, interactive, inputStreamStruct, outputStreamStruct);
 	}
 
-	public static EchoStreamStruct valueOf(final InputStream inputStream, final OutputStream outputStream) {
-		return new EchoStreamStruct(inputStream, outputStream);
+	public static EchoStreamStructImpl valueOf(final InputStreamStruct inputStreamStruct, final OutputStreamStruct outputStreamStruct) {
+		return new EchoStreamStructImpl(inputStreamStruct, outputStreamStruct);
 	}
 
-	public static EchoStreamStruct valueOf(final boolean interactive, final InputStream inputStream, final OutputStream outputStream) {
-		return new EchoStreamStruct(interactive, inputStream, outputStream);
+	public static EchoStreamStructImpl valueOf(final boolean interactive, final InputStreamStruct inputStreamStruct, final OutputStreamStruct outputStreamStruct) {
+		return new EchoStreamStructImpl(interactive, inputStreamStruct, outputStreamStruct);
 	}
 
 	@Override
@@ -62,7 +62,7 @@ public final class EchoStreamStruct extends AbstractDualStreamStruct {
 			return new ReadPeekResult(lastUnread);
 		}
 
-		final ReadPeekResult readResult = inputStream.readChar(false, eofValue, false);
+		final ReadPeekResult readResult = inputStreamStruct.readChar(false, eofValue, false);
 
 		if (readResult.isEof()) {
 			if (eofErrorP) {
@@ -72,7 +72,7 @@ public final class EchoStreamStruct extends AbstractDualStreamStruct {
 			}
 		} else {
 			final int readChar = readResult.getResult();
-			outputStream.writeChar(readChar);
+			outputStreamStruct.writeChar(readChar);
 			return readResult;
 		}
 	}
@@ -84,7 +84,7 @@ public final class EchoStreamStruct extends AbstractDualStreamStruct {
 			return new ReadPeekResult(lastUnread);
 		}
 
-		final ReadPeekResult readResult = inputStream.readByte(false, eofValue);
+		final ReadPeekResult readResult = inputStreamStruct.readByte(false, eofValue);
 
 		if (readResult.isEof()) {
 			if (eofErrorP) {
@@ -94,7 +94,7 @@ public final class EchoStreamStruct extends AbstractDualStreamStruct {
 			}
 		} else {
 			final int readByte = readResult.getResult();
-			outputStream.writeByte(readByte);
+			outputStreamStruct.writeByte(readByte);
 			return readResult;
 		}
 	}
@@ -102,13 +102,13 @@ public final class EchoStreamStruct extends AbstractDualStreamStruct {
 	@Override
 	public ReadPeekResult peekChar(final PeekType peekType, final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP) {
 		if (unreadTokens.isEmpty()) {
-			final ReadPeekResult readResult = inputStream.readChar(eofErrorP, eofValue, recursiveP);
+			final ReadPeekResult readResult = inputStreamStruct.readChar(eofErrorP, eofValue, recursiveP);
 
 			if (readResult.isEof()) {
 				return new ReadPeekResult(readResult.getEofValue());
 			} else {
 				final int peekedChar = readResult.getResult();
-				outputStream.writeChar(peekedChar);
+				outputStreamStruct.writeChar(peekedChar);
 				return new ReadPeekResult(peekedChar);
 			}
 		} else {
@@ -131,8 +131,8 @@ public final class EchoStreamStruct extends AbstractDualStreamStruct {
 	@Override
 	public String toString() {
 		final String typeClassName = getType().getClass().getSimpleName().toUpperCase();
-		final String printedInputStream = inputStream.toString();
-		final String printedOutputStream = outputStream.toString();
+		final String printedInputStream = inputStreamStruct.toString();
+		final String printedOutputStream = outputStreamStruct.toString();
 		return "#<" + typeClassName + " input " + printedInputStream + ", output " + printedOutputStream + '>';
 	}
 }

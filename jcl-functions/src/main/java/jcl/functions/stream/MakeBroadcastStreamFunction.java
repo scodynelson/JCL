@@ -13,7 +13,7 @@ import jcl.lang.factory.LispStructFactory;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
-import jcl.lang.stream.OutputStream;
+import jcl.lang.stream.OutputStreamStruct;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -31,8 +31,8 @@ public final class MakeBroadcastStreamFunction extends CommonLispBuiltInFunction
 
 	@Override
 	public LispStruct apply(final Arguments arguments) {
-		final List<OutputStream> rest = arguments.getRestArgument(OutputStream.class);
-		final Deque<OutputStream> outputStreams = new ArrayDeque<>(rest);
-		return LispStructFactory.toBroadcastStream(outputStreams);
+		final List<OutputStreamStruct> rest = arguments.getRestArgument(OutputStreamStruct.class);
+		final Deque<OutputStreamStruct> outputStreamStructs = new ArrayDeque<>(rest);
+		return LispStructFactory.toBroadcastStream(outputStreamStructs);
 	}
 }

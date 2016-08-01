@@ -52,14 +52,14 @@ public interface LispStream extends LispStruct {
 	boolean isClosed();
 
 	/**
-	 * Returns the length of the stream if it is a {@link FileStreamStruct}.
+	 * Returns the length of the stream if it is a {@link FileStreamStructImpl}.
 	 *
 	 * @return the length of the stream
 	 */
 	Long fileLength();
 
 	/**
-	 * Returns the current position in the stream if it is a {@link FileStreamStruct}.
+	 * Returns the current position in the stream if it is a {@link FileStreamStructImpl}.
 	 *
 	 * @param filePosition
 	 * 		if not null, the current stream position will be set to this value

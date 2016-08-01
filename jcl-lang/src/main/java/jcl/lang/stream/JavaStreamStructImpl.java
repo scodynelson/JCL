@@ -19,13 +19,14 @@ import jcl.lang.LispStruct;
 import jcl.lang.condition.exception.StreamErrorException;
 import jcl.type.CharacterType;
 import jcl.type.StreamType;
-import org.apache.commons.lang3.SystemUtils;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
- * The {@link CharacterNativeStreamStruct} is the object representation of a character reading and writing system level Lisp
+ * The {@link JavaStreamStructImpl} is the object representation of a character reading and writing system level Lisp
  * stream.
  */
-public final class CharacterNativeStreamStruct extends AbstractNativeStreamStruct {
+public final class JavaStreamStructImpl extends AbstractNativeStreamStructImpl {
 
 	/**
 	 * The maximum size of internal buffer array to allocate in the {@link PushbackReader} {@link #inputStream}.
@@ -43,19 +44,14 @@ public final class CharacterNativeStreamStruct extends AbstractNativeStreamStruc
 	private final PrintWriter outputStream;
 
 	/**
-	 * The last character read from the {@link #inputStream}.
-	 */
-	private char lastChar;
-
-	/**
 	 * Public constructor.
 	 *
 	 * @param inputStream
-	 * 		the {@link java.io.InputStream} to create a CharacterStreamStruct from
+	 * 		the {@link InputStream} to create a CharacterStreamStruct from
 	 * @param outputStream
-	 * 		the {@link java.io.OutputStream} to create a CharacterStreamStruct from
+	 * 		the {@link OutputStream} to create a CharacterStreamStruct from
 	 */
-	private CharacterNativeStreamStruct(final InputStream inputStream, final OutputStream outputStream) {
+	private JavaStreamStructImpl(final InputStream inputStream, final OutputStream outputStream) {
 		this(false, inputStream, outputStream);
 	}
 
@@ -65,11 +61,11 @@ public final class CharacterNativeStreamStruct extends AbstractNativeStreamStruc
 	 * @param interactive
 	 * 		whether or not the struct created is 'interactive'
 	 * @param inputStream
-	 * 		the {@link java.io.InputStream} to create a CharacterStreamStruct from
+	 * 		the {@link InputStream} to create a CharacterStreamStruct from
 	 * @param outputStream
-	 * 		the {@link java.io.OutputStream} to create a CharacterStreamStruct from
+	 * 		the {@link OutputStream} to create a CharacterStreamStruct from
 	 */
-	private CharacterNativeStreamStruct(final boolean interactive, final InputStream inputStream, final OutputStream outputStream) {
+	private JavaStreamStructImpl(final boolean interactive, final InputStream inputStream, final OutputStream outputStream) {
 		super(StreamType.INSTANCE, interactive, CharacterType.INSTANCE);
 
 		final Charset defaultCharset = Charset.defaultCharset();
@@ -77,45 +73,21 @@ public final class CharacterNativeStreamStruct extends AbstractNativeStreamStruc
 		this.outputStream = new PrintWriter(new OutputStreamWriter(outputStream, defaultCharset));
 	}
 
-	public static CharacterNativeStreamStruct valueOf(final InputStream inputStream, final OutputStream outputStream) {
-		return new CharacterNativeStreamStruct(inputStream, outputStream);
+	public static JavaStreamStructImpl valueOf(final InputStream inputStream, final OutputStream outputStream) {
+		return new JavaStreamStructImpl(inputStream, outputStream);
 	}
 
-	public static CharacterNativeStreamStruct valueOf(final boolean interactive, final InputStream inputStream, final OutputStream outputStream) {
-		return new CharacterNativeStreamStruct(interactive, inputStream, outputStream);
+	public static JavaStreamStructImpl valueOf(final boolean interactive, final InputStream inputStream, final OutputStream outputStream) {
+		return new JavaStreamStructImpl(interactive, inputStream, outputStream);
 	}
 
 	@Override
 	public ReadPeekResult readChar(final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP) {
 		try {
 			final int readChar = inputStream.read();
-			final ReadPeekResult readPeekResult = StreamUtils.getReadPeekResult(this, readChar, eofErrorP, eofValue);
-			if ((readChar == '\r') && SystemUtils.IS_OS_WINDOWS) {
-				return handleWindowsEOLChar(eofErrorP, eofValue, recursiveP, readPeekResult);
-			}
-			if (readChar == '\n') {
-				lineNumber++;
-			}
-			return readPeekResult;
+			return StreamUtils.getReadPeekResult(this, readChar, eofErrorP, eofValue);
 		} catch (final IOException ioe) {
 			throw new StreamErrorException(StreamUtils.FAILED_TO_READ_CHAR, ioe, this);
-		}
-	}
-
-	private ReadPeekResult handleWindowsEOLChar(final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP,
-	                                            final ReadPeekResult readPeekResult) {
-		final ReadPeekResult tempReadPeekResult = readChar(eofErrorP, eofValue, recursiveP);
-		final Integer result = tempReadPeekResult.getResult();
-		if (result == null) {
-			return tempReadPeekResult;
-		}
-
-		if (result == '\n') {
-			lineNumber++;
-			return tempReadPeekResult;
-		} else {
-			unreadChar(result);
-			return readPeekResult;
 		}
 	}
 
@@ -217,9 +189,6 @@ public final class CharacterNativeStreamStruct extends AbstractNativeStreamStruc
 	@Override
 	public Integer unreadChar(final Integer codePoint) {
 		try {
-			if (codePoint == '\n') {
-				lineNumber--;
-			}
 			inputStream.unread(codePoint);
 			return codePoint;
 		} catch (final IOException ioe) {
@@ -229,27 +198,12 @@ public final class CharacterNativeStreamStruct extends AbstractNativeStreamStruc
 
 	@Override
 	public void clearInput() {
-		try {
-			ReadPeekResult result = new ReadPeekResult(0);
-			while (inputStream.ready() && !result.isEof()) {
-				result = readChar(false, null, false);
-			}
-		} catch (final IOException ioe) {
-			throw new StreamErrorException("Could not clear input for stream.", ioe, this);
-		}
+		// Do nothing.
 	}
 
 	@Override
 	public void writeChar(final int aChar) {
-		if ((aChar == '\n') && SystemUtils.IS_OS_WINDOWS && (lastChar != '\r')) {
-			outputStream.write('\r');
-			outputStream.write('\n');
-			lastChar = '\n';
-			outputStream.flush();
-		} else {
-			outputStream.write((char) aChar);
-			lastChar = (char) aChar;
-		}
+		outputStream.append((char) aChar);
 	}
 
 	@Override
@@ -259,10 +213,7 @@ public final class CharacterNativeStreamStruct extends AbstractNativeStreamStruc
 
 	@Override
 	public void writeString(final String outputString, final int start, final int end) {
-		final String substring = outputString.substring(start, end);
-		outputStream.write(substring);
-
-		lastChar = outputString.charAt(end - 1);
+		outputStream.append(outputString, start, end);
 	}
 
 	@Override
@@ -282,7 +233,7 @@ public final class CharacterNativeStreamStruct extends AbstractNativeStreamStruc
 
 	@Override
 	public boolean isStartOfLine() {
-		return lastChar == '\n';
+		return false;
 	}
 
 	@Override
@@ -304,5 +255,31 @@ public final class CharacterNativeStreamStruct extends AbstractNativeStreamStruc
 	@Override
 	public Long filePosition(final Long filePosition) {
 		return null;
+	}
+
+	@Override
+	public int hashCode() {
+		return new HashCodeBuilder().appendSuper(super.hashCode())
+		                            .append(inputStream)
+		                            .append(outputStream)
+		                            .toHashCode();
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		if (obj == null) {
+			return false;
+		}
+		if (obj == this) {
+			return true;
+		}
+		if (obj.getClass() != getClass()) {
+			return false;
+		}
+		final JavaStreamStructImpl rhs = (JavaStreamStructImpl) obj;
+		return new EqualsBuilder().appendSuper(super.equals(obj))
+		                          .append(inputStream, rhs.inputStream)
+		                          .append(outputStream, rhs.outputStream)
+		                          .isEquals();
 	}
 }

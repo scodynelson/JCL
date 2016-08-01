@@ -12,7 +12,7 @@ import jcl.lang.LispStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.number.IntegerStruct;
 import jcl.lang.readtable.Reader;
-import jcl.lang.stream.InputStream;
+import jcl.lang.stream.InputStreamStruct;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -48,7 +48,7 @@ public abstract class ReaderMacroFunction extends FunctionStruct {
 	@Override
 	public LispStruct apply(final LispStruct... lispStructs) {
 
-		final InputStream stream = (InputStream) lispStructs[0];
+		final InputStreamStruct stream = (InputStreamStruct) lispStructs[0];
 
 		final CharacterStruct macroCharacter = (CharacterStruct) lispStructs[1];
 		final int codePoint = macroCharacter.getCodePoint();

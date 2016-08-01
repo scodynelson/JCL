@@ -9,7 +9,7 @@ import jcl.lang.LispStruct;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
-import jcl.lang.stream.OutputStream;
+import jcl.lang.stream.OutputStreamStruct;
 import jcl.lang.stream.StreamVariables;
 import org.springframework.stereotype.Component;
 
@@ -29,11 +29,11 @@ public final class FreshLineFunction extends CommonLispBuiltInFunctionStruct {
 
 	@Override
 	public LispStruct apply(final Arguments arguments) {
-		final OutputStream outputStream = arguments.getOptionalArgument(OUTPUT_STREAM_ARGUMENT, OutputStream.class);
+		final OutputStreamStruct outputStreamStruct = arguments.getOptionalArgument(OUTPUT_STREAM_ARGUMENT, OutputStreamStruct.class);
 
-		final boolean shouldWriteNewline = !outputStream.isStartOfLine();
+		final boolean shouldWriteNewline = !outputStreamStruct.isStartOfLine();
 		if (shouldWriteNewline) {
-			outputStream.writeChar('\n');
+			outputStreamStruct.writeChar('\n');
 		}
 
 		return BooleanStruct.toLispBoolean(shouldWriteNewline);

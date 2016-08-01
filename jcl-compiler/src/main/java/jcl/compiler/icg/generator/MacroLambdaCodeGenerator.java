@@ -31,8 +31,8 @@ import jcl.compiler.struct.specialoperator.PrognStruct;
 import jcl.compiler.struct.specialoperator.lambda.MacroLambdaStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.PackageStruct;
+import jcl.lang.StringStruct;
 import jcl.lang.SymbolStruct;
-import jcl.lang.array.StringStructImpl;
 import jcl.lang.list.NILStruct;
 import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.ClassWriter;
@@ -493,7 +493,7 @@ final class MacroLambdaCodeGenerator implements CodeGenerator<MacroLambdaStruct>
 		mv.visitVarInsn(Opcodes.ALOAD, thisStore);
 
 		String documentation = "";
-		final StringStructImpl docString = input.getDocString();
+		final StringStruct docString = input.getDocString();
 		if (docString != null) {
 			documentation = docString.getAsJavaString();
 		}

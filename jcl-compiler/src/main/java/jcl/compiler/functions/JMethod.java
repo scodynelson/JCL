@@ -9,7 +9,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import jcl.lang.LispStruct;
-import jcl.lang.array.StringStructImpl;
+import jcl.lang.StringStruct;
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.function.ExtensionsBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
@@ -38,7 +38,7 @@ public final class JMethod extends ExtensionsBuiltInFunctionStruct {
 	@Override
 	public LispStruct apply(final Arguments arguments) {
 
-		final StringStructImpl methodName = arguments.getRequiredArgument(METHOD_NAME_ARGUMENT, StringStructImpl.class);
+		final StringStruct methodName = arguments.getRequiredArgument(METHOD_NAME_ARGUMENT, StringStruct.class);
 		final String methodNameString = methodName.getAsJavaString();
 
 		final JavaClassStruct javaClassStruct = arguments.getRequiredArgument(JAVA_CLASS_ARGUMENT, JavaClassStruct.class);

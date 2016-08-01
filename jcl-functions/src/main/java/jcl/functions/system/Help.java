@@ -13,7 +13,7 @@ import javax.help.HelpSetException;
 
 import jcl.compiler.classloaders.CompilerClassLoader;
 import jcl.lang.LispStruct;
-import jcl.lang.array.StringStructImpl;
+import jcl.lang.StringStruct;
 import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.function.ExtensionsBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
@@ -39,7 +39,7 @@ public final class Help extends ExtensionsBuiltInFunctionStruct {
 	public LispStruct apply(final Arguments arguments) {
 		final String searchString;
 		if (arguments.hasOptionalArgument(SEARCH_TERM_ARGUMENT)) {
-			final StringStructImpl searchTerm = arguments.getOptionalArgument(SEARCH_TERM_ARGUMENT, StringStructImpl.class);
+			final StringStruct searchTerm = arguments.getOptionalArgument(SEARCH_TERM_ARGUMENT, StringStruct.class);
 			searchString = searchTerm.getAsJavaString();
 		} else {
 			searchString = "index";

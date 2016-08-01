@@ -11,9 +11,9 @@ import jcl.lang.LispStruct;
 import jcl.lang.PackageStruct;
 import jcl.lang.PackageSymbolStruct;
 import jcl.lang.PackageVariables;
+import jcl.lang.StringStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.ValuesStruct;
-import jcl.lang.array.StringStructImpl;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.FunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
@@ -49,7 +49,7 @@ abstract class AbstractStringPackageFunction extends CommonLispBuiltInFunctionSt
 	 */
 	@Override
 	public LispStruct apply(final Arguments arguments) {
-		final StringStructImpl aString = arguments.getRequiredArgument("STRING", StringStructImpl.class);
+		final StringStruct aString = arguments.getRequiredArgument("STRING", StringStruct.class);
 		final PackageStruct aPackage = arguments.getOptionalArgument("PACKAGE", PackageStruct.class);
 		final PackageSymbolStruct packageSymbol = packageFunction().apply(aPackage, aString.getAsJavaString());
 		if (packageSymbol == null) {

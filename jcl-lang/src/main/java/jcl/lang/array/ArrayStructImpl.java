@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import jcl.lang.ArrayStruct;
 import jcl.lang.BuiltInClassStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.PrinterVariables;
@@ -15,8 +16,6 @@ import jcl.type.ArrayType;
 import jcl.type.LispType;
 import jcl.type.SimpleArrayType;
 import jcl.type.TType;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * The {@link ArrayStructImpl} is the object representation of a Lisp 'array' type.
@@ -24,7 +23,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  * @param <TYPE>
  * 		the type of the array contents
  */
-public class ArrayStructImpl<TYPE extends LispStruct> extends BuiltInClassStruct {
+public class ArrayStructImpl<TYPE extends LispStruct> extends BuiltInClassStruct implements ArrayStruct<TYPE> {
 
 	protected List<TYPE> contents;
 
@@ -164,7 +163,7 @@ public class ArrayStructImpl<TYPE extends LispStruct> extends BuiltInClassStruct
 		}
 	}
 
-	public static <T extends LispStruct> ArrayStructImpl<T> valueOf(final List<Integer> dimensions, final List<T> contents) {
+	public static <T extends LispStruct> ArrayStruct<T> valueOf(final List<Integer> dimensions, final List<T> contents) {
 		return new ArrayStructImpl<>(dimensions, contents);
 	}
 
@@ -173,6 +172,7 @@ public class ArrayStructImpl<TYPE extends LispStruct> extends BuiltInClassStruct
 	 *
 	 * @return array {@link #contents} property
 	 */
+	@Override
 	public List<TYPE> getContents() {
 		return contents;
 	}
@@ -183,6 +183,7 @@ public class ArrayStructImpl<TYPE extends LispStruct> extends BuiltInClassStruct
 	 * @param contents
 	 * 		new array {@link #contents} property value
 	 */
+	@Override
 	public void setContents(final List<TYPE> contents) {
 		this.contents = new ArrayList<>(contents);
 	}
@@ -192,6 +193,7 @@ public class ArrayStructImpl<TYPE extends LispStruct> extends BuiltInClassStruct
 	 *
 	 * @return array {@link #dimensions} property
 	 */
+	@Override
 	public List<Integer> getDimensions() {
 		return dimensions;
 	}
@@ -202,6 +204,7 @@ public class ArrayStructImpl<TYPE extends LispStruct> extends BuiltInClassStruct
 	 * @param dimensions
 	 * 		new array {@link #dimensions} property value
 	 */
+	@Override
 	public void setDimensions(final List<Integer> dimensions) {
 		this.dimensions = dimensions;
 		updateTotalSize();
@@ -212,6 +215,7 @@ public class ArrayStructImpl<TYPE extends LispStruct> extends BuiltInClassStruct
 	 *
 	 * @return array {@link #totalSize} property
 	 */
+	@Override
 	public int getTotalSize() {
 		return totalSize;
 	}
@@ -221,6 +225,7 @@ public class ArrayStructImpl<TYPE extends LispStruct> extends BuiltInClassStruct
 	 *
 	 * @return array {@link #rank} property
 	 */
+	@Override
 	public int getRank() {
 		return rank;
 	}
@@ -231,6 +236,7 @@ public class ArrayStructImpl<TYPE extends LispStruct> extends BuiltInClassStruct
 	 * @param rank
 	 * 		new array {@link #rank} property value
 	 */
+	@Override
 	public void setRank(final int rank) {
 		this.rank = rank;
 	}
@@ -240,6 +246,7 @@ public class ArrayStructImpl<TYPE extends LispStruct> extends BuiltInClassStruct
 	 *
 	 * @return array {@link #elementType} property
 	 */
+	@Override
 	public LispType getElementType() {
 		return elementType;
 	}
@@ -250,6 +257,7 @@ public class ArrayStructImpl<TYPE extends LispStruct> extends BuiltInClassStruct
 	 * @param elementType
 	 * 		new array {@link #elementType} property value
 	 */
+	@Override
 	public void setElementType(final LispType elementType) {
 		this.elementType = elementType;
 	}
@@ -259,6 +267,7 @@ public class ArrayStructImpl<TYPE extends LispStruct> extends BuiltInClassStruct
 	 *
 	 * @return array {@link #isAdjustable} property
 	 */
+	@Override
 	public boolean isAdjustable() {
 		return isAdjustable;
 	}
@@ -269,6 +278,7 @@ public class ArrayStructImpl<TYPE extends LispStruct> extends BuiltInClassStruct
 	 * @param isAdjustable
 	 * 		new array {@link #isAdjustable} property value
 	 */
+	@Override
 	public void setAdjustable(final boolean isAdjustable) {
 		this.isAdjustable = isAdjustable;
 	}
@@ -281,6 +291,7 @@ public class ArrayStructImpl<TYPE extends LispStruct> extends BuiltInClassStruct
 	 *
 	 * @return the retrieve element at the provided {@code index} location
 	 */
+	@Override
 	public TYPE getElementAt(final int index) {
 		return contents.get(index);
 	}
@@ -293,45 +304,12 @@ public class ArrayStructImpl<TYPE extends LispStruct> extends BuiltInClassStruct
 	 * @param newValue
 	 * 		the element to set at the index location
 	 */
+	@Override
 	public void setElementAt(final int index, final TYPE newValue) {
 		for (int i = contents.size(); i <= index; i++) {
 			contents.add(null);
 		}
 		contents.set(index, newValue);
-	}
-
-	@Override
-	public int hashCode() {
-		return new HashCodeBuilder().appendSuper(super.hashCode())
-		                            .append(contents)
-		                            .append(dimensions)
-		                            .append(totalSize)
-		                            .append(rank)
-		                            .append(elementType)
-		                            .append(isAdjustable)
-		                            .toHashCode();
-	}
-
-	@Override
-	public boolean equals(final Object obj) {
-		if (obj == null) {
-			return false;
-		}
-		if (obj == this) {
-			return true;
-		}
-		if (obj.getClass() != getClass()) {
-			return false;
-		}
-		final ArrayStructImpl<?> rhs = (ArrayStructImpl) obj;
-		return new EqualsBuilder().appendSuper(super.equals(obj))
-		                          .append(contents, rhs.contents)
-		                          .append(dimensions, rhs.dimensions)
-		                          .append(totalSize, rhs.totalSize)
-		                          .append(rank, rhs.rank)
-		                          .append(elementType, rhs.elementType)
-		                          .append(isAdjustable, rhs.isAdjustable)
-		                          .isEquals();
 	}
 
 	@Override

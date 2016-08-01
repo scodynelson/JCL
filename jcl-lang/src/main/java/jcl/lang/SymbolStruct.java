@@ -222,7 +222,7 @@ public class SymbolStruct extends BuiltInClassStruct {
 	}
 
 	@Override
-	public Supplier<StringStructImpl> asString() {
+	public Supplier<StringStruct> asString() {
 		return () -> StringStructImpl.valueOf(name);
 	}
 

@@ -8,7 +8,7 @@ import java.io.File;
 import java.nio.file.Path;
 
 import jcl.lang.LispStruct;
-import jcl.lang.array.StringStructImpl;
+import jcl.lang.StringStruct;
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.factory.LispStructFactory;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
@@ -45,8 +45,8 @@ public final class PathnameFunction extends CommonLispBuiltInFunctionStruct {
 		final String namestring;
 		if (pathnameDesignator instanceof PathnameStruct) {
 			pathname = (PathnameStruct) pathnameDesignator;
-		} else if (pathnameDesignator instanceof StringStructImpl) {
-			final StringStructImpl namestringStruct = (StringStructImpl) pathnameDesignator;
+		} else if (pathnameDesignator instanceof StringStruct) {
+			final StringStruct namestringStruct = (StringStruct) pathnameDesignator;
 			namestring = namestringStruct.getAsJavaString();
 			pathname = LispStructFactory.toPathname(namestring);
 		} else if (pathnameDesignator instanceof FileStreamStruct) {

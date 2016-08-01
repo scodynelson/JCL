@@ -11,8 +11,8 @@ import java.util.stream.Collectors;
 import jcl.lang.CharacterStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.PackageStruct;
+import jcl.lang.StringStruct;
 import jcl.lang.SymbolStruct;
-import jcl.lang.array.StringStructImpl;
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
@@ -61,8 +61,8 @@ public final class RenamePackageFunction extends CommonLispBuiltInFunctionStruct
 
 		final LispStruct packageDesignator = arguments.getRequiredArgument(NEW_NAME_ARGUMENT);
 		final String newName;
-		if (packageDesignator instanceof StringStructImpl) {
-			newName = ((StringStructImpl) packageDesignator).getAsJavaString();
+		if (packageDesignator instanceof StringStruct) {
+			newName = ((StringStruct) packageDesignator).getAsJavaString();
 		} else if (packageDesignator instanceof SymbolStruct) {
 			newName = ((SymbolStruct) packageDesignator).getName();
 		} else if (packageDesignator instanceof CharacterStruct) {
@@ -79,7 +79,7 @@ public final class RenamePackageFunction extends CommonLispBuiltInFunctionStruct
 					= newNicknamesList.stream()
 					                  .map(LispStruct::asString)
 					                  .map(Supplier::get)
-					                  .map(StringStructImpl::getAsJavaString)
+					                  .map(StringStruct::getAsJavaString)
 					                  .collect(Collectors.toList());
 			aPackage.renamePackage(newName, newNicknames);
 		} else {

@@ -165,6 +165,10 @@ public class TestGround {
 		return LispStructFactory.toPathname(uri);
 	}
 
+	private Object stringGen() {
+		return LispStructFactory.toString("string");
+	}
+
 	private Object bitVectorGen() {
 		final List<IntegerStruct> contents = new ArrayList<>();
 		final IntegerStruct content = IntegerStruct.valueOf(BigInteger.ZERO);

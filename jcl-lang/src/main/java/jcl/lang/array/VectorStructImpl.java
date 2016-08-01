@@ -5,15 +5,13 @@ import java.util.List;
 
 import jcl.lang.LispStruct;
 import jcl.lang.PrinterVariables;
+import jcl.lang.VectorStruct;
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
-import jcl.lang.sequence.SequenceStruct;
 import jcl.type.LispType;
 import jcl.type.SimpleVectorType;
 import jcl.type.TType;
 import jcl.type.VectorType;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * The {@link VectorStructImpl} is the object representation of a Lisp 'vector' type.
@@ -21,7 +19,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  * @param <TYPE>
  * 		the type of the vector contents
  */
-public class VectorStructImpl<TYPE extends LispStruct> extends ArrayStructImpl<TYPE> implements SequenceStruct {
+public class VectorStructImpl<TYPE extends LispStruct> extends ArrayStructImpl<TYPE> implements VectorStruct<TYPE> {
 
 	protected Integer fillPointer;
 
@@ -92,7 +90,7 @@ public class VectorStructImpl<TYPE extends LispStruct> extends ArrayStructImpl<T
 		return (isAdjustable || (fillPointer != null)) ? VectorType.INSTANCE : SimpleVectorType.INSTANCE;
 	}
 
-	public static <T extends LispStruct> VectorStructImpl<T> valueOf(final List<T> contents) {
+	public static <T extends LispStruct> VectorStruct<T> valueOf(final List<T> contents) {
 		return new VectorStructImpl<>(contents);
 	}
 
@@ -101,6 +99,7 @@ public class VectorStructImpl<TYPE extends LispStruct> extends ArrayStructImpl<T
 	 *
 	 * @return vector {@link #fillPointer} property
 	 */
+	@Override
 	public Integer getFillPointer() {
 		return fillPointer;
 	}
@@ -111,6 +110,7 @@ public class VectorStructImpl<TYPE extends LispStruct> extends ArrayStructImpl<T
 	 * @param fillPointer
 	 * 		new vector {@link #fillPointer} property value
 	 */
+	@Override
 	public void setFillPointer(final Integer fillPointer) {
 		this.fillPointer = fillPointer;
 	}
@@ -123,6 +123,7 @@ public class VectorStructImpl<TYPE extends LispStruct> extends ArrayStructImpl<T
 	 * @throws ErrorException
 	 * 		if the vector has no {@link #fillPointer} or the {@link #fillPointer} is 0
 	 */
+	@Override
 	public TYPE pop() {
 		if (fillPointer == null) {
 			throw new TypeErrorException("Cannot pop from a vector that has no fill-pointer.");
@@ -149,6 +150,7 @@ public class VectorStructImpl<TYPE extends LispStruct> extends ArrayStructImpl<T
 	 * @throws TypeErrorException
 	 * 		if the vector has no {@link #fillPointer}
 	 */
+	@Override
 	public int push(final TYPE element) {
 		if (fillPointer == null) {
 			throw new TypeErrorException("Cannot push into a vector that has no fill-pointer.");
@@ -177,35 +179,12 @@ public class VectorStructImpl<TYPE extends LispStruct> extends ArrayStructImpl<T
 	 * @throws TypeErrorException
 	 * 		if the vector has no {@link #fillPointer} or the vector is not adjustable
 	 */
+	@Override
 	public int pushExtend(final TYPE element, final int extensionAmount) {
 		if (!isAdjustable) {
 			throw new TypeErrorException("Vector is not an adjustable array.");
 		}
 		return push(element);
-	}
-
-	@Override
-	public int hashCode() {
-		return new HashCodeBuilder().appendSuper(super.hashCode())
-		                            .append(fillPointer)
-		                            .toHashCode();
-	}
-
-	@Override
-	public boolean equals(final Object obj) {
-		if (obj == null) {
-			return false;
-		}
-		if (obj == this) {
-			return true;
-		}
-		if (obj.getClass() != getClass()) {
-			return false;
-		}
-		final VectorStructImpl<?> rhs = (VectorStructImpl) obj;
-		return new EqualsBuilder().appendSuper(super.equals(obj))
-		                          .append(fillPointer, rhs.fillPointer)
-		                          .isEquals();
 	}
 
 	@Override

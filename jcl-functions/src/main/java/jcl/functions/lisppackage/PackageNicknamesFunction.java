@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 
 import jcl.lang.LispStruct;
 import jcl.lang.PackageStruct;
-import jcl.lang.array.StringStructImpl;
+import jcl.lang.StringStruct;
 import jcl.lang.factory.LispStructFactory;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
@@ -40,12 +40,12 @@ public final class PackageNicknamesFunction extends CommonLispBuiltInFunctionStr
 	/**
 	 * {@inheritDoc}
 	 * Application method for {@code package-nicknames} package function that returns the {@link
-	 * PackageStruct#nicknames} as a {@link ListStruct} of {@link StringStructImpl}s.
+	 * PackageStruct#nicknames} as a {@link ListStruct} of {@link StringStruct}s.
 	 *
 	 * @param lispStructs
 	 * 		the function parameters
 	 *
-	 * @return the {@link PackageStruct#nicknames} as a {@link ListStruct} of {@link StringStructImpl}s
+	 * @return the {@link PackageStruct#nicknames} as a {@link ListStruct} of {@link StringStruct}s
 	 */
 	@Override
 	public LispStruct apply(final Arguments arguments) {

@@ -13,6 +13,7 @@ import jcl.compiler.icg.IntermediateCodeGenerator;
 import jcl.compiler.icg.JavaMethodBuilder;
 import jcl.compiler.struct.specialoperator.QuoteStruct;
 import jcl.lang.LispStruct;
+import jcl.lang.VectorStruct;
 import jcl.lang.array.VectorStructImpl;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
@@ -21,35 +22,35 @@ import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 /**
- * Class to generate {@link VectorStructImpl} objects dynamically by utilizing the {@link VectorStructImpl#contents} of
- * the provided {@link VectorStructImpl} input value.
+ * Class to generate {@link VectorStruct} objects dynamically by utilizing the {@link VectorStruct#getContents()} of
+ * the provided {@link VectorStruct} input value.
  */
 @Component
 final class VectorCodeGenerator implements CodeGenerator<VectorStructImpl<LispStruct>> {
 
 	/**
-	 * {@link QuoteCodeGenerator} used for generating the {@link VectorStructImpl} contents as if they were quoted values.
+	 * {@link QuoteCodeGenerator} used for generating the {@link VectorStruct} contents as if they were quoted values.
 	 */
 	@Autowired
 	private IntermediateCodeGenerator codeGenerator;
 
 	/**
 	 * {@inheritDoc}
-	 * Generation method for {@link VectorStructImpl} objects, by performing the following operations:
+	 * Generation method for {@link VectorStruct} objects, by performing the following operations:
 	 * <ol>
-	 * <li>Building the {@link VectorStructImpl#contents}, ensuring that each content value is treated as being
+	 * <li>Building the {@link VectorStruct#getContents()}, ensuring that each content value is treated as being
 	 * 'quoted'</li>
-	 * <li>Constructing a new {@link VectorStructImpl} with the built content {@link List}</li>
+	 * <li>Constructing a new {@link VectorStruct} with the built content {@link List}</li>
 	 * </ol>
 	 *
 	 * @param input
-	 * 		the {@link VectorStructImpl} input value to generate code for
+	 * 		the {@link VectorStruct} input value to generate code for
 	 * @param generatorState
 	 * 		stateful object used to hold the current state of the code generation process
 	 */
 	@EventListener
 	public void onGeneratorEvent(final GeneratorEvent<VectorStructImpl<LispStruct>> event) {
-		final VectorStructImpl<LispStruct> input = event.getSource();
+		final VectorStruct<LispStruct> input = event.getSource();
 		final GeneratorState generatorState = event.getGeneratorState();
 
 		final JavaMethodBuilder methodBuilder = generatorState.getCurrentMethodBuilder();

@@ -8,10 +8,14 @@ import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
 
+import jcl.lang.ArrayStruct;
+import jcl.lang.BitVectorStruct;
 import jcl.lang.CharacterStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.PackageStruct;
+import jcl.lang.StringStruct;
 import jcl.lang.SymbolStruct;
+import jcl.lang.VectorStruct;
 import jcl.lang.array.ArrayStructImpl;
 import jcl.lang.array.BitVectorStructImpl;
 import jcl.lang.array.StringStructImpl;
@@ -53,7 +57,7 @@ public final class LispStructFactory {
 	 * Array
 	 */
 
-	public static <T extends LispStruct> ArrayStructImpl<T> toArray(final List<Integer> dimensions, final List<T> contents) {
+	public static <T extends LispStruct> ArrayStruct<T> toArray(final List<Integer> dimensions, final List<T> contents) {
 		return ArrayStructImpl.valueOf(dimensions, contents);
 	}
 
@@ -61,11 +65,11 @@ public final class LispStructFactory {
 	 * BitVector
 	 */
 
-	public static BitVectorStructImpl toBitVector(final String bitString) {
+	public static BitVectorStruct toBitVector(final String bitString) {
 		return BitVectorStructImpl.valueOf(bitString);
 	}
 
-	public static BitVectorStructImpl toBitVector(final List<IntegerStruct> contents) {
+	public static BitVectorStruct toBitVector(final List<IntegerStruct> contents) {
 		return BitVectorStructImpl.valueOfCont(contents);
 	}
 
@@ -512,7 +516,7 @@ public final class LispStructFactory {
 	 * String
 	 */
 
-	public static StringStructImpl toString(final String stringValue) {
+	public static StringStruct toString(final String stringValue) {
 		return StringStructImpl.valueOf(stringValue);
 	}
 
@@ -528,7 +532,7 @@ public final class LispStructFactory {
 	 * Vector
 	 */
 
-	public static <T extends LispStruct> VectorStructImpl<T> toVector(final List<T> contents) {
+	public static <T extends LispStruct> VectorStruct<T> toVector(final List<T> contents) {
 		return VectorStructImpl.valueOf(contents);
 	}
 }

@@ -5,9 +5,9 @@
 package jcl.functions.symbol;
 
 import jcl.lang.LispStruct;
+import jcl.lang.StringStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.SymbolVariables;
-import jcl.lang.array.StringStructImpl;
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
@@ -38,8 +38,8 @@ public final class GensymFunction extends CommonLispBuiltInFunctionStruct {
 //		validator.validateTypes(defaulting, functionName(), "Prefix", StringType.INSTANCE, IntegerType.INSTANCE);
 		if (defaulting != null) {
 
-			if (defaulting instanceof StringStructImpl) {
-				gensymPrefix = ((StringStructImpl) defaulting).getAsJavaString();
+			if (defaulting instanceof StringStruct) {
+				gensymPrefix = ((StringStruct) defaulting).getAsJavaString();
 				SymbolVariables.GENSYM_COUNTER.setValue(gensymPostfix.add(IntegerStruct.ONE));
 			} else if (defaulting instanceof IntegerStruct) {
 				gensymPostfix = (IntegerStruct) defaulting;

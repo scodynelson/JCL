@@ -5,7 +5,7 @@
 package jcl.functions.symbol;
 
 import jcl.lang.LispStruct;
-import jcl.lang.array.StringStructImpl;
+import jcl.lang.StringStruct;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
@@ -27,7 +27,7 @@ public final class MakeSymbolFunction extends CommonLispBuiltInFunctionStruct {
 
 	@Override
 	public LispStruct apply(final Arguments arguments) {
-		final StringStructImpl name = arguments.getRequiredArgument(NAME_ARGUMENT, StringStructImpl.class);
+		final StringStruct name = arguments.getRequiredArgument(NAME_ARGUMENT, StringStruct.class);
 		return name.asSymbol().get();
 	}
 }

@@ -14,8 +14,8 @@ import jcl.compiler.struct.specialoperator.declare.SpecialDeclarationStruct;
 import jcl.lang.DeclarationStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.SpecialOperatorStruct;
+import jcl.lang.StringStruct;
 import jcl.lang.SymbolStruct;
-import jcl.lang.array.StringStructImpl;
 import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.list.ListStruct;
@@ -96,10 +96,10 @@ public class DeclareExpander extends MacroFunctionExpander<DeclareStruct> {
 		}
 
 		final LispStruct javaClassName = declSpecBody.get(0);
-		if (!(javaClassName instanceof StringStructImpl)) {
+		if (!(javaClassName instanceof StringStruct)) {
 			throw new TypeErrorException("DECLARE: JAVA-CLASS-NAME must be a String. Got: " + javaClassName);
 		}
-		final StringStructImpl javaClassNameString = (StringStructImpl) javaClassName;
+		final StringStruct javaClassNameString = (StringStruct) javaClassName;
 		return new JavaClassNameDeclarationStruct(javaClassNameString.getAsJavaString());
 	}
 

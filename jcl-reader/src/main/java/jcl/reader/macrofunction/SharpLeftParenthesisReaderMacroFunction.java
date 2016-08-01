@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 
 import jcl.lang.LispStruct;
-import jcl.lang.array.VectorStructImpl;
+import jcl.lang.VectorStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
 import jcl.lang.factory.LispStructFactory;
 import jcl.lang.function.ReaderMacroFunction;
@@ -78,16 +78,16 @@ public class SharpLeftParenthesisReaderMacroFunction extends ReaderMacroFunction
 
 	/**
 	 * Handles the processing of the number argument when parsing the provided list of {@link LispStruct}s into a
-	 * {@link VectorStructImpl}.
+	 * {@link VectorStruct}.
 	 *
 	 * @param listToken
 	 * 		the vector contents
 	 * @param numberArgument
 	 * 		the number argument passed to be used as the vector length
 	 *
-	 * @return the properly created {@link VectorStructImpl} taking care of the proper vector length
+	 * @return the properly created {@link VectorStruct} taking care of the proper vector length
 	 */
-	private static VectorStructImpl<?> handleNumberArgument(final ListStruct listToken, final BigInteger numberArgument) {
+	private static VectorStruct<?> handleNumberArgument(final ListStruct listToken, final BigInteger numberArgument) {
 		final List<LispStruct> tokensAsJavaList = listToken.stream().collect(Collectors.toList());
 
 		final int numberOfTokens = tokensAsJavaList.size();

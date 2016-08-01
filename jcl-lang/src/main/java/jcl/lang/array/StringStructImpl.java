@@ -9,6 +9,7 @@ import com.ibm.icu.lang.UCharacter;
 import jcl.lang.CharacterStruct;
 import jcl.lang.PackageStruct;
 import jcl.lang.PrinterVariables;
+import jcl.lang.StringStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.character.CharacterStructImpl;
 import jcl.lang.condition.exception.SimpleErrorException;
@@ -22,13 +23,11 @@ import jcl.type.CharacterType;
 import jcl.type.SimpleBaseStringType;
 import jcl.type.SimpleStringType;
 import jcl.type.StringType;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * The {@link StringStructImpl} is the object representation of a Lisp 'string' type.
  */
-public final class StringStructImpl extends VectorStructImpl<CharacterStruct> {
+public final class StringStructImpl extends VectorStructImpl<CharacterStruct> implements StringStruct {
 
 	/**
 	 * Public constructor.
@@ -96,7 +95,7 @@ public final class StringStructImpl extends VectorStructImpl<CharacterStruct> {
 		return charList;
 	}
 
-	public static StringStructImpl valueOf(final String stringValue) {
+	public static StringStruct valueOf(final String stringValue) {
 		return new StringStructImpl(stringValue);
 	}
 
@@ -105,6 +104,7 @@ public final class StringStructImpl extends VectorStructImpl<CharacterStruct> {
 	 *
 	 * @return a {@link String} representation of the StringStruct
 	 */
+	@Override
 	public String getAsJavaString() {
 		final StringBuilder stringBuilder = new StringBuilder(contents.size());
 
@@ -168,7 +168,7 @@ public final class StringStructImpl extends VectorStructImpl<CharacterStruct> {
 	}
 
 	@Override
-	public Supplier<StringStructImpl> asString() {
+	public Supplier<StringStruct> asString() {
 		return () -> this;
 	}
 
@@ -179,27 +179,6 @@ public final class StringStructImpl extends VectorStructImpl<CharacterStruct> {
 		final List<CharacterStruct> asJavaList = contents;
 		final int size = asJavaList.size();
 		return (long) size;
-	}
-
-	@Override
-	public int hashCode() {
-		return new HashCodeBuilder().appendSuper(super.hashCode())
-		                            .toHashCode();
-	}
-
-	@Override
-	public boolean equals(final Object obj) {
-		if (obj == null) {
-			return false;
-		}
-		if (obj == this) {
-			return true;
-		}
-		if (obj.getClass() != getClass()) {
-			return false;
-		}
-		return new EqualsBuilder().appendSuper(super.equals(obj))
-		                          .isEquals();
 	}
 
 	@Override

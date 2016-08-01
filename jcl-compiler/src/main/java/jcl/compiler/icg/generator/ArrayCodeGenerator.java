@@ -12,6 +12,7 @@ import jcl.compiler.icg.GeneratorState;
 import jcl.compiler.icg.IntermediateCodeGenerator;
 import jcl.compiler.icg.JavaMethodBuilder;
 import jcl.compiler.struct.specialoperator.QuoteStruct;
+import jcl.lang.ArrayStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.array.ArrayStructImpl;
 import org.objectweb.asm.MethodVisitor;
@@ -21,37 +22,37 @@ import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 /**
- * Class to generate {@link ArrayStructImpl} objects dynamically by utilizing the {@link ArrayStructImpl#dimensions} and {@link
- * ArrayStructImpl#contents} of the provided {@link ArrayStructImpl} input value.
+ * Class to generate {@link ArrayStruct} objects dynamically by utilizing the {@link ArrayStruct#getDimensions()} and {@link
+ * ArrayStruct#getContents()} of the provided {@link ArrayStruct} input value.
  */
 @Component
 class ArrayCodeGenerator implements CodeGenerator<ArrayStructImpl<LispStruct>> {
 
 	/**
-	 * {@link QuoteCodeGenerator} used for generating the {@link ArrayStructImpl} contents as if they were quoted values.
+	 * {@link QuoteCodeGenerator} used for generating the {@link ArrayStruct} contents as if they were quoted values.
 	 */
 	@Autowired
 	private IntermediateCodeGenerator codeGenerator;
 
 	/**
 	 * {@inheritDoc}
-	 * Generation method for {@link ArrayStructImpl} objects, by performing the following operations:
+	 * Generation method for {@link ArrayStruct} objects, by performing the following operations:
 	 * <ol>
-	 * <li>Building the {@link ArrayStructImpl#dimensions} values</li>
-	 * <li>Building the {@link ArrayStructImpl#contents} values, ensuring that each content value is treated as being
+	 * <li>Building the {@link ArrayStruct#getDimensions()} values</li>
+	 * <li>Building the {@link ArrayStruct#getContents()} values, ensuring that each content value is treated as being
 	 * 'quoted'</li>
-	 * <li>Constructing a new {@link ArrayStructImpl} with the built dimension and content {@link List}s</li>
+	 * <li>Constructing a new {@link ArrayStruct} with the built dimension and content {@link List}s</li>
 	 * </ol>
 	 *
 	 * @param input
-	 * 		the {@link ArrayStructImpl} input value to generate code for
+	 * 		the {@link ArrayStruct} input value to generate code for
 	 * @param generatorState
 	 * 		stateful object used to hold the current state of the code generation process
 	 */
 	@Override
 	@EventListener
 	public void onGeneratorEvent(final GeneratorEvent<ArrayStructImpl<LispStruct>> event) {
-		final ArrayStructImpl<LispStruct> input = event.getSource();
+		final ArrayStruct<LispStruct> input = event.getSource();
 		final GeneratorState generatorState = event.getGeneratorState();
 
 		final JavaMethodBuilder methodBuilder = generatorState.getCurrentMethodBuilder();

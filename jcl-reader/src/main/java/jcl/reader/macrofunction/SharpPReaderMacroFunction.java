@@ -10,7 +10,7 @@ import javax.annotation.PostConstruct;
 
 import jcl.functions.pathname.PathnameFunction;
 import jcl.lang.LispStruct;
-import jcl.lang.array.StringStructImpl;
+import jcl.lang.StringStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
 import jcl.lang.function.ReaderMacroFunction;
 import jcl.lang.list.NILStruct;
@@ -54,8 +54,8 @@ public class SharpPReaderMacroFunction extends ReaderMacroFunction {
 			return NILStruct.INSTANCE;
 		}
 
-		if (token instanceof StringStructImpl) {
-			final StringStructImpl pathnameString = (StringStructImpl) token;
+		if (token instanceof StringStruct) {
+			final StringStruct pathnameString = (StringStruct) token;
 			return pathnameFunction.pathname(pathnameString);
 		} else {
 			throw new ReaderErrorException("The value " + token + " is not of expected type STRING in argument to #P.");

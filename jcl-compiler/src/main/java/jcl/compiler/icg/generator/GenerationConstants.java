@@ -195,6 +195,10 @@ interface GenerationConstants {
 
 	String LISP_STRUCT_FACTORY_TO_VECTOR_METHOD_DESC = CodeGenerators.getMethodDescription(LispStructFactory.class, LISP_STRUCT_FACTORY_TO_VECTOR_METHOD_NAME, List.class);
 
+	String LISP_STRUCT_FACTORY_TO_STRING_METHOD_NAME = "toString";
+
+	String LISP_STRUCT_FACTORY_TO_STRING_METHOD_DESC = CodeGenerators.getMethodDescription(LispStructFactory.class, LISP_STRUCT_FACTORY_TO_STRING_METHOD_NAME, String.class);
+
 	String SYMBOL_STRUCT_NAME = Type.getInternalName(SymbolStruct.class);
 
 	String SYMBOL_STRUCT_DESC = Type.getDescriptor(SymbolStruct.class);

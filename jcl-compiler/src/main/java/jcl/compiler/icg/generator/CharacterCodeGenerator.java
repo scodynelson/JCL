@@ -9,6 +9,7 @@ import jcl.compiler.icg.GeneratorEvent;
 import jcl.compiler.icg.GeneratorState;
 import jcl.compiler.icg.JavaMethodBuilder;
 import jcl.lang.CharacterStruct;
+import jcl.lang.character.CharacterStructImpl;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.springframework.context.event.EventListener;
@@ -19,7 +20,7 @@ import org.springframework.stereotype.Component;
  * the provided {@link CharacterStruct} input value.
  */
 @Component
-final class CharacterCodeGenerator implements CodeGenerator<CharacterStruct> {
+final class CharacterCodeGenerator implements CodeGenerator<CharacterStructImpl> {
 
 	/**
 	 * {@inheritDoc}
@@ -35,7 +36,7 @@ final class CharacterCodeGenerator implements CodeGenerator<CharacterStruct> {
 	 * 		stateful object used to hold the current state of the code generation process
 	 */
 	@EventListener
-	public void onGeneratorEvent(final GeneratorEvent<CharacterStruct> event) {
+	public void onGeneratorEvent(final GeneratorEvent<CharacterStructImpl> event) {
 		final CharacterStruct input = event.getSource();
 		final GeneratorState generatorState = event.getGeneratorState();
 

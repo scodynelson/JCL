@@ -8,8 +8,8 @@ import jcl.compiler.environment.Environment;
 import jcl.compiler.environment.binding.lambdalist.MacroLambdaList;
 import jcl.compiler.struct.CompilerSpecialOperatorStruct;
 import jcl.compiler.struct.specialoperator.PrognStruct;
+import jcl.lang.StringStruct;
 import jcl.lang.SymbolStruct;
-import jcl.lang.array.StringStructImpl;
 
 public class MacroLambdaStruct extends CompilerSpecialOperatorStruct {
 
@@ -19,14 +19,14 @@ public class MacroLambdaStruct extends CompilerSpecialOperatorStruct {
 
 	private final MacroLambdaList lambdaListBindings;
 
-	private final StringStructImpl docString;
+	private final StringStruct docString;
 
 	private final PrognStruct forms;
 
 	private final Environment lambdaEnvironment;
 
 	public MacroLambdaStruct(final String className, final SymbolStruct macroName, final MacroLambdaList lambdaListBindings,
-	                         final StringStructImpl docString, final PrognStruct forms, final Environment lambdaEnvironment) {
+	                         final StringStruct docString, final PrognStruct forms, final Environment lambdaEnvironment) {
 		this.className = className;
 		this.macroName = macroName;
 		this.lambdaListBindings = lambdaListBindings;
@@ -47,7 +47,7 @@ public class MacroLambdaStruct extends CompilerSpecialOperatorStruct {
 		return lambdaListBindings;
 	}
 
-	public StringStructImpl getDocString() {
+	public StringStruct getDocString() {
 		return docString;
 	}
 

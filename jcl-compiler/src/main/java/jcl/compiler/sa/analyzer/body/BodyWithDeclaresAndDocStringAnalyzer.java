@@ -6,7 +6,7 @@ import java.util.List;
 
 import jcl.lang.LispStruct;
 import jcl.lang.SpecialOperatorStruct;
-import jcl.lang.array.StringStructImpl;
+import jcl.lang.StringStruct;
 import jcl.lang.list.ListStruct;
 import org.springframework.stereotype.Component;
 
@@ -16,7 +16,7 @@ public class BodyWithDeclaresAndDocStringAnalyzer {
 	public BodyProcessingResult analyze(final List<LispStruct> input) {
 
 		final List<LispStruct> declares = new ArrayList<>();
-		StringStructImpl docString = null;
+		StringStruct docString = null;
 		final List<LispStruct> bodyForms = new ArrayList<>();
 
 		final Iterator<LispStruct> iterator = input.iterator();
@@ -40,8 +40,8 @@ public class BodyWithDeclaresAndDocStringAnalyzer {
 				}
 			}
 
-			if ((next instanceof StringStructImpl) && iterator.hasNext()) {
-				docString = (StringStructImpl) next; // No need to analyze this
+			if ((next instanceof StringStruct) && iterator.hasNext()) {
+				docString = (StringStruct) next; // No need to analyze this
 				next = iterator.next();
 			}
 

@@ -11,6 +11,7 @@ import jcl.compiler.icg.GeneratorEvent;
 import jcl.compiler.icg.GeneratorState;
 import jcl.compiler.icg.IntermediateCodeGenerator;
 import jcl.compiler.icg.JavaMethodBuilder;
+import jcl.lang.BitVectorStruct;
 import jcl.lang.array.BitVectorStructImpl;
 import jcl.lang.number.IntegerStruct;
 import org.objectweb.asm.MethodVisitor;
@@ -20,14 +21,14 @@ import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 /**
- * Class to generate {@link BitVectorStructImpl} objects dynamically by utilizing the {@link BitVectorStructImpl#contents} of
- * the provided {@link BitVectorStructImpl} input value.
+ * Class to generate {@link BitVectorStruct} objects dynamically by utilizing the {@link BitVectorStruct#getContents()} of
+ * the provided {@link BitVectorStruct} input value.
  */
 @Component
 final class BitVectorCodeGenerator implements CodeGenerator<BitVectorStructImpl> {
 
 	/**
-	 * {@link IntermediateCodeGenerator} used for generating the {@link BitVectorStructImpl} {@link IntegerStruct} content
+	 * {@link IntermediateCodeGenerator} used for generating the {@link BitVectorStruct} {@link IntegerStruct} content
 	 * values.
 	 */
 	@Autowired
@@ -35,21 +36,21 @@ final class BitVectorCodeGenerator implements CodeGenerator<BitVectorStructImpl>
 
 	/**
 	 * {@inheritDoc}
-	 * Generation method for {@link BitVectorStructImpl} objects, by performing the following operations:
+	 * Generation method for {@link BitVectorStruct} objects, by performing the following operations:
 	 * <ol>
-	 * <li>Building the {@link BitVectorStructImpl#contents}, ensuring that each content {@link IntegerStruct} value is
+	 * <li>Building the {@link BitVectorStruct#getContents()}, ensuring that each content {@link IntegerStruct} value is
 	 * generated properly</li>
-	 * <li>Constructing a new {@link BitVectorStructImpl} with the built content {@link List}</li>
+	 * <li>Constructing a new {@link BitVectorStruct} with the built content {@link List}</li>
 	 * </ol>
 	 *
 	 * @param input
-	 * 		the {@link BitVectorStructImpl} input value to generate code for
+	 * 		the {@link BitVectorStruct} input value to generate code for
 	 * @param generatorState
 	 * 		stateful object used to hold the current state of the code generation process
 	 */
 	@EventListener
 	public void onGeneratorEvent(final GeneratorEvent<BitVectorStructImpl> event) {
-		final BitVectorStructImpl input = event.getSource();
+		final BitVectorStruct input = event.getSource();
 		final GeneratorState generatorState = event.getGeneratorState();
 
 		final JavaMethodBuilder methodBuilder = generatorState.getCurrentMethodBuilder();

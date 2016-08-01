@@ -5,7 +5,7 @@
 package jcl.functions.java;
 
 import jcl.lang.LispStruct;
-import jcl.lang.array.StringStructImpl;
+import jcl.lang.StringStruct;
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.function.ExtensionsBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
@@ -29,7 +29,7 @@ public final class JClass extends ExtensionsBuiltInFunctionStruct {
 
 	@Override
 	public LispStruct apply(final Arguments arguments) {
-		final StringStructImpl className = arguments.getRequiredArgument(CLASS_NAME_ARGUMENT, StringStructImpl.class);
+		final StringStruct className = arguments.getRequiredArgument(CLASS_NAME_ARGUMENT, StringStruct.class);
 		return jClass(className.getAsJavaString());
 	}
 

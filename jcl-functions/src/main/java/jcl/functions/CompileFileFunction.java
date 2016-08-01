@@ -33,9 +33,9 @@ import jcl.lang.LispStruct;
 import jcl.lang.PackageStruct;
 import jcl.lang.PackageVariables;
 import jcl.lang.SpecialOperatorStruct;
+import jcl.lang.StringStruct;
 import jcl.lang.TStruct;
 import jcl.lang.ValuesStruct;
-import jcl.lang.array.StringStructImpl;
 import jcl.lang.condition.exception.FileErrorException;
 import jcl.lang.factory.LispStructFactory;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
@@ -229,7 +229,7 @@ public final class CompileFileFunction extends CommonLispBuiltInFunctionStruct {
 	}
 
 	private static ListStruct buildFileLambda(final List<LispStruct> forms, final String inputClassName) {
-		final StringStructImpl newJavaClassName = LispStructFactory.toString("jcl." + inputClassName);
+		final StringStruct newJavaClassName = LispStructFactory.toString("jcl." + inputClassName);
 		final ListStruct javaClassNameDeclaration = LispStructFactory.toProperList(DeclarationStruct.JAVA_CLASS_NAME, newJavaClassName);
 		final ListStruct declareBlock = LispStructFactory.toProperList(SpecialOperatorStruct.DECLARE, javaClassNameDeclaration);
 

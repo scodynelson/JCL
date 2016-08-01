@@ -4,19 +4,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import jcl.lang.BitVectorStruct;
 import jcl.lang.PrinterVariables;
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.number.IntegerStruct;
 import jcl.type.BitType;
 import jcl.type.BitVectorType;
 import jcl.type.SimpleBitVectorType;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * The {@link BitVectorStructImpl} is the object representation of a Lisp 'bit-vector' type.
  */
-public final class BitVectorStructImpl extends VectorStructImpl<IntegerStruct> {
+public final class BitVectorStructImpl extends VectorStructImpl<IntegerStruct> implements BitVectorStruct {
 
 	private static final Pattern BIT_PATTERN = Pattern.compile("[0|1]+");
 
@@ -94,33 +93,12 @@ public final class BitVectorStructImpl extends VectorStructImpl<IntegerStruct> {
 		return bitList;
 	}
 
-	public static BitVectorStructImpl valueOf(final String bitString) {
+	public static BitVectorStruct valueOf(final String bitString) {
 		return new BitVectorStructImpl(bitString);
 	}
 
-	public static BitVectorStructImpl valueOfCont(final List<IntegerStruct> contents) {
+	public static BitVectorStruct valueOfCont(final List<IntegerStruct> contents) {
 		return new BitVectorStructImpl(contents);
-	}
-
-	@Override
-	public int hashCode() {
-		return new HashCodeBuilder().appendSuper(super.hashCode())
-		                            .toHashCode();
-	}
-
-	@Override
-	public boolean equals(final Object obj) {
-		if (obj == null) {
-			return false;
-		}
-		if (obj == this) {
-			return true;
-		}
-		if (obj.getClass() != getClass()) {
-			return false;
-		}
-		return new EqualsBuilder().appendSuper(super.equals(obj))
-		                          .isEquals();
 	}
 
 	@Override

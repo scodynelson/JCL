@@ -5,7 +5,7 @@
 package jcl.functions.stream;
 
 import jcl.lang.LispStruct;
-import jcl.lang.array.StringStructImpl;
+import jcl.lang.StringStruct;
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
@@ -35,7 +35,7 @@ public final class MakeStringInputStreamFunction extends CommonLispBuiltInFuncti
 
 	@Override
 	public LispStruct apply(final Arguments arguments) {
-		final StringStructImpl aString = arguments.getRequiredArgument(STRING_ARGUMENT, StringStructImpl.class);
+		final StringStruct aString = arguments.getRequiredArgument(STRING_ARGUMENT, StringStruct.class);
 		final String javaString = aString.getAsJavaString();
 
 		int start = 0;

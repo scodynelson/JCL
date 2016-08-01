@@ -2,7 +2,7 @@
  * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
  */
 
-package jcl.lang.stream;
+package jcl.lang.internal.stream;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -13,6 +13,8 @@ import java.io.OutputStream;
 import jcl.lang.BinaryNativeStreamStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.condition.exception.StreamErrorException;
+import jcl.lang.stream.PeekType;
+import jcl.lang.stream.ReadPeekResult;
 import jcl.type.StreamType;
 import jcl.type.UnsignedByteType;
 

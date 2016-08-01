@@ -2,11 +2,13 @@
  * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
  */
 
-package jcl.lang.stream;
+package jcl.lang.internal.stream;
 
 import jcl.lang.IOStreamStruct;
 import jcl.lang.condition.exception.EndOfFileException;
 import jcl.lang.condition.exception.StreamErrorException;
+import jcl.lang.stream.PeekType;
+import jcl.lang.stream.ReadPeekResult;
 import jcl.type.LispType;
 import jcl.type.StreamType;
 import org.slf4j.Logger;

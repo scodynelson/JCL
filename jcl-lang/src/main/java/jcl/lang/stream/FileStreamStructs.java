@@ -6,6 +6,7 @@ package jcl.lang.stream;
 
 import java.nio.file.Path;
 
+import jcl.lang.internal.stream.FileStreamStructImpl;
 import jcl.lang.pathname.PathnameStruct;
 import jcl.type.LispType;
 

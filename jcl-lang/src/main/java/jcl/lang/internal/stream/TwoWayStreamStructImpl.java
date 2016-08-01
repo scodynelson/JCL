@@ -2,12 +2,14 @@
  * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
  */
 
-package jcl.lang.stream;
+package jcl.lang.internal.stream;
 
 import jcl.lang.InputStreamStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.OutputStreamStruct;
 import jcl.lang.TwoWayStreamStruct;
+import jcl.lang.stream.PeekType;
+import jcl.lang.stream.ReadPeekResult;
 import jcl.type.TwoWayStreamType;
 
 /**

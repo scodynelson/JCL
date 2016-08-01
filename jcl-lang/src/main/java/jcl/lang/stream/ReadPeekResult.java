@@ -6,8 +6,6 @@ package jcl.lang.stream;
 
 import jcl.lang.InputStreamStruct;
 import jcl.lang.LispStruct;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Result object from a 'read' or 'peek' operation performed via 'read-char', 'peek-char', or 'read-byte' from an
@@ -38,7 +36,7 @@ public class ReadPeekResult {
 	 * @param result
 	 * 		the {@link Integer} result of the read or peek operation.
 	 */
-	ReadPeekResult(final Integer result) {
+	public ReadPeekResult(final Integer result) {
 		this.result = result;
 		eofValue = null;
 		eof = false;
@@ -52,7 +50,7 @@ public class ReadPeekResult {
 	 * 		the value to return if an End-of-File was hit during the read or peek operation and an error was not to be
 	 * 		thrown
 	 */
-	ReadPeekResult(final LispStruct eofValue) {
+	public ReadPeekResult(final LispStruct eofValue) {
 		result = null;
 		this.eofValue = eofValue;
 		eof = true;
@@ -85,31 +83,5 @@ public class ReadPeekResult {
 	 */
 	public boolean isEof() {
 		return eof || (result == null);
-	}
-
-	@Override
-	public int hashCode() {
-		return new HashCodeBuilder().append(result)
-		                            .append(eofValue)
-		                            .append(eof)
-		                            .toHashCode();
-	}
-
-	@Override
-	public boolean equals(final Object obj) {
-		if (obj == null) {
-			return false;
-		}
-		if (obj == this) {
-			return true;
-		}
-		if (obj.getClass() != getClass()) {
-			return false;
-		}
-		final ReadPeekResult rhs = (ReadPeekResult) obj;
-		return new EqualsBuilder().append(result, rhs.result)
-		                          .append(eofValue, rhs.eofValue)
-		                          .append(eof, rhs.eof)
-		                          .isEquals();
 	}
 }

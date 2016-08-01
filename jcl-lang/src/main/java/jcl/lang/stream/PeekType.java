@@ -52,7 +52,7 @@ public final class PeekType {
 	 *
 	 * @return the {@link #type} value
 	 */
-	PeekTypeType getType() {
+	public PeekTypeType getType() {
 		return type;
 	}
 
@@ -61,7 +61,7 @@ public final class PeekType {
 	 *
 	 * @return the {@link #codePoint} value
 	 */
-	Integer getCodePoint() {
+	public Integer getCodePoint() {
 		return codePoint;
 	}
 
@@ -80,7 +80,7 @@ public final class PeekType {
 	/**
 	 * Package private enumeration to encapsulate the specific 'peek' type.
 	 */
-	enum PeekTypeType {
+	public enum PeekTypeType {
 
 		/**
 		 * T peek type.

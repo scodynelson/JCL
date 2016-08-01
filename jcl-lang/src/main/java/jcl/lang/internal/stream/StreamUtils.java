@@ -2,11 +2,12 @@
  * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
  */
 
-package jcl.lang.stream;
+package jcl.lang.internal.stream;
 
 import jcl.lang.LispStruct;
 import jcl.lang.StreamStruct;
 import jcl.lang.condition.exception.EndOfFileException;
+import jcl.lang.stream.ReadPeekResult;
 
 /**
  * A Utility class for stream structures.

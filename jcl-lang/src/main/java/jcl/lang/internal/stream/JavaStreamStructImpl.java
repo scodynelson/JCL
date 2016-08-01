@@ -2,56 +2,58 @@
  * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
  */
 
-package jcl.lang.stream;
+package jcl.lang.internal.stream;
 
-import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.URL;
-import java.net.URLConnection;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.io.PushbackReader;
+import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.List;
 
+import jcl.lang.JavaStreamStruct;
 import jcl.lang.LispStruct;
-import jcl.lang.URLStreamStruct;
-import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.condition.exception.StreamErrorException;
+import jcl.lang.stream.PeekType;
+import jcl.lang.stream.ReadPeekResult;
 import jcl.type.CharacterType;
-import jcl.type.FileStreamType;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import jcl.type.StreamType;
 
 /**
- * The {@link URLStreamStructImpl} is the object representation of a Lisp 'url-stream' type.
+ * The {@link JavaStreamStructImpl} is the object representation of a character reading and writing system level Lisp
+ * stream.
  */
-public final class URLStreamStructImpl extends AbstractNativeStreamStructImpl implements URLStreamStruct {
+public final class JavaStreamStructImpl extends AbstractNativeStreamStructImpl implements JavaStreamStruct {
 
 	/**
-	 * The logger for this class.
+	 * The maximum size of internal buffer array to allocate in the {@link PushbackReader} {@link #inputStream}.
 	 */
-	private static final Logger LOGGER = LoggerFactory.getLogger(URLStreamStructImpl.class);
+	private static final int PUSHBACK_BUFFER_SIZE = Short.MAX_VALUE;
 
 	/**
-	 * The {@link URL} of the http resource that the {@link #urlConnection} interacts with.
+	 * The {@link PushbackReader} for reading input.
 	 */
-	private final URL url;
+	private final PushbackReader inputStream;
 
 	/**
-	 * The {@link BufferedReader} for reading input.
+	 * The {@link PrintWriter} for writing output.
 	 */
-	private final BufferedReader inputStream;
-
-	/**
-	 * The {@link URLConnection} to read from and write to.
-	 */
-	private final URLConnection urlConnection;
+	private final PrintWriter outputStream;
 
 	/**
 	 * Public constructor.
 	 *
-	 * @param url
-	 * 		the {@link URL} to create a URLStreamStruct from
+	 * @param inputStream
+	 * 		the {@link InputStream} to create a CharacterStreamStruct from
+	 * @param outputStream
+	 * 		the {@link OutputStream} to create a CharacterStreamStruct from
 	 */
-	private URLStreamStructImpl(final URL url) {
-		this(false, url);
+	private JavaStreamStructImpl(final InputStream inputStream, final OutputStream outputStream) {
+		this(false, inputStream, outputStream);
 	}
 
 	/**
@@ -59,39 +61,30 @@ public final class URLStreamStructImpl extends AbstractNativeStreamStructImpl im
 	 *
 	 * @param interactive
 	 * 		whether or not the struct created is 'interactive'
-	 * @param url
-	 * 		the {@link URL} to create a URLStreamStruct from
+	 * @param inputStream
+	 * 		the {@link InputStream} to create a CharacterStreamStruct from
+	 * @param outputStream
+	 * 		the {@link OutputStream} to create a CharacterStreamStruct from
 	 */
-	private URLStreamStructImpl(final boolean interactive, final URL url) {
-		// TODO: Character Type Stream???
-		super(FileStreamType.INSTANCE, interactive, CharacterType.INSTANCE);
+	private JavaStreamStructImpl(final boolean interactive, final InputStream inputStream, final OutputStream outputStream) {
+		super(StreamType.INSTANCE, interactive, CharacterType.INSTANCE);
 
-		this.url = url;
-		try {
-			urlConnection = url.openConnection();
-			inputStream = new BufferedReader(new InputStreamReader(url.openStream()));
-		} catch (final IOException ioe) {
-			throw new ErrorException("Failed to open provided url.", ioe);
-		}
+		final Charset defaultCharset = Charset.defaultCharset();
+		this.inputStream = new PushbackReader(new InputStreamReader(inputStream, defaultCharset), PUSHBACK_BUFFER_SIZE);
+		this.outputStream = new PrintWriter(new OutputStreamWriter(outputStream, defaultCharset));
 	}
 
-	public static URLStreamStructImpl valueOf(final URL url) {
-		return new URLStreamStructImpl(url);
+	public static JavaStreamStructImpl valueOf(final InputStream inputStream, final OutputStream outputStream) {
+		return new JavaStreamStructImpl(inputStream, outputStream);
 	}
 
-	public static URLStreamStructImpl valueOf(final boolean interactive, final URL url) {
-		return new URLStreamStructImpl(interactive, url);
-	}
-
-	@Override
-	public URL getUrl() {
-		return url;
+	public static JavaStreamStructImpl valueOf(final boolean interactive, final InputStream inputStream, final OutputStream outputStream) {
+		return new JavaStreamStructImpl(interactive, inputStream, outputStream);
 	}
 
 	@Override
 	public ReadPeekResult readChar(final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP) {
 		try {
-			inputStream.mark(1);
 			final int readChar = inputStream.read();
 			return StreamUtils.getReadPeekResult(this, readChar, eofErrorP, eofValue);
 		} catch (final IOException ioe) {
@@ -110,13 +103,13 @@ public final class URLStreamStructImpl extends AbstractNativeStreamStructImpl im
 		final int nextChar;
 		switch (peekType.getType()) {
 			case NIL:
-				nextChar = nilPeekCharUSS();
+				nextChar = nilPeekCharCSS();
 				break;
 			case T:
-				nextChar = tPeekCharUSS();
+				nextChar = tPeekCharCSS();
 				break;
 			case CHARACTER:
-				nextChar = characterPeekCharUSS(peekType.getCodePoint());
+				nextChar = characterPeekCharCSS(peekType.getCodePoint());
 				break;
 			default:
 				nextChar = -1;
@@ -131,12 +124,10 @@ public final class URLStreamStructImpl extends AbstractNativeStreamStructImpl im
 	 *
 	 * @return the character peeked from the stream
 	 */
-	private int nilPeekCharUSS() {
+	private int nilPeekCharCSS() {
 		try {
-			inputStream.mark(1);
-
 			final int nextChar = inputStream.read();
-			inputStream.reset();
+			inputStream.unread(nextChar);
 			return nextChar;
 		} catch (final IOException ioe) {
 			throw new StreamErrorException(StreamUtils.FAILED_TO_PEEK_CHAR, ioe, this);
@@ -148,16 +139,20 @@ public final class URLStreamStructImpl extends AbstractNativeStreamStructImpl im
 	 *
 	 * @return the character peeked from the stream
 	 */
-	private int tPeekCharUSS() {
+	private int tPeekCharCSS() {
 		try {
-			inputStream.mark(1);
+			final List<Integer> charsToUnread = new ArrayList<>();
 
 			// Initialize to whitespace, since we are attempting to skip it anyways
 			int nextChar = ' ';
 			while (Character.isWhitespace(nextChar)) {
 				nextChar = inputStream.read();
+				charsToUnread.add(nextChar);
 			}
-			inputStream.reset();
+			for (final Integer charToUnread : charsToUnread) {
+				// This will insert back in the correct order.
+				inputStream.unread(charToUnread);
+			}
 			return nextChar;
 		} catch (final IOException ioe) {
 			throw new StreamErrorException(StreamUtils.FAILED_TO_PEEK_CHAR, ioe, this);
@@ -172,16 +167,20 @@ public final class URLStreamStructImpl extends AbstractNativeStreamStructImpl im
 	 *
 	 * @return the character peeked from the stream
 	 */
-	private int characterPeekCharUSS(final Integer codePoint) {
+	private int characterPeekCharCSS(final Integer codePoint) {
 		try {
-			inputStream.mark(1);
+			final List<Integer> charsToUnread = new ArrayList<>();
 
 			// Initialize to -1 value, since this is essentially EOF
 			int nextChar = -1;
 			while (nextChar != codePoint) {
 				nextChar = inputStream.read();
+				charsToUnread.add(nextChar);
 			}
-			inputStream.reset();
+			for (final Integer charToUnread : charsToUnread) {
+				// This will insert back in the correct order.
+				inputStream.unread(charToUnread);
+			}
 			return nextChar;
 		} catch (final IOException ioe) {
 			throw new StreamErrorException(StreamUtils.FAILED_TO_PEEK_CHAR, ioe, this);
@@ -191,7 +190,7 @@ public final class URLStreamStructImpl extends AbstractNativeStreamStructImpl im
 	@Override
 	public Integer unreadChar(final Integer codePoint) {
 		try {
-			inputStream.reset();
+			inputStream.unread(codePoint);
 			return codePoint;
 		} catch (final IOException ioe) {
 			throw new StreamErrorException(StreamUtils.FAILED_TO_UNREAD_CHAR, ioe, this);
@@ -200,23 +199,12 @@ public final class URLStreamStructImpl extends AbstractNativeStreamStructImpl im
 
 	@Override
 	public void clearInput() {
-		try {
-			inputStream.mark(0);
-			inputStream.reset();
-		} catch (final IOException ioe) {
-			if (LOGGER.isWarnEnabled()) {
-				LOGGER.warn("IO exception occurred.", ioe);
-			}
-		}
+		// Do nothing.
 	}
 
 	@Override
 	public void writeChar(final int aChar) {
-//		try {
-		// TODO
-//		} catch (final IOException ioe) {
-//			throw new StreamErrorException(StreamUtils.FAILED_TO_WRITE_CHAR, ioe);
-//		}
+		outputStream.append((char) aChar);
 	}
 
 	@Override
@@ -226,27 +214,22 @@ public final class URLStreamStructImpl extends AbstractNativeStreamStructImpl im
 
 	@Override
 	public void writeString(final String outputString, final int start, final int end) {
-//		try {
-		final String subString = outputString.substring(start, end);
-		// TODO
-//		} catch (final IOException ioe) {
-//			throw new StreamErrorException(StreamUtils.FAILED_TO_WRITE_STRING, ioe);
-//		}
+		outputStream.append(outputString, start, end);
 	}
 
 	@Override
 	public void clearOutput() {
-		// TODO
+		outputStream.flush();
 	}
 
 	@Override
 	public void finishOutput() {
-		// TODO
+		outputStream.flush();
 	}
 
 	@Override
 	public void forceOutput() {
-		// TODO
+		outputStream.flush();
 	}
 
 	@Override
@@ -258,6 +241,7 @@ public final class URLStreamStructImpl extends AbstractNativeStreamStructImpl im
 	public boolean close() {
 		try {
 			inputStream.close();
+			outputStream.close();
 		} catch (final IOException ioe) {
 			throw new StreamErrorException("Could not close stream.", ioe, this);
 		}

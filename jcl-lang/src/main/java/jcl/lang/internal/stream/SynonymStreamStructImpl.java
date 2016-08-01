@@ -2,7 +2,7 @@
  * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
  */
 
-package jcl.lang.stream;
+package jcl.lang.internal.stream;
 
 import jcl.lang.InputStreamStruct;
 import jcl.lang.LispStruct;
@@ -12,6 +12,8 @@ import jcl.lang.SynonymStreamStruct;
 import jcl.lang.VariableStruct;
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.condition.exception.StreamErrorException;
+import jcl.lang.stream.PeekType;
+import jcl.lang.stream.ReadPeekResult;
 import jcl.type.LispType;
 import jcl.type.SynonymStreamType;
 

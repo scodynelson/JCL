@@ -1,7 +1,5 @@
 package jcl.lang;
 
-import jcl.lang.array.ArrayConstants;
-import jcl.lang.character.CharacterConstants;
 import jcl.lang.number.NumberConstants;
 import jcl.lang.number.NumberVariables;
 import jcl.lang.pathname.PathnameVariables;

@@ -2,15 +2,13 @@
  * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
  */
 
-package jcl.lang.character;
+package jcl.lang;
 
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import jcl.lang.CharacterStruct;
-import jcl.lang.ConstantStruct;
-import jcl.lang.GlobalPackageStruct;
+import jcl.lang.internal.CharacterStructImpl;
 import jcl.lang.number.IntegerStruct;
 import jcl.util.CodePointConstants;
 

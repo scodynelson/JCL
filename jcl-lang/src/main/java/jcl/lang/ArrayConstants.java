@@ -2,12 +2,10 @@
  * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
  */
 
-package jcl.lang.array;
+package jcl.lang;
 
 import java.math.BigInteger;
 
-import jcl.lang.ConstantStruct;
-import jcl.lang.GlobalPackageStruct;
 import jcl.lang.number.IntegerStruct;
 
 public interface ArrayConstants {

@@ -2,7 +2,7 @@
  * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
  */
 
-package jcl.lang.hashtable;
+package jcl.lang.internal;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;

@@ -1,4 +1,4 @@
-package jcl.lang.array;
+package jcl.lang.internal;
 
 import java.util.ArrayList;
 import java.util.List;

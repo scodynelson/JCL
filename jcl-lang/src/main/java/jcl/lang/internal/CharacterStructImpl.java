@@ -2,7 +2,7 @@
  * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
  */
 
-package jcl.lang.character;
+package jcl.lang.internal;
 
 import java.math.BigInteger;
 import java.util.Map;
@@ -14,7 +14,7 @@ import jcl.lang.LispStruct;
 import jcl.lang.PackageStruct;
 import jcl.lang.PrinterVariables;
 import jcl.lang.StringStruct;
-import jcl.lang.array.StringStructImpl;
+import jcl.lang.CharacterConstants;
 import jcl.lang.list.NILStruct;
 import jcl.lang.number.IntegerStruct;
 import jcl.type.BaseCharType;

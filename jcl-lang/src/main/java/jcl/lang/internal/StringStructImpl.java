@@ -1,4 +1,4 @@
-package jcl.lang.array;
+package jcl.lang.internal;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +11,6 @@ import jcl.lang.PackageStruct;
 import jcl.lang.PrinterVariables;
 import jcl.lang.StringStruct;
 import jcl.lang.SymbolStruct;
-import jcl.lang.character.CharacterStructImpl;
 import jcl.lang.condition.exception.SimpleErrorException;
 import jcl.lang.pathname.PathnameStruct;
 import jcl.lang.readtable.ReaderVariables;

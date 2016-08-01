@@ -4,8 +4,8 @@ import java.util.Stack;
 import java.util.function.Supplier;
 
 import com.ibm.icu.lang.UCharacter;
-import jcl.lang.array.StringStructImpl;
-import jcl.lang.character.CharacterStructImpl;
+import jcl.lang.internal.StringStructImpl;
+import jcl.lang.internal.CharacterStructImpl;
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.condition.exception.SimpleErrorException;
 import jcl.lang.function.FunctionStruct;

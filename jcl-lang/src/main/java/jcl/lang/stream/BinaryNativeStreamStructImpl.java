@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import jcl.lang.BinaryNativeStreamStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.condition.exception.StreamErrorException;
 import jcl.type.StreamType;
@@ -19,7 +20,7 @@ import jcl.type.UnsignedByteType;
  * The {@link BinaryNativeStreamStructImpl} is the object representation of a binary reading and writing system level Lisp
  * stream.
  */
-public final class BinaryNativeStreamStructImpl extends AbstractNativeStreamStructImpl {
+public final class BinaryNativeStreamStructImpl extends AbstractNativeStreamStructImpl implements BinaryNativeStreamStruct {
 
 	/**
 	 * The {@link InputStream} for reading input.

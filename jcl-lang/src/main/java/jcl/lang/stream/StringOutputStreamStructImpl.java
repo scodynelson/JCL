@@ -4,7 +4,7 @@
 
 package jcl.lang.stream;
 
-import jcl.lang.OutputStreamStruct;
+import jcl.lang.StringOutputStreamStruct;
 import jcl.lang.condition.exception.StreamErrorException;
 import jcl.type.BaseCharType;
 import jcl.type.LispType;
@@ -13,7 +13,7 @@ import jcl.type.StringStreamType;
 /**
  * The {@link StringOutputStreamStructImpl} is the object representation of a Lisp 'string-stream' output type.
  */
-public final class StringOutputStreamStructImpl extends StreamStructImpl implements OutputStreamStruct {
+public final class StringOutputStreamStructImpl extends StreamStructImpl implements StringOutputStreamStruct {
 
 	/**
 	 * The {@link StringBuffer} to use for this stream to accept characters and bytes.
@@ -75,10 +75,12 @@ public final class StringOutputStreamStructImpl extends StreamStructImpl impleme
 		return new StringOutputStreamStructImpl(interactive, elementType);
 	}
 
+	@Override
 	public String getStreamString() {
 		return stringBuffer.toString();
 	}
 
+	@Override
 	public void clearStream() {
 		stringBuffer.setLength(0);
 	}

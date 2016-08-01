@@ -1,6 +1,8 @@
 package jcl.lang.factory;
 
 import java.io.File;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.net.URI;
@@ -11,16 +13,29 @@ import java.util.Deque;
 import java.util.List;
 
 import jcl.lang.ArrayStruct;
+import jcl.lang.BinaryNativeStreamStruct;
 import jcl.lang.BitVectorStruct;
+import jcl.lang.BroadcastStreamStruct;
+import jcl.lang.CharacterNativeStreamStruct;
 import jcl.lang.CharacterStruct;
+import jcl.lang.ConcatenatedStreamStruct;
+import jcl.lang.EchoStreamStruct;
+import jcl.lang.EmptyStreamStruct;
+import jcl.lang.FileStreamStruct;
 import jcl.lang.HashTableStruct;
 import jcl.lang.InputStreamStruct;
+import jcl.lang.JavaStreamStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
 import jcl.lang.OutputStreamStruct;
 import jcl.lang.PackageStruct;
+import jcl.lang.StringInputStreamStruct;
+import jcl.lang.StringOutputStreamStruct;
 import jcl.lang.StringStruct;
 import jcl.lang.SymbolStruct;
+import jcl.lang.SynonymStreamStruct;
+import jcl.lang.TwoWayStreamStruct;
+import jcl.lang.URLStreamStruct;
 import jcl.lang.VariableStruct;
 import jcl.lang.VectorStruct;
 import jcl.lang.function.EquatorFunctionStruct;
@@ -85,11 +100,11 @@ public final class LispStructFactory {
 	 * BinaryNativeStream
 	 */
 
-	public static BinaryNativeStreamStructImpl toBinaryNativeStream(final java.io.InputStream inputStream, final java.io.OutputStream outputStream) {
+	public static BinaryNativeStreamStruct toBinaryNativeStream(final InputStream inputStream, final OutputStream outputStream) {
 		return BinaryNativeStreamStructImpl.valueOf(inputStream, outputStream);
 	}
 
-	public static BinaryNativeStreamStructImpl toBinaryNativeStream(final boolean interactive, final java.io.InputStream inputStream, final java.io.OutputStream outputStream) {
+	public static BinaryNativeStreamStruct toBinaryNativeStream(final boolean interactive, final InputStream inputStream, final OutputStream outputStream) {
 		return BinaryNativeStreamStructImpl.valueOf(interactive, inputStream, outputStream);
 	}
 
@@ -109,11 +124,11 @@ public final class LispStructFactory {
 	 * BroadcastStream
 	 */
 
-	public static BroadcastStreamStructImpl toBroadcastStream(final Deque<OutputStreamStruct> outputStreamStructs) {
+	public static BroadcastStreamStruct toBroadcastStream(final Deque<OutputStreamStruct> outputStreamStructs) {
 		return BroadcastStreamStructImpl.valueOf(outputStreamStructs);
 	}
 
-	public static BroadcastStreamStructImpl toBroadcastStream(final boolean interactive, final Deque<OutputStreamStruct> outputStreamStructs) {
+	public static BroadcastStreamStruct toBroadcastStream(final boolean interactive, final Deque<OutputStreamStruct> outputStreamStructs) {
 		return BroadcastStreamStructImpl.valueOf(interactive, outputStreamStructs);
 	}
 
@@ -149,11 +164,11 @@ public final class LispStructFactory {
 	 * CharacterNativeStream
 	 */
 
-	public static CharacterNativeStreamStructImpl toCharacterNativeStream(final java.io.InputStream inputStream, final java.io.OutputStream outputStream) {
+	public static CharacterNativeStreamStruct toCharacterNativeStream(final InputStream inputStream, final OutputStream outputStream) {
 		return CharacterNativeStreamStructImpl.valueOf(inputStream, outputStream);
 	}
 
-	public static CharacterNativeStreamStructImpl toCharacterNativeStream(final boolean interactive, final java.io.InputStream inputStream, final java.io.OutputStream outputStream) {
+	public static CharacterNativeStreamStruct toCharacterNativeStream(final boolean interactive, final InputStream inputStream, final OutputStream outputStream) {
 		return CharacterNativeStreamStructImpl.valueOf(interactive, inputStream, outputStream);
 	}
 
@@ -177,11 +192,11 @@ public final class LispStructFactory {
 	 * ConcatenatedStream
 	 */
 
-	public static ConcatenatedStreamStructImpl toConcatenatedStream(final Deque<InputStreamStruct> inputStreamStructs) {
+	public static ConcatenatedStreamStruct toConcatenatedStream(final Deque<InputStreamStruct> inputStreamStructs) {
 		return ConcatenatedStreamStructImpl.valueOf(inputStreamStructs);
 	}
 
-	public static ConcatenatedStreamStructImpl toConcatenatedStream(final boolean interactive, final Deque<InputStreamStruct> inputStreamStructs) {
+	public static ConcatenatedStreamStruct toConcatenatedStream(final boolean interactive, final Deque<InputStreamStruct> inputStreamStructs) {
 		return ConcatenatedStreamStructImpl.valueOf(interactive, inputStreamStructs);
 	}
 
@@ -201,11 +216,11 @@ public final class LispStructFactory {
 	 * EchoStream
 	 */
 
-	public static EchoStreamStructImpl toEchoStream(final InputStreamStruct inputStreamStruct, final OutputStreamStruct outputStreamStruct) {
+	public static EchoStreamStruct toEchoStream(final InputStreamStruct inputStreamStruct, final OutputStreamStruct outputStreamStruct) {
 		return EchoStreamStructImpl.valueOf(inputStreamStruct, outputStreamStruct);
 	}
 
-	public static EchoStreamStructImpl toEchoStream(final boolean interactive, final InputStreamStruct inputStreamStruct, final OutputStreamStruct outputStreamStruct) {
+	public static EchoStreamStruct toEchoStream(final boolean interactive, final InputStreamStruct inputStreamStruct, final OutputStreamStruct outputStreamStruct) {
 		return EchoStreamStructImpl.valueOf(interactive, inputStreamStruct, outputStreamStruct);
 	}
 
@@ -213,7 +228,7 @@ public final class LispStructFactory {
 	 * EmptyStream
 	 */
 
-	public static EmptyStreamStructImpl toEmptyStream() {
+	public static EmptyStreamStruct toEmptyStream() {
 		return EmptyStreamStructImpl.INSTANCE;
 	}
 
@@ -221,11 +236,11 @@ public final class LispStructFactory {
 	 * FileStream
 	 */
 
-	public static FileStreamStructImpl toFileStream(final Path path) {
+	public static FileStreamStruct toFileStream(final Path path) {
 		return FileStreamStructImpl.valueOf(path);
 	}
 
-	public static FileStreamStructImpl toFileStream(final boolean interactive, final Path path) {
+	public static FileStreamStruct toFileStream(final boolean interactive, final Path path) {
 		return FileStreamStructImpl.valueOf(interactive, path);
 	}
 
@@ -384,11 +399,11 @@ public final class LispStructFactory {
 	 * JavaStream
 	 */
 
-	public static JavaStreamStructImpl toJavaStream(final java.io.InputStream inputStream, final java.io.OutputStream outputStream) {
+	public static JavaStreamStruct toJavaStream(final InputStream inputStream, final OutputStream outputStream) {
 		return JavaStreamStructImpl.valueOf(inputStream, outputStream);
 	}
 
-	public static JavaStreamStructImpl toJavaStream(final boolean interactive, final java.io.InputStream inputStream, final java.io.OutputStream outputStream) {
+	public static JavaStreamStruct toJavaStream(final boolean interactive, final InputStream inputStream, final OutputStream outputStream) {
 		return JavaStreamStructImpl.valueOf(interactive, inputStream, outputStream);
 	}
 
@@ -636,19 +651,19 @@ public final class LispStructFactory {
 	 * StringInputStream
 	 */
 
-	public static StringInputStreamStructImpl toStringInputStream(final String inputString) {
+	public static StringInputStreamStruct toStringInputStream(final String inputString) {
 		return StringInputStreamStructImpl.valueOf(inputString);
 	}
 
-	public static StringInputStreamStructImpl toStringInputStream(final boolean interactive, final String inputString) {
+	public static StringInputStreamStruct toStringInputStream(final boolean interactive, final String inputString) {
 		return StringInputStreamStructImpl.valueOf(interactive, inputString);
 	}
 
-	public static StringInputStreamStructImpl toStringInputStream(final String inputString, final int current, final int end) {
+	public static StringInputStreamStruct toStringInputStream(final String inputString, final int current, final int end) {
 		return StringInputStreamStructImpl.valueOf(inputString, current, end);
 	}
 
-	public static StringInputStreamStructImpl toStringInputStream(final boolean interactive, final String inputString, final int current, final int end) {
+	public static StringInputStreamStruct toStringInputStream(final boolean interactive, final String inputString, final int current, final int end) {
 		return StringInputStreamStructImpl.valueOf(interactive, inputString, current, end);
 	}
 
@@ -656,19 +671,19 @@ public final class LispStructFactory {
 	 * StringOutputStream
 	 */
 
-	public static StringOutputStreamStructImpl toStringOutputStream() {
+	public static StringOutputStreamStruct toStringOutputStream() {
 		return StringOutputStreamStructImpl.valueOf();
 	}
 
-	public static StringOutputStreamStructImpl toStringOutputStream(final boolean interactive) {
+	public static StringOutputStreamStruct toStringOutputStream(final boolean interactive) {
 		return StringOutputStreamStructImpl.valueOf(interactive);
 	}
 
-	public static StringOutputStreamStructImpl toStringOutputStream(final LispType elementType) {
+	public static StringOutputStreamStruct toStringOutputStream(final LispType elementType) {
 		return StringOutputStreamStructImpl.valueOf(elementType);
 	}
 
-	public static StringOutputStreamStructImpl toStringOutputStream(final boolean interactive, final LispType elementType) {
+	public static StringOutputStreamStruct toStringOutputStream(final boolean interactive, final LispType elementType) {
 		return StringOutputStreamStructImpl.valueOf(interactive, elementType);
 	}
 
@@ -684,15 +699,15 @@ public final class LispStructFactory {
 	 * SynonymStream
 	 */
 
-	public static SynonymStreamStructImpl toSynonymStream(final VariableStruct<?> variable) {
+	public static SynonymStreamStruct toSynonymStream(final VariableStruct<?> variable) {
 		return SynonymStreamStructImpl.valueOf(variable);
 	}
 
-	public static SynonymStreamStructImpl toSynonymStream(final SymbolStruct symbol) {
+	public static SynonymStreamStruct toSynonymStream(final SymbolStruct symbol) {
 		return SynonymStreamStructImpl.valueOf(symbol);
 	}
 
-	public static SynonymStreamStructImpl toSynonymStream(final boolean interactive, final SymbolStruct symbol) {
+	public static SynonymStreamStruct toSynonymStream(final boolean interactive, final SymbolStruct symbol) {
 		return SynonymStreamStructImpl.valueOf(interactive, symbol);
 	}
 
@@ -700,11 +715,11 @@ public final class LispStructFactory {
 	 * TwoWayStream
 	 */
 
-	public static TwoWayStreamStructImpl toTwoWayStream(final InputStreamStruct inputStreamStruct, final OutputStreamStruct outputStreamStruct) {
+	public static TwoWayStreamStruct toTwoWayStream(final InputStreamStruct inputStreamStruct, final OutputStreamStruct outputStreamStruct) {
 		return TwoWayStreamStructImpl.valueOf(inputStreamStruct, outputStreamStruct);
 	}
 
-	public static TwoWayStreamStructImpl toTwoWayStream(final boolean interactive, final InputStreamStruct inputStreamStruct, final OutputStreamStruct outputStreamStruct) {
+	public static TwoWayStreamStruct toTwoWayStream(final boolean interactive, final InputStreamStruct inputStreamStruct, final OutputStreamStruct outputStreamStruct) {
 		return TwoWayStreamStructImpl.valueOf(interactive, inputStreamStruct, outputStreamStruct);
 	}
 
@@ -712,11 +727,11 @@ public final class LispStructFactory {
 	 * URLStream
 	 */
 
-	public static URLStreamStructImpl toURLStream(final URL url) {
+	public static URLStreamStruct toURLStream(final URL url) {
 		return URLStreamStructImpl.valueOf(url);
 	}
 
-	public static URLStreamStructImpl toURLStream(final boolean interactive, final URL url) {
+	public static URLStreamStruct toURLStream(final boolean interactive, final URL url) {
 		return URLStreamStructImpl.valueOf(interactive, url);
 	}
 

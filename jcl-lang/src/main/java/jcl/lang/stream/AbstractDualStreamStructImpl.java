@@ -4,7 +4,7 @@
 
 package jcl.lang.stream;
 
-import jcl.lang.IOStreamStruct;
+import jcl.lang.DualStreamStruct;
 import jcl.lang.InputStreamStruct;
 import jcl.lang.OutputStreamStruct;
 import jcl.lang.condition.exception.ErrorException;
@@ -16,7 +16,7 @@ import jcl.type.typespecifier.AndTypeSpecifier;
 /**
  * The {@link AbstractDualStreamStructImpl} is an abstraction for dual stream types.
  */
-abstract class AbstractDualStreamStructImpl extends StreamStructImpl implements IOStreamStruct {
+abstract class AbstractDualStreamStructImpl extends StreamStructImpl implements DualStreamStruct {
 
 	/**
 	 * This {@link InputStreamStruct} in the AbstractDualStreamStruct.
@@ -76,6 +76,7 @@ abstract class AbstractDualStreamStructImpl extends StreamStructImpl implements 
 	 *
 	 * @return {@link #inputStreamStruct} property
 	 */
+	@Override
 	public InputStreamStruct getInputStreamStruct() {
 		return inputStreamStruct;
 	}
@@ -85,6 +86,7 @@ abstract class AbstractDualStreamStructImpl extends StreamStructImpl implements 
 	 *
 	 * @return {@link #outputStreamStruct} property
 	 */
+	@Override
 	public OutputStreamStruct getOutputStreamStruct() {
 		return outputStreamStruct;
 	}

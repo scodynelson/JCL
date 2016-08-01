@@ -7,13 +7,13 @@ package jcl.functions.stream;
 import java.util.ArrayList;
 import java.util.Deque;
 
+import jcl.lang.BroadcastStreamStruct;
 import jcl.lang.LispStruct;
+import jcl.lang.OutputStreamStruct;
 import jcl.lang.factory.LispStructFactory;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
-import jcl.lang.stream.BroadcastStreamStructImpl;
-import jcl.lang.OutputStreamStruct;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -32,7 +32,7 @@ public final class BroadcastStreamStreamsFunction extends CommonLispBuiltInFunct
 
 	@Override
 	public LispStruct apply(final Arguments arguments) {
-		final BroadcastStreamStructImpl broadcastStream = arguments.getRequiredArgument(BROADCAST_STREAM_ARGUMENT, BroadcastStreamStructImpl.class);
+		final BroadcastStreamStruct broadcastStream = arguments.getRequiredArgument(BROADCAST_STREAM_ARGUMENT, BroadcastStreamStruct.class);
 		final Deque<OutputStreamStruct> outputStreamStructs = broadcastStream.getOutputStreamStructs();
 		return LispStructFactory.toProperList(new ArrayList<LispStruct>(outputStreamStructs));
 	}

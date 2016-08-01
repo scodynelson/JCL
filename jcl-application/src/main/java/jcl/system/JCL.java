@@ -10,14 +10,14 @@ import jcl.functions.FuncallFunction;
 import jcl.functions.LoadFunction;
 import jcl.functions.pathname.MergePathnamesFunction;
 import jcl.lang.CompilerVariables;
+import jcl.lang.JavaStreamStruct;
+import jcl.lang.TwoWayStreamStruct;
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.factory.LispStructFactory;
 import jcl.lang.pathname.PathnameName;
 import jcl.lang.pathname.PathnameStruct;
 import jcl.lang.pathname.PathnameType;
-import jcl.lang.stream.JavaStreamStructImpl;
 import jcl.lang.stream.StreamVariables;
-import jcl.lang.stream.TwoWayStreamStructImpl;
 import jcl.system.repl.ReadEvalPrint;
 import jcl.util.SimpleThreadScope;
 import org.slf4j.Logger;
@@ -55,9 +55,9 @@ public class JCL implements ApplicationRunner {
 
 	public JCL() throws IOException {
 		try (LoggerOutputStream loggerOutputStream = new LoggerOutputStream(LOGGER)) {
-			final JavaStreamStructImpl characterStream = LispStructFactory.toJavaStream(System.in, loggerOutputStream);
+			final JavaStreamStruct characterStream = LispStructFactory.toJavaStream(System.in, loggerOutputStream);
 
-			final TwoWayStreamStructImpl terminalIoStream = LispStructFactory.toTwoWayStream(true, characterStream, characterStream);
+			final TwoWayStreamStruct terminalIoStream = LispStructFactory.toTwoWayStream(true, characterStream, characterStream);
 			StreamVariables.TERMINAL_IO.setValue(terminalIoStream);
 		}
 		

@@ -6,10 +6,10 @@ package jcl.functions.stream;
 
 import jcl.lang.BooleanStruct;
 import jcl.lang.LispStruct;
+import jcl.lang.StreamStruct;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
-import jcl.lang.stream.StreamStructImpl;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -29,6 +29,6 @@ public final class StreamPFunction extends CommonLispBuiltInFunctionStruct {
 	@Override
 	public LispStruct apply(final Arguments arguments) {
 		final LispStruct object = arguments.getRequiredArgument(OBJECT_ARGUMENT);
-		return BooleanStruct.toLispBoolean(object instanceof StreamStructImpl);
+		return BooleanStruct.toLispBoolean(object instanceof StreamStruct);
 	}
 }

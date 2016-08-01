@@ -9,13 +9,13 @@ import java.math.BigInteger;
 import jcl.lang.BooleanStruct;
 import jcl.lang.CommonLispSymbols;
 import jcl.lang.LispStruct;
+import jcl.lang.StreamStruct;
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.list.NILStruct;
 import jcl.lang.number.IntegerStruct;
-import jcl.lang.stream.StreamStructImpl;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -36,7 +36,7 @@ public final class FilePositionFunction extends CommonLispBuiltInFunctionStruct 
 
 	@Override
 	public LispStruct apply(final Arguments arguments) {
-		final StreamStructImpl stream = arguments.getRequiredArgument(STREAM_ARGUMENT, StreamStructImpl.class);
+		final StreamStruct stream = arguments.getRequiredArgument(STREAM_ARGUMENT, StreamStruct.class);
 
 		final LispStruct lispStruct2 = arguments.getOptionalArgument(POSITION_ARGUMENT);
 //		validator.validateTypes(lispStruct2, functionName, "File Position", IntegerType.INSTANCE, SymbolType.INSTANCE);

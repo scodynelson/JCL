@@ -4,6 +4,7 @@
 
 package jcl.lang.stream;
 
+import jcl.lang.EmptyStreamStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.condition.exception.StreamErrorException;
 import jcl.type.CharacterType;
@@ -12,7 +13,7 @@ import jcl.type.StreamType;
 /**
  * The {@link EmptyStreamStructImpl} is the object representation of an empty reading and writing system level Lisp stream.
  */
-public final class EmptyStreamStructImpl extends AbstractNativeStreamStructImpl {
+public final class EmptyStreamStructImpl extends AbstractNativeStreamStructImpl implements EmptyStreamStruct {
 
 	/**
 	 * Singleton instance of the {@link EmptyStreamStructImpl} Lisp stream.

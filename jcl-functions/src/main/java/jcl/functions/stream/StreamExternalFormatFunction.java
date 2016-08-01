@@ -4,11 +4,11 @@
 
 package jcl.functions.stream;
 
+import jcl.lang.FileStreamStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
-import jcl.lang.stream.FileStreamStructImpl;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -27,7 +27,7 @@ public final class StreamExternalFormatFunction extends CommonLispBuiltInFunctio
 
 	@Override
 	public LispStruct apply(final Arguments arguments) {
-		final FileStreamStructImpl fileStream = arguments.getRequiredArgument(FILE_STREAM_ARGUMENT, FileStreamStructImpl.class);
+		final FileStreamStruct fileStream = arguments.getRequiredArgument(FILE_STREAM_ARGUMENT, FileStreamStruct.class);
 		return fileStream.getExternalFormat();
 	}
 }

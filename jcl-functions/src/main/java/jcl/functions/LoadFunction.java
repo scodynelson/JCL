@@ -15,6 +15,7 @@ import jcl.functions.readtable.ReadFunction;
 import jcl.lang.BooleanStruct;
 import jcl.lang.CommonLispSymbols;
 import jcl.lang.CompilerVariables;
+import jcl.lang.FileStreamStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.PackageStruct;
 import jcl.lang.PackageVariables;
@@ -32,7 +33,6 @@ import jcl.lang.pathname.PathnameVersion;
 import jcl.lang.pathname.PathnameVersionComponentType;
 import jcl.lang.readtable.ReaderVariables;
 import jcl.lang.readtable.ReadtableStruct;
-import jcl.lang.stream.FileStreamStructImpl;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -102,14 +102,14 @@ public final class LoadFunction extends CommonLispBuiltInFunctionStruct {
 
 	public LispStruct load(final LispStruct filespec, final boolean verbose, final boolean print, final boolean ifDoesNotExist) {
 
-		FileStreamStructImpl filespecFileStream = null;
+		FileStreamStruct filespecFileStream = null;
 
 		final Path filespecPath;
 		final PathnameStruct filespecPathname;
 
 		// NOTE: optimizations if the filespec is already a FileStreamStruct
-		if (filespec instanceof FileStreamStructImpl) {
-			filespecFileStream = (FileStreamStructImpl) filespec;
+		if (filespec instanceof FileStreamStruct) {
+			filespecFileStream = (FileStreamStruct) filespec;
 			filespecPath = filespecFileStream.getPath();
 			filespecPathname = LispStructFactory.toPathname(filespecPath);
 		} else {
@@ -160,7 +160,7 @@ public final class LoadFunction extends CommonLispBuiltInFunctionStruct {
 		}
 	}
 
-	private LispStruct loadSourceCode(final FileStreamStructImpl filespecFileStream, final Path filespecPath,
+	private LispStruct loadSourceCode(final FileStreamStruct filespecFileStream, final Path filespecPath,
 	                                  final boolean verbose, final boolean print) {
 
 		if (verbose) {

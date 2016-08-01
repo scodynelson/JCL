@@ -7,6 +7,7 @@ package jcl.lang.stream;
 import java.util.ArrayDeque;
 import java.util.Deque;
 
+import jcl.lang.EchoStreamStruct;
 import jcl.lang.InputStreamStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.OutputStreamStruct;
@@ -16,7 +17,7 @@ import jcl.type.EchoStreamType;
 /**
  * The {@link EchoStreamStructImpl} is the object representation of a Lisp 'echo-stream' type.
  */
-public final class EchoStreamStructImpl extends AbstractDualStreamStructImpl {
+public final class EchoStreamStructImpl extends AbstractDualStreamStructImpl implements EchoStreamStruct {
 
 	/**
 	 * The {@link Integer} tokens that have been unread so far.

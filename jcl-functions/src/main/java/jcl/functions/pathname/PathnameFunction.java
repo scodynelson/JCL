@@ -7,6 +7,7 @@ package jcl.functions.pathname;
 import java.io.File;
 import java.nio.file.Path;
 
+import jcl.lang.FileStreamStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.StringStruct;
 import jcl.lang.condition.exception.TypeErrorException;
@@ -15,7 +16,6 @@ import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.pathname.PathnameStruct;
-import jcl.lang.stream.FileStreamStructImpl;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -49,8 +49,8 @@ public final class PathnameFunction extends CommonLispBuiltInFunctionStruct {
 			final StringStruct namestringStruct = (StringStruct) pathnameDesignator;
 			namestring = namestringStruct.getAsJavaString();
 			pathname = LispStructFactory.toPathname(namestring);
-		} else if (pathnameDesignator instanceof FileStreamStructImpl) {
-			final FileStreamStructImpl fileStream = (FileStreamStructImpl) pathnameDesignator;
+		} else if (pathnameDesignator instanceof FileStreamStruct) {
+			final FileStreamStruct fileStream = (FileStreamStruct) pathnameDesignator;
 			final Path path = fileStream.getPath();
 			final File file = path.toFile();
 			namestring = file.getAbsolutePath();

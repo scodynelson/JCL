@@ -4,8 +4,8 @@
 
 package jcl.lang.stream;
 
-import jcl.lang.InputStreamStruct;
 import jcl.lang.LispStruct;
+import jcl.lang.StringInputStreamStruct;
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.condition.exception.StreamErrorException;
 import jcl.type.BaseCharType;
@@ -14,7 +14,7 @@ import jcl.type.StringStreamType;
 /**
  * The {@link StringInputStreamStructImpl} is the object representation of a Lisp 'string-stream' input type.
  */
-public final class StringInputStreamStructImpl extends StreamStructImpl implements InputStreamStruct {
+public final class StringInputStreamStructImpl extends StreamStructImpl implements StringInputStreamStruct {
 
 	/**
 	 * The {@link String} input value to read characters from.

@@ -15,18 +15,17 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
+import jcl.lang.JavaStreamStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.condition.exception.StreamErrorException;
 import jcl.type.CharacterType;
 import jcl.type.StreamType;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * The {@link JavaStreamStructImpl} is the object representation of a character reading and writing system level Lisp
  * stream.
  */
-public final class JavaStreamStructImpl extends AbstractNativeStreamStructImpl {
+public final class JavaStreamStructImpl extends AbstractNativeStreamStructImpl implements JavaStreamStruct {
 
 	/**
 	 * The maximum size of internal buffer array to allocate in the {@link PushbackReader} {@link #inputStream}.
@@ -255,31 +254,5 @@ public final class JavaStreamStructImpl extends AbstractNativeStreamStructImpl {
 	@Override
 	public Long filePosition(final Long filePosition) {
 		return null;
-	}
-
-	@Override
-	public int hashCode() {
-		return new HashCodeBuilder().appendSuper(super.hashCode())
-		                            .append(inputStream)
-		                            .append(outputStream)
-		                            .toHashCode();
-	}
-
-	@Override
-	public boolean equals(final Object obj) {
-		if (obj == null) {
-			return false;
-		}
-		if (obj == this) {
-			return true;
-		}
-		if (obj.getClass() != getClass()) {
-			return false;
-		}
-		final JavaStreamStructImpl rhs = (JavaStreamStructImpl) obj;
-		return new EqualsBuilder().appendSuper(super.equals(obj))
-		                          .append(inputStream, rhs.inputStream)
-		                          .append(outputStream, rhs.outputStream)
-		                          .isEquals();
 	}
 }

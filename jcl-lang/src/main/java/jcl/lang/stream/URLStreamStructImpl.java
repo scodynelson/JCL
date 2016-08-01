@@ -11,6 +11,7 @@ import java.net.URL;
 import java.net.URLConnection;
 
 import jcl.lang.LispStruct;
+import jcl.lang.URLStreamStruct;
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.condition.exception.StreamErrorException;
 import jcl.type.CharacterType;
@@ -21,7 +22,7 @@ import org.slf4j.LoggerFactory;
 /**
  * The {@link URLStreamStructImpl} is the object representation of a Lisp 'url-stream' type.
  */
-public final class URLStreamStructImpl extends AbstractNativeStreamStructImpl {
+public final class URLStreamStructImpl extends AbstractNativeStreamStructImpl implements URLStreamStruct {
 
 	/**
 	 * The logger for this class.
@@ -82,11 +83,7 @@ public final class URLStreamStructImpl extends AbstractNativeStreamStructImpl {
 		return new URLStreamStructImpl(interactive, url);
 	}
 
-	/**
-	 * Getter for the {@link #url} value.
-	 *
-	 * @return the {@link #url} value
-	 */
+	@Override
 	public URL getUrl() {
 		return url;
 	}

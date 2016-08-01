@@ -7,12 +7,13 @@ package jcl.lang.stream;
 import jcl.lang.InputStreamStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.OutputStreamStruct;
+import jcl.lang.TwoWayStreamStruct;
 import jcl.type.TwoWayStreamType;
 
 /**
  * The {@link TwoWayStreamStructImpl} is the object representation of a Lisp 'two-way-stream' type.
  */
-public final class TwoWayStreamStructImpl extends AbstractDualStreamStructImpl {
+public final class TwoWayStreamStructImpl extends AbstractDualStreamStructImpl implements TwoWayStreamStruct {
 
 	/**
 	 * Public constructor.

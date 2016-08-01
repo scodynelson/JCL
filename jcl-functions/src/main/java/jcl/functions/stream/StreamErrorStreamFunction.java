@@ -5,11 +5,11 @@
 package jcl.functions.stream;
 
 import jcl.lang.LispStruct;
+import jcl.lang.StreamStruct;
 import jcl.lang.condition.exception.StreamErrorException;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
-import jcl.lang.stream.StreamStructImpl;
 import org.springframework.stereotype.Component;
 
 /**
@@ -34,13 +34,13 @@ public final class StreamErrorStreamFunction extends CommonLispBuiltInFunctionSt
 
 	/**
 	 * {@inheritDoc}
-	 * Application method for {@code stream-error-stream} package function that returns the {@link StreamStructImpl} that
+	 * Application method for {@code stream-error-stream} package function that returns the {@link StreamStruct} that
 	 * was a part of provided {@link StreamErrorException} condition.
 	 *
 	 * @param lispStructs
 	 * 		the function parameters
 	 *
-	 * @return the {@link StreamStructImpl} that was a part of provided {@link StreamErrorException} condition
+	 * @return the {@link StreamStruct} that was a part of provided {@link StreamErrorException} condition
 	 */
 	@Override
 	public LispStruct apply(final Arguments arguments) {

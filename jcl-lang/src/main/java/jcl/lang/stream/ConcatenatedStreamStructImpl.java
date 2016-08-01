@@ -7,6 +7,7 @@ package jcl.lang.stream;
 import java.util.ArrayDeque;
 import java.util.Deque;
 
+import jcl.lang.ConcatenatedStreamStruct;
 import jcl.lang.InputStreamStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.condition.exception.EndOfFileException;
@@ -18,7 +19,7 @@ import jcl.type.TType;
 /**
  * The {@link ConcatenatedStreamStructImpl} is the object representation of a Lisp 'concatenated-stream' type.
  */
-public final class ConcatenatedStreamStructImpl extends StreamStructImpl implements InputStreamStruct {
+public final class ConcatenatedStreamStructImpl extends StreamStructImpl implements ConcatenatedStreamStruct {
 
 	/**
 	 * This {@link InputStreamStruct}s in the ConcatenatedStreamStruct.
@@ -88,6 +89,7 @@ public final class ConcatenatedStreamStructImpl extends StreamStructImpl impleme
 		return new ConcatenatedStreamStructImpl(interactive, inputStreamStructs);
 	}
 
+	@Override
 	public Deque<InputStreamStruct> getInputStreamStructs() {
 		return inputStreamStructs;
 	}

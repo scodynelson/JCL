@@ -29,7 +29,9 @@ import jcl.lang.BooleanStruct;
 import jcl.lang.CommonLispSymbols;
 import jcl.lang.CompilerVariables;
 import jcl.lang.DeclarationStruct;
+import jcl.lang.FileStreamStruct;
 import jcl.lang.LispStruct;
+import jcl.lang.ListStruct;
 import jcl.lang.PackageStruct;
 import jcl.lang.PackageVariables;
 import jcl.lang.SpecialOperatorStruct;
@@ -41,12 +43,10 @@ import jcl.lang.factory.LispStructFactory;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
-import jcl.lang.ListStruct;
 import jcl.lang.list.NILStruct;
 import jcl.lang.pathname.PathnameStruct;
 import jcl.lang.readtable.ReaderVariables;
 import jcl.lang.readtable.ReadtableStruct;
-import jcl.lang.stream.FileStreamStructImpl;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.SystemUtils;
@@ -164,7 +164,7 @@ public final class CompileFileFunction extends CommonLispBuiltInFunctionStruct {
 		BooleanStruct compiledWithWarnings = NILStruct.INSTANCE;
 		boolean compiledSuccessfully = false;
 		try {
-			final FileStreamStructImpl inputFileStream = LispStructFactory.toFileStream(inputFilePath);
+			final FileStreamStruct inputFileStream = LispStructFactory.toFileStream(inputFilePath);
 			final List<LispStruct> forms = new ArrayList<>();
 
 			LispStruct form;

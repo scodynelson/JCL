@@ -7,6 +7,7 @@ package jcl.lang.stream;
 import java.util.ArrayDeque;
 import java.util.Deque;
 
+import jcl.lang.BroadcastStreamStruct;
 import jcl.lang.OutputStreamStruct;
 import jcl.lang.condition.exception.ErrorException;
 import jcl.type.BroadcastStreamType;
@@ -16,7 +17,7 @@ import jcl.type.TType;
 /**
  * The {@link BroadcastStreamStructImpl} is the object representation of a Lisp 'broadcast-stream' type.
  */
-public final class BroadcastStreamStructImpl extends StreamStructImpl implements OutputStreamStruct {
+public final class BroadcastStreamStructImpl extends StreamStructImpl implements BroadcastStreamStruct {
 
 	/**
 	 * This {@link OutputStreamStruct}s in the BroadcastStreamStruct.
@@ -86,6 +87,7 @@ public final class BroadcastStreamStructImpl extends StreamStructImpl implements
 		return last.getElementType();
 	}
 
+	@Override
 	public Deque<OutputStreamStruct> getOutputStreamStructs() {
 		return outputStreamStructs;
 	}

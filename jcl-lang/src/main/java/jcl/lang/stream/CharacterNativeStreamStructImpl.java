@@ -15,6 +15,7 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
+import jcl.lang.CharacterNativeStreamStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.condition.exception.StreamErrorException;
 import jcl.type.CharacterType;
@@ -25,7 +26,7 @@ import org.apache.commons.lang3.SystemUtils;
  * The {@link CharacterNativeStreamStructImpl} is the object representation of a character reading and writing system level Lisp
  * stream.
  */
-public final class CharacterNativeStreamStructImpl extends AbstractNativeStreamStructImpl {
+public final class CharacterNativeStreamStructImpl extends AbstractNativeStreamStructImpl implements CharacterNativeStreamStruct {
 
 	/**
 	 * The maximum size of internal buffer array to allocate in the {@link PushbackReader} {@link #inputStream}.

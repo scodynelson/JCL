@@ -5,10 +5,10 @@
 package jcl.functions.stream;
 
 import jcl.lang.LispStruct;
+import jcl.lang.StreamStruct;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
-import jcl.lang.stream.StreamStructImpl;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -27,7 +27,7 @@ public final class StreamElementTypeFunction extends CommonLispBuiltInFunctionSt
 
 	@Override
 	public LispStruct apply(final Arguments arguments) {
-		final StreamStructImpl streamStruct = arguments.getRequiredArgument(STREAM_ARGUMENT, StreamStructImpl.class);
+		final StreamStruct streamStruct = arguments.getRequiredArgument(STREAM_ARGUMENT, StreamStruct.class);
 		return streamStruct.getElementType();
 	}
 }

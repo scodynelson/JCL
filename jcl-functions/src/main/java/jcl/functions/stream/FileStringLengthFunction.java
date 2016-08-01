@@ -8,13 +8,13 @@ import java.math.BigInteger;
 
 import jcl.lang.CharacterStruct;
 import jcl.lang.LispStruct;
+import jcl.lang.StreamStruct;
 import jcl.lang.StringStruct;
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.number.IntegerStruct;
-import jcl.lang.stream.StreamStructImpl;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -35,7 +35,7 @@ public final class FileStringLengthFunction extends CommonLispBuiltInFunctionStr
 
 	@Override
 	public LispStruct apply(final Arguments arguments) {
-		arguments.getRequiredArgument(STREAM_ARGUMENT, StreamStructImpl.class);
+		arguments.getRequiredArgument(STREAM_ARGUMENT, StreamStruct.class);
 		final LispStruct lispStruct2 = arguments.getRequiredArgument(OBJECT_ARGUMENT);
 
 		if (lispStruct2 instanceof CharacterStruct) {

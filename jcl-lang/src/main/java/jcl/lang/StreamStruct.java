@@ -4,7 +4,6 @@
 
 package jcl.lang;
 
-import jcl.lang.stream.FileStreamStructImpl;
 import jcl.type.LispType;
 
 /**
@@ -52,14 +51,14 @@ public interface StreamStruct extends LispStruct {
 	boolean isClosed();
 
 	/**
-	 * Returns the length of the stream if it is a {@link FileStreamStructImpl}.
+	 * Returns the length of the stream if it is a {@link FileStreamStruct}.
 	 *
 	 * @return the length of the stream
 	 */
 	Long fileLength();
 
 	/**
-	 * Returns the current position in the stream if it is a {@link FileStreamStructImpl}.
+	 * Returns the current position in the stream if it is a {@link FileStreamStruct}.
 	 *
 	 * @param filePosition
 	 * 		if not null, the current stream position will be set to this value

@@ -15,6 +15,7 @@ import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.util.function.Supplier;
 
+import jcl.lang.FileStreamStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.condition.exception.StreamErrorException;
@@ -28,7 +29,7 @@ import org.slf4j.LoggerFactory;
 /**
  * The {@link FileStreamStructImpl} is the object representation of a Lisp 'file-stream' type.
  */
-public final class FileStreamStructImpl extends AbstractNativeStreamStructImpl {
+public final class FileStreamStructImpl extends AbstractNativeStreamStructImpl implements FileStreamStruct {
 
 	/**
 	 * The logger for this class.
@@ -105,8 +106,14 @@ public final class FileStreamStructImpl extends AbstractNativeStreamStructImpl {
 	 *
 	 * @return the {@link #path} value
 	 */
+	@Override
 	public Path getPath() {
 		return path;
+	}
+
+	@Override
+	public ExternalFormat getExternalFormat() {
+		return ExternalFormat.DEFAULT;
 	}
 
 	@Override
@@ -363,9 +370,5 @@ public final class FileStreamStructImpl extends AbstractNativeStreamStructImpl {
 		} catch (final IOException ioe) {
 			throw new StreamErrorException("Could not retrieve file position.", ioe, this);
 		}
-	}
-
-	public ExternalFormat getExternalFormat() {
-		return ExternalFormat.DEFAULT;
 	}
 }

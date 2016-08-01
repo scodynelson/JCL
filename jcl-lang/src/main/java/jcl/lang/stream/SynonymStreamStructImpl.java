@@ -4,11 +4,11 @@
 
 package jcl.lang.stream;
 
-import jcl.lang.IOStreamStruct;
 import jcl.lang.InputStreamStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.OutputStreamStruct;
 import jcl.lang.SymbolStruct;
+import jcl.lang.SynonymStreamStruct;
 import jcl.lang.VariableStruct;
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.condition.exception.StreamErrorException;
@@ -18,7 +18,7 @@ import jcl.type.SynonymStreamType;
 /**
  * The {@link SynonymStreamStructImpl} is the object representation of a Lisp 'synonym-stream' type.
  */
-public final class SynonymStreamStructImpl extends StreamStructImpl implements IOStreamStruct {
+public final class SynonymStreamStructImpl extends StreamStructImpl implements SynonymStreamStruct {
 
 	/**
 	 * The {@link SymbolStruct} that contains the value for the {@link StreamStructImpl} to use.
@@ -90,6 +90,7 @@ public final class SynonymStreamStructImpl extends StreamStructImpl implements I
 	 *
 	 * @return synonym-stream {@link #symbol} property
 	 */
+	@Override
 	public SymbolStruct getSymbol() {
 		return symbol;
 	}

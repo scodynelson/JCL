@@ -8,7 +8,7 @@ import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.ListStruct;
 import jcl.lang.list.NILStruct;
-import jcl.lang.number.IntegerStruct;
+import jcl.lang.number.IntegerStructImpl;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -32,6 +32,6 @@ public final class ListLengthFunction extends CommonLispBuiltInFunctionStruct {
 		if (listLength == null) {
 			return NILStruct.INSTANCE;
 		}
-		return IntegerStruct.valueOf(BigInteger.valueOf(listLength));
+		return IntegerStructImpl.valueOf(BigInteger.valueOf(listLength));
 	}
 }

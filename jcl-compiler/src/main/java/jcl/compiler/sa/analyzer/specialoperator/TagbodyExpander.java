@@ -16,7 +16,7 @@ import jcl.lang.LispStruct;
 import jcl.lang.SpecialOperatorStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.ListStruct;
-import jcl.lang.number.IntegerStruct;
+import jcl.lang.number.IntegerStructImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -65,6 +65,6 @@ public class TagbodyExpander extends MacroFunctionExpander<TagbodyStruct> {
 	}
 
 	private static boolean isTagbodyTag(final LispStruct element) {
-		return (element instanceof SymbolStruct) || (element instanceof IntegerStruct);
+		return (element instanceof SymbolStruct) || (element instanceof IntegerStructImpl);
 	}
 }

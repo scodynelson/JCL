@@ -95,7 +95,7 @@ abstract class RealStructImpl<A extends Apfloat> extends NumberStructImpl<A> imp
 	 * @return the {@link RealStruct} that represents the appropriate {@link QuotientRemainder#remainder} value
 	 */
 	protected RealStruct getRemainderReal(final RealStruct divisor, final Apfloat remainder) {
-		return FloatStruct.valueOf(remainder);
+		return FloatStructImpl.valueOf(remainder);
 	}
 
 	/**
@@ -131,7 +131,7 @@ abstract class RealStructImpl<A extends Apfloat> extends NumberStructImpl<A> imp
 
 	/**
 	 * Performs the default quotient-remainder calculation against the {@link #ap} value, using {@link
-	 * IntegerStruct#ONE} as the divisor. The {@code operation} and {@code quotientCreator} parameters are further
+	 * IntegerStructImpl#ONE} as the divisor. The {@code operation} and {@code quotientCreator} parameters are further
 	 * passed to the {@link #quotientRemainderCalculator(Apfloat, RealStruct, Function, Function)} method.
 	 *
 	 * @param operation
@@ -143,7 +143,7 @@ abstract class RealStructImpl<A extends Apfloat> extends NumberStructImpl<A> imp
 	 */
 	private QuotientRemainder quotientRemainder(final Function<Apfloat, Apint> operation,
 	                                            final Function<Apint, ? extends RealStruct> quotientCreator) {
-		return quotientRemainderCalculator(ap, IntegerStruct.ONE, operation, quotientCreator);
+		return quotientRemainderCalculator(ap, IntegerStructImpl.ONE, operation, quotientCreator);
 	}
 
 	/**
@@ -171,62 +171,62 @@ abstract class RealStructImpl<A extends Apfloat> extends NumberStructImpl<A> imp
 
 	@Override
 	public QuotientRemainder floor() {
-		return quotientRemainder(Apfloat::floor, IntegerStruct::valueOf);
+		return quotientRemainder(Apfloat::floor, IntegerStructImpl::valueOf);
 	}
 
 	@Override
 	public QuotientRemainder floor(final RealStruct divisor) {
-		return quotientRemainderWithDivisor(divisor, Apfloat::floor, IntegerStruct::valueOf);
+		return quotientRemainderWithDivisor(divisor, Apfloat::floor, IntegerStructImpl::valueOf);
 	}
 
 	@Override
 	public QuotientRemainder ffloor() {
-		return quotientRemainder(Apfloat::floor, FloatStruct::valueOf);
+		return quotientRemainder(Apfloat::floor, FloatStructImpl::valueOf);
 	}
 
 	@Override
 	public QuotientRemainder ffloor(final RealStruct divisor) {
-		return quotientRemainderWithDivisor(divisor, Apfloat::floor, FloatStruct::valueOf);
+		return quotientRemainderWithDivisor(divisor, Apfloat::floor, FloatStructImpl::valueOf);
 	}
 
 	@Override
 	public QuotientRemainder ceiling() {
-		return quotientRemainder(Apfloat::ceil, IntegerStruct::valueOf);
+		return quotientRemainder(Apfloat::ceil, IntegerStructImpl::valueOf);
 	}
 
 	@Override
 	public QuotientRemainder ceiling(final RealStruct divisor) {
-		return quotientRemainderWithDivisor(divisor, Apfloat::ceil, IntegerStruct::valueOf);
+		return quotientRemainderWithDivisor(divisor, Apfloat::ceil, IntegerStructImpl::valueOf);
 	}
 
 	@Override
 	public QuotientRemainder fceiling() {
-		return quotientRemainder(Apfloat::ceil, FloatStruct::valueOf);
+		return quotientRemainder(Apfloat::ceil, FloatStructImpl::valueOf);
 	}
 
 	@Override
 	public QuotientRemainder fceiling(final RealStruct divisor) {
-		return quotientRemainderWithDivisor(divisor, Apfloat::ceil, FloatStruct::valueOf);
+		return quotientRemainderWithDivisor(divisor, Apfloat::ceil, FloatStructImpl::valueOf);
 	}
 
 	@Override
 	public QuotientRemainder truncate() {
-		return quotientRemainder(Apfloat::truncate, IntegerStruct::valueOf);
+		return quotientRemainder(Apfloat::truncate, IntegerStructImpl::valueOf);
 	}
 
 	@Override
 	public QuotientRemainder truncate(final RealStruct divisor) {
-		return quotientRemainderWithDivisor(divisor, Apfloat::truncate, IntegerStruct::valueOf);
+		return quotientRemainderWithDivisor(divisor, Apfloat::truncate, IntegerStructImpl::valueOf);
 	}
 
 	@Override
 	public QuotientRemainder ftruncate() {
-		return quotientRemainder(Apfloat::truncate, FloatStruct::valueOf);
+		return quotientRemainder(Apfloat::truncate, FloatStructImpl::valueOf);
 	}
 
 	@Override
 	public QuotientRemainder ftruncate(final RealStruct divisor) {
-		return quotientRemainderWithDivisor(divisor, Apfloat::truncate, FloatStruct::valueOf);
+		return quotientRemainderWithDivisor(divisor, Apfloat::truncate, FloatStructImpl::valueOf);
 	}
 
 	/**
@@ -249,22 +249,22 @@ abstract class RealStructImpl<A extends Apfloat> extends NumberStructImpl<A> imp
 
 	@Override
 	public QuotientRemainder round() {
-		return quotientRemainder(roundOpFn(IntegerStruct.ONE), IntegerStruct::valueOf);
+		return quotientRemainder(roundOpFn(IntegerStructImpl.ONE), IntegerStructImpl::valueOf);
 	}
 
 	@Override
 	public QuotientRemainder round(final RealStruct divisor) {
-		return quotientRemainderWithDivisor(divisor, roundOpFn(divisor), IntegerStruct::valueOf);
+		return quotientRemainderWithDivisor(divisor, roundOpFn(divisor), IntegerStructImpl::valueOf);
 	}
 
 	@Override
 	public QuotientRemainder fround() {
-		return quotientRemainder(roundOpFn(IntegerStruct.ONE), FloatStruct::valueOf);
+		return quotientRemainder(roundOpFn(IntegerStructImpl.ONE), FloatStructImpl::valueOf);
 	}
 
 	@Override
 	public QuotientRemainder fround(final RealStruct divisor) {
-		return quotientRemainderWithDivisor(divisor, roundOpFn(divisor), FloatStruct::valueOf);
+		return quotientRemainderWithDivisor(divisor, roundOpFn(divisor), FloatStructImpl::valueOf);
 	}
 
 	@Override

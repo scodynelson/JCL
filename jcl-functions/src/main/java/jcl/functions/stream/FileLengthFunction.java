@@ -12,7 +12,7 @@ import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.list.NILStruct;
-import jcl.lang.number.IntegerStruct;
+import jcl.lang.number.IntegerStructImpl;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -36,7 +36,7 @@ public final class FileLengthFunction extends CommonLispBuiltInFunctionStruct {
 		if (fileLength == null) {
 			return NILStruct.INSTANCE;
 		} else {
-			return IntegerStruct.valueOf(BigInteger.valueOf(fileLength));
+			return IntegerStructImpl.valueOf(BigInteger.valueOf(fileLength));
 		}
 	}
 }

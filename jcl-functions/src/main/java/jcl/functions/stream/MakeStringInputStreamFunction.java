@@ -12,7 +12,7 @@ import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.list.NILStruct;
-import jcl.lang.number.IntegerStruct;
+import jcl.lang.number.IntegerStructImpl;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -28,7 +28,7 @@ public final class MakeStringInputStreamFunction extends CommonLispBuiltInFuncti
 		      FUNCTION_NAME,
 		      Parameters.forFunction(FUNCTION_NAME)
 		                .requiredParameter(STRING_ARGUMENT)
-		                .optionalParameter(START_ARGUMENT).withInitialValue(IntegerStruct.ZERO)
+		                .optionalParameter(START_ARGUMENT).withInitialValue(IntegerStructImpl.ZERO)
 		                .optionalParameter(END_ARGUMENT).withInitialValue(NILStruct.INSTANCE)
 		);
 	}
@@ -44,8 +44,8 @@ public final class MakeStringInputStreamFunction extends CommonLispBuiltInFuncti
 		if (arguments.hasOptionalArgument(START_ARGUMENT)) {
 			final LispStruct startParam = arguments.getOptionalArgument(START_ARGUMENT);
 
-			if (startParam instanceof IntegerStruct) {
-				final int possibleStartValue = ((IntegerStruct) startParam).intValue();
+			if (startParam instanceof IntegerStructImpl) {
+				final int possibleStartValue = ((IntegerStructImpl) startParam).intValue();
 				if (possibleStartValue > end) {
 					throw new TypeErrorException(functionName + ": Start value must be less than or equal to the length of the String. Got: " + startParam);
 				}
@@ -56,8 +56,8 @@ public final class MakeStringInputStreamFunction extends CommonLispBuiltInFuncti
 		if (arguments.hasOptionalArgument(END_ARGUMENT)) {
 			final LispStruct endParam = arguments.getOptionalArgument(END_ARGUMENT);
 
-			if (endParam instanceof IntegerStruct) {
-				final int possibleEndValue = ((IntegerStruct) endParam).intValue();
+			if (endParam instanceof IntegerStructImpl) {
+				final int possibleEndValue = ((IntegerStructImpl) endParam).intValue();
 				if (possibleEndValue > end) {
 					throw new TypeErrorException(functionName + ": End value must be less than or equal to the length of the String. Got: " + endParam);
 				}

@@ -36,15 +36,15 @@ abstract class RationalStructImpl<A extends Aprational> extends RealStructImpl<A
 	}
 
 	@Override
-	public IntegerStruct numerator() {
+	public IntegerStructImpl numerator() {
 		final Apint numerator = ap.numerator();
-		return IntegerStruct.valueOf(numerator);
+		return IntegerStructImpl.valueOf(numerator);
 	}
 
 	@Override
-	public IntegerStruct denominator() {
+	public IntegerStructImpl denominator() {
 		final Apint denominator = ap.denominator();
-		return IntegerStruct.valueOf(denominator);
+		return IntegerStructImpl.valueOf(denominator);
 	}
 
 	/*
@@ -57,13 +57,13 @@ abstract class RationalStructImpl<A extends Aprational> extends RealStructImpl<A
 	}
 
 	@Override
-	public FloatStruct floatingPoint() {
-		return FloatStruct.valueOf(ap);
+	public FloatStructImpl floatingPoint() {
+		return FloatStructImpl.valueOf(ap);
 	}
 
 	@Override
-	public FloatStruct floatingPoint(final FloatStruct prototype) {
-		return FloatStruct.valueOf(ap, prototype);
+	public FloatStructImpl floatingPoint(final FloatStructImpl prototype) {
+		return FloatStructImpl.valueOf(ap, prototype);
 	}
 
 	@Override
@@ -141,15 +141,15 @@ abstract class RationalStructImpl<A extends Aprational> extends RealStructImpl<A
 	}
 
 	@Override
-	public IntegerStruct signum() {
+	public IntegerStructImpl signum() {
 		final int signum = ap.signum();
 		if (signum == 0) {
-			return IntegerStruct.ZERO;
+			return IntegerStructImpl.ZERO;
 		}
 		if (signum > 0) {
-			return IntegerStruct.ONE;
+			return IntegerStructImpl.ONE;
 		}
-		return IntegerStruct.MINUS_ONE;
+		return IntegerStructImpl.MINUS_ONE;
 	}
 
 	@Override
@@ -158,8 +158,8 @@ abstract class RationalStructImpl<A extends Aprational> extends RealStructImpl<A
 	}
 
 	@Override
-	public IntegerStruct imagPart() {
-		return IntegerStruct.ZERO;
+	public IntegerStructImpl imagPart() {
+		return IntegerStructImpl.ZERO;
 	}
 
 	@Override

@@ -13,7 +13,7 @@ import jcl.lang.SpecialOperatorStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.ListStruct;
-import jcl.lang.number.IntegerStruct;
+import jcl.lang.number.IntegerStructImpl;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -46,7 +46,7 @@ public class GoExpander extends MacroFunctionExpander<GoStruct<?>> {
 	}
 
 	private static boolean isTagbodyTag(final LispStruct element) {
-		return (element instanceof SymbolStruct) || (element instanceof IntegerStruct);
+		return (element instanceof SymbolStruct) || (element instanceof IntegerStructImpl);
 	}
 
 	private GoStruct<?> getGoTag(final Environment environment, final LispStruct tagToFind) {

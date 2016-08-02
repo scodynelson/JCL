@@ -9,7 +9,7 @@ import java.math.BigInteger;
 import jcl.lang.LispStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
 import jcl.lang.list.NILStruct;
-import jcl.lang.number.IntegerStruct;
+import jcl.lang.number.IntegerStructImpl;
 import jcl.lang.RationalStruct;
 import jcl.lang.readtable.Reader;
 import jcl.lang.statics.ReaderVariables;
@@ -39,10 +39,10 @@ final class RationalReaderMacroFunction {
 			return NILStruct.INSTANCE;
 		}
 
-		final IntegerStruct previousReadBase = ReaderVariables.READ_BASE.getVariableValue();
+		final IntegerStructImpl previousReadBase = ReaderVariables.READ_BASE.getVariableValue();
 
 		// alter the read-base
-		ReaderVariables.READ_BASE.setValue(IntegerStruct.valueOf(radix));
+		ReaderVariables.READ_BASE.setValue(IntegerStructImpl.valueOf(radix));
 
 		// read rational
 		final LispStruct token = reader.read(true, NILStruct.INSTANCE, true);

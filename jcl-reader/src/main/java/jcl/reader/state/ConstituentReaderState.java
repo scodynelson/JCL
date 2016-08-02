@@ -5,7 +5,7 @@
 package jcl.reader.state;
 
 import jcl.lang.LispStruct;
-import jcl.lang.number.IntegerStruct;
+import jcl.lang.number.IntegerStructImpl;
 import jcl.lang.readtable.AttributeType;
 import jcl.lang.statics.ReaderVariables;
 import jcl.lang.readtable.ReadtableCase;
@@ -45,7 +45,7 @@ class ConstituentReaderState implements ReaderState {
 		final ReadtableStruct readtable = ReaderVariables.READTABLE.getVariableValue();
 		final ReadtableCase readtableCase = readtable.getReadtableCase();
 
-		final IntegerStruct readBase = ReaderVariables.READ_BASE.getVariableValue();
+		final IntegerStructImpl readBase = ReaderVariables.READ_BASE.getVariableValue();
 		final AttributeType attributeType = readtable.getAttributeType(codePoint, readBase);
 
 		codePoint = ReaderState.getProperCaseForCodePoint(codePoint, attributeType, readtableCase);

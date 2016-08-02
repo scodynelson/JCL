@@ -6,7 +6,7 @@ package jcl.type.typespecifier;
 
 import java.math.BigInteger;
 
-import jcl.lang.number.IntegerStruct;
+import jcl.lang.number.IntegerStructImpl;
 import jcl.type.TypeBaseClass;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -20,9 +20,9 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 public class ModTypeSpecifier extends TypeBaseClass implements CompoundTypeSpecifier {
 
 	/**
-	 * The {@link IntegerStruct} to check against the 'MOD' type specifier.
+	 * The {@link IntegerStructImpl} to check against the 'MOD' type specifier.
 	 */
-	private final IntegerStruct integerStruct;
+	private final IntegerStructImpl integerStruct;
 
 	/**
 	 * Public constructor.
@@ -30,7 +30,7 @@ public class ModTypeSpecifier extends TypeBaseClass implements CompoundTypeSpeci
 	 * @param integerStruct
 	 * 		the integer structure
 	 */
-	public ModTypeSpecifier(final IntegerStruct integerStruct) {
+	public ModTypeSpecifier(final IntegerStructImpl integerStruct) {
 		this("T", integerStruct); // TODO: Should this be 'T'???
 	}
 
@@ -42,7 +42,7 @@ public class ModTypeSpecifier extends TypeBaseClass implements CompoundTypeSpeci
 	 * @param integerStruct
 	 * 		the integer structure
 	 */
-	protected ModTypeSpecifier(final String name, final IntegerStruct integerStruct) {
+	protected ModTypeSpecifier(final String name, final IntegerStructImpl integerStruct) {
 		super(name);
 		this.integerStruct = integerStruct;
 	}
@@ -60,8 +60,8 @@ public class ModTypeSpecifier extends TypeBaseClass implements CompoundTypeSpeci
 			return true;
 		}
 
-		if (obj instanceof IntegerStruct) {
-			final IntegerStruct objectInteger = (IntegerStruct) obj;
+		if (obj instanceof IntegerStructImpl) {
+			final IntegerStructImpl objectInteger = (IntegerStructImpl) obj;
 			final BigInteger objectValue = objectInteger.bigIntegerValue();
 
 			if (objectValue.compareTo(BigInteger.ZERO) == -1) {

@@ -4,8 +4,8 @@
 
 package jcl.lang;
 
-import jcl.lang.number.IntegerStruct;
-import jcl.lang.number.RatioStruct;
+import jcl.lang.number.IntegerStructImpl;
+import jcl.lang.number.RatioStructImpl;
 import org.apfloat.Apcomplex;
 import org.apfloat.Apint;
 import org.apfloat.Aprational;
@@ -17,9 +17,9 @@ public interface RationalStruct extends RealStruct {
 
 	/**
 	 * Returns a RationalStruct from the provided {@link Aprational} value. If the {@link Aprational} is an {@link
-	 * Apint}, {@link IntegerStruct#valueOf(Apint)} is invoked to create the appropriate {@link IntegerStruct}
-	 * instead. Otherwise, {@link RatioStruct#valueOf(Aprational)} is invoked to create the appropriate {@link
-	 * RatioStruct}
+	 * Apint}, {@link IntegerStructImpl#valueOf(Apint)} is invoked to create the appropriate {@link IntegerStructImpl}
+	 * instead. Otherwise, {@link RatioStructImpl#valueOf(Aprational)} is invoked to create the appropriate {@link
+	 * RatioStructImpl}
 	 *
 	 * @param aprational
 	 * 		the {@link Aprational} to be used as the value of the resulting RationalStruct
@@ -28,15 +28,15 @@ public interface RationalStruct extends RealStruct {
 	 */
 	static RationalStruct valueOf(final Aprational aprational) {
 		if (aprational instanceof Apint) {
-			return IntegerStruct.valueOf((Apint) aprational);
+			return IntegerStructImpl.valueOf((Apint) aprational);
 		}
-		return RatioStruct.valueOf(aprational);
+		return RatioStructImpl.valueOf(aprational);
 	}
 
 	/**
 	 * Returns a RationalStruct object with the provided numerator and denominator {@link Apint} values. If the
-	 * denominator is equal to {@link Apcomplex#ONE}, an {@link IntegerStruct} is returned; otherwise a {@link
-	 * RatioStruct} is returned.
+	 * denominator is equal to {@link Apcomplex#ONE}, an {@link IntegerStructImpl} is returned; otherwise a {@link
+	 * RatioStructImpl} is returned.
 	 *
 	 * @param numerator
 	 * 		the {@link Apint} value of the numerator of the resulting RationalStruct
@@ -47,9 +47,9 @@ public interface RationalStruct extends RealStruct {
 	 */
 	static RationalStruct valueOf(final Apint numerator, final Apint denominator) {
 		if (Apcomplex.ONE.equals(denominator)) {
-			return IntegerStruct.valueOf(numerator);
+			return IntegerStructImpl.valueOf(numerator);
 		}
-		return RatioStruct.valueOf(numerator, denominator);
+		return RatioStructImpl.valueOf(numerator, denominator);
 	}
 
 	/**
@@ -57,14 +57,14 @@ public interface RationalStruct extends RealStruct {
 	 *
 	 * @return the numerator of this RationalStruct
 	 */
-	IntegerStruct numerator();
+	IntegerStructImpl numerator();
 
 	/**
 	 * Returns the denominator of this RationalStruct.
 	 *
 	 * @return the denominator of this RationalStruct
 	 */
-	IntegerStruct denominator();
+	IntegerStructImpl denominator();
 
 	/*
 		RealStruct
@@ -83,7 +83,7 @@ public interface RationalStruct extends RealStruct {
 	Aprational ap();
 
 	@Override
-	IntegerStruct signum();
+	IntegerStructImpl signum();
 
 	@Override
 	default RationalStruct realPart() {
@@ -91,8 +91,8 @@ public interface RationalStruct extends RealStruct {
 	}
 
 	@Override
-	default IntegerStruct imagPart() {
-		return IntegerStruct.ZERO;
+	default IntegerStructImpl imagPart() {
+		return IntegerStructImpl.ZERO;
 	}
 
 	@Override

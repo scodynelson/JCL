@@ -9,7 +9,7 @@ import java.math.MathContext;
 import java.math.RoundingMode;
 import java.util.LinkedList;
 
-import jcl.lang.number.FloatStruct;
+import jcl.lang.number.FloatStructImpl;
 import jcl.lang.NumberStruct;
 import jcl.lang.number.NumberUtils;
 import jcl.lang.readtable.AttributeType;
@@ -19,7 +19,7 @@ import jcl.type.FloatType;
 import org.springframework.stereotype.Component;
 
 /**
- * Sub-piece of Reader algorithm part 10.1, used to produce a {@link FloatStruct} output when a rational token is
+ * Sub-piece of Reader algorithm part 10.1, used to produce a {@link FloatStructImpl} output when a rational token is
  * supplied with both an {@link AttributeType#RATIOMARKER} and {@link AttributeType#DECIMAL}. This means using the
  * correct exponential division using {@link MathContext#DECIMAL128} and {@link RoundingMode#HALF_UP} to produce an
  * accurate float result.
@@ -75,7 +75,7 @@ public class RationalFloatTokenAccumulatedReaderState extends FloatTokenAccumula
 		// TODO: Not sure this is the best way to handle rational floats for the read algorithm. Might be a better way.
 		// TODO: FloatType???
 		final FloatType floatType = getFloatType(exponentTokenCodePoint);
-		return FloatStruct.valueOf(bigDecimal);
+		return FloatStructImpl.valueOf(bigDecimal);
 
 //		if (DoubleFloatType.INSTANCE.equals(floatType) || LongFloatType.INSTANCE.equals(floatType)) {
 //			try {

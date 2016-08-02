@@ -9,7 +9,7 @@ import jcl.lang.LispStruct;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
-import jcl.lang.number.IntegerStruct;
+import jcl.lang.number.IntegerStructImpl;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -30,8 +30,8 @@ public final class LogTestFunction extends CommonLispBuiltInFunctionStruct {
 
 	@Override
 	public LispStruct apply(final Arguments arguments) {
-		final IntegerStruct integer1 = arguments.getRequiredArgument(INTEGER1_ARGUMENT, IntegerStruct.class);
-		final IntegerStruct integer2 = arguments.getRequiredArgument(INTEGER2_ARGUMENT, IntegerStruct.class);
+		final IntegerStructImpl integer1 = arguments.getRequiredArgument(INTEGER1_ARGUMENT, IntegerStructImpl.class);
+		final IntegerStructImpl integer2 = arguments.getRequiredArgument(INTEGER2_ARGUMENT, IntegerStructImpl.class);
 
 		final boolean result = integer1.logTest(integer2);
 		return BooleanStruct.toLispBoolean(result);

@@ -11,7 +11,7 @@ import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.ListStruct;
 import jcl.lang.list.NILStruct;
-import jcl.lang.number.IntegerStruct;
+import jcl.lang.number.IntegerStructImpl;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -31,7 +31,7 @@ public final class MakeListFunction extends CommonLispBuiltInFunctionStruct {
 
 	@Override
 	public LispStruct apply(final Arguments arguments) {
-		final IntegerStruct size = arguments.getRequiredArgument(SIZE_ARGUMENT, IntegerStruct.class);
+		final IntegerStructImpl size = arguments.getRequiredArgument(SIZE_ARGUMENT, IntegerStructImpl.class);
 		final LispStruct initialElement = arguments.getKeyArgument(CommonLispSymbols.INITIAL_ELEMENT_KEYWORD);
 		return ListStruct.makeList(size.longValue(), initialElement);
 	}

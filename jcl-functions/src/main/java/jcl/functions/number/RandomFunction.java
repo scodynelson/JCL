@@ -12,10 +12,10 @@ import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
-import jcl.lang.number.FloatStruct;
-import jcl.lang.number.IntegerStruct;
+import jcl.lang.number.FloatStructImpl;
+import jcl.lang.number.IntegerStructImpl;
 import jcl.lang.statics.NumberVariables;
-import jcl.lang.number.RandomStateStruct;
+import jcl.lang.number.RandomStateStructImpl;
 import jcl.lang.RealStruct;
 import org.springframework.stereotype.Component;
 
@@ -38,18 +38,18 @@ public final class RandomFunction extends CommonLispBuiltInFunctionStruct {
 	@Override
 	public LispStruct apply(final Arguments arguments) {
 		final RealStruct real = arguments.getRequiredArgument(LIMIT_ARGUMENT, RealStruct.class);
-		final RandomStateStruct randomState = arguments.getRequiredArgument(RANDOM_STATE_ARGUMENT, RandomStateStruct.class);
+		final RandomStateStructImpl randomState = arguments.getRequiredArgument(RANDOM_STATE_ARGUMENT, RandomStateStructImpl.class);
 
-		if (real instanceof IntegerStruct) {
+		if (real instanceof IntegerStructImpl) {
 			// TODO: fix??
-			final IntegerStruct number = (IntegerStruct) real;
+			final IntegerStructImpl number = (IntegerStructImpl) real;
 			final BigInteger randomInteger = randomState.randomInteger(number.longValue());
-			return IntegerStruct.valueOf(randomInteger);
-		} else if (real instanceof FloatStruct) {
+			return IntegerStructImpl.valueOf(randomInteger);
+		} else if (real instanceof FloatStructImpl) {
 			// TODO: fix??
-			final FloatStruct number = (FloatStruct) real;
+			final FloatStructImpl number = (FloatStructImpl) real;
 			final BigDecimal randomFloat = randomState.randomFloat(number.doubleValue());
-			return FloatStruct.valueOf(randomFloat.doubleValue());
+			return FloatStructImpl.valueOf(randomFloat.doubleValue());
 		} else {
 			throw new TypeErrorException("Argument not of type Integer or Float: " + real);
 		}

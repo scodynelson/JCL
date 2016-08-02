@@ -2,7 +2,7 @@ package jcl.lang;
 
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.list.NILStruct;
-import jcl.lang.number.IntegerStruct;
+import jcl.lang.number.IntegerStructImpl;
 
 /**
  * The {@link CharacterStruct} is the object representation of a Lisp 'character' type.
@@ -532,11 +532,11 @@ public interface CharacterStruct extends LispStruct {
 	boolean isBothCase();
 
 	/**
-	 * Returns the codePoint of this CharacterStruct as an {@link IntegerStruct}.
+	 * Returns the codePoint of this CharacterStruct as an {@link IntegerStructImpl}.
 	 *
-	 * @return the codePoint of this CharacterStruct as an {@link IntegerStruct}
+	 * @return the codePoint of this CharacterStruct as an {@link IntegerStructImpl}
 	 */
-	IntegerStruct charCode();
+	IntegerStructImpl charCode();
 
 	/**
 	 * Returns the {@link StringStruct} representing the name of this CharacterStruct.
@@ -551,7 +551,7 @@ public interface CharacterStruct extends LispStruct {
 	 *
 	 * @return the character encoding of the CharacterStruct
 	 */
-	IntegerStruct charInt();
+	IntegerStructImpl charInt();
 
 	/**
 	 * Determines the digit representation of this character in the specified radix. If the value of the {@code radix}
@@ -562,5 +562,5 @@ public interface CharacterStruct extends LispStruct {
 	 *
 	 * @return the character representation of this character in the specified radix
 	 */
-	LispStruct charDigit(final IntegerStruct radix);
+	LispStruct charDigit(final IntegerStructImpl radix);
 }

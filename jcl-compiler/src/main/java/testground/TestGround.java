@@ -29,10 +29,10 @@ import jcl.lang.function.FunctionStruct;
 import jcl.lang.list.ConsStruct;
 import jcl.lang.ListStruct;
 import jcl.lang.list.NILStruct;
-import jcl.lang.number.ComplexStruct;
-import jcl.lang.number.FloatStruct;
-import jcl.lang.number.IntegerStruct;
-import jcl.lang.number.RatioStruct;
+import jcl.lang.number.ComplexStructImpl;
+import jcl.lang.number.FloatStructImpl;
+import jcl.lang.number.IntegerStructImpl;
+import jcl.lang.number.RatioStructImpl;
 import org.apfloat.Apcomplex;
 import org.apfloat.Apfloat;
 import org.apfloat.Apint;
@@ -127,23 +127,23 @@ public class TestGround {
 
 	private Object floatGen() {
 		final Apfloat apfloat = new Apfloat("0");
-		return FloatStruct.valueOf(apfloat);
+		return FloatStructImpl.valueOf(apfloat);
 	}
 
 	private Object integerGen() {
 		final Apint apint = new Apint("0");
-		return IntegerStruct.valueOf(apint);
+		return IntegerStructImpl.valueOf(apint);
 	}
 
 	private Object ratioGen() {
 		final Aprational aprational = new Aprational("0");
-		return RatioStruct.valueOf(aprational);
+		return RatioStructImpl.valueOf(aprational);
 	}
 
 	private Object complexGen() {
 		final Apcomplex apcomplex = new Apcomplex("0");
-		final ComplexStruct.ValueType valueType = ComplexStruct.ValueType.FLOAT;
-		return ComplexStruct.valueOf(apcomplex, valueType);
+		final ComplexStructImpl.ValueType valueType = ComplexStructImpl.ValueType.FLOAT;
+		return ComplexStructImpl.valueOf(apcomplex, valueType);
 	}
 
 	private Object valuesGen() {
@@ -170,8 +170,8 @@ public class TestGround {
 	}
 
 	private Object bitVectorGen() {
-		final List<IntegerStruct> contents = new ArrayList<>();
-		final IntegerStruct content = IntegerStruct.valueOf(BigInteger.ZERO);
+		final List<IntegerStructImpl> contents = new ArrayList<>();
+		final IntegerStructImpl content = IntegerStructImpl.valueOf(BigInteger.ZERO);
 		contents.add(content);
 
 		return LispStructFactory.toBitVector(contents);
@@ -179,7 +179,7 @@ public class TestGround {
 
 	private Object vectorGen() {
 		final List<LispStruct> contents = new ArrayList<>();
-		final IntegerStruct content = IntegerStruct.valueOf(BigInteger.ZERO);
+		final IntegerStructImpl content = IntegerStructImpl.valueOf(BigInteger.ZERO);
 		contents.add(content);
 
 		return LispStructFactory.toVector(contents);
@@ -191,7 +191,7 @@ public class TestGround {
 		dimensions.add(dimension);
 
 		final List<LispStruct> contents = new ArrayList<>();
-		final IntegerStruct content = IntegerStruct.valueOf(BigInteger.ZERO);
+		final IntegerStructImpl content = IntegerStructImpl.valueOf(BigInteger.ZERO);
 		contents.add(content);
 
 		return LispStructFactory.toArray(dimensions, contents);

@@ -9,7 +9,7 @@ import jcl.lang.LispStruct;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
-import jcl.lang.number.IntegerStruct;
+import jcl.lang.number.IntegerStructImpl;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -28,7 +28,7 @@ public final class OddPFunction extends CommonLispBuiltInFunctionStruct {
 
 	@Override
 	public LispStruct apply(final Arguments arguments) {
-		final IntegerStruct integer = arguments.getRequiredArgument(INTEGER_ARGUMENT, IntegerStruct.class);
+		final IntegerStructImpl integer = arguments.getRequiredArgument(INTEGER_ARGUMENT, IntegerStructImpl.class);
 		final boolean result = integer.oddp();
 		return BooleanStruct.toLispBoolean(result);
 	}

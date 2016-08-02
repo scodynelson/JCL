@@ -9,7 +9,7 @@ import jcl.lang.LispStruct;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
-import jcl.lang.number.IntegerStruct;
+import jcl.lang.number.IntegerStructImpl;
 import org.springframework.stereotype.Component;
 
 /**
@@ -27,28 +27,28 @@ public final class DigitCharPFunction extends CommonLispBuiltInFunctionStruct {
 		      "DIGIT-CHAR-P",
 		      Parameters.forFunction("DIGIT-CHAR-P")
 		                .requiredParameter("CHARACTER")
-		                .optionalParameter("RADIX").withInitialValue(IntegerStruct.TEN)
+		                .optionalParameter("RADIX").withInitialValue(IntegerStructImpl.TEN)
 		);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 * Application method for the {@code digit-char-p} character function that expects an {@link CharacterStruct}
-	 * parameter object with an optional {@link IntegerStruct} radix parameter object and applies {@link
-	 * CharacterStruct#charDigit(IntegerStruct)} against the value and the radix value retrieved from the parameters
-	 * passed to the {@link #getRadix(LispStruct...)} method to retrieve the weighted {@link IntegerStruct} character
+	 * parameter object with an optional {@link IntegerStructImpl} radix parameter object and applies {@link
+	 * CharacterStruct#charDigit(IntegerStructImpl)} against the value and the radix value retrieved from the parameters
+	 * passed to the {@link #getRadix(LispStruct...)} method to retrieve the weighted {@link IntegerStructImpl} character
 	 * code for the {@link CharacterStruct} parameter and optional radix value.
 	 *
 	 * @param lispStructs
 	 * 		the function parameters
 	 *
-	 * @return the weighted {@link IntegerStruct} character code for the {@link CharacterStruct} parameter and optional
+	 * @return the weighted {@link IntegerStructImpl} character code for the {@link CharacterStruct} parameter and optional
 	 * radix value
 	 */
 	@Override
 	public LispStruct apply(final Arguments arguments) {
 		final CharacterStruct character = arguments.getRequiredArgument("CHARACTER", CharacterStruct.class);
-		final IntegerStruct radix = arguments.getRequiredArgument("RADIX", IntegerStruct.class);
+		final IntegerStructImpl radix = arguments.getRequiredArgument("RADIX", IntegerStructImpl.class);
 		return character.charDigit(radix);
 	}
 }

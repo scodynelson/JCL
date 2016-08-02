@@ -6,11 +6,11 @@ import jcl.lang.LispStruct;
 import jcl.lang.PackageStruct;
 import jcl.lang.VariableStruct;
 import jcl.lang.condition.exception.TypeErrorException;
-import jcl.lang.number.IntegerStruct;
+import jcl.lang.number.IntegerStructImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-class NonNegNilVariable extends VariableStruct<IntegerStruct> {
+class NonNegNilVariable extends VariableStruct<IntegerStructImpl> {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(NonNegNilVariable.class);
 
@@ -20,11 +20,11 @@ class NonNegNilVariable extends VariableStruct<IntegerStruct> {
 
 	@Override
 	public void setValue(final LispStruct value) {
-		if (!(value instanceof IntegerStruct)) {
+		if (!(value instanceof IntegerStructImpl)) {
 			// TODO: Fix me
 			throw new TypeErrorException("Must be Integer value.");
 		}
-		final IntegerStruct variableValue = (IntegerStruct) value;
+		final IntegerStructImpl variableValue = (IntegerStructImpl) value;
 
 		// TODO: optimize??
 		final BigInteger bigIntegerValue = variableValue.bigIntegerValue();

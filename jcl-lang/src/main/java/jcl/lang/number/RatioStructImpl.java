@@ -10,9 +10,9 @@ import org.apfloat.Aprational;
 import org.apfloat.AprationalMath;
 
 /**
- * The {@link RatioStruct} is the object representation of a Lisp 'ratio' type.
+ * The {@link RatioStructImpl} is the object representation of a Lisp 'ratio' type.
  */
-public final class RatioStruct extends RationalStructImpl<Aprational> {
+public final class RatioStructImpl extends RationalStructImpl<Aprational> {
 
 	/**
 	 * Private constructor.
@@ -20,7 +20,7 @@ public final class RatioStruct extends RationalStructImpl<Aprational> {
 	 * @param aprational
 	 * 		the value of the RatioStruct
 	 */
-	private RatioStruct(final Aprational aprational) {
+	private RatioStructImpl(final Aprational aprational) {
 		super(RatioType.INSTANCE, aprational);
 	}
 
@@ -32,7 +32,7 @@ public final class RatioStruct extends RationalStructImpl<Aprational> {
 	 *
 	 * @return a new RatioStruct representing the provided {@link String}
 	 */
-	public static RatioStruct valueOf(final String s) {
+	public static RatioStructImpl valueOf(final String s) {
 		final Aprational aprational = new Aprational(s);
 		return valueOf(aprational);
 	}
@@ -45,8 +45,8 @@ public final class RatioStruct extends RationalStructImpl<Aprational> {
 	 *
 	 * @return a RatioStruct object with the provided {@link Aprational} value
 	 */
-	public static RatioStruct valueOf(final Aprational aprational) {
-		return new RatioStruct(aprational);
+	public static RatioStructImpl valueOf(final Aprational aprational) {
+		return new RatioStructImpl(aprational);
 	}
 
 	/**
@@ -59,7 +59,7 @@ public final class RatioStruct extends RationalStructImpl<Aprational> {
 	 *
 	 * @return a RatioStruct object with the provided numerator and denominator {@link Apint} values
 	 */
-	public static RatioStruct valueOf(final Apint numerator, final Apint denominator) {
+	public static RatioStructImpl valueOf(final Apint numerator, final Apint denominator) {
 		final Aprational aprational = new Aprational(numerator, denominator);
 		return valueOf(aprational);
 	}
@@ -69,7 +69,7 @@ public final class RatioStruct extends RationalStructImpl<Aprational> {
 	 */
 
 	@Override
-	public RatioStruct rational() {
+	public RatioStructImpl rational() {
 		return this;
 	}
 
@@ -78,23 +78,23 @@ public final class RatioStruct extends RationalStructImpl<Aprational> {
 	 */
 
 	@Override
-	public RatioStruct abs() {
+	public RatioStructImpl abs() {
 		final Aprational abs = AprationalMath.abs(ap);
 		return valueOf(abs);
 	}
 
 	@Override
-	public RatioStruct realPart() {
+	public RatioStructImpl realPart() {
 		return this;
 	}
 
 	@Override
-	public RatioStruct conjugate() {
+	public RatioStructImpl conjugate() {
 		return this;
 	}
 
 	@Override
-	public RatioStruct negation() {
+	public RatioStructImpl negation() {
 		final Aprational negate = ap.negate();
 		return valueOf(negate);
 	}

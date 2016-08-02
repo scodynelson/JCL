@@ -13,7 +13,7 @@ import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.list.NILStruct;
-import jcl.lang.number.IntegerStruct;
+import jcl.lang.number.IntegerStructImpl;
 import jcl.lang.OutputStreamStruct;
 import jcl.lang.statics.StreamVariables;
 import org.springframework.stereotype.Component;
@@ -31,7 +31,7 @@ public final class WriteLineFunction extends CommonLispBuiltInFunctionStruct {
 		      Parameters.forFunction(FUNCTION_NAME)
 		                .requiredParameter(STRING_ARGUMENT)
 		                .optionalParameter(OUTPUT_STREAM_ARGUMENT).withInitialValue(StreamVariables.STANDARD_OUTPUT.getVariableValue())
-		                .keyParameter(CommonLispSymbols.START_KEYWORD).withInitialValue(IntegerStruct.ZERO)
+		                .keyParameter(CommonLispSymbols.START_KEYWORD).withInitialValue(IntegerStructImpl.ZERO)
 		                .keyParameter(CommonLispSymbols.END_KEYWORD).withInitialValue(NILStruct.INSTANCE)
 		);
 	}
@@ -52,14 +52,14 @@ public final class WriteLineFunction extends CommonLispBuiltInFunctionStruct {
 			throw new TypeErrorException("The value " + lispStruct + " is not either T, NIL, or an Output Stream.");
 		}
 
-		final IntegerStruct startParam = arguments.getKeyArgument(CommonLispSymbols.START_KEYWORD, IntegerStruct.class);
+		final IntegerStructImpl startParam = arguments.getKeyArgument(CommonLispSymbols.START_KEYWORD, IntegerStructImpl.class);
 		final int start = startParam.intValue();
 
 		final LispStruct endParam = arguments.getKeyArgument(CommonLispSymbols.END_KEYWORD);
 
 		final String javaString = stringParam.getAsJavaString();
-		if (endParam instanceof IntegerStruct) {
-			final int end = ((IntegerStruct) endParam).intValue();
+		if (endParam instanceof IntegerStructImpl) {
+			final int end = ((IntegerStructImpl) endParam).intValue();
 			outputStreamStruct.writeLine(javaString, start, end);
 		} else {
 			outputStreamStruct.writeLine(javaString, start);

@@ -8,7 +8,7 @@ import jcl.lang.LispStruct;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
-import jcl.lang.number.IntegerStruct;
+import jcl.lang.number.IntegerStructImpl;
 import jcl.lang.NumberStruct;
 import org.springframework.stereotype.Component;
 
@@ -29,6 +29,6 @@ public final class OnePlusFunction extends CommonLispBuiltInFunctionStruct {
 	@Override
 	public LispStruct apply(final Arguments arguments) {
 		final NumberStruct number = arguments.getRequiredArgument(NUMBER_ARGUMENT, NumberStruct.class);
-		return number.add(IntegerStruct.ONE);
+		return number.add(IntegerStructImpl.ONE);
 	}
 }

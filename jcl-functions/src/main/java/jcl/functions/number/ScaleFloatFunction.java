@@ -8,8 +8,8 @@ import jcl.lang.LispStruct;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
-import jcl.lang.number.FloatStruct;
-import jcl.lang.number.IntegerStruct;
+import jcl.lang.number.FloatStructImpl;
+import jcl.lang.number.IntegerStructImpl;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -30,8 +30,8 @@ public final class ScaleFloatFunction extends CommonLispBuiltInFunctionStruct {
 
 	@Override
 	public LispStruct apply(final Arguments arguments) {
-		final FloatStruct floatVal = arguments.getRequiredArgument(FLOAT_ARGUMENT, FloatStruct.class);
-		final IntegerStruct scale = arguments.getRequiredArgument(SCALE_ARGUMENT, IntegerStruct.class);
+		final FloatStructImpl floatVal = arguments.getRequiredArgument(FLOAT_ARGUMENT, FloatStructImpl.class);
+		final IntegerStructImpl scale = arguments.getRequiredArgument(SCALE_ARGUMENT, IntegerStructImpl.class);
 		return floatVal.scaleFloat(scale);
 	}
 }

@@ -4,7 +4,7 @@ import jcl.lang.LispStruct;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
-import jcl.lang.number.IntegerStruct;
+import jcl.lang.number.IntegerStructImpl;
 import jcl.lang.SequenceStruct;
 import org.springframework.stereotype.Component;
 
@@ -27,7 +27,7 @@ public final class EltFunction extends CommonLispBuiltInFunctionStruct {
 	@Override
 	public LispStruct apply(final Arguments arguments) {
 		final SequenceStruct sequence = arguments.getRequiredArgument(SEQUENCE_ARGUMENT, SequenceStruct.class);
-		final IntegerStruct index = arguments.getRequiredArgument(INDEX_ARGUMENT, IntegerStruct.class);
+		final IntegerStructImpl index = arguments.getRequiredArgument(INDEX_ARGUMENT, IntegerStructImpl.class);
 
 		final long indexValue = index.longValue();
 		return sequence.elt(indexValue);

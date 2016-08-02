@@ -13,7 +13,7 @@ import jcl.compiler.icg.IntermediateCodeGenerator;
 import jcl.compiler.icg.JavaMethodBuilder;
 import jcl.lang.BitVectorStruct;
 import jcl.lang.internal.BitVectorStructImpl;
-import jcl.lang.number.IntegerStruct;
+import jcl.lang.number.IntegerStructImpl;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +28,7 @@ import org.springframework.stereotype.Component;
 final class BitVectorCodeGenerator implements CodeGenerator<BitVectorStructImpl> {
 
 	/**
-	 * {@link IntermediateCodeGenerator} used for generating the {@link BitVectorStruct} {@link IntegerStruct} content
+	 * {@link IntermediateCodeGenerator} used for generating the {@link BitVectorStruct} {@link IntegerStructImpl} content
 	 * values.
 	 */
 	@Autowired
@@ -38,7 +38,7 @@ final class BitVectorCodeGenerator implements CodeGenerator<BitVectorStructImpl>
 	 * {@inheritDoc}
 	 * Generation method for {@link BitVectorStruct} objects, by performing the following operations:
 	 * <ol>
-	 * <li>Building the {@link BitVectorStruct#getContents()}, ensuring that each content {@link IntegerStruct} value is
+	 * <li>Building the {@link BitVectorStruct#getContents()}, ensuring that each content {@link IntegerStructImpl} value is
 	 * generated properly</li>
 	 * <li>Constructing a new {@link BitVectorStruct} with the built content {@link List}</li>
 	 * </ol>
@@ -68,8 +68,8 @@ final class BitVectorCodeGenerator implements CodeGenerator<BitVectorStructImpl>
 
 		final int contentStore = methodBuilder.getNextAvailableStore();
 
-		final List<IntegerStruct> contents = input.getContents();
-		for (final IntegerStruct content : contents) {
+		final List<IntegerStructImpl> contents = input.getContents();
+		for (final IntegerStructImpl content : contents) {
 			codeGenerator.generate(content, generatorState);
 			mv.visitVarInsn(Opcodes.ASTORE, contentStore);
 

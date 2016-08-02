@@ -12,19 +12,19 @@ import jcl.type.RandomStateType;
 import org.apache.commons.lang3.RandomUtils;
 
 /**
- * The {@link RandomStateStruct} is the object representation of a Lisp 'random-state' type.
+ * The {@link RandomStateStructImpl} is the object representation of a Lisp 'random-state' type.
  */
-public final class RandomStateStruct extends BuiltInClassStruct {
+public final class RandomStateStructImpl extends BuiltInClassStruct {
 
 	/**
 	 * Public constructor.
 	 */
-	private RandomStateStruct() {
+	private RandomStateStructImpl() {
 		super(RandomStateType.INSTANCE, null, null);
 	}
 
-	public static RandomStateStruct valueOf() {
-		return new RandomStateStruct();
+	public static RandomStateStructImpl valueOf() {
+		return new RandomStateStructImpl();
 	}
 
 	/**

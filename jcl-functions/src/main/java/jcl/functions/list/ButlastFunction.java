@@ -9,7 +9,7 @@ import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.ListStruct;
-import jcl.lang.number.IntegerStruct;
+import jcl.lang.number.IntegerStructImpl;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -24,14 +24,14 @@ public final class ButlastFunction extends CommonLispBuiltInFunctionStruct {
 		      FUNCTION_NAME,
 		      Parameters.forFunction(FUNCTION_NAME)
 		                .requiredParameter(LIST_ARGUMENT)
-		                .optionalParameter(N_ARGUMENT).withInitialValue(IntegerStruct.ONE)
+		                .optionalParameter(N_ARGUMENT).withInitialValue(IntegerStructImpl.ONE)
 		);
 	}
 
 	@Override
 	public LispStruct apply(final Arguments arguments) {
 		final ListStruct list = arguments.getRequiredArgument(LIST_ARGUMENT, ListStruct.class);
-		final IntegerStruct n = arguments.getOptionalArgument(N_ARGUMENT, IntegerStruct.class);
+		final IntegerStructImpl n = arguments.getOptionalArgument(N_ARGUMENT, IntegerStructImpl.class);
 		return list.butLast(n.longValue());
 	}
 }

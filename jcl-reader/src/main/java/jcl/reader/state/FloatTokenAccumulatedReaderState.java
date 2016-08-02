@@ -7,7 +7,7 @@ package jcl.reader.state;
 import java.math.RoundingMode;
 import java.util.LinkedList;
 
-import jcl.lang.number.FloatStruct;
+import jcl.lang.number.FloatStructImpl;
 import jcl.lang.NumberStruct;
 import jcl.lang.readtable.AttributeType;
 import jcl.lang.statics.ReaderVariables;
@@ -22,7 +22,7 @@ import jcl.util.CodePointConstants;
 import org.springframework.stereotype.Component;
 
 /**
- * Sub-piece of Reader algorithm part 10.1, used to produce a {@link FloatStruct} output when a float token is
+ * Sub-piece of Reader algorithm part 10.1, used to produce a {@link FloatStructImpl} output when a float token is
  * supplied. This means using the correct exponential {@link RoundingMode#HALF_UP} to produce an accurate float result.
  */
 @Component
@@ -40,7 +40,7 @@ public class FloatTokenAccumulatedReaderState implements ReaderState {
 
 		// TODO: FloatType???
 		final FloatType floatType = getFloatType(exponentTokenCodePoint);
-		return FloatStruct.valueOf(tokenString);
+		return FloatStructImpl.valueOf(tokenString);
 
 //		if (DoubleFloatType.INSTANCE.equals(floatType) || LongFloatType.INSTANCE.equals(floatType)) {
 //			try {

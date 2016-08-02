@@ -20,7 +20,7 @@ import jcl.compiler.struct.specialoperator.go.GoStruct;
 import jcl.compiler.struct.specialoperator.go.GoSymbolStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.SymbolStruct;
-import jcl.lang.number.IntegerStruct;
+import jcl.lang.number.IntegerStructImpl;
 
 final class TagbodyTagSetCollector implements Collector<LispStruct, List<GoStruct<?>>, List<GoStruct<?>>> {
 
@@ -37,8 +37,8 @@ final class TagbodyTagSetCollector implements Collector<LispStruct, List<GoStruc
 			if (current instanceof SymbolStruct) {
 				final GoStruct<?> goTag = new GoSymbolStruct((SymbolStruct) current);
 				tagSet.add(goTag);
-			} else if (current instanceof IntegerStruct) {
-				final GoStruct<?> goTag = new GoIntegerStruct((IntegerStruct) current);
+			} else if (current instanceof IntegerStructImpl) {
+				final GoStruct<?> goTag = new GoIntegerStruct((IntegerStructImpl) current);
 				tagSet.add(goTag);
 			}
 		};

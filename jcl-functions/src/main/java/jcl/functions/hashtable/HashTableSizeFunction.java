@@ -11,7 +11,7 @@ import jcl.lang.LispStruct;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
-import jcl.lang.number.IntegerStruct;
+import jcl.lang.number.IntegerStructImpl;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -32,6 +32,6 @@ public final class HashTableSizeFunction extends CommonLispBuiltInFunctionStruct
 	public LispStruct apply(final Arguments arguments) {
 		final HashTableStruct hashTable = arguments.getRequiredArgument(HASH_TABLE_ARGUMENT, HashTableStruct.class);
 		final BigInteger size = hashTable.getSize();
-		return IntegerStruct.valueOf(size);
+		return IntegerStructImpl.valueOf(size);
 	}
 }

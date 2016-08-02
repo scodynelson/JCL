@@ -10,7 +10,7 @@ import java.util.Optional;
 import jcl.lang.CharacterStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.SymbolStruct;
-import jcl.lang.number.IntegerStruct;
+import jcl.lang.number.IntegerStructImpl;
 import jcl.lang.readtable.Reader;
 import jcl.lang.InputStreamStruct;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -55,7 +55,7 @@ public abstract class ReaderMacroFunction extends FunctionStruct {
 
 		final Optional<BigInteger> numberArgument;
 		if (isDispatch()) {
-			final IntegerStruct macroNumberArgument = (IntegerStruct) lispStructs[2];
+			final IntegerStructImpl macroNumberArgument = (IntegerStructImpl) lispStructs[2];
 			// TODO: optimize??
 			final BigInteger bigInteger = macroNumberArgument.bigIntegerValue();
 			numberArgument = Optional.of(bigInteger);

@@ -7,7 +7,7 @@ package jcl.lang.readtable;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import jcl.lang.number.IntegerStruct;
+import jcl.lang.number.IntegerStructImpl;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -166,11 +166,11 @@ class AttributeTable {
 	 * @param codePoint
 	 * 		the {@code codePoint} used to find the matching attribute type
 	 * @param readBase
-	 * 		the {@link IntegerStruct} representation of the current *read-base* value
+	 * 		the {@link IntegerStructImpl} representation of the current *read-base* value
 	 *
 	 * @return the matching attribute type for the provided {@code codePoint}
 	 */
-	AttributeType getAttribute(final int codePoint, final IntegerStruct readBase) {
+	AttributeType getAttribute(final int codePoint, final IntegerStructImpl readBase) {
 		if (attributeTypeMap.containsKey(codePoint)) {
 			AttributeType attributeType = attributeTypeMap.get(codePoint);
 

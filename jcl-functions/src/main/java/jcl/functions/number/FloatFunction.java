@@ -8,7 +8,7 @@ import jcl.lang.LispStruct;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
-import jcl.lang.number.FloatStruct;
+import jcl.lang.number.FloatStructImpl;
 import jcl.lang.RealStruct;
 import org.springframework.stereotype.Component;
 
@@ -32,7 +32,7 @@ public final class FloatFunction extends CommonLispBuiltInFunctionStruct {
 	public LispStruct apply(final Arguments arguments) {
 		final RealStruct real = arguments.getRequiredArgument(REAL_ARGUMENT, RealStruct.class);
 		if (arguments.hasOptionalArgument(PROTOTYPE_ARGUMENT)) {
-			final FloatStruct prototype = arguments.getOptionalArgument(PROTOTYPE_ARGUMENT, FloatStruct.class);
+			final FloatStructImpl prototype = arguments.getOptionalArgument(PROTOTYPE_ARGUMENT, FloatStructImpl.class);
 			return real.floatingPoint(prototype);
 		}
 		return real.floatingPoint();

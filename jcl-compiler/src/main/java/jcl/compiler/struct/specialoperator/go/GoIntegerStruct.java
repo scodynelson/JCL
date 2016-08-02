@@ -4,11 +4,11 @@
 
 package jcl.compiler.struct.specialoperator.go;
 
-import jcl.lang.number.IntegerStruct;
+import jcl.lang.number.IntegerStructImpl;
 
-public class GoIntegerStruct extends GoStruct<IntegerStruct> {
+public class GoIntegerStruct extends GoStruct<IntegerStructImpl> {
 
-	public GoIntegerStruct(final IntegerStruct tag) {
+	public GoIntegerStruct(final IntegerStructImpl tag) {
 		super(tag);
 	}
 }

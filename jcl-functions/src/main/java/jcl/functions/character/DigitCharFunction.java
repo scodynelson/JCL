@@ -11,7 +11,7 @@ import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.list.NILStruct;
-import jcl.lang.number.IntegerStruct;
+import jcl.lang.number.IntegerStructImpl;
 import org.springframework.stereotype.Component;
 
 /**
@@ -30,28 +30,28 @@ public final class DigitCharFunction extends CommonLispBuiltInFunctionStruct {
 		      "DIGIT-CHAR",
 		      Parameters.forFunction("DIGIT-CHAR")
 		                .requiredParameter("WEIGHT")
-		                .optionalParameter("RADIX").withInitialValue(IntegerStruct.TEN)
+		                .optionalParameter("RADIX").withInitialValue(IntegerStructImpl.TEN)
 		);
 	}
 
 	/**
 	 * {@inheritDoc}
-	 * Application method for the {@code digit-char} character function that expects an {@link IntegerStruct} weight
-	 * parameter object with an optional {@link IntegerStruct} radix parameter object and applies {@link
-	 * CharacterStruct#digitChar(IntegerStruct, IntegerStruct)} against the value and the radix value retrieved from
+	 * Application method for the {@code digit-char} character function that expects an {@link IntegerStructImpl} weight
+	 * parameter object with an optional {@link IntegerStructImpl} radix parameter object and applies {@link
+	 * CharacterStruct#digitChar(IntegerStructImpl, IntegerStructImpl)} against the value and the radix value retrieved from
 	 * the parameters passed to the {@link #getRadix(LispStruct...)} method to retrieve the weighted {@link
-	 * CharacterStruct} for the {@link IntegerStruct} parameter weight and optional radix value.
+	 * CharacterStruct} for the {@link IntegerStructImpl} parameter weight and optional radix value.
 	 *
 	 * @param lispStructs
 	 * 		the function parameters
 	 *
-	 * @return the weighted {@link CharacterStruct} for the {@link IntegerStruct} parameter weight and optional radix
+	 * @return the weighted {@link CharacterStruct} for the {@link IntegerStructImpl} parameter weight and optional radix
 	 * value
 	 */
 	@Override
 	public LispStruct apply(final Arguments arguments) {
-		final IntegerStruct weight = arguments.getRequiredArgument("WEIGHT", IntegerStruct.class);
-		final IntegerStruct radix = arguments.getRequiredArgument("RADIX", IntegerStruct.class);
+		final IntegerStructImpl weight = arguments.getRequiredArgument("WEIGHT", IntegerStructImpl.class);
+		final IntegerStructImpl radix = arguments.getRequiredArgument("RADIX", IntegerStructImpl.class);
 
 		final int weightInt = weight.intValue();
 		final int radixInt = radix.intValue();

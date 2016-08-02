@@ -8,8 +8,8 @@ import jcl.lang.LispStruct;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
-import jcl.lang.number.FloatStruct;
-import jcl.lang.number.IntegerStruct;
+import jcl.lang.number.FloatStructImpl;
+import jcl.lang.number.IntegerStructImpl;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -24,18 +24,18 @@ public final class FloatSignFunction extends CommonLispBuiltInFunctionStruct {
 		      FUNCTION_NAME,
 		      Parameters.forFunction(FUNCTION_NAME)
 		                .requiredParameter(FLOAT1_ARGUMENT)
-		                .optionalParameter(FLOAT2_ARGUMENT).withInitialValue(IntegerStruct.ONE)
+		                .optionalParameter(FLOAT2_ARGUMENT).withInitialValue(IntegerStructImpl.ONE)
 		);
 	}
 
 	@Override
 	public LispStruct apply(final Arguments arguments) {
 		if (arguments.hasOptionalArgument(FLOAT2_ARGUMENT)) {
-			final FloatStruct float1 = arguments.getRequiredArgument(FLOAT1_ARGUMENT, FloatStruct.class);
-			final FloatStruct float2 = arguments.getOptionalArgument(FLOAT2_ARGUMENT, FloatStruct.class);
+			final FloatStructImpl float1 = arguments.getRequiredArgument(FLOAT1_ARGUMENT, FloatStructImpl.class);
+			final FloatStructImpl float2 = arguments.getOptionalArgument(FLOAT2_ARGUMENT, FloatStructImpl.class);
 			return float1.floatSign(float2);
 		} else {
-			final FloatStruct float1 = arguments.getRequiredArgument(FLOAT1_ARGUMENT, FloatStruct.class);
+			final FloatStructImpl float1 = arguments.getRequiredArgument(FLOAT1_ARGUMENT, FloatStructImpl.class);
 			return float1.floatSign();
 		}
 	}

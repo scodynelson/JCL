@@ -14,39 +14,39 @@ import org.apfloat.Apint;
 import org.apfloat.Aprational;
 
 /**
- * The {@link ComplexStruct} is the object representation of a Lisp 'complex' type.
+ * The {@link ComplexStructImpl} is the object representation of a Lisp 'complex' type.
  */
-public final class ComplexStruct extends NumberStructImpl<Apcomplex> {
+public final class ComplexStructImpl extends NumberStructImpl<Apcomplex> {
 
 	/**
-	 * {@link ComplexStruct} constant representing I.
+	 * {@link ComplexStructImpl} constant representing I.
 	 */
-	public static final ComplexStruct I = valueOf(Apcomplex.I, ValueType.RATIONAL);
+	public static final ComplexStructImpl I = valueOf(Apcomplex.I, ValueType.RATIONAL);
 
 	/**
-	 * {@link ComplexStruct} constant representing -I.
+	 * {@link ComplexStructImpl} constant representing -I.
 	 */
-	public static final ComplexStruct NEGATE_I = valueOf(Apcomplex.ZERO, new Apint(-1L), ValueType.RATIONAL);
+	public static final ComplexStructImpl NEGATE_I = valueOf(Apcomplex.ZERO, new Apint(-1L), ValueType.RATIONAL);
 
 	/**
-	 * {@link ComplexStruct} constant representing 0.
+	 * {@link ComplexStructImpl} constant representing 0.
 	 */
-	public static final ComplexStruct ZERO = valueOf(Apcomplex.ZERO, ValueType.RATIONAL);
+	public static final ComplexStructImpl ZERO = valueOf(Apcomplex.ZERO, ValueType.RATIONAL);
 
 	/**
-	 * {@link ComplexStruct} constant representing 0.0.
+	 * {@link ComplexStructImpl} constant representing 0.0.
 	 */
-	public static final ComplexStruct ZERO_FLOAT = valueOf(Apcomplex.ZERO, ValueType.FLOAT);
+	public static final ComplexStructImpl ZERO_FLOAT = valueOf(Apcomplex.ZERO, ValueType.FLOAT);
 
 	/**
-	 * {@link ComplexStruct} constant representing 1.
+	 * {@link ComplexStructImpl} constant representing 1.
 	 */
-	public static final ComplexStruct ONE = valueOf(Apcomplex.ONE, ValueType.RATIONAL);
+	public static final ComplexStructImpl ONE = valueOf(Apcomplex.ONE, ValueType.RATIONAL);
 
 	/**
-	 * {@link ComplexStruct} constant representing 1.0.
+	 * {@link ComplexStructImpl} constant representing 1.0.
 	 */
-	public static final ComplexStruct ONE_FLOAT = valueOf(Apcomplex.ONE, ValueType.FLOAT);
+	public static final ComplexStructImpl ONE_FLOAT = valueOf(Apcomplex.ONE, ValueType.FLOAT);
 
 	public enum ValueType {
 		RATIONAL,
@@ -61,7 +61,7 @@ public final class ComplexStruct extends NumberStructImpl<Apcomplex> {
 	 * @param apcomplex
 	 * 		the value of the ComplexStruct
 	 */
-	private ComplexStruct(final Apcomplex apcomplex, final ValueType valueType) {
+	private ComplexStructImpl(final Apcomplex apcomplex, final ValueType valueType) {
 		super(ComplexType.INSTANCE, apcomplex);
 		this.valueType = valueType;
 	}
@@ -78,8 +78,8 @@ public final class ComplexStruct extends NumberStructImpl<Apcomplex> {
 	 *
 	 * @return a ComplexStruct object with the provided {@link Apcomplex} value
 	 */
-	public static ComplexStruct valueOf(final Apcomplex apcomplex, final ValueType valueType) {
-		return new ComplexStruct(apcomplex, valueType);
+	public static ComplexStructImpl valueOf(final Apcomplex apcomplex, final ValueType valueType) {
+		return new ComplexStructImpl(apcomplex, valueType);
 	}
 
 	/**
@@ -92,12 +92,12 @@ public final class ComplexStruct extends NumberStructImpl<Apcomplex> {
 	 *
 	 * @return a ComplexStruct object with the provided real and imaginary {@link Apfloat} values
 	 */
-	public static ComplexStruct valueOf(final Apfloat real, final Apfloat imaginary, final ValueType valueType) {
+	public static ComplexStructImpl valueOf(final Apfloat real, final Apfloat imaginary, final ValueType valueType) {
 		final Apcomplex apcomplex = new Apcomplex(real, imaginary);
 		return valueOf(apcomplex, valueType);
 	}
 
-	public static ComplexStruct valueOf(final RealStruct real, final RealStruct imaginary) {
+	public static ComplexStructImpl valueOf(final RealStruct real, final RealStruct imaginary) {
 		final ValueType valueType = determineComplexValueType(real, imaginary);
 		return valueOf(real.ap(), imaginary.ap(), valueType);
 	}
@@ -106,7 +106,7 @@ public final class ComplexStruct extends NumberStructImpl<Apcomplex> {
 		final boolean anyFloats
 				= Arrays.stream(reals)
 				        .map(Object::getClass)
-				        .anyMatch(FloatStruct.class::isAssignableFrom);
+				        .anyMatch(FloatStructImpl.class::isAssignableFrom);
 
 		return anyFloats ? ValueType.FLOAT : ValueType.RATIONAL;
 	}

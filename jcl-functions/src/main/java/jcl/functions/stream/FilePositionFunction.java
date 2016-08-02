@@ -15,7 +15,7 @@ import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.list.NILStruct;
-import jcl.lang.number.IntegerStruct;
+import jcl.lang.number.IntegerStructImpl;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -42,8 +42,8 @@ public final class FilePositionFunction extends CommonLispBuiltInFunctionStruct 
 //		validator.validateTypes(lispStruct2, functionName, "File Position", IntegerType.INSTANCE, SymbolType.INSTANCE);
 
 		final Long position;
-		if (lispStruct2 instanceof IntegerStruct) {
-			position = ((IntegerStruct) lispStruct2).longValue();
+		if (lispStruct2 instanceof IntegerStructImpl) {
+			position = ((IntegerStructImpl) lispStruct2).longValue();
 		} else if (CommonLispSymbols.START_KEYWORD.equals(lispStruct2)) {
 			position = 0L;
 		} else if (CommonLispSymbols.END_KEYWORD.equals(lispStruct2)) {
@@ -56,7 +56,7 @@ public final class FilePositionFunction extends CommonLispBuiltInFunctionStruct 
 
 		if (position == null) {
 			final Long currentPosition = stream.filePosition(null);
-			return IntegerStruct.valueOf(BigInteger.valueOf(currentPosition));
+			return IntegerStructImpl.valueOf(BigInteger.valueOf(currentPosition));
 		} else {
 			final Long newPosition = stream.filePosition(position);
 			return BooleanStruct.toLispBoolean(newPosition != null);

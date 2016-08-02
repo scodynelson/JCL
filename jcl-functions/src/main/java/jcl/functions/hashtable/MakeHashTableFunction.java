@@ -15,8 +15,8 @@ import jcl.lang.function.EquatorFunctionStruct;
 import jcl.lang.function.FunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
-import jcl.lang.number.FloatStruct;
-import jcl.lang.number.IntegerStruct;
+import jcl.lang.number.FloatStructImpl;
+import jcl.lang.number.IntegerStructImpl;
 import jcl.lang.RealStruct;
 import org.springframework.stereotype.Component;
 
@@ -28,15 +28,15 @@ public final class MakeHashTableFunction extends CommonLispBuiltInFunctionStruct
 	private static final KeywordStruct SIZE =  KeywordStruct.valueOf("SIZE");
 	private static final KeywordStruct REHASH_SIZE = KeywordStruct.valueOf("REHASH-SIZE");
 	private static final KeywordStruct REHASH_THRESHOLD = KeywordStruct.valueOf("REHASH-THRESHOLD");
-	private static final FloatStruct DEFAULT_REHASH_THRESHOLD = FloatStruct.valueOf(0.75F);
+	private static final FloatStructImpl DEFAULT_REHASH_THRESHOLD = FloatStructImpl.valueOf(0.75F);
 
 	public MakeHashTableFunction() {
 		super("Creates and returns a new hash table.",
 		      FUNCTION_NAME,
 		      Parameters.forFunction(FUNCTION_NAME)
 		                .keyParameter(TEST).withInitialValue(CommonLispSymbols.EQL)
-		                .keyParameter(SIZE).withInitialValue(IntegerStruct.TEN)
-		                .keyParameter(REHASH_SIZE).withInitialValue(IntegerStruct.ONE)
+		                .keyParameter(SIZE).withInitialValue(IntegerStructImpl.TEN)
+		                .keyParameter(REHASH_SIZE).withInitialValue(IntegerStructImpl.ONE)
 		                .keyParameter(REHASH_THRESHOLD).withInitialValue(DEFAULT_REHASH_THRESHOLD)
 		);
 	}
@@ -47,14 +47,14 @@ public final class MakeHashTableFunction extends CommonLispBuiltInFunctionStruct
 		final FunctionStruct testFunction = validateFunctionDesignator(test);
 		final EquatorFunctionStruct equatorTestFunction = (EquatorFunctionStruct) testFunction;
 
-		final IntegerStruct size = arguments.getKeyArgument(SIZE, IntegerStruct.class);
+		final IntegerStructImpl size = arguments.getKeyArgument(SIZE, IntegerStructImpl.class);
 		final RealStruct rehashSize = arguments.getKeyArgument(REHASH_SIZE, RealStruct.class);
 //		new OrTypeSpecifier(
 //				IntegerType.Factory.getInstance(BigInteger.ONE, null),
 //				FloatType.Factory.getInstance(BigDecimal.ONE, null)
 //		)
 		// TODO: Float??
-		final FloatStruct rehashThreshold = arguments.getKeyArgument(REHASH_THRESHOLD, FloatStruct.class);
+		final FloatStructImpl rehashThreshold = arguments.getKeyArgument(REHASH_THRESHOLD, FloatStructImpl.class);
 //		RealType.Factory.getInstance(BigInteger.ZERO, BigInteger.ONE)
 
 		return LispStructFactory.toHashTable(equatorTestFunction, size.bigIntegerValue(), rehashThreshold.floatValue());

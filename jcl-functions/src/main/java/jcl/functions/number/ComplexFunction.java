@@ -8,9 +8,9 @@ import jcl.lang.LispStruct;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
-import jcl.lang.number.ComplexStruct;
-import jcl.lang.number.FloatStruct;
-import jcl.lang.number.IntegerStruct;
+import jcl.lang.number.ComplexStructImpl;
+import jcl.lang.number.FloatStructImpl;
+import jcl.lang.number.IntegerStructImpl;
 import jcl.lang.RationalStruct;
 import jcl.lang.RealStruct;
 import org.springframework.stereotype.Component;
@@ -27,7 +27,7 @@ public final class ComplexFunction extends CommonLispBuiltInFunctionStruct {
 		      FUNCTION_NAME,
 		      Parameters.forFunction(FUNCTION_NAME)
 		                .requiredParameter(REALPART_ARGUMENT)
-		                .optionalParameter(IMAGPART_ARGUMENT).withInitialValue(IntegerStruct.ONE)
+		                .optionalParameter(IMAGPART_ARGUMENT).withInitialValue(IntegerStructImpl.ONE)
 		);
 	}
 
@@ -37,13 +37,13 @@ public final class ComplexFunction extends CommonLispBuiltInFunctionStruct {
 			final RealStruct real = arguments.getRequiredArgument(REALPART_ARGUMENT, RealStruct.class);
 			final RealStruct imaginary = arguments.getOptionalArgument(IMAGPART_ARGUMENT, RealStruct.class);
 
-			return ComplexStruct.valueOf(real, imaginary);
+			return ComplexStructImpl.valueOf(real, imaginary);
 		} else {
 			final RealStruct real = arguments.getRequiredArgument(REALPART_ARGUMENT, RealStruct.class);
 			if (real instanceof RationalStruct) {
 				return real;
 			} else {
-				return ComplexStruct.valueOf(real, FloatStruct.ZERO);
+				return ComplexStructImpl.valueOf(real, FloatStructImpl.ZERO);
 			}
 		}
 	}

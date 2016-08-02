@@ -23,29 +23,29 @@ import org.apfloat.ApfloatMath;
 import org.apfloat.Apint;
 
 /**
- * The {@link FloatStruct} is the object representation of a Lisp 'float' type.
+ * The {@link FloatStructImpl} is the object representation of a Lisp 'float' type.
  */
-public final class FloatStruct extends RealStructImpl<Apfloat> {
+public final class FloatStructImpl extends RealStructImpl<Apfloat> {
 
 	/**
-	 * {@link FloatStruct} constant representing 0.0.
+	 * {@link FloatStructImpl} constant representing 0.0.
 	 */
-	public static final FloatStruct ZERO = valueOf(0.0D);
+	public static final FloatStructImpl ZERO = valueOf(0.0D);
 
 	/**
-	 * {@link FloatStruct} constant representing -0.0.
+	 * {@link FloatStructImpl} constant representing -0.0.
 	 */
-	public static final FloatStruct MINUS_ZERO = valueOf(-0.0D);
+	public static final FloatStructImpl MINUS_ZERO = valueOf(-0.0D);
 
 	/**
-	 * {@link FloatStruct} constant representing 1.0.
+	 * {@link FloatStructImpl} constant representing 1.0.
 	 */
-	public static final FloatStruct ONE = valueOf(1.0D);
+	public static final FloatStructImpl ONE = valueOf(1.0D);
 
 	/**
-	 * {@link FloatStruct} constant representing -1.0.
+	 * {@link FloatStructImpl} constant representing -1.0.
 	 */
-	public static final FloatStruct MINUS_ONE = valueOf(-1.0D);
+	public static final FloatStructImpl MINUS_ONE = valueOf(-1.0D);
 
 	/**
 	 * The floating-point precision of a FloatStruct object.
@@ -58,7 +58,7 @@ public final class FloatStruct extends RealStructImpl<Apfloat> {
 	 * @param apfloat
 	 * 		the value of the FloatStruct
 	 */
-	private FloatStruct(final Apfloat apfloat) {
+	private FloatStructImpl(final Apfloat apfloat) {
 		super(FloatType.INSTANCE, apfloat);
 	}
 
@@ -70,7 +70,7 @@ public final class FloatStruct extends RealStructImpl<Apfloat> {
 	 *
 	 * @return a FloatStruct object with the provided {@link Float} value
 	 */
-	public static FloatStruct valueOf(final Float f) {
+	public static FloatStructImpl valueOf(final Float f) {
 		final Apfloat apfloat = new Apfloat(f);
 		return valueOf(apfloat);
 	}
@@ -83,7 +83,7 @@ public final class FloatStruct extends RealStructImpl<Apfloat> {
 	 *
 	 * @return a FloatStruct object with the provided {@link Double} value
 	 */
-	public static FloatStruct valueOf(final Double d) {
+	public static FloatStructImpl valueOf(final Double d) {
 		final Apfloat apfloat = new Apfloat(d);
 		return valueOf(apfloat);
 	}
@@ -96,7 +96,7 @@ public final class FloatStruct extends RealStructImpl<Apfloat> {
 	 *
 	 * @return a FloatStruct object with the provided {@link BigDecimal} value
 	 */
-	public static FloatStruct valueOf(final BigDecimal bigDecimal) {
+	public static FloatStructImpl valueOf(final BigDecimal bigDecimal) {
 		final Apfloat apfloat = new Apfloat(bigDecimal);
 		return valueOf(apfloat);
 	}
@@ -109,7 +109,7 @@ public final class FloatStruct extends RealStructImpl<Apfloat> {
 	 *
 	 * @return a new FloatStruct representing the provided {@link String}
 	 */
-	public static FloatStruct valueOf(final String s) {
+	public static FloatStructImpl valueOf(final String s) {
 		final Apfloat apfloat = new Apfloat(s);
 		return valueOf(apfloat);
 	}
@@ -122,8 +122,8 @@ public final class FloatStruct extends RealStructImpl<Apfloat> {
 	 *
 	 * @return a FloatStruct object with the provided {@link Apfloat} value
 	 */
-	public static FloatStruct valueOf(final Apfloat apfloat) {
-		return new FloatStruct(apfloat);
+	public static FloatStructImpl valueOf(final Apfloat apfloat) {
+		return new FloatStructImpl(apfloat);
 	}
 
 	/**
@@ -137,7 +137,7 @@ public final class FloatStruct extends RealStructImpl<Apfloat> {
 	 *
 	 * @return a FloatStruct object with the provided {@link Apfloat} value
 	 */
-	public static FloatStruct valueOf(final Apfloat apfloat, final FloatStruct prototype) {
+	public static FloatStructImpl valueOf(final Apfloat apfloat, final FloatStructImpl prototype) {
 		final long precision = prototype.ap.precision();
 		final Apfloat preciseApfloat = apfloat.precision(precision);
 		return valueOf(preciseApfloat);
@@ -175,15 +175,15 @@ public final class FloatStruct extends RealStructImpl<Apfloat> {
 		final long mantissa = decodedDouble.getMantissa();
 		final int expt = ArithmeticUtils.pow(2, DOUBLE_PRECISION);
 		final long significand = mantissa / expt;
-		final FloatStruct significandFloat = valueOf(Double.valueOf(significand));
+		final FloatStructImpl significandFloat = valueOf(Double.valueOf(significand));
 
 		final long storedExponent = decodedDouble.getStoredExponent();
 		// 1023 + 52 = 1075
 		final long exponent = (storedExponent - 1075) + DOUBLE_PRECISION;
-		final IntegerStruct exponentInteger = IntegerStruct.valueOf(exponent);
+		final IntegerStructImpl exponentInteger = IntegerStructImpl.valueOf(exponent);
 
 		final int sign = decodedDouble.getSign();
-		final FloatStruct signFloat = (sign == 1) ? ONE : MINUS_ONE;
+		final FloatStructImpl signFloat = (sign == 1) ? ONE : MINUS_ONE;
 
 		return new DecodeFloatResult(significandFloat, exponentInteger, signFloat);
 	}
@@ -191,8 +191,8 @@ public final class FloatStruct extends RealStructImpl<Apfloat> {
 	/**
 	 * Computes the three main values that characterize this FloatStruct: the significand, exponent, and sign. The
 	 * difference between this method an {@link #decodeFloat()} is that the significand and sign will both be {@link
-	 * IntegerStruct}s with a special weighting between the significand and exponent based on the scaling needed for
-	 * the significand to produce an {@link IntegerStruct}.
+	 * IntegerStructImpl}s with a special weighting between the significand and exponent based on the scaling needed for
+	 * the significand to produce an {@link IntegerStructImpl}.
 	 *
 	 * @return a {@link DecodeFloatResult} containing the decoded significand, exponent, and sign for this FloatStruct
 	 */
@@ -203,15 +203,15 @@ public final class FloatStruct extends RealStructImpl<Apfloat> {
 		final DecodedDouble decodedDouble = getDecodedDouble(bits);
 
 		final long mantissa = decodedDouble.getMantissa();
-		final IntegerStruct significandInteger = IntegerStruct.valueOf(mantissa);
+		final IntegerStructImpl significandInteger = IntegerStructImpl.valueOf(mantissa);
 
 		final long storedExponent = decodedDouble.getStoredExponent();
 		// 1023 + 52 = 1075
 		final long exponent = storedExponent - 1075;
-		final IntegerStruct exponentInteger = IntegerStruct.valueOf(exponent);
+		final IntegerStructImpl exponentInteger = IntegerStructImpl.valueOf(exponent);
 
 		final int sign = decodedDouble.getSign();
-		final IntegerStruct signInteger = (sign == 1) ? IntegerStruct.ONE : IntegerStruct.MINUS_ONE;
+		final IntegerStructImpl signInteger = (sign == 1) ? IntegerStructImpl.ONE : IntegerStructImpl.MINUS_ONE;
 
 		return new DecodeFloatResult(significandInteger, exponentInteger, signInteger);
 	}
@@ -224,8 +224,8 @@ public final class FloatStruct extends RealStructImpl<Apfloat> {
 	 *
 	 * @return this FloatStruct scaled to the provided scale value
 	 */
-	public NumberStruct scaleFloat(final IntegerStruct scale) {
-		final IntegerStruct radix = floatRadix();
+	public NumberStruct scaleFloat(final IntegerStructImpl scale) {
+		final IntegerStructImpl radix = floatRadix();
 		final NumberStruct expt = radix.expt(scale);
 		return multiply(expt);
 	}
@@ -235,7 +235,7 @@ public final class FloatStruct extends RealStructImpl<Apfloat> {
 	 *
 	 * @return the number of radix b digits used in the representation of this FloatStruct
 	 */
-	public IntegerStruct floatDigits() {
+	public IntegerStructImpl floatDigits() {
 		return floatPrecision();
 	}
 
@@ -244,8 +244,8 @@ public final class FloatStruct extends RealStructImpl<Apfloat> {
 	 *
 	 * @return the number of significant radix b digits present in this FloatStruct
 	 */
-	public IntegerStruct floatPrecision() {
-		return IntegerStruct.valueOf(DOUBLE_PRECISION);
+	public IntegerStructImpl floatPrecision() {
+		return IntegerStructImpl.valueOf(DOUBLE_PRECISION);
 	}
 
 	/**
@@ -253,8 +253,8 @@ public final class FloatStruct extends RealStructImpl<Apfloat> {
 	 *
 	 * @return the radix of the FloatStruct
 	 */
-	public IntegerStruct floatRadix() {
-		return IntegerStruct.TWO;
+	public IntegerStructImpl floatRadix() {
+		return IntegerStructImpl.TWO;
 	}
 
 	/**
@@ -262,7 +262,7 @@ public final class FloatStruct extends RealStructImpl<Apfloat> {
 	 *
 	 * @return a {@code 1} or a {@code -1} value based on the sign of the FloatStruct
 	 */
-	public FloatStruct floatSign() {
+	public FloatStructImpl floatSign() {
 		final double d = ap.doubleValue();
 
 		final long bits = Double.doubleToRawLongBits(d);
@@ -279,7 +279,7 @@ public final class FloatStruct extends RealStructImpl<Apfloat> {
 	 * @return a number z such that z and this FloatStruct have the same sign and also such that z and float2 have the
 	 * same absolute value
 	 */
-	public FloatStruct floatSign(final FloatStruct float2) {
+	public FloatStructImpl floatSign(final FloatStructImpl float2) {
 		if (minusp()) {
 			if (float2.minusp()) {
 				return float2;
@@ -298,7 +298,7 @@ public final class FloatStruct extends RealStructImpl<Apfloat> {
 	 * @param bits
 	 * 		the {@code long} bits representing the {@code double} value
 	 *
-	 * @return the {@link FloatStruct.DecodedDouble} wrapping the decoded sign, exponent, and mantissa values
+	 * @return the {@link FloatStructImpl.DecodedDouble} wrapping the decoded sign, exponent, and mantissa values
 	 *
 	 * @see <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Double.html">Java Double</a>
 	 */
@@ -389,21 +389,21 @@ public final class FloatStruct extends RealStructImpl<Apfloat> {
 		final BigInteger denominator = bigFractionReduced.getDenominator();
 
 		if (BigInteger.ONE.equals(denominator)) {
-			return IntegerStruct.valueOf(numerator);
+			return IntegerStructImpl.valueOf(numerator);
 		}
 
 		final Apint numeratorAp = new Apint(numerator);
 		final Apint denominatorAp = new Apint(denominator);
-		return RatioStruct.valueOf(numeratorAp, denominatorAp);
+		return RatioStructImpl.valueOf(numeratorAp, denominatorAp);
 	}
 
 	@Override
-	public FloatStruct floatingPoint() {
+	public FloatStructImpl floatingPoint() {
 		return this;
 	}
 
 	@Override
-	public FloatStruct floatingPoint(final FloatStruct prototype) {
+	public FloatStructImpl floatingPoint(final FloatStructImpl prototype) {
 		return valueOf(ap, prototype);
 	}
 
@@ -412,7 +412,7 @@ public final class FloatStruct extends RealStructImpl<Apfloat> {
 	 */
 
 	@Override
-	public FloatStruct abs() {
+	public FloatStructImpl abs() {
 		final Apfloat abs = ApfloatMath.abs(ap);
 		return valueOf(abs);
 	}
@@ -458,7 +458,7 @@ public final class FloatStruct extends RealStructImpl<Apfloat> {
 	}
 
 	@Override
-	public FloatStruct signum() {
+	public FloatStructImpl signum() {
 		final int signum = ap.signum();
 		if (signum == 0) {
 			return ZERO;
@@ -470,28 +470,28 @@ public final class FloatStruct extends RealStructImpl<Apfloat> {
 	}
 
 	@Override
-	public FloatStruct realPart() {
+	public FloatStructImpl realPart() {
 		return this;
 	}
 
 	@Override
-	public FloatStruct imagPart() {
+	public FloatStructImpl imagPart() {
 		return ZERO;
 	}
 
 	@Override
-	public FloatStruct conjugate() {
+	public FloatStructImpl conjugate() {
 		return this;
 	}
 
 	@Override
-	public FloatStruct negation() {
+	public FloatStructImpl negation() {
 		final Apfloat negate = ap.negate();
 		return valueOf(negate);
 	}
 
 	@Override
-	public FloatStruct reciprocal() {
+	public FloatStructImpl reciprocal() {
 		final Apfloat reciprocal = Apcomplex.ONE.divide(ap);
 		return valueOf(reciprocal);
 	}

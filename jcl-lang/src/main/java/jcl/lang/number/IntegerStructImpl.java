@@ -19,37 +19,37 @@ import org.apfloat.ApintMath;
 import org.apfloat.Aprational;
 
 /**
- * The {@link IntegerStruct} is the object representation of a Lisp 'integer' type.
+ * The {@link IntegerStructImpl} is the object representation of a Lisp 'integer' type.
  */
-public final class IntegerStruct extends RationalStructImpl<Apint> {
+public final class IntegerStructImpl extends RationalStructImpl<Apint> {
 
 	/**
-	 * {@link IntegerStruct} constant representing 0.
+	 * {@link IntegerStructImpl} constant representing 0.
 	 */
-	public static final IntegerStruct ZERO = valueOf(0);
+	public static final IntegerStructImpl ZERO = valueOf(0);
 
 	/**
-	 * {@link IntegerStruct} constant representing 1.
+	 * {@link IntegerStructImpl} constant representing 1.
 	 */
-	public static final IntegerStruct ONE = valueOf(1);
+	public static final IntegerStructImpl ONE = valueOf(1);
 
 	/**
-	 * {@link IntegerStruct} constant representing 2.
+	 * {@link IntegerStructImpl} constant representing 2.
 	 */
-	public static final IntegerStruct TWO = valueOf(2);
+	public static final IntegerStructImpl TWO = valueOf(2);
 
 	/**
-	 * {@link IntegerStruct} constant representing 10.
+	 * {@link IntegerStructImpl} constant representing 10.
 	 */
-	public static final IntegerStruct TEN = valueOf(10);
+	public static final IntegerStructImpl TEN = valueOf(10);
 
 	/**
-	 * {@link IntegerStruct} constant representing -1.
+	 * {@link IntegerStructImpl} constant representing -1.
 	 */
-	public static final IntegerStruct MINUS_ONE = valueOf(-1);
+	public static final IntegerStructImpl MINUS_ONE = valueOf(-1);
 
 	/**
-	 * {@link Apint} constant for calculating whether an {@link IntegerStruct} is even or odd.
+	 * {@link Apint} constant for calculating whether an {@link IntegerStructImpl} is even or odd.
 	 */
 	private static final Apint APINT_2 = new Apint(2);
 
@@ -59,7 +59,7 @@ public final class IntegerStruct extends RationalStructImpl<Apint> {
 	 * @param apint
 	 * 		the value of the IntegerStruct
 	 */
-	private IntegerStruct(final Apint apint) {
+	private IntegerStructImpl(final Apint apint) {
 		super(IntegerType.INSTANCE, apint);
 	}
 
@@ -71,7 +71,7 @@ public final class IntegerStruct extends RationalStructImpl<Apint> {
 	 *
 	 * @return a new IntegerStruct representing the provided {@link Integer}
 	 */
-	public static IntegerStruct valueOf(final Integer i) {
+	public static IntegerStructImpl valueOf(final Integer i) {
 		final Apint apint = new Apint(i);
 		return valueOf(apint);
 	}
@@ -84,7 +84,7 @@ public final class IntegerStruct extends RationalStructImpl<Apint> {
 	 *
 	 * @return a new IntegerStruct representing the provided {@link Long}
 	 */
-	public static IntegerStruct valueOf(final Long l) {
+	public static IntegerStructImpl valueOf(final Long l) {
 		final Apint apint = new Apint(l);
 		return valueOf(apint);
 	}
@@ -97,7 +97,7 @@ public final class IntegerStruct extends RationalStructImpl<Apint> {
 	 *
 	 * @return a new IntegerStruct representing the provided {@link BigInteger}
 	 */
-	public static IntegerStruct valueOf(final BigInteger bigInteger) {
+	public static IntegerStructImpl valueOf(final BigInteger bigInteger) {
 		final Apint apint = new Apint(bigInteger);
 		return valueOf(apint);
 	}
@@ -110,7 +110,7 @@ public final class IntegerStruct extends RationalStructImpl<Apint> {
 	 *
 	 * @return a new IntegerStruct representing the provided {@link String}
 	 */
-	public static IntegerStruct valueOf(final String s) {
+	public static IntegerStructImpl valueOf(final String s) {
 		final Apint apint = new Apint(s);
 		return valueOf(apint);
 	}
@@ -123,8 +123,8 @@ public final class IntegerStruct extends RationalStructImpl<Apint> {
 	 *
 	 * @return a IntegerStruct object with the provided {@link Apint} value
 	 */
-	public static IntegerStruct valueOf(final Apint apint) {
-		return new IntegerStruct(apint);
+	public static IntegerStructImpl valueOf(final Apint apint) {
+		return new IntegerStructImpl(apint);
 	}
 
 	/**
@@ -163,8 +163,8 @@ public final class IntegerStruct extends RationalStructImpl<Apint> {
 	 *
 	 * @return the greatest common divisor of the provided IntegerStructs
 	 */
-	public static IntegerStruct gcd(final List<IntegerStruct> integers) {
-		return integers.stream().reduce(ZERO, IntegerStruct::gcd);
+	public static IntegerStructImpl gcd(final List<IntegerStructImpl> integers) {
+		return integers.stream().reduce(ZERO, IntegerStructImpl::gcd);
 	}
 
 	/**
@@ -175,7 +175,7 @@ public final class IntegerStruct extends RationalStructImpl<Apint> {
 	 *
 	 * @return the greatest common divisor between this IntegerStruct and the provided IntegerStruct
 	 */
-	public IntegerStruct gcd(final IntegerStruct integer) {
+	public IntegerStructImpl gcd(final IntegerStructImpl integer) {
 		final Apint gcd = ApintMath.gcd(ap, integer.ap);
 		return valueOf(gcd);
 	}
@@ -189,8 +189,8 @@ public final class IntegerStruct extends RationalStructImpl<Apint> {
 	 *
 	 * @return the least common multiple of the provided IntegerStructs
 	 */
-	public static IntegerStruct lcm(final List<IntegerStruct> integers) {
-		return integers.stream().reduce(ONE, IntegerStruct::lcm);
+	public static IntegerStructImpl lcm(final List<IntegerStructImpl> integers) {
+		return integers.stream().reduce(ONE, IntegerStructImpl::lcm);
 	}
 
 	/**
@@ -202,7 +202,7 @@ public final class IntegerStruct extends RationalStructImpl<Apint> {
 	 *
 	 * @return the least common multiple between this IntegerStruct and the provided IntegerStruct
 	 */
-	public IntegerStruct lcm(final IntegerStruct integer) {
+	public IntegerStructImpl lcm(final IntegerStructImpl integer) {
 		final Apint lcm = ApintMath.lcm(ap, integer.ap);
 		return valueOf(lcm);
 	}
@@ -217,7 +217,7 @@ public final class IntegerStruct extends RationalStructImpl<Apint> {
 	 *
 	 * @return the arithmetic shift operation on the binary representation of this IntegerStruct
 	 */
-	public IntegerStruct ash(final IntegerStruct count) {
+	public IntegerStructImpl ash(final IntegerStructImpl count) {
 		final Apint countAp = count.ap;
 		if (countAp.signum() == 0) {
 			return this;
@@ -237,7 +237,7 @@ public final class IntegerStruct extends RationalStructImpl<Apint> {
 	 *
 	 * @return the bit-wise logical 'and' of this IntegerStruct and the provided IntegerStruct
 	 */
-	public IntegerStruct logAnd(final IntegerStruct integer) {
+	public IntegerStructImpl logAnd(final IntegerStructImpl integer) {
 		final BigInteger bigInteger1 = ap.toBigInteger();
 		final BigInteger bigInteger2 = integer.ap.toBigInteger();
 		return valueOf(bigInteger1.and(bigInteger2));
@@ -252,8 +252,8 @@ public final class IntegerStruct extends RationalStructImpl<Apint> {
 	 *
 	 * @return the bit-wise logical 'and' of the provided IntegerStructs
 	 */
-	public static IntegerStruct logAnd(final List<IntegerStruct> integers) {
-		return integers.stream().reduce(MINUS_ONE, IntegerStruct::logAnd);
+	public static IntegerStructImpl logAnd(final List<IntegerStructImpl> integers) {
+		return integers.stream().reduce(MINUS_ONE, IntegerStructImpl::logAnd);
 	}
 
 	/**
@@ -264,7 +264,7 @@ public final class IntegerStruct extends RationalStructImpl<Apint> {
 	 *
 	 * @return the bit-wise logical 'and' of this IntegerStruct and the provided IntegerStruct
 	 */
-	public IntegerStruct logAndC1(final IntegerStruct integer) {
+	public IntegerStructImpl logAndC1(final IntegerStructImpl integer) {
 		final BigInteger bigInteger1 = ap.toBigInteger();
 		final BigInteger bigInteger2 = integer.ap.toBigInteger();
 		return valueOf(bigInteger1.not().and(bigInteger2));
@@ -278,7 +278,7 @@ public final class IntegerStruct extends RationalStructImpl<Apint> {
 	 *
 	 * @return the bit-wise logical 'and' of this IntegerStruct and the provided IntegerStruct
 	 */
-	public IntegerStruct logAndC2(final IntegerStruct integer) {
+	public IntegerStructImpl logAndC2(final IntegerStructImpl integer) {
 		final BigInteger bigInteger1 = ap.toBigInteger();
 		final BigInteger bigInteger2 = integer.ap.toBigInteger();
 		return valueOf(bigInteger1.and(bigInteger2.not()));
@@ -293,8 +293,8 @@ public final class IntegerStruct extends RationalStructImpl<Apint> {
 	 *
 	 * @return the bit-wise logical 'equivalence', or 'exclusive-nor' of the provided IntegerStructs
 	 */
-	public static IntegerStruct logEqv(final List<IntegerStruct> integers) {
-		return integers.stream().reduce(MINUS_ONE, IntegerStruct::logEqv);
+	public static IntegerStructImpl logEqv(final List<IntegerStructImpl> integers) {
+		return integers.stream().reduce(MINUS_ONE, IntegerStructImpl::logEqv);
 	}
 
 	/**
@@ -307,7 +307,7 @@ public final class IntegerStruct extends RationalStructImpl<Apint> {
 	 * @return the bit-wise logical 'equivalence', or 'exclusive-nor' of this IntegerStruct and the provided
 	 * IntegerStruct
 	 */
-	public IntegerStruct logEqv(final IntegerStruct integer) {
+	public IntegerStructImpl logEqv(final IntegerStructImpl integer) {
 		final BigInteger bigInteger1 = ap.toBigInteger();
 		final BigInteger bigInteger2 = integer.ap.toBigInteger();
 		final BigInteger xor = bigInteger1.xor(bigInteger2);
@@ -323,8 +323,8 @@ public final class IntegerStruct extends RationalStructImpl<Apint> {
 	 *
 	 * @return the bit-wise logical 'inclusive-or' of the provided IntegerStructs
 	 */
-	public static IntegerStruct logIor(final List<IntegerStruct> integers) {
-		return integers.stream().reduce(ZERO, IntegerStruct::logIor);
+	public static IntegerStructImpl logIor(final List<IntegerStructImpl> integers) {
+		return integers.stream().reduce(ZERO, IntegerStructImpl::logIor);
 	}
 
 	/**
@@ -335,7 +335,7 @@ public final class IntegerStruct extends RationalStructImpl<Apint> {
 	 *
 	 * @return the bit-wise logical 'inclusive-or' of this IntegerStruct and the provided IntegerStruct
 	 */
-	public IntegerStruct logIor(final IntegerStruct integer) {
+	public IntegerStructImpl logIor(final IntegerStructImpl integer) {
 		final BigInteger bigInteger1 = ap.toBigInteger();
 		final BigInteger bigInteger2 = integer.ap.toBigInteger();
 		return valueOf(bigInteger1.or(bigInteger2));
@@ -349,7 +349,7 @@ public final class IntegerStruct extends RationalStructImpl<Apint> {
 	 *
 	 * @return the bit-wise logical 'nand' of this IntegerStruct and the provided IntegerStruct
 	 */
-	public IntegerStruct logNand(final IntegerStruct integer) {
+	public IntegerStructImpl logNand(final IntegerStructImpl integer) {
 		final BigInteger bigInteger1 = ap.toBigInteger();
 		final BigInteger bigInteger2 = integer.ap.toBigInteger();
 		final BigInteger and = bigInteger1.and(bigInteger2);
@@ -364,7 +364,7 @@ public final class IntegerStruct extends RationalStructImpl<Apint> {
 	 *
 	 * @return the bit-wise logical 'nor' of this IntegerStruct and the provided IntegerStruct
 	 */
-	public IntegerStruct logNor(final IntegerStruct integer) {
+	public IntegerStructImpl logNor(final IntegerStructImpl integer) {
 		final BigInteger bigInteger1 = ap.toBigInteger();
 		final BigInteger bigInteger2 = integer.ap.toBigInteger();
 		final BigInteger or = bigInteger1.or(bigInteger2);
@@ -376,7 +376,7 @@ public final class IntegerStruct extends RationalStructImpl<Apint> {
 	 *
 	 * @return the bit-wise logical 'not' of this IntegerStruct
 	 */
-	public IntegerStruct logNot() {
+	public IntegerStructImpl logNot() {
 		final BigInteger bigInteger = ap.toBigInteger();
 		return valueOf(bigInteger.not());
 	}
@@ -391,7 +391,7 @@ public final class IntegerStruct extends RationalStructImpl<Apint> {
 	 * @return the bit-wise logical 'inclusive-or' of the compliment of this IntegerStruct and the provided
 	 * IntegerStruct
 	 */
-	public IntegerStruct logOrC1(final IntegerStruct integer) {
+	public IntegerStructImpl logOrC1(final IntegerStructImpl integer) {
 		final BigInteger bigInteger1 = ap.toBigInteger();
 		final BigInteger bigInteger2 = integer.ap.toBigInteger();
 		return valueOf(bigInteger1.not().or(bigInteger2));
@@ -405,7 +405,7 @@ public final class IntegerStruct extends RationalStructImpl<Apint> {
 	 *
 	 * @return the bit-wise logical 'inclusive-or' of this IntegerStruct and the compliment of provided IntegerStruct
 	 */
-	public IntegerStruct logOrC2(final IntegerStruct integer) {
+	public IntegerStructImpl logOrC2(final IntegerStructImpl integer) {
 		final BigInteger bigInteger1 = ap.toBigInteger();
 		final BigInteger bigInteger2 = integer.ap.toBigInteger();
 		return valueOf(bigInteger1.or(bigInteger2.not()));
@@ -420,8 +420,8 @@ public final class IntegerStruct extends RationalStructImpl<Apint> {
 	 *
 	 * @return the bit-wise logical 'exclusive-or' of the provided IntegerStructs
 	 */
-	public static IntegerStruct logXor(final List<IntegerStruct> integers) {
-		return integers.stream().reduce(ZERO, IntegerStruct::logXor);
+	public static IntegerStructImpl logXor(final List<IntegerStructImpl> integers) {
+		return integers.stream().reduce(ZERO, IntegerStructImpl::logXor);
 	}
 
 	/**
@@ -432,7 +432,7 @@ public final class IntegerStruct extends RationalStructImpl<Apint> {
 	 *
 	 * @return the bit-wise logical 'exclusive-or' of this IntegerStruct and the provided IntegerStruct
 	 */
-	public IntegerStruct logXor(final IntegerStruct integer) {
+	public IntegerStructImpl logXor(final IntegerStructImpl integer) {
 		final BigInteger bigInteger1 = ap.toBigInteger();
 		final BigInteger bigInteger2 = integer.ap.toBigInteger();
 		return valueOf(bigInteger1.xor(bigInteger2));
@@ -447,7 +447,7 @@ public final class IntegerStruct extends RationalStructImpl<Apint> {
 	 *
 	 * @return true if the bit in this IntegerStruct whose index is {@code index} is a one-bit; otherwise, false
 	 */
-	public boolean logBitP(final IntegerStruct index) {
+	public boolean logBitP(final IntegerStructImpl index) {
 		final BigInteger bigInteger = ap.toBigInteger();
 		final int indexInt = index.intValue();
 		return bigInteger.testBit(indexInt);
@@ -460,7 +460,7 @@ public final class IntegerStruct extends RationalStructImpl<Apint> {
 	 * @return Computes and returns the number of bits in the two's-complement binary representation of this
 	 * IntegerStruct that are 'on' or 'set'
 	 */
-	public IntegerStruct logCount() {
+	public IntegerStructImpl logCount() {
 		final BigInteger bigInteger = ap.toBigInteger();
 		final int bitCount = bigInteger.bitCount();
 		return valueOf(bitCount);
@@ -476,8 +476,8 @@ public final class IntegerStruct extends RationalStructImpl<Apint> {
 	 * @return true if any of the bits designated by the 1's in this IntegerStruct are 1 in the provided
 	 * IntegerStruct; otherwise, false.
 	 */
-	public boolean logTest(final IntegerStruct integer) {
-		final IntegerStruct and = logAnd(integer);
+	public boolean logTest(final IntegerStructImpl integer) {
+		final IntegerStructImpl and = logAnd(integer);
 		return and.ap.signum() != 0;
 	}
 
@@ -486,7 +486,7 @@ public final class IntegerStruct extends RationalStructImpl<Apint> {
 	 *
 	 * @return the number of bits needed to represent this IntegerStruct in binary two's-complement format
 	 */
-	public IntegerStruct integerLength() {
+	public IntegerStructImpl integerLength() {
 		final BigInteger bigInteger = ap.toBigInteger();
 		final int bitLength = bigInteger.bitLength();
 		return valueOf(bitLength);
@@ -515,7 +515,7 @@ public final class IntegerStruct extends RationalStructImpl<Apint> {
 	 *
 	 * @return the greatest IntegerStruct less than or equal to this IntegerStructs exact positive square root
 	 */
-	public IntegerStruct isqrt() {
+	public IntegerStructImpl isqrt() {
 		final Apint[] sqrt = ApintMath.sqrt(ap);
 		return valueOf(sqrt[0]);
 	}
@@ -525,12 +525,12 @@ public final class IntegerStruct extends RationalStructImpl<Apint> {
 	 */
 
 	@Override
-	public IntegerStruct numerator() {
+	public IntegerStructImpl numerator() {
 		return this;
 	}
 
 	@Override
-	public IntegerStruct denominator() {
+	public IntegerStructImpl denominator() {
 		return ONE;
 	}
 
@@ -539,13 +539,13 @@ public final class IntegerStruct extends RationalStructImpl<Apint> {
 	 */
 
 	@Override
-	public IntegerStruct rational() {
+	public IntegerStructImpl rational() {
 		return this;
 	}
 
 	@Override
 	protected RealStruct getRemainderReal(final RealStruct divisor, final Apfloat remainder) {
-		if (divisor instanceof IntegerStruct) {
+		if (divisor instanceof IntegerStructImpl) {
 			return valueOf((Apint) remainder);
 		}
 		return super.getRemainderReal(divisor, remainder);
@@ -561,7 +561,7 @@ public final class IntegerStruct extends RationalStructImpl<Apint> {
 	}
 
 	@Override
-	public IntegerStruct abs() {
+	public IntegerStructImpl abs() {
 		final Apint abs = ApintMath.abs(ap);
 		return valueOf(abs);
 	}
@@ -618,17 +618,17 @@ public final class IntegerStruct extends RationalStructImpl<Apint> {
 	}
 
 	@Override
-	public IntegerStruct realPart() {
+	public IntegerStructImpl realPart() {
 		return this;
 	}
 
 	@Override
-	public IntegerStruct conjugate() {
+	public IntegerStructImpl conjugate() {
 		return this;
 	}
 
 	@Override
-	public IntegerStruct negation() {
+	public IntegerStructImpl negation() {
 		final Apint negate = ap.negate();
 		return valueOf(negate);
 	}

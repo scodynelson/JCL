@@ -9,7 +9,7 @@ import java.math.BigInteger;
 import jcl.lang.ConstantStruct;
 import jcl.lang.IntegerStruct;
 import jcl.lang.factory.LispStructFactory;
-import jcl.lang.number.IntegerStructImpl;
+import jcl.lang.internal.number.IntegerStructImpl;
 
 public interface CompilerConstants {
 

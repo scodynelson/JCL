@@ -10,7 +10,7 @@ import jcl.compiler.icg.GeneratorState;
 import jcl.compiler.icg.JavaMethodBuilder;
 import jcl.lang.RatioStruct;
 import jcl.lang.factory.LispStructFactory;
-import jcl.lang.number.RatioStructImpl;
+import jcl.lang.internal.number.RatioStructImpl;
 import org.apfloat.Aprational;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;

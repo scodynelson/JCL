@@ -9,8 +9,8 @@ import java.math.BigInteger;
 import jcl.lang.ConstantStruct;
 import jcl.lang.FloatStruct;
 import jcl.lang.IntegerStruct;
-import jcl.lang.number.FloatStructImpl;
-import jcl.lang.number.IntegerStructImpl;
+import jcl.lang.internal.number.FloatStructImpl;
+import jcl.lang.internal.number.IntegerStructImpl;
 import org.apache.commons.math3.util.Precision;
 
 public interface NumberConstants {

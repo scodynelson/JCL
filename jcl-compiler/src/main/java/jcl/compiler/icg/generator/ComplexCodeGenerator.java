@@ -10,7 +10,7 @@ import jcl.compiler.icg.GeneratorState;
 import jcl.compiler.icg.JavaMethodBuilder;
 import jcl.lang.ComplexStruct;
 import jcl.lang.factory.LispStructFactory;
-import jcl.lang.number.ComplexStructImpl;
+import jcl.lang.internal.number.ComplexStructImpl;
 import org.apfloat.Apcomplex;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;

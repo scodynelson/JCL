@@ -10,7 +10,7 @@ import jcl.compiler.icg.GeneratorState;
 import jcl.compiler.icg.JavaMethodBuilder;
 import jcl.lang.FloatStruct;
 import jcl.lang.factory.LispStructFactory;
-import jcl.lang.number.FloatStructImpl;
+import jcl.lang.internal.number.FloatStructImpl;
 import org.apfloat.Apfloat;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;

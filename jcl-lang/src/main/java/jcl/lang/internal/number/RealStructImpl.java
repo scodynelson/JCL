@@ -2,7 +2,7 @@
  * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
  */
 
-package jcl.lang.number;
+package jcl.lang.internal.number;
 
 import java.math.RoundingMode;
 import java.util.function.Function;
@@ -10,6 +10,7 @@ import java.util.function.Function;
 import jcl.lang.IntegerStruct;
 import jcl.lang.NumberStruct;
 import jcl.lang.RealStruct;
+import jcl.lang.number.QuotientRemainder;
 import jcl.type.LispType;
 import org.apfloat.Apcomplex;
 import org.apfloat.Apfloat;

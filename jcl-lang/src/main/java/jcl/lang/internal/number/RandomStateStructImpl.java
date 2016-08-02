@@ -2,13 +2,14 @@
  * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
  */
 
-package jcl.lang.number;
+package jcl.lang.internal.number;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
 import jcl.lang.BuiltInClassStruct;
 import jcl.lang.RandomStateStruct;
+import jcl.lang.number.NumberUtils;
 import jcl.type.RandomStateType;
 import org.apache.commons.lang3.RandomUtils;
 

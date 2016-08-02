@@ -2,7 +2,7 @@
  * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
  */
 
-package jcl.lang.number;
+package jcl.lang.internal.number;
 
 import jcl.lang.ComplexStruct;
 import jcl.lang.RealStruct;

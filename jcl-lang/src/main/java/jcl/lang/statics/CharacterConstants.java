@@ -12,7 +12,7 @@ import jcl.lang.CharacterStruct;
 import jcl.lang.ConstantStruct;
 import jcl.lang.IntegerStruct;
 import jcl.lang.internal.CharacterStructImpl;
-import jcl.lang.number.IntegerStructImpl;
+import jcl.lang.internal.number.IntegerStructImpl;
 import jcl.util.CodePointConstants;
 
 /**

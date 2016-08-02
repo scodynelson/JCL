@@ -10,7 +10,6 @@ import jcl.lang.KeywordStruct;
 import jcl.lang.TStruct;
 import jcl.lang.VariableStruct;
 import jcl.lang.list.NILStruct;
-import jcl.lang.number.IntegerStructImpl;
 
 public interface PrinterVariables {
 

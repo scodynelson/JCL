@@ -3,7 +3,7 @@ package jcl.lang;
 import java.math.BigInteger;
 import java.util.List;
 
-import jcl.lang.number.IntegerStructImpl;
+import jcl.lang.internal.number.IntegerStructImpl;
 import org.apfloat.Apint;
 
 /**

@@ -10,7 +10,7 @@ import jcl.compiler.icg.GeneratorState;
 import jcl.compiler.icg.JavaMethodBuilder;
 import jcl.lang.IntegerStruct;
 import jcl.lang.factory.LispStructFactory;
-import jcl.lang.number.IntegerStructImpl;
+import jcl.lang.internal.number.IntegerStructImpl;
 import org.apfloat.Apint;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;

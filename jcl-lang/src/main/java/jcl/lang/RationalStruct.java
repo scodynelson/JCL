@@ -4,8 +4,8 @@
 
 package jcl.lang;
 
-import jcl.lang.number.IntegerStructImpl;
-import jcl.lang.number.RatioStructImpl;
+import jcl.lang.internal.number.IntegerStructImpl;
+import jcl.lang.internal.number.RatioStructImpl;
 import org.apfloat.Apcomplex;
 import org.apfloat.Apint;
 import org.apfloat.Aprational;

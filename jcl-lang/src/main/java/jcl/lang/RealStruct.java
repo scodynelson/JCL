@@ -6,8 +6,8 @@ package jcl.lang;
 
 import java.util.List;
 
-import jcl.lang.number.ComplexStructImpl;
-import jcl.lang.number.FloatStructImpl;
+import jcl.lang.internal.number.ComplexStructImpl;
+import jcl.lang.internal.number.FloatStructImpl;
 import jcl.lang.number.QuotientRemainder;
 import org.apfloat.Apfloat;
 import org.apfloat.Aprational;

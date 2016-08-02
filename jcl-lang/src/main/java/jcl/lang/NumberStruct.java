@@ -6,7 +6,7 @@ package jcl.lang;
 
 import java.util.List;
 
-import jcl.lang.number.ComplexStructImpl;
+import jcl.lang.internal.number.ComplexStructImpl;
 import org.apfloat.Apcomplex;
 import org.apfloat.Apfloat;
 

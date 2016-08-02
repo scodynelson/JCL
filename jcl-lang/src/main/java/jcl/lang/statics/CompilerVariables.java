@@ -11,7 +11,6 @@ import jcl.lang.ListStruct;
 import jcl.lang.VariableStruct;
 import jcl.lang.function.FunctionStruct;
 import jcl.lang.list.NILStruct;
-import jcl.lang.number.IntegerStructImpl;
 
 public interface CompilerVariables {
 

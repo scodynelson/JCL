@@ -1,10 +1,9 @@
-package jcl.lang;
+package jcl.lang.statics;
 
-import jcl.lang.number.NumberConstants;
-import jcl.lang.number.NumberVariables;
-import jcl.lang.pathname.PathnameVariables;
-import jcl.lang.readtable.ReaderVariables;
-import jcl.lang.stream.StreamVariables;
+import jcl.lang.DeclarationStruct;
+import jcl.lang.KeywordStruct;
+import jcl.lang.SpecialOperatorStruct;
+import jcl.lang.SymbolStruct;
 
 public interface CommonLispSymbols {
 

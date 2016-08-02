@@ -9,12 +9,12 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import jcl.lang.GlobalPackageStruct;
+import jcl.lang.statics.GlobalPackageStruct;
 import jcl.lang.KeywordStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.PackageStruct;
 import jcl.lang.PackageSymbolStruct;
-import jcl.lang.PackageVariables;
+import jcl.lang.statics.PackageVariables;
 import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
 import jcl.lang.readtable.AttributeType;

@@ -4,7 +4,7 @@
 
 package jcl.lang.stream;
 
-import jcl.lang.CommonLispSymbols;
+import jcl.lang.statics.CommonLispSymbols;
 import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.TypeErrorException;
 

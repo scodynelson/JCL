@@ -4,7 +4,7 @@
 
 package jcl.type;
 
-import jcl.lang.GlobalPackageStruct;
+import jcl.lang.statics.GlobalPackageStruct;
 import jcl.lang.SymbolStruct;
 
 /**

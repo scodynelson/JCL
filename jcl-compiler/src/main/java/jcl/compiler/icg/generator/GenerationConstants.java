@@ -28,7 +28,7 @@ import jcl.compiler.environment.binding.lambdalist.WholeParameter;
 import jcl.compiler.function.Closure;
 import jcl.compiler.function.CompiledFunctionStruct;
 import jcl.compiler.function.expanders.CompiledMacroFunctionExpander;
-import jcl.lang.GlobalPackageStruct;
+import jcl.lang.statics.GlobalPackageStruct;
 import jcl.lang.KeywordStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.PackageStruct;

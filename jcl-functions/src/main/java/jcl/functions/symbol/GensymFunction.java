@@ -7,7 +7,7 @@ package jcl.functions.symbol;
 import jcl.lang.LispStruct;
 import jcl.lang.StringStruct;
 import jcl.lang.SymbolStruct;
-import jcl.lang.SymbolVariables;
+import jcl.lang.statics.SymbolVariables;
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;

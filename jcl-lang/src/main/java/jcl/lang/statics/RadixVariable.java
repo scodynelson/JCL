@@ -1,7 +1,10 @@
-package jcl.lang;
+package jcl.lang.statics;
 
 import java.math.BigInteger;
 
+import jcl.lang.LispStruct;
+import jcl.lang.PackageStruct;
+import jcl.lang.VariableStruct;
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.number.IntegerStruct;
 import org.apache.commons.lang3.Range;

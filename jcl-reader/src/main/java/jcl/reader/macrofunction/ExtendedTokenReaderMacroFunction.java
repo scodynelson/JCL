@@ -7,7 +7,7 @@ package jcl.reader.macrofunction;
 import jcl.lang.list.NILStruct;
 import jcl.lang.readtable.AttributeType;
 import jcl.lang.readtable.Reader;
-import jcl.lang.readtable.ReaderVariables;
+import jcl.lang.statics.ReaderVariables;
 import jcl.lang.readtable.ReadtableCase;
 import jcl.lang.readtable.SyntaxType;
 import jcl.lang.stream.ReadPeekResult;

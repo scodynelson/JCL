@@ -7,7 +7,7 @@ package jcl.lang.number;
 import java.math.BigInteger;
 import java.util.List;
 
-import jcl.lang.PrinterVariables;
+import jcl.lang.statics.PrinterVariables;
 import jcl.type.IntegerType;
 import org.apfloat.Apcomplex;
 import org.apfloat.Apfloat;

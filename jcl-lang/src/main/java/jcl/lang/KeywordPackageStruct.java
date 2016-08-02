@@ -8,12 +8,12 @@ package jcl.lang;
  * The {@link KeywordPackageStruct} is the object representation of a Lisp 'package' type specific for 'keyword'
  * symbols.
  */
-final class KeywordPackageStruct extends PackageStruct {
+public final class KeywordPackageStruct extends PackageStruct {
 
 	/**
 	 * Singleton instance of the Keyword package.
 	 */
-	static final PackageStruct INSTANCE = new KeywordPackageStruct();
+	public static final PackageStruct INSTANCE = new KeywordPackageStruct();
 
 	/**
 	 * Public constructor.

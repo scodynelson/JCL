@@ -4,7 +4,7 @@ import java.util.Collections;
 import java.util.List;
 
 import jcl.lang.LispStruct;
-import jcl.lang.PrinterVariables;
+import jcl.lang.statics.PrinterVariables;
 import jcl.lang.VectorStruct;
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.condition.exception.TypeErrorException;

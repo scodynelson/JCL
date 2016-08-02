@@ -11,7 +11,7 @@ import java.util.function.Function;
 
 import jcl.lang.LispStruct;
 import jcl.lang.PackageStruct;
-import jcl.lang.PackageVariables;
+import jcl.lang.statics.PackageVariables;
 import jcl.lang.SymbolStruct;
 import jcl.lang.TStruct;
 import jcl.lang.condition.exception.TypeErrorException;

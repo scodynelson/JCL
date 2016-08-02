@@ -1,5 +1,7 @@
 package jcl.lang;
 
+import jcl.lang.statics.GlobalPackageStruct;
+
 public final class DeclarationStruct extends SymbolStruct {
 
 	// TODO: These are NOT declared in the "COMMON_LISP" package. They probably exist in the "SYSTEM" package instead. Have to work this in...

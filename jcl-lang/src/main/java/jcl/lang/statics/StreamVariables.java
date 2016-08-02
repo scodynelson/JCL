@@ -2,9 +2,9 @@
  * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
  */
 
-package jcl.lang.stream;
+package jcl.lang.statics;
 
-import jcl.lang.GlobalPackageStruct;
+import jcl.lang.statics.GlobalPackageStruct;
 import jcl.lang.IOStreamStruct;
 import jcl.lang.InputStreamStruct;
 import jcl.lang.OutputStreamStruct;

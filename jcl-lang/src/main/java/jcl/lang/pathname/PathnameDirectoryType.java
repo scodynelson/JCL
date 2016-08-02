@@ -4,7 +4,7 @@
 
 package jcl.lang.pathname;
 
-import jcl.lang.CommonLispSymbols;
+import jcl.lang.statics.CommonLispSymbols;
 import jcl.lang.LispStruct;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;

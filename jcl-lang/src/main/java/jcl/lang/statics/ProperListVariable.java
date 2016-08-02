@@ -2,8 +2,12 @@
  * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
  */
 
-package jcl.lang;
+package jcl.lang.statics;
 
+import jcl.lang.LispStruct;
+import jcl.lang.ListStruct;
+import jcl.lang.PackageStruct;
+import jcl.lang.VariableStruct;
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.list.NILStruct;
 import org.slf4j.Logger;

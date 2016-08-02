@@ -7,7 +7,7 @@ package jcl.reader.macrofunction;
 import jcl.lang.function.ReaderMacroFunction;
 import jcl.lang.number.IntegerStruct;
 import jcl.lang.readtable.AttributeType;
-import jcl.lang.readtable.ReaderVariables;
+import jcl.lang.statics.ReaderVariables;
 import jcl.lang.readtable.SyntaxType;
 
 /**

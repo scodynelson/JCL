@@ -5,7 +5,7 @@
 package jcl.functions.stream;
 
 import jcl.lang.BooleanStruct;
-import jcl.lang.CommonLispSymbols;
+import jcl.lang.statics.CommonLispSymbols;
 import jcl.lang.LispStruct;
 import jcl.lang.StreamStruct;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;

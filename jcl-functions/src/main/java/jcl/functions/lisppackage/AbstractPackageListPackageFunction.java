@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 
 import jcl.lang.LispStruct;
 import jcl.lang.PackageStruct;
-import jcl.lang.PackageVariables;
+import jcl.lang.statics.PackageVariables;
 import jcl.lang.TStruct;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.FunctionStruct;

@@ -8,7 +8,7 @@ import java.util.List;
 
 import jcl.lang.LispStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
-import jcl.lang.readtable.ReaderVariables;
+import jcl.lang.statics.ReaderVariables;
 import jcl.reader.TokenAttribute;
 import jcl.reader.TokenBuilder;
 import org.springframework.beans.factory.annotation.Autowired;

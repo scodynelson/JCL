@@ -12,7 +12,7 @@ import jcl.lang.number.NumberStruct;
 import jcl.lang.number.RatioStruct;
 import jcl.lang.number.RationalStruct;
 import jcl.lang.readtable.AttributeType;
-import jcl.lang.readtable.ReaderVariables;
+import jcl.lang.statics.ReaderVariables;
 import jcl.reader.TokenAttribute;
 import jcl.reader.TokenBuilder;
 import org.apfloat.Apint;

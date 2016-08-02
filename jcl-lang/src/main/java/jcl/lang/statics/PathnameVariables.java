@@ -2,9 +2,10 @@
  * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
  */
 
-package jcl.lang.pathname;
+package jcl.lang.statics;
 
-import jcl.lang.GlobalPackageStruct;
+import jcl.lang.pathname.PathnameStruct;
+import jcl.lang.statics.GlobalPackageStruct;
 import jcl.lang.VariableStruct;
 
 public interface PathnameVariables {

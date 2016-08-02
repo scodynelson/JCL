@@ -7,7 +7,7 @@ package jcl.lang.number;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
-import jcl.lang.readtable.ReaderVariables;
+import jcl.lang.statics.ReaderVariables;
 import jcl.type.DoubleFloatType;
 import jcl.type.FloatType;
 import jcl.type.LongFloatType;

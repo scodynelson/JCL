@@ -1,6 +1,6 @@
 package jcl.lang.function;
 
-import jcl.lang.GlobalPackageStruct;
+import jcl.lang.statics.GlobalPackageStruct;
 import jcl.lang.PackageStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.function.parameterdsl.Parameters;

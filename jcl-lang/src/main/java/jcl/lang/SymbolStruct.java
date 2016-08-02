@@ -13,6 +13,8 @@ import jcl.lang.function.expander.CompilerMacroFunctionExpanderInter;
 import jcl.lang.function.expander.MacroFunctionExpanderInter;
 import jcl.lang.function.expander.SymbolMacroExpanderInter;
 import jcl.lang.list.NILStruct;
+import jcl.lang.statics.GlobalPackageStruct;
+import jcl.lang.statics.PackageVariables;
 import jcl.type.LispType;
 import jcl.type.SymbolType;
 import org.apache.commons.lang3.builder.EqualsBuilder;

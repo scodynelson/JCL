@@ -6,7 +6,7 @@ package jcl.functions.symbol;
 
 import jcl.lang.LispStruct;
 import jcl.lang.PackageStruct;
-import jcl.lang.PackageVariables;
+import jcl.lang.statics.PackageVariables;
 import jcl.lang.StringStruct;
 import jcl.lang.factory.LispStructFactory;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;

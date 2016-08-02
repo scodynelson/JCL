@@ -20,7 +20,7 @@ import jcl.lang.pathname.PathnameHost;
 import jcl.lang.pathname.PathnameName;
 import jcl.lang.pathname.PathnameStruct;
 import jcl.lang.pathname.PathnameType;
-import jcl.lang.pathname.PathnameVariables;
+import jcl.lang.statics.PathnameVariables;
 import jcl.lang.pathname.PathnameVersion;
 import jcl.lang.pathname.PathnameVersionComponentType;
 import org.springframework.beans.factory.annotation.Autowired;

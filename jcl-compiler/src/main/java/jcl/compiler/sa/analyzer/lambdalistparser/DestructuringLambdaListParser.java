@@ -18,7 +18,7 @@ import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
 import jcl.compiler.environment.binding.lambdalist.RestParameter;
 import jcl.compiler.environment.binding.lambdalist.WholeParameter;
 import jcl.compiler.struct.specialoperator.declare.DeclareStruct;
-import jcl.lang.CompilerConstants;
+import jcl.lang.statics.CompilerConstants;
 import jcl.lang.LispStruct;
 import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.ListStruct;

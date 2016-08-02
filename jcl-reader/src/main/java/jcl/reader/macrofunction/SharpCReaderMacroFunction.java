@@ -17,7 +17,7 @@ import jcl.lang.list.NILStruct;
 import jcl.lang.number.ComplexStruct;
 import jcl.lang.number.RealStruct;
 import jcl.lang.readtable.Reader;
-import jcl.lang.readtable.ReaderVariables;
+import jcl.lang.statics.ReaderVariables;
 import jcl.lang.readtable.ReadtableStruct;
 import jcl.util.CodePointConstants;
 import org.springframework.stereotype.Component;

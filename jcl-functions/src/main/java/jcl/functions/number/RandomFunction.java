@@ -14,7 +14,7 @@ import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.number.FloatStruct;
 import jcl.lang.number.IntegerStruct;
-import jcl.lang.number.NumberVariables;
+import jcl.lang.statics.NumberVariables;
 import jcl.lang.number.RandomStateStruct;
 import jcl.lang.number.RealStruct;
 import org.springframework.stereotype.Component;

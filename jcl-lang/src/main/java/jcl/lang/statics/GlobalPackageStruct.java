@@ -2,11 +2,14 @@
  * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
  */
 
-package jcl.lang;
+package jcl.lang.statics;
 
 import java.util.Collections;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+
+import jcl.lang.KeywordPackageStruct;
+import jcl.lang.PackageStruct;
 
 /**
  * The {@link GlobalPackageStruct} is the global location for system defined packages.
@@ -14,7 +17,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @SuppressWarnings("all")
 public final class GlobalPackageStruct {
 
-	static final Map<String, PackageStruct> ALL_PACKAGES = new ConcurrentHashMap<>();
+	public static final Map<String, PackageStruct> ALL_PACKAGES = new ConcurrentHashMap<>();
 
 	// TODO: Eventually, we must make sure we account for lexical constraints for the CL and Keyword packages defined in the specification.
 	public static final PackageStruct EXTENSIONS = PackageStruct.valueOf("EXTENSIONS");

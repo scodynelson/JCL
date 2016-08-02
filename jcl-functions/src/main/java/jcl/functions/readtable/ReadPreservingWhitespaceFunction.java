@@ -14,7 +14,7 @@ import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.list.NILStruct;
 import jcl.lang.readtable.Reader;
 import jcl.lang.InputStreamStruct;
-import jcl.lang.stream.StreamVariables;
+import jcl.lang.statics.StreamVariables;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;

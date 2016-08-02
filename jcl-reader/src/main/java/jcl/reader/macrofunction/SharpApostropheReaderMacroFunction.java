@@ -15,7 +15,7 @@ import jcl.lang.factory.LispStructFactory;
 import jcl.lang.function.ReaderMacroFunction;
 import jcl.lang.list.NILStruct;
 import jcl.lang.readtable.Reader;
-import jcl.lang.readtable.ReaderVariables;
+import jcl.lang.statics.ReaderVariables;
 import jcl.util.CodePointConstants;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;

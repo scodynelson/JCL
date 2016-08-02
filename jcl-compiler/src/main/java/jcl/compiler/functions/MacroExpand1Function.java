@@ -8,7 +8,7 @@ import java.util.Optional;
 
 import jcl.compiler.environment.Environment;
 import jcl.lang.BooleanStruct;
-import jcl.lang.CompilerVariables;
+import jcl.lang.statics.CompilerVariables;
 import jcl.lang.LispStruct;
 import jcl.lang.PackageStruct;
 import jcl.lang.PackageSymbolStruct;

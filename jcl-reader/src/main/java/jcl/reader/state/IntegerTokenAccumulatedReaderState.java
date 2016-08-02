@@ -12,7 +12,7 @@ import java.util.List;
 import jcl.lang.number.IntegerStruct;
 import jcl.lang.number.NumberStruct;
 import jcl.lang.readtable.AttributeType;
-import jcl.lang.readtable.ReaderVariables;
+import jcl.lang.statics.ReaderVariables;
 import jcl.reader.TokenAttribute;
 import jcl.reader.TokenBuilder;
 import org.springframework.stereotype.Component;

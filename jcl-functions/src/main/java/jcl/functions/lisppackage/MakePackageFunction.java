@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-import jcl.lang.CommonLispSymbols;
+import jcl.lang.statics.CommonLispSymbols;
 import jcl.lang.LispStruct;
 import jcl.lang.PackageStruct;
 import jcl.lang.StringStruct;

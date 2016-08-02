@@ -10,7 +10,7 @@ import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.list.NILStruct;
 import jcl.lang.OutputStreamStruct;
-import jcl.lang.stream.StreamVariables;
+import jcl.lang.statics.StreamVariables;
 import org.springframework.stereotype.Component;
 
 @Component

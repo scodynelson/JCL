@@ -1,5 +1,7 @@
 package jcl.lang;
 
+import jcl.lang.statics.GlobalPackageStruct;
+
 public final class SpecialOperatorStruct extends SymbolStruct {
 
 	public static final SpecialOperatorStruct BLOCK = new SpecialOperatorStruct("BLOCK", GlobalPackageStruct.COMMON_LISP);

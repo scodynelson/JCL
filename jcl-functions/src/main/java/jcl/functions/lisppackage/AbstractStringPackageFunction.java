@@ -10,7 +10,7 @@ import jcl.lang.KeywordStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.PackageStruct;
 import jcl.lang.PackageSymbolStruct;
-import jcl.lang.PackageVariables;
+import jcl.lang.statics.PackageVariables;
 import jcl.lang.StringStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.ValuesStruct;

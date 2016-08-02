@@ -1,6 +1,7 @@
 package jcl.lang;
 
 import jcl.lang.list.NILStruct;
+import jcl.lang.statics.GlobalPackageStruct;
 import jcl.type.LispType;
 
 public abstract class BooleanStruct extends ConstantStruct<BooleanStruct> {

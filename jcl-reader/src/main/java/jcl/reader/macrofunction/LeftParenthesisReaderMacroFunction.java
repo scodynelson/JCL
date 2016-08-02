@@ -11,7 +11,7 @@ import javax.annotation.PostConstruct;
 import jcl.lang.function.ReaderMacroFunction;
 import jcl.lang.ListStruct;
 import jcl.lang.readtable.Reader;
-import jcl.lang.readtable.ReaderVariables;
+import jcl.lang.statics.ReaderVariables;
 import jcl.util.CodePointConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

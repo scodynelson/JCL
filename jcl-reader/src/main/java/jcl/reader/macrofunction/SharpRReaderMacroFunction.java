@@ -13,7 +13,7 @@ import jcl.lang.condition.exception.ReaderErrorException;
 import jcl.lang.function.ReaderMacroFunction;
 import jcl.lang.number.RationalStruct;
 import jcl.lang.readtable.Reader;
-import jcl.lang.readtable.ReaderVariables;
+import jcl.lang.statics.ReaderVariables;
 import jcl.lang.readtable.ReadtableStruct;
 import jcl.util.CodePointConstants;
 import org.apache.commons.lang3.Range;

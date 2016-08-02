@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 import jcl.lang.BitVectorStruct;
-import jcl.lang.PrinterVariables;
+import jcl.lang.statics.PrinterVariables;
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.number.IntegerStruct;
 import jcl.type.BitType;

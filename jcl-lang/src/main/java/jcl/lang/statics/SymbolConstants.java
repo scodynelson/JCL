@@ -2,8 +2,9 @@
  * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
  */
 
-package jcl.lang;
+package jcl.lang.statics;
 
+import jcl.lang.TStruct;
 import jcl.lang.list.NILStruct;
 
 public interface SymbolConstants {

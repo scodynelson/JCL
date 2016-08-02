@@ -2,11 +2,12 @@
  * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
  */
 
-package jcl.lang.readtable;
+package jcl.lang.statics;
 
 import jcl.lang.BooleanStruct;
-import jcl.lang.GlobalPackageStruct;
-import jcl.lang.RadixVariable;
+import jcl.lang.readtable.ReadtableStruct;
+import jcl.lang.statics.GlobalPackageStruct;
+import jcl.lang.statics.RadixVariable;
 import jcl.lang.TStruct;
 import jcl.lang.VariableStruct;
 import jcl.lang.list.NILStruct;

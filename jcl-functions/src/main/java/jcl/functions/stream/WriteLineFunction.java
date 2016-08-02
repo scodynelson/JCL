@@ -4,7 +4,7 @@
 
 package jcl.functions.stream;
 
-import jcl.lang.CommonLispSymbols;
+import jcl.lang.statics.CommonLispSymbols;
 import jcl.lang.LispStruct;
 import jcl.lang.StringStruct;
 import jcl.lang.TStruct;
@@ -15,7 +15,7 @@ import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.list.NILStruct;
 import jcl.lang.number.IntegerStruct;
 import jcl.lang.OutputStreamStruct;
-import jcl.lang.stream.StreamVariables;
+import jcl.lang.statics.StreamVariables;
 import org.springframework.stereotype.Component;
 
 @Component

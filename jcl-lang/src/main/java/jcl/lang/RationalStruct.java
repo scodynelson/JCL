@@ -17,9 +17,9 @@ public interface RationalStruct extends RealStruct {
 
 	/**
 	 * Returns a RationalStruct from the provided {@link Aprational} value. If the {@link Aprational} is an {@link
-	 * Apint}, {@link IntegerStructImpl#valueOf(Apint)} is invoked to create the appropriate {@link IntegerStructImpl}
+	 * Apint}, {@link IntegerStructImpl#valueOf(Apint)} is invoked to create the appropriate {@link IntegerStruct}
 	 * instead. Otherwise, {@link RatioStructImpl#valueOf(Aprational)} is invoked to create the appropriate {@link
-	 * RatioStructImpl}
+	 * RatioStruct}
 	 *
 	 * @param aprational
 	 * 		the {@link Aprational} to be used as the value of the resulting RationalStruct
@@ -35,8 +35,8 @@ public interface RationalStruct extends RealStruct {
 
 	/**
 	 * Returns a RationalStruct object with the provided numerator and denominator {@link Apint} values. If the
-	 * denominator is equal to {@link Apcomplex#ONE}, an {@link IntegerStructImpl} is returned; otherwise a {@link
-	 * RatioStructImpl} is returned.
+	 * denominator is equal to {@link Apcomplex#ONE}, an {@link IntegerStruct} is returned; otherwise a {@link
+	 * RatioStruct} is returned.
 	 *
 	 * @param numerator
 	 * 		the {@link Apint} value of the numerator of the resulting RationalStruct
@@ -57,14 +57,14 @@ public interface RationalStruct extends RealStruct {
 	 *
 	 * @return the numerator of this RationalStruct
 	 */
-	IntegerStructImpl numerator();
+	IntegerStruct numerator();
 
 	/**
 	 * Returns the denominator of this RationalStruct.
 	 *
 	 * @return the denominator of this RationalStruct
 	 */
-	IntegerStructImpl denominator();
+	IntegerStruct denominator();
 
 	/*
 		RealStruct
@@ -83,7 +83,7 @@ public interface RationalStruct extends RealStruct {
 	Aprational ap();
 
 	@Override
-	IntegerStructImpl signum();
+	IntegerStruct signum();
 
 	@Override
 	default RationalStruct realPart() {
@@ -91,8 +91,8 @@ public interface RationalStruct extends RealStruct {
 	}
 
 	@Override
-	default IntegerStructImpl imagPart() {
-		return IntegerStructImpl.ZERO;
+	default IntegerStruct imagPart() {
+		return IntegerStruct.ZERO;
 	}
 
 	@Override

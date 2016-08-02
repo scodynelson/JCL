@@ -7,9 +7,9 @@ package jcl.reader.state;
 import java.math.BigInteger;
 import java.util.LinkedList;
 
-import jcl.lang.number.IntegerStructImpl;
+import jcl.lang.IntegerStruct;
+import jcl.lang.RatioStruct;
 import jcl.lang.NumberStruct;
-import jcl.lang.number.RatioStructImpl;
 import jcl.lang.RationalStruct;
 import jcl.lang.readtable.AttributeType;
 import jcl.lang.statics.ReaderVariables;
@@ -19,8 +19,8 @@ import org.apfloat.Apint;
 import org.springframework.stereotype.Component;
 
 /**
- * Sub-piece of Reader algorithm part 10.1, used to produce a {@link RatioStructImpl} output when a rational token is
- * supplied with an {@link AttributeType#RATIOMARKER}. This will also produce an {@link IntegerStructImpl} when the
+ * Sub-piece of Reader algorithm part 10.1, used to produce a {@link RatioStruct} output when a rational token is
+ * supplied with an {@link AttributeType#RATIOMARKER}. This will also produce an {@link IntegerStruct} when the
  * resulting {@link BigInteger} has a denominator of {@link BigInteger#ONE}.
  */
 @Component

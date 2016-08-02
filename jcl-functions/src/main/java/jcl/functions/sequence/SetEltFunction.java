@@ -1,10 +1,10 @@
 package jcl.functions.sequence;
 
+import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.function.SystemBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
-import jcl.lang.number.IntegerStructImpl;
 import jcl.lang.SequenceStruct;
 import org.springframework.stereotype.Component;
 
@@ -29,7 +29,7 @@ public final class SetEltFunction extends SystemBuiltInFunctionStruct {
 	@Override
 	public LispStruct apply(final Arguments arguments) {
 		final SequenceStruct sequence = arguments.getRequiredArgument(SEQUENCE_ARGUMENT, SequenceStruct.class);
-		final IntegerStructImpl index = arguments.getRequiredArgument(INDEX_ARGUMENT, IntegerStructImpl.class);
+		final IntegerStruct index = arguments.getRequiredArgument(INDEX_ARGUMENT, IntegerStruct.class);
 		final LispStruct value = arguments.getRequiredArgument(VALUE_ARGUMENT);
 
 		final long indexValue = index.longValue();

@@ -1,11 +1,11 @@
 package jcl.functions.list;
 
+import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.ListStruct;
-import jcl.lang.number.IntegerStructImpl;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -26,7 +26,7 @@ public final class NthcdrFunction extends CommonLispBuiltInFunctionStruct {
 
 	@Override
 	public LispStruct apply(final Arguments arguments) {
-		final IntegerStructImpl nVal = arguments.getRequiredArgument(N_ARGUMENT, IntegerStructImpl.class);
+		final IntegerStruct nVal = arguments.getRequiredArgument(N_ARGUMENT, IntegerStruct.class);
 		final ListStruct list = arguments.getRequiredArgument(LIST_ARGUMENT, ListStruct.class);
 
 		final long nLong = nVal.longValue();

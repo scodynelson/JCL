@@ -8,6 +8,8 @@ import jcl.compiler.icg.CodeGenerator;
 import jcl.compiler.icg.GeneratorEvent;
 import jcl.compiler.icg.GeneratorState;
 import jcl.compiler.icg.JavaMethodBuilder;
+import jcl.lang.FloatStruct;
+import jcl.lang.factory.LispStructFactory;
 import jcl.lang.number.FloatStructImpl;
 import org.apfloat.Apfloat;
 import org.objectweb.asm.MethodVisitor;
@@ -17,27 +19,11 @@ import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 /**
- * Class to generate {@link FloatStructImpl} objects dynamically by utilizing the {@link FloatStructImpl#ap} of the provided
- * {@link FloatStructImpl} input value.
+ * Class to generate {@link FloatStruct} objects dynamically by utilizing the {@link FloatStruct#ap()} of the provided
+ * {@link FloatStruct} input value.
  */
 @Component
 final class FloatCodeGenerator implements CodeGenerator<FloatStructImpl> {
-
-	/**
-	 * Constant {@link String} containing the name for the {@link FloatStructImpl} class.
-	 */
-	private static final String FLOAT_STRUCT_NAME = Type.getInternalName(FloatStructImpl.class);
-
-	/**
-	 * Constant {@link String} containing the name for the {@link FloatStructImpl#valueOf(Apfloat)} method.
-	 */
-	private static final String FLOAT_STRUCT_VALUE_OF_METHOD_NAME = "valueOf";
-
-	/**
-	 * Constant {@link String} containing the description for the {@link FloatStructImpl#valueOf(Apfloat)} method.
-	 */
-	private static final String FLOAT_STRUCT_VALUE_OF_METHOD_DESC
-			= CodeGenerators.getMethodDescription(FloatStructImpl.class, FLOAT_STRUCT_VALUE_OF_METHOD_NAME, Apfloat.class);
 
 	/**
 	 * Constant {@link String} containing the name for the {@link Apfloat} class.
@@ -52,22 +38,22 @@ final class FloatCodeGenerator implements CodeGenerator<FloatStructImpl> {
 
 	/**
 	 * {@inheritDoc}
-	 * Generation method for {@link FloatStructImpl} objects, by performing the following operations:
+	 * Generation method for {@link FloatStruct} objects, by performing the following operations:
 	 * <ol>
-	 * <li>Constructing a new {@link Apfloat} from the {@link String} representation of the {@link FloatStructImpl#ap}
+	 * <li>Constructing a new {@link Apfloat} from the {@link String} representation of the {@link FloatStruct#ap()}
 	 * value</li>
-	 * <li>Retrieving a {@link FloatStructImpl} via {@link FloatStructImpl#valueOf(Apfloat)} with the created {@link Apfloat}
+	 * <li>Retrieving a {@link FloatStruct} via {@link LispStructFactory#toFloat(Apfloat)} with the created {@link Apfloat}
 	 * value</li>
 	 * </ol>
 	 *
 	 * @param input
-	 * 		the {@link FloatStructImpl} input value to generate code for
+	 * 		the {@link FloatStruct} input value to generate code for
 	 * @param generatorState
 	 * 		stateful object used to hold the current state of the code generation process
 	 */
 	@EventListener
 	public void onGeneratorEvent(final GeneratorEvent<FloatStructImpl> event) {
-		final FloatStructImpl input = event.getSource();
+		final FloatStruct input = event.getSource();
 		final GeneratorState generatorState = event.getGeneratorState();
 
 		final JavaMethodBuilder methodBuilder = generatorState.getCurrentMethodBuilder();
@@ -85,9 +71,9 @@ final class FloatCodeGenerator implements CodeGenerator<FloatStructImpl> {
 		                   APFLOAT_INIT_METHOD_DESC,
 		                   false);
 		mv.visitMethodInsn(Opcodes.INVOKESTATIC,
-		                   FLOAT_STRUCT_NAME,
-		                   FLOAT_STRUCT_VALUE_OF_METHOD_NAME,
-		                   FLOAT_STRUCT_VALUE_OF_METHOD_DESC,
+		                   GenerationConstants.LISP_STRUCT_FACTORY_NAME,
+		                   GenerationConstants.LISP_STRUCT_FACTORY_TO_FLOAT_METHOD_NAME,
+		                   GenerationConstants.LISP_STRUCT_FACTORY_TO_FLOAT_METHOD_DESC,
 		                   false);
 	}
 }

@@ -4,12 +4,12 @@
 
 package jcl.functions.number;
 
+import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.ValuesStruct;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
-import jcl.lang.number.IntegerStructImpl;
 import jcl.lang.number.QuotientRemainder;
 import jcl.lang.RealStruct;
 import org.springframework.stereotype.Component;
@@ -26,7 +26,7 @@ public final class FloorFunction extends CommonLispBuiltInFunctionStruct {
 		      FUNCTION_NAME,
 		      Parameters.forFunction(FUNCTION_NAME)
 		                .requiredParameter(REAL_ARGUMENT)
-		                .optionalParameter(DIVISOR_ARGUMENT).withInitialValue(IntegerStructImpl.ONE)
+		                .optionalParameter(DIVISOR_ARGUMENT).withInitialValue(IntegerStruct.ONE)
 		);
 	}
 

@@ -10,6 +10,7 @@ import java.util.function.Supplier;
 
 import jcl.lang.BuiltInClassStruct;
 import jcl.lang.CharacterStruct;
+import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.PackageStruct;
 import jcl.lang.statics.PrinterVariables;
@@ -241,7 +242,7 @@ public final class CharacterStructImpl extends BuiltInClassStruct implements Cha
 	}
 
 	@Override
-	public IntegerStructImpl charCode() {
+	public IntegerStruct charCode() {
 		return IntegerStructImpl.valueOf(BigInteger.valueOf(codePoint));
 	}
 
@@ -251,12 +252,12 @@ public final class CharacterStructImpl extends BuiltInClassStruct implements Cha
 	}
 
 	@Override
-	public IntegerStructImpl charInt() {
+	public IntegerStruct charInt() {
 		return charCode();
 	}
 
 	@Override
-	public LispStruct charDigit(final IntegerStructImpl radix) {
+	public LispStruct charDigit(final IntegerStruct radix) {
 		final int radixInt = radix.intValue();
 		final int digit = Character.digit(codePoint, radixInt);
 		if (digit == -1) {

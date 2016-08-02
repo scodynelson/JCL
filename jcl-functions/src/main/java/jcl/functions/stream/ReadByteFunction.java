@@ -10,11 +10,11 @@ import jcl.lang.BooleanStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.TStruct;
 import jcl.lang.condition.exception.TypeErrorException;
+import jcl.lang.factory.LispStructFactory;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.list.NILStruct;
-import jcl.lang.number.IntegerStructImpl;
 import jcl.lang.InputStreamStruct;
 import jcl.lang.stream.ReadPeekResult;
 import jcl.lang.statics.StreamVariables;
@@ -57,6 +57,6 @@ public final class ReadByteFunction extends CommonLispBuiltInFunctionStruct {
 		final LispStruct eofValue = arguments.getOptionalArgument(EOF_VALUE_ARGUMENT);
 
 		final ReadPeekResult readPeekResult = inputStreamStruct.readByte(eofErrorP.booleanValue(), eofValue);
-		return readPeekResult.isEof() ? eofValue : IntegerStructImpl.valueOf(BigInteger.valueOf(readPeekResult.getResult()));
+		return readPeekResult.isEof() ? eofValue : LispStructFactory.toInteger(BigInteger.valueOf(readPeekResult.getResult()));
 	}
 }

@@ -5,6 +5,7 @@
 package jcl.lang.statics;
 
 import jcl.lang.BooleanStruct;
+import jcl.lang.IntegerStruct;
 import jcl.lang.readtable.ReadtableStruct;
 import jcl.lang.TStruct;
 import jcl.lang.VariableStruct;
@@ -21,7 +22,7 @@ public interface ReaderVariables {
 	/**
 	 * A {@link RadixVariable} type variable used to determine in which radix base to read numeric values.
 	 */
-	VariableStruct<IntegerStructImpl> READ_BASE = new RadixVariable("*READ-BASE*", GlobalPackageStruct.COMMON_LISP);
+	VariableStruct<IntegerStruct> READ_BASE = new RadixVariable("*READ-BASE*", GlobalPackageStruct.COMMON_LISP);
 
 	/**
 	 * Determine the format in which to read float numeric values.

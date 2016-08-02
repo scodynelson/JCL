@@ -4,6 +4,7 @@
 
 package jcl.functions.symbol;
 
+import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.StringStruct;
 import jcl.lang.SymbolStruct;
@@ -12,7 +13,6 @@ import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
-import jcl.lang.number.IntegerStructImpl;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -33,21 +33,21 @@ public final class GensymFunction extends CommonLispBuiltInFunctionStruct {
 	public LispStruct apply(final Arguments arguments) {
 
 		String gensymPrefix = "G";
-		IntegerStructImpl gensymPostfix = SymbolVariables.GENSYM_COUNTER.getVariableValue();
+		IntegerStruct gensymPostfix = SymbolVariables.GENSYM_COUNTER.getVariableValue();
 		final LispStruct defaulting = arguments.getOptionalArgument(PREFIX_ARGUMENT);
 //		validator.validateTypes(defaulting, functionName(), "Prefix", StringType.INSTANCE, IntegerType.INSTANCE);
 		if (defaulting != null) {
 
 			if (defaulting instanceof StringStruct) {
 				gensymPrefix = ((StringStruct) defaulting).getAsJavaString();
-				SymbolVariables.GENSYM_COUNTER.setValue(gensymPostfix.add(IntegerStructImpl.ONE));
-			} else if (defaulting instanceof IntegerStructImpl) {
-				gensymPostfix = (IntegerStructImpl) defaulting;
+				SymbolVariables.GENSYM_COUNTER.setValue(gensymPostfix.add(IntegerStruct.ONE));
+			} else if (defaulting instanceof IntegerStruct) {
+				gensymPostfix = (IntegerStruct) defaulting;
 			} else {
 				throw new TypeErrorException("UNCAUGHT TYPE ERROR.");
 			}
 		} else {
-			SymbolVariables.GENSYM_COUNTER.setValue(gensymPostfix.add(IntegerStructImpl.ONE));
+			SymbolVariables.GENSYM_COUNTER.setValue(gensymPostfix.add(IntegerStruct.ONE));
 		}
 
 		final String symbolName = gensymPrefix + gensymPostfix.bigIntegerValue();

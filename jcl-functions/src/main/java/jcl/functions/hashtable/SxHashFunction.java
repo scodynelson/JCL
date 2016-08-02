@@ -7,10 +7,10 @@ package jcl.functions.hashtable;
 import java.math.BigInteger;
 
 import jcl.lang.LispStruct;
+import jcl.lang.factory.LispStructFactory;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
-import jcl.lang.number.IntegerStructImpl;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -31,6 +31,6 @@ public final class SxHashFunction extends CommonLispBuiltInFunctionStruct {
 	public LispStruct apply(final Arguments arguments) {
 		final LispStruct object = arguments.getRequiredArgument(OBJECT_ARGUMENT);
 		final int hashCode = object.hashCode();
-		return IntegerStructImpl.valueOf(BigInteger.valueOf(hashCode));
+		return LispStructFactory.toInteger(BigInteger.valueOf(hashCode));
 	}
 }

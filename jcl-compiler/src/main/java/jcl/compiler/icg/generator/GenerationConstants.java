@@ -28,6 +28,7 @@ import jcl.compiler.environment.binding.lambdalist.WholeParameter;
 import jcl.compiler.function.Closure;
 import jcl.compiler.function.CompiledFunctionStruct;
 import jcl.compiler.function.expanders.CompiledMacroFunctionExpander;
+import jcl.lang.ComplexStruct;
 import jcl.lang.statics.GlobalPackageStruct;
 import jcl.lang.KeywordStruct;
 import jcl.lang.LispStruct;
@@ -47,6 +48,10 @@ import jcl.type.TypeBaseClass;
 import jcl.type.TypeFactory;
 import jcl.type.typespecifier.AtomicTypeSpecifier;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apfloat.Apcomplex;
+import org.apfloat.Apfloat;
+import org.apfloat.Apint;
+import org.apfloat.Aprational;
 import org.objectweb.asm.Type;
 
 interface GenerationConstants {
@@ -198,6 +203,22 @@ interface GenerationConstants {
 	String LISP_STRUCT_FACTORY_TO_STRING_METHOD_NAME = "toString";
 
 	String LISP_STRUCT_FACTORY_TO_STRING_METHOD_DESC = CodeGenerators.getMethodDescription(LispStructFactory.class, LISP_STRUCT_FACTORY_TO_STRING_METHOD_NAME, String.class);
+
+	String LISP_STRUCT_FACTORY_TO_COMPLEX_METHOD_NAME = "toComplex";
+
+	String LISP_STRUCT_FACTORY_TO_COMPLEX_METHOD_DESC = CodeGenerators.getMethodDescription(LispStructFactory.class, LISP_STRUCT_FACTORY_TO_COMPLEX_METHOD_NAME, Apcomplex.class, ComplexStruct.ValueType.class);
+
+	String LISP_STRUCT_FACTORY_TO_FLOAT_METHOD_NAME = "toFloat";
+
+	String LISP_STRUCT_FACTORY_TO_FLOAT_METHOD_DESC = CodeGenerators.getMethodDescription(LispStructFactory.class, LISP_STRUCT_FACTORY_TO_FLOAT_METHOD_NAME, Apfloat.class);
+
+	String LISP_STRUCT_FACTORY_TO_RATIO_METHOD_NAME = "toRatio";
+
+	String LISP_STRUCT_FACTORY_TO_RATIO_METHOD_DESC = CodeGenerators.getMethodDescription(LispStructFactory.class, LISP_STRUCT_FACTORY_TO_RATIO_METHOD_NAME, Aprational.class);
+
+	String LISP_STRUCT_FACTORY_TO_INTEGER_METHOD_NAME = "toInteger";
+
+	String LISP_STRUCT_FACTORY_TO_INTEGER_METHOD_DESC = CodeGenerators.getMethodDescription(LispStructFactory.class, LISP_STRUCT_FACTORY_TO_INTEGER_METHOD_NAME, Apint.class);
 
 	String SYMBOL_STRUCT_NAME = Type.getInternalName(SymbolStruct.class);
 

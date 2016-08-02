@@ -4,6 +4,8 @@
 
 package jcl.lang.number;
 
+import jcl.lang.FloatStruct;
+import jcl.lang.IntegerStruct;
 import jcl.lang.NumberStruct;
 import jcl.lang.RationalStruct;
 import jcl.lang.RealStruct;
@@ -36,13 +38,13 @@ abstract class RationalStructImpl<A extends Aprational> extends RealStructImpl<A
 	}
 
 	@Override
-	public IntegerStructImpl numerator() {
+	public IntegerStruct numerator() {
 		final Apint numerator = ap.numerator();
 		return IntegerStructImpl.valueOf(numerator);
 	}
 
 	@Override
-	public IntegerStructImpl denominator() {
+	public IntegerStruct denominator() {
 		final Apint denominator = ap.denominator();
 		return IntegerStructImpl.valueOf(denominator);
 	}
@@ -57,12 +59,12 @@ abstract class RationalStructImpl<A extends Aprational> extends RealStructImpl<A
 	}
 
 	@Override
-	public FloatStructImpl floatingPoint() {
+	public FloatStruct floatingPoint() {
 		return FloatStructImpl.valueOf(ap);
 	}
 
 	@Override
-	public FloatStructImpl floatingPoint(final FloatStructImpl prototype) {
+	public FloatStruct floatingPoint(final FloatStruct prototype) {
 		return FloatStructImpl.valueOf(ap, prototype);
 	}
 
@@ -141,15 +143,15 @@ abstract class RationalStructImpl<A extends Aprational> extends RealStructImpl<A
 	}
 
 	@Override
-	public IntegerStructImpl signum() {
+	public IntegerStruct signum() {
 		final int signum = ap.signum();
 		if (signum == 0) {
-			return IntegerStructImpl.ZERO;
+			return IntegerStruct.ZERO;
 		}
 		if (signum > 0) {
-			return IntegerStructImpl.ONE;
+			return IntegerStruct.ONE;
 		}
-		return IntegerStructImpl.MINUS_ONE;
+		return IntegerStruct.MINUS_ONE;
 	}
 
 	@Override
@@ -158,8 +160,8 @@ abstract class RationalStructImpl<A extends Aprational> extends RealStructImpl<A
 	}
 
 	@Override
-	public IntegerStructImpl imagPart() {
-		return IntegerStructImpl.ZERO;
+	public IntegerStruct imagPart() {
+		return IntegerStruct.ZERO;
 	}
 
 	@Override

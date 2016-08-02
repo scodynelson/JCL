@@ -9,8 +9,8 @@ import java.util.Map;
 import jcl.compiler.struct.CompilerSpecialOperatorStruct;
 import jcl.compiler.struct.specialoperator.go.GoIntegerStruct;
 import jcl.compiler.struct.specialoperator.go.GoStruct;
+import jcl.lang.IntegerStruct;
 import jcl.lang.SymbolStruct;
-import jcl.lang.number.IntegerStructImpl;
 
 public class TagbodyStruct extends CompilerSpecialOperatorStruct {
 
@@ -33,7 +33,7 @@ public class TagbodyStruct extends CompilerSpecialOperatorStruct {
 
 			final GoStruct<?> key = entry.getKey();
 			if (key instanceof GoIntegerStruct) {
-				final IntegerStructImpl tag = ((GoIntegerStruct) key).getTag();
+				final IntegerStruct tag = ((GoIntegerStruct) key).getTag();
 				final String printedKey = tag.toString();
 				builder.append(printedKey);
 			} else {

@@ -4,6 +4,7 @@
 
 package jcl.functions.list;
 
+import jcl.lang.IntegerStruct;
 import jcl.lang.statics.CommonLispSymbols;
 import jcl.lang.LispStruct;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
@@ -11,7 +12,6 @@ import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.ListStruct;
 import jcl.lang.list.NILStruct;
-import jcl.lang.number.IntegerStructImpl;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -31,7 +31,7 @@ public final class MakeListFunction extends CommonLispBuiltInFunctionStruct {
 
 	@Override
 	public LispStruct apply(final Arguments arguments) {
-		final IntegerStructImpl size = arguments.getRequiredArgument(SIZE_ARGUMENT, IntegerStructImpl.class);
+		final IntegerStruct size = arguments.getRequiredArgument(SIZE_ARGUMENT, IntegerStruct.class);
 		final LispStruct initialElement = arguments.getKeyArgument(CommonLispSymbols.INITIAL_ELEMENT_KEYWORD);
 		return ListStruct.makeList(size.longValue(), initialElement);
 	}

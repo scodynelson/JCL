@@ -11,10 +11,10 @@ import javax.annotation.PostConstruct;
 
 import jcl.lang.LispStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
+import jcl.lang.factory.LispStructFactory;
 import jcl.lang.function.ReaderMacroFunction;
 import jcl.lang.ListStruct;
 import jcl.lang.list.NILStruct;
-import jcl.lang.number.ComplexStructImpl;
 import jcl.lang.RealStruct;
 import jcl.lang.readtable.Reader;
 import jcl.lang.statics.ReaderVariables;
@@ -72,6 +72,6 @@ public class SharpCReaderMacroFunction extends ReaderMacroFunction {
 			throw new ReaderErrorException("Only real numbers are valid tokens for #c. Got: " + imaginaryToken);
 		}
 
-		return ComplexStructImpl.valueOf((RealStruct) realToken, (RealStruct) imaginaryToken);
+		return LispStructFactory.toComplex((RealStruct) realToken, (RealStruct) imaginaryToken);
 	}
 }

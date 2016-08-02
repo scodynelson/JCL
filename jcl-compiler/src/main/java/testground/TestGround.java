@@ -18,6 +18,8 @@ import jcl.compiler.icg.generator.GoException;
 import jcl.compiler.icg.generator.ReturnFromException;
 import jcl.compiler.icg.generator.ThrowException;
 import jcl.lang.CharacterStruct;
+import jcl.lang.ComplexStruct;
+import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.PackageStruct;
 import jcl.lang.SymbolStruct;
@@ -29,10 +31,6 @@ import jcl.lang.function.FunctionStruct;
 import jcl.lang.list.ConsStruct;
 import jcl.lang.ListStruct;
 import jcl.lang.list.NILStruct;
-import jcl.lang.number.ComplexStructImpl;
-import jcl.lang.number.FloatStructImpl;
-import jcl.lang.number.IntegerStructImpl;
-import jcl.lang.number.RatioStructImpl;
 import org.apfloat.Apcomplex;
 import org.apfloat.Apfloat;
 import org.apfloat.Apint;
@@ -127,23 +125,23 @@ public class TestGround {
 
 	private Object floatGen() {
 		final Apfloat apfloat = new Apfloat("0");
-		return FloatStructImpl.valueOf(apfloat);
+		return LispStructFactory.toFloat(apfloat);
 	}
 
 	private Object integerGen() {
 		final Apint apint = new Apint("0");
-		return IntegerStructImpl.valueOf(apint);
+		return LispStructFactory.toInteger(apint);
 	}
 
 	private Object ratioGen() {
 		final Aprational aprational = new Aprational("0");
-		return RatioStructImpl.valueOf(aprational);
+		return LispStructFactory.toRatio(aprational);
 	}
 
 	private Object complexGen() {
 		final Apcomplex apcomplex = new Apcomplex("0");
-		final ComplexStructImpl.ValueType valueType = ComplexStructImpl.ValueType.FLOAT;
-		return ComplexStructImpl.valueOf(apcomplex, valueType);
+		final ComplexStruct.ValueType valueType = ComplexStruct.ValueType.FLOAT;
+		return LispStructFactory.toComplex(apcomplex, valueType);
 	}
 
 	private Object valuesGen() {
@@ -170,8 +168,8 @@ public class TestGround {
 	}
 
 	private Object bitVectorGen() {
-		final List<IntegerStructImpl> contents = new ArrayList<>();
-		final IntegerStructImpl content = IntegerStructImpl.valueOf(BigInteger.ZERO);
+		final List<IntegerStruct> contents = new ArrayList<>();
+		final IntegerStruct content = LispStructFactory.toInteger(BigInteger.ZERO);
 		contents.add(content);
 
 		return LispStructFactory.toBitVector(contents);
@@ -179,7 +177,7 @@ public class TestGround {
 
 	private Object vectorGen() {
 		final List<LispStruct> contents = new ArrayList<>();
-		final IntegerStructImpl content = IntegerStructImpl.valueOf(BigInteger.ZERO);
+		final IntegerStruct content = LispStructFactory.toInteger(BigInteger.ZERO);
 		contents.add(content);
 
 		return LispStructFactory.toVector(contents);
@@ -191,7 +189,7 @@ public class TestGround {
 		dimensions.add(dimension);
 
 		final List<LispStruct> contents = new ArrayList<>();
-		final IntegerStructImpl content = IntegerStructImpl.valueOf(BigInteger.ZERO);
+		final IntegerStruct content = LispStructFactory.toInteger(BigInteger.ZERO);
 		contents.add(content);
 
 		return LispStructFactory.toArray(dimensions, contents);

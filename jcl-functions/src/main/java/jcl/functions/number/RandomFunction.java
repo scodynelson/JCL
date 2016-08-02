@@ -7,15 +7,16 @@ package jcl.functions.number;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
+import jcl.lang.FloatStruct;
+import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
+import jcl.lang.RandomStateStruct;
 import jcl.lang.condition.exception.TypeErrorException;
+import jcl.lang.factory.LispStructFactory;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
-import jcl.lang.number.FloatStructImpl;
-import jcl.lang.number.IntegerStructImpl;
 import jcl.lang.statics.NumberVariables;
-import jcl.lang.number.RandomStateStructImpl;
 import jcl.lang.RealStruct;
 import org.springframework.stereotype.Component;
 
@@ -38,18 +39,18 @@ public final class RandomFunction extends CommonLispBuiltInFunctionStruct {
 	@Override
 	public LispStruct apply(final Arguments arguments) {
 		final RealStruct real = arguments.getRequiredArgument(LIMIT_ARGUMENT, RealStruct.class);
-		final RandomStateStructImpl randomState = arguments.getRequiredArgument(RANDOM_STATE_ARGUMENT, RandomStateStructImpl.class);
+		final RandomStateStruct randomState = arguments.getRequiredArgument(RANDOM_STATE_ARGUMENT, RandomStateStruct.class);
 
-		if (real instanceof IntegerStructImpl) {
+		if (real instanceof IntegerStruct) {
 			// TODO: fix??
-			final IntegerStructImpl number = (IntegerStructImpl) real;
+			final IntegerStruct number = (IntegerStruct) real;
 			final BigInteger randomInteger = randomState.randomInteger(number.longValue());
-			return IntegerStructImpl.valueOf(randomInteger);
-		} else if (real instanceof FloatStructImpl) {
+			return LispStructFactory.toInteger(randomInteger);
+		} else if (real instanceof FloatStruct) {
 			// TODO: fix??
-			final FloatStructImpl number = (FloatStructImpl) real;
+			final FloatStruct number = (FloatStruct) real;
 			final BigDecimal randomFloat = randomState.randomFloat(number.doubleValue());
-			return FloatStructImpl.valueOf(randomFloat.doubleValue());
+			return LispStructFactory.toFloat(randomFloat.doubleValue());
 		} else {
 			throw new TypeErrorException("Argument not of type Integer or Float: " + real);
 		}

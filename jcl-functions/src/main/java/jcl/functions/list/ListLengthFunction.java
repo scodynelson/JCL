@@ -3,12 +3,12 @@ package jcl.functions.list;
 import java.math.BigInteger;
 
 import jcl.lang.LispStruct;
+import jcl.lang.factory.LispStructFactory;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.ListStruct;
 import jcl.lang.list.NILStruct;
-import jcl.lang.number.IntegerStructImpl;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -32,6 +32,6 @@ public final class ListLengthFunction extends CommonLispBuiltInFunctionStruct {
 		if (listLength == null) {
 			return NILStruct.INSTANCE;
 		}
-		return IntegerStructImpl.valueOf(BigInteger.valueOf(listLength));
+		return LispStructFactory.toInteger(BigInteger.valueOf(listLength));
 	}
 }

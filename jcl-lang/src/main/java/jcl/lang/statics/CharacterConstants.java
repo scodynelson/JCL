@@ -10,6 +10,7 @@ import java.util.Map;
 
 import jcl.lang.CharacterStruct;
 import jcl.lang.ConstantStruct;
+import jcl.lang.IntegerStruct;
 import jcl.lang.internal.CharacterStructImpl;
 import jcl.lang.number.IntegerStructImpl;
 import jcl.util.CodePointConstants;
@@ -436,7 +437,7 @@ public final class CharacterConstants {
 
 	// Char-Code-Limit Constant
 
-	public static final ConstantStruct<IntegerStructImpl> CHAR_CODE_LIMIT = ConstantStruct.valueOf("CHAR-CODE-LIMIT", GlobalPackageStruct.COMMON_LISP, IntegerStructImpl.valueOf((int) Character.MAX_VALUE));
+	public static final ConstantStruct<IntegerStruct> CHAR_CODE_LIMIT = ConstantStruct.valueOf("CHAR-CODE-LIMIT", GlobalPackageStruct.COMMON_LISP, IntegerStructImpl.valueOf((int) Character.MAX_VALUE));
 
 	private CharacterConstants() {
 	}

@@ -4,6 +4,7 @@
 
 package jcl.lang.number;
 
+import jcl.lang.RatioStruct;
 import jcl.type.RatioType;
 import org.apfloat.Apint;
 import org.apfloat.Aprational;
@@ -12,7 +13,7 @@ import org.apfloat.AprationalMath;
 /**
  * The {@link RatioStructImpl} is the object representation of a Lisp 'ratio' type.
  */
-public final class RatioStructImpl extends RationalStructImpl<Aprational> {
+public final class RatioStructImpl extends RationalStructImpl<Aprational> implements RatioStruct {
 
 	/**
 	 * Private constructor.
@@ -32,7 +33,7 @@ public final class RatioStructImpl extends RationalStructImpl<Aprational> {
 	 *
 	 * @return a new RatioStruct representing the provided {@link String}
 	 */
-	public static RatioStructImpl valueOf(final String s) {
+	public static RatioStruct valueOf(final String s) {
 		final Aprational aprational = new Aprational(s);
 		return valueOf(aprational);
 	}
@@ -45,7 +46,7 @@ public final class RatioStructImpl extends RationalStructImpl<Aprational> {
 	 *
 	 * @return a RatioStruct object with the provided {@link Aprational} value
 	 */
-	public static RatioStructImpl valueOf(final Aprational aprational) {
+	public static RatioStruct valueOf(final Aprational aprational) {
 		return new RatioStructImpl(aprational);
 	}
 
@@ -59,7 +60,7 @@ public final class RatioStructImpl extends RationalStructImpl<Aprational> {
 	 *
 	 * @return a RatioStruct object with the provided numerator and denominator {@link Apint} values
 	 */
-	public static RatioStructImpl valueOf(final Apint numerator, final Apint denominator) {
+	public static RatioStruct valueOf(final Apint numerator, final Apint denominator) {
 		final Aprational aprational = new Aprational(numerator, denominator);
 		return valueOf(aprational);
 	}
@@ -69,7 +70,7 @@ public final class RatioStructImpl extends RationalStructImpl<Aprational> {
 	 */
 
 	@Override
-	public RatioStructImpl rational() {
+	public RatioStruct rational() {
 		return this;
 	}
 
@@ -78,23 +79,23 @@ public final class RatioStructImpl extends RationalStructImpl<Aprational> {
 	 */
 
 	@Override
-	public RatioStructImpl abs() {
+	public RatioStruct abs() {
 		final Aprational abs = AprationalMath.abs(ap);
 		return valueOf(abs);
 	}
 
 	@Override
-	public RatioStructImpl realPart() {
+	public RatioStruct realPart() {
 		return this;
 	}
 
 	@Override
-	public RatioStructImpl conjugate() {
+	public RatioStruct conjugate() {
 		return this;
 	}
 
 	@Override
-	public RatioStructImpl negation() {
+	public RatioStruct negation() {
 		final Aprational negate = ap.negate();
 		return valueOf(negate);
 	}

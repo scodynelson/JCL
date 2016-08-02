@@ -7,6 +7,7 @@ package jcl.lang.number;
 import java.math.RoundingMode;
 import java.util.function.Function;
 
+import jcl.lang.IntegerStruct;
 import jcl.lang.NumberStruct;
 import jcl.lang.RealStruct;
 import jcl.type.LispType;
@@ -131,7 +132,7 @@ abstract class RealStructImpl<A extends Apfloat> extends NumberStructImpl<A> imp
 
 	/**
 	 * Performs the default quotient-remainder calculation against the {@link #ap} value, using {@link
-	 * IntegerStructImpl#ONE} as the divisor. The {@code operation} and {@code quotientCreator} parameters are further
+	 * IntegerStruct#ONE} as the divisor. The {@code operation} and {@code quotientCreator} parameters are further
 	 * passed to the {@link #quotientRemainderCalculator(Apfloat, RealStruct, Function, Function)} method.
 	 *
 	 * @param operation
@@ -143,7 +144,7 @@ abstract class RealStructImpl<A extends Apfloat> extends NumberStructImpl<A> imp
 	 */
 	private QuotientRemainder quotientRemainder(final Function<Apfloat, Apint> operation,
 	                                            final Function<Apint, ? extends RealStruct> quotientCreator) {
-		return quotientRemainderCalculator(ap, IntegerStructImpl.ONE, operation, quotientCreator);
+		return quotientRemainderCalculator(ap, IntegerStruct.ONE, operation, quotientCreator);
 	}
 
 	/**
@@ -249,7 +250,7 @@ abstract class RealStructImpl<A extends Apfloat> extends NumberStructImpl<A> imp
 
 	@Override
 	public QuotientRemainder round() {
-		return quotientRemainder(roundOpFn(IntegerStructImpl.ONE), IntegerStructImpl::valueOf);
+		return quotientRemainder(roundOpFn(IntegerStruct.ONE), IntegerStructImpl::valueOf);
 	}
 
 	@Override
@@ -259,7 +260,7 @@ abstract class RealStructImpl<A extends Apfloat> extends NumberStructImpl<A> imp
 
 	@Override
 	public QuotientRemainder fround() {
-		return quotientRemainder(roundOpFn(IntegerStructImpl.ONE), FloatStructImpl::valueOf);
+		return quotientRemainder(roundOpFn(IntegerStruct.ONE), FloatStructImpl::valueOf);
 	}
 
 	@Override

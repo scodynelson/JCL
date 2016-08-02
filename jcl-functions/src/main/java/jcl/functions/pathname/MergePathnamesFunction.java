@@ -4,6 +4,7 @@
 
 package jcl.functions.pathname;
 
+import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.factory.LispStructFactory;
@@ -11,7 +12,6 @@ import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.list.NILStruct;
-import jcl.lang.number.IntegerStructImpl;
 import jcl.lang.pathname.LogicalPathnameStruct;
 import jcl.lang.pathname.PathnameComponentType;
 import jcl.lang.pathname.PathnameDevice;
@@ -112,8 +112,8 @@ public final class MergePathnamesFunction extends CommonLispBuiltInFunctionStruc
 
 		final PathnameVersionComponentType componentType = PathnameVersionComponentType.fromValue(defaultVersion);
 		if (componentType == null) {
-			if (defaultVersion instanceof IntegerStructImpl) {
-				final IntegerStructImpl integer = (IntegerStructImpl) defaultVersion;
+			if (defaultVersion instanceof IntegerStruct) {
+				final IntegerStruct integer = (IntegerStruct) defaultVersion;
 				final int intValue = integer.intValue();
 				if (intValue < 0) {
 					throw new ErrorException("Integer versions must be non-negative. Got: " + integer);

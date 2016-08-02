@@ -9,8 +9,9 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
-import jcl.lang.number.IntegerStructImpl;
+import jcl.lang.IntegerStruct;
 import jcl.lang.NumberStruct;
+import jcl.lang.factory.LispStructFactory;
 import jcl.lang.readtable.AttributeType;
 import jcl.lang.statics.ReaderVariables;
 import jcl.reader.TokenAttribute;
@@ -18,7 +19,7 @@ import jcl.reader.TokenBuilder;
 import org.springframework.stereotype.Component;
 
 /**
- * Sub-piece of Reader algorithm part 10.1, used to produce an {@link IntegerStructImpl} output when a rational token is
+ * Sub-piece of Reader algorithm part 10.1, used to produce an {@link IntegerStruct} output when a rational token is
  * supplied with no {@link AttributeType#RATIOMARKER} nor {@link AttributeType#DECIMAL}.
  */
 @Component
@@ -50,6 +51,6 @@ public class IntegerTokenAccumulatedReaderState implements ReaderState {
 		final int currentRadix = ReaderVariables.READ_BASE.getVariableValue().intValue();
 
 		final BigInteger bigInteger = new BigInteger(tokenString, currentRadix);
-		return IntegerStructImpl.valueOf(bigInteger);
+		return LispStructFactory.toInteger(bigInteger);
 	}
 }

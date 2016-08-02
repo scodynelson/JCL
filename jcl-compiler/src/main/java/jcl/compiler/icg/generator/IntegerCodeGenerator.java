@@ -8,6 +8,8 @@ import jcl.compiler.icg.CodeGenerator;
 import jcl.compiler.icg.GeneratorEvent;
 import jcl.compiler.icg.GeneratorState;
 import jcl.compiler.icg.JavaMethodBuilder;
+import jcl.lang.IntegerStruct;
+import jcl.lang.factory.LispStructFactory;
 import jcl.lang.number.IntegerStructImpl;
 import org.apfloat.Apint;
 import org.objectweb.asm.MethodVisitor;
@@ -17,27 +19,11 @@ import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 /**
- * Class to generate {@link IntegerStructImpl} objects dynamically by utilizing the {@link IntegerStructImpl#ap} of the provided
- * {@link IntegerStructImpl} input value.
+ * Class to generate {@link IntegerStruct} objects dynamically by utilizing the {@link IntegerStruct#ap()} of the provided
+ * {@link IntegerStruct} input value.
  */
 @Component
 final class IntegerCodeGenerator implements CodeGenerator<IntegerStructImpl> {
-
-	/**
-	 * Constant {@link String} containing the name for the {@link IntegerStructImpl} class.
-	 */
-	private static final String INTEGER_STRUCT_NAME = Type.getInternalName(IntegerStructImpl.class);
-
-	/**
-	 * Constant {@link String} containing the name for the {@link IntegerStructImpl#valueOf(Apint)} method.
-	 */
-	private static final String INTEGER_STRUCT_VALUE_OF_METHOD_NAME = "valueOf";
-
-	/**
-	 * Constant {@link String} containing the description for the {@link IntegerStructImpl#valueOf(Apint)} method.
-	 */
-	private static final String INTEGER_STRUCT_VALUE_OF_METHOD_DESC
-			= CodeGenerators.getMethodDescription(IntegerStructImpl.class, INTEGER_STRUCT_VALUE_OF_METHOD_NAME, Apint.class);
 
 	/**
 	 * Constant {@link String} containing the name for the {@link Apint} class.
@@ -52,22 +38,22 @@ final class IntegerCodeGenerator implements CodeGenerator<IntegerStructImpl> {
 
 	/**
 	 * {@inheritDoc}
-	 * Generation method for {@link IntegerStructImpl} objects, by performing the following operations:
+	 * Generation method for {@link IntegerStruct} objects, by performing the following operations:
 	 * <ol>
-	 * <li>Constructing a new {@link Apint} from the {@link String} representation of the {@link IntegerStructImpl#ap}
+	 * <li>Constructing a new {@link Apint} from the {@link String} representation of the {@link IntegerStruct#ap()}
 	 * value</li>
-	 * <li>Retrieving a {@link IntegerStructImpl} via {@link IntegerStructImpl#valueOf(Apint)} with the created {@link Apint}
+	 * <li>Retrieving a {@link IntegerStruct} via {@link LispStructFactory#toInteger(Apint)} with the created {@link Apint}
 	 * value</li>
 	 * </ol>
 	 *
 	 * @param input
-	 * 		the {@link IntegerStructImpl} input value to generate code for
+	 * 		the {@link IntegerStruct} input value to generate code for
 	 * @param generatorState
 	 * 		stateful object used to hold the current state of the code generation process
 	 */
 	@EventListener
 	public void onGeneratorEvent(final GeneratorEvent<IntegerStructImpl> event) {
-		final IntegerStructImpl input = event.getSource();
+		final IntegerStruct input = event.getSource();
 		final GeneratorState generatorState = event.getGeneratorState();
 
 		final JavaMethodBuilder methodBuilder = generatorState.getCurrentMethodBuilder();
@@ -85,9 +71,9 @@ final class IntegerCodeGenerator implements CodeGenerator<IntegerStructImpl> {
 		                   APINT_INIT_METHOD_DESC,
 		                   false);
 		mv.visitMethodInsn(Opcodes.INVOKESTATIC,
-		                   INTEGER_STRUCT_NAME,
-		                   INTEGER_STRUCT_VALUE_OF_METHOD_NAME,
-		                   INTEGER_STRUCT_VALUE_OF_METHOD_DESC,
+		                   GenerationConstants.LISP_STRUCT_FACTORY_NAME,
+		                   GenerationConstants.LISP_STRUCT_FACTORY_TO_INTEGER_METHOD_NAME,
+		                   GenerationConstants.LISP_STRUCT_FACTORY_TO_INTEGER_METHOD_DESC,
 		                   false);
 	}
 }

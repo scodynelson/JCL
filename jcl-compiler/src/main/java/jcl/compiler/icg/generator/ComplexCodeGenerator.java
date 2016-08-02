@@ -8,6 +8,8 @@ import jcl.compiler.icg.CodeGenerator;
 import jcl.compiler.icg.GeneratorEvent;
 import jcl.compiler.icg.GeneratorState;
 import jcl.compiler.icg.JavaMethodBuilder;
+import jcl.lang.ComplexStruct;
+import jcl.lang.factory.LispStructFactory;
 import jcl.lang.number.ComplexStructImpl;
 import org.apfloat.Apcomplex;
 import org.objectweb.asm.MethodVisitor;
@@ -17,39 +19,21 @@ import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 /**
- * Class to generate {@link ComplexStructImpl} objects dynamically by utilizing the {@link ComplexStructImpl#ap} and {@link
- * ComplexStructImpl#valueType} of the provided {@link ComplexStructImpl} input value.
+ * Class to generate {@link ComplexStruct} objects dynamically by utilizing the {@link ComplexStruct#ap()} and {@link
+ * ComplexStruct#getValueType()} of the provided {@link ComplexStruct} input value.
  */
 @Component
 final class ComplexCodeGenerator implements CodeGenerator<ComplexStructImpl> {
 
 	/**
-	 * Constant {@link String} containing the name for the {@link ComplexStructImpl} class.
+	 * Constant {@link String} containing the name for the {@link ComplexStruct.ValueType} class.
 	 */
-	private static final String COMPLEX_STRUCT_NAME = Type.getInternalName(ComplexStructImpl.class);
+	private static final String VALUE_TYPE_NAME = Type.getInternalName(ComplexStruct.ValueType.class);
 
 	/**
-	 * Constant {@link String} containing the name for the {@link ComplexStructImpl#valueOf(Apcomplex,
-	 * ComplexStructImpl.ValueType)} method.
+	 * Constant {@link String} containing the descriptor for the {@link ComplexStruct.ValueType} class.
 	 */
-	private static final String COMPLEX_STRUCT_VALUE_OF_METHOD_NAME = "valueOf";
-
-	/**
-	 * Constant {@link String} containing the description for the {@link ComplexStructImpl#valueOf(Apcomplex,
-	 * ComplexStructImpl.ValueType)} method.
-	 */
-	private static final String COMPLEX_STRUCT_VALUE_OF_METHOD_DESC
-			= CodeGenerators.getMethodDescription(ComplexStructImpl.class, COMPLEX_STRUCT_VALUE_OF_METHOD_NAME, Apcomplex.class, ComplexStructImpl.ValueType.class);
-
-	/**
-	 * Constant {@link String} containing the name for the {@link ComplexStructImpl.ValueType} class.
-	 */
-	private static final String VALUE_TYPE_NAME = Type.getInternalName(ComplexStructImpl.ValueType.class);
-
-	/**
-	 * Constant {@link String} containing the descriptor for the {@link ComplexStructImpl.ValueType} class.
-	 */
-	private static final String VALUE_TYPE_DESC = Type.getDescriptor(ComplexStructImpl.ValueType.class);
+	private static final String VALUE_TYPE_DESC = Type.getDescriptor(ComplexStruct.ValueType.class);
 
 	/**
 	 * Constant {@link String} containing the name for the {@link Apcomplex} class.
@@ -65,23 +49,25 @@ final class ComplexCodeGenerator implements CodeGenerator<ComplexStructImpl> {
 
 	/**
 	 * {@inheritDoc}
-	 * Generation method for {@link ComplexStructImpl} objects, by performing the following operations:
+	 * Generation method for {@link ComplexStruct} objects, by performing the following operations:
 	 * <ol>
-	 * <li>Constructing a new {@link Apcomplex} from the {@link String} representation of the {@link ComplexStructImpl#ap}
+	 * <li>Constructing a new {@link Apcomplex} from the {@link String} representation of the {@link ComplexStruct#ap}
 	 * value</li>
-	 * <li>Loading the {@link ComplexStructImpl.ValueType} from the provided {@link ComplexStructImpl#valueType} value</li>
-	 * <li>Retrieving a {@link ComplexStructImpl} via {@link ComplexStructImpl#valueOf(Apcomplex, ComplexStructImpl.ValueType)} with
-	 * the created {@link Apcomplex} and loaded {@link ComplexStructImpl.ValueType} values</li>
+	 * <li>Loading the {@link ComplexStruct.ValueType} from the provided {@link ComplexStruct#getValueType()}
+	 * value</li>
+	 * <li>Retrieving a {@link ComplexStruct} via {@link LispStructFactory#toComplex(Apcomplex,
+	 * ComplexStruct.ValueType)} with
+	 * the created {@link Apcomplex} and loaded {@link ComplexStruct.ValueType} values</li>
 	 * </ol>
 	 *
 	 * @param input
-	 * 		the {@link ComplexStructImpl} input value to generate code for
+	 * 		the {@link ComplexStruct} input value to generate code for
 	 * @param generatorState
 	 * 		stateful object used to hold the current state of the code generation process
 	 */
 	@EventListener
 	public void onGeneratorEvent(final GeneratorEvent<ComplexStructImpl> event) {
-		final ComplexStructImpl input = event.getSource();
+		final ComplexStruct input = event.getSource();
 		final GeneratorState generatorState = event.getGeneratorState();
 
 		final JavaMethodBuilder methodBuilder = generatorState.getCurrentMethodBuilder();
@@ -101,7 +87,7 @@ final class ComplexCodeGenerator implements CodeGenerator<ComplexStructImpl> {
 		final int apComplexStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, apComplexStore);
 
-		final ComplexStructImpl.ValueType valueType = input.getValueType();
+		final ComplexStruct.ValueType valueType = input.getValueType();
 		final String name = valueType.name();
 
 		mv.visitFieldInsn(Opcodes.GETSTATIC,
@@ -114,9 +100,9 @@ final class ComplexCodeGenerator implements CodeGenerator<ComplexStructImpl> {
 		mv.visitVarInsn(Opcodes.ALOAD, apComplexStore);
 		mv.visitVarInsn(Opcodes.ALOAD, valueTypeStore);
 		mv.visitMethodInsn(Opcodes.INVOKESTATIC,
-		                   COMPLEX_STRUCT_NAME,
-		                   COMPLEX_STRUCT_VALUE_OF_METHOD_NAME,
-		                   COMPLEX_STRUCT_VALUE_OF_METHOD_DESC,
+		                   GenerationConstants.LISP_STRUCT_FACTORY_NAME,
+		                   GenerationConstants.LISP_STRUCT_FACTORY_TO_COMPLEX_METHOD_NAME,
+		                   GenerationConstants.LISP_STRUCT_FACTORY_TO_COMPLEX_METHOD_DESC,
 		                   false);
 	}
 }

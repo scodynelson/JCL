@@ -2,16 +2,16 @@ package jcl.lang.statics;
 
 import java.math.BigInteger;
 
+import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.PackageStruct;
 import jcl.lang.VariableStruct;
 import jcl.lang.condition.exception.TypeErrorException;
-import jcl.lang.number.IntegerStructImpl;
 import org.apache.commons.lang3.Range;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class RadixVariable extends VariableStruct<IntegerStructImpl> {
+public class RadixVariable extends VariableStruct<IntegerStruct> {
 
 	private static final int lowerBound = 2;
 
@@ -22,16 +22,16 @@ public class RadixVariable extends VariableStruct<IntegerStructImpl> {
 	private static final Logger LOGGER = LoggerFactory.getLogger(RadixVariable.class);
 
 	public RadixVariable(final String name, final PackageStruct symbolPackage) {
-		super(name, symbolPackage, IntegerStructImpl.TEN);
+		super(name, symbolPackage, IntegerStruct.TEN);
 	}
 
 	@Override
 	public void setValue(final LispStruct value) {
-		if (!(value instanceof IntegerStructImpl)) {
+		if (!(value instanceof IntegerStruct)) {
 			// TODO: Fix me
 			throw new TypeErrorException("Must be Integer value.");
 		}
-		final IntegerStructImpl variableValue = (IntegerStructImpl) value;
+		final IntegerStruct variableValue = (IntegerStruct) value;
 
 		// TODO: optimize??
 		final BigInteger bigIntegerValue = variableValue.bigIntegerValue();
@@ -40,7 +40,7 @@ public class RadixVariable extends VariableStruct<IntegerStructImpl> {
 		} else {
 			LOGGER.warn("Error: {} had illegal value {}. Reset to 10", name, variableValue);
 
-			super.setValue(IntegerStructImpl.TEN);
+			super.setValue(IntegerStruct.TEN);
 		}
 	}
 }

@@ -18,17 +18,23 @@ import jcl.lang.BitVectorStruct;
 import jcl.lang.BroadcastStreamStruct;
 import jcl.lang.CharacterNativeStreamStruct;
 import jcl.lang.CharacterStruct;
+import jcl.lang.ComplexStruct;
 import jcl.lang.ConcatenatedStreamStruct;
 import jcl.lang.EchoStreamStruct;
 import jcl.lang.EmptyStreamStruct;
 import jcl.lang.FileStreamStruct;
+import jcl.lang.FloatStruct;
 import jcl.lang.HashTableStruct;
 import jcl.lang.InputStreamStruct;
+import jcl.lang.IntegerStruct;
 import jcl.lang.JavaStreamStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
 import jcl.lang.OutputStreamStruct;
 import jcl.lang.PackageStruct;
+import jcl.lang.RandomStateStruct;
+import jcl.lang.RatioStruct;
+import jcl.lang.RealStruct;
 import jcl.lang.StringInputStreamStruct;
 import jcl.lang.StringOutputStreamStruct;
 import jcl.lang.StringStruct;
@@ -45,24 +51,6 @@ import jcl.lang.internal.CharacterStructImpl;
 import jcl.lang.internal.HashTableStructImpl;
 import jcl.lang.internal.StringStructImpl;
 import jcl.lang.internal.VectorStructImpl;
-import jcl.lang.list.ConsStruct;
-import jcl.lang.list.NILStruct;
-import jcl.lang.number.ComplexStructImpl;
-import jcl.lang.number.FloatStructImpl;
-import jcl.lang.number.IntegerStructImpl;
-import jcl.lang.number.RandomStateStructImpl;
-import jcl.lang.number.RatioStructImpl;
-import jcl.lang.RealStruct;
-import jcl.lang.pathname.LogicalPathnameStruct;
-import jcl.lang.pathname.PathnameDevice;
-import jcl.lang.pathname.PathnameDirectory;
-import jcl.lang.pathname.PathnameHost;
-import jcl.lang.pathname.PathnameName;
-import jcl.lang.pathname.PathnameStruct;
-import jcl.lang.pathname.PathnameType;
-import jcl.lang.pathname.PathnameVersion;
-import jcl.lang.readtable.ReadtableCase;
-import jcl.lang.readtable.ReadtableStruct;
 import jcl.lang.internal.stream.BinaryNativeStreamStructImpl;
 import jcl.lang.internal.stream.BroadcastStreamStructImpl;
 import jcl.lang.internal.stream.CharacterNativeStreamStructImpl;
@@ -76,6 +64,23 @@ import jcl.lang.internal.stream.StringOutputStreamStructImpl;
 import jcl.lang.internal.stream.SynonymStreamStructImpl;
 import jcl.lang.internal.stream.TwoWayStreamStructImpl;
 import jcl.lang.internal.stream.URLStreamStructImpl;
+import jcl.lang.list.ConsStruct;
+import jcl.lang.list.NILStruct;
+import jcl.lang.number.ComplexStructImpl;
+import jcl.lang.number.FloatStructImpl;
+import jcl.lang.number.IntegerStructImpl;
+import jcl.lang.number.RandomStateStructImpl;
+import jcl.lang.number.RatioStructImpl;
+import jcl.lang.pathname.LogicalPathnameStruct;
+import jcl.lang.pathname.PathnameDevice;
+import jcl.lang.pathname.PathnameDirectory;
+import jcl.lang.pathname.PathnameHost;
+import jcl.lang.pathname.PathnameName;
+import jcl.lang.pathname.PathnameStruct;
+import jcl.lang.pathname.PathnameType;
+import jcl.lang.pathname.PathnameVersion;
+import jcl.lang.readtable.ReadtableCase;
+import jcl.lang.readtable.ReadtableStruct;
 import jcl.type.LispType;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apfloat.Apcomplex;
@@ -116,7 +121,7 @@ public final class LispStructFactory {
 		return BitVectorStructImpl.valueOf(bitString);
 	}
 
-	public static BitVectorStruct toBitVector(final List<IntegerStructImpl> contents) {
+	public static BitVectorStruct toBitVector(final List<IntegerStruct> contents) {
 		return BitVectorStructImpl.valueOfCont(contents);
 	}
 
@@ -176,15 +181,15 @@ public final class LispStructFactory {
 	 * Complex
 	 */
 
-	public static ComplexStructImpl toComplex(final Apcomplex apcomplex, final ComplexStructImpl.ValueType valueType) {
+	public static ComplexStruct toComplex(final Apcomplex apcomplex, final ComplexStruct.ValueType valueType) {
 		return ComplexStructImpl.valueOf(apcomplex, valueType);
 	}
 
-	public static ComplexStructImpl toComplex(final Apfloat real, final Apfloat imaginary, final ComplexStructImpl.ValueType valueType) {
+	public static ComplexStruct toComplex(final Apfloat real, final Apfloat imaginary, final ComplexStruct.ValueType valueType) {
 		return ComplexStructImpl.valueOf(real, imaginary, valueType);
 	}
 
-	public static ComplexStructImpl toComplex(final RealStruct real, final RealStruct imaginary) {
+	public static ComplexStruct toComplex(final RealStruct real, final RealStruct imaginary) {
 		return ComplexStructImpl.valueOf(real, imaginary);
 	}
 
@@ -256,7 +261,7 @@ public final class LispStructFactory {
 	 *
 	 * @return a FloatStruct object with the provided {@link Float} value
 	 */
-	public static FloatStructImpl toFloat(final Float f) {
+	public static FloatStruct toFloat(final Float f) {
 		return FloatStructImpl.valueOf(f);
 	}
 
@@ -268,7 +273,7 @@ public final class LispStructFactory {
 	 *
 	 * @return a FloatStruct object with the provided {@link Double} value
 	 */
-	public static FloatStructImpl toFloat(final Double d) {
+	public static FloatStruct toFloat(final Double d) {
 		return FloatStructImpl.valueOf(d);
 	}
 
@@ -280,7 +285,7 @@ public final class LispStructFactory {
 	 *
 	 * @return a FloatStruct object with the provided {@link BigDecimal} value
 	 */
-	public static FloatStructImpl toFloat(final BigDecimal bigDecimal) {
+	public static FloatStruct toFloat(final BigDecimal bigDecimal) {
 		return FloatStructImpl.valueOf(bigDecimal);
 	}
 
@@ -292,7 +297,7 @@ public final class LispStructFactory {
 	 *
 	 * @return a new FloatStruct representing the provided {@link String}
 	 */
-	public static FloatStructImpl toFloat(final String s) {
+	public static FloatStruct toFloat(final String s) {
 		return FloatStructImpl.valueOf(s);
 	}
 
@@ -304,7 +309,7 @@ public final class LispStructFactory {
 	 *
 	 * @return a FloatStruct object with the provided {@link Apfloat} value
 	 */
-	public static FloatStructImpl toFloat(final Apfloat apfloat) {
+	public static FloatStruct toFloat(final Apfloat apfloat) {
 		return FloatStructImpl.valueOf(apfloat);
 	}
 
@@ -319,7 +324,7 @@ public final class LispStructFactory {
 	 *
 	 * @return a FloatStruct object with the provided {@link Apfloat} value
 	 */
-	public static FloatStructImpl toFloat(final Apfloat apfloat, final FloatStructImpl prototype) {
+	public static FloatStruct toFloat(final Apfloat apfloat, final FloatStruct prototype) {
 		return FloatStructImpl.valueOf(apfloat, prototype);
 	}
 
@@ -343,7 +348,7 @@ public final class LispStructFactory {
 	 *
 	 * @return a new IntegerStruct representing the provided {@link Integer}
 	 */
-	public static IntegerStructImpl toInteger(final Integer i) {
+	public static IntegerStruct toInteger(final Integer i) {
 		return IntegerStructImpl.valueOf(i);
 	}
 
@@ -355,7 +360,7 @@ public final class LispStructFactory {
 	 *
 	 * @return a new IntegerStruct representing the provided {@link Long}
 	 */
-	public static IntegerStructImpl toInteger(final Long l) {
+	public static IntegerStruct toInteger(final Long l) {
 		return IntegerStructImpl.valueOf(l);
 	}
 
@@ -367,7 +372,7 @@ public final class LispStructFactory {
 	 *
 	 * @return a new IntegerStruct representing the provided {@link BigInteger}
 	 */
-	public static IntegerStructImpl toInteger(final BigInteger bigInteger) {
+	public static IntegerStruct toInteger(final BigInteger bigInteger) {
 		return IntegerStructImpl.valueOf(bigInteger);
 	}
 
@@ -379,7 +384,7 @@ public final class LispStructFactory {
 	 *
 	 * @return a new IntegerStruct representing the provided {@link String}
 	 */
-	public static IntegerStructImpl toInteger(final String s) {
+	public static IntegerStruct toInteger(final String s) {
 		return IntegerStructImpl.valueOf(s);
 	}
 
@@ -391,7 +396,7 @@ public final class LispStructFactory {
 	 *
 	 * @return a IntegerStruct object with the provided {@link Apint} value
 	 */
-	public static IntegerStructImpl toInteger(final Apint apint) {
+	public static IntegerStruct toInteger(final Apint apint) {
 		return IntegerStructImpl.valueOf(apint);
 	}
 
@@ -581,7 +586,7 @@ public final class LispStructFactory {
 	 * RandomState
 	 */
 
-	public static RandomStateStructImpl toRandomState() {
+	public static RandomStateStruct toRandomState() {
 		return RandomStateStructImpl.valueOf();
 	}
 
@@ -597,7 +602,7 @@ public final class LispStructFactory {
 	 *
 	 * @return a new RatioStruct representing the provided {@link String}
 	 */
-	public static RatioStructImpl toRatio(final String s) {
+	public static RatioStruct toRatio(final String s) {
 		return RatioStructImpl.valueOf(s);
 	}
 
@@ -609,7 +614,7 @@ public final class LispStructFactory {
 	 *
 	 * @return a RatioStruct object with the provided {@link Aprational} value
 	 */
-	public static RatioStructImpl toRatio(final Aprational aprational) {
+	public static RatioStruct toRatio(final Aprational aprational) {
 		return RatioStructImpl.valueOf(aprational);
 	}
 
@@ -623,7 +628,7 @@ public final class LispStructFactory {
 	 *
 	 * @return a RatioStruct object with the provided numerator and denominator {@link Apint} values
 	 */
-	public static RatioStructImpl toRatio(final Apint numerator, final Apint denominator) {
+	public static RatioStruct toRatio(final Apint numerator, final Apint denominator) {
 		return RatioStructImpl.valueOf(numerator, denominator);
 	}
 

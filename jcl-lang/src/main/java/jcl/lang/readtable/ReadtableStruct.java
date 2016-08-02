@@ -10,10 +10,10 @@ import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 import jcl.lang.BuiltInClassStruct;
+import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
 import jcl.lang.function.ReaderMacroFunction;
-import jcl.lang.number.IntegerStructImpl;
 import jcl.lang.stream.ReadPeekResult;
 import jcl.type.ReadtableType;
 import jcl.util.CodePointConstants;
@@ -197,7 +197,7 @@ public class ReadtableStruct extends BuiltInClassStruct {
 	 *
 	 * @return the {@link AttributeType} for the provided {@code codePoint} value
 	 */
-	public AttributeType getAttributeType(final int codePoint, final IntegerStructImpl readBase) {
+	public AttributeType getAttributeType(final int codePoint, final IntegerStruct readBase) {
 		return attributeTable.getAttribute(codePoint, readBase);
 	}
 

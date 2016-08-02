@@ -5,9 +5,9 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 import jcl.lang.BitVectorStruct;
+import jcl.lang.IntegerStruct;
 import jcl.lang.statics.PrinterVariables;
 import jcl.lang.condition.exception.TypeErrorException;
-import jcl.lang.number.IntegerStructImpl;
 import jcl.type.BitType;
 import jcl.type.BitVectorType;
 import jcl.type.SimpleBitVectorType;
@@ -15,7 +15,7 @@ import jcl.type.SimpleBitVectorType;
 /**
  * The {@link BitVectorStructImpl} is the object representation of a Lisp 'bit-vector' type.
  */
-public final class BitVectorStructImpl extends VectorStructImpl<IntegerStructImpl> implements BitVectorStruct {
+public final class BitVectorStructImpl extends VectorStructImpl<IntegerStruct> implements BitVectorStruct {
 
 	private static final Pattern BIT_PATTERN = Pattern.compile("[0|1]+");
 
@@ -35,7 +35,7 @@ public final class BitVectorStructImpl extends VectorStructImpl<IntegerStructImp
 	 * @param contents
 	 * 		the bit-vector contents
 	 */
-	private BitVectorStructImpl(final List<IntegerStructImpl> contents) {
+	private BitVectorStructImpl(final List<IntegerStruct> contents) {
 		this(contents.size(), contents, false, null);
 	}
 
@@ -51,7 +51,7 @@ public final class BitVectorStructImpl extends VectorStructImpl<IntegerStructImp
 	 * @param fillPointer
 	 * 		the bit-vector fillPointer
 	 */
-	private BitVectorStructImpl(final int size, final List<IntegerStructImpl> contents, final boolean isAdjustable, final Integer fillPointer) {
+	private BitVectorStructImpl(final int size, final List<IntegerStruct> contents, final boolean isAdjustable, final Integer fillPointer) {
 		super(getBitVectorType(isAdjustable, fillPointer), size, contents, BitType.INSTANCE, isAdjustable, fillPointer);
 	}
 
@@ -70,24 +70,24 @@ public final class BitVectorStructImpl extends VectorStructImpl<IntegerStructImp
 	}
 
 	/**
-	 * Gets a list of {@link IntegerStructImpl}s from the provided {@link String} value.
+	 * Gets a list of {@link IntegerStruct}s from the provided {@link String} value.
 	 *
 	 * @param bitString
-	 * 		the Java string to convert to a list of {@link IntegerStructImpl}s
+	 * 		the Java string to convert to a list of {@link IntegerStruct}s
 	 *
-	 * @return a list of {@link IntegerStructImpl}s from the provided {@link String} value
+	 * @return a list of {@link IntegerStruct}s from the provided {@link String} value
 	 */
-	private static List<IntegerStructImpl> getBitList(final String bitString) {
+	private static List<IntegerStruct> getBitList(final String bitString) {
 		if (!bitString.isEmpty() && !BIT_PATTERN.matcher(bitString).matches()) {
 			throw new TypeErrorException("Input contains characters not of type " + BitType.INSTANCE + ": " + bitString + '.');
 		}
 
-		final List<IntegerStructImpl> bitList = new ArrayList<>(bitString.length());
+		final List<IntegerStruct> bitList = new ArrayList<>(bitString.length());
 		for (final char character : bitString.toCharArray()) {
 			if (character == '0') {
-				bitList.add(IntegerStructImpl.ZERO);
+				bitList.add(IntegerStruct.ZERO);
 			} else if (character == '1') {
-				bitList.add(IntegerStructImpl.ONE);
+				bitList.add(IntegerStruct.ONE);
 			}
 		}
 		return bitList;
@@ -97,7 +97,7 @@ public final class BitVectorStructImpl extends VectorStructImpl<IntegerStructImp
 		return new BitVectorStructImpl(bitString);
 	}
 
-	public static BitVectorStruct valueOfCont(final List<IntegerStructImpl> contents) {
+	public static BitVectorStruct valueOfCont(final List<IntegerStruct> contents) {
 		return new BitVectorStructImpl(contents);
 	}
 
@@ -113,7 +113,7 @@ public final class BitVectorStructImpl extends VectorStructImpl<IntegerStructImp
 			final int amountToPrint = (fillPointer == null) ? contents.size() : fillPointer;
 
 			for (int i = 0; i < amountToPrint; i++) {
-				final IntegerStructImpl integerStruct = contents.get(i);
+				final IntegerStruct integerStruct = contents.get(i);
 				final String printedIntegerStruct = integerStruct.toString();
 
 				stringBuilder.append(printedIntegerStruct);

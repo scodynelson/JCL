@@ -4,8 +4,8 @@
 
 package jcl.reader.macrofunction;
 
+import jcl.lang.IntegerStruct;
 import jcl.lang.function.ReaderMacroFunction;
-import jcl.lang.number.IntegerStructImpl;
 import jcl.lang.readtable.AttributeType;
 import jcl.lang.statics.ReaderVariables;
 import jcl.lang.readtable.SyntaxType;
@@ -111,7 +111,7 @@ final class ReaderMacroFunctionUtil {
 	 * value
 	 */
 	private static AttributeType getAttributeType(final int codePoint) {
-		final IntegerStructImpl readBase = ReaderVariables.READ_BASE.getVariableValue();
+		final IntegerStruct readBase = ReaderVariables.READ_BASE.getVariableValue();
 		return ReaderVariables.READTABLE.getVariableValue().getAttributeType(codePoint, readBase);
 	}
 }

@@ -263,22 +263,22 @@ public interface RealStruct extends NumberStruct {
 	RationalStruct rational();
 
 	/**
-	 * Returns this RealStruct as a representational {@link FloatStructImpl}.
+	 * Returns this RealStruct as a representational {@link FloatStruct}.
 	 *
-	 * @return this RealStruct as a representational {@link FloatStructImpl}
+	 * @return this RealStruct as a representational {@link FloatStruct}
 	 */
-	FloatStructImpl floatingPoint();
+	FloatStruct floatingPoint();
 
 	/**
-	 * Returns this RealStruct as a representational {@link FloatStructImpl}, using the prototype as the precision
-	 * representation for the {@link FloatStructImpl} to return.
+	 * Returns this RealStruct as a representational {@link FloatStruct}, using the prototype as the precision
+	 * representation for the {@link FloatStruct} to return.
 	 *
 	 * @param prototype
-	 * 		an object representing the precision of {@link FloatStructImpl} to return
+	 * 		an object representing the precision of {@link FloatStruct} to return
 	 *
-	 * @return this RealStruct as a representational {@link FloatStructImpl}
+	 * @return this RealStruct as a representational {@link FloatStruct}
 	 */
-	FloatStructImpl floatingPoint(FloatStructImpl prototype);
+	FloatStruct floatingPoint(FloatStruct prototype);
 
 	/**
 	 * Returns the modulus of this RealStruct and the provided RealStruct divisor.
@@ -312,11 +312,11 @@ public interface RealStruct extends NumberStruct {
 	 *
 	 * @return the value of e^i* radians
 	 */
-	default ComplexStructImpl cis() {
+	default ComplexStruct cis() {
 		final RealStruct cos = cos();
 		final RealStruct sin = sin();
 		// TODO
-		return ComplexStructImpl.valueOf(cos.ap(), sin.ap(), ComplexStructImpl.ValueType.RATIONAL);
+		return ComplexStructImpl.valueOf(cos.ap(), sin.ap(), ComplexStruct.ValueType.RATIONAL);
 	}
 
 	/**
@@ -339,7 +339,7 @@ public interface RealStruct extends NumberStruct {
 
 	/**
 	 * Calculates the 'quotient' and 'remainder' for the 'FLOOR' operation for this RealStruct. The resulting
-	 * 'quotient' will be a {@link FloatStructImpl}.
+	 * 'quotient' will be a {@link FloatStruct}.
 	 *
 	 * @return the {@link QuotientRemainder} for the 'FLOOR' operation with the provided RealStruct divisor
 	 */
@@ -347,7 +347,7 @@ public interface RealStruct extends NumberStruct {
 
 	/**
 	 * Calculates the 'quotient' and 'remainder' for the 'FLOOR' operation for this RealStruct with the provided
-	 * RealStruct divisor. The resulting 'quotient' will be a {@link FloatStructImpl}.
+	 * RealStruct divisor. The resulting 'quotient' will be a {@link FloatStruct}.
 	 *
 	 * @param divisor
 	 * 		the RealStruct to be used to be used as the divisor in the 'FLOOR' operation
@@ -376,7 +376,7 @@ public interface RealStruct extends NumberStruct {
 
 	/**
 	 * Calculates the 'quotient' and 'remainder' for the 'CEILING' operation for this RealStruct. The resulting
-	 * 'quotient' will be a {@link FloatStructImpl}.
+	 * 'quotient' will be a {@link FloatStruct}.
 	 *
 	 * @return the {@link QuotientRemainder} for the 'CEILING' operation with the provided RealStruct divisor
 	 */
@@ -384,7 +384,7 @@ public interface RealStruct extends NumberStruct {
 
 	/**
 	 * Calculates the 'quotient' and 'remainder' for the 'CEILING' operation for this RealStruct with the provided
-	 * RealStruct divisor. The resulting 'quotient' will be a {@link FloatStructImpl}.
+	 * RealStruct divisor. The resulting 'quotient' will be a {@link FloatStruct}.
 	 *
 	 * @param divisor
 	 * 		the RealStruct to be used to be used as the divisor in the 'CEILING' operation
@@ -413,7 +413,7 @@ public interface RealStruct extends NumberStruct {
 
 	/**
 	 * Calculates the 'quotient' and 'remainder' for the 'TRUNCATE' operation for this RealStruct. The resulting
-	 * 'quotient' will be a {@link FloatStructImpl}.
+	 * 'quotient' will be a {@link FloatStruct}.
 	 *
 	 * @return the {@link QuotientRemainder} for the 'TRUNCATE' operation with the provided RealStruct divisor
 	 */
@@ -421,7 +421,7 @@ public interface RealStruct extends NumberStruct {
 
 	/**
 	 * Calculates the 'quotient' and 'remainder' for the 'TRUNCATE' operation for this RealStruct with the provided
-	 * RealStruct divisor. The resulting 'quotient' will be a {@link FloatStructImpl}.
+	 * RealStruct divisor. The resulting 'quotient' will be a {@link FloatStruct}.
 	 *
 	 * @param divisor
 	 * 		the RealStruct to be used to be used as the divisor in the 'TRUNCATE' operation
@@ -450,7 +450,7 @@ public interface RealStruct extends NumberStruct {
 
 	/**
 	 * Calculates the 'quotient' and 'remainder' for the 'ROUND' operation for this RealStruct. The resulting
-	 * 'quotient' will be a {@link FloatStructImpl}.
+	 * 'quotient' will be a {@link FloatStruct}.
 	 *
 	 * @return the {@link QuotientRemainder} for the 'ROUND' operation with the provided RealStruct divisor
 	 */
@@ -458,7 +458,7 @@ public interface RealStruct extends NumberStruct {
 
 	/**
 	 * Calculates the 'quotient' and 'remainder' for the 'ROUND' operation for this RealStruct with the provided
-	 * RealStruct divisor. The resulting 'quotient' will be a {@link FloatStructImpl}.
+	 * RealStruct divisor. The resulting 'quotient' will be a {@link FloatStruct}.
 	 *
 	 * @param divisor
 	 * 		the RealStruct to be used to be used as the divisor in the 'ROUND' operation

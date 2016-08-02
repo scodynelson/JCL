@@ -1,11 +1,11 @@
 package jcl.functions.list;
 
+import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.function.SystemBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.ListStruct;
-import jcl.lang.number.IntegerStructImpl;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -28,7 +28,7 @@ public final class SetNthFunction extends SystemBuiltInFunctionStruct {
 
 	@Override
 	public LispStruct apply(final Arguments arguments) {
-		final IntegerStructImpl index = arguments.getRequiredArgument(INDEX_ARGUMENT, IntegerStructImpl.class);
+		final IntegerStruct index = arguments.getRequiredArgument(INDEX_ARGUMENT, IntegerStruct.class);
 		final ListStruct list = arguments.getRequiredArgument(LIST_ARGUMENT, ListStruct.class);
 		final LispStruct value = arguments.getRequiredArgument(VALUE_ARGUMENT);
 

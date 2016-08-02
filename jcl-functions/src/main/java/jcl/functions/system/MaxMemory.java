@@ -7,10 +7,10 @@ package jcl.functions.system;
 import java.math.BigInteger;
 
 import jcl.lang.LispStruct;
+import jcl.lang.factory.LispStructFactory;
 import jcl.lang.function.ExtensionsBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
-import jcl.lang.number.IntegerStructImpl;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -28,6 +28,6 @@ public final class MaxMemory extends ExtensionsBuiltInFunctionStruct {
 	@Override
 	public LispStruct apply(final Arguments arguments) {
 		final long maxMemory = Runtime.getRuntime().maxMemory();
-		return IntegerStructImpl.valueOf(BigInteger.valueOf(maxMemory));
+		return LispStructFactory.toInteger(BigInteger.valueOf(maxMemory));
 	}
 }

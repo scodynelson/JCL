@@ -1,12 +1,12 @@
 package jcl.functions.number;
 
+import jcl.lang.FloatStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.ValuesStruct;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.number.DecodeFloatResult;
-import jcl.lang.number.FloatStructImpl;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -25,7 +25,7 @@ public final class DecodeFloatFunction extends CommonLispBuiltInFunctionStruct {
 
 	@Override
 	public LispStruct apply(final Arguments arguments) {
-		final FloatStructImpl floatVal = arguments.getRequiredArgument(FLOAT_ARGUMENT, FloatStructImpl.class);
+		final FloatStruct floatVal = arguments.getRequiredArgument(FLOAT_ARGUMENT, FloatStruct.class);
 		final DecodeFloatResult decodeFloatResult = floatVal.decodeFloat();
 		return ValuesStruct.valueOf(
 				decodeFloatResult.getSignificand(),

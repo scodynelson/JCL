@@ -4,6 +4,7 @@
 
 package jcl.functions.stream;
 
+import jcl.lang.IntegerStruct;
 import jcl.lang.statics.CommonLispSymbols;
 import jcl.lang.LispStruct;
 import jcl.lang.SymbolStruct;
@@ -11,7 +12,6 @@ import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.list.NILStruct;
-import jcl.lang.number.IntegerStructImpl;
 import jcl.lang.pathname.PathnameStruct;
 import jcl.lang.stream.DirectionType;
 import jcl.lang.stream.ExternalFormat;
@@ -32,7 +32,7 @@ public final class OpenFunction extends CommonLispBuiltInFunctionStruct {
 		      FUNCTION_NAME,
 		      Parameters.forFunction(FUNCTION_NAME)
 		                .requiredParameter(FILESPEC_ARGUMENT)
-		                .keyParameter(CommonLispSymbols.DIRECTION_KEYWORD).withInitialValue(IntegerStructImpl.ZERO)
+		                .keyParameter(CommonLispSymbols.DIRECTION_KEYWORD).withInitialValue(IntegerStruct.ZERO)
 		                .keyParameter(CommonLispSymbols.ELEMENT_TYPE_KEYWORD).withInitialValue(NILStruct.INSTANCE)
 		                .keyParameter(CommonLispSymbols.IF_EXISTS_KEYWORD).withInitialValue(NILStruct.INSTANCE)
 		                .keyParameter(CommonLispSymbols.IF_DOES_NOT_EXIST_KEYWORD).withInitialValue(NILStruct.INSTANCE)

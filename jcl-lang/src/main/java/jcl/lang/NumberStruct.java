@@ -7,7 +7,6 @@ package jcl.lang;
 import java.util.List;
 
 import jcl.lang.number.ComplexStructImpl;
-import jcl.lang.number.IntegerStructImpl;
 import org.apfloat.Apcomplex;
 import org.apfloat.Apfloat;
 
@@ -30,7 +29,7 @@ public interface NumberStruct extends LispStruct {
 			return RealStruct.valueOf((Apfloat) apcomplex);
 		}
 		// TODO
-		return ComplexStructImpl.valueOf(apcomplex, ComplexStructImpl.ValueType.RATIONAL);
+		return ComplexStructImpl.valueOf(apcomplex, ComplexStruct.ValueType.RATIONAL);
 	}
 
 	/**
@@ -66,7 +65,7 @@ public interface NumberStruct extends LispStruct {
 
 	/**
 	 * Performs the addition operation on the {@link List} of NumberStruct objects in order. {@link
-	 * IntegerStructImpl#ZERO} is returned if the list is empty.
+	 * IntegerStruct#ZERO} is returned if the list is empty.
 	 *
 	 * @param numbers
 	 * 		the {@link List} of NumberStruct objects to performs the addition operation on
@@ -74,7 +73,7 @@ public interface NumberStruct extends LispStruct {
 	 * @return the result of the addition operation against the {@link List} of NumberStruct objects
 	 */
 	static NumberStruct add(final List<NumberStruct> numbers) {
-		return numbers.stream().reduce(IntegerStructImpl.ZERO, NumberStruct::add);
+		return numbers.stream().reduce(IntegerStruct.ZERO, NumberStruct::add);
 	}
 
 	/**
@@ -119,7 +118,7 @@ public interface NumberStruct extends LispStruct {
 
 	/**
 	 * Performs the multiplication operation on the {@link List} of NumberStruct objects in order. {@link
-	 * IntegerStructImpl#ONE} is returned if the list is empty.
+	 * IntegerStruct#ONE} is returned if the list is empty.
 	 *
 	 * @param numbers
 	 * 		the {@link List} of NumberStruct objects to performs the multiplication operation on
@@ -127,7 +126,7 @@ public interface NumberStruct extends LispStruct {
 	 * @return the result of the multiplication operation against the {@link List} of NumberStruct objects
 	 */
 	static NumberStruct multiply(final List<NumberStruct> numbers) {
-		return numbers.stream().reduce(IntegerStructImpl.ONE, NumberStruct::multiply);
+		return numbers.stream().reduce(IntegerStruct.ONE, NumberStruct::multiply);
 	}
 
 	/**

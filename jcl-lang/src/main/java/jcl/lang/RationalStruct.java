@@ -2,8 +2,10 @@
  * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
  */
 
-package jcl.lang.number;
+package jcl.lang;
 
+import jcl.lang.number.IntegerStruct;
+import jcl.lang.number.RatioStruct;
 import org.apfloat.Apcomplex;
 import org.apfloat.Apint;
 import org.apfloat.Aprational;

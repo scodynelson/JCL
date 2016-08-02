@@ -15,7 +15,7 @@ import jcl.lang.function.ReaderMacroFunction;
 import jcl.lang.ListStruct;
 import jcl.lang.list.NILStruct;
 import jcl.lang.number.ComplexStruct;
-import jcl.lang.number.RealStruct;
+import jcl.lang.RealStruct;
 import jcl.lang.readtable.Reader;
 import jcl.lang.statics.ReaderVariables;
 import jcl.lang.readtable.ReadtableStruct;

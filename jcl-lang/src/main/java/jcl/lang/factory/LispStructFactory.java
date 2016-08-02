@@ -52,7 +52,7 @@ import jcl.lang.number.FloatStruct;
 import jcl.lang.number.IntegerStruct;
 import jcl.lang.number.RandomStateStruct;
 import jcl.lang.number.RatioStruct;
-import jcl.lang.number.RealStruct;
+import jcl.lang.RealStruct;
 import jcl.lang.pathname.LogicalPathnameStruct;
 import jcl.lang.pathname.PathnameDevice;
 import jcl.lang.pathname.PathnameDirectory;

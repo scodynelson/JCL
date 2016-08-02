@@ -2,10 +2,13 @@
  * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
  */
 
-package jcl.lang.number;
+package jcl.lang;
 
 import java.util.List;
 
+import jcl.lang.number.ComplexStruct;
+import jcl.lang.number.FloatStruct;
+import jcl.lang.number.QuotientRemainder;
 import org.apfloat.Apfloat;
 import org.apfloat.Aprational;
 

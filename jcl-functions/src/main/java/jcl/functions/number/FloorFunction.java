@@ -11,7 +11,7 @@ import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.number.IntegerStruct;
 import jcl.lang.number.QuotientRemainder;
-import jcl.lang.number.RealStruct;
+import jcl.lang.RealStruct;
 import org.springframework.stereotype.Component;
 
 @Component

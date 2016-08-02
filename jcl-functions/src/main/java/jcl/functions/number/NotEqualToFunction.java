@@ -11,7 +11,7 @@ import jcl.lang.LispStruct;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
-import jcl.lang.number.NumberStruct;
+import jcl.lang.NumberStruct;
 import org.springframework.stereotype.Component;
 
 @Component

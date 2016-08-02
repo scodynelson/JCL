@@ -11,8 +11,8 @@ import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.number.ComplexStruct;
 import jcl.lang.number.FloatStruct;
 import jcl.lang.number.IntegerStruct;
-import jcl.lang.number.RationalStruct;
-import jcl.lang.number.RealStruct;
+import jcl.lang.RationalStruct;
+import jcl.lang.RealStruct;
 import org.springframework.stereotype.Component;
 
 @Component

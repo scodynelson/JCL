@@ -13,7 +13,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import jcl.lang.LispStruct;
-import jcl.lang.number.NumberStruct;
+import jcl.lang.NumberStruct;
 import jcl.lang.readtable.AttributeType;
 import jcl.lang.statics.ReaderVariables;
 import jcl.reader.TokenAttribute;

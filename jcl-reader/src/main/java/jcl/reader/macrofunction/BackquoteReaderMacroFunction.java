@@ -19,7 +19,7 @@ import jcl.lang.function.ReaderMacroFunction;
 import jcl.lang.list.ConsStruct;
 import jcl.lang.ListStruct;
 import jcl.lang.list.NILStruct;
-import jcl.lang.number.NumberStruct;
+import jcl.lang.NumberStruct;
 import jcl.lang.readtable.Reader;
 import jcl.lang.statics.ReaderVariables;
 import jcl.util.CodePointConstants;

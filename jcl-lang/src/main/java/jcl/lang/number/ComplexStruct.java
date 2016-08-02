@@ -6,6 +6,7 @@ package jcl.lang.number;
 
 import java.util.Arrays;
 
+import jcl.lang.RealStruct;
 import jcl.type.ComplexType;
 import org.apfloat.Apcomplex;
 import org.apfloat.Apfloat;

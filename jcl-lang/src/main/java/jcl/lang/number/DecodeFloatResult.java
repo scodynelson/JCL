@@ -4,6 +4,8 @@
 
 package jcl.lang.number;
 
+import jcl.lang.RealStruct;
+
 public class DecodeFloatResult {
 
 	private final RealStruct significand;

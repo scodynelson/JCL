@@ -2,11 +2,12 @@
  * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
  */
 
-package jcl.lang.number;
+package jcl.lang;
 
 import java.util.List;
 
-import jcl.lang.LispStruct;
+import jcl.lang.number.ComplexStruct;
+import jcl.lang.number.IntegerStruct;
 import org.apfloat.Apcomplex;
 import org.apfloat.Apfloat;
 

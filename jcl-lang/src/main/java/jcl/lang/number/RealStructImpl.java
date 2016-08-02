@@ -7,6 +7,8 @@ package jcl.lang.number;
 import java.math.RoundingMode;
 import java.util.function.Function;
 
+import jcl.lang.NumberStruct;
+import jcl.lang.RealStruct;
 import jcl.type.LispType;
 import org.apfloat.Apcomplex;
 import org.apfloat.Apfloat;

@@ -4,6 +4,8 @@
 
 package jcl.lang.number;
 
+import jcl.lang.RealStruct;
+
 public class QuotientRemainder {
 
 	private final RealStruct quotient;

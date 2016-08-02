@@ -8,9 +8,9 @@ import java.math.BigInteger;
 import java.util.LinkedList;
 
 import jcl.lang.number.IntegerStruct;
-import jcl.lang.number.NumberStruct;
+import jcl.lang.NumberStruct;
 import jcl.lang.number.RatioStruct;
-import jcl.lang.number.RationalStruct;
+import jcl.lang.RationalStruct;
 import jcl.lang.readtable.AttributeType;
 import jcl.lang.statics.ReaderVariables;
 import jcl.reader.TokenAttribute;

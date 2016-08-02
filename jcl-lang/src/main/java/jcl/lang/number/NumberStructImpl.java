@@ -4,6 +4,8 @@
 
 package jcl.lang.number;
 
+import jcl.lang.NumberStruct;
+import jcl.lang.RealStruct;
 import jcl.type.LispType;
 import org.apfloat.Apcomplex;
 import org.apfloat.ApcomplexMath;

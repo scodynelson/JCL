@@ -10,10 +10,10 @@ import jcl.compiler.icg.GeneratorState;
 import jcl.compiler.icg.IntermediateCodeGenerator;
 import jcl.compiler.icg.JavaMethodBuilder;
 import jcl.compiler.struct.specialoperator.QuoteStruct;
+import jcl.lang.ConsStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.ProgramErrorException;
-import jcl.lang.list.ConsStructImpl;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,11 +57,11 @@ final class QuoteCodeGenerator implements CodeGenerator<QuoteStruct> {
 	 * <ol>
 	 * <li>Generating the value via {@link #generateQuotedSymbol(SymbolStruct, GeneratorState)} if the {@code
 	 * quotedObject} is a {@link SymbolStruct}</li>
-	 * <li>Generating the value via {@link #generateQuotedCons(ConsStructImpl, GeneratorState)} if the {@code quotedObject}
-	 * is a {@link ConsStructImpl}</li>
+	 * <li>Generating the value via {@link #generateQuotedCons(ConsStruct, GeneratorState)} if the {@code quotedObject}
+	 * is a {@link ConsStruct}</li>
 	 * <li>Generating the value via {@link IntermediateCodeGenerator#generate(LispStruct, GeneratorState)} if the
 	 * {@code
-	 * quotedObject} is neither a {@link SymbolStruct} nor a {@link ConsStructImpl}</li>
+	 * quotedObject} is neither a {@link SymbolStruct} nor a {@link ConsStruct}</li>
 	 * </ol>
 	 *
 	 * @param quotedObject
@@ -73,8 +73,8 @@ final class QuoteCodeGenerator implements CodeGenerator<QuoteStruct> {
 	private void generateQuotedObject(final LispStruct quotedObject, final GeneratorState generatorState) {
 		if (quotedObject instanceof SymbolStruct) {
 			generateQuotedSymbol((SymbolStruct) quotedObject, generatorState);
-		} else if (quotedObject instanceof ConsStructImpl) {
-			generateQuotedCons((ConsStructImpl) quotedObject, generatorState);
+		} else if (quotedObject instanceof ConsStruct) {
+			generateQuotedCons((ConsStruct) quotedObject, generatorState);
 		} else {
 			codeGenerator.generate(quotedObject, generatorState);
 		}
@@ -112,13 +112,13 @@ final class QuoteCodeGenerator implements CodeGenerator<QuoteStruct> {
 	}
 
 	/**
-	 * Generation method for quoted {@link ConsStructImpl} objects, by performing the following operations:
+	 * Generation method for quoted {@link ConsStruct} objects, by performing the following operations:
 	 * <ol>
-	 * <li>Checking whether or not {@link ConsStructImpl#isCircular()} is true, throwing a {@link ProgramErrorException} if
+	 * <li>Checking whether or not {@link ConsStruct#isCircular()} is true, throwing a {@link ProgramErrorException} if
 	 * so</li>
-	 * <li>Looping throw the {@link ConsStructImpl} in reverse order using a {@link ListIterator}, generating each element
-	 * into its appropriate embedded {@link ConsStructImpl}</li>
-	 * <li>Creating a dotted {@link ConsStructImpl} for the final 2 elements first if {@link ConsStructImpl#isDotted()} is
+	 * <li>Looping throw the {@link ConsStruct} in reverse order using a {@link ListIterator}, generating each element
+	 * into its appropriate embedded {@link ConsStruct}</li>
+	 * <li>Creating a dotted {@link ConsStruct} for the final 2 elements first if {@link ConsStruct#isDotted()} is
 	 * true</li>
 	 * </ol>
 	 * As an example, it will transform {@code '(x)} into the following Java code:
@@ -131,11 +131,11 @@ final class QuoteCodeGenerator implements CodeGenerator<QuoteStruct> {
 	 * </pre>
 	 *
 	 * @param quotedCons
-	 * 		the 'quoted' {@link ConsStructImpl} input value to generate code for
+	 * 		the 'quoted' {@link ConsStruct} input value to generate code for
 	 * @param generatorState
 	 * 		stateful object used to hold the current state of the code generation process
 	 */
-	private void generateQuotedCons(final ConsStructImpl quotedCons, final GeneratorState generatorState) {
+	private void generateQuotedCons(final ConsStruct quotedCons, final GeneratorState generatorState) {
 
 		final JavaMethodBuilder methodBuilder = generatorState.getCurrentMethodBuilder();
 		final MethodVisitor mv = methodBuilder.getMethodVisitor();

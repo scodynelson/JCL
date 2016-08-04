@@ -20,6 +20,7 @@ import jcl.lang.CharacterNativeStreamStruct;
 import jcl.lang.CharacterStruct;
 import jcl.lang.ComplexStruct;
 import jcl.lang.ConcatenatedStreamStruct;
+import jcl.lang.ConsStruct;
 import jcl.lang.EchoStreamStruct;
 import jcl.lang.EmptyStreamStruct;
 import jcl.lang.FileStreamStruct;
@@ -209,11 +210,11 @@ public final class LispStructFactory {
 	 * Cons
 	 */
 
-	public static ConsStructImpl toCons(final LispStruct car) {
+	public static ConsStruct toCons(final LispStruct car) {
 		return ConsStructImpl.valueOf(car);
 	}
 
-	public static ConsStructImpl toCons(final LispStruct car, final LispStruct cdr) {
+	public static ConsStruct toCons(final LispStruct car, final LispStruct cdr) {
 		return ConsStructImpl.valueOf(car, cdr);
 	}
 

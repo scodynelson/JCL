@@ -8,6 +8,7 @@ import java.math.BigInteger;
 import java.util.Optional;
 import javax.annotation.PostConstruct;
 
+import jcl.lang.ConsStruct;
 import jcl.lang.statics.GlobalPackageStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.SpecialOperatorStruct;
@@ -16,7 +17,6 @@ import jcl.lang.TStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
 import jcl.lang.factory.LispStructFactory;
 import jcl.lang.function.ReaderMacroFunction;
-import jcl.lang.list.ConsStructImpl;
 import jcl.lang.ListStruct;
 import jcl.lang.list.NILStruct;
 import jcl.lang.NumberStruct;
@@ -95,8 +95,8 @@ public class BackquoteReaderMacroFunction extends ReaderMacroFunction {
 			return new BackquoteReturn(SpecialOperatorStruct.QUOTE, code);
 		}
 
-		if (code instanceof ConsStructImpl) {
-			final ConsStructImpl consCode = (ConsStructImpl) code;
+		if (code instanceof ConsStruct) {
+			final ConsStruct consCode = (ConsStruct) code;
 
 			final LispStruct carConsCode = consCode.getCar();
 			final LispStruct cdrConsCode = consCode.getCdr();
@@ -170,7 +170,7 @@ public class BackquoteReaderMacroFunction extends ReaderMacroFunction {
 						|| TStruct.INSTANCE.equals(carBqtifyFlag)
 						|| NILStruct.INSTANCE.equals(carBqtifyFlag)) {
 
-					final ConsStructImpl bqReturnThing = LispStructFactory.toCons(carBqtifyThing, cdrBqtifyThing);
+					final ConsStruct bqReturnThing = LispStructFactory.toCons(carBqtifyThing, cdrBqtifyThing);
 					return new BackquoteReturn(SpecialOperatorStruct.QUOTE, bqReturnThing);
 				} else {
 
@@ -263,15 +263,15 @@ public class BackquoteReaderMacroFunction extends ReaderMacroFunction {
 			}
 		}
 
-		if (code instanceof ConsStructImpl) {
-			final ConsStructImpl consCode = (ConsStructImpl) code;
+		if (code instanceof ConsStruct) {
+			final ConsStruct consCode = (ConsStruct) code;
 
 			final LispStruct carConsCode = consCode.getCar();
 			final LispStruct cdrConsCode = consCode.getCdr();
 
 			if (SpecialOperatorStruct.QUOTE.equals(carConsCode)) {
 				// NOTE: This cast will always be fine because of how we build the ConsStruct in the CommaReaderMacroFunction
-				final LispStruct cadrConsCode = ((ConsStructImpl) cdrConsCode).getCar();
+				final LispStruct cadrConsCode = ((ConsStruct) cdrConsCode).getCar();
 				if (!expandableBackqExpressionP(cadrConsCode)) {
 					final SymbolStruct carConsCodeFlag = (SymbolStruct) carConsCode;
 					return new BackquoteReturn(carConsCodeFlag, cadrConsCode);
@@ -297,8 +297,8 @@ public class BackquoteReaderMacroFunction extends ReaderMacroFunction {
 	}
 
 	private static boolean expandableBackqExpressionP(final LispStruct o) {
-		if (o instanceof ConsStructImpl) {
-			final ConsStructImpl consStruct = (ConsStructImpl) o;
+		if (o instanceof ConsStruct) {
+			final ConsStruct consStruct = (ConsStruct) o;
 			final LispStruct flag = consStruct.getCar();
 			if (BQ_AT_FLAG.equals(flag) || BQ_DOT_FLAG.equals(flag)) {
 				return true;
@@ -319,14 +319,14 @@ public class BackquoteReaderMacroFunction extends ReaderMacroFunction {
 
 		if (LIST_STAR.equals(flag)) {
 			// NOTE: The following check is not in CMU-CL. Actually a semi-bug found when handling improperly created lists.
-			if (thing instanceof ConsStructImpl) {
-				final ConsStructImpl consThing = (ConsStructImpl) thing;
+			if (thing instanceof ConsStruct) {
+				final ConsStruct consThing = (ConsStruct) thing;
 
 				final LispStruct cdrThing = consThing.getCdr();
 
 				// NOTE: This will always be an ok cast due to the backquote reader algorithm
-				final LispStruct cadrThing = ((ConsStructImpl) cdrThing).getCar();
-				final LispStruct cddrThing = ((ConsStructImpl) cdrThing).getCdr();
+				final LispStruct cadrThing = ((ConsStruct) cdrThing).getCar();
+				final LispStruct cddrThing = ((ConsStruct) cdrThing).getCdr();
 
 				if (NILStruct.INSTANCE.equals(cddrThing) && !expandableBackqExpressionP(cadrThing)) {
 					// Basically if there are only 2 items in the list, just use Cons function
@@ -339,7 +339,7 @@ public class BackquoteReaderMacroFunction extends ReaderMacroFunction {
 
 				if (expandableBackqExpressionP(carOfLastThing)) {
 					final ListStruct allButLast = consThing.butLast();
-					final ConsStructImpl consStruct = LispStructFactory.toCons(LIST, allButLast);
+					final ConsStruct consStruct = LispStructFactory.toCons(LIST, allButLast);
 
 					return LispStructFactory.toProperList(APPEND, consStruct, carOfLastThing);
 				}

@@ -1,10 +1,10 @@
 package jcl.functions.list;
 
+import jcl.lang.ConsStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
-import jcl.lang.list.ConsStructImpl;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -25,7 +25,7 @@ public final class RplacaFunction extends CommonLispBuiltInFunctionStruct {
 
 	@Override
 	public LispStruct apply(final Arguments arguments) {
-		final ConsStructImpl cons = arguments.getRequiredArgument(CONS_ARGUMENT, ConsStructImpl.class);
+		final ConsStruct cons = arguments.getRequiredArgument(CONS_ARGUMENT, ConsStruct.class);
 		final LispStruct object = arguments.getRequiredArgument(OBJECT_ARGUMENT);
 		cons.setCar(object);
 		return cons;

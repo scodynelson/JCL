@@ -19,19 +19,19 @@ import jcl.compiler.struct.specialoperator.LambdaFunctionCallStruct;
 import jcl.compiler.struct.specialoperator.SymbolCompilerFunctionStruct;
 import jcl.compiler.struct.specialoperator.SymbolFunctionCallStruct;
 import jcl.compiler.struct.specialoperator.lambda.LambdaStruct;
+import jcl.lang.ConsStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.SpecialOperatorStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.java.JavaNameStruct;
-import jcl.lang.list.ConsStructImpl;
 import jcl.lang.ListStruct;
 import jcl.lang.list.NILStruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ConsAnalyzer implements Analyzer<LispStruct, ConsStructImpl> {
+public class ConsAnalyzer implements Analyzer<LispStruct, ConsStruct> {
 
 	@Autowired
 	private FormAnalyzer formAnalyzer;
@@ -40,7 +40,7 @@ public class ConsAnalyzer implements Analyzer<LispStruct, ConsStructImpl> {
 	private LambdaExpander lambdaExpander;
 
 	@Override
-	public LispStruct analyze(final ConsStructImpl input, final Environment environment) {
+	public LispStruct analyze(final ConsStruct input, final Environment environment) {
 		final LispStruct first = input.getCar();
 
 		if (NILStruct.INSTANCE.equals(first)) {

@@ -1,11 +1,11 @@
 package jcl.functions.list;
 
 import jcl.lang.BooleanStruct;
+import jcl.lang.ConsStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
-import jcl.lang.list.ConsStructImpl;
 import org.springframework.stereotype.Component;
 
 /**
@@ -28,6 +28,6 @@ public final class ConsPFunction extends CommonLispBuiltInFunctionStruct {
 	@Override
 	public LispStruct apply(final Arguments arguments) {
 		final LispStruct object = arguments.getRequiredArgument(OBJECT_ARGUMENT);
-		return BooleanStruct.toLispBoolean(object instanceof ConsStructImpl);
+		return BooleanStruct.toLispBoolean(object instanceof ConsStruct);
 	}
 }

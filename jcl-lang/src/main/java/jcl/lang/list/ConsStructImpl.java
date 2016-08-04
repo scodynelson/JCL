@@ -10,6 +10,7 @@ import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 import jcl.lang.BuiltInClassStruct;
+import jcl.lang.ConsStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
 import jcl.lang.ValuesStruct;
@@ -22,7 +23,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 /**
  * The {@link ConsStructImpl} is the object representation of a Lisp 'cons' type.
  */
-public final class ConsStructImpl extends BuiltInClassStruct implements ListStruct {
+public final class ConsStructImpl extends BuiltInClassStruct implements ConsStruct {
 
 	private LispStruct car;
 
@@ -56,11 +57,11 @@ public final class ConsStructImpl extends BuiltInClassStruct implements ListStru
 		}
 	}
 
-	public static ConsStructImpl valueOf(final LispStruct car) {
+	public static ConsStruct valueOf(final LispStruct car) {
 		return new ConsStructImpl(car);
 	}
 
-	public static ConsStructImpl valueOf(final LispStruct car, final LispStruct cdr) {
+	public static ConsStruct valueOf(final LispStruct car, final LispStruct cdr) {
 		return new ConsStructImpl(car, cdr);
 	}
 

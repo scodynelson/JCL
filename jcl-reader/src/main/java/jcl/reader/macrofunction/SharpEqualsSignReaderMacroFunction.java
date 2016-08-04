@@ -13,11 +13,11 @@ import java.util.Set;
 import java.util.UUID;
 import javax.annotation.PostConstruct;
 
+import jcl.lang.ConsStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
 import jcl.lang.function.ReaderMacroFunction;
-import jcl.lang.list.ConsStructImpl;
 import jcl.lang.list.NILStruct;
 import jcl.lang.readtable.Reader;
 import jcl.lang.statics.ReaderVariables;
@@ -80,16 +80,16 @@ public class SharpEqualsSignReaderMacroFunction extends ReaderMacroFunction {
 	 * Replaces the {@link SymbolStruct} tags located within the provided {@link LispStruct} token with the mapped
 	 * token values located within the provided {@code sharpEqualReplTable} {@link Map}. Circularities are also
 	 * accounted for by using the provided {@code sharpEqualCircleSet} {@link Set} to keep track of the {@link
-	 * ConsStructImpl} tokens throughout the replacement process.
+	 * ConsStruct} tokens throughout the replacement process.
 	 * <p>
-	 * NOTE: This method destructively modified the provided {@link LispStruct} token if it is a {@link ConsStructImpl}
+	 * NOTE: This method destructively modified the provided {@link LispStruct} token if it is a {@link ConsStruct}
 	 *
 	 * @param token
 	 * 		the {@link LispStruct} token to replace {@link SymbolStruct} tags with their mapped {@link LispStruct} tokens
 	 * @param sharpEqualReplTable
 	 * 		the {@link Map} of {@link SymbolStruct} tags to their mapped {@link LispStruct} tokens
 	 * @param sharpEqualCircleSet
-	 * 		the {@link Set} of {@link ConsStructImpl} tokens within the provided {@link LispStruct} token used to track
+	 * 		the {@link Set} of {@link ConsStruct} tokens within the provided {@link LispStruct} token used to track
 	 * 		circularities.
 	 *
 	 * @return the modified token with all {@link SymbolStruct} tags replaced with their corresponding {@link
@@ -102,12 +102,12 @@ public class SharpEqualsSignReaderMacroFunction extends ReaderMacroFunction {
 			if (sharpEqualReplTable.containsKey(token)) {
 				return sharpEqualReplTable.get(token);
 			}
-		} else if (token instanceof ConsStructImpl) {
+		} else if (token instanceof ConsStruct) {
 
 			if (!sharpEqualCircleSet.contains(token)) {
 				sharpEqualCircleSet.add(token);
 
-				final ConsStructImpl consToken = (ConsStructImpl) token;
+				final ConsStruct consToken = (ConsStruct) token;
 
 				final LispStruct car = consToken.getCar();
 				final LispStruct carSubst = replaceTagsWithTokens(car, sharpEqualReplTable, sharpEqualCircleSet);

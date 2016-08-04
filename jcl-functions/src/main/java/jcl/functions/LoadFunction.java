@@ -12,7 +12,7 @@ import jcl.compiler.classloaders.LoaderClassLoader;
 import jcl.compiler.functions.EvalFunction;
 import jcl.functions.pathname.MergePathnamesFunction;
 import jcl.functions.readtable.ReadFunction;
-import jcl.lang.BooleanStruct;
+import jcl.lang.BooleanStructImpl;
 import jcl.lang.statics.CommonLispSymbols;
 import jcl.lang.statics.CompilerVariables;
 import jcl.lang.FileStreamStruct;
@@ -83,19 +83,19 @@ public final class LoadFunction extends CommonLispBuiltInFunctionStruct {
 		final LispStruct filespec = arguments.getRequiredArgument(FILESPEC_ARGUMENT);
 		final boolean verbose;
 		if (arguments.hasKeyArgument(CommonLispSymbols.VERBOSE_KEYWORD)) {
-			verbose = arguments.getKeyArgument(CommonLispSymbols.VERBOSE_KEYWORD, BooleanStruct.class).booleanValue();
+			verbose = arguments.getKeyArgument(CommonLispSymbols.VERBOSE_KEYWORD, BooleanStructImpl.class).booleanValue();
 		} else {
-			final BooleanStruct currentLoadVerbose = CompilerVariables.LOAD_VERBOSE.getVariableValue();
+			final BooleanStructImpl currentLoadVerbose = CompilerVariables.LOAD_VERBOSE.getVariableValue();
 			verbose = currentLoadVerbose.booleanValue();
 		}
 		final boolean print;
 		if (arguments.hasKeyArgument(CommonLispSymbols.PRINT_KEYWORD)) {
-			print = arguments.getKeyArgument(CommonLispSymbols.PRINT_KEYWORD, BooleanStruct.class).booleanValue();
+			print = arguments.getKeyArgument(CommonLispSymbols.PRINT_KEYWORD, BooleanStructImpl.class).booleanValue();
 		} else {
-			final BooleanStruct currentLoadPrint = CompilerVariables.LOAD_PRINT.getVariableValue();
+			final BooleanStructImpl currentLoadPrint = CompilerVariables.LOAD_PRINT.getVariableValue();
 			print = currentLoadPrint.booleanValue();
 		}
-		final boolean ifDoesNotExist = arguments.getKeyArgument(CommonLispSymbols.IF_DOES_NOT_EXIST_KEYWORD, BooleanStruct.class).booleanValue();
+		final boolean ifDoesNotExist = arguments.getKeyArgument(CommonLispSymbols.IF_DOES_NOT_EXIST_KEYWORD, BooleanStructImpl.class).booleanValue();
 		final LispStruct externalFormat = arguments.getKeyArgument(CommonLispSymbols.EXTERNAL_FORMAT_KEYWORD);
 		return load(filespec, verbose, print, ifDoesNotExist);
 	}

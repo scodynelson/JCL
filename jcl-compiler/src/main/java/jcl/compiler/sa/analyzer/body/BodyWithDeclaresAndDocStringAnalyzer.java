@@ -5,7 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import jcl.lang.LispStruct;
-import jcl.lang.internal.SpecialOperatorStruct;
+import jcl.lang.internal.SpecialOperatorStructImpl;
 import jcl.lang.StringStruct;
 import jcl.lang.ListStruct;
 import org.springframework.stereotype.Component;
@@ -24,7 +24,7 @@ public class BodyWithDeclaresAndDocStringAnalyzer {
 		if (iterator.hasNext()) {
 			LispStruct next = iterator.next();
 
-			declares.add(SpecialOperatorStruct.DECLARE);
+			declares.add(SpecialOperatorStructImpl.DECLARE);
 
 			while (isDeclaration(next)) {
 				final ListStruct declareStatement = (ListStruct) next;
@@ -72,6 +72,6 @@ public class BodyWithDeclaresAndDocStringAnalyzer {
 	}
 
 	private boolean isDeclaration(final LispStruct next) {
-		return (next instanceof ListStruct) && ((ListStruct) next).getCar().equals(SpecialOperatorStruct.DECLARE);
+		return (next instanceof ListStruct) && ((ListStruct) next).getCar().equals(SpecialOperatorStructImpl.DECLARE);
 	}
 }

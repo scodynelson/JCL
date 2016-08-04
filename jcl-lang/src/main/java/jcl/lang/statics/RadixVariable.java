@@ -5,13 +5,13 @@ import java.math.BigInteger;
 import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.PackageStruct;
-import jcl.lang.internal.VariableStruct;
+import jcl.lang.internal.VariableStructImpl;
 import jcl.lang.condition.exception.TypeErrorException;
 import org.apache.commons.lang3.Range;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class RadixVariable extends VariableStruct<IntegerStruct> {
+public class RadixVariable extends VariableStructImpl<IntegerStruct> {
 
 	private static final int lowerBound = 2;
 

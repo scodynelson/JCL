@@ -8,7 +8,7 @@ import java.math.BigInteger;
 import java.util.Map;
 
 import jcl.lang.LispStruct;
-import jcl.lang.SymbolStruct;
+import jcl.lang.SymbolStructImpl;
 import jcl.lang.InputStreamStruct;
 import jcl.lang.stream.ReadPeekResult;
 
@@ -83,21 +83,21 @@ public interface Reader {
 	Map<BigInteger, LispStruct> getSharpEqualFinalTable();
 
 	/**
-	 * Gets the {@link Map} #n= labels to their temporary {@link SymbolStruct} tags for the JCL Reader instance.
+	 * Gets the {@link Map} #n= labels to their temporary {@link SymbolStructImpl} tags for the JCL Reader instance.
 	 *
-	 * @return the {@link Map} #n= labels to their temporary {@link SymbolStruct} tags for the JCL Reader instance
+	 * @return the {@link Map} #n= labels to their temporary {@link SymbolStructImpl} tags for the JCL Reader instance
 	 */
-	Map<BigInteger, SymbolStruct> getSharpEqualTempTable();
+	Map<BigInteger, SymbolStructImpl> getSharpEqualTempTable();
 
 	/**
-	 * Gets the {@link Map} the temporary {@link SymbolStruct} tags for #n= labels to their assigned {@link
+	 * Gets the {@link Map} the temporary {@link SymbolStructImpl} tags for #n= labels to their assigned {@link
 	 * LispStruct}s
 	 * for the JCL Reader instance.
 	 *
-	 * @return the {@link Map} the temporary {@link SymbolStruct} tags for #n= labels to their assigned {@link
+	 * @return the {@link Map} the temporary {@link SymbolStructImpl} tags for #n= labels to their assigned {@link
 	 * LispStruct}s for the JCL Reader instance
 	 */
-	Map<SymbolStruct, LispStruct> getSharpEqualReplTable();
+	Map<SymbolStructImpl, LispStruct> getSharpEqualReplTable();
 
 	/**
 	 * Gets the current backquote level for the JCL Reader instance.

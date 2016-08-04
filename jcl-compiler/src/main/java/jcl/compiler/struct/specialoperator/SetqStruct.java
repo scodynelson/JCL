@@ -8,7 +8,7 @@ import java.util.List;
 
 import jcl.compiler.struct.CompilerSpecialOperatorStruct;
 import jcl.lang.LispStruct;
-import jcl.lang.SymbolStruct;
+import jcl.lang.SymbolStructImpl;
 
 public class SetqStruct extends CompilerSpecialOperatorStruct {
 
@@ -29,7 +29,7 @@ public class SetqStruct extends CompilerSpecialOperatorStruct {
 		for (final SetqStruct.SetqPair setqPair : setqPairs) {
 			builder.append(' ');
 
-			final SymbolStruct var = setqPair.getVar();
+			final SymbolStructImpl var = setqPair.getVar();
 			final String varPrinted = var.toString();
 			builder.append(varPrinted);
 
@@ -47,16 +47,16 @@ public class SetqStruct extends CompilerSpecialOperatorStruct {
 
 	public static class SetqPair {
 
-		private final SymbolStruct var;
+		private final SymbolStructImpl var;
 
 		private final LispStruct form;
 
-		public SetqPair(final SymbolStruct var, final LispStruct form) {
+		public SetqPair(final SymbolStructImpl var, final LispStruct form) {
 			this.var = var;
 			this.form = form;
 		}
 
-		public SymbolStruct getVar() {
+		public SymbolStructImpl getVar() {
 			return var;
 		}
 

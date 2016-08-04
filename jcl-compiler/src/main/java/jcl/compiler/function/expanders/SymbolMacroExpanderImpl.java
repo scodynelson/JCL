@@ -6,7 +6,7 @@ package jcl.compiler.function.expanders;
 
 import jcl.compiler.environment.Environment;
 import jcl.lang.LispStruct;
-import jcl.lang.SymbolStruct;
+import jcl.lang.SymbolStructImpl;
 
 public class SymbolMacroExpanderImpl extends SymbolMacroExpander {
 
@@ -20,13 +20,13 @@ public class SymbolMacroExpanderImpl extends SymbolMacroExpander {
 
 	@Override
 	public LispStruct apply(final LispStruct... lispStructs) {
-		final SymbolStruct symbolStruct = (SymbolStruct) lispStructs[0];
+		final SymbolStructImpl symbolStruct = (SymbolStructImpl) lispStructs[0];
 		final Environment environment = (Environment) lispStructs[1];
 		return expand(symbolStruct, environment);
 	}
 
 	@Override
-	public LispStruct expand(final SymbolStruct form, final Environment environment) {
+	public LispStruct expand(final SymbolStructImpl form, final Environment environment) {
 		return expansion;
 	}
 }

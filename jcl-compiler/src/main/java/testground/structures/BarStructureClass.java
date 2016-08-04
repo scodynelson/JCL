@@ -8,24 +8,24 @@ import java.util.List;
 
 import jcl.lang.LispStruct;
 import jcl.lang.StructureObjectStruct;
-import jcl.lang.SymbolStruct;
+import jcl.lang.SymbolStructImpl;
 import jcl.type.LispType;
 
 @SuppressWarnings("all")
 public class BarStructureClass extends FooStructureClass {
 
 	public static final BarStructureClass INSTANCE
-			= new BarStructureClass(SymbolStruct.valueOf("MAKE-BAR"), null, null, null);
+			= new BarStructureClass(SymbolStructImpl.valueOf("MAKE-BAR"), null, null, null);
 
-	protected BarStructureClass(final SymbolStruct defaultConstructorSymbol, final SymbolStruct printerSymbol,
+	protected BarStructureClass(final SymbolStructImpl defaultConstructorSymbol, final SymbolStructImpl printerSymbol,
 	                            final List<Class<? extends LispStruct>> directSuperClasses, final List<Class<? extends LispStruct>> subClasses) {
 		this(BarStructureType.INSTANCE, defaultConstructorSymbol, printerSymbol, directSuperClasses, subClasses);
 	}
 
-	protected BarStructureClass(final LispType type, final SymbolStruct defaultConstructorSymbol, final SymbolStruct printerSymbol,
+	protected BarStructureClass(final LispType type, final SymbolStructImpl defaultConstructorSymbol, final SymbolStructImpl printerSymbol,
 	                            final List<Class<? extends LispStruct>> directSuperClasses, final List<Class<? extends LispStruct>> subClasses) {
 		super(type, defaultConstructorSymbol, printerSymbol, directSuperClasses, subClasses);
-		SymbolStruct.valueOf("BAR").setStructureClass(INSTANCE);
+		SymbolStructImpl.valueOf("BAR").setStructureClass(INSTANCE);
 	}
 
 	@Override

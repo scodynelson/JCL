@@ -7,12 +7,12 @@ package jcl.compiler.functions;
 import java.util.Optional;
 
 import jcl.compiler.environment.Environment;
-import jcl.lang.BooleanStruct;
+import jcl.lang.BooleanStructImpl;
 import jcl.lang.statics.CompilerVariables;
 import jcl.lang.LispStruct;
 import jcl.lang.PackageStruct;
 import jcl.lang.PackageSymbolStruct;
-import jcl.lang.SymbolStruct;
+import jcl.lang.SymbolStructImpl;
 import jcl.lang.TStruct;
 import jcl.lang.ValuesStruct;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
@@ -53,15 +53,15 @@ public final class MacroExpand1Function extends CommonLispBuiltInFunctionStruct 
 		final MacroExpandResult macroExpandResult = macroExpand1(form, environment);
 		final LispStruct expandedForm = macroExpandResult.getExpandedForm();
 		final boolean wasExpanded = macroExpandResult.wasExpanded();
-		final BooleanStruct wasExpandedBoolean = wasExpanded ? TStruct.INSTANCE : NILStruct.INSTANCE;
+		final BooleanStructImpl wasExpandedBoolean = wasExpanded ? TStruct.INSTANCE : NILStruct.INSTANCE;
 		return ValuesStruct.valueOf(expandedForm, wasExpandedBoolean);
 	}
 
 	public MacroExpandResult macroExpand1(final LispStruct element, final Environment environment) {
 		if (element instanceof ListStruct) {
 			return macroExpand1((ListStruct) element, environment);
-		} else if (element instanceof SymbolStruct) {
-			return macroExpand1((SymbolStruct) element, environment);
+		} else if (element instanceof SymbolStructImpl) {
+			return macroExpand1((SymbolStructImpl) element, environment);
 		} else {
 			return new MacroExpandResult(element, false);
 		}
@@ -70,11 +70,11 @@ public final class MacroExpand1Function extends CommonLispBuiltInFunctionStruct 
 	private static MacroExpandResult macroExpand1(final ListStruct form, final Environment environment) {
 
 		final LispStruct first = form.getCar();
-		if (first instanceof SymbolStruct) {
+		if (first instanceof SymbolStructImpl) {
 
-			final Optional<SymbolStruct> symbolStruct = getSymbolStruct((SymbolStruct) first);
+			final Optional<SymbolStructImpl> symbolStruct = getSymbolStruct((SymbolStructImpl) first);
 			if (symbolStruct.isPresent()) {
-				final SymbolStruct theSymbol = symbolStruct.get();
+				final SymbolStructImpl theSymbol = symbolStruct.get();
 
 				final MacroFunctionExpanderInter macroFunctionExpander = theSymbol.getMacroFunctionExpander();
 
@@ -91,11 +91,11 @@ public final class MacroExpand1Function extends CommonLispBuiltInFunctionStruct 
 		return new MacroExpandResult(form, false);
 	}
 
-	private static MacroExpandResult macroExpand1(final SymbolStruct form, final Environment environment) {
+	private static MacroExpandResult macroExpand1(final SymbolStructImpl form, final Environment environment) {
 
-		final Optional<SymbolStruct> symbolStruct = getSymbolStruct(form);
+		final Optional<SymbolStructImpl> symbolStruct = getSymbolStruct(form);
 		if (symbolStruct.isPresent()) {
-			final SymbolStruct theSymbol = symbolStruct.get();
+			final SymbolStructImpl theSymbol = symbolStruct.get();
 
 			final SymbolMacroExpanderInter symbolMacroExpander = theSymbol.getSymbolMacroExpander();
 
@@ -110,7 +110,7 @@ public final class MacroExpand1Function extends CommonLispBuiltInFunctionStruct 
 		return new MacroExpandResult(form, false);
 	}
 
-	private static Optional<SymbolStruct> getSymbolStruct(final SymbolStruct symbolElement) {
+	private static Optional<SymbolStructImpl> getSymbolStruct(final SymbolStructImpl symbolElement) {
 		final PackageStruct thePackage = symbolElement.getSymbolPackage();
 		if (thePackage != null) {
 
@@ -118,7 +118,7 @@ public final class MacroExpand1Function extends CommonLispBuiltInFunctionStruct 
 			final PackageSymbolStruct thePackageSymbol = thePackage.findSymbol(symbolName);
 
 			if (thePackageSymbol != null) {
-				final SymbolStruct theSymbol = thePackageSymbol.getSymbol();
+				final SymbolStructImpl theSymbol = thePackageSymbol.getSymbol();
 				return Optional.ofNullable(theSymbol);
 			}
 		}

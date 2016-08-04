@@ -5,19 +5,19 @@
 package testground.structures;
 
 import jcl.lang.StructureObjectStruct;
-import jcl.lang.SymbolStruct;
+import jcl.lang.SymbolStructImpl;
 
 @SuppressWarnings("all")
 public class FooStructureObject extends StructureObjectStruct {
 
 	public FooStructureObject() {
-		super(FooStructureClass.INSTANCE, SymbolStruct.valueOf("FOO"), null);
+		super(FooStructureClass.INSTANCE, SymbolStructImpl.valueOf("FOO"), null);
 		initSlotsMap();
 	}
 
 	private void initSlotsMap() {
-		slots.put(SymbolStruct.valueOf("A"), null);
-		slots.put(SymbolStruct.valueOf("B"), null);
-		slots.put(SymbolStruct.valueOf("C"), null);
+		slots.put(SymbolStructImpl.valueOf("A"), null);
+		slots.put(SymbolStructImpl.valueOf("B"), null);
+		slots.put(SymbolStructImpl.valueOf("C"), null);
 	}
 }

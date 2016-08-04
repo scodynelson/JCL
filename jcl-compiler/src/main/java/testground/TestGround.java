@@ -22,7 +22,7 @@ import jcl.lang.ComplexStruct;
 import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.PackageStruct;
-import jcl.lang.SymbolStruct;
+import jcl.lang.SymbolStructImpl;
 import jcl.lang.TStruct;
 import jcl.lang.ValuesStruct;
 import jcl.lang.condition.exception.ProgramErrorException;
@@ -39,18 +39,18 @@ import org.objectweb.asm.Label;
 @SuppressWarnings("all")
 public class TestGround {
 
-	private SymbolStruct UNINTERNED_SYMBOL = SymbolStruct.valueOf("FOO");
+	private SymbolStructImpl UNINTERNED_SYMBOL = SymbolStructImpl.valueOf("FOO");
 
 	private Object blockGen(final Closure currentClosure) {
 
 		final PackageStruct pkg = PackageStruct.findPackage("SYSTEM");
-		final SymbolStruct name = pkg.findSymbol("FOO").getSymbol();
+		final SymbolStructImpl name = pkg.findSymbol("FOO").getSymbol();
 
 		LispStruct result;
 		try {
 			result = LispStructFactory.toCharacter(97);
 		} catch (final ReturnFromException rte) {
-			final SymbolStruct rteName = rte.getName();
+			final SymbolStructImpl rteName = rte.getName();
 			if (rteName.equals(name)) {
 				result = rte.getResult();
 			} else {
@@ -63,7 +63,7 @@ public class TestGround {
 	private Object returnFromGen(final Closure currentClosure) {
 
 		final PackageStruct pkg = PackageStruct.findPackage("SYSTEM");
-		final SymbolStruct name = pkg.findSymbol("FOO").getSymbol();
+		final SymbolStructImpl name = pkg.findSymbol("FOO").getSymbol();
 
 		final LispStruct result = LispStructFactory.toCharacter(97);
 
@@ -213,26 +213,26 @@ public class TestGround {
 	private Object symbolGen() {
 
 		final PackageStruct pkg = PackageStruct.findPackage("SYSTEM");
-		final SymbolStruct symbol = pkg.findSymbol("FOO").getSymbol();
+		final SymbolStructImpl symbol = pkg.findSymbol("FOO").getSymbol();
 
 		return symbol.getValue();
 	}
 
 	private Object uninternedSymbolGen() {
-		final SymbolStruct symbol = UNINTERNED_SYMBOL;
+		final SymbolStructImpl symbol = UNINTERNED_SYMBOL;
 		return symbol;
 	}
 
 	@SuppressWarnings({"unchecked", "rawtypes"})
 	private Object setqGen(final Closure currentClosure) {
 
-		Map<SymbolStruct, LispStruct> closureBindings = null;
+		Map<SymbolStructImpl, LispStruct> closureBindings = null;
 		if (currentClosure != null) {
 			closureBindings = currentClosure.getSymbolBindings();
 		}
 
 		final PackageStruct pkg = PackageStruct.findPackage("SYSTEM");
-		final SymbolStruct symbol = pkg.findSymbol("FOO").getSymbol();
+		final SymbolStructImpl symbol = pkg.findSymbol("FOO").getSymbol();
 
 		LispStruct value = LispStructFactory.toCharacter(97);
 		value = ValuesStruct.extractPrimaryValue(value);
@@ -262,10 +262,10 @@ public class TestGround {
 	private Object letGen(Closure currentClosure) {
 
 		currentClosure = new Closure(currentClosure);
-		final Map<SymbolStruct, LispStruct> closureBindings = currentClosure.getSymbolBindings();
+		final Map<SymbolStructImpl, LispStruct> closureBindings = currentClosure.getSymbolBindings();
 
 		final PackageStruct pkg = PackageStruct.findPackage("SYSTEM");
-		final SymbolStruct symbol = pkg.findSymbol("FOO").getSymbol();
+		final SymbolStructImpl symbol = pkg.findSymbol("FOO").getSymbol();
 
 		LispStruct initForm = LispStructFactory.toCharacter(97);
 		initForm = ValuesStruct.extractPrimaryValue(initForm);
@@ -284,7 +284,7 @@ public class TestGround {
 	private Object symbolMacroletGen(final Closure currentClosure) {
 
 		final PackageStruct pkg = PackageStruct.findPackage("SYSTEM");
-		final SymbolStruct symbol = pkg.findSymbol("FOO").getSymbol();
+		final SymbolStructImpl symbol = pkg.findSymbol("FOO").getSymbol();
 
 		final SymbolMacroExpander symbolMacroExpander = new TestGroundSymbolMacroExpander();
 		symbol.bindSymbolMacroExpander(symbolMacroExpander);
@@ -301,7 +301,7 @@ public class TestGround {
 	private Object symbolFunctionGen() {
 
 		final PackageStruct pkg = PackageStruct.findPackage("SYSTEM");
-		final SymbolStruct symbol = pkg.findSymbol("FOO").getSymbol();
+		final SymbolStructImpl symbol = pkg.findSymbol("FOO").getSymbol();
 
 		return symbol.getFunction();
 	}
@@ -315,7 +315,7 @@ public class TestGround {
 	private Object functionCallGen(final Closure currentClosure) {
 
 		final PackageStruct pkg = PackageStruct.findPackage("SYSTEM");
-		final SymbolStruct symbol = pkg.findSymbol("FOO").getSymbol();
+		final SymbolStructImpl symbol = pkg.findSymbol("FOO").getSymbol();
 
 		final FunctionStruct function = symbol.getFunction();
 
@@ -339,13 +339,13 @@ public class TestGround {
 
 	private Object innerLambdaGen(final Closure currentClosure) {
 
-		Map<SymbolStruct, FunctionStruct> closureBindings = null;
+		Map<SymbolStructImpl, FunctionStruct> closureBindings = null;
 		if (currentClosure != null) {
 			closureBindings = currentClosure.getFunctionBindings();
 		}
 
 		final PackageStruct pkg = PackageStruct.findPackage("SYSTEM");
-		final SymbolStruct symbol = pkg.findSymbol("FOO").getSymbol();
+		final SymbolStructImpl symbol = pkg.findSymbol("FOO").getSymbol();
 
 		final FunctionStruct initForm = new TestGroundLambdaFunction(currentClosure);
 		symbol.bindFunction(initForm);
@@ -398,7 +398,7 @@ public class TestGround {
 		final ListStruct varsAsList = (ListStruct) vars;
 		final List<LispStruct> varsAsJavaList = varsAsList.stream().collect(Collectors.toList());
 		for (final LispStruct currentVar : varsAsJavaList) {
-			if (!(currentVar instanceof SymbolStruct)) {
+			if (!(currentVar instanceof SymbolStructImpl)) {
 				throw new ProgramErrorException("PROGV: Elements in symbols list must be symbols. Got: " + currentVar);
 			}
 		}
@@ -416,7 +416,7 @@ public class TestGround {
 		for (int i = 0; i < numberOfProgvVars; i++) {
 
 			// NOTE: We can safely cast here since we checked the type earlier
-			final SymbolStruct var = (SymbolStruct) varsAsJavaList.get(i);
+			final SymbolStructImpl var = (SymbolStructImpl) varsAsJavaList.get(i);
 
 			LispStruct val = null;
 			if (i < numberOfProgvVals) {
@@ -433,7 +433,7 @@ public class TestGround {
 		} finally {
 			for (final LispStruct var : varsAsJavaList) {
 				// NOTE: We can safely cast here since we checked the type earlier
-				final SymbolStruct varSymbol = (SymbolStruct) var;
+				final SymbolStructImpl varSymbol = (SymbolStructImpl) var;
 				varSymbol.unbindDynamicValue();
 			}
 		}
@@ -444,7 +444,7 @@ public class TestGround {
 		final TestGroundMacroFunctionExpanderGenerator expanderGenerator = new TestGroundMacroFunctionExpanderGenerator();
 
 		final PackageStruct pkg = PackageStruct.findPackage("SYSTEM");
-		final SymbolStruct macroName = pkg.findSymbol("FOO").getSymbol();
+		final SymbolStructImpl macroName = pkg.findSymbol("FOO").getSymbol();
 
 		macroName.setMacroFunctionExpander(expanderGenerator);
 		return expanderGenerator;

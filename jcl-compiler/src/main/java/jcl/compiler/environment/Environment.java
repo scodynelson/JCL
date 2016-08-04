@@ -15,7 +15,7 @@ import jcl.compiler.environment.binding.Binding;
 import jcl.compiler.environment.binding.SymbolMacroBinding;
 import jcl.compiler.struct.specialoperator.go.GoStruct;
 import jcl.lang.StandardObjectStruct;
-import jcl.lang.SymbolStruct;
+import jcl.lang.SymbolStructImpl;
 
 public class Environment extends StandardObjectStruct {
 
@@ -29,11 +29,11 @@ public class Environment extends StandardObjectStruct {
 
 	private final List<SymbolMacroBinding> symbolMacroBindings = new ArrayList<>();
 
-	private Stack<SymbolStruct> functionNameStack = new Stack<>();
+	private Stack<SymbolStructImpl> functionNameStack = new Stack<>();
 
-	private Set<SymbolStruct> undefinedFunctions = Collections.synchronizedSet(new HashSet<>());
+	private Set<SymbolStructImpl> undefinedFunctions = Collections.synchronizedSet(new HashSet<>());
 
-	private Stack<SymbolStruct> blockStack = new Stack<>();
+	private Stack<SymbolStructImpl> blockStack = new Stack<>();
 
 	private Stack<List<GoStruct<?>>> tagbodyStack = new Stack<>();
 
@@ -55,15 +55,15 @@ public class Environment extends StandardObjectStruct {
 		return parent;
 	}
 
-	public Stack<SymbolStruct> getFunctionNameStack() {
+	public Stack<SymbolStructImpl> getFunctionNameStack() {
 		return functionNameStack;
 	}
 
-	public Set<SymbolStruct> getUndefinedFunctions() {
+	public Set<SymbolStructImpl> getUndefinedFunctions() {
 		return undefinedFunctions;
 	}
 
-	public Stack<SymbolStruct> getBlockStack() {
+	public Stack<SymbolStructImpl> getBlockStack() {
 		return blockStack;
 	}
 
@@ -71,7 +71,7 @@ public class Environment extends StandardObjectStruct {
 		return tagbodyStack;
 	}
 
-	public boolean hasLexicalBinding(final SymbolStruct var) {
+	public boolean hasLexicalBinding(final SymbolStructImpl var) {
 		return lexicalBindings.stream()
 		                      .anyMatch(e -> e.getVar().equals(var));
 	}
@@ -80,7 +80,7 @@ public class Environment extends StandardObjectStruct {
 		lexicalBindings.add(environmentBinding);
 	}
 
-	public boolean hasDynamicBinding(final SymbolStruct var) {
+	public boolean hasDynamicBinding(final SymbolStructImpl var) {
 		return dynamicBindings.stream()
 		                      .anyMatch(e -> e.getVar().equals(var));
 	}
@@ -89,7 +89,7 @@ public class Environment extends StandardObjectStruct {
 		dynamicBindings.add(environmentBinding);
 	}
 
-	public boolean hasSymbolMacroBinding(final SymbolStruct var) {
+	public boolean hasSymbolMacroBinding(final SymbolStructImpl var) {
 		return symbolMacroBindings.stream()
 		                          .anyMatch(e -> e.getVar().equals(var));
 	}

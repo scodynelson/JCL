@@ -21,8 +21,8 @@ import jcl.compiler.struct.specialoperator.SymbolFunctionCallStruct;
 import jcl.compiler.struct.specialoperator.lambda.LambdaStruct;
 import jcl.lang.ConsStruct;
 import jcl.lang.LispStruct;
-import jcl.lang.internal.SpecialOperatorStruct;
-import jcl.lang.SymbolStruct;
+import jcl.lang.internal.SpecialOperatorStructImpl;
+import jcl.lang.SymbolStructImpl;
 import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.java.JavaNameStruct;
 import jcl.lang.ListStruct;
@@ -45,7 +45,7 @@ public class ConsAnalyzer implements Analyzer<LispStruct, ConsStruct> {
 
 		if (NILStruct.INSTANCE.equals(first)) {
 			throw new ProgramErrorException("CONS ANALYZER: First element must be a symbol, a Java method name, or a lambda. Got: " + input);
-		} else if (first instanceof SymbolStruct) {
+		} else if (first instanceof SymbolStructImpl) {
 			return analyzeSymbolFunctionCall(input, environment);
 		} else if (first instanceof JavaNameStruct) {
 			return analyzeJavaMethodCall(input, environment);
@@ -59,14 +59,14 @@ public class ConsAnalyzer implements Analyzer<LispStruct, ConsStruct> {
 	private SymbolFunctionCallStruct analyzeSymbolFunctionCall(final ListStruct input, final Environment environment) {
 		final Iterator<LispStruct> iterator = input.iterator();
 
-		final SymbolStruct functionSymbol = (SymbolStruct) iterator.next();
+		final SymbolStructImpl functionSymbol = (SymbolStructImpl) iterator.next();
 
-		final Set<SymbolStruct> undefinedFunctions = environment.getUndefinedFunctions();
+		final Set<SymbolStructImpl> undefinedFunctions = environment.getUndefinedFunctions();
 		if (functionSymbol.hasFunction()) {
 			// Function is defined
 			undefinedFunctions.remove(functionSymbol);
 		} else {
-			final Stack<SymbolStruct> functionNameStack = environment.getFunctionNameStack();
+			final Stack<SymbolStructImpl> functionNameStack = environment.getFunctionNameStack();
 
 			if (functionNameStack.contains(functionSymbol)) {
 				// Function is undefined, but name exists on the stack to be created
@@ -115,7 +115,7 @@ public class ConsAnalyzer implements Analyzer<LispStruct, ConsStruct> {
 		final ListStruct functionList = (ListStruct) iterator.next();
 
 		final LispStruct functionListFirst = functionList.getCar();
-		if (!functionListFirst.equals(SpecialOperatorStruct.LAMBDA)) {
+		if (!functionListFirst.equals(SpecialOperatorStructImpl.LAMBDA)) {
 			throw new ProgramErrorException("CONS ANALYZER: First element of a lambda list must be the SpecialOperator 'LAMBDA'. Got: " + functionListFirst);
 		}
 

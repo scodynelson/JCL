@@ -5,12 +5,12 @@ import java.math.BigInteger;
 import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.PackageStruct;
-import jcl.lang.internal.VariableStruct;
+import jcl.lang.internal.VariableStructImpl;
 import jcl.lang.condition.exception.TypeErrorException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-class NonNegNilVariable extends VariableStruct<IntegerStruct> {
+class NonNegNilVariable extends VariableStructImpl<IntegerStruct> {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(NonNegNilVariable.class);
 

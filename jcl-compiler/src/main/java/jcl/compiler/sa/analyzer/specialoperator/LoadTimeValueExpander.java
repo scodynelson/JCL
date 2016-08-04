@@ -6,10 +6,10 @@ import jcl.compiler.environment.Environment;
 import jcl.compiler.function.expanders.MacroFunctionExpander;
 import jcl.compiler.functions.EvalFunction;
 import jcl.compiler.sa.FormAnalyzer;
-import jcl.lang.BooleanStruct;
+import jcl.lang.BooleanStructImpl;
 import jcl.lang.LispStruct;
-import jcl.lang.internal.SpecialOperatorStruct;
-import jcl.lang.SymbolStruct;
+import jcl.lang.internal.SpecialOperatorStructImpl;
+import jcl.lang.SymbolStructImpl;
 import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.ListStruct;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,8 +25,8 @@ public class LoadTimeValueExpander extends MacroFunctionExpander<LispStruct> {
 	private EvalFunction evalFunction;
 
 	@Override
-	public SymbolStruct getFunctionSymbol() {
-		return SpecialOperatorStruct.LOAD_TIME_VALUE;
+	public SymbolStructImpl getFunctionSymbol() {
+		return SpecialOperatorStructImpl.LOAD_TIME_VALUE;
 	}
 
 	@Override
@@ -48,7 +48,7 @@ public class LoadTimeValueExpander extends MacroFunctionExpander<LispStruct> {
 			throw new ProgramErrorException("LOAD-TIME-VALUE: Incorrect number of arguments: 3. Expected between 1 and 2 arguments.");
 		}
 
-		if ((readOnlyP != null) && !(readOnlyP instanceof BooleanStruct)) {
+		if ((readOnlyP != null) && !(readOnlyP instanceof BooleanStructImpl)) {
 			throw new ProgramErrorException("LOAD-TIME-VALUE: Read-Only-P value must be either 'T' or 'NIL'. Got: " + readOnlyP);
 		}
 

@@ -4,7 +4,7 @@
 
 package jcl.functions.number;
 
-import jcl.lang.BooleanStruct;
+import jcl.lang.BooleanStructImpl;
 import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
@@ -34,6 +34,6 @@ public final class LogBitPFunction extends CommonLispBuiltInFunctionStruct {
 		final IntegerStruct index = arguments.getRequiredArgument(INTEGER_ARGUMENT, IntegerStruct.class);
 
 		final boolean result = integer.logBitP(index);
-		return BooleanStruct.toLispBoolean(result);
+		return BooleanStructImpl.toLispBoolean(result);
 	}
 }

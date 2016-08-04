@@ -5,12 +5,12 @@
 package jcl.type;
 
 import jcl.lang.statics.GlobalPackageStruct;
-import jcl.lang.SymbolStruct;
+import jcl.lang.SymbolStructImpl;
 
 /**
  * Abstract base class for all {@link LispType} implementations.
  */
-public class TypeBaseClass extends SymbolStruct implements LispType {
+public class TypeBaseClass extends SymbolStructImpl implements LispType {
 
 	/**
 	 * Protected constructor.

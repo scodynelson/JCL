@@ -4,7 +4,7 @@
 
 package jcl.functions.readtable;
 
-import jcl.lang.BooleanStruct;
+import jcl.lang.BooleanStructImpl;
 import jcl.lang.LispStruct;
 import jcl.lang.TStruct;
 import jcl.lang.condition.exception.TypeErrorException;
@@ -57,14 +57,14 @@ public final class ReadPreservingWhitespaceFunction extends CommonLispBuiltInFun
 			throw new TypeErrorException("The value " + inputStreamArg + " is not either T, NIL, or a STREAM.");
 		}
 
-		final BooleanStruct eofErrorP = arguments.getOptionalArgument(EOF_ERROR_ARGUMENT, BooleanStruct.class);
+		final BooleanStructImpl eofErrorP = arguments.getOptionalArgument(EOF_ERROR_ARGUMENT, BooleanStructImpl.class);
 		final LispStruct eofValue = arguments.getOptionalArgument(EOF_VALUE_ARGUMENT);
-		final BooleanStruct recursiveP = arguments.getOptionalArgument(RECURSIVE_P_ARGUMENT, BooleanStruct.class);
+		final BooleanStructImpl recursiveP = arguments.getOptionalArgument(RECURSIVE_P_ARGUMENT, BooleanStructImpl.class);
 		return readPreservingWhitespace(inputStreamStruct, eofErrorP, eofValue, recursiveP);
 	}
 
-	public LispStruct readPreservingWhitespace(final InputStreamStruct inputStreamStruct, final BooleanStruct eofErrorP, final LispStruct eofValue,
-	                                           final BooleanStruct recursiveP) {
+	public LispStruct readPreservingWhitespace(final InputStreamStruct inputStreamStruct, final BooleanStructImpl eofErrorP, final LispStruct eofValue,
+	                                           final BooleanStructImpl recursiveP) {
 
 		return readPreservingWhitespace(inputStreamStruct, eofErrorP.booleanValue(), eofValue, recursiveP.booleanValue());
 	}

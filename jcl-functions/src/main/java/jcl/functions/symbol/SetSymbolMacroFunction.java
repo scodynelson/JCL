@@ -7,7 +7,7 @@ package jcl.functions.symbol;
 import jcl.compiler.function.expanders.SymbolMacroExpander;
 import jcl.compiler.function.expanders.SymbolMacroExpanderImpl;
 import jcl.lang.LispStruct;
-import jcl.lang.SymbolStruct;
+import jcl.lang.SymbolStructImpl;
 import jcl.lang.function.SystemBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
@@ -31,7 +31,7 @@ public final class SetSymbolMacroFunction extends SystemBuiltInFunctionStruct {
 
 	@Override
 	public LispStruct apply(final Arguments arguments) {
-		final SymbolStruct symbol = arguments.getRequiredArgument(SYMBOL_ARGUMENT, SymbolStruct.class);
+		final SymbolStructImpl symbol = arguments.getRequiredArgument(SYMBOL_ARGUMENT, SymbolStructImpl.class);
 		final LispStruct expansion = arguments.getRequiredArgument(EXPANSION_ARGUMENT);
 
 		final SymbolMacroExpander symbolMacroExpander = new SymbolMacroExpanderImpl(expansion);

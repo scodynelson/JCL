@@ -7,8 +7,8 @@ import jcl.compiler.function.expanders.MacroFunctionExpander;
 import jcl.compiler.sa.FormAnalyzer;
 import jcl.compiler.struct.specialoperator.IfStruct;
 import jcl.lang.LispStruct;
-import jcl.lang.internal.SpecialOperatorStruct;
-import jcl.lang.SymbolStruct;
+import jcl.lang.internal.SpecialOperatorStructImpl;
+import jcl.lang.SymbolStructImpl;
 import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.ListStruct;
 import jcl.lang.NILStruct;
@@ -22,8 +22,8 @@ public class IfExpander extends MacroFunctionExpander<IfStruct> {
 	private FormAnalyzer formAnalyzer;
 
 	@Override
-	public SymbolStruct getFunctionSymbol() {
-		return SpecialOperatorStruct.IF;
+	public SymbolStructImpl getFunctionSymbol() {
+		return SpecialOperatorStructImpl.IF;
 	}
 
 	@Override

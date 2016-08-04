@@ -16,10 +16,10 @@ import jcl.compiler.struct.specialoperator.SetqStruct;
 import jcl.compiler.struct.specialoperator.SymbolCompilerFunctionStruct;
 import jcl.compiler.struct.specialoperator.SymbolFunctionCallStruct;
 import jcl.compiler.struct.specialoperator.lambda.LambdaStruct;
-import jcl.lang.BooleanStruct;
+import jcl.lang.BooleanStructImpl;
 import jcl.lang.statics.CompilerVariables;
 import jcl.lang.LispStruct;
-import jcl.lang.SymbolStruct;
+import jcl.lang.SymbolStructImpl;
 import jcl.lang.TStruct;
 import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
@@ -74,7 +74,7 @@ public final class EvalFunction extends CommonLispBuiltInFunctionStruct {
 	@SuppressWarnings({"unchecked", "rawtypes"})
 	public LispStruct eval(final LispStruct originalExp, final Environment environment) {
 
-		final BooleanStruct oldCompileTopLevel = CompilerVariables.COMPILE_TOP_LEVEL.getVariableValue();
+		final BooleanStructImpl oldCompileTopLevel = CompilerVariables.COMPILE_TOP_LEVEL.getVariableValue();
 		CompilerVariables.COMPILE_TOP_LEVEL.setValue(NILStruct.INSTANCE);
 
 		LispStruct exp;
@@ -84,8 +84,8 @@ public final class EvalFunction extends CommonLispBuiltInFunctionStruct {
 			CompilerVariables.COMPILE_TOP_LEVEL.setValue(oldCompileTopLevel);
 		}
 
-		if (exp instanceof SymbolStruct) {
-			final SymbolStruct symbol = (SymbolStruct) exp;
+		if (exp instanceof SymbolStructImpl) {
+			final SymbolStructImpl symbol = (SymbolStructImpl) exp;
 			return symbol.getValue();
 		}
 
@@ -101,7 +101,7 @@ public final class EvalFunction extends CommonLispBuiltInFunctionStruct {
 			LispStruct finalForm = NILStruct.INSTANCE;
 
 			for (final SetqStruct.SetqPair setqPair : setqPairs) {
-				final SymbolStruct var = setqPair.getVar();
+				final SymbolStructImpl var = setqPair.getVar();
 				final LispStruct form = setqPair.getForm();
 				final LispStruct evaluatedForm = eval(form);
 
@@ -126,7 +126,7 @@ public final class EvalFunction extends CommonLispBuiltInFunctionStruct {
 
 		if (exp instanceof SymbolCompilerFunctionStruct) {
 			final SymbolCompilerFunctionStruct symbolCompilerFunction = (SymbolCompilerFunctionStruct) exp;
-			final SymbolStruct functionSymbol = symbolCompilerFunction.getFunctionSymbol();
+			final SymbolStructImpl functionSymbol = symbolCompilerFunction.getFunctionSymbol();
 			return functionSymbol.getFunction();
 		}
 
@@ -141,7 +141,7 @@ public final class EvalFunction extends CommonLispBuiltInFunctionStruct {
 		if (exp instanceof SymbolFunctionCallStruct) {
 			final SymbolFunctionCallStruct functionCall = (SymbolFunctionCallStruct) exp;
 			final SymbolCompilerFunctionStruct symbolCompilerFunction = functionCall.getSymbolCompilerFunction();
-			final SymbolStruct functionSymbol = symbolCompilerFunction.getFunctionSymbol();
+			final SymbolStructImpl functionSymbol = symbolCompilerFunction.getFunctionSymbol();
 
 			final FunctionStruct function = functionSymbol.getFunction();
 
@@ -223,10 +223,10 @@ public final class EvalFunction extends CommonLispBuiltInFunctionStruct {
 		return exp;
 	}
 
-	private FunctionStruct getCompiledExpression(final BooleanStruct oldCompileTopLevel, final CompilerSpecialOperatorStruct exp) {
+	private FunctionStruct getCompiledExpression(final BooleanStructImpl oldCompileTopLevel, final CompilerSpecialOperatorStruct exp) {
 		CompilerVariables.COMPILE_TOP_LEVEL.setValue(NILStruct.INSTANCE);
 
-		final BooleanStruct oldConvertingForInterpreter = CompilerVariables.CONVERTING_FOR_INTERPRETER.getVariableValue();
+		final BooleanStructImpl oldConvertingForInterpreter = CompilerVariables.CONVERTING_FOR_INTERPRETER.getVariableValue();
 		CompilerVariables.CONVERTING_FOR_INTERPRETER.setValue(TStruct.INSTANCE);
 
 		final FunctionStruct function;

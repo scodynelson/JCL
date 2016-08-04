@@ -4,11 +4,11 @@
 
 package jcl.compiler.struct.specialoperator.go;
 
-import jcl.lang.SymbolStruct;
+import jcl.lang.SymbolStructImpl;
 
-public class GoSymbolStruct extends GoStruct<SymbolStruct> {
+public class GoSymbolStruct extends GoStruct<SymbolStructImpl> {
 
-	public GoSymbolStruct(final SymbolStruct tag) {
+	public GoSymbolStruct(final SymbolStructImpl tag) {
 		super(tag);
 	}
 }

@@ -77,7 +77,7 @@ public interface LispStruct {
 	 *
 	 * @return a converted symbol, or a throw {@link TypeErrorException}
 	 */
-	default Supplier<SymbolStruct> asSymbol() {
+	default Supplier<SymbolStructImpl> asSymbol() {
 		throw new TypeErrorException("Type cannot be converted to Symbol.");
 	}
 

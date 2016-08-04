@@ -14,8 +14,8 @@ import jcl.compiler.struct.specialoperator.TagbodyStruct;
 import jcl.compiler.struct.specialoperator.go.GoStruct;
 import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
-import jcl.lang.internal.SpecialOperatorStruct;
-import jcl.lang.SymbolStruct;
+import jcl.lang.internal.SpecialOperatorStructImpl;
+import jcl.lang.SymbolStructImpl;
 import jcl.lang.ListStruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -27,8 +27,8 @@ public class TagbodyExpander extends MacroFunctionExpander<TagbodyStruct> {
 	private FormAnalyzer formAnalyzer;
 
 	@Override
-	public SymbolStruct getFunctionSymbol() {
-		return SpecialOperatorStruct.TAGBODY;
+	public SymbolStructImpl getFunctionSymbol() {
+		return SpecialOperatorStructImpl.TAGBODY;
 	}
 
 	@Override
@@ -50,7 +50,7 @@ public class TagbodyExpander extends MacroFunctionExpander<TagbodyStruct> {
 		// NOTE: We don't care about adding this to the TagbodyStack since it is generated just for us here and will
 		//       will never be used as a real transfer of control point.
 		if (!forms.isEmpty() && !isTagbodyTag(forms.get(0))) {
-			final SymbolStruct defaultFormsTag = SymbolStruct.valueOf("Tag-" + UUID.randomUUID());
+			final SymbolStructImpl defaultFormsTag = SymbolStructImpl.valueOf("Tag-" + UUID.randomUUID());
 			forms.push(defaultFormsTag);
 		}
 
@@ -65,6 +65,6 @@ public class TagbodyExpander extends MacroFunctionExpander<TagbodyStruct> {
 	}
 
 	private static boolean isTagbodyTag(final LispStruct element) {
-		return (element instanceof SymbolStruct) || (element instanceof IntegerStruct);
+		return (element instanceof SymbolStructImpl) || (element instanceof IntegerStruct);
 	}
 }

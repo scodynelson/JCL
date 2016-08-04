@@ -9,7 +9,7 @@ import java.util.Optional;
 import javax.annotation.PostConstruct;
 
 import jcl.lang.LispStruct;
-import jcl.lang.internal.SpecialOperatorStruct;
+import jcl.lang.internal.SpecialOperatorStructImpl;
 import jcl.lang.condition.exception.ReaderErrorException;
 import jcl.lang.factory.LispStructFactory;
 import jcl.lang.function.ReaderMacroFunction;
@@ -46,6 +46,6 @@ public class ApostropheReaderMacroFunction extends ReaderMacroFunction {
 			throw new ReaderErrorException("Missing expression.");
 		}
 
-		return LispStructFactory.toProperList(SpecialOperatorStruct.QUOTE, token);
+		return LispStructFactory.toProperList(SpecialOperatorStructImpl.QUOTE, token);
 	}
 }

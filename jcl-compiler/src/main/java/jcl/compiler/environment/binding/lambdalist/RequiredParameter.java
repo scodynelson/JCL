@@ -8,24 +8,24 @@ import java.util.Collections;
 import java.util.List;
 
 import jcl.lang.PackageStruct;
-import jcl.lang.SymbolStruct;
+import jcl.lang.SymbolStructImpl;
 import jcl.type.TType;
 
 public class RequiredParameter extends Parameter {
 
-	public RequiredParameter(final SymbolStruct var) {
+	public RequiredParameter(final SymbolStructImpl var) {
 		this(var, false);
 	}
 
-	public RequiredParameter(final SymbolStruct var, final boolean isSpecial) {
+	public RequiredParameter(final SymbolStructImpl var, final boolean isSpecial) {
 		this(var, null, isSpecial);
 	}
 
-	public RequiredParameter(final SymbolStruct var, final DestructuringLambdaList destructuringForm) {
+	public RequiredParameter(final SymbolStructImpl var, final DestructuringLambdaList destructuringForm) {
 		this(var, destructuringForm, false);
 	}
 
-	public RequiredParameter(final SymbolStruct var, final DestructuringLambdaList destructuringForm,
+	public RequiredParameter(final SymbolStructImpl var, final DestructuringLambdaList destructuringForm,
 	                         final boolean isSpecial) {
 		super(var, destructuringForm, TType.INSTANCE, null, isSpecial);
 	}
@@ -36,7 +36,7 @@ public class RequiredParameter extends Parameter {
 
 	public static final class Builder {
 
-		private final SymbolStruct var;
+		private final SymbolStructImpl var;
 
 		private DestructuringLambdaList destructuringForm;
 

@@ -5,17 +5,17 @@
 package jcl.compiler.function.expanders;
 
 import jcl.lang.LispStruct;
-import jcl.lang.SymbolStruct;
+import jcl.lang.SymbolStructImpl;
 import jcl.lang.function.expander.SymbolMacroExpanderInter;
 
-public abstract class SymbolMacroExpander extends MacroExpander<LispStruct, SymbolStruct> implements SymbolMacroExpanderInter {
+public abstract class SymbolMacroExpander extends MacroExpander<LispStruct, SymbolStructImpl> implements SymbolMacroExpanderInter {
 
 	protected SymbolMacroExpander(final String documentation) {
 		super(documentation);
 	}
 
 	@Override
-	public SymbolStruct getFunctionSymbol() {
+	public SymbolStructImpl getFunctionSymbol() {
 		return null;
 	}
 

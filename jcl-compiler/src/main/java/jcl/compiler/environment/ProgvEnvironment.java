@@ -4,7 +4,7 @@
 
 package jcl.compiler.environment;
 
-import jcl.lang.SymbolStruct;
+import jcl.lang.SymbolStructImpl;
 
 public class ProgvEnvironment extends Environment {
 
@@ -13,7 +13,7 @@ public class ProgvEnvironment extends Environment {
 	}
 
 	@Override
-	public boolean hasLexicalBinding(final SymbolStruct var) {
+	public boolean hasLexicalBinding(final SymbolStructImpl var) {
 		return getParent().hasLexicalBinding(var);
 	}
 }

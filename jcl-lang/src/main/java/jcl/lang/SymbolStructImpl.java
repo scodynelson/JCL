@@ -20,9 +20,9 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
- * The {@link SymbolStruct} is the object representation of a Lisp 'symbol' type.
+ * The {@link SymbolStructImpl} is the object representation of a Lisp 'symbol' type.
  */
-public class SymbolStruct extends BuiltInClassStruct {
+public class SymbolStructImpl extends BuiltInClassStruct {
 
 	protected final String name;
 
@@ -50,7 +50,7 @@ public class SymbolStruct extends BuiltInClassStruct {
 	 * @param name
 	 * 		the symbol name
 	 */
-	private SymbolStruct(final String name) {
+	private SymbolStructImpl(final String name) {
 		this(name, null, null, null);
 	}
 
@@ -62,7 +62,7 @@ public class SymbolStruct extends BuiltInClassStruct {
 	 * @param symbolPackage
 	 * 		the symbol package
 	 */
-	protected SymbolStruct(final String name, final PackageStruct symbolPackage) {
+	protected SymbolStructImpl(final String name, final PackageStruct symbolPackage) {
 		this(name, symbolPackage, null, null);
 	}
 
@@ -74,7 +74,7 @@ public class SymbolStruct extends BuiltInClassStruct {
 	 * @param value
 	 * 		the symbol value
 	 */
-	protected SymbolStruct(final String name, final LispStruct value) {
+	protected SymbolStructImpl(final String name, final LispStruct value) {
 		this(name, null, value, null);
 	}
 
@@ -86,7 +86,7 @@ public class SymbolStruct extends BuiltInClassStruct {
 	 * @param function
 	 * 		the symbol function
 	 */
-	protected SymbolStruct(final String name, final FunctionStruct function) {
+	protected SymbolStructImpl(final String name, final FunctionStruct function) {
 		this(name, null, null, function);
 	}
 
@@ -100,7 +100,7 @@ public class SymbolStruct extends BuiltInClassStruct {
 	 * @param value
 	 * 		the symbol value
 	 */
-	protected SymbolStruct(final String name, final PackageStruct symbolPackage, final LispStruct value) {
+	protected SymbolStructImpl(final String name, final PackageStruct symbolPackage, final LispStruct value) {
 		this(SymbolType.INSTANCE, name, symbolPackage, value, null);
 	}
 
@@ -116,7 +116,7 @@ public class SymbolStruct extends BuiltInClassStruct {
 	 * @param function
 	 * 		the symbol function
 	 */
-	protected SymbolStruct(final String name, final PackageStruct symbolPackage, final LispStruct value, final FunctionStruct function) {
+	protected SymbolStructImpl(final String name, final PackageStruct symbolPackage, final LispStruct value, final FunctionStruct function) {
 		this(SymbolType.INSTANCE, name, symbolPackage, value, function);
 	}
 
@@ -134,8 +134,8 @@ public class SymbolStruct extends BuiltInClassStruct {
 	 * @param function
 	 * 		the symbol function
 	 */
-	protected SymbolStruct(final LispType lispType,
-	                       final String name, final PackageStruct symbolPackage, final LispStruct value, final FunctionStruct function) {
+	protected SymbolStructImpl(final LispType lispType,
+	                           final String name, final PackageStruct symbolPackage, final LispStruct value, final FunctionStruct function) {
 		super(lispType, null, null);
 		this.name = name;
 
@@ -161,8 +161,8 @@ public class SymbolStruct extends BuiltInClassStruct {
 		}
 	}
 
-	public static SymbolStruct valueOf(final String name) {
-		return new SymbolStruct(name);
+	public static SymbolStructImpl valueOf(final String name) {
+		return new SymbolStructImpl(name);
 	}
 
 	/**
@@ -576,9 +576,9 @@ public class SymbolStruct extends BuiltInClassStruct {
 	 *
 	 * @return the newly copied symbol
 	 */
-	public SymbolStruct copySymbol(final boolean copyProperties) {
+	public SymbolStructImpl copySymbol(final boolean copyProperties) {
 		if (copyProperties) {
-			final SymbolStruct newSymbol = new SymbolStruct(name);
+			final SymbolStructImpl newSymbol = new SymbolStructImpl(name);
 			newSymbol.lexicalValueStack.addAll(lexicalValueStack);
 			newSymbol.dynamicValueStack.addAll(dynamicValueStack);
 			newSymbol.functionStack.addAll(functionStack);
@@ -590,7 +590,7 @@ public class SymbolStruct extends BuiltInClassStruct {
 			newSymbol.properties = properties.copyList();
 			return newSymbol;
 		} else {
-			return new SymbolStruct(name);
+			return new SymbolStructImpl(name);
 		}
 	}
 
@@ -620,7 +620,7 @@ public class SymbolStruct extends BuiltInClassStruct {
 		if (obj.getClass() != getClass()) {
 			return false;
 		}
-		final SymbolStruct rhs = (SymbolStruct) obj;
+		final SymbolStructImpl rhs = (SymbolStructImpl) obj;
 		return new EqualsBuilder().appendSuper(super.equals(obj))
 		                          .append(name, rhs.name)
 		                          .append(symbolPackage, rhs.symbolPackage)

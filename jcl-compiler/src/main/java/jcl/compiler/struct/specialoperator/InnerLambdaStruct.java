@@ -8,7 +8,7 @@ import java.util.List;
 
 import jcl.compiler.environment.Environment;
 import jcl.compiler.struct.CompilerSpecialOperatorStruct;
-import jcl.lang.SymbolStruct;
+import jcl.lang.SymbolStructImpl;
 
 public class InnerLambdaStruct extends CompilerSpecialOperatorStruct {
 
@@ -38,19 +38,19 @@ public class InnerLambdaStruct extends CompilerSpecialOperatorStruct {
 
 	public static class InnerLambdaVar {
 
-		private final SymbolStruct var;
+		private final SymbolStructImpl var;
 
 		private final CompilerFunctionStruct initForm;
 
 		private final boolean isSpecial;
 
-		public InnerLambdaVar(final SymbolStruct var, final CompilerFunctionStruct initForm, final boolean isSpecial) {
+		public InnerLambdaVar(final SymbolStructImpl var, final CompilerFunctionStruct initForm, final boolean isSpecial) {
 			this.var = var;
 			this.initForm = initForm;
 			this.isSpecial = isSpecial;
 		}
 
-		public SymbolStruct getVar() {
+		public SymbolStructImpl getVar() {
 			return var;
 		}
 

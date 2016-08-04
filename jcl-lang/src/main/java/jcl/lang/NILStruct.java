@@ -14,7 +14,7 @@ import org.apache.commons.lang3.ArrayUtils;
 /**
  * The {@link NILStruct} is the object representation of a Lisp 'nil' type.
  */
-public final class NILStruct extends BooleanStruct implements ListStruct {
+public final class NILStruct extends BooleanStructImpl implements ListStruct {
 
 	public static final NILStruct INSTANCE = new NILStruct();
 

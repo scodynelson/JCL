@@ -10,8 +10,8 @@ import jcl.compiler.function.expanders.MacroFunctionExpander;
 import jcl.compiler.struct.specialoperator.go.GoStruct;
 import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
-import jcl.lang.internal.SpecialOperatorStruct;
-import jcl.lang.SymbolStruct;
+import jcl.lang.internal.SpecialOperatorStructImpl;
+import jcl.lang.SymbolStructImpl;
 import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.ListStruct;
 import org.springframework.stereotype.Component;
@@ -20,8 +20,8 @@ import org.springframework.stereotype.Component;
 public class GoExpander extends MacroFunctionExpander<GoStruct<?>> {
 
 	@Override
-	public SymbolStruct getFunctionSymbol() {
-		return SpecialOperatorStruct.GO;
+	public SymbolStructImpl getFunctionSymbol() {
+		return SpecialOperatorStructImpl.GO;
 	}
 
 	@Override
@@ -46,7 +46,7 @@ public class GoExpander extends MacroFunctionExpander<GoStruct<?>> {
 	}
 
 	private static boolean isTagbodyTag(final LispStruct element) {
-		return (element instanceof SymbolStruct) || (element instanceof IntegerStruct);
+		return (element instanceof SymbolStructImpl) || (element instanceof IntegerStruct);
 	}
 
 	private GoStruct<?> getGoTag(final Environment environment, final LispStruct tagToFind) {

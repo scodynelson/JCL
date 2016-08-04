@@ -15,7 +15,7 @@ import javax.annotation.PostConstruct;
 
 import jcl.lang.ConsStruct;
 import jcl.lang.LispStruct;
-import jcl.lang.SymbolStruct;
+import jcl.lang.SymbolStructImpl;
 import jcl.lang.condition.exception.ReaderErrorException;
 import jcl.lang.function.ReaderMacroFunction;
 import jcl.lang.NILStruct;
@@ -52,7 +52,7 @@ public class SharpEqualsSignReaderMacroFunction extends ReaderMacroFunction {
 		final BigInteger numberArgumentValue = numberArgument.get();
 
 		final Map<BigInteger, LispStruct> sharpEqualFinalTable = reader.getSharpEqualFinalTable();
-		final Map<BigInteger, SymbolStruct> sharpEqualTempTable = reader.getSharpEqualTempTable();
+		final Map<BigInteger, SymbolStructImpl> sharpEqualTempTable = reader.getSharpEqualTempTable();
 
 		if (sharpEqualFinalTable.containsKey(numberArgumentValue)
 				|| sharpEqualTempTable.containsKey(numberArgumentValue)) {
@@ -60,12 +60,12 @@ public class SharpEqualsSignReaderMacroFunction extends ReaderMacroFunction {
 		}
 
 		final String labelTagName = UUID.randomUUID().toString();
-		final SymbolStruct labelTag = SymbolStruct.valueOf(labelTagName);
+		final SymbolStructImpl labelTag = SymbolStructImpl.valueOf(labelTagName);
 		sharpEqualTempTable.put(numberArgumentValue, labelTag);
 
 		final LispStruct token = reader.read(true, NILStruct.INSTANCE, true);
 
-		final Map<SymbolStruct, LispStruct> sharpEqualReplTable = reader.getSharpEqualReplTable();
+		final Map<SymbolStructImpl, LispStruct> sharpEqualReplTable = reader.getSharpEqualReplTable();
 		sharpEqualReplTable.put(labelTag, token);
 
 		final Set<LispStruct> sharpEqualCircleSet = new HashSet<>();
@@ -77,7 +77,7 @@ public class SharpEqualsSignReaderMacroFunction extends ReaderMacroFunction {
 	}
 
 	/**
-	 * Replaces the {@link SymbolStruct} tags located within the provided {@link LispStruct} token with the mapped
+	 * Replaces the {@link SymbolStructImpl} tags located within the provided {@link LispStruct} token with the mapped
 	 * token values located within the provided {@code sharpEqualReplTable} {@link Map}. Circularities are also
 	 * accounted for by using the provided {@code sharpEqualCircleSet} {@link Set} to keep track of the {@link
 	 * ConsStruct} tokens throughout the replacement process.
@@ -85,20 +85,20 @@ public class SharpEqualsSignReaderMacroFunction extends ReaderMacroFunction {
 	 * NOTE: This method destructively modified the provided {@link LispStruct} token if it is a {@link ConsStruct}
 	 *
 	 * @param token
-	 * 		the {@link LispStruct} token to replace {@link SymbolStruct} tags with their mapped {@link LispStruct} tokens
+	 * 		the {@link LispStruct} token to replace {@link SymbolStructImpl} tags with their mapped {@link LispStruct} tokens
 	 * @param sharpEqualReplTable
-	 * 		the {@link Map} of {@link SymbolStruct} tags to their mapped {@link LispStruct} tokens
+	 * 		the {@link Map} of {@link SymbolStructImpl} tags to their mapped {@link LispStruct} tokens
 	 * @param sharpEqualCircleSet
 	 * 		the {@link Set} of {@link ConsStruct} tokens within the provided {@link LispStruct} token used to track
 	 * 		circularities.
 	 *
-	 * @return the modified token with all {@link SymbolStruct} tags replaced with their corresponding {@link
+	 * @return the modified token with all {@link SymbolStructImpl} tags replaced with their corresponding {@link
 	 * LispStruct} tokens
 	 */
-	private static LispStruct replaceTagsWithTokens(final LispStruct token, final Map<SymbolStruct, LispStruct> sharpEqualReplTable,
+	private static LispStruct replaceTagsWithTokens(final LispStruct token, final Map<SymbolStructImpl, LispStruct> sharpEqualReplTable,
 	                                                final Set<LispStruct> sharpEqualCircleSet) {
 
-		if (token instanceof SymbolStruct) {
+		if (token instanceof SymbolStructImpl) {
 			if (sharpEqualReplTable.containsKey(token)) {
 				return sharpEqualReplTable.get(token);
 			}

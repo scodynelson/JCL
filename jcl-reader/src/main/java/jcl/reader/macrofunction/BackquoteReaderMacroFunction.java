@@ -11,8 +11,8 @@ import javax.annotation.PostConstruct;
 import jcl.lang.ConsStruct;
 import jcl.lang.statics.GlobalPackageStruct;
 import jcl.lang.LispStruct;
-import jcl.lang.internal.SpecialOperatorStruct;
-import jcl.lang.SymbolStruct;
+import jcl.lang.internal.SpecialOperatorStructImpl;
+import jcl.lang.SymbolStructImpl;
 import jcl.lang.TStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
 import jcl.lang.factory.LispStructFactory;
@@ -31,18 +31,18 @@ import org.springframework.stereotype.Component;
 @Component
 public class BackquoteReaderMacroFunction extends ReaderMacroFunction {
 
-	private static final SymbolStruct APPEND = GlobalPackageStruct.COMMON_LISP.intern("APPEND").getSymbol();
-	private static final SymbolStruct CONS = GlobalPackageStruct.COMMON_LISP.intern("CONS").getSymbol();
-	private static final SymbolStruct LIST = GlobalPackageStruct.COMMON_LISP.intern("LIST").getSymbol();
-	private static final SymbolStruct LIST_STAR = GlobalPackageStruct.COMMON_LISP.intern("LIST*").getSymbol();
-	private static final SymbolStruct NCONC = GlobalPackageStruct.COMMON_LISP.intern("NCONC").getSymbol();
+	private static final SymbolStructImpl APPEND = GlobalPackageStruct.COMMON_LISP.intern("APPEND").getSymbol();
+	private static final SymbolStructImpl CONS = GlobalPackageStruct.COMMON_LISP.intern("CONS").getSymbol();
+	private static final SymbolStructImpl LIST = GlobalPackageStruct.COMMON_LISP.intern("LIST").getSymbol();
+	private static final SymbolStructImpl LIST_STAR = GlobalPackageStruct.COMMON_LISP.intern("LIST*").getSymbol();
+	private static final SymbolStructImpl NCONC = GlobalPackageStruct.COMMON_LISP.intern("NCONC").getSymbol();
 
-	private static final SymbolStruct LIST_TO_VECTOR = GlobalPackageStruct.SYSTEM.intern("LIST-TO-VECTOR").getSymbol();
+	private static final SymbolStructImpl LIST_TO_VECTOR = GlobalPackageStruct.SYSTEM.intern("LIST-TO-VECTOR").getSymbol();
 
-	public static final SymbolStruct BQ_COMMA_FLAG = GlobalPackageStruct.BACKQUOTE.intern(",").getSymbol();
-	public static final SymbolStruct BQ_AT_FLAG = GlobalPackageStruct.BACKQUOTE.intern(",@").getSymbol();
-	public static final SymbolStruct BQ_DOT_FLAG = GlobalPackageStruct.BACKQUOTE.intern(",.").getSymbol();
-	public static final SymbolStruct BQ_VECTOR_FLAG = GlobalPackageStruct.BACKQUOTE.intern("bqv").getSymbol();
+	public static final SymbolStructImpl BQ_COMMA_FLAG = GlobalPackageStruct.BACKQUOTE.intern(",").getSymbol();
+	public static final SymbolStructImpl BQ_AT_FLAG = GlobalPackageStruct.BACKQUOTE.intern(",@").getSymbol();
+	public static final SymbolStructImpl BQ_DOT_FLAG = GlobalPackageStruct.BACKQUOTE.intern(",.").getSymbol();
+	public static final SymbolStructImpl BQ_VECTOR_FLAG = GlobalPackageStruct.BACKQUOTE.intern("bqv").getSymbol();
 
 	/**
 	 * Initializes the reader macro function and adds it to the global readtable.
@@ -61,7 +61,7 @@ public class BackquoteReaderMacroFunction extends ReaderMacroFunction {
 			final LispStruct code = reader.read(true, NILStruct.INSTANCE, true);
 			final BackquoteReturn backquoteReturn = backquotify(code);
 
-			final SymbolStruct flag = backquoteReturn.getFlag();
+			final SymbolStructImpl flag = backquoteReturn.getFlag();
 			final LispStruct thing = backquoteReturn.getThing();
 
 			if (BQ_AT_FLAG.equals(flag)) {
@@ -83,16 +83,16 @@ public class BackquoteReaderMacroFunction extends ReaderMacroFunction {
 			return new BackquoteReturn(NILStruct.INSTANCE, code);
 		}
 
-		if (code instanceof SymbolStruct) {
+		if (code instanceof SymbolStructImpl) {
 			// Need to check the constant symbols here
-			final SymbolStruct codeSymbol = (SymbolStruct) code;
+			final SymbolStructImpl codeSymbol = (SymbolStructImpl) code;
 			if (TStruct.INSTANCE.equals(codeSymbol)) {
 				return new BackquoteReturn(TStruct.INSTANCE, code);
 			}
 			if (NILStruct.INSTANCE.equals(codeSymbol)) {
 				return new BackquoteReturn(NILStruct.INSTANCE, code);
 			}
-			return new BackquoteReturn(SpecialOperatorStruct.QUOTE, code);
+			return new BackquoteReturn(SpecialOperatorStructImpl.QUOTE, code);
 		}
 
 		if (code instanceof ConsStruct) {
@@ -102,7 +102,7 @@ public class BackquoteReaderMacroFunction extends ReaderMacroFunction {
 			final LispStruct cdrConsCode = consCode.getCdr();
 
 			if (BQ_AT_FLAG.equals(carConsCode) || BQ_DOT_FLAG.equals(carConsCode)) {
-				final SymbolStruct carConsCodeFlag = (SymbolStruct) carConsCode;
+				final SymbolStructImpl carConsCodeFlag = (SymbolStructImpl) carConsCode;
 				return new BackquoteReturn(carConsCodeFlag, cdrConsCode);
 			}
 
@@ -113,7 +113,7 @@ public class BackquoteReaderMacroFunction extends ReaderMacroFunction {
 			if (BQ_VECTOR_FLAG.equals(carConsCode)) {
 				final BackquoteReturn cdrBqtify = backquotify(cdrConsCode);
 
-				final SymbolStruct cdrBqtifyFlag = cdrBqtify.getFlag();
+				final SymbolStructImpl cdrBqtifyFlag = cdrBqtify.getFlag();
 				final LispStruct cdrBqtifyThing = cdrBqtify.getThing();
 
 				final LispStruct cdrBqtify_1 = backquotify_1(cdrBqtifyFlag, cdrBqtifyThing);
@@ -122,12 +122,12 @@ public class BackquoteReaderMacroFunction extends ReaderMacroFunction {
 
 			final BackquoteReturn carBqtify = backquotify(carConsCode);
 
-			final SymbolStruct carBqtifyFlag = carBqtify.getFlag();
+			final SymbolStructImpl carBqtifyFlag = carBqtify.getFlag();
 			final LispStruct carBqtifyThing = carBqtify.getThing();
 
 			final BackquoteReturn cdrBqtify = backquotify(cdrConsCode);
 
-			final SymbolStruct cdrBqtifyFlag = cdrBqtify.getFlag();
+			final SymbolStructImpl cdrBqtifyFlag = cdrBqtify.getFlag();
 			final LispStruct cdrBqtifyThing = cdrBqtify.getThing();
 
 			if (BQ_AT_FLAG.equals(cdrBqtifyFlag)) {
@@ -148,12 +148,12 @@ public class BackquoteReaderMacroFunction extends ReaderMacroFunction {
 
 			if (NILStruct.INSTANCE.equals(cdrBqtifyFlag)) {
 
-				if (SpecialOperatorStruct.QUOTE.equals(carBqtifyFlag)
+				if (SpecialOperatorStructImpl.QUOTE.equals(carBqtifyFlag)
 						|| TStruct.INSTANCE.equals(carBqtifyFlag)
 						|| NILStruct.INSTANCE.equals(carBqtifyFlag)) {
 
 					final ListStruct bqReturnThing = LispStructFactory.toProperList(carBqtifyThing);
-					return new BackquoteReturn(SpecialOperatorStruct.QUOTE, bqReturnThing);
+					return new BackquoteReturn(SpecialOperatorStructImpl.QUOTE, bqReturnThing);
 				} else {
 
 					final LispStruct backquotify_1 = backquotify_1(carBqtifyFlag, carBqtifyThing);
@@ -163,15 +163,15 @@ public class BackquoteReaderMacroFunction extends ReaderMacroFunction {
 				}
 			}
 
-			if (SpecialOperatorStruct.QUOTE.equals(cdrBqtifyFlag)
+			if (SpecialOperatorStructImpl.QUOTE.equals(cdrBqtifyFlag)
 					|| TStruct.INSTANCE.equals(cdrBqtifyFlag)) {
 
-				if (SpecialOperatorStruct.QUOTE.equals(carBqtifyFlag)
+				if (SpecialOperatorStructImpl.QUOTE.equals(carBqtifyFlag)
 						|| TStruct.INSTANCE.equals(carBqtifyFlag)
 						|| NILStruct.INSTANCE.equals(carBqtifyFlag)) {
 
 					final ConsStruct bqReturnThing = LispStructFactory.toCons(carBqtifyThing, cdrBqtifyThing);
-					return new BackquoteReturn(SpecialOperatorStruct.QUOTE, bqReturnThing);
+					return new BackquoteReturn(SpecialOperatorStructImpl.QUOTE, bqReturnThing);
 				} else {
 
 					final LispStruct backquotify_1_a = backquotify_1(carBqtifyFlag, carBqtifyThing);
@@ -199,7 +199,7 @@ public class BackquoteReaderMacroFunction extends ReaderMacroFunction {
 		return new BackquoteReturn(TStruct.INSTANCE, code);
 	}
 
-	private BackquoteReturn backquotifyAtFlag(final LispStruct carBqtifyThing, final SymbolStruct cdrBqtifyFlag, final LispStruct cdrBqtifyThing) {
+	private BackquoteReturn backquotifyAtFlag(final LispStruct carBqtifyThing, final SymbolStructImpl cdrBqtifyFlag, final LispStruct cdrBqtifyThing) {
 		if (NILStruct.INSTANCE.equals(cdrBqtifyFlag)) {
 			if (expandableBackqExpressionP(carBqtifyThing)) {
 				final ListStruct bqReturnThing = LispStructFactory.toProperList(carBqtifyThing);
@@ -221,7 +221,7 @@ public class BackquoteReaderMacroFunction extends ReaderMacroFunction {
 		}
 	}
 
-	private BackquoteReturn backquotifyDotFlag(final LispStruct carBqtifyThing, final SymbolStruct cdrBqtifyFlag, final LispStruct cdrBqtifyThing) {
+	private BackquoteReturn backquotifyDotFlag(final LispStruct carBqtifyThing, final SymbolStructImpl cdrBqtifyFlag, final LispStruct cdrBqtifyThing) {
 		if (NILStruct.INSTANCE.equals(cdrBqtifyFlag)) {
 			if (expandableBackqExpressionP(carBqtifyThing)) {
 				final ListStruct bqReturnThing = LispStructFactory.toProperList(carBqtifyThing);
@@ -253,9 +253,9 @@ public class BackquoteReaderMacroFunction extends ReaderMacroFunction {
 			return new BackquoteReturn(TStruct.INSTANCE, code);
 		}
 
-		if (code instanceof SymbolStruct) {
+		if (code instanceof SymbolStructImpl) {
 			// Need to check the constant symbols here
-			final SymbolStruct codeSymbol = (SymbolStruct) code;
+			final SymbolStructImpl codeSymbol = (SymbolStructImpl) code;
 			if (TStruct.INSTANCE.equals(codeSymbol)) {
 				return new BackquoteReturn(TStruct.INSTANCE, code);
 			} else if (NILStruct.INSTANCE.equals(codeSymbol)) {
@@ -269,11 +269,11 @@ public class BackquoteReaderMacroFunction extends ReaderMacroFunction {
 			final LispStruct carConsCode = consCode.getCar();
 			final LispStruct cdrConsCode = consCode.getCdr();
 
-			if (SpecialOperatorStruct.QUOTE.equals(carConsCode)) {
+			if (SpecialOperatorStructImpl.QUOTE.equals(carConsCode)) {
 				// NOTE: This cast will always be fine because of how we build the ConsStruct in the CommaReaderMacroFunction
 				final LispStruct cadrConsCode = ((ConsStruct) cdrConsCode).getCar();
 				if (!expandableBackqExpressionP(cadrConsCode)) {
-					final SymbolStruct carConsCodeFlag = (SymbolStruct) carConsCode;
+					final SymbolStructImpl carConsCodeFlag = (SymbolStructImpl) carConsCode;
 					return new BackquoteReturn(carConsCodeFlag, cadrConsCode);
 				}
 			}
@@ -282,7 +282,7 @@ public class BackquoteReaderMacroFunction extends ReaderMacroFunction {
 					|| LIST.equals(carConsCode)
 					|| NCONC.equals(carConsCode)) {
 
-				final SymbolStruct carConsCodeFlag = (SymbolStruct) carConsCode;
+				final SymbolStructImpl carConsCodeFlag = (SymbolStructImpl) carConsCode;
 				return new BackquoteReturn(carConsCodeFlag, cdrConsCode);
 			}
 
@@ -307,14 +307,14 @@ public class BackquoteReaderMacroFunction extends ReaderMacroFunction {
 		return false;
 	}
 
-	private static LispStruct backquotify_1(final SymbolStruct flag, final LispStruct thing) {
+	private static LispStruct backquotify_1(final SymbolStructImpl flag, final LispStruct thing) {
 
 		if (BQ_COMMA_FLAG.equals(flag) || TStruct.INSTANCE.equals(flag) || NILStruct.INSTANCE.equals(flag)) {
 			return thing;
 		}
 
-		if (SpecialOperatorStruct.QUOTE.equals(flag)) {
-			return LispStructFactory.toProperList(SpecialOperatorStruct.QUOTE, thing);
+		if (SpecialOperatorStructImpl.QUOTE.equals(flag)) {
+			return LispStructFactory.toProperList(SpecialOperatorStructImpl.QUOTE, thing);
 		}
 
 		if (LIST_STAR.equals(flag)) {
@@ -357,16 +357,16 @@ public class BackquoteReaderMacroFunction extends ReaderMacroFunction {
 
 	private static final class BackquoteReturn {
 
-		private final SymbolStruct flag;
+		private final SymbolStructImpl flag;
 
 		private final LispStruct thing;
 
-		private BackquoteReturn(final SymbolStruct flag, final LispStruct thing) {
+		private BackquoteReturn(final SymbolStructImpl flag, final LispStruct thing) {
 			this.flag = flag;
 			this.thing = thing;
 		}
 
-		public SymbolStruct getFlag() {
+		public SymbolStructImpl getFlag() {
 			return flag;
 		}
 

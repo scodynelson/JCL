@@ -7,13 +7,13 @@ package jcl.lang.statics;
 import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
 import jcl.lang.PackageStruct;
-import jcl.lang.internal.VariableStruct;
+import jcl.lang.internal.VariableStructImpl;
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.NILStruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-class ProperListVariable extends VariableStruct<ListStruct> {
+class ProperListVariable extends VariableStructImpl<ListStruct> {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(ProperListVariable.class);
 

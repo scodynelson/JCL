@@ -16,8 +16,8 @@ import jcl.compiler.struct.specialoperator.LocallyStruct;
 import jcl.compiler.struct.specialoperator.declare.DeclareStruct;
 import jcl.compiler.struct.specialoperator.declare.SpecialDeclarationStruct;
 import jcl.lang.LispStruct;
-import jcl.lang.internal.SpecialOperatorStruct;
-import jcl.lang.SymbolStruct;
+import jcl.lang.internal.SpecialOperatorStructImpl;
+import jcl.lang.SymbolStructImpl;
 import jcl.lang.factory.LispStructFactory;
 import jcl.lang.ListStruct;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,8 +36,8 @@ public class LocallyExpander extends MacroFunctionExpander<LocallyStruct> {
 	private BodyWithDeclaresAnalyzer bodyWithDeclaresAnalyzer;
 
 	@Override
-	public SymbolStruct getFunctionSymbol() {
-		return SpecialOperatorStruct.LOCALLY;
+	public SymbolStructImpl getFunctionSymbol() {
+		return SpecialOperatorStructImpl.LOCALLY;
 	}
 
 	@Override

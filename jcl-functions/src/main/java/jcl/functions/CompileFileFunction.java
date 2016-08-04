@@ -25,16 +25,16 @@ import jcl.compiler.sa.SemanticAnalyzer;
 import jcl.compiler.struct.specialoperator.lambda.LambdaStruct;
 import jcl.functions.pathname.PathnameFunction;
 import jcl.functions.readtable.ReadFunction;
-import jcl.lang.BooleanStruct;
+import jcl.lang.BooleanStructImpl;
 import jcl.lang.statics.CommonLispSymbols;
 import jcl.lang.statics.CompilerVariables;
-import jcl.lang.internal.DeclarationStruct;
+import jcl.lang.internal.DeclarationStructImpl;
 import jcl.lang.FileStreamStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
 import jcl.lang.PackageStruct;
 import jcl.lang.statics.PackageVariables;
-import jcl.lang.internal.SpecialOperatorStruct;
+import jcl.lang.internal.SpecialOperatorStructImpl;
 import jcl.lang.StringStruct;
 import jcl.lang.TStruct;
 import jcl.lang.ValuesStruct;
@@ -101,16 +101,16 @@ public final class CompileFileFunction extends CommonLispBuiltInFunctionStruct {
 		final LispStruct outputFile = arguments.getKeyArgument(CommonLispSymbols.OUTPUT_FILE_KEYWORD);
 		final boolean verbose;
 		if (arguments.hasKeyArgument(CommonLispSymbols.VERBOSE_KEYWORD)) {
-			verbose = arguments.getKeyArgument(CommonLispSymbols.VERBOSE_KEYWORD, BooleanStruct.class).booleanValue();
+			verbose = arguments.getKeyArgument(CommonLispSymbols.VERBOSE_KEYWORD, BooleanStructImpl.class).booleanValue();
 		} else {
-			final BooleanStruct currentCompileVerbose = CompilerVariables.COMPILE_VERBOSE.getVariableValue();
+			final BooleanStructImpl currentCompileVerbose = CompilerVariables.COMPILE_VERBOSE.getVariableValue();
 			verbose = currentCompileVerbose.booleanValue();
 		}
 		final boolean print;
 		if (arguments.hasKeyArgument(CommonLispSymbols.PRINT_KEYWORD)) {
-			print = arguments.getKeyArgument(CommonLispSymbols.PRINT_KEYWORD, BooleanStruct.class).booleanValue();
+			print = arguments.getKeyArgument(CommonLispSymbols.PRINT_KEYWORD, BooleanStructImpl.class).booleanValue();
 		} else {
-			final BooleanStruct currentCompilePrint = CompilerVariables.COMPILE_PRINT.getVariableValue();
+			final BooleanStructImpl currentCompilePrint = CompilerVariables.COMPILE_PRINT.getVariableValue();
 			print = currentCompilePrint.booleanValue();
 		}
 		final LispStruct externalFormat = arguments.getKeyArgument(CommonLispSymbols.EXTERNAL_FORMAT_KEYWORD);
@@ -161,7 +161,7 @@ public final class CompileFileFunction extends CommonLispBuiltInFunctionStruct {
 		final ReadtableStruct previousReadtable = ReaderVariables.READTABLE.getVariableValue();
 		final PackageStruct previousPackage = PackageVariables.PACKAGE.getVariableValue();
 
-		BooleanStruct compiledWithWarnings = NILStruct.INSTANCE;
+		BooleanStructImpl compiledWithWarnings = NILStruct.INSTANCE;
 		boolean compiledSuccessfully = false;
 		try {
 			final FileStreamStruct inputFileStream = LispStructFactory.toFileStream(inputFilePath);
@@ -230,11 +230,11 @@ public final class CompileFileFunction extends CommonLispBuiltInFunctionStruct {
 
 	private static ListStruct buildFileLambda(final List<LispStruct> forms, final String inputClassName) {
 		final StringStruct newJavaClassName = LispStructFactory.toString("jcl." + inputClassName);
-		final ListStruct javaClassNameDeclaration = LispStructFactory.toProperList(DeclarationStruct.JAVA_CLASS_NAME, newJavaClassName);
-		final ListStruct declareBlock = LispStructFactory.toProperList(SpecialOperatorStruct.DECLARE, javaClassNameDeclaration);
+		final ListStruct javaClassNameDeclaration = LispStructFactory.toProperList(DeclarationStructImpl.JAVA_CLASS_NAME, newJavaClassName);
+		final ListStruct declareBlock = LispStructFactory.toProperList(SpecialOperatorStructImpl.DECLARE, javaClassNameDeclaration);
 
 		final ListStruct formsToCompile = LispStructFactory.toProperList(forms);
-		return LispStructFactory.toDottedList(SpecialOperatorStruct.LAMBDA, NILStruct.INSTANCE, declareBlock, formsToCompile);
+		return LispStructFactory.toDottedList(SpecialOperatorStructImpl.LAMBDA, NILStruct.INSTANCE, declareBlock, formsToCompile);
 	}
 
 	private static void writeToJar(final Deque<JavaClassBuilder> javaClassBuilderDeque, final Path outputFilePath, final String inputFileName,

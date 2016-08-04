@@ -9,21 +9,21 @@ import jcl.compiler.icg.GeneratorEvent;
 import jcl.compiler.icg.GeneratorState;
 import jcl.compiler.icg.JavaMethodBuilder;
 import jcl.lang.statics.GlobalPackageStruct;
-import jcl.lang.KeywordStruct;
+import jcl.lang.KeywordStructImpl;
 import jcl.lang.PackageStruct;
 import jcl.lang.PackageSymbolStruct;
-import jcl.lang.SymbolStruct;
+import jcl.lang.SymbolStructImpl;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 /**
- * Class to generate {@link KeywordStruct} objects dynamically by utilizing the {@link KeywordStruct#name} value to
- * retrieve the {@link KeywordStruct} instance from the global {@link GlobalPackageStruct#KEYWORD} package.
+ * Class to generate {@link KeywordStructImpl} objects dynamically by utilizing the {@link KeywordStructImpl#name} value to
+ * retrieve the {@link KeywordStructImpl} instance from the global {@link GlobalPackageStruct#KEYWORD} package.
  */
 @Component
-final class KeywordCodeGenerator implements CodeGenerator<KeywordStruct> {
+final class KeywordCodeGenerator implements CodeGenerator<KeywordStructImpl> {
 
 	/**
 	 * Constant {@link String} containing the name of the {@link GlobalPackageStruct#KEYWORD} field.
@@ -32,23 +32,23 @@ final class KeywordCodeGenerator implements CodeGenerator<KeywordStruct> {
 
 	/**
 	 * {@inheritDoc}
-	 * Generation method for {@link KeywordStruct} objects, by performing the following operations:
+	 * Generation method for {@link KeywordStructImpl} objects, by performing the following operations:
 	 * <ol>
 	 * <li>Retrieving the {@link GlobalPackageStruct#KEYWORD} singleton instance</li>
 	 * <li>Retrieving the {@link PackageSymbolStruct} via the {@link PackageStruct#findSymbol(String)} method with the
-	 * {@link KeywordStruct#name} value of the provided {@link KeywordStruct}</li>
-	 * <li>Retrieving the {@link SymbolStruct} value via the {@link PackageSymbolStruct#getSymbol()} method</li>
-	 * <li>Casting the {@link SymbolStruct} to the appropriate {@link KeywordStruct} type</li>
+	 * {@link KeywordStructImpl#name} value of the provided {@link KeywordStructImpl}</li>
+	 * <li>Retrieving the {@link SymbolStructImpl} value via the {@link PackageSymbolStruct#getSymbol()} method</li>
+	 * <li>Casting the {@link SymbolStructImpl} to the appropriate {@link KeywordStructImpl} type</li>
 	 * </ol>
 	 *
 	 * @param input
-	 * 		the {@link KeywordStruct} input value to generate code for
+	 * 		the {@link KeywordStructImpl} input value to generate code for
 	 * @param generatorState
 	 * 		stateful object used to hold the current state of the code generation process
 	 */
 	@EventListener
-	public void onGeneratorEvent(final GeneratorEvent<KeywordStruct> event) {
-		final KeywordStruct input = event.getSource();
+	public void onGeneratorEvent(final GeneratorEvent<KeywordStructImpl> event) {
+		final KeywordStructImpl input = event.getSource();
 		final GeneratorState generatorState = event.getGeneratorState();
 
 		final JavaMethodBuilder methodBuilder = generatorState.getCurrentMethodBuilder();

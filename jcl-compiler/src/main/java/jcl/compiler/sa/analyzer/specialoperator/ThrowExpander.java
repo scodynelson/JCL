@@ -7,8 +7,8 @@ import jcl.compiler.function.expanders.MacroFunctionExpander;
 import jcl.compiler.sa.FormAnalyzer;
 import jcl.compiler.struct.specialoperator.ThrowStruct;
 import jcl.lang.LispStruct;
-import jcl.lang.internal.SpecialOperatorStruct;
-import jcl.lang.SymbolStruct;
+import jcl.lang.internal.SpecialOperatorStructImpl;
+import jcl.lang.SymbolStructImpl;
 import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.ListStruct;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,8 +21,8 @@ public class ThrowExpander extends MacroFunctionExpander<ThrowStruct> {
 	private FormAnalyzer formAnalyzer;
 
 	@Override
-	public SymbolStruct getFunctionSymbol() {
-		return SpecialOperatorStruct.THROW;
+	public SymbolStructImpl getFunctionSymbol() {
+		return SpecialOperatorStructImpl.THROW;
 	}
 
 	@Override

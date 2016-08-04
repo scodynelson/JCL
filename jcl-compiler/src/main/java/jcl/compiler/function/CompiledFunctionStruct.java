@@ -19,7 +19,7 @@ import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
 import jcl.compiler.environment.binding.lambdalist.RestParameter;
 import jcl.compiler.environment.binding.lambdalist.SuppliedPParameter;
 import jcl.lang.LispStruct;
-import jcl.lang.SymbolStruct;
+import jcl.lang.SymbolStructImpl;
 import jcl.lang.TStruct;
 import jcl.lang.ValuesStruct;
 import jcl.lang.condition.exception.ErrorException;
@@ -54,10 +54,10 @@ public abstract class CompiledFunctionStruct extends FunctionStruct {
 		this.closure = closure;
 	}
 
-	private static final SymbolStruct DUMMY_SYMBOL = SymbolStruct.valueOf("dummySymbol");
+	private static final SymbolStructImpl DUMMY_SYMBOL = SymbolStructImpl.valueOf("dummySymbol");
 
 	@Override
-	public SymbolStruct getFunctionSymbol() {
+	public SymbolStructImpl getFunctionSymbol() {
 		// TODO: we can do this better
 		return DUMMY_SYMBOL;
 	}
@@ -65,9 +65,9 @@ public abstract class CompiledFunctionStruct extends FunctionStruct {
 	@Override
 	@SuppressWarnings({"unchecked", "rawtypes"})
 	public LispStruct apply(final LispStruct... lispStructs) {
-		final Map<SymbolStruct, LispStruct> closureSymbolsToBind = getClosureSymbolBindings();
-		for (final Map.Entry<SymbolStruct, LispStruct> closureSymbolToBind : closureSymbolsToBind.entrySet()) {
-			final SymbolStruct symbol = closureSymbolToBind.getKey();
+		final Map<SymbolStructImpl, LispStruct> closureSymbolsToBind = getClosureSymbolBindings();
+		for (final Map.Entry<SymbolStructImpl, LispStruct> closureSymbolToBind : closureSymbolsToBind.entrySet()) {
+			final SymbolStructImpl symbol = closureSymbolToBind.getKey();
 			LispStruct value = closureSymbolToBind.getValue();
 			if (value instanceof ValuesStruct) {
 				final ValuesStruct valuesStruct = (ValuesStruct) value;
@@ -76,16 +76,16 @@ public abstract class CompiledFunctionStruct extends FunctionStruct {
 			symbol.bindLexicalValue(value);
 		}
 
-		final Map<SymbolStruct, FunctionStruct> closureFunctionsToBind = getClosureFunctionBindings();
-		for (final Map.Entry<SymbolStruct, FunctionStruct> closureFunctionToBind : closureFunctionsToBind.entrySet()) {
-			final SymbolStruct symbol = closureFunctionToBind.getKey();
+		final Map<SymbolStructImpl, FunctionStruct> closureFunctionsToBind = getClosureFunctionBindings();
+		for (final Map.Entry<SymbolStructImpl, FunctionStruct> closureFunctionToBind : closureFunctionsToBind.entrySet()) {
+			final SymbolStructImpl symbol = closureFunctionToBind.getKey();
 			final FunctionStruct function = closureFunctionToBind.getValue();
 			symbol.bindFunction(function);
 		}
 
 		final List<FunctionParameterBinding> parameterSymbolsToBind = getFunctionBindings(lispStructs);
 		for (final FunctionParameterBinding parameterSymbolToBind : parameterSymbolsToBind) {
-			final SymbolStruct symbol = parameterSymbolToBind.getParameterSymbol();
+			final SymbolStructImpl symbol = parameterSymbolToBind.getParameterSymbol();
 			LispStruct value = parameterSymbolToBind.getParameterValue();
 			if (value instanceof ValuesStruct) {
 				final ValuesStruct valuesStruct = (ValuesStruct) value;
@@ -110,7 +110,7 @@ public abstract class CompiledFunctionStruct extends FunctionStruct {
 			throw new ErrorException("Non-Lisp error found.", t);
 		} finally {
 			for (final FunctionParameterBinding parameterSymbolToUnbind : parameterSymbolsToBind) {
-				final SymbolStruct parameterSymbol = parameterSymbolToUnbind.getParameterSymbol();
+				final SymbolStructImpl parameterSymbol = parameterSymbolToUnbind.getParameterSymbol();
 				final boolean isSpecial = parameterSymbolToUnbind.isSpecial();
 				if (isSpecial) {
 					parameterSymbol.unbindDynamicValue();
@@ -118,24 +118,24 @@ public abstract class CompiledFunctionStruct extends FunctionStruct {
 					parameterSymbol.unbindLexicalValue();
 				}
 			}
-			for (final SymbolStruct closureFunctionToUnbind : closureFunctionsToBind.keySet()) {
+			for (final SymbolStructImpl closureFunctionToUnbind : closureFunctionsToBind.keySet()) {
 				closureFunctionToUnbind.unbindFunction();
 			}
-			for (final SymbolStruct closureSymbolToUnbind : closureSymbolsToBind.keySet()) {
+			for (final SymbolStructImpl closureSymbolToUnbind : closureSymbolsToBind.keySet()) {
 				closureSymbolToUnbind.unbindLexicalValue();
 			}
 		}
 		return result;
 	}
 
-	public Map<SymbolStruct, LispStruct> getClosureSymbolBindings() {
+	public Map<SymbolStructImpl, LispStruct> getClosureSymbolBindings() {
 		if (closure == null) {
 			return Collections.emptyMap();
 		}
 		return closure.getSymbolBindings();
 	}
 
-	public Map<SymbolStruct, FunctionStruct> getClosureFunctionBindings() {
+	public Map<SymbolStructImpl, FunctionStruct> getClosureFunctionBindings() {
 		if (closure == null) {
 			return Collections.emptyMap();
 		}
@@ -167,7 +167,7 @@ public abstract class CompiledFunctionStruct extends FunctionStruct {
 				throw new ProgramErrorException("Too few arguments in call to '" + functionClassName + "'. " + numberOfArguments + " arguments provided, at least " + numberOfRequired + " required.");
 			}
 
-			final SymbolStruct requiredSymbol = requiredBinding.getVar();
+			final SymbolStructImpl requiredSymbol = requiredBinding.getVar();
 			final LispStruct requiredInitForm = functionArgumentsIterator.next();
 
 			final FunctionParameterBinding functionParameterBinding = new FunctionParameterBinding(requiredSymbol, requiredInitForm, requiredBinding.isSpecial());
@@ -185,27 +185,27 @@ public abstract class CompiledFunctionStruct extends FunctionStruct {
 				optionalInitForm = INIT_FORM_PLACEHOLDER;
 				suppliedPInitForm = NILStruct.INSTANCE;
 			}
-			final SymbolStruct optionalSymbol = optionalBinding.getVar();
+			final SymbolStructImpl optionalSymbol = optionalBinding.getVar();
 
 			FunctionParameterBinding functionParameterBinding = new FunctionParameterBinding(optionalSymbol, optionalInitForm, optionalBinding.isSpecial());
 			functionParametersToBind.add(functionParameterBinding);
 
 			final SuppliedPParameter suppliedPBinding = optionalBinding.getSuppliedPBinding();
-			final SymbolStruct suppliedPSymbol = suppliedPBinding.getVar();
+			final SymbolStructImpl suppliedPSymbol = suppliedPBinding.getVar();
 
 			functionParameterBinding = new FunctionParameterBinding(suppliedPSymbol, suppliedPInitForm, suppliedPBinding.isSpecial());
 			functionParametersToBind.add(functionParameterBinding);
 		}
 
 		final int numberOfKeys = keyBindings.size();
-		final Map<SymbolStruct, KeyParameter> keysToBindings = new HashMap<>();
+		final Map<SymbolStructImpl, KeyParameter> keysToBindings = new HashMap<>();
 		for (final KeyParameter keyBinding : keyBindings) {
-			final SymbolStruct keyName = keyBinding.getKeyName();
+			final SymbolStructImpl keyName = keyBinding.getKeyName();
 			keysToBindings.put(keyName, keyBinding);
 		}
 
 		// Need to wrap the keySet() in a new HashSet because of the remove() operation below on the 'keysToBindings'
-		final Set<SymbolStruct> keys = new HashSet<>(keysToBindings.keySet());
+		final Set<SymbolStructImpl> keys = new HashSet<>(keysToBindings.keySet());
 
 		final List<LispStruct> restList = new ArrayList<>();
 
@@ -214,17 +214,17 @@ public abstract class CompiledFunctionStruct extends FunctionStruct {
 			restList.add(nextArgument);
 		}
 
-		final List<SymbolStruct> otherKeys = new ArrayList<>();
+		final List<SymbolStructImpl> otherKeys = new ArrayList<>();
 
-		final Map<SymbolStruct, FunctionParameterBinding> keywordFunctionParametersToBind = new LinkedHashMap<>(keyBindings.size());
+		final Map<SymbolStructImpl, FunctionParameterBinding> keywordFunctionParametersToBind = new LinkedHashMap<>(keyBindings.size());
 		for (final KeyParameter keyBinding : keyBindings) {
-			final SymbolStruct keySymbol = keyBinding.getVar();
+			final SymbolStructImpl keySymbol = keyBinding.getVar();
 
 			FunctionParameterBinding functionParameterBinding = new FunctionParameterBinding(keySymbol, INIT_FORM_PLACEHOLDER, keyBinding.isSpecial());
 			keywordFunctionParametersToBind.put(keySymbol, functionParameterBinding);
 
 			final SuppliedPParameter suppliedPBinding = keyBinding.getSuppliedPBinding();
-			final SymbolStruct suppliedPSymbol = suppliedPBinding.getVar();
+			final SymbolStructImpl suppliedPSymbol = suppliedPBinding.getVar();
 
 			functionParameterBinding = new FunctionParameterBinding(suppliedPSymbol, NILStruct.INSTANCE, suppliedPBinding.isSpecial());
 			keywordFunctionParametersToBind.put(suppliedPSymbol, functionParameterBinding);
@@ -233,13 +233,13 @@ public abstract class CompiledFunctionStruct extends FunctionStruct {
 		for (final Iterator<LispStruct> iterator = restList.iterator(); iterator.hasNext(); ) {
 			final LispStruct nextArgument = iterator.next();
 
-			if (nextArgument instanceof SymbolStruct) {
-				final SymbolStruct keywordArgument = (SymbolStruct) nextArgument;
+			if (nextArgument instanceof SymbolStructImpl) {
+				final SymbolStructImpl keywordArgument = (SymbolStructImpl) nextArgument;
 				if (keysToBindings.containsKey(keywordArgument)) {
 					final KeyParameter keyBinding = keysToBindings.remove(keywordArgument);
 
 					if (iterator.hasNext()) {
-						final SymbolStruct keySymbol = keyBinding.getVar();
+						final SymbolStructImpl keySymbol = keyBinding.getVar();
 						final LispStruct keyInitForm = iterator.next();
 						if (Parameters.ALLOW_OTHER_KEYS.equals(nextArgument)) {
 							if (!keyInitForm.equals(NILStruct.INSTANCE)) {
@@ -251,7 +251,7 @@ public abstract class CompiledFunctionStruct extends FunctionStruct {
 						keywordFunctionParametersToBind.put(keySymbol, functionParameterBinding);
 
 						final SuppliedPParameter suppliedPBinding = keyBinding.getSuppliedPBinding();
-						final SymbolStruct suppliedPSymbol = suppliedPBinding.getVar();
+						final SymbolStructImpl suppliedPSymbol = suppliedPBinding.getVar();
 						final LispStruct suppliedPInitForm = TStruct.INSTANCE;
 
 						functionParameterBinding = new FunctionParameterBinding(suppliedPSymbol, suppliedPInitForm, suppliedPBinding.isSpecial());
@@ -288,7 +288,7 @@ public abstract class CompiledFunctionStruct extends FunctionStruct {
 		}
 
 		if (restBinding != null) {
-			final SymbolStruct restSymbol = restBinding.getVar();
+			final SymbolStructImpl restSymbol = restBinding.getVar();
 			final LispStruct restListStruct = LispStructFactory.toProperList(restList);
 
 			final FunctionParameterBinding functionParameterBinding = new FunctionParameterBinding(restSymbol, restListStruct, restBinding.isSpecial());
@@ -298,7 +298,7 @@ public abstract class CompiledFunctionStruct extends FunctionStruct {
 		functionParametersToBind.addAll(keywordFunctionParametersToBind.values());
 
 		for (final AuxParameter auxBinding : auxBindings) {
-			final SymbolStruct auxSymbol = auxBinding.getVar();
+			final SymbolStructImpl auxSymbol = auxBinding.getVar();
 
 			final FunctionParameterBinding functionParameterBinding = new FunctionParameterBinding(auxSymbol, INIT_FORM_PLACEHOLDER, auxBinding.isSpecial());
 			functionParametersToBind.add(functionParameterBinding);
@@ -348,7 +348,7 @@ public abstract class CompiledFunctionStruct extends FunctionStruct {
 		return Collections.emptyList();
 	}
 
-	protected LispStruct getInitForm(final Closure currentClosure, final SymbolStruct parameter) {
+	protected LispStruct getInitForm(final Closure currentClosure, final SymbolStructImpl parameter) {
 		return NILStruct.INSTANCE;
 	}
 }

@@ -1,6 +1,6 @@
 package jcl.functions.list;
 
-import jcl.lang.BooleanStruct;
+import jcl.lang.BooleanStructImpl;
 import jcl.lang.LispStruct;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
@@ -28,6 +28,6 @@ public final class TailpFunction extends CommonLispBuiltInFunctionStruct {
 	public LispStruct apply(final Arguments arguments) {
 		final LispStruct object = arguments.getRequiredArgument(OBJECT_ARGUMENT);
 		final ListStruct list = arguments.getRequiredArgument(LIST_ARGUMENT, ListStruct.class);
-		return BooleanStruct.toLispBoolean(list.tailp(object));
+		return BooleanStructImpl.toLispBoolean(list.tailp(object));
 	}
 }

@@ -8,8 +8,8 @@ import jcl.compiler.struct.specialoperator.ClosureCreationStruct;
 import jcl.compiler.struct.specialoperator.LetStruct;
 import jcl.compiler.struct.specialoperator.PrognStruct;
 import jcl.lang.LispStruct;
-import jcl.lang.internal.SpecialOperatorStruct;
-import jcl.lang.SymbolStruct;
+import jcl.lang.internal.SpecialOperatorStructImpl;
+import jcl.lang.SymbolStructImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -24,12 +24,12 @@ public class LetExpander extends ClosureCreationExpander<LetStruct.LetVar> {
 	}
 
 	@Override
-	public SymbolStruct getFunctionSymbol() {
-		return SpecialOperatorStruct.LET;
+	public SymbolStructImpl getFunctionSymbol() {
+		return SpecialOperatorStructImpl.LET;
 	}
 
 	@Override
-	protected LetStruct.LetVar getClosureCreationVar(final SymbolStruct var, final LispStruct initForm,
+	protected LetStruct.LetVar getClosureCreationVar(final SymbolStructImpl var, final LispStruct initForm,
 	                                                 final boolean isSpecial) {
 		return new LetStruct.LetVar(var, initForm, isSpecial);
 	}

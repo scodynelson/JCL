@@ -8,20 +8,20 @@ import java.util.List;
 
 import jcl.compiler.struct.CompilerSpecialOperatorStruct;
 import jcl.lang.LispStruct;
-import jcl.lang.SymbolStruct;
+import jcl.lang.SymbolStructImpl;
 
 public class BlockStruct extends CompilerSpecialOperatorStruct {
 
-	private final SymbolStruct name;
+	private final SymbolStructImpl name;
 
 	private final PrognStruct forms;
 
-	public BlockStruct(final SymbolStruct name, final List<LispStruct> forms) {
+	public BlockStruct(final SymbolStructImpl name, final List<LispStruct> forms) {
 		this.name = name;
 		this.forms = new PrognStruct(forms);
 	}
 
-	public SymbolStruct getName() {
+	public SymbolStructImpl getName() {
 		return name;
 	}
 

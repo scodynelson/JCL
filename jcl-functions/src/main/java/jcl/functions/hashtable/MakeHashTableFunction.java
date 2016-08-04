@@ -7,9 +7,9 @@ package jcl.functions.hashtable;
 import jcl.lang.FloatStruct;
 import jcl.lang.IntegerStruct;
 import jcl.lang.statics.CommonLispSymbols;
-import jcl.lang.KeywordStruct;
+import jcl.lang.KeywordStructImpl;
 import jcl.lang.LispStruct;
-import jcl.lang.SymbolStruct;
+import jcl.lang.SymbolStructImpl;
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.factory.LispStructFactory;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
@@ -24,10 +24,10 @@ import org.springframework.stereotype.Component;
 public final class MakeHashTableFunction extends CommonLispBuiltInFunctionStruct {
 
 	private static final String FUNCTION_NAME = "MAKE-HASH-TABLE";
-	private static final KeywordStruct TEST = KeywordStruct.valueOf("TEST");
-	private static final KeywordStruct SIZE =  KeywordStruct.valueOf("SIZE");
-	private static final KeywordStruct REHASH_SIZE = KeywordStruct.valueOf("REHASH-SIZE");
-	private static final KeywordStruct REHASH_THRESHOLD = KeywordStruct.valueOf("REHASH-THRESHOLD");
+	private static final KeywordStructImpl TEST = KeywordStructImpl.valueOf("TEST");
+	private static final KeywordStructImpl SIZE =  KeywordStructImpl.valueOf("SIZE");
+	private static final KeywordStructImpl REHASH_SIZE = KeywordStructImpl.valueOf("REHASH-SIZE");
+	private static final KeywordStructImpl REHASH_THRESHOLD = KeywordStructImpl.valueOf("REHASH-THRESHOLD");
 	private static final FloatStruct DEFAULT_REHASH_THRESHOLD = LispStructFactory.toFloat(0.75F);
 
 	public MakeHashTableFunction() {
@@ -63,8 +63,8 @@ public final class MakeHashTableFunction extends CommonLispBuiltInFunctionStruct
 	private FunctionStruct validateFunctionDesignator(final LispStruct functionDesignator) {
 		if (functionDesignator instanceof FunctionStruct) {
 			return (FunctionStruct) functionDesignator;
-		} else if (functionDesignator instanceof SymbolStruct) {
-			return ((SymbolStruct) functionDesignator).getFunction();
+		} else if (functionDesignator instanceof SymbolStructImpl) {
+			return ((SymbolStructImpl) functionDesignator).getFunction();
 		} else {
 			throw new TypeErrorException("UNCAUGHT TYPE ERROR.");
 		}

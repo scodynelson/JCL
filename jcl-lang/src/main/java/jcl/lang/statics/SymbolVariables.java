@@ -5,9 +5,9 @@
 package jcl.lang.statics;
 
 import jcl.lang.IntegerStruct;
-import jcl.lang.internal.VariableStruct;
+import jcl.lang.internal.VariableStructImpl;
 
 public interface SymbolVariables {
 
-	VariableStruct<IntegerStruct> GENSYM_COUNTER = VariableStruct.valueOf("*GENSYM-COUNTER*", GlobalPackageStruct.COMMON_LISP, IntegerStruct.ZERO);
+	VariableStructImpl<IntegerStruct> GENSYM_COUNTER = VariableStructImpl.valueOf("*GENSYM-COUNTER*", GlobalPackageStruct.COMMON_LISP, IntegerStruct.ZERO);
 }

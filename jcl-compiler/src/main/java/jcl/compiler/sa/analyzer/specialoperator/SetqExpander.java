@@ -9,8 +9,8 @@ import jcl.compiler.function.expanders.MacroFunctionExpander;
 import jcl.compiler.sa.FormAnalyzer;
 import jcl.compiler.struct.specialoperator.SetqStruct;
 import jcl.lang.LispStruct;
-import jcl.lang.internal.SpecialOperatorStruct;
-import jcl.lang.SymbolStruct;
+import jcl.lang.internal.SpecialOperatorStructImpl;
+import jcl.lang.SymbolStructImpl;
 import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.ListStruct;
@@ -24,8 +24,8 @@ public class SetqExpander extends MacroFunctionExpander<SetqStruct> {
 	private FormAnalyzer formAnalyzer;
 
 	@Override
-	public SymbolStruct getFunctionSymbol() {
-		return SpecialOperatorStruct.SETQ;
+	public SymbolStructImpl getFunctionSymbol() {
+		return SpecialOperatorStructImpl.SETQ;
 	}
 
 	@Override
@@ -46,10 +46,10 @@ public class SetqExpander extends MacroFunctionExpander<SetqStruct> {
 		for (int index = 0; index < numberOfForms; index += 2) {
 
 			final LispStruct setqVar = forms.get(index);
-			if (!(setqVar instanceof SymbolStruct)) {
+			if (!(setqVar instanceof SymbolStructImpl)) {
 				throw new TypeErrorException("SETQ: VARIABLE must be a Symbol. Got: " + setqVar);
 			}
-			final SymbolStruct setqVarSymbol = (SymbolStruct) setqVar;
+			final SymbolStructImpl setqVarSymbol = (SymbolStructImpl) setqVar;
 
 			final LispStruct setqForm = forms.get(index + 1);
 			final LispStruct setqFormAnalyzed = formAnalyzer.analyze(setqForm, environment);

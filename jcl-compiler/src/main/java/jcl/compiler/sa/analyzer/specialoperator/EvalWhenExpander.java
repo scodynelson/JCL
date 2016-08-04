@@ -12,8 +12,8 @@ import jcl.compiler.functions.EvalFunction;
 import jcl.lang.statics.CommonLispSymbols;
 import jcl.lang.statics.CompilerVariables;
 import jcl.lang.LispStruct;
-import jcl.lang.internal.SpecialOperatorStruct;
-import jcl.lang.SymbolStruct;
+import jcl.lang.internal.SpecialOperatorStructImpl;
+import jcl.lang.SymbolStructImpl;
 import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.factory.LispStructFactory;
@@ -25,7 +25,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class EvalWhenExpander extends MacroFunctionExpander<LispStruct> {
 
-	private static final Set<SymbolStruct> SITUATION_KEYWORDS = new HashSet<>(6);
+	private static final Set<SymbolStructImpl> SITUATION_KEYWORDS = new HashSet<>(6);
 
 	static {
 		SITUATION_KEYWORDS.add(CommonLispSymbols.COMPILE_TOPLEVEL);
@@ -41,8 +41,8 @@ public class EvalWhenExpander extends MacroFunctionExpander<LispStruct> {
 	private EvalFunction evalFunction;
 
 	@Override
-	public SymbolStruct getFunctionSymbol() {
-		return SpecialOperatorStruct.EVAL_WHEN;
+	public SymbolStructImpl getFunctionSymbol() {
+		return SpecialOperatorStructImpl.EVAL_WHEN;
 	}
 
 	@Override
@@ -74,20 +74,20 @@ public class EvalWhenExpander extends MacroFunctionExpander<LispStruct> {
 		if (isTopLevel) {
 			if (isCompileTopLevel(situationList)) {
 				final ListStruct formsList = LispStructFactory.toProperList(forms);
-				final ListStruct prognOperatorList = LispStructFactory.toCons(SpecialOperatorStruct.PROGN, formsList);
+				final ListStruct prognOperatorList = LispStructFactory.toCons(SpecialOperatorStructImpl.PROGN, formsList);
 				return evalFunction.eval(prognOperatorList);
 			}
 
 			if (isLoadTopLevel(situationList) || (convertingForCompiler && isExecute(situationList))) {
 				final ListStruct formsList = LispStructFactory.toProperList(forms);
-				final ListStruct prognOperatorList = LispStructFactory.toCons(SpecialOperatorStruct.PROGN, formsList);
+				final ListStruct prognOperatorList = LispStructFactory.toCons(SpecialOperatorStructImpl.PROGN, formsList);
 				return evalFunction.eval(prognOperatorList);
 			}
 		}
 
 		if (isExecute(situationList)) {
 			final ListStruct formsList = LispStructFactory.toProperList(forms);
-			final ListStruct prognOperatorList = LispStructFactory.toCons(SpecialOperatorStruct.PROGN, formsList);
+			final ListStruct prognOperatorList = LispStructFactory.toCons(SpecialOperatorStructImpl.PROGN, formsList);
 			return evalFunction.eval(prognOperatorList);
 		}
 

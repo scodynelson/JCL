@@ -3,7 +3,7 @@ package jcl.functions;
 import jcl.compiler.functions.CompileForm;
 import jcl.compiler.functions.CompileResult;
 import jcl.lang.LispStruct;
-import jcl.lang.SymbolStruct;
+import jcl.lang.SymbolStructImpl;
 import jcl.lang.ValuesStruct;
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.condition.exception.ProgramErrorException;
@@ -66,8 +66,8 @@ public final class CompileFunction extends CommonLispBuiltInFunctionStruct {
 				function = (FunctionStruct) compiledDefinitionResult;
 			}
 
-			if (name instanceof SymbolStruct) {
-				final SymbolStruct nameSymbol = (SymbolStruct) name;
+			if (name instanceof SymbolStructImpl) {
+				final SymbolStructImpl nameSymbol = (SymbolStructImpl) name;
 				nameSymbol.setFunction(function);
 			} else if (!NILStruct.INSTANCE.equals(name)) {
 				throw new ErrorException("The value " + name + " is not an acceptable function name.");
@@ -80,10 +80,10 @@ public final class CompileFunction extends CommonLispBuiltInFunctionStruct {
 			}
 		}
 
-		if (!(name instanceof SymbolStruct)) {
+		if (!(name instanceof SymbolStructImpl)) {
 			throw new ErrorException("The value " + name + " is not an acceptable function name.");
 		}
-		final SymbolStruct nameSymbol = (SymbolStruct) name;
+		final SymbolStructImpl nameSymbol = (SymbolStructImpl) name;
 
 		final MacroFunctionExpanderInter macroFunction = nameSymbol.getMacroFunctionExpander();
 		if (macroFunction != null) {

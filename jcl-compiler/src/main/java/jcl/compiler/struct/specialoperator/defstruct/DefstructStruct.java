@@ -8,23 +8,23 @@ import java.util.List;
 
 import jcl.compiler.struct.CompilerSpecialOperatorStruct;
 import jcl.lang.StructureClassStruct;
-import jcl.lang.SymbolStruct;
+import jcl.lang.SymbolStructImpl;
 
 public class DefstructStruct extends CompilerSpecialOperatorStruct {
 
-	private final SymbolStruct structureSymbol;
+	private final SymbolStructImpl structureSymbol;
 
 	private final StructureClassStruct includeStructureClass;
 
-	private final SymbolStruct defaultConstructorSymbol;
+	private final SymbolStructImpl defaultConstructorSymbol;
 
-	private final SymbolStruct printerSymbol;
+	private final SymbolStructImpl printerSymbol;
 
-	private final List<SymbolStruct> slots;
+	private final List<SymbolStructImpl> slots;
 
-	public DefstructStruct(final SymbolStruct structureSymbol, final StructureClassStruct includeStructureClass,
-	                       final SymbolStruct defaultConstructorSymbol, final SymbolStruct printerSymbol,
-	                       final List<SymbolStruct> slots) {
+	public DefstructStruct(final SymbolStructImpl structureSymbol, final StructureClassStruct includeStructureClass,
+	                       final SymbolStructImpl defaultConstructorSymbol, final SymbolStructImpl printerSymbol,
+	                       final List<SymbolStructImpl> slots) {
 		this.structureSymbol = structureSymbol;
 		this.includeStructureClass = includeStructureClass;
 		this.defaultConstructorSymbol = defaultConstructorSymbol;
@@ -32,7 +32,7 @@ public class DefstructStruct extends CompilerSpecialOperatorStruct {
 		this.slots = slots;
 	}
 
-	public SymbolStruct getStructureSymbol() {
+	public SymbolStructImpl getStructureSymbol() {
 		return structureSymbol;
 	}
 
@@ -40,15 +40,15 @@ public class DefstructStruct extends CompilerSpecialOperatorStruct {
 		return includeStructureClass;
 	}
 
-	public SymbolStruct getDefaultConstructorSymbol() {
+	public SymbolStructImpl getDefaultConstructorSymbol() {
 		return defaultConstructorSymbol;
 	}
 
-	public SymbolStruct getPrinterSymbol() {
+	public SymbolStructImpl getPrinterSymbol() {
 		return printerSymbol;
 	}
 
-	public List<SymbolStruct> getSlots() {
+	public List<SymbolStructImpl> getSlots() {
 		return slots;
 	}
 }

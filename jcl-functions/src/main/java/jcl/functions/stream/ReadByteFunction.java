@@ -6,7 +6,7 @@ package jcl.functions.stream;
 
 import java.math.BigInteger;
 
-import jcl.lang.BooleanStruct;
+import jcl.lang.BooleanStructImpl;
 import jcl.lang.LispStruct;
 import jcl.lang.TStruct;
 import jcl.lang.condition.exception.TypeErrorException;
@@ -53,7 +53,7 @@ public final class ReadByteFunction extends CommonLispBuiltInFunctionStruct {
 			throw new TypeErrorException("The value " + lispStruct + " is not either T, NIL, or an Input Stream.");
 		}
 
-		final BooleanStruct eofErrorP = arguments.getOptionalArgument(EOF_ERROR_ARGUMENT, BooleanStruct.class);
+		final BooleanStructImpl eofErrorP = arguments.getOptionalArgument(EOF_ERROR_ARGUMENT, BooleanStructImpl.class);
 		final LispStruct eofValue = arguments.getOptionalArgument(EOF_VALUE_ARGUMENT);
 
 		final ReadPeekResult readPeekResult = inputStreamStruct.readByte(eofErrorP.booleanValue(), eofValue);

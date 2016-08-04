@@ -7,8 +7,8 @@ import jcl.compiler.function.expanders.MacroFunctionExpander;
 import jcl.compiler.sa.FormAnalyzer;
 import jcl.compiler.struct.specialoperator.TheStruct;
 import jcl.lang.LispStruct;
-import jcl.lang.internal.SpecialOperatorStruct;
-import jcl.lang.SymbolStruct;
+import jcl.lang.internal.SpecialOperatorStructImpl;
+import jcl.lang.SymbolStructImpl;
 import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.ListStruct;
@@ -22,8 +22,8 @@ public class TheExpander extends MacroFunctionExpander<TheStruct> {
 	private FormAnalyzer formAnalyzer;
 
 	@Override
-	public SymbolStruct getFunctionSymbol() {
-		return SpecialOperatorStruct.THE;
+	public SymbolStructImpl getFunctionSymbol() {
+		return SpecialOperatorStructImpl.THE;
 	}
 
 	@Override
@@ -41,7 +41,7 @@ public class TheExpander extends MacroFunctionExpander<TheStruct> {
 		}
 		final LispStruct theForm = iterator.next();
 
-		if (!(theForm instanceof SymbolStruct) && !(theForm instanceof ListStruct)) {
+		if (!(theForm instanceof SymbolStructImpl) && !(theForm instanceof ListStruct)) {
 			throw new TypeErrorException("THE: TYPE-SPECIFIER must be either a Symbol or a List. Got: " + theForm);
 		}
 

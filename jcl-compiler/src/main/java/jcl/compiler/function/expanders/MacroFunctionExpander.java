@@ -18,7 +18,7 @@ import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
 import jcl.compiler.environment.binding.lambdalist.RestParameter;
 import jcl.compiler.environment.binding.lambdalist.WholeParameter;
 import jcl.lang.LispStruct;
-import jcl.lang.SymbolStruct;
+import jcl.lang.SymbolStructImpl;
 import jcl.lang.function.expander.MacroFunctionExpanderInter;
 import jcl.lang.ListStruct;
 
@@ -37,7 +37,7 @@ public abstract class MacroFunctionExpander<O extends LispStruct> extends MacroE
 
 	@Override
 	public void afterPropertiesSet() throws Exception {
-		final SymbolStruct functionSymbol = getFunctionSymbol();
+		final SymbolStructImpl functionSymbol = getFunctionSymbol();
 		functionSymbol.setMacroFunctionExpander(this);
 	}
 
@@ -66,11 +66,11 @@ public abstract class MacroFunctionExpander<O extends LispStruct> extends MacroE
 	}
 
 	protected WholeParameter getWholeBinding() {
-		return new WholeParameter(SymbolStruct.valueOf("temp_whole_" + System.nanoTime()));
+		return new WholeParameter(SymbolStructImpl.valueOf("temp_whole_" + System.nanoTime()));
 	}
 
 	protected EnvironmentParameter getEnvironmentBinding() {
-		return new EnvironmentParameter(SymbolStruct.valueOf("temp_environment_" + System.nanoTime()));
+		return new EnvironmentParameter(SymbolStructImpl.valueOf("temp_environment_" + System.nanoTime()));
 	}
 
 	protected BodyParameter getBodyBinding() {

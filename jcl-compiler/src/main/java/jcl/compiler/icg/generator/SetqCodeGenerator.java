@@ -15,7 +15,7 @@ import jcl.compiler.icg.IntermediateCodeGenerator;
 import jcl.compiler.icg.JavaMethodBuilder;
 import jcl.compiler.struct.specialoperator.SetqStruct;
 import jcl.lang.LispStruct;
-import jcl.lang.SymbolStruct;
+import jcl.lang.SymbolStructImpl;
 import jcl.lang.ValuesStruct;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
@@ -61,7 +61,7 @@ final class SetqCodeGenerator extends SpecialOperatorCodeGenerator<SetqStruct> {
 	 * <li>Generating the {@link SetqStruct.SetqPair#form} value</li>
 	 * <li>Retrieving the primary value via {@link ValuesStruct#getPrimaryValue()} if the generated form is a {@link
 	 * ValuesStruct}</li>
-	 * <li>Generating the code to set the {@link SymbolStruct} value (lexical, dynamic, or regular) based on the
+	 * <li>Generating the code to set the {@link SymbolStructImpl} value (lexical, dynamic, or regular) based on the
 	 * current {@link Environment} at the top of the {@link GeneratorState#environmentDeque}</li>
 	 * <li>Inserting the generated {@link SetqStruct.SetqPair#var} as the key and the {@link SetqStruct.SetqPair#form}
 	 * as the value as an entry in the {@link Closure#symbolBindings} {@link Map} if the {@link Closure} parameter is
@@ -139,7 +139,7 @@ final class SetqCodeGenerator extends SpecialOperatorCodeGenerator<SetqStruct> {
 
 		final List<SetqStruct.SetqPair> setqPairs = input.getSetqPairs();
 		for (final SetqStruct.SetqPair setqPair : setqPairs) {
-			final SymbolStruct var = setqPair.getVar();
+			final SymbolStructImpl var = setqPair.getVar();
 			CodeGenerators.generateSymbol(var, generatorState, packageStore, symbolStore);
 
 			final LispStruct form = setqPair.getForm();

@@ -6,7 +6,7 @@ package jcl.reader.macrofunction;
 
 import java.util.Iterator;
 
-import jcl.lang.BooleanStruct;
+import jcl.lang.BooleanStructImpl;
 import jcl.lang.ConsStruct;
 import jcl.lang.statics.CommonLispSymbols;
 import jcl.lang.statics.CompilerVariables;
@@ -14,7 +14,7 @@ import jcl.lang.statics.GlobalPackageStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.PackageStruct;
 import jcl.lang.statics.PackageVariables;
-import jcl.lang.SymbolStruct;
+import jcl.lang.SymbolStructImpl;
 import jcl.lang.TStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
 import jcl.lang.ListStruct;
@@ -48,7 +48,7 @@ final class FeaturesReaderMacroFunction {
 	 */
 	void readFeatures(final Reader reader, final boolean shouldHideFeatures) {
 
-		final BooleanStruct previousReadSuppress = ReaderVariables.READ_SUPPRESS.getVariableValue();
+		final BooleanStructImpl previousReadSuppress = ReaderVariables.READ_SUPPRESS.getVariableValue();
 		final PackageStruct previousPackage = PackageVariables.PACKAGE.getVariableValue();
 		try {
 			ReaderVariables.READ_SUPPRESS.setValue(NILStruct.INSTANCE);
@@ -113,11 +113,11 @@ final class FeaturesReaderMacroFunction {
 		final Iterator<LispStruct> iterator = consToken.iterator();
 		final LispStruct first = iterator.next();
 
-		if (!(first instanceof SymbolStruct)) {
+		if (!(first instanceof SymbolStructImpl)) {
 			throw new ReaderErrorException("First element of feature expression must be either: :NOT, :AND, or :OR.");
 		}
 
-		final SymbolStruct featureOperator = (SymbolStruct) first;
+		final SymbolStructImpl featureOperator = (SymbolStructImpl) first;
 		if (featureOperator.equals(CommonLispSymbols.NOT_KEYWORD)) {
 			final LispStruct firstOfRest = iterator.next();
 			return !isFeature(firstOfRest);

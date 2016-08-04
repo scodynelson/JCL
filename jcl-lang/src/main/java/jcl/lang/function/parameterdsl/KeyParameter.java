@@ -1,15 +1,15 @@
 package jcl.lang.function.parameterdsl;
 
-import jcl.lang.KeywordStruct;
+import jcl.lang.KeywordStructImpl;
 import jcl.lang.LispStruct;
 
 public class KeyParameter {
 
 	private final Parameters parameters;
-	private final KeywordStruct keyword;
+	private final KeywordStructImpl keyword;
 	private LispStruct initialValue;
 
-	KeyParameter(final Parameters parameters, final KeywordStruct keyword) {
+	KeyParameter(final Parameters parameters, final KeywordStructImpl keyword) {
 		this.parameters = parameters;
 		this.keyword = keyword;
 	}
@@ -19,7 +19,7 @@ public class KeyParameter {
 		return parameters;
 	}
 
-	KeywordStruct getKeyword() {
+	KeywordStructImpl getKeyword() {
 		return keyword;
 	}
 

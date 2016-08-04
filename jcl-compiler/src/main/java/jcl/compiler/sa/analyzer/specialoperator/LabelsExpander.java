@@ -9,8 +9,8 @@ import jcl.compiler.sa.analyzer.body.BodyProcessingResult;
 import jcl.compiler.struct.specialoperator.CompilerFunctionStruct;
 import jcl.compiler.struct.specialoperator.InnerLambdaStruct;
 import jcl.compiler.struct.specialoperator.declare.DeclareStruct;
-import jcl.lang.internal.SpecialOperatorStruct;
-import jcl.lang.SymbolStruct;
+import jcl.lang.internal.SpecialOperatorStructImpl;
+import jcl.lang.SymbolStructImpl;
 import jcl.lang.ListStruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -26,8 +26,8 @@ public class LabelsExpander extends InnerLambdaExpander {
 	}
 
 	@Override
-	public SymbolStruct getFunctionSymbol() {
-		return SpecialOperatorStruct.LABELS;
+	public SymbolStructImpl getFunctionSymbol() {
+		return SpecialOperatorStructImpl.LABELS;
 	}
 
 	@Override
@@ -35,8 +35,8 @@ public class LabelsExpander extends InnerLambdaExpander {
 	                                             final Environment innerLambdaEnvironment,
 	                                             final BodyProcessingResult bodyProcessingResult,
 	                                             final DeclareStruct declare,
-	                                             final Stack<SymbolStruct> functionNameStack,
-	                                             final List<SymbolStruct> functionNames) {
+	                                             final Stack<SymbolStructImpl> functionNameStack,
+	                                             final List<SymbolStructImpl> functionNames) {
 
 		try {
 			// Add function names BEFORE analyzing the functions.
@@ -51,8 +51,8 @@ public class LabelsExpander extends InnerLambdaExpander {
 	}
 
 	@Override
-	protected ListStruct getInnerLambdaBody(final ListStruct innerBlockListStruct, final SymbolStruct functionNameSymbol,
-	                                        final List<SymbolStruct> functionNames) {
+	protected ListStruct getInnerLambdaBody(final ListStruct innerBlockListStruct, final SymbolStructImpl functionNameSymbol,
+	                                        final List<SymbolStructImpl> functionNames) {
 		return innerBlockListStruct;
 	}
 

@@ -9,18 +9,18 @@ import jcl.compiler.icg.CodeGenerator;
 import jcl.compiler.icg.GeneratorEvent;
 import jcl.compiler.icg.GeneratorState;
 import jcl.compiler.icg.JavaMethodBuilder;
-import jcl.lang.SymbolStruct;
+import jcl.lang.SymbolStructImpl;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 @Component
-final class SymbolValueCodeGenerator implements CodeGenerator<SymbolStruct> {
+final class SymbolValueCodeGenerator implements CodeGenerator<SymbolStructImpl> {
 
 	@EventListener
-	public void onGeneratorEvent(final GeneratorEvent<SymbolStruct> event) {
-		final SymbolStruct input = event.getSource();
+	public void onGeneratorEvent(final GeneratorEvent<SymbolStructImpl> event) {
+		final SymbolStructImpl input = event.getSource();
 		final GeneratorState generatorState = event.getGeneratorState();
 
 		final JavaMethodBuilder methodBuilder = generatorState.getCurrentMethodBuilder();

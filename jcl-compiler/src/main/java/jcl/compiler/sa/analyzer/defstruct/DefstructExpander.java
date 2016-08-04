@@ -8,9 +8,9 @@ import jcl.compiler.environment.Environment;
 import jcl.compiler.function.expanders.MacroFunctionExpander;
 import jcl.compiler.struct.specialoperator.defstruct.DefstructStruct;
 import jcl.lang.LispStruct;
-import jcl.lang.internal.SpecialOperatorStruct;
+import jcl.lang.internal.SpecialOperatorStructImpl;
 import jcl.lang.StructureClassStruct;
-import jcl.lang.SymbolStruct;
+import jcl.lang.SymbolStructImpl;
 import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.ListStruct;
@@ -21,8 +21,8 @@ import org.springframework.stereotype.Component;
 public class DefstructExpander extends MacroFunctionExpander<LispStruct> {
 
 	@Override
-	public SymbolStruct getFunctionSymbol() {
-		return SpecialOperatorStruct.DEFSTRUCT;
+	public SymbolStructImpl getFunctionSymbol() {
+		return SpecialOperatorStructImpl.DEFSTRUCT;
 	}
 
 	@Override
@@ -35,21 +35,21 @@ public class DefstructExpander extends MacroFunctionExpander<LispStruct> {
 		}
 		final LispStruct first = iterator.next();
 
-		if (!(first instanceof SymbolStruct)) {
+		if (!(first instanceof SymbolStructImpl)) {
 			throw new TypeErrorException("%DEFSTRUCT: STRUCTURE-NAME must be a Symbol. Got: " + first);
 		}
-		final SymbolStruct structureSymbol = (SymbolStruct) first;
+		final SymbolStructImpl structureSymbol = (SymbolStructImpl) first;
 
 		if (!iterator.hasNext()) {
 			throw new ProgramErrorException("%DEFSTRUCT: Incorrect number of arguments: 1. Expected at least 4 arguments.");
 		}
 		final LispStruct second = iterator.next();
 
-		final SymbolStruct includeStructureSymbol;
+		final SymbolStructImpl includeStructureSymbol;
 		if (NILStruct.INSTANCE.equals(second)) {
 			includeStructureSymbol = null;
-		} else if (second instanceof SymbolStruct) {
-			includeStructureSymbol = (SymbolStruct) second;
+		} else if (second instanceof SymbolStructImpl) {
+			includeStructureSymbol = (SymbolStructImpl) second;
 		} else {
 			throw new ProgramErrorException("%DEFSTRUCT: INCLUDE-STRUCTURE-NAME must be a Symbol or NIL. Got: " + second);
 		}
@@ -67,11 +67,11 @@ public class DefstructExpander extends MacroFunctionExpander<LispStruct> {
 		}
 		final LispStruct third = iterator.next();
 
-		final SymbolStruct defaultConstructorSymbol;
+		final SymbolStructImpl defaultConstructorSymbol;
 		if (NILStruct.INSTANCE.equals(third)) {
 			defaultConstructorSymbol = null;
-		} else if (third instanceof SymbolStruct) {
-			defaultConstructorSymbol = (SymbolStruct) third;
+		} else if (third instanceof SymbolStructImpl) {
+			defaultConstructorSymbol = (SymbolStructImpl) third;
 		} else {
 			throw new ProgramErrorException("%DEFSTRUCT: DEFAULT-CONSTRUCTOR-NAME must be a Symbol or NIL. Got: " + third);
 		}
@@ -81,21 +81,21 @@ public class DefstructExpander extends MacroFunctionExpander<LispStruct> {
 		}
 		final LispStruct fourth = iterator.next();
 
-		final SymbolStruct printerSymbol;
+		final SymbolStructImpl printerSymbol;
 		if (NILStruct.INSTANCE.equals(fourth)) {
 			printerSymbol = null;
-		} else if (fourth instanceof SymbolStruct) {
-			printerSymbol = (SymbolStruct) fourth;
+		} else if (fourth instanceof SymbolStructImpl) {
+			printerSymbol = (SymbolStructImpl) fourth;
 		} else {
 			throw new ProgramErrorException("%DEFSTRUCT: PRINTER-NAME must be a Symbol or NIL. Got: " + fourth);
 		}
 
-		final List<SymbolStruct> slots = new ArrayList<>();
+		final List<SymbolStructImpl> slots = new ArrayList<>();
 		iterator.forEachRemaining(element -> {
-			if (!(element instanceof SymbolStruct)) {
+			if (!(element instanceof SymbolStructImpl)) {
 				throw new TypeErrorException("%DEFSTRUCT: STRUCTURE-SLOT-NAME must be a Symbol. Got: " + element);
 			}
-			final SymbolStruct slotSymbol = (SymbolStruct) element;
+			final SymbolStructImpl slotSymbol = (SymbolStructImpl) element;
 			slots.add(slotSymbol);
 		});
 

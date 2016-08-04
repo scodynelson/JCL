@@ -9,7 +9,7 @@ import java.util.List;
 import jcl.compiler.environment.Environment;
 import jcl.compiler.struct.CompilerSpecialOperatorStruct;
 import jcl.lang.LispStruct;
-import jcl.lang.SymbolStruct;
+import jcl.lang.SymbolStructImpl;
 
 public class SymbolMacroletStruct extends CompilerSpecialOperatorStruct {
 
@@ -39,16 +39,16 @@ public class SymbolMacroletStruct extends CompilerSpecialOperatorStruct {
 
 	public static class SymbolMacroletVar {
 
-		private final SymbolStruct var;
+		private final SymbolStructImpl var;
 
 		private final LispStruct expansion;
 
-		public SymbolMacroletVar(final SymbolStruct var, final LispStruct expansion) {
+		public SymbolMacroletVar(final SymbolStructImpl var, final LispStruct expansion) {
 			this.var = var;
 			this.expansion = expansion;
 		}
 
-		public SymbolStruct getVar() {
+		public SymbolStructImpl getVar() {
 			return var;
 		}
 

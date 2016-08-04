@@ -11,8 +11,8 @@ import jcl.compiler.sa.FormAnalyzer;
 import jcl.compiler.struct.specialoperator.ProgvStruct;
 import jcl.lang.statics.CommonLispSymbols;
 import jcl.lang.LispStruct;
-import jcl.lang.internal.SpecialOperatorStruct;
-import jcl.lang.SymbolStruct;
+import jcl.lang.internal.SpecialOperatorStructImpl;
+import jcl.lang.SymbolStructImpl;
 import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.factory.LispStructFactory;
 import jcl.lang.ListStruct;
@@ -26,8 +26,8 @@ public class ProgvExpander extends MacroFunctionExpander<ProgvStruct> {
 	private FormAnalyzer formAnalyzer;
 
 	@Override
-	public SymbolStruct getFunctionSymbol() {
-		return SpecialOperatorStruct.PROGV;
+	public SymbolStructImpl getFunctionSymbol() {
+		return SpecialOperatorStructImpl.PROGV;
 	}
 
 	@Override
@@ -45,11 +45,11 @@ public class ProgvExpander extends MacroFunctionExpander<ProgvStruct> {
 		}
 		final LispStruct second = iterator.next();
 
-		final ListStruct quotedVars = LispStructFactory.toProperList(SpecialOperatorStruct.QUOTE, first);
+		final ListStruct quotedVars = LispStructFactory.toProperList(SpecialOperatorStructImpl.QUOTE, first);
 		final ListStruct evalVars = LispStructFactory.toProperList(CommonLispSymbols.EVAL, quotedVars);
 		final LispStruct analyzedEvalVars = formAnalyzer.analyze(evalVars, environment);
 
-		final ListStruct quotedVals = LispStructFactory.toProperList(SpecialOperatorStruct.QUOTE, second);
+		final ListStruct quotedVals = LispStructFactory.toProperList(SpecialOperatorStructImpl.QUOTE, second);
 		final ListStruct evalVals = LispStructFactory.toProperList(CommonLispSymbols.EVAL, quotedVals);
 		final LispStruct analyzedEvalVals = formAnalyzer.analyze(evalVals, environment);
 

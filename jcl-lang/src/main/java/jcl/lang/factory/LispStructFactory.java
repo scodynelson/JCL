@@ -39,11 +39,11 @@ import jcl.lang.RealStruct;
 import jcl.lang.StringInputStreamStruct;
 import jcl.lang.StringOutputStreamStruct;
 import jcl.lang.StringStruct;
-import jcl.lang.SymbolStruct;
+import jcl.lang.SymbolStructImpl;
 import jcl.lang.SynonymStreamStruct;
 import jcl.lang.TwoWayStreamStruct;
 import jcl.lang.URLStreamStruct;
-import jcl.lang.internal.VariableStruct;
+import jcl.lang.internal.VariableStructImpl;
 import jcl.lang.VectorStruct;
 import jcl.lang.function.EquatorFunctionStruct;
 import jcl.lang.internal.ArrayStructImpl;
@@ -697,23 +697,23 @@ public final class LispStructFactory {
 	 * Symbol
 	 */
 
-	public static SymbolStruct toSymbol(final String name) {
-		return SymbolStruct.valueOf(name);
+	public static SymbolStructImpl toSymbol(final String name) {
+		return SymbolStructImpl.valueOf(name);
 	}
 
 	/*
 	 * SynonymStream
 	 */
 
-	public static SynonymStreamStruct toSynonymStream(final VariableStruct<?> variable) {
+	public static SynonymStreamStruct toSynonymStream(final VariableStructImpl<?> variable) {
 		return SynonymStreamStructImpl.valueOf(variable);
 	}
 
-	public static SynonymStreamStruct toSynonymStream(final SymbolStruct symbol) {
+	public static SynonymStreamStruct toSynonymStream(final SymbolStructImpl symbol) {
 		return SynonymStreamStructImpl.valueOf(symbol);
 	}
 
-	public static SynonymStreamStruct toSynonymStream(final boolean interactive, final SymbolStruct symbol) {
+	public static SynonymStreamStruct toSynonymStream(final boolean interactive, final SymbolStructImpl symbol) {
 		return SynonymStreamStructImpl.valueOf(interactive, symbol);
 	}
 

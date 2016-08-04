@@ -7,7 +7,7 @@ package jcl.functions.lisppackage;
 import jcl.lang.LispStruct;
 import jcl.lang.PackageStruct;
 import jcl.lang.statics.PackageVariables;
-import jcl.lang.SymbolStruct;
+import jcl.lang.SymbolStructImpl;
 import jcl.lang.TStruct;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
@@ -39,18 +39,18 @@ public final class UninternFunction extends CommonLispBuiltInFunctionStruct {
 
 	/**
 	 * {@inheritDoc}
-	 * Application method for {@code unintern} package function that uninterns the provided {@link SymbolStruct} from
+	 * Application method for {@code unintern} package function that uninterns the provided {@link SymbolStructImpl} from
 	 * an optionally provided {@link PackageStruct}.
 	 *
 	 * @param lispStructs
 	 * 		the function parameters
 	 *
-	 * @return {@link TStruct#INSTANCE} if the {@link SymbolStruct} was successfully uninterned; {@link
+	 * @return {@link TStruct#INSTANCE} if the {@link SymbolStructImpl} was successfully uninterned; {@link
 	 * NILStruct#INSTANCE} otherwise
 	 */
 	@Override
 	public LispStruct apply(final Arguments arguments) {
-		final SymbolStruct symbol = arguments.getRequiredArgument(SYMBOL_ARGUMENT, SymbolStruct.class);
+		final SymbolStructImpl symbol = arguments.getRequiredArgument(SYMBOL_ARGUMENT, SymbolStructImpl.class);
 		final PackageStruct aPackage = arguments.getRequiredArgument(PACKAGE_ARGUMENT, PackageStruct.class);
 
 		final boolean wasUninterned = aPackage.unintern(symbol);

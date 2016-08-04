@@ -11,11 +11,11 @@ import jcl.compiler.struct.specialoperator.declare.DeclareStruct;
 import jcl.compiler.struct.specialoperator.declare.JavaClassNameDeclarationStruct;
 import jcl.compiler.struct.specialoperator.declare.LispNameDeclarationStruct;
 import jcl.compiler.struct.specialoperator.declare.SpecialDeclarationStruct;
-import jcl.lang.internal.DeclarationStruct;
+import jcl.lang.internal.DeclarationStructImpl;
 import jcl.lang.LispStruct;
-import jcl.lang.internal.SpecialOperatorStruct;
+import jcl.lang.internal.SpecialOperatorStructImpl;
 import jcl.lang.StringStruct;
-import jcl.lang.SymbolStruct;
+import jcl.lang.SymbolStructImpl;
 import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.ListStruct;
@@ -25,8 +25,8 @@ import org.springframework.stereotype.Component;
 public class DeclareExpander extends MacroFunctionExpander<DeclareStruct> {
 
 	@Override
-	public SymbolStruct getFunctionSymbol() {
-		return SpecialOperatorStruct.DECLARE;
+	public SymbolStructImpl getFunctionSymbol() {
+		return SpecialOperatorStructImpl.DECLARE;
 	}
 
 	@Override
@@ -53,32 +53,32 @@ public class DeclareExpander extends MacroFunctionExpander<DeclareStruct> {
 			declSpecIterator.forEachRemaining(declSpecBody::add);
 
 			// now come the various cases
-			if (declIdentifier.equals(DeclarationStruct.DECLARATION)) {
+			if (declIdentifier.equals(DeclarationStructImpl.DECLARATION)) {
 				//TODO: we don't do anything here yet
-			} else if (declIdentifier.equals(DeclarationStruct.DYNAMIC_EXTENT)) {
+			} else if (declIdentifier.equals(DeclarationStructImpl.DYNAMIC_EXTENT)) {
 				//TODO: we don't do anything here yet
-			} else if (declIdentifier.equals(DeclarationStruct.FTYPE)) {
+			} else if (declIdentifier.equals(DeclarationStructImpl.FTYPE)) {
 				//TODO: we don't do anything here yet
-			} else if (declIdentifier.equals(DeclarationStruct.IGNORABLE)) {
+			} else if (declIdentifier.equals(DeclarationStructImpl.IGNORABLE)) {
 				//TODO: we don't do anything here yet
-			} else if (declIdentifier.equals(DeclarationStruct.IGNORE)) {
+			} else if (declIdentifier.equals(DeclarationStructImpl.IGNORE)) {
 				//TODO: we don't do anything here yet
-			} else if (declIdentifier.equals(DeclarationStruct.INLINE)) {
+			} else if (declIdentifier.equals(DeclarationStructImpl.INLINE)) {
 				//TODO: we don't do anything here yet
-			} else if (declIdentifier.equals(DeclarationStruct.NOTINLINE)) {
+			} else if (declIdentifier.equals(DeclarationStructImpl.NOTINLINE)) {
 				//TODO: we don't do anything here yet
-			} else if (declIdentifier.equals(DeclarationStruct.OPTIMIZE)) {
+			} else if (declIdentifier.equals(DeclarationStructImpl.OPTIMIZE)) {
 				//TODO: we don't do anything here yet
-			} else if (declIdentifier.equals(DeclarationStruct.JAVA_CLASS_NAME)) {
+			} else if (declIdentifier.equals(DeclarationStructImpl.JAVA_CLASS_NAME)) {
 				final JavaClassNameDeclarationStruct jclds = saJavaClassNameDeclaration(declSpecBody);
 				declareElement.setJavaClassNameDeclaration(jclds);
-			} else if (declIdentifier.equals(DeclarationStruct.LISP_NAME)) {
+			} else if (declIdentifier.equals(DeclarationStructImpl.LISP_NAME)) {
 				final LispNameDeclarationStruct lnds = saLispNameDeclaration(declSpecBody);
 				declareElement.setLispNameDeclarationStruct(lnds);
-			} else if (declIdentifier.equals(DeclarationStruct.SPECIAL)) {
+			} else if (declIdentifier.equals(DeclarationStructImpl.SPECIAL)) {
 				final List<SpecialDeclarationStruct> sds = saSpecialDeclaration(declSpecBody);
 				declareElement.getSpecialDeclarations().addAll(sds);
-			} else if (declIdentifier.equals(DeclarationStruct.TYPE)) {
+			} else if (declIdentifier.equals(DeclarationStructImpl.TYPE)) {
 				//TODO: we don't do anything here yet
 			} else {
 				throw new ProgramErrorException("DECLARE: Declaration specifier not supported: " + declIdentifier);
@@ -111,10 +111,10 @@ public class DeclareExpander extends MacroFunctionExpander<DeclareStruct> {
 		}
 
 		final LispStruct lispName = declSpecBody.get(0);
-		if (!(lispName instanceof SymbolStruct)) {
+		if (!(lispName instanceof SymbolStructImpl)) {
 			throw new TypeErrorException("DECLARE: LISP-NAME must be a Symbol. Got: " + lispName);
 		}
-		final SymbolStruct lispNameSymbol = (SymbolStruct) lispName;
+		final SymbolStructImpl lispNameSymbol = (SymbolStructImpl) lispName;
 
 		final String name = lispNameSymbol.getName().replace('-', '_');
 		final String realName = name.chars()
@@ -133,11 +133,11 @@ public class DeclareExpander extends MacroFunctionExpander<DeclareStruct> {
 
 		// Special declaration can apply to multiple SymbolStructs
 		for (final LispStruct declSpecBodyElement : declSpecBody) {
-			if (!(declSpecBodyElement instanceof SymbolStruct)) {
+			if (!(declSpecBodyElement instanceof SymbolStructImpl)) {
 				throw new ProgramErrorException("DECLARE: a non-symbol cannot be made SPECIAL: " + declSpecBodyElement);
 			}
 
-			final SymbolStruct sym = (SymbolStruct) declSpecBodyElement;
+			final SymbolStructImpl sym = (SymbolStructImpl) declSpecBodyElement;
 
 			final SpecialDeclarationStruct specialDeclarationElement = new SpecialDeclarationStruct(sym);
 			specialDeclarationElements.add(specialDeclarationElement);

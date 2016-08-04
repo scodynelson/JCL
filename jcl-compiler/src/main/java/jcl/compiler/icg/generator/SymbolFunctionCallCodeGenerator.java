@@ -14,7 +14,7 @@ import jcl.compiler.icg.JavaMethodBuilder;
 import jcl.compiler.struct.specialoperator.SymbolCompilerFunctionStruct;
 import jcl.compiler.struct.specialoperator.SymbolFunctionCallStruct;
 import jcl.lang.LispStruct;
-import jcl.lang.SymbolStruct;
+import jcl.lang.SymbolStructImpl;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -76,7 +76,7 @@ final class SymbolFunctionCallCodeGenerator extends SpecialOperatorCodeGenerator
 	 * </pre>
 	 * NOTE: If the value of {@link SymbolFunctionCallStruct#isRecursiveCall} is true, the current lambda will be used
 	 * via 'this' reference to invoke a recursive call, rather than re-retrieving the {@link
-	 * SymbolStruct#getFunction()} value
+	 * SymbolStructImpl#getFunction()} value
 	 *
 	 * @param input
 	 * 		the {@link SymbolFunctionCallStruct} input value to generate code for

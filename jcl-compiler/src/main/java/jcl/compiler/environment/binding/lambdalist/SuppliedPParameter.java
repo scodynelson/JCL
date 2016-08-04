@@ -5,16 +5,16 @@
 package jcl.compiler.environment.binding.lambdalist;
 
 import jcl.lang.PackageStruct;
-import jcl.lang.SymbolStruct;
+import jcl.lang.SymbolStructImpl;
 import jcl.type.TType;
 
 public class SuppliedPParameter extends Parameter {
 
-	public SuppliedPParameter(final SymbolStruct var) {
+	public SuppliedPParameter(final SymbolStructImpl var) {
 		this(var, false);
 	}
 
-	public SuppliedPParameter(final SymbolStruct var, final boolean isSpecial) {
+	public SuppliedPParameter(final SymbolStructImpl var, final boolean isSpecial) {
 		super(var, null, TType.INSTANCE, null, isSpecial);
 	}
 
@@ -24,7 +24,7 @@ public class SuppliedPParameter extends Parameter {
 
 	public static final class Builder {
 
-		private final SymbolStruct var;
+		private final SymbolStructImpl var;
 
 		private DestructuringLambdaList destructuringForm;
 

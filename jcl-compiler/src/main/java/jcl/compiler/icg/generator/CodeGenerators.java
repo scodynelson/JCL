@@ -15,7 +15,7 @@ import jcl.compiler.icg.GeneratorState;
 import jcl.compiler.icg.JavaClassBuilder;
 import jcl.compiler.icg.JavaMethodBuilder;
 import jcl.lang.PackageStruct;
-import jcl.lang.SymbolStruct;
+import jcl.lang.SymbolStructImpl;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.FieldVisitor;
 import org.objectweb.asm.MethodVisitor;
@@ -61,7 +61,7 @@ final class CodeGenerators {
 		}
 	}
 
-	static void generateSymbol(final SymbolStruct input, final GeneratorState generatorState,
+	static void generateSymbol(final SymbolStructImpl input, final GeneratorState generatorState,
 	                           final int packageStore, final int symbolStore) {
 
 		final JavaMethodBuilder methodBuilder = generatorState.getCurrentMethodBuilder();

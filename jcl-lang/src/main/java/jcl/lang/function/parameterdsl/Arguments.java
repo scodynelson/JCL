@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import jcl.lang.KeywordStruct;
+import jcl.lang.KeywordStructImpl;
 import jcl.lang.LispStruct;
 import jcl.util.ClassUtils;
 
@@ -16,7 +16,7 @@ public final class Arguments {
 	private Map<String, LispStruct> requiredParameters;
 	private Map<String, LispStruct> optionalParameters;
 	private List<LispStruct> restParameter;
-	private Map<KeywordStruct, LispStruct> keyParameters;
+	private Map<KeywordStructImpl, LispStruct> keyParameters;
 
 	Arguments() {
 	}
@@ -77,25 +77,25 @@ public final class Arguments {
 		                         .collect(toList());
 	}
 
-	Map<KeywordStruct, LispStruct> getKeyParameters() {
+	Map<KeywordStructImpl, LispStruct> getKeyParameters() {
 		if (keyParameters == null) {
 			keyParameters = new HashMap<>();
 		}
 		return keyParameters;
 	}
 
-	public LispStruct getKeyArgument(final KeywordStruct keyword) {
+	public LispStruct getKeyArgument(final KeywordStructImpl keyword) {
 		return getKeyParameters().get(keyword);
 	}
 
-	public boolean hasKeyArgument(final KeywordStruct keyword) {
+	public boolean hasKeyArgument(final KeywordStructImpl keyword) {
 		if (keyParameters == null) {
 			return false;
 		}
 		return keyParameters.containsKey(keyword);
 	}
 
-	public <T extends LispStruct> T getKeyArgument(final KeywordStruct keyword, final Class<T> clazz) {
+	public <T extends LispStruct> T getKeyArgument(final KeywordStructImpl keyword, final Class<T> clazz) {
 		final LispStruct parameterValue = getKeyParameters().get(keyword);
 		return ClassUtils.convert(parameterValue, clazz);
 	}

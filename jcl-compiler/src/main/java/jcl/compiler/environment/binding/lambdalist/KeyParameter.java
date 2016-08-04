@@ -8,44 +8,44 @@ import java.util.Collections;
 import java.util.List;
 
 import jcl.lang.statics.GlobalPackageStruct;
-import jcl.lang.KeywordStruct;
+import jcl.lang.KeywordStructImpl;
 import jcl.lang.LispStruct;
 import jcl.lang.PackageStruct;
 import jcl.lang.PackageSymbolStruct;
-import jcl.lang.SymbolStruct;
+import jcl.lang.SymbolStructImpl;
 import jcl.lang.NILStruct;
 import jcl.type.TType;
 
 public class KeyParameter extends Parameter {
 
-	private final SymbolStruct keyName;
+	private final SymbolStructImpl keyName;
 
 	private final SuppliedPParameter suppliedPBinding;
 
-	public KeyParameter(final SymbolStruct var, final LispStruct initForm, final SymbolStruct keyName,
+	public KeyParameter(final SymbolStructImpl var, final LispStruct initForm, final SymbolStructImpl keyName,
 	                    final SuppliedPParameter suppliedPBinding) {
 		this(var, initForm, false, keyName, suppliedPBinding);
 	}
 
-	public KeyParameter(final SymbolStruct var, final LispStruct initForm, final boolean isSpecial,
-	                    final SymbolStruct keyName, final SuppliedPParameter suppliedPBinding) {
+	public KeyParameter(final SymbolStructImpl var, final LispStruct initForm, final boolean isSpecial,
+	                    final SymbolStructImpl keyName, final SuppliedPParameter suppliedPBinding) {
 		this(var, null, initForm, isSpecial, keyName, suppliedPBinding);
 	}
 
-	public KeyParameter(final SymbolStruct var, final DestructuringLambdaList destructuringForm,
-	                    final LispStruct initForm, final SymbolStruct keyName, final SuppliedPParameter suppliedPBinding) {
+	public KeyParameter(final SymbolStructImpl var, final DestructuringLambdaList destructuringForm,
+	                    final LispStruct initForm, final SymbolStructImpl keyName, final SuppliedPParameter suppliedPBinding) {
 		this(var, destructuringForm, initForm, false, keyName, suppliedPBinding);
 	}
 
-	public KeyParameter(final SymbolStruct var, final DestructuringLambdaList destructuringForm,
-	                    final LispStruct initForm, final boolean isSpecial, final SymbolStruct keyName,
+	public KeyParameter(final SymbolStructImpl var, final DestructuringLambdaList destructuringForm,
+	                    final LispStruct initForm, final boolean isSpecial, final SymbolStructImpl keyName,
 	                    final SuppliedPParameter suppliedPBinding) {
 		super(var, destructuringForm, TType.INSTANCE, initForm, isSpecial);
 		this.keyName = keyName;
 		this.suppliedPBinding = suppliedPBinding;
 	}
 
-	public SymbolStruct getKeyName() {
+	public SymbolStructImpl getKeyName() {
 		return keyName;
 	}
 
@@ -57,19 +57,19 @@ public class KeyParameter extends Parameter {
 		return new Builder(aPackage, symbolName);
 	}
 
-	public static Builder builder(final PackageStruct aPackage, final String symbolName, final SymbolStruct keyName) {
+	public static Builder builder(final PackageStruct aPackage, final String symbolName, final SymbolStructImpl keyName) {
 		return new Builder(aPackage, symbolName, keyName);
 	}
 
 	public static final class Builder {
 
-		private final SymbolStruct var;
+		private final SymbolStructImpl var;
 
 		private DestructuringLambdaList destructuringForm;
 
 		private LispStruct initForm = NILStruct.INSTANCE;
 
-		private final SymbolStruct keyName;
+		private final SymbolStructImpl keyName;
 
 		private SuppliedPParameter suppliedPBinding;
 
@@ -80,13 +80,13 @@ public class KeyParameter extends Parameter {
 
 			final PackageSymbolStruct symbol = GlobalPackageStruct.KEYWORD.findSymbol(symbolName);
 			if (symbol == null) {
-				keyName = KeywordStruct.valueOf(symbolName);
+				keyName = KeywordStructImpl.valueOf(symbolName);
 			} else {
 				keyName = symbol.getSymbol();
 			}
 		}
 
-		private Builder(final PackageStruct aPackage, final String symbolName, final SymbolStruct keyName) {
+		private Builder(final PackageStruct aPackage, final String symbolName, final SymbolStructImpl keyName) {
 			var = aPackage.intern(symbolName).getSymbol();
 			this.keyName = keyName;
 		}
@@ -110,7 +110,7 @@ public class KeyParameter extends Parameter {
 			final PackageStruct aPackage = var.getSymbolPackage();
 			final String symbolName = var.getName();
 
-			final SymbolStruct suppliedP = aPackage.intern(symbolName + "-P-" + System.nanoTime()).getSymbol();
+			final SymbolStructImpl suppliedP = aPackage.intern(symbolName + "-P-" + System.nanoTime()).getSymbol();
 			return suppliedPBinding(new SuppliedPParameter(suppliedP));
 		}
 

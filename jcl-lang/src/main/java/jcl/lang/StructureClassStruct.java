@@ -10,9 +10,9 @@ import jcl.type.StructureClassType;
  */
 public abstract class StructureClassStruct extends ClassStruct {
 
-	protected final SymbolStruct defaultConstructorSymbol;
+	protected final SymbolStructImpl defaultConstructorSymbol;
 
-	protected final SymbolStruct printerSymbol;
+	protected final SymbolStructImpl printerSymbol;
 
 	/**
 	 * Protected constructor.
@@ -26,7 +26,7 @@ public abstract class StructureClassStruct extends ClassStruct {
 	 * @param subClasses
 	 * 		the subclasses
 	 */
-	protected StructureClassStruct(final SymbolStruct defaultConstructorSymbol, final SymbolStruct printerSymbol,
+	protected StructureClassStruct(final SymbolStructImpl defaultConstructorSymbol, final SymbolStructImpl printerSymbol,
 	                               final List<Class<? extends LispStruct>> directSuperClasses, final List<Class<? extends LispStruct>> subClasses) {
 		this(StructureClassType.INSTANCE, defaultConstructorSymbol, printerSymbol, directSuperClasses, subClasses);
 	}
@@ -45,14 +45,14 @@ public abstract class StructureClassStruct extends ClassStruct {
 	 * @param subClasses
 	 * 		the subclasses
 	 */
-	protected StructureClassStruct(final LispType type, final SymbolStruct defaultConstructorSymbol, final SymbolStruct printerSymbol,
+	protected StructureClassStruct(final LispType type, final SymbolStructImpl defaultConstructorSymbol, final SymbolStructImpl printerSymbol,
 	                               final List<Class<? extends LispStruct>> directSuperClasses, final List<Class<? extends LispStruct>> subClasses) {
 		super(type, directSuperClasses, subClasses);
 		this.defaultConstructorSymbol = defaultConstructorSymbol;
 		this.printerSymbol = printerSymbol;
 	}
 
-	public SymbolStruct getDefaultConstructorSymbol() {
+	public SymbolStructImpl getDefaultConstructorSymbol() {
 		return defaultConstructorSymbol;
 	}
 

@@ -6,18 +6,18 @@ package jcl.lang.statics;
 
 import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
-import jcl.lang.internal.VariableStruct;
+import jcl.lang.internal.VariableStructImpl;
 
 public interface REPLVariables {
 
-	VariableStruct<LispStruct> DASH = VariableStruct.valueOf("-", GlobalPackageStruct.COMMON_LISP, null);
-	VariableStruct<LispStruct> PLUS = VariableStruct.valueOf("+", GlobalPackageStruct.COMMON_LISP, null);
-	VariableStruct<LispStruct> PLUS_PLUS = VariableStruct.valueOf("++", GlobalPackageStruct.COMMON_LISP, null);
-	VariableStruct<LispStruct> PLUS_PLUS_PLUS = VariableStruct.valueOf("+++", GlobalPackageStruct.COMMON_LISP, null);
-	VariableStruct<LispStruct> STAR = VariableStruct.valueOf("*", GlobalPackageStruct.COMMON_LISP, null);
-	VariableStruct<LispStruct> STAR_STAR = VariableStruct.valueOf("**", GlobalPackageStruct.COMMON_LISP, null);
-	VariableStruct<LispStruct> STAR_STAR_STAR = VariableStruct.valueOf("***", GlobalPackageStruct.COMMON_LISP, null);
-	VariableStruct<ListStruct> SLASH = VariableStruct.valueOf("/", GlobalPackageStruct.COMMON_LISP, null);
-	VariableStruct<ListStruct> SLASH_SLASH = VariableStruct.valueOf("//", GlobalPackageStruct.COMMON_LISP, null);
-	VariableStruct<ListStruct> SLASH_SLASH_SLASH = VariableStruct.valueOf("///", GlobalPackageStruct.COMMON_LISP, null);
+	VariableStructImpl<LispStruct> DASH = VariableStructImpl.valueOf("-", GlobalPackageStruct.COMMON_LISP, null);
+	VariableStructImpl<LispStruct> PLUS = VariableStructImpl.valueOf("+", GlobalPackageStruct.COMMON_LISP, null);
+	VariableStructImpl<LispStruct> PLUS_PLUS = VariableStructImpl.valueOf("++", GlobalPackageStruct.COMMON_LISP, null);
+	VariableStructImpl<LispStruct> PLUS_PLUS_PLUS = VariableStructImpl.valueOf("+++", GlobalPackageStruct.COMMON_LISP, null);
+	VariableStructImpl<LispStruct> STAR = VariableStructImpl.valueOf("*", GlobalPackageStruct.COMMON_LISP, null);
+	VariableStructImpl<LispStruct> STAR_STAR = VariableStructImpl.valueOf("**", GlobalPackageStruct.COMMON_LISP, null);
+	VariableStructImpl<LispStruct> STAR_STAR_STAR = VariableStructImpl.valueOf("***", GlobalPackageStruct.COMMON_LISP, null);
+	VariableStructImpl<ListStruct> SLASH = VariableStructImpl.valueOf("/", GlobalPackageStruct.COMMON_LISP, null);
+	VariableStructImpl<ListStruct> SLASH_SLASH = VariableStructImpl.valueOf("//", GlobalPackageStruct.COMMON_LISP, null);
+	VariableStructImpl<ListStruct> SLASH_SLASH_SLASH = VariableStructImpl.valueOf("///", GlobalPackageStruct.COMMON_LISP, null);
 }

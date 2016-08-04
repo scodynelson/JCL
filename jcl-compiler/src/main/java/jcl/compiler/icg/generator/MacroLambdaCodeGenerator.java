@@ -32,7 +32,7 @@ import jcl.compiler.struct.specialoperator.lambda.MacroLambdaStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.PackageStruct;
 import jcl.lang.StringStruct;
-import jcl.lang.SymbolStruct;
+import jcl.lang.SymbolStructImpl;
 import jcl.lang.NILStruct;
 import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.ClassWriter;
@@ -216,25 +216,25 @@ final class MacroLambdaCodeGenerator implements CodeGenerator<MacroLambdaStruct>
 
 	/**
 	 * Constant {@link String} containing the name for the {@link CompiledMacroFunctionExpander#getInitForm(Closure,
-	 * SymbolStruct)} method.
+	 * SymbolStructImpl)} method.
 	 */
 	private static final String GET_INIT_FORM_METHOD_NAME = "getInitForm";
 
 	/**
 	 * Constant {@link String} containing the description for the {@link CompiledMacroFunctionExpander#getInitForm(Closure,
-	 * SymbolStruct)} method.
+	 * SymbolStructImpl)} method.
 	 */
-	private static final String GET_INIT_FORM_METHOD_DESC = "(Ljcl/compiler/function/Closure;Ljcl/lang/SymbolStruct;)Ljcl/lang/LispStruct;";
+	private static final String GET_INIT_FORM_METHOD_DESC = "(Ljcl/compiler/function/Closure;Ljcl/lang/SymbolStructImpl;)Ljcl/lang/LispStruct;";
 
 	/**
 	 * Constant {@link String} containing the signature for the {@link CompiledMacroFunctionExpander#getInitForm(Closure,
-	 * SymbolStruct)} method.
+	 * SymbolStructImpl)} method.
 	 */
-	private static final String GET_INIT_FORM_METHOD_SIGNATURE = "(Ljcl/compiler/function/Closure;Ljcl/lang/SymbolStruct;)Ljcl/lang/LispStruct;";
+	private static final String GET_INIT_FORM_METHOD_SIGNATURE = "(Ljcl/compiler/function/Closure;Ljcl/lang/SymbolStructImpl;)Ljcl/lang/LispStruct;";
 
 	/**
 	 * {@link IntermediateCodeGenerator} used for generating the 'optional', 'key', and 'aux' init-form values in the
-	 * {@link CompiledMacroFunctionExpander#getInitForm(Closure, SymbolStruct)} method.
+	 * {@link CompiledMacroFunctionExpander#getInitForm(Closure, SymbolStructImpl)} method.
 	 */
 	@Autowired
 	private IntermediateCodeGenerator codeGenerator;
@@ -260,7 +260,7 @@ final class MacroLambdaCodeGenerator implements CodeGenerator<MacroLambdaStruct>
 	 * <li>Generating the code for the {@link CompiledMacroFunctionExpander#getEnvironmentBinding()} method</li>
 	 * <li>Generating the code for the {@link CompiledMacroFunctionExpander#getBodyBinding()} method</li>
 	 * <li>Generating the code for the {@link CompiledMacroFunctionExpander#internalApply(Closure)} method</li>
-	 * <li>Generating the code for the {@link CompiledMacroFunctionExpander#getInitForm(Closure, SymbolStruct)}
+	 * <li>Generating the code for the {@link CompiledMacroFunctionExpander#getInitForm(Closure, SymbolStructImpl)}
 	 * method</li>
 	 * <li>Generating the code to end the new class visitation</li>
 	 * <li>If the {@link GeneratorState#classBuilderDeque} is not empty after the visitation for this new class,
@@ -365,7 +365,7 @@ final class MacroLambdaCodeGenerator implements CodeGenerator<MacroLambdaStruct>
 		final int macroNamePackageStore = previousMethodBuilder.getNextAvailableStore();
 		final int macroNameSymbolStore = previousMethodBuilder.getNextAvailableStore();
 
-		final SymbolStruct macroName = input.getMacroName();
+		final SymbolStructImpl macroName = input.getMacroName();
 		CodeGenerators.generateSymbol(macroName, generatorState, macroNamePackageStore, macroNameSymbolStore);
 
 		previousMv.visitVarInsn(Opcodes.ALOAD, macroNameSymbolStore);
@@ -589,17 +589,17 @@ final class MacroLambdaCodeGenerator implements CodeGenerator<MacroLambdaStruct>
 	}
 
 	/**
-	 * Private method for generating the {@link CompiledMacroFunctionExpander#getInitForm(Closure, SymbolStruct)}
+	 * Private method for generating the {@link CompiledMacroFunctionExpander#getInitForm(Closure, SymbolStructImpl)}
 	 * method for the generated macro-lambda class object being written to via the provided {@link ClassWriter}. The
 	 * generation will perform the following operations:
 	 * <ol>
-	 * <li>Generating a condition check using {@link SymbolStruct#equals(Object)} to determine if the provided {@link
-	 * SymbolStruct} provided to the method is equivalent to one of the 'optional', 'key', or 'aux' function
+	 * <li>Generating a condition check using {@link SymbolStructImpl#equals(Object)} to determine if the provided {@link
+	 * SymbolStructImpl} provided to the method is equivalent to one of the 'optional', 'key', or 'aux' function
 	 * parameters</li>
 	 * <li>Generating the resulting {@link LispStruct} value of the init-form for each of the 'optional', 'key', and
 	 * 'aux' function parameters</li>
 	 * <li>Generating the {@link NILStruct#INSTANCE} singleton to be used when none of the 'optional', 'key', or 'aux'
-	 * function parameters match the provided {@link SymbolStruct}</li>
+	 * function parameters match the provided {@link SymbolStructImpl}</li>
 	 * </ol>
 	 * The following is the example Java code generated when {@code (macro-lambda foo (&optional (y 2)) y)} is
 	 * encountered:
@@ -660,7 +660,7 @@ final class MacroLambdaCodeGenerator implements CodeGenerator<MacroLambdaStruct>
 		final int initFormVarSymbolStore = methodBuilder.getNextAvailableStore();
 
 		for (final OptionalParameter optionalBinding : optionalBindings) {
-			final SymbolStruct var = optionalBinding.getVar();
+			final SymbolStructImpl var = optionalBinding.getVar();
 			final LispStruct initForm = optionalBinding.getInitForm();
 
 			generateInitForm(generatorState, methodBuilder, symbolArgStore,
@@ -668,7 +668,7 @@ final class MacroLambdaCodeGenerator implements CodeGenerator<MacroLambdaStruct>
 		}
 
 		for (final KeyParameter keyBinding : keyBindings) {
-			final SymbolStruct var = keyBinding.getVar();
+			final SymbolStructImpl var = keyBinding.getVar();
 			final LispStruct initForm = keyBinding.getInitForm();
 
 			generateInitForm(generatorState, methodBuilder, symbolArgStore,
@@ -676,7 +676,7 @@ final class MacroLambdaCodeGenerator implements CodeGenerator<MacroLambdaStruct>
 		}
 
 		for (final AuxParameter auxBinding : auxBindings) {
-			final SymbolStruct var = auxBinding.getVar();
+			final SymbolStructImpl var = auxBinding.getVar();
 			final LispStruct initForm = auxBinding.getInitForm();
 
 			generateInitForm(generatorState, methodBuilder, symbolArgStore,
@@ -694,31 +694,31 @@ final class MacroLambdaCodeGenerator implements CodeGenerator<MacroLambdaStruct>
 
 	/**
 	 * Private method used for assisting the generation of the {@link CompiledMacroFunctionExpander#getInitForm(Closure,
-	 * SymbolStruct)} method, generating the {@link SymbolStruct} equality check as well as the {@link LispStruct}
+	 * SymbolStructImpl)} method, generating the {@link SymbolStructImpl} equality check as well as the {@link LispStruct}
 	 * value of the init-form.
 	 *
 	 * @param generatorState
 	 * 		stateful object used to hold the current state of the code generation process
 	 * @param methodBuilder
 	 * 		{@link JavaMethodBuilder} used for building the Java method body for the {@link
-	 * 		CompiledMacroFunctionExpander#getInitForm(Closure, SymbolStruct)} method
+	 * 		CompiledMacroFunctionExpander#getInitForm(Closure, SymbolStructImpl)} method
 	 * @param symbolArgStore
-	 * 		the storage location index on the stack where the {@link SymbolStruct} parameter value is located
+	 * 		the storage location index on the stack where the {@link SymbolStructImpl} parameter value is located
 	 * @param initFormVarPackageStore
 	 * 		the storage location index on the stack where the {@link PackageStruct} for the provided {@code var} {@link
-	 * 		SymbolStruct} will exist
+	 * 		SymbolStructImpl} will exist
 	 * @param initFormVarSymbolStore
-	 * 		the storage location index on the stack where the provided {@code var} {@link SymbolStruct} will exist
+	 * 		the storage location index on the stack where the provided {@code var} {@link SymbolStructImpl} will exist
 	 * @param var
-	 * 		the {@link SymbolStruct} variable to be used as the source of the equality check against the {@link
-	 * 		SymbolStruct} value at the provided {@code symbolArgStore} storage location index on the stack
+	 * 		the {@link SymbolStructImpl} variable to be used as the source of the equality check against the {@link
+	 * 		SymbolStructImpl} value at the provided {@code symbolArgStore} storage location index on the stack
 	 * @param initForm
-	 * 		the {@link LispStruct} init-form value to be generated as the value to be used when the {@link SymbolStruct}
-	 * 		matching equality to the provided {@code var} {@link SymbolStruct} is encountered
+	 * 		the {@link LispStruct} init-form value to be generated as the value to be used when the {@link SymbolStructImpl}
+	 * 		matching equality to the provided {@code var} {@link SymbolStructImpl} is encountered
 	 */
 	private void generateInitForm(final GeneratorState generatorState, final JavaMethodBuilder methodBuilder,
 	                              final int symbolArgStore, final int initFormVarPackageStore,
-	                              final int initFormVarSymbolStore, final SymbolStruct var, final LispStruct initForm) {
+	                              final int initFormVarSymbolStore, final SymbolStructImpl var, final LispStruct initForm) {
 		final MethodVisitor mv = methodBuilder.getMethodVisitor();
 
 		CodeGenerators.generateSymbol(var, generatorState, initFormVarPackageStore, initFormVarSymbolStore);
@@ -836,7 +836,7 @@ final class MacroLambdaCodeGenerator implements CodeGenerator<MacroLambdaStruct>
 		final int requiredBindingStore = methodBuilder.getNextAvailableStore();
 
 		for (final RequiredParameter requiredBinding : requiredBindings) {
-			final SymbolStruct requiredSymbol = requiredBinding.getVar();
+			final SymbolStructImpl requiredSymbol = requiredBinding.getVar();
 			CodeGenerators.generateSymbol(requiredSymbol, generatorState, requiredPackageStore, requiredSymbolStore);
 			generateDestructuringFormBinding(generatorState, requiredBinding.getDestructuringForm(), mv, destructuringFormStore);
 
@@ -958,7 +958,7 @@ final class MacroLambdaCodeGenerator implements CodeGenerator<MacroLambdaStruct>
 		final int optionalBindingStore = methodBuilder.getNextAvailableStore();
 
 		for (final OptionalParameter optionalBinding : optionalBindings) {
-			final SymbolStruct optionalSymbol = optionalBinding.getVar();
+			final SymbolStructImpl optionalSymbol = optionalBinding.getVar();
 			CodeGenerators.generateSymbol(optionalSymbol, generatorState, optionalPackageStore, optionalSymbolStore);
 			generateDestructuringFormBinding(generatorState, optionalBinding.getDestructuringForm(), mv, destructuringFormStore);
 
@@ -1058,7 +1058,7 @@ final class MacroLambdaCodeGenerator implements CodeGenerator<MacroLambdaStruct>
 		final int restSymbolStore = methodBuilder.getNextAvailableStore();
 		final int destructuringFormStore = methodBuilder.getNextAvailableStore();
 
-		final SymbolStruct restSymbol = restBinding.getVar();
+		final SymbolStructImpl restSymbol = restBinding.getVar();
 		CodeGenerators.generateSymbol(restSymbol, generatorState, restPackageStore, restSymbolStore);
 		generateDestructuringFormBinding(generatorState, restBinding.getDestructuringForm(), mv, destructuringFormStore);
 
@@ -1170,13 +1170,13 @@ final class MacroLambdaCodeGenerator implements CodeGenerator<MacroLambdaStruct>
 		final int keyBindingStore = methodBuilder.getNextAvailableStore();
 
 		for (final KeyParameter keyBinding : keyBindings) {
-			final SymbolStruct keySymbol = keyBinding.getVar();
+			final SymbolStructImpl keySymbol = keyBinding.getVar();
 			CodeGenerators.generateSymbol(keySymbol, generatorState, keyPackageStore, keySymbolStore);
 
 			codeGenerator.generate(NILStruct.INSTANCE, generatorState);
 			mv.visitVarInsn(Opcodes.ASTORE, keyInitFormStore);
 
-			final SymbolStruct keyName = keyBinding.getKeyName();
+			final SymbolStructImpl keyName = keyBinding.getKeyName();
 			CodeGenerators.generateSymbol(keyName, generatorState, keyPackageStore, keyNameStore);
 			generateDestructuringFormBinding(generatorState, keyBinding.getDestructuringForm(), mv, destructuringFormStore);
 
@@ -1249,7 +1249,7 @@ final class MacroLambdaCodeGenerator implements CodeGenerator<MacroLambdaStruct>
 			mv.visitInsn(Opcodes.ACONST_NULL);
 			mv.visitVarInsn(Opcodes.ASTORE, suppliedPStore);
 		} else {
-			final SymbolStruct keySuppliedPSymbol = suppliedPBinding.getVar();
+			final SymbolStructImpl keySuppliedPSymbol = suppliedPBinding.getVar();
 			CodeGenerators.generateSymbol(keySuppliedPSymbol, generatorState, suppliedPPackageStore, suppliedPSymbolStore);
 
 			mv.visitTypeInsn(Opcodes.NEW, GenerationConstants.SUPPLIED_P_BINDING_NAME);
@@ -1398,7 +1398,7 @@ final class MacroLambdaCodeGenerator implements CodeGenerator<MacroLambdaStruct>
 		final int auxBindingStore = methodBuilder.getNextAvailableStore();
 
 		for (final AuxParameter auxBinding : auxBindings) {
-			final SymbolStruct auxSymbol = auxBinding.getVar();
+			final SymbolStructImpl auxSymbol = auxBinding.getVar();
 			CodeGenerators.generateSymbol(auxSymbol, generatorState, auxPackageStore, auxSymbolStore);
 			generateDestructuringFormBinding(generatorState, auxBinding.getDestructuringForm(), mv, destructuringFormStore);
 
@@ -1493,7 +1493,7 @@ final class MacroLambdaCodeGenerator implements CodeGenerator<MacroLambdaStruct>
 		final int wholePackageStore = methodBuilder.getNextAvailableStore();
 		final int wholeSymbolStore = methodBuilder.getNextAvailableStore();
 
-		final SymbolStruct wholeSymbol = wholeBinding.getVar();
+		final SymbolStructImpl wholeSymbol = wholeBinding.getVar();
 		CodeGenerators.generateSymbol(wholeSymbol, generatorState, wholePackageStore, wholeSymbolStore);
 
 		mv.visitTypeInsn(Opcodes.NEW, GenerationConstants.WHOLE_BINDING_NAME);
@@ -1570,7 +1570,7 @@ final class MacroLambdaCodeGenerator implements CodeGenerator<MacroLambdaStruct>
 		final int environmentPackageStore = methodBuilder.getNextAvailableStore();
 		final int environmentSymbolStore = methodBuilder.getNextAvailableStore();
 
-		final SymbolStruct environmentSymbol = environmentBinding.getVar();
+		final SymbolStructImpl environmentSymbol = environmentBinding.getVar();
 		CodeGenerators.generateSymbol(environmentSymbol, generatorState, environmentPackageStore, environmentSymbolStore);
 
 		mv.visitTypeInsn(Opcodes.NEW, GenerationConstants.ENVIRONMENT_BINDING_NAME);
@@ -1642,7 +1642,7 @@ final class MacroLambdaCodeGenerator implements CodeGenerator<MacroLambdaStruct>
 		final int bodySymbolStore = methodBuilder.getNextAvailableStore();
 		final int destructuringFormStore = methodBuilder.getNextAvailableStore();
 
-		final SymbolStruct bodySymbol = bodyBinding.getVar();
+		final SymbolStructImpl bodySymbol = bodyBinding.getVar();
 		CodeGenerators.generateSymbol(bodySymbol, generatorState, bodyPackageStore, bodySymbolStore);
 		generateDestructuringFormBinding(generatorState, bodyBinding.getDestructuringForm(), mv, destructuringFormStore);
 
@@ -1693,7 +1693,7 @@ final class MacroLambdaCodeGenerator implements CodeGenerator<MacroLambdaStruct>
 			mv.visitInsn(Opcodes.ACONST_NULL);
 			mv.visitVarInsn(Opcodes.ASTORE, wholeBindingStore);
 		} else {
-			final SymbolStruct wholeSymbol = wholeBinding.getVar();
+			final SymbolStructImpl wholeSymbol = wholeBinding.getVar();
 			CodeGenerators.generateSymbol(wholeSymbol, generatorState, parameterPackageStore, parameterSymbolStore);
 
 			mv.visitTypeInsn(Opcodes.NEW, GenerationConstants.WHOLE_BINDING_NAME);
@@ -1731,7 +1731,7 @@ final class MacroLambdaCodeGenerator implements CodeGenerator<MacroLambdaStruct>
 		final int requiredBindingStore = methodBuilder.getNextAvailableStore();
 
 		for (final RequiredParameter requiredBinding : requiredBindings) {
-			final SymbolStruct requiredSymbol = requiredBinding.getVar();
+			final SymbolStructImpl requiredSymbol = requiredBinding.getVar();
 			CodeGenerators.generateSymbol(requiredSymbol, generatorState, parameterPackageStore, parameterSymbolStore);
 			generateDestructuringFormBinding(generatorState, requiredBinding.getDestructuringForm(), mv, parameterDestructuringFormStore);
 
@@ -1783,7 +1783,7 @@ final class MacroLambdaCodeGenerator implements CodeGenerator<MacroLambdaStruct>
 		final int optionalBindingStore = methodBuilder.getNextAvailableStore();
 
 		for (final OptionalParameter optionalBinding : optionalBindings) {
-			final SymbolStruct optionalSymbol = optionalBinding.getVar();
+			final SymbolStructImpl optionalSymbol = optionalBinding.getVar();
 			CodeGenerators.generateSymbol(optionalSymbol, generatorState, parameterPackageStore, parameterSymbolStore);
 			generateDestructuringFormBinding(generatorState, optionalBinding.getDestructuringForm(), mv, parameterDestructuringFormStore);
 
@@ -1831,7 +1831,7 @@ final class MacroLambdaCodeGenerator implements CodeGenerator<MacroLambdaStruct>
 			mv.visitInsn(Opcodes.ACONST_NULL);
 			mv.visitVarInsn(Opcodes.ASTORE, restBindingStore);
 		} else {
-			final SymbolStruct restSymbol = restBinding.getVar();
+			final SymbolStructImpl restSymbol = restBinding.getVar();
 			CodeGenerators.generateSymbol(restSymbol, generatorState, parameterPackageStore, parameterSymbolStore);
 			generateDestructuringFormBinding(generatorState, restBinding.getDestructuringForm(), mv, parameterDestructuringFormStore);
 
@@ -1862,7 +1862,7 @@ final class MacroLambdaCodeGenerator implements CodeGenerator<MacroLambdaStruct>
 			mv.visitInsn(Opcodes.ACONST_NULL);
 			mv.visitVarInsn(Opcodes.ASTORE, bodyBindingStore);
 		} else {
-			final SymbolStruct bodySymbol = bodyBinding.getVar();
+			final SymbolStructImpl bodySymbol = bodyBinding.getVar();
 			CodeGenerators.generateSymbol(bodySymbol, generatorState, parameterPackageStore, parameterSymbolStore);
 			generateDestructuringFormBinding(generatorState, bodyBinding.getDestructuringForm(), mv, parameterDestructuringFormStore);
 
@@ -1906,13 +1906,13 @@ final class MacroLambdaCodeGenerator implements CodeGenerator<MacroLambdaStruct>
 		final int keyBindingStore = methodBuilder.getNextAvailableStore();
 
 		for (final KeyParameter keyBinding : keyBindings) {
-			final SymbolStruct keySymbol = keyBinding.getVar();
+			final SymbolStructImpl keySymbol = keyBinding.getVar();
 			CodeGenerators.generateSymbol(keySymbol, generatorState, parameterPackageStore, parameterSymbolStore);
 
 			codeGenerator.generate(NILStruct.INSTANCE, generatorState);
 			mv.visitVarInsn(Opcodes.ASTORE, keyInitFormStore);
 
-			final SymbolStruct keyName = keyBinding.getKeyName();
+			final SymbolStructImpl keyName = keyBinding.getKeyName();
 			CodeGenerators.generateSymbol(keyName, generatorState, parameterPackageStore, keyNameStore);
 			generateDestructuringFormBinding(generatorState, keyBinding.getDestructuringForm(), mv, parameterDestructuringFormStore);
 
@@ -1968,7 +1968,7 @@ final class MacroLambdaCodeGenerator implements CodeGenerator<MacroLambdaStruct>
 		final int auxBindingStore = methodBuilder.getNextAvailableStore();
 
 		for (final AuxParameter auxBinding : auxBindings) {
-			final SymbolStruct auxSymbol = auxBinding.getVar();
+			final SymbolStructImpl auxSymbol = auxBinding.getVar();
 			CodeGenerators.generateSymbol(auxSymbol, generatorState, parameterPackageStore, parameterSymbolStore);
 			generateDestructuringFormBinding(generatorState, auxBinding.getDestructuringForm(), mv, parameterDestructuringFormStore);
 

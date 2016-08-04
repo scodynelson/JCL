@@ -11,8 +11,8 @@ import jcl.compiler.struct.specialoperator.CompilerFunctionStruct;
 import jcl.compiler.struct.specialoperator.MultipleValueCallStruct;
 import jcl.compiler.struct.specialoperator.QuoteStruct;
 import jcl.lang.LispStruct;
-import jcl.lang.internal.SpecialOperatorStruct;
-import jcl.lang.SymbolStruct;
+import jcl.lang.internal.SpecialOperatorStructImpl;
+import jcl.lang.SymbolStructImpl;
 import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.factory.LispStructFactory;
 import jcl.lang.ListStruct;
@@ -29,8 +29,8 @@ public class MultipleValueCallExpander extends MacroFunctionExpander<MultipleVal
 	private FunctionExpander functionExpander;
 
 	@Override
-	public SymbolStruct getFunctionSymbol() {
-		return SpecialOperatorStruct.MULTIPLE_VALUE_CALL;
+	public SymbolStructImpl getFunctionSymbol() {
+		return SpecialOperatorStructImpl.MULTIPLE_VALUE_CALL;
 	}
 
 	@Override
@@ -49,7 +49,7 @@ public class MultipleValueCallExpander extends MacroFunctionExpander<MultipleVal
 			functionFormAsCompilerFunction = (CompilerFunctionStruct) functionForm;
 		} else if (functionForm instanceof QuoteStruct) {
 			final QuoteStruct quotedFunction = (QuoteStruct) functionForm;
-			final ListStruct functionListStruct = LispStructFactory.toProperList(SpecialOperatorStruct.FUNCTION, quotedFunction.getObject());
+			final ListStruct functionListStruct = LispStructFactory.toProperList(SpecialOperatorStructImpl.FUNCTION, quotedFunction.getObject());
 			functionFormAsCompilerFunction = functionExpander.expand(functionListStruct, environment);
 		} else {
 			throw new ProgramErrorException("MULTIPLE-VALUE-CALL: Invalid argument for function argument: " + functionForm);

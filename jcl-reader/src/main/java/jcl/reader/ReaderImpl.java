@@ -11,7 +11,7 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 import jcl.lang.LispStruct;
-import jcl.lang.SymbolStruct;
+import jcl.lang.SymbolStructImpl;
 import jcl.lang.readtable.Reader;
 import jcl.lang.InputStreamStruct;
 import jcl.lang.stream.ReadPeekResult;
@@ -41,13 +41,13 @@ class ReaderImpl implements Reader {
 	 * Map containing the number argument of #= to a temporary {@link UUID} tag value to handle {@link LispStruct}s not
 	 * yet parsed by the reader.
 	 */
-	private final Map<BigInteger, SymbolStruct> sharpEqualTempTable = new ConcurrentHashMap<>();
+	private final Map<BigInteger, SymbolStructImpl> sharpEqualTempTable = new ConcurrentHashMap<>();
 
 	/**
 	 * Map containing the temporary {@link UUID} tag value to a {@link LispStruct} that has been parsed by the reader,
 	 * but may have yet to return to the top level of the #= parse.
 	 */
-	private final Map<SymbolStruct, LispStruct> sharpEqualReplTable = new ConcurrentHashMap<>();
+	private final Map<SymbolStructImpl, LispStruct> sharpEqualReplTable = new ConcurrentHashMap<>();
 
 	/**
 	 * {@link ReaderStateMediator} singleton used by the reader algorithm.
@@ -92,8 +92,8 @@ class ReaderImpl implements Reader {
 		}
 
 		final Map<BigInteger, LispStruct> tempSharpEqualFinalTable = new HashMap<>(sharpEqualFinalTable);
-		final Map<BigInteger, SymbolStruct> tempSharpEqualTempTable = new HashMap<>(sharpEqualTempTable);
-		final Map<SymbolStruct, LispStruct> tempSharpEqualReplTable = new HashMap<>(sharpEqualReplTable);
+		final Map<BigInteger, SymbolStructImpl> tempSharpEqualTempTable = new HashMap<>(sharpEqualTempTable);
+		final Map<SymbolStructImpl, LispStruct> tempSharpEqualReplTable = new HashMap<>(sharpEqualReplTable);
 
 		try {
 			sharpEqualFinalTable.clear();
@@ -135,12 +135,12 @@ class ReaderImpl implements Reader {
 	}
 
 	@Override
-	public Map<BigInteger, SymbolStruct> getSharpEqualTempTable() {
+	public Map<BigInteger, SymbolStructImpl> getSharpEqualTempTable() {
 		return sharpEqualTempTable;
 	}
 
 	@Override
-	public Map<SymbolStruct, LispStruct> getSharpEqualReplTable() {
+	public Map<SymbolStructImpl, LispStruct> getSharpEqualReplTable() {
 		return sharpEqualReplTable;
 	}
 

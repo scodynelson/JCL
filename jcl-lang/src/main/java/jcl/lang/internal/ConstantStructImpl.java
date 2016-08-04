@@ -3,29 +3,29 @@ package jcl.lang.internal;
 import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
 import jcl.lang.PackageStruct;
-import jcl.lang.SymbolStruct;
+import jcl.lang.SymbolStructImpl;
 import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.function.FunctionStruct;
 import jcl.lang.function.expander.SymbolMacroExpanderInter;
 import jcl.type.LispType;
 
-public class ConstantStruct<TYPE extends LispStruct> extends SymbolStruct {
+public class ConstantStructImpl<TYPE extends LispStruct> extends SymbolStructImpl {
 
 	private final TYPE constantValue;
 
-	protected ConstantStruct(final LispType lispType,
-	                         final String name, final PackageStruct symbolPackage, final TYPE value, final FunctionStruct function) {
+	protected ConstantStructImpl(final LispType lispType,
+	                             final String name, final PackageStruct symbolPackage, final TYPE value, final FunctionStruct function) {
 		super(lispType, name, symbolPackage, value, function);
 		constantValue = value;
 	}
 
-	protected ConstantStruct(final String name, final PackageStruct symbolPackage, final TYPE value) {
+	protected ConstantStructImpl(final String name, final PackageStruct symbolPackage, final TYPE value) {
 		super(name, symbolPackage, value);
 		constantValue = value;
 	}
 
-	public static <T extends LispStruct> ConstantStruct<T> valueOf(final String name, final PackageStruct symbolPackage, final T value) {
-		return new ConstantStruct<T>(name, symbolPackage, value);
+	public static <T extends LispStruct> ConstantStructImpl<T> valueOf(final String name, final PackageStruct symbolPackage, final T value) {
+		return new ConstantStructImpl<T>(name, symbolPackage, value);
 	}
 
 	@Override

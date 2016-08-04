@@ -10,7 +10,7 @@ import jcl.lang.CharacterStruct;
 import jcl.lang.PackageStruct;
 import jcl.lang.statics.PrinterVariables;
 import jcl.lang.StringStruct;
-import jcl.lang.SymbolStruct;
+import jcl.lang.SymbolStructImpl;
 import jcl.lang.condition.exception.SimpleErrorException;
 import jcl.lang.pathname.PathnameStruct;
 import jcl.lang.statics.ReaderVariables;
@@ -144,10 +144,10 @@ public final class StringStructImpl extends VectorStructImpl<CharacterStruct> im
 	}
 
 	@Override
-	public Supplier<SymbolStruct> asSymbol() {
+	public Supplier<SymbolStructImpl> asSymbol() {
 		return () -> {
 			final String namestring = getAsJavaString();
-			return SymbolStruct.valueOf(namestring);
+			return SymbolStructImpl.valueOf(namestring);
 		};
 	}
 

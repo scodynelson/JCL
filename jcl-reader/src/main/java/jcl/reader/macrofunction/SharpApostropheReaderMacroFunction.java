@@ -9,7 +9,7 @@ import java.util.Optional;
 import javax.annotation.PostConstruct;
 
 import jcl.lang.LispStruct;
-import jcl.lang.internal.SpecialOperatorStruct;
+import jcl.lang.internal.SpecialOperatorStructImpl;
 import jcl.lang.condition.exception.ReaderErrorException;
 import jcl.lang.factory.LispStructFactory;
 import jcl.lang.function.ReaderMacroFunction;
@@ -44,7 +44,7 @@ public class SharpApostropheReaderMacroFunction extends ReaderMacroFunction {
 			throw new ReaderErrorException("Missing expression.");
 		}
 
-		return LispStructFactory.toProperList(SpecialOperatorStruct.FUNCTION, token);
+		return LispStructFactory.toProperList(SpecialOperatorStructImpl.FUNCTION, token);
 	}
 
 	@Override

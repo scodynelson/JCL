@@ -4,17 +4,17 @@
 
 package jcl.compiler.struct.specialoperator.declare;
 
-import jcl.lang.SymbolStruct;
+import jcl.lang.SymbolStructImpl;
 
 public class SpecialDeclarationStruct implements DeclarationStruct {
 
-	private final SymbolStruct var;
+	private final SymbolStructImpl var;
 
-	public SpecialDeclarationStruct(final SymbolStruct var) {
+	public SpecialDeclarationStruct(final SymbolStructImpl var) {
 		this.var = var;
 	}
 
-	public SymbolStruct getVar() {
+	public SymbolStructImpl getVar() {
 		return var;
 	}
 }

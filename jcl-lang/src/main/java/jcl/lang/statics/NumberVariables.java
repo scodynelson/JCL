@@ -6,9 +6,9 @@ package jcl.lang.statics;
 
 import jcl.lang.RandomStateStruct;
 import jcl.lang.internal.number.RandomStateStructImpl;
-import jcl.lang.internal.VariableStruct;
+import jcl.lang.internal.VariableStructImpl;
 
 public interface NumberVariables {
 
-	VariableStruct<RandomStateStruct> RANDOM_STATE = VariableStruct.valueOf("*RANDOM-STATE*", GlobalPackageStruct.COMMON_LISP, RandomStateStructImpl.valueOf());
+	VariableStructImpl<RandomStateStruct> RANDOM_STATE = VariableStructImpl.valueOf("*RANDOM-STATE*", GlobalPackageStruct.COMMON_LISP, RandomStateStructImpl.valueOf());
 }

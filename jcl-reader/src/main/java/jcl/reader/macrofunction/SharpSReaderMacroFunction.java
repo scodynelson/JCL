@@ -13,7 +13,7 @@ import javax.annotation.PostConstruct;
 
 import jcl.lang.LispStruct;
 import jcl.lang.StructureClassStruct;
-import jcl.lang.SymbolStruct;
+import jcl.lang.SymbolStructImpl;
 import jcl.lang.condition.exception.ReaderErrorException;
 import jcl.lang.function.FunctionStruct;
 import jcl.lang.function.ReaderMacroFunction;
@@ -75,17 +75,17 @@ public class SharpSReaderMacroFunction extends ReaderMacroFunction {
 		final Iterator<LispStruct> iterator = listToken.iterator();
 
 		final LispStruct structureType = iterator.next();
-		if (!(structureType instanceof SymbolStruct)) {
+		if (!(structureType instanceof SymbolStructImpl)) {
 			throw new ReaderErrorException("Structure type is not a symbol: " + structureType);
 		}
 
-		final SymbolStruct structureSymbol = (SymbolStruct) structureType;
+		final SymbolStructImpl structureSymbol = (SymbolStructImpl) structureType;
 		final StructureClassStruct structureClass = structureSymbol.getStructureClass();
 		if (structureClass == null) {
 			throw new ReaderErrorException(structureType + " is not a defined structure type for symbol: " + structureSymbol);
 		}
 
-		final SymbolStruct defaultConstructorSymbol = structureClass.getDefaultConstructorSymbol();
+		final SymbolStructImpl defaultConstructorSymbol = structureClass.getDefaultConstructorSymbol();
 		if (defaultConstructorSymbol == null) {
 			throw new ReaderErrorException("The " + structureType + " structure does not have a default constructor.");
 		}

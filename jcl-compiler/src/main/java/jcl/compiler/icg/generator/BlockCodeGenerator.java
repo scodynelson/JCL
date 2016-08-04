@@ -11,7 +11,7 @@ import jcl.compiler.icg.IntermediateCodeGenerator;
 import jcl.compiler.icg.JavaMethodBuilder;
 import jcl.compiler.struct.specialoperator.BlockStruct;
 import jcl.compiler.struct.specialoperator.PrognStruct;
-import jcl.lang.SymbolStruct;
+import jcl.lang.SymbolStructImpl;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
@@ -49,17 +49,17 @@ final class BlockCodeGenerator extends SpecialOperatorCodeGenerator<BlockStruct>
 	 * Generation method for {@link BlockStruct} objects, by performing the following operations:
 	 * <ol>
 	 * <li>Fetching the global 'COMMON-LISP-USER' package</li>
-	 * <li>Finding the {@link SymbolStruct} with the {@link BlockStruct#name} value in the fetched 'COMMON-LISP-USER'
+	 * <li>Finding the {@link SymbolStructImpl} with the {@link BlockStruct#name} value in the fetched 'COMMON-LISP-USER'
 	 * package</li>
 	 * <li>Initializing a try-catch block</li>
 	 * <li>Generating each of the {@link BlockStruct#forms} inside the try block, ensuring to store the final result
 	 * into a variable</li>
 	 * <li>Catching the expected {@link ReturnFromException}</li>
-	 * <li>Grabbing the {@link ReturnFromException#name} {@link SymbolStruct} and comparing it for equality against the
+	 * <li>Grabbing the {@link ReturnFromException#name} {@link SymbolStructImpl} and comparing it for equality against the
 	 * previously fetched {@link BlockStruct#name}</li>
-	 * <li>If the {@link SymbolStruct}s are equal, the final result variable is assigned the {@link
+	 * <li>If the {@link SymbolStructImpl}s are equal, the final result variable is assigned the {@link
 	 * ReturnFromException#result} value</li>
-	 * <li>If the {@link SymbolStruct}s are not equal, the {@link ReturnFromException} is re-thrown</li>
+	 * <li>If the {@link SymbolStructImpl}s are not equal, the {@link ReturnFromException} is re-thrown</li>
 	 * </ol>
 	 * As an example, it will transform {@code (block foo)} into the following Java code:
 	 * <pre>
@@ -99,7 +99,7 @@ final class BlockCodeGenerator extends SpecialOperatorCodeGenerator<BlockStruct>
 
 		final int namePackageStore = methodBuilder.getNextAvailableStore();
 		final int nameSymbolStore = methodBuilder.getNextAvailableStore();
-		final SymbolStruct name = input.getName();
+		final SymbolStructImpl name = input.getName();
 		CodeGenerators.generateSymbol(name, generatorState, namePackageStore, nameSymbolStore);
 
 		final Label tryBlockStart = new Label();

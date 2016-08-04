@@ -9,8 +9,8 @@ import jcl.compiler.function.expanders.MacroFunctionExpander;
 import jcl.compiler.sa.FormAnalyzer;
 import jcl.compiler.struct.specialoperator.MultipleValueProg1Struct;
 import jcl.lang.LispStruct;
-import jcl.lang.internal.SpecialOperatorStruct;
-import jcl.lang.SymbolStruct;
+import jcl.lang.internal.SpecialOperatorStructImpl;
+import jcl.lang.SymbolStructImpl;
 import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.ListStruct;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,8 +23,8 @@ public class MultipleValueProg1Expander extends MacroFunctionExpander<MultipleVa
 	private FormAnalyzer formAnalyzer;
 
 	@Override
-	public SymbolStruct getFunctionSymbol() {
-		return SpecialOperatorStruct.MULTIPLE_VALUE_PROG1;
+	public SymbolStructImpl getFunctionSymbol() {
+		return SpecialOperatorStructImpl.MULTIPLE_VALUE_PROG1;
 	}
 
 	@Override

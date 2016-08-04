@@ -5,7 +5,7 @@
 package jcl.lang.stream;
 
 import jcl.lang.statics.CommonLispSymbols;
-import jcl.lang.SymbolStruct;
+import jcl.lang.SymbolStructImpl;
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.NILStruct;
 
@@ -23,13 +23,13 @@ public enum IfExistsType {
 	SUPERSEDE(CommonLispSymbols.SUPERSEDE_KEYWORD),
 	NIL(NILStruct.INSTANCE);
 
-	private final SymbolStruct keyword;
+	private final SymbolStructImpl keyword;
 
-	IfExistsType(final SymbolStruct keyword) {
+	IfExistsType(final SymbolStructImpl keyword) {
 		this.keyword = keyword;
 	}
 
-	public static IfExistsType fromValue(final SymbolStruct keyword) {
+	public static IfExistsType fromValue(final SymbolStructImpl keyword) {
 		for (IfExistsType ifExistsType : values()) {
 			if (ifExistsType.keyword.equals(keyword)) {
 				return ifExistsType;

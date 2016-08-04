@@ -16,9 +16,9 @@ import jcl.compiler.icg.IntermediateCodeGenerator;
 import jcl.compiler.icg.JavaClassBuilder;
 import jcl.compiler.sa.SemanticAnalyzer;
 import jcl.compiler.struct.specialoperator.lambda.LambdaStruct;
-import jcl.lang.BooleanStruct;
+import jcl.lang.BooleanStructImpl;
 import jcl.lang.LispStruct;
-import jcl.lang.internal.SpecialOperatorStruct;
+import jcl.lang.internal.SpecialOperatorStructImpl;
 import jcl.lang.TStruct;
 import jcl.lang.factory.LispStructFactory;
 import jcl.lang.function.FunctionStruct;
@@ -59,8 +59,8 @@ public class CompileForm {
 		final LambdaStruct analyzedObj = semanticAnalyzer.analyze(lambdaForm);
 		final Deque<JavaClassBuilder> javaClassBuilderDeque = intermediateCodeGenerator.generate(analyzedObj);
 
-		BooleanStruct compiledWithWarnings = NILStruct.INSTANCE;
-		BooleanStruct failedToCompile = NILStruct.INSTANCE;
+		BooleanStructImpl compiledWithWarnings = NILStruct.INSTANCE;
+		BooleanStructImpl failedToCompile = NILStruct.INSTANCE;
 
 		FunctionStruct function = null;
 		for (final JavaClassBuilder javaClassBuilder : javaClassBuilderDeque) {
@@ -114,7 +114,7 @@ public class CompileForm {
 
 	private static ListStruct wrapFormInLambda(final LispStruct form) {
 		final List<LispStruct> lambdaFormList = new ArrayList<>();
-		lambdaFormList.add(SpecialOperatorStruct.LAMBDA);
+		lambdaFormList.add(SpecialOperatorStructImpl.LAMBDA);
 		lambdaFormList.add(NILStruct.INSTANCE);
 		lambdaFormList.add(form);
 

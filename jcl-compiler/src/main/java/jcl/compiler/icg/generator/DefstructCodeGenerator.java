@@ -17,7 +17,7 @@ import jcl.compiler.struct.specialoperator.defstruct.DefstructStruct;
 import jcl.lang.StandardClassStruct;
 import jcl.lang.StructureClassStruct;
 import jcl.lang.StructureObjectStruct;
-import jcl.lang.SymbolStruct;
+import jcl.lang.SymbolStructImpl;
 import jcl.type.LispType;
 import jcl.type.StructureObjectType;
 import jcl.type.TypeBaseClass;
@@ -72,15 +72,15 @@ final class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 
 	private static final String GET_INSTANCE_BRIDGE_METHOD_DESC = "()Ljcl/type/LispType;";
 
-	private static final String STRUCTURE_OBJECT_INIT_SCS_SS_SOS_METHOD_DESC = "(Ljcl/lang/StructureClassStruct;Ljcl/lang/SymbolStruct;Ljcl/lang/StructureObjectStruct;)V";
+	private static final String STRUCTURE_OBJECT_INIT_SCS_SS_SOS_METHOD_DESC = "(Ljcl/lang/StructureClassStruct;Ljcl/lang/SymbolStructImpl;Ljcl/lang/StructureObjectStruct;)V";
 
-	private static final String STRUCTURE_CLASS_INIT_SS_SS_LIST_LIST_METHOD_DESC = "(Ljcl/lang/SymbolStruct;Ljcl/lang/SymbolStruct;Ljava/util/List;Ljava/util/List;)V";
+	private static final String STRUCTURE_CLASS_INIT_SS_SS_LIST_LIST_METHOD_DESC = "(Ljcl/lang/SymbolStructImpl;Ljcl/lang/SymbolStructImpl;Ljava/util/List;Ljava/util/List;)V";
 
-	private static final String STRUCTURE_CLASS_INIT_SS_SS_LIST_LIST_METHOD_SIGNATURE = "(Ljcl/lang/SymbolStruct;Ljcl/lang/SymbolStruct;Ljava/util/List<Ljava/lang/Class<+Ljcl/lang/LispStruct;>;>;Ljava/util/List<Ljava/lang/Class<+Ljcl/lang/LispStruct;>;>;)V";
+	private static final String STRUCTURE_CLASS_INIT_SS_SS_LIST_LIST_METHOD_SIGNATURE = "(Ljcl/lang/SymbolStructImpl;Ljcl/lang/SymbolStructImpl;Ljava/util/List<Ljava/lang/Class<+Ljcl/lang/LispStruct;>;>;Ljava/util/List<Ljava/lang/Class<+Ljcl/lang/LispStruct;>;>;)V";
 
-	private static final String STRUCTURE_CLASS_INIT_LISP_TYPE_SS_SS_LIST_LIST_METHOD_DESC = "(Ljcl/type/LispType;Ljcl/lang/SymbolStruct;Ljcl/lang/SymbolStruct;Ljava/util/List;Ljava/util/List;)V";
+	private static final String STRUCTURE_CLASS_INIT_LISP_TYPE_SS_SS_LIST_LIST_METHOD_DESC = "(Ljcl/type/LispType;Ljcl/lang/SymbolStructImpl;Ljcl/lang/SymbolStructImpl;Ljava/util/List;Ljava/util/List;)V";
 
-	private static final String STRUCTURE_CLASS_INIT_LISP_TYPE_SS_SS_LIST_LIST_METHOD_SIGNATURE = "(Ljcl/type/LispType;Ljcl/lang/SymbolStruct;Ljcl/lang/SymbolStruct;Ljava/util/List<Ljava/lang/Class<+Ljcl/lang/LispStruct;>;>;Ljava/util/List<Ljava/lang/Class<+Ljcl/lang/LispStruct;>;>;)V";
+	private static final String STRUCTURE_CLASS_INIT_LISP_TYPE_SS_SS_LIST_LIST_METHOD_SIGNATURE = "(Ljcl/type/LispType;Ljcl/lang/SymbolStructImpl;Ljcl/lang/SymbolStructImpl;Ljava/util/List<Ljava/lang/Class<+Ljcl/lang/LispStruct;>;>;Ljava/util/List<Ljava/lang/Class<+Ljcl/lang/LispStruct;>;>;)V";
 
 	private static final String STRUCTURE_CLASS_NEW_INSTANCE_METHOD_NAME = "newInstance";
 
@@ -91,7 +91,7 @@ final class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 		final DefstructStruct input = event.getSource();
 		final GeneratorState generatorState = event.getGeneratorState();
 
-		final SymbolStruct structureSymbol = input.getStructureSymbol();
+		final SymbolStructImpl structureSymbol = input.getStructureSymbol();
 		final String structureName = structureSymbol.getName();
 
 		final String systemTimePostfix = "_" + System.nanoTime();
@@ -1268,12 +1268,12 @@ final class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 	}
 
 	/**
-	 * Private method for generating the {@link StructureClassStruct#StructureClassStruct(SymbolStruct, SymbolStruct,
+	 * Private method for generating the {@link StructureClassStruct#StructureClassStruct(SymbolStructImpl, SymbolStructImpl,
 	 * List, List)} constructor for the generated {@link StructureClassStruct} being written to via the provided {@link
 	 * ClassWriter}. The generation will perform the following operations:
 	 * <ol>
 	 * <li>Generating the call to the current class {@link StructureClassStruct#StructureClassStruct(LispType,
-	 * SymbolStruct, SymbolStruct, List, List)}, passing the singleton {@link StructureObjectType} with the class name
+	 * SymbolStructImpl, SymbolStructImpl, List, List)}, passing the singleton {@link StructureObjectType} with the class name
 	 * of the provided {@code structureTypeClassName}</li>
 	 * </ol>
 	 * The following is the example Java code generated when {@code (compiler:%defstruct foo nil make-foo nil a)} is
@@ -1349,12 +1349,12 @@ final class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 	}
 
 	/**
-	 * Private method for generating the {@link StructureClassStruct#StructureClassStruct(LispType, SymbolStruct,
-	 * SymbolStruct, List, List)} constructor for the generated {@link StructureClassStruct} being written to via the
+	 * Private method for generating the {@link StructureClassStruct#StructureClassStruct(LispType, SymbolStructImpl,
+	 * SymbolStructImpl, List, List)} constructor for the generated {@link StructureClassStruct} being written to via the
 	 * provided {@link ClassWriter}. The generation will perform the following operations:
 	 * <ol>
 	 * <li>Generating the call to the super class {@link StructureClassStruct#StructureClassStruct(LispType,
-	 * SymbolStruct, SymbolStruct, List, List)}, passing the singleton {@link StructureObjectType} with the class name
+	 * SymbolStructImpl, SymbolStructImpl, List, List)}, passing the singleton {@link StructureObjectType} with the class name
 	 * of the provided {@code structureTypeClassName}</li>
 	 * </ol>
 	 * The following is the example Java code generated when {@code (compiler:%defstruct foo nil make-foo nil a)} is
@@ -1484,9 +1484,9 @@ final class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 	 * clinit}) for the generated {@link StructureClassStruct} being written to via the provided {@link ClassWriter}.
 	 * The generation will perform the following operations:
 	 * <ol>
-	 * <li>Generating the code to fetch the {@link SymbolStruct} for the {@link DefstructStruct#defaultConstructorSymbol}
+	 * <li>Generating the code to fetch the {@link SymbolStructImpl} for the {@link DefstructStruct#defaultConstructorSymbol}
 	 * if it is not {@code null}, or generating {@code null}</li>
-	 * <li>Generating the code to fetch the {@link SymbolStruct} for the {@link DefstructStruct#printerSymbol} if it is
+	 * <li>Generating the code to fetch the {@link SymbolStructImpl} for the {@link DefstructStruct#printerSymbol} if it is
 	 * not {@code null}, or generating {@code null}</li>
 	 * <li>Generating null for both the 'directSuperClasses' and 'subClasses' {@link List}s</li>
 	 * <li>Generating the code to create a new instance of the {@link StructureClassStruct} with the provided {@code
@@ -1539,7 +1539,7 @@ final class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 		mv.visitTypeInsn(Opcodes.NEW, structureClassClassName);
 		mv.visitInsn(Opcodes.DUP);
 
-		final SymbolStruct defaultConstructorSymbol = input.getDefaultConstructorSymbol();
+		final SymbolStructImpl defaultConstructorSymbol = input.getDefaultConstructorSymbol();
 		if (defaultConstructorSymbol == null) {
 			mv.visitInsn(Opcodes.ACONST_NULL);
 		} else {
@@ -1550,7 +1550,7 @@ final class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 			mv.visitVarInsn(Opcodes.ALOAD, symbolStore);
 		}
 
-		final SymbolStruct printerSymbol = input.getPrinterSymbol();
+		final SymbolStructImpl printerSymbol = input.getPrinterSymbol();
 		if (printerSymbol == null) {
 			mv.visitInsn(Opcodes.ACONST_NULL);
 		} else {
@@ -1678,7 +1678,7 @@ final class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 	 * <ol>
 	 * <li>Generating the code to grab the static singleton {@code INSTANCE} field from the associated {@link
 	 * StructureClassStruct}</li>
-	 * <li>Generating the code to retrieve the {@link SymbolStruct} identifying the {@link StructureObjectStruct}</li>
+	 * <li>Generating the code to retrieve the {@link SymbolStructImpl} identifying the {@link StructureObjectStruct}</li>
 	 * <li>If the provided {@link DefstructStruct#includeStructureClass} is {@code null}, generating {@code null} to be
 	 * used as the parent {@link StructureObjectStruct} instance</li>
 	 * <li>If the provided {@link DefstructStruct#includeStructureClass} is not {@code null}, generating the code to
@@ -1759,7 +1759,7 @@ final class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 		                  GenerationConstants.SINGLETON_INSTANCE,
 		                  structureClassClassDesc);
 
-		final SymbolStruct structureSymbol = input.getStructureSymbol();
+		final SymbolStructImpl structureSymbol = input.getStructureSymbol();
 		final int packageStore = methodBuilder.getNextAvailableStore();
 		final int symbolStore = methodBuilder.getNextAvailableStore();
 		CodeGenerators.generateSymbol(structureSymbol, generatorState, packageStore, symbolStore);
@@ -1788,7 +1788,7 @@ final class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 		                   STRUCTURE_OBJECT_INIT_SCS_SS_SOS_METHOD_DESC,
 		                   false);
 
-		final List<SymbolStruct> slots = input.getSlots();
+		final List<SymbolStructImpl> slots = input.getSlots();
 		if (!slots.isEmpty()) {
 			// No need to call this method, as there are no slots to initialize
 			mv.visitVarInsn(Opcodes.ALOAD, thisStore);
@@ -1815,7 +1815,7 @@ final class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 	 * <li>Returning early and avoid generating the method unnecessarily if the {@link List} of {@link
 	 * DefstructStruct#slots} is empty</li>
 	 * <li>Generating the code to retrieve the {@link StructureObjectStruct#slots} field</li>
-	 * <li>Generating the code to retrieve the slot {@link SymbolStruct} and store a {@code null} value associated with
+	 * <li>Generating the code to retrieve the slot {@link SymbolStructImpl} and store a {@code null} value associated with
 	 * that symbol into the {@link StructureObjectStruct#slots} {@link Map}</li>
 	 * </ol>
 	 * The following is the example Java code generated when {@code (compiler:%defstruct foo nil make-foo nil a)} is
@@ -1832,7 +1832,7 @@ final class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 	 * </pre>
 	 *
 	 * @param input
-	 * 		the {@link DefstructStruct} containing the slots {@link SymbolStruct}s to initialize
+	 * 		the {@link DefstructStruct} containing the slots {@link SymbolStructImpl}s to initialize
 	 * @param generatorState
 	 * 		stateful object used to hold the current state of the code generation process
 	 * @param cw
@@ -1844,7 +1844,7 @@ final class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 	private static void generateStructureObjectInitSlotsMap(final DefstructStruct input, final GeneratorState generatorState,
 	                                                        final ClassWriter cw,
 	                                                        final String structureObjectClassName) {
-		final List<SymbolStruct> slots = input.getSlots();
+		final List<SymbolStructImpl> slots = input.getSlots();
 		if (slots.isEmpty()) {
 			// No need to generate this method, as there are no slots to initialize
 			return;
@@ -1871,7 +1871,7 @@ final class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 		final int packageStore = methodBuilder.getNextAvailableStore();
 		final int slotStore = methodBuilder.getNextAvailableStore();
 
-		for (final SymbolStruct slot : slots) {
+		for (final SymbolStructImpl slot : slots) {
 			CodeGenerators.generateSymbol(slot, generatorState, packageStore, slotStore);
 
 			mv.visitVarInsn(Opcodes.ALOAD, slotsFieldStore);

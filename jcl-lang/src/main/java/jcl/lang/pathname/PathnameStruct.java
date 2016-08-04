@@ -18,7 +18,7 @@ import java.util.StringTokenizer;
 import java.util.function.Supplier;
 import java.util.regex.Pattern;
 
-import jcl.lang.BooleanStruct;
+import jcl.lang.BooleanStructImpl;
 import jcl.lang.BuiltInClassStruct;
 import jcl.lang.statics.PrinterVariables;
 import jcl.lang.condition.exception.ErrorException;
@@ -990,7 +990,7 @@ public class PathnameStruct extends BuiltInClassStruct {
 
 	@Override
 	public String toString() {
-		final BooleanStruct printEscape = PrinterVariables.PRINT_ESCAPE.getVariableValue();
+		final BooleanStructImpl printEscape = PrinterVariables.PRINT_ESCAPE.getVariableValue();
 
 		final StringBuilder stringBuilder = new StringBuilder();
 

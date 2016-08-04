@@ -9,8 +9,8 @@ import jcl.compiler.function.expanders.MacroFunctionExpander;
 import jcl.compiler.sa.FormAnalyzer;
 import jcl.compiler.struct.specialoperator.BlockStruct;
 import jcl.lang.LispStruct;
-import jcl.lang.internal.SpecialOperatorStruct;
-import jcl.lang.SymbolStruct;
+import jcl.lang.internal.SpecialOperatorStructImpl;
+import jcl.lang.SymbolStructImpl;
 import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.ListStruct;
@@ -24,8 +24,8 @@ public class BlockExpander extends MacroFunctionExpander<BlockStruct> {
 	private FormAnalyzer formAnalyzer;
 
 	@Override
-	public SymbolStruct getFunctionSymbol() {
-		return SpecialOperatorStruct.BLOCK;
+	public SymbolStructImpl getFunctionSymbol() {
+		return SpecialOperatorStructImpl.BLOCK;
 	}
 
 	@Override
@@ -38,10 +38,10 @@ public class BlockExpander extends MacroFunctionExpander<BlockStruct> {
 		}
 		final LispStruct first = iterator.next();
 
-		if (!(first instanceof SymbolStruct)) {
+		if (!(first instanceof SymbolStructImpl)) {
 			throw new TypeErrorException("BLOCK: NAME must be a Symbol. Got: " + first);
 		}
-		final SymbolStruct name = (SymbolStruct) first;
+		final SymbolStructImpl name = (SymbolStructImpl) first;
 		environment.getBlockStack().push(name);
 
 		try {

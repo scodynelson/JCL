@@ -1,14 +1,14 @@
 package jcl.lang;
 
-import jcl.lang.internal.ConstantStruct;
+import jcl.lang.internal.ConstantStructImpl;
 import jcl.lang.statics.GlobalPackageStruct;
 import jcl.type.LispType;
 
-public abstract class BooleanStruct extends ConstantStruct<BooleanStruct> {
+public abstract class BooleanStructImpl extends ConstantStructImpl<BooleanStructImpl> {
 
 	private final boolean booleanValue;
 
-	protected BooleanStruct(final LispType lispType, final String name, final boolean booleanValue) {
+	protected BooleanStructImpl(final LispType lispType, final String name, final boolean booleanValue) {
 		super(lispType, name, GlobalPackageStruct.COMMON_LISP, null, null);
 		this.booleanValue = booleanValue;
 
@@ -26,7 +26,7 @@ public abstract class BooleanStruct extends ConstantStruct<BooleanStruct> {
 		return booleanValue;
 	}
 
-	public static BooleanStruct toLispBoolean(final Boolean aBoolean) {
+	public static BooleanStructImpl toLispBoolean(final Boolean aBoolean) {
 		if (aBoolean == null) {
 			return NILStruct.INSTANCE;
 		}

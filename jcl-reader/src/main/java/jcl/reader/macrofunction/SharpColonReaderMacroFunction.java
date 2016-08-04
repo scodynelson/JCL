@@ -9,7 +9,7 @@ import java.util.Optional;
 import javax.annotation.PostConstruct;
 
 import jcl.lang.LispStruct;
-import jcl.lang.SymbolStruct;
+import jcl.lang.SymbolStructImpl;
 import jcl.lang.condition.exception.ReaderErrorException;
 import jcl.lang.function.ReaderMacroFunction;
 import jcl.lang.NILStruct;
@@ -46,6 +46,6 @@ public class SharpColonReaderMacroFunction extends ReaderMacroFunction {
 		if (extendedToken.isHasPackageDelimiter()) {
 			throw new ReaderErrorException("Symbol following #: contains a package marker: " + tokenString);
 		}
-		return SymbolStruct.valueOf(tokenString);
+		return SymbolStructImpl.valueOf(tokenString);
 	}
 }

@@ -1,13 +1,13 @@
 package jcl.lang;
 
-import jcl.lang.internal.ConstantStruct;
+import jcl.lang.internal.ConstantStructImpl;
 import jcl.lang.statics.GlobalPackageStruct;
 import jcl.type.KeywordType;
 
 /**
- * The {@link KeywordStruct} is the object representation of a Lisp 'keyword' type.
+ * The {@link KeywordStructImpl} is the object representation of a Lisp 'keyword' type.
  */
-public final class KeywordStruct extends ConstantStruct<KeywordStruct> {
+public final class KeywordStructImpl extends ConstantStructImpl<KeywordStructImpl> {
 
 	/**
 	 * Public constructor.
@@ -15,13 +15,13 @@ public final class KeywordStruct extends ConstantStruct<KeywordStruct> {
 	 * @param name
 	 * 		the symbol name
 	 */
-	private KeywordStruct(final String name) {
+	private KeywordStructImpl(final String name) {
 		super(KeywordType.INSTANCE, name, GlobalPackageStruct.KEYWORD, null, null);
 		init();
 	}
 
-	public static KeywordStruct valueOf(final String name) {
-		return new KeywordStruct(name);
+	public static KeywordStructImpl valueOf(final String name) {
+		return new KeywordStructImpl(name);
 	}
 
 	/**

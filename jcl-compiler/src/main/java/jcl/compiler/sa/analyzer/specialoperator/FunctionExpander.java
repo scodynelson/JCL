@@ -10,8 +10,8 @@ import jcl.compiler.struct.specialoperator.LambdaCompilerFunctionStruct;
 import jcl.compiler.struct.specialoperator.SymbolCompilerFunctionStruct;
 import jcl.compiler.struct.specialoperator.lambda.LambdaStruct;
 import jcl.lang.LispStruct;
-import jcl.lang.internal.SpecialOperatorStruct;
-import jcl.lang.SymbolStruct;
+import jcl.lang.internal.SpecialOperatorStructImpl;
+import jcl.lang.SymbolStructImpl;
 import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.ListStruct;
@@ -25,8 +25,8 @@ public class FunctionExpander extends MacroFunctionExpander<CompilerFunctionStru
 	private LambdaExpander lambdaExpander;
 
 	@Override
-	public SymbolStruct getFunctionSymbol() {
-		return SpecialOperatorStruct.FUNCTION;
+	public SymbolStructImpl getFunctionSymbol() {
+		return SpecialOperatorStructImpl.FUNCTION;
 	}
 
 	@Override
@@ -43,8 +43,8 @@ public class FunctionExpander extends MacroFunctionExpander<CompilerFunctionStru
 			throw new ProgramErrorException("FUNCTION: Incorrect number of arguments: 3. Expected 2 arguments.");
 		}
 
-		if (first instanceof SymbolStruct) {
-			return new SymbolCompilerFunctionStruct((SymbolStruct) first);
+		if (first instanceof SymbolStructImpl) {
+			return new SymbolCompilerFunctionStruct((SymbolStructImpl) first);
 		} else if (first instanceof ListStruct) {
 			return analyzeFunctionList((ListStruct) first, environment);
 		} else {
@@ -56,7 +56,7 @@ public class FunctionExpander extends MacroFunctionExpander<CompilerFunctionStru
 
 		final LispStruct functionListFirst = functionList.getCar();
 
-		if (!SpecialOperatorStruct.LAMBDA.equals(functionListFirst)) {
+		if (!SpecialOperatorStructImpl.LAMBDA.equals(functionListFirst)) {
 			throw new ProgramErrorException("FUNCTION: First element of list argument must be the symbol 'LAMBDA'. Got: " + functionListFirst);
 		}
 

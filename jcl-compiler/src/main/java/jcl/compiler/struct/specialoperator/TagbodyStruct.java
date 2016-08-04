@@ -10,7 +10,7 @@ import jcl.compiler.struct.CompilerSpecialOperatorStruct;
 import jcl.compiler.struct.specialoperator.go.GoIntegerStruct;
 import jcl.compiler.struct.specialoperator.go.GoStruct;
 import jcl.lang.IntegerStruct;
-import jcl.lang.SymbolStruct;
+import jcl.lang.SymbolStructImpl;
 
 public class TagbodyStruct extends CompilerSpecialOperatorStruct {
 
@@ -37,7 +37,7 @@ public class TagbodyStruct extends CompilerSpecialOperatorStruct {
 				final String printedKey = tag.toString();
 				builder.append(printedKey);
 			} else {
-				final SymbolStruct tag = (SymbolStruct) key.getTag();
+				final SymbolStructImpl tag = (SymbolStructImpl) key.getTag();
 				if (!tag.getName().startsWith("Tag-")) {
 					final String printedKey = tag.toString();
 					builder.append(printedKey);

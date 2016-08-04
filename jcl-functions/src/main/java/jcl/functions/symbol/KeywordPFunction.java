@@ -1,7 +1,7 @@
 package jcl.functions.symbol;
 
-import jcl.lang.BooleanStruct;
-import jcl.lang.KeywordStruct;
+import jcl.lang.BooleanStructImpl;
+import jcl.lang.KeywordStructImpl;
 import jcl.lang.LispStruct;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
@@ -31,6 +31,6 @@ public final class KeywordPFunction extends CommonLispBuiltInFunctionStruct {
 	@Override
 	public LispStruct apply(final Arguments arguments) {
 		final LispStruct object = arguments.getRequiredArgument(OBJECT_ARGUMENT);
-		return BooleanStruct.toLispBoolean(object instanceof KeywordStruct);
+		return BooleanStructImpl.toLispBoolean(object instanceof KeywordStructImpl);
 	}
 }

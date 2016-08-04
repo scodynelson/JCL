@@ -30,13 +30,13 @@ import jcl.compiler.function.CompiledFunctionStruct;
 import jcl.compiler.function.expanders.CompiledMacroFunctionExpander;
 import jcl.lang.ComplexStruct;
 import jcl.lang.statics.GlobalPackageStruct;
-import jcl.lang.KeywordStruct;
+import jcl.lang.KeywordStructImpl;
 import jcl.lang.LispStruct;
 import jcl.lang.PackageStruct;
 import jcl.lang.PackageSymbolStruct;
 import jcl.lang.StructureClassStruct;
 import jcl.lang.StructureObjectStruct;
-import jcl.lang.SymbolStruct;
+import jcl.lang.SymbolStructImpl;
 import jcl.lang.ValuesStruct;
 import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.factory.LispStructFactory;
@@ -227,73 +227,73 @@ interface GenerationConstants {
 
 	String LISP_STRUCT_FACTORY_TO_CONS_CAR_CDR_METHOD_DESC = CodeGenerators.getMethodDescription(LispStructFactory.class, LISP_STRUCT_FACTORY_TO_CONS_CAR_CDR_METHOD_NAME, LispStruct.class, LispStruct.class);
 
-	String SYMBOL_STRUCT_NAME = Type.getInternalName(SymbolStruct.class);
+	String SYMBOL_STRUCT_NAME = Type.getInternalName(SymbolStructImpl.class);
 
-	String SYMBOL_STRUCT_DESC = Type.getDescriptor(SymbolStruct.class);
+	String SYMBOL_STRUCT_DESC = Type.getDescriptor(SymbolStructImpl.class);
 
 	String SYMBOL_STRUCT_VALUE_OF_STRING_NAME = "valueOf";
 
-	String SYMBOL_STRUCT_VALUE_OF_STRING_DESC = CodeGenerators.getMethodDescription(SymbolStruct.class, SYMBOL_STRUCT_VALUE_OF_STRING_NAME, String.class);
+	String SYMBOL_STRUCT_VALUE_OF_STRING_DESC = CodeGenerators.getMethodDescription(SymbolStructImpl.class, SYMBOL_STRUCT_VALUE_OF_STRING_NAME, String.class);
 
 	String SYMBOL_STRUCT_GET_LEXICAL_VALUE_METHOD_NAME = "getLexicalValue";
 
-	String SYMBOL_STRUCT_GET_LEXICAL_VALUE_METHOD_DESC = CodeGenerators.getMethodDescription(SymbolStruct.class, SYMBOL_STRUCT_GET_LEXICAL_VALUE_METHOD_NAME);
+	String SYMBOL_STRUCT_GET_LEXICAL_VALUE_METHOD_DESC = CodeGenerators.getMethodDescription(SymbolStructImpl.class, SYMBOL_STRUCT_GET_LEXICAL_VALUE_METHOD_NAME);
 
 	String SYMBOL_STRUCT_SET_LEXICAL_VALUE_METHOD_NAME = "setLexicalValue";
 
-	String SYMBOL_STRUCT_SET_LEXICAL_VALUE_METHOD_DESC = CodeGenerators.getMethodDescription(SymbolStruct.class, SYMBOL_STRUCT_SET_LEXICAL_VALUE_METHOD_NAME, LispStruct.class);
+	String SYMBOL_STRUCT_SET_LEXICAL_VALUE_METHOD_DESC = CodeGenerators.getMethodDescription(SymbolStructImpl.class, SYMBOL_STRUCT_SET_LEXICAL_VALUE_METHOD_NAME, LispStruct.class);
 
 	String SYMBOL_STRUCT_BIND_LEXICAL_VALUE_METHOD_NAME = "bindLexicalValue";
 
-	String SYMBOL_STRUCT_BIND_LEXICAL_VALUE_METHOD_DESC = CodeGenerators.getMethodDescription(SymbolStruct.class, SYMBOL_STRUCT_BIND_LEXICAL_VALUE_METHOD_NAME, LispStruct.class);
+	String SYMBOL_STRUCT_BIND_LEXICAL_VALUE_METHOD_DESC = CodeGenerators.getMethodDescription(SymbolStructImpl.class, SYMBOL_STRUCT_BIND_LEXICAL_VALUE_METHOD_NAME, LispStruct.class);
 
 	String SYMBOL_STRUCT_UNBIND_LEXICAL_VALUE_METHOD_NAME = "unbindLexicalValue";
 
-	String SYMBOL_STRUCT_UNBIND_LEXICAL_VALUE_METHOD_DESC = CodeGenerators.getMethodDescription(SymbolStruct.class, SYMBOL_STRUCT_UNBIND_LEXICAL_VALUE_METHOD_NAME);
+	String SYMBOL_STRUCT_UNBIND_LEXICAL_VALUE_METHOD_DESC = CodeGenerators.getMethodDescription(SymbolStructImpl.class, SYMBOL_STRUCT_UNBIND_LEXICAL_VALUE_METHOD_NAME);
 
 	String SYMBOL_STRUCT_GET_DYNAMIC_VALUE_METHOD_NAME = "getDynamicValue";
 
-	String SYMBOL_STRUCT_GET_DYNAMIC_VALUE_METHOD_DESC = CodeGenerators.getMethodDescription(SymbolStruct.class, SYMBOL_STRUCT_GET_DYNAMIC_VALUE_METHOD_NAME);
+	String SYMBOL_STRUCT_GET_DYNAMIC_VALUE_METHOD_DESC = CodeGenerators.getMethodDescription(SymbolStructImpl.class, SYMBOL_STRUCT_GET_DYNAMIC_VALUE_METHOD_NAME);
 
 	String SYMBOL_STRUCT_SET_DYNAMIC_VALUE_METHOD_NAME = "setDynamicValue";
 
-	String SYMBOL_STRUCT_SET_DYNAMIC_VALUE_METHOD_DESC = CodeGenerators.getMethodDescription(SymbolStruct.class, SYMBOL_STRUCT_SET_DYNAMIC_VALUE_METHOD_NAME, LispStruct.class);
+	String SYMBOL_STRUCT_SET_DYNAMIC_VALUE_METHOD_DESC = CodeGenerators.getMethodDescription(SymbolStructImpl.class, SYMBOL_STRUCT_SET_DYNAMIC_VALUE_METHOD_NAME, LispStruct.class);
 
 	String SYMBOL_STRUCT_BIND_DYNAMIC_VALUE_METHOD_NAME = "bindDynamicValue";
 
-	String SYMBOL_STRUCT_BIND_DYNAMIC_VALUE_METHOD_DESC = CodeGenerators.getMethodDescription(SymbolStruct.class, SYMBOL_STRUCT_BIND_DYNAMIC_VALUE_METHOD_NAME, LispStruct.class);
+	String SYMBOL_STRUCT_BIND_DYNAMIC_VALUE_METHOD_DESC = CodeGenerators.getMethodDescription(SymbolStructImpl.class, SYMBOL_STRUCT_BIND_DYNAMIC_VALUE_METHOD_NAME, LispStruct.class);
 
 	String SYMBOL_STRUCT_UNBIND_DYNAMIC_VALUE_METHOD_NAME = "unbindDynamicValue";
 
-	String SYMBOL_STRUCT_UNBIND_DYNAMIC_VALUE_METHOD_DESC = CodeGenerators.getMethodDescription(SymbolStruct.class, SYMBOL_STRUCT_UNBIND_DYNAMIC_VALUE_METHOD_NAME);
+	String SYMBOL_STRUCT_UNBIND_DYNAMIC_VALUE_METHOD_DESC = CodeGenerators.getMethodDescription(SymbolStructImpl.class, SYMBOL_STRUCT_UNBIND_DYNAMIC_VALUE_METHOD_NAME);
 
 	String SYMBOL_STRUCT_GET_VALUE_METHOD_NAME = "getValue";
 
-	String SYMBOL_STRUCT_GET_VALUE_METHOD_DESC = CodeGenerators.getMethodDescription(SymbolStruct.class, SYMBOL_STRUCT_GET_VALUE_METHOD_NAME);
+	String SYMBOL_STRUCT_GET_VALUE_METHOD_DESC = CodeGenerators.getMethodDescription(SymbolStructImpl.class, SYMBOL_STRUCT_GET_VALUE_METHOD_NAME);
 
 	String SYMBOL_STRUCT_SET_VALUE_METHOD_NAME = "setValue";
 
-	String SYMBOL_STRUCT_SET_VALUE_METHOD_DESC = CodeGenerators.getMethodDescription(SymbolStruct.class, SYMBOL_STRUCT_SET_VALUE_METHOD_NAME, LispStruct.class);
+	String SYMBOL_STRUCT_SET_VALUE_METHOD_DESC = CodeGenerators.getMethodDescription(SymbolStructImpl.class, SYMBOL_STRUCT_SET_VALUE_METHOD_NAME, LispStruct.class);
 
 	String SYMBOL_STRUCT_GET_FUNCTION_METHOD_NAME = "getFunction";
 
-	String SYMBOL_STRUCT_GET_FUNCTION_METHOD_DESC = CodeGenerators.getMethodDescription(SymbolStruct.class, SYMBOL_STRUCT_GET_FUNCTION_METHOD_NAME);
+	String SYMBOL_STRUCT_GET_FUNCTION_METHOD_DESC = CodeGenerators.getMethodDescription(SymbolStructImpl.class, SYMBOL_STRUCT_GET_FUNCTION_METHOD_NAME);
 
 	String SYMBOL_STRUCT_BIND_FUNCTION_METHOD_NAME = "bindFunction";
 
-	String SYMBOL_STRUCT_BIND_FUNCTION_METHOD_DESC = CodeGenerators.getMethodDescription(SymbolStruct.class, SYMBOL_STRUCT_BIND_FUNCTION_METHOD_NAME, FunctionStruct.class);
+	String SYMBOL_STRUCT_BIND_FUNCTION_METHOD_DESC = CodeGenerators.getMethodDescription(SymbolStructImpl.class, SYMBOL_STRUCT_BIND_FUNCTION_METHOD_NAME, FunctionStruct.class);
 
 	String SYMBOL_STRUCT_UNBIND_FUNCTION_METHOD_NAME = "unbindFunction";
 
-	String SYMBOL_STRUCT_UNBIND_FUNCTION_METHOD_DESC = CodeGenerators.getMethodDescription(SymbolStruct.class, SYMBOL_STRUCT_UNBIND_FUNCTION_METHOD_NAME);
+	String SYMBOL_STRUCT_UNBIND_FUNCTION_METHOD_DESC = CodeGenerators.getMethodDescription(SymbolStructImpl.class, SYMBOL_STRUCT_UNBIND_FUNCTION_METHOD_NAME);
 
 	String SYMBOL_STRUCT_SET_STRUCTURE_CLASS_METHOD_NAME = "setStructureClass";
 
-	String SYMBOL_STRUCT_SET_STRUCTURE_CLASS_METHOD_DESC = CodeGenerators.getMethodDescription(SymbolStruct.class, SYMBOL_STRUCT_SET_STRUCTURE_CLASS_METHOD_NAME, StructureClassStruct.class);
+	String SYMBOL_STRUCT_SET_STRUCTURE_CLASS_METHOD_DESC = CodeGenerators.getMethodDescription(SymbolStructImpl.class, SYMBOL_STRUCT_SET_STRUCTURE_CLASS_METHOD_NAME, StructureClassStruct.class);
 
 	String SYMBOL_STRUCT_SET_MACRO_FUNCTION_EXPANDER_METHOD_NAME = "setMacroFunctionExpander";
 
-	String SYMBOL_STRUCT_SET_MACRO_FUNCTION_EXPANDER_METHOD_DESC = CodeGenerators.getMethodDescription(SymbolStruct.class, SYMBOL_STRUCT_SET_MACRO_FUNCTION_EXPANDER_METHOD_NAME, MacroFunctionExpanderInter.class);
+	String SYMBOL_STRUCT_SET_MACRO_FUNCTION_EXPANDER_METHOD_DESC = CodeGenerators.getMethodDescription(SymbolStructImpl.class, SYMBOL_STRUCT_SET_MACRO_FUNCTION_EXPANDER_METHOD_NAME, MacroFunctionExpanderInter.class);
 
 	String PACKAGE_STRUCT_NAME = Type.getInternalName(PackageStruct.class);
 
@@ -315,7 +315,7 @@ interface GenerationConstants {
 
 	String GLOBAL_PACKAGE_STRUCT_NAME = Type.getInternalName(GlobalPackageStruct.class);
 
-	String KEYWORD_STRUCT_NAME = Type.getInternalName(KeywordStruct.class);
+	String KEYWORD_STRUCT_NAME = Type.getInternalName(KeywordStructImpl.class);
 
 	String FUNCTION_STRUCT_NAME = Type.getInternalName(FunctionStruct.class);
 
@@ -367,55 +367,55 @@ interface GenerationConstants {
 
 	String REQUIRED_BINDING_NAME = Type.getInternalName(RequiredParameter.class);
 
-	String REQUIRED_BINDING_INIT_DESC = CodeGenerators.getConstructorDescription(RequiredParameter.class, SymbolStruct.class, boolean.class);
+	String REQUIRED_BINDING_INIT_DESC = CodeGenerators.getConstructorDescription(RequiredParameter.class, SymbolStructImpl.class, boolean.class);
 
-	String REQUIRED_BINDING_DESTRUCTURING_INIT_DESC = CodeGenerators.getConstructorDescription(RequiredParameter.class, SymbolStruct.class, DestructuringLambdaList.class, boolean.class);
+	String REQUIRED_BINDING_DESTRUCTURING_INIT_DESC = CodeGenerators.getConstructorDescription(RequiredParameter.class, SymbolStructImpl.class, DestructuringLambdaList.class, boolean.class);
 
 	String OPTIONAL_BINDING_NAME = Type.getInternalName(OptionalParameter.class);
 
-	String OPTIONAL_BINDING_INIT_DESC = CodeGenerators.getConstructorDescription(OptionalParameter.class, SymbolStruct.class, LispStruct.class, boolean.class, SuppliedPParameter.class);
+	String OPTIONAL_BINDING_INIT_DESC = CodeGenerators.getConstructorDescription(OptionalParameter.class, SymbolStructImpl.class, LispStruct.class, boolean.class, SuppliedPParameter.class);
 
-	String OPTIONAL_BINDING_DESTRUCTURING_INIT_DESC = CodeGenerators.getConstructorDescription(OptionalParameter.class, SymbolStruct.class, DestructuringLambdaList.class, LispStruct.class, boolean.class, SuppliedPParameter.class);
+	String OPTIONAL_BINDING_DESTRUCTURING_INIT_DESC = CodeGenerators.getConstructorDescription(OptionalParameter.class, SymbolStructImpl.class, DestructuringLambdaList.class, LispStruct.class, boolean.class, SuppliedPParameter.class);
 
 	String REST_BINDING_NAME = Type.getInternalName(RestParameter.class);
 
-	String REST_BINDING_INIT_DESC = CodeGenerators.getConstructorDescription(RestParameter.class, SymbolStruct.class, boolean.class);
+	String REST_BINDING_INIT_DESC = CodeGenerators.getConstructorDescription(RestParameter.class, SymbolStructImpl.class, boolean.class);
 
-	String REST_BINDING_DESTRUCTURING_INIT_DESC = CodeGenerators.getConstructorDescription(RestParameter.class, SymbolStruct.class, DestructuringLambdaList.class, boolean.class);
+	String REST_BINDING_DESTRUCTURING_INIT_DESC = CodeGenerators.getConstructorDescription(RestParameter.class, SymbolStructImpl.class, DestructuringLambdaList.class, boolean.class);
 
 	String KEY_BINDING_NAME = Type.getInternalName(KeyParameter.class);
 
-	String KEY_BINDING_INIT_DESC = CodeGenerators.getConstructorDescription(KeyParameter.class, SymbolStruct.class, LispStruct.class, boolean.class, SymbolStruct.class, SuppliedPParameter.class);
+	String KEY_BINDING_INIT_DESC = CodeGenerators.getConstructorDescription(KeyParameter.class, SymbolStructImpl.class, LispStruct.class, boolean.class, SymbolStructImpl.class, SuppliedPParameter.class);
 
-	String KEY_BINDING_DESTRUCTURING_INIT_DESC = CodeGenerators.getConstructorDescription(KeyParameter.class, SymbolStruct.class, DestructuringLambdaList.class, LispStruct.class, boolean.class, SymbolStruct.class, SuppliedPParameter.class);
+	String KEY_BINDING_DESTRUCTURING_INIT_DESC = CodeGenerators.getConstructorDescription(KeyParameter.class, SymbolStructImpl.class, DestructuringLambdaList.class, LispStruct.class, boolean.class, SymbolStructImpl.class, SuppliedPParameter.class);
 
 	String AUX_BINDING_NAME = Type.getInternalName(AuxParameter.class);
 
-	String AUX_BINDING_INIT_DESC = CodeGenerators.getConstructorDescription(AuxParameter.class, SymbolStruct.class, LispStruct.class, boolean.class);
+	String AUX_BINDING_INIT_DESC = CodeGenerators.getConstructorDescription(AuxParameter.class, SymbolStructImpl.class, LispStruct.class, boolean.class);
 
-	String AUX_BINDING_DESTRUCTURING_INIT_DESC = CodeGenerators.getConstructorDescription(AuxParameter.class, SymbolStruct.class, DestructuringLambdaList.class, LispStruct.class, boolean.class);
+	String AUX_BINDING_DESTRUCTURING_INIT_DESC = CodeGenerators.getConstructorDescription(AuxParameter.class, SymbolStructImpl.class, DestructuringLambdaList.class, LispStruct.class, boolean.class);
 
 	String SUPPLIED_P_BINDING_NAME = Type.getInternalName(SuppliedPParameter.class);
 
-	String SUPPLIED_P_BINDING_INIT_DESC = CodeGenerators.getConstructorDescription(SuppliedPParameter.class, SymbolStruct.class, boolean.class);
+	String SUPPLIED_P_BINDING_INIT_DESC = CodeGenerators.getConstructorDescription(SuppliedPParameter.class, SymbolStructImpl.class, boolean.class);
 
 	String WHOLE_BINDING_NAME = Type.getInternalName(WholeParameter.class);
 
-	String WHOLE_BINDING_INIT_DESC = CodeGenerators.getConstructorDescription(WholeParameter.class, SymbolStruct.class, boolean.class);
+	String WHOLE_BINDING_INIT_DESC = CodeGenerators.getConstructorDescription(WholeParameter.class, SymbolStructImpl.class, boolean.class);
 
 	String ENVIRONMENT_BINDING_NAME = Type.getInternalName(EnvironmentParameter.class);
 
-	String ENVIRONMENT_BINDING_INIT_DESC = CodeGenerators.getConstructorDescription(EnvironmentParameter.class, SymbolStruct.class);
+	String ENVIRONMENT_BINDING_INIT_DESC = CodeGenerators.getConstructorDescription(EnvironmentParameter.class, SymbolStructImpl.class);
 
 	String BODY_BINDING_NAME = Type.getInternalName(BodyParameter.class);
 
-	String BODY_BINDING_INIT_DESC = CodeGenerators.getConstructorDescription(BodyParameter.class, SymbolStruct.class, boolean.class);
+	String BODY_BINDING_INIT_DESC = CodeGenerators.getConstructorDescription(BodyParameter.class, SymbolStructImpl.class, boolean.class);
 
-	String BODY_BINDING_DESTRUCTURING_INIT_DESC = CodeGenerators.getConstructorDescription(BodyParameter.class, SymbolStruct.class, DestructuringLambdaList.class, boolean.class);
+	String BODY_BINDING_DESTRUCTURING_INIT_DESC = CodeGenerators.getConstructorDescription(BodyParameter.class, SymbolStructImpl.class, DestructuringLambdaList.class, boolean.class);
 
 	String RETURN_FROM_EXCEPTION_NAME = Type.getInternalName(ReturnFromException.class);
 
-	String RETURN_FROM_EXCEPTION_INIT_DESC = CodeGenerators.getConstructorDescription(ReturnFromException.class, SymbolStruct.class, LispStruct.class);
+	String RETURN_FROM_EXCEPTION_INIT_DESC = CodeGenerators.getConstructorDescription(ReturnFromException.class, SymbolStructImpl.class, LispStruct.class);
 
 	String RETURN_FROM_EXCEPTION_GET_NAME_METHOD_NAME = "getName";
 

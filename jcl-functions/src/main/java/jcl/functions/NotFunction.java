@@ -4,7 +4,7 @@
 
 package jcl.functions;
 
-import jcl.lang.BooleanStruct;
+import jcl.lang.BooleanStructImpl;
 import jcl.lang.LispStruct;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
@@ -29,6 +29,6 @@ public final class NotFunction extends CommonLispBuiltInFunctionStruct {
 	@Override
 	public LispStruct apply(final Arguments arguments) {
 		final LispStruct object = arguments.getRequiredArgument(OBJECT_ARGUMENT);
-		return BooleanStruct.toLispBoolean(NILStruct.INSTANCE.equals(object));
+		return BooleanStructImpl.toLispBoolean(NILStruct.INSTANCE.equals(object));
 	}
 }

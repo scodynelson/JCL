@@ -4,7 +4,7 @@ import java.util.List;
 
 import jcl.lang.BuiltInClassStruct;
 import jcl.lang.LispStruct;
-import jcl.lang.SymbolStruct;
+import jcl.lang.SymbolStructImpl;
 import jcl.type.FunctionType;
 import jcl.type.LispType;
 import org.springframework.beans.factory.InitializingBean;
@@ -29,11 +29,11 @@ public abstract class FunctionStruct extends BuiltInClassStruct implements Initi
 
 	@Override
 	public void afterPropertiesSet() throws Exception {
-		final SymbolStruct functionSymbol = getFunctionSymbol();
+		final SymbolStructImpl functionSymbol = getFunctionSymbol();
 		functionSymbol.setFunction(this);
 	}
 
-	public abstract SymbolStruct getFunctionSymbol();
+	public abstract SymbolStructImpl getFunctionSymbol();
 
 	public abstract LispStruct apply(LispStruct... lispStructs);
 }

@@ -4,7 +4,7 @@
 
 package jcl.functions.stream;
 
-import jcl.lang.BooleanStruct;
+import jcl.lang.BooleanStructImpl;
 import jcl.lang.LispStruct;
 import jcl.lang.StreamStruct;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
@@ -29,6 +29,6 @@ public final class StreamPFunction extends CommonLispBuiltInFunctionStruct {
 	@Override
 	public LispStruct apply(final Arguments arguments) {
 		final LispStruct object = arguments.getRequiredArgument(OBJECT_ARGUMENT);
-		return BooleanStruct.toLispBoolean(object instanceof StreamStruct);
+		return BooleanStructImpl.toLispBoolean(object instanceof StreamStruct);
 	}
 }

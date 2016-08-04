@@ -2,19 +2,19 @@ package jcl.lang.internal;
 
 import jcl.lang.LispStruct;
 import jcl.lang.PackageStruct;
-import jcl.lang.SymbolStruct;
+import jcl.lang.SymbolStructImpl;
 
-public class VariableStruct<TYPE extends LispStruct> extends SymbolStruct {
+public class VariableStructImpl<TYPE extends LispStruct> extends SymbolStructImpl {
 
 	private TYPE variableValue;
 
-	protected VariableStruct(final String name, final PackageStruct symbolPackage, final TYPE value) {
+	protected VariableStructImpl(final String name, final PackageStruct symbolPackage, final TYPE value) {
 		super(name, symbolPackage, value);
 		variableValue = value;
 	}
 
-	public static <T extends LispStruct> VariableStruct<T> valueOf(final String name, final PackageStruct symbolPackage, final T value) {
-		return new VariableStruct<>(name, symbolPackage, value);
+	public static <T extends LispStruct> VariableStructImpl<T> valueOf(final String name, final PackageStruct symbolPackage, final T value) {
+		return new VariableStructImpl<>(name, symbolPackage, value);
 	}
 
 	public TYPE getVariableValue() {

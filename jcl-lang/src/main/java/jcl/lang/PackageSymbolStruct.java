@@ -5,19 +5,19 @@
 package jcl.lang;
 
 /**
- * Internal class for returning a {@link SymbolStruct} and it's current package symbol type as a {@link KeywordStruct}.
+ * Internal class for returning a {@link SymbolStructImpl} and it's current package symbol type as a {@link KeywordStructImpl}.
  */
 public class PackageSymbolStruct {
 
 	/**
-	 * The {@link SymbolStruct} symbol.
+	 * The {@link SymbolStructImpl} symbol.
 	 */
-	private final SymbolStruct symbol;
+	private final SymbolStructImpl symbol;
 
 	/**
 	 * The {@link #symbol}s package location type.
 	 */
-	private final KeywordStruct packageSymbolType;
+	private final KeywordStructImpl packageSymbolType;
 
 	/**
 	 * Package protected constructor.
@@ -27,7 +27,7 @@ public class PackageSymbolStruct {
 	 * @param packageSymbolType
 	 * 		the symbol package location
 	 */
-	PackageSymbolStruct(final SymbolStruct symbol, final KeywordStruct packageSymbolType) {
+	PackageSymbolStruct(final SymbolStructImpl symbol, final KeywordStructImpl packageSymbolType) {
 		this.symbol = symbol;
 		this.packageSymbolType = packageSymbolType;
 	}
@@ -37,7 +37,7 @@ public class PackageSymbolStruct {
 	 *
 	 * @return package-symbol {@link #symbol} property
 	 */
-	public SymbolStruct getSymbol() {
+	public SymbolStructImpl getSymbol() {
 		return symbol;
 	}
 
@@ -46,7 +46,7 @@ public class PackageSymbolStruct {
 	 *
 	 * @return package-symbol {@link #packageSymbolType} property
 	 */
-	public KeywordStruct getPackageSymbolType() {
+	public KeywordStructImpl getPackageSymbolType() {
 		return packageSymbolType;
 	}
 }

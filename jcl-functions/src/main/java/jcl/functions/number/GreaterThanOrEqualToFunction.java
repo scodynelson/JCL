@@ -6,7 +6,7 @@ package jcl.functions.number;
 
 import java.util.List;
 
-import jcl.lang.BooleanStruct;
+import jcl.lang.BooleanStructImpl;
 import jcl.lang.LispStruct;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
@@ -35,6 +35,6 @@ public final class GreaterThanOrEqualToFunction extends CommonLispBuiltInFunctio
 		final List<RealStruct> reals = arguments.getRestArgument(RealStruct.class);
 
 		final boolean result = RealStruct.isGreaterThanOrEqualTo(real, reals);
-		return BooleanStruct.toLispBoolean(result);
+		return BooleanStructImpl.toLispBoolean(result);
 	}
 }

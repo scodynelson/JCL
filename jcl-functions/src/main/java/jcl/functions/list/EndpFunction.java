@@ -1,6 +1,6 @@
 package jcl.functions.list;
 
-import jcl.lang.BooleanStruct;
+import jcl.lang.BooleanStructImpl;
 import jcl.lang.LispStruct;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
@@ -26,6 +26,6 @@ public final class EndpFunction extends CommonLispBuiltInFunctionStruct {
 	@Override
 	public LispStruct apply(final Arguments arguments) {
 		final ListStruct list = arguments.getRequiredArgument(LIST_ARGUMENT, ListStruct.class);
-		return BooleanStruct.toLispBoolean(NILStruct.INSTANCE.equals(list));
+		return BooleanStructImpl.toLispBoolean(NILStruct.INSTANCE.equals(list));
 	}
 }

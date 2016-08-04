@@ -6,7 +6,7 @@ package jcl.functions.hashtable;
 
 import jcl.lang.HashTableStruct;
 import jcl.lang.LispStruct;
-import jcl.lang.SymbolStruct;
+import jcl.lang.SymbolStructImpl;
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.FunctionStruct;
@@ -44,8 +44,8 @@ public final class MapHashFunction extends CommonLispBuiltInFunctionStruct {
 	private FunctionStruct validateFunctionDesignator(final LispStruct functionDesignator) {
 		if (functionDesignator instanceof FunctionStruct) {
 			return (FunctionStruct) functionDesignator;
-		} else if (functionDesignator instanceof SymbolStruct) {
-			return ((SymbolStruct) functionDesignator).getFunction();
+		} else if (functionDesignator instanceof SymbolStructImpl) {
+			return ((SymbolStructImpl) functionDesignator).getFunction();
 		} else {
 			throw new TypeErrorException("UNCAUGHT TYPE ERROR.");
 		}

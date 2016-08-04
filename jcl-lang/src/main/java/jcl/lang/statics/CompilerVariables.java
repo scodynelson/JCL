@@ -4,7 +4,7 @@
 
 package jcl.lang.statics;
 
-import jcl.lang.BooleanStructImpl;
+import jcl.lang.BooleanStruct;
 import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
@@ -26,12 +26,12 @@ public interface CompilerVariables {
 	VariableStructImpl<LispStruct> COMPILE_FILE_TRUENAME = VariableStructImpl.valueOf("*COMPILE-FILE-TRUENAME*", GlobalPackageStruct.COMMON_LISP, NILStruct.INSTANCE);
 	VariableStructImpl<LispStruct> LOAD_PATHNAME = VariableStructImpl.valueOf("*LOAD-PATHNAME*", GlobalPackageStruct.COMMON_LISP, NILStruct.INSTANCE);
 	VariableStructImpl<LispStruct> LOAD_TRUENAME = VariableStructImpl.valueOf("*LOAD-TRUENAME*", GlobalPackageStruct.COMMON_LISP, NILStruct.INSTANCE);
-	VariableStructImpl<BooleanStructImpl> COMPILE_PRINT = VariableStructImpl.valueOf("*COMPILE-PRINT*", GlobalPackageStruct.COMMON_LISP, NILStruct.INSTANCE);
-	VariableStructImpl<BooleanStructImpl> COMPILE_VERBOSE = VariableStructImpl.valueOf("*COMPILE-VERBOSE*", GlobalPackageStruct.COMMON_LISP, NILStruct.INSTANCE);
-	VariableStructImpl<BooleanStructImpl> LOAD_PRINT = VariableStructImpl.valueOf("*LOAD-PRINT*", GlobalPackageStruct.COMMON_LISP, NILStruct.INSTANCE);
-	VariableStructImpl<BooleanStructImpl> LOAD_VERBOSE = VariableStructImpl.valueOf("*LOAD-VERBOSE*", GlobalPackageStruct.COMMON_LISP, NILStruct.INSTANCE);
+	VariableStructImpl<BooleanStruct> COMPILE_PRINT = VariableStructImpl.valueOf("*COMPILE-PRINT*", GlobalPackageStruct.COMMON_LISP, NILStruct.INSTANCE);
+	VariableStructImpl<BooleanStruct> COMPILE_VERBOSE = VariableStructImpl.valueOf("*COMPILE-VERBOSE*", GlobalPackageStruct.COMMON_LISP, NILStruct.INSTANCE);
+	VariableStructImpl<BooleanStruct> LOAD_PRINT = VariableStructImpl.valueOf("*LOAD-PRINT*", GlobalPackageStruct.COMMON_LISP, NILStruct.INSTANCE);
+	VariableStructImpl<BooleanStruct> LOAD_VERBOSE = VariableStructImpl.valueOf("*LOAD-VERBOSE*", GlobalPackageStruct.COMMON_LISP, NILStruct.INSTANCE);
 	VariableStructImpl<?> MODULES = VariableStructImpl.valueOf("*MODULES*", GlobalPackageStruct.COMMON_LISP, null);
 
-	VariableStructImpl<BooleanStructImpl> COMPILE_TOP_LEVEL = VariableStructImpl.valueOf("*COMPILE-TOP-LEVEL*", GlobalPackageStruct.SYSTEM, NILStruct.INSTANCE);
-	VariableStructImpl<BooleanStructImpl> CONVERTING_FOR_INTERPRETER = VariableStructImpl.valueOf("*CONVERTING-FOR-INTERPRETER*", GlobalPackageStruct.SYSTEM, NILStruct.INSTANCE);
+	VariableStructImpl<BooleanStruct> COMPILE_TOP_LEVEL = VariableStructImpl.valueOf("*COMPILE-TOP-LEVEL*", GlobalPackageStruct.SYSTEM, NILStruct.INSTANCE);
+	VariableStructImpl<BooleanStruct> CONVERTING_FOR_INTERPRETER = VariableStructImpl.valueOf("*CONVERTING-FOR-INTERPRETER*", GlobalPackageStruct.SYSTEM, NILStruct.INSTANCE);
 }

@@ -7,7 +7,7 @@ import jcl.type.KeywordType;
 /**
  * The {@link KeywordStructImpl} is the object representation of a Lisp 'keyword' type.
  */
-public final class KeywordStructImpl extends ConstantStructImpl<KeywordStructImpl> {
+public final class KeywordStructImpl extends ConstantStructImpl<KeywordStructImpl> implements KeywordStruct {
 
 	/**
 	 * Public constructor.
@@ -20,7 +20,7 @@ public final class KeywordStructImpl extends ConstantStructImpl<KeywordStructImp
 		init();
 	}
 
-	public static KeywordStructImpl valueOf(final String name) {
+	public static KeywordStruct valueOf(final String name) {
 		return new KeywordStructImpl(name);
 	}
 

@@ -9,10 +9,11 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
 
-import jcl.lang.KeywordStructImpl;
+import jcl.lang.KeywordStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.NILStruct;
+import jcl.lang.factory.LispStructFactory;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.iterators.ObjectArrayIterator;
 
@@ -20,7 +21,7 @@ import static java.util.stream.Collectors.toMap;
 
 public final class Parameters {
 
-	public static final KeywordStructImpl ALLOW_OTHER_KEYS = KeywordStructImpl.valueOf("ALLOW-OTHER-KEYS");
+	public static final KeywordStruct ALLOW_OTHER_KEYS = LispStructFactory.toKeyword("ALLOW-OTHER-KEYS");
 
 	private final String functionName;
 
@@ -61,7 +62,7 @@ public final class Parameters {
 		return this;
 	}
 
-	public KeyParameter keyParameter(final KeywordStructImpl keyword) {
+	public KeyParameter keyParameter(final KeywordStruct keyword) {
 		final KeyParameter keyParameter = new KeyParameter(this, keyword);
 		if (keyParameters == null) {
 			keyParameters = new ArrayList<>();
@@ -115,7 +116,7 @@ public final class Parameters {
 			}
 		}
 
-		Map<KeywordStructImpl, KeyParameter> keywordsToKeys = Collections.emptyMap();
+		Map<KeywordStruct, KeyParameter> keywordsToKeys = Collections.emptyMap();
 		if (keyParameters != null) {
 			keywordsToKeys = keyParameters.stream().collect(toMap(KeyParameter::getKeyword, Function.identity()));
 		}
@@ -130,16 +131,16 @@ public final class Parameters {
 			resultArguments.getRestParameter().addAll(restList);
 		}
 
-		List<KeywordStructImpl> otherKeywords = null;
-		Set<KeywordStructImpl> consumedKeywords = null;
+		List<KeywordStruct> otherKeywords = null;
+		Set<KeywordStruct> consumedKeywords = null;
 
 		boolean doNotAllowOtherKeys = !allowOtherKeys;
 
 		for (final Iterator<LispStruct> restIterator = restList.iterator(); restIterator.hasNext(); ) {
 			final LispStruct argument = restIterator.next();
 
-			if (argument instanceof KeywordStructImpl) {
-				final KeywordStructImpl keywordArgument = (KeywordStructImpl) argument;
+			if (argument instanceof KeywordStruct) {
+				final KeywordStruct keywordArgument = (KeywordStruct) argument;
 
 				if (keywordsToKeys.containsKey(keywordArgument)) {
 					final KeyParameter keyParameter = keywordsToKeys.remove(keywordArgument);
@@ -157,7 +158,7 @@ public final class Parameters {
 							}
 						}
 
-						final KeywordStructImpl keyword = keyParameter.getKeyword();
+						final KeywordStruct keyword = keyParameter.getKeyword();
 						resultArguments.getKeyParameters().put(keyword, parameterValue);
 					} else {
 						final String message = String.format("Expected argument to follow keyword name argument for call to '%s' with key name: %s.",
@@ -209,7 +210,7 @@ public final class Parameters {
 		}
 
 		for (final KeyParameter keyParameter : keywordsToKeys.values()) {
-			final KeywordStructImpl keyword = keyParameter.getKeyword();
+			final KeywordStruct keyword = keyParameter.getKeyword();
 			final LispStruct parameterValue = keyParameter.getInitialValue();
 			resultArguments.getKeyParameters().put(keyword, parameterValue);
 		}

@@ -4,7 +4,7 @@
 
 package jcl.functions.readtable;
 
-import jcl.lang.BooleanStructImpl;
+import jcl.lang.BooleanStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.TStruct;
 import jcl.lang.condition.exception.TypeErrorException;
@@ -57,14 +57,14 @@ public final class ReadFunction extends CommonLispBuiltInFunctionStruct {
 			throw new TypeErrorException("The value " + inputStreamArg + " is not either T, NIL, or a STREAM.");
 		}
 
-		final BooleanStructImpl eofErrorP = arguments.getOptionalArgument(EOF_ERROR_ARGUMENT, BooleanStructImpl.class);
+		final BooleanStruct eofErrorP = arguments.getOptionalArgument(EOF_ERROR_ARGUMENT, BooleanStruct.class);
 		final LispStruct eofValue = arguments.getOptionalArgument(EOF_VALUE_ARGUMENT);
-		final BooleanStructImpl recursiveP = arguments.getOptionalArgument(RECURSIVE_P_ARGUMENT, BooleanStructImpl.class);
+		final BooleanStruct recursiveP = arguments.getOptionalArgument(RECURSIVE_P_ARGUMENT, BooleanStruct.class);
 		return read(inputStreamStruct, eofErrorP, eofValue, recursiveP);
 	}
 
-	public LispStruct read(final InputStreamStruct inputStreamStruct, final BooleanStructImpl eofErrorP, final LispStruct eofValue,
-	                       final BooleanStructImpl recursiveP) {
+	public LispStruct read(final InputStreamStruct inputStreamStruct, final BooleanStruct eofErrorP, final LispStruct eofValue,
+	                       final BooleanStruct recursiveP) {
 
 		return read(inputStreamStruct, eofErrorP.booleanValue(), eofValue, recursiveP.booleanValue());
 	}

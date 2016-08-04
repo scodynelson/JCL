@@ -6,7 +6,7 @@ import jcl.compiler.environment.Environment;
 import jcl.compiler.function.expanders.MacroFunctionExpander;
 import jcl.compiler.functions.EvalFunction;
 import jcl.compiler.sa.FormAnalyzer;
-import jcl.lang.BooleanStructImpl;
+import jcl.lang.BooleanStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.internal.SpecialOperatorStructImpl;
 import jcl.lang.SymbolStruct;
@@ -48,7 +48,7 @@ public class LoadTimeValueExpander extends MacroFunctionExpander<LispStruct> {
 			throw new ProgramErrorException("LOAD-TIME-VALUE: Incorrect number of arguments: 3. Expected between 1 and 2 arguments.");
 		}
 
-		if ((readOnlyP != null) && !(readOnlyP instanceof BooleanStructImpl)) {
+		if ((readOnlyP != null) && !(readOnlyP instanceof BooleanStruct)) {
 			throw new ProgramErrorException("LOAD-TIME-VALUE: Read-Only-P value must be either 'T' or 'NIL'. Got: " + readOnlyP);
 		}
 

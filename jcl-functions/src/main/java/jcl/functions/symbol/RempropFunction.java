@@ -4,9 +4,9 @@
 
 package jcl.functions.symbol;
 
-import jcl.lang.BooleanStructImpl;
 import jcl.lang.LispStruct;
 import jcl.lang.SymbolStruct;
+import jcl.lang.factory.LispStructFactory;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
@@ -34,6 +34,6 @@ public final class RempropFunction extends CommonLispBuiltInFunctionStruct {
 		final LispStruct indicator = arguments.getRequiredArgument(INDICATOR_ARGUMENT);
 		final boolean wasRemoved = symbol.removeProperty(indicator);
 
-		return BooleanStructImpl.toLispBoolean(wasRemoved);
+		return LispStructFactory.toBoolean(wasRemoved);
 	}
 }

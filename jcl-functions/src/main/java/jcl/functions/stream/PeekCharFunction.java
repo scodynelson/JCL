@@ -4,7 +4,7 @@
 
 package jcl.functions.stream;
 
-import jcl.lang.BooleanStructImpl;
+import jcl.lang.BooleanStruct;
 import jcl.lang.CharacterStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.TStruct;
@@ -70,9 +70,9 @@ public final class PeekCharFunction extends CommonLispBuiltInFunctionStruct {
 			throw new TypeErrorException("The value " + lispStruct + " is not either T, NIL, or an Input Stream.");
 		}
 
-		final BooleanStructImpl eofErrorP = arguments.getOptionalArgument(EOF_ERROR_ARGUMENT, BooleanStructImpl.class);
+		final BooleanStruct eofErrorP = arguments.getOptionalArgument(EOF_ERROR_ARGUMENT, BooleanStruct.class);
 		final LispStruct eofValue = arguments.getOptionalArgument(EOF_VALUE_ARGUMENT);
-		final BooleanStructImpl recursiveP = arguments.getOptionalArgument(RECURSIVE_P_ARGUMENT, BooleanStructImpl.class);
+		final BooleanStruct recursiveP = arguments.getOptionalArgument(RECURSIVE_P_ARGUMENT, BooleanStruct.class);
 
 		final ReadPeekResult readPeekResult = inputStreamStruct.peekChar(peekType, eofErrorP.booleanValue(), eofValue, recursiveP.booleanValue());
 		return readPeekResult.isEof() ? eofValue : LispStructFactory.toCharacter(readPeekResult.getResult());

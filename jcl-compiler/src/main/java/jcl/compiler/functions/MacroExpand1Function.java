@@ -7,7 +7,7 @@ package jcl.compiler.functions;
 import java.util.Optional;
 
 import jcl.compiler.environment.Environment;
-import jcl.lang.BooleanStructImpl;
+import jcl.lang.BooleanStruct;
 import jcl.lang.statics.CompilerVariables;
 import jcl.lang.LispStruct;
 import jcl.lang.PackageStruct;
@@ -53,7 +53,7 @@ public final class MacroExpand1Function extends CommonLispBuiltInFunctionStruct 
 		final MacroExpandResult macroExpandResult = macroExpand1(form, environment);
 		final LispStruct expandedForm = macroExpandResult.getExpandedForm();
 		final boolean wasExpanded = macroExpandResult.wasExpanded();
-		final BooleanStructImpl wasExpandedBoolean = wasExpanded ? TStruct.INSTANCE : NILStruct.INSTANCE;
+		final BooleanStruct wasExpandedBoolean = wasExpanded ? TStruct.INSTANCE : NILStruct.INSTANCE;
 		return ValuesStruct.valueOf(expandedForm, wasExpandedBoolean);
 	}
 

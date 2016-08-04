@@ -4,7 +4,7 @@ import jcl.lang.internal.ConstantStructImpl;
 import jcl.lang.statics.GlobalPackageStruct;
 import jcl.type.LispType;
 
-public abstract class BooleanStructImpl extends ConstantStructImpl<BooleanStructImpl> {
+public abstract class BooleanStructImpl extends ConstantStructImpl<BooleanStructImpl> implements BooleanStruct {
 
 	private final boolean booleanValue;
 
@@ -22,14 +22,8 @@ public abstract class BooleanStructImpl extends ConstantStructImpl<BooleanStruct
 		dynamicValueStack.push(this);
 	}
 
+	@Override
 	public boolean booleanValue() {
 		return booleanValue;
-	}
-
-	public static BooleanStructImpl toLispBoolean(final Boolean aBoolean) {
-		if (aBoolean == null) {
-			return NILStruct.INSTANCE;
-		}
-		return aBoolean ? TStruct.INSTANCE : NILStruct.INSTANCE;
 	}
 }

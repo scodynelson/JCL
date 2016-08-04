@@ -4,7 +4,7 @@
 
 package jcl.functions.stream;
 
-import jcl.lang.BooleanStructImpl;
+import jcl.lang.BooleanStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.TStruct;
 import jcl.lang.ValuesStruct;
@@ -54,13 +54,13 @@ public final class ReadLineFunction extends CommonLispBuiltInFunctionStruct {
 			throw new TypeErrorException("The value " + lispStruct + " is not either T, NIL, or an Input Stream.");
 		}
 
-		final BooleanStructImpl eofErrorP = arguments.getOptionalArgument(EOF_ERROR_ARGUMENT, BooleanStructImpl.class);
+		final BooleanStruct eofErrorP = arguments.getOptionalArgument(EOF_ERROR_ARGUMENT, BooleanStruct.class);
 		final LispStruct eofValue = arguments.getOptionalArgument(EOF_VALUE_ARGUMENT);
-		final BooleanStructImpl recursiveP = arguments.getOptionalArgument(RECURSIVE_P_ARGUMENT, BooleanStructImpl.class);
+		final BooleanStruct recursiveP = arguments.getOptionalArgument(RECURSIVE_P_ARGUMENT, BooleanStruct.class);
 
 		final ReadLineResult readLineResult = inputStreamStruct.readLine(eofErrorP.booleanValue(), eofValue, recursiveP.booleanValue());
 		final String result = readLineResult.getResult();
 		final boolean eof = readLineResult.isEof();
-		return ValuesStruct.valueOf(LispStructFactory.toString(result), BooleanStructImpl.toLispBoolean(eof));
+		return ValuesStruct.valueOf(LispStructFactory.toString(result), LispStructFactory.toBoolean(eof));
 	}
 }

@@ -3,6 +3,7 @@ package jcl.lang.statics;
 import java.util.HashSet;
 import java.util.Set;
 
+import jcl.lang.KeywordStruct;
 import jcl.lang.KeywordStructImpl;
 import jcl.lang.LispStruct;
 import jcl.lang.internal.VariableStructImpl;
@@ -10,15 +11,15 @@ import jcl.lang.condition.exception.TypeErrorException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-final class PrintCaseVariable extends VariableStructImpl<KeywordStructImpl> {
+final class PrintCaseVariable extends VariableStructImpl<KeywordStruct> {
 
 	public static final PrintCaseVariable INSTANCE = new PrintCaseVariable();
 
-	private static final Set<KeywordStructImpl> CASE_KEYWORDS = new HashSet<>();
+	private static final Set<KeywordStruct> CASE_KEYWORDS = new HashSet<>();
 
-	private static final KeywordStructImpl UPCASE_KEYWORD = KeywordStructImpl.valueOf("UPCASE");
-	private static final KeywordStructImpl DOWNCASE_KEYWORD = KeywordStructImpl.valueOf("DOWNCASE");
-	private static final KeywordStructImpl CAPITALIZE_KEYWORD = KeywordStructImpl.valueOf("CAPITALIZE");
+	private static final KeywordStruct UPCASE_KEYWORD = KeywordStructImpl.valueOf("UPCASE");
+	private static final KeywordStruct DOWNCASE_KEYWORD = KeywordStructImpl.valueOf("DOWNCASE");
+	private static final KeywordStruct CAPITALIZE_KEYWORD = KeywordStructImpl.valueOf("CAPITALIZE");
 
 
 	static {
@@ -35,11 +36,11 @@ final class PrintCaseVariable extends VariableStructImpl<KeywordStructImpl> {
 
 	@Override
 	public void setValue(final LispStruct value) {
-		if (!(value instanceof KeywordStructImpl)) {
+		if (!(value instanceof KeywordStruct)) {
 			// TODO: Fix me
 			throw new TypeErrorException("Must be Keyword value.");
 		}
-		final KeywordStructImpl variableValue = (KeywordStructImpl) value;
+		final KeywordStruct variableValue = (KeywordStruct) value;
 
 		if (CASE_KEYWORDS.contains(variableValue)) {
 			super.setValue(variableValue);

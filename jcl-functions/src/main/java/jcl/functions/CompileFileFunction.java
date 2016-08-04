@@ -25,7 +25,7 @@ import jcl.compiler.sa.SemanticAnalyzer;
 import jcl.compiler.struct.specialoperator.lambda.LambdaStruct;
 import jcl.functions.pathname.PathnameFunction;
 import jcl.functions.readtable.ReadFunction;
-import jcl.lang.BooleanStructImpl;
+import jcl.lang.BooleanStruct;
 import jcl.lang.statics.CommonLispSymbols;
 import jcl.lang.statics.CompilerVariables;
 import jcl.lang.internal.DeclarationStructImpl;
@@ -101,16 +101,16 @@ public final class CompileFileFunction extends CommonLispBuiltInFunctionStruct {
 		final LispStruct outputFile = arguments.getKeyArgument(CommonLispSymbols.OUTPUT_FILE_KEYWORD);
 		final boolean verbose;
 		if (arguments.hasKeyArgument(CommonLispSymbols.VERBOSE_KEYWORD)) {
-			verbose = arguments.getKeyArgument(CommonLispSymbols.VERBOSE_KEYWORD, BooleanStructImpl.class).booleanValue();
+			verbose = arguments.getKeyArgument(CommonLispSymbols.VERBOSE_KEYWORD, BooleanStruct.class).booleanValue();
 		} else {
-			final BooleanStructImpl currentCompileVerbose = CompilerVariables.COMPILE_VERBOSE.getVariableValue();
+			final BooleanStruct currentCompileVerbose = CompilerVariables.COMPILE_VERBOSE.getVariableValue();
 			verbose = currentCompileVerbose.booleanValue();
 		}
 		final boolean print;
 		if (arguments.hasKeyArgument(CommonLispSymbols.PRINT_KEYWORD)) {
-			print = arguments.getKeyArgument(CommonLispSymbols.PRINT_KEYWORD, BooleanStructImpl.class).booleanValue();
+			print = arguments.getKeyArgument(CommonLispSymbols.PRINT_KEYWORD, BooleanStruct.class).booleanValue();
 		} else {
-			final BooleanStructImpl currentCompilePrint = CompilerVariables.COMPILE_PRINT.getVariableValue();
+			final BooleanStruct currentCompilePrint = CompilerVariables.COMPILE_PRINT.getVariableValue();
 			print = currentCompilePrint.booleanValue();
 		}
 		final LispStruct externalFormat = arguments.getKeyArgument(CommonLispSymbols.EXTERNAL_FORMAT_KEYWORD);
@@ -161,7 +161,7 @@ public final class CompileFileFunction extends CommonLispBuiltInFunctionStruct {
 		final ReadtableStruct previousReadtable = ReaderVariables.READTABLE.getVariableValue();
 		final PackageStruct previousPackage = PackageVariables.PACKAGE.getVariableValue();
 
-		BooleanStructImpl compiledWithWarnings = NILStruct.INSTANCE;
+		BooleanStruct compiledWithWarnings = NILStruct.INSTANCE;
 		boolean compiledSuccessfully = false;
 		try {
 			final FileStreamStruct inputFileStream = LispStructFactory.toFileStream(inputFilePath);

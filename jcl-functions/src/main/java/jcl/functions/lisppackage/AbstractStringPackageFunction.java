@@ -6,7 +6,7 @@ package jcl.functions.lisppackage;
 
 import java.util.function.BiFunction;
 
-import jcl.lang.KeywordStructImpl;
+import jcl.lang.KeywordStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.PackageStruct;
 import jcl.lang.PackageSymbolStruct;
@@ -44,7 +44,7 @@ abstract class AbstractStringPackageFunction extends CommonLispBuiltInFunctionSt
 	 * @param lispStructs
 	 * 		the function parameters
 	 *
-	 * @return a {@link ValuesStruct} object containing the found {@link SymbolStruct} and it's {@link KeywordStructImpl}
+	 * @return a {@link ValuesStruct} object containing the found {@link SymbolStruct} and it's {@link KeywordStruct}
 	 * package type, or {@link NILStruct} if the result of the {@link #packageFunction()} operation is {@code null}
 	 */
 	@Override
@@ -57,7 +57,7 @@ abstract class AbstractStringPackageFunction extends CommonLispBuiltInFunctionSt
 		}
 
 		final SymbolStruct symbol = packageSymbol.getSymbol();
-		final KeywordStructImpl packageSymbolType = packageSymbol.getPackageSymbolType();
+		final KeywordStruct packageSymbolType = packageSymbol.getPackageSymbolType();
 		return ValuesStruct.valueOf(symbol, packageSymbolType);
 	}
 

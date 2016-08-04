@@ -7,8 +7,8 @@ package jcl.compiler.environment.binding.lambdalist;
 import java.util.Collections;
 import java.util.List;
 
+import jcl.lang.factory.LispStructFactory;
 import jcl.lang.statics.GlobalPackageStruct;
-import jcl.lang.KeywordStructImpl;
 import jcl.lang.LispStruct;
 import jcl.lang.PackageStruct;
 import jcl.lang.PackageSymbolStruct;
@@ -80,7 +80,7 @@ public class KeyParameter extends Parameter {
 
 			final PackageSymbolStruct symbol = GlobalPackageStruct.KEYWORD.findSymbol(symbolName);
 			if (symbol == null) {
-				keyName = KeywordStructImpl.valueOf(symbolName);
+				keyName = LispStructFactory.toKeyword(symbolName);
 			} else {
 				keyName = symbol.getSymbol();
 			}

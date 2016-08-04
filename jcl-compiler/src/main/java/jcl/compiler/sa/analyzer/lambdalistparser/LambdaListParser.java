@@ -20,9 +20,10 @@ import jcl.compiler.environment.binding.lambdalist.WholeParameter;
 import jcl.compiler.sa.FormAnalyzer;
 import jcl.compiler.struct.specialoperator.declare.DeclareStruct;
 import jcl.compiler.struct.specialoperator.declare.SpecialDeclarationStruct;
+import jcl.lang.KeywordStruct;
+import jcl.lang.factory.LispStructFactory;
 import jcl.lang.statics.CompilerConstants;
 import jcl.lang.statics.GlobalPackageStruct;
-import jcl.lang.KeywordStructImpl;
 import jcl.lang.LispStruct;
 import jcl.lang.PackageStruct;
 import jcl.lang.PackageSymbolStruct;
@@ -486,7 +487,7 @@ public class LambdaListParser {
 
 			if (currentElement instanceof SymbolStruct) {
 				final SymbolStruct currentParam = (SymbolStruct) currentElement;
-				final KeywordStructImpl keyName = getKeywordStruct(currentParam.getName());
+				final KeywordStruct keyName = getKeywordStruct(currentParam.getName());
 
 				final boolean isSpecial = declareElement.getSpecialDeclarations()
 				                                        .stream()
@@ -789,14 +790,14 @@ public class LambdaListParser {
 				|| lispStruct.equals(CompilerConstants.BODY);
 	}
 
-	private static KeywordStructImpl getKeywordStruct(final String symbolName) {
+	private static KeywordStruct getKeywordStruct(final String symbolName) {
 
 		final PackageSymbolStruct symbol = GlobalPackageStruct.KEYWORD.findSymbol(symbolName);
 		if (symbol == null) {
-			return KeywordStructImpl.valueOf(symbolName);
+			return LispStructFactory.toKeyword(symbolName);
 		}
 		// NOTE: This should be a safe cast because we're finding the symbol in the Keyword Package and they are only
 		//       this type of symbol.
-		return (KeywordStructImpl) symbol.getSymbol();
+		return (KeywordStruct) symbol.getSymbol();
 	}
 }

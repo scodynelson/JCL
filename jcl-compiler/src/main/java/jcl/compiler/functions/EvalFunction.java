@@ -16,7 +16,7 @@ import jcl.compiler.struct.specialoperator.SetqStruct;
 import jcl.compiler.struct.specialoperator.SymbolCompilerFunctionStruct;
 import jcl.compiler.struct.specialoperator.SymbolFunctionCallStruct;
 import jcl.compiler.struct.specialoperator.lambda.LambdaStruct;
-import jcl.lang.BooleanStructImpl;
+import jcl.lang.BooleanStruct;
 import jcl.lang.statics.CompilerVariables;
 import jcl.lang.LispStruct;
 import jcl.lang.SymbolStruct;
@@ -74,7 +74,7 @@ public final class EvalFunction extends CommonLispBuiltInFunctionStruct {
 	@SuppressWarnings({"unchecked", "rawtypes"})
 	public LispStruct eval(final LispStruct originalExp, final Environment environment) {
 
-		final BooleanStructImpl oldCompileTopLevel = CompilerVariables.COMPILE_TOP_LEVEL.getVariableValue();
+		final BooleanStruct oldCompileTopLevel = CompilerVariables.COMPILE_TOP_LEVEL.getVariableValue();
 		CompilerVariables.COMPILE_TOP_LEVEL.setValue(NILStruct.INSTANCE);
 
 		LispStruct exp;
@@ -223,10 +223,10 @@ public final class EvalFunction extends CommonLispBuiltInFunctionStruct {
 		return exp;
 	}
 
-	private FunctionStruct getCompiledExpression(final BooleanStructImpl oldCompileTopLevel, final CompilerSpecialOperatorStruct exp) {
+	private FunctionStruct getCompiledExpression(final BooleanStruct oldCompileTopLevel, final CompilerSpecialOperatorStruct exp) {
 		CompilerVariables.COMPILE_TOP_LEVEL.setValue(NILStruct.INSTANCE);
 
-		final BooleanStructImpl oldConvertingForInterpreter = CompilerVariables.CONVERTING_FOR_INTERPRETER.getVariableValue();
+		final BooleanStruct oldConvertingForInterpreter = CompilerVariables.CONVERTING_FOR_INTERPRETER.getVariableValue();
 		CompilerVariables.CONVERTING_FOR_INTERPRETER.setValue(TStruct.INSTANCE);
 
 		final FunctionStruct function;

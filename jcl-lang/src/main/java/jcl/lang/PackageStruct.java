@@ -24,9 +24,9 @@ import jcl.type.PackageType;
  */
 public class PackageStruct extends BuiltInClassStruct {
 
-	public static final KeywordStructImpl INTERNAL_KEYWORD = KeywordStructImpl.valueOf("INTERNAL");
-	public static final KeywordStructImpl EXTERNAL_KEYWORD = KeywordStructImpl.valueOf("EXTERNAL");
-	public static final KeywordStructImpl INHERITED_KEYWORD = KeywordStructImpl.valueOf("INHERITED");
+	public static final KeywordStruct INTERNAL_KEYWORD = KeywordStructImpl.valueOf("INTERNAL");
+	public static final KeywordStruct EXTERNAL_KEYWORD = KeywordStructImpl.valueOf("EXTERNAL");
+	public static final KeywordStruct INHERITED_KEYWORD = KeywordStructImpl.valueOf("INHERITED");
 
 	/**
 	 * The {@link List} of {@link PackageStruct}s that the package uses.
@@ -658,7 +658,7 @@ public class PackageStruct extends BuiltInClassStruct {
 				continue;
 			}
 
-			final KeywordStructImpl packageSymbolType = inheritedPackageSymbol.getPackageSymbolType();
+			final KeywordStruct packageSymbolType = inheritedPackageSymbol.getPackageSymbolType();
 			if (EXTERNAL_KEYWORD.equals(packageSymbolType)) {
 				foundSymbol = inheritedPackageSymbol.getSymbol();
 				break;

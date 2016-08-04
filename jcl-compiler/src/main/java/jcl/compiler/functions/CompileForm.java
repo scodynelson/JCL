@@ -16,7 +16,7 @@ import jcl.compiler.icg.IntermediateCodeGenerator;
 import jcl.compiler.icg.JavaClassBuilder;
 import jcl.compiler.sa.SemanticAnalyzer;
 import jcl.compiler.struct.specialoperator.lambda.LambdaStruct;
-import jcl.lang.BooleanStructImpl;
+import jcl.lang.BooleanStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.internal.SpecialOperatorStructImpl;
 import jcl.lang.TStruct;
@@ -59,8 +59,8 @@ public class CompileForm {
 		final LambdaStruct analyzedObj = semanticAnalyzer.analyze(lambdaForm);
 		final Deque<JavaClassBuilder> javaClassBuilderDeque = intermediateCodeGenerator.generate(analyzedObj);
 
-		BooleanStructImpl compiledWithWarnings = NILStruct.INSTANCE;
-		BooleanStructImpl failedToCompile = NILStruct.INSTANCE;
+		BooleanStruct compiledWithWarnings = NILStruct.INSTANCE;
+		BooleanStruct failedToCompile = NILStruct.INSTANCE;
 
 		FunctionStruct function = null;
 		for (final JavaClassBuilder javaClassBuilder : javaClassBuilderDeque) {

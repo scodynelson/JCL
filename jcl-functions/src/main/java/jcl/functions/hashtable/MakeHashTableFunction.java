@@ -6,8 +6,8 @@ package jcl.functions.hashtable;
 
 import jcl.lang.FloatStruct;
 import jcl.lang.IntegerStruct;
+import jcl.lang.KeywordStruct;
 import jcl.lang.statics.CommonLispSymbols;
-import jcl.lang.KeywordStructImpl;
 import jcl.lang.LispStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.TypeErrorException;
@@ -24,10 +24,10 @@ import org.springframework.stereotype.Component;
 public final class MakeHashTableFunction extends CommonLispBuiltInFunctionStruct {
 
 	private static final String FUNCTION_NAME = "MAKE-HASH-TABLE";
-	private static final KeywordStructImpl TEST = KeywordStructImpl.valueOf("TEST");
-	private static final KeywordStructImpl SIZE =  KeywordStructImpl.valueOf("SIZE");
-	private static final KeywordStructImpl REHASH_SIZE = KeywordStructImpl.valueOf("REHASH-SIZE");
-	private static final KeywordStructImpl REHASH_THRESHOLD = KeywordStructImpl.valueOf("REHASH-THRESHOLD");
+	private static final KeywordStruct TEST = LispStructFactory.toKeyword("TEST");
+	private static final KeywordStruct SIZE =  LispStructFactory.toKeyword("SIZE");
+	private static final KeywordStruct REHASH_SIZE = LispStructFactory.toKeyword("REHASH-SIZE");
+	private static final KeywordStruct REHASH_THRESHOLD = LispStructFactory.toKeyword("REHASH-THRESHOLD");
 	private static final FloatStruct DEFAULT_REHASH_THRESHOLD = LispStructFactory.toFloat(0.75F);
 
 	public MakeHashTableFunction() {

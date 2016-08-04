@@ -6,7 +6,7 @@ package jcl.reader.macrofunction;
 
 import java.util.Iterator;
 
-import jcl.lang.BooleanStructImpl;
+import jcl.lang.BooleanStruct;
 import jcl.lang.ConsStruct;
 import jcl.lang.statics.CommonLispSymbols;
 import jcl.lang.statics.CompilerVariables;
@@ -48,7 +48,7 @@ final class FeaturesReaderMacroFunction {
 	 */
 	void readFeatures(final Reader reader, final boolean shouldHideFeatures) {
 
-		final BooleanStructImpl previousReadSuppress = ReaderVariables.READ_SUPPRESS.getVariableValue();
+		final BooleanStruct previousReadSuppress = ReaderVariables.READ_SUPPRESS.getVariableValue();
 		final PackageStruct previousPackage = PackageVariables.PACKAGE.getVariableValue();
 		try {
 			ReaderVariables.READ_SUPPRESS.setValue(NILStruct.INSTANCE);

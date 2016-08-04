@@ -4,7 +4,8 @@
 
 package jcl.functions.stream;
 
-import jcl.lang.BooleanStructImpl;
+import jcl.lang.BooleanStruct;
+import jcl.lang.factory.LispStructFactory;
 import jcl.lang.statics.CommonLispSymbols;
 import jcl.lang.LispStruct;
 import jcl.lang.StreamStruct;
@@ -32,9 +33,9 @@ public final class CloseFunction extends CommonLispBuiltInFunctionStruct {
 	@Override
 	public LispStruct apply(final Arguments arguments) {
 		final StreamStruct stream = arguments.getRequiredArgument(STREAM_ARGUMENT, StreamStruct.class);
-		final BooleanStructImpl abortValue = arguments.getKeyArgument(CommonLispSymbols.ELEMENT_TYPE_KEYWORD, BooleanStructImpl.class);
+		final BooleanStruct abortValue = arguments.getKeyArgument(CommonLispSymbols.ELEMENT_TYPE_KEYWORD, BooleanStruct.class);
 
 		final boolean wasClosed = stream.close(abortValue.booleanValue());
-		return BooleanStructImpl.toLispBoolean(wasClosed);
+		return LispStructFactory.toBoolean(wasClosed);
 	}
 }

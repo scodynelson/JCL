@@ -29,8 +29,8 @@ import jcl.compiler.function.Closure;
 import jcl.compiler.function.CompiledFunctionStruct;
 import jcl.compiler.function.expanders.CompiledMacroFunctionExpander;
 import jcl.lang.ComplexStruct;
+import jcl.lang.KeywordStruct;
 import jcl.lang.statics.GlobalPackageStruct;
-import jcl.lang.KeywordStructImpl;
 import jcl.lang.LispStruct;
 import jcl.lang.PackageStruct;
 import jcl.lang.PackageSymbolStruct;
@@ -315,7 +315,7 @@ interface GenerationConstants {
 
 	String GLOBAL_PACKAGE_STRUCT_NAME = Type.getInternalName(GlobalPackageStruct.class);
 
-	String KEYWORD_STRUCT_NAME = Type.getInternalName(KeywordStructImpl.class);
+	String KEYWORD_STRUCT_NAME = Type.getInternalName(KeywordStruct.class);
 
 	String FUNCTION_STRUCT_NAME = Type.getInternalName(FunctionStruct.class);
 

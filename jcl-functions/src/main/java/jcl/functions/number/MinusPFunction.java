@@ -4,8 +4,8 @@
 
 package jcl.functions.number;
 
-import jcl.lang.BooleanStructImpl;
 import jcl.lang.LispStruct;
+import jcl.lang.factory.LispStructFactory;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
@@ -29,6 +29,6 @@ public final class MinusPFunction extends CommonLispBuiltInFunctionStruct {
 	public LispStruct apply(final Arguments arguments) {
 		final RealStruct real = arguments.getRequiredArgument(REAL_ARGUMENT, RealStruct.class);
 		final boolean result = real.minusp();
-		return BooleanStructImpl.toLispBoolean(result);
+		return LispStructFactory.toBoolean(result);
 	}
 }

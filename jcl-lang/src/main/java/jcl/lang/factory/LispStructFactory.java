@@ -15,6 +15,7 @@ import java.util.List;
 import jcl.lang.ArrayStruct;
 import jcl.lang.BinaryNativeStreamStruct;
 import jcl.lang.BitVectorStruct;
+import jcl.lang.BooleanStruct;
 import jcl.lang.BroadcastStreamStruct;
 import jcl.lang.CharacterNativeStreamStruct;
 import jcl.lang.CharacterStruct;
@@ -29,8 +30,11 @@ import jcl.lang.HashTableStruct;
 import jcl.lang.InputStreamStruct;
 import jcl.lang.IntegerStruct;
 import jcl.lang.JavaStreamStruct;
+import jcl.lang.KeywordStruct;
+import jcl.lang.KeywordStructImpl;
 import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
+import jcl.lang.NILStruct;
 import jcl.lang.OutputStreamStruct;
 import jcl.lang.PackageStruct;
 import jcl.lang.RandomStateStruct;
@@ -40,19 +44,26 @@ import jcl.lang.StringInputStreamStruct;
 import jcl.lang.StringOutputStreamStruct;
 import jcl.lang.StringStruct;
 import jcl.lang.SymbolStruct;
-import jcl.lang.internal.SymbolStructImpl;
 import jcl.lang.SynonymStreamStruct;
+import jcl.lang.TStruct;
 import jcl.lang.TwoWayStreamStruct;
 import jcl.lang.URLStreamStruct;
-import jcl.lang.internal.VariableStructImpl;
 import jcl.lang.VectorStruct;
 import jcl.lang.function.EquatorFunctionStruct;
 import jcl.lang.internal.ArrayStructImpl;
 import jcl.lang.internal.BitVectorStructImpl;
 import jcl.lang.internal.CharacterStructImpl;
+import jcl.lang.internal.ConsStructImpl;
 import jcl.lang.internal.HashTableStructImpl;
 import jcl.lang.internal.StringStructImpl;
+import jcl.lang.internal.SymbolStructImpl;
+import jcl.lang.internal.VariableStructImpl;
 import jcl.lang.internal.VectorStructImpl;
+import jcl.lang.internal.number.ComplexStructImpl;
+import jcl.lang.internal.number.FloatStructImpl;
+import jcl.lang.internal.number.IntegerStructImpl;
+import jcl.lang.internal.number.RandomStateStructImpl;
+import jcl.lang.internal.number.RatioStructImpl;
 import jcl.lang.internal.stream.BinaryNativeStreamStructImpl;
 import jcl.lang.internal.stream.BroadcastStreamStructImpl;
 import jcl.lang.internal.stream.CharacterNativeStreamStructImpl;
@@ -66,13 +77,6 @@ import jcl.lang.internal.stream.StringOutputStreamStructImpl;
 import jcl.lang.internal.stream.SynonymStreamStructImpl;
 import jcl.lang.internal.stream.TwoWayStreamStructImpl;
 import jcl.lang.internal.stream.URLStreamStructImpl;
-import jcl.lang.internal.ConsStructImpl;
-import jcl.lang.NILStruct;
-import jcl.lang.internal.number.ComplexStructImpl;
-import jcl.lang.internal.number.FloatStructImpl;
-import jcl.lang.internal.number.IntegerStructImpl;
-import jcl.lang.internal.number.RandomStateStructImpl;
-import jcl.lang.internal.number.RatioStructImpl;
 import jcl.lang.pathname.LogicalPathnameStruct;
 import jcl.lang.pathname.PathnameDevice;
 import jcl.lang.pathname.PathnameDirectory;
@@ -125,6 +129,17 @@ public final class LispStructFactory {
 
 	public static BitVectorStruct toBitVector(final List<IntegerStruct> contents) {
 		return BitVectorStructImpl.valueOfCont(contents);
+	}
+
+	/*
+	 * Boolean
+	 */
+
+	public static BooleanStruct toBoolean(final Boolean aBoolean) {
+		if (aBoolean == null) {
+			return NILStruct.INSTANCE;
+		}
+		return aBoolean ? TStruct.INSTANCE : NILStruct.INSTANCE;
 	}
 
 	/*
@@ -412,6 +427,14 @@ public final class LispStructFactory {
 
 	public static JavaStreamStruct toJavaStream(final boolean interactive, final InputStream inputStream, final OutputStream outputStream) {
 		return JavaStreamStructImpl.valueOf(interactive, inputStream, outputStream);
+	}
+
+	/*
+	 * Keyword
+	 */
+
+	public static KeywordStruct toKeyword(final String name) {
+		return KeywordStructImpl.valueOf(name);
 	}
 
 	/*

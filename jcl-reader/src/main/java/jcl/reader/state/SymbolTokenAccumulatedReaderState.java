@@ -9,8 +9,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import jcl.lang.KeywordStruct;
+import jcl.lang.factory.LispStructFactory;
 import jcl.lang.statics.GlobalPackageStruct;
-import jcl.lang.KeywordStructImpl;
 import jcl.lang.LispStruct;
 import jcl.lang.PackageStruct;
 import jcl.lang.PackageSymbolStruct;
@@ -182,7 +183,7 @@ class SymbolTokenAccumulatedReaderState implements ReaderState {
 	/**
 	 * Either finds the existing {@link SymbolStruct} within the provided {@link PackageStruct} using {@link
 	 * PackageStruct#findSymbol} or creates a new {@link SymbolStruct}. If the provided {@code PackageStruct} is equal
-	 * to {@link GlobalPackageStruct#KEYWORD}, a {@link KeywordStructImpl} will be returned instead.
+	 * to {@link GlobalPackageStruct#KEYWORD}, a {@link KeywordStruct} will be returned instead.
 	 *
 	 * @param symbolName
 	 * 		the name of the {@link SymbolStruct} to find or create
@@ -197,7 +198,7 @@ class SymbolTokenAccumulatedReaderState implements ReaderState {
 		if (foundSymbol == null) {
 			final boolean isKeyword = GlobalPackageStruct.KEYWORD.equals(symbolPackage);
 			if (isKeyword) {
-				return KeywordStructImpl.valueOf(symbolName);
+				return LispStructFactory.toKeyword(symbolName);
 			}
 			return symbolPackage.intern(symbolName).getSymbol();
 		} else {

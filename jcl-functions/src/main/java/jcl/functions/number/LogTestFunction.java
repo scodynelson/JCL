@@ -4,9 +4,9 @@
 
 package jcl.functions.number;
 
-import jcl.lang.BooleanStructImpl;
 import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
+import jcl.lang.factory.LispStructFactory;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
@@ -34,6 +34,6 @@ public final class LogTestFunction extends CommonLispBuiltInFunctionStruct {
 		final IntegerStruct integer2 = arguments.getRequiredArgument(INTEGER2_ARGUMENT, IntegerStruct.class);
 
 		final boolean result = integer1.logTest(integer2);
-		return BooleanStructImpl.toLispBoolean(result);
+		return LispStructFactory.toBoolean(result);
 	}
 }

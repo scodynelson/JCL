@@ -4,7 +4,7 @@
 
 package jcl.functions.symbol;
 
-import jcl.lang.BooleanStructImpl;
+import jcl.lang.BooleanStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
@@ -32,7 +32,7 @@ public final class CopySymbolFunction extends CommonLispBuiltInFunctionStruct {
 	@Override
 	public LispStruct apply(final Arguments arguments) {
 		final SymbolStruct symbol = arguments.getRequiredArgument(SYMBOL_ARGUMENT, SymbolStruct.class);
-		final boolean copyProperties = arguments.getOptionalArgument(COPY_PROPERTIES_ARGUMENT, BooleanStructImpl.class).booleanValue();
+		final boolean copyProperties = arguments.getOptionalArgument(COPY_PROPERTIES_ARGUMENT, BooleanStruct.class).booleanValue();
 		return symbol.copySymbol(copyProperties);
 	}
 }

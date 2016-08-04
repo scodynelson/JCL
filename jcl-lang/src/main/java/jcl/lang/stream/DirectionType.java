@@ -4,8 +4,8 @@
 
 package jcl.lang.stream;
 
+import jcl.lang.SymbolStruct;
 import jcl.lang.statics.CommonLispSymbols;
-import jcl.lang.SymbolStructImpl;
 import jcl.lang.condition.exception.TypeErrorException;
 
 /**
@@ -18,13 +18,13 @@ public enum DirectionType {
 	IO(CommonLispSymbols.IO_KEYWORD),
 	PROBE(CommonLispSymbols.PROBE_KEYWORD);
 
-	private final SymbolStructImpl keyword;
+	private final SymbolStruct keyword;
 
-	DirectionType(final SymbolStructImpl keyword) {
+	DirectionType(final SymbolStruct keyword) {
 		this.keyword = keyword;
 	}
 
-	public static DirectionType fromValue(final SymbolStructImpl keyword) {
+	public static DirectionType fromValue(final SymbolStruct keyword) {
 		for (DirectionType directionType : values()) {
 			if (directionType.keyword.equals(keyword)) {
 				return directionType;

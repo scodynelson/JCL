@@ -12,7 +12,7 @@ import jcl.lang.statics.GlobalPackageStruct;
 import jcl.lang.KeywordStructImpl;
 import jcl.lang.PackageStruct;
 import jcl.lang.PackageSymbolStruct;
-import jcl.lang.SymbolStructImpl;
+import jcl.lang.SymbolStruct;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.springframework.context.event.EventListener;
@@ -37,8 +37,8 @@ final class KeywordCodeGenerator implements CodeGenerator<KeywordStructImpl> {
 	 * <li>Retrieving the {@link GlobalPackageStruct#KEYWORD} singleton instance</li>
 	 * <li>Retrieving the {@link PackageSymbolStruct} via the {@link PackageStruct#findSymbol(String)} method with the
 	 * {@link KeywordStructImpl#name} value of the provided {@link KeywordStructImpl}</li>
-	 * <li>Retrieving the {@link SymbolStructImpl} value via the {@link PackageSymbolStruct#getSymbol()} method</li>
-	 * <li>Casting the {@link SymbolStructImpl} to the appropriate {@link KeywordStructImpl} type</li>
+	 * <li>Retrieving the {@link SymbolStruct} value via the {@link PackageSymbolStruct#getSymbol()} method</li>
+	 * <li>Casting the {@link SymbolStruct} to the appropriate {@link KeywordStructImpl} type</li>
 	 * </ol>
 	 *
 	 * @param input

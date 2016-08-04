@@ -9,7 +9,7 @@ import jcl.lang.IntegerStruct;
 import jcl.lang.statics.CommonLispSymbols;
 import jcl.lang.KeywordStructImpl;
 import jcl.lang.LispStruct;
-import jcl.lang.SymbolStructImpl;
+import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.factory.LispStructFactory;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
@@ -63,8 +63,8 @@ public final class MakeHashTableFunction extends CommonLispBuiltInFunctionStruct
 	private FunctionStruct validateFunctionDesignator(final LispStruct functionDesignator) {
 		if (functionDesignator instanceof FunctionStruct) {
 			return (FunctionStruct) functionDesignator;
-		} else if (functionDesignator instanceof SymbolStructImpl) {
-			return ((SymbolStructImpl) functionDesignator).getFunction();
+		} else if (functionDesignator instanceof SymbolStruct) {
+			return ((SymbolStruct) functionDesignator).getFunction();
 		} else {
 			throw new TypeErrorException("UNCAUGHT TYPE ERROR.");
 		}

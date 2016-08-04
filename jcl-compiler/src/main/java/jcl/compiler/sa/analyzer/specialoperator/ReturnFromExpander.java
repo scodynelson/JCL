@@ -8,7 +8,7 @@ import jcl.compiler.sa.FormAnalyzer;
 import jcl.compiler.struct.specialoperator.ReturnFromStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.internal.SpecialOperatorStructImpl;
-import jcl.lang.SymbolStructImpl;
+import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.ListStruct;
@@ -23,7 +23,7 @@ public class ReturnFromExpander extends MacroFunctionExpander<ReturnFromStruct> 
 	private FormAnalyzer formAnalyzer;
 
 	@Override
-	public SymbolStructImpl getFunctionSymbol() {
+	public SymbolStruct getFunctionSymbol() {
 		return SpecialOperatorStructImpl.RETURN_FROM;
 	}
 
@@ -37,10 +37,10 @@ public class ReturnFromExpander extends MacroFunctionExpander<ReturnFromStruct> 
 		}
 		final LispStruct first = iterator.next();
 
-		if (!(first instanceof SymbolStructImpl)) {
+		if (!(first instanceof SymbolStruct)) {
 			throw new TypeErrorException("RETURN-FROM: NAME must be a Symbol. Got: " + first);
 		}
-		final SymbolStructImpl name = (SymbolStructImpl) first;
+		final SymbolStruct name = (SymbolStruct) first;
 
 		if (environment.getBlockStack().search(name) == -1) {
 			throw new ProgramErrorException("RETURN-FROM: No BLOCK with name " + name + " is visible.");

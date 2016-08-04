@@ -19,7 +19,7 @@ import jcl.compiler.icg.JavaMethodBuilder;
 import jcl.compiler.struct.specialoperator.PrognStruct;
 import jcl.compiler.struct.specialoperator.ProgvStruct;
 import jcl.lang.LispStruct;
-import jcl.lang.SymbolStructImpl;
+import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.ListStruct;
 import org.objectweb.asm.Label;
@@ -44,7 +44,7 @@ final class ProgvCodeGenerator extends SpecialOperatorCodeGenerator<ProgvStruct>
 	/**
 	 * Constant {@link String} containing the error message prefix for the customized {@link ProgramErrorException}
 	 * thrown if each of the elements comprising the {@link ProgvStruct#vars} {@link ListStruct} value does not produce
-	 * a {@link SymbolStructImpl} value.
+	 * a {@link SymbolStruct} value.
 	 */
 	private static final String ELEMENTS_IN_SYMBOLS_LIST_MUST_BE_SYMBOLS = "PROGV: Elements in symbols list must be symbols. Got: ";
 
@@ -79,15 +79,15 @@ final class ProgvCodeGenerator extends SpecialOperatorCodeGenerator<ProgvStruct>
 	 * Generation method for {@link ProgvStruct} objects, by performing the following operations:
 	 * <ol>
 	 * <li>Generating the {@link ProgvStruct#vars} value, checking that the var result is a {@link ListStruct} and that
-	 * each of the vars are {@link SymbolStructImpl}s</li>
+	 * each of the vars are {@link SymbolStruct}s</li>
 	 * <li>Generating the {@link ProgvStruct#vals} value, checking that the val result is a {@link ListStruct}</li>
 	 * <li>Binding the vals comprising the {@link ListStruct} to the vars comprising the other {@link ListStruct} in
-	 * sequential, matching order via {@link SymbolStructImpl#bindDynamicValue(LispStruct)}</li>
+	 * sequential, matching order via {@link SymbolStruct#bindDynamicValue(LispStruct)}</li>
 	 * <li>Temporarily pushing the {@link ProgvStruct#progvEnvironment} onto the {@link
 	 * GeneratorState#environmentDeque} while generating the code for the {@link ProgvStruct#forms} values</li>
-	 * <li>Generating the code to unbind the vals dynamic binding from {@link SymbolStructImpl}s as part of the error free
+	 * <li>Generating the code to unbind the vals dynamic binding from {@link SymbolStruct}s as part of the error free
 	 * 'finally'</li>
-	 * <li>Generating the code to unbind the vals dynamic binding from {@link SymbolStructImpl}s as part of the error
+	 * <li>Generating the code to unbind the vals dynamic binding from {@link SymbolStruct}s as part of the error
 	 * caught 'finally', ensuring the error caught is re-thrown</li>
 	 * </ol>
 	 * As an example, it will transform {@code (progv '(x) '(1) x)} into the following Java code:
@@ -288,13 +288,13 @@ final class ProgvCodeGenerator extends SpecialOperatorCodeGenerator<ProgvStruct>
 
 	/**
 	 * Private method to handle the generation of a type check against all the elements of the {@link List} at the
-	 * provided {@code varsJavaListStore} to ensure each of the elements is a {@link SymbolStructImpl}. If any of them are
+	 * provided {@code varsJavaListStore} to ensure each of the elements is a {@link SymbolStruct}. If any of them are
 	 * not, the generated {@link ProgramErrorException} response is thrown.
 	 *
 	 * @param methodBuilder
 	 * 		{@link JavaMethodBuilder} used for building a Java method body
 	 * @param varsJavaListStore
-	 * 		the storage location index on the stack where the {@link List} of {@link SymbolStructImpl} vars exist
+	 * 		the storage location index on the stack where the {@link List} of {@link SymbolStruct} vars exist
 	 */
 	private static void generateVarListSymbolsCheck(final JavaMethodBuilder methodBuilder, final int varsJavaListStore) {
 		final MethodVisitor mv = methodBuilder.getMethodVisitor();
@@ -349,14 +349,14 @@ final class ProgvCodeGenerator extends SpecialOperatorCodeGenerator<ProgvStruct>
 	/**
 	 * Private method to handle the generation of dynamic binding of the {@link List} of vars at the {@code
 	 * varsJavaListStore} location and the {@link List} of vals at the {@code valsJavaListStore} location. The var
-	 * {@link SymbolStructImpl}s are bound via {@link SymbolStructImpl#bindDynamicValue(LispStruct)} by looping through the
+	 * {@link SymbolStruct}s are bound via {@link SymbolStruct#bindDynamicValue(LispStruct)} by looping through the
 	 * lists binding the vars to the matching vals sequentially and to 'null' (unbound) if the {@link List} of vals is
 	 * greater than the list of vars.
 	 *
 	 * @param methodBuilder
 	 * 		{@link JavaMethodBuilder} used for building a Java method body
 	 * @param varsJavaListStore
-	 * 		the storage location index on the stack where the {@link List} of {@link SymbolStructImpl} vars exist
+	 * 		the storage location index on the stack where the {@link List} of {@link SymbolStruct} vars exist
 	 * @param valsJavaListStore
 	 * 		the storage location index on the stack where the {@link List} of {@link LispStruct} vals exist
 	 */
@@ -438,11 +438,11 @@ final class ProgvCodeGenerator extends SpecialOperatorCodeGenerator<ProgvStruct>
 
 		mv.visitVarInsn(Opcodes.ALOAD, varSymbolStore);
 		mv.visitVarInsn(Opcodes.ALOAD, valStore);
-		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
+		mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
 		                   GenerationConstants.SYMBOL_STRUCT_NAME,
 		                   GenerationConstants.SYMBOL_STRUCT_BIND_DYNAMIC_VALUE_METHOD_NAME,
 		                   GenerationConstants.SYMBOL_STRUCT_BIND_DYNAMIC_VALUE_METHOD_DESC,
-		                   false);
+		                   true);
 
 		mv.visitIincInsn(indexValueStore, 1);
 		mv.visitJumpInsn(Opcodes.GOTO, varBindingLoopStart);
@@ -452,12 +452,12 @@ final class ProgvCodeGenerator extends SpecialOperatorCodeGenerator<ProgvStruct>
 
 	/**
 	 * Private method for generating the 'finally' block code for unbinding the dynamic {@link ProgvStruct#vars} from
-	 * each {@link SymbolStructImpl} within the {@link List} at the storage location of the {@code varJavaListStore}.
+	 * each {@link SymbolStruct} within the {@link List} at the storage location of the {@code varJavaListStore}.
 	 *
 	 * @param methodBuilder
 	 * 		{@link JavaMethodBuilder} used for building a Java method body
 	 * @param varsJavaListStore
-	 * 		the storage location index on the stack where the {@link List} of {@link SymbolStructImpl}s to unbind dynamic
+	 * 		the storage location index on the stack where the {@link List} of {@link SymbolStruct}s to unbind dynamic
 	 * 		values from exists
 	 */
 	private static void generateFinallyCode(final JavaMethodBuilder methodBuilder, final int varsJavaListStore) {
@@ -495,11 +495,11 @@ final class ProgvCodeGenerator extends SpecialOperatorCodeGenerator<ProgvStruct>
 		mv.visitVarInsn(Opcodes.ASTORE, unbindingVarSymbolStore);
 
 		mv.visitVarInsn(Opcodes.ALOAD, unbindingVarSymbolStore);
-		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
+		mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
 		                   GenerationConstants.SYMBOL_STRUCT_NAME,
 		                   GenerationConstants.SYMBOL_STRUCT_UNBIND_DYNAMIC_VALUE_METHOD_NAME,
 		                   GenerationConstants.SYMBOL_STRUCT_UNBIND_DYNAMIC_VALUE_METHOD_DESC,
-		                   false);
+		                   true);
 
 		mv.visitJumpInsn(Opcodes.GOTO, unbindingIteratorLoopStart);
 
@@ -510,7 +510,7 @@ final class ProgvCodeGenerator extends SpecialOperatorCodeGenerator<ProgvStruct>
 	 * Private method for generating the code to create and throw a customized {@link ProgramErrorException} when the
 	 * {@link ProgvStruct#vars} value does not generate a {@link ListStruct} value, the {@link ProgvStruct#vals} value
 	 * does not produce a {@link ListStruct} value, or each of the elements comprising the {@link ProgvStruct#vars}
-	 * {@link ListStruct} value does not produce a {@link SymbolStructImpl} value.
+	 * {@link ListStruct} value does not produce a {@link SymbolStruct} value.
 	 *
 	 * @param mv
 	 * 		the current {@link MethodVisitor} to generate the code inside

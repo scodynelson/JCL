@@ -9,7 +9,7 @@ import jcl.compiler.icg.GeneratorEvent;
 import jcl.compiler.icg.GeneratorState;
 import jcl.compiler.icg.JavaMethodBuilder;
 import jcl.compiler.struct.specialoperator.SymbolCompilerFunctionStruct;
-import jcl.lang.SymbolStructImpl;
+import jcl.lang.SymbolStruct;
 import jcl.lang.function.FunctionStruct;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
@@ -27,7 +27,7 @@ final class SymbolFunctionCodeGenerator implements CodeGenerator<SymbolCompilerF
 	 * Generation method for {@link SymbolCompilerFunctionStruct} objects, by performing the following operations:
 	 * <ol>
 	 * <li>Generating the {@link SymbolCompilerFunctionStruct#functionSymbol} value</li>
-	 * <li>Generating the code to retrieve the {@link SymbolStructImpl#getFunction()} call to retrieve the associated
+	 * <li>Generating the code to retrieve the {@link SymbolStruct#getFunction()} call to retrieve the associated
 	 * {@link FunctionStruct} associated with the function symbol</li>
 	 * </ol>
 	 * As an example, it will transform the function symbol '+' for {@code (+ 1)} into the following Java code:
@@ -52,16 +52,16 @@ final class SymbolFunctionCodeGenerator implements CodeGenerator<SymbolCompilerF
 		final JavaMethodBuilder methodBuilder = generatorState.getCurrentMethodBuilder();
 		final MethodVisitor mv = methodBuilder.getMethodVisitor();
 
-		final SymbolStructImpl functionSymbol = input.getFunctionSymbol();
+		final SymbolStruct functionSymbol = input.getFunctionSymbol();
 		final int functionPackageStore = methodBuilder.getNextAvailableStore();
 		final int functionSymbolStore = methodBuilder.getNextAvailableStore();
 		CodeGenerators.generateSymbol(functionSymbol, generatorState, functionPackageStore, functionSymbolStore);
 
 		mv.visitVarInsn(Opcodes.ALOAD, functionSymbolStore);
-		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
+		mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
 		                   GenerationConstants.SYMBOL_STRUCT_NAME,
 		                   GenerationConstants.SYMBOL_STRUCT_GET_FUNCTION_METHOD_NAME,
 		                   GenerationConstants.SYMBOL_STRUCT_GET_FUNCTION_METHOD_DESC,
-		                   false);
+		                   true);
 	}
 }

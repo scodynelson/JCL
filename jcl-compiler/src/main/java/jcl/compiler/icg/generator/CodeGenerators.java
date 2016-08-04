@@ -15,7 +15,7 @@ import jcl.compiler.icg.GeneratorState;
 import jcl.compiler.icg.JavaClassBuilder;
 import jcl.compiler.icg.JavaMethodBuilder;
 import jcl.lang.PackageStruct;
-import jcl.lang.SymbolStructImpl;
+import jcl.lang.SymbolStruct;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.FieldVisitor;
 import org.objectweb.asm.MethodVisitor;
@@ -61,7 +61,7 @@ final class CodeGenerators {
 		}
 	}
 
-	static void generateSymbol(final SymbolStructImpl input, final GeneratorState generatorState,
+	static void generateSymbol(final SymbolStruct input, final GeneratorState generatorState,
 	                           final int packageStore, final int symbolStore) {
 
 		final JavaMethodBuilder methodBuilder = generatorState.getCurrentMethodBuilder();
@@ -126,9 +126,9 @@ final class CodeGenerators {
 				mv.visitVarInsn(Opcodes.ALOAD, 0); // '0' is always 'this'
 				mv.visitLdcInsn(symbolName);
 				mv.visitMethodInsn(Opcodes.INVOKESTATIC,
-				                   GenerationConstants.SYMBOL_STRUCT_NAME,
-				                   GenerationConstants.SYMBOL_STRUCT_VALUE_OF_STRING_NAME,
-				                   GenerationConstants.SYMBOL_STRUCT_VALUE_OF_STRING_DESC,
+				                   GenerationConstants.LISP_STRUCT_FACTORY_NAME,
+				                   GenerationConstants.LISP_STRUCT_FACTORY_TO_SYMBOL_METHOD_NAME,
+				                   GenerationConstants.LISP_STRUCT_FACTORY_TO_SYMBOL_METHOD_DESC,
 				                   false);
 				mv.visitFieldInsn(Opcodes.PUTFIELD,
 				                  className,

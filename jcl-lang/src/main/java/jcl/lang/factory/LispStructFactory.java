@@ -39,6 +39,7 @@ import jcl.lang.RealStruct;
 import jcl.lang.StringInputStreamStruct;
 import jcl.lang.StringOutputStreamStruct;
 import jcl.lang.StringStruct;
+import jcl.lang.SymbolStruct;
 import jcl.lang.SymbolStructImpl;
 import jcl.lang.SynonymStreamStruct;
 import jcl.lang.TwoWayStreamStruct;
@@ -697,7 +698,7 @@ public final class LispStructFactory {
 	 * Symbol
 	 */
 
-	public static SymbolStructImpl toSymbol(final String name) {
+	public static SymbolStruct toSymbol(final String name) {
 		return SymbolStructImpl.valueOf(name);
 	}
 
@@ -709,11 +710,11 @@ public final class LispStructFactory {
 		return SynonymStreamStructImpl.valueOf(variable);
 	}
 
-	public static SynonymStreamStruct toSynonymStream(final SymbolStructImpl symbol) {
+	public static SynonymStreamStruct toSynonymStream(final SymbolStruct symbol) {
 		return SynonymStreamStructImpl.valueOf(symbol);
 	}
 
-	public static SynonymStreamStruct toSynonymStream(final boolean interactive, final SymbolStructImpl symbol) {
+	public static SynonymStreamStruct toSynonymStream(final boolean interactive, final SymbolStruct symbol) {
 		return SynonymStreamStructImpl.valueOf(interactive, symbol);
 	}
 

@@ -22,7 +22,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 /**
  * The {@link SymbolStructImpl} is the object representation of a Lisp 'symbol' type.
  */
-public class SymbolStructImpl extends BuiltInClassStruct {
+public class SymbolStructImpl extends BuiltInClassStruct implements SymbolStruct {
 
 	protected final String name;
 
@@ -161,7 +161,7 @@ public class SymbolStructImpl extends BuiltInClassStruct {
 		}
 	}
 
-	public static SymbolStructImpl valueOf(final String name) {
+	public static SymbolStruct valueOf(final String name) {
 		return new SymbolStructImpl(name);
 	}
 
@@ -170,6 +170,7 @@ public class SymbolStructImpl extends BuiltInClassStruct {
 	 *
 	 * @return symbol {@link #name} property
 	 */
+	@Override
 	public String getName() {
 		return name;
 	}
@@ -179,6 +180,7 @@ public class SymbolStructImpl extends BuiltInClassStruct {
 	 *
 	 * @return symbol {@link #symbolPackage} property
 	 */
+	@Override
 	public PackageStruct getSymbolPackage() {
 		return symbolPackage;
 	}
@@ -189,6 +191,7 @@ public class SymbolStructImpl extends BuiltInClassStruct {
 	 * @param symbolPackage
 	 * 		new symbol {@link #symbolPackage} property value
 	 */
+	@Override
 	public void setSymbolPackage(final PackageStruct symbolPackage) {
 		this.symbolPackage = symbolPackage;
 	}
@@ -226,6 +229,7 @@ public class SymbolStructImpl extends BuiltInClassStruct {
 		return () -> StringStructImpl.valueOf(name);
 	}
 
+	@Override
 	public boolean hasValue() {
 		return !lexicalValueStack.isEmpty() || !dynamicValueStack.isEmpty();
 	}
@@ -235,6 +239,7 @@ public class SymbolStructImpl extends BuiltInClassStruct {
 //	 *
 //	 * @return symbol {@link #value} property
 //	 */
+	@Override
 	public LispStruct getValue() {
 		final LispStruct value;
 		if (lexicalValueStack.isEmpty()) {
@@ -250,6 +255,7 @@ public class SymbolStructImpl extends BuiltInClassStruct {
 		return value;
 	}
 
+	@Override
 	public LispStruct getLexicalValue() {
 		if (lexicalValueStack.isEmpty()) {
 			return handleUnboundValue();
@@ -263,6 +269,7 @@ public class SymbolStructImpl extends BuiltInClassStruct {
 		return value;
 	}
 
+	@Override
 	public LispStruct getDynamicValue() {
 		if (dynamicValueStack.isEmpty()) {
 			handleUnboundValue();
@@ -302,6 +309,7 @@ public class SymbolStructImpl extends BuiltInClassStruct {
 //	 * @param value
 //	 * 		new symbol {@link #value} property value
 //	 */
+	@Override
 	public void setValue(final LispStruct value) {
 		if (lexicalValueStack.isEmpty()) {
 			if (dynamicValueStack.isEmpty()) {
@@ -316,6 +324,7 @@ public class SymbolStructImpl extends BuiltInClassStruct {
 		}
 	}
 
+	@Override
 	public void setLexicalValue(final LispStruct value) {
 		if (lexicalValueStack.isEmpty()) {
 			lexicalValueStack.push(value);
@@ -325,6 +334,7 @@ public class SymbolStructImpl extends BuiltInClassStruct {
 		}
 	}
 
+	@Override
 	public void setDynamicValue(final LispStruct value) {
 		if (dynamicValueStack.isEmpty()) {
 			dynamicValueStack.push(value);
@@ -334,22 +344,27 @@ public class SymbolStructImpl extends BuiltInClassStruct {
 		}
 	}
 
+	@Override
 	public void bindLexicalValue(final LispStruct value) {
 		lexicalValueStack.push(value);
 	}
 
+	@Override
 	public void unbindLexicalValue() {
 		lexicalValueStack.pop();
 	}
 
+	@Override
 	public void bindDynamicValue(final LispStruct value) {
 		dynamicValueStack.push(value);
 	}
 
+	@Override
 	public void unbindDynamicValue() {
 		dynamicValueStack.pop();
 	}
 
+	@Override
 	public boolean hasFunction() {
 		return !functionStack.isEmpty();
 	}
@@ -359,6 +374,7 @@ public class SymbolStructImpl extends BuiltInClassStruct {
 //	 *
 //	 * @return symbol {@link #function} property
 //	 */
+	@Override
 	public FunctionStruct getFunction() {
 		if (functionStack.isEmpty()) {
 			return handleUnboundFunction();
@@ -392,6 +408,7 @@ public class SymbolStructImpl extends BuiltInClassStruct {
 //	 * @param function
 //	 * 		new symbol {@link #function} property value
 //	 */
+	@Override
 	public void setFunction(final FunctionStruct function) {
 		if (functionStack.isEmpty()) {
 			functionStack.push(function);
@@ -401,10 +418,12 @@ public class SymbolStructImpl extends BuiltInClassStruct {
 		}
 	}
 
+	@Override
 	public void bindFunction(final FunctionStruct function) {
 		functionStack.push(function);
 	}
 
+	@Override
 	public FunctionStruct unbindFunction() {
 		return functionStack.pop();
 	}
@@ -414,6 +433,7 @@ public class SymbolStructImpl extends BuiltInClassStruct {
 	 *
 	 * @return symbol {@link #macroFunctionExpander} property
 	 */
+	@Override
 	public MacroFunctionExpanderInter getMacroFunctionExpander() {
 		return macroFunctionExpander;
 	}
@@ -424,6 +444,7 @@ public class SymbolStructImpl extends BuiltInClassStruct {
 	 * @param macroFunctionExpander
 	 * 		new symbol {@link #macroFunctionExpander} property value
 	 */
+	@Override
 	public void setMacroFunctionExpander(final MacroFunctionExpanderInter macroFunctionExpander) {
 		this.macroFunctionExpander = macroFunctionExpander;
 	}
@@ -433,6 +454,7 @@ public class SymbolStructImpl extends BuiltInClassStruct {
 	 *
 	 * @return symbol {@link #compilerMacroFunctionExpander} property
 	 */
+	@Override
 	public CompilerMacroFunctionExpanderInter getCompilerMacroFunctionExpander() {
 		return compilerMacroFunctionExpander;
 	}
@@ -443,6 +465,7 @@ public class SymbolStructImpl extends BuiltInClassStruct {
 	 * @param compilerMacroFunctionExpander
 	 * 		new symbol {@link #compilerMacroFunctionExpander} property value
 	 */
+	@Override
 	public void setCompilerMacroFunctionExpander(final CompilerMacroFunctionExpanderInter compilerMacroFunctionExpander) {
 		this.compilerMacroFunctionExpander = compilerMacroFunctionExpander;
 	}
@@ -452,6 +475,7 @@ public class SymbolStructImpl extends BuiltInClassStruct {
 //	 *
 //	 * @return symbol {@link #symbolMacroExpander} property
 //	 */
+	@Override
 	public SymbolMacroExpanderInter getSymbolMacroExpander() {
 		if (symbolMacroExpanderStack.isEmpty()) {
 			return null;
@@ -465,15 +489,18 @@ public class SymbolStructImpl extends BuiltInClassStruct {
 //	 * @param symbolMacroExpander
 //	 * 		new symbol {@link #symbolMacroExpander} property value
 //	 */
+	@Override
 	public void setSymbolMacroExpander(final SymbolMacroExpanderInter symbolMacroExpander) {
 		symbolMacroExpanderStack.pop();
 		symbolMacroExpanderStack.push(symbolMacroExpander);
 	}
 
+	@Override
 	public void bindSymbolMacroExpander(final SymbolMacroExpanderInter symbolMacroExpander) {
 		symbolMacroExpanderStack.push(symbolMacroExpander);
 	}
 
+	@Override
 	public void unbindSymbolMacroExpander() {
 		symbolMacroExpanderStack.pop();
 	}
@@ -483,6 +510,7 @@ public class SymbolStructImpl extends BuiltInClassStruct {
 	 *
 	 * @return symbol {@link #properties} property
 	 */
+	@Override
 	public ListStruct getProperties() {
 		if (properties == null) {
 			// We MUST lazy load this. Because NIlStruct is a symbol and can have its own Plist, but we can't initialize
@@ -492,6 +520,7 @@ public class SymbolStructImpl extends BuiltInClassStruct {
 		return properties;
 	}
 
+	@Override
 	public void setProperties(final ListStruct properties) {
 		this.properties = properties;
 	}
@@ -501,6 +530,7 @@ public class SymbolStructImpl extends BuiltInClassStruct {
 	 *
 	 * @return symbol {@link #structureClass} property
 	 */
+	@Override
 	public StructureClassStruct getStructureClass() {
 		return structureClass;
 	}
@@ -511,6 +541,7 @@ public class SymbolStructImpl extends BuiltInClassStruct {
 	 * @param structureClass
 	 * 		new symbol {@link #structureClass} property value
 	 */
+	@Override
 	public void setStructureClass(final StructureClassStruct structureClass) {
 		this.structureClass = structureClass;
 	}
@@ -524,6 +555,7 @@ public class SymbolStructImpl extends BuiltInClassStruct {
 	 *
 	 * @return the property from the symbol {@link #properties} or {@code null} if the property cannot be found.
 	 */
+	@Override
 	public LispStruct getProperty(final LispStruct indicator, final LispStruct defaultValue) {
 		if (properties == null) {
 			// We MUST lazy load this. Because NIlStruct is a symbol and can have its own Plist, but we can't initialize
@@ -542,6 +574,7 @@ public class SymbolStructImpl extends BuiltInClassStruct {
 	 * @param newValue
 	 * 		the value of the property
 	 */
+	@Override
 	public ListStruct setProperty(final LispStruct indicator, final LispStruct newValue) {
 		if (properties == null) {
 			// We MUST lazy load this. Because NIlStruct is a symbol and can have its own Plist, but we can't initialize
@@ -559,6 +592,7 @@ public class SymbolStructImpl extends BuiltInClassStruct {
 	 *
 	 * @return whether or not the property was removed
 	 */
+	@Override
 	public boolean removeProperty(final LispStruct indicator) {
 		if (properties == null) {
 			// We MUST lazy load this. Because NIlStruct is a symbol and can have its own Plist, but we can't initialize
@@ -576,7 +610,8 @@ public class SymbolStructImpl extends BuiltInClassStruct {
 	 *
 	 * @return the newly copied symbol
 	 */
-	public SymbolStructImpl copySymbol(final boolean copyProperties) {
+	@Override
+	public SymbolStruct copySymbol(final boolean copyProperties) {
 		if (copyProperties) {
 			final SymbolStructImpl newSymbol = new SymbolStructImpl(name);
 			newSymbol.lexicalValueStack.addAll(lexicalValueStack);

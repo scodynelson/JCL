@@ -17,13 +17,13 @@ public class StructureObjectStruct implements LispStruct {
 
 	protected final StructureClassStruct structureClass;
 
-	protected final SymbolStructImpl structureSymbol;
+	protected final SymbolStruct structureSymbol;
 
 	protected final StructureObjectStruct parentStructure;
 
-	protected final Map<SymbolStructImpl, LispStruct> slots = new LinkedHashMap<>();
+	protected final Map<SymbolStruct, LispStruct> slots = new LinkedHashMap<>();
 
-	protected StructureObjectStruct(final StructureClassStruct structureClass, final SymbolStructImpl structureSymbol,
+	protected StructureObjectStruct(final StructureClassStruct structureClass, final SymbolStruct structureSymbol,
 	                                final StructureObjectStruct parentStructure) {
 		this.structureClass = structureClass;
 		this.structureSymbol = structureSymbol;
@@ -34,7 +34,7 @@ public class StructureObjectStruct implements LispStruct {
 		return structureClass;
 	}
 
-	public SymbolStructImpl getStructureSymbol() {
+	public SymbolStruct getStructureSymbol() {
 		return structureSymbol;
 	}
 
@@ -42,25 +42,25 @@ public class StructureObjectStruct implements LispStruct {
 		return parentStructure;
 	}
 
-	public List<Pair<SymbolStructImpl, LispStruct>> getSlots() {
-		final List<Pair<SymbolStructImpl, LispStruct>> allSlots = new ArrayList<>();
+	public List<Pair<SymbolStruct, LispStruct>> getSlots() {
+		final List<Pair<SymbolStruct, LispStruct>> allSlots = new ArrayList<>();
 
 		if (parentStructure != null) {
-			final List<Pair<SymbolStructImpl, LispStruct>> parentAllSlots = parentStructure.getSlots();
+			final List<Pair<SymbolStruct, LispStruct>> parentAllSlots = parentStructure.getSlots();
 			allSlots.addAll(parentAllSlots);
 		}
 
-		for (final Map.Entry<SymbolStructImpl, LispStruct> slot : slots.entrySet()) {
-			final SymbolStructImpl slotSymbol = slot.getKey();
+		for (final Map.Entry<SymbolStruct, LispStruct> slot : slots.entrySet()) {
+			final SymbolStruct slotSymbol = slot.getKey();
 			final LispStruct slotValue = slot.getValue();
-			final Pair<SymbolStructImpl, LispStruct> pair = ImmutablePair.of(slotSymbol, slotValue);
+			final Pair<SymbolStruct, LispStruct> pair = ImmutablePair.of(slotSymbol, slotValue);
 			allSlots.add(pair);
 		}
 
 		return allSlots;
 	}
 
-	public LispStruct getSlot(final SymbolStructImpl slotName) {
+	public LispStruct getSlot(final SymbolStruct slotName) {
 		if (slots.containsKey(slotName)) {
 			return slots.get(slotName);
 		}
@@ -68,7 +68,7 @@ public class StructureObjectStruct implements LispStruct {
 		throw new SimpleErrorException("Slot " + slotName + " is not present for structure " + this);
 	}
 
-	public void setSlot(final SymbolStructImpl slotName, final LispStruct newSlotValue) {
+	public void setSlot(final SymbolStruct slotName, final LispStruct newSlotValue) {
 		if (slots.containsKey(slotName)) {
 			slots.put(slotName, newSlotValue);
 			return;
@@ -91,9 +91,9 @@ public class StructureObjectStruct implements LispStruct {
 		final String printedStructureSymbol = structureSymbol.toString();
 		stringBuilder.append(printedStructureSymbol);
 
-		final List<Pair<SymbolStructImpl, LispStruct>> allSlots = getSlots();
-		for (final Pair<SymbolStructImpl, LispStruct> slot : allSlots) {
-			final SymbolStructImpl slotSymbol = slot.getLeft();
+		final List<Pair<SymbolStruct, LispStruct>> allSlots = getSlots();
+		for (final Pair<SymbolStruct, LispStruct> slot : allSlots) {
+			final SymbolStruct slotSymbol = slot.getLeft();
 			final LispStruct slotValue = slot.getRight();
 
 			stringBuilder.append(" :");

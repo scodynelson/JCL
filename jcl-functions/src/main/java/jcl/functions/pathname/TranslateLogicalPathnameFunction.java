@@ -5,7 +5,7 @@
 package jcl.functions.pathname;
 
 import jcl.lang.LispStruct;
-import jcl.lang.SymbolStructImpl;
+import jcl.lang.SymbolStruct;
 import jcl.lang.SynonymStreamStruct;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
@@ -46,7 +46,7 @@ public final class TranslateLogicalPathnameFunction extends CommonLispBuiltInFun
 			pathname = logicalPathname.translateLogicalPathname();
 		} else if (pathnameDesignator instanceof SynonymStreamStruct) {
 			final SynonymStreamStruct synonymStream = (SynonymStreamStruct) pathnameDesignator;
-			final SymbolStructImpl streamSymbol = synonymStream.getSymbol();
+			final SymbolStruct streamSymbol = synonymStream.getSymbol();
 			pathname = translateLogicalPathname(streamSymbol.getValue());
 		} else {
 			pathname = pathnameFunction.pathname(pathnameDesignator);

@@ -15,7 +15,7 @@ import jcl.compiler.icg.JavaMethodBuilder;
 import jcl.compiler.struct.specialoperator.PrognStruct;
 import jcl.compiler.struct.specialoperator.SymbolMacroletStruct;
 import jcl.lang.LispStruct;
-import jcl.lang.SymbolStructImpl;
+import jcl.lang.SymbolStruct;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
@@ -54,7 +54,7 @@ final class SymbolMacroletCodeGenerator implements CodeGenerator<SymbolMacroletS
 		final int expansionStore = methodBuilder.getNextAvailableStore();
 
 		for (final SymbolMacroletStruct.SymbolMacroletVar var : vars) {
-			final SymbolStructImpl symbolVar = var.getVar();
+			final SymbolStruct symbolVar = var.getVar();
 			// NOTE: we have to get a new 'symbolStore' for each var so we can properly unbind the expansions later
 			final int symbolStore = methodBuilder.getNextAvailableStore();
 			CodeGenerators.generateSymbol(symbolVar, generatorState, packageStore, symbolStore);
@@ -72,7 +72,7 @@ final class SymbolMacroletCodeGenerator implements CodeGenerator<SymbolMacroletS
 
 			mv.visitVarInsn(Opcodes.ALOAD, symbolStore);
 			mv.visitVarInsn(Opcodes.ALOAD, expansionStore);
-			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, GenerationConstants.SYMBOL_STRUCT_NAME, "bindSymbolMacroExpander", "(Ljcl/lang/function/expander/SymbolMacroExpanderInter;)V", false);
+			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, GenerationConstants.SYMBOL_STRUCT_NAME, "bindSymbolMacroExpander", "(Ljcl/lang/function/expander/SymbolMacroExpanderInter;)V", true);
 		}
 
 		mv.visitLabel(tryBlockStart);
@@ -106,7 +106,7 @@ final class SymbolMacroletCodeGenerator implements CodeGenerator<SymbolMacroletS
 	private static void generateFinallyCode(final MethodVisitor mv, final Set<Integer> varSymbolStores) {
 		for (final Integer varSymbolStore : varSymbolStores) {
 			mv.visitVarInsn(Opcodes.ALOAD, varSymbolStore);
-			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, GenerationConstants.SYMBOL_STRUCT_NAME, "unbindSymbolMacroExpander", "()V", false);
+			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, GenerationConstants.SYMBOL_STRUCT_NAME, "unbindSymbolMacroExpander", "()V", true);
 		}
 	}
 

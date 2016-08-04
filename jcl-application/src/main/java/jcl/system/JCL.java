@@ -117,7 +117,7 @@ public class JCL implements ApplicationRunner {
 	}
 
 	private void loadLispFiles() {
-		CompileForm.OUTPUT_FILE = false;
+		CompileForm.OUTPUT_FILE = true;
 		for (final String lispFileToLoad : lispFilesToLoad) {
 			final PathnameStruct pathname = LispStructFactory.toPathname(lispFileToLoad);
 			loadFunction.load(pathname, false, false, true);

@@ -11,7 +11,7 @@ import jcl.compiler.struct.specialoperator.SymbolCompilerFunctionStruct;
 import jcl.compiler.struct.specialoperator.lambda.LambdaStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.internal.SpecialOperatorStructImpl;
-import jcl.lang.SymbolStructImpl;
+import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.ListStruct;
@@ -25,7 +25,7 @@ public class FunctionExpander extends MacroFunctionExpander<CompilerFunctionStru
 	private LambdaExpander lambdaExpander;
 
 	@Override
-	public SymbolStructImpl getFunctionSymbol() {
+	public SymbolStruct getFunctionSymbol() {
 		return SpecialOperatorStructImpl.FUNCTION;
 	}
 
@@ -43,8 +43,8 @@ public class FunctionExpander extends MacroFunctionExpander<CompilerFunctionStru
 			throw new ProgramErrorException("FUNCTION: Incorrect number of arguments: 3. Expected 2 arguments.");
 		}
 
-		if (first instanceof SymbolStructImpl) {
-			return new SymbolCompilerFunctionStruct((SymbolStructImpl) first);
+		if (first instanceof SymbolStruct) {
+			return new SymbolCompilerFunctionStruct((SymbolStruct) first);
 		} else if (first instanceof ListStruct) {
 			return analyzeFunctionList((ListStruct) first, environment);
 		} else {

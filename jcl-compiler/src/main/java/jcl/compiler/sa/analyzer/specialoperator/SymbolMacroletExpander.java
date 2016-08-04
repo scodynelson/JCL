@@ -18,7 +18,7 @@ import jcl.compiler.struct.specialoperator.declare.DeclareStruct;
 import jcl.compiler.struct.specialoperator.declare.SpecialDeclarationStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.internal.SpecialOperatorStructImpl;
-import jcl.lang.SymbolStructImpl;
+import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.factory.LispStructFactory;
@@ -40,7 +40,7 @@ public class SymbolMacroletExpander extends MacroFunctionExpander<SymbolMacrolet
 	private BodyWithDeclaresAnalyzer bodyWithDeclaresAnalyzer;
 
 	@Override
-	public SymbolStructImpl getFunctionSymbol() {
+	public SymbolStruct getFunctionSymbol() {
 		return SpecialOperatorStructImpl.SYMBOL_MACROLET;
 	}
 
@@ -108,10 +108,10 @@ public class SymbolMacroletExpander extends MacroFunctionExpander<SymbolMacrolet
 		}
 		final LispStruct first = iterator.next();
 
-		if (!(first instanceof SymbolStructImpl)) {
+		if (!(first instanceof SymbolStruct)) {
 			throw new ProgramErrorException("SYMBOL-MACROLET: First element of parameter list must be a symbol. Got: " + first);
 		}
-		final SymbolStructImpl var = (SymbolStructImpl) first;
+		final SymbolStruct var = (SymbolStruct) first;
 
 		final boolean hasGlobalBinding = Environment.NULL.hasDynamicBinding(var);
 		if (hasGlobalBinding) {

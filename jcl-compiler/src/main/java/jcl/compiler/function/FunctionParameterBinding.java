@@ -5,7 +5,7 @@
 package jcl.compiler.function;
 
 import jcl.lang.LispStruct;
-import jcl.lang.SymbolStructImpl;
+import jcl.lang.SymbolStruct;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -13,20 +13,20 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 public class FunctionParameterBinding {
 
-	private final SymbolStructImpl parameterSymbol;
+	private final SymbolStruct parameterSymbol;
 
 	private final LispStruct parameterValue;
 
 	private final boolean isSpecial;
 
-	public FunctionParameterBinding(final SymbolStructImpl parameterSymbol, final LispStruct parameterValue,
+	public FunctionParameterBinding(final SymbolStruct parameterSymbol, final LispStruct parameterValue,
 	                                final boolean isSpecial) {
 		this.parameterSymbol = parameterSymbol;
 		this.parameterValue = parameterValue;
 		this.isSpecial = isSpecial;
 	}
 
-	public SymbolStructImpl getParameterSymbol() {
+	public SymbolStruct getParameterSymbol() {
 		return parameterSymbol;
 	}
 

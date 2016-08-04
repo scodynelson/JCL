@@ -25,7 +25,7 @@ import jcl.lang.internal.DeclarationStructImpl;
 import jcl.lang.LispStruct;
 import jcl.lang.internal.SpecialOperatorStructImpl;
 import jcl.lang.StringStruct;
-import jcl.lang.SymbolStructImpl;
+import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.factory.LispStructFactory;
@@ -57,7 +57,7 @@ public class MacroletExpander extends MacroFunctionExpander<InnerLambdaStruct> {
 	private FunctionExpander functionExpander;
 
 	@Override
-	public SymbolStructImpl getFunctionSymbol() {
+	public SymbolStruct getFunctionSymbol() {
 		return SpecialOperatorStructImpl.MACROLET;
 	}
 
@@ -78,8 +78,8 @@ public class MacroletExpander extends MacroFunctionExpander<InnerLambdaStruct> {
 
 		final Environment macroletEnvironment = new Environment(environment);
 
-		final Stack<SymbolStructImpl> functionNameStack = macroletEnvironment.getFunctionNameStack();
-		final List<SymbolStructImpl> functionNames = getFunctionNames(innerMacroLambdas);
+		final Stack<SymbolStruct> functionNameStack = macroletEnvironment.getFunctionNameStack();
+		final List<SymbolStruct> functionNames = getFunctionNames(innerMacroLambdas);
 
 		final List<LispStruct> forms = new ArrayList<>();
 		iterator.forEachRemaining(forms::add);
@@ -118,9 +118,9 @@ public class MacroletExpander extends MacroFunctionExpander<InnerLambdaStruct> {
 		}
 	}
 
-	private List<SymbolStructImpl> getFunctionNames(final ListStruct innerMacroLambdas) {
+	private List<SymbolStruct> getFunctionNames(final ListStruct innerMacroLambdas) {
 
-		final List<SymbolStructImpl> functionNames = new ArrayList<>();
+		final List<SymbolStruct> functionNames = new ArrayList<>();
 
 		for (final LispStruct functionDefinition : innerMacroLambdas) {
 
@@ -130,10 +130,10 @@ public class MacroletExpander extends MacroFunctionExpander<InnerLambdaStruct> {
 			final ListStruct functionList = (ListStruct) functionDefinition;
 
 			final LispStruct functionListFirst = functionList.getCar();
-			if (!(functionListFirst instanceof SymbolStructImpl)) {
+			if (!(functionListFirst instanceof SymbolStruct)) {
 				throw new ProgramErrorException("MACROLET: First element of function parameter must be a Symbol. Got: " + functionListFirst);
 			}
-			final SymbolStructImpl functionName = (SymbolStructImpl) functionListFirst;
+			final SymbolStruct functionName = (SymbolStruct) functionListFirst;
 
 			if (functionNames.contains(functionName)) {
 				LOGGER.warn("MACROLET: Multiple bindings of {} in MACROLET form.", functionName.getName());
@@ -148,7 +148,7 @@ public class MacroletExpander extends MacroFunctionExpander<InnerLambdaStruct> {
 	                                                        final Environment macroletEnvironment) {
 
 		final ListStruct functionList = (ListStruct) functionDefinition;
-		final SymbolStructImpl functionName = (SymbolStructImpl) functionList.getCar();
+		final SymbolStruct functionName = (SymbolStruct) functionList.getCar();
 		final CompilerFunctionStruct functionInitForm = getFunctionParameterInitForm(functionList, macroletEnvironment);
 
 		final boolean isSpecial = declare.getSpecialDeclarations()
@@ -197,7 +197,7 @@ public class MacroletExpander extends MacroFunctionExpander<InnerLambdaStruct> {
 		final ListStruct innerBlockListStruct = LispStructFactory.toDottedList(SpecialOperatorStructImpl.BLOCK, functionName, blockBody);
 
 		// NOTE: This will be a safe cast since we verify it is a symbol earlier
-		final SymbolStructImpl functionNameSymbol = (SymbolStructImpl) functionName;
+		final SymbolStruct functionNameSymbol = (SymbolStruct) functionName;
 
 		final String functionNameString = functionNameSymbol.getName();
 		final String properFunctionNameString = functionNameString.codePoints()

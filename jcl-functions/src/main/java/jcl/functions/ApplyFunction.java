@@ -7,7 +7,7 @@ package jcl.functions;
 import java.util.List;
 
 import jcl.lang.LispStruct;
-import jcl.lang.SymbolStructImpl;
+import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.FunctionStruct;
@@ -38,8 +38,8 @@ public final class ApplyFunction extends CommonLispBuiltInFunctionStruct {
 		final LispStruct functionDesignator = arguments.getRequiredArgument(FN_ARGUMENT);
 
 		FunctionStruct functionStruct = null;
-		if (functionDesignator instanceof SymbolStructImpl) {
-			functionStruct = ((SymbolStructImpl) functionDesignator).getFunction();
+		if (functionDesignator instanceof SymbolStruct) {
+			functionStruct = ((SymbolStruct) functionDesignator).getFunction();
 		} else if (functionDesignator instanceof FunctionStruct) {
 			functionStruct = (FunctionStruct) functionDesignator;
 		}

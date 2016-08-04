@@ -7,7 +7,7 @@ package jcl.functions.lisppackage;
 import java.util.function.BiConsumer;
 
 import jcl.lang.PackageStruct;
-import jcl.lang.SymbolStructImpl;
+import jcl.lang.SymbolStruct;
 import org.springframework.stereotype.Component;
 
 /**
@@ -27,12 +27,12 @@ public final class ShadowingImportFunction extends AbstractSymbolListPackageFunc
 
 	/**
 	 * {@inheritDoc}
-	 * Returns {@link PackageStruct#shadowingImport(SymbolStructImpl[])} as a method reference function.
+	 * Returns {@link PackageStruct#shadowingImport(SymbolStruct[])} as a method reference function.
 	 *
-	 * @return returns {@link PackageStruct#shadowingImport(SymbolStructImpl[])} as a method reference function
+	 * @return returns {@link PackageStruct#shadowingImport(SymbolStruct[])} as a method reference function
 	 */
 	@Override
-	protected BiConsumer<PackageStruct, SymbolStructImpl[]> symbolListFunction() {
+	protected BiConsumer<PackageStruct, SymbolStruct[]> symbolListFunction() {
 		return PackageStruct::shadowingImport;
 	}
 }

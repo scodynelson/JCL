@@ -28,7 +28,7 @@ import jcl.lang.internal.DeclarationStructImpl;
 import jcl.lang.LispStruct;
 import jcl.lang.internal.SpecialOperatorStructImpl;
 import jcl.lang.StringStruct;
-import jcl.lang.SymbolStructImpl;
+import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.factory.LispStructFactory;
@@ -76,8 +76,8 @@ public abstract class InnerLambdaExpander extends MacroFunctionExpander<InnerLam
 
 		final Environment innerLambdaEnvironment = new Environment(environment);
 
-		final Stack<SymbolStructImpl> functionNameStack = environment.getFunctionNameStack();
-		final List<SymbolStructImpl> functionNames = getFunctionNames(innerLambdas);
+		final Stack<SymbolStruct> functionNameStack = environment.getFunctionNameStack();
+		final List<SymbolStruct> functionNames = getFunctionNames(innerLambdas);
 
 		final List<LispStruct> forms = new ArrayList<>();
 		iterator.forEachRemaining(forms::add);
@@ -94,11 +94,11 @@ public abstract class InnerLambdaExpander extends MacroFunctionExpander<InnerLam
 	                                                      Environment innerLambdaEnvironment,
 	                                                      BodyProcessingResult bodyProcessingResult,
 	                                                      DeclareStruct declare,
-	                                                      Stack<SymbolStructImpl> functionNameStack,
-	                                                      List<SymbolStructImpl> functionNames);
+	                                                      Stack<SymbolStruct> functionNameStack,
+	                                                      List<SymbolStruct> functionNames);
 
-	protected abstract ListStruct getInnerLambdaBody(ListStruct innerBlockListStruct, SymbolStructImpl functionNameSymbol,
-	                                                 List<SymbolStructImpl> functionNames);
+	protected abstract ListStruct getInnerLambdaBody(ListStruct innerBlockListStruct, SymbolStruct functionNameSymbol,
+	                                                 List<SymbolStruct> functionNames);
 
 	protected abstract CompilerFunctionStruct expandBuiltInnerFunction(ListStruct innerFunctionListStruct,
 	                                                                   Environment environment);
@@ -106,7 +106,7 @@ public abstract class InnerLambdaExpander extends MacroFunctionExpander<InnerLam
 	protected List<InnerLambdaStruct.InnerLambdaVar> getVars(final ListStruct innerLambdas,
 	                                                         final Environment innerLambdaEnvironment,
 	                                                         final DeclareStruct declare,
-	                                                         final List<SymbolStructImpl> functionNames) {
+	                                                         final List<SymbolStruct> functionNames) {
 		return innerLambdas.stream()
 		                   .map(e -> getVar(e, declare, innerLambdaEnvironment, functionNames))
 		                   .collect(Collectors.toList());
@@ -132,9 +132,9 @@ public abstract class InnerLambdaExpander extends MacroFunctionExpander<InnerLam
 		return new InnerLambdaStruct(vars, new PrognStruct(analyzedBodyForms), innerLambdaEnvironment);
 	}
 
-	private List<SymbolStructImpl> getFunctionNames(final ListStruct innerLambdas) {
+	private List<SymbolStruct> getFunctionNames(final ListStruct innerLambdas) {
 
-		final List<SymbolStructImpl> functionNames = new ArrayList<>();
+		final List<SymbolStruct> functionNames = new ArrayList<>();
 
 		for (final LispStruct functionDefinition : innerLambdas) {
 
@@ -144,10 +144,10 @@ public abstract class InnerLambdaExpander extends MacroFunctionExpander<InnerLam
 			final ListStruct functionList = (ListStruct) functionDefinition;
 
 			final LispStruct functionListFirst = functionList.getCar();
-			if (!(functionListFirst instanceof SymbolStructImpl)) {
+			if (!(functionListFirst instanceof SymbolStruct)) {
 				throw new TypeErrorException(expanderName + ": First element of function parameter must be a Symbol. Got: " + functionListFirst);
 			}
-			final SymbolStructImpl functionName = (SymbolStructImpl) functionListFirst;
+			final SymbolStruct functionName = (SymbolStruct) functionListFirst;
 
 			if (functionNames.contains(functionName)) {
 				LOGGER.warn("{}: Multiple bindings of {} in {} form.", expanderName, functionName.getName(), expanderName);
@@ -159,10 +159,10 @@ public abstract class InnerLambdaExpander extends MacroFunctionExpander<InnerLam
 	}
 
 	private InnerLambdaStruct.InnerLambdaVar getVar(final LispStruct functionDefinition, final DeclareStruct declare,
-	                                                final Environment environment, final List<SymbolStructImpl> functionNames) {
+	                                                final Environment environment, final List<SymbolStruct> functionNames) {
 
 		final ListStruct functionList = (ListStruct) functionDefinition;
-		final SymbolStructImpl functionName = (SymbolStructImpl) functionList.getCar();
+		final SymbolStruct functionName = (SymbolStruct) functionList.getCar();
 		final CompilerFunctionStruct functionInitForm = getFunctionParameterInitForm(functionList, environment, functionNames);
 
 		final boolean isSpecial = declare.getSpecialDeclarations()
@@ -174,7 +174,7 @@ public abstract class InnerLambdaExpander extends MacroFunctionExpander<InnerLam
 
 	private CompilerFunctionStruct getFunctionParameterInitForm(final ListStruct functionListParameter,
 	                                                            final Environment environment,
-	                                                            final List<SymbolStructImpl> functionNames) {
+	                                                            final List<SymbolStruct> functionNames) {
 
 		final Iterator<LispStruct> iterator = functionListParameter.iterator();
 
@@ -202,7 +202,7 @@ public abstract class InnerLambdaExpander extends MacroFunctionExpander<InnerLam
 		final ListStruct innerBlockListStruct = LispStructFactory.toDottedList(SpecialOperatorStructImpl.BLOCK, functionName, blockBody);
 
 		// NOTE: This will be a safe cast since we verify it is a symbol earlier
-		final SymbolStructImpl functionNameSymbol = (SymbolStructImpl) functionName;
+		final SymbolStruct functionNameSymbol = (SymbolStruct) functionName;
 
 		final ListStruct innerLambdaBody = getInnerLambdaBody(innerBlockListStruct, functionNameSymbol, functionNames);
 

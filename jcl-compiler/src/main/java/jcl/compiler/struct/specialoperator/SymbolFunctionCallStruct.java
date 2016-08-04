@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 
 import jcl.compiler.struct.CompilerSpecialOperatorStruct;
 import jcl.lang.LispStruct;
-import jcl.lang.SymbolStructImpl;
+import jcl.lang.SymbolStruct;
 
 public class SymbolFunctionCallStruct extends CompilerSpecialOperatorStruct {
 
@@ -43,7 +43,7 @@ public class SymbolFunctionCallStruct extends CompilerSpecialOperatorStruct {
 
 		final StringBuilder builder = new StringBuilder("(");
 
-		final SymbolStructImpl functionSymbol = symbolCompilerFunction.getFunctionSymbol();
+		final SymbolStruct functionSymbol = symbolCompilerFunction.getFunctionSymbol();
 		final String functionSymbolPrinted = functionSymbol.toString();
 		builder.append(functionSymbolPrinted);
 		builder.append(' ');

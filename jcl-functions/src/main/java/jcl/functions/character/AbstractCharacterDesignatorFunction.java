@@ -10,7 +10,7 @@ import java.util.function.Supplier;
 import jcl.lang.CharacterStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.StringStruct;
-import jcl.lang.SymbolStructImpl;
+import jcl.lang.SymbolStruct;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.FunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
@@ -18,7 +18,7 @@ import jcl.lang.function.parameterdsl.Parameters;
 
 /**
  * Abstract {@link FunctionStruct} implementation for character functions that operate on character designators, namely
- * {@link CharacterStruct}s, {@link StringStruct}s, and {@link SymbolStructImpl}s.
+ * {@link CharacterStruct}s, {@link StringStruct}s, and {@link SymbolStruct}s.
  */
 abstract class AbstractCharacterDesignatorFunction extends CommonLispBuiltInFunctionStruct {
 

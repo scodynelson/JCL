@@ -9,7 +9,7 @@ import java.util.Collection;
 
 import jcl.lang.LispStruct;
 import jcl.lang.PackageStruct;
-import jcl.lang.SymbolStructImpl;
+import jcl.lang.SymbolStruct;
 import jcl.lang.factory.LispStructFactory;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
@@ -52,7 +52,7 @@ public final class PackageShadowingSymbolsFunction extends CommonLispBuiltInFunc
 		final LispStruct lispStruct = arguments.getRequiredArgument(PACKAGE_ARGUMENT);
 		final PackageStruct aPackage = lispStruct.asPackage().get();
 
-		final Collection<SymbolStructImpl> shadowingSymbols = aPackage.getShadowingSymbols().values();
+		final Collection<SymbolStruct> shadowingSymbols = aPackage.getShadowingSymbols().values();
 		return LispStructFactory.toProperList(new ArrayList<>(shadowingSymbols));
 	}
 }

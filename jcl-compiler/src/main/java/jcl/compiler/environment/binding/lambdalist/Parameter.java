@@ -6,7 +6,7 @@ package jcl.compiler.environment.binding.lambdalist;
 
 import jcl.compiler.environment.binding.Binding;
 import jcl.lang.LispStruct;
-import jcl.lang.SymbolStructImpl;
+import jcl.lang.SymbolStruct;
 import jcl.type.LispType;
 
 public class Parameter extends Binding {
@@ -19,7 +19,7 @@ public class Parameter extends Binding {
 
 	private final boolean isSpecial;
 
-	protected Parameter(final SymbolStructImpl var, final DestructuringLambdaList destructuringForm,
+	protected Parameter(final SymbolStruct var, final DestructuringLambdaList destructuringForm,
 	                    final LispType type, final LispStruct initForm, final boolean isSpecial) {
 		super(var, type);
 		this.destructuringForm = destructuringForm;

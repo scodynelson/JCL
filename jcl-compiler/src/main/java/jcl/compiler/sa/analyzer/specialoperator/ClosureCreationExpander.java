@@ -22,7 +22,7 @@ import jcl.compiler.struct.specialoperator.PrognStruct;
 import jcl.compiler.struct.specialoperator.declare.DeclareStruct;
 import jcl.compiler.struct.specialoperator.declare.SpecialDeclarationStruct;
 import jcl.lang.LispStruct;
-import jcl.lang.SymbolStructImpl;
+import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.factory.LispStructFactory;
@@ -94,11 +94,11 @@ abstract class ClosureCreationExpander<V> extends MacroFunctionExpander<ClosureC
 
 	private V getVar(final LispStruct parameter, final DeclareStruct declare, final Environment environment) {
 
-		if (!(parameter instanceof SymbolStructImpl) && !(parameter instanceof ListStruct)) {
+		if (!(parameter instanceof SymbolStruct) && !(parameter instanceof ListStruct)) {
 			throw new TypeErrorException(expanderName + ": PARAMETER must be a Symbol or a List. Got: " + parameter);
 		}
 
-		final SymbolStructImpl var;
+		final SymbolStruct var;
 		final LispStruct initForm;
 
 		if (parameter instanceof ListStruct) {
@@ -110,10 +110,10 @@ abstract class ClosureCreationExpander<V> extends MacroFunctionExpander<ClosureC
 			}
 			final LispStruct first = iterator.next();
 
-			if (!(first instanceof SymbolStructImpl)) {
+			if (!(first instanceof SymbolStruct)) {
 				throw new TypeErrorException(expanderName + ": First element of list parameter must be a Symbol. Got: " + first);
 			}
-			var = (SymbolStructImpl) first;
+			var = (SymbolStruct) first;
 
 			if (iterator.hasNext()) {
 				final LispStruct value = iterator.next();
@@ -126,7 +126,7 @@ abstract class ClosureCreationExpander<V> extends MacroFunctionExpander<ClosureC
 				initForm = NILStruct.INSTANCE;
 			}
 		} else {
-			var = (SymbolStructImpl) parameter;
+			var = (SymbolStruct) parameter;
 			initForm = NILStruct.INSTANCE;
 		}
 
@@ -145,7 +145,7 @@ abstract class ClosureCreationExpander<V> extends MacroFunctionExpander<ClosureC
 		return getClosureCreationVar(var, initForm, isSpecial);
 	}
 
-	protected abstract V getClosureCreationVar(SymbolStructImpl var, LispStruct initForm,
+	protected abstract V getClosureCreationVar(SymbolStruct var, LispStruct initForm,
 	                                           boolean isSpecial);
 
 	protected abstract ClosureCreationStruct<V> getClosureCreationStruct(List<V> vars,

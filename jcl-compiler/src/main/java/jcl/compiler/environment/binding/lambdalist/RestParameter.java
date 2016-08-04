@@ -5,24 +5,24 @@
 package jcl.compiler.environment.binding.lambdalist;
 
 import jcl.lang.PackageStruct;
-import jcl.lang.SymbolStructImpl;
+import jcl.lang.SymbolStruct;
 import jcl.type.ListType;
 
 public class RestParameter extends Parameter {
 
-	public RestParameter(final SymbolStructImpl var) {
+	public RestParameter(final SymbolStruct var) {
 		this(var, false);
 	}
 
-	public RestParameter(final SymbolStructImpl var, final boolean isSpecial) {
+	public RestParameter(final SymbolStruct var, final boolean isSpecial) {
 		this(var, null, isSpecial);
 	}
 
-	public RestParameter(final SymbolStructImpl var, final DestructuringLambdaList destructuringForm) {
+	public RestParameter(final SymbolStruct var, final DestructuringLambdaList destructuringForm) {
 		this(var, destructuringForm, false);
 	}
 
-	public RestParameter(final SymbolStructImpl var, final DestructuringLambdaList destructuringForm,
+	public RestParameter(final SymbolStruct var, final DestructuringLambdaList destructuringForm,
 	                     final boolean isSpecial) {
 		super(var, destructuringForm, ListType.INSTANCE, null, isSpecial);
 	}
@@ -33,7 +33,7 @@ public class RestParameter extends Parameter {
 
 	public static final class Builder {
 
-		private final SymbolStructImpl var;
+		private final SymbolStruct var;
 
 		private DestructuringLambdaList destructuringForm;
 

@@ -6,7 +6,7 @@ package jcl.functions.structure;
 
 import jcl.lang.LispStruct;
 import jcl.lang.StructureClassStruct;
-import jcl.lang.SymbolStructImpl;
+import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.function.SystemBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
@@ -29,7 +29,7 @@ public final class MakeStructureInstanceFunction extends SystemBuiltInFunctionSt
 
 	@Override
 	public LispStruct apply(final Arguments arguments) {
-		final SymbolStructImpl structSymbol = arguments.getRequiredArgument(STRUCTURE_SYMBOL_ARGUMENT, SymbolStructImpl.class);
+		final SymbolStruct structSymbol = arguments.getRequiredArgument(STRUCTURE_SYMBOL_ARGUMENT, SymbolStruct.class);
 
 		final StructureClassStruct structureClass = structSymbol.getStructureClass();
 		if (structureClass == null) {

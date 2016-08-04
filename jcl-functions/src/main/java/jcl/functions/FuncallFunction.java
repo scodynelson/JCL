@@ -7,7 +7,7 @@ package jcl.functions;
 import java.util.List;
 
 import jcl.lang.LispStruct;
-import jcl.lang.SymbolStructImpl;
+import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.factory.LispStructFactory;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
@@ -51,8 +51,8 @@ public final class FuncallFunction extends CommonLispBuiltInFunctionStruct {
 		final LispStruct functionDesignator = arguments.getRequiredArgument(FN_ARGUMENT);
 
 		FunctionStruct functionStruct = null;
-		if (functionDesignator instanceof SymbolStructImpl) {
-			functionStruct = ((SymbolStructImpl) functionDesignator).getFunction();
+		if (functionDesignator instanceof SymbolStruct) {
+			functionStruct = ((SymbolStruct) functionDesignator).getFunction();
 		} else if (functionDesignator instanceof FunctionStruct) {
 			functionStruct = (FunctionStruct) functionDesignator;
 		}

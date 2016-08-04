@@ -7,7 +7,7 @@ package jcl.functions.stream;
 import jcl.lang.IntegerStruct;
 import jcl.lang.statics.CommonLispSymbols;
 import jcl.lang.LispStruct;
-import jcl.lang.SymbolStructImpl;
+import jcl.lang.SymbolStruct;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
@@ -44,15 +44,15 @@ public final class OpenFunction extends CommonLispBuiltInFunctionStruct {
 	public LispStruct apply(final Arguments arguments) {
 		final PathnameStruct pathname = arguments.getRequiredArgument(FILESPEC_ARGUMENT).asPathname().get();
 
-		final SymbolStructImpl directionSymbol = arguments.getKeyArgument(CommonLispSymbols.DIRECTION_KEYWORD, SymbolStructImpl.class);
+		final SymbolStruct directionSymbol = arguments.getKeyArgument(CommonLispSymbols.DIRECTION_KEYWORD, SymbolStruct.class);
 		final DirectionType directionType = DirectionType.fromValue(directionSymbol);
 
 		final LispType elementType = arguments.getKeyArgument(CommonLispSymbols.ELEMENT_TYPE_KEYWORD, LispType.class);
 
-		final SymbolStructImpl ifExistsSymbol = arguments.getKeyArgument(CommonLispSymbols.IF_EXISTS_KEYWORD, SymbolStructImpl.class);
+		final SymbolStruct ifExistsSymbol = arguments.getKeyArgument(CommonLispSymbols.IF_EXISTS_KEYWORD, SymbolStruct.class);
 		final IfExistsType ifExistsType = IfExistsType.fromValue(ifExistsSymbol);
 
-		final SymbolStructImpl ifDoesNotExistSymbol = arguments.getKeyArgument(CommonLispSymbols.IF_DOES_NOT_EXIST_KEYWORD, SymbolStructImpl.class);
+		final SymbolStruct ifDoesNotExistSymbol = arguments.getKeyArgument(CommonLispSymbols.IF_DOES_NOT_EXIST_KEYWORD, SymbolStruct.class);
 		final IfDoesNotExistType ifDoesNotExistType = IfDoesNotExistType.fromValue(ifDoesNotExistSymbol);
 
 		final ExternalFormat externalFormat = arguments.getKeyArgument(CommonLispSymbols.EXTERNAL_FORMAT_KEYWORD, ExternalFormat.class);

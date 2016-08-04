@@ -10,7 +10,7 @@ import jcl.compiler.functions.MacroExpandResult;
 import jcl.compiler.sa.FormAnalyzer;
 import jcl.lang.ConsStruct;
 import jcl.lang.LispStruct;
-import jcl.lang.SymbolStructImpl;
+import jcl.lang.SymbolStruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -29,7 +29,7 @@ public class FormAnalyzerImpl implements FormAnalyzer {
 		final MacroExpandResult macroExpandReturn = macroExpandFunction.macroExpand(input, environment);
 		final LispStruct expandedForm = macroExpandReturn.getExpandedForm();
 
-		if (expandedForm instanceof SymbolStructImpl) {
+		if (expandedForm instanceof SymbolStruct) {
 			return expandedForm;
 		} else if (expandedForm instanceof ConsStruct) {
 			return consAnalyzer.analyze((ConsStruct) expandedForm, environment);

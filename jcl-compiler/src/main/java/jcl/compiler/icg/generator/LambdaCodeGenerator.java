@@ -28,7 +28,7 @@ import jcl.compiler.struct.specialoperator.lambda.LambdaStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.PackageStruct;
 import jcl.lang.StringStruct;
-import jcl.lang.SymbolStructImpl;
+import jcl.lang.SymbolStruct;
 import jcl.lang.NILStruct;
 import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.ClassWriter;
@@ -167,26 +167,26 @@ final class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 
 	/**
 	 * Constant {@link String} containing the name for the {@link CompiledFunctionStruct#getInitForm(Closure,
-	 * SymbolStructImpl)}
+	 * SymbolStruct)}
 	 * method.
 	 */
 	private static final String GET_INIT_FORM_METHOD_NAME = "getInitForm";
 
 	/**
 	 * Constant {@link String} containing the description for the {@link CompiledFunctionStruct#getInitForm(Closure,
-	 * SymbolStructImpl)} method.
+	 * SymbolStruct)} method.
 	 */
-	private static final String GET_INIT_FORM_METHOD_DESC = "(Ljcl/compiler/function/Closure;Ljcl/lang/SymbolStructImpl;)Ljcl/lang/LispStruct;";
+	private static final String GET_INIT_FORM_METHOD_DESC = "(Ljcl/compiler/function/Closure;Ljcl/lang/SymbolStruct;)Ljcl/lang/LispStruct;";
 
 	/**
 	 * Constant {@link String} containing the signature for the {@link CompiledFunctionStruct#getInitForm(Closure,
-	 * SymbolStructImpl)} method.
+	 * SymbolStruct)} method.
 	 */
-	private static final String GET_INIT_FORM_METHOD_SIGNATURE = "(Ljcl/compiler/function/Closure;Ljcl/lang/SymbolStructImpl;)Ljcl/lang/LispStruct;";
+	private static final String GET_INIT_FORM_METHOD_SIGNATURE = "(Ljcl/compiler/function/Closure;Ljcl/lang/SymbolStruct;)Ljcl/lang/LispStruct;";
 
 	/**
 	 * {@link IntermediateCodeGenerator} used for generating the 'optional', 'key', and 'aux' init-form values in the
-	 * {@link CompiledFunctionStruct#getInitForm(Closure, SymbolStructImpl)} method.
+	 * {@link CompiledFunctionStruct#getInitForm(Closure, SymbolStruct)} method.
 	 */
 	@Autowired
 	private IntermediateCodeGenerator codeGenerator;
@@ -209,7 +209,7 @@ final class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 	 * <li>Generating the code for the {@link CompiledFunctionStruct#getAllowOtherKeys()} method</li>
 	 * <li>Generating the code for the {@link CompiledFunctionStruct#getAuxBindings()} method</li>
 	 * <li>Generating the code for the {@link CompiledFunctionStruct#internalApply(Closure)} method</li>
-	 * <li>Generating the code for the {@link CompiledFunctionStruct#getInitForm(Closure, SymbolStructImpl)} method</li>
+	 * <li>Generating the code for the {@link CompiledFunctionStruct#getInitForm(Closure, SymbolStruct)} method</li>
 	 * <li>Generating the code to end the new class visitation</li>
 	 * <li>If the {@link GeneratorState#classBuilderDeque} is not empty after the visitation for this new class,
 	 * performing the following operations:
@@ -517,17 +517,17 @@ final class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 	}
 
 	/**
-	 * Private method for generating the {@link CompiledFunctionStruct#getInitForm(Closure, SymbolStructImpl)} method for
+	 * Private method for generating the {@link CompiledFunctionStruct#getInitForm(Closure, SymbolStruct)} method for
 	 * the generated lambda class object being written to via the provided {@link ClassWriter}. The generation will
 	 * perform the following operations:
 	 * <ol>
-	 * <li>Generating a condition check using {@link SymbolStructImpl#equals(Object)} to determine if the provided {@link
-	 * SymbolStructImpl} provided to the method is equivalent to one of the 'optional', 'key', or 'aux' function
+	 * <li>Generating a condition check using {@link SymbolStruct#equals(Object)} to determine if the provided {@link
+	 * SymbolStruct} provided to the method is equivalent to one of the 'optional', 'key', or 'aux' function
 	 * parameters</li>
 	 * <li>Generating the resulting {@link LispStruct} value of the init-form for each of the 'optional', 'key', and
 	 * 'aux' function parameters</li>
 	 * <li>Generating the {@link NILStruct#INSTANCE} singleton to be used when none of the 'optional', 'key', or 'aux'
-	 * function parameters match the provided {@link SymbolStructImpl}</li>
+	 * function parameters match the provided {@link SymbolStruct}</li>
 	 * </ol>
 	 * The following is the example Java code generated when {@code (lambda (&optional (y 2)) y)} is encountered:
 	 * <pre>
@@ -587,7 +587,7 @@ final class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 		final int initFormVarSymbolStore = methodBuilder.getNextAvailableStore();
 
 		for (final OptionalParameter optionalBinding : optionalBindings) {
-			final SymbolStructImpl var = optionalBinding.getVar();
+			final SymbolStruct var = optionalBinding.getVar();
 			final LispStruct initForm = optionalBinding.getInitForm();
 
 			generateInitForm(generatorState, methodBuilder, symbolArgStore,
@@ -595,7 +595,7 @@ final class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 		}
 
 		for (final KeyParameter keyBinding : keyBindings) {
-			final SymbolStructImpl var = keyBinding.getVar();
+			final SymbolStruct var = keyBinding.getVar();
 			final LispStruct initForm = keyBinding.getInitForm();
 
 			generateInitForm(generatorState, methodBuilder, symbolArgStore,
@@ -603,7 +603,7 @@ final class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 		}
 
 		for (final AuxParameter auxBinding : auxBindings) {
-			final SymbolStructImpl var = auxBinding.getVar();
+			final SymbolStruct var = auxBinding.getVar();
 			final LispStruct initForm = auxBinding.getInitForm();
 
 			generateInitForm(generatorState, methodBuilder, symbolArgStore,
@@ -621,31 +621,31 @@ final class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 
 	/**
 	 * Private method used for assisting the generation of the {@link CompiledFunctionStruct#getInitForm(Closure,
-	 * SymbolStructImpl)} method, generating the {@link SymbolStructImpl} equality check as well as the {@link LispStruct}
+	 * SymbolStruct)} method, generating the {@link SymbolStruct} equality check as well as the {@link LispStruct}
 	 * value of the init-form.
 	 *
 	 * @param generatorState
 	 * 		stateful object used to hold the current state of the code generation process
 	 * @param methodBuilder
 	 * 		{@link JavaMethodBuilder} used for building the Java method body for the {@link
-	 * 		CompiledFunctionStruct#getInitForm(Closure, SymbolStructImpl)} method
+	 * 		CompiledFunctionStruct#getInitForm(Closure, SymbolStruct)} method
 	 * @param symbolArgStore
-	 * 		the storage location index on the stack where the {@link SymbolStructImpl} parameter value is located
+	 * 		the storage location index on the stack where the {@link SymbolStruct} parameter value is located
 	 * @param initFormVarPackageStore
 	 * 		the storage location index on the stack where the {@link PackageStruct} for the provided {@code var} {@link
-	 * 		SymbolStructImpl} will exist
+	 * 		SymbolStruct} will exist
 	 * @param initFormVarSymbolStore
-	 * 		the storage location index on the stack where the provided {@code var} {@link SymbolStructImpl} will exist
+	 * 		the storage location index on the stack where the provided {@code var} {@link SymbolStruct} will exist
 	 * @param var
-	 * 		the {@link SymbolStructImpl} variable to be used as the source of the equality check against the {@link
-	 * 		SymbolStructImpl} value at the provided {@code symbolArgStore} storage location index on the stack
+	 * 		the {@link SymbolStruct} variable to be used as the source of the equality check against the {@link
+	 * 		SymbolStruct} value at the provided {@code symbolArgStore} storage location index on the stack
 	 * @param initForm
-	 * 		the {@link LispStruct} init-form value to be generated as the value to be used when the {@link SymbolStructImpl}
-	 * 		matching equality to the provided {@code var} {@link SymbolStructImpl} is encountered
+	 * 		the {@link LispStruct} init-form value to be generated as the value to be used when the {@link SymbolStruct}
+	 * 		matching equality to the provided {@code var} {@link SymbolStruct} is encountered
 	 */
 	private void generateInitForm(final GeneratorState generatorState, final JavaMethodBuilder methodBuilder,
 	                              final int symbolArgStore, final int initFormVarPackageStore,
-	                              final int initFormVarSymbolStore, final SymbolStructImpl var, final LispStruct initForm) {
+	                              final int initFormVarSymbolStore, final SymbolStruct var, final LispStruct initForm) {
 		final MethodVisitor mv = methodBuilder.getMethodVisitor();
 
 		CodeGenerators.generateSymbol(var, generatorState, initFormVarPackageStore, initFormVarSymbolStore);
@@ -655,7 +655,7 @@ final class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 		mv.visitVarInsn(Opcodes.ALOAD, symbolArgStore);
 		mv.visitVarInsn(Opcodes.ALOAD, initFormVarSymbolStore);
 		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
-		                   GenerationConstants.SYMBOL_STRUCT_NAME,
+		                   GenerationConstants.JAVA_OBJECT_NAME,
 		                   GenerationConstants.JAVA_EQUALS_METHOD_NAME,
 		                   GenerationConstants.JAVA_EQUALS_METHOD_DESC,
 		                   false);
@@ -763,7 +763,7 @@ final class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 		final int requiredBindingStore = methodBuilder.getNextAvailableStore();
 
 		for (final RequiredParameter requiredBinding : requiredBindings) {
-			final SymbolStructImpl requiredSymbol = requiredBinding.getVar();
+			final SymbolStruct requiredSymbol = requiredBinding.getVar();
 			CodeGenerators.generateSymbol(requiredSymbol, generatorState, requiredPackageStore, requiredSymbolStore);
 
 			mv.visitTypeInsn(Opcodes.NEW, GenerationConstants.REQUIRED_BINDING_NAME);
@@ -882,7 +882,7 @@ final class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 		final int optionalBindingStore = methodBuilder.getNextAvailableStore();
 
 		for (final OptionalParameter optionalBinding : optionalBindings) {
-			final SymbolStructImpl optionalSymbol = optionalBinding.getVar();
+			final SymbolStruct optionalSymbol = optionalBinding.getVar();
 			CodeGenerators.generateSymbol(optionalSymbol, generatorState, optionalPackageStore, optionalSymbolStore);
 
 			codeGenerator.generate(NILStruct.INSTANCE, generatorState);
@@ -979,7 +979,7 @@ final class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 		final int restPackageStore = methodBuilder.getNextAvailableStore();
 		final int restSymbolStore = methodBuilder.getNextAvailableStore();
 
-		final SymbolStructImpl restSymbol = restBinding.getVar();
+		final SymbolStruct restSymbol = restBinding.getVar();
 		CodeGenerators.generateSymbol(restSymbol, generatorState, restPackageStore, restSymbolStore);
 
 		mv.visitTypeInsn(Opcodes.NEW, GenerationConstants.REST_BINDING_NAME);
@@ -1087,13 +1087,13 @@ final class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 		final int keyBindingStore = methodBuilder.getNextAvailableStore();
 
 		for (final KeyParameter keyBinding : keyBindings) {
-			final SymbolStructImpl keySymbol = keyBinding.getVar();
+			final SymbolStruct keySymbol = keyBinding.getVar();
 			CodeGenerators.generateSymbol(keySymbol, generatorState, keyPackageStore, keySymbolStore);
 
 			codeGenerator.generate(NILStruct.INSTANCE, generatorState);
 			mv.visitVarInsn(Opcodes.ASTORE, keyInitFormStore);
 
-			final SymbolStructImpl keyName = keyBinding.getKeyName();
+			final SymbolStruct keyName = keyBinding.getKeyName();
 			CodeGenerators.generateSymbol(keyName, generatorState, keyPackageStore, keyNameStore);
 
 			final SuppliedPParameter suppliedPBinding = keyBinding.getSuppliedPBinding();
@@ -1164,7 +1164,7 @@ final class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 			mv.visitInsn(Opcodes.ACONST_NULL);
 			mv.visitVarInsn(Opcodes.ASTORE, suppliedPStore);
 		} else {
-			final SymbolStructImpl keySuppliedPSymbol = suppliedPBinding.getVar();
+			final SymbolStruct keySuppliedPSymbol = suppliedPBinding.getVar();
 			CodeGenerators.generateSymbol(keySuppliedPSymbol, generatorState, suppliedPPackageStore, suppliedPSymbolStore);
 
 			mv.visitTypeInsn(Opcodes.NEW, GenerationConstants.SUPPLIED_P_BINDING_NAME);
@@ -1313,7 +1313,7 @@ final class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 		final int auxBindingStore = methodBuilder.getNextAvailableStore();
 
 		for (final AuxParameter auxBinding : auxBindings) {
-			final SymbolStructImpl auxSymbol = auxBinding.getVar();
+			final SymbolStruct auxSymbol = auxBinding.getVar();
 			CodeGenerators.generateSymbol(auxSymbol, generatorState, auxPackageStore, auxSymbolStore);
 
 			codeGenerator.generate(NILStruct.INSTANCE, generatorState);

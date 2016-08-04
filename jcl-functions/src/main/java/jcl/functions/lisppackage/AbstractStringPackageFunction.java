@@ -12,7 +12,7 @@ import jcl.lang.PackageStruct;
 import jcl.lang.PackageSymbolStruct;
 import jcl.lang.statics.PackageVariables;
 import jcl.lang.StringStruct;
-import jcl.lang.SymbolStructImpl;
+import jcl.lang.SymbolStruct;
 import jcl.lang.ValuesStruct;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.FunctionStruct;
@@ -44,7 +44,7 @@ abstract class AbstractStringPackageFunction extends CommonLispBuiltInFunctionSt
 	 * @param lispStructs
 	 * 		the function parameters
 	 *
-	 * @return a {@link ValuesStruct} object containing the found {@link SymbolStructImpl} and it's {@link KeywordStructImpl}
+	 * @return a {@link ValuesStruct} object containing the found {@link SymbolStruct} and it's {@link KeywordStructImpl}
 	 * package type, or {@link NILStruct} if the result of the {@link #packageFunction()} operation is {@code null}
 	 */
 	@Override
@@ -56,7 +56,7 @@ abstract class AbstractStringPackageFunction extends CommonLispBuiltInFunctionSt
 			return ValuesStruct.valueOf(NILStruct.INSTANCE, NILStruct.INSTANCE);
 		}
 
-		final SymbolStructImpl symbol = packageSymbol.getSymbol();
+		final SymbolStruct symbol = packageSymbol.getSymbol();
 		final KeywordStructImpl packageSymbolType = packageSymbol.getPackageSymbolType();
 		return ValuesStruct.valueOf(symbol, packageSymbolType);
 	}

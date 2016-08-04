@@ -9,7 +9,7 @@ import java.util.Set;
 import jcl.compiler.environment.Environment;
 import jcl.compiler.sa.analyzer.LambdaExpander;
 import jcl.compiler.struct.specialoperator.lambda.LambdaStruct;
-import jcl.lang.SymbolStructImpl;
+import jcl.lang.SymbolStruct;
 import jcl.lang.ListStruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,7 +31,7 @@ class SemanticAnalyzerImpl implements SemanticAnalyzer {
 	public LambdaStruct analyze(final ListStruct form) {
 		final Environment nullEnvironment = Environment.NULL;
 
-		final Set<SymbolStructImpl> undefinedFunctions = nullEnvironment.getUndefinedFunctions();
+		final Set<SymbolStruct> undefinedFunctions = nullEnvironment.getUndefinedFunctions();
 		undefinedFunctions.clear();
 
 		final LambdaStruct analyzedForm = lambdaExpander.expand(form, nullEnvironment);
@@ -44,7 +44,7 @@ class SemanticAnalyzerImpl implements SemanticAnalyzer {
 		return analyzedForm;
 	}
 
-	private void unknownFunctionWarning(final SymbolStructImpl undefinedFunction) {
+	private void unknownFunctionWarning(final SymbolStruct undefinedFunction) {
 		LOGGER.warn("Warning: no function or macro function defined for: {}", undefinedFunction);
 	}
 }

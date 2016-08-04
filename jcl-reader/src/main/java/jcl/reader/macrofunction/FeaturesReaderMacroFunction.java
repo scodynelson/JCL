@@ -14,7 +14,7 @@ import jcl.lang.statics.GlobalPackageStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.PackageStruct;
 import jcl.lang.statics.PackageVariables;
-import jcl.lang.SymbolStructImpl;
+import jcl.lang.SymbolStruct;
 import jcl.lang.TStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
 import jcl.lang.ListStruct;
@@ -113,11 +113,11 @@ final class FeaturesReaderMacroFunction {
 		final Iterator<LispStruct> iterator = consToken.iterator();
 		final LispStruct first = iterator.next();
 
-		if (!(first instanceof SymbolStructImpl)) {
+		if (!(first instanceof SymbolStruct)) {
 			throw new ReaderErrorException("First element of feature expression must be either: :NOT, :AND, or :OR.");
 		}
 
-		final SymbolStructImpl featureOperator = (SymbolStructImpl) first;
+		final SymbolStruct featureOperator = (SymbolStruct) first;
 		if (featureOperator.equals(CommonLispSymbols.NOT_KEYWORD)) {
 			final LispStruct firstOfRest = iterator.next();
 			return !isFeature(firstOfRest);

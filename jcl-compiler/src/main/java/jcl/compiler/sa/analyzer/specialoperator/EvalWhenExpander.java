@@ -13,7 +13,7 @@ import jcl.lang.statics.CommonLispSymbols;
 import jcl.lang.statics.CompilerVariables;
 import jcl.lang.LispStruct;
 import jcl.lang.internal.SpecialOperatorStructImpl;
-import jcl.lang.SymbolStructImpl;
+import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.factory.LispStructFactory;
@@ -25,7 +25,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class EvalWhenExpander extends MacroFunctionExpander<LispStruct> {
 
-	private static final Set<SymbolStructImpl> SITUATION_KEYWORDS = new HashSet<>(6);
+	private static final Set<SymbolStruct> SITUATION_KEYWORDS = new HashSet<>(6);
 
 	static {
 		SITUATION_KEYWORDS.add(CommonLispSymbols.COMPILE_TOPLEVEL);
@@ -41,7 +41,7 @@ public class EvalWhenExpander extends MacroFunctionExpander<LispStruct> {
 	private EvalFunction evalFunction;
 
 	@Override
-	public SymbolStructImpl getFunctionSymbol() {
+	public SymbolStruct getFunctionSymbol() {
 		return SpecialOperatorStructImpl.EVAL_WHEN;
 	}
 

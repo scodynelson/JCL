@@ -12,7 +12,7 @@ import jcl.compiler.icg.JavaMethodBuilder;
 import jcl.compiler.struct.specialoperator.QuoteStruct;
 import jcl.lang.ConsStruct;
 import jcl.lang.LispStruct;
-import jcl.lang.SymbolStructImpl;
+import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.ProgramErrorException;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
@@ -55,13 +55,13 @@ final class QuoteCodeGenerator implements CodeGenerator<QuoteStruct> {
 	/**
 	 * Generation method for quoted {@link LispStruct} objects. It performs the following operations:
 	 * <ol>
-	 * <li>Generating the value via {@link #generateQuotedSymbol(SymbolStructImpl, GeneratorState)} if the {@code
-	 * quotedObject} is a {@link SymbolStructImpl}</li>
+	 * <li>Generating the value via {@link #generateQuotedSymbol(SymbolStruct, GeneratorState)} if the {@code
+	 * quotedObject} is a {@link SymbolStruct}</li>
 	 * <li>Generating the value via {@link #generateQuotedCons(ConsStruct, GeneratorState)} if the {@code quotedObject}
 	 * is a {@link ConsStruct}</li>
 	 * <li>Generating the value via {@link IntermediateCodeGenerator#generate(LispStruct, GeneratorState)} if the
 	 * {@code
-	 * quotedObject} is neither a {@link SymbolStructImpl} nor a {@link ConsStruct}</li>
+	 * quotedObject} is neither a {@link SymbolStruct} nor a {@link ConsStruct}</li>
 	 * </ol>
 	 *
 	 * @param quotedObject
@@ -71,8 +71,8 @@ final class QuoteCodeGenerator implements CodeGenerator<QuoteStruct> {
 	 */
 	@SuppressWarnings("ChainOfInstanceofChecks")
 	private void generateQuotedObject(final LispStruct quotedObject, final GeneratorState generatorState) {
-		if (quotedObject instanceof SymbolStructImpl) {
-			generateQuotedSymbol((SymbolStructImpl) quotedObject, generatorState);
+		if (quotedObject instanceof SymbolStruct) {
+			generateQuotedSymbol((SymbolStruct) quotedObject, generatorState);
 		} else if (quotedObject instanceof ConsStruct) {
 			generateQuotedCons((ConsStruct) quotedObject, generatorState);
 		} else {
@@ -81,10 +81,10 @@ final class QuoteCodeGenerator implements CodeGenerator<QuoteStruct> {
 	}
 
 	/**
-	 * Generation method for quoted {@link SymbolStructImpl} objects, by performing the following operations:
+	 * Generation method for quoted {@link SymbolStruct} objects, by performing the following operations:
 	 * <ol>
-	 * <li>Generating the {@link SymbolStructImpl} value</li>
-	 * <li>Ensuring the generated {@link SymbolStructImpl} value is loaded on the top of the stack</li>
+	 * <li>Generating the {@link SymbolStruct} value</li>
+	 * <li>Ensuring the generated {@link SymbolStruct} value is loaded on the top of the stack</li>
 	 * </ol>
 	 * As an example, it will transform {@code 'x} into the following Java code:
 	 * <pre>
@@ -95,11 +95,11 @@ final class QuoteCodeGenerator implements CodeGenerator<QuoteStruct> {
 	 * </pre>
 	 *
 	 * @param quotedSymbol
-	 * 		the 'quoted' {@link SymbolStructImpl} input value to generate code for
+	 * 		the 'quoted' {@link SymbolStruct} input value to generate code for
 	 * @param generatorState
 	 * 		stateful object used to hold the current state of the code generation process
 	 */
-	private static void generateQuotedSymbol(final SymbolStructImpl quotedSymbol, final GeneratorState generatorState) {
+	private static void generateQuotedSymbol(final SymbolStruct quotedSymbol, final GeneratorState generatorState) {
 
 		final JavaMethodBuilder methodBuilder = generatorState.getCurrentMethodBuilder();
 		final MethodVisitor mv = methodBuilder.getMethodVisitor();

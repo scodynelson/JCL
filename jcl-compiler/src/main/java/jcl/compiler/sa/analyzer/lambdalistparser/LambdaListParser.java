@@ -26,7 +26,7 @@ import jcl.lang.KeywordStructImpl;
 import jcl.lang.LispStruct;
 import jcl.lang.PackageStruct;
 import jcl.lang.PackageSymbolStruct;
-import jcl.lang.SymbolStructImpl;
+import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.ListStruct;
 import jcl.lang.NILStruct;
@@ -45,10 +45,10 @@ public class LambdaListParser {
 	                                             final DeclareStruct declareElement) {
 
 		final LispStruct currentElement = iterator.next();
-		if (!(currentElement instanceof SymbolStructImpl)) {
+		if (!(currentElement instanceof SymbolStruct)) {
 			throw new ProgramErrorException("LambdaList &whole parameters must be a symbol: " + currentElement);
 		}
-		final SymbolStructImpl currentParam = (SymbolStructImpl) currentElement;
+		final SymbolStruct currentParam = (SymbolStruct) currentElement;
 
 		final boolean isSpecial = declareElement.getSpecialDeclarations()
 		                                        .stream()
@@ -70,10 +70,10 @@ public class LambdaListParser {
 	                                                         final boolean isAfterRequired) {
 
 		LispStruct currentElement = iterator.next();
-		if (!(currentElement instanceof SymbolStructImpl)) {
+		if (!(currentElement instanceof SymbolStruct)) {
 			throw new ProgramErrorException("LambdaList &environment parameters must be a symbol: " + currentElement);
 		}
-		final SymbolStructImpl currentParam = (SymbolStructImpl) currentElement;
+		final SymbolStruct currentParam = (SymbolStruct) currentElement;
 
 		if (iterator.hasNext() && isAfterRequired) {
 			currentElement = iterator.next();
@@ -105,10 +105,10 @@ public class LambdaListParser {
 				return new RequiredParseResult(currentElement, requiredBindings);
 			}
 
-			final SymbolStructImpl currentParam;
+			final SymbolStruct currentParam;
 			DestructuringLambdaList destructuringForm = null;
-			if (currentElement instanceof SymbolStructImpl) {
-				currentParam = (SymbolStructImpl) currentElement;
+			if (currentElement instanceof SymbolStruct) {
+				currentParam = (SymbolStruct) currentElement;
 			} else {
 				if (isDestructuringAllowed) {
 					if (currentElement instanceof ListStruct) {
@@ -163,8 +163,8 @@ public class LambdaListParser {
 				return new OptionalParseResult(currentElement, optionalBindings);
 			}
 
-			if (currentElement instanceof SymbolStructImpl) {
-				final SymbolStructImpl currentParam = (SymbolStructImpl) currentElement;
+			if (currentElement instanceof SymbolStruct) {
+				final SymbolStruct currentParam = (SymbolStruct) currentElement;
 
 				final boolean isSpecial = declareElement.getSpecialDeclarations()
 				                                        .stream()
@@ -182,7 +182,7 @@ public class LambdaListParser {
 				final String customSuppliedPName = paramName + "-P-" + System.nanoTime();
 				final PackageStruct currentParamPackage = currentParam.getSymbolPackage();
 
-				final SymbolStructImpl customSuppliedPCurrent = currentParamPackage.intern(customSuppliedPName).getSymbol();
+				final SymbolStruct customSuppliedPCurrent = currentParamPackage.intern(customSuppliedPName).getSymbol();
 
 				final boolean isSuppliedPSpecial = declareElement.getSpecialDeclarations()
 				                                                 .stream()
@@ -206,12 +206,12 @@ public class LambdaListParser {
 				if ((currentParamLength < 1) || (currentParamLength > 3)) {
 					if (isDestructuringAllowed) {
 						final String destructuringName = "DestructuringSymbolName-" + System.nanoTime();
-						final SymbolStructImpl varNameCurrent = GlobalPackageStruct.COMMON_LISP_USER.intern(destructuringName).getSymbol();
+						final SymbolStruct varNameCurrent = GlobalPackageStruct.COMMON_LISP_USER.intern(destructuringName).getSymbol();
 						final ListStruct destructuringFormList = (ListStruct) currentElement;
 						final DestructuringLambdaList destructuringForm = destructuringLambdaListParser.parseDestructuringLambdaList(environment, destructuringFormList, declareElement);
 
 						final String customSuppliedPName = destructuringName + "-P-" + System.nanoTime();
-						final SymbolStructImpl customSuppliedPCurrent = GlobalPackageStruct.COMMON_LISP_USER.intern(customSuppliedPName).getSymbol();
+						final SymbolStruct customSuppliedPCurrent = GlobalPackageStruct.COMMON_LISP_USER.intern(customSuppliedPName).getSymbol();
 						final SuppliedPParameter suppliedPBinding = new SuppliedPParameter(customSuppliedPCurrent);
 
 						final OptionalParameter optionalBinding = new OptionalParameter(varNameCurrent, destructuringForm, NILStruct.INSTANCE, false, suppliedPBinding);
@@ -236,10 +236,10 @@ public class LambdaListParser {
 						thirdInCurrent = NILStruct.INSTANCE;
 					}
 
-					final SymbolStructImpl varNameCurrent;
+					final SymbolStruct varNameCurrent;
 					DestructuringLambdaList destructuringForm = null;
-					if (firstInCurrent instanceof SymbolStructImpl) {
-						varNameCurrent = (SymbolStructImpl) firstInCurrent;
+					if (firstInCurrent instanceof SymbolStruct) {
+						varNameCurrent = (SymbolStruct) firstInCurrent;
 					} else {
 						if (isDestructuringAllowed) {
 							if (firstInCurrent instanceof ListStruct) {
@@ -280,7 +280,7 @@ public class LambdaListParser {
 						final String customSuppliedPName = paramName + "-P-" + System.nanoTime();
 						final PackageStruct currentParamPackage = varNameCurrent.getSymbolPackage();
 
-						final SymbolStructImpl customSuppliedPCurrent = currentParamPackage.intern(customSuppliedPName).getSymbol();
+						final SymbolStruct customSuppliedPCurrent = currentParamPackage.intern(customSuppliedPName).getSymbol();
 
 						final boolean isSuppliedPSpecial = declareElement.getSpecialDeclarations()
 						                                                 .stream()
@@ -296,11 +296,11 @@ public class LambdaListParser {
 
 						suppliedPBinding = new SuppliedPParameter(customSuppliedPCurrent, isSuppliedPSpecial);
 					} else {
-						if (!(thirdInCurrent instanceof SymbolStructImpl)) {
+						if (!(thirdInCurrent instanceof SymbolStruct)) {
 							throw new ProgramErrorException("LambdaList &optional supplied-p parameters must be a symbol: " + thirdInCurrent);
 						}
 
-						final SymbolStructImpl suppliedPCurrent = (SymbolStructImpl) thirdInCurrent;
+						final SymbolStruct suppliedPCurrent = (SymbolStruct) thirdInCurrent;
 
 						final boolean isSuppliedPSpecial = declareElement.getSpecialDeclarations()
 						                                                 .stream()
@@ -337,10 +337,10 @@ public class LambdaListParser {
 
 		LispStruct currentElement = iterator.next();
 
-		final SymbolStructImpl currentParam;
+		final SymbolStruct currentParam;
 		DestructuringLambdaList destructuringForm = null;
-		if (currentElement instanceof SymbolStructImpl) {
-			currentParam = (SymbolStructImpl) currentElement;
+		if (currentElement instanceof SymbolStruct) {
+			currentParam = (SymbolStruct) currentElement;
 		} else {
 			if (isDestructuringAllowed) {
 				if (currentElement instanceof ListStruct) {
@@ -382,10 +382,10 @@ public class LambdaListParser {
 	protected RestParseResult parseDottedRestBinding(final Environment environment, final LispStruct dottedRest,
 	                                                 final DeclareStruct declareElement, final boolean isDestructuringAllowed) {
 
-		final SymbolStructImpl currentParam;
+		final SymbolStruct currentParam;
 		DestructuringLambdaList destructuringForm = null;
-		if (dottedRest instanceof SymbolStructImpl) {
-			currentParam = (SymbolStructImpl) dottedRest;
+		if (dottedRest instanceof SymbolStruct) {
+			currentParam = (SymbolStruct) dottedRest;
 		} else {
 			if (isDestructuringAllowed) {
 				if (dottedRest instanceof ListStruct) {
@@ -426,10 +426,10 @@ public class LambdaListParser {
 
 		LispStruct currentElement = iterator.next();
 
-		final SymbolStructImpl currentParam;
+		final SymbolStruct currentParam;
 		DestructuringLambdaList destructuringForm = null;
-		if (currentElement instanceof SymbolStructImpl) {
-			currentParam = (SymbolStructImpl) currentElement;
+		if (currentElement instanceof SymbolStruct) {
+			currentParam = (SymbolStruct) currentElement;
 		} else {
 			if (isDestructuringAllowed) {
 				if (currentElement instanceof ListStruct) {
@@ -484,8 +484,8 @@ public class LambdaListParser {
 				return new KeyParseResult(currentElement, keyBindings);
 			}
 
-			if (currentElement instanceof SymbolStructImpl) {
-				final SymbolStructImpl currentParam = (SymbolStructImpl) currentElement;
+			if (currentElement instanceof SymbolStruct) {
+				final SymbolStruct currentParam = (SymbolStruct) currentElement;
 				final KeywordStructImpl keyName = getKeywordStruct(currentParam.getName());
 
 				final boolean isSpecial = declareElement.getSpecialDeclarations()
@@ -504,7 +504,7 @@ public class LambdaListParser {
 				final String customSuppliedPName = paramName + "-P-" + System.nanoTime();
 				final PackageStruct currentParamPackage = currentParam.getSymbolPackage();
 
-				final SymbolStructImpl customSuppliedPCurrent = currentParamPackage.intern(customSuppliedPName).getSymbol();
+				final SymbolStruct customSuppliedPCurrent = currentParamPackage.intern(customSuppliedPName).getSymbol();
 
 				final boolean isSuppliedPSpecial = declareElement.getSpecialDeclarations()
 				                                                 .stream()
@@ -528,13 +528,13 @@ public class LambdaListParser {
 				if ((currentParamLength < 1) || (currentParamLength > 3)) {
 					if (isDestructuringAllowed) {
 						final String destructuringName = "DestructuringSymbolName-" + System.nanoTime();
-						final SymbolStructImpl varNameCurrent = GlobalPackageStruct.COMMON_LISP_USER.intern(destructuringName).getSymbol();
-						final SymbolStructImpl varKeyNameCurrent = getKeywordStruct(varNameCurrent.getName());
+						final SymbolStruct varNameCurrent = GlobalPackageStruct.COMMON_LISP_USER.intern(destructuringName).getSymbol();
+						final SymbolStruct varKeyNameCurrent = getKeywordStruct(varNameCurrent.getName());
 						final ListStruct destructuringFormList = (ListStruct) currentElement;
 						final DestructuringLambdaList destructuringForm = destructuringLambdaListParser.parseDestructuringLambdaList(environment, destructuringFormList, declareElement);
 
 						final String customSuppliedPName = destructuringName + "-P-" + System.nanoTime();
-						final SymbolStructImpl customSuppliedPCurrent = GlobalPackageStruct.COMMON_LISP_USER.intern(customSuppliedPName).getSymbol();
+						final SymbolStruct customSuppliedPCurrent = GlobalPackageStruct.COMMON_LISP_USER.intern(customSuppliedPName).getSymbol();
 						final SuppliedPParameter suppliedPBinding = new SuppliedPParameter(customSuppliedPCurrent);
 
 						final KeyParameter keyBinding = new KeyParameter(varNameCurrent, destructuringForm, NILStruct.INSTANCE, false, varKeyNameCurrent, suppliedPBinding);
@@ -559,28 +559,28 @@ public class LambdaListParser {
 						thirdInCurrent = NILStruct.INSTANCE;
 					}
 
-					final SymbolStructImpl varNameCurrent;
-					final SymbolStructImpl varKeyNameCurrent;
+					final SymbolStruct varNameCurrent;
+					final SymbolStruct varKeyNameCurrent;
 					DestructuringLambdaList destructuringForm = null;
-					if (firstInCurrent instanceof SymbolStructImpl) {
-						varNameCurrent = (SymbolStructImpl) firstInCurrent;
+					if (firstInCurrent instanceof SymbolStruct) {
+						varNameCurrent = (SymbolStruct) firstInCurrent;
 						varKeyNameCurrent = getKeywordStruct(varNameCurrent.getName());
 					} else if (firstInCurrent instanceof ListStruct) {
 						final ListStruct currentVar = (ListStruct) firstInCurrent;
 						final long currentVarLength = currentVar.length();
 						if (currentVarLength == 2) {
 							final LispStruct firstInCurrentVar = currentVar.getCar();
-							if (firstInCurrentVar instanceof SymbolStructImpl) {
-								varKeyNameCurrent = (SymbolStructImpl) firstInCurrentVar;
+							if (firstInCurrentVar instanceof SymbolStruct) {
+								varKeyNameCurrent = (SymbolStruct) firstInCurrentVar;
 							} else {
 								throw new ProgramErrorException("LambdaList &key var name list key-name parameters must be a symbol: " + firstInCurrentVar);
 							}
 
 							final LispStruct secondInCurrentVar = ((ListStruct) currentVar.getCdr()).getCar();
-							if (!(secondInCurrentVar instanceof SymbolStructImpl)) {
+							if (!(secondInCurrentVar instanceof SymbolStruct)) {
 								throw new ProgramErrorException("LambdaList &key var name list name parameters must be a symbol: " + secondInCurrentVar);
 							}
-							varNameCurrent = (SymbolStructImpl) secondInCurrentVar;
+							varNameCurrent = (SymbolStruct) secondInCurrentVar;
 						} else {
 							if (isDestructuringAllowed) {
 								final String destructuringName = "DestructuringSymbolName-" + System.nanoTime();
@@ -621,7 +621,7 @@ public class LambdaListParser {
 						final String customSuppliedPName = paramName + "-P-" + System.nanoTime();
 						final PackageStruct currentParamPackage = varNameCurrent.getSymbolPackage();
 
-						final SymbolStructImpl customSuppliedPCurrent = currentParamPackage.intern(customSuppliedPName).getSymbol();
+						final SymbolStruct customSuppliedPCurrent = currentParamPackage.intern(customSuppliedPName).getSymbol();
 
 						final boolean isSuppliedPSpecial = declareElement.getSpecialDeclarations()
 						                                                 .stream()
@@ -637,11 +637,11 @@ public class LambdaListParser {
 
 						suppliedPBinding = new SuppliedPParameter(customSuppliedPCurrent, isSuppliedPSpecial);
 					} else {
-						if (!(thirdInCurrent instanceof SymbolStructImpl)) {
+						if (!(thirdInCurrent instanceof SymbolStruct)) {
 							throw new ProgramErrorException("LambdaList &key supplied-p parameters must be a symbol: " + thirdInCurrent);
 						}
 
-						final SymbolStructImpl suppliedPCurrent = (SymbolStructImpl) thirdInCurrent;
+						final SymbolStruct suppliedPCurrent = (SymbolStruct) thirdInCurrent;
 
 						final boolean isSuppliedPSpecial = declareElement.getSpecialDeclarations()
 						                                                 .stream()
@@ -686,8 +686,8 @@ public class LambdaListParser {
 				return new AuxParseResult(currentElement, auxBindings);
 			}
 
-			if (currentElement instanceof SymbolStructImpl) {
-				final SymbolStructImpl currentParam = (SymbolStructImpl) currentElement;
+			if (currentElement instanceof SymbolStruct) {
+				final SymbolStruct currentParam = (SymbolStruct) currentElement;
 
 				final boolean isSpecial = declareElement.getSpecialDeclarations()
 				                                        .stream()
@@ -709,7 +709,7 @@ public class LambdaListParser {
 				if ((currentParamLength < 1) || (currentParamLength > 2)) {
 					if (isDestructuringAllowed) {
 						final String destructuringName = "DestructuringSymbolName-" + System.nanoTime();
-						final SymbolStructImpl varNameCurrent = GlobalPackageStruct.COMMON_LISP_USER.intern(destructuringName).getSymbol();
+						final SymbolStruct varNameCurrent = GlobalPackageStruct.COMMON_LISP_USER.intern(destructuringName).getSymbol();
 						final ListStruct destructuringFormList = (ListStruct) currentElement;
 						final DestructuringLambdaList destructuringForm = destructuringLambdaListParser.parseDestructuringLambdaList(environment, destructuringFormList, declareElement);
 
@@ -729,10 +729,10 @@ public class LambdaListParser {
 						secondInCurrent = NILStruct.INSTANCE;
 					}
 
-					final SymbolStructImpl varNameCurrent;
+					final SymbolStruct varNameCurrent;
 					DestructuringLambdaList destructuringForm = null;
-					if (firstInCurrent instanceof SymbolStructImpl) {
-						varNameCurrent = (SymbolStructImpl) firstInCurrent;
+					if (firstInCurrent instanceof SymbolStruct) {
+						varNameCurrent = (SymbolStruct) firstInCurrent;
 					} else {
 						if (isDestructuringAllowed) {
 							if (firstInCurrent instanceof ListStruct) {

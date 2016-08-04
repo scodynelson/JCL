@@ -16,7 +16,7 @@ import jcl.compiler.icg.IntermediateCodeGenerator;
 import jcl.compiler.icg.JavaMethodBuilder;
 import jcl.compiler.struct.specialoperator.LetStruct;
 import jcl.lang.LispStruct;
-import jcl.lang.SymbolStructImpl;
+import jcl.lang.SymbolStruct;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +25,7 @@ import org.springframework.stereotype.Component;
 
 /**
  * Class to perform 'let' special operator code generation. 'Let' is different from 'Let*' in that the binding of the
- * {@link SymbolStructImpl}s to their scoped {@link LispStruct} values occurs after all the forms have had their code
+ * {@link SymbolStruct}s to their scoped {@link LispStruct} values occurs after all the forms have had their code
  * generated. This ensures that no variables are affected nor dependent on the definition of others.
  */
 @Component
@@ -56,11 +56,11 @@ final class LetCodeGenerator extends ClosureCreationCodeGenerator<LetStruct.LetV
 	 * <ol>
 	 * <li>Generating each of the {@link LetStruct.LetVar#var} and {@link LetStruct.LetVar#initForm} values</li>
 	 * <li>Collect all generated symbol and form stack locations for lazily binding the values to the {@link
-	 * SymbolStructImpl}s</li>
+	 * SymbolStruct}s</li>
 	 * <li>Symbol bindings where {@link LetStruct.LetVar#isSpecial} is true are binded via {@link
-	 * SymbolStructImpl#bindDynamicValue(LispStruct)}</li>
+	 * SymbolStruct#bindDynamicValue(LispStruct)}</li>
 	 * <li>Symbol bindings where {@link LetStruct.LetVar#isSpecial} is false are binded via {@link
-	 * SymbolStructImpl#bindLexicalValue(LispStruct)}</li>
+	 * SymbolStruct#bindLexicalValue(LispStruct)}</li>
 	 * <li>Symbol bindings where {@link LetStruct.LetVar#isSpecial} is false are also added to the {@link
 	 * Closure#symbolBindings} map for the new {@link Closure} created with the 'let'</li>
 	 * </ol>
@@ -98,7 +98,7 @@ final class LetCodeGenerator extends ClosureCreationCodeGenerator<LetStruct.LetV
 	 * </pre>
 	 *
 	 * @param vars
-	 * 		the {@link LetStruct.LetVar}s used to generate the {@link SymbolStructImpl} binding code
+	 * 		the {@link LetStruct.LetVar}s used to generate the {@link SymbolStruct} binding code
 	 * @param generatorState
 	 * 		stateful object used to hold the current state of the code generation process
 	 * @param methodBuilder
@@ -108,9 +108,9 @@ final class LetCodeGenerator extends ClosureCreationCodeGenerator<LetStruct.LetV
 	 * @param closureSymbolBindingsStore
 	 * 		the storage location index on the stack where the {@link Closure#symbolBindings} {@link Map} exists
 	 * @param lexicalSymbolStoresToUnbind
-	 * 		the {@link Set} of lexical {@link SymbolStructImpl} binding locations to unbind after the 'let' body executes
+	 * 		the {@link Set} of lexical {@link SymbolStruct} binding locations to unbind after the 'let' body executes
 	 * @param dynamicSymbolStoresToUnbind
-	 * 		the {@link Set} of dynamic {@link SymbolStructImpl} binding locations to unbind after the 'let' body executes
+	 * 		the {@link Set} of dynamic {@link SymbolStruct} binding locations to unbind after the 'let' body executes
 	 */
 	@Override
 	protected void generateBindings(final List<LetStruct.LetVar> vars, final GeneratorState generatorState,
@@ -126,7 +126,7 @@ final class LetCodeGenerator extends ClosureCreationCodeGenerator<LetStruct.LetV
 		final Map<Integer, Integer> dynamicSymbolStoresToBind = new LinkedHashMap<>();
 
 		for (final LetStruct.LetVar var : vars) {
-			final SymbolStructImpl symbolVar = var.getVar();
+			final SymbolStruct symbolVar = var.getVar();
 			final int symbolStore = methodBuilder.getNextAvailableStore();
 			CodeGenerators.generateSymbol(symbolVar, generatorState, packageStore, symbolStore);
 
@@ -162,11 +162,11 @@ final class LetCodeGenerator extends ClosureCreationCodeGenerator<LetStruct.LetV
 
 			mv.visitVarInsn(Opcodes.ALOAD, symbolStore);
 			mv.visitVarInsn(Opcodes.ALOAD, initFormStore);
-			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
+			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
 			                   GenerationConstants.SYMBOL_STRUCT_NAME,
 			                   GenerationConstants.SYMBOL_STRUCT_BIND_DYNAMIC_VALUE_METHOD_NAME,
 			                   GenerationConstants.SYMBOL_STRUCT_BIND_DYNAMIC_VALUE_METHOD_DESC,
-			                   false);
+			                   true);
 		}
 
 		for (final Map.Entry<Integer, Integer> functionStoreToBind : lexicalSymbolStoresToBind.entrySet()) {
@@ -175,11 +175,11 @@ final class LetCodeGenerator extends ClosureCreationCodeGenerator<LetStruct.LetV
 
 			mv.visitVarInsn(Opcodes.ALOAD, symbolStore);
 			mv.visitVarInsn(Opcodes.ALOAD, initFormStore);
-			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
+			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
 			                   GenerationConstants.SYMBOL_STRUCT_NAME,
 			                   GenerationConstants.SYMBOL_STRUCT_BIND_LEXICAL_VALUE_METHOD_NAME,
 			                   GenerationConstants.SYMBOL_STRUCT_BIND_LEXICAL_VALUE_METHOD_DESC,
-			                   false);
+			                   true);
 
 			mv.visitVarInsn(Opcodes.ALOAD, closureSymbolBindingsStore);
 			mv.visitVarInsn(Opcodes.ALOAD, symbolStore);

@@ -19,7 +19,7 @@ import jcl.compiler.icg.JavaMethodBuilder;
 import jcl.compiler.struct.specialoperator.CompilerFunctionStruct;
 import jcl.compiler.struct.specialoperator.InnerLambdaStruct;
 import jcl.compiler.struct.specialoperator.PrognStruct;
-import jcl.lang.SymbolStructImpl;
+import jcl.lang.SymbolStruct;
 import jcl.lang.function.FunctionStruct;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
@@ -66,14 +66,14 @@ final class InnerLambdaCodeGenerator extends SpecialOperatorCodeGenerator<InnerL
 	 * <li>Generating each of the {@link InnerLambdaStruct.InnerLambdaVar#var} and {@link
 	 * InnerLambdaStruct.InnerLambdaVar#initForm} values</li>
 	 * <li>Collect all generated function and form stack locations for lazily binding the functions to the {@link
-	 * SymbolStructImpl}s</li>
-	 * <li>Binding functions via {@link SymbolStructImpl#bindFunction(FunctionStruct)} and adding functions to the {@link
+	 * SymbolStruct}s</li>
+	 * <li>Binding functions via {@link SymbolStruct#bindFunction(FunctionStruct)} and adding functions to the {@link
 	 * Closure#functionBindings} map for the current {@link Closure}, if one exists</li>
 	 * <li>Temporarily pushing the {@link InnerLambdaStruct#lexicalEnvironment} onto the {@link
 	 * GeneratorState#environmentDeque} while generating the code for the {@link InnerLambdaStruct#forms} values</li>
-	 * <li>Generating the code to unbind the functions from {@link SymbolStructImpl}s as part of the error free
+	 * <li>Generating the code to unbind the functions from {@link SymbolStruct}s as part of the error free
 	 * 'finally'</li>
-	 * <li>Generating the code to unbind the functions from {@link SymbolStructImpl}s as part of the error caught
+	 * <li>Generating the code to unbind the functions from {@link SymbolStruct}s as part of the error caught
 	 * 'finally', ensuring the error caught is re-thrown</li>
 	 * </ol>
 	 * As an example, it will transform {@code (flet ((foo () 1)) (foo))} into the following Java code:
@@ -149,7 +149,7 @@ final class InnerLambdaCodeGenerator extends SpecialOperatorCodeGenerator<InnerL
 
 		final List<InnerLambdaStruct.InnerLambdaVar> vars = input.getVars();
 		for (final InnerLambdaStruct.InnerLambdaVar var : vars) {
-			final SymbolStructImpl functionSymbolVar = var.getVar();
+			final SymbolStruct functionSymbolVar = var.getVar();
 			final int functionSymbolStore = methodBuilder.getNextAvailableStore();
 			CodeGenerators.generateSymbol(functionSymbolVar, generatorState, packageStore, functionSymbolStore);
 
@@ -168,11 +168,11 @@ final class InnerLambdaCodeGenerator extends SpecialOperatorCodeGenerator<InnerL
 
 			mv.visitVarInsn(Opcodes.ALOAD, functionSymbolStore);
 			mv.visitVarInsn(Opcodes.ALOAD, initFormStore);
-			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
+			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
 			                   GenerationConstants.SYMBOL_STRUCT_NAME,
 			                   GenerationConstants.SYMBOL_STRUCT_BIND_FUNCTION_METHOD_NAME,
 			                   GenerationConstants.SYMBOL_STRUCT_BIND_FUNCTION_METHOD_DESC,
-			                   false);
+			                   true);
 
 			final Label closureFunctionBindingsNullCheckIfEnd = new Label();
 
@@ -235,22 +235,22 @@ final class InnerLambdaCodeGenerator extends SpecialOperatorCodeGenerator<InnerL
 
 	/**
 	 * Private method for generating the 'finally' block code for unbinding the function values from each {@link
-	 * SymbolStructImpl} at the storage location of each of the {@code functionSymbolStores}.
+	 * SymbolStruct} at the storage location of each of the {@code functionSymbolStores}.
 	 *
 	 * @param mv
 	 * 		the current {@link MethodVisitor} to generate the code inside
 	 * @param functionSymbolStores
-	 * 		the {@link Set} of storage location indexes on the stack where the {@link SymbolStructImpl}s to unbind function
+	 * 		the {@link Set} of storage location indexes on the stack where the {@link SymbolStruct}s to unbind function
 	 * 		values from exist
 	 */
 	private static void generateFinallyCode(final MethodVisitor mv, final Set<Integer> functionSymbolStores) {
 		for (final Integer functionSymbolStore : functionSymbolStores) {
 			mv.visitVarInsn(Opcodes.ALOAD, functionSymbolStore);
-			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
+			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
 			                   GenerationConstants.SYMBOL_STRUCT_NAME,
 			                   GenerationConstants.SYMBOL_STRUCT_UNBIND_FUNCTION_METHOD_NAME,
 			                   GenerationConstants.SYMBOL_STRUCT_UNBIND_FUNCTION_METHOD_DESC,
-			                   false);
+			                   true);
 			mv.visitInsn(Opcodes.POP);
 		}
 	}

@@ -7,7 +7,7 @@ package jcl.functions.structure;
 import jcl.lang.LispStruct;
 import jcl.lang.StructureClassStruct;
 import jcl.lang.StructureObjectStruct;
-import jcl.lang.SymbolStructImpl;
+import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.condition.exception.SimpleErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
@@ -37,9 +37,9 @@ public final class GetStructureSlotValueFunction extends SystemBuiltInFunctionSt
 
 	@Override
 	public LispStruct apply(final Arguments arguments) {
-		final SymbolStructImpl structureClassSymbol = arguments.getRequiredArgument(STRUCTURE_CLASS_ARGUMENT, SymbolStructImpl.class);
+		final SymbolStruct structureClassSymbol = arguments.getRequiredArgument(STRUCTURE_CLASS_ARGUMENT, SymbolStruct.class);
 		final StructureObjectStruct structureInstance = arguments.getRequiredArgument(STRUCTURE_INSTANCE_ARGUMENT, StructureObjectStruct.class);
-		final SymbolStructImpl slotName = arguments.getRequiredArgument(SLOT_NAME_ARGUMENT, SymbolStructImpl.class);
+		final SymbolStruct slotName = arguments.getRequiredArgument(SLOT_NAME_ARGUMENT, SymbolStruct.class);
 
 		final StructureClassStruct symbolStructureClass = structureClassSymbol.getStructureClass();
 		if (symbolStructureClass == null) {
@@ -59,7 +59,7 @@ public final class GetStructureSlotValueFunction extends SystemBuiltInFunctionSt
 
 	private static LispStruct innerGetStructureSlotValue(final StructureClassStruct symbolStructureClass,
 	                                                     final StructureObjectStruct structureInstance,
-	                                                     final SymbolStructImpl slotName) {
+	                                                     final SymbolStruct slotName) {
 
 		final StructureClassStruct instanceStructureClass = structureInstance.getStructureClass();
 

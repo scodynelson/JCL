@@ -6,9 +6,9 @@ package jcl.lang;
 public interface SynonymStreamStruct extends IOStreamStruct {
 
 	/**
-	 * Getter for synonym-stream {@link SymbolStructImpl} property.
+	 * Getter for synonym-stream {@link SymbolStruct} property.
 	 *
-	 * @return synonym-stream {@link SymbolStructImpl} property
+	 * @return synonym-stream {@link SymbolStruct} property
 	 */
-	SymbolStructImpl getSymbol();
+	SymbolStruct getSymbol();
 }

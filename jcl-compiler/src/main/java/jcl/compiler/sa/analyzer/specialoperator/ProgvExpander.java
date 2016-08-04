@@ -12,7 +12,7 @@ import jcl.compiler.struct.specialoperator.ProgvStruct;
 import jcl.lang.statics.CommonLispSymbols;
 import jcl.lang.LispStruct;
 import jcl.lang.internal.SpecialOperatorStructImpl;
-import jcl.lang.SymbolStructImpl;
+import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.factory.LispStructFactory;
 import jcl.lang.ListStruct;
@@ -26,7 +26,7 @@ public class ProgvExpander extends MacroFunctionExpander<ProgvStruct> {
 	private FormAnalyzer formAnalyzer;
 
 	@Override
-	public SymbolStructImpl getFunctionSymbol() {
+	public SymbolStruct getFunctionSymbol() {
 		return SpecialOperatorStructImpl.PROGV;
 	}
 

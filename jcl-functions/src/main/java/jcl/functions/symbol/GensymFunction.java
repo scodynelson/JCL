@@ -7,7 +7,7 @@ package jcl.functions.symbol;
 import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.StringStruct;
-import jcl.lang.SymbolStructImpl;
+import jcl.lang.factory.LispStructFactory;
 import jcl.lang.statics.SymbolVariables;
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
@@ -51,6 +51,6 @@ public final class GensymFunction extends CommonLispBuiltInFunctionStruct {
 		}
 
 		final String symbolName = gensymPrefix + gensymPostfix.bigIntegerValue();
-		return SymbolStructImpl.valueOf(symbolName);
+		return LispStructFactory.toSymbol(symbolName);
 	}
 }

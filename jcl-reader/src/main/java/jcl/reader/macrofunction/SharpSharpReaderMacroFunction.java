@@ -9,7 +9,7 @@ import java.util.Optional;
 import javax.annotation.PostConstruct;
 
 import jcl.lang.LispStruct;
-import jcl.lang.SymbolStructImpl;
+import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
 import jcl.lang.function.ReaderMacroFunction;
 import jcl.lang.NILStruct;
@@ -50,7 +50,7 @@ public class SharpSharpReaderMacroFunction extends ReaderMacroFunction {
 			return labelToken;
 		}
 
-		final SymbolStructImpl possibleLabelTag = reader.getSharpEqualTempTable().get(numberArgumentValue);
+		final SymbolStruct possibleLabelTag = reader.getSharpEqualTempTable().get(numberArgumentValue);
 		if (possibleLabelTag != null) {
 			return possibleLabelTag;
 		}

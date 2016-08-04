@@ -19,7 +19,7 @@ import jcl.compiler.struct.specialoperator.lambda.LambdaStruct;
 import jcl.lang.BooleanStructImpl;
 import jcl.lang.statics.CompilerVariables;
 import jcl.lang.LispStruct;
-import jcl.lang.SymbolStructImpl;
+import jcl.lang.SymbolStruct;
 import jcl.lang.TStruct;
 import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
@@ -84,8 +84,8 @@ public final class EvalFunction extends CommonLispBuiltInFunctionStruct {
 			CompilerVariables.COMPILE_TOP_LEVEL.setValue(oldCompileTopLevel);
 		}
 
-		if (exp instanceof SymbolStructImpl) {
-			final SymbolStructImpl symbol = (SymbolStructImpl) exp;
+		if (exp instanceof SymbolStruct) {
+			final SymbolStruct symbol = (SymbolStruct) exp;
 			return symbol.getValue();
 		}
 
@@ -101,7 +101,7 @@ public final class EvalFunction extends CommonLispBuiltInFunctionStruct {
 			LispStruct finalForm = NILStruct.INSTANCE;
 
 			for (final SetqStruct.SetqPair setqPair : setqPairs) {
-				final SymbolStructImpl var = setqPair.getVar();
+				final SymbolStruct var = setqPair.getVar();
 				final LispStruct form = setqPair.getForm();
 				final LispStruct evaluatedForm = eval(form);
 
@@ -126,7 +126,7 @@ public final class EvalFunction extends CommonLispBuiltInFunctionStruct {
 
 		if (exp instanceof SymbolCompilerFunctionStruct) {
 			final SymbolCompilerFunctionStruct symbolCompilerFunction = (SymbolCompilerFunctionStruct) exp;
-			final SymbolStructImpl functionSymbol = symbolCompilerFunction.getFunctionSymbol();
+			final SymbolStruct functionSymbol = symbolCompilerFunction.getFunctionSymbol();
 			return functionSymbol.getFunction();
 		}
 
@@ -141,7 +141,7 @@ public final class EvalFunction extends CommonLispBuiltInFunctionStruct {
 		if (exp instanceof SymbolFunctionCallStruct) {
 			final SymbolFunctionCallStruct functionCall = (SymbolFunctionCallStruct) exp;
 			final SymbolCompilerFunctionStruct symbolCompilerFunction = functionCall.getSymbolCompilerFunction();
-			final SymbolStructImpl functionSymbol = symbolCompilerFunction.getFunctionSymbol();
+			final SymbolStruct functionSymbol = symbolCompilerFunction.getFunctionSymbol();
 
 			final FunctionStruct function = functionSymbol.getFunction();
 

@@ -4,17 +4,17 @@
 
 package jcl.compiler.struct.specialoperator;
 
-import jcl.lang.SymbolStructImpl;
+import jcl.lang.SymbolStruct;
 
 public class SymbolCompilerFunctionStruct implements CompilerFunctionStruct {
 
-	private final SymbolStructImpl functionSymbol;
+	private final SymbolStruct functionSymbol;
 
-	public SymbolCompilerFunctionStruct(final SymbolStructImpl functionSymbol) {
+	public SymbolCompilerFunctionStruct(final SymbolStruct functionSymbol) {
 		this.functionSymbol = functionSymbol;
 	}
 
-	public SymbolStructImpl getFunctionSymbol() {
+	public SymbolStruct getFunctionSymbol() {
 		return functionSymbol;
 	}
 }

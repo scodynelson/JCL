@@ -38,23 +38,23 @@ public class PackageStruct extends BuiltInClassStruct {
 	private final List<PackageStruct> usedByList = new ArrayList<>();
 
 	/**
-	 * The {@link Map} of the packages external {@link SymbolStructImpl}s.
+	 * The {@link Map} of the packages external {@link SymbolStruct}s.
 	 * NOTE: ExternalSymbols and ShadowingSymbols are subsets of InternalSymbols (aka. anything in ExternalSymbols or
 	 * ShadowingSymbols are in InternalSymbols but not vice-versa)
 	 */
-	protected final Map<String, SymbolStructImpl> externalSymbols = new ConcurrentHashMap<>();
+	protected final Map<String, SymbolStruct> externalSymbols = new ConcurrentHashMap<>();
 
 	/**
-	 * The {@link Map} of the packages internal {@link SymbolStructImpl}s.
+	 * The {@link Map} of the packages internal {@link SymbolStruct}s.
 	 */
-	private final Map<String, SymbolStructImpl> internalSymbols = new ConcurrentHashMap<>();
+	private final Map<String, SymbolStruct> internalSymbols = new ConcurrentHashMap<>();
 
 	/**
-	 * The {@link Map} of the packages shadowing {@link SymbolStructImpl}s.
+	 * The {@link Map} of the packages shadowing {@link SymbolStruct}s.
 	 * NOTE: ExternalSymbols and ShadowingSymbols are subsets of InternalSymbols (aka. anything in ExternalSymbols or
 	 * ShadowingSymbols are in InternalSymbols but not vice-versa)
 	 */
-	private final Map<String, SymbolStructImpl> shadowingSymbols = new ConcurrentHashMap<>();
+	private final Map<String, SymbolStruct> shadowingSymbols = new ConcurrentHashMap<>();
 
 	/**
 	 * The name of package.
@@ -178,7 +178,7 @@ public class PackageStruct extends BuiltInClassStruct {
 	 *
 	 * @return package {@link #externalSymbols} property
 	 */
-	public Map<String, SymbolStructImpl> getExternalSymbols() {
+	public Map<String, SymbolStruct> getExternalSymbols() {
 		return externalSymbols;
 	}
 
@@ -187,7 +187,7 @@ public class PackageStruct extends BuiltInClassStruct {
 	 *
 	 * @return package {@link #shadowingSymbols} property
 	 */
-	public Map<String, SymbolStructImpl> getShadowingSymbols() {
+	public Map<String, SymbolStruct> getShadowingSymbols() {
 		return shadowingSymbols;
 	}
 
@@ -281,7 +281,7 @@ public class PackageStruct extends BuiltInClassStruct {
 			for (final String symbolName : packageToUse.externalSymbols.keySet()) {
 				final PackageSymbolStruct nonInheritedPackageSymbol = findNonInheritedSymbol(symbolName);
 				if (nonInheritedPackageSymbol != null) {
-					final SymbolStructImpl nonInheritedSymbol = nonInheritedPackageSymbol.getSymbol();
+					final SymbolStruct nonInheritedSymbol = nonInheritedPackageSymbol.getSymbol();
 					shadowingSymbols.put(symbolName, nonInheritedSymbol);
 				}
 			}
@@ -322,7 +322,7 @@ public class PackageStruct extends BuiltInClassStruct {
 			return foundPackageSymbol;
 		}
 
-		final SymbolStructImpl foundSymbol = findInheritedSymbol(symbolName);
+		final SymbolStruct foundSymbol = findInheritedSymbol(symbolName);
 		if (foundSymbol != null) {
 			return new PackageSymbolStruct(foundSymbol, INHERITED_KEYWORD);
 		}
@@ -336,8 +336,8 @@ public class PackageStruct extends BuiltInClassStruct {
 	 * @param symbols
 	 * 		the symbols to import into the package
 	 */
-	public void importSymbols(final SymbolStructImpl... symbols) {
-		for (final SymbolStructImpl symbol : symbols) {
+	public void importSymbols(final SymbolStruct... symbols) {
+		for (final SymbolStruct symbol : symbols) {
 			final String symbolName = symbol.getName();
 
 			final PackageSymbolStruct nonInheritedPackageSymbol = findNonInheritedSymbol(symbolName);
@@ -347,7 +347,7 @@ public class PackageStruct extends BuiltInClassStruct {
 
 			internalSymbols.put(symbolName, symbol);
 
-			final SymbolStructImpl foundSymbol = findInheritedSymbol(symbolName);
+			final SymbolStruct foundSymbol = findInheritedSymbol(symbolName);
 			if (foundSymbol != null) {
 				shadowingSymbols.put(symbolName, symbol);
 			}
@@ -365,13 +365,13 @@ public class PackageStruct extends BuiltInClassStruct {
 	 * @param symbols
 	 * 		the symbols to shadow import into the package
 	 */
-	public void shadowingImport(final SymbolStructImpl... symbols) {
-		for (final SymbolStructImpl symbol : symbols) {
+	public void shadowingImport(final SymbolStruct... symbols) {
+		for (final SymbolStruct symbol : symbols) {
 			final String symbolName = symbol.getName();
 
 			final PackageSymbolStruct nonInheritedPackageSymbol = findNonInheritedSymbol(symbolName);
 			if (nonInheritedPackageSymbol != null) {
-				final SymbolStructImpl nonInheritedSymbol = nonInheritedPackageSymbol.getSymbol();
+				final SymbolStruct nonInheritedSymbol = nonInheritedPackageSymbol.getSymbol();
 				unintern(nonInheritedSymbol);
 			}
 
@@ -392,10 +392,10 @@ public class PackageStruct extends BuiltInClassStruct {
 	 * @param symbols
 	 * 		the symbols to export
 	 */
-	public void export(final SymbolStructImpl... symbols) {
+	public void export(final SymbolStruct... symbols) {
 		final List<String> notFoundSymbolNames = new ArrayList<>();
 
-		for (final SymbolStructImpl symbol : symbols) {
+		for (final SymbolStruct symbol : symbols) {
 			final String symbolName = symbol.getName();
 
 			final PackageSymbolStruct foundPackageSymbol = findSymbol(symbolName);
@@ -427,10 +427,10 @@ public class PackageStruct extends BuiltInClassStruct {
 	 * @param symbols
 	 * 		the symbols to un-export
 	 */
-	public void unexport(final SymbolStructImpl... symbols) {
+	public void unexport(final SymbolStruct... symbols) {
 		final List<String> notFoundSymbolNames = new ArrayList<>();
 
-		for (final SymbolStructImpl symbol : symbols) {
+		for (final SymbolStruct symbol : symbols) {
 			final String symbolName = symbol.getName();
 
 			final PackageSymbolStruct foundPackageSymbol = findSymbol(symbolName);
@@ -476,7 +476,7 @@ public class PackageStruct extends BuiltInClassStruct {
 		for (final String symbolName : symbolNames) {
 			final PackageSymbolStruct nonInheritedPackageSymbol = findNonInheritedSymbol(symbolName);
 
-			final SymbolStructImpl nonInheritedSymbol;
+			final SymbolStruct nonInheritedSymbol;
 			if (nonInheritedPackageSymbol == null) {
 				nonInheritedSymbol = SymbolStructImpl.valueOf(symbolName);
 				internalSymbols.put(symbolName, nonInheritedSymbol);
@@ -503,7 +503,7 @@ public class PackageStruct extends BuiltInClassStruct {
 			return foundPackageSymbol;
 		}
 
-		final SymbolStructImpl symbolStruct = SymbolStructImpl.valueOf(symbolName);
+		final SymbolStruct symbolStruct = SymbolStructImpl.valueOf(symbolName);
 		internalSymbols.put(symbolName, symbolStruct);
 		symbolStruct.setSymbolPackage(this);
 		return new PackageSymbolStruct(symbolStruct, INTERNAL_KEYWORD);
@@ -517,15 +517,15 @@ public class PackageStruct extends BuiltInClassStruct {
 	 *
 	 * @return whether a symbol was indeed un-interned or not
 	 */
-	public boolean unintern(final SymbolStructImpl symbol) {
+	public boolean unintern(final SymbolStruct symbol) {
 		final String symbolName = symbol.getName();
 
 		// Test for conflicts BEFORE we remove anything
-		final Set<SymbolStructImpl> shadowingConflicts = getShadowingConflicts(symbolName);
+		final Set<SymbolStruct> shadowingConflicts = getShadowingConflicts(symbolName);
 		if (shadowingConflicts.size() > 1) {
 			final StringBuilder exceptionStringBuilder
 					= new StringBuilder("Uninterning " + symbolName + " from " + this + " would cause conflicts among : (");
-			for (final SymbolStructImpl conflictingSymbol : shadowingConflicts) {
+			for (final SymbolStruct conflictingSymbol : shadowingConflicts) {
 				exceptionStringBuilder.append(conflictingSymbol);
 				exceptionStringBuilder.append(' ');
 			}
@@ -533,9 +533,9 @@ public class PackageStruct extends BuiltInClassStruct {
 			throw new PackageErrorException(exceptionStringBuilder.toString(), this);
 		}
 
-		final SymbolStructImpl externalSymbol = externalSymbols.remove(symbolName);
-		final SymbolStructImpl shadowingSymbol = shadowingSymbols.remove(symbolName);
-		final SymbolStructImpl internalSymbol = internalSymbols.remove(symbolName);
+		final SymbolStruct externalSymbol = externalSymbols.remove(symbolName);
+		final SymbolStruct shadowingSymbol = shadowingSymbols.remove(symbolName);
+		final SymbolStruct internalSymbol = internalSymbols.remove(symbolName);
 
 		symbol.setSymbolPackage(null);
 
@@ -564,12 +564,12 @@ public class PackageStruct extends BuiltInClassStruct {
 	 *
 	 * @return the located symbol(s) within the ALL_PACKAGES global package map
 	 */
-	public static List<SymbolStructImpl> findAllSymbols(final String symbolName) {
-		final Set<SymbolStructImpl> allSymbols = new HashSet<>();
+	public static List<SymbolStruct> findAllSymbols(final String symbolName) {
+		final Set<SymbolStruct> allSymbols = new HashSet<>();
 		for (final PackageStruct packageStruct : GlobalPackageStruct.ALL_PACKAGES.values()) {
 			final PackageSymbolStruct foundPackageSymbol = packageStruct.findSymbol(symbolName);
 			if (foundPackageSymbol != null) {
-				final SymbolStructImpl foundSymbol = foundPackageSymbol.getSymbol();
+				final SymbolStruct foundSymbol = foundPackageSymbol.getSymbol();
 				allSymbols.add(foundSymbol);
 			}
 		}
@@ -594,16 +594,16 @@ public class PackageStruct extends BuiltInClassStruct {
 	 *
 	 * @return the conflicting symbols if any exist, or null if no conflicts exist
 	 */
-	private Set<SymbolStructImpl> getShadowingConflicts(final String symbolName) {
+	private Set<SymbolStruct> getShadowingConflicts(final String symbolName) {
 		if (!shadowingSymbols.containsKey(symbolName)) {
 			return Collections.emptySet();
 		}
 
-		final Set<SymbolStructImpl> conflictingInheritedSymbols = new HashSet<>();
+		final Set<SymbolStruct> conflictingInheritedSymbols = new HashSet<>();
 		for (final PackageStruct usedPackage : useList) {
 			final PackageSymbolStruct inheritedPackageSymbol = usedPackage.findSymbol(symbolName);
 			if (inheritedPackageSymbol != null) {
-				final SymbolStructImpl inheritedSymbol = inheritedPackageSymbol.getSymbol();
+				final SymbolStruct inheritedSymbol = inheritedPackageSymbol.getSymbol();
 				conflictingInheritedSymbols.add(inheritedSymbol);
 			}
 		}
@@ -621,7 +621,7 @@ public class PackageStruct extends BuiltInClassStruct {
 	private PackageSymbolStruct findNonInheritedSymbol(final String symbolName) {
 		// NOTE: Order matters here!!
 
-		SymbolStructImpl foundSymbol = externalSymbols.get(symbolName);
+		SymbolStruct foundSymbol = externalSymbols.get(symbolName);
 		if (foundSymbol != null) {
 			return new PackageSymbolStruct(foundSymbol, EXTERNAL_KEYWORD);
 		}
@@ -647,10 +647,10 @@ public class PackageStruct extends BuiltInClassStruct {
 	 *
 	 * @return the symbol if found, or null if not found
 	 */
-	private SymbolStructImpl findInheritedSymbol(final String symbolName) {
+	private SymbolStruct findInheritedSymbol(final String symbolName) {
 		// NOTE: Order matters here!!
 
-		SymbolStructImpl foundSymbol = null;
+		SymbolStruct foundSymbol = null;
 		for (final PackageStruct usedPackage : useList) {
 			final PackageSymbolStruct inheritedPackageSymbol = usedPackage.findSymbol(symbolName);
 			if (inheritedPackageSymbol == null) {

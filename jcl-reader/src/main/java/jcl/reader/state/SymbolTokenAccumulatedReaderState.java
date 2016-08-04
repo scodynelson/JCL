@@ -15,7 +15,7 @@ import jcl.lang.LispStruct;
 import jcl.lang.PackageStruct;
 import jcl.lang.PackageSymbolStruct;
 import jcl.lang.statics.PackageVariables;
-import jcl.lang.SymbolStructImpl;
+import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
 import jcl.lang.readtable.AttributeType;
 import jcl.reader.ReaderStateMediator;
@@ -68,7 +68,7 @@ class SymbolTokenAccumulatedReaderState implements ReaderState {
 	@Override
 	public LispStruct process(final TokenBuilder tokenBuilder) {
 
-		final SymbolStructImpl symbolToken = getSymbolToken(tokenBuilder);
+		final SymbolStruct symbolToken = getSymbolToken(tokenBuilder);
 		if (symbolToken == null) {
 			return readerStateMediator.readIllegalCharacter(tokenBuilder);
 		} else {
@@ -77,15 +77,15 @@ class SymbolTokenAccumulatedReaderState implements ReaderState {
 	}
 
 	/**
-	 * This method gets a {@link SymbolStructImpl} from the provided {@link TokenBuilder} and it's {@link
+	 * This method gets a {@link SymbolStruct} from the provided {@link TokenBuilder} and it's {@link
 	 * TokenBuilder#tokenAttributes}.
 	 *
 	 * @param tokenBuilder
-	 * 		the reader state containing the {@link TokenBuilder#tokenAttributes} to derive the {@link SymbolStructImpl}
+	 * 		the reader state containing the {@link TokenBuilder#tokenAttributes} to derive the {@link SymbolStruct}
 	 *
-	 * @return the built {@link SymbolStructImpl} value
+	 * @return the built {@link SymbolStruct} value
 	 */
-	private static SymbolStructImpl getSymbolToken(final TokenBuilder tokenBuilder) {
+	private static SymbolStruct getSymbolToken(final TokenBuilder tokenBuilder) {
 
 		final LinkedList<TokenAttribute> tokenAttributes = tokenBuilder.getTokenAttributes();
 
@@ -163,9 +163,9 @@ class SymbolTokenAccumulatedReaderState implements ReaderState {
 			}
 
 			if (packageMarkerCount == 1) {
-				final Map<String, SymbolStructImpl> symbolPackageExternalSymbols = symbolPackage.getExternalSymbols();
+				final Map<String, SymbolStruct> symbolPackageExternalSymbols = symbolPackage.getExternalSymbols();
 
-				final SymbolStructImpl externalSymbol = symbolPackageExternalSymbols.get(symbolName);
+				final SymbolStruct externalSymbol = symbolPackageExternalSymbols.get(symbolName);
 				if (externalSymbol == null) {
 					throw new ReaderErrorException("No external symbol named \"" + symbolName + "\" in package " + packageName);
 				}
@@ -180,18 +180,18 @@ class SymbolTokenAccumulatedReaderState implements ReaderState {
 	}
 
 	/**
-	 * Either finds the existing {@link SymbolStructImpl} within the provided {@link PackageStruct} using {@link
-	 * PackageStruct#findSymbol} or creates a new {@link SymbolStructImpl}. If the provided {@code PackageStruct} is equal
+	 * Either finds the existing {@link SymbolStruct} within the provided {@link PackageStruct} using {@link
+	 * PackageStruct#findSymbol} or creates a new {@link SymbolStruct}. If the provided {@code PackageStruct} is equal
 	 * to {@link GlobalPackageStruct#KEYWORD}, a {@link KeywordStructImpl} will be returned instead.
 	 *
 	 * @param symbolName
-	 * 		the name of the {@link SymbolStructImpl} to find or create
+	 * 		the name of the {@link SymbolStruct} to find or create
 	 * @param symbolPackage
-	 * 		the {@link PackageStruct} to either find the {@link SymbolStructImpl} or create and intern
+	 * 		the {@link PackageStruct} to either find the {@link SymbolStruct} or create and intern
 	 *
-	 * @return the existing {@link SymbolStructImpl} or a newly created one
+	 * @return the existing {@link SymbolStruct} or a newly created one
 	 */
-	private static SymbolStructImpl findExistingOrCreateNewSymbol(final String symbolName, final PackageStruct symbolPackage) {
+	private static SymbolStruct findExistingOrCreateNewSymbol(final String symbolName, final PackageStruct symbolPackage) {
 
 		final PackageSymbolStruct foundSymbol = symbolPackage.findSymbol(symbolName);
 		if (foundSymbol == null) {

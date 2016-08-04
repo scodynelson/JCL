@@ -4,12 +4,12 @@
 
 package jcl.compiler.environment.binding.lambdalist;
 
-import jcl.lang.SymbolStructImpl;
+import jcl.lang.SymbolStruct;
 import jcl.type.ListType;
 
 public class EnvironmentParameter extends Parameter {
 
-	public EnvironmentParameter(final SymbolStructImpl var) {
+	public EnvironmentParameter(final SymbolStruct var) {
 		super(var, null, ListType.INSTANCE, null, true);
 	}
 }

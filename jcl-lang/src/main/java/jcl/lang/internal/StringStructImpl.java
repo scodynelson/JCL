@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import com.ibm.icu.lang.UCharacter;
 import jcl.lang.CharacterStruct;
 import jcl.lang.PackageStruct;
+import jcl.lang.SymbolStruct;
 import jcl.lang.statics.PrinterVariables;
 import jcl.lang.StringStruct;
 import jcl.lang.SymbolStructImpl;
@@ -144,7 +145,7 @@ public final class StringStructImpl extends VectorStructImpl<CharacterStruct> im
 	}
 
 	@Override
-	public Supplier<SymbolStructImpl> asSymbol() {
+	public Supplier<SymbolStruct> asSymbol() {
 		return () -> {
 			final String namestring = getAsJavaString();
 			return SymbolStructImpl.valueOf(namestring);

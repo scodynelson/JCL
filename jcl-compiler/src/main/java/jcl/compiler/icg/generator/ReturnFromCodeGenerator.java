@@ -10,7 +10,7 @@ import jcl.compiler.icg.IntermediateCodeGenerator;
 import jcl.compiler.icg.JavaMethodBuilder;
 import jcl.compiler.struct.specialoperator.ReturnFromStruct;
 import jcl.lang.LispStruct;
-import jcl.lang.SymbolStructImpl;
+import jcl.lang.SymbolStruct;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,10 +49,10 @@ final class ReturnFromCodeGenerator extends SpecialOperatorCodeGenerator<ReturnF
 	 * Generation method for {@link ReturnFromStruct} objects, by performing the following operations:
 	 * <ol>
 	 * <li>Fetching the global 'COMMON-LISP-USER' package</li>
-	 * <li>Finding the {@link SymbolStructImpl} with the {@link ReturnFromStruct#name} value in the fetched
+	 * <li>Finding the {@link SymbolStruct} with the {@link ReturnFromStruct#name} value in the fetched
 	 * 'COMMON-LISP-USER' package</li>
 	 * <li>Generating the {@link ReturnFromStruct#result} value</li>
-	 * <li>Creating and throwing a new {@link ReturnFromException} with the {@link SymbolStructImpl} name and {@link
+	 * <li>Creating and throwing a new {@link ReturnFromException} with the {@link SymbolStruct} name and {@link
 	 * LispStruct} result values</li>
 	 * </ol>
 	 * As an example, it will transform {@code (return-from foo 1)} into the following Java code:
@@ -82,7 +82,7 @@ final class ReturnFromCodeGenerator extends SpecialOperatorCodeGenerator<ReturnF
 		// Generate the Name
 		final int namePackageStore = methodBuilder.getNextAvailableStore();
 		final int nameSymbolStore = methodBuilder.getNextAvailableStore();
-		final SymbolStructImpl name = input.getName();
+		final SymbolStruct name = input.getName();
 		CodeGenerators.generateSymbol(name, generatorState, namePackageStore, nameSymbolStore);
 
 		// Generate the Result

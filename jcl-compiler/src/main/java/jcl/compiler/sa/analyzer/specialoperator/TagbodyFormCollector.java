@@ -24,7 +24,7 @@ import jcl.compiler.struct.specialoperator.go.GoStruct;
 import jcl.compiler.struct.specialoperator.go.GoSymbolStruct;
 import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
-import jcl.lang.SymbolStructImpl;
+import jcl.lang.SymbolStruct;
 
 final class TagbodyFormCollector implements Collector<LispStruct, Map<GoStruct<?>, PrognStruct>, Map<GoStruct<?>, PrognStruct>> {
 
@@ -50,8 +50,8 @@ final class TagbodyFormCollector implements Collector<LispStruct, Map<GoStruct<?
 	public BiConsumer<Map<GoStruct<?>, PrognStruct>, LispStruct> accumulator() {
 		return (tagToFormsMap, current) -> {
 
-			if (current instanceof SymbolStructImpl) {
-				currentTag = new GoSymbolStruct((SymbolStructImpl) current);
+			if (current instanceof SymbolStruct) {
+				currentTag = new GoSymbolStruct((SymbolStruct) current);
 				tagToFormsMap.put(currentTag, new PrognStruct(new ArrayList<>()));
 			} else if (current instanceof IntegerStruct) {
 				currentTag = new GoIntegerStruct((IntegerStruct) current);

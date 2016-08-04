@@ -7,7 +7,7 @@ package jcl.lang.internal.stream;
 import jcl.lang.InputStreamStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.OutputStreamStruct;
-import jcl.lang.SymbolStructImpl;
+import jcl.lang.SymbolStruct;
 import jcl.lang.SynonymStreamStruct;
 import jcl.lang.internal.VariableStructImpl;
 import jcl.lang.condition.exception.ErrorException;
@@ -23,9 +23,9 @@ import jcl.type.SynonymStreamType;
 public final class SynonymStreamStructImpl extends StreamStructImpl implements SynonymStreamStruct {
 
 	/**
-	 * The {@link SymbolStructImpl} that contains the value for the {@link StreamStructImpl} to use.
+	 * The {@link SymbolStruct} that contains the value for the {@link SymbolStruct} to use.
 	 */
-	private final SymbolStructImpl symbol;
+	private final SymbolStruct symbol;
 
 	/**
 	 * Public constructor.
@@ -43,7 +43,7 @@ public final class SynonymStreamStructImpl extends StreamStructImpl implements S
 	 * @param symbol
 	 * 		the symbol to create a SynonymStreamStruct from
 	 */
-	private SynonymStreamStructImpl(final SymbolStructImpl symbol) {
+	private SynonymStreamStructImpl(final SymbolStruct symbol) {
 		this(false, symbol);
 	}
 
@@ -55,7 +55,7 @@ public final class SynonymStreamStructImpl extends StreamStructImpl implements S
 	 * @param symbol
 	 * 		the symbol to create a SynonymStreamStruct from
 	 */
-	private SynonymStreamStructImpl(final boolean interactive, final SymbolStructImpl symbol) {
+	private SynonymStreamStructImpl(final boolean interactive, final SymbolStruct symbol) {
 		super(SynonymStreamType.INSTANCE, null, null, interactive, getElementType(symbol));
 		this.symbol = symbol;
 	}
@@ -68,7 +68,7 @@ public final class SynonymStreamStructImpl extends StreamStructImpl implements S
 	 *
 	 * @return the element type for object construction
 	 */
-	private static LispType getElementType(final SymbolStructImpl symbol) {
+	private static LispType getElementType(final SymbolStruct symbol) {
 		if (symbol == null) {
 			throw new ErrorException("Provided Symbol must not be null.");
 		}
@@ -79,11 +79,11 @@ public final class SynonymStreamStructImpl extends StreamStructImpl implements S
 		return new SynonymStreamStructImpl(variable);
 	}
 
-	public static SynonymStreamStructImpl valueOf(final SymbolStructImpl symbol) {
+	public static SynonymStreamStructImpl valueOf(final SymbolStruct symbol) {
 		return new SynonymStreamStructImpl(symbol);
 	}
 
-	public static SynonymStreamStructImpl valueOf(final boolean interactive, final SymbolStructImpl symbol) {
+	public static SynonymStreamStructImpl valueOf(final boolean interactive, final SymbolStruct symbol) {
 		return new SynonymStreamStructImpl(interactive, symbol);
 	}
 
@@ -93,7 +93,7 @@ public final class SynonymStreamStructImpl extends StreamStructImpl implements S
 	 * @return synonym-stream {@link #symbol} property
 	 */
 	@Override
-	public SymbolStructImpl getSymbol() {
+	public SymbolStruct getSymbol() {
 		return symbol;
 	}
 

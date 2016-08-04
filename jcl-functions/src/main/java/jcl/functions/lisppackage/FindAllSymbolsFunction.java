@@ -8,7 +8,7 @@ import java.util.List;
 
 import jcl.lang.LispStruct;
 import jcl.lang.PackageStruct;
-import jcl.lang.SymbolStructImpl;
+import jcl.lang.SymbolStruct;
 import jcl.lang.factory.LispStructFactory;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
@@ -37,13 +37,13 @@ public final class FindAllSymbolsFunction extends CommonLispBuiltInFunctionStruc
 
 	/**
 	 * {@inheritDoc}
-	 * Application method for {@code find-all-symbols} package function that returns all the {@link SymbolStructImpl}s
+	 * Application method for {@code find-all-symbols} package function that returns all the {@link SymbolStruct}s
 	 * that match the provided string-designator symbol name from every registered {@link PackageStruct}.
 	 *
 	 * @param lispStructs
 	 * 		the function parameters
 	 *
-	 * @return the {@link SymbolStructImpl}s that match the provided string-designator symbol name from every registered
+	 * @return the {@link SymbolStruct}s that match the provided string-designator symbol name from every registered
 	 * {@link PackageStruct}
 	 */
 	@Override
@@ -51,7 +51,7 @@ public final class FindAllSymbolsFunction extends CommonLispBuiltInFunctionStruc
 		final LispStruct lispStruct = arguments.getRequiredArgument(SYMBOL_NAME_ARGUMENT);
 		final String name = lispStruct.asString().get().getAsJavaString();
 
-		final List<SymbolStructImpl> allSymbols = PackageStruct.findAllSymbols(name);
+		final List<SymbolStruct> allSymbols = PackageStruct.findAllSymbols(name);
 		return LispStructFactory.toProperList(allSymbols);
 	}
 }

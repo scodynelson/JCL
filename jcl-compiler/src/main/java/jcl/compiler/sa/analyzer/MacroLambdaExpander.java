@@ -27,7 +27,7 @@ import jcl.compiler.struct.specialoperator.declare.SpecialDeclarationStruct;
 import jcl.compiler.struct.specialoperator.lambda.MacroLambdaStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.internal.SpecialOperatorStructImpl;
-import jcl.lang.SymbolStructImpl;
+import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
@@ -54,7 +54,7 @@ public class MacroLambdaExpander extends MacroFunctionExpander<MacroLambdaStruct
 	private BodyWithDeclaresAndDocStringAnalyzer bodyWithDeclaresAndDocStringAnalyzer;
 
 	@Override
-	public SymbolStructImpl getFunctionSymbol() {
+	public SymbolStruct getFunctionSymbol() {
 		return SpecialOperatorStructImpl.MACRO_LAMBDA;
 	}
 
@@ -68,10 +68,10 @@ public class MacroLambdaExpander extends MacroFunctionExpander<MacroLambdaStruct
 		}
 		final LispStruct first = iterator.next();
 
-		if (!(first instanceof SymbolStructImpl)) {
+		if (!(first instanceof SymbolStruct)) {
 			throw new TypeErrorException("MACRO-LAMBDA: MACRO-NAME must be a Symbol. Got: " + first);
 		}
-		final SymbolStructImpl macroName = (SymbolStructImpl) first;
+		final SymbolStruct macroName = (SymbolStruct) first;
 
 		if (!iterator.hasNext()) {
 			throw new ProgramErrorException("MACRO-LAMBDA: Incorrect number of arguments: 1. Expected at least 2 arguments.");

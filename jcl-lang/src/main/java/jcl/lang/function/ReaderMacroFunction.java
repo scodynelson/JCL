@@ -10,7 +10,8 @@ import java.util.Optional;
 import jcl.lang.CharacterStruct;
 import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
-import jcl.lang.SymbolStructImpl;
+import jcl.lang.SymbolStruct;
+import jcl.lang.factory.LispStructFactory;
 import jcl.lang.readtable.Reader;
 import jcl.lang.InputStreamStruct;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -37,10 +38,10 @@ public abstract class ReaderMacroFunction extends FunctionStruct {
 		super("Some Documentation");
 	}
 
-	private static final SymbolStructImpl DUMMY_SYMBOL = SymbolStructImpl.valueOf("dummySymbol");
+	private static final SymbolStruct DUMMY_SYMBOL = LispStructFactory.toSymbol("dummySymbol");
 
 	@Override
-	public SymbolStructImpl getFunctionSymbol() {
+	public SymbolStruct getFunctionSymbol() {
 		// TODO: we can do this better
 		return DUMMY_SYMBOL;
 	}

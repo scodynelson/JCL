@@ -6,20 +6,20 @@ package jcl.compiler.struct.specialoperator;
 
 import jcl.compiler.struct.CompilerSpecialOperatorStruct;
 import jcl.lang.LispStruct;
-import jcl.lang.SymbolStructImpl;
+import jcl.lang.SymbolStruct;
 
 public class ReturnFromStruct extends CompilerSpecialOperatorStruct {
 
-	private final SymbolStructImpl name;
+	private final SymbolStruct name;
 
 	private final LispStruct result;
 
-	public ReturnFromStruct(final SymbolStructImpl name, final LispStruct result) {
+	public ReturnFromStruct(final SymbolStruct name, final LispStruct result) {
 		this.name = name;
 		this.result = result;
 	}
 
-	public SymbolStructImpl getName() {
+	public SymbolStruct getName() {
 		return name;
 	}
 

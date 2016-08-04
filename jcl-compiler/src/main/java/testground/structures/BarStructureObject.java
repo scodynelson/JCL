@@ -5,19 +5,19 @@
 package testground.structures;
 
 import jcl.lang.StructureObjectStruct;
-import jcl.lang.SymbolStructImpl;
+import jcl.lang.factory.LispStructFactory;
 
 @SuppressWarnings("all")
 public class BarStructureObject extends StructureObjectStruct {
 
 	public BarStructureObject() {
-		super(BarStructureClass.INSTANCE, SymbolStructImpl.valueOf("BAR"), FooStructureClass.INSTANCE.newInstance());
+		super(BarStructureClass.INSTANCE, LispStructFactory.toSymbol("BAR"), FooStructureClass.INSTANCE.newInstance());
 		initSlotsMap();
 	}
 
 	private void initSlotsMap() {
-		slots.put(SymbolStructImpl.valueOf("C"), null);
-		slots.put(SymbolStructImpl.valueOf("D"), null);
-		slots.put(SymbolStructImpl.valueOf("E"), null);
+		slots.put(LispStructFactory.toSymbol("C"), null);
+		slots.put(LispStructFactory.toSymbol("D"), null);
+		slots.put(LispStructFactory.toSymbol("E"), null);
 	}
 }

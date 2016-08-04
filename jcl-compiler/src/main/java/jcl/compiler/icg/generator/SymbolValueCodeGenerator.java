@@ -9,6 +9,7 @@ import jcl.compiler.icg.CodeGenerator;
 import jcl.compiler.icg.GeneratorEvent;
 import jcl.compiler.icg.GeneratorState;
 import jcl.compiler.icg.JavaMethodBuilder;
+import jcl.lang.SymbolStruct;
 import jcl.lang.SymbolStructImpl;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
@@ -20,7 +21,7 @@ final class SymbolValueCodeGenerator implements CodeGenerator<SymbolStructImpl> 
 
 	@EventListener
 	public void onGeneratorEvent(final GeneratorEvent<SymbolStructImpl> event) {
-		final SymbolStructImpl input = event.getSource();
+		final SymbolStruct input = event.getSource();
 		final GeneratorState generatorState = event.getGeneratorState();
 
 		final JavaMethodBuilder methodBuilder = generatorState.getCurrentMethodBuilder();
@@ -38,23 +39,23 @@ final class SymbolValueCodeGenerator implements CodeGenerator<SymbolStructImpl> 
 		final boolean hasDynamicBinding = currentEnvironment.hasDynamicBinding(input);
 
 		if (hasLexicalBinding) {
-			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
+			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
 			                   GenerationConstants.SYMBOL_STRUCT_NAME,
 			                   GenerationConstants.SYMBOL_STRUCT_GET_LEXICAL_VALUE_METHOD_NAME,
 			                   GenerationConstants.SYMBOL_STRUCT_GET_LEXICAL_VALUE_METHOD_DESC,
-			                   false);
+			                   true);
 		} else if (hasDynamicBinding) {
-			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
+			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
 			                   GenerationConstants.SYMBOL_STRUCT_NAME,
 			                   GenerationConstants.SYMBOL_STRUCT_GET_DYNAMIC_VALUE_METHOD_NAME,
 			                   GenerationConstants.SYMBOL_STRUCT_GET_DYNAMIC_VALUE_METHOD_DESC,
-			                   false);
+			                   true);
 		} else {
-			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
+			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
 			                   GenerationConstants.SYMBOL_STRUCT_NAME,
 			                   GenerationConstants.SYMBOL_STRUCT_GET_VALUE_METHOD_NAME,
 			                   GenerationConstants.SYMBOL_STRUCT_GET_VALUE_METHOD_DESC,
-			                   false);
+			                   true);
 		}
 	}
 }

@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 
 import jcl.compiler.environment.Environment;
 import jcl.lang.LispStruct;
-import jcl.lang.SymbolStructImpl;
+import jcl.lang.SymbolStruct;
 
 public class LetStruct extends ClosureCreationStruct<LetStruct.LetVar> {
 
@@ -43,19 +43,19 @@ public class LetStruct extends ClosureCreationStruct<LetStruct.LetVar> {
 
 	public static class LetVar {
 
-		private final SymbolStructImpl var;
+		private final SymbolStruct var;
 
 		private final LispStruct initForm;
 
 		private final boolean isSpecial;
 
-		public LetVar(final SymbolStructImpl var, final LispStruct initForm, final boolean isSpecial) {
+		public LetVar(final SymbolStruct var, final LispStruct initForm, final boolean isSpecial) {
 			this.var = var;
 			this.initForm = initForm;
 			this.isSpecial = isSpecial;
 		}
 
-		public SymbolStructImpl getVar() {
+		public SymbolStruct getVar() {
 			return var;
 		}
 

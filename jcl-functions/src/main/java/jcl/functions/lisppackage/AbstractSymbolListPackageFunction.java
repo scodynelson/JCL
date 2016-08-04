@@ -12,7 +12,7 @@ import java.util.function.Function;
 import jcl.lang.LispStruct;
 import jcl.lang.PackageStruct;
 import jcl.lang.statics.PackageVariables;
-import jcl.lang.SymbolStructImpl;
+import jcl.lang.SymbolStruct;
 import jcl.lang.TStruct;
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
@@ -51,17 +51,17 @@ abstract class AbstractSymbolListPackageFunction extends CommonLispBuiltInFuncti
 		final LispStruct lispStruct = arguments.getRequiredArgument("SYMBOLS");
 		final PackageStruct aPackage = arguments.getOptionalArgument("PACKAGE").asPackage().get();
 
-		final SymbolStructImpl[] realSymbolArray;
+		final SymbolStruct[] realSymbolArray;
 		if (lispStruct instanceof ListStruct) {
 			final ListStruct symbols = (ListStruct) lispStruct;
-			final List<SymbolStructImpl> realSymbols = new ArrayList<>();
+			final List<SymbolStruct> realSymbols = new ArrayList<>();
 			for (final LispStruct theSymbol : symbols) {
-				realSymbols.add(ClassUtils.convert(theSymbol, SymbolStructImpl.class));
+				realSymbols.add(ClassUtils.convert(theSymbol, SymbolStruct.class));
 			}
-			realSymbolArray = realSymbols.toArray(new SymbolStructImpl[realSymbols.size()]);
-		} else if (lispStruct instanceof SymbolStructImpl) {
-			realSymbolArray = new SymbolStructImpl[1];
-			realSymbolArray[0] = (SymbolStructImpl) lispStruct;
+			realSymbolArray = realSymbols.toArray(new SymbolStruct[realSymbols.size()]);
+		} else if (lispStruct instanceof SymbolStruct) {
+			realSymbolArray = new SymbolStruct[1];
+			realSymbolArray[0] = (SymbolStruct) lispStruct;
 		} else {
 			throw new TypeErrorException("UNCAUGHT TYPE ERROR.");
 		}
@@ -73,9 +73,9 @@ abstract class AbstractSymbolListPackageFunction extends CommonLispBuiltInFuncti
 
 	/**
 	 * Abstract method to return a {@link BiConsumer} function that consumes a {@link PackageStruct} and an array of
-	 * {@link SymbolStructImpl}s.
+	 * {@link SymbolStruct}s.
 	 *
-	 * @return a {@link BiConsumer} function that consumes a {@link PackageStruct} and an array of {@link SymbolStructImpl}s
+	 * @return a {@link BiConsumer} function that consumes a {@link PackageStruct} and an array of {@link SymbolStruct}s
 	 */
-	protected abstract BiConsumer<PackageStruct, SymbolStructImpl[]> symbolListFunction();
+	protected abstract BiConsumer<PackageStruct, SymbolStruct[]> symbolListFunction();
 }

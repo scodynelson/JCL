@@ -4,8 +4,8 @@
 
 package jcl.lang.stream;
 
+import jcl.lang.SymbolStruct;
 import jcl.lang.statics.CommonLispSymbols;
-import jcl.lang.SymbolStructImpl;
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.NILStruct;
 
@@ -18,13 +18,13 @@ public enum IfDoesNotExistType {
 	CREATE(CommonLispSymbols.CREATE_KEYWORD),
 	NIL(NILStruct.INSTANCE);
 
-	private final SymbolStructImpl keyword;
+	private final SymbolStruct keyword;
 
-	IfDoesNotExistType(final SymbolStructImpl keyword) {
+	IfDoesNotExistType(final SymbolStruct keyword) {
 		this.keyword = keyword;
 	}
 
-	public static IfDoesNotExistType fromValue(final SymbolStructImpl keyword) {
+	public static IfDoesNotExistType fromValue(final SymbolStruct keyword) {
 		for (IfDoesNotExistType ifDoesNotExistType : values()) {
 			if (ifDoesNotExistType.keyword.equals(keyword)) {
 				return ifDoesNotExistType;

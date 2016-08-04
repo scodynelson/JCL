@@ -17,7 +17,7 @@ import jcl.compiler.icg.IntermediateCodeGenerator;
 import jcl.compiler.icg.JavaMethodBuilder;
 import jcl.compiler.struct.specialoperator.ClosureCreationStruct;
 import jcl.compiler.struct.specialoperator.PrognStruct;
-import jcl.lang.SymbolStructImpl;
+import jcl.lang.SymbolStruct;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
@@ -64,9 +64,9 @@ abstract class ClosureCreationCodeGenerator<V, I extends ClosureCreationStruct<V
 	 * <li>Temporarily pushing the {@link ClosureCreationStruct#environment} onto the {@link
 	 * GeneratorState#environmentDeque} while generating the code for the {@link ClosureCreationStruct#forms} values
 	 * inside the try block, ensuring to store the final result into a variable</li>
-	 * <li>Generating the code to unbind the variables from {@link SymbolStructImpl}s as part of the error free
+	 * <li>Generating the code to unbind the variables from {@link SymbolStruct}s as part of the error free
 	 * 'finally'</li>
-	 * <li>Generating the code to unbind the variables from {@link SymbolStructImpl}s as part of the error caught
+	 * <li>Generating the code to unbind the variables from {@link SymbolStruct}s as part of the error caught
 	 * 'finally', ensuring the error caught is re-thrown</li>
 	 * </ol>
 	 *
@@ -150,7 +150,7 @@ abstract class ClosureCreationCodeGenerator<V, I extends ClosureCreationStruct<V
 	}
 
 	/**
-	 * Abstract method to perform {@link SymbolStructImpl} symbol binding generation logic for the provided {@link List}
+	 * Abstract method to perform {@link SymbolStruct} symbol binding generation logic for the provided {@link List}
 	 * variables.
 	 *
 	 * @param vars
@@ -164,10 +164,10 @@ abstract class ClosureCreationCodeGenerator<V, I extends ClosureCreationStruct<V
 	 * @param closureSymbolBindingsStore
 	 * 		the storage location index on the stack where the {@link Closure#symbolBindings} variable exists
 	 * @param lexicalSymbolStoresToUnbind
-	 * 		the {@link Set} of storage location indexes on the stack where the {@link SymbolStructImpl}s with lexical
+	 * 		the {@link Set} of storage location indexes on the stack where the {@link SymbolStruct}s with lexical
 	 * 		values to unbind exists
 	 * @param dynamicSymbolStoresToUnbind
-	 * 		the {@link Set} of storage location indexes on the stack where the {@link SymbolStructImpl}s with dynamic
+	 * 		the {@link Set} of storage location indexes on the stack where the {@link SymbolStruct}s with dynamic
 	 * 		values to unbind exists
 	 */
 	protected abstract void generateBindings(List<V> vars, GeneratorState generatorState,
@@ -177,35 +177,35 @@ abstract class ClosureCreationCodeGenerator<V, I extends ClosureCreationStruct<V
 
 	/**
 	 * Private method for generating the 'finally' block code for unbinding the lexical and dynamic values from each
-	 * {@link SymbolStructImpl} at the storage location of each of the {@code lexicalSymbolStoresToUnbind} and {@code
+	 * {@link SymbolStruct} at the storage location of each of the {@code lexicalSymbolStoresToUnbind} and {@code
 	 * dynamicSymbolStoresToUnbind}.
 	 *
 	 * @param mv
 	 * 		the current {@link MethodVisitor} to generate the code inside
 	 * @param lexicalSymbolStoresToUnbind
-	 * 		the {@link Set} of storage location indexes on the stack where the {@link SymbolStructImpl}s with lexical
+	 * 		the {@link Set} of storage location indexes on the stack where the {@link SymbolStruct}s with lexical
 	 * 		values to unbind exists
 	 * @param dynamicSymbolStoresToUnbind
-	 * 		the {@link Set} of storage location indexes on the stack where the {@link SymbolStructImpl}s with dynamic
+	 * 		the {@link Set} of storage location indexes on the stack where the {@link SymbolStruct}s with dynamic
 	 * 		values to unbind exists
 	 */
 	private static void generateFinallyCode(final MethodVisitor mv, final Set<Integer> lexicalSymbolStoresToUnbind,
 	                                        final Set<Integer> dynamicSymbolStoresToUnbind) {
 		for (final Integer symbolStore : dynamicSymbolStoresToUnbind) {
 			mv.visitVarInsn(Opcodes.ALOAD, symbolStore);
-			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
+			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
 			                   GenerationConstants.SYMBOL_STRUCT_NAME,
 			                   GenerationConstants.SYMBOL_STRUCT_UNBIND_DYNAMIC_VALUE_METHOD_NAME,
 			                   GenerationConstants.SYMBOL_STRUCT_UNBIND_DYNAMIC_VALUE_METHOD_DESC,
-			                   false);
+			                   true);
 		}
 		for (final Integer symbolStore : lexicalSymbolStoresToUnbind) {
 			mv.visitVarInsn(Opcodes.ALOAD, symbolStore);
-			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
+			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
 			                   GenerationConstants.SYMBOL_STRUCT_NAME,
 			                   GenerationConstants.SYMBOL_STRUCT_UNBIND_LEXICAL_VALUE_METHOD_NAME,
 			                   GenerationConstants.SYMBOL_STRUCT_UNBIND_LEXICAL_VALUE_METHOD_DESC,
-			                   false);
+			                   true);
 		}
 	}
 }

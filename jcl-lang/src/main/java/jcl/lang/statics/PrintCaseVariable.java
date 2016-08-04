@@ -5,7 +5,7 @@ import java.util.Set;
 
 import jcl.lang.KeywordStruct;
 import jcl.lang.LispStruct;
-import jcl.lang.VariableStruct;
+import jcl.lang.internal.VariableStruct;
 import jcl.lang.condition.exception.TypeErrorException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

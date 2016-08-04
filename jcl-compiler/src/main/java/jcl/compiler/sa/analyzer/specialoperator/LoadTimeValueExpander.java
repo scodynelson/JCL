@@ -8,7 +8,7 @@ import jcl.compiler.functions.EvalFunction;
 import jcl.compiler.sa.FormAnalyzer;
 import jcl.lang.BooleanStruct;
 import jcl.lang.LispStruct;
-import jcl.lang.SpecialOperatorStruct;
+import jcl.lang.internal.SpecialOperatorStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.ListStruct;

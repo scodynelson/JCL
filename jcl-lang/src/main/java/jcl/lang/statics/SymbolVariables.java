@@ -5,7 +5,7 @@
 package jcl.lang.statics;
 
 import jcl.lang.IntegerStruct;
-import jcl.lang.VariableStruct;
+import jcl.lang.internal.VariableStruct;
 
 public interface SymbolVariables {
 

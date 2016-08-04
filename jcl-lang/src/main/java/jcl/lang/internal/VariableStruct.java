@@ -1,4 +1,8 @@
-package jcl.lang;
+package jcl.lang.internal;
+
+import jcl.lang.LispStruct;
+import jcl.lang.PackageStruct;
+import jcl.lang.SymbolStruct;
 
 public class VariableStruct<TYPE extends LispStruct> extends SymbolStruct {
 

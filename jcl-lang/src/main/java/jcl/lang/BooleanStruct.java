@@ -1,5 +1,6 @@
 package jcl.lang;
 
+import jcl.lang.internal.ConstantStruct;
 import jcl.lang.statics.GlobalPackageStruct;
 import jcl.type.LispType;
 

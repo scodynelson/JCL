@@ -8,7 +8,7 @@ import jcl.compiler.environment.Environment;
 import jcl.compiler.function.expanders.MacroFunctionExpander;
 import jcl.compiler.struct.specialoperator.defstruct.DefstructStruct;
 import jcl.lang.LispStruct;
-import jcl.lang.SpecialOperatorStruct;
+import jcl.lang.internal.SpecialOperatorStruct;
 import jcl.lang.StructureClassStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.ProgramErrorException;

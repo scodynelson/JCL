@@ -9,7 +9,7 @@ import jcl.lang.LispStruct;
 import jcl.lang.OutputStreamStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.SynonymStreamStruct;
-import jcl.lang.VariableStruct;
+import jcl.lang.internal.VariableStruct;
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.condition.exception.StreamErrorException;
 import jcl.lang.stream.PeekType;

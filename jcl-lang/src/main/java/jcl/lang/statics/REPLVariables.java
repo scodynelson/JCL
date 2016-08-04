@@ -6,7 +6,7 @@ package jcl.lang.statics;
 
 import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
-import jcl.lang.VariableStruct;
+import jcl.lang.internal.VariableStruct;
 
 public interface REPLVariables {
 

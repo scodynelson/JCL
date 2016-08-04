@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import jcl.lang.CharacterStruct;
-import jcl.lang.ConstantStruct;
+import jcl.lang.internal.ConstantStruct;
 import jcl.lang.IntegerStruct;
 import jcl.lang.internal.CharacterStructImpl;
 import jcl.lang.internal.number.IntegerStructImpl;

@@ -4,11 +4,10 @@
 
 package jcl.lang.statics;
 
-import jcl.lang.statics.GlobalPackageStruct;
 import jcl.lang.IOStreamStruct;
 import jcl.lang.InputStreamStruct;
 import jcl.lang.OutputStreamStruct;
-import jcl.lang.VariableStruct;
+import jcl.lang.internal.VariableStruct;
 import jcl.lang.internal.stream.EmptyStreamStructImpl;
 import jcl.lang.internal.stream.SynonymStreamStructImpl;
 import jcl.lang.internal.stream.TwoWayStreamStructImpl;

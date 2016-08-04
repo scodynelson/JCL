@@ -43,7 +43,7 @@ import jcl.lang.SymbolStruct;
 import jcl.lang.SynonymStreamStruct;
 import jcl.lang.TwoWayStreamStruct;
 import jcl.lang.URLStreamStruct;
-import jcl.lang.VariableStruct;
+import jcl.lang.internal.VariableStruct;
 import jcl.lang.VectorStruct;
 import jcl.lang.function.EquatorFunctionStruct;
 import jcl.lang.internal.ArrayStructImpl;

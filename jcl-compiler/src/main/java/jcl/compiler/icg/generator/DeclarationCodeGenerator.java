@@ -9,7 +9,7 @@ import jcl.compiler.icg.CodeGenerator;
 import jcl.compiler.icg.GeneratorEvent;
 import jcl.compiler.icg.GeneratorState;
 import jcl.compiler.icg.JavaMethodBuilder;
-import jcl.lang.DeclarationStruct;
+import jcl.lang.internal.DeclarationStruct;
 import jcl.lang.SymbolStruct;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;

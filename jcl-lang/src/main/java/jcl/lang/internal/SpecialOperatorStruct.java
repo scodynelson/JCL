@@ -1,5 +1,7 @@
-package jcl.lang;
+package jcl.lang.internal;
 
+import jcl.lang.PackageStruct;
+import jcl.lang.SymbolStruct;
 import jcl.lang.statics.GlobalPackageStruct;
 
 public final class SpecialOperatorStruct extends SymbolStruct {

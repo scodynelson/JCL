@@ -5,7 +5,7 @@
 package jcl.lang.statics;
 
 import jcl.lang.PackageStruct;
-import jcl.lang.VariableStruct;
+import jcl.lang.internal.VariableStruct;
 
 /**
  * Defines the standard package variables for the system.

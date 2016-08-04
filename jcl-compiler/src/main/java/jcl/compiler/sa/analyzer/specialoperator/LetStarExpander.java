@@ -8,7 +8,7 @@ import jcl.compiler.struct.specialoperator.ClosureCreationStruct;
 import jcl.compiler.struct.specialoperator.LetStarStruct;
 import jcl.compiler.struct.specialoperator.PrognStruct;
 import jcl.lang.LispStruct;
-import jcl.lang.SpecialOperatorStruct;
+import jcl.lang.internal.SpecialOperatorStruct;
 import jcl.lang.SymbolStruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

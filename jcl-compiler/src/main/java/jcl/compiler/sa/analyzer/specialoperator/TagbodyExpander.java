@@ -14,7 +14,7 @@ import jcl.compiler.struct.specialoperator.TagbodyStruct;
 import jcl.compiler.struct.specialoperator.go.GoStruct;
 import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
-import jcl.lang.SpecialOperatorStruct;
+import jcl.lang.internal.SpecialOperatorStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.ListStruct;
 import org.springframework.beans.factory.annotation.Autowired;

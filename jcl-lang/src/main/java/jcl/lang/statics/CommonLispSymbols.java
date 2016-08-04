@@ -1,8 +1,8 @@
 package jcl.lang.statics;
 
-import jcl.lang.DeclarationStruct;
+import jcl.lang.internal.DeclarationStruct;
 import jcl.lang.KeywordStruct;
-import jcl.lang.SpecialOperatorStruct;
+import jcl.lang.internal.SpecialOperatorStruct;
 import jcl.lang.SymbolStruct;
 
 public interface CommonLispSymbols {

@@ -6,7 +6,7 @@ package jcl.lang.statics;
 
 import java.math.BigInteger;
 
-import jcl.lang.ConstantStruct;
+import jcl.lang.internal.ConstantStruct;
 import jcl.lang.IntegerStruct;
 import jcl.lang.internal.number.IntegerStructImpl;
 

@@ -6,7 +6,7 @@ import jcl.compiler.environment.Environment;
 import jcl.compiler.function.expanders.MacroFunctionExpander;
 import jcl.compiler.struct.specialoperator.QuoteStruct;
 import jcl.lang.LispStruct;
-import jcl.lang.SpecialOperatorStruct;
+import jcl.lang.internal.SpecialOperatorStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.ListStruct;

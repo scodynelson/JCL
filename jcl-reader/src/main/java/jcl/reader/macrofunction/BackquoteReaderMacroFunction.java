@@ -11,7 +11,7 @@ import javax.annotation.PostConstruct;
 import jcl.lang.ConsStruct;
 import jcl.lang.statics.GlobalPackageStruct;
 import jcl.lang.LispStruct;
-import jcl.lang.SpecialOperatorStruct;
+import jcl.lang.internal.SpecialOperatorStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.TStruct;
 import jcl.lang.condition.exception.ReaderErrorException;

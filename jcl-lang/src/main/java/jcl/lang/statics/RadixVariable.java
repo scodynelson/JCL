@@ -5,7 +5,7 @@ import java.math.BigInteger;
 import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.PackageStruct;
-import jcl.lang.VariableStruct;
+import jcl.lang.internal.VariableStruct;
 import jcl.lang.condition.exception.TypeErrorException;
 import org.apache.commons.lang3.Range;
 import org.slf4j.Logger;

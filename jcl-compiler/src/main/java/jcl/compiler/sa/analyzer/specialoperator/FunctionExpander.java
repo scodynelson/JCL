@@ -10,7 +10,7 @@ import jcl.compiler.struct.specialoperator.LambdaCompilerFunctionStruct;
 import jcl.compiler.struct.specialoperator.SymbolCompilerFunctionStruct;
 import jcl.compiler.struct.specialoperator.lambda.LambdaStruct;
 import jcl.lang.LispStruct;
-import jcl.lang.SpecialOperatorStruct;
+import jcl.lang.internal.SpecialOperatorStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.condition.exception.TypeErrorException;

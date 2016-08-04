@@ -13,7 +13,7 @@ import jcl.compiler.struct.specialoperator.declare.DeclareStruct;
 import jcl.lang.statics.CommonLispSymbols;
 import jcl.lang.statics.GlobalPackageStruct;
 import jcl.lang.LispStruct;
-import jcl.lang.SpecialOperatorStruct;
+import jcl.lang.internal.SpecialOperatorStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.factory.LispStructFactory;
 import jcl.lang.ListStruct;

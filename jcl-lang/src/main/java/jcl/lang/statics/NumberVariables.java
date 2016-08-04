@@ -6,7 +6,7 @@ package jcl.lang.statics;
 
 import jcl.lang.RandomStateStruct;
 import jcl.lang.internal.number.RandomStateStructImpl;
-import jcl.lang.VariableStruct;
+import jcl.lang.internal.VariableStruct;
 
 public interface NumberVariables {
 

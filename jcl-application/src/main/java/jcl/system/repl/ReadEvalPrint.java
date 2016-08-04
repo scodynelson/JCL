@@ -7,7 +7,7 @@ import jcl.lang.PackageStruct;
 import jcl.lang.statics.PackageVariables;
 import jcl.lang.statics.REPLVariables;
 import jcl.lang.ValuesStruct;
-import jcl.lang.VariableStruct;
+import jcl.lang.internal.VariableStruct;
 import jcl.lang.condition.exception.ConditionException;
 import jcl.lang.condition.exception.ReaderErrorException;
 import jcl.lang.factory.LispStructFactory;

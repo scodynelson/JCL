@@ -16,7 +16,7 @@ import jcl.compiler.struct.specialoperator.LocallyStruct;
 import jcl.compiler.struct.specialoperator.declare.DeclareStruct;
 import jcl.compiler.struct.specialoperator.declare.SpecialDeclarationStruct;
 import jcl.lang.LispStruct;
-import jcl.lang.SpecialOperatorStruct;
+import jcl.lang.internal.SpecialOperatorStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.factory.LispStructFactory;
 import jcl.lang.ListStruct;

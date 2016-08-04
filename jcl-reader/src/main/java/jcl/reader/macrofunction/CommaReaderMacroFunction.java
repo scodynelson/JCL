@@ -12,7 +12,7 @@ import jcl.lang.LispStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
 import jcl.lang.factory.LispStructFactory;
 import jcl.lang.function.ReaderMacroFunction;
-import jcl.lang.list.ConsStruct;
+import jcl.lang.list.ConsStructImpl;
 import jcl.lang.list.NILStruct;
 import jcl.lang.readtable.Reader;
 import jcl.lang.statics.ReaderVariables;
@@ -52,7 +52,7 @@ public class CommaReaderMacroFunction extends ReaderMacroFunction {
 
 		reader.decrementBackquoteLevel();
 		try {
-			final ConsStruct commaCons;
+			final ConsStructImpl commaCons;
 
 			if (nextCodePoint == CodePointConstants.AT_SIGN) {
 				final LispStruct token = reader.read(true, NILStruct.INSTANCE, true);

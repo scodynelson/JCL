@@ -64,7 +64,7 @@ import jcl.lang.internal.stream.StringOutputStreamStructImpl;
 import jcl.lang.internal.stream.SynonymStreamStructImpl;
 import jcl.lang.internal.stream.TwoWayStreamStructImpl;
 import jcl.lang.internal.stream.URLStreamStructImpl;
-import jcl.lang.list.ConsStruct;
+import jcl.lang.list.ConsStructImpl;
 import jcl.lang.list.NILStruct;
 import jcl.lang.internal.number.ComplexStructImpl;
 import jcl.lang.internal.number.FloatStructImpl;
@@ -209,12 +209,12 @@ public final class LispStructFactory {
 	 * Cons
 	 */
 
-	public static ConsStruct toCons(final LispStruct car) {
-		return ConsStruct.valueOf(car);
+	public static ConsStructImpl toCons(final LispStruct car) {
+		return ConsStructImpl.valueOf(car);
 	}
 
-	public static ConsStruct toCons(final LispStruct car, final LispStruct cdr) {
-		return ConsStruct.valueOf(car, cdr);
+	public static ConsStructImpl toCons(final LispStruct car, final LispStruct cdr) {
+		return ConsStructImpl.valueOf(car, cdr);
 	}
 
 	/*
@@ -453,7 +453,7 @@ public final class LispStructFactory {
 		final List<? extends LispStruct> rest = lispStructs.subList(1, lispStructs.size());
 
 		final LispStruct cdr = CollectionUtils.isEmpty(rest) ? NILStruct.INSTANCE : getProperList(rest);
-		return ConsStruct.valueOf(car, cdr);
+		return ConsStructImpl.valueOf(car, cdr);
 	}
 
 	/**
@@ -472,7 +472,7 @@ public final class LispStructFactory {
 			if (firstElement instanceof ListStruct) {
 				return (ListStruct) firstElement;
 			}
-			return ConsStruct.valueOf(firstElement, NILStruct.INSTANCE);
+			return ConsStructImpl.valueOf(firstElement, NILStruct.INSTANCE);
 		} else {
 			return getDottedList(Arrays.asList(lispStructs));
 		}
@@ -494,7 +494,7 @@ public final class LispStructFactory {
 			if (firstElement instanceof ListStruct) {
 				return (ListStruct) firstElement;
 			}
-			return ConsStruct.valueOf(firstElement, NILStruct.INSTANCE);
+			return ConsStructImpl.valueOf(firstElement, NILStruct.INSTANCE);
 		} else {
 			return getDottedList(lispStructs);
 		}
@@ -513,7 +513,7 @@ public final class LispStructFactory {
 		final List<? extends LispStruct> rest = lispStructs.subList(1, lispStructs.size());
 
 		final LispStruct cdr = (rest.size() == 1) ? lispStructs.get(1) : getDottedList(rest);
-		return ConsStruct.valueOf(car, cdr);
+		return ConsStructImpl.valueOf(car, cdr);
 	}
 
 	/*

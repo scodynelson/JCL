@@ -20,9 +20,9 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
- * The {@link ConsStruct} is the object representation of a Lisp 'cons' type.
+ * The {@link ConsStructImpl} is the object representation of a Lisp 'cons' type.
  */
-public class ConsStruct extends BuiltInClassStruct implements ListStruct {
+public final class ConsStructImpl extends BuiltInClassStruct implements ListStruct {
 
 	private LispStruct car;
 
@@ -34,7 +34,7 @@ public class ConsStruct extends BuiltInClassStruct implements ListStruct {
 	 * @param car
 	 * 		the car of the binary cons structure
 	 */
-	private ConsStruct(final LispStruct car) {
+	private ConsStructImpl(final LispStruct car) {
 		this(car, NILStruct.INSTANCE);
 	}
 
@@ -46,7 +46,7 @@ public class ConsStruct extends BuiltInClassStruct implements ListStruct {
 	 * @param cdr
 	 * 		the cdr of the binary cons structure
 	 */
-	private ConsStruct(final LispStruct car, final LispStruct cdr) {
+	private ConsStructImpl(final LispStruct car, final LispStruct cdr) {
 		super(ConsType.INSTANCE, null, null);
 		this.car = car;
 		if (NILStruct.INSTANCE.equals(cdr)) {
@@ -56,12 +56,12 @@ public class ConsStruct extends BuiltInClassStruct implements ListStruct {
 		}
 	}
 
-	public static ConsStruct valueOf(final LispStruct car) {
-		return new ConsStruct(car);
+	public static ConsStructImpl valueOf(final LispStruct car) {
+		return new ConsStructImpl(car);
 	}
 
-	public static ConsStruct valueOf(final LispStruct car, final LispStruct cdr) {
-		return new ConsStruct(car, cdr);
+	public static ConsStructImpl valueOf(final LispStruct car, final LispStruct cdr) {
+		return new ConsStructImpl(car, cdr);
 	}
 
 	/*
@@ -121,7 +121,7 @@ public class ConsStruct extends BuiltInClassStruct implements ListStruct {
 
 	@Override
 	public boolean isCircular() {
-		final Set<ConsStruct> conses = new HashSet<>();
+		final Set<ConsStructImpl> conses = new HashSet<>();
 		conses.add(this);
 
 		return innerIsCircular(this, conses);
@@ -139,7 +139,7 @@ public class ConsStruct extends BuiltInClassStruct implements ListStruct {
 	 *
 	 * @return whether or not the provided {@code consStruct} is circular
 	 */
-	private static boolean innerIsCircular(final ConsStruct consStruct, final Set<ConsStruct> conses) {
+	private static boolean innerIsCircular(final ConsStructImpl consStruct, final Set<ConsStructImpl> conses) {
 		return isElementCircular(consStruct.car, conses) || isElementCircular(consStruct.cdr, conses);
 	}
 
@@ -154,10 +154,10 @@ public class ConsStruct extends BuiltInClassStruct implements ListStruct {
 	 *
 	 * @return whether or not the provided {@code element} is circular
 	 */
-	private static boolean isElementCircular(final LispStruct element, final Set<ConsStruct> conses) {
+	private static boolean isElementCircular(final LispStruct element, final Set<ConsStructImpl> conses) {
 		final boolean isElementCircular;
-		if (element instanceof ConsStruct) {
-			final ConsStruct elementAsCons = (ConsStruct) element;
+		if (element instanceof ConsStructImpl) {
+			final ConsStructImpl elementAsCons = (ConsStructImpl) element;
 			if (conses.contains(elementAsCons)) {
 				return true;
 			}
@@ -186,8 +186,8 @@ public class ConsStruct extends BuiltInClassStruct implements ListStruct {
 		final LispStruct[] result = new LispStruct[Math.toIntExact(length())];
 		int i = 0;
 
-		for (LispStruct x = this; x instanceof ConsStruct; x = ((ConsStruct) x).cdr) {
-			final ConsStruct xCons = (ConsStruct) x;
+		for (LispStruct x = this; x instanceof ConsStructImpl; x = ((ConsStructImpl) x).cdr) {
+			final ConsStructImpl xCons = (ConsStructImpl) x;
 			result[i++] = xCons.car;
 		}
 		return result;
@@ -195,28 +195,28 @@ public class ConsStruct extends BuiltInClassStruct implements ListStruct {
 
 	@Override
 	public ListStruct copyTree() {
-		final LispStruct deepCar = (car instanceof ConsStruct) ? ((ConsStruct) car).copyTree() : car;
-		final LispStruct deepCdr = (cdr instanceof ConsStruct) ? ((ConsStruct) cdr).copyTree() : cdr;
-		return new ConsStruct(deepCar, deepCdr);
+		final LispStruct deepCar = (car instanceof ConsStructImpl) ? ((ConsStructImpl) car).copyTree() : car;
+		final LispStruct deepCdr = (cdr instanceof ConsStructImpl) ? ((ConsStructImpl) cdr).copyTree() : cdr;
+		return new ConsStructImpl(deepCar, deepCdr);
 	}
 
 	@Override
 	public ListStruct copyList() {
-		final LispStruct copyCdr = (cdr instanceof ConsStruct) ? ((ConsStruct) cdr).copyList() : cdr;
-		return new ConsStruct(car, copyCdr);
+		final LispStruct copyCdr = (cdr instanceof ConsStructImpl) ? ((ConsStructImpl) cdr).copyList() : cdr;
+		return new ConsStructImpl(car, copyCdr);
 	}
 
 	@Override
 	public ListStruct copyAlist() {
 		final LispStruct copyCar;
-		if (car instanceof ConsStruct) {
-			final ConsStruct assocCar = (ConsStruct) car;
-			copyCar = new ConsStruct(assocCar.car, assocCar.cdr);
+		if (car instanceof ConsStructImpl) {
+			final ConsStructImpl assocCar = (ConsStructImpl) car;
+			copyCar = new ConsStructImpl(assocCar.car, assocCar.cdr);
 		} else {
 			copyCar = car;
 		}
-		final LispStruct copyCdr = (cdr instanceof ConsStruct) ? ((ConsStruct) cdr).copyAlist() : cdr;
-		return new ConsStruct(copyCar, copyCdr);
+		final LispStruct copyCdr = (cdr instanceof ConsStructImpl) ? ((ConsStructImpl) cdr).copyAlist() : cdr;
+		return new ConsStructImpl(copyCar, copyCdr);
 	}
 
 	@Override
@@ -249,9 +249,9 @@ public class ConsStruct extends BuiltInClassStruct implements ListStruct {
 		}
 		if (cdr instanceof ListStruct) {
 			final ListStruct listCdr = (ListStruct) cdr;
-			return new ConsStruct(car, listCdr.ldiff(object));
+			return new ConsStructImpl(car, listCdr.ldiff(object));
 		}
-		return (cdr.eql(object)) ? new ConsStruct(car) : new ConsStruct(car, cdr);
+		return (cdr.eql(object)) ? new ConsStructImpl(car) : new ConsStructImpl(car, cdr);
 	}
 
 	@Override
@@ -261,15 +261,15 @@ public class ConsStruct extends BuiltInClassStruct implements ListStruct {
 		}
 
 		long currentIndex = 0L;
-		ConsStruct cons = this;
+		ConsStructImpl cons = this;
 		while (true) {
 			if (currentIndex == index) {
 				return cons.car;
 			}
 
 			final LispStruct consCdr = cons.cdr;
-			if (consCdr instanceof ConsStruct) {
-				cons = (ConsStruct) consCdr;
+			if (consCdr instanceof ConsStructImpl) {
+				cons = (ConsStructImpl) consCdr;
 				currentIndex++;
 			} else if (NILStruct.INSTANCE.equals(consCdr)) {
 				return NILStruct.INSTANCE;
@@ -286,7 +286,7 @@ public class ConsStruct extends BuiltInClassStruct implements ListStruct {
 		}
 
 		long currentIndex = 0L;
-		ConsStruct cons = this;
+		ConsStructImpl cons = this;
 		while (true) {
 			if (currentIndex == index) {
 				cons.car = newValue;
@@ -294,8 +294,8 @@ public class ConsStruct extends BuiltInClassStruct implements ListStruct {
 			}
 
 			final LispStruct consCdr = cons.cdr;
-			if (consCdr instanceof ConsStruct) {
-				cons = (ConsStruct) consCdr;
+			if (consCdr instanceof ConsStructImpl) {
+				cons = (ConsStructImpl) consCdr;
 				currentIndex++;
 			} else if (NILStruct.INSTANCE.equals(consCdr)) {
 				return;
@@ -339,11 +339,11 @@ public class ConsStruct extends BuiltInClassStruct implements ListStruct {
 
 	@Override
 	public ListStruct setProperty(final LispStruct indicator, final LispStruct newValue) {
-		if (!(cdr instanceof ConsStruct)) {
+		if (!(cdr instanceof ConsStructImpl)) {
 			throw new ErrorException("List is not a valid property list.");
 		}
 
-		final ConsStruct cdrCons = (ConsStruct) cdr;
+		final ConsStructImpl cdrCons = (ConsStructImpl) cdr;
 		if (car.eq(indicator)) {
 			cdrCons.car = newValue;
 		} else if (!(cdrCons.cdr instanceof ListStruct)) {
@@ -357,19 +357,19 @@ public class ConsStruct extends BuiltInClassStruct implements ListStruct {
 
 	@Override
 	public boolean removeProperty(final LispStruct indicator) {
-		if (!(cdr instanceof ConsStruct)) {
+		if (!(cdr instanceof ConsStructImpl)) {
 			throw new ErrorException("List is not a valid property list.");
 		}
 
-		final ConsStruct cdrCons = (ConsStruct) cdr;
+		final ConsStructImpl cdrCons = (ConsStructImpl) cdr;
 		if (car.eq(indicator)) {
 			if (NILStruct.INSTANCE.equals(cdrCons.cdr)) {
 				throw new ErrorException("Cannot remove last entry from property list.");
 			}
-			if (!(cdrCons.cdr instanceof ConsStruct)) {
+			if (!(cdrCons.cdr instanceof ConsStructImpl)) {
 				throw new ErrorException("List is not a valid property list.");
 			}
-			final ConsStruct cdrCdrCons = (ConsStruct) cdrCons.cdr;
+			final ConsStructImpl cdrCdrCons = (ConsStructImpl) cdrCons.cdr;
 			car = cdrCdrCons.car;
 			cdr = cdrCdrCons.cdr;
 		} else if (!(cdrCons.cdr instanceof ListStruct)) {
@@ -383,12 +383,12 @@ public class ConsStruct extends BuiltInClassStruct implements ListStruct {
 
 	@Override
 	public ValuesStruct getProperties(final ListStruct indicators) {
-		if (!(cdr instanceof ConsStruct)) {
+		if (!(cdr instanceof ConsStructImpl)) {
 			throw new ErrorException("List is not a valid property list.");
 		}
 		final boolean carIsIndicator = indicators.stream().anyMatch(indicator -> car.eq(indicator));
 
-		final ConsStruct cdrCons = (ConsStruct) cdr;
+		final ConsStructImpl cdrCons = (ConsStructImpl) cdr;
 		if (carIsIndicator) {
 			return ValuesStruct.valueOf(car, cdrCons.car, this);
 		} else if (!(cdrCons.cdr instanceof ListStruct)) {
@@ -409,16 +409,16 @@ public class ConsStruct extends BuiltInClassStruct implements ListStruct {
 		LispStruct returnList = currentList;
 
 		long index = 0L;
-		while (currentList instanceof ConsStruct) {
+		while (currentList instanceof ConsStructImpl) {
 			if (n <= index) {
 				// NOTE: We know this will be safe as the 'cdr' operation will always be performed on the currentList
 				//          first; the only time this isn't true is if 'n' is 0, in which case, the returnList and the
 				//          currentList refer to the same object, 'this', which we already know to be a ConsStruct.
-				final ConsStruct returnCons = (ConsStruct) returnList;
+				final ConsStructImpl returnCons = (ConsStructImpl) returnList;
 				returnList = returnCons.cdr;
 			}
 
-			final ConsStruct currentCons = (ConsStruct) currentList;
+			final ConsStructImpl currentCons = (ConsStructImpl) currentList;
 			currentList = currentCons.cdr;
 			index++;
 		}
@@ -448,7 +448,7 @@ public class ConsStruct extends BuiltInClassStruct implements ListStruct {
 			final LispStruct listCdr = list.getCdr();
 			// NOTE: We know this will be safe due to the use of 'listLength()'. Therefore, only 'proper' lists will
 			//          pass through here, in which case this is always a good cast.
-			return new ConsStruct(listCar, butLastAux((ListStruct) listCdr, limit - 1));
+			return new ConsStructImpl(listCar, butLastAux((ListStruct) listCdr, limit - 1));
 		}
 	}
 
@@ -473,7 +473,7 @@ public class ConsStruct extends BuiltInClassStruct implements ListStruct {
 
 	private static void nButLastAux(final ListStruct list, final long limit) {
 		if (limit <= 0) {
-			((ConsStruct) list).cdr = NILStruct.INSTANCE;
+			((ConsStructImpl) list).cdr = NILStruct.INSTANCE;
 		} else {
 			final LispStruct listCdr = list.getCdr();
 			// NOTE: We know this will be safe due to the use of 'listLength()'. Therefore, only 'proper' lists will
@@ -492,8 +492,8 @@ public class ConsStruct extends BuiltInClassStruct implements ListStruct {
 		LispStruct obj = cdr;
 		while (!NILStruct.INSTANCE.equals(obj)) {
 			++length;
-			if (obj instanceof ConsStruct) {
-				obj = ((ConsStruct) obj).cdr;
+			if (obj instanceof ConsStructImpl) {
+				obj = ((ConsStructImpl) obj).cdr;
 			} else {
 				throw new TypeErrorException("Not a proper list.");
 			}
@@ -508,15 +508,15 @@ public class ConsStruct extends BuiltInClassStruct implements ListStruct {
 		}
 
 		long currentIndex = 0L;
-		ConsStruct cons = this;
+		ConsStructImpl cons = this;
 		while (true) {
 			if (currentIndex == index) {
 				return cons.car;
 			}
 
 			final LispStruct consCdr = cons.cdr;
-			if (consCdr instanceof ConsStruct) {
-				cons = (ConsStruct) consCdr;
+			if (consCdr instanceof ConsStructImpl) {
+				cons = (ConsStructImpl) consCdr;
 				currentIndex++;
 			} else if (NILStruct.INSTANCE.equals(consCdr)) {
 				throw new TypeErrorException("Index is too large.");
@@ -533,7 +533,7 @@ public class ConsStruct extends BuiltInClassStruct implements ListStruct {
 		}
 
 		long currentIndex = 0L;
-		ConsStruct cons = this;
+		ConsStructImpl cons = this;
 		while (true) {
 			if (currentIndex == index) {
 				cons.car = newValue;
@@ -541,8 +541,8 @@ public class ConsStruct extends BuiltInClassStruct implements ListStruct {
 			}
 
 			final LispStruct consCdr = cons.cdr;
-			if (consCdr instanceof ConsStruct) {
-				cons = (ConsStruct) consCdr;
+			if (consCdr instanceof ConsStructImpl) {
+				cons = (ConsStructImpl) consCdr;
 				currentIndex++;
 			} else if (NILStruct.INSTANCE.equals(consCdr)) {
 				throw new TypeErrorException("Index is too large.");
@@ -556,9 +556,9 @@ public class ConsStruct extends BuiltInClassStruct implements ListStruct {
 	public ListStruct reverse() {
 		LispStruct current = this;
 		ListStruct result = NILStruct.INSTANCE;
-		while (current instanceof ConsStruct) {
-			final ConsStruct currentCons = (ConsStruct) current;
-			result = new ConsStruct(currentCons.car, result);
+		while (current instanceof ConsStructImpl) {
+			final ConsStructImpl currentCons = (ConsStructImpl) current;
+			result = new ConsStructImpl(currentCons.car, result);
 			current = currentCons.cdr;
 		}
 		if (!NILStruct.INSTANCE.equals(current)) {
@@ -569,12 +569,12 @@ public class ConsStruct extends BuiltInClassStruct implements ListStruct {
 
 	@Override
 	public ListStruct nReverse() {
-		ConsStruct cons = this;
+		ConsStructImpl cons = this;
 
 		ListStruct prevCons = NILStruct.INSTANCE;
 		LispStruct nextCons = cdr;
-		while (nextCons instanceof ConsStruct) {
-			final ConsStruct nextConsAsCons = (ConsStruct) nextCons;
+		while (nextCons instanceof ConsStructImpl) {
+			final ConsStructImpl nextConsAsCons = (ConsStructImpl) nextCons;
 			cons.cdr = prevCons;
 			prevCons = cons;
 			cons = nextConsAsCons;
@@ -604,8 +604,8 @@ public class ConsStruct extends BuiltInClassStruct implements ListStruct {
 		if (eq(object)) {
 			return true;
 		}
-		if (object instanceof ConsStruct) {
-			final ConsStruct objectCons = (ConsStruct) object;
+		if (object instanceof ConsStructImpl) {
+			final ConsStructImpl objectCons = (ConsStructImpl) object;
 			if (car.equal(objectCons.car) && cdr.equal(objectCons.cdr)) {
 				return true;
 			}
@@ -618,8 +618,8 @@ public class ConsStruct extends BuiltInClassStruct implements ListStruct {
 		if (eq(object)) {
 			return true;
 		}
-		if (object instanceof ConsStruct) {
-			final ConsStruct objectCons = (ConsStruct) object;
+		if (object instanceof ConsStructImpl) {
+			final ConsStructImpl objectCons = (ConsStructImpl) object;
 			if (car.equalp(objectCons.car) && cdr.equalp(objectCons.cdr)) {
 				return true;
 			}
@@ -672,7 +672,7 @@ public class ConsStruct extends BuiltInClassStruct implements ListStruct {
 		if (obj.getClass() != getClass()) {
 			return false;
 		}
-		final ConsStruct rhs = (ConsStruct) obj;
+		final ConsStructImpl rhs = (ConsStructImpl) obj;
 
 //		if (isCircular() || rhs.isCircular()) {
 //			// TODO: we should figure out how to handle circularities here... or should we???
@@ -714,15 +714,15 @@ public class ConsStruct extends BuiltInClassStruct implements ListStruct {
 		return stringBuilder.toString();
 	}
 
-	private static String printElements(final ConsStruct object, final StringBuilder stringBuilder) {
+	private static String printElements(final ConsStructImpl object, final StringBuilder stringBuilder) {
 
 		final LispStruct car = object.car;
 		final String printedCar = car.toString();
 
 		stringBuilder.append(printedCar);
 
-		if (object.cdr instanceof ConsStruct) {
-			final ConsStruct cdrAsCons = (ConsStruct) object.cdr;
+		if (object.cdr instanceof ConsStructImpl) {
+			final ConsStructImpl cdrAsCons = (ConsStructImpl) object.cdr;
 			final String innerConsPrinted = printElements(cdrAsCons, new StringBuilder());
 
 			stringBuilder.append(' ');
@@ -743,13 +743,13 @@ public class ConsStruct extends BuiltInClassStruct implements ListStruct {
 
 		private ListStruct current;
 
-		private ConsIterator(final ConsStruct cons) {
+		private ConsIterator(final ConsStructImpl cons) {
 			current = cons;
 		}
 
 		@Override
 		public boolean hasNext() {
-			return current instanceof ConsStruct;
+			return current instanceof ConsStructImpl;
 		}
 
 		@Override
@@ -757,7 +757,7 @@ public class ConsStruct extends BuiltInClassStruct implements ListStruct {
 			if (!hasNext()) {
 				throw new NoSuchElementException("No elements left in the Cons.");
 			}
-			final ConsStruct currentAsCons = (ConsStruct) current;
+			final ConsStructImpl currentAsCons = (ConsStructImpl) current;
 
 			final LispStruct currentCdr = currentAsCons.getCdr();
 			if (!(currentCdr instanceof ListStruct)) {

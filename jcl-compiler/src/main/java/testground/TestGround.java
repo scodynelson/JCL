@@ -28,7 +28,6 @@ import jcl.lang.ValuesStruct;
 import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.factory.LispStructFactory;
 import jcl.lang.function.FunctionStruct;
-import jcl.lang.list.ConsStruct;
 import jcl.lang.ListStruct;
 import jcl.lang.list.NILStruct;
 import org.apfloat.Apcomplex;
@@ -155,7 +154,7 @@ public class TestGround {
 	private Object consGen() {
 		final LispStruct car = LispStructFactory.toCharacter(97);
 		final LispStruct cdr = LispStructFactory.toCharacter(197);
-		return ConsStruct.valueOf(car, cdr);
+		return LispStructFactory.toCons(car, cdr);
 	}
 
 	private Object pathnameGen() {
@@ -256,7 +255,7 @@ public class TestGround {
 
 		final LispStruct element1 = LispStructFactory.toCharacter(97);
 		final LispStruct element2 = LispStructFactory.toCharacter(197);
-		return ConsStruct.valueOf(element1, element2);
+		return LispStructFactory.toCons(element1, element2);
 	}
 
 	@SuppressWarnings({"unchecked", "rawtypes"})

@@ -16,7 +16,7 @@ import jcl.lang.statics.PackageVariables;
 import jcl.lang.SymbolStruct;
 import jcl.lang.TStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
-import jcl.lang.list.ConsStruct;
+import jcl.lang.list.ConsStructImpl;
 import jcl.lang.ListStruct;
 import jcl.lang.list.NILStruct;
 import jcl.lang.readtable.Reader;
@@ -90,7 +90,7 @@ final class FeaturesReaderMacroFunction {
 
 	/**
 	 * Determines if the provided {@link ListStruct} is a feature that should be read in or not. If it is not an
-	 * instance of {@link ConsStruct}, it is automatically not a feature.
+	 * instance of {@link ConsStructImpl}, it is automatically not a feature.
 	 *
 	 * @param listToken
 	 * 		the {@link ListStruct} used to determine if a feature should be read in or not
@@ -98,18 +98,18 @@ final class FeaturesReaderMacroFunction {
 	 * @return true if the provided {@link ListStruct} is a feature that should be read in; false otherwise
 	 */
 	private boolean isListFeature(final ListStruct listToken) {
-		return (listToken instanceof ConsStruct) && isConsFeature((ConsStruct) listToken);
+		return (listToken instanceof ConsStructImpl) && isConsFeature((ConsStructImpl) listToken);
 	}
 
 	/**
-	 * Determines if the provided {@link ConsStruct} is a feature that should be read in or not.
+	 * Determines if the provided {@link ConsStructImpl} is a feature that should be read in or not.
 	 *
 	 * @param consToken
-	 * 		the {@link ConsStruct} used to determine if a feature should be read in or not
+	 * 		the {@link ConsStructImpl} used to determine if a feature should be read in or not
 	 *
-	 * @return true if the provided {@link ConsStruct} is a feature that should be read in; false otherwise
+	 * @return true if the provided {@link ConsStructImpl} is a feature that should be read in; false otherwise
 	 */
-	private boolean isConsFeature(final ConsStruct consToken) {
+	private boolean isConsFeature(final ConsStructImpl consToken) {
 		final Iterator<LispStruct> iterator = consToken.iterator();
 		final LispStruct first = iterator.next();
 

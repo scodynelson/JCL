@@ -129,7 +129,7 @@ public final class NILStruct extends BooleanStruct implements ListStruct {
 
 	@Override
 	public ListStruct setProperty(final LispStruct indicator, final LispStruct newValue) {
-		return ConsStruct.valueOf(indicator, newValue);
+		return ConsStructImpl.valueOf(indicator, newValue);
 	}
 
 	@Override

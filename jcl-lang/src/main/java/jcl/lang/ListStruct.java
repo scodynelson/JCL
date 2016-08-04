@@ -5,7 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import jcl.lang.condition.exception.TypeErrorException;
-import jcl.lang.list.ConsStruct;
+import jcl.lang.list.ConsStructImpl;
 import jcl.lang.list.NILStruct;
 
 /**
@@ -196,7 +196,7 @@ public interface ListStruct extends SequenceStruct, Iterable<LispStruct> {
 	static ListStruct makeList(final Long size, final LispStruct initialElement) {
 		ListStruct result = NILStruct.INSTANCE;
 		for (long l = 0; l < size; l++) {
-			result = ConsStruct.valueOf(initialElement, result);
+			result = ConsStructImpl.valueOf(initialElement, result);
 		}
 		return result;
 	}

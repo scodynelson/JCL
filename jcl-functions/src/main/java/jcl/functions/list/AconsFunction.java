@@ -5,7 +5,7 @@ import jcl.lang.factory.LispStructFactory;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
-import jcl.lang.list.ConsStruct;
+import jcl.lang.list.ConsStructImpl;
 import jcl.lang.ListStruct;
 import org.springframework.stereotype.Component;
 
@@ -33,7 +33,7 @@ public final class AconsFunction extends CommonLispBuiltInFunctionStruct {
 		final LispStruct datum = arguments.getRequiredArgument(DATUM_ARGUMENT);
 		final ListStruct alist = arguments.getRequiredArgument(ALIST_ARGUMENT, ListStruct.class);
 
-		final ConsStruct pair = LispStructFactory.toCons(key, datum);
+		final ConsStructImpl pair = LispStructFactory.toCons(key, datum);
 		return LispStructFactory.toCons(pair, alist);
 	}
 }

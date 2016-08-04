@@ -42,7 +42,6 @@ import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.factory.LispStructFactory;
 import jcl.lang.function.FunctionStruct;
 import jcl.lang.function.expander.MacroFunctionExpanderInter;
-import jcl.lang.list.ConsStruct;
 import jcl.lang.ListStruct;
 import jcl.type.TypeBaseClass;
 import jcl.type.TypeFactory;
@@ -219,6 +218,14 @@ interface GenerationConstants {
 	String LISP_STRUCT_FACTORY_TO_INTEGER_METHOD_NAME = "toInteger";
 
 	String LISP_STRUCT_FACTORY_TO_INTEGER_METHOD_DESC = CodeGenerators.getMethodDescription(LispStructFactory.class, LISP_STRUCT_FACTORY_TO_INTEGER_METHOD_NAME, Apint.class);
+
+	String LISP_STRUCT_FACTORY_TO_CONS_CAR_METHOD_NAME = "toCons";
+
+	String LISP_STRUCT_FACTORY_TO_CONS_CAR_METHOD_DESC = CodeGenerators.getMethodDescription(LispStructFactory.class, LISP_STRUCT_FACTORY_TO_CONS_CAR_METHOD_NAME, LispStruct.class);
+
+	String LISP_STRUCT_FACTORY_TO_CONS_CAR_CDR_METHOD_NAME = "toCons";
+
+	String LISP_STRUCT_FACTORY_TO_CONS_CAR_CDR_METHOD_DESC = CodeGenerators.getMethodDescription(LispStructFactory.class, LISP_STRUCT_FACTORY_TO_CONS_CAR_CDR_METHOD_NAME, LispStruct.class, LispStruct.class);
 
 	String SYMBOL_STRUCT_NAME = Type.getInternalName(SymbolStruct.class);
 
@@ -437,16 +444,6 @@ interface GenerationConstants {
 	String THROW_EXCEPTION_GET_RESULT_FORM_METHOD_NAME = "getResultForm";
 
 	String THROW_EXCEPTION_GET_RESULT_FORM_METHOD_DESC = CodeGenerators.getMethodDescription(ThrowException.class, THROW_EXCEPTION_GET_RESULT_FORM_METHOD_NAME);
-
-	String CONS_STRUCT_NAME = Type.getInternalName(ConsStruct.class);
-
-	String CONS_STRUCT_VALUE_OF_CAR_METHOD_NAME = "valueOf";
-
-	String CONS_STRUCT_VALUE_OF_CAR_METHOD_DESC = CodeGenerators.getMethodDescription(ConsStruct.class, CONS_STRUCT_VALUE_OF_CAR_METHOD_NAME, LispStruct.class);
-
-	String CONS_STRUCT_VALUE_OF_CAR_CDR_METHOD_NAME = "valueOf";
-
-	String CONS_STRUCT_VALUE_OF_CAR_CDR_METHOD_DESC = CodeGenerators.getMethodDescription(ConsStruct.class, CONS_STRUCT_VALUE_OF_CAR_CDR_METHOD_NAME, LispStruct.class, LispStruct.class);
 
 	String LIST_STRUCT_NAME = Type.getInternalName(ListStruct.class);
 

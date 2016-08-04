@@ -10,7 +10,7 @@ import jcl.compiler.icg.GeneratorState;
 import jcl.compiler.icg.IntermediateCodeGenerator;
 import jcl.compiler.icg.JavaMethodBuilder;
 import jcl.lang.LispStruct;
-import jcl.lang.list.ConsStruct;
+import jcl.lang.list.ConsStructImpl;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,35 +18,35 @@ import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 /**
- * Class to generate {@link ConsStruct} objects dynamically by utilizing the {@link ConsStruct#car} and {@link
- * ConsStruct#cdr} of the provided {@link ConsStruct} input value.
+ * Class to generate {@link ConsStructImpl} objects dynamically by utilizing the {@link ConsStructImpl#car} and {@link
+ * ConsStructImpl#cdr} of the provided {@link ConsStructImpl} input value.
  */
 @Component
-final class ConsCodeGenerator implements CodeGenerator<ConsStruct> {
+final class ConsCodeGenerator implements CodeGenerator<ConsStructImpl> {
 
 	/**
-	 * {@link IntermediateCodeGenerator} used for generating the {@link ConsStruct} car and cdr values.
+	 * {@link IntermediateCodeGenerator} used for generating the {@link ConsStructImpl} car and cdr values.
 	 */
 	@Autowired
 	private IntermediateCodeGenerator codeGenerator;
 
 	/**
 	 * {@inheritDoc}
-	 * Generation method for {@link ConsStruct} objects, by performing the following operations:
+	 * Generation method for {@link ConsStructImpl} objects, by performing the following operations:
 	 * <ol>
-	 * <li>Building the {@link ConsStruct#car} value</li>
-	 * <li>Building the {@link ConsStruct#cdr} value</li>
-	 * <li>Constructing a new {@link ConsStruct} with the built car and cdr values</li>
+	 * <li>Building the {@link ConsStructImpl#car} value</li>
+	 * <li>Building the {@link ConsStructImpl#cdr} value</li>
+	 * <li>Constructing a new {@link ConsStructImpl} with the built car and cdr values</li>
 	 * </ol>
 	 *
 	 * @param input
-	 * 		the {@link ConsStruct} input value to generate code for
+	 * 		the {@link ConsStructImpl} input value to generate code for
 	 * @param generatorState
 	 * 		stateful object used to hold the current state of the code generation process
 	 */
 	@EventListener
-	public void onGeneratorEvent(final GeneratorEvent<ConsStruct> event) {
-		final ConsStruct input = event.getSource();
+	public void onGeneratorEvent(final GeneratorEvent<ConsStructImpl> event) {
+		final ConsStructImpl input = event.getSource();
 		final GeneratorState generatorState = event.getGeneratorState();
 
 		final JavaMethodBuilder methodBuilder = generatorState.getCurrentMethodBuilder();
@@ -62,15 +62,12 @@ final class ConsCodeGenerator implements CodeGenerator<ConsStruct> {
 		final int cdrStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, cdrStore);
 
-		mv.visitTypeInsn(Opcodes.NEW, GenerationConstants.CONS_STRUCT_NAME);
-		mv.visitInsn(Opcodes.DUP);
-
 		mv.visitVarInsn(Opcodes.ALOAD, carStore);
 		mv.visitVarInsn(Opcodes.ALOAD, cdrStore);
 		mv.visitMethodInsn(Opcodes.INVOKESTATIC,
-		                   GenerationConstants.CONS_STRUCT_NAME,
-		                   GenerationConstants.CONS_STRUCT_VALUE_OF_CAR_CDR_METHOD_NAME,
-		                   GenerationConstants.CONS_STRUCT_VALUE_OF_CAR_CDR_METHOD_DESC,
+		                   GenerationConstants.LISP_STRUCT_FACTORY_NAME,
+		                   GenerationConstants.LISP_STRUCT_FACTORY_TO_CONS_CAR_CDR_METHOD_NAME,
+		                   GenerationConstants.LISP_STRUCT_FACTORY_TO_CONS_CAR_CDR_METHOD_DESC,
 		                   false);
 	}
 }

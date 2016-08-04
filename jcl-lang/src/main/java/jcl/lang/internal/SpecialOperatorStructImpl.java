@@ -1,7 +1,6 @@
 package jcl.lang.internal;
 
 import jcl.lang.PackageStruct;
-import jcl.lang.SymbolStructImpl;
 import jcl.lang.statics.GlobalPackageStruct;
 
 public final class SpecialOperatorStructImpl extends SymbolStructImpl {

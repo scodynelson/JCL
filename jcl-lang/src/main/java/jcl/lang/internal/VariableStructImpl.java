@@ -2,7 +2,6 @@ package jcl.lang.internal;
 
 import jcl.lang.LispStruct;
 import jcl.lang.PackageStruct;
-import jcl.lang.SymbolStructImpl;
 
 public class VariableStructImpl<TYPE extends LispStruct> extends SymbolStructImpl {
 

@@ -10,7 +10,7 @@ import jcl.compiler.icg.GeneratorEvent;
 import jcl.compiler.icg.GeneratorState;
 import jcl.compiler.icg.JavaMethodBuilder;
 import jcl.lang.SymbolStruct;
-import jcl.lang.SymbolStructImpl;
+import jcl.lang.internal.SymbolStructImpl;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.springframework.context.event.EventListener;

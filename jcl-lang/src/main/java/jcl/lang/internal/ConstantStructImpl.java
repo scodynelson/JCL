@@ -3,7 +3,6 @@ package jcl.lang.internal;
 import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
 import jcl.lang.PackageStruct;
-import jcl.lang.SymbolStructImpl;
 import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.function.FunctionStruct;
 import jcl.lang.function.expander.SymbolMacroExpanderInter;

@@ -40,7 +40,7 @@ import jcl.lang.StringInputStreamStruct;
 import jcl.lang.StringOutputStreamStruct;
 import jcl.lang.StringStruct;
 import jcl.lang.SymbolStruct;
-import jcl.lang.SymbolStructImpl;
+import jcl.lang.internal.SymbolStructImpl;
 import jcl.lang.SynonymStreamStruct;
 import jcl.lang.TwoWayStreamStruct;
 import jcl.lang.URLStreamStruct;

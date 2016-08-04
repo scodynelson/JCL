@@ -11,7 +11,6 @@ import jcl.lang.PackageStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.statics.PrinterVariables;
 import jcl.lang.StringStruct;
-import jcl.lang.SymbolStructImpl;
 import jcl.lang.condition.exception.SimpleErrorException;
 import jcl.lang.pathname.PathnameStruct;
 import jcl.lang.statics.ReaderVariables;

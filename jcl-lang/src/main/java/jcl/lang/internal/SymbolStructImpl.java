@@ -1,11 +1,19 @@
-package jcl.lang;
+package jcl.lang.internal;
 
 import java.util.Stack;
 import java.util.function.Supplier;
 
 import com.ibm.icu.lang.UCharacter;
-import jcl.lang.internal.StringStructImpl;
-import jcl.lang.internal.CharacterStructImpl;
+import jcl.lang.BuiltInClassStruct;
+import jcl.lang.CharacterStruct;
+import jcl.lang.LispStruct;
+import jcl.lang.ListStruct;
+import jcl.lang.NILStruct;
+import jcl.lang.PackageStruct;
+import jcl.lang.PackageSymbolStruct;
+import jcl.lang.StringStruct;
+import jcl.lang.StructureClassStruct;
+import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.condition.exception.SimpleErrorException;
 import jcl.lang.function.FunctionStruct;

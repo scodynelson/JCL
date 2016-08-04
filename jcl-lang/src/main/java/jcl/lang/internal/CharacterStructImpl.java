@@ -8,7 +8,6 @@ import java.math.BigInteger;
 import java.util.Map;
 import java.util.function.Supplier;
 
-import jcl.lang.BuiltInClassStruct;
 import jcl.lang.CharacterStruct;
 import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;

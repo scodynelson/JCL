@@ -1,8 +1,9 @@
-package jcl.lang;
+package jcl.lang.internal;
 
 import java.util.Collections;
 import java.util.List;
 
+import jcl.lang.LispStruct;
 import jcl.type.ClassType;
 import jcl.type.LispType;
 import org.apache.commons.lang3.builder.EqualsBuilder;

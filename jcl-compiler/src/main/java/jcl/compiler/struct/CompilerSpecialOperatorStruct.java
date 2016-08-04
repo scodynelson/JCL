@@ -4,7 +4,7 @@
 
 package jcl.compiler.struct;
 
-import jcl.lang.StandardObjectStruct;
+import jcl.lang.internal.StandardObjectStruct;
 
 public abstract class CompilerSpecialOperatorStruct extends StandardObjectStruct {
 

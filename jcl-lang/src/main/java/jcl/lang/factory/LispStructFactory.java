@@ -31,7 +31,7 @@ import jcl.lang.InputStreamStruct;
 import jcl.lang.IntegerStruct;
 import jcl.lang.JavaStreamStruct;
 import jcl.lang.KeywordStruct;
-import jcl.lang.KeywordStructImpl;
+import jcl.lang.internal.KeywordStructImpl;
 import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
 import jcl.lang.NILStruct;

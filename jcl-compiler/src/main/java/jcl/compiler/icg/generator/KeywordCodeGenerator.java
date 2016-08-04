@@ -10,7 +10,7 @@ import jcl.compiler.icg.GeneratorState;
 import jcl.compiler.icg.JavaMethodBuilder;
 import jcl.lang.KeywordStruct;
 import jcl.lang.statics.GlobalPackageStruct;
-import jcl.lang.KeywordStructImpl;
+import jcl.lang.internal.KeywordStructImpl;
 import jcl.lang.PackageStruct;
 import jcl.lang.PackageSymbolStruct;
 import jcl.lang.SymbolStruct;

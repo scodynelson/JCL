@@ -15,6 +15,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
 
 import jcl.lang.condition.exception.PackageErrorException;
+import jcl.lang.internal.BuiltInClassStruct;
+import jcl.lang.internal.KeywordStructImpl;
 import jcl.lang.internal.SymbolStructImpl;
 import jcl.lang.statics.GlobalPackageStruct;
 import jcl.type.PackageType;

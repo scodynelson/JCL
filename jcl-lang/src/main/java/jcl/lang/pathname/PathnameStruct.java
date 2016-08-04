@@ -19,7 +19,7 @@ import java.util.function.Supplier;
 import java.util.regex.Pattern;
 
 import jcl.lang.BooleanStruct;
-import jcl.lang.BuiltInClassStruct;
+import jcl.lang.internal.BuiltInClassStruct;
 import jcl.lang.statics.PrinterVariables;
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.condition.exception.FileErrorException;

@@ -1,5 +1,6 @@
 package jcl.lang;
 
+import jcl.lang.internal.BooleanStructImpl;
 import jcl.type.TType;
 
 /**

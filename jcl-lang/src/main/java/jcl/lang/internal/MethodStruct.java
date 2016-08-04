@@ -1,5 +1,6 @@
-package jcl.lang;
+package jcl.lang.internal;
 
+import jcl.lang.LispStruct;
 import jcl.type.LispType;
 import jcl.type.MethodType;
 

@@ -4,7 +4,6 @@ import java.util.Stack;
 import java.util.function.Supplier;
 
 import com.ibm.icu.lang.UCharacter;
-import jcl.lang.BuiltInClassStruct;
 import jcl.lang.CharacterStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;

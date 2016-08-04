@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import jcl.lang.ArrayStruct;
-import jcl.lang.BuiltInClassStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.statics.PrinterVariables;
 import jcl.lang.condition.exception.SimpleErrorException;

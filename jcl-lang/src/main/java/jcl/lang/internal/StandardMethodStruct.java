@@ -1,4 +1,4 @@
-package jcl.lang;
+package jcl.lang.internal;
 
 import jcl.type.LispType;
 import jcl.type.StandardMethodType;

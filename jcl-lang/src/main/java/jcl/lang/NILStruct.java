@@ -7,6 +7,7 @@ import java.util.Spliterators;
 import java.util.stream.Stream;
 
 import jcl.lang.condition.exception.SimpleErrorException;
+import jcl.lang.internal.BooleanStructImpl;
 import jcl.lang.internal.ConsStructImpl;
 import jcl.type.NILType;
 import org.apache.commons.lang3.ArrayUtils;

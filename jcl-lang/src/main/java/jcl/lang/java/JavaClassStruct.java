@@ -4,7 +4,7 @@
 
 package jcl.lang.java;
 
-import jcl.lang.BuiltInClassStruct;
+import jcl.lang.internal.BuiltInClassStruct;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 

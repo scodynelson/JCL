@@ -1,7 +1,8 @@
-package jcl.lang;
+package jcl.lang.internal;
 
 import java.util.List;
 
+import jcl.lang.LispStruct;
 import jcl.type.BuiltInClassType;
 import jcl.type.LispType;
 

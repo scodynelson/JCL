@@ -4,6 +4,8 @@
 
 package jcl.lang;
 
+import jcl.lang.internal.KeywordStructImpl;
+
 /**
  * The {@link KeywordPackageStruct} is the object representation of a Lisp 'package' type specific for 'keyword'
  * symbols.

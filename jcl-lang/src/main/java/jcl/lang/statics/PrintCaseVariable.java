@@ -4,7 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import jcl.lang.KeywordStruct;
-import jcl.lang.KeywordStructImpl;
+import jcl.lang.internal.KeywordStructImpl;
 import jcl.lang.LispStruct;
 import jcl.lang.internal.VariableStructImpl;
 import jcl.lang.condition.exception.TypeErrorException;

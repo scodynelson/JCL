@@ -9,7 +9,6 @@ import java.math.BigInteger;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import jcl.lang.BuiltInClassStruct;
 import jcl.lang.HashTableStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.function.EquatorFunctionStruct;

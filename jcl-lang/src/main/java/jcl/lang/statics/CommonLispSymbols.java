@@ -3,7 +3,7 @@ package jcl.lang.statics;
 import jcl.lang.KeywordStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.internal.DeclarationStructImpl;
-import jcl.lang.KeywordStructImpl;
+import jcl.lang.internal.KeywordStructImpl;
 import jcl.lang.internal.SpecialOperatorStructImpl;
 
 public interface CommonLispSymbols {

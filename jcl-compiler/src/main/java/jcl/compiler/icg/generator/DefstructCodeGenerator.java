@@ -14,7 +14,7 @@ import jcl.compiler.icg.GeneratorState;
 import jcl.compiler.icg.JavaClassBuilder;
 import jcl.compiler.icg.JavaMethodBuilder;
 import jcl.compiler.struct.specialoperator.defstruct.DefstructStruct;
-import jcl.lang.StandardClassStruct;
+import jcl.lang.internal.StandardClassStruct;
 import jcl.lang.StructureClassStruct;
 import jcl.lang.StructureObjectStruct;
 import jcl.lang.SymbolStruct;

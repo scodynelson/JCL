@@ -1,6 +1,6 @@
-package jcl.lang;
+package jcl.lang.internal;
 
-import jcl.lang.internal.ConstantStructImpl;
+import jcl.lang.BooleanStruct;
 import jcl.lang.statics.GlobalPackageStruct;
 import jcl.type.LispType;
 

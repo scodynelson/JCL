@@ -11,7 +11,7 @@ import jcl.lang.SymbolStruct;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
-import jcl.lang.list.NILStruct;
+import jcl.lang.NILStruct;
 import jcl.lang.pathname.PathnameStruct;
 import jcl.lang.stream.DirectionType;
 import jcl.lang.stream.ExternalFormat;

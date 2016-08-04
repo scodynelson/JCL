@@ -27,7 +27,7 @@ import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.factory.LispStructFactory;
 import jcl.lang.function.FunctionStruct;
 import jcl.lang.function.parameterdsl.Parameters;
-import jcl.lang.list.NILStruct;
+import jcl.lang.NILStruct;
 import jcl.type.CompiledFunctionType;
 import jcl.type.LispType;
 

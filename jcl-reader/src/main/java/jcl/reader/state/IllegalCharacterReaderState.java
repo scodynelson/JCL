@@ -6,7 +6,7 @@ package jcl.reader.state;
 
 import jcl.lang.LispStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
-import jcl.lang.list.NILStruct;
+import jcl.lang.NILStruct;
 import jcl.lang.stream.ReadPeekResult;
 import jcl.reader.TokenBuilder;
 import jcl.util.CodePointConstants;

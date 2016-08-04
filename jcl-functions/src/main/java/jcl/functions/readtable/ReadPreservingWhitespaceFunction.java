@@ -11,7 +11,7 @@ import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
-import jcl.lang.list.NILStruct;
+import jcl.lang.NILStruct;
 import jcl.lang.readtable.Reader;
 import jcl.lang.InputStreamStruct;
 import jcl.lang.statics.StreamVariables;

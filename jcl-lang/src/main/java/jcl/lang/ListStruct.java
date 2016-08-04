@@ -5,8 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import jcl.lang.condition.exception.TypeErrorException;
-import jcl.lang.list.ConsStructImpl;
-import jcl.lang.list.NILStruct;
+import jcl.lang.internal.ConsStructImpl;
 
 /**
  * The {@link ListStruct} is the object representation of a Lisp 'list' type.

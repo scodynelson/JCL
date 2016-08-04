@@ -29,7 +29,7 @@ import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.factory.LispStructFactory;
 import jcl.lang.function.FunctionStruct;
 import jcl.lang.ListStruct;
-import jcl.lang.list.NILStruct;
+import jcl.lang.NILStruct;
 import org.apfloat.Apcomplex;
 import org.apfloat.Apfloat;
 import org.apfloat.Apint;

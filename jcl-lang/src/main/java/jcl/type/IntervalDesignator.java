@@ -7,7 +7,7 @@ package jcl.type;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
-import jcl.lang.number.NumberUtils;
+import jcl.util.NumberUtils;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.math3.fraction.BigFraction;
 

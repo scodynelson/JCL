@@ -16,7 +16,7 @@ import jcl.lang.PackageStruct;
 import jcl.lang.statics.PrinterVariables;
 import jcl.lang.StringStruct;
 import jcl.lang.statics.CharacterConstants;
-import jcl.lang.list.NILStruct;
+import jcl.lang.NILStruct;
 import jcl.lang.internal.number.IntegerStructImpl;
 import jcl.type.BaseCharType;
 import jcl.type.CharacterType;

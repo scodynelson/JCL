@@ -9,7 +9,7 @@ import jcl.lang.IntegerStruct;
 import jcl.lang.readtable.ReadtableStruct;
 import jcl.lang.TStruct;
 import jcl.lang.VariableStruct;
-import jcl.lang.list.NILStruct;
+import jcl.lang.NILStruct;
 import jcl.type.FloatType;
 import jcl.type.SingleFloatType;
 

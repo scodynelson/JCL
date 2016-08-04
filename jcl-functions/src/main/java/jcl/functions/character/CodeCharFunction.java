@@ -11,7 +11,7 @@ import jcl.lang.factory.LispStructFactory;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
-import jcl.lang.list.NILStruct;
+import jcl.lang.NILStruct;
 import org.springframework.stereotype.Component;
 
 /**

@@ -29,7 +29,7 @@ import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.java.JavaMethodStruct;
 import jcl.lang.java.JavaNameStruct;
 import jcl.lang.java.JavaObjectStruct;
-import jcl.lang.list.NILStruct;
+import jcl.lang.NILStruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

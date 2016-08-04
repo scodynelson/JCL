@@ -9,7 +9,7 @@ import java.math.BigInteger;
 
 import jcl.lang.BuiltInClassStruct;
 import jcl.lang.RandomStateStruct;
-import jcl.lang.number.NumberUtils;
+import jcl.util.NumberUtils;
 import jcl.type.RandomStateType;
 import org.apache.commons.lang3.RandomUtils;
 

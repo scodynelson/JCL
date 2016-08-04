@@ -4,7 +4,7 @@
 
 package jcl.reader.macrofunction;
 
-import jcl.lang.list.NILStruct;
+import jcl.lang.NILStruct;
 import jcl.lang.readtable.AttributeType;
 import jcl.lang.readtable.Reader;
 import jcl.lang.statics.ReaderVariables;

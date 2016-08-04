@@ -23,7 +23,7 @@ import jcl.lang.TStruct;
 import jcl.lang.factory.LispStructFactory;
 import jcl.lang.function.FunctionStruct;
 import jcl.lang.ListStruct;
-import jcl.lang.list.NILStruct;
+import jcl.lang.NILStruct;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.util.CheckClassAdapter;

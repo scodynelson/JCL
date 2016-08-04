@@ -12,7 +12,7 @@ import java.util.LinkedList;
 import jcl.lang.FloatStruct;
 import jcl.lang.NumberStruct;
 import jcl.lang.factory.LispStructFactory;
-import jcl.lang.number.NumberUtils;
+import jcl.util.NumberUtils;
 import jcl.lang.readtable.AttributeType;
 import jcl.reader.TokenAttribute;
 import jcl.reader.TokenBuilder;

@@ -29,7 +29,7 @@ import jcl.lang.LispStruct;
 import jcl.lang.PackageStruct;
 import jcl.lang.StringStruct;
 import jcl.lang.SymbolStruct;
-import jcl.lang.list.NILStruct;
+import jcl.lang.NILStruct;
 import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Label;

@@ -1,4 +1,4 @@
-package jcl.lang.number;
+package jcl.util;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;

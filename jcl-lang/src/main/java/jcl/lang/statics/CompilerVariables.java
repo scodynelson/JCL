@@ -10,7 +10,7 @@ import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
 import jcl.lang.VariableStruct;
 import jcl.lang.function.FunctionStruct;
-import jcl.lang.list.NILStruct;
+import jcl.lang.NILStruct;
 
 public interface CompilerVariables {
 

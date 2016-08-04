@@ -9,7 +9,7 @@ import jcl.lang.ListStruct;
 import jcl.lang.PackageStruct;
 import jcl.lang.VariableStruct;
 import jcl.lang.condition.exception.TypeErrorException;
-import jcl.lang.list.NILStruct;
+import jcl.lang.NILStruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

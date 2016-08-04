@@ -34,7 +34,7 @@ import jcl.lang.factory.LispStructFactory;
 import jcl.lang.function.FunctionStruct;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.ListStruct;
-import jcl.lang.list.NILStruct;
+import jcl.lang.NILStruct;
 import jcl.type.LispType;
 
 public abstract class CompiledMacroFunctionExpander<O extends LispStruct> extends MacroFunctionExpander<O> {

@@ -1,7 +1,6 @@
 package jcl.lang;
 
 import jcl.lang.condition.exception.ErrorException;
-import jcl.lang.list.NILStruct;
 
 /**
  * The {@link CharacterStruct} is the object representation of a Lisp 'character' type.

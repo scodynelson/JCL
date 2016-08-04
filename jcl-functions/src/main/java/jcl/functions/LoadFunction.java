@@ -26,7 +26,7 @@ import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.FunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
-import jcl.lang.list.NILStruct;
+import jcl.lang.NILStruct;
 import jcl.lang.pathname.PathnameStruct;
 import jcl.lang.statics.PathnameVariables;
 import jcl.lang.pathname.PathnameVersion;

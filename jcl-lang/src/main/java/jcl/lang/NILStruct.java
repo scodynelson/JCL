@@ -1,4 +1,4 @@
-package jcl.lang.list;
+package jcl.lang;
 
 import java.util.Collections;
 import java.util.Iterator;
@@ -6,11 +6,8 @@ import java.util.Spliterator;
 import java.util.Spliterators;
 import java.util.stream.Stream;
 
-import jcl.lang.BooleanStruct;
-import jcl.lang.LispStruct;
-import jcl.lang.ListStruct;
-import jcl.lang.ValuesStruct;
 import jcl.lang.condition.exception.SimpleErrorException;
+import jcl.lang.internal.ConsStructImpl;
 import jcl.type.NILType;
 import org.apache.commons.lang3.ArrayUtils;
 

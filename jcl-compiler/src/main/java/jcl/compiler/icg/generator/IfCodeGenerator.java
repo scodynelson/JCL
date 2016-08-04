@@ -12,7 +12,7 @@ import jcl.compiler.icg.JavaMethodBuilder;
 import jcl.compiler.struct.specialoperator.IfStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.ValuesStruct;
-import jcl.lang.list.NILStruct;
+import jcl.lang.NILStruct;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;

@@ -1,4 +1,4 @@
-package jcl.lang.list;
+package jcl.lang.internal;
 
 import java.util.HashSet;
 import java.util.Iterator;
@@ -13,6 +13,7 @@ import jcl.lang.BuiltInClassStruct;
 import jcl.lang.ConsStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
+import jcl.lang.NILStruct;
 import jcl.lang.ValuesStruct;
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.condition.exception.TypeErrorException;

@@ -9,7 +9,7 @@ import jcl.lang.IntegerStruct;
 import jcl.lang.KeywordStruct;
 import jcl.lang.TStruct;
 import jcl.lang.VariableStruct;
-import jcl.lang.list.NILStruct;
+import jcl.lang.NILStruct;
 
 public interface PrinterVariables {
 

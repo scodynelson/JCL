@@ -6,7 +6,7 @@ package jcl.lang.pathname;
 
 import jcl.lang.statics.CommonLispSymbols;
 import jcl.lang.LispStruct;
-import jcl.lang.list.NILStruct;
+import jcl.lang.NILStruct;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 

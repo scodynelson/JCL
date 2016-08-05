@@ -17,6 +17,7 @@ import java.util.function.Supplier;
 
 import jcl.lang.FileStreamStruct;
 import jcl.lang.LispStruct;
+import jcl.lang.PathnameStruct;
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.condition.exception.StreamErrorException;
 import jcl.lang.pathname.PathnameStructImpl;
@@ -120,7 +121,7 @@ public final class FileStreamStructImpl extends AbstractNativeStreamStructImpl i
 	}
 
 	@Override
-	public Supplier<PathnameStructImpl> asPathname() {
+	public Supplier<PathnameStruct> asPathname() {
 		return () -> {
 			final File file = path.toFile();
 			final String namestring = file.getAbsolutePath();

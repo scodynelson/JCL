@@ -10,14 +10,14 @@ import javax.annotation.PostConstruct;
 
 import jcl.functions.pathname.PathnameFunction;
 import jcl.lang.LispStruct;
+import jcl.lang.NILStruct;
+import jcl.lang.PathnameStruct;
 import jcl.lang.StringStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
 import jcl.lang.function.ReaderMacroFunction;
-import jcl.lang.NILStruct;
-import jcl.lang.pathname.PathnameStructImpl;
 import jcl.lang.readtable.Reader;
-import jcl.lang.statics.ReaderVariables;
 import jcl.lang.readtable.ReadtableStruct;
+import jcl.lang.statics.ReaderVariables;
 import jcl.util.CodePointConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -29,7 +29,7 @@ import org.springframework.stereotype.Component;
 public class SharpPReaderMacroFunction extends ReaderMacroFunction {
 
 	/**
-	 * {@link Autowired} {@link PathnameFunction} used for getting a new {@link PathnameStructImpl} instance from the read
+	 * {@link Autowired} {@link PathnameFunction} used for getting a new {@link PathnameStruct} instance from the read
 	 * in pathname namestring.
 	 */
 	@Autowired

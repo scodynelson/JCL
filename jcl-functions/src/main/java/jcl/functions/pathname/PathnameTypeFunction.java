@@ -4,16 +4,16 @@
 
 package jcl.functions.pathname;
 
-import jcl.lang.statics.CommonLispSymbols;
 import jcl.lang.LispStruct;
+import jcl.lang.NILStruct;
+import jcl.lang.PathnameStruct;
 import jcl.lang.factory.LispStructFactory;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
-import jcl.lang.NILStruct;
 import jcl.lang.pathname.PathnameComponentType;
-import jcl.lang.pathname.PathnameStructImpl;
 import jcl.lang.pathname.PathnameType;
+import jcl.lang.statics.CommonLispSymbols;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -39,7 +39,7 @@ public final class PathnameTypeFunction extends CommonLispBuiltInFunctionStruct 
 	public LispStruct apply(final Arguments arguments) {
 
 		final LispStruct pathspec = arguments.getRequiredArgument(PATHSPEC_ARGUMENT);
-		final PathnameStructImpl pathname = pathnameFunction.pathname(pathspec);
+		final PathnameStruct pathname = pathnameFunction.pathname(pathspec);
 		final PathnameType pathnameType = pathname.getPathnameType();
 		if (pathnameType == null) {
 			return NILStruct.INSTANCE;

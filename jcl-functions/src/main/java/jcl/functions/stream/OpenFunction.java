@@ -5,14 +5,14 @@
 package jcl.functions.stream;
 
 import jcl.lang.IntegerStruct;
-import jcl.lang.statics.CommonLispSymbols;
 import jcl.lang.LispStruct;
+import jcl.lang.NILStruct;
+import jcl.lang.PathnameStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
-import jcl.lang.NILStruct;
-import jcl.lang.pathname.PathnameStructImpl;
+import jcl.lang.statics.CommonLispSymbols;
 import jcl.lang.stream.DirectionType;
 import jcl.lang.stream.ExternalFormat;
 import jcl.lang.stream.FileStreamStructs;
@@ -42,7 +42,7 @@ public final class OpenFunction extends CommonLispBuiltInFunctionStruct {
 
 	@Override
 	public LispStruct apply(final Arguments arguments) {
-		final PathnameStructImpl pathname = arguments.getRequiredArgument(FILESPEC_ARGUMENT).asPathname().get();
+		final PathnameStruct pathname = arguments.getRequiredArgument(FILESPEC_ARGUMENT).asPathname().get();
 
 		final SymbolStruct directionSymbol = arguments.getKeyArgument(CommonLispSymbols.DIRECTION_KEYWORD, SymbolStruct.class);
 		final DirectionType directionType = DirectionType.fromValue(directionSymbol);

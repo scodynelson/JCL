@@ -31,13 +31,13 @@ import jcl.lang.InputStreamStruct;
 import jcl.lang.IntegerStruct;
 import jcl.lang.JavaStreamStruct;
 import jcl.lang.KeywordStruct;
-import jcl.lang.PackageStruct;
-import jcl.lang.internal.KeywordStructImpl;
 import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
+import jcl.lang.LogicalPathnameStruct;
 import jcl.lang.NILStruct;
 import jcl.lang.OutputStreamStruct;
-import jcl.lang.internal.PackageStructImpl;
+import jcl.lang.PackageStruct;
+import jcl.lang.PathnameStruct;
 import jcl.lang.RandomStateStruct;
 import jcl.lang.RatioStruct;
 import jcl.lang.RealStruct;
@@ -56,6 +56,8 @@ import jcl.lang.internal.BitVectorStructImpl;
 import jcl.lang.internal.CharacterStructImpl;
 import jcl.lang.internal.ConsStructImpl;
 import jcl.lang.internal.HashTableStructImpl;
+import jcl.lang.internal.KeywordStructImpl;
+import jcl.lang.internal.PackageStructImpl;
 import jcl.lang.internal.StringStructImpl;
 import jcl.lang.internal.SymbolStructImpl;
 import jcl.lang.internal.VariableStructImpl;
@@ -546,12 +548,12 @@ public final class LispStructFactory {
 	 * Logical Pathname
 	 */
 
-	public static LogicalPathnameStructImpl toLogicalPathname(final String pathname) {
+	public static LogicalPathnameStruct toLogicalPathname(final String pathname) {
 		return LogicalPathnameStructImpl.valueOf(pathname);
 	}
 
-	public static LogicalPathnameStructImpl toLogicalPathname(final PathnameHost host, final PathnameDirectory directory, final PathnameName name,
-	                                                          final PathnameType type, final PathnameVersion version) {
+	public static LogicalPathnameStruct toLogicalPathname(final PathnameHost host, final PathnameDirectory directory, final PathnameName name,
+	                                                      final PathnameType type, final PathnameVersion version) {
 		return LogicalPathnameStructImpl.valueOf(host, directory, name, type, version);
 	}
 
@@ -587,24 +589,24 @@ public final class LispStructFactory {
 	 * Pathname
 	 */
 
-	public static PathnameStructImpl toPathname(final Path path) {
+	public static PathnameStruct toPathname(final Path path) {
 		return PathnameStructImpl.valueOf(path);
 	}
 
-	public static PathnameStructImpl toPathname(final File file) {
+	public static PathnameStruct toPathname(final File file) {
 		return PathnameStructImpl.valueOf(file);
 	}
 
-	public static PathnameStructImpl toPathname(final String pathname) {
+	public static PathnameStruct toPathname(final String pathname) {
 		return PathnameStructImpl.valueOf(pathname);
 	}
 
-	public static PathnameStructImpl toPathname(final URI uri) {
+	public static PathnameStruct toPathname(final URI uri) {
 		return PathnameStructImpl.valueOf(uri);
 	}
 
-	public static PathnameStructImpl toPathname(final PathnameHost host, final PathnameDevice device, final PathnameDirectory directory,
-	                                            final PathnameName name, final PathnameType type, final PathnameVersion version) {
+	public static PathnameStruct toPathname(final PathnameHost host, final PathnameDevice device, final PathnameDirectory directory,
+	                                        final PathnameName name, final PathnameType type, final PathnameVersion version) {
 		return PathnameStructImpl.valueOf(host, device, directory, name, type, version);
 	}
 

@@ -6,23 +6,23 @@ package jcl.functions.pathname;
 
 import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
+import jcl.lang.LogicalPathnameStruct;
+import jcl.lang.NILStruct;
+import jcl.lang.PathnameStruct;
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.factory.LispStructFactory;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
-import jcl.lang.NILStruct;
-import jcl.lang.pathname.LogicalPathnameStructImpl;
 import jcl.lang.pathname.PathnameComponentType;
 import jcl.lang.pathname.PathnameDevice;
 import jcl.lang.pathname.PathnameDirectory;
 import jcl.lang.pathname.PathnameHost;
 import jcl.lang.pathname.PathnameName;
-import jcl.lang.pathname.PathnameStructImpl;
 import jcl.lang.pathname.PathnameType;
-import jcl.lang.statics.PathnameVariables;
 import jcl.lang.pathname.PathnameVersion;
 import jcl.lang.pathname.PathnameVersionComponentType;
+import jcl.lang.statics.PathnameVariables;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -62,16 +62,16 @@ public final class MergePathnamesFunction extends CommonLispBuiltInFunctionStruc
 		return mergePathnames(pathname, defaultPathspec, defaultVersion);
 	}
 
-	public PathnameStructImpl mergePathnames(final LispStruct pathSpec, final LispStruct defaultPathspec) {
+	public PathnameStruct mergePathnames(final LispStruct pathSpec, final LispStruct defaultPathspec) {
 		final PathnameVersion defaultVersion = new PathnameVersion(PathnameVersionComponentType.NEWEST);
 		return mergePathnames(pathSpec, defaultPathspec, defaultVersion);
 	}
 
-	public PathnameStructImpl mergePathnames(final LispStruct pathSpec, final LispStruct defaultPathspec,
+	public PathnameStruct mergePathnames(final LispStruct pathSpec, final LispStruct defaultPathspec,
 	                                         final PathnameVersion defaultVersion) {
 
-		final PathnameStructImpl pathname = pathnameFunction.pathname(pathSpec);
-		final PathnameStructImpl defaultPathname = pathnameFunction.pathname(defaultPathspec);
+		final PathnameStruct pathname = pathnameFunction.pathname(pathSpec);
+		final PathnameStruct defaultPathname = pathnameFunction.pathname(defaultPathspec);
 
 		PathnameHost mergedPathnameHost = pathname.getPathnameHost();
 		PathnameDevice mergedPathnameDevice = pathname.getPathnameDevice();
@@ -101,7 +101,7 @@ public final class MergePathnamesFunction extends CommonLispBuiltInFunctionStruc
 			mergedPathnameVersion = defaultVersion;
 		}
 
-		if (pathname instanceof LogicalPathnameStructImpl) {
+		if (pathname instanceof LogicalPathnameStruct) {
 			return LispStructFactory.toLogicalPathname(mergedPathnameHost, mergedPathnameDirectory, mergedPathnameName, mergedPathnameType, mergedPathnameVersion);
 		} else {
 			return LispStructFactory.toPathname(mergedPathnameHost, mergedPathnameDevice, mergedPathnameDirectory, mergedPathnameName, mergedPathnameType, mergedPathnameVersion);

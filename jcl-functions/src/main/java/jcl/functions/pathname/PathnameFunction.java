@@ -9,13 +9,13 @@ import java.nio.file.Path;
 
 import jcl.lang.FileStreamStruct;
 import jcl.lang.LispStruct;
+import jcl.lang.PathnameStruct;
 import jcl.lang.StringStruct;
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.factory.LispStructFactory;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
-import jcl.lang.pathname.PathnameStructImpl;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -39,12 +39,12 @@ public final class PathnameFunction extends CommonLispBuiltInFunctionStruct {
 		return pathname(pathspec);
 	}
 
-	public PathnameStructImpl pathname(final LispStruct pathnameDesignator) {
+	public PathnameStruct pathname(final LispStruct pathnameDesignator) {
 
-		final PathnameStructImpl pathname;
+		final PathnameStruct pathname;
 		final String namestring;
-		if (pathnameDesignator instanceof PathnameStructImpl) {
-			pathname = (PathnameStructImpl) pathnameDesignator;
+		if (pathnameDesignator instanceof PathnameStruct) {
+			pathname = (PathnameStruct) pathnameDesignator;
 		} else if (pathnameDesignator instanceof StringStruct) {
 			final StringStruct namestringStruct = (StringStruct) pathnameDesignator;
 			namestring = namestringStruct.getAsJavaString();

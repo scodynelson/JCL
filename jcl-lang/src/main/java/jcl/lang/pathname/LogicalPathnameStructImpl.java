@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.regex.Pattern;
 
+import jcl.lang.LogicalPathnameStruct;
+import jcl.lang.PathnameStruct;
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.type.LogicalPathnameType;
 import org.slf4j.Logger;
@@ -17,7 +19,7 @@ import org.slf4j.LoggerFactory;
 /**
  * The {@link LogicalPathnameStructImpl} is the object representation of a Lisp 'logical-pathname' type.
  */
-public class LogicalPathnameStructImpl extends PathnameStructImpl {
+public final class LogicalPathnameStructImpl extends PathnameStructImpl implements LogicalPathnameStruct {
 
 	/**
 	 * {@link Pattern} used to parse pathname words.
@@ -98,11 +100,11 @@ public class LogicalPathnameStructImpl extends PathnameStructImpl {
 		super(LogicalPathnameType.INSTANCE, host, null, directory, name, type, version, getURIFromComponents(host, null, directory, name, type, version));
 	}
 
-	public static LogicalPathnameStructImpl valueOf(final String pathname) {
+	public static LogicalPathnameStruct valueOf(final String pathname) {
 		return new LogicalPathnameStructImpl(pathname);
 	}
 
-	public static LogicalPathnameStructImpl valueOf(final PathnameHost host, final PathnameDirectory directory, final PathnameName name,
+	public static LogicalPathnameStruct valueOf(final PathnameHost host, final PathnameDirectory directory, final PathnameName name,
 	                                                final PathnameType type, final PathnameVersion version) {
 		return new LogicalPathnameStructImpl(host, directory, name, type, version);
 	}
@@ -352,7 +354,8 @@ public class LogicalPathnameStructImpl extends PathnameStructImpl {
 		return pathname.substring(versionMarkerIndex + 1);
 	}
 
-	public PathnameStructImpl translateLogicalPathname() {
+	@Override
+	public PathnameStruct translateLogicalPathname() {
 		/*
 		(let* ((host (pathname-host pathname))
             (translations (logical-pathname-translations host)))

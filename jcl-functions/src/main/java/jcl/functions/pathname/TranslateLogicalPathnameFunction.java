@@ -5,13 +5,13 @@
 package jcl.functions.pathname;
 
 import jcl.lang.LispStruct;
+import jcl.lang.LogicalPathnameStruct;
+import jcl.lang.PathnameStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.SynonymStreamStruct;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
-import jcl.lang.pathname.LogicalPathnameStructImpl;
-import jcl.lang.pathname.PathnameStructImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -38,11 +38,11 @@ public final class TranslateLogicalPathnameFunction extends CommonLispBuiltInFun
 		return translateLogicalPathname(pathspec);
 	}
 
-	public PathnameStructImpl translateLogicalPathname(final LispStruct pathnameDesignator) {
+	public PathnameStruct translateLogicalPathname(final LispStruct pathnameDesignator) {
 
-		final PathnameStructImpl pathname;
-		if (pathnameDesignator instanceof LogicalPathnameStructImpl) {
-			final LogicalPathnameStructImpl logicalPathname = (LogicalPathnameStructImpl) pathnameDesignator;
+		final PathnameStruct pathname;
+		if (pathnameDesignator instanceof LogicalPathnameStruct) {
+			final LogicalPathnameStruct logicalPathname = (LogicalPathnameStruct) pathnameDesignator;
 			pathname = logicalPathname.translateLogicalPathname();
 		} else if (pathnameDesignator instanceof SynonymStreamStruct) {
 			final SynonymStreamStruct synonymStream = (SynonymStreamStruct) pathnameDesignator;

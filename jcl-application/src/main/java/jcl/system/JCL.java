@@ -9,14 +9,14 @@ import jcl.functions.CompileFileFunction;
 import jcl.functions.FuncallFunction;
 import jcl.functions.LoadFunction;
 import jcl.functions.pathname.MergePathnamesFunction;
-import jcl.lang.statics.CompilerVariables;
 import jcl.lang.JavaStreamStruct;
+import jcl.lang.PathnameStruct;
 import jcl.lang.TwoWayStreamStruct;
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.factory.LispStructFactory;
 import jcl.lang.pathname.PathnameName;
-import jcl.lang.pathname.PathnameStructImpl;
 import jcl.lang.pathname.PathnameType;
+import jcl.lang.statics.CompilerVariables;
 import jcl.lang.statics.StreamVariables;
 import jcl.system.repl.ReadEvalPrint;
 import jcl.util.SimpleThreadScope;
@@ -103,14 +103,14 @@ public class JCL implements ApplicationRunner {
 		final String destDir = args.getOptionValues("compileFileDestDir").get(0);
 
 		for (final String fileName : sourceFiles) {
-			final PathnameStructImpl sourceFile = LispStructFactory.toPathname(fileName);
+			final PathnameStruct sourceFile = LispStructFactory.toPathname(fileName);
 
 			final PathnameName pathnameName = sourceFile.getPathnameName();
 			final PathnameType pathnameType = new PathnameType("jar");
-			final PathnameStructImpl tempPathname = LispStructFactory.toPathname(null, null, null, pathnameName, pathnameType, null);
+			final PathnameStruct tempPathname = LispStructFactory.toPathname(null, null, null, pathnameName, pathnameType, null);
 
-			final PathnameStructImpl destDirectory = LispStructFactory.toPathname(destDir);
-			final PathnameStructImpl newSourceFile = mergePathnamesFunction.mergePathnames(destDirectory, tempPathname);
+			final PathnameStruct destDirectory = LispStructFactory.toPathname(destDir);
+			final PathnameStruct newSourceFile = mergePathnamesFunction.mergePathnames(destDirectory, tempPathname);
 
 			compileFileFunction.compileFile(sourceFile, newSourceFile, true, true);
 		}
@@ -119,7 +119,7 @@ public class JCL implements ApplicationRunner {
 	private void loadLispFiles() {
 		CompileForm.OUTPUT_FILE = false;
 		for (final String lispFileToLoad : lispFilesToLoad) {
-			final PathnameStructImpl pathname = LispStructFactory.toPathname(lispFileToLoad);
+			final PathnameStruct pathname = LispStructFactory.toPathname(lispFileToLoad);
 			loadFunction.load(pathname, false, false, true);
 		}
 		CompileForm.OUTPUT_FILE = true;

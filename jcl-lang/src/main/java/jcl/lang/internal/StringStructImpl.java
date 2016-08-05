@@ -8,14 +8,15 @@ import java.util.stream.Collectors;
 import com.ibm.icu.lang.UCharacter;
 import jcl.lang.CharacterStruct;
 import jcl.lang.PackageStruct;
-import jcl.lang.SymbolStruct;
-import jcl.lang.statics.PrinterVariables;
+import jcl.lang.PathnameStruct;
 import jcl.lang.StringStruct;
+import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.SimpleErrorException;
 import jcl.lang.pathname.PathnameStructImpl;
-import jcl.lang.statics.ReaderVariables;
 import jcl.lang.readtable.ReadtableStruct;
 import jcl.lang.readtable.SyntaxType;
+import jcl.lang.statics.PrinterVariables;
+import jcl.lang.statics.ReaderVariables;
 import jcl.type.BaseCharType;
 import jcl.type.BaseStringType;
 import jcl.type.CharacterType;
@@ -136,7 +137,7 @@ public final class StringStructImpl extends VectorStructImpl<CharacterStruct> im
 	}
 
 	@Override
-	public Supplier<PathnameStructImpl> asPathname() {
+	public Supplier<PathnameStruct> asPathname() {
 		return () -> {
 			final String namestring = getAsJavaString();
 			return PathnameStructImpl.valueOf(namestring);

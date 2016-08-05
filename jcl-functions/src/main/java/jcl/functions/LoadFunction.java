@@ -13,12 +13,11 @@ import jcl.compiler.functions.EvalFunction;
 import jcl.functions.pathname.MergePathnamesFunction;
 import jcl.functions.readtable.ReadFunction;
 import jcl.lang.BooleanStruct;
-import jcl.lang.PackageStruct;
-import jcl.lang.statics.CommonLispSymbols;
-import jcl.lang.statics.CompilerVariables;
 import jcl.lang.FileStreamStruct;
 import jcl.lang.LispStruct;
-import jcl.lang.statics.PackageVariables;
+import jcl.lang.NILStruct;
+import jcl.lang.PackageStruct;
+import jcl.lang.PathnameStruct;
 import jcl.lang.TStruct;
 import jcl.lang.condition.exception.FileErrorException;
 import jcl.lang.factory.LispStructFactory;
@@ -26,13 +25,14 @@ import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.FunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
-import jcl.lang.NILStruct;
-import jcl.lang.pathname.PathnameStructImpl;
-import jcl.lang.statics.PathnameVariables;
 import jcl.lang.pathname.PathnameVersion;
 import jcl.lang.pathname.PathnameVersionComponentType;
-import jcl.lang.statics.ReaderVariables;
 import jcl.lang.readtable.ReadtableStruct;
+import jcl.lang.statics.CommonLispSymbols;
+import jcl.lang.statics.CompilerVariables;
+import jcl.lang.statics.PackageVariables;
+import jcl.lang.statics.PathnameVariables;
+import jcl.lang.statics.ReaderVariables;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -105,7 +105,7 @@ public final class LoadFunction extends CommonLispBuiltInFunctionStruct {
 		FileStreamStruct filespecFileStream = null;
 
 		final Path filespecPath;
-		final PathnameStructImpl filespecPathname;
+		final PathnameStruct filespecPathname;
 
 		// NOTE: optimizations if the filespec is already a FileStreamStruct
 		if (filespec instanceof FileStreamStruct) {
@@ -113,7 +113,7 @@ public final class LoadFunction extends CommonLispBuiltInFunctionStruct {
 			filespecPath = filespecFileStream.getPath();
 			filespecPathname = LispStructFactory.toPathname(filespecPath);
 		} else {
-			final PathnameStructImpl defaultPathspec = PathnameVariables.DEFAULT_PATHNAME_DEFAULTS.getVariableValue();
+			final PathnameStruct defaultPathspec = PathnameVariables.DEFAULT_PATHNAME_DEFAULTS.getVariableValue();
 			final PathnameVersion nilVersion = new PathnameVersion(PathnameVersionComponentType.NIL);
 			filespecPathname = mergePathnamesFunction.mergePathnames(filespec, defaultPathspec, nilVersion);
 			final File pathnameFile = new File(filespecPathname.getNamestring());
@@ -133,7 +133,7 @@ public final class LoadFunction extends CommonLispBuiltInFunctionStruct {
 
 		CompilerVariables.COMPILE_FILE_PATHNAME.setValue(filespecPathname);
 		final Path filespecAbsolutePath = filespecPath.toAbsolutePath();
-		final PathnameStructImpl filespecTruename = LispStructFactory.toPathname(filespecAbsolutePath);
+		final PathnameStruct filespecTruename = LispStructFactory.toPathname(filespecAbsolutePath);
 		CompilerVariables.COMPILE_FILE_TRUENAME.setValue(filespecTruename);
 
 		final ReadtableStruct previousReadtable = ReaderVariables.READTABLE.getVariableValue();

@@ -19,10 +19,12 @@ import java.util.function.Supplier;
 import java.util.regex.Pattern;
 
 import jcl.lang.BooleanStruct;
-import jcl.lang.internal.BuiltInClassStruct;
-import jcl.lang.statics.PrinterVariables;
+import jcl.lang.LogicalPathnameStruct;
+import jcl.lang.PathnameStruct;
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.condition.exception.FileErrorException;
+import jcl.lang.internal.BuiltInClassStruct;
+import jcl.lang.statics.PrinterVariables;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.SystemUtils;
@@ -30,7 +32,7 @@ import org.apache.commons.lang3.SystemUtils;
 /**
  * The {@link PathnameStructImpl} is the object representation of a Lisp 'pathname' type.
  */
-public class PathnameStructImpl extends BuiltInClassStruct {
+public class PathnameStructImpl extends BuiltInClassStruct implements PathnameStruct {
 
 	private static final String CURRENT_DIR_STRING = ".";
 
@@ -220,38 +222,40 @@ public class PathnameStructImpl extends BuiltInClassStruct {
 		this.uri = uri;
 	}
 
-	public static PathnameStructImpl valueOf(final Path path) {
+	public static PathnameStruct valueOf(final Path path) {
 		return new PathnameStructImpl(path);
 	}
 
-	public static PathnameStructImpl valueOf(final File file) {
+	public static PathnameStruct valueOf(final File file) {
 		return new PathnameStructImpl(file);
 	}
 
-	public static PathnameStructImpl valueOf(final String pathname) {
+	public static PathnameStruct valueOf(final String pathname) {
 		return new PathnameStructImpl(pathname);
 	}
 
-	public static PathnameStructImpl valueOf(final URI uri) {
+	public static PathnameStruct valueOf(final URI uri) {
 		return new PathnameStructImpl(uri);
 	}
 
-	public static PathnameStructImpl valueOf(final PathnameHost host, final PathnameDevice device, final PathnameDirectory directory,
+	public static PathnameStruct valueOf(final PathnameHost host, final PathnameDevice device, final PathnameDirectory directory,
 	                                         final PathnameName name, final PathnameType type, final PathnameVersion version) {
 		return new PathnameStructImpl(host, device, directory, name, type, version);
 	}
 
 	@Override
-	public Supplier<PathnameStructImpl> asPathname() {
+	public Supplier<PathnameStruct> asPathname() {
 		return () -> this;
 	}
 
+	@Override
 	public Path getPath() {
 		final String namestring = getNamestring();
 		final File file = new File(namestring);
 		return file.toPath();
 	}
 
+	@Override
 	public boolean exists() {
 		final String namestring = getNamestring();
 		final File file = new File(namestring);
@@ -488,65 +492,37 @@ public class PathnameStructImpl extends BuiltInClassStruct {
 		return URI.create(pathname);
 	}
 
-	/**
-	 * Getter for pathname {@link #host} property.
-	 *
-	 * @return pathname {@link #host} property
-	 */
+	@Override
 	public PathnameHost getPathnameHost() {
 		return host;
 	}
 
-	/**
-	 * Getter for pathname {@link #device} property.
-	 *
-	 * @return pathname {@link #device} property
-	 */
+	@Override
 	public PathnameDevice getPathnameDevice() {
 		return device;
 	}
 
-	/**
-	 * Getter for pathname {@link #directory} property.
-	 *
-	 * @return pathname {@link #directory} property
-	 */
+	@Override
 	public PathnameDirectory getPathnameDirectory() {
 		return directory;
 	}
 
-	/**
-	 * Getter for pathname {@link #name} property.
-	 *
-	 * @return pathname {@link #name} property
-	 */
+	@Override
 	public PathnameName getPathnameName() {
 		return name;
 	}
 
-	/**
-	 * Getter for pathname {@link #type} property.
-	 *
-	 * @return pathname {@link #type} property
-	 */
+	@Override
 	public PathnameType getPathnameType() {
 		return type;
 	}
 
-	/**
-	 * Getter for pathname {@link #version} property.
-	 *
-	 * @return pathname {@link #version} property
-	 */
+	@Override
 	public PathnameVersion getPathnameVersion() {
 		return version;
 	}
 
-	/**
-	 * Getter for pathname {@link #uri} property.
-	 *
-	 * @return pathname {@link #uri} property
-	 */
+	@Override
 	public URI getUri() {
 		return uri;
 	}
@@ -666,6 +642,7 @@ public class PathnameStructImpl extends BuiltInClassStruct {
 		return getURIFromPathname(stringBuilder.toString());
 	}
 
+	@Override
 	public String getNamestring() {
 		return uri.toString();
 	}
@@ -852,7 +829,7 @@ public class PathnameStructImpl extends BuiltInClassStruct {
 		final StringBuilder sb = new StringBuilder();
 		final String hostString = host.getHost();
 		if (hostString != null) {
-			if (this instanceof LogicalPathnameStructImpl) {
+			if (this instanceof LogicalPathnameStruct) {
 				sb.append(hostString);
 				sb.append(':');
 			} else {
@@ -864,7 +841,7 @@ public class PathnameStructImpl extends BuiltInClassStruct {
 		final String deviceString = device.getDevice();
 		if (deviceString != null) {
 			sb.append(deviceString);
-			if ((this instanceof LogicalPathnameStructImpl) || (hostString == null)) {
+			if ((this instanceof LogicalPathnameStruct) || (hostString == null)) {
 				sb.append(':'); // non-UNC paths
 			}
 		} else {
@@ -895,7 +872,7 @@ public class PathnameStructImpl extends BuiltInClassStruct {
 			sb.append('*');
 		}
 
-		if (this instanceof LogicalPathnameStructImpl) {
+		if (this instanceof LogicalPathnameStruct) {
 			final Integer versionValue = version.getVersion();
 			if (versionValue != null) {
 				sb.append('.');

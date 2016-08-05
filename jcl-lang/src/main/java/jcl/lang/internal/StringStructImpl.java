@@ -12,7 +12,6 @@ import jcl.lang.PathnameStruct;
 import jcl.lang.StringStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.SimpleErrorException;
-import jcl.lang.pathname.PathnameStructImpl;
 import jcl.lang.readtable.ReadtableStruct;
 import jcl.lang.readtable.SyntaxType;
 import jcl.lang.statics.PrinterVariables;

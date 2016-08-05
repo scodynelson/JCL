@@ -20,7 +20,7 @@ import jcl.lang.LispStruct;
 import jcl.lang.PathnameStruct;
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.condition.exception.StreamErrorException;
-import jcl.lang.pathname.PathnameStructImpl;
+import jcl.lang.internal.PathnameStructImpl;
 import jcl.lang.stream.ExternalFormat;
 import jcl.lang.stream.PeekType;
 import jcl.lang.stream.ReadPeekResult;

@@ -6,7 +6,7 @@ package jcl.lang.statics;
 
 import jcl.lang.PathnameStruct;
 import jcl.lang.internal.VariableStructImpl;
-import jcl.lang.pathname.PathnameStructImpl;
+import jcl.lang.internal.PathnameStructImpl;
 
 public interface PathnameVariables {
 

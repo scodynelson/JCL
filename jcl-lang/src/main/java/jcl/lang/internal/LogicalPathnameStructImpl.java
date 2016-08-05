@@ -2,7 +2,7 @@
  * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
  */
 
-package jcl.lang.pathname;
+package jcl.lang.internal;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,6 +12,17 @@ import java.util.regex.Pattern;
 import jcl.lang.LogicalPathnameStruct;
 import jcl.lang.PathnameStruct;
 import jcl.lang.condition.exception.TypeErrorException;
+import jcl.lang.pathname.PathnameComponentType;
+import jcl.lang.pathname.PathnameDirectory;
+import jcl.lang.pathname.PathnameDirectoryComponent;
+import jcl.lang.pathname.PathnameDirectoryLevel;
+import jcl.lang.pathname.PathnameDirectoryLevelType;
+import jcl.lang.pathname.PathnameDirectoryType;
+import jcl.lang.pathname.PathnameHost;
+import jcl.lang.pathname.PathnameName;
+import jcl.lang.pathname.PathnameType;
+import jcl.lang.pathname.PathnameVersion;
+import jcl.lang.pathname.PathnameVersionComponentType;
 import jcl.type.LogicalPathnameType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

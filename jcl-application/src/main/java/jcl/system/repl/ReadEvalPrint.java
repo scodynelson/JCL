@@ -42,19 +42,19 @@ public class ReadEvalPrint {
 
 	public void funcall(final ApplicationArguments args) {
 		try {
-			REPLVariables.DASH.bindDynamicValue(NILStruct.INSTANCE);
+			REPLVariables.DASH.setValue(NILStruct.INSTANCE);
 
-			REPLVariables.PLUS.bindDynamicValue(NILStruct.INSTANCE);
-			REPLVariables.PLUS_PLUS.bindDynamicValue(NILStruct.INSTANCE);
-			REPLVariables.PLUS_PLUS_PLUS.bindDynamicValue(NILStruct.INSTANCE);
+			REPLVariables.PLUS.setValue(NILStruct.INSTANCE);
+			REPLVariables.PLUS_PLUS.setValue(NILStruct.INSTANCE);
+			REPLVariables.PLUS_PLUS_PLUS.setValue(NILStruct.INSTANCE);
 
-			REPLVariables.SLASH.bindDynamicValue(NILStruct.INSTANCE);
-			REPLVariables.SLASH_SLASH.bindDynamicValue(NILStruct.INSTANCE);
-			REPLVariables.SLASH_SLASH_SLASH.bindDynamicValue(NILStruct.INSTANCE);
+			REPLVariables.SLASH.setValue(NILStruct.INSTANCE);
+			REPLVariables.SLASH_SLASH.setValue(NILStruct.INSTANCE);
+			REPLVariables.SLASH_SLASH_SLASH.setValue(NILStruct.INSTANCE);
 
-			REPLVariables.STAR.bindDynamicValue(NILStruct.INSTANCE);
-			REPLVariables.STAR_STAR.bindDynamicValue(NILStruct.INSTANCE);
-			REPLVariables.STAR_STAR_STAR.bindDynamicValue(NILStruct.INSTANCE);
+			REPLVariables.STAR.setValue(NILStruct.INSTANCE);
+			REPLVariables.STAR_STAR.setValue(NILStruct.INSTANCE);
+			REPLVariables.STAR_STAR_STAR.setValue(NILStruct.INSTANCE);
 
 			final Reader reader = context.getBean(Reader.class, StreamVariables.STANDARD_INPUT.getValue());
 
@@ -70,38 +70,38 @@ public class ReadEvalPrint {
 					final LispStruct whatRead = readFunction.read(reader, true, NILStruct.INSTANCE, false);
 
 					// bind '-' to the form just read
-					REPLVariables.DASH.setDynamicValue(whatRead);
+					REPLVariables.DASH.setValue(whatRead);
 
 					// EVAL --------------
 					final LispStruct value = evalFunction.apply(whatRead);
 
 					// bind '**' and '***' to their appropriate values
-					REPLVariables.STAR_STAR_STAR.setDynamicValue(REPLVariables.STAR_STAR.getDynamicValue());
-					REPLVariables.STAR_STAR.setDynamicValue(REPLVariables.STAR.getDynamicValue());
+					REPLVariables.STAR_STAR_STAR.setValue(REPLVariables.STAR_STAR.getValue());
+					REPLVariables.STAR_STAR.setValue(REPLVariables.STAR.getValue());
 
 					// bind '//' and '///' to their appropriate values
-					REPLVariables.SLASH_SLASH_SLASH.setValue(REPLVariables.SLASH_SLASH.getDynamicValue());
-					REPLVariables.SLASH_SLASH.setDynamicValue(REPLVariables.SLASH.getDynamicValue());
+					REPLVariables.SLASH_SLASH_SLASH.setValue(REPLVariables.SLASH_SLASH.getValue());
+					REPLVariables.SLASH_SLASH.setValue(REPLVariables.SLASH.getValue());
 
 					// bind '*' and '/' values to the form just evaluated
 					if (value instanceof ValuesStruct) {
 						final ValuesStruct values = (ValuesStruct) value;
-						REPLVariables.STAR.setDynamicValue(values.getPrimaryValue());
-						REPLVariables.SLASH.setDynamicValue(LispStructFactory.toProperList(values.getValuesList()));
+						REPLVariables.STAR.setValue(values.getPrimaryValue());
+						REPLVariables.SLASH.setValue(LispStructFactory.toProperList(values.getValuesList()));
 					} else {
-						REPLVariables.STAR.setDynamicValue(value);
+						REPLVariables.STAR.setValue(value);
 						// null check
-						REPLVariables.SLASH.setDynamicValue(LispStructFactory.toProperList(value));
+						REPLVariables.SLASH.setValue(LispStructFactory.toProperList(value));
 					}
 
 					// bind '+' to the form just evaluated and '++' and '+++' to their appropriate values
-					REPLVariables.PLUS_PLUS_PLUS.setDynamicValue(REPLVariables.PLUS_PLUS.getDynamicValue());
-					REPLVariables.PLUS_PLUS.setDynamicValue(REPLVariables.PLUS.getDynamicValue());
-					REPLVariables.PLUS.setDynamicValue(REPLVariables.DASH.getDynamicValue());
+					REPLVariables.PLUS_PLUS_PLUS.setValue(REPLVariables.PLUS_PLUS.getValue());
+					REPLVariables.PLUS_PLUS.setValue(REPLVariables.PLUS.getValue());
+					REPLVariables.PLUS.setValue(REPLVariables.DASH.getValue());
 
 					if (value == null) {
 						LOGGER.warn("Setting * to NIL since it had no value.");
-						REPLVariables.STAR.setDynamicValue(NILStruct.INSTANCE);
+						REPLVariables.STAR.setValue(NILStruct.INSTANCE);
 					}
 
 					// PRINT -------------
@@ -130,29 +130,29 @@ public class ReadEvalPrint {
 				} catch (final VerifyError err) {
 					LOGGER.error("; ERROR: loading class, {}", err.getMessage(), err);
 				} finally {
-					REPLVariables.DASH.unbindDynamicValue();
+//					REPLVariables.DASH.unbindDynamicValue();
 				}
 			}
 		} finally {
-			unbindREPLVariable(REPLVariables.STAR);
-			unbindREPLVariable(REPLVariables.STAR_STAR);
-			unbindREPLVariable(REPLVariables.STAR_STAR_STAR);
-
-			unbindREPLVariable(REPLVariables.SLASH);
-			unbindREPLVariable(REPLVariables.SLASH_SLASH);
-			unbindREPLVariable(REPLVariables.SLASH_SLASH_SLASH);
-
-			unbindREPLVariable(REPLVariables.PLUS);
-			unbindREPLVariable(REPLVariables.PLUS_PLUS);
-			unbindREPLVariable(REPLVariables.PLUS_PLUS_PLUS);
-
-			unbindREPLVariable(REPLVariables.DASH);
+//			unbindREPLVariable(REPLVariables.STAR);
+//			unbindREPLVariable(REPLVariables.STAR_STAR);
+//			unbindREPLVariable(REPLVariables.STAR_STAR_STAR);
+//
+//			unbindREPLVariable(REPLVariables.SLASH);
+//			unbindREPLVariable(REPLVariables.SLASH_SLASH);
+//			unbindREPLVariable(REPLVariables.SLASH_SLASH_SLASH);
+//
+//			unbindREPLVariable(REPLVariables.PLUS);
+//			unbindREPLVariable(REPLVariables.PLUS_PLUS);
+//			unbindREPLVariable(REPLVariables.PLUS_PLUS_PLUS);
+//
+//			unbindREPLVariable(REPLVariables.DASH);
 		}
 	}
 
-	private void unbindREPLVariable(final VariableStructImpl<?> replVariable) {
-		if (replVariable.hasValue()) {
-			replVariable.unbindDynamicValue();
-		}
-	}
+//	private void unbindREPLVariable(final VariableStructImpl<?> replVariable) {
+//		if (replVariable.hasValue()) {
+//			replVariable.unbindDynamicValue();
+//		}
+//	}
 }

@@ -319,15 +319,9 @@ public class SymbolStructImpl extends BuiltInClassStruct implements SymbolStruct
 	@Override
 	public void setValue(final LispStruct value) {
 		if (lexicalValueStack.isEmpty()) {
-			if (dynamicValueStack.isEmpty()) {
-				dynamicValueStack.push(value);
-			} else {
-				dynamicValueStack.pop();
-				dynamicValueStack.push(value);
-			}
+			setDynamicValue(value);
 		} else {
-			lexicalValueStack.pop();
-			lexicalValueStack.push(value);
+			setLexicalValue(value);
 		}
 	}
 

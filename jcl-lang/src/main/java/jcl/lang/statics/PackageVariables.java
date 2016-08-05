@@ -4,7 +4,7 @@
 
 package jcl.lang.statics;
 
-import jcl.lang.PackageStruct;
+import jcl.lang.PackageStructImpl;
 import jcl.lang.internal.VariableStructImpl;
 
 /**
@@ -15,7 +15,7 @@ public final class PackageVariables {
 
 	// Package Variable
 
-	public static final VariableStructImpl<PackageStruct> PACKAGE = VariableStructImpl.valueOf("*PACKAGE*", GlobalPackageStruct.COMMON_LISP, GlobalPackageStruct.COMMON_LISP_USER);
+	public static final VariableStructImpl<PackageStructImpl> PACKAGE = VariableStructImpl.valueOf("*PACKAGE*", GlobalPackageStruct.COMMON_LISP, GlobalPackageStruct.COMMON_LISP_USER);
 
 	private PackageVariables() {
 	}

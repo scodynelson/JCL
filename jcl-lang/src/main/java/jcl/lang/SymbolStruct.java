@@ -18,19 +18,19 @@ public interface SymbolStruct extends LispStruct {
 	String getName();
 
 	/**
-	 * Getter for symbol {@link PackageStruct} property.
+	 * Getter for symbol {@link PackageStructImpl} property.
 	 *
-	 * @return symbol {@link PackageStruct} property
+	 * @return symbol {@link PackageStructImpl} property
 	 */
-	PackageStruct getSymbolPackage();
+	PackageStructImpl getSymbolPackage();
 
 	/**
-	 * Setter for symbol {@link PackageStruct} property.
+	 * Setter for symbol {@link PackageStructImpl} property.
 	 *
 	 * @param symbolPackage
-	 * 		new symbol {@link PackageStruct} property value
+	 * 		new symbol {@link PackageStructImpl} property value
 	 */
-	void setSymbolPackage(final PackageStruct symbolPackage);
+	void setSymbolPackage(final PackageStructImpl symbolPackage);
 
 	boolean hasValue();
 

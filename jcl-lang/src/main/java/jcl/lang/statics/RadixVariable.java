@@ -4,7 +4,7 @@ import java.math.BigInteger;
 
 import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
-import jcl.lang.PackageStruct;
+import jcl.lang.PackageStructImpl;
 import jcl.lang.internal.VariableStructImpl;
 import jcl.lang.condition.exception.TypeErrorException;
 import org.apache.commons.lang3.Range;
@@ -21,7 +21,7 @@ public class RadixVariable extends VariableStructImpl<IntegerStruct> {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(RadixVariable.class);
 
-	public RadixVariable(final String name, final PackageStruct symbolPackage) {
+	public RadixVariable(final String name, final PackageStructImpl symbolPackage) {
 		super(name, symbolPackage, IntegerStruct.TEN);
 	}
 

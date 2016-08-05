@@ -1,6 +1,6 @@
 package jcl.lang.internal;
 
-import jcl.lang.PackageStruct;
+import jcl.lang.PackageStructImpl;
 import jcl.lang.statics.GlobalPackageStruct;
 
 public final class SpecialOperatorStructImpl extends SymbolStructImpl {
@@ -68,7 +68,7 @@ public final class SpecialOperatorStructImpl extends SymbolStructImpl {
 
 	public static final SpecialOperatorStructImpl TAIL_RECURSION = new SpecialOperatorStructImpl("%TAIL-RECURSION", GlobalPackageStruct.COMPILER);
 
-	private SpecialOperatorStructImpl(final String name, final PackageStruct symbolPackage) {
+	private SpecialOperatorStructImpl(final String name, final PackageStructImpl symbolPackage) {
 		super(name, symbolPackage);
 	}
 }

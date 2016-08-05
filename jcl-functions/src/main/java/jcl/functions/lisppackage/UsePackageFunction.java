@@ -7,7 +7,7 @@ package jcl.functions.lisppackage;
 import java.util.function.BiConsumer;
 
 import jcl.lang.statics.GlobalPackageStruct;
-import jcl.lang.PackageStruct;
+import jcl.lang.PackageStructImpl;
 import jcl.lang.condition.exception.ErrorException;
 import org.springframework.stereotype.Component;
 
@@ -28,26 +28,26 @@ public final class UsePackageFunction extends AbstractPackageListPackageFunction
 
 	/**
 	 * {@inheritDoc}
-	 * Returns {@link PackageStruct#usePackage(PackageStruct...)} as a method reference function.
+	 * Returns {@link PackageStructImpl#usePackage(PackageStructImpl...)} as a method reference function.
 	 *
-	 * @return returns {@link PackageStruct#usePackage(PackageStruct...)} as a method reference function
+	 * @return returns {@link PackageStructImpl#usePackage(PackageStructImpl...)} as a method reference function
 	 */
 	@Override
-	protected BiConsumer<PackageStruct, PackageStruct[]> packageListFunction() {
-		return PackageStruct::usePackage;
+	protected BiConsumer<PackageStructImpl, PackageStructImpl[]> packageListFunction() {
+		return PackageStructImpl::usePackage;
 	}
 
 	/**
 	 * {@inheritDoc}
-	 * Performs validation on the provided {@link PackageStruct}s, ensuring that none of the {@link PackageStruct}s are
+	 * Performs validation on the provided {@link PackageStructImpl}s, ensuring that none of the {@link PackageStructImpl}s are
 	 * equal to the constant {@link GlobalPackageStruct#KEYWORD} package.
 	 *
 	 * @param packageStructs
-	 * 		the {@link PackageStruct}s to validate
+	 * 		the {@link PackageStructImpl}s to validate
 	 */
 	@Override
-	protected void validatePackages(final PackageStruct... packageStructs) {
-		for (final PackageStruct packageStruct : packageStructs) {
+	protected void validatePackages(final PackageStructImpl... packageStructs) {
+		for (final PackageStructImpl packageStruct : packageStructs) {
 			if (GlobalPackageStruct.KEYWORD.equals(packageStruct)) {
 				throw new ErrorException("Cannot use KEYWORD Package.");
 			}

@@ -11,7 +11,7 @@ import jcl.compiler.icg.JavaMethodBuilder;
 import jcl.lang.KeywordStruct;
 import jcl.lang.statics.GlobalPackageStruct;
 import jcl.lang.internal.KeywordStructImpl;
-import jcl.lang.PackageStruct;
+import jcl.lang.PackageStructImpl;
 import jcl.lang.PackageSymbolStruct;
 import jcl.lang.SymbolStruct;
 import org.objectweb.asm.MethodVisitor;
@@ -36,7 +36,7 @@ final class KeywordCodeGenerator implements CodeGenerator<KeywordStructImpl> {
 	 * Generation method for {@link KeywordStruct} objects, by performing the following operations:
 	 * <ol>
 	 * <li>Retrieving the {@link GlobalPackageStruct#KEYWORD} singleton instance</li>
-	 * <li>Retrieving the {@link PackageSymbolStruct} via the {@link PackageStruct#findSymbol(String)} method with the
+	 * <li>Retrieving the {@link PackageSymbolStruct} via the {@link PackageStructImpl#findSymbol(String)} method with the
 	 * {@link KeywordStruct#getName()} value of the provided {@link KeywordStruct}</li>
 	 * <li>Retrieving the {@link SymbolStruct} value via the {@link PackageSymbolStruct#getSymbol()} method</li>
 	 * <li>Casting the {@link SymbolStruct} to the appropriate {@link KeywordStruct} type</li>

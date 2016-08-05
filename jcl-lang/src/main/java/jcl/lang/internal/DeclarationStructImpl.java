@@ -1,6 +1,6 @@
 package jcl.lang.internal;
 
-import jcl.lang.PackageStruct;
+import jcl.lang.PackageStructImpl;
 import jcl.lang.statics.GlobalPackageStruct;
 
 public final class DeclarationStructImpl extends SymbolStructImpl {
@@ -42,7 +42,7 @@ public final class DeclarationStructImpl extends SymbolStructImpl {
 
 	public static final DeclarationStructImpl LISP_NAME = new DeclarationStructImpl("%LISP-NAME", GlobalPackageStruct.SYSTEM);
 
-	private DeclarationStructImpl(final String name, final PackageStruct symbolPackage) {
+	private DeclarationStructImpl(final String name, final PackageStructImpl symbolPackage) {
 		super(name, symbolPackage);
 		init();
 	}

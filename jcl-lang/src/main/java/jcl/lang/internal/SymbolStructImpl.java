@@ -8,7 +8,7 @@ import jcl.lang.CharacterStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
 import jcl.lang.NILStruct;
-import jcl.lang.PackageStruct;
+import jcl.lang.PackageStructImpl;
 import jcl.lang.PackageSymbolStruct;
 import jcl.lang.StringStruct;
 import jcl.lang.StructureClassStruct;
@@ -35,7 +35,7 @@ public class SymbolStructImpl extends BuiltInClassStruct implements SymbolStruct
 
 	protected ListStruct properties;
 
-	protected PackageStruct symbolPackage;
+	protected PackageStructImpl symbolPackage;
 
 	protected Stack<LispStruct> lexicalValueStack = new Stack<>();
 
@@ -69,7 +69,7 @@ public class SymbolStructImpl extends BuiltInClassStruct implements SymbolStruct
 	 * @param symbolPackage
 	 * 		the symbol package
 	 */
-	protected SymbolStructImpl(final String name, final PackageStruct symbolPackage) {
+	protected SymbolStructImpl(final String name, final PackageStructImpl symbolPackage) {
 		this(name, symbolPackage, null, null);
 	}
 
@@ -107,7 +107,7 @@ public class SymbolStructImpl extends BuiltInClassStruct implements SymbolStruct
 	 * @param value
 	 * 		the symbol value
 	 */
-	protected SymbolStructImpl(final String name, final PackageStruct symbolPackage, final LispStruct value) {
+	protected SymbolStructImpl(final String name, final PackageStructImpl symbolPackage, final LispStruct value) {
 		this(SymbolType.INSTANCE, name, symbolPackage, value, null);
 	}
 
@@ -123,7 +123,7 @@ public class SymbolStructImpl extends BuiltInClassStruct implements SymbolStruct
 	 * @param function
 	 * 		the symbol function
 	 */
-	protected SymbolStructImpl(final String name, final PackageStruct symbolPackage, final LispStruct value, final FunctionStruct function) {
+	protected SymbolStructImpl(final String name, final PackageStructImpl symbolPackage, final LispStruct value, final FunctionStruct function) {
 		this(SymbolType.INSTANCE, name, symbolPackage, value, function);
 	}
 
@@ -142,7 +142,7 @@ public class SymbolStructImpl extends BuiltInClassStruct implements SymbolStruct
 	 * 		the symbol function
 	 */
 	protected SymbolStructImpl(final LispType lispType,
-	                           final String name, final PackageStruct symbolPackage, final LispStruct value, final FunctionStruct function) {
+	                           final String name, final PackageStructImpl symbolPackage, final LispStruct value, final FunctionStruct function) {
 		super(lispType, null, null);
 		this.name = name;
 
@@ -188,7 +188,7 @@ public class SymbolStructImpl extends BuiltInClassStruct implements SymbolStruct
 	 * @return symbol {@link #symbolPackage} property
 	 */
 	@Override
-	public PackageStruct getSymbolPackage() {
+	public PackageStructImpl getSymbolPackage() {
 		return symbolPackage;
 	}
 
@@ -199,7 +199,7 @@ public class SymbolStructImpl extends BuiltInClassStruct implements SymbolStruct
 	 * 		new symbol {@link #symbolPackage} property value
 	 */
 	@Override
-	public void setSymbolPackage(final PackageStruct symbolPackage) {
+	public void setSymbolPackage(final PackageStructImpl symbolPackage) {
 		this.symbolPackage = symbolPackage;
 	}
 
@@ -220,15 +220,15 @@ public class SymbolStructImpl extends BuiltInClassStruct implements SymbolStruct
 
 	/**
 	 * {@inheritDoc}
-	 * Returns the PackageStruct with the {@link PackageStruct#name} that matches the {@link #name} value on the
-	 * instance via {@link PackageStruct#findPackage(String)}.
+	 * Returns the PackageStruct with the {@link PackageStructImpl#name} that matches the {@link #name} value on the
+	 * instance via {@link PackageStructImpl#findPackage(String)}.
 	 *
-	 * @return the PackageStruct with the {@link PackageStruct#name} that matches the {@link #name} value on the
+	 * @return the PackageStruct with the {@link PackageStructImpl#name} that matches the {@link #name} value on the
 	 * instance
 	 */
 	@Override
-	public Supplier<PackageStruct> asPackage() {
-		return () -> PackageStruct.findPackage(name);
+	public Supplier<PackageStructImpl> asPackage() {
+		return () -> PackageStructImpl.findPackage(name);
 	}
 
 	@Override
@@ -292,7 +292,7 @@ public class SymbolStructImpl extends BuiltInClassStruct implements SymbolStruct
 
 	private LispStruct handleUnboundValue() {
 		String variableName = name;
-		final PackageStruct currentPackage = PackageVariables.PACKAGE.getVariableValue();
+		final PackageStructImpl currentPackage = PackageVariables.PACKAGE.getVariableValue();
 
 		if (!currentPackage.equals(symbolPackage)) {
 			if (symbolPackage == null) {
@@ -391,7 +391,7 @@ public class SymbolStructImpl extends BuiltInClassStruct implements SymbolStruct
 
 	private FunctionStruct handleUnboundFunction() {
 		String variableName = name;
-		final PackageStruct currentPackage = PackageVariables.PACKAGE.getVariableValue();
+		final PackageStructImpl currentPackage = PackageVariables.PACKAGE.getVariableValue();
 
 		if (!currentPackage.equals(symbolPackage)) {
 			if (symbolPackage == null) {
@@ -695,7 +695,7 @@ public class SymbolStructImpl extends BuiltInClassStruct implements SymbolStruct
 		// TODO: the following isn't right. It's more like the symbol is not "accessible" in the current package...
 		// TODO: probably by use of 'findSymbol'
 
-		final PackageStruct currentPackage = PackageVariables.PACKAGE.getVariableValue();
+		final PackageStructImpl currentPackage = PackageVariables.PACKAGE.getVariableValue();
 
 		PackageSymbolStruct symbol = currentPackage.findSymbol(name);
 		if (symbol == null) {
@@ -703,7 +703,7 @@ public class SymbolStructImpl extends BuiltInClassStruct implements SymbolStruct
 
 			final String packageName = symbolPackage.getName();
 
-			final boolean externalSymbol = PackageStruct.EXTERNAL_KEYWORD.equals(symbol.getPackageSymbolType());
+			final boolean externalSymbol = PackageStructImpl.EXTERNAL_KEYWORD.equals(symbol.getPackageSymbolType());
 			if (externalSymbol) {
 				// TODO: verify it is a single colon for external symbols when printing...
 				return packageName + ':' + name;

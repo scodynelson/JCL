@@ -6,7 +6,7 @@ package jcl.functions.lisppackage;
 
 import java.util.function.BiConsumer;
 
-import jcl.lang.PackageStruct;
+import jcl.lang.PackageStructImpl;
 import org.springframework.stereotype.Component;
 
 /**
@@ -26,23 +26,23 @@ public final class UnusePackageFunction extends AbstractPackageListPackageFuncti
 
 	/**
 	 * {@inheritDoc}
-	 * Returns {@link PackageStruct#unUsePackage(PackageStruct...)} as a method reference function.
+	 * Returns {@link PackageStructImpl#unUsePackage(PackageStructImpl...)} as a method reference function.
 	 *
-	 * @return returns {@link PackageStruct#unUsePackage(PackageStruct...)} as a method reference function
+	 * @return returns {@link PackageStructImpl#unUsePackage(PackageStructImpl...)} as a method reference function
 	 */
 	@Override
-	protected BiConsumer<PackageStruct, PackageStruct[]> packageListFunction() {
-		return PackageStruct::unUsePackage;
+	protected BiConsumer<PackageStructImpl, PackageStructImpl[]> packageListFunction() {
+		return PackageStructImpl::unUsePackage;
 	}
 
 	/**
 	 * {@inheritDoc}
-	 * Performs default (aka. no) validation on the provided {@link PackageStruct}s.
+	 * Performs default (aka. no) validation on the provided {@link PackageStructImpl}s.
 	 *
 	 * @param packageStructs
-	 * 		the {@link PackageStruct}s to validate
+	 * 		the {@link PackageStructImpl}s to validate
 	 */
 	@Override
-	protected void validatePackages(final PackageStruct... packageStructs) {
+	protected void validatePackages(final PackageStructImpl... packageStructs) {
 	}
 }

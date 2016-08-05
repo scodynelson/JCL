@@ -8,7 +8,7 @@ import java.util.function.BiFunction;
 
 import jcl.lang.KeywordStruct;
 import jcl.lang.LispStruct;
-import jcl.lang.PackageStruct;
+import jcl.lang.PackageStructImpl;
 import jcl.lang.PackageSymbolStruct;
 import jcl.lang.statics.PackageVariables;
 import jcl.lang.StringStruct;
@@ -36,7 +36,7 @@ abstract class AbstractStringPackageFunction extends CommonLispBuiltInFunctionSt
 	}
 
 	/**
-	 * Application method for the package function that gets the optional {@link PackageStruct} to perform the {@link
+	 * Application method for the package function that gets the optional {@link PackageStructImpl} to perform the {@link
 	 * #packageFunction()} operation on and performs it, returning the appropriate {@link ValuesStruct} populated
 	 * object. If the result of the {@link #packageFunction()} operation is {@code null}, {@link NILStruct#INSTANCE} is
 	 * returned for both the symbol and the package type.
@@ -50,7 +50,7 @@ abstract class AbstractStringPackageFunction extends CommonLispBuiltInFunctionSt
 	@Override
 	public LispStruct apply(final Arguments arguments) {
 		final StringStruct aString = arguments.getRequiredArgument("STRING", StringStruct.class);
-		final PackageStruct aPackage = arguments.getOptionalArgument("PACKAGE", PackageStruct.class);
+		final PackageStructImpl aPackage = arguments.getOptionalArgument("PACKAGE", PackageStructImpl.class);
 		final PackageSymbolStruct packageSymbol = packageFunction().apply(aPackage, aString.getAsJavaString());
 		if (packageSymbol == null) {
 			return ValuesStruct.valueOf(NILStruct.INSTANCE, NILStruct.INSTANCE);
@@ -62,11 +62,11 @@ abstract class AbstractStringPackageFunction extends CommonLispBuiltInFunctionSt
 	}
 
 	/**
-	 * Abstract method to return a {@link BiFunction} function that consumes a {@link PackageStruct} and a {@link
+	 * Abstract method to return a {@link BiFunction} function that consumes a {@link PackageStructImpl} and a {@link
 	 * String} and returns a {@link PackageSymbolStruct} result.
 	 *
-	 * @return a {@link BiFunction} function that consumes a {@link PackageStruct} and a {@link String} and returns a
+	 * @return a {@link BiFunction} function that consumes a {@link PackageStructImpl} and a {@link String} and returns a
 	 * {@link PackageSymbolStruct} result
 	 */
-	protected abstract BiFunction<PackageStruct, String, PackageSymbolStruct> packageFunction();
+	protected abstract BiFunction<PackageStructImpl, String, PackageSymbolStruct> packageFunction();
 }

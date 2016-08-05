@@ -5,7 +5,7 @@
 package jcl.functions.lisppackage;
 
 import jcl.lang.LispStruct;
-import jcl.lang.PackageStruct;
+import jcl.lang.PackageStructImpl;
 import jcl.lang.TStruct;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
@@ -35,7 +35,7 @@ public final class DeletePackageFunction extends CommonLispBuiltInFunctionStruct
 
 	/**
 	 * {@inheritDoc}
-	 * Application method for {@code delete-package} package function that deletes the provided {@link PackageStruct}
+	 * Application method for {@code delete-package} package function that deletes the provided {@link PackageStructImpl}
 	 * package-designator.
 	 *
 	 * @param lispStructs
@@ -46,7 +46,7 @@ public final class DeletePackageFunction extends CommonLispBuiltInFunctionStruct
 	@Override
 	public LispStruct apply(final Arguments arguments) {
 		final LispStruct lispStruct = arguments.getRequiredArgument(PACKAGE_ARGUMENT);
-		final PackageStruct aPackage = lispStruct.asPackage().get();
+		final PackageStructImpl aPackage = lispStruct.asPackage().get();
 
 		if (aPackage.getName() == null) {
 			return NILStruct.INSTANCE;

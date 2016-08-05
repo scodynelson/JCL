@@ -5,7 +5,7 @@
 package jcl.functions.lisppackage;
 
 import jcl.lang.LispStruct;
-import jcl.lang.PackageStruct;
+import jcl.lang.PackageStructImpl;
 import jcl.lang.statics.PackageVariables;
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
@@ -41,14 +41,14 @@ public final class InPackageFunction extends CommonLispBuiltInFunctionStruct {
 	 * @param lispStructs
 	 * 		the function parameters
 	 *
-	 * @return the new {@link PackageStruct} value of the global {@code *package*} variable
+	 * @return the new {@link PackageStructImpl} value of the global {@code *package*} variable
 	 */
 	@Override
 	public LispStruct apply(final Arguments arguments) {
 		final LispStruct lispStruct = arguments.getRequiredArgument(NAME_ARGUMENT);
 		final String name = lispStruct.asString().get().getAsJavaString();
 
-		final PackageStruct newCurrentPackage = PackageStruct.findPackage(name);
+		final PackageStructImpl newCurrentPackage = PackageStructImpl.findPackage(name);
 		if (newCurrentPackage == null) {
 			throw new ErrorException("There is no package named " + name);
 		}

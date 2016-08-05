@@ -7,7 +7,7 @@ package jcl.functions.lisppackage;
 import java.util.List;
 
 import jcl.lang.LispStruct;
-import jcl.lang.PackageStruct;
+import jcl.lang.PackageStructImpl;
 import jcl.lang.factory.LispStructFactory;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
@@ -36,16 +36,16 @@ public final class ListAllPackagesFunction extends CommonLispBuiltInFunctionStru
 	/**
 	 * {@inheritDoc}
 	 * Application method for {@code list-all-packages} package function returns the result of {@link
-	 * PackageStruct#listAllPackages()} as a {@link ListStruct}.
+	 * PackageStructImpl#listAllPackages()} as a {@link ListStruct}.
 	 *
 	 * @param lispStructs
 	 * 		the function parameters
 	 *
-	 * @return the result of {@link PackageStruct#listAllPackages()} as a {@link ListStruct}
+	 * @return the result of {@link PackageStructImpl#listAllPackages()} as a {@link ListStruct}
 	 */
 	@Override
 	public LispStruct apply(final Arguments arguments) {
-		final List<PackageStruct> allPackages = PackageStruct.listAllPackages();
+		final List<PackageStructImpl> allPackages = PackageStructImpl.listAllPackages();
 		return LispStructFactory.toProperList(allPackages);
 	}
 }

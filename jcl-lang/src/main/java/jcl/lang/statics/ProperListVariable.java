@@ -6,7 +6,7 @@ package jcl.lang.statics;
 
 import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
-import jcl.lang.PackageStruct;
+import jcl.lang.PackageStructImpl;
 import jcl.lang.internal.VariableStructImpl;
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.NILStruct;
@@ -17,7 +17,7 @@ class ProperListVariable extends VariableStructImpl<ListStruct> {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(ProperListVariable.class);
 
-	ProperListVariable(final String name, final PackageStruct symbolPackage) {
+	ProperListVariable(final String name, final PackageStructImpl symbolPackage) {
 		super(name, symbolPackage, NILStruct.INSTANCE);
 	}
 

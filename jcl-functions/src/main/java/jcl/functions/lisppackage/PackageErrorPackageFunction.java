@@ -5,7 +5,7 @@
 package jcl.functions.lisppackage;
 
 import jcl.lang.LispStruct;
-import jcl.lang.PackageStruct;
+import jcl.lang.PackageStructImpl;
 import jcl.lang.condition.exception.PackageErrorException;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
@@ -34,13 +34,13 @@ public final class PackageErrorPackageFunction extends CommonLispBuiltInFunction
 
 	/**
 	 * {@inheritDoc}
-	 * Application method for {@code package-error-package} package function that returns the {@link PackageStruct}
+	 * Application method for {@code package-error-package} package function that returns the {@link PackageStructImpl}
 	 * that was a part of provided {@link PackageErrorException} condition.
 	 *
 	 * @param lispStructs
 	 * 		the function parameters
 	 *
-	 * @return the {@link PackageStruct} that was a part of provided {@link PackageErrorException} condition
+	 * @return the {@link PackageStructImpl} that was a part of provided {@link PackageErrorException} condition
 	 */
 	@Override
 	public LispStruct apply(final Arguments arguments) {

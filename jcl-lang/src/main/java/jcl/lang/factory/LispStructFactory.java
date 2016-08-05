@@ -36,7 +36,7 @@ import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
 import jcl.lang.NILStruct;
 import jcl.lang.OutputStreamStruct;
-import jcl.lang.PackageStruct;
+import jcl.lang.PackageStructImpl;
 import jcl.lang.RandomStateStruct;
 import jcl.lang.RatioStruct;
 import jcl.lang.RealStruct;
@@ -566,20 +566,20 @@ public final class LispStructFactory {
 	 * Package
 	 */
 
-	public static PackageStruct toPackage(final String name) {
-		return PackageStruct.valueOf(name);
+	public static PackageStructImpl toPackage(final String name) {
+		return PackageStructImpl.valueOf(name);
 	}
 
-	public static PackageStruct toPackage(final String name, final List<String> nicknames) {
-		return PackageStruct.valueOf(name, nicknames);
+	public static PackageStructImpl toPackage(final String name, final List<String> nicknames) {
+		return PackageStructImpl.valueOf(name, nicknames);
 	}
 
-	public static PackageStruct toPackage(final String name, final List<String> nicknames, final PackageStruct... useList) {
-		return PackageStruct.valueOf(name, nicknames, useList);
+	public static PackageStructImpl toPackage(final String name, final List<String> nicknames, final PackageStructImpl... useList) {
+		return PackageStructImpl.valueOf(name, nicknames, useList);
 	}
 
-	public static PackageStruct toPackage(final String name, final List<String> nicknames, final List<PackageStruct> useList) {
-		return PackageStruct.valueOf(name, nicknames, useList);
+	public static PackageStructImpl toPackage(final String name, final List<String> nicknames, final List<PackageStructImpl> useList) {
+		return PackageStructImpl.valueOf(name, nicknames, useList);
 	}
 
 	/*

@@ -25,7 +25,7 @@ import jcl.lang.factory.LispStructFactory;
 import jcl.lang.statics.CompilerConstants;
 import jcl.lang.statics.GlobalPackageStruct;
 import jcl.lang.LispStruct;
-import jcl.lang.PackageStruct;
+import jcl.lang.PackageStructImpl;
 import jcl.lang.PackageSymbolStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.ProgramErrorException;
@@ -181,7 +181,7 @@ public class LambdaListParser {
 
 				final String paramName = currentParam.getName();
 				final String customSuppliedPName = paramName + "-P-" + System.nanoTime();
-				final PackageStruct currentParamPackage = currentParam.getSymbolPackage();
+				final PackageStructImpl currentParamPackage = currentParam.getSymbolPackage();
 
 				final SymbolStruct customSuppliedPCurrent = currentParamPackage.intern(customSuppliedPName).getSymbol();
 
@@ -279,7 +279,7 @@ public class LambdaListParser {
 					if (thirdInCurrent.equals(NILStruct.INSTANCE)) {
 						final String paramName = varNameCurrent.getName();
 						final String customSuppliedPName = paramName + "-P-" + System.nanoTime();
-						final PackageStruct currentParamPackage = varNameCurrent.getSymbolPackage();
+						final PackageStructImpl currentParamPackage = varNameCurrent.getSymbolPackage();
 
 						final SymbolStruct customSuppliedPCurrent = currentParamPackage.intern(customSuppliedPName).getSymbol();
 
@@ -503,7 +503,7 @@ public class LambdaListParser {
 
 				final String paramName = currentParam.getName();
 				final String customSuppliedPName = paramName + "-P-" + System.nanoTime();
-				final PackageStruct currentParamPackage = currentParam.getSymbolPackage();
+				final PackageStructImpl currentParamPackage = currentParam.getSymbolPackage();
 
 				final SymbolStruct customSuppliedPCurrent = currentParamPackage.intern(customSuppliedPName).getSymbol();
 
@@ -620,7 +620,7 @@ public class LambdaListParser {
 					if (thirdInCurrent.equals(NILStruct.INSTANCE)) {
 						final String paramName = varNameCurrent.getName();
 						final String customSuppliedPName = paramName + "-P-" + System.nanoTime();
-						final PackageStruct currentParamPackage = varNameCurrent.getSymbolPackage();
+						final PackageStructImpl currentParamPackage = varNameCurrent.getSymbolPackage();
 
 						final SymbolStruct customSuppliedPCurrent = currentParamPackage.intern(customSuppliedPName).getSymbol();
 

@@ -5,7 +5,7 @@
 package jcl.functions.symbol;
 
 import jcl.lang.LispStruct;
-import jcl.lang.PackageStruct;
+import jcl.lang.PackageStructImpl;
 import jcl.lang.SymbolStruct;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
@@ -30,7 +30,7 @@ public final class SymbolPackageFunction extends CommonLispBuiltInFunctionStruct
 	@Override
 	public LispStruct apply(final Arguments arguments) {
 		final SymbolStruct symbol = arguments.getRequiredArgument(SYMBOL_ARGUMENT, SymbolStruct.class);
-		final PackageStruct symbolPackage = symbol.getSymbolPackage();
+		final PackageStructImpl symbolPackage = symbol.getSymbolPackage();
 		return (symbolPackage == null) ? NILStruct.INSTANCE : symbolPackage;
 	}
 }

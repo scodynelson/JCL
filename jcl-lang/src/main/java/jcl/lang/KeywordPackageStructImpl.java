@@ -7,20 +7,20 @@ package jcl.lang;
 import jcl.lang.internal.KeywordStructImpl;
 
 /**
- * The {@link KeywordPackageStruct} is the object representation of a Lisp 'package' type specific for 'keyword'
+ * The {@link KeywordPackageStructImpl} is the object representation of a Lisp 'package' type specific for 'keyword'
  * symbols.
  */
-public final class KeywordPackageStruct extends PackageStruct {
+public final class KeywordPackageStructImpl extends PackageStructImpl {
 
 	/**
 	 * Singleton instance of the Keyword package.
 	 */
-	public static final PackageStruct INSTANCE = new KeywordPackageStruct();
+	public static final PackageStructImpl INSTANCE = new KeywordPackageStructImpl();
 
 	/**
 	 * Public constructor.
 	 */
-	private KeywordPackageStruct() {
+	private KeywordPackageStructImpl() {
 		super("KEYWORD");
 	}
 

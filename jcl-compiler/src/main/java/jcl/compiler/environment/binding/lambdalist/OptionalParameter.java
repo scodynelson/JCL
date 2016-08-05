@@ -8,7 +8,7 @@ import java.util.Collections;
 import java.util.List;
 
 import jcl.lang.LispStruct;
-import jcl.lang.PackageStruct;
+import jcl.lang.PackageStructImpl;
 import jcl.lang.SymbolStruct;
 import jcl.lang.NILStruct;
 import jcl.type.TType;
@@ -41,7 +41,7 @@ public class OptionalParameter extends Parameter {
 		return suppliedPBinding;
 	}
 
-	public static Builder builder(final PackageStruct aPackage, final String symbolName) {
+	public static Builder builder(final PackageStructImpl aPackage, final String symbolName) {
 		return new Builder(aPackage, symbolName);
 	}
 
@@ -57,7 +57,7 @@ public class OptionalParameter extends Parameter {
 
 		private boolean isSpecial;
 
-		private Builder(final PackageStruct aPackage, final String symbolName) {
+		private Builder(final PackageStructImpl aPackage, final String symbolName) {
 			var = aPackage.intern(symbolName).getSymbol();
 		}
 
@@ -77,7 +77,7 @@ public class OptionalParameter extends Parameter {
 		}
 
 		public Builder suppliedPBinding() {
-			final PackageStruct aPackage = var.getSymbolPackage();
+			final PackageStructImpl aPackage = var.getSymbolPackage();
 			final String symbolName = var.getName();
 
 			final SymbolStruct suppliedP = aPackage.intern(symbolName + "-P-" + System.nanoTime()).getSymbol();

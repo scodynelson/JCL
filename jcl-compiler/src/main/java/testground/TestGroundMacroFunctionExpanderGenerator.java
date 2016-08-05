@@ -21,7 +21,7 @@ import jcl.compiler.environment.binding.lambdalist.WholeParameter;
 import jcl.compiler.function.Closure;
 import jcl.compiler.function.expanders.CompiledMacroFunctionExpander;
 import jcl.lang.LispStruct;
-import jcl.lang.PackageStruct;
+import jcl.lang.PackageStructImpl;
 import jcl.lang.SymbolStruct;
 import jcl.lang.factory.LispStructFactory;
 import jcl.lang.NILStruct;
@@ -42,7 +42,7 @@ public class TestGroundMacroFunctionExpanderGenerator extends CompiledMacroFunct
 	protected List<RequiredParameter> getRequiredBindings() {
 		final List<RequiredParameter> requiredBindings = new ArrayList<>();
 
-		final PackageStruct pkg = PackageStruct.findPackage("SYSTEM");
+		final PackageStructImpl pkg = PackageStructImpl.findPackage("SYSTEM");
 		final SymbolStruct requiredSymbol = pkg.intern("REQUIRED-SYMBOL").getSymbol();
 		final DestructuringLambdaList destructuringForm = null;
 		final RequiredParameter requiredBinding = new RequiredParameter(requiredSymbol, null, true);
@@ -73,11 +73,11 @@ public class TestGroundMacroFunctionExpanderGenerator extends CompiledMacroFunct
 	protected List<OptionalParameter> getOptionalBindings() {
 		final List<OptionalParameter> optionalBindings = new ArrayList<>();
 
-		PackageStruct pkg = PackageStruct.findPackage("SYSTEM");
+		PackageStructImpl pkg = PackageStructImpl.findPackage("SYSTEM");
 		final SymbolStruct optionalSymbol = pkg.intern("OPTIONAL-SYMBOL").getSymbol();
 		final LispStruct optionalInitForm = NILStruct.INSTANCE;
 
-		pkg = PackageStruct.findPackage("SYSTEM");
+		pkg = PackageStructImpl.findPackage("SYSTEM");
 		final SymbolStruct optionalSuppliedPSymbol = pkg.intern("OPTIONAL-SYMBOL-P").getSymbol();
 		final SuppliedPParameter optionalSuppliedPBinding = new SuppliedPParameter(optionalSuppliedPSymbol, false);
 
@@ -89,7 +89,7 @@ public class TestGroundMacroFunctionExpanderGenerator extends CompiledMacroFunct
 
 	@Override
 	protected RestParameter getRestBinding() {
-		final PackageStruct pkg = PackageStruct.findPackage("SYSTEM");
+		final PackageStructImpl pkg = PackageStructImpl.findPackage("SYSTEM");
 		final SymbolStruct restSymbol = pkg.intern("REST-SYMBOL").getSymbol();
 		return new RestParameter(restSymbol, true);
 	}
@@ -98,15 +98,15 @@ public class TestGroundMacroFunctionExpanderGenerator extends CompiledMacroFunct
 	protected List<KeyParameter> getKeyBindings() {
 		final List<KeyParameter> keyBindings = new ArrayList<>();
 
-		PackageStruct pkg = PackageStruct.findPackage("SYSTEM");
+		PackageStructImpl pkg = PackageStructImpl.findPackage("SYSTEM");
 		final SymbolStruct keySymbol = pkg.intern("KEY-SYMBOL").getSymbol();
 		final LispStruct keyInitForm = NILStruct.INSTANCE;
 
-		pkg = PackageStruct.findPackage("SYSTEM");
+		pkg = PackageStructImpl.findPackage("SYSTEM");
 		final SymbolStruct keySuppliedPSymbol = pkg.intern("KEY-SUPPLIED-P-SYMBOL").getSymbol();
 		final SuppliedPParameter keySuppliedPBinding = new SuppliedPParameter(keySuppliedPSymbol, false);
 
-		pkg = PackageStruct.findPackage("KEYWORD");
+		pkg = PackageStructImpl.findPackage("KEYWORD");
 		final SymbolStruct keyName = pkg.intern("KEY-NAME").getSymbol();
 
 		final KeyParameter keyBinding = new KeyParameter(keySymbol, keyInitForm, false, keyName, keySuppliedPBinding);
@@ -124,7 +124,7 @@ public class TestGroundMacroFunctionExpanderGenerator extends CompiledMacroFunct
 	protected List<AuxParameter> getAuxBindings() {
 		final List<AuxParameter> auxBindings = new ArrayList<>();
 
-		final PackageStruct pkg = PackageStruct.findPackage("SYSTEM");
+		final PackageStructImpl pkg = PackageStructImpl.findPackage("SYSTEM");
 		final SymbolStruct auxSymbol = pkg.intern("AUX-SYMBOL").getSymbol();
 		final LispStruct auxInitForm = NILStruct.INSTANCE;
 
@@ -136,21 +136,21 @@ public class TestGroundMacroFunctionExpanderGenerator extends CompiledMacroFunct
 
 	@Override
 	protected WholeParameter getWholeBinding() {
-		final PackageStruct pkg = PackageStruct.findPackage("SYSTEM");
+		final PackageStructImpl pkg = PackageStructImpl.findPackage("SYSTEM");
 		final SymbolStruct wholeSymbol = pkg.intern("WHOLE-SYMBOL").getSymbol();
 		return new WholeParameter(wholeSymbol, true);
 	}
 
 	@Override
 	protected EnvironmentParameter getEnvironmentBinding() {
-		final PackageStruct pkg = PackageStruct.findPackage("SYSTEM");
+		final PackageStructImpl pkg = PackageStructImpl.findPackage("SYSTEM");
 		final SymbolStruct environmentSymbol = pkg.intern("ENVIRONMENT-SYMBOL").getSymbol();
 		return new EnvironmentParameter(environmentSymbol);
 	}
 
 	@Override
 	protected BodyParameter getBodyBinding() {
-		final PackageStruct pkg = PackageStruct.findPackage("SYSTEM");
+		final PackageStructImpl pkg = PackageStructImpl.findPackage("SYSTEM");
 		final SymbolStruct bodySymbol = pkg.intern("BODY-SYMBOL").getSymbol();
 		return new BodyParameter(bodySymbol, true);
 	}
@@ -163,13 +163,13 @@ public class TestGroundMacroFunctionExpanderGenerator extends CompiledMacroFunct
 	@Override
 	protected LispStruct getInitForm(final Closure currentClosure, final SymbolStruct symbolBinding) {
 
-		final PackageStruct pkg1 = PackageStruct.findPackage("SYSTEM");
+		final PackageStructImpl pkg1 = PackageStructImpl.findPackage("SYSTEM");
 		final SymbolStruct symbol1 = pkg1.findSymbol("SYMBOL1").getSymbol();
 		if (symbolBinding.equals(symbol1)) {
 			return LispStructFactory.toCharacter(100);
 		}
 
-		final PackageStruct pkg2 = PackageStruct.findPackage("SYSTEM");
+		final PackageStructImpl pkg2 = PackageStructImpl.findPackage("SYSTEM");
 		final SymbolStruct symbol2 = pkg2.findSymbol("SYMBOL2").getSymbol();
 		if (symbolBinding.equals(symbol2)) {
 			return LispStructFactory.toCharacter(200);

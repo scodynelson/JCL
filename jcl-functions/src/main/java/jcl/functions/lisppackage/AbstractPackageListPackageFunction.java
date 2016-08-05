@@ -11,7 +11,7 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import jcl.lang.LispStruct;
-import jcl.lang.PackageStruct;
+import jcl.lang.PackageStructImpl;
 import jcl.lang.statics.PackageVariables;
 import jcl.lang.TStruct;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
@@ -36,7 +36,7 @@ abstract class AbstractPackageListPackageFunction extends CommonLispBuiltInFunct
 
 	/**
 	 * Application method for the package function that gets the package(s) from the package-designators, validates the
-	 * objects are indeed {@link PackageStruct}s, and applies the {@link Function} from the {@link
+	 * objects are indeed {@link PackageStructImpl}s, and applies the {@link Function} from the {@link
 	 * #packageListFunction()}.
 	 *
 	 * @param lispStructs
@@ -47,20 +47,20 @@ abstract class AbstractPackageListPackageFunction extends CommonLispBuiltInFunct
 	@Override
 	public LispStruct apply(final Arguments arguments) {
 		final LispStruct lispStruct = arguments.getRequiredArgument("PACKAGES");
-		final PackageStruct aPackage = arguments.getOptionalArgument("PACKAGE", PackageStruct.class);
+		final PackageStructImpl aPackage = arguments.getOptionalArgument("PACKAGE", PackageStructImpl.class);
 		validatePackages(aPackage);
 
-		final PackageStruct[] realPackageArray;
+		final PackageStructImpl[] realPackageArray;
 		if (lispStruct instanceof ListStruct) {
 			final ListStruct packages = (ListStruct) lispStruct;
-			final List<PackageStruct> realPackages
+			final List<PackageStructImpl> realPackages
 					= packages.stream()
 					          .map(LispStruct::asPackage)
 					          .map(Supplier::get)
 					          .collect(Collectors.toList());
-			realPackageArray = realPackages.toArray(new PackageStruct[realPackages.size()]);
+			realPackageArray = realPackages.toArray(new PackageStructImpl[realPackages.size()]);
 		} else {
-			realPackageArray = new PackageStruct[1];
+			realPackageArray = new PackageStructImpl[1];
 			realPackageArray[0] = lispStruct.asPackage().get();
 		}
 
@@ -71,20 +71,20 @@ abstract class AbstractPackageListPackageFunction extends CommonLispBuiltInFunct
 	}
 
 	/**
-	 * Abstract method to return a {@link BiConsumer} function that consumes a {@link PackageStruct} and a separate
-	 * array of {@link PackageStruct}s.
+	 * Abstract method to return a {@link BiConsumer} function that consumes a {@link PackageStructImpl} and a separate
+	 * array of {@link PackageStructImpl}s.
 	 *
-	 * @return a {@link BiConsumer} function that consumes a {@link PackageStruct} and a separate array of {@link
-	 * PackageStruct}s
+	 * @return a {@link BiConsumer} function that consumes a {@link PackageStructImpl} and a separate array of {@link
+	 * PackageStructImpl}s
 	 */
-	protected abstract BiConsumer<PackageStruct, PackageStruct[]> packageListFunction();
+	protected abstract BiConsumer<PackageStructImpl, PackageStructImpl[]> packageListFunction();
 
 	/**
-	 * Abstract method to validate the provided {@link PackageStruct}s to ensure they meet the function parameter
+	 * Abstract method to validate the provided {@link PackageStructImpl}s to ensure they meet the function parameter
 	 * criteria.
 	 *
 	 * @param packageStructs
-	 * 		the {@link PackageStruct}s to validate
+	 * 		the {@link PackageStructImpl}s to validate
 	 */
-	protected abstract void validatePackages(PackageStruct... packageStructs);
+	protected abstract void validatePackages(PackageStructImpl... packageStructs);
 }

@@ -32,7 +32,7 @@ import jcl.lang.internal.DeclarationStructImpl;
 import jcl.lang.FileStreamStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
-import jcl.lang.PackageStruct;
+import jcl.lang.PackageStructImpl;
 import jcl.lang.statics.PackageVariables;
 import jcl.lang.internal.SpecialOperatorStructImpl;
 import jcl.lang.StringStruct;
@@ -159,7 +159,7 @@ public final class CompileFileFunction extends CommonLispBuiltInFunctionStruct {
 		CompilerVariables.COMPILE_FILE_TRUENAME.setValue(outputFileTruename);
 
 		final ReadtableStruct previousReadtable = ReaderVariables.READTABLE.getVariableValue();
-		final PackageStruct previousPackage = PackageVariables.PACKAGE.getVariableValue();
+		final PackageStructImpl previousPackage = PackageVariables.PACKAGE.getVariableValue();
 
 		BooleanStruct compiledWithWarnings = NILStruct.INSTANCE;
 		boolean compiledSuccessfully = false;

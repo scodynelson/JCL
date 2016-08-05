@@ -87,7 +87,7 @@ public interface LispStruct {
 	 *
 	 * @return a converted package, or a throw {@link TypeErrorException}
 	 */
-	default Supplier<PackageStruct> asPackage() {
+	default Supplier<PackageStructImpl> asPackage() {
 		throw new TypeErrorException("Type cannot be converted to Package.");
 	}
 

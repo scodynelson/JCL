@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 import jcl.compiler.icg.GeneratorState;
 import jcl.compiler.icg.JavaClassBuilder;
 import jcl.compiler.icg.JavaMethodBuilder;
-import jcl.lang.PackageStruct;
+import jcl.lang.PackageStructImpl;
 import jcl.lang.SymbolStruct;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.FieldVisitor;
@@ -67,7 +67,7 @@ final class CodeGenerators {
 		final JavaMethodBuilder methodBuilder = generatorState.getCurrentMethodBuilder();
 		final MethodVisitor mv = methodBuilder.getMethodVisitor();
 
-		final PackageStruct pkg = input.getSymbolPackage();
+		final PackageStructImpl pkg = input.getSymbolPackage();
 		final String symbolName = input.getName();
 
 		if (pkg == null) {

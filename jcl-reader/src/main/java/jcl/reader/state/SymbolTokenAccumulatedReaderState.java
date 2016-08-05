@@ -13,7 +13,7 @@ import jcl.lang.KeywordStruct;
 import jcl.lang.factory.LispStructFactory;
 import jcl.lang.statics.GlobalPackageStruct;
 import jcl.lang.LispStruct;
-import jcl.lang.PackageStruct;
+import jcl.lang.PackageStructImpl;
 import jcl.lang.PackageSymbolStruct;
 import jcl.lang.statics.PackageVariables;
 import jcl.lang.SymbolStruct;
@@ -95,7 +95,7 @@ class SymbolTokenAccumulatedReaderState implements ReaderState {
 		if (hasNoPackageMarkers) {
 			final String symbolName = ReaderState.convertTokenAttributesToString(tokenAttributes);
 
-			final PackageStruct symbolPackage = PackageVariables.PACKAGE.getVariableValue();
+			final PackageStructImpl symbolPackage = PackageVariables.PACKAGE.getVariableValue();
 			return findExistingOrCreateNewSymbol(symbolName, symbolPackage);
 		}
 
@@ -157,7 +157,7 @@ class SymbolTokenAccumulatedReaderState implements ReaderState {
 		final String symbolName = ReaderState.convertTokenAttributesToString(symbolNameTokenAttributes);
 
 		if (StringUtils.isNotEmpty(packageName)) {
-			final PackageStruct symbolPackage = PackageStruct.findPackage(packageName);
+			final PackageStructImpl symbolPackage = PackageStructImpl.findPackage(packageName);
 
 			if (symbolPackage == null) {
 				throw new ReaderErrorException("There is no package named " + packageName);
@@ -176,23 +176,23 @@ class SymbolTokenAccumulatedReaderState implements ReaderState {
 			}
 		}
 
-		final PackageStruct symbolPackage = GlobalPackageStruct.KEYWORD;
+		final PackageStructImpl symbolPackage = GlobalPackageStruct.KEYWORD;
 		return findExistingOrCreateNewSymbol(symbolName, symbolPackage);
 	}
 
 	/**
-	 * Either finds the existing {@link SymbolStruct} within the provided {@link PackageStruct} using {@link
-	 * PackageStruct#findSymbol} or creates a new {@link SymbolStruct}. If the provided {@code PackageStruct} is equal
+	 * Either finds the existing {@link SymbolStruct} within the provided {@link PackageStructImpl} using {@link
+	 * PackageStructImpl#findSymbol} or creates a new {@link SymbolStruct}. If the provided {@code PackageStruct} is equal
 	 * to {@link GlobalPackageStruct#KEYWORD}, a {@link KeywordStruct} will be returned instead.
 	 *
 	 * @param symbolName
 	 * 		the name of the {@link SymbolStruct} to find or create
 	 * @param symbolPackage
-	 * 		the {@link PackageStruct} to either find the {@link SymbolStruct} or create and intern
+	 * 		the {@link PackageStructImpl} to either find the {@link SymbolStruct} or create and intern
 	 *
 	 * @return the existing {@link SymbolStruct} or a newly created one
 	 */
-	private static SymbolStruct findExistingOrCreateNewSymbol(final String symbolName, final PackageStruct symbolPackage) {
+	private static SymbolStruct findExistingOrCreateNewSymbol(final String symbolName, final PackageStructImpl symbolPackage) {
 
 		final PackageSymbolStruct foundSymbol = symbolPackage.findSymbol(symbolName);
 		if (foundSymbol == null) {

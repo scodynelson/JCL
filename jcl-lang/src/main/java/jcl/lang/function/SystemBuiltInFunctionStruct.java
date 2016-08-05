@@ -2,7 +2,7 @@ package jcl.lang.function;
 
 import jcl.lang.SymbolStruct;
 import jcl.lang.statics.GlobalPackageStruct;
-import jcl.lang.PackageStruct;
+import jcl.lang.PackageStructImpl;
 import jcl.lang.function.parameterdsl.Parameters;
 
 public abstract class SystemBuiltInFunctionStruct extends BuiltInFunctionStruct {
@@ -13,7 +13,7 @@ public abstract class SystemBuiltInFunctionStruct extends BuiltInFunctionStruct 
 
 	@Override
 	public SymbolStruct getFunctionSymbol() {
-		final PackageStruct aPackage = GlobalPackageStruct.SYSTEM;
+		final PackageStructImpl aPackage = GlobalPackageStruct.SYSTEM;
 		final SymbolStruct symbol = aPackage.intern(functionName).getSymbol();
 		aPackage.export(symbol);
 		return symbol;

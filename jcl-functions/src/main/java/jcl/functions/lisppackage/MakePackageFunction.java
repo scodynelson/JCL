@@ -8,9 +8,10 @@ import java.util.List;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+import jcl.lang.PackageStruct;
+import jcl.lang.factory.LispStructFactory;
 import jcl.lang.statics.CommonLispSymbols;
 import jcl.lang.LispStruct;
-import jcl.lang.PackageStructImpl;
 import jcl.lang.StringStruct;
 import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
@@ -44,20 +45,20 @@ public final class MakePackageFunction extends CommonLispBuiltInFunctionStruct {
 
 	/**
 	 * {@inheritDoc}
-	 * Application method for the package function that creates a new {@link PackageStructImpl} object with the provided
+	 * Application method for the package function that creates a new {@link PackageStruct} object with the provided
 	 * string-designator package name and the optional nicknames list and packages to use list.
 	 *
 	 * @param lispStructs
 	 * 		the function parameters
 	 *
-	 * @return the newly created {@link PackageStructImpl} object
+	 * @return the newly created {@link PackageStruct} object
 	 */
 	@Override
 	public LispStruct apply(final Arguments arguments) {
 		final LispStruct lispStruct = arguments.getRequiredArgument(PACKAGE_NAME_ARGUMENT);
 		final String packageName = lispStruct.asString().get().getAsJavaString();
 
-		if (PackageStructImpl.findPackage(packageName) != null) {
+		if (PackageStruct.findPackage(packageName) != null) {
 			throw new ProgramErrorException("Package name " + packageName + " is already in use.");
 		}
 
@@ -70,12 +71,12 @@ public final class MakePackageFunction extends CommonLispBuiltInFunctionStruct {
 				               .collect(Collectors.toList());
 
 		final ListStruct usePackagesList = arguments.getKeyArgument(CommonLispSymbols.USE_KEYWORD, ListStruct.class);
-		final List<PackageStructImpl> realUsePackages
+		final List<PackageStruct> realUsePackages
 				= usePackagesList.stream()
 				                 .map(LispStruct::asPackage)
 				                 .map(Supplier::get)
 				                 .collect(Collectors.toList());
 
-		return PackageStructImpl.valueOf(packageName, realNicknames, realUsePackages);
+		return LispStructFactory.toPackage(packageName, realNicknames, realUsePackages);
 	}
 }

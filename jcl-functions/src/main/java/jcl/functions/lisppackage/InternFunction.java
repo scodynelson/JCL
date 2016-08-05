@@ -6,7 +6,7 @@ package jcl.functions.lisppackage;
 
 import java.util.function.BiFunction;
 
-import jcl.lang.PackageStructImpl;
+import jcl.lang.PackageStruct;
 import jcl.lang.PackageSymbolStruct;
 import org.springframework.stereotype.Component;
 
@@ -27,12 +27,12 @@ public final class InternFunction extends AbstractStringPackageFunction {
 
 	/**
 	 * {@inheritDoc}
-	 * Returns {@link PackageStructImpl#intern(String)} as a method reference function.
+	 * Returns {@link PackageStruct#intern(String)} as a method reference function.
 	 *
-	 * @return returns {@link PackageStructImpl#intern(String)} as a method reference function
+	 * @return returns {@link PackageStruct#intern(String)} as a method reference function
 	 */
 	@Override
-	protected BiFunction<PackageStructImpl, String, PackageSymbolStruct> packageFunction() {
-		return PackageStructImpl::intern;
+	protected BiFunction<PackageStruct, String, PackageSymbolStruct> packageFunction() {
+		return PackageStruct::intern;
 	}
 }

@@ -8,11 +8,11 @@ import java.util.Iterator;
 
 import jcl.lang.BooleanStruct;
 import jcl.lang.ConsStruct;
+import jcl.lang.PackageStruct;
 import jcl.lang.statics.CommonLispSymbols;
 import jcl.lang.statics.CompilerVariables;
 import jcl.lang.statics.GlobalPackageStruct;
 import jcl.lang.LispStruct;
-import jcl.lang.PackageStructImpl;
 import jcl.lang.statics.PackageVariables;
 import jcl.lang.SymbolStruct;
 import jcl.lang.TStruct;
@@ -49,7 +49,7 @@ final class FeaturesReaderMacroFunction {
 	void readFeatures(final Reader reader, final boolean shouldHideFeatures) {
 
 		final BooleanStruct previousReadSuppress = ReaderVariables.READ_SUPPRESS.getVariableValue();
-		final PackageStructImpl previousPackage = PackageVariables.PACKAGE.getVariableValue();
+		final PackageStruct previousPackage = PackageVariables.PACKAGE.getVariableValue();
 		try {
 			ReaderVariables.READ_SUPPRESS.setValue(NILStruct.INSTANCE);
 

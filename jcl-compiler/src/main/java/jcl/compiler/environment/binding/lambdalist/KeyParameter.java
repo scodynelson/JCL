@@ -7,10 +7,10 @@ package jcl.compiler.environment.binding.lambdalist;
 import java.util.Collections;
 import java.util.List;
 
+import jcl.lang.PackageStruct;
 import jcl.lang.factory.LispStructFactory;
 import jcl.lang.statics.GlobalPackageStruct;
 import jcl.lang.LispStruct;
-import jcl.lang.PackageStructImpl;
 import jcl.lang.PackageSymbolStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.NILStruct;
@@ -53,11 +53,11 @@ public class KeyParameter extends Parameter {
 		return suppliedPBinding;
 	}
 
-	public static Builder builder(final PackageStructImpl aPackage, final String symbolName) {
+	public static Builder builder(final PackageStruct aPackage, final String symbolName) {
 		return new Builder(aPackage, symbolName);
 	}
 
-	public static Builder builder(final PackageStructImpl aPackage, final String symbolName, final SymbolStruct keyName) {
+	public static Builder builder(final PackageStruct aPackage, final String symbolName, final SymbolStruct keyName) {
 		return new Builder(aPackage, symbolName, keyName);
 	}
 
@@ -75,7 +75,7 @@ public class KeyParameter extends Parameter {
 
 		private boolean isSpecial;
 
-		private Builder(final PackageStructImpl aPackage, final String symbolName) {
+		private Builder(final PackageStruct aPackage, final String symbolName) {
 			var = aPackage.intern(symbolName).getSymbol();
 
 			final PackageSymbolStruct symbol = GlobalPackageStruct.KEYWORD.findSymbol(symbolName);
@@ -86,7 +86,7 @@ public class KeyParameter extends Parameter {
 			}
 		}
 
-		private Builder(final PackageStructImpl aPackage, final String symbolName, final SymbolStruct keyName) {
+		private Builder(final PackageStruct aPackage, final String symbolName, final SymbolStruct keyName) {
 			var = aPackage.intern(symbolName).getSymbol();
 			this.keyName = keyName;
 		}
@@ -107,7 +107,7 @@ public class KeyParameter extends Parameter {
 		}
 
 		public Builder suppliedPBinding() {
-			final PackageStructImpl aPackage = var.getSymbolPackage();
+			final PackageStruct aPackage = var.getSymbolPackage();
 			final String symbolName = var.getName();
 
 			final SymbolStruct suppliedP = aPackage.intern(symbolName + "-P-" + System.nanoTime()).getSymbol();

@@ -11,7 +11,7 @@ import java.util.function.Supplier;
 import jcl.lang.CharacterStruct;
 import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
-import jcl.lang.PackageStructImpl;
+import jcl.lang.PackageStruct;
 import jcl.lang.statics.PrinterVariables;
 import jcl.lang.StringStruct;
 import jcl.lang.statics.CharacterConstants;
@@ -123,10 +123,10 @@ public final class CharacterStructImpl extends BuiltInClassStruct implements Cha
 	}
 
 	@Override
-	public Supplier<PackageStructImpl> asPackage() {
+	public Supplier<PackageStruct> asPackage() {
 		return () -> {
 			final String packageName = getCharacter().toString();
-			return PackageStructImpl.findPackage(packageName);
+			return PackageStruct.findPackage(packageName);
 		};
 	}
 

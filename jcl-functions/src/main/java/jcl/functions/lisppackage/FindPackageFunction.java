@@ -5,7 +5,7 @@
 package jcl.functions.lisppackage;
 
 import jcl.lang.LispStruct;
-import jcl.lang.PackageStructImpl;
+import jcl.lang.PackageStruct;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
@@ -34,18 +34,18 @@ public final class FindPackageFunction extends CommonLispBuiltInFunctionStruct {
 
 	/**
 	 * {@inheritDoc}
-	 * Application method for {@code find-package} package function that returns the {@link PackageStructImpl} with the
+	 * Application method for {@code find-package} package function that returns the {@link PackageStruct} with the
 	 * provided package-designator parameter.
 	 *
 	 * @param lispStructs
 	 * 		the function parameters
 	 *
-	 * @return {@link PackageStructImpl} with the provided package-designator parameter
+	 * @return {@link PackageStruct} with the provided package-designator parameter
 	 */
 	@Override
 	public LispStruct apply(final Arguments arguments) {
 		final LispStruct packageDesignator = arguments.getRequiredArgument(NAME_ARGUMENT);
-		final PackageStructImpl aPackage = packageDesignator.asPackage().get();
+		final PackageStruct aPackage = packageDesignator.asPackage().get();
 		return (aPackage == null) ? NILStruct.INSTANCE : aPackage;
 	}
 }

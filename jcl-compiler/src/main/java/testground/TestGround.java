@@ -21,7 +21,7 @@ import jcl.lang.CharacterStruct;
 import jcl.lang.ComplexStruct;
 import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
-import jcl.lang.PackageStructImpl;
+import jcl.lang.PackageStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.TStruct;
 import jcl.lang.ValuesStruct;
@@ -43,7 +43,7 @@ public class TestGround {
 
 	private Object blockGen(final Closure currentClosure) {
 
-		final PackageStructImpl pkg = PackageStructImpl.findPackage("SYSTEM");
+		final PackageStruct pkg = PackageStruct.findPackage("SYSTEM");
 		final SymbolStruct name = pkg.findSymbol("FOO").getSymbol();
 
 		LispStruct result;
@@ -62,7 +62,7 @@ public class TestGround {
 
 	private Object returnFromGen(final Closure currentClosure) {
 
-		final PackageStructImpl pkg = PackageStructImpl.findPackage("SYSTEM");
+		final PackageStruct pkg = PackageStruct.findPackage("SYSTEM");
 		final SymbolStruct name = pkg.findSymbol("FOO").getSymbol();
 
 		final LispStruct result = LispStructFactory.toCharacter(97);
@@ -212,7 +212,7 @@ public class TestGround {
 
 	private Object symbolGen() {
 
-		final PackageStructImpl pkg = PackageStructImpl.findPackage("SYSTEM");
+		final PackageStruct pkg = PackageStruct.findPackage("SYSTEM");
 		final SymbolStruct symbol = pkg.findSymbol("FOO").getSymbol();
 
 		return symbol.getValue();
@@ -231,7 +231,7 @@ public class TestGround {
 			closureBindings = currentClosure.getSymbolBindings();
 		}
 
-		final PackageStructImpl pkg = PackageStructImpl.findPackage("SYSTEM");
+		final PackageStruct pkg = PackageStruct.findPackage("SYSTEM");
 		final SymbolStruct symbol = pkg.findSymbol("FOO").getSymbol();
 
 		LispStruct value = LispStructFactory.toCharacter(97);
@@ -264,7 +264,7 @@ public class TestGround {
 		currentClosure = new Closure(currentClosure);
 		final Map<SymbolStruct, LispStruct> closureBindings = currentClosure.getSymbolBindings();
 
-		final PackageStructImpl pkg = PackageStructImpl.findPackage("SYSTEM");
+		final PackageStruct pkg = PackageStruct.findPackage("SYSTEM");
 		final SymbolStruct symbol = pkg.findSymbol("FOO").getSymbol();
 
 		LispStruct initForm = LispStructFactory.toCharacter(97);
@@ -283,7 +283,7 @@ public class TestGround {
 
 	private Object symbolMacroletGen(final Closure currentClosure) {
 
-		final PackageStructImpl pkg = PackageStructImpl.findPackage("SYSTEM");
+		final PackageStruct pkg = PackageStruct.findPackage("SYSTEM");
 		final SymbolStruct symbol = pkg.findSymbol("FOO").getSymbol();
 
 		final SymbolMacroExpander symbolMacroExpander = new TestGroundSymbolMacroExpander();
@@ -300,7 +300,7 @@ public class TestGround {
 
 	private Object symbolFunctionGen() {
 
-		final PackageStructImpl pkg = PackageStructImpl.findPackage("SYSTEM");
+		final PackageStruct pkg = PackageStruct.findPackage("SYSTEM");
 		final SymbolStruct symbol = pkg.findSymbol("FOO").getSymbol();
 
 		return symbol.getFunction();
@@ -314,7 +314,7 @@ public class TestGround {
 
 	private Object functionCallGen(final Closure currentClosure) {
 
-		final PackageStructImpl pkg = PackageStructImpl.findPackage("SYSTEM");
+		final PackageStruct pkg = PackageStruct.findPackage("SYSTEM");
 		final SymbolStruct symbol = pkg.findSymbol("FOO").getSymbol();
 
 		final FunctionStruct function = symbol.getFunction();
@@ -344,7 +344,7 @@ public class TestGround {
 			closureBindings = currentClosure.getFunctionBindings();
 		}
 
-		final PackageStructImpl pkg = PackageStructImpl.findPackage("SYSTEM");
+		final PackageStruct pkg = PackageStruct.findPackage("SYSTEM");
 		final SymbolStruct symbol = pkg.findSymbol("FOO").getSymbol();
 
 		final FunctionStruct initForm = new TestGroundLambdaFunction(currentClosure);
@@ -443,7 +443,7 @@ public class TestGround {
 	private Object setUpMacroLambda() {
 		final TestGroundMacroFunctionExpanderGenerator expanderGenerator = new TestGroundMacroFunctionExpanderGenerator();
 
-		final PackageStructImpl pkg = PackageStructImpl.findPackage("SYSTEM");
+		final PackageStruct pkg = PackageStruct.findPackage("SYSTEM");
 		final SymbolStruct macroName = pkg.findSymbol("FOO").getSymbol();
 
 		macroName.setMacroFunctionExpander(expanderGenerator);

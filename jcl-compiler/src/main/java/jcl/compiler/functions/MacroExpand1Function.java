@@ -8,9 +8,9 @@ import java.util.Optional;
 
 import jcl.compiler.environment.Environment;
 import jcl.lang.BooleanStruct;
+import jcl.lang.PackageStruct;
 import jcl.lang.statics.CompilerVariables;
 import jcl.lang.LispStruct;
-import jcl.lang.PackageStructImpl;
 import jcl.lang.PackageSymbolStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.TStruct;
@@ -111,7 +111,7 @@ public final class MacroExpand1Function extends CommonLispBuiltInFunctionStruct 
 	}
 
 	private static Optional<SymbolStruct> getSymbolStruct(final SymbolStruct symbolElement) {
-		final PackageStructImpl thePackage = symbolElement.getSymbolPackage();
+		final PackageStruct thePackage = symbolElement.getSymbolPackage();
 		if (thePackage != null) {
 
 			final String symbolName = symbolElement.getName();

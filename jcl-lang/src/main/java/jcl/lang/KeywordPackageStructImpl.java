@@ -15,7 +15,7 @@ public final class KeywordPackageStructImpl extends PackageStructImpl {
 	/**
 	 * Singleton instance of the Keyword package.
 	 */
-	public static final PackageStructImpl INSTANCE = new KeywordPackageStructImpl();
+	public static final PackageStruct INSTANCE = new KeywordPackageStructImpl();
 
 	/**
 	 * Public constructor.

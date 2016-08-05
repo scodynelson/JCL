@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import jcl.lang.LispStruct;
-import jcl.lang.PackageStructImpl;
+import jcl.lang.PackageStruct;
 import jcl.lang.statics.PackageVariables;
 import jcl.lang.TStruct;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
@@ -51,7 +51,7 @@ public final class ShadowFunction extends CommonLispBuiltInFunctionStruct {
 	@Override
 	public LispStruct apply(final Arguments arguments) {
 		final LispStruct lispStruct = arguments.getRequiredArgument(SYMBOL_NAMES_ARGUMENT);
-		final PackageStructImpl aPackage = arguments.getOptionalArgument(PACKAGE_ARGUMENT, PackageStructImpl.class);
+		final PackageStruct aPackage = arguments.getOptionalArgument(PACKAGE_ARGUMENT, PackageStruct.class);
 
 		final String[] symbolNameArray;
 		if (lispStruct instanceof ListStruct) {

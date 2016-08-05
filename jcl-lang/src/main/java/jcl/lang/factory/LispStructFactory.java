@@ -31,6 +31,7 @@ import jcl.lang.InputStreamStruct;
 import jcl.lang.IntegerStruct;
 import jcl.lang.JavaStreamStruct;
 import jcl.lang.KeywordStruct;
+import jcl.lang.PackageStruct;
 import jcl.lang.internal.KeywordStructImpl;
 import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
@@ -566,19 +567,19 @@ public final class LispStructFactory {
 	 * Package
 	 */
 
-	public static PackageStructImpl toPackage(final String name) {
+	public static PackageStruct toPackage(final String name) {
 		return PackageStructImpl.valueOf(name);
 	}
 
-	public static PackageStructImpl toPackage(final String name, final List<String> nicknames) {
+	public static PackageStruct toPackage(final String name, final List<String> nicknames) {
 		return PackageStructImpl.valueOf(name, nicknames);
 	}
 
-	public static PackageStructImpl toPackage(final String name, final List<String> nicknames, final PackageStructImpl... useList) {
+	public static PackageStruct toPackage(final String name, final List<String> nicknames, final PackageStruct... useList) {
 		return PackageStructImpl.valueOf(name, nicknames, useList);
 	}
 
-	public static PackageStructImpl toPackage(final String name, final List<String> nicknames, final List<PackageStructImpl> useList) {
+	public static PackageStruct toPackage(final String name, final List<String> nicknames, final List<PackageStruct> useList) {
 		return PackageStructImpl.valueOf(name, nicknames, useList);
 	}
 

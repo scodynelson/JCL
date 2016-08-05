@@ -7,7 +7,7 @@ import java.util.stream.Collectors;
 
 import com.ibm.icu.lang.UCharacter;
 import jcl.lang.CharacterStruct;
-import jcl.lang.PackageStructImpl;
+import jcl.lang.PackageStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.statics.PrinterVariables;
 import jcl.lang.StringStruct;
@@ -153,16 +153,16 @@ public final class StringStructImpl extends VectorStructImpl<CharacterStruct> im
 
 	/**
 	 * {@inheritDoc}
-	 * Returns the PackageStruct with the {@link PackageStructImpl#name} that matches the StringStruct instance via
-	 * {@link PackageStructImpl#findPackage(String)}.
+	 * Returns the PackageStruct with the {@link PackageStruct#getName()} that matches the StringStruct instance via
+	 * {@link PackageStruct#findPackage(String)}.
 	 *
-	 * @return the PackageStruct with the {@link PackageStructImpl#name} that matches the instance
+	 * @return the PackageStruct with the {@link PackageStruct#getName()} that matches the instance
 	 */
 	@Override
-	public Supplier<PackageStructImpl> asPackage() {
+	public Supplier<PackageStruct> asPackage() {
 		return () -> {
 			final String packageName = getAsJavaString();
-			return PackageStructImpl.findPackage(packageName);
+			return PackageStruct.findPackage(packageName);
 		};
 	}
 

@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import jcl.lang.LispStruct;
-import jcl.lang.PackageStructImpl;
+import jcl.lang.PackageStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.factory.LispStructFactory;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
@@ -40,17 +40,17 @@ public final class PackageShadowingSymbolsFunction extends CommonLispBuiltInFunc
 	/**
 	 * {@inheritDoc}
 	 * Application method for {@code package-shadowing-symbols} package function that returns the {@link
-	 * PackageStructImpl#shadowingSymbols} values as a {@link ListStruct}.
+	 * PackageStruct#getShadowingSymbols()} values as a {@link ListStruct}.
 	 *
 	 * @param lispStructs
 	 * 		the function parameters
 	 *
-	 * @return the {@link PackageStructImpl#shadowingSymbols} values as a {@link ListStruct}
+	 * @return the {@link PackageStruct#getShadowingSymbols()} values as a {@link ListStruct}
 	 */
 	@Override
 	public LispStruct apply(final Arguments arguments) {
 		final LispStruct lispStruct = arguments.getRequiredArgument(PACKAGE_ARGUMENT);
-		final PackageStructImpl aPackage = lispStruct.asPackage().get();
+		final PackageStruct aPackage = lispStruct.asPackage().get();
 
 		final Collection<SymbolStruct> shadowingSymbols = aPackage.getShadowingSymbols().values();
 		return LispStructFactory.toProperList(new ArrayList<>(shadowingSymbols));

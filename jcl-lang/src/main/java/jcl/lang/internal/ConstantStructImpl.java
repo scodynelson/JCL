@@ -2,7 +2,7 @@ package jcl.lang.internal;
 
 import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
-import jcl.lang.PackageStructImpl;
+import jcl.lang.PackageStruct;
 import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.function.FunctionStruct;
 import jcl.lang.function.expander.SymbolMacroExpanderInter;
@@ -13,22 +13,22 @@ public class ConstantStructImpl<TYPE extends LispStruct> extends SymbolStructImp
 	private final TYPE constantValue;
 
 	protected ConstantStructImpl(final LispType lispType,
-	                             final String name, final PackageStructImpl symbolPackage, final TYPE value, final FunctionStruct function) {
+	                             final String name, final PackageStruct symbolPackage, final TYPE value, final FunctionStruct function) {
 		super(lispType, name, symbolPackage, value, function);
 		constantValue = value;
 	}
 
-	protected ConstantStructImpl(final String name, final PackageStructImpl symbolPackage, final TYPE value) {
+	protected ConstantStructImpl(final String name, final PackageStruct symbolPackage, final TYPE value) {
 		super(name, symbolPackage, value);
 		constantValue = value;
 	}
 
-	public static <T extends LispStruct> ConstantStructImpl<T> valueOf(final String name, final PackageStructImpl symbolPackage, final T value) {
+	public static <T extends LispStruct> ConstantStructImpl<T> valueOf(final String name, final PackageStruct symbolPackage, final T value) {
 		return new ConstantStructImpl<T>(name, symbolPackage, value);
 	}
 
 	@Override
-	public void setSymbolPackage(final PackageStructImpl symbolPackage) {
+	public void setSymbolPackage(final PackageStruct symbolPackage) {
 		throw new ProgramErrorException("Can't set package for constant " + name + '.');
 	}
 

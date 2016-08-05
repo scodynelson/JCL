@@ -10,7 +10,7 @@ import java.util.function.BiConsumer;
 import java.util.function.Function;
 
 import jcl.lang.LispStruct;
-import jcl.lang.PackageStructImpl;
+import jcl.lang.PackageStruct;
 import jcl.lang.statics.PackageVariables;
 import jcl.lang.SymbolStruct;
 import jcl.lang.TStruct;
@@ -49,7 +49,7 @@ abstract class AbstractSymbolListPackageFunction extends CommonLispBuiltInFuncti
 	@Override
 	public LispStruct apply(final Arguments arguments) {
 		final LispStruct lispStruct = arguments.getRequiredArgument("SYMBOLS");
-		final PackageStructImpl aPackage = arguments.getOptionalArgument("PACKAGE").asPackage().get();
+		final PackageStruct aPackage = arguments.getOptionalArgument("PACKAGE").asPackage().get();
 
 		final SymbolStruct[] realSymbolArray;
 		if (lispStruct instanceof ListStruct) {
@@ -72,10 +72,10 @@ abstract class AbstractSymbolListPackageFunction extends CommonLispBuiltInFuncti
 	}
 
 	/**
-	 * Abstract method to return a {@link BiConsumer} function that consumes a {@link PackageStructImpl} and an array of
+	 * Abstract method to return a {@link BiConsumer} function that consumes a {@link PackageStruct} and an array of
 	 * {@link SymbolStruct}s.
 	 *
-	 * @return a {@link BiConsumer} function that consumes a {@link PackageStructImpl} and an array of {@link SymbolStruct}s
+	 * @return a {@link BiConsumer} function that consumes a {@link PackageStruct} and an array of {@link SymbolStruct}s
 	 */
-	protected abstract BiConsumer<PackageStructImpl, SymbolStruct[]> symbolListFunction();
+	protected abstract BiConsumer<PackageStruct, SymbolStruct[]> symbolListFunction();
 }

@@ -24,21 +24,21 @@ import jcl.type.PackageType;
 /**
  * The {@link PackageStructImpl} is the object representation of a Lisp 'package' type.
  */
-public class PackageStructImpl extends BuiltInClassStruct {
+public class PackageStructImpl extends BuiltInClassStruct implements PackageStruct {
 
 	public static final KeywordStruct INTERNAL_KEYWORD = KeywordStructImpl.valueOf("INTERNAL");
 	public static final KeywordStruct EXTERNAL_KEYWORD = KeywordStructImpl.valueOf("EXTERNAL");
 	public static final KeywordStruct INHERITED_KEYWORD = KeywordStructImpl.valueOf("INHERITED");
 
 	/**
-	 * The {@link List} of {@link PackageStructImpl}s that the package uses.
+	 * The {@link List} of {@link PackageStruct}s that the package uses.
 	 */
-	private final List<PackageStructImpl> useList = new ArrayList<>();
+	private final List<PackageStruct> useList = new ArrayList<>();
 
 	/**
-	 * The {@link List} of {@link PackageStructImpl}s that the package is used by.
+	 * The {@link List} of {@link PackageStruct}s that the package is used by.
 	 */
-	private final List<PackageStructImpl> usedByList = new ArrayList<>();
+	private final List<PackageStruct> usedByList = new ArrayList<>();
 
 	/**
 	 * The {@link Map} of the packages external {@link SymbolStruct}s.
@@ -101,7 +101,7 @@ public class PackageStructImpl extends BuiltInClassStruct {
 	 * @param useList
 	 * 		the packages this package will use/inherit from
 	 */
-	private PackageStructImpl(final String name, final List<String> nicknames, final PackageStructImpl... useList) {
+	private PackageStructImpl(final String name, final List<String> nicknames, final PackageStruct... useList) {
 		this(name, nicknames, new ArrayList<>(Arrays.asList(useList)));
 	}
 
@@ -115,13 +115,13 @@ public class PackageStructImpl extends BuiltInClassStruct {
 	 * @param useList
 	 * 		the packages this package will use/inherit from
 	 */
-	private PackageStructImpl(final String name, final List<String> nicknames, final List<PackageStructImpl> useList) {
+	private PackageStructImpl(final String name, final List<String> nicknames, final List<PackageStruct> useList) {
 		super(PackageType.INSTANCE, null, null);
 		this.name = name;
 		this.nicknames = nicknames;
 
 		this.useList.addAll(useList);
-		final PackageStructImpl[] useListArray = new PackageStructImpl[useList.size()];
+		final PackageStruct[] useListArray = new PackageStruct[useList.size()];
 		internalUsePackage(useList.toArray(useListArray));
 
 		init();
@@ -137,99 +137,63 @@ public class PackageStructImpl extends BuiltInClassStruct {
 		}
 	}
 
-	public static PackageStructImpl valueOf(final String name) {
+	public static PackageStruct valueOf(final String name) {
 		return new PackageStructImpl(name);
 	}
 
-	public static PackageStructImpl valueOf(final String name, final List<String> nicknames) {
+	public static PackageStruct valueOf(final String name, final List<String> nicknames) {
 		return new PackageStructImpl(name, nicknames);
 	}
 
-	public static PackageStructImpl valueOf(final String name, final List<String> nicknames, final PackageStructImpl... useList) {
+	public static PackageStruct valueOf(final String name, final List<String> nicknames, final PackageStruct... useList) {
 		return new PackageStructImpl(name, nicknames, useList);
 	}
 
-	public static PackageStructImpl valueOf(final String name, final List<String> nicknames, final List<PackageStructImpl> useList) {
+	public static PackageStruct valueOf(final String name, final List<String> nicknames, final List<PackageStruct> useList) {
 		return new PackageStructImpl(name, nicknames, useList);
 	}
 
 	@Override
-	public Supplier<PackageStructImpl> asPackage() {
+	public Supplier<PackageStruct> asPackage() {
 		return () -> this;
 	}
 
-	/**
-	 * Getter for package {@link #name} property.
-	 *
-	 * @return package {@link #name} property
-	 */
+	@Override
 	public String getName() {
 		return name;
 	}
 
-	/**
-	 * Getter for package {@link #nicknames} property.
-	 *
-	 * @return package {@link #nicknames} property
-	 */
+	@Override
 	public List<String> getNicknames() {
 		return nicknames;
 	}
 
-	/**
-	 * Getter for package {@link #externalSymbols} property.
-	 *
-	 * @return package {@link #externalSymbols} property
-	 */
+	@Override
 	public Map<String, SymbolStruct> getExternalSymbols() {
 		return externalSymbols;
 	}
 
-	/**
-	 * Getter for package {@link #shadowingSymbols} property.
-	 *
-	 * @return package {@link #shadowingSymbols} property
-	 */
+	@Override
 	public Map<String, SymbolStruct> getShadowingSymbols() {
 		return shadowingSymbols;
 	}
 
-	/**
-	 * Getter for package {@link #useList} property.
-	 *
-	 * @return package {@link #useList} property
-	 */
-	public List<PackageStructImpl> getUseList() {
+	@Override
+	public List<PackageStruct> getUseList() {
 		return new ArrayList<>(useList);
 	}
 
-	/**
-	 * Getter for package {@link #usedByList} property.
-	 *
-	 * @return package {@link #usedByList} property
-	 */
-	public List<PackageStructImpl> getUsedByList() {
+	@Override
+	public List<PackageStruct> getUsedByList() {
 		return new ArrayList<>(usedByList);
 	}
 
-	/**
-	 * Renames the package and updates it in the {@link GlobalPackageStruct#ALL_PACKAGES} map.
-	 *
-	 * @param newName
-	 * 		the new package name
-	 */
+	@Override
 	public void renamePackage(final String newName) {
 		renamePackage(newName, Collections.emptyList());
 	}
 
-	/**
-	 * Renames the package and updates it in the global ALL_PACKAGES map.
-	 *
-	 * @param newName
-	 * 		the new package name
-	 * @param newNicknames
-	 * 		the new package nicknames
-	 */
+	@Override
 	public void renamePackage(final String newName, final List<String> newNicknames) {
 		GlobalPackageStruct.ALL_PACKAGES.remove(name);
 		name = newName;
@@ -242,14 +206,11 @@ public class PackageStructImpl extends BuiltInClassStruct {
 		}
 	}
 
-	/**
-	 * Deletes the package and removes it from the {@link GlobalPackageStruct#ALL_PACKAGES} map. The deletion method
-	 * does not destroy the object, but clears its global usages and changes the name to 'null'.
-	 */
+	@Override
 	public void deletePackage() {
 		GlobalPackageStruct.ALL_PACKAGES.remove(name);
 		nicknames.forEach(GlobalPackageStruct.ALL_PACKAGES::remove);
-		for (final PackageStructImpl usedByPackage : usedByList) {
+		for (final PackageStruct usedByPackage : usedByList) {
 			usedByPackage.unUsePackage(this);
 		}
 		usedByList.clear();
@@ -257,13 +218,8 @@ public class PackageStructImpl extends BuiltInClassStruct {
 		name = null;
 	}
 
-	/**
-	 * Updates the package to use the provided {@code packagesToUse}.
-	 *
-	 * @param packagesToUse
-	 * 		the packages that will be used
-	 */
-	public void usePackage(final PackageStructImpl... packagesToUse) {
+	@Override
+	public void usePackage(final PackageStruct... packagesToUse) {
 		useList.addAll(Arrays.asList(packagesToUse));
 		internalUsePackage(packagesToUse);
 	}
@@ -274,14 +230,14 @@ public class PackageStructImpl extends BuiltInClassStruct {
 	 * @param packagesToUse
 	 * 		the packages that will be used
 	 */
-	private void internalUsePackage(final PackageStructImpl... packagesToUse) {
-		for (final PackageStructImpl packageToUse : packagesToUse) {
+	private void internalUsePackage(final PackageStruct... packagesToUse) {
+		for (final PackageStruct packageToUse : packagesToUse) {
 			if (packageToUse.equals(GlobalPackageStruct.KEYWORD)) {
 				throw new PackageErrorException(this + " can't use package " + GlobalPackageStruct.KEYWORD, this);
 			}
 
 			// Shadow current nonInherited symbols
-			for (final String symbolName : packageToUse.externalSymbols.keySet()) {
+			for (final String symbolName : packageToUse.getExternalSymbols().keySet()) {
 				final PackageSymbolStruct nonInheritedPackageSymbol = findNonInheritedSymbol(symbolName);
 				if (nonInheritedPackageSymbol != null) {
 					final SymbolStruct nonInheritedSymbol = nonInheritedPackageSymbol.getSymbol();
@@ -289,34 +245,22 @@ public class PackageStructImpl extends BuiltInClassStruct {
 				}
 			}
 
-			packageToUse.usedByList.add(this);
+			packageToUse.getUsedByList().add(this);
 		}
 	}
 
-	/**
-	 * Updates the package to un-use the provided {@code packagesToUnUse}.
-	 *
-	 * @param packagesToUnUse
-	 * 		the packages that will be un-used
-	 */
-	public void unUsePackage(final PackageStructImpl... packagesToUnUse) {
+	@Override
+	public void unUsePackage(final PackageStruct... packagesToUnUse) {
 		useList.removeAll(Arrays.asList(packagesToUnUse));
-		for (final PackageStructImpl packageToUnUse : packagesToUnUse) {
+		for (final PackageStruct packageToUnUse : packagesToUnUse) {
 			// NOTE: We will leave the shadows in the shadowing list. This is due to the fact that we would have to search
 			// through ALL used packages to make sure that there aren't any other inherited symbols that the symbol names
 			// are shadowing. That's just overkill, when keeping them in the shadowing list won't affect anything.
-			packageToUnUse.usedByList.remove(this);
+			packageToUnUse.getUsedByList().remove(this);
 		}
 	}
 
-	/**
-	 * Locates the symbol matching the provided {@code symbolName}.
-	 *
-	 * @param symbolName
-	 * 		the name of the symbol to find
-	 *
-	 * @return the symbol if found and it's package location type, or null if not found
-	 */
+	@Override
 	public PackageSymbolStruct findSymbol(final String symbolName) {
 		// NOTE: Order matters here!!
 
@@ -333,12 +277,7 @@ public class PackageStructImpl extends BuiltInClassStruct {
 		return null;
 	}
 
-	/**
-	 * Imports the provided {@code symbols} into the package.
-	 *
-	 * @param symbols
-	 * 		the symbols to import into the package
-	 */
+	@Override
 	public void importSymbols(final SymbolStruct... symbols) {
 		for (final SymbolStruct symbol : symbols) {
 			final String symbolName = symbol.getName();
@@ -361,13 +300,7 @@ public class PackageStructImpl extends BuiltInClassStruct {
 		}
 	}
 
-	/**
-	 * Performs a shadowing import of the provided {@code symbols} into the package, shadowing each one and uninterning
-	 * current symbols with matching symbol names that already exist in the internal symbols of the package.
-	 *
-	 * @param symbols
-	 * 		the symbols to shadow import into the package
-	 */
+	@Override
 	public void shadowingImport(final SymbolStruct... symbols) {
 		for (final SymbolStruct symbol : symbols) {
 			final String symbolName = symbol.getName();
@@ -387,14 +320,7 @@ public class PackageStructImpl extends BuiltInClassStruct {
 		}
 	}
 
-	/**
-	 * Exports the provided symbols and puts them into the externalSymbols map. All found symbols are exported and
-	 * those
-	 * not found are stored for throwing in a {@link PackageErrorException}.
-	 *
-	 * @param symbols
-	 * 		the symbols to export
-	 */
+	@Override
 	public void export(final SymbolStruct... symbols) {
 		final List<String> notFoundSymbolNames = new ArrayList<>();
 
@@ -423,13 +349,7 @@ public class PackageStructImpl extends BuiltInClassStruct {
 		handleExportSymbolsNotInPackageError(notFoundSymbolNames);
 	}
 
-	/**
-	 * Un-exports the provided symbols and removes them from the externalSymbols map. All found symbols are un-exported
-	 * and those not found are stored for throwing in a {@link PackageErrorException}.
-	 *
-	 * @param symbols
-	 * 		the symbols to un-export
-	 */
+	@Override
 	public void unexport(final SymbolStruct... symbols) {
 		final List<String> notFoundSymbolNames = new ArrayList<>();
 
@@ -468,13 +388,7 @@ public class PackageStructImpl extends BuiltInClassStruct {
 		}
 	}
 
-	/**
-	 * Shadows the provided {@code symbolNames}, either by finding the current non-inherited matching symbol, or by
-	 * creating a new symbol with the non-existent symbolName.
-	 *
-	 * @param symbolNames
-	 * 		the names of the symbols to shadow
-	 */
+	@Override
 	public void shadow(final String... symbolNames) {
 		for (final String symbolName : symbolNames) {
 			final PackageSymbolStruct nonInheritedPackageSymbol = findNonInheritedSymbol(symbolName);
@@ -491,15 +405,7 @@ public class PackageStructImpl extends BuiltInClassStruct {
 		}
 	}
 
-	/**
-	 * Locates the symbol matching the provided {@code symbolName} or creates a new internal symbol with it, interns it
-	 * into the package, and returns it with it's package location type.
-	 *
-	 * @param symbolName
-	 * 		the name of the symbol to intern
-	 *
-	 * @return the symbol if found and it's package location type, or a new symbol with internal type if not found
-	 */
+	@Override
 	public PackageSymbolStruct intern(final String symbolName) {
 		final PackageSymbolStruct foundPackageSymbol = findSymbol(symbolName);
 		if (foundPackageSymbol != null) {
@@ -512,14 +418,7 @@ public class PackageStructImpl extends BuiltInClassStruct {
 		return new PackageSymbolStruct(symbolStruct, INTERNAL_KEYWORD);
 	}
 
-	/**
-	 * Un-interns the provided {@code symbol} from the package.
-	 *
-	 * @param symbol
-	 * 		the symbol to un-intern from the package
-	 *
-	 * @return whether a symbol was indeed un-interned or not
-	 */
+	@Override
 	public boolean unintern(final SymbolStruct symbol) {
 		final String symbolName = symbol.getName();
 
@@ -546,49 +445,6 @@ public class PackageStructImpl extends BuiltInClassStruct {
 	}
 
 	/**
-	 * Finds the matching package in the {@link GlobalPackageStruct#ALL_PACKAGES} map by the provided {@code
-	 * packageName}.
-	 *
-	 * @param packageName
-	 * 		the name of the package to location within the {@link GlobalPackageStruct#ALL_PACKAGES} map
-	 *
-	 * @return the located package for the provided {@code packageName}
-	 */
-	public static PackageStructImpl findPackage(final String packageName) {
-		return GlobalPackageStruct.ALL_PACKAGES.get(packageName);
-	}
-
-	/**
-	 * This static method finds all symbols in the {@link GlobalPackageStruct#ALL_PACKAGES} map by traversing all the
-	 * existing packages to find all the symbols with the provided {@code symbolName}.
-	 *
-	 * @param symbolName
-	 * 		the name of the symbol(s) to locate within the {@link GlobalPackageStruct#ALL_PACKAGES} map
-	 *
-	 * @return the located symbol(s) within the ALL_PACKAGES global package map
-	 */
-	public static List<SymbolStruct> findAllSymbols(final String symbolName) {
-		final Set<SymbolStruct> allSymbols = new HashSet<>();
-		for (final PackageStructImpl packageStruct : GlobalPackageStruct.ALL_PACKAGES.values()) {
-			final PackageSymbolStruct foundPackageSymbol = packageStruct.findSymbol(symbolName);
-			if (foundPackageSymbol != null) {
-				final SymbolStruct foundSymbol = foundPackageSymbol.getSymbol();
-				allSymbols.add(foundSymbol);
-			}
-		}
-		return new ArrayList<>(allSymbols);
-	}
-
-	/**
-	 * Lists all current packages existent in the {@link GlobalPackageStruct#ALL_PACKAGES} map.
-	 *
-	 * @return a list of all current packages existent in the {@link GlobalPackageStruct#ALL_PACKAGES} map
-	 */
-	public static List<PackageStructImpl> listAllPackages() {
-		return new ArrayList<>(GlobalPackageStruct.ALL_PACKAGES.values());
-	}
-
-	/**
 	 * Determines if a name conflict exists with the symbolName and that it is currently resolved due to a shadowing
 	 * symbol existence.
 	 *
@@ -603,7 +459,7 @@ public class PackageStructImpl extends BuiltInClassStruct {
 		}
 
 		final Set<SymbolStruct> conflictingInheritedSymbols = new HashSet<>();
-		for (final PackageStructImpl usedPackage : useList) {
+		for (final PackageStruct usedPackage : useList) {
 			final PackageSymbolStruct inheritedPackageSymbol = usedPackage.findSymbol(symbolName);
 			if (inheritedPackageSymbol != null) {
 				final SymbolStruct inheritedSymbol = inheritedPackageSymbol.getSymbol();
@@ -654,7 +510,7 @@ public class PackageStructImpl extends BuiltInClassStruct {
 		// NOTE: Order matters here!!
 
 		SymbolStruct foundSymbol = null;
-		for (final PackageStructImpl usedPackage : useList) {
+		for (final PackageStruct usedPackage : useList) {
 			final PackageSymbolStruct inheritedPackageSymbol = usedPackage.findSymbol(symbolName);
 			if (inheritedPackageSymbol == null) {
 				continue;

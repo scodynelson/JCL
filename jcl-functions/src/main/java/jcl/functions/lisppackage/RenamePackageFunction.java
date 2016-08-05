@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 
 import jcl.lang.CharacterStruct;
 import jcl.lang.LispStruct;
-import jcl.lang.PackageStructImpl;
+import jcl.lang.PackageStruct;
 import jcl.lang.StringStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.TypeErrorException;
@@ -47,17 +47,17 @@ public final class RenamePackageFunction extends CommonLispBuiltInFunctionStruct
 
 	/**
 	 * {@inheritDoc}
-	 * Application method for the package function that renames the provided {@link PackageStructImpl} package-designator,
+	 * Application method for the package function that renames the provided {@link PackageStruct} package-designator,
 	 * optionally giving it the provided nicknames.
 	 *
 	 * @param lispStructs
 	 * 		the function parameters
 	 *
-	 * @return the renamed {@link PackageStructImpl}
+	 * @return the renamed {@link PackageStruct}
 	 */
 	@Override
 	public LispStruct apply(final Arguments arguments) {
-		final PackageStructImpl aPackage = arguments.getRequiredArgument(PACKAGE_ARGUMENT).asPackage().get();
+		final PackageStruct aPackage = arguments.getRequiredArgument(PACKAGE_ARGUMENT).asPackage().get();
 
 		final LispStruct packageDesignator = arguments.getRequiredArgument(NEW_NAME_ARGUMENT);
 		final String newName;
@@ -67,8 +67,8 @@ public final class RenamePackageFunction extends CommonLispBuiltInFunctionStruct
 			newName = ((SymbolStruct) packageDesignator).getName();
 		} else if (packageDesignator instanceof CharacterStruct) {
 			newName = ((CharacterStruct) packageDesignator).getCharacter().toString();
-		} else if (packageDesignator instanceof PackageStructImpl) {
-			newName = ((PackageStructImpl) packageDesignator).getName();
+		} else if (packageDesignator instanceof PackageStruct) {
+			newName = ((PackageStruct) packageDesignator).getName();
 		} else {
 			throw new TypeErrorException("UNCAUGHT TYPE ERROR.");
 		}

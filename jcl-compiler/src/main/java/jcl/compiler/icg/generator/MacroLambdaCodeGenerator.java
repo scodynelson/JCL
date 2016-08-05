@@ -30,7 +30,7 @@ import jcl.compiler.icg.JavaMethodBuilder;
 import jcl.compiler.struct.specialoperator.PrognStruct;
 import jcl.compiler.struct.specialoperator.lambda.MacroLambdaStruct;
 import jcl.lang.LispStruct;
-import jcl.lang.PackageStructImpl;
+import jcl.lang.PackageStruct;
 import jcl.lang.StringStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.NILStruct;
@@ -705,7 +705,7 @@ final class MacroLambdaCodeGenerator implements CodeGenerator<MacroLambdaStruct>
 	 * @param symbolArgStore
 	 * 		the storage location index on the stack where the {@link SymbolStruct} parameter value is located
 	 * @param initFormVarPackageStore
-	 * 		the storage location index on the stack where the {@link PackageStructImpl} for the provided {@code var} {@link
+	 * 		the storage location index on the stack where the {@link PackageStruct} for the provided {@code var} {@link
 	 * 		SymbolStruct} will exist
 	 * @param initFormVarSymbolStore
 	 * 		the storage location index on the stack where the provided {@code var} {@link SymbolStruct} will exist
@@ -1232,7 +1232,7 @@ final class MacroLambdaCodeGenerator implements CodeGenerator<MacroLambdaStruct>
 	 * @param generatorState
 	 * 		stateful object used to hold the current state of the code generation process
 	 * @param suppliedPPackageStore
-	 * 		the storage location index on the stack where the {@link PackageStructImpl} for the provided {@link
+	 * 		the storage location index on the stack where the {@link PackageStruct} for the provided {@link
 	 * 		SuppliedPParameter#var} will exist
 	 * @param suppliedPSymbolStore
 	 * 		the storage location index on the stack where the {@link SuppliedPParameter#var} will exist

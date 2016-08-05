@@ -16,7 +16,7 @@ import jcl.compiler.environment.binding.lambdalist.SuppliedPParameter;
 import jcl.compiler.function.Closure;
 import jcl.compiler.function.CompiledFunctionStruct;
 import jcl.lang.LispStruct;
-import jcl.lang.PackageStructImpl;
+import jcl.lang.PackageStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.factory.LispStructFactory;
 import jcl.lang.NILStruct;
@@ -39,7 +39,7 @@ public class TestLambdaGenerator extends CompiledFunctionStruct {
 	protected List<RequiredParameter> getRequiredBindings() {
 		final List<RequiredParameter> requiredBindings = new ArrayList<>();
 
-		final PackageStructImpl pkg = PackageStructImpl.findPackage("SYSTEM");
+		final PackageStruct pkg = PackageStruct.findPackage("SYSTEM");
 		final SymbolStruct requiredSymbol = pkg.intern("REQUIRED-SYMBOL").getSymbol();
 		final RequiredParameter requiredBinding = new RequiredParameter(requiredSymbol, true);
 		requiredBindings.add(requiredBinding);
@@ -51,11 +51,11 @@ public class TestLambdaGenerator extends CompiledFunctionStruct {
 	protected List<OptionalParameter> getOptionalBindings() {
 		final List<OptionalParameter> optionalBindings = new ArrayList<>();
 
-		PackageStructImpl pkg = PackageStructImpl.findPackage("SYSTEM");
+		PackageStruct pkg = PackageStruct.findPackage("SYSTEM");
 		final SymbolStruct optionalSymbol = pkg.intern("OPTIONAL-SYMBOL").getSymbol();
 		final LispStruct optionalInitForm = NILStruct.INSTANCE;
 
-		pkg = PackageStructImpl.findPackage("SYSTEM");
+		pkg = PackageStruct.findPackage("SYSTEM");
 		final SymbolStruct optionalSuppliedPSymbol = pkg.intern("OPTIONAL-SYMBOL-P").getSymbol();
 		final SuppliedPParameter optionalSuppliedPBinding = new SuppliedPParameter(optionalSuppliedPSymbol, false);
 
@@ -67,7 +67,7 @@ public class TestLambdaGenerator extends CompiledFunctionStruct {
 
 	@Override
 	protected RestParameter getRestBinding() {
-		final PackageStructImpl pkg = PackageStructImpl.findPackage("SYSTEM");
+		final PackageStruct pkg = PackageStruct.findPackage("SYSTEM");
 		final SymbolStruct restSymbol = pkg.intern("REST-SYMBOL").getSymbol();
 		return new RestParameter(restSymbol, true);
 	}
@@ -76,15 +76,15 @@ public class TestLambdaGenerator extends CompiledFunctionStruct {
 	protected List<KeyParameter> getKeyBindings() {
 		final List<KeyParameter> keyBindings = new ArrayList<>();
 
-		PackageStructImpl pkg = PackageStructImpl.findPackage("SYSTEM");
+		PackageStruct pkg = PackageStruct.findPackage("SYSTEM");
 		final SymbolStruct keySymbol = pkg.intern("KEY-SYMBOL").getSymbol();
 		final LispStruct keyInitForm = NILStruct.INSTANCE;
 
-		pkg = PackageStructImpl.findPackage("SYSTEM");
+		pkg = PackageStruct.findPackage("SYSTEM");
 		final SymbolStruct keySuppliedPSymbol = pkg.intern("KEY-SUPPLIED-P-SYMBOL").getSymbol();
 		final SuppliedPParameter keySuppliedPBinding = new SuppliedPParameter(keySuppliedPSymbol, false);
 
-		pkg = PackageStructImpl.findPackage("KEYWORD");
+		pkg = PackageStruct.findPackage("KEYWORD");
 		final SymbolStruct keyName = pkg.intern("KEY-NAME").getSymbol();
 
 		final KeyParameter keyBinding = new KeyParameter(keySymbol, keyInitForm, false, keyName, keySuppliedPBinding);
@@ -102,7 +102,7 @@ public class TestLambdaGenerator extends CompiledFunctionStruct {
 	protected List<AuxParameter> getAuxBindings() {
 		final List<AuxParameter> auxBindings = new ArrayList<>();
 
-		final PackageStructImpl pkg = PackageStructImpl.findPackage("SYSTEM");
+		final PackageStruct pkg = PackageStruct.findPackage("SYSTEM");
 		final SymbolStruct auxSymbol = pkg.intern("AUX-SYMBOL").getSymbol();
 		final LispStruct auxInitForm = NILStruct.INSTANCE;
 
@@ -121,13 +121,13 @@ public class TestLambdaGenerator extends CompiledFunctionStruct {
 	@Override
 	protected LispStruct getInitForm(final Closure currentClosure, final SymbolStruct symbolBinding) {
 
-		final PackageStructImpl pkg1 = PackageStructImpl.findPackage("SYSTEM");
+		final PackageStruct pkg1 = PackageStruct.findPackage("SYSTEM");
 		final SymbolStruct symbol1 = pkg1.findSymbol("SYMBOL1").getSymbol();
 		if (symbolBinding.equals(symbol1)) {
 			return LispStructFactory.toCharacter(100);
 		}
 
-		final PackageStructImpl pkg2 = PackageStructImpl.findPackage("SYSTEM");
+		final PackageStruct pkg2 = PackageStruct.findPackage("SYSTEM");
 		final SymbolStruct symbol2 = pkg2.findSymbol("SYMBOL2").getSymbol();
 		if (symbolBinding.equals(symbol2)) {
 			return LispStructFactory.toCharacter(200);

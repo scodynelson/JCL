@@ -3,7 +3,7 @@ package jcl.system.repl;
 import jcl.compiler.functions.EvalFunction;
 import jcl.functions.readtable.ReadFunction;
 import jcl.lang.LispStruct;
-import jcl.lang.PackageStructImpl;
+import jcl.lang.PackageStruct;
 import jcl.lang.statics.PackageVariables;
 import jcl.lang.statics.REPLVariables;
 import jcl.lang.ValuesStruct;
@@ -62,7 +62,7 @@ public class ReadEvalPrint {
 			while (true) {
 				try {
 					// PROMPT --------------
-					final PackageStructImpl currentPackage = PackageVariables.PACKAGE.getVariableValue();
+					final PackageStruct currentPackage = PackageVariables.PACKAGE.getVariableValue();
 					final String currentPackageName = currentPackage.getName();
 					LOGGER.info("{}: {}> ", currentPackageName, counter++);
 

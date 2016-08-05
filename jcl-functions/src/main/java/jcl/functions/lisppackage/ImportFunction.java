@@ -6,7 +6,7 @@ package jcl.functions.lisppackage;
 
 import java.util.function.BiConsumer;
 
-import jcl.lang.PackageStructImpl;
+import jcl.lang.PackageStruct;
 import jcl.lang.SymbolStruct;
 import org.springframework.stereotype.Component;
 
@@ -27,12 +27,12 @@ public final class ImportFunction extends AbstractSymbolListPackageFunction {
 
 	/**
 	 * {@inheritDoc}
-	 * Returns {@link PackageStructImpl#importSymbols(SymbolStruct[])} as a method reference function.
+	 * Returns {@link PackageStruct#importSymbols(SymbolStruct[])} as a method reference function.
 	 *
-	 * @return returns {@link PackageStructImpl#importSymbols(SymbolStruct[])} as a method reference function
+	 * @return returns {@link PackageStruct#importSymbols(SymbolStruct[])} as a method reference function
 	 */
 	@Override
-	protected BiConsumer<PackageStructImpl, SymbolStruct[]> symbolListFunction() {
-		return PackageStructImpl::importSymbols;
+	protected BiConsumer<PackageStruct, SymbolStruct[]> symbolListFunction() {
+		return PackageStruct::importSymbols;
 	}
 }

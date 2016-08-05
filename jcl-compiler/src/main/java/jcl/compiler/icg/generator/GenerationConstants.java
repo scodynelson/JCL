@@ -30,9 +30,9 @@ import jcl.compiler.function.CompiledFunctionStruct;
 import jcl.compiler.function.expanders.CompiledMacroFunctionExpander;
 import jcl.lang.ComplexStruct;
 import jcl.lang.KeywordStruct;
+import jcl.lang.PackageStruct;
 import jcl.lang.statics.GlobalPackageStruct;
 import jcl.lang.LispStruct;
-import jcl.lang.PackageStructImpl;
 import jcl.lang.PackageSymbolStruct;
 import jcl.lang.StructureClassStruct;
 import jcl.lang.StructureObjectStruct;
@@ -295,17 +295,17 @@ interface GenerationConstants {
 
 	String SYMBOL_STRUCT_SET_MACRO_FUNCTION_EXPANDER_METHOD_DESC = CodeGenerators.getMethodDescription(SymbolStruct.class, SYMBOL_STRUCT_SET_MACRO_FUNCTION_EXPANDER_METHOD_NAME, MacroFunctionExpanderInter.class);
 
-	String PACKAGE_STRUCT_NAME = Type.getInternalName(PackageStructImpl.class);
+	String PACKAGE_STRUCT_NAME = Type.getInternalName(PackageStruct.class);
 
-	String PACKAGE_STRUCT_DESC = Type.getDescriptor(PackageStructImpl.class);
+	String PACKAGE_STRUCT_DESC = Type.getDescriptor(PackageStruct.class);
 
 	String PACKAGE_STRUCT_FIND_PACKAGE_METHOD_NAME = "findPackage";
 
-	String PACKAGE_STRUCT_FIND_PACKAGE_METHOD_DESC = CodeGenerators.getMethodDescription(PackageStructImpl.class, PACKAGE_STRUCT_FIND_PACKAGE_METHOD_NAME, String.class);
+	String PACKAGE_STRUCT_FIND_PACKAGE_METHOD_DESC = CodeGenerators.getMethodDescription(PackageStruct.class, PACKAGE_STRUCT_FIND_PACKAGE_METHOD_NAME, String.class);
 
 	String PACKAGE_STRUCT_INTERN_METHOD_NAME = "intern";
 
-	String PACKAGE_STRUCT_INTERN_METHOD_DESC = CodeGenerators.getMethodDescription(PackageStructImpl.class, PACKAGE_STRUCT_INTERN_METHOD_NAME, String.class);
+	String PACKAGE_STRUCT_INTERN_METHOD_DESC = CodeGenerators.getMethodDescription(PackageStruct.class, PACKAGE_STRUCT_INTERN_METHOD_NAME, String.class);
 
 	String PACKAGE_SYMBOL_STRUCT_NAME = Type.getInternalName(PackageSymbolStruct.class);
 

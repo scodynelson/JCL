@@ -13,11 +13,11 @@ import jcl.compiler.functions.EvalFunction;
 import jcl.functions.pathname.MergePathnamesFunction;
 import jcl.functions.readtable.ReadFunction;
 import jcl.lang.BooleanStruct;
+import jcl.lang.PackageStruct;
 import jcl.lang.statics.CommonLispSymbols;
 import jcl.lang.statics.CompilerVariables;
 import jcl.lang.FileStreamStruct;
 import jcl.lang.LispStruct;
-import jcl.lang.PackageStructImpl;
 import jcl.lang.statics.PackageVariables;
 import jcl.lang.TStruct;
 import jcl.lang.condition.exception.FileErrorException;
@@ -137,7 +137,7 @@ public final class LoadFunction extends CommonLispBuiltInFunctionStruct {
 		CompilerVariables.COMPILE_FILE_TRUENAME.setValue(filespecTruename);
 
 		final ReadtableStruct previousReadtable = ReaderVariables.READTABLE.getVariableValue();
-		final PackageStructImpl previousPackage = PackageVariables.PACKAGE.getVariableValue();
+		final PackageStruct previousPackage = PackageVariables.PACKAGE.getVariableValue();
 
 		try {
 			final String filespecNamestring = filespecPath.toString();

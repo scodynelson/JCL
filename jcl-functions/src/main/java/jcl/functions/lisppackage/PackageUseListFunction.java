@@ -7,7 +7,7 @@ package jcl.functions.lisppackage;
 import java.util.List;
 
 import jcl.lang.LispStruct;
-import jcl.lang.PackageStructImpl;
+import jcl.lang.PackageStruct;
 import jcl.lang.factory.LispStructFactory;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
@@ -37,20 +37,20 @@ public final class PackageUseListFunction extends CommonLispBuiltInFunctionStruc
 
 	/**
 	 * {@inheritDoc}
-	 * Application method for {@code package-use-list} package function that returns the {@link PackageStructImpl#useList}
+	 * Application method for {@code package-use-list} package function that returns the {@link PackageStruct#getUseList()}
 	 * as a {@link ListStruct}.
 	 *
 	 * @param lispStructs
 	 * 		the function parameters
 	 *
-	 * @return the {@link PackageStructImpl#useList} as a {@link ListStruct}
+	 * @return the {@link PackageStruct#getUseList()} as a {@link ListStruct}
 	 */
 	@Override
 	public LispStruct apply(final Arguments arguments) {
 		final LispStruct lispStruct = arguments.getRequiredArgument(PACKAGE_ARGUMENT);
-		final PackageStructImpl aPackage = lispStruct.asPackage().get();
+		final PackageStruct aPackage = lispStruct.asPackage().get();
 
-		final List<PackageStructImpl> useList = aPackage.getUseList();
+		final List<PackageStruct> useList = aPackage.getUseList();
 		return LispStructFactory.toProperList(useList);
 	}
 }

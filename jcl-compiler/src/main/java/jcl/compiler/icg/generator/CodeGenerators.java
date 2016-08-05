@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 import jcl.compiler.icg.GeneratorState;
 import jcl.compiler.icg.JavaClassBuilder;
 import jcl.compiler.icg.JavaMethodBuilder;
-import jcl.lang.PackageStructImpl;
+import jcl.lang.PackageStruct;
 import jcl.lang.SymbolStruct;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.FieldVisitor;
@@ -67,7 +67,7 @@ final class CodeGenerators {
 		final JavaMethodBuilder methodBuilder = generatorState.getCurrentMethodBuilder();
 		final MethodVisitor mv = methodBuilder.getMethodVisitor();
 
-		final PackageStructImpl pkg = input.getSymbolPackage();
+		final PackageStruct pkg = input.getSymbolPackage();
 		final String symbolName = input.getName();
 
 		if (pkg == null) {
@@ -152,16 +152,16 @@ final class CodeGenerators {
 			                   GenerationConstants.PACKAGE_STRUCT_NAME,
 			                   GenerationConstants.PACKAGE_STRUCT_FIND_PACKAGE_METHOD_NAME,
 			                   GenerationConstants.PACKAGE_STRUCT_FIND_PACKAGE_METHOD_DESC,
-			                   false);
+			                   true);
 			mv.visitVarInsn(Opcodes.ASTORE, packageStore);
 
 			mv.visitVarInsn(Opcodes.ALOAD, packageStore);
 			mv.visitLdcInsn(symbolName);
-			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
+			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
 			                   GenerationConstants.PACKAGE_STRUCT_NAME,
 			                   GenerationConstants.PACKAGE_STRUCT_INTERN_METHOD_NAME,
 			                   GenerationConstants.PACKAGE_STRUCT_INTERN_METHOD_DESC,
-			                   false);
+			                   true);
 			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
 			                   GenerationConstants.PACKAGE_SYMBOL_STRUCT_NAME,
 			                   GenerationConstants.PACKAGE_SYMBOL_STRUCT_GET_SYMBOL_METHOD_NAME,

@@ -7,7 +7,7 @@ package jcl.lang.stream;
 import java.nio.file.Path;
 
 import jcl.lang.internal.stream.FileStreamStructImpl;
-import jcl.lang.pathname.PathnameStruct;
+import jcl.lang.pathname.PathnameStructImpl;
 import jcl.type.LispType;
 
 /**
@@ -18,7 +18,7 @@ public final class FileStreamStructs {
 	private FileStreamStructs() {
 	}
 
-	public static FileStreamStructImpl open(final PathnameStruct pathname, final DirectionType directionType, final LispType elementType,
+	public static FileStreamStructImpl open(final PathnameStructImpl pathname, final DirectionType directionType, final LispType elementType,
 	                                        final IfExistsType ifExistsType, final IfDoesNotExistType ifDoesNotExistType,
 	                                        final ExternalFormat externalFormat) {
 

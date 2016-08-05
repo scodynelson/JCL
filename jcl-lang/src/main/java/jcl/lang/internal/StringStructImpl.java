@@ -12,7 +12,7 @@ import jcl.lang.SymbolStruct;
 import jcl.lang.statics.PrinterVariables;
 import jcl.lang.StringStruct;
 import jcl.lang.condition.exception.SimpleErrorException;
-import jcl.lang.pathname.PathnameStruct;
+import jcl.lang.pathname.PathnameStructImpl;
 import jcl.lang.statics.ReaderVariables;
 import jcl.lang.readtable.ReadtableStruct;
 import jcl.lang.readtable.SyntaxType;
@@ -136,10 +136,10 @@ public final class StringStructImpl extends VectorStructImpl<CharacterStruct> im
 	}
 
 	@Override
-	public Supplier<PathnameStruct> asPathname() {
+	public Supplier<PathnameStructImpl> asPathname() {
 		return () -> {
 			final String namestring = getAsJavaString();
-			return PathnameStruct.valueOf(namestring);
+			return PathnameStructImpl.valueOf(namestring);
 		};
 	}
 

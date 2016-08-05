@@ -10,7 +10,7 @@ import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.NILStruct;
-import jcl.lang.pathname.PathnameStruct;
+import jcl.lang.pathname.PathnameStructImpl;
 import jcl.lang.pathname.PathnameVersion;
 import jcl.lang.pathname.PathnameVersionComponentType;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +37,7 @@ public final class PathnameVersionFunction extends CommonLispBuiltInFunctionStru
 	public LispStruct apply(final Arguments arguments) {
 
 		final LispStruct pathspec = arguments.getRequiredArgument(PATHSPEC_ARGUMENT);
-		final PathnameStruct pathname = pathnameFunction.pathname(pathspec);
+		final PathnameStructImpl pathname = pathnameFunction.pathname(pathspec);
 		final PathnameVersion pathnameVersion = pathname.getPathnameVersion();
 		if (pathnameVersion == null) {
 			return NILStruct.INSTANCE;

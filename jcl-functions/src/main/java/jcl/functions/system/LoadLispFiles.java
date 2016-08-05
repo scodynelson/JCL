@@ -11,7 +11,7 @@ import jcl.lang.factory.LispStructFactory;
 import jcl.lang.function.ExtensionsBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
-import jcl.lang.pathname.PathnameStruct;
+import jcl.lang.pathname.PathnameStructImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -43,7 +43,7 @@ public final class LoadLispFiles extends ExtensionsBuiltInFunctionStruct {
 	public LispStruct apply(final Arguments arguments) {
 		CompileForm.OUTPUT_FILE = false;
 		for (final String lispFileToLoad : lispFilesToLoad) {
-			final PathnameStruct pathname = LispStructFactory.toPathname(lispFileToLoad);
+			final PathnameStructImpl pathname = LispStructFactory.toPathname(lispFileToLoad);
 			loadFunction.load(pathname, false, false, true);
 		}
 		CompileForm.OUTPUT_FILE = true;

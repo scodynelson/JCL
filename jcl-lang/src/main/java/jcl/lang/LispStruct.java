@@ -7,7 +7,7 @@ package jcl.lang;
 import java.util.function.Supplier;
 
 import jcl.lang.condition.exception.TypeErrorException;
-import jcl.lang.pathname.PathnameStruct;
+import jcl.lang.pathname.PathnameStructImpl;
 import jcl.type.LispType;
 import jcl.type.TType;
 
@@ -67,7 +67,7 @@ public interface LispStruct {
 	 *
 	 * @return a converted pathname, or a throw {@link TypeErrorException}
 	 */
-	default Supplier<PathnameStruct> asPathname() {
+	default Supplier<PathnameStructImpl> asPathname() {
 		throw new TypeErrorException("Type cannot be converted to Pathname.");
 	}
 

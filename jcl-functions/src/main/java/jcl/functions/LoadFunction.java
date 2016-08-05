@@ -27,7 +27,7 @@ import jcl.lang.function.FunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.NILStruct;
-import jcl.lang.pathname.PathnameStruct;
+import jcl.lang.pathname.PathnameStructImpl;
 import jcl.lang.statics.PathnameVariables;
 import jcl.lang.pathname.PathnameVersion;
 import jcl.lang.pathname.PathnameVersionComponentType;
@@ -105,7 +105,7 @@ public final class LoadFunction extends CommonLispBuiltInFunctionStruct {
 		FileStreamStruct filespecFileStream = null;
 
 		final Path filespecPath;
-		final PathnameStruct filespecPathname;
+		final PathnameStructImpl filespecPathname;
 
 		// NOTE: optimizations if the filespec is already a FileStreamStruct
 		if (filespec instanceof FileStreamStruct) {
@@ -113,7 +113,7 @@ public final class LoadFunction extends CommonLispBuiltInFunctionStruct {
 			filespecPath = filespecFileStream.getPath();
 			filespecPathname = LispStructFactory.toPathname(filespecPath);
 		} else {
-			final PathnameStruct defaultPathspec = PathnameVariables.DEFAULT_PATHNAME_DEFAULTS.getVariableValue();
+			final PathnameStructImpl defaultPathspec = PathnameVariables.DEFAULT_PATHNAME_DEFAULTS.getVariableValue();
 			final PathnameVersion nilVersion = new PathnameVersion(PathnameVersionComponentType.NIL);
 			filespecPathname = mergePathnamesFunction.mergePathnames(filespec, defaultPathspec, nilVersion);
 			final File pathnameFile = new File(filespecPathname.getNamestring());
@@ -133,7 +133,7 @@ public final class LoadFunction extends CommonLispBuiltInFunctionStruct {
 
 		CompilerVariables.COMPILE_FILE_PATHNAME.setValue(filespecPathname);
 		final Path filespecAbsolutePath = filespecPath.toAbsolutePath();
-		final PathnameStruct filespecTruename = LispStructFactory.toPathname(filespecAbsolutePath);
+		final PathnameStructImpl filespecTruename = LispStructFactory.toPathname(filespecAbsolutePath);
 		CompilerVariables.COMPILE_FILE_TRUENAME.setValue(filespecTruename);
 
 		final ReadtableStruct previousReadtable = ReaderVariables.READTABLE.getVariableValue();

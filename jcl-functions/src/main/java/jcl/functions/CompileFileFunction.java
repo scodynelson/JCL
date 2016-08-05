@@ -44,7 +44,7 @@ import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.NILStruct;
-import jcl.lang.pathname.PathnameStruct;
+import jcl.lang.pathname.PathnameStructImpl;
 import jcl.lang.statics.ReaderVariables;
 import jcl.lang.readtable.ReadtableStruct;
 import org.apache.commons.io.FilenameUtils;
@@ -120,7 +120,7 @@ public final class CompileFileFunction extends CommonLispBuiltInFunctionStruct {
 	public LispStruct compileFile(final LispStruct inputFile, final LispStruct outputFile, final boolean verbose, final boolean print) {
 		// NOTE: 'outputFile' will be null if it is not supplied.
 
-		final PathnameStruct inputFilePathname = pathnameFunction.pathname(inputFile);
+		final PathnameStructImpl inputFilePathname = pathnameFunction.pathname(inputFile);
 		final File inputFilePathnameFile = new File(inputFilePathname.getNamestring());
 		final Path inputFilePath = inputFilePathnameFile.toPath();
 
@@ -146,7 +146,7 @@ public final class CompileFileFunction extends CommonLispBuiltInFunctionStruct {
 			LOGGER.info("");
 		}
 
-		final PathnameStruct outputFilePathname = compileFilePathnameFunction.compileFilePathname(inputFilePathname, outputFile);
+		final PathnameStructImpl outputFilePathname = compileFilePathnameFunction.compileFilePathname(inputFilePathname, outputFile);
 		final File outputFilePathnameFile = new File(outputFilePathname.getNamestring());
 		final Path outputFilePath = outputFilePathnameFile.toPath();
 
@@ -155,7 +155,7 @@ public final class CompileFileFunction extends CommonLispBuiltInFunctionStruct {
 
 		CompilerVariables.COMPILE_FILE_PATHNAME.setValue(outputFilePathname);
 		final Path outputFileAbsolutePath = outputFilePath.toAbsolutePath();
-		final PathnameStruct outputFileTruename = LispStructFactory.toPathname(outputFileAbsolutePath);
+		final PathnameStructImpl outputFileTruename = LispStructFactory.toPathname(outputFileAbsolutePath);
 		CompilerVariables.COMPILE_FILE_TRUENAME.setValue(outputFileTruename);
 
 		final ReadtableStruct previousReadtable = ReaderVariables.READTABLE.getVariableValue();

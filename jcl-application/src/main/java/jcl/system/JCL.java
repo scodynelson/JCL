@@ -15,7 +15,7 @@ import jcl.lang.TwoWayStreamStruct;
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.factory.LispStructFactory;
 import jcl.lang.pathname.PathnameName;
-import jcl.lang.pathname.PathnameStruct;
+import jcl.lang.pathname.PathnameStructImpl;
 import jcl.lang.pathname.PathnameType;
 import jcl.lang.statics.StreamVariables;
 import jcl.system.repl.ReadEvalPrint;
@@ -103,14 +103,14 @@ public class JCL implements ApplicationRunner {
 		final String destDir = args.getOptionValues("compileFileDestDir").get(0);
 
 		for (final String fileName : sourceFiles) {
-			final PathnameStruct sourceFile = LispStructFactory.toPathname(fileName);
+			final PathnameStructImpl sourceFile = LispStructFactory.toPathname(fileName);
 
 			final PathnameName pathnameName = sourceFile.getPathnameName();
 			final PathnameType pathnameType = new PathnameType("jar");
-			final PathnameStruct tempPathname = LispStructFactory.toPathname(null, null, null, pathnameName, pathnameType, null);
+			final PathnameStructImpl tempPathname = LispStructFactory.toPathname(null, null, null, pathnameName, pathnameType, null);
 
-			final PathnameStruct destDirectory = LispStructFactory.toPathname(destDir);
-			final PathnameStruct newSourceFile = mergePathnamesFunction.mergePathnames(destDirectory, tempPathname);
+			final PathnameStructImpl destDirectory = LispStructFactory.toPathname(destDir);
+			final PathnameStructImpl newSourceFile = mergePathnamesFunction.mergePathnames(destDirectory, tempPathname);
 
 			compileFileFunction.compileFile(sourceFile, newSourceFile, true, true);
 		}
@@ -119,7 +119,7 @@ public class JCL implements ApplicationRunner {
 	private void loadLispFiles() {
 		CompileForm.OUTPUT_FILE = false;
 		for (final String lispFileToLoad : lispFilesToLoad) {
-			final PathnameStruct pathname = LispStructFactory.toPathname(lispFileToLoad);
+			final PathnameStructImpl pathname = LispStructFactory.toPathname(lispFileToLoad);
 			loadFunction.load(pathname, false, false, true);
 		}
 		CompileForm.OUTPUT_FILE = true;

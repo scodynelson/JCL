@@ -10,8 +10,8 @@ import jcl.lang.SynonymStreamStruct;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
-import jcl.lang.pathname.LogicalPathnameStruct;
-import jcl.lang.pathname.PathnameStruct;
+import jcl.lang.pathname.LogicalPathnameStructImpl;
+import jcl.lang.pathname.PathnameStructImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -38,11 +38,11 @@ public final class TranslateLogicalPathnameFunction extends CommonLispBuiltInFun
 		return translateLogicalPathname(pathspec);
 	}
 
-	public PathnameStruct translateLogicalPathname(final LispStruct pathnameDesignator) {
+	public PathnameStructImpl translateLogicalPathname(final LispStruct pathnameDesignator) {
 
-		final PathnameStruct pathname;
-		if (pathnameDesignator instanceof LogicalPathnameStruct) {
-			final LogicalPathnameStruct logicalPathname = (LogicalPathnameStruct) pathnameDesignator;
+		final PathnameStructImpl pathname;
+		if (pathnameDesignator instanceof LogicalPathnameStructImpl) {
+			final LogicalPathnameStructImpl logicalPathname = (LogicalPathnameStructImpl) pathnameDesignator;
 			pathname = logicalPathname.translateLogicalPathname();
 		} else if (pathnameDesignator instanceof SynonymStreamStruct) {
 			final SynonymStreamStruct synonymStream = (SynonymStreamStruct) pathnameDesignator;

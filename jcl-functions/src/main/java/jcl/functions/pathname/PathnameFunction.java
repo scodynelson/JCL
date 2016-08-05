@@ -15,7 +15,7 @@ import jcl.lang.factory.LispStructFactory;
 import jcl.lang.function.CommonLispBuiltInFunctionStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
-import jcl.lang.pathname.PathnameStruct;
+import jcl.lang.pathname.PathnameStructImpl;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -39,12 +39,12 @@ public final class PathnameFunction extends CommonLispBuiltInFunctionStruct {
 		return pathname(pathspec);
 	}
 
-	public PathnameStruct pathname(final LispStruct pathnameDesignator) {
+	public PathnameStructImpl pathname(final LispStruct pathnameDesignator) {
 
-		final PathnameStruct pathname;
+		final PathnameStructImpl pathname;
 		final String namestring;
-		if (pathnameDesignator instanceof PathnameStruct) {
-			pathname = (PathnameStruct) pathnameDesignator;
+		if (pathnameDesignator instanceof PathnameStructImpl) {
+			pathname = (PathnameStructImpl) pathnameDesignator;
 		} else if (pathnameDesignator instanceof StringStruct) {
 			final StringStruct namestringStruct = (StringStruct) pathnameDesignator;
 			namestring = namestringStruct.getAsJavaString();

@@ -20,7 +20,7 @@ import jcl.lang.pathname.PathnameDirectoryComponent;
 import jcl.lang.pathname.PathnameDirectoryLevel;
 import jcl.lang.pathname.PathnameDirectoryLevelType;
 import jcl.lang.pathname.PathnameDirectoryType;
-import jcl.lang.pathname.PathnameStruct;
+import jcl.lang.pathname.PathnameStructImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -46,7 +46,7 @@ public final class PathnameDirectoryFunction extends CommonLispBuiltInFunctionSt
 	public LispStruct apply(final Arguments arguments) {
 
 		final LispStruct pathspec = arguments.getRequiredArgument(PATHSPEC_ARGUMENT);
-		final PathnameStruct pathname = pathnameFunction.pathname(pathspec);
+		final PathnameStructImpl pathname = pathnameFunction.pathname(pathspec);
 		final PathnameDirectory pathnameDirectory = pathname.getPathnameDirectory();
 		if (pathnameDirectory == null) {
 			return NILStruct.INSTANCE;

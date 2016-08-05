@@ -15,9 +15,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * The {@link LogicalPathnameStruct} is the object representation of a Lisp 'logical-pathname' type.
+ * The {@link LogicalPathnameStructImpl} is the object representation of a Lisp 'logical-pathname' type.
  */
-public class LogicalPathnameStruct extends PathnameStruct {
+public class LogicalPathnameStructImpl extends PathnameStructImpl {
 
 	/**
 	 * {@link Pattern} used to parse pathname words.
@@ -67,7 +67,7 @@ public class LogicalPathnameStruct extends PathnameStruct {
 	/**
 	 * The logger for this class.
 	 */
-	private static final Logger LOGGER = LoggerFactory.getLogger(LogicalPathnameStruct.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(LogicalPathnameStructImpl.class);
 
 	/**
 	 * Public constructor.
@@ -75,7 +75,7 @@ public class LogicalPathnameStruct extends PathnameStruct {
 	 * @param pathname
 	 * 		the pathname string to parse into the logical-pathname object elements
 	 */
-	private LogicalPathnameStruct(final String pathname) {
+	private LogicalPathnameStructImpl(final String pathname) {
 		this(getHost(pathname), getDirectory(pathname), getName(pathname), getType(pathname), getVersion(pathname));
 	}
 
@@ -93,18 +93,18 @@ public class LogicalPathnameStruct extends PathnameStruct {
 	 * @param version
 	 * 		the logical-pathname version
 	 */
-	private LogicalPathnameStruct(final PathnameHost host, final PathnameDirectory directory, final PathnameName name,
-	                             final PathnameType type, final PathnameVersion version) {
+	private LogicalPathnameStructImpl(final PathnameHost host, final PathnameDirectory directory, final PathnameName name,
+	                                  final PathnameType type, final PathnameVersion version) {
 		super(LogicalPathnameType.INSTANCE, host, null, directory, name, type, version, getURIFromComponents(host, null, directory, name, type, version));
 	}
 
-	public static LogicalPathnameStruct valueOf(final String pathname) {
-		return new LogicalPathnameStruct(pathname);
+	public static LogicalPathnameStructImpl valueOf(final String pathname) {
+		return new LogicalPathnameStructImpl(pathname);
 	}
 
-	public static LogicalPathnameStruct valueOf(final PathnameHost host, final PathnameDirectory directory, final PathnameName name,
-	                                            final PathnameType type, final PathnameVersion version) {
-		return new LogicalPathnameStruct(host, directory, name, type, version);
+	public static LogicalPathnameStructImpl valueOf(final PathnameHost host, final PathnameDirectory directory, final PathnameName name,
+	                                                final PathnameType type, final PathnameVersion version) {
+		return new LogicalPathnameStructImpl(host, directory, name, type, version);
 	}
 
 	/**
@@ -352,7 +352,7 @@ public class LogicalPathnameStruct extends PathnameStruct {
 		return pathname.substring(versionMarkerIndex + 1);
 	}
 
-	public PathnameStruct translateLogicalPathname() {
+	public PathnameStructImpl translateLogicalPathname() {
 		/*
 		(let* ((host (pathname-host pathname))
             (translations (logical-pathname-translations host)))

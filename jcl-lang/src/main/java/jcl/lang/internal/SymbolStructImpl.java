@@ -9,7 +9,6 @@ import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
 import jcl.lang.NILStruct;
 import jcl.lang.PackageStruct;
-import jcl.lang.PackageStructImpl;
 import jcl.lang.PackageSymbolStruct;
 import jcl.lang.StringStruct;
 import jcl.lang.StructureClassStruct;

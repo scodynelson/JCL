@@ -27,7 +27,7 @@ public class PackageSymbolStruct {
 	 * @param packageSymbolType
 	 * 		the symbol package location
 	 */
-	PackageSymbolStruct(final SymbolStruct symbol, final KeywordStruct packageSymbolType) {
+	public PackageSymbolStruct(final SymbolStruct symbol, final KeywordStruct packageSymbolType) {
 		this.symbol = symbol;
 		this.packageSymbolType = packageSymbolType;
 	}

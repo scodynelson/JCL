@@ -2,9 +2,11 @@
  * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
  */
 
-package jcl.lang;
+package jcl.lang.internal;
 
-import jcl.lang.internal.KeywordStructImpl;
+import jcl.lang.KeywordStruct;
+import jcl.lang.PackageStruct;
+import jcl.lang.PackageSymbolStruct;
 
 /**
  * The {@link KeywordPackageStructImpl} is the object representation of a Lisp 'package' type specific for 'keyword'

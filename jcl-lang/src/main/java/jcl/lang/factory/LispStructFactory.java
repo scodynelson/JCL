@@ -37,7 +37,7 @@ import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
 import jcl.lang.NILStruct;
 import jcl.lang.OutputStreamStruct;
-import jcl.lang.PackageStructImpl;
+import jcl.lang.internal.PackageStructImpl;
 import jcl.lang.RandomStateStruct;
 import jcl.lang.RatioStruct;
 import jcl.lang.RealStruct;

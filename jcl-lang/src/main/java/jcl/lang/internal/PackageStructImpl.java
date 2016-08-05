@@ -2,7 +2,7 @@
  * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
  */
 
-package jcl.lang;
+package jcl.lang.internal;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -14,10 +14,11 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
 
+import jcl.lang.KeywordStruct;
+import jcl.lang.PackageStruct;
+import jcl.lang.PackageSymbolStruct;
+import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.PackageErrorException;
-import jcl.lang.internal.BuiltInClassStruct;
-import jcl.lang.internal.KeywordStructImpl;
-import jcl.lang.internal.SymbolStructImpl;
 import jcl.lang.statics.GlobalPackageStruct;
 import jcl.type.PackageType;
 

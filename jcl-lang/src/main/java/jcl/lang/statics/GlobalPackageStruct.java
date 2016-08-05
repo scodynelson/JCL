@@ -8,9 +8,9 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import jcl.lang.KeywordPackageStructImpl;
+import jcl.lang.internal.KeywordPackageStructImpl;
 import jcl.lang.PackageStruct;
-import jcl.lang.PackageStructImpl;
+import jcl.lang.internal.PackageStructImpl;
 
 /**
  * The {@link GlobalPackageStruct} is the global location for system defined packages.

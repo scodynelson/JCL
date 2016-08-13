@@ -89,7 +89,7 @@ import jcl.lang.internal.PathnameStructImpl;
 import jcl.lang.pathname.PathnameType;
 import jcl.lang.pathname.PathnameVersion;
 import jcl.lang.readtable.ReadtableCase;
-import jcl.lang.readtable.ReadtableStruct;
+import jcl.lang.readtable.ReadtableStructImpl;
 import jcl.type.LispType;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apfloat.Apcomplex;
@@ -664,12 +664,12 @@ public final class LispStructFactory {
 	 * Readtable
 	 */
 
-	public static ReadtableStruct toReadtable() {
-		return ReadtableStruct.valueOf();
+	public static ReadtableStructImpl toReadtable() {
+		return ReadtableStructImpl.valueOf();
 	}
 
-	public static ReadtableStruct toReadtable(final ReadtableCase readtableCase) {
-		return ReadtableStruct.valueOf(readtableCase);
+	public static ReadtableStructImpl toReadtable(final ReadtableCase readtableCase) {
+		return ReadtableStructImpl.valueOf(readtableCase);
 	}
 
 	/*

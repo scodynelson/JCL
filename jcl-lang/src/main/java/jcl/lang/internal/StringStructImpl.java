@@ -12,7 +12,7 @@ import jcl.lang.PathnameStruct;
 import jcl.lang.StringStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.SimpleErrorException;
-import jcl.lang.readtable.ReadtableStruct;
+import jcl.lang.readtable.ReadtableStructImpl;
 import jcl.lang.readtable.SyntaxType;
 import jcl.lang.statics.PrinterVariables;
 import jcl.lang.statics.ReaderVariables;
@@ -184,7 +184,7 @@ public final class StringStructImpl extends VectorStructImpl<CharacterStruct> im
 	public String toString() {
 		final boolean printEscape = PrinterVariables.PRINT_ESCAPE.getVariableValue().booleanValue();
 
-		final ReadtableStruct readtable = ReaderVariables.READTABLE.getVariableValue();
+		final ReadtableStructImpl readtable = ReaderVariables.READTABLE.getVariableValue();
 
 		final StringBuilder stringBuilder = new StringBuilder();
 		if (printEscape) {

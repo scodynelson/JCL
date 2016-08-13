@@ -27,7 +27,7 @@ import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.pathname.PathnameVersion;
 import jcl.lang.pathname.PathnameVersionComponentType;
-import jcl.lang.readtable.ReadtableStruct;
+import jcl.lang.readtable.ReadtableStructImpl;
 import jcl.lang.statics.CommonLispSymbols;
 import jcl.lang.statics.CompilerVariables;
 import jcl.lang.statics.PackageVariables;
@@ -136,7 +136,7 @@ public final class LoadFunction extends CommonLispBuiltInFunctionStructBase {
 		final PathnameStruct filespecTruename = LispStructFactory.toPathname(filespecAbsolutePath);
 		CompilerVariables.COMPILE_FILE_TRUENAME.setValue(filespecTruename);
 
-		final ReadtableStruct previousReadtable = ReaderVariables.READTABLE.getVariableValue();
+		final ReadtableStructImpl previousReadtable = ReaderVariables.READTABLE.getVariableValue();
 		final PackageStruct previousPackage = PackageVariables.PACKAGE.getVariableValue();
 
 		try {

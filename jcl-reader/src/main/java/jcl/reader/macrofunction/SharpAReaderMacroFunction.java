@@ -18,7 +18,7 @@ import jcl.lang.factory.LispStructFactory;
 import jcl.lang.NILStruct;
 import jcl.lang.readtable.Reader;
 import jcl.lang.statics.ReaderVariables;
-import jcl.lang.readtable.ReadtableStruct;
+import jcl.lang.readtable.ReadtableStructImpl;
 import jcl.lang.SequenceStruct;
 import jcl.util.CodePointConstants;
 import org.springframework.stereotype.Component;
@@ -34,7 +34,7 @@ public class SharpAReaderMacroFunction extends ReaderMacroFunctionImpl {
 	 */
 	@PostConstruct
 	private void init() {
-		final ReadtableStruct readtable = ReaderVariables.READTABLE.getVariableValue();
+		final ReadtableStructImpl readtable = ReaderVariables.READTABLE.getVariableValue();
 		readtable.setDispatchMacroCharacter(CodePointConstants.NUMBER_SIGN, CodePointConstants.LATIN_SMALL_LETTER_A, this);
 		readtable.setDispatchMacroCharacter(CodePointConstants.NUMBER_SIGN, CodePointConstants.LATIN_CAPITAL_LETTER_A, this);
 	}

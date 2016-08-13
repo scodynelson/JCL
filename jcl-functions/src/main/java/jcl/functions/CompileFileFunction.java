@@ -42,7 +42,7 @@ import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.internal.DeclarationStructImpl;
 import jcl.lang.internal.SpecialOperatorStructImpl;
-import jcl.lang.readtable.ReadtableStruct;
+import jcl.lang.readtable.ReadtableStructImpl;
 import jcl.lang.statics.CommonLispSymbols;
 import jcl.lang.statics.CompilerVariables;
 import jcl.lang.statics.PackageVariables;
@@ -158,7 +158,7 @@ public final class CompileFileFunction extends CommonLispBuiltInFunctionStructBa
 		final PathnameStruct outputFileTruename = LispStructFactory.toPathname(outputFileAbsolutePath);
 		CompilerVariables.COMPILE_FILE_TRUENAME.setValue(outputFileTruename);
 
-		final ReadtableStruct previousReadtable = ReaderVariables.READTABLE.getVariableValue();
+		final ReadtableStructImpl previousReadtable = ReaderVariables.READTABLE.getVariableValue();
 		final PackageStruct previousPackage = PackageVariables.PACKAGE.getVariableValue();
 
 		BooleanStruct compiledWithWarnings = NILStruct.INSTANCE;

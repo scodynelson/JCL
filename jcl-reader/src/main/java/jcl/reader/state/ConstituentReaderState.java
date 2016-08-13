@@ -9,7 +9,7 @@ import jcl.lang.LispStruct;
 import jcl.lang.readtable.AttributeType;
 import jcl.lang.statics.ReaderVariables;
 import jcl.lang.readtable.ReadtableCase;
-import jcl.lang.readtable.ReadtableStruct;
+import jcl.lang.readtable.ReadtableStructImpl;
 import jcl.lang.stream.ReadPeekResult;
 import jcl.reader.ReaderStateMediator;
 import jcl.reader.TokenBuilder;
@@ -42,7 +42,7 @@ class ConstituentReaderState implements ReaderState {
 		// This 'codePoint' will not be 'null'. We check for EOFs after each 'read'.
 		int codePoint = readResult.getResult();
 
-		final ReadtableStruct readtable = ReaderVariables.READTABLE.getVariableValue();
+		final ReadtableStructImpl readtable = ReaderVariables.READTABLE.getVariableValue();
 		final ReadtableCase readtableCase = readtable.getReadtableCase();
 
 		final IntegerStruct readBase = ReaderVariables.READ_BASE.getVariableValue();

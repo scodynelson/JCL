@@ -12,7 +12,7 @@ import jcl.lang.LispStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
 import jcl.lang.readtable.Reader;
 import jcl.lang.statics.ReaderVariables;
-import jcl.lang.readtable.ReadtableStruct;
+import jcl.lang.readtable.ReadtableStructImpl;
 import jcl.util.CodePointConstants;
 import org.springframework.stereotype.Component;
 
@@ -27,7 +27,7 @@ public class SharpIllegalReaderMacroFunction extends ReaderMacroFunctionImpl {
 	 */
 	@PostConstruct
 	private void init() {
-		final ReadtableStruct readtable = ReaderVariables.READTABLE.getVariableValue();
+		final ReadtableStructImpl readtable = ReaderVariables.READTABLE.getVariableValue();
 		readtable.setDispatchMacroCharacter(CodePointConstants.NUMBER_SIGN, CodePointConstants.RIGHT_PARENTHESIS, this);
 		readtable.setDispatchMacroCharacter(CodePointConstants.NUMBER_SIGN, CodePointConstants.LESS_THAN_SIGN, this);
 

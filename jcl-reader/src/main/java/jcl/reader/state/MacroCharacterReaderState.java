@@ -13,7 +13,7 @@ import jcl.lang.NILStruct;
 import jcl.lang.readtable.Reader;
 import jcl.lang.readtable.ReaderMacroFunction;
 import jcl.lang.statics.ReaderVariables;
-import jcl.lang.readtable.ReadtableStruct;
+import jcl.lang.readtable.ReadtableStructImpl;
 import jcl.lang.stream.ReadPeekResult;
 import jcl.reader.ReaderStateMediator;
 import jcl.reader.TokenBuilder;
@@ -56,7 +56,7 @@ class MacroCharacterReaderState implements ReaderState {
 		final ReadPeekResult readResult = tokenBuilder.getPreviousReadResult();
 		final int codePoint = readResult.getResult();
 
-		final ReadtableStruct readtable = ReaderVariables.READTABLE.getVariableValue();
+		final ReadtableStructImpl readtable = ReaderVariables.READTABLE.getVariableValue();
 		final ReaderMacroFunction readerMacroFunction = readtable.getMacroCharacter(codePoint);
 
 		if (readerMacroFunction == null) {

@@ -18,9 +18,9 @@ import jcl.type.ReadtableType;
 import jcl.util.CodePointConstants;
 
 /**
- * The {@link ReadtableStruct} is the object representation of a Lisp 'readtable' type.
+ * The {@link ReadtableStructImpl} is the object representation of a Lisp 'readtable' type.
  */
-public final class ReadtableStruct extends BuiltInClassStruct {
+public final class ReadtableStructImpl extends BuiltInClassStruct {
 
 	/**
 	 * Internal map storing the {@link Integer} code point mappings to appropriate {@link ReaderMacroFunction}s.
@@ -51,7 +51,7 @@ public final class ReadtableStruct extends BuiltInClassStruct {
 	/**
 	 * Public constructor.
 	 */
-	private ReadtableStruct() {
+	private ReadtableStructImpl() {
 		this(ReadtableCase.UPCASE);
 	}
 
@@ -61,19 +61,19 @@ public final class ReadtableStruct extends BuiltInClassStruct {
 	 * @param readtableCase
 	 * 		the readtable case
 	 */
-	private ReadtableStruct(final ReadtableCase readtableCase) {
+	private ReadtableStructImpl(final ReadtableCase readtableCase) {
 		super(ReadtableType.INSTANCE, null, null);
 		this.readtableCase = readtableCase;
 
 		init();
 	}
 
-	public static ReadtableStruct valueOf() {
-		return new ReadtableStruct();
+	public static ReadtableStructImpl valueOf() {
+		return new ReadtableStructImpl();
 	}
 
-	public static ReadtableStruct valueOf(final ReadtableCase readtableCase) {
-		return new ReadtableStruct(readtableCase);
+	public static ReadtableStructImpl valueOf(final ReadtableCase readtableCase) {
+		return new ReadtableStructImpl(readtableCase);
 	}
 
 	/**

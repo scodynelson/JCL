@@ -6,7 +6,6 @@ package jcl.reader.macrofunction;
 
 import java.math.BigInteger;
 import java.util.Optional;
-import javax.annotation.PostConstruct;
 
 import jcl.functions.java.JClass;
 import jcl.functions.java.JNew;
@@ -14,8 +13,8 @@ import jcl.lang.LispStruct;
 import jcl.lang.ReadtableStruct;
 import jcl.lang.java.JavaClassStruct;
 import jcl.lang.readtable.Reader;
-import jcl.lang.statics.ReaderVariables;
 import jcl.lang.readtable.ReadtableCase;
+import jcl.lang.statics.ReaderVariables;
 import jcl.util.CodePointConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -26,17 +25,19 @@ import org.springframework.stereotype.Component;
 @Component
 public class AtSignReaderMacroFunction extends ReaderMacroFunctionImpl {
 
-	@Autowired
-	private JClass jClass;
+	private final JClass jClass;
+
+	private final JNew jNew;
 
 	@Autowired
-	private JNew jNew;
+	public AtSignReaderMacroFunction(final JClass jClass, final JNew jNew) {
+		this.jClass = jClass;
+		this.jNew = jNew;
+	}
 
-	/**
-	 * Initializes the reader macro function and adds it to the global readtable.
-	 */
-	@PostConstruct
-	private void init() {
+	@Override
+	public void afterPropertiesSet() throws Exception {
+		super.afterPropertiesSet();
 		ReaderVariables.READTABLE.getVariableValue().setMacroCharacter(CodePointConstants.AT_SIGN, this, false);
 	}
 

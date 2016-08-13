@@ -6,14 +6,13 @@ package jcl.reader.macrofunction;
 
 import java.math.BigInteger;
 import java.util.Optional;
-import javax.annotation.PostConstruct;
 
 import jcl.lang.LispStruct;
 import jcl.lang.ReadtableStruct;
 import jcl.lang.java.JavaNameStruct;
 import jcl.lang.readtable.Reader;
-import jcl.lang.statics.ReaderVariables;
 import jcl.lang.readtable.ReadtableCase;
+import jcl.lang.statics.ReaderVariables;
 import jcl.util.CodePointConstants;
 import org.springframework.stereotype.Component;
 
@@ -23,11 +22,9 @@ import org.springframework.stereotype.Component;
 @Component
 public class DollarSignReaderMacroFunction extends ReaderMacroFunctionImpl {
 
-	/**
-	 * Initializes the reader macro function and adds it to the global readtable.
-	 */
-	@PostConstruct
-	private void init() {
+	@Override
+	public void afterPropertiesSet() throws Exception {
+		super.afterPropertiesSet();
 		ReaderVariables.READTABLE.getVariableValue().setMacroCharacter(CodePointConstants.DOLLAR_SIGN, this, false);
 	}
 

@@ -6,7 +6,6 @@ package jcl.reader.macrofunction;
 
 import java.math.BigInteger;
 import java.util.Optional;
-import javax.annotation.PostConstruct;
 
 import jcl.lang.LispStruct;
 import jcl.lang.RationalStruct;
@@ -31,14 +30,16 @@ public class SharpXReaderMacroFunction extends ReaderMacroFunctionImpl {
 	/**
 	 * {@link Autowired} {@link RationalReaderMacroFunction} used for reading {@link RationalStruct}s.
 	 */
-	@Autowired
-	private RationalReaderMacroFunction rationalReaderMacroFunction;
+	private final RationalReaderMacroFunction rationalReaderMacroFunction;
 
-	/**
-	 * Initializes the reader macro function and adds it to the global readtable.
-	 */
-	@PostConstruct
-	private void init() {
+	@Autowired
+	public SharpXReaderMacroFunction(final RationalReaderMacroFunction rationalReaderMacroFunction) {
+		this.rationalReaderMacroFunction = rationalReaderMacroFunction;
+	}
+
+	@Override
+	public void afterPropertiesSet() throws Exception {
+		super.afterPropertiesSet();
 		final ReadtableStruct readtable = ReaderVariables.READTABLE.getVariableValue();
 		readtable.setDispatchMacroCharacter(CodePointConstants.NUMBER_SIGN, CodePointConstants.LATIN_SMALL_LETTER_X, this);
 		readtable.setDispatchMacroCharacter(CodePointConstants.NUMBER_SIGN, CodePointConstants.LATIN_CAPITAL_LETTER_X, this);

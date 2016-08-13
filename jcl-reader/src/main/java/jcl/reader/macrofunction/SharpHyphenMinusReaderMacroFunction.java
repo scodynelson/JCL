@@ -6,7 +6,6 @@ package jcl.reader.macrofunction;
 
 import java.math.BigInteger;
 import java.util.Optional;
-import javax.annotation.PostConstruct;
 
 import jcl.lang.LispStruct;
 import jcl.lang.readtable.Reader;
@@ -25,14 +24,16 @@ public class SharpHyphenMinusReaderMacroFunction extends ReaderMacroFunctionImpl
 	 * {@link Autowired} {@link FeaturesReaderMacroFunction} used for reading features and either reading or
 	 * suppressing the following {@link LispStruct}s based on whether or not the feature is present.
 	 */
-	@Autowired
-	private FeaturesReaderMacroFunction featuresReaderMacroFunction;
+	private final FeaturesReaderMacroFunction featuresReaderMacroFunction;
 
-	/**
-	 * Initializes the reader macro function and adds it to the global readtable.
-	 */
-	@PostConstruct
-	private void init() {
+	@Autowired
+	public SharpHyphenMinusReaderMacroFunction(final FeaturesReaderMacroFunction featuresReaderMacroFunction) {
+		this.featuresReaderMacroFunction = featuresReaderMacroFunction;
+	}
+
+	@Override
+	public void afterPropertiesSet() throws Exception {
+		super.afterPropertiesSet();
 		ReaderVariables.READTABLE.getVariableValue().setDispatchMacroCharacter(CodePointConstants.NUMBER_SIGN, CodePointConstants.HYPHEN_MINUS, this);
 	}
 

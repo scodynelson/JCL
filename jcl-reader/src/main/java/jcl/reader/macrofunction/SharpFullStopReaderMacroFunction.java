@@ -6,12 +6,11 @@ package jcl.reader.macrofunction;
 
 import java.math.BigInteger;
 import java.util.Optional;
-import javax.annotation.PostConstruct;
 
 import jcl.compiler.functions.EvalFunction;
 import jcl.lang.LispStruct;
-import jcl.lang.condition.exception.ReaderErrorException;
 import jcl.lang.NILStruct;
+import jcl.lang.condition.exception.ReaderErrorException;
 import jcl.lang.readtable.Reader;
 import jcl.lang.statics.ReaderVariables;
 import jcl.util.CodePointConstants;
@@ -27,14 +26,16 @@ public class SharpFullStopReaderMacroFunction extends ReaderMacroFunctionImpl {
 	/**
 	 * {@link EvalFunction} singleton used to evaluate the expression passed to '#.'.
 	 */
-	@Autowired
-	private EvalFunction evalFunction;
+	private final EvalFunction evalFunction;
 
-	/**
-	 * Initializes the reader macro function and adds it to the global readtable.
-	 */
-	@PostConstruct
-	private void init() {
+	@Autowired
+	public SharpFullStopReaderMacroFunction(final EvalFunction evalFunction) {
+		this.evalFunction = evalFunction;
+	}
+
+	@Override
+	public void afterPropertiesSet() throws Exception {
+		super.afterPropertiesSet();
 		ReaderVariables.READTABLE.getVariableValue().setDispatchMacroCharacter(CodePointConstants.NUMBER_SIGN, CodePointConstants.FULL_STOP, this);
 	}
 

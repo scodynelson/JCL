@@ -6,13 +6,12 @@ package jcl.reader.macrofunction;
 
 import java.math.BigInteger;
 import java.util.Optional;
-import javax.annotation.PostConstruct;
 
 import jcl.lang.ConsStruct;
 import jcl.lang.LispStruct;
+import jcl.lang.NILStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
 import jcl.lang.factory.LispStructFactory;
-import jcl.lang.NILStruct;
 import jcl.lang.readtable.Reader;
 import jcl.lang.statics.ReaderVariables;
 import jcl.lang.stream.ReadPeekResult;
@@ -25,11 +24,9 @@ import org.springframework.stereotype.Component;
 @Component
 public class CommaReaderMacroFunction extends ReaderMacroFunctionImpl {
 
-	/**
-	 * Initializes the reader macro function and adds it to the global readtable.
-	 */
-	@PostConstruct
-	private void init() {
+	@Override
+	public void afterPropertiesSet() throws Exception {
+		super.afterPropertiesSet();
 		ReaderVariables.READTABLE.getVariableValue().setMacroCharacter(CodePointConstants.COMMA, this, false);
 	}
 

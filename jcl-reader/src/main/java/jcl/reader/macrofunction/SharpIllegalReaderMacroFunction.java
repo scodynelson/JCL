@@ -6,7 +6,6 @@ package jcl.reader.macrofunction;
 
 import java.math.BigInteger;
 import java.util.Optional;
-import javax.annotation.PostConstruct;
 
 import jcl.lang.LispStruct;
 import jcl.lang.ReadtableStruct;
@@ -22,11 +21,9 @@ import org.springframework.stereotype.Component;
 @Component
 public class SharpIllegalReaderMacroFunction extends ReaderMacroFunctionImpl {
 
-	/**
-	 * Initializes the reader macro function and adds it to the global readtable.
-	 */
-	@PostConstruct
-	private void init() {
+	@Override
+	public void afterPropertiesSet() throws Exception {
+		super.afterPropertiesSet();
 		final ReadtableStruct readtable = ReaderVariables.READTABLE.getVariableValue();
 		readtable.setDispatchMacroCharacter(CodePointConstants.NUMBER_SIGN, CodePointConstants.RIGHT_PARENTHESIS, this);
 		readtable.setDispatchMacroCharacter(CodePointConstants.NUMBER_SIGN, CodePointConstants.LESS_THAN_SIGN, this);

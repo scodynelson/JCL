@@ -6,7 +6,6 @@ package jcl.reader.macrofunction;
 
 import java.math.BigInteger;
 import java.util.Optional;
-import javax.annotation.PostConstruct;
 
 import jcl.lang.ListStruct;
 import jcl.lang.readtable.Reader;
@@ -24,14 +23,16 @@ public class LeftParenthesisReaderMacroFunction extends ReaderMacroFunctionImpl 
 	/**
 	 * {@link Autowired} {@link ListReaderMacroFunction} used for reading {@link ListStruct}s.
 	 */
-	@Autowired
-	private ListReaderMacroFunction listReaderMacroFunction;
+	private final ListReaderMacroFunction listReaderMacroFunction;
 
-	/**
-	 * Initializes the reader macro function and adds it to the global readtable.
-	 */
-	@PostConstruct
-	private void init() {
+	@Autowired
+	public LeftParenthesisReaderMacroFunction(final ListReaderMacroFunction listReaderMacroFunction) {
+		this.listReaderMacroFunction = listReaderMacroFunction;
+	}
+
+	@Override
+	public void afterPropertiesSet() throws Exception {
+		super.afterPropertiesSet();
 		ReaderVariables.READTABLE.getVariableValue().setMacroCharacter(CodePointConstants.LEFT_PARENTHESIS, this, false);
 	}
 

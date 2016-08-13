@@ -6,7 +6,6 @@ package jcl.reader.macrofunction;
 
 import java.math.BigInteger;
 import java.util.Optional;
-import javax.annotation.PostConstruct;
 
 import jcl.lang.LispStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
@@ -21,11 +20,9 @@ import org.springframework.stereotype.Component;
 @Component
 public class RightParenthesisReaderMacroFunction extends ReaderMacroFunctionImpl {
 
-	/**
-	 * Initializes the reader macro function and adds it to the global readtable.
-	 */
-	@PostConstruct
-	private void init() {
+	@Override
+	public void afterPropertiesSet() throws Exception {
+		super.afterPropertiesSet();
 		ReaderVariables.READTABLE.getVariableValue().setMacroCharacter(CodePointConstants.RIGHT_PARENTHESIS, this, false);
 	}
 

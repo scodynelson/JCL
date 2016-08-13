@@ -10,16 +10,15 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import javax.annotation.PostConstruct;
 
 import jcl.lang.LispStruct;
+import jcl.lang.NILStruct;
 import jcl.lang.ReadtableStruct;
+import jcl.lang.SequenceStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
 import jcl.lang.factory.LispStructFactory;
-import jcl.lang.NILStruct;
 import jcl.lang.readtable.Reader;
 import jcl.lang.statics.ReaderVariables;
-import jcl.lang.SequenceStruct;
 import jcl.util.CodePointConstants;
 import org.springframework.stereotype.Component;
 
@@ -29,11 +28,9 @@ import org.springframework.stereotype.Component;
 @Component
 public class SharpAReaderMacroFunction extends ReaderMacroFunctionImpl {
 
-	/**
-	 * Initializes the reader macro function and adds it to the global readtable.
-	 */
-	@PostConstruct
-	private void init() {
+	@Override
+	public void afterPropertiesSet() throws Exception {
+		super.afterPropertiesSet();
 		final ReadtableStruct readtable = ReaderVariables.READTABLE.getVariableValue();
 		readtable.setDispatchMacroCharacter(CodePointConstants.NUMBER_SIGN, CodePointConstants.LATIN_SMALL_LETTER_A, this);
 		readtable.setDispatchMacroCharacter(CodePointConstants.NUMBER_SIGN, CodePointConstants.LATIN_CAPITAL_LETTER_A, this);

@@ -6,20 +6,19 @@ package jcl.reader.macrofunction;
 
 import java.math.BigInteger;
 import java.util.Optional;
-import javax.annotation.PostConstruct;
 
 import jcl.lang.ConsStruct;
-import jcl.lang.statics.GlobalPackageStruct;
 import jcl.lang.LispStruct;
-import jcl.lang.internal.SpecialOperatorStructImpl;
+import jcl.lang.ListStruct;
+import jcl.lang.NILStruct;
+import jcl.lang.NumberStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.TStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
 import jcl.lang.factory.LispStructFactory;
-import jcl.lang.ListStruct;
-import jcl.lang.NILStruct;
-import jcl.lang.NumberStruct;
+import jcl.lang.internal.SpecialOperatorStructImpl;
 import jcl.lang.readtable.Reader;
+import jcl.lang.statics.GlobalPackageStruct;
 import jcl.lang.statics.ReaderVariables;
 import jcl.util.CodePointConstants;
 import org.springframework.stereotype.Component;
@@ -43,11 +42,9 @@ public class BackquoteReaderMacroFunction extends ReaderMacroFunctionImpl {
 	public static final SymbolStruct BQ_DOT_FLAG = GlobalPackageStruct.BACKQUOTE.intern(",.").getSymbol();
 	public static final SymbolStruct BQ_VECTOR_FLAG = GlobalPackageStruct.BACKQUOTE.intern("bqv").getSymbol();
 
-	/**
-	 * Initializes the reader macro function and adds it to the global readtable.
-	 */
-	@PostConstruct
-	private void init() {
+	@Override
+	public void afterPropertiesSet() throws Exception {
+		super.afterPropertiesSet();
 		ReaderVariables.READTABLE.getVariableValue().setMacroCharacter(CodePointConstants.GRAVE_ACCENT, this, false);
 	}
 

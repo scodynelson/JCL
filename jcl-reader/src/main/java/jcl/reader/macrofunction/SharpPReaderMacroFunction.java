@@ -6,7 +6,6 @@ package jcl.reader.macrofunction;
 
 import java.math.BigInteger;
 import java.util.Optional;
-import javax.annotation.PostConstruct;
 
 import jcl.functions.pathname.PathnameFunction;
 import jcl.lang.LispStruct;
@@ -31,14 +30,16 @@ public class SharpPReaderMacroFunction extends ReaderMacroFunctionImpl {
 	 * {@link Autowired} {@link PathnameFunction} used for getting a new {@link PathnameStruct} instance from the read
 	 * in pathname namestring.
 	 */
-	@Autowired
-	private PathnameFunction pathnameFunction;
+	private final PathnameFunction pathnameFunction;
 
-	/**
-	 * Initializes the reader macro function and adds it to the global readtable.
-	 */
-	@PostConstruct
-	private void init() {
+	@Autowired
+	public SharpPReaderMacroFunction(final PathnameFunction pathnameFunction) {
+		this.pathnameFunction = pathnameFunction;
+	}
+
+	@Override
+	public void afterPropertiesSet() throws Exception {
+		super.afterPropertiesSet();
 		final ReadtableStruct readtable = ReaderVariables.READTABLE.getVariableValue();
 		readtable.setDispatchMacroCharacter(CodePointConstants.NUMBER_SIGN, CodePointConstants.LATIN_SMALL_LETTER_P, this);
 		readtable.setDispatchMacroCharacter(CodePointConstants.NUMBER_SIGN, CodePointConstants.LATIN_CAPITAL_LETTER_P, this);

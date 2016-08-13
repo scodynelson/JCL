@@ -4,12 +4,12 @@ import java.util.Map;
 import java.util.Stack;
 import java.util.concurrent.ConcurrentHashMap;
 
+import jcl.lang.FunctionStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.PackageStruct;
 import jcl.lang.StructureClassStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.ErrorException;
-import jcl.lang.function.FunctionStructImpl;
 import jcl.lang.function.expander.CompilerMacroFunctionExpanderInter;
 import jcl.lang.function.expander.MacroFunctionExpanderInter;
 import jcl.lang.function.expander.SymbolMacroExpanderInter;
@@ -23,7 +23,7 @@ public final class SymbolState {
 
 	private Stack<LispStruct> dynamicValueStack = new Stack<>();
 
-	private Stack<FunctionStructImpl> functionStack = new Stack<>();
+	private Stack<FunctionStruct> functionStack = new Stack<>();
 
 	private MacroFunctionExpanderInter macroFunctionExpander;
 
@@ -49,11 +49,11 @@ public final class SymbolState {
 		this.dynamicValueStack = dynamicValueStack;
 	}
 
-	public Stack<FunctionStructImpl> getFunctionStack() {
+	public Stack<FunctionStruct> getFunctionStack() {
 		return functionStack;
 	}
 
-	public void setFunctionStack(final Stack<FunctionStructImpl> functionStack) {
+	public void setFunctionStack(final Stack<FunctionStruct> functionStack) {
 		this.functionStack = functionStack;
 	}
 
@@ -236,7 +236,7 @@ public final class SymbolState {
 		return !symbolState.functionStack.isEmpty();
 	}
 
-	public static FunctionStructImpl getFunction(final SymbolStruct symbol) {
+	public static FunctionStruct getFunction(final SymbolStruct symbol) {
 		final SymbolState symbolState = SYMBOL_STATE.get(symbol);
 
 		if (symbolState.functionStack.isEmpty()) {
@@ -245,7 +245,7 @@ public final class SymbolState {
 		return symbolState.functionStack.peek();
 	}
 
-	private static FunctionStructImpl handleUnboundFunction(final SymbolStruct symbol) {
+	private static FunctionStruct handleUnboundFunction(final SymbolStruct symbol) {
 		final String name = symbol.getName();
 		String variableName = name;
 		final PackageStruct currentPackage = PackageVariables.PACKAGE.getVariableValue();
@@ -267,7 +267,7 @@ public final class SymbolState {
 		throw new ErrorException("Undefined function: " + variableName);
 	}
 
-	public static void setFunction(final SymbolStruct symbol, final FunctionStructImpl function) {
+	public static void setFunction(final SymbolStruct symbol, final FunctionStruct function) {
 		final SymbolState symbolState = SYMBOL_STATE.get(symbol);
 
 		if (symbolState.functionStack.isEmpty()) {
@@ -278,13 +278,13 @@ public final class SymbolState {
 		}
 	}
 
-	public static void bindFunction(final SymbolStruct symbol, final FunctionStructImpl function) {
+	public static void bindFunction(final SymbolStruct symbol, final FunctionStruct function) {
 		final SymbolState symbolState = SYMBOL_STATE.get(symbol);
 
 		symbolState.functionStack.push(function);
 	}
 
-	public static FunctionStructImpl unbindFunction(final SymbolStruct symbol) {
+	public static FunctionStruct unbindFunction(final SymbolStruct symbol) {
 		final SymbolState symbolState = SYMBOL_STATE.get(symbol);
 
 		return symbolState.functionStack.pop();

@@ -13,9 +13,9 @@ import jcl.compiler.icg.IntermediateCodeGenerator;
 import jcl.compiler.icg.JavaMethodBuilder;
 import jcl.compiler.struct.specialoperator.CompilerFunctionStruct;
 import jcl.compiler.struct.specialoperator.MultipleValueCallStruct;
+import jcl.lang.FunctionStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.condition.exception.ProgramErrorException;
-import jcl.lang.function.FunctionStructImpl;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
@@ -31,7 +31,7 @@ final class MultipleValueCallCodeGenerator extends SpecialOperatorCodeGenerator<
 
 	/**
 	 * Constant {@link String} containing the error message prefix for the customized {@link ProgramErrorException}
-	 * thrown if the {@link MultipleValueCallStruct#functionForm} does not produce a {@link FunctionStructImpl} value.
+	 * thrown if the {@link MultipleValueCallStruct#functionForm} does not produce a {@link FunctionStruct} value.
 	 */
 	private static final String NOT_FUNCTION_ERROR_STRING = "MULTIPLE-VALUE-CALL: Invalid function form: ";
 
@@ -61,14 +61,14 @@ final class MultipleValueCallCodeGenerator extends SpecialOperatorCodeGenerator<
 	 * Generation method for {@link MultipleValueCallStruct} objects, by performing the following operations:
 	 * <ol>
 	 * <li>Generating the {@link MultipleValueCallStruct#functionForm} value</li>
-	 * <li>Verifying if the generated function value is an instance of type {@link FunctionStructImpl}, throwing a
+	 * <li>Verifying if the generated function value is an instance of type {@link FunctionStruct}, throwing a
 	 * customized {@link ProgramErrorException} if it is not</li>
-	 * <li>After verifying the function value is a {@link FunctionStructImpl}, the parameter application list is built</li>
+	 * <li>After verifying the function value is a {@link FunctionStruct}, the parameter application list is built</li>
 	 * <li>Each of the {@link MultipleValueCallStruct#forms} are generated and added to the new parameter {@link
 	 * List}</li>
 	 * <li>After the parameter {@link List} is built, it is then converted to an array of {@link LispStruct}s to be
 	 * used as parameters via {@link List#toArray(Object[])}</li>
-	 * <li>Finally, the {@link FunctionStructImpl} is invoked passing the new array of {@link LispStruct}s as its
+	 * <li>Finally, the {@link FunctionStruct} is invoked passing the new array of {@link LispStruct}s as its
 	 * arguments</li>
 	 * </ol>
 	 * As an example, it will transform {@code (multiple-value-call #'+ 1 2)} into the following Java code:
@@ -185,18 +185,18 @@ final class MultipleValueCallCodeGenerator extends SpecialOperatorCodeGenerator<
 
 		mv.visitVarInsn(Opcodes.ALOAD, realFunctionFormStore);
 		mv.visitVarInsn(Opcodes.ALOAD, argsStore);
-		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
+		mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
 		                   GenerationConstants.FUNCTION_STRUCT_NAME,
 		                   GenerationConstants.FUNCTION_STRUCT_APPLY_METHOD_NAME,
 		                   GenerationConstants.FUNCTION_STRUCT_APPLY_METHOD_DESC,
-		                   false);
+		                   true);
 
 		mv.visitInsn(Opcodes.ARETURN);
 	}
 
 	/**
 	 * Private method for generating the code to create and throw a customized {@link ProgramErrorException} when the
-	 * {@link MultipleValueCallStruct#functionForm} does not generate a {@link FunctionStructImpl} value.
+	 * {@link MultipleValueCallStruct#functionForm} does not generate a {@link FunctionStruct} value.
 	 *
 	 * @param mv
 	 * 		the current {@link MethodVisitor} to generate the code inside

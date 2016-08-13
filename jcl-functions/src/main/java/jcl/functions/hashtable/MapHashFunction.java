@@ -4,12 +4,12 @@
 
 package jcl.functions.hashtable;
 
+import jcl.lang.FunctionStruct;
 import jcl.lang.HashTableStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.function.CommonLispBuiltInFunctionStructBase;
-import jcl.lang.function.FunctionStructImpl;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.NILStruct;
@@ -34,16 +34,16 @@ public final class MapHashFunction extends CommonLispBuiltInFunctionStructBase {
 	@Override
 	public LispStruct apply(final Arguments arguments) {
 		final LispStruct function = arguments.getRequiredArgument(FUNCTION_ARGUMENT);
-		final FunctionStructImpl functionVal = validateFunctionDesignator(function);
+		final FunctionStruct functionVal = validateFunctionDesignator(function);
 		final HashTableStruct hashTable = arguments.getRequiredArgument(HASH_TABLE_ARGUMENT, HashTableStruct.class);
 
 		hashTable.mapHash(functionVal);
 		return NILStruct.INSTANCE;
 	}
 
-	private FunctionStructImpl validateFunctionDesignator(final LispStruct functionDesignator) {
-		if (functionDesignator instanceof FunctionStructImpl) {
-			return (FunctionStructImpl) functionDesignator;
+	private FunctionStruct validateFunctionDesignator(final LispStruct functionDesignator) {
+		if (functionDesignator instanceof FunctionStruct) {
+			return (FunctionStruct) functionDesignator;
 		} else if (functionDesignator instanceof SymbolStruct) {
 			return ((SymbolStruct) functionDesignator).getFunction();
 		} else {

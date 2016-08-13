@@ -10,9 +10,9 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+import jcl.lang.FunctionStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.PackageStruct;
-import jcl.lang.function.FunctionStructImpl;
 import jcl.lang.statics.PackageVariables;
 import jcl.lang.TStruct;
 import jcl.lang.function.CommonLispBuiltInFunctionStructBase;
@@ -21,8 +21,8 @@ import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.ListStruct;
 
 /**
- * Abstract {@link FunctionStructImpl} implementation for package functions that take package-designator objects. This
- * {@link FunctionStructImpl} also has an optional package parameter value.
+ * Abstract {@link FunctionStruct} implementation for package functions that take package-designator objects. This
+ * {@link FunctionStruct} also has an optional package parameter value.
  */
 abstract class AbstractPackageListPackageFunction extends CommonLispBuiltInFunctionStructBase {
 

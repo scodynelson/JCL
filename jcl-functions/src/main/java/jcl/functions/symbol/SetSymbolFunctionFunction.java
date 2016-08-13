@@ -4,9 +4,9 @@
 
 package jcl.functions.symbol;
 
+import jcl.lang.FunctionStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.SymbolStruct;
-import jcl.lang.function.FunctionStructImpl;
 import jcl.lang.function.SystemBuiltInFunctionStructBase;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
@@ -31,7 +31,7 @@ public final class SetSymbolFunctionFunction extends SystemBuiltInFunctionStruct
 	@Override
 	public LispStruct apply(final Arguments arguments) {
 		final SymbolStruct symbol = arguments.getRequiredArgument(SYMBOL_ARGUMENT, SymbolStruct.class);
-		final FunctionStructImpl function = arguments.getRequiredArgument(FUNCTION_ARGUMENT, FunctionStructImpl.class);
+		final FunctionStruct function = arguments.getRequiredArgument(FUNCTION_ARGUMENT, FunctionStruct.class);
 
 		symbol.setFunction(function);
 		return function;

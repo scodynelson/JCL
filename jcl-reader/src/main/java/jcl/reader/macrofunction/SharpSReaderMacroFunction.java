@@ -11,11 +11,11 @@ import java.util.List;
 import java.util.Optional;
 import javax.annotation.PostConstruct;
 
+import jcl.lang.FunctionStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.StructureClassStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
-import jcl.lang.function.FunctionStructImpl;
 import jcl.lang.function.ReaderMacroFunctionImpl;
 import jcl.lang.ListStruct;
 import jcl.lang.NILStruct;
@@ -90,7 +90,7 @@ public class SharpSReaderMacroFunction extends ReaderMacroFunctionImpl {
 			throw new ReaderErrorException("The " + structureType + " structure does not have a default constructor.");
 		}
 
-		final FunctionStructImpl defaultConstructor = defaultConstructorSymbol.getFunction();
+		final FunctionStruct defaultConstructor = defaultConstructorSymbol.getFunction();
 		if (defaultConstructor == null) {
 			throw new ReaderErrorException("The " + structureType + " structure default constructor is undefined.");
 		}

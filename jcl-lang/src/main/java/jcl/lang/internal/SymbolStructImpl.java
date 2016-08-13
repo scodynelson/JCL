@@ -5,6 +5,7 @@ import java.util.function.Supplier;
 
 import com.ibm.icu.lang.UCharacter;
 import jcl.lang.CharacterStruct;
+import jcl.lang.FunctionStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
 import jcl.lang.NILStruct;
@@ -15,7 +16,6 @@ import jcl.lang.StructureClassStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.condition.exception.SimpleErrorException;
-import jcl.lang.function.FunctionStructImpl;
 import jcl.lang.function.expander.CompilerMacroFunctionExpanderInter;
 import jcl.lang.function.expander.MacroFunctionExpanderInter;
 import jcl.lang.function.expander.SymbolMacroExpanderInter;
@@ -41,7 +41,7 @@ public class SymbolStructImpl extends BuiltInClassStruct implements SymbolStruct
 
 	protected Stack<LispStruct> dynamicValueStack = new Stack<>();
 
-	protected Stack<FunctionStructImpl> functionStack = new Stack<>();
+	protected Stack<FunctionStruct> functionStack = new Stack<>();
 
 	protected MacroFunctionExpanderInter macroFunctionExpander;
 
@@ -93,7 +93,7 @@ public class SymbolStructImpl extends BuiltInClassStruct implements SymbolStruct
 	 * @param function
 	 * 		the symbol function
 	 */
-	protected SymbolStructImpl(final String name, final FunctionStructImpl function) {
+	protected SymbolStructImpl(final String name, final FunctionStruct function) {
 		this(name, null, null, function);
 	}
 
@@ -123,7 +123,7 @@ public class SymbolStructImpl extends BuiltInClassStruct implements SymbolStruct
 	 * @param function
 	 * 		the symbol function
 	 */
-	protected SymbolStructImpl(final String name, final PackageStruct symbolPackage, final LispStruct value, final FunctionStructImpl function) {
+	protected SymbolStructImpl(final String name, final PackageStruct symbolPackage, final LispStruct value, final FunctionStruct function) {
 		this(SymbolType.INSTANCE, name, symbolPackage, value, function);
 	}
 
@@ -142,7 +142,7 @@ public class SymbolStructImpl extends BuiltInClassStruct implements SymbolStruct
 	 * 		the symbol function
 	 */
 	protected SymbolStructImpl(final LispType lispType,
-	                           final String name, final PackageStruct symbolPackage, final LispStruct value, final FunctionStructImpl function) {
+	                           final String name, final PackageStruct symbolPackage, final LispStruct value, final FunctionStruct function) {
 		super(lispType, null, null);
 		this.name = name;
 
@@ -376,14 +376,14 @@ public class SymbolStructImpl extends BuiltInClassStruct implements SymbolStruct
 //	 * @return symbol {@link #function} property
 //	 */
 	@Override
-	public FunctionStructImpl getFunction() {
+	public FunctionStruct getFunction() {
 		if (functionStack.isEmpty()) {
 			return handleUnboundFunction();
 		}
 		return functionStack.peek();
 	}
 
-	private FunctionStructImpl handleUnboundFunction() {
+	private FunctionStruct handleUnboundFunction() {
 		String variableName = name;
 		final PackageStruct currentPackage = PackageVariables.PACKAGE.getVariableValue();
 
@@ -410,7 +410,7 @@ public class SymbolStructImpl extends BuiltInClassStruct implements SymbolStruct
 //	 * 		new symbol {@link #function} property value
 //	 */
 	@Override
-	public void setFunction(final FunctionStructImpl function) {
+	public void setFunction(final FunctionStruct function) {
 		if (functionStack.isEmpty()) {
 			functionStack.push(function);
 		} else {
@@ -420,12 +420,12 @@ public class SymbolStructImpl extends BuiltInClassStruct implements SymbolStruct
 	}
 
 	@Override
-	public void bindFunction(final FunctionStructImpl function) {
+	public void bindFunction(final FunctionStruct function) {
 		functionStack.push(function);
 	}
 
 	@Override
-	public FunctionStructImpl unbindFunction() {
+	public FunctionStruct unbindFunction() {
 		return functionStack.pop();
 	}
 

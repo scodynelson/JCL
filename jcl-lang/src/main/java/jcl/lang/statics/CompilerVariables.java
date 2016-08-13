@@ -5,16 +5,16 @@
 package jcl.lang.statics;
 
 import jcl.lang.BooleanStruct;
+import jcl.lang.FunctionStruct;
 import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
 import jcl.lang.internal.VariableStructImpl;
-import jcl.lang.function.FunctionStructImpl;
 import jcl.lang.NILStruct;
 
 public interface CompilerVariables {
 
-	VariableStructImpl<FunctionStructImpl> MACROEXPAND_HOOK = VariableStructImpl.valueOf("*MACROEXPAND-HOOK*", GlobalPackageStruct.COMMON_LISP, null);
+	VariableStructImpl<FunctionStruct> MACROEXPAND_HOOK = VariableStructImpl.valueOf("*MACROEXPAND-HOOK*", GlobalPackageStruct.COMMON_LISP, null);
 
 	VariableStructImpl<?> DEBUGGER_HOOK = VariableStructImpl.valueOf("*DEBUGGER-HOOK*", GlobalPackageStruct.COMMON_LISP, null);
 	VariableStructImpl<?> BREAK_ON_SIGNALS = VariableStructImpl.valueOf("*BREAK-ON-SIGNALS*", GlobalPackageStruct.COMMON_LISP, null);

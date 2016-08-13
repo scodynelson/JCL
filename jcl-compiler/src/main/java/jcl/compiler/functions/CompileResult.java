@@ -5,7 +5,7 @@
 package jcl.compiler.functions;
 
 import jcl.lang.BooleanStruct;
-import jcl.lang.function.FunctionStructImpl;
+import jcl.lang.FunctionStruct;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -13,19 +13,19 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 public class CompileResult {
 
-	private final FunctionStructImpl function;
+	private final FunctionStruct function;
 
 	private final BooleanStruct compiledWithWarnings;
 
 	private final BooleanStruct failedToCompile;
 
-	public CompileResult(final FunctionStructImpl function, final BooleanStruct compiledWithWarnings, final BooleanStruct failedToCompile) {
+	public CompileResult(final FunctionStruct function, final BooleanStruct compiledWithWarnings, final BooleanStruct failedToCompile) {
 		this.function = function;
 		this.compiledWithWarnings = compiledWithWarnings;
 		this.failedToCompile = failedToCompile;
 	}
 
-	public FunctionStructImpl getFunction() {
+	public FunctionStruct getFunction() {
 		return function;
 	}
 

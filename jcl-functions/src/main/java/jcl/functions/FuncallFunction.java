@@ -6,12 +6,12 @@ package jcl.functions;
 
 import java.util.List;
 
+import jcl.lang.FunctionStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.factory.LispStructFactory;
 import jcl.lang.function.CommonLispBuiltInFunctionStructBase;
-import jcl.lang.function.FunctionStructImpl;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.ListStruct;
@@ -50,11 +50,11 @@ public final class FuncallFunction extends CommonLispBuiltInFunctionStructBase {
 
 		final LispStruct functionDesignator = arguments.getRequiredArgument(FN_ARGUMENT);
 
-		FunctionStructImpl functionStruct = null;
+		FunctionStruct functionStruct = null;
 		if (functionDesignator instanceof SymbolStruct) {
 			functionStruct = ((SymbolStruct) functionDesignator).getFunction();
-		} else if (functionDesignator instanceof FunctionStructImpl) {
-			functionStruct = (FunctionStructImpl) functionDesignator;
+		} else if (functionDesignator instanceof FunctionStruct) {
+			functionStruct = (FunctionStruct) functionDesignator;
 		}
 
 		final List<LispStruct> functionArguments = arguments.getRestArgument();

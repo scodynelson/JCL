@@ -2,6 +2,7 @@ package jcl.lang.function;
 
 import java.util.List;
 
+import jcl.lang.FunctionStruct;
 import jcl.lang.internal.BuiltInClassStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.SymbolStruct;
@@ -10,9 +11,9 @@ import jcl.type.LispType;
 import org.springframework.beans.factory.InitializingBean;
 
 /**
- * The {@link FunctionStructImpl} is the object representation of a Lisp 'function' type.
+ * The {@link FunctionStruct} is the object representation of a Lisp 'function' type.
  */
-public abstract class FunctionStructImpl extends BuiltInClassStruct implements InitializingBean {
+public abstract class FunctionStructImpl extends BuiltInClassStruct implements FunctionStruct, InitializingBean {
 
 	protected FunctionStructImpl(final String documentation) {
 		this(documentation, FunctionType.INSTANCE);
@@ -35,5 +36,6 @@ public abstract class FunctionStructImpl extends BuiltInClassStruct implements I
 
 	public abstract SymbolStruct getFunctionSymbol();
 
+	@Override
 	public abstract LispStruct apply(LispStruct... lispStructs);
 }

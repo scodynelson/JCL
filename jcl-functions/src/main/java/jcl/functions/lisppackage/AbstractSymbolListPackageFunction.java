@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
+import jcl.lang.FunctionStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.PackageStruct;
 import jcl.lang.statics.PackageVariables;
@@ -16,15 +17,14 @@ import jcl.lang.SymbolStruct;
 import jcl.lang.TStruct;
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.function.CommonLispBuiltInFunctionStructBase;
-import jcl.lang.function.FunctionStructImpl;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.ListStruct;
 import jcl.util.ClassUtils;
 
 /**
- * Abstract {@link FunctionStructImpl} implementation for package functions that take symbol objects. This {@link
- * FunctionStructImpl} also has an optional package parameter value.
+ * Abstract {@link FunctionStruct} implementation for package functions that take symbol objects. This {@link
+ * FunctionStruct} also has an optional package parameter value.
  */
 abstract class AbstractSymbolListPackageFunction extends CommonLispBuiltInFunctionStructBase {
 

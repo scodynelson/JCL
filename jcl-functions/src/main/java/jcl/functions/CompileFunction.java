@@ -2,13 +2,13 @@ package jcl.functions;
 
 import jcl.compiler.functions.CompileForm;
 import jcl.compiler.functions.CompileResult;
+import jcl.lang.FunctionStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.ValuesStruct;
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.function.CommonLispBuiltInFunctionStructBase;
-import jcl.lang.function.FunctionStructImpl;
 import jcl.lang.function.expander.MacroFunctionExpanderInter;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
@@ -52,18 +52,18 @@ public final class CompileFunction extends CommonLispBuiltInFunctionStructBase {
 		if (uncompiledDefinition != null) {
 			CompileResult compiledDefinition = null;
 
-			final FunctionStructImpl function;
-			if (uncompiledDefinition instanceof FunctionStructImpl) {
-				function = (FunctionStructImpl) uncompiledDefinition;
+			final FunctionStruct function;
+			if (uncompiledDefinition instanceof FunctionStruct) {
+				function = (FunctionStruct) uncompiledDefinition;
 			} else {
 				compiledDefinition = compileForm.compile(uncompiledDefinition);
-				final FunctionStructImpl compiledDefinitionFunction = compiledDefinition.getFunction();
+				final FunctionStruct compiledDefinitionFunction = compiledDefinition.getFunction();
 				final LispStruct compiledDefinitionResult = compiledDefinitionFunction.apply();
 
-				if (!(compiledDefinitionResult instanceof FunctionStructImpl)) {
+				if (!(compiledDefinitionResult instanceof FunctionStruct)) {
 					throw new ProgramErrorException("Error compiling anonymous function : " + uncompiledDefinition + " is not a valid lambda expression.");
 				}
-				function = (FunctionStructImpl) compiledDefinitionResult;
+				function = (FunctionStruct) compiledDefinitionResult;
 			}
 
 			if (name instanceof SymbolStruct) {
@@ -92,7 +92,7 @@ public final class CompileFunction extends CommonLispBuiltInFunctionStructBase {
 
 		final boolean hasFunction = nameSymbol.hasFunction();
 		if (hasFunction) {
-			final FunctionStructImpl function = nameSymbol.getFunction();
+			final FunctionStruct function = nameSymbol.getFunction();
 			return ValuesStruct.valueOf(function, NILStruct.INSTANCE, NILStruct.INSTANCE);
 		}
 

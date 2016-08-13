@@ -7,15 +7,15 @@ package jcl.functions.character;
 import java.util.function.Predicate;
 
 import jcl.lang.CharacterStruct;
+import jcl.lang.FunctionStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.factory.LispStructFactory;
 import jcl.lang.function.CommonLispBuiltInFunctionStructBase;
-import jcl.lang.function.FunctionStructImpl;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 
 /**
- * Abstract {@link FunctionStructImpl} implementation for character functions that operates on a {@link CharacterStruct} to
+ * Abstract {@link FunctionStruct} implementation for character functions that operates on a {@link CharacterStruct} to
  * check against some {@link Predicate} operation.
  */
 abstract class AbstractCharacterPredicateFunction extends CommonLispBuiltInFunctionStructBase {

@@ -129,11 +129,11 @@ final class SymbolFunctionCallCodeGenerator extends SpecialOperatorCodeGenerator
 
 		mv.visitVarInsn(Opcodes.ALOAD, functionStore);
 		mv.visitVarInsn(Opcodes.ALOAD, argumentsArrayStore);
-		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
+		mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
 		                   GenerationConstants.FUNCTION_STRUCT_NAME,
 		                   GenerationConstants.FUNCTION_STRUCT_APPLY_METHOD_NAME,
 		                   GenerationConstants.FUNCTION_STRUCT_APPLY_METHOD_DESC,
-		                   false);
+		                   true);
 
 		mv.visitInsn(Opcodes.ARETURN);
 	}

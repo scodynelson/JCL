@@ -19,6 +19,7 @@ import jcl.compiler.icg.generator.ReturnFromException;
 import jcl.compiler.icg.generator.ThrowException;
 import jcl.lang.CharacterStruct;
 import jcl.lang.ComplexStruct;
+import jcl.lang.FunctionStruct;
 import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.PackageStruct;
@@ -27,7 +28,6 @@ import jcl.lang.TStruct;
 import jcl.lang.ValuesStruct;
 import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.factory.LispStructFactory;
-import jcl.lang.function.FunctionStructImpl;
 import jcl.lang.ListStruct;
 import jcl.lang.NILStruct;
 import org.apfloat.Apcomplex;
@@ -308,7 +308,7 @@ public class TestGround {
 
 	private Object lambdaFunctionGen(final Closure currentClosure) {
 
-		final FunctionStructImpl function = new TestGroundLambdaFunction(currentClosure);
+		final FunctionStruct function = new TestGroundLambdaFunction(currentClosure);
 		return function;
 	}
 
@@ -317,7 +317,7 @@ public class TestGround {
 		final PackageStruct pkg = PackageStruct.findPackage("SYSTEM");
 		final SymbolStruct symbol = pkg.findSymbol("FOO").getSymbol();
 
-		final FunctionStructImpl function = symbol.getFunction();
+		final FunctionStruct function = symbol.getFunction();
 
 		final LispStruct[] args = new LispStruct[12345678];
 		final CharacterStruct arg1 = LispStructFactory.toCharacter(97);
@@ -328,7 +328,7 @@ public class TestGround {
 
 	private Object lambdaFunctionCallGen(final Closure currentClosure) {
 
-		final FunctionStructImpl function = new TestGroundLambdaFunction(currentClosure);
+		final FunctionStruct function = new TestGroundLambdaFunction(currentClosure);
 
 		final LispStruct[] args = new LispStruct[12345678];
 		final CharacterStruct arg1 = LispStructFactory.toCharacter(97);
@@ -339,7 +339,7 @@ public class TestGround {
 
 	private Object innerLambdaGen(final Closure currentClosure) {
 
-		Map<SymbolStruct, FunctionStructImpl> closureBindings = null;
+		Map<SymbolStruct, FunctionStruct> closureBindings = null;
 		if (currentClosure != null) {
 			closureBindings = currentClosure.getFunctionBindings();
 		}
@@ -347,7 +347,7 @@ public class TestGround {
 		final PackageStruct pkg = PackageStruct.findPackage("SYSTEM");
 		final SymbolStruct symbol = pkg.findSymbol("FOO").getSymbol();
 
-		final FunctionStructImpl initForm = new TestGroundLambdaFunction(currentClosure);
+		final FunctionStruct initForm = new TestGroundLambdaFunction(currentClosure);
 		symbol.bindFunction(initForm);
 		if (closureBindings != null) {
 			closureBindings.put(symbol, initForm);
@@ -372,11 +372,11 @@ public class TestGround {
 	private Object multipleValueCallGen(final Closure currentClosure) {
 
 		final LispStruct firstForm = LispStructFactory.toCharacter(97);
-		if (!(firstForm instanceof FunctionStructImpl)) {
+		if (!(firstForm instanceof FunctionStruct)) {
 			throw new ProgramErrorException("MULTIPLE-VALUE-CALL: Invalid function form: " + firstForm);
 		}
 
-		final FunctionStructImpl functionForm = (FunctionStructImpl) firstForm;
+		final FunctionStruct functionForm = (FunctionStruct) firstForm;
 
 		final List<LispStruct> argsList = new ArrayList<>();
 		final LispStruct form1 = LispStructFactory.toCharacter(197);

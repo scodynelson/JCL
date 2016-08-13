@@ -5,9 +5,9 @@
 package jcl.functions.hashtable;
 
 import jcl.lang.FloatStruct;
+import jcl.lang.FunctionStruct;
 import jcl.lang.IntegerStruct;
 import jcl.lang.KeywordStruct;
-import jcl.lang.function.FunctionStructImpl;
 import jcl.lang.statics.CommonLispSymbols;
 import jcl.lang.LispStruct;
 import jcl.lang.SymbolStruct;
@@ -44,7 +44,7 @@ public final class MakeHashTableFunction extends CommonLispBuiltInFunctionStruct
 	@Override
 	public LispStruct apply(final Arguments arguments) {
 		final LispStruct test = arguments.getKeyArgument(TEST);
-		final FunctionStructImpl testFunction = validateFunctionDesignator(test);
+		final FunctionStruct testFunction = validateFunctionDesignator(test);
 		final EquatorFunctionStructBase equatorTestFunction = (EquatorFunctionStructBase) testFunction;
 
 		final IntegerStruct size = arguments.getKeyArgument(SIZE, IntegerStruct.class);
@@ -60,9 +60,9 @@ public final class MakeHashTableFunction extends CommonLispBuiltInFunctionStruct
 		return LispStructFactory.toHashTable(equatorTestFunction, size.bigIntegerValue(), rehashThreshold.floatValue());
 	}
 
-	private FunctionStructImpl validateFunctionDesignator(final LispStruct functionDesignator) {
-		if (functionDesignator instanceof FunctionStructImpl) {
-			return (FunctionStructImpl) functionDesignator;
+	private FunctionStruct validateFunctionDesignator(final LispStruct functionDesignator) {
+		if (functionDesignator instanceof FunctionStruct) {
+			return (FunctionStruct) functionDesignator;
 		} else if (functionDesignator instanceof SymbolStruct) {
 			return ((SymbolStruct) functionDesignator).getFunction();
 		} else {

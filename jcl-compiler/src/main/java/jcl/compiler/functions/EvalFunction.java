@@ -17,7 +17,7 @@ import jcl.compiler.struct.specialoperator.SymbolCompilerFunctionStruct;
 import jcl.compiler.struct.specialoperator.SymbolFunctionCallStruct;
 import jcl.compiler.struct.specialoperator.lambda.LambdaStruct;
 import jcl.lang.BooleanStruct;
-import jcl.lang.function.FunctionStructImpl;
+import jcl.lang.FunctionStruct;
 import jcl.lang.statics.CompilerVariables;
 import jcl.lang.LispStruct;
 import jcl.lang.SymbolStruct;
@@ -134,7 +134,7 @@ public final class EvalFunction extends CommonLispBuiltInFunctionStructBase {
 			final LambdaCompilerFunctionStruct lambdaCompilerFunction = (LambdaCompilerFunctionStruct) exp;
 			final LambdaStruct lambda = lambdaCompilerFunction.getLambdaStruct();
 
-			final FunctionStructImpl function = getCompiledExpression(oldCompileTopLevel, lambda);
+			final FunctionStruct function = getCompiledExpression(oldCompileTopLevel, lambda);
 			return function.apply();
 		}
 
@@ -143,7 +143,7 @@ public final class EvalFunction extends CommonLispBuiltInFunctionStructBase {
 			final SymbolCompilerFunctionStruct symbolCompilerFunction = functionCall.getSymbolCompilerFunction();
 			final SymbolStruct functionSymbol = symbolCompilerFunction.getFunctionSymbol();
 
-			final FunctionStructImpl function = functionSymbol.getFunction();
+			final FunctionStruct function = functionSymbol.getFunction();
 
 			final List<LispStruct> arguments = functionCall.getArguments();
 			final List<LispStruct> evaluatedArguments = new ArrayList<>(arguments.size());
@@ -198,7 +198,7 @@ public final class EvalFunction extends CommonLispBuiltInFunctionStructBase {
 			final LambdaCompilerFunctionStruct lambdaCompilerFunction = lambdaFunctionCall.getLambdaCompilerFunction();
 			final LambdaStruct lambda = lambdaCompilerFunction.getLambdaStruct();
 
-			final FunctionStructImpl function = getCompiledExpression(oldCompileTopLevel, lambda);
+			final FunctionStruct function = getCompiledExpression(oldCompileTopLevel, lambda);
 
 			final List<LispStruct> arguments = lambdaFunctionCall.getArguments();
 			final List<LispStruct> evaluatedArguments = new ArrayList<>(arguments.size());
@@ -211,25 +211,25 @@ public final class EvalFunction extends CommonLispBuiltInFunctionStructBase {
 			evaluatedArguments.toArray(args);
 
 			// NOTE: This cast should be safe since we're compiling a lambda form. If it doesn't cast, we have a bigger problem somewhere.
-			final FunctionStructImpl compiledLambda = (FunctionStructImpl) function.apply();
+			final FunctionStruct compiledLambda = (FunctionStruct) function.apply();
 			return compiledLambda.apply(args);
 		}
 
 		if (exp instanceof CompilerSpecialOperatorStruct) {
-			final FunctionStructImpl function = getCompiledExpression(oldCompileTopLevel, (CompilerSpecialOperatorStruct) exp);
+			final FunctionStruct function = getCompiledExpression(oldCompileTopLevel, (CompilerSpecialOperatorStruct) exp);
 			return function.apply();
 		}
 
 		return exp;
 	}
 
-	private FunctionStructImpl getCompiledExpression(final BooleanStruct oldCompileTopLevel, final CompilerSpecialOperatorStruct exp) {
+	private FunctionStruct getCompiledExpression(final BooleanStruct oldCompileTopLevel, final CompilerSpecialOperatorStruct exp) {
 		CompilerVariables.COMPILE_TOP_LEVEL.setValue(NILStruct.INSTANCE);
 
 		final BooleanStruct oldConvertingForInterpreter = CompilerVariables.CONVERTING_FOR_INTERPRETER.getVariableValue();
 		CompilerVariables.CONVERTING_FOR_INTERPRETER.setValue(TStruct.INSTANCE);
 
-		final FunctionStructImpl function;
+		final FunctionStruct function;
 		try {
 			final CompileResult compileResult = compileForm.compile(exp);
 			function = compileResult.getFunction();

@@ -17,8 +17,8 @@ import jcl.compiler.icg.JavaClassBuilder;
 import jcl.compiler.sa.SemanticAnalyzer;
 import jcl.compiler.struct.specialoperator.lambda.LambdaStruct;
 import jcl.lang.BooleanStruct;
+import jcl.lang.FunctionStruct;
 import jcl.lang.LispStruct;
-import jcl.lang.function.FunctionStructImpl;
 import jcl.lang.internal.SpecialOperatorStructImpl;
 import jcl.lang.TStruct;
 import jcl.lang.factory.LispStructFactory;
@@ -62,7 +62,7 @@ public class CompileForm {
 		BooleanStruct compiledWithWarnings = NILStruct.INSTANCE;
 		BooleanStruct failedToCompile = NILStruct.INSTANCE;
 
-		FunctionStructImpl function = null;
+		FunctionStruct function = null;
 		for (final JavaClassBuilder javaClassBuilder : javaClassBuilderDeque) {
 			final ClassWriter cw = javaClassBuilder.getClassWriter();
 
@@ -91,7 +91,7 @@ public class CompileForm {
 			final Class<?> classLoaded = cl.loadClass(className, byteArray);
 
 			try {
-				final boolean isFunctionStruct = FunctionStructImpl.class.isAssignableFrom(classLoaded);
+				final boolean isFunctionStruct = FunctionStruct.class.isAssignableFrom(classLoaded);
 				if (isFunctionStruct) {
 					final BeanDefinitionBuilder builder = BeanDefinitionBuilder.genericBeanDefinition(classLoaded);
 					final DefaultListableBeanFactory factory = (DefaultListableBeanFactory) applicationContext.getBeanFactory();
@@ -100,7 +100,7 @@ public class CompileForm {
 					final BeanDefinition beanDefinition = builder.getBeanDefinition();
 					factory.registerBeanDefinition(beanName, beanDefinition);
 
-					function = (FunctionStructImpl) applicationContext.getBean(classLoaded);
+					function = (FunctionStruct) applicationContext.getBean(classLoaded);
 				}
 			} catch (BeansException | IllegalStateException ex) {
 				LOGGER.error("Error compiling definition.", ex);

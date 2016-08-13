@@ -18,6 +18,7 @@ import jcl.compiler.environment.binding.lambdalist.OrdinaryLambdaList;
 import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
 import jcl.compiler.environment.binding.lambdalist.RestParameter;
 import jcl.compiler.environment.binding.lambdalist.SuppliedPParameter;
+import jcl.lang.FunctionStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.TStruct;
@@ -76,10 +77,10 @@ public abstract class CompiledFunctionStruct extends FunctionStructImpl {
 			symbol.bindLexicalValue(value);
 		}
 
-		final Map<SymbolStruct, FunctionStructImpl> closureFunctionsToBind = getClosureFunctionBindings();
-		for (final Map.Entry<SymbolStruct, FunctionStructImpl> closureFunctionToBind : closureFunctionsToBind.entrySet()) {
+		final Map<SymbolStruct, FunctionStruct> closureFunctionsToBind = getClosureFunctionBindings();
+		for (final Map.Entry<SymbolStruct, FunctionStruct> closureFunctionToBind : closureFunctionsToBind.entrySet()) {
 			final SymbolStruct symbol = closureFunctionToBind.getKey();
-			final FunctionStructImpl function = closureFunctionToBind.getValue();
+			final FunctionStruct function = closureFunctionToBind.getValue();
 			symbol.bindFunction(function);
 		}
 
@@ -135,7 +136,7 @@ public abstract class CompiledFunctionStruct extends FunctionStructImpl {
 		return closure.getSymbolBindings();
 	}
 
-	public Map<SymbolStruct, FunctionStructImpl> getClosureFunctionBindings() {
+	public Map<SymbolStruct, FunctionStruct> getClosureFunctionBindings() {
 		if (closure == null) {
 			return Collections.emptyMap();
 		}

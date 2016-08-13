@@ -9,10 +9,10 @@ import java.math.BigInteger;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import jcl.lang.FunctionStruct;
 import jcl.lang.HashTableStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.function.EquatorFunctionStructBase;
-import jcl.lang.function.FunctionStructImpl;
 import jcl.type.HashTableType;
 import jcl.type.LispType;
 
@@ -67,7 +67,7 @@ public final class HashTableStructImpl extends BuiltInClassStruct implements Has
 	 * @return hash-table {@link #test} property
 	 */
 	@Override
-	public FunctionStructImpl getTest() {
+	public FunctionStruct getTest() {
 		return test;
 	}
 
@@ -168,7 +168,7 @@ public final class HashTableStructImpl extends BuiltInClassStruct implements Has
 	 * 		the mapping function
 	 */
 	@Override
-	public void mapHash(final FunctionStructImpl function) {
+	public void mapHash(final FunctionStruct function) {
 		for (final Map.Entry<LispStruct, LispStruct> entry : map.entrySet()) {
 			final LispStruct keyWrapper = KeyWrapper.getInstance(entry.getKey(), test);
 			function.apply(keyWrapper, entry.getValue());

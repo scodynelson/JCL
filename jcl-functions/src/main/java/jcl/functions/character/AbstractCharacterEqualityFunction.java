@@ -8,16 +8,16 @@ import java.util.List;
 import java.util.function.Predicate;
 
 import jcl.lang.CharacterStruct;
+import jcl.lang.FunctionStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.TStruct;
 import jcl.lang.function.CommonLispBuiltInFunctionStructBase;
-import jcl.lang.function.FunctionStructImpl;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.NILStruct;
 
 /**
- * Abstract {@link FunctionStructImpl} implementation for character functions that operates one to many {@link
+ * Abstract {@link FunctionStruct} implementation for character functions that operates one to many {@link
  * CharacterStruct}s to verify their equality properties.
  */
 abstract class AbstractCharacterEqualityFunction extends CommonLispBuiltInFunctionStructBase {

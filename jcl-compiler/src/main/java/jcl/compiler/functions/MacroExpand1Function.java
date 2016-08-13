@@ -8,6 +8,7 @@ import java.util.Optional;
 
 import jcl.compiler.environment.Environment;
 import jcl.lang.BooleanStruct;
+import jcl.lang.FunctionStruct;
 import jcl.lang.PackageStruct;
 import jcl.lang.statics.CompilerVariables;
 import jcl.lang.LispStruct;
@@ -16,7 +17,6 @@ import jcl.lang.SymbolStruct;
 import jcl.lang.TStruct;
 import jcl.lang.ValuesStruct;
 import jcl.lang.function.CommonLispBuiltInFunctionStructBase;
-import jcl.lang.function.FunctionStructImpl;
 import jcl.lang.function.expander.MacroFunctionExpanderInter;
 import jcl.lang.function.expander.SymbolMacroExpanderInter;
 import jcl.lang.function.parameterdsl.Arguments;
@@ -79,7 +79,7 @@ public final class MacroExpand1Function extends CommonLispBuiltInFunctionStructB
 				final MacroFunctionExpanderInter macroFunctionExpander = theSymbol.getMacroFunctionExpander();
 
 				if (macroFunctionExpander != null) {
-					final FunctionStructImpl macroExpandHook = CompilerVariables.MACROEXPAND_HOOK.getVariableValue();
+					final FunctionStruct macroExpandHook = CompilerVariables.MACROEXPAND_HOOK.getVariableValue();
 					final LispStruct expansion = macroExpandHook.apply(macroFunctionExpander, form, environment);
 
 					return new MacroExpandResult(expansion, true);
@@ -100,7 +100,7 @@ public final class MacroExpand1Function extends CommonLispBuiltInFunctionStructB
 			final SymbolMacroExpanderInter symbolMacroExpander = theSymbol.getSymbolMacroExpander();
 
 			if (symbolMacroExpander != null) {
-				final FunctionStructImpl macroExpandHook = CompilerVariables.MACROEXPAND_HOOK.getVariableValue();
+				final FunctionStruct macroExpandHook = CompilerVariables.MACROEXPAND_HOOK.getVariableValue();
 				final LispStruct expansion = macroExpandHook.apply(symbolMacroExpander, form, environment);
 
 				return new MacroExpandResult(expansion, true);

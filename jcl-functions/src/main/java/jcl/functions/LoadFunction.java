@@ -14,6 +14,7 @@ import jcl.functions.pathname.MergePathnamesFunction;
 import jcl.functions.readtable.ReadFunction;
 import jcl.lang.BooleanStruct;
 import jcl.lang.FileStreamStruct;
+import jcl.lang.FunctionStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.NILStruct;
 import jcl.lang.PackageStruct;
@@ -22,7 +23,6 @@ import jcl.lang.TStruct;
 import jcl.lang.condition.exception.FileErrorException;
 import jcl.lang.factory.LispStructFactory;
 import jcl.lang.function.CommonLispBuiltInFunctionStructBase;
-import jcl.lang.function.FunctionStructImpl;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.pathname.PathnameVersion;
@@ -199,7 +199,7 @@ public final class LoadFunction extends CommonLispBuiltInFunctionStructBase {
 				final BeanDefinition beanDefinition = builder.getBeanDefinition();
 				factory.registerBeanDefinition(beanName, beanDefinition);
 
-				final FunctionStructImpl function = (FunctionStructImpl) applicationContext.getBean(classLoaded);
+				final FunctionStruct function = (FunctionStruct) applicationContext.getBean(classLoaded);
 				return function.apply();
 			}
 		} catch (final FileErrorException fee) {

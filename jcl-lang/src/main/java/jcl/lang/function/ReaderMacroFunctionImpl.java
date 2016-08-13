@@ -8,16 +8,13 @@ import java.math.BigInteger;
 import java.util.Optional;
 
 import jcl.lang.CharacterStruct;
+import jcl.lang.InputStreamStruct;
 import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.factory.LispStructFactory;
 import jcl.lang.readtable.Reader;
-import jcl.lang.InputStreamStruct;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
+import jcl.lang.readtable.ReaderMacroFunction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 
@@ -25,7 +22,7 @@ import org.springframework.context.ApplicationContext;
  * Abstract implementation definition for all Reader defined macro functions that read character macros based off of a
  * provided {@link Integer} code point.
  */
-public abstract class ReaderMacroFunctionImpl extends FunctionStructImpl {
+public abstract class ReaderMacroFunctionImpl extends FunctionStructImpl implements ReaderMacroFunction {
 
 	/**
 	 * {@link Autowired} {@link ApplicationContext} used for getting a new {@link Reader} bean instance.
@@ -69,58 +66,6 @@ public abstract class ReaderMacroFunctionImpl extends FunctionStructImpl {
 		return readMacro(codePoint, reader, numberArgument);
 	}
 
-	/**
-	 * Interpret the character stream from the provided {@link Reader} (up to End-of-File or new line) based on the
-	 * provided {@code codePoint}.
-	 *
-	 * @param codePoint
-	 * 		the character code point that determines the macro function
-	 * @param reader
-	 * 		the {@link Reader} used to read tokens
-	 * @param numberArgument
-	 * 		the optional number argument
-	 *
-	 * @return the parsed {@link LispStruct} token
-	 */
+	@Override
 	public abstract LispStruct readMacro(int codePoint, Reader reader, Optional<BigInteger> numberArgument);
-
-	/**
-	 * Default method used to determine if the ReaderMacroFunctionImpl is a dispatching macro. The default value return is
-	 * {@code #false}, however this is overridden in the internal dispatching table in a readtable.
-	 *
-	 * @return whether or not the ReaderMacroFunctionImpl is a dispatching macro
-	 */
-	public boolean isDispatch() {
-		return false;
-	}
-
-	@Override
-	public int hashCode() {
-		return new HashCodeBuilder().appendSuper(super.hashCode())
-		                            .append(applicationContext)
-		                            .toHashCode();
-	}
-
-	@Override
-	public boolean equals(final Object obj) {
-		if (obj == null) {
-			return false;
-		}
-		if (obj == this) {
-			return true;
-		}
-		if (obj.getClass() != getClass()) {
-			return false;
-		}
-		final ReaderMacroFunctionImpl rhs = (ReaderMacroFunctionImpl) obj;
-		return new EqualsBuilder().appendSuper(super.equals(obj))
-		                          .append(applicationContext, rhs.applicationContext)
-		                          .isEquals();
-	}
-
-	@Override
-	public String toString() {
-		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(applicationContext)
-		                                                                .toString();
-	}
 }

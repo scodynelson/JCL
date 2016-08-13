@@ -8,12 +8,12 @@ import java.math.BigInteger;
 import java.util.Optional;
 
 import jcl.lang.LispStruct;
+import jcl.lang.ReadtableStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
 import jcl.lang.NILStruct;
 import jcl.lang.readtable.Reader;
 import jcl.lang.readtable.ReaderMacroFunction;
 import jcl.lang.statics.ReaderVariables;
-import jcl.lang.readtable.ReadtableStructImpl;
 import jcl.lang.stream.ReadPeekResult;
 import jcl.reader.ReaderStateMediator;
 import jcl.reader.TokenBuilder;
@@ -56,7 +56,7 @@ class MacroCharacterReaderState implements ReaderState {
 		final ReadPeekResult readResult = tokenBuilder.getPreviousReadResult();
 		final int codePoint = readResult.getResult();
 
-		final ReadtableStructImpl readtable = ReaderVariables.READTABLE.getVariableValue();
+		final ReadtableStruct readtable = ReaderVariables.READTABLE.getVariableValue();
 		final ReaderMacroFunction readerMacroFunction = readtable.getMacroCharacter(codePoint);
 
 		if (readerMacroFunction == null) {

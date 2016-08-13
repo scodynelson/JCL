@@ -11,6 +11,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
+import jcl.lang.ReadtableStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
 import jcl.lang.internal.BuiltInClassStruct;
 import jcl.lang.stream.ReadPeekResult;
@@ -20,7 +21,7 @@ import jcl.util.CodePointConstants;
 /**
  * The {@link ReadtableStructImpl} is the object representation of a Lisp 'readtable' type.
  */
-public final class ReadtableStructImpl extends BuiltInClassStruct {
+public final class ReadtableStructImpl extends BuiltInClassStruct implements ReadtableStruct {
 
 	/**
 	 * Internal map storing the {@link Integer} code point mappings to appropriate {@link ReaderMacroFunction}s.
@@ -68,11 +69,11 @@ public final class ReadtableStructImpl extends BuiltInClassStruct {
 		init();
 	}
 
-	public static ReadtableStructImpl valueOf() {
+	public static ReadtableStruct valueOf() {
 		return new ReadtableStructImpl();
 	}
 
-	public static ReadtableStructImpl valueOf(final ReadtableCase readtableCase) {
+	public static ReadtableStruct valueOf(final ReadtableCase readtableCase) {
 		return new ReadtableStructImpl(readtableCase);
 	}
 

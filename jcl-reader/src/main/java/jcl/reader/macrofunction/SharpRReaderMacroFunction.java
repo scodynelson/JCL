@@ -9,11 +9,11 @@ import java.util.Optional;
 import javax.annotation.PostConstruct;
 
 import jcl.lang.LispStruct;
+import jcl.lang.ReadtableStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
 import jcl.lang.RationalStruct;
 import jcl.lang.readtable.Reader;
 import jcl.lang.statics.ReaderVariables;
-import jcl.lang.readtable.ReadtableStructImpl;
 import jcl.util.CodePointConstants;
 import org.apache.commons.lang3.Range;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +42,7 @@ public class SharpRReaderMacroFunction extends ReaderMacroFunctionImpl {
 	 */
 	@PostConstruct
 	private void init() {
-		final ReadtableStructImpl readtable = ReaderVariables.READTABLE.getVariableValue();
+		final ReadtableStruct readtable = ReaderVariables.READTABLE.getVariableValue();
 		readtable.setDispatchMacroCharacter(CodePointConstants.NUMBER_SIGN, CodePointConstants.LATIN_SMALL_LETTER_R, this);
 		readtable.setDispatchMacroCharacter(CodePointConstants.NUMBER_SIGN, CodePointConstants.LATIN_CAPITAL_LETTER_R, this);
 	}

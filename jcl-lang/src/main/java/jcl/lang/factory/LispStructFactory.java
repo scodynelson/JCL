@@ -40,6 +40,7 @@ import jcl.lang.PackageStruct;
 import jcl.lang.PathnameStruct;
 import jcl.lang.RandomStateStruct;
 import jcl.lang.RatioStruct;
+import jcl.lang.ReadtableStruct;
 import jcl.lang.RealStruct;
 import jcl.lang.StringInputStreamStruct;
 import jcl.lang.StringOutputStreamStruct;
@@ -664,11 +665,11 @@ public final class LispStructFactory {
 	 * Readtable
 	 */
 
-	public static ReadtableStructImpl toReadtable() {
+	public static ReadtableStruct toReadtable() {
 		return ReadtableStructImpl.valueOf();
 	}
 
-	public static ReadtableStructImpl toReadtable(final ReadtableCase readtableCase) {
+	public static ReadtableStruct toReadtable(final ReadtableCase readtableCase) {
 		return ReadtableStructImpl.valueOf(readtableCase);
 	}
 

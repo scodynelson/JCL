@@ -6,6 +6,7 @@ package jcl.lang.statics;
 
 import jcl.lang.BooleanStruct;
 import jcl.lang.IntegerStruct;
+import jcl.lang.ReadtableStruct;
 import jcl.lang.readtable.ReadtableStructImpl;
 import jcl.lang.TStruct;
 import jcl.lang.internal.VariableStructImpl;
@@ -39,7 +40,7 @@ public interface ReaderVariables {
 	VariableStructImpl<BooleanStruct> READ_SUPPRESS = VariableStructImpl.valueOf("*READ-SUPPRESS*", GlobalPackageStruct.COMMON_LISP, NILStruct.INSTANCE);
 
 	/**
-	 * The global {@link ReadtableStructImpl} denoting the default readtable to be used throughout the JCL system.
+	 * The global {@link ReadtableStruct} denoting the default readtable to be used throughout the JCL system.
 	 */
-	VariableStructImpl<ReadtableStructImpl> READTABLE = VariableStructImpl.valueOf("*READTABLE*", GlobalPackageStruct.COMMON_LISP, ReadtableStructImpl.valueOf());
+	VariableStructImpl<ReadtableStruct> READTABLE = VariableStructImpl.valueOf("*READTABLE*", GlobalPackageStruct.COMMON_LISP, ReadtableStructImpl.valueOf());
 }

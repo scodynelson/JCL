@@ -12,10 +12,10 @@ import jcl.functions.pathname.PathnameFunction;
 import jcl.lang.LispStruct;
 import jcl.lang.NILStruct;
 import jcl.lang.PathnameStruct;
+import jcl.lang.ReadtableStruct;
 import jcl.lang.StringStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
 import jcl.lang.readtable.Reader;
-import jcl.lang.readtable.ReadtableStructImpl;
 import jcl.lang.statics.ReaderVariables;
 import jcl.util.CodePointConstants;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +39,7 @@ public class SharpPReaderMacroFunction extends ReaderMacroFunctionImpl {
 	 */
 	@PostConstruct
 	private void init() {
-		final ReadtableStructImpl readtable = ReaderVariables.READTABLE.getVariableValue();
+		final ReadtableStruct readtable = ReaderVariables.READTABLE.getVariableValue();
 		readtable.setDispatchMacroCharacter(CodePointConstants.NUMBER_SIGN, CodePointConstants.LATIN_SMALL_LETTER_P, this);
 		readtable.setDispatchMacroCharacter(CodePointConstants.NUMBER_SIGN, CodePointConstants.LATIN_CAPITAL_LETTER_P, this);
 	}

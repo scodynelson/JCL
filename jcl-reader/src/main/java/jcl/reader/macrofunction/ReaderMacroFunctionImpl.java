@@ -2,7 +2,7 @@
  * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
  */
 
-package jcl.lang.function;
+package jcl.reader.macrofunction;
 
 import java.math.BigInteger;
 import java.util.Optional;
@@ -13,6 +13,7 @@ import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.factory.LispStructFactory;
+import jcl.lang.function.FunctionStructImpl;
 import jcl.lang.readtable.Reader;
 import jcl.lang.readtable.ReaderMacroFunction;
 import org.springframework.beans.factory.annotation.Autowired;

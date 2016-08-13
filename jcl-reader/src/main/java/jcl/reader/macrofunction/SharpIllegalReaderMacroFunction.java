@@ -10,7 +10,6 @@ import javax.annotation.PostConstruct;
 
 import jcl.lang.LispStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
-import jcl.lang.function.ReaderMacroFunctionImpl;
 import jcl.lang.readtable.Reader;
 import jcl.lang.statics.ReaderVariables;
 import jcl.lang.readtable.ReadtableStruct;

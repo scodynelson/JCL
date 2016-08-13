@@ -9,7 +9,6 @@ import java.util.Optional;
 import javax.annotation.PostConstruct;
 
 import jcl.lang.LispStruct;
-import jcl.lang.function.ReaderMacroFunctionImpl;
 import jcl.lang.internal.SpecialOperatorStructImpl;
 import jcl.lang.condition.exception.ReaderErrorException;
 import jcl.lang.factory.LispStructFactory;

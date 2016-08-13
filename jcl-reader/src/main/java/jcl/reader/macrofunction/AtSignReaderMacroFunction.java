@@ -11,7 +11,6 @@ import javax.annotation.PostConstruct;
 import jcl.functions.java.JClass;
 import jcl.functions.java.JNew;
 import jcl.lang.LispStruct;
-import jcl.lang.function.ReaderMacroFunctionImpl;
 import jcl.lang.java.JavaClassStruct;
 import jcl.lang.readtable.Reader;
 import jcl.lang.statics.ReaderVariables;

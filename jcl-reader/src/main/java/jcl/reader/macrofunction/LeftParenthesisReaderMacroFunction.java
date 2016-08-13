@@ -8,7 +8,6 @@ import java.math.BigInteger;
 import java.util.Optional;
 import javax.annotation.PostConstruct;
 
-import jcl.lang.function.ReaderMacroFunctionImpl;
 import jcl.lang.ListStruct;
 import jcl.lang.readtable.Reader;
 import jcl.lang.statics.ReaderVariables;

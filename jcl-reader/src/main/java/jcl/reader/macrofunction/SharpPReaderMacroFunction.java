@@ -14,7 +14,6 @@ import jcl.lang.NILStruct;
 import jcl.lang.PathnameStruct;
 import jcl.lang.StringStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
-import jcl.lang.function.ReaderMacroFunctionImpl;
 import jcl.lang.readtable.Reader;
 import jcl.lang.readtable.ReadtableStruct;
 import jcl.lang.statics.ReaderVariables;

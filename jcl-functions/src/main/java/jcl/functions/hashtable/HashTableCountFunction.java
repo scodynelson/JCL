@@ -9,13 +9,13 @@ import java.math.BigInteger;
 import jcl.lang.HashTableStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.factory.LispStructFactory;
-import jcl.lang.function.CommonLispBuiltInFunctionStruct;
+import jcl.lang.function.CommonLispBuiltInFunctionStructBase;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class HashTableCountFunction extends CommonLispBuiltInFunctionStruct {
+public final class HashTableCountFunction extends CommonLispBuiltInFunctionStructBase {
 
 	private static final String FUNCTION_NAME = "HASH-TABLE-COUNT";
 	private static final String HASH_TABLE_ARGUMENT = "HASH-TABLE";

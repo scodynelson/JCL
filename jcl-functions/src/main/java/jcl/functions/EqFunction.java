@@ -6,13 +6,13 @@ package jcl.functions;
 
 import jcl.lang.LispStruct;
 import jcl.lang.factory.LispStructFactory;
-import jcl.lang.function.EquatorFunctionStruct;
+import jcl.lang.function.EquatorFunctionStructBase;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class EqFunction extends EquatorFunctionStruct {
+public final class EqFunction extends EquatorFunctionStructBase {
 
 	private static final String FUNCTION_NAME = "EQL";
 	private static final String OBJECT1_ARGUMENT = "OBJECT-1";

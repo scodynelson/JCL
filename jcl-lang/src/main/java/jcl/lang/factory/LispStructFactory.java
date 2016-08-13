@@ -50,7 +50,7 @@ import jcl.lang.TStruct;
 import jcl.lang.TwoWayStreamStruct;
 import jcl.lang.URLStreamStruct;
 import jcl.lang.VectorStruct;
-import jcl.lang.function.EquatorFunctionStruct;
+import jcl.lang.function.EquatorFunctionStructBase;
 import jcl.lang.internal.ArrayStructImpl;
 import jcl.lang.internal.BitVectorStructImpl;
 import jcl.lang.internal.CharacterStructImpl;
@@ -352,7 +352,7 @@ public final class LispStructFactory {
 	 * HashTable
 	 */
 
-	public static HashTableStruct toHashTable(final EquatorFunctionStruct test, final BigInteger size, final float rehashThreshold) {
+	public static HashTableStruct toHashTable(final EquatorFunctionStructBase test, final BigInteger size, final float rehashThreshold) {
 		return HashTableStructImpl.valueOf(test, size, rehashThreshold);
 	}
 

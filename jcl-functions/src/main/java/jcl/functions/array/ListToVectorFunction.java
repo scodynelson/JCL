@@ -9,14 +9,14 @@ import java.util.stream.Collectors;
 
 import jcl.lang.LispStruct;
 import jcl.lang.factory.LispStructFactory;
-import jcl.lang.function.SystemBuiltInFunctionStruct;
+import jcl.lang.function.SystemBuiltInFunctionStructBase;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.ListStruct;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class ListToVectorFunction extends SystemBuiltInFunctionStruct {
+public final class ListToVectorFunction extends SystemBuiltInFunctionStructBase {
 
 	private static final String FUNCTION_NAME = "LIST-TO-VECTOR";
 	private static final String LIST_ARGUMENT = "LIST";

@@ -6,7 +6,7 @@ package jcl.functions.system;
 
 import jcl.lang.LispStruct;
 import jcl.lang.TStruct;
-import jcl.lang.function.ExtensionsBuiltInFunctionStruct;
+import jcl.lang.function.ExtensionsBuiltInFunctionStructBase;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import org.slf4j.Logger;
@@ -14,7 +14,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class GC extends ExtensionsBuiltInFunctionStruct {
+public final class GC extends ExtensionsBuiltInFunctionStructBase {
 
 	private static final String FUNCTION_NAME = "GC";
 

@@ -10,17 +10,17 @@ import java.util.function.Predicate;
 import jcl.lang.CharacterStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.TStruct;
-import jcl.lang.function.CommonLispBuiltInFunctionStruct;
-import jcl.lang.function.FunctionStruct;
+import jcl.lang.function.CommonLispBuiltInFunctionStructBase;
+import jcl.lang.function.FunctionStructImpl;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.NILStruct;
 
 /**
- * Abstract {@link FunctionStruct} implementation for character functions that operates one to many {@link
+ * Abstract {@link FunctionStructImpl} implementation for character functions that operates one to many {@link
  * CharacterStruct}s to verify their equality properties.
  */
-abstract class AbstractCharacterEqualityFunction extends CommonLispBuiltInFunctionStruct {
+abstract class AbstractCharacterEqualityFunction extends CommonLispBuiltInFunctionStructBase {
 
 	protected AbstractCharacterEqualityFunction(final String documentation, final String functionName) {
 		super(documentation, functionName,

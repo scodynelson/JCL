@@ -14,7 +14,7 @@ import jcl.lang.LispStruct;
 import jcl.lang.VectorStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
 import jcl.lang.factory.LispStructFactory;
-import jcl.lang.function.ReaderMacroFunction;
+import jcl.lang.function.ReaderMacroFunctionImpl;
 import jcl.lang.ListStruct;
 import jcl.lang.NILStruct;
 import jcl.lang.readtable.Reader;
@@ -28,7 +28,7 @@ import org.springframework.stereotype.Component;
  * Implements the '#(...)' Lisp reader macro.
  */
 @Component
-public class SharpLeftParenthesisReaderMacroFunction extends ReaderMacroFunction {
+public class SharpLeftParenthesisReaderMacroFunction extends ReaderMacroFunctionImpl {
 
 	/**
 	 * {@link Autowired} {@link ListReaderMacroFunction} used for reading {@link ListStruct}s.

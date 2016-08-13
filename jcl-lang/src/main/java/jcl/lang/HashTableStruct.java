@@ -3,7 +3,7 @@ package jcl.lang;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
-import jcl.lang.function.FunctionStruct;
+import jcl.lang.function.FunctionStructImpl;
 
 /**
  * The {@link HashTableStruct} is the object representation of a Lisp 'hash-table' type.
@@ -15,7 +15,7 @@ public interface HashTableStruct extends LispStruct {
 	 *
 	 * @return hash-table test property
 	 */
-	FunctionStruct getTest();
+	FunctionStructImpl getTest();
 
 	/**
 	 * Getter for hash-table rehash-size property.
@@ -86,5 +86,5 @@ public interface HashTableStruct extends LispStruct {
 	 * @param function
 	 * 		the mapping function
 	 */
-	void mapHash(final FunctionStruct function);
+	void mapHash(final FunctionStructImpl function);
 }

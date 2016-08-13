@@ -9,7 +9,7 @@ import jcl.lang.LispStruct;
 import jcl.lang.NILStruct;
 import jcl.lang.PathnameStruct;
 import jcl.lang.SymbolStruct;
-import jcl.lang.function.CommonLispBuiltInFunctionStruct;
+import jcl.lang.function.CommonLispBuiltInFunctionStructBase;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.statics.CommonLispSymbols;
@@ -22,7 +22,7 @@ import jcl.type.LispType;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class OpenFunction extends CommonLispBuiltInFunctionStruct {
+public final class OpenFunction extends CommonLispBuiltInFunctionStructBase {
 
 	private static final String FUNCTION_NAME = "OPEN";
 	private static final String FILESPEC_ARGUMENT = "FILESPEC";

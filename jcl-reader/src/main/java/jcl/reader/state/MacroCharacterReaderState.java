@@ -9,7 +9,7 @@ import java.util.Optional;
 
 import jcl.lang.LispStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
-import jcl.lang.function.ReaderMacroFunction;
+import jcl.lang.function.ReaderMacroFunctionImpl;
 import jcl.lang.NILStruct;
 import jcl.lang.readtable.Reader;
 import jcl.lang.statics.ReaderVariables;
@@ -57,7 +57,7 @@ class MacroCharacterReaderState implements ReaderState {
 		final int codePoint = readResult.getResult();
 
 		final ReadtableStruct readtable = ReaderVariables.READTABLE.getVariableValue();
-		final ReaderMacroFunction readerMacroFunction = readtable.getMacroCharacter(codePoint);
+		final ReaderMacroFunctionImpl readerMacroFunction = readtable.getMacroCharacter(codePoint);
 
 		if (readerMacroFunction == null) {
 			throw new ReaderErrorException("No reader macro function exists for character: " + codePoint + '.');

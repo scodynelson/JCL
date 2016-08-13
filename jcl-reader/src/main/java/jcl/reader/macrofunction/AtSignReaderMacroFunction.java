@@ -11,7 +11,7 @@ import javax.annotation.PostConstruct;
 import jcl.functions.java.JClass;
 import jcl.functions.java.JNew;
 import jcl.lang.LispStruct;
-import jcl.lang.function.ReaderMacroFunction;
+import jcl.lang.function.ReaderMacroFunctionImpl;
 import jcl.lang.java.JavaClassStruct;
 import jcl.lang.readtable.Reader;
 import jcl.lang.statics.ReaderVariables;
@@ -25,7 +25,7 @@ import org.springframework.stereotype.Component;
  * Implements the '@...' Lisp reader macro.
  */
 @Component
-public class AtSignReaderMacroFunction extends ReaderMacroFunction {
+public class AtSignReaderMacroFunction extends ReaderMacroFunctionImpl {
 
 	@Autowired
 	private JClass jClass;

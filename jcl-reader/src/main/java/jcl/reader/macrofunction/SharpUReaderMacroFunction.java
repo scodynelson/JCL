@@ -10,7 +10,7 @@ import javax.annotation.PostConstruct;
 
 import jcl.lang.LispStruct;
 import jcl.lang.factory.LispStructFactory;
-import jcl.lang.function.ReaderMacroFunction;
+import jcl.lang.function.ReaderMacroFunctionImpl;
 import jcl.lang.NILStruct;
 import jcl.lang.readtable.Reader;
 import jcl.lang.statics.ReaderVariables;
@@ -22,7 +22,7 @@ import org.springframework.stereotype.Component;
  * Implements the '#u' Lisp reader macro.
  */
 @Component
-public class SharpUReaderMacroFunction extends ReaderMacroFunction {
+public class SharpUReaderMacroFunction extends ReaderMacroFunctionImpl {
 
 	/**
 	 * Initializes the reader macro function and adds it to the global readtable.

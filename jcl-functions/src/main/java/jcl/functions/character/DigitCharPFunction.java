@@ -7,7 +7,7 @@ package jcl.functions.character;
 import jcl.lang.CharacterStruct;
 import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
-import jcl.lang.function.CommonLispBuiltInFunctionStruct;
+import jcl.lang.function.CommonLispBuiltInFunctionStructBase;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import org.springframework.stereotype.Component;
@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
  * Function implementation for {@code digit-char-p}.
  */
 @Component
-public final class DigitCharPFunction extends CommonLispBuiltInFunctionStruct {
+public final class DigitCharPFunction extends CommonLispBuiltInFunctionStructBase {
 
 	/**
 	 * Public constructor passing the documentation string.

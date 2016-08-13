@@ -9,14 +9,14 @@ import jcl.lang.LispStruct;
 import jcl.lang.StringStruct;
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.factory.LispStructFactory;
-import jcl.lang.function.CommonLispBuiltInFunctionStruct;
+import jcl.lang.function.CommonLispBuiltInFunctionStructBase;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.NILStruct;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class MakeStringInputStreamFunction extends CommonLispBuiltInFunctionStruct {
+public final class MakeStringInputStreamFunction extends CommonLispBuiltInFunctionStructBase {
 
 	private static final String FUNCTION_NAME = "MAKE-STRING-INPUT-STREAM";
 	private static final String STRING_ARGUMENT = "STRING";

@@ -1,14 +1,14 @@
 package jcl.functions.list;
 
 import jcl.lang.LispStruct;
-import jcl.lang.function.CommonLispBuiltInFunctionStruct;
+import jcl.lang.function.CommonLispBuiltInFunctionStructBase;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.ListStruct;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class CopyAlistFunction extends CommonLispBuiltInFunctionStruct {
+public final class CopyAlistFunction extends CommonLispBuiltInFunctionStructBase {
 
 	private static final String FUNCTION_NAME = "COPY-ALIST";
 	private static final String ALIST_ARGUMENT = "ALIST";

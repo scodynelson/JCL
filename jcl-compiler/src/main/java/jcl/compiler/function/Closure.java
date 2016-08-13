@@ -9,7 +9,7 @@ import java.util.Map;
 
 import jcl.lang.LispStruct;
 import jcl.lang.SymbolStruct;
-import jcl.lang.function.FunctionStruct;
+import jcl.lang.function.FunctionStructImpl;
 
 public class Closure {
 
@@ -17,7 +17,7 @@ public class Closure {
 
 	private final Map<SymbolStruct, LispStruct> symbolBindings = new LinkedHashMap<>();
 
-	private final Map<SymbolStruct, FunctionStruct> functionBindings = new LinkedHashMap<>();
+	private final Map<SymbolStruct, FunctionStructImpl> functionBindings = new LinkedHashMap<>();
 
 	public Closure(final Closure parent) {
 		this.parent = parent;
@@ -36,7 +36,7 @@ public class Closure {
 		return symbolBindings;
 	}
 
-	public Map<SymbolStruct, FunctionStruct> getFunctionBindings() {
+	public Map<SymbolStruct, FunctionStructImpl> getFunctionBindings() {
 		return functionBindings;
 	}
 

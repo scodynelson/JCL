@@ -9,13 +9,13 @@ import jcl.lang.PackageStruct;
 import jcl.lang.statics.PackageVariables;
 import jcl.lang.StringStruct;
 import jcl.lang.factory.LispStructFactory;
-import jcl.lang.function.CommonLispBuiltInFunctionStruct;
+import jcl.lang.function.CommonLispBuiltInFunctionStructBase;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class GentempFunction extends CommonLispBuiltInFunctionStruct {
+public final class GentempFunction extends CommonLispBuiltInFunctionStructBase {
 
 	private static final String FUNCTION_NAME = "GENTEMP";
 	private static final String PREFIX_ARGUMENT = "PREFIX";

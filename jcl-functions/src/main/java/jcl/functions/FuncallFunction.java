@@ -10,8 +10,8 @@ import jcl.lang.LispStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.factory.LispStructFactory;
-import jcl.lang.function.CommonLispBuiltInFunctionStruct;
-import jcl.lang.function.FunctionStruct;
+import jcl.lang.function.CommonLispBuiltInFunctionStructBase;
+import jcl.lang.function.FunctionStructImpl;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.ListStruct;
@@ -19,7 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class FuncallFunction extends CommonLispBuiltInFunctionStruct {
+public final class FuncallFunction extends CommonLispBuiltInFunctionStructBase {
 
 //	private static final Logger LOGGER = LoggerFactory.getLogger(FuncallFunction.class);
 
@@ -50,11 +50,11 @@ public final class FuncallFunction extends CommonLispBuiltInFunctionStruct {
 
 		final LispStruct functionDesignator = arguments.getRequiredArgument(FN_ARGUMENT);
 
-		FunctionStruct functionStruct = null;
+		FunctionStructImpl functionStruct = null;
 		if (functionDesignator instanceof SymbolStruct) {
 			functionStruct = ((SymbolStruct) functionDesignator).getFunction();
-		} else if (functionDesignator instanceof FunctionStruct) {
-			functionStruct = (FunctionStruct) functionDesignator;
+		} else if (functionDesignator instanceof FunctionStructImpl) {
+			functionStruct = (FunctionStructImpl) functionDesignator;
 		}
 
 		final List<LispStruct> functionArguments = arguments.getRestArgument();

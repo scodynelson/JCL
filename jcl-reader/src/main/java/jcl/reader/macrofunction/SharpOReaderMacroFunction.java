@@ -9,7 +9,7 @@ import java.util.Optional;
 import javax.annotation.PostConstruct;
 
 import jcl.lang.LispStruct;
-import jcl.lang.function.ReaderMacroFunction;
+import jcl.lang.function.ReaderMacroFunctionImpl;
 import jcl.lang.RationalStruct;
 import jcl.lang.readtable.Reader;
 import jcl.lang.statics.ReaderVariables;
@@ -22,7 +22,7 @@ import org.springframework.stereotype.Component;
  * Implements the '#o' Lisp reader macro.
  */
 @Component
-public class SharpOReaderMacroFunction extends ReaderMacroFunction {
+public class SharpOReaderMacroFunction extends ReaderMacroFunctionImpl {
 
 	/**
 	 * Radix value to use.

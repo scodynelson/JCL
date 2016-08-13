@@ -10,7 +10,7 @@ import javax.annotation.PostConstruct;
 
 import jcl.lang.LispStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
-import jcl.lang.function.ReaderMacroFunction;
+import jcl.lang.function.ReaderMacroFunctionImpl;
 import jcl.lang.readtable.Reader;
 import jcl.lang.statics.ReaderVariables;
 import jcl.lang.readtable.ReadtableStruct;
@@ -21,7 +21,7 @@ import org.springframework.stereotype.Component;
  * Implements the illegal '#??" Lisp reader macros.
  */
 @Component
-public class SharpIllegalReaderMacroFunction extends ReaderMacroFunction {
+public class SharpIllegalReaderMacroFunction extends ReaderMacroFunctionImpl {
 
 	/**
 	 * Initializes the reader macro function and adds it to the global readtable.

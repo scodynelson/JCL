@@ -4,7 +4,7 @@ import java.math.BigInteger;
 
 import jcl.lang.LispStruct;
 import jcl.lang.factory.LispStructFactory;
-import jcl.lang.function.CommonLispBuiltInFunctionStruct;
+import jcl.lang.function.CommonLispBuiltInFunctionStructBase;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.ListStruct;
@@ -12,7 +12,7 @@ import jcl.lang.NILStruct;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class ListLengthFunction extends CommonLispBuiltInFunctionStruct {
+public final class ListLengthFunction extends CommonLispBuiltInFunctionStructBase {
 
 	private static final String FUNCTION_NAME = "LIST-LENGTH";
 	private static final String LIST_ARGUMENT = "LIST";

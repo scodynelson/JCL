@@ -5,9 +5,9 @@ import jcl.lang.SymbolStruct;
 import jcl.lang.statics.GlobalPackageStruct;
 import jcl.lang.function.parameterdsl.Parameters;
 
-public abstract class SystemBuiltInFunctionStruct extends BuiltInFunctionStruct {
+public abstract class SystemBuiltInFunctionStructBase extends BuiltInFunctionStructImpl {
 
-	protected SystemBuiltInFunctionStruct(final String documentation, final String functionName, final Parameters parameters) {
+	protected SystemBuiltInFunctionStructBase(final String documentation, final String functionName, final Parameters parameters) {
 		super(documentation, functionName, parameters);
 	}
 

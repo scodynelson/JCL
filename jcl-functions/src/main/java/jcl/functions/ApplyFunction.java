@@ -9,15 +9,15 @@ import java.util.List;
 import jcl.lang.LispStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.ErrorException;
-import jcl.lang.function.CommonLispBuiltInFunctionStruct;
-import jcl.lang.function.FunctionStruct;
+import jcl.lang.function.CommonLispBuiltInFunctionStructBase;
+import jcl.lang.function.FunctionStructImpl;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.ListStruct;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class ApplyFunction extends CommonLispBuiltInFunctionStruct {
+public final class ApplyFunction extends CommonLispBuiltInFunctionStructBase {
 
 	private static final String FUNCTION_NAME = "APPLY";
 	private static final String FN_ARGUMENT = "FN";
@@ -37,11 +37,11 @@ public final class ApplyFunction extends CommonLispBuiltInFunctionStruct {
 	public LispStruct apply(final Arguments arguments) {
 		final LispStruct functionDesignator = arguments.getRequiredArgument(FN_ARGUMENT);
 
-		FunctionStruct functionStruct = null;
+		FunctionStructImpl functionStruct = null;
 		if (functionDesignator instanceof SymbolStruct) {
 			functionStruct = ((SymbolStruct) functionDesignator).getFunction();
-		} else if (functionDesignator instanceof FunctionStruct) {
-			functionStruct = (FunctionStruct) functionDesignator;
+		} else if (functionDesignator instanceof FunctionStructImpl) {
+			functionStruct = (FunctionStructImpl) functionDesignator;
 		}
 
 		final LispStruct arg = arguments.getRequiredArgument(ARG_ARGUMENT);

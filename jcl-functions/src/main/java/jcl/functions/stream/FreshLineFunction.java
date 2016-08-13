@@ -6,7 +6,7 @@ package jcl.functions.stream;
 
 import jcl.lang.LispStruct;
 import jcl.lang.factory.LispStructFactory;
-import jcl.lang.function.CommonLispBuiltInFunctionStruct;
+import jcl.lang.function.CommonLispBuiltInFunctionStructBase;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.OutputStreamStruct;
@@ -14,7 +14,7 @@ import jcl.lang.statics.StreamVariables;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class FreshLineFunction extends CommonLispBuiltInFunctionStruct {
+public final class FreshLineFunction extends CommonLispBuiltInFunctionStructBase {
 
 	private static final String FUNCTION_NAME = "FRESHLINE";
 	private static final String OUTPUT_STREAM_ARGUMENT = "OUTPUT-STREAM";

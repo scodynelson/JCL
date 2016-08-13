@@ -5,7 +5,7 @@
 package jcl.type.typespecifier;
 
 import jcl.lang.LispStruct;
-import jcl.lang.function.PredicateFunctionStruct;
+import jcl.lang.function.PredicateFunctionStructBase;
 import jcl.type.TypeBaseClass;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -22,9 +22,9 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 public class SatisfiesTypeSpecifier extends TypeBaseClass implements CompoundTypeSpecifier {
 
 	/**
-	 * The {@link PredicateFunctionStruct} to check against the 'SATISFIES' type specifier.
+	 * The {@link PredicateFunctionStructBase} to check against the 'SATISFIES' type specifier.
 	 */
-	private final PredicateFunctionStruct<LispStruct> predicate;
+	private final PredicateFunctionStructBase<LispStruct> predicate;
 
 	/**
 	 * Public constructor.
@@ -32,7 +32,7 @@ public class SatisfiesTypeSpecifier extends TypeBaseClass implements CompoundTyp
 	 * @param predicate
 	 * 		the predicate function to test satisfaction
 	 */
-	public SatisfiesTypeSpecifier(final PredicateFunctionStruct<LispStruct> predicate) {
+	public SatisfiesTypeSpecifier(final PredicateFunctionStructBase<LispStruct> predicate) {
 		this("T", predicate); // TODO: Should this be 'T'???
 	}
 
@@ -44,7 +44,7 @@ public class SatisfiesTypeSpecifier extends TypeBaseClass implements CompoundTyp
 	 * @param predicate
 	 * 		the predicate function to test satisfaction
 	 */
-	protected SatisfiesTypeSpecifier(final String name, final PredicateFunctionStruct<LispStruct> predicate) {
+	protected SatisfiesTypeSpecifier(final String name, final PredicateFunctionStructBase<LispStruct> predicate) {
 		super(name);
 		this.predicate = predicate;
 	}

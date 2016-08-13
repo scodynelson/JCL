@@ -10,7 +10,7 @@ import jcl.compiler.icg.GeneratorState;
 import jcl.compiler.icg.JavaMethodBuilder;
 import jcl.compiler.struct.specialoperator.SymbolCompilerFunctionStruct;
 import jcl.lang.SymbolStruct;
-import jcl.lang.function.FunctionStruct;
+import jcl.lang.function.FunctionStructImpl;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.springframework.context.event.EventListener;
@@ -28,14 +28,14 @@ final class SymbolFunctionCodeGenerator implements CodeGenerator<SymbolCompilerF
 	 * <ol>
 	 * <li>Generating the {@link SymbolCompilerFunctionStruct#functionSymbol} value</li>
 	 * <li>Generating the code to retrieve the {@link SymbolStruct#getFunction()} call to retrieve the associated
-	 * {@link FunctionStruct} associated with the function symbol</li>
+	 * {@link FunctionStructImpl} associated with the function symbol</li>
 	 * </ol>
 	 * As an example, it will transform the function symbol '+' for {@code (+ 1)} into the following Java code:
 	 * <pre>
 	 * {@code
 	 *      PackageStruct var2 = PackageStruct.findPackage("COMMON-LISP");
 	 *      SymbolStruct var3 = var2.findSymbol("+").getSymbol();
-	 *      FunctionStruct var4 = var3.getFunction();
+	 *      FunctionStructImpl var4 = var3.getFunction();
 	 * }
 	 * </pre>
 	 *

@@ -7,7 +7,7 @@ package jcl.functions.character;
 import jcl.lang.CharacterStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.factory.LispStructFactory;
-import jcl.lang.function.CommonLispBuiltInFunctionStruct;
+import jcl.lang.function.CommonLispBuiltInFunctionStructBase;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import org.springframework.stereotype.Component;
@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
  * Function implementation for {@code characterp}.
  */
 @Component
-public final class CharacterPFunction extends CommonLispBuiltInFunctionStruct {
+public final class CharacterPFunction extends CommonLispBuiltInFunctionStructBase {
 
 	private static final String FUNCTION_NAME = "CHARACTERP";
 	private static final String OBJECT_ARGUMENT = "OBJECT";

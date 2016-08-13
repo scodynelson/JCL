@@ -2,14 +2,14 @@ package jcl.functions.list;
 
 import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
-import jcl.lang.function.SystemBuiltInFunctionStruct;
+import jcl.lang.function.SystemBuiltInFunctionStructBase;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.ListStruct;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class SetNthFunction extends SystemBuiltInFunctionStruct {
+public final class SetNthFunction extends SystemBuiltInFunctionStructBase {
 
 	private static final String FUNCTION_NAME = "SET-NTH";
 	private static final String INDEX_ARGUMENT = "INDEX";

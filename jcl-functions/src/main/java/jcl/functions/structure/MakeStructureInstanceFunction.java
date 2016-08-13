@@ -8,13 +8,13 @@ import jcl.lang.LispStruct;
 import jcl.lang.StructureClassStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.ProgramErrorException;
-import jcl.lang.function.SystemBuiltInFunctionStruct;
+import jcl.lang.function.SystemBuiltInFunctionStructBase;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class MakeStructureInstanceFunction extends SystemBuiltInFunctionStruct {
+public final class MakeStructureInstanceFunction extends SystemBuiltInFunctionStructBase {
 
 	private static final String FUNCTION_NAME = "MAKE-STRUCTURE-INSTANCE";
 	private static final String STRUCTURE_SYMBOL_ARGUMENT = "STRUCTURE-SYMBOL";

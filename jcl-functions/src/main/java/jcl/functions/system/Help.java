@@ -15,14 +15,14 @@ import jcl.compiler.classloaders.CompilerClassLoader;
 import jcl.lang.LispStruct;
 import jcl.lang.StringStruct;
 import jcl.lang.condition.exception.ProgramErrorException;
-import jcl.lang.function.ExtensionsBuiltInFunctionStruct;
+import jcl.lang.function.ExtensionsBuiltInFunctionStructBase;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.NILStruct;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class Help extends ExtensionsBuiltInFunctionStruct {
+public final class Help extends ExtensionsBuiltInFunctionStructBase {
 
 	private static final String FUNCTION_NAME = "HELP";
 	private static final String SEARCH_TERM_ARGUMENT = "SEARCH-TERM";

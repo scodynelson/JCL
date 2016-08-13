@@ -6,13 +6,13 @@ package jcl.functions.stream;
 
 import jcl.lang.EchoStreamStruct;
 import jcl.lang.LispStruct;
-import jcl.lang.function.CommonLispBuiltInFunctionStruct;
+import jcl.lang.function.CommonLispBuiltInFunctionStructBase;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class EchoStreamInputStreamFunction extends CommonLispBuiltInFunctionStruct {
+public final class EchoStreamInputStreamFunction extends CommonLispBuiltInFunctionStructBase {
 
 	private static final String FUNCTION_NAME = "ECHO-STREAM-INPUT-STREAM";
 	private static final String ECHO_STREAM_ARGUMENT = "ECHO-STREAM";

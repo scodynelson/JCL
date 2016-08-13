@@ -3,7 +3,7 @@ package jcl.functions.symbol;
 import jcl.lang.KeywordStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.factory.LispStructFactory;
-import jcl.lang.function.CommonLispBuiltInFunctionStruct;
+import jcl.lang.function.CommonLispBuiltInFunctionStructBase;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import org.springframework.stereotype.Component;
@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
  * Function implementation for {@code keywordp}.
  */
 @Component
-public final class KeywordPFunction extends CommonLispBuiltInFunctionStruct {
+public final class KeywordPFunction extends CommonLispBuiltInFunctionStructBase {
 
 	private static final String FUNCTION_NAME = "KEYWORDP";
 	private static final String OBJECT_ARGUMENT = "OBJECT";

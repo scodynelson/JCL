@@ -6,13 +6,13 @@ package jcl.functions.symbol;
 
 import jcl.lang.LispStruct;
 import jcl.lang.SymbolStruct;
-import jcl.lang.function.CommonLispBuiltInFunctionStruct;
+import jcl.lang.function.CommonLispBuiltInFunctionStructBase;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class SetFunction extends CommonLispBuiltInFunctionStruct {
+public final class SetFunction extends CommonLispBuiltInFunctionStructBase {
 
 	private static final String FUNCTION_NAME = "SET";
 	private static final String SYMBOL_ARGUMENT = "SYMBOL";

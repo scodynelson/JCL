@@ -9,10 +9,10 @@ import java.util.Optional;
 import javax.annotation.PostConstruct;
 
 import jcl.lang.LispStruct;
+import jcl.lang.function.ReaderMacroFunctionImpl;
 import jcl.lang.internal.SpecialOperatorStructImpl;
 import jcl.lang.condition.exception.ReaderErrorException;
 import jcl.lang.factory.LispStructFactory;
-import jcl.lang.function.ReaderMacroFunction;
 import jcl.lang.NILStruct;
 import jcl.lang.readtable.Reader;
 import jcl.lang.statics.ReaderVariables;
@@ -23,7 +23,7 @@ import org.springframework.stereotype.Component;
  * Implements the ''' Lisp reader macro.
  */
 @Component
-public class ApostropheReaderMacroFunction extends ReaderMacroFunction {
+public class ApostropheReaderMacroFunction extends ReaderMacroFunctionImpl {
 
 	/**
 	 * Initializes the reader macro function and adds it to the global readtable.

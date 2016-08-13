@@ -14,7 +14,7 @@ import jcl.lang.NILStruct;
 import jcl.lang.PathnameStruct;
 import jcl.lang.StringStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
-import jcl.lang.function.ReaderMacroFunction;
+import jcl.lang.function.ReaderMacroFunctionImpl;
 import jcl.lang.readtable.Reader;
 import jcl.lang.readtable.ReadtableStruct;
 import jcl.lang.statics.ReaderVariables;
@@ -26,7 +26,7 @@ import org.springframework.stereotype.Component;
  * Implements the '#p' Lisp reader macro.
  */
 @Component
-public class SharpPReaderMacroFunction extends ReaderMacroFunction {
+public class SharpPReaderMacroFunction extends ReaderMacroFunctionImpl {
 
 	/**
 	 * {@link Autowired} {@link PathnameFunction} used for getting a new {@link PathnameStruct} instance from the read

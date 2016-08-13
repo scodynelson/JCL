@@ -8,15 +8,15 @@ import jcl.lang.HashTableStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.TypeErrorException;
-import jcl.lang.function.CommonLispBuiltInFunctionStruct;
-import jcl.lang.function.FunctionStruct;
+import jcl.lang.function.CommonLispBuiltInFunctionStructBase;
+import jcl.lang.function.FunctionStructImpl;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.NILStruct;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class MapHashFunction extends CommonLispBuiltInFunctionStruct {
+public final class MapHashFunction extends CommonLispBuiltInFunctionStructBase {
 
 	private static final String FUNCTION_NAME = "MAPHASH";
 	private static final String FUNCTION_ARGUMENT = "FUNCTION";
@@ -34,16 +34,16 @@ public final class MapHashFunction extends CommonLispBuiltInFunctionStruct {
 	@Override
 	public LispStruct apply(final Arguments arguments) {
 		final LispStruct function = arguments.getRequiredArgument(FUNCTION_ARGUMENT);
-		final FunctionStruct functionVal = validateFunctionDesignator(function);
+		final FunctionStructImpl functionVal = validateFunctionDesignator(function);
 		final HashTableStruct hashTable = arguments.getRequiredArgument(HASH_TABLE_ARGUMENT, HashTableStruct.class);
 
 		hashTable.mapHash(functionVal);
 		return NILStruct.INSTANCE;
 	}
 
-	private FunctionStruct validateFunctionDesignator(final LispStruct functionDesignator) {
-		if (functionDesignator instanceof FunctionStruct) {
-			return (FunctionStruct) functionDesignator;
+	private FunctionStructImpl validateFunctionDesignator(final LispStruct functionDesignator) {
+		if (functionDesignator instanceof FunctionStructImpl) {
+			return (FunctionStructImpl) functionDesignator;
 		} else if (functionDesignator instanceof SymbolStruct) {
 			return ((SymbolStruct) functionDesignator).getFunction();
 		} else {

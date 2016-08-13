@@ -16,7 +16,7 @@ import jcl.lang.SymbolStruct;
 import jcl.lang.TStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
 import jcl.lang.factory.LispStructFactory;
-import jcl.lang.function.ReaderMacroFunction;
+import jcl.lang.function.ReaderMacroFunctionImpl;
 import jcl.lang.ListStruct;
 import jcl.lang.NILStruct;
 import jcl.lang.NumberStruct;
@@ -29,7 +29,7 @@ import org.springframework.stereotype.Component;
  * Implements the '`' Lisp reader macro.
  */
 @Component
-public class BackquoteReaderMacroFunction extends ReaderMacroFunction {
+public class BackquoteReaderMacroFunction extends ReaderMacroFunctionImpl {
 
 	private static final SymbolStruct APPEND = GlobalPackageStruct.COMMON_LISP.intern("APPEND").getSymbol();
 	private static final SymbolStruct CONS = GlobalPackageStruct.COMMON_LISP.intern("CONS").getSymbol();

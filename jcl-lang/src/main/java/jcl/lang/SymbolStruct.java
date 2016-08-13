@@ -1,6 +1,6 @@
 package jcl.lang;
 
-import jcl.lang.function.FunctionStruct;
+import jcl.lang.function.FunctionStructImpl;
 import jcl.lang.function.expander.CompilerMacroFunctionExpanderInter;
 import jcl.lang.function.expander.MacroFunctionExpanderInter;
 import jcl.lang.function.expander.SymbolMacroExpanderInter;
@@ -72,7 +72,7 @@ public interface SymbolStruct extends LispStruct {
 //	 *
 //	 * @return symbol {@link #function} property
 //	 */
-	FunctionStruct getFunction();
+	FunctionStructImpl getFunction();
 
 	//	/**
 //	 * Setter for symbol {@link #function} property.
@@ -80,11 +80,11 @@ public interface SymbolStruct extends LispStruct {
 //	 * @param function
 //	 * 		new symbol {@link #function} property value
 //	 */
-	void setFunction(final FunctionStruct function);
+	void setFunction(final FunctionStructImpl function);
 
-	void bindFunction(final FunctionStruct function);
+	void bindFunction(final FunctionStructImpl function);
 
-	FunctionStruct unbindFunction();
+	FunctionStructImpl unbindFunction();
 
 	/**
 	 * Getter for symbol {@link MacroFunctionExpanderInter} property.

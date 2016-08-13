@@ -9,14 +9,14 @@ import jcl.lang.LogicalPathnameStruct;
 import jcl.lang.PathnameStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.SynonymStreamStruct;
-import jcl.lang.function.CommonLispBuiltInFunctionStruct;
+import jcl.lang.function.CommonLispBuiltInFunctionStructBase;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class TranslateLogicalPathnameFunction extends CommonLispBuiltInFunctionStruct {
+public final class TranslateLogicalPathnameFunction extends CommonLispBuiltInFunctionStructBase {
 
 	private static final String FUNCTION_NAME = "TRANSLATE-LOGICAL-PATHNAME";
 	private static final String PATHSPEC_ARGUMENT = "PATHSPEC";

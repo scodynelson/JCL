@@ -7,14 +7,14 @@ package jcl.functions.symbol;
 import jcl.lang.LispStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.ValuesStruct;
-import jcl.lang.function.FunctionStruct;
-import jcl.lang.function.SystemBuiltInFunctionStruct;
+import jcl.lang.function.FunctionStructImpl;
+import jcl.lang.function.SystemBuiltInFunctionStructBase;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class BindSymbolFunctionFunction extends SystemBuiltInFunctionStruct {
+public final class BindSymbolFunctionFunction extends SystemBuiltInFunctionStructBase {
 
 	private static final String FUNCTION_NAME = "BIND-SYMBOL-FUNCTION";
 	private static final String SYMBOL_ARGUMENT = "SYMBOL";
@@ -32,7 +32,7 @@ public final class BindSymbolFunctionFunction extends SystemBuiltInFunctionStruc
 	@Override
 	public LispStruct apply(final Arguments arguments) {
 		final SymbolStruct symbol = arguments.getRequiredArgument(SYMBOL_ARGUMENT, SymbolStruct.class);
-		final FunctionStruct function = arguments.getRequiredArgument(FUNCTION_ARGUMENT, FunctionStruct.class);
+		final FunctionStructImpl function = arguments.getRequiredArgument(FUNCTION_ARGUMENT, FunctionStructImpl.class);
 
 		symbol.bindFunction(function);
 		return ValuesStruct.valueOf();

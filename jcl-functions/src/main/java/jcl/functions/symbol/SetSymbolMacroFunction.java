@@ -8,13 +8,13 @@ import jcl.compiler.function.expanders.SymbolMacroExpander;
 import jcl.compiler.function.expanders.SymbolMacroExpanderImpl;
 import jcl.lang.LispStruct;
 import jcl.lang.SymbolStruct;
-import jcl.lang.function.SystemBuiltInFunctionStruct;
+import jcl.lang.function.SystemBuiltInFunctionStructBase;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class SetSymbolMacroFunction extends SystemBuiltInFunctionStruct {
+public final class SetSymbolMacroFunction extends SystemBuiltInFunctionStructBase {
 
 	private static final String FUNCTION_NAME = "SET-SYMBOL-MACRO";
 	private static final String SYMBOL_ARGUMENT = "SYMBOL";

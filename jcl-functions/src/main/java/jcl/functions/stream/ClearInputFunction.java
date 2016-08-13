@@ -5,7 +5,7 @@
 package jcl.functions.stream;
 
 import jcl.lang.LispStruct;
-import jcl.lang.function.CommonLispBuiltInFunctionStruct;
+import jcl.lang.function.CommonLispBuiltInFunctionStructBase;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.NILStruct;
@@ -14,7 +14,7 @@ import jcl.lang.statics.StreamVariables;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class ClearInputFunction extends CommonLispBuiltInFunctionStruct {
+public final class ClearInputFunction extends CommonLispBuiltInFunctionStructBase {
 
 	private static final String FUNCTION_NAME = "CLEAR-INPUT";
 	private static final String INPUT_STREAM_ARGUMENT = "INPUT-STREAM";

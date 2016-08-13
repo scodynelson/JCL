@@ -21,8 +21,8 @@ import jcl.lang.PathnameStruct;
 import jcl.lang.TStruct;
 import jcl.lang.condition.exception.FileErrorException;
 import jcl.lang.factory.LispStructFactory;
-import jcl.lang.function.CommonLispBuiltInFunctionStruct;
-import jcl.lang.function.FunctionStruct;
+import jcl.lang.function.CommonLispBuiltInFunctionStructBase;
+import jcl.lang.function.FunctionStructImpl;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.pathname.PathnameVersion;
@@ -45,7 +45,7 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class LoadFunction extends CommonLispBuiltInFunctionStruct {
+public final class LoadFunction extends CommonLispBuiltInFunctionStructBase {
 
 	private static final String FUNCTION_NAME = "LOAD";
 	private static final String FILESPEC_ARGUMENT = "FILESPEC";
@@ -199,7 +199,7 @@ public final class LoadFunction extends CommonLispBuiltInFunctionStruct {
 				final BeanDefinition beanDefinition = builder.getBeanDefinition();
 				factory.registerBeanDefinition(beanName, beanDefinition);
 
-				final FunctionStruct function = (FunctionStruct) applicationContext.getBean(classLoaded);
+				final FunctionStructImpl function = (FunctionStructImpl) applicationContext.getBean(classLoaded);
 				return function.apply();
 			}
 		} catch (final FileErrorException fee) {

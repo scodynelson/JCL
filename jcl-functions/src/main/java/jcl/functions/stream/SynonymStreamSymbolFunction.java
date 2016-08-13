@@ -6,13 +6,13 @@ package jcl.functions.stream;
 
 import jcl.lang.LispStruct;
 import jcl.lang.SynonymStreamStruct;
-import jcl.lang.function.CommonLispBuiltInFunctionStruct;
+import jcl.lang.function.CommonLispBuiltInFunctionStructBase;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class SynonymStreamSymbolFunction extends CommonLispBuiltInFunctionStruct {
+public final class SynonymStreamSymbolFunction extends CommonLispBuiltInFunctionStructBase {
 
 	private static final String FUNCTION_NAME = "SYNONYM-STREAM-SYMBOL";
 	private static final String SYNONYM_STREAM_ARGUMENT = "SYNONYM-STREAM";

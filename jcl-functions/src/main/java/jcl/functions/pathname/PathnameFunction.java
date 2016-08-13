@@ -13,13 +13,13 @@ import jcl.lang.PathnameStruct;
 import jcl.lang.StringStruct;
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.factory.LispStructFactory;
-import jcl.lang.function.CommonLispBuiltInFunctionStruct;
+import jcl.lang.function.CommonLispBuiltInFunctionStructBase;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class PathnameFunction extends CommonLispBuiltInFunctionStruct {
+public final class PathnameFunction extends CommonLispBuiltInFunctionStructBase {
 
 	private static final String FUNCTION_NAME = "PATHNAME";
 	private static final String PATHSPEC_ARGUMENT = "PATHSPEC";

@@ -7,14 +7,14 @@ package jcl.functions.number;
 import java.util.List;
 
 import jcl.lang.LispStruct;
-import jcl.lang.function.CommonLispBuiltInFunctionStruct;
+import jcl.lang.function.CommonLispBuiltInFunctionStructBase;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.NumberStruct;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class SubtractFunction extends CommonLispBuiltInFunctionStruct {
+public final class SubtractFunction extends CommonLispBuiltInFunctionStructBase {
 
 	private static final String FUNCTION_NAME = "-";
 	private static final String NUMBER_ARGUMENT = "NUMBER";

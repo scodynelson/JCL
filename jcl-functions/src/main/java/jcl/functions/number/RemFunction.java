@@ -5,14 +5,14 @@
 package jcl.functions.number;
 
 import jcl.lang.LispStruct;
-import jcl.lang.function.CommonLispBuiltInFunctionStruct;
+import jcl.lang.function.CommonLispBuiltInFunctionStructBase;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.RealStruct;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class RemFunction extends CommonLispBuiltInFunctionStruct {
+public final class RemFunction extends CommonLispBuiltInFunctionStructBase {
 
 	private static final String FUNCTION_NAME = "REM";
 	private static final String REAL_ARGUMENT = "REAL";

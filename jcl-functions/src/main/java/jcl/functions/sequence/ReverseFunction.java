@@ -1,14 +1,14 @@
 package jcl.functions.sequence;
 
 import jcl.lang.LispStruct;
-import jcl.lang.function.CommonLispBuiltInFunctionStruct;
+import jcl.lang.function.CommonLispBuiltInFunctionStructBase;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.SequenceStruct;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class ReverseFunction extends CommonLispBuiltInFunctionStruct {
+public final class ReverseFunction extends CommonLispBuiltInFunctionStructBase {
 
 	private static final String FUNCTION_NAME = "REVERSE";
 	private static final String SEQUENCE_ARGUMENT = "SEQUENCE";

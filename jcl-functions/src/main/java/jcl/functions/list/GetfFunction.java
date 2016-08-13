@@ -1,7 +1,7 @@
 package jcl.functions.list;
 
 import jcl.lang.LispStruct;
-import jcl.lang.function.CommonLispBuiltInFunctionStruct;
+import jcl.lang.function.CommonLispBuiltInFunctionStructBase;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.ListStruct;
@@ -9,7 +9,7 @@ import jcl.lang.NILStruct;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class GetfFunction extends CommonLispBuiltInFunctionStruct {
+public final class GetfFunction extends CommonLispBuiltInFunctionStructBase {
 
 	private static final String FUNCTION_NAME = "GETF";
 	private static final String PLIST_ARGUMENT = "PLIST";

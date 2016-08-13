@@ -5,7 +5,7 @@
 package jcl.functions.system;
 
 import jcl.lang.LispStruct;
-import jcl.lang.function.ExtensionsBuiltInFunctionStruct;
+import jcl.lang.function.ExtensionsBuiltInFunctionStructBase;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +14,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class QuitFunction extends ExtensionsBuiltInFunctionStruct {
+public final class QuitFunction extends ExtensionsBuiltInFunctionStructBase {
 
 	private static final String FUNCTION_NAME = "QUIT";
 

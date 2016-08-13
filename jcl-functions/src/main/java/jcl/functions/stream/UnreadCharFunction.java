@@ -6,7 +6,7 @@ package jcl.functions.stream;
 
 import jcl.lang.CharacterStruct;
 import jcl.lang.LispStruct;
-import jcl.lang.function.CommonLispBuiltInFunctionStruct;
+import jcl.lang.function.CommonLispBuiltInFunctionStructBase;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.InputStreamStruct;
@@ -14,7 +14,7 @@ import jcl.lang.statics.StreamVariables;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class UnreadCharFunction extends CommonLispBuiltInFunctionStruct {
+public final class UnreadCharFunction extends CommonLispBuiltInFunctionStructBase {
 
 	private static final String FUNCTION_NAME = "UNREAD-CHAR";
 	private static final String CHARACTER_ARGUMENT = "CHARACTER";

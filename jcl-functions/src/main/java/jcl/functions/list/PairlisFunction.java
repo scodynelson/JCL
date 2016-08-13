@@ -4,7 +4,7 @@ import jcl.lang.ConsStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.condition.exception.SimpleErrorException;
 import jcl.lang.factory.LispStructFactory;
-import jcl.lang.function.CommonLispBuiltInFunctionStruct;
+import jcl.lang.function.CommonLispBuiltInFunctionStructBase;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.ListStruct;
@@ -12,7 +12,7 @@ import jcl.lang.NILStruct;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class PairlisFunction extends CommonLispBuiltInFunctionStruct {
+public final class PairlisFunction extends CommonLispBuiltInFunctionStructBase {
 
 	private static final String FUNCTION_NAME = "PAIRLIS";
 	private static final String KEYS_ARGUMENT = "KEYS";

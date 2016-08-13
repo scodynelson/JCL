@@ -6,14 +6,14 @@ package jcl.functions.symbol;
 
 import jcl.lang.LispStruct;
 import jcl.lang.SymbolStruct;
-import jcl.lang.function.SystemBuiltInFunctionStruct;
+import jcl.lang.function.SystemBuiltInFunctionStructBase;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.ListStruct;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class SetSymbolPlistFunction extends SystemBuiltInFunctionStruct {
+public final class SetSymbolPlistFunction extends SystemBuiltInFunctionStructBase {
 
 	private static final String FUNCTION_NAME = "SET-SYMBOL-PLIST";
 	private static final String SYMBOL_ARGUMENT = "SYMBOL";

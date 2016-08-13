@@ -11,14 +11,14 @@ import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.condition.exception.SimpleErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
-import jcl.lang.function.SystemBuiltInFunctionStruct;
+import jcl.lang.function.SystemBuiltInFunctionStructBase;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.type.LispType;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class SetStructureSlotValueFunction extends SystemBuiltInFunctionStruct {
+public final class SetStructureSlotValueFunction extends SystemBuiltInFunctionStructBase {
 
 	private static final String FUNCTION_NAME = "SET-STRUCTURE-SLOT-VALUE";
 	private static final String STRUCTURE_CLASS_ARGUMENT = "STRUCTURE-CLASS";

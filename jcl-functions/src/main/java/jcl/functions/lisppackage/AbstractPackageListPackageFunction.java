@@ -12,19 +12,19 @@ import java.util.stream.Collectors;
 
 import jcl.lang.LispStruct;
 import jcl.lang.PackageStruct;
+import jcl.lang.function.FunctionStructImpl;
 import jcl.lang.statics.PackageVariables;
 import jcl.lang.TStruct;
-import jcl.lang.function.CommonLispBuiltInFunctionStruct;
-import jcl.lang.function.FunctionStruct;
+import jcl.lang.function.CommonLispBuiltInFunctionStructBase;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.ListStruct;
 
 /**
- * Abstract {@link FunctionStruct} implementation for package functions that take package-designator objects. This
- * {@link FunctionStruct} also has an optional package parameter value.
+ * Abstract {@link FunctionStructImpl} implementation for package functions that take package-designator objects. This
+ * {@link FunctionStructImpl} also has an optional package parameter value.
  */
-abstract class AbstractPackageListPackageFunction extends CommonLispBuiltInFunctionStruct {
+abstract class AbstractPackageListPackageFunction extends CommonLispBuiltInFunctionStructBase {
 
 	protected AbstractPackageListPackageFunction(final String documentation, final String functionName) {
 		super(documentation, functionName,

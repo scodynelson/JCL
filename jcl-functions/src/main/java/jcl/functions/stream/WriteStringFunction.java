@@ -10,7 +10,7 @@ import jcl.lang.LispStruct;
 import jcl.lang.StringStruct;
 import jcl.lang.TStruct;
 import jcl.lang.condition.exception.TypeErrorException;
-import jcl.lang.function.CommonLispBuiltInFunctionStruct;
+import jcl.lang.function.CommonLispBuiltInFunctionStructBase;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.NILStruct;
@@ -19,7 +19,7 @@ import jcl.lang.statics.StreamVariables;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class WriteStringFunction extends CommonLispBuiltInFunctionStruct {
+public final class WriteStringFunction extends CommonLispBuiltInFunctionStructBase {
 
 	private static final String FUNCTION_NAME = "WRITE-STRING";
 	private static final String STRING_ARGUMENT = "STRING";

@@ -11,7 +11,7 @@ import jcl.lang.LispStruct;
 import jcl.lang.PackageStruct;
 import jcl.lang.statics.PackageVariables;
 import jcl.lang.TStruct;
-import jcl.lang.function.CommonLispBuiltInFunctionStruct;
+import jcl.lang.function.CommonLispBuiltInFunctionStructBase;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.ListStruct;
@@ -21,7 +21,7 @@ import org.springframework.stereotype.Component;
  * Function implementation for {@code shadow}.
  */
 @Component
-public final class ShadowFunction extends CommonLispBuiltInFunctionStruct {
+public final class ShadowFunction extends CommonLispBuiltInFunctionStructBase {
 
 	private static final String FUNCTION_NAME = "SHADOW";
 	private static final String SYMBOL_NAMES_ARGUMENT = "SYMBOL-NAMES";

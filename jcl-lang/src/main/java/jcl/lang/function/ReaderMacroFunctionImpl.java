@@ -25,7 +25,7 @@ import org.springframework.context.ApplicationContext;
  * Abstract implementation definition for all Reader defined macro functions that read character macros based off of a
  * provided {@link Integer} code point.
  */
-public abstract class ReaderMacroFunction extends FunctionStruct {
+public abstract class ReaderMacroFunctionImpl extends FunctionStructImpl {
 
 	/**
 	 * {@link Autowired} {@link ApplicationContext} used for getting a new {@link Reader} bean instance.
@@ -33,7 +33,7 @@ public abstract class ReaderMacroFunction extends FunctionStruct {
 	@Autowired
 	private ApplicationContext applicationContext;
 
-	protected ReaderMacroFunction() {
+	protected ReaderMacroFunctionImpl() {
 		// TODO
 		super("Some Documentation");
 	}
@@ -85,10 +85,10 @@ public abstract class ReaderMacroFunction extends FunctionStruct {
 	public abstract LispStruct readMacro(int codePoint, Reader reader, Optional<BigInteger> numberArgument);
 
 	/**
-	 * Default method used to determine if the ReaderMacroFunction is a dispatching macro. The default value return is
+	 * Default method used to determine if the ReaderMacroFunctionImpl is a dispatching macro. The default value return is
 	 * {@code #false}, however this is overridden in the internal dispatching table in a readtable.
 	 *
-	 * @return whether or not the ReaderMacroFunction is a dispatching macro
+	 * @return whether or not the ReaderMacroFunctionImpl is a dispatching macro
 	 */
 	public boolean isDispatch() {
 		return false;
@@ -112,7 +112,7 @@ public abstract class ReaderMacroFunction extends FunctionStruct {
 		if (obj.getClass() != getClass()) {
 			return false;
 		}
-		final ReaderMacroFunction rhs = (ReaderMacroFunction) obj;
+		final ReaderMacroFunctionImpl rhs = (ReaderMacroFunctionImpl) obj;
 		return new EqualsBuilder().appendSuper(super.equals(obj))
 		                          .append(applicationContext, rhs.applicationContext)
 		                          .isEquals();

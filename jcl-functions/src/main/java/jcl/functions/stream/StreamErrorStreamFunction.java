@@ -7,7 +7,7 @@ package jcl.functions.stream;
 import jcl.lang.LispStruct;
 import jcl.lang.StreamStruct;
 import jcl.lang.condition.exception.StreamErrorException;
-import jcl.lang.function.CommonLispBuiltInFunctionStruct;
+import jcl.lang.function.CommonLispBuiltInFunctionStructBase;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import org.springframework.stereotype.Component;
@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
  * Function implementation for {@code stream-error-stream}.
  */
 @Component
-public final class StreamErrorStreamFunction extends CommonLispBuiltInFunctionStruct {
+public final class StreamErrorStreamFunction extends CommonLispBuiltInFunctionStructBase {
 
 	private static final String FUNCTION_NAME = "STREAM-ERROR-STREAM";
 	private static final String CONDITION_ARGUMENT = "CONDITION";

@@ -7,8 +7,8 @@ import jcl.lang.SymbolStruct;
 import jcl.lang.ValuesStruct;
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.condition.exception.ProgramErrorException;
-import jcl.lang.function.CommonLispBuiltInFunctionStruct;
-import jcl.lang.function.FunctionStruct;
+import jcl.lang.function.CommonLispBuiltInFunctionStructBase;
+import jcl.lang.function.FunctionStructImpl;
 import jcl.lang.function.expander.MacroFunctionExpanderInter;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
@@ -17,7 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class CompileFunction extends CommonLispBuiltInFunctionStruct {
+public final class CompileFunction extends CommonLispBuiltInFunctionStructBase {
 
 	private static final String FUNCTION_NAME = "COMPILE";
 	private static final String NAME_ARGUMENT = "NAME";
@@ -52,18 +52,18 @@ public final class CompileFunction extends CommonLispBuiltInFunctionStruct {
 		if (uncompiledDefinition != null) {
 			CompileResult compiledDefinition = null;
 
-			final FunctionStruct function;
-			if (uncompiledDefinition instanceof FunctionStruct) {
-				function = (FunctionStruct) uncompiledDefinition;
+			final FunctionStructImpl function;
+			if (uncompiledDefinition instanceof FunctionStructImpl) {
+				function = (FunctionStructImpl) uncompiledDefinition;
 			} else {
 				compiledDefinition = compileForm.compile(uncompiledDefinition);
-				final FunctionStruct compiledDefinitionFunction = compiledDefinition.getFunction();
+				final FunctionStructImpl compiledDefinitionFunction = compiledDefinition.getFunction();
 				final LispStruct compiledDefinitionResult = compiledDefinitionFunction.apply();
 
-				if (!(compiledDefinitionResult instanceof FunctionStruct)) {
+				if (!(compiledDefinitionResult instanceof FunctionStructImpl)) {
 					throw new ProgramErrorException("Error compiling anonymous function : " + uncompiledDefinition + " is not a valid lambda expression.");
 				}
-				function = (FunctionStruct) compiledDefinitionResult;
+				function = (FunctionStructImpl) compiledDefinitionResult;
 			}
 
 			if (name instanceof SymbolStruct) {
@@ -92,7 +92,7 @@ public final class CompileFunction extends CommonLispBuiltInFunctionStruct {
 
 		final boolean hasFunction = nameSymbol.hasFunction();
 		if (hasFunction) {
-			final FunctionStruct function = nameSymbol.getFunction();
+			final FunctionStructImpl function = nameSymbol.getFunction();
 			return ValuesStruct.valueOf(function, NILStruct.INSTANCE, NILStruct.INSTANCE);
 		}
 

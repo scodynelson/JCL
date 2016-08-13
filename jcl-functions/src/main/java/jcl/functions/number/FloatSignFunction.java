@@ -7,13 +7,13 @@ package jcl.functions.number;
 import jcl.lang.FloatStruct;
 import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
-import jcl.lang.function.CommonLispBuiltInFunctionStruct;
+import jcl.lang.function.CommonLispBuiltInFunctionStructBase;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class FloatSignFunction extends CommonLispBuiltInFunctionStruct {
+public final class FloatSignFunction extends CommonLispBuiltInFunctionStructBase {
 
 	private static final String FUNCTION_NAME = "FLOAT-SIGN";
 	private static final String FLOAT1_ARGUMENT = "FLOAT1";

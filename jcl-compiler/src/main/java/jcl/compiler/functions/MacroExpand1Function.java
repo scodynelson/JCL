@@ -15,8 +15,8 @@ import jcl.lang.PackageSymbolStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.TStruct;
 import jcl.lang.ValuesStruct;
-import jcl.lang.function.CommonLispBuiltInFunctionStruct;
-import jcl.lang.function.FunctionStruct;
+import jcl.lang.function.CommonLispBuiltInFunctionStructBase;
+import jcl.lang.function.FunctionStructImpl;
 import jcl.lang.function.expander.MacroFunctionExpanderInter;
 import jcl.lang.function.expander.SymbolMacroExpanderInter;
 import jcl.lang.function.parameterdsl.Arguments;
@@ -26,7 +26,7 @@ import jcl.lang.NILStruct;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class MacroExpand1Function extends CommonLispBuiltInFunctionStruct {
+public final class MacroExpand1Function extends CommonLispBuiltInFunctionStructBase {
 
 	private static final String FUNCTION_NAME = "MACROEXPAND-1";
 	private static final String FORM_ARGUMENT = "FORM";
@@ -79,7 +79,7 @@ public final class MacroExpand1Function extends CommonLispBuiltInFunctionStruct 
 				final MacroFunctionExpanderInter macroFunctionExpander = theSymbol.getMacroFunctionExpander();
 
 				if (macroFunctionExpander != null) {
-					final FunctionStruct macroExpandHook = CompilerVariables.MACROEXPAND_HOOK.getVariableValue();
+					final FunctionStructImpl macroExpandHook = CompilerVariables.MACROEXPAND_HOOK.getVariableValue();
 					final LispStruct expansion = macroExpandHook.apply(macroFunctionExpander, form, environment);
 
 					return new MacroExpandResult(expansion, true);
@@ -100,7 +100,7 @@ public final class MacroExpand1Function extends CommonLispBuiltInFunctionStruct 
 			final SymbolMacroExpanderInter symbolMacroExpander = theSymbol.getSymbolMacroExpander();
 
 			if (symbolMacroExpander != null) {
-				final FunctionStruct macroExpandHook = CompilerVariables.MACROEXPAND_HOOK.getVariableValue();
+				final FunctionStructImpl macroExpandHook = CompilerVariables.MACROEXPAND_HOOK.getVariableValue();
 				final LispStruct expansion = macroExpandHook.apply(symbolMacroExpander, form, environment);
 
 				return new MacroExpandResult(expansion, true);

@@ -6,13 +6,13 @@ package jcl.functions.symbol;
 
 import jcl.lang.LispStruct;
 import jcl.lang.StringStruct;
-import jcl.lang.function.CommonLispBuiltInFunctionStruct;
+import jcl.lang.function.CommonLispBuiltInFunctionStructBase;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class MakeSymbolFunction extends CommonLispBuiltInFunctionStruct {
+public final class MakeSymbolFunction extends CommonLispBuiltInFunctionStructBase {
 
 	private static final String FUNCTION_NAME = "MAKE-SYMBOL";
 	private static final String NAME_ARGUMENT = "NAME";

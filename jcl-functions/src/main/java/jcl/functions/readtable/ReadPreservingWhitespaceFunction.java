@@ -8,7 +8,7 @@ import jcl.lang.BooleanStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.TStruct;
 import jcl.lang.condition.exception.TypeErrorException;
-import jcl.lang.function.CommonLispBuiltInFunctionStruct;
+import jcl.lang.function.CommonLispBuiltInFunctionStructBase;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.NILStruct;
@@ -20,7 +20,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class ReadPreservingWhitespaceFunction extends CommonLispBuiltInFunctionStruct {
+public final class ReadPreservingWhitespaceFunction extends CommonLispBuiltInFunctionStructBase {
 
 	private static final String FUNCTION_NAME = "READ-PRESERVING-WHITESPACE";
 	private static final String INPUT_STREAM_ARGUMENT = "INPUT-STREAM";

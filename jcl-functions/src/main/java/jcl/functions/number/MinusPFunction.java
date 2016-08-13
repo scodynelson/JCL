@@ -6,14 +6,14 @@ package jcl.functions.number;
 
 import jcl.lang.LispStruct;
 import jcl.lang.factory.LispStructFactory;
-import jcl.lang.function.CommonLispBuiltInFunctionStruct;
+import jcl.lang.function.CommonLispBuiltInFunctionStructBase;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.RealStruct;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class MinusPFunction extends CommonLispBuiltInFunctionStruct {
+public final class MinusPFunction extends CommonLispBuiltInFunctionStructBase {
 
 	private static final String FUNCTION_NAME = "MINUSP";
 	private static final String REAL_ARGUMENT = "REAL";

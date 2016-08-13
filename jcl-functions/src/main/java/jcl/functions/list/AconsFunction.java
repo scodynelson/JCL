@@ -3,14 +3,14 @@ package jcl.functions.list;
 import jcl.lang.ConsStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.factory.LispStructFactory;
-import jcl.lang.function.CommonLispBuiltInFunctionStruct;
+import jcl.lang.function.CommonLispBuiltInFunctionStructBase;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.ListStruct;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class AconsFunction extends CommonLispBuiltInFunctionStruct {
+public final class AconsFunction extends CommonLispBuiltInFunctionStructBase {
 
 	private static final String FUNCTION_NAME = "ACONS";
 	private static final String KEY_ARGUMENT = "KEY";

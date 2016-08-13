@@ -10,20 +10,20 @@ import jcl.type.LispType;
 import org.springframework.beans.factory.InitializingBean;
 
 /**
- * The {@link FunctionStruct} is the object representation of a Lisp 'function' type.
+ * The {@link FunctionStructImpl} is the object representation of a Lisp 'function' type.
  */
-public abstract class FunctionStruct extends BuiltInClassStruct implements InitializingBean {
+public abstract class FunctionStructImpl extends BuiltInClassStruct implements InitializingBean {
 
-	protected FunctionStruct(final String documentation) {
+	protected FunctionStructImpl(final String documentation) {
 		this(documentation, FunctionType.INSTANCE);
 	}
 
-	protected FunctionStruct(final String documentation, final FunctionType type) {
+	protected FunctionStructImpl(final String documentation, final FunctionType type) {
 		this(documentation, type, null, null);
 	}
 
-	protected FunctionStruct(final String documentation, final LispType type,
-	                         final List<Class<? extends LispStruct>> directSuperClasses, final List<Class<? extends LispStruct>> subClasses) {
+	protected FunctionStructImpl(final String documentation, final LispType type,
+	                             final List<Class<? extends LispStruct>> directSuperClasses, final List<Class<? extends LispStruct>> subClasses) {
 		super(documentation, type, directSuperClasses, subClasses);
 	}
 

@@ -5,7 +5,7 @@
 package jcl.functions.number;
 
 import jcl.lang.LispStruct;
-import jcl.lang.function.CommonLispBuiltInFunctionStruct;
+import jcl.lang.function.CommonLispBuiltInFunctionStructBase;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.NumberStruct;
@@ -13,7 +13,7 @@ import jcl.lang.RealStruct;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class ATanFunction extends CommonLispBuiltInFunctionStruct {
+public final class ATanFunction extends CommonLispBuiltInFunctionStructBase {
 
 	private static final String FUNCTION_NAME = "ATAN";
 	private static final String NUMBER1_ARGUMENT = "NUMBER1";

@@ -9,7 +9,7 @@ import java.lang.reflect.InvocationTargetException;
 
 import jcl.lang.LispStruct;
 import jcl.lang.condition.exception.ErrorException;
-import jcl.lang.function.ExtensionsBuiltInFunctionStruct;
+import jcl.lang.function.ExtensionsBuiltInFunctionStructBase;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.java.JavaClassStruct;
@@ -19,7 +19,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class JNew extends ExtensionsBuiltInFunctionStruct {
+public final class JNew extends ExtensionsBuiltInFunctionStructBase {
 
 	private static final String FUNCTION_NAME = "JNEW";
 	private static final String JAVA_CLASS_ARGUMENT = "JAVA-CLASS";

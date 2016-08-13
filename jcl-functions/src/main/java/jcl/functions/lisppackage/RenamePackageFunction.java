@@ -14,7 +14,7 @@ import jcl.lang.PackageStruct;
 import jcl.lang.StringStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.TypeErrorException;
-import jcl.lang.function.CommonLispBuiltInFunctionStruct;
+import jcl.lang.function.CommonLispBuiltInFunctionStructBase;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.ListStruct;
@@ -25,7 +25,7 @@ import org.springframework.stereotype.Component;
  * Function implementation for {@code rename-package}.
  */
 @Component
-public final class RenamePackageFunction extends CommonLispBuiltInFunctionStruct {
+public final class RenamePackageFunction extends CommonLispBuiltInFunctionStructBase {
 
 	private static final String FUNCTION_NAME = "RENAME-PACKAGE";
 	private static final String PACKAGE_ARGUMENT = "PACKAGE";

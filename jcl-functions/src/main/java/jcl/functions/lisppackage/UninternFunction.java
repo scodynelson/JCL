@@ -9,7 +9,7 @@ import jcl.lang.PackageStruct;
 import jcl.lang.statics.PackageVariables;
 import jcl.lang.SymbolStruct;
 import jcl.lang.TStruct;
-import jcl.lang.function.CommonLispBuiltInFunctionStruct;
+import jcl.lang.function.CommonLispBuiltInFunctionStructBase;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.NILStruct;
@@ -19,7 +19,7 @@ import org.springframework.stereotype.Component;
  * Function implementation for {@code unintern}.
  */
 @Component
-public final class UninternFunction extends CommonLispBuiltInFunctionStruct {
+public final class UninternFunction extends CommonLispBuiltInFunctionStructBase {
 
 	private static final String FUNCTION_NAME = "UNINTERN";
 	private static final String SYMBOL_ARGUMENT = "SYMBOL";

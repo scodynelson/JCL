@@ -8,15 +8,15 @@ import java.util.function.Function;
 
 import jcl.lang.CharacterStruct;
 import jcl.lang.LispStruct;
-import jcl.lang.function.CommonLispBuiltInFunctionStruct;
-import jcl.lang.function.FunctionStruct;
+import jcl.lang.function.CommonLispBuiltInFunctionStructBase;
+import jcl.lang.function.FunctionStructImpl;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 
 /**
- * Abstract {@link FunctionStruct} implementation for character functions that operates on a {@link CharacterStruct}.
+ * Abstract {@link FunctionStructImpl} implementation for character functions that operates on a {@link CharacterStruct}.
  */
-abstract class AbstractCharacterFunction extends CommonLispBuiltInFunctionStruct {
+abstract class AbstractCharacterFunction extends CommonLispBuiltInFunctionStructBase {
 
 	protected AbstractCharacterFunction(final String documentation, final String functionName) {
 		super(documentation, functionName,

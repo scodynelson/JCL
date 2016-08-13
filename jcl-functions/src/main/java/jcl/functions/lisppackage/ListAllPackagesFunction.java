@@ -9,7 +9,7 @@ import java.util.List;
 import jcl.lang.LispStruct;
 import jcl.lang.PackageStruct;
 import jcl.lang.factory.LispStructFactory;
-import jcl.lang.function.CommonLispBuiltInFunctionStruct;
+import jcl.lang.function.CommonLispBuiltInFunctionStructBase;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.ListStruct;
@@ -19,7 +19,7 @@ import org.springframework.stereotype.Component;
  * Function implementation for {@code list-all-packages}.
  */
 @Component
-public final class ListAllPackagesFunction extends CommonLispBuiltInFunctionStruct {
+public final class ListAllPackagesFunction extends CommonLispBuiltInFunctionStructBase {
 
 	private static final String FUNCTION_NAME = "LIST-ALL-PACKAGES";
 

@@ -7,13 +7,13 @@ package jcl.functions.stream;
 import jcl.lang.LispStruct;
 import jcl.lang.StringOutputStreamStruct;
 import jcl.lang.factory.LispStructFactory;
-import jcl.lang.function.CommonLispBuiltInFunctionStruct;
+import jcl.lang.function.CommonLispBuiltInFunctionStructBase;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class GetOutputStreamStringFunction extends CommonLispBuiltInFunctionStruct {
+public final class GetOutputStreamStringFunction extends CommonLispBuiltInFunctionStructBase {
 
 	private static final String FUNCTION_NAME = "GET-OUTPUT-STREAM-STRING";
 	private static final String STRING_OUTPUT_STREAM_ARGUMENT = "STRING-OUTPUT-STREAM";

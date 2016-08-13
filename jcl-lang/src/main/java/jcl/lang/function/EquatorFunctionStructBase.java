@@ -7,9 +7,9 @@ import jcl.lang.function.parameterdsl.Parameters;
 import org.apache.commons.collections4.Equator;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-public abstract class EquatorFunctionStruct extends CommonLispBuiltInFunctionStruct implements Equator<LispStruct> {
+public abstract class EquatorFunctionStructBase extends CommonLispBuiltInFunctionStructBase implements Equator<LispStruct> {
 
-	protected EquatorFunctionStruct(final String documentation, final String functionName, final Parameters parameters) {
+	protected EquatorFunctionStructBase(final String documentation, final String functionName, final Parameters parameters) {
 		super(documentation, functionName, parameters);
 	}
 

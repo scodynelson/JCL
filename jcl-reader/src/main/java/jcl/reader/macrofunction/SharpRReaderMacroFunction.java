@@ -10,7 +10,7 @@ import javax.annotation.PostConstruct;
 
 import jcl.lang.LispStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
-import jcl.lang.function.ReaderMacroFunction;
+import jcl.lang.function.ReaderMacroFunctionImpl;
 import jcl.lang.RationalStruct;
 import jcl.lang.readtable.Reader;
 import jcl.lang.statics.ReaderVariables;
@@ -24,7 +24,7 @@ import org.springframework.stereotype.Component;
  * Implements the '#r' Lisp reader macro.
  */
 @Component
-public class SharpRReaderMacroFunction extends ReaderMacroFunction {
+public class SharpRReaderMacroFunction extends ReaderMacroFunctionImpl {
 
 	/**
 	 * The valid range of radix values.

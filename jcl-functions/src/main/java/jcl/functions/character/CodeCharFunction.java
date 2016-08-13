@@ -8,7 +8,7 @@ import jcl.lang.CharacterStruct;
 import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.factory.LispStructFactory;
-import jcl.lang.function.CommonLispBuiltInFunctionStruct;
+import jcl.lang.function.CommonLispBuiltInFunctionStructBase;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.NILStruct;
@@ -18,7 +18,7 @@ import org.springframework.stereotype.Component;
  * Function implementation for {@code code-char}.
  */
 @Component
-public final class CodeCharFunction extends CommonLispBuiltInFunctionStruct {
+public final class CodeCharFunction extends CommonLispBuiltInFunctionStructBase {
 
 	/**
 	 * Public constructor passing the documentation string.

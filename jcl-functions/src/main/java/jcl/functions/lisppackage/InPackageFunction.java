@@ -8,7 +8,7 @@ import jcl.lang.LispStruct;
 import jcl.lang.PackageStruct;
 import jcl.lang.statics.PackageVariables;
 import jcl.lang.condition.exception.ErrorException;
-import jcl.lang.function.CommonLispBuiltInFunctionStruct;
+import jcl.lang.function.CommonLispBuiltInFunctionStructBase;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import org.springframework.stereotype.Component;
@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
  * Function implementation for {@code in-package}.
  */
 @Component
-public final class InPackageFunction extends CommonLispBuiltInFunctionStruct {
+public final class InPackageFunction extends CommonLispBuiltInFunctionStructBase {
 
 	private static final String FUNCTION_NAME = "IN-PACKAGE";
 	private static final String NAME_ARGUMENT = "NAME";

@@ -15,8 +15,8 @@ import jcl.lang.LispStruct;
 import jcl.lang.StructureClassStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
-import jcl.lang.function.FunctionStruct;
-import jcl.lang.function.ReaderMacroFunction;
+import jcl.lang.function.FunctionStructImpl;
+import jcl.lang.function.ReaderMacroFunctionImpl;
 import jcl.lang.ListStruct;
 import jcl.lang.NILStruct;
 import jcl.lang.readtable.Reader;
@@ -31,7 +31,7 @@ import org.springframework.stereotype.Component;
  * Implements the '#s' Lisp reader macro.
  */
 @Component
-public class SharpSReaderMacroFunction extends ReaderMacroFunction {
+public class SharpSReaderMacroFunction extends ReaderMacroFunctionImpl {
 
 	/**
 	 * {@link Autowired} {@link ListReaderMacroFunction} used for reading {@link ListStruct}s.
@@ -90,7 +90,7 @@ public class SharpSReaderMacroFunction extends ReaderMacroFunction {
 			throw new ReaderErrorException("The " + structureType + " structure does not have a default constructor.");
 		}
 
-		final FunctionStruct defaultConstructor = defaultConstructorSymbol.getFunction();
+		final FunctionStructImpl defaultConstructor = defaultConstructorSymbol.getFunction();
 		if (defaultConstructor == null) {
 			throw new ReaderErrorException("The " + structureType + " structure default constructor is undefined.");
 		}

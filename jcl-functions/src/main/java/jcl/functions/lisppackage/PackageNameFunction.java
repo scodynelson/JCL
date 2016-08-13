@@ -8,7 +8,7 @@ import jcl.lang.LispStruct;
 import jcl.lang.PackageStruct;
 import jcl.lang.StringStruct;
 import jcl.lang.factory.LispStructFactory;
-import jcl.lang.function.CommonLispBuiltInFunctionStruct;
+import jcl.lang.function.CommonLispBuiltInFunctionStructBase;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.NILStruct;
@@ -18,7 +18,7 @@ import org.springframework.stereotype.Component;
  * Function implementation for {@code package-name}.
  */
 @Component
-public final class PackageNameFunction extends CommonLispBuiltInFunctionStruct {
+public final class PackageNameFunction extends CommonLispBuiltInFunctionStructBase {
 
 	private static final String FUNCTION_NAME = "PACKAGE-NAME";
 	private static final String PACKAGE_ARGUMENT = "PACKAGE";

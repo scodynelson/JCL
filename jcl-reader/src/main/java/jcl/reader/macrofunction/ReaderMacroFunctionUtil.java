@@ -5,13 +5,13 @@
 package jcl.reader.macrofunction;
 
 import jcl.lang.IntegerStruct;
-import jcl.lang.function.ReaderMacroFunction;
+import jcl.lang.function.ReaderMacroFunctionImpl;
 import jcl.lang.readtable.AttributeType;
 import jcl.lang.statics.ReaderVariables;
 import jcl.lang.readtable.SyntaxType;
 
 /**
- * Utility class for common operations for {@link ReaderMacroFunction}s.
+ * Utility class for common operations for {@link ReaderMacroFunctionImpl}s.
  */
 final class ReaderMacroFunctionUtil {
 

@@ -3,14 +3,14 @@ package jcl.functions.number;
 import jcl.lang.FloatStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.ValuesStruct;
-import jcl.lang.function.CommonLispBuiltInFunctionStruct;
+import jcl.lang.function.CommonLispBuiltInFunctionStructBase;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.number.DecodeFloatResult;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class DecodeFloatFunction extends CommonLispBuiltInFunctionStruct {
+public final class DecodeFloatFunction extends CommonLispBuiltInFunctionStructBase {
 
 	private static final String FUNCTION_NAME = "DECODE-FLOAT";
 	private static final String FLOAT_ARGUMENT = "FLOAT";

@@ -65,7 +65,7 @@ final class SymbolFunctionCallCodeGenerator extends SpecialOperatorCodeGenerator
 	 * private LispStruct symbolFunctionCall_1(Closure var1) {
 	 *      PackageStruct var2 = PackageStruct.findPackage("COMMON-LISP");
 	 *      SymbolStruct var3 = var2.findSymbol("+").getSymbol();
-	 *      FunctionStruct var4 = var3.getFunction();
+	 *      FunctionStructImpl var4 = var3.getFunction();
 	 *      LispStruct[] var5 = new LispStruct[1];
 	 *      BigInteger var7 = new BigInteger("1");
 	 *      IntegerStruct var6 = new IntIntegerStruct(var7);

@@ -6,13 +6,13 @@ package jcl.functions.stream;
 
 import jcl.lang.LispStruct;
 import jcl.lang.StreamStruct;
-import jcl.lang.function.CommonLispBuiltInFunctionStruct;
+import jcl.lang.function.CommonLispBuiltInFunctionStructBase;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class StreamElementTypeFunction extends CommonLispBuiltInFunctionStruct {
+public final class StreamElementTypeFunction extends CommonLispBuiltInFunctionStructBase {
 
 	private static final String FUNCTION_NAME = "STREAM-ELEMENT-TYPE";
 	private static final String STREAM_ARGUMENT = "STREAM";

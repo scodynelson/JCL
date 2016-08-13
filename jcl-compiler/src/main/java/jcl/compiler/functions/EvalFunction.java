@@ -17,13 +17,13 @@ import jcl.compiler.struct.specialoperator.SymbolCompilerFunctionStruct;
 import jcl.compiler.struct.specialoperator.SymbolFunctionCallStruct;
 import jcl.compiler.struct.specialoperator.lambda.LambdaStruct;
 import jcl.lang.BooleanStruct;
+import jcl.lang.function.FunctionStructImpl;
 import jcl.lang.statics.CompilerVariables;
 import jcl.lang.LispStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.TStruct;
 import jcl.lang.condition.exception.ProgramErrorException;
-import jcl.lang.function.CommonLispBuiltInFunctionStruct;
-import jcl.lang.function.FunctionStruct;
+import jcl.lang.function.CommonLispBuiltInFunctionStructBase;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.java.JavaMethodStruct;
@@ -34,7 +34,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class EvalFunction extends CommonLispBuiltInFunctionStruct {
+public final class EvalFunction extends CommonLispBuiltInFunctionStructBase {
 
 	private static final String FUNCTION_NAME = "EVAL";
 	private static final String FORM_ARGUMENT = "FORM";
@@ -134,7 +134,7 @@ public final class EvalFunction extends CommonLispBuiltInFunctionStruct {
 			final LambdaCompilerFunctionStruct lambdaCompilerFunction = (LambdaCompilerFunctionStruct) exp;
 			final LambdaStruct lambda = lambdaCompilerFunction.getLambdaStruct();
 
-			final FunctionStruct function = getCompiledExpression(oldCompileTopLevel, lambda);
+			final FunctionStructImpl function = getCompiledExpression(oldCompileTopLevel, lambda);
 			return function.apply();
 		}
 
@@ -143,7 +143,7 @@ public final class EvalFunction extends CommonLispBuiltInFunctionStruct {
 			final SymbolCompilerFunctionStruct symbolCompilerFunction = functionCall.getSymbolCompilerFunction();
 			final SymbolStruct functionSymbol = symbolCompilerFunction.getFunctionSymbol();
 
-			final FunctionStruct function = functionSymbol.getFunction();
+			final FunctionStructImpl function = functionSymbol.getFunction();
 
 			final List<LispStruct> arguments = functionCall.getArguments();
 			final List<LispStruct> evaluatedArguments = new ArrayList<>(arguments.size());
@@ -198,7 +198,7 @@ public final class EvalFunction extends CommonLispBuiltInFunctionStruct {
 			final LambdaCompilerFunctionStruct lambdaCompilerFunction = lambdaFunctionCall.getLambdaCompilerFunction();
 			final LambdaStruct lambda = lambdaCompilerFunction.getLambdaStruct();
 
-			final FunctionStruct function = getCompiledExpression(oldCompileTopLevel, lambda);
+			final FunctionStructImpl function = getCompiledExpression(oldCompileTopLevel, lambda);
 
 			final List<LispStruct> arguments = lambdaFunctionCall.getArguments();
 			final List<LispStruct> evaluatedArguments = new ArrayList<>(arguments.size());
@@ -211,25 +211,25 @@ public final class EvalFunction extends CommonLispBuiltInFunctionStruct {
 			evaluatedArguments.toArray(args);
 
 			// NOTE: This cast should be safe since we're compiling a lambda form. If it doesn't cast, we have a bigger problem somewhere.
-			final FunctionStruct compiledLambda = (FunctionStruct) function.apply();
+			final FunctionStructImpl compiledLambda = (FunctionStructImpl) function.apply();
 			return compiledLambda.apply(args);
 		}
 
 		if (exp instanceof CompilerSpecialOperatorStruct) {
-			final FunctionStruct function = getCompiledExpression(oldCompileTopLevel, (CompilerSpecialOperatorStruct) exp);
+			final FunctionStructImpl function = getCompiledExpression(oldCompileTopLevel, (CompilerSpecialOperatorStruct) exp);
 			return function.apply();
 		}
 
 		return exp;
 	}
 
-	private FunctionStruct getCompiledExpression(final BooleanStruct oldCompileTopLevel, final CompilerSpecialOperatorStruct exp) {
+	private FunctionStructImpl getCompiledExpression(final BooleanStruct oldCompileTopLevel, final CompilerSpecialOperatorStruct exp) {
 		CompilerVariables.COMPILE_TOP_LEVEL.setValue(NILStruct.INSTANCE);
 
 		final BooleanStruct oldConvertingForInterpreter = CompilerVariables.CONVERTING_FOR_INTERPRETER.getVariableValue();
 		CompilerVariables.CONVERTING_FOR_INTERPRETER.setValue(TStruct.INSTANCE);
 
-		final FunctionStruct function;
+		final FunctionStructImpl function;
 		try {
 			final CompileResult compileResult = compileForm.compile(exp);
 			function = compileResult.getFunction();

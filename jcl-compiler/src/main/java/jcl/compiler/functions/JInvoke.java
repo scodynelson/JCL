@@ -10,7 +10,7 @@ import java.util.List;
 
 import jcl.lang.LispStruct;
 import jcl.lang.condition.exception.ErrorException;
-import jcl.lang.function.ExtensionsBuiltInFunctionStruct;
+import jcl.lang.function.ExtensionsBuiltInFunctionStructBase;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.java.JavaMethodStruct;
@@ -20,7 +20,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 @Component
-public class JInvoke extends ExtensionsBuiltInFunctionStruct {
+public class JInvoke extends ExtensionsBuiltInFunctionStructBase {
 
 	private static final String FUNCTION_NAME = "JINVOKE";
 	private static final String JAVA_METHOD_ARGUMENT = "JAVA-METHOD";

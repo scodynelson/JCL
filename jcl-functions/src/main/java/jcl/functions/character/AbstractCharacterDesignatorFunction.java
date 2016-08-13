@@ -11,16 +11,16 @@ import jcl.lang.CharacterStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.StringStruct;
 import jcl.lang.SymbolStruct;
-import jcl.lang.function.CommonLispBuiltInFunctionStruct;
-import jcl.lang.function.FunctionStruct;
+import jcl.lang.function.CommonLispBuiltInFunctionStructBase;
+import jcl.lang.function.FunctionStructImpl;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 
 /**
- * Abstract {@link FunctionStruct} implementation for character functions that operate on character designators, namely
+ * Abstract {@link FunctionStructImpl} implementation for character functions that operate on character designators, namely
  * {@link CharacterStruct}s, {@link StringStruct}s, and {@link SymbolStruct}s.
  */
-abstract class AbstractCharacterDesignatorFunction extends CommonLispBuiltInFunctionStruct {
+abstract class AbstractCharacterDesignatorFunction extends CommonLispBuiltInFunctionStructBase {
 
 	protected AbstractCharacterDesignatorFunction(final String documentation, final String functionName) {
 		super(documentation, functionName,

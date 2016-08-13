@@ -11,7 +11,7 @@ import java.util.List;
 import jcl.lang.LispStruct;
 import jcl.lang.StringStruct;
 import jcl.lang.condition.exception.ErrorException;
-import jcl.lang.function.ExtensionsBuiltInFunctionStruct;
+import jcl.lang.function.ExtensionsBuiltInFunctionStructBase;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.java.JavaClassStruct;
@@ -19,7 +19,7 @@ import jcl.lang.java.JavaMethodStruct;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class JMethod extends ExtensionsBuiltInFunctionStruct {
+public final class JMethod extends ExtensionsBuiltInFunctionStructBase {
 
 	private static final String FUNCTION_NAME = "JMETHOD";
 	private static final String METHOD_NAME_ARGUMENT = "METHOD-NAME";

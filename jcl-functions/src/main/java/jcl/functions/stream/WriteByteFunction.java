@@ -6,14 +6,14 @@ package jcl.functions.stream;
 
 import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
-import jcl.lang.function.CommonLispBuiltInFunctionStruct;
+import jcl.lang.function.CommonLispBuiltInFunctionStructBase;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.OutputStreamStruct;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class WriteByteFunction extends CommonLispBuiltInFunctionStruct {
+public final class WriteByteFunction extends CommonLispBuiltInFunctionStructBase {
 
 	private static final String FUNCTION_NAME = "WRITE-BYTE";
 	private static final String BYTE_ARGUMENT = "BYTE";

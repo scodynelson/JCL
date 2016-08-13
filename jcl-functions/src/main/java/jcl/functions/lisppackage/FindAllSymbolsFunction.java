@@ -10,7 +10,7 @@ import jcl.lang.LispStruct;
 import jcl.lang.PackageStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.factory.LispStructFactory;
-import jcl.lang.function.CommonLispBuiltInFunctionStruct;
+import jcl.lang.function.CommonLispBuiltInFunctionStructBase;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import org.springframework.stereotype.Component;
@@ -19,7 +19,7 @@ import org.springframework.stereotype.Component;
  * Function implementation for {@code find-all-symbols}.
  */
 @Component
-public final class FindAllSymbolsFunction extends CommonLispBuiltInFunctionStruct {
+public final class FindAllSymbolsFunction extends CommonLispBuiltInFunctionStructBase {
 
 	private static final String FUNCTION_NAME = "FIND-ALL-SYMBOLS";
 	private static final String SYMBOL_NAME_ARGUMENT = "SYMBOL-NAME";

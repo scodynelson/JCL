@@ -11,7 +11,7 @@ import javax.annotation.PostConstruct;
 import jcl.compiler.functions.EvalFunction;
 import jcl.lang.LispStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
-import jcl.lang.function.ReaderMacroFunction;
+import jcl.lang.function.ReaderMacroFunctionImpl;
 import jcl.lang.NILStruct;
 import jcl.lang.readtable.Reader;
 import jcl.lang.statics.ReaderVariables;
@@ -23,7 +23,7 @@ import org.springframework.stereotype.Component;
  * Implements the '#.' Lisp reader macro.
  */
 @Component
-public class SharpFullStopReaderMacroFunction extends ReaderMacroFunction {
+public class SharpFullStopReaderMacroFunction extends ReaderMacroFunctionImpl {
 
 	/**
 	 * {@link EvalFunction} singleton used to evaluate the expression passed to '#.'.

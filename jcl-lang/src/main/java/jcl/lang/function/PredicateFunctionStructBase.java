@@ -2,9 +2,9 @@ package jcl.lang.function;
 
 import org.apache.commons.collections4.Predicate;
 
-public abstract class PredicateFunctionStruct<T> extends FunctionStruct implements Predicate<T> {
+public abstract class PredicateFunctionStructBase<T> extends FunctionStructImpl implements Predicate<T> {
 
-	protected PredicateFunctionStruct(final String documentation) {
+	protected PredicateFunctionStructBase(final String documentation) {
 		super(documentation);
 	}
 

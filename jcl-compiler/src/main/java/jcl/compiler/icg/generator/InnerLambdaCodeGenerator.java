@@ -20,7 +20,7 @@ import jcl.compiler.struct.specialoperator.CompilerFunctionStruct;
 import jcl.compiler.struct.specialoperator.InnerLambdaStruct;
 import jcl.compiler.struct.specialoperator.PrognStruct;
 import jcl.lang.SymbolStruct;
-import jcl.lang.function.FunctionStruct;
+import jcl.lang.function.FunctionStructImpl;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
@@ -67,7 +67,7 @@ final class InnerLambdaCodeGenerator extends SpecialOperatorCodeGenerator<InnerL
 	 * InnerLambdaStruct.InnerLambdaVar#initForm} values</li>
 	 * <li>Collect all generated function and form stack locations for lazily binding the functions to the {@link
 	 * SymbolStruct}s</li>
-	 * <li>Binding functions via {@link SymbolStruct#bindFunction(FunctionStruct)} and adding functions to the {@link
+	 * <li>Binding functions via {@link SymbolStruct#bindFunction(FunctionStructImpl)} and adding functions to the {@link
 	 * Closure#functionBindings} map for the current {@link Closure}, if one exists</li>
 	 * <li>Temporarily pushing the {@link InnerLambdaStruct#lexicalEnvironment} onto the {@link
 	 * GeneratorState#environmentDeque} while generating the code for the {@link InnerLambdaStruct#forms} values</li>
@@ -97,7 +97,7 @@ final class InnerLambdaCodeGenerator extends SpecialOperatorCodeGenerator<InnerL
 	 *      try {
 	 *          PackageStruct var6 = PackageStruct.findPackage("COMMON-LISP-USER");
 	 *          SymbolStruct var7 = var6.findSymbol("FOO").getSymbol();
-	 *          FunctionStruct var8 = var7.getFunction();
+	 *          FunctionStructImpl var8 = var7.getFunction();
 	 *          LispStruct[] var9 = new LispStruct[0];
 	 *          var11 = var8.apply(var9);
 	 *      } finally {

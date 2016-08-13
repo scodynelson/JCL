@@ -31,7 +31,7 @@ import jcl.lang.ValuesStruct;
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.factory.LispStructFactory;
-import jcl.lang.function.FunctionStruct;
+import jcl.lang.function.FunctionStructImpl;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.ListStruct;
 import jcl.lang.NILStruct;
@@ -522,10 +522,10 @@ public abstract class CompiledMacroFunctionExpander<O extends LispStruct> extend
 			symbol.bindLexicalValue(value);
 		}
 
-		final Map<SymbolStruct, FunctionStruct> closureFunctionsToBind = getClosureFunctionBindings();
-		for (final Map.Entry<SymbolStruct, FunctionStruct> closureFunctionToBind : closureFunctionsToBind.entrySet()) {
+		final Map<SymbolStruct, FunctionStructImpl> closureFunctionsToBind = getClosureFunctionBindings();
+		for (final Map.Entry<SymbolStruct, FunctionStructImpl> closureFunctionToBind : closureFunctionsToBind.entrySet()) {
 			final SymbolStruct symbol = closureFunctionToBind.getKey();
-			final FunctionStruct function = closureFunctionToBind.getValue();
+			final FunctionStructImpl function = closureFunctionToBind.getValue();
 			symbol.bindFunction(function);
 		}
 
@@ -581,7 +581,7 @@ public abstract class CompiledMacroFunctionExpander<O extends LispStruct> extend
 		return closure.getSymbolBindings();
 	}
 
-	public Map<SymbolStruct, FunctionStruct> getClosureFunctionBindings() {
+	public Map<SymbolStruct, FunctionStructImpl> getClosureFunctionBindings() {
 		if (closure == null) {
 			return Collections.emptyMap();
 		}

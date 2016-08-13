@@ -10,7 +10,7 @@ import javax.annotation.PostConstruct;
 
 import jcl.lang.LispStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
-import jcl.lang.function.ReaderMacroFunction;
+import jcl.lang.function.ReaderMacroFunctionImpl;
 import jcl.lang.readtable.Reader;
 import jcl.lang.statics.ReaderVariables;
 import jcl.util.CodePointConstants;
@@ -20,7 +20,7 @@ import org.springframework.stereotype.Component;
  * Implements the ')' Lisp reader macro.
  */
 @Component
-public class RightParenthesisReaderMacroFunction extends ReaderMacroFunction {
+public class RightParenthesisReaderMacroFunction extends ReaderMacroFunctionImpl {
 
 	/**
 	 * Initializes the reader macro function and adds it to the global readtable.

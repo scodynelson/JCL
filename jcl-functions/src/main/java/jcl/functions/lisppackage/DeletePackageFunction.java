@@ -7,7 +7,7 @@ package jcl.functions.lisppackage;
 import jcl.lang.LispStruct;
 import jcl.lang.PackageStruct;
 import jcl.lang.TStruct;
-import jcl.lang.function.CommonLispBuiltInFunctionStruct;
+import jcl.lang.function.CommonLispBuiltInFunctionStructBase;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.NILStruct;
@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
  * Function implementation for {@code delete-package}.
  */
 @Component
-public final class DeletePackageFunction extends CommonLispBuiltInFunctionStruct {
+public final class DeletePackageFunction extends CommonLispBuiltInFunctionStructBase {
 
 	private static final String FUNCTION_NAME = "DELETE-PACKAGE";
 	private static final String PACKAGE_ARGUMENT = "PACKAGE";

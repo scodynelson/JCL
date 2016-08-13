@@ -10,13 +10,13 @@ import jcl.lang.StringStruct;
 import jcl.lang.factory.LispStructFactory;
 import jcl.lang.statics.SymbolVariables;
 import jcl.lang.condition.exception.TypeErrorException;
-import jcl.lang.function.CommonLispBuiltInFunctionStruct;
+import jcl.lang.function.CommonLispBuiltInFunctionStructBase;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class GensymFunction extends CommonLispBuiltInFunctionStruct {
+public final class GensymFunction extends CommonLispBuiltInFunctionStructBase {
 
 	private static final String FUNCTION_NAME = "GENSYM";
 	private static final String PREFIX_ARGUMENT = "PREFIX";

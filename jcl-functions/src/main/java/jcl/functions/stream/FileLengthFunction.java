@@ -9,14 +9,14 @@ import java.math.BigInteger;
 import jcl.lang.LispStruct;
 import jcl.lang.StreamStruct;
 import jcl.lang.factory.LispStructFactory;
-import jcl.lang.function.CommonLispBuiltInFunctionStruct;
+import jcl.lang.function.CommonLispBuiltInFunctionStructBase;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.NILStruct;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class FileLengthFunction extends CommonLispBuiltInFunctionStruct {
+public final class FileLengthFunction extends CommonLispBuiltInFunctionStructBase {
 
 	private static final String FUNCTION_NAME = "FILE-LENGTH";
 	private static final String STREAM_ARGUMENT = "STREAM";

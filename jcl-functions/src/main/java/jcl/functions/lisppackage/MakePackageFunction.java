@@ -14,7 +14,7 @@ import jcl.lang.statics.CommonLispSymbols;
 import jcl.lang.LispStruct;
 import jcl.lang.StringStruct;
 import jcl.lang.condition.exception.ProgramErrorException;
-import jcl.lang.function.CommonLispBuiltInFunctionStruct;
+import jcl.lang.function.CommonLispBuiltInFunctionStructBase;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.ListStruct;
@@ -25,7 +25,7 @@ import org.springframework.stereotype.Component;
  * Function implementation for {@code make-package}.
  */
 @Component
-public final class MakePackageFunction extends CommonLispBuiltInFunctionStruct {
+public final class MakePackageFunction extends CommonLispBuiltInFunctionStructBase {
 
 	private static final String FUNCTION_NAME = "MAKE-PACKAGE";
 	private static final String PACKAGE_NAME_ARGUMENT = "PACKAGE-NAME";

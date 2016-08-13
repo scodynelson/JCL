@@ -7,14 +7,14 @@ package jcl.functions.java;
 import jcl.lang.LispStruct;
 import jcl.lang.StringStruct;
 import jcl.lang.condition.exception.ErrorException;
-import jcl.lang.function.ExtensionsBuiltInFunctionStruct;
+import jcl.lang.function.ExtensionsBuiltInFunctionStructBase;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.java.JavaClassStruct;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class JClass extends ExtensionsBuiltInFunctionStruct {
+public final class JClass extends ExtensionsBuiltInFunctionStructBase {
 
 	private static final String FUNCTION_NAME = "JCLASS";
 	private static final String CLASS_NAME_ARGUMENT = "CLASS_NAME";

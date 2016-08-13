@@ -2,14 +2,14 @@ package jcl.functions.sequence;
 
 import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
-import jcl.lang.function.SystemBuiltInFunctionStruct;
+import jcl.lang.function.SystemBuiltInFunctionStructBase;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.SequenceStruct;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class SetEltFunction extends SystemBuiltInFunctionStruct {
+public final class SetEltFunction extends SystemBuiltInFunctionStructBase {
 
 	private static final String FUNCTION_NAME = "SET-ELT";
 	private static final String SEQUENCE_ARGUMENT = "SEQUENCE";

@@ -6,7 +6,7 @@ package jcl.functions.stream;
 
 import jcl.lang.CharacterStruct;
 import jcl.lang.LispStruct;
-import jcl.lang.function.CommonLispBuiltInFunctionStruct;
+import jcl.lang.function.CommonLispBuiltInFunctionStructBase;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.OutputStreamStruct;
@@ -14,7 +14,7 @@ import jcl.lang.statics.StreamVariables;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class WriteCharFunction extends CommonLispBuiltInFunctionStruct {
+public final class WriteCharFunction extends CommonLispBuiltInFunctionStructBase {
 
 	private static final String FUNCTION_NAME = "WRITE-CHAR";
 	private static final String CHARACTER_ARGUMENT = "CHARACTER";

@@ -4,7 +4,7 @@ import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
 import jcl.lang.PackageStruct;
 import jcl.lang.condition.exception.ProgramErrorException;
-import jcl.lang.function.FunctionStruct;
+import jcl.lang.function.FunctionStructImpl;
 import jcl.lang.function.expander.SymbolMacroExpanderInter;
 import jcl.type.LispType;
 
@@ -13,7 +13,7 @@ public class ConstantStructImpl<TYPE extends LispStruct> extends SymbolStructImp
 	private final TYPE constantValue;
 
 	protected ConstantStructImpl(final LispType lispType,
-	                             final String name, final PackageStruct symbolPackage, final TYPE value, final FunctionStruct function) {
+	                             final String name, final PackageStruct symbolPackage, final TYPE value, final FunctionStructImpl function) {
 		super(lispType, name, symbolPackage, value, function);
 		constantValue = value;
 	}

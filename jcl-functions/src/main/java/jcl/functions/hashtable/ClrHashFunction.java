@@ -6,13 +6,13 @@ package jcl.functions.hashtable;
 
 import jcl.lang.HashTableStruct;
 import jcl.lang.LispStruct;
-import jcl.lang.function.CommonLispBuiltInFunctionStruct;
+import jcl.lang.function.CommonLispBuiltInFunctionStructBase;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class ClrHashFunction extends CommonLispBuiltInFunctionStruct {
+public final class ClrHashFunction extends CommonLispBuiltInFunctionStructBase {
 
 	private static final String FUNCTION_NAME = "CLRHASH";
 	private static final String HASH_TABLE_ARGUMENT = "HASH-TABLE";

@@ -7,7 +7,7 @@ package jcl.functions.lisppackage;
 import jcl.lang.LispStruct;
 import jcl.lang.PackageStruct;
 import jcl.lang.condition.exception.PackageErrorException;
-import jcl.lang.function.CommonLispBuiltInFunctionStruct;
+import jcl.lang.function.CommonLispBuiltInFunctionStructBase;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import org.springframework.stereotype.Component;
@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
  * Function implementation for {@code package-error-package}.
  */
 @Component
-public final class PackageErrorPackageFunction extends CommonLispBuiltInFunctionStruct {
+public final class PackageErrorPackageFunction extends CommonLispBuiltInFunctionStructBase {
 
 	private static final String FUNCTION_NAME = "PACKAGE-ERROR-PACKAGE";
 	private static final String CONDITION_ARGUMENT = "CONDITION";

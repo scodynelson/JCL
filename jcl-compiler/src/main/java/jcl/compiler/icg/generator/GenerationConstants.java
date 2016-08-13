@@ -31,6 +31,7 @@ import jcl.compiler.function.expanders.CompiledMacroFunctionExpander;
 import jcl.lang.ComplexStruct;
 import jcl.lang.KeywordStruct;
 import jcl.lang.PackageStruct;
+import jcl.lang.function.FunctionStructImpl;
 import jcl.lang.statics.GlobalPackageStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.PackageSymbolStruct;
@@ -40,7 +41,6 @@ import jcl.lang.SymbolStruct;
 import jcl.lang.ValuesStruct;
 import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.factory.LispStructFactory;
-import jcl.lang.function.FunctionStruct;
 import jcl.lang.function.expander.MacroFunctionExpanderInter;
 import jcl.lang.ListStruct;
 import jcl.type.TypeBaseClass;
@@ -281,7 +281,7 @@ interface GenerationConstants {
 
 	String SYMBOL_STRUCT_BIND_FUNCTION_METHOD_NAME = "bindFunction";
 
-	String SYMBOL_STRUCT_BIND_FUNCTION_METHOD_DESC = CodeGenerators.getMethodDescription(SymbolStruct.class, SYMBOL_STRUCT_BIND_FUNCTION_METHOD_NAME, FunctionStruct.class);
+	String SYMBOL_STRUCT_BIND_FUNCTION_METHOD_DESC = CodeGenerators.getMethodDescription(SymbolStruct.class, SYMBOL_STRUCT_BIND_FUNCTION_METHOD_NAME, FunctionStructImpl.class);
 
 	String SYMBOL_STRUCT_UNBIND_FUNCTION_METHOD_NAME = "unbindFunction";
 
@@ -317,7 +317,7 @@ interface GenerationConstants {
 
 	String KEYWORD_STRUCT_NAME = Type.getInternalName(KeywordStruct.class);
 
-	String FUNCTION_STRUCT_NAME = Type.getInternalName(FunctionStruct.class);
+	String FUNCTION_STRUCT_NAME = Type.getInternalName(FunctionStructImpl.class);
 
 	String COMPILED_FUNCTION_STRUCT_NAME = Type.getInternalName(CompiledFunctionStruct.class);
 
@@ -327,7 +327,7 @@ interface GenerationConstants {
 
 	String FUNCTION_STRUCT_APPLY_METHOD_NAME = "apply";
 
-	String FUNCTION_STRUCT_APPLY_METHOD_DESC = CodeGenerators.getMethodDescription(FunctionStruct.class, FUNCTION_STRUCT_APPLY_METHOD_NAME, LispStruct[].class);
+	String FUNCTION_STRUCT_APPLY_METHOD_DESC = CodeGenerators.getMethodDescription(FunctionStructImpl.class, FUNCTION_STRUCT_APPLY_METHOD_NAME, LispStruct[].class);
 
 	String COMPILED_MACRO_FUNCTION_EXPANDER_NAME = Type.getInternalName(CompiledMacroFunctionExpander.class);
 

@@ -13,7 +13,7 @@ import jcl.lang.LispStruct;
 import jcl.lang.RandomStateStruct;
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.factory.LispStructFactory;
-import jcl.lang.function.CommonLispBuiltInFunctionStruct;
+import jcl.lang.function.CommonLispBuiltInFunctionStructBase;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.statics.NumberVariables;
@@ -21,7 +21,7 @@ import jcl.lang.RealStruct;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class RandomFunction extends CommonLispBuiltInFunctionStruct {
+public final class RandomFunction extends CommonLispBuiltInFunctionStructBase {
 
 	private static final String FUNCTION_NAME = "RANDOM";
 	private static final String LIMIT_ARGUMENT = "LIMIT";

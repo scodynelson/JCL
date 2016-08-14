@@ -6,7 +6,7 @@ package jcl.functions.structure;
 
 import jcl.lang.LispStruct;
 import jcl.lang.StructureClassStruct;
-import jcl.lang.StructureObjectStructImpl;
+import jcl.lang.StructureObjectStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.condition.exception.SimpleErrorException;
@@ -38,7 +38,7 @@ public final class GetStructureSlotValueFunction extends SystemBuiltInFunctionSt
 	@Override
 	public LispStruct apply(final Arguments arguments) {
 		final SymbolStruct structureClassSymbol = arguments.getRequiredArgument(STRUCTURE_CLASS_ARGUMENT, SymbolStruct.class);
-		final StructureObjectStructImpl structureInstance = arguments.getRequiredArgument(STRUCTURE_INSTANCE_ARGUMENT, StructureObjectStructImpl.class);
+		final StructureObjectStruct structureInstance = arguments.getRequiredArgument(STRUCTURE_INSTANCE_ARGUMENT, StructureObjectStruct.class);
 		final SymbolStruct slotName = arguments.getRequiredArgument(SLOT_NAME_ARGUMENT, SymbolStruct.class);
 
 		final StructureClassStruct symbolStructureClass = structureClassSymbol.getStructureClass();
@@ -58,7 +58,7 @@ public final class GetStructureSlotValueFunction extends SystemBuiltInFunctionSt
 	}
 
 	private static LispStruct innerGetStructureSlotValue(final StructureClassStruct symbolStructureClass,
-	                                                     final StructureObjectStructImpl structureInstance,
+	                                                     final StructureObjectStruct structureInstance,
 	                                                     final SymbolStruct slotName) {
 
 		final StructureClassStruct instanceStructureClass = structureInstance.getStructureClass();
@@ -67,7 +67,7 @@ public final class GetStructureSlotValueFunction extends SystemBuiltInFunctionSt
 			return structureInstance.getSlot(slotName);
 		}
 
-		final StructureObjectStructImpl parentStructure = structureInstance.getParentStructure();
+		final StructureObjectStruct parentStructure = structureInstance.getParentStructure();
 		if (parentStructure == null) {
 			throw new SimpleErrorException("Slot " + slotName + " is not present for structure " + structureInstance);
 		}

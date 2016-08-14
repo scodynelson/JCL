@@ -57,5 +57,5 @@ public abstract class StructureClassStruct extends ClassStruct {
 		return defaultConstructorSymbol;
 	}
 
-	public abstract StructureObjectStructImpl newInstance();
+	public abstract StructureObjectStruct newInstance();
 }

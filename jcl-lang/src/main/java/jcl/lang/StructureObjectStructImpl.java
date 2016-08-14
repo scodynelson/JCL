@@ -13,18 +13,18 @@ import org.apache.commons.lang3.tuple.Pair;
 /**
  * The {@link StructureObjectStructImpl} is the object representation of a Lisp 'structure-object' type.
  */
-public class StructureObjectStructImpl implements LispStruct {
+public class StructureObjectStructImpl implements StructureObjectStruct {
 
 	protected final StructureClassStruct structureClass;
 
 	protected final SymbolStruct structureSymbol;
 
-	protected final StructureObjectStructImpl parentStructure;
+	protected final StructureObjectStruct parentStructure;
 
 	protected final Map<SymbolStruct, LispStruct> slots = new LinkedHashMap<>();
 
 	protected StructureObjectStructImpl(final StructureClassStruct structureClass, final SymbolStruct structureSymbol,
-	                                    final StructureObjectStructImpl parentStructure) {
+	                                    final StructureObjectStruct parentStructure) {
 		this.structureClass = structureClass;
 		this.structureSymbol = structureSymbol;
 		this.parentStructure = parentStructure;
@@ -38,7 +38,7 @@ public class StructureObjectStructImpl implements LispStruct {
 		return structureSymbol;
 	}
 
-	public StructureObjectStructImpl getParentStructure() {
+	public StructureObjectStruct getParentStructure() {
 		return parentStructure;
 	}
 

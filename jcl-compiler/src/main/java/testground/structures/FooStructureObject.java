@@ -4,6 +4,7 @@
 
 package testground.structures;
 
+import jcl.lang.NILStruct;
 import jcl.lang.StructureObjectStructImpl;
 import jcl.lang.factory.LispStructFactory;
 
@@ -16,8 +17,8 @@ public class FooStructureObject extends StructureObjectStructImpl {
 	}
 
 	private void initSlotsMap() {
-		slots.put(LispStructFactory.toSymbol("A"), null);
-		slots.put(LispStructFactory.toSymbol("B"), null);
-		slots.put(LispStructFactory.toSymbol("C"), null);
+		slots.put(LispStructFactory.toSymbol("A"), NILStruct.INSTANCE);
+		slots.put(LispStructFactory.toSymbol("B"), NILStruct.INSTANCE);
+		slots.put(LispStructFactory.toSymbol("C"), NILStruct.INSTANCE);
 	}
 }

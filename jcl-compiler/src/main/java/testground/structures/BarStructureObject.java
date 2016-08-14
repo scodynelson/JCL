@@ -4,6 +4,7 @@
 
 package testground.structures;
 
+import jcl.lang.NILStruct;
 import jcl.lang.StructureObjectStructImpl;
 import jcl.lang.factory.LispStructFactory;
 
@@ -16,8 +17,8 @@ public class BarStructureObject extends StructureObjectStructImpl {
 	}
 
 	private void initSlotsMap() {
-		slots.put(LispStructFactory.toSymbol("C"), null);
-		slots.put(LispStructFactory.toSymbol("D"), null);
-		slots.put(LispStructFactory.toSymbol("E"), null);
+		slots.put(LispStructFactory.toSymbol("C"), NILStruct.INSTANCE);
+		slots.put(LispStructFactory.toSymbol("D"), NILStruct.INSTANCE);
+		slots.put(LispStructFactory.toSymbol("E"), NILStruct.INSTANCE);
 	}
 }

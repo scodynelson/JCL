@@ -4,11 +4,11 @@
 
 package testground.structures;
 
-import jcl.lang.StructureObjectStruct;
+import jcl.lang.StructureObjectStructImpl;
 import jcl.lang.factory.LispStructFactory;
 
 @SuppressWarnings("all")
-public class BarStructureObject extends StructureObjectStruct {
+public class BarStructureObject extends StructureObjectStructImpl {
 
 	public BarStructureObject() {
 		super(BarStructureClass.INSTANCE, LispStructFactory.toSymbol("BAR"), FooStructureClass.INSTANCE.newInstance());

@@ -11,20 +11,20 @@ import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
 /**
- * The {@link StructureObjectStruct} is the object representation of a Lisp 'structure-object' type.
+ * The {@link StructureObjectStructImpl} is the object representation of a Lisp 'structure-object' type.
  */
-public class StructureObjectStruct implements LispStruct {
+public class StructureObjectStructImpl implements LispStruct {
 
 	protected final StructureClassStruct structureClass;
 
 	protected final SymbolStruct structureSymbol;
 
-	protected final StructureObjectStruct parentStructure;
+	protected final StructureObjectStructImpl parentStructure;
 
 	protected final Map<SymbolStruct, LispStruct> slots = new LinkedHashMap<>();
 
-	protected StructureObjectStruct(final StructureClassStruct structureClass, final SymbolStruct structureSymbol,
-	                                final StructureObjectStruct parentStructure) {
+	protected StructureObjectStructImpl(final StructureClassStruct structureClass, final SymbolStruct structureSymbol,
+	                                    final StructureObjectStructImpl parentStructure) {
 		this.structureClass = structureClass;
 		this.structureSymbol = structureSymbol;
 		this.parentStructure = parentStructure;
@@ -38,7 +38,7 @@ public class StructureObjectStruct implements LispStruct {
 		return structureSymbol;
 	}
 
-	public StructureObjectStruct getParentStructure() {
+	public StructureObjectStructImpl getParentStructure() {
 		return parentStructure;
 	}
 

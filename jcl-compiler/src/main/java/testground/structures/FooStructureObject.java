@@ -4,11 +4,11 @@
 
 package testground.structures;
 
-import jcl.lang.StructureObjectStruct;
+import jcl.lang.StructureObjectStructImpl;
 import jcl.lang.factory.LispStructFactory;
 
 @SuppressWarnings("all")
-public class FooStructureObject extends StructureObjectStruct {
+public class FooStructureObject extends StructureObjectStructImpl {
 
 	public FooStructureObject() {
 		super(FooStructureClass.INSTANCE, LispStructFactory.toSymbol("FOO"), null);

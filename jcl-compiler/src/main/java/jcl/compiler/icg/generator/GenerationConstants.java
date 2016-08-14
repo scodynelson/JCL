@@ -36,7 +36,7 @@ import jcl.lang.statics.GlobalPackageStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.PackageSymbolStruct;
 import jcl.lang.StructureClassStruct;
-import jcl.lang.StructureObjectStruct;
+import jcl.lang.StructureObjectStructImpl;
 import jcl.lang.SymbolStruct;
 import jcl.lang.ValuesStruct;
 import jcl.lang.condition.exception.ProgramErrorException;
@@ -451,7 +451,7 @@ interface GenerationConstants {
 
 	String LIST_STRUCT_STREAM_METHOD_DESC = CodeGenerators.getMethodDescription(ListStruct.class, LIST_STRUCT_STREAM_METHOD_NAME);
 
-	String STRUCTURE_OBJECT_STRUCT_NAME = Type.getInternalName(StructureObjectStruct.class);
+	String STRUCTURE_OBJECT_STRUCT_NAME = Type.getInternalName(StructureObjectStructImpl.class);
 
 	String TYPE_BASE_CLASS_NAME = Type.getInternalName(TypeBaseClass.class);
 

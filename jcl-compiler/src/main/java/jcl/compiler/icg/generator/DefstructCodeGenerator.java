@@ -14,9 +14,9 @@ import jcl.compiler.icg.GeneratorState;
 import jcl.compiler.icg.JavaClassBuilder;
 import jcl.compiler.icg.JavaMethodBuilder;
 import jcl.compiler.struct.specialoperator.defstruct.DefstructStruct;
-import jcl.lang.internal.StandardClassStruct;
 import jcl.lang.StructureClassStruct;
-import jcl.lang.StructureObjectStruct;
+import jcl.lang.StructureObjectStructImpl;
+import jcl.lang.internal.StandardClassStruct;
 import jcl.lang.SymbolStruct;
 import jcl.type.LispType;
 import jcl.type.StructureObjectType;
@@ -72,7 +72,7 @@ final class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 
 	private static final String GET_INSTANCE_BRIDGE_METHOD_DESC = "()Ljcl/type/LispType;";
 
-	private static final String STRUCTURE_OBJECT_INIT_SCS_SS_SOS_METHOD_DESC = "(Ljcl/lang/StructureClassStruct;Ljcl/lang/SymbolStruct;Ljcl/lang/StructureObjectStruct;)V";
+	private static final String STRUCTURE_OBJECT_INIT_SCS_SS_SOS_METHOD_DESC = "(Ljcl/lang/StructureClassStruct;Ljcl/lang/SymbolStruct;Ljcl/lang/StructureObjectStructImpl;)V";
 
 	private static final String STRUCTURE_CLASS_INIT_SS_SS_LIST_LIST_METHOD_DESC = "(Ljcl/lang/SymbolStruct;Ljcl/lang/SymbolStruct;Ljava/util/List;Ljava/util/List;)V";
 
@@ -84,7 +84,7 @@ final class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 
 	private static final String STRUCTURE_CLASS_NEW_INSTANCE_METHOD_NAME = "newInstance";
 
-	private static final String STRUCTURE_CLASS_NEW_INSTANCE_METHOD_DESC = "()Ljcl/lang/StructureObjectStruct;";
+	private static final String STRUCTURE_CLASS_NEW_INSTANCE_METHOD_DESC = "()Ljcl/lang/StructureObjectStructImpl;";
 
 	@EventListener
 	public void onGeneratorEvent(final GeneratorEvent<DefstructStruct> event) {
@@ -1120,7 +1120,7 @@ final class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 	 * import LispType;
 	 * import PackageStruct;
 	 * import StructureClassStruct;
-	 * import StructureObjectStruct;
+	 * import StructureObjectStructImpl;
 	 * import jcl.structures.struct.objects.FOOStructureObject_1;
 	 * import jcl.structures.struct.types.FOOStructureType_1;
 	 * import SymbolStruct;
@@ -1140,7 +1140,7 @@ final class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 	 *          super(var1, var2, var3, var4, var5);
 	 *      }
 	 *
-	 *      public StructureObjectStruct newInstance() {
+	 *      public StructureObjectStructImpl newInstance() {
 	 *          return new FOOStructureObject_1();
 	 *      }
 	 *
@@ -1164,7 +1164,7 @@ final class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 	 * import LispStruct;
 	 * import LispType;
 	 * import PackageStruct;
-	 * import StructureObjectStruct;
+	 * import StructureObjectStructImpl;
 	 * import jcl.structures.struct.classes.FOOStructureClass_1;
 	 * import jcl.structures.struct.objects.BARStructureObject_1;
 	 * import jcl.structures.struct.types.BARStructureType_1;
@@ -1185,7 +1185,7 @@ final class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 	 *          super(var1, var2, var3, var4, var5);
 	 *      }
 	 *
-	 *      public StructureObjectStruct newInstance() {
+	 *      public StructureObjectStructImpl newInstance() {
 	 *          return new BARStructureObject_1();
 	 *      }
 	 *
@@ -1199,24 +1199,24 @@ final class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 	 * </pre>
 	 *
 	 * @param input
-	 * 		the {@link DefstructStruct} containing the {@link StructureObjectStruct} metadata needed for generating a new
-	 * 		{@link StructureObjectStruct}
+	 * 		the {@link DefstructStruct} containing the {@link StructureObjectStructImpl} metadata needed for generating a new
+	 * 		{@link StructureObjectStructImpl}
 	 * @param generatorState
 	 * 		stateful object used to hold the current state of the code generation process
 	 * @param structureTypeClassName
 	 * 		the {@link String} containing the name of the {@link StructureClassStruct} for this {@link
-	 * 		StructureObjectStruct}
+	 * 		StructureObjectStructImpl}
 	 * @param structureTypeClassDesc
 	 * 		the {@link String} containing the type descriptor of the {@link StructureClassStruct} for this {@link
-	 * 		StructureObjectStruct}
+	 * 		StructureObjectStructImpl}
 	 * @param structureClassClassName
 	 * 		the {@link String} containing the name of the {@link StructureClassStruct} for this {@link
-	 * 		StructureObjectStruct}
+	 * 		StructureObjectStructImpl}
 	 * @param structureClassClassDesc
 	 * 		the {@link String} containing the type descriptor of the {@link StructureClassStruct} for this {@link
-	 * 		StructureObjectStruct}
+	 * 		StructureObjectStructImpl}
 	 * @param structureObjectClassName
-	 * 		the {@link String} containing the name of the {@link StructureObjectStruct} to generate the constructor code
+	 * 		the {@link String} containing the name of the {@link StructureObjectStructImpl} to generate the constructor code
 	 * 		for
 	 */
 	private static void generateStructureClass(final DefstructStruct input, final GeneratorState generatorState,
@@ -1294,10 +1294,10 @@ final class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 	 * 		the current {@link ClassWriter} to generate the constructor code for
 	 * @param structureTypeClassName
 	 * 		the {@link String} containing the name of the {@link StructureObjectType} for this {@link
-	 * 		StructureObjectStruct}
+	 * 		StructureObjectStructImpl}
 	 * @param structureTypeClassDesc
 	 * 		the {@link String} containing the type descriptor of the {@link StructureObjectType} for this {@link
-	 * 		StructureObjectStruct}
+	 * 		StructureObjectStructImpl}
 	 * @param structureClassClassName
 	 * 		the {@link String} containing the name of the {@link StructureClassStruct} to generate the constructor code
 	 * 		for
@@ -1425,14 +1425,14 @@ final class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 	 * StructureClassStruct} being written to via the provided {@link ClassWriter}. The generation will perform the
 	 * following operations:
 	 * <ol>
-	 * <li>Generating the code to create and return a new instance of the {@link StructureObjectStruct} with the
+	 * <li>Generating the code to create and return a new instance of the {@link StructureObjectStructImpl} with the
 	 * provided {@code structureObjectClassName} class name</li>
 	 * </ol>
 	 * The following is the example Java code generated when {@code (compiler:%defstruct foo nil make-foo nil a)} is
 	 * encountered:
 	 * <pre>
 	 * {@code
-	 * public StructureObjectStruct newInstance() {
+	 * public StructureObjectStructImpl newInstance() {
 	 *      return new FOOStructureObject_1();
 	 * }
 	 * }
@@ -1443,7 +1443,7 @@ final class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 	 * @param cw
 	 * 		the current {@link ClassWriter} to generate the method code for
 	 * @param structureObjectClassName
-	 * 		the {@link String} containing the name of the {@link StructureObjectStruct} to be created and returned from
+	 * 		the {@link String} containing the name of the {@link StructureObjectStructImpl} to be created and returned from
 	 * 		the {@link StructureClassStruct#newInstance()} method
 	 */
 	private static void generateStructureClassNewInstanceMethod(final GeneratorState generatorState,
@@ -1505,8 +1505,8 @@ final class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 	 * </pre>
 	 *
 	 * @param input
-	 * 		the {@link DefstructStruct} containing the {@link StructureObjectStruct} metadata needed for generating a new
-	 * 		{@link StructureObjectStruct}
+	 * 		the {@link DefstructStruct} containing the {@link StructureObjectStructImpl} metadata needed for generating a new
+	 * 		{@link StructureObjectStructImpl}
 	 * @param generatorState
 	 * 		stateful object used to hold the current state of the code generation process
 	 * @param cw
@@ -1583,7 +1583,7 @@ final class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 	}
 
 	/**
-	 * Private method for generating a new {@link StructureObjectStruct}, by performing the following operations:
+	 * Private method for generating a new {@link StructureObjectStructImpl}, by performing the following operations:
 	 * <ol>
 	 * <li>Creating a new {@link JavaClassBuilder}, which internally creates a new {@link ClassWriter}</li>
 	 * <li>Visiting a new class via {@link ClassWriter#visit(int, int, String, String, String, String[])} of the new
@@ -1600,17 +1600,17 @@ final class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 	 *
 	 * import java.util.Map;
 	 * import PackageStruct;
-	 * import StructureObjectStruct;
+	 * import StructureObjectStructImpl;
 	 * import jcl.structures.struct.classes.FOOStructureClass_1;
 	 * import SymbolStruct;
 	 *
-	 * public class FOOStructureObject_1 extends StructureObjectStruct {
+	 * public class FOOStructureObject_1 extends StructureObjectStructImpl {
 	 *
 	 *      public FOOStructureObject_1() {
 	 *          FOOStructureClass_1 var10001 = FOOStructureClass_1.INSTANCE;
 	 *          PackageStruct var1 = PackageStruct.findPackage("COMMON-LISP-USER");
 	 *          SymbolStruct var2 = var1.intern("FOO").getSymbol();
-	 *          super(var10001, var2, (StructureObjectStruct)null);
+	 *          super(var10001, var2, (StructureObjectStructImpl)null);
 	 *          this.initSlotsMap();
 	 *      }
 	 *
@@ -1625,18 +1625,18 @@ final class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 	 * </pre>
 	 *
 	 * @param input
-	 * 		the {@link DefstructStruct} containing the {@link StructureObjectStruct} metadata needed for generating a new
-	 * 		{@link StructureObjectStruct}
+	 * 		the {@link DefstructStruct} containing the {@link StructureObjectStructImpl} metadata needed for generating a new
+	 * 		{@link StructureObjectStructImpl}
 	 * @param generatorState
 	 * 		stateful object used to hold the current state of the code generation process
 	 * @param structureClassClassName
 	 * 		the {@link String} containing the name of the {@link StructureClassStruct} for this {@link
-	 * 		StructureObjectStruct}
+	 * 		StructureObjectStructImpl}
 	 * @param structureClassClassDesc
 	 * 		the {@link String} containing the type descriptor of the {@link StructureClassStruct} for this {@link
-	 * 		StructureObjectStruct}
+	 * 		StructureObjectStructImpl}
 	 * @param structureObjectClassName
-	 * 		the {@link String} containing the name of the {@link StructureObjectStruct} to generate the constructor code
+	 * 		the {@link String} containing the name of the {@link StructureObjectStructImpl} to generate the constructor code
 	 * 		for
 	 */
 	private static void generateStructureObject(final DefstructStruct input, final GeneratorState generatorState,
@@ -1673,19 +1673,19 @@ final class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 	}
 
 	/**
-	 * Private method for generating the constructor for the generated {@link StructureObjectStruct} being written to
+	 * Private method for generating the constructor for the generated {@link StructureObjectStructImpl} being written to
 	 * via the provided {@link ClassWriter}. The generation will perform the following operations:
 	 * <ol>
 	 * <li>Generating the code to grab the static singleton {@code INSTANCE} field from the associated {@link
 	 * StructureClassStruct}</li>
-	 * <li>Generating the code to retrieve the {@link SymbolStruct} identifying the {@link StructureObjectStruct}</li>
+	 * <li>Generating the code to retrieve the {@link SymbolStruct} identifying the {@link StructureObjectStructImpl}</li>
 	 * <li>If the provided {@link DefstructStruct#includeStructureClass} is {@code null}, generating {@code null} to be
-	 * used as the parent {@link StructureObjectStruct} instance</li>
+	 * used as the parent {@link StructureObjectStructImpl} instance</li>
 	 * <li>If the provided {@link DefstructStruct#includeStructureClass} is not {@code null}, generating the code to
 	 * grab the static singleton {@code INSTANCE} field from the associated {@link StructureClassStruct} of the parent
-	 * {@link StructureObjectStruct} and invoking {@link StructureClassStruct#newInstance()} to retrieve and use a new
-	 * instance of the associated parent {@link StructureObjectStruct}</li>
-	 * <li>Optionally generating the code to invoke the initialization of the {@link StructureObjectStruct#slots} map
+	 * {@link StructureObjectStructImpl} and invoking {@link StructureClassStruct#newInstance()} to retrieve and use a new
+	 * instance of the associated parent {@link StructureObjectStructImpl}</li>
+	 * <li>Optionally generating the code to invoke the initialization of the {@link StructureObjectStructImpl#slots} map
 	 * depending on whether or not the {@link DefstructStruct#slots} list is empty or not</li>
 	 * </ol>
 	 * The following is the example Java code generated when {@code (compiler:%defstruct foo nil make-foo nil a)} is
@@ -1698,7 +1698,7 @@ final class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 	 *      PackageStruct var1 = PackageStruct.findPackage("COMMON-LISP-USER");
 	 *      SymbolStruct var2 = var1.intern("FOO").getSymbol();
 	 *
-	 *      super(var10001, var2, (StructureObjectStruct)null);
+	 *      super(var10001, var2, (StructureObjectStructImpl)null);
 	 *      this.initSlotsMap();
 	 * }
 	 * }
@@ -1719,7 +1719,7 @@ final class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 	 * </pre>
 	 *
 	 * @param input
-	 * 		the {@link DefstructStruct} containing the {@link StructureObjectStruct} metadata needed to generate the
+	 * 		the {@link DefstructStruct} containing the {@link StructureObjectStructImpl} metadata needed to generate the
 	 * 		constructor code
 	 * @param generatorState
 	 * 		stateful object used to hold the current state of the code generation process
@@ -1727,12 +1727,12 @@ final class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 	 * 		the current {@link ClassWriter} to generate the constructor code for
 	 * @param structureClassClassName
 	 * 		the {@link String} containing the name of the {@link StructureClassStruct} for this {@link
-	 * 		StructureObjectStruct}
+	 * 		StructureObjectStructImpl}
 	 * @param structureClassClassDesc
 	 * 		the {@link String} containing the type descriptor of the {@link StructureClassStruct} for this {@link
-	 * 		StructureObjectStruct}
+	 * 		StructureObjectStructImpl}
 	 * @param structureObjectClassName
-	 * 		the {@link String} containing the name of the {@link StructureObjectStruct} to generate the constructor code
+	 * 		the {@link String} containing the name of the {@link StructureObjectStructImpl} to generate the constructor code
 	 * 		for
 	 */
 	private static void generateStructureObjectConstructor(final DefstructStruct input, final GeneratorState generatorState,
@@ -1809,14 +1809,14 @@ final class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 
 	/**
 	 * Private method for generating the {@code initSlotsMap} initializing method for the generated {@link
-	 * StructureObjectStruct} being written to via the provided {@link ClassWriter}. The generation will perform the
+	 * StructureObjectStructImpl} being written to via the provided {@link ClassWriter}. The generation will perform the
 	 * following operations:
 	 * <ol>
 	 * <li>Returning early and avoid generating the method unnecessarily if the {@link List} of {@link
 	 * DefstructStruct#slots} is empty</li>
-	 * <li>Generating the code to retrieve the {@link StructureObjectStruct#slots} field</li>
+	 * <li>Generating the code to retrieve the {@link StructureObjectStructImpl#slots} field</li>
 	 * <li>Generating the code to retrieve the slot {@link SymbolStruct} and store a {@code null} value associated with
-	 * that symbol into the {@link StructureObjectStruct#slots} {@link Map}</li>
+	 * that symbol into the {@link StructureObjectStructImpl#slots} {@link Map}</li>
 	 * </ol>
 	 * The following is the example Java code generated when {@code (compiler:%defstruct foo nil make-foo nil a)} is
 	 * encountered:
@@ -1838,7 +1838,7 @@ final class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 	 * @param cw
 	 * 		the current {@link ClassWriter} to generate the method code for
 	 * @param structureObjectClassName
-	 * 		the {@link String} containing the name of the {@link StructureObjectStruct} to generate the {@code
+	 * 		the {@link String} containing the name of the {@link StructureObjectStructImpl} to generate the {@code
 	 * 		initSlotsMap} method code for
 	 */
 	private static void generateStructureObjectInitSlotsMap(final DefstructStruct input, final GeneratorState generatorState,

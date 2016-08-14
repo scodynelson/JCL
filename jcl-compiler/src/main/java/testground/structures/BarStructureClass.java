@@ -7,7 +7,7 @@ package testground.structures;
 import java.util.List;
 
 import jcl.lang.LispStruct;
-import jcl.lang.StructureObjectStruct;
+import jcl.lang.StructureObjectStructImpl;
 import jcl.lang.SymbolStruct;
 import jcl.lang.factory.LispStructFactory;
 import jcl.type.LispType;
@@ -30,7 +30,7 @@ public class BarStructureClass extends FooStructureClass {
 	}
 
 	@Override
-	public StructureObjectStruct newInstance() {
+	public StructureObjectStructImpl newInstance() {
 		return new BarStructureObject();
 	}
 }

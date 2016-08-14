@@ -14,22 +14,14 @@ import jcl.lang.LispStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.factory.LispStructFactory;
 import jcl.lang.function.FunctionStructImpl;
-import jcl.lang.readtable.Reader;
+import jcl.lang.readtable.ReaderInputStreamStruct;
 import jcl.lang.readtable.ReaderMacroFunction;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 
 /**
  * Abstract implementation definition for all Reader defined macro functions that read character macros based off of a
  * provided {@link Integer} code point.
  */
 public abstract class ReaderMacroFunctionImpl extends FunctionStructImpl implements ReaderMacroFunction {
-
-	/**
-	 * {@link Autowired} {@link ApplicationContext} used for getting a new {@link Reader} bean instance.
-	 */
-	@Autowired
-	private ApplicationContext applicationContext;
 
 	protected ReaderMacroFunctionImpl() {
 		// TODO
@@ -62,11 +54,7 @@ public abstract class ReaderMacroFunctionImpl extends FunctionStructImpl impleme
 			numberArgument = Optional.empty();
 		}
 
-		final Reader reader = applicationContext.getBean(Reader.class, stream);
-
-		return readMacro(codePoint, reader, numberArgument);
+		final ReaderInputStreamStruct readerInputStreamStruct = new ReaderInputStreamStruct(stream);
+		return readMacro(readerInputStreamStruct, codePoint, numberArgument);
 	}
-
-	@Override
-	public abstract LispStruct readMacro(int codePoint, Reader reader, Optional<BigInteger> numberArgument);
 }

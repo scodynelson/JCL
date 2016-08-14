@@ -9,7 +9,7 @@ import java.util.Optional;
 
 import jcl.lang.LispStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
-import jcl.lang.readtable.Reader;
+import jcl.lang.readtable.ReaderInputStreamStruct;
 import jcl.lang.statics.ReaderVariables;
 import jcl.util.CodePointConstants;
 import org.springframework.stereotype.Component;
@@ -27,7 +27,7 @@ public class RightParenthesisReaderMacroFunction extends ReaderMacroFunctionImpl
 	}
 
 	@Override
-	public LispStruct readMacro(final int codePoint, final Reader reader, final Optional<BigInteger> numberArgument) {
+	public LispStruct readMacro(final ReaderInputStreamStruct inputStreamStruct, final int codePoint, final Optional<BigInteger> numberArgument) {
 		assert codePoint == CodePointConstants.RIGHT_PARENTHESIS;
 
 		throw new ReaderErrorException("Unmatched close parenthesis.");

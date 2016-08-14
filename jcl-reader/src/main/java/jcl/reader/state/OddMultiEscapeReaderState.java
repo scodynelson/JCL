@@ -8,8 +8,9 @@ import jcl.lang.LispStruct;
 import jcl.lang.ReadtableStruct;
 import jcl.lang.readtable.AttributeType;
 import jcl.lang.readtable.Reader;
-import jcl.lang.statics.ReaderVariables;
+import jcl.lang.readtable.ReaderInputStreamStruct;
 import jcl.lang.readtable.SyntaxType;
+import jcl.lang.statics.ReaderVariables;
 import jcl.lang.stream.ReadPeekResult;
 import jcl.reader.ReaderStateMediator;
 import jcl.reader.TokenBuilder;
@@ -47,15 +48,18 @@ class OddMultiEscapeReaderState implements ReaderState {
 	@Autowired
 	private ReaderStateMediator readerStateMediator;
 
+	@Autowired
+	private Reader reader;
+
 	@Override
 	public LispStruct process(final TokenBuilder tokenBuilder) {
 
 		final boolean isEofErrorP = tokenBuilder.isEofErrorP();
 		final LispStruct eofValue = tokenBuilder.getEofValue();
 
-		final Reader reader = tokenBuilder.getReader();
+		final ReaderInputStreamStruct inputStreamStruct = tokenBuilder.getInputStreamStruct();
 
-		ReadPeekResult readResult = reader.readChar(isEofErrorP, eofValue, true);
+		ReadPeekResult readResult = reader.readChar(inputStreamStruct, isEofErrorP, eofValue, true);
 		tokenBuilder.setPreviousReadResult(readResult);
 
 		if (readResult.isEof()) {
@@ -77,7 +81,7 @@ class OddMultiEscapeReaderState implements ReaderState {
 			return readerStateMediator.readOddMultipleEscape(tokenBuilder);
 		} else if (syntaxType == SyntaxType.SINGLE_ESCAPE) {
 
-			readResult = reader.readChar(isEofErrorP, eofValue, true);
+			readResult = reader.readChar(inputStreamStruct, isEofErrorP, eofValue, true);
 			tokenBuilder.setPreviousReadResult(readResult);
 
 			if (readResult.isEof()) {

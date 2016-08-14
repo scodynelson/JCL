@@ -12,7 +12,7 @@ import jcl.functions.java.JNew;
 import jcl.lang.LispStruct;
 import jcl.lang.ReadtableStruct;
 import jcl.lang.java.JavaClassStruct;
-import jcl.lang.readtable.Reader;
+import jcl.lang.readtable.ReaderInputStreamStruct;
 import jcl.lang.readtable.ReadtableCase;
 import jcl.lang.statics.ReaderVariables;
 import jcl.util.CodePointConstants;
@@ -25,14 +25,17 @@ import org.springframework.stereotype.Component;
 @Component
 public class AtSignReaderMacroFunction extends ReaderMacroFunctionImpl {
 
+	private final ExtendedTokenReaderMacroFunction extendedTokenReaderMacroFunction;
+
 	private final JClass jClass;
 
 	private final JNew jNew;
 
 	@Autowired
-	public AtSignReaderMacroFunction(final JClass jClass, final JNew jNew) {
+	public AtSignReaderMacroFunction(final JClass jClass, final JNew jNew, final ExtendedTokenReaderMacroFunction extendedTokenReaderMacroFunction) {
 		this.jClass = jClass;
 		this.jNew = jNew;
+		this.extendedTokenReaderMacroFunction = extendedTokenReaderMacroFunction;
 	}
 
 	@Override
@@ -42,7 +45,7 @@ public class AtSignReaderMacroFunction extends ReaderMacroFunctionImpl {
 	}
 
 	@Override
-	public LispStruct readMacro(final int codePoint, final Reader reader, final Optional<BigInteger> numberArgument) {
+	public LispStruct readMacro(final ReaderInputStreamStruct inputStreamStruct, final int codePoint, final Optional<BigInteger> numberArgument) {
 		assert codePoint == CodePointConstants.AT_SIGN;
 
 		final ReadtableStruct readtable = ReaderVariables.READTABLE.getVariableValue();
@@ -52,7 +55,7 @@ public class AtSignReaderMacroFunction extends ReaderMacroFunctionImpl {
 
 		final String tokenString;
 		try {
-			final ExtendedTokenReaderMacroFunction.ReadExtendedToken extendedToken = ExtendedTokenReaderMacroFunction.readExtendedToken(reader, false);
+			final ExtendedTokenReaderMacroFunction.ReadExtendedToken extendedToken = extendedTokenReaderMacroFunction.readExtendedToken(inputStreamStruct, false);
 			tokenString = extendedToken.getTokenString();
 		} finally {
 			readtable.setReadtableCase(previousCase);

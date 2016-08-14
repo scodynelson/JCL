@@ -11,9 +11,11 @@ import jcl.lang.LispStruct;
 import jcl.lang.NILStruct;
 import jcl.lang.factory.LispStructFactory;
 import jcl.lang.readtable.Reader;
+import jcl.lang.readtable.ReaderInputStreamStruct;
 import jcl.lang.statics.ReaderVariables;
 import jcl.lang.stream.ReadPeekResult;
 import jcl.util.CodePointConstants;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -22,6 +24,16 @@ import org.springframework.stereotype.Component;
 @Component
 public class QuotationMarkReaderMacroFunction extends ReaderMacroFunctionImpl {
 
+	private final Reader reader;
+
+	private final UnicodeCharacterReaderMacroFunction unicodeCharacterReaderMacroFunction;
+
+	@Autowired
+	public QuotationMarkReaderMacroFunction(final Reader reader, final UnicodeCharacterReaderMacroFunction unicodeCharacterReaderMacroFunction) {
+		this.reader = reader;
+		this.unicodeCharacterReaderMacroFunction = unicodeCharacterReaderMacroFunction;
+	}
+
 	@Override
 	public void afterPropertiesSet() throws Exception {
 		super.afterPropertiesSet();
@@ -29,24 +41,24 @@ public class QuotationMarkReaderMacroFunction extends ReaderMacroFunctionImpl {
 	}
 
 	@Override
-	public LispStruct readMacro(final int codePoint, final Reader reader, final Optional<BigInteger> numberArgument) {
+	public LispStruct readMacro(final ReaderInputStreamStruct inputStreamStruct, final int codePoint, final Optional<BigInteger> numberArgument) {
 		assert codePoint == CodePointConstants.QUOTATION_MARK;
 
 		final StringBuilder stringBuilder = new StringBuilder();
 
 		// NOTE: This will throw errors when it reaches an EOF
-		ReadPeekResult readResult = reader.readChar(true, NILStruct.INSTANCE, true);
+		ReadPeekResult readResult = reader.readChar(inputStreamStruct, true, NILStruct.INSTANCE, true);
 		int nextCodePoint = readResult.getResult();
 
 		while (nextCodePoint != CodePointConstants.QUOTATION_MARK) {
 			if (nextCodePoint == CodePointConstants.BACKSLASH) {
-				handleEscapedCharacter(reader, stringBuilder);
+				handleEscapedCharacter(inputStreamStruct, stringBuilder);
 			} else {
 				stringBuilder.appendCodePoint(nextCodePoint);
 			}
 
 			// NOTE: This will throw errors when it reaches an EOF
-			readResult = reader.readChar(true, NILStruct.INSTANCE, true);
+			readResult = reader.readChar(inputStreamStruct, true, NILStruct.INSTANCE, true);
 			nextCodePoint = readResult.getResult();
 		}
 
@@ -61,24 +73,24 @@ public class QuotationMarkReaderMacroFunction extends ReaderMacroFunctionImpl {
 	/**
 	 * Handles escaped characters during a read operation for '"..."'.
 	 *
-	 * @param reader
-	 * 		the {@link Reader} used to read tokens
+	 * @param inputStreamStruct
+	 * 		the {@link ReaderInputStreamStruct} to read tokens from
 	 * @param stringBuilder
 	 * 		the {@link StringBuilder} used to build the final token
 	 */
-	private static void handleEscapedCharacter(final Reader reader, final StringBuilder stringBuilder) {
+	private void handleEscapedCharacter(final ReaderInputStreamStruct inputStreamStruct, final StringBuilder stringBuilder) {
 		int codePoint = CodePointConstants.BACKSLASH;
 
 		// NOTE: This will throw errors when it reaches an EOF
-		final ReadPeekResult tempReadResult = reader.readChar(true, NILStruct.INSTANCE, true);
+		final ReadPeekResult tempReadResult = reader.readChar(inputStreamStruct, true, NILStruct.INSTANCE, true);
 		final int tempCodePoint = tempReadResult.getResult();
 		if ((tempCodePoint == CodePointConstants.LATIN_SMALL_LETTER_U)
 				|| (tempCodePoint == CodePointConstants.LATIN_CAPITAL_LETTER_U)) {
 
-			final ReadPeekResult nextTempReadResult = reader.readChar(true, NILStruct.INSTANCE, true);
+			final ReadPeekResult nextTempReadResult = reader.readChar(inputStreamStruct, true, NILStruct.INSTANCE, true);
 			final int nextTempCodePoint = nextTempReadResult.getResult();
 			if (nextTempCodePoint == CodePointConstants.PLUS_SIGN) {
-				codePoint = UnicodeCharacterReaderMacroFunction.readUnicodeCharacter(reader);
+				codePoint = unicodeCharacterReaderMacroFunction.readUnicodeCharacter(inputStreamStruct);
 				stringBuilder.appendCodePoint(codePoint);
 			} else {
 				// NOTE: Order matters here!!

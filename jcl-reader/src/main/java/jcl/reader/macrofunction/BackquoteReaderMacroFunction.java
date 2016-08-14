@@ -18,9 +18,11 @@ import jcl.lang.condition.exception.ReaderErrorException;
 import jcl.lang.factory.LispStructFactory;
 import jcl.lang.internal.SpecialOperatorStructImpl;
 import jcl.lang.readtable.Reader;
+import jcl.lang.readtable.ReaderInputStreamStruct;
 import jcl.lang.statics.GlobalPackageStruct;
 import jcl.lang.statics.ReaderVariables;
 import jcl.util.CodePointConstants;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -42,6 +44,13 @@ public class BackquoteReaderMacroFunction extends ReaderMacroFunctionImpl {
 	public static final SymbolStruct BQ_DOT_FLAG = GlobalPackageStruct.BACKQUOTE.intern(",.").getSymbol();
 	public static final SymbolStruct BQ_VECTOR_FLAG = GlobalPackageStruct.BACKQUOTE.intern("bqv").getSymbol();
 
+	private final Reader reader;
+
+	@Autowired
+	public BackquoteReaderMacroFunction(final Reader reader) {
+		this.reader = reader;
+	}
+
 	@Override
 	public void afterPropertiesSet() throws Exception {
 		super.afterPropertiesSet();
@@ -49,12 +58,12 @@ public class BackquoteReaderMacroFunction extends ReaderMacroFunctionImpl {
 	}
 
 	@Override
-	public LispStruct readMacro(final int codePoint, final Reader reader, final Optional<BigInteger> numberArgument) {
+	public LispStruct readMacro(final ReaderInputStreamStruct inputStreamStruct, final int codePoint, final Optional<BigInteger> numberArgument) {
 		assert codePoint == CodePointConstants.GRAVE_ACCENT;
 
-		reader.incrementBackquoteLevel();
+		inputStreamStruct.incrementBackquoteLevel();
 		try {
-			final LispStruct code = reader.read(true, NILStruct.INSTANCE, true);
+			final LispStruct code = reader.read(inputStreamStruct, true, NILStruct.INSTANCE, true);
 			final BackquoteReturn backquoteReturn = backquotify(code);
 
 			final SymbolStruct flag = backquoteReturn.getFlag();
@@ -69,7 +78,7 @@ public class BackquoteReaderMacroFunction extends ReaderMacroFunctionImpl {
 
 			return backquotify_1(flag, thing);
 		} finally {
-			reader.decrementBackquoteLevel();
+			inputStreamStruct.decrementBackquoteLevel();
 		}
 	}
 

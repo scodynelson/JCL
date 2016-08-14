@@ -15,17 +15,19 @@ import jcl.lang.NILStruct;
 import jcl.lang.VectorStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
 import jcl.lang.factory.LispStructFactory;
-import jcl.lang.readtable.Reader;
+import jcl.lang.readtable.ReaderInputStreamStruct;
 import jcl.lang.statics.ReaderVariables;
 import jcl.util.CodePointConstants;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Component;
 
 /**
  * Implements the '#(...)' Lisp reader macro.
  */
 @Component
+@DependsOn("readerBootstrap")
 public class SharpLeftParenthesisReaderMacroFunction extends ReaderMacroFunctionImpl {
 
 	/**
@@ -45,10 +47,10 @@ public class SharpLeftParenthesisReaderMacroFunction extends ReaderMacroFunction
 	}
 
 	@Override
-	public LispStruct readMacro(final int codePoint, final Reader reader, final Optional<BigInteger> numberArgument) {
+	public LispStruct readMacro(final ReaderInputStreamStruct inputStreamStruct, final int codePoint, final Optional<BigInteger> numberArgument) {
 		assert codePoint == CodePointConstants.LEFT_PARENTHESIS;
 
-		final ListStruct listToken = listReaderMacroFunction.readList(reader);
+		final ListStruct listToken = listReaderMacroFunction.readList(inputStreamStruct);
 
 		if (ReaderVariables.READ_SUPPRESS.getVariableValue().booleanValue()) {
 			return NILStruct.INSTANCE;
@@ -62,7 +64,7 @@ public class SharpLeftParenthesisReaderMacroFunction extends ReaderMacroFunction
 			throw new ReaderErrorException("Ill-formed vector: #" + listToken);
 		}
 
-		final int backquoteLevel = reader.getBackquoteLevel();
+		final int backquoteLevel = inputStreamStruct.getBackquoteLevel();
 		if (backquoteLevel == 0) {
 			if (!numberArgument.isPresent()) {
 				final List<LispStruct> tokensAsJavaList = listToken.stream().collect(Collectors.toList());

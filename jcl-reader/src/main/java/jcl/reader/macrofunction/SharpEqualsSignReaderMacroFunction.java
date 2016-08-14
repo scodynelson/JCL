@@ -19,15 +19,26 @@ import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
 import jcl.lang.factory.LispStructFactory;
 import jcl.lang.readtable.Reader;
+import jcl.lang.readtable.ReaderInputStreamStruct;
 import jcl.lang.statics.ReaderVariables;
 import jcl.util.CodePointConstants;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Component;
 
 /**
  * Implements the '#=' Lisp reader macro.
  */
 @Component
+@DependsOn("readerBootstrap")
 public class SharpEqualsSignReaderMacroFunction extends ReaderMacroFunctionImpl {
+
+	private final Reader reader;
+
+	@Autowired
+	public SharpEqualsSignReaderMacroFunction(final Reader reader) {
+		this.reader = reader;
+	}
 
 	@Override
 	public void afterPropertiesSet() throws Exception {
@@ -36,7 +47,7 @@ public class SharpEqualsSignReaderMacroFunction extends ReaderMacroFunctionImpl 
 	}
 
 	@Override
-	public LispStruct readMacro(final int codePoint, final Reader reader, final Optional<BigInteger> numberArgument) {
+	public LispStruct readMacro(final ReaderInputStreamStruct inputStreamStruct, final int codePoint, final Optional<BigInteger> numberArgument) {
 		assert codePoint == CodePointConstants.EQUALS_SIGN;
 
 		if (ReaderVariables.READ_SUPPRESS.getVariableValue().booleanValue()) {
@@ -48,8 +59,8 @@ public class SharpEqualsSignReaderMacroFunction extends ReaderMacroFunctionImpl 
 		}
 		final BigInteger numberArgumentValue = numberArgument.get();
 
-		final Map<BigInteger, LispStruct> sharpEqualFinalTable = reader.getSharpEqualFinalTable();
-		final Map<BigInteger, SymbolStruct> sharpEqualTempTable = reader.getSharpEqualTempTable();
+		final Map<BigInteger, LispStruct> sharpEqualFinalTable = inputStreamStruct.getSharpEqualFinalTable();
+		final Map<BigInteger, SymbolStruct> sharpEqualTempTable = inputStreamStruct.getSharpEqualTempTable();
 
 		if (sharpEqualFinalTable.containsKey(numberArgumentValue)
 				|| sharpEqualTempTable.containsKey(numberArgumentValue)) {
@@ -60,9 +71,9 @@ public class SharpEqualsSignReaderMacroFunction extends ReaderMacroFunctionImpl 
 		final SymbolStruct labelTag = LispStructFactory.toSymbol(labelTagName);
 		sharpEqualTempTable.put(numberArgumentValue, labelTag);
 
-		final LispStruct token = reader.read(true, NILStruct.INSTANCE, true);
+		final LispStruct token = reader.read(inputStreamStruct, true, NILStruct.INSTANCE, true);
 
-		final Map<SymbolStruct, LispStruct> sharpEqualReplTable = reader.getSharpEqualReplTable();
+		final Map<SymbolStruct, LispStruct> sharpEqualReplTable = inputStreamStruct.getSharpEqualReplTable();
 		sharpEqualReplTable.put(labelTag, token);
 
 		final Set<LispStruct> sharpEqualCircleSet = new HashSet<>();

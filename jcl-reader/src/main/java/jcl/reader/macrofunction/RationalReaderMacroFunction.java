@@ -8,12 +8,14 @@ import java.math.BigInteger;
 
 import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
-import jcl.lang.condition.exception.ReaderErrorException;
-import jcl.lang.factory.LispStructFactory;
 import jcl.lang.NILStruct;
 import jcl.lang.RationalStruct;
+import jcl.lang.condition.exception.ReaderErrorException;
+import jcl.lang.factory.LispStructFactory;
 import jcl.lang.readtable.Reader;
+import jcl.lang.readtable.ReaderInputStreamStruct;
 import jcl.lang.statics.ReaderVariables;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -23,20 +25,30 @@ import org.springframework.stereotype.Component;
 @Component
 final class RationalReaderMacroFunction {
 
+	private final Reader reader;
+
+	private final ExtendedTokenReaderMacroFunction extendedTokenReaderMacroFunction;
+
+	@Autowired
+	RationalReaderMacroFunction(final Reader reader, final ExtendedTokenReaderMacroFunction extendedTokenReaderMacroFunction) {
+		this.reader = reader;
+		this.extendedTokenReaderMacroFunction = extendedTokenReaderMacroFunction;
+	}
+
 	/**
 	 * Read in and returns a properly parsed {@link RationalStruct}, handling proper radix rules for reader number base
 	 * handling based on the provided {@code radix} value.
 	 *
-	 * @param reader
-	 * 		the {@link Reader} used to read in the {@link RationalStruct}
+	 * @param inputStreamStruct
+	 * 		the {@link ReaderInputStreamStruct} to read in the {@link RationalStruct}
 	 * @param radix
 	 * 		the radix value used when reading numeric parts of the {@link RationalStruct}
 	 *
 	 * @return the properly parsed {@link RationalStruct}
 	 */
-	LispStruct readRational(final Reader reader, final BigInteger radix) {
+	LispStruct readRational(final ReaderInputStreamStruct inputStreamStruct, final BigInteger radix) {
 		if (ReaderVariables.READ_SUPPRESS.getVariableValue().booleanValue()) {
-			ExtendedTokenReaderMacroFunction.readExtendedToken(reader, false);
+			extendedTokenReaderMacroFunction.readExtendedToken(inputStreamStruct, false);
 			return NILStruct.INSTANCE;
 		}
 
@@ -46,7 +58,7 @@ final class RationalReaderMacroFunction {
 		ReaderVariables.READ_BASE.setValue(LispStructFactory.toInteger(radix));
 
 		// read rational
-		final LispStruct token = reader.read(true, NILStruct.INSTANCE, true);
+		final LispStruct token = reader.read(inputStreamStruct, true, NILStruct.INSTANCE, true);
 
 		// reset the read-base
 		ReaderVariables.READ_BASE.setValue(previousReadBase);

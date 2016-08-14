@@ -11,15 +11,17 @@ import jcl.lang.LispStruct;
 import jcl.lang.NILStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
-import jcl.lang.readtable.Reader;
+import jcl.lang.readtable.ReaderInputStreamStruct;
 import jcl.lang.statics.ReaderVariables;
 import jcl.util.CodePointConstants;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Component;
 
 /**
  * Implements the '##' Lisp reader macro.
  */
 @Component
+@DependsOn("readerBootstrap")
 public class SharpSharpReaderMacroFunction extends ReaderMacroFunctionImpl {
 
 	@Override
@@ -29,7 +31,7 @@ public class SharpSharpReaderMacroFunction extends ReaderMacroFunctionImpl {
 	}
 
 	@Override
-	public LispStruct readMacro(final int codePoint, final Reader reader, final Optional<BigInteger> numberArgument) {
+	public LispStruct readMacro(final ReaderInputStreamStruct inputStreamStruct, final int codePoint, final Optional<BigInteger> numberArgument) {
 		assert codePoint == CodePointConstants.NUMBER_SIGN;
 
 		if (ReaderVariables.READ_SUPPRESS.getVariableValue().booleanValue()) {
@@ -41,12 +43,12 @@ public class SharpSharpReaderMacroFunction extends ReaderMacroFunctionImpl {
 		}
 		final BigInteger numberArgumentValue = numberArgument.get();
 
-		final LispStruct labelToken = reader.getSharpEqualFinalTable().get(numberArgumentValue);
+		final LispStruct labelToken = inputStreamStruct.getSharpEqualFinalTable().get(numberArgumentValue);
 		if (labelToken != null) {
 			return labelToken;
 		}
 
-		final SymbolStruct possibleLabelTag = reader.getSharpEqualTempTable().get(numberArgumentValue);
+		final SymbolStruct possibleLabelTag = inputStreamStruct.getSharpEqualTempTable().get(numberArgumentValue);
 		if (possibleLabelTag != null) {
 			return possibleLabelTag;
 		}

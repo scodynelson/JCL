@@ -5,11 +5,14 @@
 package jcl.reader.macrofunction;
 
 import jcl.lang.condition.exception.ReaderErrorException;
-import jcl.lang.readtable.Reader;
+import jcl.lang.readtable.ReaderInputStreamStruct;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 /**
  * Reader Macro Function for handling the reading unicode character.
  */
+@Component
 final class UnicodeCharacterReaderMacroFunction {
 
 	/**
@@ -17,24 +20,25 @@ final class UnicodeCharacterReaderMacroFunction {
 	 */
 	private static final int UNICODE_RADIX = 16;
 
-	/**
-	 * Private constructor.
-	 */
-	private UnicodeCharacterReaderMacroFunction() {
+	private final ExtendedTokenReaderMacroFunction extendedTokenReaderMacroFunction;
+
+	@Autowired
+	UnicodeCharacterReaderMacroFunction(final ExtendedTokenReaderMacroFunction extendedTokenReaderMacroFunction) {
+		this.extendedTokenReaderMacroFunction = extendedTokenReaderMacroFunction;
 	}
 
 	/**
 	 * Reads in and returns the properly read in Unicode character token. A {@link ReaderErrorException} is thrown if
 	 * the character is not a proper Unicode character.
 	 *
-	 * @param reader
-	 * 		the {@link Reader} used to read in the Unicode character token
+	 * @param inputStreamStruct
+	 * 		the {@link ReaderInputStreamStruct} to read the Unicode character token from
 	 *
 	 * @return a Unicode character code point
 	 */
-	static int readUnicodeCharacter(final Reader reader) {
+	int readUnicodeCharacter(final ReaderInputStreamStruct inputStreamStruct) {
 		final ExtendedTokenReaderMacroFunction.ReadExtendedToken readExtendedToken =
-				ExtendedTokenReaderMacroFunction.readExtendedToken(reader, true);
+				extendedTokenReaderMacroFunction.readExtendedToken(inputStreamStruct, true);
 
 		final String unicodeCharacterString = readExtendedToken.getTokenString();
 		try {

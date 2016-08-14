@@ -6,9 +6,11 @@ package jcl.reader;
 
 import java.util.LinkedList;
 
+import jcl.lang.InputStreamStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.readtable.AttributeType;
 import jcl.lang.readtable.Reader;
+import jcl.lang.readtable.ReaderInputStreamStruct;
 import jcl.lang.stream.ReadPeekResult;
 
 /**
@@ -17,9 +19,9 @@ import jcl.lang.stream.ReadPeekResult;
 public class TokenBuilder {
 
 	/**
-	 * The {@link Reader} instance to use when building lisp tokens.
+	 * The {@link ReaderInputStreamStruct} to use when building lisp tokens.
 	 */
-	private final Reader reader;
+	private final ReaderInputStreamStruct inputStreamStruct;
 
 	/**
 	 * Determines if an error should be thrown when an End-of-File character is encountered.
@@ -49,15 +51,15 @@ public class TokenBuilder {
 	/**
 	 * Package private constructor.
 	 *
-	 * @param reader
-	 * 		the {@link Reader} used to read tokens
+	 * @param inputStreamStruct
+	 * 		the {@link InputStreamStruct} to read tokens from
 	 * @param eofErrorP
 	 * 		whether or not to throw an error when an End-Of-File is reached
 	 * @param eofValue
 	 * 		the value to return if an End-Of-File is reached and an error is not to be thrown
 	 */
-	TokenBuilder(final Reader reader, final boolean eofErrorP, final LispStruct eofValue) {
-		this.reader = reader;
+	TokenBuilder(final ReaderInputStreamStruct inputStreamStruct, final boolean eofErrorP, final LispStruct eofValue) {
+		this.inputStreamStruct = inputStreamStruct;
 		this.eofErrorP = eofErrorP;
 		this.eofValue = eofValue;
 		tokenAttributes = new LinkedList<>();
@@ -67,12 +69,12 @@ public class TokenBuilder {
 	}
 
 	/**
-	 * Getter for {@link #reader} property.
+	 * Getter for {@link #inputStreamStruct} property.
 	 *
-	 * @return {@link #reader} property
+	 * @return {@link #inputStreamStruct} property
 	 */
-	public Reader getReader() {
-		return reader;
+	public ReaderInputStreamStruct getInputStreamStruct() {
+		return inputStreamStruct;
 	}
 
 	/**

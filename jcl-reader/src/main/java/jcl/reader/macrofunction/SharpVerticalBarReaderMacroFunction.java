@@ -10,16 +10,27 @@ import java.util.Optional;
 import jcl.lang.LispStruct;
 import jcl.lang.NILStruct;
 import jcl.lang.readtable.Reader;
+import jcl.lang.readtable.ReaderInputStreamStruct;
 import jcl.lang.statics.ReaderVariables;
 import jcl.lang.stream.ReadPeekResult;
 import jcl.util.CodePointConstants;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Component;
 
 /**
  * Implements the '#|...|#' Lisp reader macro.
  */
 @Component
+@DependsOn("readerBootstrap")
 public class SharpVerticalBarReaderMacroFunction extends ReaderMacroFunctionImpl {
+
+	private final Reader reader;
+
+	@Autowired
+	public SharpVerticalBarReaderMacroFunction(final Reader reader) {
+		this.reader = reader;
+	}
 
 	@Override
 	public void afterPropertiesSet() throws Exception {
@@ -28,15 +39,15 @@ public class SharpVerticalBarReaderMacroFunction extends ReaderMacroFunctionImpl
 	}
 
 	@Override
-	public LispStruct readMacro(final int codePoint, final Reader reader, final Optional<BigInteger> numberArgument) {
+	public LispStruct readMacro(final ReaderInputStreamStruct inputStreamStruct, final int codePoint, final Optional<BigInteger> numberArgument) {
 		assert codePoint == CodePointConstants.VERTICAL_LINE;
 
 		final int baseLevel = 0;
 		int currentLevel = 1;
 
 		// NOTE: This will throw errors when it reaches an EOF
-		ReadPeekResult previousReadResult = reader.readChar(true, NILStruct.INSTANCE, false);
-		ReadPeekResult nextReadResult = reader.readChar(true, NILStruct.INSTANCE, false);
+		ReadPeekResult previousReadResult = reader.readChar(inputStreamStruct, true, NILStruct.INSTANCE, false);
+		ReadPeekResult nextReadResult = reader.readChar(inputStreamStruct,true, NILStruct.INSTANCE, false);
 
 		final StringBuilder stringBuilder = new StringBuilder();
 		while (true) {
@@ -55,7 +66,7 @@ public class SharpVerticalBarReaderMacroFunction extends ReaderMacroFunctionImpl
 				stringBuilder.appendCodePoint(nextCodePoint);
 
 				// NOTE: This will throw errors when it reaches an EOF
-				nextReadResult = reader.readChar(true, NILStruct.INSTANCE, false);
+				nextReadResult = reader.readChar(inputStreamStruct,true, NILStruct.INSTANCE, false);
 				currentLevel += 1;
 			} else {
 				stringBuilder.appendCodePoint(previousCodePoint);
@@ -63,7 +74,7 @@ public class SharpVerticalBarReaderMacroFunction extends ReaderMacroFunctionImpl
 
 			// NOTE: This will throw errors when it reaches an EOF
 			previousReadResult = nextReadResult;
-			nextReadResult = reader.readChar(true, NILStruct.INSTANCE, false);
+			nextReadResult = reader.readChar(inputStreamStruct,true, NILStruct.INSTANCE, false);
 		}
 
 //		final String stringValue = stringBuilder.toString();

@@ -11,17 +11,19 @@ import jcl.lang.LispStruct;
 import jcl.lang.RationalStruct;
 import jcl.lang.ReadtableStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
-import jcl.lang.readtable.Reader;
+import jcl.lang.readtable.ReaderInputStreamStruct;
 import jcl.lang.statics.ReaderVariables;
 import jcl.util.CodePointConstants;
 import org.apache.commons.lang3.Range;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Component;
 
 /**
  * Implements the '#r' Lisp reader macro.
  */
 @Component
+@DependsOn("readerBootstrap")
 public class SharpRReaderMacroFunction extends ReaderMacroFunctionImpl {
 
 	/**
@@ -49,7 +51,7 @@ public class SharpRReaderMacroFunction extends ReaderMacroFunctionImpl {
 	}
 
 	@Override
-	public LispStruct readMacro(final int codePoint, final Reader reader, final Optional<BigInteger> numberArgument) {
+	public LispStruct readMacro(final ReaderInputStreamStruct inputStreamStruct, final int codePoint, final Optional<BigInteger> numberArgument) {
 		assert (codePoint == CodePointConstants.LATIN_SMALL_LETTER_R) || (codePoint == CodePointConstants.LATIN_CAPITAL_LETTER_R);
 
 		if (!numberArgument.isPresent()) {
@@ -61,6 +63,6 @@ public class SharpRReaderMacroFunction extends ReaderMacroFunctionImpl {
 			throw new ReaderErrorException("Illegal radix for #R: " + radix + '.');
 		}
 
-		return rationalReaderMacroFunction.readRational(reader, radix);
+		return rationalReaderMacroFunction.readRational(inputStreamStruct, radix);
 	}
 }

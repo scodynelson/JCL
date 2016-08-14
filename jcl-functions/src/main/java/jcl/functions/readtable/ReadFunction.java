@@ -5,18 +5,18 @@
 package jcl.functions.readtable;
 
 import jcl.lang.BooleanStruct;
+import jcl.lang.InputStreamStruct;
 import jcl.lang.LispStruct;
+import jcl.lang.NILStruct;
 import jcl.lang.TStruct;
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.function.CommonLispBuiltInFunctionStructBase;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
-import jcl.lang.NILStruct;
 import jcl.lang.readtable.Reader;
-import jcl.lang.InputStreamStruct;
+import jcl.lang.readtable.ReaderInputStreamStruct;
 import jcl.lang.statics.StreamVariables;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -29,7 +29,7 @@ public final class ReadFunction extends CommonLispBuiltInFunctionStructBase {
 	private static final String RECURSIVE_P_ARGUMENT = "RECURSIVE-P";
 
 	@Autowired
-	private ApplicationContext context;
+	private Reader reader;
 
 	public ReadFunction() {
 		super("Parses the printed representation of an object from input-stream and builds such an object.",
@@ -57,28 +57,23 @@ public final class ReadFunction extends CommonLispBuiltInFunctionStructBase {
 			throw new TypeErrorException("The value " + inputStreamArg + " is not either T, NIL, or a STREAM.");
 		}
 
+		final ReaderInputStreamStruct readerInputStreamStruct = new ReaderInputStreamStruct(inputStreamStruct);
 		final BooleanStruct eofErrorP = arguments.getOptionalArgument(EOF_ERROR_ARGUMENT, BooleanStruct.class);
 		final LispStruct eofValue = arguments.getOptionalArgument(EOF_VALUE_ARGUMENT);
 		final BooleanStruct recursiveP = arguments.getOptionalArgument(RECURSIVE_P_ARGUMENT, BooleanStruct.class);
-		return read(inputStreamStruct, eofErrorP, eofValue, recursiveP);
+
+		return read(readerInputStreamStruct, eofErrorP, eofValue, recursiveP);
 	}
 
-	public LispStruct read(final InputStreamStruct inputStreamStruct, final BooleanStruct eofErrorP, final LispStruct eofValue,
+	public LispStruct read(final ReaderInputStreamStruct inputStreamStruct, final BooleanStruct eofErrorP, final LispStruct eofValue,
 	                       final BooleanStruct recursiveP) {
 
 		return read(inputStreamStruct, eofErrorP.booleanValue(), eofValue, recursiveP.booleanValue());
 	}
 
-	public LispStruct read(final InputStreamStruct inputStreamStruct, final boolean eofErrorP, final LispStruct eofValue,
+	public LispStruct read(final ReaderInputStreamStruct inputStreamStruct, final boolean eofErrorP, final LispStruct eofValue,
 	                       final boolean recursiveP) {
 
-		final Reader reader = context.getBean(Reader.class, inputStreamStruct);
-		return reader.read(eofErrorP, eofValue, recursiveP);
-	}
-
-	public LispStruct read(final Reader reader, final boolean eofErrorP, final LispStruct eofValue,
-	                       final boolean recursiveP) {
-
-		return reader.read(eofErrorP, eofValue, recursiveP);
+		return reader.read(inputStreamStruct, eofErrorP, eofValue, recursiveP);
 	}
 }

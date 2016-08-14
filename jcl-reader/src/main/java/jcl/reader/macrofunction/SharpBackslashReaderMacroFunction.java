@@ -12,17 +12,27 @@ import jcl.lang.LispStruct;
 import jcl.lang.NILStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
 import jcl.lang.factory.LispStructFactory;
-import jcl.lang.readtable.Reader;
+import jcl.lang.readtable.ReaderInputStreamStruct;
 import jcl.lang.statics.ReaderVariables;
 import jcl.util.CodePointConstants;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Component;
 
 /**
  * Implements the '#\' Lisp reader macro.
  */
 @Component
+@DependsOn("readerBootstrap")
 public class SharpBackslashReaderMacroFunction extends ReaderMacroFunctionImpl {
+
+	private final ExtendedTokenReaderMacroFunction extendedTokenReaderMacroFunction;
+
+	@Autowired
+	public SharpBackslashReaderMacroFunction(final ExtendedTokenReaderMacroFunction extendedTokenReaderMacroFunction) {
+		this.extendedTokenReaderMacroFunction = extendedTokenReaderMacroFunction;
+	}
 
 	@Override
 	public void afterPropertiesSet() throws Exception {
@@ -31,10 +41,10 @@ public class SharpBackslashReaderMacroFunction extends ReaderMacroFunctionImpl {
 	}
 
 	@Override
-	public LispStruct readMacro(final int codePoint, final Reader reader, final Optional<BigInteger> numberArgument) {
+	public LispStruct readMacro(final ReaderInputStreamStruct inputStreamStruct, final int codePoint, final Optional<BigInteger> numberArgument) {
 		assert codePoint == CodePointConstants.BACKSLASH;
 
-		final ExtendedTokenReaderMacroFunction.ReadExtendedToken extendedToken = ExtendedTokenReaderMacroFunction.readExtendedToken(reader, true);
+		final ExtendedTokenReaderMacroFunction.ReadExtendedToken extendedToken = extendedTokenReaderMacroFunction.readExtendedToken(inputStreamStruct, true);
 		final String tokenString = extendedToken.getTokenString();
 
 		if (ReaderVariables.READ_SUPPRESS.getVariableValue().booleanValue()) {

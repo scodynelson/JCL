@@ -8,21 +8,23 @@ import java.util.Iterator;
 
 import jcl.lang.BooleanStruct;
 import jcl.lang.ConsStruct;
-import jcl.lang.PackageStruct;
-import jcl.lang.statics.CommonLispSymbols;
-import jcl.lang.statics.CompilerVariables;
-import jcl.lang.statics.GlobalPackageStruct;
 import jcl.lang.LispStruct;
-import jcl.lang.statics.PackageVariables;
+import jcl.lang.ListStruct;
+import jcl.lang.NILStruct;
+import jcl.lang.PackageStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.TStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
-import jcl.lang.ListStruct;
-import jcl.lang.NILStruct;
 import jcl.lang.readtable.Reader;
+import jcl.lang.readtable.ReaderInputStreamStruct;
+import jcl.lang.statics.CommonLispSymbols;
+import jcl.lang.statics.CompilerVariables;
+import jcl.lang.statics.GlobalPackageStruct;
+import jcl.lang.statics.PackageVariables;
 import jcl.lang.statics.ReaderVariables;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -37,16 +39,23 @@ final class FeaturesReaderMacroFunction {
 	 */
 	private static final Logger LOGGER = LoggerFactory.getLogger(FeaturesReaderMacroFunction.class);
 
+	private final Reader reader;
+
+	@Autowired
+	FeaturesReaderMacroFunction(final Reader reader) {
+		this.reader = reader;
+	}
+
 	/**
 	 * Reads in the next set of *features*, following the {@code shouldHideFeatures} property to properly suppress the
 	 * read operation or not.
 	 *
-	 * @param reader
-	 * 		the {@link Reader} used to read in the next token
+	 * @param inputStreamStruct
+	 * 		the {@link ReaderInputStreamStruct} to read in the next token
 	 * @param shouldHideFeatures
 	 * 		whether or not the *features* read should be hidden or not (aka. the token is read in but ignored)
 	 */
-	void readFeatures(final Reader reader, final boolean shouldHideFeatures) {
+	void readFeatures(final ReaderInputStreamStruct inputStreamStruct, final boolean shouldHideFeatures) {
 
 		final BooleanStruct previousReadSuppress = ReaderVariables.READ_SUPPRESS.getVariableValue();
 		final PackageStruct previousPackage = PackageVariables.PACKAGE.getVariableValue();
@@ -54,13 +63,13 @@ final class FeaturesReaderMacroFunction {
 			ReaderVariables.READ_SUPPRESS.setValue(NILStruct.INSTANCE);
 
 			PackageVariables.PACKAGE.setValue(GlobalPackageStruct.KEYWORD);
-			final LispStruct token = reader.read(true, NILStruct.INSTANCE, true);
+			final LispStruct token = reader.read(inputStreamStruct, true, NILStruct.INSTANCE, true);
 			PackageVariables.PACKAGE.setValue(previousPackage);
 
 			final boolean isFeature = isFeature(token);
 			if (isFeature && shouldHideFeatures) {
 				ReaderVariables.READ_SUPPRESS.setValue(TStruct.INSTANCE);
-				reader.read(true, NILStruct.INSTANCE, true);
+				reader.read(inputStreamStruct, true, NILStruct.INSTANCE, true);
 			}
 		} catch (final ReaderErrorException ree) {
 			if (LOGGER.isDebugEnabled()) {

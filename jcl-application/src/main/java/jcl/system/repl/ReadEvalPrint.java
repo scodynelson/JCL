@@ -3,24 +3,23 @@ package jcl.system.repl;
 import jcl.compiler.functions.EvalFunction;
 import jcl.functions.readtable.ReadFunction;
 import jcl.lang.LispStruct;
+import jcl.lang.NILStruct;
 import jcl.lang.PackageStruct;
-import jcl.lang.statics.PackageVariables;
-import jcl.lang.statics.REPLVariables;
 import jcl.lang.ValuesStruct;
-import jcl.lang.internal.VariableStructImpl;
 import jcl.lang.condition.exception.ConditionException;
 import jcl.lang.condition.exception.ReaderErrorException;
 import jcl.lang.factory.LispStructFactory;
-import jcl.lang.NILStruct;
 import jcl.lang.readtable.Reader;
-import jcl.lang.stream.ReadPeekResult;
+import jcl.lang.readtable.ReaderInputStreamStruct;
+import jcl.lang.statics.PackageVariables;
+import jcl.lang.statics.REPLVariables;
 import jcl.lang.statics.StreamVariables;
+import jcl.lang.stream.ReadPeekResult;
 import jcl.printer.Printer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
-import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -29,13 +28,13 @@ public class ReadEvalPrint {
 	private static final Logger LOGGER = LoggerFactory.getLogger(ReadEvalPrint.class);
 
 	@Autowired
-	private ApplicationContext context;
-
-	@Autowired
 	private ReadFunction readFunction;
 
 	@Autowired
 	private EvalFunction evalFunction;
+
+	@Autowired
+	private Reader reader;
 
 	@Autowired
 	private Printer printer;
@@ -56,7 +55,7 @@ public class ReadEvalPrint {
 			REPLVariables.STAR_STAR.setValue(NILStruct.INSTANCE);
 			REPLVariables.STAR_STAR_STAR.setValue(NILStruct.INSTANCE);
 
-			final Reader reader = context.getBean(Reader.class, StreamVariables.STANDARD_INPUT.getValue());
+			final ReaderInputStreamStruct inputStreamStruct = new ReaderInputStreamStruct(StreamVariables.STANDARD_INPUT.getVariableValue());
 
 			int counter = 1;
 			while (true) {
@@ -67,7 +66,7 @@ public class ReadEvalPrint {
 					LOGGER.info("{}: {}> ", currentPackageName, counter++);
 
 					// READ --------------
-					final LispStruct whatRead = readFunction.read(reader, true, NILStruct.INSTANCE, false);
+					final LispStruct whatRead = readFunction.read(inputStreamStruct, true, NILStruct.INSTANCE, false);
 
 					// bind '-' to the form just read
 					REPLVariables.DASH.setValue(whatRead);
@@ -116,7 +115,7 @@ public class ReadEvalPrint {
 					// Consume the rest of the input so we don't attempt to parse the rest of the input when an error occurs.
 					Integer readChar;
 					do {
-						final ReadPeekResult readResult = reader.readChar(false, null, true);
+						final ReadPeekResult readResult = reader.readChar(inputStreamStruct, false, null, true);
 						readChar = readResult.getResult();
 					} while ((readChar != null) && (readChar != -1) && (readChar != 10));
 

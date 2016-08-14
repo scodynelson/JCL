@@ -8,10 +8,11 @@ import java.math.BigInteger;
 import java.util.Optional;
 
 import jcl.lang.LispStruct;
+import jcl.lang.NILStruct;
 import jcl.lang.ReadtableStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
-import jcl.lang.NILStruct;
 import jcl.lang.readtable.Reader;
+import jcl.lang.readtable.ReaderInputStreamStruct;
 import jcl.lang.readtable.ReaderMacroFunction;
 import jcl.lang.statics.ReaderVariables;
 import jcl.lang.stream.ReadPeekResult;
@@ -49,6 +50,9 @@ class MacroCharacterReaderState implements ReaderState {
 	@Autowired
 	private ReaderStateMediator readerStateMediator;
 
+	@Autowired
+	private Reader reader;
+
 	@Override
 	public LispStruct process(final TokenBuilder tokenBuilder) {
 
@@ -63,12 +67,12 @@ class MacroCharacterReaderState implements ReaderState {
 			throw new ReaderErrorException("No reader macro function exists for character: " + codePoint + '.');
 		}
 
-		final Reader reader = tokenBuilder.getReader();
+		final ReaderInputStreamStruct inputStreamStruct = tokenBuilder.getInputStreamStruct();
 
 		final Optional<BigInteger> numberArgument
-				= readerMacroFunction.isDispatch() ? getNumberArgument(reader) : Optional.empty();
+				= readerMacroFunction.isDispatch() ? getNumberArgument(inputStreamStruct) : Optional.empty();
 
-		final LispStruct token = readerMacroFunction.readMacro(codePoint, reader, numberArgument);
+		final LispStruct token = readerMacroFunction.readMacro(inputStreamStruct, codePoint, numberArgument);
 		if (token == null) {
 			return readerStateMediator.read(tokenBuilder);
 		} else {
@@ -79,15 +83,15 @@ class MacroCharacterReaderState implements ReaderState {
 	/**
 	 * Reads in the number argument for the macro reader to use when processing the macro function character.
 	 *
-	 * @param reader
-	 * 		the reader to use for reading the number argument
+	 * @param inputStreamStruct
+	 * 		the {@link ReaderInputStreamStruct} to use for reading the number argument
 	 *
 	 * @return the number argument if it exists; {@link Optional#empty} if no number argument was read in
 	 */
-	private static Optional<BigInteger> getNumberArgument(final Reader reader) {
+	private Optional<BigInteger> getNumberArgument(final ReaderInputStreamStruct inputStreamStruct) {
 
 		// NOTE: This will throw errors when it reaches an EOF. That's why we can un-box the 'readChar' variable below.
-		ReadPeekResult readResult = reader.readChar(true, NILStruct.INSTANCE, false);
+		ReadPeekResult readResult = reader.readChar(inputStreamStruct, true, NILStruct.INSTANCE, false);
 		int codePoint = readResult.getResult();
 
 		final StringBuilder digitStringBuilder = new StringBuilder();
@@ -95,7 +99,7 @@ class MacroCharacterReaderState implements ReaderState {
 		while (Character.isDigit(codePoint)) {
 			digitStringBuilder.appendCodePoint(codePoint);
 
-			readResult = reader.readChar(true, NILStruct.INSTANCE, false);
+			readResult = reader.readChar(inputStreamStruct, true, NILStruct.INSTANCE, false);
 			codePoint = readResult.getResult();
 		}
 
@@ -111,7 +115,7 @@ class MacroCharacterReaderState implements ReaderState {
 		}
 
 		// Make sure to unread the last character read after the number arg
-		reader.unreadChar(codePoint);
+		reader.unreadChar(inputStreamStruct, codePoint);
 
 		return numberArgument;
 	}

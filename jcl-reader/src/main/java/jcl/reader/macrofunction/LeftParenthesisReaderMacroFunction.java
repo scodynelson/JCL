@@ -7,8 +7,9 @@ package jcl.reader.macrofunction;
 import java.math.BigInteger;
 import java.util.Optional;
 
+import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
-import jcl.lang.readtable.Reader;
+import jcl.lang.readtable.ReaderInputStreamStruct;
 import jcl.lang.statics.ReaderVariables;
 import jcl.util.CodePointConstants;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,9 +38,9 @@ public class LeftParenthesisReaderMacroFunction extends ReaderMacroFunctionImpl 
 	}
 
 	@Override
-	public ListStruct readMacro(final int codePoint, final Reader reader, final Optional<BigInteger> numberArgument) {
+	public LispStruct readMacro(final ReaderInputStreamStruct inputStreamStruct, final int codePoint, final Optional<BigInteger> numberArgument) {
 		assert codePoint == CodePointConstants.LEFT_PARENTHESIS;
 
-		return listReaderMacroFunction.readList(reader);
+		return listReaderMacroFunction.readList(inputStreamStruct);
 	}
 }

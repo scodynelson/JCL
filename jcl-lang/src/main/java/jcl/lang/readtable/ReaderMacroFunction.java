@@ -13,19 +13,19 @@ import jcl.lang.LispStruct;
 public interface ReaderMacroFunction extends FunctionStruct {
 
 	/**
-	 * Interpret the character stream from the provided {@link Reader} (up to End-of-File or new line) based on the
+	 * Interpret the character stream from the provided {@link ReaderInputStreamStruct} (up to End-of-File or new line) based on the
 	 * provided {@code codePoint}.
 	 *
+	 * @param inputStreamStruct
+	 * 		the {@link ReaderInputStreamStruct} to read tokens from
 	 * @param codePoint
 	 * 		the character code point that determines the macro function
-	 * @param reader
-	 * 		the {@link Reader} used to read tokens
 	 * @param numberArgument
 	 * 		the optional number argument
 	 *
 	 * @return the parsed {@link LispStruct} token
 	 */
-	LispStruct readMacro(int codePoint, Reader reader, Optional<BigInteger> numberArgument);
+	LispStruct readMacro(ReaderInputStreamStruct inputStreamStruct, int codePoint, Optional<BigInteger> numberArgument);
 
 	/**
 	 * Default method used to determine if the ReaderMacroFunction is a dispatching macro. The default value return is

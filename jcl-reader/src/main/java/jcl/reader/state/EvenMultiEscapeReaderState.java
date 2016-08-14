@@ -8,8 +8,9 @@ import jcl.lang.LispStruct;
 import jcl.lang.ReadtableStruct;
 import jcl.lang.readtable.AttributeType;
 import jcl.lang.readtable.Reader;
-import jcl.lang.statics.ReaderVariables;
+import jcl.lang.readtable.ReaderInputStreamStruct;
 import jcl.lang.readtable.SyntaxType;
+import jcl.lang.statics.ReaderVariables;
 import jcl.lang.stream.ReadPeekResult;
 import jcl.reader.ReaderStateMediator;
 import jcl.reader.TokenBuilder;
@@ -69,15 +70,18 @@ class EvenMultiEscapeReaderState implements ReaderState {
 	@Autowired
 	private SymbolTokenAccumulatedReaderState symbolTokenAccumulatedReaderState;
 
+	@Autowired
+	private Reader reader;
+
 	@Override
 	public LispStruct process(final TokenBuilder tokenBuilder) {
 
 		final boolean isEofErrorP = tokenBuilder.isEofErrorP();
 		final LispStruct eofValue = tokenBuilder.getEofValue();
 
-		final Reader reader = tokenBuilder.getReader();
+		final ReaderInputStreamStruct inputStreamStruct = tokenBuilder.getInputStreamStruct();
 
-		ReadPeekResult readResult = reader.readChar(isEofErrorP, eofValue, true);
+		ReadPeekResult readResult = reader.readChar(inputStreamStruct, isEofErrorP, eofValue, true);
 		tokenBuilder.setPreviousReadResult(readResult);
 
 		if (readResult.isEof()) {
@@ -98,7 +102,7 @@ class EvenMultiEscapeReaderState implements ReaderState {
 			return readerStateMediator.readConstituent(tokenBuilder);
 		} else if (syntaxType == SyntaxType.SINGLE_ESCAPE) {
 
-			readResult = reader.readChar(isEofErrorP, eofValue, true);
+			readResult = reader.readChar(inputStreamStruct, isEofErrorP, eofValue, true);
 			tokenBuilder.setPreviousReadResult(readResult);
 
 			if (readResult.isEof()) {
@@ -117,7 +121,7 @@ class EvenMultiEscapeReaderState implements ReaderState {
 			//      If a command interpreter takes single-character commands, but occasionally reads an object then if
 			//      the whitespace[2] after a symbol is not discarded it might be interpreted as a command some time
 			//      later after the symbol had been read.
-			reader.unreadChar(codePoint);
+			reader.unreadChar(inputStreamStruct, codePoint);
 
 			final boolean isMultiEscapedToken = tokenBuilder.isMultiEscapedToken();
 			if (isMultiEscapedToken) {

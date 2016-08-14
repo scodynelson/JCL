@@ -1,6 +1,7 @@
 package jcl.lang;
 
 import jcl.lang.readtable.AttributeType;
+import jcl.lang.readtable.DispatchingReaderMacroFunction;
 import jcl.lang.readtable.ReaderMacroFunction;
 import jcl.lang.readtable.ReadtableCase;
 import jcl.lang.readtable.SyntaxType;
@@ -21,7 +22,7 @@ public interface ReadtableStruct extends LispStruct {
 	 *
 	 * @return the value of {@code nonTerminatingP}
 	 */
-	boolean makeDispatchMacroCharacter(final int codePoint, final boolean nonTerminatingP);
+	boolean makeDispatchMacroCharacter(final DispatchingReaderMacroFunction dispatchTable, final int codePoint, final boolean nonTerminatingP);
 
 	/**
 	 * Sets the {@link ReaderMacroFunction} for the provided {@code codePoint} to the provided {@code

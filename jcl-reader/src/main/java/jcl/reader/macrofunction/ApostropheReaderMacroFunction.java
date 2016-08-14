@@ -13,8 +13,10 @@ import jcl.lang.condition.exception.ReaderErrorException;
 import jcl.lang.factory.LispStructFactory;
 import jcl.lang.internal.SpecialOperatorStructImpl;
 import jcl.lang.readtable.Reader;
+import jcl.lang.readtable.ReaderInputStreamStruct;
 import jcl.lang.statics.ReaderVariables;
 import jcl.util.CodePointConstants;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -23,6 +25,13 @@ import org.springframework.stereotype.Component;
 @Component
 public class ApostropheReaderMacroFunction extends ReaderMacroFunctionImpl {
 
+	private final Reader reader;
+
+	@Autowired
+	public ApostropheReaderMacroFunction(final Reader reader) {
+		this.reader = reader;
+	}
+
 	@Override
 	public void afterPropertiesSet() throws Exception {
 		super.afterPropertiesSet();
@@ -30,10 +39,10 @@ public class ApostropheReaderMacroFunction extends ReaderMacroFunctionImpl {
 	}
 
 	@Override
-	public LispStruct readMacro(final int codePoint, final Reader reader, final Optional<BigInteger> numberArgument) {
+	public LispStruct readMacro(final ReaderInputStreamStruct inputStreamStruct, final int codePoint, final Optional<BigInteger> numberArgument) {
 		assert codePoint == CodePointConstants.APOSTROPHE;
 
-		final LispStruct token = reader.read(true, NILStruct.INSTANCE, true);
+		final LispStruct token = reader.read(inputStreamStruct, true, NILStruct.INSTANCE, true);
 		if (ReaderVariables.READ_SUPPRESS.getVariableValue().booleanValue()) {
 			return NILStruct.INSTANCE;
 		}

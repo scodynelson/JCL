@@ -10,15 +10,17 @@ import java.util.Optional;
 import jcl.lang.LispStruct;
 import jcl.lang.ReadtableStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
-import jcl.lang.readtable.Reader;
+import jcl.lang.readtable.ReaderInputStreamStruct;
 import jcl.lang.statics.ReaderVariables;
 import jcl.util.CodePointConstants;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Component;
 
 /**
  * Implements the illegal '#??" Lisp reader macros.
  */
 @Component
+@DependsOn("readerBootstrap")
 public class SharpIllegalReaderMacroFunction extends ReaderMacroFunctionImpl {
 
 	@Override
@@ -37,7 +39,7 @@ public class SharpIllegalReaderMacroFunction extends ReaderMacroFunctionImpl {
 	}
 
 	@Override
-	public LispStruct readMacro(final int codePoint, final Reader reader, final Optional<BigInteger> numberArgument) {
+	public LispStruct readMacro(final ReaderInputStreamStruct inputStreamStruct, final int codePoint, final Optional<BigInteger> numberArgument) {
 		throw new ReaderErrorException("Illegal sharp character " + codePoint);
 	}
 }

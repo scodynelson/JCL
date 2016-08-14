@@ -4,12 +4,8 @@
 
 package jcl.lang.readtable;
 
-import java.math.BigInteger;
-import java.util.Map;
-
-import jcl.lang.LispStruct;
-import jcl.lang.SymbolStruct;
 import jcl.lang.InputStreamStruct;
+import jcl.lang.LispStruct;
 import jcl.lang.stream.ReadPeekResult;
 
 /**
@@ -29,7 +25,7 @@ public interface Reader {
 	 *
 	 * @return the next {@link LispStruct} from the {@link InputStreamStruct}
 	 */
-	LispStruct read(boolean eofErrorP, LispStruct eofValue, boolean recursiveP);
+	LispStruct read(ReaderInputStreamStruct inputStreamStruct, boolean eofErrorP, LispStruct eofValue, boolean recursiveP);
 
 	/**
 	 * Reads the next {@link LispStruct} from the {@link InputStreamStruct}, making sure to preserve any whitespace
@@ -44,7 +40,7 @@ public interface Reader {
 	 *
 	 * @return the next {@link LispStruct} from the {@link InputStreamStruct}
 	 */
-	LispStruct readPreservingWhitespace(boolean eofErrorP, LispStruct eofValue, boolean recursiveP);
+	LispStruct readPreservingWhitespace(ReaderInputStreamStruct inputStreamStruct, boolean eofErrorP, LispStruct eofValue, boolean recursiveP);
 
 	/**
 	 * Reads the next {@link ReadPeekResult} from the {@link InputStreamStruct}.
@@ -58,7 +54,7 @@ public interface Reader {
 	 *
 	 * @return the next {@link ReadPeekResult} from the {@link InputStreamStruct}
 	 */
-	ReadPeekResult readChar(boolean eofErrorP, LispStruct eofValue, boolean recursiveP);
+	ReadPeekResult readChar(ReaderInputStreamStruct inputStreamStruct, boolean eofErrorP, LispStruct eofValue, boolean recursiveP);
 
 	/**
 	 * Un-reads the provided {@code codePoint} value from (or really back into) the {@link InputStreamStruct}.
@@ -66,53 +62,5 @@ public interface Reader {
 	 * @param codePoint
 	 * 		the value to un-read from (or really back into) the {@link InputStreamStruct}
 	 */
-	void unreadChar(int codePoint);
-
-	/**
-	 * Gets the {@link InputStreamStruct} for the JCL Reader instance.
-	 *
-	 * @return the {@link InputStreamStruct} for the JCL Reader instance
-	 */
-	InputStreamStruct getInputStreamStruct();
-
-	/**
-	 * Gets the {@link Map} #n= labels to their assigned {@link LispStruct}s for the JCL Reader instance.
-	 *
-	 * @return the {@link Map} #n= labels to their assigned {@link LispStruct}s for the JCL Reader instance
-	 */
-	Map<BigInteger, LispStruct> getSharpEqualFinalTable();
-
-	/**
-	 * Gets the {@link Map} #n= labels to their temporary {@link SymbolStruct} tags for the JCL Reader instance.
-	 *
-	 * @return the {@link Map} #n= labels to their temporary {@link SymbolStruct} tags for the JCL Reader instance
-	 */
-	Map<BigInteger, SymbolStruct> getSharpEqualTempTable();
-
-	/**
-	 * Gets the {@link Map} the temporary {@link SymbolStruct} tags for #n= labels to their assigned {@link
-	 * LispStruct}s
-	 * for the JCL Reader instance.
-	 *
-	 * @return the {@link Map} the temporary {@link SymbolStruct} tags for #n= labels to their assigned {@link
-	 * LispStruct}s for the JCL Reader instance
-	 */
-	Map<SymbolStruct, LispStruct> getSharpEqualReplTable();
-
-	/**
-	 * Gets the current backquote level for the JCL Reader instance.
-	 *
-	 * @return the current backquote level for the JCL Reader instance
-	 */
-	int getBackquoteLevel();
-
-	/**
-	 * Increments the current backquote level for the JCL Reader instance.
-	 */
-	void incrementBackquoteLevel();
-
-	/**
-	 * Decrements the current backquote level for the JCL Reader instance.
-	 */
-	void decrementBackquoteLevel();
+	void unreadChar(ReaderInputStreamStruct inputStreamStruct, int codePoint);
 }

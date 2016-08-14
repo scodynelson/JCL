@@ -2,6 +2,7 @@ package jcl.lang;
 
 import java.util.List;
 
+import jcl.lang.internal.StructureClassStruct;
 import org.apache.commons.lang3.tuple.Pair;
 
 /**

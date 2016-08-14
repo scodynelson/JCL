@@ -5,7 +5,7 @@
 package jcl.functions.structure;
 
 import jcl.lang.LispStruct;
-import jcl.lang.StructureClassStruct;
+import jcl.lang.internal.StructureClassStruct;
 import jcl.lang.StructureObjectStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.ProgramErrorException;

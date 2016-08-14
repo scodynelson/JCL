@@ -3,6 +3,7 @@ package jcl.lang;
 import jcl.lang.function.expander.CompilerMacroFunctionExpanderInter;
 import jcl.lang.function.expander.MacroFunctionExpanderInter;
 import jcl.lang.function.expander.SymbolMacroExpanderInter;
+import jcl.lang.internal.StructureClassStruct;
 
 /**
  * The {@link SymbolStruct} is the object representation of a Lisp 'symbol' type.

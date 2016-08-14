@@ -1,8 +1,10 @@
-package jcl.lang;
+package jcl.lang.internal;
 
 import java.util.List;
 
-import jcl.lang.internal.ClassStruct;
+import jcl.lang.LispStruct;
+import jcl.lang.StructureObjectStruct;
+import jcl.lang.SymbolStruct;
 import jcl.type.LispType;
 import jcl.type.StructureClassType;
 

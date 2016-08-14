@@ -1,10 +1,13 @@
-package jcl.lang;
+package jcl.lang.internal;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import jcl.lang.LispStruct;
+import jcl.lang.StructureObjectStruct;
+import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.SimpleErrorException;
 import jcl.type.LispType;
 import org.apache.commons.lang3.tuple.ImmutablePair;

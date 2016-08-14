@@ -16,7 +16,7 @@ import jcl.compiler.icg.JavaClassBuilder;
 import jcl.compiler.icg.JavaMethodBuilder;
 import jcl.compiler.struct.specialoperator.defstruct.DefstructStruct;
 import jcl.lang.NILStruct;
-import jcl.lang.StructureClassStruct;
+import jcl.lang.internal.StructureClassStruct;
 import jcl.lang.StructureObjectStruct;
 import jcl.lang.internal.StandardClassStruct;
 import jcl.lang.SymbolStruct;

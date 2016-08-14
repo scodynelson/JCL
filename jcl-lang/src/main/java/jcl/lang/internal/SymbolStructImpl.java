@@ -12,7 +12,6 @@ import jcl.lang.NILStruct;
 import jcl.lang.PackageStruct;
 import jcl.lang.PackageSymbolStruct;
 import jcl.lang.StringStruct;
-import jcl.lang.StructureClassStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.condition.exception.SimpleErrorException;

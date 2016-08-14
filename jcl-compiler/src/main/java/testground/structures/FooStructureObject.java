@@ -5,7 +5,7 @@
 package testground.structures;
 
 import jcl.lang.NILStruct;
-import jcl.lang.StructureObjectStructImpl;
+import jcl.lang.internal.StructureObjectStructImpl;
 import jcl.lang.factory.LispStructFactory;
 
 @SuppressWarnings("all")

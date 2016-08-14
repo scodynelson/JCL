@@ -68,7 +68,7 @@ public class JInvoke extends ExtensionsBuiltInFunctionStructBase {
 			if (methodResult instanceof LispStruct) {
 				return (LispStruct) methodResult;
 			}
-			return new JavaObjectStruct(methodResult);
+			return JavaObjectStruct.valueOf(methodResult);
 		} catch (final InvocationTargetException | IllegalAccessException ex) {
 			final String message = "Java Method '" + javaMethodName + "' could not be properly invoked on Java Class '" + javaObjectClassName + "'.";
 			LOGGER.error(message, ex);

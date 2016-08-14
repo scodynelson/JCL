@@ -6,11 +6,10 @@ package jcl.functions.java;
 
 import jcl.lang.LispStruct;
 import jcl.lang.StringStruct;
-import jcl.lang.condition.exception.ErrorException;
+import jcl.lang.factory.LispStructFactory;
 import jcl.lang.function.ExtensionsBuiltInFunctionStructBase;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
-import jcl.lang.java.JavaClassStruct;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -30,15 +29,7 @@ public final class JClass extends ExtensionsBuiltInFunctionStructBase {
 	@Override
 	public LispStruct apply(final Arguments arguments) {
 		final StringStruct className = arguments.getRequiredArgument(CLASS_NAME_ARGUMENT, StringStruct.class);
-		return jClass(className.getAsJavaString());
-	}
-
-	public JavaClassStruct jClass(final String className) {
-		try {
-			final Class<?> javaClass = Class.forName(className);
-			return new JavaClassStruct(javaClass);
-		} catch (final ClassNotFoundException ex) {
-			throw new ErrorException("Java Class not found for class name '" + className + "'.", ex);
-		}
+		final String classNameString = className.getAsJavaString();
+		return LispStructFactory.toJavaClass(classNameString);
 	}
 }

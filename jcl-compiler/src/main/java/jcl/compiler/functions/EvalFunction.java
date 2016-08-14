@@ -18,6 +18,7 @@ import jcl.compiler.struct.specialoperator.SymbolFunctionCallStruct;
 import jcl.compiler.struct.specialoperator.lambda.LambdaStruct;
 import jcl.lang.BooleanStruct;
 import jcl.lang.FunctionStruct;
+import jcl.lang.factory.LispStructFactory;
 import jcl.lang.statics.CompilerVariables;
 import jcl.lang.LispStruct;
 import jcl.lang.SymbolStruct;
@@ -44,9 +45,6 @@ public final class EvalFunction extends CommonLispBuiltInFunctionStructBase {
 
 	@Autowired
 	private FormAnalyzer formAnalyzer;
-
-	@Autowired
-	private JMethod jMethod;
 
 	@Autowired
 	private JInvoke jInvoke;
@@ -187,7 +185,7 @@ public final class EvalFunction extends CommonLispBuiltInFunctionStructBase {
 				methodParamTypes[i] = Object.class;
 			}
 
-			final JavaMethodStruct javaMethodStruct = jMethod.jMethod(methodName.getJavaName(), actualJavaObject.getClass(), methodParamTypes);
+			final JavaMethodStruct javaMethodStruct = LispStructFactory.toJavaMethod(methodName.getJavaName(), actualJavaObject.getClass(), methodParamTypes);
 			final Method javaMethod = javaMethodStruct.getJavaMethod();
 
 			return jInvoke.jInvoke(javaMethod, actualJavaObject, methodEvaluatedArgs);

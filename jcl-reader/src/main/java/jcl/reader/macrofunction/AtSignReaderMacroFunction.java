@@ -7,10 +7,9 @@ package jcl.reader.macrofunction;
 import java.math.BigInteger;
 import java.util.Optional;
 
-import jcl.functions.java.JClass;
-import jcl.functions.java.JNew;
 import jcl.lang.LispStruct;
 import jcl.lang.ReadtableStruct;
+import jcl.lang.factory.LispStructFactory;
 import jcl.lang.java.JavaClassStruct;
 import jcl.lang.readtable.ReaderInputStreamStruct;
 import jcl.lang.readtable.ReadtableCase;
@@ -27,14 +26,8 @@ public class AtSignReaderMacroFunction extends ReaderMacroFunctionImpl {
 
 	private final ExtendedTokenReaderMacroFunction extendedTokenReaderMacroFunction;
 
-	private final JClass jClass;
-
-	private final JNew jNew;
-
 	@Autowired
-	public AtSignReaderMacroFunction(final JClass jClass, final JNew jNew, final ExtendedTokenReaderMacroFunction extendedTokenReaderMacroFunction) {
-		this.jClass = jClass;
-		this.jNew = jNew;
+	public AtSignReaderMacroFunction(final ExtendedTokenReaderMacroFunction extendedTokenReaderMacroFunction) {
 		this.extendedTokenReaderMacroFunction = extendedTokenReaderMacroFunction;
 	}
 
@@ -65,7 +58,7 @@ public class AtSignReaderMacroFunction extends ReaderMacroFunctionImpl {
 			return null;
 		}
 
-		final JavaClassStruct javaClass = jClass.jClass(tokenString);
-		return jNew.jNew(javaClass.getJavaClass());
+		final JavaClassStruct javaClass = LispStructFactory.toJavaClass(tokenString);
+		return LispStructFactory.toJavaObject(javaClass.getJavaClass());
 	}
 }

@@ -9,7 +9,7 @@ import java.util.Optional;
 
 import jcl.lang.LispStruct;
 import jcl.lang.ReadtableStruct;
-import jcl.lang.java.JavaNameStruct;
+import jcl.lang.factory.LispStructFactory;
 import jcl.lang.readtable.ReaderInputStreamStruct;
 import jcl.lang.readtable.ReadtableCase;
 import jcl.lang.statics.ReaderVariables;
@@ -57,6 +57,6 @@ public class DollarSignReaderMacroFunction extends ReaderMacroFunctionImpl {
 			return null;
 		}
 
-		return new JavaNameStruct(tokenString);
+		return LispStructFactory.toJavaName(tokenString);
 	}
 }

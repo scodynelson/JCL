@@ -228,7 +228,6 @@ project("jcl-reader") {
 	dependencies {
 		compile(project(":jcl-lang"))
 		compile(project(":jcl-compiler"))
-		compile(project(":jcl-functions"))
 
 		compile("org.apache.commons:commons-lang3:${commonsLangVersion}")
 		compile("org.apache.commons:commons-collections4:${commonsCollectionsVersion}")

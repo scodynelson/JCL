@@ -3,6 +3,9 @@ package jcl.lang.factory;
 import java.io.File;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.net.URI;
@@ -51,6 +54,7 @@ import jcl.lang.TStruct;
 import jcl.lang.TwoWayStreamStruct;
 import jcl.lang.URLStreamStruct;
 import jcl.lang.VectorStruct;
+import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.function.EquatorFunctionStructBase;
 import jcl.lang.internal.ArrayStructImpl;
 import jcl.lang.internal.BitVectorStructImpl;
@@ -58,7 +62,9 @@ import jcl.lang.internal.CharacterStructImpl;
 import jcl.lang.internal.ConsStructImpl;
 import jcl.lang.internal.HashTableStructImpl;
 import jcl.lang.internal.KeywordStructImpl;
+import jcl.lang.internal.LogicalPathnameStructImpl;
 import jcl.lang.internal.PackageStructImpl;
+import jcl.lang.internal.PathnameStructImpl;
 import jcl.lang.internal.StringStructImpl;
 import jcl.lang.internal.SymbolStructImpl;
 import jcl.lang.internal.VariableStructImpl;
@@ -81,12 +87,14 @@ import jcl.lang.internal.stream.StringOutputStreamStructImpl;
 import jcl.lang.internal.stream.SynonymStreamStructImpl;
 import jcl.lang.internal.stream.TwoWayStreamStructImpl;
 import jcl.lang.internal.stream.URLStreamStructImpl;
-import jcl.lang.internal.LogicalPathnameStructImpl;
+import jcl.lang.java.JavaClassStruct;
+import jcl.lang.java.JavaMethodStruct;
+import jcl.lang.java.JavaNameStruct;
+import jcl.lang.java.JavaObjectStruct;
 import jcl.lang.pathname.PathnameDevice;
 import jcl.lang.pathname.PathnameDirectory;
 import jcl.lang.pathname.PathnameHost;
 import jcl.lang.pathname.PathnameName;
-import jcl.lang.internal.PathnameStructImpl;
 import jcl.lang.pathname.PathnameType;
 import jcl.lang.pathname.PathnameVersion;
 import jcl.lang.readtable.ReadtableCase;
@@ -97,8 +105,12 @@ import org.apfloat.Apcomplex;
 import org.apfloat.Apfloat;
 import org.apfloat.Apint;
 import org.apfloat.Aprational;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public final class LispStructFactory {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(LispStructFactory.class);
 
 	private LispStructFactory() {
 	}
@@ -419,6 +431,60 @@ public final class LispStructFactory {
 	 */
 	public static IntegerStruct toInteger(final Apint apint) {
 		return IntegerStructImpl.valueOf(apint);
+	}
+
+	/*
+	 * JavaClassStruct
+	 */
+
+	public static JavaClassStruct toJavaClass(final String className) {
+		try {
+			final Class<?> javaClass = Class.forName(className);
+			return JavaClassStruct.valueOf(javaClass);
+		} catch (final ClassNotFoundException ex) {
+			throw new ErrorException("Java Class not found for class name '" + className + "'.", ex);
+		}
+	}
+
+	/*
+	 * JavaMethodStruct
+	 */
+
+	public static JavaMethodStruct toJavaMethod(final String methodName, final Class<?> javaClass, final Class<?>... parameterTypes) {
+		final String javaClassName = javaClass.getName();
+		try {
+			final Method method = javaClass.getDeclaredMethod(methodName, parameterTypes);
+			return JavaMethodStruct.valueOf(method);
+		} catch (final NoSuchMethodException ex) {
+			throw new ErrorException("Java Class '" + javaClassName + "' does not have the method '" + methodName + "' with parameter types '" + Arrays.toString(parameterTypes) + "'.", ex);
+		}
+	}
+
+	/*
+	 * JavaNameStruct
+	 */
+
+	public static JavaNameStruct toJavaName(final String javaName) {
+		return JavaNameStruct.valueOf(javaName);
+	}
+
+	/*
+	 * JavaObjectStruct
+	 */
+
+	public static JavaObjectStruct toJavaObject(final Class<?> javaClass) {
+		final String javaClassName = javaClass.getName();
+		try {
+			final Constructor<?> defaultConstructor = javaClass.getDeclaredConstructor();
+			final Object newInstance = defaultConstructor.newInstance();
+			return JavaObjectStruct.valueOf(newInstance);
+		} catch (final NoSuchMethodException ex) {
+			throw new ErrorException("Java Class '" + javaClassName + "' does not have a default no argument constructor.", ex);
+		} catch (final InvocationTargetException | InstantiationException | IllegalAccessException ex) {
+			final String message = "Java Class '" + javaClassName + "' could not be instantiated.";
+			LOGGER.error(message, ex);
+			throw new ErrorException(message, ex);
+		}
 	}
 
 	/*

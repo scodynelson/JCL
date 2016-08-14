@@ -4,18 +4,15 @@
 
 package jcl.compiler.functions;
 
-import java.lang.reflect.Method;
-import java.util.Arrays;
 import java.util.List;
 
 import jcl.lang.LispStruct;
 import jcl.lang.StringStruct;
-import jcl.lang.condition.exception.ErrorException;
+import jcl.lang.factory.LispStructFactory;
 import jcl.lang.function.ExtensionsBuiltInFunctionStructBase;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.java.JavaClassStruct;
-import jcl.lang.java.JavaMethodStruct;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -52,17 +49,6 @@ public final class JMethod extends ExtensionsBuiltInFunctionStructBase {
 			parameterTypes[i] = methodParamClassStruct.getJavaClass();
 		}
 
-		return jMethod(methodNameString, javaClass, parameterTypes);
-	}
-
-	public JavaMethodStruct jMethod(final String methodName, final Class<?> javaClass, final Class<?>... parameterTypes) {
-
-		final String javaClassName = javaClass.getName();
-		try {
-			final Method method = javaClass.getDeclaredMethod(methodName, parameterTypes);
-			return new JavaMethodStruct(method);
-		} catch (final NoSuchMethodException ex) {
-			throw new ErrorException("Java Class '" + javaClassName + "' does not have the method '" + methodName + "' with parameter types '" + Arrays.toString(parameterTypes) + "'.", ex);
-		}
+		return LispStructFactory.toJavaMethod(methodNameString, javaClass, parameterTypes);
 	}
 }

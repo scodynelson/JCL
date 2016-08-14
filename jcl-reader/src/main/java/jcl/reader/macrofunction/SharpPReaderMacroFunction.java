@@ -7,13 +7,12 @@ package jcl.reader.macrofunction;
 import java.math.BigInteger;
 import java.util.Optional;
 
-import jcl.functions.pathname.PathnameFunction;
 import jcl.lang.LispStruct;
 import jcl.lang.NILStruct;
-import jcl.lang.PathnameStruct;
 import jcl.lang.ReadtableStruct;
 import jcl.lang.StringStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
+import jcl.lang.factory.LispStructFactory;
 import jcl.lang.readtable.Reader;
 import jcl.lang.readtable.ReaderInputStreamStruct;
 import jcl.lang.statics.ReaderVariables;
@@ -31,16 +30,9 @@ public class SharpPReaderMacroFunction extends ReaderMacroFunctionImpl {
 
 	private final Reader reader;
 
-	/**
-	 * {@link Autowired} {@link PathnameFunction} used for getting a new {@link PathnameStruct} instance from the read
-	 * in pathname namestring.
-	 */
-	private final PathnameFunction pathnameFunction;
-
 	@Autowired
-	public SharpPReaderMacroFunction(final Reader reader, final PathnameFunction pathnameFunction) {
+	public SharpPReaderMacroFunction(final Reader reader) {
 		this.reader = reader;
-		this.pathnameFunction = pathnameFunction;
 	}
 
 	@Override
@@ -62,7 +54,8 @@ public class SharpPReaderMacroFunction extends ReaderMacroFunctionImpl {
 
 		if (token instanceof StringStruct) {
 			final StringStruct pathnameString = (StringStruct) token;
-			return pathnameFunction.pathname(pathnameString);
+			final String namestring = pathnameString.getAsJavaString();
+			return LispStructFactory.toPathname(namestring);
 		} else {
 			throw new ReaderErrorException("The value " + token + " is not of expected type STRING in argument to #P.");
 		}

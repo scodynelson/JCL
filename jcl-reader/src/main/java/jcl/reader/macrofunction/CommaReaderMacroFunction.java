@@ -12,7 +12,7 @@ import jcl.lang.LispStruct;
 import jcl.lang.NILStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
 import jcl.lang.factory.LispStructFactory;
-import jcl.lang.readtable.Reader;
+import jcl.reader.Reader;
 import jcl.lang.readtable.ReaderInputStreamStruct;
 import jcl.lang.statics.ReaderVariables;
 import jcl.lang.stream.ReadPeekResult;

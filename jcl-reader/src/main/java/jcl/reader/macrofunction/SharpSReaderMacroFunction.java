@@ -18,7 +18,7 @@ import jcl.lang.ReadtableStruct;
 import jcl.lang.StructureClassStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
-import jcl.lang.readtable.Reader;
+import jcl.reader.Reader;
 import jcl.lang.readtable.ReaderInputStreamStruct;
 import jcl.lang.statics.ReaderVariables;
 import jcl.lang.stream.ReadPeekResult;

@@ -15,7 +15,7 @@ import jcl.lang.PackageStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.TStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
-import jcl.lang.readtable.Reader;
+import jcl.reader.Reader;
 import jcl.lang.readtable.ReaderInputStreamStruct;
 import jcl.lang.statics.CommonLispSymbols;
 import jcl.lang.statics.CompilerVariables;

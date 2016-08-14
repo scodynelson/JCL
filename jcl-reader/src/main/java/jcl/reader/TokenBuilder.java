@@ -9,7 +9,6 @@ import java.util.LinkedList;
 import jcl.lang.InputStreamStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.readtable.AttributeType;
-import jcl.lang.readtable.Reader;
 import jcl.lang.readtable.ReaderInputStreamStruct;
 import jcl.lang.stream.ReadPeekResult;
 

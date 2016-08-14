@@ -2,10 +2,11 @@
  * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
  */
 
-package jcl.lang.readtable;
+package jcl.reader;
 
 import jcl.lang.InputStreamStruct;
 import jcl.lang.LispStruct;
+import jcl.lang.readtable.ReaderInputStreamStruct;
 import jcl.lang.stream.ReadPeekResult;
 
 /**

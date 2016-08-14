@@ -7,7 +7,7 @@ package jcl.lang.statics;
 import jcl.lang.BooleanStruct;
 import jcl.lang.IntegerStruct;
 import jcl.lang.ReadtableStruct;
-import jcl.lang.readtable.ReadtableStructImpl;
+import jcl.lang.internal.readtable.ReadtableStructImpl;
 import jcl.lang.TStruct;
 import jcl.lang.internal.VariableStructImpl;
 import jcl.lang.NILStruct;

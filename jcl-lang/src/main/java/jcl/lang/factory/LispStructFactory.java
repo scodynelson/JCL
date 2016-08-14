@@ -98,7 +98,7 @@ import jcl.lang.pathname.PathnameName;
 import jcl.lang.pathname.PathnameType;
 import jcl.lang.pathname.PathnameVersion;
 import jcl.lang.readtable.ReadtableCase;
-import jcl.lang.readtable.ReadtableStructImpl;
+import jcl.lang.internal.readtable.ReadtableStructImpl;
 import jcl.type.LispType;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apfloat.Apcomplex;

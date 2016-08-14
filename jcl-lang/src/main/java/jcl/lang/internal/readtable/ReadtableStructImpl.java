@@ -2,7 +2,7 @@
  * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
  */
 
-package jcl.lang.readtable;
+package jcl.lang.internal.readtable;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -10,6 +10,11 @@ import java.util.concurrent.ConcurrentHashMap;
 import jcl.lang.IntegerStruct;
 import jcl.lang.ReadtableStruct;
 import jcl.lang.internal.BuiltInClassStruct;
+import jcl.lang.readtable.AttributeType;
+import jcl.lang.readtable.DispatchingReaderMacroFunction;
+import jcl.lang.readtable.ReaderMacroFunction;
+import jcl.lang.readtable.ReadtableCase;
+import jcl.lang.readtable.SyntaxType;
 import jcl.type.ReadtableType;
 
 /**

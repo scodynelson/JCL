@@ -17,7 +17,7 @@ import jcl.lang.TStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
 import jcl.lang.factory.LispStructFactory;
 import jcl.lang.internal.SpecialOperatorStructImpl;
-import jcl.lang.readtable.Reader;
+import jcl.reader.Reader;
 import jcl.lang.readtable.ReaderInputStreamStruct;
 import jcl.lang.statics.GlobalPackageStruct;
 import jcl.lang.statics.ReaderVariables;

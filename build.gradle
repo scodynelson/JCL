@@ -200,28 +200,6 @@ project("jcl-compiler") {
 	}
 }
 
-project("jcl-functions") {
-	description = "JCL Functions"
-
-	dependencies {
-		compile(project(":jcl-lang"))
-		compile(project(":jcl-compiler"))
-
-		compile("org.apache.commons:commons-lang3:${commonsLangVersion}")
-		compile("org.apache.commons:commons-collections4:${commonsCollectionsVersion}")
-		compile("commons-io:commons-io:${commonsIoVersion}")
-
-		compile("org.ow2.asm:asm-all:${asmAllVersion}")
-
-		optional("org.springframework.boot:spring-boot-starter:${springBootVersion}")
-		optional("org.springframework.boot:spring-boot-loader:${springBootVersion}")
-
-		compile("javax.help:javahelp:${javaHelpVersion}")
-
-		testCompile("org.springframework.boot:spring-boot-starter-test:${springBootVersion}")
-	}
-}
-
 project("jcl-reader") {
 	description = "JCL Reader"
 
@@ -243,14 +221,37 @@ project("jcl-reader") {
 	}
 }
 
+project("jcl-functions") {
+	description = "JCL Functions"
+
+	dependencies {
+		compile(project(":jcl-lang"))
+		compile(project(":jcl-compiler"))
+		compile(project(":jcl-reader"))
+
+		compile("org.apache.commons:commons-lang3:${commonsLangVersion}")
+		compile("org.apache.commons:commons-collections4:${commonsCollectionsVersion}")
+		compile("commons-io:commons-io:${commonsIoVersion}")
+
+		compile("org.ow2.asm:asm-all:${asmAllVersion}")
+
+		optional("org.springframework.boot:spring-boot-starter:${springBootVersion}")
+		optional("org.springframework.boot:spring-boot-loader:${springBootVersion}")
+
+		compile("javax.help:javahelp:${javaHelpVersion}")
+
+		testCompile("org.springframework.boot:spring-boot-starter-test:${springBootVersion}")
+	}
+}
+
 project("jcl-application") {
 	description = "JCL Application"
 
 	dependencies {
 		compile(project(":jcl-lang"))
-		compile(project(":jcl-functions"))
 		compile(project(":jcl-compiler"))
 		compile(project(":jcl-reader"))
+		compile(project(":jcl-functions"))
 
 		compile("org.apache.commons:commons-lang3:${commonsLangVersion}")
 

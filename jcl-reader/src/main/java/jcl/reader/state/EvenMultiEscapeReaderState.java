@@ -7,7 +7,7 @@ package jcl.reader.state;
 import jcl.lang.LispStruct;
 import jcl.lang.ReadtableStruct;
 import jcl.lang.readtable.AttributeType;
-import jcl.lang.readtable.Reader;
+import jcl.reader.Reader;
 import jcl.lang.readtable.ReaderInputStreamStruct;
 import jcl.lang.readtable.SyntaxType;
 import jcl.lang.statics.ReaderVariables;

@@ -8,7 +8,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import jcl.lang.LispStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
 import jcl.lang.readtable.DispatchingReaderMacroFunction;
-import jcl.lang.readtable.Reader;
+import jcl.reader.Reader;
 import jcl.lang.readtable.ReaderInputStreamStruct;
 import jcl.lang.readtable.ReaderMacroFunction;
 import jcl.lang.stream.ReadPeekResult;

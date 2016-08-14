@@ -10,7 +10,6 @@ import java.util.Map;
 import jcl.lang.InputStreamStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.SymbolStruct;
-import jcl.lang.readtable.Reader;
 import jcl.lang.readtable.ReaderInputStreamStruct;
 import jcl.lang.stream.ReadPeekResult;
 import org.springframework.beans.factory.annotation.Autowired;

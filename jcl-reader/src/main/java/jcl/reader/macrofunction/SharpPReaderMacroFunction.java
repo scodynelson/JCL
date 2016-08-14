@@ -13,7 +13,7 @@ import jcl.lang.ReadtableStruct;
 import jcl.lang.StringStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
 import jcl.lang.factory.LispStructFactory;
-import jcl.lang.readtable.Reader;
+import jcl.reader.Reader;
 import jcl.lang.readtable.ReaderInputStreamStruct;
 import jcl.lang.statics.ReaderVariables;
 import jcl.util.CodePointConstants;

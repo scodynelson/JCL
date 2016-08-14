@@ -5,7 +5,6 @@
 package jcl.reader;
 
 import jcl.lang.readtable.AttributeType;
-import jcl.lang.readtable.Reader;
 
 /**
  * Used to store a character token and its {@link AttributeType} value as a {@link Reader} process executes.

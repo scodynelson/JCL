@@ -2,11 +2,12 @@
  * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
  */
 
-package jcl.lang.readtable;
+package jcl.lang.internal.readtable;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import jcl.lang.readtable.SyntaxType;
 import jcl.util.CodePointConstants;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;

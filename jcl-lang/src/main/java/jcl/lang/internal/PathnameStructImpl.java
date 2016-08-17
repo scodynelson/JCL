@@ -21,6 +21,7 @@ import java.util.regex.Pattern;
 import jcl.lang.BooleanStruct;
 import jcl.lang.LogicalPathnameStruct;
 import jcl.lang.PathnameStruct;
+import jcl.lang.classes.BuiltInClassStruct;
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.condition.exception.FileErrorException;
 import jcl.lang.pathname.PathnameComponentType;

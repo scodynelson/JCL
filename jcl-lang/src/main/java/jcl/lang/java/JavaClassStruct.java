@@ -4,7 +4,7 @@
 
 package jcl.lang.java;
 
-import jcl.lang.internal.BuiltInClassStruct;
+import jcl.lang.classes.BuiltInClassStruct;
 
 public class JavaClassStruct extends BuiltInClassStruct {
 

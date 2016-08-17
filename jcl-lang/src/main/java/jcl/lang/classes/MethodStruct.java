@@ -1,4 +1,4 @@
-package jcl.lang.internal;
+package jcl.lang.classes;
 
 import jcl.lang.LispStruct;
 import jcl.type.LispType;

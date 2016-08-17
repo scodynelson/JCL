@@ -16,9 +16,9 @@ import jcl.compiler.icg.JavaClassBuilder;
 import jcl.compiler.icg.JavaMethodBuilder;
 import jcl.compiler.struct.specialoperator.defstruct.DefstructStruct;
 import jcl.lang.NILStruct;
-import jcl.lang.internal.StructureClassStruct;
+import jcl.lang.classes.StructureClassStruct;
 import jcl.lang.StructureObjectStruct;
-import jcl.lang.internal.StandardClassStruct;
+import jcl.lang.classes.StandardClassStruct;
 import jcl.lang.SymbolStruct;
 import jcl.type.LispType;
 import jcl.type.StructureObjectType;
@@ -75,7 +75,7 @@ final class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 
 	private static final String GET_INSTANCE_BRIDGE_METHOD_DESC = "()Ljcl/type/LispType;";
 
-	private static final String STRUCTURE_OBJECT_INIT_SCS_SS_SOS_METHOD_DESC = "(Ljcl/lang/StructureClassStruct;Ljcl/lang/SymbolStruct;Ljcl/lang/StructureObjectStruct;)V";
+	private static final String STRUCTURE_OBJECT_INIT_SCS_SS_SOS_METHOD_DESC = "(Ljcl/lang/classes/StructureClassStruct;Ljcl/lang/SymbolStruct;Ljcl/lang/StructureObjectStruct;)V";
 
 	private static final String STRUCTURE_CLASS_INIT_SS_SS_LIST_LIST_METHOD_DESC = "(Ljcl/lang/SymbolStruct;Ljcl/lang/SymbolStruct;Ljava/util/List;Ljava/util/List;)V";
 

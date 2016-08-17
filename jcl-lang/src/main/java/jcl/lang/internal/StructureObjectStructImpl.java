@@ -8,6 +8,7 @@ import java.util.Map;
 import jcl.lang.LispStruct;
 import jcl.lang.StructureObjectStruct;
 import jcl.lang.SymbolStruct;
+import jcl.lang.classes.StructureClassStruct;
 import jcl.lang.condition.exception.SimpleErrorException;
 import jcl.type.LispType;
 import org.apache.commons.lang3.tuple.ImmutablePair;

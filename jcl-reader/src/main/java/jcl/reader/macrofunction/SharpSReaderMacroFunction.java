@@ -15,7 +15,7 @@ import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
 import jcl.lang.NILStruct;
 import jcl.lang.ReadtableStruct;
-import jcl.lang.internal.StructureClassStruct;
+import jcl.lang.classes.StructureClassStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
 import jcl.reader.Reader;

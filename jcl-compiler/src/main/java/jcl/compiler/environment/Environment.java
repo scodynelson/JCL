@@ -14,7 +14,7 @@ import java.util.Stack;
 import jcl.compiler.environment.binding.Binding;
 import jcl.compiler.environment.binding.SymbolMacroBinding;
 import jcl.compiler.struct.specialoperator.go.GoStruct;
-import jcl.lang.internal.StandardObjectStruct;
+import jcl.lang.classes.StandardObjectStruct;
 import jcl.lang.SymbolStruct;
 
 public class Environment extends StandardObjectStruct {

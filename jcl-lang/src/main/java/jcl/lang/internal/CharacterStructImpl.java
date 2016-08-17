@@ -12,6 +12,7 @@ import jcl.lang.CharacterStruct;
 import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.PackageStruct;
+import jcl.lang.classes.BuiltInClassStruct;
 import jcl.lang.statics.PrinterVariables;
 import jcl.lang.StringStruct;
 import jcl.lang.statics.CharacterConstants;

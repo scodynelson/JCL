@@ -9,7 +9,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import jcl.lang.IntegerStruct;
 import jcl.lang.ReadtableStruct;
-import jcl.lang.internal.BuiltInClassStruct;
+import jcl.lang.classes.BuiltInClassStruct;
 import jcl.lang.readtable.AttributeType;
 import jcl.lang.readtable.DispatchingReaderMacroFunction;
 import jcl.lang.readtable.ReaderMacroFunction;

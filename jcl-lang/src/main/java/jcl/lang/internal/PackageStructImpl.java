@@ -18,6 +18,7 @@ import jcl.lang.KeywordStruct;
 import jcl.lang.PackageStruct;
 import jcl.lang.PackageSymbolStruct;
 import jcl.lang.SymbolStruct;
+import jcl.lang.classes.BuiltInClassStruct;
 import jcl.lang.condition.exception.PackageErrorException;
 import jcl.lang.statics.GlobalPackageStruct;
 import jcl.type.PackageType;

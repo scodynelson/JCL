@@ -3,7 +3,7 @@ package jcl.lang.function;
 import java.util.List;
 
 import jcl.lang.FunctionStruct;
-import jcl.lang.internal.BuiltInClassStruct;
+import jcl.lang.classes.BuiltInClassStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.SymbolStruct;
 import jcl.type.FunctionType;

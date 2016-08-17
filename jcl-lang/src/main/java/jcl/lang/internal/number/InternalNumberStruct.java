@@ -4,7 +4,7 @@
 
 package jcl.lang.internal.number;
 
-import jcl.lang.internal.BuiltInClassStruct;
+import jcl.lang.classes.BuiltInClassStruct;
 import jcl.type.LispType;
 import org.apfloat.Apcomplex;
 

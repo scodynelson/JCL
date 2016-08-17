@@ -1,4 +1,4 @@
-package jcl.lang.internal;
+package jcl.lang.classes;
 
 import java.util.Collections;
 import java.util.List;

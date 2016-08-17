@@ -35,7 +35,7 @@ import jcl.lang.PackageStruct;
 import jcl.lang.statics.GlobalPackageStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.PackageSymbolStruct;
-import jcl.lang.internal.StructureClassStruct;
+import jcl.lang.classes.StructureClassStruct;
 import jcl.lang.internal.StructureObjectStructImpl;
 import jcl.lang.SymbolStruct;
 import jcl.lang.ValuesStruct;

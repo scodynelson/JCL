@@ -7,7 +7,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import jcl.lang.FunctionStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.PackageStruct;
-import jcl.lang.internal.StructureClassStruct;
+import jcl.lang.classes.StructureClassStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.function.expander.CompilerMacroFunctionExpanderInter;

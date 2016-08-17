@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 
 import jcl.lang.ArrayStruct;
 import jcl.lang.LispStruct;
+import jcl.lang.classes.BuiltInClassStruct;
 import jcl.lang.statics.PrinterVariables;
 import jcl.lang.condition.exception.SimpleErrorException;
 import jcl.lang.condition.exception.TypeErrorException;

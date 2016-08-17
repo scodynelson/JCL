@@ -6,7 +6,7 @@ package jcl.lang.java;
 
 import java.lang.reflect.Method;
 
-import jcl.lang.internal.BuiltInClassStruct;
+import jcl.lang.classes.BuiltInClassStruct;
 
 public class JavaMethodStruct extends BuiltInClassStruct {
 

@@ -9,7 +9,7 @@ import jcl.compiler.function.expanders.MacroFunctionExpander;
 import jcl.compiler.struct.specialoperator.defstruct.DefstructStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.internal.SpecialOperatorStructImpl;
-import jcl.lang.internal.StructureClassStruct;
+import jcl.lang.classes.StructureClassStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.condition.exception.TypeErrorException;

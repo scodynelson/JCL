@@ -7,7 +7,7 @@ package testground.structures;
 import java.util.List;
 
 import jcl.lang.LispStruct;
-import jcl.lang.internal.StructureClassStruct;
+import jcl.lang.classes.StructureClassStruct;
 import jcl.lang.StructureObjectStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.factory.LispStructFactory;

@@ -12,6 +12,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import jcl.lang.FunctionStruct;
 import jcl.lang.HashTableStruct;
 import jcl.lang.LispStruct;
+import jcl.lang.classes.BuiltInClassStruct;
 import jcl.lang.function.EquatorFunctionStructBase;
 import jcl.type.HashTableType;
 import jcl.type.LispType;

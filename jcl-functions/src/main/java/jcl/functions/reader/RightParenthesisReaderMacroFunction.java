@@ -20,6 +20,10 @@ import org.springframework.stereotype.Component;
 @Component
 public class RightParenthesisReaderMacroFunction extends ReaderMacroFunctionImpl {
 
+	protected RightParenthesisReaderMacroFunction() {
+		super("RIGHT-PARENTHESIS");
+	}
+
 	@Override
 	public void afterPropertiesSet() throws Exception {
 		super.afterPropertiesSet();

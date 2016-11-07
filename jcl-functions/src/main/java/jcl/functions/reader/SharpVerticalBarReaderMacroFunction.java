@@ -29,6 +29,7 @@ public class SharpVerticalBarReaderMacroFunction extends ReaderMacroFunctionImpl
 
 	@Autowired
 	public SharpVerticalBarReaderMacroFunction(final Reader reader) {
+		super("SHARP-VERTICAL-BAR");
 		this.reader = reader;
 	}
 

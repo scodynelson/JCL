@@ -33,6 +33,7 @@ public final class DispatchingReaderMacroFunctionImpl extends ReaderMacroFunctio
 
 	@Autowired
 	public DispatchingReaderMacroFunctionImpl(final Reader reader) {
+		super("DISPATCHING");
 		this.reader = reader;
 	}
 

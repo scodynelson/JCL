@@ -30,6 +30,7 @@ public class QuotationMarkReaderMacroFunction extends ReaderMacroFunctionImpl {
 
 	@Autowired
 	public QuotationMarkReaderMacroFunction(final Reader reader, final UnicodeCharacterReaderMacroFunction unicodeCharacterReaderMacroFunction) {
+		super("QUOTATION-MARK");
 		this.reader = reader;
 		this.unicodeCharacterReaderMacroFunction = unicodeCharacterReaderMacroFunction;
 	}

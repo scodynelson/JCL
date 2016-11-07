@@ -36,6 +36,7 @@ public class SharpOReaderMacroFunction extends ReaderMacroFunctionImpl {
 
 	@Autowired
 	public SharpOReaderMacroFunction(final RationalReaderMacroFunction rationalReaderMacroFunction) {
+		super("SHARP-O");
 		this.rationalReaderMacroFunction = rationalReaderMacroFunction;
 	}
 

@@ -28,6 +28,7 @@ public class AtSignReaderMacroFunction extends ReaderMacroFunctionImpl {
 
 	@Autowired
 	public AtSignReaderMacroFunction(final ExtendedTokenReaderMacroFunction extendedTokenReaderMacroFunction) {
+		super("AT-SIGN");
 		this.extendedTokenReaderMacroFunction = extendedTokenReaderMacroFunction;
 	}
 

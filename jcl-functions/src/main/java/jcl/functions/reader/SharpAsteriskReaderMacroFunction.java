@@ -31,6 +31,7 @@ public class SharpAsteriskReaderMacroFunction extends ReaderMacroFunctionImpl {
 
 	@Autowired
 	public SharpAsteriskReaderMacroFunction(final ExtendedTokenReaderMacroFunction extendedTokenReaderMacroFunction) {
+		super("SHARP-ASTERISK");
 		this.extendedTokenReaderMacroFunction = extendedTokenReaderMacroFunction;
 	}
 

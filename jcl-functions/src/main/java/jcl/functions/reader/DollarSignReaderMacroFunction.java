@@ -27,6 +27,7 @@ public class DollarSignReaderMacroFunction extends ReaderMacroFunctionImpl {
 
 	@Autowired
 	public DollarSignReaderMacroFunction(final ExtendedTokenReaderMacroFunction extendedTokenReaderMacroFunction) {
+		super("DOLLAR-SIGN");
 		this.extendedTokenReaderMacroFunction = extendedTokenReaderMacroFunction;
 	}
 

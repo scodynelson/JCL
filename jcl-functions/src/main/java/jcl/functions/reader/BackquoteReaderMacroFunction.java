@@ -48,6 +48,7 @@ public class BackquoteReaderMacroFunction extends ReaderMacroFunctionImpl {
 
 	@Autowired
 	public BackquoteReaderMacroFunction(final Reader reader) {
+		super("BACKQUOTE");
 		this.reader = reader;
 	}
 

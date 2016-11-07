@@ -31,6 +31,7 @@ public class SharpApostropheReaderMacroFunction extends ReaderMacroFunctionImpl 
 
 	@Autowired
 	public SharpApostropheReaderMacroFunction(final Reader reader) {
+		super("SHARP-APOSTROPHE");
 		this.reader = reader;
 	}
 

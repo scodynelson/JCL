@@ -32,6 +32,7 @@ public class SharpBackslashReaderMacroFunction extends ReaderMacroFunctionImpl {
 
 	@Autowired
 	public SharpBackslashReaderMacroFunction(final ExtendedTokenReaderMacroFunction extendedTokenReaderMacroFunction) {
+		super("SHARP-BACKSLASH");
 		this.extendedTokenReaderMacroFunction = extendedTokenReaderMacroFunction;
 	}
 

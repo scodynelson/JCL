@@ -29,6 +29,7 @@ public class SharpUReaderMacroFunction extends ReaderMacroFunctionImpl {
 
 	@Autowired
 	public SharpUReaderMacroFunction(final UnicodeCharacterReaderMacroFunction unicodeCharacterReaderMacroFunction) {
+		super("SHARP-U");
 		this.unicodeCharacterReaderMacroFunction = unicodeCharacterReaderMacroFunction;
 	}
 

@@ -24,6 +24,10 @@ import org.springframework.stereotype.Component;
 @DependsOn("readerBootstrap")
 public class SharpSharpReaderMacroFunction extends ReaderMacroFunctionImpl {
 
+	protected SharpSharpReaderMacroFunction() {
+		super("SHARP-SHARP");
+	}
+
 	@Override
 	public void afterPropertiesSet() throws Exception {
 		super.afterPropertiesSet();

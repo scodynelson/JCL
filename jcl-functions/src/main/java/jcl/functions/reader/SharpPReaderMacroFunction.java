@@ -32,6 +32,7 @@ public class SharpPReaderMacroFunction extends ReaderMacroFunctionImpl {
 
 	@Autowired
 	public SharpPReaderMacroFunction(final Reader reader) {
+		super("SHARP-P");
 		this.reader = reader;
 	}
 

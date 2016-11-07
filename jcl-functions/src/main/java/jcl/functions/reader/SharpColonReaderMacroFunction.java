@@ -29,6 +29,7 @@ public class SharpColonReaderMacroFunction extends ReaderMacroFunctionImpl {
 
 	@Autowired
 	public SharpColonReaderMacroFunction(final ExtendedTokenReaderMacroFunction extendedTokenReaderMacroFunction) {
+		super("SHARP-COLON");
 		this.extendedTokenReaderMacroFunction = extendedTokenReaderMacroFunction;
 	}
 

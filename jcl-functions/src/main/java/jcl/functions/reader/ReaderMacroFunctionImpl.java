@@ -11,9 +11,9 @@ import jcl.lang.CharacterStruct;
 import jcl.lang.InputStreamStruct;
 import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
-import jcl.lang.SymbolStruct;
-import jcl.lang.factory.LispStructFactory;
-import jcl.lang.function.FunctionStructImpl;
+import jcl.lang.function.SystemBuiltInFunctionStructBase;
+import jcl.lang.function.parameterdsl.Arguments;
+import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.readtable.ReaderInputStreamStruct;
 import jcl.lang.readtable.ReaderMacroFunction;
 
@@ -21,37 +21,35 @@ import jcl.lang.readtable.ReaderMacroFunction;
  * Abstract implementation definition for all Reader defined macro functions that read character macros based off of a
  * provided {@link Integer} code point.
  */
-public abstract class ReaderMacroFunctionImpl extends FunctionStructImpl implements ReaderMacroFunction {
+public abstract class ReaderMacroFunctionImpl extends SystemBuiltInFunctionStructBase implements ReaderMacroFunction {
 
-	protected ReaderMacroFunctionImpl() {
-		// TODO
-		super("Some Documentation");
+	private static final String INPUT_STREAM_ARGUMENT = "INPUT-STREAM";
+	private static final String MACRO_CHARACTER_ARGUMENT = "MACRO-CHARACTER";
+	private static final String N_ARGUMENT = "N";
+
+	protected ReaderMacroFunctionImpl(final String functionName) {
+		super("Some Documentation",
+		      functionName,
+		      Parameters.forFunction(functionName)
+		                .requiredParameter(INPUT_STREAM_ARGUMENT)
+		                .requiredParameter(MACRO_CHARACTER_ARGUMENT)
+		                .optionalParameter(N_ARGUMENT)
+		                .withInitialValue(IntegerStruct.ZERO)
+		);
 	}
 
-	private static final SymbolStruct DUMMY_SYMBOL = LispStructFactory.toSymbol("dummySymbol");
-
 	@Override
-	public SymbolStruct getFunctionSymbol() {
-		// TODO: we can do this better
-		return DUMMY_SYMBOL;
-	}
+	public LispStruct apply(final Arguments arguments) {
+		final InputStreamStruct stream = arguments.getRequiredArgument(INPUT_STREAM_ARGUMENT, InputStreamStruct.class);
 
-	@Override
-	public LispStruct apply(final LispStruct... lispStructs) {
-
-		final InputStreamStruct stream = (InputStreamStruct) lispStructs[0];
-
-		final CharacterStruct macroCharacter = (CharacterStruct) lispStructs[1];
+		final CharacterStruct macroCharacter = arguments.getRequiredArgument(MACRO_CHARACTER_ARGUMENT, CharacterStruct.class);
 		final int codePoint = macroCharacter.getCodePoint();
 
-		final Optional<BigInteger> numberArgument;
-		if (isDispatch()) {
-			final IntegerStruct macroNumberArgument = (IntegerStruct) lispStructs[2];
-			// TODO: optimize??
+		Optional<BigInteger> numberArgument = Optional.empty();
+		if (isDispatch() && arguments.hasOptionalArgument(N_ARGUMENT)) {
+			final IntegerStruct macroNumberArgument = arguments.getOptionalArgument(N_ARGUMENT, IntegerStruct.class);
 			final BigInteger bigInteger = macroNumberArgument.bigIntegerValue();
 			numberArgument = Optional.of(bigInteger);
-		} else {
-			numberArgument = Optional.empty();
 		}
 
 		final ReaderInputStreamStruct readerInputStreamStruct = new ReaderInputStreamStruct(stream);

@@ -30,6 +30,7 @@ public class CommaReaderMacroFunction extends ReaderMacroFunctionImpl {
 
 	@Autowired
 	public CommaReaderMacroFunction(final Reader reader) {
+		super("COMMA");
 		this.reader = reader;
 	}
 

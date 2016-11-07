@@ -35,6 +35,7 @@ public class SharpFullStopReaderMacroFunction extends ReaderMacroFunctionImpl {
 
 	@Autowired
 	public SharpFullStopReaderMacroFunction(final Reader reader, final EvalFunction evalFunction) {
+		super("SHARP-FULL-STOP");
 		this.reader = reader;
 		this.evalFunction = evalFunction;
 	}

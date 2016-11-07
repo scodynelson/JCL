@@ -30,6 +30,7 @@ public class SharpPlusSignReaderMacroFunction extends ReaderMacroFunctionImpl {
 
 	@Autowired
 	public SharpPlusSignReaderMacroFunction(final FeaturesReaderMacroFunction featuresReaderMacroFunction) {
+		super("SHARP-PLUS-SIGN");
 		this.featuresReaderMacroFunction = featuresReaderMacroFunction;
 	}
 

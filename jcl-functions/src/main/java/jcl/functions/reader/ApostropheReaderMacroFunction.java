@@ -29,6 +29,7 @@ public class ApostropheReaderMacroFunction extends ReaderMacroFunctionImpl {
 
 	@Autowired
 	public ApostropheReaderMacroFunction(final Reader reader) {
+		super("APOSTROPHE");
 		this.reader = reader;
 	}
 

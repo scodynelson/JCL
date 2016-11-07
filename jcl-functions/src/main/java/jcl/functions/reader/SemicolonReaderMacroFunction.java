@@ -27,6 +27,7 @@ public class SemicolonReaderMacroFunction extends ReaderMacroFunctionImpl {
 
 	@Autowired
 	public SemicolonReaderMacroFunction(final Reader reader) {
+		super("SEMICOLON");
 		this.reader = reader;
 	}
 

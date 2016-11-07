@@ -37,6 +37,7 @@ public class SharpEqualsSignReaderMacroFunction extends ReaderMacroFunctionImpl 
 
 	@Autowired
 	public SharpEqualsSignReaderMacroFunction(final Reader reader) {
+		super("SHARP-EQUALS");
 		this.reader = reader;
 	}
 

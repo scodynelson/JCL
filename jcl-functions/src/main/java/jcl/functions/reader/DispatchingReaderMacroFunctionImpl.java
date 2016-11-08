@@ -6,7 +6,9 @@ import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 import jcl.lang.LispStruct;
+import jcl.lang.NILStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
+import jcl.lang.factory.LispStructFactory;
 import jcl.lang.readtable.DispatchingReaderMacroFunction;
 import jcl.reader.Reader;
 import jcl.lang.readtable.ReaderInputStreamStruct;
@@ -51,7 +53,20 @@ public final class DispatchingReaderMacroFunctionImpl extends ReaderMacroFunctio
 			throw new ReaderErrorException("No reader macro function exists for: " + codePoint + nextCodePoint + '.');
 		}
 
-		return macroFunction.readMacro(inputStreamStruct, nextCodePoint, numberArgument);
+		if (numberArgument.isPresent()) {
+			return macroFunction.apply(
+					inputStreamStruct,
+					LispStructFactory.toCharacter(nextCodePoint),
+					LispStructFactory.toInteger(numberArgument.get())
+			);
+		} else {
+			return macroFunction.apply(
+					inputStreamStruct,
+					LispStructFactory.toCharacter(nextCodePoint),
+					NILStruct.INSTANCE
+			);
+		}
+//		return macroFunction.readMacro(inputStreamStruct, nextCodePoint, numberArgument);
 	}
 
 	/**

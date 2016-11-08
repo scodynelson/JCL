@@ -33,10 +33,24 @@ public abstract class ReaderMacroFunctionImpl extends SystemBuiltInFunctionStruc
 		      Parameters.forFunction(functionName)
 		                .requiredParameter(INPUT_STREAM_ARGUMENT)
 		                .requiredParameter(MACRO_CHARACTER_ARGUMENT)
-		                .optionalParameter(N_ARGUMENT)
-		                .withInitialValue(IntegerStruct.ZERO)
+		                .requiredParameter(N_ARGUMENT)
 		);
 	}
+
+	/**
+	 * Interpret the character stream from the provided {@link ReaderInputStreamStruct} (up to End-of-File or new line) based on the
+	 * provided {@code codePoint}.
+	 *
+	 * @param inputStreamStruct
+	 * 		the {@link ReaderInputStreamStruct} to read tokens from
+	 * @param codePoint
+	 * 		the character code point that determines the macro function
+	 * @param numberArgument
+	 * 		the optional number argument
+	 *
+	 * @return the parsed {@link LispStruct} token
+	 */
+	protected abstract LispStruct readMacro(ReaderInputStreamStruct inputStreamStruct, int codePoint, Optional<BigInteger> numberArgument);
 
 	@Override
 	public LispStruct apply(final Arguments arguments) {
@@ -52,7 +66,13 @@ public abstract class ReaderMacroFunctionImpl extends SystemBuiltInFunctionStruc
 			numberArgument = Optional.of(bigInteger);
 		}
 
-		final ReaderInputStreamStruct readerInputStreamStruct = new ReaderInputStreamStruct(stream);
+		final ReaderInputStreamStruct readerInputStreamStruct;
+		if (stream instanceof ReaderInputStreamStruct) {
+			readerInputStreamStruct = (ReaderInputStreamStruct) stream;
+		} else {
+			readerInputStreamStruct = new ReaderInputStreamStruct(stream);
+		}
+
 		return readMacro(readerInputStreamStruct, codePoint, numberArgument);
 	}
 }

@@ -11,11 +11,12 @@ import jcl.lang.LispStruct;
 import jcl.lang.NILStruct;
 import jcl.lang.ReadtableStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
-import jcl.reader.Reader;
+import jcl.lang.factory.LispStructFactory;
 import jcl.lang.readtable.ReaderInputStreamStruct;
 import jcl.lang.readtable.ReaderMacroFunction;
 import jcl.lang.statics.ReaderVariables;
 import jcl.lang.stream.ReadPeekResult;
+import jcl.reader.Reader;
 import jcl.reader.ReaderStateMediator;
 import jcl.reader.TokenBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,10 +70,34 @@ class MacroCharacterReaderState implements ReaderState {
 
 		final ReaderInputStreamStruct inputStreamStruct = tokenBuilder.getInputStreamStruct();
 
-		final Optional<BigInteger> numberArgument
-				= readerMacroFunction.isDispatch() ? getNumberArgument(inputStreamStruct) : Optional.empty();
+		final LispStruct token;
+		if (readerMacroFunction.isDispatch()) {
+			final Optional<BigInteger> numberArgument = getNumberArgument(inputStreamStruct);
+			if (numberArgument.isPresent()) {
+				token = readerMacroFunction.apply(
+						inputStreamStruct,
+						LispStructFactory.toCharacter(codePoint),
+						LispStructFactory.toInteger(numberArgument.get())
+				);
+			} else {
+				token = readerMacroFunction.apply(
+						inputStreamStruct,
+						LispStructFactory.toCharacter(codePoint),
+				        NILStruct.INSTANCE
+				);
+			}
+		} else {
+			token = readerMacroFunction.apply(
+					inputStreamStruct,
+					LispStructFactory.toCharacter(codePoint),
+					NILStruct.INSTANCE
+			);
+		}
 
-		final LispStruct token = readerMacroFunction.readMacro(inputStreamStruct, codePoint, numberArgument);
+//		final Optional<BigInteger> numberArgument
+//				= readerMacroFunction.isDispatch() ? getNumberArgument(inputStreamStruct) : Optional.empty();
+//
+//		final LispStruct token = readerMacroFunction.readMacro(inputStreamStruct, codePoint, numberArgument);
 		if (token == null) {
 			return readerStateMediator.read(tokenBuilder);
 		} else {

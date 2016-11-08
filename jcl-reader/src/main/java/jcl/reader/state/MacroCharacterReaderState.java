@@ -7,13 +7,14 @@ package jcl.reader.state;
 import java.math.BigInteger;
 import java.util.Optional;
 
+import jcl.lang.FunctionStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.NILStruct;
 import jcl.lang.ReadtableStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
 import jcl.lang.factory.LispStructFactory;
+import jcl.lang.readtable.DispatchingReaderMacroFunction;
 import jcl.lang.readtable.ReaderInputStreamStruct;
-import jcl.lang.readtable.ReaderMacroFunction;
 import jcl.lang.statics.ReaderVariables;
 import jcl.lang.stream.ReadPeekResult;
 import jcl.reader.Reader;
@@ -62,7 +63,7 @@ class MacroCharacterReaderState implements ReaderState {
 		final int codePoint = readResult.getResult();
 
 		final ReadtableStruct readtable = ReaderVariables.READTABLE.getVariableValue();
-		final ReaderMacroFunction readerMacroFunction = readtable.getMacroCharacter(codePoint);
+		final FunctionStruct readerMacroFunction = readtable.getMacroCharacter(codePoint);
 
 		if (readerMacroFunction == null) {
 			throw new ReaderErrorException("No reader macro function exists for character: " + codePoint + '.');
@@ -71,7 +72,7 @@ class MacroCharacterReaderState implements ReaderState {
 		final ReaderInputStreamStruct inputStreamStruct = tokenBuilder.getInputStreamStruct();
 
 		final LispStruct token;
-		if (readerMacroFunction.isDispatch()) {
+		if (readerMacroFunction instanceof DispatchingReaderMacroFunction) {
 			final Optional<BigInteger> numberArgument = getNumberArgument(inputStreamStruct);
 			if (numberArgument.isPresent()) {
 				token = readerMacroFunction.apply(

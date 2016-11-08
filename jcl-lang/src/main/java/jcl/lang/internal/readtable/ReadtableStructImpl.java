@@ -7,12 +7,12 @@ package jcl.lang.internal.readtable;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import jcl.lang.FunctionStruct;
 import jcl.lang.IntegerStruct;
 import jcl.lang.ReadtableStruct;
 import jcl.lang.classes.BuiltInClassStruct;
 import jcl.lang.readtable.AttributeType;
 import jcl.lang.readtable.DispatchingReaderMacroFunction;
-import jcl.lang.readtable.ReaderMacroFunction;
 import jcl.lang.readtable.ReadtableCase;
 import jcl.lang.readtable.SyntaxType;
 import jcl.type.ReadtableType;
@@ -23,13 +23,13 @@ import jcl.type.ReadtableType;
 public final class ReadtableStructImpl extends BuiltInClassStruct implements ReadtableStruct {
 
 	/**
-	 * Internal map storing the {@link Integer} code point mappings to appropriate {@link ReaderMacroFunction}s.
+	 * Internal map storing the {@link Integer} code point mappings to appropriate {@link FunctionStruct}s.
 	 */
-	private final Map<Integer, ReaderMacroFunction> macroTableMap = new ConcurrentHashMap<>();
+	private final Map<Integer, FunctionStruct> macroTableMap = new ConcurrentHashMap<>();
 
 	/**
 	 * Internal map storing the {@link Integer} code point mappings to appropriate {@link DispatchingReaderMacroFunction}s for
-	 * dispatching on specializing {@link ReaderMacroFunction}s.
+	 * dispatching on specializing {@link FunctionStruct}s.
 	 */
 	private final Map<Integer, DispatchingReaderMacroFunction> dispatchTableMap = new ConcurrentHashMap<>();
 
@@ -82,7 +82,7 @@ public final class ReadtableStructImpl extends BuiltInClassStruct implements Rea
 	}
 
 	@Override
-	public void setMacroCharacter(final int codePoint, final ReaderMacroFunction readerMacroFunction, final boolean nonTerminatingP) {
+	public void setMacroCharacter(final int codePoint, final FunctionStruct readerMacroFunction, final boolean nonTerminatingP) {
 		if (!nonTerminatingP) {
 			syntaxTable.setSyntaxType(codePoint, SyntaxType.TERMINATING);
 		}
@@ -100,17 +100,17 @@ public final class ReadtableStructImpl extends BuiltInClassStruct implements Rea
 	}
 
 	@Override
-	public ReaderMacroFunction getMacroCharacter(final int codePoint) {
+	public FunctionStruct getMacroCharacter(final int codePoint) {
 		return macroTableMap.get(codePoint);
 	}
 
 	@Override
-	public ReaderMacroFunction getDispatchMacroCharacter(final int dispatchCodePoint, final int subCodePoint) {
+	public FunctionStruct getDispatchMacroCharacter(final int dispatchCodePoint, final int subCodePoint) {
 		return dispatchTableMap.get(dispatchCodePoint).getMacroFunction(subCodePoint);
 	}
 
 	@Override
-	public void setDispatchMacroCharacter(final int dispatchCodePoint, final int subCodePoint, final ReaderMacroFunction readerMacroFunction) {
+	public void setDispatchMacroCharacter(final int dispatchCodePoint, final int subCodePoint, final FunctionStruct readerMacroFunction) {
 		dispatchTableMap.get(dispatchCodePoint).setMacroCharacter(subCodePoint, readerMacroFunction);
 	}
 

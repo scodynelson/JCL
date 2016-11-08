@@ -4,14 +4,14 @@
 
 package jcl.functions.reader;
 
+import jcl.lang.FunctionStruct;
 import jcl.lang.IntegerStruct;
 import jcl.lang.readtable.AttributeType;
-import jcl.lang.readtable.ReaderMacroFunction;
 import jcl.lang.statics.ReaderVariables;
 import jcl.lang.readtable.SyntaxType;
 
 /**
- * Utility class for common operations for {@link ReaderMacroFunction}s.
+ * Utility class for common operations for {@link FunctionStruct}s.
  */
 final class ReaderMacroFunctionUtil {
 

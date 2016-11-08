@@ -1,25 +1,22 @@
 package jcl.lang.readtable;
 
-/**
- * This holds mappings for code points to {@link ReaderMacroFunction}s and delegates to the proper one when used.
- */
-public interface DispatchingReaderMacroFunction extends ReaderMacroFunction {
+import jcl.lang.FunctionStruct;
 
-	ReaderMacroFunction getMacroFunction(final int codePoint);
+/**
+ * This holds mappings for code points to {@link FunctionStruct}s and delegates to the proper one when used.
+ */
+public interface DispatchingReaderMacroFunction extends FunctionStruct {
+
+	FunctionStruct getMacroFunction(final int codePoint);
 
 	/**
-	 * Sets the {@link ReaderMacroFunction} with the provided {@code codePoint} to the provided {@code
+	 * Sets the {@link FunctionStruct} with the provided {@code codePoint} to the provided {@code
 	 * readerMacroFunction}.
 	 *
 	 * @param codePoint
-	 * 		the code point associated with the {@link ReaderMacroFunction} to set
+	 * 		the code point associated with the {@link FunctionStruct} to set
 	 * @param readerMacroFunction
-	 * 		the new {@link ReaderMacroFunction} to be associated
+	 * 		the new {@link FunctionStruct} to be associated
 	 */
-	void setMacroCharacter(final int codePoint, final ReaderMacroFunction readerMacroFunction);
-
-	@Override
-	default boolean isDispatch() {
-		return true;
-	}
+	void setMacroCharacter(final int codePoint, final FunctionStruct readerMacroFunction);
 }

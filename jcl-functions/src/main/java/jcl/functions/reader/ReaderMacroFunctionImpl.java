@@ -15,13 +15,12 @@ import jcl.lang.function.SystemBuiltInFunctionStructBase;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.readtable.ReaderInputStreamStruct;
-import jcl.lang.readtable.ReaderMacroFunction;
 
 /**
  * Abstract implementation definition for all Reader defined macro functions that read character macros based off of a
  * provided {@link Integer} code point.
  */
-public abstract class ReaderMacroFunctionImpl extends SystemBuiltInFunctionStructBase implements ReaderMacroFunction {
+public abstract class ReaderMacroFunctionImpl extends SystemBuiltInFunctionStructBase {
 
 	private static final String INPUT_STREAM_ARGUMENT = "INPUT-STREAM";
 	private static final String MACRO_CHARACTER_ARGUMENT = "MACRO-CHARACTER";
@@ -51,6 +50,16 @@ public abstract class ReaderMacroFunctionImpl extends SystemBuiltInFunctionStruc
 	 * @return the parsed {@link LispStruct} token
 	 */
 	protected abstract LispStruct readMacro(ReaderInputStreamStruct inputStreamStruct, int codePoint, Optional<BigInteger> numberArgument);
+
+	/**
+	 * Default method used to determine if the ReaderMacroFunction is a dispatching macro. The default value return is
+	 * {@code #false}, however this is overridden in the internal dispatching table in a readtable.
+	 *
+	 * @return whether or not the ReaderMacroFunction is a dispatching macro
+	 */
+	protected boolean isDispatch() {
+		return false;
+	}
 
 	@Override
 	public LispStruct apply(final Arguments arguments) {

@@ -4,7 +4,6 @@
 
 package jcl.functions.reader;
 
-import java.lang.*;
 import java.math.BigInteger;
 import java.util.Optional;
 
@@ -17,7 +16,6 @@ import jcl.lang.factory.LispStructFactory;
 import jcl.lang.statics.ReaderVariables;
 import jcl.util.CodePointConstants;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Component;
 
@@ -28,12 +26,8 @@ import org.springframework.stereotype.Component;
 @DependsOn("readerBootstrap")
 public class SharpBackslashReaderMacroFunction extends ReaderMacroFunctionImpl {
 
-	private final ExtendedTokenReaderMacroFunction extendedTokenReaderMacroFunction;
-
-	@Autowired
-	public SharpBackslashReaderMacroFunction(final ExtendedTokenReaderMacroFunction extendedTokenReaderMacroFunction) {
+	public SharpBackslashReaderMacroFunction() {
 		super("SHARP-BACKSLASH");
-		this.extendedTokenReaderMacroFunction = extendedTokenReaderMacroFunction;
 	}
 
 	@Override
@@ -46,7 +40,7 @@ public class SharpBackslashReaderMacroFunction extends ReaderMacroFunctionImpl {
 	public LispStruct readMacro(final InputStreamStruct inputStreamStruct, final int codePoint, final Optional<BigInteger> numberArgument) {
 		assert codePoint == CodePointConstants.BACKSLASH;
 
-		final ExtendedTokenReaderMacroFunction.ReadExtendedToken extendedToken = extendedTokenReaderMacroFunction.readExtendedToken(inputStreamStruct, true);
+		final ExtendedTokenReaderMacroFunction.ReadExtendedToken extendedToken = ExtendedTokenReaderMacroFunction.readExtendedToken(inputStreamStruct, true);
 		final String tokenString = extendedToken.getTokenString();
 
 		if (ReaderVariables.READ_SUPPRESS.getVariableValue().booleanValue()) {

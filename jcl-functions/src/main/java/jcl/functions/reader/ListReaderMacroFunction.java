@@ -59,7 +59,7 @@ final class ListReaderMacroFunction {
 				}
 			}
 
-			reader.unreadChar(inputStreamStruct, codePoint);
+			inputStreamStruct.unreadChar(codePoint);
 
 			final LispStruct token = reader.read(inputStreamStruct, true, NILStruct.INSTANCE, true);
 			if (token != null) {
@@ -98,7 +98,7 @@ final class ListReaderMacroFunction {
 		boolean isDotted = false;
 
 		// NOTE: This will throw errors when it reaches an EOF
-		final ReadPeekResult readResult = reader.readChar(inputStreamStruct, true, NILStruct.INSTANCE, false);
+		final ReadPeekResult readResult = inputStreamStruct.readChar(true, NILStruct.INSTANCE, false);
 		final int nextCodePoint = readResult.getResult();
 
 		if (ReaderMacroFunctionUtil.isWhitespaceOrTerminating(nextCodePoint)) {
@@ -109,7 +109,7 @@ final class ListReaderMacroFunction {
 			isDotted = true;
 			processAfterDot(inputStreamStruct, currentTokenList, nextCodePoint);
 		} else {
-			reader.unreadChar(inputStreamStruct, nextCodePoint);
+			inputStreamStruct.unreadChar(nextCodePoint);
 		}
 		return isDotted;
 	}
@@ -138,7 +138,7 @@ final class ListReaderMacroFunction {
 			if (firstCodePoint == CodePointConstants.RIGHT_PARENTHESIS) {
 				throw new ReaderErrorException("Nothing appears after . in list.");
 			}
-			reader.unreadChar(inputStreamStruct, firstCodePoint);
+			inputStreamStruct.unreadChar(firstCodePoint);
 
 			// NOTE: This will throw errors when it reaches an EOF
 			token = reader.read(inputStreamStruct, true, NILStruct.INSTANCE, true);
@@ -147,7 +147,7 @@ final class ListReaderMacroFunction {
 		currentTokenList.add(token);
 
 		while (firstCodePoint != CodePointConstants.RIGHT_PARENTHESIS) {
-			reader.unreadChar(inputStreamStruct, firstCodePoint);
+			inputStreamStruct.unreadChar(firstCodePoint);
 
 			// NOTE: This will throw errors when it reaches an EOF
 			token = reader.read(inputStreamStruct, true, NILStruct.INSTANCE, true);
@@ -167,13 +167,13 @@ final class ListReaderMacroFunction {
 	 *
 	 * @return the next code point value that is not a 'whitespace' character
 	 */
-	private int flushWhitespace(final InputStreamStruct inputStreamStruct) {
+	private static int flushWhitespace(final InputStreamStruct inputStreamStruct) {
 
 		// NOTE: This will throw errors when it reaches an EOF
-		ReadPeekResult readResult = reader.readChar(inputStreamStruct, true, NILStruct.INSTANCE, false);
+		ReadPeekResult readResult = inputStreamStruct.readChar(true, NILStruct.INSTANCE, false);
 		int codePoint = readResult.getResult();
 		while (ReaderMacroFunctionUtil.isWhitespace(codePoint)) {
-			readResult = reader.readChar(inputStreamStruct, true, NILStruct.INSTANCE, false);
+			readResult = inputStreamStruct.readChar(true, NILStruct.INSTANCE, false);
 			codePoint = readResult.getResult();
 		}
 		return codePoint;

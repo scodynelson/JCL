@@ -13,8 +13,8 @@ import jcl.lang.NILStruct;
 import jcl.lang.RationalStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
 import jcl.lang.factory.LispStructFactory;
-import jcl.reader.Reader;
 import jcl.lang.statics.ReaderVariables;
+import jcl.reader.Reader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -27,12 +27,9 @@ final class RationalReaderMacroFunction {
 
 	private final Reader reader;
 
-	private final ExtendedTokenReaderMacroFunction extendedTokenReaderMacroFunction;
-
 	@Autowired
-	RationalReaderMacroFunction(final Reader reader, final ExtendedTokenReaderMacroFunction extendedTokenReaderMacroFunction) {
+	RationalReaderMacroFunction(final Reader reader) {
 		this.reader = reader;
-		this.extendedTokenReaderMacroFunction = extendedTokenReaderMacroFunction;
 	}
 
 	/**
@@ -48,7 +45,7 @@ final class RationalReaderMacroFunction {
 	 */
 	LispStruct readRational(final InputStreamStruct inputStreamStruct, final BigInteger radix) {
 		if (ReaderVariables.READ_SUPPRESS.getVariableValue().booleanValue()) {
-			extendedTokenReaderMacroFunction.readExtendedToken(inputStreamStruct, false);
+			ExtendedTokenReaderMacroFunction.readExtendedToken(inputStreamStruct, false);
 			return NILStruct.INSTANCE;
 		}
 

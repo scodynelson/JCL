@@ -15,7 +15,6 @@ import jcl.lang.java.JavaClassStruct;
 import jcl.lang.readtable.ReadtableCase;
 import jcl.lang.statics.ReaderVariables;
 import jcl.util.CodePointConstants;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -24,12 +23,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class AtSignReaderMacroFunction extends ReaderMacroFunctionImpl {
 
-	private final ExtendedTokenReaderMacroFunction extendedTokenReaderMacroFunction;
-
-	@Autowired
-	public AtSignReaderMacroFunction(final ExtendedTokenReaderMacroFunction extendedTokenReaderMacroFunction) {
+	public AtSignReaderMacroFunction() {
 		super("AT-SIGN");
-		this.extendedTokenReaderMacroFunction = extendedTokenReaderMacroFunction;
 	}
 
 	@Override
@@ -49,7 +44,7 @@ public class AtSignReaderMacroFunction extends ReaderMacroFunctionImpl {
 
 		final String tokenString;
 		try {
-			final ExtendedTokenReaderMacroFunction.ReadExtendedToken extendedToken = extendedTokenReaderMacroFunction.readExtendedToken(inputStreamStruct, false);
+			final ExtendedTokenReaderMacroFunction.ReadExtendedToken extendedToken = ExtendedTokenReaderMacroFunction.readExtendedToken(inputStreamStruct, false);
 			tokenString = extendedToken.getTokenString();
 		} finally {
 			readtable.setReadtableCase(previousCase);

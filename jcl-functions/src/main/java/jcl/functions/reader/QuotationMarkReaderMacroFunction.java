@@ -11,11 +11,9 @@ import jcl.lang.InputStreamStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.NILStruct;
 import jcl.lang.factory.LispStructFactory;
-import jcl.reader.Reader;
 import jcl.lang.statics.ReaderVariables;
 import jcl.lang.stream.ReadPeekResult;
 import jcl.util.CodePointConstants;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -24,15 +22,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class QuotationMarkReaderMacroFunction extends ReaderMacroFunctionImpl {
 
-	private final Reader reader;
-
-	private final UnicodeCharacterReaderMacroFunction unicodeCharacterReaderMacroFunction;
-
-	@Autowired
-	public QuotationMarkReaderMacroFunction(final Reader reader, final UnicodeCharacterReaderMacroFunction unicodeCharacterReaderMacroFunction) {
+	public QuotationMarkReaderMacroFunction() {
 		super("QUOTATION-MARK");
-		this.reader = reader;
-		this.unicodeCharacterReaderMacroFunction = unicodeCharacterReaderMacroFunction;
 	}
 
 	@Override
@@ -48,7 +39,7 @@ public class QuotationMarkReaderMacroFunction extends ReaderMacroFunctionImpl {
 		final StringBuilder stringBuilder = new StringBuilder();
 
 		// NOTE: This will throw errors when it reaches an EOF
-		ReadPeekResult readResult = reader.readChar(inputStreamStruct, true, NILStruct.INSTANCE, true);
+		ReadPeekResult readResult = inputStreamStruct.readChar(true, NILStruct.INSTANCE, true);
 		int nextCodePoint = readResult.getResult();
 
 		while (nextCodePoint != CodePointConstants.QUOTATION_MARK) {
@@ -59,7 +50,7 @@ public class QuotationMarkReaderMacroFunction extends ReaderMacroFunctionImpl {
 			}
 
 			// NOTE: This will throw errors when it reaches an EOF
-			readResult = reader.readChar(inputStreamStruct, true, NILStruct.INSTANCE, true);
+			readResult = inputStreamStruct.readChar(true, NILStruct.INSTANCE, true);
 			nextCodePoint = readResult.getResult();
 		}
 
@@ -79,19 +70,19 @@ public class QuotationMarkReaderMacroFunction extends ReaderMacroFunctionImpl {
 	 * @param stringBuilder
 	 * 		the {@link StringBuilder} used to build the final token
 	 */
-	private void handleEscapedCharacter(final InputStreamStruct inputStreamStruct, final StringBuilder stringBuilder) {
+	private static void handleEscapedCharacter(final InputStreamStruct inputStreamStruct, final StringBuilder stringBuilder) {
 		int codePoint = CodePointConstants.BACKSLASH;
 
 		// NOTE: This will throw errors when it reaches an EOF
-		final ReadPeekResult tempReadResult = reader.readChar(inputStreamStruct, true, NILStruct.INSTANCE, true);
+		final ReadPeekResult tempReadResult = inputStreamStruct.readChar(true, NILStruct.INSTANCE, true);
 		final int tempCodePoint = tempReadResult.getResult();
 		if ((tempCodePoint == CodePointConstants.LATIN_SMALL_LETTER_U)
 				|| (tempCodePoint == CodePointConstants.LATIN_CAPITAL_LETTER_U)) {
 
-			final ReadPeekResult nextTempReadResult = reader.readChar(inputStreamStruct, true, NILStruct.INSTANCE, true);
+			final ReadPeekResult nextTempReadResult = inputStreamStruct.readChar(true, NILStruct.INSTANCE, true);
 			final int nextTempCodePoint = nextTempReadResult.getResult();
 			if (nextTempCodePoint == CodePointConstants.PLUS_SIGN) {
-				codePoint = unicodeCharacterReaderMacroFunction.readUnicodeCharacter(inputStreamStruct);
+				codePoint = UnicodeCharacterReaderMacroFunction.readUnicodeCharacter(inputStreamStruct);
 				stringBuilder.appendCodePoint(codePoint);
 			} else {
 				// NOTE: Order matters here!!

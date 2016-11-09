@@ -13,11 +13,8 @@ import jcl.lang.TStruct;
 import jcl.lang.function.CommonLispBuiltInFunctionStructBase;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
-import jcl.lang.readtable.DispatchingReaderMacroFunction;
 import jcl.lang.statics.ReaderVariables;
-import jcl.reader.Reader;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -29,10 +26,7 @@ public final class MakeDispatchMacroCharacterFunction extends CommonLispBuiltInF
 	private static final String READTABLE_ARGUMENT = "READTABLE";
 
 	@Autowired
-	private ApplicationContext applicationContext;
-
-	@Autowired
-	private Reader reader;
+	private ReadDispatchCharacterFunction readDispatchCharacterFunction;
 
 	public MakeDispatchMacroCharacterFunction() {
 		super("Makes char be a dispatching macro character in readtable.",
@@ -50,9 +44,7 @@ public final class MakeDispatchMacroCharacterFunction extends CommonLispBuiltInF
 		final BooleanStruct nonTerminatingP = arguments.getOptionalArgument(NON_TERMINATING_P_ARGUMENT, BooleanStruct.class);
 		final ReadtableStruct readtable = arguments.getOptionalArgument(READTABLE_ARGUMENT, ReadtableStruct.class);
 
-		final DispatchingReaderMacroFunction dispatchingReaderMacroFunction
-				= applicationContext.getBean(DispatchingReaderMacroFunction.class, reader);
-		readtable.makeDispatchMacroCharacter(dispatchingReaderMacroFunction, character.getCodePoint(), nonTerminatingP.booleanValue());
+		readtable.makeDispatchMacroCharacter(readDispatchCharacterFunction, character.getCodePoint(), nonTerminatingP.booleanValue());
 		return TStruct.INSTANCE;
 	}
 }

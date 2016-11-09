@@ -16,12 +16,12 @@ import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
 import jcl.lang.NILStruct;
 import jcl.lang.ReadtableStruct;
-import jcl.lang.classes.StructureClassStruct;
 import jcl.lang.SymbolStruct;
+import jcl.lang.classes.StructureClassStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
-import jcl.reader.Reader;
 import jcl.lang.statics.ReaderVariables;
 import jcl.lang.stream.ReadPeekResult;
+import jcl.reader.Reader;
 import jcl.util.CodePointConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.DependsOn;
@@ -65,7 +65,7 @@ public class SharpSReaderMacroFunction extends ReaderMacroFunctionImpl {
 			return NILStruct.INSTANCE;
 		}
 
-		final ReadPeekResult readResult = reader.readChar(inputStreamStruct, true, NILStruct.INSTANCE, false);
+		final ReadPeekResult readResult = inputStreamStruct.readChar(true, NILStruct.INSTANCE, false);
 		final int nextCodePoint = readResult.getResult();
 		if (nextCodePoint != CodePointConstants.LEFT_PARENTHESIS) {
 			throw new ReaderErrorException("Non-list following #S");

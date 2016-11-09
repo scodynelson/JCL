@@ -115,7 +115,7 @@ public class ReadEvalPrint {
 					// Consume the rest of the input so we don't attempt to parse the rest of the input when an error occurs.
 					Integer readChar;
 					do {
-						final ReadPeekResult readResult = reader.readChar(inputStreamStruct, false, null, true);
+						final ReadPeekResult readResult = inputStreamStruct.readChar(false, null, true);
 						readChar = readResult.getResult();
 					} while ((readChar != null) && (readChar != -1) && (readChar != 10));
 

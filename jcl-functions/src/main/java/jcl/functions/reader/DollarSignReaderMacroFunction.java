@@ -14,7 +14,6 @@ import jcl.lang.factory.LispStructFactory;
 import jcl.lang.readtable.ReadtableCase;
 import jcl.lang.statics.ReaderVariables;
 import jcl.util.CodePointConstants;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -23,12 +22,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class DollarSignReaderMacroFunction extends ReaderMacroFunctionImpl {
 
-	private final ExtendedTokenReaderMacroFunction extendedTokenReaderMacroFunction;
-
-	@Autowired
-	public DollarSignReaderMacroFunction(final ExtendedTokenReaderMacroFunction extendedTokenReaderMacroFunction) {
+	public DollarSignReaderMacroFunction() {
 		super("DOLLAR-SIGN");
-		this.extendedTokenReaderMacroFunction = extendedTokenReaderMacroFunction;
 	}
 
 	@Override
@@ -48,7 +43,7 @@ public class DollarSignReaderMacroFunction extends ReaderMacroFunctionImpl {
 
 		final String tokenString;
 		try {
-			final ExtendedTokenReaderMacroFunction.ReadExtendedToken extendedToken = extendedTokenReaderMacroFunction.readExtendedToken(inputStreamStruct, false);
+			final ExtendedTokenReaderMacroFunction.ReadExtendedToken extendedToken = ExtendedTokenReaderMacroFunction.readExtendedToken(inputStreamStruct, false);
 			tokenString = extendedToken.getTokenString();
 		} finally {
 			readtable.setReadtableCase(previousCase);

@@ -4,9 +4,6 @@
 
 package jcl.reader.state;
 
-import java.math.BigInteger;
-import java.util.Optional;
-
 import jcl.lang.FunctionStruct;
 import jcl.lang.InputStreamStruct;
 import jcl.lang.LispStruct;
@@ -14,10 +11,8 @@ import jcl.lang.NILStruct;
 import jcl.lang.ReadtableStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
 import jcl.lang.factory.LispStructFactory;
-import jcl.lang.readtable.DispatchingReaderMacroFunction;
 import jcl.lang.statics.ReaderVariables;
 import jcl.lang.stream.ReadPeekResult;
-import jcl.reader.Reader;
 import jcl.reader.ReaderStateMediator;
 import jcl.reader.TokenBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,9 +47,6 @@ class MacroCharacterReaderState implements ReaderState {
 	@Autowired
 	private ReaderStateMediator readerStateMediator;
 
-	@Autowired
-	private Reader reader;
-
 	@Override
 	public LispStruct process(final TokenBuilder tokenBuilder) {
 
@@ -71,78 +63,16 @@ class MacroCharacterReaderState implements ReaderState {
 
 		final InputStreamStruct inputStreamStruct = tokenBuilder.getInputStreamStruct();
 
-		final LispStruct token;
-		if (readerMacroFunction instanceof DispatchingReaderMacroFunction) {
-			final Optional<BigInteger> numberArgument = getNumberArgument(inputStreamStruct);
-			if (numberArgument.isPresent()) {
-				token = readerMacroFunction.apply(
-						inputStreamStruct,
-						LispStructFactory.toCharacter(codePoint),
-						LispStructFactory.toInteger(numberArgument.get())
-				);
-			} else {
-				token = readerMacroFunction.apply(
-						inputStreamStruct,
-						LispStructFactory.toCharacter(codePoint),
-				        NILStruct.INSTANCE
-				);
-			}
-		} else {
-			token = readerMacroFunction.apply(
-					inputStreamStruct,
-					LispStructFactory.toCharacter(codePoint),
-					NILStruct.INSTANCE
-			);
-		}
+		final LispStruct token = readerMacroFunction.apply(
+				inputStreamStruct,
+				LispStructFactory.toCharacter(codePoint),
+				NILStruct.INSTANCE
+		);
 
-//		final Optional<BigInteger> numberArgument
-//				= readerMacroFunction.isDispatch() ? getNumberArgument(inputStreamStruct) : Optional.empty();
-//
-//		final LispStruct token = readerMacroFunction.readMacro(inputStreamStruct, codePoint, numberArgument);
 		if (token == null) {
 			return readerStateMediator.read(tokenBuilder);
 		} else {
 			return token;
 		}
-	}
-
-	/**
-	 * Reads in the number argument for the macro reader to use when processing the macro function character.
-	 *
-	 * @param inputStreamStruct
-	 * 		the {@link InputStreamStruct} to use for reading the number argument
-	 *
-	 * @return the number argument if it exists; {@link Optional#empty} if no number argument was read in
-	 */
-	private Optional<BigInteger> getNumberArgument(final InputStreamStruct inputStreamStruct) {
-
-		// NOTE: This will throw errors when it reaches an EOF. That's why we can un-box the 'readChar' variable below.
-		ReadPeekResult readResult = reader.readChar(inputStreamStruct, true, NILStruct.INSTANCE, false);
-		int codePoint = readResult.getResult();
-
-		final StringBuilder digitStringBuilder = new StringBuilder();
-
-		while (Character.isDigit(codePoint)) {
-			digitStringBuilder.appendCodePoint(codePoint);
-
-			readResult = reader.readChar(inputStreamStruct, true, NILStruct.INSTANCE, false);
-			codePoint = readResult.getResult();
-		}
-
-		final int minimumDigitLength = 1;
-
-		final Optional<BigInteger> numberArgument;
-		if (digitStringBuilder.length() >= minimumDigitLength) {
-			final String digitString = digitStringBuilder.toString();
-			final BigInteger bigInteger = new BigInteger(digitString);
-			numberArgument = Optional.of(bigInteger);
-		} else {
-			numberArgument = Optional.empty();
-		}
-
-		// Make sure to unread the last character read after the number arg
-		reader.unreadChar(inputStreamStruct, codePoint);
-
-		return numberArgument;
 	}
 }

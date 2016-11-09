@@ -6,13 +6,10 @@ package jcl.functions.reader;
 
 import jcl.lang.InputStreamStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 /**
  * Reader Macro Function for handling the reading unicode character.
  */
-@Component
 final class UnicodeCharacterReaderMacroFunction {
 
 	/**
@@ -20,11 +17,7 @@ final class UnicodeCharacterReaderMacroFunction {
 	 */
 	private static final int UNICODE_RADIX = 16;
 
-	private final ExtendedTokenReaderMacroFunction extendedTokenReaderMacroFunction;
-
-	@Autowired
-	UnicodeCharacterReaderMacroFunction(final ExtendedTokenReaderMacroFunction extendedTokenReaderMacroFunction) {
-		this.extendedTokenReaderMacroFunction = extendedTokenReaderMacroFunction;
+	private UnicodeCharacterReaderMacroFunction() {
 	}
 
 	/**
@@ -36,9 +29,9 @@ final class UnicodeCharacterReaderMacroFunction {
 	 *
 	 * @return a Unicode character code point
 	 */
-	int readUnicodeCharacter(final InputStreamStruct inputStreamStruct) {
+	static int readUnicodeCharacter(final InputStreamStruct inputStreamStruct) {
 		final ExtendedTokenReaderMacroFunction.ReadExtendedToken readExtendedToken =
-				extendedTokenReaderMacroFunction.readExtendedToken(inputStreamStruct, true);
+				ExtendedTokenReaderMacroFunction.readExtendedToken(inputStreamStruct, true);
 
 		final String unicodeCharacterString = readExtendedToken.getTokenString();
 		try {

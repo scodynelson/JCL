@@ -10,11 +10,9 @@ import java.util.Optional;
 import jcl.lang.InputStreamStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.NILStruct;
-import jcl.reader.Reader;
 import jcl.lang.statics.ReaderVariables;
 import jcl.lang.stream.ReadPeekResult;
 import jcl.util.CodePointConstants;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -23,12 +21,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class SemicolonReaderMacroFunction extends ReaderMacroFunctionImpl {
 
-	private final Reader reader;
-
-	@Autowired
-	public SemicolonReaderMacroFunction(final Reader reader) {
+	public SemicolonReaderMacroFunction() {
 		super("SEMICOLON");
-		this.reader = reader;
 	}
 
 	@Override
@@ -43,12 +37,12 @@ public class SemicolonReaderMacroFunction extends ReaderMacroFunctionImpl {
 
 		final StringBuilder stringBuilder = new StringBuilder();
 
-		ReadPeekResult readResult = reader.readChar(inputStreamStruct, false, null, false);
+		ReadPeekResult readResult = inputStreamStruct.readChar(false, null, false);
 		Integer nextCodePoint = readResult.getResult();
 		while (!readResult.isEof() && (nextCodePoint.intValue() != CodePointConstants.NEWLINE)) {
 			stringBuilder.appendCodePoint(nextCodePoint);
 
-			readResult = reader.readChar(inputStreamStruct, false, null, false);
+			readResult = inputStreamStruct.readChar(false, null, false);
 			nextCodePoint = readResult.getResult();
 		}
 

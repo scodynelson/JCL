@@ -8,7 +8,6 @@ import jcl.lang.InputStreamStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.ReadtableStruct;
 import jcl.lang.readtable.AttributeType;
-import jcl.reader.Reader;
 import jcl.lang.readtable.SyntaxType;
 import jcl.lang.statics.ReaderVariables;
 import jcl.lang.stream.ReadPeekResult;
@@ -48,9 +47,6 @@ class OddMultiEscapeReaderState implements ReaderState {
 	@Autowired
 	private ReaderStateMediator readerStateMediator;
 
-	@Autowired
-	private Reader reader;
-
 	@Override
 	public LispStruct process(final TokenBuilder tokenBuilder) {
 
@@ -59,7 +55,7 @@ class OddMultiEscapeReaderState implements ReaderState {
 
 		final InputStreamStruct inputStreamStruct = tokenBuilder.getInputStreamStruct();
 
-		ReadPeekResult readResult = reader.readChar(inputStreamStruct, isEofErrorP, eofValue, true);
+		ReadPeekResult readResult = inputStreamStruct.readChar(isEofErrorP, eofValue, true);
 		tokenBuilder.setPreviousReadResult(readResult);
 
 		if (readResult.isEof()) {
@@ -81,7 +77,7 @@ class OddMultiEscapeReaderState implements ReaderState {
 			return readerStateMediator.readOddMultipleEscape(tokenBuilder);
 		} else if (syntaxType == SyntaxType.SINGLE_ESCAPE) {
 
-			readResult = reader.readChar(inputStreamStruct, isEofErrorP, eofValue, true);
+			readResult = inputStreamStruct.readChar(isEofErrorP, eofValue, true);
 			tokenBuilder.setPreviousReadResult(readResult);
 
 			if (readResult.isEof()) {

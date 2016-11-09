@@ -30,10 +30,10 @@ class ReaderImpl implements Reader {
 	public LispStruct read(final InputStreamStruct inputStreamStruct, final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP) {
 		final LispStruct token = readPreservingWhitespace(inputStreamStruct, eofErrorP, eofValue, recursiveP);
 
-		final ReadPeekResult possibleWhitespace = readChar(inputStreamStruct, false, eofValue, false);
+		final ReadPeekResult possibleWhitespace = inputStreamStruct.readChar(false, eofValue, false);
 		final Integer codePoint = possibleWhitespace.getResult();
 		if (!possibleWhitespace.isEof() && (!Character.isWhitespace(codePoint) || recursiveP)) {
-			unreadChar(inputStreamStruct, codePoint);
+			inputStreamStruct.unreadChar(codePoint);
 		}
 
 		return token;
@@ -58,15 +58,5 @@ class ReaderImpl implements Reader {
 		} finally {
 			context.restoreSharpEqualTables(tempSharpEqualFinalTable, tempSharpEqualTempTable, tempSharpEqualReplTable);
 		}
-	}
-
-	@Override
-	public ReadPeekResult readChar(final InputStreamStruct inputStreamStruct, final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP) {
-		return inputStreamStruct.readChar(eofErrorP, eofValue, recursiveP);
-	}
-
-	@Override
-	public void unreadChar(final InputStreamStruct inputStreamStruct, final int codePoint) {
-		inputStreamStruct.unreadChar(codePoint);
 	}
 }

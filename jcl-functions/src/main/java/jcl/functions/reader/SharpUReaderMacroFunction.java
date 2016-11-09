@@ -14,7 +14,6 @@ import jcl.lang.ReadtableStruct;
 import jcl.lang.factory.LispStructFactory;
 import jcl.lang.statics.ReaderVariables;
 import jcl.util.CodePointConstants;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Component;
 
@@ -25,12 +24,8 @@ import org.springframework.stereotype.Component;
 @DependsOn("readerBootstrap")
 public class SharpUReaderMacroFunction extends ReaderMacroFunctionImpl {
 
-	private final UnicodeCharacterReaderMacroFunction unicodeCharacterReaderMacroFunction;
-
-	@Autowired
-	public SharpUReaderMacroFunction(final UnicodeCharacterReaderMacroFunction unicodeCharacterReaderMacroFunction) {
+	public SharpUReaderMacroFunction() {
 		super("SHARP-U");
-		this.unicodeCharacterReaderMacroFunction = unicodeCharacterReaderMacroFunction;
 	}
 
 	@Override
@@ -49,7 +44,7 @@ public class SharpUReaderMacroFunction extends ReaderMacroFunctionImpl {
 			return NILStruct.INSTANCE;
 		}
 
-		final int unicodeCodePoint = unicodeCharacterReaderMacroFunction.readUnicodeCharacter(inputStreamStruct);
+		final int unicodeCodePoint = UnicodeCharacterReaderMacroFunction.readUnicodeCharacter(inputStreamStruct);
 		return LispStructFactory.toCharacter(unicodeCodePoint);
 	}
 }

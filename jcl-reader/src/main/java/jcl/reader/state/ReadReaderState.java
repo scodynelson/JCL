@@ -8,7 +8,6 @@ import jcl.lang.InputStreamStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.NILStruct;
 import jcl.lang.ReadtableStruct;
-import jcl.reader.Reader;
 import jcl.lang.readtable.SyntaxType;
 import jcl.lang.statics.ReaderVariables;
 import jcl.lang.stream.ReadPeekResult;
@@ -40,9 +39,6 @@ class ReadReaderState implements ReaderState {
 	@Autowired
 	private ReaderStateMediator readerStateMediator;
 
-	@Autowired
-	private Reader reader;
-
 	@Override
 	public LispStruct process(final TokenBuilder tokenBuilder) {
 
@@ -51,7 +47,7 @@ class ReadReaderState implements ReaderState {
 
 		final InputStreamStruct inputStreamStruct = tokenBuilder.getInputStreamStruct();
 
-		final ReadPeekResult readResult = reader.readChar(inputStreamStruct, isEofErrorP, eofValue, true);
+		final ReadPeekResult readResult = inputStreamStruct.readChar(isEofErrorP, eofValue, true);
 		tokenBuilder.setPreviousReadResult(readResult);
 
 		if (readResult.isEof()) {

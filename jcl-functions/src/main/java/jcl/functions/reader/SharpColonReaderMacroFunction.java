@@ -14,7 +14,6 @@ import jcl.lang.condition.exception.ReaderErrorException;
 import jcl.lang.factory.LispStructFactory;
 import jcl.lang.statics.ReaderVariables;
 import jcl.util.CodePointConstants;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Component;
 
@@ -25,12 +24,8 @@ import org.springframework.stereotype.Component;
 @DependsOn("readerBootstrap")
 public class SharpColonReaderMacroFunction extends ReaderMacroFunctionImpl {
 
-	private final ExtendedTokenReaderMacroFunction extendedTokenReaderMacroFunction;
-
-	@Autowired
-	public SharpColonReaderMacroFunction(final ExtendedTokenReaderMacroFunction extendedTokenReaderMacroFunction) {
+	public SharpColonReaderMacroFunction() {
 		super("SHARP-COLON");
-		this.extendedTokenReaderMacroFunction = extendedTokenReaderMacroFunction;
 	}
 
 	@Override
@@ -43,7 +38,7 @@ public class SharpColonReaderMacroFunction extends ReaderMacroFunctionImpl {
 	public LispStruct readMacro(final InputStreamStruct inputStreamStruct, final int codePoint, final Optional<BigInteger> numberArgument) {
 		assert codePoint == CodePointConstants.COLON;
 
-		final ExtendedTokenReaderMacroFunction.ReadExtendedToken extendedToken = extendedTokenReaderMacroFunction.readExtendedToken(inputStreamStruct, false);
+		final ExtendedTokenReaderMacroFunction.ReadExtendedToken extendedToken = ExtendedTokenReaderMacroFunction.readExtendedToken(inputStreamStruct, false);
 		final String tokenString = extendedToken.getTokenString();
 
 		if (ReaderVariables.READ_SUPPRESS.getVariableValue().booleanValue()) {

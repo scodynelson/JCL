@@ -13,9 +13,9 @@ import jcl.lang.LispStruct;
 import jcl.lang.NILStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
 import jcl.lang.factory.LispStructFactory;
-import jcl.reader.Reader;
 import jcl.lang.statics.ReaderVariables;
 import jcl.lang.stream.ReadPeekResult;
+import jcl.reader.Reader;
 import jcl.reader.ReaderContext;
 import jcl.reader.ReaderContextHolder;
 import jcl.util.CodePointConstants;
@@ -56,7 +56,7 @@ public class CommaReaderMacroFunction extends ReaderMacroFunctionImpl {
 			throw new ReaderErrorException("Comma not inside a backquote.");
 		}
 
-		final ReadPeekResult readResult = reader.readChar(inputStreamStruct, true, NILStruct.INSTANCE, false);
+		final ReadPeekResult readResult = inputStreamStruct.readChar(true, NILStruct.INSTANCE, false);
 		final int nextCodePoint = readResult.getResult();
 
 		context.decrementBackquoteLevel();
@@ -70,7 +70,7 @@ public class CommaReaderMacroFunction extends ReaderMacroFunctionImpl {
 				final LispStruct token = reader.read(inputStreamStruct, true, NILStruct.INSTANCE, true);
 				commaCons = LispStructFactory.toCons(BackquoteReaderMacroFunction.BQ_DOT_FLAG, token);
 			} else {
-				reader.unreadChar(inputStreamStruct, nextCodePoint);
+				inputStreamStruct.unreadChar(nextCodePoint);
 				final LispStruct token = reader.read(inputStreamStruct, true, NILStruct.INSTANCE, true);
 				commaCons = LispStructFactory.toCons(BackquoteReaderMacroFunction.BQ_COMMA_FLAG, token);
 			}

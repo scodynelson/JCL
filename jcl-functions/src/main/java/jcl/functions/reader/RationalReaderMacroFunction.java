@@ -6,6 +6,7 @@ package jcl.functions.reader;
 
 import java.math.BigInteger;
 
+import jcl.lang.InputStreamStruct;
 import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.NILStruct;
@@ -13,7 +14,6 @@ import jcl.lang.RationalStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
 import jcl.lang.factory.LispStructFactory;
 import jcl.reader.Reader;
-import jcl.lang.readtable.ReaderInputStreamStruct;
 import jcl.lang.statics.ReaderVariables;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -40,13 +40,13 @@ final class RationalReaderMacroFunction {
 	 * handling based on the provided {@code radix} value.
 	 *
 	 * @param inputStreamStruct
-	 * 		the {@link ReaderInputStreamStruct} to read in the {@link RationalStruct}
+	 * 		the {@link InputStreamStruct} to read in the {@link RationalStruct}
 	 * @param radix
 	 * 		the radix value used when reading numeric parts of the {@link RationalStruct}
 	 *
 	 * @return the properly parsed {@link RationalStruct}
 	 */
-	LispStruct readRational(final ReaderInputStreamStruct inputStreamStruct, final BigInteger radix) {
+	LispStruct readRational(final InputStreamStruct inputStreamStruct, final BigInteger radix) {
 		if (ReaderVariables.READ_SUPPRESS.getVariableValue().booleanValue()) {
 			extendedTokenReaderMacroFunction.readExtendedToken(inputStreamStruct, false);
 			return NILStruct.INSTANCE;

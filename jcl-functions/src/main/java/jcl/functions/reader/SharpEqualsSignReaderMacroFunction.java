@@ -13,14 +13,16 @@ import java.util.Set;
 import java.util.UUID;
 
 import jcl.lang.ConsStruct;
+import jcl.lang.InputStreamStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.NILStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
 import jcl.lang.factory.LispStructFactory;
 import jcl.reader.Reader;
-import jcl.lang.readtable.ReaderInputStreamStruct;
 import jcl.lang.statics.ReaderVariables;
+import jcl.reader.ReaderContext;
+import jcl.reader.ReaderContextHolder;
 import jcl.util.CodePointConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.DependsOn;
@@ -48,7 +50,7 @@ public class SharpEqualsSignReaderMacroFunction extends ReaderMacroFunctionImpl 
 	}
 
 	@Override
-	public LispStruct readMacro(final ReaderInputStreamStruct inputStreamStruct, final int codePoint, final Optional<BigInteger> numberArgument) {
+	public LispStruct readMacro(final InputStreamStruct inputStreamStruct, final int codePoint, final Optional<BigInteger> numberArgument) {
 		assert codePoint == CodePointConstants.EQUALS_SIGN;
 
 		if (ReaderVariables.READ_SUPPRESS.getVariableValue().booleanValue()) {
@@ -60,8 +62,9 @@ public class SharpEqualsSignReaderMacroFunction extends ReaderMacroFunctionImpl 
 		}
 		final BigInteger numberArgumentValue = numberArgument.get();
 
-		final Map<BigInteger, LispStruct> sharpEqualFinalTable = inputStreamStruct.getSharpEqualFinalTable();
-		final Map<BigInteger, SymbolStruct> sharpEqualTempTable = inputStreamStruct.getSharpEqualTempTable();
+		final ReaderContext context = ReaderContextHolder.getContext();
+		final Map<BigInteger, LispStruct> sharpEqualFinalTable = context.getSharpEqualFinalTable();
+		final Map<BigInteger, SymbolStruct> sharpEqualTempTable = context.getSharpEqualTempTable();
 
 		if (sharpEqualFinalTable.containsKey(numberArgumentValue)
 				|| sharpEqualTempTable.containsKey(numberArgumentValue)) {
@@ -74,7 +77,7 @@ public class SharpEqualsSignReaderMacroFunction extends ReaderMacroFunctionImpl 
 
 		final LispStruct token = reader.read(inputStreamStruct, true, NILStruct.INSTANCE, true);
 
-		final Map<SymbolStruct, LispStruct> sharpEqualReplTable = inputStreamStruct.getSharpEqualReplTable();
+		final Map<SymbolStruct, LispStruct> sharpEqualReplTable = context.getSharpEqualReplTable();
 		sharpEqualReplTable.put(labelTag, token);
 
 		final Set<LispStruct> sharpEqualCircleSet = new HashSet<>();

@@ -14,8 +14,8 @@ import jcl.lang.function.CommonLispBuiltInFunctionStructBase;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.reader.Reader;
-import jcl.lang.readtable.ReaderInputStreamStruct;
 import jcl.lang.statics.StreamVariables;
+import jcl.reader.ReaderContextHolder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -57,23 +57,26 @@ public final class ReadFunction extends CommonLispBuiltInFunctionStructBase {
 			throw new TypeErrorException("The value " + inputStreamArg + " is not either T, NIL, or a STREAM.");
 		}
 
-		final ReaderInputStreamStruct readerInputStreamStruct = new ReaderInputStreamStruct(inputStreamStruct);
 		final BooleanStruct eofErrorP = arguments.getOptionalArgument(EOF_ERROR_ARGUMENT, BooleanStruct.class);
 		final LispStruct eofValue = arguments.getOptionalArgument(EOF_VALUE_ARGUMENT);
 		final BooleanStruct recursiveP = arguments.getOptionalArgument(RECURSIVE_P_ARGUMENT, BooleanStruct.class);
 
-		return read(readerInputStreamStruct, eofErrorP, eofValue, recursiveP);
+		return read(inputStreamStruct, eofErrorP, eofValue, recursiveP);
 	}
 
-	public LispStruct read(final ReaderInputStreamStruct inputStreamStruct, final BooleanStruct eofErrorP, final LispStruct eofValue,
+	public LispStruct read(final InputStreamStruct inputStreamStruct, final BooleanStruct eofErrorP, final LispStruct eofValue,
 	                       final BooleanStruct recursiveP) {
 
 		return read(inputStreamStruct, eofErrorP.booleanValue(), eofValue, recursiveP.booleanValue());
 	}
 
-	public LispStruct read(final ReaderInputStreamStruct inputStreamStruct, final boolean eofErrorP, final LispStruct eofValue,
+	public LispStruct read(final InputStreamStruct inputStreamStruct, final boolean eofErrorP, final LispStruct eofValue,
 	                       final boolean recursiveP) {
 
-		return reader.read(inputStreamStruct, eofErrorP, eofValue, recursiveP);
+		try {
+			return reader.read(inputStreamStruct, eofErrorP, eofValue, recursiveP);
+		} finally {
+			ReaderContextHolder.clearContext();
+		}
 	}
 }

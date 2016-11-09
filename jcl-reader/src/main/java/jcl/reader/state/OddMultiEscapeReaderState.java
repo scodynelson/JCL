@@ -4,11 +4,11 @@
 
 package jcl.reader.state;
 
+import jcl.lang.InputStreamStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.ReadtableStruct;
 import jcl.lang.readtable.AttributeType;
 import jcl.reader.Reader;
-import jcl.lang.readtable.ReaderInputStreamStruct;
 import jcl.lang.readtable.SyntaxType;
 import jcl.lang.statics.ReaderVariables;
 import jcl.lang.stream.ReadPeekResult;
@@ -57,7 +57,7 @@ class OddMultiEscapeReaderState implements ReaderState {
 		final boolean isEofErrorP = tokenBuilder.isEofErrorP();
 		final LispStruct eofValue = tokenBuilder.getEofValue();
 
-		final ReaderInputStreamStruct inputStreamStruct = tokenBuilder.getInputStreamStruct();
+		final InputStreamStruct inputStreamStruct = tokenBuilder.getInputStreamStruct();
 
 		ReadPeekResult readResult = reader.readChar(inputStreamStruct, isEofErrorP, eofValue, true);
 		tokenBuilder.setPreviousReadResult(readResult);

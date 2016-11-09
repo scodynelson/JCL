@@ -8,6 +8,7 @@ import java.util.Iterator;
 
 import jcl.lang.BooleanStruct;
 import jcl.lang.ConsStruct;
+import jcl.lang.InputStreamStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
 import jcl.lang.NILStruct;
@@ -16,7 +17,6 @@ import jcl.lang.SymbolStruct;
 import jcl.lang.TStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
 import jcl.reader.Reader;
-import jcl.lang.readtable.ReaderInputStreamStruct;
 import jcl.lang.statics.CommonLispSymbols;
 import jcl.lang.statics.CompilerVariables;
 import jcl.lang.statics.GlobalPackageStruct;
@@ -51,11 +51,11 @@ final class FeaturesReaderMacroFunction {
 	 * read operation or not.
 	 *
 	 * @param inputStreamStruct
-	 * 		the {@link ReaderInputStreamStruct} to read in the next token
+	 * 		the {@link InputStreamStruct} to read in the next token
 	 * @param shouldHideFeatures
 	 * 		whether or not the *features* read should be hidden or not (aka. the token is read in but ignored)
 	 */
-	void readFeatures(final ReaderInputStreamStruct inputStreamStruct, final boolean shouldHideFeatures) {
+	void readFeatures(final InputStreamStruct inputStreamStruct, final boolean shouldHideFeatures) {
 
 		final BooleanStruct previousReadSuppress = ReaderVariables.READ_SUPPRESS.getVariableValue();
 		final PackageStruct previousPackage = PackageVariables.PACKAGE.getVariableValue();

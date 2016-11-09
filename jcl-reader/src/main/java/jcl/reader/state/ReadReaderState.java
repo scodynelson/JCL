@@ -4,11 +4,11 @@
 
 package jcl.reader.state;
 
+import jcl.lang.InputStreamStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.NILStruct;
 import jcl.lang.ReadtableStruct;
 import jcl.reader.Reader;
-import jcl.lang.readtable.ReaderInputStreamStruct;
 import jcl.lang.readtable.SyntaxType;
 import jcl.lang.statics.ReaderVariables;
 import jcl.lang.stream.ReadPeekResult;
@@ -49,7 +49,7 @@ class ReadReaderState implements ReaderState {
 		final boolean isEofErrorP = tokenBuilder.isEofErrorP();
 		final LispStruct eofValue = tokenBuilder.getEofValue();
 
-		final ReaderInputStreamStruct inputStreamStruct = tokenBuilder.getInputStreamStruct();
+		final InputStreamStruct inputStreamStruct = tokenBuilder.getInputStreamStruct();
 
 		final ReadPeekResult readResult = reader.readChar(inputStreamStruct, isEofErrorP, eofValue, true);
 		tokenBuilder.setPreviousReadResult(readResult);

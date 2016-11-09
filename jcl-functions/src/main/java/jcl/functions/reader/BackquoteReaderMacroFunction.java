@@ -8,6 +8,7 @@ import java.math.BigInteger;
 import java.util.Optional;
 
 import jcl.lang.ConsStruct;
+import jcl.lang.InputStreamStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
 import jcl.lang.NILStruct;
@@ -18,9 +19,10 @@ import jcl.lang.condition.exception.ReaderErrorException;
 import jcl.lang.factory.LispStructFactory;
 import jcl.lang.internal.SpecialOperatorStructImpl;
 import jcl.reader.Reader;
-import jcl.lang.readtable.ReaderInputStreamStruct;
 import jcl.lang.statics.GlobalPackageStruct;
 import jcl.lang.statics.ReaderVariables;
+import jcl.reader.ReaderContext;
+import jcl.reader.ReaderContextHolder;
 import jcl.util.CodePointConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -59,10 +61,11 @@ public class BackquoteReaderMacroFunction extends ReaderMacroFunctionImpl {
 	}
 
 	@Override
-	public LispStruct readMacro(final ReaderInputStreamStruct inputStreamStruct, final int codePoint, final Optional<BigInteger> numberArgument) {
+	public LispStruct readMacro(final InputStreamStruct inputStreamStruct, final int codePoint, final Optional<BigInteger> numberArgument) {
 		assert codePoint == CodePointConstants.GRAVE_ACCENT;
 
-		inputStreamStruct.incrementBackquoteLevel();
+		final ReaderContext context = ReaderContextHolder.getContext();
+		context.incrementBackquoteLevel();
 		try {
 			final LispStruct code = reader.read(inputStreamStruct, true, NILStruct.INSTANCE, true);
 			final BackquoteReturn backquoteReturn = backquotify(code);
@@ -79,7 +82,7 @@ public class BackquoteReaderMacroFunction extends ReaderMacroFunctionImpl {
 
 			return backquotify_1(flag, thing);
 		} finally {
-			inputStreamStruct.decrementBackquoteLevel();
+			context.decrementBackquoteLevel();
 		}
 	}
 

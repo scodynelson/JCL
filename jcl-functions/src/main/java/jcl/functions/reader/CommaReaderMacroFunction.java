@@ -8,14 +8,16 @@ import java.math.BigInteger;
 import java.util.Optional;
 
 import jcl.lang.ConsStruct;
+import jcl.lang.InputStreamStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.NILStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
 import jcl.lang.factory.LispStructFactory;
 import jcl.reader.Reader;
-import jcl.lang.readtable.ReaderInputStreamStruct;
 import jcl.lang.statics.ReaderVariables;
 import jcl.lang.stream.ReadPeekResult;
+import jcl.reader.ReaderContext;
+import jcl.reader.ReaderContextHolder;
 import jcl.util.CodePointConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -41,10 +43,11 @@ public class CommaReaderMacroFunction extends ReaderMacroFunctionImpl {
 	}
 
 	@Override
-	public LispStruct readMacro(final ReaderInputStreamStruct inputStreamStruct, final int codePoint, final Optional<BigInteger> numberArgument) {
+	public LispStruct readMacro(final InputStreamStruct inputStreamStruct, final int codePoint, final Optional<BigInteger> numberArgument) {
 		assert codePoint == CodePointConstants.GRAVE_ACCENT;
 
-		final int currentBackquoteLevel = inputStreamStruct.getBackquoteLevel();
+		final ReaderContext context = ReaderContextHolder.getContext();
+		final int currentBackquoteLevel = context.getBackquoteLevel();
 		if (currentBackquoteLevel <= 0) {
 			if (ReaderVariables.READ_SUPPRESS.getVariableValue().booleanValue()) {
 				return NILStruct.INSTANCE;
@@ -56,7 +59,7 @@ public class CommaReaderMacroFunction extends ReaderMacroFunctionImpl {
 		final ReadPeekResult readResult = reader.readChar(inputStreamStruct, true, NILStruct.INSTANCE, false);
 		final int nextCodePoint = readResult.getResult();
 
-		inputStreamStruct.decrementBackquoteLevel();
+		context.decrementBackquoteLevel();
 		try {
 			final ConsStruct commaCons;
 
@@ -73,7 +76,7 @@ public class CommaReaderMacroFunction extends ReaderMacroFunctionImpl {
 			}
 			return commaCons;
 		} finally {
-			inputStreamStruct.incrementBackquoteLevel();
+			context.incrementBackquoteLevel();
 		}
 	}
 }

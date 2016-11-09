@@ -14,7 +14,6 @@ import jcl.lang.LispStruct;
 import jcl.lang.function.SystemBuiltInFunctionStructBase;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
-import jcl.lang.readtable.ReaderInputStreamStruct;
 
 /**
  * Abstract implementation definition for all Reader defined macro functions that read character macros based off of a
@@ -37,11 +36,11 @@ public abstract class ReaderMacroFunctionImpl extends SystemBuiltInFunctionStruc
 	}
 
 	/**
-	 * Interpret the character stream from the provided {@link ReaderInputStreamStruct} (up to End-of-File or new line) based on the
+	 * Interpret the character stream from the provided {@link InputStreamStruct} (up to End-of-File or new line) based on the
 	 * provided {@code codePoint}.
 	 *
 	 * @param inputStreamStruct
-	 * 		the {@link ReaderInputStreamStruct} to read tokens from
+	 * 		the {@link InputStreamStruct} to read tokens from
 	 * @param codePoint
 	 * 		the character code point that determines the macro function
 	 * @param numberArgument
@@ -49,7 +48,7 @@ public abstract class ReaderMacroFunctionImpl extends SystemBuiltInFunctionStruc
 	 *
 	 * @return the parsed {@link LispStruct} token
 	 */
-	protected abstract LispStruct readMacro(ReaderInputStreamStruct inputStreamStruct, int codePoint, Optional<BigInteger> numberArgument);
+	protected abstract LispStruct readMacro(InputStreamStruct inputStreamStruct, int codePoint, Optional<BigInteger> numberArgument);
 
 	/**
 	 * Default method used to determine if the ReaderMacroFunction is a dispatching macro. The default value return is
@@ -75,13 +74,6 @@ public abstract class ReaderMacroFunctionImpl extends SystemBuiltInFunctionStruc
 			numberArgument = Optional.of(bigInteger);
 		}
 
-		final ReaderInputStreamStruct readerInputStreamStruct;
-		if (stream instanceof ReaderInputStreamStruct) {
-			readerInputStreamStruct = (ReaderInputStreamStruct) stream;
-		} else {
-			readerInputStreamStruct = new ReaderInputStreamStruct(stream);
-		}
-
-		return readMacro(readerInputStreamStruct, codePoint, numberArgument);
+		return readMacro(stream, codePoint, numberArgument);
 	}
 }

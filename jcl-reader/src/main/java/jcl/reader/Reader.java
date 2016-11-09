@@ -6,7 +6,6 @@ package jcl.reader;
 
 import jcl.lang.InputStreamStruct;
 import jcl.lang.LispStruct;
-import jcl.lang.readtable.ReaderInputStreamStruct;
 import jcl.lang.stream.ReadPeekResult;
 
 /**
@@ -26,7 +25,7 @@ public interface Reader {
 	 *
 	 * @return the next {@link LispStruct} from the {@link InputStreamStruct}
 	 */
-	LispStruct read(ReaderInputStreamStruct inputStreamStruct, boolean eofErrorP, LispStruct eofValue, boolean recursiveP);
+	LispStruct read(InputStreamStruct inputStreamStruct, boolean eofErrorP, LispStruct eofValue, boolean recursiveP);
 
 	/**
 	 * Reads the next {@link LispStruct} from the {@link InputStreamStruct}, making sure to preserve any whitespace
@@ -41,7 +40,7 @@ public interface Reader {
 	 *
 	 * @return the next {@link LispStruct} from the {@link InputStreamStruct}
 	 */
-	LispStruct readPreservingWhitespace(ReaderInputStreamStruct inputStreamStruct, boolean eofErrorP, LispStruct eofValue, boolean recursiveP);
+	LispStruct readPreservingWhitespace(InputStreamStruct inputStreamStruct, boolean eofErrorP, LispStruct eofValue, boolean recursiveP);
 
 	/**
 	 * Reads the next {@link ReadPeekResult} from the {@link InputStreamStruct}.
@@ -55,7 +54,7 @@ public interface Reader {
 	 *
 	 * @return the next {@link ReadPeekResult} from the {@link InputStreamStruct}
 	 */
-	ReadPeekResult readChar(ReaderInputStreamStruct inputStreamStruct, boolean eofErrorP, LispStruct eofValue, boolean recursiveP);
+	ReadPeekResult readChar(InputStreamStruct inputStreamStruct, boolean eofErrorP, LispStruct eofValue, boolean recursiveP);
 
 	/**
 	 * Un-reads the provided {@code codePoint} value from (or really back into) the {@link InputStreamStruct}.
@@ -63,5 +62,5 @@ public interface Reader {
 	 * @param codePoint
 	 * 		the value to un-read from (or really back into) the {@link InputStreamStruct}
 	 */
-	void unreadChar(ReaderInputStreamStruct inputStreamStruct, int codePoint);
+	void unreadChar(InputStreamStruct inputStreamStruct, int codePoint);
 }

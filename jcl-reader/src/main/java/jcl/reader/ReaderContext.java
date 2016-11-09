@@ -1,21 +1,16 @@
-package jcl.lang.readtable;
+package jcl.reader;
 
 import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
-import jcl.lang.InputStreamStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.SymbolStruct;
-import jcl.lang.stream.PeekType;
-import jcl.lang.stream.ReadPeekResult;
-import jcl.type.LispType;
 
-public class ReaderInputStreamStruct implements InputStreamStruct {
-
-	private final InputStreamStruct inputStreamStruct;
+public class ReaderContext {
 
 	/**
 	 * Map containing the number argument to #= to parsed {@link LispStruct}s produced by the #= reader macro function.
@@ -39,14 +34,6 @@ public class ReaderInputStreamStruct implements InputStreamStruct {
 	 * usage and evaluation.
 	 */
 	private int backquoteLevel;
-
-	public ReaderInputStreamStruct(final InputStreamStruct inputStreamStruct) {
-		this.inputStreamStruct = inputStreamStruct;
-	}
-
-	public InputStreamStruct getInputStream() {
-		return inputStreamStruct;
-	}
 
 	public Map<BigInteger, LispStruct> getSharpEqualFinalTable() {
 		return new HashMap<>(sharpEqualFinalTable);
@@ -88,72 +75,22 @@ public class ReaderInputStreamStruct implements InputStreamStruct {
 	}
 
 	@Override
-	public boolean close() {
-		return inputStreamStruct.close();
+	public boolean equals(final Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if ((obj == null) || (getClass() != obj.getClass())) {
+			return false;
+		}
+		final ReaderContext context = (ReaderContext) obj;
+		return (backquoteLevel == context.backquoteLevel) &&
+				Objects.equals(sharpEqualFinalTable, context.sharpEqualFinalTable) &&
+				Objects.equals(sharpEqualTempTable, context.sharpEqualTempTable) &&
+				Objects.equals(sharpEqualReplTable, context.sharpEqualReplTable);
 	}
 
 	@Override
-	public LispType getElementType() {
-		return inputStreamStruct.getElementType();
-	}
-
-	@Override
-	public boolean isInteractive() {
-		return inputStreamStruct.isInteractive();
-	}
-
-	@Override
-	public boolean isOpen() {
-		return inputStreamStruct.isOpen();
-	}
-
-	@Override
-	public boolean isClosed() {
-		return inputStreamStruct.isClosed();
-	}
-
-	@Override
-	public Long fileLength() {
-		return inputStreamStruct.fileLength();
-	}
-
-	@Override
-	public Long filePosition(final Long filePosition) {
-		return inputStreamStruct.filePosition(filePosition);
-	}
-
-	@Override
-	public Long lineNumber() {
-		return inputStreamStruct.lineNumber();
-	}
-
-	@Override
-	public ReadPeekResult readChar(final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP) {
-		return inputStreamStruct.readChar(eofErrorP, eofValue, recursiveP);
-	}
-
-	@Override
-	public ReadPeekResult readByte(final boolean eofErrorP, final LispStruct eofValue) {
-		return inputStreamStruct.readByte(eofErrorP, eofValue);
-	}
-
-	@Override
-	public ReadPeekResult peekChar(final PeekType peekType, final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP) {
-		return inputStreamStruct.peekChar(peekType, eofErrorP, eofValue, recursiveP);
-	}
-
-	@Override
-	public Integer unreadChar(final Integer codePoint) {
-		return inputStreamStruct.unreadChar(codePoint);
-	}
-
-	@Override
-	public void clearInput() {
-		inputStreamStruct.clearInput();
-	}
-
-	@Override
-	public boolean listen() {
-		return inputStreamStruct.listen();
+	public int hashCode() {
+		return Objects.hash(sharpEqualFinalTable, sharpEqualTempTable, sharpEqualReplTable, backquoteLevel);
 	}
 }

@@ -8,13 +8,13 @@ import java.math.BigInteger;
 import java.util.Optional;
 
 import jcl.lang.FunctionStruct;
+import jcl.lang.InputStreamStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.NILStruct;
 import jcl.lang.ReadtableStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
 import jcl.lang.factory.LispStructFactory;
 import jcl.lang.readtable.DispatchingReaderMacroFunction;
-import jcl.lang.readtable.ReaderInputStreamStruct;
 import jcl.lang.statics.ReaderVariables;
 import jcl.lang.stream.ReadPeekResult;
 import jcl.reader.Reader;
@@ -69,7 +69,7 @@ class MacroCharacterReaderState implements ReaderState {
 			throw new ReaderErrorException("No reader macro function exists for character: " + codePoint + '.');
 		}
 
-		final ReaderInputStreamStruct inputStreamStruct = tokenBuilder.getInputStreamStruct();
+		final InputStreamStruct inputStreamStruct = tokenBuilder.getInputStreamStruct();
 
 		final LispStruct token;
 		if (readerMacroFunction instanceof DispatchingReaderMacroFunction) {
@@ -110,11 +110,11 @@ class MacroCharacterReaderState implements ReaderState {
 	 * Reads in the number argument for the macro reader to use when processing the macro function character.
 	 *
 	 * @param inputStreamStruct
-	 * 		the {@link ReaderInputStreamStruct} to use for reading the number argument
+	 * 		the {@link InputStreamStruct} to use for reading the number argument
 	 *
 	 * @return the number argument if it exists; {@link Optional#empty} if no number argument was read in
 	 */
-	private Optional<BigInteger> getNumberArgument(final ReaderInputStreamStruct inputStreamStruct) {
+	private Optional<BigInteger> getNumberArgument(final InputStreamStruct inputStreamStruct) {
 
 		// NOTE: This will throw errors when it reaches an EOF. That's why we can un-box the 'readChar' variable below.
 		ReadPeekResult readResult = reader.readChar(inputStreamStruct, true, NILStruct.INSTANCE, false);

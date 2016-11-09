@@ -10,7 +10,6 @@ import java.util.Map;
 import jcl.lang.InputStreamStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.SymbolStruct;
-import jcl.lang.readtable.ReaderInputStreamStruct;
 import jcl.lang.stream.ReadPeekResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -28,7 +27,7 @@ class ReaderImpl implements Reader {
 	private ReaderStateMediator readerStateMediator;
 
 	@Override
-	public LispStruct read(final ReaderInputStreamStruct inputStreamStruct, final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP) {
+	public LispStruct read(final InputStreamStruct inputStreamStruct, final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP) {
 		final LispStruct token = readPreservingWhitespace(inputStreamStruct, eofErrorP, eofValue, recursiveP);
 
 		final ReadPeekResult possibleWhitespace = readChar(inputStreamStruct, false, eofValue, false);
@@ -41,34 +40,33 @@ class ReaderImpl implements Reader {
 	}
 
 	@Override
-	public LispStruct readPreservingWhitespace(final ReaderInputStreamStruct inputStreamStruct, final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP) {
+	public LispStruct readPreservingWhitespace(final InputStreamStruct inputStreamStruct, final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP) {
 		if (recursiveP) {
 			final TokenBuilder tokenBuilder = new TokenBuilder(inputStreamStruct, eofErrorP, eofValue);
 			return readerStateMediator.read(tokenBuilder);
 		}
 
-		final Map<BigInteger, LispStruct> tempSharpEqualFinalTable = inputStreamStruct.getSharpEqualFinalTable();
-		final Map<BigInteger, SymbolStruct> tempSharpEqualTempTable = inputStreamStruct.getSharpEqualTempTable();
-		final Map<SymbolStruct, LispStruct> tempSharpEqualReplTable = inputStreamStruct.getSharpEqualReplTable();
+		final ReaderContext context = ReaderContextHolder.getContext();
+		final Map<BigInteger, LispStruct> tempSharpEqualFinalTable = context.getSharpEqualFinalTable();
+		final Map<BigInteger, SymbolStruct> tempSharpEqualTempTable = context.getSharpEqualTempTable();
+		final Map<SymbolStruct, LispStruct> tempSharpEqualReplTable = context.getSharpEqualReplTable();
 
 		try {
-			inputStreamStruct.clearSharpEqualTables();
+			context.clearSharpEqualTables();
 
 			return readPreservingWhitespace(inputStreamStruct, eofErrorP, eofValue, true);
 		} finally {
-			inputStreamStruct.restoreSharpEqualTables(tempSharpEqualFinalTable, tempSharpEqualTempTable, tempSharpEqualReplTable);
+			context.restoreSharpEqualTables(tempSharpEqualFinalTable, tempSharpEqualTempTable, tempSharpEqualReplTable);
 		}
 	}
 
 	@Override
-	public ReadPeekResult readChar(final ReaderInputStreamStruct inputStreamStruct, final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP) {
-		final InputStreamStruct inputStream = inputStreamStruct.getInputStream();
-		return inputStream.readChar(eofErrorP, eofValue, recursiveP);
+	public ReadPeekResult readChar(final InputStreamStruct inputStreamStruct, final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP) {
+		return inputStreamStruct.readChar(eofErrorP, eofValue, recursiveP);
 	}
 
 	@Override
-	public void unreadChar(final ReaderInputStreamStruct inputStreamStruct, final int codePoint) {
-		final InputStreamStruct inputStream = inputStreamStruct.getInputStream();
-		inputStream.unreadChar(codePoint);
+	public void unreadChar(final InputStreamStruct inputStreamStruct, final int codePoint) {
+		inputStreamStruct.unreadChar(codePoint);
 	}
 }

@@ -7,10 +7,10 @@ package jcl.functions.reader;
 import java.math.BigInteger;
 import java.util.Optional;
 
+import jcl.lang.InputStreamStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.ReadtableStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
-import jcl.lang.readtable.ReaderInputStreamStruct;
 import jcl.lang.statics.ReaderVariables;
 import jcl.util.CodePointConstants;
 import org.springframework.context.annotation.DependsOn;
@@ -43,7 +43,7 @@ public class SharpIllegalReaderMacroFunction extends ReaderMacroFunctionImpl {
 	}
 
 	@Override
-	public LispStruct readMacro(final ReaderInputStreamStruct inputStreamStruct, final int codePoint, final Optional<BigInteger> numberArgument) {
+	public LispStruct readMacro(final InputStreamStruct inputStreamStruct, final int codePoint, final Optional<BigInteger> numberArgument) {
 		throw new ReaderErrorException("Illegal sharp character " + codePoint);
 	}
 }

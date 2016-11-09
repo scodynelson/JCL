@@ -4,8 +4,8 @@
 
 package jcl.functions.reader;
 
+import jcl.lang.InputStreamStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
-import jcl.lang.readtable.ReaderInputStreamStruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -32,11 +32,11 @@ final class UnicodeCharacterReaderMacroFunction {
 	 * the character is not a proper Unicode character.
 	 *
 	 * @param inputStreamStruct
-	 * 		the {@link ReaderInputStreamStruct} to read the Unicode character token from
+	 * 		the {@link InputStreamStruct} to read the Unicode character token from
 	 *
 	 * @return a Unicode character code point
 	 */
-	int readUnicodeCharacter(final ReaderInputStreamStruct inputStreamStruct) {
+	int readUnicodeCharacter(final InputStreamStruct inputStreamStruct) {
 		final ExtendedTokenReaderMacroFunction.ReadExtendedToken readExtendedToken =
 				extendedTokenReaderMacroFunction.readExtendedToken(inputStreamStruct, true);
 

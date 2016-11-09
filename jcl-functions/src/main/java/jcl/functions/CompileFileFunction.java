@@ -43,7 +43,6 @@ import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.internal.DeclarationStructImpl;
 import jcl.lang.internal.SpecialOperatorStructImpl;
-import jcl.lang.readtable.ReaderInputStreamStruct;
 import jcl.lang.statics.CommonLispSymbols;
 import jcl.lang.statics.CompilerVariables;
 import jcl.lang.statics.PackageVariables;
@@ -170,8 +169,7 @@ public final class CompileFileFunction extends CommonLispBuiltInFunctionStructBa
 
 			LispStruct form;
 			do {
-				final ReaderInputStreamStruct readerInputStreamStruct = new ReaderInputStreamStruct(inputFileStream);
-				form = readFunction.read(readerInputStreamStruct, NILStruct.INSTANCE, null, NILStruct.INSTANCE);
+				form = readFunction.read(inputFileStream, NILStruct.INSTANCE, null, NILStruct.INSTANCE);
 
 				if (form instanceof ListStruct) {
 					forms.add(form);

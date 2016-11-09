@@ -9,14 +9,16 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import jcl.lang.InputStreamStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
 import jcl.lang.NILStruct;
 import jcl.lang.VectorStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
 import jcl.lang.factory.LispStructFactory;
-import jcl.lang.readtable.ReaderInputStreamStruct;
 import jcl.lang.statics.ReaderVariables;
+import jcl.reader.ReaderContext;
+import jcl.reader.ReaderContextHolder;
 import jcl.util.CodePointConstants;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,7 +50,7 @@ public class SharpLeftParenthesisReaderMacroFunction extends ReaderMacroFunction
 	}
 
 	@Override
-	public LispStruct readMacro(final ReaderInputStreamStruct inputStreamStruct, final int codePoint, final Optional<BigInteger> numberArgument) {
+	public LispStruct readMacro(final InputStreamStruct inputStreamStruct, final int codePoint, final Optional<BigInteger> numberArgument) {
 		assert codePoint == CodePointConstants.LEFT_PARENTHESIS;
 
 		final ListStruct listToken = listReaderMacroFunction.readList(inputStreamStruct);
@@ -65,7 +67,8 @@ public class SharpLeftParenthesisReaderMacroFunction extends ReaderMacroFunction
 			throw new ReaderErrorException("Ill-formed vector: #" + listToken);
 		}
 
-		final int backquoteLevel = inputStreamStruct.getBackquoteLevel();
+		final ReaderContext context = ReaderContextHolder.getContext();
+		final int backquoteLevel = context.getBackquoteLevel();
 		if (backquoteLevel == 0) {
 			if (!numberArgument.isPresent()) {
 				final List<LispStruct> tokensAsJavaList = listToken.stream().collect(Collectors.toList());

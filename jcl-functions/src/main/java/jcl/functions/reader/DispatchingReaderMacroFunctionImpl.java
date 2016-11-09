@@ -6,13 +6,13 @@ import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 import jcl.lang.FunctionStruct;
+import jcl.lang.InputStreamStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.NILStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
 import jcl.lang.factory.LispStructFactory;
 import jcl.lang.readtable.DispatchingReaderMacroFunction;
 import jcl.reader.Reader;
-import jcl.lang.readtable.ReaderInputStreamStruct;
 import jcl.lang.stream.ReadPeekResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -40,7 +40,7 @@ public final class DispatchingReaderMacroFunctionImpl extends ReaderMacroFunctio
 	}
 
 	@Override
-	public LispStruct readMacro(final ReaderInputStreamStruct inputStreamStruct, final int codePoint, final Optional<BigInteger> numberArgument) {
+	public LispStruct readMacro(final InputStreamStruct inputStreamStruct, final int codePoint, final Optional<BigInteger> numberArgument) {
 
 		final ReadPeekResult readResult = reader.readChar(inputStreamStruct, false, null, false);
 		if (readResult.isEof()) {

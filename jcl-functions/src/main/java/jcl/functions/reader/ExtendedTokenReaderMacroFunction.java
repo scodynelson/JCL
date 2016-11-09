@@ -4,10 +4,10 @@
 
 package jcl.functions.reader;
 
+import jcl.lang.InputStreamStruct;
 import jcl.lang.NILStruct;
 import jcl.lang.readtable.AttributeType;
 import jcl.reader.Reader;
-import jcl.lang.readtable.ReaderInputStreamStruct;
 import jcl.lang.readtable.ReadtableCase;
 import jcl.lang.readtable.SyntaxType;
 import jcl.lang.statics.ReaderVariables;
@@ -34,13 +34,13 @@ final class ExtendedTokenReaderMacroFunction {
 	 * characters, and whether or not the token has a package delimiter.
 	 *
 	 * @param inputStreamStruct
-	 * 		the {@link ReaderInputStreamStruct} to read the token from
+	 * 		the {@link InputStreamStruct} to read the token from
 	 * @param isEscaped
 	 * 		whether or not characters read in by the JCL Reader should be considered escaped or not
 	 *
 	 * @return a {@link ReadExtendedToken} object containing the extended token information as read
 	 */
-	ReadExtendedToken readExtendedToken(final ReaderInputStreamStruct inputStreamStruct, final boolean isEscaped) {
+	ReadExtendedToken readExtendedToken(final InputStreamStruct inputStreamStruct, final boolean isEscaped) {
 
 		final StringBuilder stringBuilder = new StringBuilder();
 
@@ -86,11 +86,11 @@ final class ExtendedTokenReaderMacroFunction {
 	 * Reads in the next token considering a 'single escape' character code point.
 	 *
 	 * @param inputStreamStruct
-	 * 		the {@link ReaderInputStreamStruct} used when reading  the next token character
+	 * 		the {@link InputStreamStruct} used when reading  the next token character
 	 * @param stringBuilder
 	 * 		the {@link StringBuilder} to append the next token character
 	 */
-	private void readSingleEscape(final ReaderInputStreamStruct inputStreamStruct, final StringBuilder stringBuilder) {
+	private void readSingleEscape(final InputStreamStruct inputStreamStruct, final StringBuilder stringBuilder) {
 		readToken(inputStreamStruct, true, false, stringBuilder, true);
 	}
 
@@ -99,11 +99,11 @@ final class ExtendedTokenReaderMacroFunction {
 	 * comments specifically so that comments are properly escaped, but the next token is considered correctly.
 	 *
 	 * @param inputStreamStruct
-	 * 		the {@link ReaderInputStreamStruct} used when read the next token character(s)
+	 * 		the {@link InputStreamStruct} used when read the next token character(s)
 	 * @param stringBuilder
 	 * 		the {@link StringBuilder} to append the next token character(s)
 	 */
-	private void readMultipleEscape(final ReaderInputStreamStruct inputStreamStruct, final StringBuilder stringBuilder) {
+	private void readMultipleEscape(final InputStreamStruct inputStreamStruct, final StringBuilder stringBuilder) {
 
 		ReadPeekResult tempReadResult = reader.readChar(inputStreamStruct, true, null, false);
 		int tempCodePoint = tempReadResult.getResult();
@@ -131,7 +131,7 @@ final class ExtendedTokenReaderMacroFunction {
 	 * the appropriate case of the token character to append.
 	 *
 	 * @param inputStreamStruct
-	 * 		the {@link ReaderInputStreamStruct} to read the next token character from
+	 * 		the {@link InputStreamStruct} to read the next token character from
 	 * @param eofErrorP
 	 * 		whether or not the reader will fail when an End-Of-File is reached
 	 * @param recursiveP
@@ -143,7 +143,7 @@ final class ExtendedTokenReaderMacroFunction {
 	 *
 	 * @return the resulting {@link ReadPeekResult} of the read operation performed by the {@link Reader}
 	 */
-	private ReadPeekResult readToken(final ReaderInputStreamStruct inputStreamStruct, final boolean eofErrorP, final boolean recursiveP,
+	private ReadPeekResult readToken(final InputStreamStruct inputStreamStruct, final boolean eofErrorP, final boolean recursiveP,
 	                                 final StringBuilder stringBuilder, final boolean isEscaped) {
 		final ReadPeekResult readResult = reader.readChar(inputStreamStruct, eofErrorP, NILStruct.INSTANCE, recursiveP);
 		appendToken(readResult, stringBuilder, isEscaped);

@@ -2,6 +2,7 @@ package jcl.system.repl;
 
 import jcl.compiler.functions.EvalFunction;
 import jcl.functions.readtable.ReadFunction;
+import jcl.lang.InputStreamStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.NILStruct;
 import jcl.lang.PackageStruct;
@@ -9,7 +10,6 @@ import jcl.lang.ValuesStruct;
 import jcl.lang.condition.exception.ConditionException;
 import jcl.lang.condition.exception.ReaderErrorException;
 import jcl.lang.factory.LispStructFactory;
-import jcl.lang.readtable.ReaderInputStreamStruct;
 import jcl.lang.statics.PackageVariables;
 import jcl.lang.statics.REPLVariables;
 import jcl.lang.statics.StreamVariables;
@@ -55,7 +55,7 @@ public class ReadEvalPrint {
 			REPLVariables.STAR_STAR.setValue(NILStruct.INSTANCE);
 			REPLVariables.STAR_STAR_STAR.setValue(NILStruct.INSTANCE);
 
-			final ReaderInputStreamStruct inputStreamStruct = new ReaderInputStreamStruct(StreamVariables.STANDARD_INPUT.getVariableValue());
+			final InputStreamStruct inputStreamStruct = StreamVariables.STANDARD_INPUT.getVariableValue();
 
 			int counter = 1;
 			while (true) {

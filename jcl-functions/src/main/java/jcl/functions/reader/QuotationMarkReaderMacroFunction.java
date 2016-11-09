@@ -7,11 +7,11 @@ package jcl.functions.reader;
 import java.math.BigInteger;
 import java.util.Optional;
 
+import jcl.lang.InputStreamStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.NILStruct;
 import jcl.lang.factory.LispStructFactory;
 import jcl.reader.Reader;
-import jcl.lang.readtable.ReaderInputStreamStruct;
 import jcl.lang.statics.ReaderVariables;
 import jcl.lang.stream.ReadPeekResult;
 import jcl.util.CodePointConstants;
@@ -42,7 +42,7 @@ public class QuotationMarkReaderMacroFunction extends ReaderMacroFunctionImpl {
 	}
 
 	@Override
-	public LispStruct readMacro(final ReaderInputStreamStruct inputStreamStruct, final int codePoint, final Optional<BigInteger> numberArgument) {
+	public LispStruct readMacro(final InputStreamStruct inputStreamStruct, final int codePoint, final Optional<BigInteger> numberArgument) {
 		assert codePoint == CodePointConstants.QUOTATION_MARK;
 
 		final StringBuilder stringBuilder = new StringBuilder();
@@ -75,11 +75,11 @@ public class QuotationMarkReaderMacroFunction extends ReaderMacroFunctionImpl {
 	 * Handles escaped characters during a read operation for '"..."'.
 	 *
 	 * @param inputStreamStruct
-	 * 		the {@link ReaderInputStreamStruct} to read tokens from
+	 * 		the {@link InputStreamStruct} to read tokens from
 	 * @param stringBuilder
 	 * 		the {@link StringBuilder} used to build the final token
 	 */
-	private void handleEscapedCharacter(final ReaderInputStreamStruct inputStreamStruct, final StringBuilder stringBuilder) {
+	private void handleEscapedCharacter(final InputStreamStruct inputStreamStruct, final StringBuilder stringBuilder) {
 		int codePoint = CodePointConstants.BACKSLASH;
 
 		// NOTE: This will throw errors when it reaches an EOF

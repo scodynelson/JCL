@@ -7,13 +7,13 @@ package jcl.functions.reader;
 import java.util.ArrayList;
 import java.util.List;
 
+import jcl.lang.InputStreamStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
 import jcl.lang.NILStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
 import jcl.lang.factory.LispStructFactory;
 import jcl.reader.Reader;
-import jcl.lang.readtable.ReaderInputStreamStruct;
 import jcl.lang.statics.ReaderVariables;
 import jcl.lang.stream.ReadPeekResult;
 import jcl.util.CodePointConstants;
@@ -40,11 +40,11 @@ final class ListReaderMacroFunction {
 	 * character is encountered, proper parsing rules will be applied and a dotted list will be returned.
 	 *
 	 * @param inputStreamStruct
-	 * 		the {@link ReaderInputStreamStruct} to read in the {@link ListStruct}
+	 * 		the {@link InputStreamStruct} to read in the {@link ListStruct}
 	 *
 	 * @return the properly parsed {@link ListStruct}
 	 */
-	ListStruct readList(final ReaderInputStreamStruct inputStreamStruct) {
+	ListStruct readList(final InputStreamStruct inputStreamStruct) {
 		final List<LispStruct> currentTokenList = new ArrayList<>();
 
 		boolean isDottedList = false;
@@ -86,14 +86,14 @@ final class ListReaderMacroFunction {
 	 * least one element that appears before the '.' in the currently parsed list of tokens.
 	 *
 	 * @param inputStreamStruct
-	 * 		the {@link ReaderInputStreamStruct} to read in tokens following the '.' character
+	 * 		the {@link InputStreamStruct} to read in tokens following the '.' character
 	 * @param currentTokenList
 	 * 		the list of currently read and parsed {@link LispStruct} tokens
 	 *
 	 * @return true if the list to be created post processing of the '.' character is indeed a dotted list; false
 	 * otherwise
 	 */
-	private boolean processDot(final ReaderInputStreamStruct inputStreamStruct, final List<LispStruct> currentTokenList) {
+	private boolean processDot(final InputStreamStruct inputStreamStruct, final List<LispStruct> currentTokenList) {
 
 		boolean isDotted = false;
 
@@ -119,13 +119,13 @@ final class ListReaderMacroFunction {
 	 * ReaderErrorException} if either no items or more than one item are there.
 	 *
 	 * @param inputStreamStruct
-	 * 		the {@link ReaderInputStreamStruct} to read in for the token(s) following the '.' in the list
+	 * 		the {@link InputStreamStruct} to read in for the token(s) following the '.' in the list
 	 * @param currentTokenList
 	 * 		the current list of read {@link LispStruct}s in the list
 	 * @param codePoint
 	 * 		the next character code point following the '.' (at this point, either a whitespace or terminating character)
 	 */
-	private void processAfterDot(final ReaderInputStreamStruct inputStreamStruct, final List<LispStruct> currentTokenList, final int codePoint) {
+	private void processAfterDot(final InputStreamStruct inputStreamStruct, final List<LispStruct> currentTokenList, final int codePoint) {
 		int firstCodePoint = codePoint;
 		if (ReaderMacroFunctionUtil.isWhitespace(codePoint)) {
 			firstCodePoint = flushWhitespace(inputStreamStruct);
@@ -163,11 +163,11 @@ final class ListReaderMacroFunction {
 	 * Gets the next code point value that is not a 'whitespace' character.
 	 *
 	 * @param inputStreamStruct
-	 * 		the {@link ReaderInputStreamStruct} to read in the next character tokens until a non-whitespace character is found
+	 * 		the {@link InputStreamStruct} to read in the next character tokens until a non-whitespace character is found
 	 *
 	 * @return the next code point value that is not a 'whitespace' character
 	 */
-	private int flushWhitespace(final ReaderInputStreamStruct inputStreamStruct) {
+	private int flushWhitespace(final InputStreamStruct inputStreamStruct) {
 
 		// NOTE: This will throw errors when it reaches an EOF
 		ReadPeekResult readResult = reader.readChar(inputStreamStruct, true, NILStruct.INSTANCE, false);

@@ -4,10 +4,10 @@
 
 package jcl.reader.state;
 
+import jcl.lang.InputStreamStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.readtable.AttributeType;
 import jcl.reader.Reader;
-import jcl.lang.readtable.ReaderInputStreamStruct;
 import jcl.lang.stream.ReadPeekResult;
 import jcl.reader.ReaderStateMediator;
 import jcl.reader.TokenBuilder;
@@ -40,7 +40,7 @@ class SingleEscapeReaderState implements ReaderState {
 		final boolean isEofErrorP = tokenBuilder.isEofErrorP();
 		final LispStruct eofValue = tokenBuilder.getEofValue();
 
-		final ReaderInputStreamStruct inputStreamStruct = tokenBuilder.getInputStreamStruct();
+		final InputStreamStruct inputStreamStruct = tokenBuilder.getInputStreamStruct();
 
 		final ReadPeekResult readResult = reader.readChar(inputStreamStruct, isEofErrorP, eofValue, true);
 		tokenBuilder.setPreviousReadResult(readResult);

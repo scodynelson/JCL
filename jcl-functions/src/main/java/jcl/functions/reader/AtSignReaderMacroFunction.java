@@ -7,11 +7,11 @@ package jcl.functions.reader;
 import java.math.BigInteger;
 import java.util.Optional;
 
+import jcl.lang.InputStreamStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.ReadtableStruct;
 import jcl.lang.factory.LispStructFactory;
 import jcl.lang.java.JavaClassStruct;
-import jcl.lang.readtable.ReaderInputStreamStruct;
 import jcl.lang.readtable.ReadtableCase;
 import jcl.lang.statics.ReaderVariables;
 import jcl.util.CodePointConstants;
@@ -39,7 +39,7 @@ public class AtSignReaderMacroFunction extends ReaderMacroFunctionImpl {
 	}
 
 	@Override
-	public LispStruct readMacro(final ReaderInputStreamStruct inputStreamStruct, final int codePoint, final Optional<BigInteger> numberArgument) {
+	public LispStruct readMacro(final InputStreamStruct inputStreamStruct, final int codePoint, final Optional<BigInteger> numberArgument) {
 		assert codePoint == CodePointConstants.AT_SIGN;
 
 		final ReadtableStruct readtable = ReaderVariables.READTABLE.getVariableValue();

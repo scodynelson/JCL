@@ -1035,6 +1035,12 @@ public interface CommonLispSymbols {
 	KeywordStruct SUPERSEDE_KEYWORD = KeywordStructImpl.valueOf("SUPERSEDE");
 	KeywordStruct CREATE_KEYWORD = KeywordStructImpl.valueOf("CREATE");
 
+	// Readtable Keywords
+//	KeywordStruct UPCASE_KEYWORD = KeywordStructImpl.valueOf("UPCASE");
+//	KeywordStruct DOWNCASE_KEYWORD = KeywordStructImpl.valueOf("DOWNCASE");
+	KeywordStruct PRESERVE_KEYWORD = KeywordStructImpl.valueOf("PRESERVE");
+	KeywordStruct INVERT_KEYWORD = KeywordStructImpl.valueOf("INVERT");
+
 	// Features Keywords
 	/**
 	 * NOT {@link KeywordStruct} for processing features that should 'not' be included.

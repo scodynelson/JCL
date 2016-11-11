@@ -70,25 +70,25 @@ configure(allprojects) { project ->
 			"-Xlint:-unchecked", "-Xlint:-options"]
 
 	compileJava {
-		sourceCompatibility = 1.8
-		targetCompatibility = 1.8
+		sourceCompatibility = "1.8"
+		targetCompatibility = "1.8"
 	}
 
 	compileTestJava {
-		sourceCompatibility = 1.8
-		targetCompatibility = 1.8
+		sourceCompatibility = "1.8"
+		targetCompatibility = "1.8"
 		options.compilerArgs += "-parameters"
 	}
 
 	test {
-//		systemProperty("java.awt.headless", "true")
-//		systemProperty("testGroups", project.properties.get("testGroups"))
+		systemProperty("java.awt.headless", "true")
+		systemProperty("testGroups", project.properties.get("testGroups"))
 		//scanForTestClasses = false
-//		include(["**/*Tests.class", "**/*Test.class"])
+		include(["**/*Tests.class", "**/*Test.class"])
 		// Since we set scanForTestClasses to false, we need to filter out inner
 		// classes with the "$" pattern; otherwise, using -Dtest.single=MyTests to
 		// run MyTests by itself will fail if MyTests contains any inner classes.
-//		exclude(["**/Abstract*.class", '**/*$*'])
+		exclude(["**/Abstract*.class", '**/*$*'])
 	}
 
 	repositories {
@@ -112,7 +112,7 @@ configure(subprojects) { subproject ->
 
 	gradle.taskGraph.whenReady { taskGraph ->
 		if (taskGraph.hasTask(':sonarqube')) {
-			test.jvmArgs "-javaagent:${configurations.jacoco.asPath}=destfile=${buildDir}/jacoco.exec,includes=jcl.*"
+			test.jvmArgs ["-javaagent:${configurations.jacoco.asPath}=destfile=${buildDir}/jacoco.exec,includes=jcl.*"]
 		}
 	}
 
@@ -362,7 +362,7 @@ def lispCompiledTree = fileTree(dir: 'compiled-lisp', include: '**/*.jar')
 
 task cleanLispJars {
 	def compiledLispDirectory = "$projectDir/compiled-lisp"
-	new File(compiledLispDirectory).mkdirs();
+	new File(compiledLispDirectory).mkdirs()
 
 	lispCompiledTree.each { file ->
 		doLast {
@@ -376,7 +376,7 @@ task cleanLispJars {
 
 task generateLispJars {
 	def compiledLispDirectory = "$projectDir/compiled-lisp"
-	new File(compiledLispDirectory).mkdirs();
+	new File(compiledLispDirectory).mkdirs()
 
 	lispSourceTree.each { file ->
 		doLast {
@@ -384,10 +384,10 @@ task generateLispJars {
 			println(file.absolutePath)
 
 			javaexec {
-				main = 'jcl.system.JCL'
+				main = "jcl.system.JCL"
 				classpath sourceSets.main.runtimeClasspath
-				args "--compileFileSrcDir=$file.absolutePath"
-				args "--compileFileDestDir=$compiledLispDirectory/"
+				args ["--compileFileSrcDir=$file.absolutePath"]
+				args ["--compileFileDestDir=$compiledLispDirectory/"]
 			}
 			// TODO: Fix the need to prepend a '/' to the directory name. This is a problem with the Pathname object.
 			println()

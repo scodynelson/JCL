@@ -1,6 +1,6 @@
 package jcl.system.repl;
 
-import jcl.compiler.functions.EvalFunction;
+import jcl.functions.EvalFunction;
 import jcl.functions.readtable.ReadFunction;
 import jcl.lang.InputStreamStruct;
 import jcl.lang.LispStruct;

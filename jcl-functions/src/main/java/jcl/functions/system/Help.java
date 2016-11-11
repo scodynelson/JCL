@@ -15,7 +15,7 @@ import jcl.compiler.classloaders.CompilerClassLoader;
 import jcl.lang.LispStruct;
 import jcl.lang.StringStruct;
 import jcl.lang.condition.exception.ProgramErrorException;
-import jcl.lang.function.ExtensionsBuiltInFunctionStructBase;
+import jcl.functions.ExtensionsBuiltInFunctionStructBase;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.NILStruct;

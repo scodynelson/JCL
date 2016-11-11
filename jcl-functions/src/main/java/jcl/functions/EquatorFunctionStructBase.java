@@ -1,4 +1,4 @@
-package jcl.lang.function;
+package jcl.functions;
 
 import java.util.Objects;
 

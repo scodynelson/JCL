@@ -4,8 +4,9 @@
 
 package jcl.type.typespecifier;
 
+import jcl.lang.BooleanStruct;
+import jcl.lang.FunctionStruct;
 import jcl.lang.LispStruct;
-import jcl.lang.function.PredicateFunctionStructBase;
 import jcl.type.TypeBaseClass;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -22,9 +23,9 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 public class SatisfiesTypeSpecifier extends TypeBaseClass implements CompoundTypeSpecifier {
 
 	/**
-	 * The {@link PredicateFunctionStructBase} to check against the 'SATISFIES' type specifier.
+	 * The {@link FunctionStruct} to check against the 'SATISFIES' type specifier.
 	 */
-	private final PredicateFunctionStructBase<LispStruct> predicate;
+	private final FunctionStruct predicate;
 
 	/**
 	 * Public constructor.
@@ -32,7 +33,7 @@ public class SatisfiesTypeSpecifier extends TypeBaseClass implements CompoundTyp
 	 * @param predicate
 	 * 		the predicate function to test satisfaction
 	 */
-	public SatisfiesTypeSpecifier(final PredicateFunctionStructBase<LispStruct> predicate) {
+	public SatisfiesTypeSpecifier(final FunctionStruct predicate) {
 		this("T", predicate); // TODO: Should this be 'T'???
 	}
 
@@ -44,7 +45,7 @@ public class SatisfiesTypeSpecifier extends TypeBaseClass implements CompoundTyp
 	 * @param predicate
 	 * 		the predicate function to test satisfaction
 	 */
-	protected SatisfiesTypeSpecifier(final String name, final PredicateFunctionStructBase<LispStruct> predicate) {
+	protected SatisfiesTypeSpecifier(final String name, final FunctionStruct predicate) {
 		super(name);
 		this.predicate = predicate;
 	}
@@ -68,7 +69,8 @@ public class SatisfiesTypeSpecifier extends TypeBaseClass implements CompoundTyp
 
 		final LispStruct lispStruct = (LispStruct) obj;
 
-		return predicate.evaluate(lispStruct);
+		// TODO: this probably isn't very safe...
+		return ((BooleanStruct) predicate.apply(lispStruct)).booleanValue();
 	}
 
 	@Override

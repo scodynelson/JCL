@@ -8,7 +8,7 @@ import jcl.lang.LispStruct;
 import jcl.lang.classes.StructureClassStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.ProgramErrorException;
-import jcl.lang.function.SystemBuiltInFunctionStructBase;
+import jcl.functions.SystemBuiltInFunctionStructBase;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import org.springframework.stereotype.Component;

@@ -7,7 +7,7 @@ package jcl.functions.lisppackage;
 import jcl.lang.LispStruct;
 import jcl.lang.PackageStruct;
 import jcl.lang.condition.exception.PackageErrorException;
-import jcl.lang.function.CommonLispBuiltInFunctionStructBase;
+import jcl.functions.CommonLispBuiltInFunctionStructBase;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import org.springframework.stereotype.Component;

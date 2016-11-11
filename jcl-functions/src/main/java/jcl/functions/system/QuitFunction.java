@@ -5,7 +5,7 @@
 package jcl.functions.system;
 
 import jcl.lang.LispStruct;
-import jcl.lang.function.ExtensionsBuiltInFunctionStructBase;
+import jcl.functions.ExtensionsBuiltInFunctionStructBase;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import org.springframework.beans.factory.annotation.Autowired;

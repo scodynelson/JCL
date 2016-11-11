@@ -7,7 +7,7 @@ package jcl.functions.reader;
 import java.math.BigInteger;
 import java.util.Optional;
 
-import jcl.compiler.functions.EvalFunction;
+import jcl.functions.EvalFunction;
 import jcl.lang.InputStreamStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.NILStruct;

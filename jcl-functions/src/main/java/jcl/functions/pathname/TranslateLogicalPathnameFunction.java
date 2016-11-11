@@ -9,7 +9,7 @@ import jcl.lang.LogicalPathnameStruct;
 import jcl.lang.PathnameStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.SynonymStreamStruct;
-import jcl.lang.function.CommonLispBuiltInFunctionStructBase;
+import jcl.functions.CommonLispBuiltInFunctionStructBase;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import org.springframework.beans.factory.annotation.Autowired;

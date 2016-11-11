@@ -7,14 +7,14 @@ package jcl.functions.character;
 import java.util.List;
 import java.util.function.Predicate;
 
+import jcl.functions.CommonLispBuiltInFunctionStructBase;
 import jcl.lang.CharacterStruct;
 import jcl.lang.FunctionStruct;
 import jcl.lang.LispStruct;
+import jcl.lang.NILStruct;
 import jcl.lang.TStruct;
-import jcl.lang.function.CommonLispBuiltInFunctionStructBase;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
-import jcl.lang.NILStruct;
 
 /**
  * Abstract {@link FunctionStruct} implementation for character functions that operates one to many {@link

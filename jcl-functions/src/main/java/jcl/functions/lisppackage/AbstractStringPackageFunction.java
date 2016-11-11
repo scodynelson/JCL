@@ -15,7 +15,7 @@ import jcl.lang.statics.PackageVariables;
 import jcl.lang.StringStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.ValuesStruct;
-import jcl.lang.function.CommonLispBuiltInFunctionStructBase;
+import jcl.functions.CommonLispBuiltInFunctionStructBase;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.NILStruct;

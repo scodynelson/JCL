@@ -2,7 +2,7 @@
  * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
  */
 
-package jcl.compiler.functions;
+package jcl.functions;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -19,11 +19,11 @@ import jcl.compiler.struct.specialoperator.lambda.LambdaStruct;
 import jcl.lang.BooleanStruct;
 import jcl.lang.FunctionStruct;
 import jcl.lang.LispStruct;
-import jcl.lang.internal.SpecialOperatorStructImpl;
-import jcl.lang.TStruct;
-import jcl.lang.factory.LispStructFactory;
 import jcl.lang.ListStruct;
 import jcl.lang.NILStruct;
+import jcl.lang.TStruct;
+import jcl.lang.factory.LispStructFactory;
+import jcl.lang.internal.SpecialOperatorStructImpl;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.util.CheckClassAdapter;

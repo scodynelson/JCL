@@ -2,27 +2,26 @@
  * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
  */
 
-package jcl.compiler.functions;
+package jcl.functions;
 
 import java.util.Optional;
 
 import jcl.compiler.environment.Environment;
 import jcl.lang.BooleanStruct;
 import jcl.lang.FunctionStruct;
-import jcl.lang.PackageStruct;
-import jcl.lang.statics.CompilerVariables;
 import jcl.lang.LispStruct;
+import jcl.lang.ListStruct;
+import jcl.lang.NILStruct;
+import jcl.lang.PackageStruct;
 import jcl.lang.PackageSymbolStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.TStruct;
 import jcl.lang.ValuesStruct;
-import jcl.lang.function.CommonLispBuiltInFunctionStructBase;
 import jcl.lang.function.expander.MacroFunctionExpanderInter;
 import jcl.lang.function.expander.SymbolMacroExpanderInter;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
-import jcl.lang.ListStruct;
-import jcl.lang.NILStruct;
+import jcl.lang.statics.CompilerVariables;
 import org.springframework.stereotype.Component;
 
 @Component

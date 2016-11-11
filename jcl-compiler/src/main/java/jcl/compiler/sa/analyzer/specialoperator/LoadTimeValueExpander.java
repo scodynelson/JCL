@@ -4,14 +4,14 @@ import java.util.Iterator;
 
 import jcl.compiler.environment.Environment;
 import jcl.compiler.function.expanders.MacroFunctionExpander;
-import jcl.compiler.functions.EvalFunction;
 import jcl.compiler.sa.FormAnalyzer;
+import jcl.functions.EvalFunction;
 import jcl.lang.BooleanStruct;
 import jcl.lang.LispStruct;
-import jcl.lang.internal.SpecialOperatorStructImpl;
+import jcl.lang.ListStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.ProgramErrorException;
-import jcl.lang.ListStruct;
+import jcl.lang.internal.SpecialOperatorStructImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

@@ -6,7 +6,7 @@ package jcl.functions.symbol;
 
 import jcl.lang.LispStruct;
 import jcl.lang.StringStruct;
-import jcl.lang.function.CommonLispBuiltInFunctionStructBase;
+import jcl.functions.CommonLispBuiltInFunctionStructBase;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import org.springframework.stereotype.Component;

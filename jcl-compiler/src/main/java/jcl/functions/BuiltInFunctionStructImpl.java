@@ -1,10 +1,11 @@
-package jcl.lang.function;
+package jcl.functions;
 
 import jcl.lang.LispStruct;
+import jcl.lang.function.FunctionStructImpl;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 
-abstract class BuiltInFunctionStructImpl extends FunctionStructImpl {
+public abstract class BuiltInFunctionStructImpl extends FunctionStructImpl {
 
 	protected final String functionName;
 	private final Parameters parameters;

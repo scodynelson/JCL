@@ -7,12 +7,12 @@ package jcl.functions.character;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+import jcl.functions.CommonLispBuiltInFunctionStructBase;
 import jcl.lang.CharacterStruct;
 import jcl.lang.FunctionStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.StringStruct;
 import jcl.lang.SymbolStruct;
-import jcl.lang.function.CommonLispBuiltInFunctionStructBase;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 

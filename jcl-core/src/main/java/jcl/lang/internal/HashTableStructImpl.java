@@ -9,11 +9,11 @@ import java.math.BigInteger;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import jcl.lang.BooleanStruct;
 import jcl.lang.FunctionStruct;
 import jcl.lang.HashTableStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.classes.BuiltInClassStruct;
-import jcl.lang.function.EquatorFunctionStructBase;
 import jcl.type.HashTableType;
 import jcl.type.LispType;
 
@@ -28,7 +28,7 @@ public final class HashTableStructImpl extends BuiltInClassStruct implements Has
 	/**
 	 * The test function for verifying equivalence of a key.
 	 */
-	private final EquatorFunctionStructBase test;
+	private final FunctionStruct test;
 
 	/**
 	 * The threshold used in the rehashing of the {@link #map}.
@@ -50,7 +50,7 @@ public final class HashTableStructImpl extends BuiltInClassStruct implements Has
 	 * @param rehashThreshold
 	 * 		the threshold amount when resizing the table
 	 */
-	private HashTableStructImpl(final EquatorFunctionStructBase test, final BigInteger size, final float rehashThreshold) {
+	private HashTableStructImpl(final FunctionStruct test, final BigInteger size, final float rehashThreshold) {
 		super(HashTableType.INSTANCE, null, null);
 		this.test = test;
 		this.rehashThreshold = rehashThreshold;
@@ -58,7 +58,7 @@ public final class HashTableStructImpl extends BuiltInClassStruct implements Has
 		map = new ConcurrentHashMap<>(size.intValue(), rehashThreshold);
 	}
 
-	public static HashTableStructImpl valueOf(final EquatorFunctionStructBase test, final BigInteger size, final float rehashThreshold) {
+	public static HashTableStructImpl valueOf(final FunctionStruct test, final BigInteger size, final float rehashThreshold) {
 		return new HashTableStructImpl(test, size, rehashThreshold);
 	}
 
@@ -198,9 +198,9 @@ public final class HashTableStructImpl extends BuiltInClassStruct implements Has
 		private final LispStruct key;
 
 		/**
-		 * The {@link EquatorFunctionStructBase} used to test equivalence of a key.
+		 * The {@link FunctionStruct} used to test equivalence of a key.
 		 */
-		private final EquatorFunctionStructBase equator;
+		private final FunctionStruct equator;
 
 		/**
 		 * Private constructor.
@@ -210,7 +210,7 @@ public final class HashTableStructImpl extends BuiltInClassStruct implements Has
 		 * @param equator
 		 * 		the equator function used to test equality of keys
 		 */
-		private KeyWrapper(final LispStruct key, final EquatorFunctionStructBase equator) {
+		private KeyWrapper(final LispStruct key, final FunctionStruct equator) {
 			this.key = key;
 			this.equator = equator;
 		}
@@ -231,7 +231,7 @@ public final class HashTableStructImpl extends BuiltInClassStruct implements Has
 
 		@Override
 		public int hashCode() {
-			return equator.hash(key);
+			return key.hashCode();
 		}
 
 		@Override
@@ -241,7 +241,8 @@ public final class HashTableStructImpl extends BuiltInClassStruct implements Has
 			}
 
 			final LispStruct lispStruct = (LispStruct) obj;
-			return equator.equate(key, lispStruct);
+			// TODO: cleanup??
+			return ((BooleanStruct) equator.apply(key, lispStruct)).booleanValue();
 		}
 
 		@Override
@@ -259,7 +260,7 @@ public final class HashTableStructImpl extends BuiltInClassStruct implements Has
 		 *
 		 * @return the newly created KeyWrapper object
 		 */
-		private static KeyWrapper getInstance(final LispStruct key, final EquatorFunctionStructBase equator) {
+		private static KeyWrapper getInstance(final LispStruct key, final FunctionStruct equator) {
 			return new KeyWrapper(key, equator);
 		}
 	}

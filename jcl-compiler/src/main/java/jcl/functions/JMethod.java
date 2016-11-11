@@ -2,14 +2,13 @@
  * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
  */
 
-package jcl.compiler.functions;
+package jcl.functions;
 
 import java.util.List;
 
 import jcl.lang.LispStruct;
 import jcl.lang.StringStruct;
 import jcl.lang.factory.LispStructFactory;
-import jcl.lang.function.ExtensionsBuiltInFunctionStructBase;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.java.JavaClassStruct;

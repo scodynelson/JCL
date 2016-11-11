@@ -5,7 +5,7 @@ import java.util.Objects;
 import jcl.lang.LispStruct;
 import jcl.lang.ReadtableStruct;
 import jcl.lang.SymbolStruct;
-import jcl.lang.function.SystemBuiltInFunctionStructBase;
+import jcl.functions.SystemBuiltInFunctionStructBase;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.readtable.ReadtableCase;

@@ -7,12 +7,12 @@ package jcl.functions.array;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import jcl.functions.SystemBuiltInFunctionStructBase;
 import jcl.lang.LispStruct;
+import jcl.lang.ListStruct;
 import jcl.lang.factory.LispStructFactory;
-import jcl.lang.function.SystemBuiltInFunctionStructBase;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
-import jcl.lang.ListStruct;
 import org.springframework.stereotype.Component;
 
 @Component

@@ -9,7 +9,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 import jcl.compiler.classloaders.LoaderClassLoader;
-import jcl.compiler.functions.EvalFunction;
 import jcl.functions.pathname.MergePathnamesFunction;
 import jcl.functions.readtable.ReadFunction;
 import jcl.lang.BooleanStruct;
@@ -23,7 +22,6 @@ import jcl.lang.ReadtableStruct;
 import jcl.lang.TStruct;
 import jcl.lang.condition.exception.FileErrorException;
 import jcl.lang.factory.LispStructFactory;
-import jcl.lang.function.CommonLispBuiltInFunctionStructBase;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.pathname.PathnameVersion;

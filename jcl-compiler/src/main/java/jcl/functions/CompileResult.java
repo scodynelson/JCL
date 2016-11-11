@@ -2,7 +2,7 @@
  * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
  */
 
-package jcl.compiler.functions;
+package jcl.functions;
 
 import jcl.lang.BooleanStruct;
 import jcl.lang.FunctionStruct;

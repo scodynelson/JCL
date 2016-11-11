@@ -29,6 +29,7 @@ import jcl.lang.EchoStreamStruct;
 import jcl.lang.EmptyStreamStruct;
 import jcl.lang.FileStreamStruct;
 import jcl.lang.FloatStruct;
+import jcl.lang.FunctionStruct;
 import jcl.lang.HashTableStruct;
 import jcl.lang.InputStreamStruct;
 import jcl.lang.IntegerStruct;
@@ -55,7 +56,6 @@ import jcl.lang.TwoWayStreamStruct;
 import jcl.lang.URLStreamStruct;
 import jcl.lang.VectorStruct;
 import jcl.lang.condition.exception.ErrorException;
-import jcl.lang.function.EquatorFunctionStructBase;
 import jcl.lang.internal.ArrayStructImpl;
 import jcl.lang.internal.BitVectorStructImpl;
 import jcl.lang.internal.CharacterStructImpl;
@@ -74,6 +74,7 @@ import jcl.lang.internal.number.FloatStructImpl;
 import jcl.lang.internal.number.IntegerStructImpl;
 import jcl.lang.internal.number.RandomStateStructImpl;
 import jcl.lang.internal.number.RatioStructImpl;
+import jcl.lang.internal.readtable.ReadtableStructImpl;
 import jcl.lang.internal.stream.BinaryNativeStreamStructImpl;
 import jcl.lang.internal.stream.BroadcastStreamStructImpl;
 import jcl.lang.internal.stream.CharacterNativeStreamStructImpl;
@@ -98,7 +99,6 @@ import jcl.lang.pathname.PathnameName;
 import jcl.lang.pathname.PathnameType;
 import jcl.lang.pathname.PathnameVersion;
 import jcl.lang.readtable.ReadtableCase;
-import jcl.lang.internal.readtable.ReadtableStructImpl;
 import jcl.type.LispType;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apfloat.Apcomplex;
@@ -365,7 +365,7 @@ public final class LispStructFactory {
 	 * HashTable
 	 */
 
-	public static HashTableStruct toHashTable(final EquatorFunctionStructBase test, final BigInteger size, final float rehashThreshold) {
+	public static HashTableStruct toHashTable(final FunctionStruct test, final BigInteger size, final float rehashThreshold) {
 		return HashTableStructImpl.valueOf(test, size, rehashThreshold);
 	}
 

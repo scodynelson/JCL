@@ -1,14 +1,11 @@
 package jcl.functions;
 
-import jcl.compiler.functions.CompileForm;
-import jcl.compiler.functions.CompileResult;
 import jcl.lang.FunctionStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.ValuesStruct;
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.condition.exception.ProgramErrorException;
-import jcl.lang.function.CommonLispBuiltInFunctionStructBase;
 import jcl.lang.function.expander.MacroFunctionExpanderInter;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;

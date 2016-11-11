@@ -8,7 +8,7 @@ import jcl.compiler.function.expanders.SymbolMacroExpander;
 import jcl.compiler.function.expanders.SymbolMacroExpanderImpl;
 import jcl.lang.LispStruct;
 import jcl.lang.SymbolStruct;
-import jcl.lang.function.SystemBuiltInFunctionStructBase;
+import jcl.functions.SystemBuiltInFunctionStructBase;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import org.springframework.stereotype.Component;

@@ -10,7 +10,7 @@ import jcl.reader.Reader;
 /**
  * Used to store a character token and its {@link AttributeType} value as a {@link Reader} process executes.
  */
-public class TokenAttribute {
+class TokenAttribute {
 
 	/**
 	 * The character token code point.
@@ -40,7 +40,7 @@ public class TokenAttribute {
 	 *
 	 * @return {@link #codePoint} property
 	 */
-	public int getCodePoint() {
+	int getCodePoint() {
 		return codePoint;
 	}
 
@@ -49,7 +49,7 @@ public class TokenAttribute {
 	 *
 	 * @return {@link #attributeType} property
 	 */
-	public AttributeType getAttributeType() {
+	AttributeType getAttributeType() {
 		return attributeType;
 	}
 }

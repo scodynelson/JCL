@@ -48,7 +48,7 @@ import org.slf4j.LoggerFactory;
  * For online specifications of these states, goto http://www.lispworks.com/documentation/HyperSpec/Body/02_b.htm
  * This site is the Reader Algorithm that is outlined within the CommonLisp HyperSpec (TM).
  */
-public class ReaderProcessor {
+class ReaderProcessor {
 
 	/**
 	 * The logger for this class.
@@ -68,7 +68,7 @@ public class ReaderProcessor {
 	 * from the input stream, and dispatched according to the syntax type of x to one of steps 2 to 7.
 	 * </p>
 	 */
-	public static LispStruct read(final TokenBuilder tokenBuilder) {
+	static LispStruct read(final TokenBuilder tokenBuilder) {
 
 		final boolean isEofErrorP = tokenBuilder.isEofErrorP();
 		final LispStruct eofValue = tokenBuilder.getEofValue();

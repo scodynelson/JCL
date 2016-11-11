@@ -15,7 +15,7 @@ import jcl.reader.Reader;
 /**
  * Used to build {@link LispStruct} tokens as a {@link Reader} process executes.
  */
-public class TokenBuilder {
+class TokenBuilder {
 
 	/**
 	 * The {@link InputStreamStruct} to use when building lisp tokens.
@@ -72,7 +72,7 @@ public class TokenBuilder {
 	 *
 	 * @return {@link #inputStreamStruct} property
 	 */
-	public InputStreamStruct getInputStreamStruct() {
+	InputStreamStruct getInputStreamStruct() {
 		return inputStreamStruct;
 	}
 
@@ -81,7 +81,7 @@ public class TokenBuilder {
 	 *
 	 * @return {@link #eofErrorP} property
 	 */
-	public boolean isEofErrorP() {
+	boolean isEofErrorP() {
 		return eofErrorP;
 	}
 
@@ -90,7 +90,7 @@ public class TokenBuilder {
 	 *
 	 * @return {@link #eofValue} property
 	 */
-	public LispStruct getEofValue() {
+	LispStruct getEofValue() {
 		return eofValue;
 	}
 
@@ -99,7 +99,7 @@ public class TokenBuilder {
 	 *
 	 * @return {@link #tokenAttributes} property
 	 */
-	public LinkedList<TokenAttribute> getTokenAttributes() {
+	LinkedList<TokenAttribute> getTokenAttributes() {
 		return tokenAttributes;
 	}
 
@@ -112,7 +112,7 @@ public class TokenBuilder {
 	 * @param attributeType
 	 * 		the {@link AttributeType} of the token to add
 	 */
-	public void addToTokenAttributes(final int token, final AttributeType attributeType) {
+	void addToTokenAttributes(final int token, final AttributeType attributeType) {
 		final TokenAttribute tokenAttribute = new TokenAttribute(token, attributeType);
 		tokenAttributes.add(tokenAttribute);
 	}
@@ -122,7 +122,7 @@ public class TokenBuilder {
 	 *
 	 * @return {@link #previousReadResult} property
 	 */
-	public ReadPeekResult getPreviousReadResult() {
+	ReadPeekResult getPreviousReadResult() {
 		return previousReadResult;
 	}
 
@@ -132,7 +132,7 @@ public class TokenBuilder {
 	 * @param previousReadResult
 	 * 		the new value of the {@link #previousReadResult} property
 	 */
-	public void setPreviousReadResult(final ReadPeekResult previousReadResult) {
+	void setPreviousReadResult(final ReadPeekResult previousReadResult) {
 		this.previousReadResult = previousReadResult;
 	}
 
@@ -141,14 +141,14 @@ public class TokenBuilder {
 	 *
 	 * @return {@link #isMultiEscapedToken} property
 	 */
-	public boolean isMultiEscapedToken() {
+	boolean isMultiEscapedToken() {
 		return isMultiEscapedToken;
 	}
 
 	/**
 	 * Setter for the {@link #isMultiEscapedToken} property that will always set the value to true.
 	 */
-	public void setMultiEscapedToken() {
+	void setMultiEscapedToken() {
 		isMultiEscapedToken = true;
 	}
 }

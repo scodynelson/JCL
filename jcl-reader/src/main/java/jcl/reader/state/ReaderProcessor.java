@@ -11,7 +11,9 @@ import jcl.lang.InputStreamStruct;
 import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.NILStruct;
+import jcl.lang.NumberStruct;
 import jcl.lang.ReadtableStruct;
+import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
 import jcl.lang.factory.LispStructFactory;
 import jcl.lang.readtable.AttributeType;
@@ -19,37 +21,47 @@ import jcl.lang.readtable.ReadtableCase;
 import jcl.lang.readtable.SyntaxType;
 import jcl.lang.statics.ReaderVariables;
 import jcl.lang.stream.ReadPeekResult;
-import jcl.reader.Reader;
 import jcl.reader.TokenAttribute;
 import jcl.reader.TokenBuilder;
 import jcl.util.CodePointConstants;
+import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 /**
- * Mediator implementation for {@link Reader} {@link ReaderState} invocations throughout the read process.
+ * This interface defines a set of anonymous classes that comprise the states of the Reader state machine as defined in
+ * CLtL: Ch 22.1.1 pp 511-515. These states are active objects having a single {@code process} method. Each state
+ * returns a State object that is the next state to process. The current Reader instance is passed to each State. The
+ * Reader instance contains a reference to the current input Stream. A state processes according to the specification
+ * and returns the next state. The states in CLtL are numbered. The following is a correspondence list between the
+ * numbered states and the named states in this interface.
+ * <ol start=0>
+ * <li>ReadState
+ * <li>IllegalCharState
+ * <li>WhitespaceState
+ * <li>MacroCharacterState
+ * <li>SingleEscapeState
+ * <li>MultipleEscapeState
+ * <li>ConstituentState
+ * <li>EvenMultiEscapeState
+ * <li>OddMultiEscapeState
+ * <li>TokenAccumulatedState
+ * </ol>
+ * For online specifications of these states, goto http://www.lispworks.com/documentation/HyperSpec/Body/02_b.htm
+ * This site is the Reader Algorithm that is outlined within the CommonLisp HyperSpec (TM).
  */
-@Component
-public class ReaderStateMediatorImpl {
+public class ReaderProcessor {
 
 	/**
 	 * The logger for this class.
 	 */
-	private static final Logger LOGGER = LoggerFactory.getLogger(ReaderStateMediatorImpl.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(ReaderProcessor.class);
 
 	/**
-	 * {@link NumberTokenAccumulatedReaderState} singleton used by the reader algorithm.
+	 * Private constructor.
 	 */
-	@Autowired
-	private NumberTokenAccumulatedReaderState numberTokenAccumulatedReaderState;
-
-	/**
-	 * {@link SymbolTokenAccumulatedReaderState} singleton used by the reader algorithm.
-	 */
-	@Autowired
-	private SymbolTokenAccumulatedReaderState symbolTokenAccumulatedReaderState;
+	private ReaderProcessor() {
+	}
 
 	/**
 	 * Step 1 of the Reader Algorithm.
@@ -58,7 +70,7 @@ public class ReaderStateMediatorImpl {
 	 * from the input stream, and dispatched according to the syntax type of x to one of steps 2 to 7.
 	 * </p>
 	 */
-	public LispStruct read(final TokenBuilder tokenBuilder) {
+	public static LispStruct read(final TokenBuilder tokenBuilder) {
 
 		final boolean isEofErrorP = tokenBuilder.isEofErrorP();
 		final LispStruct eofValue = tokenBuilder.getEofValue();
@@ -109,7 +121,7 @@ public class ReaderStateMediatorImpl {
 	 * If x is an invalid character, an error of type reader-error is signaled.
 	 * </p>
 	 */
-	public LispStruct readIllegalCharacter(final TokenBuilder tokenBuilder) {
+	private static LispStruct readIllegalCharacter(final TokenBuilder tokenBuilder) {
 
 		if (!tokenBuilder.isEofErrorP()) {
 			return tokenBuilder.getEofValue();
@@ -139,7 +151,7 @@ public class ReaderStateMediatorImpl {
 	 * If x is a whitespace[2] character, then it is discarded and step 1 is re-entered.
 	 * </p>
 	 */
-	public LispStruct readWhitespace(final TokenBuilder tokenBuilder) {
+	private static LispStruct readWhitespace(final TokenBuilder tokenBuilder) {
 		return read(tokenBuilder);
 	}
 
@@ -163,7 +175,7 @@ public class ReaderStateMediatorImpl {
 	 * as the result of the read operation; the algorithm is done. If zero values are returned, then step 1 is re-entered.
 	 * </p>
 	 */
-	public LispStruct readMacroCharacter(final TokenBuilder tokenBuilder) {
+	private static LispStruct readMacroCharacter(final TokenBuilder tokenBuilder) {
 
 		// NOTE: This will throw errors when it reaches an EOF
 		final ReadPeekResult readResult = tokenBuilder.getPreviousReadResult();
@@ -192,13 +204,14 @@ public class ReaderStateMediatorImpl {
 	}
 
 	/**
-	 * Step 6 of the Reader Algorithm.
+	 * Step 5 of the Reader Algorithm.
 	 * <p>
-	 * If x is a multiple escape character then a token (initially containing no characters) is begun and step 9 is
-	 * entered.
+	 * If x is a single escape character then the next character, y, is read, or an error of type end-of-file is signaled
+	 * if at the end of file. y is treated as if it is a constituent whose only constituent trait is alphabetic[2]. y is
+	 * used to begin a token, and step 8 is entered.
 	 * </p>
 	 */
-	public LispStruct readSingleEscape(final TokenBuilder tokenBuilder) {
+	private static LispStruct readSingleEscape(final TokenBuilder tokenBuilder) {
 
 		final boolean isEofErrorP = tokenBuilder.isEofErrorP();
 		final LispStruct eofValue = tokenBuilder.getEofValue();
@@ -218,7 +231,14 @@ public class ReaderStateMediatorImpl {
 		return readEvenMultipleEscape(tokenBuilder);
 	}
 
-	public LispStruct readMultipleEscape(final TokenBuilder tokenBuilder) {
+	/**
+	 * Step 6 of the Reader Algorithm.
+	 * <p>
+	 * If x is a multiple escape character then a token (initially containing no characters) is begun and step 9 is
+	 * entered.
+	 * </p>
+	 */
+	private static LispStruct readMultipleEscape(final TokenBuilder tokenBuilder) {
 		return readOddMultipleEscape(tokenBuilder);
 	}
 
@@ -232,7 +252,7 @@ public class ReaderStateMediatorImpl {
 	 * the current readtable. X is used to begin a token, and step 8 is entered.
 	 * </p>
 	 */
-	public LispStruct readConstituent(final TokenBuilder tokenBuilder) {
+	private static LispStruct readConstituent(final TokenBuilder tokenBuilder) {
 
 		final ReadPeekResult readResult = tokenBuilder.getPreviousReadResult();
 		// This 'codePoint' will not be 'null'. We check for EOFs after each 'read'.
@@ -244,7 +264,7 @@ public class ReaderStateMediatorImpl {
 		final IntegerStruct readBase = ReaderVariables.READ_BASE.getVariableValue();
 		final AttributeType attributeType = readtable.getAttributeType(codePoint, readBase);
 
-		codePoint = ReaderState.getProperCaseForCodePoint(codePoint, attributeType, readtableCase);
+		codePoint = getProperCaseForCodePoint(codePoint, attributeType, readtableCase);
 		tokenBuilder.addToTokenAttributes(codePoint, attributeType);
 
 		return readEvenMultipleEscape(tokenBuilder);
@@ -288,7 +308,7 @@ public class ReaderStateMediatorImpl {
 	 * then step 10 is entered.
 	 * </p>
 	 */
-	public LispStruct readEvenMultipleEscape(final TokenBuilder tokenBuilder) {
+	private static LispStruct readEvenMultipleEscape(final TokenBuilder tokenBuilder) {
 
 		final boolean isEofErrorP = tokenBuilder.isEofErrorP();
 		final LispStruct eofValue = tokenBuilder.getEofValue();
@@ -301,7 +321,7 @@ public class ReaderStateMediatorImpl {
 		if (readResult.isEof()) {
 			final boolean isMultiEscapedToken = tokenBuilder.isMultiEscapedToken();
 			if (isMultiEscapedToken) {
-				return symbolTokenAccumulatedReaderState.process(tokenBuilder);
+				return readSymbolTokenAccumulated(tokenBuilder);
 			} else {
 				return readTokenAccumulated(tokenBuilder);
 			}
@@ -339,7 +359,7 @@ public class ReaderStateMediatorImpl {
 
 			final boolean isMultiEscapedToken = tokenBuilder.isMultiEscapedToken();
 			if (isMultiEscapedToken) {
-				return symbolTokenAccumulatedReaderState.process(tokenBuilder);
+				return readSymbolTokenAccumulated(tokenBuilder);
 			} else {
 				return readTokenAccumulated(tokenBuilder);
 			}
@@ -370,7 +390,7 @@ public class ReaderStateMediatorImpl {
 	 * If y is an invalid character, an error of type reader-error is signaled.
 	 * </p>
 	 */
-	public LispStruct readOddMultipleEscape(final TokenBuilder tokenBuilder) {
+	private static LispStruct readOddMultipleEscape(final TokenBuilder tokenBuilder) {
 
 		final boolean isEofErrorP = tokenBuilder.isEofErrorP();
 		final LispStruct eofValue = tokenBuilder.getEofValue();
@@ -431,7 +451,7 @@ public class ReaderStateMediatorImpl {
 	 * 3) Package with a Symbol
 	 * </p>
 	 */
-	public LispStruct readTokenAccumulated(final TokenBuilder tokenBuilder) {
+	private static LispStruct readTokenAccumulated(final TokenBuilder tokenBuilder) {
 
 		if (ReaderVariables.READ_SUPPRESS.getVariableValue().booleanValue()) {
 			return null;
@@ -439,11 +459,148 @@ public class ReaderStateMediatorImpl {
 
 		final List<TokenAttribute> tokenAttributes = tokenBuilder.getTokenAttributes();
 
-		final String tokenString = ReaderState.convertTokenAttributesToString(tokenAttributes);
+		final String tokenString = convertTokenAttributesToString(tokenAttributes);
 		if (".".equals(tokenString)) {
 			throw new ReaderErrorException("Dot context error in '.'");
 		}
 
-		return numberTokenAccumulatedReaderState.process(tokenBuilder);
+		return readNumberTokenAccumulated(tokenBuilder);
+	}
+
+	private static LispStruct readNumberTokenAccumulated(final TokenBuilder tokenBuilder) {
+		final NumberStruct numberToken = NumberTokenAccumulatedReaderState.getNumberToken(tokenBuilder);
+		if (numberToken == null) {
+			return readSymbolTokenAccumulated(tokenBuilder);
+		} else {
+			return numberToken;
+		}
+	}
+
+	private static LispStruct readSymbolTokenAccumulated(final TokenBuilder tokenBuilder) {
+		final SymbolStruct symbolToken = SymbolTokenAccumulatedReaderState.getSymbolToken(tokenBuilder);
+		if (symbolToken == null) {
+			return readIllegalCharacter(tokenBuilder);
+		} else {
+			return symbolToken;
+		}
+	}
+
+	/*
+		Helpers
+	 */
+
+	/**
+	 * Converts the provided list of {@link TokenAttribute}s to a {@link String}.
+	 *
+	 * @param tokenAttributes
+	 * 		the list of {@link TokenAttribute}s to convert to a {@link String}
+	 *
+	 * @return the {@link String} produced from the list of {@link TokenAttribute}s
+	 */
+	static String convertTokenAttributesToString(final List<TokenAttribute> tokenAttributes) {
+		if (CollectionUtils.isEmpty(tokenAttributes)) {
+			return "";
+		}
+
+		final StringBuilder stringBuilder = new StringBuilder();
+		tokenAttributes.stream()
+		               .mapToInt(TokenAttribute::getCodePoint)
+		               .forEachOrdered(stringBuilder::appendCodePoint);
+		return stringBuilder.toString();
+	}
+
+	/**
+	 * Determines and returns the proper code point value based from the provided {@code codePoint} and using the
+	 * provided {@code attributeType} and {@code caseSpec} properties.
+	 *
+	 * @param codePoint
+	 * 		the code point value to properly case
+	 * @param attributeType
+	 * 		the {@link AttributeType} of the code point value used in determining the proper case value
+	 * @param readtableCase
+	 * 		the current readtable case used in determines the proper case value
+	 *
+	 * @return the proper code point value based from the provided {@code codePoint}
+	 */
+	static int getProperCaseForCodePoint(final int codePoint, final AttributeType attributeType, final ReadtableCase readtableCase) {
+
+		final int properCaseCodePoint;
+		if (Character.isBmpCodePoint(codePoint)) {
+			if ((readtableCase == ReadtableCase.UPCASE) && ((attributeType == AttributeType.ALPHADIGIT) || (attributeType == AttributeType.EXPONENTMARKER))) {
+				properCaseCodePoint = Character.toUpperCase(codePoint);
+			} else if (readtableCase == ReadtableCase.DOWNCASE) {
+				properCaseCodePoint = Character.toLowerCase(codePoint);
+			} else if (readtableCase == ReadtableCase.INVERT) {
+				if (Character.isUpperCase(codePoint)) {
+					properCaseCodePoint = Character.toLowerCase(codePoint);
+				} else {
+					properCaseCodePoint = Character.toUpperCase(codePoint);
+				}
+			} else {
+				properCaseCodePoint = codePoint;
+			}
+		} else {
+			properCaseCodePoint = codePoint;
+		}
+		return properCaseCodePoint;
+	}
+
+	/**
+	 * Determines if the provided list of {@link TokenAttribute}s contains at least one token with an {@link
+	 * AttributeType} equal to the provided {@code attributeType} value.
+	 *
+	 * @param tokenAttributes
+	 * 		the list of {@link TokenAttribute}s containing the current tokens
+	 * @param attributeType
+	 * 		the {@link AttributeType} value to check for existence in the {@code tokenAttributes} list
+	 *
+	 * @return if the provided list of {@link TokenAttribute}s contains at least one token with an {@link AttributeType}
+	 * equal to the provided {@code attributeType} value.
+	 */
+	static boolean hasAnyAttributeWithAttributeType(final List<TokenAttribute> tokenAttributes, final AttributeType attributeType) {
+		return tokenAttributes.stream()
+		                      .map(TokenAttribute::getAttributeType)
+		                      .anyMatch(currentAttributeType -> currentAttributeType == attributeType);
+	}
+
+	/**
+	 * Determines if the provided list of {@link TokenAttribute}s contains no tokens with an {@link AttributeType}
+	 * equal to the provided {@code attributeType} value.
+	 *
+	 * @param tokenAttributes
+	 * 		the list of {@link TokenAttribute}s containing the current tokens
+	 * @param attributeType
+	 * 		the {@link AttributeType} value to check for existence in the {@code tokenAttributes} list
+	 *
+	 * @return if the provided list of {@link TokenAttribute}s contains no tokens with an {@link AttributeType} equal to
+	 * the provided {@code attributeType} value.
+	 */
+	static boolean hasNoAttributesWithAttributeType(final List<TokenAttribute> tokenAttributes, final AttributeType attributeType) {
+		return tokenAttributes.stream()
+		                      .map(TokenAttribute::getAttributeType)
+		                      .noneMatch(currentAttributeType -> currentAttributeType == attributeType);
+	}
+
+	/**
+	 * Gets the first occurrence of a token code point with an {@link AttributeType} equal to the provided {@code
+	 * attributeType} value in the provided list of {@link TokenAttribute}s. If no token code points have an {@link
+	 * AttributeType} that matches the provided {@code attributeType} value, null will be returned.
+	 *
+	 * @param tokenAttributes
+	 * 		the list of {@link TokenAttribute}s containing the current tokens
+	 * @param attributeType
+	 * 		the {@link AttributeType} value used to locate the first matching token code point in the {@code
+	 * 		tokenAttributes} list
+	 *
+	 * @return the first occurrence of a token code point with an {@link AttributeType} equal to the provided {@code
+	 * attributeType} value in the provided list of {@link TokenAttribute}s or null if no such token code point can be
+	 * found
+	 */
+	static Integer getTokenCodePointByAttribute(final List<TokenAttribute> tokenAttributes, final AttributeType attributeType) {
+		return tokenAttributes.stream()
+		                      .filter(currentTokenAttribute -> currentTokenAttribute.getAttributeType() == attributeType)
+		                      .map(TokenAttribute::getCodePoint)
+		                      .findFirst()
+		                      .orElse(null);
 	}
 }

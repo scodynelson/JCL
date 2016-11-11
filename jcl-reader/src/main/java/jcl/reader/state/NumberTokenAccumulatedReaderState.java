@@ -7,6 +7,7 @@ package jcl.reader.state;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.MathContext;
+import java.math.RoundingMode;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedList;
@@ -15,8 +16,10 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import jcl.lang.LispStruct;
+import jcl.lang.FloatStruct;
+import jcl.lang.IntegerStruct;
 import jcl.lang.NumberStruct;
+import jcl.lang.RatioStruct;
 import jcl.lang.RationalStruct;
 import jcl.lang.factory.LispStructFactory;
 import jcl.lang.readtable.AttributeType;
@@ -32,8 +35,6 @@ import jcl.util.CodePointConstants;
 import jcl.util.NumberUtils;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apfloat.Apint;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 /**
  * Step 10.1 of the Reader Algorithm.
@@ -46,8 +47,7 @@ import org.springframework.stereotype.Component;
  * be formatted, then we progress to the SymbolTokenAccumulatedState.
  * </p>
  */
-@Component
-class NumberTokenAccumulatedReaderState implements ReaderState {
+final class NumberTokenAccumulatedReaderState {
 
 	/**
 	 * The list of {@link AttributeType}s that should not be present in a numeric token.
@@ -60,20 +60,9 @@ class NumberTokenAccumulatedReaderState implements ReaderState {
 	private static final List<AttributeType> NOT_MORE_THAN_ONE_ATTRIBUTES = Arrays.asList(AttributeType.DECIMAL, AttributeType.RATIOMARKER);
 
 	/**
-	 * {@link SymbolTokenAccumulatedReaderState} singleton used by the reader algorithm.
+	 * Private constructor.
 	 */
-	@Autowired
-	private SymbolTokenAccumulatedReaderState symbolTokenAccumulatedReaderState;
-
-	@Override
-	public LispStruct process(final TokenBuilder tokenBuilder) {
-
-		final NumberStruct numberToken = getNumberToken(tokenBuilder);
-		if (numberToken == null) {
-			return symbolTokenAccumulatedReaderState.process(tokenBuilder);
-		} else {
-			return numberToken;
-		}
+	private NumberTokenAccumulatedReaderState() {
 	}
 
 	/**
@@ -85,7 +74,7 @@ class NumberTokenAccumulatedReaderState implements ReaderState {
 	 *
 	 * @return the built {@link NumberStruct} value
 	 */
-	private NumberStruct getNumberToken(final TokenBuilder tokenBuilder) {
+	static NumberStruct getNumberToken(final TokenBuilder tokenBuilder) {
 
 		final LinkedList<TokenAttribute> tokenAttributes = tokenBuilder.getTokenAttributes();
 
@@ -104,7 +93,7 @@ class NumberTokenAccumulatedReaderState implements ReaderState {
 		}
 
 		// Check that there is at least 1 'ALPHADIGIT'
-		final boolean hasNoAlphaDigits = ReaderState.hasNoAttributesWithAttributeType(tokenAttributes, AttributeType.ALPHADIGIT);
+		final boolean hasNoAlphaDigits = ReaderProcessor.hasNoAttributesWithAttributeType(tokenAttributes, AttributeType.ALPHADIGIT);
 		if (hasNoAlphaDigits) {
 			return null;
 		}
@@ -143,9 +132,9 @@ class NumberTokenAccumulatedReaderState implements ReaderState {
 			tokenAttributes.removeLast();
 		}
 
-		final boolean hasDecimal = ReaderState.hasAnyAttributeWithAttributeType(tokenAttributes, AttributeType.DECIMAL);
-		final boolean hasExponentMarker = ReaderState.hasAnyAttributeWithAttributeType(tokenAttributes, AttributeType.EXPONENTMARKER);
-		final boolean hasRatioMarker = ReaderState.hasAnyAttributeWithAttributeType(tokenAttributes, AttributeType.RATIOMARKER);
+		final boolean hasDecimal = ReaderProcessor.hasAnyAttributeWithAttributeType(tokenAttributes, AttributeType.DECIMAL);
+		final boolean hasExponentMarker = ReaderProcessor.hasAnyAttributeWithAttributeType(tokenAttributes, AttributeType.EXPONENTMARKER);
+		final boolean hasRatioMarker = ReaderProcessor.hasAnyAttributeWithAttributeType(tokenAttributes, AttributeType.RATIOMARKER);
 
 		if (hasDecimal && hasRatioMarker) {
 			return processRationalFloat(tokenBuilder);
@@ -215,7 +204,11 @@ class NumberTokenAccumulatedReaderState implements ReaderState {
 	 */
 	private static final List<AttributeType> FIRST_ONLY_ATTRIBUTES = Arrays.asList(AttributeType.PLUS, AttributeType.MINUS);
 
-	public NumberStruct processIntegerToken(final TokenBuilder tokenBuilder) {
+	/**
+	 * Sub-piece of Reader algorithm part 10.1, used to produce an {@link IntegerStruct} output when a rational token is
+	 * supplied with no {@link AttributeType#RATIOMARKER} nor {@link AttributeType#DECIMAL}.
+	 */
+	private static NumberStruct processIntegerToken(final TokenBuilder tokenBuilder) {
 
 		final LinkedList<TokenAttribute> tokenAttributes = tokenBuilder.getTokenAttributes();
 
@@ -231,7 +224,7 @@ class NumberTokenAccumulatedReaderState implements ReaderState {
 			return null;
 		}
 
-		final String tokenString = ReaderState.convertTokenAttributesToString(tokenAttributes);
+		final String tokenString = ReaderProcessor.convertTokenAttributesToString(tokenAttributes);
 		final int currentRadix = ReaderVariables.READ_BASE.getVariableValue().intValue();
 
 		final BigInteger bigInteger = new BigInteger(tokenString, currentRadix);
@@ -242,13 +235,17 @@ class NumberTokenAccumulatedReaderState implements ReaderState {
 		Float
 	 */
 
-	public NumberStruct processFloatToken(final TokenBuilder tokenBuilder) {
+	/**
+	 * Sub-piece of Reader algorithm part 10.1, used to produce a {@link FloatStruct} output when a float token is
+	 * supplied. This means using the correct exponential {@link RoundingMode#HALF_UP} to produce an accurate float result.
+	 */
+	private static NumberStruct processFloatToken(final TokenBuilder tokenBuilder) {
 
 		final LinkedList<TokenAttribute> tokenAttributes = tokenBuilder.getTokenAttributes();
 
-		final Integer exponentTokenCodePoint = ReaderState.getTokenCodePointByAttribute(tokenAttributes, AttributeType.EXPONENTMARKER);
+		final Integer exponentTokenCodePoint = ReaderProcessor.getTokenCodePointByAttribute(tokenAttributes, AttributeType.EXPONENTMARKER);
 
-		String tokenString = ReaderState.convertTokenAttributesToString(tokenAttributes);
+		String tokenString = ReaderProcessor.convertTokenAttributesToString(tokenAttributes);
 		tokenString = getFloatTokenString(tokenString, exponentTokenCodePoint);
 
 		// TODO: FloatType???
@@ -283,7 +280,7 @@ class NumberTokenAccumulatedReaderState implements ReaderState {
 	 *
 	 * @return the proper float token string
 	 */
-	static String getFloatTokenString(final String tokenString, final Integer exponentTokenCodePoint) {
+	private static String getFloatTokenString(final String tokenString, final Integer exponentTokenCodePoint) {
 		if (exponentTokenCodePoint != null) {
 			final String exponentTokenString = String.valueOf(Character.toChars(exponentTokenCodePoint));
 			final String eCapitalLetterString = CodePointConstants.LATIN_CAPITAL_LETTER_E.toString();
@@ -300,7 +297,7 @@ class NumberTokenAccumulatedReaderState implements ReaderState {
 	 *
 	 * @return the proper float type
 	 */
-	static FloatType getFloatType(final Integer exponentTokenCodePoint) {
+	private static FloatType getFloatType(final Integer exponentTokenCodePoint) {
 		FloatType floatType = ReaderVariables.READ_DEFAULT_FLOAT_FORMAT.getVariableValue();
 
 		if (exponentTokenCodePoint != null) {
@@ -324,7 +321,12 @@ class NumberTokenAccumulatedReaderState implements ReaderState {
 		Rational
 	 */
 
-	public NumberStruct processRationalToken(final TokenBuilder tokenBuilder) {
+	/**
+	 * Sub-piece of Reader algorithm part 10.1, used to produce a {@link RatioStruct} output when a rational token is
+	 * supplied with an {@link AttributeType#RATIOMARKER}. This will also produce an {@link IntegerStruct} when the
+	 * resulting {@link BigInteger} has a denominator of {@link BigInteger#ONE}.
+	 */
+	private static NumberStruct processRationalToken(final TokenBuilder tokenBuilder) {
 
 		final LinkedList<TokenAttribute> tokenAttributes = tokenBuilder.getTokenAttributes();
 
@@ -339,7 +341,7 @@ class NumberTokenAccumulatedReaderState implements ReaderState {
 			return null;
 		}
 
-		final String tokenString = ReaderState.convertTokenAttributesToString(tokenAttributes);
+		final String tokenString = ReaderProcessor.convertTokenAttributesToString(tokenAttributes);
 
 		final int numberOfRationalParts = 2;
 		final String[] rationalParts = tokenString.split("/", numberOfRationalParts);
@@ -358,7 +360,13 @@ class NumberTokenAccumulatedReaderState implements ReaderState {
 		Rational Float
 	 */
 
-	public NumberStruct processRationalFloat(final TokenBuilder tokenBuilder) {
+	/**
+	 * Sub-piece of Reader algorithm part 10.1, used to produce a {@link FloatStruct} output when a rational token is
+	 * supplied with both an {@link AttributeType#RATIOMARKER} and {@link AttributeType#DECIMAL}. This means using the
+	 * correct exponential division using {@link MathContext#DECIMAL128} and {@link RoundingMode#HALF_UP} to produce an
+	 * accurate float result.
+	 */
+	private static NumberStruct processRationalFloat(final TokenBuilder tokenBuilder) {
 
 		final LinkedList<TokenAttribute> tokenAttributes = tokenBuilder.getTokenAttributes();
 
@@ -373,7 +381,7 @@ class NumberTokenAccumulatedReaderState implements ReaderState {
 			return null;
 		}
 
-		final String tokenString = ReaderState.convertTokenAttributesToString(tokenAttributes);
+		final String tokenString = ReaderProcessor.convertTokenAttributesToString(tokenAttributes);
 
 		final int numberOfRationalParts = 2;
 		final String[] rationalParts = tokenString.split("/", numberOfRationalParts);
@@ -385,7 +393,7 @@ class NumberTokenAccumulatedReaderState implements ReaderState {
 			return null;
 		}
 
-		final Integer exponentTokenCodePoint = ReaderState.getTokenCodePointByAttribute(tokenAttributes, AttributeType.EXPONENTMARKER);
+		final Integer exponentTokenCodePoint = ReaderProcessor.getTokenCodePointByAttribute(tokenAttributes, AttributeType.EXPONENTMARKER);
 
 		final String numeratorTokenString = getFloatTokenString(numeratorPart, exponentTokenCodePoint);
 		final BigDecimal numeratorBigDecimal = NumberUtils.bigDecimalValue(numeratorTokenString);

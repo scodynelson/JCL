@@ -11,8 +11,7 @@ import jcl.lang.InputStreamStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.stream.ReadPeekResult;
-import jcl.reader.state.ReaderStateMediatorImpl;
-import org.springframework.beans.factory.annotation.Autowired;
+import jcl.reader.state.ReaderProcessor;
 import org.springframework.stereotype.Component;
 
 /**
@@ -20,12 +19,6 @@ import org.springframework.stereotype.Component;
  */
 @Component
 class ReaderImpl implements Reader {
-
-	/**
-	 * {@link ReaderStateMediatorImpl} singleton used by the reader algorithm.
-	 */
-	@Autowired
-	private ReaderStateMediatorImpl readerStateMediator;
 
 	@Override
 	public LispStruct read(final InputStreamStruct inputStreamStruct, final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP) {
@@ -44,7 +37,7 @@ class ReaderImpl implements Reader {
 	public LispStruct readPreservingWhitespace(final InputStreamStruct inputStreamStruct, final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP) {
 		if (recursiveP) {
 			final TokenBuilder tokenBuilder = new TokenBuilder(inputStreamStruct, eofErrorP, eofValue);
-			return readerStateMediator.read(tokenBuilder);
+			return ReaderProcessor.read(tokenBuilder);
 		}
 
 		final ReaderContext context = ReaderContextHolder.getContext();

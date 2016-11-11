@@ -11,19 +11,16 @@ import java.util.Map;
 
 import jcl.lang.KeywordStruct;
 import jcl.lang.PackageStruct;
-import jcl.lang.factory.LispStructFactory;
-import jcl.lang.statics.GlobalPackageStruct;
-import jcl.lang.LispStruct;
 import jcl.lang.PackageSymbolStruct;
-import jcl.lang.statics.PackageVariables;
 import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
+import jcl.lang.factory.LispStructFactory;
 import jcl.lang.readtable.AttributeType;
+import jcl.lang.statics.GlobalPackageStruct;
+import jcl.lang.statics.PackageVariables;
 import jcl.reader.TokenAttribute;
 import jcl.reader.TokenBuilder;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 /**
  * Step 10.2 of the Reader Algorithm.
@@ -56,24 +53,12 @@ import org.springframework.stereotype.Component;
  * return the EndState.
  * </p>
  */
-@Component
-class SymbolTokenAccumulatedReaderState implements ReaderState {
+final class SymbolTokenAccumulatedReaderState {
 
 	/**
-	 * {@link ReaderStateMediatorImpl} singleton used by the reader algorithm.
+	 * Private constructor.
 	 */
-	@Autowired
-	private ReaderStateMediatorImpl readerStateMediator;
-
-	@Override
-	public LispStruct process(final TokenBuilder tokenBuilder) {
-
-		final SymbolStruct symbolToken = getSymbolToken(tokenBuilder);
-		if (symbolToken == null) {
-			return readerStateMediator.readIllegalCharacter(tokenBuilder);
-		} else {
-			return symbolToken;
-		}
+	private SymbolTokenAccumulatedReaderState() {
 	}
 
 	/**
@@ -85,14 +70,14 @@ class SymbolTokenAccumulatedReaderState implements ReaderState {
 	 *
 	 * @return the built {@link SymbolStruct} value
 	 */
-	private static SymbolStruct getSymbolToken(final TokenBuilder tokenBuilder) {
+	static SymbolStruct getSymbolToken(final TokenBuilder tokenBuilder) {
 
 		final LinkedList<TokenAttribute> tokenAttributes = tokenBuilder.getTokenAttributes();
 
 		// Check that there is at least 1 'ALPHADIGIT'
-		final boolean hasNoPackageMarkers = ReaderState.hasNoAttributesWithAttributeType(tokenAttributes, AttributeType.PACKAGEMARKER);
+		final boolean hasNoPackageMarkers = ReaderProcessor.hasNoAttributesWithAttributeType(tokenAttributes, AttributeType.PACKAGEMARKER);
 		if (hasNoPackageMarkers) {
-			final String symbolName = ReaderState.convertTokenAttributesToString(tokenAttributes);
+			final String symbolName = ReaderProcessor.convertTokenAttributesToString(tokenAttributes);
 
 			final PackageStruct symbolPackage = PackageVariables.PACKAGE.getVariableValue();
 			return findExistingOrCreateNewSymbol(symbolName, symbolPackage);
@@ -152,8 +137,8 @@ class SymbolTokenAccumulatedReaderState implements ReaderState {
 			symbolNameTokenAttributes.add(tokenAttribute);
 		}
 
-		final String packageName = ReaderState.convertTokenAttributesToString(packageNameTokenAttributes);
-		final String symbolName = ReaderState.convertTokenAttributesToString(symbolNameTokenAttributes);
+		final String packageName = ReaderProcessor.convertTokenAttributesToString(packageNameTokenAttributes);
+		final String symbolName = ReaderProcessor.convertTokenAttributesToString(symbolNameTokenAttributes);
 
 		if (StringUtils.isNotEmpty(packageName)) {
 			final PackageStruct symbolPackage = PackageStruct.findPackage(packageName);

@@ -2,7 +2,7 @@
  * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
  */
 
-package jcl.reader.state;
+package jcl.reader.internal;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -18,8 +18,6 @@ import jcl.lang.factory.LispStructFactory;
 import jcl.lang.readtable.AttributeType;
 import jcl.lang.statics.GlobalPackageStruct;
 import jcl.lang.statics.PackageVariables;
-import jcl.reader.TokenAttribute;
-import jcl.reader.TokenBuilder;
 import org.apache.commons.lang3.StringUtils;
 
 /**

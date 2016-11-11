@@ -2,7 +2,7 @@
  * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
  */
 
-package jcl.reader.state;
+package jcl.reader.internal;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -24,8 +24,6 @@ import jcl.lang.RationalStruct;
 import jcl.lang.factory.LispStructFactory;
 import jcl.lang.readtable.AttributeType;
 import jcl.lang.statics.ReaderVariables;
-import jcl.reader.TokenAttribute;
-import jcl.reader.TokenBuilder;
 import jcl.type.DoubleFloatType;
 import jcl.type.FloatType;
 import jcl.type.LongFloatType;

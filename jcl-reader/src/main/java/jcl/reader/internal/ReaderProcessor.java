@@ -2,7 +2,7 @@
  * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
  */
 
-package jcl.reader.state;
+package jcl.reader.internal;
 
 import java.util.List;
 
@@ -21,8 +21,6 @@ import jcl.lang.readtable.ReadtableCase;
 import jcl.lang.readtable.SyntaxType;
 import jcl.lang.statics.ReaderVariables;
 import jcl.lang.stream.ReadPeekResult;
-import jcl.reader.TokenAttribute;
-import jcl.reader.TokenBuilder;
 import jcl.util.CodePointConstants;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;

@@ -2,7 +2,7 @@
  * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
  */
 
-package jcl.reader;
+package jcl.reader.internal;
 
 import java.math.BigInteger;
 import java.util.Map;
@@ -11,7 +11,9 @@ import jcl.lang.InputStreamStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.stream.ReadPeekResult;
-import jcl.reader.state.ReaderProcessor;
+import jcl.reader.Reader;
+import jcl.reader.ReaderContext;
+import jcl.reader.ReaderContextHolder;
 import org.springframework.stereotype.Component;
 
 /**

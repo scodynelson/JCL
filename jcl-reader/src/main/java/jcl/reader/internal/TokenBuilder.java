@@ -2,7 +2,7 @@
  * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
  */
 
-package jcl.reader;
+package jcl.reader.internal;
 
 import java.util.LinkedList;
 
@@ -10,6 +10,7 @@ import jcl.lang.InputStreamStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.readtable.AttributeType;
 import jcl.lang.stream.ReadPeekResult;
+import jcl.reader.Reader;
 
 /**
  * Used to build {@link LispStruct} tokens as a {@link Reader} process executes.

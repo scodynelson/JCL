@@ -2,9 +2,10 @@
  * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
  */
 
-package jcl.reader;
+package jcl.reader.internal;
 
 import jcl.lang.readtable.AttributeType;
+import jcl.reader.Reader;
 
 /**
  * Used to store a character token and its {@link AttributeType} value as a {@link Reader} process executes.

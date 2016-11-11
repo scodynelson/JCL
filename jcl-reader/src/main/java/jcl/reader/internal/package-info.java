@@ -5,4 +5,4 @@
 /**
  * The package containing the reader state algorithm for reading and parsing lisp tokens into JCL structures.
  */
-package jcl.reader.state;
+package jcl.reader.internal;

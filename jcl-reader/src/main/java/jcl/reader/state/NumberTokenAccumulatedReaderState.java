@@ -4,6 +4,9 @@
 
 package jcl.reader.state;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.math.MathContext;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedList;
@@ -14,11 +17,21 @@ import java.util.stream.Collectors;
 
 import jcl.lang.LispStruct;
 import jcl.lang.NumberStruct;
+import jcl.lang.RationalStruct;
+import jcl.lang.factory.LispStructFactory;
 import jcl.lang.readtable.AttributeType;
 import jcl.lang.statics.ReaderVariables;
 import jcl.reader.TokenAttribute;
 import jcl.reader.TokenBuilder;
+import jcl.type.DoubleFloatType;
+import jcl.type.FloatType;
+import jcl.type.LongFloatType;
+import jcl.type.ShortFloatType;
+import jcl.type.SingleFloatType;
+import jcl.util.CodePointConstants;
+import jcl.util.NumberUtils;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apfloat.Apint;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -51,31 +64,6 @@ class NumberTokenAccumulatedReaderState implements ReaderState {
 	 */
 	@Autowired
 	private SymbolTokenAccumulatedReaderState symbolTokenAccumulatedReaderState;
-
-	/**
-	 * {@link FloatTokenAccumulatedReaderState} singleton used to accumulate a float token.
-	 */
-	@Autowired
-	private FloatTokenAccumulatedReaderState floatTokenAccumulatedReaderState;
-
-	/**
-	 * {@link IntegerTokenAccumulatedReaderState} singleton used to accumulate an integer token.
-	 */
-	@Autowired
-	private IntegerTokenAccumulatedReaderState integerTokenAccumulatedReaderState;
-
-	/**
-	 * {@link RationalFloatTokenAccumulatedReaderState} singleton used to accumulate a float token from a rational
-	 * token.
-	 */
-	@Autowired
-	private RationalFloatTokenAccumulatedReaderState rationalFloatTokenAccumulatedReaderState;
-
-	/**
-	 * {@link RationalTokenAccumulatedReaderState} singleton used to accumulate a rational token.
-	 */
-	@Autowired
-	private RationalTokenAccumulatedReaderState rationalTokenAccumulatedReaderState;
 
 	@Override
 	public LispStruct process(final TokenBuilder tokenBuilder) {
@@ -160,18 +148,18 @@ class NumberTokenAccumulatedReaderState implements ReaderState {
 		final boolean hasRatioMarker = ReaderState.hasAnyAttributeWithAttributeType(tokenAttributes, AttributeType.RATIOMARKER);
 
 		if (hasDecimal && hasRatioMarker) {
-			return rationalFloatTokenAccumulatedReaderState.process(tokenBuilder);
+			return processRationalFloat(tokenBuilder);
 		}
 
 		if (hasDecimal || hasExponentMarker) {
-			return floatTokenAccumulatedReaderState.process(tokenBuilder);
+			return processFloatToken(tokenBuilder);
 		}
 
 		if (hasRatioMarker) {
-			return rationalTokenAccumulatedReaderState.process(tokenBuilder);
+			return processRationalToken(tokenBuilder);
 		}
 
-		return integerTokenAccumulatedReaderState.process(tokenBuilder);
+		return processIntegerToken(tokenBuilder);
 	}
 
 	/**
@@ -216,5 +204,223 @@ class NumberTokenAccumulatedReaderState implements ReaderState {
 		final Character.UnicodeBlock firstTokenCodePointBlock = Character.UnicodeBlock.of(firstTokenCodePoint);
 		final boolean isDigitInSameBlock = Character.UnicodeBlock.of(currentToken).equals(firstTokenCodePointBlock);
 		return isDigitWithRadix && isDigitInSameBlock;
+	}
+
+	/*
+		Integer
+	 */
+
+	/**
+	 * The list of {@link AttributeType}s that should only be first if present in a numeric token.
+	 */
+	private static final List<AttributeType> FIRST_ONLY_ATTRIBUTES = Arrays.asList(AttributeType.PLUS, AttributeType.MINUS);
+
+	public NumberStruct processIntegerToken(final TokenBuilder tokenBuilder) {
+
+		final LinkedList<TokenAttribute> tokenAttributes = tokenBuilder.getTokenAttributes();
+
+		final List<TokenAttribute> allButFirstTokenAttribute = tokenAttributes.subList(1, tokenAttributes.size());
+
+		// Checks to make sure if either 'PLUS' or 'MINUS' is supplied, that it is first
+		final boolean hasAttributesAndNotFirst
+				= allButFirstTokenAttribute.stream()
+				                           .map(TokenAttribute::getAttributeType)
+				                           .anyMatch(FIRST_ONLY_ATTRIBUTES::contains);
+
+		if (hasAttributesAndNotFirst) {
+			return null;
+		}
+
+		final String tokenString = ReaderState.convertTokenAttributesToString(tokenAttributes);
+		final int currentRadix = ReaderVariables.READ_BASE.getVariableValue().intValue();
+
+		final BigInteger bigInteger = new BigInteger(tokenString, currentRadix);
+		return LispStructFactory.toInteger(bigInteger);
+	}
+
+	/*
+		Float
+	 */
+
+	public NumberStruct processFloatToken(final TokenBuilder tokenBuilder) {
+
+		final LinkedList<TokenAttribute> tokenAttributes = tokenBuilder.getTokenAttributes();
+
+		final Integer exponentTokenCodePoint = ReaderState.getTokenCodePointByAttribute(tokenAttributes, AttributeType.EXPONENTMARKER);
+
+		String tokenString = ReaderState.convertTokenAttributesToString(tokenAttributes);
+		tokenString = getFloatTokenString(tokenString, exponentTokenCodePoint);
+
+		// TODO: FloatType???
+		final FloatType floatType = getFloatType(exponentTokenCodePoint);
+		return LispStructFactory.toFloat(tokenString);
+
+//		if (DoubleFloatType.INSTANCE.equals(floatType) || LongFloatType.INSTANCE.equals(floatType)) {
+//			try {
+//				final Double d = Double.parseDouble(tokenString);
+//				return DoubleFloatStruct.valueOf(d);
+//			} catch (final NumberFormatException ignore) {
+//				return null;
+//			}
+//		} else {
+//			try {
+//				final Float f = Float.parseFloat(tokenString);
+//				return SingleFloatStruct.valueOf(f);
+//			} catch (final NumberFormatException ignore) {
+//				return null;
+//			}
+//		}
+	}
+
+	/**
+	 * Gets the float token string from the provided tokenString and exponentToken code point. The exponentToken code
+	 * point determines how the tokenString exponent should be replaced to look like a valid exponent string in Java.
+	 *
+	 * @param tokenString
+	 * 		the tokenString
+	 * @param exponentTokenCodePoint
+	 * 		the exponentToken code point
+	 *
+	 * @return the proper float token string
+	 */
+	static String getFloatTokenString(final String tokenString, final Integer exponentTokenCodePoint) {
+		if (exponentTokenCodePoint != null) {
+			final String exponentTokenString = String.valueOf(Character.toChars(exponentTokenCodePoint));
+			final String eCapitalLetterString = CodePointConstants.LATIN_CAPITAL_LETTER_E.toString();
+			return tokenString.replace(exponentTokenString, eCapitalLetterString);
+		}
+		return tokenString;
+	}
+
+	/**
+	 * Gets the float type from the based off of the exponentToken code point parameter.
+	 *
+	 * @param exponentTokenCodePoint
+	 * 		the exponentToken code point used to determine the float type
+	 *
+	 * @return the proper float type
+	 */
+	static FloatType getFloatType(final Integer exponentTokenCodePoint) {
+		FloatType floatType = ReaderVariables.READ_DEFAULT_FLOAT_FORMAT.getVariableValue();
+
+		if (exponentTokenCodePoint != null) {
+			final int exponentTokenInt = exponentTokenCodePoint;
+			if ((exponentTokenInt == CodePointConstants.LATIN_SMALL_LETTER_S) || (exponentTokenInt == CodePointConstants.LATIN_CAPITAL_LETTER_S)) {
+				floatType = ShortFloatType.INSTANCE;
+			} else if ((exponentTokenInt == CodePointConstants.LATIN_SMALL_LETTER_F) || (exponentTokenInt == CodePointConstants.LATIN_CAPITAL_LETTER_F)) {
+				floatType = SingleFloatType.INSTANCE;
+			} else if ((exponentTokenInt == CodePointConstants.LATIN_SMALL_LETTER_D) || (exponentTokenInt == CodePointConstants.LATIN_CAPITAL_LETTER_D)) {
+				floatType = DoubleFloatType.INSTANCE;
+			} else if ((exponentTokenInt == CodePointConstants.LATIN_SMALL_LETTER_L) || (exponentTokenInt == CodePointConstants.LATIN_CAPITAL_LETTER_L)) {
+				floatType = LongFloatType.INSTANCE;
+			} else if ((exponentTokenInt == CodePointConstants.LATIN_SMALL_LETTER_E) || (exponentTokenInt == CodePointConstants.LATIN_CAPITAL_LETTER_E)) {
+				floatType = ReaderVariables.READ_DEFAULT_FLOAT_FORMAT.getVariableValue();
+			}
+		}
+		return floatType;
+	}
+
+	/*
+		Rational
+	 */
+
+	public NumberStruct processRationalToken(final TokenBuilder tokenBuilder) {
+
+		final LinkedList<TokenAttribute> tokenAttributes = tokenBuilder.getTokenAttributes();
+
+		final TokenAttribute firstTokenAttribute = tokenAttributes.getFirst();
+		final AttributeType firstAttributeType = firstTokenAttribute.getAttributeType();
+
+		final TokenAttribute lastTokenAttribute = tokenAttributes.getLast();
+		final AttributeType lastAttributeType = lastTokenAttribute.getAttributeType();
+
+		// Checks to make sure if either 'RATIOMARKER' is supplied, that it is neither first nor last
+		if ((firstAttributeType == AttributeType.RATIOMARKER) || (lastAttributeType == AttributeType.RATIOMARKER)) {
+			return null;
+		}
+
+		final String tokenString = ReaderState.convertTokenAttributesToString(tokenAttributes);
+
+		final int numberOfRationalParts = 2;
+		final String[] rationalParts = tokenString.split("/", numberOfRationalParts);
+
+		final int currentRadix = ReaderVariables.READ_BASE.getVariableValue().intValue();
+
+		final BigInteger numerator = new BigInteger(rationalParts[0], currentRadix);
+		final BigInteger denominator = new BigInteger(rationalParts[1], currentRadix);
+
+		final Apint numeratorAp = new Apint(numerator);
+		final Apint denominatorAp = new Apint(denominator);
+		return RationalStruct.valueOf(numeratorAp, denominatorAp);
+	}
+
+	/*
+		Rational Float
+	 */
+
+	public NumberStruct processRationalFloat(final TokenBuilder tokenBuilder) {
+
+		final LinkedList<TokenAttribute> tokenAttributes = tokenBuilder.getTokenAttributes();
+
+		final TokenAttribute firstTokenAttribute = tokenAttributes.getFirst();
+		final AttributeType firstAttributeType = firstTokenAttribute.getAttributeType();
+
+		final TokenAttribute lastTokenAttribute = tokenAttributes.getLast();
+		final AttributeType lastAttributeType = lastTokenAttribute.getAttributeType();
+
+		// Checks to make sure if either 'RATIOMARKER' is supplied, that it is neither first nor last
+		if ((firstAttributeType == AttributeType.RATIOMARKER) || (lastAttributeType == AttributeType.RATIOMARKER)) {
+			return null;
+		}
+
+		final String tokenString = ReaderState.convertTokenAttributesToString(tokenAttributes);
+
+		final int numberOfRationalParts = 2;
+		final String[] rationalParts = tokenString.split("/", numberOfRationalParts);
+
+		final String numeratorPart = rationalParts[0];
+
+		// Numerator cannot contain a DECIMAL
+		if (numeratorPart.contains(".")) {
+			return null;
+		}
+
+		final Integer exponentTokenCodePoint = ReaderState.getTokenCodePointByAttribute(tokenAttributes, AttributeType.EXPONENTMARKER);
+
+		final String numeratorTokenString = getFloatTokenString(numeratorPart, exponentTokenCodePoint);
+		final BigDecimal numeratorBigDecimal = NumberUtils.bigDecimalValue(numeratorTokenString);
+
+		final String denominatorTokenString = getFloatTokenString(rationalParts[1], exponentTokenCodePoint);
+		final BigDecimal denominatorBigDecimal;
+		try {
+			denominatorBigDecimal = NumberUtils.bigDecimalValue(denominatorTokenString);
+		} catch (final NumberFormatException ignore) {
+			// NOTE: we don't check the 'numeratorBigDecimal' because it MUST be an integer token, therefore we won't
+			//       have the issues with the BigDecimal creations
+			return null;
+		}
+
+		final BigDecimal bigDecimal = numeratorBigDecimal.divide(denominatorBigDecimal, MathContext.DECIMAL128);
+
+		// TODO: Not sure this is the best way to handle rational floats for the read algorithm. Might be a better way.
+		// TODO: FloatType???
+		final FloatType floatType = getFloatType(exponentTokenCodePoint);
+		return LispStructFactory.toFloat(bigDecimal);
+
+//		if (DoubleFloatType.INSTANCE.equals(floatType) || LongFloatType.INSTANCE.equals(floatType)) {
+//			try {
+//				final Double d = bigDecimal.doubleValue();
+//				return DoubleFloatStruct.valueOf(d);
+//			} catch (final NumberFormatException ignore) {
+//				return null;
+//			}
+//		} else {
+//			try {
+//				final Float f = bigDecimal.floatValue();
+//				return SingleFloatStruct.valueOf(f);
+//			} catch (final NumberFormatException ignore) {
+//				return null;
+//			}
+//		}
 	}
 }

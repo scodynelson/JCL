@@ -26,7 +26,7 @@ import org.springframework.stereotype.Component;
  * Sub-piece of Reader algorithm part 10.1, used to produce a {@link FloatStruct} output when a float token is
  * supplied. This means using the correct exponential {@link RoundingMode#HALF_UP} to produce an accurate float result.
  */
-@Component
+//@Component
 public class FloatTokenAccumulatedReaderState implements ReaderState {
 
 	@Override

@@ -19,7 +19,6 @@ import jcl.lang.statics.PackageVariables;
 import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
 import jcl.lang.readtable.AttributeType;
-import jcl.reader.ReaderStateMediator;
 import jcl.reader.TokenAttribute;
 import jcl.reader.TokenBuilder;
 import org.apache.commons.lang3.StringUtils;
@@ -61,7 +60,7 @@ import org.springframework.stereotype.Component;
 class SymbolTokenAccumulatedReaderState implements ReaderState {
 
 	/**
-	 * {@link ReaderStateMediator} singleton used by the reader algorithm.
+	 * {@link ReaderStateMediatorImpl} singleton used by the reader algorithm.
 	 */
 	@Autowired
 	private ReaderStateMediatorImpl readerStateMediator;

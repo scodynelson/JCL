@@ -22,7 +22,7 @@ import org.springframework.stereotype.Component;
  * Sub-piece of Reader algorithm part 10.1, used to produce an {@link IntegerStruct} output when a rational token is
  * supplied with no {@link AttributeType#RATIOMARKER} nor {@link AttributeType#DECIMAL}.
  */
-@Component
+//@Component
 public class IntegerTokenAccumulatedReaderState implements ReaderState {
 
 	/**

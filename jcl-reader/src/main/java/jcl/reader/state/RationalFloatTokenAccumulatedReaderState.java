@@ -25,7 +25,7 @@ import org.springframework.stereotype.Component;
  * correct exponential division using {@link MathContext#DECIMAL128} and {@link RoundingMode#HALF_UP} to produce an
  * accurate float result.
  */
-@Component
+//@Component
 public class RationalFloatTokenAccumulatedReaderState extends FloatTokenAccumulatedReaderState {
 
 	@Override

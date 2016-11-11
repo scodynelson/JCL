@@ -23,7 +23,7 @@ import org.springframework.stereotype.Component;
  * supplied with an {@link AttributeType#RATIOMARKER}. This will also produce an {@link IntegerStruct} when the
  * resulting {@link BigInteger} has a denominator of {@link BigInteger#ONE}.
  */
-@Component
+//@Component
 public class RationalTokenAccumulatedReaderState implements ReaderState {
 
 	@Override

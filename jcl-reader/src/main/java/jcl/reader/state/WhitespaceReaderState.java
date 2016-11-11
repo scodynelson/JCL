@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
  * If x is a whitespace[2] character, then it is discarded and step 1 is re-entered.
  * </p>
  */
-@Component
+//@Component
 class WhitespaceReaderState implements ReaderState {
 
 	/**

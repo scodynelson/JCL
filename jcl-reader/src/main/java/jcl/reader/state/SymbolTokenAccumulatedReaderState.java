@@ -64,7 +64,7 @@ class SymbolTokenAccumulatedReaderState implements ReaderState {
 	 * {@link ReaderStateMediator} singleton used by the reader algorithm.
 	 */
 	@Autowired
-	private ReaderStateMediator readerStateMediator;
+	private ReaderStateMediatorImpl readerStateMediator;
 
 	@Override
 	public LispStruct process(final TokenBuilder tokenBuilder) {

@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
  * entered.
  * </p>
  */
-@Component
+//@Component
 class MultipleEscapeReaderState implements ReaderState {
 
 	/**

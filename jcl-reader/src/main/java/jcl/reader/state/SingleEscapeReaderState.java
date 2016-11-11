@@ -21,7 +21,7 @@ import org.springframework.stereotype.Component;
  * used to begin a token, and step 8 is entered.
  * </p>
  */
-@Component
+//@Component
 class SingleEscapeReaderState implements ReaderState {
 
 	/**

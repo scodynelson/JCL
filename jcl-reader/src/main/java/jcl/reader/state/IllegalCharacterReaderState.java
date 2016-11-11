@@ -18,7 +18,7 @@ import org.springframework.stereotype.Component;
  * If x is an invalid character, an error of type reader-error is signaled.
  * </p>
  */
-@Component
+//@Component
 class IllegalCharacterReaderState implements ReaderState {
 
 	@Override

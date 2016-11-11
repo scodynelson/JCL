@@ -25,7 +25,7 @@ import org.springframework.stereotype.Component;
  * from the input stream, and dispatched according to the syntax type of x to one of steps 2 to 7.
  * </p>
  */
-@Component
+//@Component
 class ReadReaderState implements ReaderState {
 
 	/**

@@ -26,7 +26,7 @@ import org.springframework.stereotype.Component;
  * the current readtable. X is used to begin a token, and step 8 is entered.
  * </p>
  */
-@Component
+//@Component
 class ConstituentReaderState implements ReaderState {
 
 	/**

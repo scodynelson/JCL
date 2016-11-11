@@ -38,7 +38,7 @@ import org.springframework.stereotype.Component;
  * If y is an invalid character, an error of type reader-error is signaled.
  * </p>
  */
-@Component
+//@Component
 class OddMultiEscapeReaderState implements ReaderState {
 
 	/**

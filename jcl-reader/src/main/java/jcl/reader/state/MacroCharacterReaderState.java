@@ -38,7 +38,7 @@ import org.springframework.stereotype.Component;
  * as the result of the read operation; the algorithm is done. If zero values are returned, then step 1 is re-entered.
  * </p>
  */
-@Component
+//@Component
 class MacroCharacterReaderState implements ReaderState {
 
 	/**

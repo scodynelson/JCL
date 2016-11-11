@@ -27,7 +27,7 @@ import org.springframework.stereotype.Component;
  * 3) Package with a Symbol
  * </p>
  */
-@Component
+//@Component
 class TokenAccumulatedReaderState implements ReaderState {
 
 	/**

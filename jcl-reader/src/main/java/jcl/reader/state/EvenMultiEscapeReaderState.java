@@ -54,7 +54,7 @@ import org.springframework.stereotype.Component;
  * then step 10 is entered.
  * </p>
  */
-@Component
+//@Component
 class EvenMultiEscapeReaderState implements ReaderState {
 
 	/**

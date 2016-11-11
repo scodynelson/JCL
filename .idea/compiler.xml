@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="CompilerConfiguration">
-    <option name="DEFAULT_COMPILER" value="Javac" />
-    <resourceExtensions />
     <wildcardResourcePatterns>
       <entry name="!?*.java" />
       <entry name="!?*.form" />
@@ -13,20 +11,15 @@
       <entry name="!?*.kt" />
       <entry name="!?*.clj" />
     </wildcardResourcePatterns>
-    <annotationProcessing>
-      <profile default="true" name="Default" enabled="false">
-        <processorPath useClasspath="true" />
-      </profile>
-    </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="jcl-application_main" target="1.8" />
       <module name="jcl-application_test" target="1.8" />
       <module name="jcl-compiler_main" target="1.8" />
       <module name="jcl-compiler_test" target="1.8" />
+      <module name="jcl-core_main" target="1.8" />
+      <module name="jcl-core_test" target="1.8" />
       <module name="jcl-functions_main" target="1.8" />
       <module name="jcl-functions_test" target="1.8" />
-      <module name="jcl-lang_main" target="1.8" />
-      <module name="jcl-lang_test" target="1.8" />
       <module name="jcl-reader_main" target="1.8" />
       <module name="jcl-reader_test" target="1.8" />
       <module name="jcl_main" target="1.8" />

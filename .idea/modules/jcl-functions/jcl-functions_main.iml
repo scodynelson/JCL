@@ -9,7 +9,7 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module" module-name="jcl-lang_main" />
+    <orderEntry type="module" module-name="jcl-core_main" />
     <orderEntry type="module" module-name="jcl-compiler_main" />
     <orderEntry type="module" module-name="jcl-reader_main" />
     <orderEntry type="library" name="Gradle: org.apache.commons:commons-lang3:3.4" level="project" />

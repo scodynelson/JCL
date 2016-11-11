@@ -160,8 +160,8 @@ configure(subprojects) { subproject ->
 	}
 }
 
-project("jcl-lang") {
-	description = "JCL Language"
+project("jcl-core") {
+	description = "JCL Core"
 
 	dependencies {
 		compile("org.apache.commons:commons-lang3:${commonsLangVersion}")
@@ -184,7 +184,7 @@ project("jcl-compiler") {
 	description = "JCL Compiler"
 
 	dependencies {
-		compile(project(":jcl-lang"))
+		compile(project(":jcl-core"))
 
 		compile("org.apache.commons:commons-lang3:${commonsLangVersion}")
 		compile("commons-io:commons-io:${commonsIoVersion}")
@@ -204,7 +204,7 @@ project("jcl-reader") {
 	description = "JCL Reader"
 
 	dependencies {
-		compile(project(":jcl-lang"))
+		compile(project(":jcl-core"))
 		compile(project(":jcl-compiler"))
 
 		compile("org.apache.commons:commons-lang3:${commonsLangVersion}")
@@ -225,7 +225,7 @@ project("jcl-functions") {
 	description = "JCL Functions"
 
 	dependencies {
-		compile(project(":jcl-lang"))
+		compile(project(":jcl-core"))
 		compile(project(":jcl-compiler"))
 		compile(project(":jcl-reader"))
 
@@ -248,7 +248,7 @@ project("jcl-application") {
 	description = "JCL Application"
 
 	dependencies {
-		compile(project(":jcl-lang"))
+		compile(project(":jcl-core"))
 		compile(project(":jcl-compiler"))
 		compile(project(":jcl-reader"))
 		compile(project(":jcl-functions"))

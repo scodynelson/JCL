@@ -1,6 +1,6 @@
 rootProject.name = "jcl"
 
-include 'jcl-lang'
+include 'jcl-core'
 include 'jcl-compiler'
 include 'jcl-functions'
 include 'jcl-reader'

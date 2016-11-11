@@ -31,8 +31,6 @@ import jcl.type.ShortFloatType;
 import jcl.type.SingleFloatType;
 import jcl.util.CodePointConstants;
 import jcl.util.NumberUtils;
-import org.apache.commons.collections4.CollectionUtils;
-import org.apfloat.Apint;
 
 /**
  * Step 10.1 of the Reader Algorithm.
@@ -77,7 +75,7 @@ final class NumberTokenAccumulatedReaderState {
 		final LinkedList<TokenAttribute> tokenAttributes = tokenBuilder.getTokenAttributes();
 
 		// If there are no tokens, not a number. NOTE: We should never get here in the sequence. This is a protection.
-		if (CollectionUtils.isEmpty(tokenAttributes)) {
+		if (tokenAttributes.isEmpty()) {
 			return null;
 		}
 
@@ -348,10 +346,7 @@ final class NumberTokenAccumulatedReaderState {
 
 		final BigInteger numerator = new BigInteger(rationalParts[0], currentRadix);
 		final BigInteger denominator = new BigInteger(rationalParts[1], currentRadix);
-
-		final Apint numeratorAp = new Apint(numerator);
-		final Apint denominatorAp = new Apint(denominator);
-		return RationalStruct.valueOf(numeratorAp, denominatorAp);
+		return RationalStruct.valueOf(numerator, denominator);
 	}
 
 	/*

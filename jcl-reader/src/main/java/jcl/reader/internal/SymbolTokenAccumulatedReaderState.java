@@ -18,7 +18,6 @@ import jcl.lang.factory.LispStructFactory;
 import jcl.lang.readtable.AttributeType;
 import jcl.lang.statics.GlobalPackageStruct;
 import jcl.lang.statics.PackageVariables;
-import org.apache.commons.lang3.StringUtils;
 
 /**
  * Step 10.2 of the Reader Algorithm.
@@ -138,7 +137,7 @@ final class SymbolTokenAccumulatedReaderState {
 		final String packageName = ReaderProcessor.convertTokenAttributesToString(packageNameTokenAttributes);
 		final String symbolName = ReaderProcessor.convertTokenAttributesToString(symbolNameTokenAttributes);
 
-		if (StringUtils.isNotEmpty(packageName)) {
+		if (!packageName.isEmpty()) {
 			final PackageStruct symbolPackage = PackageStruct.findPackage(packageName);
 
 			if (symbolPackage == null) {

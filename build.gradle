@@ -207,17 +207,7 @@ project("jcl-reader") {
 		compile(project(":jcl-core"))
 		compile(project(":jcl-compiler"))
 
-		compile("org.apache.commons:commons-lang3:${commonsLangVersion}")
-		compile("org.apache.commons:commons-collections4:${commonsCollectionsVersion}")
-
-		compile("org.apfloat:apfloat:${apfloatVersion}")
-
-		compile("com.ibm.icu:icu4j:${icu4jVersion}")
-
 		optional("org.springframework.boot:spring-boot-starter:${springBootVersion}")
-		optional("org.springframework.boot:spring-boot-loader:${springBootVersion}")
-
-		testCompile("org.springframework.boot:spring-boot-starter-test:${springBootVersion}")
 	}
 }
 

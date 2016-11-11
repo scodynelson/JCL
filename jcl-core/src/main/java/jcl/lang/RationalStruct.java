@@ -4,6 +4,8 @@
 
 package jcl.lang;
 
+import java.math.BigInteger;
+
 import jcl.lang.internal.number.IntegerStructImpl;
 import jcl.lang.internal.number.RatioStructImpl;
 import org.apfloat.Apcomplex;
@@ -31,6 +33,24 @@ public interface RationalStruct extends RealStruct {
 			return IntegerStructImpl.valueOf((Apint) aprational);
 		}
 		return RatioStructImpl.valueOf(aprational);
+	}
+
+	/**
+	 * Returns a RationalStruct object with the provided numerator and denominator {@link Apint} values. If the
+	 * denominator is equal to {@link Apcomplex#ONE}, an {@link IntegerStruct} is returned; otherwise a {@link
+	 * RatioStruct} is returned.
+	 *
+	 * @param numerator
+	 * 		the {@link Apint} value of the numerator of the resulting RationalStruct
+	 * @param denominator
+	 * 		the {@link Apint} value of the denominator of the resulting RationalStruct
+	 *
+	 * @return a RationalStruct object with the provided numerator and denominator {@link Apint} values
+	 */
+	static RationalStruct valueOf(final BigInteger numerator, final BigInteger denominator) {
+		final Apint numeratorAp = new Apint(numerator);
+		final Apint denominatorAp = new Apint(denominator);
+		return valueOf(numeratorAp, denominatorAp);
 	}
 
 	/**

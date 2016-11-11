@@ -22,7 +22,6 @@ import jcl.lang.readtable.SyntaxType;
 import jcl.lang.statics.ReaderVariables;
 import jcl.lang.stream.ReadPeekResult;
 import jcl.util.CodePointConstants;
-import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -496,7 +495,7 @@ class ReaderProcessor {
 	 * @return the {@link String} produced from the list of {@link TokenAttribute}s
 	 */
 	static String convertTokenAttributesToString(final List<TokenAttribute> tokenAttributes) {
-		if (CollectionUtils.isEmpty(tokenAttributes)) {
+		if (tokenAttributes.isEmpty()) {
 			return "";
 		}
 

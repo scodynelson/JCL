@@ -205,7 +205,6 @@ project("jcl-reader") {
 
 	dependencies {
 		compile(project(":jcl-core"))
-		compile(project(":jcl-compiler"))
 
 		optional("org.springframework.boot:spring-boot-starter:${springBootVersion}")
 	}

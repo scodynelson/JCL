@@ -10,13 +10,13 @@ import jcl.compiler.sa.analyzer.body.BodyProcessingResult;
 import jcl.compiler.struct.specialoperator.CompilerFunctionStruct;
 import jcl.compiler.struct.specialoperator.InnerLambdaStruct;
 import jcl.compiler.struct.specialoperator.declare.DeclareStruct;
-import jcl.lang.statics.CommonLispSymbols;
-import jcl.lang.statics.GlobalPackageStruct;
 import jcl.lang.LispStruct;
-import jcl.lang.internal.SpecialOperatorStructImpl;
+import jcl.lang.ListStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.factory.LispStructFactory;
-import jcl.lang.ListStruct;
+import jcl.lang.internal.SpecialOperatorStructImpl;
+import jcl.lang.statics.CommonLispSymbols;
+import jcl.lang.statics.GlobalPackageStruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

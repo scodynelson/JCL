@@ -8,12 +8,12 @@ import java.util.List;
 
 import jcl.lang.FunctionStruct;
 import jcl.lang.LispStruct;
+import jcl.lang.ListStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.factory.LispStructFactory;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
-import jcl.lang.ListStruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

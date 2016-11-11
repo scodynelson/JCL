@@ -4,12 +4,12 @@
 
 package jcl.functions.stream;
 
+import jcl.functions.CommonLispBuiltInFunctionStructBase;
 import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.NILStruct;
 import jcl.lang.PathnameStruct;
 import jcl.lang.SymbolStruct;
-import jcl.functions.CommonLispBuiltInFunctionStructBase;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.statics.CommonLispSymbols;

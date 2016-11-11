@@ -4,13 +4,13 @@
 
 package jcl.functions.number;
 
+import jcl.functions.CommonLispBuiltInFunctionStructBase;
 import jcl.lang.FloatStruct;
 import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.RationalStruct;
 import jcl.lang.RealStruct;
 import jcl.lang.factory.LispStructFactory;
-import jcl.functions.CommonLispBuiltInFunctionStructBase;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import org.springframework.stereotype.Component;

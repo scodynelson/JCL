@@ -26,6 +26,8 @@ import jcl.compiler.function.Closure;
 import jcl.compiler.function.FunctionParameterBinding;
 import jcl.lang.FunctionStruct;
 import jcl.lang.LispStruct;
+import jcl.lang.ListStruct;
+import jcl.lang.NILStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.TStruct;
 import jcl.lang.ValuesStruct;
@@ -33,8 +35,6 @@ import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.factory.LispStructFactory;
 import jcl.lang.function.parameterdsl.Parameters;
-import jcl.lang.ListStruct;
-import jcl.lang.NILStruct;
 import jcl.type.LispType;
 
 public abstract class CompiledMacroFunctionExpander<O extends LispStruct> extends MacroFunctionExpander<O> {

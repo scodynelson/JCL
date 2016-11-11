@@ -6,9 +6,9 @@ package jcl.functions.number;
 
 import java.util.List;
 
+import jcl.functions.CommonLispBuiltInFunctionStructBase;
 import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
-import jcl.functions.CommonLispBuiltInFunctionStructBase;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import org.springframework.stereotype.Component;

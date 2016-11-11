@@ -6,9 +6,9 @@ package jcl.lang.statics;
 
 import java.math.BigInteger;
 
-import jcl.lang.internal.ConstantStructImpl;
 import jcl.lang.IntegerStruct;
 import jcl.lang.factory.LispStructFactory;
+import jcl.lang.internal.ConstantStructImpl;
 import jcl.lang.internal.number.IntegerStructImpl;
 
 public interface CompilerConstants {

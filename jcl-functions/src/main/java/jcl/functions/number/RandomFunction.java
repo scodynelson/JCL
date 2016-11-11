@@ -7,17 +7,17 @@ package jcl.functions.number;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
+import jcl.functions.CommonLispBuiltInFunctionStructBase;
 import jcl.lang.FloatStruct;
 import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.RandomStateStruct;
+import jcl.lang.RealStruct;
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.factory.LispStructFactory;
-import jcl.functions.CommonLispBuiltInFunctionStructBase;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.statics.NumberVariables;
-import jcl.lang.RealStruct;
 import org.springframework.stereotype.Component;
 
 @Component

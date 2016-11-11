@@ -4,9 +4,9 @@
 
 package jcl.functions.stream;
 
+import jcl.functions.CommonLispBuiltInFunctionStructBase;
 import jcl.lang.FileStreamStruct;
 import jcl.lang.LispStruct;
-import jcl.functions.CommonLispBuiltInFunctionStructBase;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import org.springframework.stereotype.Component;

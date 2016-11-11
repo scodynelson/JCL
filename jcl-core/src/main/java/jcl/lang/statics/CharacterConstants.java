@@ -9,9 +9,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import jcl.lang.CharacterStruct;
-import jcl.lang.internal.ConstantStructImpl;
 import jcl.lang.IntegerStruct;
 import jcl.lang.internal.CharacterStructImpl;
+import jcl.lang.internal.ConstantStructImpl;
 import jcl.lang.internal.number.IntegerStructImpl;
 import jcl.util.CodePointConstants;
 

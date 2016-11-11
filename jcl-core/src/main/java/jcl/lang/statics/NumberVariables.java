@@ -5,8 +5,8 @@
 package jcl.lang.statics;
 
 import jcl.lang.RandomStateStruct;
-import jcl.lang.internal.number.RandomStateStructImpl;
 import jcl.lang.internal.VariableStructImpl;
+import jcl.lang.internal.number.RandomStateStructImpl;
 
 public interface NumberVariables {
 

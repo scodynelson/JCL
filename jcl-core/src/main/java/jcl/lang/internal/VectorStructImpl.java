@@ -4,10 +4,10 @@ import java.util.Collections;
 import java.util.List;
 
 import jcl.lang.LispStruct;
-import jcl.lang.statics.PrinterVariables;
 import jcl.lang.VectorStruct;
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
+import jcl.lang.statics.PrinterVariables;
 import jcl.type.LispType;
 import jcl.type.SimpleVectorType;
 import jcl.type.TType;

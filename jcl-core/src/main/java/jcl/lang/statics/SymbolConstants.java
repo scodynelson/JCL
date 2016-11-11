@@ -4,8 +4,8 @@
 
 package jcl.lang.statics;
 
-import jcl.lang.TStruct;
 import jcl.lang.NILStruct;
+import jcl.lang.TStruct;
 
 public interface SymbolConstants {
 

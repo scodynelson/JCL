@@ -6,8 +6,8 @@ import java.util.regex.Pattern;
 
 import jcl.lang.BitVectorStruct;
 import jcl.lang.IntegerStruct;
-import jcl.lang.statics.PrinterVariables;
 import jcl.lang.condition.exception.TypeErrorException;
+import jcl.lang.statics.PrinterVariables;
 import jcl.type.BitType;
 import jcl.type.BitVectorType;
 import jcl.type.SimpleBitVectorType;

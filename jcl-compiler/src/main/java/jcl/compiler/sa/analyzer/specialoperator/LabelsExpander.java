@@ -9,9 +9,9 @@ import jcl.compiler.sa.analyzer.body.BodyProcessingResult;
 import jcl.compiler.struct.specialoperator.CompilerFunctionStruct;
 import jcl.compiler.struct.specialoperator.InnerLambdaStruct;
 import jcl.compiler.struct.specialoperator.declare.DeclareStruct;
-import jcl.lang.internal.SpecialOperatorStructImpl;
-import jcl.lang.SymbolStruct;
 import jcl.lang.ListStruct;
+import jcl.lang.SymbolStruct;
+import jcl.lang.internal.SpecialOperatorStructImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

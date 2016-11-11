@@ -2,10 +2,10 @@ package jcl.functions.readtable;
 
 import java.util.Objects;
 
+import jcl.functions.SystemBuiltInFunctionStructBase;
 import jcl.lang.LispStruct;
 import jcl.lang.ReadtableStruct;
 import jcl.lang.SymbolStruct;
-import jcl.functions.SystemBuiltInFunctionStructBase;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.readtable.ReadtableCase;

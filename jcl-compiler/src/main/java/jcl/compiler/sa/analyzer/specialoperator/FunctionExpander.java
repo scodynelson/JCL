@@ -10,11 +10,11 @@ import jcl.compiler.struct.specialoperator.LambdaCompilerFunctionStruct;
 import jcl.compiler.struct.specialoperator.SymbolCompilerFunctionStruct;
 import jcl.compiler.struct.specialoperator.lambda.LambdaStruct;
 import jcl.lang.LispStruct;
-import jcl.lang.internal.SpecialOperatorStructImpl;
+import jcl.lang.ListStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
-import jcl.lang.ListStruct;
+import jcl.lang.internal.SpecialOperatorStructImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

@@ -4,10 +4,10 @@ import java.util.HashSet;
 import java.util.Set;
 
 import jcl.lang.KeywordStruct;
-import jcl.lang.internal.KeywordStructImpl;
 import jcl.lang.LispStruct;
-import jcl.lang.internal.VariableStructImpl;
 import jcl.lang.condition.exception.TypeErrorException;
+import jcl.lang.internal.KeywordStructImpl;
+import jcl.lang.internal.VariableStructImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

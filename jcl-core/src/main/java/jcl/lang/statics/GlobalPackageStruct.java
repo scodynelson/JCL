@@ -8,8 +8,8 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import jcl.lang.internal.KeywordPackageStructImpl;
 import jcl.lang.PackageStruct;
+import jcl.lang.internal.KeywordPackageStructImpl;
 import jcl.lang.internal.PackageStructImpl;
 
 /**

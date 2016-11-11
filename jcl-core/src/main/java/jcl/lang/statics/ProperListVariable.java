@@ -6,10 +6,10 @@ package jcl.lang.statics;
 
 import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
-import jcl.lang.PackageStruct;
-import jcl.lang.internal.VariableStructImpl;
-import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.NILStruct;
+import jcl.lang.PackageStruct;
+import jcl.lang.condition.exception.TypeErrorException;
+import jcl.lang.internal.VariableStructImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

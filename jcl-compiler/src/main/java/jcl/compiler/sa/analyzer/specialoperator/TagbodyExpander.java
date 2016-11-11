@@ -14,10 +14,10 @@ import jcl.compiler.struct.specialoperator.TagbodyStruct;
 import jcl.compiler.struct.specialoperator.go.GoStruct;
 import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
+import jcl.lang.ListStruct;
+import jcl.lang.SymbolStruct;
 import jcl.lang.factory.LispStructFactory;
 import jcl.lang.internal.SpecialOperatorStructImpl;
-import jcl.lang.SymbolStruct;
-import jcl.lang.ListStruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

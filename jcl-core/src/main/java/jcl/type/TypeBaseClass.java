@@ -4,8 +4,8 @@
 
 package jcl.type;
 
-import jcl.lang.statics.GlobalPackageStruct;
 import jcl.lang.internal.SymbolStructImpl;
+import jcl.lang.statics.GlobalPackageStruct;
 
 /**
  * Abstract base class for all {@link LispType} implementations.

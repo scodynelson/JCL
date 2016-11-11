@@ -7,10 +7,10 @@ package jcl.lang.internal.number;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
-import jcl.lang.classes.BuiltInClassStruct;
 import jcl.lang.RandomStateStruct;
-import jcl.util.NumberUtils;
+import jcl.lang.classes.BuiltInClassStruct;
 import jcl.type.RandomStateType;
+import jcl.util.NumberUtils;
 import org.apache.commons.lang3.RandomUtils;
 
 /**

@@ -7,11 +7,11 @@ package jcl.functions.reader;
 import java.math.BigInteger;
 import java.util.Optional;
 
+import jcl.functions.SystemBuiltInFunctionStructBase;
 import jcl.lang.CharacterStruct;
 import jcl.lang.InputStreamStruct;
 import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
-import jcl.functions.SystemBuiltInFunctionStructBase;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 

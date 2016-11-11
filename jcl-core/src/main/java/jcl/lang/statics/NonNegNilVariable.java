@@ -5,8 +5,8 @@ import java.math.BigInteger;
 import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.PackageStruct;
-import jcl.lang.internal.VariableStructImpl;
 import jcl.lang.condition.exception.TypeErrorException;
+import jcl.lang.internal.VariableStructImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

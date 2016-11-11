@@ -2,8 +2,8 @@ package jcl.functions;
 
 import jcl.lang.PackageStruct;
 import jcl.lang.SymbolStruct;
-import jcl.lang.statics.GlobalPackageStruct;
 import jcl.lang.function.parameterdsl.Parameters;
+import jcl.lang.statics.GlobalPackageStruct;
 
 public abstract class SystemBuiltInFunctionStructBase extends BuiltInFunctionStructImpl {
 

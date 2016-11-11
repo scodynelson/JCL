@@ -11,14 +11,14 @@ import jcl.compiler.struct.specialoperator.declare.DeclareStruct;
 import jcl.compiler.struct.specialoperator.declare.JavaClassNameDeclarationStruct;
 import jcl.compiler.struct.specialoperator.declare.LispNameDeclarationStruct;
 import jcl.compiler.struct.specialoperator.declare.SpecialDeclarationStruct;
-import jcl.lang.internal.DeclarationStructImpl;
 import jcl.lang.LispStruct;
-import jcl.lang.internal.SpecialOperatorStructImpl;
+import jcl.lang.ListStruct;
 import jcl.lang.StringStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
-import jcl.lang.ListStruct;
+import jcl.lang.internal.DeclarationStructImpl;
+import jcl.lang.internal.SpecialOperatorStructImpl;
 import org.springframework.stereotype.Component;
 
 @Component

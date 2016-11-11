@@ -6,19 +6,19 @@ package jcl.functions.lisppackage;
 
 import java.util.function.BiFunction;
 
+import jcl.functions.CommonLispBuiltInFunctionStructBase;
 import jcl.lang.FunctionStruct;
 import jcl.lang.KeywordStruct;
 import jcl.lang.LispStruct;
+import jcl.lang.NILStruct;
 import jcl.lang.PackageStruct;
 import jcl.lang.PackageSymbolStruct;
-import jcl.lang.statics.PackageVariables;
 import jcl.lang.StringStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.ValuesStruct;
-import jcl.functions.CommonLispBuiltInFunctionStructBase;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
-import jcl.lang.NILStruct;
+import jcl.lang.statics.PackageVariables;
 
 /**
  * Abstract {@link FunctionStruct} implementation for package functions that operate on string-designators representing

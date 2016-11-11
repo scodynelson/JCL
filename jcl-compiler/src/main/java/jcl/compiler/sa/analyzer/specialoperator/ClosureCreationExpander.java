@@ -22,12 +22,12 @@ import jcl.compiler.struct.specialoperator.PrognStruct;
 import jcl.compiler.struct.specialoperator.declare.DeclareStruct;
 import jcl.compiler.struct.specialoperator.declare.SpecialDeclarationStruct;
 import jcl.lang.LispStruct;
+import jcl.lang.ListStruct;
+import jcl.lang.NILStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.factory.LispStructFactory;
-import jcl.lang.ListStruct;
-import jcl.lang.NILStruct;
 import org.springframework.beans.factory.annotation.Autowired;
 
 abstract class ClosureCreationExpander<V> extends MacroFunctionExpander<ClosureCreationStruct<V>> {

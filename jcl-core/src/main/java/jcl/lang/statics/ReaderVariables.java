@@ -6,11 +6,11 @@ package jcl.lang.statics;
 
 import jcl.lang.BooleanStruct;
 import jcl.lang.IntegerStruct;
+import jcl.lang.NILStruct;
 import jcl.lang.ReadtableStruct;
-import jcl.lang.internal.readtable.ReadtableStructImpl;
 import jcl.lang.TStruct;
 import jcl.lang.internal.VariableStructImpl;
-import jcl.lang.NILStruct;
+import jcl.lang.internal.readtable.ReadtableStructImpl;
 import jcl.type.FloatType;
 import jcl.type.SingleFloatType;
 

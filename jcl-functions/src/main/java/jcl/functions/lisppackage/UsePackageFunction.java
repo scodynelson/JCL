@@ -7,8 +7,8 @@ package jcl.functions.lisppackage;
 import java.util.function.BiConsumer;
 
 import jcl.lang.PackageStruct;
-import jcl.lang.statics.GlobalPackageStruct;
 import jcl.lang.condition.exception.ErrorException;
+import jcl.lang.statics.GlobalPackageStruct;
 import org.springframework.stereotype.Component;
 
 /**

@@ -9,8 +9,8 @@ import jcl.lang.FunctionStruct;
 import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
-import jcl.lang.internal.VariableStructImpl;
 import jcl.lang.NILStruct;
+import jcl.lang.internal.VariableStructImpl;
 
 public interface CompilerVariables {
 

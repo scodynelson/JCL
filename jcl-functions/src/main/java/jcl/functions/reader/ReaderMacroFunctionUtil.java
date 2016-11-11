@@ -7,8 +7,8 @@ package jcl.functions.reader;
 import jcl.lang.FunctionStruct;
 import jcl.lang.IntegerStruct;
 import jcl.lang.readtable.AttributeType;
-import jcl.lang.statics.ReaderVariables;
 import jcl.lang.readtable.SyntaxType;
+import jcl.lang.statics.ReaderVariables;
 
 /**
  * Utility class for common operations for {@link FunctionStruct}s.

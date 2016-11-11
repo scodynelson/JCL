@@ -1,11 +1,11 @@
 package jcl.functions.list;
 
+import jcl.functions.SystemBuiltInFunctionStructBase;
 import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
-import jcl.functions.SystemBuiltInFunctionStructBase;
+import jcl.lang.ListStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
-import jcl.lang.ListStruct;
 import org.springframework.stereotype.Component;
 
 @Component

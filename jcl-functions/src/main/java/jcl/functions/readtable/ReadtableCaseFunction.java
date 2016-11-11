@@ -4,10 +4,10 @@
 
 package jcl.functions.readtable;
 
+import jcl.functions.CommonLispBuiltInFunctionStructBase;
 import jcl.lang.LispStruct;
 import jcl.lang.NILStruct;
 import jcl.lang.ReadtableStruct;
-import jcl.functions.CommonLispBuiltInFunctionStructBase;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.readtable.ReadtableCase;

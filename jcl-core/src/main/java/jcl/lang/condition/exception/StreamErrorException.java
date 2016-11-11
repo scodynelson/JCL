@@ -1,7 +1,7 @@
 package jcl.lang.condition.exception;
 
-import jcl.lang.condition.ConditionType;
 import jcl.lang.StreamStruct;
+import jcl.lang.condition.ConditionType;
 import jcl.type.LispType;
 
 public class StreamErrorException extends ErrorException {

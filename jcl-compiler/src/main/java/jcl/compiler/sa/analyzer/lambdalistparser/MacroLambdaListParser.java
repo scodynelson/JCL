@@ -19,11 +19,11 @@ import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
 import jcl.compiler.environment.binding.lambdalist.RestParameter;
 import jcl.compiler.environment.binding.lambdalist.WholeParameter;
 import jcl.compiler.struct.specialoperator.declare.DeclareStruct;
-import jcl.lang.statics.CompilerConstants;
 import jcl.lang.LispStruct;
-import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.ListStruct;
 import jcl.lang.NILStruct;
+import jcl.lang.condition.exception.ProgramErrorException;
+import jcl.lang.statics.CompilerConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

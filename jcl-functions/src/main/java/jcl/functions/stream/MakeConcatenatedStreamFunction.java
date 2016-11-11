@@ -8,12 +8,12 @@ import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.List;
 
+import jcl.functions.CommonLispBuiltInFunctionStructBase;
+import jcl.lang.InputStreamStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.factory.LispStructFactory;
-import jcl.functions.CommonLispBuiltInFunctionStructBase;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
-import jcl.lang.InputStreamStruct;
 import org.springframework.stereotype.Component;
 
 @Component

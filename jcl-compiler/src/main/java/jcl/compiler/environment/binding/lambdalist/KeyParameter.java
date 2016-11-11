@@ -7,13 +7,13 @@ package jcl.compiler.environment.binding.lambdalist;
 import java.util.Collections;
 import java.util.List;
 
-import jcl.lang.PackageStruct;
-import jcl.lang.factory.LispStructFactory;
-import jcl.lang.statics.GlobalPackageStruct;
 import jcl.lang.LispStruct;
+import jcl.lang.NILStruct;
+import jcl.lang.PackageStruct;
 import jcl.lang.PackageSymbolStruct;
 import jcl.lang.SymbolStruct;
-import jcl.lang.NILStruct;
+import jcl.lang.factory.LispStructFactory;
+import jcl.lang.statics.GlobalPackageStruct;
 import jcl.type.TType;
 
 public class KeyParameter extends Parameter {

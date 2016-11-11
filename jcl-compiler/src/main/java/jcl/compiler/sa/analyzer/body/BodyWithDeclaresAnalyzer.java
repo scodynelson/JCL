@@ -5,8 +5,8 @@ import java.util.Iterator;
 import java.util.List;
 
 import jcl.lang.LispStruct;
-import jcl.lang.internal.SpecialOperatorStructImpl;
 import jcl.lang.ListStruct;
+import jcl.lang.internal.SpecialOperatorStructImpl;
 import org.springframework.stereotype.Component;
 
 @Component

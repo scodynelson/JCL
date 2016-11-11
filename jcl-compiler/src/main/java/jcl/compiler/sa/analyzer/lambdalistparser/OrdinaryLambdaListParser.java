@@ -16,10 +16,10 @@ import jcl.compiler.environment.binding.lambdalist.OrdinaryLambdaList;
 import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
 import jcl.compiler.environment.binding.lambdalist.RestParameter;
 import jcl.compiler.struct.specialoperator.declare.DeclareStruct;
-import jcl.lang.statics.CompilerConstants;
 import jcl.lang.LispStruct;
-import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.ListStruct;
+import jcl.lang.condition.exception.ProgramErrorException;
+import jcl.lang.statics.CompilerConstants;
 import org.springframework.stereotype.Component;
 
 @Component

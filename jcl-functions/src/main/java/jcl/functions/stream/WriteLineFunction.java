@@ -4,17 +4,17 @@
 
 package jcl.functions.stream;
 
+import jcl.functions.CommonLispBuiltInFunctionStructBase;
 import jcl.lang.IntegerStruct;
-import jcl.lang.statics.CommonLispSymbols;
 import jcl.lang.LispStruct;
+import jcl.lang.NILStruct;
+import jcl.lang.OutputStreamStruct;
 import jcl.lang.StringStruct;
 import jcl.lang.TStruct;
 import jcl.lang.condition.exception.TypeErrorException;
-import jcl.functions.CommonLispBuiltInFunctionStructBase;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
-import jcl.lang.NILStruct;
-import jcl.lang.OutputStreamStruct;
+import jcl.lang.statics.CommonLispSymbols;
 import jcl.lang.statics.StreamVariables;
 import org.springframework.stereotype.Component;
 

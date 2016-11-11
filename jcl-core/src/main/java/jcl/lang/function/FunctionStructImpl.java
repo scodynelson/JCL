@@ -3,9 +3,9 @@ package jcl.lang.function;
 import java.util.List;
 
 import jcl.lang.FunctionStruct;
-import jcl.lang.classes.BuiltInClassStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.SymbolStruct;
+import jcl.lang.classes.BuiltInClassStruct;
 import jcl.type.FunctionType;
 import jcl.type.LispType;
 import org.springframework.beans.factory.InitializingBean;

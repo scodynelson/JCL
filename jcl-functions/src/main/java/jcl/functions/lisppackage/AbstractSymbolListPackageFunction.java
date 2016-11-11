@@ -9,17 +9,17 @@ import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
+import jcl.functions.CommonLispBuiltInFunctionStructBase;
 import jcl.lang.FunctionStruct;
 import jcl.lang.LispStruct;
+import jcl.lang.ListStruct;
 import jcl.lang.PackageStruct;
-import jcl.lang.statics.PackageVariables;
 import jcl.lang.SymbolStruct;
 import jcl.lang.TStruct;
 import jcl.lang.condition.exception.TypeErrorException;
-import jcl.functions.CommonLispBuiltInFunctionStructBase;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
-import jcl.lang.ListStruct;
+import jcl.lang.statics.PackageVariables;
 import jcl.util.ClassUtils;
 
 /**

@@ -6,9 +6,9 @@ package jcl.lang.statics;
 
 import java.math.BigInteger;
 
-import jcl.lang.internal.ConstantStructImpl;
 import jcl.lang.FloatStruct;
 import jcl.lang.IntegerStruct;
+import jcl.lang.internal.ConstantStructImpl;
 import jcl.lang.internal.number.FloatStructImpl;
 import jcl.lang.internal.number.IntegerStructImpl;
 import org.apache.commons.math3.util.Precision;

@@ -1,10 +1,10 @@
 package jcl.functions.sequence;
 
-import jcl.lang.LispStruct;
 import jcl.functions.CommonLispBuiltInFunctionStructBase;
+import jcl.lang.LispStruct;
+import jcl.lang.SequenceStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
-import jcl.lang.SequenceStruct;
 import org.springframework.stereotype.Component;
 
 @Component

@@ -1,7 +1,7 @@
 package jcl.lang;
 
-import jcl.lang.number.DecodeFloatResult;
 import jcl.lang.internal.number.FloatStructImpl;
+import jcl.lang.number.DecodeFloatResult;
 
 /**
  * The {@link FloatStruct} is the object representation of a Lisp 'float' type.

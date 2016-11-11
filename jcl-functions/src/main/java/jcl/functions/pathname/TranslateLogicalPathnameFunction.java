@@ -4,12 +4,12 @@
 
 package jcl.functions.pathname;
 
+import jcl.functions.CommonLispBuiltInFunctionStructBase;
 import jcl.lang.LispStruct;
 import jcl.lang.LogicalPathnameStruct;
 import jcl.lang.PathnameStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.SynonymStreamStruct;
-import jcl.functions.CommonLispBuiltInFunctionStructBase;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -4,20 +4,20 @@
 
 package jcl.functions.stream;
 
+import jcl.functions.CommonLispBuiltInFunctionStructBase;
 import jcl.lang.BooleanStruct;
 import jcl.lang.CharacterStruct;
+import jcl.lang.InputStreamStruct;
 import jcl.lang.LispStruct;
+import jcl.lang.NILStruct;
 import jcl.lang.TStruct;
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.factory.LispStructFactory;
-import jcl.functions.CommonLispBuiltInFunctionStructBase;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
-import jcl.lang.NILStruct;
-import jcl.lang.InputStreamStruct;
+import jcl.lang.statics.StreamVariables;
 import jcl.lang.stream.PeekType;
 import jcl.lang.stream.ReadPeekResult;
-import jcl.lang.statics.StreamVariables;
 import org.springframework.stereotype.Component;
 
 @Component

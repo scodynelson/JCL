@@ -5,8 +5,8 @@
 package testground.structures;
 
 import jcl.lang.NILStruct;
-import jcl.lang.internal.StructureObjectStructImpl;
 import jcl.lang.factory.LispStructFactory;
+import jcl.lang.internal.StructureObjectStructImpl;
 
 @SuppressWarnings("all")
 public class FooStructureObject extends StructureObjectStructImpl {

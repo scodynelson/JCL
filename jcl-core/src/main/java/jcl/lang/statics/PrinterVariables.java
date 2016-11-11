@@ -7,9 +7,9 @@ package jcl.lang.statics;
 import jcl.lang.BooleanStruct;
 import jcl.lang.IntegerStruct;
 import jcl.lang.KeywordStruct;
+import jcl.lang.NILStruct;
 import jcl.lang.TStruct;
 import jcl.lang.internal.VariableStructImpl;
-import jcl.lang.NILStruct;
 
 public interface PrinterVariables {
 

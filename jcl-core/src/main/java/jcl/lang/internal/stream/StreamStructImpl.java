@@ -6,9 +6,9 @@ package jcl.lang.internal.stream;
 
 import java.util.List;
 
-import jcl.lang.classes.BuiltInClassStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.StreamStruct;
+import jcl.lang.classes.BuiltInClassStruct;
 import jcl.type.LispType;
 import jcl.type.StreamType;
 

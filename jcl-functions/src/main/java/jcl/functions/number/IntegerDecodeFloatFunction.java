@@ -1,9 +1,9 @@
 package jcl.functions.number;
 
+import jcl.functions.CommonLispBuiltInFunctionStructBase;
 import jcl.lang.FloatStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.ValuesStruct;
-import jcl.functions.CommonLispBuiltInFunctionStructBase;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.number.DecodeFloatResult;

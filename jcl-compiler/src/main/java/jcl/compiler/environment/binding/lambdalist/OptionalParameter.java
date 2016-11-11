@@ -8,9 +8,9 @@ import java.util.Collections;
 import java.util.List;
 
 import jcl.lang.LispStruct;
+import jcl.lang.NILStruct;
 import jcl.lang.PackageStruct;
 import jcl.lang.SymbolStruct;
-import jcl.lang.NILStruct;
 import jcl.type.TType;
 
 public class OptionalParameter extends Parameter {

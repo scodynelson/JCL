@@ -7,8 +7,8 @@ package jcl.compiler.struct.specialoperator.defstruct;
 import java.util.List;
 
 import jcl.compiler.struct.CompilerSpecialOperatorStruct;
-import jcl.lang.classes.StructureClassStruct;
 import jcl.lang.SymbolStruct;
+import jcl.lang.classes.StructureClassStruct;
 
 public class DefstructStruct extends CompilerSpecialOperatorStruct {
 

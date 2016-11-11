@@ -21,10 +21,10 @@ import jcl.compiler.environment.binding.lambdalist.WholeParameter;
 import jcl.compiler.function.Closure;
 import jcl.compiler.function.expanders.CompiledMacroFunctionExpander;
 import jcl.lang.LispStruct;
+import jcl.lang.NILStruct;
 import jcl.lang.PackageStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.factory.LispStructFactory;
-import jcl.lang.NILStruct;
 
 @SuppressWarnings("all")
 public class TestGroundMacroFunctionExpanderGenerator extends CompiledMacroFunctionExpander<LispStruct> {

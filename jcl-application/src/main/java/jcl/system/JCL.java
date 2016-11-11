@@ -19,17 +19,14 @@ import jcl.lang.pathname.PathnameType;
 import jcl.lang.statics.CompilerVariables;
 import jcl.lang.statics.StreamVariables;
 import jcl.system.repl.ReadEvalPrint;
-import jcl.util.SimpleThreadScope;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.CustomScopeConfigurer;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.context.annotation.Bean;
 
 @SpringBootApplication(scanBasePackages = "jcl")
 public class JCL implements ApplicationRunner {
@@ -73,13 +70,6 @@ public class JCL implements ApplicationRunner {
 		try (final ConfigurableApplicationContext context = SpringApplication.run(JCL.class, args)) {
 			context.registerShutdownHook();
 		}
-	}
-
-	@Bean
-	public static CustomScopeConfigurer threadScopeConfigurer() {
-		final CustomScopeConfigurer scopeConfigurer = new CustomScopeConfigurer();
-		scopeConfigurer.addScope("thread", new SimpleThreadScope());
-		return scopeConfigurer;
 	}
 
 	@Override

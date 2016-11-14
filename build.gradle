@@ -171,6 +171,8 @@ project("jcl-core") {
 
 		compile("org.apfloat:apfloat:${apfloatVersion}")
 
+		compile 'io.javaslang:javaslang:2.0.4'
+
 		compile("com.ibm.icu:icu4j:${icu4jVersion}")
 
 		optional("org.springframework.boot:spring-boot-starter:${springBootVersion}")

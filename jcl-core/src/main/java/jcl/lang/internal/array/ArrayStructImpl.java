@@ -1,4 +1,4 @@
-package jcl.lang.internal;
+package jcl.lang.internal.array;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -36,6 +36,10 @@ public class ArrayStructImpl<TYPE extends LispStruct> extends BuiltInClassStruct
 	protected LispType elementType;
 
 	protected boolean isAdjustable;
+
+	private ArrayStruct<TYPE> displacedTo;
+
+	private int displacedIndexOffset;
 
 	/**
 	 * Public constructor.

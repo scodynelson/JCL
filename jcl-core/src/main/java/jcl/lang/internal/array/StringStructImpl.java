@@ -1,4 +1,4 @@
-package jcl.lang.internal;
+package jcl.lang.internal.array;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +13,9 @@ import jcl.lang.ReadtableStruct;
 import jcl.lang.StringStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.SimpleErrorException;
+import jcl.lang.internal.CharacterStructImpl;
+import jcl.lang.internal.PathnameStructImpl;
+import jcl.lang.internal.SymbolStructImpl;
 import jcl.lang.readtable.SyntaxType;
 import jcl.lang.statics.PrinterVariables;
 import jcl.lang.statics.ReaderVariables;
@@ -26,7 +29,7 @@ import jcl.type.StringType;
 /**
  * The {@link StringStructImpl} is the object representation of a Lisp 'string' type.
  */
-public final class StringStructImpl extends VectorStructImpl<CharacterStruct> implements StringStruct {
+public class StringStructImpl extends VectorStructImpl<CharacterStruct> implements StringStruct {
 
 	/**
 	 * Public constructor.
@@ -34,7 +37,7 @@ public final class StringStructImpl extends VectorStructImpl<CharacterStruct> im
 	 * @param stringValue
 	 * 		a Java string used for the string contents
 	 */
-	private StringStructImpl(final String stringValue) {
+	protected StringStructImpl(final String stringValue) {
 		this(stringValue.length(), getCharList(stringValue), CharacterType.INSTANCE, false, null);
 	}
 
@@ -52,7 +55,7 @@ public final class StringStructImpl extends VectorStructImpl<CharacterStruct> im
 	 * @param fillPointer
 	 * 		the string fillPointer
 	 */
-	private StringStructImpl(final int size, final List<CharacterStruct> contents, final CharacterType elementType,
+	protected StringStructImpl(final int size, final List<CharacterStruct> contents, final CharacterType elementType,
 	                         final boolean isAdjustable, final Integer fillPointer) {
 		super(getStringType(isAdjustable, fillPointer, elementType), size, contents, elementType, isAdjustable, fillPointer);
 	}

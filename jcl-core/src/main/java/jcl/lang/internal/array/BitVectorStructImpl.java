@@ -1,8 +1,10 @@
-package jcl.lang.internal.array;
+package jcl.lang.internal;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import jcl.lang.BitVectorStruct;
 import jcl.lang.IntegerStruct;
@@ -15,44 +17,51 @@ import jcl.type.SimpleBitVectorType;
 /**
  * The {@link BitVectorStructImpl} is the object representation of a Lisp 'bit-vector' type.
  */
-public class BitVectorStructImpl extends VectorStructImpl<IntegerStruct> implements BitVectorStruct {
+public final class BitVectorStructImpl extends VectorStructImpl<IntegerStruct> implements BitVectorStruct {
 
 	private static final Pattern BIT_PATTERN = Pattern.compile("[0|1]+");
 
-	/**
-	 * Public constructor.
-	 *
-	 * @param bitString
-	 * 		a Java string used for the bit-vector contents
-	 */
-	protected BitVectorStructImpl(final String bitString) {
-		this(bitString.length(), getBitList(bitString), false, null);
+	private BitVectorStructImpl(final BitVectorType bitVectorType, final Integer size, final List<IntegerStruct> contents,
+	                            final boolean isAdjustable, final Integer fillPointer) {
+		super(bitVectorType, size, BitType.INSTANCE, contents, isAdjustable, fillPointer);
 	}
 
-	/**
-	 * Public constructor.
-	 *
-	 * @param contents
-	 * 		the bit-vector contents
-	 */
-	protected BitVectorStructImpl(final List<IntegerStruct> contents) {
-		this(contents.size(), contents, false, null);
+	public static BitVectorStruct valueOf(final Integer size, final IntegerStruct initialElement,
+	                                      final boolean isAdjustable, final Integer fillPointer) {
+		final List<IntegerStruct> initialContents = Stream.generate(() -> initialElement)
+		                                                  .limit(size)
+		                                                  .collect(Collectors.toList());
+		final BitVectorType bitVectorType = getBitVectorType(isAdjustable, fillPointer);
+		return new BitVectorStructImpl(bitVectorType, size, initialContents, isAdjustable, fillPointer);
 	}
 
-	/**
-	 * Public constructor.
-	 *
-	 * @param size
-	 * 		the bit-vector size
-	 * @param contents
-	 * 		the bit-vector contents
-	 * @param isAdjustable
-	 * 		whether or not the bit-vector is adjustable
-	 * @param fillPointer
-	 * 		the bit-vector fillPointer
+	public static BitVectorStruct valueOf(final Integer size, final List<IntegerStruct> initialContents,
+	                                      final boolean isAdjustable, final Integer fillPointer) {
+		final BitVectorType bitVectorType = getBitVectorType(isAdjustable, fillPointer);
+		return new BitVectorStructImpl(bitVectorType, size, initialContents, isAdjustable, fillPointer);
+	}
+
+	public static BitVectorStruct valueOf(final Integer size, final IntegerStruct initialElement) {
+		final List<IntegerStruct> initialContents = Stream.generate(() -> initialElement)
+		                                                  .limit(size)
+		                                                  .collect(Collectors.toList());
+		return new BitVectorStructImpl(SimpleBitVectorType.INSTANCE, size, initialContents, false, null);
+	}
+
+	public static BitVectorStruct valueOf(final Integer size, final List<IntegerStruct> initialContents) {
+		return new BitVectorStructImpl(SimpleBitVectorType.INSTANCE, size, initialContents, false, null);
+	}
+
+	/*
+		Old Builders
 	 */
-	protected BitVectorStructImpl(final int size, final List<IntegerStruct> contents, final boolean isAdjustable, final Integer fillPointer) {
-		super(getBitVectorType(isAdjustable, fillPointer), size, contents, BitType.INSTANCE, isAdjustable, fillPointer);
+
+	public static BitVectorStruct valueOf(final String bitString) {
+		return new BitVectorStructImpl(SimpleBitVectorType.INSTANCE, bitString.length(), getBitList(bitString), false, null);
+	}
+
+	public static BitVectorStruct valueOfCont(final List<IntegerStruct> contents) {
+		return new BitVectorStructImpl(SimpleBitVectorType.INSTANCE, contents.size(), contents, false, null);
 	}
 
 	/**
@@ -91,14 +100,6 @@ public class BitVectorStructImpl extends VectorStructImpl<IntegerStruct> impleme
 			}
 		}
 		return bitList;
-	}
-
-	public static BitVectorStruct valueOf(final String bitString) {
-		return new BitVectorStructImpl(bitString);
-	}
-
-	public static BitVectorStruct valueOfCont(final List<IntegerStruct> contents) {
-		return new BitVectorStructImpl(contents);
 	}
 
 	@Override

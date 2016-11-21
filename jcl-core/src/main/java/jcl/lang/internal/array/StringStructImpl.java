@@ -1,9 +1,10 @@
-package jcl.lang.internal.array;
+package jcl.lang.internal;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import com.ibm.icu.lang.UCharacter;
 import jcl.lang.CharacterStruct;
@@ -13,9 +14,6 @@ import jcl.lang.ReadtableStruct;
 import jcl.lang.StringStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.SimpleErrorException;
-import jcl.lang.internal.CharacterStructImpl;
-import jcl.lang.internal.PathnameStructImpl;
-import jcl.lang.internal.SymbolStructImpl;
 import jcl.lang.readtable.SyntaxType;
 import jcl.lang.statics.PrinterVariables;
 import jcl.lang.statics.ReaderVariables;
@@ -29,35 +27,47 @@ import jcl.type.StringType;
 /**
  * The {@link StringStructImpl} is the object representation of a Lisp 'string' type.
  */
-public class StringStructImpl extends VectorStructImpl<CharacterStruct> implements StringStruct {
+public final class StringStructImpl extends VectorStructImpl<CharacterStruct> implements StringStruct {
 
-	/**
-	 * Public constructor.
-	 *
-	 * @param stringValue
-	 * 		a Java string used for the string contents
-	 */
-	protected StringStructImpl(final String stringValue) {
-		this(stringValue.length(), getCharList(stringValue), CharacterType.INSTANCE, false, null);
+	private StringStructImpl(final StringType stringType, final Integer size, final CharacterType elementType,
+	                         final List<CharacterStruct> contents, final boolean isAdjustable, final Integer fillPointer) {
+		super(stringType, size, elementType, contents, isAdjustable, fillPointer);
 	}
 
-	/**
-	 * Public constructor.
-	 *
-	 * @param size
-	 * 		the string size
-	 * @param contents
-	 * 		the string contents
-	 * @param elementType
-	 * 		the string elementType
-	 * @param isAdjustable
-	 * 		whether or not the string is adjustable
-	 * @param fillPointer
-	 * 		the string fillPointer
+	public static StringStruct valueOf(final Integer size, final CharacterType elementType, final CharacterStruct initialElement,
+	                                   final boolean isAdjustable, final Integer fillPointer) {
+		final List<CharacterStruct> initialContents = Stream.generate(() -> initialElement)
+		                                                    .limit(size)
+		                                                    .collect(Collectors.toList());
+		final StringType stringType = getStringType(isAdjustable, fillPointer, elementType);
+		return new StringStructImpl(stringType, size, elementType, initialContents, isAdjustable, fillPointer);
+	}
+
+	public static StringStruct valueOf(final Integer size, final CharacterType elementType, final List<CharacterStruct> initialContents,
+	                                   final boolean isAdjustable, final Integer fillPointer) {
+		final StringType stringType = getStringType(isAdjustable, fillPointer, elementType);
+		return new StringStructImpl(stringType, size, elementType, initialContents, isAdjustable, fillPointer);
+	}
+
+	public static StringStruct valueOf(final Integer size, final CharacterType elementType, final CharacterStruct initialElement) {
+		final List<CharacterStruct> initialContents = Stream.generate(() -> initialElement)
+		                                                    .limit(size)
+		                                                    .collect(Collectors.toList());
+		final StringType stringType = getStringType(false, null, elementType);
+		return new StringStructImpl(stringType, size, elementType, initialContents, false, null);
+	}
+
+	public static StringStruct valueOf(final Integer size, final CharacterType elementType, final List<CharacterStruct> initialContents) {
+		final StringType stringType = getStringType(false, null, elementType);
+		return new StringStructImpl(stringType, size, elementType, initialContents, false, null);
+	}
+
+	/*
+		Old Builders
 	 */
-	protected StringStructImpl(final int size, final List<CharacterStruct> contents, final CharacterType elementType,
-	                         final boolean isAdjustable, final Integer fillPointer) {
-		super(getStringType(isAdjustable, fillPointer, elementType), size, contents, elementType, isAdjustable, fillPointer);
+
+	public static StringStruct valueOf(final String stringValue) {
+		return new StringStructImpl(SimpleStringType.INSTANCE, stringValue.length(), CharacterType.INSTANCE, getCharList(stringValue), false, null);
 	}
 
 	/**
@@ -95,10 +105,6 @@ public class StringStructImpl extends VectorStructImpl<CharacterStruct> implemen
 			charList.add(characterStruct);
 		}
 		return charList;
-	}
-
-	public static StringStruct valueOf(final String stringValue) {
-		return new StringStructImpl(stringValue);
 	}
 
 	/**

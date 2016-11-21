@@ -1,9 +1,10 @@
-package jcl.lang.internal.array;
+package jcl.lang.internal;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import jcl.lang.ArrayStruct;
 import jcl.lang.LispStruct;
@@ -37,37 +38,8 @@ public class ArrayStructImpl<TYPE extends LispStruct> extends BuiltInClassStruct
 
 	protected boolean isAdjustable;
 
-	private ArrayStruct<TYPE> displacedTo;
-
-	private int displacedIndexOffset;
-
-	/**
-	 * Public constructor.
-	 *
-	 * @param dimensions
-	 * 		the array dimensions
-	 * @param contents
-	 * 		the array contents
-	 */
-	protected ArrayStructImpl(final List<Integer> dimensions, final List<TYPE> contents) {
-		this(SimpleArrayType.INSTANCE, dimensions, contents, TType.INSTANCE, false);
-	}
-
-	/**
-	 * Public constructor.
-	 *
-	 * @param dimensions
-	 * 		the array dimensions
-	 * @param contents
-	 * 		the array contents
-	 * @param elementType
-	 * 		the array elementType
-	 * @param isAdjustable
-	 * 		whether or not the array is adjustable
-	 */
-	protected ArrayStructImpl(final List<Integer> dimensions, final List<TYPE> contents, final LispType elementType, final boolean isAdjustable) {
-		this(getArrayType(isAdjustable), dimensions, contents, elementType, isAdjustable);
-	}
+	private final ArrayStruct<TYPE> displacedTo;
+	private final Integer displacedIndexOffset;
 
 	/**
 	 * Protected constructor.
@@ -83,8 +55,8 @@ public class ArrayStructImpl<TYPE extends LispStruct> extends BuiltInClassStruct
 	 * @param isAdjustable
 	 * 		whether or not the array is adjustable
 	 */
-	protected ArrayStructImpl(final ArrayType arrayType,
-	                          final List<Integer> dimensions, final List<TYPE> contents, final LispType elementType, final boolean isAdjustable) {
+	protected ArrayStructImpl(final ArrayType arrayType, final List<Integer> dimensions, final LispType elementType,
+	                          final List<TYPE> contents, final boolean isAdjustable) {
 		super(arrayType, null, null);
 
 		// Check input data
@@ -98,6 +70,104 @@ public class ArrayStructImpl<TYPE extends LispStruct> extends BuiltInClassStruct
 
 		this.elementType = elementType;
 		this.isAdjustable = isAdjustable;
+
+		displacedTo = null;
+		displacedIndexOffset = null;
+	}
+
+	/**
+	 * Protected constructor.
+	 *
+	 * @param arrayType
+	 * 		the array type
+	 * @param dimensions
+	 * 		the array dimensions
+	 * @param elementType
+	 * 		the array elementType
+	 * @param isAdjustable
+	 * 		whether or not the array is adjustable
+	 */
+	private ArrayStructImpl(final ArrayType arrayType, final List<Integer> dimensions, final LispType elementType,
+	                        final boolean isAdjustable, final ArrayStruct<TYPE> displacedTo, final Integer displacedIndexOffset) {
+		super(arrayType, null, null);
+
+		contents = null;
+		this.dimensions = dimensions;
+		updateTotalSize();
+
+		rank = dimensions.size();
+
+		this.elementType = elementType;
+		this.isAdjustable = isAdjustable;
+
+		this.displacedTo = displacedTo;
+		this.displacedIndexOffset = displacedIndexOffset;
+	}
+
+	public static <T extends LispStruct> ArrayStruct<T> valueOf(final List<Integer> dimensions, final LispType elementType,
+	                                                            final T initialElement, final boolean isAdjustable) {
+		final int totalElements = dimensions.stream()
+		                                    .mapToInt(Integer::intValue)
+		                                    .sum();
+		final List<T> initialContents = Stream.generate(() -> initialElement)
+		                                      .limit(totalElements)
+		                                      .collect(Collectors.toList());
+
+		// Check input data
+		// TODO: is this needed?? Optimize...
+		areContentsValidForDimensionsAndElementType(dimensions, elementType, initialContents);
+
+		final ArrayType arrayType = getArrayType(isAdjustable);
+		return new ArrayStructImpl<>(arrayType, dimensions, elementType, initialContents, isAdjustable);
+	}
+
+	public static <T extends LispStruct> ArrayStruct<T> valueOf(final List<Integer> dimensions, final LispType elementType,
+	                                                            final List<T> initialContents, final boolean isAdjustable) {
+
+		// Check input data
+		areContentsValidForDimensionsAndElementType(dimensions, elementType, initialContents);
+
+		final ArrayType arrayType = getArrayType(isAdjustable);
+		return new ArrayStructImpl<>(arrayType, dimensions, elementType, initialContents, isAdjustable);
+	}
+
+	public static <T extends LispStruct> ArrayStruct<T> valueOf(final List<Integer> dimensions, final LispType elementType,
+	                                                            final boolean isAdjustable, final ArrayStruct<T> displacedTo,
+	                                                            final Integer displacedIndexOffset) {
+		return new ArrayStructImpl<>(ArrayType.INSTANCE, dimensions, elementType, isAdjustable, displacedTo, displacedIndexOffset);
+	}
+
+	public static <T extends LispStruct> ArrayStruct<T> valueOf(final List<Integer> dimensions, final LispType elementType,
+	                                                            final T initialElement) {
+		final int totalElements = dimensions.stream()
+		                                    .mapToInt(Integer::intValue)
+		                                    .sum();
+		final List<T> initialContents = Stream.generate(() -> initialElement)
+		                                      .limit(totalElements)
+		                                      .collect(Collectors.toList());
+
+		// Check input data
+		// TODO: is this needed?? Optimize...
+		areContentsValidForDimensionsAndElementType(dimensions, elementType, initialContents);
+
+		return new ArrayStructImpl<>(SimpleArrayType.INSTANCE, dimensions, elementType, initialContents, false);
+	}
+
+	public static <T extends LispStruct> ArrayStruct<T> valueOf(final List<Integer> dimensions, final LispType elementType,
+	                                                            final List<T> initialContents) {
+
+		// Check input data
+		areContentsValidForDimensionsAndElementType(dimensions, elementType, initialContents);
+
+		return new ArrayStructImpl<>(SimpleArrayType.INSTANCE, dimensions, elementType, initialContents, false);
+	}
+
+	/*
+		Old Builders
+	 */
+
+	public static <T extends LispStruct> ArrayStruct<T> valueOf(final List<Integer> dimensions, final List<T> contents) {
+		return new ArrayStructImpl<>(SimpleArrayType.INSTANCE, dimensions, TType.INSTANCE, contents, false);
 	}
 
 	/**
@@ -165,10 +235,6 @@ public class ArrayStructImpl<TYPE extends LispStruct> extends BuiltInClassStruct
 		for (final Integer dimension : dimensions) {
 			totalSize += dimension;
 		}
-	}
-
-	public static <T extends LispStruct> ArrayStruct<T> valueOf(final List<Integer> dimensions, final List<T> contents) {
-		return new ArrayStructImpl<>(dimensions, contents);
 	}
 
 	/**

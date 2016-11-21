@@ -2,6 +2,8 @@ package jcl.lang.internal.array;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import jcl.lang.LispStruct;
 import jcl.lang.VectorStruct;
@@ -24,35 +26,6 @@ public class VectorStructImpl<TYPE extends LispStruct> extends ArrayStructImpl<T
 	protected Integer fillPointer;
 
 	/**
-	 * Public constructor.
-	 *
-	 * @param contents
-	 * 		the vector contents
-	 */
-	protected VectorStructImpl(final List<TYPE> contents) {
-		this(contents.size(), contents, TType.INSTANCE, false, null);
-	}
-
-	/**
-	 * Public constructor.
-	 *
-	 * @param size
-	 * 		the vector size
-	 * @param contents
-	 * 		the vector contents
-	 * @param elementType
-	 * 		the vector elementType
-	 * @param isAdjustable
-	 * 		whether or not the vector is adjustable
-	 * @param fillPointer
-	 * 		the vector fillPointer
-	 */
-	protected VectorStructImpl(final int size, final List<TYPE> contents, final LispType elementType,
-	                           final boolean isAdjustable, final Integer fillPointer) {
-		this(getVectorType(isAdjustable, fillPointer), size, contents, elementType, isAdjustable, fillPointer);
-	}
-
-	/**
 	 * Protected constructor.
 	 *
 	 * @param vectorType
@@ -68,12 +41,49 @@ public class VectorStructImpl<TYPE extends LispStruct> extends ArrayStructImpl<T
 	 * @param fillPointer
 	 * 		the vector fillPointer
 	 */
-	protected VectorStructImpl(final VectorType vectorType,
-	                           final int size, final List<TYPE> contents, final LispType elementType,
-	                           final boolean isAdjustable, final Integer fillPointer) {
-		super(vectorType, Collections.singletonList(size), contents, elementType, isAdjustable);
+	protected VectorStructImpl(final VectorType vectorType, final Integer size, final LispType elementType,
+	                           final List<TYPE> contents, final boolean isAdjustable, final Integer fillPointer) {
+		super(vectorType, Collections.singletonList(size), elementType, contents, isAdjustable);
 
 		this.fillPointer = fillPointer;
+	}
+
+	public static <T extends LispStruct> VectorStruct<T> valueOf(final Integer size, final LispType elementType,
+	                                                             final T initialElement, final boolean isAdjustable,
+	                                                             final Integer fillPointer) {
+		final List<T> initialContents = Stream.generate(() -> initialElement)
+		                                      .limit(size)
+		                                      .collect(Collectors.toList());
+		final VectorType vectorType = getVectorType(isAdjustable, fillPointer);
+		return new VectorStructImpl<>(vectorType, size, elementType, initialContents, isAdjustable, fillPointer);
+	}
+
+	public static <T extends LispStruct> VectorStruct<T> valueOf(final Integer size, final LispType elementType,
+	                                                             final List<T> initialContents, final boolean isAdjustable,
+	                                                             final Integer fillPointer) {
+		final VectorType vectorType = getVectorType(isAdjustable, fillPointer);
+		return new VectorStructImpl<>(vectorType, size, elementType, initialContents, isAdjustable, fillPointer);
+	}
+
+	public static <T extends LispStruct> VectorStruct<T> valueOf(final Integer size, final LispType elementType,
+	                                                             final T initialElement) {
+		final List<T> initialContents = Stream.generate(() -> initialElement)
+		                                      .limit(size)
+		                                      .collect(Collectors.toList());
+		return new VectorStructImpl<>(SimpleVectorType.INSTANCE, size, elementType, initialContents, false, null);
+	}
+
+	public static <T extends LispStruct> VectorStruct<T> valueOf(final Integer size, final LispType elementType,
+	                                                             final List<T> initialContents) {
+		return new VectorStructImpl<>(SimpleVectorType.INSTANCE, size, elementType, initialContents, false, null);
+	}
+
+	/*
+		Old Builders
+	 */
+
+	public static <T extends LispStruct> VectorStruct<T> valueOf(final List<T> contents) {
+		return new VectorStructImpl<>(SimpleVectorType.INSTANCE, contents.size(), TType.INSTANCE, contents, false, null);
 	}
 
 	/**
@@ -88,10 +98,6 @@ public class VectorStructImpl<TYPE extends LispStruct> extends ArrayStructImpl<T
 	 */
 	private static VectorType getVectorType(final boolean isAdjustable, final Integer fillPointer) {
 		return (isAdjustable || (fillPointer != null)) ? VectorType.INSTANCE : SimpleVectorType.INSTANCE;
-	}
-
-	public static <T extends LispStruct> VectorStruct<T> valueOf(final List<T> contents) {
-		return new VectorStructImpl<>(contents);
 	}
 
 	/**

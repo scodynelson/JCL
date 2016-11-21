@@ -13,7 +13,7 @@ import jcl.compiler.icg.IntermediateCodeGenerator;
 import jcl.compiler.icg.JavaMethodBuilder;
 import jcl.lang.BitVectorStruct;
 import jcl.lang.IntegerStruct;
-import jcl.lang.internal.array.BitVectorStructImpl;
+import jcl.lang.internal.BitVectorStructImpl;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.springframework.beans.factory.annotation.Autowired;

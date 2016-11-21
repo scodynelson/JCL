@@ -14,7 +14,7 @@ import jcl.compiler.icg.JavaMethodBuilder;
 import jcl.compiler.struct.specialoperator.QuoteStruct;
 import jcl.lang.ArrayStruct;
 import jcl.lang.LispStruct;
-import jcl.lang.internal.array.ArrayStructImpl;
+import jcl.lang.internal.ArrayStructImpl;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.springframework.beans.factory.annotation.Autowired;

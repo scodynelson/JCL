@@ -9,7 +9,7 @@ import jcl.compiler.icg.GeneratorEvent;
 import jcl.compiler.icg.GeneratorState;
 import jcl.compiler.icg.JavaMethodBuilder;
 import jcl.lang.StringStruct;
-import jcl.lang.internal.array.StringStructImpl;
+import jcl.lang.internal.StringStructImpl;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.springframework.context.event.EventListener;

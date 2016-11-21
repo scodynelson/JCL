@@ -20,7 +20,6 @@ import jcl.lang.condition.exception.SimpleErrorException;
 import jcl.lang.function.expander.CompilerMacroFunctionExpanderInter;
 import jcl.lang.function.expander.MacroFunctionExpanderInter;
 import jcl.lang.function.expander.SymbolMacroExpanderInter;
-import jcl.lang.internal.array.StringStructImpl;
 import jcl.lang.statics.GlobalPackageStruct;
 import jcl.lang.statics.PackageVariables;
 import jcl.type.LispType;

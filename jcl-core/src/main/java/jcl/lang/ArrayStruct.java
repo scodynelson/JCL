@@ -12,6 +12,8 @@ import jcl.type.LispType;
  */
 public interface ArrayStruct<TYPE extends LispStruct> extends LispStruct {
 
+//	IntegerStruct dimension(final int axisNumber);
+
 	/**
 	 * Gets the array contents.
 	 *
@@ -20,27 +22,11 @@ public interface ArrayStruct<TYPE extends LispStruct> extends LispStruct {
 	List<TYPE> getContents();
 
 	/**
-	 * Sets the array contents.
-	 *
-	 * @param contents
-	 * 		new array contents
-	 */
-	void setContents(final List<TYPE> contents);
-
-	/**
 	 * Gets the array dimensions.
 	 *
 	 * @return array dimensions
 	 */
 	List<Integer> getDimensions();
-
-	/**
-	 * Sets the array dimensions.
-	 *
-	 * @param dimensions
-	 * 		new array dimensions
-	 */
-	void setDimensions(final List<Integer> dimensions);
 
 	/**
 	 * Gets the array's total size.
@@ -57,14 +43,6 @@ public interface ArrayStruct<TYPE extends LispStruct> extends LispStruct {
 	int getRank();
 
 	/**
-	 * Sets the array rank.
-	 *
-	 * @param rank
-	 * 		new array rank
-	 */
-	void setRank(final int rank);
-
-	/**
 	 * Gets the array elementType.
 	 *
 	 * @return array elementType
@@ -72,27 +50,11 @@ public interface ArrayStruct<TYPE extends LispStruct> extends LispStruct {
 	LispType getElementType();
 
 	/**
-	 * Sets the array elementType.
-	 *
-	 * @param elementType
-	 * 		new array elementType
-	 */
-	void setElementType(final LispType elementType);
-
-	/**
 	 * Gets the array contents.
 	 *
 	 * @return array contents
 	 */
 	boolean isAdjustable();
-
-	/**
-	 * Setter for array {@link #isAdjustable} property.
-	 *
-	 * @param isAdjustable
-	 * 		new array {@link #isAdjustable} property value
-	 */
-	void setAdjustable(final boolean isAdjustable);
 
 	/**
 	 * Retrieves the element at the provided {@code index} location.
@@ -105,6 +67,16 @@ public interface ArrayStruct<TYPE extends LispStruct> extends LispStruct {
 	TYPE getElementAt(final int index);
 
 	/**
+	 * Retrieves the element at the provided {@code index} location.
+	 *
+	 * @param indicies
+	 * 		the index location of the element to retrieve
+	 *
+	 * @return the retrieve element at the provided {@code index} location
+	 */
+	TYPE getElementAt(final int... indicies);
+
+	/**
 	 * Sets the element at the provide {@code index} location to the provided {@code newValue} element.
 	 *
 	 * @param index
@@ -113,4 +85,8 @@ public interface ArrayStruct<TYPE extends LispStruct> extends LispStruct {
 	 * 		the element to set at the index location
 	 */
 	void setElementAt(final int index, final TYPE newValue);
+
+	ArrayStruct<TYPE> getDisplacedTo();
+
+	Integer getDisplacedIndexOffset();
 }

@@ -32,8 +32,6 @@ public class ArrayStructImpl<TYPE extends LispStruct> extends BuiltInClassStruct
 
 	protected int totalSize;
 
-	protected int rank;
-
 	protected LispType elementType;
 
 	protected boolean isAdjustable;
@@ -64,9 +62,11 @@ public class ArrayStructImpl<TYPE extends LispStruct> extends BuiltInClassStruct
 
 		this.contents = new ArrayList<>(contents);
 		this.dimensions = dimensions;
-		updateTotalSize();
 
-		rank = dimensions.size();
+		totalSize = 0;
+		for (final Integer dimension : dimensions) {
+			totalSize += dimension;
+		}
 
 		this.elementType = elementType;
 		this.isAdjustable = isAdjustable;
@@ -93,9 +93,11 @@ public class ArrayStructImpl<TYPE extends LispStruct> extends BuiltInClassStruct
 
 		contents = null;
 		this.dimensions = dimensions;
-		updateTotalSize();
 
-		rank = dimensions.size();
+		totalSize = 0;
+		for (final Integer dimension : dimensions) {
+			totalSize += dimension;
+		}
 
 		this.elementType = elementType;
 		this.isAdjustable = isAdjustable;
@@ -227,159 +229,61 @@ public class ArrayStructImpl<TYPE extends LispStruct> extends BuiltInClassStruct
 		}
 	}
 
-	/**
-	 * Calculates and updates the {@link #totalSize} of the array based on the {@link #dimensions} property.
-	 */
-	private void updateTotalSize() {
-		totalSize = 0;
-		for (final Integer dimension : dimensions) {
-			totalSize += dimension;
-		}
-	}
-
-	/**
-	 * Getter for array {@link #contents} property.
-	 *
-	 * @return array {@link #contents} property
-	 */
 	@Override
 	public List<TYPE> getContents() {
 		return contents;
 	}
 
-	/**
-	 * Setter for array {@link #contents} property.
-	 *
-	 * @param contents
-	 * 		new array {@link #contents} property value
-	 */
-	@Override
-	public void setContents(final List<TYPE> contents) {
-		this.contents = new ArrayList<>(contents);
-	}
-
-	/**
-	 * Getter for array {@link #dimensions} property.
-	 *
-	 * @return array {@link #dimensions} property
-	 */
 	@Override
 	public List<Integer> getDimensions() {
 		return dimensions;
 	}
 
-	/**
-	 * Setter for array {@link #dimensions} property.
-	 *
-	 * @param dimensions
-	 * 		new array {@link #dimensions} property value
-	 */
-	@Override
-	public void setDimensions(final List<Integer> dimensions) {
-		this.dimensions = dimensions;
-		updateTotalSize();
-	}
-
-	/**
-	 * Getter for array {@link #totalSize} property.
-	 *
-	 * @return array {@link #totalSize} property
-	 */
 	@Override
 	public int getTotalSize() {
 		return totalSize;
 	}
 
-	/**
-	 * Getter for array {@link #rank} property.
-	 *
-	 * @return array {@link #rank} property
-	 */
 	@Override
 	public int getRank() {
-		return rank;
+		return dimensions.size();
 	}
 
-	/**
-	 * Setter for array {@link #rank} property.
-	 *
-	 * @param rank
-	 * 		new array {@link #rank} property value
-	 */
-	@Override
-	public void setRank(final int rank) {
-		this.rank = rank;
-	}
-
-	/**
-	 * Getter for array {@link #elementType} property.
-	 *
-	 * @return array {@link #elementType} property
-	 */
 	@Override
 	public LispType getElementType() {
 		return elementType;
 	}
 
-	/**
-	 * Setter for array {@link #elementType} property.
-	 *
-	 * @param elementType
-	 * 		new array {@link #elementType} property value
-	 */
-	@Override
-	public void setElementType(final LispType elementType) {
-		this.elementType = elementType;
-	}
-
-	/**
-	 * Getter for array {@link #isAdjustable} property.
-	 *
-	 * @return array {@link #isAdjustable} property
-	 */
 	@Override
 	public boolean isAdjustable() {
 		return isAdjustable;
 	}
 
-	/**
-	 * Setter for array {@link #isAdjustable} property.
-	 *
-	 * @param isAdjustable
-	 * 		new array {@link #isAdjustable} property value
-	 */
-	@Override
-	public void setAdjustable(final boolean isAdjustable) {
-		this.isAdjustable = isAdjustable;
+	public TYPE getElementAt(final int... indicies) {
+		return null;
 	}
 
-	/**
-	 * Retrieves the element at the provided {@code index} location.
-	 *
-	 * @param index
-	 * 		the index location of the element to retrieve
-	 *
-	 * @return the retrieve element at the provided {@code index} location
-	 */
 	@Override
 	public TYPE getElementAt(final int index) {
 		return contents.get(index);
 	}
 
-	/**
-	 * Sets the element at the provide {@code index} location to the provided {@code newValue} element.
-	 *
-	 * @param index
-	 * 		the index location of the element to set
-	 * @param newValue
-	 * 		the element to set at the index location
-	 */
 	@Override
 	public void setElementAt(final int index, final TYPE newValue) {
 		for (int i = contents.size(); i <= index; i++) {
 			contents.add(null);
 		}
 		contents.set(index, newValue);
+	}
+
+	@Override
+	public ArrayStruct<TYPE> getDisplacedTo() {
+		return displacedTo;
+	}
+
+	@Override
+	public Integer getDisplacedIndexOffset() {
+		return displacedIndexOffset;
 	}
 
 	@Override
@@ -391,6 +295,7 @@ public class ArrayStructImpl<TYPE extends LispStruct> extends BuiltInClassStruct
 
 		final StringBuilder stringBuilder = new StringBuilder();
 
+		final int rank = dimensions.size();
 		if (printArray || printReadably) {
 			stringBuilder.append('#');
 
@@ -422,10 +327,10 @@ public class ArrayStructImpl<TYPE extends LispStruct> extends BuiltInClassStruct
 			stringBuilder.append(typeClassName);
 			stringBuilder.append(' ');
 
-			for (int i = 0; i < dimensions.size(); i++) {
+			for (int i = 0; i < rank; i++) {
 				stringBuilder.append(dimensions.get(i));
 
-				if ((i + 1) != dimensions.size()) {
+				if ((i + 1) != rank) {
 					stringBuilder.append('x');
 				}
 			}

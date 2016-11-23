@@ -107,11 +107,6 @@ public final class StringStructImpl extends VectorStructImpl<CharacterStruct> im
 		return charList;
 	}
 
-	/**
-	 * Returns the {@link String} representation of the StringStruct.
-	 *
-	 * @return a {@link String} representation of the StringStruct
-	 */
 	@Override
 	public String getAsJavaString() {
 		final StringBuilder stringBuilder = new StringBuilder(contents.size());
@@ -160,13 +155,6 @@ public final class StringStructImpl extends VectorStructImpl<CharacterStruct> im
 		};
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * Returns the PackageStruct with the {@link PackageStruct#getName()} that matches the StringStruct instance via
-	 * {@link PackageStruct#findPackage(String)}.
-	 *
-	 * @return the PackageStruct with the {@link PackageStruct#getName()} that matches the instance
-	 */
 	@Override
 	public Supplier<PackageStruct> asPackage() {
 		return () -> {

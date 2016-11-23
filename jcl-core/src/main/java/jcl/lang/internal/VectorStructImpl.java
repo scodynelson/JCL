@@ -100,35 +100,21 @@ public class VectorStructImpl<TYPE extends LispStruct> extends ArrayStructImpl<T
 		return (isAdjustable || (fillPointer != null)) ? VectorType.INSTANCE : SimpleVectorType.INSTANCE;
 	}
 
-	/**
-	 * Getter for vector {@link #fillPointer} property.
-	 *
-	 * @return vector {@link #fillPointer} property
-	 */
+	@Override
+	public int getRank() {
+		return 1;
+	}
+
 	@Override
 	public Integer getFillPointer() {
 		return fillPointer;
 	}
 
-	/**
-	 * Setter for vector {@link #fillPointer} property.
-	 *
-	 * @param fillPointer
-	 * 		new vector {@link #fillPointer} property value
-	 */
 	@Override
 	public void setFillPointer(final Integer fillPointer) {
 		this.fillPointer = fillPointer;
 	}
 
-	/**
-	 * Pops the element at the {@link #fillPointer} index and decreases the {@link #fillPointer} by 1.
-	 *
-	 * @return the element popped from the {@link #fillPointer} index
-	 *
-	 * @throws ErrorException
-	 * 		if the vector has no {@link #fillPointer} or the {@link #fillPointer} is 0
-	 */
 	@Override
 	public TYPE pop() {
 		if (fillPointer == null) {
@@ -145,17 +131,6 @@ public class VectorStructImpl<TYPE extends LispStruct> extends ArrayStructImpl<T
 		return element;
 	}
 
-	/**
-	 * Pushes the provided {@code element} into the current {@link #fillPointer} index.
-	 *
-	 * @param element
-	 * 		the element to push into the vector
-	 *
-	 * @return the location of the newly added element
-	 *
-	 * @throws TypeErrorException
-	 * 		if the vector has no {@link #fillPointer}
-	 */
 	@Override
 	public int push(final TYPE element) {
 		if (fillPointer == null) {
@@ -171,20 +146,6 @@ public class VectorStructImpl<TYPE extends LispStruct> extends ArrayStructImpl<T
 		return fillPointer;
 	}
 
-	/**
-	 * Pushes the provided {@code element} into the current {@link #fillPointer} index and extends the vector to the
-	 * current size of the contents plus the provided {@code extensionAmount}.
-	 *
-	 * @param element
-	 * 		the element to push into the vector
-	 * @param extensionAmount
-	 * 		the amount to extend the vector when pushing
-	 *
-	 * @return the location of the newly added element
-	 *
-	 * @throws TypeErrorException
-	 * 		if the vector has no {@link #fillPointer} or the vector is not adjustable
-	 */
 	@Override
 	public int pushExtend(final TYPE element, final int extensionAmount) {
 		if (!isAdjustable) {

@@ -126,7 +126,7 @@ public final class BitVectorStructImpl extends VectorStructImpl<IntegerStruct> i
 			stringBuilder.append(typeClassName);
 			stringBuilder.append(' ');
 
-			stringBuilder.append(totalSize);
+			stringBuilder.append(arrayTotalSize());
 
 			if (fillPointer != null) {
 				stringBuilder.append(" fill-pointer ");

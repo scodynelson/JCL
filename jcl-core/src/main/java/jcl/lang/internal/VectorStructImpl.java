@@ -101,11 +101,6 @@ public class VectorStructImpl<TYPE extends LispStruct> extends ArrayStructImpl<T
 	}
 
 	@Override
-	public int getRank() {
-		return 1;
-	}
-
-	@Override
 	public Integer getFillPointer() {
 		return fillPointer;
 	}
@@ -187,7 +182,7 @@ public class VectorStructImpl<TYPE extends LispStruct> extends ArrayStructImpl<T
 			stringBuilder.append(typeClassName);
 			stringBuilder.append(' ');
 
-			stringBuilder.append(totalSize);
+			stringBuilder.append(arrayTotalSize());
 
 			stringBuilder.append(" type ");
 

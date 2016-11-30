@@ -12,7 +12,50 @@ import jcl.type.LispType;
  */
 public interface ArrayStruct<TYPE extends LispStruct> extends LispStruct {
 
-//	IntegerStruct dimension(final int axisNumber);
+//	ArrayStruct<TYPE> adjustArray();
+
+	BooleanStruct adjustableArrayP();
+
+	TYPE aref(final IntegerStruct... subscripts);
+
+	TYPE setfAref(final TYPE newElement, final IntegerStruct... subscripts);
+
+	IntegerStruct arrayDimension(final IntegerStruct axisNumber);
+
+	ListStruct arrayDimensions();
+
+	/**
+	 * Gets the array elementType.
+	 *
+	 * @return array elementType
+	 */
+	LispType arrayElementType();
+
+	BooleanStruct arrayHasFillPointerP();
+
+	ValuesStruct arrayDisplacement();
+
+	BooleanStruct arrayInBoundsP(final IntegerStruct... subscripts);
+
+	/**
+	 * Gets the array rank.
+	 *
+	 * @return array rank
+	 */
+	IntegerStruct arrayRank();
+
+	IntegerStruct arrayRowMajorIndex(final IntegerStruct... subscripts);
+
+	/**
+	 * Gets the array's total size.
+	 *
+	 * @return array's total size
+	 */
+	IntegerStruct arrayTotalSize();
+
+	TYPE rowMajorAref(final IntegerStruct index);
+
+	// =================
 
 	/**
 	 * Gets the array contents.
@@ -27,66 +70,4 @@ public interface ArrayStruct<TYPE extends LispStruct> extends LispStruct {
 	 * @return array dimensions
 	 */
 	List<Integer> getDimensions();
-
-	/**
-	 * Gets the array's total size.
-	 *
-	 * @return array's total size
-	 */
-	int getTotalSize();
-
-	/**
-	 * Gets the array rank.
-	 *
-	 * @return array rank
-	 */
-	int getRank();
-
-	/**
-	 * Gets the array elementType.
-	 *
-	 * @return array elementType
-	 */
-	LispType getElementType();
-
-	/**
-	 * Gets the array contents.
-	 *
-	 * @return array contents
-	 */
-	boolean isAdjustable();
-
-	/**
-	 * Retrieves the element at the provided {@code index} location.
-	 *
-	 * @param index
-	 * 		the index location of the element to retrieve
-	 *
-	 * @return the retrieve element at the provided {@code index} location
-	 */
-	TYPE getElementAt(final int index);
-
-	/**
-	 * Retrieves the element at the provided {@code index} location.
-	 *
-	 * @param indicies
-	 * 		the index location of the element to retrieve
-	 *
-	 * @return the retrieve element at the provided {@code index} location
-	 */
-	TYPE getElementAt(final int... indicies);
-
-	/**
-	 * Sets the element at the provide {@code index} location to the provided {@code newValue} element.
-	 *
-	 * @param index
-	 * 		the index location of the element to set
-	 * @param newValue
-	 * 		the element to set at the index location
-	 */
-	void setElementAt(final int index, final TYPE newValue);
-
-	ArrayStruct<TYPE> getDisplacedTo();
-
-	Integer getDisplacedIndexOffset();
 }

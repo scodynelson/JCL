@@ -5,10 +5,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
+import jcl.lang.NILStruct;
 import jcl.lang.VectorStruct;
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
+import jcl.lang.internal.number.IntegerStructImpl;
 import jcl.lang.statics.PrinterVariables;
 import jcl.type.LispType;
 import jcl.type.SimpleVectorType;
@@ -59,7 +62,8 @@ public class VectorStructImpl<TYPE extends LispStruct> extends ArrayStructImpl<T
 	}
 
 	public static <T extends LispStruct> VectorStruct<T> valueOf(final Integer size, final LispType elementType,
-	                                                             final List<T> initialContents, final boolean isAdjustable,
+	                                                             final List<T> initialContents,
+	                                                             final boolean isAdjustable,
 	                                                             final Integer fillPointer) {
 		final VectorType vectorType = getVectorType(isAdjustable, fillPointer);
 		return new VectorStructImpl<>(vectorType, size, elementType, initialContents, isAdjustable, fillPointer);
@@ -83,7 +87,8 @@ public class VectorStructImpl<TYPE extends LispStruct> extends ArrayStructImpl<T
 	 */
 
 	public static <T extends LispStruct> VectorStruct<T> valueOf(final List<T> contents) {
-		return new VectorStructImpl<>(SimpleVectorType.INSTANCE, contents.size(), TType.INSTANCE, contents, false, null);
+		return new VectorStructImpl<>(SimpleVectorType.INSTANCE, contents.size(), TType.INSTANCE, contents, false,
+		                              null);
 	}
 
 	/**
@@ -101,52 +106,60 @@ public class VectorStructImpl<TYPE extends LispStruct> extends ArrayStructImpl<T
 	}
 
 	@Override
-	public Integer getFillPointer() {
+	public IntegerStruct fillPointer() {
+		return IntegerStructImpl.valueOf(fillPointer);
+	}
+
+	@Override
+	public IntegerStruct setfFillPointer(final IntegerStruct fillPointer) {
+		this.fillPointer = fillPointer.intValue();
 		return fillPointer;
 	}
 
 	@Override
-	public void setFillPointer(final Integer fillPointer) {
-		this.fillPointer = fillPointer;
-	}
-
-	@Override
-	public TYPE pop() {
+	public TYPE vectorPop() {
 		if (fillPointer == null) {
-			throw new TypeErrorException("Cannot pop from a vector that has no fill-pointer.");
+			throw new TypeErrorException("Cannot pop from a VECTOR with no fill-pointer.");
 		}
 		if (fillPointer == 0) {
-			throw new ErrorException("Fill pointer is 0.");
+			throw new ErrorException("Nothing left to pop.");
 		}
+
 		fillPointer--;
-
 		final TYPE element = contents.get(fillPointer);
-
-		contents.remove(fillPointer.intValue());
+		contents.set(fillPointer, null);
 		return element;
 	}
 
 	@Override
-	public int push(final TYPE element) {
+	public LispStruct vectorPush(final TYPE element) {
 		if (fillPointer == null) {
-			throw new TypeErrorException("Cannot push into a vector that has no fill-pointer.");
+			throw new TypeErrorException("Cannot push into a VECTOR with no fill-pointer.");
 		}
-		fillPointer++;
-
 		if (fillPointer >= contents.size()) {
-			contents.add(fillPointer, element);
-		} else {
-			contents.set(fillPointer, element);
+			return NILStruct.INSTANCE;
 		}
-		return fillPointer;
+
+		final Integer previousFillPointer = fillPointer++;
+		contents.set(fillPointer, element);
+		return IntegerStructImpl.valueOf(previousFillPointer);
 	}
 
 	@Override
-	public int pushExtend(final TYPE element, final int extensionAmount) {
-		if (!isAdjustable) {
-			throw new TypeErrorException("Vector is not an adjustable array.");
+	public IntegerStruct vectorPushExtend(final TYPE element, final IntegerStruct extensionAmount) {
+		if (fillPointer == null) {
+			throw new TypeErrorException("Cannot push into a VECTOR with no fill-pointer.");
 		}
-		return push(element);
+		if (!isAdjustable) {
+			throw new TypeErrorException("VECTOR is not adjustable.");
+		}
+		if (fillPointer >= contents.size()) {
+//			adjustArray(fillPointer + extensionAmount);
+		}
+
+		final Integer previousFillPointer = fillPointer++;
+		contents.set(fillPointer, element);
+		return IntegerStructImpl.valueOf(previousFillPointer);
 	}
 
 	@Override

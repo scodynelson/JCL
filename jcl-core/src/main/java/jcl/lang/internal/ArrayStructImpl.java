@@ -98,7 +98,7 @@ public class ArrayStructImpl<TYPE extends LispStruct> extends BuiltInClassStruct
 	 * @param isAdjustable
 	 * 		whether or not the array is adjustable
 	 */
-	private ArrayStructImpl(final ArrayType arrayType, final List<Integer> dimensions, final LispType elementType,
+	protected ArrayStructImpl(final ArrayType arrayType, final List<Integer> dimensions, final LispType elementType,
 	                        final boolean isAdjustable, final ArrayStruct<TYPE> displacedTo,
 	                        final Integer displacedIndexOffset) {
 		super(arrayType, null, null);
@@ -201,7 +201,7 @@ public class ArrayStructImpl<TYPE extends LispStruct> extends BuiltInClassStruct
 	 *
 	 * @return the matching array type for the provided {@link #isAdjustable} value
 	 */
-	private static ArrayType getArrayType(final boolean isAdjustable) {
+	protected static ArrayType getArrayType(final boolean isAdjustable) {
 		return isAdjustable ? ArrayType.INSTANCE : SimpleArrayType.INSTANCE;
 	}
 
@@ -216,7 +216,7 @@ public class ArrayStructImpl<TYPE extends LispStruct> extends BuiltInClassStruct
 	 * @param contentsToCheck
 	 * 		the array contents to check
 	 */
-	private static void areContentsValidForDimensionsAndElementType(final List<Integer> dimensionsToCheck,
+	protected static void areContentsValidForDimensionsAndElementType(final List<Integer> dimensionsToCheck,
 	                                                                final LispType elementTypeToCheck,
 	                                                                final List<? extends LispStruct> contentsToCheck) {
 

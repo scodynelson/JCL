@@ -2,6 +2,8 @@ package jcl.lang;
 
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
+import jcl.type.LispType;
+import jcl.type.SimpleVectorType;
 
 /**
  * The {@link VectorStruct} is the object representation of a Lisp 'vector' type.
@@ -11,12 +13,30 @@ import jcl.lang.condition.exception.TypeErrorException;
  */
 public interface VectorStruct<TYPE extends LispStruct> extends ArrayStruct<TYPE>, SequenceStruct {
 
+	default TYPE svref(final IntegerStruct index) {
+		final LispType type = getType();
+		if (SimpleVectorType.INSTANCE.equals(type)) {
+			return aref(index);
+		}
+		throw new TypeErrorException(
+				"The value " + this + " is not of the expected type " + SimpleVectorType.INSTANCE + '.');
+	}
+
+	default TYPE setfSvref(final TYPE newElement, final IntegerStruct index) {
+		final LispType type = getType();
+		if (SimpleVectorType.INSTANCE.equals(type)) {
+			return setfAref(newElement, index);
+		}
+		throw new TypeErrorException(
+				"The value " + this + " is not of the expected type " + SimpleVectorType.INSTANCE + '.');
+	}
+
 	/**
 	 * Gets the vector's fill-pointer.
 	 *
 	 * @return vector's fill-pointer
 	 */
-	Integer getFillPointer();
+	IntegerStruct fillPointer();
 
 	/**
 	 * Sets the vector's fill-pointer.
@@ -24,7 +44,7 @@ public interface VectorStruct<TYPE extends LispStruct> extends ArrayStruct<TYPE>
 	 * @param fillPointer
 	 * 		new vector fill-pointer
 	 */
-	void setFillPointer(final Integer fillPointer);
+	IntegerStruct setfFillPointer(final IntegerStruct fillPointer);
 
 	/**
 	 * Pops the element at the fill-pointer index and decreases the fill-pointer by 1.
@@ -34,7 +54,7 @@ public interface VectorStruct<TYPE extends LispStruct> extends ArrayStruct<TYPE>
 	 * @throws ErrorException
 	 * 		if the vector has no fill-pointer or the fill-pointer is 0
 	 */
-	TYPE pop();
+	TYPE vectorPop();
 
 	/**
 	 * Pushes the provided {@code element} into the current fill-pointer index.
@@ -47,7 +67,7 @@ public interface VectorStruct<TYPE extends LispStruct> extends ArrayStruct<TYPE>
 	 * @throws TypeErrorException
 	 * 		if the vector has no fill-pointer
 	 */
-	int push(final TYPE element);
+	LispStruct vectorPush(final TYPE element);
 
 	/**
 	 * Pushes the provided {@code element} into the current fill-pointer index and extends the vector to the
@@ -63,5 +83,5 @@ public interface VectorStruct<TYPE extends LispStruct> extends ArrayStruct<TYPE>
 	 * @throws TypeErrorException
 	 * 		if the vector has no fill-pointer or the vector is not adjustable
 	 */
-	int pushExtend(final TYPE element, final int extensionAmount);
+	IntegerStruct vectorPushExtend(final TYPE element, final IntegerStruct extensionAmount);
 }

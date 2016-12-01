@@ -4,14 +4,12 @@ buildscript {
 	}
 
 	dependencies {
-		classpath("org.springframework.boot:spring-boot-gradle-plugin:1.4.1.RELEASE")
+		classpath("io.spring.gradle:dependency-management-plugin:0.6.0.RELEASE")
+		classpath("org.springframework.boot:spring-boot-gradle-plugin:1.4.2.RELEASE")
 		classpath("org.springframework.build.gradle:propdeps-plugin:0.0.7")
-//		classpath("ca.cutterslade.gradle:gradle-dependency-analyze:1.0.3")
+		classpath("org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.2.1")
+		classpath("ca.cutterslade.gradle:gradle-dependency-analyze:1.1.0")
 	}
-}
-
-plugins {
-	id "org.sonarqube" version "2.0.1"
 }
 
 ext {
@@ -28,98 +26,91 @@ ext {
 //}
 //******************//
 
-configure(allprojects) { project ->
+allprojects {
 	group = "jcl"
 	version = "1.0-SNAPSHOT"
 
-	ext.commonsLangVersion = "3.4"
+	ext.apfloatVersion = "1.8.2"
+	ext.asmAllVersion = "5.1"
 	ext.commonsMathVersion = "3.6.1"
 	ext.commonsCollectionsVersion = "4.1"
-	ext.commonsIoVersion = "2.5"
-
-	ext.apfloatVersion = "1.8.2"
-
 	ext.icu4jVersion = "57.1"
-
-	ext.asmAllVersion = "5.1"
-
-	ext.springBootVersion = "1.4.1.RELEASE"
-
 	ext.javaHelpVersion = "2.0.05"
+}
 
+subprojects {
+
+	apply plugin: "io.spring.dependency-management"
 	apply plugin: "propdeps"
+
 	apply plugin: "java"
-//	apply plugin: "ca.cutterslade.analyze"
+	apply plugin: "ca.cutterslade.analyze"
+
+	apply plugin: "jacoco"
+	apply plugin: "org.sonarqube"
 
 	configurations {
 	}
 
+	sourceCompatibility = "1.8"
+	targetCompatibility = "1.8"
+
 	compileJava.options*.compilerArgs = [
-			"-Xlint:serial", "-Xlint:varargs", "-Xlint:cast", "-Xlint:classfile",
-			"-Xlint:dep-ann", "-Xlint:divzero", "-Xlint:empty", "-Xlint:finally",
-			"-Xlint:overrides", "-Xlint:path", "-Xlint:processing", "-Xlint:static",
-			"-Xlint:try", "-Xlint:fallthrough", "-Xlint:rawtypes", "-Xlint:deprecation",
-			"-Xlint:unchecked", "-Xlint:-options" //, "-Werror"
+			"-Xlint:serial", "-Xlint:varargs", "-Xlint:cast", "-Xlint:classfile", "-Xlint:dep-ann", "-Xlint:divzero",
+			"-Xlint:empty", "-Xlint:finally", "-Xlint:overrides", "-Xlint:path", "-Xlint:static", "-Xlint:try",
+			"-Xlint:fallthrough", "-Xlint:rawtypes", "-Xlint:deprecation", "-Xlint:unchecked", "-Xlint:-options"
+			//, "-Xlint:processing" , "-Werror"
 	]
 
 	compileTestJava.options*.compilerArgs = [
-			"-Xlint:serial", "-Xlint:-varargs", "-Xlint:cast", "-Xlint:classfile",
-			"-Xlint:dep-ann", "-Xlint:divzero", "-Xlint:empty", "-Xlint:finally",
-			"-Xlint:overrides", "-Xlint:path", "-Xlint:processing", "-Xlint:static",
-			"-Xlint:try", "-Xlint:-fallthrough", "-Xlint:-rawtypes", "-Xlint:-deprecation",
-			"-Xlint:-unchecked", "-Xlint:-options"]
-
-	compileJava {
-		sourceCompatibility = "1.8"
-		targetCompatibility = "1.8"
-	}
+			"-Xlint:serial", "-Xlint:-varargs", "-Xlint:cast", "-Xlint:classfile", "-Xlint:dep-ann", "-Xlint:divzero",
+			"-Xlint:empty", "-Xlint:finally", "-Xlint:overrides", "-Xlint:path", "-Xlint:static", "-Xlint:try",
+			"-Xlint:-fallthrough", "-Xlint:-rawtypes", "-Xlint:-deprecation", "-Xlint:-unchecked", "-Xlint:-options"
+			//, "-Xlint:processing"
+	]
 
 	compileTestJava {
-		sourceCompatibility = "1.8"
-		targetCompatibility = "1.8"
 		options.compilerArgs += "-parameters"
 	}
 
 	test {
 		systemProperty("java.awt.headless", "true")
-		systemProperty("testGroups", project.properties.get("testGroups"))
-		//scanForTestClasses = false
-		include(["**/*Tests.class", "**/*Test.class"])
-		// Since we set scanForTestClasses to false, we need to filter out inner
-		// classes with the "$" pattern; otherwise, using -Dtest.single=MyTests to
-		// run MyTests by itself will fail if MyTests contains any inner classes.
-		exclude(["**/Abstract*.class", '**/*$*'])
+//		systemProperty("testGroups", project.properties.get("testGroups"))
+		jacoco {
+			destinationFile = file("$buildDir/jacoco/jacocoTest.exec")
+			classDumpFile = file("$buildDir/jacoco/classpathdumps")
+		}
 	}
 
 	repositories {
 		mavenCentral()
 	}
 
-	ext.javadocLinks = [
-			"http://docs.oracle.com/javase/8/docs/api/"
-	] as String[]
-}
+	dependencyManagement {
+		imports {
+			mavenBom "io.spring.platform:platform-bom:Athens-SR1"
+		}
+	}
 
-configure(subprojects) { subproject ->
 	configurations {
 		jacoco
 	}
 
-	dependencies {
-		ext.jacocoVersion = "0.7.7.201606060606"
-		jacoco("org.jacoco:org.jacoco.agent:${jacocoVersion}:runtime")
-	}
+//	dependencies {
+//		ext.jacocoVersion = "0.7.7.201606060606"
+//		jacoco("org.jacoco:org.jacoco.agent:${jacocoVersion}:runtime")
+//	}
 
 	gradle.taskGraph.whenReady { taskGraph ->
 		if (taskGraph.hasTask(':sonarqube')) {
-			test.jvmArgs ["-javaagent:${configurations.jacoco.asPath}=destfile=${buildDir}/jacoco.exec,includes=jcl.*"]
+			test.jvmArgs["-javaagent:${configurations.jacoco.asPath}=destfile=${buildDir}/jacoco.exec,includes=jcl.*"]
 		}
 	}
 
 	jar {
 		manifest.attributes["Created-By"] = "${System.getProperty("java.version")} (${System.getProperty("java.specification.vendor")})"
-		manifest.attributes["Implementation-Title"] = subproject.name
-		manifest.attributes["Implementation-Version"] = subproject.version
+		manifest.attributes["Implementation-Title"] = name
+		manifest.attributes["Implementation-Version"] = version
 
 //		from("${rootProject.projectDir}/src/dist") {
 //			include "license.txt"
@@ -128,6 +119,10 @@ configure(subprojects) { subproject ->
 //			expand(copyright: new Date().format("yyyy"), version: project.version)
 //		}
 	}
+
+	ext.javadocLinks = [
+			"http://docs.oracle.com/javase/8/docs/api/"
+	] as String[]
 
 	javadoc {
 		description = "Generates project-level javadoc for use in -javadoc jar"
@@ -158,27 +153,44 @@ configure(subprojects) { subproject ->
 		archives sourcesJar
 		archives javadocJar
 	}
+
+	jacoco {
+		toolVersion = '0.7.7.201606060606'
+	}
+
+	jacocoTestReport {
+		reports {
+			xml.enabled false
+			csv.enabled false
+			html.destination "$buildDir/jacocoHtml"
+		}
+	}
+	jacocoTestReport.dependsOn(test)
+
+	sonarqube {
+		properties {
+			property "sonar.host.url", "http://localhost:9000"
+			property "sonar.jdbc.url", "jdbc:h2:tcp://localhost:9092/sonar"
+			property "sonar.jdbc.username", "sonar"
+			property "sonar.jdbc.password", "sonar"
+		}
+	}
 }
 
 project("jcl-core") {
 	description = "JCL Core"
 
 	dependencies {
-		compile("org.apache.commons:commons-lang3:${commonsLangVersion}")
+		compile("com.ibm.icu:icu4j:${icu4jVersion}")
+		compile("commons-io:commons-io")
+//		compile("io.javaslang:javaslang:2.0.4")
+		compile("org.apache.commons:commons-lang3")
 		compile("org.apache.commons:commons-math3:${commonsMathVersion}")
 		compile("org.apache.commons:commons-collections4:${commonsCollectionsVersion}")
-		compile("commons-io:commons-io:${commonsIoVersion}")
-
 		compile("org.apfloat:apfloat:${apfloatVersion}")
-
-		compile 'io.javaslang:javaslang:2.0.4'
-
-		compile("com.ibm.icu:icu4j:${icu4jVersion}")
-
-		optional("org.springframework.boot:spring-boot-starter:${springBootVersion}")
-		optional("org.springframework.boot:spring-boot-loader:${springBootVersion}")
-
-		testCompile("org.springframework.boot:spring-boot-starter-test:${springBootVersion}")
+		compile("org.slf4j:slf4j-api")
+		compile("org.springframework:spring-core")
+		compile("org.springframework:spring-beans")
 	}
 }
 
@@ -188,17 +200,14 @@ project("jcl-compiler") {
 	dependencies {
 		compile(project(":jcl-core"))
 
-		compile("org.apache.commons:commons-lang3:${commonsLangVersion}")
-		compile("commons-io:commons-io:${commonsIoVersion}")
-
+		compile("commons-io:commons-io")
+		compile("org.apache.commons:commons-lang3")
 		compile("org.apfloat:apfloat:${apfloatVersion}")
-
 		compile("org.ow2.asm:asm-all:${asmAllVersion}")
-
-		optional("org.springframework.boot:spring-boot-starter:${springBootVersion}")
-		optional("org.springframework.boot:spring-boot-loader:${springBootVersion}")
-
-		testCompile("org.springframework.boot:spring-boot-starter-test:${springBootVersion}")
+		compile("org.slf4j:slf4j-api")
+		compile("org.springframework:spring-context")
+		compile("org.springframework:spring-core")
+		compile("org.springframework:spring-beans")
 	}
 }
 
@@ -208,7 +217,8 @@ project("jcl-reader") {
 	dependencies {
 		compile(project(":jcl-core"))
 
-		optional("org.springframework.boot:spring-boot-starter:${springBootVersion}")
+		compile("org.slf4j:slf4j-api")
+		compile("org.springframework:spring-context")
 	}
 }
 
@@ -220,18 +230,16 @@ project("jcl-functions") {
 		compile(project(":jcl-compiler"))
 		compile(project(":jcl-reader"))
 
-		compile("org.apache.commons:commons-lang3:${commonsLangVersion}")
-		compile("org.apache.commons:commons-collections4:${commonsCollectionsVersion}")
-		compile("commons-io:commons-io:${commonsIoVersion}")
-
-		compile("org.ow2.asm:asm-all:${asmAllVersion}")
-
-		optional("org.springframework.boot:spring-boot-starter:${springBootVersion}")
-		optional("org.springframework.boot:spring-boot-loader:${springBootVersion}")
-
+		compile("com.ibm.icu:icu4j:${icu4jVersion}")
+		compile("commons-io:commons-io")
 		compile("javax.help:javahelp:${javaHelpVersion}")
-
-		testCompile("org.springframework.boot:spring-boot-starter-test:${springBootVersion}")
+		compile("org.apache.commons:commons-collections4:${commonsCollectionsVersion}")
+		compile("org.apache.commons:commons-lang3")
+		compile("org.ow2.asm:asm-all:${asmAllVersion}")
+		compile("org.slf4j:slf4j-api")
+		compile("org.springframework.boot:spring-boot")
+		compile("org.springframework:spring-context")
+		compile("org.springframework:spring-beans")
 	}
 }
 
@@ -244,12 +252,14 @@ project("jcl-application") {
 		compile(project(":jcl-reader"))
 		compile(project(":jcl-functions"))
 
-		compile("org.apache.commons:commons-lang3:${commonsLangVersion}")
+		compile("org.apache.commons:commons-lang3")
+		compile("org.slf4j:slf4j-api")
+		compile("org.springframework.boot:spring-boot")
+		compile("org.springframework.boot:spring-boot-autoconfigure")
+		compile("org.springframework:spring-context")
+		compile("org.springframework:spring-beans")
 
-		compile("org.springframework.boot:spring-boot-starter:${springBootVersion}")
-		compile("org.springframework.boot:spring-boot-loader:${springBootVersion}")
-
-		testCompile("org.springframework.boot:spring-boot-starter-test:${springBootVersion}")
+		testCompile("junit:junit")
 	}
 }
 
@@ -377,8 +387,8 @@ task generateLispJars {
 			javaexec {
 				main = "jcl.system.JCL"
 				classpath sourceSets.main.runtimeClasspath
-				args ["--compileFileSrcDir=$file.absolutePath"]
-				args ["--compileFileDestDir=$compiledLispDirectory/"]
+				args["--compileFileSrcDir=$file.absolutePath"]
+				args["--compileFileDestDir=$compiledLispDirectory/"]
 			}
 			// TODO: Fix the need to prepend a '/' to the directory name. This is a problem with the Pathname object.
 			println()
@@ -400,36 +410,3 @@ task unpackLispJars {
 	}
 }
 //jar.dependsOn(unpackLispJars)
-
-//********* JACOCO *********//
-
-apply plugin: 'jacoco'
-jacoco {
-	toolVersion = '0.7.7.201606060606'
-}
-test {
-	jacoco {
-		destinationFile = file("$buildDir/jacoco/jacocoTest.exec")
-		classDumpFile = file("$buildDir/jacoco/classpathdumps")
-	}
-}
-jacocoTestReport {
-	reports {
-		xml.enabled false
-		csv.enabled false
-		html.destination "$buildDir/jacocoHtml"
-	}
-}
-jacocoTestReport.dependsOn(test)
-
-//********* SONAR *********//
-
-apply plugin: 'org.sonarqube'
-sonarqube {
-	properties {
-		property "sonar.host.url", "http://localhost:9000"
-		property "sonar.jdbc.url", "jdbc:h2:tcp://localhost:9092/sonar"
-		property "sonar.jdbc.username", "sonar"
-		property "sonar.jdbc.password", "sonar"
-	}
-}

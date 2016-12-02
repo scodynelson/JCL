@@ -21,8 +21,9 @@ public final class BitVectorStructImpl extends VectorStructImpl<IntegerStruct> i
 
 	private static final Pattern BIT_PATTERN = Pattern.compile("[0|1]+");
 
-	private BitVectorStructImpl(final BitVectorType bitVectorType, final Integer size, final List<IntegerStruct> contents,
-	                            final boolean isAdjustable, final Integer fillPointer) {
+	private BitVectorStructImpl(final BitVectorType bitVectorType, final Integer size,
+	                            final List<IntegerStruct> contents, final boolean isAdjustable,
+	                            final Integer fillPointer) {
 		super(bitVectorType, size, BitType.INSTANCE, contents, isAdjustable, fillPointer);
 	}
 
@@ -57,7 +58,8 @@ public final class BitVectorStructImpl extends VectorStructImpl<IntegerStruct> i
 	 */
 
 	public static BitVectorStruct valueOf(final String bitString) {
-		return new BitVectorStructImpl(SimpleBitVectorType.INSTANCE, bitString.length(), getBitList(bitString), false, null);
+		return new BitVectorStructImpl(SimpleBitVectorType.INSTANCE, bitString.length(), getBitList(bitString), false,
+		                               null);
 	}
 
 	public static BitVectorStruct valueOfCont(final List<IntegerStruct> contents) {
@@ -88,7 +90,8 @@ public final class BitVectorStructImpl extends VectorStructImpl<IntegerStruct> i
 	 */
 	private static List<IntegerStruct> getBitList(final String bitString) {
 		if (!bitString.isEmpty() && !BIT_PATTERN.matcher(bitString).matches()) {
-			throw new TypeErrorException("Input contains characters not of type " + BitType.INSTANCE + ": " + bitString + '.');
+			throw new TypeErrorException(
+					"Input contains characters not of type " + BitType.INSTANCE + ": " + bitString + '.');
 		}
 
 		final List<IntegerStruct> bitList = new ArrayList<>(bitString.length());
@@ -141,5 +144,11 @@ public final class BitVectorStructImpl extends VectorStructImpl<IntegerStruct> i
 		}
 
 		return stringBuilder.toString();
+	}
+
+	@Override
+	public BitVectorStruct copyBitArray() {
+		return new BitVectorStructImpl(getBitVectorType(isAdjustable, fillPointer), contents.size(), contents,
+		                               isAdjustable, fillPointer);
 	}
 }

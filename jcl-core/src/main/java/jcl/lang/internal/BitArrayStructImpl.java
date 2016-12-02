@@ -7,7 +7,7 @@ import java.util.stream.Stream;
 import jcl.lang.BitArrayStruct;
 import jcl.lang.IntegerStruct;
 import jcl.type.ArrayType;
-import jcl.type.LispType;
+import jcl.type.BitType;
 import jcl.type.SimpleArrayType;
 
 /**
@@ -22,16 +22,13 @@ public class BitArrayStructImpl extends ArrayStructImpl<IntegerStruct> implement
 	 * 		the array type
 	 * @param dimensions
 	 * 		the array dimensions
-	 * @param elementType
-	 * 		the array elementType
 	 * @param contents
 	 * 		the array contents
 	 * @param isAdjustable
 	 */
 	protected BitArrayStructImpl(final ArrayType arrayType, final List<Integer> dimensions,
-	                             final LispType elementType, final List<IntegerStruct> contents,
-	                             final boolean isAdjustable) {
-		super(arrayType, dimensions, elementType, contents, isAdjustable);
+	                             final List<IntegerStruct> contents, final boolean isAdjustable) {
+		super(arrayType, dimensions, BitType.INSTANCE, contents, isAdjustable);
 	}
 
 	/**
@@ -41,41 +38,30 @@ public class BitArrayStructImpl extends ArrayStructImpl<IntegerStruct> implement
 	 * 		the array type
 	 * @param dimensions
 	 * 		the array dimensions
-	 * @param elementType
-	 * 		the array elementType
 	 * @param isAdjustable
 	 * 		whether or not the array is adjustable
 	 */
-	protected BitArrayStructImpl(final ArrayType arrayType, final List<Integer> dimensions, final LispType elementType,
-	                             final boolean isAdjustable, final BitArrayStruct displacedTo,
-	                             final Integer displacedIndexOffset) {
-		super(arrayType, dimensions, elementType, isAdjustable, displacedTo, displacedIndexOffset);
+	protected BitArrayStructImpl(final ArrayType arrayType, final List<Integer> dimensions, final boolean isAdjustable,
+	                             final BitArrayStruct displacedTo, final Integer displacedIndexOffset) {
+		super(arrayType, dimensions, BitType.INSTANCE, isAdjustable, displacedTo, displacedIndexOffset);
 	}
 
-	public static BitArrayStruct valueOfBA(final List<Integer> dimensions,
-	                                       final LispType elementType,
-	                                       final List<IntegerStruct> initialContents,
+	public static BitArrayStruct valueOfBA(final List<Integer> dimensions, final List<IntegerStruct> initialContents,
 	                                       final boolean isAdjustable) {
-
 		// Check input data
-		areContentsValidForDimensionsAndElementType(dimensions, elementType, initialContents);
+		// TODO: cleanup
+		areContentsValidForDimensionsAndElementType(dimensions, BitType.INSTANCE, initialContents);
 
 		final ArrayType arrayType = getArrayType(isAdjustable);
-		return new BitArrayStructImpl(arrayType, dimensions, elementType, initialContents, isAdjustable);
+		return new BitArrayStructImpl(arrayType, dimensions, initialContents, isAdjustable);
 	}
 
-	public static BitArrayStruct valueOfBA(final List<Integer> dimensions,
-	                                       final LispType elementType,
-	                                       final boolean isAdjustable,
-	                                       final BitArrayStruct displacedTo,
-	                                       final Integer displacedIndexOffset) {
-		return new BitArrayStructImpl(ArrayType.INSTANCE, dimensions, elementType, isAdjustable, displacedTo,
-		                              displacedIndexOffset);
+	public static BitArrayStruct valueOf(final List<Integer> dimensions, final boolean isAdjustable,
+	                                     final BitArrayStruct displacedTo, final Integer displacedIndexOffset) {
+		return new BitArrayStructImpl(ArrayType.INSTANCE, dimensions, isAdjustable, displacedTo, displacedIndexOffset);
 	}
 
-	public static BitArrayStruct valueOfBA(final List<Integer> dimensions,
-	                                       final LispType elementType,
-	                                       final IntegerStruct initialElement) {
+	public static BitArrayStruct valueOf(final List<Integer> dimensions, final IntegerStruct initialElement) {
 		final int totalElements = dimensions.stream()
 		                                    .mapToInt(Integer::intValue)
 		                                    .sum();
@@ -84,19 +70,23 @@ public class BitArrayStructImpl extends ArrayStructImpl<IntegerStruct> implement
 		                                                  .collect(Collectors.toList());
 
 		// Check input data
-		// TODO: is this needed?? Optimize...
-		areContentsValidForDimensionsAndElementType(dimensions, elementType, initialContents);
+		// TODO: cleanup
+		areContentsValidForDimensionsAndElementType(dimensions, BitType.INSTANCE, initialContents);
 
-		return new BitArrayStructImpl(SimpleArrayType.INSTANCE, dimensions, elementType, initialContents, false);
+		return new BitArrayStructImpl(SimpleArrayType.INSTANCE, dimensions, initialContents, false);
 	}
 
-	public static BitArrayStruct valueOfBA(final List<Integer> dimensions,
-	                                       final LispType elementType,
-	                                       final List<IntegerStruct> initialContents) {
+	public static BitArrayStruct valueOfBA(final List<Integer> dimensions, final List<IntegerStruct> initialContents) {
 
 		// Check input data
-		areContentsValidForDimensionsAndElementType(dimensions, elementType, initialContents);
+		// TODO: cleanup
+		areContentsValidForDimensionsAndElementType(dimensions, BitType.INSTANCE, initialContents);
 
-		return new BitArrayStructImpl(SimpleArrayType.INSTANCE, dimensions, elementType, initialContents, false);
+		return new BitArrayStructImpl(SimpleArrayType.INSTANCE, dimensions, initialContents, false);
+	}
+
+	@Override
+	public BitArrayStruct copyBitArray() {
+		return new BitArrayStructImpl(getArrayType(isAdjustable), dimensions, contents, isAdjustable);
 	}
 }

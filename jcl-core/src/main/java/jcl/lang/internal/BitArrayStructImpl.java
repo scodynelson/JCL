@@ -1,16 +1,17 @@
 package jcl.lang.internal;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import jcl.lang.BitArrayStruct;
+import jcl.lang.BooleanStruct;
 import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.SequenceStruct;
 import jcl.lang.condition.exception.SimpleErrorException;
-import jcl.lang.condition.exception.TypeErrorException;
 import jcl.type.ArrayType;
 import jcl.type.BitType;
 import jcl.type.SimpleArrayType;
@@ -32,7 +33,7 @@ public class BitArrayStructImpl extends ArrayStructImpl<IntegerStruct> implement
 	 * @param isAdjustable
 	 */
 	BitArrayStructImpl(final ArrayType arrayType, final List<Integer> dimensions,
-	                             final List<IntegerStruct> contents, final boolean isAdjustable) {
+	                   final List<IntegerStruct> contents, final boolean isAdjustable) {
 		super(arrayType, dimensions, BitType.INSTANCE, contents, isAdjustable);
 	}
 
@@ -46,53 +47,74 @@ public class BitArrayStructImpl extends ArrayStructImpl<IntegerStruct> implement
 	 * @param isAdjustable
 	 * 		whether or not the array is adjustable
 	 */
-	BitArrayStructImpl(final ArrayType arrayType, final List<Integer> dimensions, final boolean isAdjustable,
-	                             final BitArrayStruct displacedTo, final Integer displacedIndexOffset) {
-		super(arrayType, dimensions, BitType.INSTANCE, isAdjustable, displacedTo, displacedIndexOffset);
+	BitArrayStructImpl(final ArrayType arrayType, final List<Integer> dimensions,
+	                   final BitArrayStruct displacedTo, final Integer displacedIndexOffset,
+	                   final boolean isAdjustable) {
+		super(arrayType, dimensions, BitType.INSTANCE, displacedTo, displacedIndexOffset, isAdjustable);
 	}
 
-	public static BitArrayStruct valueOf(final List<Integer> dimensions, final LispStruct initialContents,
-	                                     final boolean isAdjustable) {
-
-		if (!dimensions.isEmpty() && !(initialContents instanceof SequenceStruct)) {
-			throw new TypeErrorException(
-					"Expected :initial-contents value to be of type SEQUENCE. Got " + initialContents + '.');
-		}
-
-		final SequenceStruct initialContentsSeq = (SequenceStruct) initialContents;
-		final List<IntegerStruct> validContents = getValidContents(dimensions, initialContentsSeq);
-
-		final ArrayType arrayType = getArrayType(isAdjustable);
-		return new BitArrayStructImpl(arrayType, dimensions, validContents, isAdjustable);
-	}
-
-	public static BitArrayStruct valueOf(final List<Integer> dimensions, final boolean isAdjustable,
-	                                     final BitArrayStruct displacedTo, final Integer displacedIndexOffset) {
-		return new BitArrayStructImpl(ArrayType.INSTANCE, dimensions, isAdjustable, displacedTo, displacedIndexOffset);
-	}
-
-	public static BitArrayStruct valueOf(final List<Integer> dimensions, final IntegerStruct initialElement) {
-		final int totalElements = dimensions.stream()
-		                                    .mapToInt(Integer::intValue)
-		                                    .sum();
+	public static BitArrayStruct valueOf(final List<IntegerStruct> dimensions, final IntegerStruct initialElement,
+	                                     final BooleanStruct isAdjustable) {
+		final List<Integer> dimensionInts = dimensions.stream()
+		                                              .map(IntegerStruct::intValue)
+		                                              .collect(Collectors.toList());
+		final int totalSize = dimensionInts.stream()
+		                                   .mapToInt(Integer::intValue)
+		                                   .sum();
 		final List<IntegerStruct> initialContents = Stream.generate(() -> initialElement)
-		                                                  .limit(totalElements)
+		                                                  .limit(totalSize)
 		                                                  .collect(Collectors.toList());
 
-		return new BitArrayStructImpl(SimpleArrayType.INSTANCE, dimensions, initialContents, false);
+		final boolean adjustableBoolean = isAdjustable.booleanValue();
+		final ArrayType arrayType = getArrayType(adjustableBoolean);
+		return new BitArrayStructImpl(arrayType, dimensionInts, initialContents, adjustableBoolean);
 	}
 
-	public static BitArrayStruct valueOf(final List<Integer> dimensions, final LispStruct initialContents) {
+	public static BitArrayStruct valueOf(final List<IntegerStruct> dimensions, final SequenceStruct initialContents,
+	                                     final BooleanStruct isAdjustable) {
+		final List<Integer> dimensionInts = dimensions.stream()
+		                                              .map(IntegerStruct::intValue)
+		                                              .collect(Collectors.toList());
+		final List<IntegerStruct> validContents = getValidContents(dimensionInts, initialContents);
 
-		if (!dimensions.isEmpty() && !(initialContents instanceof SequenceStruct)) {
-			throw new TypeErrorException(
-					"Expected :initial-contents value to be of type SEQUENCE. Got " + initialContents + '.');
-		}
+		final boolean adjustableBoolean = isAdjustable.booleanValue();
+		final ArrayType arrayType = getArrayType(adjustableBoolean);
+		return new BitArrayStructImpl(arrayType, dimensionInts, validContents, adjustableBoolean);
+	}
 
-		final SequenceStruct initialContentsSeq = (SequenceStruct) initialContents;
-		final List<IntegerStruct> validContents = getValidContents(dimensions, initialContentsSeq);
+	public static BitArrayStruct valueOf(final List<IntegerStruct> dimensions, final BitArrayStruct displacedTo,
+	                                     final IntegerStruct displacedIndexOffset, final BooleanStruct isAdjustable) {
+		final List<Integer> dimensionInts = dimensions.stream()
+		                                              .map(IntegerStruct::intValue)
+		                                              .collect(Collectors.toList());
 
-		return new BitArrayStructImpl(SimpleArrayType.INSTANCE, dimensions, validContents, false);
+		// TODO: Total size of A be no smaller than the sum of the total size of B plus the offset 'n' supplied by the offset
+
+		return new BitArrayStructImpl(ArrayType.INSTANCE, dimensionInts, displacedTo, displacedIndexOffset.intValue(),
+		                              isAdjustable.booleanValue());
+	}
+
+	public static BitArrayStruct valueOf(final List<IntegerStruct> dimensions, final IntegerStruct initialElement) {
+		final List<Integer> dimensionInts = dimensions.stream()
+		                                              .map(IntegerStruct::intValue)
+		                                              .collect(Collectors.toList());
+		final int totalSize = dimensionInts.stream()
+		                                   .mapToInt(Integer::intValue)
+		                                   .sum();
+		final List<IntegerStruct> initialContents = Stream.generate(() -> initialElement)
+		                                                  .limit(totalSize)
+		                                                  .collect(Collectors.toList());
+
+		return new BitArrayStructImpl(SimpleArrayType.INSTANCE, dimensionInts, initialContents, false);
+	}
+
+	public static BitArrayStruct valueOf(final List<IntegerStruct> dimensions, final SequenceStruct initialContents) {
+		final List<Integer> dimensionInts = dimensions.stream()
+		                                              .map(IntegerStruct::intValue)
+		                                              .collect(Collectors.toList());
+		final List<IntegerStruct> validContents = getValidContents(dimensionInts, initialContents);
+
+		return new BitArrayStructImpl(SimpleArrayType.INSTANCE, dimensionInts, validContents, false);
 	}
 
 	/**
@@ -106,8 +128,12 @@ public class BitArrayStructImpl extends ArrayStructImpl<IntegerStruct> implement
 	 */
 	private static List<IntegerStruct> getValidContents(final List<Integer> dimensions,
 	                                                    final SequenceStruct initialContents) {
+		final int numberOfDimensions = dimensions.size();
+		if (numberOfDimensions == 0) {
+			return Collections.emptyList();
+		}
 
-		if (dimensions.size() == 1) {
+		if (numberOfDimensions == 1) {
 			final int dimension = dimensions.get(0);
 			if (initialContents.length() == dimension) {
 				return initialContents.stream()
@@ -123,7 +149,7 @@ public class BitArrayStructImpl extends ArrayStructImpl<IntegerStruct> implement
 
 		final int dimension = dimensions.get(0);
 		if (initialContents.length() == dimension) {
-			final List<Integer> subDimension = dimensions.subList(1, dimensions.size());
+			final List<Integer> subDimension = dimensions.subList(1, numberOfDimensions);
 
 			for (final LispStruct contentToCheck : initialContents) {
 				if (!(contentToCheck instanceof SequenceStruct)) {

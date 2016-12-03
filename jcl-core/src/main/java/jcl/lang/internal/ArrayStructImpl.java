@@ -2,6 +2,7 @@ package jcl.lang.internal;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -66,7 +67,7 @@ public class ArrayStructImpl<TYPE extends LispStruct> extends BuiltInClassStruct
 	 * 		whether or not the array is adjustable
 	 */
 	ArrayStructImpl(final ArrayType arrayType, final List<Integer> dimensions, final LispType elementType,
-	                          final List<TYPE> contents, final boolean isAdjustable) {
+	                final List<TYPE> contents, final boolean isAdjustable) {
 		super(arrayType, null, null);
 
 		final int[] dimensionArray = dimensions.stream()
@@ -97,8 +98,8 @@ public class ArrayStructImpl<TYPE extends LispStruct> extends BuiltInClassStruct
 	 * 		whether or not the array is adjustable
 	 */
 	ArrayStructImpl(final ArrayType arrayType, final List<Integer> dimensions, final LispType elementType,
-	                          final boolean isAdjustable, final ArrayStruct<TYPE> displacedTo,
-	                          final Integer displacedIndexOffset) {
+	                final ArrayStruct<TYPE> displacedTo, final Integer displacedIndexOffset,
+	                final boolean isAdjustable) {
 		super(arrayType, null, null);
 
 		final int[] dimensionArray = dimensions.stream()
@@ -116,91 +117,106 @@ public class ArrayStructImpl<TYPE extends LispStruct> extends BuiltInClassStruct
 		this.displacedIndexOffset = displacedIndexOffset;
 	}
 
-	public static <T extends LispStruct> ArrayStruct<T> valueOf(final List<Integer> dimensions,
+	public static <T extends LispStruct> ArrayStruct<T> valueOf(final List<IntegerStruct> dimensions,
 	                                                            final LispType elementType,
 	                                                            final T initialElement,
-	                                                            final boolean isAdjustable) {
+	                                                            final BooleanStruct isAdjustable) {
+		final List<Integer> dimensionInts = dimensions.stream()
+		                                              .map(IntegerStruct::intValue)
+		                                              .collect(Collectors.toList());
+
 		final LispType initialElementType = initialElement.getType();
 		if (!initialElementType.equals(elementType) && !elementType.equals(initialElementType)) {
 			throw new TypeErrorException(
 					"Provided element " + initialElement + " is not a subtype of the provided elementType " + elementType + '.');
 		}
 
-		final int totalElements = dimensions.stream()
-		                                    .mapToInt(Integer::intValue)
-		                                    .sum();
-		final List<T> initialContents = Stream.generate(() -> initialElement)
-		                                      .limit(totalElements)
-		                                      .collect(Collectors.toList());
-
-		final ArrayType arrayType = getArrayType(isAdjustable);
-		return new ArrayStructImpl<>(arrayType, dimensions, elementType, initialContents, isAdjustable);
-	}
-
-	public static <T extends LispStruct> ArrayStruct<T> valueOfIC(final List<Integer> dimensions,
-	                                                              final LispType elementType,
-	                                                              final LispStruct initialContents,
-	                                                              final boolean isAdjustable) {
-
-		if (!dimensions.isEmpty() && !(initialContents instanceof SequenceStruct)) {
-			throw new TypeErrorException(
-					"Expected :initial-contents value to be of type SEQUENCE. Got " + initialContents + '.');
-		}
-
-		final SequenceStruct initialContentsSeq = (SequenceStruct) initialContents;
-		final List<T> validContents = getValidContents(dimensions, elementType, initialContentsSeq);
-
-		final ArrayType arrayType = getArrayType(isAdjustable);
-		return new ArrayStructImpl<>(arrayType, dimensions, elementType, validContents, isAdjustable);
-	}
-
-	public static <T extends LispStruct> ArrayStruct<T> valueOf(final List<Integer> dimensions,
-	                                                            final LispType elementType,
-	                                                            final boolean isAdjustable,
-	                                                            final ArrayStruct<T> displacedTo,
-	                                                            final Integer displacedIndexOffset) {
-
-		// TODO: Total size of A be no smaller than the sum of the total size of B plus the offset 'n' supplied by the offset
-
-		return new ArrayStructImpl<>(ArrayType.INSTANCE, dimensions, elementType, isAdjustable, displacedTo,
-		                             displacedIndexOffset);
-	}
-
-	public static <T extends LispStruct> ArrayStruct<T> valueOf(final List<Integer> dimensions,
-	                                                            final LispType elementType,
-	                                                            final T initialElement) {
-		final int totalSize = dimensions.stream()
-		                                .mapToInt(Integer::intValue)
-		                                .sum();
+		final int totalSize = dimensionInts.stream()
+		                                   .mapToInt(Integer::intValue)
+		                                   .sum();
 		final List<T> initialContents = Stream.generate(() -> initialElement)
 		                                      .limit(totalSize)
 		                                      .collect(Collectors.toList());
 
-		return new ArrayStructImpl<>(SimpleArrayType.INSTANCE, dimensions, elementType, initialContents, false);
+		final boolean adjustableBoolean = isAdjustable.booleanValue();
+		final ArrayType arrayType = getArrayType(adjustableBoolean);
+		return new ArrayStructImpl<>(arrayType, dimensionInts, elementType, initialContents, adjustableBoolean);
 	}
 
-	public static <T extends LispStruct> ArrayStruct<T> valueOfIC(final List<Integer> dimensions,
-	                                                              final LispType elementType,
-	                                                              final LispStruct initialContents) {
+	public static <T extends LispStruct> ArrayStruct<T> valueOf(final List<IntegerStruct> dimensions,
+	                                                            final LispType elementType,
+	                                                            final SequenceStruct initialContents,
+	                                                            final BooleanStruct isAdjustable) {
+		final List<Integer> dimensionInts = dimensions.stream()
+		                                              .map(IntegerStruct::intValue)
+		                                              .collect(Collectors.toList());
+		final List<T> validContents = getValidContents(dimensionInts, elementType, initialContents);
 
-		if (!dimensions.isEmpty() && !(initialContents instanceof SequenceStruct)) {
+		final boolean adjustableBoolean = isAdjustable.booleanValue();
+		final ArrayType arrayType = getArrayType(adjustableBoolean);
+		return new ArrayStructImpl<>(arrayType, dimensionInts, elementType, validContents, adjustableBoolean);
+	}
+
+	public static <T extends LispStruct> ArrayStruct<T> valueOf(final List<IntegerStruct> dimensions,
+	                                                            final LispType elementType,
+	                                                            final ArrayStruct<T> displacedTo,
+	                                                            final IntegerStruct displacedIndexOffset,
+	                                                            final BooleanStruct isAdjustable) {
+		final List<Integer> dimensionInts = dimensions.stream()
+		                                              .map(IntegerStruct::intValue)
+		                                              .collect(Collectors.toList());
+
+		// TODO: Total size of A be no smaller than the sum of the total size of B plus the offset 'n' supplied by the offset
+
+		return new ArrayStructImpl<>(ArrayType.INSTANCE, dimensionInts, elementType, displacedTo,
+		                             displacedIndexOffset.intValue(), isAdjustable.booleanValue());
+	}
+
+	public static <T extends LispStruct> ArrayStruct<T> valueOf(final List<IntegerStruct> dimensions,
+	                                                            final LispType elementType,
+	                                                            final T initialElement) {
+		final List<Integer> dimensionInts = dimensions.stream()
+		                                              .map(IntegerStruct::intValue)
+		                                              .collect(Collectors.toList());
+
+		final LispType initialElementType = initialElement.getType();
+		if (!initialElementType.equals(elementType) && !elementType.equals(initialElementType)) {
 			throw new TypeErrorException(
-					"Expected :initial-contents value to be of type SEQUENCE. Got " + initialContents + '.');
+					"Provided element " + initialElement + " is not a subtype of the provided elementType " + elementType + '.');
 		}
 
-		final SequenceStruct initialContentsSeq = (SequenceStruct) initialContents;
-		final List<T> validContents = getValidContents(dimensions, elementType, initialContentsSeq);
+		final int totalSize = dimensionInts.stream()
+		                                   .mapToInt(Integer::intValue)
+		                                   .sum();
+		final List<T> initialContents = Stream.generate(() -> initialElement)
+		                                      .limit(totalSize)
+		                                      .collect(Collectors.toList());
 
-		return new ArrayStructImpl<>(SimpleArrayType.INSTANCE, dimensions, elementType, validContents, false);
+		return new ArrayStructImpl<>(SimpleArrayType.INSTANCE, dimensionInts, elementType, initialContents, false);
+	}
+
+	public static <T extends LispStruct> ArrayStruct<T> valueOf(final List<IntegerStruct> dimensions,
+	                                                            final LispType elementType,
+	                                                            final SequenceStruct initialContents) {
+		final List<Integer> dimensionInts = dimensions.stream()
+		                                              .map(IntegerStruct::intValue)
+		                                              .collect(Collectors.toList());
+		final List<T> validContents = getValidContents(dimensionInts, elementType, initialContents);
+
+		return new ArrayStructImpl<>(SimpleArrayType.INSTANCE, dimensionInts, elementType, validContents, false);
 	}
 
 	/*
 		Old Builders
 	 */
 
-	public static <T extends LispStruct> ArrayStruct<T> valueOf(final List<Integer> dimensions,
+	public static <T extends LispStruct> ArrayStruct<T> valueOf(final List<IntegerStruct> dimensions,
 	                                                            final List<T> contents) {
-		return new ArrayStructImpl<>(SimpleArrayType.INSTANCE, dimensions, TType.INSTANCE, contents, false);
+		final List<Integer> dimensionInts = dimensions.stream()
+		                                              .map(IntegerStruct::intValue)
+		                                              .collect(Collectors.toList());
+
+		return new ArrayStructImpl<>(SimpleArrayType.INSTANCE, dimensionInts, TType.INSTANCE, contents, false);
 	}
 
 	/**
@@ -229,8 +245,12 @@ public class ArrayStructImpl<TYPE extends LispStruct> extends BuiltInClassStruct
 	private static <TYPE extends LispStruct> List<TYPE> getValidContents(final List<Integer> dimensions,
 	                                                                     final LispType elementType,
 	                                                                     final SequenceStruct initialContents) {
+		final int numberOfDimensions = dimensions.size();
+		if (numberOfDimensions == 0) {
+			return Collections.emptyList();
+		}
 
-		if (dimensions.size() == 1) {
+		if (numberOfDimensions == 1) {
 			final int dimension = dimensions.get(0);
 			if (initialContents.length() == dimension) {
 				return getValidContents(elementType, initialContents);
@@ -244,7 +264,7 @@ public class ArrayStructImpl<TYPE extends LispStruct> extends BuiltInClassStruct
 
 		final int dimension = dimensions.get(0);
 		if (initialContents.length() == dimension) {
-			final List<Integer> subDimension = dimensions.subList(1, dimensions.size());
+			final List<Integer> subDimension = dimensions.subList(1, numberOfDimensions);
 
 			for (final LispStruct contentToCheck : initialContents) {
 				if (!(contentToCheck instanceof SequenceStruct)) {
@@ -279,6 +299,37 @@ public class ArrayStructImpl<TYPE extends LispStruct> extends BuiltInClassStruct
 			}
 		}
 		return validContents;
+	}
+
+	@Override
+	public ArrayStruct<TYPE> adjustArray(final List<IntegerStruct> dimensions, final LispType elementType,
+	                                     final TYPE initialElement, final BooleanStruct isAdjustable) {
+		return null;
+	}
+
+	@Override
+	public ArrayStruct<TYPE> adjustArray(final List<IntegerStruct> dimensions, final LispType elementType,
+	                                     final SequenceStruct initialContents, final BooleanStruct isAdjustable) {
+		return null;
+	}
+
+	@Override
+	public ArrayStruct<TYPE> adjustArray(final List<IntegerStruct> dimensions, final LispType elementType,
+	                                     final ArrayStruct<TYPE> displacedTo, final IntegerStruct displacedIndexOffset,
+	                                     final BooleanStruct isAdjustable) {
+		return null;
+	}
+
+	@Override
+	public ArrayStruct<TYPE> adjustArray(final List<IntegerStruct> newDimensions, final LispType elementType,
+	                                     final TYPE initialElement) {
+		return null;
+	}
+
+	@Override
+	public ArrayStruct<TYPE> adjustArray(final List<IntegerStruct> newDimensions, final LispType elementType,
+	                                     final SequenceStruct initialContents) {
+		return null;
 	}
 
 	@Override

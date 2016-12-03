@@ -14,6 +14,7 @@ import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Deque;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import jcl.lang.ArrayStruct;
 import jcl.lang.BinaryNativeStreamStruct;
@@ -120,7 +121,11 @@ public final class LispStructFactory {
 	 */
 
 	public static <T extends LispStruct> ArrayStruct<T> toArray(final List<Integer> dimensions, final List<T> contents) {
-		return ArrayStructImpl.valueOf(dimensions, contents);
+		// TODO: Fix me
+		final List<IntegerStruct> dimensionStructs = dimensions.stream()
+		                                                       .map(IntegerStructImpl::valueOf)
+		                                                       .collect(Collectors.toList());
+		return ArrayStructImpl.valueOf(dimensionStructs, contents);
 	}
 
 	/*

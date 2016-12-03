@@ -12,7 +12,21 @@ import jcl.type.LispType;
  */
 public interface ArrayStruct<TYPE extends LispStruct> extends LispStruct {
 
-//	ArrayStruct<TYPE> adjustArray();
+	ArrayStruct<TYPE> adjustArray(final List<IntegerStruct> dimensions, final LispType elementType,
+	                              final TYPE initialElement, final BooleanStruct isAdjustable);
+
+	ArrayStruct<TYPE> adjustArray(final List<IntegerStruct> dimensions, final LispType elementType,
+	                              final SequenceStruct initialContents, final BooleanStruct isAdjustable);
+
+	ArrayStruct<TYPE> adjustArray(final List<IntegerStruct> dimensions, final LispType elementType,
+	                              final ArrayStruct<TYPE> displacedTo, final IntegerStruct displacedIndexOffset,
+	                              final BooleanStruct isAdjustable);
+
+	ArrayStruct<TYPE> adjustArray(final List<IntegerStruct> newDimensions, final LispType elementType,
+	                              final TYPE initialElement);
+
+	ArrayStruct<TYPE> adjustArray(final List<IntegerStruct> newDimensions, final LispType elementType,
+	                              final SequenceStruct initialContents);
 
 	BooleanStruct adjustableArrayP();
 

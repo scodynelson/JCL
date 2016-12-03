@@ -10,7 +10,7 @@ import jcl.lang.internal.ConsStructImpl;
 /**
  * The {@link ListStruct} is the object representation of a Lisp 'list' type.
  */
-public interface ListStruct extends SequenceStruct, Iterable<LispStruct> {
+public interface ListStruct extends SequenceStruct {
 
 	LispStruct getCar();
 

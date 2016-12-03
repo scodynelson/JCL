@@ -2,7 +2,6 @@ package jcl.lang.internal;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -41,14 +40,16 @@ public class ArrayStructImpl<TYPE extends LispStruct> extends BuiltInClassStruct
 	protected List<TYPE> contents;
 
 	protected List<Integer> dimensions;
-	private final MultidimensionalCounter multidimensionalCounter;
 
-	protected LispType elementType;
+	private MultidimensionalCounter multidimensionalCounter;
 
-	protected boolean isAdjustable;
+	private LispType elementType;
 
-	private final ArrayStruct<TYPE> displacedTo;
-	private final Integer displacedIndexOffset;
+	boolean isAdjustable;
+
+	private ArrayStruct<TYPE> displacedTo;
+
+	private Integer displacedIndexOffset;
 
 	/**
 	 * Protected constructor.
@@ -64,15 +65,9 @@ public class ArrayStructImpl<TYPE extends LispStruct> extends BuiltInClassStruct
 	 * @param isAdjustable
 	 * 		whether or not the array is adjustable
 	 */
-	protected ArrayStructImpl(final ArrayType arrayType, final List<Integer> dimensions, final LispType elementType,
+	ArrayStructImpl(final ArrayType arrayType, final List<Integer> dimensions, final LispType elementType,
 	                          final List<TYPE> contents, final boolean isAdjustable) {
 		super(arrayType, null, null);
-
-		// Check input data
-		areContentsValidForDimensionsAndElementType(dimensions, elementType, contents);
-
-		this.contents = new ArrayList<>(contents);
-		this.dimensions = dimensions;
 
 		final int[] dimensionArray = dimensions.stream()
 		                                       .mapToInt(Integer::intValue)
@@ -81,6 +76,9 @@ public class ArrayStructImpl<TYPE extends LispStruct> extends BuiltInClassStruct
 
 		this.elementType = elementType;
 		this.isAdjustable = isAdjustable;
+
+		this.dimensions = dimensions;
+		this.contents = contents;
 
 		displacedTo = null;
 		displacedIndexOffset = null;
@@ -98,13 +96,10 @@ public class ArrayStructImpl<TYPE extends LispStruct> extends BuiltInClassStruct
 	 * @param isAdjustable
 	 * 		whether or not the array is adjustable
 	 */
-	protected ArrayStructImpl(final ArrayType arrayType, final List<Integer> dimensions, final LispType elementType,
-	                        final boolean isAdjustable, final ArrayStruct<TYPE> displacedTo,
-	                        final Integer displacedIndexOffset) {
+	ArrayStructImpl(final ArrayType arrayType, final List<Integer> dimensions, final LispType elementType,
+	                          final boolean isAdjustable, final ArrayStruct<TYPE> displacedTo,
+	                          final Integer displacedIndexOffset) {
 		super(arrayType, null, null);
-
-		contents = null;
-		this.dimensions = dimensions;
 
 		final int[] dimensionArray = dimensions.stream()
 		                                       .mapToInt(Integer::intValue)
@@ -114,13 +109,23 @@ public class ArrayStructImpl<TYPE extends LispStruct> extends BuiltInClassStruct
 		this.elementType = elementType;
 		this.isAdjustable = isAdjustable;
 
+		this.dimensions = dimensions;
+		contents = null;
+
 		this.displacedTo = displacedTo;
 		this.displacedIndexOffset = displacedIndexOffset;
 	}
 
 	public static <T extends LispStruct> ArrayStruct<T> valueOf(final List<Integer> dimensions,
 	                                                            final LispType elementType,
-	                                                            final T initialElement, final boolean isAdjustable) {
+	                                                            final T initialElement,
+	                                                            final boolean isAdjustable) {
+		final LispType initialElementType = initialElement.getType();
+		if (!initialElementType.equals(elementType) && !elementType.equals(initialElementType)) {
+			throw new TypeErrorException(
+					"Provided element " + initialElement + " is not a subtype of the provided elementType " + elementType + '.');
+		}
+
 		final int totalElements = dimensions.stream()
 		                                    .mapToInt(Integer::intValue)
 		                                    .sum();
@@ -128,24 +133,25 @@ public class ArrayStructImpl<TYPE extends LispStruct> extends BuiltInClassStruct
 		                                      .limit(totalElements)
 		                                      .collect(Collectors.toList());
 
-		// Check input data
-		// TODO: is this needed?? Optimize...
-		areContentsValidForDimensionsAndElementType(dimensions, elementType, initialContents);
-
 		final ArrayType arrayType = getArrayType(isAdjustable);
 		return new ArrayStructImpl<>(arrayType, dimensions, elementType, initialContents, isAdjustable);
 	}
 
-	public static <T extends LispStruct> ArrayStruct<T> valueOf(final List<Integer> dimensions,
-	                                                            final LispType elementType,
-	                                                            final List<T> initialContents,
-	                                                            final boolean isAdjustable) {
+	public static <T extends LispStruct> ArrayStruct<T> valueOfIC(final List<Integer> dimensions,
+	                                                              final LispType elementType,
+	                                                              final LispStruct initialContents,
+	                                                              final boolean isAdjustable) {
 
-		// Check input data
-		areContentsValidForDimensionsAndElementType(dimensions, elementType, initialContents);
+		if (!dimensions.isEmpty() && !(initialContents instanceof SequenceStruct)) {
+			throw new TypeErrorException(
+					"Expected :initial-contents value to be of type SEQUENCE. Got " + initialContents + '.');
+		}
+
+		final SequenceStruct initialContentsSeq = (SequenceStruct) initialContents;
+		final List<T> validContents = getValidContents(dimensions, elementType, initialContentsSeq);
 
 		final ArrayType arrayType = getArrayType(isAdjustable);
-		return new ArrayStructImpl<>(arrayType, dimensions, elementType, initialContents, isAdjustable);
+		return new ArrayStructImpl<>(arrayType, dimensions, elementType, validContents, isAdjustable);
 	}
 
 	public static <T extends LispStruct> ArrayStruct<T> valueOf(final List<Integer> dimensions,
@@ -153,6 +159,9 @@ public class ArrayStructImpl<TYPE extends LispStruct> extends BuiltInClassStruct
 	                                                            final boolean isAdjustable,
 	                                                            final ArrayStruct<T> displacedTo,
 	                                                            final Integer displacedIndexOffset) {
+
+		// TODO: Total size of A be no smaller than the sum of the total size of B plus the offset 'n' supplied by the offset
+
 		return new ArrayStructImpl<>(ArrayType.INSTANCE, dimensions, elementType, isAdjustable, displacedTo,
 		                             displacedIndexOffset);
 	}
@@ -160,28 +169,29 @@ public class ArrayStructImpl<TYPE extends LispStruct> extends BuiltInClassStruct
 	public static <T extends LispStruct> ArrayStruct<T> valueOf(final List<Integer> dimensions,
 	                                                            final LispType elementType,
 	                                                            final T initialElement) {
-		final int totalElements = dimensions.stream()
-		                                    .mapToInt(Integer::intValue)
-		                                    .sum();
+		final int totalSize = dimensions.stream()
+		                                .mapToInt(Integer::intValue)
+		                                .sum();
 		final List<T> initialContents = Stream.generate(() -> initialElement)
-		                                      .limit(totalElements)
+		                                      .limit(totalSize)
 		                                      .collect(Collectors.toList());
-
-		// Check input data
-		// TODO: is this needed?? Optimize...
-		areContentsValidForDimensionsAndElementType(dimensions, elementType, initialContents);
 
 		return new ArrayStructImpl<>(SimpleArrayType.INSTANCE, dimensions, elementType, initialContents, false);
 	}
 
-	public static <T extends LispStruct> ArrayStruct<T> valueOf(final List<Integer> dimensions,
-	                                                            final LispType elementType,
-	                                                            final List<T> initialContents) {
+	public static <T extends LispStruct> ArrayStruct<T> valueOfIC(final List<Integer> dimensions,
+	                                                              final LispType elementType,
+	                                                              final LispStruct initialContents) {
 
-		// Check input data
-		areContentsValidForDimensionsAndElementType(dimensions, elementType, initialContents);
+		if (!dimensions.isEmpty() && !(initialContents instanceof SequenceStruct)) {
+			throw new TypeErrorException(
+					"Expected :initial-contents value to be of type SEQUENCE. Got " + initialContents + '.');
+		}
 
-		return new ArrayStructImpl<>(SimpleArrayType.INSTANCE, dimensions, elementType, initialContents, false);
+		final SequenceStruct initialContentsSeq = (SequenceStruct) initialContents;
+		final List<T> validContents = getValidContents(dimensions, elementType, initialContentsSeq);
+
+		return new ArrayStructImpl<>(SimpleArrayType.INSTANCE, dimensions, elementType, validContents, false);
 	}
 
 	/*
@@ -201,7 +211,7 @@ public class ArrayStructImpl<TYPE extends LispStruct> extends BuiltInClassStruct
 	 *
 	 * @return the matching array type for the provided {@link #isAdjustable} value
 	 */
-	protected static ArrayType getArrayType(final boolean isAdjustable) {
+	static ArrayType getArrayType(final boolean isAdjustable) {
 		return isAdjustable ? ArrayType.INSTANCE : SimpleArrayType.INSTANCE;
 	}
 
@@ -209,48 +219,66 @@ public class ArrayStructImpl<TYPE extends LispStruct> extends BuiltInClassStruct
 	 * Determines if the provided {@code dimensionsToCheck} and {@code elementTypeToCheck} are valid for the provided
 	 * {@code contentsToCheck}.
 	 *
-	 * @param dimensionsToCheck
+	 * @param dimensions
 	 * 		the array dimensions to check
-	 * @param elementTypeToCheck
+	 * @param elementType
 	 * 		the array elementType to check
-	 * @param contentsToCheck
+	 * @param initialContents
 	 * 		the array contents to check
 	 */
-	protected static void areContentsValidForDimensionsAndElementType(final List<Integer> dimensionsToCheck,
-	                                                                final LispType elementTypeToCheck,
-	                                                                final List<? extends LispStruct> contentsToCheck) {
+	private static <TYPE extends LispStruct> List<TYPE> getValidContents(final List<Integer> dimensions,
+	                                                                     final LispType elementType,
+	                                                                     final SequenceStruct initialContents) {
 
-		if (dimensionsToCheck.isEmpty()) {
-			return;
+		if (dimensions.size() == 1) {
+			final int dimension = dimensions.get(0);
+			if (initialContents.length() == dimension) {
+				return getValidContents(elementType, initialContents);
+			} else {
+				throw new SimpleErrorException(
+						initialContents + " doesn't match array dimensions of #<" + elementType + ' ' + dimension + ">.");
+			}
 		}
 
-		final Integer dimension = dimensionsToCheck.get(0);
-		if (contentsToCheck.size() == dimension) {
-			final List<Integer> subDimensionToCheck = dimensionsToCheck.subList(1, dimensionsToCheck.size());
-			for (final LispStruct contentToCheck : contentsToCheck) {
+		final List<TYPE> validContents = new ArrayList<>();
 
-				final List<LispStruct> subContentsToCheck;
+		final int dimension = dimensions.get(0);
+		if (initialContents.length() == dimension) {
+			final List<Integer> subDimension = dimensions.subList(1, dimensions.size());
 
-				if (contentToCheck instanceof SequenceStruct) {
-					final SequenceStruct sequenceToken = (SequenceStruct) contentToCheck;
-					subContentsToCheck = sequenceToken.stream().collect(Collectors.toList());
-				} else {
-					subContentsToCheck = Collections.singletonList(contentToCheck);
+			for (final LispStruct contentToCheck : initialContents) {
+				if (!(contentToCheck instanceof SequenceStruct)) {
+					throw new SimpleErrorException(
+							initialContents + " doesn't match array dimensions of #<" + elementType + ' ' + dimension + ">.");
 				}
-				areContentsValidForDimensionsAndElementType(subDimensionToCheck, elementTypeToCheck,
-				                                            subContentsToCheck);
+
+				final SequenceStruct subContents = (SequenceStruct) contentToCheck;
+				final List<TYPE> validSubContents = getValidContents(subDimension, elementType, subContents);
+				validContents.addAll(validSubContents);
 			}
 		} else {
 			throw new SimpleErrorException(
-					contentsToCheck + " doesn't match array dimensions of #<" + elementTypeToCheck + ' ' + dimension + ">.");
+					initialContents + " doesn't match array dimensions of #<" + elementType + ' ' + dimension + ">.");
 		}
 
-		for (final LispStruct current : contentsToCheck) {
-			if (!current.getType().equals(elementTypeToCheck) && !elementTypeToCheck.equals(current.getType())) {
+		return validContents;
+	}
+
+	@SuppressWarnings("unchecked")
+	private static <TYPE extends LispStruct> List<TYPE> getValidContents(final LispType elementType,
+	                                                                     final SequenceStruct initialContents) {
+		final List<TYPE> validContents = new ArrayList<>();
+
+		for (final LispStruct current : initialContents) {
+			final LispType currentType = current.getType();
+			if (!currentType.equals(elementType) && !elementType.equals(currentType)) {
 				throw new TypeErrorException(
-						"Provided element " + current + " is not a subtype of the provided elementType " + elementTypeToCheck + '.');
+						"Provided element " + current + " is not a subtype of the provided elementType " + elementType + '.');
+			} else {
+				validContents.add((TYPE) current);
 			}
 		}
+		return validContents;
 	}
 
 	@Override

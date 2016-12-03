@@ -1,7 +1,11 @@
 package jcl.lang.internal;
 
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Spliterator;
+import java.util.Spliterators;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -26,7 +30,7 @@ import jcl.type.VectorType;
  */
 public class VectorStructImpl<TYPE extends LispStruct> extends ArrayStructImpl<TYPE> implements VectorStruct<TYPE> {
 
-	protected Integer fillPointer;
+	Integer fillPointer;
 
 	/**
 	 * Protected constructor.
@@ -44,8 +48,8 @@ public class VectorStructImpl<TYPE extends LispStruct> extends ArrayStructImpl<T
 	 * @param fillPointer
 	 * 		the vector fillPointer
 	 */
-	protected VectorStructImpl(final VectorType vectorType, final Integer size, final LispType elementType,
-	                           final List<TYPE> contents, final boolean isAdjustable, final Integer fillPointer) {
+	VectorStructImpl(final VectorType vectorType, final Integer size, final LispType elementType,
+	                 final List<TYPE> contents, final boolean isAdjustable, final Integer fillPointer) {
 		super(vectorType, Collections.singletonList(size), elementType, contents, isAdjustable);
 
 		this.fillPointer = fillPointer;
@@ -162,6 +166,50 @@ public class VectorStructImpl<TYPE extends LispStruct> extends ArrayStructImpl<T
 		return IntegerStructImpl.valueOf(previousFillPointer);
 	}
 
+	/*
+	ITERABLE
+	 */
+
+	@Override
+	public Iterator<LispStruct> iterator() {
+		return new VectorIterator<>(contents.iterator());
+	}
+
+	@Override
+	public Spliterator<LispStruct> spliterator() {
+		return Spliterators.spliterator(contents.iterator(),
+		                                contents.size(),
+		                                Spliterator.ORDERED |
+				                                Spliterator.SIZED |
+				                                Spliterator.IMMUTABLE |
+				                                Spliterator.SUBSIZED
+		);
+	}
+
+	private static final class VectorIterator<TYPE extends LispStruct> implements Iterator<LispStruct> {
+
+		private Iterator<TYPE> iterator;
+
+		private VectorIterator(final Iterator<TYPE> iterator) {
+			this.iterator = iterator;
+		}
+
+		@Override
+		public boolean hasNext() {
+			return iterator.hasNext();
+		}
+
+		@Override
+		public LispStruct next() {
+			return iterator.next();
+		}
+
+		@Override
+		public void forEachRemaining(final Consumer<? super LispStruct> action) {
+			iterator.forEachRemaining(action);
+		}
+	}
+
 	@Override
 	public String toString() {
 		// TODO: Ignoring *PRINT-LEVEL* and *PRINT-LENGTH*
@@ -199,7 +247,7 @@ public class VectorStructImpl<TYPE extends LispStruct> extends ArrayStructImpl<T
 
 			stringBuilder.append(" type ");
 
-			final String elementTypeClassName = elementType.getClass().getName().toUpperCase();
+			final String elementTypeClassName = arrayElementType().getClass().getName().toUpperCase();
 			stringBuilder.append(elementTypeClassName);
 
 			if (fillPointer != null) {

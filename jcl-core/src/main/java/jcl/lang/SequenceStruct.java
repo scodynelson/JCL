@@ -9,7 +9,7 @@ import java.util.stream.Stream;
 /**
  * The {@link SequenceStruct} is the object representation of a Lisp 'sequence' type.
  */
-public interface SequenceStruct extends LispStruct {
+public interface SequenceStruct extends LispStruct, Iterable<LispStruct> {
 
 	default Stream<LispStruct> stream() {
 		throw new UnsupportedOperationException("Not supported yet.");

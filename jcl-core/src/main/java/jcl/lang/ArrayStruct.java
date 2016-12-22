@@ -22,10 +22,10 @@ public interface ArrayStruct<TYPE extends LispStruct> extends LispStruct {
 	                              final ArrayStruct<TYPE> displacedTo, final IntegerStruct displacedIndexOffset,
 	                              final BooleanStruct isAdjustable);
 
-	ArrayStruct<TYPE> adjustArray(final List<IntegerStruct> newDimensions, final LispType elementType,
+	ArrayStruct<TYPE> adjustArray(final List<IntegerStruct> dimensions, final LispType elementType,
 	                              final TYPE initialElement);
 
-	ArrayStruct<TYPE> adjustArray(final List<IntegerStruct> newDimensions, final LispType elementType,
+	ArrayStruct<TYPE> adjustArray(final List<IntegerStruct> dimensions, final LispType elementType,
 	                              final SequenceStruct initialContents);
 
 	BooleanStruct adjustableArrayP();

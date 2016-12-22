@@ -82,7 +82,7 @@ public class ArrayStructImpl<TYPE extends LispStruct> extends BuiltInClassStruct
 		this.contents = contents;
 
 		displacedTo = null;
-		displacedIndexOffset = null;
+		displacedIndexOffset = 0;
 	}
 
 	/**
@@ -133,7 +133,7 @@ public class ArrayStructImpl<TYPE extends LispStruct> extends BuiltInClassStruct
 
 		final int totalSize = dimensionInts.stream()
 		                                   .mapToInt(Integer::intValue)
-		                                   .sum();
+		                                   .reduce(1, (x, y) -> x * y);
 		final List<T> initialContents = Stream.generate(() -> initialElement)
 		                                      .limit(totalSize)
 		                                      .collect(Collectors.toList());
@@ -187,7 +187,7 @@ public class ArrayStructImpl<TYPE extends LispStruct> extends BuiltInClassStruct
 
 		final int totalSize = dimensionInts.stream()
 		                                   .mapToInt(Integer::intValue)
-		                                   .sum();
+		                                   .reduce(1, (x, y) -> x * y);
 		final List<T> initialContents = Stream.generate(() -> initialElement)
 		                                      .limit(totalSize)
 		                                      .collect(Collectors.toList());
@@ -301,16 +301,185 @@ public class ArrayStructImpl<TYPE extends LispStruct> extends BuiltInClassStruct
 		return validContents;
 	}
 
+	/*
+	$$$$$$$$$$$$$$$$$
+	 */
+
+	private List<TYPE> dataVectorFromInits(final Integer totalSize,
+	                                       final List<TYPE> initialContents, final boolean initialContentsP,
+	                                       final TYPE initialElement, final boolean initialElementP) {
+
+		if (initialContentsP && initialElementP) {
+			throw new ErrorException(
+					"Cannot supply both :initial-contents and :initial-element to either make-array or adjust-array.");
+		}
+
+		List<TYPE> data = new ArrayList<>();
+		if (initialElementP) {
+			data = Stream.generate(() -> initialElement)
+			             .limit(totalSize)
+			             .collect(Collectors.toList());
+		} else if (initialContentsP) {
+			data = initialContents;
+		}
+
+		return data;
+	}
+
+	private void zapArrayData(final List<TYPE> oldData, final List<Integer> oldDims,
+	                          final Integer offset,
+	                          final List<TYPE> newData, final List<Integer> newDims,
+	                          final Integer newLength, final LispType elementType,
+	                          final TYPE initialElement, final boolean initialElementP) {
+
+		Collections.reverse(oldDims);
+		final List<Integer> innerNewDims = new ArrayList<>(newDims);
+		Collections.reverse(innerNewDims);
+
+		if (oldData == newData) {
+			final List<TYPE> temp = zapArrayDataTemp(newLength, elementType, initialElement, initialElementP);
+			zapArrayDataAux(oldData, oldDims, offset, temp, newDims);
+
+			for (int i = 0; i < newLength; i++) {
+				newData.set(i, temp.get(i));
+			}
+		} else {
+			zapArrayDataAux(oldData, oldDims, offset, newData, newDims);
+		}
+	}
+
+	private List<TYPE> zapArrayDataTemp(final Integer length, final LispType elementType, final TYPE initialElement,
+	                                    final boolean initialElementP) {
+		return Stream.generate(() -> initialElement)
+		             .limit(length)
+		             .collect(Collectors.toList());
+	}
+
+	private void zapArrayDataAux(final List<TYPE> oldData, final List<Integer> oldDims,
+	                             final Integer offset,
+	                             final List<TYPE> newData, final List<Integer> newDims) {
+
+		final List<Integer> limits = new ArrayList<>();
+		for (int i = 0; i < oldDims.size(); i++) {
+			final Integer x = oldDims.get(0);
+			final Integer y = newDims.get(0);
+			limits.add(Math.min(x, y) - 1);
+		}
+
+		List<Integer> indexList =
+				Stream.generate(() -> 0)
+				      .limit(oldDims.size())
+				      .collect(Collectors.toList());
+
+		while (!indexList.isEmpty()) {
+			newData.set(rowMajorIndexFromDims(indexList, newDims),
+			            oldData.get(rowMajorIndexFromDims(indexList, oldDims) + offset));
+
+			indexList = bumpIndexList(indexList, limits);
+		}
+	}
+
+	private List<Integer> bumpIndexList(final List<Integer> indexList, final List<Integer> limits) {
+
+		List<Integer> subscripts = indexList;
+		List<Integer> innerLimits = limits;
+
+		while (!subscripts.isEmpty()) {
+
+			if (subscripts.get(0) < innerLimits.get(0)) {
+				subscripts.set(0, subscripts.get(0) + 1);
+				return indexList;
+			}
+			subscripts.set(0, 0);
+
+			subscripts = subscripts.subList(1, subscripts.size() - 1);
+			innerLimits = innerLimits.subList(1, limits.size() - 1);
+		}
+
+		return Collections.emptyList();
+	}
+
+	private Integer rowMajorIndexFromDims(final List<Integer> revSubscripts, final List<Integer> revDimList) {
+
+		List<Integer> innerRevSubscripts = revSubscripts;
+		List<Integer> innerRevDimList = revDimList;
+		Integer chunkSize = 1;
+		Integer result = 0;
+
+		while (!innerRevDimList.isEmpty()) {
+			result += innerRevSubscripts.get(0) * chunkSize;
+			chunkSize *= innerRevDimList.get(0);
+
+			innerRevSubscripts = innerRevSubscripts.subList(1, innerRevSubscripts.size() - 1);
+			innerRevDimList = innerRevDimList.subList(1, innerRevDimList.size() - 1);
+		}
+		return result;
+	}
+
+	/*
+	$$$$$$$$$$$$$$$$$
+	 */
+
 	@Override
 	public ArrayStruct<TYPE> adjustArray(final List<IntegerStruct> dimensions, final LispType elementType,
 	                                     final TYPE initialElement, final BooleanStruct isAdjustable) {
-		return null;
+
+		final int oldTotalSize = multidimensionalCounter.getSize();
+
+		final int[] dimensionArray = dimensions.stream()
+		                                       .mapToInt(IntegerStruct::intValue)
+		                                       .toArray();
+		final MultidimensionalCounter newMultidimensionalCounter = new MultidimensionalCounter(dimensionArray);
+		final int newTotalSize = newMultidimensionalCounter.getSize();
+
+		List<TYPE> newData;
+		if ((displacedTo != null) || (newTotalSize > oldTotalSize)) {
+			newData = dataVectorFromInits(newTotalSize, null, false, initialElement, true);
+		} else {
+			newData = contents;
+		}
+
+		final List<Integer> newDims = dimensions.stream().map(IntegerStruct::intValue).collect(Collectors.toList());
+		zapArrayData(contents, this.dimensions, displacedIndexOffset, newData, newDims, newTotalSize, elementType, initialElement, true);
+
+		this.contents = newData;
+		this.multidimensionalCounter = newMultidimensionalCounter;
+		this.isAdjustable = isAdjustable.booleanValue();
+		this.displacedTo = null;
+		this.displacedIndexOffset = 0;
+		this.dimensions = newDims;
+
+		return this;
 	}
 
 	@Override
 	public ArrayStruct<TYPE> adjustArray(final List<IntegerStruct> dimensions, final LispType elementType,
 	                                     final SequenceStruct initialContents, final BooleanStruct isAdjustable) {
-		return null;
+		final List<Integer> dimensionInts = dimensions.stream()
+		                                              .map(IntegerStruct::intValue)
+		                                              .collect(Collectors.toList());
+		final List<TYPE> validContents = getValidContents(dimensionInts, elementType, initialContents);
+
+		final boolean adjustableBoolean = isAdjustable.booleanValue();
+		final ArrayType arrayType = getArrayType(adjustableBoolean);
+//		return new ArrayStructImpl<>(arrayType, dimensionInts, elementType, validContents, adjustableBoolean);
+
+
+		final int[] dimensionArray = dimensions.stream()
+		                                       .mapToInt(IntegerStruct::intValue)
+		                                       .toArray();
+		multidimensionalCounter = new MultidimensionalCounter(dimensionArray);
+
+		this.elementType = elementType;
+		this.isAdjustable = isAdjustable.booleanValue();
+
+		this.dimensions = dimensions.stream().map(IntegerStruct::intValue).collect(Collectors.toList());
+		this.contents = new ArrayList<>(contents);
+
+		displacedTo = null;
+		displacedIndexOffset = 0;
+
+		return this;
 	}
 
 	@Override
@@ -321,15 +490,63 @@ public class ArrayStructImpl<TYPE extends LispStruct> extends BuiltInClassStruct
 	}
 
 	@Override
-	public ArrayStruct<TYPE> adjustArray(final List<IntegerStruct> newDimensions, final LispType elementType,
+	public ArrayStruct<TYPE> adjustArray(final List<IntegerStruct> dimensions, final LispType elementType,
 	                                     final TYPE initialElement) {
-		return null;
+
+		final int oldTotalSize = multidimensionalCounter.getSize();
+
+		final int[] dimensionArray = dimensions.stream()
+		                                       .mapToInt(IntegerStruct::intValue)
+		                                       .toArray();
+		final MultidimensionalCounter newMultidimensionalCounter = new MultidimensionalCounter(dimensionArray);
+		final int newTotalSize = newMultidimensionalCounter.getSize();
+
+		List<TYPE> newData;
+		if ((displacedTo != null) || (newTotalSize > oldTotalSize)) {
+			newData = dataVectorFromInits(newTotalSize, null, false, initialElement, true);
+		} else {
+			newData = contents;
+		}
+
+		final List<Integer> newDims = dimensions.stream().map(IntegerStruct::intValue).collect(Collectors.toList());
+		zapArrayData(contents, this.dimensions, displacedIndexOffset, newData, newDims, newTotalSize, elementType, initialElement, true);
+
+		this.contents = newData;
+		this.multidimensionalCounter = newMultidimensionalCounter;
+		this.isAdjustable = false;
+		this.displacedTo = null;
+		this.displacedIndexOffset = 0;
+		this.dimensions = newDims;
+
+		return this;
 	}
 
 	@Override
-	public ArrayStruct<TYPE> adjustArray(final List<IntegerStruct> newDimensions, final LispType elementType,
+	public ArrayStruct<TYPE> adjustArray(final List<IntegerStruct> dimensions, final LispType elementType,
 	                                     final SequenceStruct initialContents) {
-		return null;
+		final List<Integer> dimensionInts = dimensions.stream()
+		                                              .map(IntegerStruct::intValue)
+		                                              .collect(Collectors.toList());
+		final List<TYPE> validContents = getValidContents(dimensionInts, elementType, initialContents);
+
+//		return new ArrayStructImpl<>(arrayType, dimensionInts, elementType, validContents, adjustableBoolean);
+
+
+		final int[] dimensionArray = dimensions.stream()
+		                                       .mapToInt(IntegerStruct::intValue)
+		                                       .toArray();
+		multidimensionalCounter = new MultidimensionalCounter(dimensionArray);
+
+		this.elementType = elementType;
+		this.isAdjustable = false;
+
+		this.dimensions = dimensions.stream().map(IntegerStruct::intValue).collect(Collectors.toList());
+		this.contents = new ArrayList<>(contents);
+
+		displacedTo = null;
+		displacedIndexOffset = 0;
+
+		return this;
 	}
 
 	@Override

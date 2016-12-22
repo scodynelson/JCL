@@ -18,8 +18,6 @@
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/jcl-reader/jcl-reader.iml" filepath="$PROJECT_DIR$/.idea/modules/jcl-reader/jcl-reader.iml" group="jcl-reader" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/jcl-reader/jcl-reader_main.iml" filepath="$PROJECT_DIR$/.idea/modules/jcl-reader/jcl-reader_main.iml" group="jcl-reader" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/jcl-reader/jcl-reader_test.iml" filepath="$PROJECT_DIR$/.idea/modules/jcl-reader/jcl-reader_test.iml" group="jcl-reader" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/jcl_main.iml" filepath="$PROJECT_DIR$/.idea/modules/jcl_main.iml" group="jcl" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/jcl_test.iml" filepath="$PROJECT_DIR$/.idea/modules/jcl_test.iml" group="jcl" />
     </modules>
   </component>
 </project>

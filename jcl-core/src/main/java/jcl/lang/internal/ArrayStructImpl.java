@@ -27,8 +27,9 @@ import jcl.type.ArrayType;
 import jcl.type.LispType;
 import jcl.type.SimpleArrayType;
 import jcl.type.TType;
+import org.apache.commons.math3.exception.DimensionMismatchException;
+import org.apache.commons.math3.exception.NotStrictlyPositiveException;
 import org.apache.commons.math3.exception.OutOfRangeException;
-import org.apache.commons.math3.util.MultidimensionalCounter;
 
 /**
  * The {@link ArrayStructImpl} is the object representation of a Lisp 'array' type.
@@ -424,6 +425,18 @@ public class ArrayStructImpl<TYPE extends LispStruct> extends BuiltInClassStruct
 	public ArrayStruct<TYPE> adjustArray(final List<IntegerStruct> dimensions, final LispType elementType,
 	                                     final TYPE initialElement, final BooleanStruct isAdjustable) {
 
+		if (this.dimensions.size() != dimensions.size()) {
+			throw new ErrorException("Array cannot be adjusted to a different array dimension rank.");
+		}
+
+//		final int oldTotalSize;
+//		if (dimensions.isEmpty()) {
+//			oldTotalSize = 0;
+//		} else if (multidimensionalCounter == null) {
+//			oldTotalSize = this.dimensions.get(0);
+//		} else {
+//			oldTotalSize = multidimensionalCounter.getSize();
+//		}
 		final int oldTotalSize = multidimensionalCounter.getSize();
 
 		final int[] dimensionArray = dimensions.stream()
@@ -440,7 +453,8 @@ public class ArrayStructImpl<TYPE extends LispStruct> extends BuiltInClassStruct
 		}
 
 		final List<Integer> newDims = dimensions.stream().map(IntegerStruct::intValue).collect(Collectors.toList());
-		zapArrayData(contents, this.dimensions, displacedIndexOffset, newData, newDims, newTotalSize, elementType, initialElement, true);
+		zapArrayData(contents, this.dimensions, displacedIndexOffset, newData, newDims, newTotalSize, elementType,
+		             initialElement, true);
 
 		this.contents = newData;
 		this.multidimensionalCounter = newMultidimensionalCounter;
@@ -455,6 +469,11 @@ public class ArrayStructImpl<TYPE extends LispStruct> extends BuiltInClassStruct
 	@Override
 	public ArrayStruct<TYPE> adjustArray(final List<IntegerStruct> dimensions, final LispType elementType,
 	                                     final SequenceStruct initialContents, final BooleanStruct isAdjustable) {
+
+		if (this.dimensions.size() != dimensions.size()) {
+			throw new ErrorException("Array cannot be adjusted to a different array dimension rank.");
+		}
+
 		final List<Integer> dimensionInts = dimensions.stream()
 		                                              .map(IntegerStruct::intValue)
 		                                              .collect(Collectors.toList());
@@ -486,12 +505,21 @@ public class ArrayStructImpl<TYPE extends LispStruct> extends BuiltInClassStruct
 	public ArrayStruct<TYPE> adjustArray(final List<IntegerStruct> dimensions, final LispType elementType,
 	                                     final ArrayStruct<TYPE> displacedTo, final IntegerStruct displacedIndexOffset,
 	                                     final BooleanStruct isAdjustable) {
+
+		if (this.dimensions.size() != dimensions.size()) {
+			throw new ErrorException("Array cannot be adjusted to a different array dimension rank.");
+		}
+
 		return null;
 	}
 
 	@Override
 	public ArrayStruct<TYPE> adjustArray(final List<IntegerStruct> dimensions, final LispType elementType,
 	                                     final TYPE initialElement) {
+
+		if (this.dimensions.size() != dimensions.size()) {
+			throw new ErrorException("Array cannot be adjusted to a different array dimension rank.");
+		}
 
 		final int oldTotalSize = multidimensionalCounter.getSize();
 
@@ -509,7 +537,8 @@ public class ArrayStructImpl<TYPE extends LispStruct> extends BuiltInClassStruct
 		}
 
 		final List<Integer> newDims = dimensions.stream().map(IntegerStruct::intValue).collect(Collectors.toList());
-		zapArrayData(contents, this.dimensions, displacedIndexOffset, newData, newDims, newTotalSize, elementType, initialElement, true);
+		zapArrayData(contents, this.dimensions, displacedIndexOffset, newData, newDims, newTotalSize, elementType,
+		             initialElement, true);
 
 		this.contents = newData;
 		this.multidimensionalCounter = newMultidimensionalCounter;
@@ -524,6 +553,11 @@ public class ArrayStructImpl<TYPE extends LispStruct> extends BuiltInClassStruct
 	@Override
 	public ArrayStruct<TYPE> adjustArray(final List<IntegerStruct> dimensions, final LispType elementType,
 	                                     final SequenceStruct initialContents) {
+
+		if (this.dimensions.size() != dimensions.size()) {
+			throw new ErrorException("Array cannot be adjusted to a different array dimension rank.");
+		}
+
 		final List<Integer> dimensionInts = dimensions.stream()
 		                                              .map(IntegerStruct::intValue)
 		                                              .collect(Collectors.toList());
@@ -569,6 +603,10 @@ public class ArrayStructImpl<TYPE extends LispStruct> extends BuiltInClassStruct
 
 	@Override
 	public IntegerStruct arrayDimension(final IntegerStruct axisNumber) {
+		if (dimensions.isEmpty()) {
+			throw new ErrorException("Cannot determine array dimension for array with rank 0.");
+		}
+
 		final int axisInt = axisNumber.intValue();
 		final int[] sizes = multidimensionalCounter.getSizes();
 		if ((axisInt < 0) || (axisInt >= sizes.length)) {
@@ -579,8 +617,9 @@ public class ArrayStructImpl<TYPE extends LispStruct> extends BuiltInClassStruct
 
 	@Override
 	public ListStruct arrayDimensions() {
+		final int[] sizes = multidimensionalCounter.getSizes();
 		final List<IntegerStruct> dimensionStructs
-				= Arrays.stream(multidimensionalCounter.getSizes())
+				= Arrays.stream(sizes)
 				        .mapToObj(IntegerStructImpl::valueOf)
 				        .collect(Collectors.toList());
 		return LispStructFactory.toProperList(dimensionStructs);
@@ -605,21 +644,10 @@ public class ArrayStructImpl<TYPE extends LispStruct> extends BuiltInClassStruct
 
 	@Override
 	public BooleanStruct arrayInBoundsP(final IntegerStruct... subscripts) {
-		final int rank = multidimensionalCounter.getDimension();
-		if (subscripts.length > rank) {
-			throw new ErrorException(
-					"Wrong number of subscripts, " + subscripts.length + ", for array of rank " + rank + '.');
-		}
-
-		final int[] intSubscripts
-				= Arrays.stream(subscripts)
-				        .mapToInt(IntegerStruct::intValue)
-				        .toArray();
-
 		try {
-			multidimensionalCounter.getCount(intSubscripts);
+			rowMajorIndexInternal(subscripts);
 			return TStruct.INSTANCE;
-		} catch (final OutOfRangeException ignore) {
+		} catch (final ErrorException ignore) {
 			return NILStruct.INSTANCE;
 		}
 	}
@@ -644,6 +672,15 @@ public class ArrayStructImpl<TYPE extends LispStruct> extends BuiltInClassStruct
 
 	@Override
 	public TYPE rowMajorAref(final IntegerStruct index) {
+//		if (dimensions.isEmpty()) {
+//			return contents.get(0);
+//		}
+//
+//		if (multidimensionalCounter == null) {
+//			final int indexInt = index.intValue();
+//			return contents.get(indexInt);
+//		}
+
 		final int indexInt = index.intValue();
 		final int totalSize = multidimensionalCounter.getSize();
 		if (indexInt > totalSize) {
@@ -653,10 +690,12 @@ public class ArrayStructImpl<TYPE extends LispStruct> extends BuiltInClassStruct
 	}
 
 	private int rowMajorIndexInternal(final IntegerStruct... subscripts) {
+		final int numberOfSubscripts = subscripts.length;
+
 		final int rank = multidimensionalCounter.getDimension();
-		if (subscripts.length > rank) {
+		if (numberOfSubscripts > rank) {
 			throw new ErrorException(
-					"Wrong number of subscripts, " + subscripts.length + ", for array of rank " + rank + '.');
+					"Wrong number of subscripts, " + numberOfSubscripts + ", for array of rank " + rank + '.');
 		}
 
 		final int[] intSubscripts
@@ -667,7 +706,7 @@ public class ArrayStructImpl<TYPE extends LispStruct> extends BuiltInClassStruct
 		final int rowMajorIndex;
 		try {
 			rowMajorIndex = multidimensionalCounter.getCount(intSubscripts);
-		} catch (final OutOfRangeException ex) {
+		} catch (final DimensionMismatchException | OutOfRangeException ex) {
 			final Number argument = ex.getArgument();
 			throw new ErrorException("Subscript " + argument + " is out of bounds for " + this + '.');
 		}
@@ -750,5 +789,199 @@ public class ArrayStructImpl<TYPE extends LispStruct> extends BuiltInClassStruct
 		}
 
 		return stringBuilder.toString();
+	}
+
+	/*
+		Adapted from commons-math3 implementation.
+	 */
+
+	/**
+	 * Converter between unidimensional storage structure and multidimensional
+	 * conceptual structure.
+	 * This utility will convert from indices in a multidimensional structure
+	 * to the corresponding index in a one-dimensional array. For example,
+	 * assuming that the ranges (in 3 dimensions) of indices are 2, 4 and 3,
+	 * the following correspondences, between 3-tuples indices and unidimensional
+	 * indices, will hold:
+	 * <ul>
+	 * <li>(0, 0, 0) corresponds to 0</li>
+	 * <li>(0, 0, 1) corresponds to 1</li>
+	 * <li>(0, 0, 2) corresponds to 2</li>
+	 * <li>(0, 1, 0) corresponds to 3</li>
+	 * <li>...</li>
+	 * <li>(1, 0, 0) corresponds to 12</li>
+	 * <li>...</li>
+	 * <li>(1, 3, 2) corresponds to 23</li>
+	 * </ul>
+	 */
+	@SuppressWarnings("all")
+	public class MultidimensionalCounter {
+
+		/**
+		 * Number of dimensions.
+		 */
+		private final int dimension;
+		/**
+		 * Offset for each dimension.
+		 */
+		private final int[] uniCounterOffset;
+		/**
+		 * Counter sizes.
+		 */
+		private final int[] size;
+		/**
+		 * Total number of (one-dimensional) slots.
+		 */
+		private final int totalSize;
+		/**
+		 * Index of last dimension.
+		 */
+		private final int last;
+
+		/**
+		 * Create a counter.
+		 *
+		 * @param size
+		 * 		Counter sizes (number of slots in each dimension).
+		 *
+		 * @throws NotStrictlyPositiveException
+		 * 		if one of the sizes is
+		 * 		negative or zero.
+		 */
+		public MultidimensionalCounter(int... size) throws NotStrictlyPositiveException {
+			dimension = size.length;
+			this.size = Arrays.copyOf(size, size.length);
+
+			uniCounterOffset = new int[dimension];
+
+			last = dimension - 1;
+			if (dimension == 0) {
+				totalSize = 1;
+			} else {
+				int tS = size[last];
+				for (int i = 0; i < last; i++) {
+					int count = 1;
+					for (int j = i + 1; j < dimension; j++) {
+						count *= size[j];
+					}
+					uniCounterOffset[i] = count;
+					tS *= size[i];
+				}
+				uniCounterOffset[last] = 0;
+
+				totalSize = tS;
+			}
+		}
+
+		/**
+		 * Get the number of dimensions of the multidimensional counter.
+		 *
+		 * @return the number of dimensions.
+		 */
+		public int getDimension() {
+			return dimension;
+		}
+
+		/**
+		 * Convert to multidimensional counter.
+		 *
+		 * @param index
+		 * 		Index in unidimensional counter.
+		 *
+		 * @return the multidimensional counts.
+		 *
+		 * @throws OutOfRangeException
+		 * 		if {@code index} is not between
+		 * 		{@code 0} and the value returned by {@link #getSize()} (excluded).
+		 */
+		public int[] getCounts(int index) throws OutOfRangeException {
+			if (index < 0 ||
+					index >= totalSize) {
+				throw new OutOfRangeException(index, 0, totalSize);
+			}
+
+			final int[] indices = new int[dimension];
+
+			int count = 0;
+			for (int i = 0; i < last; i++) {
+				int idx = 0;
+				final int offset = uniCounterOffset[i];
+				while (count <= index) {
+					count += offset;
+					++idx;
+				}
+				--idx;
+				count -= offset;
+				indices[i] = idx;
+			}
+
+			indices[last] = index - count;
+
+			return indices;
+		}
+
+
+		/**
+		 * Convert to unidimensional counter.
+		 *
+		 * @param c
+		 * 		Indices in multidimensional counter.
+		 *
+		 * @return the index within the unidimensionl counter.
+		 *
+		 * @throws DimensionMismatchException
+		 * 		if the size of {@code c}
+		 * 		does not match the size of the array given in the constructor.
+		 * @throws OutOfRangeException
+		 * 		if a value of {@code c} is not in
+		 * 		the range of the corresponding dimension, as defined in the
+		 * 		{@link org.apache.commons.math3.util.MultidimensionalCounter#MultidimensionalCounter(int...) constructor}.
+		 */
+		public int getCount(int... c)
+				throws OutOfRangeException, DimensionMismatchException {
+			if (c.length != dimension || dimension == 0) {
+				throw new DimensionMismatchException(c.length, dimension);
+			}
+			int count = 0;
+			for (int i = 0; i < dimension; i++) {
+				final int index = c[i];
+				if (index < 0 ||
+						index >= size[i]) {
+					throw new OutOfRangeException(index, 0, size[i] - 1);
+				}
+				count += uniCounterOffset[i] * c[i];
+			}
+			return count + c[last];
+		}
+
+		/**
+		 * Get the total number of elements.
+		 *
+		 * @return the total size of the unidimensional counter.
+		 */
+		public int getSize() {
+			return totalSize;
+		}
+
+		/**
+		 * Get the number of multidimensional counter slots in each dimension.
+		 *
+		 * @return the sizes of the multidimensional counter in each dimension.
+		 */
+		public int[] getSizes() {
+			return Arrays.copyOf(size, size.length);
+		}
+
+		/**
+		 * {@inheritDoc}
+		 */
+		@Override
+		public String toString() {
+			final StringBuilder sb = new StringBuilder();
+			for (int i = 0; i < dimension; i++) {
+				sb.append("[").append(getCount(i)).append("]");
+			}
+			return sb.toString();
+		}
 	}
 }

@@ -163,14 +163,26 @@ public class ArrayStructImpl<TYPE extends LispStruct> extends BuiltInClassStruct
 	                                                            final ArrayStruct<T> displacedTo,
 	                                                            final IntegerStruct displacedIndexOffset,
 	                                                            final BooleanStruct isAdjustable) {
+
+		// Error: Requested size is too large to displace to #<ARRAY 0-dimensional, simple> .
+
+
 		final List<Integer> dimensionInts = dimensions.stream()
 		                                              .map(IntegerStruct::intValue)
 		                                              .collect(Collectors.toList());
 
+		final int totalSize = dimensionInts.stream()
+		                                   .mapToInt(Integer::intValue)
+		                                   .reduce(1, (x, y) -> x * y);
+		final int offsetInt = displacedIndexOffset.intValue();
+		if (offsetInt > totalSize) {
+			throw new ErrorException("Requested size is too large to displace to " + displacedTo + '.');
+		}
+
 		// TODO: Total size of A be no smaller than the sum of the total size of B plus the offset 'n' supplied by the offset
 
 		return new ArrayStructImpl<>(ArrayType.INSTANCE, dimensionInts, elementType, displacedTo,
-		                             displacedIndexOffset.intValue(), isAdjustable.booleanValue());
+		                             offsetInt, isAdjustable.booleanValue());
 	}
 
 	public static <T extends LispStruct> ArrayStruct<T> valueOf(final List<IntegerStruct> dimensions,

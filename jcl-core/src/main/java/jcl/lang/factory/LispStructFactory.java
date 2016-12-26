@@ -57,13 +57,13 @@ import jcl.lang.TwoWayStreamStruct;
 import jcl.lang.URLStreamStruct;
 import jcl.lang.VectorStruct;
 import jcl.lang.condition.exception.ErrorException;
-import jcl.lang.internal.ArrayStructImpl;
 import jcl.lang.internal.BitVectorStructImpl;
 import jcl.lang.internal.CharacterStructImpl;
 import jcl.lang.internal.ConsStructImpl;
 import jcl.lang.internal.HashTableStructImpl;
 import jcl.lang.internal.KeywordStructImpl;
 import jcl.lang.internal.LogicalPathnameStructImpl;
+import jcl.lang.internal.MultiArrayStructImpl;
 import jcl.lang.internal.PackageStructImpl;
 import jcl.lang.internal.PathnameStructImpl;
 import jcl.lang.internal.StringStructImpl;
@@ -125,7 +125,7 @@ public final class LispStructFactory {
 		final List<IntegerStruct> dimensionStructs = dimensions.stream()
 		                                                       .map(IntegerStructImpl::valueOf)
 		                                                       .collect(Collectors.toList());
-		return ArrayStructImpl.valueOf(dimensionStructs, contents);
+		return MultiArrayStructImpl.valueOf(dimensionStructs, contents);
 	}
 
 	/*

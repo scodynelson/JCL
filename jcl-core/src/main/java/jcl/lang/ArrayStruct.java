@@ -2,7 +2,14 @@ package jcl.lang;
 
 import java.util.List;
 
+import jcl.type.BaseCharType;
+import jcl.type.BitType;
+import jcl.type.CharacterType;
+import jcl.type.ExtendedCharType;
 import jcl.type.LispType;
+import jcl.type.NILType;
+import jcl.type.StandardCharType;
+import jcl.type.TType;
 
 /**
  * The {@link ArrayStruct} is the object representation of a Lisp 'array' type.
@@ -68,6 +75,22 @@ public interface ArrayStruct<TYPE extends LispStruct> extends LispStruct {
 	IntegerStruct arrayTotalSize();
 
 	TYPE rowMajorAref(final IntegerStruct index);
+
+	static LispType upgradedArrayElementType(final LispType type) {
+		if (CharacterType.INSTANCE.equals(type)
+				|| BaseCharType.INSTANCE.equals(type)
+				|| StandardCharType.INSTANCE.equals(type)
+				|| ExtendedCharType.INSTANCE.equals(type)) {
+			return CharacterType.INSTANCE;
+		}
+		if (BitType.INSTANCE.equals(type)) {
+			return BitType.INSTANCE;
+		}
+		if (NILType.INSTANCE.equals(type)) {
+			return NILType.INSTANCE;
+		}
+		return TType.INSTANCE;
+	}
 
 	// =================
 

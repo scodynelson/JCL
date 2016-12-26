@@ -9,12 +9,18 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import jcl.lang.ArrayStruct;
+import jcl.lang.BooleanStruct;
 import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
+import jcl.lang.ListStruct;
 import jcl.lang.NILStruct;
+import jcl.lang.SequenceStruct;
+import jcl.lang.TStruct;
 import jcl.lang.VectorStruct;
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
+import jcl.lang.factory.LispStructFactory;
 import jcl.lang.internal.number.IntegerStructImpl;
 import jcl.lang.statics.PrinterVariables;
 import jcl.type.LispType;
@@ -30,7 +36,11 @@ import jcl.type.VectorType;
  */
 public class VectorStructImpl<TYPE extends LispStruct> extends ArrayStructImpl<TYPE> implements VectorStruct<TYPE> {
 
-	Integer fillPointer;
+	protected Integer totalSize;
+
+	protected List<TYPE> contents;
+
+	protected Integer fillPointer;
 
 	/**
 	 * Protected constructor.
@@ -50,8 +60,10 @@ public class VectorStructImpl<TYPE extends LispStruct> extends ArrayStructImpl<T
 	 */
 	VectorStructImpl(final VectorType vectorType, final Integer size, final LispType elementType,
 	                 final List<TYPE> contents, final boolean isAdjustable, final Integer fillPointer) {
-		super(vectorType, Collections.singletonList(size), elementType, contents, isAdjustable);
+		super(vectorType, elementType, isAdjustable);
 
+		totalSize = size;
+		this.contents = contents;
 		this.fillPointer = fillPointer;
 	}
 
@@ -165,6 +177,137 @@ public class VectorStructImpl<TYPE extends LispStruct> extends ArrayStructImpl<T
 		contents.set(fillPointer, element);
 		return IntegerStructImpl.valueOf(previousFillPointer);
 	}
+
+	/*
+	ARRAY-STRUCT
+	 */
+
+	@Override
+	public ArrayStruct<TYPE> adjustArray(final List<IntegerStruct> dimensions, final LispType elementType,
+	                                     final TYPE initialElement, final BooleanStruct isAdjustable) {
+		return null;
+	}
+
+	@Override
+	public ArrayStruct<TYPE> adjustArray(final List<IntegerStruct> dimensions, final LispType elementType,
+	                                     final SequenceStruct initialContents, final BooleanStruct isAdjustable) {
+		return null;
+	}
+
+	@Override
+	public ArrayStruct<TYPE> adjustArray(final List<IntegerStruct> dimensions, final LispType elementType,
+	                                     final ArrayStruct<TYPE> displacedTo, final IntegerStruct displacedIndexOffset,
+	                                     final BooleanStruct isAdjustable) {
+		return null;
+	}
+
+	@Override
+	public ArrayStruct<TYPE> adjustArray(final List<IntegerStruct> dimensions, final LispType elementType,
+	                                     final TYPE initialElement) {
+		return null;
+	}
+
+	@Override
+	public ArrayStruct<TYPE> adjustArray(final List<IntegerStruct> dimensions, final LispType elementType,
+	                                     final SequenceStruct initialContents) {
+		return null;
+	}
+
+	@Override
+	public TYPE aref(final IntegerStruct... subscripts) {
+		final int rowMajorIndex = rowMajorIndexInternal(subscripts);
+		return contents.get(rowMajorIndex);
+	}
+
+	@Override
+	public TYPE setfAref(final TYPE newElement, final IntegerStruct... subscripts) {
+		final int rowMajorIndex = rowMajorIndexInternal(subscripts);
+		contents.set(rowMajorIndex, newElement);
+		return newElement;
+	}
+
+	@Override
+	public IntegerStruct arrayDimension(final IntegerStruct axisNumber) {
+		if (!IntegerStruct.ZERO.eq(axisNumber)) {
+			throw new ErrorException("Subscript " + axisNumber + " is out of bounds for " + this + '.');
+		}
+		return IntegerStructImpl.valueOf(totalSize);
+	}
+
+	@Override
+	public ListStruct arrayDimensions() {
+		final IntegerStruct size = IntegerStructImpl.valueOf(totalSize);
+		return LispStructFactory.toProperList(size);
+	}
+
+	@Override
+	public BooleanStruct arrayHasFillPointerP() {
+		return LispStructFactory.toBoolean(fillPointer != null);
+	}
+
+	@Override
+	public BooleanStruct arrayInBoundsP(final IntegerStruct... subscripts) {
+		try {
+			rowMajorIndexInternal(subscripts);
+			return TStruct.INSTANCE;
+		} catch (final ErrorException ignore) {
+			return NILStruct.INSTANCE;
+		}
+	}
+
+	@Override
+	public IntegerStruct arrayRank() {
+		return IntegerStruct.ONE;
+	}
+
+	@Override
+	public IntegerStruct arrayRowMajorIndex(final IntegerStruct... subscripts) {
+		final int rowMajorIndex = rowMajorIndexInternal(subscripts);
+		return IntegerStructImpl.valueOf(rowMajorIndex);
+	}
+
+	@Override
+	public IntegerStruct arrayTotalSize() {
+		return IntegerStructImpl.valueOf(totalSize);
+	}
+
+	@Override
+	public TYPE rowMajorAref(final IntegerStruct index) {
+		final int indexInt = index.intValue();
+		if ((indexInt < 0) || (indexInt >= totalSize)) {
+			throw new ErrorException("Index " + index + " is out of bounds for " + this + '.');
+		}
+		return contents.get(indexInt);
+	}
+
+	private int rowMajorIndexInternal(final IntegerStruct... subscripts) {
+		final int numberOfSubscripts = subscripts.length;
+
+		if (numberOfSubscripts != 1) {
+			throw new ErrorException(
+					"Wrong number of subscripts, " + numberOfSubscripts + ", for array of rank 1.");
+		}
+
+		final int subscript = subscripts[0].intValue();
+		if ((subscript < 0) || (subscript >= totalSize)) {
+			throw new ErrorException("Subscript " + subscript + " is out of bounds for " + this + '.');
+		}
+		return subscript;
+	}
+
+// =================
+
+	@Override
+	public List<TYPE> getContents() {
+		return contents;
+	}
+
+	@Override
+	public List<Integer> getDimensions() {
+		return Collections.singletonList(totalSize);
+	}
+
+// =================
 
 	/*
 	ITERABLE

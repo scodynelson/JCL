@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import jcl.lang.ArrayStruct;
 import jcl.lang.BitArrayStruct;
 import jcl.lang.BooleanStruct;
 import jcl.lang.IntegerStruct;
@@ -17,39 +18,18 @@ import jcl.type.BitType;
 import jcl.type.SimpleArrayType;
 
 /**
- * The {@link BitArrayStructImpl} is the object representation of a Lisp 'bit-array' type.
+ * The {@link MultiBitArrayStructImpl} is the object representation of a Lisp 'bit-array' type.
  */
-public class BitArrayStructImpl extends ArrayStructImpl<IntegerStruct> implements BitArrayStruct {
+public class MultiBitArrayStructImpl extends MultiArrayStructImpl<IntegerStruct> implements BitArrayStruct {
 
-	/**
-	 * Protected constructor.
-	 *
-	 * @param arrayType
-	 * 		the array type
-	 * @param dimensions
-	 * 		the array dimensions
-	 * @param contents
-	 * 		the array contents
-	 * @param isAdjustable
-	 */
-	BitArrayStructImpl(final ArrayType arrayType, final List<Integer> dimensions,
-	                   final List<IntegerStruct> contents, final boolean isAdjustable) {
+	private MultiBitArrayStructImpl(final ArrayType arrayType, final List<Integer> dimensions,
+	                                final List<IntegerStruct> contents, final boolean isAdjustable) {
 		super(arrayType, dimensions, BitType.INSTANCE, contents, isAdjustable);
 	}
 
-	/**
-	 * Protected constructor.
-	 *
-	 * @param arrayType
-	 * 		the array type
-	 * @param dimensions
-	 * 		the array dimensions
-	 * @param isAdjustable
-	 * 		whether or not the array is adjustable
-	 */
-	BitArrayStructImpl(final ArrayType arrayType, final List<Integer> dimensions,
-	                   final BitArrayStruct displacedTo, final Integer displacedIndexOffset,
-	                   final boolean isAdjustable) {
+	private MultiBitArrayStructImpl(final ArrayType arrayType, final List<Integer> dimensions,
+	                                final ArrayStruct<IntegerStruct> displacedTo, final Integer displacedIndexOffset,
+	                                final boolean isAdjustable) {
 		super(arrayType, dimensions, BitType.INSTANCE, displacedTo, displacedIndexOffset, isAdjustable);
 	}
 
@@ -67,7 +47,7 @@ public class BitArrayStructImpl extends ArrayStructImpl<IntegerStruct> implement
 
 		final boolean adjustableBoolean = isAdjustable.booleanValue();
 		final ArrayType arrayType = getArrayType(adjustableBoolean);
-		return new BitArrayStructImpl(arrayType, dimensionInts, initialContents, adjustableBoolean);
+		return new MultiBitArrayStructImpl(arrayType, dimensionInts, initialContents, adjustableBoolean);
 	}
 
 	public static BitArrayStruct valueOf(final List<IntegerStruct> dimensions, final SequenceStruct initialContents,
@@ -79,7 +59,7 @@ public class BitArrayStructImpl extends ArrayStructImpl<IntegerStruct> implement
 
 		final boolean adjustableBoolean = isAdjustable.booleanValue();
 		final ArrayType arrayType = getArrayType(adjustableBoolean);
-		return new BitArrayStructImpl(arrayType, dimensionInts, validContents, adjustableBoolean);
+		return new MultiBitArrayStructImpl(arrayType, dimensionInts, validContents, adjustableBoolean);
 	}
 
 	public static BitArrayStruct valueOf(final List<IntegerStruct> dimensions, final BitArrayStruct displacedTo,
@@ -90,8 +70,9 @@ public class BitArrayStructImpl extends ArrayStructImpl<IntegerStruct> implement
 
 		// TODO: Total size of A be no smaller than the sum of the total size of B plus the offset 'n' supplied by the offset
 
-		return new BitArrayStructImpl(ArrayType.INSTANCE, dimensionInts, displacedTo, displacedIndexOffset.intValue(),
-		                              isAdjustable.booleanValue());
+		return new MultiBitArrayStructImpl(ArrayType.INSTANCE, dimensionInts, displacedTo,
+		                                   displacedIndexOffset.intValue(),
+		                                   isAdjustable.booleanValue());
 	}
 
 	public static BitArrayStruct valueOf(final List<IntegerStruct> dimensions, final IntegerStruct initialElement) {
@@ -105,7 +86,7 @@ public class BitArrayStructImpl extends ArrayStructImpl<IntegerStruct> implement
 		                                                  .limit(totalSize)
 		                                                  .collect(Collectors.toList());
 
-		return new BitArrayStructImpl(SimpleArrayType.INSTANCE, dimensionInts, initialContents, false);
+		return new MultiBitArrayStructImpl(SimpleArrayType.INSTANCE, dimensionInts, initialContents, false);
 	}
 
 	public static BitArrayStruct valueOf(final List<IntegerStruct> dimensions, final SequenceStruct initialContents) {
@@ -114,7 +95,7 @@ public class BitArrayStructImpl extends ArrayStructImpl<IntegerStruct> implement
 		                                              .collect(Collectors.toList());
 		final List<IntegerStruct> validContents = getValidContents(dimensionInts, initialContents);
 
-		return new BitArrayStructImpl(SimpleArrayType.INSTANCE, dimensionInts, validContents, false);
+		return new MultiBitArrayStructImpl(SimpleArrayType.INSTANCE, dimensionInts, validContents, false);
 	}
 
 	/**
@@ -171,6 +152,11 @@ public class BitArrayStructImpl extends ArrayStructImpl<IntegerStruct> implement
 
 	@Override
 	public BitArrayStruct copyBitArray() {
-		return new BitArrayStructImpl(getArrayType(isAdjustable), dimensions, contents, isAdjustable);
+		if (displacedTo == null) {
+			return new MultiBitArrayStructImpl(getArrayType(isAdjustable), dimensions, contents, isAdjustable);
+		} else {
+			return new MultiBitArrayStructImpl(getArrayType(isAdjustable), dimensions, displacedTo,
+			                                   displacedIndexOffset, isAdjustable);
+		}
 	}
 }

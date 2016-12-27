@@ -84,31 +84,13 @@ public class NILArrayStructImpl<TYPE extends LispStruct> extends ArrayStructImpl
 	}
 
 	public static <T extends LispStruct> ArrayStruct<T> valueOf(final LispType elementType, final T initialElement) {
-		final LispType upgradedET = ArrayStruct.upgradedArrayElementType(elementType);
-
-		final LispType initialElementType = initialElement.getType();
-		if (!initialElementType.equals(upgradedET) && !upgradedET.equals(initialElementType)) {
-			throw new TypeErrorException(
-					"Provided element " + initialElement + " is not a subtype of the upgraded-array-element-type " + upgradedET + '.');
-		}
-
-		return new NILArrayStructImpl<>(SimpleArrayType.INSTANCE, upgradedET, initialElement, false);
+		return valueOf(elementType, initialElement, NILStruct.INSTANCE);
 	}
 
 	@SuppressWarnings("unchecked")
 	public static <T extends LispStruct> ArrayStruct<T> valueOf(final LispType elementType,
 	                                                            final SequenceStruct initialContents) {
-		final LispType upgradedET = ArrayStruct.upgradedArrayElementType(elementType);
-
-		for (final LispStruct initialElement : initialContents) {
-			final LispType initialElementType = initialElement.getType();
-			if (!initialElementType.equals(upgradedET) && !upgradedET.equals(initialElementType)) {
-				throw new TypeErrorException(
-						"Provided element " + initialElement + " is not a subtype of the upgraded-array-element-type " + upgradedET + '.');
-			}
-		}
-
-		return new NILArrayStructImpl<>(SimpleArrayType.INSTANCE, upgradedET, (T) initialContents, false);
+		return valueOf(elementType, initialContents, NILStruct.INSTANCE);
 	}
 
 	@Override

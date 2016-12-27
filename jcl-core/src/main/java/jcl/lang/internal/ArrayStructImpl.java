@@ -64,7 +64,7 @@ public abstract class ArrayStructImpl<TYPE extends LispStruct> extends BuiltInCl
 	 *
 	 * @return the matching array type for the provided {@link #isAdjustable} value
 	 */
-	static ArrayType getArrayType(final boolean isAdjustable) {
+	protected static ArrayType getArrayType(final boolean isAdjustable) {
 		return isAdjustable ? ArrayType.INSTANCE : SimpleArrayType.INSTANCE;
 	}
 

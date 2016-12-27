@@ -15,7 +15,6 @@ import jcl.lang.ListStruct;
 import jcl.lang.NILStruct;
 import jcl.lang.SequenceStruct;
 import jcl.lang.TStruct;
-import jcl.lang.ValuesStruct;
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.factory.LispStructFactory;
@@ -31,21 +30,21 @@ import org.apache.commons.math3.exception.OutOfRangeException;
 
 public class MultiArrayStructImpl<TYPE extends LispStruct> extends ArrayStructImpl<TYPE> {
 
-	protected List<TYPE> contents;
+	protected MultidimensionalCounter multidimensionalCounter;
 
 	protected List<Integer> dimensions;
 
-	protected MultidimensionalCounter multidimensionalCounter;
+	protected List<TYPE> contents;
 
 	protected MultiArrayStructImpl(final ArrayType arrayType, final List<Integer> dimensions,
-	                               final LispType elementType, final List<TYPE> contents, final boolean isAdjustable) {
+	                               final LispType elementType, final List<TYPE> contents,
+	                               final boolean isAdjustable) {
 		super(arrayType, elementType, isAdjustable);
 
 		final int[] dimensionArray = dimensions.stream()
 		                                       .mapToInt(Integer::intValue)
 		                                       .toArray();
 		multidimensionalCounter = new MultidimensionalCounter(dimensionArray);
-
 		this.dimensions = dimensions;
 		this.contents = contents;
 	}
@@ -59,7 +58,6 @@ public class MultiArrayStructImpl<TYPE extends LispStruct> extends ArrayStructIm
 		                                       .mapToInt(Integer::intValue)
 		                                       .toArray();
 		multidimensionalCounter = new MultidimensionalCounter(dimensionArray);
-
 		this.dimensions = dimensions;
 		contents = null;
 	}
@@ -68,6 +66,14 @@ public class MultiArrayStructImpl<TYPE extends LispStruct> extends ArrayStructIm
 	                                                            final LispType elementType,
 	                                                            final T initialElement,
 	                                                            final BooleanStruct isAdjustable) {
+		final int rank = dimensions.size();
+		if (rank == 0) {
+			throw new IllegalStateException("Construct NILArray instead of MultiArray for a 0-rank array.");
+		}
+		if (rank == 1) {
+			throw new IllegalStateException("Construct Vector instead of MultiArray for a 1-rank array.");
+		}
+
 		final List<Integer> dimensionInts = dimensions.stream()
 		                                              .map(IntegerStruct::intValue)
 		                                              .collect(Collectors.toList());
@@ -94,6 +100,14 @@ public class MultiArrayStructImpl<TYPE extends LispStruct> extends ArrayStructIm
 	                                                            final LispType elementType,
 	                                                            final SequenceStruct initialContents,
 	                                                            final BooleanStruct isAdjustable) {
+		final int rank = dimensions.size();
+		if (rank == 0) {
+			throw new IllegalStateException("Construct NILArray instead of MultiArray for a 0-rank array.");
+		}
+		if (rank == 1) {
+			throw new IllegalStateException("Construct Vector instead of MultiArray for a 1-rank array.");
+		}
+
 		final List<Integer> dimensionInts = dimensions.stream()
 		                                              .map(IntegerStruct::intValue)
 		                                              .collect(Collectors.toList());
@@ -109,6 +123,14 @@ public class MultiArrayStructImpl<TYPE extends LispStruct> extends ArrayStructIm
 	                                                            final ArrayStruct<T> displacedTo,
 	                                                            final IntegerStruct displacedIndexOffset,
 	                                                            final BooleanStruct isAdjustable) {
+		final int rank = dimensions.size();
+		if (rank == 0) {
+			throw new IllegalStateException("Construct NILArray instead of MultiArray for a 0-rank array.");
+		}
+		if (rank == 1) {
+			throw new IllegalStateException("Construct Vector instead of MultiArray for a 1-rank array.");
+		}
+
 
 		// Error: Requested size is too large to displace to #<ARRAY 0-dimensional, simple> .
 
@@ -134,35 +156,13 @@ public class MultiArrayStructImpl<TYPE extends LispStruct> extends ArrayStructIm
 	public static <T extends LispStruct> ArrayStruct<T> valueOf(final List<IntegerStruct> dimensions,
 	                                                            final LispType elementType,
 	                                                            final T initialElement) {
-		final List<Integer> dimensionInts = dimensions.stream()
-		                                              .map(IntegerStruct::intValue)
-		                                              .collect(Collectors.toList());
-
-		final LispType initialElementType = initialElement.getType();
-		if (!initialElementType.equals(elementType) && !elementType.equals(initialElementType)) {
-			throw new TypeErrorException(
-					"Provided element " + initialElement + " is not a subtype of the provided elementType " + elementType + '.');
-		}
-
-		final int totalSize = dimensionInts.stream()
-		                                   .mapToInt(Integer::intValue)
-		                                   .reduce(1, (x, y) -> x * y);
-		final List<T> initialContents = Stream.generate(() -> initialElement)
-		                                      .limit(totalSize)
-		                                      .collect(Collectors.toList());
-
-		return new MultiArrayStructImpl<>(SimpleArrayType.INSTANCE, dimensionInts, elementType, initialContents, false);
+		return valueOf(dimensions, elementType, initialElement, NILStruct.INSTANCE);
 	}
 
 	public static <T extends LispStruct> ArrayStruct<T> valueOf(final List<IntegerStruct> dimensions,
 	                                                            final LispType elementType,
 	                                                            final SequenceStruct initialContents) {
-		final List<Integer> dimensionInts = dimensions.stream()
-		                                              .map(IntegerStruct::intValue)
-		                                              .collect(Collectors.toList());
-		final List<T> validContents = getValidContents(dimensionInts, elementType, initialContents);
-
-		return new MultiArrayStructImpl<>(SimpleArrayType.INSTANCE, dimensionInts, elementType, validContents, false);
+		return valueOf(dimensions, elementType, initialContents, NILStruct.INSTANCE);
 	}
 
 	/*
@@ -176,10 +176,6 @@ public class MultiArrayStructImpl<TYPE extends LispStruct> extends ArrayStructIm
 		                                              .collect(Collectors.toList());
 
 		return new MultiArrayStructImpl<>(SimpleArrayType.INSTANCE, dimensionInts, TType.INSTANCE, contents, false);
-	}
-
-	static ArrayType getArrayType(final boolean isAdjustable) {
-		return isAdjustable ? ArrayType.INSTANCE : SimpleArrayType.INSTANCE;
 	}
 
 	/*
@@ -225,22 +221,6 @@ public class MultiArrayStructImpl<TYPE extends LispStruct> extends ArrayStructIm
 			return validContents;
 		}
 	*/
-	@SuppressWarnings("unchecked")
-	private static <TYPE extends LispStruct> List<TYPE> getValidContents(final LispType elementType,
-	                                                                     final SequenceStruct initialContents) {
-		final List<TYPE> validContents = new ArrayList<>();
-
-		for (final LispStruct current : initialContents) {
-			final LispType currentType = current.getType();
-			if (!currentType.equals(elementType) && !elementType.equals(currentType)) {
-				throw new TypeErrorException(
-						"Provided element " + current + " is not a subtype of the provided elementType " + elementType + '.');
-			} else {
-				validContents.add((TYPE) current);
-			}
-		}
-		return validContents;
-	}
 
 	private List<TYPE> dataVectorFromInits(final Integer totalSize,
 	                                       final List<TYPE> initialContents, final boolean initialContentsP,

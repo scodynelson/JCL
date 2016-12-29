@@ -280,6 +280,16 @@ public class VectorStructImpl<TYPE extends LispStruct> extends ArrayStructImpl<T
 		return contents.get(indexInt);
 	}
 
+	@Override
+	public TYPE setfRowMajorAref(final TYPE newElement, final IntegerStruct index) {
+		final int indexInt = index.intValue();
+		if ((indexInt < 0) || (indexInt >= totalSize)) {
+			throw new ErrorException("Index " + index + " is out of bounds for " + this + '.');
+		}
+		contents.set(indexInt, newElement);
+		return newElement;
+	}
+
 	private int rowMajorIndexInternal(final IntegerStruct... subscripts) {
 		final int numberOfSubscripts = subscripts.length;
 

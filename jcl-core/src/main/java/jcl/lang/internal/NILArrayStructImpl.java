@@ -13,10 +13,10 @@ import jcl.lang.SequenceStruct;
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.factory.LispStructFactory;
+import jcl.lang.internal.number.IntegerStructImpl;
 import jcl.lang.statics.PrinterVariables;
 import jcl.type.ArrayType;
 import jcl.type.LispType;
-import jcl.type.SimpleArrayType;
 
 public class NILArrayStructImpl<TYPE extends LispStruct> extends ArrayStructImpl<TYPE> {
 
@@ -72,13 +72,20 @@ public class NILArrayStructImpl<TYPE extends LispStruct> extends ArrayStructImpl
 	                                                            final ArrayStruct<T> displacedTo,
 	                                                            final IntegerStruct displacedIndexOffset,
 	                                                            final BooleanStruct isAdjustable) {
+
+		final LispType displacedToType = displacedTo.getType();
+		final LispType upgradedET = ArrayStruct.upgradedArrayElementType(elementType);
+		if (!displacedToType.equals(upgradedET) && !upgradedET.equals(displacedToType)) {
+			throw new TypeErrorException(
+					"Provided displaced to " + displacedTo + " is not an array with a subtype of the upgraded-array-element-type " + upgradedET + '.');
+		}
+
 		try {
 			displacedTo.rowMajorAref(displacedIndexOffset);
 		} catch (final ErrorException ignore) {
 			throw new ErrorException("Requested size is too large to displace to " + displacedTo + '.');
 		}
 
-		final LispType upgradedET = ArrayStruct.upgradedArrayElementType(elementType);
 		return new NILArrayStructImpl<>(ArrayType.INSTANCE, upgradedET, displacedTo, displacedIndexOffset.intValue(),
 		                                isAdjustable.booleanValue());
 	}
@@ -238,13 +245,25 @@ public class NILArrayStructImpl<TYPE extends LispStruct> extends ArrayStructImpl
 	@Override
 	public TYPE aref(final IntegerStruct... subscripts) {
 		validateSubscripts(subscripts);
-		return content;
+		if (displacedTo == null) {
+			return content;
+		}
+
+		// TODO: should the struct just stay persistent vs being unwrapped into an Integer???
+		final IntegerStruct displacedIndexOffsetStruct = IntegerStructImpl.valueOf(displacedIndexOffset);
+		return displacedTo.rowMajorAref(displacedIndexOffsetStruct);
 	}
 
 	@Override
 	public TYPE setfAref(final TYPE newElement, final IntegerStruct... subscripts) {
 		validateSubscripts(subscripts);
-		content = newElement;
+		if (displacedTo == null) {
+			content = newElement;
+		} else {
+			// TODO: should the struct just stay persistent vs being unwrapped into an Integer???
+			final IntegerStruct displacedIndexOffsetStruct = IntegerStructImpl.valueOf(displacedIndexOffset);
+			displacedTo.setfRowMajorAref(newElement, displacedIndexOffsetStruct);
+		}
 		return newElement;
 	}
 
@@ -286,10 +305,19 @@ public class NILArrayStructImpl<TYPE extends LispStruct> extends ArrayStructImpl
 
 	@Override
 	public TYPE rowMajorAref(final IntegerStruct index) {
-		if (!IntegerStruct.ZERO.equals(index)) {
+		if (!IntegerStruct.ZERO.eql(index)) {
 			throw new ErrorException("Index " + index + " is out of bounds for " + this + '.');
 		}
 		return content;
+	}
+
+	@Override
+	public TYPE setfRowMajorAref(final TYPE newElement, final IntegerStruct index) {
+		if (!IntegerStruct.ZERO.eql(index)) {
+			throw new ErrorException("Index " + index + " is out of bounds for " + this + '.');
+		}
+		content = newElement;
+		return newElement;
 	}
 
 	private static void validateSubscripts(final IntegerStruct... subscripts) {

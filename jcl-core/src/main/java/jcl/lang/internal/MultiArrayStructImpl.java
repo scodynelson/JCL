@@ -499,6 +499,17 @@ public class MultiArrayStructImpl<TYPE extends LispStruct> extends ArrayStructIm
 	public TYPE aref(final IntegerStruct... subscripts) {
 		final int rowMajorIndex = rowMajorIndexInternal(subscripts);
 		return contents.get(rowMajorIndex);
+
+//		validateSubscripts(subscripts);
+//		if (displacedTo == null) {
+//			return content;
+//		}
+//
+//		final IntegerStruct index = displacedTo.arrayRowMajorIndex(subscripts);
+//		// TODO: should the struct just stay persistent vs being unwrapped into an Integer???
+//		final IntegerStruct displacedIndexOffsetStruct = IntegerStructImpl.valueOf(displacedIndexOffset);
+//		final IntegerStruct indexWithOffset = (IntegerStruct) index.add(displacedIndexOffsetStruct);
+//		return displacedTo.rowMajorAref(displacedIndexOffsetStruct);
 	}
 
 	@Override
@@ -506,6 +517,18 @@ public class MultiArrayStructImpl<TYPE extends LispStruct> extends ArrayStructIm
 		final int rowMajorIndex = rowMajorIndexInternal(subscripts);
 		contents.set(rowMajorIndex, newElement);
 		return newElement;
+
+//		validateSubscripts(subscripts);
+//		if (displacedTo == null) {
+//			content = newElement;
+//		} else {
+//			final IntegerStruct index = displacedTo.arrayRowMajorIndex(subscripts);
+//			// TODO: should the struct just stay persistent vs being unwrapped into an Integer???
+//			final IntegerStruct displacedIndexOffsetStruct = IntegerStructImpl.valueOf(displacedIndexOffset);
+//			final IntegerStruct indexWithOffset = (IntegerStruct) index.add(displacedIndexOffsetStruct);
+//			displacedTo.setfRowMajorAref(newElement, indexWithOffset);
+//		}
+//		return newElement;
 	}
 
 	@Override
@@ -573,6 +596,18 @@ public class MultiArrayStructImpl<TYPE extends LispStruct> extends ArrayStructIm
 			throw new ErrorException("Index " + index + " is out of bounds for " + this + '.');
 		}
 		return contents.get(indexInt);
+	}
+
+	@Override
+	public TYPE setfRowMajorAref(final TYPE newElement, final IntegerStruct index) {
+		final int indexInt = index.intValue();
+		final int totalSize = multidimensionalCounter.getSize();
+		if (indexInt > totalSize) {
+			throw new ErrorException("Index " + index + " is out of bounds for " + this + '.');
+		}
+
+		contents.set(indexInt, newElement);
+		return newElement;
 	}
 
 	private int rowMajorIndexInternal(final IntegerStruct... subscripts) {

@@ -99,7 +99,7 @@ public class MultiArrayStructImplTest {
 	public void test_adjustableArrayP_True() {
 
 		final ArrayStruct<LispStruct> array
-				= MultiArrayStructImpl.valueOf(Collections.emptyList(),
+				= MultiArrayStructImpl.valueOf(Arrays.asList(IntegerStruct.TWO, IntegerStruct.TWO),
 				                               TType.INSTANCE,
 				                               IntegerStruct.ZERO,
 				                               TStruct.INSTANCE);
@@ -111,7 +111,7 @@ public class MultiArrayStructImplTest {
 	public void test_adjustableArrayP_False() {
 
 		final ArrayStruct<LispStruct> array
-				= MultiArrayStructImpl.valueOf(Collections.emptyList(),
+				= MultiArrayStructImpl.valueOf(Arrays.asList(IntegerStruct.TWO, IntegerStruct.TWO),
 				                               TType.INSTANCE,
 				                               IntegerStruct.ZERO,
 				                               NILStruct.INSTANCE);
@@ -219,7 +219,7 @@ public class MultiArrayStructImplTest {
 	public void test_arrayElementType() {
 		final BitType elementType = BitType.INSTANCE;
 		final ArrayStruct<LispStruct> array
-				= MultiArrayStructImpl.valueOf(Collections.emptyList(),
+				= MultiArrayStructImpl.valueOf(Arrays.asList(IntegerStruct.TWO, IntegerStruct.TWO),
 				                               elementType,
 				                               IntegerStruct.ZERO,
 				                               NILStruct.INSTANCE);
@@ -234,7 +234,7 @@ public class MultiArrayStructImplTest {
 	@Test
 	public void test_arrayHasFillPointerP() {
 		final ArrayStruct<LispStruct> array
-				= MultiArrayStructImpl.valueOf(Collections.emptyList(),
+				= MultiArrayStructImpl.valueOf(Arrays.asList(IntegerStruct.TWO, IntegerStruct.TWO),
 				                               TType.INSTANCE,
 				                               IntegerStruct.ZERO,
 				                               NILStruct.INSTANCE);

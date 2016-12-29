@@ -412,7 +412,8 @@ public interface NumberStruct extends LispStruct {
 	 */
 	@Override
 	default boolean eql(final LispStruct object) {
-		return equals(object);
+//		return equals(object);
+		return (object instanceof NumberStruct) && ((NumberStruct) object).ap().equals(ap());
 	}
 
 	/**

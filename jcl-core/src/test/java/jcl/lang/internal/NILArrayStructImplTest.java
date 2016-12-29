@@ -1,15 +1,23 @@
 package jcl.lang.internal;
 
+import java.util.Arrays;
+
 import jcl.lang.ArrayStruct;
 import jcl.lang.BooleanStruct;
 import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
 import jcl.lang.NILStruct;
+import jcl.lang.SequenceStruct;
 import jcl.lang.TStruct;
 import jcl.lang.condition.exception.ErrorException;
+import jcl.lang.condition.exception.TypeErrorException;
+import jcl.lang.factory.LispStructFactory;
+import jcl.type.ArrayType;
 import jcl.type.BitType;
 import jcl.type.LispType;
+import jcl.type.NILType;
+import jcl.type.SimpleArrayType;
 import jcl.type.TType;
 import org.junit.Assert;
 import org.junit.Rule;
@@ -25,37 +33,208 @@ public class NILArrayStructImplTest {
 	public final ExpectedException thrown = ExpectedException.none();
 
 	/*
-	Value-Of
+	Value-Of (LispType, T, BooleanStruct)
 	 */
 
 	@Test
-	public void valueOf() {
+	public void valueOf_IE_Adj_TypeError() {
+		thrown.expect(TypeErrorException.class);
+		thrown.expectMessage(containsString("is not a subtype of the upgraded-array-element-type"));
 
+		final IntegerStruct initialElement = IntegerStruct.ZERO;
+		NILArrayStructImpl.valueOf(NILType.INSTANCE,
+		                           initialElement,
+		                           NILStruct.INSTANCE);
 	}
 
 	@Test
-	public void valueOf1() {
+	public void valueOf_IE_Adj_IsAdj() {
 
+		final IntegerStruct initialElement = IntegerStruct.ZERO;
+		final ArrayStruct<LispStruct> array
+				= NILArrayStructImpl.valueOf(TType.INSTANCE,
+				                             initialElement,
+				                             TStruct.INSTANCE);
+		Assert.assertThat(array.getType(), is(ArrayType.INSTANCE));
+		Assert.assertThat(array.aref(), is(initialElement));
+		Assert.assertThat(array.adjustableArrayP(), is(TStruct.INSTANCE));
 	}
 
 	@Test
-	public void valueOf2() {
+	public void valueOf_IE_Adj_IsNotAdj() {
 
+		final IntegerStruct initialElement = IntegerStruct.ZERO;
+		final ArrayStruct<LispStruct> array
+				= NILArrayStructImpl.valueOf(TType.INSTANCE,
+				                             initialElement,
+				                             NILStruct.INSTANCE);
+		Assert.assertThat(array.getType(), is(SimpleArrayType.INSTANCE));
+		Assert.assertThat(array.aref(), is(initialElement));
+		Assert.assertThat(array.adjustableArrayP(), is(NILStruct.INSTANCE));
+	}
+
+	/*
+	Value-Of (LispType, SequenceStruct, BooleanStruct)
+	 */
+
+	@Test
+	public void valueOf_IC_Adj_TypeError() {
+		thrown.expect(TypeErrorException.class);
+		thrown.expectMessage(containsString("is not a subtype of the upgraded-array-element-type"));
+
+		final SequenceStruct initialContents = LispStructFactory.toProperList(IntegerStruct.ZERO);
+		NILArrayStructImpl.valueOf(NILType.INSTANCE,
+		                           initialContents,
+		                           NILStruct.INSTANCE);
 	}
 
 	@Test
-	public void valueOf3() {
+	public void valueOf_IC_Adj_IsAdj() {
 
+		final SequenceStruct initialContents = LispStructFactory.toProperList(IntegerStruct.ZERO);
+		final ArrayStruct<LispStruct> array
+				= NILArrayStructImpl.valueOf(TType.INSTANCE,
+				                             initialContents,
+				                             TStruct.INSTANCE);
+		Assert.assertThat(array.getType(), is(ArrayType.INSTANCE));
+		Assert.assertThat(array.aref(), is(initialContents));
+		Assert.assertThat(array.adjustableArrayP(), is(TStruct.INSTANCE));
 	}
 
 	@Test
-	public void valueOf4() {
+	public void valueOf_IC_Adj_IsNotAdj() {
 
+		final SequenceStruct initialContents = NILStruct.INSTANCE;
+		final ArrayStruct<LispStruct> array
+				= NILArrayStructImpl.valueOf(TType.INSTANCE,
+				                             initialContents,
+				                             NILStruct.INSTANCE);
+		Assert.assertThat(array.getType(), is(SimpleArrayType.INSTANCE));
+		Assert.assertThat(array.aref(), is(initialContents));
+		Assert.assertThat(array.adjustableArrayP(), is(NILStruct.INSTANCE));
+	}
+
+	/*
+	Value-Of (LispType, ArrayStruct<T>, IntegerStruct, BooleanStruct)
+	 */
+
+	@Test
+	public void valueOf_Disp_OutOfBounds() {
+		thrown.expect(ErrorException.class);
+		thrown.expectMessage(containsString("Requested size is too large to displace to"));
+
+		final ArrayStruct<LispStruct> displacedTo
+				= NILArrayStructImpl.valueOf(TType.INSTANCE,
+				                             IntegerStruct.ZERO,
+				                             NILStruct.INSTANCE);
+		NILArrayStructImpl.valueOf(TType.INSTANCE,
+		                           displacedTo,
+		                           IntegerStruct.ONE,
+		                           NILStruct.INSTANCE);
 	}
 
 	@Test
-	public void valueOf5() {
+	public void valueOf_Disp_TypeError() {
+		thrown.expect(TypeErrorException.class);
+		thrown.expectMessage(containsString("is not an array with a subtype of the upgraded-array-element-type"));
 
+		final ArrayStruct<LispStruct> displacedTo
+				= NILArrayStructImpl.valueOf(TType.INSTANCE,
+				                             IntegerStruct.ZERO,
+				                             NILStruct.INSTANCE);
+		NILArrayStructImpl.valueOf(NILType.INSTANCE,
+		                           displacedTo,
+		                           IntegerStruct.ZERO,
+		                           NILStruct.INSTANCE);
+	}
+
+	@Test
+	public void valueOf_Disp_IsAdj() {
+
+		final IntegerStruct initialElement = IntegerStruct.ZERO;
+		final ArrayStruct<LispStruct> displacedTo
+				= NILArrayStructImpl.valueOf(TType.INSTANCE,
+				                             initialElement,
+				                             NILStruct.INSTANCE);
+		final ArrayStruct<LispStruct> array
+				= NILArrayStructImpl.valueOf(TType.INSTANCE,
+				                             displacedTo,
+				                             IntegerStruct.ZERO,
+				                             TStruct.INSTANCE);
+		Assert.assertThat(array.getType(), is(ArrayType.INSTANCE));
+		Assert.assertThat(array.aref(), is(initialElement));
+		Assert.assertThat(array.adjustableArrayP(), is(TStruct.INSTANCE));
+	}
+
+	@Test
+	public void valueOf_Disp_IsNotAdj() {
+
+		final ArrayStruct<LispStruct> displacedTo
+				= VectorStructImpl.valueOf(2,
+				                           TType.INSTANCE,
+				                           Arrays.asList(IntegerStruct.TEN, IntegerStruct.TWO),
+				                           false,
+				                           null);
+		final ArrayStruct<LispStruct> array
+				= NILArrayStructImpl.valueOf(TType.INSTANCE,
+				                             displacedTo,
+				                             IntegerStruct.ONE,
+				                             NILStruct.INSTANCE);
+		Assert.assertThat(array.getType(), is(SimpleArrayType.INSTANCE));
+		Assert.assertThat(array.aref(), is(IntegerStruct.TWO));
+		Assert.assertThat(array.adjustableArrayP(), is(NILStruct.INSTANCE));
+	}
+
+	/*
+	Value-Of (LispType, T)
+	 */
+
+	@Test
+	public void valueOf_IE_TypeError() {
+		thrown.expect(TypeErrorException.class);
+		thrown.expectMessage(containsString("is not a subtype of the upgraded-array-element-type"));
+
+		final IntegerStruct initialElement = IntegerStruct.ZERO;
+		NILArrayStructImpl.valueOf(NILType.INSTANCE,
+		                           initialElement);
+	}
+
+	@Test
+	public void valueOf_IE() {
+
+		final IntegerStruct initialElement = IntegerStruct.ZERO;
+		final ArrayStruct<LispStruct> array
+				= NILArrayStructImpl.valueOf(TType.INSTANCE,
+				                             initialElement);
+		Assert.assertThat(array.getType(), is(SimpleArrayType.INSTANCE));
+		Assert.assertThat(array.aref(), is(initialElement));
+		Assert.assertThat(array.adjustableArrayP(), is(NILStruct.INSTANCE));
+	}
+
+	/*
+	Value-Of (LispType, SequenceStruct)
+	 */
+
+	@Test
+	public void valueOf_IC_TypeError() {
+		thrown.expect(TypeErrorException.class);
+		thrown.expectMessage(containsString("is not a subtype of the upgraded-array-element-type"));
+
+		final SequenceStruct initialContents = LispStructFactory.toProperList(IntegerStruct.ZERO);
+		NILArrayStructImpl.valueOf(NILType.INSTANCE,
+		                           initialContents);
+	}
+
+	@Test
+	public void valueOf_IC() {
+
+		final SequenceStruct initialContents = LispStructFactory.toProperList(IntegerStruct.ZERO);
+		final ArrayStruct<LispStruct> array
+				= NILArrayStructImpl.valueOf(TType.INSTANCE,
+				                             initialContents);
+		Assert.assertThat(array.getType(), is(SimpleArrayType.INSTANCE));
+		Assert.assertThat(array.aref(), is(initialContents));
+		Assert.assertThat(array.adjustableArrayP(), is(NILStruct.INSTANCE));
 	}
 
 	/*

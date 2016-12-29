@@ -76,6 +76,8 @@ public interface ArrayStruct<TYPE extends LispStruct> extends LispStruct {
 
 	TYPE rowMajorAref(final IntegerStruct index);
 
+	TYPE setfRowMajorAref(final TYPE newElement, final IntegerStruct index);
+
 	static LispType upgradedArrayElementType(final LispType type) {
 		if (CharacterType.INSTANCE.equals(type)
 				|| BaseCharType.INSTANCE.equals(type)

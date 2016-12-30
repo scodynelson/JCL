@@ -184,25 +184,6 @@ public class VectorStructImpl<TYPE extends LispStruct> extends ArrayStructImpl<T
 
 	@Override
 	public ArrayStruct<TYPE> adjustArray(final List<IntegerStruct> dimensions, final LispType elementType,
-	                                     final TYPE initialElement, final BooleanStruct isAdjustable) {
-		return null;
-	}
-
-	@Override
-	public ArrayStruct<TYPE> adjustArray(final List<IntegerStruct> dimensions, final LispType elementType,
-	                                     final SequenceStruct initialContents, final BooleanStruct isAdjustable) {
-		return null;
-	}
-
-	@Override
-	public ArrayStruct<TYPE> adjustArray(final List<IntegerStruct> dimensions, final LispType elementType,
-	                                     final ArrayStruct<TYPE> displacedTo, final IntegerStruct displacedIndexOffset,
-	                                     final BooleanStruct isAdjustable) {
-		return null;
-	}
-
-	@Override
-	public ArrayStruct<TYPE> adjustArray(final List<IntegerStruct> dimensions, final LispType elementType,
 	                                     final TYPE initialElement) {
 		return null;
 	}
@@ -210,6 +191,12 @@ public class VectorStructImpl<TYPE extends LispStruct> extends ArrayStructImpl<T
 	@Override
 	public ArrayStruct<TYPE> adjustArray(final List<IntegerStruct> dimensions, final LispType elementType,
 	                                     final SequenceStruct initialContents) {
+		return null;
+	}
+
+	@Override
+	public ArrayStruct<TYPE> adjustArray(final List<IntegerStruct> dimensions, final LispType elementType,
+	                                     final ArrayStruct<TYPE> displacedTo, final IntegerStruct displacedIndexOffset) {
 		return null;
 	}
 

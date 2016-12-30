@@ -102,97 +102,17 @@ public class NILArrayStructImpl<TYPE extends LispStruct> extends ArrayStructImpl
 
 	@Override
 	public ArrayStruct<TYPE> adjustArray(final List<IntegerStruct> dimensions, final LispType elementType,
-	                                     final TYPE initialElement, final BooleanStruct isAdjustable) {
-
-		if (!dimensions.isEmpty()) {
-			throw new ErrorException("Array cannot be adjusted to a different array dimension rank.");
-		}
-		final LispType upgradedET = ArrayStruct.upgradedArrayElementType(elementType);
-
-		final LispType initialElementType = initialElement.getType();
-		if (!initialElementType.equals(upgradedET) && !upgradedET.equals(initialElementType)) {
-			throw new TypeErrorException(
-					"Provided element " + initialElement + " is not a subtype of the upgraded-array-element-type " + upgradedET + '.');
-		}
-
-		if (this.isAdjustable) {
-			this.elementType = upgradedET;
-			content = initialElement;
-			this.isAdjustable = isAdjustable.booleanValue();
-			displacedTo = null;
-			displacedIndexOffset = 0;
-			return this;
-		} else {
-			return valueOf(upgradedET, initialElement);
-		}
-	}
-
-	@SuppressWarnings("unchecked")
-	@Override
-	public ArrayStruct<TYPE> adjustArray(final List<IntegerStruct> dimensions, final LispType elementType,
-	                                     final SequenceStruct initialContents, final BooleanStruct isAdjustable) {
-
-		if (!dimensions.isEmpty()) {
-			throw new ErrorException("Array cannot be adjusted to a different array dimension rank.");
-		}
-		final LispType upgradedET = ArrayStruct.upgradedArrayElementType(elementType);
-
-		for (final LispStruct initialElement : initialContents) {
-			final LispType initialElementType = initialElement.getType();
-			if (!initialElementType.equals(upgradedET) && !upgradedET.equals(initialElementType)) {
-				throw new TypeErrorException(
-						"Provided element " + initialElement + " is not a subtype of the upgraded-array-element-type " + upgradedET + '.');
-			}
-		}
-
-		if (this.isAdjustable) {
-			this.elementType = upgradedET;
-			content = (TYPE) initialContents;
-			this.isAdjustable = isAdjustable.booleanValue();
-			displacedTo = null;
-			displacedIndexOffset = 0;
-			return this;
-		} else {
-			return valueOf(upgradedET, initialContents, isAdjustable);
-		}
-	}
-
-	@Override
-	public ArrayStruct<TYPE> adjustArray(final List<IntegerStruct> dimensions, final LispType elementType,
-	                                     final ArrayStruct<TYPE> displacedTo, final IntegerStruct displacedIndexOffset,
-	                                     final BooleanStruct isAdjustable) {
-
-		if (!dimensions.isEmpty()) {
-			throw new ErrorException("Array cannot be adjusted to a different array dimension rank.");
-		}
-		final LispType upgradedET = ArrayStruct.upgradedArrayElementType(elementType);
-
-		try {
-			displacedTo.rowMajorAref(displacedIndexOffset);
-		} catch (final ErrorException ignore) {
-			throw new ErrorException("Requested size is too large to displace to " + displacedTo + '.');
-		}
-
-		if (this.isAdjustable) {
-			this.elementType = elementType;
-			content = null;
-			this.isAdjustable = isAdjustable.booleanValue();
-			this.displacedTo = displacedTo;
-			this.displacedIndexOffset = displacedIndexOffset.intValue();
-			return this;
-		} else {
-			return valueOf(upgradedET, displacedTo, displacedIndexOffset, isAdjustable);
-		}
-	}
-
-	@Override
-	public ArrayStruct<TYPE> adjustArray(final List<IntegerStruct> dimensions, final LispType elementType,
 	                                     final TYPE initialElement) {
 
 		if (!dimensions.isEmpty()) {
 			throw new ErrorException("Array cannot be adjusted to a different array dimension rank.");
 		}
 		final LispType upgradedET = ArrayStruct.upgradedArrayElementType(elementType);
+
+		if (!this.elementType.equals(upgradedET) || !upgradedET.equals(this.elementType)) {
+			throw new TypeErrorException(
+					"Provided upgraded-array-element-type " + upgradedET + " must be the same as initial upgraded-array-element-type " + this.elementType + '.');
+		}
 
 		final LispType initialElementType = initialElement.getType();
 		if (!initialElementType.equals(upgradedET) && !upgradedET.equals(initialElementType)) {
@@ -203,7 +123,6 @@ public class NILArrayStructImpl<TYPE extends LispStruct> extends ArrayStructImpl
 		if (isAdjustable) {
 			this.elementType = upgradedET;
 			content = initialElement;
-			isAdjustable = false;
 			displacedTo = null;
 			displacedIndexOffset = 0;
 			return this;
@@ -222,6 +141,11 @@ public class NILArrayStructImpl<TYPE extends LispStruct> extends ArrayStructImpl
 		}
 		final LispType upgradedET = ArrayStruct.upgradedArrayElementType(elementType);
 
+		if (!this.elementType.equals(upgradedET) || !upgradedET.equals(this.elementType)) {
+			throw new TypeErrorException(
+					"Provided upgraded-array-element-type " + upgradedET + " must be the same as initial upgraded-array-element-type " + this.elementType + '.');
+		}
+
 		for (final LispStruct initialElement : initialContents) {
 			final LispType initialElementType = initialElement.getType();
 			if (!initialElementType.equals(upgradedET) && !upgradedET.equals(initialElementType)) {
@@ -233,12 +157,49 @@ public class NILArrayStructImpl<TYPE extends LispStruct> extends ArrayStructImpl
 		if (isAdjustable) {
 			this.elementType = upgradedET;
 			content = (TYPE) initialContents;
-			isAdjustable = false;
 			displacedTo = null;
 			displacedIndexOffset = 0;
 			return this;
 		} else {
 			return valueOf(upgradedET, initialContents);
+		}
+	}
+
+	@Override
+	public ArrayStruct<TYPE> adjustArray(final List<IntegerStruct> dimensions, final LispType elementType,
+	                                     final ArrayStruct<TYPE> displacedTo,
+	                                     final IntegerStruct displacedIndexOffset) {
+
+		if (!dimensions.isEmpty()) {
+			throw new ErrorException("Array cannot be adjusted to a different array dimension rank.");
+		}
+		final LispType upgradedET = ArrayStruct.upgradedArrayElementType(elementType);
+
+		if (!this.elementType.equals(upgradedET) || !upgradedET.equals(this.elementType)) {
+			throw new TypeErrorException(
+					"Provided upgraded-array-element-type " + upgradedET + " must be the same as initial upgraded-array-element-type " + this.elementType + '.');
+		}
+
+		final LispType initialElementType = displacedTo.arrayElementType();
+		if (!initialElementType.equals(upgradedET) || !upgradedET.equals(initialElementType)) {
+			throw new TypeErrorException(
+					"Provided array for displacement " + displacedTo + " is not a subtype of the upgraded-array-element-type " + upgradedET + '.');
+		}
+
+		try {
+			displacedTo.rowMajorAref(displacedIndexOffset);
+		} catch (final ErrorException ignore) {
+			throw new ErrorException("Requested size is too large to displace to " + displacedTo + '.');
+		}
+
+		if (isAdjustable) {
+			this.elementType = elementType;
+			content = null;
+			this.displacedTo = displacedTo;
+			this.displacedIndexOffset = displacedIndexOffset.intValue();
+			return this;
+		} else {
+			return valueOf(upgradedET, displacedTo, displacedIndexOffset, NILStruct.INSTANCE);
 		}
 	}
 

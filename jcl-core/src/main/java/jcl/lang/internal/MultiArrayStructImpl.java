@@ -333,97 +333,85 @@ public class MultiArrayStructImpl<TYPE extends LispStruct> extends ArrayStructIm
 		return result;
 	}
 
-	@Override
-	public ArrayStruct<TYPE> adjustArray(final List<IntegerStruct> dimensions, final LispType elementType,
-	                                     final TYPE initialElement, final BooleanStruct isAdjustable) {
-
-		if (this.dimensions.size() != dimensions.size()) {
-			throw new ErrorException("Array cannot be adjusted to a different array dimension rank.");
-		}
-
-//		final int oldTotalSize;
-//		if (dimensions.isEmpty()) {
-//			oldTotalSize = 0;
-//		} else if (multidimensionalCounter == null) {
-//			oldTotalSize = this.dimensions.get(0);
-//		} else {
-//			oldTotalSize = multidimensionalCounter.getSize();
+//	@Override
+//	public ArrayStruct<TYPE> adjustArray(final List<IntegerStruct> dimensions, final LispType elementType,
+//	                                     final TYPE initialElement, final BooleanStruct isAdjustable) {
+//
+//		if (this.dimensions.size() != dimensions.size()) {
+//			throw new ErrorException("Array cannot be adjusted to a different array dimension rank.");
 //		}
-		final int oldTotalSize = multidimensionalCounter.getSize();
-
-		final int[] dimensionArray = dimensions.stream()
-		                                       .mapToInt(IntegerStruct::intValue)
-		                                       .toArray();
-		final MultidimensionalCounter newMultidimensionalCounter = new MultidimensionalCounter(dimensionArray);
-		final int newTotalSize = newMultidimensionalCounter.getSize();
-
-		List<TYPE> newData;
-		if ((displacedTo != null) || (newTotalSize > oldTotalSize)) {
-			newData = dataVectorFromInits(newTotalSize, null, false, initialElement, true);
-		} else {
-			newData = contents;
-		}
-
-		final List<Integer> newDims = dimensions.stream().map(IntegerStruct::intValue).collect(Collectors.toList());
-		zapArrayData(contents, this.dimensions, displacedIndexOffset, newData, newDims, newTotalSize, elementType,
-		             initialElement, true);
-
-		this.contents = newData;
-		this.multidimensionalCounter = newMultidimensionalCounter;
-		this.isAdjustable = isAdjustable.booleanValue();
-		this.displacedTo = null;
-		this.displacedIndexOffset = 0;
-		this.dimensions = newDims;
-
-		return this;
-	}
-
-	@Override
-	public ArrayStruct<TYPE> adjustArray(final List<IntegerStruct> dimensions, final LispType elementType,
-	                                     final SequenceStruct initialContents, final BooleanStruct isAdjustable) {
-
-		if (this.dimensions.size() != dimensions.size()) {
-			throw new ErrorException("Array cannot be adjusted to a different array dimension rank.");
-		}
-
-		final List<Integer> dimensionInts = dimensions.stream()
-		                                              .map(IntegerStruct::intValue)
-		                                              .collect(Collectors.toList());
-		final List<TYPE> validContents = getValidContents(dimensionInts, elementType, initialContents);
-
-		final boolean adjustableBoolean = isAdjustable.booleanValue();
-		final ArrayType arrayType = getArrayType(adjustableBoolean);
-//		return new ArrayStructImpl<>(arrayType, dimensionInts, elementType, validContents, adjustableBoolean);
-
-
-		final int[] dimensionArray = dimensions.stream()
-		                                       .mapToInt(IntegerStruct::intValue)
-		                                       .toArray();
-		multidimensionalCounter = new MultidimensionalCounter(dimensionArray);
-
-		this.elementType = elementType;
-		this.isAdjustable = isAdjustable.booleanValue();
-
-		this.dimensions = dimensions.stream().map(IntegerStruct::intValue).collect(Collectors.toList());
-		this.contents = new ArrayList<>(contents);
-
-		displacedTo = null;
-		displacedIndexOffset = 0;
-
-		return this;
-	}
-
-	@Override
-	public ArrayStruct<TYPE> adjustArray(final List<IntegerStruct> dimensions, final LispType elementType,
-	                                     final ArrayStruct<TYPE> displacedTo, final IntegerStruct displacedIndexOffset,
-	                                     final BooleanStruct isAdjustable) {
-
-		if (this.dimensions.size() != dimensions.size()) {
-			throw new ErrorException("Array cannot be adjusted to a different array dimension rank.");
-		}
-
-		return null;
-	}
+//
+////		final int oldTotalSize;
+////		if (dimensions.isEmpty()) {
+////			oldTotalSize = 0;
+////		} else if (multidimensionalCounter == null) {
+////			oldTotalSize = this.dimensions.get(0);
+////		} else {
+////			oldTotalSize = multidimensionalCounter.getSize();
+////		}
+//		final int oldTotalSize = multidimensionalCounter.getSize();
+//
+//		final int[] dimensionArray = dimensions.stream()
+//		                                       .mapToInt(IntegerStruct::intValue)
+//		                                       .toArray();
+//		final MultidimensionalCounter newMultidimensionalCounter = new MultidimensionalCounter(dimensionArray);
+//		final int newTotalSize = newMultidimensionalCounter.getSize();
+//
+//		List<TYPE> newData;
+//		if ((displacedTo != null) || (newTotalSize > oldTotalSize)) {
+//			newData = dataVectorFromInits(newTotalSize, null, false, initialElement, true);
+//		} else {
+//			newData = contents;
+//		}
+//
+//		final List<Integer> newDims = dimensions.stream().map(IntegerStruct::intValue).collect(Collectors.toList());
+//		zapArrayData(contents, this.dimensions, displacedIndexOffset, newData, newDims, newTotalSize, elementType,
+//		             initialElement, true);
+//
+//		this.contents = newData;
+//		this.multidimensionalCounter = newMultidimensionalCounter;
+//		this.isAdjustable = isAdjustable.booleanValue();
+//		this.displacedTo = null;
+//		this.displacedIndexOffset = 0;
+//		this.dimensions = newDims;
+//
+//		return this;
+//	}
+//
+//	@Override
+//	public ArrayStruct<TYPE> adjustArray(final List<IntegerStruct> dimensions, final LispType elementType,
+//	                                     final SequenceStruct initialContents, final BooleanStruct isAdjustable) {
+//
+//		if (this.dimensions.size() != dimensions.size()) {
+//			throw new ErrorException("Array cannot be adjusted to a different array dimension rank.");
+//		}
+//
+//		final List<Integer> dimensionInts = dimensions.stream()
+//		                                              .map(IntegerStruct::intValue)
+//		                                              .collect(Collectors.toList());
+//		final List<TYPE> validContents = getValidContents(dimensionInts, elementType, initialContents);
+//
+//		final boolean adjustableBoolean = isAdjustable.booleanValue();
+//		final ArrayType arrayType = getArrayType(adjustableBoolean);
+////		return new ArrayStructImpl<>(arrayType, dimensionInts, elementType, validContents, adjustableBoolean);
+//
+//
+//		final int[] dimensionArray = dimensions.stream()
+//		                                       .mapToInt(IntegerStruct::intValue)
+//		                                       .toArray();
+//		multidimensionalCounter = new MultidimensionalCounter(dimensionArray);
+//
+//		this.elementType = elementType;
+//		this.isAdjustable = isAdjustable.booleanValue();
+//
+//		this.dimensions = dimensions.stream().map(IntegerStruct::intValue).collect(Collectors.toList());
+//		this.contents = new ArrayList<>(contents);
+//
+//		displacedTo = null;
+//		displacedIndexOffset = 0;
+//
+//		return this;
+//	}
 
 	@Override
 	public ArrayStruct<TYPE> adjustArray(final List<IntegerStruct> dimensions, final LispType elementType,
@@ -493,6 +481,17 @@ public class MultiArrayStructImpl<TYPE extends LispStruct> extends ArrayStructIm
 		displacedIndexOffset = 0;
 
 		return this;
+	}
+
+	@Override
+	public ArrayStruct<TYPE> adjustArray(final List<IntegerStruct> dimensions, final LispType elementType,
+	                                     final ArrayStruct<TYPE> displacedTo, final IntegerStruct displacedIndexOffset) {
+
+		if (this.dimensions.size() != dimensions.size()) {
+			throw new ErrorException("Array cannot be adjusted to a different array dimension rank.");
+		}
+
+		return null;
 	}
 
 	@Override

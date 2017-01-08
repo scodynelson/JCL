@@ -20,13 +20,14 @@ import jcl.type.TType;
 public interface ArrayStruct<TYPE extends LispStruct> extends LispStruct {
 
 	ArrayStruct<TYPE> adjustArray(final List<IntegerStruct> dimensions, final LispType elementType,
-	                              final TYPE initialElement);
+	                              final TYPE initialElement, final IntegerStruct fillPointer);
 
 	ArrayStruct<TYPE> adjustArray(final List<IntegerStruct> dimensions, final LispType elementType,
-	                              final SequenceStruct initialContents);
+	                              final SequenceStruct initialContents, final IntegerStruct fillPointer);
 
 	ArrayStruct<TYPE> adjustArray(final List<IntegerStruct> dimensions, final LispType elementType,
-	                              final ArrayStruct<TYPE> displacedTo, final IntegerStruct displacedIndexOffset);
+	                              final IntegerStruct fillPointer, final ArrayStruct<TYPE> displacedTo,
+	                              final IntegerStruct displacedIndexOffset);
 
 	BooleanStruct adjustableArrayP();
 

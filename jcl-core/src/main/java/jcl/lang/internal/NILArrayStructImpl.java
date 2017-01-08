@@ -204,10 +204,13 @@ public class NILArrayStructImpl<TYPE extends LispStruct> extends ArrayStructImpl
 
 	@Override
 	public ArrayStruct<TYPE> adjustArray(final List<IntegerStruct> dimensions, final LispType elementType,
-	                                     final TYPE initialElement) {
+	                                     final TYPE initialElement, final IntegerStruct fillPointer) {
 
 		if (!dimensions.isEmpty()) {
 			throw new ErrorException("Array cannot be adjusted to a different array dimension rank.");
+		}
+		if (fillPointer != null) {
+			throw new ErrorException("Non-vector arrays cannot adjust fill-pointer.");
 		}
 		final LispType upgradedET = ArrayStruct.upgradedArrayElementType(elementType);
 
@@ -236,10 +239,13 @@ public class NILArrayStructImpl<TYPE extends LispStruct> extends ArrayStructImpl
 	@SuppressWarnings("unchecked")
 	@Override
 	public ArrayStruct<TYPE> adjustArray(final List<IntegerStruct> dimensions, final LispType elementType,
-	                                     final SequenceStruct initialContents) {
+	                                     final SequenceStruct initialContents, final IntegerStruct fillPointer) {
 
 		if (!dimensions.isEmpty()) {
 			throw new ErrorException("Array cannot be adjusted to a different array dimension rank.");
+		}
+		if (fillPointer != null) {
+			throw new ErrorException("Non-vector arrays cannot adjust fill-pointer.");
 		}
 		final LispType upgradedET = ArrayStruct.upgradedArrayElementType(elementType);
 
@@ -269,11 +275,14 @@ public class NILArrayStructImpl<TYPE extends LispStruct> extends ArrayStructImpl
 
 	@Override
 	public ArrayStruct<TYPE> adjustArray(final List<IntegerStruct> dimensions, final LispType elementType,
-	                                     final ArrayStruct<TYPE> displacedTo,
+	                                     final IntegerStruct fillPointer, final ArrayStruct<TYPE> displacedTo,
 	                                     final IntegerStruct displacedIndexOffset) {
 
 		if (!dimensions.isEmpty()) {
 			throw new ErrorException("Array cannot be adjusted to a different array dimension rank.");
+		}
+		if (fillPointer != null) {
+			throw new ErrorException("Non-vector arrays cannot adjust fill-pointer.");
 		}
 		final LispType upgradedET = ArrayStruct.upgradedArrayElementType(elementType);
 

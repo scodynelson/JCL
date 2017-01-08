@@ -223,12 +223,11 @@ public class NILArrayStructImplTest {
 	@Test
 	public void test_valueOf_Disp_IsNotAdj() {
 
+		final ListStruct initialContents = LispStructFactory.toProperList(IntegerStruct.TEN, IntegerStruct.TWO);
 		final ArrayStruct<LispStruct> displacedTo
-				= VectorStructImpl.valueOf(IntegerStruct.TWO,
-				                           TType.INSTANCE,
-				                           LispStructFactory.toProperList(IntegerStruct.TEN, IntegerStruct.TWO),
-				                           NILStruct.INSTANCE,
-				                           null);
+				= new VectorStructImpl.Builder<>(IntegerStruct.TWO).initialContents(initialContents)
+				                                                   .adjustable(TStruct.INSTANCE)
+				                                                   .build();
 		final IntegerStruct displacedIndexOffset = IntegerStruct.ONE;
 		final ArrayStruct<LispStruct> array
 				= NILArrayStructImpl.valueOf(TType.INSTANCE,
@@ -314,8 +313,8 @@ public class NILArrayStructImplTest {
 	 */
 
 	/**
-	 * Test for {@link NILArrayStructImpl#adjustArray(List, LispType, LispStruct)} where the new dimensions would result
-	 * in a different array rank.
+	 * Test for {@link NILArrayStructImpl#adjustArray(List, LispType, LispStruct, IntegerStruct)} where the new
+	 * dimensions would result in a different array rank.
 	 */
 	@Test
 	public void test_adjustArray_IE_DifferentRank() {
@@ -328,12 +327,32 @@ public class NILArrayStructImplTest {
 				                             initialElement);
 		array.adjustArray(Collections.singletonList(IntegerStruct.ONE),
 		                  TType.INSTANCE,
-		                  initialElement);
+		                  initialElement,
+		                  null);
 	}
 
 	/**
-	 * Test for {@link NILArrayStructImpl#adjustArray(List, LispType, LispStruct)} where the element-type of the
-	 * original array is not equivalent to the newly provided element-type.
+	 * Test for {@link NILArrayStructImpl#adjustArray(List, LispType, LispStruct, IntegerStruct)} where the fill-pointer
+	 * parameter is non-null.
+	 */
+	@Test
+	public void test_adjustArray_IE_FillPointer() {
+		thrown.expect(ErrorException.class);
+		thrown.expectMessage(containsString("Non-vector arrays cannot adjust fill-pointer."));
+
+		final IntegerStruct initialElement = IntegerStruct.ZERO;
+		final ArrayStruct<LispStruct> array
+				= NILArrayStructImpl.valueOf(TType.INSTANCE,
+				                             initialElement);
+		array.adjustArray(Collections.emptyList(),
+		                  TType.INSTANCE,
+		                  initialElement,
+		                  IntegerStruct.ZERO);
+	}
+
+	/**
+	 * Test for {@link NILArrayStructImpl#adjustArray(List, LispType, LispStruct, IntegerStruct)} where the element-type
+	 * of the original array is not equivalent to the newly provided element-type.
 	 */
 	@Test
 	public void test_adjustArray_IE_InitialElementTypeNotEqual() {
@@ -346,12 +365,13 @@ public class NILArrayStructImplTest {
 				                             initialElement);
 		array.adjustArray(Collections.emptyList(),
 		                  TType.INSTANCE,
-		                  initialElement);
+		                  initialElement,
+		                  null);
 	}
 
 	/**
-	 * Test for {@link NILArrayStructImpl#adjustArray(List, LispType, LispStruct)} where the newly provided element-type
-	 * is not equivalent to the element-type of the original array.
+	 * Test for {@link NILArrayStructImpl#adjustArray(List, LispType, LispStruct, IntegerStruct)} where the newly
+	 * provided element-type is not equivalent to the element-type of the original array.
 	 */
 	@Test
 	public void test_adjustArray_IE_NewElementTypeNotEqual() {
@@ -364,12 +384,13 @@ public class NILArrayStructImplTest {
 				                             initialElement);
 		array.adjustArray(Collections.emptyList(),
 		                  BitType.INSTANCE,
-		                  initialElement);
+		                  initialElement,
+		                  null);
 	}
 
 	/**
-	 * Test for {@link NILArrayStructImpl#adjustArray(List, LispType, LispStruct)} where the new initial-element is not
-	 * a subtype of the provided element-type.
+	 * Test for {@link NILArrayStructImpl#adjustArray(List, LispType, LispStruct, IntegerStruct)} where the new
+	 * initial-element is not a subtype of the provided element-type.
 	 */
 	@Test
 	public void test_adjustArray_IE_InitialElementNotSubtype() {
@@ -384,12 +405,13 @@ public class NILArrayStructImplTest {
 		final CharacterStruct newElement = CharacterStructImpl.valueOf('a');
 		array.adjustArray(Collections.emptyList(),
 		                  BitType.INSTANCE,
-		                  newElement);
+		                  newElement,
+		                  null);
 	}
 
 	/**
-	 * Test for {@link NILArrayStructImpl#adjustArray(List, LispType, LispStruct)} where the original array was
-	 * adjustable.
+	 * Test for {@link NILArrayStructImpl#adjustArray(List, LispType, LispStruct, IntegerStruct)} where the original
+	 * array was adjustable.
 	 */
 	@Test
 	public void test_adjustArray_IE_WasAdjustable() {
@@ -404,7 +426,8 @@ public class NILArrayStructImplTest {
 		final ArrayStruct<LispStruct> result
 				= array.adjustArray(Collections.emptyList(),
 				                    TType.INSTANCE,
-				                    newElement);
+				                    newElement,
+				                    null);
 		Assert.assertThat(array, sameInstance(result));
 		Assert.assertThat(result.getType(), is(ArrayType.INSTANCE));
 		Assert.assertThat(result.aref(), is(newElement));
@@ -412,8 +435,8 @@ public class NILArrayStructImplTest {
 	}
 
 	/**
-	 * Test for {@link NILArrayStructImpl#adjustArray(List, LispType, LispStruct)} where the original array was not
-	 * adjustable.
+	 * Test for {@link NILArrayStructImpl#adjustArray(List, LispType, LispStruct, IntegerStruct)} where the original
+	 * array was not adjustable.
 	 */
 	@Test
 	public void test_adjustArray_IE_WasNotAdjustable() {
@@ -427,7 +450,8 @@ public class NILArrayStructImplTest {
 		final ArrayStruct<LispStruct> result
 				= array.adjustArray(Collections.emptyList(),
 				                    TType.INSTANCE,
-				                    newElement);
+				                    newElement,
+				                    null);
 		Assert.assertThat(array, not(sameInstance(result)));
 		Assert.assertThat(array.getType(), is(SimpleArrayType.INSTANCE));
 		Assert.assertThat(array.aref(), is(initialElement));
@@ -443,8 +467,8 @@ public class NILArrayStructImplTest {
 	 */
 
 	/**
-	 * Test for {@link NILArrayStructImpl#adjustArray(List, LispType, SequenceStruct)} where the new dimensions would
-	 * result in a different array rank.
+	 * Test for {@link NILArrayStructImpl#adjustArray(List, LispType, SequenceStruct, IntegerStruct)} where the new
+	 * dimensions would result in a different array rank.
 	 */
 	@Test
 	public void test_adjustArray_IC_DifferentRank() {
@@ -457,12 +481,32 @@ public class NILArrayStructImplTest {
 				                             initialContents);
 		array.adjustArray(Collections.singletonList(IntegerStruct.ONE),
 		                  TType.INSTANCE,
-		                  initialContents);
+		                  initialContents,
+		                  null);
 	}
 
 	/**
-	 * Test for {@link NILArrayStructImpl#adjustArray(List, LispType, SequenceStruct)} where the element-type of the
-	 * original array is not equivalent to the newly provided element-type.
+	 * Test for {@link NILArrayStructImpl#adjustArray(List, LispType, SequenceStruct, IntegerStruct)} where the
+	 * fill-pointer parameter is non-null.
+	 */
+	@Test
+	public void test_adjustArray_IC_FillPointer() {
+		thrown.expect(ErrorException.class);
+		thrown.expectMessage(containsString("Non-vector arrays cannot adjust fill-pointer."));
+
+		final SequenceStruct initialContents = LispStructFactory.toProperList(IntegerStruct.ZERO);
+		final ArrayStruct<LispStruct> array
+				= NILArrayStructImpl.valueOf(TType.INSTANCE,
+				                             initialContents);
+		array.adjustArray(Collections.emptyList(),
+		                  TType.INSTANCE,
+		                  initialContents,
+		                  IntegerStruct.ZERO);
+	}
+
+	/**
+	 * Test for {@link NILArrayStructImpl#adjustArray(List, LispType, SequenceStruct, IntegerStruct)} where the
+	 * element-type of the original array is not equivalent to the newly provided element-type.
 	 */
 	@Test
 	public void test_adjustArray_IC_InitialElementTypeNotEqual() {
@@ -475,12 +519,13 @@ public class NILArrayStructImplTest {
 				                             initialContents);
 		array.adjustArray(Collections.emptyList(),
 		                  TType.INSTANCE,
-		                  initialContents);
+		                  initialContents,
+		                  null);
 	}
 
 	/**
-	 * Test for {@link NILArrayStructImpl#adjustArray(List, LispType, SequenceStruct)} where the newly provided
-	 * element-type is not equivalent to the element-type of the original array.
+	 * Test for {@link NILArrayStructImpl#adjustArray(List, LispType, SequenceStruct, IntegerStruct)} where the newly
+	 * provided element-type is not equivalent to the element-type of the original array.
 	 */
 	@Test
 	public void test_adjustArray_IC_NewElementTypeNotEqual() {
@@ -493,12 +538,13 @@ public class NILArrayStructImplTest {
 				                             initialContents);
 		array.adjustArray(Collections.emptyList(),
 		                  BitType.INSTANCE,
-		                  initialContents);
+		                  initialContents,
+		                  null);
 	}
 
 	/**
-	 * Test for {@link NILArrayStructImpl#adjustArray(List, LispType, SequenceStruct)} where the new initial-contents
-	 * have an element that is not a subtype of the provided element-type.
+	 * Test for {@link NILArrayStructImpl#adjustArray(List, LispType, SequenceStruct, IntegerStruct)} where the new
+	 * initial-contents have an element that is not a subtype of the provided element-type.
 	 */
 	@Test
 	public void test_adjustArray_IC_InitialContentsNotSubtype() {
@@ -512,12 +558,13 @@ public class NILArrayStructImplTest {
 		final SequenceStruct newContents = LispStructFactory.toProperList(CharacterStructImpl.valueOf('a'));
 		array.adjustArray(Collections.emptyList(),
 		                  BitType.INSTANCE,
-		                  newContents);
+		                  newContents,
+		                  null);
 	}
 
 	/**
-	 * Test for {@link NILArrayStructImpl#adjustArray(List, LispType, SequenceStruct)} where the original array was
-	 * adjustable.
+	 * Test for {@link NILArrayStructImpl#adjustArray(List, LispType, SequenceStruct, IntegerStruct)} where the original
+	 * array was adjustable.
 	 */
 	@Test
 	public void test_adjustArray_IC_WasAdjustable() {
@@ -532,7 +579,8 @@ public class NILArrayStructImplTest {
 		final ArrayStruct<LispStruct> result
 				= array.adjustArray(Collections.emptyList(),
 				                    TType.INSTANCE,
-				                    newContents);
+				                    newContents,
+				                    null);
 		Assert.assertThat(array, sameInstance(result));
 		Assert.assertThat(result.getType(), is(ArrayType.INSTANCE));
 		Assert.assertThat(result.aref(), is(newContents));
@@ -540,8 +588,8 @@ public class NILArrayStructImplTest {
 	}
 
 	/**
-	 * Test for {@link NILArrayStructImpl#adjustArray(List, LispType, SequenceStruct)} where the original array was not
-	 * adjustable.
+	 * Test for {@link NILArrayStructImpl#adjustArray(List, LispType, SequenceStruct, IntegerStruct)} where the original
+	 * array was not adjustable.
 	 */
 	@Test
 	public void test_adjustArray_IC_WasNotAdjustable() {
@@ -555,7 +603,8 @@ public class NILArrayStructImplTest {
 		final ArrayStruct<LispStruct> result
 				= array.adjustArray(Collections.emptyList(),
 				                    TType.INSTANCE,
-				                    newContents);
+				                    newContents,
+				                    null);
 		Assert.assertThat(array, not(sameInstance(result)));
 		Assert.assertThat(array.getType(), is(SimpleArrayType.INSTANCE));
 		Assert.assertThat(array.aref(), is(initialContents));
@@ -571,8 +620,8 @@ public class NILArrayStructImplTest {
 	 */
 
 	/**
-	 * Test for {@link NILArrayStructImpl#adjustArray(List, LispType, ArrayStruct, IntegerStruct)} where the new
-	 * dimensions would result in a different array rank.
+	 * Test for {@link NILArrayStructImpl#adjustArray(List, LispType, IntegerStruct, ArrayStruct, IntegerStruct)} where
+	 * the new dimensions would result in a different array rank.
 	 */
 	@Test
 	public void test_adjustArray_Disp_DifferentRank() {
@@ -590,12 +639,38 @@ public class NILArrayStructImplTest {
 				                             initialElement);
 		array.adjustArray(Collections.singletonList(IntegerStruct.ONE),
 		                  TType.INSTANCE,
+		                  null,
 		                  displacedTo,
 		                  displacedIndexOffset);
 	}
 
 	/**
-	 * Test for {@link NILArrayStructImpl#adjustArray(List, LispType, ArrayStruct, IntegerStruct)} where
+	 * Test for {@link NILArrayStructImpl#adjustArray(List, LispType, IntegerStruct, ArrayStruct, IntegerStruct)} where
+	 * the fill-pointer parameter is non-null.
+	 */
+	@Test
+	public void test_adjustArray_Disp_FillPointer() {
+		thrown.expect(ErrorException.class);
+		thrown.expectMessage(containsString("Non-vector arrays cannot adjust fill-pointer."));
+
+		final IntegerStruct initialElement = IntegerStruct.ZERO;
+		final ArrayStruct<LispStruct> displacedTo
+				= NILArrayStructImpl.valueOf(TType.INSTANCE,
+				                             initialElement);
+		final IntegerStruct displacedIndexOffset = IntegerStruct.ZERO;
+
+		final ArrayStruct<LispStruct> array
+				= NILArrayStructImpl.valueOf(TType.INSTANCE,
+				                             initialElement);
+		array.adjustArray(Collections.emptyList(),
+		                  TType.INSTANCE,
+		                  IntegerStruct.ZERO,
+		                  displacedTo,
+		                  displacedIndexOffset);
+	}
+
+	/**
+	 * Test for {@link NILArrayStructImpl#adjustArray(List, LispType, IntegerStruct, ArrayStruct, IntegerStruct)} where
 	 * displaced-index-offset is not a valid row-major-index in the provided displaced-to array.
 	 */
 	@Test
@@ -614,13 +689,14 @@ public class NILArrayStructImplTest {
 				                             initialElement);
 		array.adjustArray(Collections.emptyList(),
 		                  TType.INSTANCE,
+		                  null,
 		                  displacedTo,
 		                  displacedIndexOffset);
 	}
 
 	/**
-	 * Test for {@link NILArrayStructImpl#adjustArray(List, LispType, ArrayStruct, IntegerStruct)} where the
-	 * element-type of the original array is not equivalent to the newly provided element-type.
+	 * Test for {@link NILArrayStructImpl#adjustArray(List, LispType, IntegerStruct, ArrayStruct, IntegerStruct)} where
+	 * the element-type of the original array is not equivalent to the newly provided element-type.
 	 */
 	@Test
 	public void test_adjustArray_Disp_InitialElementTypeNotEqual() {
@@ -638,13 +714,14 @@ public class NILArrayStructImplTest {
 				                             initialElement);
 		array.adjustArray(Collections.emptyList(),
 		                  TType.INSTANCE,
+		                  null,
 		                  displacedTo,
 		                  displacedIndexOffset);
 	}
 
 	/**
-	 * Test for {@link NILArrayStructImpl#adjustArray(List, LispType, ArrayStruct, IntegerStruct)} where the newly
-	 * provided element-type is not equivalent to the element-type of the original array.
+	 * Test for {@link NILArrayStructImpl#adjustArray(List, LispType, IntegerStruct, ArrayStruct, IntegerStruct)} where
+	 * the newly provided element-type is not equivalent to the element-type of the original array.
 	 */
 	@Test
 	public void test_adjustArray_Disp_NewElementTypeNotEqual() {
@@ -662,13 +739,14 @@ public class NILArrayStructImplTest {
 				                             initialElement);
 		array.adjustArray(Collections.emptyList(),
 		                  BitType.INSTANCE,
+		                  null,
 		                  displacedTo,
 		                  displacedIndexOffset);
 	}
 
 	/**
-	 * Test for {@link NILArrayStructImpl#adjustArray(List, LispType, ArrayStruct, IntegerStruct)} where the
-	 * element-type of the new displaced-to array is not a subtype of the provided element-type.
+	 * Test for {@link NILArrayStructImpl#adjustArray(List, LispType, IntegerStruct, ArrayStruct, IntegerStruct)} where
+	 * the element-type of the new displaced-to array is not a subtype of the provided element-type.
 	 */
 	@Test
 	public void test_adjustArray_Disp_DisplacedToNotSubtype() {
@@ -686,13 +764,14 @@ public class NILArrayStructImplTest {
 				                             initialElement);
 		array.adjustArray(Collections.emptyList(),
 		                  BitType.INSTANCE,
+		                  null,
 		                  displacedTo,
 		                  displacedIndexOffset);
 	}
 
 	/**
-	 * Test for {@link NILArrayStructImpl#adjustArray(List, LispType, ArrayStruct, IntegerStruct)} where the original
-	 * array was adjustable.
+	 * Test for {@link NILArrayStructImpl#adjustArray(List, LispType, IntegerStruct, ArrayStruct, IntegerStruct)} where
+	 * the original array was adjustable.
 	 */
 	@Test
 	public void test_adjustArray_Disp_WasAdjustable() {
@@ -712,6 +791,7 @@ public class NILArrayStructImplTest {
 		final ArrayStruct<LispStruct> result
 				= array.adjustArray(Collections.emptyList(),
 				                    TType.INSTANCE,
+				                    null,
 				                    displacedTo,
 				                    displacedIndexOffset);
 		Assert.assertThat(array, sameInstance(result));
@@ -725,8 +805,8 @@ public class NILArrayStructImplTest {
 	}
 
 	/**
-	 * Test for {@link NILArrayStructImpl#adjustArray(List, LispType, ArrayStruct, IntegerStruct)} where the original
-	 * array was not adjustable.
+	 * Test for {@link NILArrayStructImpl#adjustArray(List, LispType, IntegerStruct, ArrayStruct, IntegerStruct)} where
+	 * the original array was not adjustable.
 	 */
 	@Test
 	public void test_adjustArray_Disp_WasNotAdjustable() {
@@ -745,6 +825,7 @@ public class NILArrayStructImplTest {
 		final ArrayStruct<LispStruct> result
 				= array.adjustArray(Collections.emptyList(),
 				                    TType.INSTANCE,
+				                    null,
 				                    displacedTo,
 				                    displacedIndexOffset);
 		Assert.assertThat(array, not(sameInstance(result)));

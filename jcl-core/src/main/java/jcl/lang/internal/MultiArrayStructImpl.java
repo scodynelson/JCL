@@ -415,7 +415,7 @@ public class MultiArrayStructImpl<TYPE extends LispStruct> extends ArrayStructIm
 
 	@Override
 	public ArrayStruct<TYPE> adjustArray(final List<IntegerStruct> dimensions, final LispType elementType,
-	                                     final TYPE initialElement) {
+	                                     final TYPE initialElement, final IntegerStruct fillPointer) {
 
 		if (this.dimensions.size() != dimensions.size()) {
 			throw new ErrorException("Array cannot be adjusted to a different array dimension rank.");
@@ -452,7 +452,7 @@ public class MultiArrayStructImpl<TYPE extends LispStruct> extends ArrayStructIm
 
 	@Override
 	public ArrayStruct<TYPE> adjustArray(final List<IntegerStruct> dimensions, final LispType elementType,
-	                                     final SequenceStruct initialContents) {
+	                                     final SequenceStruct initialContents, final IntegerStruct fillPointer) {
 
 		if (this.dimensions.size() != dimensions.size()) {
 			throw new ErrorException("Array cannot be adjusted to a different array dimension rank.");
@@ -485,7 +485,8 @@ public class MultiArrayStructImpl<TYPE extends LispStruct> extends ArrayStructIm
 
 	@Override
 	public ArrayStruct<TYPE> adjustArray(final List<IntegerStruct> dimensions, final LispType elementType,
-	                                     final ArrayStruct<TYPE> displacedTo, final IntegerStruct displacedIndexOffset) {
+	                                     final IntegerStruct fillPointer, final ArrayStruct<TYPE> displacedTo,
+	                                     final IntegerStruct displacedIndexOffset) {
 
 		if (this.dimensions.size() != dimensions.size()) {
 			throw new ErrorException("Array cannot be adjusted to a different array dimension rank.");

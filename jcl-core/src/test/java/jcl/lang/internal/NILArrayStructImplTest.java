@@ -443,6 +443,10 @@ public class NILArrayStructImplTest {
 	Adjust-Array (List<IntegerStruct>, LispType, SequenceStruct)
 	 */
 
+	/**
+	 * Test for {@link NILArrayStructImpl#adjustArray(List, LispType, SequenceStruct)} where the new dimensions would
+	 * result in a different array rank.
+	 */
 	@Test
 	public void test_adjustArray_IC_DifferentRank() {
 		thrown.expect(ErrorException.class);
@@ -457,6 +461,10 @@ public class NILArrayStructImplTest {
 		                  initialContents);
 	}
 
+	/**
+	 * Test for {@link NILArrayStructImpl#adjustArray(List, LispType, SequenceStruct)} where the element-type of the
+	 * original array is not equivalent to the newly provided element-type.
+	 */
 	@Test
 	public void test_adjustArray_IC_InitialElementTypeNotEqual() {
 		thrown.expect(TypeErrorException.class);
@@ -471,6 +479,10 @@ public class NILArrayStructImplTest {
 		                  initialContents);
 	}
 
+	/**
+	 * Test for {@link NILArrayStructImpl#adjustArray(List, LispType, SequenceStruct)} where the newly provided
+	 * element-type is not equivalent to the element-type of the original array.
+	 */
 	@Test
 	public void test_adjustArray_IC_NewElementTypeNotEqual() {
 		thrown.expect(TypeErrorException.class);
@@ -485,6 +497,10 @@ public class NILArrayStructImplTest {
 		                  initialContents);
 	}
 
+	/**
+	 * Test for {@link NILArrayStructImpl#adjustArray(List, LispType, SequenceStruct)} where the new initial-contents
+	 * have an element that is not a subtype of the provided element-type.
+	 */
 	@Test
 	public void test_adjustArray_IC_InitialContentsNotSubtype() {
 		thrown.expect(TypeErrorException.class);
@@ -500,6 +516,10 @@ public class NILArrayStructImplTest {
 		                  newContents);
 	}
 
+	/**
+	 * Test for {@link NILArrayStructImpl#adjustArray(List, LispType, SequenceStruct)} where the original array was
+	 * adjustable.
+	 */
 	@Test
 	public void test_adjustArray_IC_WasAdjustable() {
 
@@ -520,6 +540,10 @@ public class NILArrayStructImplTest {
 		Assert.assertThat(result.adjustableArrayP(), is(TStruct.INSTANCE));
 	}
 
+	/**
+	 * Test for {@link NILArrayStructImpl#adjustArray(List, LispType, SequenceStruct)} where the original array was not
+	 * adjustable.
+	 */
 	@Test
 	public void test_adjustArray_IC_WasNotAdjustable() {
 
@@ -547,6 +571,10 @@ public class NILArrayStructImplTest {
 	Adjust-Array (List<IntegerStruct>, LispType, ArrayStruct<TYPE>, IntegerStruct)
 	 */
 
+	/**
+	 * Test for {@link NILArrayStructImpl#adjustArray(List, LispType, ArrayStruct, IntegerStruct)} where the new
+	 * dimensions would result in a different array rank.
+	 */
 	@Test
 	public void test_adjustArray_Disp_DifferentRank() {
 		thrown.expect(ErrorException.class);
@@ -567,6 +595,10 @@ public class NILArrayStructImplTest {
 		                  displacedIndexOffset);
 	}
 
+	/**
+	 * Test for {@link NILArrayStructImpl#adjustArray(List, LispType, ArrayStruct, IntegerStruct)} where
+	 * displaced-index-offset is not a valid row-major-index in the provided displaced-to array.
+	 */
 	@Test
 	public void test_adjustArray_Disp_OutOfBounds() {
 		thrown.expect(ErrorException.class);
@@ -587,6 +619,10 @@ public class NILArrayStructImplTest {
 		                  displacedIndexOffset);
 	}
 
+	/**
+	 * Test for {@link NILArrayStructImpl#adjustArray(List, LispType, ArrayStruct, IntegerStruct)} where the
+	 * element-type of the original array is not equivalent to the newly provided element-type.
+	 */
 	@Test
 	public void test_adjustArray_Disp_InitialElementTypeNotEqual() {
 		thrown.expect(TypeErrorException.class);
@@ -607,6 +643,10 @@ public class NILArrayStructImplTest {
 		                  displacedIndexOffset);
 	}
 
+	/**
+	 * Test for {@link NILArrayStructImpl#adjustArray(List, LispType, ArrayStruct, IntegerStruct)} where the newly
+	 * provided element-type is not equivalent to the element-type of the original array.
+	 */
 	@Test
 	public void test_adjustArray_Disp_NewElementTypeNotEqual() {
 		thrown.expect(TypeErrorException.class);
@@ -627,6 +667,10 @@ public class NILArrayStructImplTest {
 		                  displacedIndexOffset);
 	}
 
+	/**
+	 * Test for {@link NILArrayStructImpl#adjustArray(List, LispType, ArrayStruct, IntegerStruct)} where the
+	 * element-type of the new displaced-to array is not a subtype of the provided element-type.
+	 */
 	@Test
 	public void test_adjustArray_Disp_DisplacedToNotSubtype() {
 		thrown.expect(TypeErrorException.class);
@@ -647,6 +691,10 @@ public class NILArrayStructImplTest {
 		                  displacedIndexOffset);
 	}
 
+	/**
+	 * Test for {@link NILArrayStructImpl#adjustArray(List, LispType, ArrayStruct, IntegerStruct)} where the original
+	 * array was adjustable.
+	 */
 	@Test
 	public void test_adjustArray_Disp_WasAdjustable() {
 
@@ -677,6 +725,10 @@ public class NILArrayStructImplTest {
 		Assert.assertThat(displacement.getValuesList().get(1), is(displacedIndexOffset));
 	}
 
+	/**
+	 * Test for {@link NILArrayStructImpl#adjustArray(List, LispType, ArrayStruct, IntegerStruct)} where the original
+	 * array was not adjustable.
+	 */
 	@Test
 	public void test_adjustArray_Disp_WasNotAdjustable() {
 
@@ -714,6 +766,9 @@ public class NILArrayStructImplTest {
 	Adjustable-Array-P
 	 */
 
+	/**
+	 * Test for {@link NILArrayStructImpl#adjustableArrayP()} where the array is adjustable.
+	 */
 	@Test
 	public void test_adjustableArrayP_True() {
 
@@ -725,6 +780,9 @@ public class NILArrayStructImplTest {
 		Assert.assertThat(result, is(TStruct.INSTANCE));
 	}
 
+	/**
+	 * Test for {@link NILArrayStructImpl#adjustableArrayP()} where the array is not adjustable.
+	 */
 	@Test
 	public void test_adjustableArrayP_False() {
 
@@ -740,6 +798,9 @@ public class NILArrayStructImplTest {
 	Aref
 	 */
 
+	/**
+	 * Test for {@link NILArrayStructImpl#aref(IntegerStruct...)} where the wrong number of subscripts were provided.
+	 */
 	@Test
 	public void test_aref_WrongNumOfSubscripts() {
 		thrown.expect(ErrorException.class);
@@ -752,6 +813,9 @@ public class NILArrayStructImplTest {
 		array.aref(IntegerStruct.ZERO);
 	}
 
+	/**
+	 * Test for {@link NILArrayStructImpl#aref(IntegerStruct...)}.
+	 */
 	@Test
 	public void test_aref() {
 		final IntegerStruct initialElement = IntegerStruct.ZERO;
@@ -761,6 +825,9 @@ public class NILArrayStructImplTest {
 		Assert.assertThat(array.aref(), is(initialElement));
 	}
 
+	/**
+	 * Test for {@link NILArrayStructImpl#aref(IntegerStruct...)} where the array is displaced.
+	 */
 	@Test
 	public void test_aref_Displaced() {
 		final IntegerStruct initialElement = IntegerStruct.ZERO;
@@ -780,6 +847,10 @@ public class NILArrayStructImplTest {
 	Setf-Aref
 	 */
 
+	/**
+	 * Test for {@link NILArrayStructImpl#setfAref(LispStruct, IntegerStruct...)} where the wrong number of subscripts
+	 * were provided.
+	 */
 	@Test
 	public void test_setfAref_WrongNumOfSubscripts() {
 		thrown.expect(ErrorException.class);
@@ -795,6 +866,9 @@ public class NILArrayStructImplTest {
 		array.setfAref(newElement, IntegerStruct.ZERO);
 	}
 
+	/**
+	 * Test for {@link NILArrayStructImpl#setfAref(LispStruct, IntegerStruct...)}.
+	 */
 	@Test
 	public void test_setfAref() {
 		final IntegerStruct initialElement = IntegerStruct.ZERO;
@@ -809,6 +883,9 @@ public class NILArrayStructImplTest {
 		Assert.assertThat(array.aref(), is(newElement));
 	}
 
+	/**
+	 * Test for {@link NILArrayStructImpl#setfAref(LispStruct, IntegerStruct...)} where the array is displaced.
+	 */
 	@Test
 	public void test_setfAref_Displaced() {
 		final IntegerStruct initialElement = IntegerStruct.ZERO;
@@ -834,6 +911,9 @@ public class NILArrayStructImplTest {
 	Array-Dimension
 	 */
 
+	/**
+	 * Test for {@link NILArrayStructImpl#arrayDimension(IntegerStruct)}.
+	 */
 	@Test
 	public void test_arrayDimension() {
 		thrown.expect(ErrorException.class);
@@ -849,6 +929,9 @@ public class NILArrayStructImplTest {
 	Array-Dimensions
 	 */
 
+	/**
+	 * Test for {@link NILArrayStructImpl#arrayDimensions()}.
+	 */
 	@Test
 	public void test_arrayDimensions() {
 		final ArrayStruct<LispStruct> array
@@ -862,6 +945,9 @@ public class NILArrayStructImplTest {
 	Array-Element-Type
 	 */
 
+	/**
+	 * Test for {@link NILArrayStructImpl#arrayElementType()}.
+	 */
 	@Test
 	public void test_arrayElementType() {
 		final BitType elementType = BitType.INSTANCE;
@@ -876,6 +962,9 @@ public class NILArrayStructImplTest {
 	Array-Has-Fill-Pointer-P
 	 */
 
+	/**
+	 * Test for {@link NILArrayStructImpl#arrayHasFillPointerP()}.
+	 */
 	@Test
 	public void test_arrayHasFillPointerP() {
 		final ArrayStruct<LispStruct> array
@@ -889,6 +978,9 @@ public class NILArrayStructImplTest {
 	Array-Displacement
 	 */
 
+	/**
+	 * Test for {@link NILArrayStructImpl#arrayDisplacement()}.
+	 */
 	@Test
 	public void test_arrayDisplacement() {
 
@@ -902,6 +994,9 @@ public class NILArrayStructImplTest {
 		Assert.assertThat(displacement.getValuesList().get(1), is(IntegerStruct.ZERO));
 	}
 
+	/**
+	 * Test for {@link NILArrayStructImpl#arrayDisplacement()} where the array is displaced.
+	 */
 	@Test
 	public void test_arrayDisplacement_Displaced() {
 
@@ -926,6 +1021,9 @@ public class NILArrayStructImplTest {
 	Array-In-Bounds-P
 	 */
 
+	/**
+	 * Test for {@link NILArrayStructImpl#arrayInBoundsP(IntegerStruct...)}.
+	 */
 	@Test
 	public void test_arrayInBoundsP() {
 		final ArrayStruct<LispStruct> array
@@ -939,6 +1037,9 @@ public class NILArrayStructImplTest {
 	Array-Rank
 	 */
 
+	/**
+	 * Test for {@link NILArrayStructImpl#arrayRank()}.
+	 */
 	@Test
 	public void test_arrayRank() {
 		final ArrayStruct<LispStruct> array
@@ -952,6 +1053,10 @@ public class NILArrayStructImplTest {
 	Array-Row-Major-Index
 	 */
 
+	/**
+	 * Test for {@link NILArrayStructImpl#arrayRowMajorIndex(IntegerStruct...)} where the wrong number of subscripts
+	 * were provided.
+	 */
 	@Test
 	public void test_arrayRowMajorIndex_WrongNumOfSubscripts() {
 		thrown.expect(ErrorException.class);
@@ -964,6 +1069,9 @@ public class NILArrayStructImplTest {
 		array.arrayRowMajorIndex(IntegerStruct.ONE);
 	}
 
+	/**
+	 * Test for {@link NILArrayStructImpl#arrayRowMajorIndex(IntegerStruct...)}.
+	 */
 	@Test
 	public void test_arrayRowMajorIndex() {
 
@@ -979,6 +1087,9 @@ public class NILArrayStructImplTest {
 	Array-Total-Size
 	 */
 
+	/**
+	 * Test for {@link NILArrayStructImpl#arrayTotalSize()}.
+	 */
 	@Test
 	public void test_arrayTotalSize() {
 		final ArrayStruct<LispStruct> array
@@ -992,6 +1103,9 @@ public class NILArrayStructImplTest {
 	Row-Major-Aref
 	 */
 
+	/**
+	 * Test for {@link NILArrayStructImpl#rowMajorAref(IntegerStruct)} where the provided index was out of bounds.
+	 */
 	@Test
 	public void test_rowMajorAref_OutOfBounds() {
 		thrown.expect(ErrorException.class);
@@ -1004,6 +1118,9 @@ public class NILArrayStructImplTest {
 		array.rowMajorAref(IntegerStruct.ONE);
 	}
 
+	/**
+	 * Test for {@link NILArrayStructImpl#rowMajorAref(IntegerStruct)}.
+	 */
 	@Test
 	public void test_rowMajorAref() {
 
@@ -1019,6 +1136,10 @@ public class NILArrayStructImplTest {
 	Setf-Row-Major-Aref
 	 */
 
+	/**
+	 * Test for {@link NILArrayStructImpl#setfRowMajorAref(LispStruct, IntegerStruct)} where the provided index was out
+	 * of bounds.
+	 */
 	@Test
 	public void test_setfRowMajorAref_OutOfBounds() {
 		thrown.expect(ErrorException.class);
@@ -1034,6 +1155,9 @@ public class NILArrayStructImplTest {
 		array.setfRowMajorAref(newElement, IntegerStruct.ONE);
 	}
 
+	/**
+	 * Test for {@link NILArrayStructImpl#setfRowMajorAref(LispStruct, IntegerStruct)}.
+	 */
 	@Test
 	public void test_setfRowMajorAref() {
 
@@ -1053,6 +1177,10 @@ public class NILArrayStructImplTest {
 	To-String
 	 */
 
+	/**
+	 * Test for {@link NILArrayStructImpl#toString()} where {@link PrinterVariables#PRINT_ARRAY} is true and {@link
+	 * PrinterVariables#PRINT_READABLY} is false.
+	 */
 	@Test
 	public void test_toString_PrintArray() {
 
@@ -1074,6 +1202,10 @@ public class NILArrayStructImplTest {
 		}
 	}
 
+	/**
+	 * Test for {@link NILArrayStructImpl#toString()} where {@link PrinterVariables#PRINT_ARRAY} is false and {@link
+	 * PrinterVariables#PRINT_READABLY} is true.
+	 */
 	@Test
 	public void test_toString_PrintReadably() {
 
@@ -1095,6 +1227,10 @@ public class NILArrayStructImplTest {
 		}
 	}
 
+	/**
+	 * Test for {@link NILArrayStructImpl#toString()} where both {@link PrinterVariables#PRINT_ARRAY} and {@link
+	 * PrinterVariables#PRINT_READABLY} are true.
+	 */
 	@Test
 	public void test_toString_PrintArray_PrintReadably() {
 
@@ -1116,6 +1252,10 @@ public class NILArrayStructImplTest {
 		}
 	}
 
+	/**
+	 * Test for {@link NILArrayStructImpl#toString()} where both {@link PrinterVariables#PRINT_ARRAY} and {@link
+	 * PrinterVariables#PRINT_READABLY} are false and the array is adjustable.
+	 */
 	@Test
 	public void test_toString_Adjustable() {
 
@@ -1141,6 +1281,10 @@ public class NILArrayStructImplTest {
 		}
 	}
 
+	/**
+	 * Test for {@link NILArrayStructImpl#toString()} where both {@link PrinterVariables#PRINT_ARRAY} and {@link
+	 * PrinterVariables#PRINT_READABLY} are false and the array is not adjustable.
+	 */
 	@Test
 	public void test_toString_NotAdjustable() {
 

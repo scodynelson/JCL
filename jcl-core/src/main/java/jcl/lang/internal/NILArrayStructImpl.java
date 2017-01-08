@@ -18,22 +18,71 @@ import jcl.lang.statics.PrinterVariables;
 import jcl.type.ArrayType;
 import jcl.type.LispType;
 
+/**
+ * The implementation of a zero-ranked {@link ArrayStruct}.
+ *
+ * @param <TYPE>
+ * 		the type of the array contents
+ */
 public class NILArrayStructImpl<TYPE extends LispStruct> extends ArrayStructImpl<TYPE> {
 
-	protected TYPE content;
+	/**
+	 * The single content value of the structure.
+	 */
+	TYPE content;
 
-	protected NILArrayStructImpl(final ArrayType arrayType, final LispType elementType,
-	                             final TYPE content, final boolean isAdjustable) {
+	/**
+	 * Constructor for building the zero-ranked array structure.
+	 *
+	 * @param arrayType
+	 * 		the {@link LispStruct} type of the array
+	 * @param elementType
+	 * 		the upgraded-array-element-type type of the content value
+	 * @param content
+	 * 		the content value of the structure
+	 * @param isAdjustable
+	 * 		whether or not the structure is mutable
+	 */
+	NILArrayStructImpl(final ArrayType arrayType, final LispType elementType, final TYPE content,
+	                   final boolean isAdjustable) {
 		super(arrayType, elementType, isAdjustable);
 		this.content = content;
 	}
 
-	protected NILArrayStructImpl(final ArrayType arrayType, final LispType elementType,
-	                             final ArrayStruct<TYPE> displacedTo, final Integer displacedIndexOffset,
-	                             final boolean isAdjustable) {
+	/**
+	 * Constructor for building the zero-ranked array structure.
+	 *
+	 * @param arrayType
+	 * 		the {@link LispStruct} type of the array
+	 * @param elementType
+	 * 		the upgraded-array-element-type type of the content value
+	 * @param displacedTo
+	 * 		the array structure that this array structure will be displaced to for content values
+	 * @param displacedIndexOffset
+	 * 		the offset of the index lookup for the content value into the displaced array structure
+	 * @param isAdjustable
+	 * 		whether or not the structure is mutable
+	 */
+	NILArrayStructImpl(final ArrayType arrayType, final LispType elementType,
+	                   final ArrayStruct<TYPE> displacedTo, final Integer displacedIndexOffset,
+	                   final boolean isAdjustable) {
 		super(arrayType, elementType, displacedTo, displacedIndexOffset, isAdjustable);
 	}
 
+	/**
+	 * Builder method for creating a zero-ranked array structure.
+	 *
+	 * @param elementType
+	 * 		the expected element type of the content value
+	 * @param initialElement
+	 * 		the initial content value
+	 * @param isAdjustable
+	 * 		whether or not the structure will be mutable
+	 * @param <T>
+	 * 		the type of the array contents
+	 *
+	 * @return a newly created zero-ranked array structure.
+	 */
 	public static <T extends LispStruct> ArrayStruct<T> valueOf(final LispType elementType, final T initialElement,
 	                                                            final BooleanStruct isAdjustable) {
 		final LispType upgradedET = ArrayStruct.upgradedArrayElementType(elementType);
@@ -49,6 +98,20 @@ public class NILArrayStructImpl<TYPE extends LispStruct> extends ArrayStructImpl
 		return new NILArrayStructImpl<>(arrayType, upgradedET, initialElement, adjustableBoolean);
 	}
 
+	/**
+	 * Builder method for creating a zero-ranked array structure.
+	 *
+	 * @param elementType
+	 * 		the expected element type of the content value
+	 * @param initialContents
+	 * 		the initial content value
+	 * @param isAdjustable
+	 * 		whether or not the structure will be mutable
+	 * @param <T>
+	 * 		the type of the array contents
+	 *
+	 * @return a newly created zero-ranked array structure.
+	 */
 	@SuppressWarnings("unchecked")
 	public static <T extends LispStruct> ArrayStruct<T> valueOf(final LispType elementType,
 	                                                            final SequenceStruct initialContents,
@@ -68,6 +131,22 @@ public class NILArrayStructImpl<TYPE extends LispStruct> extends ArrayStructImpl
 		return new NILArrayStructImpl<>(arrayType, upgradedET, (T) initialContents, adjustableBoolean);
 	}
 
+	/**
+	 * Builder method for creating a zero-ranked array structure.
+	 *
+	 * @param elementType
+	 * 		the expected element type of the content value
+	 * @param displacedTo
+	 * 		the array structure that this array structure will be displaced to for content values
+	 * @param displacedIndexOffset
+	 * 		the offset of the index lookup for the content value into the displaced array structure
+	 * @param isAdjustable
+	 * 		whether or not the structure will be mutable
+	 * @param <T>
+	 * 		the type of the array contents
+	 *
+	 * @return a newly created zero-ranked array structure.
+	 */
 	public static <T extends LispStruct> ArrayStruct<T> valueOf(final LispType elementType,
 	                                                            final ArrayStruct<T> displacedTo,
 	                                                            final IntegerStruct displacedIndexOffset,
@@ -90,11 +169,34 @@ public class NILArrayStructImpl<TYPE extends LispStruct> extends ArrayStructImpl
 		                                isAdjustable.booleanValue());
 	}
 
+	/**
+	 * Builder method for creating a zero-ranked, immutable array structure.
+	 *
+	 * @param elementType
+	 * 		the expected element type of the content value
+	 * @param initialElement
+	 * 		the initial content value
+	 * @param <T>
+	 * 		the type of the array contents
+	 *
+	 * @return a newly created zero-ranked array structure.
+	 */
 	public static <T extends LispStruct> ArrayStruct<T> valueOf(final LispType elementType, final T initialElement) {
 		return valueOf(elementType, initialElement, NILStruct.INSTANCE);
 	}
 
-	@SuppressWarnings("unchecked")
+	/**
+	 * Builder method for creating a zero-ranked, immutable array structure.
+	 *
+	 * @param elementType
+	 * 		the expected element type of the content value
+	 * @param initialContents
+	 * 		the initial content value
+	 * @param <T>
+	 * 		the type of the array contents
+	 *
+	 * @return a newly created zero-ranked array structure.
+	 */
 	public static <T extends LispStruct> ArrayStruct<T> valueOf(final LispType elementType,
 	                                                            final SequenceStruct initialContents) {
 		return valueOf(elementType, initialContents, NILStruct.INSTANCE);
@@ -281,6 +383,12 @@ public class NILArrayStructImpl<TYPE extends LispStruct> extends ArrayStructImpl
 		return newElement;
 	}
 
+	/**
+	 * Validates the provided subscripts, ensuring that there are none provided.
+	 *
+	 * @param subscripts
+	 * 		the subscripts to validate
+	 */
 	private static void validateSubscripts(final IntegerStruct... subscripts) {
 		final int numberOfSubscripts = subscripts.length;
 

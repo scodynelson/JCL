@@ -1,6 +1,5 @@
 package jcl.lang.internal;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -225,10 +224,10 @@ public class NILArrayStructImplTest {
 	public void test_valueOf_Disp_IsNotAdj() {
 
 		final ArrayStruct<LispStruct> displacedTo
-				= VectorStructImpl.valueOf(2,
+				= VectorStructImpl.valueOf(IntegerStruct.TWO,
 				                           TType.INSTANCE,
-				                           Arrays.asList(IntegerStruct.TEN, IntegerStruct.TWO),
-				                           false,
+				                           LispStructFactory.toProperList(IntegerStruct.TEN, IntegerStruct.TWO),
+				                           NILStruct.INSTANCE,
 				                           null);
 		final IntegerStruct displacedIndexOffset = IntegerStruct.ONE;
 		final ArrayStruct<LispStruct> array

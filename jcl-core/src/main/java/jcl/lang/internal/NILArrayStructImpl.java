@@ -312,9 +312,8 @@ public class NILArrayStructImpl<TYPE extends LispStruct> extends ArrayStructImpl
 			return content;
 		}
 
-		// TODO: should the struct just stay persistent vs being unwrapped into an Integer???
-		final IntegerStruct displacedIndexOffsetStruct = IntegerStructImpl.valueOf(displacedIndexOffset);
-		return displacedTo.rowMajorAref(displacedIndexOffsetStruct);
+		final IntegerStruct indexToGet = IntegerStructImpl.valueOf(displacedIndexOffset);
+		return displacedTo.rowMajorAref(indexToGet);
 	}
 
 	@Override
@@ -323,9 +322,8 @@ public class NILArrayStructImpl<TYPE extends LispStruct> extends ArrayStructImpl
 		if (displacedTo == null) {
 			content = newElement;
 		} else {
-			// TODO: should the struct just stay persistent vs being unwrapped into an Integer???
-			final IntegerStruct displacedIndexOffsetStruct = IntegerStructImpl.valueOf(displacedIndexOffset);
-			displacedTo.setfRowMajorAref(newElement, displacedIndexOffsetStruct);
+			final IntegerStruct indexToSet = IntegerStructImpl.valueOf(displacedIndexOffset);
+			displacedTo.setfRowMajorAref(newElement, indexToSet);
 		}
 		return newElement;
 	}

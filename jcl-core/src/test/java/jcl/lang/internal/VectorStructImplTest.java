@@ -96,10 +96,10 @@ public class VectorStructImplTest {
 	public void test_adjustableArrayP_True() {
 
 		final ArrayStruct<LispStruct> array
-				= VectorStructImpl.valueOf(2,
+				= VectorStructImpl.valueOf(IntegerStruct.TWO,
 				                           TType.INSTANCE,
 				                           IntegerStruct.ZERO,
-				                           true,
+				                           TStruct.INSTANCE,
 				                           null);
 		final BooleanStruct result = array.adjustableArrayP();
 		Assert.assertThat(result, is(TStruct.INSTANCE));
@@ -109,10 +109,10 @@ public class VectorStructImplTest {
 	public void test_adjustableArrayP_False() {
 
 		final ArrayStruct<LispStruct> array
-				= VectorStructImpl.valueOf(2,
+				= VectorStructImpl.valueOf(IntegerStruct.TWO,
 				                           TType.INSTANCE,
 				                           IntegerStruct.ZERO,
-				                           false,
+				                           NILStruct.INSTANCE,
 				                           null);
 		final BooleanStruct result = array.adjustableArrayP();
 		Assert.assertThat(result, is(NILStruct.INSTANCE));
@@ -146,10 +146,10 @@ public class VectorStructImplTest {
 		thrown.expectMessage(containsString("is out of bounds"));
 
 		final ArrayStruct<LispStruct> array
-				= VectorStructImpl.valueOf(2,
+				= VectorStructImpl.valueOf(IntegerStruct.TWO,
 				                           TType.INSTANCE,
 				                           IntegerStruct.ZERO,
-				                           false,
+				                           NILStruct.INSTANCE,
 				                           null);
 		array.arrayDimension(IntegerStruct.MINUS_ONE);
 	}
@@ -160,10 +160,10 @@ public class VectorStructImplTest {
 		thrown.expectMessage(containsString("is out of bounds"));
 
 		final ArrayStruct<LispStruct> array
-				= VectorStructImpl.valueOf(2,
+				= VectorStructImpl.valueOf(IntegerStruct.TWO,
 				                           TType.INSTANCE,
 				                           IntegerStruct.ZERO,
-				                           false,
+				                           NILStruct.INSTANCE,
 				                           null);
 		array.arrayDimension(IntegerStruct.ONE);
 	}
@@ -171,10 +171,10 @@ public class VectorStructImplTest {
 	@Test
 	public void test_arrayDimension() {
 		final ArrayStruct<LispStruct> array
-				= VectorStructImpl.valueOf(2,
+				= VectorStructImpl.valueOf(IntegerStruct.TWO,
 				                           TType.INSTANCE,
 				                           IntegerStruct.ZERO,
-				                           false,
+				                           NILStruct.INSTANCE,
 				                           null);
 		final IntegerStruct result = array.arrayDimension(IntegerStruct.ZERO);
 		Assert.assertThat(result.intValue(), is(2));
@@ -188,10 +188,10 @@ public class VectorStructImplTest {
 	@Test
 	public void test_arrayDimensions() {
 		final ArrayStruct<LispStruct> array
-				= VectorStructImpl.valueOf(2,
+				= VectorStructImpl.valueOf(IntegerStruct.TWO,
 				                           TType.INSTANCE,
 				                           IntegerStruct.ZERO,
-				                           false,
+				                           NILStruct.INSTANCE,
 				                           null);
 		final ListStruct result = array.arrayDimensions();
 		Assert.assertThat(result, not(is(NILStruct.INSTANCE)));
@@ -209,10 +209,10 @@ public class VectorStructImplTest {
 	public void test_arrayElementType() {
 		final BitType elementType = BitType.INSTANCE;
 		final ArrayStruct<LispStruct> array
-				= VectorStructImpl.valueOf(2,
+				= VectorStructImpl.valueOf(IntegerStruct.TWO,
 				                           elementType,
 				                           IntegerStruct.ZERO,
-				                           false,
+				                           NILStruct.INSTANCE,
 				                           null);
 		final LispType result = array.arrayElementType();
 		Assert.assertThat(result, is(elementType));
@@ -225,10 +225,10 @@ public class VectorStructImplTest {
 	@Test
 	public void test_arrayHasFillPointerP() {
 		final ArrayStruct<LispStruct> array
-				= VectorStructImpl.valueOf(2,
+				= VectorStructImpl.valueOf(IntegerStruct.TWO,
 				                           TType.INSTANCE,
 				                           IntegerStruct.ZERO,
-				                           false,
+				                           NILStruct.INSTANCE,
 				                           null);
 		final BooleanStruct result = array.arrayHasFillPointerP();
 		Assert.assertThat(result, is(NILStruct.INSTANCE));
@@ -250,10 +250,10 @@ public class VectorStructImplTest {
 	@Test
 	public void test_arrayInBoundsP_False_WrongNumberOfSubscripts_Less() {
 		final ArrayStruct<LispStruct> array
-				= VectorStructImpl.valueOf(2,
+				= VectorStructImpl.valueOf(IntegerStruct.TWO,
 				                           TType.INSTANCE,
 				                           IntegerStruct.ZERO,
-				                           false,
+				                           NILStruct.INSTANCE,
 				                           null);
 		final BooleanStruct result = array.arrayInBoundsP();
 		Assert.assertThat(result.booleanValue(), is(false));
@@ -262,10 +262,10 @@ public class VectorStructImplTest {
 	@Test
 	public void test_arrayInBoundsP_False_WrongNumberOfSubscripts_More() {
 		final ArrayStruct<LispStruct> array
-				= VectorStructImpl.valueOf(2,
+				= VectorStructImpl.valueOf(IntegerStruct.TWO,
 				                           TType.INSTANCE,
 				                           IntegerStruct.ZERO,
-				                           false,
+				                           NILStruct.INSTANCE,
 				                           null);
 		final BooleanStruct result = array.arrayInBoundsP(IntegerStruct.ONE, IntegerStruct.ONE);
 		Assert.assertThat(result.booleanValue(), is(false));
@@ -274,10 +274,10 @@ public class VectorStructImplTest {
 	@Test
 	public void test_arrayInBoundsP_False_OutOfBoundsSubscripts_MinusOne() {
 		final ArrayStruct<LispStruct> array
-				= VectorStructImpl.valueOf(2,
+				= VectorStructImpl.valueOf(IntegerStruct.TWO,
 				                           TType.INSTANCE,
 				                           IntegerStruct.ZERO,
-				                           false,
+				                           NILStruct.INSTANCE,
 				                           null);
 		final BooleanStruct result = array.arrayInBoundsP(IntegerStruct.MINUS_ONE);
 		Assert.assertThat(result.booleanValue(), is(false));
@@ -286,10 +286,10 @@ public class VectorStructImplTest {
 	@Test
 	public void test_arrayInBoundsP_False_OutOfBoundsSubscripts_More() {
 		final ArrayStruct<LispStruct> array
-				= VectorStructImpl.valueOf(2,
+				= VectorStructImpl.valueOf(IntegerStruct.TWO,
 				                           TType.INSTANCE,
 				                           IntegerStruct.ZERO,
-				                           false,
+				                           NILStruct.INSTANCE,
 				                           null);
 		final BooleanStruct result = array.arrayInBoundsP(IntegerStruct.TEN);
 		Assert.assertThat(result.booleanValue(), is(false));
@@ -298,10 +298,10 @@ public class VectorStructImplTest {
 	@Test
 	public void test_arrayInBoundsP_True() {
 		final ArrayStruct<LispStruct> array
-				= VectorStructImpl.valueOf(2,
+				= VectorStructImpl.valueOf(IntegerStruct.TWO,
 				                           TType.INSTANCE,
 				                           IntegerStruct.ZERO,
-				                           false,
+				                           NILStruct.INSTANCE,
 				                           null);
 		final BooleanStruct result = array.arrayInBoundsP(IntegerStruct.ONE);
 		Assert.assertThat(result.booleanValue(), is(true));
@@ -314,10 +314,10 @@ public class VectorStructImplTest {
 	@Test
 	public void test_arrayRank() {
 		final ArrayStruct<LispStruct> array
-				= VectorStructImpl.valueOf(2,
+				= VectorStructImpl.valueOf(IntegerStruct.TWO,
 				                           TType.INSTANCE,
 				                           IntegerStruct.ZERO,
-				                           false,
+				                           NILStruct.INSTANCE,
 				                           null);
 		final IntegerStruct result = array.arrayRank();
 		Assert.assertThat(result.intValue(), is(1));
@@ -339,10 +339,10 @@ public class VectorStructImplTest {
 	@Test
 	public void test_arrayTotalSize_Empty() {
 		final ArrayStruct<LispStruct> array
-				= VectorStructImpl.valueOf(0,
+				= VectorStructImpl.valueOf(IntegerStruct.ZERO,
 				                           TType.INSTANCE,
 				                           IntegerStruct.ZERO,
-				                           false,
+				                           NILStruct.INSTANCE,
 				                           null);
 		final IntegerStruct result = array.arrayTotalSize();
 		Assert.assertThat(result.intValue(), is(0));
@@ -351,10 +351,10 @@ public class VectorStructImplTest {
 	@Test
 	public void test_arrayTotalSize_NotEmpty() {
 		final ArrayStruct<LispStruct> array
-				= VectorStructImpl.valueOf(2,
+				= VectorStructImpl.valueOf(IntegerStruct.TWO,
 				                           TType.INSTANCE,
 				                           IntegerStruct.ZERO,
-				                           false,
+				                           NILStruct.INSTANCE,
 				                           null);
 		final IntegerStruct result = array.arrayTotalSize();
 		Assert.assertThat(result.intValue(), is(2));

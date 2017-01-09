@@ -13,6 +13,7 @@ import jcl.lang.NILStruct;
 import jcl.lang.SequenceStruct;
 import jcl.lang.TStruct;
 import jcl.lang.ValuesStruct;
+import jcl.lang.VectorStruct;
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.factory.LispStructFactory;
@@ -225,9 +226,9 @@ public class NILArrayStructImplTest {
 
 		final ListStruct initialContents = LispStructFactory.toProperList(IntegerStruct.TEN, IntegerStruct.TWO);
 		final ArrayStruct<LispStruct> displacedTo
-				= new VectorStructImpl.Builder<>(IntegerStruct.TWO).initialContents(initialContents)
-				                                                   .adjustable(TStruct.INSTANCE)
-				                                                   .build();
+				= new VectorStruct.Builder<>(IntegerStruct.TWO).initialContents(initialContents)
+				                                               .adjustable(TStruct.INSTANCE)
+				                                               .build();
 		final IntegerStruct displacedIndexOffset = IntegerStruct.ONE;
 		final ArrayStruct<LispStruct> array
 				= NILArrayStructImpl.valueOf(TType.INSTANCE,

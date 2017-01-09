@@ -43,7 +43,7 @@ public class NILArrayStructImpl<TYPE extends LispStruct> extends ArrayStructImpl
 	 * @param isAdjustable
 	 * 		whether or not the structure is mutable
 	 */
-	NILArrayStructImpl(final ArrayType arrayType, final LispType elementType, final TYPE content,
+	public NILArrayStructImpl(final ArrayType arrayType, final LispType elementType, final TYPE content,
 	                   final boolean isAdjustable) {
 		super(arrayType, elementType, isAdjustable);
 		this.content = content;
@@ -63,7 +63,7 @@ public class NILArrayStructImpl<TYPE extends LispStruct> extends ArrayStructImpl
 	 * @param isAdjustable
 	 * 		whether or not the structure is mutable
 	 */
-	NILArrayStructImpl(final ArrayType arrayType, final LispType elementType,
+	public NILArrayStructImpl(final ArrayType arrayType, final LispType elementType,
 	                   final ArrayStruct<TYPE> displacedTo, final Integer displacedIndexOffset,
 	                   final boolean isAdjustable) {
 		super(arrayType, elementType, displacedTo, displacedIndexOffset, isAdjustable);

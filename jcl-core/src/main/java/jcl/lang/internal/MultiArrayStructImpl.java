@@ -36,7 +36,7 @@ public class MultiArrayStructImpl<TYPE extends LispStruct> extends ArrayStructIm
 
 	protected List<TYPE> contents;
 
-	protected MultiArrayStructImpl(final ArrayType arrayType, final List<Integer> dimensions,
+	public MultiArrayStructImpl(final ArrayType arrayType, final List<Integer> dimensions,
 	                               final LispType elementType, final List<TYPE> contents,
 	                               final boolean isAdjustable) {
 		super(arrayType, elementType, isAdjustable);
@@ -49,7 +49,7 @@ public class MultiArrayStructImpl<TYPE extends LispStruct> extends ArrayStructIm
 		this.contents = contents;
 	}
 
-	protected MultiArrayStructImpl(final ArrayType arrayType, final List<Integer> dimensions,
+	public MultiArrayStructImpl(final ArrayType arrayType, final List<Integer> dimensions,
 	                               final LispType elementType, final ArrayStruct<TYPE> displacedTo,
 	                               final Integer displacedIndexOffset, final boolean isAdjustable) {
 		super(arrayType, elementType, displacedTo, displacedIndexOffset, isAdjustable);
@@ -111,7 +111,7 @@ public class MultiArrayStructImpl<TYPE extends LispStruct> extends ArrayStructIm
 		final List<Integer> dimensionInts = dimensions.stream()
 		                                              .map(IntegerStruct::intValue)
 		                                              .collect(Collectors.toList());
-		final List<T> validContents = getValidContents(dimensionInts, elementType, initialContents);
+		final List<T> validContents = ArrayStruct.getValidContents(dimensionInts, elementType, initialContents);
 
 		final boolean adjustableBoolean = isAdjustable.booleanValue();
 		final ArrayType arrayType = getArrayType(adjustableBoolean);
@@ -461,7 +461,7 @@ public class MultiArrayStructImpl<TYPE extends LispStruct> extends ArrayStructIm
 		final List<Integer> dimensionInts = dimensions.stream()
 		                                              .map(IntegerStruct::intValue)
 		                                              .collect(Collectors.toList());
-		final List<TYPE> validContents = getValidContents(dimensionInts, elementType, initialContents);
+		final List<TYPE> validContents = ArrayStruct.getValidContents(dimensionInts, elementType, initialContents);
 
 //		return new ArrayStructImpl<>(arrayType, dimensionInts, elementType, validContents, adjustableBoolean);
 

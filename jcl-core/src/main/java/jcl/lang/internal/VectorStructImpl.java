@@ -58,8 +58,8 @@ public class VectorStructImpl<TYPE extends LispStruct> extends ArrayStructImpl<T
 	 * @param fillPointer
 	 * 		the vector fillPointer
 	 */
-	VectorStructImpl(final VectorType vectorType, final Integer size, final LispType elementType,
-	                 final List<TYPE> contents, final boolean isAdjustable, final Integer fillPointer) {
+	public VectorStructImpl(final VectorType vectorType, final Integer size, final LispType elementType,
+	                        final List<TYPE> contents, final boolean isAdjustable, final Integer fillPointer) {
 		super(vectorType, elementType, isAdjustable);
 
 		totalSize = size;
@@ -85,134 +85,13 @@ public class VectorStructImpl<TYPE extends LispStruct> extends ArrayStructImpl<T
 	 * @param fillPointer
 	 * 		the vector fillPointer
 	 */
-	VectorStructImpl(final VectorType vectorType, final Integer size, final LispType elementType,
-	                 final ArrayStruct<TYPE> displacedTo, final Integer displacedIndexOffset,
-	                 final boolean isAdjustable, final Integer fillPointer) {
+	public VectorStructImpl(final VectorType vectorType, final Integer size, final LispType elementType,
+	                        final ArrayStruct<TYPE> displacedTo, final Integer displacedIndexOffset,
+	                        final boolean isAdjustable, final Integer fillPointer) {
 		super(vectorType, elementType, displacedTo, displacedIndexOffset, isAdjustable);
 
 		totalSize = size;
 		this.fillPointer = fillPointer;
-	}
-
-	public static class Builder<T extends LispStruct> {
-
-		private final IntegerStruct size;
-		private LispType elementType = TType.INSTANCE;
-		@SuppressWarnings("unchecked")
-		private T initialElement = (T) NILStruct.INSTANCE;
-		private SequenceStruct initialContents;
-		private BooleanStruct adjustable = NILStruct.INSTANCE;
-		private IntegerStruct fillPointer;
-		private ArrayStruct<T> displacedTo;
-		private IntegerStruct displacedIndexOffset = IntegerStruct.ZERO;
-
-		public Builder(final IntegerStruct size) {
-			this.size = size;
-		}
-
-		public Builder<T> elementType(final LispType elementType) {
-			this.elementType = elementType;
-			return this;
-		}
-
-		public Builder<T> initialElement(final T initialElement) {
-			this.initialElement = initialElement;
-			return this;
-		}
-
-		public Builder<T> initialContents(final SequenceStruct initialContents) {
-			this.initialContents = initialContents;
-			return this;
-		}
-
-		public Builder<T> adjustable(final BooleanStruct adjustable) {
-			this.adjustable = adjustable;
-			return this;
-		}
-
-		public Builder<T> fillPointer(final IntegerStruct fillPointer) {
-			this.fillPointer = fillPointer;
-			return this;
-		}
-
-		public Builder<T> displacedTo(final ArrayStruct<T> displacedTo) {
-			this.displacedTo = displacedTo;
-			return this;
-		}
-
-		public Builder<T> displacedIndexOffset(final IntegerStruct displacedIndexOffset) {
-			this.displacedIndexOffset = displacedIndexOffset;
-			return this;
-		}
-
-		public VectorStruct<T> build() {
-			final int sizeInt = size.intValue();
-			final LispType upgradedET = ArrayStruct.upgradedArrayElementType(elementType);
-			final boolean adjustableBoolean = adjustable.booleanValue();
-			final Integer fillPointerInt = (fillPointer == null) ? null : fillPointer.intValue();
-
-			if (displacedTo != null) {
-				final LispType displacedToType = displacedTo.getType();
-				if (!displacedToType.equals(upgradedET) && !upgradedET.equals(displacedToType)) {
-					throw new TypeErrorException(
-							"Provided displaced to " + displacedTo + " is not an array with a subtype of the upgraded-array-element-type " + upgradedET + '.');
-				}
-
-				try {
-					displacedTo.rowMajorAref(displacedIndexOffset);
-				} catch (final ErrorException ignore) {
-					throw new ErrorException("Requested size is too large to displace to " + displacedTo + '.');
-				}
-
-				return new VectorStructImpl<>(VectorType.INSTANCE,
-				                              sizeInt,
-				                              upgradedET,
-				                              displacedTo,
-				                              displacedIndexOffset.intValue(),
-				                              adjustableBoolean,
-				                              fillPointerInt);
-			}
-
-			final VectorType vectorType = (adjustableBoolean || (fillPointerInt != null))
-			                              ? VectorType.INSTANCE
-			                              : SimpleVectorType.INSTANCE;
-
-			if (initialContents != null) {
-				for (final LispStruct element : initialContents) {
-					final LispType initialElementType = element.getType();
-					if (!initialElementType.equals(upgradedET) && !upgradedET.equals(initialElementType)) {
-						throw new TypeErrorException(
-								"Provided element " + element + " is not a subtype of the upgraded-array-element-type " + upgradedET + '.');
-					}
-				}
-
-				final List<T> validContents = getValidContents(Collections.singletonList(sizeInt),
-				                                               elementType,
-				                                               initialContents);
-				return new VectorStructImpl<>(vectorType,
-				                              sizeInt,
-				                              elementType,
-				                              validContents,
-				                              adjustableBoolean,
-				                              fillPointerInt);
-			} else {
-				final LispType initialElementType = initialElement.getType();
-				if (!initialElementType.equals(upgradedET) && !upgradedET.equals(initialElementType)) {
-					throw new TypeErrorException(
-							"Provided element " + initialElement + " is not a subtype of the upgraded-array-element-type " + upgradedET + '.');
-				}
-
-				final List<T> contents = Stream.generate(() -> initialElement)
-				                               .limit(sizeInt)
-				                               .collect(Collectors.toList());
-				return new VectorStructImpl<>(vectorType,
-				                              sizeInt,
-				                              elementType,
-				                              contents,
-				                              adjustableBoolean,
-				                              fillPointerInt);
-			}
-		}
 	}
 
 	/*
@@ -319,9 +198,9 @@ public class VectorStructImpl<TYPE extends LispStruct> extends ArrayStructImpl<T
 			displacedIndexOffset = 0;
 			return this;
 		} else {
-			return new Builder<TYPE>(size).elementType(upgradedET)
-			                              .initialElement(initialElement)
-			                              .build();
+			return new VectorStruct.Builder<TYPE>(size).elementType(upgradedET)
+			                                           .initialElement(initialElement)
+			                                           .build();
 		}
 	}
 
@@ -351,14 +230,14 @@ public class VectorStructImpl<TYPE extends LispStruct> extends ArrayStructImpl<T
 		if (isAdjustable) {
 			this.elementType = upgradedET;
 			final List<Integer> dimensionInts = Collections.singletonList(size.intValue());
-			contents = getValidContents(dimensionInts, elementType, initialContents);
+			contents = ArrayStruct.getValidContents(dimensionInts, elementType, initialContents);
 			displacedTo = null;
 			displacedIndexOffset = 0;
 			return this;
 		} else {
-			return new Builder<TYPE>(size).elementType(upgradedET)
-			                              .initialContents(initialContents)
-			                              .build();
+			return new VectorStruct.Builder<TYPE>(size).elementType(upgradedET)
+			                                           .initialContents(initialContents)
+			                                           .build();
 		}
 	}
 
@@ -397,10 +276,10 @@ public class VectorStructImpl<TYPE extends LispStruct> extends ArrayStructImpl<T
 			this.displacedIndexOffset = displacedIndexOffset.intValue();
 			return this;
 		} else {
-			return new Builder<TYPE>(size).elementType(upgradedET)
-			                              .displacedTo(displacedTo)
-			                              .displacedIndexOffset(displacedIndexOffset)
-			                              .build();
+			return new VectorStruct.Builder<TYPE>(size).elementType(upgradedET)
+			                                           .displacedTo(displacedTo)
+			                                           .displacedIndexOffset(displacedIndexOffset)
+			                                           .build();
 		}
 	}
 

@@ -18,12 +18,12 @@ import jcl.type.SimpleArrayType;
  */
 public class NILBitArrayStructImpl extends NILArrayStructImpl<IntegerStruct> implements BitArrayStruct {
 
-	private NILBitArrayStructImpl(final ArrayType arrayType, final IntegerStruct content,
+	public NILBitArrayStructImpl(final ArrayType arrayType, final IntegerStruct content,
 	                                final boolean isAdjustable) {
 		super(arrayType, BitType.INSTANCE, content, isAdjustable);
 	}
 
-	private NILBitArrayStructImpl(final ArrayType arrayType, final ArrayStruct<IntegerStruct> displacedTo,
+	public NILBitArrayStructImpl(final ArrayType arrayType, final ArrayStruct<IntegerStruct> displacedTo,
 	                              final Integer displacedIndexOffset, final boolean isAdjustable) {
 		super(arrayType, BitType.INSTANCE, displacedTo, displacedIndexOffset, isAdjustable);
 	}

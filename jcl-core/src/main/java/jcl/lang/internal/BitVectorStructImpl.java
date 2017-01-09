@@ -21,7 +21,7 @@ public final class BitVectorStructImpl extends VectorStructImpl<IntegerStruct> i
 
 	private static final Pattern BIT_PATTERN = Pattern.compile("[0|1]+");
 
-	private BitVectorStructImpl(final BitVectorType bitVectorType, final Integer size,
+	public BitVectorStructImpl(final BitVectorType bitVectorType, final Integer size,
 	                            final List<IntegerStruct> contents, final boolean isAdjustable,
 	                            final Integer fillPointer) {
 		super(bitVectorType, size, BitType.INSTANCE, contents, isAdjustable, fillPointer);

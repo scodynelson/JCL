@@ -1,12 +1,18 @@
 package jcl.lang;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.type.LispType;
 import jcl.type.SimpleArrayType;
+import jcl.type.SimpleVectorType;
+import jcl.type.TType;
+import jcl.type.VectorType;
 
 /**
  * The {@link BitArrayStruct} is the object representation of a Lisp 'bit-array' type.
@@ -207,4 +213,140 @@ public interface BitArrayStruct extends ArrayStruct<IntegerStruct> {
 	}
 
 	BitArrayStruct copyBitArray();
+
+	class Builder {
+
+		private final List<IntegerStruct> dimensions;
+		private LispType elementType = TType.INSTANCE;
+		private IntegerStruct initialElement = IntegerStruct.ZERO;
+		private SequenceStruct initialContents;
+		private BooleanStruct adjustable = NILStruct.INSTANCE;
+		private IntegerStruct fillPointer;
+		private ArrayStruct<IntegerStruct> displacedTo;
+		private IntegerStruct displacedIndexOffset = IntegerStruct.ZERO;
+
+		public Builder(final List<IntegerStruct> dimensions) {
+			this.dimensions = dimensions;
+		}
+
+		public BitArrayStruct.Builder elementType(final LispType elementType) {
+			this.elementType = elementType;
+			return this;
+		}
+
+		public BitArrayStruct.Builder initialElement(final IntegerStruct initialElement) {
+			this.initialElement = initialElement;
+			return this;
+		}
+
+		public BitArrayStruct.Builder initialContents(final SequenceStruct initialContents) {
+			this.initialContents = initialContents;
+			return this;
+		}
+
+		public BitArrayStruct.Builder adjustable(final BooleanStruct adjustable) {
+			this.adjustable = adjustable;
+			return this;
+		}
+
+		public BitArrayStruct.Builder fillPointer(final IntegerStruct fillPointer) {
+			this.fillPointer = fillPointer;
+			return this;
+		}
+
+		public BitArrayStruct.Builder displacedTo(final ArrayStruct<IntegerStruct> displacedTo) {
+			this.displacedTo = displacedTo;
+			return this;
+		}
+
+		public BitArrayStruct.Builder displacedIndexOffset(final IntegerStruct displacedIndexOffset) {
+			this.displacedIndexOffset = displacedIndexOffset;
+			return this;
+		}
+
+		public BitArrayStruct build() {
+			if (dimensions.size() == 1) {
+				return new BitVectorStruct.Builder(dimensions.get(0))
+						.elementType(elementType)
+						.initialElement(initialElement)
+						.initialContents(initialContents)
+						.adjustable(adjustable)
+						.fillPointer(fillPointer)
+						.displacedTo(displacedTo)
+						.displacedIndexOffset(displacedIndexOffset)
+						.build();
+			}
+
+			final LispType upgradedET = ArrayStruct.upgradedArrayElementType(elementType);
+
+			final boolean adjustableBoolean = adjustable.booleanValue();
+			final Integer fillPointerInt = (fillPointer == null) ? null : fillPointer.intValue();
+
+			if (displacedTo != null) {
+				final LispType displacedToType = displacedTo.getType();
+				if (!displacedToType.equals(upgradedET) && !upgradedET.equals(displacedToType)) {
+					throw new TypeErrorException(
+							"Provided displaced to " + displacedTo + " is not an array with a subtype of the upgraded-array-element-type " + upgradedET + '.');
+				}
+
+				try {
+					displacedTo.rowMajorAref(displacedIndexOffset);
+				} catch (final ErrorException ignore) {
+					throw new ErrorException("Requested size is too large to displace to " + displacedTo + '.');
+				}
+
+//				return new VectorStructImpl<>(VectorType.INSTANCE,
+//				                              sizeInt,
+//				                              upgradedET,
+//				                              displacedTo,
+//				                              displacedIndexOffset.intValue(),
+//				                              adjustableBoolean,
+//				                              fillPointerInt);
+				return null;
+			}
+
+			final VectorType vectorType = (adjustableBoolean || (fillPointerInt != null))
+			                              ? VectorType.INSTANCE
+			                              : SimpleVectorType.INSTANCE;
+
+			if (initialContents != null) {
+				for (final LispStruct element : initialContents) {
+					final LispType initialElementType = element.getType();
+					if (!initialElementType.equals(upgradedET) && !upgradedET.equals(initialElementType)) {
+						throw new TypeErrorException(
+								"Provided element " + element + " is not a subtype of the upgraded-array-element-type " + upgradedET + '.');
+					}
+				}
+
+				final List<IntegerStruct> validContents = ArrayStruct.getValidContents(Collections.singletonList(0),
+				                                                                       // TODO
+				                                                                       elementType,
+				                                                                       initialContents);
+//				return new VectorStructImpl<>(vectorType,
+//				                              sizeInt,
+//				                              elementType,
+//				                              validContents,
+//				                              adjustableBoolean,
+//				                              fillPointerInt);
+				return null;
+			} else {
+				final LispType initialElementType = initialElement.getType();
+				if (!initialElementType.equals(upgradedET) && !upgradedET.equals(initialElementType)) {
+					throw new TypeErrorException(
+							"Provided element " + initialElement + " is not a subtype of the upgraded-array-element-type " + upgradedET + '.');
+				}
+
+				final List<IntegerStruct> contents = Stream.generate(() -> initialElement)
+				                                           .limit(0) // TODO
+				                                           .collect(Collectors.toList());
+//				return new VectorStructImpl<>(vectorType,
+//				                              sizeInt,
+//				                              elementType,
+//				                              contents,
+//				                              adjustableBoolean,
+//				                              fillPointerInt);
+				return null;
+			}
+		}
+	}
 }

@@ -22,12 +22,12 @@ import jcl.type.SimpleArrayType;
  */
 public class MultiBitArrayStructImpl extends MultiArrayStructImpl<IntegerStruct> implements BitArrayStruct {
 
-	private MultiBitArrayStructImpl(final ArrayType arrayType, final List<Integer> dimensions,
+	public MultiBitArrayStructImpl(final ArrayType arrayType, final List<Integer> dimensions,
 	                                final List<IntegerStruct> contents, final boolean isAdjustable) {
 		super(arrayType, dimensions, BitType.INSTANCE, contents, isAdjustable);
 	}
 
-	private MultiBitArrayStructImpl(final ArrayType arrayType, final List<Integer> dimensions,
+	public MultiBitArrayStructImpl(final ArrayType arrayType, final List<Integer> dimensions,
 	                                final ArrayStruct<IntegerStruct> displacedTo, final Integer displacedIndexOffset,
 	                                final boolean isAdjustable) {
 		super(arrayType, dimensions, BitType.INSTANCE, displacedTo, displacedIndexOffset, isAdjustable);

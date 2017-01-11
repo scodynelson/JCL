@@ -1,6 +1,7 @@
 package jcl.lang;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -185,25 +186,51 @@ public interface ArrayStruct<TYPE extends LispStruct> extends LispStruct {
 		return validContents;
 	}
 
+	static <T extends LispStruct> VectorStruct.Builder<T> builder(final IntegerStruct size) {
+		return new VectorStruct.Builder<>(size);
+	}
+
+	static <T extends LispStruct> ArrayStruct.Builder<T> builder(final IntegerStruct... dimensions) {
+		return new ArrayStruct.Builder<>(dimensions);
+	}
+
 	class Builder<T extends LispStruct> {
 
-		private final List<IntegerStruct> dimensions;
-		private LispType elementType = TType.INSTANCE;
-		@SuppressWarnings("unchecked")
-		private T initialElement = (T) NILStruct.INSTANCE;
-		private SequenceStruct initialContents;
-		private BooleanStruct adjustable = NILStruct.INSTANCE;
-		private IntegerStruct fillPointer;
-		private ArrayStruct<T> displacedTo;
-		private IntegerStruct displacedIndexOffset = IntegerStruct.ZERO;
+		protected final IntegerStruct[] dimensions;
 
-		public Builder(final List<IntegerStruct> dimensions) {
+		protected LispType elementType;
+		protected T initialElement;
+		protected SequenceStruct initialContents;
+		protected BooleanStruct adjustable = NILStruct.INSTANCE;
+		protected ArrayStruct<T> displacedTo;
+		protected IntegerStruct displacedIndexOffset = IntegerStruct.ZERO;
+
+		protected Builder(final IntegerStruct... dimensions) {
 			this.dimensions = dimensions;
 		}
 
 		public ArrayStruct.Builder<T> elementType(final LispType elementType) {
 			this.elementType = elementType;
 			return this;
+		}
+
+		@SuppressWarnings("unchecked")
+		// TODO: return type here
+		public BitVectorStruct.Builder elementType(final BitType elementType) {
+			if ((initialElement != null) && !(initialElement instanceof IntegerStruct)) {
+				throw new ErrorException("The value " + initialElement + " is not of the expected type BIT.");
+			}
+			if (!BitType.INSTANCE.equals(displacedTo.arrayElementType())) {
+				throw new ErrorException(
+						"The :DISPLACED-TO array " + displacedTo + " is not of :ELEMENT-TYPE BIT");
+			}
+			return BitArrayStruct.builder(dimensions)
+			                     .elementType(elementType)
+			                     .initialElement((IntegerStruct) initialElement)
+			                     .initialContents(initialContents)
+			                     .adjustable(adjustable)
+			                     .displacedTo((ArrayStruct<IntegerStruct>) displacedTo)
+			                     .displacedIndexOffset(displacedIndexOffset);
 		}
 
 		public ArrayStruct.Builder<T> initialElement(final T initialElement) {
@@ -222,8 +249,7 @@ public interface ArrayStruct<TYPE extends LispStruct> extends LispStruct {
 		}
 
 		public ArrayStruct.Builder<T> fillPointer(final IntegerStruct fillPointer) {
-			this.fillPointer = fillPointer;
-			return this;
+			throw new ErrorException("Non-vector arrays cannot adjust fill-pointer.");
 		}
 
 		public ArrayStruct.Builder<T> displacedTo(final ArrayStruct<T> displacedTo) {
@@ -236,44 +262,14 @@ public interface ArrayStruct<TYPE extends LispStruct> extends LispStruct {
 			return this;
 		}
 
+		@SuppressWarnings("unchecked")
 		public ArrayStruct<T> build() {
-			if (dimensions.size() == 1) {
-				return new VectorStruct.Builder<T>(dimensions.get(0))
-						.elementType(elementType)
-						.initialElement(initialElement)
-						.initialContents(initialContents)
-						.adjustable(adjustable)
-						.fillPointer(fillPointer)
-						.displacedTo(displacedTo)
-						.displacedIndexOffset(displacedIndexOffset)
-						.build();
-			}
-			if (fillPointer != null) {
-				throw new ErrorException("Non-vector arrays cannot adjust fill-pointer.");
-			}
-
 			final LispType upgradedET = upgradedArrayElementType(elementType);
-			if (BitType.INSTANCE.equals(upgradedET) || upgradedET.equals(BitType.INSTANCE)) {
-				return (ArrayStruct<T>) new BitArrayStruct.Builder(dimensions)
-						.elementType(upgradedET)
-						.initialElement((IntegerStruct) initialElement)
-						.initialContents(initialContents)
-						.adjustable(adjustable)
-						.fillPointer(fillPointer)
-						.displacedTo((ArrayStruct<IntegerStruct>) displacedTo)
-						.displacedIndexOffset(displacedIndexOffset)
-						.build();
-			}
-
 			final boolean adjustableBoolean = adjustable.booleanValue();
-
-			final List<Integer> dimensionInts = dimensions.stream()
-			                                              .map(IntegerStruct::intValue)
-			                                              .collect(Collectors.toList());
 
 			if (displacedTo != null) {
 				final LispType displacedToType = displacedTo.getType();
-				if (!displacedToType.equals(upgradedET) && !upgradedET.equals(displacedToType)) {
+				if (displacedToType.isNotOfType(upgradedET)) {
 					throw new TypeErrorException(
 							"Provided displaced to " + displacedTo + " is not an array with a subtype of the upgraded-array-element-type " + upgradedET + '.');
 				}
@@ -284,7 +280,7 @@ public interface ArrayStruct<TYPE extends LispStruct> extends LispStruct {
 					throw new ErrorException("Requested size is too large to displace to " + displacedTo + '.');
 				}
 
-				if (dimensions.isEmpty()) {
+				if (dimensions.length == 0) {
 					return new NILArrayStructImpl<>(ArrayType.INSTANCE,
 					                                upgradedET,
 					                                displacedTo,
@@ -292,6 +288,9 @@ public interface ArrayStruct<TYPE extends LispStruct> extends LispStruct {
 					                                adjustableBoolean);
 				}
 
+				final List<Integer> dimensionInts = Arrays.stream(dimensions)
+				                                          .map(IntegerStruct::intValue)
+				                                          .collect(Collectors.toList());
 				return new MultiArrayStructImpl<>(ArrayType.INSTANCE,
 				                                  dimensionInts,
 				                                  upgradedET,
@@ -300,23 +299,32 @@ public interface ArrayStruct<TYPE extends LispStruct> extends LispStruct {
 				                                  adjustableBoolean);
 			}
 
+			final ArrayType arrayType = adjustableBoolean
+			                            ? ArrayType.INSTANCE
+			                            : SimpleArrayType.INSTANCE;
+
 			if (initialContents != null) {
 				for (final LispStruct element : initialContents) {
 					final LispType initialElementType = element.getType();
-					if (!initialElementType.equals(upgradedET) && !upgradedET.equals(initialElementType)) {
+					if (initialElementType.isNotOfType(upgradedET)) {
 						throw new TypeErrorException(
 								"Provided element " + element + " is not a subtype of the upgraded-array-element-type " + upgradedET + '.');
 					}
 				}
-				final ArrayType arrayType = adjustableBoolean ? ArrayType.INSTANCE : SimpleArrayType.INSTANCE;
 
-				if (dimensions.isEmpty()) {
+				if (dimensions.length == 0) {
 					return new NILArrayStructImpl<>(arrayType,
 					                                upgradedET,
 					                                (T) initialContents,
 					                                adjustableBoolean);
 				}
-				final List<T> validContents = getValidContents(dimensionInts, upgradedET, initialContents);
+
+				final List<Integer> dimensionInts = Arrays.stream(dimensions)
+				                                          .map(IntegerStruct::intValue)
+				                                          .collect(Collectors.toList());
+				final List<T> validContents = getValidContents(dimensionInts,
+				                                               upgradedET,
+				                                               initialContents);
 				return new MultiArrayStructImpl<>(arrayType,
 				                                  dimensionInts,
 				                                  upgradedET,
@@ -324,19 +332,21 @@ public interface ArrayStruct<TYPE extends LispStruct> extends LispStruct {
 				                                  adjustableBoolean);
 			} else {
 				final LispType initialElementType = initialElement.getType();
-				if (!initialElementType.equals(upgradedET) && !upgradedET.equals(initialElementType)) {
+				if (initialElementType.isNotOfType(upgradedET)) {
 					throw new TypeErrorException(
 							"Provided element " + initialElement + " is not a subtype of the upgraded-array-element-type " + upgradedET + '.');
 				}
-				final ArrayType arrayType = adjustableBoolean ? ArrayType.INSTANCE : SimpleArrayType.INSTANCE;
 
-				if (dimensions.isEmpty()) {
+				if (dimensions.length == 0) {
 					return new NILArrayStructImpl<>(arrayType,
 					                                upgradedET,
 					                                initialElement,
 					                                adjustableBoolean);
 				}
 
+				final List<Integer> dimensionInts = Arrays.stream(dimensions)
+				                                          .map(IntegerStruct::intValue)
+				                                          .collect(Collectors.toList());
 				final int totalSize = dimensionInts.stream()
 				                                   .mapToInt(Integer::intValue)
 				                                   .reduce(1, (x, y) -> x * y);

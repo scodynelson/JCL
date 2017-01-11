@@ -8,9 +8,10 @@ import java.util.stream.Stream;
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.internal.VectorStructImpl;
+import jcl.type.BitType;
+import jcl.type.CharacterType;
 import jcl.type.LispType;
 import jcl.type.SimpleVectorType;
-import jcl.type.TType;
 import jcl.type.VectorType;
 
 /**
@@ -93,57 +94,103 @@ public interface VectorStruct<TYPE extends LispStruct> extends ArrayStruct<TYPE>
 	 */
 	IntegerStruct vectorPushExtend(final TYPE element, final IntegerStruct extensionAmount);
 
-	class Builder<T extends LispStruct> {
+	static <T extends LispStruct> VectorStruct.Builder<T> builder(final IntegerStruct size) {
+		return new VectorStruct.Builder<>(size);
+	}
 
-		private final IntegerStruct size;
-		private LispType elementType = TType.INSTANCE;
-		@SuppressWarnings("unchecked")
-		private T initialElement = (T) NILStruct.INSTANCE;
-		private SequenceStruct initialContents;
-		private BooleanStruct adjustable = NILStruct.INSTANCE;
-		private IntegerStruct fillPointer;
-		private ArrayStruct<T> displacedTo;
-		private IntegerStruct displacedIndexOffset = IntegerStruct.ZERO;
+	class Builder<T extends LispStruct> extends ArrayStruct.Builder<T> {
 
-		public Builder(final IntegerStruct size) {
+		protected final IntegerStruct size;
+
+		protected IntegerStruct fillPointer;
+
+		protected Builder(final IntegerStruct size) {
+			super(size);
 			this.size = size;
 		}
 
-		public Builder<T> elementType(final LispType elementType) {
-			this.elementType = elementType;
+		@Override
+		public VectorStruct.Builder<T> elementType(final LispType elementType) {
+			super.elementType(elementType);
 			return this;
 		}
 
-		public Builder<T> initialElement(final T initialElement) {
-			this.initialElement = initialElement;
+		@SuppressWarnings("unchecked")
+		@Override
+		public BitVectorStruct.Builder elementType(final BitType elementType) {
+			if ((initialElement != null) && !(initialElement instanceof IntegerStruct)) {
+				throw new ErrorException("The value " + initialElement + " is not of the expected type BIT.");
+			}
+			if (!BitType.INSTANCE.equals(displacedTo.arrayElementType())) {
+				throw new ErrorException(
+						"The :DISPLACED-TO array " + displacedTo + " is not of :ELEMENT-TYPE BIT");
+			}
+			return BitVectorStruct.builder(size)
+			                      .elementType(elementType)
+			                      .initialElement((IntegerStruct) initialElement)
+			                      .initialContents(initialContents)
+			                      .adjustable(adjustable)
+			                      .fillPointer(fillPointer)
+			                      .displacedTo((ArrayStruct<IntegerStruct>) displacedTo)
+			                      .displacedIndexOffset(displacedIndexOffset);
+		}
+
+		@SuppressWarnings("unchecked")
+		public StringStruct.Builder elementType(final CharacterType elementType) {
+			if ((initialElement != null) && !(initialElement instanceof CharacterStruct)) {
+				throw new ErrorException("The value " + initialElement + " is not of the expected type CHARACTER.");
+			}
+			if (!BitType.INSTANCE.equals(displacedTo.arrayElementType())) {
+				throw new ErrorException(
+						"The :DISPLACED-TO array " + displacedTo + " is not of :ELEMENT-TYPE CHARACTER");
+			}
+			return StringStruct.builder(size)
+			                   .elementType(elementType)
+			                   .initialElement((CharacterStruct) initialElement)
+			                   .initialContents(initialContents)
+			                   .adjustable(adjustable)
+			                   .fillPointer(fillPointer)
+			                   .displacedTo((ArrayStruct<CharacterStruct>) displacedTo)
+			                   .displacedIndexOffset(displacedIndexOffset);
+		}
+
+		@Override
+		public VectorStruct.Builder<T> initialElement(final T initialElement) {
+			super.initialElement(initialElement);
 			return this;
 		}
 
-		public Builder<T> initialContents(final SequenceStruct initialContents) {
-			this.initialContents = initialContents;
+		@Override
+		public VectorStruct.Builder<T> initialContents(final SequenceStruct initialContents) {
+			super.initialContents(initialContents);
 			return this;
 		}
 
-		public Builder<T> adjustable(final BooleanStruct adjustable) {
-			this.adjustable = adjustable;
+		@Override
+		public VectorStruct.Builder<T> adjustable(final BooleanStruct adjustable) {
+			super.adjustable(adjustable);
 			return this;
 		}
 
-		public Builder<T> fillPointer(final IntegerStruct fillPointer) {
+		@Override
+		public VectorStruct.Builder<T> fillPointer(final IntegerStruct fillPointer) {
 			this.fillPointer = fillPointer;
 			return this;
 		}
 
-		public Builder<T> displacedTo(final ArrayStruct<T> displacedTo) {
-			this.displacedTo = displacedTo;
+		@Override
+		public VectorStruct.Builder<T> displacedTo(final ArrayStruct<T> displacedTo) {
+			super.displacedTo(displacedTo);
 			return this;
 		}
 
-		public Builder<T> displacedIndexOffset(final IntegerStruct displacedIndexOffset) {
-			this.displacedIndexOffset = displacedIndexOffset;
+		@Override
+		public VectorStruct.Builder<T> displacedIndexOffset(final IntegerStruct displacedIndexOffset) {
+			super.displacedIndexOffset(displacedIndexOffset);
 			return this;
 		}
 
+		@Override
 		public VectorStruct<T> build() {
 			final int sizeInt = size.intValue();
 			final LispType upgradedET = ArrayStruct.upgradedArrayElementType(elementType);
@@ -152,7 +199,7 @@ public interface VectorStruct<TYPE extends LispStruct> extends ArrayStruct<TYPE>
 
 			if (displacedTo != null) {
 				final LispType displacedToType = displacedTo.getType();
-				if (!displacedToType.equals(upgradedET) && !upgradedET.equals(displacedToType)) {
+				if (displacedToType.isNotOfType(upgradedET)) {
 					throw new TypeErrorException(
 							"Provided displaced to " + displacedTo + " is not an array with a subtype of the upgraded-array-element-type " + upgradedET + '.');
 				}
@@ -179,24 +226,24 @@ public interface VectorStruct<TYPE extends LispStruct> extends ArrayStruct<TYPE>
 			if (initialContents != null) {
 				for (final LispStruct element : initialContents) {
 					final LispType initialElementType = element.getType();
-					if (!initialElementType.equals(upgradedET) && !upgradedET.equals(initialElementType)) {
+					if (initialElementType.isNotOfType(upgradedET)) {
 						throw new TypeErrorException(
 								"Provided element " + element + " is not a subtype of the upgraded-array-element-type " + upgradedET + '.');
 					}
 				}
 
 				final List<T> validContents = ArrayStruct.getValidContents(Collections.singletonList(sizeInt),
-				                                                           elementType,
+				                                                           upgradedET,
 				                                                           initialContents);
 				return new VectorStructImpl<>(vectorType,
 				                              sizeInt,
-				                              elementType,
+				                              upgradedET,
 				                              validContents,
 				                              adjustableBoolean,
 				                              fillPointerInt);
 			} else {
 				final LispType initialElementType = initialElement.getType();
-				if (!initialElementType.equals(upgradedET) && !upgradedET.equals(initialElementType)) {
+				if (initialElementType.isNotOfType(upgradedET)) {
 					throw new TypeErrorException(
 							"Provided element " + initialElement + " is not a subtype of the upgraded-array-element-type " + upgradedET + '.');
 				}
@@ -206,7 +253,7 @@ public interface VectorStruct<TYPE extends LispStruct> extends ArrayStruct<TYPE>
 				                               .collect(Collectors.toList());
 				return new VectorStructImpl<>(vectorType,
 				                              sizeInt,
-				                              elementType,
+				                              upgradedET,
 				                              contents,
 				                              adjustableBoolean,
 				                              fillPointerInt);

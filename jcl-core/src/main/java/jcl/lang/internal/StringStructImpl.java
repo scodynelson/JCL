@@ -29,7 +29,7 @@ import jcl.type.StringType;
  */
 public final class StringStructImpl extends VectorStructImpl<CharacterStruct> implements StringStruct {
 
-	private StringStructImpl(final StringType stringType, final Integer size, final CharacterType elementType,
+	public StringStructImpl(final StringType stringType, final Integer size, final CharacterType elementType,
 	                         final List<CharacterStruct> contents, final boolean isAdjustable, final Integer fillPointer) {
 		super(stringType, size, elementType, contents, isAdjustable, fillPointer);
 	}

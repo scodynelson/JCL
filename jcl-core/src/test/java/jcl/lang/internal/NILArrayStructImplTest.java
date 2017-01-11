@@ -226,9 +226,10 @@ public class NILArrayStructImplTest {
 
 		final ListStruct initialContents = LispStructFactory.toProperList(IntegerStruct.TEN, IntegerStruct.TWO);
 		final ArrayStruct<LispStruct> displacedTo
-				= new VectorStruct.Builder<>(IntegerStruct.TWO).initialContents(initialContents)
-				                                               .adjustable(TStruct.INSTANCE)
-				                                               .build();
+				= VectorStruct.builder(IntegerStruct.TWO)
+				              .initialContents(initialContents)
+				              .adjustable(TStruct.INSTANCE)
+				              .build();
 		final IntegerStruct displacedIndexOffset = IntegerStruct.ONE;
 		final ArrayStruct<LispStruct> array
 				= NILArrayStructImpl.valueOf(TType.INSTANCE,

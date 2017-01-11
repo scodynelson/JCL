@@ -198,9 +198,10 @@ public class VectorStructImpl<TYPE extends LispStruct> extends ArrayStructImpl<T
 			displacedIndexOffset = 0;
 			return this;
 		} else {
-			return new VectorStruct.Builder<TYPE>(size).elementType(upgradedET)
-			                                           .initialElement(initialElement)
-			                                           .build();
+			return VectorStruct.<TYPE>builder(size)
+					.elementType(upgradedET)
+					.initialElement(initialElement)
+					.build();
 		}
 	}
 
@@ -235,9 +236,10 @@ public class VectorStructImpl<TYPE extends LispStruct> extends ArrayStructImpl<T
 			displacedIndexOffset = 0;
 			return this;
 		} else {
-			return new VectorStruct.Builder<TYPE>(size).elementType(upgradedET)
-			                                           .initialContents(initialContents)
-			                                           .build();
+			return VectorStruct.<TYPE>builder(size)
+					.elementType(upgradedET)
+					.initialContents(initialContents)
+					.build();
 		}
 	}
 
@@ -276,10 +278,11 @@ public class VectorStructImpl<TYPE extends LispStruct> extends ArrayStructImpl<T
 			this.displacedIndexOffset = displacedIndexOffset.intValue();
 			return this;
 		} else {
-			return new VectorStruct.Builder<TYPE>(size).elementType(upgradedET)
-			                                           .displacedTo(displacedTo)
-			                                           .displacedIndexOffset(displacedIndexOffset)
-			                                           .build();
+			return VectorStruct.<TYPE>builder(size)
+					.elementType(upgradedET)
+					.displacedTo(displacedTo)
+					.displacedIndexOffset(displacedIndexOffset)
+					.build();
 		}
 	}
 

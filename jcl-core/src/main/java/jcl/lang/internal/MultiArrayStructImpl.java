@@ -28,17 +28,16 @@ import org.apache.commons.math3.exception.DimensionMismatchException;
 import org.apache.commons.math3.exception.NotStrictlyPositiveException;
 import org.apache.commons.math3.exception.OutOfRangeException;
 
-public class MultiArrayStructImpl<TYPE extends LispStruct> extends ArrayStructImpl<TYPE> {
+public class MultiArrayStructImpl extends ArrayStructImpl {
 
 	protected MultidimensionalCounter multidimensionalCounter;
 
 	protected List<Integer> dimensions;
 
-	protected List<TYPE> contents;
+	protected List<LispStruct> contents;
 
-	public MultiArrayStructImpl(final ArrayType arrayType, final List<Integer> dimensions,
-	                               final LispType elementType, final List<TYPE> contents,
-	                               final boolean isAdjustable) {
+	public MultiArrayStructImpl(final ArrayType arrayType, final List<Integer> dimensions, final LispType elementType,
+	                            final List<LispStruct> contents, final boolean isAdjustable) {
 		super(arrayType, elementType, isAdjustable);
 
 		final int[] dimensionArray = dimensions.stream()
@@ -49,9 +48,9 @@ public class MultiArrayStructImpl<TYPE extends LispStruct> extends ArrayStructIm
 		this.contents = contents;
 	}
 
-	public MultiArrayStructImpl(final ArrayType arrayType, final List<Integer> dimensions,
-	                               final LispType elementType, final ArrayStruct<TYPE> displacedTo,
-	                               final Integer displacedIndexOffset, final boolean isAdjustable) {
+	public MultiArrayStructImpl(final ArrayType arrayType, final List<Integer> dimensions, final LispType elementType,
+	                            final ArrayStruct displacedTo, final Integer displacedIndexOffset,
+	                            final boolean isAdjustable) {
 		super(arrayType, elementType, displacedTo, displacedIndexOffset, isAdjustable);
 
 		final int[] dimensionArray = dimensions.stream()
@@ -62,10 +61,8 @@ public class MultiArrayStructImpl<TYPE extends LispStruct> extends ArrayStructIm
 		contents = null;
 	}
 
-	public static <T extends LispStruct> ArrayStruct<T> valueOf(final List<IntegerStruct> dimensions,
-	                                                            final LispType elementType,
-	                                                            final T initialElement,
-	                                                            final BooleanStruct isAdjustable) {
+	public static ArrayStruct valueOf(final List<IntegerStruct> dimensions, final LispType elementType,
+	                                  final LispStruct initialElement, final BooleanStruct isAdjustable) {
 		final int rank = dimensions.size();
 		if (rank == 0) {
 			throw new IllegalStateException("Construct NILArray instead of MultiArray for a 0-rank array.");
@@ -87,19 +84,17 @@ public class MultiArrayStructImpl<TYPE extends LispStruct> extends ArrayStructIm
 		final int totalSize = dimensionInts.stream()
 		                                   .mapToInt(Integer::intValue)
 		                                   .reduce(1, (x, y) -> x * y);
-		final List<T> initialContents = Stream.generate(() -> initialElement)
-		                                      .limit(totalSize)
-		                                      .collect(Collectors.toList());
+		final List<LispStruct> initialContents = Stream.generate(() -> initialElement)
+		                                               .limit(totalSize)
+		                                               .collect(Collectors.toList());
 
 		final boolean adjustableBoolean = isAdjustable.booleanValue();
 		final ArrayType arrayType = getArrayType(adjustableBoolean);
-		return new MultiArrayStructImpl<>(arrayType, dimensionInts, elementType, initialContents, adjustableBoolean);
+		return new MultiArrayStructImpl(arrayType, dimensionInts, elementType, initialContents, adjustableBoolean);
 	}
 
-	public static <T extends LispStruct> ArrayStruct<T> valueOf(final List<IntegerStruct> dimensions,
-	                                                            final LispType elementType,
-	                                                            final SequenceStruct initialContents,
-	                                                            final BooleanStruct isAdjustable) {
+	public static ArrayStruct valueOf(final List<IntegerStruct> dimensions, final LispType elementType,
+	                                  final SequenceStruct initialContents, final BooleanStruct isAdjustable) {
 		final int rank = dimensions.size();
 		if (rank == 0) {
 			throw new IllegalStateException("Construct NILArray instead of MultiArray for a 0-rank array.");
@@ -111,18 +106,17 @@ public class MultiArrayStructImpl<TYPE extends LispStruct> extends ArrayStructIm
 		final List<Integer> dimensionInts = dimensions.stream()
 		                                              .map(IntegerStruct::intValue)
 		                                              .collect(Collectors.toList());
-		final List<T> validContents = ArrayStruct.getValidContents(dimensionInts, elementType, initialContents);
+		final List<LispStruct> validContents = ArrayStruct.getValidContents(dimensionInts, elementType,
+		                                                                    initialContents);
 
 		final boolean adjustableBoolean = isAdjustable.booleanValue();
 		final ArrayType arrayType = getArrayType(adjustableBoolean);
-		return new MultiArrayStructImpl<>(arrayType, dimensionInts, elementType, validContents, adjustableBoolean);
+		return new MultiArrayStructImpl(arrayType, dimensionInts, elementType, validContents, adjustableBoolean);
 	}
 
-	public static <T extends LispStruct> ArrayStruct<T> valueOf(final List<IntegerStruct> dimensions,
-	                                                            final LispType elementType,
-	                                                            final ArrayStruct<T> displacedTo,
-	                                                            final IntegerStruct displacedIndexOffset,
-	                                                            final BooleanStruct isAdjustable) {
+	public static ArrayStruct valueOf(final List<IntegerStruct> dimensions, final LispType elementType,
+	                                  final ArrayStruct displacedTo, final IntegerStruct displacedIndexOffset,
+	                                  final BooleanStruct isAdjustable) {
 		final int rank = dimensions.size();
 		if (rank == 0) {
 			throw new IllegalStateException("Construct NILArray instead of MultiArray for a 0-rank array.");
@@ -149,19 +143,17 @@ public class MultiArrayStructImpl<TYPE extends LispStruct> extends ArrayStructIm
 
 		// TODO: Total size of A be no smaller than the sum of the total size of B plus the offset 'n' supplied by the offset
 
-		return new MultiArrayStructImpl<>(ArrayType.INSTANCE, dimensionInts, elementType, displacedTo,
-		                                  offsetInt, isAdjustable.booleanValue());
+		return new MultiArrayStructImpl(ArrayType.INSTANCE, dimensionInts, elementType, displacedTo,
+		                                offsetInt, isAdjustable.booleanValue());
 	}
 
-	public static <T extends LispStruct> ArrayStruct<T> valueOf(final List<IntegerStruct> dimensions,
-	                                                            final LispType elementType,
-	                                                            final T initialElement) {
+	public static ArrayStruct valueOf(final List<IntegerStruct> dimensions, final LispType elementType,
+	                                  final LispStruct initialElement) {
 		return valueOf(dimensions, elementType, initialElement, NILStruct.INSTANCE);
 	}
 
-	public static <T extends LispStruct> ArrayStruct<T> valueOf(final List<IntegerStruct> dimensions,
-	                                                            final LispType elementType,
-	                                                            final SequenceStruct initialContents) {
+	public static ArrayStruct valueOf(final List<IntegerStruct> dimensions, final LispType elementType,
+	                                  final SequenceStruct initialContents) {
 		return valueOf(dimensions, elementType, initialContents, NILStruct.INSTANCE);
 	}
 
@@ -169,13 +161,12 @@ public class MultiArrayStructImpl<TYPE extends LispStruct> extends ArrayStructIm
 		Old Builders
 	 */
 
-	public static <T extends LispStruct> ArrayStruct<T> valueOf(final List<IntegerStruct> dimensions,
-	                                                            final List<T> contents) {
+	public static ArrayStruct valueOf(final List<IntegerStruct> dimensions, final List<LispStruct> contents) {
 		final List<Integer> dimensionInts = dimensions.stream()
 		                                              .map(IntegerStruct::intValue)
 		                                              .collect(Collectors.toList());
 
-		return new MultiArrayStructImpl<>(SimpleArrayType.INSTANCE, dimensionInts, TType.INSTANCE, contents, false);
+		return new MultiArrayStructImpl(SimpleArrayType.INSTANCE, dimensionInts, TType.INSTANCE, contents, false);
 	}
 
 	/*
@@ -222,16 +213,16 @@ public class MultiArrayStructImpl<TYPE extends LispStruct> extends ArrayStructIm
 		}
 	*/
 
-	private List<TYPE> dataVectorFromInits(final Integer totalSize,
-	                                       final List<TYPE> initialContents, final boolean initialContentsP,
-	                                       final TYPE initialElement, final boolean initialElementP) {
+	private List<LispStruct> dataVectorFromInits(final Integer totalSize,
+	                                             final List<LispStruct> initialContents, final boolean initialContentsP,
+	                                             final LispStruct initialElement, final boolean initialElementP) {
 
 		if (initialContentsP && initialElementP) {
 			throw new ErrorException(
 					"Cannot supply both :initial-contents and :initial-element to either make-array or adjust-array.");
 		}
 
-		List<TYPE> data = new ArrayList<>();
+		List<LispStruct> data = new ArrayList<>();
 		if (initialElementP) {
 			data = Stream.generate(() -> initialElement)
 			             .limit(totalSize)
@@ -243,18 +234,18 @@ public class MultiArrayStructImpl<TYPE extends LispStruct> extends ArrayStructIm
 		return data;
 	}
 
-	private void zapArrayData(final List<TYPE> oldData, final List<Integer> oldDims,
+	private void zapArrayData(final List<LispStruct> oldData, final List<Integer> oldDims,
 	                          final Integer offset,
-	                          final List<TYPE> newData, final List<Integer> newDims,
+	                          final List<LispStruct> newData, final List<Integer> newDims,
 	                          final Integer newLength, final LispType elementType,
-	                          final TYPE initialElement, final boolean initialElementP) {
+	                          final LispStruct initialElement, final boolean initialElementP) {
 
 		Collections.reverse(oldDims);
 		final List<Integer> innerNewDims = new ArrayList<>(newDims);
 		Collections.reverse(innerNewDims);
 
 		if (oldData == newData) {
-			final List<TYPE> temp = zapArrayDataTemp(newLength, elementType, initialElement, initialElementP);
+			final List<LispStruct> temp = zapArrayDataTemp(newLength, elementType, initialElement, initialElementP);
 			zapArrayDataAux(oldData, oldDims, offset, temp, newDims);
 
 			for (int i = 0; i < newLength; i++) {
@@ -265,16 +256,16 @@ public class MultiArrayStructImpl<TYPE extends LispStruct> extends ArrayStructIm
 		}
 	}
 
-	private List<TYPE> zapArrayDataTemp(final Integer length, final LispType elementType, final TYPE initialElement,
-	                                    final boolean initialElementP) {
+	private List<LispStruct> zapArrayDataTemp(final Integer length, final LispType elementType,
+	                                          final LispStruct initialElement, final boolean initialElementP) {
 		return Stream.generate(() -> initialElement)
 		             .limit(length)
 		             .collect(Collectors.toList());
 	}
 
-	private void zapArrayDataAux(final List<TYPE> oldData, final List<Integer> oldDims,
+	private void zapArrayDataAux(final List<LispStruct> oldData, final List<Integer> oldDims,
 	                             final Integer offset,
-	                             final List<TYPE> newData, final List<Integer> newDims) {
+	                             final List<LispStruct> newData, final List<Integer> newDims) {
 
 		final List<Integer> limits = new ArrayList<>();
 		for (int i = 0; i < oldDims.size(); i++) {
@@ -414,8 +405,8 @@ public class MultiArrayStructImpl<TYPE extends LispStruct> extends ArrayStructIm
 //	}
 
 	@Override
-	public ArrayStruct<TYPE> adjustArray(final List<IntegerStruct> dimensions, final LispType elementType,
-	                                     final TYPE initialElement, final IntegerStruct fillPointer) {
+	public ArrayStruct adjustArray(final List<IntegerStruct> dimensions, final LispType elementType,
+	                               final LispStruct initialElement, final IntegerStruct fillPointer) {
 
 		if (this.dimensions.size() != dimensions.size()) {
 			throw new ErrorException("Array cannot be adjusted to a different array dimension rank.");
@@ -429,7 +420,7 @@ public class MultiArrayStructImpl<TYPE extends LispStruct> extends ArrayStructIm
 		final MultidimensionalCounter newMultidimensionalCounter = new MultidimensionalCounter(dimensionArray);
 		final int newTotalSize = newMultidimensionalCounter.getSize();
 
-		List<TYPE> newData;
+		List<LispStruct> newData;
 		if ((displacedTo != null) || (newTotalSize > oldTotalSize)) {
 			newData = dataVectorFromInits(newTotalSize, null, false, initialElement, true);
 		} else {
@@ -451,8 +442,8 @@ public class MultiArrayStructImpl<TYPE extends LispStruct> extends ArrayStructIm
 	}
 
 	@Override
-	public ArrayStruct<TYPE> adjustArray(final List<IntegerStruct> dimensions, final LispType elementType,
-	                                     final SequenceStruct initialContents, final IntegerStruct fillPointer) {
+	public ArrayStruct adjustArray(final List<IntegerStruct> dimensions, final LispType elementType,
+	                               final SequenceStruct initialContents, final IntegerStruct fillPointer) {
 
 		if (this.dimensions.size() != dimensions.size()) {
 			throw new ErrorException("Array cannot be adjusted to a different array dimension rank.");
@@ -461,7 +452,8 @@ public class MultiArrayStructImpl<TYPE extends LispStruct> extends ArrayStructIm
 		final List<Integer> dimensionInts = dimensions.stream()
 		                                              .map(IntegerStruct::intValue)
 		                                              .collect(Collectors.toList());
-		final List<TYPE> validContents = ArrayStruct.getValidContents(dimensionInts, elementType, initialContents);
+		final List<LispStruct> validContents = ArrayStruct.getValidContents(dimensionInts, elementType,
+		                                                                    initialContents);
 
 //		return new ArrayStructImpl<>(arrayType, dimensionInts, elementType, validContents, adjustableBoolean);
 
@@ -484,9 +476,9 @@ public class MultiArrayStructImpl<TYPE extends LispStruct> extends ArrayStructIm
 	}
 
 	@Override
-	public ArrayStruct<TYPE> adjustArray(final List<IntegerStruct> dimensions, final LispType elementType,
-	                                     final IntegerStruct fillPointer, final ArrayStruct<TYPE> displacedTo,
-	                                     final IntegerStruct displacedIndexOffset) {
+	public ArrayStruct adjustArray(final List<IntegerStruct> dimensions, final LispType elementType,
+	                               final IntegerStruct fillPointer, final ArrayStruct displacedTo,
+	                               final IntegerStruct displacedIndexOffset) {
 
 		if (this.dimensions.size() != dimensions.size()) {
 			throw new ErrorException("Array cannot be adjusted to a different array dimension rank.");
@@ -496,7 +488,7 @@ public class MultiArrayStructImpl<TYPE extends LispStruct> extends ArrayStructIm
 	}
 
 	@Override
-	public TYPE aref(final IntegerStruct... subscripts) {
+	public LispStruct aref(final IntegerStruct... subscripts) {
 		final int rowMajorIndex = rowMajorIndexInternal(subscripts);
 		return contents.get(rowMajorIndex);
 
@@ -513,7 +505,7 @@ public class MultiArrayStructImpl<TYPE extends LispStruct> extends ArrayStructIm
 	}
 
 	@Override
-	public TYPE setfAref(final TYPE newElement, final IntegerStruct... subscripts) {
+	public LispStruct setfAref(final LispStruct newElement, final IntegerStruct... subscripts) { // TODO: type check
 		final int rowMajorIndex = rowMajorIndexInternal(subscripts);
 		contents.set(rowMajorIndex, newElement);
 		return newElement;
@@ -589,7 +581,7 @@ public class MultiArrayStructImpl<TYPE extends LispStruct> extends ArrayStructIm
 	}
 
 	@Override
-	public TYPE rowMajorAref(final IntegerStruct index) {
+	public LispStruct rowMajorAref(final IntegerStruct index) {
 		final int indexInt = index.intValue();
 		final int totalSize = multidimensionalCounter.getSize();
 		if (indexInt > totalSize) {
@@ -599,7 +591,7 @@ public class MultiArrayStructImpl<TYPE extends LispStruct> extends ArrayStructIm
 	}
 
 	@Override
-	public TYPE setfRowMajorAref(final TYPE newElement, final IntegerStruct index) {
+	public LispStruct setfRowMajorAref(final LispStruct newElement, final IntegerStruct index) { // TODO: type check
 		final int indexInt = index.intValue();
 		final int totalSize = multidimensionalCounter.getSize();
 		if (indexInt > totalSize) {
@@ -637,7 +629,7 @@ public class MultiArrayStructImpl<TYPE extends LispStruct> extends ArrayStructIm
 // =================
 
 	@Override
-	public List<TYPE> getContents() {
+	public List<LispStruct> getContents() {
 		return contents;
 	}
 
@@ -669,7 +661,7 @@ public class MultiArrayStructImpl<TYPE extends LispStruct> extends ArrayStructIm
 
 			final int contentsSize = contents.size();
 			for (int i = 0; i < contentsSize; i++) {
-				final TYPE lispStruct = contents.get(i);
+				final LispStruct lispStruct = contents.get(i);
 				final String printedLispStruct = lispStruct.toString();
 
 				stringBuilder.append(printedLispStruct);

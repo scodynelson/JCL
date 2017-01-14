@@ -19,7 +19,7 @@ import jcl.type.StringType;
 /**
  * The {@link StringStruct} is the object representation of a Lisp 'string' type.
  */
-public interface StringStruct extends VectorStruct<CharacterStruct> {
+public interface StringStruct extends VectorStruct {
 
 	/**
 	 * Returns the {@link String} representation of the StringStruct.
@@ -32,20 +32,20 @@ public interface StringStruct extends VectorStruct<CharacterStruct> {
 		return new StringStruct.Builder(size);
 	}
 
-	final class Builder extends VectorStruct.Builder<CharacterStruct> {
+	final class Builder extends VectorStruct.Builder {
 
 		private Builder(final IntegerStruct size) {
 			super(size);
 		}
 
 		@Override
-		public StringStruct.Builder elementType(final LispType elementType) {
+		public StringStruct.Builder elementType(final LispType elementType) { // TODO ??
 			super.elementType(elementType);
 			return this;
 		}
 
 		@Override
-		public StringStruct.Builder initialElement(final CharacterStruct initialElement) {
+		public StringStruct.Builder initialElement(final LispStruct initialElement) { // TODO ??
 			super.initialElement(initialElement);
 			return this;
 		}
@@ -69,7 +69,7 @@ public interface StringStruct extends VectorStruct<CharacterStruct> {
 		}
 
 		@Override
-		public StringStruct.Builder displacedTo(final ArrayStruct<CharacterStruct> displacedTo) {
+		public StringStruct.Builder displacedTo(final ArrayStruct displacedTo) {
 			super.displacedTo(displacedTo);
 			return this;
 		}
@@ -142,7 +142,7 @@ public interface StringStruct extends VectorStruct<CharacterStruct> {
 							"Provided element " + initialElement + " is not a subtype of the upgraded-array-element-type " + upgradedET + '.');
 				}
 
-				final List<CharacterStruct> contents = Stream.generate(() -> initialElement)
+				final List<CharacterStruct> contents = Stream.generate(() -> (CharacterStruct) initialElement) // TODO
 				                                             .limit(sizeInt)
 				                                             .collect(Collectors.toList());
 				return new StringStructImpl(stringType,

@@ -3,7 +3,6 @@ package jcl.lang.internal;
 import jcl.lang.ArrayStruct;
 import jcl.lang.BooleanStruct;
 import jcl.lang.IntegerStruct;
-import jcl.lang.LispStruct;
 import jcl.lang.NILStruct;
 import jcl.lang.ValuesStruct;
 import jcl.lang.classes.BuiltInClassStruct;
@@ -15,17 +14,14 @@ import jcl.type.SimpleArrayType;
 
 /**
  * The {@link ArrayStructImpl} is the object representation of a Lisp 'array' type.
- *
- * @param <TYPE>
- * 		the type of the array contents
  */
-public abstract class ArrayStructImpl<TYPE extends LispStruct> extends BuiltInClassStruct implements ArrayStruct<TYPE> {
+public abstract class ArrayStructImpl extends BuiltInClassStruct implements ArrayStruct {
 
 	protected LispType elementType;
 
 	protected boolean isAdjustable;
 
-	protected ArrayStruct<TYPE> displacedTo;
+	protected ArrayStruct displacedTo;
 
 	protected Integer displacedIndexOffset;
 
@@ -38,9 +34,8 @@ public abstract class ArrayStructImpl<TYPE extends LispStruct> extends BuiltInCl
 		displacedIndexOffset = 0;
 	}
 
-	protected ArrayStructImpl(final ArrayType arrayType, final LispType elementType,
-	                          final ArrayStruct<TYPE> displacedTo, final Integer displacedIndexOffset,
-	                          final boolean isAdjustable) {
+	protected ArrayStructImpl(final ArrayType arrayType, final LispType elementType, final ArrayStruct displacedTo,
+	                          final Integer displacedIndexOffset, final boolean isAdjustable) {
 		super(arrayType, null, null);
 
 		this.elementType = elementType;

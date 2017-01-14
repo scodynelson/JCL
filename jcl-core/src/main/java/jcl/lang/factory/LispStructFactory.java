@@ -120,7 +120,7 @@ public final class LispStructFactory {
 	 * Array
 	 */
 
-	public static <T extends LispStruct> ArrayStruct<T> toArray(final List<Integer> dimensions, final List<T> contents) {
+	public static ArrayStruct toArray(final List<Integer> dimensions, final List<LispStruct> contents) {
 		// TODO: Fix me
 		final List<IntegerStruct> dimensionStructs = dimensions.stream()
 		                                                       .map(IntegerStructImpl::valueOf)
@@ -132,11 +132,14 @@ public final class LispStructFactory {
 	 * BinaryNativeStream
 	 */
 
-	public static BinaryNativeStreamStruct toBinaryNativeStream(final InputStream inputStream, final OutputStream outputStream) {
+	public static BinaryNativeStreamStruct toBinaryNativeStream(final InputStream inputStream,
+	                                                            final OutputStream outputStream) {
 		return BinaryNativeStreamStructImpl.valueOf(inputStream, outputStream);
 	}
 
-	public static BinaryNativeStreamStruct toBinaryNativeStream(final boolean interactive, final InputStream inputStream, final OutputStream outputStream) {
+	public static BinaryNativeStreamStruct toBinaryNativeStream(final boolean interactive,
+	                                                            final InputStream inputStream,
+	                                                            final OutputStream outputStream) {
 		return BinaryNativeStreamStructImpl.valueOf(interactive, inputStream, outputStream);
 	}
 
@@ -171,7 +174,8 @@ public final class LispStructFactory {
 		return BroadcastStreamStructImpl.valueOf(outputStreamStructs);
 	}
 
-	public static BroadcastStreamStruct toBroadcastStream(final boolean interactive, final Deque<OutputStreamStruct> outputStreamStructs) {
+	public static BroadcastStreamStruct toBroadcastStream(final boolean interactive,
+	                                                      final Deque<OutputStreamStruct> outputStreamStructs) {
 		return BroadcastStreamStructImpl.valueOf(interactive, outputStreamStructs);
 	}
 
@@ -207,11 +211,14 @@ public final class LispStructFactory {
 	 * CharacterNativeStream
 	 */
 
-	public static CharacterNativeStreamStruct toCharacterNativeStream(final InputStream inputStream, final OutputStream outputStream) {
+	public static CharacterNativeStreamStruct toCharacterNativeStream(final InputStream inputStream,
+	                                                                  final OutputStream outputStream) {
 		return CharacterNativeStreamStructImpl.valueOf(inputStream, outputStream);
 	}
 
-	public static CharacterNativeStreamStruct toCharacterNativeStream(final boolean interactive, final InputStream inputStream, final OutputStream outputStream) {
+	public static CharacterNativeStreamStruct toCharacterNativeStream(final boolean interactive,
+	                                                                  final InputStream inputStream,
+	                                                                  final OutputStream outputStream) {
 		return CharacterNativeStreamStructImpl.valueOf(interactive, inputStream, outputStream);
 	}
 
@@ -223,7 +230,9 @@ public final class LispStructFactory {
 		return ComplexStructImpl.valueOf(apcomplex, valueType);
 	}
 
-	public static ComplexStruct toComplex(final Apfloat real, final Apfloat imaginary, final ComplexStruct.ValueType valueType) {
+	public static ComplexStruct toComplex(final Apfloat real,
+	                                      final Apfloat imaginary,
+	                                      final ComplexStruct.ValueType valueType) {
 		return ComplexStructImpl.valueOf(real, imaginary, valueType);
 	}
 
@@ -239,7 +248,8 @@ public final class LispStructFactory {
 		return ConcatenatedStreamStructImpl.valueOf(inputStreamStructs);
 	}
 
-	public static ConcatenatedStreamStruct toConcatenatedStream(final boolean interactive, final Deque<InputStreamStruct> inputStreamStructs) {
+	public static ConcatenatedStreamStruct toConcatenatedStream(final boolean interactive,
+	                                                            final Deque<InputStreamStruct> inputStreamStructs) {
 		return ConcatenatedStreamStructImpl.valueOf(interactive, inputStreamStructs);
 	}
 
@@ -259,11 +269,14 @@ public final class LispStructFactory {
 	 * EchoStream
 	 */
 
-	public static EchoStreamStruct toEchoStream(final InputStreamStruct inputStreamStruct, final OutputStreamStruct outputStreamStruct) {
+	public static EchoStreamStruct toEchoStream(final InputStreamStruct inputStreamStruct,
+	                                            final OutputStreamStruct outputStreamStruct) {
 		return EchoStreamStructImpl.valueOf(inputStreamStruct, outputStreamStruct);
 	}
 
-	public static EchoStreamStruct toEchoStream(final boolean interactive, final InputStreamStruct inputStreamStruct, final OutputStreamStruct outputStreamStruct) {
+	public static EchoStreamStruct toEchoStream(final boolean interactive,
+	                                            final InputStreamStruct inputStreamStruct,
+	                                            final OutputStreamStruct outputStreamStruct) {
 		return EchoStreamStructImpl.valueOf(interactive, inputStreamStruct, outputStreamStruct);
 	}
 
@@ -370,7 +383,9 @@ public final class LispStructFactory {
 	 * HashTable
 	 */
 
-	public static HashTableStruct toHashTable(final FunctionStruct test, final BigInteger size, final float rehashThreshold) {
+	public static HashTableStruct toHashTable(final FunctionStruct test,
+	                                          final BigInteger size,
+	                                          final float rehashThreshold) {
 		return HashTableStructImpl.valueOf(test, size, rehashThreshold);
 	}
 
@@ -455,13 +470,19 @@ public final class LispStructFactory {
 	 * JavaMethodStruct
 	 */
 
-	public static JavaMethodStruct toJavaMethod(final String methodName, final Class<?> javaClass, final Class<?>... parameterTypes) {
+	public static JavaMethodStruct toJavaMethod(final String methodName,
+	                                            final Class<?> javaClass,
+	                                            final Class<?>... parameterTypes) {
 		final String javaClassName = javaClass.getName();
 		try {
 			final Method method = javaClass.getDeclaredMethod(methodName, parameterTypes);
 			return JavaMethodStruct.valueOf(method);
 		} catch (final NoSuchMethodException ex) {
-			throw new ErrorException("Java Class '" + javaClassName + "' does not have the method '" + methodName + "' with parameter types '" + Arrays.toString(parameterTypes) + "'.", ex);
+			throw new ErrorException(
+					"Java Class '" + javaClassName +
+							"' does not have the method '" + methodName +
+							"' with parameter types '" + Arrays.toString(parameterTypes) +
+							"'.", ex);
 		}
 	}
 
@@ -484,7 +505,9 @@ public final class LispStructFactory {
 			final Object newInstance = defaultConstructor.newInstance();
 			return JavaObjectStruct.valueOf(newInstance);
 		} catch (final NoSuchMethodException ex) {
-			throw new ErrorException("Java Class '" + javaClassName + "' does not have a default no argument constructor.", ex);
+			throw new ErrorException(
+					"Java Class '" + javaClassName +
+							"' does not have a default no argument constructor.", ex);
 		} catch (final InvocationTargetException | InstantiationException | IllegalAccessException ex) {
 			final String message = "Java Class '" + javaClassName + "' could not be instantiated.";
 			LOGGER.error(message, ex);
@@ -500,7 +523,9 @@ public final class LispStructFactory {
 		return JavaStreamStructImpl.valueOf(inputStream, outputStream);
 	}
 
-	public static JavaStreamStruct toJavaStream(final boolean interactive, final InputStream inputStream, final OutputStream outputStream) {
+	public static JavaStreamStruct toJavaStream(final boolean interactive,
+	                                            final InputStream inputStream,
+	                                            final OutputStream outputStream) {
 		return JavaStreamStructImpl.valueOf(interactive, inputStream, outputStream);
 	}
 
@@ -624,8 +649,11 @@ public final class LispStructFactory {
 		return LogicalPathnameStructImpl.valueOf(pathname);
 	}
 
-	public static LogicalPathnameStruct toLogicalPathname(final PathnameHost host, final PathnameDirectory directory, final PathnameName name,
-	                                                      final PathnameType type, final PathnameVersion version) {
+	public static LogicalPathnameStruct toLogicalPathname(final PathnameHost host,
+	                                                      final PathnameDirectory directory,
+	                                                      final PathnameName name,
+	                                                      final PathnameType type,
+	                                                      final PathnameVersion version) {
 		return LogicalPathnameStructImpl.valueOf(host, directory, name, type, version);
 	}
 
@@ -649,11 +677,15 @@ public final class LispStructFactory {
 		return PackageStructImpl.valueOf(name, nicknames);
 	}
 
-	public static PackageStruct toPackage(final String name, final List<String> nicknames, final PackageStruct... useList) {
+	public static PackageStruct toPackage(final String name,
+	                                      final List<String> nicknames,
+	                                      final PackageStruct... useList) {
 		return PackageStructImpl.valueOf(name, nicknames, useList);
 	}
 
-	public static PackageStruct toPackage(final String name, final List<String> nicknames, final List<PackageStruct> useList) {
+	public static PackageStruct toPackage(final String name,
+	                                      final List<String> nicknames,
+	                                      final List<PackageStruct> useList) {
 		return PackageStructImpl.valueOf(name, nicknames, useList);
 	}
 
@@ -677,8 +709,12 @@ public final class LispStructFactory {
 		return PathnameStructImpl.valueOf(uri);
 	}
 
-	public static PathnameStruct toPathname(final PathnameHost host, final PathnameDevice device, final PathnameDirectory directory,
-	                                        final PathnameName name, final PathnameType type, final PathnameVersion version) {
+	public static PathnameStruct toPathname(final PathnameHost host,
+	                                        final PathnameDevice device,
+	                                        final PathnameDirectory directory,
+	                                        final PathnameName name,
+	                                        final PathnameType type,
+	                                        final PathnameVersion version) {
 		return PathnameStructImpl.valueOf(host, device, directory, name, type, version);
 	}
 
@@ -764,11 +800,16 @@ public final class LispStructFactory {
 		return StringInputStreamStructImpl.valueOf(interactive, inputString);
 	}
 
-	public static StringInputStreamStruct toStringInputStream(final String inputString, final int current, final int end) {
+	public static StringInputStreamStruct toStringInputStream(final String inputString,
+	                                                          final int current,
+	                                                          final int end) {
 		return StringInputStreamStructImpl.valueOf(inputString, current, end);
 	}
 
-	public static StringInputStreamStruct toStringInputStream(final boolean interactive, final String inputString, final int current, final int end) {
+	public static StringInputStreamStruct toStringInputStream(final boolean interactive,
+	                                                          final String inputString,
+	                                                          final int current,
+	                                                          final int end) {
 		return StringInputStreamStructImpl.valueOf(interactive, inputString, current, end);
 	}
 
@@ -820,11 +861,14 @@ public final class LispStructFactory {
 	 * TwoWayStream
 	 */
 
-	public static TwoWayStreamStruct toTwoWayStream(final InputStreamStruct inputStreamStruct, final OutputStreamStruct outputStreamStruct) {
+	public static TwoWayStreamStruct toTwoWayStream(final InputStreamStruct inputStreamStruct,
+	                                                final OutputStreamStruct outputStreamStruct) {
 		return TwoWayStreamStructImpl.valueOf(inputStreamStruct, outputStreamStruct);
 	}
 
-	public static TwoWayStreamStruct toTwoWayStream(final boolean interactive, final InputStreamStruct inputStreamStruct, final OutputStreamStruct outputStreamStruct) {
+	public static TwoWayStreamStruct toTwoWayStream(final boolean interactive,
+	                                                final InputStreamStruct inputStreamStruct,
+	                                                final OutputStreamStruct outputStreamStruct) {
 		return TwoWayStreamStructImpl.valueOf(interactive, inputStreamStruct, outputStreamStruct);
 	}
 
@@ -844,7 +888,7 @@ public final class LispStructFactory {
 	 * Vector
 	 */
 
-	public static <T extends LispStruct> VectorStruct<T> toVector(final List<T> contents) {
+	public static VectorStruct toVector(final List<LispStruct> contents) {
 		return VectorStructImpl.valueOf(contents);
 	}
 }

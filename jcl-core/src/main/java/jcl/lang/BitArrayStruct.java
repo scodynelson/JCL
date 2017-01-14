@@ -17,20 +17,20 @@ import jcl.type.SimpleArrayType;
 /**
  * The {@link BitArrayStruct} is the object representation of a Lisp 'bit-array' type.
  */
-public interface BitArrayStruct extends ArrayStruct<IntegerStruct> {
+public interface BitArrayStruct extends ArrayStruct {
 
 	default IntegerStruct bit(final IntegerStruct... subscripts) {
-		return aref(subscripts);
+		return (IntegerStruct) aref(subscripts); // TODO
 	}
 
 	default IntegerStruct setfBit(final IntegerStruct newElement, final IntegerStruct... subscripts) {
-		return setfAref(newElement, subscripts);
+		return (IntegerStruct) setfAref(newElement, subscripts); // TODO
 	}
 
 	default IntegerStruct sbit(final IntegerStruct... subscripts) {
 		final LispType type = getType();
 		if (SimpleArrayType.INSTANCE.equals(type)) {
-			return aref(subscripts);
+			return (IntegerStruct) aref(subscripts); // TODO
 		}
 		throw new TypeErrorException(
 				"The value " + this + " is not of the expected type " + SimpleArrayType.INSTANCE + '.');
@@ -39,7 +39,7 @@ public interface BitArrayStruct extends ArrayStruct<IntegerStruct> {
 	default IntegerStruct setfSbit(final IntegerStruct newElement, final IntegerStruct... subscripts) {
 		final LispType type = getType();
 		if (SimpleArrayType.INSTANCE.equals(type)) {
-			return setfAref(newElement, subscripts);
+			return (IntegerStruct) setfAref(newElement, subscripts); // TODO
 		}
 		throw new TypeErrorException(
 				"The value " + this + " is not of the expected type " + SimpleArrayType.INSTANCE + '.');
@@ -156,8 +156,8 @@ public interface BitArrayStruct extends ArrayStruct<IntegerStruct> {
 
 		final BitArrayStruct bitArrayToUpdate = getBitArrayToUpdate(optArg, dimensions1);
 
-		final List<IntegerStruct> contents1 = getContents();
-		final List<IntegerStruct> contentsToUpdate = bitArrayToUpdate.getContents();
+		final List<IntegerStruct> contents1 = null; //TODO getContents();
+		final List<IntegerStruct> contentsToUpdate = null; //TODO bitArrayToUpdate.getContents();
 
 		final int totalSize = arrayTotalSize().intValue();
 		for (int i = 0; i < totalSize; i++) {
@@ -179,9 +179,9 @@ public interface BitArrayStruct extends ArrayStruct<IntegerStruct> {
 
 		final BitArrayStruct bitArrayToUpdate = getBitArrayToUpdate(optArg, dimensions1);
 
-		final List<IntegerStruct> contents1 = getContents();
-		final List<IntegerStruct> contents2 = bitArray2.getContents();
-		final List<IntegerStruct> contentsToUpdate = bitArrayToUpdate.getContents();
+		final List<IntegerStruct> contents1 = null; //TODO getContents();
+		final List<IntegerStruct> contents2 = null; //TODO bitArray2.getContents();
+		final List<IntegerStruct> contentsToUpdate = null; //TODO bitArrayToUpdate.getContents();
 
 		final int totalSize = arrayTotalSize().intValue();
 		for (int i = 0; i < totalSize; i++) {
@@ -222,20 +222,20 @@ public interface BitArrayStruct extends ArrayStruct<IntegerStruct> {
 		return new BitArrayStruct.Builder(dimensions);
 	}
 
-	class Builder extends ArrayStruct.Builder<IntegerStruct> {
+	class Builder extends ArrayStruct.Builder {
 
 		protected Builder(final IntegerStruct... dimensions) {
 			super(dimensions);
 		}
 
 		@Override
-		public BitArrayStruct.Builder elementType(final LispType elementType) {
+		public BitArrayStruct.Builder elementType(final LispType elementType) { // TODO ??
 			super.elementType(elementType);
 			return this;
 		}
 
 		@Override
-		public BitArrayStruct.Builder initialElement(final IntegerStruct initialElement) {
+		public BitArrayStruct.Builder initialElement(final LispStruct initialElement) { // TODO ??
 			super.initialElement(initialElement);
 			return this;
 		}
@@ -253,7 +253,7 @@ public interface BitArrayStruct extends ArrayStruct<IntegerStruct> {
 		}
 
 		@Override
-		public BitArrayStruct.Builder displacedTo(final ArrayStruct<IntegerStruct> displacedTo) {
+		public BitArrayStruct.Builder displacedTo(final ArrayStruct displacedTo) {
 			super.displacedTo(displacedTo);
 			return this;
 		}
@@ -317,16 +317,16 @@ public interface BitArrayStruct extends ArrayStruct<IntegerStruct> {
 				if (dimensions.length == 0) {
 					return new NILBitArrayStructImpl(arrayType,
 //					                                upgradedET,
-                                                     (IntegerStruct) initialContents,
+                                                     initialContents,
                                                      adjustableBoolean);
 				}
 
 				final List<Integer> dimensionInts = Arrays.stream(dimensions)
 				                                          .map(IntegerStruct::intValue)
 				                                          .collect(Collectors.toList());
-				final List<IntegerStruct> validContents = ArrayStruct.getValidContents(dimensionInts,
-				                                                                       upgradedET,
-				                                                                       initialContents);
+				final List<LispStruct> validContents = ArrayStruct.getValidContents(dimensionInts,
+				                                                                    upgradedET,
+				                                                                    initialContents);
 				return new MultiBitArrayStructImpl(arrayType,
 				                                   dimensionInts,
 //				                                  upgradedET,
@@ -352,9 +352,9 @@ public interface BitArrayStruct extends ArrayStruct<IntegerStruct> {
 				final int totalSize = dimensionInts.stream()
 				                                   .mapToInt(Integer::intValue)
 				                                   .reduce(1, (x, y) -> x * y);
-				final List<IntegerStruct> contents = Stream.generate(() -> initialElement)
-				                                           .limit(totalSize)
-				                                           .collect(Collectors.toList());
+				final List<LispStruct> contents = Stream.generate(() -> initialElement)
+				                                        .limit(totalSize)
+				                                        .collect(Collectors.toList());
 				return new MultiBitArrayStructImpl(arrayType,
 				                                   dimensionInts,
 //				                                  upgradedET,

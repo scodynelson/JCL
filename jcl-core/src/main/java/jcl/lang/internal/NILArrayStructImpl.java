@@ -20,16 +20,13 @@ import jcl.type.LispType;
 
 /**
  * The implementation of a zero-ranked {@link ArrayStruct}.
- *
- * @param <TYPE>
- * 		the type of the array contents
  */
-public class NILArrayStructImpl<TYPE extends LispStruct> extends ArrayStructImpl<TYPE> {
+public class NILArrayStructImpl extends ArrayStructImpl {
 
 	/**
 	 * The single content value of the structure.
 	 */
-	TYPE content;
+	LispStruct content;
 
 	/**
 	 * Constructor for building the zero-ranked array structure.
@@ -43,8 +40,8 @@ public class NILArrayStructImpl<TYPE extends LispStruct> extends ArrayStructImpl
 	 * @param isAdjustable
 	 * 		whether or not the structure is mutable
 	 */
-	public NILArrayStructImpl(final ArrayType arrayType, final LispType elementType, final TYPE content,
-	                   final boolean isAdjustable) {
+	public NILArrayStructImpl(final ArrayType arrayType, final LispType elementType, final LispStruct content,
+	                          final boolean isAdjustable) {
 		super(arrayType, elementType, isAdjustable);
 		this.content = content;
 	}
@@ -63,9 +60,8 @@ public class NILArrayStructImpl<TYPE extends LispStruct> extends ArrayStructImpl
 	 * @param isAdjustable
 	 * 		whether or not the structure is mutable
 	 */
-	public NILArrayStructImpl(final ArrayType arrayType, final LispType elementType,
-	                   final ArrayStruct<TYPE> displacedTo, final Integer displacedIndexOffset,
-	                   final boolean isAdjustable) {
+	public NILArrayStructImpl(final ArrayType arrayType, final LispType elementType, final ArrayStruct displacedTo,
+	                          final Integer displacedIndexOffset, final boolean isAdjustable) {
 		super(arrayType, elementType, displacedTo, displacedIndexOffset, isAdjustable);
 	}
 
@@ -78,13 +74,11 @@ public class NILArrayStructImpl<TYPE extends LispStruct> extends ArrayStructImpl
 	 * 		the initial content value
 	 * @param isAdjustable
 	 * 		whether or not the structure will be mutable
-	 * @param <T>
-	 * 		the type of the array contents
 	 *
 	 * @return a newly created zero-ranked array structure.
 	 */
-	public static <T extends LispStruct> ArrayStruct<T> valueOf(final LispType elementType, final T initialElement,
-	                                                            final BooleanStruct isAdjustable) {
+	public static ArrayStruct valueOf(final LispType elementType, final LispStruct initialElement,
+	                                  final BooleanStruct isAdjustable) {
 		final LispType upgradedET = ArrayStruct.upgradedArrayElementType(elementType);
 
 		final LispType initialElementType = initialElement.getType();
@@ -95,7 +89,7 @@ public class NILArrayStructImpl<TYPE extends LispStruct> extends ArrayStructImpl
 
 		final boolean adjustableBoolean = isAdjustable.booleanValue();
 		final ArrayType arrayType = getArrayType(adjustableBoolean);
-		return new NILArrayStructImpl<>(arrayType, upgradedET, initialElement, adjustableBoolean);
+		return new NILArrayStructImpl(arrayType, upgradedET, initialElement, adjustableBoolean);
 	}
 
 	/**
@@ -107,15 +101,11 @@ public class NILArrayStructImpl<TYPE extends LispStruct> extends ArrayStructImpl
 	 * 		the initial content value
 	 * @param isAdjustable
 	 * 		whether or not the structure will be mutable
-	 * @param <T>
-	 * 		the type of the array contents
 	 *
 	 * @return a newly created zero-ranked array structure.
 	 */
-	@SuppressWarnings("unchecked")
-	public static <T extends LispStruct> ArrayStruct<T> valueOf(final LispType elementType,
-	                                                            final SequenceStruct initialContents,
-	                                                            final BooleanStruct isAdjustable) {
+	public static ArrayStruct valueOf(final LispType elementType, final SequenceStruct initialContents,
+	                                  final BooleanStruct isAdjustable) {
 		final LispType upgradedET = ArrayStruct.upgradedArrayElementType(elementType);
 
 		for (final LispStruct initialElement : initialContents) {
@@ -128,7 +118,7 @@ public class NILArrayStructImpl<TYPE extends LispStruct> extends ArrayStructImpl
 
 		final boolean adjustableBoolean = isAdjustable.booleanValue();
 		final ArrayType arrayType = getArrayType(adjustableBoolean);
-		return new NILArrayStructImpl<>(arrayType, upgradedET, (T) initialContents, adjustableBoolean);
+		return new NILArrayStructImpl(arrayType, upgradedET, initialContents, adjustableBoolean);
 	}
 
 	/**
@@ -142,15 +132,11 @@ public class NILArrayStructImpl<TYPE extends LispStruct> extends ArrayStructImpl
 	 * 		the offset of the index lookup for the content value into the displaced array structure
 	 * @param isAdjustable
 	 * 		whether or not the structure will be mutable
-	 * @param <T>
-	 * 		the type of the array contents
 	 *
 	 * @return a newly created zero-ranked array structure.
 	 */
-	public static <T extends LispStruct> ArrayStruct<T> valueOf(final LispType elementType,
-	                                                            final ArrayStruct<T> displacedTo,
-	                                                            final IntegerStruct displacedIndexOffset,
-	                                                            final BooleanStruct isAdjustable) {
+	public static ArrayStruct valueOf(final LispType elementType, final ArrayStruct displacedTo,
+	                                  final IntegerStruct displacedIndexOffset, final BooleanStruct isAdjustable) {
 
 		final LispType displacedToType = displacedTo.getType();
 		final LispType upgradedET = ArrayStruct.upgradedArrayElementType(elementType);
@@ -165,8 +151,11 @@ public class NILArrayStructImpl<TYPE extends LispStruct> extends ArrayStructImpl
 			throw new ErrorException("Requested size is too large to displace to " + displacedTo + '.');
 		}
 
-		return new NILArrayStructImpl<>(ArrayType.INSTANCE, upgradedET, displacedTo, displacedIndexOffset.intValue(),
-		                                isAdjustable.booleanValue());
+		return new NILArrayStructImpl(ArrayType.INSTANCE,
+		                              upgradedET,
+		                              displacedTo,
+		                              displacedIndexOffset.intValue(),
+		                              isAdjustable.booleanValue());
 	}
 
 	/**
@@ -176,12 +165,10 @@ public class NILArrayStructImpl<TYPE extends LispStruct> extends ArrayStructImpl
 	 * 		the expected element type of the content value
 	 * @param initialElement
 	 * 		the initial content value
-	 * @param <T>
-	 * 		the type of the array contents
 	 *
 	 * @return a newly created zero-ranked array structure.
 	 */
-	public static <T extends LispStruct> ArrayStruct<T> valueOf(final LispType elementType, final T initialElement) {
+	public static ArrayStruct valueOf(final LispType elementType, final LispStruct initialElement) {
 		return valueOf(elementType, initialElement, NILStruct.INSTANCE);
 	}
 
@@ -192,19 +179,16 @@ public class NILArrayStructImpl<TYPE extends LispStruct> extends ArrayStructImpl
 	 * 		the expected element type of the content value
 	 * @param initialContents
 	 * 		the initial content value
-	 * @param <T>
-	 * 		the type of the array contents
 	 *
 	 * @return a newly created zero-ranked array structure.
 	 */
-	public static <T extends LispStruct> ArrayStruct<T> valueOf(final LispType elementType,
-	                                                            final SequenceStruct initialContents) {
+	public static ArrayStruct valueOf(final LispType elementType, final SequenceStruct initialContents) {
 		return valueOf(elementType, initialContents, NILStruct.INSTANCE);
 	}
 
 	@Override
-	public ArrayStruct<TYPE> adjustArray(final List<IntegerStruct> dimensions, final LispType elementType,
-	                                     final TYPE initialElement, final IntegerStruct fillPointer) {
+	public ArrayStruct adjustArray(final List<IntegerStruct> dimensions, final LispType elementType,
+	                               final LispStruct initialElement, final IntegerStruct fillPointer) {
 
 		if (!dimensions.isEmpty()) {
 			throw new ErrorException("Array cannot be adjusted to a different array dimension rank.");
@@ -236,10 +220,9 @@ public class NILArrayStructImpl<TYPE extends LispStruct> extends ArrayStructImpl
 		}
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
-	public ArrayStruct<TYPE> adjustArray(final List<IntegerStruct> dimensions, final LispType elementType,
-	                                     final SequenceStruct initialContents, final IntegerStruct fillPointer) {
+	public ArrayStruct adjustArray(final List<IntegerStruct> dimensions, final LispType elementType,
+	                               final SequenceStruct initialContents, final IntegerStruct fillPointer) {
 
 		if (!dimensions.isEmpty()) {
 			throw new ErrorException("Array cannot be adjusted to a different array dimension rank.");
@@ -264,7 +247,7 @@ public class NILArrayStructImpl<TYPE extends LispStruct> extends ArrayStructImpl
 
 		if (isAdjustable) {
 			this.elementType = upgradedET;
-			content = (TYPE) initialContents;
+			content = initialContents;
 			displacedTo = null;
 			displacedIndexOffset = 0;
 			return this;
@@ -274,9 +257,9 @@ public class NILArrayStructImpl<TYPE extends LispStruct> extends ArrayStructImpl
 	}
 
 	@Override
-	public ArrayStruct<TYPE> adjustArray(final List<IntegerStruct> dimensions, final LispType elementType,
-	                                     final IntegerStruct fillPointer, final ArrayStruct<TYPE> displacedTo,
-	                                     final IntegerStruct displacedIndexOffset) {
+	public ArrayStruct adjustArray(final List<IntegerStruct> dimensions, final LispType elementType,
+	                               final IntegerStruct fillPointer, final ArrayStruct displacedTo,
+	                               final IntegerStruct displacedIndexOffset) {
 
 		if (!dimensions.isEmpty()) {
 			throw new ErrorException("Array cannot be adjusted to a different array dimension rank.");
@@ -315,7 +298,7 @@ public class NILArrayStructImpl<TYPE extends LispStruct> extends ArrayStructImpl
 	}
 
 	@Override
-	public TYPE aref(final IntegerStruct... subscripts) {
+	public LispStruct aref(final IntegerStruct... subscripts) {
 		validateSubscripts(subscripts);
 		if (displacedTo == null) {
 			return content;
@@ -326,7 +309,7 @@ public class NILArrayStructImpl<TYPE extends LispStruct> extends ArrayStructImpl
 	}
 
 	@Override
-	public TYPE setfAref(final TYPE newElement, final IntegerStruct... subscripts) {
+	public LispStruct setfAref(final LispStruct newElement, final IntegerStruct... subscripts) { // TODO: type check
 		validateSubscripts(subscripts);
 		if (displacedTo == null) {
 			content = newElement;
@@ -374,7 +357,7 @@ public class NILArrayStructImpl<TYPE extends LispStruct> extends ArrayStructImpl
 	}
 
 	@Override
-	public TYPE rowMajorAref(final IntegerStruct index) {
+	public LispStruct rowMajorAref(final IntegerStruct index) {
 		if (!IntegerStruct.ZERO.eql(index)) {
 			throw new ErrorException("Index " + index + " is out of bounds for " + this + '.');
 		}
@@ -382,7 +365,7 @@ public class NILArrayStructImpl<TYPE extends LispStruct> extends ArrayStructImpl
 	}
 
 	@Override
-	public TYPE setfRowMajorAref(final TYPE newElement, final IntegerStruct index) {
+	public LispStruct setfRowMajorAref(final LispStruct newElement, final IntegerStruct index) { // TODO: type check
 		if (!IntegerStruct.ZERO.eql(index)) {
 			throw new ErrorException("Index " + index + " is out of bounds for " + this + '.');
 		}
@@ -408,7 +391,7 @@ public class NILArrayStructImpl<TYPE extends LispStruct> extends ArrayStructImpl
 // =================
 
 	@Override
-	public List<TYPE> getContents() {
+	public List<LispStruct> getContents() {
 		return Collections.singletonList(content);
 	}
 

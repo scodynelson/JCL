@@ -30,15 +30,12 @@ import jcl.type.VectorType;
 
 /**
  * The {@link VectorStructImpl} is the object representation of a Lisp 'vector' type.
- *
- * @param <TYPE>
- * 		the type of the vector contents
  */
-public class VectorStructImpl<TYPE extends LispStruct> extends ArrayStructImpl<TYPE> implements VectorStruct<TYPE> {
+public class VectorStructImpl extends ArrayStructImpl implements VectorStruct {
 
 	protected Integer totalSize;
 
-	protected List<TYPE> contents;
+	private List<LispStruct> contents;
 
 	protected Integer fillPointer;
 
@@ -59,7 +56,7 @@ public class VectorStructImpl<TYPE extends LispStruct> extends ArrayStructImpl<T
 	 * 		the vector fillPointer
 	 */
 	public VectorStructImpl(final VectorType vectorType, final Integer size, final LispType elementType,
-	                        final List<TYPE> contents, final boolean isAdjustable, final Integer fillPointer) {
+	                        final List<LispStruct> contents, final boolean isAdjustable, final Integer fillPointer) {
 		super(vectorType, elementType, isAdjustable);
 
 		totalSize = size;
@@ -86,7 +83,7 @@ public class VectorStructImpl<TYPE extends LispStruct> extends ArrayStructImpl<T
 	 * 		the vector fillPointer
 	 */
 	public VectorStructImpl(final VectorType vectorType, final Integer size, final LispType elementType,
-	                        final ArrayStruct<TYPE> displacedTo, final Integer displacedIndexOffset,
+	                        final ArrayStruct displacedTo, final Integer displacedIndexOffset,
 	                        final boolean isAdjustable, final Integer fillPointer) {
 		super(vectorType, elementType, displacedTo, displacedIndexOffset, isAdjustable);
 
@@ -98,13 +95,13 @@ public class VectorStructImpl<TYPE extends LispStruct> extends ArrayStructImpl<T
 		Old Builders
 	 */
 
-	public static <T extends LispStruct> VectorStruct<T> valueOf(final List<T> contents) {
-		return new VectorStructImpl<>(SimpleVectorType.INSTANCE,
-		                              contents.size(),
-		                              TType.INSTANCE,
-		                              contents,
-		                              false,
-		                              null);
+	public static VectorStruct valueOf(final List<LispStruct> contents) {
+		return new VectorStructImpl(SimpleVectorType.INSTANCE,
+		                            contents.size(),
+		                            TType.INSTANCE,
+		                            contents,
+		                            false,
+		                            null);
 	}
 
 	@Override
@@ -119,7 +116,7 @@ public class VectorStructImpl<TYPE extends LispStruct> extends ArrayStructImpl<T
 	}
 
 	@Override
-	public TYPE vectorPop() {
+	public LispStruct vectorPop() {
 		if (fillPointer == null) {
 			throw new TypeErrorException("Cannot pop from a VECTOR with no fill-pointer.");
 		}
@@ -128,13 +125,13 @@ public class VectorStructImpl<TYPE extends LispStruct> extends ArrayStructImpl<T
 		}
 
 		fillPointer--;
-		final TYPE element = contents.get(fillPointer);
+		final LispStruct element = contents.get(fillPointer);
 		contents.set(fillPointer, null);
 		return element;
 	}
 
 	@Override
-	public LispStruct vectorPush(final TYPE element) {
+	public LispStruct vectorPush(final LispStruct element) { // TODO: type check
 		if (fillPointer == null) {
 			throw new TypeErrorException("Cannot push into a VECTOR with no fill-pointer.");
 		}
@@ -148,7 +145,8 @@ public class VectorStructImpl<TYPE extends LispStruct> extends ArrayStructImpl<T
 	}
 
 	@Override
-	public IntegerStruct vectorPushExtend(final TYPE element, final IntegerStruct extensionAmount) {
+	public IntegerStruct vectorPushExtend(final LispStruct element,
+	                                      final IntegerStruct extensionAmount) { // TODO: type check
 		if (fillPointer == null) {
 			throw new TypeErrorException("Cannot push into a VECTOR with no fill-pointer.");
 		}
@@ -169,8 +167,8 @@ public class VectorStructImpl<TYPE extends LispStruct> extends ArrayStructImpl<T
 	 */
 
 	@Override
-	public ArrayStruct<TYPE> adjustArray(final List<IntegerStruct> dimensions, final LispType elementType,
-	                                     final TYPE initialElement, final IntegerStruct fillPointer) {
+	public ArrayStruct adjustArray(final List<IntegerStruct> dimensions, final LispType elementType,
+	                               final LispStruct initialElement, final IntegerStruct fillPointer) {
 
 		if (!dimensions.isEmpty()) {
 			throw new ErrorException("Array cannot be adjusted to a different array dimension rank.");
@@ -198,16 +196,16 @@ public class VectorStructImpl<TYPE extends LispStruct> extends ArrayStructImpl<T
 			displacedIndexOffset = 0;
 			return this;
 		} else {
-			return VectorStruct.<TYPE>builder(size)
-					.elementType(upgradedET)
-					.initialElement(initialElement)
-					.build();
+			return VectorStruct.builder(size)
+			                   .elementType(upgradedET)
+			                   .initialElement(initialElement)
+			                   .build();
 		}
 	}
 
 	@Override
-	public ArrayStruct<TYPE> adjustArray(final List<IntegerStruct> dimensions, final LispType elementType,
-	                                     final SequenceStruct initialContents, final IntegerStruct fillPointer) {
+	public ArrayStruct adjustArray(final List<IntegerStruct> dimensions, final LispType elementType,
+	                               final SequenceStruct initialContents, final IntegerStruct fillPointer) {
 
 		if (!dimensions.isEmpty()) {
 			throw new ErrorException("Array cannot be adjusted to a different array dimension rank.");
@@ -236,17 +234,17 @@ public class VectorStructImpl<TYPE extends LispStruct> extends ArrayStructImpl<T
 			displacedIndexOffset = 0;
 			return this;
 		} else {
-			return VectorStruct.<TYPE>builder(size)
-					.elementType(upgradedET)
-					.initialContents(initialContents)
-					.build();
+			return VectorStruct.builder(size)
+			                   .elementType(upgradedET)
+			                   .initialContents(initialContents)
+			                   .build();
 		}
 	}
 
 	@Override
-	public ArrayStruct<TYPE> adjustArray(final List<IntegerStruct> dimensions, final LispType elementType,
-	                                     final IntegerStruct fillPointer, final ArrayStruct<TYPE> displacedTo,
-	                                     final IntegerStruct displacedIndexOffset) {
+	public ArrayStruct adjustArray(final List<IntegerStruct> dimensions, final LispType elementType,
+	                               final IntegerStruct fillPointer, final ArrayStruct displacedTo,
+	                               final IntegerStruct displacedIndexOffset) {
 
 		if (!dimensions.isEmpty()) {
 			throw new ErrorException("Array cannot be adjusted to a different array dimension rank.");
@@ -278,16 +276,16 @@ public class VectorStructImpl<TYPE extends LispStruct> extends ArrayStructImpl<T
 			this.displacedIndexOffset = displacedIndexOffset.intValue();
 			return this;
 		} else {
-			return VectorStruct.<TYPE>builder(size)
-					.elementType(upgradedET)
-					.displacedTo(displacedTo)
-					.displacedIndexOffset(displacedIndexOffset)
-					.build();
+			return VectorStruct.builder(size)
+			                   .elementType(upgradedET)
+			                   .displacedTo(displacedTo)
+			                   .displacedIndexOffset(displacedIndexOffset)
+			                   .build();
 		}
 	}
 
 	@Override
-	public TYPE aref(final IntegerStruct... subscripts) {
+	public LispStruct aref(final IntegerStruct... subscripts) {
 		final int rowMajorIndex = rowMajorIndexInternal(subscripts);
 		if (displacedTo == null) {
 			return contents.get(rowMajorIndex);
@@ -298,7 +296,7 @@ public class VectorStructImpl<TYPE extends LispStruct> extends ArrayStructImpl<T
 	}
 
 	@Override
-	public TYPE setfAref(final TYPE newElement, final IntegerStruct... subscripts) {
+	public LispStruct setfAref(final LispStruct newElement, final IntegerStruct... subscripts) { // TODO: type check
 		final int rowMajorIndex = rowMajorIndexInternal(subscripts);
 		if (displacedTo == null) {
 			contents.set(rowMajorIndex, newElement);
@@ -355,13 +353,13 @@ public class VectorStructImpl<TYPE extends LispStruct> extends ArrayStructImpl<T
 	}
 
 	@Override
-	public TYPE rowMajorAref(final IntegerStruct index) {
+	public LispStruct rowMajorAref(final IntegerStruct index) {
 		final int indexInt = validateSubscript(index);
 		return contents.get(indexInt);
 	}
 
 	@Override
-	public TYPE setfRowMajorAref(final TYPE newElement, final IntegerStruct index) {
+	public LispStruct setfRowMajorAref(final LispStruct newElement, final IntegerStruct index) { // TODO: type check
 		final int indexInt = validateSubscript(index);
 		contents.set(indexInt, newElement);
 		return newElement;
@@ -390,7 +388,7 @@ public class VectorStructImpl<TYPE extends LispStruct> extends ArrayStructImpl<T
 // =================
 
 	@Override
-	public List<TYPE> getContents() {
+	public List<LispStruct> getContents() {
 		return contents;
 	}
 
@@ -460,7 +458,7 @@ public class VectorStructImpl<TYPE extends LispStruct> extends ArrayStructImpl<T
 			final int amountToPrint = (fillPointer == null) ? contents.size() : fillPointer;
 
 			for (int i = 0; i < amountToPrint; i++) {
-				final TYPE lispStruct = contents.get(i);
+				final LispStruct lispStruct = contents.get(i);
 				final String printedLispStruct = lispStruct.toString();
 
 				stringBuilder.append(printedLispStruct);

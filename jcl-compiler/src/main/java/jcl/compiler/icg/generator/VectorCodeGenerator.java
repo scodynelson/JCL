@@ -26,7 +26,7 @@ import org.springframework.stereotype.Component;
  * the provided {@link VectorStruct} input value.
  */
 @Component
-final class VectorCodeGenerator implements CodeGenerator<VectorStructImpl<LispStruct>> {
+final class VectorCodeGenerator implements CodeGenerator<VectorStructImpl> {
 
 	/**
 	 * {@link QuoteCodeGenerator} used for generating the {@link VectorStruct} contents as if they were quoted values.
@@ -49,8 +49,8 @@ final class VectorCodeGenerator implements CodeGenerator<VectorStructImpl<LispSt
 	 * 		stateful object used to hold the current state of the code generation process
 	 */
 	@EventListener
-	public void onGeneratorEvent(final GeneratorEvent<VectorStructImpl<LispStruct>> event) {
-		final VectorStruct<LispStruct> input = event.getSource();
+	public void onGeneratorEvent(final GeneratorEvent<VectorStructImpl> event) {
+		final VectorStruct input = event.getSource();
 		final GeneratorState generatorState = event.getGeneratorState();
 
 		final JavaMethodBuilder methodBuilder = generatorState.getCurrentMethodBuilder();

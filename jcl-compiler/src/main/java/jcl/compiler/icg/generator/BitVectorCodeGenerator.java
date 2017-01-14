@@ -68,7 +68,7 @@ final class BitVectorCodeGenerator implements CodeGenerator<BitVectorStructImpl>
 
 		final int contentStore = methodBuilder.getNextAvailableStore();
 
-		final List<IntegerStruct> contents = input.getContents();
+		final List<IntegerStruct> contents = input.getBVContents();
 		for (final IntegerStruct content : contents) {
 			codeGenerator.generate(content, generatorState);
 			mv.visitVarInsn(Opcodes.ASTORE, contentStore);

@@ -93,7 +93,7 @@ public class SharpLeftParenthesisReaderMacroFunction extends ReaderMacroFunction
 	 *
 	 * @return the properly created {@link VectorStruct} taking care of the proper vector length
 	 */
-	private static VectorStruct<?> handleNumberArgument(final ListStruct listToken, final BigInteger numberArgument) {
+	private static VectorStruct handleNumberArgument(final ListStruct listToken, final BigInteger numberArgument) {
 		final List<LispStruct> tokensAsJavaList = listToken.stream().collect(Collectors.toList());
 
 		final int numberOfTokens = tokensAsJavaList.size();

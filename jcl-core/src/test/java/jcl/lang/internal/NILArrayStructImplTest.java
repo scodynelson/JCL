@@ -72,7 +72,7 @@ public class NILArrayStructImplTest {
 	public void test_valueOf_IE_Adj_IsAdj() {
 
 		final IntegerStruct initialElement = IntegerStruct.ZERO;
-		final ArrayStruct<LispStruct> array
+		final ArrayStruct array
 				= NILArrayStructImpl.valueOf(TType.INSTANCE,
 				                             initialElement,
 				                             TStruct.INSTANCE);
@@ -89,7 +89,7 @@ public class NILArrayStructImplTest {
 	public void test_valueOf_IE_Adj_IsNotAdj() {
 
 		final IntegerStruct initialElement = IntegerStruct.ZERO;
-		final ArrayStruct<LispStruct> array
+		final ArrayStruct array
 				= NILArrayStructImpl.valueOf(TType.INSTANCE,
 				                             initialElement,
 				                             NILStruct.INSTANCE);
@@ -125,7 +125,7 @@ public class NILArrayStructImplTest {
 	public void test_valueOf_IC_Adj_IsAdj() {
 
 		final SequenceStruct initialContents = LispStructFactory.toProperList(IntegerStruct.ZERO);
-		final ArrayStruct<LispStruct> array
+		final ArrayStruct array
 				= NILArrayStructImpl.valueOf(TType.INSTANCE,
 				                             initialContents,
 				                             TStruct.INSTANCE);
@@ -142,7 +142,7 @@ public class NILArrayStructImplTest {
 	public void test_valueOf_IC_Adj_IsNotAdj() {
 
 		final SequenceStruct initialContents = NILStruct.INSTANCE;
-		final ArrayStruct<LispStruct> array
+		final ArrayStruct array
 				= NILArrayStructImpl.valueOf(TType.INSTANCE,
 				                             initialContents,
 				                             NILStruct.INSTANCE);
@@ -164,7 +164,7 @@ public class NILArrayStructImplTest {
 		thrown.expect(ErrorException.class);
 		thrown.expectMessage(containsString("Requested size is too large to displace to"));
 
-		final ArrayStruct<LispStruct> displacedTo
+		final ArrayStruct displacedTo
 				= NILArrayStructImpl.valueOf(TType.INSTANCE,
 				                             IntegerStruct.ZERO);
 		NILArrayStructImpl.valueOf(TType.INSTANCE,
@@ -182,7 +182,7 @@ public class NILArrayStructImplTest {
 		thrown.expect(TypeErrorException.class);
 		thrown.expectMessage(containsString("is not an array with a subtype of the upgraded-array-element-type"));
 
-		final ArrayStruct<LispStruct> displacedTo
+		final ArrayStruct displacedTo
 				= NILArrayStructImpl.valueOf(TType.INSTANCE,
 				                             IntegerStruct.ZERO);
 		NILArrayStructImpl.valueOf(NILType.INSTANCE,
@@ -199,11 +199,11 @@ public class NILArrayStructImplTest {
 	public void test_valueOf_Disp_IsAdj() {
 
 		final IntegerStruct initialElement = IntegerStruct.ZERO;
-		final ArrayStruct<LispStruct> displacedTo
+		final ArrayStruct displacedTo
 				= NILArrayStructImpl.valueOf(TType.INSTANCE,
 				                             initialElement);
 		final IntegerStruct displacedIndexOffset = IntegerStruct.ZERO;
-		final ArrayStruct<LispStruct> array
+		final ArrayStruct array
 				= NILArrayStructImpl.valueOf(TType.INSTANCE,
 				                             displacedTo,
 				                             displacedIndexOffset,
@@ -225,13 +225,13 @@ public class NILArrayStructImplTest {
 	public void test_valueOf_Disp_IsNotAdj() {
 
 		final ListStruct initialContents = LispStructFactory.toProperList(IntegerStruct.TEN, IntegerStruct.TWO);
-		final ArrayStruct<LispStruct> displacedTo
+		final ArrayStruct displacedTo
 				= VectorStruct.builder(IntegerStruct.TWO)
 				              .initialContents(initialContents)
 				              .adjustable(TStruct.INSTANCE)
 				              .build();
 		final IntegerStruct displacedIndexOffset = IntegerStruct.ONE;
-		final ArrayStruct<LispStruct> array
+		final ArrayStruct array
 				= NILArrayStructImpl.valueOf(TType.INSTANCE,
 				                             displacedTo,
 				                             displacedIndexOffset,
@@ -269,7 +269,7 @@ public class NILArrayStructImplTest {
 	public void test_valueOf_IE() {
 
 		final IntegerStruct initialElement = IntegerStruct.ZERO;
-		final ArrayStruct<LispStruct> array
+		final ArrayStruct array
 				= NILArrayStructImpl.valueOf(TType.INSTANCE,
 				                             initialElement);
 		Assert.assertThat(array.getType(), is(SimpleArrayType.INSTANCE));
@@ -302,7 +302,7 @@ public class NILArrayStructImplTest {
 	public void test_valueOf_IC() {
 
 		final SequenceStruct initialContents = LispStructFactory.toProperList(IntegerStruct.ZERO);
-		final ArrayStruct<LispStruct> array
+		final ArrayStruct array
 				= NILArrayStructImpl.valueOf(TType.INSTANCE,
 				                             initialContents);
 		Assert.assertThat(array.getType(), is(SimpleArrayType.INSTANCE));
@@ -324,7 +324,7 @@ public class NILArrayStructImplTest {
 		thrown.expectMessage(containsString("Array cannot be adjusted to a different array dimension rank."));
 
 		final IntegerStruct initialElement = IntegerStruct.ZERO;
-		final ArrayStruct<LispStruct> array
+		final ArrayStruct array
 				= NILArrayStructImpl.valueOf(TType.INSTANCE,
 				                             initialElement);
 		array.adjustArray(Collections.singletonList(IntegerStruct.ONE),
@@ -343,7 +343,7 @@ public class NILArrayStructImplTest {
 		thrown.expectMessage(containsString("Non-vector arrays cannot adjust fill-pointer."));
 
 		final IntegerStruct initialElement = IntegerStruct.ZERO;
-		final ArrayStruct<LispStruct> array
+		final ArrayStruct array
 				= NILArrayStructImpl.valueOf(TType.INSTANCE,
 				                             initialElement);
 		array.adjustArray(Collections.emptyList(),
@@ -362,7 +362,7 @@ public class NILArrayStructImplTest {
 		thrown.expectMessage(containsString("must be the same as initial upgraded-array-element-type"));
 
 		final IntegerStruct initialElement = IntegerStruct.ZERO;
-		final ArrayStruct<LispStruct> array
+		final ArrayStruct array
 				= NILArrayStructImpl.valueOf(BitType.INSTANCE,
 				                             initialElement);
 		array.adjustArray(Collections.emptyList(),
@@ -381,7 +381,7 @@ public class NILArrayStructImplTest {
 		thrown.expectMessage(containsString("must be the same as initial upgraded-array-element-type"));
 
 		final IntegerStruct initialElement = IntegerStruct.ONE;
-		final ArrayStruct<LispStruct> array
+		final ArrayStruct array
 				= NILArrayStructImpl.valueOf(TType.INSTANCE,
 				                             initialElement);
 		array.adjustArray(Collections.emptyList(),
@@ -400,7 +400,7 @@ public class NILArrayStructImplTest {
 		thrown.expectMessage(containsString("is not a subtype of the upgraded-array-element-type"));
 
 		final IntegerStruct initialElement = IntegerStruct.ZERO;
-		final ArrayStruct<LispStruct> array
+		final ArrayStruct array
 				= NILArrayStructImpl.valueOf(BitType.INSTANCE,
 				                             initialElement);
 
@@ -419,13 +419,13 @@ public class NILArrayStructImplTest {
 	public void test_adjustArray_IE_WasAdjustable() {
 
 		final IntegerStruct initialElement = IntegerStruct.ZERO;
-		final ArrayStruct<LispStruct> array
+		final ArrayStruct array
 				= NILArrayStructImpl.valueOf(TType.INSTANCE,
 				                             initialElement,
 				                             TStruct.INSTANCE);
 
 		final IntegerStruct newElement = IntegerStruct.ONE;
-		final ArrayStruct<LispStruct> result
+		final ArrayStruct result
 				= array.adjustArray(Collections.emptyList(),
 				                    TType.INSTANCE,
 				                    newElement,
@@ -444,12 +444,12 @@ public class NILArrayStructImplTest {
 	public void test_adjustArray_IE_WasNotAdjustable() {
 
 		final IntegerStruct initialElement = IntegerStruct.ZERO;
-		final ArrayStruct<LispStruct> array
+		final ArrayStruct array
 				= NILArrayStructImpl.valueOf(TType.INSTANCE,
 				                             IntegerStruct.ZERO);
 
 		final IntegerStruct newElement = IntegerStruct.ONE;
-		final ArrayStruct<LispStruct> result
+		final ArrayStruct result
 				= array.adjustArray(Collections.emptyList(),
 				                    TType.INSTANCE,
 				                    newElement,
@@ -478,7 +478,7 @@ public class NILArrayStructImplTest {
 		thrown.expectMessage(containsString("Array cannot be adjusted to a different array dimension rank."));
 
 		final SequenceStruct initialContents = LispStructFactory.toProperList(IntegerStruct.ZERO);
-		final ArrayStruct<LispStruct> array
+		final ArrayStruct array
 				= NILArrayStructImpl.valueOf(TType.INSTANCE,
 				                             initialContents);
 		array.adjustArray(Collections.singletonList(IntegerStruct.ONE),
@@ -497,7 +497,7 @@ public class NILArrayStructImplTest {
 		thrown.expectMessage(containsString("Non-vector arrays cannot adjust fill-pointer."));
 
 		final SequenceStruct initialContents = LispStructFactory.toProperList(IntegerStruct.ZERO);
-		final ArrayStruct<LispStruct> array
+		final ArrayStruct array
 				= NILArrayStructImpl.valueOf(TType.INSTANCE,
 				                             initialContents);
 		array.adjustArray(Collections.emptyList(),
@@ -516,7 +516,7 @@ public class NILArrayStructImplTest {
 		thrown.expectMessage(containsString("must be the same as initial upgraded-array-element-type"));
 
 		final SequenceStruct initialContents = LispStructFactory.toProperList(IntegerStruct.ZERO);
-		final ArrayStruct<LispStruct> array
+		final ArrayStruct array
 				= NILArrayStructImpl.valueOf(BitType.INSTANCE,
 				                             initialContents);
 		array.adjustArray(Collections.emptyList(),
@@ -535,7 +535,7 @@ public class NILArrayStructImplTest {
 		thrown.expectMessage(containsString("must be the same as initial upgraded-array-element-type"));
 
 		final SequenceStruct initialContents = LispStructFactory.toProperList(IntegerStruct.ONE);
-		final ArrayStruct<LispStruct> array
+		final ArrayStruct array
 				= NILArrayStructImpl.valueOf(TType.INSTANCE,
 				                             initialContents);
 		array.adjustArray(Collections.emptyList(),
@@ -554,7 +554,7 @@ public class NILArrayStructImplTest {
 		thrown.expectMessage(containsString("is not a subtype of the upgraded-array-element-type"));
 
 		final IntegerStruct initialElement = IntegerStruct.ZERO;
-		final ArrayStruct<LispStruct> array
+		final ArrayStruct array
 				= NILArrayStructImpl.valueOf(BitType.INSTANCE,
 				                             initialElement);
 		final SequenceStruct newContents = LispStructFactory.toProperList(CharacterStructImpl.valueOf('a'));
@@ -572,13 +572,13 @@ public class NILArrayStructImplTest {
 	public void test_adjustArray_IC_WasAdjustable() {
 
 		final SequenceStruct initialContents = LispStructFactory.toProperList(IntegerStruct.ZERO);
-		final ArrayStruct<LispStruct> array
+		final ArrayStruct array
 				= NILArrayStructImpl.valueOf(TType.INSTANCE,
 				                             initialContents,
 				                             TStruct.INSTANCE);
 
 		final SequenceStruct newContents = LispStructFactory.toProperList(IntegerStruct.ONE);
-		final ArrayStruct<LispStruct> result
+		final ArrayStruct result
 				= array.adjustArray(Collections.emptyList(),
 				                    TType.INSTANCE,
 				                    newContents,
@@ -597,12 +597,12 @@ public class NILArrayStructImplTest {
 	public void test_adjustArray_IC_WasNotAdjustable() {
 
 		final SequenceStruct initialContents = LispStructFactory.toProperList(IntegerStruct.ZERO);
-		final ArrayStruct<LispStruct> array
+		final ArrayStruct array
 				= NILArrayStructImpl.valueOf(TType.INSTANCE,
 				                             initialContents);
 
 		final SequenceStruct newContents = LispStructFactory.toProperList(IntegerStruct.ONE);
-		final ArrayStruct<LispStruct> result
+		final ArrayStruct result
 				= array.adjustArray(Collections.emptyList(),
 				                    TType.INSTANCE,
 				                    newContents,
@@ -631,12 +631,12 @@ public class NILArrayStructImplTest {
 		thrown.expectMessage(containsString("Array cannot be adjusted to a different array dimension rank."));
 
 		final IntegerStruct initialElement = IntegerStruct.ZERO;
-		final ArrayStruct<LispStruct> displacedTo
+		final ArrayStruct displacedTo
 				= NILArrayStructImpl.valueOf(TType.INSTANCE,
 				                             initialElement);
 		final IntegerStruct displacedIndexOffset = IntegerStruct.ZERO;
 
-		final ArrayStruct<LispStruct> array
+		final ArrayStruct array
 				= NILArrayStructImpl.valueOf(TType.INSTANCE,
 				                             initialElement);
 		array.adjustArray(Collections.singletonList(IntegerStruct.ONE),
@@ -656,12 +656,12 @@ public class NILArrayStructImplTest {
 		thrown.expectMessage(containsString("Non-vector arrays cannot adjust fill-pointer."));
 
 		final IntegerStruct initialElement = IntegerStruct.ZERO;
-		final ArrayStruct<LispStruct> displacedTo
+		final ArrayStruct displacedTo
 				= NILArrayStructImpl.valueOf(TType.INSTANCE,
 				                             initialElement);
 		final IntegerStruct displacedIndexOffset = IntegerStruct.ZERO;
 
-		final ArrayStruct<LispStruct> array
+		final ArrayStruct array
 				= NILArrayStructImpl.valueOf(TType.INSTANCE,
 				                             initialElement);
 		array.adjustArray(Collections.emptyList(),
@@ -681,12 +681,12 @@ public class NILArrayStructImplTest {
 		thrown.expectMessage(containsString("Requested size is too large to displace to"));
 
 		final IntegerStruct initialElement = IntegerStruct.ZERO;
-		final ArrayStruct<LispStruct> displacedTo
+		final ArrayStruct displacedTo
 				= NILArrayStructImpl.valueOf(TType.INSTANCE,
 				                             initialElement);
 		final IntegerStruct displacedIndexOffset = IntegerStruct.ONE;
 
-		final ArrayStruct<LispStruct> array
+		final ArrayStruct array
 				= NILArrayStructImpl.valueOf(TType.INSTANCE,
 				                             initialElement);
 		array.adjustArray(Collections.emptyList(),
@@ -706,12 +706,12 @@ public class NILArrayStructImplTest {
 		thrown.expectMessage(containsString("must be the same as initial upgraded-array-element-type"));
 
 		final IntegerStruct initialElement = IntegerStruct.ZERO;
-		final ArrayStruct<LispStruct> displacedTo
+		final ArrayStruct displacedTo
 				= NILArrayStructImpl.valueOf(TType.INSTANCE,
 				                             initialElement);
 		final IntegerStruct displacedIndexOffset = IntegerStruct.ZERO;
 
-		final ArrayStruct<LispStruct> array
+		final ArrayStruct array
 				= NILArrayStructImpl.valueOf(BitType.INSTANCE,
 				                             initialElement);
 		array.adjustArray(Collections.emptyList(),
@@ -731,12 +731,12 @@ public class NILArrayStructImplTest {
 		thrown.expectMessage(containsString("must be the same as initial upgraded-array-element-type"));
 
 		final IntegerStruct initialElement = IntegerStruct.ONE;
-		final ArrayStruct<LispStruct> displacedTo
+		final ArrayStruct displacedTo
 				= NILArrayStructImpl.valueOf(TType.INSTANCE,
 				                             initialElement);
 		final IntegerStruct displacedIndexOffset = IntegerStruct.ZERO;
 
-		final ArrayStruct<LispStruct> array
+		final ArrayStruct array
 				= NILArrayStructImpl.valueOf(TType.INSTANCE,
 				                             initialElement);
 		array.adjustArray(Collections.emptyList(),
@@ -756,12 +756,12 @@ public class NILArrayStructImplTest {
 		thrown.expectMessage(containsString("is not a subtype of the upgraded-array-element-type"));
 
 		final IntegerStruct initialElement = IntegerStruct.ZERO;
-		final ArrayStruct<LispStruct> displacedTo
+		final ArrayStruct displacedTo
 				= NILArrayStructImpl.valueOf(TType.INSTANCE,
 				                             initialElement);
 		final IntegerStruct displacedIndexOffset = IntegerStruct.ZERO;
 
-		final ArrayStruct<LispStruct> array
+		final ArrayStruct array
 				= NILArrayStructImpl.valueOf(BitType.INSTANCE,
 				                             initialElement);
 		array.adjustArray(Collections.emptyList(),
@@ -779,18 +779,18 @@ public class NILArrayStructImplTest {
 	public void test_adjustArray_Disp_WasAdjustable() {
 
 		final IntegerStruct newElement = IntegerStruct.ONE;
-		final ArrayStruct<LispStruct> displacedTo
+		final ArrayStruct displacedTo
 				= NILArrayStructImpl.valueOf(TType.INSTANCE,
 				                             newElement);
 		final IntegerStruct displacedIndexOffset = IntegerStruct.ZERO;
 
 		final IntegerStruct initialElement = IntegerStruct.ZERO;
-		final ArrayStruct<LispStruct> array
+		final ArrayStruct array
 				= NILArrayStructImpl.valueOf(TType.INSTANCE,
 				                             initialElement,
 				                             TStruct.INSTANCE);
 
-		final ArrayStruct<LispStruct> result
+		final ArrayStruct result
 				= array.adjustArray(Collections.emptyList(),
 				                    TType.INSTANCE,
 				                    null,
@@ -814,17 +814,17 @@ public class NILArrayStructImplTest {
 	public void test_adjustArray_Disp_WasNotAdjustable() {
 
 		final IntegerStruct newElement = IntegerStruct.ONE;
-		final ArrayStruct<LispStruct> displacedTo
+		final ArrayStruct displacedTo
 				= NILArrayStructImpl.valueOf(TType.INSTANCE,
 				                             newElement);
 		final IntegerStruct displacedIndexOffset = IntegerStruct.ZERO;
 
 		final IntegerStruct initialElement = IntegerStruct.ZERO;
-		final ArrayStruct<LispStruct> array
+		final ArrayStruct array
 				= NILArrayStructImpl.valueOf(TType.INSTANCE,
 				                             initialElement);
 
-		final ArrayStruct<LispStruct> result
+		final ArrayStruct result
 				= array.adjustArray(Collections.emptyList(),
 				                    TType.INSTANCE,
 				                    null,
@@ -854,7 +854,7 @@ public class NILArrayStructImplTest {
 	@Test
 	public void test_adjustableArrayP_True() {
 
-		final ArrayStruct<LispStruct> array
+		final ArrayStruct array
 				= NILArrayStructImpl.valueOf(TType.INSTANCE,
 				                             IntegerStruct.ZERO,
 				                             TStruct.INSTANCE);
@@ -868,7 +868,7 @@ public class NILArrayStructImplTest {
 	@Test
 	public void test_adjustableArrayP_False() {
 
-		final ArrayStruct<LispStruct> array
+		final ArrayStruct array
 				= NILArrayStructImpl.valueOf(TType.INSTANCE,
 				                             IntegerStruct.ZERO,
 				                             NILStruct.INSTANCE);
@@ -889,7 +889,7 @@ public class NILArrayStructImplTest {
 		thrown.expectMessage(containsString("Wrong number of subscripts"));
 
 		final IntegerStruct initialElement = IntegerStruct.ZERO;
-		final ArrayStruct<LispStruct> array
+		final ArrayStruct array
 				= NILArrayStructImpl.valueOf(TType.INSTANCE,
 				                             initialElement);
 		array.aref(IntegerStruct.ZERO);
@@ -901,7 +901,7 @@ public class NILArrayStructImplTest {
 	@Test
 	public void test_aref() {
 		final IntegerStruct initialElement = IntegerStruct.ZERO;
-		final ArrayStruct<LispStruct> array
+		final ArrayStruct array
 				= NILArrayStructImpl.valueOf(TType.INSTANCE,
 				                             initialElement);
 		Assert.assertThat(array.aref(), is(initialElement));
@@ -913,11 +913,11 @@ public class NILArrayStructImplTest {
 	@Test
 	public void test_aref_Displaced() {
 		final IntegerStruct initialElement = IntegerStruct.ZERO;
-		final ArrayStruct<LispStruct> displacedTo
+		final ArrayStruct displacedTo
 				= NILArrayStructImpl.valueOf(TType.INSTANCE,
 				                             initialElement);
 		final IntegerStruct displacedIndexOffset = IntegerStruct.ZERO;
-		final ArrayStruct<LispStruct> array
+		final ArrayStruct array
 				= NILArrayStructImpl.valueOf(TType.INSTANCE,
 				                             displacedTo,
 				                             displacedIndexOffset,
@@ -939,7 +939,7 @@ public class NILArrayStructImplTest {
 		thrown.expectMessage(containsString("Wrong number of subscripts"));
 
 		final IntegerStruct initialElement = IntegerStruct.ZERO;
-		final ArrayStruct<LispStruct> array
+		final ArrayStruct array
 				= NILArrayStructImpl.valueOf(TType.INSTANCE,
 				                             initialElement);
 		Assert.assertThat(array.aref(), is(initialElement));
@@ -954,7 +954,7 @@ public class NILArrayStructImplTest {
 	@Test
 	public void test_setfAref() {
 		final IntegerStruct initialElement = IntegerStruct.ZERO;
-		final ArrayStruct<LispStruct> array
+		final ArrayStruct array
 				= NILArrayStructImpl.valueOf(TType.INSTANCE,
 				                             initialElement);
 		Assert.assertThat(array.aref(), is(initialElement));
@@ -971,11 +971,11 @@ public class NILArrayStructImplTest {
 	@Test
 	public void test_setfAref_Displaced() {
 		final IntegerStruct initialElement = IntegerStruct.ZERO;
-		final ArrayStruct<LispStruct> displacedTo
+		final ArrayStruct displacedTo
 				= NILArrayStructImpl.valueOf(TType.INSTANCE,
 				                             initialElement);
 		final IntegerStruct displacedIndexOffset = IntegerStruct.ZERO;
-		final ArrayStruct<LispStruct> array
+		final ArrayStruct array
 				= NILArrayStructImpl.valueOf(TType.INSTANCE,
 				                             displacedTo,
 				                             displacedIndexOffset,
@@ -1001,7 +1001,7 @@ public class NILArrayStructImplTest {
 		thrown.expect(ErrorException.class);
 		thrown.expectMessage(containsString("Cannot determine array dimension for array with rank 0."));
 
-		final ArrayStruct<LispStruct> array
+		final ArrayStruct array
 				= NILArrayStructImpl.valueOf(TType.INSTANCE,
 				                             IntegerStruct.ZERO);
 		array.arrayDimension(IntegerStruct.ZERO);
@@ -1016,7 +1016,7 @@ public class NILArrayStructImplTest {
 	 */
 	@Test
 	public void test_arrayDimensions() {
-		final ArrayStruct<LispStruct> array
+		final ArrayStruct array
 				= NILArrayStructImpl.valueOf(TType.INSTANCE,
 				                             IntegerStruct.ZERO);
 		final ListStruct result = array.arrayDimensions();
@@ -1033,7 +1033,7 @@ public class NILArrayStructImplTest {
 	@Test
 	public void test_arrayElementType() {
 		final BitType elementType = BitType.INSTANCE;
-		final ArrayStruct<LispStruct> array
+		final ArrayStruct array
 				= NILArrayStructImpl.valueOf(elementType,
 				                             IntegerStruct.ZERO);
 		final LispType result = array.arrayElementType();
@@ -1049,7 +1049,7 @@ public class NILArrayStructImplTest {
 	 */
 	@Test
 	public void test_arrayHasFillPointerP() {
-		final ArrayStruct<LispStruct> array
+		final ArrayStruct array
 				= NILArrayStructImpl.valueOf(TType.INSTANCE,
 				                             IntegerStruct.ZERO);
 		final BooleanStruct result = array.arrayHasFillPointerP();
@@ -1067,7 +1067,7 @@ public class NILArrayStructImplTest {
 	public void test_arrayDisplacement() {
 
 		final IntegerStruct initialElement = IntegerStruct.ZERO;
-		final ArrayStruct<LispStruct> array
+		final ArrayStruct array
 				= NILArrayStructImpl.valueOf(TType.INSTANCE,
 				                             initialElement);
 
@@ -1083,12 +1083,12 @@ public class NILArrayStructImplTest {
 	public void test_arrayDisplacement_Displaced() {
 
 		final IntegerStruct initialElement = IntegerStruct.TWO;
-		final ArrayStruct<LispStruct> displacedTo
+		final ArrayStruct displacedTo
 				= NILArrayStructImpl.valueOf(TType.INSTANCE,
 				                             initialElement);
 		final IntegerStruct displacedIndexOffset = IntegerStruct.ZERO;
 
-		final ArrayStruct<LispStruct> array
+		final ArrayStruct array
 				= NILArrayStructImpl.valueOf(TType.INSTANCE,
 				                             displacedTo,
 				                             displacedIndexOffset,
@@ -1108,7 +1108,7 @@ public class NILArrayStructImplTest {
 	 */
 	@Test
 	public void test_arrayInBoundsP() {
-		final ArrayStruct<LispStruct> array
+		final ArrayStruct array
 				= NILArrayStructImpl.valueOf(TType.INSTANCE,
 				                             IntegerStruct.ZERO);
 		final BooleanStruct result = array.arrayInBoundsP();
@@ -1124,7 +1124,7 @@ public class NILArrayStructImplTest {
 	 */
 	@Test
 	public void test_arrayRank() {
-		final ArrayStruct<LispStruct> array
+		final ArrayStruct array
 				= NILArrayStructImpl.valueOf(TType.INSTANCE,
 				                             IntegerStruct.ZERO);
 		final IntegerStruct result = array.arrayRank();
@@ -1145,7 +1145,7 @@ public class NILArrayStructImplTest {
 		thrown.expectMessage(containsString("Wrong number of subscripts"));
 
 		final IntegerStruct initialElement = IntegerStruct.ZERO;
-		final ArrayStruct<LispStruct> array
+		final ArrayStruct array
 				= NILArrayStructImpl.valueOf(TType.INSTANCE,
 				                             initialElement);
 		array.arrayRowMajorIndex(IntegerStruct.ONE);
@@ -1158,7 +1158,7 @@ public class NILArrayStructImplTest {
 	public void test_arrayRowMajorIndex() {
 
 		final IntegerStruct initialElement = IntegerStruct.ZERO;
-		final ArrayStruct<LispStruct> array
+		final ArrayStruct array
 				= NILArrayStructImpl.valueOf(TType.INSTANCE,
 				                             initialElement);
 		final IntegerStruct result = array.arrayRowMajorIndex();
@@ -1174,7 +1174,7 @@ public class NILArrayStructImplTest {
 	 */
 	@Test
 	public void test_arrayTotalSize() {
-		final ArrayStruct<LispStruct> array
+		final ArrayStruct array
 				= NILArrayStructImpl.valueOf(TType.INSTANCE,
 				                             IntegerStruct.ZERO);
 		final IntegerStruct result = array.arrayTotalSize();
@@ -1194,7 +1194,7 @@ public class NILArrayStructImplTest {
 		thrown.expectMessage(containsString("is out of bounds for"));
 
 		final IntegerStruct initialElement = IntegerStruct.ZERO;
-		final ArrayStruct<LispStruct> array
+		final ArrayStruct array
 				= NILArrayStructImpl.valueOf(TType.INSTANCE,
 				                             initialElement);
 		array.rowMajorAref(IntegerStruct.ONE);
@@ -1207,7 +1207,7 @@ public class NILArrayStructImplTest {
 	public void test_rowMajorAref() {
 
 		final IntegerStruct initialElement = IntegerStruct.ZERO;
-		final ArrayStruct<LispStruct> array
+		final ArrayStruct array
 				= NILArrayStructImpl.valueOf(TType.INSTANCE,
 				                             initialElement);
 		final LispStruct result = array.rowMajorAref(IntegerStruct.ZERO);
@@ -1228,7 +1228,7 @@ public class NILArrayStructImplTest {
 		thrown.expectMessage(containsString("is out of bounds for"));
 
 		final IntegerStruct initialElement = IntegerStruct.ZERO;
-		final ArrayStruct<LispStruct> array
+		final ArrayStruct array
 				= NILArrayStructImpl.valueOf(TType.INSTANCE,
 				                             initialElement);
 		Assert.assertThat(array.rowMajorAref(IntegerStruct.ZERO), is(initialElement));
@@ -1244,7 +1244,7 @@ public class NILArrayStructImplTest {
 	public void test_setfRowMajorAref() {
 
 		final IntegerStruct initialElement = IntegerStruct.ZERO;
-		final ArrayStruct<LispStruct> array
+		final ArrayStruct array
 				= NILArrayStructImpl.valueOf(TType.INSTANCE,
 				                             initialElement);
 		Assert.assertThat(array.rowMajorAref(IntegerStruct.ZERO), is(initialElement));
@@ -1273,7 +1273,7 @@ public class NILArrayStructImplTest {
 			PrinterVariables.PRINT_READABLY.setValue(NILStruct.INSTANCE);
 
 			final IntegerStruct initialElement = IntegerStruct.ZERO;
-			final ArrayStruct<LispStruct> array
+			final ArrayStruct array
 					= NILArrayStructImpl.valueOf(TType.INSTANCE,
 					                             initialElement);
 			final String result = array.toString();
@@ -1298,7 +1298,7 @@ public class NILArrayStructImplTest {
 			PrinterVariables.PRINT_READABLY.setValue(TStruct.INSTANCE);
 
 			final IntegerStruct initialElement = IntegerStruct.ZERO;
-			final ArrayStruct<LispStruct> array
+			final ArrayStruct array
 					= NILArrayStructImpl.valueOf(TType.INSTANCE,
 					                             initialElement);
 			final String result = array.toString();
@@ -1323,7 +1323,7 @@ public class NILArrayStructImplTest {
 			PrinterVariables.PRINT_READABLY.setValue(TStruct.INSTANCE);
 
 			final IntegerStruct initialElement = IntegerStruct.ZERO;
-			final ArrayStruct<LispStruct> array
+			final ArrayStruct array
 					= NILArrayStructImpl.valueOf(TType.INSTANCE,
 					                             initialElement);
 			final String result = array.toString();
@@ -1348,7 +1348,7 @@ public class NILArrayStructImplTest {
 			PrinterVariables.PRINT_READABLY.setValue(NILStruct.INSTANCE);
 
 			final IntegerStruct initialElement = IntegerStruct.ZERO;
-			final ArrayStruct<LispStruct> array
+			final ArrayStruct array
 					= NILArrayStructImpl.valueOf(TType.INSTANCE,
 					                             initialElement,
 					                             TStruct.INSTANCE);
@@ -1377,7 +1377,7 @@ public class NILArrayStructImplTest {
 			PrinterVariables.PRINT_READABLY.setValue(NILStruct.INSTANCE);
 
 			final IntegerStruct initialElement = IntegerStruct.ZERO;
-			final ArrayStruct<LispStruct> array
+			final ArrayStruct array
 					= NILArrayStructImpl.valueOf(TType.INSTANCE,
 					                             initialElement);
 			final String result = array.toString();

@@ -17,14 +17,17 @@ import jcl.type.SimpleBitVectorType;
 /**
  * The {@link BitVectorStructImpl} is the object representation of a Lisp 'bit-vector' type.
  */
-public final class BitVectorStructImpl extends VectorStructImpl<IntegerStruct> implements BitVectorStruct {
+public final class BitVectorStructImpl extends VectorStructImpl implements BitVectorStruct {
 
 	private static final Pattern BIT_PATTERN = Pattern.compile("[0|1]+");
 
+	private List<IntegerStruct> contents;
+
 	public BitVectorStructImpl(final BitVectorType bitVectorType, final Integer size,
-	                            final List<IntegerStruct> contents, final boolean isAdjustable,
-	                            final Integer fillPointer) {
-		super(bitVectorType, size, BitType.INSTANCE, contents, isAdjustable, fillPointer);
+	                           final List<IntegerStruct> contents, final boolean isAdjustable,
+	                           final Integer fillPointer) {
+		super(bitVectorType, size, BitType.INSTANCE, null, isAdjustable, fillPointer);
+		this.contents = contents;
 	}
 
 	public static BitVectorStruct valueOf(final Integer size, final IntegerStruct initialElement,
@@ -150,5 +153,10 @@ public final class BitVectorStructImpl extends VectorStructImpl<IntegerStruct> i
 	public BitVectorStruct copyBitArray() {
 		return new BitVectorStructImpl(getBitVectorType(isAdjustable, fillPointer), contents.size(), contents,
 		                               isAdjustable, fillPointer);
+	}
+
+	@Override
+	public List<IntegerStruct> getBVContents() {
+		return contents;
 	}
 }

@@ -20,16 +20,16 @@ import jcl.type.SimpleArrayType;
 /**
  * The {@link MultiBitArrayStructImpl} is the object representation of a Lisp 'bit-array' type.
  */
-public class MultiBitArrayStructImpl extends MultiArrayStructImpl<IntegerStruct> implements BitArrayStruct {
+public class MultiBitArrayStructImpl extends MultiArrayStructImpl implements BitArrayStruct {
 
 	public MultiBitArrayStructImpl(final ArrayType arrayType, final List<Integer> dimensions,
-	                                final List<IntegerStruct> contents, final boolean isAdjustable) {
+	                               final List<LispStruct> contents, final boolean isAdjustable) {
 		super(arrayType, dimensions, BitType.INSTANCE, contents, isAdjustable);
 	}
 
 	public MultiBitArrayStructImpl(final ArrayType arrayType, final List<Integer> dimensions,
-	                                final ArrayStruct<IntegerStruct> displacedTo, final Integer displacedIndexOffset,
-	                                final boolean isAdjustable) {
+	                               final ArrayStruct displacedTo, final Integer displacedIndexOffset,
+	                               final boolean isAdjustable) {
 		super(arrayType, dimensions, BitType.INSTANCE, displacedTo, displacedIndexOffset, isAdjustable);
 	}
 
@@ -41,9 +41,9 @@ public class MultiBitArrayStructImpl extends MultiArrayStructImpl<IntegerStruct>
 		final int totalSize = dimensionInts.stream()
 		                                   .mapToInt(Integer::intValue)
 		                                   .sum();
-		final List<IntegerStruct> initialContents = Stream.generate(() -> initialElement)
-		                                                  .limit(totalSize)
-		                                                  .collect(Collectors.toList());
+		final List<LispStruct> initialContents = Stream.generate(() -> initialElement)
+		                                               .limit(totalSize)
+		                                               .collect(Collectors.toList());
 
 		final boolean adjustableBoolean = isAdjustable.booleanValue();
 		final ArrayType arrayType = getArrayType(adjustableBoolean);
@@ -55,7 +55,7 @@ public class MultiBitArrayStructImpl extends MultiArrayStructImpl<IntegerStruct>
 		final List<Integer> dimensionInts = dimensions.stream()
 		                                              .map(IntegerStruct::intValue)
 		                                              .collect(Collectors.toList());
-		final List<IntegerStruct> validContents = getValidContents(dimensionInts, initialContents);
+		final List<LispStruct> validContents = getValidContents(dimensionInts, initialContents);
 
 		final boolean adjustableBoolean = isAdjustable.booleanValue();
 		final ArrayType arrayType = getArrayType(adjustableBoolean);
@@ -82,9 +82,9 @@ public class MultiBitArrayStructImpl extends MultiArrayStructImpl<IntegerStruct>
 		final int totalSize = dimensionInts.stream()
 		                                   .mapToInt(Integer::intValue)
 		                                   .sum();
-		final List<IntegerStruct> initialContents = Stream.generate(() -> initialElement)
-		                                                  .limit(totalSize)
-		                                                  .collect(Collectors.toList());
+		final List<LispStruct> initialContents = Stream.generate(() -> initialElement)
+		                                               .limit(totalSize)
+		                                               .collect(Collectors.toList());
 
 		return new MultiBitArrayStructImpl(SimpleArrayType.INSTANCE, dimensionInts, initialContents, false);
 	}
@@ -93,7 +93,7 @@ public class MultiBitArrayStructImpl extends MultiArrayStructImpl<IntegerStruct>
 		final List<Integer> dimensionInts = dimensions.stream()
 		                                              .map(IntegerStruct::intValue)
 		                                              .collect(Collectors.toList());
-		final List<IntegerStruct> validContents = getValidContents(dimensionInts, initialContents);
+		final List<LispStruct> validContents = getValidContents(dimensionInts, initialContents);
 
 		return new MultiBitArrayStructImpl(SimpleArrayType.INSTANCE, dimensionInts, validContents, false);
 	}
@@ -107,8 +107,8 @@ public class MultiBitArrayStructImpl extends MultiArrayStructImpl<IntegerStruct>
 	 * @param initialContents
 	 * 		the array contents to check
 	 */
-	private static List<IntegerStruct> getValidContents(final List<Integer> dimensions,
-	                                                    final SequenceStruct initialContents) {
+	private static List<LispStruct> getValidContents(final List<Integer> dimensions,
+	                                                 final SequenceStruct initialContents) {
 		final int numberOfDimensions = dimensions.size();
 		if (numberOfDimensions == 0) {
 			return Collections.emptyList();
@@ -126,7 +126,7 @@ public class MultiBitArrayStructImpl extends MultiArrayStructImpl<IntegerStruct>
 			}
 		}
 
-		final List<IntegerStruct> validContents = new ArrayList<>();
+		final List<LispStruct> validContents = new ArrayList<>();
 
 		final int dimension = dimensions.get(0);
 		if (initialContents.length() == dimension) {
@@ -139,7 +139,7 @@ public class MultiBitArrayStructImpl extends MultiArrayStructImpl<IntegerStruct>
 				}
 
 				final SequenceStruct subContents = (SequenceStruct) contentToCheck;
-				final List<IntegerStruct> validSubContents = getValidContents(subDimension, subContents);
+				final List<LispStruct> validSubContents = getValidContents(subDimension, subContents);
 				validContents.addAll(validSubContents);
 			}
 		} else {

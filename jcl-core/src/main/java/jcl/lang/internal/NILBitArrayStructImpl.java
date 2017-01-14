@@ -16,15 +16,15 @@ import jcl.type.SimpleArrayType;
 /**
  * The {@link NILBitArrayStructImpl} is the object representation of a Lisp 'bit-array' type.
  */
-public class NILBitArrayStructImpl extends NILArrayStructImpl<IntegerStruct> implements BitArrayStruct {
+public class NILBitArrayStructImpl extends NILArrayStructImpl implements BitArrayStruct {
 
-	public NILBitArrayStructImpl(final ArrayType arrayType, final IntegerStruct content,
-	                                final boolean isAdjustable) {
+	public NILBitArrayStructImpl(final ArrayType arrayType, final LispStruct content,
+	                             final boolean isAdjustable) {
 		super(arrayType, BitType.INSTANCE, content, isAdjustable);
 	}
 
-	public NILBitArrayStructImpl(final ArrayType arrayType, final ArrayStruct<IntegerStruct> displacedTo,
-	                              final Integer displacedIndexOffset, final boolean isAdjustable) {
+	public NILBitArrayStructImpl(final ArrayType arrayType, final ArrayStruct displacedTo,
+	                             final Integer displacedIndexOffset, final boolean isAdjustable) {
 		super(arrayType, BitType.INSTANCE, displacedTo, displacedIndexOffset, isAdjustable);
 	}
 
@@ -48,7 +48,7 @@ public class NILBitArrayStructImpl extends NILArrayStructImpl<IntegerStruct> imp
 		final boolean adjustableBoolean = isAdjustable.booleanValue();
 		final ArrayType arrayType = getArrayType(adjustableBoolean);
 		// TODO
-		return new NILBitArrayStructImpl(arrayType, (IntegerStruct) initialContents, adjustableBoolean);
+		return new NILBitArrayStructImpl(arrayType, initialContents, adjustableBoolean);
 	}
 
 	public static BitArrayStruct valueOf(final BitArrayStruct displacedTo, final IntegerStruct displacedIndexOffset,
@@ -79,7 +79,7 @@ public class NILBitArrayStructImpl extends NILArrayStructImpl<IntegerStruct> imp
 		}
 
 		// TODO
-		return new NILBitArrayStructImpl(SimpleArrayType.INSTANCE, (IntegerStruct) initialContents, false);
+		return new NILBitArrayStructImpl(SimpleArrayType.INSTANCE, initialContents, false);
 	}
 
 	@Override

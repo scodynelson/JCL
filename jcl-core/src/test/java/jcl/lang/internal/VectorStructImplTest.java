@@ -95,7 +95,7 @@ public class VectorStructImplTest {
 	@Test
 	public void test_adjustableArrayP_True() {
 
-		final ArrayStruct<LispStruct> array
+		final ArrayStruct array
 				= VectorStruct.builder(IntegerStruct.TWO)
 				              .initialElement(IntegerStruct.ZERO)
 				              .adjustable(TStruct.INSTANCE)
@@ -107,7 +107,7 @@ public class VectorStructImplTest {
 	@Test
 	public void test_adjustableArrayP_False() {
 
-		final ArrayStruct<LispStruct> array
+		final ArrayStruct array
 				= VectorStruct.builder(IntegerStruct.TWO)
 				              .initialElement(IntegerStruct.ZERO)
 				              .build();
@@ -142,7 +142,7 @@ public class VectorStructImplTest {
 		thrown.expect(ErrorException.class);
 		thrown.expectMessage(containsString("is out of bounds"));
 
-		final ArrayStruct<LispStruct> array
+		final ArrayStruct array
 				= VectorStruct.builder(IntegerStruct.TWO)
 				              .initialElement(IntegerStruct.ZERO)
 				              .build();
@@ -154,7 +154,7 @@ public class VectorStructImplTest {
 		thrown.expect(ErrorException.class);
 		thrown.expectMessage(containsString("is out of bounds"));
 
-		final ArrayStruct<LispStruct> array
+		final ArrayStruct array
 				= VectorStruct.builder(IntegerStruct.TWO)
 				              .initialElement(IntegerStruct.ZERO)
 				              .build();
@@ -163,7 +163,7 @@ public class VectorStructImplTest {
 
 	@Test
 	public void test_arrayDimension() {
-		final ArrayStruct<LispStruct> array
+		final ArrayStruct array
 				= VectorStruct.builder(IntegerStruct.TWO)
 				              .initialElement(IntegerStruct.ZERO)
 				              .build();
@@ -178,7 +178,7 @@ public class VectorStructImplTest {
 
 	@Test
 	public void test_arrayDimensions() {
-		final ArrayStruct<LispStruct> array
+		final ArrayStruct array
 				= VectorStruct.builder(IntegerStruct.TWO)
 				              .initialElement(IntegerStruct.ZERO)
 				              .build();
@@ -197,7 +197,7 @@ public class VectorStructImplTest {
 	@Test
 	public void test_arrayElementType() {
 		final BitType elementType = BitType.INSTANCE;
-		final ArrayStruct<LispStruct> array
+		final ArrayStruct array
 				= VectorStruct.builder(IntegerStruct.TWO)
 				              .initialElement(IntegerStruct.ZERO)
 				              .build();
@@ -211,7 +211,7 @@ public class VectorStructImplTest {
 
 	@Test
 	public void test_arrayHasFillPointerP() {
-		final ArrayStruct<LispStruct> array
+		final ArrayStruct array
 				= VectorStruct.builder(IntegerStruct.TWO)
 				              .initialElement(IntegerStruct.ZERO)
 				              .build();
@@ -234,7 +234,7 @@ public class VectorStructImplTest {
 
 	@Test
 	public void test_arrayInBoundsP_False_WrongNumberOfSubscripts_Less() {
-		final ArrayStruct<LispStruct> array
+		final ArrayStruct array
 				= VectorStruct.builder(IntegerStruct.TWO)
 				              .initialElement(IntegerStruct.ZERO)
 				              .build();
@@ -244,7 +244,7 @@ public class VectorStructImplTest {
 
 	@Test
 	public void test_arrayInBoundsP_False_WrongNumberOfSubscripts_More() {
-		final ArrayStruct<LispStruct> array
+		final ArrayStruct array
 				= VectorStruct.builder(IntegerStruct.TWO)
 				              .initialElement(IntegerStruct.ZERO)
 				              .build();
@@ -254,7 +254,7 @@ public class VectorStructImplTest {
 
 	@Test
 	public void test_arrayInBoundsP_False_OutOfBoundsSubscripts_MinusOne() {
-		final ArrayStruct<LispStruct> array
+		final ArrayStruct array
 				= VectorStruct.builder(IntegerStruct.TWO)
 				              .initialElement(IntegerStruct.ZERO)
 				              .build();
@@ -264,7 +264,7 @@ public class VectorStructImplTest {
 
 	@Test
 	public void test_arrayInBoundsP_False_OutOfBoundsSubscripts_More() {
-		final ArrayStruct<LispStruct> array
+		final ArrayStruct array
 				= VectorStruct.builder(IntegerStruct.TWO)
 				              .initialElement(IntegerStruct.ZERO)
 				              .build();
@@ -274,7 +274,7 @@ public class VectorStructImplTest {
 
 	@Test
 	public void test_arrayInBoundsP_True() {
-		final ArrayStruct<LispStruct> array
+		final ArrayStruct array
 				= VectorStruct.builder(IntegerStruct.TWO)
 				              .initialElement(IntegerStruct.ZERO)
 				              .build();
@@ -288,7 +288,7 @@ public class VectorStructImplTest {
 
 	@Test
 	public void test_arrayRank() {
-		final ArrayStruct<LispStruct> array
+		final ArrayStruct array
 				= VectorStruct.builder(IntegerStruct.TWO)
 				              .initialElement(IntegerStruct.ZERO)
 				              .build();
@@ -311,7 +311,7 @@ public class VectorStructImplTest {
 
 	@Test
 	public void test_arrayTotalSize_Empty() {
-		final ArrayStruct<LispStruct> array
+		final ArrayStruct array
 				= VectorStruct.builder(IntegerStruct.ZERO)
 				              .initialElement(IntegerStruct.ZERO)
 				              .build();
@@ -321,7 +321,7 @@ public class VectorStructImplTest {
 
 	@Test
 	public void test_arrayTotalSize_NotEmpty() {
-		final ArrayStruct<LispStruct> array
+		final ArrayStruct array
 				= VectorStruct.builder(IntegerStruct.TWO)
 				              .initialElement(IntegerStruct.ZERO)
 				              .build();

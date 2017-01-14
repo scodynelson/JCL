@@ -15,26 +15,33 @@ import jcl.type.SimpleBitVectorType;
 /**
  * The {@link BitVectorStruct} is the object representation of a Lisp 'bit-vector' type.
  */
-public interface BitVectorStruct extends VectorStruct<IntegerStruct>, BitArrayStruct {
+public interface BitVectorStruct extends VectorStruct, BitArrayStruct {
 
 	static BitVectorStruct.Builder builder(final IntegerStruct size) {
 		return new BitVectorStruct.Builder(size);
 	}
 
-	class Builder extends VectorStruct.Builder<IntegerStruct> {
+	/**
+	 * Gets the array contents.
+	 *
+	 * @return array contents
+	 */
+	List<IntegerStruct> getBVContents();
+
+	class Builder extends VectorStruct.Builder {
 
 		public Builder(final IntegerStruct size) {
 			super(size);
 		}
 
 		@Override
-		public BitVectorStruct.Builder elementType(final LispType elementType) {
+		public BitVectorStruct.Builder elementType(final LispType elementType) { // TODO ??
 			this.elementType = elementType;
 			return this;
 		}
 
 		@Override
-		public BitVectorStruct.Builder initialElement(final IntegerStruct initialElement) {
+		public BitVectorStruct.Builder initialElement(final LispStruct initialElement) { // TODO ??
 			super.initialElement(initialElement);
 			return this;
 		}
@@ -58,7 +65,7 @@ public interface BitVectorStruct extends VectorStruct<IntegerStruct>, BitArraySt
 		}
 
 		@Override
-		public BitVectorStruct.Builder displacedTo(final ArrayStruct<IntegerStruct> displacedTo) {
+		public BitVectorStruct.Builder displacedTo(final ArrayStruct displacedTo) {
 			super.displacedTo(displacedTo);
 			return this;
 		}
@@ -129,7 +136,7 @@ public interface BitVectorStruct extends VectorStruct<IntegerStruct>, BitArraySt
 							"Provided element " + initialElement + " is not a subtype of the upgraded-array-element-type " + upgradedET + '.');
 				}
 
-				final List<IntegerStruct> contents = Stream.generate(() -> initialElement)
+				final List<IntegerStruct> contents = Stream.generate(() -> (IntegerStruct) initialElement) // TODO
 				                                           .limit(sizeInt)
 				                                           .collect(Collectors.toList());
 				return new BitVectorStructImpl(vectorType,

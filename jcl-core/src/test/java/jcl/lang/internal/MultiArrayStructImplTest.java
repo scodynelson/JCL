@@ -1,7 +1,6 @@
 package jcl.lang.internal;
 
 import java.util.Arrays;
-import java.util.Collections;
 
 import jcl.lang.ArrayStruct;
 import jcl.lang.BooleanStruct;
@@ -98,7 +97,7 @@ public class MultiArrayStructImplTest {
 	@Test
 	public void test_adjustableArrayP_True() {
 
-		final ArrayStruct<LispStruct> array
+		final ArrayStruct array
 				= MultiArrayStructImpl.valueOf(Arrays.asList(IntegerStruct.TWO, IntegerStruct.TWO),
 				                               TType.INSTANCE,
 				                               IntegerStruct.ZERO,
@@ -110,7 +109,7 @@ public class MultiArrayStructImplTest {
 	@Test
 	public void test_adjustableArrayP_False() {
 
-		final ArrayStruct<LispStruct> array
+		final ArrayStruct array
 				= MultiArrayStructImpl.valueOf(Arrays.asList(IntegerStruct.TWO, IntegerStruct.TWO),
 				                               TType.INSTANCE,
 				                               IntegerStruct.ZERO,
@@ -146,7 +145,7 @@ public class MultiArrayStructImplTest {
 		thrown.expect(ErrorException.class);
 		thrown.expectMessage(containsString("is out of bounds"));
 
-		final ArrayStruct<LispStruct> array
+		final ArrayStruct array
 				= MultiArrayStructImpl.valueOf(Arrays.asList(IntegerStruct.TWO, IntegerStruct.TEN),
 				                               TType.INSTANCE,
 				                               IntegerStruct.ZERO,
@@ -159,7 +158,7 @@ public class MultiArrayStructImplTest {
 		thrown.expect(ErrorException.class);
 		thrown.expectMessage(containsString("is out of bounds"));
 
-		final ArrayStruct<LispStruct> array
+		final ArrayStruct array
 				= MultiArrayStructImpl.valueOf(Arrays.asList(IntegerStruct.TWO, IntegerStruct.TEN),
 				                               TType.INSTANCE,
 				                               IntegerStruct.ZERO,
@@ -169,7 +168,7 @@ public class MultiArrayStructImplTest {
 
 	@Test
 	public void test_arrayDimension_First() {
-		final ArrayStruct<LispStruct> array
+		final ArrayStruct array
 				= MultiArrayStructImpl.valueOf(Arrays.asList(IntegerStruct.TWO, IntegerStruct.TEN),
 				                               TType.INSTANCE,
 				                               IntegerStruct.ZERO,
@@ -180,7 +179,7 @@ public class MultiArrayStructImplTest {
 
 	@Test
 	public void test_arrayDimension_Second() {
-		final ArrayStruct<LispStruct> array
+		final ArrayStruct array
 				= MultiArrayStructImpl.valueOf(Arrays.asList(IntegerStruct.TWO, IntegerStruct.TEN),
 				                               TType.INSTANCE,
 				                               IntegerStruct.ZERO,
@@ -195,7 +194,7 @@ public class MultiArrayStructImplTest {
 
 	@Test
 	public void test_arrayDimensions() {
-		final ArrayStruct<LispStruct> array
+		final ArrayStruct array
 				= MultiArrayStructImpl.valueOf(Arrays.asList(IntegerStruct.TWO, IntegerStruct.TEN),
 				                               TType.INSTANCE,
 				                               IntegerStruct.ZERO,
@@ -218,7 +217,7 @@ public class MultiArrayStructImplTest {
 	@Test
 	public void test_arrayElementType() {
 		final BitType elementType = BitType.INSTANCE;
-		final ArrayStruct<LispStruct> array
+		final ArrayStruct array
 				= MultiArrayStructImpl.valueOf(Arrays.asList(IntegerStruct.TWO, IntegerStruct.TWO),
 				                               elementType,
 				                               IntegerStruct.ZERO,
@@ -233,7 +232,7 @@ public class MultiArrayStructImplTest {
 
 	@Test
 	public void test_arrayHasFillPointerP() {
-		final ArrayStruct<LispStruct> array
+		final ArrayStruct array
 				= MultiArrayStructImpl.valueOf(Arrays.asList(IntegerStruct.TWO, IntegerStruct.TWO),
 				                               TType.INSTANCE,
 				                               IntegerStruct.ZERO,
@@ -257,7 +256,7 @@ public class MultiArrayStructImplTest {
 
 	@Test
 	public void test_arrayInBoundsP_False_WrongNumberOfSubscripts_Less() {
-		final ArrayStruct<LispStruct> array
+		final ArrayStruct array
 				= MultiArrayStructImpl.valueOf(Arrays.asList(IntegerStruct.TWO, IntegerStruct.TWO),
 				                               TType.INSTANCE,
 				                               IntegerStruct.ZERO,
@@ -268,7 +267,7 @@ public class MultiArrayStructImplTest {
 
 	@Test
 	public void test_arrayInBoundsP_False_WrongNumberOfSubscripts_More() {
-		final ArrayStruct<LispStruct> array
+		final ArrayStruct array
 				= MultiArrayStructImpl.valueOf(Arrays.asList(IntegerStruct.TWO, IntegerStruct.TWO),
 				                               TType.INSTANCE,
 				                               IntegerStruct.ZERO,
@@ -279,7 +278,7 @@ public class MultiArrayStructImplTest {
 
 	@Test
 	public void test_arrayInBoundsP_False_OutOfBoundsSubscripts_FirstDim_MinusOne() {
-		final ArrayStruct<LispStruct> array
+		final ArrayStruct array
 				= MultiArrayStructImpl.valueOf(Arrays.asList(IntegerStruct.TWO, IntegerStruct.TWO, IntegerStruct.TWO),
 				                               TType.INSTANCE,
 				                               IntegerStruct.ZERO,
@@ -290,7 +289,7 @@ public class MultiArrayStructImplTest {
 
 	@Test
 	public void test_arrayInBoundsP_False_OutOfBoundsSubscripts_SecondDim_MinusOne() {
-		final ArrayStruct<LispStruct> array
+		final ArrayStruct array
 				= MultiArrayStructImpl.valueOf(Arrays.asList(IntegerStruct.TWO, IntegerStruct.TWO, IntegerStruct.TWO),
 				                               TType.INSTANCE,
 				                               IntegerStruct.ZERO,
@@ -301,7 +300,7 @@ public class MultiArrayStructImplTest {
 
 	@Test
 	public void test_arrayInBoundsP_False_OutOfBoundsSubscripts_FirstDim_More() {
-		final ArrayStruct<LispStruct> array
+		final ArrayStruct array
 				= MultiArrayStructImpl.valueOf(Arrays.asList(IntegerStruct.TWO, IntegerStruct.TWO, IntegerStruct.TWO),
 				                               TType.INSTANCE,
 				                               IntegerStruct.ZERO,
@@ -312,7 +311,7 @@ public class MultiArrayStructImplTest {
 
 	@Test
 	public void test_arrayInBoundsP_False_OutOfBoundsSubscripts_SecondDim_More() {
-		final ArrayStruct<LispStruct> array
+		final ArrayStruct array
 				= MultiArrayStructImpl.valueOf(Arrays.asList(IntegerStruct.TWO, IntegerStruct.TWO, IntegerStruct.TWO),
 				                               TType.INSTANCE,
 				                               IntegerStruct.ZERO,
@@ -323,7 +322,7 @@ public class MultiArrayStructImplTest {
 
 	@Test
 	public void test_arrayInBoundsP_True() {
-		final ArrayStruct<LispStruct> array
+		final ArrayStruct array
 				= MultiArrayStructImpl.valueOf(Arrays.asList(IntegerStruct.TWO, IntegerStruct.TWO),
 				                               TType.INSTANCE,
 				                               IntegerStruct.ZERO,
@@ -338,7 +337,7 @@ public class MultiArrayStructImplTest {
 
 	@Test
 	public void test_arrayRank() {
-		final ArrayStruct<LispStruct> array
+		final ArrayStruct array
 				= MultiArrayStructImpl.valueOf(Arrays.asList(IntegerStruct.TWO, IntegerStruct.TWO, IntegerStruct.TWO),
 				                               TType.INSTANCE,
 				                               IntegerStruct.ZERO,
@@ -362,7 +361,7 @@ public class MultiArrayStructImplTest {
 
 	@Test
 	public void test_arrayTotalSize_Empty() {
-		final ArrayStruct<LispStruct> array
+		final ArrayStruct array
 				= MultiArrayStructImpl.valueOf(Arrays.asList(IntegerStruct.ZERO, IntegerStruct.ZERO),
 				                               TType.INSTANCE,
 				                               IntegerStruct.ZERO,
@@ -373,7 +372,7 @@ public class MultiArrayStructImplTest {
 
 	@Test
 	public void test_arrayTotalSize_NotEmpty() {
-		final ArrayStruct<LispStruct> array
+		final ArrayStruct array
 				= MultiArrayStructImpl.valueOf(Arrays.asList(IntegerStruct.TWO, IntegerStruct.TWO),
 				                               TType.INSTANCE,
 				                               IntegerStruct.ZERO,

@@ -26,7 +26,7 @@ import org.springframework.stereotype.Component;
  * ArrayStruct#getContents()} of the provided {@link ArrayStruct} input value.
  */
 @Component
-class ArrayCodeGenerator implements CodeGenerator<ArrayStructImpl<LispStruct>> {
+class ArrayCodeGenerator implements CodeGenerator<ArrayStructImpl> {
 
 	/**
 	 * {@link QuoteCodeGenerator} used for generating the {@link ArrayStruct} contents as if they were quoted values.
@@ -51,8 +51,8 @@ class ArrayCodeGenerator implements CodeGenerator<ArrayStructImpl<LispStruct>> {
 	 */
 	@Override
 	@EventListener
-	public void onGeneratorEvent(final GeneratorEvent<ArrayStructImpl<LispStruct>> event) {
-		final ArrayStruct<LispStruct> input = event.getSource();
+	public void onGeneratorEvent(final GeneratorEvent<ArrayStructImpl> event) {
+		final ArrayStruct input = event.getSource();
 		final GeneratorState generatorState = event.getGeneratorState();
 
 		final JavaMethodBuilder methodBuilder = generatorState.getCurrentMethodBuilder();

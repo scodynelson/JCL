@@ -12,6 +12,7 @@ import jcl.type.BitType;
 import jcl.type.CharacterType;
 import jcl.type.LispType;
 import jcl.type.SimpleVectorType;
+import jcl.type.TType;
 import jcl.type.VectorType;
 
 /**
@@ -95,24 +96,17 @@ public interface VectorStruct extends ArrayStruct, SequenceStruct {
 		return new VectorStruct.Builder(size);
 	}
 
-	class Builder extends ArrayStruct.Builder {
+	final class Builder extends ArrayStruct.AbstractBuilder<VectorStruct, LispType, LispStruct> {
 
-		protected final IntegerStruct size;
+		private final IntegerStruct size;
 
-		protected IntegerStruct fillPointer;
+		private IntegerStruct fillPointer;
 
-		protected Builder(final IntegerStruct size) {
-			super(size);
+		private Builder(final IntegerStruct size) {
+			super(TType.INSTANCE, NILStruct.INSTANCE);
 			this.size = size;
 		}
 
-		@Override
-		public VectorStruct.Builder elementType(final LispType elementType) {
-			super.elementType(elementType);
-			return this;
-		}
-
-		@Override
 		public BitVectorStruct.Builder elementType(final BitType elementType) {
 			if ((initialElement != null) && !(initialElement instanceof IntegerStruct)) {
 				throw new ErrorException("The value " + initialElement + " is not of the expected type BIT.");
@@ -123,7 +117,7 @@ public interface VectorStruct extends ArrayStruct, SequenceStruct {
 			}
 			return BitVectorStruct.builder(size)
 			                      .elementType(elementType)
-			                      .initialElement(initialElement)
+			                      .initialElement((IntegerStruct) initialElement)
 			                      .initialContents(initialContents)
 			                      .adjustable(adjustable)
 			                      .fillPointer(fillPointer)
@@ -141,7 +135,7 @@ public interface VectorStruct extends ArrayStruct, SequenceStruct {
 			}
 			return StringStruct.builder(size)
 			                   .elementType(elementType)
-			                   .initialElement(initialElement)
+			                   .initialElement((CharacterStruct) initialElement)
 			                   .initialContents(initialContents)
 			                   .adjustable(adjustable)
 			                   .fillPointer(fillPointer)
@@ -150,20 +144,26 @@ public interface VectorStruct extends ArrayStruct, SequenceStruct {
 		}
 
 		@Override
+		public VectorStruct.Builder elementType(final LispType elementType) {
+			this.elementType = elementType;
+			return this;
+		}
+
+		@Override
 		public VectorStruct.Builder initialElement(final LispStruct initialElement) {
-			super.initialElement(initialElement);
+			this.initialElement = initialElement;
 			return this;
 		}
 
 		@Override
 		public VectorStruct.Builder initialContents(final SequenceStruct initialContents) {
-			super.initialContents(initialContents);
+			this.initialContents = initialContents;
 			return this;
 		}
 
 		@Override
 		public VectorStruct.Builder adjustable(final BooleanStruct adjustable) {
-			super.adjustable(adjustable);
+			this.adjustable = adjustable;
 			return this;
 		}
 
@@ -175,13 +175,13 @@ public interface VectorStruct extends ArrayStruct, SequenceStruct {
 
 		@Override
 		public VectorStruct.Builder displacedTo(final ArrayStruct displacedTo) {
-			super.displacedTo(displacedTo);
+			this.displacedTo = displacedTo;
 			return this;
 		}
 
 		@Override
 		public VectorStruct.Builder displacedIndexOffset(final IntegerStruct displacedIndexOffset) {
-			super.displacedIndexOffset(displacedIndexOffset);
+			this.displacedIndexOffset = displacedIndexOffset;
 			return this;
 		}
 

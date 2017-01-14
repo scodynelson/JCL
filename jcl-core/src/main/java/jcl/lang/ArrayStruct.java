@@ -184,36 +184,29 @@ public interface ArrayStruct extends LispStruct {
 	}
 
 	static VectorStruct.Builder builder(final IntegerStruct size) {
-		return new VectorStruct.Builder(size);
+		return VectorStruct.builder(size);
 	}
 
 	static ArrayStruct.Builder builder(final IntegerStruct... dimensions) {
 		return new ArrayStruct.Builder(dimensions);
 	}
 
-	class Builder {
+	final class Builder extends AbstractBuilder<ArrayStruct, LispType, LispStruct> {
 
-		protected final IntegerStruct[] dimensions;
+		private final IntegerStruct[] dimensions;
 
-		protected LispType elementType;
-		protected LispStruct initialElement;
-		protected SequenceStruct initialContents;
-		protected BooleanStruct adjustable = NILStruct.INSTANCE;
-		protected ArrayStruct displacedTo;
-		protected IntegerStruct displacedIndexOffset = IntegerStruct.ZERO;
-
-		protected Builder(final IntegerStruct... dimensions) {
+		private Builder(final IntegerStruct... dimensions) {
+			super(TType.INSTANCE, NILStruct.INSTANCE);
 			this.dimensions = dimensions;
 		}
 
+		@Override
 		public ArrayStruct.Builder elementType(final LispType elementType) {
 			this.elementType = elementType;
 			return this;
 		}
 
-		@SuppressWarnings("unchecked")
-		// TODO: return type here
-		public BitVectorStruct.Builder elementType(final BitType elementType) {
+		public BitArrayStruct.Builder elementType(final BitType elementType) {
 			if ((initialElement != null) && !(initialElement instanceof IntegerStruct)) {
 				throw new ErrorException("The value " + initialElement + " is not of the expected type BIT.");
 			}
@@ -223,42 +216,49 @@ public interface ArrayStruct extends LispStruct {
 			}
 			return BitArrayStruct.builder(dimensions)
 			                     .elementType(elementType)
-			                     .initialElement(initialElement)
+			                     .initialElement((IntegerStruct) initialElement)
 			                     .initialContents(initialContents)
 			                     .adjustable(adjustable)
 			                     .displacedTo(displacedTo)
 			                     .displacedIndexOffset(displacedIndexOffset);
 		}
 
+		@Override
 		public ArrayStruct.Builder initialElement(final LispStruct initialElement) {
 			this.initialElement = initialElement;
 			return this;
 		}
 
+		@Override
 		public ArrayStruct.Builder initialContents(final SequenceStruct initialContents) {
 			this.initialContents = initialContents;
 			return this;
 		}
 
+		@Override
 		public ArrayStruct.Builder adjustable(final BooleanStruct adjustable) {
 			this.adjustable = adjustable;
 			return this;
 		}
 
+		@Override
 		public ArrayStruct.Builder fillPointer(final IntegerStruct fillPointer) {
 			throw new ErrorException("Non-vector arrays cannot adjust fill-pointer.");
 		}
 
+		@Override
 		public ArrayStruct.Builder displacedTo(final ArrayStruct displacedTo) {
 			this.displacedTo = displacedTo;
 			return this;
 		}
 
+		@Override
 		public ArrayStruct.Builder displacedIndexOffset(final IntegerStruct displacedIndexOffset) {
 			this.displacedIndexOffset = displacedIndexOffset;
 			return this;
 		}
 
+		@Override
 		public ArrayStruct build() {
 			final LispType upgradedET = upgradedArrayElementType(elementType);
 			final boolean adjustableBoolean = adjustable.booleanValue();
@@ -358,5 +358,43 @@ public interface ArrayStruct extends LispStruct {
 				                                adjustableBoolean);
 			}
 		}
+	}
+
+	abstract class AbstractBuilder<AS extends ArrayStruct, ET extends LispType, IE extends LispStruct> {
+
+		protected ET elementType;
+		protected IE initialElement;
+		protected SequenceStruct initialContents;
+		protected BooleanStruct adjustable = NILStruct.INSTANCE;
+		protected ArrayStruct displacedTo;
+		protected IntegerStruct displacedIndexOffset = IntegerStruct.ZERO;
+
+		AbstractBuilder(final ET elementType, final IE initialElement) {
+			this.elementType = elementType;
+			this.initialElement = initialElement;
+		}
+
+		public abstract ArrayStruct.AbstractBuilder<AS, ET, IE> elementType(
+				ET elementType);
+
+		public abstract ArrayStruct.AbstractBuilder<AS, ET, IE> initialElement(
+				IE initialElement);
+
+		public abstract ArrayStruct.AbstractBuilder<AS, ET, IE> initialContents(
+				SequenceStruct initialContents);
+
+		public abstract ArrayStruct.AbstractBuilder<AS, ET, IE> adjustable(
+				BooleanStruct adjustable);
+
+		public abstract ArrayStruct.AbstractBuilder<AS, ET, IE> fillPointer(
+				IntegerStruct fillPointer);
+
+		public abstract ArrayStruct.AbstractBuilder<AS, ET, IE> displacedTo(
+				ArrayStruct displacedTo);
+
+		public abstract ArrayStruct.AbstractBuilder<AS, ET, IE> displacedIndexOffset(
+				IntegerStruct displacedIndexOffset);
+
+		public abstract AS build();
 	}
 }

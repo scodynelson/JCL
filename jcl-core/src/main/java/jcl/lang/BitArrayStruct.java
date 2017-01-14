@@ -11,6 +11,7 @@ import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.internal.MultiBitArrayStructImpl;
 import jcl.lang.internal.NILBitArrayStructImpl;
 import jcl.type.ArrayType;
+import jcl.type.BitType;
 import jcl.type.LispType;
 import jcl.type.SimpleArrayType;
 
@@ -215,52 +216,60 @@ public interface BitArrayStruct extends ArrayStruct {
 	BitArrayStruct copyBitArray();
 
 	static BitVectorStruct.Builder builder(final IntegerStruct size) {
-		return new BitVectorStruct.Builder(size);
+		return BitVectorStruct.builder(size);
 	}
 
 	static BitArrayStruct.Builder builder(final IntegerStruct... dimensions) {
 		return new BitArrayStruct.Builder(dimensions);
 	}
 
-	class Builder extends ArrayStruct.Builder {
+	final class Builder extends ArrayStruct.AbstractBuilder<BitArrayStruct, BitType, IntegerStruct> {
 
-		protected Builder(final IntegerStruct... dimensions) {
-			super(dimensions);
+		private final IntegerStruct[] dimensions;
+
+		private Builder(final IntegerStruct... dimensions) {
+			super(BitType.INSTANCE, IntegerStruct.ZERO);
+			this.dimensions = dimensions;
 		}
 
 		@Override
-		public BitArrayStruct.Builder elementType(final LispType elementType) { // TODO ??
-			super.elementType(elementType);
+		public BitArrayStruct.Builder elementType(final BitType elementType) {
+			this.elementType = elementType;
 			return this;
 		}
 
 		@Override
-		public BitArrayStruct.Builder initialElement(final LispStruct initialElement) { // TODO ??
-			super.initialElement(initialElement);
+		public BitArrayStruct.Builder initialElement(final IntegerStruct initialElement) {
+			this.initialElement = initialElement;
 			return this;
 		}
 
 		@Override
 		public BitArrayStruct.Builder initialContents(final SequenceStruct initialContents) {
-			super.initialContents(initialContents);
+			this.initialContents = initialContents;
 			return this;
 		}
 
 		@Override
 		public BitArrayStruct.Builder adjustable(final BooleanStruct adjustable) {
-			super.adjustable(adjustable);
+			this.adjustable = adjustable;
 			return this;
 		}
 
 		@Override
+		public BitArrayStruct.Builder fillPointer(final IntegerStruct fillPointer) {
+			throw new ErrorException("Non-vector arrays cannot adjust fill-pointer.");
+		}
+
+		@Override
 		public BitArrayStruct.Builder displacedTo(final ArrayStruct displacedTo) {
-			super.displacedTo(displacedTo);
+			this.displacedTo = displacedTo;
 			return this;
 		}
 
 		@Override
 		public BitArrayStruct.Builder displacedIndexOffset(final IntegerStruct displacedIndexOffset) {
-			super.displacedIndexOffset(displacedIndexOffset);
+			this.displacedIndexOffset = displacedIndexOffset;
 			return this;
 		}
 

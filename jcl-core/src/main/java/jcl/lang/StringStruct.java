@@ -8,6 +8,7 @@ import java.util.stream.Stream;
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.internal.StringStructImpl;
+import jcl.lang.statics.CharacterConstants;
 import jcl.type.BaseCharType;
 import jcl.type.BaseStringType;
 import jcl.type.CharacterType;
@@ -32,51 +33,55 @@ public interface StringStruct extends VectorStruct {
 		return new StringStruct.Builder(size);
 	}
 
-	final class Builder extends VectorStruct.Builder {
+	final class Builder extends ArrayStruct.AbstractBuilder<StringStruct, CharacterType, CharacterStruct> {
+
+		private final IntegerStruct size;
+		private IntegerStruct fillPointer;
 
 		private Builder(final IntegerStruct size) {
-			super(size);
+			super(CharacterType.INSTANCE, CharacterConstants.NULL_CHAR);
+			this.size = size;
 		}
 
 		@Override
-		public StringStruct.Builder elementType(final LispType elementType) { // TODO ??
-			super.elementType(elementType);
+		public StringStruct.Builder elementType(final CharacterType elementType) {
+			this.elementType = elementType;
 			return this;
 		}
 
 		@Override
-		public StringStruct.Builder initialElement(final LispStruct initialElement) { // TODO ??
-			super.initialElement(initialElement);
+		public StringStruct.Builder initialElement(final CharacterStruct initialElement) {
+			this.initialElement = initialElement;
 			return this;
 		}
 
 		@Override
 		public StringStruct.Builder initialContents(final SequenceStruct initialContents) {
-			super.initialContents(initialContents);
+			this.initialContents = initialContents;
 			return this;
 		}
 
 		@Override
 		public StringStruct.Builder adjustable(final BooleanStruct adjustable) {
-			super.adjustable(adjustable);
+			this.adjustable = adjustable;
 			return this;
 		}
 
 		@Override
 		public StringStruct.Builder fillPointer(final IntegerStruct fillPointer) {
-			super.fillPointer(fillPointer);
+			this.fillPointer = fillPointer;
 			return this;
 		}
 
 		@Override
 		public StringStruct.Builder displacedTo(final ArrayStruct displacedTo) {
-			super.displacedTo(displacedTo);
+			this.displacedTo = displacedTo;
 			return this;
 		}
 
 		@Override
 		public StringStruct.Builder displacedIndexOffset(final IntegerStruct displacedIndexOffset) {
-			super.displacedIndexOffset(displacedIndexOffset);
+			this.displacedIndexOffset = displacedIndexOffset;
 			return this;
 		}
 
@@ -142,7 +147,7 @@ public interface StringStruct extends VectorStruct {
 							"Provided element " + initialElement + " is not a subtype of the upgraded-array-element-type " + upgradedET + '.');
 				}
 
-				final List<CharacterStruct> contents = Stream.generate(() -> (CharacterStruct) initialElement) // TODO
+				final List<CharacterStruct> contents = Stream.generate(() -> initialElement)
 				                                             .limit(sizeInt)
 				                                             .collect(Collectors.toList());
 				return new StringStructImpl(stringType,

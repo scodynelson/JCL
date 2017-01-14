@@ -8,6 +8,7 @@ import java.util.stream.Stream;
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.internal.BitVectorStructImpl;
+import jcl.type.BitType;
 import jcl.type.BitVectorType;
 import jcl.type.LispType;
 import jcl.type.SimpleBitVectorType;
@@ -28,51 +29,55 @@ public interface BitVectorStruct extends VectorStruct, BitArrayStruct {
 	 */
 	List<IntegerStruct> getBVContents();
 
-	class Builder extends VectorStruct.Builder {
+	final class Builder extends ArrayStruct.AbstractBuilder<BitVectorStruct, BitType, IntegerStruct> {
 
-		public Builder(final IntegerStruct size) {
-			super(size);
+		private final IntegerStruct size;
+		private IntegerStruct fillPointer;
+
+		private Builder(final IntegerStruct size) {
+			super(BitType.INSTANCE, IntegerStruct.ZERO);
+			this.size = size;
 		}
 
 		@Override
-		public BitVectorStruct.Builder elementType(final LispType elementType) { // TODO ??
+		public BitVectorStruct.Builder elementType(final BitType elementType) {
 			this.elementType = elementType;
 			return this;
 		}
 
 		@Override
-		public BitVectorStruct.Builder initialElement(final LispStruct initialElement) { // TODO ??
-			super.initialElement(initialElement);
+		public BitVectorStruct.Builder initialElement(final IntegerStruct initialElement) {
+			this.initialElement = initialElement;
 			return this;
 		}
 
 		@Override
 		public BitVectorStruct.Builder initialContents(final SequenceStruct initialContents) {
-			super.initialContents(initialContents);
+			this.initialContents = initialContents;
 			return this;
 		}
 
 		@Override
 		public BitVectorStruct.Builder adjustable(final BooleanStruct adjustable) {
-			super.adjustable(adjustable);
+			this.adjustable = adjustable;
 			return this;
 		}
 
 		@Override
 		public BitVectorStruct.Builder fillPointer(final IntegerStruct fillPointer) {
-			super.fillPointer(fillPointer);
+			this.fillPointer = fillPointer;
 			return this;
 		}
 
 		@Override
 		public BitVectorStruct.Builder displacedTo(final ArrayStruct displacedTo) {
-			super.displacedTo(displacedTo);
+			this.displacedTo = displacedTo;
 			return this;
 		}
 
 		@Override
 		public BitVectorStruct.Builder displacedIndexOffset(final IntegerStruct displacedIndexOffset) {
-			super.displacedIndexOffset(displacedIndexOffset);
+			this.displacedIndexOffset = displacedIndexOffset;
 			return this;
 		}
 
@@ -136,7 +141,7 @@ public interface BitVectorStruct extends VectorStruct, BitArrayStruct {
 							"Provided element " + initialElement + " is not a subtype of the upgraded-array-element-type " + upgradedET + '.');
 				}
 
-				final List<IntegerStruct> contents = Stream.generate(() -> (IntegerStruct) initialElement) // TODO
+				final List<IntegerStruct> contents = Stream.generate(() -> initialElement)
 				                                           .limit(sizeInt)
 				                                           .collect(Collectors.toList());
 				return new BitVectorStructImpl(vectorType,

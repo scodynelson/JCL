@@ -47,45 +47,64 @@ public interface StringStruct extends VectorStruct {
 		return this;
 	}
 
-	class StringCaseContext {
+	class StringIntervalOpContext {
 
-		private IntegerStruct start;
+		public static class Builder {
 
-		private IntegerStruct end;
+			private IntegerStruct start;
 
-		private StringCaseContext() {
+			private IntegerStruct end;
+
+			private Builder() {
+			}
+
+			public StringIntervalOpContext.Builder start(final IntegerStruct start) {
+				this.start = start;
+				return this;
+			}
+
+			public StringIntervalOpContext.Builder end(final IntegerStruct end) {
+				this.end = end;
+				return this;
+			}
+
+			public StringIntervalOpContext build() {
+				return new StringIntervalOpContext(start, end);
+			}
 		}
 
-		public StringCaseContext start(final IntegerStruct start) {
+		private final IntegerStruct start;
+		private final IntegerStruct end;
+
+		private StringIntervalOpContext(final IntegerStruct start, final IntegerStruct end) {
 			this.start = start;
-			return this;
-		}
-
-		public StringCaseContext end(final IntegerStruct end) {
 			this.end = end;
-			return this;
 		}
 
-		public StringCaseContext build() {
-			return this;
+		public IntegerStruct getStart() {
+			return start;
 		}
 
-		public static StringCaseContext builder() {
-			return new StringCaseContext();
+		public IntegerStruct getEnd() {
+			return end;
+		}
+
+		public static StringIntervalOpContext.Builder builder() {
+			return new StringIntervalOpContext.Builder();
 		}
 	}
 
-	StringStruct stringUpcase(final StringCaseContext context);
+	StringStruct stringUpcase(final StringIntervalOpContext context);
 
-	StringStruct stringDowncase(final StringCaseContext context);
+	StringStruct stringDowncase(final StringIntervalOpContext context);
 
-	StringStruct stringCapitalize(final StringCaseContext context);
+	StringStruct stringCapitalize(final StringIntervalOpContext context);
 
-	StringStruct nStringUpcase(final StringCaseContext context);
+	StringStruct nStringUpcase(final StringIntervalOpContext context);
 
-	StringStruct nStringDowncase(final StringCaseContext context);
+	StringStruct nStringDowncase(final StringIntervalOpContext context);
 
-	StringStruct nStringCapitalize(final StringCaseContext context);
+	StringStruct nStringCapitalize(final StringIntervalOpContext context);
 
 	StringStruct stringTrim(final SequenceStruct characterBag);
 
@@ -95,72 +114,107 @@ public interface StringStruct extends VectorStruct {
 
 	class StringEqualityContext {
 
+		public static class Builder {
+
+			private final StringStruct struct;
+			private StringIntervalOpContext.Builder intervalOpContext1;
+			private StringIntervalOpContext.Builder intervalOpContext2;
+
+			private Builder(final StringStruct struct) {
+				this.struct = struct;
+			}
+
+			public StringEqualityContext.Builder start1(final IntegerStruct start1) {
+				if (intervalOpContext1 == null) {
+					intervalOpContext1 = StringIntervalOpContext.builder();
+				}
+				intervalOpContext1.start(start1);
+				return this;
+			}
+
+			public StringEqualityContext.Builder end1(final IntegerStruct end1) {
+				if (intervalOpContext1 == null) {
+					intervalOpContext1 = StringIntervalOpContext.builder();
+				}
+				intervalOpContext1.end(end1);
+				return this;
+			}
+
+			public StringEqualityContext.Builder start2(final IntegerStruct start2) {
+				if (intervalOpContext2 == null) {
+					intervalOpContext2 = StringIntervalOpContext.builder();
+				}
+				intervalOpContext2.start(start2);
+				return this;
+			}
+
+			public StringEqualityContext.Builder end2(final IntegerStruct end2) {
+				if (intervalOpContext2 == null) {
+					intervalOpContext2 = StringIntervalOpContext.builder();
+				}
+				intervalOpContext2.end(end2);
+				return this;
+			}
+
+			public StringEqualityContext build() {
+				return new StringEqualityContext(struct,
+				                                 intervalOpContext1.build(),
+				                                 intervalOpContext2.build());
+			}
+		}
+
 		private final StringStruct struct;
+		private final StringIntervalOpContext context1;
+		private final StringIntervalOpContext context2;
 
-		private IntegerStruct start1;
-
-		private IntegerStruct end1;
-
-		private IntegerStruct start2;
-
-		private IntegerStruct end2;
-
-		private StringEqualityContext(final StringStruct struct) {
+		private StringEqualityContext(final StringStruct struct,
+		                              final StringIntervalOpContext context1,
+		                              final StringIntervalOpContext context2) {
 			this.struct = struct;
+			this.context1 = context1;
+			this.context2 = context2;
 		}
 
-		public StringEqualityContext start1(final IntegerStruct start1) {
-			this.start1 = start1;
-			return this;
+		public StringStruct getStruct() {
+			return struct;
 		}
 
-		public StringEqualityContext end1(final IntegerStruct end1) {
-			this.end1 = end1;
-			return this;
+		public StringIntervalOpContext getContext1() {
+			return context1;
 		}
 
-		public StringEqualityContext start2(final IntegerStruct start2) {
-			this.start2 = start2;
-			return this;
+		public StringIntervalOpContext getContext2() {
+			return context2;
 		}
 
-		public StringEqualityContext end2(final IntegerStruct end2) {
-			this.end2 = end2;
-			return this;
-		}
-
-		public StringEqualityContext build() {
-			return this;
-		}
-
-		public static StringEqualityContext builder(final StringStruct struct) {
-			return new StringEqualityContext(struct);
+		public static StringEqualityContext.Builder builder(final StringStruct struct) {
+			return new StringEqualityContext.Builder(struct);
 		}
 	}
 
 	BooleanStruct stringEqual(final StringEqualityContext context);
 
-	IntegerStruct stringNotEqual(final StringEqualityContext context);
+	LispStruct stringNotEqual(final StringEqualityContext context);
 
-	IntegerStruct stringLessThan(final StringEqualityContext context);
+	LispStruct stringLessThan(final StringEqualityContext context);
 
-	IntegerStruct stringGreaterThan(final StringEqualityContext context);
+	LispStruct stringGreaterThan(final StringEqualityContext context);
 
-	IntegerStruct stringLessThanOrEqualTo(final StringEqualityContext context);
+	LispStruct stringLessThanOrEqualTo(final StringEqualityContext context);
 
-	IntegerStruct stringGreaterThanOrEqualTo(final StringEqualityContext context);
+	LispStruct stringGreaterThanOrEqualTo(final StringEqualityContext context);
 
 	BooleanStruct stringEqualIgnoreCase(final StringEqualityContext context);
 
-	IntegerStruct stringNotEqualIgnoreCase(final StringEqualityContext context);
+	LispStruct stringNotEqualIgnoreCase(final StringEqualityContext context);
 
-	IntegerStruct stringLessThanIgnoreCase(final StringEqualityContext context);
+	LispStruct stringLessThanIgnoreCase(final StringEqualityContext context);
 
-	IntegerStruct stringGreaterThanIgnoreCase(final StringEqualityContext context);
+	LispStruct stringGreaterThanIgnoreCase(final StringEqualityContext context);
 
-	IntegerStruct stringLessThanOrEqualToIgnoreCase(final StringEqualityContext context);
+	LispStruct stringLessThanOrEqualToIgnoreCase(final StringEqualityContext context);
 
-	IntegerStruct stringGreaterThanOrEqualToIgnoreCase(final StringEqualityContext context);
+	LispStruct stringGreaterThanOrEqualToIgnoreCase(final StringEqualityContext context);
 
 	/**
 	 * Returns the {@link String} representation of the StringStruct.
@@ -168,6 +222,21 @@ public interface StringStruct extends VectorStruct {
 	 * @return a {@link String} representation of the StringStruct
 	 */
 	String getAsJavaString();
+
+	default String toJavaString() {
+		return toJavaString(false);
+	}
+
+	String toJavaString(final boolean fillPointerRestriction);
+
+	static StringStruct toLispString(final String str) {
+		return new StringStructImpl(SimpleStringType.INSTANCE,
+		                            str.length(),
+		                            CharacterType.INSTANCE,
+		                            new StringBuilder(str),
+		                            false,
+		                            null);
+	}
 
 	static StringStruct.Builder builder(final IntegerStruct size) {
 		return new StringStruct.Builder(size);

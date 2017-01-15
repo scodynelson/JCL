@@ -7,6 +7,7 @@ package jcl.functions.lisppackage;
 import java.util.List;
 
 import jcl.functions.CommonLispBuiltInFunctionStructBase;
+import jcl.functions.FunctionHelpers;
 import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
 import jcl.lang.PackageStruct;
@@ -48,7 +49,7 @@ public final class PackageUseListFunction extends CommonLispBuiltInFunctionStruc
 	@Override
 	public LispStruct apply(final Arguments arguments) {
 		final LispStruct lispStruct = arguments.getRequiredArgument(PACKAGE_ARGUMENT);
-		final PackageStruct aPackage = lispStruct.asPackage().get();
+		final PackageStruct aPackage = FunctionHelpers.asPackage(lispStruct);
 
 		final List<PackageStruct> useList = aPackage.getUseList();
 		return LispStructFactory.toProperList(useList);

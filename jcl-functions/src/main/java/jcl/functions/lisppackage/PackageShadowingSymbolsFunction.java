@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import jcl.functions.CommonLispBuiltInFunctionStructBase;
+import jcl.functions.FunctionHelpers;
 import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
 import jcl.lang.PackageStruct;
@@ -50,7 +51,7 @@ public final class PackageShadowingSymbolsFunction extends CommonLispBuiltInFunc
 	@Override
 	public LispStruct apply(final Arguments arguments) {
 		final LispStruct lispStruct = arguments.getRequiredArgument(PACKAGE_ARGUMENT);
-		final PackageStruct aPackage = lispStruct.asPackage().get();
+		final PackageStruct aPackage = FunctionHelpers.asPackage(lispStruct);
 
 		final Collection<SymbolStruct> shadowingSymbols = aPackage.getShadowingSymbols().values();
 		return LispStructFactory.toProperList(new ArrayList<>(shadowingSymbols));

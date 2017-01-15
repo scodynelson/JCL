@@ -9,6 +9,7 @@ import jcl.lang.LispStruct;
 import jcl.lang.StringStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
+import jcl.lang.internal.SymbolStructImpl;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -28,6 +29,7 @@ public final class MakeSymbolFunction extends CommonLispBuiltInFunctionStructBas
 	@Override
 	public LispStruct apply(final Arguments arguments) {
 		final StringStruct name = arguments.getRequiredArgument(NAME_ARGUMENT, StringStruct.class);
-		return name.asSymbol().get();
+		final String namestring = name.getAsJavaString();
+		return SymbolStructImpl.valueOf(namestring);
 	}
 }

@@ -5,10 +5,10 @@
 package jcl.functions.lisppackage;
 
 import java.util.List;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import jcl.functions.CommonLispBuiltInFunctionStructBase;
+import jcl.functions.FunctionHelpers;
 import jcl.lang.CharacterStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
@@ -57,7 +57,7 @@ public final class RenamePackageFunction extends CommonLispBuiltInFunctionStruct
 	 */
 	@Override
 	public LispStruct apply(final Arguments arguments) {
-		final PackageStruct aPackage = arguments.getRequiredArgument(PACKAGE_ARGUMENT).asPackage().get();
+		final PackageStruct aPackage = FunctionHelpers.asPackage(arguments.getRequiredArgument(PACKAGE_ARGUMENT));
 
 		final LispStruct packageDesignator = arguments.getRequiredArgument(NEW_NAME_ARGUMENT);
 		final String newName;
@@ -77,8 +77,7 @@ public final class RenamePackageFunction extends CommonLispBuiltInFunctionStruct
 			final ListStruct newNicknamesList = arguments.getOptionalArgument(NEW_NICKNAMES_ARGUMENT, ListStruct.class);
 			final List<String> newNicknames
 					= newNicknamesList.stream()
-					                  .map(LispStruct::asString)
-					                  .map(Supplier::get)
+					                  .map(FunctionHelpers::asString)
 					                  .map(StringStruct::getAsJavaString)
 					                  .collect(Collectors.toList());
 			aPackage.renamePackage(newName, newNicknames);

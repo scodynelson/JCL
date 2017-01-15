@@ -28,6 +28,69 @@ import jcl.type.TType;
  */
 public interface ArrayStruct extends LispStruct {
 
+	class AdjustArrayContext {
+
+		private final IntegerStruct[] dimensions;
+		private LispType elementType;
+		private LispStruct initialElement;
+		private SequenceStruct initialContents;
+		private BooleanStruct adjustable = NILStruct.INSTANCE;
+		private IntegerStruct fillPointer;
+		private ArrayStruct displacedTo;
+		private IntegerStruct displacedIndexOffset = IntegerStruct.ZERO;
+
+		private AdjustArrayContext(final IntegerStruct... dimensions) {
+			this.dimensions = dimensions;
+		}
+
+		public AdjustArrayContext elementType(final LispType elementType) {
+			this.elementType = elementType;
+			return this;
+		}
+
+		public AdjustArrayContext initialElement(final LispStruct initialElement) {
+			this.initialElement = initialElement;
+			return this;
+		}
+
+		public AdjustArrayContext initialContents(final SequenceStruct initialContents) {
+			this.initialContents = initialContents;
+			return this;
+		}
+
+		public AdjustArrayContext adjustable(final BooleanStruct adjustable) {
+			this.adjustable = adjustable;
+			return this;
+		}
+
+		public AdjustArrayContext fillPointer(final IntegerStruct fillPointer) {
+			this.fillPointer = fillPointer;
+			return this;
+		}
+
+		public AdjustArrayContext displacedTo(final ArrayStruct displacedTo) {
+			this.displacedTo = displacedTo;
+			return this;
+		}
+
+		public AdjustArrayContext displacedIndexOffset(final IntegerStruct displacedIndexOffset) {
+			this.displacedIndexOffset = displacedIndexOffset;
+			return this;
+		}
+
+		public AdjustArrayContext build() {
+			return this;
+		}
+
+		public static AdjustArrayContext builder(final IntegerStruct... dimensions) {
+			return new AdjustArrayContext(dimensions);
+		}
+	}
+
+	default ArrayStruct adjustArray(final AdjustArrayContext context) {
+		return this;
+	}
+
 	ArrayStruct adjustArray(final List<IntegerStruct> dimensions, final LispType elementType,
 	                        final LispStruct initialElement, final IntegerStruct fillPointer);
 
@@ -134,7 +197,7 @@ public interface ArrayStruct extends LispStruct {
 
 		if (numberOfDimensions == 1) {
 			final int dimension = dimensions.get(0);
-			if (initialContents.length() == dimension) {
+			if (initialContents.length().intValue() == dimension) {
 				return getValidContents(elementType, initialContents);
 			} else {
 				throw new SimpleErrorException(
@@ -145,7 +208,7 @@ public interface ArrayStruct extends LispStruct {
 		final List<TYPE> validContents = new ArrayList<>();
 
 		final int dimension = dimensions.get(0);
-		if (initialContents.length() == dimension) {
+		if (initialContents.length().intValue() == dimension) {
 			final List<Integer> subDimension = dimensions.subList(1, numberOfDimensions);
 
 			for (final LispStruct contentToCheck : initialContents) {
@@ -375,25 +438,25 @@ public interface ArrayStruct extends LispStruct {
 		}
 
 		public abstract ArrayStruct.AbstractBuilder<AS, ET, IE> elementType(
-				ET elementType);
+				final ET elementType);
 
 		public abstract ArrayStruct.AbstractBuilder<AS, ET, IE> initialElement(
-				IE initialElement);
+				final IE initialElement);
 
 		public abstract ArrayStruct.AbstractBuilder<AS, ET, IE> initialContents(
-				SequenceStruct initialContents);
+				final SequenceStruct initialContents);
 
 		public abstract ArrayStruct.AbstractBuilder<AS, ET, IE> adjustable(
-				BooleanStruct adjustable);
+				final BooleanStruct adjustable);
 
 		public abstract ArrayStruct.AbstractBuilder<AS, ET, IE> fillPointer(
-				IntegerStruct fillPointer);
+				final IntegerStruct fillPointer);
 
 		public abstract ArrayStruct.AbstractBuilder<AS, ET, IE> displacedTo(
-				ArrayStruct displacedTo);
+				final ArrayStruct displacedTo);
 
 		public abstract ArrayStruct.AbstractBuilder<AS, ET, IE> displacedIndexOffset(
-				IntegerStruct displacedIndexOffset);
+				final IntegerStruct displacedIndexOffset);
 
 		public abstract AS build();
 	}

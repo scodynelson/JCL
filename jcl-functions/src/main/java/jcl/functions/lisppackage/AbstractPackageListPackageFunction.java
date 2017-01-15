@@ -7,10 +7,10 @@ package jcl.functions.lisppackage;
 import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import jcl.functions.CommonLispBuiltInFunctionStructBase;
+import jcl.functions.FunctionHelpers;
 import jcl.lang.FunctionStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
@@ -55,13 +55,12 @@ abstract class AbstractPackageListPackageFunction extends CommonLispBuiltInFunct
 			final ListStruct packages = (ListStruct) lispStruct;
 			final List<PackageStruct> realPackages
 					= packages.stream()
-					          .map(LispStruct::asPackage)
-					          .map(Supplier::get)
+					          .map(FunctionHelpers::asPackage)
 					          .collect(Collectors.toList());
 			realPackageArray = realPackages.toArray(new PackageStruct[realPackages.size()]);
 		} else {
 			realPackageArray = new PackageStruct[1];
-			realPackageArray[0] = lispStruct.asPackage().get();
+			realPackageArray[0] = FunctionHelpers.asPackage(lispStruct);
 		}
 
 		validatePackages(realPackageArray);

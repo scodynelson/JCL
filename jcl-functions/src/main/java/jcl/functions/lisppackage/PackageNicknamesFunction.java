@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import jcl.functions.CommonLispBuiltInFunctionStructBase;
+import jcl.functions.FunctionHelpers;
 import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
 import jcl.lang.PackageStruct;
@@ -50,7 +51,7 @@ public final class PackageNicknamesFunction extends CommonLispBuiltInFunctionStr
 	@Override
 	public LispStruct apply(final Arguments arguments) {
 		final LispStruct lispStruct = arguments.getRequiredArgument(PACKAGE_ARGUMENT);
-		final PackageStruct aPackage = lispStruct.asPackage().get();
+		final PackageStruct aPackage = FunctionHelpers.asPackage(lispStruct);
 
 		final List<String> nicknames = aPackage.getNicknames();
 		final List<LispStruct> nicknamesStructs =

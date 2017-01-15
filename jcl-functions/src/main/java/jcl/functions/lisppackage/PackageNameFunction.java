@@ -5,6 +5,7 @@
 package jcl.functions.lisppackage;
 
 import jcl.functions.CommonLispBuiltInFunctionStructBase;
+import jcl.functions.FunctionHelpers;
 import jcl.lang.LispStruct;
 import jcl.lang.NILStruct;
 import jcl.lang.PackageStruct;
@@ -47,7 +48,7 @@ public final class PackageNameFunction extends CommonLispBuiltInFunctionStructBa
 	@Override
 	public LispStruct apply(final Arguments arguments) {
 		final LispStruct lispStruct = arguments.getRequiredArgument(PACKAGE_ARGUMENT);
-		final PackageStruct aPackage = lispStruct.asPackage().get();
+		final PackageStruct aPackage = FunctionHelpers.asPackage(lispStruct);
 
 		final String name = aPackage.getName();
 		return (name == null) ? NILStruct.INSTANCE : LispStructFactory.toString(name);

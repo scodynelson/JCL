@@ -86,7 +86,7 @@ public abstract class CompiledMacroFunctionExpander<O extends LispStruct> extend
 			functionParametersToBind.add(wholeParameterBinding);
 		}
 
-		final int numberOfArguments = Math.toIntExact(destructuredForm.length());
+		final int numberOfArguments = Math.toIntExact(destructuredForm.length().longValue());
 		final Iterator<LispStruct> functionArgumentsIterator = destructuredForm.iterator();
 
 		final String functionClassName = getClass().getSimpleName();

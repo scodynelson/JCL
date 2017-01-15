@@ -2,7 +2,6 @@ package jcl.lang;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import jcl.lang.condition.exception.ErrorException;
@@ -21,6 +20,147 @@ import jcl.type.StringType;
  * The {@link StringStruct} is the object representation of a Lisp 'string' type.
  */
 public interface StringStruct extends VectorStruct {
+
+	CharacterStruct char_(final IntegerStruct index);
+
+	default CharacterStruct schar(final IntegerStruct index) {
+		final LispType type = getType();
+		if (SimpleStringType.INSTANCE.equals(type)) {
+			return char_(index);
+		}
+		throw new TypeErrorException(
+				"The value " + this + " is not of the expected type " + SimpleStringType.INSTANCE + '.');
+	}
+
+	CharacterStruct setfChar(final CharacterStruct newElement, final IntegerStruct index);
+
+	default CharacterStruct setfSchar(final CharacterStruct newElement, final IntegerStruct index) {
+		final LispType type = getType();
+		if (SimpleStringType.INSTANCE.equals(type)) {
+			return setfChar(newElement, index);
+		}
+		throw new TypeErrorException(
+				"The value " + this + " is not of the expected type " + SimpleStringType.INSTANCE + '.');
+	}
+
+	default StringStruct string() {
+		return this;
+	}
+
+	class StringCaseContext {
+
+		private IntegerStruct start;
+
+		private IntegerStruct end;
+
+		private StringCaseContext() {
+		}
+
+		public StringCaseContext start(final IntegerStruct start) {
+			this.start = start;
+			return this;
+		}
+
+		public StringCaseContext end(final IntegerStruct end) {
+			this.end = end;
+			return this;
+		}
+
+		public StringCaseContext build() {
+			return this;
+		}
+
+		public static StringCaseContext builder() {
+			return new StringCaseContext();
+		}
+	}
+
+	StringStruct stringUpcase(final StringCaseContext context);
+
+	StringStruct stringDowncase(final StringCaseContext context);
+
+	StringStruct stringCapitalize(final StringCaseContext context);
+
+	StringStruct nStringUpcase(final StringCaseContext context);
+
+	StringStruct nStringDowncase(final StringCaseContext context);
+
+	StringStruct nStringCapitalize(final StringCaseContext context);
+
+	StringStruct stringTrim(final SequenceStruct characterBag);
+
+	StringStruct stringLeftTrim(final SequenceStruct characterBag);
+
+	StringStruct stringRightTrim(final SequenceStruct characterBag);
+
+	class StringEqualityContext {
+
+		private final StringStruct struct;
+
+		private IntegerStruct start1;
+
+		private IntegerStruct end1;
+
+		private IntegerStruct start2;
+
+		private IntegerStruct end2;
+
+		private StringEqualityContext(final StringStruct struct) {
+			this.struct = struct;
+		}
+
+		public StringEqualityContext start1(final IntegerStruct start1) {
+			this.start1 = start1;
+			return this;
+		}
+
+		public StringEqualityContext end1(final IntegerStruct end1) {
+			this.end1 = end1;
+			return this;
+		}
+
+		public StringEqualityContext start2(final IntegerStruct start2) {
+			this.start2 = start2;
+			return this;
+		}
+
+		public StringEqualityContext end2(final IntegerStruct end2) {
+			this.end2 = end2;
+			return this;
+		}
+
+		public StringEqualityContext build() {
+			return this;
+		}
+
+		public static StringEqualityContext builder(final StringStruct struct) {
+			return new StringEqualityContext(struct);
+		}
+	}
+
+	BooleanStruct stringEqual(final StringEqualityContext context);
+
+	IntegerStruct stringNotEqual(final StringEqualityContext context);
+
+	IntegerStruct stringLessThan(final StringEqualityContext context);
+
+	IntegerStruct stringGreaterThan(final StringEqualityContext context);
+
+	IntegerStruct stringLessThanOrEqualTo(final StringEqualityContext context);
+
+	IntegerStruct stringGreaterThanOrEqualTo(final StringEqualityContext context);
+
+	BooleanStruct stringEqualIgnoreCase(final StringEqualityContext context);
+
+	IntegerStruct stringNotEqualIgnoreCase(final StringEqualityContext context);
+
+	IntegerStruct stringLessThanIgnoreCase(final StringEqualityContext context);
+
+	IntegerStruct stringGreaterThanIgnoreCase(final StringEqualityContext context);
+
+	IntegerStruct stringLessThanOrEqualToIgnoreCase(final StringEqualityContext context);
+
+	IntegerStruct stringGreaterThanOrEqualToIgnoreCase(final StringEqualityContext context);
 
 	/**
 	 * Returns the {@link String} representation of the StringStruct.
@@ -104,22 +244,17 @@ public interface StringStruct extends VectorStruct {
 				} catch (final ErrorException ignore) {
 					throw new ErrorException("Requested size is too large to displace to " + displacedTo + '.');
 				}
-				final StringType stringType = (elementType instanceof BaseCharType)
-				                              ? BaseStringType.INSTANCE
-				                              : StringType.INSTANCE;
 
-				// TODO:
-//				return new StringStructImpl(stringType,
-//				                            sizeInt,
-//				                            upgradedET,
-//				                            displacedTo,
-//				                            displacedIndexOffset.intValue(),
-//				                            adjustableBoolean,
-//				                            fillPointerInt);
-				return null;
+				final StringType stringType = getStringType(adjustableBoolean, fillPointerInt, upgradedET);
+				return new StringStructImpl(stringType,
+				                            sizeInt,
+				                            upgradedET,
+				                            displacedTo,
+				                            displacedIndexOffset.intValue(),
+				                            adjustableBoolean,
+				                            fillPointerInt);
 			}
-
-			final StringType stringType = getStringType(adjustableBoolean, fillPointerInt, (CharacterType) upgradedET);
+			final StringType stringType = getStringType(adjustableBoolean, fillPointerInt, upgradedET);
 
 			if (initialContents != null) {
 				for (final LispStruct element : initialContents) {
@@ -134,22 +269,12 @@ public interface StringStruct extends VectorStruct {
 						= ArrayStruct.getValidContents(Collections.singletonList(sizeInt),
 						                               upgradedET,
 						                               initialContents);
-				return new StringStructImpl(stringType,
-				                            sizeInt,
-				                            CharacterType.INSTANCE,
-				                            validContents,
-				                            adjustableBoolean,
-				                            fillPointerInt);
-			} else {
-				final LispType initialElementType = initialElement.getType();
-				if (initialElementType.isNotOfType(upgradedET)) {
-					throw new TypeErrorException(
-							"Provided element " + initialElement + " is not a subtype of the upgraded-array-element-type " + upgradedET + '.');
-				}
 
-				final List<CharacterStruct> contents = Stream.generate(() -> initialElement)
-				                                             .limit(sizeInt)
-				                                             .collect(Collectors.toList());
+				final StringBuilder contents = validContents.stream()
+				                                            .mapToInt(CharacterStruct::getCodePoint)
+				                                            .collect(StringBuilder::new,
+				                                                     StringBuilder::appendCodePoint,
+				                                                     StringBuilder::append);
 				return new StringStructImpl(stringType,
 				                            sizeInt,
 				                            CharacterType.INSTANCE,
@@ -157,6 +282,25 @@ public interface StringStruct extends VectorStruct {
 				                            adjustableBoolean,
 				                            fillPointerInt);
 			}
+
+			final LispType initialElementType = initialElement.getType();
+			if (initialElementType.isNotOfType(upgradedET)) {
+				throw new TypeErrorException(
+						"Provided element " + initialElement + " is not a subtype of the upgraded-array-element-type " + upgradedET + '.');
+			}
+
+			final StringBuilder contents = Stream.generate(() -> initialElement)
+			                                     .limit(sizeInt)
+			                                     .mapToInt(CharacterStruct::getCodePoint)
+			                                     .collect(StringBuilder::new,
+			                                              StringBuilder::appendCodePoint,
+			                                              StringBuilder::append);
+			return new StringStructImpl(stringType,
+			                            sizeInt,
+			                            CharacterType.INSTANCE,
+			                            contents,
+			                            adjustableBoolean,
+			                            fillPointerInt);
 		}
 
 		/**
@@ -171,10 +315,13 @@ public interface StringStruct extends VectorStruct {
 		 *
 		 * @return the matching string type for the provided isAdjustable, fillPointer, and elementType values
 		 */
-		private static StringType getStringType(final boolean isAdjustable, final Integer fillPointer,
-		                                        final CharacterType elementType) {
+		private static StringType getStringType(final boolean isAdjustable,
+		                                        final Integer fillPointer,
+		                                        final LispType elementType) {
 			if (isAdjustable || (fillPointer != null)) {
-				return (elementType instanceof BaseCharType) ? BaseStringType.INSTANCE : StringType.INSTANCE;
+				return (elementType instanceof BaseCharType)
+				       ? BaseStringType.INSTANCE
+				       : StringType.INSTANCE;
 			} else {
 				return (elementType instanceof BaseCharType)
 				       ? SimpleBaseStringType.INSTANCE

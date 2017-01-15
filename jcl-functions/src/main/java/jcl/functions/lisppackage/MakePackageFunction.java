@@ -5,10 +5,10 @@
 package jcl.functions.lisppackage;
 
 import java.util.List;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import jcl.functions.CommonLispBuiltInFunctionStructBase;
+import jcl.functions.FunctionHelpers;
 import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
 import jcl.lang.NILStruct;
@@ -56,7 +56,7 @@ public final class MakePackageFunction extends CommonLispBuiltInFunctionStructBa
 	@Override
 	public LispStruct apply(final Arguments arguments) {
 		final LispStruct lispStruct = arguments.getRequiredArgument(PACKAGE_NAME_ARGUMENT);
-		final String packageName = lispStruct.asString().get().getAsJavaString();
+		final String packageName = FunctionHelpers.asString(lispStruct).getAsJavaString();
 
 		if (PackageStruct.findPackage(packageName) != null) {
 			throw new ProgramErrorException("Package name " + packageName + " is already in use.");
@@ -65,16 +65,14 @@ public final class MakePackageFunction extends CommonLispBuiltInFunctionStructBa
 		final ListStruct nicknamesList = arguments.getKeyArgument(CommonLispSymbols.NICKNAMES_KEYWORD, ListStruct.class);
 		final List<String> realNicknames
 				= nicknamesList.stream()
-				               .map(LispStruct::asString)
-				               .map(Supplier::get)
+				               .map(FunctionHelpers::asString)
 				               .map(StringStruct::getAsJavaString)
 				               .collect(Collectors.toList());
 
 		final ListStruct usePackagesList = arguments.getKeyArgument(CommonLispSymbols.USE_KEYWORD, ListStruct.class);
 		final List<PackageStruct> realUsePackages
 				= usePackagesList.stream()
-				                 .map(LispStruct::asPackage)
-				                 .map(Supplier::get)
+				                 .map(FunctionHelpers::asPackage)
 				                 .collect(Collectors.toList());
 
 		return LispStructFactory.toPackage(packageName, realNicknames, realUsePackages);

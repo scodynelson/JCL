@@ -160,17 +160,17 @@ public final class NILStruct extends BooleanStructImpl implements ListStruct {
 	 */
 
 	@Override
-	public Long length() {
-		return 0L;
+	public IntegerStruct length() {
+		return IntegerStruct.ZERO;
 	}
 
 	@Override
-	public LispStruct elt(final long index) {
+	public LispStruct elt(final IntegerStruct index) {
 		return INSTANCE;
 	}
 
 	@Override
-	public void setElt(final long index, final LispStruct newValue) {
+	public LispStruct setfElt(final LispStruct newElement, final IntegerStruct index) {
 		throw new SimpleErrorException("Cannot set element within NIL.");
 	}
 

@@ -65,7 +65,7 @@ public class SharpCReaderMacroFunction extends ReaderMacroFunctionImpl {
 		}
 
 		final int maxNumberOfTokensForComplex = 2;
-		if (listToken.length() != maxNumberOfTokensForComplex) {
+		if (listToken.length().longValue() != maxNumberOfTokensForComplex) {
 			throw new ReaderErrorException("Illegal complex number format: #C" + token);
 		}
 		final Iterator<LispStruct> iterator = listToken.iterator();

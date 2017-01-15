@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import jcl.functions.CommonLispBuiltInFunctionStructBase;
+import jcl.functions.FunctionHelpers;
 import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
 import jcl.lang.PackageStruct;
@@ -58,13 +59,13 @@ public final class ShadowFunction extends CommonLispBuiltInFunctionStructBase {
 			final ListStruct symbolNames = (ListStruct) lispStruct;
 			final List<String> realSymbolNames = new ArrayList<>();
 			for (final LispStruct theSymbolName : symbolNames) {
-				final String realSymbolName = theSymbolName.asString().get().getAsJavaString();
+				final String realSymbolName = FunctionHelpers.asString(theSymbolName).getAsJavaString();
 				realSymbolNames.add(realSymbolName);
 			}
 			symbolNameArray = realSymbolNames.toArray(new String[realSymbolNames.size()]);
 		} else {
 			symbolNameArray = new String[1];
-			symbolNameArray[0] = lispStruct.asString().get().getAsJavaString();
+			symbolNameArray[0] = FunctionHelpers.asString(lispStruct).getAsJavaString();
 		}
 
 		aPackage.shadow(symbolNameArray);

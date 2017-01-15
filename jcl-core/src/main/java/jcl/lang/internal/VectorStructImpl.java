@@ -39,6 +39,13 @@ public class VectorStructImpl extends ArrayStructImpl implements VectorStruct {
 
 	protected Integer fillPointer;
 
+	protected VectorStructImpl(final VectorType vectorType, final Integer size, final LispType elementType,
+	                           final boolean isAdjustable, final Integer fillPointer) {
+		super(vectorType, elementType, isAdjustable);
+		totalSize = size;
+		this.fillPointer = fillPointer;
+	}
+
 	/**
 	 * Protected constructor.
 	 *
@@ -57,11 +64,8 @@ public class VectorStructImpl extends ArrayStructImpl implements VectorStruct {
 	 */
 	public VectorStructImpl(final VectorType vectorType, final Integer size, final LispType elementType,
 	                        final List<LispStruct> contents, final boolean isAdjustable, final Integer fillPointer) {
-		super(vectorType, elementType, isAdjustable);
-
-		totalSize = size;
+		this(vectorType, size, elementType, isAdjustable, fillPointer);
 		this.contents = contents;
-		this.fillPointer = fillPointer;
 	}
 
 	/**
@@ -104,6 +108,10 @@ public class VectorStructImpl extends ArrayStructImpl implements VectorStruct {
 		                            null);
 	}
 
+	/*
+	VECTOR-STRUCT
+	 */
+
 	@Override
 	public IntegerStruct fillPointer() {
 		return IntegerStructImpl.valueOf(fillPointer);
@@ -131,7 +139,7 @@ public class VectorStructImpl extends ArrayStructImpl implements VectorStruct {
 	}
 
 	@Override
-	public LispStruct vectorPush(final LispStruct element) { // TODO: type check
+	public LispStruct vectorPush(final LispStruct newElement) { // TODO: type check
 		if (fillPointer == null) {
 			throw new TypeErrorException("Cannot push into a VECTOR with no fill-pointer.");
 		}
@@ -140,13 +148,13 @@ public class VectorStructImpl extends ArrayStructImpl implements VectorStruct {
 		}
 
 		final Integer previousFillPointer = fillPointer++;
-		contents.set(fillPointer, element);
+		contents.set(fillPointer, newElement);
 		return IntegerStructImpl.valueOf(previousFillPointer);
 	}
 
 	@Override
-	public IntegerStruct vectorPushExtend(final LispStruct element,
-	                                      final IntegerStruct extensionAmount) { // TODO: type check
+	public IntegerStruct vectorPushExtend(final LispStruct newElement,
+	                                      final IntegerStruct extension) { // TODO: type check
 		if (fillPointer == null) {
 			throw new TypeErrorException("Cannot push into a VECTOR with no fill-pointer.");
 		}
@@ -154,11 +162,11 @@ public class VectorStructImpl extends ArrayStructImpl implements VectorStruct {
 			throw new TypeErrorException("VECTOR is not adjustable.");
 		}
 		if (fillPointer >= contents.size()) {
-//			adjustArray(fillPointer + extensionAmount);
+//			adjustArray(fillPointer + extensionAmount); // TODO
 		}
 
 		final Integer previousFillPointer = fillPointer++;
-		contents.set(fillPointer, element);
+		contents.set(fillPointer, newElement);
 		return IntegerStructImpl.valueOf(previousFillPointer);
 	}
 
@@ -365,7 +373,7 @@ public class VectorStructImpl extends ArrayStructImpl implements VectorStruct {
 		return newElement;
 	}
 
-	private int rowMajorIndexInternal(final IntegerStruct... subscripts) {
+	protected int rowMajorIndexInternal(final IntegerStruct... subscripts) {
 		final int numberOfSubscripts = subscripts.length;
 
 		if (numberOfSubscripts != 1) {
@@ -377,7 +385,7 @@ public class VectorStructImpl extends ArrayStructImpl implements VectorStruct {
 		return validateSubscript(subscript);
 	}
 
-	private int validateSubscript(final IntegerStruct subscript) {
+	protected int validateSubscript(final IntegerStruct subscript) {
 		final int subscriptInt = subscript.intValue();
 		if ((subscriptInt < 0) || (subscriptInt >= totalSize)) {
 			throw new ErrorException("Subscript " + subscript + " is out of bounds for " + this + '.');
@@ -398,6 +406,51 @@ public class VectorStructImpl extends ArrayStructImpl implements VectorStruct {
 	}
 
 // =================
+
+	/*
+	SEQUENCE-STRUCT
+	 */
+
+	@Override
+	public IntegerStruct length() {
+		if (fillPointer != null) {
+			return IntegerStructImpl.valueOf(fillPointer);
+		}
+		return IntegerStructImpl.valueOf(totalSize);
+	}
+
+	@Override
+	public LispStruct elt(final IntegerStruct index) {
+		final int indexInt = validateIndexAgainstFillPointer(index);
+		return contents.get(indexInt);
+	}
+
+	@Override
+	public LispStruct setfElt(final LispStruct newElement, final IntegerStruct index) { // TODO: type check
+		final int indexInt = validateIndexAgainstFillPointer(index);
+		contents.set(indexInt, newElement);
+		return newElement;
+	}
+
+	protected int validateIndexAgainstFillPointer(final IntegerStruct index) {
+		if (fillPointer != null) {
+			final int indexInt = index.intValue();
+			if (indexInt > fillPointer) {
+				throw new ErrorException(index + " is not a valid sequence index for " + this);
+			}
+		}
+		return validateSubscript(index);
+	}
+
+	@Override
+	public SequenceStruct reverse() {
+		return this; // TODO
+	}
+
+	@Override
+	public SequenceStruct nReverse() {
+		return this; // TODO
+	}
 
 	/*
 	ITERABLE
@@ -442,6 +495,10 @@ public class VectorStructImpl extends ArrayStructImpl implements VectorStruct {
 			iterator.forEachRemaining(action);
 		}
 	}
+
+	/*
+	OBJECT
+	 */
 
 	@Override
 	public String toString() {

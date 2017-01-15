@@ -5,6 +5,7 @@
 package jcl.functions.lisppackage;
 
 import jcl.functions.CommonLispBuiltInFunctionStructBase;
+import jcl.functions.FunctionHelpers;
 import jcl.lang.LispStruct;
 import jcl.lang.NILStruct;
 import jcl.lang.PackageStruct;
@@ -45,7 +46,7 @@ public final class FindPackageFunction extends CommonLispBuiltInFunctionStructBa
 	@Override
 	public LispStruct apply(final Arguments arguments) {
 		final LispStruct packageDesignator = arguments.getRequiredArgument(NAME_ARGUMENT);
-		final PackageStruct aPackage = packageDesignator.asPackage().get();
+		final PackageStruct aPackage = FunctionHelpers.asPackage(packageDesignator);
 		return (aPackage == null) ? NILStruct.INSTANCE : aPackage;
 	}
 }

@@ -7,6 +7,7 @@ package jcl.functions.character;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+import jcl.functions.FunctionHelpers;
 import jcl.lang.CharacterStruct;
 import jcl.lang.LispStruct;
 import org.springframework.stereotype.Component;
@@ -28,13 +29,14 @@ public final class NameCharFunction extends AbstractCharacterDesignatorFunction 
 
 	/**
 	 * {@inheritDoc}
-	 * Creates a {@link Function} applying {@link LispStruct#asNamedCharacter()} against a {@link LispStruct}
-	 * parameter.
+	 * Creates a {@link Function} applying {@link FunctionHelpers#asNamedCharacter(LispStruct)} against a {@link
+	 * LispStruct} parameter.
 	 *
-	 * @return a {@link Function} applying {@link LispStruct#asNamedCharacter()} against a {@link LispStruct}
+	 * @return a {@link Function} applying {@link FunctionHelpers#asNamedCharacter(LispStruct)} against a {@link
+	 * LispStruct}
 	 */
 	@Override
 	protected Function<LispStruct, Supplier<CharacterStruct>> characterFunction() {
-		return LispStruct::asNamedCharacter;
+		return lispStruct -> () -> FunctionHelpers.asNamedCharacter(lispStruct);
 	}
 }

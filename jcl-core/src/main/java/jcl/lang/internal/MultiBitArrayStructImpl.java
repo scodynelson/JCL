@@ -116,7 +116,7 @@ public class MultiBitArrayStructImpl extends MultiArrayStructImpl implements Bit
 
 		if (numberOfDimensions == 1) {
 			final int dimension = dimensions.get(0);
-			if (initialContents.length() == dimension) {
+			if (initialContents.length().intValue() == dimension) {
 				return initialContents.stream()
 				                      .map(e -> (IntegerStruct) e)
 				                      .collect(Collectors.toList());
@@ -129,7 +129,7 @@ public class MultiBitArrayStructImpl extends MultiArrayStructImpl implements Bit
 		final List<LispStruct> validContents = new ArrayList<>();
 
 		final int dimension = dimensions.get(0);
-		if (initialContents.length() == dimension) {
+		if (initialContents.length().intValue() == dimension) {
 			final List<Integer> subDimension = dimensions.subList(1, numberOfDimensions);
 
 			for (final LispStruct contentToCheck : initialContents) {

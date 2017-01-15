@@ -4,12 +4,9 @@
 
 package jcl.functions.sequence;
 
-import java.math.BigInteger;
-
 import jcl.functions.CommonLispBuiltInFunctionStructBase;
 import jcl.lang.LispStruct;
 import jcl.lang.SequenceStruct;
-import jcl.lang.factory.LispStructFactory;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import org.springframework.stereotype.Component;
@@ -31,7 +28,6 @@ public final class LengthFunction extends CommonLispBuiltInFunctionStructBase {
 	@Override
 	public LispStruct apply(final Arguments arguments) {
 		final SequenceStruct sequence = arguments.getRequiredArgument(SEQUENCE_ARGUMENT, SequenceStruct.class);
-		final Long length = sequence.length();
-		return LispStructFactory.toInteger(BigInteger.valueOf(length));
+		return sequence.length();
 	}
 }

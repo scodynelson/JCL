@@ -1,26 +1,28 @@
 package jcl.lang.internal;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
+import java.util.Spliterator;
+import java.util.Spliterators;
+import java.util.function.IntConsumer;
 
-import com.ibm.icu.lang.UCharacter;
+import jcl.lang.ArrayStruct;
+import jcl.lang.BooleanStruct;
 import jcl.lang.CharacterStruct;
-import jcl.lang.PackageStruct;
-import jcl.lang.PathnameStruct;
+import jcl.lang.IntegerStruct;
+import jcl.lang.LispStruct;
+import jcl.lang.NILStruct;
 import jcl.lang.ReadtableStruct;
+import jcl.lang.SequenceStruct;
 import jcl.lang.StringStruct;
-import jcl.lang.SymbolStruct;
-import jcl.lang.condition.exception.SimpleErrorException;
+import jcl.lang.condition.exception.ErrorException;
+import jcl.lang.condition.exception.TypeErrorException;
+import jcl.lang.internal.number.IntegerStructImpl;
 import jcl.lang.readtable.SyntaxType;
 import jcl.lang.statics.PrinterVariables;
 import jcl.lang.statics.ReaderVariables;
-import jcl.type.BaseCharType;
-import jcl.type.BaseStringType;
 import jcl.type.CharacterType;
-import jcl.type.SimpleBaseStringType;
+import jcl.type.LispType;
 import jcl.type.SimpleStringType;
 import jcl.type.StringType;
 
@@ -29,45 +31,19 @@ import jcl.type.StringType;
  */
 public final class StringStructImpl extends VectorStructImpl implements StringStruct {
 
-	private List<CharacterStruct> contents;
+	private StringBuilder contents;
 
-	public StringStructImpl(final StringType stringType, final Integer size, final CharacterType elementType,
-	                        final List<CharacterStruct> contents, final boolean isAdjustable,
+	public StringStructImpl(final StringType stringType, final Integer size, final LispType elementType,
+	                        final StringBuilder contents, final boolean isAdjustable,
 	                        final Integer fillPointer) {
-		super(stringType, size, elementType, null, isAdjustable, fillPointer);
+		super(stringType, size, elementType, isAdjustable, fillPointer);
 		this.contents = contents;
 	}
 
-	public static StringStruct valueOf(final Integer size, final CharacterType elementType,
-	                                   final CharacterStruct initialElement, final boolean isAdjustable,
-	                                   final Integer fillPointer) {
-		final List<CharacterStruct> initialContents = Stream.generate(() -> initialElement)
-		                                                    .limit(size)
-		                                                    .collect(Collectors.toList());
-		final StringType stringType = getStringType(isAdjustable, fillPointer, elementType);
-		return new StringStructImpl(stringType, size, elementType, initialContents, isAdjustable, fillPointer);
-	}
-
-	public static StringStruct valueOf(final Integer size, final CharacterType elementType,
-	                                   final List<CharacterStruct> initialContents, final boolean isAdjustable,
-	                                   final Integer fillPointer) {
-		final StringType stringType = getStringType(isAdjustable, fillPointer, elementType);
-		return new StringStructImpl(stringType, size, elementType, initialContents, isAdjustable, fillPointer);
-	}
-
-	public static StringStruct valueOf(final Integer size, final CharacterType elementType,
-	                                   final CharacterStruct initialElement) {
-		final List<CharacterStruct> initialContents = Stream.generate(() -> initialElement)
-		                                                    .limit(size)
-		                                                    .collect(Collectors.toList());
-		final StringType stringType = getStringType(false, null, elementType);
-		return new StringStructImpl(stringType, size, elementType, initialContents, false, null);
-	}
-
-	public static StringStruct valueOf(final Integer size, final CharacterType elementType,
-	                                   final List<CharacterStruct> initialContents) {
-		final StringType stringType = getStringType(false, null, elementType);
-		return new StringStructImpl(stringType, size, elementType, initialContents, false, null);
+	public StringStructImpl(final StringType stringType, final Integer size, final LispType elementType,
+	                        final ArrayStruct displacedTo, final Integer displacedIndexOffset,
+	                        final boolean isAdjustable, final Integer fillPointer) {
+		super(stringType, size, elementType, displacedTo, displacedIndexOffset, isAdjustable, fillPointer);
 	}
 
 	/*
@@ -75,117 +51,368 @@ public final class StringStructImpl extends VectorStructImpl implements StringSt
 	 */
 
 	public static StringStruct valueOf(final String stringValue) {
-		return new StringStructImpl(SimpleStringType.INSTANCE, stringValue.length(), CharacterType.INSTANCE,
-		                            getCharList(stringValue), false, null);
+		return new StringStructImpl(SimpleStringType.INSTANCE,
+		                            stringValue.length(),
+		                            CharacterType.INSTANCE,
+		                            new StringBuilder(stringValue),
+		                            false,
+		                            null);
 	}
 
-	/**
-	 * Gets the string type from the provided isAdjustable, fillPointer, and elementType values.
-	 *
-	 * @param isAdjustable
-	 * 		whether or not the string is adjustable
-	 * @param fillPointer
-	 * 		the string fillPointer
-	 * @param elementType
-	 * 		the string elementType
-	 *
-	 * @return the matching string type for the provided isAdjustable, fillPointer, and elementType values
+	/*
+	STRING-STRUCT
 	 */
-	private static StringType getStringType(final boolean isAdjustable, final Integer fillPointer,
-	                                        final CharacterType elementType) {
-		if (isAdjustable || (fillPointer != null)) {
-			return (elementType instanceof BaseCharType) ? BaseStringType.INSTANCE : StringType.INSTANCE;
+
+	@Override
+	public CharacterStruct char_(final IntegerStruct index) {
+		final int indexInt = validateSubscript(index);
+		return charInternal(indexInt);
+	}
+
+	private CharacterStruct charInternal(final int indexInt) {
+		if (displacedTo == null) {
+			final char character = contents.charAt(indexInt);
+			return CharacterStructImpl.valueOf(character);
+		}
+
+		final IntegerStruct indexToGet = IntegerStructImpl.valueOf(displacedIndexOffset + indexInt);
+		return (CharacterStruct) displacedTo.rowMajorAref(indexToGet);
+	}
+
+	@Override
+	public CharacterStruct setfChar(final CharacterStruct newElement, final IntegerStruct index) {
+		final int indexInt = validateSubscript(index);
+		return setfCharInternal(newElement, indexInt);
+	}
+
+	private CharacterStruct setfCharInternal(final CharacterStruct newElement, final int indexInt) {
+		if (displacedTo == null) {
+			final char character = newElement.getCharacter();
+			contents.setCharAt(indexInt, character);
 		} else {
-			return (elementType instanceof BaseCharType) ? SimpleBaseStringType.INSTANCE : SimpleStringType.INSTANCE;
+			final IntegerStruct indexToSet = IntegerStructImpl.valueOf(displacedIndexOffset + indexInt);
+			displacedTo.setfRowMajorAref(newElement, indexToSet);
 		}
+		return newElement;
 	}
 
-	/**
-	 * Gets a list of {@link CharacterStruct}s from the provided {@link String} value.
-	 *
-	 * @param stringValue
-	 * 		the Java string to convert to a list of {@link CharacterStruct}s
-	 *
-	 * @return a list of {@link CharacterStruct}s from the provided {@link String} value
-	 */
-	private static List<CharacterStruct> getCharList(final String stringValue) {
-		final List<CharacterStruct> charList = new ArrayList<>(stringValue.length());
-		for (final char character : stringValue.toCharArray()) {
-			final CharacterStruct characterStruct = CharacterStructImpl.valueOf(character);
-			charList.add(characterStruct);
-		}
-		return charList;
+	@Override
+	public StringStruct stringUpcase(final StringCaseContext context) {
+		return null;
+	}
+
+	@Override
+	public StringStruct stringDowncase(final StringCaseContext context) {
+		return null;
+	}
+
+	@Override
+	public StringStruct stringCapitalize(final StringCaseContext context) {
+		return null;
+	}
+
+	@Override
+	public StringStruct nStringUpcase(final StringCaseContext context) {
+		return null;
+	}
+
+	@Override
+	public StringStruct nStringDowncase(final StringCaseContext context) {
+		return null;
+	}
+
+	@Override
+	public StringStruct nStringCapitalize(final StringCaseContext context) {
+		return null;
+	}
+
+	@Override
+	public StringStruct stringTrim(final SequenceStruct characterBag) {
+		return null;
+	}
+
+	@Override
+	public StringStruct stringLeftTrim(final SequenceStruct characterBag) {
+		return null;
+	}
+
+	@Override
+	public StringStruct stringRightTrim(final SequenceStruct characterBag) {
+		return null;
+	}
+
+	@Override
+	public BooleanStruct stringEqual(final StringEqualityContext context) {
+		return null;
+	}
+
+	@Override
+	public IntegerStruct stringNotEqual(final StringEqualityContext context) {
+		return null;
+	}
+
+	@Override
+	public IntegerStruct stringLessThan(final StringEqualityContext context) {
+		return null;
+	}
+
+	@Override
+	public IntegerStruct stringGreaterThan(final StringEqualityContext context) {
+		return null;
+	}
+
+	@Override
+	public IntegerStruct stringLessThanOrEqualTo(final StringEqualityContext context) {
+		return null;
+	}
+
+	@Override
+	public IntegerStruct stringGreaterThanOrEqualTo(final StringEqualityContext context) {
+		return null;
+	}
+
+	@Override
+	public BooleanStruct stringEqualIgnoreCase(final StringEqualityContext context) {
+		return null;
+	}
+
+	@Override
+	public IntegerStruct stringNotEqualIgnoreCase(final StringEqualityContext context) {
+		return null;
+	}
+
+	@Override
+	public IntegerStruct stringLessThanIgnoreCase(final StringEqualityContext context) {
+		return null;
+	}
+
+	@Override
+	public IntegerStruct stringGreaterThanIgnoreCase(final StringEqualityContext context) {
+		return null;
+	}
+
+	@Override
+	public IntegerStruct stringLessThanOrEqualToIgnoreCase(final StringEqualityContext context) {
+		return null;
+	}
+
+	@Override
+	public IntegerStruct stringGreaterThanOrEqualToIgnoreCase(final StringEqualityContext context) {
+		return null;
 	}
 
 	@Override
 	public String getAsJavaString() {
-		final StringBuilder stringBuilder = new StringBuilder(contents.size());
+		return contents.toString();
+	}
 
-		for (final CharacterStruct characterStruct : contents) {
-			final int codePoint = characterStruct.getCodePoint();
-			stringBuilder.appendCodePoint(codePoint);
+	/*
+	VECTOR-STRUCT
+	 */
+
+	@Override
+	public LispStruct vectorPop() {
+		if (fillPointer == null) {
+			throw new TypeErrorException("Cannot pop from a VECTOR with no fill-pointer.");
+		}
+		if (fillPointer == 0) {
+			throw new ErrorException("Nothing left to pop.");
 		}
 
-		return stringBuilder.toString();
+		fillPointer--;
+		final char element = contents.charAt(fillPointer);
+		return CharacterStructImpl.valueOf(element);
 	}
 
 	@Override
-	public Supplier<CharacterStruct> asCharacter() {
-		return () -> {
-			// TODO: Can improve this
-			final String javaString = getAsJavaString();
-			if (javaString.length() != 1) {
-				throw new SimpleErrorException("String is not of length one: " + javaString);
+	public LispStruct vectorPush(final LispStruct newElement) {
+		if (!(newElement instanceof CharacterStruct)) {
+			throw new TypeErrorException(newElement + " is not a character type.");
+		}
+		if (fillPointer == null) {
+			throw new TypeErrorException("Cannot push into a VECTOR with no fill-pointer.");
+		}
+		if (fillPointer >= contents.length()) {
+			return NILStruct.INSTANCE;
+		}
+
+		final Integer previousFillPointer = fillPointer++;
+		final char character = ((CharacterStruct) newElement).getCharacter();
+		contents.setCharAt(fillPointer, character);
+		return IntegerStructImpl.valueOf(previousFillPointer);
+	}
+
+	@Override
+	public IntegerStruct vectorPushExtend(final LispStruct newElement,
+	                                      final IntegerStruct extension) {
+		if (!(newElement instanceof CharacterStruct)) {
+			throw new TypeErrorException(newElement + " is not a character type.");
+		}
+		if (fillPointer == null) {
+			throw new TypeErrorException("Cannot push into a VECTOR with no fill-pointer.");
+		}
+		if (!isAdjustable) {
+			throw new TypeErrorException("VECTOR is not adjustable.");
+		}
+		if (fillPointer >= contents.length()) {
+//			adjustArray(fillPointer + extensionAmount); // TODO
+		}
+
+		final Integer previousFillPointer = fillPointer++;
+		final char character = ((CharacterStruct) newElement).getCharacter();
+		contents.setCharAt(fillPointer, character);
+		return IntegerStructImpl.valueOf(previousFillPointer);
+	}
+
+	/*
+	ARRAY-STRUCT
+	 */
+
+	@Override
+	public StringStruct adjustArray(final AdjustArrayContext context) {
+		return this; // TODO
+	}
+
+	@Override
+	public LispStruct aref(final IntegerStruct... subscripts) {
+		final int rowMajorIndex = rowMajorIndexInternal(subscripts);
+		return charInternal(rowMajorIndex);
+	}
+
+	@Override
+	public LispStruct setfAref(final LispStruct newElement, final IntegerStruct... subscripts) {
+		if (!(newElement instanceof CharacterStruct)) {
+			throw new TypeErrorException(newElement + " is not a character type.");
+		}
+
+		final int rowMajorIndex = rowMajorIndexInternal(subscripts);
+		return setfCharInternal((CharacterStruct) newElement, rowMajorIndex);
+	}
+
+	@Override
+	public LispStruct rowMajorAref(final IntegerStruct index) {
+		final int indexInt = validateSubscript(index);
+		return charInternal(indexInt);
+	}
+
+	@Override
+	public LispStruct setfRowMajorAref(final LispStruct newElement, final IntegerStruct index) {
+		if (!(newElement instanceof CharacterStruct)) {
+			throw new TypeErrorException(newElement + " is not a character type.");
+		}
+
+		final int indexInt = validateSubscript(index);
+		return setfCharInternal((CharacterStruct) newElement, indexInt);
+	}
+
+	/*
+	SEQUENCE-STRUCT
+	 */
+
+	@Override
+	public LispStruct elt(final IntegerStruct index) {
+		final int indexInt = validateIndexAgainstFillPointer(index);
+		return charInternal(indexInt);
+	}
+
+	@Override
+	public LispStruct setfElt(final LispStruct newElement, final IntegerStruct index) {
+		if (!(newElement instanceof CharacterStruct)) {
+			throw new TypeErrorException(newElement + " is not a character type.");
+		}
+
+		final int indexInt = validateIndexAgainstFillPointer(index);
+		return setfCharInternal((CharacterStruct) newElement, indexInt);
+	}
+
+	@Override
+	public SequenceStruct reverse() {
+		final StringBuilder reversedContents;
+		if (fillPointer == null) {
+			final StringBuilder currentContents = contents;
+			reversedContents = contents.reverse();
+			contents = currentContents;
+		} else {
+			final String contentsToReverse = contents.substring(0, fillPointer);
+			reversedContents = new StringBuilder(contentsToReverse).reverse();
+		}
+		return new StringStructImpl((StringType) getType(),
+		                            totalSize,
+		                            elementType,
+		                            reversedContents,
+		                            isAdjustable,
+		                            fillPointer);
+	}
+
+	@Override
+	public SequenceStruct nReverse() {
+		if (fillPointer == null) {
+			contents.reverse();
+		} else {
+			final String contentsToReverse = contents.substring(0, fillPointer);
+			final String reversedContet = new StringBuilder(contentsToReverse).reverse()
+			                                                                  .toString();
+			contents.replace(0, fillPointer, reversedContet);
+		}
+		return this;
+	}
+
+	/*
+	ITERABLE
+	 */
+
+	@Override
+	public Iterator<LispStruct> iterator() {
+		return new StringStructImpl.StringIterator(contents);
+	}
+
+	@Override
+	public Spliterator<LispStruct> spliterator() {
+		return Spliterators.spliterator(iterator(),
+		                                contents.length(),
+		                                Spliterator.ORDERED |
+				                                Spliterator.SIZED |
+				                                Spliterator.IMMUTABLE |
+				                                Spliterator.SUBSIZED
+		);
+	}
+
+	private static final class StringIterator implements Iterator<LispStruct> {
+
+		private final StringBuilder contents;
+		private int current;
+
+		private StringIterator(final StringBuilder contents) {
+			this.contents = contents;
+		}
+
+		@Override
+		public boolean hasNext() {
+			try {
+				contents.charAt(current);
+				return true;
+			} catch (final StringIndexOutOfBoundsException ignore) {
+				return false;
 			}
-			return CharacterStructImpl.valueOf(javaString.charAt(0));
-		};
+		}
+
+		@Override
+		public LispStruct next() {
+			final char character;
+			try {
+				character = contents.charAt(current);
+			} catch (final StringIndexOutOfBoundsException ex) {
+				throw new NoSuchElementException(ex.getMessage());
+			} finally {
+				current++;
+			}
+			return CharacterStructImpl.valueOf(character);
+		}
 	}
 
-	@Override
-	public Supplier<CharacterStruct> asNamedCharacter() {
-		return () -> {
-			final String javaString = getAsJavaString();
-			return CharacterStructImpl.valueOf(UCharacter.getCharFromName(javaString));
-		};
-	}
-
-	@Override
-	public Supplier<PathnameStruct> asPathname() {
-		return () -> {
-			final String namestring = getAsJavaString();
-			return PathnameStructImpl.valueOf(namestring);
-		};
-	}
-
-	@Override
-	public Supplier<SymbolStruct> asSymbol() {
-		return () -> {
-			final String namestring = getAsJavaString();
-			return SymbolStructImpl.valueOf(namestring);
-		};
-	}
-
-	@Override
-	public Supplier<PackageStruct> asPackage() {
-		return () -> {
-			final String packageName = getAsJavaString();
-			return PackageStruct.findPackage(packageName);
-		};
-	}
-
-	@Override
-	public Supplier<StringStruct> asString() {
-		return () -> this;
-	}
-
-	@Override
-	public Long length() {
-		// TODO: Do this right later...
-
-		final List<CharacterStruct> asJavaList = contents;
-		final int size = asJavaList.size();
-		return (long) size;
-	}
+	/*
+	OBJECT
+	 */
 
 	@Override
 	public String toString() {
@@ -198,21 +425,21 @@ public final class StringStructImpl extends VectorStructImpl implements StringSt
 			stringBuilder.append('"');
 		}
 
-		final List<Integer> codePointContents =
-				contents.stream()
-				        .map(CharacterStruct::getCodePoint)
-				        .collect(Collectors.toList());
-
-		final int amountToPrint = (fillPointer == null) ? codePointContents.size() : fillPointer;
-
-		for (int i = 0; i < amountToPrint; i++) {
-			final int codePoint = codePointContents.get(i);
-
+		final IntConsumer appendFn = codePoint -> {
 			final SyntaxType syntaxType = readtable.getSyntaxType(codePoint);
 			if ((codePoint == '"') || (syntaxType == SyntaxType.SINGLE_ESCAPE)) {
 				stringBuilder.append('\\');
 			}
 			stringBuilder.appendCodePoint(codePoint);
+		};
+
+		if (fillPointer == null) {
+			contents.codePoints()
+			        .forEach(appendFn);
+		} else {
+			contents.codePoints()
+			        .limit(fillPointer)
+			        .forEach(appendFn);
 		}
 
 		if (printEscape) {

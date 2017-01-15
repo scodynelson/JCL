@@ -15,7 +15,6 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.StringTokenizer;
-import java.util.function.Supplier;
 import java.util.regex.Pattern;
 
 import jcl.lang.BooleanStruct;
@@ -253,11 +252,6 @@ public class PathnameStructImpl extends BuiltInClassStruct implements PathnameSt
 	public static PathnameStruct valueOf(final PathnameHost host, final PathnameDevice device, final PathnameDirectory directory,
 	                                         final PathnameName name, final PathnameType type, final PathnameVersion version) {
 		return new PathnameStructImpl(host, device, directory, name, type, version);
-	}
-
-	@Override
-	public Supplier<PathnameStruct> asPathname() {
-		return () -> this;
 	}
 
 	@Override

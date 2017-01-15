@@ -6,13 +6,11 @@ package jcl.lang.internal;
 
 import java.math.BigInteger;
 import java.util.Map;
-import java.util.function.Supplier;
 
 import jcl.lang.CharacterStruct;
 import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.NILStruct;
-import jcl.lang.PackageStruct;
 import jcl.lang.StringStruct;
 import jcl.lang.classes.BuiltInClassStruct;
 import jcl.lang.internal.number.IntegerStructImpl;
@@ -111,29 +109,6 @@ public final class CharacterStructImpl extends BuiltInClassStruct implements Cha
 	@Override
 	public Character getCharacter() {
 		return (char) codePoint.intValue();
-	}
-
-	@Override
-	public Supplier<CharacterStruct> asCharacter() {
-		return () -> this;
-	}
-
-	@Override
-	public Supplier<CharacterStruct> asNamedCharacter() {
-		return () -> this;
-	}
-
-	@Override
-	public Supplier<PackageStruct> asPackage() {
-		return () -> {
-			final String packageName = getCharacter().toString();
-			return PackageStruct.findPackage(packageName);
-		};
-	}
-
-	@Override
-	public Supplier<StringStruct> asString() {
-		return () -> StringStructImpl.valueOf(getCharacter().toString());
 	}
 
 	@Override

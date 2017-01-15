@@ -23,23 +23,13 @@ public interface SequenceStruct extends LispStruct, Iterable<LispStruct> {
 		throw new UnsupportedOperationException("Not supported yet.");
 	}
 
-	default Long length() {
-		throw new UnsupportedOperationException("Not supported yet.");
-	}
+	IntegerStruct length();
 
-	default LispStruct elt(final long index) {
-		throw new UnsupportedOperationException("Not supported yet.");
-	}
+	LispStruct elt(final IntegerStruct index);
 
-	default void setElt(final long index, final LispStruct newValue) {
-		throw new UnsupportedOperationException("Not supported yet.");
-	}
+	LispStruct setfElt(final LispStruct newElement, final IntegerStruct index);
 
-	default SequenceStruct reverse() {
-		throw new UnsupportedOperationException("Not supported yet.");
-	}
+	SequenceStruct reverse();
 
-	default SequenceStruct nReverse() {
-		throw new UnsupportedOperationException("Not supported yet.");
-	}
+	SequenceStruct nReverse();
 }

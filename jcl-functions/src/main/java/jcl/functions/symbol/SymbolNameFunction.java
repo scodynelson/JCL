@@ -5,6 +5,7 @@
 package jcl.functions.symbol;
 
 import jcl.functions.CommonLispBuiltInFunctionStructBase;
+import jcl.functions.FunctionHelpers;
 import jcl.lang.LispStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.function.parameterdsl.Arguments;
@@ -28,6 +29,6 @@ public final class SymbolNameFunction extends CommonLispBuiltInFunctionStructBas
 	@Override
 	public LispStruct apply(final Arguments arguments) {
 		final SymbolStruct symbol = arguments.getRequiredArgument(SYMBOL_ARGUMENT, SymbolStruct.class);
-		return symbol.asString().get();
+		return FunctionHelpers.asString(symbol);
 	}
 }

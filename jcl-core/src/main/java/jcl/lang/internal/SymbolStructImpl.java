@@ -1,22 +1,17 @@
 package jcl.lang.internal;
 
 import java.util.Stack;
-import java.util.function.Supplier;
 
-import com.ibm.icu.lang.UCharacter;
-import jcl.lang.CharacterStruct;
 import jcl.lang.FunctionStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
 import jcl.lang.NILStruct;
 import jcl.lang.PackageStruct;
 import jcl.lang.PackageSymbolStruct;
-import jcl.lang.StringStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.classes.BuiltInClassStruct;
 import jcl.lang.classes.StructureClassStruct;
 import jcl.lang.condition.exception.ErrorException;
-import jcl.lang.condition.exception.SimpleErrorException;
 import jcl.lang.function.expander.CompilerMacroFunctionExpanderInter;
 import jcl.lang.function.expander.MacroFunctionExpanderInter;
 import jcl.lang.function.expander.SymbolMacroExpanderInter;
@@ -202,39 +197,6 @@ public class SymbolStructImpl extends BuiltInClassStruct implements SymbolStruct
 	@Override
 	public void setSymbolPackage(final PackageStruct symbolPackage) {
 		this.symbolPackage = symbolPackage;
-	}
-
-	@Override
-	public Supplier<CharacterStruct> asCharacter() {
-		return () -> {
-			if (name.length() != 1) {
-				throw new SimpleErrorException("Symbol name is not of length one: " + name);
-			}
-			return CharacterStructImpl.valueOf(name.charAt(0));
-		};
-	}
-
-	@Override
-	public Supplier<CharacterStruct> asNamedCharacter() {
-		return () -> CharacterStructImpl.valueOf(UCharacter.getCharFromName(name));
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * Returns the PackageStruct with the {@link PackageStruct#getName()} that matches the {@link #name} value on the
-	 * instance via {@link PackageStruct#findPackage(String)}.
-	 *
-	 * @return the PackageStruct with the {@link PackageStruct#getName()} that matches the {@link #name} value on the
-	 * instance
-	 */
-	@Override
-	public Supplier<PackageStruct> asPackage() {
-		return () -> PackageStruct.findPackage(name);
-	}
-
-	@Override
-	public Supplier<StringStruct> asString() {
-		return () -> StringStructImpl.valueOf(name);
 	}
 
 	@Override

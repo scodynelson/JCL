@@ -5,7 +5,6 @@
 package jcl.lang.internal.stream;
 
 import java.io.EOFException;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
@@ -13,14 +12,11 @@ import java.math.BigInteger;
 import java.nio.channels.FileChannel;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
-import java.util.function.Supplier;
 
 import jcl.lang.FileStreamStruct;
 import jcl.lang.LispStruct;
-import jcl.lang.PathnameStruct;
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.condition.exception.StreamErrorException;
-import jcl.lang.internal.PathnameStructImpl;
 import jcl.lang.stream.ExternalFormat;
 import jcl.lang.stream.PeekType;
 import jcl.lang.stream.ReadPeekResult;
@@ -118,15 +114,6 @@ public final class FileStreamStructImpl extends AbstractNativeStreamStructImpl i
 	@Override
 	public ExternalFormat getExternalFormat() {
 		return ExternalFormat.DEFAULT;
-	}
-
-	@Override
-	public Supplier<PathnameStruct> asPathname() {
-		return () -> {
-			final File file = path.toFile();
-			final String namestring = file.getAbsolutePath();
-			return PathnameStructImpl.valueOf(namestring);
-		};
 	}
 
 	@Override

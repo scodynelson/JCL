@@ -5,6 +5,7 @@
 package jcl.functions.stream;
 
 import jcl.functions.CommonLispBuiltInFunctionStructBase;
+import jcl.functions.FunctionHelpers;
 import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.NILStruct;
@@ -42,7 +43,7 @@ public final class OpenFunction extends CommonLispBuiltInFunctionStructBase {
 
 	@Override
 	public LispStruct apply(final Arguments arguments) {
-		final PathnameStruct pathname = arguments.getRequiredArgument(FILESPEC_ARGUMENT).asPathname().get();
+		final PathnameStruct pathname = FunctionHelpers.asPathname(arguments.getRequiredArgument(FILESPEC_ARGUMENT));
 
 		final SymbolStruct directionSymbol = arguments.getKeyArgument(CommonLispSymbols.DIRECTION_KEYWORD, SymbolStruct.class);
 		final DirectionType directionType = DirectionType.fromValue(directionSymbol);

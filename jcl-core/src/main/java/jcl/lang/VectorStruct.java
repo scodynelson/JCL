@@ -66,7 +66,7 @@ public interface VectorStruct extends ArrayStruct, SequenceStruct {
 	/**
 	 * Pushes the provided {@code element} into the current fill-pointer index.
 	 *
-	 * @param element
+	 * @param newElement
 	 * 		the element to push into the vector
 	 *
 	 * @return the location of the newly added element
@@ -74,15 +74,15 @@ public interface VectorStruct extends ArrayStruct, SequenceStruct {
 	 * @throws TypeErrorException
 	 * 		if the vector has no fill-pointer
 	 */
-	LispStruct vectorPush(final LispStruct element);
+	LispStruct vectorPush(final LispStruct newElement);
 
 	/**
 	 * Pushes the provided {@code element} into the current fill-pointer index and extends the vector to the
 	 * current size of the contents plus the provided {@code extensionAmount}.
 	 *
-	 * @param element
+	 * @param newElement
 	 * 		the element to push into the vector
-	 * @param extensionAmount
+	 * @param extension
 	 * 		the amount to extend the vector when pushing
 	 *
 	 * @return the location of the newly added element
@@ -90,7 +90,36 @@ public interface VectorStruct extends ArrayStruct, SequenceStruct {
 	 * @throws TypeErrorException
 	 * 		if the vector has no fill-pointer or the vector is not adjustable
 	 */
-	IntegerStruct vectorPushExtend(final LispStruct element, final IntegerStruct extensionAmount);
+	IntegerStruct vectorPushExtend(final LispStruct newElement, final IntegerStruct extension);
+
+	/*
+	SEQUENCE-STRUCT
+	 */
+
+	@Override
+	default IntegerStruct length() {
+		throw new UnsupportedOperationException("Not supported yet.");
+	}
+
+	@Override
+	default LispStruct elt(final IntegerStruct index) {
+		return svref(index);
+	}
+
+	@Override
+	default LispStruct setfElt(final LispStruct newElement, final IntegerStruct index) {
+		return setfSvref(newElement, index);
+	}
+
+	@Override
+	default SequenceStruct reverse() {
+		throw new UnsupportedOperationException("Not supported yet.");
+	}
+
+	@Override
+	default SequenceStruct nReverse() {
+		throw new UnsupportedOperationException("Not supported yet.");
+	}
 
 	static VectorStruct.Builder builder(final IntegerStruct size) {
 		return new VectorStruct.Builder(size);

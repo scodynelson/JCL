@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.Supplier;
 
 import jcl.lang.KeywordStruct;
 import jcl.lang.PackageStruct;
@@ -153,11 +152,6 @@ public class PackageStructImpl extends BuiltInClassStruct implements PackageStru
 
 	public static PackageStruct valueOf(final String name, final List<String> nicknames, final List<PackageStruct> useList) {
 		return new PackageStructImpl(name, nicknames, useList);
-	}
-
-	@Override
-	public Supplier<PackageStruct> asPackage() {
-		return () -> this;
 	}
 
 	@Override

@@ -10,6 +10,7 @@ import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 import jcl.lang.ConsStruct;
+import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
 import jcl.lang.NILStruct;
@@ -17,6 +18,7 @@ import jcl.lang.ValuesStruct;
 import jcl.lang.classes.BuiltInClassStruct;
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
+import jcl.lang.internal.number.IntegerStructImpl;
 import jcl.type.ConsType;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -185,7 +187,7 @@ public final class ConsStructImpl extends BuiltInClassStruct implements ConsStru
 
 	@Override
 	public LispStruct[] toArray() {
-		final LispStruct[] result = new LispStruct[Math.toIntExact(length())];
+		final LispStruct[] result = new LispStruct[Math.toIntExact(length().longValue())];
 		int i = 0;
 
 		for (LispStruct x = this; x instanceof ConsStructImpl; x = ((ConsStructImpl) x).cdr) {
@@ -229,7 +231,7 @@ public final class ConsStructImpl extends BuiltInClassStruct implements ConsStru
 		if (isCircular()) {
 			return null;
 		}
-		return length();
+		return length().longValue();
 	}
 
 	@Override
@@ -489,7 +491,7 @@ public final class ConsStructImpl extends BuiltInClassStruct implements ConsStru
 	 */
 
 	@Override
-	public Long length() {
+	public IntegerStruct length() {
 		long length = 1L;
 		LispStruct obj = cdr;
 		while (!NILStruct.INSTANCE.equals(obj)) {
@@ -500,19 +502,20 @@ public final class ConsStructImpl extends BuiltInClassStruct implements ConsStru
 				throw new TypeErrorException("Not a proper list.");
 			}
 		}
-		return length;
+		return IntegerStructImpl.valueOf(length);
 	}
 
 	@Override
-	public LispStruct elt(final long index) {
-		if (index < 0) {
+	public LispStruct elt(final IntegerStruct index) {
+		final long longIndex = index.longValue();
+		if (longIndex < 0) {
 			throw new TypeErrorException("N value must be non-negative.");
 		}
 
 		long currentIndex = 0L;
 		ConsStructImpl cons = this;
 		while (true) {
-			if (currentIndex == index) {
+			if (currentIndex == longIndex) {
 				return cons.car;
 			}
 
@@ -529,17 +532,18 @@ public final class ConsStructImpl extends BuiltInClassStruct implements ConsStru
 	}
 
 	@Override
-	public void setElt(final long index, final LispStruct newValue) {
-		if (index < 0) {
+	public LispStruct setfElt(final LispStruct newElement, final IntegerStruct index) {
+		final long longIndex = index.longValue();
+		if (longIndex < 0) {
 			throw new TypeErrorException("N value must be non-negative.");
 		}
 
 		long currentIndex = 0L;
 		ConsStructImpl cons = this;
 		while (true) {
-			if (currentIndex == index) {
-				cons.car = newValue;
-				return;
+			if (currentIndex == longIndex) {
+				cons.car = newElement;
+				return newElement;
 			}
 
 			final LispStruct consCdr = cons.cdr;
@@ -640,7 +644,8 @@ public final class ConsStructImpl extends BuiltInClassStruct implements ConsStru
 
 	@Override
 	public Spliterator<LispStruct> spliterator() {
-		return Spliterators.spliterator(iterator(), length(),
+		return Spliterators.spliterator(iterator(),
+		                                length().longValue(),
 		                                Spliterator.ORDERED |
 				                                Spliterator.SIZED |
 				                                Spliterator.NONNULL |

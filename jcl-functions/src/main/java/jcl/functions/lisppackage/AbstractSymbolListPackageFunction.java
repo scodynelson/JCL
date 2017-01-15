@@ -10,6 +10,7 @@ import java.util.function.BiConsumer;
 import java.util.function.Function;
 
 import jcl.functions.CommonLispBuiltInFunctionStructBase;
+import jcl.functions.FunctionHelpers;
 import jcl.lang.FunctionStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
@@ -49,7 +50,7 @@ abstract class AbstractSymbolListPackageFunction extends CommonLispBuiltInFuncti
 	@Override
 	public LispStruct apply(final Arguments arguments) {
 		final LispStruct lispStruct = arguments.getRequiredArgument("SYMBOLS");
-		final PackageStruct aPackage = arguments.getOptionalArgument("PACKAGE").asPackage().get();
+		final PackageStruct aPackage = FunctionHelpers.asPackage(arguments.getOptionalArgument("PACKAGE"));
 
 		final SymbolStruct[] realSymbolArray;
 		if (lispStruct instanceof ListStruct) {

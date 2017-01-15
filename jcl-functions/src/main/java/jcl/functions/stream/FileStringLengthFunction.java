@@ -4,8 +4,6 @@
 
 package jcl.functions.stream;
 
-import java.math.BigInteger;
-
 import jcl.functions.CommonLispBuiltInFunctionStructBase;
 import jcl.lang.CharacterStruct;
 import jcl.lang.IntegerStruct;
@@ -13,7 +11,6 @@ import jcl.lang.LispStruct;
 import jcl.lang.StreamStruct;
 import jcl.lang.StringStruct;
 import jcl.lang.condition.exception.TypeErrorException;
-import jcl.lang.factory.LispStructFactory;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import org.springframework.stereotype.Component;
@@ -42,8 +39,7 @@ public final class FileStringLengthFunction extends CommonLispBuiltInFunctionStr
 		if (lispStruct2 instanceof CharacterStruct) {
 			return IntegerStruct.ONE;
 		} else if (lispStruct2 instanceof StringStruct) {
-			final Long length = ((StringStruct) lispStruct2).length();
-			return LispStructFactory.toInteger(BigInteger.valueOf(length));
+			return ((StringStruct) lispStruct2).length();
 		} else {
 			throw new TypeErrorException("UNCAUGHT TYPE ERROR.");
 		}

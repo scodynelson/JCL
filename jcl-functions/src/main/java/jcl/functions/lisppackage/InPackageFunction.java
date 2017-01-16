@@ -47,7 +47,7 @@ public final class InPackageFunction extends CommonLispBuiltInFunctionStructBase
 	@Override
 	public LispStruct apply(final Arguments arguments) {
 		final LispStruct lispStruct = arguments.getRequiredArgument(NAME_ARGUMENT);
-		final String name = FunctionHelpers.asString(lispStruct).getAsJavaString();
+		final String name = FunctionHelpers.asString(lispStruct).toJavaString();
 
 		final PackageStruct newCurrentPackage = PackageStruct.findPackage(name);
 		if (newCurrentPackage == null) {

@@ -56,7 +56,7 @@ public final class PackageNicknamesFunction extends CommonLispBuiltInFunctionStr
 		final List<String> nicknames = aPackage.getNicknames();
 		final List<LispStruct> nicknamesStructs =
 				nicknames.stream()
-				         .map(LispStructFactory::toString)
+				         .map(StringStruct::toLispString)
 				         .collect(Collectors.toList());
 		return LispStructFactory.toProperList(nicknamesStructs);
 	}

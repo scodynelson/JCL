@@ -39,7 +39,7 @@ public final class GensymFunction extends CommonLispBuiltInFunctionStructBase {
 		if (defaulting != null) {
 
 			if (defaulting instanceof StringStruct) {
-				gensymPrefix = ((StringStruct) defaulting).getAsJavaString();
+				gensymPrefix = ((StringStruct) defaulting).toJavaString();
 				SymbolVariables.GENSYM_COUNTER.setValue(gensymPostfix.add(IntegerStruct.ONE));
 			} else if (defaulting instanceof IntegerStruct) {
 				gensymPostfix = (IntegerStruct) defaulting;

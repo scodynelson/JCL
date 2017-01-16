@@ -55,7 +55,7 @@ public class SharpPReaderMacroFunction extends ReaderMacroFunctionImpl {
 
 		if (token instanceof StringStruct) {
 			final StringStruct pathnameString = (StringStruct) token;
-			final String namestring = pathnameString.getAsJavaString();
+			final String namestring = pathnameString.toJavaString();
 			return LispStructFactory.toPathname(namestring);
 		} else {
 			throw new ReaderErrorException("The value " + token + " is not of expected type STRING in argument to #P.");

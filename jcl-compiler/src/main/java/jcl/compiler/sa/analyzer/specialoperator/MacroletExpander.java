@@ -206,7 +206,7 @@ public class MacroletExpander extends MacroFunctionExpander<InnerLambdaStruct> {
 		                                                          .toString();
 
 		final String macroletParamName = "jcl.MACROLET_" + properFunctionNameString + "_MacroLambda_" + System.nanoTime();
-		final StringStruct macroletParamJavaClassName = LispStructFactory.toString(macroletParamName);
+		final StringStruct macroletParamJavaClassName = StringStruct.toLispString(macroletParamName);
 		final ListStruct macroletParamJavaClassNameDeclaration = LispStructFactory.toProperList(DeclarationStructImpl.JAVA_CLASS_NAME, macroletParamJavaClassName);
 		declares.add(macroletParamJavaClassNameDeclaration);
 

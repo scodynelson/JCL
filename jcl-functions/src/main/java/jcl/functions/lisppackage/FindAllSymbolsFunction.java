@@ -50,7 +50,7 @@ public final class FindAllSymbolsFunction extends CommonLispBuiltInFunctionStruc
 	@Override
 	public LispStruct apply(final Arguments arguments) {
 		final LispStruct lispStruct = arguments.getRequiredArgument(SYMBOL_NAME_ARGUMENT);
-		final String name = FunctionHelpers.asString(lispStruct).getAsJavaString();
+		final String name = FunctionHelpers.asString(lispStruct).toJavaString();
 
 		final List<SymbolStruct> allSymbols = PackageStruct.findAllSymbols(name);
 		return LispStructFactory.toProperList(allSymbols);

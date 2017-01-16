@@ -47,7 +47,7 @@ public final class PathnameFunction extends CommonLispBuiltInFunctionStructBase 
 			pathname = (PathnameStruct) pathnameDesignator;
 		} else if (pathnameDesignator instanceof StringStruct) {
 			final StringStruct namestringStruct = (StringStruct) pathnameDesignator;
-			namestring = namestringStruct.getAsJavaString();
+			namestring = namestringStruct.toJavaString();
 			pathname = LispStructFactory.toPathname(namestring);
 		} else if (pathnameDesignator instanceof FileStreamStruct) {
 			final FileStreamStruct fileStream = (FileStreamStruct) pathnameDesignator;

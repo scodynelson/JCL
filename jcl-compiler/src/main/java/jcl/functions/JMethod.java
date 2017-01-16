@@ -35,7 +35,7 @@ public final class JMethod extends ExtensionsBuiltInFunctionStructBase {
 	public LispStruct apply(final Arguments arguments) {
 
 		final StringStruct methodName = arguments.getRequiredArgument(METHOD_NAME_ARGUMENT, StringStruct.class);
-		final String methodNameString = methodName.getAsJavaString();
+		final String methodNameString = methodName.toJavaString();
 
 		final JavaClassStruct javaClassStruct = arguments.getRequiredArgument(JAVA_CLASS_ARGUMENT, JavaClassStruct.class);
 		final Class<?> javaClass = javaClassStruct.getJavaClass();

@@ -56,7 +56,7 @@ public final class MakePackageFunction extends CommonLispBuiltInFunctionStructBa
 	@Override
 	public LispStruct apply(final Arguments arguments) {
 		final LispStruct lispStruct = arguments.getRequiredArgument(PACKAGE_NAME_ARGUMENT);
-		final String packageName = FunctionHelpers.asString(lispStruct).getAsJavaString();
+		final String packageName = FunctionHelpers.asString(lispStruct).toJavaString();
 
 		if (PackageStruct.findPackage(packageName) != null) {
 			throw new ProgramErrorException("Package name " + packageName + " is already in use.");
@@ -66,7 +66,7 @@ public final class MakePackageFunction extends CommonLispBuiltInFunctionStructBa
 		final List<String> realNicknames
 				= nicknamesList.stream()
 				               .map(FunctionHelpers::asString)
-				               .map(StringStruct::getAsJavaString)
+				               .map(StringStruct::toJavaString)
 				               .collect(Collectors.toList());
 
 		final ListStruct usePackagesList = arguments.getKeyArgument(CommonLispSymbols.USE_KEYWORD, ListStruct.class);

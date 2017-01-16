@@ -36,7 +36,7 @@ public final class MakeStringInputStreamFunction extends CommonLispBuiltInFuncti
 	@Override
 	public LispStruct apply(final Arguments arguments) {
 		final StringStruct aString = arguments.getRequiredArgument(STRING_ARGUMENT, StringStruct.class);
-		final String javaString = aString.getAsJavaString();
+		final String javaString = aString.toJavaString();
 
 		int start = 0;
 		int end = javaString.length();

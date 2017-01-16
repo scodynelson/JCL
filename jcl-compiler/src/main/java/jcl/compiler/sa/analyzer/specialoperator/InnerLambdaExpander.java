@@ -213,7 +213,7 @@ public abstract class InnerLambdaExpander extends MacroFunctionExpander<InnerLam
 		                                                          .toString();
 
 		final String paramName = "jcl." + expanderName + '_' + properFunctionNameString + "_Lambda_" + System.nanoTime();
-		final StringStruct paramJavaClassName = LispStructFactory.toString(paramName);
+		final StringStruct paramJavaClassName = StringStruct.toLispString(paramName);
 		final ListStruct paramJavaClassNameDeclaration = LispStructFactory.toProperList(DeclarationStructImpl.JAVA_CLASS_NAME, paramJavaClassName);
 		declares.add(paramJavaClassNameDeclaration);
 

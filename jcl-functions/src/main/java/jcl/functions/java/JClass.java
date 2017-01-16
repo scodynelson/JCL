@@ -29,7 +29,7 @@ public final class JClass extends ExtensionsBuiltInFunctionStructBase {
 	@Override
 	public LispStruct apply(final Arguments arguments) {
 		final StringStruct className = arguments.getRequiredArgument(CLASS_NAME_ARGUMENT, StringStruct.class);
-		final String classNameString = className.getAsJavaString();
+		final String classNameString = className.toJavaString();
 		return LispStructFactory.toJavaClass(classNameString);
 	}
 }

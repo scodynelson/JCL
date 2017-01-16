@@ -221,9 +221,8 @@ public interface StringStruct extends VectorStruct {
 	 *
 	 * @return a {@link String} representation of the StringStruct
 	 */
-	String getAsJavaString();
-
 	default String toJavaString() {
+		// TODO: right now this ignores fill-pointer by default. Should it or should it not??
 		return toJavaString(false);
 	}
 

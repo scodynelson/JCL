@@ -40,7 +40,7 @@ public final class Help extends ExtensionsBuiltInFunctionStructBase {
 		final String searchString;
 		if (arguments.hasOptionalArgument(SEARCH_TERM_ARGUMENT)) {
 			final StringStruct searchTerm = arguments.getOptionalArgument(SEARCH_TERM_ARGUMENT, StringStruct.class);
-			searchString = searchTerm.getAsJavaString();
+			searchString = searchTerm.toJavaString();
 		} else {
 			searchString = "index";
 		}

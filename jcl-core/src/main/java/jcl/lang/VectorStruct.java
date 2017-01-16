@@ -76,6 +76,10 @@ public interface VectorStruct extends ArrayStruct, SequenceStruct {
 	 */
 	LispStruct vectorPush(final LispStruct newElement);
 
+	default IntegerStruct vectorPushExtend(final LispStruct newElement) {
+		return vectorPushExtend(newElement, length());
+	}
+
 	/**
 	 * Pushes the provided {@code element} into the current fill-pointer index and extends the vector to the
 	 * current size of the contents plus the provided {@code extensionAmount}.

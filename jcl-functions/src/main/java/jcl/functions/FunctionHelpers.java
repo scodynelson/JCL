@@ -14,7 +14,6 @@ import jcl.lang.condition.exception.SimpleErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.internal.CharacterStructImpl;
 import jcl.lang.internal.PathnameStructImpl;
-import jcl.lang.internal.StringStructImpl;
 
 public final class FunctionHelpers {
 
@@ -31,7 +30,7 @@ public final class FunctionHelpers {
 			return PathnameStructImpl.valueOf(namestring);
 		} else if (lispStruct instanceof StringStruct) {
 			final StringStruct stringStruct = (StringStruct) lispStruct;
-			final String namestring = stringStruct.getAsJavaString();
+			final String namestring = stringStruct.toJavaString();
 			return PathnameStructImpl.valueOf(namestring);
 		} else {
 			throw new TypeErrorException("Type cannot be converted to Pathname.");
@@ -50,7 +49,7 @@ public final class FunctionHelpers {
 			return CharacterStructImpl.valueOf(name.charAt(0));
 		} else if (lispStruct instanceof StringStruct) {
 			final StringStruct struct = (StringStruct) lispStruct;
-			final String javaString = struct.getAsJavaString();
+			final String javaString = struct.toJavaString();
 			if (javaString.length() != 1) {
 				throw new SimpleErrorException("String is not of length one: " + javaString);
 			}
@@ -69,7 +68,7 @@ public final class FunctionHelpers {
 			return CharacterStructImpl.valueOf(UCharacter.getCharFromName(name));
 		} else if (lispStruct instanceof StringStruct) {
 			final StringStruct string = (StringStruct) lispStruct;
-			final String javaString = string.getAsJavaString();
+			final String javaString = string.toJavaString();
 			return CharacterStructImpl.valueOf(UCharacter.getCharFromName(javaString));
 		} else {
 			throw new TypeErrorException("Type cannot be converted to Character.");
@@ -89,7 +88,7 @@ public final class FunctionHelpers {
 			return PackageStruct.findPackage(packageName);
 		} else if (lispStruct instanceof StringStruct) {
 			final StringStruct stringStruct = (StringStruct) lispStruct;
-			final String packageName = stringStruct.getAsJavaString();
+			final String packageName = stringStruct.toJavaString();
 			return PackageStruct.findPackage(packageName);
 		} else {
 			throw new TypeErrorException("Type cannot be converted to Package.");
@@ -102,10 +101,10 @@ public final class FunctionHelpers {
 		} else if (lispStruct instanceof SymbolStruct) {
 			final SymbolStruct symbolStruct = (SymbolStruct) lispStruct;
 			final String name = symbolStruct.getName();
-			return StringStructImpl.valueOf(name);
+			return StringStruct.toLispString(name);
 		} else if (lispStruct instanceof CharacterStruct) {
 			final CharacterStruct characterStruct = (CharacterStruct) lispStruct;
-			return StringStructImpl.valueOf(characterStruct.getCharacter().toString());
+			return StringStruct.toLispString(characterStruct.getCharacter().toString());
 		} else {
 			throw new TypeErrorException("Type cannot be converted to Package.");
 		}

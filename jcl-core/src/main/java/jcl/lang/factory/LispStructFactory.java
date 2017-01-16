@@ -66,7 +66,6 @@ import jcl.lang.internal.LogicalPathnameStructImpl;
 import jcl.lang.internal.MultiArrayStructImpl;
 import jcl.lang.internal.PackageStructImpl;
 import jcl.lang.internal.PathnameStructImpl;
-import jcl.lang.internal.StringStructImpl;
 import jcl.lang.internal.SymbolStructImpl;
 import jcl.lang.internal.VariableStructImpl;
 import jcl.lang.internal.VectorStructImpl;
@@ -785,7 +784,7 @@ public final class LispStructFactory {
 	 */
 
 	public static StringStruct toString(final String stringValue) {
-		return StringStructImpl.valueOf(stringValue);
+		return StringStruct.toLispString(stringValue);
 	}
 
 	/*

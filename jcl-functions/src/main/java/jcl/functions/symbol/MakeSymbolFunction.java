@@ -29,7 +29,7 @@ public final class MakeSymbolFunction extends CommonLispBuiltInFunctionStructBas
 	@Override
 	public LispStruct apply(final Arguments arguments) {
 		final StringStruct name = arguments.getRequiredArgument(NAME_ARGUMENT, StringStruct.class);
-		final String namestring = name.getAsJavaString();
+		final String namestring = name.toJavaString();
 		return SymbolStructImpl.valueOf(namestring);
 	}
 }

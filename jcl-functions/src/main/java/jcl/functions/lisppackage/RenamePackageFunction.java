@@ -62,7 +62,7 @@ public final class RenamePackageFunction extends CommonLispBuiltInFunctionStruct
 		final LispStruct packageDesignator = arguments.getRequiredArgument(NEW_NAME_ARGUMENT);
 		final String newName;
 		if (packageDesignator instanceof StringStruct) {
-			newName = ((StringStruct) packageDesignator).getAsJavaString();
+			newName = ((StringStruct) packageDesignator).toJavaString();
 		} else if (packageDesignator instanceof SymbolStruct) {
 			newName = ((SymbolStruct) packageDesignator).getName();
 		} else if (packageDesignator instanceof CharacterStruct) {
@@ -78,7 +78,7 @@ public final class RenamePackageFunction extends CommonLispBuiltInFunctionStruct
 			final List<String> newNicknames
 					= newNicknamesList.stream()
 					                  .map(FunctionHelpers::asString)
-					                  .map(StringStruct::getAsJavaString)
+					                  .map(StringStruct::toJavaString)
 					                  .collect(Collectors.toList());
 			aPackage.renamePackage(newName, newNicknames);
 		} else {

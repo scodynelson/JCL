@@ -54,19 +54,6 @@ public final class StringStructImpl extends VectorStructImpl implements StringSt
 	}
 
 	/*
-		Old Builders
-	 */
-
-	public static StringStruct valueOf(final String stringValue) {
-		return new StringStructImpl(SimpleStringType.INSTANCE,
-		                            stringValue.length(),
-		                            CharacterType.INSTANCE,
-		                            new StringBuilder(stringValue),
-		                            false,
-		                            null);
-	}
-
-	/*
 	STRING-STRUCT
 	 */
 
@@ -133,22 +120,55 @@ public final class StringStructImpl extends VectorStructImpl implements StringSt
 		return nCasifyString(context, StringUtils::capitalize);
 	}
 
-	private StringStruct casifyString(final StringIntervalOpContext context, final Function<String, String> casifyOp) {
+	private StringStruct casifyString(final StringIntervalOpContext context,
+	                                  final Function<String, String> casifyOp) {
 		final int startInt = getStringOpStart(context);
 		final int endInt = getStringOpEnd(context, startInt);
 
-		String str = contents.substring(startInt, endInt);
-		str = casifyOp.apply(str);
-		return valueOf(str);
+		final String str = toJavaString(true);
+		final StringBuilder builder = new StringBuilder(str);
+
+		String strToCasify = builder.substring(startInt, endInt);
+		strToCasify = casifyOp.apply(strToCasify);
+		builder.replace(startInt, endInt, strToCasify);
+
+		return new StringStructImpl(SimpleStringType.INSTANCE,
+		                            builder.length(),
+		                            CharacterType.INSTANCE,
+		                            builder,
+		                            false,
+		                            null);
 	}
 
-	private StringStruct nCasifyString(final StringIntervalOpContext context, final Function<String, String> casifyOp) {
+	private StringStruct nCasifyString(final StringIntervalOpContext context,
+	                                   final Function<String, String> casifyOp) {
 		final int startInt = getStringOpStart(context);
 		final int endInt = getStringOpEnd(context, startInt);
 
-		String str = contents.substring(startInt, endInt);
-		str = casifyOp.apply(str);
-		contents.replace(startInt, endInt, str);
+		if (displacedTo == null) {
+			String str = contents.substring(startInt, endInt);
+			str = casifyOp.apply(str);
+			contents.replace(startInt, endInt, str);
+		} else {
+			final StringBuilder builder = new StringBuilder();
+			for (int index = startInt; index < endInt; index++) {
+				final IntegerStruct indexToGet = IntegerStructImpl.valueOf(displacedIndexOffset + index);
+				final CharacterStruct character = (CharacterStruct) displacedTo.rowMajorAref(indexToGet);
+				builder.appendCodePoint(character.getCodePoint());
+			}
+
+			String str = builder.toString();
+			str = casifyOp.apply(str);
+
+			for (int updateIndex = startInt, stringIndex = 0;
+			     updateIndex < endInt;
+			     updateIndex++, stringIndex++) {
+				final IntegerStruct indexToSet = IntegerStructImpl.valueOf(displacedIndexOffset + updateIndex);
+				final char c = str.charAt(stringIndex);
+				final CharacterStruct character = CharacterStructImpl.valueOf(c);
+				displacedTo.setfRowMajorAref(character, indexToSet);
+			}
+		}
 		return this;
 	}
 
@@ -186,14 +206,14 @@ public final class StringStructImpl extends VectorStructImpl implements StringSt
 				                       StringBuilder::append)
 				              .toString();
 
-		final String str;
-		if (fillPointer == null) {
-			str = contents.toString();
-		} else {
-			str = contents.substring(0, fillPointer);
-		}
+		final String str = toJavaString(true);
 		final String trimmedString = trimOp.apply(str, stripChars);
-		return valueOf(trimmedString);
+		return new StringStructImpl(SimpleStringType.INSTANCE,
+		                            trimmedString.length(),
+		                            CharacterType.INSTANCE,
+		                            new StringBuilder(),
+		                            false,
+		                            null);
 	}
 
 	@Override
@@ -344,12 +364,7 @@ public final class StringStructImpl extends VectorStructImpl implements StringSt
 		final int start2 = getStringOpStart(context2);
 		final int end2 = getStringOpEnd(context2, start2);
 
-		final String str1;
-		if (fillPointer == null) {
-			str1 = contents.toString();
-		} else {
-			str1 = contents.substring(0, fillPointer);
-		}
+		final String str1 = toJavaString(true);
 		final String str2 = context.getStruct()
 		                           .toJavaString(true);
 
@@ -378,16 +393,25 @@ public final class StringStructImpl extends VectorStructImpl implements StringSt
 	}
 
 	@Override
-	public String getAsJavaString() {
-		return contents.toString();
-	}
-
-	@Override
 	public String toJavaString(final boolean fillPointerRestriction) {
+		if (displacedTo != null) {
+			return getDisplacedToAsJavaString(fillPointerRestriction);
+		}
 		if (fillPointerRestriction && (fillPointer != null)) {
 			return contents.substring(0, fillPointer);
 		}
 		return contents.toString();
+	}
+
+	private String getDisplacedToAsJavaString(final boolean fillPointerRestriction) {
+		final int size = (fillPointerRestriction && (fillPointer != null)) ? fillPointer : totalSize;
+		final StringBuilder builder = new StringBuilder();
+		for (int index = 0; index < size; index++) {
+			final IntegerStruct indexToGet = IntegerStructImpl.valueOf(displacedIndexOffset + index);
+			final CharacterStruct character = (CharacterStruct) displacedTo.rowMajorAref(indexToGet);
+			builder.appendCodePoint(character.getCodePoint());
+		}
+		return builder.toString();
 	}
 
 	private int getStringOpStart(final StringIntervalOpContext context) {
@@ -397,7 +421,7 @@ public final class StringStructImpl extends VectorStructImpl implements StringSt
 			startInt = 0;
 		} else {
 			startInt = start.intValue();
-			final int observedLength = (fillPointer == null) ? contents.length() : fillPointer;
+			final int observedLength = (fillPointer == null) ? totalSize : fillPointer;
 			if ((startInt < 0) || (startInt > observedLength)) {
 				throw new ErrorException(
 						"Bad start value " + start + " for string with size: " + observedLength);
@@ -410,10 +434,10 @@ public final class StringStructImpl extends VectorStructImpl implements StringSt
 		final IntegerStruct end = context.getEnd();
 		final int endInt;
 		if (end == null) {
-			endInt = (fillPointer == null) ? contents.length() : fillPointer;
+			endInt = (fillPointer == null) ? totalSize : fillPointer;
 		} else {
 			endInt = end.intValue();
-			final int observedLength = (fillPointer == null) ? contents.length() : fillPointer;
+			final int observedLength = (fillPointer == null) ? totalSize : fillPointer;
 			if ((endInt < 0) || (endInt > observedLength) || (endInt < startInt)) {
 				throw new ErrorException(
 						"Bad end value " + end + " with start value " + startInt + " for string with size: " + observedLength);
@@ -427,17 +451,16 @@ public final class StringStructImpl extends VectorStructImpl implements StringSt
 	 */
 
 	@Override
-	public LispStruct vectorPop() {
+	public CharacterStruct vectorPop() {
 		if (fillPointer == null) {
-			throw new TypeErrorException("Cannot pop from a VECTOR with no fill-pointer.");
+			throw new TypeErrorException("Cannot pop from a STRING with no fill-pointer.");
 		}
 		if (fillPointer == 0) {
 			throw new ErrorException("Nothing left to pop.");
 		}
 
 		fillPointer--;
-		final char element = contents.charAt(fillPointer);
-		return CharacterStructImpl.valueOf(element);
+		return charInternal(fillPointer);
 	}
 
 	@Override
@@ -446,15 +469,14 @@ public final class StringStructImpl extends VectorStructImpl implements StringSt
 			throw new TypeErrorException(newElement + " is not a character type.");
 		}
 		if (fillPointer == null) {
-			throw new TypeErrorException("Cannot push into a VECTOR with no fill-pointer.");
+			throw new TypeErrorException("Cannot push into a STRING with no fill-pointer.");
 		}
-		if (fillPointer >= contents.length()) {
+		if (fillPointer >= totalSize) {
 			return NILStruct.INSTANCE;
 		}
 
 		final Integer previousFillPointer = fillPointer++;
-		final char character = ((CharacterStruct) newElement).getCharacter();
-		contents.setCharAt(fillPointer, character);
+		setfCharInternal((CharacterStruct) newElement, fillPointer);
 		return IntegerStructImpl.valueOf(previousFillPointer);
 	}
 
@@ -465,18 +487,26 @@ public final class StringStructImpl extends VectorStructImpl implements StringSt
 			throw new TypeErrorException(newElement + " is not a character type.");
 		}
 		if (fillPointer == null) {
-			throw new TypeErrorException("Cannot push into a VECTOR with no fill-pointer.");
+			throw new TypeErrorException("Cannot push into a STRING with no fill-pointer.");
 		}
-		if (!isAdjustable) {
-			throw new TypeErrorException("VECTOR is not adjustable.");
-		}
-		if (fillPointer >= contents.length()) {
-//			adjustArray(fillPointer + extensionAmount); // TODO
+		if (fillPointer >= totalSize) {
+			if (!isAdjustable) {
+				throw new TypeErrorException("VECTOR would be extended and is not adjustable.");
+			}
+			if (displacedTo == null) {
+				contents.ensureCapacity(contents.capacity() + extension.intValue());
+			} else {
+				final String displacedContents = getDisplacedToAsJavaString(true);
+				contents = new StringBuilder(displacedContents.length() + extension.intValue());
+				contents.append(displacedContents);
+
+				displacedTo = null;
+				displacedIndexOffset = null;
+			}
 		}
 
 		final Integer previousFillPointer = fillPointer++;
-		final char character = ((CharacterStruct) newElement).getCharacter();
-		contents.setCharAt(fillPointer, character);
+		setfCharInternal((CharacterStruct) newElement, fillPointer);
 		return IntegerStructImpl.valueOf(previousFillPointer);
 	}
 
@@ -490,13 +520,13 @@ public final class StringStructImpl extends VectorStructImpl implements StringSt
 	}
 
 	@Override
-	public LispStruct aref(final IntegerStruct... subscripts) {
+	public CharacterStruct aref(final IntegerStruct... subscripts) {
 		final int rowMajorIndex = rowMajorIndexInternal(subscripts);
 		return charInternal(rowMajorIndex);
 	}
 
 	@Override
-	public LispStruct setfAref(final LispStruct newElement, final IntegerStruct... subscripts) {
+	public CharacterStruct setfAref(final LispStruct newElement, final IntegerStruct... subscripts) {
 		if (!(newElement instanceof CharacterStruct)) {
 			throw new TypeErrorException(newElement + " is not a character type.");
 		}
@@ -506,13 +536,13 @@ public final class StringStructImpl extends VectorStructImpl implements StringSt
 	}
 
 	@Override
-	public LispStruct rowMajorAref(final IntegerStruct index) {
+	public CharacterStruct rowMajorAref(final IntegerStruct index) {
 		final int indexInt = validateSubscript(index);
 		return charInternal(indexInt);
 	}
 
 	@Override
-	public LispStruct setfRowMajorAref(final LispStruct newElement, final IntegerStruct index) {
+	public CharacterStruct setfRowMajorAref(final LispStruct newElement, final IntegerStruct index) {
 		if (!(newElement instanceof CharacterStruct)) {
 			throw new TypeErrorException(newElement + " is not a character type.");
 		}
@@ -526,13 +556,13 @@ public final class StringStructImpl extends VectorStructImpl implements StringSt
 	 */
 
 	@Override
-	public LispStruct elt(final IntegerStruct index) {
+	public CharacterStruct elt(final IntegerStruct index) {
 		final int indexInt = validateIndexAgainstFillPointer(index);
 		return charInternal(indexInt);
 	}
 
 	@Override
-	public LispStruct setfElt(final LispStruct newElement, final IntegerStruct index) {
+	public CharacterStruct setfElt(final LispStruct newElement, final IntegerStruct index) {
 		if (!(newElement instanceof CharacterStruct)) {
 			throw new TypeErrorException(newElement + " is not a character type.");
 		}
@@ -542,12 +572,14 @@ public final class StringStructImpl extends VectorStructImpl implements StringSt
 	}
 
 	@Override
-	public SequenceStruct reverse() {
+	public StringStruct reverse() {
 		final StringBuilder reversedContents;
-		if (fillPointer == null) {
-			final StringBuilder currentContents = contents;
-			reversedContents = contents.reverse();
-			contents = currentContents;
+		if (displacedTo != null) {
+			final String contentsToReverse = getDisplacedToAsJavaString(true);
+			reversedContents = new StringBuilder(contentsToReverse).reverse();
+		} else if (fillPointer == null) {
+			final String contentsToReverse = contents.toString();
+			reversedContents = new StringBuilder(contentsToReverse).reverse();
 		} else {
 			final String contentsToReverse = contents.substring(0, fillPointer);
 			reversedContents = new StringBuilder(contentsToReverse).reverse();
@@ -561,14 +593,24 @@ public final class StringStructImpl extends VectorStructImpl implements StringSt
 	}
 
 	@Override
-	public SequenceStruct nReverse() {
-		if (fillPointer == null) {
+	public StringStruct nReverse() {
+		if (displacedTo != null) {
+			final String contentsToReverse = getDisplacedToAsJavaString(true);
+			final StringBuilder reversedContent = new StringBuilder(contentsToReverse).reverse();
+
+			for (int index = 0; index < reversedContent.length(); index++) {
+				final IntegerStruct indexToSet = IntegerStructImpl.valueOf(displacedIndexOffset + index);
+				final char c = reversedContent.charAt(index);
+				final CharacterStruct character = CharacterStructImpl.valueOf(c);
+				displacedTo.setfRowMajorAref(character, indexToSet);
+			}
+		} else if (fillPointer == null) {
 			contents.reverse();
 		} else {
 			final String contentsToReverse = contents.substring(0, fillPointer);
-			final String reversedContet = new StringBuilder(contentsToReverse).reverse()
-			                                                                  .toString();
-			contents.replace(0, fillPointer, reversedContet);
+			final String reversedContent = new StringBuilder(contentsToReverse).reverse()
+			                                                                   .toString();
+			contents.replace(0, fillPointer, reversedContent);
 		}
 		return this;
 	}
@@ -579,13 +621,17 @@ public final class StringStructImpl extends VectorStructImpl implements StringSt
 
 	@Override
 	public Iterator<LispStruct> iterator() {
-		return new StringStructImpl.StringIterator(contents);
+		if (displacedTo == null) {
+			return new StringStructImpl.StringIterator(contents);
+		} else {
+			return new StringStructImpl.DisplacedStringIterator(totalSize, displacedTo, displacedIndexOffset);
+		}
 	}
 
 	@Override
 	public Spliterator<LispStruct> spliterator() {
 		return Spliterators.spliterator(iterator(),
-		                                contents.length(),
+		                                totalSize,
 		                                Spliterator.ORDERED |
 				                                Spliterator.SIZED |
 				                                Spliterator.IMMUTABLE |
@@ -626,6 +672,37 @@ public final class StringStructImpl extends VectorStructImpl implements StringSt
 		}
 	}
 
+	private static final class DisplacedStringIterator implements Iterator<LispStruct> {
+
+		private final int totalSize;
+		private final ArrayStruct displacedTo;
+		private final int displacedIndexOffset;
+		private int current;
+
+		private DisplacedStringIterator(final int totalSize,
+		                                final ArrayStruct displacedTo,
+		                                final int displacedIndexOffset) {
+			this.totalSize = totalSize;
+			this.displacedTo = displacedTo;
+			this.displacedIndexOffset = displacedIndexOffset;
+		}
+
+		@Override
+		public boolean hasNext() {
+			return current < totalSize;
+		}
+
+		@Override
+		public LispStruct next() {
+			if (current < totalSize) {
+				final IntegerStruct indexToGet = IntegerStructImpl.valueOf(displacedIndexOffset + current);
+				current++;
+				return displacedTo.rowMajorAref(indexToGet);
+			}
+			throw new NoSuchElementException("All elements consumed.");
+		}
+	}
+
 	/*
 	OBJECT
 	 */
@@ -649,7 +726,11 @@ public final class StringStructImpl extends VectorStructImpl implements StringSt
 			stringBuilder.appendCodePoint(codePoint);
 		};
 
-		if (fillPointer == null) {
+		if (displacedTo != null) {
+			final String str = getDisplacedToAsJavaString(true);
+			str.codePoints()
+			   .forEach(appendFn);
+		} else if (fillPointer == null) {
 			contents.codePoints()
 			        .forEach(appendFn);
 		} else {

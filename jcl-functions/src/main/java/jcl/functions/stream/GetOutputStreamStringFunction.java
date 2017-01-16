@@ -7,7 +7,7 @@ package jcl.functions.stream;
 import jcl.functions.CommonLispBuiltInFunctionStructBase;
 import jcl.lang.LispStruct;
 import jcl.lang.StringOutputStreamStruct;
-import jcl.lang.factory.LispStructFactory;
+import jcl.lang.StringStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import org.springframework.stereotype.Component;
@@ -32,6 +32,6 @@ public final class GetOutputStreamStringFunction extends CommonLispBuiltInFuncti
 		final String streamString = stringOutputStream.getStreamString();
 		stringOutputStream.clearStream();
 
-		return LispStructFactory.toString(streamString);
+		return StringStruct.toLispString(streamString);
 	}
 }

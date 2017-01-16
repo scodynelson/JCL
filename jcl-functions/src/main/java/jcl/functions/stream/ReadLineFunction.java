@@ -9,6 +9,7 @@ import jcl.lang.BooleanStruct;
 import jcl.lang.InputStreamStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.NILStruct;
+import jcl.lang.StringStruct;
 import jcl.lang.TStruct;
 import jcl.lang.ValuesStruct;
 import jcl.lang.condition.exception.TypeErrorException;
@@ -61,6 +62,6 @@ public final class ReadLineFunction extends CommonLispBuiltInFunctionStructBase 
 		final ReadLineResult readLineResult = inputStreamStruct.readLine(eofErrorP.booleanValue(), eofValue, recursiveP.booleanValue());
 		final String result = readLineResult.getResult();
 		final boolean eof = readLineResult.isEof();
-		return ValuesStruct.valueOf(LispStructFactory.toString(result), LispStructFactory.toBoolean(eof));
+		return ValuesStruct.valueOf(StringStruct.toLispString(result), LispStructFactory.toBoolean(eof));
 	}
 }

@@ -8,7 +8,7 @@ import jcl.functions.CommonLispBuiltInFunctionStructBase;
 import jcl.lang.LispStruct;
 import jcl.lang.NILStruct;
 import jcl.lang.PathnameStruct;
-import jcl.lang.factory.LispStructFactory;
+import jcl.lang.StringStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.pathname.PathnameComponentType;
@@ -52,7 +52,7 @@ public final class PathnameHostFunction extends CommonLispBuiltInFunctionStructB
 			final PathnameComponentType componentType = pathnameHost.getComponentType();
 			returnValue = componentType.getValue();
 		} else {
-			returnValue = LispStructFactory.toString(host);
+			returnValue = StringStruct.toLispString(host);
 		}
 
 		return returnValue;

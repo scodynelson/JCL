@@ -100,7 +100,7 @@ public class DeclareExpander extends MacroFunctionExpander<DeclareStruct> {
 			throw new TypeErrorException("DECLARE: JAVA-CLASS-NAME must be a String. Got: " + javaClassName);
 		}
 		final StringStruct javaClassNameString = (StringStruct) javaClassName;
-		return new JavaClassNameDeclarationStruct(javaClassNameString.getAsJavaString());
+		return new JavaClassNameDeclarationStruct(javaClassNameString.toJavaString());
 	}
 
 	private LispNameDeclarationStruct saLispNameDeclaration(final List<LispStruct> declSpecBody) {

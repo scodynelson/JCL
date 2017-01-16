@@ -495,7 +495,7 @@ final class MacroLambdaCodeGenerator implements CodeGenerator<MacroLambdaStruct>
 		String documentation = "";
 		final StringStruct docString = input.getDocString();
 		if (docString != null) {
-			documentation = docString.getAsJavaString();
+			documentation = docString.toJavaString();
 		}
 		mv.visitLdcInsn(documentation);
 		mv.visitVarInsn(Opcodes.ALOAD, closureStore);

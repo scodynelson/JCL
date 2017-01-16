@@ -228,7 +228,7 @@ public final class CompileFileFunction extends CommonLispBuiltInFunctionStructBa
 	}
 
 	private static ListStruct buildFileLambda(final List<LispStruct> forms, final String inputClassName) {
-		final StringStruct newJavaClassName = LispStructFactory.toString("jcl." + inputClassName);
+		final StringStruct newJavaClassName = StringStruct.toLispString("jcl." + inputClassName);
 		final ListStruct javaClassNameDeclaration = LispStructFactory.toProperList(DeclarationStructImpl.JAVA_CLASS_NAME, newJavaClassName);
 		final ListStruct declareBlock = LispStructFactory.toProperList(SpecialOperatorStructImpl.DECLARE, javaClassNameDeclaration);
 

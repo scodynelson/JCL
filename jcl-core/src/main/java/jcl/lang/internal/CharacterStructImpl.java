@@ -223,7 +223,7 @@ public final class CharacterStructImpl extends BuiltInClassStruct implements Cha
 
 	@Override
 	public StringStruct charName() {
-		return StringStructImpl.valueOf(Character.getName(codePoint));
+		return StringStruct.toLispString(Character.getName(codePoint));
 	}
 
 	@Override

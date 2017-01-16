@@ -16,7 +16,7 @@ import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 /**
- * Class to generate {@link StringStruct} objects dynamically by utilizing {@link StringStruct#getAsJavaString()} to
+ * Class to generate {@link StringStruct} objects dynamically by utilizing {@link StringStruct#toJavaString()} to
  * get the equivalent {@link String} value of the provided {@link StringStruct} input value.
  */
 @Component
@@ -26,7 +26,7 @@ final class StringCodeGenerator implements CodeGenerator<StringStructImpl> {
 	 * {@inheritDoc}
 	 * Generation method for {@link StringStruct} objects, by performing the following operations:
 	 * <ol>
-	 * <li>Loading the {@link String} constant produced by performing {@link StringStruct#getAsJavaString()}</li>
+	 * <li>Loading the {@link String} constant produced by performing {@link StringStruct#toJavaString()}</li>
 	 * <li>Constructing a new {@link StringStruct} with the loaded {@link String} value</li>
 	 * </ol>
 	 *
@@ -43,7 +43,7 @@ final class StringCodeGenerator implements CodeGenerator<StringStructImpl> {
 		final JavaMethodBuilder methodBuilder = generatorState.getCurrentMethodBuilder();
 		final MethodVisitor mv = methodBuilder.getMethodVisitor();
 
-		final String javaString = input.getAsJavaString();
+		final String javaString = input.toJavaString();
 		mv.visitLdcInsn(javaString);
 		mv.visitMethodInsn(Opcodes.INVOKESTATIC,
 		                   GenerationConstants.LISP_STRUCT_FACTORY_NAME,

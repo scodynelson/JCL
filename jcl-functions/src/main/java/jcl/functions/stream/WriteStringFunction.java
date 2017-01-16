@@ -57,7 +57,7 @@ public final class WriteStringFunction extends CommonLispBuiltInFunctionStructBa
 
 		final LispStruct endParam = arguments.getKeyArgument(CommonLispSymbols.END_KEYWORD);
 
-		final String javaString = stringParam.getAsJavaString();
+		final String javaString = stringParam.toJavaString();
 		if (endParam instanceof IntegerStruct) {
 			final int end = ((IntegerStruct) endParam).intValue();
 			outputStreamStruct.writeString(javaString, start, end);

@@ -201,7 +201,7 @@ public class MultiArrayStructImplTest {
 				                               NILStruct.INSTANCE);
 		final ListStruct result = array.arrayDimensions();
 		Assert.assertThat(result, not(is(NILStruct.INSTANCE)));
-		Assert.assertThat(result.length(), is(2L));
+		Assert.assertThat(result.length(), is(IntegerStruct.TWO));
 
 		final LispStruct dim1 = result.nth(0);
 		Assert.assertThat(dim1, is(IntegerStruct.TWO));

@@ -184,7 +184,7 @@ public class VectorStructImplTest {
 				              .build();
 		final ListStruct result = array.arrayDimensions();
 		Assert.assertThat(result, not(is(NILStruct.INSTANCE)));
-		Assert.assertThat(result.length(), is(1L));
+		Assert.assertThat(result.length(), is(IntegerStruct.ONE));
 
 		final LispStruct dim = result.nth(0);
 		Assert.assertThat(dim, is(IntegerStruct.TWO));

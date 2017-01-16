@@ -18,9 +18,9 @@
 *.class
 
 # Package Files #
-*.jar
-*.war
-*.ear
+# *.jar
+# *.war
+# *.ear
 
 ### Gradle template
 .gradle/

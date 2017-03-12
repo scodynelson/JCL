@@ -25,7 +25,6 @@
             <task name="wrapper" type="org.gradle.api.tasks.wrapper.Wrapper">Generates Gradle wrapper files. [incubating]&lt;p&gt;&lt;i&gt;Task group: Build Setup&lt;i&gt;</task>
             <task name="analyzeTestClassesDependencies" type="ca.cutterslade.gradle.analyze.AnalyzeDependenciesTask">&lt;i&gt;Task group: other&lt;i&gt;</task>
             <task name="cleanIdeaModule" type="org.gradle.api.tasks.Delete">&lt;i&gt;Task group: other&lt;i&gt;</task>
-            <task name="sourcesJar" type="org.gradle.api.tasks.bundling.Jar">&lt;i&gt;Task group: other&lt;i&gt;</task>
             <task name="testClasses">Assembles test classes.&lt;p&gt;&lt;i&gt;Task group: build&lt;i&gt;</task>
             <task name="javadoc" type="org.gradle.api.tasks.javadoc.Javadoc">Generates project-level javadoc for use in -javadoc jar&lt;p&gt;&lt;i&gt;Task group: documentation&lt;i&gt;</task>
             <task name="analyzeClassesDependencies" type="ca.cutterslade.gradle.analyze.AnalyzeDependenciesTask">&lt;i&gt;Task group: other&lt;i&gt;</task>
@@ -43,7 +42,6 @@
             <task name="dependencyManagement" type="io.spring.gradle.dependencymanagement.internal.report.DependencyManagementReportTask">&lt;i&gt;Task group: other&lt;i&gt;</task>
             <task name="sonarqube" type="org.sonarqube.gradle.SonarQubeTask">Analyzes root project 'jcl' and its subprojects with SonarQube.&lt;p&gt;&lt;i&gt;Task group: other&lt;i&gt;</task>
             <task name="compileJava" type="org.gradle.api.tasks.compile.JavaCompile">Compiles main Java source.&lt;p&gt;&lt;i&gt;Task group: other&lt;i&gt;</task>
-            <task name="javadocJar" type="org.gradle.api.tasks.bundling.Jar">&lt;i&gt;Task group: other&lt;i&gt;</task>
             <task name="dependencyInsight" type="org.gradle.api.tasks.diagnostics.DependencyInsightReportTask">Displays the insight into a specific dependency in root project 'jcl'.&lt;p&gt;&lt;i&gt;Task group: help&lt;i&gt;</task>
             <task name="check">Runs all checks.&lt;p&gt;&lt;i&gt;Task group: verification&lt;i&gt;</task>
             <task name="jacocoTestReport" type="org.gradle.testing.jacoco.tasks.JacocoReport">&lt;i&gt;Task group: other&lt;i&gt;</task>
@@ -88,7 +86,6 @@
             <task name="buildEnvironment" type="org.gradle.api.tasks.diagnostics.BuildEnvironmentReportTask">Displays all buildscript dependencies declared in project ':jcl-application'.&lt;p&gt;&lt;i&gt;Task group: help&lt;i&gt;</task>
             <task name="analyzeTestClassesDependencies" type="ca.cutterslade.gradle.analyze.AnalyzeDependenciesTask">&lt;i&gt;Task group: other&lt;i&gt;</task>
             <task name="cleanIdeaModule" type="org.gradle.api.tasks.Delete">&lt;i&gt;Task group: other&lt;i&gt;</task>
-            <task name="sourcesJar" type="org.gradle.api.tasks.bundling.Jar">&lt;i&gt;Task group: other&lt;i&gt;</task>
             <task name="testClasses">Assembles test classes.&lt;p&gt;&lt;i&gt;Task group: build&lt;i&gt;</task>
             <task name="javadoc" type="org.gradle.api.tasks.javadoc.Javadoc">Generates project-level javadoc for use in -javadoc jar&lt;p&gt;&lt;i&gt;Task group: documentation&lt;i&gt;</task>
             <task name="analyzeClassesDependencies" type="ca.cutterslade.gradle.analyze.AnalyzeDependenciesTask">&lt;i&gt;Task group: other&lt;i&gt;</task>
@@ -101,7 +98,6 @@
             <task name="test" type="org.gradle.api.tasks.testing.Test">Runs the unit tests.&lt;p&gt;&lt;i&gt;Task group: verification&lt;i&gt;</task>
             <task name="dependencyManagement" type="io.spring.gradle.dependencymanagement.internal.report.DependencyManagementReportTask">&lt;i&gt;Task group: other&lt;i&gt;</task>
             <task name="compileJava" type="org.gradle.api.tasks.compile.JavaCompile">Compiles main Java source.&lt;p&gt;&lt;i&gt;Task group: other&lt;i&gt;</task>
-            <task name="javadocJar" type="org.gradle.api.tasks.bundling.Jar">&lt;i&gt;Task group: other&lt;i&gt;</task>
             <task name="dependencyInsight" type="org.gradle.api.tasks.diagnostics.DependencyInsightReportTask">Displays the insight into a specific dependency in project ':jcl-application'.&lt;p&gt;&lt;i&gt;Task group: help&lt;i&gt;</task>
             <task name="check">Runs all checks.&lt;p&gt;&lt;i&gt;Task group: verification&lt;i&gt;</task>
             <task name="jacocoTestReport" type="org.gradle.testing.jacoco.tasks.JacocoReport">&lt;i&gt;Task group: other&lt;i&gt;</task>
@@ -158,7 +154,6 @@
             <task name="buildEnvironment" type="org.gradle.api.tasks.diagnostics.BuildEnvironmentReportTask">Displays all buildscript dependencies declared in project ':jcl-compiler'.&lt;p&gt;&lt;i&gt;Task group: help&lt;i&gt;</task>
             <task name="analyzeTestClassesDependencies" type="ca.cutterslade.gradle.analyze.AnalyzeDependenciesTask">&lt;i&gt;Task group: other&lt;i&gt;</task>
             <task name="cleanIdeaModule" type="org.gradle.api.tasks.Delete">&lt;i&gt;Task group: other&lt;i&gt;</task>
-            <task name="sourcesJar" type="org.gradle.api.tasks.bundling.Jar">&lt;i&gt;Task group: other&lt;i&gt;</task>
             <task name="testClasses">Assembles test classes.&lt;p&gt;&lt;i&gt;Task group: build&lt;i&gt;</task>
             <task name="javadoc" type="org.gradle.api.tasks.javadoc.Javadoc">Generates project-level javadoc for use in -javadoc jar&lt;p&gt;&lt;i&gt;Task group: documentation&lt;i&gt;</task>
             <task name="analyzeClassesDependencies" type="ca.cutterslade.gradle.analyze.AnalyzeDependenciesTask">&lt;i&gt;Task group: other&lt;i&gt;</task>
@@ -171,7 +166,6 @@
             <task name="test" type="org.gradle.api.tasks.testing.Test">Runs the unit tests.&lt;p&gt;&lt;i&gt;Task group: verification&lt;i&gt;</task>
             <task name="dependencyManagement" type="io.spring.gradle.dependencymanagement.internal.report.DependencyManagementReportTask">&lt;i&gt;Task group: other&lt;i&gt;</task>
             <task name="compileJava" type="org.gradle.api.tasks.compile.JavaCompile">Compiles main Java source.&lt;p&gt;&lt;i&gt;Task group: other&lt;i&gt;</task>
-            <task name="javadocJar" type="org.gradle.api.tasks.bundling.Jar">&lt;i&gt;Task group: other&lt;i&gt;</task>
             <task name="dependencyInsight" type="org.gradle.api.tasks.diagnostics.DependencyInsightReportTask">Displays the insight into a specific dependency in project ':jcl-compiler'.&lt;p&gt;&lt;i&gt;Task group: help&lt;i&gt;</task>
             <task name="check">Runs all checks.&lt;p&gt;&lt;i&gt;Task group: verification&lt;i&gt;</task>
             <task name="jacocoTestReport" type="org.gradle.testing.jacoco.tasks.JacocoReport">&lt;i&gt;Task group: other&lt;i&gt;</task>
@@ -228,7 +222,6 @@
             <task name="buildEnvironment" type="org.gradle.api.tasks.diagnostics.BuildEnvironmentReportTask">Displays all buildscript dependencies declared in project ':jcl-core'.&lt;p&gt;&lt;i&gt;Task group: help&lt;i&gt;</task>
             <task name="analyzeTestClassesDependencies" type="ca.cutterslade.gradle.analyze.AnalyzeDependenciesTask">&lt;i&gt;Task group: other&lt;i&gt;</task>
             <task name="cleanIdeaModule" type="org.gradle.api.tasks.Delete">&lt;i&gt;Task group: other&lt;i&gt;</task>
-            <task name="sourcesJar" type="org.gradle.api.tasks.bundling.Jar">&lt;i&gt;Task group: other&lt;i&gt;</task>
             <task name="testClasses">Assembles test classes.&lt;p&gt;&lt;i&gt;Task group: build&lt;i&gt;</task>
             <task name="javadoc" type="org.gradle.api.tasks.javadoc.Javadoc">Generates project-level javadoc for use in -javadoc jar&lt;p&gt;&lt;i&gt;Task group: documentation&lt;i&gt;</task>
             <task name="analyzeClassesDependencies" type="ca.cutterslade.gradle.analyze.AnalyzeDependenciesTask">&lt;i&gt;Task group: other&lt;i&gt;</task>
@@ -241,7 +234,6 @@
             <task name="test" type="org.gradle.api.tasks.testing.Test">Runs the unit tests.&lt;p&gt;&lt;i&gt;Task group: verification&lt;i&gt;</task>
             <task name="dependencyManagement" type="io.spring.gradle.dependencymanagement.internal.report.DependencyManagementReportTask">&lt;i&gt;Task group: other&lt;i&gt;</task>
             <task name="compileJava" type="org.gradle.api.tasks.compile.JavaCompile">Compiles main Java source.&lt;p&gt;&lt;i&gt;Task group: other&lt;i&gt;</task>
-            <task name="javadocJar" type="org.gradle.api.tasks.bundling.Jar">&lt;i&gt;Task group: other&lt;i&gt;</task>
             <task name="dependencyInsight" type="org.gradle.api.tasks.diagnostics.DependencyInsightReportTask">Displays the insight into a specific dependency in project ':jcl-core'.&lt;p&gt;&lt;i&gt;Task group: help&lt;i&gt;</task>
             <task name="check">Runs all checks.&lt;p&gt;&lt;i&gt;Task group: verification&lt;i&gt;</task>
             <task name="jacocoTestReport" type="org.gradle.testing.jacoco.tasks.JacocoReport">&lt;i&gt;Task group: other&lt;i&gt;</task>
@@ -298,7 +290,6 @@
             <task name="buildEnvironment" type="org.gradle.api.tasks.diagnostics.BuildEnvironmentReportTask">Displays all buildscript dependencies declared in project ':jcl-functions'.&lt;p&gt;&lt;i&gt;Task group: help&lt;i&gt;</task>
             <task name="analyzeTestClassesDependencies" type="ca.cutterslade.gradle.analyze.AnalyzeDependenciesTask">&lt;i&gt;Task group: other&lt;i&gt;</task>
             <task name="cleanIdeaModule" type="org.gradle.api.tasks.Delete">&lt;i&gt;Task group: other&lt;i&gt;</task>
-            <task name="sourcesJar" type="org.gradle.api.tasks.bundling.Jar">&lt;i&gt;Task group: other&lt;i&gt;</task>
             <task name="testClasses">Assembles test classes.&lt;p&gt;&lt;i&gt;Task group: build&lt;i&gt;</task>
             <task name="javadoc" type="org.gradle.api.tasks.javadoc.Javadoc">Generates project-level javadoc for use in -javadoc jar&lt;p&gt;&lt;i&gt;Task group: documentation&lt;i&gt;</task>
             <task name="analyzeClassesDependencies" type="ca.cutterslade.gradle.analyze.AnalyzeDependenciesTask">&lt;i&gt;Task group: other&lt;i&gt;</task>
@@ -311,7 +302,6 @@
             <task name="test" type="org.gradle.api.tasks.testing.Test">Runs the unit tests.&lt;p&gt;&lt;i&gt;Task group: verification&lt;i&gt;</task>
             <task name="dependencyManagement" type="io.spring.gradle.dependencymanagement.internal.report.DependencyManagementReportTask">&lt;i&gt;Task group: other&lt;i&gt;</task>
             <task name="compileJava" type="org.gradle.api.tasks.compile.JavaCompile">Compiles main Java source.&lt;p&gt;&lt;i&gt;Task group: other&lt;i&gt;</task>
-            <task name="javadocJar" type="org.gradle.api.tasks.bundling.Jar">&lt;i&gt;Task group: other&lt;i&gt;</task>
             <task name="dependencyInsight" type="org.gradle.api.tasks.diagnostics.DependencyInsightReportTask">Displays the insight into a specific dependency in project ':jcl-functions'.&lt;p&gt;&lt;i&gt;Task group: help&lt;i&gt;</task>
             <task name="check">Runs all checks.&lt;p&gt;&lt;i&gt;Task group: verification&lt;i&gt;</task>
             <task name="jacocoTestReport" type="org.gradle.testing.jacoco.tasks.JacocoReport">&lt;i&gt;Task group: other&lt;i&gt;</task>
@@ -368,7 +358,6 @@
             <task name="buildEnvironment" type="org.gradle.api.tasks.diagnostics.BuildEnvironmentReportTask">Displays all buildscript dependencies declared in project ':jcl-reader'.&lt;p&gt;&lt;i&gt;Task group: help&lt;i&gt;</task>
             <task name="analyzeTestClassesDependencies" type="ca.cutterslade.gradle.analyze.AnalyzeDependenciesTask">&lt;i&gt;Task group: other&lt;i&gt;</task>
             <task name="cleanIdeaModule" type="org.gradle.api.tasks.Delete">&lt;i&gt;Task group: other&lt;i&gt;</task>
-            <task name="sourcesJar" type="org.gradle.api.tasks.bundling.Jar">&lt;i&gt;Task group: other&lt;i&gt;</task>
             <task name="testClasses">Assembles test classes.&lt;p&gt;&lt;i&gt;Task group: build&lt;i&gt;</task>
             <task name="javadoc" type="org.gradle.api.tasks.javadoc.Javadoc">Generates project-level javadoc for use in -javadoc jar&lt;p&gt;&lt;i&gt;Task group: documentation&lt;i&gt;</task>
             <task name="analyzeClassesDependencies" type="ca.cutterslade.gradle.analyze.AnalyzeDependenciesTask">&lt;i&gt;Task group: other&lt;i&gt;</task>
@@ -381,7 +370,6 @@
             <task name="test" type="org.gradle.api.tasks.testing.Test">Runs the unit tests.&lt;p&gt;&lt;i&gt;Task group: verification&lt;i&gt;</task>
             <task name="dependencyManagement" type="io.spring.gradle.dependencymanagement.internal.report.DependencyManagementReportTask">&lt;i&gt;Task group: other&lt;i&gt;</task>
             <task name="compileJava" type="org.gradle.api.tasks.compile.JavaCompile">Compiles main Java source.&lt;p&gt;&lt;i&gt;Task group: other&lt;i&gt;</task>
-            <task name="javadocJar" type="org.gradle.api.tasks.bundling.Jar">&lt;i&gt;Task group: other&lt;i&gt;</task>
             <task name="dependencyInsight" type="org.gradle.api.tasks.diagnostics.DependencyInsightReportTask">Displays the insight into a specific dependency in project ':jcl-reader'.&lt;p&gt;&lt;i&gt;Task group: help&lt;i&gt;</task>
             <task name="check">Runs all checks.&lt;p&gt;&lt;i&gt;Task group: verification&lt;i&gt;</task>
             <task name="jacocoTestReport" type="org.gradle.testing.jacoco.tasks.JacocoReport">&lt;i&gt;Task group: other&lt;i&gt;</task>

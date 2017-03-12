@@ -557,7 +557,7 @@ public class MultiArrayStructImpl extends ArrayStructImpl {
 		try {
 			rowMajorIndexInternal(subscripts);
 			return TStruct.INSTANCE;
-		} catch (final ErrorException ignore) {
+		} catch (final ErrorException ignored) {
 			return NILStruct.INSTANCE;
 		}
 	}

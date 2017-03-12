@@ -1,5 +1,6 @@
 package jcl.lang.internal;
 
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -11,6 +12,8 @@ import java.util.function.IntConsumer;
 import java.util.function.IntPredicate;
 import java.util.stream.Collectors;
 
+import javaslang.collection.CharSeq;
+import jcl.lang.AdjustArrayContext;
 import jcl.lang.ArrayStruct;
 import jcl.lang.BooleanStruct;
 import jcl.lang.CharacterStruct;
@@ -25,21 +28,43 @@ import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.factory.LispStructFactory;
 import jcl.lang.internal.number.IntegerStructImpl;
 import jcl.lang.readtable.SyntaxType;
+import jcl.lang.statics.CharacterConstants;
 import jcl.lang.statics.PrinterVariables;
 import jcl.lang.statics.ReaderVariables;
 import jcl.type.CharacterType;
 import jcl.type.LispType;
-import jcl.type.SimpleStringType;
 import jcl.type.StringType;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.text.WordUtils;
 
 /**
  * The {@link StringStructImpl} is the object representation of a Lisp 'string' type.
  */
 public final class StringStructImpl extends VectorStructImpl implements StringStruct {
 
+	private CharSeq charSeq;
+
+	/**
+	 * {@link StringBuilder} containing the implementation contents of the {@link StringStruct}.
+	 */
 	private StringBuilder contents;
 
+	/**
+	 * Constructor for creating a new instance.
+	 *
+	 * @param stringType
+	 * 		the {@link StringType} type of string
+	 * @param size
+	 * 		the size of the structure
+	 * @param elementType
+	 * 		the {@link LispType} type of the elements
+	 * @param contents
+	 * 		the {@link StringBuilder} contents
+	 * @param isAdjustable
+	 * 		whether or not the structure is adjustable
+	 * @param fillPointer
+	 * 		the fill-pointer value of the structure
+	 */
 	public StringStructImpl(final StringType stringType, final Integer size, final LispType elementType,
 	                        final StringBuilder contents, final boolean isAdjustable,
 	                        final Integer fillPointer) {
@@ -47,6 +72,24 @@ public final class StringStructImpl extends VectorStructImpl implements StringSt
 		this.contents = contents;
 	}
 
+	/**
+	 * Constructor for creating a new instance.
+	 *
+	 * @param stringType
+	 * 		the {@link StringType} type of string
+	 * @param size
+	 * 		the size of the structure
+	 * @param elementType
+	 * 		the {@link LispType} type of the elements
+	 * @param displacedTo
+	 * 		the {@link ArrayStruct} structure this instance will be displaced to
+	 * @param displacedIndexOffset
+	 * 		the offset indicating where in the displaced to structure this structures contents will start from
+	 * @param isAdjustable
+	 * 		whether or not the structure is adjustable
+	 * @param fillPointer
+	 * 		the fill-pointer value of the structure
+	 */
 	public StringStructImpl(final StringType stringType, final Integer size, final LispType elementType,
 	                        final ArrayStruct displacedTo, final Integer displacedIndexOffset,
 	                        final boolean isAdjustable, final Integer fillPointer) {
@@ -63,13 +106,29 @@ public final class StringStructImpl extends VectorStructImpl implements StringSt
 		return charInternal(indexInt);
 	}
 
-	private CharacterStruct charInternal(final int indexInt) {
+	/**
+	 * Internal handling of character retrieval from the underlying contents, accounting for both displaced contents and
+	 * structures where the size of the structure is greater than the current number of filled contents.
+	 *
+	 * @param index
+	 * 		the index in the contents to retrieve the {@link CharacterStruct}
+	 *
+	 * @return the {@link CharacterStruct} value within the contents, or {@link CharacterConstants#NULL_CHAR} if the
+	 * value has yet to be populated
+	 */
+	private CharacterStruct charInternal(final int index) {
 		if (displacedTo == null) {
-			final char character = contents.charAt(indexInt);
-			return CharacterStructImpl.valueOf(character);
+			try {
+				final char character = contents.charAt(index);
+				return CharacterStructImpl.valueOf(character);
+			} catch (final StringIndexOutOfBoundsException ignored) {
+				// This is here for when the 'totalSize' is more than the contents.
+				// Typically will only happen with adjusted strings.
+				return CharacterConstants.NULL_CHAR;
+			}
 		}
 
-		final IntegerStruct indexToGet = IntegerStructImpl.valueOf(displacedIndexOffset + indexInt);
+		final IntegerStruct indexToGet = IntegerStructImpl.valueOf(displacedIndexOffset + index);
 		return (CharacterStruct) displacedTo.rowMajorAref(indexToGet);
 	}
 
@@ -79,12 +138,22 @@ public final class StringStructImpl extends VectorStructImpl implements StringSt
 		return setfCharInternal(newElement, indexInt);
 	}
 
-	private CharacterStruct setfCharInternal(final CharacterStruct newElement, final int indexInt) {
+	/**
+	 * Internal handling of character modification within the underlying contents, accounting for displaced contents.
+	 *
+	 * @param newElement
+	 * 		the new element to be set at the provided index location within the contents
+	 * @param index
+	 * 		the index in the contents to modify the existing value with the provided {@code newElement}
+	 *
+	 * @return newElement
+	 */
+	private CharacterStruct setfCharInternal(final CharacterStruct newElement, final int index) {
 		if (displacedTo == null) {
 			final char character = newElement.getCharacter();
-			contents.setCharAt(indexInt, character);
+			contents.setCharAt(index, character);
 		} else {
-			final IntegerStruct indexToSet = IntegerStructImpl.valueOf(displacedIndexOffset + indexInt);
+			final IntegerStruct indexToSet = IntegerStructImpl.valueOf(displacedIndexOffset + index);
 			displacedTo.setfRowMajorAref(newElement, indexToSet);
 		}
 		return newElement;
@@ -102,7 +171,7 @@ public final class StringStructImpl extends VectorStructImpl implements StringSt
 
 	@Override
 	public StringStruct stringCapitalize(final StringIntervalOpContext context) {
-		return casifyString(context, StringUtils::capitalize);
+		return casifyString(context, WordUtils::capitalize);
 	}
 
 	@Override
@@ -117,29 +186,52 @@ public final class StringStructImpl extends VectorStructImpl implements StringSt
 
 	@Override
 	public StringStruct nStringCapitalize(final StringIntervalOpContext context) {
-		return nCasifyString(context, StringUtils::capitalize);
+		return nCasifyString(context, WordUtils::capitalize);
 	}
 
+	/**
+	 * Performs the string case-altering operation function provided on the current string, utilizing the provided
+	 * {@link StringIntervalOpContext} for the start and end values in determining casing boundaries.
+	 *
+	 * @param context
+	 * 		the {@link StringIntervalOpContext} containing the start and end values
+	 * @param casifyOp
+	 * 		the case-altering operation function
+	 *
+	 * @return a new {@link StringStruct} with case-altered contents
+	 */
 	private StringStruct casifyString(final StringIntervalOpContext context,
 	                                  final Function<String, String> casifyOp) {
 		final int startInt = getStringOpStart(context);
 		final int endInt = getStringOpEnd(context, startInt);
 
-		final String str = toJavaString(true);
+		final String str = toJavaString(false);
 		final StringBuilder builder = new StringBuilder(str);
 
 		String strToCasify = builder.substring(startInt, endInt);
 		strToCasify = casifyOp.apply(strToCasify);
 		builder.replace(startInt, endInt, strToCasify);
 
-		return new StringStructImpl(SimpleStringType.INSTANCE,
+		return new StringStructImpl((StringType) getType(),
 		                            builder.length(),
-		                            CharacterType.INSTANCE,
+		                            elementType,
 		                            builder,
 		                            false,
 		                            null);
 	}
 
+	/**
+	 * Destructively modifies the current {@link #contents} or {@link #displacedTo} contents by utilizing the provided
+	 * case-altering operation function and the provided {@link .StringIntervalOpContext} for the start and end values
+	 * in determining casing boundaries.
+	 *
+	 * @param context
+	 * 		the {@link StringIntervalOpContext} containing the start and end values
+	 * @param casifyOp
+	 * 		the case-altering operation function
+	 *
+	 * @return the {@link StringStruct} instance
+	 */
 	private StringStruct nCasifyString(final StringIntervalOpContext context,
 	                                   final Function<String, String> casifyOp) {
 		final int startInt = getStringOpStart(context);
@@ -187,6 +279,16 @@ public final class StringStructImpl extends VectorStructImpl implements StringSt
 		return trimString(characterBag, StringUtils::stripEnd);
 	}
 
+	/**
+	 * Trims the string based on the provided trimming operation and the {@link SequenceStruct} character bag.
+	 *
+	 * @param characterBag
+	 * 		the collection of characters to trim from the string
+	 * @param trimOp
+	 * 		the trimming operation to perform
+	 *
+	 * @return a new string with the bag of characters trimmed from the string
+	 */
 	private StringStruct trimString(final SequenceStruct characterBag,
 	                                final BiFunction<String, String, String> trimOp) {
 		final List<LispStruct> nonCharacters
@@ -206,12 +308,12 @@ public final class StringStructImpl extends VectorStructImpl implements StringSt
 				                       StringBuilder::append)
 				              .toString();
 
-		final String str = toJavaString(true);
+		final String str = toJavaString(false);
 		final String trimmedString = trimOp.apply(str, stripChars);
-		return new StringStructImpl(SimpleStringType.INSTANCE,
+		return new StringStructImpl((StringType) getType(),
 		                            trimmedString.length(),
-		                            CharacterType.INSTANCE,
-		                            new StringBuilder(),
+		                            elementType,
+		                            new StringBuilder(trimmedString),
 		                            false,
 		                            null);
 	}
@@ -308,33 +410,74 @@ public final class StringStructImpl extends VectorStructImpl implements StringSt
 		                            StringUtils::indexOfDifference);
 	}
 
+	/**
+	 * Compares this string using the provided comparison function with the {@link StringEqualityContext#struct}
+	 * string, utilizing the provided {@link StringEqualityContext} for the start and end values for each string in the
+	 * comparison.
+	 *
+	 * @param context
+	 * 		the {@link StringEqualityContext} containing the string to compare to as well as start and end values for each
+	 * 		string in the comparison
+	 * @param stringCompareToOp
+	 * 		the equality comparison function
+	 *
+	 * @return true if the strings are equal; false otherwise
+	 */
 	private BooleanStruct equalComparison(final StringEqualityContext context,
 	                                      final BiFunction<String, String, Integer> stringCompareToOp) {
 		final EqualityStrings equalityStrings = getEqualityStrings(context);
-		final String str1 = equalityStrings.getStr1();
-		final String str2 = equalityStrings.getStr2();
+		final String str1 = equalityStrings.str1;
+		final String str2 = equalityStrings.str2;
 
 		final int result = stringCompareToOp.apply(str1, str2);
 		return LispStructFactory.toBoolean(result == 0);
 	}
 
+	/**
+	 * Compares this string using the provided comparison function with the {@link StringEqualityContext#struct}
+	 * string, utilizing the provided {@link StringEqualityContext} for the start and end values for each string in the
+	 * comparison.
+	 *
+	 * @param context
+	 * 		the {@link StringEqualityContext} containing the string to compare to as well as start and end values for each
+	 * 		string in the comparison
+	 * @param stringCompareToOp
+	 * 		the equality comparison function
+	 * @param comparisonOp
+	 * 		the numeric comparison operation for determining level of equivalence
+	 * @param mismatchIndexOp
+	 * 		the operation for locating the mismatched character index in the case of inequality
+	 *
+	 * @return {@link NILStruct#INSTANCE} if the strings are equal; the mismatching index otherwise
+	 */
 	private LispStruct inequalityComparison(final StringEqualityContext context,
 	                                        final BiFunction<String, String, Integer> stringCompareToOp,
 	                                        final IntPredicate comparisonOp,
 	                                        final BiFunction<String, String, Integer> mismatchIndexOp) {
 		final EqualityStrings equalityStrings = getEqualityStrings(context);
-		final String str1 = equalityStrings.getStr1();
-		final String str2 = equalityStrings.getStr2();
+		final String str1 = equalityStrings.str1;
+		final String str2 = equalityStrings.str2;
 
 		final int result = stringCompareToOp.apply(str1, str2);
 		if (comparisonOp.test(result)) {
-			return NILStruct.INSTANCE;
-		} else {
 			final int mismatchIndex = mismatchIndexOp.apply(str1, str2);
 			return IntegerStructImpl.valueOf(mismatchIndex);
+		} else {
+			return NILStruct.INSTANCE;
 		}
 	}
 
+	/**
+	 * Adapted from {@link StringUtils#indexOfDifference(CharSequence, CharSequence)} to determine the index where the
+	 * two provided {@link CharSequence} objects are the same.
+	 *
+	 * @param cs1
+	 * 		the first {@link CharSequence}
+	 * @param cs2
+	 * 		the second {@link CharSequence}
+	 *
+	 * @return the index where cs1 and cs2 begin to differ; -1 if they are equal
+	 */
 	private static int indexOfSameness(final CharSequence cs1, final CharSequence cs2) {
 		if (cs1 == cs2) {
 			return 0;
@@ -354,6 +497,16 @@ public final class StringStructImpl extends VectorStructImpl implements StringSt
 		return StringUtils.INDEX_NOT_FOUND;
 	}
 
+	/**
+	 * Retrieves an {@link EqualityStrings} object containing the two strings to compare for equality, accounting for
+	 * starting and ending indexes for both strings.
+	 *
+	 * @param context
+	 * 		the {@link StringEqualityContext} containing the string to compare this string to as well as starting and
+	 * 		ending indicies for each string in the equality operation
+	 *
+	 * @return an {@link EqualityStrings} object containing the two strings to compare for equality
+	 */
 	private EqualityStrings getEqualityStrings(final StringEqualityContext context) {
 		final StringIntervalOpContext context1 = context.getContext1();
 		final StringIntervalOpContext context2 = context.getContext2();
@@ -364,47 +517,66 @@ public final class StringStructImpl extends VectorStructImpl implements StringSt
 		final int start2 = getStringOpStart(context2);
 		final int end2 = getStringOpEnd(context2, start2);
 
-		final String str1 = toJavaString(true);
+		final String str1 = toJavaString(false);
 		final String str2 = context.getStruct()
-		                           .toJavaString(true);
+		                           .toJavaString(false);
 
 		final String subStr1 = str1.substring(start1, end1);
 		final String subStr2 = str2.substring(start2, end2);
 		return new EqualityStrings(subStr1, subStr2);
 	}
 
+	/**
+	 * A wrapper for the {@link String} objects to be used in an equality operation.
+	 */
 	private static final class EqualityStrings {
 
-		private final String str1;
-		private final String str2;
+		/**
+		 * The first string to compare.
+		 */
+		final String str1;
 
+		/**
+		 * The second string to compare.
+		 */
+		final String str2;
+
+		/**
+		 * Private constructor initializing the object.
+		 *
+		 * @param str1
+		 * 		the first string to compare
+		 * @param str2
+		 * 		the second string to compare
+		 */
 		private EqualityStrings(final String str1, final String str2) {
 			this.str1 = str1;
 			this.str2 = str2;
 		}
-
-		private String getStr1() {
-			return str1;
-		}
-
-		private String getStr2() {
-			return str2;
-		}
 	}
 
 	@Override
-	public String toJavaString(final boolean fillPointerRestriction) {
+	public String toJavaString(final boolean ignoreFillPointer) {
 		if (displacedTo != null) {
-			return getDisplacedToAsJavaString(fillPointerRestriction);
+			return getDisplacedToAsJavaString(ignoreFillPointer);
 		}
-		if (fillPointerRestriction && (fillPointer != null)) {
+		if (!ignoreFillPointer && (fillPointer != null)) {
 			return contents.substring(0, fillPointer);
 		}
 		return contents.toString();
 	}
 
-	private String getDisplacedToAsJavaString(final boolean fillPointerRestriction) {
-		final int size = (fillPointerRestriction && (fillPointer != null)) ? fillPointer : totalSize;
+	/**
+	 * Returns this displaced string value as a {@link String}, ignoring the fill-pointer value according to the
+	 * provided {@code ignoreFillPointer} value.
+	 *
+	 * @param ignoreFillPointer
+	 * 		whether or not to ignore the fill-pointer value of the string
+	 *
+	 * @return a {@link String} representation of the displaced string
+	 */
+	private String getDisplacedToAsJavaString(final boolean ignoreFillPointer) {
+		final int size = (!ignoreFillPointer && (fillPointer != null)) ? fillPointer : totalSize;
 		final StringBuilder builder = new StringBuilder();
 		for (int index = 0; index < size; index++) {
 			final IntegerStruct indexToGet = IntegerStructImpl.valueOf(displacedIndexOffset + index);
@@ -414,6 +586,14 @@ public final class StringStructImpl extends VectorStructImpl implements StringSt
 		return builder.toString();
 	}
 
+	/**
+	 * Retrieves the starting value from the {@link StringIntervalOpContext} for a string operation.
+	 *
+	 * @param context
+	 * 		the {@link StringIntervalOpContext} containing starting and ending values for string operations
+	 *
+	 * @return the start value for the string operation
+	 */
 	private int getStringOpStart(final StringIntervalOpContext context) {
 		final IntegerStruct start = context.getStart();
 		final int startInt;
@@ -430,6 +610,16 @@ public final class StringStructImpl extends VectorStructImpl implements StringSt
 		return startInt;
 	}
 
+	/**
+	 * Retrieves the ending value from the {@link StringIntervalOpContext} for a string operation.
+	 *
+	 * @param context
+	 * 		the {@link StringIntervalOpContext} containing starting and ending values for string operations
+	 * @param startInt
+	 * 		the starting value for the string operation
+	 *
+	 * @return the end value for the string operation
+	 */
 	private int getStringOpEnd(final StringIntervalOpContext context, final int startInt) {
 		final IntegerStruct end = context.getEnd();
 		final int endInt;
@@ -496,7 +686,7 @@ public final class StringStructImpl extends VectorStructImpl implements StringSt
 			if (displacedTo == null) {
 				contents.ensureCapacity(contents.capacity() + extension.intValue());
 			} else {
-				final String displacedContents = getDisplacedToAsJavaString(true);
+				final String displacedContents = getDisplacedToAsJavaString(false);
 				contents = new StringBuilder(displacedContents.length() + extension.intValue());
 				contents.append(displacedContents);
 
@@ -515,13 +705,202 @@ public final class StringStructImpl extends VectorStructImpl implements StringSt
 	 */
 
 	@Override
-	public StringStruct adjustArray(final AdjustArrayContext context) {
-		return this; // TODO
+	public ArrayStruct adjustArray(final AdjustArrayContext context) {
+
+		final List<IntegerStruct> newDimensions = context.getDimensions();
+		final LispType newElementType = context.getElementType();
+		final SequenceStruct newInitialContents = context.getInitialContents();
+		final ArrayStruct newDisplacedTo = context.getDisplacedTo();
+
+		if (newDimensions.size() != 1) {
+			throw new ErrorException("Array cannot be adjusted to a different array dimension rank.");
+		}
+		final LispType upgradedET = ArrayStruct.upgradedArrayElementType(newElementType);
+
+		if (elementType.isNotOfType(upgradedET)) {
+			throw new TypeErrorException(
+					"Provided upgraded-array-element-type " + upgradedET + " must be the same as initial upgraded-array-element-type " + elementType + '.');
+		}
+
+		if (newDisplacedTo != null) {
+			return adjustDisplacedTo(context, upgradedET);
+		} else if (newInitialContents != null) {
+			return adjustInitialContents(context, upgradedET);
+		} else {
+			return adjustInitialElement(context, upgradedET);
+		}
+	}
+
+	private ArrayStruct adjustDisplacedTo(final AdjustArrayContext context, final LispType upgradedET) {
+
+		final IntegerStruct newTotalSize = context.getDimensions().get(0);
+		final BooleanStruct newAdjustable = context.getAdjustable();
+		final IntegerStruct newFillPointer = context.getFillPointer();
+		final ArrayStruct newDisplacedTo = context.getDisplacedTo();
+		final IntegerStruct newDisplacedIndexOffset = context.getDisplacedIndexOffset();
+
+		final LispType displacedElementType = newDisplacedTo.arrayElementType();
+		if (displacedElementType.isNotOfType(upgradedET)) {
+			throw new TypeErrorException(
+					"Provided array for displacement " + newDisplacedTo + " is not a subtype of the upgraded-array-element-type " + upgradedET + '.');
+		}
+
+		try {
+			newDisplacedTo.rowMajorAref(newDisplacedIndexOffset);
+		} catch (final ErrorException ignored) {
+			throw new ErrorException("Requested size is too large to displace to " + newDisplacedTo + '.');
+		}
+
+		if (isAdjustable) {
+			totalSize = newTotalSize.intValue();
+			elementType = upgradedET;
+			isAdjustable = newAdjustable.booleanValue();
+			fillPointer = (newFillPointer == null) ? null : newFillPointer.intValue();
+			contents = null;
+			displacedTo = newDisplacedTo;
+			displacedIndexOffset = newDisplacedIndexOffset.intValue();
+			return this;
+		} else {
+			return StringStruct.builder(newTotalSize)
+			                   .elementType((CharacterType) upgradedET)
+			                   .adjustable(newAdjustable)
+			                   .fillPointer(newFillPointer)
+			                   .displacedTo(newDisplacedTo)
+			                   .displacedIndexOffset(newDisplacedIndexOffset)
+			                   .build();
+		}
+	}
+
+	private ArrayStruct adjustInitialContents(final AdjustArrayContext context, final LispType upgradedET) {
+
+		final IntegerStruct newTotalSize = context.getDimensions().get(0);
+		final SequenceStruct newInitialContents = context.getInitialContents();
+		final BooleanStruct newAdjustable = context.getAdjustable();
+		final IntegerStruct newFillPointer = context.getFillPointer();
+
+		for (final LispStruct initialElement : newInitialContents) {
+			final LispType currentElementType = initialElement.getType();
+			if (currentElementType.isNotOfType(upgradedET)) {
+				throw new TypeErrorException(
+						"Provided element " + initialElement + " is not a subtype of the upgraded-array-element-type " + upgradedET + '.');
+			}
+		}
+
+		if (isAdjustable) {
+			final int newTotalSizeInt = newTotalSize.intValue();
+			final boolean newAdjustableBoolean = newAdjustable.booleanValue();
+			final Integer newFillPointerInt = (newFillPointer == null) ? null : newFillPointer.intValue();
+
+			final List<CharacterStruct> validContents
+					= ArrayStruct.getValidContents(Collections.singletonList(newTotalSizeInt),
+					                               upgradedET,
+					                               newInitialContents);
+			contents = validContents.stream()
+			                        .mapToInt(CharacterStruct::getCodePoint)
+			                        .collect(StringBuilder::new,
+			                                 StringBuilder::appendCodePoint,
+			                                 StringBuilder::append);
+
+			totalSize = newTotalSizeInt;
+			elementType = upgradedET;
+			isAdjustable = newAdjustableBoolean;
+			fillPointer = newFillPointerInt;
+			displacedTo = null;
+			displacedIndexOffset = 0;
+			return this;
+		} else {
+			return StringStruct.builder(newTotalSize)
+			                   .elementType((CharacterType) upgradedET)
+			                   .adjustable(newAdjustable)
+			                   .fillPointer(newFillPointer)
+			                   .initialContents(newInitialContents)
+			                   .build();
+		}
+	}
+
+	private ArrayStruct adjustInitialElement(final AdjustArrayContext context, final LispType upgradedET) {
+		final LispStruct newInitialElement = context.getInitialElement();
+
+		if (newInitialElement != null) {
+			final LispType initialElementType = newInitialElement.getType();
+			if (initialElementType.isNotOfType(upgradedET)) {
+				throw new TypeErrorException(
+						"Provided element " + newInitialElement + " is not a subtype of the upgraded-array-element-type " + upgradedET + '.');
+			}
+			if (!(newInitialElement instanceof CharacterStruct)) {
+				throw new TypeErrorException(
+						"Provided element " + newInitialElement + " is not a CHARACTER.");
+			}
+		}
+
+		final IntegerStruct newTotalSize = context.getDimensions().get(0);
+		final int newTotalSizeInt = newTotalSize.intValue();
+
+		final BooleanStruct newAdjustable = context.getAdjustable();
+		final boolean newAdjustableBoolean = newAdjustable.booleanValue();
+
+		final IntegerStruct newFillPointer = context.getFillPointer();
+		final Integer newFillPointerInt = (newFillPointer == null) ? null : newFillPointer.intValue();
+
+		if (isAdjustable) {
+			if (displacedTo == null) {
+				updateContentsWithElement(contents, newInitialElement, totalSize, newTotalSizeInt);
+			} else {
+				final String displacedContents = getDisplacedToAsJavaString(true);
+				contents = new StringBuilder(displacedContents);
+			}
+			updateContentsWithElement(contents, newInitialElement, totalSize, newTotalSizeInt);
+
+			totalSize = newTotalSizeInt;
+			elementType = upgradedET;
+			isAdjustable = newAdjustableBoolean;
+			fillPointer = newFillPointerInt;
+			displacedTo = null;
+			displacedIndexOffset = 0;
+			return this;
+		} else {
+			final StringBuilder newContents;
+			if (displacedTo == null) {
+				newContents = new StringBuilder(contents);
+			} else {
+				final String displacedContents = getDisplacedToAsJavaString(true);
+				newContents = new StringBuilder(displacedContents);
+			}
+			updateContentsWithElement(newContents, newInitialElement, totalSize, newTotalSizeInt);
+
+			final StringType stringType = StringStruct.Builder.getStringType(
+					newAdjustableBoolean,
+					newFillPointerInt,
+					upgradedET
+			);
+			return new StringStructImpl(stringType,
+			                            newTotalSizeInt,
+			                            upgradedET,
+			                            newContents,
+			                            newAdjustableBoolean,
+			                            newFillPointerInt);
+		}
+	}
+
+	private static void updateContentsWithElement(final StringBuilder newContents, final LispStruct newElement,
+	                                              final int oldTotalSize, final int newTotalSizeInt) {
+		if (newTotalSizeInt < oldTotalSize) {
+			newContents.delete(newTotalSizeInt, newContents.length());
+		} else if (newTotalSizeInt > oldTotalSize) {
+			newContents.ensureCapacity(newTotalSizeInt);
+			for (int i = oldTotalSize; i < newTotalSizeInt; i++) {
+				if (newElement != null) {
+					final int codePoint = ((CharacterStruct) newElement).getCodePoint();
+					newContents.appendCodePoint(codePoint);
+				}
+			}
+		}
 	}
 
 	@Override
 	public CharacterStruct aref(final IntegerStruct... subscripts) {
-		final int rowMajorIndex = rowMajorIndexInternal(subscripts);
+		final IntegerStruct subscript = rowMajorIndexInternal(subscripts);
+		final int rowMajorIndex = validateSubscript(subscript);
 		return charInternal(rowMajorIndex);
 	}
 
@@ -531,7 +910,8 @@ public final class StringStructImpl extends VectorStructImpl implements StringSt
 			throw new TypeErrorException(newElement + " is not a character type.");
 		}
 
-		final int rowMajorIndex = rowMajorIndexInternal(subscripts);
+		final IntegerStruct subscript = rowMajorIndexInternal(subscripts);
+		final int rowMajorIndex = validateSubscript(subscript);
 		return setfCharInternal((CharacterStruct) newElement, rowMajorIndex);
 	}
 
@@ -575,7 +955,7 @@ public final class StringStructImpl extends VectorStructImpl implements StringSt
 	public StringStruct reverse() {
 		final StringBuilder reversedContents;
 		if (displacedTo != null) {
-			final String contentsToReverse = getDisplacedToAsJavaString(true);
+			final String contentsToReverse = getDisplacedToAsJavaString(false);
 			reversedContents = new StringBuilder(contentsToReverse).reverse();
 		} else if (fillPointer == null) {
 			final String contentsToReverse = contents.toString();
@@ -595,7 +975,7 @@ public final class StringStructImpl extends VectorStructImpl implements StringSt
 	@Override
 	public StringStruct nReverse() {
 		if (displacedTo != null) {
-			final String contentsToReverse = getDisplacedToAsJavaString(true);
+			final String contentsToReverse = getDisplacedToAsJavaString(false);
 			final StringBuilder reversedContent = new StringBuilder(contentsToReverse).reverse();
 
 			for (int index = 0; index < reversedContent.length(); index++) {
@@ -639,11 +1019,27 @@ public final class StringStructImpl extends VectorStructImpl implements StringSt
 		);
 	}
 
+	/**
+	 * Iterator for {@link StringStruct} structures without displaced contents.
+	 */
 	private static final class StringIterator implements Iterator<LispStruct> {
 
+		/**
+		 * The contents of the {@link StringStructImpl} being iterated over.
+		 */
 		private final StringBuilder contents;
+
+		/**
+		 * The current index of the iteration.
+		 */
 		private int current;
 
+		/**
+		 * Constructor for building the iterator.
+		 *
+		 * @param contents
+		 * 		the contents of the {@link StringStructImpl} to be iterated over
+		 */
 		private StringIterator(final StringBuilder contents) {
 			this.contents = contents;
 		}
@@ -653,7 +1049,7 @@ public final class StringStructImpl extends VectorStructImpl implements StringSt
 			try {
 				contents.charAt(current);
 				return true;
-			} catch (final StringIndexOutOfBoundsException ignore) {
+			} catch (final StringIndexOutOfBoundsException ignored) {
 				return false;
 			}
 		}
@@ -663,8 +1059,8 @@ public final class StringStructImpl extends VectorStructImpl implements StringSt
 			final char character;
 			try {
 				character = contents.charAt(current);
-			} catch (final StringIndexOutOfBoundsException ex) {
-				throw new NoSuchElementException(ex.getMessage());
+			} catch (final StringIndexOutOfBoundsException ignored) {
+				throw new NoSuchElementException("All elements consumed.");
 			} finally {
 				current++;
 			}
@@ -672,13 +1068,41 @@ public final class StringStructImpl extends VectorStructImpl implements StringSt
 		}
 	}
 
+	/**
+	 * Iterator for {@link StringStruct} structures with displaced contents.
+	 */
 	private static final class DisplacedStringIterator implements Iterator<LispStruct> {
 
+		/**
+		 * The total size of the contents of the {@link StringStructImpl} structure.
+		 */
 		private final int totalSize;
+
+		/**
+		 * The {@link ArrayStruct} the {@link StringStructImpl} is displaced to.
+		 */
 		private final ArrayStruct displacedTo;
+
+		/**
+		 * The offset value into the displaced array structure where the {@link StringStructImpl} starts.
+		 */
 		private final int displacedIndexOffset;
+
+		/**
+		 * The current index of the iteration.
+		 */
 		private int current;
 
+		/**
+		 * Constructor for building the iterator.
+		 *
+		 * @param totalSize
+		 * 		the total size of the contents of the {@link StringStructImpl} structure
+		 * @param displacedTo
+		 * 		the {@link ArrayStruct} the {@link StringStructImpl} is displaced to
+		 * @param displacedIndexOffset
+		 * 		the offset value into the displaced array structure where the {@link StringStructImpl} starts
+		 */
 		private DisplacedStringIterator(final int totalSize,
 		                                final ArrayStruct displacedTo,
 		                                final int displacedIndexOffset) {
@@ -727,7 +1151,7 @@ public final class StringStructImpl extends VectorStructImpl implements StringSt
 		};
 
 		if (displacedTo != null) {
-			final String str = getDisplacedToAsJavaString(true);
+			final String str = getDisplacedToAsJavaString(false);
 			str.codePoints()
 			   .forEach(appendFn);
 		} else if (fillPointer == null) {

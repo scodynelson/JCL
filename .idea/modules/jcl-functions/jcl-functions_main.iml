@@ -16,16 +16,18 @@
     <orderEntry type="library" name="Gradle: commons-io:commons-io:2.5" level="project" />
     <orderEntry type="library" name="Gradle: javax.help:javahelp:2.0.05" level="project" />
     <orderEntry type="library" name="Gradle: org.apache.commons:commons-collections4:4.1" level="project" />
-    <orderEntry type="library" name="Gradle: org.apache.commons:commons-lang3:3.4" level="project" />
-    <orderEntry type="library" name="Gradle: org.ow2.asm:asm-all:5.1" level="project" />
-    <orderEntry type="library" name="Gradle: org.slf4j:slf4j-api:1.7.21" level="project" />
-    <orderEntry type="library" name="Gradle: org.springframework.boot:spring-boot:1.4.2.RELEASE" level="project" />
-    <orderEntry type="library" name="Gradle: org.springframework:spring-context:4.3.4.RELEASE" level="project" />
-    <orderEntry type="library" name="Gradle: org.springframework:spring-beans:4.3.4.RELEASE" level="project" />
+    <orderEntry type="library" name="Gradle: org.apache.commons:commons-lang3:3.5" level="project" />
+    <orderEntry type="library" name="Gradle: org.ow2.asm:asm-all:5.2" level="project" />
+    <orderEntry type="library" name="Gradle: org.slf4j:slf4j-api:1.7.22" level="project" />
+    <orderEntry type="library" name="Gradle: org.springframework.boot:spring-boot:1.5.1.RELEASE" level="project" />
+    <orderEntry type="library" name="Gradle: org.springframework:spring-context:4.3.6.RELEASE" level="project" />
+    <orderEntry type="library" name="Gradle: org.springframework:spring-beans:4.3.6.RELEASE" level="project" />
+    <orderEntry type="library" name="Gradle: io.javaslang:javaslang:2.0.5" level="project" />
     <orderEntry type="library" name="Gradle: org.apache.commons:commons-math3:3.6.1" level="project" />
     <orderEntry type="library" name="Gradle: org.apfloat:apfloat:1.8.2" level="project" />
-    <orderEntry type="library" name="Gradle: org.springframework:spring-core:4.3.4.RELEASE" level="project" />
-    <orderEntry type="library" name="Gradle: org.springframework:spring-aop:4.3.4.RELEASE" level="project" />
-    <orderEntry type="library" name="Gradle: org.springframework:spring-expression:4.3.4.RELEASE" level="project" />
+    <orderEntry type="library" name="Gradle: org.springframework:spring-core:4.3.6.RELEASE" level="project" />
+    <orderEntry type="library" name="Gradle: org.springframework:spring-aop:4.3.6.RELEASE" level="project" />
+    <orderEntry type="library" name="Gradle: org.springframework:spring-expression:4.3.6.RELEASE" level="project" />
+    <orderEntry type="library" name="Gradle: io.javaslang:javaslang-match:2.0.5" level="project" />
   </component>
 </module>

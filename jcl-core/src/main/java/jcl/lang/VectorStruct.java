@@ -116,12 +116,12 @@ public interface VectorStruct extends ArrayStruct, SequenceStruct {
 	}
 
 	@Override
-	default SequenceStruct reverse() {
+	default VectorStruct reverse() {
 		throw new UnsupportedOperationException("Not supported yet.");
 	}
 
 	@Override
-	default SequenceStruct nReverse() {
+	default VectorStruct nReverse() {
 		throw new UnsupportedOperationException("Not supported yet.");
 	}
 
@@ -234,7 +234,7 @@ public interface VectorStruct extends ArrayStruct, SequenceStruct {
 
 				try {
 					displacedTo.rowMajorAref(displacedIndexOffset);
-				} catch (final ErrorException ignore) {
+				} catch (final ErrorException ignored) {
 					throw new ErrorException("Requested size is too large to displace to " + displacedTo + '.');
 				}
 

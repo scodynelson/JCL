@@ -234,22 +234,26 @@ public class VectorStructImplTest {
 
 	@Test
 	public void test_arrayInBoundsP_False_WrongNumberOfSubscripts_Less() {
+		thrown.expect(ErrorException.class);
+		thrown.expectMessage(containsString("Wrong number of subscripts"));
+
 		final ArrayStruct array
 				= VectorStruct.builder(IntegerStruct.TWO)
 				              .initialElement(IntegerStruct.ZERO)
 				              .build();
-		final BooleanStruct result = array.arrayInBoundsP();
-		Assert.assertThat(result.booleanValue(), is(false));
+		array.arrayInBoundsP();
 	}
 
 	@Test
 	public void test_arrayInBoundsP_False_WrongNumberOfSubscripts_More() {
+		thrown.expect(ErrorException.class);
+		thrown.expectMessage(containsString("Wrong number of subscripts"));
+
 		final ArrayStruct array
 				= VectorStruct.builder(IntegerStruct.TWO)
 				              .initialElement(IntegerStruct.ZERO)
 				              .build();
-		final BooleanStruct result = array.arrayInBoundsP(IntegerStruct.ONE, IntegerStruct.ONE);
-		Assert.assertThat(result.booleanValue(), is(false));
+		array.arrayInBoundsP(IntegerStruct.ONE, IntegerStruct.ONE);
 	}
 
 	@Test

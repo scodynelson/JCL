@@ -55,7 +55,7 @@ public class NILBitArrayStructImpl extends NILArrayStructImpl implements BitArra
 	                                     final BooleanStruct isAdjustable) {
 		try {
 			displacedTo.rowMajorAref(displacedIndexOffset);
-		} catch (final ErrorException ignore) {
+		} catch (final ErrorException ignored) {
 			throw new ErrorException("Requested size is too large to displace to " + displacedTo + '.');
 		}
 

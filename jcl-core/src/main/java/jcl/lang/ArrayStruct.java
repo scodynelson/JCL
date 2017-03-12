@@ -28,67 +28,8 @@ import jcl.type.TType;
  */
 public interface ArrayStruct extends LispStruct {
 
-	class AdjustArrayContext {
-
-		private final IntegerStruct[] dimensions;
-		private LispType elementType;
-		private LispStruct initialElement;
-		private SequenceStruct initialContents;
-		private BooleanStruct adjustable = NILStruct.INSTANCE;
-		private IntegerStruct fillPointer;
-		private ArrayStruct displacedTo;
-		private IntegerStruct displacedIndexOffset = IntegerStruct.ZERO;
-
-		private AdjustArrayContext(final IntegerStruct... dimensions) {
-			this.dimensions = dimensions;
-		}
-
-		public AdjustArrayContext elementType(final LispType elementType) {
-			this.elementType = elementType;
-			return this;
-		}
-
-		public AdjustArrayContext initialElement(final LispStruct initialElement) {
-			this.initialElement = initialElement;
-			return this;
-		}
-
-		public AdjustArrayContext initialContents(final SequenceStruct initialContents) {
-			this.initialContents = initialContents;
-			return this;
-		}
-
-		public AdjustArrayContext adjustable(final BooleanStruct adjustable) {
-			this.adjustable = adjustable;
-			return this;
-		}
-
-		public AdjustArrayContext fillPointer(final IntegerStruct fillPointer) {
-			this.fillPointer = fillPointer;
-			return this;
-		}
-
-		public AdjustArrayContext displacedTo(final ArrayStruct displacedTo) {
-			this.displacedTo = displacedTo;
-			return this;
-		}
-
-		public AdjustArrayContext displacedIndexOffset(final IntegerStruct displacedIndexOffset) {
-			this.displacedIndexOffset = displacedIndexOffset;
-			return this;
-		}
-
-		public AdjustArrayContext build() {
-			return this;
-		}
-
-		public static AdjustArrayContext builder(final IntegerStruct... dimensions) {
-			return new AdjustArrayContext(dimensions);
-		}
-	}
-
 	default ArrayStruct adjustArray(final AdjustArrayContext context) {
-		return this;
+		return null;
 	}
 
 	ArrayStruct adjustArray(final List<IntegerStruct> dimensions, final LispType elementType,
@@ -335,7 +276,7 @@ public interface ArrayStruct extends LispStruct {
 
 				try {
 					displacedTo.rowMajorAref(displacedIndexOffset);
-				} catch (final ErrorException ignore) {
+				} catch (final ErrorException ignored) {
 					throw new ErrorException("Requested size is too large to displace to " + displacedTo + '.');
 				}
 

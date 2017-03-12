@@ -97,7 +97,7 @@ public interface BitVectorStruct extends VectorStruct, BitArrayStruct {
 
 				try {
 					displacedTo.rowMajorAref(displacedIndexOffset);
-				} catch (final ErrorException ignore) {
+				} catch (final ErrorException ignored) {
 					throw new ErrorException("Requested size is too large to displace to " + displacedTo + '.');
 				}
 

@@ -147,7 +147,7 @@ public class NILArrayStructImpl extends ArrayStructImpl {
 
 		try {
 			displacedTo.rowMajorAref(displacedIndexOffset);
-		} catch (final ErrorException ignore) {
+		} catch (final ErrorException ignored) {
 			throw new ErrorException("Requested size is too large to displace to " + displacedTo + '.');
 		}
 
@@ -282,7 +282,7 @@ public class NILArrayStructImpl extends ArrayStructImpl {
 
 		try {
 			displacedTo.rowMajorAref(displacedIndexOffset);
-		} catch (final ErrorException ignore) {
+		} catch (final ErrorException ignored) {
 			throw new ErrorException("Requested size is too large to displace to " + displacedTo + '.');
 		}
 

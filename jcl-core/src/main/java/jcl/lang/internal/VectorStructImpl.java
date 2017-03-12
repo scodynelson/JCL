@@ -114,12 +114,21 @@ public class VectorStructImpl extends ArrayStructImpl implements VectorStruct {
 
 	@Override
 	public IntegerStruct fillPointer() {
+		if (fillPointer == null) {
+			throw new TypeErrorException("VECTOR has no fill-pointer to retrieve.");
+		}
 		return IntegerStructImpl.valueOf(fillPointer);
 	}
 
 	@Override
 	public IntegerStruct setfFillPointer(final IntegerStruct fillPointer) {
-		this.fillPointer = fillPointer.intValue();
+		final int intValue = fillPointer.intValue();
+		if ((intValue < 0) || (intValue > totalSize)) {
+			throw new ErrorException(
+					"Fill-pointer " + fillPointer + " value is out of bounds for VECTOR with size " + totalSize + '.');
+		}
+
+		this.fillPointer = intValue;
 		return fillPointer;
 	}
 
@@ -272,7 +281,7 @@ public class VectorStructImpl extends ArrayStructImpl implements VectorStruct {
 
 		try {
 			displacedTo.rowMajorAref(displacedIndexOffset);
-		} catch (final ErrorException ignore) {
+		} catch (final ErrorException ignored) {
 			throw new ErrorException("Requested size is too large to displace to " + displacedTo + '.');
 		}
 
@@ -294,7 +303,8 @@ public class VectorStructImpl extends ArrayStructImpl implements VectorStruct {
 
 	@Override
 	public LispStruct aref(final IntegerStruct... subscripts) {
-		final int rowMajorIndex = rowMajorIndexInternal(subscripts);
+		final IntegerStruct subscript = rowMajorIndexInternal(subscripts);
+		final int rowMajorIndex = validateSubscript(subscript);
 		if (displacedTo == null) {
 			return contents.get(rowMajorIndex);
 		}
@@ -305,7 +315,8 @@ public class VectorStructImpl extends ArrayStructImpl implements VectorStruct {
 
 	@Override
 	public LispStruct setfAref(final LispStruct newElement, final IntegerStruct... subscripts) { // TODO: type check
-		final int rowMajorIndex = rowMajorIndexInternal(subscripts);
+		final IntegerStruct subscript = rowMajorIndexInternal(subscripts);
+		final int rowMajorIndex = validateSubscript(subscript);
 		if (displacedTo == null) {
 			contents.set(rowMajorIndex, newElement);
 		} else {
@@ -336,10 +347,11 @@ public class VectorStructImpl extends ArrayStructImpl implements VectorStruct {
 
 	@Override
 	public BooleanStruct arrayInBoundsP(final IntegerStruct... subscripts) {
+		final IntegerStruct subscript = rowMajorIndexInternal(subscripts);
 		try {
-			rowMajorIndexInternal(subscripts);
+			validateSubscript(subscript);
 			return TStruct.INSTANCE;
-		} catch (final ErrorException ignore) {
+		} catch (final ErrorException ignored) {
 			return NILStruct.INSTANCE;
 		}
 	}
@@ -351,7 +363,8 @@ public class VectorStructImpl extends ArrayStructImpl implements VectorStruct {
 
 	@Override
 	public IntegerStruct arrayRowMajorIndex(final IntegerStruct... subscripts) {
-		final int rowMajorIndex = rowMajorIndexInternal(subscripts);
+		final IntegerStruct subscript = rowMajorIndexInternal(subscripts);
+		final int rowMajorIndex = validateSubscript(subscript);
 		return IntegerStructImpl.valueOf(rowMajorIndex);
 	}
 
@@ -373,16 +386,14 @@ public class VectorStructImpl extends ArrayStructImpl implements VectorStruct {
 		return newElement;
 	}
 
-	protected int rowMajorIndexInternal(final IntegerStruct... subscripts) {
+	protected IntegerStruct rowMajorIndexInternal(final IntegerStruct... subscripts) {
 		final int numberOfSubscripts = subscripts.length;
-
 		if (numberOfSubscripts != 1) {
 			throw new ErrorException(
 					"Wrong number of subscripts, " + numberOfSubscripts + ", for array of rank 1.");
 		}
 
-		final IntegerStruct subscript = subscripts[0];
-		return validateSubscript(subscript);
+		return subscripts[0];
 	}
 
 	protected int validateSubscript(final IntegerStruct subscript) {
@@ -443,12 +454,12 @@ public class VectorStructImpl extends ArrayStructImpl implements VectorStruct {
 	}
 
 	@Override
-	public SequenceStruct reverse() {
+	public VectorStruct reverse() {
 		return this; // TODO
 	}
 
 	@Override
-	public SequenceStruct nReverse() {
+	public VectorStruct nReverse() {
 		return this; // TODO
 	}
 

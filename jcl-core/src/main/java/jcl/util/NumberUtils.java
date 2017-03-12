@@ -31,7 +31,7 @@ public class NumberUtils {
 	public static BigDecimal bigDecimalValue(final BigFraction bigFraction) {
 		try {
 			return bigFraction.bigDecimalValue();
-		} catch (final ArithmeticException ignore) {
+		} catch (final ArithmeticException ignored) {
 			if (LOGGER.isTraceEnabled()) {
 				LOGGER.trace("Loss of precision when converting BigFraction to BigDecimal.");
 			}

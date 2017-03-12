@@ -4,16 +4,14 @@ buildscript {
 	}
 
 	dependencies {
-//		classpath("io.spring.gradle:dependency-management-plugin:0.6.0.RELEASE")
-		classpath("org.springframework.boot:spring-boot-gradle-plugin:1.4.2.RELEASE")
+		classpath("org.springframework.boot:spring-boot-gradle-plugin:1.5.1.RELEASE")
 		classpath("org.springframework.build.gradle:propdeps-plugin:0.0.7")
-//		classpath("org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.2.1")
 		classpath("ca.cutterslade.gradle:gradle-dependency-analyze:1.1.0")
 	}
 }
 
 plugins {
-	id "io.spring.dependency-management" version "1.0.0.RC1"
+	id "io.spring.dependency-management" version "1.0.0.RELEASE"
 	id "org.sonarqube" version "2.2.1"
 }
 
@@ -36,11 +34,12 @@ allprojects {
 	version = "1.0-SNAPSHOT"
 
 	ext.apfloatVersion = "1.8.2"
-	ext.asmAllVersion = "5.1"
+	ext.asmAllVersion = "5.2"
 	ext.commonsMathVersion = "3.6.1"
 	ext.commonsCollectionsVersion = "4.1"
 	ext.icu4jVersion = "58.2"
 	ext.javaHelpVersion = "2.0.05"
+	ext.javasLangVersion = "2.0.5"
 }
 
 subprojects {
@@ -81,10 +80,10 @@ subprojects {
 	test {
 		systemProperty("java.awt.headless", "true")
 //		systemProperty("testGroups", project.properties.get("testGroups"))
-		jacoco {
-			destinationFile = file("$buildDir/jacoco/jacocoTest.exec")
-			classDumpFile = file("$buildDir/jacoco/classpathdumps")
-		}
+//		jacoco {
+//			destinationFile = file("$buildDir/jacoco/jacocoTest.exec")
+//			classDumpFile = file("$buildDir/jacoco/classpathdumps")
+//		}
 	}
 
 	repositories {
@@ -93,7 +92,7 @@ subprojects {
 
 	dependencyManagement {
 		imports {
-			mavenBom "io.spring.platform:platform-bom:Athens-SR1"
+			mavenBom "io.spring.platform:platform-bom:Brussels-RELEASE"
 		}
 	}
 
@@ -102,15 +101,15 @@ subprojects {
 	}
 
 //	dependencies {
-//		ext.jacocoVersion = "0.7.8"
+//		ext.jacocoVersion = "0.7.9"
 //		jacoco("org.jacoco:org.jacoco.agent:${jacocoVersion}:runtime")
 //	}
 
-	gradle.taskGraph.whenReady { taskGraph ->
-		if (taskGraph.hasTask(':sonarqube')) {
-			test.jvmArgs["-javaagent:${configurations.jacoco.asPath}=destfile=${buildDir}/jacoco.exec,includes=jcl.*"]
-		}
-	}
+//	gradle.taskGraph.whenReady { taskGraph ->
+//		if (taskGraph.hasTask(':sonarqube')) {
+//			test.jvmArgs["-javaagent:${configurations.jacoco.asPath}=destfile=${buildDir}/jacoco.exec,includes=jcl.*"]
+//		}
+//	}
 
 	jar {
 		manifest.attributes["Created-By"] = "${System.getProperty("java.version")} (${System.getProperty("java.specification.vendor")})"
@@ -159,30 +158,28 @@ subprojects {
 //		archives javadocJar
 //	}
 
-	jacoco {
-		toolVersion = '0.7.8'
-	}
+//	jacoco {
+//		toolVersion = '0.7.9'
+//	}
 
-	jacocoTestReport {
-		reports {
-			xml.enabled false
-			csv.enabled false
-			html.destination "$buildDir/jacocoHtml"
-		}
-	}
+//	jacocoTestReport {
+//		reports {
+//			xml.enabled false
+//			csv.enabled false
+//			html.destination "${buildDir}/jacocoHtml"
+//		}
+//	}
 	jacocoTestReport.dependsOn(test)
 
 	sonarqube {
 		properties {
 			property "sonar.projectName", "JCL"
-			property "sonar.profile", "JCL"
-			property "sonar.jacoco.reportPath", "$buildDir/jacoco/jacocoTest.exec"
-			property "sonar.java.coveragePlugin", "jacoco"
-
-			property "sonar.host.url", "http://localhost:9000"
-			property "sonar.jdbc.url", "jdbc:h2:tcp://localhost:9092/sonar"
-			property "sonar.jdbc.username", "sonar"
-			property "sonar.jdbc.password", "sonar"
+//			property "sonar.profile", "JCL"
+//			property "sonar.jacoco.reportPath", "$buildDir/jacoco/jacocoTest.exec"
+//			property "sonar.java.coveragePlugin", "jacoco"
+//
+//			property "sonar.host.url", "https://sonarqube.com"
+//			property "sonar.login", ""
 		}
 	}
 }
@@ -192,7 +189,7 @@ project("jcl-core") {
 
 	dependencies {
 		compile("commons-io:commons-io")
-//		compile("io.javaslang:javaslang:2.0.4")
+		compile("io.javaslang:javaslang:${javasLangVersion}")
 		compile("org.apache.commons:commons-lang3")
 		compile("org.apache.commons:commons-math3:${commonsMathVersion}")
 		compile("org.apache.commons:commons-collections4:${commonsCollectionsVersion}")

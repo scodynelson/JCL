@@ -252,14 +252,14 @@ final class NumberTokenAccumulatedReaderState {
 //			try {
 //				final Double d = Double.parseDouble(tokenString);
 //				return DoubleFloatStruct.valueOf(d);
-//			} catch (final NumberFormatException ignore) {
+//			} catch (final NumberFormatException ignored) {
 //				return null;
 //			}
 //		} else {
 //			try {
 //				final Float f = Float.parseFloat(tokenString);
 //				return SingleFloatStruct.valueOf(f);
-//			} catch (final NumberFormatException ignore) {
+//			} catch (final NumberFormatException ignored) {
 //				return null;
 //			}
 //		}
@@ -395,7 +395,7 @@ final class NumberTokenAccumulatedReaderState {
 		final BigDecimal denominatorBigDecimal;
 		try {
 			denominatorBigDecimal = NumberUtils.bigDecimalValue(denominatorTokenString);
-		} catch (final NumberFormatException ignore) {
+		} catch (final NumberFormatException ignored) {
 			// NOTE: we don't check the 'numeratorBigDecimal' because it MUST be an integer token, therefore we won't
 			//       have the issues with the BigDecimal creations
 			return null;
@@ -412,14 +412,14 @@ final class NumberTokenAccumulatedReaderState {
 //			try {
 //				final Double d = bigDecimal.doubleValue();
 //				return DoubleFloatStruct.valueOf(d);
-//			} catch (final NumberFormatException ignore) {
+//			} catch (final NumberFormatException ignored) {
 //				return null;
 //			}
 //		} else {
 //			try {
 //				final Float f = bigDecimal.floatValue();
 //				return SingleFloatStruct.valueOf(f);
-//			} catch (final NumberFormatException ignore) {
+//			} catch (final NumberFormatException ignored) {
 //				return null;
 //			}
 //		}

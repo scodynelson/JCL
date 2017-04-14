@@ -623,6 +623,10 @@ public interface StringStruct extends VectorStruct {
 	 */
 	LispStruct stringGreaterThanOrEqualToIgnoreCase(final StringEqualityContext context);
 
+	default boolean isSimpleString() {
+		return getType().isOfType(SimpleStringType.INSTANCE);
+	}
+
 	/**
 	 * Returns the {@link String} representation of the StringStruct.
 	 *

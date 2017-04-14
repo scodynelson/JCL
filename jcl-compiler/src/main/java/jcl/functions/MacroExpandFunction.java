@@ -30,7 +30,7 @@ public final class MacroExpandFunction extends CommonLispBuiltInFunctionStructBa
 		      FUNCTION_NAME,
 		      Parameters.forFunction(FUNCTION_NAME)
 		                .requiredParameter(FORM_ARGUMENT)
-		                .optionalParameter(ENVIRONMENT_ARGUMENT).withInitialValue(NILStruct.INSTANCE)
+		                .optionalParameter(ENVIRONMENT_ARGUMENT).withInitialValue(Environment.NULL)
 		);
 	}
 

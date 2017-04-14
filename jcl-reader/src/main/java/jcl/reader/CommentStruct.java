@@ -2,7 +2,7 @@
  * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
  */
 
-package jcl.functions.reader;
+package jcl.reader;
 
 import jcl.lang.LispStruct;
 
@@ -37,8 +37,6 @@ public class CommentStruct implements LispStruct {
 
 	@Override
 	public String toString() {
-//		return object.getCommentString();
-		// NOTE: disabling comment printing for now.
-		return "";
+		return commentString;
 	}
 }

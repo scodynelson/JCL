@@ -9,9 +9,9 @@ import java.util.Optional;
 
 import jcl.lang.InputStreamStruct;
 import jcl.lang.LispStruct;
-import jcl.lang.NILStruct;
 import jcl.lang.statics.ReaderVariables;
 import jcl.lang.stream.ReadPeekResult;
+import jcl.reader.CommentStruct;
 import jcl.util.CodePointConstants;
 import org.springframework.stereotype.Component;
 
@@ -46,8 +46,7 @@ public class SemicolonReaderMacroFunction extends ReaderMacroFunctionImpl {
 			nextCodePoint = readResult.getResult();
 		}
 
-//		final String stringValue = stringBuilder.toString();
-//		return new CommentStruct(stringValue);
-		return NILStruct.INSTANCE;
+		final String stringValue = stringBuilder.toString();
+		return new CommentStruct(stringValue);
 	}
 }

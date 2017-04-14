@@ -12,6 +12,7 @@ import jcl.lang.LispStruct;
 import jcl.lang.NILStruct;
 import jcl.lang.statics.ReaderVariables;
 import jcl.lang.stream.ReadPeekResult;
+import jcl.reader.CommentStruct;
 import jcl.util.CodePointConstants;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Component;
@@ -72,8 +73,7 @@ public class SharpVerticalBarReaderMacroFunction extends ReaderMacroFunctionImpl
 			nextReadResult = inputStreamStruct.readChar(true, NILStruct.INSTANCE, false);
 		}
 
-//		final String stringValue = stringBuilder.toString();
-//		return new CommentStruct(stringValue);
-		return NILStruct.INSTANCE;
+		final String stringValue = stringBuilder.toString();
+		return new CommentStruct(stringValue);
 	}
 }

@@ -24,8 +24,9 @@ public class PrognStruct extends CompilerSpecialOperatorStruct {
 
 	@Override
 	public String toString() {
-		return forms.stream()
-		            .map(Object::toString)
-		            .collect(Collectors.joining(" "));
+		final String formsString = forms.stream()
+		                                .map(Object::toString)
+		                                .collect(Collectors.joining(" "));
+		return "(PROGN " + formsString + ')';
 	}
 }

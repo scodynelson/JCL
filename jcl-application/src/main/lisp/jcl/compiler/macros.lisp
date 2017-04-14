@@ -134,8 +134,8 @@
 			      ,result
 			    (or ,@(cdr forms))))))))
 
-;; Case,Ccase,Ecase || Typecase, Ctypecase, Etypecase
-#|
+;; Case, Ccase, Ecase || Typecase, Ctypecase, Etypecase
+
 (defun parse-normal-clause (clause key-fn key-test)
   (when clause
     (if (not (listp clause))
@@ -149,7 +149,6 @@
                (progn ,@forms)))))))
 
 (defun handle-most-clauses (clauses key-fn key-test last-clause-callback)
-  ;; it's a boo-boo if there is a t or otherwise in other than the last clause
     (let ((key-form (car (car clauses))))
       (when (and (rest clauses) (or (eq key-form t) (eq key-form 'otherwise)))
         (error "T and OTHERWISE are not permitted in other than the last clause"))
@@ -166,7 +165,8 @@
     ;; this is the last clause processor
     #'(lambda (last-clause)
        (let* ((key-form (car last-clause)))
-         (if (or (eq key-form t) (eq key-form 'otherwise))
+         (if (or (eq key-form t)
+                 (eq key-form 'otherwise))
            `(progn ,(car (cdr last-clause)))
            (parse-normal-clause last-clause key-fn key-test))))))
 
@@ -175,12 +175,14 @@
     ;; this is the last clause processor
     #'(lambda (last-clause)
        (let* ((key-form (car last-clause)))
-         (when (and (or (eq key-form t) (eq key-form 'otherwise)) (not typecase-p))
+         (when (and (or (eq key-form t)
+                        (eq key-form 'otherwise))
+                    (not typecase-p))
            (error "T and OTHERWISE are not permitted in ECASE"))
          ;; handle the last clause
          ;; add the error clause
          (append (parse-normal-clause last-clause key-fn key-test)
-           (list `(error "There were no matches in the ECASE to value" ,key-test)))))))
+                 (list `(error "There were no matches in the ECASE to value" ,key-test)))))))
 
 (defmacro case (keyform &rest clauses)
   (declare (system::%java-class-name "lisp.common.function.Case"))
@@ -205,7 +207,7 @@
   (let ((test-val (gensym)))
     `(let ((,test-val ,keyform))
        ,(handle-error-clauses clauses 'typep test-val t))))
-|#
+
 ;; Multiple-Value-Bind
 
 (defmacro multiple-value-bind ((&rest vars) value-form &body body)
@@ -224,18 +226,10 @@
 
 ;; Multiple-Value-Setq
 #|
-(defmacro multiple-value-setq ((&rest vars) form)
-  (declare (system::%java-class-name "lisp.common.function.MultipleValueSetq"))
-  (let* ((ctr 0)
-         (var-forms (mapcar #'(lambda (var) `(setq ,var (nth 0 xx-00))) vars)))
-    (dolist (form-x var-forms)
-      (rplaca (cdr (third form-x)) ctr)
-      (setq ctr (1+ ctr)))
-    `(let ((xx-00 (multiple-value-list ,form)))
-       (progn ,@var-forms))))
-
 (defmacro multiple-value-setq (varlist value-form)
   (declare (system::%java-class-name "jcl.compiler.functions.MultipleValueSetq"))
+  (unless (and (listp varlist) (every #'symbolp varlist))
+    (error "~S is not a list of symbols." varlist))
   (if varlist
       `(values (setf (values ,@varlist) ,value-form))
     `(values ,value-form)))

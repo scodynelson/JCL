@@ -21,6 +21,7 @@ import jcl.lang.readtable.ReadtableCase;
 import jcl.lang.readtable.SyntaxType;
 import jcl.lang.statics.ReaderVariables;
 import jcl.lang.stream.ReadPeekResult;
+import jcl.reader.CommentStruct;
 import jcl.util.CodePointConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -193,7 +194,12 @@ class ReaderProcessor {
 				NILStruct.INSTANCE
 		);
 
-		if (token == null) {
+		if (token instanceof CommentStruct) {
+			if (LOGGER.isTraceEnabled()) {
+				LOGGER.trace(((CommentStruct) token).getCommentString());
+			}
+			return read(tokenBuilder);
+		} else if (token == null) {
 			return read(tokenBuilder);
 		} else {
 			return token;

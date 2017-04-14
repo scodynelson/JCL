@@ -120,6 +120,13 @@ final class NumberTokenAccumulatedReaderState {
 			return null;
 		}
 
+		// If first token is an exponent marker, this is a symbol not a number
+		final TokenAttribute firstTokenAttribute = tokenAttributes.getFirst();
+		final AttributeType firstAttributeType = firstTokenAttribute.getAttributeType();
+		if (firstAttributeType == AttributeType.EXPONENTMARKER) {
+			return null;
+		}
+
 		final TokenAttribute lastTokenAttribute = tokenAttributes.getLast();
 		final AttributeType lastAttributeType = lastTokenAttribute.getAttributeType();
 

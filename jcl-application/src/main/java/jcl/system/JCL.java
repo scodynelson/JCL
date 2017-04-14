@@ -107,11 +107,28 @@ public class JCL implements ApplicationRunner {
 	}
 
 	private void loadLispFiles() {
+//		for (final String lispFileToLoad : lispFilesToLoad) {
+//			final PathnameStruct pathname = LispStructFactory.toPathname(lispFileToLoad);
+//			loadFunction.load(pathname, false, false, true);
+//		}
 		CompileForm.OUTPUT_FILE = false;
-		for (final String lispFileToLoad : lispFilesToLoad) {
-			final PathnameStruct pathname = LispStructFactory.toPathname(lispFileToLoad);
-			loadFunction.load(pathname, false, false, true);
-		}
+		PathnameStruct pathname = LispStructFactory.toPathname("jcl-application/src/main/lisp/jcl/compiler/base-macro-lambdas.lisp");
+		loadFunction.load(pathname, false, false, true);
+		CompileForm.OUTPUT_FILE = true;
+
+		CompileForm.OUTPUT_FILE = false;
+		pathname = LispStructFactory.toPathname("jcl-application/src/main/lisp/jcl/compiler/macros.lisp");
+		loadFunction.load(pathname, false, false, true);
+		CompileForm.OUTPUT_FILE = true;
+
+		CompileForm.OUTPUT_FILE = false;
+		pathname = LispStructFactory.toPathname("jcl-application/src/main/lisp/jcl/iterators/iterators.lisp");
+		loadFunction.load(pathname, false, false, true);
+		CompileForm.OUTPUT_FILE = true;
+
+		CompileForm.OUTPUT_FILE = false;
+		pathname = LispStructFactory.toPathname("jcl-application/src/main/lisp/jcl/lists/lists.lisp");
+		loadFunction.load(pathname, false, false, true);
 		CompileForm.OUTPUT_FILE = true;
 	}
 }

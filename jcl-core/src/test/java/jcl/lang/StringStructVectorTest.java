@@ -82,7 +82,7 @@ public class StringStructVectorTest {
 	@Test
 	public void test_fillPointer_NoFillPointer() {
 		thrown.expect(TypeErrorException.class);
-		thrown.expectMessage("VECTOR has no fill-pointer to retrieve.");
+		thrown.expectMessage("STRING has no fill-pointer to retrieve.");
 
 		final StringStruct struct = StringStruct.toLispString("abc");
 		struct.fillPointer();
@@ -115,7 +115,7 @@ public class StringStructVectorTest {
 	@Test
 	public void test_setfFillPointer_OutOfBounds_TooSmall() {
 		thrown.expect(ErrorException.class);
-		thrown.expectMessage("value is out of bounds for VECTOR with size");
+		thrown.expectMessage("value is out of bounds for STRING with size");
 
 		final String str = "abc";
 		final IntegerStruct fillPointer = IntegerStruct.TWO;
@@ -134,7 +134,7 @@ public class StringStructVectorTest {
 	@Test
 	public void test_setfFillPointer_OutOfBounds_TooLarge() {
 		thrown.expect(ErrorException.class);
-		thrown.expectMessage("value is out of bounds for VECTOR with size");
+		thrown.expectMessage("value is out of bounds for STRING with size");
 
 		final String str = "abc";
 		final IntegerStruct fillPointer = IntegerStruct.TWO;

@@ -177,7 +177,7 @@ public class StringStructArrayTest {
 			result.fillPointer();
 			Assert.fail("Expected String not to have fill-pointer.");
 		} catch (final TypeErrorException ex) {
-			Assert.assertThat(ex.getMessage(), containsString("VECTOR has no fill-pointer to retrieve."));
+			Assert.assertThat(ex.getMessage(), containsString("STRING has no fill-pointer to retrieve."));
 		}
 		Assert.assertThat(result.arrayDisplacement().getValuesList().get(0), is(displacedTo));
 		Assert.assertThat(result.arrayDisplacement().getValuesList().get(1), is(IntegerStruct.ONE));
@@ -258,7 +258,7 @@ public class StringStructArrayTest {
 			result.fillPointer();
 			Assert.fail("Expected String not to have fill-pointer.");
 		} catch (final TypeErrorException ex) {
-			Assert.assertThat(ex.getMessage(), containsString("VECTOR has no fill-pointer to retrieve."));
+			Assert.assertThat(ex.getMessage(), containsString("STRING has no fill-pointer to retrieve."));
 		}
 		Assert.assertThat(result.arrayDisplacement().getValuesList().get(0), is(displacedTo));
 		Assert.assertThat(result.arrayDisplacement().getValuesList().get(1), is(IntegerStruct.ONE));
@@ -359,7 +359,7 @@ public class StringStructArrayTest {
 			result.fillPointer();
 			Assert.fail("Expected String not to have fill-pointer.");
 		} catch (final TypeErrorException ex) {
-			Assert.assertThat(ex.getMessage(), containsString("VECTOR has no fill-pointer to retrieve."));
+			Assert.assertThat(ex.getMessage(), containsString("STRING has no fill-pointer to retrieve."));
 		}
 		Assert.assertThat(result.arrayDisplacement().getValuesList().get(0), is(NILStruct.INSTANCE));
 		Assert.assertThat(result.arrayDisplacement().getValuesList().get(1), is(IntegerStruct.ZERO));
@@ -438,7 +438,7 @@ public class StringStructArrayTest {
 			result.fillPointer();
 			Assert.fail("Expected String not to have fill-pointer.");
 		} catch (final TypeErrorException ex) {
-			Assert.assertThat(ex.getMessage(), containsString("VECTOR has no fill-pointer to retrieve."));
+			Assert.assertThat(ex.getMessage(), containsString("STRING has no fill-pointer to retrieve."));
 		}
 		Assert.assertThat(result.arrayDisplacement().getValuesList().get(0), is(NILStruct.INSTANCE));
 		Assert.assertThat(result.arrayDisplacement().getValuesList().get(1), is(IntegerStruct.ZERO));
@@ -555,7 +555,7 @@ public class StringStructArrayTest {
 			result.fillPointer();
 			Assert.fail("Expected String not to have fill-pointer.");
 		} catch (final TypeErrorException ex) {
-			Assert.assertThat(ex.getMessage(), containsString("VECTOR has no fill-pointer to retrieve."));
+			Assert.assertThat(ex.getMessage(), containsString("STRING has no fill-pointer to retrieve."));
 		}
 		Assert.assertThat(result.arrayDisplacement().getValuesList().get(0), is(NILStruct.INSTANCE));
 		Assert.assertThat(result.arrayDisplacement().getValuesList().get(1), is(IntegerStruct.ZERO));
@@ -627,7 +627,7 @@ public class StringStructArrayTest {
 			result.fillPointer();
 			Assert.fail("Expected String not to have fill-pointer.");
 		} catch (final TypeErrorException ex) {
-			Assert.assertThat(ex.getMessage(), containsString("VECTOR has no fill-pointer to retrieve."));
+			Assert.assertThat(ex.getMessage(), containsString("STRING has no fill-pointer to retrieve."));
 		}
 		Assert.assertThat(result.arrayDisplacement().getValuesList().get(0), is(NILStruct.INSTANCE));
 		Assert.assertThat(result.arrayDisplacement().getValuesList().get(1), is(IntegerStruct.ZERO));
@@ -659,7 +659,7 @@ public class StringStructArrayTest {
 			result.fillPointer();
 			Assert.fail("Expected String not to have fill-pointer.");
 		} catch (final TypeErrorException ex) {
-			Assert.assertThat(ex.getMessage(), containsString("VECTOR has no fill-pointer to retrieve."));
+			Assert.assertThat(ex.getMessage(), containsString("STRING has no fill-pointer to retrieve."));
 		}
 		Assert.assertThat(result.arrayDisplacement().getValuesList().get(0), is(NILStruct.INSTANCE));
 		Assert.assertThat(result.arrayDisplacement().getValuesList().get(1), is(IntegerStruct.ZERO));
@@ -690,7 +690,7 @@ public class StringStructArrayTest {
 			result.fillPointer();
 			Assert.fail("Expected String not to have fill-pointer.");
 		} catch (final TypeErrorException ex) {
-			Assert.assertThat(ex.getMessage(), containsString("VECTOR has no fill-pointer to retrieve."));
+			Assert.assertThat(ex.getMessage(), containsString("STRING has no fill-pointer to retrieve."));
 		}
 		Assert.assertThat(result.arrayDisplacement().getValuesList().get(0), is(NILStruct.INSTANCE));
 		Assert.assertThat(result.arrayDisplacement().getValuesList().get(1), is(IntegerStruct.ZERO));

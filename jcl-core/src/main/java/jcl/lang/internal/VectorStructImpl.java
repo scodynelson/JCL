@@ -13,10 +13,9 @@ import jcl.lang.ArrayStruct;
 import jcl.lang.BooleanStruct;
 import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
-import jcl.lang.ListStruct;
 import jcl.lang.NILStruct;
 import jcl.lang.SequenceStruct;
-import jcl.lang.TStruct;
+import jcl.lang.ValuesStruct;
 import jcl.lang.VectorStruct;
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
@@ -31,19 +30,23 @@ import jcl.type.VectorType;
 /**
  * The {@link VectorStructImpl} is the object representation of a Lisp 'vector' type.
  */
-public class VectorStructImpl extends ArrayStructImpl implements VectorStruct {
-
-	protected Integer totalSize;
+public class VectorStructImpl extends AbstractVectorStructImpl {
 
 	private List<LispStruct> contents;
 
 	protected Integer fillPointer;
 
+	protected boolean isAdjustable;
+
+	protected ArrayStruct displacedTo;
+
+	protected Integer displacedIndexOffset;
+
 	protected VectorStructImpl(final VectorType vectorType, final Integer size, final LispType elementType,
 	                           final boolean isAdjustable, final Integer fillPointer) {
-		super(vectorType, elementType, isAdjustable);
-		totalSize = size;
+		super(vectorType, elementType, size);
 		this.fillPointer = fillPointer;
+		this.isAdjustable = isAdjustable;
 	}
 
 	/**
@@ -89,10 +92,9 @@ public class VectorStructImpl extends ArrayStructImpl implements VectorStruct {
 	public VectorStructImpl(final VectorType vectorType, final Integer size, final LispType elementType,
 	                        final ArrayStruct displacedTo, final Integer displacedIndexOffset,
 	                        final boolean isAdjustable, final Integer fillPointer) {
-		super(vectorType, elementType, displacedTo, displacedIndexOffset, isAdjustable);
-
-		totalSize = size;
-		this.fillPointer = fillPointer;
+		this(vectorType, size, elementType, isAdjustable, fillPointer);
+		this.displacedTo = displacedTo;
+		this.displacedIndexOffset = displacedIndexOffset;
 	}
 
 	/*
@@ -299,6 +301,11 @@ public class VectorStructImpl extends ArrayStructImpl implements VectorStruct {
 	}
 
 	@Override
+	public BooleanStruct adjustableArrayP() {
+		return LispStructFactory.toBoolean(isAdjustable);
+	}
+
+	@Override
 	public LispStruct aref(final IntegerStruct... subscripts) {
 		final IntegerStruct subscript = rowMajorIndexInternal(subscripts);
 		final int rowMajorIndex = validateSubscript(subscript);
@@ -324,50 +331,15 @@ public class VectorStructImpl extends ArrayStructImpl implements VectorStruct {
 	}
 
 	@Override
-	public IntegerStruct arrayDimension(final IntegerStruct axisNumber) {
-		if (!IntegerStruct.ZERO.eq(axisNumber)) {
-			throw new ErrorException("Axis " + axisNumber + " is out of bounds for " + this + '.');
-		}
-		return IntegerStructImpl.valueOf(totalSize);
-	}
-
-	@Override
-	public ListStruct arrayDimensions() {
-		final IntegerStruct size = IntegerStructImpl.valueOf(totalSize);
-		return LispStructFactory.toProperList(size);
-	}
-
-	@Override
 	public BooleanStruct arrayHasFillPointerP() {
 		return LispStructFactory.toBoolean(fillPointer != null);
 	}
 
 	@Override
-	public BooleanStruct arrayInBoundsP(final IntegerStruct... subscripts) {
-		final IntegerStruct subscript = rowMajorIndexInternal(subscripts);
-		try {
-			validateSubscript(subscript);
-			return TStruct.INSTANCE;
-		} catch (final ErrorException ignored) {
-			return NILStruct.INSTANCE;
-		}
-	}
-
-	@Override
-	public IntegerStruct arrayRank() {
-		return IntegerStruct.ONE;
-	}
-
-	@Override
-	public IntegerStruct arrayRowMajorIndex(final IntegerStruct... subscripts) {
-		final IntegerStruct subscript = rowMajorIndexInternal(subscripts);
-		final int rowMajorIndex = validateSubscript(subscript);
-		return IntegerStructImpl.valueOf(rowMajorIndex);
-	}
-
-	@Override
-	public IntegerStruct arrayTotalSize() {
-		return IntegerStructImpl.valueOf(totalSize);
+	public ValuesStruct arrayDisplacement() {
+		return (displacedTo == null)
+		       ? ValuesStruct.valueOf(NILStruct.INSTANCE, IntegerStruct.ZERO)
+		       : ValuesStruct.valueOf(displacedTo, IntegerStructImpl.valueOf(displacedIndexOffset));
 	}
 
 	@Override
@@ -383,34 +355,11 @@ public class VectorStructImpl extends ArrayStructImpl implements VectorStruct {
 		return newElement;
 	}
 
-	protected IntegerStruct rowMajorIndexInternal(final IntegerStruct... subscripts) {
-		final int numberOfSubscripts = subscripts.length;
-		if (numberOfSubscripts != 1) {
-			throw new ErrorException(
-					"Wrong number of subscripts, " + numberOfSubscripts + ", for array of rank 1.");
-		}
-
-		return subscripts[0];
-	}
-
-	protected int validateSubscript(final IntegerStruct subscript) {
-		final int subscriptInt = subscript.intValue();
-		if ((subscriptInt < 0) || (subscriptInt >= totalSize)) {
-			throw new ErrorException("Subscript " + subscript + " is out of bounds for " + this + '.');
-		}
-		return subscriptInt;
-	}
-
 // =================
 
 	@Override
 	public List<LispStruct> getContents() {
 		return contents;
-	}
-
-	@Override
-	public List<Integer> getDimensions() {
-		return Collections.singletonList(totalSize);
 	}
 
 // =================

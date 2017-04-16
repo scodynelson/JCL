@@ -25,10 +25,12 @@ import jcl.lang.SequenceStruct;
 import jcl.lang.StringEqualityContext;
 import jcl.lang.StringIntervalOpContext;
 import jcl.lang.StringStruct;
+import jcl.lang.ValuesStruct;
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.factory.LispStructFactory;
 import jcl.lang.internal.number.IntegerStructImpl;
+import jcl.lang.internal.stream.AbstractStringStructImpl;
 import jcl.lang.readtable.SyntaxType;
 import jcl.lang.statics.CharacterConstants;
 import jcl.lang.statics.PrinterVariables;
@@ -42,7 +44,7 @@ import org.apache.commons.lang3.text.WordUtils;
 /**
  * The {@link StringStructImpl} is the object representation of a Lisp 'string' type.
  */
-public final class StringStructImpl extends VectorStructImpl implements StringStruct {
+public final class StringStructImpl extends AbstractStringStructImpl implements StringStruct {
 
 	private CharSeq charSeq;
 
@@ -50,6 +52,11 @@ public final class StringStructImpl extends VectorStructImpl implements StringSt
 	 * {@link StringBuilder} containing the implementation contents of the {@link StringStruct}.
 	 */
 	private StringBuilder contents;
+
+	protected Integer fillPointer;
+	protected boolean isAdjustable;
+	protected ArrayStruct displacedTo;
+	protected Integer displacedIndexOffset;
 
 	/**
 	 * Constructor for creating a new instance.
@@ -59,7 +66,7 @@ public final class StringStructImpl extends VectorStructImpl implements StringSt
 	 * @param size
 	 * 		the size of the structure
 	 * @param elementType
-	 * 		the {@link LispType} type of the elements
+	 * 		the {@link CharacterType} type of the elements
 	 * @param contents
 	 * 		the {@link StringBuilder} contents
 	 * @param isAdjustable
@@ -67,11 +74,13 @@ public final class StringStructImpl extends VectorStructImpl implements StringSt
 	 * @param fillPointer
 	 * 		the fill-pointer value of the structure
 	 */
-	public StringStructImpl(final StringType stringType, final Integer size, final LispType elementType,
+	public StringStructImpl(final StringType stringType, final Integer size, final CharacterType elementType,
 	                        final StringBuilder contents, final boolean isAdjustable,
 	                        final Integer fillPointer) {
-		super(stringType, size, elementType, isAdjustable, fillPointer);
+		super(stringType, elementType, size);
 		this.contents = contents;
+		this.fillPointer = fillPointer;
+		this.isAdjustable = isAdjustable;
 	}
 
 	/**
@@ -82,7 +91,7 @@ public final class StringStructImpl extends VectorStructImpl implements StringSt
 	 * @param size
 	 * 		the size of the structure
 	 * @param elementType
-	 * 		the {@link LispType} type of the elements
+	 * 		the {@link CharacterType} type of the elements
 	 * @param displacedTo
 	 * 		the {@link ArrayStruct} structure this instance will be displaced to
 	 * @param displacedIndexOffset
@@ -92,10 +101,14 @@ public final class StringStructImpl extends VectorStructImpl implements StringSt
 	 * @param fillPointer
 	 * 		the fill-pointer value of the structure
 	 */
-	public StringStructImpl(final StringType stringType, final Integer size, final LispType elementType,
+	public StringStructImpl(final StringType stringType, final Integer size, final CharacterType elementType,
 	                        final ArrayStruct displacedTo, final Integer displacedIndexOffset,
 	                        final boolean isAdjustable, final Integer fillPointer) {
-		super(stringType, size, elementType, displacedTo, displacedIndexOffset, isAdjustable, fillPointer);
+		super(stringType, elementType, size);
+		this.displacedTo = displacedTo;
+		this.displacedIndexOffset = displacedIndexOffset;
+		this.fillPointer = fillPointer;
+		this.isAdjustable = isAdjustable;
 	}
 
 	/*
@@ -216,7 +229,7 @@ public final class StringStructImpl extends VectorStructImpl implements StringSt
 
 		return new StringStructImpl((StringType) getType(),
 		                            builder.length(),
-		                            elementType,
+		                            (CharacterType) elementType,
 		                            builder,
 		                            false,
 		                            null);
@@ -314,7 +327,7 @@ public final class StringStructImpl extends VectorStructImpl implements StringSt
 		final String trimmedString = trimOp.apply(str, stripChars);
 		return new StringStructImpl((StringType) getType(),
 		                            trimmedString.length(),
-		                            elementType,
+		                            (CharacterType) elementType,
 		                            new StringBuilder(trimmedString),
 		                            false,
 		                            null);
@@ -643,6 +656,26 @@ public final class StringStructImpl extends VectorStructImpl implements StringSt
 	 */
 
 	@Override
+	public IntegerStruct fillPointer() {
+		if (fillPointer == null) {
+			throw new TypeErrorException("STRING has no fill-pointer to retrieve.");
+		}
+		return IntegerStructImpl.valueOf(fillPointer);
+	}
+
+	@Override
+	public IntegerStruct setfFillPointer(final IntegerStruct fillPointer) {
+		final int intValue = fillPointer.intValue();
+		if ((intValue < 0) || (intValue > totalSize)) {
+			throw new ErrorException(
+					"Fill-pointer " + fillPointer + " value is out of bounds for STRING with size " + totalSize + '.');
+		}
+
+		this.fillPointer = intValue;
+		return fillPointer;
+	}
+
+	@Override
 	public CharacterStruct vectorPop() {
 		if (fillPointer == null) {
 			throw new TypeErrorException("Cannot pop from a STRING with no fill-pointer.");
@@ -705,6 +738,25 @@ public final class StringStructImpl extends VectorStructImpl implements StringSt
 	/*
 	ARRAY-STRUCT
 	 */
+
+	@Override
+	public ArrayStruct adjustArray(final List<IntegerStruct> dimensions, final LispType elementType,
+	                               final LispStruct initialElement, final IntegerStruct fillPointer) {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public ArrayStruct adjustArray(final List<IntegerStruct> dimensions, final LispType elementType,
+	                               final SequenceStruct initialContents, final IntegerStruct fillPointer) {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public ArrayStruct adjustArray(final List<IntegerStruct> dimensions, final LispType elementType,
+	                               final IntegerStruct fillPointer, final ArrayStruct displacedTo,
+	                               final IntegerStruct displacedIndexOffset) {
+		throw new UnsupportedOperationException();
+	}
 
 	@Override
 	public StringStruct adjustArray(final AdjustArrayContext context) {
@@ -920,7 +972,7 @@ public final class StringStructImpl extends VectorStructImpl implements StringSt
 			);
 			return new StringStructImpl(stringType,
 			                            newTotalSizeInt,
-			                            upgradedET,
+			                            (CharacterType) upgradedET,
 			                            newContents,
 			                            newAdjustableBoolean,
 			                            newFillPointerInt);
@@ -957,6 +1009,11 @@ public final class StringStructImpl extends VectorStructImpl implements StringSt
 	}
 
 	@Override
+	public BooleanStruct adjustableArrayP() {
+		return LispStructFactory.toBoolean(isAdjustable);
+	}
+
+	@Override
 	public CharacterStruct aref(final IntegerStruct... subscripts) {
 		final IntegerStruct subscript = rowMajorIndexInternal(subscripts);
 		final int rowMajorIndex = validateSubscript(subscript);
@@ -975,6 +1032,18 @@ public final class StringStructImpl extends VectorStructImpl implements StringSt
 	}
 
 	@Override
+	public BooleanStruct arrayHasFillPointerP() {
+		return LispStructFactory.toBoolean(fillPointer != null);
+	}
+
+	@Override
+	public ValuesStruct arrayDisplacement() {
+		return (displacedTo == null)
+		       ? ValuesStruct.valueOf(NILStruct.INSTANCE, IntegerStruct.ZERO)
+		       : ValuesStruct.valueOf(displacedTo, IntegerStructImpl.valueOf(displacedIndexOffset));
+	}
+
+	@Override
 	public CharacterStruct rowMajorAref(final IntegerStruct index) {
 		final int indexInt = validateSubscript(index);
 		return charInternal(indexInt);
@@ -990,9 +1059,26 @@ public final class StringStructImpl extends VectorStructImpl implements StringSt
 		return setfCharInternal((CharacterStruct) newElement, indexInt);
 	}
 
+// =================
+
+	@Override
+	public List<LispStruct> getContents() {
+		return null;
+	}
+
+// =================
+
 	/*
 	SEQUENCE-STRUCT
 	 */
+
+	@Override
+	public IntegerStruct length() {
+		if (fillPointer != null) {
+			return IntegerStructImpl.valueOf(fillPointer);
+		}
+		return IntegerStructImpl.valueOf(totalSize);
+	}
 
 	@Override
 	public CharacterStruct elt(final IntegerStruct index) {
@@ -1010,6 +1096,16 @@ public final class StringStructImpl extends VectorStructImpl implements StringSt
 		return setfCharInternal((CharacterStruct) newElement, indexInt);
 	}
 
+	private int validateIndexAgainstFillPointer(final IntegerStruct index) {
+		if (fillPointer != null) {
+			final int indexInt = index.intValue();
+			if (indexInt > fillPointer) {
+				throw new ErrorException(index + " is not a valid sequence index for " + this);
+			}
+		}
+		return validateSubscript(index);
+	}
+
 	@Override
 	public StringStruct reverse() {
 		final StringBuilder reversedContents;
@@ -1025,7 +1121,7 @@ public final class StringStructImpl extends VectorStructImpl implements StringSt
 		}
 		return new StringStructImpl((StringType) getType(),
 		                            totalSize,
-		                            elementType,
+		                            (CharacterType) elementType,
 		                            reversedContents,
 		                            isAdjustable,
 		                            fillPointer);

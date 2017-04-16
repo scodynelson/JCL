@@ -492,7 +492,7 @@ public interface StringStruct extends VectorStruct {
 				final StringType stringType = getStringType(adjustableBoolean, fillPointerInt, upgradedET);
 				return new StringStructImpl(stringType,
 				                            sizeInt,
-				                            upgradedET,
+				                            (CharacterType) upgradedET,
 				                            displacedTo,
 				                            displacedIndexOffset.intValue(),
 				                            adjustableBoolean,

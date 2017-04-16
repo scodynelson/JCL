@@ -1,33 +1,59 @@
 package jcl.lang.internal;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Spliterator;
+import java.util.Spliterators;
+import java.util.function.Consumer;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import jcl.lang.ArrayStruct;
 import jcl.lang.BitVectorStruct;
+import jcl.lang.BooleanStruct;
 import jcl.lang.IntegerStruct;
+import jcl.lang.LispStruct;
+import jcl.lang.NILStruct;
+import jcl.lang.SequenceStruct;
+import jcl.lang.ValuesStruct;
+import jcl.lang.VectorStruct;
+import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
+import jcl.lang.factory.LispStructFactory;
+import jcl.lang.internal.number.IntegerStructImpl;
 import jcl.lang.statics.PrinterVariables;
 import jcl.type.BitType;
 import jcl.type.BitVectorType;
+import jcl.type.LispType;
 import jcl.type.SimpleBitVectorType;
 
 /**
  * The {@link BitVectorStructImpl} is the object representation of a Lisp 'bit-vector' type.
  */
-public final class BitVectorStructImpl extends VectorStructImpl implements BitVectorStruct {
+public final class BitVectorStructImpl extends AbstractBitVectorStructImpl {
 
 	private static final Pattern BIT_PATTERN = Pattern.compile("[0|1]+");
 
 	private List<IntegerStruct> contents;
 
+	protected Integer fillPointer;
+
+	protected boolean isAdjustable;
+
+	protected ArrayStruct displacedTo;
+
+	protected Integer displacedIndexOffset;
+
 	public BitVectorStructImpl(final BitVectorType bitVectorType, final Integer size,
 	                           final List<IntegerStruct> contents, final boolean isAdjustable,
 	                           final Integer fillPointer) {
-		super(bitVectorType, size, BitType.INSTANCE, null, isAdjustable, fillPointer);
+		super(bitVectorType, size);
 		this.contents = contents;
+		this.isAdjustable = isAdjustable;
+		this.fillPointer = fillPointer;
 	}
 
 	public static BitVectorStruct valueOf(final Integer size, final IntegerStruct initialElement,
@@ -106,6 +132,304 @@ public final class BitVectorStructImpl extends VectorStructImpl implements BitVe
 			}
 		}
 		return bitList;
+	}
+
+	/*
+	VECTOR-STRUCT
+	 */
+
+	@Override
+	public IntegerStruct fillPointer() {
+		if (fillPointer == null) {
+			throw new TypeErrorException("VECTOR has no fill-pointer to retrieve.");
+		}
+		return IntegerStructImpl.valueOf(fillPointer);
+	}
+
+	@Override
+	public IntegerStruct setfFillPointer(final IntegerStruct fillPointer) {
+		final int intValue = fillPointer.intValue();
+		if ((intValue < 0) || (intValue > totalSize)) {
+			throw new ErrorException(
+					"Fill-pointer " + fillPointer + " value is out of bounds for VECTOR with size " + totalSize + '.');
+		}
+
+		this.fillPointer = intValue;
+		return fillPointer;
+	}
+
+	@Override
+	public LispStruct vectorPop() {
+		if (fillPointer == null) {
+			throw new TypeErrorException("Cannot pop from a VECTOR with no fill-pointer.");
+		}
+		if (fillPointer == 0) {
+			throw new ErrorException("Nothing left to pop.");
+		}
+
+		final LispStruct element = contents.get(--fillPointer);
+		contents.set(fillPointer, null);
+		return element;
+	}
+
+	@Override
+	public LispStruct vectorPush(final LispStruct newElement) { // TODO: type check
+		if (fillPointer == null) {
+			throw new TypeErrorException("Cannot push into a VECTOR with no fill-pointer.");
+		}
+		if (fillPointer >= contents.size()) {
+			return NILStruct.INSTANCE;
+		}
+
+		contents.set(fillPointer++, (IntegerStruct) newElement);
+		return IntegerStructImpl.valueOf(fillPointer);
+	}
+
+	@Override
+	public IntegerStruct vectorPushExtend(final LispStruct newElement,
+	                                      final IntegerStruct extension) { // TODO: type check
+		if (fillPointer == null) {
+			throw new TypeErrorException("Cannot push into a VECTOR with no fill-pointer.");
+		}
+		if (!isAdjustable) {
+			throw new TypeErrorException("VECTOR is not adjustable.");
+		}
+		if (fillPointer >= contents.size()) {
+//			adjustArray(fillPointer + extensionAmount); // TODO
+		}
+
+		contents.set(fillPointer++, (IntegerStruct) newElement);
+		return IntegerStructImpl.valueOf(fillPointer);
+	}
+
+	/*
+	ARRAY-STRUCT
+	 */
+
+	@Override
+	public ArrayStruct adjustArray(final List<IntegerStruct> dimensions, final LispType elementType,
+	                               final LispStruct initialElement, final IntegerStruct fillPointer) {
+
+		if (!dimensions.isEmpty()) {
+			throw new ErrorException("Array cannot be adjusted to a different array dimension rank.");
+		}
+		final LispType upgradedET = ArrayStruct.upgradedArrayElementType(elementType);
+
+		if (!this.elementType.equals(upgradedET) || !upgradedET.equals(this.elementType)) {
+			throw new TypeErrorException(
+					"Provided upgraded-array-element-type " + upgradedET + " must be the same as initial upgraded-array-element-type " + this.elementType + '.');
+		}
+
+		final LispType initialElementType = initialElement.getType();
+		if (!initialElementType.equals(upgradedET) && !upgradedET.equals(initialElementType)) {
+			throw new TypeErrorException(
+					"Provided element " + initialElement + " is not a subtype of the upgraded-array-element-type " + upgradedET + '.');
+		}
+
+		final IntegerStruct size = dimensions.get(0);
+		if (isAdjustable) {
+			this.elementType = upgradedET;
+			contents = Stream.generate(() -> (IntegerStruct) initialElement)
+			                 .limit(size.intValue())
+			                 .collect(Collectors.toList());
+			displacedTo = null;
+			displacedIndexOffset = 0;
+			return this;
+		} else {
+			return VectorStruct.builder(size)
+			                   .elementType(upgradedET)
+			                   .initialElement(initialElement)
+			                   .build();
+		}
+	}
+
+	@Override
+	public ArrayStruct adjustArray(final List<IntegerStruct> dimensions, final LispType elementType,
+	                               final SequenceStruct initialContents, final IntegerStruct fillPointer) {
+
+		if (!dimensions.isEmpty()) {
+			throw new ErrorException("Array cannot be adjusted to a different array dimension rank.");
+		}
+		final LispType upgradedET = ArrayStruct.upgradedArrayElementType(elementType);
+
+		if (!this.elementType.equals(upgradedET) || !upgradedET.equals(this.elementType)) {
+			throw new TypeErrorException(
+					"Provided upgraded-array-element-type " + upgradedET + " must be the same as initial upgraded-array-element-type " + this.elementType + '.');
+		}
+
+		for (final LispStruct initialElement : initialContents) {
+			final LispType initialElementType = initialElement.getType();
+			if (!initialElementType.equals(upgradedET) && !upgradedET.equals(initialElementType)) {
+				throw new TypeErrorException(
+						"Provided element " + initialElement + " is not a subtype of the upgraded-array-element-type " + upgradedET + '.');
+			}
+		}
+
+		final IntegerStruct size = dimensions.get(0);
+		if (isAdjustable) {
+			this.elementType = upgradedET;
+			final List<Integer> dimensionInts = Collections.singletonList(size.intValue());
+			contents = ArrayStruct.getValidContents(dimensionInts, elementType, initialContents);
+			displacedTo = null;
+			displacedIndexOffset = 0;
+			return this;
+		} else {
+			return VectorStruct.builder(size)
+			                   .elementType(upgradedET)
+			                   .initialContents(initialContents)
+			                   .build();
+		}
+	}
+
+	@Override
+	public ArrayStruct adjustArray(final List<IntegerStruct> dimensions, final LispType elementType,
+	                               final IntegerStruct fillPointer, final ArrayStruct displacedTo,
+	                               final IntegerStruct displacedIndexOffset) {
+
+		if (!dimensions.isEmpty()) {
+			throw new ErrorException("Array cannot be adjusted to a different array dimension rank.");
+		}
+		final LispType upgradedET = ArrayStruct.upgradedArrayElementType(elementType);
+
+		if (!this.elementType.equals(upgradedET) || !upgradedET.equals(this.elementType)) {
+			throw new TypeErrorException(
+					"Provided upgraded-array-element-type " + upgradedET + " must be the same as initial upgraded-array-element-type " + this.elementType + '.');
+		}
+
+		final LispType initialElementType = displacedTo.arrayElementType();
+		if (!initialElementType.equals(upgradedET) || !upgradedET.equals(initialElementType)) {
+			throw new TypeErrorException(
+					"Provided array for displacement " + displacedTo + " is not a subtype of the upgraded-array-element-type " + upgradedET + '.');
+		}
+
+		try {
+			displacedTo.rowMajorAref(displacedIndexOffset);
+		} catch (final ErrorException ignored) {
+			throw new ErrorException("Requested size is too large to displace to " + displacedTo + '.');
+		}
+
+		final IntegerStruct size = dimensions.get(0);
+		if (isAdjustable) {
+			this.elementType = elementType;
+			contents = null;
+			this.displacedTo = displacedTo;
+			this.displacedIndexOffset = displacedIndexOffset.intValue();
+			return this;
+		} else {
+			return VectorStruct.builder(size)
+			                   .elementType(upgradedET)
+			                   .displacedTo(displacedTo)
+			                   .displacedIndexOffset(displacedIndexOffset)
+			                   .build();
+		}
+	}
+
+	@Override
+	public BooleanStruct adjustableArrayP() {
+		return LispStructFactory.toBoolean(isAdjustable);
+	}
+
+	@Override
+	public LispStruct aref(final IntegerStruct... subscripts) {
+		final IntegerStruct subscript = rowMajorIndexInternal(subscripts);
+		final int rowMajorIndex = validateSubscript(subscript);
+		if (displacedTo == null) {
+			return contents.get(rowMajorIndex);
+		}
+
+		final IntegerStruct indexToGet = IntegerStructImpl.valueOf(displacedIndexOffset + rowMajorIndex);
+		return displacedTo.rowMajorAref(indexToGet);
+	}
+
+	@Override
+	public LispStruct setfAref(final LispStruct newElement, final IntegerStruct... subscripts) { // TODO: type check
+		final IntegerStruct subscript = rowMajorIndexInternal(subscripts);
+		final int rowMajorIndex = validateSubscript(subscript);
+		if (displacedTo == null) {
+			contents.set(rowMajorIndex, (IntegerStruct) newElement);
+		} else {
+			final IntegerStruct indexToSet = IntegerStructImpl.valueOf(displacedIndexOffset + rowMajorIndex);
+			displacedTo.setfRowMajorAref(newElement, indexToSet);
+		}
+		return newElement;
+	}
+
+	@Override
+	public BooleanStruct arrayHasFillPointerP() {
+		return LispStructFactory.toBoolean(fillPointer != null);
+	}
+
+	@Override
+	public ValuesStruct arrayDisplacement() {
+		return (displacedTo == null)
+		       ? ValuesStruct.valueOf(NILStruct.INSTANCE, IntegerStruct.ZERO)
+		       : ValuesStruct.valueOf(displacedTo, IntegerStructImpl.valueOf(displacedIndexOffset));
+	}
+
+	@Override
+	public LispStruct rowMajorAref(final IntegerStruct index) {
+		final int indexInt = validateSubscript(index);
+		return contents.get(indexInt);
+	}
+
+	@Override
+	public LispStruct setfRowMajorAref(final LispStruct newElement, final IntegerStruct index) { // TODO: type check
+		final int indexInt = validateSubscript(index);
+		contents.set(indexInt, (IntegerStruct) newElement);
+		return newElement;
+	}
+
+// =================
+
+	@Override
+	public List<LispStruct> getContents() {
+		return Collections.emptyList();
+	}
+
+// =================
+
+	/*
+	ITERABLE
+	 */
+
+	@Override
+	public Iterator<LispStruct> iterator() {
+		return new BitVectorIterator<>(contents.iterator());
+	}
+
+	@Override
+	public Spliterator<LispStruct> spliterator() {
+		return Spliterators.spliterator(contents.iterator(),
+		                                contents.size(),
+		                                Spliterator.ORDERED |
+				                                Spliterator.SIZED |
+				                                Spliterator.IMMUTABLE |
+				                                Spliterator.SUBSIZED
+		);
+	}
+
+	private static final class BitVectorIterator<TYPE extends LispStruct> implements Iterator<LispStruct> {
+
+		private Iterator<TYPE> iterator;
+
+		private BitVectorIterator(final Iterator<TYPE> iterator) {
+			this.iterator = iterator;
+		}
+
+		@Override
+		public boolean hasNext() {
+			return iterator.hasNext();
+		}
+
+		@Override
+		public LispStruct next() {
+			return iterator.next();
+		}
+
+		@Override
+		public void forEachRemaining(final Consumer<? super LispStruct> action) {
+			iterator.forEachRemaining(action);
+		}
 	}
 
 	@Override

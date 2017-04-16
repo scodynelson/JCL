@@ -2,15 +2,22 @@ package jcl.lang;
 
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
+import jcl.lang.factory.LispStructFactory;
+import jcl.lang.internal.number.IntegerStructImpl;
 import jcl.lang.statics.CharacterConstants;
 import jcl.type.CharacterType;
+import jcl.type.ExtendedCharType;
+import jcl.type.IntegerType;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.CoreMatchers.sameInstance;
 
 /**
  * Unit tests for {@link StringStruct} array methods.
@@ -27,8 +34,667 @@ public class StringStructArrayTest {
 	Adjust-Array
 	 */
 
+	/**
+	 * Test for {@link StringStruct#adjustArray(AdjustArrayContext)} where the dimensions to be adjust to is not valid.
+	 */
 	@Test
-	public void test_adjustArray() {
+	public void test_adjustArray_WrongDimensions() {
+		thrown.expect(ErrorException.class);
+		thrown.expectMessage(containsString("Array cannot be adjusted to a different array dimension rank."));
+
+		final StringStruct struct = StringStruct.builder(IntegerStruct.ONE).build();
+
+		final AdjustArrayContext context = AdjustArrayContext.builder().build();
+		struct.adjustArray(context);
+	}
+
+	/**
+	 * Test for {@link StringStruct#adjustArray(AdjustArrayContext)} where the element-type to be adjust to is not
+	 * valid.
+	 */
+	@Test
+	public void test_adjustArray_WrongElementType() {
+		thrown.expect(TypeErrorException.class);
+		thrown.expectMessage(containsString("Provided upgraded-array-element-type"));
+		thrown.expectMessage(containsString("must be the same as initial upgraded-array-element-type"));
+
+		final StringStruct struct = StringStruct.builder(IntegerStruct.ONE).build();
+
+		final AdjustArrayContext context = AdjustArrayContext.builder(IntegerStruct.ONE)
+		                                                     .elementType(IntegerType.INSTANCE)
+		                                                     .build();
+		struct.adjustArray(context);
+	}
+
+	/**
+	 * Test for {@link StringStruct#adjustArray(AdjustArrayContext)} where attempting to adjust to a displaced array and
+	 * the displaced-to element-type is not valid.
+	 */
+	@Test
+	public void test_adjustArray_Displaced_WrongDisplacedType() {
+		thrown.expect(TypeErrorException.class);
+		thrown.expectMessage(containsString("Provided array for displacement"));
+		thrown.expectMessage(containsString("is not a subtype of the upgraded-array-element-type"));
+
+		final StringStruct struct = StringStruct.builder(IntegerStruct.ONE).build();
+
+		final VectorStruct displacedTo = VectorStruct.builder(IntegerStruct.ONE).build();
+		final AdjustArrayContext context = AdjustArrayContext.builder(IntegerStruct.ONE)
+		                                                     .displacedTo(displacedTo)
+		                                                     .build();
+		struct.adjustArray(context);
+	}
+
+	/**
+	 * Test for {@link StringStruct#adjustArray(AdjustArrayContext)} where attempting to adjust to a displaced array and
+	 * the displaced-index-offset is too large.
+	 */
+	@Test
+	public void test_adjustArray_Displaced_DisplacedOffsetTooLarge() {
+		thrown.expect(ErrorException.class);
+		thrown.expectMessage(containsString("Requested size is too large to displace to"));
+
+		final StringStruct struct = StringStruct.builder(IntegerStruct.ONE).build();
+
+		final StringStruct displacedTo = StringStruct.builder(IntegerStruct.ONE)
+		                                             .build();
+		final AdjustArrayContext context = AdjustArrayContext.builder(IntegerStruct.ONE)
+		                                                     .displacedTo(displacedTo)
+		                                                     .displacedIndexOffset(IntegerStruct.TEN)
+		                                                     .build();
+		struct.adjustArray(context);
+	}
+
+	/**
+	 * Test for {@link StringStruct#adjustArray(AdjustArrayContext)} where the following applies:
+	 * 1.) The original array was adjustable.
+	 * 2.) The original array had initial-contents.
+	 * 3.) The resulting array will have a fill-pointer.
+	 * 4.) The resulting array will be adjustable.
+	 * 5.) The resulting array will be a displaced array.
+	 */
+	@Test
+	public void test_adjustArray_Displaced_Adjustable_NewFillPointer_WillBeAdjustable_HadContents() {
+		final StringStruct struct = StringStruct.builder(IntegerStruct.ONE)
+		                                        .adjustable(BooleanStruct.T)
+		                                        .initialContents(StringStruct.toLispString("1"))
+		                                        .build();
+
+		final StringStruct displacedTo = StringStruct.builder(IntegerStructImpl.valueOf(3))
+		                                             .initialContents(StringStruct.toLispString("abc"))
+		                                             .build();
+		final AdjustArrayContext context = AdjustArrayContext.builder(IntegerStruct.TWO)
+		                                                     .fillPointer(IntegerStruct.ONE)
+		                                                     .adjustable(BooleanStruct.T)
+		                                                     .displacedTo(displacedTo)
+		                                                     .displacedIndexOffset(IntegerStruct.ONE)
+		                                                     .build();
+
+		final StringStruct result = struct.adjustArray(context);
+		Assert.assertThat(result, sameInstance(struct));
+		Assert.assertThat(result.length(), is(IntegerStruct.ONE));
+		Assert.assertThat(result.arrayTotalSize(), is(IntegerStruct.TWO));
+		Assert.assertThat(result.adjustableArrayP(), is(BooleanStruct.T));
+		Assert.assertThat(result.fillPointer(), is(IntegerStruct.ONE));
+		Assert.assertThat(result.arrayDisplacement().getValuesList().get(0), is(displacedTo));
+		Assert.assertThat(result.arrayDisplacement().getValuesList().get(1), is(IntegerStruct.ONE));
+		Assert.assertThat(result.char_(IntegerStruct.ZERO), is(CharacterConstants.LATIN_SMALL_LETTER_B_CHAR));
+	}
+
+	/**
+	 * Test for {@link StringStruct#adjustArray(AdjustArrayContext)} where the following applies:
+	 * 1.) The original array was adjustable.
+	 * 2.) The original array was displaced.
+	 * 3.) The resulting array will not have a fill-pointer.
+	 * 4.) The resulting array will not be adjustable.
+	 * 5.) The resulting array will be a displaced array.
+	 */
+	@Test
+	public void test_adjustArray_Displaced_Adjustable_NoFillPointer_WillNotBeAdjustable_HadDisplacement() {
+		final StringStruct originalDisplacedTo = StringStruct.builder(IntegerStruct.ONE)
+		                                                     .initialContents(StringStruct.toLispString("1"))
+		                                                     .build();
+		final StringStruct struct = StringStruct.builder(IntegerStruct.ONE)
+		                                        .adjustable(BooleanStruct.T)
+		                                        .displacedTo(originalDisplacedTo)
+		                                        .build();
+
+		final StringStruct displacedTo = StringStruct.builder(IntegerStructImpl.valueOf(3))
+		                                             .initialContents(StringStruct.toLispString("abc"))
+		                                             .build();
+		final AdjustArrayContext context = AdjustArrayContext.builder(IntegerStruct.TWO)
+		                                                     .adjustable(BooleanStruct.NIL)
+		                                                     .displacedTo(displacedTo)
+		                                                     .displacedIndexOffset(IntegerStruct.ONE)
+		                                                     .build();
+
+		final StringStruct result = struct.adjustArray(context);
+		Assert.assertThat(result, sameInstance(struct));
+		Assert.assertThat(result.length(), is(IntegerStruct.TWO));
+		Assert.assertThat(result.arrayTotalSize(), is(IntegerStruct.TWO));
+		Assert.assertThat(result.adjustableArrayP(), is(BooleanStruct.NIL));
+		try {
+			result.fillPointer();
+			Assert.fail("Expected String not to have fill-pointer.");
+		} catch (final TypeErrorException ex) {
+			Assert.assertThat(ex.getMessage(), containsString("VECTOR has no fill-pointer to retrieve."));
+		}
+		Assert.assertThat(result.arrayDisplacement().getValuesList().get(0), is(displacedTo));
+		Assert.assertThat(result.arrayDisplacement().getValuesList().get(1), is(IntegerStruct.ONE));
+		Assert.assertThat(result.char_(IntegerStruct.ZERO), is(CharacterConstants.LATIN_SMALL_LETTER_B_CHAR));
+		Assert.assertThat(result.char_(IntegerStruct.ONE), is(CharacterConstants.LATIN_SMALL_LETTER_C_CHAR));
+	}
+
+	/**
+	 * Test for {@link StringStruct#adjustArray(AdjustArrayContext)} where the following applies:
+	 * 1.) The original array was not adjustable.
+	 * 2.) The original array had initial-contents.
+	 * 3.) The resulting array will have a fill-pointer.
+	 * 4.) The resulting array will be adjustable.
+	 * 5.) The resulting array will be a displaced array.
+	 */
+	@Test
+	public void test_adjustArray_Displaced_NotAdjustable_NewFillPointer_WillBeAdjustable_HadContents() {
+		final StringStruct struct = StringStruct.builder(IntegerStruct.ONE)
+		                                        .adjustable(BooleanStruct.NIL)
+		                                        .initialContents(StringStruct.toLispString("1"))
+		                                        .build();
+
+		final StringStruct displacedTo = StringStruct.builder(IntegerStructImpl.valueOf(3))
+		                                             .elementType(ExtendedCharType.INSTANCE)
+		                                             .initialContents(StringStruct.toLispString("abc"))
+		                                             .build();
+		final AdjustArrayContext context = AdjustArrayContext.builder(IntegerStruct.TWO)
+		                                                     .fillPointer(IntegerStruct.ONE)
+		                                                     .adjustable(BooleanStruct.T)
+		                                                     .displacedTo(displacedTo)
+		                                                     .displacedIndexOffset(IntegerStruct.ONE)
+		                                                     .build();
+
+		final StringStruct result = struct.adjustArray(context);
+		Assert.assertThat(result, not(sameInstance(struct)));
+		Assert.assertThat(result.length(), is(IntegerStruct.ONE));
+		Assert.assertThat(result.arrayTotalSize(), is(IntegerStruct.TWO));
+		Assert.assertThat(result.adjustableArrayP(), is(BooleanStruct.T));
+		Assert.assertThat(result.fillPointer(), is(IntegerStruct.ONE));
+		Assert.assertThat(result.arrayDisplacement().getValuesList().get(0), is(displacedTo));
+		Assert.assertThat(result.arrayDisplacement().getValuesList().get(1), is(IntegerStruct.ONE));
+		Assert.assertThat(result.char_(IntegerStruct.ZERO), is(CharacterConstants.LATIN_SMALL_LETTER_B_CHAR));
+	}
+
+	/**
+	 * Test for {@link StringStruct#adjustArray(AdjustArrayContext)} where the following applies:
+	 * 1.) The original array was not adjustable.
+	 * 2.) The original array was displaced.
+	 * 3.) The resulting array will not have a fill-pointer.
+	 * 4.) The resulting array will not be adjustable.
+	 * 5.) The resulting array will be a displaced array.
+	 */
+	@Test
+	public void test_adjustArray_Displaced_NotAdjustable_NoFillPointer_WillNotBeAdjustable_HadDisplacement() {
+		final StringStruct originalDisplacedTo = StringStruct.builder(IntegerStruct.ONE)
+		                                                     .initialContents(StringStruct.toLispString("1"))
+		                                                     .build();
+		final StringStruct struct = StringStruct.builder(IntegerStruct.ONE)
+		                                        .adjustable(BooleanStruct.NIL)
+		                                        .displacedTo(originalDisplacedTo)
+		                                        .build();
+
+		final StringStruct displacedTo = StringStruct.builder(IntegerStructImpl.valueOf(3))
+		                                             .initialContents(StringStruct.toLispString("abc"))
+		                                             .build();
+		final AdjustArrayContext context = AdjustArrayContext.builder(IntegerStruct.TWO)
+		                                                     .adjustable(BooleanStruct.NIL)
+		                                                     .displacedTo(displacedTo)
+		                                                     .displacedIndexOffset(IntegerStruct.ONE)
+		                                                     .build();
+
+		final StringStruct result = struct.adjustArray(context);
+		Assert.assertThat(result, not(sameInstance(struct)));
+		Assert.assertThat(result.length(), is(IntegerStruct.TWO));
+		Assert.assertThat(result.arrayTotalSize(), is(IntegerStruct.TWO));
+		Assert.assertThat(result.adjustableArrayP(), is(BooleanStruct.NIL));
+		try {
+			result.fillPointer();
+			Assert.fail("Expected String not to have fill-pointer.");
+		} catch (final TypeErrorException ex) {
+			Assert.assertThat(ex.getMessage(), containsString("VECTOR has no fill-pointer to retrieve."));
+		}
+		Assert.assertThat(result.arrayDisplacement().getValuesList().get(0), is(displacedTo));
+		Assert.assertThat(result.arrayDisplacement().getValuesList().get(1), is(IntegerStruct.ONE));
+		Assert.assertThat(result.char_(IntegerStruct.ZERO), is(CharacterConstants.LATIN_SMALL_LETTER_B_CHAR));
+		Assert.assertThat(result.char_(IntegerStruct.ONE), is(CharacterConstants.LATIN_SMALL_LETTER_C_CHAR));
+	}
+
+	/**
+	 * Test for {@link StringStruct#adjustArray(AdjustArrayContext)} where attempting to adjust the contents and the
+	 * contents contain an element with an invalid element-type.
+	 */
+	@Test
+	public void test_adjustArray_IContents_BadTypeInContents() {
+		thrown.expect(TypeErrorException.class);
+		thrown.expectMessage(containsString("Provided element"));
+		thrown.expectMessage(containsString("is not a subtype of the upgraded-array-element-type"));
+
+		final StringStruct struct = StringStruct.builder(IntegerStruct.ONE).build();
+
+		final SequenceStruct initialContents = LispStructFactory.toProperList(CharacterConstants.AT_SIGN_CHAR,
+		                                                                      IntegerStruct.ONE);
+		final AdjustArrayContext context = AdjustArrayContext.builder(IntegerStruct.TWO)
+		                                                     .fillPointer(IntegerStruct.ONE)
+		                                                     .adjustable(BooleanStruct.T)
+		                                                     .initialContents(initialContents)
+		                                                     .build();
+
+		struct.adjustArray(context);
+	}
+
+	/**
+	 * Test for {@link StringStruct#adjustArray(AdjustArrayContext)} where the following applies:
+	 * 1.) The original array was adjustable.
+	 * 2.) The original array had initial-contents.
+	 * 3.) The resulting array will have a fill-pointer.
+	 * 4.) The resulting array will be adjustable.
+	 * 5.) The resulting array will be an array with the new initial-contents.
+	 */
+	@Test
+	public void test_adjustArray_IContents_Adjustable_NewFillPointer_WillBeAdjustable_HadContents() {
+		final StringStruct struct = StringStruct.builder(IntegerStruct.ONE)
+		                                        .adjustable(BooleanStruct.T)
+		                                        .initialContents(StringStruct.toLispString("1"))
+		                                        .build();
+
+		final StringStruct initialContents = StringStruct.builder(IntegerStruct.TWO)
+		                                                 .initialContents(StringStruct.toLispString("ab"))
+		                                                 .build();
+		final AdjustArrayContext context = AdjustArrayContext.builder(IntegerStruct.TWO)
+		                                                     .fillPointer(IntegerStruct.ONE)
+		                                                     .adjustable(BooleanStruct.T)
+		                                                     .initialContents(initialContents)
+		                                                     .build();
+
+		final StringStruct result = struct.adjustArray(context);
+		Assert.assertThat(result, sameInstance(struct));
+		Assert.assertThat(result.length(), is(IntegerStruct.ONE));
+		Assert.assertThat(result.arrayTotalSize(), is(IntegerStruct.TWO));
+		Assert.assertThat(result.adjustableArrayP(), is(BooleanStruct.T));
+		Assert.assertThat(result.fillPointer(), is(IntegerStruct.ONE));
+		Assert.assertThat(result.arrayDisplacement().getValuesList().get(0), is(NILStruct.INSTANCE));
+		Assert.assertThat(result.arrayDisplacement().getValuesList().get(1), is(IntegerStruct.ZERO));
+		Assert.assertThat(result.char_(IntegerStruct.ZERO), is(CharacterConstants.LATIN_SMALL_LETTER_A_CHAR));
+	}
+
+	/**
+	 * Test for {@link StringStruct#adjustArray(AdjustArrayContext)} where the following applies:
+	 * 1.) The original array was adjustable.
+	 * 2.) The original array was displaced.
+	 * 3.) The resulting array will not have a fill-pointer.
+	 * 4.) The resulting array will not be adjustable.
+	 * 5.) The resulting array will be an array with the new initial-contents.
+	 */
+	@Test
+	public void test_adjustArray_IContents_Adjustable_NoFillPointer_WillNotBeAdjustable_HadDisplacement() {
+		final StringStruct originalDisplacedTo = StringStruct.builder(IntegerStruct.ONE)
+		                                                     .initialContents(StringStruct.toLispString("1"))
+		                                                     .build();
+		final StringStruct struct = StringStruct.builder(IntegerStruct.ONE)
+		                                        .adjustable(BooleanStruct.T)
+		                                        .displacedTo(originalDisplacedTo)
+		                                        .build();
+
+		final StringStruct initialContents = StringStruct.builder(IntegerStruct.TWO)
+		                                                 .initialContents(StringStruct.toLispString("ab"))
+		                                                 .build();
+		final AdjustArrayContext context = AdjustArrayContext.builder(IntegerStruct.TWO)
+		                                                     .adjustable(BooleanStruct.NIL)
+		                                                     .initialContents(initialContents)
+		                                                     .build();
+
+		final StringStruct result = struct.adjustArray(context);
+		Assert.assertThat(result, sameInstance(struct));
+		Assert.assertThat(result.length(), is(IntegerStruct.ONE));
+		Assert.assertThat(result.arrayTotalSize(), is(IntegerStruct.TWO));
+		Assert.assertThat(result.adjustableArrayP(), is(BooleanStruct.NIL));
+		try {
+			result.fillPointer();
+			Assert.fail("Expected String not to have fill-pointer.");
+		} catch (final TypeErrorException ex) {
+			Assert.assertThat(ex.getMessage(), containsString("VECTOR has no fill-pointer to retrieve."));
+		}
+		Assert.assertThat(result.arrayDisplacement().getValuesList().get(0), is(NILStruct.INSTANCE));
+		Assert.assertThat(result.arrayDisplacement().getValuesList().get(1), is(IntegerStruct.ZERO));
+		Assert.assertThat(result.char_(IntegerStruct.ZERO), is(CharacterConstants.LATIN_SMALL_LETTER_A_CHAR));
+		Assert.assertThat(result.char_(IntegerStruct.ONE), is(CharacterConstants.LATIN_SMALL_LETTER_B_CHAR));
+	}
+
+	/**
+	 * Test for {@link StringStruct#adjustArray(AdjustArrayContext)} where the following applies:
+	 * 1.) The original array was not adjustable.
+	 * 2.) The original array had initial-contents.
+	 * 3.) The resulting array will have a fill-pointer.
+	 * 4.) The resulting array will be adjustable.
+	 * 5.) The resulting array will be an array with the new initial-contents.
+	 */
+	@Test
+	public void test_adjustArray_IContents_NotAdjustable_NewFillPointer_WillBeAdjustable_HadContents() {
+		final StringStruct struct = StringStruct.builder(IntegerStruct.ONE)
+		                                        .adjustable(BooleanStruct.NIL)
+		                                        .initialContents(StringStruct.toLispString("1"))
+		                                        .build();
+
+		final StringStruct initialContents = StringStruct.builder(IntegerStruct.TWO)
+		                                                 .elementType(ExtendedCharType.INSTANCE)
+		                                                 .initialContents(StringStruct.toLispString("ab"))
+		                                                 .build();
+		final AdjustArrayContext context = AdjustArrayContext.builder(IntegerStruct.TWO)
+		                                                     .fillPointer(IntegerStruct.ONE)
+		                                                     .adjustable(BooleanStruct.T)
+		                                                     .initialContents(initialContents)
+		                                                     .build();
+
+		final StringStruct result = struct.adjustArray(context);
+		Assert.assertThat(result, not(sameInstance(struct)));
+		Assert.assertThat(result.length(), is(IntegerStruct.ONE));
+		Assert.assertThat(result.arrayTotalSize(), is(IntegerStruct.TWO));
+		Assert.assertThat(result.adjustableArrayP(), is(BooleanStruct.T));
+		Assert.assertThat(result.fillPointer(), is(IntegerStruct.ONE));
+		Assert.assertThat(result.arrayDisplacement().getValuesList().get(0), is(NILStruct.INSTANCE));
+		Assert.assertThat(result.arrayDisplacement().getValuesList().get(1), is(IntegerStruct.ZERO));
+		Assert.assertThat(result.char_(IntegerStruct.ZERO), is(CharacterConstants.LATIN_SMALL_LETTER_A_CHAR));
+	}
+
+	/**
+	 * Test for {@link StringStruct#adjustArray(AdjustArrayContext)} where the following applies:
+	 * 1.) The original array was not adjustable.
+	 * 2.) The original array was displaced.
+	 * 3.) The resulting array will not have a fill-pointer.
+	 * 4.) The resulting array will not be adjustable.
+	 * 5.) The resulting array will be an array with the new initial-contents.
+	 */
+	@Test
+	public void test_adjustArray_IContents_NotAdjustable_NoFillPointer_WillNotBeAdjustable_HadDisplacement() {
+		final StringStruct originalDisplacedTo = StringStruct.builder(IntegerStruct.ONE)
+		                                                     .initialContents(StringStruct.toLispString("1"))
+		                                                     .build();
+		final StringStruct struct = StringStruct.builder(IntegerStruct.ONE)
+		                                        .adjustable(BooleanStruct.NIL)
+		                                        .displacedTo(originalDisplacedTo)
+		                                        .build();
+
+		final StringStruct initialContents = StringStruct.builder(IntegerStruct.TWO)
+		                                                 .initialContents(StringStruct.toLispString("ab"))
+		                                                 .build();
+		final AdjustArrayContext context = AdjustArrayContext.builder(IntegerStruct.TWO)
+		                                                     .adjustable(BooleanStruct.NIL)
+		                                                     .initialContents(initialContents)
+		                                                     .build();
+
+		final StringStruct result = struct.adjustArray(context);
+		Assert.assertThat(result, not(sameInstance(struct)));
+		Assert.assertThat(result.length(), is(IntegerStruct.ONE));
+		Assert.assertThat(result.arrayTotalSize(), is(IntegerStruct.TWO));
+		Assert.assertThat(result.adjustableArrayP(), is(BooleanStruct.NIL));
+		try {
+			result.fillPointer();
+			Assert.fail("Expected String not to have fill-pointer.");
+		} catch (final TypeErrorException ex) {
+			Assert.assertThat(ex.getMessage(), containsString("VECTOR has no fill-pointer to retrieve."));
+		}
+		Assert.assertThat(result.arrayDisplacement().getValuesList().get(0), is(NILStruct.INSTANCE));
+		Assert.assertThat(result.arrayDisplacement().getValuesList().get(1), is(IntegerStruct.ZERO));
+		Assert.assertThat(result.char_(IntegerStruct.ZERO), is(CharacterConstants.LATIN_SMALL_LETTER_A_CHAR));
+		Assert.assertThat(result.char_(IntegerStruct.ONE), is(CharacterConstants.LATIN_SMALL_LETTER_B_CHAR));
+	}
+
+	/**
+	 * Test for {@link StringStruct#adjustArray(AdjustArrayContext)} where attempting to adjust the contents and the
+	 * contents contain an element with an invalid element-type.
+	 */
+	@Test
+	public void test_adjustArray_IElement_NotCharacter() {
+		thrown.expect(TypeErrorException.class);
+		thrown.expectMessage(containsString("Provided element"));
+		thrown.expectMessage(containsString("is not a CHARACTER."));
+
+		final StringStruct struct = StringStruct.builder(IntegerStruct.ONE).build();
+
+		final AdjustArrayContext context = AdjustArrayContext.builder(IntegerStruct.TWO)
+		                                                     .fillPointer(IntegerStruct.ONE)
+		                                                     .adjustable(BooleanStruct.T)
+		                                                     .initialElement(IntegerStruct.ZERO)
+		                                                     .build();
+
+		struct.adjustArray(context);
+	}
+
+	/**
+	 * Test for {@link StringStruct#adjustArray(AdjustArrayContext)} where attempting to adjust to a new element and the
+	 * new element has an invalid element-type.
+	 *
+	 * TODO: cannot support this test due to the current type system among other things and not properly subtyping characters
+	 */
+	@Test
+	@Ignore
+	public void test_adjustArray_IElement_NotSubType() {
+		thrown.expect(TypeErrorException.class);
+		thrown.expectMessage(containsString("Provided element"));
+		thrown.expectMessage(containsString("is not a subtype of the upgraded-array-element-type"));
+
+		final StringStruct struct = StringStruct.builder(IntegerStruct.ONE).build();
+
+		final AdjustArrayContext context = AdjustArrayContext.builder(IntegerStruct.TWO)
+		                                                     .fillPointer(IntegerStruct.ONE)
+		                                                     .adjustable(BooleanStruct.T)
+		                                                     .initialElement(IntegerStruct.ZERO)
+		                                                     .build();
+
+		struct.adjustArray(context);
+	}
+
+	/**
+	 * Test for {@link StringStruct#adjustArray(AdjustArrayContext)} where the following applies:
+	 * 1.) The original array was adjustable.
+	 * 2.) The original array had initial-contents.
+	 * 3.) The resulting array will have a fill-pointer.
+	 * 4.) The resulting array will be adjustable.
+	 * 5.) The resulting array will be an array with the new element filling in the contents.
+	 */
+	@Test
+	public void test_adjustArray_IElement_Adjustable_NewFillPointer_WillBeAdjustable_HadContents() {
+		final StringStruct struct = StringStruct.builder(IntegerStruct.ONE)
+		                                        .adjustable(BooleanStruct.T)
+		                                        .initialContents(StringStruct.toLispString("1"))
+		                                        .build();
+
+		final AdjustArrayContext context = AdjustArrayContext.builder(IntegerStruct.TWO)
+		                                                     .fillPointer(IntegerStruct.ONE)
+		                                                     .adjustable(BooleanStruct.T)
+		                                                     .initialElement(CharacterConstants.DOLLAR_SIGN_CHAR)
+		                                                     .build();
+
+		final StringStruct result = struct.adjustArray(context);
+		Assert.assertThat(result, sameInstance(struct));
+		Assert.assertThat(result.length(), is(IntegerStruct.ONE));
+		Assert.assertThat(result.arrayTotalSize(), is(IntegerStruct.TWO));
+		Assert.assertThat(result.adjustableArrayP(), is(BooleanStruct.T));
+		Assert.assertThat(result.fillPointer(), is(IntegerStruct.ONE));
+		Assert.assertThat(result.arrayDisplacement().getValuesList().get(0), is(NILStruct.INSTANCE));
+		Assert.assertThat(result.arrayDisplacement().getValuesList().get(1), is(IntegerStruct.ZERO));
+		Assert.assertThat(result.char_(IntegerStruct.ZERO), is(CharacterConstants.DOLLAR_SIGN_CHAR));
+	}
+
+	/**
+	 * Test for {@link StringStruct#adjustArray(AdjustArrayContext)} where the following applies:
+	 * 1.) The original array was adjustable.
+	 * 2.) The original array was displaced.
+	 * 3.) The resulting array will not have a fill-pointer.
+	 * 4.) The resulting array will not be adjustable.
+	 * 5.) The resulting array will be an array with the new element filling in the contents.
+	 */
+	@Test
+	public void test_adjustArray_IElement_Adjustable_NoFillPointer_WillNotBeAdjustable_HadDisplacement() {
+		final StringStruct originalDisplacedTo = StringStruct.builder(IntegerStruct.ONE)
+		                                                     .initialContents(StringStruct.toLispString("1"))
+		                                                     .build();
+		final StringStruct struct = StringStruct.builder(IntegerStruct.ONE)
+		                                        .adjustable(BooleanStruct.T)
+		                                        .displacedTo(originalDisplacedTo)
+		                                        .build();
+
+		final AdjustArrayContext context = AdjustArrayContext.builder(IntegerStruct.TWO)
+		                                                     .adjustable(BooleanStruct.NIL)
+		                                                     .initialElement(CharacterConstants.DOLLAR_SIGN_CHAR)
+		                                                     .build();
+
+		final StringStruct result = struct.adjustArray(context);
+		Assert.assertThat(result, sameInstance(struct));
+		Assert.assertThat(result.length(), is(IntegerStruct.ONE));
+		Assert.assertThat(result.arrayTotalSize(), is(IntegerStruct.TWO));
+		Assert.assertThat(result.adjustableArrayP(), is(BooleanStruct.NIL));
+		try {
+			result.fillPointer();
+			Assert.fail("Expected String not to have fill-pointer.");
+		} catch (final TypeErrorException ex) {
+			Assert.assertThat(ex.getMessage(), containsString("VECTOR has no fill-pointer to retrieve."));
+		}
+		Assert.assertThat(result.arrayDisplacement().getValuesList().get(0), is(NILStruct.INSTANCE));
+		Assert.assertThat(result.arrayDisplacement().getValuesList().get(1), is(IntegerStruct.ZERO));
+		Assert.assertThat(result.char_(IntegerStruct.ZERO), is(CharacterConstants.DOLLAR_SIGN_CHAR));
+		Assert.assertThat(result.char_(IntegerStruct.ONE), is(CharacterConstants.DOLLAR_SIGN_CHAR));
+	}
+
+	/**
+	 * Test for {@link StringStruct#adjustArray(AdjustArrayContext)} where the following applies:
+	 * 1.) The original array was not adjustable.
+	 * 2.) The original array had initial-contents.
+	 * 3.) The resulting array will have a fill-pointer.
+	 * 4.) The resulting array will be adjustable.
+	 * 5.) The resulting array will be an array with the new element filling in the contents.
+	 */
+	@Test
+	public void test_adjustArray_IElement_NotAdjustable_NewFillPointer_WillBeAdjustable_HadContents() {
+		final StringStruct struct = StringStruct.builder(IntegerStruct.ONE)
+		                                        .adjustable(BooleanStruct.NIL)
+		                                        .initialContents(StringStruct.toLispString("1"))
+		                                        .build();
+
+		final AdjustArrayContext context = AdjustArrayContext.builder(IntegerStruct.TWO)
+		                                                     .fillPointer(IntegerStruct.ONE)
+		                                                     .adjustable(BooleanStruct.T)
+		                                                     .initialElement(CharacterConstants.DOLLAR_SIGN_CHAR)
+		                                                     .build();
+
+		final StringStruct result = struct.adjustArray(context);
+		Assert.assertThat(result, not(sameInstance(struct)));
+		Assert.assertThat(result.length(), is(IntegerStruct.ONE));
+		Assert.assertThat(result.arrayTotalSize(), is(IntegerStruct.TWO));
+		Assert.assertThat(result.adjustableArrayP(), is(BooleanStruct.T));
+		Assert.assertThat(result.fillPointer(), is(IntegerStruct.ONE));
+		Assert.assertThat(result.arrayDisplacement().getValuesList().get(0), is(NILStruct.INSTANCE));
+		Assert.assertThat(result.arrayDisplacement().getValuesList().get(1), is(IntegerStruct.ZERO));
+		Assert.assertThat(result.char_(IntegerStruct.ZERO), is(CharacterConstants.DOLLAR_SIGN_CHAR));
+	}
+
+	/**
+	 * Test for {@link StringStruct#adjustArray(AdjustArrayContext)} where the following applies:
+	 * 1.) The original array was not adjustable.
+	 * 2.) The original array was displaced.
+	 * 3.) The resulting array will not have a fill-pointer.
+	 * 4.) The resulting array will not be adjustable.
+	 * 5.) The resulting array will be an array with the new element filling in the contents.
+	 */
+	@Test
+	public void test_adjustArray_IElement_NotAdjustable_NoFillPointer_WillNotBeAdjustable_HadDisplacement() {
+		final StringStruct originalDisplacedTo = StringStruct.builder(IntegerStruct.ONE)
+		                                                     .initialContents(StringStruct.toLispString("1"))
+		                                                     .build();
+		final StringStruct struct = StringStruct.builder(IntegerStruct.ONE)
+		                                        .adjustable(BooleanStruct.NIL)
+		                                        .displacedTo(originalDisplacedTo)
+		                                        .build();
+
+		final AdjustArrayContext context = AdjustArrayContext.builder(IntegerStruct.TWO)
+		                                                     .adjustable(BooleanStruct.NIL)
+		                                                     .initialElement(CharacterConstants.DOLLAR_SIGN_CHAR)
+		                                                     .build();
+
+		final StringStruct result = struct.adjustArray(context);
+		Assert.assertThat(result, not(sameInstance(struct)));
+		Assert.assertThat(result.length(), is(IntegerStruct.ONE));
+		Assert.assertThat(result.arrayTotalSize(), is(IntegerStruct.TWO));
+		Assert.assertThat(result.adjustableArrayP(), is(BooleanStruct.NIL));
+		try {
+			result.fillPointer();
+			Assert.fail("Expected String not to have fill-pointer.");
+		} catch (final TypeErrorException ex) {
+			Assert.assertThat(ex.getMessage(), containsString("VECTOR has no fill-pointer to retrieve."));
+		}
+		Assert.assertThat(result.arrayDisplacement().getValuesList().get(0), is(NILStruct.INSTANCE));
+		Assert.assertThat(result.arrayDisplacement().getValuesList().get(1), is(IntegerStruct.ZERO));
+		Assert.assertThat(result.char_(IntegerStruct.ZERO), is(CharacterConstants.DOLLAR_SIGN_CHAR));
+		Assert.assertThat(result.char_(IntegerStruct.ONE), is(CharacterConstants.DOLLAR_SIGN_CHAR));
+	}
+
+	/**
+	 * Test for {@link StringStruct#adjustArray(AdjustArrayContext)} where the new intial-element is provided, but the
+	 * array size is reduced and the original array was adjustable.
+	 */
+	@Test
+	public void test_adjustArray_IElement_Adjustable_ShrinkString() {
+		final StringStruct struct = StringStruct.builder(IntegerStruct.TWO)
+		                                        .adjustable(BooleanStruct.T)
+		                                        .initialContents(StringStruct.toLispString("12"))
+		                                        .build();
+
+		final AdjustArrayContext context = AdjustArrayContext.builder(IntegerStruct.ONE)
+		                                                     .initialElement(CharacterConstants.DOLLAR_SIGN_CHAR)
+		                                                     .build();
+
+		final StringStruct result = struct.adjustArray(context);
+		Assert.assertThat(result, sameInstance(struct));
+		Assert.assertThat(result.length(), is(IntegerStruct.ONE));
+		Assert.assertThat(result.arrayTotalSize(), is(IntegerStruct.TWO));
+		Assert.assertThat(result.adjustableArrayP(), is(BooleanStruct.NIL));
+		try {
+			result.fillPointer();
+			Assert.fail("Expected String not to have fill-pointer.");
+		} catch (final TypeErrorException ex) {
+			Assert.assertThat(ex.getMessage(), containsString("VECTOR has no fill-pointer to retrieve."));
+		}
+		Assert.assertThat(result.arrayDisplacement().getValuesList().get(0), is(NILStruct.INSTANCE));
+		Assert.assertThat(result.arrayDisplacement().getValuesList().get(1), is(IntegerStruct.ZERO));
+		Assert.assertThat(result.char_(IntegerStruct.ZERO), is(CharacterConstants.DOLLAR_SIGN_CHAR));
+	}
+
+	/**
+	 * Test for {@link StringStruct#adjustArray(AdjustArrayContext)} where the new intial-element is provided, but the
+	 * array size is reduced and the original array was not adjustable.
+	 */
+	@Test
+	public void test_adjustArray_IElement_NotAdjustable_ShrinkString() {
+		final StringStruct struct = StringStruct.builder(IntegerStruct.TWO)
+		                                        .adjustable(BooleanStruct.NIL)
+		                                        .initialContents(StringStruct.toLispString("12"))
+		                                        .build();
+
+		final AdjustArrayContext context = AdjustArrayContext.builder(IntegerStruct.ONE)
+		                                                     .initialElement(CharacterConstants.DOLLAR_SIGN_CHAR)
+		                                                     .build();
+
+		final StringStruct result = struct.adjustArray(context);
+		Assert.assertThat(result, not(sameInstance(struct)));
+		Assert.assertThat(result.length(), is(IntegerStruct.ONE));
+		Assert.assertThat(result.arrayTotalSize(), is(IntegerStruct.TWO));
+		Assert.assertThat(result.adjustableArrayP(), is(BooleanStruct.NIL));
+		try {
+			result.fillPointer();
+			Assert.fail("Expected String not to have fill-pointer.");
+		} catch (final TypeErrorException ex) {
+			Assert.assertThat(ex.getMessage(), containsString("VECTOR has no fill-pointer to retrieve."));
+		}
+		Assert.assertThat(result.arrayDisplacement().getValuesList().get(0), is(NILStruct.INSTANCE));
+		Assert.assertThat(result.arrayDisplacement().getValuesList().get(1), is(IntegerStruct.ZERO));
+		Assert.assertThat(result.char_(IntegerStruct.ZERO), is(CharacterConstants.DOLLAR_SIGN_CHAR));
 	}
 
 	/*
@@ -40,7 +706,6 @@ public class StringStructArrayTest {
 	 */
 	@Test
 	public void test_adjustableArrayP_True() {
-
 		final StringStruct struct
 				= StringStruct.builder(IntegerStruct.ONE)
 				              .adjustable(TStruct.INSTANCE)
@@ -53,7 +718,6 @@ public class StringStructArrayTest {
 	 */
 	@Test
 	public void test_adjustableArrayP_False() {
-
 		final StringStruct struct
 				= StringStruct.builder(IntegerStruct.ONE)
 				              .adjustable(NILStruct.INSTANCE)

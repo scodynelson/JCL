@@ -4,15 +4,15 @@ buildscript {
 	}
 
 	dependencies {
-		classpath("org.springframework.boot:spring-boot-gradle-plugin:1.5.1.RELEASE")
+		classpath("org.springframework.boot:spring-boot-gradle-plugin:1.5.2.RELEASE")
 		classpath("org.springframework.build.gradle:propdeps-plugin:0.0.7")
 		classpath("ca.cutterslade.gradle:gradle-dependency-analyze:1.1.0")
 	}
 }
 
 plugins {
-	id "io.spring.dependency-management" version "1.0.0.RELEASE"
-	id "org.sonarqube" version "2.2.1"
+	id "io.spring.dependency-management" version "1.0.2.RELEASE"
+	id "org.sonarqube" version "2.3"
 }
 
 ext {
@@ -39,7 +39,7 @@ allprojects {
 	ext.commonsCollectionsVersion = "4.1"
 	ext.icu4jVersion = "58.2"
 	ext.javaHelpVersion = "2.0.05"
-	ext.javasLangVersion = "2.0.5"
+	ext.javasLangVersion = "2.0.6"
 }
 
 subprojects {
@@ -92,7 +92,7 @@ subprojects {
 
 	dependencyManagement {
 		imports {
-			mavenBom "io.spring.platform:platform-bom:Brussels-RELEASE"
+			mavenBom "io.spring.platform:platform-bom:Brussels-SR1"
 		}
 	}
 

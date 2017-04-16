@@ -8,6 +8,7 @@ import org.junit.runners.Suite;
  */
 @RunWith(Suite.class)
 @Suite.SuiteClasses({StringStructStringTest.class,
+                     StringStructStringEqualityTest.class,
                      StringStructVectorTest.class,
                      StringStructArrayTest.class,
                      StringStructSequenceTest.class})

@@ -92,120 +92,6 @@ public interface StringStruct extends VectorStruct {
 	}
 
 	/**
-	 * Context argument class for string functions that require interval arguments to produce the intended result.
-	 */
-	final class StringIntervalOpContext {
-
-		/**
-		 * Builder factory for {@link StringIntervalOpContext}.
-		 */
-		public static final class Builder {
-
-			/**
-			 * Starting index to perform a string operation.
-			 */
-			private IntegerStruct start;
-
-			/**
-			 * Ending index to perform a string operation.
-			 */
-			private IntegerStruct end;
-
-			/**
-			 * Private constructor.
-			 */
-			private Builder() {
-			}
-
-			/**
-			 * Builder method for setting {@link #start} value.
-			 *
-			 * @param start
-			 * 		new value for {@link #start}
-			 *
-			 * @return the current builder instance
-			 */
-			public StringIntervalOpContext.Builder start(final IntegerStruct start) {
-				this.start = start;
-				return this;
-			}
-
-			/**
-			 * Builder method for setting {@link #end} value.
-			 *
-			 * @param end
-			 * 		new value for {@link #end}
-			 *
-			 * @return the current builder instance
-			 */
-			public StringIntervalOpContext.Builder end(final IntegerStruct end) {
-				this.end = end;
-				return this;
-			}
-
-			/**
-			 * Builder method for constructing a new {@link StringIntervalOpContext} from the current {@link #start} and
-			 * {@link #end} values.
-			 *
-			 * @return a new {@link StringIntervalOpContext} from the current {@link #start} and {@link #end} values
-			 */
-			public StringIntervalOpContext build() {
-				return new StringIntervalOpContext(start, end);
-			}
-		}
-
-		/**
-		 * Starting index to perform a string operation.
-		 */
-		private final IntegerStruct start;
-
-		/**
-		 * Ending index to perform a string operation.
-		 */
-		private final IntegerStruct end;
-
-		/**
-		 * Private constructor initializing {@link #start} and {@link #end} values.
-		 *
-		 * @param start
-		 * 		initial value for {@link #start}
-		 * @param end
-		 * 		initial value for {@link #end}
-		 */
-		private StringIntervalOpContext(final IntegerStruct start, final IntegerStruct end) {
-			this.start = start;
-			this.end = end;
-		}
-
-		/**
-		 * Getter for {@link #start} value.
-		 *
-		 * @return {@link #start} value
-		 */
-		public IntegerStruct getStart() {
-			return start;
-		}
-
-		/**
-		 * Getter for {@link #end} value.
-		 *
-		 * @return {@link #end} value
-		 */
-		public IntegerStruct getEnd() {
-			return end;
-		}
-
-		/**
-		 * Factory method for retrieving a new {@link  StringIntervalOpContext.Builder} object.
-		 *
-		 * @return a new {@link  StringIntervalOpContext.Builder} object
-		 */
-		public static StringIntervalOpContext.Builder builder() {
-			return new StringIntervalOpContext.Builder();
-		}
-	}
-
-	/**
 	 * Returns a new string with the contents upper-cased according to the provided {@link StringIntervalOpContext}.
 	 *
 	 * @param context
@@ -299,191 +185,6 @@ public interface StringStruct extends VectorStruct {
 	 * @return and new string with the characters in the provided character-bag trimmed from the end of the string
 	 */
 	StringStruct stringRightTrim(final SequenceStruct characterBag);
-
-	/**
-	 * Context argument class for string functions that require equality checking arguments to produce the intended
-	 * result.
-	 */
-	final class StringEqualityContext {
-
-		/**
-		 * Builder factory for {@link StringEqualityContext}.
-		 */
-		public static final class Builder {
-
-			/**
-			 * The {@link StringStruct} to compare against.
-			 */
-			private final StringStruct struct;
-
-			/**
-			 * The {@link StringIntervalOpContext.Builder} to build the intervals for the first {@link StringStruct} in
-			 * the equality operation.
-			 */
-			private final StringIntervalOpContext.Builder intervalOpContext1 = StringIntervalOpContext.builder();
-
-			/**
-			 * The {@link StringIntervalOpContext.Builder} to build the intervals for the second {@link StringStruct} in
-			 * the equality operation.
-			 */
-			private final StringIntervalOpContext.Builder intervalOpContext2 = StringIntervalOpContext.builder();
-
-			/**
-			 * Private constructor.
-			 *
-			 * @param struct
-			 * 		the {@link StringStruct} to compare against
-			 */
-			private Builder(final StringStruct struct) {
-				this.struct = struct;
-			}
-
-			/**
-			 * Builder method for setting {@link StringIntervalOpContext.Builder#start} value for {@link
-			 * #intervalOpContext1}.
-			 *
-			 * @param start1
-			 * 		new value for {@link StringIntervalOpContext.Builder#start} for {@link #intervalOpContext1}
-			 *
-			 * @return the current builder instance
-			 */
-			public StringEqualityContext.Builder start1(final IntegerStruct start1) {
-				intervalOpContext1.start(start1);
-				return this;
-			}
-
-			/**
-			 * Builder method for setting {@link StringIntervalOpContext.Builder#end} value for {@link
-			 * #intervalOpContext1}.
-			 *
-			 * @param end1
-			 * 		new value for {@link StringIntervalOpContext.Builder#end} for {@link #intervalOpContext1}
-			 *
-			 * @return the current builder instance
-			 */
-			public StringEqualityContext.Builder end1(final IntegerStruct end1) {
-				intervalOpContext1.end(end1);
-				return this;
-			}
-
-			/**
-			 * Builder method for setting {@link StringIntervalOpContext.Builder#start} value for {@link
-			 * #intervalOpContext2}.
-			 *
-			 * @param start2
-			 * 		new value for {@link StringIntervalOpContext.Builder#start} for {@link #intervalOpContext1}
-			 *
-			 * @return the current builder instance
-			 */
-			public StringEqualityContext.Builder start2(final IntegerStruct start2) {
-				intervalOpContext2.start(start2);
-				return this;
-			}
-
-			/**
-			 * Builder method for setting {@link StringIntervalOpContext.Builder#end} value for {@link
-			 * #intervalOpContext2}.
-			 *
-			 * @param end2
-			 * 		new value for {@link StringIntervalOpContext.Builder#end} for {@link #intervalOpContext2}
-			 *
-			 * @return the current builder instance
-			 */
-			public StringEqualityContext.Builder end2(final IntegerStruct end2) {
-				intervalOpContext2.end(end2);
-				return this;
-			}
-
-			/**
-			 * Builder method for constructing a new {@link StringEqualityContext} from the current {@link #struct},
-			 * {@link #intervalOpContext1}, and {@link #intervalOpContext2} values.
-			 *
-			 * @return a new {@link StringIntervalOpContext} from the current {@link #struct}, {@link
-			 * #intervalOpContext1}, and {@link #intervalOpContext2} values
-			 */
-			public StringEqualityContext build() {
-				return new StringEqualityContext(struct,
-				                                 intervalOpContext1.build(),
-				                                 intervalOpContext2.build());
-			}
-		}
-
-		/**
-		 * The {@link StringStruct} to compare against.
-		 */
-		private final StringStruct struct;
-
-		/**
-		 * The {@link StringIntervalOpContext} containing the interval boundaries for the first {@link StringStruct} in
-		 * the equality operation.
-		 */
-		private final StringIntervalOpContext context1;
-
-		/**
-		 * The {@link StringIntervalOpContext} containing the interval boundaries for the second {@link StringStruct} in
-		 * the equality operation.
-		 */
-		private final StringIntervalOpContext context2;
-
-		/**
-		 * Private constructor for initializing the {@link #struct}, {@link #context1}, and {@link #context2} values.
-		 *
-		 * @param struct
-		 * 		the {@link StringStruct} to compare against
-		 * @param context1
-		 * 		{@link StringIntervalOpContext} containing the interval boundaries for the first {@link StringStruct} in
-		 * 		the equality operation
-		 * @param context2
-		 * 		{@link StringIntervalOpContext} containing the interval boundaries for the second {@link StringStruct}
-		 * 		in the equality operation
-		 */
-		private StringEqualityContext(final StringStruct struct,
-		                              final StringIntervalOpContext context1,
-		                              final StringIntervalOpContext context2) {
-			this.struct = struct;
-			this.context1 = context1;
-			this.context2 = context2;
-		}
-
-		/**
-		 * Getter for {@link #struct} value.
-		 *
-		 * @return {@link #struct} value
-		 */
-		public StringStruct getStruct() {
-			return struct;
-		}
-
-		/**
-		 * Getter for {@link #context1} value.
-		 *
-		 * @return {@link #context1} value
-		 */
-		public StringIntervalOpContext getContext1() {
-			return context1;
-		}
-
-		/**
-		 * Getter for {@link #context2} value.
-		 *
-		 * @return {@link #context2} value
-		 */
-		public StringIntervalOpContext getContext2() {
-			return context2;
-		}
-
-		/**
-		 * Factory method for retrieving a new {@link  StringEqualityContext.Builder} object.
-		 *
-		 * @param struct
-		 * 		the {@link StringStruct} to compare against
-		 *
-		 * @return a new {@link  StringEqualityContext.Builder} object
-		 */
-		public static StringEqualityContext.Builder builder(final StringStruct struct) {
-			return new StringEqualityContext.Builder(struct);
-		}
-	}
 
 	/**
 	 * Determines equality of strings according to the provided {@link StringEqualityContext}. Case is accounted for.
@@ -623,6 +324,7 @@ public interface StringStruct extends VectorStruct {
 	 */
 	LispStruct stringGreaterThanOrEqualToIgnoreCase(final StringEqualityContext context);
 
+	// TODO: fix by subclassing properly
 	default boolean isSimpleString() {
 		return getType().isOfType(SimpleStringType.INSTANCE);
 	}
@@ -685,6 +387,13 @@ public interface StringStruct extends VectorStruct {
 	static StringStruct.Builder builder(final IntegerStruct size) {
 		return new StringStruct.Builder(size);
 	}
+
+	/*
+	ARRAY-STRUCT
+	 */
+
+	@Override
+	StringStruct adjustArray(final AdjustArrayContext context);
 
 	/*
 	SEQUENCE-STRUCT

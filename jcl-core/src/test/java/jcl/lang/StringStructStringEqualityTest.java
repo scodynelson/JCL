@@ -26,7 +26,7 @@ public class StringStructStringEqualityTest {
 	 */
 
 	/**
-	 * Test for {@link StringStruct#stringEqual(StringStruct.StringEqualityContext)} where the start1 index was
+	 * Test for {@link StringStruct#stringEqual(StringEqualityContext)} where the start1 index was
 	 * negative.
 	 */
 	@Test
@@ -36,13 +36,13 @@ public class StringStructStringEqualityTest {
 
 		final StringStruct struct1 = StringStruct.emptyString();
 		final StringStruct struct2 = StringStruct.emptyString();
-		struct1.stringEqual(StringStruct.StringEqualityContext.builder(struct2)
-		                                                      .start1(IntegerStruct.MINUS_ONE)
-		                                                      .build());
+		struct1.stringEqual(StringEqualityContext.builder(struct2)
+		                                         .start1(IntegerStruct.MINUS_ONE)
+		                                         .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringEqual(StringStruct.StringEqualityContext)} where the start1 index was more
+	 * Test for {@link StringStruct#stringEqual(StringEqualityContext)} where the start1 index was more
 	 * than the total size of the first structure.
 	 */
 	@Test
@@ -52,14 +52,14 @@ public class StringStructStringEqualityTest {
 
 		final StringStruct struct1 = StringStruct.emptyString();
 		final StringStruct struct2 = StringStruct.emptyString();
-		struct1.stringEqual(StringStruct.StringEqualityContext.builder(struct2)
-		                                                      .start1(IntegerStruct.ONE)
-		                                                      .build());
+		struct1.stringEqual(StringEqualityContext.builder(struct2)
+		                                         .start1(IntegerStruct.ONE)
+		                                         .build());
 
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringEqual(StringStruct.StringEqualityContext)} where the start1 index was more
+	 * Test for {@link StringStruct#stringEqual(StringEqualityContext)} where the start1 index was more
 	 * than the fill pointer of the first structure.
 	 */
 	@Test
@@ -71,13 +71,13 @@ public class StringStructStringEqualityTest {
 		                                         .fillPointer(IntegerStruct.ONE)
 		                                         .build();
 		final StringStruct struct2 = StringStruct.emptyString();
-		struct1.stringEqual(StringStruct.StringEqualityContext.builder(struct2)
-		                                                      .start1(IntegerStruct.TWO)
-		                                                      .build());
+		struct1.stringEqual(StringEqualityContext.builder(struct2)
+		                                         .start1(IntegerStruct.TWO)
+		                                         .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringEqual(StringStruct.StringEqualityContext)} where the end1 index was negative.
+	 * Test for {@link StringStruct#stringEqual(StringEqualityContext)} where the end1 index was negative.
 	 */
 	@Test
 	public void test_stringEqual_NegativeEnd1() {
@@ -86,13 +86,13 @@ public class StringStructStringEqualityTest {
 
 		final StringStruct struct1 = StringStruct.emptyString();
 		final StringStruct struct2 = StringStruct.emptyString();
-		struct1.stringEqual(StringStruct.StringEqualityContext.builder(struct2)
-		                                                      .end1(IntegerStruct.MINUS_ONE)
-		                                                      .build());
+		struct1.stringEqual(StringEqualityContext.builder(struct2)
+		                                         .end1(IntegerStruct.MINUS_ONE)
+		                                         .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringEqual(StringStruct.StringEqualityContext)} where the end1 index was more than
+	 * Test for {@link StringStruct#stringEqual(StringEqualityContext)} where the end1 index was more than
 	 * the total size of the first structure.
 	 */
 	@Test
@@ -102,13 +102,13 @@ public class StringStructStringEqualityTest {
 
 		final StringStruct struct1 = StringStruct.emptyString();
 		final StringStruct struct2 = StringStruct.emptyString();
-		struct1.stringEqual(StringStruct.StringEqualityContext.builder(struct2)
-		                                                      .end1(IntegerStruct.ONE)
-		                                                      .build());
+		struct1.stringEqual(StringEqualityContext.builder(struct2)
+		                                         .end1(IntegerStruct.ONE)
+		                                         .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringEqual(StringStruct.StringEqualityContext)} where the end1 index was more than
+	 * Test for {@link StringStruct#stringEqual(StringEqualityContext)} where the end1 index was more than
 	 * the fill pointer of the first structure.
 	 */
 	@Test
@@ -120,13 +120,13 @@ public class StringStructStringEqualityTest {
 		                                         .fillPointer(IntegerStruct.ONE)
 		                                         .build();
 		final StringStruct struct2 = StringStruct.emptyString();
-		struct1.stringEqual(StringStruct.StringEqualityContext.builder(struct2)
-		                                                      .end1(IntegerStruct.TWO)
-		                                                      .build());
+		struct1.stringEqual(StringEqualityContext.builder(struct2)
+		                                         .end1(IntegerStruct.TWO)
+		                                         .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringEqual(StringStruct.StringEqualityContext)} where the start1 index was more
+	 * Test for {@link StringStruct#stringEqual(StringEqualityContext)} where the start1 index was more
 	 * than the end1 index.
 	 */
 	@Test
@@ -136,14 +136,14 @@ public class StringStructStringEqualityTest {
 
 		final StringStruct struct1 = StringStruct.toLispString("1");
 		final StringStruct struct2 = StringStruct.toLispString("1");
-		struct1.stringEqual(StringStruct.StringEqualityContext.builder(struct2)
-		                                                      .start1(IntegerStruct.ONE)
-		                                                      .end1(IntegerStruct.ZERO)
-		                                                      .build());
+		struct1.stringEqual(StringEqualityContext.builder(struct2)
+		                                         .start1(IntegerStruct.ONE)
+		                                         .end1(IntegerStruct.ZERO)
+		                                         .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringEqual(StringStruct.StringEqualityContext)} where the start2 index was
+	 * Test for {@link StringStruct#stringEqual(StringEqualityContext)} where the start2 index was
 	 * negative.
 	 */
 	@Test
@@ -153,13 +153,13 @@ public class StringStructStringEqualityTest {
 
 		final StringStruct struct1 = StringStruct.emptyString();
 		final StringStruct struct2 = StringStruct.emptyString();
-		struct1.stringEqual(StringStruct.StringEqualityContext.builder(struct2)
-		                                                      .start2(IntegerStruct.MINUS_ONE)
-		                                                      .build());
+		struct1.stringEqual(StringEqualityContext.builder(struct2)
+		                                         .start2(IntegerStruct.MINUS_ONE)
+		                                         .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringEqual(StringStruct.StringEqualityContext)} where the start2 index was more
+	 * Test for {@link StringStruct#stringEqual(StringEqualityContext)} where the start2 index was more
 	 * than the total size of the second structure.
 	 */
 	@Test
@@ -169,14 +169,14 @@ public class StringStructStringEqualityTest {
 
 		final StringStruct struct1 = StringStruct.emptyString();
 		final StringStruct struct2 = StringStruct.emptyString();
-		struct1.stringEqual(StringStruct.StringEqualityContext.builder(struct2)
-		                                                      .start2(IntegerStruct.ONE)
-		                                                      .build());
+		struct1.stringEqual(StringEqualityContext.builder(struct2)
+		                                         .start2(IntegerStruct.ONE)
+		                                         .build());
 
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringEqual(StringStruct.StringEqualityContext)} where the start2 index was more
+	 * Test for {@link StringStruct#stringEqual(StringEqualityContext)} where the start2 index was more
 	 * than the fill pointer of the second structure.
 	 */
 	@Test
@@ -188,13 +188,13 @@ public class StringStructStringEqualityTest {
 		final StringStruct struct2 = StringStruct.builder(IntegerStruct.TWO)
 		                                         .fillPointer(IntegerStruct.ONE)
 		                                         .build();
-		struct1.stringEqual(StringStruct.StringEqualityContext.builder(struct2)
-		                                                      .start2(IntegerStruct.TWO)
-		                                                      .build());
+		struct1.stringEqual(StringEqualityContext.builder(struct2)
+		                                         .start2(IntegerStruct.TWO)
+		                                         .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringEqual(StringStruct.StringEqualityContext)} where the end2 index was negative.
+	 * Test for {@link StringStruct#stringEqual(StringEqualityContext)} where the end2 index was negative.
 	 */
 	@Test
 	public void test_stringEqual_NegativeEnd2() {
@@ -203,13 +203,13 @@ public class StringStructStringEqualityTest {
 
 		final StringStruct struct1 = StringStruct.emptyString();
 		final StringStruct struct2 = StringStruct.emptyString();
-		struct1.stringEqual(StringStruct.StringEqualityContext.builder(struct2)
-		                                                      .end2(IntegerStruct.MINUS_ONE)
-		                                                      .build());
+		struct1.stringEqual(StringEqualityContext.builder(struct2)
+		                                         .end2(IntegerStruct.MINUS_ONE)
+		                                         .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringEqual(StringStruct.StringEqualityContext)} where the end2 index was more than
+	 * Test for {@link StringStruct#stringEqual(StringEqualityContext)} where the end2 index was more than
 	 * the total size of the second structure.
 	 */
 	@Test
@@ -219,13 +219,13 @@ public class StringStructStringEqualityTest {
 
 		final StringStruct struct1 = StringStruct.emptyString();
 		final StringStruct struct2 = StringStruct.emptyString();
-		struct1.stringEqual(StringStruct.StringEqualityContext.builder(struct2)
-		                                                      .end2(IntegerStruct.ONE)
-		                                                      .build());
+		struct1.stringEqual(StringEqualityContext.builder(struct2)
+		                                         .end2(IntegerStruct.ONE)
+		                                         .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringEqual(StringStruct.StringEqualityContext)} where the end2 index was more than
+	 * Test for {@link StringStruct#stringEqual(StringEqualityContext)} where the end2 index was more than
 	 * the fill pointer of the second structure.
 	 */
 	@Test
@@ -237,13 +237,13 @@ public class StringStructStringEqualityTest {
 		final StringStruct struct2 = StringStruct.builder(IntegerStruct.TWO)
 		                                         .fillPointer(IntegerStruct.ONE)
 		                                         .build();
-		struct1.stringEqual(StringStruct.StringEqualityContext.builder(struct2)
-		                                                      .end2(IntegerStruct.TWO)
-		                                                      .build());
+		struct1.stringEqual(StringEqualityContext.builder(struct2)
+		                                         .end2(IntegerStruct.TWO)
+		                                         .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringEqual(StringStruct.StringEqualityContext)} where the start2 index was more
+	 * Test for {@link StringStruct#stringEqual(StringEqualityContext)} where the start2 index was more
 	 * than the end2 index.
 	 */
 	@Test
@@ -253,29 +253,29 @@ public class StringStructStringEqualityTest {
 
 		final StringStruct struct1 = StringStruct.toLispString("1");
 		final StringStruct struct2 = StringStruct.toLispString("1");
-		struct1.stringEqual(StringStruct.StringEqualityContext.builder(struct2)
-		                                                      .start2(IntegerStruct.ONE)
-		                                                      .end2(IntegerStruct.ZERO)
-		                                                      .build());
+		struct1.stringEqual(StringEqualityContext.builder(struct2)
+		                                         .start2(IntegerStruct.ONE)
+		                                         .end2(IntegerStruct.ZERO)
+		                                         .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringEqual(StringStruct.StringEqualityContext)}.
+	 * Test for {@link StringStruct#stringEqual(StringEqualityContext)}.
 	 */
 	@Test
 	public void test_stringEqual_NoStartsAndNoEnds() {
 		final String str = "1";
 		final StringStruct struct1 = StringStruct.toLispString(str);
 		final StringStruct struct2 = StringStruct.toLispString(str);
-		final BooleanStruct result = struct1.stringEqual(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                                   .build());
+		final BooleanStruct result = struct1.stringEqual(StringEqualityContext.builder(struct2)
+		                                                                      .build());
 		Assert.assertThat(result, is(BooleanStruct.T));
 		Assert.assertThat(struct1.toJavaString(), is(str));
 		Assert.assertThat(struct2.toJavaString(), is(str));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringEqual(StringStruct.StringEqualityContext)} where a start index was
+	 * Test for {@link StringStruct#stringEqual(StringEqualityContext)} where a start index was
 	 * provided.
 	 */
 	@Test
@@ -284,17 +284,17 @@ public class StringStructStringEqualityTest {
 		final StringStruct struct1 = StringStruct.toLispString(str1);
 		final String str2 = "31";
 		final StringStruct struct2 = StringStruct.toLispString(str2);
-		final BooleanStruct result = struct1.stringEqual(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                                   .start1(IntegerStruct.ONE)
-		                                                                                   .start2(IntegerStruct.ONE)
-		                                                                                   .build());
+		final BooleanStruct result = struct1.stringEqual(StringEqualityContext.builder(struct2)
+		                                                                      .start1(IntegerStruct.ONE)
+		                                                                      .start2(IntegerStruct.ONE)
+		                                                                      .build());
 		Assert.assertThat(result, is(BooleanStruct.T));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringEqual(StringStruct.StringEqualityContext)} where an end index was
+	 * Test for {@link StringStruct#stringEqual(StringEqualityContext)} where an end index was
 	 * provided.
 	 */
 	@Test
@@ -303,17 +303,17 @@ public class StringStructStringEqualityTest {
 		final StringStruct struct1 = StringStruct.toLispString(str1);
 		final String str2 = "13";
 		final StringStruct struct2 = StringStruct.toLispString(str2);
-		final BooleanStruct result = struct1.stringEqual(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                                   .end1(IntegerStruct.ONE)
-		                                                                                   .end2(IntegerStruct.ONE)
-		                                                                                   .build());
+		final BooleanStruct result = struct1.stringEqual(StringEqualityContext.builder(struct2)
+		                                                                      .end1(IntegerStruct.ONE)
+		                                                                      .end2(IntegerStruct.ONE)
+		                                                                      .build());
 		Assert.assertThat(result, is(BooleanStruct.T));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringEqual(StringStruct.StringEqualityContext)} where a start index and an
+	 * Test for {@link StringStruct#stringEqual(StringEqualityContext)} where a start index and an
 	 * end index were provided.
 	 */
 	@Test
@@ -322,19 +322,19 @@ public class StringStructStringEqualityTest {
 		final StringStruct struct1 = StringStruct.toLispString(str1);
 		final String str2 = "321";
 		final StringStruct struct2 = StringStruct.toLispString(str2);
-		final BooleanStruct result = struct1.stringEqual(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                                   .start1(IntegerStruct.ONE)
-		                                                                                   .start2(IntegerStruct.ONE)
-		                                                                                   .end1(IntegerStruct.TWO)
-		                                                                                   .end2(IntegerStruct.TWO)
-		                                                                                   .build());
+		final BooleanStruct result = struct1.stringEqual(StringEqualityContext.builder(struct2)
+		                                                                      .start1(IntegerStruct.ONE)
+		                                                                      .start2(IntegerStruct.ONE)
+		                                                                      .end1(IntegerStruct.TWO)
+		                                                                      .end2(IntegerStruct.TWO)
+		                                                                      .build());
 		Assert.assertThat(result, is(BooleanStruct.T));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringEqual(StringStruct.StringEqualityContext)} where string1 has a fill pointer.
+	 * Test for {@link StringStruct#stringEqual(StringEqualityContext)} where string1 has a fill pointer.
 	 */
 	@Test
 	public void test_stringEqual_FillPointer1() {
@@ -345,15 +345,15 @@ public class StringStructStringEqualityTest {
 		                                         .build();
 		final String str2 = "12";
 		final StringStruct struct2 = StringStruct.toLispString(str2);
-		final BooleanStruct result = struct1.stringEqual(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                                   .build());
+		final BooleanStruct result = struct1.stringEqual(StringEqualityContext.builder(struct2)
+		                                                                      .build());
 		Assert.assertThat(result, is(BooleanStruct.T));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringEqual(StringStruct.StringEqualityContext)} where string2 has a fill pointer.
+	 * Test for {@link StringStruct#stringEqual(StringEqualityContext)} where string2 has a fill pointer.
 	 */
 	@Test
 	public void test_stringEqual_FillPointer2() {
@@ -364,15 +364,15 @@ public class StringStructStringEqualityTest {
 		                                         .initialContents(StringStruct.toLispString(str2))
 		                                         .fillPointer(IntegerStruct.TWO)
 		                                         .build();
-		final BooleanStruct result = struct1.stringEqual(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                                   .build());
+		final BooleanStruct result = struct1.stringEqual(StringEqualityContext.builder(struct2)
+		                                                                      .build());
 		Assert.assertThat(result, is(BooleanStruct.T));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringEqual(StringStruct.StringEqualityContext)} where both string1 and string2 have
+	 * Test for {@link StringStruct#stringEqual(StringEqualityContext)} where both string1 and string2 have
 	 * fill pointers.
 	 */
 	@Test
@@ -387,15 +387,15 @@ public class StringStructStringEqualityTest {
 		                                         .initialContents(StringStruct.toLispString(str2))
 		                                         .fillPointer(IntegerStruct.TWO)
 		                                         .build();
-		final BooleanStruct result = struct1.stringEqual(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                                   .build());
+		final BooleanStruct result = struct1.stringEqual(StringEqualityContext.builder(struct2)
+		                                                                      .build());
 		Assert.assertThat(result, is(BooleanStruct.T));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringEqual(StringStruct.StringEqualityContext)} where string1 is displaced.
+	 * Test for {@link StringStruct#stringEqual(StringEqualityContext)} where string1 is displaced.
 	 */
 	@Test
 	public void test_stringEqual_Displaced1() {
@@ -406,15 +406,15 @@ public class StringStructStringEqualityTest {
 		                                         .build();
 		final String str2 = "12";
 		final StringStruct struct2 = StringStruct.toLispString(str2);
-		final BooleanStruct result = struct1.stringEqual(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                                   .build());
+		final BooleanStruct result = struct1.stringEqual(StringEqualityContext.builder(struct2)
+		                                                                      .build());
 		Assert.assertThat(result, is(BooleanStruct.T));
 		Assert.assertThat(struct1.toJavaString(), is(str1.substring(1)));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringEqual(StringStruct.StringEqualityContext)} where string2 is displaced.
+	 * Test for {@link StringStruct#stringEqual(StringEqualityContext)} where string2 is displaced.
 	 */
 	@Test
 	public void test_stringEqual_Displaced2() {
@@ -425,15 +425,15 @@ public class StringStructStringEqualityTest {
 		                                         .displacedTo(StringStruct.toLispString(str2))
 		                                         .displacedIndexOffset(IntegerStruct.ONE)
 		                                         .build();
-		final BooleanStruct result = struct1.stringEqual(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                                   .build());
+		final BooleanStruct result = struct1.stringEqual(StringEqualityContext.builder(struct2)
+		                                                                      .build());
 		Assert.assertThat(result, is(BooleanStruct.T));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2.substring(1)));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringEqual(StringStruct.StringEqualityContext)} where both string1 and string2 are
+	 * Test for {@link StringStruct#stringEqual(StringEqualityContext)} where both string1 and string2 are
 	 * displaced.
 	 */
 	@Test
@@ -448,15 +448,15 @@ public class StringStructStringEqualityTest {
 		                                         .displacedTo(StringStruct.toLispString(str2))
 		                                         .displacedIndexOffset(IntegerStruct.ONE)
 		                                         .build();
-		final BooleanStruct result = struct1.stringEqual(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                                   .build());
+		final BooleanStruct result = struct1.stringEqual(StringEqualityContext.builder(struct2)
+		                                                                      .build());
 		Assert.assertThat(result, is(BooleanStruct.T));
 		Assert.assertThat(struct1.toJavaString(), is(str1.substring(1)));
 		Assert.assertThat(struct2.toJavaString(), is(str2.substring(1)));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringEqual(StringStruct.StringEqualityContext)} where string1 and string2 are not
+	 * Test for {@link StringStruct#stringEqual(StringEqualityContext)} where string1 and string2 are not
 	 * equal.
 	 */
 	@Test
@@ -465,15 +465,15 @@ public class StringStructStringEqualityTest {
 		final StringStruct struct1 = StringStruct.toLispString(str1);
 		final String str2 = "2";
 		final StringStruct struct2 = StringStruct.toLispString(str2);
-		final BooleanStruct result = struct1.stringEqual(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                                   .build());
+		final BooleanStruct result = struct1.stringEqual(StringEqualityContext.builder(struct2)
+		                                                                      .build());
 		Assert.assertThat(result, is(BooleanStruct.NIL));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringEqual(StringStruct.StringEqualityContext)} where string1 and string2 are not
+	 * Test for {@link StringStruct#stringEqual(StringEqualityContext)} where string1 and string2 are not
 	 * equal and case is accounted for.
 	 */
 	@Test
@@ -482,8 +482,8 @@ public class StringStructStringEqualityTest {
 		final StringStruct struct1 = StringStruct.toLispString(str1);
 		final String str2 = "a";
 		final StringStruct struct2 = StringStruct.toLispString(str2);
-		final BooleanStruct result = struct1.stringEqual(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                                   .build());
+		final BooleanStruct result = struct1.stringEqual(StringEqualityContext.builder(struct2)
+		                                                                      .build());
 		Assert.assertThat(result, is(BooleanStruct.NIL));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
@@ -494,7 +494,7 @@ public class StringStructStringEqualityTest {
 	 */
 
 	/**
-	 * Test for {@link StringStruct#stringNotEqual(StringStruct.StringEqualityContext)} where the start1 index was
+	 * Test for {@link StringStruct#stringNotEqual(StringEqualityContext)} where the start1 index was
 	 * negative.
 	 */
 	@Test
@@ -504,13 +504,13 @@ public class StringStructStringEqualityTest {
 
 		final StringStruct struct1 = StringStruct.emptyString();
 		final StringStruct struct2 = StringStruct.emptyString();
-		struct1.stringNotEqual(StringStruct.StringEqualityContext.builder(struct2)
-		                                                         .start1(IntegerStruct.MINUS_ONE)
-		                                                         .build());
+		struct1.stringNotEqual(StringEqualityContext.builder(struct2)
+		                                            .start1(IntegerStruct.MINUS_ONE)
+		                                            .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringNotEqual(StringStruct.StringEqualityContext)} where the start1 index was more
+	 * Test for {@link StringStruct#stringNotEqual(StringEqualityContext)} where the start1 index was more
 	 * than the total size of the first structure.
 	 */
 	@Test
@@ -520,14 +520,14 @@ public class StringStructStringEqualityTest {
 
 		final StringStruct struct1 = StringStruct.emptyString();
 		final StringStruct struct2 = StringStruct.emptyString();
-		struct1.stringNotEqual(StringStruct.StringEqualityContext.builder(struct2)
-		                                                         .start1(IntegerStruct.ONE)
-		                                                         .build());
+		struct1.stringNotEqual(StringEqualityContext.builder(struct2)
+		                                            .start1(IntegerStruct.ONE)
+		                                            .build());
 
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringNotEqual(StringStruct.StringEqualityContext)} where the start1 index was more
+	 * Test for {@link StringStruct#stringNotEqual(StringEqualityContext)} where the start1 index was more
 	 * than the fill pointer of the first structure.
 	 */
 	@Test
@@ -539,13 +539,13 @@ public class StringStructStringEqualityTest {
 		                                         .fillPointer(IntegerStruct.ONE)
 		                                         .build();
 		final StringStruct struct2 = StringStruct.emptyString();
-		struct1.stringNotEqual(StringStruct.StringEqualityContext.builder(struct2)
-		                                                         .start1(IntegerStruct.TWO)
-		                                                         .build());
+		struct1.stringNotEqual(StringEqualityContext.builder(struct2)
+		                                            .start1(IntegerStruct.TWO)
+		                                            .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringNotEqual(StringStruct.StringEqualityContext)} where the end1 index was
+	 * Test for {@link StringStruct#stringNotEqual(StringEqualityContext)} where the end1 index was
 	 * negative.
 	 */
 	@Test
@@ -555,13 +555,13 @@ public class StringStructStringEqualityTest {
 
 		final StringStruct struct1 = StringStruct.emptyString();
 		final StringStruct struct2 = StringStruct.emptyString();
-		struct1.stringNotEqual(StringStruct.StringEqualityContext.builder(struct2)
-		                                                         .end1(IntegerStruct.MINUS_ONE)
-		                                                         .build());
+		struct1.stringNotEqual(StringEqualityContext.builder(struct2)
+		                                            .end1(IntegerStruct.MINUS_ONE)
+		                                            .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringNotEqual(StringStruct.StringEqualityContext)} where the end1 index was more
+	 * Test for {@link StringStruct#stringNotEqual(StringEqualityContext)} where the end1 index was more
 	 * than the total size of the first structure.
 	 */
 	@Test
@@ -571,13 +571,13 @@ public class StringStructStringEqualityTest {
 
 		final StringStruct struct1 = StringStruct.emptyString();
 		final StringStruct struct2 = StringStruct.emptyString();
-		struct1.stringNotEqual(StringStruct.StringEqualityContext.builder(struct2)
-		                                                         .end1(IntegerStruct.ONE)
-		                                                         .build());
+		struct1.stringNotEqual(StringEqualityContext.builder(struct2)
+		                                            .end1(IntegerStruct.ONE)
+		                                            .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringNotEqual(StringStruct.StringEqualityContext)} where the end1 index was more
+	 * Test for {@link StringStruct#stringNotEqual(StringEqualityContext)} where the end1 index was more
 	 * than the fill pointer of the first structure.
 	 */
 	@Test
@@ -589,13 +589,13 @@ public class StringStructStringEqualityTest {
 		                                         .fillPointer(IntegerStruct.ONE)
 		                                         .build();
 		final StringStruct struct2 = StringStruct.emptyString();
-		struct1.stringNotEqual(StringStruct.StringEqualityContext.builder(struct2)
-		                                                         .end1(IntegerStruct.TWO)
-		                                                         .build());
+		struct1.stringNotEqual(StringEqualityContext.builder(struct2)
+		                                            .end1(IntegerStruct.TWO)
+		                                            .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringNotEqual(StringStruct.StringEqualityContext)} where the start1 index was more
+	 * Test for {@link StringStruct#stringNotEqual(StringEqualityContext)} where the start1 index was more
 	 * than the end1 index.
 	 */
 	@Test
@@ -605,14 +605,14 @@ public class StringStructStringEqualityTest {
 
 		final StringStruct struct1 = StringStruct.toLispString("1");
 		final StringStruct struct2 = StringStruct.toLispString("1");
-		struct1.stringNotEqual(StringStruct.StringEqualityContext.builder(struct2)
-		                                                         .start1(IntegerStruct.ONE)
-		                                                         .end1(IntegerStruct.ZERO)
-		                                                         .build());
+		struct1.stringNotEqual(StringEqualityContext.builder(struct2)
+		                                            .start1(IntegerStruct.ONE)
+		                                            .end1(IntegerStruct.ZERO)
+		                                            .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringNotEqual(StringStruct.StringEqualityContext)} where the start2 index was
+	 * Test for {@link StringStruct#stringNotEqual(StringEqualityContext)} where the start2 index was
 	 * negative.
 	 */
 	@Test
@@ -622,13 +622,13 @@ public class StringStructStringEqualityTest {
 
 		final StringStruct struct1 = StringStruct.emptyString();
 		final StringStruct struct2 = StringStruct.emptyString();
-		struct1.stringNotEqual(StringStruct.StringEqualityContext.builder(struct2)
-		                                                         .start2(IntegerStruct.MINUS_ONE)
-		                                                         .build());
+		struct1.stringNotEqual(StringEqualityContext.builder(struct2)
+		                                            .start2(IntegerStruct.MINUS_ONE)
+		                                            .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringNotEqual(StringStruct.StringEqualityContext)} where the start2 index was more
+	 * Test for {@link StringStruct#stringNotEqual(StringEqualityContext)} where the start2 index was more
 	 * than the total size of the second structure.
 	 */
 	@Test
@@ -638,14 +638,14 @@ public class StringStructStringEqualityTest {
 
 		final StringStruct struct1 = StringStruct.emptyString();
 		final StringStruct struct2 = StringStruct.emptyString();
-		struct1.stringNotEqual(StringStruct.StringEqualityContext.builder(struct2)
-		                                                         .start2(IntegerStruct.ONE)
-		                                                         .build());
+		struct1.stringNotEqual(StringEqualityContext.builder(struct2)
+		                                            .start2(IntegerStruct.ONE)
+		                                            .build());
 
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringNotEqual(StringStruct.StringEqualityContext)} where the start2 index was more
+	 * Test for {@link StringStruct#stringNotEqual(StringEqualityContext)} where the start2 index was more
 	 * than the fill pointer of the second structure.
 	 */
 	@Test
@@ -657,13 +657,13 @@ public class StringStructStringEqualityTest {
 		final StringStruct struct2 = StringStruct.builder(IntegerStruct.TWO)
 		                                         .fillPointer(IntegerStruct.ONE)
 		                                         .build();
-		struct1.stringNotEqual(StringStruct.StringEqualityContext.builder(struct2)
-		                                                         .start2(IntegerStruct.TWO)
-		                                                         .build());
+		struct1.stringNotEqual(StringEqualityContext.builder(struct2)
+		                                            .start2(IntegerStruct.TWO)
+		                                            .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringNotEqual(StringStruct.StringEqualityContext)} where the end2 index was
+	 * Test for {@link StringStruct#stringNotEqual(StringEqualityContext)} where the end2 index was
 	 * negative.
 	 */
 	@Test
@@ -673,13 +673,13 @@ public class StringStructStringEqualityTest {
 
 		final StringStruct struct1 = StringStruct.emptyString();
 		final StringStruct struct2 = StringStruct.emptyString();
-		struct1.stringNotEqual(StringStruct.StringEqualityContext.builder(struct2)
-		                                                         .end2(IntegerStruct.MINUS_ONE)
-		                                                         .build());
+		struct1.stringNotEqual(StringEqualityContext.builder(struct2)
+		                                            .end2(IntegerStruct.MINUS_ONE)
+		                                            .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringNotEqual(StringStruct.StringEqualityContext)} where the end2 index was more
+	 * Test for {@link StringStruct#stringNotEqual(StringEqualityContext)} where the end2 index was more
 	 * than the total size of the second structure.
 	 */
 	@Test
@@ -689,13 +689,13 @@ public class StringStructStringEqualityTest {
 
 		final StringStruct struct1 = StringStruct.emptyString();
 		final StringStruct struct2 = StringStruct.emptyString();
-		struct1.stringNotEqual(StringStruct.StringEqualityContext.builder(struct2)
-		                                                         .end2(IntegerStruct.ONE)
-		                                                         .build());
+		struct1.stringNotEqual(StringEqualityContext.builder(struct2)
+		                                            .end2(IntegerStruct.ONE)
+		                                            .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringNotEqual(StringStruct.StringEqualityContext)} where the end2 index was more
+	 * Test for {@link StringStruct#stringNotEqual(StringEqualityContext)} where the end2 index was more
 	 * than the fill pointer of the second structure.
 	 */
 	@Test
@@ -707,13 +707,13 @@ public class StringStructStringEqualityTest {
 		final StringStruct struct2 = StringStruct.builder(IntegerStruct.TWO)
 		                                         .fillPointer(IntegerStruct.ONE)
 		                                         .build();
-		struct1.stringNotEqual(StringStruct.StringEqualityContext.builder(struct2)
-		                                                         .end2(IntegerStruct.TWO)
-		                                                         .build());
+		struct1.stringNotEqual(StringEqualityContext.builder(struct2)
+		                                            .end2(IntegerStruct.TWO)
+		                                            .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringNotEqual(StringStruct.StringEqualityContext)} where the start2 index was more
+	 * Test for {@link StringStruct#stringNotEqual(StringEqualityContext)} where the start2 index was more
 	 * than the end2 index.
 	 */
 	@Test
@@ -723,14 +723,14 @@ public class StringStructStringEqualityTest {
 
 		final StringStruct struct1 = StringStruct.toLispString("1");
 		final StringStruct struct2 = StringStruct.toLispString("1");
-		struct1.stringNotEqual(StringStruct.StringEqualityContext.builder(struct2)
-		                                                         .start2(IntegerStruct.ONE)
-		                                                         .end2(IntegerStruct.ZERO)
-		                                                         .build());
+		struct1.stringNotEqual(StringEqualityContext.builder(struct2)
+		                                            .start2(IntegerStruct.ONE)
+		                                            .end2(IntegerStruct.ZERO)
+		                                            .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringNotEqual(StringStruct.StringEqualityContext)}.
+	 * Test for {@link StringStruct#stringNotEqual(StringEqualityContext)}.
 	 */
 	@Test
 	public void test_stringNotEqual_NoStartsAndNoEnds() {
@@ -738,15 +738,15 @@ public class StringStructStringEqualityTest {
 		final StringStruct struct1 = StringStruct.toLispString(str1);
 		final String str2 = "1";
 		final StringStruct struct2 = StringStruct.toLispString(str2);
-		final LispStruct result = struct1.stringNotEqual(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                                   .build());
+		final LispStruct result = struct1.stringNotEqual(StringEqualityContext.builder(struct2)
+		                                                                      .build());
 		Assert.assertThat(result, is(BooleanStruct.NIL));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringNotEqual(StringStruct.StringEqualityContext)} where a start index was
+	 * Test for {@link StringStruct#stringNotEqual(StringEqualityContext)} where a start index was
 	 * provided.
 	 */
 	@Test
@@ -755,17 +755,17 @@ public class StringStructStringEqualityTest {
 		final StringStruct struct1 = StringStruct.toLispString(str1);
 		final String str2 = "31";
 		final StringStruct struct2 = StringStruct.toLispString(str2);
-		final LispStruct result = struct1.stringNotEqual(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                                   .start1(IntegerStruct.ONE)
-		                                                                                   .start2(IntegerStruct.ONE)
-		                                                                                   .build());
+		final LispStruct result = struct1.stringNotEqual(StringEqualityContext.builder(struct2)
+		                                                                      .start1(IntegerStruct.ONE)
+		                                                                      .start2(IntegerStruct.ONE)
+		                                                                      .build());
 		Assert.assertThat(result, is(BooleanStruct.NIL));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringNotEqual(StringStruct.StringEqualityContext)} where an end index was
+	 * Test for {@link StringStruct#stringNotEqual(StringEqualityContext)} where an end index was
 	 * provided.
 	 */
 	@Test
@@ -774,17 +774,17 @@ public class StringStructStringEqualityTest {
 		final StringStruct struct1 = StringStruct.toLispString(str1);
 		final String str2 = "13";
 		final StringStruct struct2 = StringStruct.toLispString(str2);
-		final LispStruct result = struct1.stringNotEqual(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                                   .end1(IntegerStruct.ONE)
-		                                                                                   .end2(IntegerStruct.ONE)
-		                                                                                   .build());
+		final LispStruct result = struct1.stringNotEqual(StringEqualityContext.builder(struct2)
+		                                                                      .end1(IntegerStruct.ONE)
+		                                                                      .end2(IntegerStruct.ONE)
+		                                                                      .build());
 		Assert.assertThat(result, is(BooleanStruct.NIL));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringNotEqual(StringStruct.StringEqualityContext)} where a start index and an
+	 * Test for {@link StringStruct#stringNotEqual(StringEqualityContext)} where a start index and an
 	 * end index were provided.
 	 */
 	@Test
@@ -793,19 +793,19 @@ public class StringStructStringEqualityTest {
 		final StringStruct struct1 = StringStruct.toLispString(str1);
 		final String str2 = "321";
 		final StringStruct struct2 = StringStruct.toLispString(str2);
-		final LispStruct result = struct1.stringNotEqual(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                                   .start1(IntegerStruct.ONE)
-		                                                                                   .start2(IntegerStruct.ONE)
-		                                                                                   .end1(IntegerStruct.TWO)
-		                                                                                   .end2(IntegerStruct.TWO)
-		                                                                                   .build());
+		final LispStruct result = struct1.stringNotEqual(StringEqualityContext.builder(struct2)
+		                                                                      .start1(IntegerStruct.ONE)
+		                                                                      .start2(IntegerStruct.ONE)
+		                                                                      .end1(IntegerStruct.TWO)
+		                                                                      .end2(IntegerStruct.TWO)
+		                                                                      .build());
 		Assert.assertThat(result, is(BooleanStruct.NIL));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringNotEqual(StringStruct.StringEqualityContext)} where string1 has a fill
+	 * Test for {@link StringStruct#stringNotEqual(StringEqualityContext)} where string1 has a fill
 	 * pointer.
 	 */
 	@Test
@@ -817,15 +817,15 @@ public class StringStructStringEqualityTest {
 		                                         .build();
 		final String str2 = "12";
 		final StringStruct struct2 = StringStruct.toLispString(str2);
-		final LispStruct result = struct1.stringNotEqual(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                                   .build());
+		final LispStruct result = struct1.stringNotEqual(StringEqualityContext.builder(struct2)
+		                                                                      .build());
 		Assert.assertThat(result, is(BooleanStruct.NIL));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringNotEqual(StringStruct.StringEqualityContext)} where string2 has a fill
+	 * Test for {@link StringStruct#stringNotEqual(StringEqualityContext)} where string2 has a fill
 	 * pointer.
 	 */
 	@Test
@@ -837,15 +837,15 @@ public class StringStructStringEqualityTest {
 		                                         .initialContents(StringStruct.toLispString(str2))
 		                                         .fillPointer(IntegerStruct.TWO)
 		                                         .build();
-		final LispStruct result = struct1.stringNotEqual(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                                   .build());
+		final LispStruct result = struct1.stringNotEqual(StringEqualityContext.builder(struct2)
+		                                                                      .build());
 		Assert.assertThat(result, is(BooleanStruct.NIL));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringNotEqual(StringStruct.StringEqualityContext)} where both string1 and string2
+	 * Test for {@link StringStruct#stringNotEqual(StringEqualityContext)} where both string1 and string2
 	 * have fill pointers.
 	 */
 	@Test
@@ -860,15 +860,15 @@ public class StringStructStringEqualityTest {
 		                                         .initialContents(StringStruct.toLispString(str2))
 		                                         .fillPointer(IntegerStruct.TWO)
 		                                         .build();
-		final LispStruct result = struct1.stringNotEqual(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                                   .build());
+		final LispStruct result = struct1.stringNotEqual(StringEqualityContext.builder(struct2)
+		                                                                      .build());
 		Assert.assertThat(result, is(BooleanStruct.NIL));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringNotEqual(StringStruct.StringEqualityContext)} where string1 is displaced.
+	 * Test for {@link StringStruct#stringNotEqual(StringEqualityContext)} where string1 is displaced.
 	 */
 	@Test
 	public void test_stringNotEqual_Displaced1() {
@@ -879,15 +879,15 @@ public class StringStructStringEqualityTest {
 		                                         .build();
 		final String str2 = "23";
 		final StringStruct struct2 = StringStruct.toLispString(str2);
-		final LispStruct result = struct1.stringNotEqual(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                                   .build());
+		final LispStruct result = struct1.stringNotEqual(StringEqualityContext.builder(struct2)
+		                                                                      .build());
 		Assert.assertThat(result, is(BooleanStruct.NIL));
 		Assert.assertThat(struct1.toJavaString(), is(str1.substring(1)));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringNotEqual(StringStruct.StringEqualityContext)} where string2 is displaced.
+	 * Test for {@link StringStruct#stringNotEqual(StringEqualityContext)} where string2 is displaced.
 	 */
 	@Test
 	public void test_stringNotEqual_Displaced2() {
@@ -898,15 +898,15 @@ public class StringStructStringEqualityTest {
 		                                         .displacedTo(StringStruct.toLispString(str2))
 		                                         .displacedIndexOffset(IntegerStruct.ONE)
 		                                         .build();
-		final LispStruct result = struct1.stringNotEqual(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                                   .build());
+		final LispStruct result = struct1.stringNotEqual(StringEqualityContext.builder(struct2)
+		                                                                      .build());
 		Assert.assertThat(result, is(BooleanStruct.NIL));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2.substring(1)));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringNotEqual(StringStruct.StringEqualityContext)} where both string1 and string2
+	 * Test for {@link StringStruct#stringNotEqual(StringEqualityContext)} where both string1 and string2
 	 * are displaced.
 	 */
 	@Test
@@ -921,15 +921,15 @@ public class StringStructStringEqualityTest {
 		                                         .displacedTo(StringStruct.toLispString(str2))
 		                                         .displacedIndexOffset(IntegerStruct.ONE)
 		                                         .build();
-		final LispStruct result = struct1.stringNotEqual(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                                   .build());
+		final LispStruct result = struct1.stringNotEqual(StringEqualityContext.builder(struct2)
+		                                                                      .build());
 		Assert.assertThat(result, is(BooleanStruct.NIL));
 		Assert.assertThat(struct1.toJavaString(), is(str1.substring(1)));
 		Assert.assertThat(struct2.toJavaString(), is(str2.substring(1)));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringNotEqual(StringStruct.StringEqualityContext)} where string1 and string2 are
+	 * Test for {@link StringStruct#stringNotEqual(StringEqualityContext)} where string1 and string2 are
 	 * equal.
 	 */
 	@Test
@@ -938,15 +938,15 @@ public class StringStructStringEqualityTest {
 		final StringStruct struct1 = StringStruct.toLispString(str1);
 		final String str2 = "121";
 		final StringStruct struct2 = StringStruct.toLispString(str2);
-		final LispStruct result = struct1.stringNotEqual(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                                   .build());
+		final LispStruct result = struct1.stringNotEqual(StringEqualityContext.builder(struct2)
+		                                                                      .build());
 		Assert.assertThat(result, is(IntegerStruct.ONE));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringNotEqual(StringStruct.StringEqualityContext)} where string1 and string2 are
+	 * Test for {@link StringStruct#stringNotEqual(StringEqualityContext)} where string1 and string2 are
 	 * equal and case is accounted for.
 	 */
 	@Test
@@ -955,8 +955,8 @@ public class StringStructStringEqualityTest {
 		final StringStruct struct1 = StringStruct.toLispString(str1);
 		final String str2 = "a";
 		final StringStruct struct2 = StringStruct.toLispString(str2);
-		final LispStruct result = struct1.stringNotEqual(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                                   .build());
+		final LispStruct result = struct1.stringNotEqual(StringEqualityContext.builder(struct2)
+		                                                                      .build());
 		Assert.assertThat(result, is(IntegerStruct.ZERO));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
@@ -967,7 +967,7 @@ public class StringStructStringEqualityTest {
 	 */
 
 	/**
-	 * Test for {@link StringStruct#stringLessThan(StringStruct.StringEqualityContext)} where the start1 index was
+	 * Test for {@link StringStruct#stringLessThan(StringEqualityContext)} where the start1 index was
 	 * negative.
 	 */
 	@Test
@@ -977,13 +977,13 @@ public class StringStructStringEqualityTest {
 
 		final StringStruct struct1 = StringStruct.emptyString();
 		final StringStruct struct2 = StringStruct.emptyString();
-		struct1.stringLessThan(StringStruct.StringEqualityContext.builder(struct2)
-		                                                         .start1(IntegerStruct.MINUS_ONE)
-		                                                         .build());
+		struct1.stringLessThan(StringEqualityContext.builder(struct2)
+		                                            .start1(IntegerStruct.MINUS_ONE)
+		                                            .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringLessThan(StringStruct.StringEqualityContext)} where the start1 index was more
+	 * Test for {@link StringStruct#stringLessThan(StringEqualityContext)} where the start1 index was more
 	 * than the total size of the first structure.
 	 */
 	@Test
@@ -993,14 +993,14 @@ public class StringStructStringEqualityTest {
 
 		final StringStruct struct1 = StringStruct.emptyString();
 		final StringStruct struct2 = StringStruct.emptyString();
-		struct1.stringLessThan(StringStruct.StringEqualityContext.builder(struct2)
-		                                                         .start1(IntegerStruct.ONE)
-		                                                         .build());
+		struct1.stringLessThan(StringEqualityContext.builder(struct2)
+		                                            .start1(IntegerStruct.ONE)
+		                                            .build());
 
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringLessThan(StringStruct.StringEqualityContext)} where the start1 index was more
+	 * Test for {@link StringStruct#stringLessThan(StringEqualityContext)} where the start1 index was more
 	 * than the fill pointer of the first structure.
 	 */
 	@Test
@@ -1012,13 +1012,13 @@ public class StringStructStringEqualityTest {
 		                                         .fillPointer(IntegerStruct.ONE)
 		                                         .build();
 		final StringStruct struct2 = StringStruct.emptyString();
-		struct1.stringLessThan(StringStruct.StringEqualityContext.builder(struct2)
-		                                                         .start1(IntegerStruct.TWO)
-		                                                         .build());
+		struct1.stringLessThan(StringEqualityContext.builder(struct2)
+		                                            .start1(IntegerStruct.TWO)
+		                                            .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringLessThan(StringStruct.StringEqualityContext)} where the end1 index was
+	 * Test for {@link StringStruct#stringLessThan(StringEqualityContext)} where the end1 index was
 	 * negative.
 	 */
 	@Test
@@ -1028,13 +1028,13 @@ public class StringStructStringEqualityTest {
 
 		final StringStruct struct1 = StringStruct.emptyString();
 		final StringStruct struct2 = StringStruct.emptyString();
-		struct1.stringLessThan(StringStruct.StringEqualityContext.builder(struct2)
-		                                                         .end1(IntegerStruct.MINUS_ONE)
-		                                                         .build());
+		struct1.stringLessThan(StringEqualityContext.builder(struct2)
+		                                            .end1(IntegerStruct.MINUS_ONE)
+		                                            .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringLessThan(StringStruct.StringEqualityContext)} where the end1 index was more
+	 * Test for {@link StringStruct#stringLessThan(StringEqualityContext)} where the end1 index was more
 	 * than the total size of the first structure.
 	 */
 	@Test
@@ -1044,13 +1044,13 @@ public class StringStructStringEqualityTest {
 
 		final StringStruct struct1 = StringStruct.emptyString();
 		final StringStruct struct2 = StringStruct.emptyString();
-		struct1.stringLessThan(StringStruct.StringEqualityContext.builder(struct2)
-		                                                         .end1(IntegerStruct.ONE)
-		                                                         .build());
+		struct1.stringLessThan(StringEqualityContext.builder(struct2)
+		                                            .end1(IntegerStruct.ONE)
+		                                            .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringLessThan(StringStruct.StringEqualityContext)} where the end1 index was more
+	 * Test for {@link StringStruct#stringLessThan(StringEqualityContext)} where the end1 index was more
 	 * than the fill pointer of the first structure.
 	 */
 	@Test
@@ -1062,13 +1062,13 @@ public class StringStructStringEqualityTest {
 		                                         .fillPointer(IntegerStruct.ONE)
 		                                         .build();
 		final StringStruct struct2 = StringStruct.emptyString();
-		struct1.stringLessThan(StringStruct.StringEqualityContext.builder(struct2)
-		                                                         .end1(IntegerStruct.TWO)
-		                                                         .build());
+		struct1.stringLessThan(StringEqualityContext.builder(struct2)
+		                                            .end1(IntegerStruct.TWO)
+		                                            .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringLessThan(StringStruct.StringEqualityContext)} where the start1 index was more
+	 * Test for {@link StringStruct#stringLessThan(StringEqualityContext)} where the start1 index was more
 	 * than the end1 index.
 	 */
 	@Test
@@ -1078,14 +1078,14 @@ public class StringStructStringEqualityTest {
 
 		final StringStruct struct1 = StringStruct.toLispString("1");
 		final StringStruct struct2 = StringStruct.toLispString("1");
-		struct1.stringLessThan(StringStruct.StringEqualityContext.builder(struct2)
-		                                                         .start1(IntegerStruct.ONE)
-		                                                         .end1(IntegerStruct.ZERO)
-		                                                         .build());
+		struct1.stringLessThan(StringEqualityContext.builder(struct2)
+		                                            .start1(IntegerStruct.ONE)
+		                                            .end1(IntegerStruct.ZERO)
+		                                            .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringLessThan(StringStruct.StringEqualityContext)} where the start2 index was
+	 * Test for {@link StringStruct#stringLessThan(StringEqualityContext)} where the start2 index was
 	 * negative.
 	 */
 	@Test
@@ -1095,13 +1095,13 @@ public class StringStructStringEqualityTest {
 
 		final StringStruct struct1 = StringStruct.emptyString();
 		final StringStruct struct2 = StringStruct.emptyString();
-		struct1.stringLessThan(StringStruct.StringEqualityContext.builder(struct2)
-		                                                         .start2(IntegerStruct.MINUS_ONE)
-		                                                         .build());
+		struct1.stringLessThan(StringEqualityContext.builder(struct2)
+		                                            .start2(IntegerStruct.MINUS_ONE)
+		                                            .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringLessThan(StringStruct.StringEqualityContext)} where the start2 index was more
+	 * Test for {@link StringStruct#stringLessThan(StringEqualityContext)} where the start2 index was more
 	 * than the total size of the second structure.
 	 */
 	@Test
@@ -1111,14 +1111,14 @@ public class StringStructStringEqualityTest {
 
 		final StringStruct struct1 = StringStruct.emptyString();
 		final StringStruct struct2 = StringStruct.emptyString();
-		struct1.stringLessThan(StringStruct.StringEqualityContext.builder(struct2)
-		                                                         .start2(IntegerStruct.ONE)
-		                                                         .build());
+		struct1.stringLessThan(StringEqualityContext.builder(struct2)
+		                                            .start2(IntegerStruct.ONE)
+		                                            .build());
 
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringLessThan(StringStruct.StringEqualityContext)} where the start2 index was more
+	 * Test for {@link StringStruct#stringLessThan(StringEqualityContext)} where the start2 index was more
 	 * than the fill pointer of the second structure.
 	 */
 	@Test
@@ -1130,13 +1130,13 @@ public class StringStructStringEqualityTest {
 		final StringStruct struct2 = StringStruct.builder(IntegerStruct.TWO)
 		                                         .fillPointer(IntegerStruct.ONE)
 		                                         .build();
-		struct1.stringLessThan(StringStruct.StringEqualityContext.builder(struct2)
-		                                                         .start2(IntegerStruct.TWO)
-		                                                         .build());
+		struct1.stringLessThan(StringEqualityContext.builder(struct2)
+		                                            .start2(IntegerStruct.TWO)
+		                                            .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringLessThan(StringStruct.StringEqualityContext)} where the end2 index was
+	 * Test for {@link StringStruct#stringLessThan(StringEqualityContext)} where the end2 index was
 	 * negative.
 	 */
 	@Test
@@ -1146,13 +1146,13 @@ public class StringStructStringEqualityTest {
 
 		final StringStruct struct1 = StringStruct.emptyString();
 		final StringStruct struct2 = StringStruct.emptyString();
-		struct1.stringLessThan(StringStruct.StringEqualityContext.builder(struct2)
-		                                                         .end2(IntegerStruct.MINUS_ONE)
-		                                                         .build());
+		struct1.stringLessThan(StringEqualityContext.builder(struct2)
+		                                            .end2(IntegerStruct.MINUS_ONE)
+		                                            .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringLessThan(StringStruct.StringEqualityContext)} where the end2 index was more
+	 * Test for {@link StringStruct#stringLessThan(StringEqualityContext)} where the end2 index was more
 	 * than the total size of the second structure.
 	 */
 	@Test
@@ -1162,13 +1162,13 @@ public class StringStructStringEqualityTest {
 
 		final StringStruct struct1 = StringStruct.emptyString();
 		final StringStruct struct2 = StringStruct.emptyString();
-		struct1.stringLessThan(StringStruct.StringEqualityContext.builder(struct2)
-		                                                         .end2(IntegerStruct.ONE)
-		                                                         .build());
+		struct1.stringLessThan(StringEqualityContext.builder(struct2)
+		                                            .end2(IntegerStruct.ONE)
+		                                            .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringLessThan(StringStruct.StringEqualityContext)} where the end2 index was more
+	 * Test for {@link StringStruct#stringLessThan(StringEqualityContext)} where the end2 index was more
 	 * than the fill pointer of the second structure.
 	 */
 	@Test
@@ -1180,13 +1180,13 @@ public class StringStructStringEqualityTest {
 		final StringStruct struct2 = StringStruct.builder(IntegerStruct.TWO)
 		                                         .fillPointer(IntegerStruct.ONE)
 		                                         .build();
-		struct1.stringLessThan(StringStruct.StringEqualityContext.builder(struct2)
-		                                                         .end2(IntegerStruct.TWO)
-		                                                         .build());
+		struct1.stringLessThan(StringEqualityContext.builder(struct2)
+		                                            .end2(IntegerStruct.TWO)
+		                                            .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringLessThan(StringStruct.StringEqualityContext)} where the start2 index was more
+	 * Test for {@link StringStruct#stringLessThan(StringEqualityContext)} where the start2 index was more
 	 * than the end2 index.
 	 */
 	@Test
@@ -1196,14 +1196,14 @@ public class StringStructStringEqualityTest {
 
 		final StringStruct struct1 = StringStruct.toLispString("1");
 		final StringStruct struct2 = StringStruct.toLispString("1");
-		struct1.stringLessThan(StringStruct.StringEqualityContext.builder(struct2)
-		                                                         .start2(IntegerStruct.ONE)
-		                                                         .end2(IntegerStruct.ZERO)
-		                                                         .build());
+		struct1.stringLessThan(StringEqualityContext.builder(struct2)
+		                                            .start2(IntegerStruct.ONE)
+		                                            .end2(IntegerStruct.ZERO)
+		                                            .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringLessThan(StringStruct.StringEqualityContext)}.
+	 * Test for {@link StringStruct#stringLessThan(StringEqualityContext)}.
 	 */
 	@Test
 	public void test_stringLessThan_NoStartsAndNoEnds() {
@@ -1211,15 +1211,15 @@ public class StringStructStringEqualityTest {
 		final StringStruct struct1 = StringStruct.toLispString(str1);
 		final String str2 = "1";
 		final StringStruct struct2 = StringStruct.toLispString(str2);
-		final LispStruct result = struct1.stringLessThan(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                                   .build());
+		final LispStruct result = struct1.stringLessThan(StringEqualityContext.builder(struct2)
+		                                                                      .build());
 		Assert.assertThat(result, is(BooleanStruct.NIL));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringLessThan(StringStruct.StringEqualityContext)} where a start index was
+	 * Test for {@link StringStruct#stringLessThan(StringEqualityContext)} where a start index was
 	 * provided.
 	 */
 	@Test
@@ -1228,17 +1228,17 @@ public class StringStructStringEqualityTest {
 		final StringStruct struct1 = StringStruct.toLispString(str1);
 		final String str2 = "21";
 		final StringStruct struct2 = StringStruct.toLispString(str2);
-		final LispStruct result = struct1.stringLessThan(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                                   .start1(IntegerStruct.ONE)
-		                                                                                   .start2(IntegerStruct.ONE)
-		                                                                                   .build());
+		final LispStruct result = struct1.stringLessThan(StringEqualityContext.builder(struct2)
+		                                                                      .start1(IntegerStruct.ONE)
+		                                                                      .start2(IntegerStruct.ONE)
+		                                                                      .build());
 		Assert.assertThat(result, is(BooleanStruct.NIL));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringLessThan(StringStruct.StringEqualityContext)} where an end index was
+	 * Test for {@link StringStruct#stringLessThan(StringEqualityContext)} where an end index was
 	 * provided.
 	 */
 	@Test
@@ -1247,17 +1247,17 @@ public class StringStructStringEqualityTest {
 		final StringStruct struct1 = StringStruct.toLispString(str1);
 		final String str2 = "12";
 		final StringStruct struct2 = StringStruct.toLispString(str2);
-		final LispStruct result = struct1.stringLessThan(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                                   .end1(IntegerStruct.ONE)
-		                                                                                   .end2(IntegerStruct.ONE)
-		                                                                                   .build());
+		final LispStruct result = struct1.stringLessThan(StringEqualityContext.builder(struct2)
+		                                                                      .end1(IntegerStruct.ONE)
+		                                                                      .end2(IntegerStruct.ONE)
+		                                                                      .build());
 		Assert.assertThat(result, is(BooleanStruct.NIL));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringLessThan(StringStruct.StringEqualityContext)} where a start index and an
+	 * Test for {@link StringStruct#stringLessThan(StringEqualityContext)} where a start index and an
 	 * end index were provided.
 	 */
 	@Test
@@ -1266,19 +1266,19 @@ public class StringStructStringEqualityTest {
 		final StringStruct struct1 = StringStruct.toLispString(str1);
 		final String str2 = "311";
 		final StringStruct struct2 = StringStruct.toLispString(str2);
-		final LispStruct result = struct1.stringLessThan(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                                   .start1(IntegerStruct.ONE)
-		                                                                                   .start2(IntegerStruct.ONE)
-		                                                                                   .end1(IntegerStruct.TWO)
-		                                                                                   .end2(IntegerStruct.TWO)
-		                                                                                   .build());
+		final LispStruct result = struct1.stringLessThan(StringEqualityContext.builder(struct2)
+		                                                                      .start1(IntegerStruct.ONE)
+		                                                                      .start2(IntegerStruct.ONE)
+		                                                                      .end1(IntegerStruct.TWO)
+		                                                                      .end2(IntegerStruct.TWO)
+		                                                                      .build());
 		Assert.assertThat(result, is(BooleanStruct.NIL));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringLessThan(StringStruct.StringEqualityContext)} where string1 has a fill
+	 * Test for {@link StringStruct#stringLessThan(StringEqualityContext)} where string1 has a fill
 	 * pointer.
 	 */
 	@Test
@@ -1290,15 +1290,15 @@ public class StringStructStringEqualityTest {
 		                                         .build();
 		final String str2 = "11";
 		final StringStruct struct2 = StringStruct.toLispString(str2);
-		final LispStruct result = struct1.stringLessThan(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                                   .build());
+		final LispStruct result = struct1.stringLessThan(StringEqualityContext.builder(struct2)
+		                                                                      .build());
 		Assert.assertThat(result, is(BooleanStruct.NIL));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringLessThan(StringStruct.StringEqualityContext)} where string2 has a fill
+	 * Test for {@link StringStruct#stringLessThan(StringEqualityContext)} where string2 has a fill
 	 * pointer.
 	 */
 	@Test
@@ -1310,15 +1310,15 @@ public class StringStructStringEqualityTest {
 		                                         .initialContents(StringStruct.toLispString(str2))
 		                                         .fillPointer(IntegerStruct.TWO)
 		                                         .build();
-		final LispStruct result = struct1.stringLessThan(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                                   .build());
+		final LispStruct result = struct1.stringLessThan(StringEqualityContext.builder(struct2)
+		                                                                      .build());
 		Assert.assertThat(result, is(BooleanStruct.NIL));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringLessThan(StringStruct.StringEqualityContext)} where both string1 and string2
+	 * Test for {@link StringStruct#stringLessThan(StringEqualityContext)} where both string1 and string2
 	 * have fill pointers.
 	 */
 	@Test
@@ -1333,15 +1333,15 @@ public class StringStructStringEqualityTest {
 		                                         .initialContents(StringStruct.toLispString(str2))
 		                                         .fillPointer(IntegerStruct.TWO)
 		                                         .build();
-		final LispStruct result = struct1.stringLessThan(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                                   .build());
+		final LispStruct result = struct1.stringLessThan(StringEqualityContext.builder(struct2)
+		                                                                      .build());
 		Assert.assertThat(result, is(BooleanStruct.NIL));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringLessThan(StringStruct.StringEqualityContext)} where string1 is displaced.
+	 * Test for {@link StringStruct#stringLessThan(StringEqualityContext)} where string1 is displaced.
 	 */
 	@Test
 	public void test_stringLessThan_Displaced1() {
@@ -1352,15 +1352,15 @@ public class StringStructStringEqualityTest {
 		                                         .build();
 		final String str2 = "11";
 		final StringStruct struct2 = StringStruct.toLispString(str2);
-		final LispStruct result = struct1.stringLessThan(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                                   .build());
+		final LispStruct result = struct1.stringLessThan(StringEqualityContext.builder(struct2)
+		                                                                      .build());
 		Assert.assertThat(result, is(BooleanStruct.NIL));
 		Assert.assertThat(struct1.toJavaString(), is(str1.substring(1)));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringLessThan(StringStruct.StringEqualityContext)} where string2 is displaced.
+	 * Test for {@link StringStruct#stringLessThan(StringEqualityContext)} where string2 is displaced.
 	 */
 	@Test
 	public void test_stringLessThan_Displaced2() {
@@ -1371,15 +1371,15 @@ public class StringStructStringEqualityTest {
 		                                         .displacedTo(StringStruct.toLispString(str2))
 		                                         .displacedIndexOffset(IntegerStruct.ONE)
 		                                         .build();
-		final LispStruct result = struct1.stringLessThan(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                                   .build());
+		final LispStruct result = struct1.stringLessThan(StringEqualityContext.builder(struct2)
+		                                                                      .build());
 		Assert.assertThat(result, is(BooleanStruct.NIL));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2.substring(1)));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringLessThan(StringStruct.StringEqualityContext)} where both string1 and string2
+	 * Test for {@link StringStruct#stringLessThan(StringEqualityContext)} where both string1 and string2
 	 * are displaced.
 	 */
 	@Test
@@ -1394,15 +1394,15 @@ public class StringStructStringEqualityTest {
 		                                         .displacedTo(StringStruct.toLispString(str2))
 		                                         .displacedIndexOffset(IntegerStruct.ONE)
 		                                         .build();
-		final LispStruct result = struct1.stringLessThan(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                                   .build());
+		final LispStruct result = struct1.stringLessThan(StringEqualityContext.builder(struct2)
+		                                                                      .build());
 		Assert.assertThat(result, is(BooleanStruct.NIL));
 		Assert.assertThat(struct1.toJavaString(), is(str1.substring(1)));
 		Assert.assertThat(struct2.toJavaString(), is(str2.substring(1)));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringLessThan(StringStruct.StringEqualityContext)} where string1 is greater than
+	 * Test for {@link StringStruct#stringLessThan(StringEqualityContext)} where string1 is greater than
 	 * string2.
 	 */
 	@Test
@@ -1411,15 +1411,15 @@ public class StringStructStringEqualityTest {
 		final StringStruct struct1 = StringStruct.toLispString(str1);
 		final String str2 = "132";
 		final StringStruct struct2 = StringStruct.toLispString(str2);
-		final LispStruct result = struct1.stringLessThan(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                                   .build());
+		final LispStruct result = struct1.stringLessThan(StringEqualityContext.builder(struct2)
+		                                                                      .build());
 		Assert.assertThat(result, is(IntegerStruct.ONE));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringLessThan(StringStruct.StringEqualityContext)} where string1 is equal to
+	 * Test for {@link StringStruct#stringLessThan(StringEqualityContext)} where string1 is equal to
 	 * string2.
 	 */
 	@Test
@@ -1428,15 +1428,15 @@ public class StringStructStringEqualityTest {
 		final StringStruct struct1 = StringStruct.toLispString(str1);
 		final String str2 = "123";
 		final StringStruct struct2 = StringStruct.toLispString(str2);
-		final LispStruct result = struct1.stringLessThan(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                                   .build());
+		final LispStruct result = struct1.stringLessThan(StringEqualityContext.builder(struct2)
+		                                                                      .build());
 		Assert.assertThat(result, is(BooleanStruct.NIL));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringLessThan(StringStruct.StringEqualityContext)} where string1 is greater than
+	 * Test for {@link StringStruct#stringLessThan(StringEqualityContext)} where string1 is greater than
 	 * string2 differing by case.
 	 */
 	@Test
@@ -1445,8 +1445,8 @@ public class StringStructStringEqualityTest {
 		final StringStruct struct1 = StringStruct.toLispString(str1);
 		final String str2 = "a";
 		final StringStruct struct2 = StringStruct.toLispString(str2);
-		final LispStruct result = struct1.stringLessThan(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                                   .build());
+		final LispStruct result = struct1.stringLessThan(StringEqualityContext.builder(struct2)
+		                                                                      .build());
 		Assert.assertThat(result, is(IntegerStruct.ZERO));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
@@ -1457,7 +1457,7 @@ public class StringStructStringEqualityTest {
 	 */
 
 	/**
-	 * Test for {@link StringStruct#stringGreaterThan(StringStruct.StringEqualityContext)} where the start1 index was
+	 * Test for {@link StringStruct#stringGreaterThan(StringEqualityContext)} where the start1 index was
 	 * negative.
 	 */
 	@Test
@@ -1467,13 +1467,13 @@ public class StringStructStringEqualityTest {
 
 		final StringStruct struct1 = StringStruct.emptyString();
 		final StringStruct struct2 = StringStruct.emptyString();
-		struct1.stringGreaterThan(StringStruct.StringEqualityContext.builder(struct2)
-		                                                            .start1(IntegerStruct.MINUS_ONE)
-		                                                            .build());
+		struct1.stringGreaterThan(StringEqualityContext.builder(struct2)
+		                                               .start1(IntegerStruct.MINUS_ONE)
+		                                               .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringGreaterThan(StringStruct.StringEqualityContext)} where the start1 index was
+	 * Test for {@link StringStruct#stringGreaterThan(StringEqualityContext)} where the start1 index was
 	 * more than the total size of the first structure.
 	 */
 	@Test
@@ -1483,14 +1483,14 @@ public class StringStructStringEqualityTest {
 
 		final StringStruct struct1 = StringStruct.emptyString();
 		final StringStruct struct2 = StringStruct.emptyString();
-		struct1.stringGreaterThan(StringStruct.StringEqualityContext.builder(struct2)
-		                                                            .start1(IntegerStruct.ONE)
-		                                                            .build());
+		struct1.stringGreaterThan(StringEqualityContext.builder(struct2)
+		                                               .start1(IntegerStruct.ONE)
+		                                               .build());
 
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringGreaterThan(StringStruct.StringEqualityContext)} where the start1 index was
+	 * Test for {@link StringStruct#stringGreaterThan(StringEqualityContext)} where the start1 index was
 	 * more than the fill pointer of the first structure.
 	 */
 	@Test
@@ -1502,13 +1502,13 @@ public class StringStructStringEqualityTest {
 		                                         .fillPointer(IntegerStruct.ONE)
 		                                         .build();
 		final StringStruct struct2 = StringStruct.emptyString();
-		struct1.stringGreaterThan(StringStruct.StringEqualityContext.builder(struct2)
-		                                                            .start1(IntegerStruct.TWO)
-		                                                            .build());
+		struct1.stringGreaterThan(StringEqualityContext.builder(struct2)
+		                                               .start1(IntegerStruct.TWO)
+		                                               .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringGreaterThan(StringStruct.StringEqualityContext)} where the end1 index was
+	 * Test for {@link StringStruct#stringGreaterThan(StringEqualityContext)} where the end1 index was
 	 * negative.
 	 */
 	@Test
@@ -1518,13 +1518,13 @@ public class StringStructStringEqualityTest {
 
 		final StringStruct struct1 = StringStruct.emptyString();
 		final StringStruct struct2 = StringStruct.emptyString();
-		struct1.stringGreaterThan(StringStruct.StringEqualityContext.builder(struct2)
-		                                                            .end1(IntegerStruct.MINUS_ONE)
-		                                                            .build());
+		struct1.stringGreaterThan(StringEqualityContext.builder(struct2)
+		                                               .end1(IntegerStruct.MINUS_ONE)
+		                                               .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringGreaterThan(StringStruct.StringEqualityContext)} where the end1 index was more
+	 * Test for {@link StringStruct#stringGreaterThan(StringEqualityContext)} where the end1 index was more
 	 * than the total size of the first structure.
 	 */
 	@Test
@@ -1534,13 +1534,13 @@ public class StringStructStringEqualityTest {
 
 		final StringStruct struct1 = StringStruct.emptyString();
 		final StringStruct struct2 = StringStruct.emptyString();
-		struct1.stringGreaterThan(StringStruct.StringEqualityContext.builder(struct2)
-		                                                            .end1(IntegerStruct.ONE)
-		                                                            .build());
+		struct1.stringGreaterThan(StringEqualityContext.builder(struct2)
+		                                               .end1(IntegerStruct.ONE)
+		                                               .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringGreaterThan(StringStruct.StringEqualityContext)} where the end1 index was more
+	 * Test for {@link StringStruct#stringGreaterThan(StringEqualityContext)} where the end1 index was more
 	 * than the fill pointer of the first structure.
 	 */
 	@Test
@@ -1552,13 +1552,13 @@ public class StringStructStringEqualityTest {
 		                                         .fillPointer(IntegerStruct.ONE)
 		                                         .build();
 		final StringStruct struct2 = StringStruct.emptyString();
-		struct1.stringGreaterThan(StringStruct.StringEqualityContext.builder(struct2)
-		                                                            .end1(IntegerStruct.TWO)
-		                                                            .build());
+		struct1.stringGreaterThan(StringEqualityContext.builder(struct2)
+		                                               .end1(IntegerStruct.TWO)
+		                                               .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringGreaterThan(StringStruct.StringEqualityContext)} where the start1 index was
+	 * Test for {@link StringStruct#stringGreaterThan(StringEqualityContext)} where the start1 index was
 	 * more than the end1 index.
 	 */
 	@Test
@@ -1568,14 +1568,14 @@ public class StringStructStringEqualityTest {
 
 		final StringStruct struct1 = StringStruct.toLispString("1");
 		final StringStruct struct2 = StringStruct.toLispString("1");
-		struct1.stringGreaterThan(StringStruct.StringEqualityContext.builder(struct2)
-		                                                            .start1(IntegerStruct.ONE)
-		                                                            .end1(IntegerStruct.ZERO)
-		                                                            .build());
+		struct1.stringGreaterThan(StringEqualityContext.builder(struct2)
+		                                               .start1(IntegerStruct.ONE)
+		                                               .end1(IntegerStruct.ZERO)
+		                                               .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringGreaterThan(StringStruct.StringEqualityContext)} where the start2 index was
+	 * Test for {@link StringStruct#stringGreaterThan(StringEqualityContext)} where the start2 index was
 	 * negative.
 	 */
 	@Test
@@ -1585,13 +1585,13 @@ public class StringStructStringEqualityTest {
 
 		final StringStruct struct1 = StringStruct.emptyString();
 		final StringStruct struct2 = StringStruct.emptyString();
-		struct1.stringGreaterThan(StringStruct.StringEqualityContext.builder(struct2)
-		                                                            .start2(IntegerStruct.MINUS_ONE)
-		                                                            .build());
+		struct1.stringGreaterThan(StringEqualityContext.builder(struct2)
+		                                               .start2(IntegerStruct.MINUS_ONE)
+		                                               .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringGreaterThan(StringStruct.StringEqualityContext)} where the start2 index was
+	 * Test for {@link StringStruct#stringGreaterThan(StringEqualityContext)} where the start2 index was
 	 * more than the total size of the second structure.
 	 */
 	@Test
@@ -1601,14 +1601,14 @@ public class StringStructStringEqualityTest {
 
 		final StringStruct struct1 = StringStruct.emptyString();
 		final StringStruct struct2 = StringStruct.emptyString();
-		struct1.stringGreaterThan(StringStruct.StringEqualityContext.builder(struct2)
-		                                                            .start2(IntegerStruct.ONE)
-		                                                            .build());
+		struct1.stringGreaterThan(StringEqualityContext.builder(struct2)
+		                                               .start2(IntegerStruct.ONE)
+		                                               .build());
 
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringGreaterThan(StringStruct.StringEqualityContext)} where the start2 index was
+	 * Test for {@link StringStruct#stringGreaterThan(StringEqualityContext)} where the start2 index was
 	 * more than the fill pointer of the second structure.
 	 */
 	@Test
@@ -1620,13 +1620,13 @@ public class StringStructStringEqualityTest {
 		final StringStruct struct2 = StringStruct.builder(IntegerStruct.TWO)
 		                                         .fillPointer(IntegerStruct.ONE)
 		                                         .build();
-		struct1.stringGreaterThan(StringStruct.StringEqualityContext.builder(struct2)
-		                                                            .start2(IntegerStruct.TWO)
-		                                                            .build());
+		struct1.stringGreaterThan(StringEqualityContext.builder(struct2)
+		                                               .start2(IntegerStruct.TWO)
+		                                               .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringGreaterThan(StringStruct.StringEqualityContext)} where the end2 index was
+	 * Test for {@link StringStruct#stringGreaterThan(StringEqualityContext)} where the end2 index was
 	 * negative.
 	 */
 	@Test
@@ -1636,13 +1636,13 @@ public class StringStructStringEqualityTest {
 
 		final StringStruct struct1 = StringStruct.emptyString();
 		final StringStruct struct2 = StringStruct.emptyString();
-		struct1.stringGreaterThan(StringStruct.StringEqualityContext.builder(struct2)
-		                                                            .end2(IntegerStruct.MINUS_ONE)
-		                                                            .build());
+		struct1.stringGreaterThan(StringEqualityContext.builder(struct2)
+		                                               .end2(IntegerStruct.MINUS_ONE)
+		                                               .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringGreaterThan(StringStruct.StringEqualityContext)} where the end2 index was more
+	 * Test for {@link StringStruct#stringGreaterThan(StringEqualityContext)} where the end2 index was more
 	 * than the total size of the second structure.
 	 */
 	@Test
@@ -1652,13 +1652,13 @@ public class StringStructStringEqualityTest {
 
 		final StringStruct struct1 = StringStruct.emptyString();
 		final StringStruct struct2 = StringStruct.emptyString();
-		struct1.stringGreaterThan(StringStruct.StringEqualityContext.builder(struct2)
-		                                                            .end2(IntegerStruct.ONE)
-		                                                            .build());
+		struct1.stringGreaterThan(StringEqualityContext.builder(struct2)
+		                                               .end2(IntegerStruct.ONE)
+		                                               .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringGreaterThan(StringStruct.StringEqualityContext)} where the end2 index was more
+	 * Test for {@link StringStruct#stringGreaterThan(StringEqualityContext)} where the end2 index was more
 	 * than the fill pointer of the second structure.
 	 */
 	@Test
@@ -1670,13 +1670,13 @@ public class StringStructStringEqualityTest {
 		final StringStruct struct2 = StringStruct.builder(IntegerStruct.TWO)
 		                                         .fillPointer(IntegerStruct.ONE)
 		                                         .build();
-		struct1.stringGreaterThan(StringStruct.StringEqualityContext.builder(struct2)
-		                                                            .end2(IntegerStruct.TWO)
-		                                                            .build());
+		struct1.stringGreaterThan(StringEqualityContext.builder(struct2)
+		                                               .end2(IntegerStruct.TWO)
+		                                               .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringGreaterThan(StringStruct.StringEqualityContext)} where the start2 index was
+	 * Test for {@link StringStruct#stringGreaterThan(StringEqualityContext)} where the start2 index was
 	 * more than the end2 index.
 	 */
 	@Test
@@ -1686,14 +1686,14 @@ public class StringStructStringEqualityTest {
 
 		final StringStruct struct1 = StringStruct.toLispString("1");
 		final StringStruct struct2 = StringStruct.toLispString("1");
-		struct1.stringGreaterThan(StringStruct.StringEqualityContext.builder(struct2)
-		                                                            .start2(IntegerStruct.ONE)
-		                                                            .end2(IntegerStruct.ZERO)
-		                                                            .build());
+		struct1.stringGreaterThan(StringEqualityContext.builder(struct2)
+		                                               .start2(IntegerStruct.ONE)
+		                                               .end2(IntegerStruct.ZERO)
+		                                               .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringGreaterThan(StringStruct.StringEqualityContext)}.
+	 * Test for {@link StringStruct#stringGreaterThan(StringEqualityContext)}.
 	 */
 	@Test
 	public void test_stringGreaterThan_NoStartsAndNoEnds() {
@@ -1701,15 +1701,15 @@ public class StringStructStringEqualityTest {
 		final StringStruct struct1 = StringStruct.toLispString(str1);
 		final String str2 = "2";
 		final StringStruct struct2 = StringStruct.toLispString(str2);
-		final LispStruct result = struct1.stringGreaterThan(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                                      .build());
+		final LispStruct result = struct1.stringGreaterThan(StringEqualityContext.builder(struct2)
+		                                                                         .build());
 		Assert.assertThat(result, is(BooleanStruct.NIL));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringGreaterThan(StringStruct.StringEqualityContext)} where a start index was
+	 * Test for {@link StringStruct#stringGreaterThan(StringEqualityContext)} where a start index was
 	 * provided.
 	 */
 	@Test
@@ -1718,17 +1718,17 @@ public class StringStructStringEqualityTest {
 		final StringStruct struct1 = StringStruct.toLispString(str1);
 		final String str2 = "12";
 		final StringStruct struct2 = StringStruct.toLispString(str2);
-		final LispStruct result = struct1.stringGreaterThan(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                                      .start1(IntegerStruct.ONE)
-		                                                                                      .start2(IntegerStruct.ONE)
-		                                                                                      .build());
+		final LispStruct result = struct1.stringGreaterThan(StringEqualityContext.builder(struct2)
+		                                                                         .start1(IntegerStruct.ONE)
+		                                                                         .start2(IntegerStruct.ONE)
+		                                                                         .build());
 		Assert.assertThat(result, is(BooleanStruct.NIL));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringGreaterThan(StringStruct.StringEqualityContext)} where an end index was
+	 * Test for {@link StringStruct#stringGreaterThan(StringEqualityContext)} where an end index was
 	 * provided.
 	 */
 	@Test
@@ -1737,17 +1737,17 @@ public class StringStructStringEqualityTest {
 		final StringStruct struct1 = StringStruct.toLispString(str1);
 		final String str2 = "2";
 		final StringStruct struct2 = StringStruct.toLispString(str2);
-		final LispStruct result = struct1.stringGreaterThan(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                                      .end1(IntegerStruct.ONE)
-		                                                                                      .end2(IntegerStruct.ONE)
-		                                                                                      .build());
+		final LispStruct result = struct1.stringGreaterThan(StringEqualityContext.builder(struct2)
+		                                                                         .end1(IntegerStruct.ONE)
+		                                                                         .end2(IntegerStruct.ONE)
+		                                                                         .build());
 		Assert.assertThat(result, is(BooleanStruct.NIL));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringGreaterThan(StringStruct.StringEqualityContext)} where a start index and an
+	 * Test for {@link StringStruct#stringGreaterThan(StringEqualityContext)} where a start index and an
 	 * end index were provided.
 	 */
 	@Test
@@ -1756,19 +1756,19 @@ public class StringStructStringEqualityTest {
 		final StringStruct struct1 = StringStruct.toLispString(str1);
 		final String str2 = "12";
 		final StringStruct struct2 = StringStruct.toLispString(str2);
-		final LispStruct result = struct1.stringGreaterThan(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                                      .start1(IntegerStruct.ONE)
-		                                                                                      .start2(IntegerStruct.ONE)
-		                                                                                      .end1(IntegerStruct.TWO)
-		                                                                                      .end2(IntegerStruct.TWO)
-		                                                                                      .build());
+		final LispStruct result = struct1.stringGreaterThan(StringEqualityContext.builder(struct2)
+		                                                                         .start1(IntegerStruct.ONE)
+		                                                                         .start2(IntegerStruct.ONE)
+		                                                                         .end1(IntegerStruct.TWO)
+		                                                                         .end2(IntegerStruct.TWO)
+		                                                                         .build());
 		Assert.assertThat(result, is(BooleanStruct.NIL));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringGreaterThan(StringStruct.StringEqualityContext)} where string1 has a fill
+	 * Test for {@link StringStruct#stringGreaterThan(StringEqualityContext)} where string1 has a fill
 	 * pointer.
 	 */
 	@Test
@@ -1780,15 +1780,15 @@ public class StringStructStringEqualityTest {
 		                                         .build();
 		final String str2 = "13";
 		final StringStruct struct2 = StringStruct.toLispString(str2);
-		final LispStruct result = struct1.stringGreaterThan(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                                      .build());
+		final LispStruct result = struct1.stringGreaterThan(StringEqualityContext.builder(struct2)
+		                                                                         .build());
 		Assert.assertThat(result, is(BooleanStruct.NIL));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringGreaterThan(StringStruct.StringEqualityContext)} where string2 has a fill
+	 * Test for {@link StringStruct#stringGreaterThan(StringEqualityContext)} where string2 has a fill
 	 * pointer.
 	 */
 	@Test
@@ -1800,15 +1800,15 @@ public class StringStructStringEqualityTest {
 		                                         .initialContents(StringStruct.toLispString(str2))
 		                                         .fillPointer(IntegerStruct.TWO)
 		                                         .build();
-		final LispStruct result = struct1.stringGreaterThan(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                                      .build());
+		final LispStruct result = struct1.stringGreaterThan(StringEqualityContext.builder(struct2)
+		                                                                         .build());
 		Assert.assertThat(result, is(BooleanStruct.NIL));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringGreaterThan(StringStruct.StringEqualityContext)} where both string1 and
+	 * Test for {@link StringStruct#stringGreaterThan(StringEqualityContext)} where both string1 and
 	 * string2 have fill pointers.
 	 */
 	@Test
@@ -1823,15 +1823,15 @@ public class StringStructStringEqualityTest {
 		                                         .initialContents(StringStruct.toLispString(str2))
 		                                         .fillPointer(IntegerStruct.TWO)
 		                                         .build();
-		final LispStruct result = struct1.stringGreaterThan(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                                      .build());
+		final LispStruct result = struct1.stringGreaterThan(StringEqualityContext.builder(struct2)
+		                                                                         .build());
 		Assert.assertThat(result, is(BooleanStruct.NIL));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringGreaterThan(StringStruct.StringEqualityContext)} where string1 is displaced.
+	 * Test for {@link StringStruct#stringGreaterThan(StringEqualityContext)} where string1 is displaced.
 	 */
 	@Test
 	public void test_stringGreaterThan_Displaced1() {
@@ -1842,15 +1842,15 @@ public class StringStructStringEqualityTest {
 		                                         .build();
 		final String str2 = "12";
 		final StringStruct struct2 = StringStruct.toLispString(str2);
-		final LispStruct result = struct1.stringGreaterThan(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                                      .build());
+		final LispStruct result = struct1.stringGreaterThan(StringEqualityContext.builder(struct2)
+		                                                                         .build());
 		Assert.assertThat(result, is(BooleanStruct.NIL));
 		Assert.assertThat(struct1.toJavaString(), is(str1.substring(1)));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringGreaterThan(StringStruct.StringEqualityContext)} where string2 is displaced.
+	 * Test for {@link StringStruct#stringGreaterThan(StringEqualityContext)} where string2 is displaced.
 	 */
 	@Test
 	public void test_stringGreaterThan_Displaced2() {
@@ -1861,15 +1861,15 @@ public class StringStructStringEqualityTest {
 		                                         .displacedTo(StringStruct.toLispString(str2))
 		                                         .displacedIndexOffset(IntegerStruct.ONE)
 		                                         .build();
-		final LispStruct result = struct1.stringGreaterThan(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                                      .build());
+		final LispStruct result = struct1.stringGreaterThan(StringEqualityContext.builder(struct2)
+		                                                                         .build());
 		Assert.assertThat(result, is(BooleanStruct.NIL));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2.substring(1)));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringGreaterThan(StringStruct.StringEqualityContext)} where both string1 and
+	 * Test for {@link StringStruct#stringGreaterThan(StringEqualityContext)} where both string1 and
 	 * string2 are displaced.
 	 */
 	@Test
@@ -1884,15 +1884,15 @@ public class StringStructStringEqualityTest {
 		                                         .displacedTo(StringStruct.toLispString(str2))
 		                                         .displacedIndexOffset(IntegerStruct.ONE)
 		                                         .build();
-		final LispStruct result = struct1.stringGreaterThan(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                                      .build());
+		final LispStruct result = struct1.stringGreaterThan(StringEqualityContext.builder(struct2)
+		                                                                         .build());
 		Assert.assertThat(result, is(BooleanStruct.NIL));
 		Assert.assertThat(struct1.toJavaString(), is(str1.substring(1)));
 		Assert.assertThat(struct2.toJavaString(), is(str2.substring(1)));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringGreaterThan(StringStruct.StringEqualityContext)} where string1 is less than
+	 * Test for {@link StringStruct#stringGreaterThan(StringEqualityContext)} where string1 is less than
 	 * string2.
 	 */
 	@Test
@@ -1901,15 +1901,15 @@ public class StringStructStringEqualityTest {
 		final StringStruct struct1 = StringStruct.toLispString(str1);
 		final String str2 = "123";
 		final StringStruct struct2 = StringStruct.toLispString(str2);
-		final LispStruct result = struct1.stringGreaterThan(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                                      .build());
+		final LispStruct result = struct1.stringGreaterThan(StringEqualityContext.builder(struct2)
+		                                                                         .build());
 		Assert.assertThat(result, is(IntegerStruct.ONE));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringGreaterThan(StringStruct.StringEqualityContext)} where string1 is equal to
+	 * Test for {@link StringStruct#stringGreaterThan(StringEqualityContext)} where string1 is equal to
 	 * string2.
 	 */
 	@Test
@@ -1918,15 +1918,15 @@ public class StringStructStringEqualityTest {
 		final StringStruct struct1 = StringStruct.toLispString(str1);
 		final String str2 = "123";
 		final StringStruct struct2 = StringStruct.toLispString(str2);
-		final LispStruct result = struct1.stringGreaterThan(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                                      .build());
+		final LispStruct result = struct1.stringGreaterThan(StringEqualityContext.builder(struct2)
+		                                                                         .build());
 		Assert.assertThat(result, is(BooleanStruct.NIL));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringGreaterThan(StringStruct.StringEqualityContext)} where string1 is less than
+	 * Test for {@link StringStruct#stringGreaterThan(StringEqualityContext)} where string1 is less than
 	 * string2 differing by case.
 	 */
 	@Test
@@ -1935,8 +1935,8 @@ public class StringStructStringEqualityTest {
 		final StringStruct struct1 = StringStruct.toLispString(str1);
 		final String str2 = "A";
 		final StringStruct struct2 = StringStruct.toLispString(str2);
-		final LispStruct result = struct1.stringGreaterThan(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                                      .build());
+		final LispStruct result = struct1.stringGreaterThan(StringEqualityContext.builder(struct2)
+		                                                                         .build());
 		Assert.assertThat(result, is(IntegerStruct.ZERO));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
@@ -1947,7 +1947,7 @@ public class StringStructStringEqualityTest {
 	 */
 
 	/**
-	 * Test for {@link StringStruct#stringLessThanOrEqualTo(StringStruct.StringEqualityContext)} where the start1 index
+	 * Test for {@link StringStruct#stringLessThanOrEqualTo(StringEqualityContext)} where the start1 index
 	 * was negative.
 	 */
 	@Test
@@ -1957,13 +1957,13 @@ public class StringStructStringEqualityTest {
 
 		final StringStruct struct1 = StringStruct.emptyString();
 		final StringStruct struct2 = StringStruct.emptyString();
-		struct1.stringLessThanOrEqualTo(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                  .start1(IntegerStruct.MINUS_ONE)
-		                                                                  .build());
+		struct1.stringLessThanOrEqualTo(StringEqualityContext.builder(struct2)
+		                                                     .start1(IntegerStruct.MINUS_ONE)
+		                                                     .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringLessThanOrEqualTo(StringStruct.StringEqualityContext)} where the start1 index
+	 * Test for {@link StringStruct#stringLessThanOrEqualTo(StringEqualityContext)} where the start1 index
 	 * was more than the total size of the first structure.
 	 */
 	@Test
@@ -1973,14 +1973,14 @@ public class StringStructStringEqualityTest {
 
 		final StringStruct struct1 = StringStruct.emptyString();
 		final StringStruct struct2 = StringStruct.emptyString();
-		struct1.stringLessThanOrEqualTo(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                  .start1(IntegerStruct.ONE)
-		                                                                  .build());
+		struct1.stringLessThanOrEqualTo(StringEqualityContext.builder(struct2)
+		                                                     .start1(IntegerStruct.ONE)
+		                                                     .build());
 
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringLessThanOrEqualTo(StringStruct.StringEqualityContext)} where the start1 index
+	 * Test for {@link StringStruct#stringLessThanOrEqualTo(StringEqualityContext)} where the start1 index
 	 * was more than the fill pointer of the first structure.
 	 */
 	@Test
@@ -1992,13 +1992,13 @@ public class StringStructStringEqualityTest {
 		                                         .fillPointer(IntegerStruct.ONE)
 		                                         .build();
 		final StringStruct struct2 = StringStruct.emptyString();
-		struct1.stringLessThanOrEqualTo(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                  .start1(IntegerStruct.TWO)
-		                                                                  .build());
+		struct1.stringLessThanOrEqualTo(StringEqualityContext.builder(struct2)
+		                                                     .start1(IntegerStruct.TWO)
+		                                                     .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringLessThanOrEqualTo(StringStruct.StringEqualityContext)} where the end1 index
+	 * Test for {@link StringStruct#stringLessThanOrEqualTo(StringEqualityContext)} where the end1 index
 	 * was negative.
 	 */
 	@Test
@@ -2008,13 +2008,13 @@ public class StringStructStringEqualityTest {
 
 		final StringStruct struct1 = StringStruct.emptyString();
 		final StringStruct struct2 = StringStruct.emptyString();
-		struct1.stringLessThanOrEqualTo(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                  .end1(IntegerStruct.MINUS_ONE)
-		                                                                  .build());
+		struct1.stringLessThanOrEqualTo(StringEqualityContext.builder(struct2)
+		                                                     .end1(IntegerStruct.MINUS_ONE)
+		                                                     .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringLessThanOrEqualTo(StringStruct.StringEqualityContext)} where the end1 index
+	 * Test for {@link StringStruct#stringLessThanOrEqualTo(StringEqualityContext)} where the end1 index
 	 * was more than the total size of the first structure.
 	 */
 	@Test
@@ -2024,13 +2024,13 @@ public class StringStructStringEqualityTest {
 
 		final StringStruct struct1 = StringStruct.emptyString();
 		final StringStruct struct2 = StringStruct.emptyString();
-		struct1.stringLessThanOrEqualTo(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                  .end1(IntegerStruct.ONE)
-		                                                                  .build());
+		struct1.stringLessThanOrEqualTo(StringEqualityContext.builder(struct2)
+		                                                     .end1(IntegerStruct.ONE)
+		                                                     .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringLessThanOrEqualTo(StringStruct.StringEqualityContext)} where the end1 index
+	 * Test for {@link StringStruct#stringLessThanOrEqualTo(StringEqualityContext)} where the end1 index
 	 * was more than the fill pointer of the first structure.
 	 */
 	@Test
@@ -2042,13 +2042,13 @@ public class StringStructStringEqualityTest {
 		                                         .fillPointer(IntegerStruct.ONE)
 		                                         .build();
 		final StringStruct struct2 = StringStruct.emptyString();
-		struct1.stringLessThanOrEqualTo(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                  .end1(IntegerStruct.TWO)
-		                                                                  .build());
+		struct1.stringLessThanOrEqualTo(StringEqualityContext.builder(struct2)
+		                                                     .end1(IntegerStruct.TWO)
+		                                                     .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringLessThanOrEqualTo(StringStruct.StringEqualityContext)} where the start1 index
+	 * Test for {@link StringStruct#stringLessThanOrEqualTo(StringEqualityContext)} where the start1 index
 	 * was more than the end1 index.
 	 */
 	@Test
@@ -2058,14 +2058,14 @@ public class StringStructStringEqualityTest {
 
 		final StringStruct struct1 = StringStruct.toLispString("1");
 		final StringStruct struct2 = StringStruct.toLispString("1");
-		struct1.stringLessThanOrEqualTo(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                  .start1(IntegerStruct.ONE)
-		                                                                  .end1(IntegerStruct.ZERO)
-		                                                                  .build());
+		struct1.stringLessThanOrEqualTo(StringEqualityContext.builder(struct2)
+		                                                     .start1(IntegerStruct.ONE)
+		                                                     .end1(IntegerStruct.ZERO)
+		                                                     .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringLessThanOrEqualTo(StringStruct.StringEqualityContext)} where the start2 index
+	 * Test for {@link StringStruct#stringLessThanOrEqualTo(StringEqualityContext)} where the start2 index
 	 * was negative.
 	 */
 	@Test
@@ -2075,13 +2075,13 @@ public class StringStructStringEqualityTest {
 
 		final StringStruct struct1 = StringStruct.emptyString();
 		final StringStruct struct2 = StringStruct.emptyString();
-		struct1.stringLessThanOrEqualTo(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                  .start2(IntegerStruct.MINUS_ONE)
-		                                                                  .build());
+		struct1.stringLessThanOrEqualTo(StringEqualityContext.builder(struct2)
+		                                                     .start2(IntegerStruct.MINUS_ONE)
+		                                                     .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringLessThanOrEqualTo(StringStruct.StringEqualityContext)} where the start2 index
+	 * Test for {@link StringStruct#stringLessThanOrEqualTo(StringEqualityContext)} where the start2 index
 	 * was more than the total size of the second structure.
 	 */
 	@Test
@@ -2091,14 +2091,14 @@ public class StringStructStringEqualityTest {
 
 		final StringStruct struct1 = StringStruct.emptyString();
 		final StringStruct struct2 = StringStruct.emptyString();
-		struct1.stringLessThanOrEqualTo(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                  .start2(IntegerStruct.ONE)
-		                                                                  .build());
+		struct1.stringLessThanOrEqualTo(StringEqualityContext.builder(struct2)
+		                                                     .start2(IntegerStruct.ONE)
+		                                                     .build());
 
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringLessThanOrEqualTo(StringStruct.StringEqualityContext)} where the start2 index
+	 * Test for {@link StringStruct#stringLessThanOrEqualTo(StringEqualityContext)} where the start2 index
 	 * was more than the fill pointer of the second structure.
 	 */
 	@Test
@@ -2110,13 +2110,13 @@ public class StringStructStringEqualityTest {
 		final StringStruct struct2 = StringStruct.builder(IntegerStruct.TWO)
 		                                         .fillPointer(IntegerStruct.ONE)
 		                                         .build();
-		struct1.stringLessThanOrEqualTo(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                  .start2(IntegerStruct.TWO)
-		                                                                  .build());
+		struct1.stringLessThanOrEqualTo(StringEqualityContext.builder(struct2)
+		                                                     .start2(IntegerStruct.TWO)
+		                                                     .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringLessThanOrEqualTo(StringStruct.StringEqualityContext)} where the end2 index
+	 * Test for {@link StringStruct#stringLessThanOrEqualTo(StringEqualityContext)} where the end2 index
 	 * was negative.
 	 */
 	@Test
@@ -2126,13 +2126,13 @@ public class StringStructStringEqualityTest {
 
 		final StringStruct struct1 = StringStruct.emptyString();
 		final StringStruct struct2 = StringStruct.emptyString();
-		struct1.stringLessThanOrEqualTo(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                  .end2(IntegerStruct.MINUS_ONE)
-		                                                                  .build());
+		struct1.stringLessThanOrEqualTo(StringEqualityContext.builder(struct2)
+		                                                     .end2(IntegerStruct.MINUS_ONE)
+		                                                     .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringLessThanOrEqualTo(StringStruct.StringEqualityContext)} where the end2 index
+	 * Test for {@link StringStruct#stringLessThanOrEqualTo(StringEqualityContext)} where the end2 index
 	 * was more than the total size of the second structure.
 	 */
 	@Test
@@ -2142,13 +2142,13 @@ public class StringStructStringEqualityTest {
 
 		final StringStruct struct1 = StringStruct.emptyString();
 		final StringStruct struct2 = StringStruct.emptyString();
-		struct1.stringLessThanOrEqualTo(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                  .end2(IntegerStruct.ONE)
-		                                                                  .build());
+		struct1.stringLessThanOrEqualTo(StringEqualityContext.builder(struct2)
+		                                                     .end2(IntegerStruct.ONE)
+		                                                     .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringLessThanOrEqualTo(StringStruct.StringEqualityContext)} where the end2 index
+	 * Test for {@link StringStruct#stringLessThanOrEqualTo(StringEqualityContext)} where the end2 index
 	 * was more than the fill pointer of the second structure.
 	 */
 	@Test
@@ -2160,13 +2160,13 @@ public class StringStructStringEqualityTest {
 		final StringStruct struct2 = StringStruct.builder(IntegerStruct.TWO)
 		                                         .fillPointer(IntegerStruct.ONE)
 		                                         .build();
-		struct1.stringLessThanOrEqualTo(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                  .end2(IntegerStruct.TWO)
-		                                                                  .build());
+		struct1.stringLessThanOrEqualTo(StringEqualityContext.builder(struct2)
+		                                                     .end2(IntegerStruct.TWO)
+		                                                     .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringLessThanOrEqualTo(StringStruct.StringEqualityContext)} where the start2 index
+	 * Test for {@link StringStruct#stringLessThanOrEqualTo(StringEqualityContext)} where the start2 index
 	 * was more than the end2 index.
 	 */
 	@Test
@@ -2176,14 +2176,14 @@ public class StringStructStringEqualityTest {
 
 		final StringStruct struct1 = StringStruct.toLispString("1");
 		final StringStruct struct2 = StringStruct.toLispString("1");
-		struct1.stringLessThanOrEqualTo(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                  .start2(IntegerStruct.ONE)
-		                                                                  .end2(IntegerStruct.ZERO)
-		                                                                  .build());
+		struct1.stringLessThanOrEqualTo(StringEqualityContext.builder(struct2)
+		                                                     .start2(IntegerStruct.ONE)
+		                                                     .end2(IntegerStruct.ZERO)
+		                                                     .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringLessThanOrEqualTo(StringStruct.StringEqualityContext)}.
+	 * Test for {@link StringStruct#stringLessThanOrEqualTo(StringEqualityContext)}.
 	 */
 	@Test
 	public void test_stringLessThanOrEqualTo_NoStartsAndNoEnds() {
@@ -2191,15 +2191,15 @@ public class StringStructStringEqualityTest {
 		final StringStruct struct1 = StringStruct.toLispString(str1);
 		final String str2 = "1";
 		final StringStruct struct2 = StringStruct.toLispString(str2);
-		final LispStruct result = struct1.stringLessThanOrEqualTo(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                                            .build());
+		final LispStruct result = struct1.stringLessThanOrEqualTo(StringEqualityContext.builder(struct2)
+		                                                                               .build());
 		Assert.assertThat(result, is(BooleanStruct.NIL));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringLessThanOrEqualTo(StringStruct.StringEqualityContext)} where a start index was
+	 * Test for {@link StringStruct#stringLessThanOrEqualTo(StringEqualityContext)} where a start index was
 	 * provided.
 	 */
 	@Test
@@ -2208,17 +2208,17 @@ public class StringStructStringEqualityTest {
 		final StringStruct struct1 = StringStruct.toLispString(str1);
 		final String str2 = "21";
 		final StringStruct struct2 = StringStruct.toLispString(str2);
-		final LispStruct result = struct1.stringLessThanOrEqualTo(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                                            .start1(IntegerStruct.ONE)
-		                                                                                            .start2(IntegerStruct.ONE)
-		                                                                                            .build());
+		final LispStruct result = struct1.stringLessThanOrEqualTo(StringEqualityContext.builder(struct2)
+		                                                                               .start1(IntegerStruct.ONE)
+		                                                                               .start2(IntegerStruct.ONE)
+		                                                                               .build());
 		Assert.assertThat(result, is(BooleanStruct.NIL));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringLessThanOrEqualTo(StringStruct.StringEqualityContext)} where an end index was
+	 * Test for {@link StringStruct#stringLessThanOrEqualTo(StringEqualityContext)} where an end index was
 	 * provided.
 	 */
 	@Test
@@ -2227,17 +2227,17 @@ public class StringStructStringEqualityTest {
 		final StringStruct struct1 = StringStruct.toLispString(str1);
 		final String str2 = "12";
 		final StringStruct struct2 = StringStruct.toLispString(str2);
-		final LispStruct result = struct1.stringLessThanOrEqualTo(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                                            .end1(IntegerStruct.ONE)
-		                                                                                            .end2(IntegerStruct.ONE)
-		                                                                                            .build());
+		final LispStruct result = struct1.stringLessThanOrEqualTo(StringEqualityContext.builder(struct2)
+		                                                                               .end1(IntegerStruct.ONE)
+		                                                                               .end2(IntegerStruct.ONE)
+		                                                                               .build());
 		Assert.assertThat(result, is(BooleanStruct.NIL));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringLessThanOrEqualTo(StringStruct.StringEqualityContext)} where a start index and
+	 * Test for {@link StringStruct#stringLessThanOrEqualTo(StringEqualityContext)} where a start index and
 	 * an end index were provided.
 	 */
 	@Test
@@ -2246,19 +2246,19 @@ public class StringStructStringEqualityTest {
 		final StringStruct struct1 = StringStruct.toLispString(str1);
 		final String str2 = "311";
 		final StringStruct struct2 = StringStruct.toLispString(str2);
-		final LispStruct result = struct1.stringLessThanOrEqualTo(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                                            .start1(IntegerStruct.ONE)
-		                                                                                            .start2(IntegerStruct.ONE)
-		                                                                                            .end1(IntegerStruct.TWO)
-		                                                                                            .end2(IntegerStruct.TWO)
-		                                                                                            .build());
+		final LispStruct result = struct1.stringLessThanOrEqualTo(StringEqualityContext.builder(struct2)
+		                                                                               .start1(IntegerStruct.ONE)
+		                                                                               .start2(IntegerStruct.ONE)
+		                                                                               .end1(IntegerStruct.TWO)
+		                                                                               .end2(IntegerStruct.TWO)
+		                                                                               .build());
 		Assert.assertThat(result, is(BooleanStruct.NIL));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringLessThanOrEqualTo(StringStruct.StringEqualityContext)} where string1 has a
+	 * Test for {@link StringStruct#stringLessThanOrEqualTo(StringEqualityContext)} where string1 has a
 	 * fill pointer.
 	 */
 	@Test
@@ -2270,15 +2270,15 @@ public class StringStructStringEqualityTest {
 		                                         .build();
 		final String str2 = "11";
 		final StringStruct struct2 = StringStruct.toLispString(str2);
-		final LispStruct result = struct1.stringLessThanOrEqualTo(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                                            .build());
+		final LispStruct result = struct1.stringLessThanOrEqualTo(StringEqualityContext.builder(struct2)
+		                                                                               .build());
 		Assert.assertThat(result, is(BooleanStruct.NIL));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringLessThanOrEqualTo(StringStruct.StringEqualityContext)} where string2 has a
+	 * Test for {@link StringStruct#stringLessThanOrEqualTo(StringEqualityContext)} where string2 has a
 	 * fill pointer.
 	 */
 	@Test
@@ -2290,15 +2290,15 @@ public class StringStructStringEqualityTest {
 		                                         .initialContents(StringStruct.toLispString(str2))
 		                                         .fillPointer(IntegerStruct.TWO)
 		                                         .build();
-		final LispStruct result = struct1.stringLessThanOrEqualTo(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                                            .build());
+		final LispStruct result = struct1.stringLessThanOrEqualTo(StringEqualityContext.builder(struct2)
+		                                                                               .build());
 		Assert.assertThat(result, is(BooleanStruct.NIL));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringLessThanOrEqualTo(StringStruct.StringEqualityContext)} where both string1 and
+	 * Test for {@link StringStruct#stringLessThanOrEqualTo(StringEqualityContext)} where both string1 and
 	 * string2 have fill pointers.
 	 */
 	@Test
@@ -2313,15 +2313,15 @@ public class StringStructStringEqualityTest {
 		                                         .initialContents(StringStruct.toLispString(str2))
 		                                         .fillPointer(IntegerStruct.TWO)
 		                                         .build();
-		final LispStruct result = struct1.stringLessThanOrEqualTo(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                                            .build());
+		final LispStruct result = struct1.stringLessThanOrEqualTo(StringEqualityContext.builder(struct2)
+		                                                                               .build());
 		Assert.assertThat(result, is(BooleanStruct.NIL));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringLessThanOrEqualTo(StringStruct.StringEqualityContext)} where string1 is
+	 * Test for {@link StringStruct#stringLessThanOrEqualTo(StringEqualityContext)} where string1 is
 	 * displaced.
 	 */
 	@Test
@@ -2333,15 +2333,15 @@ public class StringStructStringEqualityTest {
 		                                         .build();
 		final String str2 = "11";
 		final StringStruct struct2 = StringStruct.toLispString(str2);
-		final LispStruct result = struct1.stringLessThanOrEqualTo(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                                            .build());
+		final LispStruct result = struct1.stringLessThanOrEqualTo(StringEqualityContext.builder(struct2)
+		                                                                               .build());
 		Assert.assertThat(result, is(BooleanStruct.NIL));
 		Assert.assertThat(struct1.toJavaString(), is(str1.substring(1)));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringLessThanOrEqualTo(StringStruct.StringEqualityContext)} where string2 is
+	 * Test for {@link StringStruct#stringLessThanOrEqualTo(StringEqualityContext)} where string2 is
 	 * displaced.
 	 */
 	@Test
@@ -2353,15 +2353,15 @@ public class StringStructStringEqualityTest {
 		                                         .displacedTo(StringStruct.toLispString(str2))
 		                                         .displacedIndexOffset(IntegerStruct.ONE)
 		                                         .build();
-		final LispStruct result = struct1.stringLessThanOrEqualTo(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                                            .build());
+		final LispStruct result = struct1.stringLessThanOrEqualTo(StringEqualityContext.builder(struct2)
+		                                                                               .build());
 		Assert.assertThat(result, is(BooleanStruct.NIL));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2.substring(1)));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringLessThanOrEqualTo(StringStruct.StringEqualityContext)} where both string1 and
+	 * Test for {@link StringStruct#stringLessThanOrEqualTo(StringEqualityContext)} where both string1 and
 	 * string2 are displaced.
 	 */
 	@Test
@@ -2376,15 +2376,15 @@ public class StringStructStringEqualityTest {
 		                                         .displacedTo(StringStruct.toLispString(str2))
 		                                         .displacedIndexOffset(IntegerStruct.ONE)
 		                                         .build();
-		final LispStruct result = struct1.stringLessThanOrEqualTo(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                                            .build());
+		final LispStruct result = struct1.stringLessThanOrEqualTo(StringEqualityContext.builder(struct2)
+		                                                                               .build());
 		Assert.assertThat(result, is(BooleanStruct.NIL));
 		Assert.assertThat(struct1.toJavaString(), is(str1.substring(1)));
 		Assert.assertThat(struct2.toJavaString(), is(str2.substring(1)));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringLessThanOrEqualTo(StringStruct.StringEqualityContext)} where string1 is
+	 * Test for {@link StringStruct#stringLessThanOrEqualTo(StringEqualityContext)} where string1 is
 	 * greater than string2.
 	 */
 	@Test
@@ -2393,15 +2393,15 @@ public class StringStructStringEqualityTest {
 		final StringStruct struct1 = StringStruct.toLispString(str1);
 		final String str2 = "132";
 		final StringStruct struct2 = StringStruct.toLispString(str2);
-		final LispStruct result = struct1.stringLessThanOrEqualTo(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                                            .build());
+		final LispStruct result = struct1.stringLessThanOrEqualTo(StringEqualityContext.builder(struct2)
+		                                                                               .build());
 		Assert.assertThat(result, is(IntegerStruct.ONE));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringLessThanOrEqualTo(StringStruct.StringEqualityContext)} where string1 is
+	 * Test for {@link StringStruct#stringLessThanOrEqualTo(StringEqualityContext)} where string1 is
 	 * equal to string2.
 	 */
 	@Test
@@ -2410,15 +2410,15 @@ public class StringStructStringEqualityTest {
 		final StringStruct struct1 = StringStruct.toLispString(str1);
 		final String str2 = "123";
 		final StringStruct struct2 = StringStruct.toLispString(str2);
-		final LispStruct result = struct1.stringLessThanOrEqualTo(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                                            .build());
+		final LispStruct result = struct1.stringLessThanOrEqualTo(StringEqualityContext.builder(struct2)
+		                                                                               .build());
 		Assert.assertThat(result, is(IntegerStructImpl.valueOf(3)));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringLessThanOrEqualTo(StringStruct.StringEqualityContext)} where string1 is
+	 * Test for {@link StringStruct#stringLessThanOrEqualTo(StringEqualityContext)} where string1 is
 	 * greater than string2 differing by case.
 	 */
 	@Test
@@ -2427,8 +2427,8 @@ public class StringStructStringEqualityTest {
 		final StringStruct struct1 = StringStruct.toLispString(str1);
 		final String str2 = "a";
 		final StringStruct struct2 = StringStruct.toLispString(str2);
-		final LispStruct result = struct1.stringLessThanOrEqualTo(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                                            .build());
+		final LispStruct result = struct1.stringLessThanOrEqualTo(StringEqualityContext.builder(struct2)
+		                                                                               .build());
 		Assert.assertThat(result, is(IntegerStruct.ZERO));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
@@ -2439,7 +2439,7 @@ public class StringStructStringEqualityTest {
 	 */
 
 	/**
-	 * Test for {@link StringStruct#stringGreaterThanOrEqualTo(StringStruct.StringEqualityContext)} where the start1
+	 * Test for {@link StringStruct#stringGreaterThanOrEqualTo(StringEqualityContext)} where the start1
 	 * index was negative.
 	 */
 	@Test
@@ -2449,13 +2449,13 @@ public class StringStructStringEqualityTest {
 
 		final StringStruct struct1 = StringStruct.emptyString();
 		final StringStruct struct2 = StringStruct.emptyString();
-		struct1.stringGreaterThanOrEqualTo(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                     .start1(IntegerStruct.MINUS_ONE)
-		                                                                     .build());
+		struct1.stringGreaterThanOrEqualTo(StringEqualityContext.builder(struct2)
+		                                                        .start1(IntegerStruct.MINUS_ONE)
+		                                                        .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringGreaterThanOrEqualTo(StringStruct.StringEqualityContext)} where the start1
+	 * Test for {@link StringStruct#stringGreaterThanOrEqualTo(StringEqualityContext)} where the start1
 	 * index was more than the total size of the first structure.
 	 */
 	@Test
@@ -2465,14 +2465,14 @@ public class StringStructStringEqualityTest {
 
 		final StringStruct struct1 = StringStruct.emptyString();
 		final StringStruct struct2 = StringStruct.emptyString();
-		struct1.stringGreaterThanOrEqualTo(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                     .start1(IntegerStruct.ONE)
-		                                                                     .build());
+		struct1.stringGreaterThanOrEqualTo(StringEqualityContext.builder(struct2)
+		                                                        .start1(IntegerStruct.ONE)
+		                                                        .build());
 
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringGreaterThanOrEqualTo(StringStruct.StringEqualityContext)} where the start1
+	 * Test for {@link StringStruct#stringGreaterThanOrEqualTo(StringEqualityContext)} where the start1
 	 * index was more than the fill pointer of the first structure.
 	 */
 	@Test
@@ -2484,13 +2484,13 @@ public class StringStructStringEqualityTest {
 		                                         .fillPointer(IntegerStruct.ONE)
 		                                         .build();
 		final StringStruct struct2 = StringStruct.emptyString();
-		struct1.stringGreaterThanOrEqualTo(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                     .start1(IntegerStruct.TWO)
-		                                                                     .build());
+		struct1.stringGreaterThanOrEqualTo(StringEqualityContext.builder(struct2)
+		                                                        .start1(IntegerStruct.TWO)
+		                                                        .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringGreaterThanOrEqualTo(StringStruct.StringEqualityContext)} where the end1 index
+	 * Test for {@link StringStruct#stringGreaterThanOrEqualTo(StringEqualityContext)} where the end1 index
 	 * was negative.
 	 */
 	@Test
@@ -2500,13 +2500,13 @@ public class StringStructStringEqualityTest {
 
 		final StringStruct struct1 = StringStruct.emptyString();
 		final StringStruct struct2 = StringStruct.emptyString();
-		struct1.stringGreaterThanOrEqualTo(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                     .end1(IntegerStruct.MINUS_ONE)
-		                                                                     .build());
+		struct1.stringGreaterThanOrEqualTo(StringEqualityContext.builder(struct2)
+		                                                        .end1(IntegerStruct.MINUS_ONE)
+		                                                        .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringGreaterThanOrEqualTo(StringStruct.StringEqualityContext)} where the end1 index
+	 * Test for {@link StringStruct#stringGreaterThanOrEqualTo(StringEqualityContext)} where the end1 index
 	 * was more than the total size of the first structure.
 	 */
 	@Test
@@ -2516,13 +2516,13 @@ public class StringStructStringEqualityTest {
 
 		final StringStruct struct1 = StringStruct.emptyString();
 		final StringStruct struct2 = StringStruct.emptyString();
-		struct1.stringGreaterThanOrEqualTo(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                     .end1(IntegerStruct.ONE)
-		                                                                     .build());
+		struct1.stringGreaterThanOrEqualTo(StringEqualityContext.builder(struct2)
+		                                                        .end1(IntegerStruct.ONE)
+		                                                        .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringGreaterThanOrEqualTo(StringStruct.StringEqualityContext)} where the end1 index
+	 * Test for {@link StringStruct#stringGreaterThanOrEqualTo(StringEqualityContext)} where the end1 index
 	 * was more than the fill pointer of the first structure.
 	 */
 	@Test
@@ -2534,13 +2534,13 @@ public class StringStructStringEqualityTest {
 		                                         .fillPointer(IntegerStruct.ONE)
 		                                         .build();
 		final StringStruct struct2 = StringStruct.emptyString();
-		struct1.stringGreaterThanOrEqualTo(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                     .end1(IntegerStruct.TWO)
-		                                                                     .build());
+		struct1.stringGreaterThanOrEqualTo(StringEqualityContext.builder(struct2)
+		                                                        .end1(IntegerStruct.TWO)
+		                                                        .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringGreaterThanOrEqualTo(StringStruct.StringEqualityContext)} where the start1
+	 * Test for {@link StringStruct#stringGreaterThanOrEqualTo(StringEqualityContext)} where the start1
 	 * index was more than the end1 index.
 	 */
 	@Test
@@ -2550,14 +2550,14 @@ public class StringStructStringEqualityTest {
 
 		final StringStruct struct1 = StringStruct.toLispString("1");
 		final StringStruct struct2 = StringStruct.toLispString("1");
-		struct1.stringGreaterThanOrEqualTo(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                     .start1(IntegerStruct.ONE)
-		                                                                     .end1(IntegerStruct.ZERO)
-		                                                                     .build());
+		struct1.stringGreaterThanOrEqualTo(StringEqualityContext.builder(struct2)
+		                                                        .start1(IntegerStruct.ONE)
+		                                                        .end1(IntegerStruct.ZERO)
+		                                                        .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringGreaterThanOrEqualTo(StringStruct.StringEqualityContext)} where the start2
+	 * Test for {@link StringStruct#stringGreaterThanOrEqualTo(StringEqualityContext)} where the start2
 	 * index was negative.
 	 */
 	@Test
@@ -2567,13 +2567,13 @@ public class StringStructStringEqualityTest {
 
 		final StringStruct struct1 = StringStruct.emptyString();
 		final StringStruct struct2 = StringStruct.emptyString();
-		struct1.stringGreaterThanOrEqualTo(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                     .start2(IntegerStruct.MINUS_ONE)
-		                                                                     .build());
+		struct1.stringGreaterThanOrEqualTo(StringEqualityContext.builder(struct2)
+		                                                        .start2(IntegerStruct.MINUS_ONE)
+		                                                        .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringGreaterThanOrEqualTo(StringStruct.StringEqualityContext)} where the start2
+	 * Test for {@link StringStruct#stringGreaterThanOrEqualTo(StringEqualityContext)} where the start2
 	 * index was more than the total size of the second structure.
 	 */
 	@Test
@@ -2583,14 +2583,14 @@ public class StringStructStringEqualityTest {
 
 		final StringStruct struct1 = StringStruct.emptyString();
 		final StringStruct struct2 = StringStruct.emptyString();
-		struct1.stringGreaterThanOrEqualTo(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                     .start2(IntegerStruct.ONE)
-		                                                                     .build());
+		struct1.stringGreaterThanOrEqualTo(StringEqualityContext.builder(struct2)
+		                                                        .start2(IntegerStruct.ONE)
+		                                                        .build());
 
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringGreaterThanOrEqualTo(StringStruct.StringEqualityContext)} where the start2
+	 * Test for {@link StringStruct#stringGreaterThanOrEqualTo(StringEqualityContext)} where the start2
 	 * index was more than the fill pointer of the second structure.
 	 */
 	@Test
@@ -2602,13 +2602,13 @@ public class StringStructStringEqualityTest {
 		final StringStruct struct2 = StringStruct.builder(IntegerStruct.TWO)
 		                                         .fillPointer(IntegerStruct.ONE)
 		                                         .build();
-		struct1.stringGreaterThanOrEqualTo(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                     .start2(IntegerStruct.TWO)
-		                                                                     .build());
+		struct1.stringGreaterThanOrEqualTo(StringEqualityContext.builder(struct2)
+		                                                        .start2(IntegerStruct.TWO)
+		                                                        .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringGreaterThanOrEqualTo(StringStruct.StringEqualityContext)} where the end2 index
+	 * Test for {@link StringStruct#stringGreaterThanOrEqualTo(StringEqualityContext)} where the end2 index
 	 * was negative.
 	 */
 	@Test
@@ -2618,13 +2618,13 @@ public class StringStructStringEqualityTest {
 
 		final StringStruct struct1 = StringStruct.emptyString();
 		final StringStruct struct2 = StringStruct.emptyString();
-		struct1.stringGreaterThanOrEqualTo(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                     .end2(IntegerStruct.MINUS_ONE)
-		                                                                     .build());
+		struct1.stringGreaterThanOrEqualTo(StringEqualityContext.builder(struct2)
+		                                                        .end2(IntegerStruct.MINUS_ONE)
+		                                                        .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringGreaterThanOrEqualTo(StringStruct.StringEqualityContext)} where the end2 index
+	 * Test for {@link StringStruct#stringGreaterThanOrEqualTo(StringEqualityContext)} where the end2 index
 	 * was more than the total size of the second structure.
 	 */
 	@Test
@@ -2634,13 +2634,13 @@ public class StringStructStringEqualityTest {
 
 		final StringStruct struct1 = StringStruct.emptyString();
 		final StringStruct struct2 = StringStruct.emptyString();
-		struct1.stringGreaterThanOrEqualTo(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                     .end2(IntegerStruct.ONE)
-		                                                                     .build());
+		struct1.stringGreaterThanOrEqualTo(StringEqualityContext.builder(struct2)
+		                                                        .end2(IntegerStruct.ONE)
+		                                                        .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringGreaterThanOrEqualTo(StringStruct.StringEqualityContext)} where the end2 index
+	 * Test for {@link StringStruct#stringGreaterThanOrEqualTo(StringEqualityContext)} where the end2 index
 	 * was more than the fill pointer of the second structure.
 	 */
 	@Test
@@ -2652,13 +2652,13 @@ public class StringStructStringEqualityTest {
 		final StringStruct struct2 = StringStruct.builder(IntegerStruct.TWO)
 		                                         .fillPointer(IntegerStruct.ONE)
 		                                         .build();
-		struct1.stringGreaterThanOrEqualTo(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                     .end2(IntegerStruct.TWO)
-		                                                                     .build());
+		struct1.stringGreaterThanOrEqualTo(StringEqualityContext.builder(struct2)
+		                                                        .end2(IntegerStruct.TWO)
+		                                                        .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringGreaterThanOrEqualTo(StringStruct.StringEqualityContext)} where the start2
+	 * Test for {@link StringStruct#stringGreaterThanOrEqualTo(StringEqualityContext)} where the start2
 	 * index was more than the end2 index.
 	 */
 	@Test
@@ -2668,14 +2668,14 @@ public class StringStructStringEqualityTest {
 
 		final StringStruct struct1 = StringStruct.toLispString("1");
 		final StringStruct struct2 = StringStruct.toLispString("1");
-		struct1.stringGreaterThanOrEqualTo(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                     .start2(IntegerStruct.ONE)
-		                                                                     .end2(IntegerStruct.ZERO)
-		                                                                     .build());
+		struct1.stringGreaterThanOrEqualTo(StringEqualityContext.builder(struct2)
+		                                                        .start2(IntegerStruct.ONE)
+		                                                        .end2(IntegerStruct.ZERO)
+		                                                        .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringGreaterThanOrEqualTo(StringStruct.StringEqualityContext)}.
+	 * Test for {@link StringStruct#stringGreaterThanOrEqualTo(StringEqualityContext)}.
 	 */
 	@Test
 	public void test_stringGreaterThanOrEqualTo_NoStartsAndNoEnds() {
@@ -2684,15 +2684,15 @@ public class StringStructStringEqualityTest {
 		final String str2 = "2";
 		final StringStruct struct2 = StringStruct.toLispString(str2);
 		final LispStruct result = struct1.stringGreaterThanOrEqualTo(
-				StringStruct.StringEqualityContext.builder(struct2)
-				                                  .build());
+				StringEqualityContext.builder(struct2)
+				                     .build());
 		Assert.assertThat(result, is(BooleanStruct.NIL));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringGreaterThanOrEqualTo(StringStruct.StringEqualityContext)} where a start index
+	 * Test for {@link StringStruct#stringGreaterThanOrEqualTo(StringEqualityContext)} where a start index
 	 * was provided.
 	 */
 	@Test
@@ -2702,17 +2702,17 @@ public class StringStructStringEqualityTest {
 		final String str2 = "12";
 		final StringStruct struct2 = StringStruct.toLispString(str2);
 		final LispStruct result = struct1.stringGreaterThanOrEqualTo(
-				StringStruct.StringEqualityContext.builder(struct2)
-				                                  .start1(IntegerStruct.ONE)
-				                                  .start2(IntegerStruct.ONE)
-				                                  .build());
+				StringEqualityContext.builder(struct2)
+				                     .start1(IntegerStruct.ONE)
+				                     .start2(IntegerStruct.ONE)
+				                     .build());
 		Assert.assertThat(result, is(BooleanStruct.NIL));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringGreaterThanOrEqualTo(StringStruct.StringEqualityContext)} where an end index
+	 * Test for {@link StringStruct#stringGreaterThanOrEqualTo(StringEqualityContext)} where an end index
 	 * was provided.
 	 */
 	@Test
@@ -2722,17 +2722,17 @@ public class StringStructStringEqualityTest {
 		final String str2 = "2";
 		final StringStruct struct2 = StringStruct.toLispString(str2);
 		final LispStruct result = struct1.stringGreaterThanOrEqualTo(
-				StringStruct.StringEqualityContext.builder(struct2)
-				                                  .end1(IntegerStruct.ONE)
-				                                  .end2(IntegerStruct.ONE)
-				                                  .build());
+				StringEqualityContext.builder(struct2)
+				                     .end1(IntegerStruct.ONE)
+				                     .end2(IntegerStruct.ONE)
+				                     .build());
 		Assert.assertThat(result, is(BooleanStruct.NIL));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringGreaterThanOrEqualTo(StringStruct.StringEqualityContext)} where a start index
+	 * Test for {@link StringStruct#stringGreaterThanOrEqualTo(StringEqualityContext)} where a start index
 	 * and an end index were provided.
 	 */
 	@Test
@@ -2742,19 +2742,19 @@ public class StringStructStringEqualityTest {
 		final String str2 = "12";
 		final StringStruct struct2 = StringStruct.toLispString(str2);
 		final LispStruct result = struct1.stringGreaterThanOrEqualTo(
-				StringStruct.StringEqualityContext.builder(struct2)
-				                                  .start1(IntegerStruct.ONE)
-				                                  .start2(IntegerStruct.ONE)
-				                                  .end1(IntegerStruct.TWO)
-				                                  .end2(IntegerStruct.TWO)
-				                                  .build());
+				StringEqualityContext.builder(struct2)
+				                     .start1(IntegerStruct.ONE)
+				                     .start2(IntegerStruct.ONE)
+				                     .end1(IntegerStruct.TWO)
+				                     .end2(IntegerStruct.TWO)
+				                     .build());
 		Assert.assertThat(result, is(BooleanStruct.NIL));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringGreaterThanOrEqualTo(StringStruct.StringEqualityContext)} where string1 has a
+	 * Test for {@link StringStruct#stringGreaterThanOrEqualTo(StringEqualityContext)} where string1 has a
 	 * fill pointer.
 	 */
 	@Test
@@ -2767,15 +2767,15 @@ public class StringStructStringEqualityTest {
 		final String str2 = "13";
 		final StringStruct struct2 = StringStruct.toLispString(str2);
 		final LispStruct result = struct1.stringGreaterThanOrEqualTo(
-				StringStruct.StringEqualityContext.builder(struct2)
-				                                  .build());
+				StringEqualityContext.builder(struct2)
+				                     .build());
 		Assert.assertThat(result, is(BooleanStruct.NIL));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringGreaterThanOrEqualTo(StringStruct.StringEqualityContext)} where string2 has a
+	 * Test for {@link StringStruct#stringGreaterThanOrEqualTo(StringEqualityContext)} where string2 has a
 	 * fill pointer.
 	 */
 	@Test
@@ -2788,15 +2788,15 @@ public class StringStructStringEqualityTest {
 		                                         .fillPointer(IntegerStruct.TWO)
 		                                         .build();
 		final LispStruct result = struct1.stringGreaterThanOrEqualTo(
-				StringStruct.StringEqualityContext.builder(struct2)
-				                                  .build());
+				StringEqualityContext.builder(struct2)
+				                     .build());
 		Assert.assertThat(result, is(BooleanStruct.NIL));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringGreaterThanOrEqualTo(StringStruct.StringEqualityContext)} where both string1
+	 * Test for {@link StringStruct#stringGreaterThanOrEqualTo(StringEqualityContext)} where both string1
 	 * and string2 have fill pointers.
 	 */
 	@Test
@@ -2812,15 +2812,15 @@ public class StringStructStringEqualityTest {
 		                                         .fillPointer(IntegerStruct.TWO)
 		                                         .build();
 		final LispStruct result = struct1.stringGreaterThanOrEqualTo(
-				StringStruct.StringEqualityContext.builder(struct2)
-				                                  .build());
+				StringEqualityContext.builder(struct2)
+				                     .build());
 		Assert.assertThat(result, is(BooleanStruct.NIL));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringGreaterThanOrEqualTo(StringStruct.StringEqualityContext)} where string1 is
+	 * Test for {@link StringStruct#stringGreaterThanOrEqualTo(StringEqualityContext)} where string1 is
 	 * displaced.
 	 */
 	@Test
@@ -2833,15 +2833,15 @@ public class StringStructStringEqualityTest {
 		final String str2 = "12";
 		final StringStruct struct2 = StringStruct.toLispString(str2);
 		final LispStruct result = struct1.stringGreaterThanOrEqualTo(
-				StringStruct.StringEqualityContext.builder(struct2)
-				                                  .build());
+				StringEqualityContext.builder(struct2)
+				                     .build());
 		Assert.assertThat(result, is(BooleanStruct.NIL));
 		Assert.assertThat(struct1.toJavaString(), is(str1.substring(1)));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringGreaterThanOrEqualTo(StringStruct.StringEqualityContext)} where string2 is
+	 * Test for {@link StringStruct#stringGreaterThanOrEqualTo(StringEqualityContext)} where string2 is
 	 * displaced.
 	 */
 	@Test
@@ -2854,15 +2854,15 @@ public class StringStructStringEqualityTest {
 		                                         .displacedIndexOffset(IntegerStruct.ONE)
 		                                         .build();
 		final LispStruct result = struct1.stringGreaterThanOrEqualTo(
-				StringStruct.StringEqualityContext.builder(struct2)
-				                                  .build());
+				StringEqualityContext.builder(struct2)
+				                     .build());
 		Assert.assertThat(result, is(BooleanStruct.NIL));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2.substring(1)));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringGreaterThanOrEqualTo(StringStruct.StringEqualityContext)} where both string1
+	 * Test for {@link StringStruct#stringGreaterThanOrEqualTo(StringEqualityContext)} where both string1
 	 * and string2 are displaced.
 	 */
 	@Test
@@ -2878,15 +2878,15 @@ public class StringStructStringEqualityTest {
 		                                         .displacedIndexOffset(IntegerStruct.ONE)
 		                                         .build();
 		final LispStruct result = struct1.stringGreaterThanOrEqualTo(
-				StringStruct.StringEqualityContext.builder(struct2)
-				                                  .build());
+				StringEqualityContext.builder(struct2)
+				                     .build());
 		Assert.assertThat(result, is(BooleanStruct.NIL));
 		Assert.assertThat(struct1.toJavaString(), is(str1.substring(1)));
 		Assert.assertThat(struct2.toJavaString(), is(str2.substring(1)));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringGreaterThanOrEqualTo(StringStruct.StringEqualityContext)} where string1 is
+	 * Test for {@link StringStruct#stringGreaterThanOrEqualTo(StringEqualityContext)} where string1 is
 	 * less than string2.
 	 */
 	@Test
@@ -2896,15 +2896,15 @@ public class StringStructStringEqualityTest {
 		final String str2 = "123";
 		final StringStruct struct2 = StringStruct.toLispString(str2);
 		final LispStruct result = struct1.stringGreaterThanOrEqualTo(
-				StringStruct.StringEqualityContext.builder(struct2)
-				                                  .build());
+				StringEqualityContext.builder(struct2)
+				                     .build());
 		Assert.assertThat(result, is(IntegerStruct.ONE));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringGreaterThanOrEqualTo(StringStruct.StringEqualityContext)} where string1 is
+	 * Test for {@link StringStruct#stringGreaterThanOrEqualTo(StringEqualityContext)} where string1 is
 	 * equal to string2.
 	 */
 	@Test
@@ -2914,15 +2914,15 @@ public class StringStructStringEqualityTest {
 		final String str2 = "123";
 		final StringStruct struct2 = StringStruct.toLispString(str2);
 		final LispStruct result = struct1.stringGreaterThanOrEqualTo(
-				StringStruct.StringEqualityContext.builder(struct2)
-				                                  .build());
+				StringEqualityContext.builder(struct2)
+				                     .build());
 		Assert.assertThat(result, is(IntegerStructImpl.valueOf(3)));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringGreaterThanOrEqualTo(StringStruct.StringEqualityContext)} where string1 is
+	 * Test for {@link StringStruct#stringGreaterThanOrEqualTo(StringEqualityContext)} where string1 is
 	 * greater than string2 differing by case.
 	 */
 	@Test
@@ -2932,8 +2932,8 @@ public class StringStructStringEqualityTest {
 		final String str2 = "A";
 		final StringStruct struct2 = StringStruct.toLispString(str2);
 		final LispStruct result = struct1.stringGreaterThanOrEqualTo(
-				StringStruct.StringEqualityContext.builder(struct2)
-				                                  .build());
+				StringEqualityContext.builder(struct2)
+				                     .build());
 		Assert.assertThat(result, is(IntegerStruct.ZERO));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
@@ -2944,7 +2944,7 @@ public class StringStructStringEqualityTest {
 	 */
 
 	/**
-	 * Test for {@link StringStruct#stringEqualIgnoreCase(StringStruct.StringEqualityContext)} where the start1 index
+	 * Test for {@link StringStruct#stringEqualIgnoreCase(StringEqualityContext)} where the start1 index
 	 * was negative.
 	 */
 	@Test
@@ -2954,13 +2954,13 @@ public class StringStructStringEqualityTest {
 
 		final StringStruct struct1 = StringStruct.emptyString();
 		final StringStruct struct2 = StringStruct.emptyString();
-		struct1.stringEqualIgnoreCase(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                .start1(IntegerStruct.MINUS_ONE)
-		                                                                .build());
+		struct1.stringEqualIgnoreCase(StringEqualityContext.builder(struct2)
+		                                                   .start1(IntegerStruct.MINUS_ONE)
+		                                                   .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringEqualIgnoreCase(StringStruct.StringEqualityContext)} where the start1 index
+	 * Test for {@link StringStruct#stringEqualIgnoreCase(StringEqualityContext)} where the start1 index
 	 * was more than the total size of the first structure.
 	 */
 	@Test
@@ -2970,14 +2970,14 @@ public class StringStructStringEqualityTest {
 
 		final StringStruct struct1 = StringStruct.emptyString();
 		final StringStruct struct2 = StringStruct.emptyString();
-		struct1.stringEqualIgnoreCase(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                .start1(IntegerStruct.ONE)
-		                                                                .build());
+		struct1.stringEqualIgnoreCase(StringEqualityContext.builder(struct2)
+		                                                   .start1(IntegerStruct.ONE)
+		                                                   .build());
 
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringEqualIgnoreCase(StringStruct.StringEqualityContext)} where the start1 index
+	 * Test for {@link StringStruct#stringEqualIgnoreCase(StringEqualityContext)} where the start1 index
 	 * was more than the fill pointer of the first structure.
 	 */
 	@Test
@@ -2989,13 +2989,13 @@ public class StringStructStringEqualityTest {
 		                                         .fillPointer(IntegerStruct.ONE)
 		                                         .build();
 		final StringStruct struct2 = StringStruct.emptyString();
-		struct1.stringEqualIgnoreCase(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                .start1(IntegerStruct.TWO)
-		                                                                .build());
+		struct1.stringEqualIgnoreCase(StringEqualityContext.builder(struct2)
+		                                                   .start1(IntegerStruct.TWO)
+		                                                   .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringEqualIgnoreCase(StringStruct.StringEqualityContext)} where the end1 index was
+	 * Test for {@link StringStruct#stringEqualIgnoreCase(StringEqualityContext)} where the end1 index was
 	 * negative.
 	 */
 	@Test
@@ -3005,13 +3005,13 @@ public class StringStructStringEqualityTest {
 
 		final StringStruct struct1 = StringStruct.emptyString();
 		final StringStruct struct2 = StringStruct.emptyString();
-		struct1.stringEqualIgnoreCase(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                .end1(IntegerStruct.MINUS_ONE)
-		                                                                .build());
+		struct1.stringEqualIgnoreCase(StringEqualityContext.builder(struct2)
+		                                                   .end1(IntegerStruct.MINUS_ONE)
+		                                                   .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringEqualIgnoreCase(StringStruct.StringEqualityContext)} where the end1 index was
+	 * Test for {@link StringStruct#stringEqualIgnoreCase(StringEqualityContext)} where the end1 index was
 	 * more than the total size of the first structure.
 	 */
 	@Test
@@ -3021,13 +3021,13 @@ public class StringStructStringEqualityTest {
 
 		final StringStruct struct1 = StringStruct.emptyString();
 		final StringStruct struct2 = StringStruct.emptyString();
-		struct1.stringEqualIgnoreCase(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                .end1(IntegerStruct.ONE)
-		                                                                .build());
+		struct1.stringEqualIgnoreCase(StringEqualityContext.builder(struct2)
+		                                                   .end1(IntegerStruct.ONE)
+		                                                   .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringEqualIgnoreCase(StringStruct.StringEqualityContext)} where the end1 index was
+	 * Test for {@link StringStruct#stringEqualIgnoreCase(StringEqualityContext)} where the end1 index was
 	 * more than the fill pointer of the first structure.
 	 */
 	@Test
@@ -3039,13 +3039,13 @@ public class StringStructStringEqualityTest {
 		                                         .fillPointer(IntegerStruct.ONE)
 		                                         .build();
 		final StringStruct struct2 = StringStruct.emptyString();
-		struct1.stringEqualIgnoreCase(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                .end1(IntegerStruct.TWO)
-		                                                                .build());
+		struct1.stringEqualIgnoreCase(StringEqualityContext.builder(struct2)
+		                                                   .end1(IntegerStruct.TWO)
+		                                                   .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringEqualIgnoreCase(StringStruct.StringEqualityContext)} where the start1 index
+	 * Test for {@link StringStruct#stringEqualIgnoreCase(StringEqualityContext)} where the start1 index
 	 * was more than the end1 index.
 	 */
 	@Test
@@ -3055,14 +3055,14 @@ public class StringStructStringEqualityTest {
 
 		final StringStruct struct1 = StringStruct.toLispString("1");
 		final StringStruct struct2 = StringStruct.toLispString("1");
-		struct1.stringEqualIgnoreCase(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                .start1(IntegerStruct.ONE)
-		                                                                .end1(IntegerStruct.ZERO)
-		                                                                .build());
+		struct1.stringEqualIgnoreCase(StringEqualityContext.builder(struct2)
+		                                                   .start1(IntegerStruct.ONE)
+		                                                   .end1(IntegerStruct.ZERO)
+		                                                   .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringEqualIgnoreCase(StringStruct.StringEqualityContext)} where the start2 index
+	 * Test for {@link StringStruct#stringEqualIgnoreCase(StringEqualityContext)} where the start2 index
 	 * was negative.
 	 */
 	@Test
@@ -3072,13 +3072,13 @@ public class StringStructStringEqualityTest {
 
 		final StringStruct struct1 = StringStruct.emptyString();
 		final StringStruct struct2 = StringStruct.emptyString();
-		struct1.stringEqualIgnoreCase(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                .start2(IntegerStruct.MINUS_ONE)
-		                                                                .build());
+		struct1.stringEqualIgnoreCase(StringEqualityContext.builder(struct2)
+		                                                   .start2(IntegerStruct.MINUS_ONE)
+		                                                   .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringEqualIgnoreCase(StringStruct.StringEqualityContext)} where the start2 index
+	 * Test for {@link StringStruct#stringEqualIgnoreCase(StringEqualityContext)} where the start2 index
 	 * was more than the total size of the second structure.
 	 */
 	@Test
@@ -3088,14 +3088,14 @@ public class StringStructStringEqualityTest {
 
 		final StringStruct struct1 = StringStruct.emptyString();
 		final StringStruct struct2 = StringStruct.emptyString();
-		struct1.stringEqualIgnoreCase(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                .start2(IntegerStruct.ONE)
-		                                                                .build());
+		struct1.stringEqualIgnoreCase(StringEqualityContext.builder(struct2)
+		                                                   .start2(IntegerStruct.ONE)
+		                                                   .build());
 
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringEqualIgnoreCase(StringStruct.StringEqualityContext)} where the start2 index
+	 * Test for {@link StringStruct#stringEqualIgnoreCase(StringEqualityContext)} where the start2 index
 	 * was more than the fill pointer of the second structure.
 	 */
 	@Test
@@ -3107,13 +3107,13 @@ public class StringStructStringEqualityTest {
 		final StringStruct struct2 = StringStruct.builder(IntegerStruct.TWO)
 		                                         .fillPointer(IntegerStruct.ONE)
 		                                         .build();
-		struct1.stringEqualIgnoreCase(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                .start2(IntegerStruct.TWO)
-		                                                                .build());
+		struct1.stringEqualIgnoreCase(StringEqualityContext.builder(struct2)
+		                                                   .start2(IntegerStruct.TWO)
+		                                                   .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringEqualIgnoreCase(StringStruct.StringEqualityContext)} where the end2 index was
+	 * Test for {@link StringStruct#stringEqualIgnoreCase(StringEqualityContext)} where the end2 index was
 	 * negative.
 	 */
 	@Test
@@ -3123,13 +3123,13 @@ public class StringStructStringEqualityTest {
 
 		final StringStruct struct1 = StringStruct.emptyString();
 		final StringStruct struct2 = StringStruct.emptyString();
-		struct1.stringEqualIgnoreCase(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                .end2(IntegerStruct.MINUS_ONE)
-		                                                                .build());
+		struct1.stringEqualIgnoreCase(StringEqualityContext.builder(struct2)
+		                                                   .end2(IntegerStruct.MINUS_ONE)
+		                                                   .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringEqualIgnoreCase(StringStruct.StringEqualityContext)} where the end2 index was
+	 * Test for {@link StringStruct#stringEqualIgnoreCase(StringEqualityContext)} where the end2 index was
 	 * more than the total size of the second structure.
 	 */
 	@Test
@@ -3139,13 +3139,13 @@ public class StringStructStringEqualityTest {
 
 		final StringStruct struct1 = StringStruct.emptyString();
 		final StringStruct struct2 = StringStruct.emptyString();
-		struct1.stringEqualIgnoreCase(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                .end2(IntegerStruct.ONE)
-		                                                                .build());
+		struct1.stringEqualIgnoreCase(StringEqualityContext.builder(struct2)
+		                                                   .end2(IntegerStruct.ONE)
+		                                                   .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringEqualIgnoreCase(StringStruct.StringEqualityContext)} where the end2 index was
+	 * Test for {@link StringStruct#stringEqualIgnoreCase(StringEqualityContext)} where the end2 index was
 	 * more than the fill pointer of the second structure.
 	 */
 	@Test
@@ -3157,13 +3157,13 @@ public class StringStructStringEqualityTest {
 		final StringStruct struct2 = StringStruct.builder(IntegerStruct.TWO)
 		                                         .fillPointer(IntegerStruct.ONE)
 		                                         .build();
-		struct1.stringEqualIgnoreCase(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                .end2(IntegerStruct.TWO)
-		                                                                .build());
+		struct1.stringEqualIgnoreCase(StringEqualityContext.builder(struct2)
+		                                                   .end2(IntegerStruct.TWO)
+		                                                   .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringEqualIgnoreCase(StringStruct.StringEqualityContext)} where the start2 index
+	 * Test for {@link StringStruct#stringEqualIgnoreCase(StringEqualityContext)} where the start2 index
 	 * was more than the end2 index.
 	 */
 	@Test
@@ -3173,29 +3173,29 @@ public class StringStructStringEqualityTest {
 
 		final StringStruct struct1 = StringStruct.toLispString("1");
 		final StringStruct struct2 = StringStruct.toLispString("1");
-		struct1.stringEqualIgnoreCase(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                .start2(IntegerStruct.ONE)
-		                                                                .end2(IntegerStruct.ZERO)
-		                                                                .build());
+		struct1.stringEqualIgnoreCase(StringEqualityContext.builder(struct2)
+		                                                   .start2(IntegerStruct.ONE)
+		                                                   .end2(IntegerStruct.ZERO)
+		                                                   .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringEqualIgnoreCase(StringStruct.StringEqualityContext)}.
+	 * Test for {@link StringStruct#stringEqualIgnoreCase(StringEqualityContext)}.
 	 */
 	@Test
 	public void test_stringEqualIgnoreCase_NoStartsAndNoEnds() {
 		final String str = "1";
 		final StringStruct struct1 = StringStruct.toLispString(str);
 		final StringStruct struct2 = StringStruct.toLispString(str);
-		final LispStruct result = struct1.stringEqualIgnoreCase(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                                          .build());
+		final LispStruct result = struct1.stringEqualIgnoreCase(StringEqualityContext.builder(struct2)
+		                                                                             .build());
 		Assert.assertThat(result, is(BooleanStruct.T));
 		Assert.assertThat(struct1.toJavaString(), is(str));
 		Assert.assertThat(struct2.toJavaString(), is(str));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringEqualIgnoreCase(StringStruct.StringEqualityContext)} where a start index was
+	 * Test for {@link StringStruct#stringEqualIgnoreCase(StringEqualityContext)} where a start index was
 	 * provided.
 	 */
 	@Test
@@ -3204,17 +3204,17 @@ public class StringStructStringEqualityTest {
 		final StringStruct struct1 = StringStruct.toLispString(str1);
 		final String str2 = "31";
 		final StringStruct struct2 = StringStruct.toLispString(str2);
-		final LispStruct result = struct1.stringEqualIgnoreCase(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                                          .start1(IntegerStruct.ONE)
-		                                                                                          .start2(IntegerStruct.ONE)
-		                                                                                          .build());
+		final LispStruct result = struct1.stringEqualIgnoreCase(StringEqualityContext.builder(struct2)
+		                                                                             .start1(IntegerStruct.ONE)
+		                                                                             .start2(IntegerStruct.ONE)
+		                                                                             .build());
 		Assert.assertThat(result, is(BooleanStruct.T));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringEqualIgnoreCase(StringStruct.StringEqualityContext)} where an end index was
+	 * Test for {@link StringStruct#stringEqualIgnoreCase(StringEqualityContext)} where an end index was
 	 * provided.
 	 */
 	@Test
@@ -3223,17 +3223,17 @@ public class StringStructStringEqualityTest {
 		final StringStruct struct1 = StringStruct.toLispString(str1);
 		final String str2 = "13";
 		final StringStruct struct2 = StringStruct.toLispString(str2);
-		final LispStruct result = struct1.stringEqualIgnoreCase(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                                          .end1(IntegerStruct.ONE)
-		                                                                                          .end2(IntegerStruct.ONE)
-		                                                                                          .build());
+		final LispStruct result = struct1.stringEqualIgnoreCase(StringEqualityContext.builder(struct2)
+		                                                                             .end1(IntegerStruct.ONE)
+		                                                                             .end2(IntegerStruct.ONE)
+		                                                                             .build());
 		Assert.assertThat(result, is(BooleanStruct.T));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringEqualIgnoreCase(StringStruct.StringEqualityContext)} where a start index and
+	 * Test for {@link StringStruct#stringEqualIgnoreCase(StringEqualityContext)} where a start index and
 	 * an end index were provided.
 	 */
 	@Test
@@ -3242,19 +3242,19 @@ public class StringStructStringEqualityTest {
 		final StringStruct struct1 = StringStruct.toLispString(str1);
 		final String str2 = "321";
 		final StringStruct struct2 = StringStruct.toLispString(str2);
-		final LispStruct result = struct1.stringEqualIgnoreCase(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                                          .start1(IntegerStruct.ONE)
-		                                                                                          .start2(IntegerStruct.ONE)
-		                                                                                          .end1(IntegerStruct.TWO)
-		                                                                                          .end2(IntegerStruct.TWO)
-		                                                                                          .build());
+		final LispStruct result = struct1.stringEqualIgnoreCase(StringEqualityContext.builder(struct2)
+		                                                                             .start1(IntegerStruct.ONE)
+		                                                                             .start2(IntegerStruct.ONE)
+		                                                                             .end1(IntegerStruct.TWO)
+		                                                                             .end2(IntegerStruct.TWO)
+		                                                                             .build());
 		Assert.assertThat(result, is(BooleanStruct.T));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringEqualIgnoreCase(StringStruct.StringEqualityContext)} where string1 has a fill
+	 * Test for {@link StringStruct#stringEqualIgnoreCase(StringEqualityContext)} where string1 has a fill
 	 * pointer.
 	 */
 	@Test
@@ -3266,15 +3266,15 @@ public class StringStructStringEqualityTest {
 		                                         .build();
 		final String str2 = "12";
 		final StringStruct struct2 = StringStruct.toLispString(str2);
-		final LispStruct result = struct1.stringEqualIgnoreCase(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                                          .build());
+		final LispStruct result = struct1.stringEqualIgnoreCase(StringEqualityContext.builder(struct2)
+		                                                                             .build());
 		Assert.assertThat(result, is(BooleanStruct.T));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringEqualIgnoreCase(StringStruct.StringEqualityContext)} where string2 has a fill
+	 * Test for {@link StringStruct#stringEqualIgnoreCase(StringEqualityContext)} where string2 has a fill
 	 * pointer.
 	 */
 	@Test
@@ -3286,15 +3286,15 @@ public class StringStructStringEqualityTest {
 		                                         .initialContents(StringStruct.toLispString(str2))
 		                                         .fillPointer(IntegerStruct.TWO)
 		                                         .build();
-		final LispStruct result = struct1.stringEqualIgnoreCase(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                                          .build());
+		final LispStruct result = struct1.stringEqualIgnoreCase(StringEqualityContext.builder(struct2)
+		                                                                             .build());
 		Assert.assertThat(result, is(BooleanStruct.T));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringEqualIgnoreCase(StringStruct.StringEqualityContext)} where both string1 and
+	 * Test for {@link StringStruct#stringEqualIgnoreCase(StringEqualityContext)} where both string1 and
 	 * string2 have fill pointers.
 	 */
 	@Test
@@ -3309,15 +3309,15 @@ public class StringStructStringEqualityTest {
 		                                         .initialContents(StringStruct.toLispString(str2))
 		                                         .fillPointer(IntegerStruct.TWO)
 		                                         .build();
-		final LispStruct result = struct1.stringEqualIgnoreCase(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                                          .build());
+		final LispStruct result = struct1.stringEqualIgnoreCase(StringEqualityContext.builder(struct2)
+		                                                                             .build());
 		Assert.assertThat(result, is(BooleanStruct.T));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringEqualIgnoreCase(StringStruct.StringEqualityContext)} where string1 is
+	 * Test for {@link StringStruct#stringEqualIgnoreCase(StringEqualityContext)} where string1 is
 	 * displaced.
 	 */
 	@Test
@@ -3329,15 +3329,15 @@ public class StringStructStringEqualityTest {
 		                                         .build();
 		final String str2 = "12";
 		final StringStruct struct2 = StringStruct.toLispString(str2);
-		final LispStruct result = struct1.stringEqualIgnoreCase(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                                          .build());
+		final LispStruct result = struct1.stringEqualIgnoreCase(StringEqualityContext.builder(struct2)
+		                                                                             .build());
 		Assert.assertThat(result, is(BooleanStruct.T));
 		Assert.assertThat(struct1.toJavaString(), is(str1.substring(1)));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringEqualIgnoreCase(StringStruct.StringEqualityContext)} where string2 is
+	 * Test for {@link StringStruct#stringEqualIgnoreCase(StringEqualityContext)} where string2 is
 	 * displaced.
 	 */
 	@Test
@@ -3349,15 +3349,15 @@ public class StringStructStringEqualityTest {
 		                                         .displacedTo(StringStruct.toLispString(str2))
 		                                         .displacedIndexOffset(IntegerStruct.ONE)
 		                                         .build();
-		final LispStruct result = struct1.stringEqualIgnoreCase(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                                          .build());
+		final LispStruct result = struct1.stringEqualIgnoreCase(StringEqualityContext.builder(struct2)
+		                                                                             .build());
 		Assert.assertThat(result, is(BooleanStruct.T));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2.substring(1)));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringEqualIgnoreCase(StringStruct.StringEqualityContext)} where both string1 and
+	 * Test for {@link StringStruct#stringEqualIgnoreCase(StringEqualityContext)} where both string1 and
 	 * string2 are displaced.
 	 */
 	@Test
@@ -3372,15 +3372,15 @@ public class StringStructStringEqualityTest {
 		                                         .displacedTo(StringStruct.toLispString(str2))
 		                                         .displacedIndexOffset(IntegerStruct.ONE)
 		                                         .build();
-		final LispStruct result = struct1.stringEqualIgnoreCase(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                                          .build());
+		final LispStruct result = struct1.stringEqualIgnoreCase(StringEqualityContext.builder(struct2)
+		                                                                             .build());
 		Assert.assertThat(result, is(BooleanStruct.T));
 		Assert.assertThat(struct1.toJavaString(), is(str1.substring(1)));
 		Assert.assertThat(struct2.toJavaString(), is(str2.substring(1)));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringEqualIgnoreCase(StringStruct.StringEqualityContext)} where string1 and string2
+	 * Test for {@link StringStruct#stringEqualIgnoreCase(StringEqualityContext)} where string1 and string2
 	 * are not equal.
 	 */
 	@Test
@@ -3389,15 +3389,15 @@ public class StringStructStringEqualityTest {
 		final StringStruct struct1 = StringStruct.toLispString(str1);
 		final String str2 = "2";
 		final StringStruct struct2 = StringStruct.toLispString(str2);
-		final LispStruct result = struct1.stringEqualIgnoreCase(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                                          .build());
+		final LispStruct result = struct1.stringEqualIgnoreCase(StringEqualityContext.builder(struct2)
+		                                                                             .build());
 		Assert.assertThat(result, is(BooleanStruct.NIL));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringEqualIgnoreCase(StringStruct.StringEqualityContext)} where string1 and string2
+	 * Test for {@link StringStruct#stringEqualIgnoreCase(StringEqualityContext)} where string1 and string2
 	 * are not equal and case is accounted for.
 	 */
 	@Test
@@ -3406,8 +3406,8 @@ public class StringStructStringEqualityTest {
 		final StringStruct struct1 = StringStruct.toLispString(str1);
 		final String str2 = "a";
 		final StringStruct struct2 = StringStruct.toLispString(str2);
-		final LispStruct result = struct1.stringEqualIgnoreCase(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                                          .build());
+		final LispStruct result = struct1.stringEqualIgnoreCase(StringEqualityContext.builder(struct2)
+		                                                                             .build());
 		Assert.assertThat(result, is(BooleanStruct.T));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
@@ -3418,7 +3418,7 @@ public class StringStructStringEqualityTest {
 	 */
 
 	/**
-	 * Test for {@link StringStruct#stringNotEqualIgnoreCase(StringStruct.StringEqualityContext)} where the start1 index
+	 * Test for {@link StringStruct#stringNotEqualIgnoreCase(StringEqualityContext)} where the start1 index
 	 * was negative.
 	 */
 	@Test
@@ -3428,13 +3428,13 @@ public class StringStructStringEqualityTest {
 
 		final StringStruct struct1 = StringStruct.emptyString();
 		final StringStruct struct2 = StringStruct.emptyString();
-		struct1.stringNotEqualIgnoreCase(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                   .start1(IntegerStruct.MINUS_ONE)
-		                                                                   .build());
+		struct1.stringNotEqualIgnoreCase(StringEqualityContext.builder(struct2)
+		                                                      .start1(IntegerStruct.MINUS_ONE)
+		                                                      .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringNotEqualIgnoreCase(StringStruct.StringEqualityContext)} where the start1 index
+	 * Test for {@link StringStruct#stringNotEqualIgnoreCase(StringEqualityContext)} where the start1 index
 	 * was more than the total size of the first structure.
 	 */
 	@Test
@@ -3444,14 +3444,14 @@ public class StringStructStringEqualityTest {
 
 		final StringStruct struct1 = StringStruct.emptyString();
 		final StringStruct struct2 = StringStruct.emptyString();
-		struct1.stringNotEqualIgnoreCase(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                   .start1(IntegerStruct.ONE)
-		                                                                   .build());
+		struct1.stringNotEqualIgnoreCase(StringEqualityContext.builder(struct2)
+		                                                      .start1(IntegerStruct.ONE)
+		                                                      .build());
 
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringNotEqualIgnoreCase(StringStruct.StringEqualityContext)} where the start1 index
+	 * Test for {@link StringStruct#stringNotEqualIgnoreCase(StringEqualityContext)} where the start1 index
 	 * was more than the fill pointer of the first structure.
 	 */
 	@Test
@@ -3463,13 +3463,13 @@ public class StringStructStringEqualityTest {
 		                                         .fillPointer(IntegerStruct.ONE)
 		                                         .build();
 		final StringStruct struct2 = StringStruct.emptyString();
-		struct1.stringNotEqualIgnoreCase(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                   .start1(IntegerStruct.TWO)
-		                                                                   .build());
+		struct1.stringNotEqualIgnoreCase(StringEqualityContext.builder(struct2)
+		                                                      .start1(IntegerStruct.TWO)
+		                                                      .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringNotEqualIgnoreCase(StringStruct.StringEqualityContext)} where the end1 index
+	 * Test for {@link StringStruct#stringNotEqualIgnoreCase(StringEqualityContext)} where the end1 index
 	 * was negative.
 	 */
 	@Test
@@ -3479,13 +3479,13 @@ public class StringStructStringEqualityTest {
 
 		final StringStruct struct1 = StringStruct.emptyString();
 		final StringStruct struct2 = StringStruct.emptyString();
-		struct1.stringNotEqualIgnoreCase(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                   .end1(IntegerStruct.MINUS_ONE)
-		                                                                   .build());
+		struct1.stringNotEqualIgnoreCase(StringEqualityContext.builder(struct2)
+		                                                      .end1(IntegerStruct.MINUS_ONE)
+		                                                      .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringNotEqualIgnoreCase(StringStruct.StringEqualityContext)} where the end1 index
+	 * Test for {@link StringStruct#stringNotEqualIgnoreCase(StringEqualityContext)} where the end1 index
 	 * was more than the total size of the first structure.
 	 */
 	@Test
@@ -3495,13 +3495,13 @@ public class StringStructStringEqualityTest {
 
 		final StringStruct struct1 = StringStruct.emptyString();
 		final StringStruct struct2 = StringStruct.emptyString();
-		struct1.stringNotEqualIgnoreCase(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                   .end1(IntegerStruct.ONE)
-		                                                                   .build());
+		struct1.stringNotEqualIgnoreCase(StringEqualityContext.builder(struct2)
+		                                                      .end1(IntegerStruct.ONE)
+		                                                      .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringNotEqualIgnoreCase(StringStruct.StringEqualityContext)} where the end1 index
+	 * Test for {@link StringStruct#stringNotEqualIgnoreCase(StringEqualityContext)} where the end1 index
 	 * was more than the fill pointer of the first structure.
 	 */
 	@Test
@@ -3513,13 +3513,13 @@ public class StringStructStringEqualityTest {
 		                                         .fillPointer(IntegerStruct.ONE)
 		                                         .build();
 		final StringStruct struct2 = StringStruct.emptyString();
-		struct1.stringNotEqualIgnoreCase(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                   .end1(IntegerStruct.TWO)
-		                                                                   .build());
+		struct1.stringNotEqualIgnoreCase(StringEqualityContext.builder(struct2)
+		                                                      .end1(IntegerStruct.TWO)
+		                                                      .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringNotEqualIgnoreCase(StringStruct.StringEqualityContext)} where the start1 index
+	 * Test for {@link StringStruct#stringNotEqualIgnoreCase(StringEqualityContext)} where the start1 index
 	 * was more than the end1 index.
 	 */
 	@Test
@@ -3529,14 +3529,14 @@ public class StringStructStringEqualityTest {
 
 		final StringStruct struct1 = StringStruct.toLispString("1");
 		final StringStruct struct2 = StringStruct.toLispString("1");
-		struct1.stringNotEqualIgnoreCase(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                   .start1(IntegerStruct.ONE)
-		                                                                   .end1(IntegerStruct.ZERO)
-		                                                                   .build());
+		struct1.stringNotEqualIgnoreCase(StringEqualityContext.builder(struct2)
+		                                                      .start1(IntegerStruct.ONE)
+		                                                      .end1(IntegerStruct.ZERO)
+		                                                      .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringNotEqualIgnoreCase(StringStruct.StringEqualityContext)} where the start2 index
+	 * Test for {@link StringStruct#stringNotEqualIgnoreCase(StringEqualityContext)} where the start2 index
 	 * was negative.
 	 */
 	@Test
@@ -3546,13 +3546,13 @@ public class StringStructStringEqualityTest {
 
 		final StringStruct struct1 = StringStruct.emptyString();
 		final StringStruct struct2 = StringStruct.emptyString();
-		struct1.stringNotEqualIgnoreCase(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                   .start2(IntegerStruct.MINUS_ONE)
-		                                                                   .build());
+		struct1.stringNotEqualIgnoreCase(StringEqualityContext.builder(struct2)
+		                                                      .start2(IntegerStruct.MINUS_ONE)
+		                                                      .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringNotEqualIgnoreCase(StringStruct.StringEqualityContext)} where the start2 index
+	 * Test for {@link StringStruct#stringNotEqualIgnoreCase(StringEqualityContext)} where the start2 index
 	 * was more than the total size of the second structure.
 	 */
 	@Test
@@ -3562,14 +3562,14 @@ public class StringStructStringEqualityTest {
 
 		final StringStruct struct1 = StringStruct.emptyString();
 		final StringStruct struct2 = StringStruct.emptyString();
-		struct1.stringNotEqualIgnoreCase(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                   .start2(IntegerStruct.ONE)
-		                                                                   .build());
+		struct1.stringNotEqualIgnoreCase(StringEqualityContext.builder(struct2)
+		                                                      .start2(IntegerStruct.ONE)
+		                                                      .build());
 
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringNotEqualIgnoreCase(StringStruct.StringEqualityContext)} where the start2 index
+	 * Test for {@link StringStruct#stringNotEqualIgnoreCase(StringEqualityContext)} where the start2 index
 	 * was more than the fill pointer of the second structure.
 	 */
 	@Test
@@ -3581,13 +3581,13 @@ public class StringStructStringEqualityTest {
 		final StringStruct struct2 = StringStruct.builder(IntegerStruct.TWO)
 		                                         .fillPointer(IntegerStruct.ONE)
 		                                         .build();
-		struct1.stringNotEqualIgnoreCase(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                   .start2(IntegerStruct.TWO)
-		                                                                   .build());
+		struct1.stringNotEqualIgnoreCase(StringEqualityContext.builder(struct2)
+		                                                      .start2(IntegerStruct.TWO)
+		                                                      .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringNotEqualIgnoreCase(StringStruct.StringEqualityContext)} where the end2 index
+	 * Test for {@link StringStruct#stringNotEqualIgnoreCase(StringEqualityContext)} where the end2 index
 	 * was negative.
 	 */
 	@Test
@@ -3597,13 +3597,13 @@ public class StringStructStringEqualityTest {
 
 		final StringStruct struct1 = StringStruct.emptyString();
 		final StringStruct struct2 = StringStruct.emptyString();
-		struct1.stringNotEqualIgnoreCase(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                   .end2(IntegerStruct.MINUS_ONE)
-		                                                                   .build());
+		struct1.stringNotEqualIgnoreCase(StringEqualityContext.builder(struct2)
+		                                                      .end2(IntegerStruct.MINUS_ONE)
+		                                                      .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringNotEqualIgnoreCase(StringStruct.StringEqualityContext)} where the end2 index
+	 * Test for {@link StringStruct#stringNotEqualIgnoreCase(StringEqualityContext)} where the end2 index
 	 * was more than the total size of the second structure.
 	 */
 	@Test
@@ -3613,13 +3613,13 @@ public class StringStructStringEqualityTest {
 
 		final StringStruct struct1 = StringStruct.emptyString();
 		final StringStruct struct2 = StringStruct.emptyString();
-		struct1.stringNotEqualIgnoreCase(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                   .end2(IntegerStruct.ONE)
-		                                                                   .build());
+		struct1.stringNotEqualIgnoreCase(StringEqualityContext.builder(struct2)
+		                                                      .end2(IntegerStruct.ONE)
+		                                                      .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringNotEqualIgnoreCase(StringStruct.StringEqualityContext)} where the end2 index
+	 * Test for {@link StringStruct#stringNotEqualIgnoreCase(StringEqualityContext)} where the end2 index
 	 * was more than the fill pointer of the second structure.
 	 */
 	@Test
@@ -3631,13 +3631,13 @@ public class StringStructStringEqualityTest {
 		final StringStruct struct2 = StringStruct.builder(IntegerStruct.TWO)
 		                                         .fillPointer(IntegerStruct.ONE)
 		                                         .build();
-		struct1.stringNotEqualIgnoreCase(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                   .end2(IntegerStruct.TWO)
-		                                                                   .build());
+		struct1.stringNotEqualIgnoreCase(StringEqualityContext.builder(struct2)
+		                                                      .end2(IntegerStruct.TWO)
+		                                                      .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringNotEqualIgnoreCase(StringStruct.StringEqualityContext)} where the start2 index
+	 * Test for {@link StringStruct#stringNotEqualIgnoreCase(StringEqualityContext)} where the start2 index
 	 * was more than the end2 index.
 	 */
 	@Test
@@ -3647,14 +3647,14 @@ public class StringStructStringEqualityTest {
 
 		final StringStruct struct1 = StringStruct.toLispString("1");
 		final StringStruct struct2 = StringStruct.toLispString("1");
-		struct1.stringNotEqualIgnoreCase(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                   .start2(IntegerStruct.ONE)
-		                                                                   .end2(IntegerStruct.ZERO)
-		                                                                   .build());
+		struct1.stringNotEqualIgnoreCase(StringEqualityContext.builder(struct2)
+		                                                      .start2(IntegerStruct.ONE)
+		                                                      .end2(IntegerStruct.ZERO)
+		                                                      .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringNotEqualIgnoreCase(StringStruct.StringEqualityContext)}.
+	 * Test for {@link StringStruct#stringNotEqualIgnoreCase(StringEqualityContext)}.
 	 */
 	@Test
 	public void test_stringNotEqualIgnoreCase_NoStartsAndNoEnds() {
@@ -3663,15 +3663,15 @@ public class StringStructStringEqualityTest {
 		final String str2 = "1";
 		final StringStruct struct2 = StringStruct.toLispString(str2);
 		final LispStruct result = struct1.stringNotEqualIgnoreCase(
-				StringStruct.StringEqualityContext.builder(struct2)
-				                                  .build());
+				StringEqualityContext.builder(struct2)
+				                     .build());
 		Assert.assertThat(result, is(BooleanStruct.NIL));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringNotEqualIgnoreCase(StringStruct.StringEqualityContext)} where a start index
+	 * Test for {@link StringStruct#stringNotEqualIgnoreCase(StringEqualityContext)} where a start index
 	 * was provided.
 	 */
 	@Test
@@ -3681,17 +3681,17 @@ public class StringStructStringEqualityTest {
 		final String str2 = "31";
 		final StringStruct struct2 = StringStruct.toLispString(str2);
 		final LispStruct result = struct1.stringNotEqualIgnoreCase(
-				StringStruct.StringEqualityContext.builder(struct2)
-				                                  .start1(IntegerStruct.ONE)
-				                                  .start2(IntegerStruct.ONE)
-				                                  .build());
+				StringEqualityContext.builder(struct2)
+				                     .start1(IntegerStruct.ONE)
+				                     .start2(IntegerStruct.ONE)
+				                     .build());
 		Assert.assertThat(result, is(BooleanStruct.NIL));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringNotEqualIgnoreCase(StringStruct.StringEqualityContext)} where an end index was
+	 * Test for {@link StringStruct#stringNotEqualIgnoreCase(StringEqualityContext)} where an end index was
 	 * provided.
 	 */
 	@Test
@@ -3701,17 +3701,17 @@ public class StringStructStringEqualityTest {
 		final String str2 = "13";
 		final StringStruct struct2 = StringStruct.toLispString(str2);
 		final LispStruct result = struct1.stringNotEqualIgnoreCase(
-				StringStruct.StringEqualityContext.builder(struct2)
-				                                  .end1(IntegerStruct.ONE)
-				                                  .end2(IntegerStruct.ONE)
-				                                  .build());
+				StringEqualityContext.builder(struct2)
+				                     .end1(IntegerStruct.ONE)
+				                     .end2(IntegerStruct.ONE)
+				                     .build());
 		Assert.assertThat(result, is(BooleanStruct.NIL));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringNotEqualIgnoreCase(StringStruct.StringEqualityContext)} where a start index
+	 * Test for {@link StringStruct#stringNotEqualIgnoreCase(StringEqualityContext)} where a start index
 	 * and an end index were provided.
 	 */
 	@Test
@@ -3721,19 +3721,19 @@ public class StringStructStringEqualityTest {
 		final String str2 = "321";
 		final StringStruct struct2 = StringStruct.toLispString(str2);
 		final LispStruct result = struct1.stringNotEqualIgnoreCase(
-				StringStruct.StringEqualityContext.builder(struct2)
-				                                  .start1(IntegerStruct.ONE)
-				                                  .start2(IntegerStruct.ONE)
-				                                  .end1(IntegerStruct.TWO)
-				                                  .end2(IntegerStruct.TWO)
-				                                  .build());
+				StringEqualityContext.builder(struct2)
+				                     .start1(IntegerStruct.ONE)
+				                     .start2(IntegerStruct.ONE)
+				                     .end1(IntegerStruct.TWO)
+				                     .end2(IntegerStruct.TWO)
+				                     .build());
 		Assert.assertThat(result, is(BooleanStruct.NIL));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringNotEqualIgnoreCase(StringStruct.StringEqualityContext)} where string1 has a
+	 * Test for {@link StringStruct#stringNotEqualIgnoreCase(StringEqualityContext)} where string1 has a
 	 * fill pointer.
 	 */
 	@Test
@@ -3745,15 +3745,15 @@ public class StringStructStringEqualityTest {
 		                                         .build();
 		final String str2 = "12";
 		final StringStruct struct2 = StringStruct.toLispString(str2);
-		final LispStruct result = struct1.stringNotEqualIgnoreCase(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                                             .build());
+		final LispStruct result = struct1.stringNotEqualIgnoreCase(StringEqualityContext.builder(struct2)
+		                                                                                .build());
 		Assert.assertThat(result, is(BooleanStruct.NIL));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringNotEqualIgnoreCase(StringStruct.StringEqualityContext)} where string2 has a
+	 * Test for {@link StringStruct#stringNotEqualIgnoreCase(StringEqualityContext)} where string2 has a
 	 * fill pointer.
 	 */
 	@Test
@@ -3766,15 +3766,15 @@ public class StringStructStringEqualityTest {
 		                                         .fillPointer(IntegerStruct.TWO)
 		                                         .build();
 		final LispStruct result = struct1.stringNotEqualIgnoreCase(
-				StringStruct.StringEqualityContext.builder(struct2)
-				                                  .build());
+				StringEqualityContext.builder(struct2)
+				                     .build());
 		Assert.assertThat(result, is(BooleanStruct.NIL));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringNotEqualIgnoreCase(StringStruct.StringEqualityContext)} where both string1 and
+	 * Test for {@link StringStruct#stringNotEqualIgnoreCase(StringEqualityContext)} where both string1 and
 	 * string2 have fill pointers.
 	 */
 	@Test
@@ -3790,15 +3790,15 @@ public class StringStructStringEqualityTest {
 		                                         .fillPointer(IntegerStruct.TWO)
 		                                         .build();
 		final LispStruct result = struct1.stringNotEqualIgnoreCase(
-				StringStruct.StringEqualityContext.builder(struct2)
-				                                  .build());
+				StringEqualityContext.builder(struct2)
+				                     .build());
 		Assert.assertThat(result, is(BooleanStruct.NIL));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringNotEqualIgnoreCase(StringStruct.StringEqualityContext)} where string1 is
+	 * Test for {@link StringStruct#stringNotEqualIgnoreCase(StringEqualityContext)} where string1 is
 	 * displaced.
 	 */
 	@Test
@@ -3811,15 +3811,15 @@ public class StringStructStringEqualityTest {
 		final String str2 = "23";
 		final StringStruct struct2 = StringStruct.toLispString(str2);
 		final LispStruct result = struct1.stringNotEqualIgnoreCase(
-				StringStruct.StringEqualityContext.builder(struct2)
-				                                  .build());
+				StringEqualityContext.builder(struct2)
+				                     .build());
 		Assert.assertThat(result, is(BooleanStruct.NIL));
 		Assert.assertThat(struct1.toJavaString(), is(str1.substring(1)));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringNotEqualIgnoreCase(StringStruct.StringEqualityContext)} where string2 is
+	 * Test for {@link StringStruct#stringNotEqualIgnoreCase(StringEqualityContext)} where string2 is
 	 * displaced.
 	 */
 	@Test
@@ -3832,15 +3832,15 @@ public class StringStructStringEqualityTest {
 		                                         .displacedIndexOffset(IntegerStruct.ONE)
 		                                         .build();
 		final LispStruct result = struct1.stringNotEqualIgnoreCase(
-				StringStruct.StringEqualityContext.builder(struct2)
-				                                  .build());
+				StringEqualityContext.builder(struct2)
+				                     .build());
 		Assert.assertThat(result, is(BooleanStruct.NIL));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2.substring(1)));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringNotEqualIgnoreCase(StringStruct.StringEqualityContext)} where both string1 and
+	 * Test for {@link StringStruct#stringNotEqualIgnoreCase(StringEqualityContext)} where both string1 and
 	 * string2 are displaced.
 	 */
 	@Test
@@ -3856,15 +3856,15 @@ public class StringStructStringEqualityTest {
 		                                         .displacedIndexOffset(IntegerStruct.ONE)
 		                                         .build();
 		final LispStruct result = struct1.stringNotEqualIgnoreCase(
-				StringStruct.StringEqualityContext.builder(struct2)
-				                                  .build());
+				StringEqualityContext.builder(struct2)
+				                     .build());
 		Assert.assertThat(result, is(BooleanStruct.NIL));
 		Assert.assertThat(struct1.toJavaString(), is(str1.substring(1)));
 		Assert.assertThat(struct2.toJavaString(), is(str2.substring(1)));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringNotEqualIgnoreCase(StringStruct.StringEqualityContext)} where string1 and
+	 * Test for {@link StringStruct#stringNotEqualIgnoreCase(StringEqualityContext)} where string1 and
 	 * string2 are not equal.
 	 */
 	@Test
@@ -3874,15 +3874,15 @@ public class StringStructStringEqualityTest {
 		final String str2 = "121";
 		final StringStruct struct2 = StringStruct.toLispString(str2);
 		final LispStruct result = struct1.stringNotEqualIgnoreCase(
-				StringStruct.StringEqualityContext.builder(struct2)
-				                                  .build());
+				StringEqualityContext.builder(struct2)
+				                     .build());
 		Assert.assertThat(result, is(IntegerStruct.ONE));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringNotEqualIgnoreCase(StringStruct.StringEqualityContext)} where string1 and
+	 * Test for {@link StringStruct#stringNotEqualIgnoreCase(StringEqualityContext)} where string1 and
 	 * string2 are not equal and case is accounted for.
 	 */
 	@Test
@@ -3892,8 +3892,8 @@ public class StringStructStringEqualityTest {
 		final String str2 = "a";
 		final StringStruct struct2 = StringStruct.toLispString(str2);
 		final LispStruct result = struct1.stringNotEqualIgnoreCase(
-				StringStruct.StringEqualityContext.builder(struct2)
-				                                  .build());
+				StringEqualityContext.builder(struct2)
+				                     .build());
 		Assert.assertThat(result, is(BooleanStruct.NIL));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
@@ -3904,7 +3904,7 @@ public class StringStructStringEqualityTest {
 	 */
 
 	/**
-	 * Test for {@link StringStruct#stringLessThanIgnoreCase(StringStruct.StringEqualityContext)} where the start1 index
+	 * Test for {@link StringStruct#stringLessThanIgnoreCase(StringEqualityContext)} where the start1 index
 	 * was negative.
 	 */
 	@Test
@@ -3914,13 +3914,13 @@ public class StringStructStringEqualityTest {
 
 		final StringStruct struct1 = StringStruct.emptyString();
 		final StringStruct struct2 = StringStruct.emptyString();
-		struct1.stringLessThanIgnoreCase(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                   .start1(IntegerStruct.MINUS_ONE)
-		                                                                   .build());
+		struct1.stringLessThanIgnoreCase(StringEqualityContext.builder(struct2)
+		                                                      .start1(IntegerStruct.MINUS_ONE)
+		                                                      .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringLessThanIgnoreCase(StringStruct.StringEqualityContext)} where the start1 index
+	 * Test for {@link StringStruct#stringLessThanIgnoreCase(StringEqualityContext)} where the start1 index
 	 * was more than the total size of the first structure.
 	 */
 	@Test
@@ -3930,14 +3930,14 @@ public class StringStructStringEqualityTest {
 
 		final StringStruct struct1 = StringStruct.emptyString();
 		final StringStruct struct2 = StringStruct.emptyString();
-		struct1.stringLessThanIgnoreCase(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                   .start1(IntegerStruct.ONE)
-		                                                                   .build());
+		struct1.stringLessThanIgnoreCase(StringEqualityContext.builder(struct2)
+		                                                      .start1(IntegerStruct.ONE)
+		                                                      .build());
 
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringLessThanIgnoreCase(StringStruct.StringEqualityContext)} where the start1 index
+	 * Test for {@link StringStruct#stringLessThanIgnoreCase(StringEqualityContext)} where the start1 index
 	 * was more than the fill pointer of the first structure.
 	 */
 	@Test
@@ -3949,13 +3949,13 @@ public class StringStructStringEqualityTest {
 		                                         .fillPointer(IntegerStruct.ONE)
 		                                         .build();
 		final StringStruct struct2 = StringStruct.emptyString();
-		struct1.stringLessThanIgnoreCase(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                   .start1(IntegerStruct.TWO)
-		                                                                   .build());
+		struct1.stringLessThanIgnoreCase(StringEqualityContext.builder(struct2)
+		                                                      .start1(IntegerStruct.TWO)
+		                                                      .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringLessThanIgnoreCase(StringStruct.StringEqualityContext)} where the end1 index
+	 * Test for {@link StringStruct#stringLessThanIgnoreCase(StringEqualityContext)} where the end1 index
 	 * was negative.
 	 */
 	@Test
@@ -3965,13 +3965,13 @@ public class StringStructStringEqualityTest {
 
 		final StringStruct struct1 = StringStruct.emptyString();
 		final StringStruct struct2 = StringStruct.emptyString();
-		struct1.stringLessThanIgnoreCase(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                   .end1(IntegerStruct.MINUS_ONE)
-		                                                                   .build());
+		struct1.stringLessThanIgnoreCase(StringEqualityContext.builder(struct2)
+		                                                      .end1(IntegerStruct.MINUS_ONE)
+		                                                      .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringLessThanIgnoreCase(StringStruct.StringEqualityContext)} where the end1 index
+	 * Test for {@link StringStruct#stringLessThanIgnoreCase(StringEqualityContext)} where the end1 index
 	 * was more than the total size of the first structure.
 	 */
 	@Test
@@ -3981,13 +3981,13 @@ public class StringStructStringEqualityTest {
 
 		final StringStruct struct1 = StringStruct.emptyString();
 		final StringStruct struct2 = StringStruct.emptyString();
-		struct1.stringLessThanIgnoreCase(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                   .end1(IntegerStruct.ONE)
-		                                                                   .build());
+		struct1.stringLessThanIgnoreCase(StringEqualityContext.builder(struct2)
+		                                                      .end1(IntegerStruct.ONE)
+		                                                      .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringLessThanIgnoreCase(StringStruct.StringEqualityContext)} where the end1 index
+	 * Test for {@link StringStruct#stringLessThanIgnoreCase(StringEqualityContext)} where the end1 index
 	 * was more than the fill pointer of the first structure.
 	 */
 	@Test
@@ -3999,13 +3999,13 @@ public class StringStructStringEqualityTest {
 		                                         .fillPointer(IntegerStruct.ONE)
 		                                         .build();
 		final StringStruct struct2 = StringStruct.emptyString();
-		struct1.stringLessThanIgnoreCase(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                   .end1(IntegerStruct.TWO)
-		                                                                   .build());
+		struct1.stringLessThanIgnoreCase(StringEqualityContext.builder(struct2)
+		                                                      .end1(IntegerStruct.TWO)
+		                                                      .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringLessThanIgnoreCase(StringStruct.StringEqualityContext)} where the start1 index
+	 * Test for {@link StringStruct#stringLessThanIgnoreCase(StringEqualityContext)} where the start1 index
 	 * was more than the end1 index.
 	 */
 	@Test
@@ -4015,14 +4015,14 @@ public class StringStructStringEqualityTest {
 
 		final StringStruct struct1 = StringStruct.toLispString("1");
 		final StringStruct struct2 = StringStruct.toLispString("1");
-		struct1.stringLessThanIgnoreCase(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                   .start1(IntegerStruct.ONE)
-		                                                                   .end1(IntegerStruct.ZERO)
-		                                                                   .build());
+		struct1.stringLessThanIgnoreCase(StringEqualityContext.builder(struct2)
+		                                                      .start1(IntegerStruct.ONE)
+		                                                      .end1(IntegerStruct.ZERO)
+		                                                      .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringLessThanIgnoreCase(StringStruct.StringEqualityContext)} where the start2 index
+	 * Test for {@link StringStruct#stringLessThanIgnoreCase(StringEqualityContext)} where the start2 index
 	 * was negative.
 	 */
 	@Test
@@ -4032,13 +4032,13 @@ public class StringStructStringEqualityTest {
 
 		final StringStruct struct1 = StringStruct.emptyString();
 		final StringStruct struct2 = StringStruct.emptyString();
-		struct1.stringLessThanIgnoreCase(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                   .start2(IntegerStruct.MINUS_ONE)
-		                                                                   .build());
+		struct1.stringLessThanIgnoreCase(StringEqualityContext.builder(struct2)
+		                                                      .start2(IntegerStruct.MINUS_ONE)
+		                                                      .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringLessThanIgnoreCase(StringStruct.StringEqualityContext)} where the start2 index
+	 * Test for {@link StringStruct#stringLessThanIgnoreCase(StringEqualityContext)} where the start2 index
 	 * was more than the total size of the second structure.
 	 */
 	@Test
@@ -4048,14 +4048,14 @@ public class StringStructStringEqualityTest {
 
 		final StringStruct struct1 = StringStruct.emptyString();
 		final StringStruct struct2 = StringStruct.emptyString();
-		struct1.stringLessThanIgnoreCase(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                   .start2(IntegerStruct.ONE)
-		                                                                   .build());
+		struct1.stringLessThanIgnoreCase(StringEqualityContext.builder(struct2)
+		                                                      .start2(IntegerStruct.ONE)
+		                                                      .build());
 
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringLessThanIgnoreCase(StringStruct.StringEqualityContext)} where the start2 index
+	 * Test for {@link StringStruct#stringLessThanIgnoreCase(StringEqualityContext)} where the start2 index
 	 * was more than the fill pointer of the second structure.
 	 */
 	@Test
@@ -4067,13 +4067,13 @@ public class StringStructStringEqualityTest {
 		final StringStruct struct2 = StringStruct.builder(IntegerStruct.TWO)
 		                                         .fillPointer(IntegerStruct.ONE)
 		                                         .build();
-		struct1.stringLessThanIgnoreCase(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                   .start2(IntegerStruct.TWO)
-		                                                                   .build());
+		struct1.stringLessThanIgnoreCase(StringEqualityContext.builder(struct2)
+		                                                      .start2(IntegerStruct.TWO)
+		                                                      .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringLessThanIgnoreCase(StringStruct.StringEqualityContext)} where the end2 index
+	 * Test for {@link StringStruct#stringLessThanIgnoreCase(StringEqualityContext)} where the end2 index
 	 * was negative.
 	 */
 	@Test
@@ -4083,13 +4083,13 @@ public class StringStructStringEqualityTest {
 
 		final StringStruct struct1 = StringStruct.emptyString();
 		final StringStruct struct2 = StringStruct.emptyString();
-		struct1.stringLessThanIgnoreCase(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                   .end2(IntegerStruct.MINUS_ONE)
-		                                                                   .build());
+		struct1.stringLessThanIgnoreCase(StringEqualityContext.builder(struct2)
+		                                                      .end2(IntegerStruct.MINUS_ONE)
+		                                                      .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringLessThanIgnoreCase(StringStruct.StringEqualityContext)} where the end2 index
+	 * Test for {@link StringStruct#stringLessThanIgnoreCase(StringEqualityContext)} where the end2 index
 	 * was more than the total size of the second structure.
 	 */
 	@Test
@@ -4099,13 +4099,13 @@ public class StringStructStringEqualityTest {
 
 		final StringStruct struct1 = StringStruct.emptyString();
 		final StringStruct struct2 = StringStruct.emptyString();
-		struct1.stringLessThanIgnoreCase(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                   .end2(IntegerStruct.ONE)
-		                                                                   .build());
+		struct1.stringLessThanIgnoreCase(StringEqualityContext.builder(struct2)
+		                                                      .end2(IntegerStruct.ONE)
+		                                                      .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringLessThanIgnoreCase(StringStruct.StringEqualityContext)} where the end2 index
+	 * Test for {@link StringStruct#stringLessThanIgnoreCase(StringEqualityContext)} where the end2 index
 	 * was more than the fill pointer of the second structure.
 	 */
 	@Test
@@ -4117,13 +4117,13 @@ public class StringStructStringEqualityTest {
 		final StringStruct struct2 = StringStruct.builder(IntegerStruct.TWO)
 		                                         .fillPointer(IntegerStruct.ONE)
 		                                         .build();
-		struct1.stringLessThanIgnoreCase(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                   .end2(IntegerStruct.TWO)
-		                                                                   .build());
+		struct1.stringLessThanIgnoreCase(StringEqualityContext.builder(struct2)
+		                                                      .end2(IntegerStruct.TWO)
+		                                                      .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringLessThanIgnoreCase(StringStruct.StringEqualityContext)} where the start2 index
+	 * Test for {@link StringStruct#stringLessThanIgnoreCase(StringEqualityContext)} where the start2 index
 	 * was more than the end2 index.
 	 */
 	@Test
@@ -4133,14 +4133,14 @@ public class StringStructStringEqualityTest {
 
 		final StringStruct struct1 = StringStruct.toLispString("1");
 		final StringStruct struct2 = StringStruct.toLispString("1");
-		struct1.stringLessThanIgnoreCase(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                   .start2(IntegerStruct.ONE)
-		                                                                   .end2(IntegerStruct.ZERO)
-		                                                                   .build());
+		struct1.stringLessThanIgnoreCase(StringEqualityContext.builder(struct2)
+		                                                      .start2(IntegerStruct.ONE)
+		                                                      .end2(IntegerStruct.ZERO)
+		                                                      .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringLessThanIgnoreCase(StringStruct.StringEqualityContext)}.
+	 * Test for {@link StringStruct#stringLessThanIgnoreCase(StringEqualityContext)}.
 	 */
 	@Test
 	public void test_stringLessThanIgnoreCase_NoStartsAndNoEnds() {
@@ -4149,15 +4149,15 @@ public class StringStructStringEqualityTest {
 		final String str2 = "1";
 		final StringStruct struct2 = StringStruct.toLispString(str2);
 		final LispStruct result = struct1.stringLessThanIgnoreCase(
-				StringStruct.StringEqualityContext.builder(struct2)
-				                                  .build());
+				StringEqualityContext.builder(struct2)
+				                     .build());
 		Assert.assertThat(result, is(BooleanStruct.NIL));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringLessThanIgnoreCase(StringStruct.StringEqualityContext)} where a start index
+	 * Test for {@link StringStruct#stringLessThanIgnoreCase(StringEqualityContext)} where a start index
 	 * was provided.
 	 */
 	@Test
@@ -4167,17 +4167,17 @@ public class StringStructStringEqualityTest {
 		final String str2 = "21";
 		final StringStruct struct2 = StringStruct.toLispString(str2);
 		final LispStruct result = struct1.stringLessThanIgnoreCase(
-				StringStruct.StringEqualityContext.builder(struct2)
-				                                  .start1(IntegerStruct.ONE)
-				                                  .start2(IntegerStruct.ONE)
-				                                  .build());
+				StringEqualityContext.builder(struct2)
+				                     .start1(IntegerStruct.ONE)
+				                     .start2(IntegerStruct.ONE)
+				                     .build());
 		Assert.assertThat(result, is(BooleanStruct.NIL));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringLessThanIgnoreCase(StringStruct.StringEqualityContext)} where an end index was
+	 * Test for {@link StringStruct#stringLessThanIgnoreCase(StringEqualityContext)} where an end index was
 	 * provided.
 	 */
 	@Test
@@ -4187,17 +4187,17 @@ public class StringStructStringEqualityTest {
 		final String str2 = "12";
 		final StringStruct struct2 = StringStruct.toLispString(str2);
 		final LispStruct result = struct1.stringLessThanIgnoreCase(
-				StringStruct.StringEqualityContext.builder(struct2)
-				                                  .end1(IntegerStruct.ONE)
-				                                  .end2(IntegerStruct.ONE)
-				                                  .build());
+				StringEqualityContext.builder(struct2)
+				                     .end1(IntegerStruct.ONE)
+				                     .end2(IntegerStruct.ONE)
+				                     .build());
 		Assert.assertThat(result, is(BooleanStruct.NIL));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringLessThanIgnoreCase(StringStruct.StringEqualityContext)} where a start index
+	 * Test for {@link StringStruct#stringLessThanIgnoreCase(StringEqualityContext)} where a start index
 	 * and an end index were provided.
 	 */
 	@Test
@@ -4207,19 +4207,19 @@ public class StringStructStringEqualityTest {
 		final String str2 = "311";
 		final StringStruct struct2 = StringStruct.toLispString(str2);
 		final LispStruct result = struct1.stringLessThanIgnoreCase(
-				StringStruct.StringEqualityContext.builder(struct2)
-				                                  .start1(IntegerStruct.ONE)
-				                                  .start2(IntegerStruct.ONE)
-				                                  .end1(IntegerStruct.TWO)
-				                                  .end2(IntegerStruct.TWO)
-				                                  .build());
+				StringEqualityContext.builder(struct2)
+				                     .start1(IntegerStruct.ONE)
+				                     .start2(IntegerStruct.ONE)
+				                     .end1(IntegerStruct.TWO)
+				                     .end2(IntegerStruct.TWO)
+				                     .build());
 		Assert.assertThat(result, is(BooleanStruct.NIL));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringLessThanIgnoreCase(StringStruct.StringEqualityContext)} where string1 has a
+	 * Test for {@link StringStruct#stringLessThanIgnoreCase(StringEqualityContext)} where string1 has a
 	 * fill pointer.
 	 */
 	@Test
@@ -4232,15 +4232,15 @@ public class StringStructStringEqualityTest {
 		final String str2 = "11";
 		final StringStruct struct2 = StringStruct.toLispString(str2);
 		final LispStruct result = struct1.stringLessThanIgnoreCase(
-				StringStruct.StringEqualityContext.builder(struct2)
-				                                  .build());
+				StringEqualityContext.builder(struct2)
+				                     .build());
 		Assert.assertThat(result, is(BooleanStruct.NIL));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringLessThanIgnoreCase(StringStruct.StringEqualityContext)} where string2 has a
+	 * Test for {@link StringStruct#stringLessThanIgnoreCase(StringEqualityContext)} where string2 has a
 	 * fill pointer.
 	 */
 	@Test
@@ -4253,15 +4253,15 @@ public class StringStructStringEqualityTest {
 		                                         .fillPointer(IntegerStruct.TWO)
 		                                         .build();
 		final LispStruct result = struct1.stringLessThanIgnoreCase(
-				StringStruct.StringEqualityContext.builder(struct2)
-				                                  .build());
+				StringEqualityContext.builder(struct2)
+				                     .build());
 		Assert.assertThat(result, is(BooleanStruct.NIL));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringLessThanIgnoreCase(StringStruct.StringEqualityContext)} where both string1 and
+	 * Test for {@link StringStruct#stringLessThanIgnoreCase(StringEqualityContext)} where both string1 and
 	 * string2 have fill pointers.
 	 */
 	@Test
@@ -4277,15 +4277,15 @@ public class StringStructStringEqualityTest {
 		                                         .fillPointer(IntegerStruct.TWO)
 		                                         .build();
 		final LispStruct result = struct1.stringLessThanIgnoreCase(
-				StringStruct.StringEqualityContext.builder(struct2)
-				                                  .build());
+				StringEqualityContext.builder(struct2)
+				                     .build());
 		Assert.assertThat(result, is(BooleanStruct.NIL));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringLessThanIgnoreCase(StringStruct.StringEqualityContext)} where string1 is
+	 * Test for {@link StringStruct#stringLessThanIgnoreCase(StringEqualityContext)} where string1 is
 	 * displaced.
 	 */
 	@Test
@@ -4298,15 +4298,15 @@ public class StringStructStringEqualityTest {
 		final String str2 = "11";
 		final StringStruct struct2 = StringStruct.toLispString(str2);
 		final LispStruct result = struct1.stringLessThanIgnoreCase(
-				StringStruct.StringEqualityContext.builder(struct2)
-				                                  .build());
+				StringEqualityContext.builder(struct2)
+				                     .build());
 		Assert.assertThat(result, is(BooleanStruct.NIL));
 		Assert.assertThat(struct1.toJavaString(), is(str1.substring(1)));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringLessThanIgnoreCase(StringStruct.StringEqualityContext)} where string2 is
+	 * Test for {@link StringStruct#stringLessThanIgnoreCase(StringEqualityContext)} where string2 is
 	 * displaced.
 	 */
 	@Test
@@ -4319,15 +4319,15 @@ public class StringStructStringEqualityTest {
 		                                         .displacedIndexOffset(IntegerStruct.ONE)
 		                                         .build();
 		final LispStruct result = struct1.stringLessThanIgnoreCase(
-				StringStruct.StringEqualityContext.builder(struct2)
-				                                  .build());
+				StringEqualityContext.builder(struct2)
+				                     .build());
 		Assert.assertThat(result, is(BooleanStruct.NIL));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2.substring(1)));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringLessThanIgnoreCase(StringStruct.StringEqualityContext)} where both string1 and
+	 * Test for {@link StringStruct#stringLessThanIgnoreCase(StringEqualityContext)} where both string1 and
 	 * string2 are displaced.
 	 */
 	@Test
@@ -4343,15 +4343,15 @@ public class StringStructStringEqualityTest {
 		                                         .displacedIndexOffset(IntegerStruct.ONE)
 		                                         .build();
 		final LispStruct result = struct1.stringLessThanIgnoreCase(
-				StringStruct.StringEqualityContext.builder(struct2)
-				                                  .build());
+				StringEqualityContext.builder(struct2)
+				                     .build());
 		Assert.assertThat(result, is(BooleanStruct.NIL));
 		Assert.assertThat(struct1.toJavaString(), is(str1.substring(1)));
 		Assert.assertThat(struct2.toJavaString(), is(str2.substring(1)));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringLessThanIgnoreCase(StringStruct.StringEqualityContext)} where string1 is
+	 * Test for {@link StringStruct#stringLessThanIgnoreCase(StringEqualityContext)} where string1 is
 	 * greater than string2.
 	 */
 	@Test
@@ -4361,15 +4361,15 @@ public class StringStructStringEqualityTest {
 		final String str2 = "132";
 		final StringStruct struct2 = StringStruct.toLispString(str2);
 		final LispStruct result = struct1.stringLessThanIgnoreCase(
-				StringStruct.StringEqualityContext.builder(struct2)
-				                                  .build());
+				StringEqualityContext.builder(struct2)
+				                     .build());
 		Assert.assertThat(result, is(IntegerStruct.ONE));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringLessThanIgnoreCase(StringStruct.StringEqualityContext)} where string1 is
+	 * Test for {@link StringStruct#stringLessThanIgnoreCase(StringEqualityContext)} where string1 is
 	 * equal to string2.
 	 */
 	@Test
@@ -4379,15 +4379,15 @@ public class StringStructStringEqualityTest {
 		final String str2 = "123";
 		final StringStruct struct2 = StringStruct.toLispString(str2);
 		final LispStruct result = struct1.stringLessThanIgnoreCase(
-				StringStruct.StringEqualityContext.builder(struct2)
-				                                  .build());
+				StringEqualityContext.builder(struct2)
+				                     .build());
 		Assert.assertThat(result, is(BooleanStruct.NIL));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringLessThanIgnoreCase(StringStruct.StringEqualityContext)} where string1 is
+	 * Test for {@link StringStruct#stringLessThanIgnoreCase(StringEqualityContext)} where string1 is
 	 * greater than string2 differing by case.
 	 */
 	@Test
@@ -4397,8 +4397,8 @@ public class StringStructStringEqualityTest {
 		final String str2 = "B";
 		final StringStruct struct2 = StringStruct.toLispString(str2);
 		final LispStruct result = struct1.stringLessThanIgnoreCase(
-				StringStruct.StringEqualityContext.builder(struct2)
-				                                  .build());
+				StringEqualityContext.builder(struct2)
+				                     .build());
 		Assert.assertThat(result, is(IntegerStruct.ZERO));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
@@ -4409,7 +4409,7 @@ public class StringStructStringEqualityTest {
 	 */
 
 	/**
-	 * Test for {@link StringStruct#stringGreaterThanIgnoreCase(StringStruct.StringEqualityContext)} where the start1
+	 * Test for {@link StringStruct#stringGreaterThanIgnoreCase(StringEqualityContext)} where the start1
 	 * index was negative.
 	 */
 	@Test
@@ -4419,13 +4419,13 @@ public class StringStructStringEqualityTest {
 
 		final StringStruct struct1 = StringStruct.emptyString();
 		final StringStruct struct2 = StringStruct.emptyString();
-		struct1.stringGreaterThanIgnoreCase(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                      .start1(IntegerStruct.MINUS_ONE)
-		                                                                      .build());
+		struct1.stringGreaterThanIgnoreCase(StringEqualityContext.builder(struct2)
+		                                                         .start1(IntegerStruct.MINUS_ONE)
+		                                                         .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringGreaterThanIgnoreCase(StringStruct.StringEqualityContext)} where the start1
+	 * Test for {@link StringStruct#stringGreaterThanIgnoreCase(StringEqualityContext)} where the start1
 	 * index was more than the total size of the first structure.
 	 */
 	@Test
@@ -4435,14 +4435,14 @@ public class StringStructStringEqualityTest {
 
 		final StringStruct struct1 = StringStruct.emptyString();
 		final StringStruct struct2 = StringStruct.emptyString();
-		struct1.stringGreaterThanIgnoreCase(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                      .start1(IntegerStruct.ONE)
-		                                                                      .build());
+		struct1.stringGreaterThanIgnoreCase(StringEqualityContext.builder(struct2)
+		                                                         .start1(IntegerStruct.ONE)
+		                                                         .build());
 
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringGreaterThanIgnoreCase(StringStruct.StringEqualityContext)} where the start1
+	 * Test for {@link StringStruct#stringGreaterThanIgnoreCase(StringEqualityContext)} where the start1
 	 * index was more than the fill pointer of the first structure.
 	 */
 	@Test
@@ -4454,13 +4454,13 @@ public class StringStructStringEqualityTest {
 		                                         .fillPointer(IntegerStruct.ONE)
 		                                         .build();
 		final StringStruct struct2 = StringStruct.emptyString();
-		struct1.stringGreaterThanIgnoreCase(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                      .start1(IntegerStruct.TWO)
-		                                                                      .build());
+		struct1.stringGreaterThanIgnoreCase(StringEqualityContext.builder(struct2)
+		                                                         .start1(IntegerStruct.TWO)
+		                                                         .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringGreaterThanIgnoreCase(StringStruct.StringEqualityContext)} where the end1
+	 * Test for {@link StringStruct#stringGreaterThanIgnoreCase(StringEqualityContext)} where the end1
 	 * index was negative.
 	 */
 	@Test
@@ -4470,13 +4470,13 @@ public class StringStructStringEqualityTest {
 
 		final StringStruct struct1 = StringStruct.emptyString();
 		final StringStruct struct2 = StringStruct.emptyString();
-		struct1.stringGreaterThanIgnoreCase(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                      .end1(IntegerStruct.MINUS_ONE)
-		                                                                      .build());
+		struct1.stringGreaterThanIgnoreCase(StringEqualityContext.builder(struct2)
+		                                                         .end1(IntegerStruct.MINUS_ONE)
+		                                                         .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringGreaterThanIgnoreCase(StringStruct.StringEqualityContext)} where the end1
+	 * Test for {@link StringStruct#stringGreaterThanIgnoreCase(StringEqualityContext)} where the end1
 	 * index was more than the total size of the first structure.
 	 */
 	@Test
@@ -4486,13 +4486,13 @@ public class StringStructStringEqualityTest {
 
 		final StringStruct struct1 = StringStruct.emptyString();
 		final StringStruct struct2 = StringStruct.emptyString();
-		struct1.stringGreaterThanIgnoreCase(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                      .end1(IntegerStruct.ONE)
-		                                                                      .build());
+		struct1.stringGreaterThanIgnoreCase(StringEqualityContext.builder(struct2)
+		                                                         .end1(IntegerStruct.ONE)
+		                                                         .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringGreaterThanIgnoreCase(StringStruct.StringEqualityContext)} where the end1
+	 * Test for {@link StringStruct#stringGreaterThanIgnoreCase(StringEqualityContext)} where the end1
 	 * index was more than the fill pointer of the first structure.
 	 */
 	@Test
@@ -4504,13 +4504,13 @@ public class StringStructStringEqualityTest {
 		                                         .fillPointer(IntegerStruct.ONE)
 		                                         .build();
 		final StringStruct struct2 = StringStruct.emptyString();
-		struct1.stringGreaterThanIgnoreCase(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                      .end1(IntegerStruct.TWO)
-		                                                                      .build());
+		struct1.stringGreaterThanIgnoreCase(StringEqualityContext.builder(struct2)
+		                                                         .end1(IntegerStruct.TWO)
+		                                                         .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringGreaterThanIgnoreCase(StringStruct.StringEqualityContext)} where the start1
+	 * Test for {@link StringStruct#stringGreaterThanIgnoreCase(StringEqualityContext)} where the start1
 	 * index was more than the end1 index.
 	 */
 	@Test
@@ -4520,14 +4520,14 @@ public class StringStructStringEqualityTest {
 
 		final StringStruct struct1 = StringStruct.toLispString("1");
 		final StringStruct struct2 = StringStruct.toLispString("1");
-		struct1.stringGreaterThanIgnoreCase(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                      .start1(IntegerStruct.ONE)
-		                                                                      .end1(IntegerStruct.ZERO)
-		                                                                      .build());
+		struct1.stringGreaterThanIgnoreCase(StringEqualityContext.builder(struct2)
+		                                                         .start1(IntegerStruct.ONE)
+		                                                         .end1(IntegerStruct.ZERO)
+		                                                         .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringGreaterThanIgnoreCase(StringStruct.StringEqualityContext)} where the start2
+	 * Test for {@link StringStruct#stringGreaterThanIgnoreCase(StringEqualityContext)} where the start2
 	 * index was negative.
 	 */
 	@Test
@@ -4537,13 +4537,13 @@ public class StringStructStringEqualityTest {
 
 		final StringStruct struct1 = StringStruct.emptyString();
 		final StringStruct struct2 = StringStruct.emptyString();
-		struct1.stringGreaterThanIgnoreCase(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                      .start2(IntegerStruct.MINUS_ONE)
-		                                                                      .build());
+		struct1.stringGreaterThanIgnoreCase(StringEqualityContext.builder(struct2)
+		                                                         .start2(IntegerStruct.MINUS_ONE)
+		                                                         .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringGreaterThanIgnoreCase(StringStruct.StringEqualityContext)} where the start2
+	 * Test for {@link StringStruct#stringGreaterThanIgnoreCase(StringEqualityContext)} where the start2
 	 * index was more than the total size of the second structure.
 	 */
 	@Test
@@ -4553,14 +4553,14 @@ public class StringStructStringEqualityTest {
 
 		final StringStruct struct1 = StringStruct.emptyString();
 		final StringStruct struct2 = StringStruct.emptyString();
-		struct1.stringGreaterThanIgnoreCase(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                      .start2(IntegerStruct.ONE)
-		                                                                      .build());
+		struct1.stringGreaterThanIgnoreCase(StringEqualityContext.builder(struct2)
+		                                                         .start2(IntegerStruct.ONE)
+		                                                         .build());
 
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringGreaterThanIgnoreCase(StringStruct.StringEqualityContext)} where the start2
+	 * Test for {@link StringStruct#stringGreaterThanIgnoreCase(StringEqualityContext)} where the start2
 	 * index was more than the fill pointer of the second structure.
 	 */
 	@Test
@@ -4572,13 +4572,13 @@ public class StringStructStringEqualityTest {
 		final StringStruct struct2 = StringStruct.builder(IntegerStruct.TWO)
 		                                         .fillPointer(IntegerStruct.ONE)
 		                                         .build();
-		struct1.stringGreaterThanIgnoreCase(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                      .start2(IntegerStruct.TWO)
-		                                                                      .build());
+		struct1.stringGreaterThanIgnoreCase(StringEqualityContext.builder(struct2)
+		                                                         .start2(IntegerStruct.TWO)
+		                                                         .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringGreaterThanIgnoreCase(StringStruct.StringEqualityContext)} where the end2
+	 * Test for {@link StringStruct#stringGreaterThanIgnoreCase(StringEqualityContext)} where the end2
 	 * index was negative.
 	 */
 	@Test
@@ -4588,13 +4588,13 @@ public class StringStructStringEqualityTest {
 
 		final StringStruct struct1 = StringStruct.emptyString();
 		final StringStruct struct2 = StringStruct.emptyString();
-		struct1.stringGreaterThanIgnoreCase(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                      .end2(IntegerStruct.MINUS_ONE)
-		                                                                      .build());
+		struct1.stringGreaterThanIgnoreCase(StringEqualityContext.builder(struct2)
+		                                                         .end2(IntegerStruct.MINUS_ONE)
+		                                                         .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringGreaterThanIgnoreCase(StringStruct.StringEqualityContext)} where the end2
+	 * Test for {@link StringStruct#stringGreaterThanIgnoreCase(StringEqualityContext)} where the end2
 	 * index was more than the total size of the second structure.
 	 */
 	@Test
@@ -4604,13 +4604,13 @@ public class StringStructStringEqualityTest {
 
 		final StringStruct struct1 = StringStruct.emptyString();
 		final StringStruct struct2 = StringStruct.emptyString();
-		struct1.stringGreaterThanIgnoreCase(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                      .end2(IntegerStruct.ONE)
-		                                                                      .build());
+		struct1.stringGreaterThanIgnoreCase(StringEqualityContext.builder(struct2)
+		                                                         .end2(IntegerStruct.ONE)
+		                                                         .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringGreaterThanIgnoreCase(StringStruct.StringEqualityContext)} where the end2
+	 * Test for {@link StringStruct#stringGreaterThanIgnoreCase(StringEqualityContext)} where the end2
 	 * index was more than the fill pointer of the second structure.
 	 */
 	@Test
@@ -4622,13 +4622,13 @@ public class StringStructStringEqualityTest {
 		final StringStruct struct2 = StringStruct.builder(IntegerStruct.TWO)
 		                                         .fillPointer(IntegerStruct.ONE)
 		                                         .build();
-		struct1.stringGreaterThanIgnoreCase(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                      .end2(IntegerStruct.TWO)
-		                                                                      .build());
+		struct1.stringGreaterThanIgnoreCase(StringEqualityContext.builder(struct2)
+		                                                         .end2(IntegerStruct.TWO)
+		                                                         .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringGreaterThanIgnoreCase(StringStruct.StringEqualityContext)} where the start2
+	 * Test for {@link StringStruct#stringGreaterThanIgnoreCase(StringEqualityContext)} where the start2
 	 * index was more than the end2 index.
 	 */
 	@Test
@@ -4638,14 +4638,14 @@ public class StringStructStringEqualityTest {
 
 		final StringStruct struct1 = StringStruct.toLispString("1");
 		final StringStruct struct2 = StringStruct.toLispString("1");
-		struct1.stringGreaterThanIgnoreCase(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                      .start2(IntegerStruct.ONE)
-		                                                                      .end2(IntegerStruct.ZERO)
-		                                                                      .build());
+		struct1.stringGreaterThanIgnoreCase(StringEqualityContext.builder(struct2)
+		                                                         .start2(IntegerStruct.ONE)
+		                                                         .end2(IntegerStruct.ZERO)
+		                                                         .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringGreaterThanIgnoreCase(StringStruct.StringEqualityContext)}.
+	 * Test for {@link StringStruct#stringGreaterThanIgnoreCase(StringEqualityContext)}.
 	 */
 	@Test
 	public void test_stringGreaterThanIgnoreCase_NoStartsAndNoEnds() {
@@ -4654,15 +4654,15 @@ public class StringStructStringEqualityTest {
 		final String str2 = "2";
 		final StringStruct struct2 = StringStruct.toLispString(str2);
 		final LispStruct result = struct1.stringGreaterThanIgnoreCase(
-				StringStruct.StringEqualityContext.builder(struct2)
-				                                  .build());
+				StringEqualityContext.builder(struct2)
+				                     .build());
 		Assert.assertThat(result, is(BooleanStruct.NIL));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringGreaterThanIgnoreCase(StringStruct.StringEqualityContext)} where a start index
+	 * Test for {@link StringStruct#stringGreaterThanIgnoreCase(StringEqualityContext)} where a start index
 	 * was provided.
 	 */
 	@Test
@@ -4672,17 +4672,17 @@ public class StringStructStringEqualityTest {
 		final String str2 = "12";
 		final StringStruct struct2 = StringStruct.toLispString(str2);
 		final LispStruct result = struct1.stringGreaterThanIgnoreCase(
-				StringStruct.StringEqualityContext.builder(struct2)
-				                                  .start1(IntegerStruct.ONE)
-				                                  .start2(IntegerStruct.ONE)
-				                                  .build());
+				StringEqualityContext.builder(struct2)
+				                     .start1(IntegerStruct.ONE)
+				                     .start2(IntegerStruct.ONE)
+				                     .build());
 		Assert.assertThat(result, is(BooleanStruct.NIL));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringGreaterThanIgnoreCase(StringStruct.StringEqualityContext)} where an end index
+	 * Test for {@link StringStruct#stringGreaterThanIgnoreCase(StringEqualityContext)} where an end index
 	 * was provided.
 	 */
 	@Test
@@ -4692,17 +4692,17 @@ public class StringStructStringEqualityTest {
 		final String str2 = "2";
 		final StringStruct struct2 = StringStruct.toLispString(str2);
 		final LispStruct result = struct1.stringGreaterThanIgnoreCase(
-				StringStruct.StringEqualityContext.builder(struct2)
-				                                  .end1(IntegerStruct.ONE)
-				                                  .end2(IntegerStruct.ONE)
-				                                  .build());
+				StringEqualityContext.builder(struct2)
+				                     .end1(IntegerStruct.ONE)
+				                     .end2(IntegerStruct.ONE)
+				                     .build());
 		Assert.assertThat(result, is(BooleanStruct.NIL));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringGreaterThanIgnoreCase(StringStruct.StringEqualityContext)} where a start index
+	 * Test for {@link StringStruct#stringGreaterThanIgnoreCase(StringEqualityContext)} where a start index
 	 * and an end index were provided.
 	 */
 	@Test
@@ -4712,19 +4712,19 @@ public class StringStructStringEqualityTest {
 		final String str2 = "12";
 		final StringStruct struct2 = StringStruct.toLispString(str2);
 		final LispStruct result = struct1.stringGreaterThanIgnoreCase(
-				StringStruct.StringEqualityContext.builder(struct2)
-				                                  .start1(IntegerStruct.ONE)
-				                                  .start2(IntegerStruct.ONE)
-				                                  .end1(IntegerStruct.TWO)
-				                                  .end2(IntegerStruct.TWO)
-				                                  .build());
+				StringEqualityContext.builder(struct2)
+				                     .start1(IntegerStruct.ONE)
+				                     .start2(IntegerStruct.ONE)
+				                     .end1(IntegerStruct.TWO)
+				                     .end2(IntegerStruct.TWO)
+				                     .build());
 		Assert.assertThat(result, is(BooleanStruct.NIL));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringGreaterThanIgnoreCase(StringStruct.StringEqualityContext)} where string1 has a
+	 * Test for {@link StringStruct#stringGreaterThanIgnoreCase(StringEqualityContext)} where string1 has a
 	 * fill pointer.
 	 */
 	@Test
@@ -4737,15 +4737,15 @@ public class StringStructStringEqualityTest {
 		final String str2 = "13";
 		final StringStruct struct2 = StringStruct.toLispString(str2);
 		final LispStruct result = struct1.stringGreaterThanIgnoreCase(
-				StringStruct.StringEqualityContext.builder(struct2)
-				                                  .build());
+				StringEqualityContext.builder(struct2)
+				                     .build());
 		Assert.assertThat(result, is(BooleanStruct.NIL));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringGreaterThanIgnoreCase(StringStruct.StringEqualityContext)} where string2 has a
+	 * Test for {@link StringStruct#stringGreaterThanIgnoreCase(StringEqualityContext)} where string2 has a
 	 * fill pointer.
 	 */
 	@Test
@@ -4758,15 +4758,15 @@ public class StringStructStringEqualityTest {
 		                                         .fillPointer(IntegerStruct.TWO)
 		                                         .build();
 		final LispStruct result = struct1.stringGreaterThanIgnoreCase(
-				StringStruct.StringEqualityContext.builder(struct2)
-				                                  .build());
+				StringEqualityContext.builder(struct2)
+				                     .build());
 		Assert.assertThat(result, is(BooleanStruct.NIL));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringGreaterThanIgnoreCase(StringStruct.StringEqualityContext)} where both string1
+	 * Test for {@link StringStruct#stringGreaterThanIgnoreCase(StringEqualityContext)} where both string1
 	 * and string2 have fill pointers.
 	 */
 	@Test
@@ -4782,15 +4782,15 @@ public class StringStructStringEqualityTest {
 		                                         .fillPointer(IntegerStruct.TWO)
 		                                         .build();
 		final LispStruct result = struct1.stringGreaterThanIgnoreCase(
-				StringStruct.StringEqualityContext.builder(struct2)
-				                                  .build());
+				StringEqualityContext.builder(struct2)
+				                     .build());
 		Assert.assertThat(result, is(BooleanStruct.NIL));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringGreaterThanIgnoreCase(StringStruct.StringEqualityContext)} where string1 is
+	 * Test for {@link StringStruct#stringGreaterThanIgnoreCase(StringEqualityContext)} where string1 is
 	 * displaced.
 	 */
 	@Test
@@ -4803,15 +4803,15 @@ public class StringStructStringEqualityTest {
 		final String str2 = "12";
 		final StringStruct struct2 = StringStruct.toLispString(str2);
 		final LispStruct result = struct1.stringGreaterThanIgnoreCase(
-				StringStruct.StringEqualityContext.builder(struct2)
-				                                  .build());
+				StringEqualityContext.builder(struct2)
+				                     .build());
 		Assert.assertThat(result, is(BooleanStruct.NIL));
 		Assert.assertThat(struct1.toJavaString(), is(str1.substring(1)));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringGreaterThanIgnoreCase(StringStruct.StringEqualityContext)} where string2 is
+	 * Test for {@link StringStruct#stringGreaterThanIgnoreCase(StringEqualityContext)} where string2 is
 	 * displaced.
 	 */
 	@Test
@@ -4824,15 +4824,15 @@ public class StringStructStringEqualityTest {
 		                                         .displacedIndexOffset(IntegerStruct.ONE)
 		                                         .build();
 		final LispStruct result = struct1.stringGreaterThanIgnoreCase(
-				StringStruct.StringEqualityContext.builder(struct2)
-				                                  .build());
+				StringEqualityContext.builder(struct2)
+				                     .build());
 		Assert.assertThat(result, is(BooleanStruct.NIL));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2.substring(1)));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringGreaterThanIgnoreCase(StringStruct.StringEqualityContext)} where both string1
+	 * Test for {@link StringStruct#stringGreaterThanIgnoreCase(StringEqualityContext)} where both string1
 	 * and string2 are displaced.
 	 */
 	@Test
@@ -4848,15 +4848,15 @@ public class StringStructStringEqualityTest {
 		                                         .displacedIndexOffset(IntegerStruct.ONE)
 		                                         .build();
 		final LispStruct result = struct1.stringGreaterThanIgnoreCase(
-				StringStruct.StringEqualityContext.builder(struct2)
-				                                  .build());
+				StringEqualityContext.builder(struct2)
+				                     .build());
 		Assert.assertThat(result, is(BooleanStruct.NIL));
 		Assert.assertThat(struct1.toJavaString(), is(str1.substring(1)));
 		Assert.assertThat(struct2.toJavaString(), is(str2.substring(1)));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringGreaterThanIgnoreCase(StringStruct.StringEqualityContext)} where string1 is
+	 * Test for {@link StringStruct#stringGreaterThanIgnoreCase(StringEqualityContext)} where string1 is
 	 * less than string2.
 	 */
 	@Test
@@ -4866,15 +4866,15 @@ public class StringStructStringEqualityTest {
 		final String str2 = "123";
 		final StringStruct struct2 = StringStruct.toLispString(str2);
 		final LispStruct result = struct1.stringGreaterThanIgnoreCase(
-				StringStruct.StringEqualityContext.builder(struct2)
-				                                  .build());
+				StringEqualityContext.builder(struct2)
+				                     .build());
 		Assert.assertThat(result, is(IntegerStruct.ONE));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringGreaterThanIgnoreCase(StringStruct.StringEqualityContext)} where string1 is
+	 * Test for {@link StringStruct#stringGreaterThanIgnoreCase(StringEqualityContext)} where string1 is
 	 * equal to string2.
 	 */
 	@Test
@@ -4884,15 +4884,15 @@ public class StringStructStringEqualityTest {
 		final String str2 = "123";
 		final StringStruct struct2 = StringStruct.toLispString(str2);
 		final LispStruct result = struct1.stringGreaterThanIgnoreCase(
-				StringStruct.StringEqualityContext.builder(struct2)
-				                                  .build());
+				StringEqualityContext.builder(struct2)
+				                     .build());
 		Assert.assertThat(result, is(BooleanStruct.NIL));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringGreaterThanIgnoreCase(StringStruct.StringEqualityContext)} where string1 is
+	 * Test for {@link StringStruct#stringGreaterThanIgnoreCase(StringEqualityContext)} where string1 is
 	 * less than string2 differing by case.
 	 */
 	@Test
@@ -4902,8 +4902,8 @@ public class StringStructStringEqualityTest {
 		final String str2 = "a";
 		final StringStruct struct2 = StringStruct.toLispString(str2);
 		final LispStruct result = struct1.stringGreaterThanIgnoreCase(
-				StringStruct.StringEqualityContext.builder(struct2)
-				                                  .build());
+				StringEqualityContext.builder(struct2)
+				                     .build());
 		Assert.assertThat(result, is(IntegerStruct.ZERO));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
@@ -4914,7 +4914,7 @@ public class StringStructStringEqualityTest {
 	 */
 
 	/**
-	 * Test for {@link StringStruct#stringLessThanOrEqualToIgnoreCase(StringStruct.StringEqualityContext)} where the
+	 * Test for {@link StringStruct#stringLessThanOrEqualToIgnoreCase(StringEqualityContext)} where the
 	 * start1 index was negative.
 	 */
 	@Test
@@ -4924,13 +4924,13 @@ public class StringStructStringEqualityTest {
 
 		final StringStruct struct1 = StringStruct.emptyString();
 		final StringStruct struct2 = StringStruct.emptyString();
-		struct1.stringLessThanOrEqualToIgnoreCase(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                            .start1(IntegerStruct.MINUS_ONE)
-		                                                                            .build());
+		struct1.stringLessThanOrEqualToIgnoreCase(StringEqualityContext.builder(struct2)
+		                                                               .start1(IntegerStruct.MINUS_ONE)
+		                                                               .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringLessThanOrEqualToIgnoreCase(StringStruct.StringEqualityContext)} where the
+	 * Test for {@link StringStruct#stringLessThanOrEqualToIgnoreCase(StringEqualityContext)} where the
 	 * start1 index was more than the total size of the first structure.
 	 */
 	@Test
@@ -4940,14 +4940,14 @@ public class StringStructStringEqualityTest {
 
 		final StringStruct struct1 = StringStruct.emptyString();
 		final StringStruct struct2 = StringStruct.emptyString();
-		struct1.stringLessThanOrEqualToIgnoreCase(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                            .start1(IntegerStruct.ONE)
-		                                                                            .build());
+		struct1.stringLessThanOrEqualToIgnoreCase(StringEqualityContext.builder(struct2)
+		                                                               .start1(IntegerStruct.ONE)
+		                                                               .build());
 
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringLessThanOrEqualToIgnoreCase(StringStruct.StringEqualityContext)} where the
+	 * Test for {@link StringStruct#stringLessThanOrEqualToIgnoreCase(StringEqualityContext)} where the
 	 * start1 index was more than the fill pointer of the first structure.
 	 */
 	@Test
@@ -4959,13 +4959,13 @@ public class StringStructStringEqualityTest {
 		                                         .fillPointer(IntegerStruct.ONE)
 		                                         .build();
 		final StringStruct struct2 = StringStruct.emptyString();
-		struct1.stringLessThanOrEqualToIgnoreCase(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                            .start1(IntegerStruct.TWO)
-		                                                                            .build());
+		struct1.stringLessThanOrEqualToIgnoreCase(StringEqualityContext.builder(struct2)
+		                                                               .start1(IntegerStruct.TWO)
+		                                                               .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringLessThanOrEqualToIgnoreCase(StringStruct.StringEqualityContext)} where the
+	 * Test for {@link StringStruct#stringLessThanOrEqualToIgnoreCase(StringEqualityContext)} where the
 	 * end1 index was negative.
 	 */
 	@Test
@@ -4975,13 +4975,13 @@ public class StringStructStringEqualityTest {
 
 		final StringStruct struct1 = StringStruct.emptyString();
 		final StringStruct struct2 = StringStruct.emptyString();
-		struct1.stringLessThanOrEqualToIgnoreCase(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                            .end1(IntegerStruct.MINUS_ONE)
-		                                                                            .build());
+		struct1.stringLessThanOrEqualToIgnoreCase(StringEqualityContext.builder(struct2)
+		                                                               .end1(IntegerStruct.MINUS_ONE)
+		                                                               .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringLessThanOrEqualToIgnoreCase(StringStruct.StringEqualityContext)} where the
+	 * Test for {@link StringStruct#stringLessThanOrEqualToIgnoreCase(StringEqualityContext)} where the
 	 * end1 index was more than the total size of the first structure.
 	 */
 	@Test
@@ -4991,13 +4991,13 @@ public class StringStructStringEqualityTest {
 
 		final StringStruct struct1 = StringStruct.emptyString();
 		final StringStruct struct2 = StringStruct.emptyString();
-		struct1.stringLessThanOrEqualToIgnoreCase(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                            .end1(IntegerStruct.ONE)
-		                                                                            .build());
+		struct1.stringLessThanOrEqualToIgnoreCase(StringEqualityContext.builder(struct2)
+		                                                               .end1(IntegerStruct.ONE)
+		                                                               .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringLessThanOrEqualToIgnoreCase(StringStruct.StringEqualityContext)} where the
+	 * Test for {@link StringStruct#stringLessThanOrEqualToIgnoreCase(StringEqualityContext)} where the
 	 * end1 index was more than the fill pointer of the first structure.
 	 */
 	@Test
@@ -5009,13 +5009,13 @@ public class StringStructStringEqualityTest {
 		                                         .fillPointer(IntegerStruct.ONE)
 		                                         .build();
 		final StringStruct struct2 = StringStruct.emptyString();
-		struct1.stringLessThanOrEqualToIgnoreCase(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                            .end1(IntegerStruct.TWO)
-		                                                                            .build());
+		struct1.stringLessThanOrEqualToIgnoreCase(StringEqualityContext.builder(struct2)
+		                                                               .end1(IntegerStruct.TWO)
+		                                                               .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringLessThanOrEqualToIgnoreCase(StringStruct.StringEqualityContext)} where the
+	 * Test for {@link StringStruct#stringLessThanOrEqualToIgnoreCase(StringEqualityContext)} where the
 	 * start1 index was more than the end1 index.
 	 */
 	@Test
@@ -5025,14 +5025,14 @@ public class StringStructStringEqualityTest {
 
 		final StringStruct struct1 = StringStruct.toLispString("1");
 		final StringStruct struct2 = StringStruct.toLispString("1");
-		struct1.stringLessThanOrEqualToIgnoreCase(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                            .start1(IntegerStruct.ONE)
-		                                                                            .end1(IntegerStruct.ZERO)
-		                                                                            .build());
+		struct1.stringLessThanOrEqualToIgnoreCase(StringEqualityContext.builder(struct2)
+		                                                               .start1(IntegerStruct.ONE)
+		                                                               .end1(IntegerStruct.ZERO)
+		                                                               .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringLessThanOrEqualToIgnoreCase(StringStruct.StringEqualityContext)} where the
+	 * Test for {@link StringStruct#stringLessThanOrEqualToIgnoreCase(StringEqualityContext)} where the
 	 * start2 index was negative.
 	 */
 	@Test
@@ -5042,13 +5042,13 @@ public class StringStructStringEqualityTest {
 
 		final StringStruct struct1 = StringStruct.emptyString();
 		final StringStruct struct2 = StringStruct.emptyString();
-		struct1.stringLessThanOrEqualToIgnoreCase(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                            .start2(IntegerStruct.MINUS_ONE)
-		                                                                            .build());
+		struct1.stringLessThanOrEqualToIgnoreCase(StringEqualityContext.builder(struct2)
+		                                                               .start2(IntegerStruct.MINUS_ONE)
+		                                                               .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringLessThanOrEqualToIgnoreCase(StringStruct.StringEqualityContext)} where the
+	 * Test for {@link StringStruct#stringLessThanOrEqualToIgnoreCase(StringEqualityContext)} where the
 	 * start2 index was more than the total size of the second structure.
 	 */
 	@Test
@@ -5058,14 +5058,14 @@ public class StringStructStringEqualityTest {
 
 		final StringStruct struct1 = StringStruct.emptyString();
 		final StringStruct struct2 = StringStruct.emptyString();
-		struct1.stringLessThanOrEqualToIgnoreCase(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                            .start2(IntegerStruct.ONE)
-		                                                                            .build());
+		struct1.stringLessThanOrEqualToIgnoreCase(StringEqualityContext.builder(struct2)
+		                                                               .start2(IntegerStruct.ONE)
+		                                                               .build());
 
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringLessThanOrEqualToIgnoreCase(StringStruct.StringEqualityContext)} where the
+	 * Test for {@link StringStruct#stringLessThanOrEqualToIgnoreCase(StringEqualityContext)} where the
 	 * start2 index was more than the fill pointer of the second structure.
 	 */
 	@Test
@@ -5077,13 +5077,13 @@ public class StringStructStringEqualityTest {
 		final StringStruct struct2 = StringStruct.builder(IntegerStruct.TWO)
 		                                         .fillPointer(IntegerStruct.ONE)
 		                                         .build();
-		struct1.stringLessThanOrEqualToIgnoreCase(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                            .start2(IntegerStruct.TWO)
-		                                                                            .build());
+		struct1.stringLessThanOrEqualToIgnoreCase(StringEqualityContext.builder(struct2)
+		                                                               .start2(IntegerStruct.TWO)
+		                                                               .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringLessThanOrEqualToIgnoreCase(StringStruct.StringEqualityContext)} where the
+	 * Test for {@link StringStruct#stringLessThanOrEqualToIgnoreCase(StringEqualityContext)} where the
 	 * end2 index was negative.
 	 */
 	@Test
@@ -5093,13 +5093,13 @@ public class StringStructStringEqualityTest {
 
 		final StringStruct struct1 = StringStruct.emptyString();
 		final StringStruct struct2 = StringStruct.emptyString();
-		struct1.stringLessThanOrEqualToIgnoreCase(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                            .end2(IntegerStruct.MINUS_ONE)
-		                                                                            .build());
+		struct1.stringLessThanOrEqualToIgnoreCase(StringEqualityContext.builder(struct2)
+		                                                               .end2(IntegerStruct.MINUS_ONE)
+		                                                               .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringLessThanOrEqualToIgnoreCase(StringStruct.StringEqualityContext)} where the
+	 * Test for {@link StringStruct#stringLessThanOrEqualToIgnoreCase(StringEqualityContext)} where the
 	 * end2 index was more than the total size of the second structure.
 	 */
 	@Test
@@ -5109,13 +5109,13 @@ public class StringStructStringEqualityTest {
 
 		final StringStruct struct1 = StringStruct.emptyString();
 		final StringStruct struct2 = StringStruct.emptyString();
-		struct1.stringLessThanOrEqualToIgnoreCase(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                            .end2(IntegerStruct.ONE)
-		                                                                            .build());
+		struct1.stringLessThanOrEqualToIgnoreCase(StringEqualityContext.builder(struct2)
+		                                                               .end2(IntegerStruct.ONE)
+		                                                               .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringLessThanOrEqualToIgnoreCase(StringStruct.StringEqualityContext)} where the
+	 * Test for {@link StringStruct#stringLessThanOrEqualToIgnoreCase(StringEqualityContext)} where the
 	 * end2 index was more than the fill pointer of the second structure.
 	 */
 	@Test
@@ -5127,13 +5127,13 @@ public class StringStructStringEqualityTest {
 		final StringStruct struct2 = StringStruct.builder(IntegerStruct.TWO)
 		                                         .fillPointer(IntegerStruct.ONE)
 		                                         .build();
-		struct1.stringLessThanOrEqualToIgnoreCase(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                            .end2(IntegerStruct.TWO)
-		                                                                            .build());
+		struct1.stringLessThanOrEqualToIgnoreCase(StringEqualityContext.builder(struct2)
+		                                                               .end2(IntegerStruct.TWO)
+		                                                               .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringLessThanOrEqualToIgnoreCase(StringStruct.StringEqualityContext)} where the
+	 * Test for {@link StringStruct#stringLessThanOrEqualToIgnoreCase(StringEqualityContext)} where the
 	 * start2 index was more than the end2 index.
 	 */
 	@Test
@@ -5143,14 +5143,14 @@ public class StringStructStringEqualityTest {
 
 		final StringStruct struct1 = StringStruct.toLispString("1");
 		final StringStruct struct2 = StringStruct.toLispString("1");
-		struct1.stringLessThanOrEqualToIgnoreCase(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                            .start2(IntegerStruct.ONE)
-		                                                                            .end2(IntegerStruct.ZERO)
-		                                                                            .build());
+		struct1.stringLessThanOrEqualToIgnoreCase(StringEqualityContext.builder(struct2)
+		                                                               .start2(IntegerStruct.ONE)
+		                                                               .end2(IntegerStruct.ZERO)
+		                                                               .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringLessThanOrEqualToIgnoreCase(StringStruct.StringEqualityContext)}.
+	 * Test for {@link StringStruct#stringLessThanOrEqualToIgnoreCase(StringEqualityContext)}.
 	 */
 	@Test
 	public void test_stringLessThanOrEqualToIgnoreCase_NoStartsAndNoEnds() {
@@ -5159,15 +5159,15 @@ public class StringStructStringEqualityTest {
 		final String str2 = "1";
 		final StringStruct struct2 = StringStruct.toLispString(str2);
 		final LispStruct result = struct1.stringLessThanOrEqualToIgnoreCase(
-				StringStruct.StringEqualityContext.builder(struct2)
-				                                  .build());
+				StringEqualityContext.builder(struct2)
+				                     .build());
 		Assert.assertThat(result, is(BooleanStruct.NIL));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringLessThanOrEqualToIgnoreCase(StringStruct.StringEqualityContext)} where a start
+	 * Test for {@link StringStruct#stringLessThanOrEqualToIgnoreCase(StringEqualityContext)} where a start
 	 * index was provided.
 	 */
 	@Test
@@ -5177,17 +5177,17 @@ public class StringStructStringEqualityTest {
 		final String str2 = "21";
 		final StringStruct struct2 = StringStruct.toLispString(str2);
 		final LispStruct result = struct1.stringLessThanOrEqualToIgnoreCase(
-				StringStruct.StringEqualityContext.builder(struct2)
-				                                  .start1(IntegerStruct.ONE)
-				                                  .start2(IntegerStruct.ONE)
-				                                  .build());
+				StringEqualityContext.builder(struct2)
+				                     .start1(IntegerStruct.ONE)
+				                     .start2(IntegerStruct.ONE)
+				                     .build());
 		Assert.assertThat(result, is(BooleanStruct.NIL));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringLessThanOrEqualToIgnoreCase(StringStruct.StringEqualityContext)} where an end
+	 * Test for {@link StringStruct#stringLessThanOrEqualToIgnoreCase(StringEqualityContext)} where an end
 	 * index was provided.
 	 */
 	@Test
@@ -5197,17 +5197,17 @@ public class StringStructStringEqualityTest {
 		final String str2 = "12";
 		final StringStruct struct2 = StringStruct.toLispString(str2);
 		final LispStruct result = struct1.stringLessThanOrEqualToIgnoreCase(
-				StringStruct.StringEqualityContext.builder(struct2)
-				                                  .end1(IntegerStruct.ONE)
-				                                  .end2(IntegerStruct.ONE)
-				                                  .build());
+				StringEqualityContext.builder(struct2)
+				                     .end1(IntegerStruct.ONE)
+				                     .end2(IntegerStruct.ONE)
+				                     .build());
 		Assert.assertThat(result, is(BooleanStruct.NIL));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringLessThanOrEqualToIgnoreCase(StringStruct.StringEqualityContext)} where a start
+	 * Test for {@link StringStruct#stringLessThanOrEqualToIgnoreCase(StringEqualityContext)} where a start
 	 * index and an end index were provided.
 	 */
 	@Test
@@ -5217,19 +5217,19 @@ public class StringStructStringEqualityTest {
 		final String str2 = "311";
 		final StringStruct struct2 = StringStruct.toLispString(str2);
 		final LispStruct result = struct1.stringLessThanOrEqualToIgnoreCase(
-				StringStruct.StringEqualityContext.builder(struct2)
-				                                  .start1(IntegerStruct.ONE)
-				                                  .start2(IntegerStruct.ONE)
-				                                  .end1(IntegerStruct.TWO)
-				                                  .end2(IntegerStruct.TWO)
-				                                  .build());
+				StringEqualityContext.builder(struct2)
+				                     .start1(IntegerStruct.ONE)
+				                     .start2(IntegerStruct.ONE)
+				                     .end1(IntegerStruct.TWO)
+				                     .end2(IntegerStruct.TWO)
+				                     .build());
 		Assert.assertThat(result, is(BooleanStruct.NIL));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringLessThanOrEqualToIgnoreCase(StringStruct.StringEqualityContext)} where string1
+	 * Test for {@link StringStruct#stringLessThanOrEqualToIgnoreCase(StringEqualityContext)} where string1
 	 * has a fill pointer.
 	 */
 	@Test
@@ -5242,15 +5242,15 @@ public class StringStructStringEqualityTest {
 		final String str2 = "11";
 		final StringStruct struct2 = StringStruct.toLispString(str2);
 		final LispStruct result = struct1.stringLessThanOrEqualToIgnoreCase(
-				StringStruct.StringEqualityContext.builder(struct2)
-				                                  .build());
+				StringEqualityContext.builder(struct2)
+				                     .build());
 		Assert.assertThat(result, is(BooleanStruct.NIL));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringLessThanOrEqualToIgnoreCase(StringStruct.StringEqualityContext)} where string2
+	 * Test for {@link StringStruct#stringLessThanOrEqualToIgnoreCase(StringEqualityContext)} where string2
 	 * has a fill pointer.
 	 */
 	@Test
@@ -5263,15 +5263,15 @@ public class StringStructStringEqualityTest {
 		                                         .fillPointer(IntegerStruct.TWO)
 		                                         .build();
 		final LispStruct result = struct1.stringLessThanOrEqualToIgnoreCase(
-				StringStruct.StringEqualityContext.builder(struct2)
-				                                  .build());
+				StringEqualityContext.builder(struct2)
+				                     .build());
 		Assert.assertThat(result, is(BooleanStruct.NIL));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringLessThanOrEqualToIgnoreCase(StringStruct.StringEqualityContext)} where both
+	 * Test for {@link StringStruct#stringLessThanOrEqualToIgnoreCase(StringEqualityContext)} where both
 	 * string1 and string2 have fill pointers.
 	 */
 	@Test
@@ -5287,15 +5287,15 @@ public class StringStructStringEqualityTest {
 		                                         .fillPointer(IntegerStruct.TWO)
 		                                         .build();
 		final LispStruct result = struct1.stringLessThanOrEqualToIgnoreCase(
-				StringStruct.StringEqualityContext.builder(struct2)
-				                                  .build());
+				StringEqualityContext.builder(struct2)
+				                     .build());
 		Assert.assertThat(result, is(BooleanStruct.NIL));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringLessThanOrEqualToIgnoreCase(StringStruct.StringEqualityContext)} where string1
+	 * Test for {@link StringStruct#stringLessThanOrEqualToIgnoreCase(StringEqualityContext)} where string1
 	 * is displaced.
 	 */
 	@Test
@@ -5308,15 +5308,15 @@ public class StringStructStringEqualityTest {
 		final String str2 = "11";
 		final StringStruct struct2 = StringStruct.toLispString(str2);
 		final LispStruct result = struct1.stringLessThanOrEqualToIgnoreCase(
-				StringStruct.StringEqualityContext.builder(struct2)
-				                                  .build());
+				StringEqualityContext.builder(struct2)
+				                     .build());
 		Assert.assertThat(result, is(BooleanStruct.NIL));
 		Assert.assertThat(struct1.toJavaString(), is(str1.substring(1)));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringLessThanOrEqualToIgnoreCase(StringStruct.StringEqualityContext)} where string2
+	 * Test for {@link StringStruct#stringLessThanOrEqualToIgnoreCase(StringEqualityContext)} where string2
 	 * is displaced.
 	 */
 	@Test
@@ -5329,15 +5329,15 @@ public class StringStructStringEqualityTest {
 		                                         .displacedIndexOffset(IntegerStruct.ONE)
 		                                         .build();
 		final LispStruct result = struct1.stringLessThanOrEqualToIgnoreCase(
-				StringStruct.StringEqualityContext.builder(struct2)
-				                                  .build());
+				StringEqualityContext.builder(struct2)
+				                     .build());
 		Assert.assertThat(result, is(BooleanStruct.NIL));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2.substring(1)));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringLessThanOrEqualToIgnoreCase(StringStruct.StringEqualityContext)} where both
+	 * Test for {@link StringStruct#stringLessThanOrEqualToIgnoreCase(StringEqualityContext)} where both
 	 * string1 and string2 are displaced.
 	 */
 	@Test
@@ -5353,15 +5353,15 @@ public class StringStructStringEqualityTest {
 		                                         .displacedIndexOffset(IntegerStruct.ONE)
 		                                         .build();
 		final LispStruct result = struct1.stringLessThanOrEqualToIgnoreCase(
-				StringStruct.StringEqualityContext.builder(struct2)
-				                                  .build());
+				StringEqualityContext.builder(struct2)
+				                     .build());
 		Assert.assertThat(result, is(BooleanStruct.NIL));
 		Assert.assertThat(struct1.toJavaString(), is(str1.substring(1)));
 		Assert.assertThat(struct2.toJavaString(), is(str2.substring(1)));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringLessThanOrEqualToIgnoreCase(StringStruct.StringEqualityContext)} where
+	 * Test for {@link StringStruct#stringLessThanOrEqualToIgnoreCase(StringEqualityContext)} where
 	 * string1 is greater than string2.
 	 */
 	@Test
@@ -5371,15 +5371,15 @@ public class StringStructStringEqualityTest {
 		final String str2 = "132";
 		final StringStruct struct2 = StringStruct.toLispString(str2);
 		final LispStruct result = struct1.stringLessThanOrEqualToIgnoreCase(
-				StringStruct.StringEqualityContext.builder(struct2)
-				                                  .build());
+				StringEqualityContext.builder(struct2)
+				                     .build());
 		Assert.assertThat(result, is(IntegerStruct.ONE));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringLessThanOrEqualToIgnoreCase(StringStruct.StringEqualityContext)} where
+	 * Test for {@link StringStruct#stringLessThanOrEqualToIgnoreCase(StringEqualityContext)} where
 	 * string1 is equal to string2.
 	 */
 	@Test
@@ -5389,15 +5389,15 @@ public class StringStructStringEqualityTest {
 		final String str2 = "123";
 		final StringStruct struct2 = StringStruct.toLispString(str2);
 		final LispStruct result = struct1.stringLessThanOrEqualToIgnoreCase(
-				StringStruct.StringEqualityContext.builder(struct2)
-				                                  .build());
+				StringEqualityContext.builder(struct2)
+				                     .build());
 		Assert.assertThat(result, is(IntegerStructImpl.valueOf(3)));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringLessThanOrEqualToIgnoreCase(StringStruct.StringEqualityContext)} where
+	 * Test for {@link StringStruct#stringLessThanOrEqualToIgnoreCase(StringEqualityContext)} where
 	 * string1 is greater than string2 differing by case.
 	 */
 	@Test
@@ -5407,8 +5407,8 @@ public class StringStructStringEqualityTest {
 		final String str2 = "B";
 		final StringStruct struct2 = StringStruct.toLispString(str2);
 		final LispStruct result = struct1.stringLessThanOrEqualToIgnoreCase(
-				StringStruct.StringEqualityContext.builder(struct2)
-				                                  .build());
+				StringEqualityContext.builder(struct2)
+				                     .build());
 		Assert.assertThat(result, is(IntegerStruct.ZERO));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
@@ -5419,7 +5419,7 @@ public class StringStructStringEqualityTest {
 	 */
 
 	/**
-	 * Test for {@link StringStruct#stringGreaterThanOrEqualToIgnoreCase(StringStruct.StringEqualityContext)} where the
+	 * Test for {@link StringStruct#stringGreaterThanOrEqualToIgnoreCase(StringEqualityContext)} where the
 	 * start1 index was negative.
 	 */
 	@Test
@@ -5429,13 +5429,13 @@ public class StringStructStringEqualityTest {
 
 		final StringStruct struct1 = StringStruct.emptyString();
 		final StringStruct struct2 = StringStruct.emptyString();
-		struct1.stringGreaterThanOrEqualToIgnoreCase(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                               .start1(IntegerStruct.MINUS_ONE)
-		                                                                               .build());
+		struct1.stringGreaterThanOrEqualToIgnoreCase(StringEqualityContext.builder(struct2)
+		                                                                  .start1(IntegerStruct.MINUS_ONE)
+		                                                                  .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringGreaterThanOrEqualToIgnoreCase(StringStruct.StringEqualityContext)} where the
+	 * Test for {@link StringStruct#stringGreaterThanOrEqualToIgnoreCase(StringEqualityContext)} where the
 	 * start1 index was more than the total size of the first structure.
 	 */
 	@Test
@@ -5445,14 +5445,14 @@ public class StringStructStringEqualityTest {
 
 		final StringStruct struct1 = StringStruct.emptyString();
 		final StringStruct struct2 = StringStruct.emptyString();
-		struct1.stringGreaterThanOrEqualToIgnoreCase(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                               .start1(IntegerStruct.ONE)
-		                                                                               .build());
+		struct1.stringGreaterThanOrEqualToIgnoreCase(StringEqualityContext.builder(struct2)
+		                                                                  .start1(IntegerStruct.ONE)
+		                                                                  .build());
 
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringGreaterThanOrEqualToIgnoreCase(StringStruct.StringEqualityContext)} where the
+	 * Test for {@link StringStruct#stringGreaterThanOrEqualToIgnoreCase(StringEqualityContext)} where the
 	 * start1 index was more than the fill pointer of the first structure.
 	 */
 	@Test
@@ -5464,13 +5464,13 @@ public class StringStructStringEqualityTest {
 		                                         .fillPointer(IntegerStruct.ONE)
 		                                         .build();
 		final StringStruct struct2 = StringStruct.emptyString();
-		struct1.stringGreaterThanOrEqualToIgnoreCase(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                               .start1(IntegerStruct.TWO)
-		                                                                               .build());
+		struct1.stringGreaterThanOrEqualToIgnoreCase(StringEqualityContext.builder(struct2)
+		                                                                  .start1(IntegerStruct.TWO)
+		                                                                  .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringGreaterThanOrEqualToIgnoreCase(StringStruct.StringEqualityContext)} where the
+	 * Test for {@link StringStruct#stringGreaterThanOrEqualToIgnoreCase(StringEqualityContext)} where the
 	 * end1 index was negative.
 	 */
 	@Test
@@ -5480,13 +5480,13 @@ public class StringStructStringEqualityTest {
 
 		final StringStruct struct1 = StringStruct.emptyString();
 		final StringStruct struct2 = StringStruct.emptyString();
-		struct1.stringGreaterThanOrEqualToIgnoreCase(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                               .end1(IntegerStruct.MINUS_ONE)
-		                                                                               .build());
+		struct1.stringGreaterThanOrEqualToIgnoreCase(StringEqualityContext.builder(struct2)
+		                                                                  .end1(IntegerStruct.MINUS_ONE)
+		                                                                  .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringGreaterThanOrEqualToIgnoreCase(StringStruct.StringEqualityContext)} where the
+	 * Test for {@link StringStruct#stringGreaterThanOrEqualToIgnoreCase(StringEqualityContext)} where the
 	 * end1 index was more than the total size of the first structure.
 	 */
 	@Test
@@ -5496,13 +5496,13 @@ public class StringStructStringEqualityTest {
 
 		final StringStruct struct1 = StringStruct.emptyString();
 		final StringStruct struct2 = StringStruct.emptyString();
-		struct1.stringGreaterThanOrEqualToIgnoreCase(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                               .end1(IntegerStruct.ONE)
-		                                                                               .build());
+		struct1.stringGreaterThanOrEqualToIgnoreCase(StringEqualityContext.builder(struct2)
+		                                                                  .end1(IntegerStruct.ONE)
+		                                                                  .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringGreaterThanOrEqualToIgnoreCase(StringStruct.StringEqualityContext)} where the
+	 * Test for {@link StringStruct#stringGreaterThanOrEqualToIgnoreCase(StringEqualityContext)} where the
 	 * end1 index was more than the fill pointer of the first structure.
 	 */
 	@Test
@@ -5514,13 +5514,13 @@ public class StringStructStringEqualityTest {
 		                                         .fillPointer(IntegerStruct.ONE)
 		                                         .build();
 		final StringStruct struct2 = StringStruct.emptyString();
-		struct1.stringGreaterThanOrEqualToIgnoreCase(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                               .end1(IntegerStruct.TWO)
-		                                                                               .build());
+		struct1.stringGreaterThanOrEqualToIgnoreCase(StringEqualityContext.builder(struct2)
+		                                                                  .end1(IntegerStruct.TWO)
+		                                                                  .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringGreaterThanOrEqualToIgnoreCase(StringStruct.StringEqualityContext)} where the
+	 * Test for {@link StringStruct#stringGreaterThanOrEqualToIgnoreCase(StringEqualityContext)} where the
 	 * start1 index was more than the end1 index.
 	 */
 	@Test
@@ -5530,14 +5530,14 @@ public class StringStructStringEqualityTest {
 
 		final StringStruct struct1 = StringStruct.toLispString("1");
 		final StringStruct struct2 = StringStruct.toLispString("1");
-		struct1.stringGreaterThanOrEqualToIgnoreCase(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                               .start1(IntegerStruct.ONE)
-		                                                                               .end1(IntegerStruct.ZERO)
-		                                                                               .build());
+		struct1.stringGreaterThanOrEqualToIgnoreCase(StringEqualityContext.builder(struct2)
+		                                                                  .start1(IntegerStruct.ONE)
+		                                                                  .end1(IntegerStruct.ZERO)
+		                                                                  .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringGreaterThanOrEqualToIgnoreCase(StringStruct.StringEqualityContext)} where the
+	 * Test for {@link StringStruct#stringGreaterThanOrEqualToIgnoreCase(StringEqualityContext)} where the
 	 * start2 index was negative.
 	 */
 	@Test
@@ -5547,13 +5547,13 @@ public class StringStructStringEqualityTest {
 
 		final StringStruct struct1 = StringStruct.emptyString();
 		final StringStruct struct2 = StringStruct.emptyString();
-		struct1.stringGreaterThanOrEqualToIgnoreCase(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                               .start2(IntegerStruct.MINUS_ONE)
-		                                                                               .build());
+		struct1.stringGreaterThanOrEqualToIgnoreCase(StringEqualityContext.builder(struct2)
+		                                                                  .start2(IntegerStruct.MINUS_ONE)
+		                                                                  .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringGreaterThanOrEqualToIgnoreCase(StringStruct.StringEqualityContext)} where the
+	 * Test for {@link StringStruct#stringGreaterThanOrEqualToIgnoreCase(StringEqualityContext)} where the
 	 * start2 index was more than the total size of the second structure.
 	 */
 	@Test
@@ -5563,14 +5563,14 @@ public class StringStructStringEqualityTest {
 
 		final StringStruct struct1 = StringStruct.emptyString();
 		final StringStruct struct2 = StringStruct.emptyString();
-		struct1.stringGreaterThanOrEqualToIgnoreCase(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                               .start2(IntegerStruct.ONE)
-		                                                                               .build());
+		struct1.stringGreaterThanOrEqualToIgnoreCase(StringEqualityContext.builder(struct2)
+		                                                                  .start2(IntegerStruct.ONE)
+		                                                                  .build());
 
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringGreaterThanOrEqualToIgnoreCase(StringStruct.StringEqualityContext)} where the
+	 * Test for {@link StringStruct#stringGreaterThanOrEqualToIgnoreCase(StringEqualityContext)} where the
 	 * start2 index was more than the fill pointer of the second structure.
 	 */
 	@Test
@@ -5582,13 +5582,13 @@ public class StringStructStringEqualityTest {
 		final StringStruct struct2 = StringStruct.builder(IntegerStruct.TWO)
 		                                         .fillPointer(IntegerStruct.ONE)
 		                                         .build();
-		struct1.stringGreaterThanOrEqualToIgnoreCase(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                               .start2(IntegerStruct.TWO)
-		                                                                               .build());
+		struct1.stringGreaterThanOrEqualToIgnoreCase(StringEqualityContext.builder(struct2)
+		                                                                  .start2(IntegerStruct.TWO)
+		                                                                  .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringGreaterThanOrEqualToIgnoreCase(StringStruct.StringEqualityContext)} where the
+	 * Test for {@link StringStruct#stringGreaterThanOrEqualToIgnoreCase(StringEqualityContext)} where the
 	 * end2 index was negative.
 	 */
 	@Test
@@ -5598,13 +5598,13 @@ public class StringStructStringEqualityTest {
 
 		final StringStruct struct1 = StringStruct.emptyString();
 		final StringStruct struct2 = StringStruct.emptyString();
-		struct1.stringGreaterThanOrEqualToIgnoreCase(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                               .end2(IntegerStruct.MINUS_ONE)
-		                                                                               .build());
+		struct1.stringGreaterThanOrEqualToIgnoreCase(StringEqualityContext.builder(struct2)
+		                                                                  .end2(IntegerStruct.MINUS_ONE)
+		                                                                  .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringGreaterThanOrEqualToIgnoreCase(StringStruct.StringEqualityContext)} where the
+	 * Test for {@link StringStruct#stringGreaterThanOrEqualToIgnoreCase(StringEqualityContext)} where the
 	 * end2 index was more than the total size of the second structure.
 	 */
 	@Test
@@ -5614,13 +5614,13 @@ public class StringStructStringEqualityTest {
 
 		final StringStruct struct1 = StringStruct.emptyString();
 		final StringStruct struct2 = StringStruct.emptyString();
-		struct1.stringGreaterThanOrEqualToIgnoreCase(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                               .end2(IntegerStruct.ONE)
-		                                                                               .build());
+		struct1.stringGreaterThanOrEqualToIgnoreCase(StringEqualityContext.builder(struct2)
+		                                                                  .end2(IntegerStruct.ONE)
+		                                                                  .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringGreaterThanOrEqualToIgnoreCase(StringStruct.StringEqualityContext)} where the
+	 * Test for {@link StringStruct#stringGreaterThanOrEqualToIgnoreCase(StringEqualityContext)} where the
 	 * end2 index was more than the fill pointer of the second structure.
 	 */
 	@Test
@@ -5632,13 +5632,13 @@ public class StringStructStringEqualityTest {
 		final StringStruct struct2 = StringStruct.builder(IntegerStruct.TWO)
 		                                         .fillPointer(IntegerStruct.ONE)
 		                                         .build();
-		struct1.stringGreaterThanOrEqualToIgnoreCase(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                               .end2(IntegerStruct.TWO)
-		                                                                               .build());
+		struct1.stringGreaterThanOrEqualToIgnoreCase(StringEqualityContext.builder(struct2)
+		                                                                  .end2(IntegerStruct.TWO)
+		                                                                  .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringGreaterThanOrEqualToIgnoreCase(StringStruct.StringEqualityContext)} where the
+	 * Test for {@link StringStruct#stringGreaterThanOrEqualToIgnoreCase(StringEqualityContext)} where the
 	 * start2 index was more than the end2 index.
 	 */
 	@Test
@@ -5648,14 +5648,14 @@ public class StringStructStringEqualityTest {
 
 		final StringStruct struct1 = StringStruct.toLispString("1");
 		final StringStruct struct2 = StringStruct.toLispString("1");
-		struct1.stringGreaterThanOrEqualToIgnoreCase(StringStruct.StringEqualityContext.builder(struct2)
-		                                                                               .start2(IntegerStruct.ONE)
-		                                                                               .end2(IntegerStruct.ZERO)
-		                                                                               .build());
+		struct1.stringGreaterThanOrEqualToIgnoreCase(StringEqualityContext.builder(struct2)
+		                                                                  .start2(IntegerStruct.ONE)
+		                                                                  .end2(IntegerStruct.ZERO)
+		                                                                  .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringGreaterThanOrEqualToIgnoreCase(StringStruct.StringEqualityContext)}.
+	 * Test for {@link StringStruct#stringGreaterThanOrEqualToIgnoreCase(StringEqualityContext)}.
 	 */
 	@Test
 	public void test_stringGreaterThanOrEqualToIgnoreCase_NoStartsAndNoEnds() {
@@ -5664,15 +5664,15 @@ public class StringStructStringEqualityTest {
 		final String str2 = "2";
 		final StringStruct struct2 = StringStruct.toLispString(str2);
 		final LispStruct result = struct1.stringGreaterThanOrEqualToIgnoreCase(
-				StringStruct.StringEqualityContext.builder(struct2)
-				                                  .build());
+				StringEqualityContext.builder(struct2)
+				                     .build());
 		Assert.assertThat(result, is(BooleanStruct.NIL));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringGreaterThanOrEqualToIgnoreCase(StringStruct.StringEqualityContext)} where a
+	 * Test for {@link StringStruct#stringGreaterThanOrEqualToIgnoreCase(StringEqualityContext)} where a
 	 * start index was provided.
 	 */
 	@Test
@@ -5682,17 +5682,17 @@ public class StringStructStringEqualityTest {
 		final String str2 = "12";
 		final StringStruct struct2 = StringStruct.toLispString(str2);
 		final LispStruct result = struct1.stringGreaterThanOrEqualToIgnoreCase(
-				StringStruct.StringEqualityContext.builder(struct2)
-				                                  .start1(IntegerStruct.ONE)
-				                                  .start2(IntegerStruct.ONE)
-				                                  .build());
+				StringEqualityContext.builder(struct2)
+				                     .start1(IntegerStruct.ONE)
+				                     .start2(IntegerStruct.ONE)
+				                     .build());
 		Assert.assertThat(result, is(BooleanStruct.NIL));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringGreaterThanOrEqualToIgnoreCase(StringStruct.StringEqualityContext)} where an
+	 * Test for {@link StringStruct#stringGreaterThanOrEqualToIgnoreCase(StringEqualityContext)} where an
 	 * end index was provided.
 	 */
 	@Test
@@ -5702,17 +5702,17 @@ public class StringStructStringEqualityTest {
 		final String str2 = "2";
 		final StringStruct struct2 = StringStruct.toLispString(str2);
 		final LispStruct result = struct1.stringGreaterThanOrEqualToIgnoreCase(
-				StringStruct.StringEqualityContext.builder(struct2)
-				                                  .end1(IntegerStruct.ONE)
-				                                  .end2(IntegerStruct.ONE)
-				                                  .build());
+				StringEqualityContext.builder(struct2)
+				                     .end1(IntegerStruct.ONE)
+				                     .end2(IntegerStruct.ONE)
+				                     .build());
 		Assert.assertThat(result, is(BooleanStruct.NIL));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringGreaterThanOrEqualToIgnoreCase(StringStruct.StringEqualityContext)} where a
+	 * Test for {@link StringStruct#stringGreaterThanOrEqualToIgnoreCase(StringEqualityContext)} where a
 	 * start index and an end index were provided.
 	 */
 	@Test
@@ -5722,19 +5722,19 @@ public class StringStructStringEqualityTest {
 		final String str2 = "12";
 		final StringStruct struct2 = StringStruct.toLispString(str2);
 		final LispStruct result = struct1.stringGreaterThanOrEqualToIgnoreCase(
-				StringStruct.StringEqualityContext.builder(struct2)
-				                                  .start1(IntegerStruct.ONE)
-				                                  .start2(IntegerStruct.ONE)
-				                                  .end1(IntegerStruct.TWO)
-				                                  .end2(IntegerStruct.TWO)
-				                                  .build());
+				StringEqualityContext.builder(struct2)
+				                     .start1(IntegerStruct.ONE)
+				                     .start2(IntegerStruct.ONE)
+				                     .end1(IntegerStruct.TWO)
+				                     .end2(IntegerStruct.TWO)
+				                     .build());
 		Assert.assertThat(result, is(BooleanStruct.NIL));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringGreaterThanOrEqualToIgnoreCase(StringStruct.StringEqualityContext)} where
+	 * Test for {@link StringStruct#stringGreaterThanOrEqualToIgnoreCase(StringEqualityContext)} where
 	 * string1 has a fill pointer.
 	 */
 	@Test
@@ -5747,15 +5747,15 @@ public class StringStructStringEqualityTest {
 		final String str2 = "13";
 		final StringStruct struct2 = StringStruct.toLispString(str2);
 		final LispStruct result = struct1.stringGreaterThanOrEqualToIgnoreCase(
-				StringStruct.StringEqualityContext.builder(struct2)
-				                                  .build());
+				StringEqualityContext.builder(struct2)
+				                     .build());
 		Assert.assertThat(result, is(BooleanStruct.NIL));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringGreaterThanOrEqualToIgnoreCase(StringStruct.StringEqualityContext)} where
+	 * Test for {@link StringStruct#stringGreaterThanOrEqualToIgnoreCase(StringEqualityContext)} where
 	 * string2 has a fill pointer.
 	 */
 	@Test
@@ -5768,15 +5768,15 @@ public class StringStructStringEqualityTest {
 		                                         .fillPointer(IntegerStruct.TWO)
 		                                         .build();
 		final LispStruct result = struct1.stringGreaterThanOrEqualToIgnoreCase(
-				StringStruct.StringEqualityContext.builder(struct2)
-				                                  .build());
+				StringEqualityContext.builder(struct2)
+				                     .build());
 		Assert.assertThat(result, is(BooleanStruct.NIL));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringGreaterThanOrEqualToIgnoreCase(StringStruct.StringEqualityContext)} where both
+	 * Test for {@link StringStruct#stringGreaterThanOrEqualToIgnoreCase(StringEqualityContext)} where both
 	 * string1 and string2 have fill pointers.
 	 */
 	@Test
@@ -5792,15 +5792,15 @@ public class StringStructStringEqualityTest {
 		                                         .fillPointer(IntegerStruct.TWO)
 		                                         .build();
 		final LispStruct result = struct1.stringGreaterThanOrEqualToIgnoreCase(
-				StringStruct.StringEqualityContext.builder(struct2)
-				                                  .build());
+				StringEqualityContext.builder(struct2)
+				                     .build());
 		Assert.assertThat(result, is(BooleanStruct.NIL));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringGreaterThanOrEqualToIgnoreCase(StringStruct.StringEqualityContext)} where
+	 * Test for {@link StringStruct#stringGreaterThanOrEqualToIgnoreCase(StringEqualityContext)} where
 	 * string1 is displaced.
 	 */
 	@Test
@@ -5813,15 +5813,15 @@ public class StringStructStringEqualityTest {
 		final String str2 = "12";
 		final StringStruct struct2 = StringStruct.toLispString(str2);
 		final LispStruct result = struct1.stringGreaterThanOrEqualToIgnoreCase(
-				StringStruct.StringEqualityContext.builder(struct2)
-				                                  .build());
+				StringEqualityContext.builder(struct2)
+				                     .build());
 		Assert.assertThat(result, is(BooleanStruct.NIL));
 		Assert.assertThat(struct1.toJavaString(), is(str1.substring(1)));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringGreaterThanOrEqualToIgnoreCase(StringStruct.StringEqualityContext)} where
+	 * Test for {@link StringStruct#stringGreaterThanOrEqualToIgnoreCase(StringEqualityContext)} where
 	 * string2 is displaced.
 	 */
 	@Test
@@ -5834,15 +5834,15 @@ public class StringStructStringEqualityTest {
 		                                         .displacedIndexOffset(IntegerStruct.ONE)
 		                                         .build();
 		final LispStruct result = struct1.stringGreaterThanOrEqualToIgnoreCase(
-				StringStruct.StringEqualityContext.builder(struct2)
-				                                  .build());
+				StringEqualityContext.builder(struct2)
+				                     .build());
 		Assert.assertThat(result, is(BooleanStruct.NIL));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2.substring(1)));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringGreaterThanOrEqualToIgnoreCase(StringStruct.StringEqualityContext)} where both
+	 * Test for {@link StringStruct#stringGreaterThanOrEqualToIgnoreCase(StringEqualityContext)} where both
 	 * string1 and string2 are displaced.
 	 */
 	@Test
@@ -5858,15 +5858,15 @@ public class StringStructStringEqualityTest {
 		                                         .displacedIndexOffset(IntegerStruct.ONE)
 		                                         .build();
 		final LispStruct result = struct1.stringGreaterThanOrEqualToIgnoreCase(
-				StringStruct.StringEqualityContext.builder(struct2)
-				                                  .build());
+				StringEqualityContext.builder(struct2)
+				                     .build());
 		Assert.assertThat(result, is(BooleanStruct.NIL));
 		Assert.assertThat(struct1.toJavaString(), is(str1.substring(1)));
 		Assert.assertThat(struct2.toJavaString(), is(str2.substring(1)));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringGreaterThanOrEqualToIgnoreCase(StringStruct.StringEqualityContext)} where
+	 * Test for {@link StringStruct#stringGreaterThanOrEqualToIgnoreCase(StringEqualityContext)} where
 	 * string1 is less than string2.
 	 */
 	@Test
@@ -5876,15 +5876,15 @@ public class StringStructStringEqualityTest {
 		final String str2 = "123";
 		final StringStruct struct2 = StringStruct.toLispString(str2);
 		final LispStruct result = struct1.stringGreaterThanOrEqualToIgnoreCase(
-				StringStruct.StringEqualityContext.builder(struct2)
-				                                  .build());
+				StringEqualityContext.builder(struct2)
+				                     .build());
 		Assert.assertThat(result, is(IntegerStruct.ONE));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringGreaterThanOrEqualToIgnoreCase(StringStruct.StringEqualityContext)} where
+	 * Test for {@link StringStruct#stringGreaterThanOrEqualToIgnoreCase(StringEqualityContext)} where
 	 * string1 is equal to string2.
 	 */
 	@Test
@@ -5894,15 +5894,15 @@ public class StringStructStringEqualityTest {
 		final String str2 = "123";
 		final StringStruct struct2 = StringStruct.toLispString(str2);
 		final LispStruct result = struct1.stringGreaterThanOrEqualToIgnoreCase(
-				StringStruct.StringEqualityContext.builder(struct2)
-				                                  .build());
+				StringEqualityContext.builder(struct2)
+				                     .build());
 		Assert.assertThat(result, is(IntegerStructImpl.valueOf(3)));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringGreaterThanOrEqualToIgnoreCase(StringStruct.StringEqualityContext)} where
+	 * Test for {@link StringStruct#stringGreaterThanOrEqualToIgnoreCase(StringEqualityContext)} where
 	 * string1 is greater than string2 differing by case.
 	 */
 	@Test
@@ -5912,8 +5912,8 @@ public class StringStructStringEqualityTest {
 		final String str2 = "a";
 		final StringStruct struct2 = StringStruct.toLispString(str2);
 		final LispStruct result = struct1.stringGreaterThanOrEqualToIgnoreCase(
-				StringStruct.StringEqualityContext.builder(struct2)
-				                                  .build());
+				StringEqualityContext.builder(struct2)
+				                     .build());
 		Assert.assertThat(result, is(IntegerStruct.ZERO));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2));

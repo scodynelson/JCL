@@ -5,6 +5,7 @@ import jcl.lang.IntegerStruct;
 import jcl.lang.KeywordStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.NILStruct;
+import jcl.lang.StringEqualityContext;
 import jcl.lang.StringStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
@@ -41,7 +42,7 @@ public final class StringLTEqFunction extends CommonLispBuiltInFunctionStructBas
 		final StringStruct struct1 = arguments.getRequiredArgument(STRING1_ARGUMENT, StringStruct.class);
 		final StringStruct struct2 = arguments.getRequiredArgument(STRING2_ARGUMENT, StringStruct.class);
 
-		final StringStruct.StringEqualityContext.Builder builder = StringStruct.StringEqualityContext.builder(struct2);
+		final StringEqualityContext.Builder builder = StringEqualityContext.builder(struct2);
 		if (arguments.hasKeyArgument(START1_ARGUMENT)) {
 			final IntegerStruct start1 = arguments.getKeyArgument(CommonLispSymbols.START_KEYWORD, IntegerStruct.class);
 			builder.start1(start1);

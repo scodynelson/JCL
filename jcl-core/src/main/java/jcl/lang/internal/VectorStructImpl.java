@@ -141,8 +141,7 @@ public class VectorStructImpl extends ArrayStructImpl implements VectorStruct {
 			throw new ErrorException("Nothing left to pop.");
 		}
 
-		fillPointer--;
-		final LispStruct element = contents.get(fillPointer);
+		final LispStruct element = contents.get(--fillPointer);
 		contents.set(fillPointer, null);
 		return element;
 	}
@@ -156,9 +155,8 @@ public class VectorStructImpl extends ArrayStructImpl implements VectorStruct {
 			return NILStruct.INSTANCE;
 		}
 
-		final Integer previousFillPointer = fillPointer++;
-		contents.set(fillPointer, newElement);
-		return IntegerStructImpl.valueOf(previousFillPointer);
+		contents.set(fillPointer++, newElement);
+		return IntegerStructImpl.valueOf(fillPointer);
 	}
 
 	@Override
@@ -174,9 +172,8 @@ public class VectorStructImpl extends ArrayStructImpl implements VectorStruct {
 //			adjustArray(fillPointer + extensionAmount); // TODO
 		}
 
-		final Integer previousFillPointer = fillPointer++;
-		contents.set(fillPointer, newElement);
-		return IntegerStructImpl.valueOf(previousFillPointer);
+		contents.set(fillPointer++, newElement);
+		return IntegerStructImpl.valueOf(fillPointer);
 	}
 
 	/*

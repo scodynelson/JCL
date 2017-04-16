@@ -22,6 +22,8 @@ import jcl.lang.LispStruct;
 import jcl.lang.NILStruct;
 import jcl.lang.ReadtableStruct;
 import jcl.lang.SequenceStruct;
+import jcl.lang.StringEqualityContext;
+import jcl.lang.StringIntervalOpContext;
 import jcl.lang.StringStruct;
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
@@ -649,8 +651,7 @@ public final class StringStructImpl extends VectorStructImpl implements StringSt
 			throw new ErrorException("Nothing left to pop.");
 		}
 
-		fillPointer--;
-		return charInternal(fillPointer);
+		return charInternal(--fillPointer);
 	}
 
 	@Override
@@ -665,9 +666,8 @@ public final class StringStructImpl extends VectorStructImpl implements StringSt
 			return NILStruct.INSTANCE;
 		}
 
-		final Integer previousFillPointer = fillPointer++;
-		setfCharInternal((CharacterStruct) newElement, fillPointer);
-		return IntegerStructImpl.valueOf(previousFillPointer);
+		setfCharInternal((CharacterStruct) newElement, fillPointer++);
+		return IntegerStructImpl.valueOf(fillPointer);
 	}
 
 	@Override
@@ -684,20 +684,22 @@ public final class StringStructImpl extends VectorStructImpl implements StringSt
 				throw new TypeErrorException("VECTOR would be extended and is not adjustable.");
 			}
 			if (displacedTo == null) {
-				contents.ensureCapacity(contents.capacity() + extension.intValue());
+				final int currentContentSize = contents.length();
+				contents.ensureCapacity(currentContentSize + extension.intValue());
+				contents.setLength(currentContentSize + 1);
 			} else {
 				final String displacedContents = getDisplacedToAsJavaString(false);
 				contents = new StringBuilder(displacedContents.length() + extension.intValue());
 				contents.append(displacedContents);
+				contents.setLength(contents.length() + 1);
 
 				displacedTo = null;
 				displacedIndexOffset = null;
 			}
 		}
 
-		final Integer previousFillPointer = fillPointer++;
-		setfCharInternal((CharacterStruct) newElement, fillPointer);
-		return IntegerStructImpl.valueOf(previousFillPointer);
+		setfCharInternal((CharacterStruct) newElement, fillPointer++);
+		return IntegerStructImpl.valueOf(fillPointer);
 	}
 
 	/*
@@ -705,7 +707,7 @@ public final class StringStructImpl extends VectorStructImpl implements StringSt
 	 */
 
 	@Override
-	public ArrayStruct adjustArray(final AdjustArrayContext context) {
+	public StringStruct adjustArray(final AdjustArrayContext context) {
 
 		final List<IntegerStruct> newDimensions = context.getDimensions();
 		final LispType newElementType = context.getElementType();
@@ -715,9 +717,11 @@ public final class StringStructImpl extends VectorStructImpl implements StringSt
 		if (newDimensions.size() != 1) {
 			throw new ErrorException("Array cannot be adjusted to a different array dimension rank.");
 		}
-		final LispType upgradedET = ArrayStruct.upgradedArrayElementType(newElementType);
+		final LispType upgradedET = (newElementType == null)
+		                            ? elementType
+		                            : ArrayStruct.upgradedArrayElementType(newElementType);
 
-		if (elementType.isNotOfType(upgradedET)) {
+		if (!elementType.equals(upgradedET)) {
 			throw new TypeErrorException(
 					"Provided upgraded-array-element-type " + upgradedET + " must be the same as initial upgraded-array-element-type " + elementType + '.');
 		}
@@ -731,7 +735,20 @@ public final class StringStructImpl extends VectorStructImpl implements StringSt
 		}
 	}
 
-	private ArrayStruct adjustDisplacedTo(final AdjustArrayContext context, final LispType upgradedET) {
+	/**
+	 * Performs adjust-array functionality when attempting to adjust to a displaced array. If the original array was
+	 * adjustable, the innards will be adjusted so that the contents are no longer valid and the {@link #displacedTo}
+	 * contains the content value. If the original array was not adjustable, the information between the original array
+	 * and the {@link AdjustArrayContext} adjusting parameters will produce a new array adjusted accordingly.
+	 *
+	 * @param context
+	 * 		the {@link AdjustArrayContext} containing the adjusting parameters
+	 * @param upgradedET
+	 * 		the element-type that represents the upgraded array-element-type for the resulting adjustment
+	 *
+	 * @return either the current instance, if the original array was adjustable, or a new instance adjusted accordingly
+	 */
+	private StringStruct adjustDisplacedTo(final AdjustArrayContext context, final LispType upgradedET) {
 
 		final IntegerStruct newTotalSize = context.getDimensions().get(0);
 		final BooleanStruct newAdjustable = context.getAdjustable();
@@ -740,7 +757,7 @@ public final class StringStructImpl extends VectorStructImpl implements StringSt
 		final IntegerStruct newDisplacedIndexOffset = context.getDisplacedIndexOffset();
 
 		final LispType displacedElementType = newDisplacedTo.arrayElementType();
-		if (displacedElementType.isNotOfType(upgradedET)) {
+		if (!upgradedET.equals(displacedElementType)) {
 			throw new TypeErrorException(
 					"Provided array for displacement " + newDisplacedTo + " is not a subtype of the upgraded-array-element-type " + upgradedET + '.');
 		}
@@ -771,7 +788,20 @@ public final class StringStructImpl extends VectorStructImpl implements StringSt
 		}
 	}
 
-	private ArrayStruct adjustInitialContents(final AdjustArrayContext context, final LispType upgradedET) {
+	/**
+	 * Performs adjust-array functionality when attempting to adjust with a new sequence of contents. If the original
+	 * array was adjustable, the innards will be adjusted so that any displacements are no longer valid and the contents
+	 * contain the content value. If the original array was not adjustable, the information between the original array
+	 * and the {@link AdjustArrayContext} adjusting parameters will produce a new array adjusted accordingly.
+	 *
+	 * @param context
+	 * 		the {@link AdjustArrayContext} containing the adjusting parameters
+	 * @param upgradedET
+	 * 		the element-type that represents the upgraded array-element-type for the resulting adjustment
+	 *
+	 * @return either the current instance, if the original array was adjustable, or a new instance adjusted accordingly
+	 */
+	private StringStruct adjustInitialContents(final AdjustArrayContext context, final LispType upgradedET) {
 
 		final IntegerStruct newTotalSize = context.getDimensions().get(0);
 		final SequenceStruct newInitialContents = context.getInitialContents();
@@ -818,18 +848,33 @@ public final class StringStructImpl extends VectorStructImpl implements StringSt
 		}
 	}
 
-	private ArrayStruct adjustInitialElement(final AdjustArrayContext context, final LispType upgradedET) {
+	/**
+	 * Performs adjust-array functionality when attempting to adjust with a new provided element value. If the original
+	 * array was adjustable, the innards will be adjusted so that any displacements are no longer valid and the
+	 * contents contain filled in value with the provided element. If the original array was not adjustable, the
+	 * information between the original array and the {@link AdjustArrayContext} adjusting parameters will produce a new
+	 * array adjusted accordingly.
+	 *
+	 * @param context
+	 * 		the {@link AdjustArrayContext} containing the adjusting parameters
+	 * @param upgradedET
+	 * 		the element-type that represents the upgraded array-element-type for the resulting adjustment
+	 *
+	 * @return either the current instance, if the original array was adjustable, or a new instance adjusted accordingly
+	 */
+	private StringStruct adjustInitialElement(final AdjustArrayContext context, final LispType upgradedET) {
 		final LispStruct newInitialElement = context.getInitialElement();
 
 		if (newInitialElement != null) {
-			final LispType initialElementType = newInitialElement.getType();
-			if (initialElementType.isNotOfType(upgradedET)) {
-				throw new TypeErrorException(
-						"Provided element " + newInitialElement + " is not a subtype of the upgraded-array-element-type " + upgradedET + '.');
-			}
 			if (!(newInitialElement instanceof CharacterStruct)) {
 				throw new TypeErrorException(
 						"Provided element " + newInitialElement + " is not a CHARACTER.");
+			}
+
+			final LispType initialElementType = newInitialElement.getType();
+			if (!upgradedET.equals(initialElementType)) {
+				throw new TypeErrorException(
+						"Provided element " + newInitialElement + " is not a subtype of the upgraded-array-element-type " + upgradedET + '.');
 			}
 		}
 
@@ -882,6 +927,20 @@ public final class StringStructImpl extends VectorStructImpl implements StringSt
 		}
 	}
 
+	/**
+	 * A special case for adjusting by initial-element, where the size is altered. If the new size is less than the old
+	 * size, the contents are reduce and the new element is not added. However, if the new size is greater than the old
+	 * size, the new content slots will be filled with the new element.
+	 *
+	 * @param newContents
+	 * 		the new contents container
+	 * @param newElement
+	 * 		the new element to be used when filling in the new contents
+	 * @param oldTotalSize
+	 * 		the size of the original array
+	 * @param newTotalSizeInt
+	 * 		the size the array is to be adjusted to
+	 */
 	private static void updateContentsWithElement(final StringBuilder newContents, final LispStruct newElement,
 	                                              final int oldTotalSize, final int newTotalSizeInt) {
 		if (newTotalSizeInt < oldTotalSize) {

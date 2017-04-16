@@ -4,6 +4,7 @@ import jcl.functions.CommonLispBuiltInFunctionStructBase;
 import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.NILStruct;
+import jcl.lang.StringIntervalOpContext;
 import jcl.lang.StringStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
@@ -30,7 +31,7 @@ public final class NstringCapitalize extends CommonLispBuiltInFunctionStructBase
 	public LispStruct apply(final Arguments arguments) {
 		final StringStruct struct = arguments.getRequiredArgument(STRING_ARGUMENT, StringStruct.class);
 
-		final StringStruct.StringIntervalOpContext.Builder builder = StringStruct.StringIntervalOpContext.builder();
+		final StringIntervalOpContext.Builder builder = StringIntervalOpContext.builder();
 		if (arguments.hasKeyArgument(CommonLispSymbols.START_KEYWORD)) {
 			final IntegerStruct start = arguments.getKeyArgument(CommonLispSymbols.START_KEYWORD, IntegerStruct.class);
 			builder.start(start);

@@ -352,7 +352,7 @@ public class StringStructStringTest {
 	 */
 
 	/**
-	 * Test for {@link StringStruct#stringUpcase(StringStruct.StringIntervalOpContext)} where the start index was
+	 * Test for {@link StringStruct#stringUpcase(StringIntervalOpContext)} where the start index was
 	 * negative.
 	 */
 	@Test
@@ -361,13 +361,13 @@ public class StringStructStringTest {
 		thrown.expectMessage(containsString("Bad start value "));
 
 		final StringStruct struct = StringStruct.emptyString();
-		struct.stringUpcase(StringStruct.StringIntervalOpContext.builder()
-		                                                        .start(IntegerStruct.MINUS_ONE)
-		                                                        .build());
+		struct.stringUpcase(StringIntervalOpContext.builder()
+		                                           .start(IntegerStruct.MINUS_ONE)
+		                                           .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringUpcase(StringStruct.StringIntervalOpContext)} where the start index was
+	 * Test for {@link StringStruct#stringUpcase(StringIntervalOpContext)} where the start index was
 	 * more than the total size.
 	 */
 	@Test
@@ -376,14 +376,14 @@ public class StringStructStringTest {
 		thrown.expectMessage(containsString("Bad start value "));
 
 		final StringStruct struct = StringStruct.emptyString();
-		struct.stringUpcase(StringStruct.StringIntervalOpContext.builder()
-		                                                        .start(IntegerStruct.ONE)
-		                                                        .build());
+		struct.stringUpcase(StringIntervalOpContext.builder()
+		                                           .start(IntegerStruct.ONE)
+		                                           .build());
 
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringUpcase(StringStruct.StringIntervalOpContext)} where the start index was
+	 * Test for {@link StringStruct#stringUpcase(StringIntervalOpContext)} where the start index was
 	 * more than the fill pointer.
 	 */
 	@Test
@@ -394,13 +394,13 @@ public class StringStructStringTest {
 		final StringStruct struct = StringStruct.builder(IntegerStruct.TWO)
 		                                        .fillPointer(IntegerStruct.ONE)
 		                                        .build();
-		struct.stringUpcase(StringStruct.StringIntervalOpContext.builder()
-		                                                        .start(IntegerStruct.TWO)
-		                                                        .build());
+		struct.stringUpcase(StringIntervalOpContext.builder()
+		                                           .start(IntegerStruct.TWO)
+		                                           .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringUpcase(StringStruct.StringIntervalOpContext)} where the end index was
+	 * Test for {@link StringStruct#stringUpcase(StringIntervalOpContext)} where the end index was
 	 * negative.
 	 */
 	@Test
@@ -409,13 +409,13 @@ public class StringStructStringTest {
 		thrown.expectMessage(containsString("Bad end value "));
 
 		final StringStruct struct = StringStruct.emptyString();
-		struct.stringUpcase(StringStruct.StringIntervalOpContext.builder()
-		                                                        .end(IntegerStruct.MINUS_ONE)
-		                                                        .build());
+		struct.stringUpcase(StringIntervalOpContext.builder()
+		                                           .end(IntegerStruct.MINUS_ONE)
+		                                           .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringUpcase(StringStruct.StringIntervalOpContext)} where the end index was
+	 * Test for {@link StringStruct#stringUpcase(StringIntervalOpContext)} where the end index was
 	 * more than the total size.
 	 */
 	@Test
@@ -424,13 +424,13 @@ public class StringStructStringTest {
 		thrown.expectMessage(containsString("Bad end value "));
 
 		final StringStruct struct = StringStruct.emptyString();
-		struct.stringUpcase(StringStruct.StringIntervalOpContext.builder()
-		                                                        .end(IntegerStruct.ONE)
-		                                                        .build());
+		struct.stringUpcase(StringIntervalOpContext.builder()
+		                                           .end(IntegerStruct.ONE)
+		                                           .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringUpcase(StringStruct.StringIntervalOpContext)} where the end index was
+	 * Test for {@link StringStruct#stringUpcase(StringIntervalOpContext)} where the end index was
 	 * more than the fill pointer.
 	 */
 	@Test
@@ -441,13 +441,13 @@ public class StringStructStringTest {
 		final StringStruct struct = StringStruct.builder(IntegerStruct.TWO)
 		                                        .fillPointer(IntegerStruct.ONE)
 		                                        .build();
-		struct.stringUpcase(StringStruct.StringIntervalOpContext.builder()
-		                                                        .end(IntegerStruct.TWO)
-		                                                        .build());
+		struct.stringUpcase(StringIntervalOpContext.builder()
+		                                           .end(IntegerStruct.TWO)
+		                                           .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringUpcase(StringStruct.StringIntervalOpContext)} where the start index was
+	 * Test for {@link StringStruct#stringUpcase(StringIntervalOpContext)} where the start index was
 	 * more than the end index.
 	 */
 	@Test
@@ -456,73 +456,73 @@ public class StringStructStringTest {
 		thrown.expectMessage(containsString("Bad end value "));
 
 		final StringStruct struct = StringStruct.toLispString("abc");
-		struct.stringUpcase(StringStruct.StringIntervalOpContext.builder()
-		                                                        .start(IntegerStruct.ONE)
-		                                                        .end(IntegerStruct.ZERO)
-		                                                        .build());
+		struct.stringUpcase(StringIntervalOpContext.builder()
+		                                           .start(IntegerStruct.ONE)
+		                                           .end(IntegerStruct.ZERO)
+		                                           .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringUpcase(StringStruct.StringIntervalOpContext)}.
+	 * Test for {@link StringStruct#stringUpcase(StringIntervalOpContext)}.
 	 */
 	@Test
 	public void test_stringUpcase_NoStartAndNoEnd() {
 		final String str = "abc";
 		final StringStruct struct = StringStruct.toLispString(str);
-		final StringStruct result = struct.stringUpcase(StringStruct.StringIntervalOpContext.builder()
-		                                                                                    .build());
+		final StringStruct result = struct.stringUpcase(StringIntervalOpContext.builder()
+		                                                                       .build());
 		Assert.assertThat(result.toJavaString(), is(str.toUpperCase()));
 		Assert.assertThat(struct.toJavaString(), is(str));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringUpcase(StringStruct.StringIntervalOpContext)} where a start index was
+	 * Test for {@link StringStruct#stringUpcase(StringIntervalOpContext)} where a start index was
 	 * provided.
 	 */
 	@Test
 	public void test_stringUpcase_StartAndNoEnd() {
 		final String str = "abc";
 		final StringStruct struct = StringStruct.toLispString(str);
-		final StringStruct result = struct.stringUpcase(StringStruct.StringIntervalOpContext.builder()
-		                                                                                    .start(IntegerStruct.ONE)
-		                                                                                    .build());
+		final StringStruct result = struct.stringUpcase(StringIntervalOpContext.builder()
+		                                                                       .start(IntegerStruct.ONE)
+		                                                                       .build());
 		Assert.assertThat(result.toJavaString(), is("aBC"));
 		Assert.assertThat(struct.toJavaString(), is(str));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringUpcase(StringStruct.StringIntervalOpContext)} where an end index was
+	 * Test for {@link StringStruct#stringUpcase(StringIntervalOpContext)} where an end index was
 	 * provided.
 	 */
 	@Test
 	public void test_stringUpcase_NoStartAndEnd() {
 		final String str = "abc";
 		final StringStruct struct = StringStruct.toLispString(str);
-		final StringStruct result = struct.stringUpcase(StringStruct.StringIntervalOpContext.builder()
-		                                                                                    .end(IntegerStruct.TWO)
-		                                                                                    .build());
+		final StringStruct result = struct.stringUpcase(StringIntervalOpContext.builder()
+		                                                                       .end(IntegerStruct.TWO)
+		                                                                       .build());
 		Assert.assertThat(result.toJavaString(), is("ABc"));
 		Assert.assertThat(struct.toJavaString(), is(str));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringUpcase(StringStruct.StringIntervalOpContext)} where a start index and an
+	 * Test for {@link StringStruct#stringUpcase(StringIntervalOpContext)} where a start index and an
 	 * end index were provided.
 	 */
 	@Test
 	public void test_stringUpcase_StartAndEnd() {
 		final String str = "abc";
 		final StringStruct struct = StringStruct.toLispString(str);
-		final StringStruct result = struct.stringUpcase(StringStruct.StringIntervalOpContext.builder()
-		                                                                                    .start(IntegerStruct.ONE)
-		                                                                                    .end(IntegerStruct.TWO)
-		                                                                                    .build());
+		final StringStruct result = struct.stringUpcase(StringIntervalOpContext.builder()
+		                                                                       .start(IntegerStruct.ONE)
+		                                                                       .end(IntegerStruct.TWO)
+		                                                                       .build());
 		Assert.assertThat(result.toJavaString(), is("aBc"));
 		Assert.assertThat(struct.toJavaString(), is(str));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringUpcase(StringStruct.StringIntervalOpContext)} where the string has a fill
+	 * Test for {@link StringStruct#stringUpcase(StringIntervalOpContext)} where the string has a fill
 	 * pointer.
 	 */
 	@Test
@@ -532,8 +532,8 @@ public class StringStructStringTest {
 		                                        .initialContents(StringStruct.toLispString(str))
 		                                        .fillPointer(IntegerStruct.TWO)
 		                                        .build();
-		final StringStruct result = struct.stringUpcase(StringStruct.StringIntervalOpContext.builder()
-		                                                                                    .build());
+		final StringStruct result = struct.stringUpcase(StringIntervalOpContext.builder()
+		                                                                       .build());
 		Assert.assertThat(result.toJavaString(true), is("AB"));
 		Assert.assertThat(result.toJavaString(false), is("AB"));
 		Assert.assertThat(struct.toJavaString(true), is(str));
@@ -541,7 +541,7 @@ public class StringStructStringTest {
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringUpcase(StringStruct.StringIntervalOpContext)} where the string is
+	 * Test for {@link StringStruct#stringUpcase(StringIntervalOpContext)} where the string is
 	 * displaced.
 	 */
 	@Test
@@ -551,8 +551,8 @@ public class StringStructStringTest {
 		                                        .displacedTo(StringStruct.toLispString(str))
 		                                        .displacedIndexOffset(IntegerStruct.ONE)
 		                                        .build();
-		final StringStruct result = struct.stringUpcase(StringStruct.StringIntervalOpContext.builder()
-		                                                                                    .build());
+		final StringStruct result = struct.stringUpcase(StringIntervalOpContext.builder()
+		                                                                       .build());
 		Assert.assertThat(result.toJavaString(), is("BC"));
 		Assert.assertThat(struct.toJavaString(), is("bc"));
 	}
@@ -562,7 +562,7 @@ public class StringStructStringTest {
 	 */
 
 	/**
-	 * Test for {@link StringStruct#stringDowncase(StringStruct.StringIntervalOpContext)} where the start index was
+	 * Test for {@link StringStruct#stringDowncase(StringIntervalOpContext)} where the start index was
 	 * negative.
 	 */
 	@Test
@@ -571,13 +571,13 @@ public class StringStructStringTest {
 		thrown.expectMessage(containsString("Bad start value "));
 
 		final StringStruct struct = StringStruct.emptyString();
-		struct.stringDowncase(StringStruct.StringIntervalOpContext.builder()
-		                                                          .start(IntegerStruct.MINUS_ONE)
-		                                                          .build());
+		struct.stringDowncase(StringIntervalOpContext.builder()
+		                                             .start(IntegerStruct.MINUS_ONE)
+		                                             .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringDowncase(StringStruct.StringIntervalOpContext)} where the start index was
+	 * Test for {@link StringStruct#stringDowncase(StringIntervalOpContext)} where the start index was
 	 * more than the total size.
 	 */
 	@Test
@@ -586,14 +586,14 @@ public class StringStructStringTest {
 		thrown.expectMessage(containsString("Bad start value "));
 
 		final StringStruct struct = StringStruct.emptyString();
-		struct.stringDowncase(StringStruct.StringIntervalOpContext.builder()
-		                                                          .start(IntegerStruct.ONE)
-		                                                          .build());
+		struct.stringDowncase(StringIntervalOpContext.builder()
+		                                             .start(IntegerStruct.ONE)
+		                                             .build());
 
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringDowncase(StringStruct.StringIntervalOpContext)} where the start index was
+	 * Test for {@link StringStruct#stringDowncase(StringIntervalOpContext)} where the start index was
 	 * more than the fill pointer.
 	 */
 	@Test
@@ -604,13 +604,13 @@ public class StringStructStringTest {
 		final StringStruct struct = StringStruct.builder(IntegerStruct.TWO)
 		                                        .fillPointer(IntegerStruct.ONE)
 		                                        .build();
-		struct.stringDowncase(StringStruct.StringIntervalOpContext.builder()
-		                                                          .start(IntegerStruct.TWO)
-		                                                          .build());
+		struct.stringDowncase(StringIntervalOpContext.builder()
+		                                             .start(IntegerStruct.TWO)
+		                                             .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringDowncase(StringStruct.StringIntervalOpContext)} where the end index was
+	 * Test for {@link StringStruct#stringDowncase(StringIntervalOpContext)} where the end index was
 	 * negative.
 	 */
 	@Test
@@ -619,13 +619,13 @@ public class StringStructStringTest {
 		thrown.expectMessage(containsString("Bad end value "));
 
 		final StringStruct struct = StringStruct.emptyString();
-		struct.stringDowncase(StringStruct.StringIntervalOpContext.builder()
-		                                                          .end(IntegerStruct.MINUS_ONE)
-		                                                          .build());
+		struct.stringDowncase(StringIntervalOpContext.builder()
+		                                             .end(IntegerStruct.MINUS_ONE)
+		                                             .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringDowncase(StringStruct.StringIntervalOpContext)} where the end index was
+	 * Test for {@link StringStruct#stringDowncase(StringIntervalOpContext)} where the end index was
 	 * more than the total size.
 	 */
 	@Test
@@ -634,13 +634,13 @@ public class StringStructStringTest {
 		thrown.expectMessage(containsString("Bad end value "));
 
 		final StringStruct struct = StringStruct.emptyString();
-		struct.stringDowncase(StringStruct.StringIntervalOpContext.builder()
-		                                                          .end(IntegerStruct.ONE)
-		                                                          .build());
+		struct.stringDowncase(StringIntervalOpContext.builder()
+		                                             .end(IntegerStruct.ONE)
+		                                             .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringDowncase(StringStruct.StringIntervalOpContext)} where the end index was
+	 * Test for {@link StringStruct#stringDowncase(StringIntervalOpContext)} where the end index was
 	 * more than the fill pointer.
 	 */
 	@Test
@@ -651,13 +651,13 @@ public class StringStructStringTest {
 		final StringStruct struct = StringStruct.builder(IntegerStruct.TWO)
 		                                        .fillPointer(IntegerStruct.ONE)
 		                                        .build();
-		struct.stringDowncase(StringStruct.StringIntervalOpContext.builder()
-		                                                          .end(IntegerStruct.TWO)
-		                                                          .build());
+		struct.stringDowncase(StringIntervalOpContext.builder()
+		                                             .end(IntegerStruct.TWO)
+		                                             .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringDowncase(StringStruct.StringIntervalOpContext)} where the start index was
+	 * Test for {@link StringStruct#stringDowncase(StringIntervalOpContext)} where the start index was
 	 * more than the end index.
 	 */
 	@Test
@@ -666,73 +666,73 @@ public class StringStructStringTest {
 		thrown.expectMessage(containsString("Bad end value "));
 
 		final StringStruct struct = StringStruct.toLispString("ABC");
-		struct.stringDowncase(StringStruct.StringIntervalOpContext.builder()
-		                                                          .start(IntegerStruct.ONE)
-		                                                          .end(IntegerStruct.ZERO)
-		                                                          .build());
+		struct.stringDowncase(StringIntervalOpContext.builder()
+		                                             .start(IntegerStruct.ONE)
+		                                             .end(IntegerStruct.ZERO)
+		                                             .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringDowncase(StringStruct.StringIntervalOpContext)}.
+	 * Test for {@link StringStruct#stringDowncase(StringIntervalOpContext)}.
 	 */
 	@Test
 	public void test_stringDowncase_NoStartAndNoEnd() {
 		final String str = "ABC";
 		final StringStruct struct = StringStruct.toLispString(str);
-		final StringStruct result = struct.stringDowncase(StringStruct.StringIntervalOpContext.builder()
-		                                                                                      .build());
+		final StringStruct result = struct.stringDowncase(StringIntervalOpContext.builder()
+		                                                                         .build());
 		Assert.assertThat(result.toJavaString(), is(str.toLowerCase()));
 		Assert.assertThat(struct.toJavaString(), is(str));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringDowncase(StringStruct.StringIntervalOpContext)} where a start index was
+	 * Test for {@link StringStruct#stringDowncase(StringIntervalOpContext)} where a start index was
 	 * provided.
 	 */
 	@Test
 	public void test_stringDowncase_StartAndNoEnd() {
 		final String str = "ABC";
 		final StringStruct struct = StringStruct.toLispString(str);
-		final StringStruct result = struct.stringDowncase(StringStruct.StringIntervalOpContext.builder()
-		                                                                                      .start(IntegerStruct.ONE)
-		                                                                                      .build());
+		final StringStruct result = struct.stringDowncase(StringIntervalOpContext.builder()
+		                                                                         .start(IntegerStruct.ONE)
+		                                                                         .build());
 		Assert.assertThat(result.toJavaString(), is("Abc"));
 		Assert.assertThat(struct.toJavaString(), is(str));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringDowncase(StringStruct.StringIntervalOpContext)} where an end index was
+	 * Test for {@link StringStruct#stringDowncase(StringIntervalOpContext)} where an end index was
 	 * provided.
 	 */
 	@Test
 	public void test_stringDowncase_NoStartAndEnd() {
 		final String str = "ABC";
 		final StringStruct struct = StringStruct.toLispString(str);
-		final StringStruct result = struct.stringDowncase(StringStruct.StringIntervalOpContext.builder()
-		                                                                                      .end(IntegerStruct.TWO)
-		                                                                                      .build());
+		final StringStruct result = struct.stringDowncase(StringIntervalOpContext.builder()
+		                                                                         .end(IntegerStruct.TWO)
+		                                                                         .build());
 		Assert.assertThat(result.toJavaString(), is("abC"));
 		Assert.assertThat(struct.toJavaString(), is(str));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringDowncase(StringStruct.StringIntervalOpContext)} where a start index and an
+	 * Test for {@link StringStruct#stringDowncase(StringIntervalOpContext)} where a start index and an
 	 * end index were provided.
 	 */
 	@Test
 	public void test_stringDowncase_StartAndEnd() {
 		final String str = "ABC";
 		final StringStruct struct = StringStruct.toLispString(str);
-		final StringStruct result = struct.stringDowncase(StringStruct.StringIntervalOpContext.builder()
-		                                                                                      .start(IntegerStruct.ONE)
-		                                                                                      .end(IntegerStruct.TWO)
-		                                                                                      .build());
+		final StringStruct result = struct.stringDowncase(StringIntervalOpContext.builder()
+		                                                                         .start(IntegerStruct.ONE)
+		                                                                         .end(IntegerStruct.TWO)
+		                                                                         .build());
 		Assert.assertThat(result.toJavaString(), is("AbC"));
 		Assert.assertThat(struct.toJavaString(), is(str));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringDowncase(StringStruct.StringIntervalOpContext)} where the string has a
+	 * Test for {@link StringStruct#stringDowncase(StringIntervalOpContext)} where the string has a
 	 * fill pointer.
 	 */
 	@Test
@@ -742,8 +742,8 @@ public class StringStructStringTest {
 		                                        .initialContents(StringStruct.toLispString(str))
 		                                        .fillPointer(IntegerStruct.TWO)
 		                                        .build();
-		final StringStruct result = struct.stringDowncase(StringStruct.StringIntervalOpContext.builder()
-		                                                                                      .build());
+		final StringStruct result = struct.stringDowncase(StringIntervalOpContext.builder()
+		                                                                         .build());
 		Assert.assertThat(result.toJavaString(true), is("ab"));
 		Assert.assertThat(result.toJavaString(false), is("ab"));
 		Assert.assertThat(struct.toJavaString(true), is(str));
@@ -751,7 +751,7 @@ public class StringStructStringTest {
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringDowncase(StringStruct.StringIntervalOpContext)} where the string is
+	 * Test for {@link StringStruct#stringDowncase(StringIntervalOpContext)} where the string is
 	 * displaced.
 	 */
 	@Test
@@ -761,8 +761,8 @@ public class StringStructStringTest {
 		                                        .displacedTo(StringStruct.toLispString(str))
 		                                        .displacedIndexOffset(IntegerStruct.ONE)
 		                                        .build();
-		final StringStruct result = struct.stringDowncase(StringStruct.StringIntervalOpContext.builder()
-		                                                                                      .build());
+		final StringStruct result = struct.stringDowncase(StringIntervalOpContext.builder()
+		                                                                         .build());
 		Assert.assertThat(result.toJavaString(), is("bc"));
 		Assert.assertThat(struct.toJavaString(), is("BC"));
 	}
@@ -772,7 +772,7 @@ public class StringStructStringTest {
 	 */
 
 	/**
-	 * Test for {@link StringStruct#stringCapitalize(StringStruct.StringIntervalOpContext)} where the start index
+	 * Test for {@link StringStruct#stringCapitalize(StringIntervalOpContext)} where the start index
 	 * was negative.
 	 */
 	@Test
@@ -781,13 +781,13 @@ public class StringStructStringTest {
 		thrown.expectMessage(containsString("Bad start value "));
 
 		final StringStruct struct = StringStruct.emptyString();
-		struct.stringCapitalize(StringStruct.StringIntervalOpContext.builder()
-		                                                            .start(IntegerStruct.MINUS_ONE)
-		                                                            .build());
+		struct.stringCapitalize(StringIntervalOpContext.builder()
+		                                               .start(IntegerStruct.MINUS_ONE)
+		                                               .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringCapitalize(StringStruct.StringIntervalOpContext)} where the start index
+	 * Test for {@link StringStruct#stringCapitalize(StringIntervalOpContext)} where the start index
 	 * was more than the total size.
 	 */
 	@Test
@@ -796,14 +796,14 @@ public class StringStructStringTest {
 		thrown.expectMessage(containsString("Bad start value "));
 
 		final StringStruct struct = StringStruct.emptyString();
-		struct.stringCapitalize(StringStruct.StringIntervalOpContext.builder()
-		                                                            .start(IntegerStruct.ONE)
-		                                                            .build());
+		struct.stringCapitalize(StringIntervalOpContext.builder()
+		                                               .start(IntegerStruct.ONE)
+		                                               .build());
 
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringCapitalize(StringStruct.StringIntervalOpContext)} where the start index
+	 * Test for {@link StringStruct#stringCapitalize(StringIntervalOpContext)} where the start index
 	 * was more than the fill pointer.
 	 */
 	@Test
@@ -814,13 +814,13 @@ public class StringStructStringTest {
 		final StringStruct struct = StringStruct.builder(IntegerStruct.TWO)
 		                                        .fillPointer(IntegerStruct.ONE)
 		                                        .build();
-		struct.stringCapitalize(StringStruct.StringIntervalOpContext.builder()
-		                                                            .start(IntegerStruct.TWO)
-		                                                            .build());
+		struct.stringCapitalize(StringIntervalOpContext.builder()
+		                                               .start(IntegerStruct.TWO)
+		                                               .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringCapitalize(StringStruct.StringIntervalOpContext)} where the end index was
+	 * Test for {@link StringStruct#stringCapitalize(StringIntervalOpContext)} where the end index was
 	 * negative.
 	 */
 	@Test
@@ -829,13 +829,13 @@ public class StringStructStringTest {
 		thrown.expectMessage(containsString("Bad end value "));
 
 		final StringStruct struct = StringStruct.emptyString();
-		struct.stringCapitalize(StringStruct.StringIntervalOpContext.builder()
-		                                                            .end(IntegerStruct.MINUS_ONE)
-		                                                            .build());
+		struct.stringCapitalize(StringIntervalOpContext.builder()
+		                                               .end(IntegerStruct.MINUS_ONE)
+		                                               .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringCapitalize(StringStruct.StringIntervalOpContext)} where the end index was
+	 * Test for {@link StringStruct#stringCapitalize(StringIntervalOpContext)} where the end index was
 	 * more than the total size.
 	 */
 	@Test
@@ -844,13 +844,13 @@ public class StringStructStringTest {
 		thrown.expectMessage(containsString("Bad end value "));
 
 		final StringStruct struct = StringStruct.emptyString();
-		struct.stringCapitalize(StringStruct.StringIntervalOpContext.builder()
-		                                                            .end(IntegerStruct.ONE)
-		                                                            .build());
+		struct.stringCapitalize(StringIntervalOpContext.builder()
+		                                               .end(IntegerStruct.ONE)
+		                                               .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringCapitalize(StringStruct.StringIntervalOpContext)} where the end index was
+	 * Test for {@link StringStruct#stringCapitalize(StringIntervalOpContext)} where the end index was
 	 * more than the fill pointer.
 	 */
 	@Test
@@ -861,13 +861,13 @@ public class StringStructStringTest {
 		final StringStruct struct = StringStruct.builder(IntegerStruct.TWO)
 		                                        .fillPointer(IntegerStruct.ONE)
 		                                        .build();
-		struct.stringCapitalize(StringStruct.StringIntervalOpContext.builder()
-		                                                            .end(IntegerStruct.TWO)
-		                                                            .build());
+		struct.stringCapitalize(StringIntervalOpContext.builder()
+		                                               .end(IntegerStruct.TWO)
+		                                               .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringCapitalize(StringStruct.StringIntervalOpContext)} where the start index
+	 * Test for {@link StringStruct#stringCapitalize(StringIntervalOpContext)} where the start index
 	 * was more than the end index.
 	 */
 	@Test
@@ -876,73 +876,73 @@ public class StringStructStringTest {
 		thrown.expectMessage(containsString("Bad end value "));
 
 		final StringStruct struct = StringStruct.toLispString("abc def");
-		struct.stringCapitalize(StringStruct.StringIntervalOpContext.builder()
-		                                                            .start(IntegerStruct.ONE)
-		                                                            .end(IntegerStruct.ZERO)
-		                                                            .build());
+		struct.stringCapitalize(StringIntervalOpContext.builder()
+		                                               .start(IntegerStruct.ONE)
+		                                               .end(IntegerStruct.ZERO)
+		                                               .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringCapitalize(StringStruct.StringIntervalOpContext)}.
+	 * Test for {@link StringStruct#stringCapitalize(StringIntervalOpContext)}.
 	 */
 	@Test
 	public void test_stringCapitalize_NoStartAndNoEnd() {
 		final String str = "abc def";
 		final StringStruct struct = StringStruct.toLispString(str);
-		final StringStruct result = struct.stringCapitalize(StringStruct.StringIntervalOpContext.builder()
-		                                                                                        .build());
+		final StringStruct result = struct.stringCapitalize(StringIntervalOpContext.builder()
+		                                                                           .build());
 		Assert.assertThat(result.toJavaString(), is(WordUtils.capitalize(str)));
 		Assert.assertThat(struct.toJavaString(), is(str));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringCapitalize(StringStruct.StringIntervalOpContext)} where a start index was
+	 * Test for {@link StringStruct#stringCapitalize(StringIntervalOpContext)} where a start index was
 	 * provided.
 	 */
 	@Test
 	public void test_stringCapitalize_StartAndNoEnd() {
 		final String str = "abc def";
 		final StringStruct struct = StringStruct.toLispString(str);
-		final StringStruct result = struct.stringCapitalize(StringStruct.StringIntervalOpContext.builder()
-		                                                                                        .start(IntegerStruct.ONE)
-		                                                                                        .build());
+		final StringStruct result = struct.stringCapitalize(StringIntervalOpContext.builder()
+		                                                                           .start(IntegerStruct.ONE)
+		                                                                           .build());
 		Assert.assertThat(result.toJavaString(), is("aBc Def"));
 		Assert.assertThat(struct.toJavaString(), is(str));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringCapitalize(StringStruct.StringIntervalOpContext)} where an end index was
+	 * Test for {@link StringStruct#stringCapitalize(StringIntervalOpContext)} where an end index was
 	 * provided.
 	 */
 	@Test
 	public void test_stringCapitalize_NoStartAndEnd() {
 		final String str = "abc def";
 		final StringStruct struct = StringStruct.toLispString(str);
-		final StringStruct result = struct.stringCapitalize(StringStruct.StringIntervalOpContext.builder()
-		                                                                                        .end(IntegerStruct.TWO)
-		                                                                                        .build());
+		final StringStruct result = struct.stringCapitalize(StringIntervalOpContext.builder()
+		                                                                           .end(IntegerStruct.TWO)
+		                                                                           .build());
 		Assert.assertThat(result.toJavaString(), is("Abc def"));
 		Assert.assertThat(struct.toJavaString(), is(str));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringCapitalize(StringStruct.StringIntervalOpContext)} where a start index and
+	 * Test for {@link StringStruct#stringCapitalize(StringIntervalOpContext)} where a start index and
 	 * an end index were provided.
 	 */
 	@Test
 	public void test_stringCapitalize_StartAndEnd() {
 		final String str = "abc def";
 		final StringStruct struct = StringStruct.toLispString(str);
-		final StringStruct result = struct.stringCapitalize(StringStruct.StringIntervalOpContext.builder()
-		                                                                                        .start(IntegerStruct.ONE)
-		                                                                                        .end(IntegerStruct.TWO)
-		                                                                                        .build());
+		final StringStruct result = struct.stringCapitalize(StringIntervalOpContext.builder()
+		                                                                           .start(IntegerStruct.ONE)
+		                                                                           .end(IntegerStruct.TWO)
+		                                                                           .build());
 		Assert.assertThat(result.toJavaString(), is("aBc def"));
 		Assert.assertThat(struct.toJavaString(), is(str));
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringCapitalize(StringStruct.StringIntervalOpContext)} where the string has a
+	 * Test for {@link StringStruct#stringCapitalize(StringIntervalOpContext)} where the string has a
 	 * fill pointer.
 	 */
 	@Test
@@ -952,8 +952,8 @@ public class StringStructStringTest {
 		                                        .initialContents(StringStruct.toLispString(str))
 		                                        .fillPointer(IntegerStructImpl.valueOf(4))
 		                                        .build();
-		final StringStruct result = struct.stringCapitalize(StringStruct.StringIntervalOpContext.builder()
-		                                                                                        .build());
+		final StringStruct result = struct.stringCapitalize(StringIntervalOpContext.builder()
+		                                                                           .build());
 		Assert.assertThat(result.toJavaString(true), is("Abc "));
 		Assert.assertThat(result.toJavaString(false), is("Abc "));
 		Assert.assertThat(struct.toJavaString(true), is(str));
@@ -961,7 +961,7 @@ public class StringStructStringTest {
 	}
 
 	/**
-	 * Test for {@link StringStruct#stringCapitalize(StringStruct.StringIntervalOpContext)} where the string is
+	 * Test for {@link StringStruct#stringCapitalize(StringIntervalOpContext)} where the string is
 	 * displaced.
 	 */
 	@Test
@@ -971,8 +971,8 @@ public class StringStructStringTest {
 		                                        .displacedTo(StringStruct.toLispString(str))
 		                                        .displacedIndexOffset(IntegerStruct.ONE)
 		                                        .build();
-		final StringStruct result = struct.stringCapitalize(StringStruct.StringIntervalOpContext.builder()
-		                                                                                        .build());
+		final StringStruct result = struct.stringCapitalize(StringIntervalOpContext.builder()
+		                                                                           .build());
 		Assert.assertThat(result.toJavaString(), is("Bc Def"));
 		Assert.assertThat(struct.toJavaString(), is("bc def"));
 	}
@@ -982,7 +982,7 @@ public class StringStructStringTest {
 	 */
 
 	/**
-	 * Test for {@link StringStruct#nStringUpcase(StringStruct.StringIntervalOpContext)} where the start index was
+	 * Test for {@link StringStruct#nStringUpcase(StringIntervalOpContext)} where the start index was
 	 * negative.
 	 */
 	@Test
@@ -991,13 +991,13 @@ public class StringStructStringTest {
 		thrown.expectMessage(containsString("Bad start value "));
 
 		final StringStruct struct = StringStruct.emptyString();
-		struct.nStringUpcase(StringStruct.StringIntervalOpContext.builder()
-		                                                         .start(IntegerStruct.MINUS_ONE)
-		                                                         .build());
+		struct.nStringUpcase(StringIntervalOpContext.builder()
+		                                            .start(IntegerStruct.MINUS_ONE)
+		                                            .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#nStringUpcase(StringStruct.StringIntervalOpContext)} where the start index was
+	 * Test for {@link StringStruct#nStringUpcase(StringIntervalOpContext)} where the start index was
 	 * more than the total size.
 	 */
 	@Test
@@ -1006,14 +1006,14 @@ public class StringStructStringTest {
 		thrown.expectMessage(containsString("Bad start value "));
 
 		final StringStruct struct = StringStruct.emptyString();
-		struct.nStringUpcase(StringStruct.StringIntervalOpContext.builder()
-		                                                         .start(IntegerStruct.ONE)
-		                                                         .build());
+		struct.nStringUpcase(StringIntervalOpContext.builder()
+		                                            .start(IntegerStruct.ONE)
+		                                            .build());
 
 	}
 
 	/**
-	 * Test for {@link StringStruct#nStringUpcase(StringStruct.StringIntervalOpContext)} where the start index was
+	 * Test for {@link StringStruct#nStringUpcase(StringIntervalOpContext)} where the start index was
 	 * more than the fill pointer.
 	 */
 	@Test
@@ -1024,13 +1024,13 @@ public class StringStructStringTest {
 		final StringStruct struct = StringStruct.builder(IntegerStruct.TWO)
 		                                        .fillPointer(IntegerStruct.ONE)
 		                                        .build();
-		struct.nStringUpcase(StringStruct.StringIntervalOpContext.builder()
-		                                                         .start(IntegerStruct.TWO)
-		                                                         .build());
+		struct.nStringUpcase(StringIntervalOpContext.builder()
+		                                            .start(IntegerStruct.TWO)
+		                                            .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#nStringUpcase(StringStruct.StringIntervalOpContext)} where the end index was
+	 * Test for {@link StringStruct#nStringUpcase(StringIntervalOpContext)} where the end index was
 	 * negative.
 	 */
 	@Test
@@ -1039,13 +1039,13 @@ public class StringStructStringTest {
 		thrown.expectMessage(containsString("Bad end value "));
 
 		final StringStruct struct = StringStruct.emptyString();
-		struct.nStringUpcase(StringStruct.StringIntervalOpContext.builder()
-		                                                         .end(IntegerStruct.MINUS_ONE)
-		                                                         .build());
+		struct.nStringUpcase(StringIntervalOpContext.builder()
+		                                            .end(IntegerStruct.MINUS_ONE)
+		                                            .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#nStringUpcase(StringStruct.StringIntervalOpContext)} where the end index was
+	 * Test for {@link StringStruct#nStringUpcase(StringIntervalOpContext)} where the end index was
 	 * more than the total size.
 	 */
 	@Test
@@ -1054,13 +1054,13 @@ public class StringStructStringTest {
 		thrown.expectMessage(containsString("Bad end value "));
 
 		final StringStruct struct = StringStruct.emptyString();
-		struct.nStringUpcase(StringStruct.StringIntervalOpContext.builder()
-		                                                         .end(IntegerStruct.ONE)
-		                                                         .build());
+		struct.nStringUpcase(StringIntervalOpContext.builder()
+		                                            .end(IntegerStruct.ONE)
+		                                            .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#nStringUpcase(StringStruct.StringIntervalOpContext)} where the end index was
+	 * Test for {@link StringStruct#nStringUpcase(StringIntervalOpContext)} where the end index was
 	 * more than the fill pointer.
 	 */
 	@Test
@@ -1071,13 +1071,13 @@ public class StringStructStringTest {
 		final StringStruct struct = StringStruct.builder(IntegerStruct.TWO)
 		                                        .fillPointer(IntegerStruct.ONE)
 		                                        .build();
-		struct.nStringUpcase(StringStruct.StringIntervalOpContext.builder()
-		                                                         .end(IntegerStruct.TWO)
-		                                                         .build());
+		struct.nStringUpcase(StringIntervalOpContext.builder()
+		                                            .end(IntegerStruct.TWO)
+		                                            .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#nStringUpcase(StringStruct.StringIntervalOpContext)} where the start index was
+	 * Test for {@link StringStruct#nStringUpcase(StringIntervalOpContext)} where the start index was
 	 * more than the end index.
 	 */
 	@Test
@@ -1086,77 +1086,77 @@ public class StringStructStringTest {
 		thrown.expectMessage(containsString("Bad end value "));
 
 		final StringStruct struct = StringStruct.toLispString("abc");
-		struct.nStringUpcase(StringStruct.StringIntervalOpContext.builder()
-		                                                         .start(IntegerStruct.ONE)
-		                                                         .end(IntegerStruct.ZERO)
-		                                                         .build());
+		struct.nStringUpcase(StringIntervalOpContext.builder()
+		                                            .start(IntegerStruct.ONE)
+		                                            .end(IntegerStruct.ZERO)
+		                                            .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#nStringUpcase(StringStruct.StringIntervalOpContext)}.
+	 * Test for {@link StringStruct#nStringUpcase(StringIntervalOpContext)}.
 	 */
 	@Test
 	public void test_nStringUpcase_NoStartAndNoEnd() {
 		final String str = "abc";
 		final StringStruct struct = StringStruct.toLispString(str);
-		final StringStruct result = struct.nStringUpcase(StringStruct.StringIntervalOpContext.builder()
-		                                                                                     .build());
+		final StringStruct result = struct.nStringUpcase(StringIntervalOpContext.builder()
+		                                                                        .build());
 		Assert.assertThat(result, sameInstance(struct));
 		Assert.assertThat(result.toJavaString(), is(str.toUpperCase()));
 		Assert.assertThat(struct.toJavaString(), is(str.toUpperCase()));
 	}
 
 	/**
-	 * Test for {@link StringStruct#nStringUpcase(StringStruct.StringIntervalOpContext)} where a start index was
+	 * Test for {@link StringStruct#nStringUpcase(StringIntervalOpContext)} where a start index was
 	 * provided.
 	 */
 	@Test
 	public void test_nStringUpcase_StartAndNoEnd() {
 		final String str = "abc";
 		final StringStruct struct = StringStruct.toLispString(str);
-		final StringStruct result = struct.nStringUpcase(StringStruct.StringIntervalOpContext.builder()
-		                                                                                     .start(IntegerStruct.ONE)
-		                                                                                     .build());
+		final StringStruct result = struct.nStringUpcase(StringIntervalOpContext.builder()
+		                                                                        .start(IntegerStruct.ONE)
+		                                                                        .build());
 		Assert.assertThat(result, sameInstance(struct));
 		Assert.assertThat(result.toJavaString(), is("aBC"));
 		Assert.assertThat(struct.toJavaString(), is("aBC"));
 	}
 
 	/**
-	 * Test for {@link StringStruct#nStringUpcase(StringStruct.StringIntervalOpContext)} where an end index was
+	 * Test for {@link StringStruct#nStringUpcase(StringIntervalOpContext)} where an end index was
 	 * provided.
 	 */
 	@Test
 	public void test_nStringUpcase_NoStartAndEnd() {
 		final String str = "abc";
 		final StringStruct struct = StringStruct.toLispString(str);
-		final StringStruct result = struct.nStringUpcase(StringStruct.StringIntervalOpContext.builder()
-		                                                                                     .end(IntegerStruct.TWO)
-		                                                                                     .build());
+		final StringStruct result = struct.nStringUpcase(StringIntervalOpContext.builder()
+		                                                                        .end(IntegerStruct.TWO)
+		                                                                        .build());
 		Assert.assertThat(result, sameInstance(struct));
 		Assert.assertThat(result.toJavaString(), is("ABc"));
 		Assert.assertThat(struct.toJavaString(), is("ABc"));
 	}
 
 	/**
-	 * Test for {@link StringStruct#nStringUpcase(StringStruct.StringIntervalOpContext)} where a start index and an
+	 * Test for {@link StringStruct#nStringUpcase(StringIntervalOpContext)} where a start index and an
 	 * end index were provided.
 	 */
 	@Test
 	public void test_nStringUpcase_StartAndEnd() {
 		final String str = "abc";
 		final StringStruct struct = StringStruct.toLispString(str);
-		final StringStruct result = struct.nStringUpcase(StringStruct.StringIntervalOpContext.builder()
-		                                                                                     .start(IntegerStruct.ONE)
-		                                                                                     .end(IntegerStruct.TWO)
-		                                                                                     .build());
+		final StringStruct result = struct.nStringUpcase(StringIntervalOpContext.builder()
+		                                                                        .start(IntegerStruct.ONE)
+		                                                                        .end(IntegerStruct.TWO)
+		                                                                        .build());
 		Assert.assertThat(result, sameInstance(struct));
 		Assert.assertThat(result.toJavaString(), is("aBc"));
 		Assert.assertThat(struct.toJavaString(), is("aBc"));
 	}
 
 	/**
-	 * Test for {@link StringStruct#nStringUpcase(StringStruct.StringIntervalOpContext)} where the string has a fill
+	 * Test for {@link StringStruct#nStringUpcase(StringIntervalOpContext)} where the string has a fill
 	 * pointer.
 	 */
 	@Test
@@ -1166,8 +1166,8 @@ public class StringStructStringTest {
 		                                        .initialContents(StringStruct.toLispString(str))
 		                                        .fillPointer(IntegerStruct.TWO)
 		                                        .build();
-		final StringStruct result = struct.nStringUpcase(StringStruct.StringIntervalOpContext.builder()
-		                                                                                     .build());
+		final StringStruct result = struct.nStringUpcase(StringIntervalOpContext.builder()
+		                                                                        .build());
 		Assert.assertThat(result, sameInstance(struct));
 		Assert.assertThat(result.toJavaString(true), is("ABc"));
 		Assert.assertThat(result.toJavaString(false), is("AB"));
@@ -1176,7 +1176,7 @@ public class StringStructStringTest {
 	}
 
 	/**
-	 * Test for {@link StringStruct#nStringUpcase(StringStruct.StringIntervalOpContext)} where the string is
+	 * Test for {@link StringStruct#nStringUpcase(StringIntervalOpContext)} where the string is
 	 * displaced.
 	 */
 	@Test
@@ -1186,8 +1186,8 @@ public class StringStructStringTest {
 		                                        .displacedTo(StringStruct.toLispString(str))
 		                                        .displacedIndexOffset(IntegerStruct.ONE)
 		                                        .build();
-		final StringStruct result = struct.nStringUpcase(StringStruct.StringIntervalOpContext.builder()
-		                                                                                     .build());
+		final StringStruct result = struct.nStringUpcase(StringIntervalOpContext.builder()
+		                                                                        .build());
 		Assert.assertThat(result, sameInstance(struct));
 		Assert.assertThat(result.toJavaString(), is("BC"));
 		Assert.assertThat(struct.toJavaString(), is("BC"));
@@ -1198,7 +1198,7 @@ public class StringStructStringTest {
 	 */
 
 	/**
-	 * Test for {@link StringStruct#nStringDowncase(StringStruct.StringIntervalOpContext)} where the start index was
+	 * Test for {@link StringStruct#nStringDowncase(StringIntervalOpContext)} where the start index was
 	 * negative.
 	 */
 	@Test
@@ -1207,13 +1207,13 @@ public class StringStructStringTest {
 		thrown.expectMessage(containsString("Bad start value "));
 
 		final StringStruct struct = StringStruct.emptyString();
-		struct.nStringDowncase(StringStruct.StringIntervalOpContext.builder()
-		                                                           .start(IntegerStruct.MINUS_ONE)
-		                                                           .build());
+		struct.nStringDowncase(StringIntervalOpContext.builder()
+		                                              .start(IntegerStruct.MINUS_ONE)
+		                                              .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#nStringDowncase(StringStruct.StringIntervalOpContext)} where the start index was
+	 * Test for {@link StringStruct#nStringDowncase(StringIntervalOpContext)} where the start index was
 	 * more than the total size.
 	 */
 	@Test
@@ -1222,14 +1222,14 @@ public class StringStructStringTest {
 		thrown.expectMessage(containsString("Bad start value "));
 
 		final StringStruct struct = StringStruct.emptyString();
-		struct.nStringDowncase(StringStruct.StringIntervalOpContext.builder()
-		                                                           .start(IntegerStruct.ONE)
-		                                                           .build());
+		struct.nStringDowncase(StringIntervalOpContext.builder()
+		                                              .start(IntegerStruct.ONE)
+		                                              .build());
 
 	}
 
 	/**
-	 * Test for {@link StringStruct#nStringDowncase(StringStruct.StringIntervalOpContext)} where the start index was
+	 * Test for {@link StringStruct#nStringDowncase(StringIntervalOpContext)} where the start index was
 	 * more than the fill pointer.
 	 */
 	@Test
@@ -1240,13 +1240,13 @@ public class StringStructStringTest {
 		final StringStruct struct = StringStruct.builder(IntegerStruct.TWO)
 		                                        .fillPointer(IntegerStruct.ONE)
 		                                        .build();
-		struct.nStringDowncase(StringStruct.StringIntervalOpContext.builder()
-		                                                           .start(IntegerStruct.TWO)
-		                                                           .build());
+		struct.nStringDowncase(StringIntervalOpContext.builder()
+		                                              .start(IntegerStruct.TWO)
+		                                              .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#nStringDowncase(StringStruct.StringIntervalOpContext)} where the end index was
+	 * Test for {@link StringStruct#nStringDowncase(StringIntervalOpContext)} where the end index was
 	 * negative.
 	 */
 	@Test
@@ -1255,13 +1255,13 @@ public class StringStructStringTest {
 		thrown.expectMessage(containsString("Bad end value "));
 
 		final StringStruct struct = StringStruct.emptyString();
-		struct.nStringDowncase(StringStruct.StringIntervalOpContext.builder()
-		                                                           .end(IntegerStruct.MINUS_ONE)
-		                                                           .build());
+		struct.nStringDowncase(StringIntervalOpContext.builder()
+		                                              .end(IntegerStruct.MINUS_ONE)
+		                                              .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#nStringDowncase(StringStruct.StringIntervalOpContext)} where the end index was
+	 * Test for {@link StringStruct#nStringDowncase(StringIntervalOpContext)} where the end index was
 	 * more than the total size.
 	 */
 	@Test
@@ -1270,13 +1270,13 @@ public class StringStructStringTest {
 		thrown.expectMessage(containsString("Bad end value "));
 
 		final StringStruct struct = StringStruct.emptyString();
-		struct.nStringDowncase(StringStruct.StringIntervalOpContext.builder()
-		                                                           .end(IntegerStruct.ONE)
-		                                                           .build());
+		struct.nStringDowncase(StringIntervalOpContext.builder()
+		                                              .end(IntegerStruct.ONE)
+		                                              .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#nStringDowncase(StringStruct.StringIntervalOpContext)} where the end index was
+	 * Test for {@link StringStruct#nStringDowncase(StringIntervalOpContext)} where the end index was
 	 * more than the fill pointer.
 	 */
 	@Test
@@ -1287,13 +1287,13 @@ public class StringStructStringTest {
 		final StringStruct struct = StringStruct.builder(IntegerStruct.TWO)
 		                                        .fillPointer(IntegerStruct.ONE)
 		                                        .build();
-		struct.nStringDowncase(StringStruct.StringIntervalOpContext.builder()
-		                                                           .end(IntegerStruct.TWO)
-		                                                           .build());
+		struct.nStringDowncase(StringIntervalOpContext.builder()
+		                                              .end(IntegerStruct.TWO)
+		                                              .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#nStringDowncase(StringStruct.StringIntervalOpContext)} where the start index was
+	 * Test for {@link StringStruct#nStringDowncase(StringIntervalOpContext)} where the start index was
 	 * more than the end index.
 	 */
 	@Test
@@ -1302,77 +1302,77 @@ public class StringStructStringTest {
 		thrown.expectMessage(containsString("Bad end value "));
 
 		final StringStruct struct = StringStruct.toLispString("ABC");
-		struct.nStringDowncase(StringStruct.StringIntervalOpContext.builder()
-		                                                           .start(IntegerStruct.ONE)
-		                                                           .end(IntegerStruct.ZERO)
-		                                                           .build());
+		struct.nStringDowncase(StringIntervalOpContext.builder()
+		                                              .start(IntegerStruct.ONE)
+		                                              .end(IntegerStruct.ZERO)
+		                                              .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#nStringDowncase(StringStruct.StringIntervalOpContext)}.
+	 * Test for {@link StringStruct#nStringDowncase(StringIntervalOpContext)}.
 	 */
 	@Test
 	public void test_nStringDowncase_NoStartAndNoEnd() {
 		final String str = "ABC";
 		final StringStruct struct = StringStruct.toLispString(str);
-		final StringStruct result = struct.nStringDowncase(StringStruct.StringIntervalOpContext.builder()
-		                                                                                       .build());
+		final StringStruct result = struct.nStringDowncase(StringIntervalOpContext.builder()
+		                                                                          .build());
 		Assert.assertThat(result, sameInstance(struct));
 		Assert.assertThat(result.toJavaString(), is(str.toLowerCase()));
 		Assert.assertThat(struct.toJavaString(), is(str.toLowerCase()));
 	}
 
 	/**
-	 * Test for {@link StringStruct#nStringDowncase(StringStruct.StringIntervalOpContext)} where a start index was
+	 * Test for {@link StringStruct#nStringDowncase(StringIntervalOpContext)} where a start index was
 	 * provided.
 	 */
 	@Test
 	public void test_nStringDowncase_StartAndNoEnd() {
 		final String str = "ABC";
 		final StringStruct struct = StringStruct.toLispString(str);
-		final StringStruct result = struct.nStringDowncase(StringStruct.StringIntervalOpContext.builder()
-		                                                                                       .start(IntegerStruct.ONE)
-		                                                                                       .build());
+		final StringStruct result = struct.nStringDowncase(StringIntervalOpContext.builder()
+		                                                                          .start(IntegerStruct.ONE)
+		                                                                          .build());
 		Assert.assertThat(result, sameInstance(struct));
 		Assert.assertThat(result.toJavaString(), is("Abc"));
 		Assert.assertThat(struct.toJavaString(), is("Abc"));
 	}
 
 	/**
-	 * Test for {@link StringStruct#nStringDowncase(StringStruct.StringIntervalOpContext)} where an end index was
+	 * Test for {@link StringStruct#nStringDowncase(StringIntervalOpContext)} where an end index was
 	 * provided.
 	 */
 	@Test
 	public void test_nStringDowncase_NoStartAndEnd() {
 		final String str = "ABC";
 		final StringStruct struct = StringStruct.toLispString(str);
-		final StringStruct result = struct.nStringDowncase(StringStruct.StringIntervalOpContext.builder()
-		                                                                                       .end(IntegerStruct.TWO)
-		                                                                                       .build());
+		final StringStruct result = struct.nStringDowncase(StringIntervalOpContext.builder()
+		                                                                          .end(IntegerStruct.TWO)
+		                                                                          .build());
 		Assert.assertThat(result, sameInstance(struct));
 		Assert.assertThat(result.toJavaString(), is("abC"));
 		Assert.assertThat(struct.toJavaString(), is("abC"));
 	}
 
 	/**
-	 * Test for {@link StringStruct#nStringDowncase(StringStruct.StringIntervalOpContext)} where a start index and
+	 * Test for {@link StringStruct#nStringDowncase(StringIntervalOpContext)} where a start index and
 	 * an end index were provided.
 	 */
 	@Test
 	public void test_nStringDowncase_StartAndEnd() {
 		final String str = "ABC";
 		final StringStruct struct = StringStruct.toLispString(str);
-		final StringStruct result = struct.nStringDowncase(StringStruct.StringIntervalOpContext.builder()
-		                                                                                       .start(IntegerStruct.ONE)
-		                                                                                       .end(IntegerStruct.TWO)
-		                                                                                       .build());
+		final StringStruct result = struct.nStringDowncase(StringIntervalOpContext.builder()
+		                                                                          .start(IntegerStruct.ONE)
+		                                                                          .end(IntegerStruct.TWO)
+		                                                                          .build());
 		Assert.assertThat(result, sameInstance(struct));
 		Assert.assertThat(result.toJavaString(), is("AbC"));
 		Assert.assertThat(struct.toJavaString(), is("AbC"));
 	}
 
 	/**
-	 * Test for {@link StringStruct#nStringDowncase(StringStruct.StringIntervalOpContext)} where the string has a
+	 * Test for {@link StringStruct#nStringDowncase(StringIntervalOpContext)} where the string has a
 	 * fill pointer.
 	 */
 	@Test
@@ -1382,8 +1382,8 @@ public class StringStructStringTest {
 		                                        .initialContents(StringStruct.toLispString(str))
 		                                        .fillPointer(IntegerStruct.TWO)
 		                                        .build();
-		final StringStruct result = struct.nStringDowncase(StringStruct.StringIntervalOpContext.builder()
-		                                                                                       .build());
+		final StringStruct result = struct.nStringDowncase(StringIntervalOpContext.builder()
+		                                                                          .build());
 		Assert.assertThat(result, sameInstance(struct));
 		Assert.assertThat(result.toJavaString(true), is("abC"));
 		Assert.assertThat(result.toJavaString(false), is("ab"));
@@ -1392,7 +1392,7 @@ public class StringStructStringTest {
 	}
 
 	/**
-	 * Test for {@link StringStruct#nStringDowncase(StringStruct.StringIntervalOpContext)} where the string is
+	 * Test for {@link StringStruct#nStringDowncase(StringIntervalOpContext)} where the string is
 	 * displaced.
 	 */
 	@Test
@@ -1402,8 +1402,8 @@ public class StringStructStringTest {
 		                                        .displacedTo(StringStruct.toLispString(str))
 		                                        .displacedIndexOffset(IntegerStruct.ONE)
 		                                        .build();
-		final StringStruct result = struct.nStringDowncase(StringStruct.StringIntervalOpContext.builder()
-		                                                                                       .build());
+		final StringStruct result = struct.nStringDowncase(StringIntervalOpContext.builder()
+		                                                                          .build());
 		Assert.assertThat(result, sameInstance(struct));
 		Assert.assertThat(result.toJavaString(), is("bc"));
 		Assert.assertThat(struct.toJavaString(), is("bc"));
@@ -1414,7 +1414,7 @@ public class StringStructStringTest {
 	 */
 
 	/**
-	 * Test for {@link StringStruct#nStringCapitalize(StringStruct.StringIntervalOpContext)} where the start index
+	 * Test for {@link StringStruct#nStringCapitalize(StringIntervalOpContext)} where the start index
 	 * was negative.
 	 */
 	@Test
@@ -1423,13 +1423,13 @@ public class StringStructStringTest {
 		thrown.expectMessage(containsString("Bad start value "));
 
 		final StringStruct struct = StringStruct.emptyString();
-		struct.nStringCapitalize(StringStruct.StringIntervalOpContext.builder()
-		                                                             .start(IntegerStruct.MINUS_ONE)
-		                                                             .build());
+		struct.nStringCapitalize(StringIntervalOpContext.builder()
+		                                                .start(IntegerStruct.MINUS_ONE)
+		                                                .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#nStringCapitalize(StringStruct.StringIntervalOpContext)} where the start index
+	 * Test for {@link StringStruct#nStringCapitalize(StringIntervalOpContext)} where the start index
 	 * was more than the total size.
 	 */
 	@Test
@@ -1438,14 +1438,14 @@ public class StringStructStringTest {
 		thrown.expectMessage(containsString("Bad start value "));
 
 		final StringStruct struct = StringStruct.emptyString();
-		struct.nStringCapitalize(StringStruct.StringIntervalOpContext.builder()
-		                                                             .start(IntegerStruct.ONE)
-		                                                             .build());
+		struct.nStringCapitalize(StringIntervalOpContext.builder()
+		                                                .start(IntegerStruct.ONE)
+		                                                .build());
 
 	}
 
 	/**
-	 * Test for {@link StringStruct#nStringCapitalize(StringStruct.StringIntervalOpContext)} where the start index
+	 * Test for {@link StringStruct#nStringCapitalize(StringIntervalOpContext)} where the start index
 	 * was more than the fill pointer.
 	 */
 	@Test
@@ -1456,13 +1456,13 @@ public class StringStructStringTest {
 		final StringStruct struct = StringStruct.builder(IntegerStruct.TWO)
 		                                        .fillPointer(IntegerStruct.ONE)
 		                                        .build();
-		struct.nStringCapitalize(StringStruct.StringIntervalOpContext.builder()
-		                                                             .start(IntegerStruct.TWO)
-		                                                             .build());
+		struct.nStringCapitalize(StringIntervalOpContext.builder()
+		                                                .start(IntegerStruct.TWO)
+		                                                .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#nStringCapitalize(StringStruct.StringIntervalOpContext)} where the end index was
+	 * Test for {@link StringStruct#nStringCapitalize(StringIntervalOpContext)} where the end index was
 	 * negative.
 	 */
 	@Test
@@ -1471,13 +1471,13 @@ public class StringStructStringTest {
 		thrown.expectMessage(containsString("Bad end value "));
 
 		final StringStruct struct = StringStruct.emptyString();
-		struct.nStringCapitalize(StringStruct.StringIntervalOpContext.builder()
-		                                                             .end(IntegerStruct.MINUS_ONE)
-		                                                             .build());
+		struct.nStringCapitalize(StringIntervalOpContext.builder()
+		                                                .end(IntegerStruct.MINUS_ONE)
+		                                                .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#nStringCapitalize(StringStruct.StringIntervalOpContext)} where the end index was
+	 * Test for {@link StringStruct#nStringCapitalize(StringIntervalOpContext)} where the end index was
 	 * more than the total size.
 	 */
 	@Test
@@ -1486,13 +1486,13 @@ public class StringStructStringTest {
 		thrown.expectMessage(containsString("Bad end value "));
 
 		final StringStruct struct = StringStruct.emptyString();
-		struct.nStringCapitalize(StringStruct.StringIntervalOpContext.builder()
-		                                                             .end(IntegerStruct.ONE)
-		                                                             .build());
+		struct.nStringCapitalize(StringIntervalOpContext.builder()
+		                                                .end(IntegerStruct.ONE)
+		                                                .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#nStringCapitalize(StringStruct.StringIntervalOpContext)} where the end index was
+	 * Test for {@link StringStruct#nStringCapitalize(StringIntervalOpContext)} where the end index was
 	 * more than the fill pointer.
 	 */
 	@Test
@@ -1503,13 +1503,13 @@ public class StringStructStringTest {
 		final StringStruct struct = StringStruct.builder(IntegerStruct.TWO)
 		                                        .fillPointer(IntegerStruct.ONE)
 		                                        .build();
-		struct.nStringCapitalize(StringStruct.StringIntervalOpContext.builder()
-		                                                             .end(IntegerStruct.TWO)
-		                                                             .build());
+		struct.nStringCapitalize(StringIntervalOpContext.builder()
+		                                                .end(IntegerStruct.TWO)
+		                                                .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#nStringCapitalize(StringStruct.StringIntervalOpContext)} where the start index
+	 * Test for {@link StringStruct#nStringCapitalize(StringIntervalOpContext)} where the start index
 	 * was more than the end index.
 	 */
 	@Test
@@ -1518,77 +1518,77 @@ public class StringStructStringTest {
 		thrown.expectMessage(containsString("Bad end value "));
 
 		final StringStruct struct = StringStruct.toLispString("abc def");
-		struct.nStringCapitalize(StringStruct.StringIntervalOpContext.builder()
-		                                                             .start(IntegerStruct.ONE)
-		                                                             .end(IntegerStruct.ZERO)
-		                                                             .build());
+		struct.nStringCapitalize(StringIntervalOpContext.builder()
+		                                                .start(IntegerStruct.ONE)
+		                                                .end(IntegerStruct.ZERO)
+		                                                .build());
 	}
 
 	/**
-	 * Test for {@link StringStruct#nStringCapitalize(StringStruct.StringIntervalOpContext)}.
+	 * Test for {@link StringStruct#nStringCapitalize(StringIntervalOpContext)}.
 	 */
 	@Test
 	public void test_nStringCapitalize_NoStartAndNoEnd() {
 		final String str = "abc def";
 		final StringStruct struct = StringStruct.toLispString(str);
-		final StringStruct result = struct.nStringCapitalize(StringStruct.StringIntervalOpContext.builder()
-		                                                                                         .build());
+		final StringStruct result = struct.nStringCapitalize(StringIntervalOpContext.builder()
+		                                                                            .build());
 		Assert.assertThat(result, sameInstance(struct));
 		Assert.assertThat(result.toJavaString(), is(WordUtils.capitalize(str)));
 		Assert.assertThat(struct.toJavaString(), is(WordUtils.capitalize(str)));
 	}
 
 	/**
-	 * Test for {@link StringStruct#nStringCapitalize(StringStruct.StringIntervalOpContext)} where a start index was
+	 * Test for {@link StringStruct#nStringCapitalize(StringIntervalOpContext)} where a start index was
 	 * provided.
 	 */
 	@Test
 	public void test_nStringCapitalize_StartAndNoEnd() {
 		final String str = "abc def";
 		final StringStruct struct = StringStruct.toLispString(str);
-		final StringStruct result = struct.nStringCapitalize(StringStruct.StringIntervalOpContext.builder()
-		                                                                                         .start(IntegerStruct.ONE)
-		                                                                                         .build());
+		final StringStruct result = struct.nStringCapitalize(StringIntervalOpContext.builder()
+		                                                                            .start(IntegerStruct.ONE)
+		                                                                            .build());
 		Assert.assertThat(result, sameInstance(struct));
 		Assert.assertThat(result.toJavaString(), is("aBc Def"));
 		Assert.assertThat(struct.toJavaString(), is("aBc Def"));
 	}
 
 	/**
-	 * Test for {@link StringStruct#nStringCapitalize(StringStruct.StringIntervalOpContext)} where an end index was
+	 * Test for {@link StringStruct#nStringCapitalize(StringIntervalOpContext)} where an end index was
 	 * provided.
 	 */
 	@Test
 	public void test_nStringCapitalize_NoStartAndEnd() {
 		final String str = "abc def";
 		final StringStruct struct = StringStruct.toLispString(str);
-		final StringStruct result = struct.nStringCapitalize(StringStruct.StringIntervalOpContext.builder()
-		                                                                                         .end(IntegerStruct.TWO)
-		                                                                                         .build());
+		final StringStruct result = struct.nStringCapitalize(StringIntervalOpContext.builder()
+		                                                                            .end(IntegerStruct.TWO)
+		                                                                            .build());
 		Assert.assertThat(result, sameInstance(struct));
 		Assert.assertThat(result.toJavaString(), is("Abc def"));
 		Assert.assertThat(struct.toJavaString(), is("Abc def"));
 	}
 
 	/**
-	 * Test for {@link StringStruct#nStringCapitalize(StringStruct.StringIntervalOpContext)} where a start index and
+	 * Test for {@link StringStruct#nStringCapitalize(StringIntervalOpContext)} where a start index and
 	 * an end index were provided.
 	 */
 	@Test
 	public void test_nStringCapitalize_StartAndEnd() {
 		final String str = "abc def";
 		final StringStruct struct = StringStruct.toLispString(str);
-		final StringStruct result = struct.nStringCapitalize(StringStruct.StringIntervalOpContext.builder()
-		                                                                                         .start(IntegerStruct.ONE)
-		                                                                                         .end(IntegerStruct.TWO)
-		                                                                                         .build());
+		final StringStruct result = struct.nStringCapitalize(StringIntervalOpContext.builder()
+		                                                                            .start(IntegerStruct.ONE)
+		                                                                            .end(IntegerStruct.TWO)
+		                                                                            .build());
 		Assert.assertThat(result, sameInstance(struct));
 		Assert.assertThat(result.toJavaString(), is("aBc def"));
 		Assert.assertThat(struct.toJavaString(), is("aBc def"));
 	}
 
 	/**
-	 * Test for {@link StringStruct#nStringCapitalize(StringStruct.StringIntervalOpContext)} where the string has a
+	 * Test for {@link StringStruct#nStringCapitalize(StringIntervalOpContext)} where the string has a
 	 * fill pointer.
 	 */
 	@Test
@@ -1598,8 +1598,8 @@ public class StringStructStringTest {
 		                                        .initialContents(StringStruct.toLispString(str))
 		                                        .fillPointer(IntegerStructImpl.valueOf(4))
 		                                        .build();
-		final StringStruct result = struct.nStringCapitalize(StringStruct.StringIntervalOpContext.builder()
-		                                                                                         .build());
+		final StringStruct result = struct.nStringCapitalize(StringIntervalOpContext.builder()
+		                                                                            .build());
 		Assert.assertThat(result, sameInstance(struct));
 		Assert.assertThat(result.toJavaString(true), is("Abc def"));
 		Assert.assertThat(result.toJavaString(false), is("Abc "));
@@ -1608,7 +1608,7 @@ public class StringStructStringTest {
 	}
 
 	/**
-	 * Test for {@link StringStruct#nStringCapitalize(StringStruct.StringIntervalOpContext)} where the string is
+	 * Test for {@link StringStruct#nStringCapitalize(StringIntervalOpContext)} where the string is
 	 * displaced.
 	 */
 	@Test
@@ -1618,8 +1618,8 @@ public class StringStructStringTest {
 		                                        .displacedTo(StringStruct.toLispString(str))
 		                                        .displacedIndexOffset(IntegerStruct.ONE)
 		                                        .build();
-		final StringStruct result = struct.nStringCapitalize(StringStruct.StringIntervalOpContext.builder()
-		                                                                                         .build());
+		final StringStruct result = struct.nStringCapitalize(StringIntervalOpContext.builder()
+		                                                                            .build());
 		Assert.assertThat(result, sameInstance(struct));
 		Assert.assertThat(result.toJavaString(), is("Bc Def"));
 		Assert.assertThat(struct.toJavaString(), is("Bc Def"));

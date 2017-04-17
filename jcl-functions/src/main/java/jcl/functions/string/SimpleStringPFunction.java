@@ -4,7 +4,6 @@ import jcl.functions.CommonLispBuiltInFunctionStructBase;
 import jcl.lang.BooleanStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.StringStruct;
-import jcl.lang.factory.LispStructFactory;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import org.springframework.stereotype.Component;
@@ -30,6 +29,6 @@ public final class SimpleStringPFunction extends CommonLispBuiltInFunctionStruct
 		if (!isString) {
 			return BooleanStruct.NIL;
 		}
-		return LispStructFactory.toBoolean(((StringStruct) object).isSimpleString());
+		return ((StringStruct) object).isSimpleString();
 	}
 }

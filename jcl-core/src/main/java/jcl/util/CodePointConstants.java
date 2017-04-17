@@ -4,11 +4,14 @@
 
 package jcl.util;
 
+import lombok.experimental.UtilityClass;
+
 /**
  * Defines the standard character constants for the system.
  */
 @SuppressWarnings("all")
-public final class CodePointConstants {
+@UtilityClass
+public class CodePointConstants {
 
 	// Integer/Character Standard-Char Constants
 
@@ -279,7 +282,4 @@ public final class CodePointConstants {
 	public static final Character RUBOUT = 127;
 
 	public static final Integer EXIT_CHAR = 0xFFFF;
-
-	private CodePointConstants() {
-	}
 }

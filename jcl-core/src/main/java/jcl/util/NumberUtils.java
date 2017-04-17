@@ -5,16 +5,13 @@ import java.math.BigInteger;
 import java.math.MathContext;
 import java.math.RoundingMode;
 
+import lombok.experimental.UtilityClass;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.math3.fraction.BigFraction;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+@Slf4j
+@UtilityClass
 public class NumberUtils {
-
-	/**
-	 * The logger for this class.
-	 */
-	private static final Logger LOGGER = LoggerFactory.getLogger(NumberUtils.class);
 
 	public static BigDecimal bigDecimalValue(final int i) {
 		return BigDecimal.valueOf(i).setScale(1, RoundingMode.HALF_EVEN);
@@ -32,8 +29,8 @@ public class NumberUtils {
 		try {
 			return bigFraction.bigDecimalValue();
 		} catch (final ArithmeticException ignored) {
-			if (LOGGER.isTraceEnabled()) {
-				LOGGER.trace("Loss of precision when converting BigFraction to BigDecimal.");
+			if (log.isTraceEnabled()) {
+				log.trace("Loss of precision when converting BigFraction to BigDecimal.");
 			}
 			// This means that we have to round the fraction.
 			return bigFraction.bigDecimalValue(

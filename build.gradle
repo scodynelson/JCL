@@ -18,17 +18,6 @@ plugins {
 ext {
 }
 
-//******************//
-//apply plugin: 'java'
-//apply plugin: 'application'
-//apply plugin: 'spring-boot'
-
-//jar {
-//	baseName = 'jcl'
-//	version = '1.0-SNAPSHOT'
-//}
-//******************//
-
 allprojects {
 	group = "jcl"
 	version = "1.0-SNAPSHOT"
@@ -79,11 +68,6 @@ subprojects {
 
 	test {
 		systemProperty("java.awt.headless", "true")
-//		systemProperty("testGroups", project.properties.get("testGroups"))
-//		jacoco {
-//			destinationFile = file("$buildDir/jacoco/jacocoTest.exec")
-//			classDumpFile = file("$buildDir/jacoco/classpathdumps")
-//		}
 	}
 
 	repositories {
@@ -99,17 +83,6 @@ subprojects {
 	configurations {
 		jacoco
 	}
-
-//	dependencies {
-//		ext.jacocoVersion = "0.7.9"
-//		jacoco("org.jacoco:org.jacoco.agent:${jacocoVersion}:runtime")
-//	}
-
-//	gradle.taskGraph.whenReady { taskGraph ->
-//		if (taskGraph.hasTask(':sonarqube')) {
-//			test.jvmArgs["-javaagent:${configurations.jacoco.asPath}=destfile=${buildDir}/jacoco.exec,includes=jcl.*"]
-//		}
-//	}
 
 	jar {
 		manifest.attributes["Created-By"] = "${System.getProperty("java.version")} (${System.getProperty("java.specification.vendor")})"
@@ -158,24 +131,13 @@ subprojects {
 //		archives javadocJar
 //	}
 
-//	jacoco {
-//		toolVersion = '0.7.9'
-//	}
-
-//	jacocoTestReport {
-//		reports {
-//			xml.enabled false
-//			csv.enabled false
-//			html.destination "${buildDir}/jacocoHtml"
-//		}
-//	}
 	jacocoTestReport.dependsOn(test)
 
 	sonarqube {
 		properties {
 			property "sonar.projectName", "JCL"
 //			property "sonar.profile", "JCL"
-//			property "sonar.jacoco.reportPath", "$buildDir/jacoco/jacocoTest.exec"
+//			property "sonar.jacoco.reportPath", "$buildDir/jacoco/test.exec"
 //			property "sonar.java.coveragePlugin", "jacoco"
 //
 //			property "sonar.host.url", "https://sonarqube.com"
@@ -194,6 +156,8 @@ project("jcl-core") {
 		compile("org.apache.commons:commons-math3:${commonsMathVersion}")
 		compile("org.apache.commons:commons-collections4:${commonsCollectionsVersion}")
 		compile("org.apfloat:apfloat:${apfloatVersion}")
+		compileOnly("org.projectlombok:lombok")
+		permitUnusedDeclared("org.projectlombok:lombok")
 		compile("org.slf4j:slf4j-api")
 		compile("org.springframework:spring-core")
 		compile("org.springframework:spring-beans")
@@ -319,16 +283,6 @@ project("jcl-application") {
 //		manifest.attributes["Can-Set-Native-Method-Prefix"] = "false"
 //	}
 //}
-//
-//sonarqube {
-//	properties {
-//		property "sonar.projectName", "JCL"
-//		property "sonar.profile", "JCL"
-//		property "sonar.jacoco.reportPath", "${buildDir.name}/jacoco.exec"
-//		property "sonar.java.coveragePlugin", "jacoco"
-//	}
-//}
-//
 //configure(rootProject) {
 //	description = "JCL"
 //

@@ -5,15 +5,11 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import jcl.lang.condition.exception.TypeErrorException;
-import jcl.lang.internal.StringStructImpl;
+import jcl.lang.internal.ComplexStringStructImpl;
+import jcl.lang.internal.SimpleStringStructImpl;
 import jcl.lang.statics.CharacterConstants;
-import jcl.type.BaseCharType;
-import jcl.type.BaseStringType;
 import jcl.type.CharacterType;
 import jcl.type.LispType;
-import jcl.type.SimpleBaseStringType;
-import jcl.type.SimpleStringType;
-import jcl.type.StringType;
 
 /**
  * The {@link StringStruct} is the object representation of a Lisp 'string' type.
@@ -23,12 +19,7 @@ public interface StringStruct extends VectorStruct {
 	/**
 	 * Constant representing an empty StringStruct.
 	 */
-	StringStructImpl EMPTY_STRING = new StringStructImpl(SimpleStringType.INSTANCE,
-	                                                     0,
-	                                                     CharacterType.INSTANCE,
-	                                                     new StringBuilder(),
-	                                                     false,
-	                                                     null);
+	StringStruct EMPTY_STRING = new SimpleStringStructImpl("");
 
 	/**
 	 * Retrieves the {@link CharacterStruct} at the provided {@link IntegerStruct} index from the structure.
@@ -55,25 +46,18 @@ public interface StringStruct extends VectorStruct {
 
 	/**
 	 * Retrieves the {@link CharacterStruct} at the provided {@link IntegerStruct} index from the structure, only if the
-	 * structure is a {@link SimpleStringType} structure.
+	 * structure is a 'simple' string.
 	 *
 	 * @param index
 	 * 		the position of the {@link CharacterStruct} to retrieve
 	 *
 	 * @return the {@link CharacterStruct} at the provided index
 	 */
-	default CharacterStruct schar(final IntegerStruct index) {
-		final LispType type = getType();
-		if (SimpleStringType.INSTANCE.equals(type)) {
-			return char_(index);
-		}
-		throw new TypeErrorException(
-				"The value " + this + " is not of the expected type " + SimpleStringType.INSTANCE + '.');
-	}
+	CharacterStruct schar(final IntegerStruct index);
 
 	/**
 	 * Sets the {@link CharacterStruct} at the provided {@link IntegerStruct} index within the structure to the provided
-	 * new {@link CharacterStruct} element, only if the structure is a {@link SimpleStringType} structure.
+	 * new {@link CharacterStruct} element, only if the structure is a 'simple' string.
 	 *
 	 * @param newElement
 	 * 		the new {@link CharacterStruct} to set at the provided index
@@ -82,14 +66,7 @@ public interface StringStruct extends VectorStruct {
 	 *
 	 * @return the new {@link CharacterStruct} element
 	 */
-	default CharacterStruct setfSchar(final CharacterStruct newElement, final IntegerStruct index) {
-		final LispType type = getType();
-		if (SimpleStringType.INSTANCE.equals(type)) {
-			return setfChar(newElement, index);
-		}
-		throw new TypeErrorException(
-				"The value " + this + " is not of the expected type " + SimpleStringType.INSTANCE + '.');
-	}
+	CharacterStruct setfSchar(final CharacterStruct newElement, final IntegerStruct index);
 
 	/**
 	 * Returns a new string with the contents upper-cased according to the provided {@link StringIntervalOpContext}.
@@ -324,20 +301,19 @@ public interface StringStruct extends VectorStruct {
 	 */
 	LispStruct stringGreaterThanOrEqualToIgnoreCase(final StringEqualityContext context);
 
-	// TODO: fix by subclassing properly
-	default boolean isSimpleString() {
-		return getType().isOfType(SimpleStringType.INSTANCE);
-	}
+	/**
+	 * Returns whether or not the String is a 'simple' string.
+	 *
+	 * @return true if the String is a 'simple' string; false otherwise
+	 */
+	BooleanStruct isSimpleString();
 
 	/**
 	 * Returns the {@link String} representation of the StringStruct.
 	 *
 	 * @return a {@link String} representation of the StringStruct
 	 */
-	default String toJavaString() {
-		// TODO: right now this ignores fill-pointer by default. Should it or should it not??
-		return toJavaString(true);
-	}
+	String toJavaString();
 
 	/**
 	 * Returns the {@link String} representation of the StringStruct, ignoring the fill-pointer attribute accordingly
@@ -368,12 +344,7 @@ public interface StringStruct extends VectorStruct {
 	 * @return a new StringStruct representation of the provided {@link String}
 	 */
 	static StringStruct toLispString(final String str) {
-		return new StringStructImpl(SimpleStringType.INSTANCE,
-		                            str.length(),
-		                            CharacterType.INSTANCE,
-		                            new StringBuilder(str),
-		                            false,
-		                            null);
+		return new SimpleStringStructImpl(str);
 	}
 
 	/**
@@ -489,16 +460,13 @@ public interface StringStruct extends VectorStruct {
 				// Check displaced index
 				displacedTo.rowMajorAref(displacedIndexOffset);
 
-				final StringType stringType = getStringType(adjustableBoolean, fillPointerInt, upgradedET);
-				return new StringStructImpl(stringType,
-				                            sizeInt,
-				                            (CharacterType) upgradedET,
-				                            displacedTo,
-				                            displacedIndexOffset.intValue(),
-				                            adjustableBoolean,
-				                            fillPointerInt);
+				return new ComplexStringStructImpl(sizeInt,
+				                                   (CharacterType) upgradedET,
+				                                   displacedTo,
+				                                   displacedIndexOffset.intValue(),
+				                                   adjustableBoolean,
+				                                   fillPointerInt);
 			}
-			final StringType stringType = getStringType(adjustableBoolean, fillPointerInt, upgradedET);
 
 			if (initialContents != null) {
 				for (final LispStruct element : initialContents) {
@@ -519,12 +487,16 @@ public interface StringStruct extends VectorStruct {
 				                                            .collect(StringBuilder::new,
 				                                                     StringBuilder::appendCodePoint,
 				                                                     StringBuilder::append);
-				return new StringStructImpl(stringType,
-				                            sizeInt,
-				                            CharacterType.INSTANCE,
-				                            contents,
-				                            adjustableBoolean,
-				                            fillPointerInt);
+				if ((fillPointerInt == null) && !adjustableBoolean) {
+					return new SimpleStringStructImpl(sizeInt,
+					                                  CharacterType.INSTANCE,
+					                                  contents);
+				}
+				return new ComplexStringStructImpl(sizeInt,
+				                                   CharacterType.INSTANCE,
+				                                   contents,
+				                                   adjustableBoolean,
+				                                   fillPointerInt);
 			}
 
 			final LispType initialElementType = initialElement.getType();
@@ -540,39 +512,16 @@ public interface StringStruct extends VectorStruct {
 			                                     .collect(StringBuilder::new,
 			                                              StringBuilder::appendCodePoint,
 			                                              StringBuilder::append);
-			return new StringStructImpl(stringType,
-			                            sizeInt,
-			                            CharacterType.INSTANCE,
-			                            contents,
-			                            adjustableBoolean,
-			                            fillPointerInt);
-		}
-
-		/**
-		 * Gets the string type from the provided isAdjustable, fillPointer, and elementType values.
-		 *
-		 * @param isAdjustable
-		 * 		whether or not the string is adjustable
-		 * @param fillPointer
-		 * 		the string fillPointer
-		 * @param elementType
-		 * 		the string elementType
-		 *
-		 * @return the matching string type for the provided isAdjustable, fillPointer, and elementType values
-		 */
-		public static StringType getStringType(final boolean isAdjustable,
-		                                       final Integer fillPointer,
-		                                       final LispType elementType) {
-			// TODO: Refactor this out somewhere shared??
-			if (isAdjustable || (fillPointer != null)) {
-				return (elementType instanceof BaseCharType)
-				       ? BaseStringType.INSTANCE
-				       : StringType.INSTANCE;
-			} else {
-				return (elementType instanceof BaseCharType)
-				       ? SimpleBaseStringType.INSTANCE
-				       : SimpleStringType.INSTANCE;
+			if ((fillPointerInt == null) && !adjustableBoolean) {
+				return new SimpleStringStructImpl(sizeInt,
+				                                  CharacterType.INSTANCE,
+				                                  contents);
 			}
+			return new ComplexStringStructImpl(sizeInt,
+			                                   CharacterType.INSTANCE,
+			                                   contents,
+			                                   adjustableBoolean,
+			                                   fillPointerInt);
 		}
 	}
 }

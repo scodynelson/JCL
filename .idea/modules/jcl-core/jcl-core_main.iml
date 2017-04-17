@@ -17,6 +17,7 @@
     <orderEntry type="library" name="Gradle: org.apfloat:apfloat:1.8.2" level="project" />
     <orderEntry type="library" name="Gradle: org.slf4j:slf4j-api:1.7.24" level="project" />
     <orderEntry type="library" name="Gradle: org.springframework:spring-core:4.3.7.RELEASE" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: org.projectlombok:lombok:1.16.14" level="project" />
     <orderEntry type="library" name="Gradle: org.springframework:spring-beans:4.3.7.RELEASE" level="project" />
     <orderEntry type="library" name="Gradle: io.javaslang:javaslang-match:2.0.5" level="project" />
   </component>

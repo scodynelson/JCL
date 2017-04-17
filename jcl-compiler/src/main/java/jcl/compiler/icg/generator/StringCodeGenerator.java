@@ -9,7 +9,7 @@ import jcl.compiler.icg.GeneratorEvent;
 import jcl.compiler.icg.GeneratorState;
 import jcl.compiler.icg.JavaMethodBuilder;
 import jcl.lang.StringStruct;
-import jcl.lang.internal.StringStructImpl;
+import jcl.lang.internal.SimpleStringStructImpl;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.springframework.context.event.EventListener;
@@ -20,7 +20,7 @@ import org.springframework.stereotype.Component;
  * get the equivalent {@link String} value of the provided {@link StringStruct} input value.
  */
 @Component
-final class StringCodeGenerator implements CodeGenerator<StringStructImpl> {
+final class StringCodeGenerator implements CodeGenerator<SimpleStringStructImpl> {
 
 	/**
 	 * {@inheritDoc}
@@ -36,7 +36,7 @@ final class StringCodeGenerator implements CodeGenerator<StringStructImpl> {
 	 * 		stateful object used to hold the current state of the code generation process
 	 */
 	@EventListener
-	public void onGeneratorEvent(final GeneratorEvent<StringStructImpl> event) {
+	public void onGeneratorEvent(final GeneratorEvent<SimpleStringStructImpl> event) {
 		final StringStruct input = event.getSource();
 		final GeneratorState generatorState = event.getGeneratorState();
 

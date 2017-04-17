@@ -1,11 +1,10 @@
 package jcl.util;
 
 import jcl.lang.condition.exception.TypeErrorException;
+import lombok.experimental.UtilityClass;
 
-public final class ClassUtils {
-
-	private ClassUtils() {
-	}
+@UtilityClass
+public class ClassUtils {
 
 	@SuppressWarnings("unchecked")
 	public static <T> T convert(final Object value, final Class<T> type) {

@@ -442,6 +442,26 @@ public class StringStructSequenceTest {
 	}
 
 	/**
+	 * Test for {@link StringStruct#reverse()} with an adjustable string.
+	 */
+	@Test
+	public void test_reverse_Adjustable() {
+		final String str = "12345";
+		final String reversedStr = new StringBuilder(str).reverse().toString();
+
+		final StringStruct initialContents = StringStruct.toLispString(str);
+		final StringStruct struct
+				= StringStruct.builder(IntegerStructImpl.valueOf(str.length()))
+				              .adjustable(BooleanStruct.T)
+				              .initialContents(initialContents)
+				              .build();
+
+		final StringStruct result = struct.reverse();
+		Assert.assertThat(result, not(sameInstance(struct)));
+		Assert.assertThat(result.toJavaString(false), is(reversedStr));
+	}
+
+	/**
 	 * Test for {@link StringStruct#reverse()} where the array is displaced.
 	 */
 	@Test
@@ -529,6 +549,26 @@ public class StringStructSequenceTest {
 	}
 
 	/**
+	 * Test for {@link StringStruct#nReverse()} with an adjustable string.
+	 */
+	@Test
+	public void test_nReverse_Adjustable() {
+		final String str = "12345";
+		final String reversedStr = new StringBuilder(str).reverse().toString();
+
+		final StringStruct initialContents = StringStruct.toLispString(str);
+		final StringStruct struct
+				= StringStruct.builder(IntegerStructImpl.valueOf(str.length()))
+				              .adjustable(BooleanStruct.T)
+				              .initialContents(initialContents)
+				              .build();
+
+		final StringStruct result = struct.nReverse();
+		Assert.assertThat(result, sameInstance(struct));
+		Assert.assertThat(result.toJavaString(false), is(reversedStr));
+	}
+
+	/**
 	 * Test for {@link StringStruct#nReverse()} where the array is displaced.
 	 */
 	@Test
@@ -580,7 +620,7 @@ public class StringStructSequenceTest {
 	 * Test for {@link StringStruct#iterator()}.
 	 */
 	@Test
-	public void test_iterator() {
+	public void test_iterator_Simple() {
 		final String str = "12345";
 		final StringStruct struct = StringStruct.toLispString(str);
 		final Iterator<LispStruct> iterator = struct.iterator();
@@ -597,12 +637,53 @@ public class StringStructSequenceTest {
 	 * Test for {@link StringStruct#iterator()} where {@link Iterator#next()} is called and no values are left.
 	 */
 	@Test
-	public void test_iterator_NoSuchElement() {
+	public void test_iterator_Simple_NoSuchElement() {
 		thrown.expect(NoSuchElementException.class);
 		thrown.expectMessage("All elements consumed.");
 
 		final String str = "12345";
 		final StringStruct struct = StringStruct.toLispString(str);
+		final Iterator<LispStruct> iterator = struct.iterator();
+
+		while (iterator.hasNext()) {
+			iterator.next();
+		}
+		iterator.next();
+	}
+
+	/**
+	 * Test for {@link StringStruct#iterator()}.
+	 */
+	@Test
+	public void test_iterator_Complex() {
+		final String str = "12345";
+		final StringStruct struct = StringStruct.builder(IntegerStructImpl.valueOf(str.length()))
+		                                        .initialContents(StringStruct.toLispString(str))
+		                                        .adjustable(BooleanStruct.T)
+		                                        .build();
+		final Iterator<LispStruct> iterator = struct.iterator();
+
+		final StringBuilder resultBuilder = new StringBuilder();
+		while (iterator.hasNext()) {
+			final LispStruct element = iterator.next();
+			populateBuilder(resultBuilder, element);
+		}
+		Assert.assertThat(resultBuilder.toString(), is(str));
+	}
+
+	/**
+	 * Test for {@link StringStruct#iterator()} where {@link Iterator#next()} is called and no values are left.
+	 */
+	@Test
+	public void test_iterator_Complex_NoSuchElement() {
+		thrown.expect(NoSuchElementException.class);
+		thrown.expectMessage("All elements consumed.");
+
+		final String str = "12345";
+		final StringStruct struct = StringStruct.builder(IntegerStructImpl.valueOf(str.length()))
+		                                        .initialContents(StringStruct.toLispString(str))
+		                                        .adjustable(BooleanStruct.T)
+		                                        .build();
 		final Iterator<LispStruct> iterator = struct.iterator();
 
 		while (iterator.hasNext()) {

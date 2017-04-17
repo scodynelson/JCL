@@ -11,6 +11,7 @@ import org.junit.runners.Suite;
                      StringStructStringEqualityTest.class,
                      StringStructVectorTest.class,
                      StringStructArrayTest.class,
+                     StringStructAdjustArrayTest.class,
                      StringStructSequenceTest.class})
 public class StringStructTestSuite {
 }

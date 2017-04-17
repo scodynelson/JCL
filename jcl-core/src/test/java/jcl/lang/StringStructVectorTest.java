@@ -62,10 +62,10 @@ public class StringStructVectorTest {
 	 */
 
 	/**
-	 * Test for {@link StringStruct#fillPointer()}.
+	 * Test for {@link StringStruct#fillPointer()} where the string is 'complex'.
 	 */
 	@Test
-	public void test_fillPointer() {
+	public void test_fillPointer_Complex() {
 		final String str = "abc";
 		final IntegerStruct fillPointer = IntegerStruct.TWO;
 		final StringStruct struct = StringStruct.builder(IntegerStructImpl.valueOf(str.length()))
@@ -77,10 +77,10 @@ public class StringStructVectorTest {
 	}
 
 	/**
-	 * Test for {@link StringStruct#fillPointer()} where there is no fill-pointer value.
+	 * Test for {@link StringStruct#fillPointer()} where the string is 'simple'.
 	 */
 	@Test
-	public void test_fillPointer_NoFillPointer() {
+	public void test_fillPointer_Simple() {
 		thrown.expect(TypeErrorException.class);
 		thrown.expectMessage("STRING has no fill-pointer to retrieve.");
 
@@ -93,16 +93,31 @@ public class StringStructVectorTest {
 	 */
 
 	/**
-	 * Test for {@link StringStruct#setfFillPointer(IntegerStruct)}.
+	 * Test for {@link StringStruct#setfFillPointer(IntegerStruct)} where the string is 'complex'.
 	 */
 	@Test
-	public void test_setfFillPointer() {
+	public void test_setfFillPointer_Complex() {
 		final String str = "abc";
 		final IntegerStruct fillPointer = IntegerStruct.TWO;
 		final StringStruct struct = StringStruct.builder(IntegerStructImpl.valueOf(str.length()))
 		                                        .initialContents(StringStruct.toLispString(str))
 		                                        .fillPointer(fillPointer)
 		                                        .build();
+
+		final IntegerStruct newFillPointer = IntegerStruct.ONE;
+		final IntegerStruct result = struct.setfFillPointer(newFillPointer);
+		Assert.assertThat(result, is(newFillPointer));
+	}
+
+	/**
+	 * Test for {@link StringStruct#setfFillPointer(IntegerStruct)} where the string is 'simple'.
+	 */
+	@Test
+	public void test_setfFillPointer_Simple() {
+		thrown.expect(TypeErrorException.class);
+		thrown.expectMessage("Cannot set fill-pointer for SIMPLE-STRING.");
+
+		final StringStruct struct = StringStruct.EMPTY_STRING;
 
 		final IntegerStruct newFillPointer = IntegerStruct.ONE;
 		final IntegerStruct result = struct.setfFillPointer(newFillPointer);
@@ -152,14 +167,29 @@ public class StringStructVectorTest {
 	 */
 
 	/**
-	 * Test for {@link StringStruct#vectorPop()} where the string has no fill-pointer.
+	 * Test for {@link StringStruct#vectorPop()} where the string has no fill-pointer and is a 'simple' string.
 	 */
 	@Test
-	public void test_vectorPop_NoFillPointer() {
+	public void test_vectorPop_NoFillPointer_Simple() {
 		thrown.expect(TypeErrorException.class);
 		thrown.expectMessage(containsString("Cannot pop from a STRING with no fill-pointer."));
 
 		final StringStruct struct = StringStruct.toLispString("abc");
+		struct.vectorPop();
+	}
+
+	/**
+	 * Test for {@link StringStruct#vectorPop()} where the string has no fill-pointer and is a 'complex' string.
+	 */
+	@Test
+	public void test_vectorPop_NoFillPointer_Complex() {
+		thrown.expect(TypeErrorException.class);
+		thrown.expectMessage(containsString("Cannot pop from a STRING with no fill-pointer."));
+
+		final StringStruct struct = StringStruct.builder(IntegerStruct.TWO)
+		                                        .initialContents(StringStruct.toLispString("ab"))
+		                                        .adjustable(BooleanStruct.T)
+		                                        .build();
 		struct.vectorPop();
 	}
 
@@ -224,19 +254,42 @@ public class StringStructVectorTest {
 		thrown.expect(TypeErrorException.class);
 		thrown.expectMessage(containsString("is not a character type."));
 
-		final StringStruct struct = StringStruct.toLispString("abc");
+		final String str = "abc";
+		final IntegerStruct size = IntegerStructImpl.valueOf(str.length());
+
+		final StringStruct struct = StringStruct.builder(size)
+		                                        .initialContents(StringStruct.toLispString(str))
+		                                        .fillPointer(size)
+		                                        .build();
 		struct.vectorPush(IntegerStruct.ZERO);
 	}
 
 	/**
-	 * Test for {@link StringStruct#vectorPush(LispStruct)} where the string has no fill-pointer.
+	 * Test for {@link StringStruct#vectorPush(LispStruct)} where the string has no fill-pointer and is a 'simple'
+	 * string.
 	 */
 	@Test
-	public void test_vectorPush_NoFillPointer() {
+	public void test_vectorPush_NoFillPointer_Simple() {
 		thrown.expect(TypeErrorException.class);
 		thrown.expectMessage(containsString("Cannot push into a STRING with no fill-pointer."));
 
 		final StringStruct struct = StringStruct.toLispString("abc");
+		struct.vectorPush(CharacterConstants.DOLLAR_SIGN_CHAR);
+	}
+
+	/**
+	 * Test for {@link StringStruct#vectorPush(LispStruct)} where the string has no fill-pointer and is a 'complex'
+	 * string.
+	 */
+	@Test
+	public void test_vectorPush_NoFillPointer_Complex() {
+		thrown.expect(TypeErrorException.class);
+		thrown.expectMessage(containsString("Cannot push into a STRING with no fill-pointer."));
+
+		final StringStruct struct = StringStruct.builder(IntegerStruct.TWO)
+		                                        .initialContents(StringStruct.toLispString("ab"))
+		                                        .adjustable(BooleanStruct.T)
+		                                        .build();
 		struct.vectorPush(CharacterConstants.DOLLAR_SIGN_CHAR);
 	}
 
@@ -310,19 +363,42 @@ public class StringStructVectorTest {
 		thrown.expect(TypeErrorException.class);
 		thrown.expectMessage(containsString("is not a character type."));
 
-		final StringStruct struct = StringStruct.toLispString("abc");
+		final String str = "abc";
+		final IntegerStruct size = IntegerStructImpl.valueOf(str.length());
+
+		final StringStruct struct = StringStruct.builder(size)
+		                                        .initialContents(StringStruct.toLispString(str))
+		                                        .fillPointer(size)
+		                                        .build();
 		struct.vectorPushExtend(IntegerStruct.ZERO);
 	}
 
 	/**
-	 * Test for {@link StringStruct#vectorPushExtend(LispStruct)} where the string has no fill-pointer.
+	 * Test for {@link StringStruct#vectorPushExtend(LispStruct)} where the string has no fill-pointer and is a 'simple'
+	 * string.
 	 */
 	@Test
-	public void test_vectorPushExtend_NoFillPointer() {
+	public void test_vectorPushExtend_NoFillPointer_Simple() {
 		thrown.expect(TypeErrorException.class);
-		thrown.expectMessage(containsString("Cannot push into a STRING with no fill-pointer."));
+		thrown.expectMessage(containsString("Cannot push or extend a STRING with no fill-pointer."));
 
 		final StringStruct struct = StringStruct.toLispString("abc");
+		struct.vectorPushExtend(CharacterConstants.DOLLAR_SIGN_CHAR);
+	}
+
+	/**
+	 * Test for {@link StringStruct#vectorPushExtend(LispStruct)} where the string has no fill-pointer and is a
+	 * 'complex' string.
+	 */
+	@Test
+	public void test_vectorPushExtend_NoFillPointer_Complex() {
+		thrown.expect(TypeErrorException.class);
+		thrown.expectMessage(containsString("Cannot push or extend a STRING with no fill-pointer."));
+
+		final StringStruct struct = StringStruct.builder(IntegerStruct.TWO)
+		                                        .initialContents(StringStruct.toLispString("ab"))
+		                                        .adjustable(BooleanStruct.T)
+		                                        .build();
 		struct.vectorPushExtend(CharacterConstants.DOLLAR_SIGN_CHAR);
 	}
 

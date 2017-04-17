@@ -1890,6 +1890,30 @@ public class StringStructStringTest {
 	}
 
 	/*
+	Is-Simple-String
+	 */
+
+	/**
+	 * Test for {@link StringStruct#isSimpleString()} where the string is 'simple'.
+	 */
+	@Test
+	public void test_isSimpleString_True() {
+		final StringStruct struct = StringStruct.EMPTY_STRING;
+		Assert.assertThat(struct.isSimpleString(), is(BooleanStruct.T));
+	}
+
+	/**
+	 * Test for {@link StringStruct#isSimpleString()} where the string is 'complex'.
+	 */
+	@Test
+	public void test_isSimpleString_False() {
+		final StringStruct struct = StringStruct.builder(IntegerStruct.ZERO)
+		                                        .adjustable(BooleanStruct.T)
+		                                        .build();
+		Assert.assertThat(struct.isSimpleString(), is(BooleanStruct.NIL));
+	}
+
+	/*
 	To-Java-String
 	 */
 
@@ -2151,14 +2175,7 @@ public class StringStructStringTest {
 		                                        .displacedIndexOffset(IntegerStruct.ONE)
 		                                        .build();
 
-		final BooleanStruct printEscape = PrinterVariables.PRINT_ESCAPE.getVariableValue();
-		try {
-			PrinterVariables.PRINT_ESCAPE.setValue(NILStruct.INSTANCE);
-			final String result = struct.toString();
-			Assert.assertThat(result, is(str.substring(1)));
-		} finally {
-			PrinterVariables.PRINT_ESCAPE.setValue(printEscape);
-		}
+		validateToStringWithNoEscapes(str.substring(1), struct);
 	}
 
 	/**
@@ -2172,48 +2189,76 @@ public class StringStructStringTest {
 		                                        .fillPointer(IntegerStruct.TWO)
 		                                        .build();
 
-		final BooleanStruct printEscape = PrinterVariables.PRINT_ESCAPE.getVariableValue();
-		try {
-			PrinterVariables.PRINT_ESCAPE.setValue(NILStruct.INSTANCE);
-			final String result = struct.toString();
-			Assert.assertThat(result, is(str.substring(0, 2)));
-		} finally {
-			PrinterVariables.PRINT_ESCAPE.setValue(printEscape);
-		}
+		validateToStringWithNoEscapes(str.substring(0, 2), struct);
 	}
 
 	/**
-	 * Test for {@link StringStruct#toString()} where escaping is off and the {@link StringStruct} is a simple string.
+	 * Test for {@link StringStruct#toString()} where escaping is off and the {@link StringStruct} is a 'simple' string.
 	 */
 	@Test
 	public void test_toString_Simple_NoEscape() {
 		final String str = "abc";
 		final StringStruct struct = StringStruct.toLispString(str);
 
-		final BooleanStruct printEscape = PrinterVariables.PRINT_ESCAPE.getVariableValue();
-		try {
-			PrinterVariables.PRINT_ESCAPE.setValue(NILStruct.INSTANCE);
-			final String result = struct.toString();
-			Assert.assertThat(result, is(str));
-		} finally {
-			PrinterVariables.PRINT_ESCAPE.setValue(printEscape);
-		}
+		validateToStringWithNoEscapes(str, struct);
 	}
 
 	/**
-	 * Test for {@link StringStruct#toString()} where escaping is off and the {@link StringStruct} has the {@code '\'}
-	 * and {@link '"'} characters.
+	 * Test for {@link StringStruct#toString()} where escaping is off and the {@link StringStruct} is a 'complex'
+	 * string.
+	 */
+	@Test
+	public void test_toString_Complex_NoEscape() {
+		final String str = "abc";
+		final StringStruct struct = StringStruct.builder(IntegerStructImpl.valueOf(str.length()))
+		                                        .initialContents(StringStruct.toLispString(str))
+		                                        .adjustable(BooleanStruct.T)
+		                                        .build();
+
+		validateToStringWithNoEscapes(str, struct);
+	}
+
+	/**
+	 * Test for {@link StringStruct#toString()} where escaping is off, the {@link StringStruct} has the {@code '\'} and
+	 * {@link '"'} characters, and the {@link StringStruct} is a 'simple' string.
 	 */
 	@Test
 	public void test_toString_Simple_NoEscape_WithSpecialEscapes() {
 		final String str = "a\\4*j\"p";
 		final StringStruct struct = StringStruct.toLispString(str);
 
+		validateToStringWithNoEscapes("a\\\\4*j\\\"p", struct);
+	}
+
+	/**
+	 * Test for {@link StringStruct#toString()} where escaping is off, the {@link StringStruct} has the {@code '\'} and
+	 * {@link '"'} characters, and the {@link StringStruct} is a 'complex' string.
+	 */
+	@Test
+	public void test_toString_Complex_NoEscape_WithSpecialEscapes() {
+		final String str = "a\\4*j\"p";
+		final StringStruct struct = StringStruct.builder(IntegerStructImpl.valueOf(str.length()))
+		                                        .initialContents(StringStruct.toLispString(str))
+		                                        .adjustable(BooleanStruct.T)
+		                                        .build();
+
+		validateToStringWithNoEscapes("a\\\\4*j\\\"p", struct);
+	}
+
+	/**
+	 * Validates the {@link StringStruct#toString()} method, ensuring that escaping is off and reset after the testing.
+	 *
+	 * @param str
+	 * 		the expected result {@link String} from the {@link StringStruct#toString()} invocation
+	 * @param struct
+	 * 		the {@link StringStruct} to perform the {@link StringStruct#toString()} operation on
+	 */
+	private static void validateToStringWithNoEscapes(final String str, final StringStruct struct) {
 		final BooleanStruct printEscape = PrinterVariables.PRINT_ESCAPE.getVariableValue();
 		try {
 			PrinterVariables.PRINT_ESCAPE.setValue(NILStruct.INSTANCE);
 			final String result = struct.toString();
-			Assert.assertThat(result, is("a\\\\4*j\\\"p"));
+			Assert.assertThat(result, is(str));
 		} finally {
 			PrinterVariables.PRINT_ESCAPE.setValue(printEscape);
 		}

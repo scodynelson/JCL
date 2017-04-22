@@ -88,7 +88,7 @@ public final class SimpleStringStructImpl extends AbstractStringStructImpl {
 	protected CharacterStruct charInternal(final int index) {
 		try {
 			final char character = contents.charAt(index);
-			return CharacterStructImpl.valueOf(character);
+			return CharacterStruct.toLispCharacter(character);
 		} catch (final StringIndexOutOfBoundsException ignored) {
 			// This is here for when the 'totalSize' is more than the contents.
 			// Typically will only happen with adjusted strings.
@@ -98,7 +98,7 @@ public final class SimpleStringStructImpl extends AbstractStringStructImpl {
 
 	@Override
 	protected CharacterStruct setfCharInternal(final CharacterStruct newElement, final int index) {
-		final char character = newElement.getCharacter();
+		final char character = newElement.toJavaChar();
 		contents.setCharAt(index, character);
 		return newElement;
 	}
@@ -353,7 +353,7 @@ public final class SimpleStringStructImpl extends AbstractStringStructImpl {
 			} finally {
 				current++;
 			}
-			return CharacterStructImpl.valueOf(character);
+			return CharacterStruct.toLispCharacter(character);
 		}
 	}
 

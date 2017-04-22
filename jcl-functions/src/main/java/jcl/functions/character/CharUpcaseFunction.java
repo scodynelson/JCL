@@ -27,12 +27,12 @@ public final class CharUpcaseFunction extends AbstractCharacterFunction {
 
 	/**
 	 * {@inheritDoc}
-	 * Returns {@link CharacterStruct#toUpperCase()} as a method reference function.
+	 * Returns {@link CharacterStruct#charUpcase()} as a method reference function.
 	 *
-	 * @return returns {@link CharacterStruct#toUpperCase()} as a method reference function
+	 * @return returns {@link CharacterStruct#charUpcase()} as a method reference function
 	 */
 	@Override
 	protected Function<CharacterStruct, LispStruct> characterFunction() {
-		return CharacterStruct::toUpperCase;
+		return CharacterStruct::charUpcase;
 	}
 }

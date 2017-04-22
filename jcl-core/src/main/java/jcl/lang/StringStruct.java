@@ -483,7 +483,7 @@ public interface StringStruct extends VectorStruct {
 						                               initialContents);
 
 				final StringBuilder contents = validContents.stream()
-				                                            .mapToInt(CharacterStruct::getCodePoint)
+				                                            .mapToInt(CharacterStruct::toUnicodeCodePoint)
 				                                            .collect(StringBuilder::new,
 				                                                     StringBuilder::appendCodePoint,
 				                                                     StringBuilder::append);
@@ -508,7 +508,7 @@ public interface StringStruct extends VectorStruct {
 
 			final StringBuilder contents = Stream.generate(() -> initialElement)
 			                                     .limit(sizeInt)
-			                                     .mapToInt(CharacterStruct::getCodePoint)
+			                                     .mapToInt(CharacterStruct::toUnicodeCodePoint)
 			                                     .collect(StringBuilder::new,
 			                                              StringBuilder::appendCodePoint,
 			                                              StringBuilder::append);

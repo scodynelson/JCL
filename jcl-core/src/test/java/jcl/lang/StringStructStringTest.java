@@ -5,7 +5,6 @@ import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.factory.LispStructFactory;
 import jcl.lang.internal.number.IntegerStructImpl;
 import jcl.lang.statics.CharacterConstants;
-import jcl.lang.statics.PrinterVariables;
 import jcl.type.BaseCharType;
 import jcl.type.CharacterType;
 import jcl.type.ExtendedCharType;
@@ -2175,7 +2174,7 @@ public class StringStructStringTest {
 		                                        .displacedIndexOffset(IntegerStruct.ONE)
 		                                        .build();
 
-		validateToStringWithNoEscapes(str.substring(1), struct);
+		ToStringTestUtils.validateToStringWithNoEscapes(str.substring(1), struct);
 	}
 
 	/**
@@ -2189,7 +2188,7 @@ public class StringStructStringTest {
 		                                        .fillPointer(IntegerStruct.TWO)
 		                                        .build();
 
-		validateToStringWithNoEscapes(str.substring(0, 2), struct);
+		ToStringTestUtils.validateToStringWithNoEscapes(str.substring(0, 2), struct);
 	}
 
 	/**
@@ -2200,7 +2199,7 @@ public class StringStructStringTest {
 		final String str = "abc";
 		final StringStruct struct = StringStruct.toLispString(str);
 
-		validateToStringWithNoEscapes(str, struct);
+		ToStringTestUtils.validateToStringWithNoEscapes(str, struct);
 	}
 
 	/**
@@ -2215,7 +2214,7 @@ public class StringStructStringTest {
 		                                        .adjustable(BooleanStruct.T)
 		                                        .build();
 
-		validateToStringWithNoEscapes(str, struct);
+		ToStringTestUtils.validateToStringWithNoEscapes(str, struct);
 	}
 
 	/**
@@ -2227,7 +2226,7 @@ public class StringStructStringTest {
 		final String str = "a\\4*j\"p";
 		final StringStruct struct = StringStruct.toLispString(str);
 
-		validateToStringWithNoEscapes("a\\\\4*j\\\"p", struct);
+		ToStringTestUtils.validateToStringWithNoEscapes("a\\\\4*j\\\"p", struct);
 	}
 
 	/**
@@ -2242,26 +2241,7 @@ public class StringStructStringTest {
 		                                        .adjustable(BooleanStruct.T)
 		                                        .build();
 
-		validateToStringWithNoEscapes("a\\\\4*j\\\"p", struct);
-	}
-
-	/**
-	 * Validates the {@link StringStruct#toString()} method, ensuring that escaping is off and reset after the testing.
-	 *
-	 * @param str
-	 * 		the expected result {@link String} from the {@link StringStruct#toString()} invocation
-	 * @param struct
-	 * 		the {@link StringStruct} to perform the {@link StringStruct#toString()} operation on
-	 */
-	private static void validateToStringWithNoEscapes(final String str, final StringStruct struct) {
-		final BooleanStruct printEscape = PrinterVariables.PRINT_ESCAPE.getVariableValue();
-		try {
-			PrinterVariables.PRINT_ESCAPE.setValue(NILStruct.INSTANCE);
-			final String result = struct.toString();
-			Assert.assertThat(result, is(str));
-		} finally {
-			PrinterVariables.PRINT_ESCAPE.setValue(printEscape);
-		}
+		ToStringTestUtils.validateToStringWithNoEscapes("a\\\\4*j\\\"p", struct);
 	}
 
 	/*

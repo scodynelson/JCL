@@ -4,39 +4,35 @@
 
 package jcl.functions.character;
 
-import java.util.function.Function;
-import java.util.function.Supplier;
-
-import jcl.functions.FunctionHelpers;
+import jcl.functions.CommonLispBuiltInFunctionStructBase;
 import jcl.lang.CharacterStruct;
 import jcl.lang.LispStruct;
+import jcl.lang.function.parameterdsl.Arguments;
+import jcl.lang.function.parameterdsl.Parameters;
 import org.springframework.stereotype.Component;
 
 /**
  * Function implementation for {@code name-char}.
  */
 @Component
-public final class NameCharFunction extends AbstractCharacterDesignatorFunction {
+public final class NameCharFunction extends CommonLispBuiltInFunctionStructBase {
+
+	private static final String FUNCTION_NAME = "NAME-CHAR";
 
 	/**
 	 * Public constructor passing the documentation string.
 	 */
 	public NameCharFunction() {
 		super("Returns the character object whose name is name. If such a character does not exist, nil is returned.",
-		      "NAME-CHAR"
+		      FUNCTION_NAME,
+		      Parameters.forFunction(FUNCTION_NAME)
+		                .requiredParameter("CHARACTER-DESIGNATOR")
 		);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * Creates a {@link Function} applying {@link FunctionHelpers#asNamedCharacter(LispStruct)} against a {@link
-	 * LispStruct} parameter.
-	 *
-	 * @return a {@link Function} applying {@link FunctionHelpers#asNamedCharacter(LispStruct)} against a {@link
-	 * LispStruct}
-	 */
 	@Override
-	protected Function<LispStruct, Supplier<CharacterStruct>> characterFunction() {
-		return lispStruct -> () -> FunctionHelpers.asNamedCharacter(lispStruct);
+	public LispStruct apply(final Arguments arguments) {
+		final LispStruct characterDesignator = arguments.getRequiredArgument("CHARACTER-DESIGNATOR");
+		return CharacterStruct.nameChar(characterDesignator);
 	}
 }

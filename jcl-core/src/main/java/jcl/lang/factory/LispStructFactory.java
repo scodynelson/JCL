@@ -22,7 +22,6 @@ import jcl.lang.BitVectorStruct;
 import jcl.lang.BooleanStruct;
 import jcl.lang.BroadcastStreamStruct;
 import jcl.lang.CharacterNativeStreamStruct;
-import jcl.lang.CharacterStruct;
 import jcl.lang.ComplexStruct;
 import jcl.lang.ConcatenatedStreamStruct;
 import jcl.lang.ConsStruct;
@@ -49,7 +48,6 @@ import jcl.lang.ReadtableStruct;
 import jcl.lang.RealStruct;
 import jcl.lang.StringInputStreamStruct;
 import jcl.lang.StringOutputStreamStruct;
-import jcl.lang.StringStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.SynonymStreamStruct;
 import jcl.lang.TStruct;
@@ -58,7 +56,6 @@ import jcl.lang.URLStreamStruct;
 import jcl.lang.VectorStruct;
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.internal.BitVectorStructImpl;
-import jcl.lang.internal.CharacterStructImpl;
 import jcl.lang.internal.ConsStructImpl;
 import jcl.lang.internal.HashTableStructImpl;
 import jcl.lang.internal.KeywordStructImpl;
@@ -176,34 +173,6 @@ public final class LispStructFactory {
 	public static BroadcastStreamStruct toBroadcastStream(final boolean interactive,
 	                                                      final Deque<OutputStreamStruct> outputStreamStructs) {
 		return BroadcastStreamStructImpl.valueOf(interactive, outputStreamStructs);
-	}
-
-	/*
-	 * Character
-	 */
-
-	/**
-	 * Returns a CharacterStruct object with the provided {@code character} value.
-	 *
-	 * @param character
-	 * 		the character value used to derive the {@link CharacterStruct#getCodePoint()} of the resulting CharacterStruct
-	 *
-	 * @return a CharacterStruct object with the provided {@code character} value
-	 */
-	public static CharacterStruct toCharacter(final Character character) {
-		return CharacterStructImpl.valueOf(character);
-	}
-
-	/**
-	 * Returns a CharacterStruct object with the provided {@code codePoint} value.
-	 *
-	 * @param codePoint
-	 * 		the {@link CharacterStruct#getCodePoint()} value of the resulting CharacterStruct
-	 *
-	 * @return a CharacterStruct object with the provided {@code codePoint} value
-	 */
-	public static CharacterStruct toCharacter(final Integer codePoint) {
-		return CharacterStructImpl.valueOf(codePoint);
 	}
 
 	/*
@@ -777,14 +746,6 @@ public final class LispStructFactory {
 
 	public static ReadtableStruct toReadtable(final ReadtableCase readtableCase) {
 		return ReadtableStructImpl.valueOf(readtableCase);
-	}
-
-	/*
-	 * String
-	 */
-
-	public static StringStruct toString(final String stringValue) {
-		return StringStruct.toLispString(stringValue);
 	}
 
 	/*

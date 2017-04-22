@@ -227,7 +227,7 @@ public abstract class AbstractStringStructImpl extends AbstractVectorStructImpl 
 		final String stripChars
 				= characterBag.stream()
 				              .map(CharacterStruct.class::cast)
-				              .map(CharacterStruct::getCodePoint)
+				              .map(CharacterStruct::toUnicodeCodePoint)
 				              .collect(StringBuilder::new,
 				                       StringBuilder::appendCodePoint,
 				                       StringBuilder::append)
@@ -633,7 +633,7 @@ public abstract class AbstractStringStructImpl extends AbstractVectorStructImpl 
 			newContents.ensureCapacity(newTotalSizeInt);
 			for (int i = oldTotalSize; i < newTotalSizeInt; i++) {
 				if (newElement != null) {
-					final int codePoint = ((CharacterStruct) newElement).getCodePoint();
+					final int codePoint = ((CharacterStruct) newElement).toUnicodeCodePoint();
 					newContents.appendCodePoint(codePoint);
 				}
 			}

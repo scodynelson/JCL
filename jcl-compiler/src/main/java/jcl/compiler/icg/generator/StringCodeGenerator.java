@@ -46,9 +46,9 @@ final class StringCodeGenerator implements CodeGenerator<SimpleStringStructImpl>
 		final String javaString = input.toJavaString();
 		mv.visitLdcInsn(javaString);
 		mv.visitMethodInsn(Opcodes.INVOKESTATIC,
-		                   GenerationConstants.LISP_STRUCT_FACTORY_NAME,
-		                   GenerationConstants.LISP_STRUCT_FACTORY_TO_STRING_METHOD_NAME,
-		                   GenerationConstants.LISP_STRUCT_FACTORY_TO_STRING_METHOD_DESC,
+		                   GenerationConstants.STRING_STRUCT_NAME,
+		                   GenerationConstants.STRING_STRUCT_TO_LISP_STRING_METHOD_NAME,
+		                   GenerationConstants.STRING_STRUCT_TO_LISP_STRING_METHOD_DESC,
 		                   false);
 	}
 }

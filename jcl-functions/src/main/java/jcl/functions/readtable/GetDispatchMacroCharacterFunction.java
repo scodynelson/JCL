@@ -37,6 +37,6 @@ public final class GetDispatchMacroCharacterFunction extends CommonLispBuiltInFu
 		final CharacterStruct subChar = arguments.getRequiredArgument(SUB_CHAR_ARGUMENT, CharacterStruct.class);
 		final ReadtableStruct readtable = arguments.getOptionalArgument(READTABLE_ARGUMENT, ReadtableStruct.class);
 
-		return readtable.getDispatchMacroCharacter(dispatchChar.getCodePoint(), subChar.getCodePoint());
+		return readtable.getDispatchMacroCharacter(dispatchChar.toUnicodeCodePoint(), subChar.toUnicodeCodePoint());
 	}
 }

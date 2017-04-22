@@ -4,8 +4,9 @@
 
 package jcl.functions.character;
 
-import java.util.function.Predicate;
+import java.util.function.Function;
 
+import jcl.lang.BooleanStruct;
 import jcl.lang.CharacterStruct;
 import org.springframework.stereotype.Component;
 
@@ -33,7 +34,7 @@ public final class CharNotGreaterpFunction extends AbstractCharacterEqualityFunc
 	 * function
 	 */
 	@Override
-	protected Predicate<CharacterStruct[]> characterEqualityPredicate() {
+	protected Function<CharacterStruct[], BooleanStruct> characterEqualityPredicate() {
 		return CharacterStruct::isLessThanOrEqualToIgnoreCase;
 	}
 }

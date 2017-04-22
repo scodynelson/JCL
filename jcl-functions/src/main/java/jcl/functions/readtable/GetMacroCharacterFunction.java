@@ -34,6 +34,6 @@ public final class GetMacroCharacterFunction extends CommonLispBuiltInFunctionSt
 		final CharacterStruct character = arguments.getRequiredArgument(CHAR_ARGUMENT, CharacterStruct.class);
 		final ReadtableStruct readtable = arguments.getOptionalArgument(READTABLE_ARGUMENT, ReadtableStruct.class);
 
-		return readtable.getMacroCharacter(character.getCodePoint());
+		return readtable.getMacroCharacter(character.toUnicodeCodePoint());
 	}
 }

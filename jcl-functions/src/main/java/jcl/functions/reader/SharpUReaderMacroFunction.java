@@ -7,11 +7,11 @@ package jcl.functions.reader;
 import java.math.BigInteger;
 import java.util.Optional;
 
+import jcl.lang.CharacterStruct;
 import jcl.lang.InputStreamStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.NILStruct;
 import jcl.lang.ReadtableStruct;
-import jcl.lang.factory.LispStructFactory;
 import jcl.lang.statics.ReaderVariables;
 import jcl.util.CodePointConstants;
 import org.springframework.context.annotation.DependsOn;
@@ -45,6 +45,6 @@ public class SharpUReaderMacroFunction extends ReaderMacroFunctionImpl {
 		}
 
 		final int unicodeCodePoint = UnicodeCharacterReaderMacroFunction.readUnicodeCharacter(inputStreamStruct);
-		return LispStructFactory.toCharacter(unicodeCodePoint);
+		return CharacterStruct.toLispCharacter(unicodeCodePoint);
 	}
 }

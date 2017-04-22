@@ -34,7 +34,7 @@ public final class WriteCharFunction extends CommonLispBuiltInFunctionStructBase
 		final CharacterStruct character = arguments.getRequiredArgument(CHARACTER_ARGUMENT, CharacterStruct.class);
 		final OutputStreamStruct outputStreamStruct = arguments.getOptionalArgument(OUTPUT_STREAM_ARGUMENT, OutputStreamStruct.class);
 
-		outputStreamStruct.writeChar(character.getCodePoint());
+		outputStreamStruct.writeChar(character.toUnicodeCodePoint());
 		return character;
 	}
 }

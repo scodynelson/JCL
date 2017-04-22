@@ -48,7 +48,10 @@ public final class DigitCharPFunction extends CommonLispBuiltInFunctionStructBas
 	@Override
 	public LispStruct apply(final Arguments arguments) {
 		final CharacterStruct character = arguments.getRequiredArgument("CHARACTER", CharacterStruct.class);
-		final IntegerStruct radix = arguments.getRequiredArgument("RADIX", IntegerStruct.class);
-		return character.charDigit(radix);
+		if (arguments.hasOptionalArgument("RADIX")) {
+			final IntegerStruct radix = arguments.getRequiredArgument("RADIX", IntegerStruct.class);
+			return character.charDigit(radix);
+		}
+		return character.charDigit();
 	}
 }

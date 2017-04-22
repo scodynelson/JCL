@@ -34,7 +34,7 @@ public final class UnreadCharFunction extends CommonLispBuiltInFunctionStructBas
 		final CharacterStruct character = arguments.getRequiredArgument(CHARACTER_ARGUMENT, CharacterStruct.class);
 		final InputStreamStruct inputStreamStruct = arguments.getOptionalArgument(INPUT_STREAM_ARGUMENT, InputStreamStruct.class);
 
-		inputStreamStruct.unreadChar(character.getCodePoint());
+		inputStreamStruct.unreadChar(character.toUnicodeCodePoint());
 		return character;
 	}
 }

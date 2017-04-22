@@ -5,14 +5,14 @@
 package jcl.functions.character;
 
 import java.util.List;
+import java.util.function.Function;
 import java.util.function.Predicate;
 
 import jcl.functions.CommonLispBuiltInFunctionStructBase;
+import jcl.lang.BooleanStruct;
 import jcl.lang.CharacterStruct;
 import jcl.lang.FunctionStruct;
 import jcl.lang.LispStruct;
-import jcl.lang.NILStruct;
-import jcl.lang.TStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 
@@ -54,7 +54,7 @@ abstract class AbstractCharacterEqualityFunction extends CommonLispBuiltInFuncti
 			characterArray[i] = characters.get(i - 1);
 		}
 
-		return characterEqualityPredicate().test(characterArray) ? TStruct.INSTANCE : NILStruct.INSTANCE;
+		return characterEqualityPredicate().apply(characterArray);
 	}
 
 	/**
@@ -62,5 +62,5 @@ abstract class AbstractCharacterEqualityFunction extends CommonLispBuiltInFuncti
 	 *
 	 * @return returns a {@link Predicate} that consumes a {@link CharacterStruct[]}
 	 */
-	protected abstract Predicate<CharacterStruct[]> characterEqualityPredicate();
+	protected abstract Function<CharacterStruct[], BooleanStruct> characterEqualityPredicate();
 }

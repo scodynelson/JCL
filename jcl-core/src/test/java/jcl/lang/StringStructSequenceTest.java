@@ -784,7 +784,7 @@ public class StringStructSequenceTest {
 	 */
 	private static void populateBuilder(final StringBuilder resultBuilder, final LispStruct element) {
 		if (element instanceof CharacterStruct) {
-			resultBuilder.appendCodePoint(((CharacterStruct) element).getCodePoint());
+			resultBuilder.appendCodePoint(((CharacterStruct) element).toUnicodeCodePoint());
 		} else {
 			Assert.fail("Element returned from 'iterator.next()' not a CharacterStruct: " + element);
 		}

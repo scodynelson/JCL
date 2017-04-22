@@ -55,7 +55,7 @@ public abstract class ReaderMacroFunctionImpl extends SystemBuiltInFunctionStruc
 		final InputStreamStruct inputStream = arguments.getRequiredArgument(INPUT_STREAM_ARGUMENT, InputStreamStruct.class);
 
 		final CharacterStruct macroCharacter = arguments.getRequiredArgument(MACRO_CHARACTER_ARGUMENT, CharacterStruct.class);
-		final int codePoint = macroCharacter.getCodePoint();
+		final int codePoint = macroCharacter.toUnicodeCodePoint();
 
 		Optional<BigInteger> numberArgument = Optional.empty();
 		if (arguments.hasOptionalArgument(N_ARGUMENT)) {

@@ -12,7 +12,6 @@ import jcl.lang.LispStruct;
 import jcl.lang.NILStruct;
 import jcl.lang.TStruct;
 import jcl.lang.condition.exception.TypeErrorException;
-import jcl.lang.factory.LispStructFactory;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.statics.StreamVariables;
@@ -53,7 +52,7 @@ public final class PeekCharFunction extends CommonLispBuiltInFunctionStructBase 
 			peekType = PeekType.NIL_PEEK_TYPE;
 		} else if (lispStruct1 instanceof CharacterStruct) {
 			final CharacterStruct character = (CharacterStruct) lispStruct1;
-			peekType = PeekType.getCharacterPeekType(character.getCodePoint());
+			peekType = PeekType.getCharacterPeekType(character.toUnicodeCodePoint());
 		} else {
 			throw new TypeErrorException("UNCAUGHT TYPE ERROR.");
 		}
@@ -75,6 +74,6 @@ public final class PeekCharFunction extends CommonLispBuiltInFunctionStructBase 
 		final BooleanStruct recursiveP = arguments.getOptionalArgument(RECURSIVE_P_ARGUMENT, BooleanStruct.class);
 
 		final ReadPeekResult readPeekResult = inputStreamStruct.peekChar(peekType, eofErrorP.booleanValue(), eofValue, recursiveP.booleanValue());
-		return readPeekResult.isEof() ? eofValue : LispStructFactory.toCharacter(readPeekResult.getResult());
+		return readPeekResult.isEof() ? eofValue : CharacterStruct.toLispCharacter(readPeekResult.getResult());
 	}
 }

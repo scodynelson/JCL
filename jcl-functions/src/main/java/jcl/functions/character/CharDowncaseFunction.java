@@ -27,12 +27,12 @@ public final class CharDowncaseFunction extends AbstractCharacterFunction {
 
 	/**
 	 * {@inheritDoc}
-	 * Returns {@link CharacterStruct#toLowerCase()} as a method reference function.
+	 * Returns {@link CharacterStruct#charDowncase()} as a method reference function.
 	 *
-	 * @return returns {@link CharacterStruct#toLowerCase()} as a method reference function
+	 * @return returns {@link CharacterStruct#charDowncase()} as a method reference function
 	 */
 	@Override
 	protected Function<CharacterStruct, LispStruct> characterFunction() {
-		return CharacterStruct::toLowerCase;
+		return CharacterStruct::charDowncase;
 	}
 }

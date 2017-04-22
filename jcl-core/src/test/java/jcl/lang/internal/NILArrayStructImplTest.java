@@ -404,7 +404,7 @@ public class NILArrayStructImplTest {
 				= NILArrayStructImpl.valueOf(BitType.INSTANCE,
 				                             initialElement);
 
-		final CharacterStruct newElement = CharacterStructImpl.valueOf('a');
+		final CharacterStruct newElement = CharacterStruct.toLispCharacter('a');
 		array.adjustArray(Collections.emptyList(),
 		                  BitType.INSTANCE,
 		                  newElement,
@@ -557,7 +557,7 @@ public class NILArrayStructImplTest {
 		final ArrayStruct array
 				= NILArrayStructImpl.valueOf(BitType.INSTANCE,
 				                             initialElement);
-		final SequenceStruct newContents = LispStructFactory.toProperList(CharacterStructImpl.valueOf('a'));
+		final SequenceStruct newContents = LispStructFactory.toProperList(CharacterStruct.toLispCharacter('a'));
 		array.adjustArray(Collections.emptyList(),
 		                  BitType.INSTANCE,
 		                  newContents,

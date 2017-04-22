@@ -8,8 +8,6 @@ import jcl.functions.CommonLispBuiltInFunctionStructBase;
 import jcl.lang.CharacterStruct;
 import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
-import jcl.lang.NILStruct;
-import jcl.lang.factory.LispStructFactory;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import org.springframework.stereotype.Component;
@@ -51,17 +49,11 @@ public final class DigitCharFunction extends CommonLispBuiltInFunctionStructBase
 	@Override
 	public LispStruct apply(final Arguments arguments) {
 		final IntegerStruct weight = arguments.getRequiredArgument("WEIGHT", IntegerStruct.class);
-		final IntegerStruct radix = arguments.getRequiredArgument("RADIX", IntegerStruct.class);
+		if (arguments.hasOptionalArgument("RADIX")) {
+			final IntegerStruct radix = arguments.getOptionalArgument("RADIX", IntegerStruct.class);
+			return CharacterStruct.digitChar(weight, radix);
 
-		final int weightInt = weight.intValue();
-		final int radixInt = radix.intValue();
-
-		final Character digit = Character.forDigit(weightInt, radixInt);
-		if (digit == '\0') {
-			return NILStruct.INSTANCE;
 		}
-
-		final Character result = Character.toUpperCase(digit);
-		return LispStructFactory.toCharacter((int) result);
+		return CharacterStruct.digitChar(weight);
 	}
 }

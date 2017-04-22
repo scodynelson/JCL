@@ -44,7 +44,7 @@ public final class SetMacroCharacterFunction extends CommonLispBuiltInFunctionSt
 		final BooleanStruct nonTerminatingP = arguments.getOptionalArgument(NON_TERMINATING_P_ARGUMENT, BooleanStruct.class);
 		final ReadtableStruct readtable = arguments.getOptionalArgument(READTABLE_ARGUMENT, ReadtableStruct.class);
 
-		readtable.setMacroCharacter(character.getCodePoint(), newFunction, nonTerminatingP.booleanValue());
+		readtable.setMacroCharacter(character.toUnicodeCodePoint(), newFunction, nonTerminatingP.booleanValue());
 		return TStruct.INSTANCE;
 	}
 }

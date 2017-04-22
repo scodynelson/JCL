@@ -28,7 +28,6 @@ allprojects {
 	ext.commonsCollectionsVersion = "4.1"
 	ext.icu4jVersion = "58.2"
 	ext.javaHelpVersion = "2.0.05"
-	ext.javasLangVersion = "2.0.6"
 }
 
 subprojects {
@@ -150,8 +149,9 @@ project("jcl-core") {
 	description = "JCL Core"
 
 	dependencies {
+		compile("com.ibm.icu:icu4j:${icu4jVersion}")
 		compile("commons-io:commons-io")
-		compile("io.javaslang:javaslang:${javasLangVersion}")
+		compile("io.javaslang:javaslang")
 		compile("org.apache.commons:commons-lang3")
 		compile("org.apache.commons:commons-math3:${commonsMathVersion}")
 		compile("org.apache.commons:commons-collections4:${commonsCollectionsVersion}")
@@ -203,7 +203,6 @@ project("jcl-functions") {
 		compile(project(":jcl-compiler"))
 		compile(project(":jcl-reader"))
 
-		compile("com.ibm.icu:icu4j:${icu4jVersion}")
 		compile("commons-io:commons-io")
 		compile("javax.help:javahelp:${javaHelpVersion}")
 		compile("org.apache.commons:commons-collections4:${commonsCollectionsVersion}")

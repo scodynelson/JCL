@@ -16,7 +16,7 @@ import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 /**
- * Class to generate {@link CharacterStruct} objects dynamically by utilizing the {@link CharacterStruct#getCodePoint()} of
+ * Class to generate {@link CharacterStruct} objects dynamically by utilizing the {@link CharacterStruct#toUnicodeCodePoint()} of
  * the provided {@link CharacterStruct} input value.
  */
 @Component
@@ -26,7 +26,7 @@ final class CharacterCodeGenerator implements CodeGenerator<CharacterStructImpl>
 	 * {@inheritDoc}
 	 * Generation method for {@link CharacterStruct} objects, by performing the following operations:
 	 * <ol>
-	 * <li>Loading the {@link CharacterStruct#getCodePoint()} constant</li>
+	 * <li>Loading the {@link CharacterStruct#toUnicodeCodePoint()} constant</li>
 	 * <li>Retrieving a {@link CharacterStruct} with the loaded code point value</li>
 	 * </ol>
 	 *
@@ -43,7 +43,7 @@ final class CharacterCodeGenerator implements CodeGenerator<CharacterStructImpl>
 		final JavaMethodBuilder methodBuilder = generatorState.getCurrentMethodBuilder();
 		final MethodVisitor mv = methodBuilder.getMethodVisitor();
 
-		final int codePoint = input.getCodePoint();
+		final int codePoint = input.toUnicodeCodePoint();
 		mv.visitLdcInsn(codePoint);
 		mv.visitMethodInsn(Opcodes.INVOKESTATIC,
 		                   GenerationConstants.JAVA_INTEGER_NAME,
@@ -51,9 +51,9 @@ final class CharacterCodeGenerator implements CodeGenerator<CharacterStructImpl>
 		                   GenerationConstants.JAVA_INTEGER_VALUE_OF_METHOD_DESC,
 		                   false);
 		mv.visitMethodInsn(Opcodes.INVOKESTATIC,
-		                   GenerationConstants.LISP_STRUCT_FACTORY_NAME,
-		                   GenerationConstants.LISP_STRUCT_FACTORY_TO_CHARACTER_METHOD_NAME,
-		                   GenerationConstants.LISP_STRUCT_FACTORY_TO_CHARACTER_METHOD_DESC,
+		                   GenerationConstants.CHARACTER_STRUCT_NAME,
+		                   GenerationConstants.CHARACTER_STRUCT_TO_LISP_CHARACTER_METHOD_NAME,
+		                   GenerationConstants.CHARACTER_STRUCT_TO_LISP_CHARACTER_METHOD_DESC,
 		                   false);
 	}
 }

@@ -39,7 +39,7 @@ public class ReadDispatchCharacterFunction extends SystemBuiltInFunctionStructBa
 	public LispStruct apply(final Arguments arguments) {
 		final InputStreamStruct inputStream = arguments.getRequiredArgument(INPUT_STREAM_ARGUMENT, InputStreamStruct.class);
 		final CharacterStruct character = arguments.getRequiredArgument(DISPATCH_CHAR_ARGUMENT, CharacterStruct.class);
-		final int dispatchCodePoint = character.getCodePoint();
+		final int dispatchCodePoint = character.toUnicodeCodePoint();
 
 		ReadPeekResult readResult = inputStream.readChar(false, null, false);
 		int codePoint = readResult.getResult();
@@ -74,13 +74,13 @@ public class ReadDispatchCharacterFunction extends SystemBuiltInFunctionStructBa
 		if (numberArgument == null) {
 			return macroFunction.apply(
 					inputStream,
-					LispStructFactory.toCharacter(subCodePoint),
+					CharacterStruct.toLispCharacter(subCodePoint),
 					NILStruct.INSTANCE
 			);
 		} else {
 			return macroFunction.apply(
 					inputStream,
-					LispStructFactory.toCharacter(subCodePoint),
+					CharacterStruct.toLispCharacter(subCodePoint),
 					LispStructFactory.toInteger(numberArgument)
 			);
 		}

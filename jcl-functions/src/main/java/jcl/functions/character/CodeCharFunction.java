@@ -8,8 +8,6 @@ import jcl.functions.CommonLispBuiltInFunctionStructBase;
 import jcl.lang.CharacterStruct;
 import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
-import jcl.lang.NILStruct;
-import jcl.lang.factory.LispStructFactory;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import org.springframework.stereotype.Component;
@@ -46,10 +44,6 @@ public final class CodeCharFunction extends CommonLispBuiltInFunctionStructBase 
 	@Override
 	public LispStruct apply(final Arguments arguments) {
 		final IntegerStruct code = arguments.getRequiredArgument("CODE", IntegerStruct.class);
-		final int codeValue = code.intValue();
-		if (!Character.isDefined(codeValue)) {
-			return NILStruct.INSTANCE;
-		}
-		return LispStructFactory.toCharacter(codeValue);
+		return CharacterStruct.codeChar(code);
 	}
 }

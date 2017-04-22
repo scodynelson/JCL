@@ -42,7 +42,7 @@ public final class SetDispatchMacroCharacterFunction extends CommonLispBuiltInFu
 		final FunctionStruct newFunction = arguments.getRequiredArgument(NEW_FUNCTION_ARGUMENT, FunctionStruct.class);
 		final ReadtableStruct readtable = arguments.getOptionalArgument(READTABLE_ARGUMENT, ReadtableStruct.class);
 
-		readtable.setDispatchMacroCharacter(dispatchChar.getCodePoint(), subChar.getCodePoint(), newFunction);
+		readtable.setDispatchMacroCharacter(dispatchChar.toUnicodeCodePoint(), subChar.toUnicodeCodePoint(), newFunction);
 		return TStruct.INSTANCE;
 	}
 }

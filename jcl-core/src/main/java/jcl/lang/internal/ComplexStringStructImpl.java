@@ -139,7 +139,7 @@ public final class ComplexStringStructImpl extends AbstractStringStructImpl {
 		if (displacedTo == null) {
 			try {
 				final char character = contents.charAt(index);
-				return CharacterStructImpl.valueOf(character);
+				return CharacterStruct.toLispCharacter(character);
 			} catch (final StringIndexOutOfBoundsException ignored) {
 				// This is here for when the 'totalSize' is more than the contents.
 				// Typically will only happen with adjusted strings.
@@ -154,7 +154,7 @@ public final class ComplexStringStructImpl extends AbstractStringStructImpl {
 	@Override
 	protected CharacterStruct setfCharInternal(final CharacterStruct newElement, final int index) {
 		if (displacedTo == null) {
-			final char character = newElement.getCharacter();
+			final char character = newElement.toJavaChar();
 			contents.setCharAt(index, character);
 		} else {
 			final IntegerStruct indexToSet = IntegerStructImpl.valueOf(displacedIndexOffset + index);
@@ -190,7 +190,7 @@ public final class ComplexStringStructImpl extends AbstractStringStructImpl {
 			for (int index = startInt; index < endInt; index++) {
 				final IntegerStruct indexToGet = IntegerStructImpl.valueOf(displacedIndexOffset + index);
 				final CharacterStruct character = (CharacterStruct) displacedTo.rowMajorAref(indexToGet);
-				builder.appendCodePoint(character.getCodePoint());
+				builder.appendCodePoint(character.toUnicodeCodePoint());
 			}
 
 			String str = builder.toString();
@@ -201,7 +201,7 @@ public final class ComplexStringStructImpl extends AbstractStringStructImpl {
 			     updateIndex++, stringIndex++) {
 				final IntegerStruct indexToSet = IntegerStructImpl.valueOf(displacedIndexOffset + updateIndex);
 				final char c = str.charAt(stringIndex);
-				final CharacterStruct character = CharacterStructImpl.valueOf(c);
+				final CharacterStruct character = CharacterStruct.toLispCharacter(c);
 				displacedTo.setfRowMajorAref(character, indexToSet);
 			}
 		}
@@ -245,7 +245,7 @@ public final class ComplexStringStructImpl extends AbstractStringStructImpl {
 		for (int index = 0; index < size; index++) {
 			final IntegerStruct indexToGet = IntegerStructImpl.valueOf(displacedIndexOffset + index);
 			final CharacterStruct character = (CharacterStruct) displacedTo.rowMajorAref(indexToGet);
-			builder.appendCodePoint(character.getCodePoint());
+			builder.appendCodePoint(character.toUnicodeCodePoint());
 		}
 		return builder.toString();
 	}
@@ -410,7 +410,7 @@ public final class ComplexStringStructImpl extends AbstractStringStructImpl {
 					                               upgradedET,
 					                               newInitialContents);
 			contents = validContents.stream()
-			                        .mapToInt(CharacterStruct::getCodePoint)
+			                        .mapToInt(CharacterStruct::toUnicodeCodePoint)
 			                        .collect(StringBuilder::new,
 			                                 StringBuilder::appendCodePoint,
 			                                 StringBuilder::append);
@@ -549,7 +549,7 @@ public final class ComplexStringStructImpl extends AbstractStringStructImpl {
 			for (int index = 0; index < reversedContent.length(); index++) {
 				final IntegerStruct indexToSet = IntegerStructImpl.valueOf(displacedIndexOffset + index);
 				final char c = reversedContent.charAt(index);
-				final CharacterStruct character = CharacterStructImpl.valueOf(c);
+				final CharacterStruct character = CharacterStruct.toLispCharacter(c);
 				displacedTo.setfRowMajorAref(character, indexToSet);
 			}
 		} else if (fillPointer == null) {
@@ -632,7 +632,7 @@ public final class ComplexStringStructImpl extends AbstractStringStructImpl {
 			} finally {
 				current++;
 			}
-			return CharacterStructImpl.valueOf(character);
+			return CharacterStruct.toLispCharacter(character);
 		}
 	}
 

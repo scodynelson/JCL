@@ -4,22 +4,21 @@
 
 package jcl.lang.internal;
 
-import java.math.BigInteger;
-import java.util.Map;
-
+import jcl.lang.BooleanStruct;
 import jcl.lang.CharacterStruct;
 import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.NILStruct;
 import jcl.lang.StringStruct;
 import jcl.lang.classes.BuiltInClassStruct;
+import jcl.lang.factory.LispStructFactory;
 import jcl.lang.internal.number.IntegerStructImpl;
-import jcl.lang.statics.CharacterConstants;
 import jcl.lang.statics.PrinterVariables;
 import jcl.type.BaseCharType;
 import jcl.type.CharacterType;
 import jcl.type.ExtendedCharType;
 import jcl.type.StandardCharType;
+import jcl.util.CodePointConstants;
 import org.apache.commons.lang3.CharUtils;
 
 /**
@@ -30,35 +29,35 @@ public final class CharacterStructImpl extends BuiltInClassStruct implements Cha
 	/**
 	 * The code point of the character.
 	 */
-	private final Integer codePoint;
+	private final int codePoint;
 
 	/**
-	 * Protected constructor.
+	 * Public constructor.
 	 *
 	 * @param codePoint
 	 * 		the character {@link #codePoint} value
 	 */
-	private CharacterStructImpl(final int codePoint) {
+	public CharacterStructImpl(final int codePoint) {
 		super(getCharacterType(codePoint), null, null);
 		this.codePoint = codePoint;
 	}
 
 	/**
-	 * This method gets the character type from the provide {@code characterCodePoint}.
+	 * This method gets the character type from the provide {@code codePoint}.
 	 *
-	 * @param characterCodePoint
-	 * 		the character {@link #codePoint} value
+	 * @param codePoint
+	 * 		the character value
 	 *
-	 * @return the matching character type for the provided {@code characterCodePoint}
+	 * @return the matching character type for the provided {@code codePoint}
 	 */
-	private static CharacterType getCharacterType(final int characterCodePoint) {
+	private static CharacterType getCharacterType(final int codePoint) {
 		final CharacterType characterType;
 
-		if (CharUtils.isAsciiControl((char) characterCodePoint) && (characterCodePoint != CharUtils.LF)) {
+		if (CharUtils.isAsciiControl((char) codePoint) && (codePoint != CharUtils.LF)) {
 			characterType = BaseCharType.INSTANCE;
-		} else if (CharUtils.isAscii((char) characterCodePoint)) {
+		} else if (CharUtils.isAscii((char) codePoint)) {
 			characterType = StandardCharType.INSTANCE;
-		} else if (Character.isDefined(characterCodePoint)) {
+		} else if (Character.isDefined(codePoint)) {
 			characterType = ExtendedCharType.INSTANCE;
 		} else {
 			characterType = CharacterType.INSTANCE;
@@ -67,158 +66,121 @@ public final class CharacterStructImpl extends BuiltInClassStruct implements Cha
 		return characterType;
 	}
 
-	/**
-	 * Returns a CharacterStruct object with the provided {@code character} value.
-	 *
-	 * @param character
-	 * 		the character value used to derive the {@link #codePoint} of the resulting CharacterStruct
-	 *
-	 * @return a CharacterStruct object with the provided {@code character} value
-	 */
-	public static CharacterStruct valueOf(final Character character) {
-		return valueOf((int) character);
-	}
-
-	/**
-	 * Returns a CharacterStruct object with the provided {@code codePoint} value.
-	 *
-	 * @param codePoint
-	 * 		the {@link #codePoint} value of the resulting CharacterStruct
-	 *
-	 * @return a CharacterStruct object with the provided {@code codePoint} value
-	 */
-	public static CharacterStruct valueOf(final Integer codePoint) {
-		final Map<Integer, CharacterStruct> standardCharMap = CharacterConstants.STANDARD_CHAR_MAP;
-		if (standardCharMap == null) {
-			// This will occur on the initial load only.
-			return new CharacterStructImpl(codePoint);
-		}
-
-		final CharacterStruct possibleStandardChar = CharacterConstants.STANDARD_CHAR_MAP.get(codePoint);
-		if (possibleStandardChar != null) {
-			return possibleStandardChar;
-		}
-		return new CharacterStructImpl(codePoint);
-	}
-
-	@Override
-	public int getCodePoint() {
-		return codePoint;
-	}
-
-	@Override
-	public Character getCharacter() {
-		return (char) codePoint.intValue();
-	}
-
 	@Override
 	public boolean isEqualTo(final CharacterStruct character) {
-		return codePoint.compareTo(character.getCodePoint()) == 0;
+		return Character.compare((char) codePoint, character.toJavaChar()) == 0;
 	}
 
 	@Override
 	public boolean isNotEqualTo(final CharacterStruct character) {
-		return codePoint.compareTo(character.getCodePoint()) != 0;
+		return Character.compare((char) codePoint, character.toJavaChar()) != 0;
 	}
 
 	@Override
 	public boolean isLessThan(final CharacterStruct character) {
-		return codePoint.compareTo(character.getCodePoint()) < 0;
+		return Character.compare((char) codePoint, character.toJavaChar()) < 0;
 	}
 
 	@Override
 	public boolean isGreaterThan(final CharacterStruct character) {
-		return codePoint.compareTo(character.getCodePoint()) > 0;
+		return Character.compare((char) codePoint, character.toJavaChar()) > 0;
 	}
 
 	@Override
 	public boolean isLessThanOrEqualTo(final CharacterStruct character) {
-		return codePoint.compareTo(character.getCodePoint()) <= 0;
+		return Character.compare((char) codePoint, character.toJavaChar()) <= 0;
 	}
 
 	@Override
 	public boolean isGreaterThanOrEqualTo(final CharacterStruct character) {
-		return codePoint.compareTo(character.getCodePoint()) >= 0;
+		return Character.compare((char) codePoint, character.toJavaChar()) >= 0;
 	}
 
 	@Override
 	public boolean isEqualToIgnoreCase(final CharacterStruct character) {
-		return Character.toLowerCase(codePoint) == Character.toLowerCase(character.getCodePoint());
+		return Character.toLowerCase(codePoint) == Character.toLowerCase(character.toUnicodeCodePoint());
 	}
 
 	@Override
 	public boolean isNotEqualToIgnoreCase(final CharacterStruct character) {
-		return Character.toLowerCase(codePoint) != Character.toLowerCase(character.getCodePoint());
+		return Character.toLowerCase(codePoint) != Character.toLowerCase(character.toUnicodeCodePoint());
 	}
 
 	@Override
 	public boolean isLessThanIgnoreCase(final CharacterStruct character) {
-		return Character.toLowerCase(codePoint) < Character.toLowerCase(character.getCodePoint());
+		return Character.toLowerCase(codePoint) < Character.toLowerCase(character.toUnicodeCodePoint());
 	}
 
 	@Override
 	public boolean isGreaterThanIgnoreCase(final CharacterStruct character) {
-		return Character.toLowerCase(codePoint) > Character.toLowerCase(character.getCodePoint());
+		return Character.toLowerCase(codePoint) > Character.toLowerCase(character.toUnicodeCodePoint());
 	}
 
 	@Override
 	public boolean isLessThanOrEqualToIgnoreCase(final CharacterStruct character) {
-		return Character.toLowerCase(codePoint) <= Character.toLowerCase(character.getCodePoint());
+		return Character.toLowerCase(codePoint) <= Character.toLowerCase(character.toUnicodeCodePoint());
 	}
 
 	@Override
 	public boolean isGreaterThanOrEqualToIgnoreCase(final CharacterStruct character) {
-		return Character.toLowerCase(codePoint) >= Character.toLowerCase(character.getCodePoint());
+		return Character.toLowerCase(codePoint) >= Character.toLowerCase(character.toUnicodeCodePoint());
 	}
 
 	@Override
-	public boolean isAlphaChar() {
-		return Character.isLetter(codePoint);
+	public BooleanStruct isAlphaChar() {
+		return LispStructFactory.toBoolean(Character.isLetter(codePoint));
 	}
 
 	@Override
-	public boolean isAlphanumeric() {
-		return Character.isLetterOrDigit(codePoint);
+	public BooleanStruct isAlphanumeric() {
+		return LispStructFactory.toBoolean(Character.isLetterOrDigit(codePoint));
 	}
 
 	@Override
-	public boolean isGraphicChar() {
-		return CharUtils.isAsciiPrintable(getCharacter());
+	public BooleanStruct isDigitChar() {
+		return LispStructFactory.toBoolean(Character.isDigit(codePoint));
 	}
 
 	@Override
-	public boolean isStandardChar() {
-		return CharUtils.isAsciiPrintable(getCharacter()) || (codePoint == CharUtils.LF);
+	public BooleanStruct isGraphicChar() {
+		return LispStructFactory.toBoolean(CharUtils.isAsciiPrintable((char) codePoint));
 	}
 
 	@Override
-	public CharacterStruct toUpperCase() {
-		return new CharacterStructImpl(Character.toUpperCase(codePoint));
+	public BooleanStruct isStandardChar() {
+		final boolean isStandardChar
+				= CharUtils.isAsciiPrintable((char) codePoint) || (codePoint == CodePointConstants.NEWLINE);
+		return LispStructFactory.toBoolean(isStandardChar);
 	}
 
 	@Override
-	public CharacterStruct toLowerCase() {
-		return new CharacterStructImpl(Character.toLowerCase(codePoint));
+	public CharacterStruct charUpcase() {
+		return CharacterStruct.toLispCharacter(Character.toUpperCase(codePoint));
 	}
 
 	@Override
-	public boolean isUpperCase() {
-		return Character.isUpperCase(codePoint);
+	public CharacterStruct charDowncase() {
+		return CharacterStruct.toLispCharacter(Character.toLowerCase(codePoint));
 	}
 
 	@Override
-	public boolean isLowerCase() {
-		return Character.isLowerCase(codePoint);
+	public BooleanStruct isUpperCase() {
+		return LispStructFactory.toBoolean(Character.isUpperCase(codePoint));
 	}
 
 	@Override
-	public boolean isBothCase() {
-		return Character.isUpperCase(codePoint) || Character.isLowerCase(codePoint);
+	public BooleanStruct isLowerCase() {
+		return LispStructFactory.toBoolean(Character.isLowerCase(codePoint));
+	}
+
+	@Override
+	public BooleanStruct isBothCase() {
+		return LispStructFactory.toBoolean(Character.isUpperCase(codePoint) || Character.isLowerCase(codePoint));
 	}
 
 	@Override
 	public IntegerStruct charCode() {
-		return IntegerStructImpl.valueOf(BigInteger.valueOf(codePoint));
+		return IntegerStructImpl.valueOf(codePoint);
 	}
 
 	@Override
@@ -238,7 +200,22 @@ public final class CharacterStructImpl extends BuiltInClassStruct implements Cha
 		if (digit == -1) {
 			return NILStruct.INSTANCE;
 		}
-		return IntegerStructImpl.valueOf(BigInteger.valueOf(digit));
+		return IntegerStructImpl.valueOf(digit);
+	}
+
+	@Override
+	public char toJavaChar() {
+		return (char) codePoint;
+	}
+
+	@Override
+	public Character toJavaCharacter() {
+		return toJavaChar();
+	}
+
+	@Override
+	public int toUnicodeCodePoint() {
+		return codePoint;
 	}
 
 	@Override
@@ -249,12 +226,7 @@ public final class CharacterStructImpl extends BuiltInClassStruct implements Cha
 		if (printEscape) {
 			stringBuilder.append("#\\");
 		}
-
-		if (Character.isWhitespace(codePoint)) {
-			stringBuilder.append(Character.getName(codePoint));
-		} else {
-			stringBuilder.appendCodePoint(codePoint);
-		}
+		stringBuilder.appendCodePoint(codePoint);
 
 		return stringBuilder.toString();
 	}

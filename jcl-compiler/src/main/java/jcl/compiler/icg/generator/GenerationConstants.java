@@ -28,6 +28,7 @@ import jcl.compiler.environment.binding.lambdalist.WholeParameter;
 import jcl.compiler.function.Closure;
 import jcl.compiler.function.CompiledFunctionStruct;
 import jcl.compiler.function.expanders.CompiledMacroFunctionExpander;
+import jcl.lang.CharacterStruct;
 import jcl.lang.ComplexStruct;
 import jcl.lang.FunctionStruct;
 import jcl.lang.KeywordStruct;
@@ -35,6 +36,7 @@ import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
 import jcl.lang.PackageStruct;
 import jcl.lang.PackageSymbolStruct;
+import jcl.lang.StringStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.ValuesStruct;
 import jcl.lang.classes.StructureClassStruct;
@@ -179,9 +181,11 @@ interface GenerationConstants {
 
 	String LISP_STRUCT_FACTORY_NAME = Type.getInternalName(LispStructFactory.class);
 
-	String LISP_STRUCT_FACTORY_TO_CHARACTER_METHOD_NAME = "toCharacter";
+	String CHARACTER_STRUCT_NAME = Type.getInternalName(CharacterStruct.class);
 
-	String LISP_STRUCT_FACTORY_TO_CHARACTER_METHOD_DESC = CodeGenerators.getMethodDescription(LispStructFactory.class, LISP_STRUCT_FACTORY_TO_CHARACTER_METHOD_NAME, int.class);
+	String CHARACTER_STRUCT_TO_LISP_CHARACTER_METHOD_NAME = "toLispCharacter";
+
+	String CHARACTER_STRUCT_TO_LISP_CHARACTER_METHOD_DESC = CodeGenerators.getMethodDescription(CharacterStruct.class, CHARACTER_STRUCT_TO_LISP_CHARACTER_METHOD_NAME, int.class);
 
 	String LISP_STRUCT_FACTORY_TO_PATHNAME_URI_METHOD_NAME = "toPathname";
 
@@ -199,9 +203,11 @@ interface GenerationConstants {
 
 	String LISP_STRUCT_FACTORY_TO_VECTOR_METHOD_DESC = CodeGenerators.getMethodDescription(LispStructFactory.class, LISP_STRUCT_FACTORY_TO_VECTOR_METHOD_NAME, List.class);
 
-	String LISP_STRUCT_FACTORY_TO_STRING_METHOD_NAME = "toString";
+	String STRING_STRUCT_NAME = Type.getInternalName(StringStruct.class);
 
-	String LISP_STRUCT_FACTORY_TO_STRING_METHOD_DESC = CodeGenerators.getMethodDescription(LispStructFactory.class, LISP_STRUCT_FACTORY_TO_STRING_METHOD_NAME, String.class);
+	String STRING_STRUCT_TO_LISP_STRING_METHOD_NAME = "toLispString";
+
+	String STRING_STRUCT_TO_LISP_STRING_METHOD_DESC = CodeGenerators.getMethodDescription(StringStruct.class, STRING_STRUCT_TO_LISP_STRING_METHOD_NAME, String.class);
 
 	String LISP_STRUCT_FACTORY_TO_COMPLEX_METHOD_NAME = "toComplex";
 

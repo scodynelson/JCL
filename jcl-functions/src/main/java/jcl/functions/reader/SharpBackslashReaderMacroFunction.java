@@ -7,12 +7,13 @@ package jcl.functions.reader;
 import java.math.BigInteger;
 import java.util.Optional;
 
-import com.ibm.icu.lang.UCharacter;
+import jcl.lang.CharacterStruct;
 import jcl.lang.InputStreamStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.NILStruct;
+import jcl.lang.StringStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
-import jcl.lang.factory.LispStructFactory;
+import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.statics.ReaderVariables;
 import jcl.util.CodePointConstants;
 import org.apache.commons.lang3.StringUtils;
@@ -50,26 +51,18 @@ public class SharpBackslashReaderMacroFunction extends ReaderMacroFunctionImpl {
 		final int maxTokenStringLength = 1;
 		if (StringUtils.length(tokenString) == maxTokenStringLength) {
 			final char characterToken = tokenString.charAt(0);
-			return LispStructFactory.toCharacter(characterToken);
+			return CharacterStruct.toLispCharacter(characterToken);
 		}
 
-		Integer nameCodePoint = null;
-		for (final CharacterName characterName : CharacterName.values()) {
-			final String name = characterName.getName();
-			if (StringUtils.equalsIgnoreCase(tokenString, name)) {
-				nameCodePoint = characterName.getCodePoint();
-				break;
+		final StringStruct string = StringStruct.toLispString(tokenString.toUpperCase());
+		try {
+			final LispStruct character = CharacterStruct.nameChar(string);
+			if (NILStruct.INSTANCE.equals(character)) {
+				throw new ReaderErrorException("Unrecognized character name: " + tokenString);
 			}
-		}
-
-		if (nameCodePoint == null) {
-			nameCodePoint = UCharacter.getCharFromName(tokenString);
-		}
-
-		if (nameCodePoint == -1) {
+			return character;
+		} catch (final TypeErrorException ignored) {
 			throw new ReaderErrorException("Unrecognized character name: " + tokenString);
 		}
-
-		return LispStructFactory.toCharacter(nameCodePoint);
 	}
 }

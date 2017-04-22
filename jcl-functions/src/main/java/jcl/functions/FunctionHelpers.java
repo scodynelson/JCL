@@ -2,7 +2,6 @@ package jcl.functions;
 
 import java.io.File;
 
-import com.ibm.icu.lang.UCharacter;
 import jcl.lang.CharacterStruct;
 import jcl.lang.FileStreamStruct;
 import jcl.lang.LispStruct;
@@ -10,9 +9,7 @@ import jcl.lang.PackageStruct;
 import jcl.lang.PathnameStruct;
 import jcl.lang.StringStruct;
 import jcl.lang.SymbolStruct;
-import jcl.lang.condition.exception.SimpleErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
-import jcl.lang.internal.CharacterStructImpl;
 import jcl.lang.internal.PathnameStructImpl;
 
 public final class FunctionHelpers {
@@ -37,44 +34,6 @@ public final class FunctionHelpers {
 		}
 	}
 
-	public static CharacterStruct asCharacter(final LispStruct lispStruct) {
-		if (lispStruct instanceof CharacterStruct) {
-			return (CharacterStruct) lispStruct;
-		} else if (lispStruct instanceof SymbolStruct) {
-			final SymbolStruct symbol = (SymbolStruct) lispStruct;
-			final String name = symbol.getName();
-			if (name.length() != 1) {
-				throw new SimpleErrorException("Symbol name is not of length one: " + name);
-			}
-			return CharacterStructImpl.valueOf(name.charAt(0));
-		} else if (lispStruct instanceof StringStruct) {
-			final StringStruct struct = (StringStruct) lispStruct;
-			final String javaString = struct.toJavaString();
-			if (javaString.length() != 1) {
-				throw new SimpleErrorException("String is not of length one: " + javaString);
-			}
-			return CharacterStructImpl.valueOf(javaString.charAt(0));
-		} else {
-			throw new TypeErrorException("Type cannot be converted to Character.");
-		}
-	}
-
-	public static CharacterStruct asNamedCharacter(final LispStruct lispStruct) {
-		if (lispStruct instanceof CharacterStruct) {
-			return (CharacterStruct) lispStruct;
-		} else if (lispStruct instanceof SymbolStruct) {
-			final SymbolStruct symbol = (SymbolStruct) lispStruct;
-			final String name = symbol.getName();
-			return CharacterStructImpl.valueOf(UCharacter.getCharFromName(name));
-		} else if (lispStruct instanceof StringStruct) {
-			final StringStruct string = (StringStruct) lispStruct;
-			final String javaString = string.toJavaString();
-			return CharacterStructImpl.valueOf(UCharacter.getCharFromName(javaString));
-		} else {
-			throw new TypeErrorException("Type cannot be converted to Character.");
-		}
-	}
-
 	public static PackageStruct asPackage(final LispStruct lispStruct) {
 		if (lispStruct instanceof PackageStruct) {
 			return (PackageStruct) lispStruct;
@@ -84,7 +43,7 @@ public final class FunctionHelpers {
 			return PackageStruct.findPackage(name);
 		} else if (lispStruct instanceof CharacterStruct) {
 			final CharacterStruct characterStruct = (CharacterStruct) lispStruct;
-			final String packageName = characterStruct.getCharacter().toString();
+			final String packageName = characterStruct.toJavaCharacter().toString();
 			return PackageStruct.findPackage(packageName);
 		} else if (lispStruct instanceof StringStruct) {
 			final StringStruct stringStruct = (StringStruct) lispStruct;
@@ -104,7 +63,7 @@ public final class FunctionHelpers {
 			return StringStruct.toLispString(name);
 		} else if (lispStruct instanceof CharacterStruct) {
 			final CharacterStruct characterStruct = (CharacterStruct) lispStruct;
-			return StringStruct.toLispString(characterStruct.getCharacter().toString());
+			return StringStruct.toLispString(characterStruct.toJavaCharacter().toString());
 		} else {
 			throw new TypeErrorException("Type cannot be converted to Package.");
 		}

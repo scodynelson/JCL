@@ -10,290 +10,295 @@ import java.util.Map;
 
 import jcl.lang.CharacterStruct;
 import jcl.lang.IntegerStruct;
-import jcl.lang.internal.CharacterStructImpl;
 import jcl.lang.internal.ConstantStructImpl;
 import jcl.lang.internal.number.IntegerStructImpl;
 import jcl.util.CodePointConstants;
+import lombok.experimental.UtilityClass;
 
 /**
  * Defines the standard character constants for the system.
  */
 @SuppressWarnings("all")
-public final class CharacterConstants {
+@UtilityClass
+public class CharacterConstants {
 
 	// CharacterStruct Standard-Char Constants
 
-	public static final CharacterStruct EOF_CHAR = CharacterStructImpl.valueOf(CodePointConstants.EOF);
+	public static final CharacterStruct EOF_CHAR = CharacterStruct.toLispCharacter(CodePointConstants.EOF);
 
-	public static final CharacterStruct NULL_CHAR = CharacterStructImpl.valueOf(CodePointConstants.NULL);
+	public static final CharacterStruct NULL_CHAR = CharacterStruct.toLispCharacter(CodePointConstants.NULL);
 
-	public static final CharacterStruct START_OF_HEADER_CHAR = CharacterStructImpl.valueOf(CodePointConstants.START_OF_HEADER);
+	public static final CharacterStruct START_OF_HEADER_CHAR = CharacterStruct.toLispCharacter(CodePointConstants.START_OF_HEADER);
 
-	public static final CharacterStruct START_OF_TEXT_CHAR = CharacterStructImpl.valueOf(CodePointConstants.START_OF_TEXT);
+	public static final CharacterStruct START_OF_TEXT_CHAR = CharacterStruct.toLispCharacter(CodePointConstants.START_OF_TEXT);
 
-	public static final CharacterStruct END_OF_TEXT_CHAR = CharacterStructImpl.valueOf(CodePointConstants.END_OF_TEXT);
+	public static final CharacterStruct END_OF_TEXT_CHAR = CharacterStruct.toLispCharacter(CodePointConstants.END_OF_TEXT);
 
-	public static final CharacterStruct END_OF_TRANSMISSION_CHAR = CharacterStructImpl.valueOf(CodePointConstants.END_OF_TRANSMISSION);
+	public static final CharacterStruct END_OF_TRANSMISSION_CHAR = CharacterStruct.toLispCharacter(CodePointConstants.END_OF_TRANSMISSION);
 
-	public static final CharacterStruct ENQUIRY_CHAR = CharacterStructImpl.valueOf(CodePointConstants.ENQUIRY);
+	public static final CharacterStruct ENQUIRY_CHAR = CharacterStruct.toLispCharacter(CodePointConstants.ENQUIRY);
 
-	public static final CharacterStruct ACKNOWLEDGE_CHAR = CharacterStructImpl.valueOf(CodePointConstants.ACKNOWLEDGE);
+	public static final CharacterStruct ACKNOWLEDGE_CHAR = CharacterStruct.toLispCharacter(CodePointConstants.ACKNOWLEDGE);
 
-	public static final CharacterStruct BELL_CHAR = CharacterStructImpl.valueOf(CodePointConstants.BELL);
+	public static final CharacterStruct BELL_CHAR = CharacterStruct.toLispCharacter(CodePointConstants.BELL);
 
-	public static final CharacterStruct BACKSPACE_CHAR = CharacterStructImpl.valueOf(CodePointConstants.BACKSPACE);
+	public static final CharacterStruct BACKSPACE_CHAR = CharacterStruct.toLispCharacter(CodePointConstants.BACKSPACE);
 
-	public static final CharacterStruct TAB_CHAR = CharacterStructImpl.valueOf(CodePointConstants.TAB);
+	public static final CharacterStruct TAB_CHAR = CharacterStruct.toLispCharacter(CodePointConstants.TAB);
 
-	public static final CharacterStruct LINE_FEED_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LINE_FEED);
+	public static final CharacterStruct LINE_FEED_CHAR = CharacterStruct.toLispCharacter(CodePointConstants.LINE_FEED);
 
-	public static final CharacterStruct NEWLINE_CHAR = CharacterStructImpl.valueOf(CodePointConstants.NEWLINE);
+	public static final CharacterStruct NEWLINE_CHAR = CharacterStruct.toLispCharacter(CodePointConstants.NEWLINE);
 
-	public static final CharacterStruct VERTICAL_TAB_CHAR = CharacterStructImpl.valueOf(CodePointConstants.VERTICAL_TAB);
+	public static final CharacterStruct VERTICAL_TAB_CHAR = CharacterStruct.toLispCharacter(CodePointConstants.VERTICAL_TAB);
 
-	public static final CharacterStruct FORM_FEED_CHAR = CharacterStructImpl.valueOf(CodePointConstants.FORM_FEED);
+	public static final CharacterStruct FORM_FEED_CHAR = CharacterStruct.toLispCharacter(CodePointConstants.FORM_FEED);
 
-	public static final CharacterStruct PAGE_CHAR = CharacterStructImpl.valueOf(CodePointConstants.PAGE);
+	public static final CharacterStruct PAGE_CHAR = CharacterStruct.toLispCharacter(CodePointConstants.PAGE);
 
-	public static final CharacterStruct CARRIAGE_RETURN_CHAR = CharacterStructImpl.valueOf(CodePointConstants.CARRIAGE_RETURN);
+	public static final CharacterStruct CARRIAGE_RETURN_CHAR = CharacterStruct.toLispCharacter(CodePointConstants.CARRIAGE_RETURN);
 
-	public static final CharacterStruct RETURN_CHAR = CharacterStructImpl.valueOf(CodePointConstants.RETURN);
+	public static final CharacterStruct RETURN_CHAR = CharacterStruct.toLispCharacter(CodePointConstants.RETURN);
 
-	public static final CharacterStruct SHIFT_OUT_CHAR = CharacterStructImpl.valueOf(CodePointConstants.SHIFT_OUT);
+	public static final CharacterStruct SHIFT_OUT_CHAR = CharacterStruct.toLispCharacter(CodePointConstants.SHIFT_OUT);
 
-	public static final CharacterStruct SHIFT_IN_CHAR = CharacterStructImpl.valueOf(CodePointConstants.SHIFT_IN);
+	public static final CharacterStruct SHIFT_IN_CHAR = CharacterStruct.toLispCharacter(CodePointConstants.SHIFT_IN);
 
-	public static final CharacterStruct DATA_LINK_ESCAPE_CHAR = CharacterStructImpl.valueOf(CodePointConstants.DATA_LINK_ESCAPE);
+	public static final CharacterStruct DATA_LINK_ESCAPE_CHAR = CharacterStruct.toLispCharacter(CodePointConstants.DATA_LINK_ESCAPE);
 
-	public static final CharacterStruct DEVICE_CONTROL_1_CHAR = CharacterStructImpl.valueOf(CodePointConstants.DEVICE_CONTROL_1);
+	public static final CharacterStruct DEVICE_CONTROL_1_CHAR = CharacterStruct.toLispCharacter(CodePointConstants.DEVICE_CONTROL_1);
 
-	public static final CharacterStruct DEVICE_CONTROL_2_CHAR = CharacterStructImpl.valueOf(CodePointConstants.DEVICE_CONTROL_2);
+	public static final CharacterStruct DEVICE_CONTROL_2_CHAR = CharacterStruct.toLispCharacter(CodePointConstants.DEVICE_CONTROL_2);
 
-	public static final CharacterStruct DEVICE_CONTROL_3_CHAR = CharacterStructImpl.valueOf(CodePointConstants.DEVICE_CONTROL_3);
+	public static final CharacterStruct DEVICE_CONTROL_3_CHAR = CharacterStruct.toLispCharacter(CodePointConstants.DEVICE_CONTROL_3);
 
-	public static final CharacterStruct DEVICE_CONTROL_4_CHAR = CharacterStructImpl.valueOf(CodePointConstants.DEVICE_CONTROL_4);
+	public static final CharacterStruct DEVICE_CONTROL_4_CHAR = CharacterStruct.toLispCharacter(CodePointConstants.DEVICE_CONTROL_4);
 
-	public static final CharacterStruct NEGATIVE_ACKNOWLEDGE_CHAR = CharacterStructImpl.valueOf(CodePointConstants.NEGATIVE_ACKNOWLEDGE);
+	public static final CharacterStruct NEGATIVE_ACKNOWLEDGE_CHAR = CharacterStruct.toLispCharacter(CodePointConstants.NEGATIVE_ACKNOWLEDGE);
 
-	public static final CharacterStruct SYNCHRONOUS_IDLE_CHAR = CharacterStructImpl.valueOf(CodePointConstants.SYNCHRONOUS_IDLE);
+	public static final CharacterStruct SYNCHRONOUS_IDLE_CHAR = CharacterStruct.toLispCharacter(CodePointConstants.SYNCHRONOUS_IDLE);
 
-	public static final CharacterStruct END_OF_TRANSMISSION_BLOCK_CHAR = CharacterStructImpl.valueOf(CodePointConstants.END_OF_TRANSMISSION_BLOCK);
+	public static final CharacterStruct END_OF_TRANSMISSION_BLOCK_CHAR = CharacterStruct.toLispCharacter(CodePointConstants.END_OF_TRANSMISSION_BLOCK);
 
-	public static final CharacterStruct CANCEL_CHAR = CharacterStructImpl.valueOf(CodePointConstants.CANCEL);
+	public static final CharacterStruct CANCEL_CHAR = CharacterStruct.toLispCharacter(CodePointConstants.CANCEL);
 
-	public static final CharacterStruct END_OF_MEDIUM_CHAR = CharacterStructImpl.valueOf(CodePointConstants.END_OF_MEDIUM);
+	public static final CharacterStruct END_OF_MEDIUM_CHAR = CharacterStruct.toLispCharacter(CodePointConstants.END_OF_MEDIUM);
 
-	public static final CharacterStruct SUBSTITUTE_CHAR = CharacterStructImpl.valueOf(CodePointConstants.SUBSTITUTE);
+	public static final CharacterStruct SUBSTITUTE_CHAR = CharacterStruct.toLispCharacter(CodePointConstants.SUBSTITUTE);
 
-	public static final CharacterStruct ESCAPE_CHAR = CharacterStructImpl.valueOf(CodePointConstants.ESCAPE);
+	public static final CharacterStruct ESCAPE_CHAR = CharacterStruct.toLispCharacter(CodePointConstants.ESCAPE);
 
-	public static final CharacterStruct FILE_SEPARATOR_CHAR = CharacterStructImpl.valueOf(CodePointConstants.FILE_SEPARATOR);
+	public static final CharacterStruct FILE_SEPARATOR_CHAR = CharacterStruct.toLispCharacter(CodePointConstants.FILE_SEPARATOR);
 
-	public static final CharacterStruct GROUP_SEPARATOR_CHAR = CharacterStructImpl.valueOf(CodePointConstants.GROUP_SEPARATOR);
+	public static final CharacterStruct GROUP_SEPARATOR_CHAR = CharacterStruct.toLispCharacter(CodePointConstants.GROUP_SEPARATOR);
 
-	public static final CharacterStruct RECORD_SEPARATOR_CHAR = CharacterStructImpl.valueOf(CodePointConstants.RECORD_SEPARATOR);
+	public static final CharacterStruct RECORD_SEPARATOR_CHAR = CharacterStruct.toLispCharacter(CodePointConstants.RECORD_SEPARATOR);
 
-	public static final CharacterStruct UNIT_SEPARATOR_CHAR = CharacterStructImpl.valueOf(CodePointConstants.UNIT_SEPARATOR);
+	public static final CharacterStruct UNIT_SEPARATOR_CHAR = CharacterStruct.toLispCharacter(CodePointConstants.UNIT_SEPARATOR);
 
-	public static final CharacterStruct SPACE_CHAR = CharacterStructImpl.valueOf(CodePointConstants.SPACE);
+	public static final CharacterStruct SPACE_CHAR = CharacterStruct.toLispCharacter(CodePointConstants.SPACE);
 
-	public static final CharacterStruct EXCLAMATION_MARK_CHAR = CharacterStructImpl.valueOf(CodePointConstants.EXCLAMATION_MARK);
+	public static final CharacterStruct EXCLAMATION_MARK_CHAR = CharacterStruct.toLispCharacter(CodePointConstants.EXCLAMATION_MARK);
 
-	public static final CharacterStruct QUOTATION_MARK_CHAR = CharacterStructImpl.valueOf(CodePointConstants.QUOTATION_MARK);
+	public static final CharacterStruct QUOTATION_MARK_CHAR = CharacterStruct.toLispCharacter(CodePointConstants.QUOTATION_MARK);
 
-	public static final CharacterStruct NUMBER_SIGN_CHAR = CharacterStructImpl.valueOf(CodePointConstants.NUMBER_SIGN);
+	public static final CharacterStruct NUMBER_SIGN_CHAR = CharacterStruct.toLispCharacter(CodePointConstants.NUMBER_SIGN);
 
-	public static final CharacterStruct DOLLAR_SIGN_CHAR = CharacterStructImpl.valueOf(CodePointConstants.DOLLAR_SIGN);
+	public static final CharacterStruct DOLLAR_SIGN_CHAR = CharacterStruct.toLispCharacter(CodePointConstants.DOLLAR_SIGN);
 
-	public static final CharacterStruct PERCENT_SIGN_CHAR = CharacterStructImpl.valueOf(CodePointConstants.PERCENT_SIGN);
+	public static final CharacterStruct PERCENT_SIGN_CHAR = CharacterStruct.toLispCharacter(CodePointConstants.PERCENT_SIGN);
 
-	public static final CharacterStruct AMPERSAND_CHAR = CharacterStructImpl.valueOf(CodePointConstants.AMPERSAND);
+	public static final CharacterStruct AMPERSAND_CHAR = CharacterStruct.toLispCharacter(CodePointConstants.AMPERSAND);
 
-	public static final CharacterStruct APOSTROPHE_CHAR = CharacterStructImpl.valueOf(CodePointConstants.APOSTROPHE);
+	public static final CharacterStruct APOSTROPHE_CHAR = CharacterStruct.toLispCharacter(CodePointConstants.APOSTROPHE);
 
-	public static final CharacterStruct LEFT_PARENTHESIS_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LEFT_PARENTHESIS);
+	public static final CharacterStruct LEFT_PARENTHESIS_CHAR = CharacterStruct.toLispCharacter(CodePointConstants.LEFT_PARENTHESIS);
 
-	public static final CharacterStruct RIGHT_PARENTHESIS_CHAR = CharacterStructImpl.valueOf(CodePointConstants.RIGHT_PARENTHESIS);
+	public static final CharacterStruct RIGHT_PARENTHESIS_CHAR = CharacterStruct.toLispCharacter(CodePointConstants.RIGHT_PARENTHESIS);
 
-	public static final CharacterStruct ASTERISK_CHAR = CharacterStructImpl.valueOf(CodePointConstants.ASTERISK);
+	public static final CharacterStruct ASTERISK_CHAR = CharacterStruct.toLispCharacter(CodePointConstants.ASTERISK);
 
-	public static final CharacterStruct PLUS_SIGN_CHAR = CharacterStructImpl.valueOf(CodePointConstants.PLUS_SIGN);
+	public static final CharacterStruct PLUS_SIGN_CHAR = CharacterStruct.toLispCharacter(CodePointConstants.PLUS_SIGN);
 
-	public static final CharacterStruct COMMA_CHAR = CharacterStructImpl.valueOf(CodePointConstants.COMMA);
+	public static final CharacterStruct COMMA_CHAR = CharacterStruct.toLispCharacter(CodePointConstants.COMMA);
 
-	public static final CharacterStruct HYPHEN_MINUS_CHAR = CharacterStructImpl.valueOf(CodePointConstants.HYPHEN_MINUS);
+	public static final CharacterStruct HYPHEN_MINUS_CHAR = CharacterStruct.toLispCharacter(CodePointConstants.HYPHEN_MINUS);
 
-	public static final CharacterStruct FULL_STOP_CHAR = CharacterStructImpl.valueOf(CodePointConstants.FULL_STOP);
+	public static final CharacterStruct FULL_STOP_CHAR = CharacterStruct.toLispCharacter(CodePointConstants.FULL_STOP);
 
-	public static final CharacterStruct SLASH_CHAR = CharacterStructImpl.valueOf(CodePointConstants.SLASH);
+	public static final CharacterStruct SLASH_CHAR = CharacterStruct.toLispCharacter(CodePointConstants.SLASH);
 
-	public static final CharacterStruct DIGIT_ZERO_CHAR = CharacterStructImpl.valueOf(CodePointConstants.DIGIT_ZERO);
+	public static final CharacterStruct DIGIT_ZERO_CHAR = CharacterStruct.toLispCharacter(CodePointConstants.DIGIT_ZERO);
 
-	public static final CharacterStruct DIGIT_ONE_CHAR = CharacterStructImpl.valueOf(CodePointConstants.DIGIT_ONE);
+	public static final CharacterStruct DIGIT_ONE_CHAR = CharacterStruct.toLispCharacter(CodePointConstants.DIGIT_ONE);
 
-	public static final CharacterStruct DIGIT_TWO_CHAR = CharacterStructImpl.valueOf(CodePointConstants.DIGIT_TWO);
+	public static final CharacterStruct DIGIT_TWO_CHAR = CharacterStruct.toLispCharacter(CodePointConstants.DIGIT_TWO);
 
-	public static final CharacterStruct DIGIT_THREE_CHAR = CharacterStructImpl.valueOf(CodePointConstants.DIGIT_THREE);
+	public static final CharacterStruct DIGIT_THREE_CHAR = CharacterStruct.toLispCharacter(CodePointConstants.DIGIT_THREE);
 
-	public static final CharacterStruct DIGIT_FOUR_CHAR = CharacterStructImpl.valueOf(CodePointConstants.DIGIT_FOUR);
+	public static final CharacterStruct DIGIT_FOUR_CHAR = CharacterStruct.toLispCharacter(CodePointConstants.DIGIT_FOUR);
 
-	public static final CharacterStruct DIGIT_FIVE_CHAR = CharacterStructImpl.valueOf(CodePointConstants.DIGIT_FIVE);
+	public static final CharacterStruct DIGIT_FIVE_CHAR = CharacterStruct.toLispCharacter(CodePointConstants.DIGIT_FIVE);
 
-	public static final CharacterStruct DIGIT_SIX_CHAR = CharacterStructImpl.valueOf(CodePointConstants.DIGIT_SIX);
+	public static final CharacterStruct DIGIT_SIX_CHAR = CharacterStruct.toLispCharacter(CodePointConstants.DIGIT_SIX);
 
-	public static final CharacterStruct DIGIT_SEVEN_CHAR = CharacterStructImpl.valueOf(CodePointConstants.DIGIT_SEVEN);
+	public static final CharacterStruct DIGIT_SEVEN_CHAR = CharacterStruct.toLispCharacter(CodePointConstants.DIGIT_SEVEN);
 
-	public static final CharacterStruct DIGIT_EIGHT_CHAR = CharacterStructImpl.valueOf(CodePointConstants.DIGIT_EIGHT);
+	public static final CharacterStruct DIGIT_EIGHT_CHAR = CharacterStruct.toLispCharacter(CodePointConstants.DIGIT_EIGHT);
 
-	public static final CharacterStruct DIGIT_NINE_CHAR = CharacterStructImpl.valueOf(CodePointConstants.DIGIT_NINE);
+	public static final CharacterStruct DIGIT_NINE_CHAR = CharacterStruct.toLispCharacter(CodePointConstants.DIGIT_NINE);
 
-	public static final CharacterStruct COLON_CHAR = CharacterStructImpl.valueOf(CodePointConstants.COLON);
+	public static final CharacterStruct COLON_CHAR = CharacterStruct.toLispCharacter(CodePointConstants.COLON);
 
-	public static final CharacterStruct SEMICOLON_CHAR = CharacterStructImpl.valueOf(CodePointConstants.SEMICOLON);
+	public static final CharacterStruct SEMICOLON_CHAR = CharacterStruct.toLispCharacter(CodePointConstants.SEMICOLON);
 
-	public static final CharacterStruct LESS_THAN_SIGN_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LESS_THAN_SIGN);
+	public static final CharacterStruct LESS_THAN_SIGN_CHAR = CharacterStruct.toLispCharacter(CodePointConstants.LESS_THAN_SIGN);
 
-	public static final CharacterStruct EQUALS_SIGN_CHAR = CharacterStructImpl.valueOf(CodePointConstants.EQUALS_SIGN);
+	public static final CharacterStruct EQUALS_SIGN_CHAR = CharacterStruct.toLispCharacter(CodePointConstants.EQUALS_SIGN);
 
-	public static final CharacterStruct GREATER_THAN_SIGN_CHAR = CharacterStructImpl.valueOf(CodePointConstants.GREATER_THAN_SIGN);
+	public static final CharacterStruct GREATER_THAN_SIGN_CHAR = CharacterStruct.toLispCharacter(CodePointConstants.GREATER_THAN_SIGN);
 
-	public static final CharacterStruct QUESTION_MARK_CHAR = CharacterStructImpl.valueOf(CodePointConstants.QUESTION_MARK);
+	public static final CharacterStruct QUESTION_MARK_CHAR = CharacterStruct.toLispCharacter(CodePointConstants.QUESTION_MARK);
 
-	public static final CharacterStruct AT_SIGN_CHAR = CharacterStructImpl.valueOf(CodePointConstants.AT_SIGN);
+	public static final CharacterStruct AT_SIGN_CHAR = CharacterStruct.toLispCharacter(CodePointConstants.AT_SIGN);
 
-	public static final CharacterStruct LATIN_CAPITAL_LETTER_A_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_CAPITAL_LETTER_A);
+	public static final CharacterStruct LATIN_CAPITAL_LETTER_A_CHAR = CharacterStruct.toLispCharacter(CodePointConstants.LATIN_CAPITAL_LETTER_A);
 
-	public static final CharacterStruct LATIN_CAPITAL_LETTER_B_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_CAPITAL_LETTER_B);
+	public static final CharacterStruct LATIN_CAPITAL_LETTER_B_CHAR = CharacterStruct.toLispCharacter(CodePointConstants.LATIN_CAPITAL_LETTER_B);
 
-	public static final CharacterStruct LATIN_CAPITAL_LETTER_C_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_CAPITAL_LETTER_C);
+	public static final CharacterStruct LATIN_CAPITAL_LETTER_C_CHAR = CharacterStruct.toLispCharacter(CodePointConstants.LATIN_CAPITAL_LETTER_C);
 
-	public static final CharacterStruct LATIN_CAPITAL_LETTER_D_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_CAPITAL_LETTER_D);
+	public static final CharacterStruct LATIN_CAPITAL_LETTER_D_CHAR = CharacterStruct.toLispCharacter(CodePointConstants.LATIN_CAPITAL_LETTER_D);
 
-	public static final CharacterStruct LATIN_CAPITAL_LETTER_E_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_CAPITAL_LETTER_E);
+	public static final CharacterStruct LATIN_CAPITAL_LETTER_E_CHAR = CharacterStruct.toLispCharacter(CodePointConstants.LATIN_CAPITAL_LETTER_E);
 
-	public static final CharacterStruct LATIN_CAPITAL_LETTER_F_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_CAPITAL_LETTER_F);
+	public static final CharacterStruct LATIN_CAPITAL_LETTER_F_CHAR = CharacterStruct.toLispCharacter(CodePointConstants.LATIN_CAPITAL_LETTER_F);
 
-	public static final CharacterStruct LATIN_CAPITAL_LETTER_G_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_CAPITAL_LETTER_G);
+	public static final CharacterStruct LATIN_CAPITAL_LETTER_G_CHAR = CharacterStruct.toLispCharacter(CodePointConstants.LATIN_CAPITAL_LETTER_G);
 
-	public static final CharacterStruct LATIN_CAPITAL_LETTER_H_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_CAPITAL_LETTER_H);
+	public static final CharacterStruct LATIN_CAPITAL_LETTER_H_CHAR = CharacterStruct.toLispCharacter(CodePointConstants.LATIN_CAPITAL_LETTER_H);
 
-	public static final CharacterStruct LATIN_CAPITAL_LETTER_I_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_CAPITAL_LETTER_I);
+	public static final CharacterStruct LATIN_CAPITAL_LETTER_I_CHAR = CharacterStruct.toLispCharacter(CodePointConstants.LATIN_CAPITAL_LETTER_I);
 
-	public static final CharacterStruct LATIN_CAPITAL_LETTER_J_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_CAPITAL_LETTER_J);
+	public static final CharacterStruct LATIN_CAPITAL_LETTER_J_CHAR = CharacterStruct.toLispCharacter(CodePointConstants.LATIN_CAPITAL_LETTER_J);
 
-	public static final CharacterStruct LATIN_CAPITAL_LETTER_K_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_CAPITAL_LETTER_K);
+	public static final CharacterStruct LATIN_CAPITAL_LETTER_K_CHAR = CharacterStruct.toLispCharacter(CodePointConstants.LATIN_CAPITAL_LETTER_K);
 
-	public static final CharacterStruct LATIN_CAPITAL_LETTER_L_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_CAPITAL_LETTER_L);
+	public static final CharacterStruct LATIN_CAPITAL_LETTER_L_CHAR = CharacterStruct.toLispCharacter(CodePointConstants.LATIN_CAPITAL_LETTER_L);
 
-	public static final CharacterStruct LATIN_CAPITAL_LETTER_M_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_CAPITAL_LETTER_M);
+	public static final CharacterStruct LATIN_CAPITAL_LETTER_M_CHAR = CharacterStruct.toLispCharacter(CodePointConstants.LATIN_CAPITAL_LETTER_M);
 
-	public static final CharacterStruct LATIN_CAPITAL_LETTER_N_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_CAPITAL_LETTER_N);
+	public static final CharacterStruct LATIN_CAPITAL_LETTER_N_CHAR = CharacterStruct.toLispCharacter(CodePointConstants.LATIN_CAPITAL_LETTER_N);
 
-	public static final CharacterStruct LATIN_CAPITAL_LETTER_O_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_CAPITAL_LETTER_O);
+	public static final CharacterStruct LATIN_CAPITAL_LETTER_O_CHAR = CharacterStruct.toLispCharacter(CodePointConstants.LATIN_CAPITAL_LETTER_O);
 
-	public static final CharacterStruct LATIN_CAPITAL_LETTER_P_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_CAPITAL_LETTER_P);
+	public static final CharacterStruct LATIN_CAPITAL_LETTER_P_CHAR = CharacterStruct.toLispCharacter(CodePointConstants.LATIN_CAPITAL_LETTER_P);
 
-	public static final CharacterStruct LATIN_CAPITAL_LETTER_Q_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_CAPITAL_LETTER_Q);
+	public static final CharacterStruct LATIN_CAPITAL_LETTER_Q_CHAR = CharacterStruct.toLispCharacter(CodePointConstants.LATIN_CAPITAL_LETTER_Q);
 
-	public static final CharacterStruct LATIN_CAPITAL_LETTER_R_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_CAPITAL_LETTER_R);
+	public static final CharacterStruct LATIN_CAPITAL_LETTER_R_CHAR = CharacterStruct.toLispCharacter(CodePointConstants.LATIN_CAPITAL_LETTER_R);
 
-	public static final CharacterStruct LATIN_CAPITAL_LETTER_S_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_CAPITAL_LETTER_S);
+	public static final CharacterStruct LATIN_CAPITAL_LETTER_S_CHAR = CharacterStruct.toLispCharacter(CodePointConstants.LATIN_CAPITAL_LETTER_S);
 
-	public static final CharacterStruct LATIN_CAPITAL_LETTER_T_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_CAPITAL_LETTER_T);
+	public static final CharacterStruct LATIN_CAPITAL_LETTER_T_CHAR = CharacterStruct.toLispCharacter(CodePointConstants.LATIN_CAPITAL_LETTER_T);
 
-	public static final CharacterStruct LATIN_CAPITAL_LETTER_U_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_CAPITAL_LETTER_U);
+	public static final CharacterStruct LATIN_CAPITAL_LETTER_U_CHAR = CharacterStruct.toLispCharacter(CodePointConstants.LATIN_CAPITAL_LETTER_U);
 
-	public static final CharacterStruct LATIN_CAPITAL_LETTER_V_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_CAPITAL_LETTER_V);
+	public static final CharacterStruct LATIN_CAPITAL_LETTER_V_CHAR = CharacterStruct.toLispCharacter(CodePointConstants.LATIN_CAPITAL_LETTER_V);
 
-	public static final CharacterStruct LATIN_CAPITAL_LETTER_W_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_CAPITAL_LETTER_W);
+	public static final CharacterStruct LATIN_CAPITAL_LETTER_W_CHAR = CharacterStruct.toLispCharacter(CodePointConstants.LATIN_CAPITAL_LETTER_W);
 
-	public static final CharacterStruct LATIN_CAPITAL_LETTER_X_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_CAPITAL_LETTER_X);
+	public static final CharacterStruct LATIN_CAPITAL_LETTER_X_CHAR = CharacterStruct.toLispCharacter(CodePointConstants.LATIN_CAPITAL_LETTER_X);
 
-	public static final CharacterStruct LATIN_CAPITAL_LETTER_Y_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_CAPITAL_LETTER_Y);
+	public static final CharacterStruct LATIN_CAPITAL_LETTER_Y_CHAR = CharacterStruct.toLispCharacter(CodePointConstants.LATIN_CAPITAL_LETTER_Y);
 
-	public static final CharacterStruct LATIN_CAPITAL_LETTER_Z_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_CAPITAL_LETTER_Z);
+	public static final CharacterStruct LATIN_CAPITAL_LETTER_Z_CHAR = CharacterStruct.toLispCharacter(CodePointConstants.LATIN_CAPITAL_LETTER_Z);
 
-	public static final CharacterStruct LEFT_SQUARE_BRACKET_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LEFT_SQUARE_BRACKET);
+	public static final CharacterStruct LEFT_SQUARE_BRACKET_CHAR = CharacterStruct.toLispCharacter(CodePointConstants.LEFT_SQUARE_BRACKET);
 
-	public static final CharacterStruct BACKSLASH_CHAR = CharacterStructImpl.valueOf(CodePointConstants.BACKSLASH);
+	public static final CharacterStruct BACKSLASH_CHAR = CharacterStruct.toLispCharacter(CodePointConstants.BACKSLASH);
 
-	public static final CharacterStruct RIGHT_SQUARE_BRACKET_CHAR = CharacterStructImpl.valueOf(CodePointConstants.RIGHT_SQUARE_BRACKET);
+	public static final CharacterStruct RIGHT_SQUARE_BRACKET_CHAR = CharacterStruct.toLispCharacter(CodePointConstants.RIGHT_SQUARE_BRACKET);
 
-	public static final CharacterStruct CIRCUMFLEX_ACCENT_CHAR = CharacterStructImpl.valueOf(CodePointConstants.CIRCUMFLEX_ACCENT);
+	public static final CharacterStruct CIRCUMFLEX_ACCENT_CHAR = CharacterStruct.toLispCharacter(CodePointConstants.CIRCUMFLEX_ACCENT);
 
-	public static final CharacterStruct LOW_LINE_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LOW_LINE);
+	public static final CharacterStruct LOW_LINE_CHAR = CharacterStruct.toLispCharacter(CodePointConstants.LOW_LINE);
 
-	public static final CharacterStruct GRAVE_ACCENT_CHAR = CharacterStructImpl.valueOf(CodePointConstants.GRAVE_ACCENT);
+	public static final CharacterStruct GRAVE_ACCENT_CHAR = CharacterStruct.toLispCharacter(CodePointConstants.GRAVE_ACCENT);
 
-	public static final CharacterStruct LATIN_SMALL_LETTER_A_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_SMALL_LETTER_A);
+	public static final CharacterStruct LATIN_SMALL_LETTER_A_CHAR = CharacterStruct.toLispCharacter(CodePointConstants.LATIN_SMALL_LETTER_A);
 
-	public static final CharacterStruct LATIN_SMALL_LETTER_B_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_SMALL_LETTER_B);
+	public static final CharacterStruct LATIN_SMALL_LETTER_B_CHAR = CharacterStruct.toLispCharacter(CodePointConstants.LATIN_SMALL_LETTER_B);
 
-	public static final CharacterStruct LATIN_SMALL_LETTER_C_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_SMALL_LETTER_C);
+	public static final CharacterStruct LATIN_SMALL_LETTER_C_CHAR = CharacterStruct.toLispCharacter(CodePointConstants.LATIN_SMALL_LETTER_C);
 
-	public static final CharacterStruct LATIN_SMALL_LETTER_D_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_SMALL_LETTER_D);
+	public static final CharacterStruct LATIN_SMALL_LETTER_D_CHAR = CharacterStruct.toLispCharacter(CodePointConstants.LATIN_SMALL_LETTER_D);
 
-	public static final CharacterStruct LATIN_SMALL_LETTER_E_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_SMALL_LETTER_E);
+	public static final CharacterStruct LATIN_SMALL_LETTER_E_CHAR = CharacterStruct.toLispCharacter(CodePointConstants.LATIN_SMALL_LETTER_E);
 
-	public static final CharacterStruct LATIN_SMALL_LETTER_F_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_SMALL_LETTER_F);
+	public static final CharacterStruct LATIN_SMALL_LETTER_F_CHAR = CharacterStruct.toLispCharacter(CodePointConstants.LATIN_SMALL_LETTER_F);
 
-	public static final CharacterStruct LATIN_SMALL_LETTER_G_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_SMALL_LETTER_G);
+	public static final CharacterStruct LATIN_SMALL_LETTER_G_CHAR = CharacterStruct.toLispCharacter(CodePointConstants.LATIN_SMALL_LETTER_G);
 
-	public static final CharacterStruct LATIN_SMALL_LETTER_H_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_SMALL_LETTER_H);
+	public static final CharacterStruct LATIN_SMALL_LETTER_H_CHAR = CharacterStruct.toLispCharacter(CodePointConstants.LATIN_SMALL_LETTER_H);
 
-	public static final CharacterStruct LATIN_SMALL_LETTER_I_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_SMALL_LETTER_I);
+	public static final CharacterStruct LATIN_SMALL_LETTER_I_CHAR = CharacterStruct.toLispCharacter(CodePointConstants.LATIN_SMALL_LETTER_I);
 
-	public static final CharacterStruct LATIN_SMALL_LETTER_J_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_SMALL_LETTER_J);
+	public static final CharacterStruct LATIN_SMALL_LETTER_J_CHAR = CharacterStruct.toLispCharacter(CodePointConstants.LATIN_SMALL_LETTER_J);
 
-	public static final CharacterStruct LATIN_SMALL_LETTER_K_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_SMALL_LETTER_K);
+	public static final CharacterStruct LATIN_SMALL_LETTER_K_CHAR = CharacterStruct.toLispCharacter(CodePointConstants.LATIN_SMALL_LETTER_K);
 
-	public static final CharacterStruct LATIN_SMALL_LETTER_L_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_SMALL_LETTER_L);
+	public static final CharacterStruct LATIN_SMALL_LETTER_L_CHAR = CharacterStruct.toLispCharacter(CodePointConstants.LATIN_SMALL_LETTER_L);
 
-	public static final CharacterStruct LATIN_SMALL_LETTER_M_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_SMALL_LETTER_M);
+	public static final CharacterStruct LATIN_SMALL_LETTER_M_CHAR = CharacterStruct.toLispCharacter(CodePointConstants.LATIN_SMALL_LETTER_M);
 
-	public static final CharacterStruct LATIN_SMALL_LETTER_N_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_SMALL_LETTER_N);
+	public static final CharacterStruct LATIN_SMALL_LETTER_N_CHAR = CharacterStruct.toLispCharacter(CodePointConstants.LATIN_SMALL_LETTER_N);
 
-	public static final CharacterStruct LATIN_SMALL_LETTER_O_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_SMALL_LETTER_O);
+	public static final CharacterStruct LATIN_SMALL_LETTER_O_CHAR = CharacterStruct.toLispCharacter(CodePointConstants.LATIN_SMALL_LETTER_O);
 
-	public static final CharacterStruct LATIN_SMALL_LETTER_P_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_SMALL_LETTER_P);
+	public static final CharacterStruct LATIN_SMALL_LETTER_P_CHAR = CharacterStruct.toLispCharacter(CodePointConstants.LATIN_SMALL_LETTER_P);
 
-	public static final CharacterStruct LATIN_SMALL_LETTER_Q_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_SMALL_LETTER_Q);
+	public static final CharacterStruct LATIN_SMALL_LETTER_Q_CHAR = CharacterStruct.toLispCharacter(CodePointConstants.LATIN_SMALL_LETTER_Q);
 
-	public static final CharacterStruct LATIN_SMALL_LETTER_R_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_SMALL_LETTER_R);
+	public static final CharacterStruct LATIN_SMALL_LETTER_R_CHAR = CharacterStruct.toLispCharacter(CodePointConstants.LATIN_SMALL_LETTER_R);
 
-	public static final CharacterStruct LATIN_SMALL_LETTER_S_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_SMALL_LETTER_S);
+	public static final CharacterStruct LATIN_SMALL_LETTER_S_CHAR = CharacterStruct.toLispCharacter(CodePointConstants.LATIN_SMALL_LETTER_S);
 
-	public static final CharacterStruct LATIN_SMALL_LETTER_T_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_SMALL_LETTER_T);
+	public static final CharacterStruct LATIN_SMALL_LETTER_T_CHAR = CharacterStruct.toLispCharacter(CodePointConstants.LATIN_SMALL_LETTER_T);
 
-	public static final CharacterStruct LATIN_SMALL_LETTER_U_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_SMALL_LETTER_U);
+	public static final CharacterStruct LATIN_SMALL_LETTER_U_CHAR = CharacterStruct.toLispCharacter(CodePointConstants.LATIN_SMALL_LETTER_U);
 
-	public static final CharacterStruct LATIN_SMALL_LETTER_V_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_SMALL_LETTER_V);
+	public static final CharacterStruct LATIN_SMALL_LETTER_V_CHAR = CharacterStruct.toLispCharacter(CodePointConstants.LATIN_SMALL_LETTER_V);
 
-	public static final CharacterStruct LATIN_SMALL_LETTER_W_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_SMALL_LETTER_W);
+	public static final CharacterStruct LATIN_SMALL_LETTER_W_CHAR = CharacterStruct.toLispCharacter(CodePointConstants.LATIN_SMALL_LETTER_W);
 
-	public static final CharacterStruct LATIN_SMALL_LETTER_X_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_SMALL_LETTER_X);
+	public static final CharacterStruct LATIN_SMALL_LETTER_X_CHAR = CharacterStruct.toLispCharacter(CodePointConstants.LATIN_SMALL_LETTER_X);
 
-	public static final CharacterStruct LATIN_SMALL_LETTER_Y_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_SMALL_LETTER_Y);
+	public static final CharacterStruct LATIN_SMALL_LETTER_Y_CHAR = CharacterStruct.toLispCharacter(CodePointConstants.LATIN_SMALL_LETTER_Y);
 
-	public static final CharacterStruct LATIN_SMALL_LETTER_Z_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LATIN_SMALL_LETTER_Z);
+	public static final CharacterStruct LATIN_SMALL_LETTER_Z_CHAR = CharacterStruct.toLispCharacter(CodePointConstants.LATIN_SMALL_LETTER_Z);
 
-	public static final CharacterStruct LEFT_CURLY_BRACKET_CHAR = CharacterStructImpl.valueOf(CodePointConstants.LEFT_CURLY_BRACKET);
+	public static final CharacterStruct LEFT_CURLY_BRACKET_CHAR = CharacterStruct.toLispCharacter(CodePointConstants.LEFT_CURLY_BRACKET);
 
-	public static final CharacterStruct VERTICAL_LINE_CHAR = CharacterStructImpl.valueOf(CodePointConstants.VERTICAL_LINE);
+	public static final CharacterStruct VERTICAL_LINE_CHAR = CharacterStruct.toLispCharacter(CodePointConstants.VERTICAL_LINE);
 
-	public static final CharacterStruct RIGHT_CURLY_BRACKET_CHAR = CharacterStructImpl.valueOf(CodePointConstants.RIGHT_CURLY_BRACKET);
+	public static final CharacterStruct RIGHT_CURLY_BRACKET_CHAR = CharacterStruct.toLispCharacter(CodePointConstants.RIGHT_CURLY_BRACKET);
 
-	public static final CharacterStruct TILDE_CHAR = CharacterStructImpl.valueOf(CodePointConstants.TILDE);
+	public static final CharacterStruct TILDE_CHAR = CharacterStruct.toLispCharacter(CodePointConstants.TILDE);
 
-	public static final CharacterStruct DELETE_CHAR = CharacterStructImpl.valueOf(CodePointConstants.DELETE);
+	public static final CharacterStruct DELETE_CHAR = CharacterStruct.toLispCharacter(CodePointConstants.DELETE);
 
-	public static final CharacterStruct RUBOUT_CHAR = CharacterStructImpl.valueOf(CodePointConstants.RUBOUT);
+	public static final CharacterStruct RUBOUT_CHAR = CharacterStruct.toLispCharacter(CodePointConstants.RUBOUT);
 
-	public static final CharacterStruct EXIT_CHAR_CHAR = CharacterStructImpl.valueOf(CodePointConstants.EXIT_CHAR);
+	public static final CharacterStruct EXIT_CHAR_CHAR = CharacterStruct.toLispCharacter(CodePointConstants.EXIT_CHAR);
 
 	// Standard-Char Map Constant
 
 	public static final Map<Integer, CharacterStruct> STANDARD_CHAR_MAP;
+
+	// Common-Lisp Special Graphic-Character Name Map Constant
+
+	public static final Map<String, CharacterStruct> CL_GRAPHIC_CHAR_NAME_MAP;
 
 	static {
 		final Map<Integer, CharacterStruct> tempStandardCharMap = new HashMap<>();
@@ -433,12 +438,24 @@ public final class CharacterConstants {
 		tempStandardCharMap.put(CodePointConstants.EXIT_CHAR, EXIT_CHAR_CHAR);
 
 		STANDARD_CHAR_MAP = Collections.unmodifiableMap(tempStandardCharMap);
+
+		final Map<String, CharacterStruct> tempGraphicCharNameMap = new HashMap<>();
+		tempGraphicCharNameMap.put("NULL", NULL_CHAR);
+		tempGraphicCharNameMap.put("^@", NULL_CHAR);
+		tempGraphicCharNameMap.put("BACKSPACE", BACKSPACE_CHAR);
+		tempGraphicCharNameMap.put("TAB", TAB_CHAR);
+		tempGraphicCharNameMap.put("NEWLINE", NEWLINE_CHAR);
+		tempGraphicCharNameMap.put("LINEFEED", LINE_FEED_CHAR);
+		tempGraphicCharNameMap.put("RETURN", RETURN_CHAR);
+		tempGraphicCharNameMap.put("RUBOUT", RUBOUT_CHAR);
+
+		CL_GRAPHIC_CHAR_NAME_MAP = Collections.unmodifiableMap(tempGraphicCharNameMap);
 	}
 
 	// Char-Code-Limit Constant
 
-	public static final ConstantStructImpl<IntegerStruct> CHAR_CODE_LIMIT = ConstantStructImpl.valueOf("CHAR-CODE-LIMIT", GlobalPackageStruct.COMMON_LISP, IntegerStructImpl.valueOf((int) Character.MAX_VALUE));
-
-	private CharacterConstants() {
-	}
+	public static final ConstantStructImpl<IntegerStruct> CHAR_CODE_LIMIT
+			= ConstantStructImpl.valueOf("CHAR-CODE-LIMIT",
+			                             GlobalPackageStruct.COMMON_LISP,
+			                             IntegerStructImpl.valueOf((int) Character.MAX_VALUE));
 }

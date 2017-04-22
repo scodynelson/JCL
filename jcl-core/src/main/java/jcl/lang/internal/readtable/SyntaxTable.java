@@ -9,10 +9,6 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import jcl.lang.readtable.SyntaxType;
 import jcl.util.CodePointConstants;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -102,7 +98,7 @@ class SyntaxTable {
 		syntaxTypeMap.put(61, SyntaxType.CONSTITUENT);                // =
 		syntaxTypeMap.put(62, SyntaxType.CONSTITUENT);                // >
 		syntaxTypeMap.put(63, SyntaxType.CONSTITUENT);                // ?
-		syntaxTypeMap.put(64, SyntaxType.TERMINATING);                // @
+		syntaxTypeMap.put(64, SyntaxType.CONSTITUENT);                // @
 		syntaxTypeMap.put(65, SyntaxType.CONSTITUENT);                // A
 		syntaxTypeMap.put(66, SyntaxType.CONSTITUENT);                // B
 		syntaxTypeMap.put(67, SyntaxType.CONSTITUENT);                // C
@@ -209,33 +205,5 @@ class SyntaxTable {
 	 */
 	void setSyntaxType(final int codePoint, final SyntaxType syntaxType) {
 		syntaxTypeMap.put(codePoint, syntaxType);
-	}
-
-	@Override
-	public int hashCode() {
-		return new HashCodeBuilder().append(syntaxTypeMap)
-		                            .toHashCode();
-	}
-
-	@Override
-	public boolean equals(final Object obj) {
-		if (obj == null) {
-			return false;
-		}
-		if (obj == this) {
-			return true;
-		}
-		if (obj.getClass() != getClass()) {
-			return false;
-		}
-		final SyntaxTable rhs = (SyntaxTable) obj;
-		return new EqualsBuilder().append(syntaxTypeMap, rhs.syntaxTypeMap)
-		                          .isEquals();
-	}
-
-	@Override
-	public String toString() {
-		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(syntaxTypeMap)
-		                                                                .toString();
 	}
 }

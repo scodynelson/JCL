@@ -44,7 +44,7 @@ public final class MakeDispatchMacroCharacterFunction extends CommonLispBuiltInF
 		final BooleanStruct nonTerminatingP = arguments.getOptionalArgument(NON_TERMINATING_P_ARGUMENT, BooleanStruct.class);
 		final ReadtableStruct readtable = arguments.getOptionalArgument(READTABLE_ARGUMENT, ReadtableStruct.class);
 
-		readtable.makeDispatchMacroCharacter(readDispatchCharacterFunction, character.getCodePoint(), nonTerminatingP.booleanValue());
+		readtable.makeDispatchMacroCharacter(readDispatchCharacterFunction, character.toUnicodeCodePoint(), nonTerminatingP.booleanValue());
 		return TStruct.INSTANCE;
 	}
 }

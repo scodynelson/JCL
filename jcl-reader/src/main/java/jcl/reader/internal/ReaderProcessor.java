@@ -6,6 +6,7 @@ package jcl.reader.internal;
 
 import java.util.List;
 
+import jcl.lang.CharacterStruct;
 import jcl.lang.FunctionStruct;
 import jcl.lang.InputStreamStruct;
 import jcl.lang.IntegerStruct;
@@ -15,7 +16,6 @@ import jcl.lang.NumberStruct;
 import jcl.lang.ReadtableStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
-import jcl.lang.factory.LispStructFactory;
 import jcl.lang.readtable.AttributeType;
 import jcl.lang.readtable.ReadtableCase;
 import jcl.lang.readtable.SyntaxType;
@@ -190,7 +190,7 @@ class ReaderProcessor {
 
 		final LispStruct token = readerMacroFunction.apply(
 				inputStreamStruct,
-				LispStructFactory.toCharacter(codePoint),
+				CharacterStruct.toLispCharacter(codePoint),
 				NILStruct.INSTANCE
 		);
 

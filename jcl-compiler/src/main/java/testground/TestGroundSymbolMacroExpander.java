@@ -6,9 +6,9 @@ package testground;
 
 import jcl.compiler.environment.Environment;
 import jcl.compiler.function.expanders.SymbolMacroExpander;
+import jcl.lang.CharacterStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.SymbolStruct;
-import jcl.lang.factory.LispStructFactory;
 
 @SuppressWarnings({"all", "rawtypes"})
 public class TestGroundSymbolMacroExpander extends SymbolMacroExpander {
@@ -20,7 +20,7 @@ public class TestGroundSymbolMacroExpander extends SymbolMacroExpander {
 
 	@Override
 	public LispStruct expand(final SymbolStruct form, final Environment environment) {
-		return LispStructFactory.toCharacter(123456789);
+		return CharacterStruct.toLispCharacter(123456789);
 	}
 
 	// TODO: COMMENTED OUT?!?!?!?

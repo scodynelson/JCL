@@ -66,7 +66,7 @@ public final class RenamePackageFunction extends CommonLispBuiltInFunctionStruct
 		} else if (packageDesignator instanceof SymbolStruct) {
 			newName = ((SymbolStruct) packageDesignator).getName();
 		} else if (packageDesignator instanceof CharacterStruct) {
-			newName = ((CharacterStruct) packageDesignator).getCharacter().toString();
+			newName = ((CharacterStruct) packageDesignator).toJavaCharacter().toString();
 		} else if (packageDesignator instanceof PackageStruct) {
 			newName = ((PackageStruct) packageDesignator).getName();
 		} else {

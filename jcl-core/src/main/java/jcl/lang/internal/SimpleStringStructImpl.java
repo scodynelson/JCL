@@ -183,7 +183,7 @@ public final class SimpleStringStructImpl extends AbstractStringStructImpl {
 		final IntegerStruct newDisplacedIndexOffset = context.getDisplacedIndexOffset();
 
 		final LispType displacedElementType = newDisplacedTo.arrayElementType();
-		if (!upgradedET.equals(displacedElementType)) {
+		if (!upgradedET.typeEquals(displacedElementType)) {
 			throw new TypeErrorException(
 					"Provided array for displacement " + newDisplacedTo + " is not a subtype of the upgraded-array-element-type " + upgradedET + '.');
 		}
@@ -213,7 +213,7 @@ public final class SimpleStringStructImpl extends AbstractStringStructImpl {
 
 		for (final LispStruct initialElement : newInitialContents) {
 			final LispType currentElementType = initialElement.getType();
-			if (currentElementType.isNotOfType(upgradedET)) {
+			if (!upgradedET.typeEquals(currentElementType)) {
 				throw new TypeErrorException(
 						"Provided element " + initialElement + " is not a subtype of the upgraded-array-element-type " + upgradedET + '.');
 			}

@@ -10,6 +10,7 @@ import jcl.lang.NumberStruct;
 import jcl.lang.RationalStruct;
 import jcl.lang.RealStruct;
 import jcl.type.LispType;
+import lombok.EqualsAndHashCode;
 import org.apfloat.Apcomplex;
 import org.apfloat.Apfloat;
 import org.apfloat.Apint;
@@ -22,6 +23,7 @@ import org.apfloat.AprationalMath;
  * @param <A>
  * 		the type of {@link Aprational} the {@link RationalStruct} object will use for its value
  */
+@EqualsAndHashCode(callSuper = true)
 abstract class RationalStructImpl<A extends Aprational> extends RealStructImpl<A> implements RationalStruct {
 
 	/**

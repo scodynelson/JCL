@@ -10,7 +10,7 @@ import jcl.lang.statics.GlobalPackageStruct;
 /**
  * Abstract base class for all {@link LispType} implementations.
  */
-public class TypeBaseClass extends SymbolStructImpl implements LispType {
+public abstract class TypeBaseClass extends SymbolStructImpl implements LispType {
 
 	/**
 	 * Protected constructor.

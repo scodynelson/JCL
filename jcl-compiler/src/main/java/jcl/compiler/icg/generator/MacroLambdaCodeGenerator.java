@@ -608,7 +608,7 @@ final class MacroLambdaCodeGenerator implements CodeGenerator<MacroLambdaStruct>
 	 * protected LispStruct getInitForm(Closure var1, SymbolStruct var2) {
 	 *      PackageStruct var3 = PackageStruct.findPackage("COMMON-LISP-USER");
 	 *      SymbolStruct var4 = var3.intern("Y").getSymbol();
-	 *      if(var2.equals(var4)) {
+	 *      if(var2.eq(var4)) {
 	 *          BigInteger var5 = new BigInteger("2");
 	 *          return new IntIntegerStruct(var5);
 	 *      } else {
@@ -727,11 +727,11 @@ final class MacroLambdaCodeGenerator implements CodeGenerator<MacroLambdaStruct>
 
 		mv.visitVarInsn(Opcodes.ALOAD, symbolArgStore);
 		mv.visitVarInsn(Opcodes.ALOAD, initFormVarSymbolStore);
-		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
-		                   GenerationConstants.JAVA_OBJECT_NAME,
-		                   GenerationConstants.JAVA_EQUALS_METHOD_NAME,
-		                   GenerationConstants.JAVA_EQUALS_METHOD_DESC,
-		                   false);
+		mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
+		                   GenerationConstants.LISP_STRUCT_NAME,
+		                   GenerationConstants.LISP_STRUCT_EQ_METHOD_NAME,
+		                   GenerationConstants.LISP_STRUCT_EQ_METHOD_DESC,
+		                   true);
 		mv.visitJumpInsn(Opcodes.IFEQ, symbolCheckIfEnd);
 
 		codeGenerator.generate(initForm, generatorState);

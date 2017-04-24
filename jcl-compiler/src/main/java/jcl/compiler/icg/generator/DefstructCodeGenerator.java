@@ -24,7 +24,6 @@ import jcl.type.LispType;
 import jcl.type.StructureObjectType;
 import jcl.type.TypeBaseClass;
 import jcl.type.TypeFactory;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
@@ -196,7 +195,6 @@ final class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 //	import TypeBaseClass;
 //	import TypeFactory;
 //	import AtomicTypeSpecifier;
-//	import org.apache.commons.lang3.builder.HashCodeBuilder;
 //
 //	public interface FOOStructureType_34553964509765 extends StructureObjectType {
 //	FOOStructureType_34553964509765 INSTANCE = new FOOStructureType_34553964509765.Factory.FOOStructureTypeImpl_34553964509765((1_34553964509765)null);
@@ -215,11 +213,7 @@ final class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 //	super("FOO");
 //	}
 //
-//	public int hashCode() {
-//	return (new HashCodeBuilder()).appendSuper(super.hashCode()).toHashCode();
-//	}
-//
-//	public boolean equals(Object var1) {
+//	public boolean typeEquals(Object var1) {
 //	return this == var1 || var1 instanceof FOOStructureType_34553964509765;
 //	}
 //	}
@@ -236,7 +230,6 @@ final class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 //	import TypeBaseClass;
 //	import TypeFactory;
 //	import AtomicTypeSpecifier;
-//	import org.apache.commons.lang3.builder.HashCodeBuilder;
 //
 //	public interface BARStructureType_35662194797508 extends FOOStructureType_35638529195808 {
 //	BARStructureType_35662194797508 INSTANCE = new BARStructureType_35662194797508.Factory.BARStructureTypeImpl_35662194797508((1_35662194797508)null);
@@ -255,11 +248,7 @@ final class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 //	super("BAR");
 //	}
 //
-//	public int hashCode() {
-//	return (new HashCodeBuilder()).appendSuper(super.hashCode()).toHashCode();
-//	}
-//
-//	public boolean equals(Object var1) {
+//	public boolean typeEquals(Object var1) {
 //	return this == var1 || var1 instanceof BARStructureType_35662194797508;
 //	}
 //	}
@@ -481,11 +470,7 @@ final class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 	 *              super("FOO");
 	 *          }
 	 *
-	 *          public int hashCode() {
-	 *              return (new HashCodeBuilder()).appendSuper(super.hashCode()).toHashCode();
-	 *          }
-	 *
-	 *          public boolean equals(Object var1) {
+	 *          public boolean typeEquals(Object var1) {
 	 *              return this == var1 || var1 instanceof FOOStructureType_1;
 	 *          }
 	 *      }
@@ -739,8 +724,7 @@ final class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 	 * generated</li>
 	 * <li>Generating the code for the default constructor</li>
 	 * <li>Generating the code for the {@code Synthetic} constructor</li>
-	 * <li>Generating the code for the {@link Object#hashCode()} method</li>
-	 * <li>Generating the code for the {@link Object#equals(Object)} method</li>
+	 * <li>Generating the code for the {@link LispType#typeEquals(Object)} method</li>
 	 * <li>Generating the code to end the new class visitation</li>
 	 * </ol>
 	 * As an example, it will transform {@code (compiler:%defstruct foo nil make-foo nil a)} into the following Java
@@ -754,11 +738,7 @@ final class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 	 *          super("FOO");
 	 *      }
 	 *
-	 *      public int hashCode() {
-	 *          return (new HashCodeBuilder()).appendSuper(super.hashCode()).toHashCode();
-	 *      }
-	 *
-	 *      public boolean equals(Object var1) {
+	 *      public boolean typeEquals(Object var1) {
 	 *          return this == var1 || var1 instanceof FOOStructureType_1;
 	 *      }
 	 * }
@@ -831,9 +811,8 @@ final class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 		                                     structureName);
 		generateStructureTypeImplSyntheticConstructor(generatorState, cw,
 		                                              structureTypeImplClassName, structureTypeImplSyntheticClassDesc);
-		generateStructureTypeImplHashCodeMethod(generatorState, cw);
-		generateStructureTypeImplEqualsMethod(generatorState, cw,
-		                                      structureTypeClassName);
+		generateStructureTypeImplTypeEqualsMethod(generatorState, cw,
+		                                          structureTypeClassName);
 
 		cw.visitEnd();
 
@@ -952,80 +931,7 @@ final class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 	}
 
 	/**
-	 * Private method for generating the {@link Object#hashCode()} method for the generated {@link StructureObjectType}
-	 * being written to via the provided {@link ClassWriter}. The generation will perform the following operations:
-	 * <ol>
-	 * <li>Generating to code to create a new {@link HashCodeBuilder}</li>
-	 * <li>Generating the code to call {@link HashCodeBuilder#appendSuper(int)} with the value of {@code
-	 * super.hashCode()}</li>
-	 * <li>Generating the code to call and return the value of {@link HashCodeBuilder#toHashCode()}</li>
-	 * </ol>
-	 * The following is the example Java code generated when {@code (compiler:%defstruct foo nil make-foo nil a)} is
-	 * encountered:
-	 * <pre>
-	 * {@code
-	 * public int hashCode() {
-	 *      return (new HashCodeBuilder()).appendSuper(super.hashCode()).toHashCode();
-	 * }
-	 * }
-	 * </pre>
-	 *
-	 * @param generatorState
-	 * 		stateful object used to hold the current state of the code generation process
-	 * @param cw
-	 * 		the current {@link ClassWriter} to generate the method code for
-	 */
-	private static void generateStructureTypeImplHashCodeMethod(final GeneratorState generatorState,
-	                                                            final ClassWriter cw) {
-		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PUBLIC,
-		                                        GenerationConstants.JAVA_HASH_CODE_METHOD_NAME,
-		                                        GenerationConstants.JAVA_HASH_CODE_METHOD_DESC,
-		                                        null,
-		                                        null);
-
-		final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
-		final Deque<JavaMethodBuilder> methodBuilderDeque = generatorState.getMethodBuilderDeque();
-		methodBuilderDeque.addFirst(methodBuilder);
-
-		mv.visitCode();
-		final int thisStore = methodBuilder.getNextAvailableStore();
-
-		mv.visitTypeInsn(Opcodes.NEW, GenerationConstants.HASH_CODE_BUILDER_NAME);
-		mv.visitInsn(Opcodes.DUP);
-
-		mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
-		                   GenerationConstants.HASH_CODE_BUILDER_NAME,
-		                   GenerationConstants.INIT_METHOD_NAME,
-		                   GenerationConstants.INIT_METHOD_DESC,
-		                   false);
-		mv.visitVarInsn(Opcodes.ALOAD, thisStore);
-		mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
-		                   GenerationConstants.TYPE_BASE_CLASS_NAME,
-		                   GenerationConstants.JAVA_HASH_CODE_METHOD_NAME,
-		                   GenerationConstants.JAVA_HASH_CODE_METHOD_DESC,
-		                   false);
-
-		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
-		                   GenerationConstants.HASH_CODE_BUILDER_NAME,
-		                   GenerationConstants.HASH_CODE_BUILDER_APPEND_SUPER_METHOD_NAME,
-		                   GenerationConstants.HASH_CODE_BUILDER_APPEND_SUPER_METHOD_DESC,
-		                   false);
-		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
-		                   GenerationConstants.HASH_CODE_BUILDER_NAME,
-		                   GenerationConstants.HASH_CODE_BUILDER_TO_HASH_CODE_METHOD_NAME,
-		                   GenerationConstants.HASH_CODE_BUILDER_TO_HASH_CODE_METHOD_DESC,
-		                   false);
-
-		mv.visitInsn(Opcodes.IRETURN);
-
-		mv.visitMaxs(-1, -1);
-		mv.visitEnd();
-
-		methodBuilderDeque.removeFirst();
-	}
-
-	/**
-	 * Private method for generating the {@link Object#equals(Object)} method for the generated {@link
+	 * Private method for generating the {@link LispType#typeEquals(Object)} method for the generated {@link
 	 * StructureObjectType} being written to via the provided {@link ClassWriter}. The generation will perform the
 	 * following operations:
 	 * <ol>
@@ -1040,7 +946,7 @@ final class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 	 * encountered:
 	 * <pre>
 	 * {@code
-	 * public boolean equals(Object var1) {
+	 * public boolean typeEquals(Object var1) {
 	 *      return this == var1 || var1 instanceof FOOStructureType_1;
 	 * }
 	 * }
@@ -1052,14 +958,14 @@ final class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 	 * 		the current {@link ClassWriter} to generate the method code for
 	 * @param structureTypeClassName
 	 * 		the {@link String} containing the name of the {@link StructureObjectType} whose implementation class this
-	 * 		{@link Object#equals(Object)} method is being generated for
+	 * 		{@link LispType#typeEquals(Object)} method is being generated for
 	 */
-	private static void generateStructureTypeImplEqualsMethod(final GeneratorState generatorState,
-	                                                          final ClassWriter cw,
-	                                                          final String structureTypeClassName) {
+	private static void generateStructureTypeImplTypeEqualsMethod(final GeneratorState generatorState,
+	                                                              final ClassWriter cw,
+	                                                              final String structureTypeClassName) {
 		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PUBLIC,
-		                                        GenerationConstants.JAVA_EQUALS_METHOD_NAME,
-		                                        GenerationConstants.JAVA_EQUALS_METHOD_DESC,
+		                                        GenerationConstants.LISP_TYPE_TYPE_EQUALS_METHOD_NAME,
+		                                        GenerationConstants.LISP_TYPE_TYPE_EQUALS_METHOD_DESC,
 		                                        null,
 		                                        null);
 

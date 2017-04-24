@@ -96,16 +96,16 @@ public class EvalWhenExpander extends MacroFunctionExpander<LispStruct> {
 
 	private static boolean isCompileTopLevel(final ListStruct situationList) {
 		return situationList.stream()
-		                    .anyMatch(element -> CommonLispSymbols.COMPILE_TOPLEVEL.equals(element) || CommonLispSymbols.COMPILE.equals(element));
+		                    .anyMatch(element -> CommonLispSymbols.COMPILE_TOPLEVEL.eq(element) || CommonLispSymbols.COMPILE.eq(element));
 	}
 
 	private static boolean isLoadTopLevel(final ListStruct situationList) {
 		return situationList.stream()
-		                    .anyMatch(element -> CommonLispSymbols.LOAD_TOPLEVEL.equals(element) || CommonLispSymbols.LOAD.equals(element));
+		                    .anyMatch(element -> CommonLispSymbols.LOAD_TOPLEVEL.eq(element) || CommonLispSymbols.LOAD.eq(element));
 	}
 
 	private static boolean isExecute(final ListStruct situationList) {
 		return situationList.stream()
-		                    .anyMatch(element -> CommonLispSymbols.EXECUTE.equals(element) || CommonLispSymbols.EVAL.equals(element));
+		                    .anyMatch(element -> CommonLispSymbols.EXECUTE.eq(element) || CommonLispSymbols.EVAL.eq(element));
 	}
 }

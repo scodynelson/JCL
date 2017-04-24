@@ -8,7 +8,6 @@ import jcl.type.StructureObjectType;
 import jcl.type.TypeBaseClass;
 import jcl.type.TypeFactory;
 import jcl.type.typespecifier.AtomicTypeSpecifier;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 @SuppressWarnings("all")
 public interface FooStructureType extends StructureObjectType {
@@ -29,13 +28,7 @@ public interface FooStructureType extends StructureObjectType {
 			}
 
 			@Override
-			public int hashCode() {
-				return new HashCodeBuilder().appendSuper(super.hashCode())
-				                            .toHashCode();
-			}
-
-			@Override
-			public boolean equals(final Object obj) {
+			public boolean typeEquals(final Object obj) {
 				return (this == obj) || (obj instanceof FooStructureType);
 			}
 		}

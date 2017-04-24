@@ -547,4 +547,11 @@ public interface RealStruct extends NumberStruct {
 
 	@Override
 	RealStruct atanh();
+
+	@Override
+	default boolean eql(final LispStruct object) {
+		return eq(object) ||
+				((object instanceof RealStruct)
+						&& ((RealStruct) object).ap().equals(ap()));
+	}
 }

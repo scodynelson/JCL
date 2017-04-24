@@ -57,7 +57,7 @@ public class SharpBackslashReaderMacroFunction extends ReaderMacroFunctionImpl {
 		final StringStruct string = StringStruct.toLispString(tokenString.toUpperCase());
 		try {
 			final LispStruct character = CharacterStruct.nameChar(string);
-			if (NILStruct.INSTANCE.equals(character)) {
+			if (NILStruct.INSTANCE.eq(character)) {
 				throw new ReaderErrorException("Unrecognized character name: " + tokenString);
 			}
 			return character;

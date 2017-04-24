@@ -9,10 +9,6 @@ import java.util.List;
 
 import jcl.lang.condition.exception.FileErrorException;
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
  * The {@link PathnameDirectoryComponent} is the object representation of a directory component of the 'directory'
@@ -80,36 +76,5 @@ public final class PathnameDirectoryComponent {
 	 */
 	public PathnameDirectoryType getPathnameDirectoryType() {
 		return pathnameDirectoryType;
-	}
-
-	@Override
-	public int hashCode() {
-		return new HashCodeBuilder().append(directoryLevels)
-		                            .append(pathnameDirectoryType)
-		                            .toHashCode();
-	}
-
-	@Override
-	public boolean equals(final Object obj) {
-		if (obj == null) {
-			return false;
-		}
-		if (obj == this) {
-			return true;
-		}
-		if (obj.getClass() != getClass()) {
-			return false;
-		}
-		final PathnameDirectoryComponent rhs = (PathnameDirectoryComponent) obj;
-		return new EqualsBuilder().append(directoryLevels, rhs.directoryLevels)
-		                          .append(pathnameDirectoryType, rhs.pathnameDirectoryType)
-		                          .isEquals();
-	}
-
-	@Override
-	public String toString() {
-		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(directoryLevels)
-		                                                                .append(pathnameDirectoryType)
-		                                                                .toString();
 	}
 }

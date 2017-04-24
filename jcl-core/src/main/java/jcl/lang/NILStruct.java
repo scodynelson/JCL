@@ -97,7 +97,7 @@ public final class NILStruct extends BooleanStructImpl implements ListStruct {
 
 	@Override
 	public boolean tailp(final LispStruct object) {
-		return INSTANCE.equals(object);
+		return INSTANCE == object;
 	}
 
 	@Override

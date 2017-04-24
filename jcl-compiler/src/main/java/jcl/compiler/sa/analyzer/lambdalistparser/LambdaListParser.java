@@ -257,7 +257,7 @@ public class LambdaListParser {
 					}
 
 					LispStruct initForm = NILStruct.INSTANCE;
-					if (!secondInCurrent.equals(NILStruct.INSTANCE)) {
+					if (!secondInCurrent.eq(NILStruct.INSTANCE)) {
 						initForm = secondInCurrent;
 					}
 
@@ -276,7 +276,7 @@ public class LambdaListParser {
 					}
 
 					final SuppliedPParameter suppliedPBinding;
-					if (thirdInCurrent.equals(NILStruct.INSTANCE)) {
+					if (thirdInCurrent.eq(NILStruct.INSTANCE)) {
 						final String paramName = varNameCurrent.getName();
 						final String customSuppliedPName = paramName + "-P-" + System.nanoTime();
 						final PackageStruct currentParamPackage = varNameCurrent.getSymbolPackage();
@@ -598,7 +598,7 @@ public class LambdaListParser {
 					}
 
 					LispStruct initForm = NILStruct.INSTANCE;
-					if (!secondInCurrent.equals(NILStruct.INSTANCE)) {
+					if (!secondInCurrent.eq(NILStruct.INSTANCE)) {
 						initForm = secondInCurrent;
 					}
 
@@ -617,7 +617,7 @@ public class LambdaListParser {
 					}
 
 					final SuppliedPParameter suppliedPBinding;
-					if (thirdInCurrent.equals(NILStruct.INSTANCE)) {
+					if (thirdInCurrent.eq(NILStruct.INSTANCE)) {
 						final String paramName = varNameCurrent.getName();
 						final String customSuppliedPName = paramName + "-P-" + System.nanoTime();
 						final PackageStruct currentParamPackage = varNameCurrent.getSymbolPackage();
@@ -750,7 +750,7 @@ public class LambdaListParser {
 					}
 
 					LispStruct initForm = NILStruct.INSTANCE;
-					if (!secondInCurrent.equals(NILStruct.INSTANCE)) {
+					if (!secondInCurrent.eq(NILStruct.INSTANCE)) {
 						initForm = secondInCurrent;
 					}
 
@@ -780,14 +780,14 @@ public class LambdaListParser {
 	}
 
 	protected static boolean isLambdaListKeyword(final LispStruct lispStruct) {
-		return lispStruct.equals(CompilerConstants.AUX)
-				|| lispStruct.equals(CompilerConstants.ALLOW_OTHER_KEYS)
-				|| lispStruct.equals(CompilerConstants.KEY)
-				|| lispStruct.equals(CompilerConstants.OPTIONAL)
-				|| lispStruct.equals(CompilerConstants.REST)
-				|| lispStruct.equals(CompilerConstants.WHOLE)
-				|| lispStruct.equals(CompilerConstants.ENVIRONMENT)
-				|| lispStruct.equals(CompilerConstants.BODY);
+		return lispStruct.eq(CompilerConstants.AUX)
+				|| lispStruct.eq(CompilerConstants.ALLOW_OTHER_KEYS)
+				|| lispStruct.eq(CompilerConstants.KEY)
+				|| lispStruct.eq(CompilerConstants.OPTIONAL)
+				|| lispStruct.eq(CompilerConstants.REST)
+				|| lispStruct.eq(CompilerConstants.WHOLE)
+				|| lispStruct.eq(CompilerConstants.ENVIRONMENT)
+				|| lispStruct.eq(CompilerConstants.BODY);
 	}
 
 	private static KeywordStruct getKeywordStruct(final String symbolName) {

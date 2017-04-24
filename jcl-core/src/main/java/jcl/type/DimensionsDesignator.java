@@ -7,9 +7,9 @@ package jcl.type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 import org.apache.commons.lang3.ObjectUtils;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * This class represents a dimensions designator, found within compound {@link ArrayType}s.
@@ -52,8 +52,7 @@ public class DimensionsDesignator {
 
 	@Override
 	public int hashCode() {
-		return new HashCodeBuilder().append(dimensions)
-		                            .toHashCode();
+		return Objects.hashCode(dimensions);
 	}
 
 	@Override

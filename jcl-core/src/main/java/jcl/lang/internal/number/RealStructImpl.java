@@ -12,6 +12,7 @@ import jcl.lang.NumberStruct;
 import jcl.lang.RealStruct;
 import jcl.lang.number.QuotientRemainder;
 import jcl.type.LispType;
+import lombok.EqualsAndHashCode;
 import org.apfloat.Apcomplex;
 import org.apfloat.Apfloat;
 import org.apfloat.ApfloatMath;
@@ -23,6 +24,7 @@ import org.apfloat.Apint;
  * @param <A>
  * 		the type of {@link Apfloat} the {@link RealStruct} object will use for its value
  */
+@EqualsAndHashCode(callSuper = true)
 abstract class RealStructImpl<A extends Apfloat> extends NumberStructImpl<A> implements RealStruct {
 
 	/**

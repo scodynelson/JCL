@@ -46,9 +46,9 @@ public final class PeekCharFunction extends CommonLispBuiltInFunctionStructBase 
 
 		final LispStruct lispStruct1 = arguments.getOptionalArgument(PEEK_TYPE_ARGUMENT);
 		final PeekType peekType;
-		if (TStruct.INSTANCE.equals(lispStruct1)) {
+		if (TStruct.INSTANCE.eq(lispStruct1)) {
 			peekType = PeekType.T_PEEK_TYPE;
-		} else if (NILStruct.INSTANCE.equals(lispStruct1)) {
+		} else if (NILStruct.INSTANCE.eq(lispStruct1)) {
 			peekType = PeekType.NIL_PEEK_TYPE;
 		} else if (lispStruct1 instanceof CharacterStruct) {
 			final CharacterStruct character = (CharacterStruct) lispStruct1;
@@ -59,9 +59,9 @@ public final class PeekCharFunction extends CommonLispBuiltInFunctionStructBase 
 
 		final LispStruct lispStruct = arguments.getOptionalArgument(INPUT_STREAM_ARGUMENT);
 		final InputStreamStruct inputStreamStruct;
-		if (TStruct.INSTANCE.equals(lispStruct)) {
+		if (TStruct.INSTANCE.eq(lispStruct)) {
 			inputStreamStruct = StreamVariables.STANDARD_INPUT.getVariableValue();
-		} else if (NILStruct.INSTANCE.equals(lispStruct)) {
+		} else if (NILStruct.INSTANCE.eq(lispStruct)) {
 			inputStreamStruct = StreamVariables.STANDARD_INPUT.getVariableValue();
 		} else if (lispStruct instanceof InputStreamStruct) {
 			inputStreamStruct = (InputStreamStruct) lispStruct;

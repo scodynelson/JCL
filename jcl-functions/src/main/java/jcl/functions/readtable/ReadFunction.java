@@ -47,9 +47,9 @@ public final class ReadFunction extends CommonLispBuiltInFunctionStructBase {
 
 		final LispStruct inputStreamArg = arguments.getRequiredArgument(INPUT_STREAM_ARGUMENT);
 		final InputStreamStruct inputStreamStruct;
-		if (TStruct.INSTANCE.equals(inputStreamArg)) {
+		if (TStruct.INSTANCE.eq(inputStreamArg)) {
 			inputStreamStruct = StreamVariables.TERMINAL_IO.getVariableValue();
-		} else if (NILStruct.INSTANCE.equals(inputStreamArg)) {
+		} else if (NILStruct.INSTANCE.eq(inputStreamArg)) {
 			inputStreamStruct = StreamVariables.STANDARD_INPUT.getVariableValue();
 		} else if (inputStreamArg instanceof InputStreamStruct) {
 			inputStreamStruct = (InputStreamStruct) inputStreamArg;

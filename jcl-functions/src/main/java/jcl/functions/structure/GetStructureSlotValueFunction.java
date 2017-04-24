@@ -50,7 +50,7 @@ public final class GetStructureSlotValueFunction extends SystemBuiltInFunctionSt
 		final LispType instanceStructureType = instanceStructureClass.getType();
 
 		final LispType symbolStructureType = symbolStructureClass.getType();
-		if (!symbolStructureType.equals(instanceStructureType)) {
+		if (symbolStructureType.isNotOfType(instanceStructureType)) {
 			throw new TypeErrorException("Error: The value " + structureInstance + " is not of the expected type " + symbolStructureType + '.');
 		}
 
@@ -63,7 +63,7 @@ public final class GetStructureSlotValueFunction extends SystemBuiltInFunctionSt
 
 		final StructureClassStruct instanceStructureClass = structureInstance.getStructureClass();
 
-		if (symbolStructureClass.equals(instanceStructureClass)) {
+		if (symbolStructureClass.eq(instanceStructureClass)) {
 			return structureInstance.getSlot(slotName);
 		}
 

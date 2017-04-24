@@ -8,7 +8,6 @@ import java.util.List;
 
 import jcl.type.typespecifier.AtomicTypeSpecifier;
 import jcl.type.typespecifier.CompoundTypeSpecifier;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * A {@link SimpleArrayType} is the type of an {@link ArrayType} that is not displaced to another {@link ArrayType},
@@ -112,15 +111,7 @@ public interface SimpleArrayType extends ArrayType {
 			}
 
 			@Override
-			public int hashCode() {
-				return new HashCodeBuilder().appendSuper(super.hashCode())
-				                            .append(dimensions)
-				                            .append(elementType)
-				                            .toHashCode();
-			}
-
-			@Override
-			public boolean equals(final Object obj) {
+			public boolean typeEquals(final Object obj) {
 				if (this == obj) {
 					return true;
 				}
@@ -151,10 +142,10 @@ public interface SimpleArrayType extends ArrayType {
 			 */
 			private boolean checkSimpleArrayTypeImplEquality(final SimpleArrayTypeImpl simpleArrayTypeImpl) {
 				if (dimensions == null) {
-					return elementType.equals(simpleArrayTypeImpl.elementType);
+					return elementType.isOfType(simpleArrayTypeImpl.elementType);
 				}
 
-				return dimensions.equals(simpleArrayTypeImpl.dimensions) && elementType.equals(simpleArrayTypeImpl.elementType);
+				return dimensions.equals(simpleArrayTypeImpl.dimensions) && elementType.isOfType(simpleArrayTypeImpl.elementType);
 			}
 
 			@Override

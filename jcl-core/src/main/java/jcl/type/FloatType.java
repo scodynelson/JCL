@@ -8,7 +8,6 @@ import java.math.BigDecimal;
 
 import jcl.type.typespecifier.AtomicTypeSpecifier;
 import jcl.type.typespecifier.CompoundTypeSpecifier;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * A {@link FloatType} is a mathematical rational (but not a Common Lisp {@link RationalType}) of the form s*f*b^e-p,
@@ -131,14 +130,7 @@ public interface FloatType extends RealType {
 			}
 
 			@Override
-			public int hashCode() {
-				return new HashCodeBuilder().appendSuper(super.hashCode())
-				                            .append(intervalDesignator)
-				                            .toHashCode();
-			}
-
-			@Override
-			public boolean equals(final Object obj) {
+			public boolean typeEquals(final Object obj) {
 				if (this == obj) {
 					return true;
 				}

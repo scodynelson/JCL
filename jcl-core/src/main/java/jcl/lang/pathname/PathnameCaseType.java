@@ -6,8 +6,6 @@ package jcl.lang.pathname;
 
 import jcl.lang.LispStruct;
 import jcl.lang.statics.CommonLispSymbols;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
  * The {@link PathnameCaseType} is the enumeration of the case types to parse the elements of a Lisp 'pathname' type.
@@ -58,16 +56,10 @@ public enum PathnameCaseType {
 	 */
 	public static PathnameCaseType fromValue(final LispStruct value) {
 		for (final PathnameCaseType caseType : values()) {
-			if (caseType.value.equals(value)) {
+			if (caseType.value.eql(value)) {
 				return caseType;
 			}
 		}
 		return null;
-	}
-
-	@Override
-	public String toString() {
-		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(value)
-		                                                                .toString();
 	}
 }

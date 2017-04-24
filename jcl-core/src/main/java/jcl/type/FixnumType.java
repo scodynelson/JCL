@@ -8,7 +8,6 @@ import java.math.BigInteger;
 
 import jcl.type.typespecifier.AndTypeSpecifier;
 import jcl.type.typespecifier.AtomicTypeSpecifier;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * A {@link FixnumType} is an {@link IntegerType} whose value is between most-negative-fixnum and most-positive-fixnum
@@ -56,13 +55,7 @@ public interface FixnumType extends IntegerType {
 			}
 
 			@Override
-			public int hashCode() {
-				return new HashCodeBuilder().appendSuper(super.hashCode())
-				                            .toHashCode();
-			}
-
-			@Override
-			public boolean equals(final Object obj) {
+			public boolean typeEquals(final Object obj) {
 				return (this == obj) || (obj instanceof FixnumType);
 			}
 

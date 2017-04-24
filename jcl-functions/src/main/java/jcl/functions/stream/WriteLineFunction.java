@@ -42,9 +42,9 @@ public final class WriteLineFunction extends CommonLispBuiltInFunctionStructBase
 		final LispStruct lispStruct = arguments.getOptionalArgument(OUTPUT_STREAM_ARGUMENT);
 
 		final OutputStreamStruct outputStreamStruct;
-		if (TStruct.INSTANCE.equals(lispStruct)) {
+		if (TStruct.INSTANCE.eq(lispStruct)) {
 			outputStreamStruct = StreamVariables.STANDARD_OUTPUT.getVariableValue();
-		} else if (NILStruct.INSTANCE.equals(lispStruct)) {
+		} else if (NILStruct.INSTANCE.eq(lispStruct)) {
 			outputStreamStruct = StreamVariables.STANDARD_OUTPUT.getVariableValue();
 		} else if (lispStruct instanceof OutputStreamStruct) {
 			outputStreamStruct = (OutputStreamStruct) lispStruct;

@@ -38,7 +38,7 @@ public final class TypeUtils {
 		final LispType elementType1 = arrayType1.getElementType();
 		if (elementType1 != null) {
 			final LispType elementType2 = arrayType2.getElementType();
-			if (!elementType1.equals(elementType2)) {
+			if (elementType1.isNotOfType(elementType2)) {
 				return false;
 			}
 		}

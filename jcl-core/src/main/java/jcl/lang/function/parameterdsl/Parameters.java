@@ -152,8 +152,8 @@ public final class Parameters {
 					if (restIterator.hasNext()) {
 						final LispStruct parameterValue = restIterator.next();
 
-						if (ALLOW_OTHER_KEYS.equals(argument)) {
-							if (!NILStruct.INSTANCE.equals(parameterValue)) {
+						if (ALLOW_OTHER_KEYS.eq(argument)) {
+							if (!NILStruct.INSTANCE.eq(parameterValue)) {
 								doNotAllowOtherKeys = false;
 							}
 						}
@@ -166,9 +166,9 @@ public final class Parameters {
 						                                     keywordArgument);
 						throw new ProgramErrorException(message);
 					}
-				} else if (ALLOW_OTHER_KEYS.equals(argument)) {
+				} else if (ALLOW_OTHER_KEYS.eq(argument)) {
 					final LispStruct allowOtherKeysValue = restIterator.next();
-					if (!NILStruct.INSTANCE.equals(allowOtherKeysValue)) {
+					if (!NILStruct.INSTANCE.eq(allowOtherKeysValue)) {
 						doNotAllowOtherKeys = false;
 					}
 				} else {

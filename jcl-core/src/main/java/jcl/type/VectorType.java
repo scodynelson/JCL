@@ -8,7 +8,6 @@ import java.util.List;
 
 import jcl.type.typespecifier.AtomicTypeSpecifier;
 import jcl.type.typespecifier.CompoundTypeSpecifier;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * A {@link VectorType} is any one-dimensional {@link ArrayType}.
@@ -113,15 +112,7 @@ public interface VectorType extends ArrayType, SequenceType {
 			}
 
 			@Override
-			public int hashCode() {
-				return new HashCodeBuilder().appendSuper(super.hashCode())
-				                            .append(size)
-				                            .append(elementType)
-				                            .toHashCode();
-			}
-
-			@Override
-			public boolean equals(final Object obj) {
+			public boolean typeEquals(final Object obj) {
 				if (this == obj) {
 					return true;
 				}
@@ -152,10 +143,10 @@ public interface VectorType extends ArrayType, SequenceType {
 			 */
 			private boolean checkVectorTypeImplEquality(final VectorTypeImpl vectorTypeImpl) {
 				if (size == null) {
-					return elementType.equals(vectorTypeImpl.elementType);
+					return elementType.isOfType(vectorTypeImpl.elementType);
 				}
 
-				return size.equals(vectorTypeImpl.size) && elementType.equals(vectorTypeImpl.elementType);
+				return size.equals(vectorTypeImpl.size) && elementType.isOfType(vectorTypeImpl.elementType);
 			}
 
 			@Override

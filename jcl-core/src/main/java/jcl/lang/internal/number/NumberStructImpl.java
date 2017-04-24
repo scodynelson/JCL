@@ -7,6 +7,7 @@ package jcl.lang.internal.number;
 import jcl.lang.NumberStruct;
 import jcl.lang.RealStruct;
 import jcl.type.LispType;
+import lombok.EqualsAndHashCode;
 import org.apfloat.Apcomplex;
 import org.apfloat.ApcomplexMath;
 import org.apfloat.Apfloat;
@@ -17,6 +18,7 @@ import org.apfloat.Apfloat;
  * @param <A>
  * 		the type of {@link Apcomplex} the {@link NumberStruct} object will use for its value
  */
+@EqualsAndHashCode(callSuper = true)
 abstract class NumberStructImpl<A extends Apcomplex> extends InternalNumberStruct<A> implements NumberStruct {
 
 	/**

@@ -32,7 +32,7 @@ abstract class ConsMappingFunction extends CommonLispBuiltInFunctionStructBase {
 
 		while (true) {
 			for (final LispStruct x : arglists) {
-				if (NILStruct.INSTANCE.equals(x)) {
+				if (NILStruct.INSTANCE.eq(x)) {
 					if (accumulate != null) {
 						return retList.getCdr();
 					} else {
@@ -44,7 +44,7 @@ abstract class ConsMappingFunction extends CommonLispBuiltInFunctionStructBase {
 			// Inner 'DO' vars
 			ListStruct l = arglists;
 
-			while (!NILStruct.INSTANCE.equals(l)) {
+			while (!NILStruct.INSTANCE.eq(l)) {
 
 				// PUSH
 				final LispStruct carToPush;

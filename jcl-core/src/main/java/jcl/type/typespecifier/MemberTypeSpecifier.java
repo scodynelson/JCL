@@ -10,9 +10,6 @@ import java.util.List;
 
 import jcl.lang.LispStruct;
 import jcl.type.TypeBaseClass;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
  * A {@link MemberTypeSpecifier} denotes the set containing the named objects. An object is of this type if and only if
@@ -51,14 +48,7 @@ public class MemberTypeSpecifier extends TypeBaseClass implements CompoundTypeSp
 	}
 
 	@Override
-	public int hashCode() {
-		return new HashCodeBuilder().appendSuper(super.hashCode())
-		                            .append(lispStructs)
-		                            .toHashCode();
-	}
-
-	@Override
-	public boolean equals(final Object obj) {
+	public boolean typeEquals(final Object obj) {
 		if (this == obj) {
 			return true;
 		}
@@ -70,16 +60,10 @@ public class MemberTypeSpecifier extends TypeBaseClass implements CompoundTypeSp
 		// TODO: does this account for x.equals(y) and y.equals(x)???
 		final LispStruct lispStruct = (LispStruct) obj;
 		for (final LispStruct memberLispStruct : lispStructs) {
-			if (lispStruct.equals(memberLispStruct)) {
+			if (lispStruct.eql(memberLispStruct)) {
 				return true;
 			}
 		}
 		return false;
-	}
-
-	@Override
-	public String toString() {
-		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(lispStructs)
-		                                                                .toString();
 	}
 }

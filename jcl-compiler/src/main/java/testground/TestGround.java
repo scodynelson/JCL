@@ -52,7 +52,7 @@ public class TestGround {
 			result = CharacterStruct.toLispCharacter(97);
 		} catch (final ReturnFromException rte) {
 			final SymbolStruct rteName = rte.getName();
-			if (rteName.equals(name)) {
+			if (rteName.eq(name)) {
 				result = rte.getResult();
 			} else {
 				throw rte;
@@ -77,7 +77,7 @@ public class TestGround {
 		testObj = ValuesStruct.extractPrimaryValue(testObj);
 
 		final LispStruct result;
-		if (!testObj.equals(NILStruct.INSTANCE)) {
+		if (!testObj.eq(NILStruct.INSTANCE)) {
 			result = CharacterStruct.toLispCharacter(197);
 		} else {
 			result = CharacterStruct.toLispCharacter(297);
@@ -94,7 +94,7 @@ public class TestGround {
 			resultForm = CharacterStruct.toLispCharacter(197);
 		} catch (final ThrowException te) {
 			final LispStruct teCatchTag = te.getCatchTag();
-			if (teCatchTag.equals(catchTag)) {
+			if (teCatchTag.eq(catchTag)) {
 				resultForm = te.getResultForm();
 			} else {
 				throw te;

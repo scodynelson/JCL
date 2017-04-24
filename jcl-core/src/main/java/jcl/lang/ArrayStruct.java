@@ -12,6 +12,7 @@ import jcl.lang.condition.exception.SimpleErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.internal.MultiArrayStructImpl;
 import jcl.lang.internal.NILArrayStructImpl;
+import jcl.lang.internal.number.IntegerStructImpl;
 import jcl.type.ArrayType;
 import jcl.type.BaseCharType;
 import jcl.type.BitType;
@@ -86,19 +87,46 @@ public interface ArrayStruct extends LispStruct {
 	LispStruct setfRowMajorAref(final LispStruct newElement, final IntegerStruct index);
 
 	static LispType upgradedArrayElementType(final LispType type) {
-		if (CharacterType.INSTANCE.equals(type)
-				|| BaseCharType.INSTANCE.equals(type)
-				|| StandardCharType.INSTANCE.equals(type)
-				|| ExtendedCharType.INSTANCE.equals(type)) {
+		if (CharacterType.INSTANCE.eq(type)
+				|| BaseCharType.INSTANCE.eq(type)
+				|| StandardCharType.INSTANCE.eq(type)
+				|| ExtendedCharType.INSTANCE.eq(type)) {
 			return CharacterType.INSTANCE;
 		}
-		if (BitType.INSTANCE.equals(type)) {
+		if (BitType.INSTANCE.eq(type)) {
 			return BitType.INSTANCE;
 		}
-		if (NILType.INSTANCE.equals(type)) {
+		if (NILType.INSTANCE.eq(type)) {
 			return NILType.INSTANCE;
 		}
 		return TType.INSTANCE;
+	}
+
+	@Override
+	default boolean equalp(final LispStruct object) {
+		if (eq(object)) {
+			return true;
+		}
+		if (object instanceof ArrayStruct) {
+			final ArrayStruct a = (ArrayStruct) object;
+			if (!arrayRank().eql(a.arrayRank())) {
+				return false;
+			}
+			for (int i = 0; i < arrayRank().intValue(); i++) {
+				final IntegerStruct axisNumber = IntegerStructImpl.valueOf(i);
+				if (!arrayDimension(axisNumber).eql(a.arrayDimension(axisNumber))) {
+					return false;
+				}
+			}
+			for (int i = 0; i < arrayTotalSize().intValue(); i++) {
+				final IntegerStruct index = IntegerStructImpl.valueOf(i);
+				if (!rowMajorAref(index).equalp(a.rowMajorAref(index))) {
+					return false;
+				}
+			}
+			return true;
+		}
+		return false;
 	}
 
 	// =================
@@ -177,7 +205,7 @@ public interface ArrayStruct extends LispStruct {
 
 		for (final LispStruct current : initialContents) {
 			final LispType currentType = current.getType();
-			if (!currentType.equals(elementType) && !elementType.equals(currentType)) {
+			if (currentType.isNotOfType(elementType)) {
 				throw new TypeErrorException(
 						"Provided element " + current + " is not a subtype of the provided elementType " + elementType + '.');
 			} else {
@@ -214,7 +242,7 @@ public interface ArrayStruct extends LispStruct {
 			if ((initialElement != null) && !(initialElement instanceof IntegerStruct)) {
 				throw new ErrorException("The value " + initialElement + " is not of the expected type BIT.");
 			}
-			if (!BitType.INSTANCE.equals(displacedTo.arrayElementType())) {
+			if (!BitType.INSTANCE.typeEquals(displacedTo.arrayElementType())) {
 				throw new ErrorException(
 						"The :DISPLACED-TO array " + displacedTo + " is not of :ELEMENT-TYPE BIT");
 			}
@@ -269,7 +297,7 @@ public interface ArrayStruct extends LispStruct {
 
 			if (displacedTo != null) {
 				final LispType displacedToType = displacedTo.getType();
-				if (displacedToType.isNotOfType(upgradedET)) {
+				if (!upgradedET.typeEquals(displacedToType)) {
 					throw new TypeErrorException(
 							"Provided displaced to " + displacedTo + " is not an array with a subtype of the upgraded-array-element-type " + upgradedET + '.');
 				}
@@ -306,7 +334,7 @@ public interface ArrayStruct extends LispStruct {
 			if (initialContents != null) {
 				for (final LispStruct element : initialContents) {
 					final LispType initialElementType = element.getType();
-					if (initialElementType.isNotOfType(upgradedET)) {
+					if (!upgradedET.typeEquals(initialElementType)) {
 						throw new TypeErrorException(
 								"Provided element " + element + " is not a subtype of the upgraded-array-element-type " + upgradedET + '.');
 					}
@@ -333,7 +361,7 @@ public interface ArrayStruct extends LispStruct {
 				                                adjustableBoolean);
 			} else {
 				final LispType initialElementType = initialElement.getType();
-				if (initialElementType.isNotOfType(upgradedET)) {
+				if (!upgradedET.typeEquals(initialElementType)) {
 					throw new TypeErrorException(
 							"Provided element " + initialElement + " is not a subtype of the upgraded-array-element-type " + upgradedET + '.');
 				}

@@ -5,7 +5,6 @@
 package jcl.type;
 
 import jcl.type.typespecifier.AtomicTypeSpecifier;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * The only object of type {@link NullType} is {@link NILType}, which represents the empty {@link ListType} and can
@@ -43,13 +42,7 @@ public interface NullType extends SymbolType, ListType {
 			}
 
 			@Override
-			public int hashCode() {
-				return new HashCodeBuilder().appendSuper(super.hashCode())
-				                            .toHashCode();
-			}
-
-			@Override
-			public boolean equals(final Object obj) {
+			public boolean typeEquals(final Object obj) {
 				return (this == obj) || (obj instanceof NullType);
 			}
 		}

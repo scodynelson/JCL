@@ -181,8 +181,9 @@ public final class BitVectorStructImpl extends AbstractBitVectorStructImpl {
 			return NILStruct.INSTANCE;
 		}
 
-		contents.set(fillPointer++, (IntegerStruct) newElement);
-		return IntegerStructImpl.valueOf(fillPointer);
+		final Integer formerFillPointer = fillPointer++;
+		contents.set(formerFillPointer, (IntegerStruct) newElement);
+		return IntegerStructImpl.valueOf(formerFillPointer);
 	}
 
 	@Override
@@ -198,8 +199,9 @@ public final class BitVectorStructImpl extends AbstractBitVectorStructImpl {
 //			adjustArray(fillPointer + extensionAmount); // TODO
 		}
 
-		contents.set(fillPointer++, (IntegerStruct) newElement);
-		return IntegerStructImpl.valueOf(fillPointer);
+		final Integer formerFillPointer = fillPointer++;
+		contents.set(formerFillPointer, (IntegerStruct) newElement);
+		return IntegerStructImpl.valueOf(formerFillPointer);
 	}
 
 	/*
@@ -215,13 +217,13 @@ public final class BitVectorStructImpl extends AbstractBitVectorStructImpl {
 		}
 		final LispType upgradedET = ArrayStruct.upgradedArrayElementType(elementType);
 
-		if (!this.elementType.equals(upgradedET) || !upgradedET.equals(this.elementType)) {
+		if (!upgradedET.typeEquals(this.elementType)) {
 			throw new TypeErrorException(
 					"Provided upgraded-array-element-type " + upgradedET + " must be the same as initial upgraded-array-element-type " + this.elementType + '.');
 		}
 
 		final LispType initialElementType = initialElement.getType();
-		if (!initialElementType.equals(upgradedET) && !upgradedET.equals(initialElementType)) {
+		if (!upgradedET.typeEquals(initialElementType)) {
 			throw new TypeErrorException(
 					"Provided element " + initialElement + " is not a subtype of the upgraded-array-element-type " + upgradedET + '.');
 		}
@@ -252,14 +254,14 @@ public final class BitVectorStructImpl extends AbstractBitVectorStructImpl {
 		}
 		final LispType upgradedET = ArrayStruct.upgradedArrayElementType(elementType);
 
-		if (!this.elementType.equals(upgradedET) || !upgradedET.equals(this.elementType)) {
+		if (!upgradedET.typeEquals(this.elementType)) {
 			throw new TypeErrorException(
 					"Provided upgraded-array-element-type " + upgradedET + " must be the same as initial upgraded-array-element-type " + this.elementType + '.');
 		}
 
 		for (final LispStruct initialElement : initialContents) {
 			final LispType initialElementType = initialElement.getType();
-			if (!initialElementType.equals(upgradedET) && !upgradedET.equals(initialElementType)) {
+			if (!upgradedET.typeEquals(initialElementType)) {
 				throw new TypeErrorException(
 						"Provided element " + initialElement + " is not a subtype of the upgraded-array-element-type " + upgradedET + '.');
 			}
@@ -291,13 +293,13 @@ public final class BitVectorStructImpl extends AbstractBitVectorStructImpl {
 		}
 		final LispType upgradedET = ArrayStruct.upgradedArrayElementType(elementType);
 
-		if (!this.elementType.equals(upgradedET) || !upgradedET.equals(this.elementType)) {
+		if (!upgradedET.typeEquals(this.elementType)) {
 			throw new TypeErrorException(
 					"Provided upgraded-array-element-type " + upgradedET + " must be the same as initial upgraded-array-element-type " + this.elementType + '.');
 		}
 
 		final LispType initialElementType = displacedTo.arrayElementType();
-		if (!initialElementType.equals(upgradedET) || !upgradedET.equals(initialElementType)) {
+		if (!upgradedET.typeEquals(initialElementType)) {
 			throw new TypeErrorException(
 					"Provided array for displacement " + displacedTo + " is not a subtype of the upgraded-array-element-type " + upgradedET + '.');
 		}

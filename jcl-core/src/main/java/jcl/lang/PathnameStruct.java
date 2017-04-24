@@ -70,4 +70,56 @@ public interface PathnameStruct extends LispStruct {
 
 	String getNamestring();
 
+	@Override
+	default boolean equal(final LispStruct object) {
+		// TODO: clean this up!!!
+		if (eq(object)) {
+			return true;
+		}
+		if (object instanceof PathnameStruct) {
+			final PathnameStruct p = (PathnameStruct) object;
+//			if (Utilities.isPlatformWindows) {
+//				if (!host.equalp(p.host)) {
+//					return false;
+//				}
+//				if (!device.equalp(p.device)) {
+//					return false;
+//				}
+//				if (!directory.equalp(p.directory)) {
+//					return false;
+//				}
+//				if (!name.equalp(p.name)) {
+//					return false;
+//				}
+//				if (!type.equalp(p.type)) {
+//					return false;
+//				}
+//				// Ignore version component.
+//				//if (!version.equalp(p.version))
+//				//    return false;
+//			} else {
+			// Unix.
+			if (!getPathnameHost().equals(p.getPathnameHost())) {
+				return false;
+			}
+			if (!getPathnameDevice().equals(p.getPathnameDevice())) {
+				return false;
+			}
+			if (!getPathnameDirectory().equals(p.getPathnameDirectory())) {
+				return false;
+			}
+			if (!getPathnameName().equals(p.getPathnameName())) {
+				return false;
+			}
+			if (!getPathnameType().equals(p.getPathnameType())) {
+				return false;
+			}
+			// Ignore version component.
+			//if (!getPathnameVersion.equals(p.getPathnameVersion))
+			//    return false;
+//			}
+			return true;
+		}
+		return false;
+	}
 }

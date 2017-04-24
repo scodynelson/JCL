@@ -8,7 +8,6 @@ import java.math.BigInteger;
 
 import jcl.type.typespecifier.AtomicTypeSpecifier;
 import jcl.type.typespecifier.CompoundTypeSpecifier;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * A {@link RationalType} is a {@link NumberType} with a canonical representation of an {@link IntegerType} if its
@@ -127,14 +126,7 @@ public interface RationalType extends RealType {
 			}
 
 			@Override
-			public int hashCode() {
-				return new HashCodeBuilder().appendSuper(super.hashCode())
-				                            .append(intervalDesignator)
-				                            .toHashCode();
-			}
-
-			@Override
-			public boolean equals(final Object obj) {
+			public boolean typeEquals(final Object obj) {
 				if (this == obj) {
 					return true;
 				}

@@ -6,6 +6,7 @@ package jcl.lang.internal.number;
 
 import jcl.lang.RatioStruct;
 import jcl.type.RatioType;
+import lombok.EqualsAndHashCode;
 import org.apfloat.Apint;
 import org.apfloat.Aprational;
 import org.apfloat.AprationalMath;
@@ -13,6 +14,7 @@ import org.apfloat.AprationalMath;
 /**
  * The {@link RatioStructImpl} is the object representation of a Lisp 'ratio' type.
  */
+@EqualsAndHashCode(callSuper = true)
 public final class RatioStructImpl extends RationalStructImpl<Aprational> implements RatioStruct {
 
 	/**

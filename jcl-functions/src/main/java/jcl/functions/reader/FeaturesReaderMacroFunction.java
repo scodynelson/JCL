@@ -127,12 +127,12 @@ final class FeaturesReaderMacroFunction {
 		}
 
 		final SymbolStruct featureOperator = (SymbolStruct) first;
-		if (featureOperator.equals(CommonLispSymbols.NOT_KEYWORD)) {
+		if (featureOperator.eq(CommonLispSymbols.NOT_KEYWORD)) {
 			final LispStruct firstOfRest = iterator.next();
 			return !isFeature(firstOfRest);
-		} else if (featureOperator.equals(CommonLispSymbols.AND_KEYWORD)) {
+		} else if (featureOperator.eq(CommonLispSymbols.AND_KEYWORD)) {
 			return isAndConsFeature(iterator);
-		} else if (featureOperator.equals(CommonLispSymbols.OR_KEYWORD)) {
+		} else if (featureOperator.eq(CommonLispSymbols.OR_KEYWORD)) {
 			return isOrConsFeature(iterator);
 		} else {
 			throw new ReaderErrorException("Unknown operator in feature expression: " + featureOperator);

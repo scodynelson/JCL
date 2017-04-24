@@ -3,13 +3,11 @@ package jcl.lang;
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.factory.LispStructFactory;
-import jcl.lang.internal.AbstractStringStructImpl;
 import jcl.lang.internal.SimpleStringStructImpl;
 import jcl.lang.internal.number.IntegerStructImpl;
 import jcl.lang.statics.CharacterConstants;
 import jcl.type.ExtendedCharType;
 import jcl.type.IntegerType;
-import jcl.type.LispType;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Rule;
@@ -57,8 +55,8 @@ public class StringStructAdjustArrayTest {
 	@Test
 	public void test_adjustArray_WrongElementType() {
 		thrown.expect(TypeErrorException.class);
-		thrown.expectMessage(containsString("Provided upgraded-array-element-type"));
-		thrown.expectMessage(containsString("must be the same as initial upgraded-array-element-type"));
+		thrown.expectMessage(containsString("Provided element-type"));
+		thrown.expectMessage(containsString("must be a subtype of the initial upgraded-array-element-type"));
 
 		final StringStruct struct = StringStruct.builder(IntegerStruct.ONE).build();
 
@@ -182,6 +180,7 @@ public class StringStructAdjustArrayTest {
 		Assert.assertThat(result.arrayDisplacement().getValuesList().get(0), is(displacedTo));
 		Assert.assertThat(result.arrayDisplacement().getValuesList().get(1), is(IntegerStruct.ONE));
 		Assert.assertThat(result.char_(IntegerStruct.ZERO), is(CharacterConstants.LATIN_SMALL_LETTER_B_CHAR));
+		Assert.assertThat(result.char_(IntegerStruct.ONE), is(CharacterConstants.LATIN_SMALL_LETTER_C_CHAR));
 	}
 
 	/**
@@ -256,6 +255,7 @@ public class StringStructAdjustArrayTest {
 		Assert.assertThat(result.arrayDisplacement().getValuesList().get(0), is(displacedTo));
 		Assert.assertThat(result.arrayDisplacement().getValuesList().get(1), is(IntegerStruct.ONE));
 		Assert.assertThat(result.char_(IntegerStruct.ZERO), is(CharacterConstants.LATIN_SMALL_LETTER_B_CHAR));
+		Assert.assertThat(result.char_(IntegerStruct.ONE), is(CharacterConstants.LATIN_SMALL_LETTER_C_CHAR));
 	}
 
 	/**
@@ -292,6 +292,7 @@ public class StringStructAdjustArrayTest {
 		Assert.assertThat(result.arrayDisplacement().getValuesList().get(0), is(displacedTo));
 		Assert.assertThat(result.arrayDisplacement().getValuesList().get(1), is(IntegerStruct.ONE));
 		Assert.assertThat(result.char_(IntegerStruct.ZERO), is(CharacterConstants.LATIN_SMALL_LETTER_B_CHAR));
+		Assert.assertThat(result.char_(IntegerStruct.ONE), is(CharacterConstants.LATIN_SMALL_LETTER_C_CHAR));
 	}
 
 	/**
@@ -330,6 +331,7 @@ public class StringStructAdjustArrayTest {
 		Assert.assertThat(result.arrayDisplacement().getValuesList().get(0), is(displacedTo));
 		Assert.assertThat(result.arrayDisplacement().getValuesList().get(1), is(IntegerStruct.ONE));
 		Assert.assertThat(result.char_(IntegerStruct.ZERO), is(CharacterConstants.LATIN_SMALL_LETTER_B_CHAR));
+		Assert.assertThat(result.char_(IntegerStruct.ONE), is(CharacterConstants.LATIN_SMALL_LETTER_C_CHAR));
 	}
 
 	/**
@@ -491,6 +493,7 @@ public class StringStructAdjustArrayTest {
 		Assert.assertThat(result.arrayDisplacement().getValuesList().get(0), is(displacedTo));
 		Assert.assertThat(result.arrayDisplacement().getValuesList().get(1), is(IntegerStruct.ONE));
 		Assert.assertThat(result.char_(IntegerStruct.ZERO), is(CharacterConstants.LATIN_SMALL_LETTER_B_CHAR));
+		Assert.assertThat(result.char_(IntegerStruct.ONE), is(CharacterConstants.LATIN_SMALL_LETTER_C_CHAR));
 	}
 
 	/**
@@ -530,6 +533,7 @@ public class StringStructAdjustArrayTest {
 		Assert.assertThat(result.arrayDisplacement().getValuesList().get(0), is(displacedTo));
 		Assert.assertThat(result.arrayDisplacement().getValuesList().get(1), is(IntegerStruct.ONE));
 		Assert.assertThat(result.char_(IntegerStruct.ZERO), is(CharacterConstants.LATIN_SMALL_LETTER_B_CHAR));
+		Assert.assertThat(result.char_(IntegerStruct.ONE), is(CharacterConstants.LATIN_SMALL_LETTER_C_CHAR));
 	}
 
 	/**
@@ -571,6 +575,7 @@ public class StringStructAdjustArrayTest {
 		Assert.assertThat(result.arrayDisplacement().getValuesList().get(0), is(displacedTo));
 		Assert.assertThat(result.arrayDisplacement().getValuesList().get(1), is(IntegerStruct.ONE));
 		Assert.assertThat(result.char_(IntegerStruct.ZERO), is(CharacterConstants.LATIN_SMALL_LETTER_B_CHAR));
+		Assert.assertThat(result.char_(IntegerStruct.ONE), is(CharacterConstants.LATIN_SMALL_LETTER_C_CHAR));
 	}
 
 	/**
@@ -782,7 +787,8 @@ public class StringStructAdjustArrayTest {
 		Assert.assertThat(result.fillPointer(), is(IntegerStruct.ONE));
 		Assert.assertThat(result.arrayDisplacement().getValuesList().get(0), is(NILStruct.INSTANCE));
 		Assert.assertThat(result.arrayDisplacement().getValuesList().get(1), is(IntegerStruct.ZERO));
-		Assert.assertThat(result.char_(IntegerStruct.ZERO), is(CharacterConstants.LATIN_SMALL_LETTER_A_CHAR));
+		Assert.assertThat(result.char_(IntegerStruct.ZERO), is(CharacterConstants.LATIN_SMALL_LETTER_B_CHAR));
+		Assert.assertThat(result.char_(IntegerStruct.ONE), is(CharacterConstants.LATIN_SMALL_LETTER_C_CHAR));
 	}
 
 	/**
@@ -855,6 +861,7 @@ public class StringStructAdjustArrayTest {
 		Assert.assertThat(result.arrayDisplacement().getValuesList().get(0), is(NILStruct.INSTANCE));
 		Assert.assertThat(result.arrayDisplacement().getValuesList().get(1), is(IntegerStruct.ZERO));
 		Assert.assertThat(result.char_(IntegerStruct.ZERO), is(CharacterConstants.LATIN_SMALL_LETTER_B_CHAR));
+		Assert.assertThat(result.char_(IntegerStruct.ONE), is(CharacterConstants.LATIN_SMALL_LETTER_C_CHAR));
 	}
 
 	/**
@@ -890,6 +897,7 @@ public class StringStructAdjustArrayTest {
 		Assert.assertThat(result.arrayDisplacement().getValuesList().get(0), is(NILStruct.INSTANCE));
 		Assert.assertThat(result.arrayDisplacement().getValuesList().get(1), is(IntegerStruct.ZERO));
 		Assert.assertThat(result.char_(IntegerStruct.ZERO), is(CharacterConstants.LATIN_SMALL_LETTER_B_CHAR));
+		Assert.assertThat(result.char_(IntegerStruct.ONE), is(CharacterConstants.LATIN_SMALL_LETTER_C_CHAR));
 	}
 
 	/**
@@ -927,6 +935,7 @@ public class StringStructAdjustArrayTest {
 		Assert.assertThat(result.arrayDisplacement().getValuesList().get(0), is(NILStruct.INSTANCE));
 		Assert.assertThat(result.arrayDisplacement().getValuesList().get(1), is(IntegerStruct.ZERO));
 		Assert.assertThat(result.char_(IntegerStruct.ZERO), is(CharacterConstants.LATIN_SMALL_LETTER_B_CHAR));
+		Assert.assertThat(result.char_(IntegerStruct.ONE), is(CharacterConstants.LATIN_SMALL_LETTER_C_CHAR));
 	}
 
 	/**
@@ -953,7 +962,7 @@ public class StringStructAdjustArrayTest {
 
 		final StringStruct result = struct.adjustArray(context);
 		Assert.assertThat(result, sameInstance(struct));
-		Assert.assertThat(result.length(), is(IntegerStruct.ONE));
+		Assert.assertThat(result.length(), is(IntegerStruct.TWO));
 		Assert.assertThat(result.arrayTotalSize(), is(IntegerStruct.TWO));
 		Assert.assertThat(result.adjustableArrayP(), is(BooleanStruct.NIL));
 		try {
@@ -992,7 +1001,7 @@ public class StringStructAdjustArrayTest {
 
 		final StringStruct result = struct.adjustArray(context);
 		Assert.assertThat(result, not(sameInstance(struct)));
-		Assert.assertThat(result.length(), is(IntegerStruct.ONE));
+		Assert.assertThat(result.length(), is(IntegerStruct.TWO));
 		Assert.assertThat(result.arrayTotalSize(), is(IntegerStruct.TWO));
 		Assert.assertThat(result.adjustableArrayP(), is(BooleanStruct.NIL));
 		try {
@@ -1033,7 +1042,7 @@ public class StringStructAdjustArrayTest {
 
 		final StringStruct result = struct.adjustArray(context);
 		Assert.assertThat(result, sameInstance(struct));
-		Assert.assertThat(result.length(), is(IntegerStruct.ONE));
+		Assert.assertThat(result.length(), is(IntegerStruct.TWO));
 		Assert.assertThat(result.arrayTotalSize(), is(IntegerStruct.TWO));
 		Assert.assertThat(result.adjustableArrayP(), is(BooleanStruct.NIL));
 		try {
@@ -1084,6 +1093,7 @@ public class StringStructAdjustArrayTest {
 		Assert.assertThat(result.arrayDisplacement().getValuesList().get(0), is(NILStruct.INSTANCE));
 		Assert.assertThat(result.arrayDisplacement().getValuesList().get(1), is(IntegerStruct.ZERO));
 		Assert.assertThat(result.char_(IntegerStruct.ZERO), is(CharacterConstants.LATIN_SMALL_LETTER_B_CHAR));
+		Assert.assertThat(result.char_(IntegerStruct.ONE), is(CharacterConstants.LATIN_SMALL_LETTER_C_CHAR));
 	}
 
 	/**
@@ -1122,6 +1132,7 @@ public class StringStructAdjustArrayTest {
 		Assert.assertThat(result.arrayDisplacement().getValuesList().get(0), is(NILStruct.INSTANCE));
 		Assert.assertThat(result.arrayDisplacement().getValuesList().get(1), is(IntegerStruct.ZERO));
 		Assert.assertThat(result.char_(IntegerStruct.ZERO), is(CharacterConstants.LATIN_SMALL_LETTER_B_CHAR));
+		Assert.assertThat(result.char_(IntegerStruct.ONE), is(CharacterConstants.LATIN_SMALL_LETTER_C_CHAR));
 	}
 
 	/**
@@ -1162,6 +1173,7 @@ public class StringStructAdjustArrayTest {
 		Assert.assertThat(result.arrayDisplacement().getValuesList().get(0), is(NILStruct.INSTANCE));
 		Assert.assertThat(result.arrayDisplacement().getValuesList().get(1), is(IntegerStruct.ZERO));
 		Assert.assertThat(result.char_(IntegerStruct.ZERO), is(CharacterConstants.LATIN_SMALL_LETTER_B_CHAR));
+		Assert.assertThat(result.char_(IntegerStruct.ONE), is(CharacterConstants.LATIN_SMALL_LETTER_C_CHAR));
 	}
 
 	/**
@@ -1191,7 +1203,7 @@ public class StringStructAdjustArrayTest {
 
 		final StringStruct result = struct.adjustArray(context);
 		Assert.assertThat(result, sameInstance(struct));
-		Assert.assertThat(result.length(), is(IntegerStruct.ONE));
+		Assert.assertThat(result.length(), is(IntegerStruct.TWO));
 		Assert.assertThat(result.arrayTotalSize(), is(IntegerStruct.TWO));
 		Assert.assertThat(result.adjustableArrayP(), is(BooleanStruct.NIL));
 		try {
@@ -1233,7 +1245,7 @@ public class StringStructAdjustArrayTest {
 
 		final StringStruct result = struct.adjustArray(context);
 		Assert.assertThat(result, not(sameInstance(struct)));
-		Assert.assertThat(result.length(), is(IntegerStruct.ONE));
+		Assert.assertThat(result.length(), is(IntegerStruct.TWO));
 		Assert.assertThat(result.arrayTotalSize(), is(IntegerStruct.TWO));
 		Assert.assertThat(result.adjustableArrayP(), is(BooleanStruct.NIL));
 		try {
@@ -1277,7 +1289,7 @@ public class StringStructAdjustArrayTest {
 
 		final StringStruct result = struct.adjustArray(context);
 		Assert.assertThat(result, sameInstance(struct));
-		Assert.assertThat(result.length(), is(IntegerStruct.ONE));
+		Assert.assertThat(result.length(), is(IntegerStruct.TWO));
 		Assert.assertThat(result.arrayTotalSize(), is(IntegerStruct.TWO));
 		Assert.assertThat(result.adjustableArrayP(), is(BooleanStruct.NIL));
 		try {
@@ -1359,58 +1371,6 @@ public class StringStructAdjustArrayTest {
 	}
 
 	/**
-	 * Test for {@link StringStruct#adjustArray(AdjustArrayContext)} where attempting to adjust a 'simple' string to a
-	 * new element and the new element has an invalid element-type.
-	 * <p>
-	 * TODO: investigate when reworking type system. This is the test for covering the missing exception case in
-	 * {@link AbstractStringStructImpl#validateNewInitialElement(LispStruct, LispType)}.
-	 */
-	@Test
-	@Ignore
-	public void test_adjustArray_IElement_NotSubType_Simple() {
-		thrown.expect(TypeErrorException.class);
-		thrown.expectMessage(containsString("Provided element"));
-		thrown.expectMessage(containsString("is not a subtype of the upgraded-array-element-type"));
-
-		final StringStruct struct = StringStruct.builder(IntegerStruct.ONE).build();
-
-		final AdjustArrayContext context = AdjustArrayContext.builder(IntegerStruct.TWO)
-		                                                     .fillPointer(IntegerStruct.ONE)
-		                                                     .adjustable(BooleanStruct.T)
-		                                                     .initialElement(IntegerStruct.ZERO)
-		                                                     .build();
-
-		struct.adjustArray(context);
-	}
-
-	/**
-	 * Test for {@link StringStruct#adjustArray(AdjustArrayContext)} where attempting to adjust a 'complex' string to a
-	 * new element and the new element has an invalid element-type.
-	 * <p>
-	 * TODO: investigate when reworking type system. This is the test for covering the missing exception case in
-	 * {@link AbstractStringStructImpl#validateNewInitialElement(LispStruct, LispType)}.
-	 */
-	@Test
-	@Ignore
-	public void test_adjustArray_IElement_NotSubType_Complex() {
-		thrown.expect(TypeErrorException.class);
-		thrown.expectMessage(containsString("Provided element"));
-		thrown.expectMessage(containsString("is not a subtype of the upgraded-array-element-type"));
-
-		final StringStruct struct = StringStruct.builder(IntegerStruct.ONE)
-		                                        .adjustable(BooleanStruct.T)
-		                                        .build();
-
-		final AdjustArrayContext context = AdjustArrayContext.builder(IntegerStruct.TWO)
-		                                                     .fillPointer(IntegerStruct.ONE)
-		                                                     .adjustable(BooleanStruct.T)
-		                                                     .initialElement(IntegerStruct.ZERO)
-		                                                     .build();
-
-		struct.adjustArray(context);
-	}
-
-	/**
 	 * Test for {@link StringStruct#adjustArray(AdjustArrayContext)} where the following applies:
 	 * 1.) The original array was simple.
 	 * 2.) The resulting array will have a fill-pointer.
@@ -1437,7 +1397,8 @@ public class StringStructAdjustArrayTest {
 		Assert.assertThat(result.fillPointer(), is(IntegerStruct.ONE));
 		Assert.assertThat(result.arrayDisplacement().getValuesList().get(0), is(NILStruct.INSTANCE));
 		Assert.assertThat(result.arrayDisplacement().getValuesList().get(1), is(IntegerStruct.ZERO));
-		Assert.assertThat(result.char_(IntegerStruct.ZERO), is(CharacterConstants.DOLLAR_SIGN_CHAR));
+		Assert.assertThat(result.char_(IntegerStruct.ZERO), is(CharacterConstants.DIGIT_ONE_CHAR));
+		Assert.assertThat(result.char_(IntegerStruct.ONE), is(CharacterConstants.DOLLAR_SIGN_CHAR));
 	}
 
 	/**
@@ -1470,7 +1431,7 @@ public class StringStructAdjustArrayTest {
 		}
 		Assert.assertThat(result.arrayDisplacement().getValuesList().get(0), is(NILStruct.INSTANCE));
 		Assert.assertThat(result.arrayDisplacement().getValuesList().get(1), is(IntegerStruct.ZERO));
-		Assert.assertThat(result.char_(IntegerStruct.ZERO), is(CharacterConstants.DOLLAR_SIGN_CHAR));
+		Assert.assertThat(result.char_(IntegerStruct.ZERO), is(CharacterConstants.DIGIT_ONE_CHAR));
 		Assert.assertThat(result.char_(IntegerStruct.ONE), is(CharacterConstants.DOLLAR_SIGN_CHAR));
 	}
 
@@ -1503,7 +1464,8 @@ public class StringStructAdjustArrayTest {
 		Assert.assertThat(result.fillPointer(), is(IntegerStruct.ONE));
 		Assert.assertThat(result.arrayDisplacement().getValuesList().get(0), is(NILStruct.INSTANCE));
 		Assert.assertThat(result.arrayDisplacement().getValuesList().get(1), is(IntegerStruct.ZERO));
-		Assert.assertThat(result.char_(IntegerStruct.ZERO), is(CharacterConstants.DOLLAR_SIGN_CHAR));
+		Assert.assertThat(result.char_(IntegerStruct.ZERO), is(CharacterConstants.DIGIT_ONE_CHAR));
+		Assert.assertThat(result.char_(IntegerStruct.ONE), is(CharacterConstants.DOLLAR_SIGN_CHAR));
 	}
 
 	/**
@@ -1535,7 +1497,8 @@ public class StringStructAdjustArrayTest {
 		Assert.assertThat(result.fillPointer(), is(IntegerStruct.ONE));
 		Assert.assertThat(result.arrayDisplacement().getValuesList().get(0), is(NILStruct.INSTANCE));
 		Assert.assertThat(result.arrayDisplacement().getValuesList().get(1), is(IntegerStruct.ZERO));
-		Assert.assertThat(result.char_(IntegerStruct.ZERO), is(CharacterConstants.DOLLAR_SIGN_CHAR));
+		Assert.assertThat(result.char_(IntegerStruct.ZERO), is(CharacterConstants.DIGIT_ONE_CHAR));
+		Assert.assertThat(result.char_(IntegerStruct.ONE), is(CharacterConstants.DOLLAR_SIGN_CHAR));
 	}
 
 	/**
@@ -1569,7 +1532,8 @@ public class StringStructAdjustArrayTest {
 		Assert.assertThat(result.fillPointer(), is(IntegerStruct.ONE));
 		Assert.assertThat(result.arrayDisplacement().getValuesList().get(0), is(NILStruct.INSTANCE));
 		Assert.assertThat(result.arrayDisplacement().getValuesList().get(1), is(IntegerStruct.ZERO));
-		Assert.assertThat(result.char_(IntegerStruct.ZERO), is(CharacterConstants.DOLLAR_SIGN_CHAR));
+		Assert.assertThat(result.char_(IntegerStruct.ZERO), is(CharacterConstants.DIGIT_ONE_CHAR));
+		Assert.assertThat(result.char_(IntegerStruct.ONE), is(CharacterConstants.DOLLAR_SIGN_CHAR));
 	}
 
 	/**
@@ -1593,7 +1557,7 @@ public class StringStructAdjustArrayTest {
 
 		final StringStruct result = struct.adjustArray(context);
 		Assert.assertThat(result, sameInstance(struct));
-		Assert.assertThat(result.length(), is(IntegerStruct.ONE));
+		Assert.assertThat(result.length(), is(IntegerStruct.TWO));
 		Assert.assertThat(result.arrayTotalSize(), is(IntegerStruct.TWO));
 		Assert.assertThat(result.adjustableArrayP(), is(BooleanStruct.NIL));
 		try {
@@ -1604,7 +1568,7 @@ public class StringStructAdjustArrayTest {
 		}
 		Assert.assertThat(result.arrayDisplacement().getValuesList().get(0), is(NILStruct.INSTANCE));
 		Assert.assertThat(result.arrayDisplacement().getValuesList().get(1), is(IntegerStruct.ZERO));
-		Assert.assertThat(result.char_(IntegerStruct.ZERO), is(CharacterConstants.DOLLAR_SIGN_CHAR));
+		Assert.assertThat(result.char_(IntegerStruct.ZERO), is(CharacterConstants.DIGIT_ONE_CHAR));
 		Assert.assertThat(result.char_(IntegerStruct.ONE), is(CharacterConstants.DOLLAR_SIGN_CHAR));
 	}
 
@@ -1629,7 +1593,7 @@ public class StringStructAdjustArrayTest {
 
 		final StringStruct result = struct.adjustArray(context);
 		Assert.assertThat(result, not(sameInstance(struct)));
-		Assert.assertThat(result.length(), is(IntegerStruct.ONE));
+		Assert.assertThat(result.length(), is(IntegerStruct.TWO));
 		Assert.assertThat(result.arrayTotalSize(), is(IntegerStruct.TWO));
 		Assert.assertThat(result.adjustableArrayP(), is(BooleanStruct.NIL));
 		try {
@@ -1640,7 +1604,7 @@ public class StringStructAdjustArrayTest {
 		}
 		Assert.assertThat(result.arrayDisplacement().getValuesList().get(0), is(NILStruct.INSTANCE));
 		Assert.assertThat(result.arrayDisplacement().getValuesList().get(1), is(IntegerStruct.ZERO));
-		Assert.assertThat(result.char_(IntegerStruct.ZERO), is(CharacterConstants.DOLLAR_SIGN_CHAR));
+		Assert.assertThat(result.char_(IntegerStruct.ZERO), is(CharacterConstants.DIGIT_ONE_CHAR));
 		Assert.assertThat(result.char_(IntegerStruct.ONE), is(CharacterConstants.DOLLAR_SIGN_CHAR));
 	}
 
@@ -1667,7 +1631,7 @@ public class StringStructAdjustArrayTest {
 
 		final StringStruct result = struct.adjustArray(context);
 		Assert.assertThat(result, sameInstance(struct));
-		Assert.assertThat(result.length(), is(IntegerStruct.ONE));
+		Assert.assertThat(result.length(), is(IntegerStruct.TWO));
 		Assert.assertThat(result.arrayTotalSize(), is(IntegerStruct.TWO));
 		Assert.assertThat(result.adjustableArrayP(), is(BooleanStruct.NIL));
 		try {
@@ -1678,7 +1642,7 @@ public class StringStructAdjustArrayTest {
 		}
 		Assert.assertThat(result.arrayDisplacement().getValuesList().get(0), is(NILStruct.INSTANCE));
 		Assert.assertThat(result.arrayDisplacement().getValuesList().get(1), is(IntegerStruct.ZERO));
-		Assert.assertThat(result.char_(IntegerStruct.ZERO), is(CharacterConstants.DOLLAR_SIGN_CHAR));
+		Assert.assertThat(result.char_(IntegerStruct.ZERO), is(CharacterConstants.DIGIT_ONE_CHAR));
 		Assert.assertThat(result.char_(IntegerStruct.ONE), is(CharacterConstants.DOLLAR_SIGN_CHAR));
 	}
 
@@ -1714,7 +1678,8 @@ public class StringStructAdjustArrayTest {
 		Assert.assertThat(result.fillPointer(), is(IntegerStruct.ONE));
 		Assert.assertThat(result.arrayDisplacement().getValuesList().get(0), is(NILStruct.INSTANCE));
 		Assert.assertThat(result.arrayDisplacement().getValuesList().get(1), is(IntegerStruct.ZERO));
-		Assert.assertThat(result.char_(IntegerStruct.ZERO), is(CharacterConstants.DOLLAR_SIGN_CHAR));
+		Assert.assertThat(result.char_(IntegerStruct.ZERO), is(CharacterConstants.DIGIT_ONE_CHAR));
+		Assert.assertThat(result.char_(IntegerStruct.ONE), is(CharacterConstants.DOLLAR_SIGN_CHAR));
 	}
 
 	/**
@@ -1749,7 +1714,8 @@ public class StringStructAdjustArrayTest {
 		Assert.assertThat(result.fillPointer(), is(IntegerStruct.ONE));
 		Assert.assertThat(result.arrayDisplacement().getValuesList().get(0), is(NILStruct.INSTANCE));
 		Assert.assertThat(result.arrayDisplacement().getValuesList().get(1), is(IntegerStruct.ZERO));
-		Assert.assertThat(result.char_(IntegerStruct.ZERO), is(CharacterConstants.DOLLAR_SIGN_CHAR));
+		Assert.assertThat(result.char_(IntegerStruct.ZERO), is(CharacterConstants.DIGIT_ONE_CHAR));
+		Assert.assertThat(result.char_(IntegerStruct.ONE), is(CharacterConstants.DOLLAR_SIGN_CHAR));
 	}
 
 	/**
@@ -1786,7 +1752,8 @@ public class StringStructAdjustArrayTest {
 		Assert.assertThat(result.fillPointer(), is(IntegerStruct.ONE));
 		Assert.assertThat(result.arrayDisplacement().getValuesList().get(0), is(NILStruct.INSTANCE));
 		Assert.assertThat(result.arrayDisplacement().getValuesList().get(1), is(IntegerStruct.ZERO));
-		Assert.assertThat(result.char_(IntegerStruct.ZERO), is(CharacterConstants.DOLLAR_SIGN_CHAR));
+		Assert.assertThat(result.char_(IntegerStruct.ZERO), is(CharacterConstants.DIGIT_ONE_CHAR));
+		Assert.assertThat(result.char_(IntegerStruct.ONE), is(CharacterConstants.DOLLAR_SIGN_CHAR));
 	}
 
 	/**
@@ -1813,7 +1780,7 @@ public class StringStructAdjustArrayTest {
 
 		final StringStruct result = struct.adjustArray(context);
 		Assert.assertThat(result, sameInstance(struct));
-		Assert.assertThat(result.length(), is(IntegerStruct.ONE));
+		Assert.assertThat(result.length(), is(IntegerStruct.TWO));
 		Assert.assertThat(result.arrayTotalSize(), is(IntegerStruct.TWO));
 		Assert.assertThat(result.adjustableArrayP(), is(BooleanStruct.NIL));
 		try {
@@ -1824,7 +1791,7 @@ public class StringStructAdjustArrayTest {
 		}
 		Assert.assertThat(result.arrayDisplacement().getValuesList().get(0), is(NILStruct.INSTANCE));
 		Assert.assertThat(result.arrayDisplacement().getValuesList().get(1), is(IntegerStruct.ZERO));
-		Assert.assertThat(result.char_(IntegerStruct.ZERO), is(CharacterConstants.DOLLAR_SIGN_CHAR));
+		Assert.assertThat(result.char_(IntegerStruct.ZERO), is(CharacterConstants.DIGIT_ONE_CHAR));
 		Assert.assertThat(result.char_(IntegerStruct.ONE), is(CharacterConstants.DOLLAR_SIGN_CHAR));
 	}
 
@@ -1852,7 +1819,7 @@ public class StringStructAdjustArrayTest {
 
 		final StringStruct result = struct.adjustArray(context);
 		Assert.assertThat(result, not(sameInstance(struct)));
-		Assert.assertThat(result.length(), is(IntegerStruct.ONE));
+		Assert.assertThat(result.length(), is(IntegerStruct.TWO));
 		Assert.assertThat(result.arrayTotalSize(), is(IntegerStruct.TWO));
 		Assert.assertThat(result.adjustableArrayP(), is(BooleanStruct.NIL));
 		try {
@@ -1863,7 +1830,7 @@ public class StringStructAdjustArrayTest {
 		}
 		Assert.assertThat(result.arrayDisplacement().getValuesList().get(0), is(NILStruct.INSTANCE));
 		Assert.assertThat(result.arrayDisplacement().getValuesList().get(1), is(IntegerStruct.ZERO));
-		Assert.assertThat(result.char_(IntegerStruct.ZERO), is(CharacterConstants.DOLLAR_SIGN_CHAR));
+		Assert.assertThat(result.char_(IntegerStruct.ZERO), is(CharacterConstants.DIGIT_ONE_CHAR));
 		Assert.assertThat(result.char_(IntegerStruct.ONE), is(CharacterConstants.DOLLAR_SIGN_CHAR));
 	}
 
@@ -1893,7 +1860,7 @@ public class StringStructAdjustArrayTest {
 
 		final StringStruct result = struct.adjustArray(context);
 		Assert.assertThat(result, sameInstance(struct));
-		Assert.assertThat(result.length(), is(IntegerStruct.ONE));
+		Assert.assertThat(result.length(), is(IntegerStruct.TWO));
 		Assert.assertThat(result.arrayTotalSize(), is(IntegerStruct.TWO));
 		Assert.assertThat(result.adjustableArrayP(), is(BooleanStruct.NIL));
 		try {
@@ -1904,12 +1871,12 @@ public class StringStructAdjustArrayTest {
 		}
 		Assert.assertThat(result.arrayDisplacement().getValuesList().get(0), is(NILStruct.INSTANCE));
 		Assert.assertThat(result.arrayDisplacement().getValuesList().get(1), is(IntegerStruct.ZERO));
-		Assert.assertThat(result.char_(IntegerStruct.ZERO), is(CharacterConstants.DOLLAR_SIGN_CHAR));
+		Assert.assertThat(result.char_(IntegerStruct.ZERO), is(CharacterConstants.DIGIT_ONE_CHAR));
 		Assert.assertThat(result.char_(IntegerStruct.ONE), is(CharacterConstants.DOLLAR_SIGN_CHAR));
 	}
 
 	/**
-	 * Test for {@link StringStruct#adjustArray(AdjustArrayContext)} where the new intial-element is provided, but the
+	 * Test for {@link StringStruct#adjustArray(AdjustArrayContext)} where the new initial-element is provided, but the
 	 * array size is reduced and the original array was adjustable.
 	 */
 	@Test
@@ -1926,7 +1893,7 @@ public class StringStructAdjustArrayTest {
 		final StringStruct result = struct.adjustArray(context);
 		Assert.assertThat(result, sameInstance(struct));
 		Assert.assertThat(result.length(), is(IntegerStruct.ONE));
-		Assert.assertThat(result.arrayTotalSize(), is(IntegerStruct.TWO));
+		Assert.assertThat(result.arrayTotalSize(), is(IntegerStruct.ONE));
 		Assert.assertThat(result.adjustableArrayP(), is(BooleanStruct.NIL));
 		try {
 			result.fillPointer();
@@ -1936,11 +1903,11 @@ public class StringStructAdjustArrayTest {
 		}
 		Assert.assertThat(result.arrayDisplacement().getValuesList().get(0), is(NILStruct.INSTANCE));
 		Assert.assertThat(result.arrayDisplacement().getValuesList().get(1), is(IntegerStruct.ZERO));
-		Assert.assertThat(result.char_(IntegerStruct.ZERO), is(CharacterConstants.DOLLAR_SIGN_CHAR));
+		Assert.assertThat(result.char_(IntegerStruct.ZERO), is(CharacterConstants.DIGIT_ONE_CHAR));
 	}
 
 	/**
-	 * Test for {@link StringStruct#adjustArray(AdjustArrayContext)} where the new intial-element is provided, but the
+	 * Test for {@link StringStruct#adjustArray(AdjustArrayContext)} where the new initial-element is provided, but the
 	 * array size is reduced and the original array was not adjustable.
 	 */
 	@Test
@@ -1957,7 +1924,7 @@ public class StringStructAdjustArrayTest {
 		final StringStruct result = struct.adjustArray(context);
 		Assert.assertThat(result, not(sameInstance(struct)));
 		Assert.assertThat(result.length(), is(IntegerStruct.ONE));
-		Assert.assertThat(result.arrayTotalSize(), is(IntegerStruct.TWO));
+		Assert.assertThat(result.arrayTotalSize(), is(IntegerStruct.ONE));
 		Assert.assertThat(result.adjustableArrayP(), is(BooleanStruct.NIL));
 		try {
 			result.fillPointer();
@@ -1967,6 +1934,6 @@ public class StringStructAdjustArrayTest {
 		}
 		Assert.assertThat(result.arrayDisplacement().getValuesList().get(0), is(NILStruct.INSTANCE));
 		Assert.assertThat(result.arrayDisplacement().getValuesList().get(1), is(IntegerStruct.ZERO));
-		Assert.assertThat(result.char_(IntegerStruct.ZERO), is(CharacterConstants.DOLLAR_SIGN_CHAR));
+		Assert.assertThat(result.char_(IntegerStruct.ZERO), is(CharacterConstants.DIGIT_ONE_CHAR));
 	}
 }

@@ -45,10 +45,10 @@ import jcl.lang.factory.LispStructFactory;
 import jcl.lang.function.expander.MacroFunctionExpanderInter;
 import jcl.lang.internal.StructureObjectStructImpl;
 import jcl.lang.statics.GlobalPackageStruct;
+import jcl.type.LispType;
 import jcl.type.TypeBaseClass;
 import jcl.type.TypeFactory;
 import jcl.type.typespecifier.AtomicTypeSpecifier;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apfloat.Apcomplex;
 import org.apfloat.Apfloat;
 import org.apfloat.Apint;
@@ -70,14 +70,6 @@ interface GenerationConstants {
 	String CLASS_INIT_METHOD_DESC = "()V";
 
 	String JAVA_OBJECT_NAME = Type.getInternalName(Object.class);
-
-	String JAVA_EQUALS_METHOD_NAME = "equals";
-
-	String JAVA_EQUALS_METHOD_DESC = CodeGenerators.getMethodDescription(Object.class, JAVA_EQUALS_METHOD_NAME, Object.class);
-
-	String JAVA_HASH_CODE_METHOD_NAME = "hashCode";
-
-	String JAVA_HASH_CODE_METHOD_DESC = CodeGenerators.getMethodDescription(Object.class, JAVA_HASH_CODE_METHOD_NAME);
 
 	String JAVA_STREAM_NAME = Type.getInternalName(Stream.class);
 
@@ -168,16 +160,6 @@ interface GenerationConstants {
 	String JAVA_STRING_BUILDER_TO_STRING_METHOD_NAME = "toString";
 
 	String JAVA_STRING_BUILDER_TO_STRING_METHOD_DESC = CodeGenerators.getMethodDescription(StringBuilder.class, JAVA_STRING_BUILDER_TO_STRING_METHOD_NAME);
-
-	String HASH_CODE_BUILDER_NAME = "org/apache/commons/lang3/builder/HashCodeBuilder";
-
-	String HASH_CODE_BUILDER_APPEND_SUPER_METHOD_NAME = "appendSuper";
-
-	String HASH_CODE_BUILDER_APPEND_SUPER_METHOD_DESC = CodeGenerators.getMethodDescription(HashCodeBuilder.class, HASH_CODE_BUILDER_APPEND_SUPER_METHOD_NAME, int.class);
-
-	String HASH_CODE_BUILDER_TO_HASH_CODE_METHOD_NAME = "toHashCode";
-
-	String HASH_CODE_BUILDER_TO_HASH_CODE_METHOD_DESC = CodeGenerators.getMethodDescription(HashCodeBuilder.class, HASH_CODE_BUILDER_TO_HASH_CODE_METHOD_NAME);
 
 	String LISP_STRUCT_FACTORY_NAME = Type.getInternalName(LispStructFactory.class);
 
@@ -343,6 +325,10 @@ interface GenerationConstants {
 
 	String LISP_STRUCT_DESC = Type.getDescriptor(LispStruct.class);
 
+	String LISP_STRUCT_EQ_METHOD_NAME = "eq";
+
+	String LISP_STRUCT_EQ_METHOD_DESC = CodeGenerators.getMethodDescription(LispStruct.class, LISP_STRUCT_EQ_METHOD_NAME, LispStruct.class);
+
 	String LISP_STRUCT_ARRAY_DESC = Type.getDescriptor(LispStruct[].class);
 
 	String VALUES_STRUCT_NAME = Type.getInternalName(ValuesStruct.class);
@@ -466,4 +452,8 @@ interface GenerationConstants {
 	String ATOMIC_TYPE_SPECIFIER_NAME = Type.getInternalName(AtomicTypeSpecifier.class);
 
 	String TYPE_FACTORY_NAME = Type.getInternalName(TypeFactory.class);
+
+	String LISP_TYPE_TYPE_EQUALS_METHOD_NAME = "typeEquals";
+
+	String LISP_TYPE_TYPE_EQUALS_METHOD_DESC = CodeGenerators.getMethodDescription(LispType.class, LISP_TYPE_TYPE_EQUALS_METHOD_NAME, Object.class);
 }

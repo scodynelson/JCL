@@ -12,7 +12,6 @@ import jcl.type.IntegerType;
 import jcl.type.StandardCharType;
 import org.apache.commons.lang3.text.WordUtils;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -2296,10 +2295,8 @@ public class StringStructStringTest {
 
 	/**
 	 * Test for {@link StringStruct.Builder} creation where the provided displaced-to contains non-character elements.
-	 * TODO: investigate again after cleaning up the type system.
 	 */
 	@Test
-	@Ignore
 	public void test_Builder_DisplacedToContainsNonCharacters() {
 		thrown.expect(TypeErrorException.class);
 		thrown.expectMessage(containsString("is not an array with a subtype of the upgraded-array-element-type"));

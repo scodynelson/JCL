@@ -5,7 +5,6 @@
 package jcl.type;
 
 import jcl.type.typespecifier.AtomicTypeSpecifier;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * A {@link SequenceType} is an ordered collection of objects, called the elements of the sequence. The type {@link
@@ -47,13 +46,7 @@ public interface SequenceType extends TType {
 			}
 
 			@Override
-			public int hashCode() {
-				return new HashCodeBuilder().appendSuper(super.hashCode())
-				                            .toHashCode();
-			}
-
-			@Override
-			public boolean equals(final Object obj) {
+			public boolean typeEquals(final Object obj) {
 				return (this == obj) || (obj instanceof SequenceType);
 			}
 		}

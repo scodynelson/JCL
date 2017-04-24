@@ -228,7 +228,7 @@ public class PackageStructImpl extends BuiltInClassStruct implements PackageStru
 	 */
 	private void internalUsePackage(final PackageStruct... packagesToUse) {
 		for (final PackageStruct packageToUse : packagesToUse) {
-			if (packageToUse.equals(GlobalPackageStruct.KEYWORD)) {
+			if (packageToUse.eq(GlobalPackageStruct.KEYWORD)) {
 				throw new PackageErrorException(this + " can't use package " + GlobalPackageStruct.KEYWORD, this);
 			}
 
@@ -513,7 +513,7 @@ public class PackageStructImpl extends BuiltInClassStruct implements PackageStru
 			}
 
 			final KeywordStruct packageSymbolType = inheritedPackageSymbol.getPackageSymbolType();
-			if (EXTERNAL_KEYWORD.equals(packageSymbolType)) {
+			if (EXTERNAL_KEYWORD.eq(packageSymbolType)) {
 				foundSymbol = inheritedPackageSymbol.getSymbol();
 				break;
 			}

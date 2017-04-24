@@ -5,7 +5,6 @@
 package jcl.type;
 
 import jcl.type.typespecifier.AtomicTypeSpecifier;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * A {@link FileStreamType} is a {@link StreamType} from which the direct source or sink is a file.
@@ -42,13 +41,7 @@ public interface FileStreamType extends StreamType {
 			}
 
 			@Override
-			public int hashCode() {
-				return new HashCodeBuilder().appendSuper(super.hashCode())
-				                            .toHashCode();
-			}
-
-			@Override
-			public boolean equals(final Object obj) {
+			public boolean typeEquals(final Object obj) {
 				return (this == obj) || (obj instanceof FileStreamType);
 			}
 		}

@@ -8,7 +8,6 @@ import java.math.BigDecimal;
 
 import jcl.type.typespecifier.AtomicTypeSpecifier;
 import jcl.type.typespecifier.CompoundTypeSpecifier;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * A {@link SingleFloatType} is a {@link FloatType} type with a minimum of 24 precision bits and 8 exponent bits.
@@ -124,14 +123,7 @@ public interface SingleFloatType extends FloatType {
 			}
 
 			@Override
-			public int hashCode() {
-				return new HashCodeBuilder().appendSuper(super.hashCode())
-				                            .append(intervalDesignator)
-				                            .toHashCode();
-			}
-
-			@Override
-			public boolean equals(final Object obj) {
+			public boolean typeEquals(final Object obj) {
 				if (this == obj) {
 					return true;
 				}

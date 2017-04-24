@@ -49,14 +49,14 @@ public final class DestructuringLambdaListParser {
 
 		// NOTE: this first peek is to ensure we don't damage the initial state of the iterator by consuming the first element early.
 		LispStruct firstElement = null;
-		if (!NILStruct.INSTANCE.equals(lambdaList)) {
+		if (!NILStruct.INSTANCE.eq(lambdaList)) {
 			firstElement = lambdaList.getCar();
 		}
 
 		LispStruct currentElement = null;
 
 		WholeParameter wholeBinding = null;
-		if (CompilerConstants.WHOLE.equals(firstElement)) {
+		if (CompilerConstants.WHOLE.eq(firstElement)) {
 			// Now that we've verified the first element is actually '&whole', consume it.
 			currentElement = iterator.next();
 
@@ -76,7 +76,7 @@ public final class DestructuringLambdaListParser {
 		}
 
 		List<OptionalParameter> optionalBindings = Collections.emptyList();
-		if (CompilerConstants.OPTIONAL.equals(currentElement)) {
+		if (CompilerConstants.OPTIONAL.eq(currentElement)) {
 			final OptionalParseResult optionalParseResult
 					= lambdaListParser.parseOptionalBindings(environment, iterator, declareElement, false, true);
 
@@ -85,7 +85,7 @@ public final class DestructuringLambdaListParser {
 		}
 
 		RestParameter restBinding = null;
-		if (CompilerConstants.REST.equals(currentElement)) {
+		if (CompilerConstants.REST.eq(currentElement)) {
 			final RestParseResult restParseResult
 					= lambdaListParser.parseRestBinding(environment, iterator, declareElement, true);
 
@@ -94,7 +94,7 @@ public final class DestructuringLambdaListParser {
 		}
 
 		BodyParameter bodyBinding = null;
-		if (CompilerConstants.BODY.equals(currentElement)) {
+		if (CompilerConstants.BODY.eq(currentElement)) {
 			if (restBinding != null) {
 				throw new ProgramErrorException("Destructuring LambdaList &body parameter cannot be supplied alongside &rest parameter.");
 			}
@@ -109,7 +109,7 @@ public final class DestructuringLambdaListParser {
 		boolean keyNotProvided = true;
 
 		List<KeyParameter> keyBindings = Collections.emptyList();
-		if (CompilerConstants.KEY.equals(currentElement)) {
+		if (CompilerConstants.KEY.eq(currentElement)) {
 			final KeyParseResult keyParseResult
 					= lambdaListParser.parseKeyBindings(environment, iterator, declareElement, true);
 
@@ -120,7 +120,7 @@ public final class DestructuringLambdaListParser {
 		}
 
 		boolean allowOtherKeys = false;
-		if (CompilerConstants.ALLOW_OTHER_KEYS.equals(currentElement)) {
+		if (CompilerConstants.ALLOW_OTHER_KEYS.eq(currentElement)) {
 			if (keyNotProvided) {
 				throw new ProgramErrorException("&allow-other-keys cannot be provided when &key is not provided.");
 			}
@@ -132,7 +132,7 @@ public final class DestructuringLambdaListParser {
 		}
 
 		List<AuxParameter> auxBindings = Collections.emptyList();
-		if (CompilerConstants.AUX.equals(currentElement)) {
+		if (CompilerConstants.AUX.eq(currentElement)) {
 			final AuxParseResult auxParseResult
 					= lambdaListParser.parseAuxBindings(environment, iterator, declareElement, true);
 
@@ -154,14 +154,14 @@ public final class DestructuringLambdaListParser {
 
 		// NOTE: this first peek is to ensure we don't damage the initial state of the iterator by consuming the first element early.
 		LispStruct firstElement = null;
-		if (!NILStruct.INSTANCE.equals(lambdaList)) {
+		if (!NILStruct.INSTANCE.eq(lambdaList)) {
 			firstElement = lambdaList.getCar();
 		}
 
 		LispStruct currentElement = null;
 
 		WholeParameter wholeBinding = null;
-		if (CompilerConstants.WHOLE.equals(firstElement)) {
+		if (CompilerConstants.WHOLE.eq(firstElement)) {
 			// Now that we've verified the first element is actually '&whole', consume it.
 			currentElement = iterator.next();
 
@@ -181,7 +181,7 @@ public final class DestructuringLambdaListParser {
 		}
 
 		List<OptionalParameter> optionalBindings = Collections.emptyList();
-		if (CompilerConstants.OPTIONAL.equals(currentElement)) {
+		if (CompilerConstants.OPTIONAL.eq(currentElement)) {
 			final OptionalParseResult optionalParseResult
 					= lambdaListParser.parseOptionalBindings(environment, iterator, declareElement, true, true);
 

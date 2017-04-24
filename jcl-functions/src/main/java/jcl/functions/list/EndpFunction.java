@@ -26,6 +26,6 @@ public final class EndpFunction extends CommonLispBuiltInFunctionStructBase {
 	@Override
 	public LispStruct apply(final Arguments arguments) {
 		final ListStruct list = arguments.getRequiredArgument(LIST_ARGUMENT, ListStruct.class);
-		return LispStructFactory.toBoolean(NILStruct.INSTANCE.equals(list));
+		return LispStructFactory.toBoolean(NILStruct.INSTANCE.eq(list));
 	}
 }

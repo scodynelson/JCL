@@ -8,6 +8,7 @@ import java.util.stream.Stream;
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.internal.VectorStructImpl;
+import jcl.lang.internal.number.IntegerStructImpl;
 import jcl.type.BitType;
 import jcl.type.CharacterType;
 import jcl.type.LispType;
@@ -22,7 +23,7 @@ public interface VectorStruct extends ArrayStruct, SequenceStruct {
 
 	default LispStruct svref(final IntegerStruct index) {
 		final LispType type = getType();
-		if (SimpleVectorType.INSTANCE.equals(type)) {
+		if (SimpleVectorType.INSTANCE.typeEquals(type)) {
 			return aref(index);
 		}
 		throw new TypeErrorException(
@@ -31,7 +32,7 @@ public interface VectorStruct extends ArrayStruct, SequenceStruct {
 
 	default LispStruct setfSvref(final LispStruct newElement, final IntegerStruct index) { // TODO: check type
 		final LispType type = getType();
-		if (SimpleVectorType.INSTANCE.equals(type)) {
+		if (SimpleVectorType.INSTANCE.typeEquals(type)) {
 			return setfAref(newElement, index);
 		}
 		throw new TypeErrorException(
@@ -107,12 +108,12 @@ public interface VectorStruct extends ArrayStruct, SequenceStruct {
 
 	@Override
 	default LispStruct elt(final IntegerStruct index) {
-		return svref(index);
+		return aref(index);
 	}
 
 	@Override
 	default LispStruct setfElt(final LispStruct newElement, final IntegerStruct index) {
-		return setfSvref(newElement, index);
+		return setfAref(newElement, index);
 	}
 
 	@Override
@@ -123,6 +124,31 @@ public interface VectorStruct extends ArrayStruct, SequenceStruct {
 	@Override
 	default VectorStruct nReverse() {
 		throw new UnsupportedOperationException("Not supported yet.");
+	}
+
+	/*
+	LISP-STRUCT
+	 */
+
+	@Override
+	default boolean equalp(final LispStruct object) {
+		if (eq(object)) {
+			return true;
+		}
+		if (object instanceof VectorStruct) {
+			final VectorStruct v = (VectorStruct) object;
+			if (!length().eql(v.length())) {
+				return false;
+			}
+			for (int i = 0; i < length().intValue(); i++) {
+				final IntegerStruct index = IntegerStructImpl.valueOf(i);
+				if (!aref(index).equalp(v.aref(index))) {
+					return false;
+				}
+			}
+			return true;
+		}
+		return false;
 	}
 
 	static VectorStruct.Builder builder(final IntegerStruct size) {
@@ -144,7 +170,7 @@ public interface VectorStruct extends ArrayStruct, SequenceStruct {
 			if ((initialElement != null) && !(initialElement instanceof IntegerStruct)) {
 				throw new ErrorException("The value " + initialElement + " is not of the expected type BIT.");
 			}
-			if (!BitType.INSTANCE.equals(displacedTo.arrayElementType())) {
+			if ((displacedTo != null) && !BitType.INSTANCE.typeEquals(displacedTo.arrayElementType())) {
 				throw new ErrorException(
 						"The :DISPLACED-TO array " + displacedTo + " is not of :ELEMENT-TYPE BIT");
 			}
@@ -162,7 +188,7 @@ public interface VectorStruct extends ArrayStruct, SequenceStruct {
 			if ((initialElement != null) && !(initialElement instanceof CharacterStruct)) {
 				throw new ErrorException("The value " + initialElement + " is not of the expected type CHARACTER.");
 			}
-			if (!BitType.INSTANCE.equals(displacedTo.arrayElementType())) {
+			if (!BitType.INSTANCE.typeEquals(displacedTo.arrayElementType())) {
 				throw new ErrorException(
 						"The :DISPLACED-TO array " + displacedTo + " is not of :ELEMENT-TYPE CHARACTER");
 			}
@@ -227,7 +253,7 @@ public interface VectorStruct extends ArrayStruct, SequenceStruct {
 
 			if (displacedTo != null) {
 				final LispType displacedToType = displacedTo.getType();
-				if (displacedToType.isNotOfType(upgradedET)) {
+				if (!upgradedET.typeEquals(displacedToType)) {
 					throw new TypeErrorException(
 							"Provided displaced to " + displacedTo + " is not an array with a subtype of the upgraded-array-element-type " + upgradedET + '.');
 				}
@@ -254,7 +280,7 @@ public interface VectorStruct extends ArrayStruct, SequenceStruct {
 			if (initialContents != null) {
 				for (final LispStruct element : initialContents) {
 					final LispType initialElementType = element.getType();
-					if (initialElementType.isNotOfType(upgradedET)) {
+					if (!upgradedET.typeEquals(initialElementType)) {
 						throw new TypeErrorException(
 								"Provided element " + element + " is not a subtype of the upgraded-array-element-type " + upgradedET + '.');
 					}
@@ -272,7 +298,7 @@ public interface VectorStruct extends ArrayStruct, SequenceStruct {
 				                            fillPointerInt);
 			} else {
 				final LispType initialElementType = initialElement.getType();
-				if (initialElementType.isNotOfType(upgradedET)) {
+				if (!upgradedET.typeEquals(initialElementType)) {
 					throw new TypeErrorException(
 							"Provided element " + initialElement + " is not a subtype of the upgraded-array-element-type " + upgradedET + '.');
 				}

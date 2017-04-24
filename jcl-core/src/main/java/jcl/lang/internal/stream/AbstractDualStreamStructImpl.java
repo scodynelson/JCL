@@ -68,7 +68,7 @@ abstract class AbstractDualStreamStructImpl extends StreamStructImpl implements 
 		final LispType inType = inputStreamStruct.getElementType();
 		final LispType outType = outputStreamStruct.getElementType();
 
-		return inType.equals(outType) ? inType : new AndTypeSpecifier(inType, outType);
+		return inType.isOfType(outType) ? inType : new AndTypeSpecifier(inType, outType);
 	}
 
 	/**

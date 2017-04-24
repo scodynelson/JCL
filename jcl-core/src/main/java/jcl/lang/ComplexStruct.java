@@ -56,4 +56,11 @@ public interface ComplexStruct extends NumberStruct {
 
 		return anyFloats ? ValueType.FLOAT : ValueType.RATIONAL;
 	}
+
+	@Override
+	default boolean eql(final LispStruct object) {
+		return eq(object) ||
+				((object instanceof ComplexStruct)
+						&& ((ComplexStruct) object).ap().equals(ap()));
+	}
 }

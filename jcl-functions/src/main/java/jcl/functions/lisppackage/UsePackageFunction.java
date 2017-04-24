@@ -48,7 +48,7 @@ public final class UsePackageFunction extends AbstractPackageListPackageFunction
 	@Override
 	protected void validatePackages(final PackageStruct... packageStructs) {
 		for (final PackageStruct packageStruct : packageStructs) {
-			if (GlobalPackageStruct.KEYWORD.equals(packageStruct)) {
+			if (GlobalPackageStruct.KEYWORD.eq(packageStruct)) {
 				throw new ErrorException("Cannot use KEYWORD Package.");
 			}
 		}

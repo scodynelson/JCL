@@ -5,10 +5,6 @@
 package jcl.lang.pathname;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
  * The {@link PathnameHost} is the object representation of the 'host' element of a Lisp 'pathname' type.
@@ -76,36 +72,5 @@ public final class PathnameHost {
 	 */
 	public PathnameComponentType getComponentType() {
 		return componentType;
-	}
-
-	@Override
-	public int hashCode() {
-		return new HashCodeBuilder().append(host)
-		                            .append(componentType)
-		                            .toHashCode();
-	}
-
-	@Override
-	public boolean equals(final Object obj) {
-		if (obj == null) {
-			return false;
-		}
-		if (obj == this) {
-			return true;
-		}
-		if (obj.getClass() != getClass()) {
-			return false;
-		}
-		final PathnameHost rhs = (PathnameHost) obj;
-		return new EqualsBuilder().append(host, rhs.host)
-		                          .append(componentType, rhs.componentType)
-		                          .isEquals();
-	}
-
-	@Override
-	public String toString() {
-		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(host)
-		                                                                .append(componentType)
-		                                                                .toString();
 	}
 }

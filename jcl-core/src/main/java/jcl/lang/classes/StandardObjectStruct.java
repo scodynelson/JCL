@@ -3,8 +3,6 @@ package jcl.lang.classes;
 import jcl.lang.LispStruct;
 import jcl.type.LispType;
 import jcl.type.StandardObjectType;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * The {@link StandardObjectStruct} is the object representation of a Lisp 'standard-object' type.
@@ -52,28 +50,6 @@ public abstract class StandardObjectStruct implements LispStruct {
 	@Override
 	public LispType getType() {
 		return StandardObjectType.INSTANCE;
-	}
-
-	@Override
-	public int hashCode() {
-		return new HashCodeBuilder().append(documentation)
-		                            .toHashCode();
-	}
-
-	@Override
-	public boolean equals(final Object obj) {
-		if (obj == null) {
-			return false;
-		}
-		if (obj == this) {
-			return true;
-		}
-		if (obj.getClass() != getClass()) {
-			return false;
-		}
-		final StandardObjectStruct rhs = (StandardObjectStruct) obj;
-		return new EqualsBuilder().append(documentation, rhs.documentation)
-		                          .isEquals();
 	}
 
 	@Override

@@ -8,9 +8,6 @@ import jcl.lang.BooleanStruct;
 import jcl.lang.FunctionStruct;
 import jcl.lang.LispStruct;
 import jcl.type.TypeBaseClass;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
  * A {@link SatisfiesTypeSpecifier} denotes the set of all objects that satisfy the predicate predicate-name, which
@@ -51,14 +48,7 @@ public class SatisfiesTypeSpecifier extends TypeBaseClass implements CompoundTyp
 	}
 
 	@Override
-	public int hashCode() {
-		return new HashCodeBuilder().appendSuper(super.hashCode())
-		                            .append(predicate)
-		                            .toHashCode();
-	}
-
-	@Override
-	public boolean equals(final Object obj) {
+	public boolean typeEquals(final Object obj) {
 		if (this == obj) {
 			return true;
 		}
@@ -71,11 +61,5 @@ public class SatisfiesTypeSpecifier extends TypeBaseClass implements CompoundTyp
 
 		// TODO: this probably isn't very safe...
 		return ((BooleanStruct) predicate.apply(lispStruct)).booleanValue();
-	}
-
-	@Override
-	public String toString() {
-		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(predicate)
-		                                                                .toString();
 	}
 }

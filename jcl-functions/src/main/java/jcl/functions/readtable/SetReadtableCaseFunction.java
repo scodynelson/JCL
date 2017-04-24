@@ -1,7 +1,5 @@
 package jcl.functions.readtable;
 
-import java.util.Objects;
-
 import jcl.functions.SystemBuiltInFunctionStructBase;
 import jcl.lang.LispStruct;
 import jcl.lang.ReadtableStruct;
@@ -33,13 +31,13 @@ public final class SetReadtableCaseFunction extends SystemBuiltInFunctionStructB
 		final ReadtableStruct readtable = arguments.getRequiredArgument(READTABLE_ARGUMENT, ReadtableStruct.class);
 		final SymbolStruct mode = arguments.getRequiredArgument(MODE_ARGUMENT, SymbolStruct.class);
 
-		if (Objects.equals(CommonLispSymbols.UPCASE_KEYWORD, mode)) {
+		if (CommonLispSymbols.UPCASE_KEYWORD.eq(mode)) {
 			readtable.setReadtableCase(ReadtableCase.UPCASE);
-		} else if (Objects.equals(CommonLispSymbols.DOWNCASE_KEYWORD, mode)) {
+		} else if (CommonLispSymbols.DOWNCASE_KEYWORD.eq(mode)) {
 			readtable.setReadtableCase(ReadtableCase.DOWNCASE);
-		} else if (Objects.equals(CommonLispSymbols.PRESERVE_KEYWORD, mode)) {
+		} else if (CommonLispSymbols.PRESERVE_KEYWORD.eq(mode)) {
 			readtable.setReadtableCase(ReadtableCase.PRESERVE);
-		} else if (Objects.equals(CommonLispSymbols.INVERT_KEYWORD, mode)) {
+		} else if (CommonLispSymbols.INVERT_KEYWORD.eq(mode)) {
 			readtable.setReadtableCase(ReadtableCase.INVERT);
 		}
 		return mode;

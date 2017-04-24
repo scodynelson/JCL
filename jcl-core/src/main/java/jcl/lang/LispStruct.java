@@ -26,14 +26,14 @@ public interface LispStruct {
 	}
 
 	default boolean eql(final LispStruct object) {
-		return equals(object);
+		return eq(object);
 	}
 
 	default boolean equal(final LispStruct object) {
-		return equals(object);
+		return eql(object);
 	}
 
 	default boolean equalp(final LispStruct object) {
-		return equals(object);
+		return equal(object);
 	}
 }

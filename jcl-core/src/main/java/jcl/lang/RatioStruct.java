@@ -33,4 +33,11 @@ public interface RatioStruct extends RationalStruct {
 
 	@Override
 	RatioStruct negation();
+
+	@Override
+	default boolean eql(final LispStruct object) {
+		return eq(object) ||
+				((object instanceof RatioStruct)
+						&& ((RatioStruct) object).ap().equals(ap()));
+	}
 }

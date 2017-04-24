@@ -39,38 +39,4 @@ public class Closure {
 	public Map<SymbolStruct, FunctionStruct> getFunctionBindings() {
 		return functionBindings;
 	}
-
-//	@Override
-//	public int hashCode() {
-//		return new HashCodeBuilder().append(parent)
-//		                            .append(symbolBindings)
-//		                            .append(functionBindings)
-//		                            .toHashCode();
-//	}
-//
-//	@Override
-//	public boolean equals(final Object obj) {
-//		if (obj == null) {
-//			return false;
-//		}
-//		if (obj == this) {
-//			return true;
-//		}
-//		if (obj.getClass() != getClass()) {
-//			return false;
-//		}
-//		final Closure rhs = (Closure) obj;
-//		return new EqualsBuilder().append(parent, rhs.parent)
-//		                          .append(symbolBindings, rhs.symbolBindings)
-//		                          .append(functionBindings, rhs.functionBindings)
-//		                          .isEquals();
-//	}
-//
-//	@Override
-//	public String toString() {
-//		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(parent)
-//		                                                                .append(symbolBindings)
-//		                                                                .append(functionBindings)
-//		                                                                .toString();
-//	}
 }

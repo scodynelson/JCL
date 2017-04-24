@@ -125,4 +125,11 @@ public interface RationalStruct extends RealStruct {
 
 	@Override
 	RationalStruct reciprocal();
+
+	@Override
+	default boolean eql(final LispStruct object) {
+		return eq(object) ||
+				((object instanceof RationalStruct)
+						&& ((RationalStruct) object).ap().equals(ap()));
+	}
 }

@@ -28,6 +28,6 @@ public final class NotFunction extends CommonLispBuiltInFunctionStructBase {
 	@Override
 	public LispStruct apply(final Arguments arguments) {
 		final LispStruct object = arguments.getRequiredArgument(OBJECT_ARGUMENT);
-		return LispStructFactory.toBoolean(NILStruct.INSTANCE.equals(object));
+		return LispStructFactory.toBoolean(NILStruct.INSTANCE.eq(object));
 	}
 }

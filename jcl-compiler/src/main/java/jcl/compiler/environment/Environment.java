@@ -73,7 +73,7 @@ public class Environment extends StandardObjectStruct {
 
 	public boolean hasLexicalBinding(final SymbolStruct var) {
 		return lexicalBindings.stream()
-		                      .anyMatch(e -> e.getVar().equals(var));
+		                      .anyMatch(e -> e.getVar().eq(var));
 	}
 
 	public void addLexicalBinding(final Binding environmentBinding) {
@@ -82,7 +82,7 @@ public class Environment extends StandardObjectStruct {
 
 	public boolean hasDynamicBinding(final SymbolStruct var) {
 		return dynamicBindings.stream()
-		                      .anyMatch(e -> e.getVar().equals(var));
+		                      .anyMatch(e -> e.getVar().eq(var));
 	}
 
 	public void addDynamicBinding(final Binding environmentBinding) {
@@ -91,7 +91,7 @@ public class Environment extends StandardObjectStruct {
 
 	public boolean hasSymbolMacroBinding(final SymbolStruct var) {
 		return symbolMacroBindings.stream()
-		                          .anyMatch(e -> e.getVar().equals(var));
+		                          .anyMatch(e -> e.getVar().eq(var));
 	}
 
 	public void addSymbolMacroBinding(final SymbolMacroBinding symbolMacroBinding) {

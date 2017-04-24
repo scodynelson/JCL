@@ -26,7 +26,7 @@ public enum DirectionType {
 
 	public static DirectionType fromValue(final SymbolStruct keyword) {
 		for (DirectionType directionType : values()) {
-			if (directionType.keyword.equals(keyword)) {
+			if (directionType.keyword.eq(keyword)) {
 				return directionType;
 			}
 		}

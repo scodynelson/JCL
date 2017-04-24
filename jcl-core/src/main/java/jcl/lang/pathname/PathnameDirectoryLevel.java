@@ -6,10 +6,6 @@ package jcl.lang.pathname;
 
 import jcl.lang.condition.exception.FileErrorException;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
  * The {@link PathnameDirectoryLevel} is the object representation of a specific directory level of the 'directory'
@@ -81,36 +77,5 @@ public final class PathnameDirectoryLevel {
 	 */
 	public PathnameDirectoryLevelType getDirectoryLevelType() {
 		return directoryLevelType;
-	}
-
-	@Override
-	public int hashCode() {
-		return new HashCodeBuilder().append(directoryLevel)
-		                            .append(directoryLevelType)
-		                            .toHashCode();
-	}
-
-	@Override
-	public boolean equals(final Object obj) {
-		if (obj == null) {
-			return false;
-		}
-		if (obj == this) {
-			return true;
-		}
-		if (obj.getClass() != getClass()) {
-			return false;
-		}
-		final PathnameDirectoryLevel rhs = (PathnameDirectoryLevel) obj;
-		return new EqualsBuilder().append(directoryLevel, rhs.directoryLevel)
-		                          .append(directoryLevelType, rhs.directoryLevelType)
-		                          .isEquals();
-	}
-
-	@Override
-	public String toString() {
-		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(directoryLevel)
-		                                                                .append(directoryLevelType)
-		                                                                .toString();
 	}
 }

@@ -7,8 +7,6 @@ package jcl.lang.pathname;
 import jcl.lang.LispStruct;
 import jcl.lang.NILStruct;
 import jcl.lang.statics.CommonLispSymbols;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
  * The {@link PathnameComponentType} is the enumeration of the type of a component element of a Lisp 'pathname' type.
@@ -68,16 +66,10 @@ public enum PathnameComponentType {
 	 */
 	public static PathnameComponentType fromValue(final LispStruct value) {
 		for (final PathnameComponentType componentType : values()) {
-			if (componentType.value.equals(value)) {
+			if (componentType.value.eql(value)) {
 				return componentType;
 			}
 		}
 		return null;
-	}
-
-	@Override
-	public String toString() {
-		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(value)
-		                                                                .toString();
 	}
 }

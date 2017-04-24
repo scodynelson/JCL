@@ -42,7 +42,7 @@ public final class OrdinaryLambdaListParser extends LambdaListParser {
 		}
 
 		List<OptionalParameter> optionalBindings = Collections.emptyList();
-		if (CompilerConstants.OPTIONAL.equals(currentElement)) {
+		if (CompilerConstants.OPTIONAL.eq(currentElement)) {
 			final OptionalParseResult optionalParseResult
 					= parseOptionalBindings(environment, iterator, declareElement, false, false);
 
@@ -51,7 +51,7 @@ public final class OrdinaryLambdaListParser extends LambdaListParser {
 		}
 
 		RestParameter restBinding = null;
-		if (CompilerConstants.REST.equals(currentElement)) {
+		if (CompilerConstants.REST.eq(currentElement)) {
 			final RestParseResult restParseResult
 					= parseRestBinding(environment, iterator, declareElement, false);
 
@@ -62,7 +62,7 @@ public final class OrdinaryLambdaListParser extends LambdaListParser {
 		boolean keyNotProvided = true;
 
 		List<KeyParameter> keyBindings = Collections.emptyList();
-		if (CompilerConstants.KEY.equals(currentElement)) {
+		if (CompilerConstants.KEY.eq(currentElement)) {
 			final KeyParseResult keyParseResult
 					= parseKeyBindings(environment, iterator, declareElement, false);
 
@@ -73,7 +73,7 @@ public final class OrdinaryLambdaListParser extends LambdaListParser {
 		}
 
 		boolean allowOtherKeys = false;
-		if (CompilerConstants.ALLOW_OTHER_KEYS.equals(currentElement)) {
+		if (CompilerConstants.ALLOW_OTHER_KEYS.eq(currentElement)) {
 			if (keyNotProvided) {
 				throw new ProgramErrorException("&allow-other-keys cannot be provided when &key is not provided.");
 			}
@@ -85,7 +85,7 @@ public final class OrdinaryLambdaListParser extends LambdaListParser {
 		}
 
 		List<AuxParameter> auxBindings = Collections.emptyList();
-		if (CompilerConstants.AUX.equals(currentElement)) {
+		if (CompilerConstants.AUX.eq(currentElement)) {
 			final AuxParseResult auxParseResult
 					= parseAuxBindings(environment, iterator, declareElement, false);
 

@@ -67,7 +67,7 @@ final class IfCodeGenerator extends SpecialOperatorCodeGenerator<IfStruct> {
 	 *          var2 = var3.getPrimaryValue();
 	 *      }
 	 *      IntegerStruct var4;
-	 *      if(!var2.equals(NILStruct.INSTANCE)) {
+	 *      if(!var2.eq(NILStruct.INSTANCE)) {
 	 *          BigInteger var5 = new BigInteger("1");
 	 *          var4 = new IntIntegerStruct(var5);
 	 *      } else {
@@ -113,11 +113,11 @@ final class IfCodeGenerator extends SpecialOperatorCodeGenerator<IfStruct> {
 
 		mv.visitVarInsn(Opcodes.ALOAD, testFormStore);
 		codeGenerator.generate(NILStruct.INSTANCE, generatorState);
-		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
-		                   GenerationConstants.JAVA_OBJECT_NAME,
-		                   GenerationConstants.JAVA_EQUALS_METHOD_NAME,
-		                   GenerationConstants.JAVA_EQUALS_METHOD_DESC,
-		                   false);
+		mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
+		                   GenerationConstants.LISP_STRUCT_NAME,
+		                   GenerationConstants.LISP_STRUCT_EQ_METHOD_NAME,
+		                   GenerationConstants.LISP_STRUCT_EQ_METHOD_DESC,
+		                   true);
 		mv.visitJumpInsn(Opcodes.IFNE, elseStart);
 
 		final int resultFormStore = methodBuilder.getNextAvailableStore();

@@ -31,7 +31,7 @@ public enum IfExistsType {
 
 	public static IfExistsType fromValue(final SymbolStruct keyword) {
 		for (IfExistsType ifExistsType : values()) {
-			if (ifExistsType.keyword.equals(keyword)) {
+			if (ifExistsType.keyword.eq(keyword)) {
 				return ifExistsType;
 			}
 		}

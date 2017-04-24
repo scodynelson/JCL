@@ -4,11 +4,8 @@
 
 package jcl.type;
 
-import java.util.Objects;
-
 import jcl.type.typespecifier.AtomicTypeSpecifier;
 import jcl.type.typespecifier.CompoundTypeSpecifier;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * A {@link ComplexType} includes all mathematical complex numbers other than those included in the type {@link
@@ -89,14 +86,7 @@ public interface ComplexType extends NumberType {
 			}
 
 			@Override
-			public int hashCode() {
-				return new HashCodeBuilder().appendSuper(super.hashCode())
-				                            .append(realType)
-				                            .toHashCode();
-			}
-
-			@Override
-			public boolean equals(final Object obj) {
+			public boolean typeEquals(final Object obj) {
 				if (this == obj) {
 					return true;
 				}
@@ -113,7 +103,7 @@ public interface ComplexType extends NumberType {
 				if (complexType instanceof ComplexTypeImpl) {
 					final ComplexTypeImpl complexTypeImpl = (ComplexTypeImpl) complexType;
 
-					return Objects.equals(realType, complexTypeImpl.realType);
+					return realType.isOfType(complexTypeImpl.realType);
 				}
 
 				return false;

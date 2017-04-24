@@ -3,7 +3,6 @@ package jcl.reader;
 import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -72,25 +71,5 @@ public class ReaderContext {
 
 	public void decrementBackquoteLevel() {
 		backquoteLevel--;
-	}
-
-	@Override
-	public boolean equals(final Object obj) {
-		if (this == obj) {
-			return true;
-		}
-		if ((obj == null) || (getClass() != obj.getClass())) {
-			return false;
-		}
-		final ReaderContext context = (ReaderContext) obj;
-		return (backquoteLevel == context.backquoteLevel) &&
-				Objects.equals(sharpEqualFinalTable, context.sharpEqualFinalTable) &&
-				Objects.equals(sharpEqualTempTable, context.sharpEqualTempTable) &&
-				Objects.equals(sharpEqualReplTable, context.sharpEqualReplTable);
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(sharpEqualFinalTable, sharpEqualTempTable, sharpEqualReplTable, backquoteLevel);
 	}
 }

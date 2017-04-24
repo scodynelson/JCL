@@ -6,8 +6,6 @@ import java.util.List;
 import jcl.lang.LispStruct;
 import jcl.type.ClassType;
 import jcl.type.LispType;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * The {@link ClassStruct} is the object representation of a Lisp 'class' type.
@@ -93,33 +91,5 @@ public abstract class ClassStruct extends StandardObjectStruct {
 	 */
 	public List<Class<? extends LispStruct>> getSubClasses() {
 		return subClasses;
-	}
-
-	@Override
-	public int hashCode() {
-		return new HashCodeBuilder().appendSuper(super.hashCode())
-		                            .append(type)
-		                            .append(directSuperClasses)
-		                            .append(subClasses)
-		                            .toHashCode();
-	}
-
-	@Override
-	public boolean equals(final Object obj) {
-		if (obj == null) {
-			return false;
-		}
-		if (obj == this) {
-			return true;
-		}
-		if (obj.getClass() != getClass()) {
-			return false;
-		}
-		final ClassStruct rhs = (ClassStruct) obj;
-		return new EqualsBuilder().appendSuper(super.equals(obj))
-		                          .append(type, rhs.type)
-		                          .append(directSuperClasses, rhs.directSuperClasses)
-		                          .append(subClasses, rhs.subClasses)
-		                          .isEquals();
 	}
 }

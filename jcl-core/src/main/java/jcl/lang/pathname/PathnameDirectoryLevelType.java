@@ -7,8 +7,6 @@ package jcl.lang.pathname;
 import jcl.lang.LispStruct;
 import jcl.lang.NILStruct;
 import jcl.lang.statics.CommonLispSymbols;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
  * The {@link PathnameDirectoryLevelType} is the enumeration of the directory level type of a 'directory' level
@@ -76,16 +74,10 @@ public enum PathnameDirectoryLevelType {
 	 */
 	public static PathnameDirectoryLevelType fromValue(final LispStruct value) {
 		for (final PathnameDirectoryLevelType directoryLevelType : values()) {
-			if (directoryLevelType.value.equals(value)) {
+			if (directoryLevelType.value.eql(value)) {
 				return directoryLevelType;
 			}
 		}
 		return null;
-	}
-
-	@Override
-	public String toString() {
-		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(value)
-		                                                                .toString();
 	}
 }

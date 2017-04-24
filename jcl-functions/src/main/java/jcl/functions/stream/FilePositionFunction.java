@@ -44,11 +44,11 @@ public final class FilePositionFunction extends CommonLispBuiltInFunctionStructB
 		final Long position;
 		if (lispStruct2 instanceof IntegerStruct) {
 			position = ((IntegerStruct) lispStruct2).longValue();
-		} else if (CommonLispSymbols.START_KEYWORD.equals(lispStruct2)) {
+		} else if (CommonLispSymbols.START_KEYWORD.eq(lispStruct2)) {
 			position = 0L;
-		} else if (CommonLispSymbols.END_KEYWORD.equals(lispStruct2)) {
+		} else if (CommonLispSymbols.END_KEYWORD.eq(lispStruct2)) {
 			position = stream.fileLength();
-		} else if (NILStruct.INSTANCE.equals(lispStruct2)) {
+		} else if (NILStruct.INSTANCE.eq(lispStruct2)) {
 			position = null;
 		} else {
 			throw new TypeErrorException("UNCAUGHT TYPE ERROR.");

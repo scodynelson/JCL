@@ -7,6 +7,7 @@ import java.util.stream.Stream;
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.internal.ComplexStringStructImpl;
 import jcl.lang.internal.SimpleStringStructImpl;
+import jcl.lang.internal.number.IntegerStructImpl;
 import jcl.lang.statics.CharacterConstants;
 import jcl.type.CharacterType;
 import jcl.type.LispType;
@@ -376,6 +377,61 @@ public interface StringStruct extends VectorStruct {
 	@Override
 	StringStruct nReverse();
 
+	/*
+	LISP-STRUCT
+	 */
+
+	@Override
+	default boolean equal(final LispStruct object) {
+		if (eq(object)) {
+			return true;
+		}
+		if (object instanceof StringStruct) {
+			final StringStruct string = (StringStruct) object;
+			if (!length().eql(string.length())) {
+				return false;
+			}
+			for (int i = 0; i < length().intValue(); i++) {
+				final IntegerStruct index = IntegerStructImpl.valueOf(i);
+				if (!char_(index).equal(string.char_(index))) {
+					return false;
+				}
+			}
+			return true;
+		}
+		if (object instanceof ArrayStruct) {
+			return object.equal(this);
+		}
+		return false;
+	}
+
+	@Override
+	default boolean equalp(final LispStruct object) {
+		if (eq(object)) {
+			return true;
+		}
+		if (object instanceof StringStruct) {
+			final StringStruct string = (StringStruct) object;
+			if (!length().eql(string.length())) {
+				return false;
+			}
+			for (int i = 0; i < length().intValue(); i++) {
+				final IntegerStruct index = IntegerStructImpl.valueOf(i);
+				if (!char_(index).equalp(string.char_(index))) {
+					return false;
+				}
+			}
+			return true;
+		}
+		if (object instanceof BitVectorStruct) {
+			return false;
+		}
+		if (object instanceof ArrayStruct) {
+			return object.equalp(this);
+		}
+		return false;
+	}
+
 	/**
 	 * Builder factory for creating {@link StringStruct} objects.
 	 */
@@ -453,7 +509,7 @@ public interface StringStruct extends VectorStruct {
 
 			if (displacedTo != null) {
 				final LispType displacedToType = displacedTo.arrayElementType();
-				if (displacedToType.isNotOfType(upgradedET)) {
+				if (!upgradedET.typeEquals(displacedToType)) {
 					throw new TypeErrorException(
 							"Provided displaced to " + displacedTo + " is not an array with a subtype of the upgraded-array-element-type " + upgradedET + '.');
 				}
@@ -471,7 +527,7 @@ public interface StringStruct extends VectorStruct {
 			if (initialContents != null) {
 				for (final LispStruct element : initialContents) {
 					final LispType initialElementType = element.getType();
-					if (initialElementType.isNotOfType(upgradedET)) {
+					if (!upgradedET.typeEquals(initialElementType)) {
 						throw new TypeErrorException(
 								"Provided element " + element + " is not a subtype of the upgraded-array-element-type " + upgradedET + '.');
 					}
@@ -500,7 +556,7 @@ public interface StringStruct extends VectorStruct {
 			}
 
 			final LispType initialElementType = initialElement.getType();
-			if (initialElementType.isNotOfType(upgradedET)) {
+			if (!upgradedET.typeEquals(initialElementType)) {
 				// NOTE: This should never get hit due to the implementation of array-upgraded-element-type
 				throw new TypeErrorException(
 						"Provided element " + initialElement + " is not a subtype of the upgraded-array-element-type " + upgradedET + '.');

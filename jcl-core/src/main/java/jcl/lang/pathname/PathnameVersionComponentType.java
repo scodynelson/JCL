@@ -7,8 +7,6 @@ package jcl.lang.pathname;
 import jcl.lang.LispStruct;
 import jcl.lang.NILStruct;
 import jcl.lang.statics.CommonLispSymbols;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
  * The {@link PathnameVersionComponentType} is the enumeration of the type of a component element of the version
@@ -76,16 +74,10 @@ public enum PathnameVersionComponentType {
 	 */
 	public static PathnameVersionComponentType fromValue(final LispStruct value) {
 		for (final PathnameVersionComponentType versionComponentType : values()) {
-			if (versionComponentType.value.equals(value)) {
+			if (versionComponentType.value.eql(value)) {
 				return versionComponentType;
 			}
 		}
 		return null;
-	}
-
-	@Override
-	public String toString() {
-		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(value)
-		                                                                .toString();
 	}
 }

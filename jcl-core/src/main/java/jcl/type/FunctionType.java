@@ -14,7 +14,6 @@ import jcl.type.typespecifier.ValuesTypeSpecifier;
 import jcl.type.typespecifier.lambdalist.variable.Key;
 import jcl.type.typespecifier.lambdalist.variable.Optional;
 import jcl.type.typespecifier.lambdalist.variable.Rest;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * A {@link FunctionType} is an object that represents code to be executed when an appropriate number of arguments is
@@ -147,18 +146,7 @@ public interface FunctionType extends TType {
 			}
 
 			@Override
-			public int hashCode() {
-				return new HashCodeBuilder().appendSuper(super.hashCode())
-				                            .append(typeSpecifiers)
-				                            .append(optional)
-				                            .append(rest)
-				                            .append(key)
-				                            .append(valuesTypeSpecifier)
-				                            .toHashCode();
-			}
-
-			@Override
-			public boolean equals(final Object obj) {
+			public boolean typeEquals(final Object obj) {
 				if (this == obj) {
 					return true;
 				}

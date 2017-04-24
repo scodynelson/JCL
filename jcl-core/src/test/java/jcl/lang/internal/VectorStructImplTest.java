@@ -200,6 +200,7 @@ public class VectorStructImplTest {
 		final ArrayStruct array
 				= VectorStruct.builder(IntegerStruct.TWO)
 				              .initialElement(IntegerStruct.ZERO)
+				              .elementType(elementType)
 				              .build();
 		final LispType result = array.arrayElementType();
 		Assert.assertThat(result, is(elementType));

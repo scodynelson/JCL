@@ -152,7 +152,7 @@ public final class SymbolState {
 		final PackageStruct currentPackage = PackageVariables.PACKAGE.getVariableValue();
 
 		final PackageStruct symbolPackage = symbol.getSymbolPackage();
-		if (!currentPackage.equals(symbolPackage)) {
+		if (!currentPackage.eq(symbolPackage)) {
 			if (symbolPackage == null) {
 				variableName = "#:" + name;
 			} else {
@@ -251,7 +251,7 @@ public final class SymbolState {
 		final PackageStruct currentPackage = PackageVariables.PACKAGE.getVariableValue();
 
 		final PackageStruct symbolPackage = symbol.getSymbolPackage();
-		if (!currentPackage.equals(symbolPackage)) {
+		if (!currentPackage.eq(symbolPackage)) {
 			if (symbolPackage == null) {
 				variableName = "#:" + name;
 			} else {

@@ -10,9 +10,6 @@ import java.util.List;
 
 import jcl.type.LispType;
 import jcl.type.TypeBaseClass;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
  * An {@link AndTypeSpecifier} denotes the set of all objects of the type determined by the intersection of the
@@ -51,14 +48,7 @@ public class AndTypeSpecifier extends TypeBaseClass implements CompoundTypeSpeci
 	}
 
 	@Override
-	public int hashCode() {
-		return new HashCodeBuilder().appendSuper(super.hashCode())
-		                            .append(types)
-		                            .toHashCode();
-	}
-
-	@Override
-	public boolean equals(final Object obj) {
+	public boolean typeEquals(final Object obj) {
 		if (this == obj) {
 			return true;
 		}
@@ -71,14 +61,8 @@ public class AndTypeSpecifier extends TypeBaseClass implements CompoundTypeSpeci
 
 		boolean result = true;
 		for (final LispType type : types) {
-			result = result && (lispType.equals(type) || type.equals(lispType));
+			result = result && lispType.isOfType(type);
 		}
 		return result;
-	}
-
-	@Override
-	public String toString() {
-		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(types)
-		                                                                .toString();
 	}
 }

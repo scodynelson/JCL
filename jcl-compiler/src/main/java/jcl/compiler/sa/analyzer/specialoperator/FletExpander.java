@@ -62,7 +62,7 @@ public class FletExpander extends InnerLambdaExpander {
 		final List<LispStruct> letFunctionBindVars = new ArrayList<>();
 		final List<LispStruct> rebindFunctions = new ArrayList<>();
 		functionNames.stream()
-		             .filter(name -> !name.equals(functionNameSymbol))
+		             .filter(name -> !name.eq(functionNameSymbol))
 		             .forEach(name -> {
 			             final String tempFunctionBindName = "temp_" + name.getName() + "_bind_" + System.nanoTime();
 			             final SymbolStruct tempFunctionBindVar = GlobalPackageStruct.COMMON_LISP_USER.intern(tempFunctionBindName).getSymbol();

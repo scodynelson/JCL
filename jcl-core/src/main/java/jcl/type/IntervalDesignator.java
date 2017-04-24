@@ -6,9 +6,9 @@ package jcl.type;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.Objects;
 
 import jcl.util.NumberUtils;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.math3.fraction.BigFraction;
 
 /**
@@ -68,9 +68,7 @@ public class IntervalDesignator<N extends Number> {
 
 	@Override
 	public int hashCode() {
-		return new HashCodeBuilder().append(lowerBound)
-		                            .append(upperBound)
-		                            .toHashCode();
+		return Objects.hash(lowerBound, upperBound);
 	}
 
 	@Override
@@ -83,7 +81,7 @@ public class IntervalDesignator<N extends Number> {
 			return false;
 		}
 
-		final IntervalDesignator<?> intervalDesignator = (IntervalDesignator) obj;
+		final IntervalDesignator<?> intervalDesignator = (IntervalDesignator<?>) obj;
 
 		return isWithinBounds(intervalDesignator.lowerBound) && isWithinBounds(intervalDesignator.upperBound);
 	}

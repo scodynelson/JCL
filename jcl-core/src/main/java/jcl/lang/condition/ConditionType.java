@@ -41,5 +41,10 @@ public enum ConditionType implements LispType {
 
 	PRINT_NOT_READABLE,
 
-	READER_ERROR
+	READER_ERROR;
+
+	@Override
+	public boolean typeEquals(final Object obj) {
+		return true;
+	}
 }

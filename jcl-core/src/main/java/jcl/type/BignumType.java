@@ -7,7 +7,6 @@ package jcl.type;
 import jcl.type.typespecifier.AndTypeSpecifier;
 import jcl.type.typespecifier.AtomicTypeSpecifier;
 import jcl.type.typespecifier.NotTypeSpecifier;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * The type {@link BignumType} is defined to be exactly (and integer (not fixnum)).
@@ -45,13 +44,7 @@ public interface BignumType extends IntegerType {
 			}
 
 			@Override
-			public int hashCode() {
-				return new HashCodeBuilder().appendSuper(super.hashCode())
-				                            .toHashCode();
-			}
-
-			@Override
-			public boolean equals(final Object obj) {
+			public boolean typeEquals(final Object obj) {
 				return (this == obj) || (obj instanceof BignumType);
 			}
 

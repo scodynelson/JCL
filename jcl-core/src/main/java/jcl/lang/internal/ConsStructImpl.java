@@ -1,9 +1,9 @@
 package jcl.lang.internal;
 
-import java.util.HashSet;
+import java.util.IdentityHashMap;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.NoSuchElementException;
-import java.util.Set;
 import java.util.Spliterator;
 import java.util.Spliterators;
 import java.util.stream.Stream;
@@ -20,8 +20,6 @@ import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.internal.number.IntegerStructImpl;
 import jcl.type.ConsType;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * The {@link ConsStructImpl} is the object representation of a Lisp 'cons' type.
@@ -53,7 +51,7 @@ public final class ConsStructImpl extends BuiltInClassStruct implements ConsStru
 	private ConsStructImpl(final LispStruct car, final LispStruct cdr) {
 		super(ConsType.INSTANCE, null, null);
 		this.car = car;
-		if (NILStruct.INSTANCE.equals(cdr)) {
+		if (NILStruct.INSTANCE.eq(cdr)) {
 			this.cdr = NILStruct.INSTANCE;
 		} else {
 			this.cdr = cdr;
@@ -123,10 +121,12 @@ public final class ConsStructImpl extends BuiltInClassStruct implements ConsStru
 		return true;
 	}
 
+	private static final Object PRESENT = new Object();
+
 	@Override
 	public boolean isCircular() {
-		final Set<ConsStructImpl> conses = new HashSet<>();
-		conses.add(this);
+		final Map<ConsStructImpl, Object> conses = new IdentityHashMap<>();
+		conses.put(this, PRESENT);
 
 		return innerIsCircular(this, conses);
 	}
@@ -143,7 +143,7 @@ public final class ConsStructImpl extends BuiltInClassStruct implements ConsStru
 	 *
 	 * @return whether or not the provided {@code consStruct} is circular
 	 */
-	private static boolean innerIsCircular(final ConsStructImpl consStruct, final Set<ConsStructImpl> conses) {
+	private static boolean innerIsCircular(final ConsStructImpl consStruct, final Map<ConsStructImpl, Object> conses) {
 		return isElementCircular(consStruct.car, conses) || isElementCircular(consStruct.cdr, conses);
 	}
 
@@ -158,15 +158,15 @@ public final class ConsStructImpl extends BuiltInClassStruct implements ConsStru
 	 *
 	 * @return whether or not the provided {@code element} is circular
 	 */
-	private static boolean isElementCircular(final LispStruct element, final Set<ConsStructImpl> conses) {
+	private static boolean isElementCircular(final LispStruct element, final Map<ConsStructImpl, Object> conses) {
 		final boolean isElementCircular;
 		if (element instanceof ConsStructImpl) {
 			final ConsStructImpl elementAsCons = (ConsStructImpl) element;
-			if (conses.contains(elementAsCons)) {
+			if (conses.containsKey(elementAsCons)) {
 				return true;
 			}
 
-			conses.add(elementAsCons);
+			conses.put(elementAsCons, PRESENT);
 			isElementCircular = innerIsCircular(elementAsCons, conses);
 			conses.remove(elementAsCons);
 		} else {
@@ -275,7 +275,7 @@ public final class ConsStructImpl extends BuiltInClassStruct implements ConsStru
 			if (consCdr instanceof ConsStructImpl) {
 				cons = (ConsStructImpl) consCdr;
 				currentIndex++;
-			} else if (NILStruct.INSTANCE.equals(consCdr)) {
+			} else if (NILStruct.INSTANCE.eq(consCdr)) {
 				return NILStruct.INSTANCE;
 			} else {
 				throw new TypeErrorException("Not a proper list.");
@@ -301,7 +301,7 @@ public final class ConsStructImpl extends BuiltInClassStruct implements ConsStru
 			if (consCdr instanceof ConsStructImpl) {
 				cons = (ConsStructImpl) consCdr;
 				currentIndex++;
-			} else if (NILStruct.INSTANCE.equals(consCdr)) {
+			} else if (NILStruct.INSTANCE.eq(consCdr)) {
 				return;
 			} else {
 				throw new TypeErrorException("Not a proper list.");
@@ -367,7 +367,7 @@ public final class ConsStructImpl extends BuiltInClassStruct implements ConsStru
 
 		final ConsStructImpl cdrCons = (ConsStructImpl) cdr;
 		if (car.eq(indicator)) {
-			if (NILStruct.INSTANCE.equals(cdrCons.cdr)) {
+			if (NILStruct.INSTANCE.eq(cdrCons.cdr)) {
 				throw new ErrorException("Cannot remove last entry from property list.");
 			}
 			if (!(cdrCons.cdr instanceof ConsStructImpl)) {
@@ -494,7 +494,7 @@ public final class ConsStructImpl extends BuiltInClassStruct implements ConsStru
 	public IntegerStruct length() {
 		long length = 1L;
 		LispStruct obj = cdr;
-		while (!NILStruct.INSTANCE.equals(obj)) {
+		while (!NILStruct.INSTANCE.eq(obj)) {
 			++length;
 			if (obj instanceof ConsStructImpl) {
 				obj = ((ConsStructImpl) obj).cdr;
@@ -523,7 +523,7 @@ public final class ConsStructImpl extends BuiltInClassStruct implements ConsStru
 			if (consCdr instanceof ConsStructImpl) {
 				cons = (ConsStructImpl) consCdr;
 				currentIndex++;
-			} else if (NILStruct.INSTANCE.equals(consCdr)) {
+			} else if (NILStruct.INSTANCE.eq(consCdr)) {
 				throw new TypeErrorException("Index is too large.");
 			} else {
 				throw new TypeErrorException("Not a proper list.");
@@ -550,7 +550,7 @@ public final class ConsStructImpl extends BuiltInClassStruct implements ConsStru
 			if (consCdr instanceof ConsStructImpl) {
 				cons = (ConsStructImpl) consCdr;
 				currentIndex++;
-			} else if (NILStruct.INSTANCE.equals(consCdr)) {
+			} else if (NILStruct.INSTANCE.eq(consCdr)) {
 				throw new TypeErrorException("Index is too large.");
 			} else {
 				throw new TypeErrorException("Not a proper list.");
@@ -567,7 +567,7 @@ public final class ConsStructImpl extends BuiltInClassStruct implements ConsStru
 			result = new ConsStructImpl(currentCons.car, result);
 			current = currentCons.cdr;
 		}
-		if (!NILStruct.INSTANCE.equals(current)) {
+		if (!NILStruct.INSTANCE.eq(current)) {
 			throw new TypeErrorException("Not a proper list.");
 		}
 		return result;
@@ -588,7 +588,7 @@ public final class ConsStructImpl extends BuiltInClassStruct implements ConsStru
 		}
 		cons.cdr = prevCons;
 
-		if (!NILStruct.INSTANCE.equals(nextCons)) {
+		if (!NILStruct.INSTANCE.eq(nextCons)) {
 			throw new TypeErrorException("Not a proper list.");
 		}
 
@@ -598,12 +598,6 @@ public final class ConsStructImpl extends BuiltInClassStruct implements ConsStru
 	/*
 	LISP_STRUCT
 	 */
-
-	@Override
-	public boolean eql(final LispStruct object) {
-		// TODO: Fix this when we fix 'eql' for everything
-		return eq(object);
-	}
 
 	@Override
 	public boolean equal(final LispStruct object) {
@@ -655,55 +649,6 @@ public final class ConsStructImpl extends BuiltInClassStruct implements ConsStru
 	}
 
 	@Override
-	public int hashCode() {
-//		if (isCircular()) {
-//		    // TODO: we should figure out how to handle circularities here... or should we???
-//		    return new HashCodeBuilder().appendSuper(super.hashCode())
-//		                                .toHashCode();
-//		} else {
-		return new HashCodeBuilder().appendSuper(super.hashCode())
-		                            .append(car)
-		                            .append(cdr)
-		                            .toHashCode();
-//		}
-	}
-
-	@Override
-	public boolean equals(final Object obj) {
-		if (obj == null) {
-			return false;
-		}
-		if (obj == this) {
-			return true;
-		}
-		if (obj.getClass() != getClass()) {
-			return false;
-		}
-		final ConsStructImpl rhs = (ConsStructImpl) obj;
-
-//		if (isCircular() || rhs.isCircular()) {
-//			// TODO: we should figure out how to handle circularities here... or should we???
-//			return false;
-//		} else {
-		return new EqualsBuilder().appendSuper(super.equals(obj))
-		                          .append(car, rhs.car)
-		                          .append(cdr, rhs.cdr)
-		                          .isEquals();
-//		}
-	}
-
-//	@Override
-//	public String toString() {
-//		if (isCircular()) {
-//			return "ConsStruct{'circular'}";
-//		} else {
-//			return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(car)
-//			                                                                .append(cdr)
-//			                                                                .toString();
-//		}
-//	}
-
-	@Override
 	public String toString() {
 		// TODO: Ignoring *PRINT-PRETTY* and the pretty printer in general right now...
 
@@ -734,7 +679,7 @@ public final class ConsStructImpl extends BuiltInClassStruct implements ConsStru
 
 			stringBuilder.append(' ');
 			stringBuilder.append(innerConsPrinted);
-		} else if (!object.cdr.equals(NILStruct.INSTANCE)) {
+		} else if (!object.cdr.eq(NILStruct.INSTANCE)) {
 			stringBuilder.append(" . ");
 
 			final LispStruct cdr = object.cdr;

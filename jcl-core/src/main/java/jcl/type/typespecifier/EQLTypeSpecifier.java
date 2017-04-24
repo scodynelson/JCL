@@ -6,9 +6,6 @@ package jcl.type.typespecifier;
 
 import jcl.type.LispType;
 import jcl.type.TypeBaseClass;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
  * An {@link EQLTypeSpecifier} represents the type of all x for which (eql object x) is true. The argument object is
@@ -46,14 +43,7 @@ public class EQLTypeSpecifier extends TypeBaseClass implements CompoundTypeSpeci
 	}
 
 	@Override
-	public int hashCode() {
-		return new HashCodeBuilder().appendSuper(super.hashCode())
-		                            .append(typeSpecifier)
-		                            .toHashCode();
-	}
-
-	@Override
-	public boolean equals(final Object obj) {
+	public boolean typeEquals(final Object obj) {
 		if (this == obj) {
 			return true;
 		}
@@ -62,14 +52,7 @@ public class EQLTypeSpecifier extends TypeBaseClass implements CompoundTypeSpeci
 			return false;
 		}
 
-		// TODO: does this account for x.equals(y) and y.equals(x)???
 		final LispType lispType = (LispType) obj;
-		return typeSpecifier.equals(lispType);
-	}
-
-	@Override
-	public String toString() {
-		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(typeSpecifier)
-		                                                                .toString();
+		return typeSpecifier.isOfType(lispType);
 	}
 }

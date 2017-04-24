@@ -177,7 +177,7 @@ final class SymbolTokenAccumulatedReaderState {
 
 		final PackageSymbolStruct foundSymbol = symbolPackage.findSymbol(symbolName);
 		if (foundSymbol == null) {
-			final boolean isKeyword = GlobalPackageStruct.KEYWORD.equals(symbolPackage);
+			final boolean isKeyword = GlobalPackageStruct.KEYWORD.eq(symbolPackage);
 			if (isKeyword) {
 				return LispStructFactory.toKeyword(symbolName);
 			}

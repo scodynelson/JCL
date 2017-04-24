@@ -404,37 +404,17 @@ public interface NumberStruct extends LispStruct {
 		LispStruct
 	 */
 
-	/**
-	 * {@inheritDoc}
-	 * <p>
-	 * Determines the object equality of this NumberStruct with the provided {@link LispStruct}. 'EQL' rules state
-	 * that if 'x' and 'y' are both numbers of the same type and the same value, then they are equal.
-	 */
 	@Override
 	default boolean eql(final LispStruct object) {
-//		return equals(object);
-		return (object instanceof NumberStruct) && ((NumberStruct) object).ap().equals(ap());
+		return eq(object) ||
+				((object instanceof NumberStruct)
+						&& ((NumberStruct) object).ap().equals(ap()));
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * <p>
-	 * Determines the object equality of this NumberStruct with the provided {@link LispStruct}. 'EQUAL' rules state
-	 * that if 'x' and 'y' are 'EQL', then they are equal.
-	 */
-	@Override
-	default boolean equal(final LispStruct object) {
-		return eql(object);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * <p>
-	 * Determines the object equality of this NumberStruct with the provided {@link LispStruct}. 'EQUALP' rules state
-	 * that if 'x' and 'y' are 'EQL', then they are equal.
-	 */
 	@Override
 	default boolean equalp(final LispStruct object) {
-		return (object instanceof NumberStruct) && isEqualTo((NumberStruct) object);
+		return equal(object) ||
+				((object instanceof NumberStruct)
+						&& isEqualTo((NumberStruct) object));
 	}
 }

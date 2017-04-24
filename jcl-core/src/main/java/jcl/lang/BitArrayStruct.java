@@ -30,7 +30,7 @@ public interface BitArrayStruct extends ArrayStruct {
 
 	default IntegerStruct sbit(final IntegerStruct... subscripts) {
 		final LispType type = getType();
-		if (SimpleArrayType.INSTANCE.equals(type)) {
+		if (SimpleArrayType.INSTANCE.isOfType(type)) {
 			return (IntegerStruct) aref(subscripts); // TODO
 		}
 		throw new TypeErrorException(
@@ -39,7 +39,7 @@ public interface BitArrayStruct extends ArrayStruct {
 
 	default IntegerStruct setfSbit(final IntegerStruct newElement, final IntegerStruct... subscripts) {
 		final LispType type = getType();
-		if (SimpleArrayType.INSTANCE.equals(type)) {
+		if (SimpleArrayType.INSTANCE.isOfType(type)) {
 			return (IntegerStruct) setfAref(newElement, subscripts); // TODO
 		}
 		throw new TypeErrorException(
@@ -174,6 +174,7 @@ public interface BitArrayStruct extends ArrayStruct {
 	                                   final Function<BitLogicContents, IntegerStruct> bitLogicFunction) {
 		final List<Integer> dimensions1 = getDimensions();
 		final List<Integer> dimensions2 = bitArray2.getDimensions();
+		// TODO: check this dimension equality
 		if (!dimensions1.equals(dimensions2)) {
 			throw new ErrorException(this + " and " + bitArray2 + " do not have the same dimensions.");
 		}
@@ -196,13 +197,14 @@ public interface BitArrayStruct extends ArrayStruct {
 	// TODO: Make 'private' when we have Java 9
 	default BitArrayStruct getBitArrayToUpdate(final LispStruct optArg, final List<Integer> dimensions1) {
 		final BitArrayStruct bitArrayToUpdate;
-		if (TStruct.INSTANCE.equals(optArg)) {
+		if (TStruct.INSTANCE.eq(optArg)) {
 			bitArrayToUpdate = this;
-		} else if (NILStruct.INSTANCE.equals(optArg)) {
+		} else if (NILStruct.INSTANCE.eq(optArg)) {
 			bitArrayToUpdate = copyBitArray();
 		} else if (optArg instanceof BitArrayStruct) {
 			bitArrayToUpdate = (BitArrayStruct) optArg;
 			final List<Integer> optArgDimensions = bitArrayToUpdate.getDimensions();
+			// TODO: check this dimension equality
 			if (!dimensions1.equals(optArgDimensions)) {
 				throw new ErrorException(this + " and " + optArg + " do not have the same dimensions.");
 			}
@@ -280,7 +282,7 @@ public interface BitArrayStruct extends ArrayStruct {
 
 			if (displacedTo != null) {
 				final LispType displacedToType = displacedTo.getType();
-				if (displacedToType.isNotOfType(upgradedET)) {
+				if (!upgradedET.typeEquals(displacedToType)) {
 					throw new TypeErrorException(
 							"Provided displaced to " + displacedTo + " is not an array with a subtype of the upgraded-array-element-type " + upgradedET + '.');
 				}
@@ -317,7 +319,7 @@ public interface BitArrayStruct extends ArrayStruct {
 			if (initialContents != null) {
 				for (final LispStruct element : initialContents) {
 					final LispType initialElementType = element.getType();
-					if (initialElementType.isNotOfType(upgradedET)) {
+					if (!upgradedET.typeEquals(initialElementType)) {
 						throw new TypeErrorException(
 								"Provided element " + element + " is not a subtype of the upgraded-array-element-type " + upgradedET + '.');
 					}
@@ -343,7 +345,7 @@ public interface BitArrayStruct extends ArrayStruct {
                                                    adjustableBoolean);
 			} else {
 				final LispType initialElementType = initialElement.getType();
-				if (!initialElementType.equals(upgradedET) && !upgradedET.equals(initialElementType)) {
+				if (!upgradedET.typeEquals(initialElementType)) {
 					throw new TypeErrorException(
 							"Provided element " + initialElement + " is not a subtype of the upgraded-array-element-type " + upgradedET + '.');
 				}

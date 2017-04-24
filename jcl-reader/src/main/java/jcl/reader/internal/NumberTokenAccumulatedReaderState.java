@@ -255,7 +255,7 @@ final class NumberTokenAccumulatedReaderState {
 		final FloatType floatType = getFloatType(exponentTokenCodePoint);
 		return LispStructFactory.toFloat(tokenString);
 
-//		if (DoubleFloatType.INSTANCE.equals(floatType) || LongFloatType.INSTANCE.equals(floatType)) {
+//		if (DoubleFloatType.INSTANCE.isOfType(floatType) || LongFloatType.INSTANCE.isOfType(floatType)) {
 //			try {
 //				final Double d = Double.parseDouble(tokenString);
 //				return DoubleFloatStruct.valueOf(d);
@@ -415,7 +415,7 @@ final class NumberTokenAccumulatedReaderState {
 		final FloatType floatType = getFloatType(exponentTokenCodePoint);
 		return LispStructFactory.toFloat(bigDecimal);
 
-//		if (DoubleFloatType.INSTANCE.equals(floatType) || LongFloatType.INSTANCE.equals(floatType)) {
+//		if (DoubleFloatType.INSTANCE.isOfType(floatType) || LongFloatType.INSTANCE.isOfType(floatType)) {
 //			try {
 //				final Double d = bigDecimal.doubleValue();
 //				return DoubleFloatStruct.valueOf(d);

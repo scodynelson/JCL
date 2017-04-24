@@ -43,9 +43,9 @@ public final class ReadByteFunction extends CommonLispBuiltInFunctionStructBase 
 		final LispStruct lispStruct = arguments.getOptionalArgument(INPUT_STREAM_ARGUMENT);
 
 		final InputStreamStruct inputStreamStruct;
-		if (TStruct.INSTANCE.equals(lispStruct)) {
+		if (TStruct.INSTANCE.eq(lispStruct)) {
 			inputStreamStruct = StreamVariables.STANDARD_INPUT.getVariableValue();
-		} else if (NILStruct.INSTANCE.equals(lispStruct)) {
+		} else if (NILStruct.INSTANCE.eq(lispStruct)) {
 			inputStreamStruct = StreamVariables.STANDARD_INPUT.getVariableValue();
 		} else if (lispStruct instanceof InputStreamStruct) {
 			inputStreamStruct = (InputStreamStruct) lispStruct;

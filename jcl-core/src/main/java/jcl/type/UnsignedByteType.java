@@ -8,7 +8,6 @@ import java.math.BigInteger;
 
 import jcl.type.typespecifier.AndTypeSpecifier;
 import jcl.type.typespecifier.AtomicTypeSpecifier;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.math3.util.ArithmeticUtils;
 
 /**
@@ -102,13 +101,7 @@ public interface UnsignedByteType extends SignedByteType {
 			}
 
 			@Override
-			public int hashCode() {
-				return new HashCodeBuilder().appendSuper(super.hashCode())
-				                            .toHashCode();
-			}
-
-			@Override
-			public boolean equals(final Object obj) {
+			public boolean typeEquals(final Object obj) {
 				return (this == obj) || (obj instanceof UnsignedByteType);
 			}
 

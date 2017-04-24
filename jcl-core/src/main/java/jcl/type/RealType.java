@@ -9,7 +9,6 @@ import java.math.BigInteger;
 
 import jcl.type.typespecifier.AtomicTypeSpecifier;
 import jcl.type.typespecifier.CompoundTypeSpecifier;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * A {@link RealType} includes all numbers that represent mathematical real numbers, though there are mathematical real
@@ -211,15 +210,7 @@ public interface RealType extends NumberType {
 			}
 
 			@Override
-			public int hashCode() {
-				return new HashCodeBuilder().appendSuper(super.hashCode())
-				                            .append(integerIntervalDesignator)
-				                            .append(decimalIntervalDesignator)
-				                            .toHashCode();
-			}
-
-			@Override
-			public boolean equals(final Object obj) {
+			public boolean typeEquals(final Object obj) {
 				if (this == obj) {
 					return true;
 				}

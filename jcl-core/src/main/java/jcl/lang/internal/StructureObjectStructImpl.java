@@ -82,6 +82,30 @@ public class StructureObjectStructImpl implements StructureObjectStruct {
 	}
 
 	@Override
+	public boolean equalp(final LispStruct object) {
+		if (eq(object)) {
+			return true;
+		}
+		if (object instanceof StructureObjectStructImpl) {
+			final StructureObjectStructImpl o = (StructureObjectStructImpl) object;
+			if (!structureClass.eq(o.structureClass)) {
+				return false;
+			}
+			for (final Map.Entry<SymbolStruct, LispStruct> entry : slots.entrySet()) {
+				final SymbolStruct key = entry.getKey();
+				final LispStruct value = entry.getValue();
+				final LispStruct objectValue = o.slots.get(key);
+
+				if (!value.equalp(objectValue)) {
+					return false;
+				}
+			}
+			return true;
+		}
+		return false;
+	}
+
+	@Override
 	public LispType getType() {
 		return structureClass.getType();
 	}

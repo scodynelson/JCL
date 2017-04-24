@@ -108,7 +108,7 @@ class GoCodeGenerator<T extends GoStruct<?>> extends SpecialOperatorCodeGenerato
 			final Set<GeneratorState.TagbodyLabel> previousStack = tagbodyLabelIterator.next();
 			for (final GeneratorState.TagbodyLabel currentTBL : previousStack) {
 				final GoStruct<?> goTag = currentTBL.getTag();
-				if (tagToFind.equals(goTag)) {
+				if (tagToFind.eql(goTag)) {
 					tagbodyLabel = currentTBL;
 					break out;
 				}

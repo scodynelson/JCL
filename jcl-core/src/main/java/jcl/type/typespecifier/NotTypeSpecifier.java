@@ -6,9 +6,6 @@ package jcl.type.typespecifier;
 
 import jcl.type.LispType;
 import jcl.type.TypeBaseClass;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
  * A {@link NotTypeSpecifier} denotes the set of all objects that are not of the type typespec.
@@ -45,14 +42,7 @@ public class NotTypeSpecifier extends TypeBaseClass implements CompoundTypeSpeci
 	}
 
 	@Override
-	public int hashCode() {
-		return new HashCodeBuilder().appendSuper(super.hashCode())
-		                            .append(type)
-		                            .toHashCode();
-	}
-
-	@Override
-	public boolean equals(final Object obj) {
+	public boolean typeEquals(final Object obj) {
 		if (this == obj) {
 			return true;
 		}
@@ -63,12 +53,6 @@ public class NotTypeSpecifier extends TypeBaseClass implements CompoundTypeSpeci
 
 		final LispType lispType = (LispType) obj;
 
-		return !lispType.equals(type) && !type.equals(lispType);
-	}
-
-	@Override
-	public String toString() {
-		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(type)
-		                                                                .toString();
+		return lispType.isNotOfType(type);
 	}
 }

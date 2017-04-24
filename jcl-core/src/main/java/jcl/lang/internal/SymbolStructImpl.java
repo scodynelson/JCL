@@ -19,12 +19,12 @@ import jcl.lang.statics.GlobalPackageStruct;
 import jcl.lang.statics.PackageVariables;
 import jcl.type.LispType;
 import jcl.type.SymbolType;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
+import lombok.EqualsAndHashCode;
 
 /**
  * The {@link SymbolStructImpl} is the object representation of a Lisp 'symbol' type.
  */
+@EqualsAndHashCode(of = {"name", "symbolPackage"}, callSuper = false)
 public class SymbolStructImpl extends BuiltInClassStruct implements SymbolStruct {
 
 	protected final String name;
@@ -257,7 +257,7 @@ public class SymbolStructImpl extends BuiltInClassStruct implements SymbolStruct
 		String variableName = name;
 		final PackageStruct currentPackage = PackageVariables.PACKAGE.getVariableValue();
 
-		if (!currentPackage.equals(symbolPackage)) {
+		if (!currentPackage.eq(symbolPackage)) {
 			if (symbolPackage == null) {
 				variableName = "#:" + name;
 			} else {
@@ -350,7 +350,7 @@ public class SymbolStructImpl extends BuiltInClassStruct implements SymbolStruct
 		String variableName = name;
 		final PackageStruct currentPackage = PackageVariables.PACKAGE.getVariableValue();
 
-		if (!currentPackage.equals(symbolPackage)) {
+		if (!currentPackage.eq(symbolPackage)) {
 			if (symbolPackage == null) {
 				variableName = "#:" + name;
 			} else {
@@ -594,46 +594,6 @@ public class SymbolStructImpl extends BuiltInClassStruct implements SymbolStruct
 	}
 
 	@Override
-	public int hashCode() {
-		return new HashCodeBuilder().appendSuper(super.hashCode())
-		                            .append(name)
-//		                            .append(symbolPackage)
-//		                            .append(functionStack)
-                                    .append(properties)
-//		                            .append(macroFunctionExpander)
-//		                            .append(compilerMacroFunctionExpander)
-//		                            .append(symbolMacroExpanderStack)
-                                    .toHashCode();
-//		                            .append(lexicalValueStack) TODO: why does this cause explosions???
-//		                            .append(dynamicValueStack) TODO: why does this cause explosions???
-	}
-
-	@Override
-	public boolean equals(final Object obj) {
-		if (obj == null) {
-			return false;
-		}
-		if (obj == this) {
-			return true;
-		}
-		if (obj.getClass() != getClass()) {
-			return false;
-		}
-		final SymbolStructImpl rhs = (SymbolStructImpl) obj;
-		return new EqualsBuilder().appendSuper(super.equals(obj))
-		                          .append(name, rhs.name)
-		                          .append(symbolPackage, rhs.symbolPackage)
-		                          .append(lexicalValueStack, rhs.lexicalValueStack)
-		                          .append(dynamicValueStack, rhs.dynamicValueStack)
-		                          .append(functionStack, rhs.functionStack)
-		                          .append(properties, rhs.properties)
-		                          .append(macroFunctionExpander, rhs.macroFunctionExpander)
-		                          .append(compilerMacroFunctionExpander, rhs.compilerMacroFunctionExpander)
-		                          .append(symbolMacroExpanderStack, rhs.symbolMacroExpanderStack)
-		                          .isEquals();
-	}
-
-	@Override
 	public String toString() {
 //		final BooleanStruct printEscape = PrinterVariables.PRINT_ESCAPE.getVariableValue();
 
@@ -645,7 +605,7 @@ public class SymbolStructImpl extends BuiltInClassStruct implements SymbolStruct
 
 		// TODO: look into symbols with '|x| pattern...
 
-		if (GlobalPackageStruct.KEYWORD.equals(symbolPackage)) {
+		if (GlobalPackageStruct.KEYWORD.eq(symbolPackage)) {
 			return ':' + name;
 		}
 
@@ -660,7 +620,7 @@ public class SymbolStructImpl extends BuiltInClassStruct implements SymbolStruct
 
 			final String packageName = symbolPackage.getName();
 
-			final boolean externalSymbol = PackageStructImpl.EXTERNAL_KEYWORD.equals(symbol.getPackageSymbolType());
+			final boolean externalSymbol = PackageStructImpl.EXTERNAL_KEYWORD.eq(symbol.getPackageSymbolType());
 			if (externalSymbol) {
 				// TODO: verify it is a single colon for external symbols when printing...
 				return packageName + ':' + name;

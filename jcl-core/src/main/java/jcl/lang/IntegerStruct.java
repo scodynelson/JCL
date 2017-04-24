@@ -386,4 +386,11 @@ public interface IntegerStruct extends RationalStruct {
 
 	@Override
 	IntegerStruct negation();
+
+	@Override
+	default boolean eql(final LispStruct object) {
+		return eq(object) ||
+				((object instanceof IntegerStruct)
+						&& ((IntegerStruct) object).ap().equals(ap()));
+	}
 }

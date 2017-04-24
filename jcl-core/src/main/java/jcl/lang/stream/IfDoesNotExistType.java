@@ -26,7 +26,7 @@ public enum IfDoesNotExistType {
 
 	public static IfDoesNotExistType fromValue(final SymbolStruct keyword) {
 		for (IfDoesNotExistType ifDoesNotExistType : values()) {
-			if (ifDoesNotExistType.keyword.equals(keyword)) {
+			if (ifDoesNotExistType.keyword.eq(keyword)) {
 				return ifDoesNotExistType;
 			}
 		}

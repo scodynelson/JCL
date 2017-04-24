@@ -39,7 +39,7 @@ public class NILBitArrayStructImpl extends NILArrayStructImpl implements BitArra
 
 		for (final LispStruct initialElement : initialContents) {
 			final LispType initialElementType = initialElement.getType();
-			if (!initialElementType.equals(upgradedET) && !upgradedET.equals(initialElementType)) {
+			if (!upgradedET.typeEquals(initialElementType)) {
 				throw new TypeErrorException(
 						"Provided element " + initialElement + " is not a subtype of the upgraded-array-element-type " + upgradedET + '.');
 			}
@@ -72,7 +72,7 @@ public class NILBitArrayStructImpl extends NILArrayStructImpl implements BitArra
 
 		for (final LispStruct initialElement : initialContents) {
 			final LispType initialElementType = initialElement.getType();
-			if (!initialElementType.equals(upgradedET) && !upgradedET.equals(initialElementType)) {
+			if (!upgradedET.typeEquals(initialElementType)) {
 				throw new TypeErrorException(
 						"Provided element " + initialElement + " is not a subtype of the upgraded-array-element-type " + upgradedET + '.');
 			}

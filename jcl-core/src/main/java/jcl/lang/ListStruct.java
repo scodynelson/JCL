@@ -103,12 +103,12 @@ public interface ListStruct extends SequenceStruct {
 		while (iterator.hasNext()) {
 			final ListStruct list = iterator.next();
 
-			if (NILStruct.INSTANCE.equals(list)) {
+			if (NILStruct.INSTANCE.eq(list)) {
 				continue;
 			}
 
 			final ListStruct copyList = list.copyList();
-			if (NILStruct.INSTANCE.equals(result)) {
+			if (NILStruct.INSTANCE.eq(result)) {
 				result = copyList;
 				continue;
 			}
@@ -121,7 +121,7 @@ public interface ListStruct extends SequenceStruct {
 			lastOfResult.setCdr(copyList);
 		}
 
-		if (NILStruct.INSTANCE.equals(result)) {
+		if (NILStruct.INSTANCE.eq(result)) {
 			return object;
 		}
 
@@ -151,11 +151,11 @@ public interface ListStruct extends SequenceStruct {
 		while (iterator.hasNext()) {
 			final ListStruct list = iterator.next();
 
-			if (NILStruct.INSTANCE.equals(list)) {
+			if (NILStruct.INSTANCE.eq(list)) {
 				continue;
 			}
 
-			if (NILStruct.INSTANCE.equals(result)) {
+			if (NILStruct.INSTANCE.eq(result)) {
 				result = list;
 				continue;
 			}
@@ -168,7 +168,7 @@ public interface ListStruct extends SequenceStruct {
 			lastOfResult.setCdr(list);
 		}
 
-		if (NILStruct.INSTANCE.equals(result)) {
+		if (NILStruct.INSTANCE.eq(result)) {
 			return object;
 		}
 

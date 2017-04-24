@@ -7,6 +7,7 @@ package jcl.lang.internal.number;
 import jcl.lang.ComplexStruct;
 import jcl.lang.RealStruct;
 import jcl.type.ComplexType;
+import lombok.EqualsAndHashCode;
 import org.apfloat.Apcomplex;
 import org.apfloat.Apfloat;
 import org.apfloat.Aprational;
@@ -14,6 +15,7 @@ import org.apfloat.Aprational;
 /**
  * The {@link ComplexStructImpl} is the object representation of a Lisp 'complex' type.
  */
+@EqualsAndHashCode(callSuper = true)
 public final class ComplexStructImpl extends NumberStructImpl<Apcomplex> implements ComplexStruct {
 
 	private final ValueType valueType;

@@ -5,10 +5,6 @@
 package jcl.lang.pathname;
 
 import jcl.lang.condition.exception.FileErrorException;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
  * The {@link PathnameVersion} is the object representation of the 'version' element of a Lisp 'pathname' type.
@@ -76,36 +72,5 @@ public final class PathnameVersion {
 	 */
 	public PathnameVersionComponentType getComponentType() {
 		return componentType;
-	}
-
-	@Override
-	public int hashCode() {
-		return new HashCodeBuilder().append(version)
-		                            .append(componentType)
-		                            .toHashCode();
-	}
-
-	@Override
-	public boolean equals(final Object obj) {
-		if (obj == null) {
-			return false;
-		}
-		if (obj == this) {
-			return true;
-		}
-		if (obj.getClass() != getClass()) {
-			return false;
-		}
-		final PathnameVersion rhs = (PathnameVersion) obj;
-		return new EqualsBuilder().append(version, rhs.version)
-		                          .append(componentType, rhs.componentType)
-		                          .isEquals();
-	}
-
-	@Override
-	public String toString() {
-		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(version)
-		                                                                .append(componentType)
-		                                                                .toString();
 	}
 }

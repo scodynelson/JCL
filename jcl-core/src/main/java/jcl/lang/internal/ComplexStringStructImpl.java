@@ -303,8 +303,9 @@ public final class ComplexStringStructImpl extends AbstractStringStructImpl {
 			return NILStruct.INSTANCE;
 		}
 
-		setfCharInternal((CharacterStruct) newElement, fillPointer++);
-		return IntegerStructImpl.valueOf(fillPointer);
+		final Integer formerFillPointer = fillPointer++;
+		setfCharInternal((CharacterStruct) newElement, formerFillPointer);
+		return IntegerStructImpl.valueOf(formerFillPointer);
 	}
 
 	@Override
@@ -335,8 +336,9 @@ public final class ComplexStringStructImpl extends AbstractStringStructImpl {
 			}
 		}
 
-		setfCharInternal((CharacterStruct) newElement, fillPointer++);
-		return IntegerStructImpl.valueOf(fillPointer);
+		final Integer formerFillPointer = fillPointer++;
+		setfCharInternal((CharacterStruct) newElement, formerFillPointer);
+		return IntegerStructImpl.valueOf(formerFillPointer);
 	}
 
 	/*
@@ -353,7 +355,7 @@ public final class ComplexStringStructImpl extends AbstractStringStructImpl {
 		final IntegerStruct newDisplacedIndexOffset = context.getDisplacedIndexOffset();
 
 		final LispType displacedElementType = newDisplacedTo.arrayElementType();
-		if (!upgradedET.equals(displacedElementType)) {
+		if (!upgradedET.typeEquals(displacedElementType)) {
 			throw new TypeErrorException(
 					"Provided array for displacement " + newDisplacedTo + " is not a subtype of the upgraded-array-element-type " + upgradedET + '.');
 		}
@@ -394,7 +396,7 @@ public final class ComplexStringStructImpl extends AbstractStringStructImpl {
 
 		for (final LispStruct initialElement : newInitialContents) {
 			final LispType currentElementType = initialElement.getType();
-			if (currentElementType.isNotOfType(upgradedET)) {
+			if (!upgradedET.typeEquals(currentElementType)) {
 				throw new TypeErrorException(
 						"Provided element " + initialElement + " is not a subtype of the upgraded-array-element-type " + upgradedET + '.');
 			}

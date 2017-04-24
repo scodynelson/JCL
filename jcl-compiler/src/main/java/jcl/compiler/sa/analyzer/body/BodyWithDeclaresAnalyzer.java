@@ -51,6 +51,6 @@ public class BodyWithDeclaresAnalyzer {
 	}
 
 	private boolean isDeclaration(final LispStruct next) {
-		return (next instanceof ListStruct) && ((ListStruct) next).getCar().equals(SpecialOperatorStructImpl.DECLARE);
+		return (next instanceof ListStruct) && ((ListStruct) next).getCar().eq(SpecialOperatorStructImpl.DECLARE);
 	}
 }

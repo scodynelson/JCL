@@ -53,32 +53,32 @@ public class DeclareExpander extends MacroFunctionExpander<DeclareStruct> {
 			declSpecIterator.forEachRemaining(declSpecBody::add);
 
 			// now come the various cases
-			if (declIdentifier.equals(DeclarationStructImpl.DECLARATION)) {
+			if (declIdentifier.eq(DeclarationStructImpl.DECLARATION)) {
 				//TODO: we don't do anything here yet
-			} else if (declIdentifier.equals(DeclarationStructImpl.DYNAMIC_EXTENT)) {
+			} else if (declIdentifier.eq(DeclarationStructImpl.DYNAMIC_EXTENT)) {
 				//TODO: we don't do anything here yet
-			} else if (declIdentifier.equals(DeclarationStructImpl.FTYPE)) {
+			} else if (declIdentifier.eq(DeclarationStructImpl.FTYPE)) {
 				//TODO: we don't do anything here yet
-			} else if (declIdentifier.equals(DeclarationStructImpl.IGNORABLE)) {
+			} else if (declIdentifier.eq(DeclarationStructImpl.IGNORABLE)) {
 				//TODO: we don't do anything here yet
-			} else if (declIdentifier.equals(DeclarationStructImpl.IGNORE)) {
+			} else if (declIdentifier.eq(DeclarationStructImpl.IGNORE)) {
 				//TODO: we don't do anything here yet
-			} else if (declIdentifier.equals(DeclarationStructImpl.INLINE)) {
+			} else if (declIdentifier.eq(DeclarationStructImpl.INLINE)) {
 				//TODO: we don't do anything here yet
-			} else if (declIdentifier.equals(DeclarationStructImpl.NOTINLINE)) {
+			} else if (declIdentifier.eq(DeclarationStructImpl.NOTINLINE)) {
 				//TODO: we don't do anything here yet
-			} else if (declIdentifier.equals(DeclarationStructImpl.OPTIMIZE)) {
+			} else if (declIdentifier.eq(DeclarationStructImpl.OPTIMIZE)) {
 				//TODO: we don't do anything here yet
-			} else if (declIdentifier.equals(DeclarationStructImpl.JAVA_CLASS_NAME)) {
+			} else if (declIdentifier.eq(DeclarationStructImpl.JAVA_CLASS_NAME)) {
 				final JavaClassNameDeclarationStruct jclds = saJavaClassNameDeclaration(declSpecBody);
 				declareElement.setJavaClassNameDeclaration(jclds);
-			} else if (declIdentifier.equals(DeclarationStructImpl.LISP_NAME)) {
+			} else if (declIdentifier.eq(DeclarationStructImpl.LISP_NAME)) {
 				final LispNameDeclarationStruct lnds = saLispNameDeclaration(declSpecBody);
 				declareElement.setLispNameDeclarationStruct(lnds);
-			} else if (declIdentifier.equals(DeclarationStructImpl.SPECIAL)) {
+			} else if (declIdentifier.eq(DeclarationStructImpl.SPECIAL)) {
 				final List<SpecialDeclarationStruct> sds = saSpecialDeclaration(declSpecBody);
 				declareElement.getSpecialDeclarations().addAll(sds);
-			} else if (declIdentifier.equals(DeclarationStructImpl.TYPE)) {
+			} else if (declIdentifier.eq(DeclarationStructImpl.TYPE)) {
 				//TODO: we don't do anything here yet
 			} else {
 				throw new ProgramErrorException("DECLARE: Declaration specifier not supported: " + declIdentifier);

@@ -6,8 +6,6 @@ package jcl.lang.pathname;
 
 import jcl.lang.LispStruct;
 import jcl.lang.statics.CommonLispSymbols;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
  * The {@link PathnameDirectoryType} is the enumeration of the type of the 'directory' element of a Lisp 'pathname'
@@ -59,16 +57,10 @@ public enum PathnameDirectoryType {
 	 */
 	public static PathnameDirectoryType fromValue(final LispStruct value) {
 		for (final PathnameDirectoryType directoryType : values()) {
-			if (directoryType.value.equals(value)) {
+			if (directoryType.value.eql(value)) {
 				return directoryType;
 			}
 		}
 		return null;
-	}
-
-	@Override
-	public String toString() {
-		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(value)
-		                                                                .toString();
 	}
 }

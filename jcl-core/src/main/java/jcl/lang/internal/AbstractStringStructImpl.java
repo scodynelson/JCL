@@ -251,7 +251,7 @@ public abstract class AbstractStringStructImpl extends AbstractVectorStructImpl 
 		return inequalityComparison(context,
 		                            String::compareTo,
 		                            x -> x != 0,
-		                            jcl.util.StringUtils::indexOfSameness);
+		                            StringUtils::indexOfDifference);
 	}
 
 	@Override
@@ -297,7 +297,7 @@ public abstract class AbstractStringStructImpl extends AbstractVectorStructImpl 
 		return inequalityComparison(context,
 		                            String::compareToIgnoreCase,
 		                            x -> x != 0,
-		                            jcl.util.StringUtils::indexOfSameness);
+		                            StringUtils::indexOfDifference);
 	}
 
 	@Override
@@ -383,6 +383,9 @@ public abstract class AbstractStringStructImpl extends AbstractVectorStructImpl 
 		final int result = stringCompareToOp.apply(str1, str2);
 		if (comparisonOp.test(result)) {
 			final int mismatchIndex = mismatchIndexOp.apply(str1, str2);
+			if (mismatchIndex == -1) {
+				return IntegerStructImpl.valueOf(Math.min(str1.length(), str2.length()));
+			}
 			return IntegerStructImpl.valueOf(mismatchIndex);
 		} else {
 			return NILStruct.INSTANCE;
@@ -523,13 +526,14 @@ public abstract class AbstractStringStructImpl extends AbstractVectorStructImpl 
 		if (newDimensions.size() != 1) {
 			throw new ErrorException("Array cannot be adjusted to a different array dimension rank.");
 		}
-		final LispType upgradedET = (newElementType == null)
-		                            ? elementType
-		                            : ArrayStruct.upgradedArrayElementType(newElementType);
 
-		if (!elementType.equals(upgradedET)) {
-			throw new TypeErrorException(
-					"Provided upgraded-array-element-type " + upgradedET + " must be the same as initial upgraded-array-element-type " + elementType + '.');
+		LispType upgradedET = elementType;
+		if (newElementType != null) {
+			if (!elementType.typeEquals(newElementType)) {
+				throw new TypeErrorException(
+						"Provided element-type " + newElementType + " must be a subtype of the initial upgraded-array-element-type " + elementType + '.');
+			}
+			upgradedET = ArrayStruct.upgradedArrayElementType(newElementType);
 		}
 
 		if (newDisplacedTo != null) {
@@ -603,8 +607,9 @@ public abstract class AbstractStringStructImpl extends AbstractVectorStructImpl 
 						"Provided element " + newInitialElement + " is not a CHARACTER.");
 			}
 
+			// NOTE: Should never hit this in reality, but keeping this check here.
 			final LispType initialElementType = newInitialElement.getType();
-			if (!upgradedET.equals(initialElementType)) {
+			if (!upgradedET.typeEquals(initialElementType)) {
 				throw new TypeErrorException(
 						"Provided element " + newInitialElement + " is not a subtype of the upgraded-array-element-type " + upgradedET + '.');
 			}

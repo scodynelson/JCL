@@ -8,7 +8,6 @@ import java.math.BigInteger;
 
 import jcl.type.typespecifier.AndTypeSpecifier;
 import jcl.type.typespecifier.AtomicTypeSpecifier;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * The type {@link BitType} is equivalent to the type (integer 0 1) and (unsigned-byte 1).
@@ -46,13 +45,7 @@ public interface BitType extends UnsignedByteType {
 			}
 
 			@Override
-			public int hashCode() {
-				return new HashCodeBuilder().appendSuper(super.hashCode())
-				                            .toHashCode();
-			}
-
-			@Override
-			public boolean equals(final Object obj) {
+			public boolean typeEquals(final Object obj) {
 				return (this == obj) || (obj instanceof BitType);
 			}
 

@@ -19,11 +19,13 @@ import jcl.type.CharacterType;
 import jcl.type.ExtendedCharType;
 import jcl.type.StandardCharType;
 import jcl.util.CodePointConstants;
+import lombok.EqualsAndHashCode;
 import org.apache.commons.lang3.CharUtils;
 
 /**
  * The {@link CharacterStructImpl} is the object representation of a Lisp 'character' type.
  */
+@EqualsAndHashCode(callSuper = false)
 public final class CharacterStructImpl extends BuiltInClassStruct implements CharacterStruct {
 
 	/**

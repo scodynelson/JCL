@@ -379,8 +379,7 @@ public class CharacterStructTest {
 		final CharacterStruct character = CharacterConstants.LATIN_CAPITAL_LETTER_A_CHAR;
 		final LispStruct result = character.charDigit(IntegerStructImpl.valueOf(16));
 
-		final IntegerStruct eleven = IntegerStructImpl.valueOf(11);
-		Assert.assertThat(result, is(eleven));
+		Assert.assertThat(result, is(IntegerStruct.TEN));
 	}
 
 	/**

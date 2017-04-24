@@ -8,7 +8,6 @@ import java.util.List;
 
 import jcl.type.typespecifier.AtomicTypeSpecifier;
 import jcl.type.typespecifier.CompoundTypeSpecifier;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * An {@link ArrayType} contains objects arranged according to a Cartesian coordinate system. An {@link ArrayType}
@@ -126,15 +125,7 @@ public interface ArrayType extends TType {
 			}
 
 			@Override
-			public int hashCode() {
-				return new HashCodeBuilder().appendSuper(super.hashCode())
-				                            .append(dimensions)
-				                            .append(elementType)
-				                            .toHashCode();
-			}
-
-			@Override
-			public boolean equals(final Object obj) {
+			public boolean typeEquals(final Object obj) {
 				if (this == obj) {
 					return true;
 				}
@@ -165,10 +156,10 @@ public interface ArrayType extends TType {
 			 */
 			private boolean checkArrayImplEquality(final ArrayTypeImpl arrayTypeImpl) {
 				if (dimensions == null) {
-					return elementType.equals(arrayTypeImpl.elementType);
+					return elementType.isOfType(arrayTypeImpl.elementType);
 				}
 
-				return dimensions.equals(arrayTypeImpl.dimensions) && elementType.equals(arrayTypeImpl.elementType);
+				return dimensions.equals(arrayTypeImpl.dimensions) && elementType.isOfType(arrayTypeImpl.elementType);
 			}
 
 			@Override

@@ -43,7 +43,7 @@ public class ConsAnalyzer implements Analyzer<LispStruct, ConsStruct> {
 	public LispStruct analyze(final ConsStruct input, final Environment environment) {
 		final LispStruct first = input.getCar();
 
-		if (NILStruct.INSTANCE.equals(first)) {
+		if (NILStruct.INSTANCE.eq(first)) {
 			throw new ProgramErrorException("CONS ANALYZER: First element must be a symbol, a Java method name, or a lambda. Got: " + input);
 		} else if (first instanceof SymbolStruct) {
 			return analyzeSymbolFunctionCall(input, environment);
@@ -115,7 +115,7 @@ public class ConsAnalyzer implements Analyzer<LispStruct, ConsStruct> {
 		final ListStruct functionList = (ListStruct) iterator.next();
 
 		final LispStruct functionListFirst = functionList.getCar();
-		if (!functionListFirst.equals(SpecialOperatorStructImpl.LAMBDA)) {
+		if (!functionListFirst.eq(SpecialOperatorStructImpl.LAMBDA)) {
 			throw new ProgramErrorException("CONS ANALYZER: First element of a lambda list must be the SpecialOperator 'LAMBDA'. Got: " + functionListFirst);
 		}
 

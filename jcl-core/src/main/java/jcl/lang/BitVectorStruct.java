@@ -8,6 +8,7 @@ import java.util.stream.Stream;
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.internal.BitVectorStructImpl;
+import jcl.lang.internal.number.IntegerStructImpl;
 import jcl.type.BitType;
 import jcl.type.BitVectorType;
 import jcl.type.LispType;
@@ -28,6 +29,54 @@ public interface BitVectorStruct extends VectorStruct, BitArrayStruct {
 	 * @return array contents
 	 */
 	List<IntegerStruct> getBVContents();
+
+	@Override
+	default boolean equal(final LispStruct object) {
+		if (eq(object)) {
+			return true;
+		}
+		if (object instanceof BitVectorStruct) {
+			final BitVectorStruct v = (BitVectorStruct) object;
+			if (!length().eql(v.length())) {
+				return false;
+			}
+			for (int i = 0; i < length().intValue(); i++) {
+				final IntegerStruct index = IntegerStructImpl.valueOf(i);
+				if (!bit(index).equal(v.bit(index))) {
+					return false;
+				}
+			}
+			return true;
+		}
+		return false;
+	}
+
+	@Override
+	default boolean equalp(final LispStruct object) {
+		if (eq(object)) {
+			return true;
+		}
+		if (object instanceof BitVectorStruct) {
+			final BitVectorStruct v = (BitVectorStruct) object;
+			if (!length().eql(v.length())) {
+				return false;
+			}
+			for (int i = 0; i < length().intValue(); i++) {
+				final IntegerStruct index = IntegerStructImpl.valueOf(i);
+				if (!bit(index).equalp(v.bit(index))) {
+					return false;
+				}
+			}
+			return true;
+		}
+		if (object instanceof StringStruct) {
+			return false;
+		}
+		if (object instanceof VectorStruct) {
+			return object.equalp(this);
+		}
+		return false;
+	}
 
 	final class Builder extends ArrayStruct.AbstractBuilder<BitVectorStruct, BitType, IntegerStruct> {
 
@@ -90,7 +139,7 @@ public interface BitVectorStruct extends VectorStruct, BitArrayStruct {
 
 			if (displacedTo != null) {
 				final LispType displacedToType = displacedTo.getType();
-				if (displacedToType.isNotOfType(upgradedET)) {
+				if (!upgradedET.typeEquals(displacedToType)) {
 					throw new TypeErrorException(
 							"Provided displaced to " + displacedTo + " is not an array with a subtype of the upgraded-array-element-type " + upgradedET + '.');
 				}
@@ -119,7 +168,7 @@ public interface BitVectorStruct extends VectorStruct, BitArrayStruct {
 			if (initialContents != null) {
 				for (final LispStruct element : initialContents) {
 					final LispType initialElementType = element.getType();
-					if (initialElementType.isNotOfType(upgradedET)) {
+					if (!upgradedET.typeEquals(initialElementType)) {
 						throw new TypeErrorException(
 								"Provided element " + element + " is not a subtype of the upgraded-array-element-type " + upgradedET + '.');
 					}
@@ -136,7 +185,7 @@ public interface BitVectorStruct extends VectorStruct, BitArrayStruct {
 				                               fillPointerInt);
 			} else {
 				final LispType initialElementType = initialElement.getType();
-				if (initialElementType.isNotOfType(upgradedET)) {
+				if (!upgradedET.typeEquals(initialElementType)) {
 					throw new TypeErrorException(
 							"Provided element " + initialElement + " is not a subtype of the upgraded-array-element-type " + upgradedET + '.');
 				}

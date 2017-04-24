@@ -66,7 +66,7 @@ public final class CompileFunction extends CommonLispBuiltInFunctionStructBase {
 			if (name instanceof SymbolStruct) {
 				final SymbolStruct nameSymbol = (SymbolStruct) name;
 				nameSymbol.setFunction(function);
-			} else if (!NILStruct.INSTANCE.equals(name)) {
+			} else if (!NILStruct.INSTANCE.eq(name)) {
 				throw new ErrorException("The value " + name + " is not an acceptable function name.");
 			}
 

@@ -11,14 +11,14 @@ import jcl.lang.function.parameterdsl.Parameters;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class EqFunction extends CommonLispBuiltInFunctionStructBase {
+public final class EqualFunction extends CommonLispBuiltInFunctionStructBase {
 
-	private static final String FUNCTION_NAME = "EQ";
+	private static final String FUNCTION_NAME = "EQUAL";
 	private static final String OBJECT1_ARGUMENT = "OBJECT-1";
 	private static final String OBJECT2_ARGUMENT = "OBJECT-2";
 
-	public EqFunction() {
-		super("Returns true if its arguments are the same, identical object; otherwise, returns false.",
+	public EqualFunction() {
+		super("Returns true if x and y are structurally similar (isomorphic) objects.",
 		      FUNCTION_NAME,
 		      Parameters.forFunction(FUNCTION_NAME)
 		                .requiredParameter(OBJECT1_ARGUMENT)
@@ -30,6 +30,6 @@ public final class EqFunction extends CommonLispBuiltInFunctionStructBase {
 	public LispStruct apply(final Arguments arguments) {
 		final LispStruct object1 = arguments.getRequiredArgument(OBJECT1_ARGUMENT);
 		final LispStruct object2 = arguments.getRequiredArgument(OBJECT2_ARGUMENT);
-		return LispStructFactory.toBoolean(object1.eq(object2));
+		return LispStructFactory.toBoolean(object1.equal(object2));
 	}
 }

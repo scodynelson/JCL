@@ -6,8 +6,6 @@ package jcl.compiler.struct.specialoperator.go;
 
 import jcl.compiler.struct.CompilerSpecialOperatorStruct;
 import jcl.lang.LispStruct;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 public class GoStruct<T extends LispStruct> extends CompilerSpecialOperatorStruct {
 
@@ -22,29 +20,10 @@ public class GoStruct<T extends LispStruct> extends CompilerSpecialOperatorStruc
 	}
 
 	@Override
-	public boolean equals(final Object obj) {
-		if (this == obj) {
-			return true;
-		}
-
-		if ((obj == null) || (getClass() != obj.getClass())) {
-			return false;
-		}
-
-		final GoStruct<?> goStruct = (GoStruct<?>) obj;
-
-		return new EqualsBuilder()
-				.appendSuper(super.equals(obj))
-				.append(tag, goStruct.tag)
-				.isEquals();
-	}
-
-	@Override
-	public int hashCode() {
-		return new HashCodeBuilder()
-				.appendSuper(super.hashCode())
-				.append(tag)
-				.toHashCode();
+	public boolean eql(final LispStruct object) {
+		return eq(object) ||
+				((object instanceof GoStruct)
+						&& tag.eq(((GoStruct<?>) object).tag));
 	}
 
 	@Override

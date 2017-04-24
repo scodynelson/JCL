@@ -6,7 +6,6 @@ package jcl.type;
 
 import jcl.type.typespecifier.AtomicTypeSpecifier;
 import jcl.type.typespecifier.CompoundTypeSpecifier;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * A {@link ConsType} is a compound object having two components, called the car and cdr. These form a dotted pair.
@@ -96,15 +95,7 @@ public interface ConsType extends ListType {
 			}
 
 			@Override
-			public int hashCode() {
-				return new HashCodeBuilder().appendSuper(super.hashCode())
-				                            .append(carSpec)
-				                            .append(cdrSpec)
-				                            .toHashCode();
-			}
-
-			@Override
-			public boolean equals(final Object obj) {
+			public boolean typeEquals(final Object obj) {
 				if (this == obj) {
 					return true;
 				}
@@ -127,10 +118,10 @@ public interface ConsType extends ListType {
 			 */
 			private boolean checkConsImplEquality(final ConsTypeImpl consImpl) {
 				if (carSpec != null) {
-					return carSpec.equals(consImpl.carSpec);
+					return carSpec.isOfType(consImpl.carSpec);
 				}
 
-				return (cdrSpec == null) || cdrSpec.equals(consImpl.cdrSpec);
+				return (cdrSpec == null) || cdrSpec.isOfType(consImpl.cdrSpec);
 			}
 
 			@Override

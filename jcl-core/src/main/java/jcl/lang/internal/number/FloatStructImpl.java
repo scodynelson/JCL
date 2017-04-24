@@ -18,6 +18,7 @@ import jcl.type.FloatType;
 import jcl.type.LongFloatType;
 import jcl.type.ShortFloatType;
 import jcl.type.SingleFloatType;
+import lombok.EqualsAndHashCode;
 import org.apache.commons.math3.fraction.BigFraction;
 import org.apache.commons.math3.util.ArithmeticUtils;
 import org.apfloat.Apcomplex;
@@ -28,6 +29,7 @@ import org.apfloat.Apint;
 /**
  * The {@link FloatStructImpl} is the object representation of a Lisp 'float' type.
  */
+@EqualsAndHashCode(callSuper = true)
 public final class FloatStructImpl extends RealStructImpl<Apfloat> implements FloatStruct {
 
 	/**
@@ -409,14 +411,14 @@ public final class FloatStructImpl extends RealStructImpl<Apfloat> implements Fl
 		final FloatType defaultFloatFormat = ReaderVariables.READ_DEFAULT_FLOAT_FORMAT.getVariableValue();
 
 		String floatString = ap.toString(true);
-		if (!floatType.equals(defaultFloatFormat)) {
-			if (floatType.equals(ShortFloatType.INSTANCE)) {
+		if (floatType.isNotOfType(defaultFloatFormat)) {
+			if (floatType.isOfType(ShortFloatType.INSTANCE)) {
 				floatString = floatString.replace('E', 'S');
-			} else if (floatType.equals(SingleFloatType.INSTANCE)) {
+			} else if (floatType.isOfType(SingleFloatType.INSTANCE)) {
 				floatString = floatString.replace('E', 'F');
-			} else if (floatType.equals(DoubleFloatType.INSTANCE)) {
+			} else if (floatType.isOfType(DoubleFloatType.INSTANCE)) {
 				floatString = floatString.replace('E', 'D');
-			} else if (floatType.equals(LongFloatType.INSTANCE)) {
+			} else if (floatType.isOfType(LongFloatType.INSTANCE)) {
 				floatString = floatString.replace('E', 'L');
 			}
 		}

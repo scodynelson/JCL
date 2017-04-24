@@ -12,10 +12,12 @@ import jcl.lang.LispStruct;
 public interface LispType extends LispStruct {
 
 	default boolean isOfType(final LispType lispType) {
-		return equals(lispType) || lispType.equals(this);
+		return typeEquals(lispType) || lispType.typeEquals(this);
 	}
 
 	default boolean isNotOfType(final LispType lispType) {
-		return !equals(lispType) && !lispType.equals(this);
+		return !typeEquals(lispType) && !lispType.typeEquals(this);
 	}
+
+	boolean typeEquals(final Object obj);
 }

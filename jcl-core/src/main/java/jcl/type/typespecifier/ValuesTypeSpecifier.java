@@ -10,9 +10,6 @@ import java.util.Objects;
 import jcl.type.TypeBaseClass;
 import jcl.type.typespecifier.lambdalist.variable.Optional;
 import jcl.type.typespecifier.lambdalist.variable.Rest;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
  * A {@link ValuesTypeSpecifier} can be used only as the value-type in a function type specifier or a the special form.
@@ -74,16 +71,7 @@ public class ValuesTypeSpecifier extends TypeBaseClass implements CompoundTypeSp
 	}
 
 	@Override
-	public int hashCode() {
-		return new HashCodeBuilder().appendSuper(super.hashCode())
-		                            .append(typeSpecifiers)
-		                            .append(optional)
-		                            .append(rest)
-		                            .toHashCode();
-	}
-
-	@Override
-	public boolean equals(final Object obj) {
+	public boolean typeEquals(final Object obj) {
 		if (this == obj) {
 			return true;
 		}
@@ -97,13 +85,5 @@ public class ValuesTypeSpecifier extends TypeBaseClass implements CompoundTypeSp
 		return Objects.equals(typeSpecifiers, valuesTypeSpecifier.typeSpecifiers)
 				&& Objects.equals(optional, valuesTypeSpecifier.optional)
 				&& Objects.equals(rest, valuesTypeSpecifier.rest);
-	}
-
-	@Override
-	public String toString() {
-		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(typeSpecifiers)
-		                                                                .append(optional)
-		                                                                .append(rest)
-		                                                                .toString();
 	}
 }

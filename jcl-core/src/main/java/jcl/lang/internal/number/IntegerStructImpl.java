@@ -11,7 +11,11 @@ import jcl.lang.NumberStruct;
 import jcl.lang.RationalStruct;
 import jcl.lang.RealStruct;
 import jcl.lang.statics.PrinterVariables;
+import jcl.type.BignumType;
+import jcl.type.BitType;
+import jcl.type.FixnumType;
 import jcl.type.IntegerType;
+import lombok.EqualsAndHashCode;
 import org.apfloat.Apcomplex;
 import org.apfloat.Apfloat;
 import org.apfloat.Apint;
@@ -21,6 +25,7 @@ import org.apfloat.Aprational;
 /**
  * The {@link IntegerStructImpl} is the object representation of a Lisp 'integer' type.
  */
+@EqualsAndHashCode(callSuper = true)
 public final class IntegerStructImpl extends RationalStructImpl<Apint> implements IntegerStruct {
 
 	/**
@@ -35,7 +40,19 @@ public final class IntegerStructImpl extends RationalStructImpl<Apint> implement
 	 * 		the value of the IntegerStruct
 	 */
 	private IntegerStructImpl(final Apint apint) {
-		super(IntegerType.INSTANCE, apint);
+		super(getIntegerType(apint), apint);
+	}
+
+	private static IntegerType getIntegerType(final Apint apint) {
+		if (Apcomplex.ZERO.equals(apint)
+				|| Apcomplex.ONE.equals(apint)) {
+			return BitType.INSTANCE;
+		}
+		if ((apint.compareTo(new Apint(Integer.MAX_VALUE)) <= 0)
+				|| (apint.compareTo(new Apint(Integer.MIN_VALUE)) >= 0)) {
+			return FixnumType.INSTANCE;
+		}
+		return BignumType.INSTANCE;
 	}
 
 	/**

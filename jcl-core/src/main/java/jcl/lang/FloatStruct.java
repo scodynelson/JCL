@@ -169,4 +169,11 @@ public interface FloatStruct extends RealStruct {
 
 	@Override
 	FloatStruct reciprocal();
+
+	@Override
+	default boolean eql(final LispStruct object) {
+		return eq(object) ||
+				((object instanceof FloatStruct)
+						&& ((FloatStruct) object).ap().equals(ap()));
+	}
 }

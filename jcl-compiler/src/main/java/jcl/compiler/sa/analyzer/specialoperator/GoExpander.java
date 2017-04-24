@@ -61,7 +61,7 @@ public class GoExpander extends MacroFunctionExpander<GoStruct<?>> {
 			final List<GoStruct<?>> previousStack = tagbodyListIterator.previous();
 			for (final GoStruct<?> goStruct : previousStack) {
 				final LispStruct goTag = goStruct.getTag();
-				if (tagToFind.equals(goTag)) {
+				if (tagToFind.eq(goTag)) {
 					tag = goStruct;
 					break out;
 				}

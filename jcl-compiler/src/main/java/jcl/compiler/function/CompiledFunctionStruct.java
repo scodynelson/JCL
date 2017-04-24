@@ -91,7 +91,7 @@ public abstract class CompiledFunctionStruct extends FunctionStructImpl {
 			if (value instanceof ValuesStruct) {
 				final ValuesStruct valuesStruct = (ValuesStruct) value;
 				value = valuesStruct.getPrimaryValue();
-			} else if (INIT_FORM_PLACEHOLDER.equals(value)) {
+			} else if (INIT_FORM_PLACEHOLDER.eq(value)) {
 				value = getInitForm(closure, symbol);
 			}
 			final boolean isSpecial = parameterSymbolToBind.isSpecial();
@@ -242,8 +242,8 @@ public abstract class CompiledFunctionStruct extends FunctionStructImpl {
 					if (iterator.hasNext()) {
 						final SymbolStruct keySymbol = keyBinding.getVar();
 						final LispStruct keyInitForm = iterator.next();
-						if (Parameters.ALLOW_OTHER_KEYS.equals(nextArgument)) {
-							if (!keyInitForm.equals(NILStruct.INSTANCE)) {
+						if (Parameters.ALLOW_OTHER_KEYS.eq(nextArgument)) {
+							if (!keyInitForm.eq(NILStruct.INSTANCE)) {
 								allowOtherKeys = true;
 							}
 						}
@@ -260,9 +260,9 @@ public abstract class CompiledFunctionStruct extends FunctionStructImpl {
 					} else {
 						throw new ProgramErrorException("Expected argument to follow keyword name argument for call to '" + functionClassName + " with key name: " + keywordArgument);
 					}
-				} else if (Parameters.ALLOW_OTHER_KEYS.equals(nextArgument)) {
+				} else if (Parameters.ALLOW_OTHER_KEYS.eq(nextArgument)) {
 					final LispStruct allowOtherKeysValue = iterator.next();
-					if (!allowOtherKeysValue.equals(NILStruct.INSTANCE)) {
+					if (!allowOtherKeysValue.eq(NILStruct.INSTANCE)) {
 						allowOtherKeys = true;
 					}
 				} else {

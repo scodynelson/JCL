@@ -46,7 +46,7 @@ public class DefstructExpander extends MacroFunctionExpander<LispStruct> {
 		final LispStruct second = iterator.next();
 
 		final SymbolStruct includeStructureSymbol;
-		if (NILStruct.INSTANCE.equals(second)) {
+		if (NILStruct.INSTANCE.eq(second)) {
 			includeStructureSymbol = null;
 		} else if (second instanceof SymbolStruct) {
 			includeStructureSymbol = (SymbolStruct) second;
@@ -68,7 +68,7 @@ public class DefstructExpander extends MacroFunctionExpander<LispStruct> {
 		final LispStruct third = iterator.next();
 
 		final SymbolStruct defaultConstructorSymbol;
-		if (NILStruct.INSTANCE.equals(third)) {
+		if (NILStruct.INSTANCE.eq(third)) {
 			defaultConstructorSymbol = null;
 		} else if (third instanceof SymbolStruct) {
 			defaultConstructorSymbol = (SymbolStruct) third;
@@ -82,7 +82,7 @@ public class DefstructExpander extends MacroFunctionExpander<LispStruct> {
 		final LispStruct fourth = iterator.next();
 
 		final SymbolStruct printerSymbol;
-		if (NILStruct.INSTANCE.equals(fourth)) {
+		if (NILStruct.INSTANCE.eq(fourth)) {
 			printerSymbol = null;
 		} else if (fourth instanceof SymbolStruct) {
 			printerSymbol = (SymbolStruct) fourth;

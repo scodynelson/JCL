@@ -76,7 +76,7 @@ public class MultiArrayStructImpl extends ArrayStructImpl {
 		                                              .collect(Collectors.toList());
 
 		final LispType initialElementType = initialElement.getType();
-		if (!initialElementType.equals(elementType) && !elementType.equals(initialElementType)) {
+		if (!elementType.typeEquals(initialElementType)) {
 			throw new TypeErrorException(
 					"Provided element " + initialElement + " is not a subtype of the provided elementType " + elementType + '.');
 		}

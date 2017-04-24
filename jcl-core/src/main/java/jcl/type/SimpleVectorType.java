@@ -8,7 +8,6 @@ import java.util.List;
 
 import jcl.type.typespecifier.AtomicTypeSpecifier;
 import jcl.type.typespecifier.CompoundTypeSpecifier;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * A {@link SimpleVectorType} is a type of a {@link VectorType} that is not displaced to another {@link ArrayType}, has
@@ -124,15 +123,7 @@ public interface SimpleVectorType extends VectorType, SimpleArrayType {
 			}
 
 			@Override
-			public int hashCode() {
-				return new HashCodeBuilder().appendSuper(super.hashCode())
-				                            .append(size)
-				                            .append(elementType)
-				                            .toHashCode();
-			}
-
-			@Override
-			public boolean equals(final Object obj) {
+			public boolean typeEquals(final Object obj) {
 				if (this == obj) {
 					return true;
 				}
@@ -163,10 +154,10 @@ public interface SimpleVectorType extends VectorType, SimpleArrayType {
 			 */
 			private boolean checkSimpleVectorTypeImplEquality(final SimpleVectorTypeImpl simpleVectorTypeImpl) {
 				if (size == null) {
-					return elementType.equals(simpleVectorTypeImpl.elementType);
+					return elementType.isOfType(simpleVectorTypeImpl.elementType);
 				}
 
-				return size.equals(simpleVectorTypeImpl.size) && elementType.equals(simpleVectorTypeImpl.elementType);
+				return size.equals(simpleVectorTypeImpl.size) && elementType.isOfType(simpleVectorTypeImpl.elementType);
 			}
 
 			@Override

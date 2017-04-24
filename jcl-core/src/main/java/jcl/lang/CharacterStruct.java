@@ -570,7 +570,8 @@ public interface CharacterStruct extends LispStruct {
 	IntegerStruct charInt();
 
 	/**
-	 * Determines the digit representation of this character within a defaulted radix of {@code 10}. This is used for the 'digit-char-p' LISP function.
+	 * Determines the digit representation of this character within a defaulted radix of {@code 10}. This is used for
+	 * the 'digit-char-p' LISP function.
 	 *
 	 * @return the character representation of this character within the {@code 10} radix
 	 */
@@ -778,5 +779,23 @@ public interface CharacterStruct extends LispStruct {
 			return toLispCharacter(javaString.charAt(0));
 		}
 		throw new TypeErrorException("Type cannot be converted to CHARACTER.");
+	}
+
+	/*
+	LISP-STRUCT
+	 */
+
+	@Override
+	default boolean eql(final LispStruct object) {
+		return eq(object) ||
+				((object instanceof CharacterStruct)
+						&& isEqualTo((CharacterStruct) object));
+	}
+
+	@Override
+	default boolean equalp(final LispStruct object) {
+		return equal(object) ||
+				((object instanceof CharacterStruct)
+						&& isEqualToIgnoreCase((CharacterStruct) object));
 	}
 }

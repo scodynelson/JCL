@@ -70,7 +70,7 @@ final class CatchCodeGenerator extends SpecialOperatorCodeGenerator<CatchStruct>
 	 *          var5 = NILStruct.INSTANCE;
 	 *      } catch (ThrowException var8) {
 	 *          LispStruct var7 = var8.getCatchTag();
-	 *          if(!var7.equals(var3)) {
+	 *          if(!var7.eq(var3)) {
 	 *              throw var8;
 	 *          }
 	 *          var5 = var8.getResultForm();
@@ -135,11 +135,11 @@ final class CatchCodeGenerator extends SpecialOperatorCodeGenerator<CatchStruct>
 
 		mv.visitVarInsn(Opcodes.ALOAD, throwExceptionCatchTagStore);
 		mv.visitVarInsn(Opcodes.ALOAD, catchTagStore);
-		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
-		                   GenerationConstants.JAVA_OBJECT_NAME,
-		                   GenerationConstants.JAVA_EQUALS_METHOD_NAME,
-		                   GenerationConstants.JAVA_EQUALS_METHOD_DESC,
-		                   false);
+		mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
+		                   GenerationConstants.LISP_STRUCT_NAME,
+		                   GenerationConstants.LISP_STRUCT_EQ_METHOD_NAME,
+		                   GenerationConstants.LISP_STRUCT_EQ_METHOD_DESC,
+		                   true);
 
 		final Label rethrowException = new Label();
 		mv.visitJumpInsn(Opcodes.IFEQ, rethrowException);

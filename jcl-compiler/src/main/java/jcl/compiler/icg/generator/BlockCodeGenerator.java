@@ -72,7 +72,7 @@ final class BlockCodeGenerator extends SpecialOperatorCodeGenerator<BlockStruct>
 	 *          var4 = NILStruct.INSTANCE;
 	 *      } catch (ReturnFromException var7) {
 	 *          SymbolStruct var6 = var7.getName();
-	 *          if(!var6.equals(var3)) {
+	 *          if(!var6.eq(var3)) {
 	 *              throw var7;
 	 *          }
 	 *          var4 = var8.getResult();
@@ -137,11 +137,11 @@ final class BlockCodeGenerator extends SpecialOperatorCodeGenerator<BlockStruct>
 
 		mv.visitVarInsn(Opcodes.ALOAD, returnFromExceptionNameStore);
 		mv.visitVarInsn(Opcodes.ALOAD, nameSymbolStore);
-		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
-		                   GenerationConstants.JAVA_OBJECT_NAME,
-		                   GenerationConstants.JAVA_EQUALS_METHOD_NAME,
-		                   GenerationConstants.JAVA_EQUALS_METHOD_DESC,
-		                   false);
+		mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
+		                   GenerationConstants.LISP_STRUCT_NAME,
+		                   GenerationConstants.LISP_STRUCT_EQ_METHOD_NAME,
+		                   GenerationConstants.LISP_STRUCT_EQ_METHOD_DESC,
+		                   true);
 
 		final Label rethrowException = new Label();
 		mv.visitJumpInsn(Opcodes.IFEQ, rethrowException);

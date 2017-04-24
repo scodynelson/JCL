@@ -171,9 +171,36 @@ public final class HashTableStructImpl extends BuiltInClassStruct implements Has
 	@Override
 	public void mapHash(final FunctionStruct function) {
 		for (final Map.Entry<LispStruct, LispStruct> entry : map.entrySet()) {
-			final LispStruct keyWrapper = KeyWrapper.getInstance(entry.getKey(), test);
+			final LispStruct keyWrapper = new KeyWrapper(entry.getKey(), test);
 			function.apply(keyWrapper, entry.getValue());
 		}
+	}
+
+	@Override
+	public boolean equalp(final LispStruct object) {
+		if (eq(object)) {
+			return true;
+		}
+		if (object instanceof HashTableStructImpl) {
+			final HashTableStructImpl ht = (HashTableStructImpl) object;
+			if (map.size() != ht.map.size()) {
+				return false;
+			}
+			if (!test.eq(ht.test)) {
+				return false;
+			}
+			for (final Map.Entry<LispStruct, LispStruct> entry : map.entrySet()) {
+				final LispStruct key = entry.getKey();
+				final LispStruct value = entry.getValue();
+				final LispStruct objectValue = ht.map.get(key);
+
+				if (!value.equalp(objectValue)) {
+					return false;
+				}
+			}
+			return true;
+		}
+		return false;
 	}
 
 	@Override
@@ -200,19 +227,19 @@ public final class HashTableStructImpl extends BuiltInClassStruct implements Has
 		/**
 		 * The {@link FunctionStruct} used to test equivalence of a key.
 		 */
-		private final FunctionStruct equator;
+		private final FunctionStruct equivalenceFn;
 
 		/**
 		 * Private constructor.
 		 *
 		 * @param key
 		 * 		the key to wrap
-		 * @param equator
-		 * 		the equator function used to test equality of keys
+		 * @param equivalenceFn
+		 * 		the equivalence function used to test equality of keys
 		 */
-		private KeyWrapper(final LispStruct key, final FunctionStruct equator) {
+		private KeyWrapper(final LispStruct key, final FunctionStruct equivalenceFn) {
 			this.key = key;
-			this.equator = equator;
+			this.equivalenceFn = equivalenceFn;
 		}
 
 		/**
@@ -241,8 +268,7 @@ public final class HashTableStructImpl extends BuiltInClassStruct implements Has
 			}
 
 			final LispStruct lispStruct = (LispStruct) obj;
-			// TODO: cleanup??
-			return ((BooleanStruct) equator.apply(key, lispStruct)).booleanValue();
+			return ((BooleanStruct) equivalenceFn.apply(key, lispStruct)).booleanValue();
 		}
 
 		@Override

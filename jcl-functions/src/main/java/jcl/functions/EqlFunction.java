@@ -11,9 +11,9 @@ import jcl.lang.function.parameterdsl.Parameters;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class EqlFunction extends EquatorFunctionStructBase {
+public final class EqlFunction extends CommonLispBuiltInFunctionStructBase {
 
-	private static final String FUNCTION_NAME = "EQ";
+	private static final String FUNCTION_NAME = "EQL";
 	private static final String OBJECT1_ARGUMENT = "OBJECT-1";
 	private static final String OBJECT2_ARGUMENT = "OBJECT-2";
 

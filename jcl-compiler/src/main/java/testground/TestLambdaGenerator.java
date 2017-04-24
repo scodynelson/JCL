@@ -123,13 +123,13 @@ public class TestLambdaGenerator extends CompiledFunctionStruct {
 
 		final PackageStruct pkg1 = PackageStruct.findPackage("SYSTEM");
 		final SymbolStruct symbol1 = pkg1.findSymbol("SYMBOL1").getSymbol();
-		if (symbolBinding.equals(symbol1)) {
+		if (symbolBinding.eq(symbol1)) {
 			return CharacterStruct.toLispCharacter(100);
 		}
 
 		final PackageStruct pkg2 = PackageStruct.findPackage("SYSTEM");
 		final SymbolStruct symbol2 = pkg2.findSymbol("SYMBOL2").getSymbol();
-		if (symbolBinding.equals(symbol2)) {
+		if (symbolBinding.eq(symbol2)) {
 			return CharacterStruct.toLispCharacter(200);
 		}
 

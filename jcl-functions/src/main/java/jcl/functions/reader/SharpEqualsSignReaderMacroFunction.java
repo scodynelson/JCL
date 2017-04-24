@@ -124,14 +124,14 @@ public class SharpEqualsSignReaderMacroFunction extends ReaderMacroFunctionImpl 
 				final LispStruct car = consToken.getCar();
 				final LispStruct carSubst = replaceTagsWithTokens(car, sharpEqualReplTable, sharpEqualCircleSet);
 
-				if (!Objects.equals(carSubst, car)) {
+				if (!carSubst.eq(car)) {
 					consToken.setCar(carSubst);
 				}
 
 				final LispStruct cdr = consToken.getCdr();
 				final LispStruct cdrSubst = replaceTagsWithTokens(cdr, sharpEqualReplTable, sharpEqualCircleSet);
 
-				if (!Objects.equals(cdrSubst, cdr)) {
+				if (!cdrSubst.eq(cdr)) {
 					consToken.setCdr(cdrSubst);
 				}
 			}

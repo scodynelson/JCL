@@ -26,7 +26,7 @@ import org.apfloat.Aprational;
  * The {@link IntegerStructImpl} is the object representation of a Lisp 'integer' type.
  */
 @EqualsAndHashCode(callSuper = true)
-public final class IntegerStructImpl extends RationalStructImpl<Apint> implements IntegerStruct {
+public class IntegerStructImpl extends RationalStructImpl<Apint> implements IntegerStruct {
 
 	/**
 	 * {@link Apint} constant for calculating whether an {@link IntegerStructImpl} is even or odd.
@@ -39,7 +39,7 @@ public final class IntegerStructImpl extends RationalStructImpl<Apint> implement
 	 * @param apint
 	 * 		the value of the IntegerStruct
 	 */
-	private IntegerStructImpl(final Apint apint) {
+	public IntegerStructImpl(final Apint apint) {
 		super(getIntegerType(apint), apint);
 	}
 

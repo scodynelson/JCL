@@ -7,6 +7,7 @@ package jcl.lang.internal.number;
 import jcl.lang.RatioStruct;
 import jcl.type.RatioType;
 import lombok.EqualsAndHashCode;
+import org.apache.commons.math3.fraction.BigFraction;
 import org.apfloat.Apint;
 import org.apfloat.Aprational;
 import org.apfloat.AprationalMath;
@@ -70,6 +71,11 @@ public final class RatioStructImpl extends RationalStructImpl<Aprational> implem
 	/*
 		RealStruct
 	 */
+
+	@Override
+	public BigFraction toBigFraction() {
+		return new BigFraction(ap.numerator().toBigInteger(), ap.denominator().toBigInteger());
+	}
 
 	@Override
 	public RatioStruct rational() {

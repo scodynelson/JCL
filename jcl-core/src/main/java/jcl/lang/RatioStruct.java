@@ -1,9 +1,13 @@
 package jcl.lang;
 
+import org.apache.commons.math3.fraction.BigFraction;
+
 /**
  * The {@link RatioStruct} is the object representation of a Lisp 'ratio' type.
  */
 public interface RatioStruct extends RationalStruct {
+
+	BigFraction toBigFraction();
 
 	/*
 		RealStruct

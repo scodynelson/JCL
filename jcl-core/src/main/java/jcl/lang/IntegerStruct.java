@@ -3,7 +3,10 @@ package jcl.lang;
 import java.math.BigInteger;
 import java.util.List;
 
+import jcl.lang.internal.BignumStructImpl;
+import jcl.lang.internal.FixnumStructImpl;
 import jcl.lang.internal.number.IntegerStructImpl;
+import jcl.lang.internal.LongnumStructImpl;
 import org.apfloat.Apint;
 
 /**
@@ -341,8 +344,31 @@ public interface IntegerStruct extends RationalStruct {
 	 */
 	IntegerStruct isqrt();
 
+	static IntegerStruct toLispInteger(final Integer value) {
+		return new FixnumStructImpl(value);
+	}
+
+	static IntegerStruct toLispInteger(final Long value) {
+		if ((value < Integer.MIN_VALUE) || (value > Integer.MAX_VALUE)) {
+			return new LongnumStructImpl(value);
+		}
+		return new FixnumStructImpl(value.intValue());
+	}
+
+	static IntegerStruct toLispInteger(final BigInteger value) {
+		if ((value.compareTo(BigInteger.valueOf(Integer.MIN_VALUE)) < 0)
+				|| (value.compareTo(BigInteger.valueOf(Integer.MAX_VALUE)) > 0)) {
+			if ((value.compareTo(BigInteger.valueOf(Long.MIN_VALUE)) < 0)
+					|| (value.compareTo(BigInteger.valueOf(Long.MAX_VALUE)) > 0)) {
+				return new BignumStructImpl(value);
+			}
+			return new LongnumStructImpl(value.longValue());
+		}
+		return new FixnumStructImpl(value.intValue());
+	}
+
 	/*
-		RationalStruct
+	RATIONAL-STRUCT
 	 */
 
 	@Override
@@ -356,7 +382,7 @@ public interface IntegerStruct extends RationalStruct {
 	}
 
 	/*
-		RealStruct
+	REAL-STRUCT
 	 */
 
 	@Override
@@ -365,7 +391,7 @@ public interface IntegerStruct extends RationalStruct {
 	}
 
 	/*
-		NumberStruct
+	NUMBER-STRUCT
 	 */
 
 	@Override
@@ -386,6 +412,10 @@ public interface IntegerStruct extends RationalStruct {
 
 	@Override
 	IntegerStruct negation();
+
+	/*
+	LISP-STRUCT
+	 */
 
 	@Override
 	default boolean eql(final LispStruct object) {

@@ -1,5 +1,7 @@
 package jcl.lang;
 
+import java.math.BigDecimal;
+
 import jcl.lang.internal.number.FloatStructImpl;
 import jcl.lang.number.DecodeFloatResult;
 
@@ -41,6 +43,13 @@ public interface FloatStruct extends RealStruct {
 	 * @return this FloatStruct as a {@code double} value
 	 */
 	double doubleValue();
+
+	/**
+	 * Returns this FloatStruct as a {@link BigDecimal} value.
+	 *
+	 * @return this FloatStruct as a {@link BigDecimal} value
+	 */
+	BigDecimal bigDecimalValue();
 
 	/**
 	 * Computes the three main values that characterize this FloatStruct: the significand, exponent, and sign..

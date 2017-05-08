@@ -30,7 +30,7 @@ import org.apfloat.Apint;
  * The {@link FloatStructImpl} is the object representation of a Lisp 'float' type.
  */
 @EqualsAndHashCode(callSuper = true)
-public final class FloatStructImpl extends RealStructImpl<Apfloat> implements FloatStruct {
+public class FloatStructImpl extends RealStructImpl<Apfloat> implements FloatStruct {
 
 	/**
 	 * The floating-point precision of a FloatStruct object.
@@ -43,7 +43,7 @@ public final class FloatStructImpl extends RealStructImpl<Apfloat> implements Fl
 	 * @param apfloat
 	 * 		the value of the FloatStruct
 	 */
-	private FloatStructImpl(final Apfloat apfloat) {
+	public FloatStructImpl(final Apfloat apfloat) {
 		super(FloatType.INSTANCE, apfloat);
 	}
 
@@ -136,6 +136,11 @@ public final class FloatStructImpl extends RealStructImpl<Apfloat> implements Fl
 	@Override
 	public double doubleValue() {
 		return ap.doubleValue();
+	}
+
+	@Override
+	public BigDecimal bigDecimalValue() {
+		return BigDecimal.valueOf(ap.doubleValue());
 	}
 
 	@Override

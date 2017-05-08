@@ -7,7 +7,8 @@ import org.junit.runners.Suite;
  * Test suite for {@link CharacterStruct} tests.
  */
 @RunWith(Suite.class)
-@Suite.SuiteClasses({CharacterStructTest.class,
-                     CharacterStructCharacterEqualityTest.class})
+@Suite.SuiteClasses({CharacterStructCharacterTest.class,
+                     CharacterStructCharacterEqualityTest.class,
+                     CharacterStructObjectTest.class})
 public class CharacterStructTestSuite {
 }

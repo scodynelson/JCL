@@ -400,6 +400,7 @@ public interface StringStruct extends VectorStruct {
 			return true;
 		}
 		if (object instanceof ArrayStruct) {
+			// TODO: NILArray
 			return object.equal(this);
 		}
 		return false;

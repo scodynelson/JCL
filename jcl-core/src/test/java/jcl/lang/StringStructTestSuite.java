@@ -12,6 +12,7 @@ import org.junit.runners.Suite;
                      StringStructVectorTest.class,
                      StringStructArrayTest.class,
                      StringStructAdjustArrayTest.class,
-                     StringStructSequenceTest.class})
+                     StringStructSequenceTest.class,
+                     StringStructObjectTest.class})
 public class StringStructTestSuite {
 }

@@ -20,7 +20,7 @@ import static org.hamcrest.CoreMatchers.sameInstance;
 /**
  * Unit tests for {@link CharacterStruct} character methods.
  */
-public class CharacterStructTest {
+public class CharacterStructCharacterTest {
 
 	/**
 	 * {@link Rule} for performing expectations on exceptions.

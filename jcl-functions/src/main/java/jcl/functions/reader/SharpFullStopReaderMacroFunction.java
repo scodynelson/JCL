@@ -7,6 +7,7 @@ package jcl.functions.reader;
 import java.math.BigInteger;
 import java.util.Optional;
 
+import jcl.compiler.function.InternalEval;
 import jcl.functions.EvalFunction;
 import jcl.lang.InputStreamStruct;
 import jcl.lang.LispStruct;
@@ -31,13 +32,13 @@ public class SharpFullStopReaderMacroFunction extends ReaderMacroFunctionImpl {
 	/**
 	 * {@link EvalFunction} singleton used to evaluate the expression passed to '#.'.
 	 */
-	private final EvalFunction evalFunction;
+	private final InternalEval internalEval;
 
 	@Autowired
-	public SharpFullStopReaderMacroFunction(final Reader reader, final EvalFunction evalFunction) {
+	public SharpFullStopReaderMacroFunction(final Reader reader, final InternalEval internalEval) {
 		super("SHARP-FULL-STOP");
 		this.reader = reader;
-		this.evalFunction = evalFunction;
+		this.internalEval = internalEval;
 	}
 
 	@Override
@@ -59,6 +60,6 @@ public class SharpFullStopReaderMacroFunction extends ReaderMacroFunctionImpl {
 			throw new ReaderErrorException("Attempt to read #. while *READ-EVAL* is bound to NIL.");
 		}
 
-		return evalFunction.eval(token);
+		return internalEval.eval(token);
 	}
 }

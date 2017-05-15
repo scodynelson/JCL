@@ -3,7 +3,7 @@ package jcl.functions.system;
 import java.util.Arrays;
 import java.util.List;
 
-import jcl.functions.CompileForm;
+import jcl.compiler.function.CompileForm;
 import jcl.functions.ExtensionsBuiltInFunctionStructBase;
 import jcl.functions.LoadFunction;
 import jcl.lang.LispStruct;

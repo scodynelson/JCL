@@ -4,18 +4,16 @@
 
 package jcl.functions;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
 
+import jcl.compiler.function.InternalEval;
 import jcl.lang.LispStruct;
-import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.java.JavaMethodStruct;
 import jcl.lang.java.JavaObjectStruct;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -25,7 +23,8 @@ public class JInvoke extends ExtensionsBuiltInFunctionStructBase {
 	private static final String JAVA_METHOD_ARGUMENT = "JAVA-METHOD";
 	private static final String JAVA_OBJECT_ARGUMENT = "JAVA-OBJECT";
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(JInvoke.class);
+	@Autowired
+	private InternalEval internalEval;
 
 	public JInvoke() {
 		super("Creates a new instance of the Java Class matching the provided string",
@@ -53,25 +52,6 @@ public class JInvoke extends ExtensionsBuiltInFunctionStructBase {
 			methodArgs[i] = currentArg;
 		}
 
-		return jInvoke(javaMethod, javaObject, methodArgs);
-	}
-
-	public LispStruct jInvoke(final Method javaMethod, final Object javaObject, final LispStruct... methodArgs) {
-
-		final String javaMethodName = javaMethod.getName();
-
-		final Class<?> javaObjectClass = javaObject.getClass();
-		final String javaObjectClassName = javaObjectClass.getName();
-		try {
-			final Object methodResult = javaMethod.invoke(javaObject, (Object[]) methodArgs);
-			if (methodResult instanceof LispStruct) {
-				return (LispStruct) methodResult;
-			}
-			return JavaObjectStruct.valueOf(methodResult);
-		} catch (final InvocationTargetException | IllegalAccessException ex) {
-			final String message = "Java Method '" + javaMethodName + "' could not be properly invoked on Java Class '" + javaObjectClassName + "'.";
-			LOGGER.error(message, ex);
-			throw new ErrorException(message, ex);
-		}
+		return internalEval.jInvoke(javaMethod, javaObject, methodArgs);
 	}
 }

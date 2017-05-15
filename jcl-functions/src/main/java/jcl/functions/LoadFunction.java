@@ -9,6 +9,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 import jcl.compiler.classloaders.LoaderClassLoader;
+import jcl.compiler.function.InternalEval;
 import jcl.functions.pathname.MergePathnamesFunction;
 import jcl.functions.readtable.ReadFunction;
 import jcl.lang.BooleanStruct;
@@ -54,7 +55,7 @@ public final class LoadFunction extends CommonLispBuiltInFunctionStructBase {
 	private ReadFunction readFunction;
 
 	@Autowired
-	private EvalFunction evalFunction;
+	private InternalEval internalEval;
 
 	@Autowired
 	private MergePathnamesFunction mergePathnamesFunction;
@@ -172,7 +173,7 @@ public final class LoadFunction extends CommonLispBuiltInFunctionStructBase {
 				continue;
 			}
 
-			final LispStruct evaluatedForm = evalFunction.eval(form);
+			final LispStruct evaluatedForm = internalEval.eval(form);
 			if (print) {
 				LOGGER.info("; {}", evaluatedForm);
 			}

@@ -4,8 +4,8 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
+import jcl.compiler.function.CompileForm;
 import jcl.functions.CompileFileFunction;
-import jcl.functions.CompileForm;
 import jcl.functions.FuncallFunction;
 import jcl.functions.LoadFunction;
 import jcl.functions.pathname.MergePathnamesFunction;

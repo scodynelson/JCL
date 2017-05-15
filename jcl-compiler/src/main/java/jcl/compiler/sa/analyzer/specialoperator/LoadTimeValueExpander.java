@@ -3,9 +3,9 @@ package jcl.compiler.sa.analyzer.specialoperator;
 import java.util.Iterator;
 
 import jcl.compiler.environment.Environment;
+import jcl.compiler.function.InternalEval;
 import jcl.compiler.function.expanders.MacroFunctionExpander;
 import jcl.compiler.sa.FormAnalyzer;
-import jcl.functions.EvalFunction;
 import jcl.lang.BooleanStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
@@ -22,7 +22,7 @@ public class LoadTimeValueExpander extends MacroFunctionExpander<LispStruct> {
 	private FormAnalyzer formAnalyzer;
 
 	@Autowired
-	private EvalFunction evalFunction;
+	private InternalEval internalEval;
 
 	@Override
 	public SymbolStruct getFunctionSymbol() {
@@ -53,6 +53,6 @@ public class LoadTimeValueExpander extends MacroFunctionExpander<LispStruct> {
 		}
 
 		final LispStruct analyzedLoadTimeValueForm = formAnalyzer.analyze(loadTimeValueForm, Environment.NULL);
-		return evalFunction.eval(analyzedLoadTimeValueForm, Environment.NULL);
+		return internalEval.eval(analyzedLoadTimeValueForm, Environment.NULL);
 	}
 }

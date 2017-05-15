@@ -1,5 +1,6 @@
-package jcl.functions;
+package jcl.compiler.function;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,45 +23,28 @@ import jcl.lang.LispStruct;
 import jcl.lang.NILStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.TStruct;
+import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.factory.LispStructFactory;
-import jcl.lang.function.parameterdsl.Arguments;
-import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.java.JavaMethodStruct;
 import jcl.lang.java.JavaNameStruct;
 import jcl.lang.java.JavaObjectStruct;
 import jcl.lang.statics.CompilerVariables;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class EvalFunction extends CommonLispBuiltInFunctionStructBase {
+public class InternalEval {
 
-	private static final String FUNCTION_NAME = "EVAL";
-	private static final String FORM_ARGUMENT = "FORM";
+	private static final Logger LOGGER = LoggerFactory.getLogger(InternalEval.class);
 
 	@Autowired
 	private CompileForm compileForm;
 
 	@Autowired
 	private FormAnalyzer formAnalyzer;
-
-	@Autowired
-	private JInvoke jInvoke;
-
-	public EvalFunction() {
-		super("Evaluates form in the current dynamic environment and the null lexical environment.",
-		      FUNCTION_NAME,
-		      Parameters.forFunction(FUNCTION_NAME)
-		                .requiredParameter(FORM_ARGUMENT)
-		);
-	}
-
-	@Override
-	public LispStruct apply(final Arguments arguments) {
-		final LispStruct form = arguments.getRequiredArgument(FORM_ARGUMENT);
-		return eval(form);
-	}
 
 	public LispStruct eval(final LispStruct originalExp) {
 
@@ -166,7 +150,8 @@ public final class EvalFunction extends CommonLispBuiltInFunctionStructBase {
 			final LispStruct javaObject = javaMethodCall.getJavaObject();
 			final LispStruct evaluatedJavaObject = eval(javaObject);
 			if (!(evaluatedJavaObject instanceof JavaObjectStruct)) {
-				throw new ProgramErrorException("EVAL: Second argument to Java method call must be a Java object. Got: " + evaluatedJavaObject);
+				throw new ProgramErrorException(
+						"EVAL: Second argument to Java method call must be a Java object. Got: " + evaluatedJavaObject);
 			}
 
 			final JavaObjectStruct javaObjectStruct = (JavaObjectStruct) evaluatedJavaObject;
@@ -184,10 +169,12 @@ public final class EvalFunction extends CommonLispBuiltInFunctionStructBase {
 				methodParamTypes[i] = Object.class;
 			}
 
-			final JavaMethodStruct javaMethodStruct = LispStructFactory.toJavaMethod(methodName.getJavaName(), actualJavaObject.getClass(), methodParamTypes);
+			final JavaMethodStruct javaMethodStruct = LispStructFactory.toJavaMethod(methodName.getJavaName(),
+			                                                                         actualJavaObject.getClass(),
+			                                                                         methodParamTypes);
 			final Method javaMethod = javaMethodStruct.getJavaMethod();
 
-			return jInvoke.jInvoke(javaMethod, actualJavaObject, methodEvaluatedArgs);
+			return jInvoke(javaMethod, actualJavaObject, methodEvaluatedArgs);
 		}
 
 		if (exp instanceof LambdaFunctionCallStruct) {
@@ -213,14 +200,16 @@ public final class EvalFunction extends CommonLispBuiltInFunctionStructBase {
 		}
 
 		if (exp instanceof CompilerSpecialOperatorStruct) {
-			final FunctionStruct function = getCompiledExpression(oldCompileTopLevel, (CompilerSpecialOperatorStruct) exp);
+			final FunctionStruct function = getCompiledExpression(oldCompileTopLevel,
+			                                                      (CompilerSpecialOperatorStruct) exp);
 			return function.apply();
 		}
 
 		return exp;
 	}
 
-	private FunctionStruct getCompiledExpression(final BooleanStruct oldCompileTopLevel, final CompilerSpecialOperatorStruct exp) {
+	private FunctionStruct getCompiledExpression(final BooleanStruct oldCompileTopLevel,
+	                                             final CompilerSpecialOperatorStruct exp) {
 		CompilerVariables.COMPILE_TOP_LEVEL.setValue(NILStruct.INSTANCE);
 
 		final BooleanStruct oldConvertingForInterpreter = CompilerVariables.CONVERTING_FOR_INTERPRETER.getVariableValue();
@@ -235,5 +224,24 @@ public final class EvalFunction extends CommonLispBuiltInFunctionStructBase {
 			CompilerVariables.COMPILE_TOP_LEVEL.setValue(oldCompileTopLevel);
 		}
 		return function;
+	}
+
+	public LispStruct jInvoke(final Method javaMethod, final Object javaObject, final LispStruct... methodArgs) {
+
+		final String javaMethodName = javaMethod.getName();
+
+		final Class<?> javaObjectClass = javaObject.getClass();
+		final String javaObjectClassName = javaObjectClass.getName();
+		try {
+			final Object methodResult = javaMethod.invoke(javaObject, (Object[]) methodArgs);
+			if (methodResult instanceof LispStruct) {
+				return (LispStruct) methodResult;
+			}
+			return JavaObjectStruct.valueOf(methodResult);
+		} catch (final InvocationTargetException | IllegalAccessException ex) {
+			final String message = "Java Method '" + javaMethodName + "' could not be properly invoked on Java Class '" + javaObjectClassName + "'.";
+			LOGGER.error(message, ex);
+			throw new ErrorException(message, ex);
+		}
 	}
 }

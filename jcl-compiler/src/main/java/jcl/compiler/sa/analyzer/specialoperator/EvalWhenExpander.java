@@ -7,8 +7,8 @@ import java.util.List;
 import java.util.Set;
 
 import jcl.compiler.environment.Environment;
+import jcl.compiler.function.InternalEval;
 import jcl.compiler.function.expanders.MacroFunctionExpander;
-import jcl.functions.EvalFunction;
 import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
 import jcl.lang.NILStruct;
@@ -38,7 +38,7 @@ public class EvalWhenExpander extends MacroFunctionExpander<LispStruct> {
 	}
 
 	@Autowired
-	private EvalFunction evalFunction;
+	private InternalEval internalEval;
 
 	@Override
 	public SymbolStruct getFunctionSymbol() {
@@ -75,20 +75,20 @@ public class EvalWhenExpander extends MacroFunctionExpander<LispStruct> {
 			if (isCompileTopLevel(situationList)) {
 				final ListStruct formsList = LispStructFactory.toProperList(forms);
 				final ListStruct prognOperatorList = LispStructFactory.toCons(SpecialOperatorStructImpl.PROGN, formsList);
-				return evalFunction.eval(prognOperatorList);
+				return internalEval.eval(prognOperatorList);
 			}
 
 			if (isLoadTopLevel(situationList) || (convertingForCompiler && isExecute(situationList))) {
 				final ListStruct formsList = LispStructFactory.toProperList(forms);
 				final ListStruct prognOperatorList = LispStructFactory.toCons(SpecialOperatorStructImpl.PROGN, formsList);
-				return evalFunction.eval(prognOperatorList);
+				return internalEval.eval(prognOperatorList);
 			}
 		}
 
 		if (isExecute(situationList)) {
 			final ListStruct formsList = LispStructFactory.toProperList(forms);
 			final ListStruct prognOperatorList = LispStructFactory.toCons(SpecialOperatorStructImpl.PROGN, formsList);
-			return evalFunction.eval(prognOperatorList);
+			return internalEval.eval(prognOperatorList);
 		}
 
 		return NILStruct.INSTANCE;

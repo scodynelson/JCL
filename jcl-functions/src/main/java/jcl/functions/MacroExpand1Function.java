@@ -5,6 +5,8 @@
 package jcl.functions;
 
 import jcl.compiler.environment.Environment;
+import jcl.compiler.function.InternalMacroExpand;
+import jcl.compiler.function.MacroExpandResult;
 import jcl.lang.BooleanStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.NILStruct;
@@ -16,17 +18,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class MacroExpandFunction extends CommonLispBuiltInFunctionStructBase {
+public final class MacroExpand1Function extends CommonLispBuiltInFunctionStructBase {
 
-	private static final String FUNCTION_NAME = "MACROEXPAND";
+	private static final String FUNCTION_NAME = "MACROEXPAND-1";
 	private static final String FORM_ARGUMENT = "FORM";
 	private static final String ENVIRONMENT_ARGUMENT = "ENVIRONMENT";
 
 	@Autowired
-	private MacroExpand1Function macroExpand1Function;
+	private InternalMacroExpand internalMacroExpand;
 
-	public MacroExpandFunction() {
-		super("Repeatedly expands form until it is no longer a macro form.",
+	public MacroExpand1Function() {
+		super("Expands form once.",
 		      FUNCTION_NAME,
 		      Parameters.forFunction(FUNCTION_NAME)
 		                .requiredParameter(FORM_ARGUMENT)
@@ -43,26 +45,10 @@ public final class MacroExpandFunction extends CommonLispBuiltInFunctionStructBa
 			environment = arguments.getOptionalArgument(ENVIRONMENT_ARGUMENT, Environment.class);
 		}
 
-		final MacroExpandResult macroExpandResult = macroExpand(form, environment);
+		final MacroExpandResult macroExpandResult = internalMacroExpand.macroExpand1(form, environment);
 		final LispStruct expandedForm = macroExpandResult.getExpandedForm();
 		final boolean wasExpanded = macroExpandResult.wasExpanded();
 		final BooleanStruct wasExpandedBoolean = wasExpanded ? TStruct.INSTANCE : NILStruct.INSTANCE;
 		return ValuesStruct.valueOf(expandedForm, wasExpandedBoolean);
-	}
-
-	public MacroExpandResult macroExpand(final LispStruct element, final Environment environment) {
-		LispStruct tempElement = element;
-
-		boolean wasExpanded = false;
-		while (true) {
-			final MacroExpandResult expansion = macroExpand1Function.macroExpand1(tempElement, environment);
-			tempElement = expansion.getExpandedForm();
-
-			final boolean innerWasNotExpanded = !expansion.wasExpanded();
-			if (innerWasNotExpanded) {
-				return new MacroExpandResult(tempElement, wasExpanded);
-			}
-			wasExpanded = true;
-		}
 	}
 }

@@ -1,4 +1,4 @@
-package jcl.reader;
+package jcl.system;
 
 import jcl.functions.readtable.ReadDispatchCharacterFunction;
 import jcl.lang.statics.ReaderVariables;

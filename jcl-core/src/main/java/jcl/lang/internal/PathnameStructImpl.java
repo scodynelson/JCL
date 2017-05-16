@@ -311,7 +311,7 @@ public class PathnameStructImpl extends BuiltInClassStruct implements PathnameSt
 	 * @return the pathname directory
 	 */
 	private static PathnameDirectory getDirectory(final URI uri) {
-		final String uriPath = uri.getPath();
+		final String uriPath = StringUtils.defaultString(uri.getPath());
 		final String realURIPath = resolveUserHome(uriPath);
 
 		String directoryPath = FilenameUtils.getFullPathNoEndSeparator(realURIPath);

@@ -4,9 +4,9 @@
 
 package jcl.functions;
 
-import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import jcl.compiler.classloaders.LoaderClassLoader;
 import jcl.compiler.function.InternalEval;
@@ -115,8 +115,7 @@ public final class LoadFunction extends CommonLispBuiltInFunctionStructBase {
 			final PathnameStruct defaultPathspec = PathnameVariables.DEFAULT_PATHNAME_DEFAULTS.getVariableValue();
 			final PathnameVersion nilVersion = new PathnameVersion(PathnameVersionComponentType.NIL);
 			filespecPathname = mergePathnamesFunction.mergePathnames(filespec, defaultPathspec, nilVersion);
-			final File pathnameFile = new File(filespecPathname.getNamestring());
-			filespecPath = pathnameFile.toPath();
+			filespecPath = Paths.get(filespecPathname.getUri());
 		}
 
 		final boolean filespecNotExists = Files.notExists(filespecPath);

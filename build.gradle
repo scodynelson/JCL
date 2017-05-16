@@ -1,10 +1,21 @@
 buildscript {
+	ext {
+		dependencyManagementPluginVersion = "1.0.2.RELEASE"
+		springBootVersion = "1.5.3.RELEASE"
+		springIOPlatformVersion = "Brussels-SR2"
+		apfloatVersion = "1.8.2"
+		asmAllVersion = "5.2"
+		commonsMathVersion = "3.6.1"
+		commonsCollectionsVersion = "4.1"
+		icu4jVersion = "59.1"
+		javaHelpVersion = "2.0.05"
+	}
 	repositories {
 		maven { url 'http://repo.spring.io/plugins-release' }
 	}
-
 	dependencies {
-		classpath("org.springframework.boot:spring-boot-gradle-plugin:1.5.3.RELEASE")
+		classpath("io.spring.gradle:dependency-management-plugin:${dependencyManagementPluginVersion}")
+		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
 		classpath("org.springframework.build.gradle:propdeps-plugin:0.0.7")
 		classpath("ca.cutterslade.gradle:gradle-dependency-analyze:1.1.0")
 	}
@@ -15,19 +26,9 @@ plugins {
 	id "org.sonarqube" version "2.4"
 }
 
-ext {
-}
-
 allprojects {
 	group = "jcl"
 	version = "1.0-SNAPSHOT"
-
-	ext.apfloatVersion = "1.8.2"
-	ext.asmAllVersion = "5.2"
-	ext.commonsMathVersion = "3.6.1"
-	ext.commonsCollectionsVersion = "4.1"
-	ext.icu4jVersion = "59.1"
-	ext.javaHelpVersion = "2.0.05"
 }
 
 subprojects {
@@ -75,7 +76,7 @@ subprojects {
 
 	dependencyManagement {
 		imports {
-			mavenBom "io.spring.platform:platform-bom:Brussels-SR2"
+			mavenBom "io.spring.platform:platform-bom:${springIOPlatformVersion}"
 		}
 	}
 
@@ -142,99 +143,6 @@ subprojects {
 //			property "sonar.host.url", "https://sonarqube.com"
 //			property "sonar.login", ""
 		}
-	}
-}
-
-project("jcl-core") {
-	description = "JCL Core"
-
-	dependencies {
-		compile("com.ibm.icu:icu4j:${icu4jVersion}")
-		compile("commons-io:commons-io")
-		compile("io.javaslang:javaslang")
-		compile("org.apache.commons:commons-lang3")
-		compile("org.apache.commons:commons-math3:${commonsMathVersion}")
-		compile("org.apache.commons:commons-collections4:${commonsCollectionsVersion}")
-		compile("org.apfloat:apfloat:${apfloatVersion}")
-		compileOnly("org.projectlombok:lombok")
-		permitUnusedDeclared("org.projectlombok:lombok")
-		compile("org.slf4j:slf4j-api")
-		compile("org.springframework:spring-core")
-		compile("org.springframework:spring-beans")
-
-		testCompile("junit:junit")
-		testCompile("org.hamcrest:hamcrest-core")
-	}
-}
-
-project("jcl-compiler") {
-	description = "JCL Compiler"
-
-	dependencies {
-		compile(project(":jcl-core"))
-
-		compile("commons-io:commons-io")
-		compile("org.apfloat:apfloat:${apfloatVersion}")
-		compile("org.ow2.asm:asm-all:${asmAllVersion}")
-		compileOnly("org.projectlombok:lombok")
-		permitUnusedDeclared("org.projectlombok:lombok")
-		compile("org.slf4j:slf4j-api")
-		compile("org.springframework:spring-context")
-		compile("org.springframework:spring-core")
-		compile("org.springframework:spring-beans")
-	}
-}
-
-project("jcl-reader") {
-	description = "JCL Reader"
-
-	dependencies {
-		compile(project(":jcl-core"))
-
-		compile("org.slf4j:slf4j-api")
-		compile("org.springframework:spring-context")
-	}
-}
-
-project("jcl-functions") {
-	description = "JCL Functions"
-
-	dependencies {
-		compile(project(":jcl-core"))
-		compile(project(":jcl-compiler"))
-		compile(project(":jcl-reader"))
-
-		compile("commons-io:commons-io")
-		compile("javax.help:javahelp:${javaHelpVersion}")
-		compile("org.apache.commons:commons-collections4:${commonsCollectionsVersion}")
-		compile("org.apache.commons:commons-lang3")
-		compile("org.ow2.asm:asm-all:${asmAllVersion}")
-		compile("org.slf4j:slf4j-api")
-		compile("org.springframework.boot:spring-boot")
-		compile("org.springframework:spring-context")
-		compile("org.springframework:spring-beans")
-	}
-}
-
-project("jcl-application") {
-	description = "JCL Application"
-
-	dependencies {
-		compile(project(":jcl-core"))
-		compile(project(":jcl-compiler"))
-		compile(project(":jcl-reader"))
-		compile(project(":jcl-functions"))
-
-		compile("org.apache.commons:commons-lang3")
-		compile("org.slf4j:slf4j-api")
-		compile("org.springframework.boot:spring-boot")
-		compile("org.springframework.boot:spring-boot-autoconfigure")
-		compile("org.springframework:spring-context")
-		compile("org.springframework:spring-beans")
-		
-		runtime("org.springframework.boot:spring-boot-starter-logging")
-
-		testCompile("junit:junit")
 	}
 }
 
@@ -321,57 +229,6 @@ project("jcl-application") {
 //	}
 //}
 
-//********* LISP JAR GENERATION *********//
-
-def lispSourceTree = fileTree(dir: 'src/main/lisp/jcl/compiler', include: '**/*.lisp')
-def lispCompiledTree = fileTree(dir: 'compiled-lisp', include: '**/*.jar')
-
-task cleanLispJars {
-	def compiledLispDirectory = "$projectDir/compiled-lisp"
-	new File(compiledLispDirectory).mkdirs()
-
-	lispCompiledTree.each { file ->
-		doLast {
-			println("Removing Lisp Jar")
-			println(file.absolutePath)
-
-			file.delete()
-		}
-	}
+task wrapper(type: Wrapper) {
+	gradleVersion = '3.5'
 }
-
-task generateLispJars {
-	def compiledLispDirectory = "$projectDir/compiled-lisp"
-	new File(compiledLispDirectory).mkdirs()
-
-	lispSourceTree.each { file ->
-		doLast {
-			println("Generating Lisp Jar")
-			println(file.absolutePath)
-
-			javaexec {
-				main = "jcl.system.JCL"
-				classpath sourceSets.main.runtimeClasspath
-				args["--compileFileSrcDir=$file.absolutePath"]
-				args["--compileFileDestDir=$compiledLispDirectory/"]
-			}
-			// TODO: Fix the need to prepend a '/' to the directory name. This is a problem with the Pathname object.
-			println()
-		}
-	}
-}
-
-task unpackLispJars {
-	lispCompiledTree.each { file ->
-		doLast {
-			println("Unpacking Lisp Jar")
-			println(file.absolutePath)
-
-			copy {
-				from zipTree(file)
-				into compileJava.destinationDir
-			}
-		}
-	}
-}
-//jar.dependsOn(unpackLispJars)

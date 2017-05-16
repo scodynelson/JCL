@@ -1,0 +1,19 @@
+description = "JCL Core"
+
+dependencies {
+	compile("com.ibm.icu:icu4j:${icu4jVersion}")
+	compile("commons-io:commons-io")
+	compile("io.javaslang:javaslang")
+	compile("org.apache.commons:commons-lang3")
+	compile("org.apache.commons:commons-math3:${commonsMathVersion}")
+	compile("org.apache.commons:commons-collections4:${commonsCollectionsVersion}")
+	compile("org.apfloat:apfloat:${apfloatVersion}")
+	compileOnly("org.projectlombok:lombok")
+	permitUnusedDeclared("org.projectlombok:lombok")
+	compile("org.slf4j:slf4j-api")
+	compile("org.springframework:spring-core")
+	compile("org.springframework:spring-beans")
+
+	testCompile("junit:junit")
+	testCompile("org.hamcrest:hamcrest-core")
+}

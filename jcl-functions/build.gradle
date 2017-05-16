@@ -1,0 +1,17 @@
+description = "JCL Functions"
+
+dependencies {
+	compile(project(":jcl-core"))
+	compile(project(":jcl-compiler"))
+	compile(project(":jcl-reader"))
+
+	compile("commons-io:commons-io")
+	compile("javax.help:javahelp:${javaHelpVersion}")
+	compile("org.apache.commons:commons-collections4:${commonsCollectionsVersion}")
+	compile("org.apache.commons:commons-lang3")
+	compile("org.ow2.asm:asm-all:${asmAllVersion}")
+	compile("org.slf4j:slf4j-api")
+	compile("org.springframework.boot:spring-boot")
+	compile("org.springframework:spring-context")
+	compile("org.springframework:spring-beans")
+}

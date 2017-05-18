@@ -21,3 +21,6 @@
 ### Gradle
 .gradle/
 #build/
+
+### Compiled Lisp
+compiled-lisp/

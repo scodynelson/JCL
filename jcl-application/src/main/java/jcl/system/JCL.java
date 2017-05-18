@@ -75,7 +75,6 @@ public class JCL implements ApplicationRunner {
 	@Override
 	public void run(final ApplicationArguments args) throws Exception {
 		CompilerVariables.MACROEXPAND_HOOK.setValue(funcallFunction);
-		loadLispFiles();
 
 		final boolean compileFileSrcDir = args.containsOption("compileFileSrcDir");
 		final boolean compileFileDestDir = args.containsOption("compileFileDestDir");
@@ -84,6 +83,7 @@ public class JCL implements ApplicationRunner {
 		} else if (compileFileSrcDir || compileFileDestDir) {
 			throw new ErrorException("Both Compile File Source and Destination directories must be provided.");
 		} else {
+			loadLispFiles();
 			readEvalPrint.funcall(args);
 		}
 	}

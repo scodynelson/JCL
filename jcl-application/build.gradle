@@ -34,7 +34,7 @@ bootRepackage {
 
 //********* LISP JAR GENERATION *********//
 
-def lispSourceTree = fileTree(dir: 'src/main/lisp/jcl/compiler', include: '**/*.lisp')
+//def lispSourceTree = fileTree(dir: 'src/main/lisp', include: '**/*.lisp')
 def lispCompiledTree = fileTree(dir: 'compiled-lisp', include: '**/*.jar')
 
 task cleanLispJars {
@@ -51,38 +51,40 @@ task cleanLispJars {
 	}
 }
 
-task generateLispJars {
-	def compiledLispDirectory = "$projectDir/compiled-lisp"
-	new File(compiledLispDirectory).mkdirs()
+def lispSourceFiles = [
+		"jcl/compiler/base-macro-lambdas.lisp",
+		"jcl/compiler/macros.lisp",
+		"jcl/iterators/iterators.lisp",
+		"jcl/lists/lists.lisp"
+]
 
-	lispSourceTree.each { file ->
-		doLast {
-			println("Generating Lisp Jar")
-			println(file.absolutePath)
-
-			javaexec {
-				main = "jcl.system.JCL"
-				classpath sourceSets.main.runtimeClasspath
-				args["--compileFileSrcDir=$file.absolutePath"]
-				args["--compileFileDestDir=$compiledLispDirectory/"]
-			}
-			// TODO: Fix the need to prepend a '/' to the directory name. This is a problem with the Pathname object.
-			println()
-		}
+def createLispGenerationTask(def lispSourceFile, def lispSourceFileName) {
+	return tasks.create("generate-${lispSourceFileName}-Jar", JavaExec) {
+		main = "jcl.system.JCL"
+		classpath = sourceSets.main.runtimeClasspath
+		args += "--compileFileSrcDir=$projectDir/src/main/lisp/${lispSourceFile}"
+		args += "--compileFileDestDir=$projectDir/compiled-lisp/"
+		// TODO: Fix the need to prepend a '/' to the directory name. This is a problem with the Pathname object.
 	}
 }
 
-task unpackLispJars {
-	lispCompiledTree.each { file ->
-		doLast {
-			println("Unpacking Lisp Jar")
-			println(file.absolutePath)
-
-			copy {
-				from zipTree(file)
-				into compileJava.destinationDir
-			}
-		}
+def createJarUnpackingTask(def lispSourceFileName) {
+	return tasks.create(name: "unpack-${lispSourceFileName}-Jar",
+			type: Copy,
+			dependsOn: "generate-${lispSourceFileName}-Jar") {
+		from zipTree("$projectDir/compiled-lisp/${lispSourceFileName}.jar")
+		into compileJava.destinationDir
 	}
 }
-//jar.dependsOn(unpackLispJars)
+
+task generateLispSource(dependsOn: classes) {
+	lispSourceFiles.each { lispSourceFile ->
+		String lispSourceFileName = lispSourceFile.substring(
+				lispSourceFile.lastIndexOf("/") + 1,
+				lispSourceFile.lastIndexOf(".")
+		)
+		createLispGenerationTask(lispSourceFile, lispSourceFileName)
+		createJarUnpackingTask(lispSourceFileName)
+	}
+}
+//jar.dependsOn(generateLispSource)

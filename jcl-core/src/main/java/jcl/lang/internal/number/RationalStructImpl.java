@@ -23,6 +23,7 @@ import org.apfloat.AprationalMath;
  * @param <A>
  * 		the type of {@link Aprational} the {@link RationalStruct} object will use for its value
  */
+@Deprecated
 @EqualsAndHashCode(callSuper = true)
 abstract class RationalStructImpl<A extends Aprational> extends RealStructImpl<A> implements RationalStruct {
 

@@ -9,6 +9,7 @@ buildscript {
 		commonsCollectionsVersion = "4.1"
 		icu4jVersion = "59.1"
 		javaHelpVersion = "2.0.05"
+		procyonVersion = "2.5.0.Final"
 	}
 	repositories {
 		maven { url 'http://repo.spring.io/plugins-release' }

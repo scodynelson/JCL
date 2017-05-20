@@ -1,18 +1,17 @@
 package jcl.lang.internal;
 
 import java.math.BigInteger;
+import java.math.RoundingMode;
+import java.util.function.Function;
 
-import jcl.lang.DoubleFloatStruct;
+import com.google.common.math.DoubleMath;
+import com.google.common.math.IntMath;
 import jcl.lang.FixnumStruct;
 import jcl.lang.FloatStruct;
 import jcl.lang.IntegerStruct;
 import jcl.lang.NumberStruct;
 import jcl.lang.RationalStruct;
 import jcl.lang.RealStruct;
-import jcl.lang.SingleFloatStruct;
-import jcl.lang.classes.BuiltInClassStruct;
-import jcl.lang.internal.number.FloatStructImpl;
-import jcl.lang.internal.number.RatioStructImpl;
 import jcl.lang.number.QuotientRemainder;
 import jcl.type.FixnumType;
 import lombok.EqualsAndHashCode;
@@ -24,43 +23,41 @@ import org.apfloat.ApcomplexMath;
 import org.apfloat.Apfloat;
 import org.apfloat.ApfloatMath;
 import org.apfloat.Apint;
-import org.apfloat.ApintMath;
 
-@EqualsAndHashCode(callSuper = true)
-public final class FixnumStructImpl extends BuiltInClassStruct implements FixnumStruct {
+/**
+ * The {@link FixnumStructImpl} is the object representation of a Lisp 'fixnum' type.
+ */
+@EqualsAndHashCode(callSuper = false)
+public final class FixnumStructImpl extends IntegerStructImpl implements FixnumStruct {
 
-	private final int value;
+	/**
+	 * The integer value.
+	 */
+	final int value;
 
+	/**
+	 * Public constructor.
+	 *
+	 * @param value
+	 * 		the integer value
+	 */
 	public FixnumStructImpl(final int value) {
-		super(FixnumType.INSTANCE, null, null);
+		super(FixnumType.INSTANCE);
 		this.value = value;
-	}
-
-	@Override
-	public int intValue() {
-		return value;
-	}
-
-	@Override
-	public long longValue() {
-		return value;
-	}
-
-	@Override
-	public BigInteger bigIntegerValue() {
-		return BigInteger.valueOf(value);
 	}
 
 	@Override
 	public IntegerStruct gcd(final IntegerStruct integer) {
 		if (integer instanceof FixnumStructImpl) {
-			final int gcd = ArithmeticUtils.gcd(value, integer.intValue());
+			final int gcd = ArithmeticUtils.gcd(value, ((FixnumStructImpl) integer).value);
 			return IntegerStruct.toLispInteger(gcd);
 		} else if (integer instanceof LongnumStructImpl) {
-			final long gcd = ArithmeticUtils.gcd(value, integer.longValue());
+			final long gcd = ArithmeticUtils.gcd(value, ((LongnumStructImpl) integer).value);
 			return IntegerStruct.toLispInteger(gcd);
 		} else {
-			final BigInteger gcd = BigInteger.valueOf(value).gcd(integer.bigIntegerValue());
+			final BigInteger bigInteger1 = BigInteger.valueOf(value);
+			final BigInteger bigInteger2 = ((BignumStructImpl) integer).value;
+			final BigInteger gcd = bigInteger1.gcd(bigInteger2);
 			return IntegerStruct.toLispInteger(gcd);
 		}
 	}
@@ -68,40 +65,41 @@ public final class FixnumStructImpl extends BuiltInClassStruct implements Fixnum
 	@Override
 	public IntegerStruct lcm(final IntegerStruct integer) {
 		if (integer instanceof FixnumStructImpl) {
-			final int lcm = ArithmeticUtils.lcm(value, integer.intValue());
+			final int lcm = ArithmeticUtils.lcm(value, ((FixnumStructImpl) integer).value);
 			return IntegerStruct.toLispInteger(lcm);
 		} else if (integer instanceof LongnumStructImpl) {
-			final long lcm = ArithmeticUtils.lcm(value, integer.longValue());
+			final long lcm = ArithmeticUtils.lcm(value, ((LongnumStructImpl) integer).value);
 			return IntegerStruct.toLispInteger(lcm);
 		} else {
-			final Apint lcm = ApintMath.lcm(ap(), integer.ap());
-			return IntegerStruct.toLispInteger(lcm.toBigInteger());
+			final BigInteger bigInteger1 = BigInteger.valueOf(value);
+			final BigInteger bigInteger2 = integer.toJavaBigInteger();
+			final BigInteger lcm = lcm(bigInteger1, bigInteger2);
+			return IntegerStruct.toLispInteger(lcm);
 		}
 	}
 
 	@Override
 	public IntegerStruct ash(final IntegerStruct count) {
-		final Apint countAp = count.ap();
-		if (countAp.signum() == 0) {
+		if (count.zerop()) {
 			return this;
 		}
-		final int countI = countAp.intValue();
+		final int countInt = count.toJavaInt();
 
 		// NOTE: shiftLeft will automatically take care of shiftRight based on the sign of countInt
 		final BigInteger bigInteger = BigInteger.valueOf(value);
-		final BigInteger shiftedBigInteger = bigInteger.shiftLeft(countI);
+		final BigInteger shiftedBigInteger = bigInteger.shiftLeft(countInt);
 		return IntegerStruct.toLispInteger(shiftedBigInteger);
 	}
 
 	@Override
 	public IntegerStruct logAnd(final IntegerStruct integer) {
 		if (integer instanceof FixnumStructImpl) {
-			return IntegerStruct.toLispInteger(value & integer.intValue());
+			return IntegerStruct.toLispInteger(value & ((FixnumStructImpl) integer).value);
 		} else if (integer instanceof LongnumStructImpl) {
-			return IntegerStruct.toLispInteger(value & integer.longValue());
+			return IntegerStruct.toLispInteger(value & ((LongnumStructImpl) integer).value);
 		} else {
 			final BigInteger bigInteger1 = BigInteger.valueOf(value);
-			final BigInteger bigInteger2 = integer.bigIntegerValue();
+			final BigInteger bigInteger2 = ((BignumStructImpl) integer).value;
 			return IntegerStruct.toLispInteger(bigInteger1.and(bigInteger2));
 		}
 	}
@@ -109,12 +107,12 @@ public final class FixnumStructImpl extends BuiltInClassStruct implements Fixnum
 	@Override
 	public IntegerStruct logAndC1(final IntegerStruct integer) {
 		if (integer instanceof FixnumStructImpl) {
-			return IntegerStruct.toLispInteger(~value & integer.intValue());
+			return IntegerStruct.toLispInteger(~value & ((FixnumStructImpl) integer).value);
 		} else if (integer instanceof LongnumStructImpl) {
-			return IntegerStruct.toLispInteger(~value & integer.longValue());
+			return IntegerStruct.toLispInteger(~value & ((LongnumStructImpl) integer).value);
 		} else {
 			final BigInteger bigInteger1 = BigInteger.valueOf(value);
-			final BigInteger bigInteger2 = integer.bigIntegerValue();
+			final BigInteger bigInteger2 = ((BignumStructImpl) integer).value;
 			return IntegerStruct.toLispInteger(bigInteger1.not().and(bigInteger2));
 		}
 	}
@@ -122,12 +120,12 @@ public final class FixnumStructImpl extends BuiltInClassStruct implements Fixnum
 	@Override
 	public IntegerStruct logAndC2(final IntegerStruct integer) {
 		if (integer instanceof FixnumStructImpl) {
-			return IntegerStruct.toLispInteger(value & ~integer.intValue());
+			return IntegerStruct.toLispInteger(value & ~((FixnumStructImpl) integer).value);
 		} else if (integer instanceof LongnumStructImpl) {
-			return IntegerStruct.toLispInteger(value & ~integer.longValue());
+			return IntegerStruct.toLispInteger(value & ~((LongnumStructImpl) integer).value);
 		} else {
 			final BigInteger bigInteger1 = BigInteger.valueOf(value);
-			final BigInteger bigInteger2 = integer.bigIntegerValue();
+			final BigInteger bigInteger2 = ((BignumStructImpl) integer).value;
 			return IntegerStruct.toLispInteger(bigInteger1.and(bigInteger2.not()));
 		}
 	}
@@ -135,12 +133,12 @@ public final class FixnumStructImpl extends BuiltInClassStruct implements Fixnum
 	@Override
 	public IntegerStruct logEqv(final IntegerStruct integer) {
 		if (integer instanceof FixnumStructImpl) {
-			return IntegerStruct.toLispInteger(~(value ^ integer.intValue()));
+			return IntegerStruct.toLispInteger(~(value ^ ((FixnumStructImpl) integer).value));
 		} else if (integer instanceof LongnumStructImpl) {
-			return IntegerStruct.toLispInteger(~(value ^ integer.longValue()));
+			return IntegerStruct.toLispInteger(~(value ^ ((LongnumStructImpl) integer).value));
 		} else {
 			final BigInteger bigInteger1 = BigInteger.valueOf(value);
-			final BigInteger bigInteger2 = integer.bigIntegerValue();
+			final BigInteger bigInteger2 = ((BignumStructImpl) integer).value;
 			final BigInteger xor = bigInteger1.xor(bigInteger2);
 			return IntegerStruct.toLispInteger(xor.not());
 		}
@@ -149,12 +147,12 @@ public final class FixnumStructImpl extends BuiltInClassStruct implements Fixnum
 	@Override
 	public IntegerStruct logIor(final IntegerStruct integer) {
 		if (integer instanceof FixnumStructImpl) {
-			return IntegerStruct.toLispInteger(value | integer.intValue());
+			return IntegerStruct.toLispInteger(value | ((FixnumStructImpl) integer).value);
 		} else if (integer instanceof LongnumStructImpl) {
-			return IntegerStruct.toLispInteger(value | integer.longValue());
+			return IntegerStruct.toLispInteger(value | ((LongnumStructImpl) integer).value);
 		} else {
 			final BigInteger bigInteger1 = BigInteger.valueOf(value);
-			final BigInteger bigInteger2 = integer.bigIntegerValue();
+			final BigInteger bigInteger2 = ((BignumStructImpl) integer).value;
 			return IntegerStruct.toLispInteger(bigInteger1.or(bigInteger2));
 		}
 	}
@@ -162,12 +160,12 @@ public final class FixnumStructImpl extends BuiltInClassStruct implements Fixnum
 	@Override
 	public IntegerStruct logNand(final IntegerStruct integer) {
 		if (integer instanceof FixnumStructImpl) {
-			return IntegerStruct.toLispInteger(~(value & integer.intValue()));
+			return IntegerStruct.toLispInteger(~(value & ((FixnumStructImpl) integer).value));
 		} else if (integer instanceof LongnumStructImpl) {
-			return IntegerStruct.toLispInteger(~(value & integer.longValue()));
+			return IntegerStruct.toLispInteger(~(value & ((LongnumStructImpl) integer).value));
 		} else {
 			final BigInteger bigInteger1 = BigInteger.valueOf(value);
-			final BigInteger bigInteger2 = integer.bigIntegerValue();
+			final BigInteger bigInteger2 = ((BignumStructImpl) integer).value;
 			final BigInteger and = bigInteger1.and(bigInteger2);
 			return IntegerStruct.toLispInteger(and.not());
 		}
@@ -176,12 +174,12 @@ public final class FixnumStructImpl extends BuiltInClassStruct implements Fixnum
 	@Override
 	public IntegerStruct logNor(final IntegerStruct integer) {
 		if (integer instanceof FixnumStructImpl) {
-			return IntegerStruct.toLispInteger(~(value | integer.intValue()));
+			return IntegerStruct.toLispInteger(~(value | ((FixnumStructImpl) integer).value));
 		} else if (integer instanceof LongnumStructImpl) {
-			return IntegerStruct.toLispInteger(~(value | integer.longValue()));
+			return IntegerStruct.toLispInteger(~(value | ((LongnumStructImpl) integer).value));
 		} else {
 			final BigInteger bigInteger1 = BigInteger.valueOf(value);
-			final BigInteger bigInteger2 = integer.bigIntegerValue();
+			final BigInteger bigInteger2 = ((BignumStructImpl) integer).value;
 			final BigInteger or = bigInteger1.or(bigInteger2);
 			return IntegerStruct.toLispInteger(or.not());
 		}
@@ -195,12 +193,12 @@ public final class FixnumStructImpl extends BuiltInClassStruct implements Fixnum
 	@Override
 	public IntegerStruct logOrC1(final IntegerStruct integer) {
 		if (integer instanceof FixnumStructImpl) {
-			return IntegerStruct.toLispInteger(~value | integer.intValue());
+			return IntegerStruct.toLispInteger(~value | ((FixnumStructImpl) integer).value);
 		} else if (integer instanceof LongnumStructImpl) {
-			return IntegerStruct.toLispInteger(~value | integer.longValue());
+			return IntegerStruct.toLispInteger(~value | ((LongnumStructImpl) integer).value);
 		} else {
 			final BigInteger bigInteger1 = BigInteger.valueOf(value);
-			final BigInteger bigInteger2 = integer.bigIntegerValue();
+			final BigInteger bigInteger2 = ((BignumStructImpl) integer).value;
 			return IntegerStruct.toLispInteger(bigInteger1.not().or(bigInteger2));
 		}
 	}
@@ -208,12 +206,12 @@ public final class FixnumStructImpl extends BuiltInClassStruct implements Fixnum
 	@Override
 	public IntegerStruct logOrC2(final IntegerStruct integer) {
 		if (integer instanceof FixnumStructImpl) {
-			return IntegerStruct.toLispInteger(value | ~integer.intValue());
+			return IntegerStruct.toLispInteger(value | ~((FixnumStructImpl) integer).value);
 		} else if (integer instanceof LongnumStructImpl) {
-			return IntegerStruct.toLispInteger(value | ~integer.longValue());
+			return IntegerStruct.toLispInteger(value | ~((LongnumStructImpl) integer).value);
 		} else {
 			final BigInteger bigInteger1 = BigInteger.valueOf(value);
-			final BigInteger bigInteger2 = integer.bigIntegerValue();
+			final BigInteger bigInteger2 = ((BignumStructImpl) integer).value;
 			return IntegerStruct.toLispInteger(bigInteger1.or(bigInteger2.not()));
 		}
 	}
@@ -221,12 +219,12 @@ public final class FixnumStructImpl extends BuiltInClassStruct implements Fixnum
 	@Override
 	public IntegerStruct logXor(final IntegerStruct integer) {
 		if (integer instanceof FixnumStructImpl) {
-			return IntegerStruct.toLispInteger(value ^ integer.intValue());
+			return IntegerStruct.toLispInteger(value ^ ((FixnumStructImpl) integer).value);
 		} else if (integer instanceof LongnumStructImpl) {
-			return IntegerStruct.toLispInteger(value ^ integer.longValue());
+			return IntegerStruct.toLispInteger(value ^ ((LongnumStructImpl) integer).value);
 		} else {
 			final BigInteger bigInteger1 = BigInteger.valueOf(value);
-			final BigInteger bigInteger2 = integer.bigIntegerValue();
+			final BigInteger bigInteger2 = ((BignumStructImpl) integer).value;
 			return IntegerStruct.toLispInteger(bigInteger1.xor(bigInteger2));
 		}
 	}
@@ -234,7 +232,7 @@ public final class FixnumStructImpl extends BuiltInClassStruct implements Fixnum
 	@Override
 	public boolean logBitP(final IntegerStruct index) {
 		final BigInteger bigInteger = BigInteger.valueOf(value);
-		final int indexInt = index.intValue();
+		final int indexInt = index.toJavaInt();
 		return bigInteger.testBit(indexInt);
 	}
 
@@ -248,7 +246,7 @@ public final class FixnumStructImpl extends BuiltInClassStruct implements Fixnum
 	@Override
 	public boolean logTest(final IntegerStruct integer) {
 		final BigInteger bigInteger1 = BigInteger.valueOf(value);
-		final BigInteger bigInteger2 = integer.bigIntegerValue();
+		final BigInteger bigInteger2 = integer.toJavaBigInteger();
 		final BigInteger and = bigInteger1.and(bigInteger2);
 		return and.signum() != 0;
 	}
@@ -270,10 +268,51 @@ public final class FixnumStructImpl extends BuiltInClassStruct implements Fixnum
 		return (value & 0x01) != 0;
 	}
 
+	@SuppressWarnings("NumericCastThatLosesPrecision")
 	@Override
-	public IntegerStruct isqrt() {
-		final int isqrt = (int) Math.floor(Math.sqrt(value));
+	public NumberStruct isqrt() {
+		if (value < 0) {
+			final Apint ap = new Apint(value);
+			final Apcomplex sqrt = ApcomplexMath.sqrt(ap);
+			return ApfloatUtils.toNumberStruct(sqrt);
+		}
+
+		final int isqrt = IntMath.sqrt(value, RoundingMode.FLOOR);
 		return IntegerStruct.toLispInteger(isqrt);
+	}
+
+	@Override
+	public int toJavaInt() {
+		return value;
+	}
+
+	@Override
+	public Integer toJavaInteger() {
+		return value;
+	}
+
+	@Override
+	public long toJavaPLong() {
+		return value;
+	}
+
+	@Override
+	public Long toJavaLong() {
+		return (long) value;
+	}
+
+	@Override
+	public BigInteger toJavaBigInteger() {
+		return BigInteger.valueOf(value);
+	}
+
+	/*
+	RATIONAL-STRUCT
+	 */
+
+	@Override
+	public BigFraction toJavaBigFraction() {
+		return new BigFraction(value);
 	}
 
 	/*
@@ -283,17 +322,17 @@ public final class FixnumStructImpl extends BuiltInClassStruct implements Fixnum
 	@Override
 	public boolean isLessThan(final RealStruct real) {
 		if (real instanceof FixnumStructImpl) {
-			return value < ((FixnumStructImpl) real).intValue();
+			return value < ((FixnumStructImpl) real).value;
 		} else if (real instanceof LongnumStructImpl) {
-			return value < ((LongnumStructImpl) real).longValue();
+			return value < ((LongnumStructImpl) real).value;
 		} else if (real instanceof BignumStructImpl) {
 			final BigInteger bigInteger1 = BigInteger.valueOf(value);
-			final BigInteger bigInteger2 = ((BignumStructImpl) real).bigIntegerValue();
+			final BigInteger bigInteger2 = ((BignumStructImpl) real).value;
 			return bigInteger1.compareTo(bigInteger2) < 0;
 		} else if (real instanceof RatioStructImpl) {
 			final BigInteger bigInteger = BigInteger.valueOf(value);
 			final BigFraction bigFraction1 = new BigFraction(bigInteger);
-			final BigFraction bigFraction2 = ((RatioStructImpl) real).toBigFraction();
+			final BigFraction bigFraction2 = ((RatioStructImpl) real).value;
 			return bigFraction1.compareTo(bigFraction2) < 0;
 		}
 		return isLessThan(real.rational());
@@ -302,17 +341,17 @@ public final class FixnumStructImpl extends BuiltInClassStruct implements Fixnum
 	@Override
 	public boolean isGreaterThan(final RealStruct real) {
 		if (real instanceof FixnumStructImpl) {
-			return value > ((FixnumStructImpl) real).intValue();
+			return value > ((FixnumStructImpl) real).value;
 		} else if (real instanceof LongnumStructImpl) {
-			return value > ((LongnumStructImpl) real).longValue();
+			return value > ((LongnumStructImpl) real).value;
 		} else if (real instanceof BignumStructImpl) {
 			final BigInteger bigInteger1 = BigInteger.valueOf(value);
-			final BigInteger bigInteger2 = ((BignumStructImpl) real).bigIntegerValue();
+			final BigInteger bigInteger2 = ((BignumStructImpl) real).value;
 			return bigInteger1.compareTo(bigInteger2) > 0;
 		} else if (real instanceof RatioStructImpl) {
 			final BigInteger bigInteger = BigInteger.valueOf(value);
 			final BigFraction bigFraction1 = new BigFraction(bigInteger);
-			final BigFraction bigFraction2 = ((RatioStructImpl) real).toBigFraction();
+			final BigFraction bigFraction2 = ((RatioStructImpl) real).value;
 			return bigFraction1.compareTo(bigFraction2) > 0;
 		}
 		return isGreaterThan(real.rational());
@@ -321,17 +360,17 @@ public final class FixnumStructImpl extends BuiltInClassStruct implements Fixnum
 	@Override
 	public boolean isLessThanOrEqualTo(final RealStruct real) {
 		if (real instanceof FixnumStructImpl) {
-			return value <= ((FixnumStructImpl) real).intValue();
+			return value <= ((FixnumStructImpl) real).value;
 		} else if (real instanceof LongnumStructImpl) {
-			return value <= ((LongnumStructImpl) real).longValue();
+			return value <= ((LongnumStructImpl) real).value;
 		} else if (real instanceof BignumStructImpl) {
 			final BigInteger bigInteger1 = BigInteger.valueOf(value);
-			final BigInteger bigInteger2 = ((BignumStructImpl) real).bigIntegerValue();
+			final BigInteger bigInteger2 = ((BignumStructImpl) real).value;
 			return bigInteger1.compareTo(bigInteger2) <= 0;
 		} else if (real instanceof RatioStructImpl) {
 			final BigInteger bigInteger = BigInteger.valueOf(value);
 			final BigFraction bigFraction1 = new BigFraction(bigInteger);
-			final BigFraction bigFraction2 = ((RatioStructImpl) real).toBigFraction();
+			final BigFraction bigFraction2 = ((RatioStructImpl) real).value;
 			return bigFraction1.compareTo(bigFraction2) <= 0;
 		}
 		return isLessThanOrEqualTo(real.rational());
@@ -340,17 +379,17 @@ public final class FixnumStructImpl extends BuiltInClassStruct implements Fixnum
 	@Override
 	public boolean isGreaterThanOrEqualTo(final RealStruct real) {
 		if (real instanceof FixnumStructImpl) {
-			return value >= ((FixnumStructImpl) real).intValue();
+			return value >= ((FixnumStructImpl) real).value;
 		} else if (real instanceof LongnumStructImpl) {
-			return value >= ((LongnumStructImpl) real).longValue();
+			return value >= ((LongnumStructImpl) real).value;
 		} else if (real instanceof BignumStructImpl) {
 			final BigInteger bigInteger1 = BigInteger.valueOf(value);
-			final BigInteger bigInteger2 = ((BignumStructImpl) real).bigIntegerValue();
+			final BigInteger bigInteger2 = ((BignumStructImpl) real).value;
 			return bigInteger1.compareTo(bigInteger2) >= 0;
 		} else if (real instanceof RatioStructImpl) {
 			final BigInteger bigInteger = BigInteger.valueOf(value);
 			final BigFraction bigFraction1 = new BigFraction(bigInteger);
-			final BigFraction bigFraction2 = ((RatioStructImpl) real).toBigFraction();
+			final BigFraction bigFraction2 = ((RatioStructImpl) real).value;
 			return bigFraction1.compareTo(bigFraction2) >= 0;
 		}
 		return isGreaterThanOrEqualTo(real.rational());
@@ -368,144 +407,260 @@ public final class FixnumStructImpl extends BuiltInClassStruct implements Fixnum
 
 	@Override
 	public FloatStruct floatingPoint() {
-		// TODO
-		return SingleFloatStruct.toLispFloat((float) value);
+		return new SingleFloatStructImpl(value);
 	}
 
 	@Override
 	public FloatStruct floatingPoint(final FloatStruct prototype) {
-		// TODO
-		return FloatStructImpl.valueOf(new Apfloat((float) value), prototype);
+		if (prototype instanceof SingleFloatStructImpl) {
+			return new SingleFloatStructImpl(value);
+		} else {
+			return new DoubleFloatStructImpl(value);
+		}
 	}
 
 	@Override
 	public RealStruct mod(final RealStruct divisor) {
+		// TODO
 		if (divisor instanceof FixnumStructImpl) {
-			final int mod = value % ((FixnumStructImpl) divisor).intValue();
+			final int mod = value % ((FixnumStructImpl) divisor).value;
 			return IntegerStruct.toLispInteger(mod);
 		} else if (divisor instanceof LongnumStructImpl) {
-			final long mod = value % ((LongnumStructImpl) divisor).longValue();
+			final long mod = value % ((LongnumStructImpl) divisor).value;
 			return IntegerStruct.toLispInteger(mod);
 		}
 		final QuotientRemainder floor = floor(divisor);
 		return floor.getRemainder();
 	}
 
+	/**
+	 * Calculates the quotient remainder using the provided {@code operation} dividing {@link #value} by the provided
+	 * {@code divisor}. The resulting quotient will be created using the provided {@code quotientCreator}.
+	 *
+	 * @param divisor
+	 * 		what to divide {@link #value} by before performing the operation
+	 * @param operation
+	 * 		the quotient/remainder operation to perform
+	 * @param quotientCreator
+	 * 		the quotient generator
+	 *
+	 * @return a {@link QuotientRemainder} containing the results of the operation
+	 */
+	private QuotientRemainder calculateQuotientRemainder(final RealStruct divisor,
+	                                                     final Function<Double, Long> operation,
+	                                                     final Function<Long, RealStruct> quotientCreator) {
+
+		if (divisor instanceof FixnumStructImpl) {
+			final int divisorValue = ((FixnumStructImpl) divisor).value;
+			final int quotient = value / divisorValue;
+			final int remainder = value % divisorValue;
+
+			return new QuotientRemainder(
+					IntegerStruct.toLispInteger(quotient),
+					IntegerStruct.toLispInteger(remainder)
+			);
+		} else if (divisor instanceof LongnumStructImpl) {
+			final long divisorValue = ((LongnumStructImpl) divisor).value;
+			final long quotient = value / divisorValue;
+			final long remainder = value % divisorValue;
+
+			return new QuotientRemainder(
+					IntegerStruct.toLispInteger(quotient),
+					IntegerStruct.toLispInteger(remainder)
+			);
+		} else if (divisor instanceof BignumStructImpl) {
+			final BigInteger val = BigInteger.valueOf(value);
+			final BigInteger divisorValue = ((BignumStructImpl) divisor).value;
+			final BigInteger[] results = val.divideAndRemainder(divisorValue);
+			final BigInteger quotient = results[0];
+			final BigInteger remainder = results[1];
+
+			return new QuotientRemainder(
+					IntegerStruct.toLispInteger(quotient),
+					IntegerStruct.toLispInteger(remainder)
+			);
+		} else if (divisor instanceof RatioStructImpl) {
+			final BigInteger val = BigInteger.valueOf(value);
+			final BigFraction divisorValue = ((RatioStructImpl) divisor).value;
+			final BigInteger numerator = divisorValue.getNumerator();
+			final BigInteger denominator = divisorValue.getDenominator();
+
+			final BigInteger quotient = val.multiply(denominator).divide(numerator);
+
+			final BigFraction valBF = new BigFraction(value);
+			final BigFraction quotientBF = new BigFraction(quotient);
+			final BigFraction remainder = valBF.subtract(quotientBF.multiply(divisorValue));
+
+			return new QuotientRemainder(
+					IntegerStruct.toLispInteger(quotient),
+					RationalStruct.toLispRational(remainder)
+			);
+		} else if (divisor instanceof SingleFloatStructImpl) {
+			final float divisorValue = ((SingleFloatStructImpl) divisor).value;
+			final double divide = value / divisorValue;
+
+			final long quotient = operation.apply(divide);
+			final double remainder = value - (quotient * divisorValue);
+
+			return new QuotientRemainder(
+					quotientCreator.apply(quotient),
+					new SingleFloatStructImpl(remainder)
+			);
+		} else if (divisor instanceof DoubleFloatStructImpl) {
+			final double divisorValue = ((DoubleFloatStructImpl) divisor).value;
+			final double divide = value / divisorValue;
+
+			final long quotient = operation.apply(divide);
+			final double remainder = value - (quotient * divisorValue);
+
+			return new QuotientRemainder(
+					quotientCreator.apply(quotient),
+					new DoubleFloatStructImpl(remainder)
+			);
+		} else {
+			final double divisorValue = divisor.ap().doubleValue();
+			final double divide = value / divisorValue;
+
+			final long quotient = operation.apply(divide);
+			final double remainder = value - (quotient * divisorValue);
+
+			return new QuotientRemainder(
+					quotientCreator.apply(quotient),
+					new SingleFloatStructImpl(remainder)
+			);
+		}
+	}
+
+	/**
+	 * Creates a function for creating a new lisp float instance when provided a {@code long} value. If the provided
+	 * {@code real} is a single-float, a single-float will be generated; otherwise a double-float will be generated.
+	 *
+	 * @param real
+	 * 		the real used to determine the generating function
+	 *
+	 * @return a lisp float generating function
+	 */
+	private static Function<Long, RealStruct> toLispFloat(final RealStruct real) {
+		return (real instanceof SingleFloatStructImpl)
+		       ? SingleFloatStructImpl::new
+		       : DoubleFloatStructImpl::new;
+	}
+
+	@SuppressWarnings("NumericCastThatLosesPrecision")
 	@Override
 	public QuotientRemainder floor() {
-		// TODO
-		return null;
+		return new QuotientRemainder(this, ZERO);
 	}
 
+	@SuppressWarnings("NumericCastThatLosesPrecision")
 	@Override
 	public QuotientRemainder floor(final RealStruct divisor) {
-		// TODO
-		return null;
+		return calculateQuotientRemainder(divisor, val -> (long) StrictMath.floor(val),
+		                                  IntegerStruct::toLispInteger);
 	}
 
+	@SuppressWarnings("NumericCastThatLosesPrecision")
 	@Override
 	public QuotientRemainder ffloor() {
-		// TODO
-		return null;
+		return new QuotientRemainder(new SingleFloatStructImpl(value), ZERO);
 	}
 
+	@SuppressWarnings("NumericCastThatLosesPrecision")
 	@Override
 	public QuotientRemainder ffloor(final RealStruct divisor) {
-		// TODO
-		return null;
+		return calculateQuotientRemainder(divisor, val -> (long) StrictMath.floor(val),
+		                                  toLispFloat(divisor));
 	}
 
+	@SuppressWarnings("NumericCastThatLosesPrecision")
 	@Override
 	public QuotientRemainder ceiling() {
-		// TODO
-		return null;
+		return new QuotientRemainder(this, ZERO);
 	}
 
+	@SuppressWarnings("NumericCastThatLosesPrecision")
 	@Override
 	public QuotientRemainder ceiling(final RealStruct divisor) {
-		// TODO
-		return null;
+		return calculateQuotientRemainder(divisor, val -> (long) StrictMath.ceil(val),
+		                                  IntegerStruct::toLispInteger);
 	}
 
+	@SuppressWarnings("NumericCastThatLosesPrecision")
 	@Override
 	public QuotientRemainder fceiling() {
-		// TODO
-		return null;
+		return new QuotientRemainder(new SingleFloatStructImpl(value), ZERO);
 	}
 
+	@SuppressWarnings("NumericCastThatLosesPrecision")
 	@Override
 	public QuotientRemainder fceiling(final RealStruct divisor) {
-		// TODO
-		return null;
+		return calculateQuotientRemainder(divisor, val -> (long) StrictMath.ceil(val),
+		                                  toLispFloat(divisor));
 	}
 
 	@Override
 	public QuotientRemainder truncate() {
-		// TODO
-		return null;
+		return new QuotientRemainder(this, ZERO);
 	}
 
 	@Override
 	public QuotientRemainder truncate(final RealStruct divisor) {
-		// TODO
-		return null;
+		return calculateQuotientRemainder(divisor, val -> DoubleMath.roundToLong(value, RoundingMode.DOWN),
+		                                  IntegerStruct::toLispInteger);
 	}
 
 	@Override
 	public QuotientRemainder ftruncate() {
-		// TODO
-		return null;
+		return new QuotientRemainder(new SingleFloatStructImpl(value), ZERO);
 	}
 
 	@Override
 	public QuotientRemainder ftruncate(final RealStruct divisor) {
-		// TODO
-		return null;
+		return calculateQuotientRemainder(divisor, val -> DoubleMath.roundToLong(value, RoundingMode.DOWN),
+		                                  toLispFloat(divisor));
 	}
 
 	@Override
 	public QuotientRemainder round() {
-		// TODO
-		return null;
+		return new QuotientRemainder(this, ZERO);
 	}
 
 	@Override
 	public QuotientRemainder round(final RealStruct divisor) {
-		// TODO
-		return null;
+		return calculateQuotientRemainder(divisor, val -> DoubleMath.roundToLong(value, RoundingMode.HALF_EVEN),
+		                                  IntegerStruct::toLispInteger);
 	}
 
 	@Override
 	public QuotientRemainder fround() {
-		// TODO
-		return null;
+		return new QuotientRemainder(new SingleFloatStructImpl(value), ZERO);
 	}
 
 	@Override
 	public QuotientRemainder fround(final RealStruct divisor) {
-		// TODO
-		return null;
+		return calculateQuotientRemainder(divisor, val -> DoubleMath.roundToLong(value, RoundingMode.HALF_EVEN),
+		                                  toLispFloat(divisor));
 	}
 
 	@Override
 	public RealStruct atan(final RealStruct real) {
 		if (real instanceof FixnumStructImpl) {
-			final double atan2 = StrictMath.atan2(value, ((FixnumStructImpl) real).intValue());
-			return DoubleFloatStruct.toLispFloat(atan2);
+			final double atan2 = StrictMath.atan2(value, ((FixnumStructImpl) real).value);
+			return new SingleFloatStructImpl(atan2);
 		} else if (real instanceof LongnumStructImpl) {
-			final double atan2 = StrictMath.atan2(value, ((LongnumStructImpl) real).longValue());
-			return DoubleFloatStruct.toLispFloat(atan2);
+			final double atan2 = StrictMath.atan2(value, ((LongnumStructImpl) real).value);
+			return new SingleFloatStructImpl(atan2);
 		} else if (real instanceof SingleFloatStructImpl) {
-			final double atan2 = StrictMath.atan2(value, ((FloatStruct) real).floatValue());
-			return DoubleFloatStruct.toLispFloat(atan2);
+			final double atan2 = StrictMath.atan2(value, ((SingleFloatStructImpl) real).value);
+			return new SingleFloatStructImpl(atan2);
 		} else if (real instanceof DoubleFloatStructImpl) {
-			final double atan2 = StrictMath.atan2(value, ((FloatStruct) real).doubleValue());
-			return DoubleFloatStruct.toLispFloat(atan2);
+			final double atan2 = StrictMath.atan2(value, ((DoubleFloatStructImpl) real).value);
+			return new SingleFloatStructImpl(atan2);
 		}
 		final Apint ap = new Apint(value);
 		final Apfloat realAp = real.ap();
 		final Apfloat atan2 = ApfloatMath.atan2(ap, realAp);
-		return DoubleFloatStruct.toLispFloat(atan2.doubleValue());
+		return new SingleFloatStructImpl(atan2.floatValue());
 	}
 
 	/*
@@ -519,7 +674,7 @@ public final class FixnumStructImpl extends BuiltInClassStruct implements Fixnum
 
 	@Override
 	public IntegerStruct abs() {
-		return IntegerStruct.toLispInteger(Math.abs(value));
+		return new FixnumStructImpl(Math.abs(value));
 	}
 
 	@Override
@@ -529,37 +684,108 @@ public final class FixnumStructImpl extends BuiltInClassStruct implements Fixnum
 
 	@Override
 	public NumberStruct add(final NumberStruct number) {
-		// TODO
-		return null;
+		if (number instanceof FixnumStructImpl) {
+			return addExact(value, ((FixnumStructImpl) number).value);
+		} else if (number instanceof LongnumStructImpl) {
+			return addExact(value, ((LongnumStructImpl) number).value);
+		} else if (number instanceof BignumStructImpl) {
+			final BigInteger add = BigInteger.valueOf(value).add(((BignumStructImpl) number).value);
+			return new BignumStructImpl(add);
+		} else if (number instanceof RatioStructImpl) {
+			final BigFraction add = ((RatioStructImpl) number).value.add(value);
+			return new RatioStructImpl(add);
+		} else if (number instanceof SingleFloatStructImpl) {
+			final float add = value + ((SingleFloatStructImpl) number).value;
+			return new SingleFloatStructImpl(add);
+		} else if (number instanceof DoubleFloatStructImpl) {
+			final double add = value + ((DoubleFloatStructImpl) number).value;
+			return new DoubleFloatStructImpl(add);
+		}
+		final Apint ap = new Apint(value);
+		final Apcomplex numberAp = number.ap();
+		final Apcomplex add = ap.add(numberAp);
+		return ApfloatUtils.toNumberStruct(add);
 	}
 
 	@Override
 	public NumberStruct subtract(final NumberStruct number) {
-		// TODO
-		return null;
+		if (number instanceof FixnumStructImpl) {
+			return subtractExact(value, ((FixnumStructImpl) number).value);
+		} else if (number instanceof LongnumStructImpl) {
+			return subtractExact(value, ((LongnumStructImpl) number).value);
+		} else if (number instanceof BignumStructImpl) {
+			final BigInteger subtract = BigInteger.valueOf(value).subtract(((BignumStructImpl) number).value);
+			return new BignumStructImpl(subtract);
+		} else if (number instanceof RatioStructImpl) {
+			final BigFraction subtract = new BigFraction(value).subtract(((RatioStructImpl) number).value);
+			return new RatioStructImpl(subtract);
+		} else if (number instanceof SingleFloatStructImpl) {
+			final float subtract = value - ((SingleFloatStructImpl) number).value;
+			return new SingleFloatStructImpl(subtract);
+		} else if (number instanceof DoubleFloatStructImpl) {
+			final double subtract = value - ((DoubleFloatStructImpl) number).value;
+			return new DoubleFloatStructImpl(subtract);
+		}
+		final Apint ap = new Apint(value);
+		final Apcomplex numberAp = number.ap();
+		final Apcomplex subtract = ap.subtract(numberAp);
+		return ApfloatUtils.toNumberStruct(subtract);
 	}
 
 	@Override
 	public NumberStruct multiply(final NumberStruct number) {
-		// TODO
-		return null;
+		if (number instanceof FixnumStructImpl) {
+			return multiplyExact(value, ((FixnumStructImpl) number).value);
+		} else if (number instanceof LongnumStructImpl) {
+			return multiplyExact(value, ((LongnumStructImpl) number).value);
+		} else if (number instanceof BignumStructImpl) {
+			final BigInteger multiply = BigInteger.valueOf(value).multiply(((BignumStructImpl) number).value);
+			return new BignumStructImpl(multiply);
+		} else if (number instanceof RatioStructImpl) {
+			final BigFraction multiply = ((RatioStructImpl) number).value.multiply(value);
+			return RationalStruct.toLispRational(multiply);
+		} else if (number instanceof SingleFloatStructImpl) {
+			final float multiply = value * ((SingleFloatStructImpl) number).value;
+			return new SingleFloatStructImpl(multiply);
+		} else if (number instanceof DoubleFloatStructImpl) {
+			final double multiply = value * ((DoubleFloatStructImpl) number).value;
+			return new DoubleFloatStructImpl(multiply);
+		}
+		final Apint ap = new Apint(value);
+		final Apcomplex numberAp = number.ap();
+		final Apcomplex multiply = ap.multiply(numberAp);
+		return ApfloatUtils.toNumberStruct(multiply);
 	}
 
 	@Override
 	public NumberStruct divide(final NumberStruct number) {
-		// TODO
-		return null;
+		if (number instanceof IntegerStruct) {
+			return RationalStruct.toLispRational(this, (IntegerStruct) number);
+		} else if (number instanceof RatioStructImpl) {
+			final BigFraction divide = new BigFraction(value).divide(((RatioStructImpl) number).value);
+			return RationalStruct.toLispRational(divide);
+		} else if (number instanceof SingleFloatStructImpl) {
+			final float divide = value / ((SingleFloatStructImpl) number).value;
+			return new SingleFloatStructImpl(divide);
+		} else if (number instanceof DoubleFloatStructImpl) {
+			final double divide = value / ((DoubleFloatStructImpl) number).value;
+			return new DoubleFloatStructImpl(divide);
+		}
+		final Apint ap = new Apint(value);
+		final Apcomplex numberAp = number.ap();
+		final Apcomplex divide = ap.divide(numberAp);
+		return ApfloatUtils.toNumberStruct(divide);
 	}
 
 	@Override
 	public boolean isEqualTo(final NumberStruct number) {
 		if (number instanceof FixnumStructImpl) {
-			return value == ((FixnumStructImpl) number).intValue();
+			return value == ((FixnumStructImpl) number).value;
 		} else if (number instanceof LongnumStructImpl) {
-			return value == ((LongnumStructImpl) number).longValue();
+			return value == ((LongnumStructImpl) number).value;
 		} else if (number instanceof BignumStructImpl) {
 			final BigInteger bigInteger1 = BigInteger.valueOf(value);
-			final BigInteger bigInteger2 = ((BignumStructImpl) number).bigIntegerValue();
+			final BigInteger bigInteger2 = ((BignumStructImpl) number).value;
 			return bigInteger1.compareTo(bigInteger2) == 0;
 		}
 		return number.isEqualTo(this);
@@ -568,12 +794,12 @@ public final class FixnumStructImpl extends BuiltInClassStruct implements Fixnum
 	@Override
 	public boolean isNotEqualTo(final NumberStruct number) {
 		if (number instanceof FixnumStructImpl) {
-			return value != ((FixnumStructImpl) number).intValue();
+			return value != ((FixnumStructImpl) number).value;
 		} else if (number instanceof LongnumStructImpl) {
-			return value != ((LongnumStructImpl) number).longValue();
+			return value != ((LongnumStructImpl) number).value;
 		} else if (number instanceof BignumStructImpl) {
 			final BigInteger bigInteger1 = BigInteger.valueOf(value);
-			final BigInteger bigInteger2 = ((BignumStructImpl) number).bigIntegerValue();
+			final BigInteger bigInteger2 = ((BignumStructImpl) number).value;
 			return bigInteger1.compareTo(bigInteger2) != 0;
 		}
 		return number.isNotEqualTo(this);
@@ -585,127 +811,139 @@ public final class FixnumStructImpl extends BuiltInClassStruct implements Fixnum
 			return this;
 		}
 		if (value > 0) {
-			return IntegerStruct.ONE;
+			return ONE;
 		}
-		return IntegerStruct.MINUS_ONE;
+		return MINUS_ONE;
 	}
 
 	@Override
 	public IntegerStruct negation() {
-		return IntegerStruct.toLispInteger(-value);
+		return new FixnumStructImpl(-value);
 	}
 
 	@Override
 	public RationalStruct reciprocal() {
-		// TODO
-		return null;
+		if (value == 1) {
+			return this;
+		}
+		return new RatioStructImpl(ONE, this);
 	}
 
 	@Override
 	public RealStruct exp() {
 		final double exp = StrictMath.exp(value);
-		return DoubleFloatStruct.toLispFloat(exp);
+		return new SingleFloatStructImpl(exp);
 	}
 
 	@Override
 	public NumberStruct expt(final NumberStruct power) {
-		// TODO
+		if (power instanceof IntegerStruct) {
+			final BigInteger bigInteger1 = BigInteger.valueOf(value);
+			final BigInteger bigInteger2 = ((IntegerStruct) power).toJavaBigInteger();
+			final BigInteger pow = ArithmeticUtils.pow(bigInteger1, bigInteger2);
+			return IntegerStruct.toLispInteger(pow);
+		}
 		final Apint ap = new Apint(value);
 		final Apcomplex powerAp = power.ap();
 		final Apcomplex pow = ApcomplexMath.pow(ap, powerAp);
-		return NumberStruct.valueOf(pow);
+		return ApfloatUtils.toNumberStruct(pow);
 	}
 
 	@Override
 	public RealStruct log() {
 		final double log = StrictMath.log(value);
-		return DoubleFloatStruct.toLispFloat(log);
+		return new SingleFloatStructImpl(log);
 	}
 
 	@Override
 	public NumberStruct log(final NumberStruct base) {
-		// TODO
 		final Apint ap = new Apint(value);
 		final Apcomplex baseAp = base.ap();
 		final Apcomplex log = ApcomplexMath.log(ap, baseAp);
-		return NumberStruct.valueOf(log);
+		return ApfloatUtils.toNumberStruct(log);
 	}
 
 	@Override
-	public RealStruct sqrt() {
+	public NumberStruct sqrt() {
+		if (value < 0) {
+			final Apint ap = new Apint(value);
+			final Apcomplex sqrt = ApcomplexMath.sqrt(ap);
+			return ApfloatUtils.toNumberStruct(sqrt);
+		}
+
 		final double sqrt = StrictMath.sqrt(value);
-		return DoubleFloatStruct.toLispFloat(sqrt);
+		return new SingleFloatStructImpl(sqrt);
 	}
 
 	@Override
 	public RealStruct sin() {
 		final double sin = StrictMath.sin(value);
-		return DoubleFloatStruct.toLispFloat(sin);
+		return new SingleFloatStructImpl(sin);
 	}
 
 	@Override
 	public RealStruct cos() {
 		final double cos = StrictMath.cos(value);
-		return DoubleFloatStruct.toLispFloat(cos);
+		return new SingleFloatStructImpl(cos);
 	}
 
 	@Override
 	public RealStruct tan() {
 		final double tan = StrictMath.tan(value);
-		return DoubleFloatStruct.toLispFloat(tan);
+		return new SingleFloatStructImpl(tan);
 	}
 
 	@Override
 	public RealStruct asin() {
 		final double asin = StrictMath.asin(value);
-		return DoubleFloatStruct.toLispFloat(asin);
+		return new SingleFloatStructImpl(asin);
 	}
 
 	@Override
 	public RealStruct acos() {
 		final double acos = StrictMath.acos(value);
-		return DoubleFloatStruct.toLispFloat(acos);
+		return new SingleFloatStructImpl(acos);
 	}
 
 	@Override
 	public RealStruct atan() {
 		final double atan = StrictMath.atan(value);
-		return DoubleFloatStruct.toLispFloat(atan);
+		return new SingleFloatStructImpl(atan);
 	}
 
 	@Override
 	public RealStruct sinh() {
 		final double sinh = StrictMath.sinh(value);
-		return DoubleFloatStruct.toLispFloat(sinh);
+		return new SingleFloatStructImpl(sinh);
 	}
 
 	@Override
 	public RealStruct cosh() {
 		final double cosh = StrictMath.cosh(value);
-		return DoubleFloatStruct.toLispFloat(cosh);
+		return new SingleFloatStructImpl(cosh);
 	}
 
 	@Override
 	public RealStruct tanh() {
 		final double tanh = StrictMath.tanh(value);
-		return DoubleFloatStruct.toLispFloat(tanh);
+		return new SingleFloatStructImpl(tanh);
 	}
 
 	@Override
 	public RealStruct asinh() {
 		final double asinh = FastMath.asinh(value);
-		return DoubleFloatStruct.toLispFloat(asinh);
+		return new SingleFloatStructImpl(asinh);
 	}
 
 	@Override
 	public RealStruct acosh() {
 		final double acosh = FastMath.acosh(value);
-		return DoubleFloatStruct.toLispFloat(acosh);
+		return new SingleFloatStructImpl(acosh);
 	}
 
 	@Override
 	public RealStruct atanh() {
 		final double atanh = FastMath.atanh(value);
-		return DoubleFloatStruct.toLispFloat(atanh);
+		return new SingleFloatStructImpl(atanh);
 	}
 }

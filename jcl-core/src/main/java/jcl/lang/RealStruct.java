@@ -6,7 +6,9 @@ package jcl.lang;
 
 import java.util.List;
 
-import jcl.lang.internal.number.ComplexStructImpl;
+import jcl.lang.condition.exception.ErrorException;
+import jcl.lang.factory.LispStructFactory;
+import jcl.lang.internal.ComplexStructImpl;
 import jcl.lang.internal.number.FloatStructImpl;
 import jcl.lang.number.QuotientRemainder;
 import org.apfloat.Apfloat;
@@ -16,22 +18,6 @@ import org.apfloat.Aprational;
  * The {@link RealStruct} is the object representation of a Lisp 'real' type.
  */
 public interface RealStruct extends NumberStruct {
-
-	/**
-	 * Returns a RealStruct from the provided {@link Apfloat} value. If the {@link Apfloat} is an {@link Aprational},
-	 * {@link RationalStruct#valueOf(Aprational)} is invoked to create the appropriate {@link RationalStruct} instead.
-	 *
-	 * @param apfloat
-	 * 		the {@link Apfloat} to be used as the value of the resulting RealStruct
-	 *
-	 * @return a RealStruct with the provided {@link Apfloat} as its value
-	 */
-	static RealStruct valueOf(final Apfloat apfloat) {
-		if (apfloat instanceof Aprational) {
-			return RationalStruct.valueOf((Aprational) apfloat);
-		}
-		return FloatStructImpl.valueOf(apfloat);
-	}
 
 	/**
 	 * Performs a {@literal '<'} comparison of this RealStruct and the provided RealStruct.
@@ -44,29 +30,31 @@ public interface RealStruct extends NumberStruct {
 	boolean isLessThan(RealStruct real);
 
 	/**
-	 * Performs a {@literal '<'} comparison of the provided RealStruct objects in order, using the single RealStruct
-	 * as the starting point in the comparison. If at any point a value does not follow the expected comparison, the
-	 * comparison loop with short-circuit.
+	 * Performs a {@literal '<'} comparison of the provided RealStruct objects in order. If at any point a value does
+	 * not follow the expected comparison, the comparison loop with short-circuit.
 	 *
-	 * @param real
-	 * 		the initial RealStruct used in the {@literal '<'} comparison
 	 * @param reals
-	 * 		the {@link List} of RealStruct objects used in the {@literal '<'} comparison
+	 * 		the RealStructs used in the {@literal '<'} comparison
 	 *
 	 * @return the {@literal '<'} comparison provided RealStruct objects
 	 */
-	static boolean isLessThan(final RealStruct real, final List<RealStruct> reals) {
-		RealStruct previousReal = real;
+	static BooleanStruct isLessThan(final RealStruct... reals) {
+		if (reals.length == 0) {
+			throw new ErrorException("At least one real required to test equality.");
+		}
+
+		RealStruct previousReal = reals[0];
 
 		boolean result = true;
-		for (final RealStruct currentReal : reals) {
+		for (int i = 1; i < reals.length; i++) {
+			final RealStruct currentReal = reals[i];
 			result = previousReal.isLessThan(currentReal);
 			if (!result) {
 				break;
 			}
 			previousReal = currentReal;
 		}
-		return result;
+		return LispStructFactory.toBoolean(result);
 	}
 
 	/**
@@ -80,29 +68,31 @@ public interface RealStruct extends NumberStruct {
 	boolean isGreaterThan(RealStruct real);
 
 	/**
-	 * Performs a {@literal '>'} comparison of the provided RealStruct objects in order, using the single RealStruct
-	 * as the starting point in the comparison. If at any point a value does not follow the expected comparison, the
-	 * comparison loop with short-circuit.
+	 * Performs a {@literal '>'} comparison of the provided RealStruct objects in order. If at any point a value does
+	 * not follow the expected comparison, the comparison loop with short-circuit.
 	 *
-	 * @param real
-	 * 		the initial RealStruct used in the {@literal '>'} comparison
 	 * @param reals
-	 * 		the {@link List} of RealStruct objects used in the {@literal '>'} comparison
+	 * 		the RealStructs used in the {@literal '>'} comparison
 	 *
 	 * @return the {@literal '>'} comparison provided RealStruct objects
 	 */
-	static boolean isGreaterThan(final RealStruct real, final List<RealStruct> reals) {
-		RealStruct previousReal = real;
+	static BooleanStruct isGreaterThan(final RealStruct... reals) {
+		if (reals.length == 0) {
+			throw new ErrorException("At least one real required to test equality.");
+		}
+
+		RealStruct previousReal = reals[0];
 
 		boolean result = true;
-		for (final RealStruct currentReal : reals) {
+		for (int i = 1; i < reals.length; i++) {
+			final RealStruct currentReal = reals[i];
 			result = previousReal.isGreaterThan(currentReal);
 			if (!result) {
 				break;
 			}
 			previousReal = currentReal;
 		}
-		return result;
+		return LispStructFactory.toBoolean(result);
 	}
 
 	/**
@@ -116,29 +106,31 @@ public interface RealStruct extends NumberStruct {
 	boolean isLessThanOrEqualTo(RealStruct real);
 
 	/**
-	 * Performs a {@literal '<='} comparison of the provided RealStruct objects in order, using the single RealStruct
-	 * as the starting point in the comparison. If at any point a value does not follow the expected comparison, the
-	 * comparison loop with short-circuit.
+	 * Performs a {@literal '<='} comparison of the provided RealStruct objects in order. If at any point a value does
+	 * not follow the expected comparison, the comparison loop with short-circuit.
 	 *
-	 * @param real
-	 * 		the initial RealStruct used in the {@literal '<='} comparison
 	 * @param reals
-	 * 		the {@link List} of RealStruct objects used in the {@literal '<='} comparison
+	 * 		the RealStructs used in the {@literal '<='} comparison
 	 *
 	 * @return the {@literal '<='} comparison provided RealStruct objects
 	 */
-	static boolean isLessThanOrEqualTo(final RealStruct real, final List<RealStruct> reals) {
-		RealStruct previousReal = real;
+	static BooleanStruct isLessThanOrEqualTo(final RealStruct... reals) {
+		if (reals.length == 0) {
+			throw new ErrorException("At least one real required to test equality.");
+		}
+
+		RealStruct previousReal = reals[0];
 
 		boolean result = true;
-		for (final RealStruct currentReal : reals) {
+		for (int i = 1; i < reals.length; i++) {
+			final RealStruct currentReal = reals[i];
 			result = previousReal.isLessThanOrEqualTo(currentReal);
 			if (!result) {
 				break;
 			}
 			previousReal = currentReal;
 		}
-		return result;
+		return LispStructFactory.toBoolean(result);
 	}
 
 	/**
@@ -152,29 +144,31 @@ public interface RealStruct extends NumberStruct {
 	boolean isGreaterThanOrEqualTo(RealStruct real);
 
 	/**
-	 * Performs a {@literal '>='} comparison of the provided RealStruct objects in order, using the single RealStruct
-	 * as the starting point in the comparison. If at any point a value does not follow the expected comparison, the
-	 * comparison loop with short-circuit.
+	 * Performs a {@literal '>='} comparison of the provided RealStruct objects in order. If at any point a value does
+	 * not follow the expected comparison, the comparison loop with short-circuit.
 	 *
-	 * @param real
-	 * 		the initial RealStruct used in the {@literal '>='} comparison
 	 * @param reals
-	 * 		the {@link List} of RealStruct objects used in the {@literal '>='} comparison
+	 * 		the RealStructs used in the {@literal '>='} comparison
 	 *
 	 * @return the {@literal '>='} comparison provided RealStruct objects
 	 */
-	static boolean isGreaterThanOrEqualTo(final RealStruct real, final List<RealStruct> reals) {
-		RealStruct previousReal = real;
+	static BooleanStruct isGreaterThanOrEqualTo(final RealStruct... reals) {
+		if (reals.length == 0) {
+			throw new ErrorException("At least one real required to test equality.");
+		}
+
+		RealStruct previousReal = reals[0];
 
 		boolean result = true;
-		for (final RealStruct currentReal : reals) {
+		for (int i = 1; i < reals.length; i++) {
+			final RealStruct currentReal = reals[i];
 			result = previousReal.isGreaterThanOrEqualTo(currentReal);
 			if (!result) {
 				break;
 			}
 			previousReal = currentReal;
 		}
-		return result;
+		return LispStructFactory.toBoolean(result);
 	}
 
 	/**
@@ -315,8 +309,7 @@ public interface RealStruct extends NumberStruct {
 	default ComplexStruct cis() {
 		final RealStruct cos = cos();
 		final RealStruct sin = sin();
-		// TODO
-		return ComplexStructImpl.valueOf(cos.ap(), sin.ap(), ComplexStruct.ValueType.RATIONAL);
+		return new ComplexStructImpl(cos, sin);
 	}
 
 	/**
@@ -510,9 +503,6 @@ public interface RealStruct extends NumberStruct {
 	RealStruct log();
 
 	@Override
-	RealStruct sqrt();
-
-	@Override
 	RealStruct sin();
 
 	@Override
@@ -553,5 +543,17 @@ public interface RealStruct extends NumberStruct {
 		return eq(object) ||
 				((object instanceof RealStruct)
 						&& ((RealStruct) object).ap().equals(ap()));
+	}
+
+	/*
+	DEPRECATED
+	 */
+
+	@Deprecated
+	static RealStruct valueOf(final Apfloat apfloat) {
+		if (apfloat instanceof Aprational) {
+			return RationalStruct.valueOf((Aprational) apfloat);
+		}
+		return FloatStructImpl.valueOf(apfloat);
 	}
 }

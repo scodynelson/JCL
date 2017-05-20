@@ -18,6 +18,7 @@ import org.apfloat.Apfloat;
  * @param <A>
  * 		the type of {@link Apcomplex} the {@link NumberStruct} object will use for its value
  */
+@Deprecated
 @EqualsAndHashCode(callSuper = true)
 abstract class NumberStructImpl<A extends Apcomplex> extends InternalNumberStruct<A> implements NumberStruct {
 

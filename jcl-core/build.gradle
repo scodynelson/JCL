@@ -3,6 +3,7 @@ description = "JCL Core"
 dependencies {
 	compile("com.ibm.icu:icu4j:${icu4jVersion}")
 	compile("commons-io:commons-io")
+	compile("com.google.guava:guava")
 	compile("io.javaslang:javaslang")
 	compile("org.apache.commons:commons-lang3")
 	compile("org.apache.commons:commons-math3:${commonsMathVersion}")

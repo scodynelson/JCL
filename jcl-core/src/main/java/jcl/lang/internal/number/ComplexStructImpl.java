@@ -10,15 +10,13 @@ import jcl.type.ComplexType;
 import lombok.EqualsAndHashCode;
 import org.apfloat.Apcomplex;
 import org.apfloat.Apfloat;
-import org.apfloat.Aprational;
 
 /**
  * The {@link ComplexStructImpl} is the object representation of a Lisp 'complex' type.
  */
+@Deprecated
 @EqualsAndHashCode(callSuper = true)
 public final class ComplexStructImpl extends NumberStructImpl<Apcomplex> implements ComplexStruct {
-
-	private final ValueType valueType;
 
 	/**
 	 * Private constructor.
@@ -26,9 +24,8 @@ public final class ComplexStructImpl extends NumberStructImpl<Apcomplex> impleme
 	 * @param apcomplex
 	 * 		the value of the ComplexStruct
 	 */
-	private ComplexStructImpl(final Apcomplex apcomplex, final ValueType valueType) {
+	private ComplexStructImpl(final Apcomplex apcomplex) {
 		super(ComplexType.INSTANCE, apcomplex);
-		this.valueType = valueType;
 	}
 
 	/**
@@ -39,8 +36,9 @@ public final class ComplexStructImpl extends NumberStructImpl<Apcomplex> impleme
 	 *
 	 * @return a ComplexStruct object with the provided {@link Apcomplex} value
 	 */
-	public static ComplexStruct valueOf(final Apcomplex apcomplex, final ValueType valueType) {
-		return new ComplexStructImpl(apcomplex, valueType);
+	@Deprecated
+	public static ComplexStruct valueOf(final Apcomplex apcomplex) {
+		return new ComplexStructImpl(apcomplex);
 	}
 
 	/**
@@ -53,19 +51,15 @@ public final class ComplexStructImpl extends NumberStructImpl<Apcomplex> impleme
 	 *
 	 * @return a ComplexStruct object with the provided real and imaginary {@link Apfloat} values
 	 */
-	public static ComplexStruct valueOf(final Apfloat real, final Apfloat imaginary, final ValueType valueType) {
+	@Deprecated
+	public static ComplexStruct valueOf(final Apfloat real, final Apfloat imaginary) {
 		final Apcomplex apcomplex = new Apcomplex(real, imaginary);
-		return valueOf(apcomplex, valueType);
+		return valueOf(apcomplex);
 	}
 
+	@Deprecated
 	public static ComplexStruct valueOf(final RealStruct real, final RealStruct imaginary) {
-		final ValueType valueType = ComplexStruct.determineComplexValueType(real, imaginary);
-		return valueOf(real.ap(), imaginary.ap(), valueType);
-	}
-
-	@Override
-	public ValueType getValueType() {
-		return valueType;
+		return valueOf(real.ap(), imaginary.ap());
 	}
 
 	/*
@@ -78,12 +72,6 @@ public final class ComplexStructImpl extends NumberStructImpl<Apcomplex> impleme
 	}
 
 	private String formatApfloat(final Apfloat apfloat) {
-		switch (valueType) {
-			case FLOAT:
-				if (apfloat instanceof Aprational) {
-					return String.valueOf(apfloat.doubleValue());
-				}
-		}
 		return apfloat.toString(true);
 	}
 }

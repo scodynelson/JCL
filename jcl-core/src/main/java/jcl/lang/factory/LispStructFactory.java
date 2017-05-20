@@ -194,14 +194,12 @@ public final class LispStructFactory {
 	 * Complex
 	 */
 
-	public static ComplexStruct toComplex(final Apcomplex apcomplex, final ComplexStruct.ValueType valueType) {
-		return ComplexStructImpl.valueOf(apcomplex, valueType);
+	public static ComplexStruct toComplex(final Apcomplex apcomplex) {
+		return ComplexStructImpl.valueOf(apcomplex);
 	}
 
-	public static ComplexStruct toComplex(final Apfloat real,
-	                                      final Apfloat imaginary,
-	                                      final ComplexStruct.ValueType valueType) {
-		return ComplexStructImpl.valueOf(real, imaginary, valueType);
+	public static ComplexStruct toComplex(final Apfloat real, final Apfloat imaginary) {
+		return ComplexStructImpl.valueOf(real, imaginary);
 	}
 
 	public static ComplexStruct toComplex(final RealStruct real, final RealStruct imaginary) {

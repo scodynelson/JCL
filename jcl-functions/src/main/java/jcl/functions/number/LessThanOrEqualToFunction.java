@@ -9,7 +9,6 @@ import java.util.List;
 import jcl.functions.CommonLispBuiltInFunctionStructBase;
 import jcl.lang.LispStruct;
 import jcl.lang.RealStruct;
-import jcl.lang.factory.LispStructFactory;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import org.springframework.stereotype.Component;
@@ -34,7 +33,13 @@ public final class LessThanOrEqualToFunction extends CommonLispBuiltInFunctionSt
 		final RealStruct real = arguments.getRequiredArgument(REAL_ARGUMENT, RealStruct.class);
 		final List<RealStruct> reals = arguments.getRestArgument(RealStruct.class);
 
-		final boolean result = RealStruct.isLessThanOrEqualTo(real, reals);
-		return LispStructFactory.toBoolean(result);
+		final RealStruct[] realsToCompare = new RealStruct[reals.size() + 1];
+		realsToCompare[0] = real;
+		for (int i = 1; i < realsToCompare.length; i++) {
+			final RealStruct realToCompare = reals.get(i - 1);
+			realsToCompare[i] = realToCompare;
+		}
+
+		return RealStruct.isLessThanOrEqualTo(realsToCompare);
 	}
 }

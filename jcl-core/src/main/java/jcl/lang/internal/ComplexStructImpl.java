@@ -1,29 +1,79 @@
 package jcl.lang.internal;
 
+import java.util.Arrays;
+
 import jcl.lang.ComplexStruct;
+import jcl.lang.FloatStruct;
 import jcl.lang.NumberStruct;
 import jcl.lang.RealStruct;
 import jcl.lang.classes.BuiltInClassStruct;
 import jcl.type.ComplexType;
 import lombok.EqualsAndHashCode;
 import org.apfloat.Apcomplex;
+import org.apfloat.ApcomplexMath;
+import org.apfloat.Apfloat;
 
-@EqualsAndHashCode(callSuper = true)
+/**
+ * The {@link ComplexStruct} is the object representation of a Lisp 'complex' type.
+ */
+@EqualsAndHashCode(callSuper = false)
 public class ComplexStructImpl extends BuiltInClassStruct implements ComplexStruct {
 
+	/**
+	 * The real part of the complex number.
+	 */
 	private final RealStruct real;
+
+	/**
+	 * The imaginary part of the complex number.
+	 */
 	private final RealStruct imaginary;
 
+	/**
+	 * The {@link Apcomplex} representation of the complex number.
+	 */
+	final Apcomplex apcomplex;
+
+	/**
+	 * Public constructor.
+	 *
+	 * @param apcomplex
+	 * 		the {@link Apcomplex} representation of the complex number
+	 */
+	public ComplexStructImpl(final Apcomplex apcomplex) {
+		super(ComplexType.INSTANCE, null, null);
+		real = ApfloatUtils.toRealStruct(apcomplex.real());
+		imaginary = ApfloatUtils.toRealStruct(apcomplex.imag());
+		this.apcomplex = apcomplex;
+	}
+
+	/**
+	 * Public constructor.
+	 *
+	 * @param real
+	 * 		the real part of the complex number
+	 * @param imaginary
+	 * 		the imaginary part of the complex number
+	 */
 	public ComplexStructImpl(final RealStruct real, final RealStruct imaginary) {
 		super(ComplexType.INSTANCE, null, null);
 		this.real = real;
 		this.imaginary = imaginary;
+		apcomplex = new Apcomplex(real.ap(), imaginary.ap());
 	}
 
-	@Override
-	public ValueType getValueType() {
-		// TODO
-		return null;
+	private enum ValueType {
+		RATIONAL,
+		FLOAT
+	}
+
+	private static ValueType determineComplexValueType(final RealStruct... reals) {
+		final boolean anyFloats
+				= Arrays.stream(reals)
+				        .map(Object::getClass)
+				        .anyMatch(FloatStruct.class::isAssignableFrom);
+
+		return anyFloats ? ValueType.FLOAT : ValueType.RATIONAL;
 	}
 
 	/*
@@ -32,193 +82,199 @@ public class ComplexStructImpl extends BuiltInClassStruct implements ComplexStru
 
 	@Override
 	public Apcomplex ap() {
-		// TODO
-		return null;
+		return apcomplex;
 	}
 
 	@Override
 	public RealStruct abs() {
-		// TODO
-		return null;
+		final Apfloat abs = ApcomplexMath.abs(apcomplex);
+		return ApfloatUtils.toRealStruct(abs);
 	}
 
 	@Override
 	public boolean zerop() {
-		// TODO
-		return false;
+		return Apcomplex.ZERO.equals(apcomplex);
 	}
 
 	@Override
 	public NumberStruct add(final NumberStruct number) {
-		// TODO
-		return null;
+		final Apcomplex numberAp = number.ap();
+		final Apcomplex add = apcomplex.add(numberAp);
+		return ApfloatUtils.toNumberStruct(add);
 	}
 
 	@Override
 	public NumberStruct subtract(final NumberStruct number) {
-		// TODO
-		return null;
+		final Apcomplex numberAp = number.ap();
+		final Apcomplex subtract = apcomplex.subtract(numberAp);
+		return ApfloatUtils.toNumberStruct(subtract);
 	}
 
 	@Override
 	public NumberStruct multiply(final NumberStruct number) {
-		// TODO
-		return null;
+		final Apcomplex numberAp = number.ap();
+		final Apcomplex multiply = apcomplex.multiply(numberAp);
+		return ApfloatUtils.toNumberStruct(multiply);
 	}
 
 	@Override
 	public NumberStruct divide(final NumberStruct number) {
-		// TODO
-		return null;
+		final Apcomplex numberAp = number.ap();
+		final Apcomplex divide = apcomplex.divide(numberAp);
+		return ApfloatUtils.toNumberStruct(divide);
 	}
 
 	@Override
 	public boolean isEqualTo(final NumberStruct number) {
-		// TODO
-		return false;
+		final Apcomplex numberAp = number.ap();
+		return apcomplex.equals(numberAp);
 	}
 
 	@Override
 	public boolean isNotEqualTo(final NumberStruct number) {
-		// TODO
-		return false;
+		final Apcomplex numberAp = number.ap();
+		return !apcomplex.equals(numberAp);
 	}
 
 	@Override
 	public NumberStruct signum() {
-		// TODO
-		return null;
+		if (Apcomplex.ZERO.equals(apcomplex)) {
+			return this;
+		}
+
+		final Apfloat abs = ApcomplexMath.abs(apcomplex);
+		final Apcomplex signum = apcomplex.divide(abs);
+		return ApfloatUtils.toNumberStruct(signum);
 	}
 
 	@Override
 	public RealStruct realPart() {
-		// TODO
-		return null;
+		return real;
 	}
 
 	@Override
 	public RealStruct imagPart() {
-		// TODO
-		return null;
+		return imaginary;
 	}
 
 	@Override
 	public NumberStruct conjugate() {
-		// TODO
-		return null;
+		final Apcomplex conj = apcomplex.conj();
+		return new ComplexStructImpl(conj);
 	}
 
 	@Override
 	public NumberStruct negation() {
-		// TODO
-		return null;
+		final Apcomplex negate = apcomplex.negate();
+		return new ComplexStructImpl(negate);
 	}
 
 	@Override
 	public NumberStruct reciprocal() {
-		// TODO
-		return null;
+		final Apcomplex reciprocal = Apcomplex.ONE.divide(apcomplex);
+		return ApfloatUtils.toNumberStruct(reciprocal);
 	}
 
 	@Override
 	public NumberStruct exp() {
-		// TODO
-		return null;
+		final Apcomplex exp = ApcomplexMath.exp(apcomplex);
+		return ApfloatUtils.toNumberStruct(exp);
 	}
 
 	@Override
 	public NumberStruct expt(final NumberStruct power) {
-		// TODO
-		return null;
+		final Apcomplex powerAp = power.ap();
+		final Apcomplex pow = ApcomplexMath.pow(apcomplex, powerAp);
+		return ApfloatUtils.toNumberStruct(pow);
 	}
 
 	@Override
 	public NumberStruct log() {
-		// TODO
-		return null;
+		final Apcomplex log = ApcomplexMath.log(apcomplex);
+		return ApfloatUtils.toNumberStruct(log);
 	}
 
 	@Override
 	public NumberStruct log(final NumberStruct base) {
-		// TODO
-		return null;
+		final Apcomplex log = ApcomplexMath.log(apcomplex);
+		return ApfloatUtils.toNumberStruct(log);
 	}
 
 	@Override
 	public NumberStruct sqrt() {
-		// TODO
-		return null;
+		final Apcomplex sqrt = ApcomplexMath.sqrt(apcomplex);
+		return ApfloatUtils.toNumberStruct(sqrt);
 	}
 
 	@Override
 	public NumberStruct sin() {
-		// TODO
-		return null;
+		final Apcomplex sin = ApcomplexMath.sin(apcomplex);
+		return ApfloatUtils.toNumberStruct(sin);
 	}
 
 	@Override
 	public NumberStruct cos() {
-		// TODO
-		return null;
+		final Apcomplex cos = ApcomplexMath.cos(apcomplex);
+		return ApfloatUtils.toNumberStruct(cos);
 	}
 
 	@Override
 	public NumberStruct tan() {
-		// TODO
-		return null;
+		final Apcomplex tan = ApcomplexMath.tan(apcomplex);
+		return ApfloatUtils.toNumberStruct(tan);
 	}
 
 	@Override
 	public NumberStruct asin() {
-		// TODO
-		return null;
+		final Apcomplex asin = ApcomplexMath.asin(apcomplex);
+		return ApfloatUtils.toNumberStruct(asin);
 	}
 
 	@Override
 	public NumberStruct acos() {
-		// TODO
-		return null;
+		final Apcomplex acos = ApcomplexMath.acos(apcomplex);
+		return ApfloatUtils.toNumberStruct(acos);
 	}
 
 	@Override
 	public NumberStruct atan() {
-		// TODO
-		return null;
+		final Apcomplex atan = ApcomplexMath.atan(apcomplex);
+		return ApfloatUtils.toNumberStruct(atan);
 	}
 
 	@Override
 	public NumberStruct sinh() {
-		// TODO
-		return null;
+		final Apcomplex sinh = ApcomplexMath.sinh(apcomplex);
+		return ApfloatUtils.toNumberStruct(sinh);
 	}
 
 	@Override
 	public NumberStruct cosh() {
-		// TODO
-		return null;
+		final Apcomplex cosh = ApcomplexMath.cosh(apcomplex);
+		return ApfloatUtils.toNumberStruct(cosh);
 	}
 
 	@Override
 	public NumberStruct tanh() {
-		// TODO
-		return null;
+		final Apcomplex tanh = ApcomplexMath.tanh(apcomplex);
+		return ApfloatUtils.toNumberStruct(tanh);
 	}
 
 	@Override
 	public NumberStruct asinh() {
-		// TODO
-		return null;
+		final Apcomplex asinh = ApcomplexMath.asinh(apcomplex);
+		return ApfloatUtils.toNumberStruct(asinh);
 	}
 
 	@Override
 	public NumberStruct acosh() {
-		// TODO
-		return null;
+		final Apcomplex acosh = ApcomplexMath.acosh(apcomplex);
+		return ApfloatUtils.toNumberStruct(acosh);
 	}
 
 	@Override
 	public NumberStruct atanh() {
-		// TODO
-		return null;
+		final Apcomplex atanh = ApcomplexMath.atanh(apcomplex);
+		return ApfloatUtils.toNumberStruct(atanh);
 	}
 }

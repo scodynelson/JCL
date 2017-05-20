@@ -18,7 +18,6 @@ import jcl.compiler.icg.generator.GoException;
 import jcl.compiler.icg.generator.ReturnFromException;
 import jcl.compiler.icg.generator.ThrowException;
 import jcl.lang.CharacterStruct;
-import jcl.lang.ComplexStruct;
 import jcl.lang.FunctionStruct;
 import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
@@ -142,8 +141,7 @@ public class TestGround {
 
 	private Object complexGen() {
 		final Apcomplex apcomplex = new Apcomplex("0");
-		final ComplexStruct.ValueType valueType = ComplexStruct.ValueType.FLOAT;
-		return LispStructFactory.toComplex(apcomplex, valueType);
+		return LispStructFactory.toComplex(apcomplex);
 	}
 
 	private Object valuesGen() {

@@ -29,6 +29,7 @@ import org.apfloat.Apint;
 /**
  * The {@link FloatStructImpl} is the object representation of a Lisp 'float' type.
  */
+@Deprecated
 @EqualsAndHashCode(callSuper = true)
 public class FloatStructImpl extends RealStructImpl<Apfloat> implements FloatStruct {
 
@@ -43,6 +44,7 @@ public class FloatStructImpl extends RealStructImpl<Apfloat> implements FloatStr
 	 * @param apfloat
 	 * 		the value of the FloatStruct
 	 */
+	@Deprecated
 	public FloatStructImpl(final Apfloat apfloat) {
 		super(FloatType.INSTANCE, apfloat);
 	}
@@ -55,6 +57,7 @@ public class FloatStructImpl extends RealStructImpl<Apfloat> implements FloatStr
 	 *
 	 * @return a FloatStruct object with the provided {@link Float} value
 	 */
+	@Deprecated
 	public static FloatStruct valueOf(final Float f) {
 		final Apfloat apfloat = new Apfloat(f);
 		return valueOf(apfloat);
@@ -68,6 +71,7 @@ public class FloatStructImpl extends RealStructImpl<Apfloat> implements FloatStr
 	 *
 	 * @return a FloatStruct object with the provided {@link Double} value
 	 */
+	@Deprecated
 	public static FloatStruct valueOf(final Double d) {
 		final Apfloat apfloat = new Apfloat(d);
 		return valueOf(apfloat);
@@ -81,6 +85,7 @@ public class FloatStructImpl extends RealStructImpl<Apfloat> implements FloatStr
 	 *
 	 * @return a FloatStruct object with the provided {@link BigDecimal} value
 	 */
+	@Deprecated
 	public static FloatStruct valueOf(final BigDecimal bigDecimal) {
 		final Apfloat apfloat = new Apfloat(bigDecimal);
 		return valueOf(apfloat);
@@ -94,6 +99,7 @@ public class FloatStructImpl extends RealStructImpl<Apfloat> implements FloatStr
 	 *
 	 * @return a new FloatStruct representing the provided {@link String}
 	 */
+	@Deprecated
 	public static FloatStruct valueOf(final String s) {
 		final Apfloat apfloat = new Apfloat(s);
 		return valueOf(apfloat);
@@ -107,6 +113,7 @@ public class FloatStructImpl extends RealStructImpl<Apfloat> implements FloatStr
 	 *
 	 * @return a FloatStruct object with the provided {@link Apfloat} value
 	 */
+	@Deprecated
 	public static FloatStruct valueOf(final Apfloat apfloat) {
 		return new FloatStructImpl(apfloat);
 	}
@@ -122,6 +129,7 @@ public class FloatStructImpl extends RealStructImpl<Apfloat> implements FloatStr
 	 *
 	 * @return a FloatStruct object with the provided {@link Apfloat} value
 	 */
+	@Deprecated
 	public static FloatStruct valueOf(final Apfloat apfloat, final FloatStruct prototype) {
 		final long precision = prototype.ap().precision();
 		final Apfloat preciseApfloat = apfloat.precision(precision);
@@ -198,6 +206,31 @@ public class FloatStructImpl extends RealStructImpl<Apfloat> implements FloatStr
 
 		final long bits = Double.doubleToRawLongBits(d);
 		return (bits < 0) ? MINUS_ONE : ONE;
+	}
+
+	@Override
+	public float toJavaPFloat() {
+		return ap.floatValue();
+	}
+
+	@Override
+	public Float toJavaFloat() {
+		return ap.floatValue();
+	}
+
+	@Override
+	public double toJavaPDouble() {
+		return ap.doubleValue();
+	}
+
+	@Override
+	public Double toJavaDouble() {
+		return ap.doubleValue();
+	}
+
+	@Override
+	public BigDecimal toJavaBigDecimal() {
+		return BigDecimal.valueOf(ap.doubleValue());
 	}
 
 	/**

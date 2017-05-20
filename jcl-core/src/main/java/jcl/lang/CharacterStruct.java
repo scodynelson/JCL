@@ -26,12 +26,13 @@ public interface CharacterStruct extends LispStruct {
 	boolean isEqualTo(final CharacterStruct character);
 
 	/**
-	 * Returns the '=' comparison of the provided CharacterStructs.
+	 * Returns the '=' comparison of the provided CharacterStructs. If at any point a value does not follow the expected
+	 * comparison, the comparison loop with short-circuit.
 	 *
 	 * @param characters
 	 * 		the CharacterStructs to be used in the '=' operation
 	 *
-	 * @return the '=' comparison of the provided IntegerStructs
+	 * @return the '=' comparison of the provided CharacterStructs
 	 */
 	static BooleanStruct isEqualTo(final CharacterStruct... characters) {
 		if (characters.length == 0) {
@@ -63,12 +64,13 @@ public interface CharacterStruct extends LispStruct {
 	boolean isNotEqualTo(final CharacterStruct character);
 
 	/**
-	 * Returns the '!=' comparison of the provided CharacterStructs.
+	 * Returns the '!=' comparison of the provided CharacterStructs. If at any point a value does not follow the
+	 * expected comparison, the comparison loop with short-circuit.
 	 *
 	 * @param characters
 	 * 		the CharacterStructs to be used in the '!=' operation
 	 *
-	 * @return the '!=' comparison of the provided IntegerStructs
+	 * @return the '!=' comparison of the provided CharacterStructs
 	 */
 	static BooleanStruct isNotEqualTo(final CharacterStruct... characters) {
 		if (characters.length == 0) {
@@ -100,12 +102,13 @@ public interface CharacterStruct extends LispStruct {
 	boolean isLessThan(final CharacterStruct character);
 
 	/**
-	 * Returns the {@literal '<'} comparison of the provided CharacterStructs.
+	 * Returns the {@literal '<'} comparison of the provided CharacterStructs. If at any point a value does not follow
+	 * the expected comparison, the comparison loop with short-circuit.
 	 *
 	 * @param characters
 	 * 		the CharacterStructs to be used in the {@literal '<'} operation
 	 *
-	 * @return the {@literal '<'} comparison of the provided IntegerStructs
+	 * @return the {@literal '<'} comparison of the provided CharacterStructs
 	 */
 	static BooleanStruct isLessThan(final CharacterStruct... characters) {
 		if (characters.length == 0) {
@@ -137,12 +140,13 @@ public interface CharacterStruct extends LispStruct {
 	boolean isGreaterThan(final CharacterStruct character);
 
 	/**
-	 * Returns the {@literal '>'} comparison of the provided CharacterStructs.
+	 * Returns the {@literal '>'} comparison of the provided CharacterStructs. If at any point a value does not follow
+	 * the expected comparison, the comparison loop with short-circuit.
 	 *
 	 * @param characters
 	 * 		the CharacterStructs to be used in the {@literal '>'} operation
 	 *
-	 * @return the {@literal '>'} comparison of the provided IntegerStructs
+	 * @return the {@literal '>'} comparison of the provided CharacterStructs
 	 */
 	static BooleanStruct isGreaterThan(final CharacterStruct... characters) {
 		if (characters.length == 0) {
@@ -174,12 +178,13 @@ public interface CharacterStruct extends LispStruct {
 	boolean isLessThanOrEqualTo(final CharacterStruct character);
 
 	/**
-	 * Returns the {@literal '<='} comparison of the provided CharacterStructs.
+	 * Returns the {@literal '<='} comparison of the provided CharacterStructs. If at any point a value does not follow
+	 * the expected comparison, the comparison loop with short-circuit.
 	 *
 	 * @param characters
 	 * 		the CharacterStructs to be used in the {@literal '<='} operation
 	 *
-	 * @return the {@literal '<='} comparison of the provided IntegerStructs
+	 * @return the {@literal '<='} comparison of the provided CharacterStructs
 	 */
 	static BooleanStruct isLessThanOrEqualTo(final CharacterStruct... characters) {
 		if (characters.length == 0) {
@@ -211,12 +216,13 @@ public interface CharacterStruct extends LispStruct {
 	boolean isGreaterThanOrEqualTo(final CharacterStruct character);
 
 	/**
-	 * Returns the {@literal '>='} comparison of the provided CharacterStructs.
+	 * Returns the {@literal '>='} comparison of the provided CharacterStructs. If at any point a value does not follow
+	 * the expected comparison, the comparison loop with short-circuit.
 	 *
 	 * @param characters
 	 * 		the CharacterStructs to be used in the {@literal '>='} operation
 	 *
-	 * @return the {@literal '>='} comparison of the provided IntegerStructs
+	 * @return the {@literal '>='} comparison of the provided CharacterStructs
 	 */
 	static BooleanStruct isGreaterThanOrEqualTo(final CharacterStruct... characters) {
 		if (characters.length == 0) {
@@ -248,12 +254,13 @@ public interface CharacterStruct extends LispStruct {
 	boolean isEqualToIgnoreCase(final CharacterStruct character);
 
 	/**
-	 * Returns the '=' comparison of the provided CharacterStructs.
+	 * Returns the '=' comparison of the provided CharacterStructs. If at any point a value does not follow
+	 * the expected comparison, the comparison loop with short-circuit.
 	 *
 	 * @param characters
 	 * 		the CharacterStructs to be used in the '=' operation
 	 *
-	 * @return the '=' comparison of the provided IntegerStructs
+	 * @return the '=' comparison of the provided CharacterStructs
 	 */
 	static BooleanStruct isEqualToIgnoreCase(final CharacterStruct... characters) {
 		if (characters.length == 0) {
@@ -285,12 +292,13 @@ public interface CharacterStruct extends LispStruct {
 	boolean isNotEqualToIgnoreCase(final CharacterStruct character);
 
 	/**
-	 * Returns the '!=' comparison of the provided CharacterStructs.
+	 * Returns the '!=' comparison of the provided CharacterStructs. If at any point a value does not follow
+	 * the expected comparison, the comparison loop with short-circuit.
 	 *
 	 * @param characters
 	 * 		the CharacterStructs to be used in the '!=' operation
 	 *
-	 * @return the '!=' comparison of the provided IntegerStructs
+	 * @return the '!=' comparison of the provided CharacterStructs
 	 */
 	static BooleanStruct isNotEqualToIgnoreCase(final CharacterStruct... characters) {
 		if (characters.length == 0) {
@@ -322,12 +330,13 @@ public interface CharacterStruct extends LispStruct {
 	boolean isLessThanIgnoreCase(final CharacterStruct character);
 
 	/**
-	 * Returns the {@literal '<'} comparison of the provided CharacterStructs.
+	 * Returns the {@literal '<'} comparison of the provided CharacterStructs. If at any point a value does not follow
+	 * the expected comparison, the comparison loop with short-circuit.
 	 *
 	 * @param characters
 	 * 		the CharacterStructs to be used in the {@literal '<'} operation
 	 *
-	 * @return the {@literal '<'} comparison of the provided IntegerStructs
+	 * @return the {@literal '<'} comparison of the provided CharacterStructs
 	 */
 	static BooleanStruct isLessThanIgnoreCase(final CharacterStruct... characters) {
 		if (characters.length == 0) {
@@ -359,12 +368,13 @@ public interface CharacterStruct extends LispStruct {
 	boolean isGreaterThanIgnoreCase(final CharacterStruct character);
 
 	/**
-	 * Returns the {@literal '>'} comparison of the provided CharacterStructs.
+	 * Returns the {@literal '>'} comparison of the provided CharacterStructs. If at any point a value does not follow
+	 * the expected comparison, the comparison loop with short-circuit.
 	 *
 	 * @param characters
 	 * 		the CharacterStructs to be used in the {@literal '>'} operation
 	 *
-	 * @return the {@literal '>'} comparison of the provided IntegerStructs
+	 * @return the {@literal '>'} comparison of the provided CharacterStructs
 	 */
 	static BooleanStruct isGreaterThanIgnoreCase(final CharacterStruct... characters) {
 		if (characters.length == 0) {
@@ -396,12 +406,13 @@ public interface CharacterStruct extends LispStruct {
 	boolean isLessThanOrEqualToIgnoreCase(final CharacterStruct character);
 
 	/**
-	 * Returns the {@literal '<='} comparison of the provided CharacterStructs.
+	 * Returns the {@literal '<='} comparison of the provided CharacterStructs. If at any point a value does not follow
+	 * the expected comparison, the comparison loop with short-circuit.
 	 *
 	 * @param characters
 	 * 		the CharacterStructs to be used in the {@literal '<='} operation
 	 *
-	 * @return the {@literal '<='} comparison of the provided IntegerStructs
+	 * @return the {@literal '<='} comparison of the provided CharacterStructs
 	 */
 	static BooleanStruct isLessThanOrEqualToIgnoreCase(final CharacterStruct... characters) {
 		if (characters.length == 0) {
@@ -433,12 +444,13 @@ public interface CharacterStruct extends LispStruct {
 	boolean isGreaterThanOrEqualToIgnoreCase(final CharacterStruct character);
 
 	/**
-	 * Returns the {@literal '>='} comparison of the provided CharacterStructs.
+	 * Returns the {@literal '>='} comparison of the provided CharacterStructs. If at any point a value does not follow
+	 * the expected comparison, the comparison loop with short-circuit.
 	 *
 	 * @param characters
 	 * 		the CharacterStructs to be used in the {@literal '>='} operation
 	 *
-	 * @return the {@literal '>='} comparison of the provided IntegerStructs
+	 * @return the {@literal '>='} comparison of the provided CharacterStructs
 	 */
 	static BooleanStruct isGreaterThanOrEqualToIgnoreCase(final CharacterStruct... characters) {
 		if (characters.length == 0) {

@@ -74,6 +74,10 @@ public final class JavaStreamStructImpl extends AbstractNativeStreamStructImpl i
 		this.outputStream = new PrintWriter(new OutputStreamWriter(outputStream, defaultCharset));
 	}
 
+	public PrintWriter getOutputStream() {
+		return outputStream;
+	}
+
 	public static JavaStreamStructImpl valueOf(final InputStream inputStream, final OutputStream outputStream) {
 		return new JavaStreamStructImpl(inputStream, outputStream);
 	}

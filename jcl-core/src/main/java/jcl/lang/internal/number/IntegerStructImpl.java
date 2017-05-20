@@ -16,6 +16,7 @@ import jcl.type.BitType;
 import jcl.type.FixnumType;
 import jcl.type.IntegerType;
 import lombok.EqualsAndHashCode;
+import org.apache.commons.math3.fraction.BigFraction;
 import org.apfloat.Apcomplex;
 import org.apfloat.Apfloat;
 import org.apfloat.Apint;
@@ -25,6 +26,7 @@ import org.apfloat.Aprational;
 /**
  * The {@link IntegerStructImpl} is the object representation of a Lisp 'integer' type.
  */
+@Deprecated
 @EqualsAndHashCode(callSuper = true)
 public class IntegerStructImpl extends RationalStructImpl<Apint> implements IntegerStruct {
 
@@ -39,6 +41,7 @@ public class IntegerStructImpl extends RationalStructImpl<Apint> implements Inte
 	 * @param apint
 	 * 		the value of the IntegerStruct
 	 */
+	@Deprecated
 	public IntegerStructImpl(final Apint apint) {
 		super(getIntegerType(apint), apint);
 	}
@@ -63,6 +66,7 @@ public class IntegerStructImpl extends RationalStructImpl<Apint> implements Inte
 	 *
 	 * @return a new IntegerStruct representing the provided {@link Integer}
 	 */
+	@Deprecated
 	public static IntegerStruct valueOf(final Integer i) {
 		final Apint apint = new Apint(i);
 		return valueOf(apint);
@@ -76,6 +80,7 @@ public class IntegerStructImpl extends RationalStructImpl<Apint> implements Inte
 	 *
 	 * @return a new IntegerStruct representing the provided {@link Long}
 	 */
+	@Deprecated
 	public static IntegerStruct valueOf(final Long l) {
 		final Apint apint = new Apint(l);
 		return valueOf(apint);
@@ -89,6 +94,7 @@ public class IntegerStructImpl extends RationalStructImpl<Apint> implements Inte
 	 *
 	 * @return a new IntegerStruct representing the provided {@link BigInteger}
 	 */
+	@Deprecated
 	public static IntegerStruct valueOf(final BigInteger bigInteger) {
 		final Apint apint = new Apint(bigInteger);
 		return valueOf(apint);
@@ -102,6 +108,7 @@ public class IntegerStructImpl extends RationalStructImpl<Apint> implements Inte
 	 *
 	 * @return a new IntegerStruct representing the provided {@link String}
 	 */
+	@Deprecated
 	public static IntegerStruct valueOf(final String s) {
 		final Apint apint = new Apint(s);
 		return valueOf(apint);
@@ -115,6 +122,7 @@ public class IntegerStructImpl extends RationalStructImpl<Apint> implements Inte
 	 *
 	 * @return a IntegerStruct object with the provided {@link Apint} value
 	 */
+	@Deprecated
 	public static IntegerStruct valueOf(final Apint apint) {
 		return new IntegerStructImpl(apint);
 	}
@@ -271,9 +279,34 @@ public class IntegerStructImpl extends RationalStructImpl<Apint> implements Inte
 	}
 
 	@Override
-	public IntegerStruct isqrt() {
+	public NumberStruct isqrt() {
 		final Apint[] sqrt = ApintMath.sqrt(ap);
 		return valueOf(sqrt[0]);
+	}
+
+	@Override
+	public int toJavaInt() {
+		return ap.intValue();
+	}
+
+	@Override
+	public Integer toJavaInteger() {
+		return ap.intValue();
+	}
+
+	@Override
+	public long toJavaPLong() {
+		return ap.longValue();
+	}
+
+	@Override
+	public Long toJavaLong() {
+		return ap.longValue();
+	}
+
+	@Override
+	public BigInteger toJavaBigInteger() {
+		return ap.toBigInteger();
 	}
 
 	/*
@@ -283,6 +316,11 @@ public class IntegerStructImpl extends RationalStructImpl<Apint> implements Inte
 	@Override
 	public IntegerStruct numerator() {
 		return this;
+	}
+
+	@Override
+	public BigFraction toJavaBigFraction() {
+		return new BigFraction(ap.toBigInteger());
 	}
 
 	/*

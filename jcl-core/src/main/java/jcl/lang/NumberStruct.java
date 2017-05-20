@@ -6,6 +6,8 @@ package jcl.lang;
 
 import java.util.List;
 
+import jcl.lang.condition.exception.ErrorException;
+import jcl.lang.factory.LispStructFactory;
 import jcl.lang.internal.number.ComplexStructImpl;
 import org.apfloat.Apcomplex;
 import org.apfloat.Apfloat;
@@ -16,26 +18,9 @@ import org.apfloat.Apfloat;
 public interface NumberStruct extends LispStruct {
 
 	/**
-	 * Returns a NumberStruct from the provided {@link Apcomplex} value. If the {@link Apcomplex} is an {@link
-	 * Apfloat}, {@link RealStruct#valueOf(Apfloat)} is invoked to create the appropriate {@link RealStruct} instead.
+	 * Returns the {@link Apcomplex} representation of the NumberStruct.
 	 *
-	 * @param apcomplex
-	 * 		the {@link Apcomplex} to be used as the value of the resulting NumberStruct
-	 *
-	 * @return a NumberStruct with the provided {@link Apcomplex} as its value
-	 */
-	static NumberStruct valueOf(final Apcomplex apcomplex) {
-		if (apcomplex instanceof Apfloat) {
-			return RealStruct.valueOf((Apfloat) apcomplex);
-		}
-		// TODO
-		return ComplexStructImpl.valueOf(apcomplex, ComplexStruct.ValueType.RATIONAL);
-	}
-
-	/**
-	 * Returns the {@link Apcomplex} that is used for NumberStruct calculations.
-	 *
-	 * @return the {@link Apcomplex} that is used for NumberStruct calculations
+	 * @return the {@link Apcomplex} representation of the NumberStruct
 	 */
 	Apcomplex ap();
 
@@ -170,29 +155,31 @@ public interface NumberStruct extends LispStruct {
 	boolean isEqualTo(NumberStruct number);
 
 	/**
-	 * Performs a {@literal '=='} comparison of the provided NumberStruct objects in order, using the single
-	 * NumberStruct as the starting point in the comparison. If at any point a value does not follow the expected
-	 * comparison, the comparison loop with short-circuit.
+	 * Performs a {@literal '=='} comparison of the provided NumberStruct objects in order. If at any point a value does
+	 * not follow the expected comparison, the comparison loop with short-circuit.
 	 *
-	 * @param number
-	 * 		the initial NumberStruct used in the {@literal '=='} comparison
 	 * @param numbers
-	 * 		the {@link List} of NumberStruct objects used in the {@literal '=='} comparison
+	 * 		the NumberStructs to be used in the {@literal '=='} comparison
 	 *
 	 * @return the {@literal '=='} comparison provided NumberStruct objects
 	 */
-	static boolean isEqualTo(final NumberStruct number, final List<NumberStruct> numbers) {
-		NumberStruct previousNumber = number;
+	static BooleanStruct isEqualTo(final NumberStruct... numbers) {
+		if (numbers.length == 0) {
+			throw new ErrorException("At least one number required to test equality.");
+		}
+
+		NumberStruct previousNumber = numbers[0];
 
 		boolean result = true;
-		for (final NumberStruct currentNumber : numbers) {
+		for (int i = 1; i < numbers.length; i++) {
+			final NumberStruct currentNumber = numbers[i];
 			result = previousNumber.isEqualTo(currentNumber);
 			if (!result) {
 				break;
 			}
 			previousNumber = currentNumber;
 		}
-		return result;
+		return LispStructFactory.toBoolean(result);
 	}
 
 	/**
@@ -208,29 +195,31 @@ public interface NumberStruct extends LispStruct {
 	}
 
 	/**
-	 * Performs a {@literal '!='} comparison of the provided NumberStruct objects in order, using the single
-	 * NumberStruct as the starting point in the comparison. If at any point a value does not follow the expected
-	 * comparison, the comparison loop with short-circuit.
+	 * Performs a {@literal '!='} comparison of the provided NumberStruct objects in order. If at any point a value does
+	 * not follow the expected comparison, the comparison loop with short-circuit.
 	 *
-	 * @param number
-	 * 		the initial NumberStruct used in the {@literal '!='} comparison
 	 * @param numbers
-	 * 		the {@link List} of NumberStruct objects used in the {@literal '!='} comparison
+	 * 		the NumberStructs used in the {@literal '!='} comparison
 	 *
 	 * @return the {@literal '!='} comparison provided NumberStruct objects
 	 */
-	static boolean isNotEqualTo(final NumberStruct number, final List<NumberStruct> numbers) {
-		NumberStruct previousNumber = number;
+	static BooleanStruct isNotEqualTo(final NumberStruct... numbers) {
+		if (numbers.length == 0) {
+			throw new ErrorException("At least one number required to test equality.");
+		}
+
+		NumberStruct previousNumber = numbers[0];
 
 		boolean result = true;
-		for (final NumberStruct currentNumber : numbers) {
+		for (int i = 1; i < numbers.length; i++) {
+			final NumberStruct currentNumber = numbers[i];
 			result = previousNumber.isNotEqualTo(currentNumber);
 			if (!result) {
 				break;
 			}
 			previousNumber = currentNumber;
 		}
-		return result;
+		return LispStructFactory.toBoolean(result);
 	}
 
 	/**
@@ -416,5 +405,17 @@ public interface NumberStruct extends LispStruct {
 		return equal(object) ||
 				((object instanceof NumberStruct)
 						&& isEqualTo((NumberStruct) object));
+	}
+
+	/*
+	DEPRECATED
+	 */
+
+	@Deprecated
+	static NumberStruct valueOf(final Apcomplex apcomplex) {
+		if (apcomplex instanceof Apfloat) {
+			return RealStruct.valueOf((Apfloat) apcomplex);
+		}
+		return ComplexStructImpl.valueOf(apcomplex);
 	}
 }

@@ -9,7 +9,6 @@ import java.util.List;
 import jcl.functions.CommonLispBuiltInFunctionStructBase;
 import jcl.lang.LispStruct;
 import jcl.lang.NumberStruct;
-import jcl.lang.factory.LispStructFactory;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import org.springframework.stereotype.Component;
@@ -34,7 +33,13 @@ public final class NotEqualToFunction extends CommonLispBuiltInFunctionStructBas
 		final NumberStruct number = arguments.getRequiredArgument(NUMBER_ARGUMENT, NumberStruct.class);
 		final List<NumberStruct> numbers = arguments.getRestArgument(NumberStruct.class);
 
-		final boolean result = NumberStruct.isNotEqualTo(number, numbers);
-		return LispStructFactory.toBoolean(result);
+		final NumberStruct[] numbersToCompare = new NumberStruct[numbers.size() + 1];
+		numbersToCompare[0] = number;
+		for (int i = 1; i < numbersToCompare.length; i++) {
+			final NumberStruct numberToCompare = numbers.get(i - 1);
+			numbersToCompare[i] = numberToCompare;
+		}
+
+		return NumberStruct.isNotEqualTo(numbersToCompare);
 	}
 }

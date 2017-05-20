@@ -630,6 +630,7 @@
       <option name="myAllowedSuppressions">
         <list>
           <option value="all" />
+          <option value="NumericCastThatLosesPrecision" />
         </list>
       </option>
     </inspection_tool>
@@ -722,6 +723,7 @@
     <inspection_tool class="UnnecessaryExplicitNumericCast" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="UnnecessaryFullyQualifiedName" enabled="true" level="WARNING" enabled_by_default="true">
       <option name="m_ignoreJavadoc" value="false" />
+      <option name="ignoreInModuleStatements" value="true" />
     </inspection_tool>
     <inspection_tool class="UnnecessaryInheritDoc" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="UnnecessaryJavaDocLink" enabled="true" level="WARNING" enabled_by_default="true">

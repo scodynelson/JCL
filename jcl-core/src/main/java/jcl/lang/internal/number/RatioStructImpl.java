@@ -15,6 +15,7 @@ import org.apfloat.AprationalMath;
 /**
  * The {@link RatioStructImpl} is the object representation of a Lisp 'ratio' type.
  */
+@Deprecated
 @EqualsAndHashCode(callSuper = true)
 public final class RatioStructImpl extends RationalStructImpl<Aprational> implements RatioStruct {
 
@@ -36,6 +37,7 @@ public final class RatioStructImpl extends RationalStructImpl<Aprational> implem
 	 *
 	 * @return a new RatioStruct representing the provided {@link String}
 	 */
+	@Deprecated
 	public static RatioStruct valueOf(final String s) {
 		final Aprational aprational = new Aprational(s);
 		return valueOf(aprational);
@@ -49,6 +51,7 @@ public final class RatioStructImpl extends RationalStructImpl<Aprational> implem
 	 *
 	 * @return a RatioStruct object with the provided {@link Aprational} value
 	 */
+	@Deprecated
 	public static RatioStruct valueOf(final Aprational aprational) {
 		return new RatioStructImpl(aprational);
 	}
@@ -63,6 +66,7 @@ public final class RatioStructImpl extends RationalStructImpl<Aprational> implem
 	 *
 	 * @return a RatioStruct object with the provided numerator and denominator {@link Apint} values
 	 */
+	@Deprecated
 	public static RatioStruct valueOf(final Apint numerator, final Apint denominator) {
 		final Aprational aprational = new Aprational(numerator, denominator);
 		return valueOf(aprational);
@@ -73,7 +77,7 @@ public final class RatioStructImpl extends RationalStructImpl<Aprational> implem
 	 */
 
 	@Override
-	public BigFraction toBigFraction() {
+	public BigFraction toJavaBigFraction() {
 		return new BigFraction(ap.numerator().toBigInteger(), ap.denominator().toBigInteger());
 	}
 

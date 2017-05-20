@@ -9,6 +9,7 @@ import jcl.type.LispType;
 import lombok.EqualsAndHashCode;
 import org.apfloat.Apcomplex;
 
+@Deprecated
 @EqualsAndHashCode(callSuper = false)
 abstract class InternalNumberStruct<A extends Apcomplex> extends BuiltInClassStruct {
 

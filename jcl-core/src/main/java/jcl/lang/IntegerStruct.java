@@ -5,8 +5,8 @@ import java.util.List;
 
 import jcl.lang.internal.BignumStructImpl;
 import jcl.lang.internal.FixnumStructImpl;
-import jcl.lang.internal.number.IntegerStructImpl;
 import jcl.lang.internal.LongnumStructImpl;
+import jcl.lang.internal.number.IntegerStructImpl;
 import org.apfloat.Apint;
 
 /**
@@ -38,27 +38,6 @@ public interface IntegerStruct extends RationalStruct {
 	 * {@link IntegerStruct} constant representing -1.
 	 */
 	IntegerStruct MINUS_ONE = IntegerStructImpl.valueOf(-1);
-
-	/**
-	 * Returns this IntegerStruct as a {@code int} value.
-	 *
-	 * @return this IntegerStruct as a {@code int} value
-	 */
-	int intValue();
-
-	/**
-	 * Returns this IntegerStruct as a {@code long} value.
-	 *
-	 * @return this IntegerStruct as a {@code long} value
-	 */
-	long longValue();
-
-	/**
-	 * Returns this IntegerStruct as a {@link BigInteger} value.
-	 *
-	 * @return this IntegerStruct as a {@link BigInteger} value
-	 */
-	BigInteger bigIntegerValue();
 
 	/**
 	 * Returns the greatest common divisor of the provided IntegerStructs. If the number of IntegerStructs provided is
@@ -342,29 +321,74 @@ public interface IntegerStruct extends RationalStruct {
 	 *
 	 * @return the greatest IntegerStruct less than or equal to this IntegerStructs exact positive square root
 	 */
-	IntegerStruct isqrt();
+	NumberStruct isqrt();
+
+	/**
+	 * Returns the {@literal int} representation of the IntegerStruct.
+	 *
+	 * @return a {@literal int} representation of the IntegerStruct
+	 */
+	int toJavaInt();
+
+	/**
+	 * Returns the {@link Integer} representation of the IntegerStruct.
+	 *
+	 * @return a {@link Integer} representation of the IntegerStruct
+	 */
+	Integer toJavaInteger();
+
+	/**
+	 * Returns the {@literal long} representation of the IntegerStruct.
+	 *
+	 * @return a {@literal long} representation of the IntegerStruct
+	 */
+	long toJavaPLong();
+
+	/**
+	 * Returns the {@link Long} representation of the IntegerStruct.
+	 *
+	 * @return a {@link Long} representation of the IntegerStruct
+	 */
+	Long toJavaLong();
+
+	/**
+	 * Returns the {@link BigInteger} representation of the IntegerStruct.
+	 *
+	 * @return a {@link BigInteger} representation of the IntegerStruct
+	 */
+	BigInteger toJavaBigInteger();
+
+	static IntegerStruct toLispInteger(final int value) {
+		return new FixnumStructImpl(value);
+	}
 
 	static IntegerStruct toLispInteger(final Integer value) {
 		return new FixnumStructImpl(value);
 	}
 
-	static IntegerStruct toLispInteger(final Long value) {
-		if ((value < Integer.MIN_VALUE) || (value > Integer.MAX_VALUE)) {
-			return new LongnumStructImpl(value);
+	@SuppressWarnings("NumericCastThatLosesPrecision")
+	static IntegerStruct toLispInteger(final long value) {
+		if ((int) value == value) {
+			return new FixnumStructImpl((int) value);
 		}
-		return new FixnumStructImpl(value.intValue());
+		return new LongnumStructImpl(value);
+	}
+
+	static IntegerStruct toLispInteger(final Long value) {
+		if (value.intValue() == value) {
+			return new FixnumStructImpl(value.intValue());
+		}
+		return new LongnumStructImpl(value);
 	}
 
 	static IntegerStruct toLispInteger(final BigInteger value) {
-		if ((value.compareTo(BigInteger.valueOf(Integer.MIN_VALUE)) < 0)
-				|| (value.compareTo(BigInteger.valueOf(Integer.MAX_VALUE)) > 0)) {
-			if ((value.compareTo(BigInteger.valueOf(Long.MIN_VALUE)) < 0)
-					|| (value.compareTo(BigInteger.valueOf(Long.MAX_VALUE)) > 0)) {
-				return new BignumStructImpl(value);
-			}
+		if (value.bitLength() <= (Integer.SIZE - 1)) {
+			return new FixnumStructImpl(value.intValue());
+		}
+		if (value.bitLength() <= (Long.SIZE - 1)) {
 			return new LongnumStructImpl(value.longValue());
 		}
-		return new FixnumStructImpl(value.intValue());
+		return new BignumStructImpl(value);
 	}
 
 	/*
@@ -423,4 +447,24 @@ public interface IntegerStruct extends RationalStruct {
 				((object instanceof IntegerStruct)
 						&& ((IntegerStruct) object).ap().equals(ap()));
 	}
+
+	/*
+	DEPRECATED
+	 */
+
+	@Deprecated
+	default int intValue() {
+		return toJavaInteger();
+	}
+
+	@Deprecated
+	default long longValue() {
+		return toJavaLong();
+	}
+
+	@Deprecated
+	default BigInteger bigIntegerValue() {
+		return toJavaBigInteger();
+	}
+
 }

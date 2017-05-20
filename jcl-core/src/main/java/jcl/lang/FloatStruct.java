@@ -13,43 +13,26 @@ public interface FloatStruct extends RealStruct {
 	/**
 	 * {@link FloatStruct} constant representing 0.0.
 	 */
+	@Deprecated
 	FloatStruct ZERO = FloatStructImpl.valueOf(0.0D);
 
 	/**
 	 * {@link FloatStruct} constant representing -0.0.
 	 */
+	@Deprecated
 	FloatStruct MINUS_ZERO = FloatStructImpl.valueOf(-0.0D);
 
 	/**
 	 * {@link FloatStruct} constant representing 1.0.
 	 */
+	@Deprecated
 	FloatStruct ONE = FloatStructImpl.valueOf(1.0D);
 
 	/**
 	 * {@link FloatStruct} constant representing -1.0.
 	 */
+	@Deprecated
 	FloatStruct MINUS_ONE = FloatStructImpl.valueOf(-1.0D);
-
-	/**
-	 * Returns this FloatStruct as a {@code float} value.
-	 *
-	 * @return this FloatStruct as a {@code float} value
-	 */
-	float floatValue();
-
-	/**
-	 * Returns this FloatStruct as a {@code double} value.
-	 *
-	 * @return this FloatStruct as a {@code double} value
-	 */
-	double doubleValue();
-
-	/**
-	 * Returns this FloatStruct as a {@link BigDecimal} value.
-	 *
-	 * @return this FloatStruct as a {@link BigDecimal} value
-	 */
-	BigDecimal bigDecimalValue();
 
 	/**
 	 * Computes the three main values that characterize this FloatStruct: the significand, exponent, and sign..
@@ -136,6 +119,41 @@ public interface FloatStruct extends RealStruct {
 		}
 	}
 
+	/**
+	 * Returns the {@literal float} representation of the FloatStruct.
+	 *
+	 * @return a {@literal float} representation of the FloatStruct
+	 */
+	float toJavaPFloat();
+
+	/**
+	 * Returns the {@link Float} representation of the FloatStruct.
+	 *
+	 * @return a {@link Float} representation of the FloatStruct
+	 */
+	Float toJavaFloat();
+
+	/**
+	 * Returns the {@literal double} representation of the FloatStruct.
+	 *
+	 * @return a {@literal double} representation of the FloatStruct
+	 */
+	double toJavaPDouble();
+
+	/**
+	 * Returns the {@link Double} representation of the FloatStruct.
+	 *
+	 * @return a {@link Double} representation of the FloatStruct
+	 */
+	Double toJavaDouble();
+
+	/**
+	 * Returns the {@link BigDecimal} representation of the FloatStruct.
+	 *
+	 * @return a {@link BigDecimal} representation of the FloatStruct
+	 */
+	BigDecimal toJavaBigDecimal();
+
 	/*
 		RealStruct
 	 */
@@ -164,11 +182,6 @@ public interface FloatStruct extends RealStruct {
 	}
 
 	@Override
-	default FloatStruct imagPart() {
-		return ZERO;
-	}
-
-	@Override
 	default FloatStruct conjugate() {
 		return this;
 	}
@@ -184,5 +197,24 @@ public interface FloatStruct extends RealStruct {
 		return eq(object) ||
 				((object instanceof FloatStruct)
 						&& ((FloatStruct) object).ap().equals(ap()));
+	}
+
+	/*
+	DEPRECATED
+	 */
+
+	@Deprecated
+	default float floatValue() {
+		return toJavaFloat();
+	}
+
+	@Deprecated
+	default double doubleValue() {
+		return toJavaDouble();
+	}
+
+	@Deprecated
+	default BigDecimal bigDecimalValue() {
+		return toJavaBigDecimal();
 	}
 }

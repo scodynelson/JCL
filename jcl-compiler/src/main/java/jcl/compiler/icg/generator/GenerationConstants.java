@@ -29,7 +29,6 @@ import jcl.compiler.function.Closure;
 import jcl.compiler.function.CompiledFunctionStruct;
 import jcl.compiler.function.expanders.CompiledMacroFunctionExpander;
 import jcl.lang.CharacterStruct;
-import jcl.lang.ComplexStruct;
 import jcl.lang.FunctionStruct;
 import jcl.lang.KeywordStruct;
 import jcl.lang.LispStruct;
@@ -193,7 +192,7 @@ interface GenerationConstants {
 
 	String LISP_STRUCT_FACTORY_TO_COMPLEX_METHOD_NAME = "toComplex";
 
-	String LISP_STRUCT_FACTORY_TO_COMPLEX_METHOD_DESC = CodeGenerators.getMethodDescription(LispStructFactory.class, LISP_STRUCT_FACTORY_TO_COMPLEX_METHOD_NAME, Apcomplex.class, ComplexStruct.ValueType.class);
+	String LISP_STRUCT_FACTORY_TO_COMPLEX_METHOD_DESC = CodeGenerators.getMethodDescription(LispStructFactory.class, LISP_STRUCT_FACTORY_TO_COMPLEX_METHOD_NAME, Apcomplex.class);
 
 	String LISP_STRUCT_FACTORY_TO_FLOAT_METHOD_NAME = "toFloat";
 

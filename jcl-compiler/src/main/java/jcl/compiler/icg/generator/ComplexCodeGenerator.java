@@ -26,16 +26,6 @@ import org.springframework.stereotype.Component;
 final class ComplexCodeGenerator implements CodeGenerator<ComplexStructImpl> {
 
 	/**
-	 * Constant {@link String} containing the name for the {@link ComplexStruct.ValueType} class.
-	 */
-	private static final String VALUE_TYPE_NAME = Type.getInternalName(ComplexStruct.ValueType.class);
-
-	/**
-	 * Constant {@link String} containing the descriptor for the {@link ComplexStruct.ValueType} class.
-	 */
-	private static final String VALUE_TYPE_DESC = Type.getDescriptor(ComplexStruct.ValueType.class);
-
-	/**
 	 * Constant {@link String} containing the name for the {@link Apcomplex} class.
 	 */
 	private static final String APCOMPLEX_NAME = Type.getInternalName(Apcomplex.class);
@@ -87,18 +77,7 @@ final class ComplexCodeGenerator implements CodeGenerator<ComplexStructImpl> {
 		final int apComplexStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, apComplexStore);
 
-		final ComplexStruct.ValueType valueType = input.getValueType();
-		final String name = valueType.name();
-
-		mv.visitFieldInsn(Opcodes.GETSTATIC,
-		                  VALUE_TYPE_NAME,
-		                  name,
-		                  VALUE_TYPE_DESC);
-		final int valueTypeStore = methodBuilder.getNextAvailableStore();
-		mv.visitVarInsn(Opcodes.ASTORE, valueTypeStore);
-
 		mv.visitVarInsn(Opcodes.ALOAD, apComplexStore);
-		mv.visitVarInsn(Opcodes.ALOAD, valueTypeStore);
 		mv.visitMethodInsn(Opcodes.INVOKESTATIC,
 		                   GenerationConstants.LISP_STRUCT_FACTORY_NAME,
 		                   GenerationConstants.LISP_STRUCT_FACTORY_TO_COMPLEX_METHOD_NAME,

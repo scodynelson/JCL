@@ -7,8 +7,6 @@ import org.apache.commons.math3.fraction.BigFraction;
  */
 public interface RatioStruct extends RationalStruct {
 
-	BigFraction toBigFraction();
-
 	/*
 		RealStruct
 	 */
@@ -43,5 +41,14 @@ public interface RatioStruct extends RationalStruct {
 		return eq(object) ||
 				((object instanceof RatioStruct)
 						&& ((RatioStruct) object).ap().equals(ap()));
+	}
+
+	/*
+	DEPRECATED
+	 */
+
+	@Deprecated
+	default BigFraction toBigFraction() {
+		return toJavaBigFraction();
 	}
 }

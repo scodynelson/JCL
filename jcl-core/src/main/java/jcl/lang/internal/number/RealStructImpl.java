@@ -24,6 +24,7 @@ import org.apfloat.Apint;
  * @param <A>
  * 		the type of {@link Apfloat} the {@link RealStruct} object will use for its value
  */
+@Deprecated
 @EqualsAndHashCode(callSuper = true)
 abstract class RealStructImpl<A extends Apfloat> extends NumberStructImpl<A> implements RealStruct {
 

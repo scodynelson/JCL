@@ -18,7 +18,6 @@ import jcl.lang.TStruct;
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.factory.LispStructFactory;
-import jcl.lang.internal.number.IntegerStructImpl;
 import jcl.lang.statics.PrinterVariables;
 import jcl.type.ArrayType;
 import jcl.type.LispType;
@@ -72,7 +71,7 @@ public class MultiArrayStructImpl extends ArrayStructImpl {
 		}
 
 		final List<Integer> dimensionInts = dimensions.stream()
-		                                              .map(IntegerStruct::intValue)
+		                                              .map(IntegerStruct::toJavaInt)
 		                                              .collect(Collectors.toList());
 
 		final LispType initialElementType = initialElement.getType();
@@ -104,7 +103,7 @@ public class MultiArrayStructImpl extends ArrayStructImpl {
 		}
 
 		final List<Integer> dimensionInts = dimensions.stream()
-		                                              .map(IntegerStruct::intValue)
+		                                              .map(IntegerStruct::toJavaInt)
 		                                              .collect(Collectors.toList());
 		final List<LispStruct> validContents = ArrayStruct.getValidContents(dimensionInts, elementType,
 		                                                                    initialContents);
@@ -130,13 +129,13 @@ public class MultiArrayStructImpl extends ArrayStructImpl {
 
 
 		final List<Integer> dimensionInts = dimensions.stream()
-		                                              .map(IntegerStruct::intValue)
+		                                              .map(IntegerStruct::toJavaInt)
 		                                              .collect(Collectors.toList());
 
 		final int totalSize = dimensionInts.stream()
 		                                   .mapToInt(Integer::intValue)
 		                                   .reduce(1, (x, y) -> x * y);
-		final int offsetInt = displacedIndexOffset.intValue();
+		final int offsetInt = displacedIndexOffset.toJavaInt();
 		if (offsetInt > totalSize) {
 			throw new ErrorException("Requested size is too large to displace to " + displacedTo + '.');
 		}
@@ -163,7 +162,7 @@ public class MultiArrayStructImpl extends ArrayStructImpl {
 
 	public static ArrayStruct valueOf(final List<IntegerStruct> dimensions, final List<LispStruct> contents) {
 		final List<Integer> dimensionInts = dimensions.stream()
-		                                              .map(IntegerStruct::intValue)
+		                                              .map(IntegerStruct::toJavaInt)
 		                                              .collect(Collectors.toList());
 
 		return new MultiArrayStructImpl(SimpleArrayType.INSTANCE, dimensionInts, TType.INSTANCE, contents, false);
@@ -415,7 +414,7 @@ public class MultiArrayStructImpl extends ArrayStructImpl {
 		final int oldTotalSize = multidimensionalCounter.getSize();
 
 		final int[] dimensionArray = dimensions.stream()
-		                                       .mapToInt(IntegerStruct::intValue)
+		                                       .mapToInt(IntegerStruct::toJavaInt)
 		                                       .toArray();
 		final MultidimensionalCounter newMultidimensionalCounter = new MultidimensionalCounter(dimensionArray);
 		final int newTotalSize = newMultidimensionalCounter.getSize();
@@ -427,7 +426,7 @@ public class MultiArrayStructImpl extends ArrayStructImpl {
 			newData = contents;
 		}
 
-		final List<Integer> newDims = dimensions.stream().map(IntegerStruct::intValue).collect(Collectors.toList());
+		final List<Integer> newDims = dimensions.stream().map(IntegerStruct::toJavaInt).collect(Collectors.toList());
 		zapArrayData(contents, this.dimensions, displacedIndexOffset, newData, newDims, newTotalSize, elementType,
 		             initialElement, true);
 
@@ -450,7 +449,7 @@ public class MultiArrayStructImpl extends ArrayStructImpl {
 		}
 
 		final List<Integer> dimensionInts = dimensions.stream()
-		                                              .map(IntegerStruct::intValue)
+		                                              .map(IntegerStruct::toJavaInt)
 		                                              .collect(Collectors.toList());
 		final List<LispStruct> validContents = ArrayStruct.getValidContents(dimensionInts, elementType,
 		                                                                    initialContents);
@@ -459,14 +458,14 @@ public class MultiArrayStructImpl extends ArrayStructImpl {
 
 
 		final int[] dimensionArray = dimensions.stream()
-		                                       .mapToInt(IntegerStruct::intValue)
+		                                       .mapToInt(IntegerStruct::toJavaInt)
 		                                       .toArray();
 		multidimensionalCounter = new MultidimensionalCounter(dimensionArray);
 
 		this.elementType = elementType;
 		this.isAdjustable = false;
 
-		this.dimensions = dimensions.stream().map(IntegerStruct::intValue).collect(Collectors.toList());
+		this.dimensions = dimensions.stream().map(IntegerStruct::toJavaInt).collect(Collectors.toList());
 		this.contents = new ArrayList<>(contents);
 
 		displacedTo = null;
@@ -499,7 +498,7 @@ public class MultiArrayStructImpl extends ArrayStructImpl {
 //
 //		final IntegerStruct index = displacedTo.arrayRowMajorIndex(subscripts);
 //		// TODO: should the struct just stay persistent vs being unwrapped into an Integer???
-//		final IntegerStruct displacedIndexOffsetStruct = IntegerStructImpl.valueOf(displacedIndexOffset);
+//		final IntegerStruct displacedIndexOffsetStruct = IntegerStruct.toLispInteger(displacedIndexOffset);
 //		final IntegerStruct indexWithOffset = (IntegerStruct) index.add(displacedIndexOffsetStruct);
 //		return displacedTo.rowMajorAref(displacedIndexOffsetStruct);
 	}
@@ -516,7 +515,7 @@ public class MultiArrayStructImpl extends ArrayStructImpl {
 //		} else {
 //			final IntegerStruct index = displacedTo.arrayRowMajorIndex(subscripts);
 //			// TODO: should the struct just stay persistent vs being unwrapped into an Integer???
-//			final IntegerStruct displacedIndexOffsetStruct = IntegerStructImpl.valueOf(displacedIndexOffset);
+//			final IntegerStruct displacedIndexOffsetStruct = IntegerStruct.toLispInteger(displacedIndexOffset);
 //			final IntegerStruct indexWithOffset = (IntegerStruct) index.add(displacedIndexOffsetStruct);
 //			displacedTo.setfRowMajorAref(newElement, indexWithOffset);
 //		}
@@ -529,12 +528,12 @@ public class MultiArrayStructImpl extends ArrayStructImpl {
 			throw new ErrorException("Cannot determine array dimension for array with rank 0.");
 		}
 
-		final int axisInt = axisNumber.intValue();
+		final int axisInt = axisNumber.toJavaInt();
 		final int[] sizes = multidimensionalCounter.getSizes();
 		if ((axisInt < 0) || (axisInt >= sizes.length)) {
 			throw new ErrorException("Subscript " + axisNumber + " is out of bounds for " + this + '.');
 		}
-		return IntegerStructImpl.valueOf(sizes[axisInt]);
+		return IntegerStruct.toLispInteger(sizes[axisInt]);
 	}
 
 	@Override
@@ -542,7 +541,7 @@ public class MultiArrayStructImpl extends ArrayStructImpl {
 		final int[] sizes = multidimensionalCounter.getSizes();
 		final List<IntegerStruct> dimensionStructs
 				= Arrays.stream(sizes)
-				        .mapToObj(IntegerStructImpl::valueOf)
+				        .mapToObj(IntegerStruct::toLispInteger)
 				        .collect(Collectors.toList());
 		return LispStructFactory.toProperList(dimensionStructs);
 	}
@@ -565,24 +564,24 @@ public class MultiArrayStructImpl extends ArrayStructImpl {
 	@Override
 	public IntegerStruct arrayRank() {
 		final int rank = multidimensionalCounter.getDimension();
-		return IntegerStructImpl.valueOf(rank);
+		return IntegerStruct.toLispInteger(rank);
 	}
 
 	@Override
 	public IntegerStruct arrayRowMajorIndex(final IntegerStruct... subscripts) {
 		final int rowMajorIndex = rowMajorIndexInternal(subscripts);
-		return IntegerStructImpl.valueOf(rowMajorIndex);
+		return IntegerStruct.toLispInteger(rowMajorIndex);
 	}
 
 	@Override
 	public IntegerStruct arrayTotalSize() {
 		final int totalSize = multidimensionalCounter.getSize();
-		return IntegerStructImpl.valueOf(totalSize);
+		return IntegerStruct.toLispInteger(totalSize);
 	}
 
 	@Override
 	public LispStruct rowMajorAref(final IntegerStruct index) {
-		final int indexInt = index.intValue();
+		final int indexInt = index.toJavaInt();
 		final int totalSize = multidimensionalCounter.getSize();
 		if (indexInt > totalSize) {
 			throw new ErrorException("Index " + index + " is out of bounds for " + this + '.');
@@ -592,7 +591,7 @@ public class MultiArrayStructImpl extends ArrayStructImpl {
 
 	@Override
 	public LispStruct setfRowMajorAref(final LispStruct newElement, final IntegerStruct index) { // TODO: type check
-		final int indexInt = index.intValue();
+		final int indexInt = index.toJavaInt();
 		final int totalSize = multidimensionalCounter.getSize();
 		if (indexInt > totalSize) {
 			throw new ErrorException("Index " + index + " is out of bounds for " + this + '.');
@@ -613,7 +612,7 @@ public class MultiArrayStructImpl extends ArrayStructImpl {
 
 		final int[] intSubscripts
 				= Arrays.stream(subscripts)
-				        .mapToInt(IntegerStruct::intValue)
+				        .mapToInt(IntegerStruct::toJavaInt)
 				        .toArray();
 
 		final int rowMajorIndex;

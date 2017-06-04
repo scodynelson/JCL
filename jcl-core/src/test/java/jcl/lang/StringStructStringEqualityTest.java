@@ -1,7 +1,6 @@
 package jcl.lang;
 
 import jcl.lang.condition.exception.ErrorException;
-import jcl.lang.internal.number.IntegerStructImpl;
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
@@ -339,7 +338,7 @@ public class StringStructStringEqualityTest {
 	@Test
 	public void test_stringEqual_FillPointer1() {
 		final String str1 = "123";
-		final StringStruct struct1 = StringStruct.builder(IntegerStructImpl.valueOf(str1.length()))
+		final StringStruct struct1 = StringStruct.builder(IntegerStruct.toLispInteger(str1.length()))
 		                                         .initialContents(StringStruct.toLispString(str1))
 		                                         .fillPointer(IntegerStruct.TWO)
 		                                         .build();
@@ -360,7 +359,7 @@ public class StringStructStringEqualityTest {
 		final String str1 = "12";
 		final StringStruct struct1 = StringStruct.toLispString(str1);
 		final String str2 = "123";
-		final StringStruct struct2 = StringStruct.builder(IntegerStructImpl.valueOf(str2.length()))
+		final StringStruct struct2 = StringStruct.builder(IntegerStruct.toLispInteger(str2.length()))
 		                                         .initialContents(StringStruct.toLispString(str2))
 		                                         .fillPointer(IntegerStruct.TWO)
 		                                         .build();
@@ -378,12 +377,12 @@ public class StringStructStringEqualityTest {
 	@Test
 	public void test_stringEqual_FillPointer_Both() {
 		final String str1 = "123";
-		final StringStruct struct1 = StringStruct.builder(IntegerStructImpl.valueOf(str1.length()))
+		final StringStruct struct1 = StringStruct.builder(IntegerStruct.toLispInteger(str1.length()))
 		                                         .initialContents(StringStruct.toLispString(str1))
 		                                         .fillPointer(IntegerStruct.TWO)
 		                                         .build();
 		final String str2 = "124";
-		final StringStruct struct2 = StringStruct.builder(IntegerStructImpl.valueOf(str2.length()))
+		final StringStruct struct2 = StringStruct.builder(IntegerStruct.toLispInteger(str2.length()))
 		                                         .initialContents(StringStruct.toLispString(str2))
 		                                         .fillPointer(IntegerStruct.TWO)
 		                                         .build();
@@ -811,7 +810,7 @@ public class StringStructStringEqualityTest {
 	@Test
 	public void test_stringNotEqual_FillPointer1() {
 		final String str1 = "123";
-		final StringStruct struct1 = StringStruct.builder(IntegerStructImpl.valueOf(str1.length()))
+		final StringStruct struct1 = StringStruct.builder(IntegerStruct.toLispInteger(str1.length()))
 		                                         .initialContents(StringStruct.toLispString(str1))
 		                                         .fillPointer(IntegerStruct.TWO)
 		                                         .build();
@@ -833,7 +832,7 @@ public class StringStructStringEqualityTest {
 		final String str1 = "12";
 		final StringStruct struct1 = StringStruct.toLispString(str1);
 		final String str2 = "123";
-		final StringStruct struct2 = StringStruct.builder(IntegerStructImpl.valueOf(str2.length()))
+		final StringStruct struct2 = StringStruct.builder(IntegerStruct.toLispInteger(str2.length()))
 		                                         .initialContents(StringStruct.toLispString(str2))
 		                                         .fillPointer(IntegerStruct.TWO)
 		                                         .build();
@@ -851,12 +850,12 @@ public class StringStructStringEqualityTest {
 	@Test
 	public void test_stringNotEqual_FillPointer_Both() {
 		final String str1 = "123";
-		final StringStruct struct1 = StringStruct.builder(IntegerStructImpl.valueOf(str1.length()))
+		final StringStruct struct1 = StringStruct.builder(IntegerStruct.toLispInteger(str1.length()))
 		                                         .initialContents(StringStruct.toLispString(str1))
 		                                         .fillPointer(IntegerStruct.TWO)
 		                                         .build();
 		final String str2 = "124";
-		final StringStruct struct2 = StringStruct.builder(IntegerStructImpl.valueOf(str2.length()))
+		final StringStruct struct2 = StringStruct.builder(IntegerStruct.toLispInteger(str2.length()))
 		                                         .initialContents(StringStruct.toLispString(str2))
 		                                         .fillPointer(IntegerStruct.TWO)
 		                                         .build();
@@ -1284,7 +1283,7 @@ public class StringStructStringEqualityTest {
 	@Test
 	public void test_stringLessThan_FillPointer1() {
 		final String str1 = "123";
-		final StringStruct struct1 = StringStruct.builder(IntegerStructImpl.valueOf(str1.length()))
+		final StringStruct struct1 = StringStruct.builder(IntegerStruct.toLispInteger(str1.length()))
 		                                         .initialContents(StringStruct.toLispString(str1))
 		                                         .fillPointer(IntegerStruct.TWO)
 		                                         .build();
@@ -1306,7 +1305,7 @@ public class StringStructStringEqualityTest {
 		final String str1 = "13";
 		final StringStruct struct1 = StringStruct.toLispString(str1);
 		final String str2 = "123";
-		final StringStruct struct2 = StringStruct.builder(IntegerStructImpl.valueOf(str2.length()))
+		final StringStruct struct2 = StringStruct.builder(IntegerStruct.toLispInteger(str2.length()))
 		                                         .initialContents(StringStruct.toLispString(str2))
 		                                         .fillPointer(IntegerStruct.TWO)
 		                                         .build();
@@ -1324,12 +1323,12 @@ public class StringStructStringEqualityTest {
 	@Test
 	public void test_stringLessThan_FillPointer_Both() {
 		final String str1 = "123";
-		final StringStruct struct1 = StringStruct.builder(IntegerStructImpl.valueOf(str1.length()))
+		final StringStruct struct1 = StringStruct.builder(IntegerStruct.toLispInteger(str1.length()))
 		                                         .initialContents(StringStruct.toLispString(str1))
 		                                         .fillPointer(IntegerStruct.TWO)
 		                                         .build();
 		final String str2 = "1123";
-		final StringStruct struct2 = StringStruct.builder(IntegerStructImpl.valueOf(str2.length()))
+		final StringStruct struct2 = StringStruct.builder(IntegerStruct.toLispInteger(str2.length()))
 		                                         .initialContents(StringStruct.toLispString(str2))
 		                                         .fillPointer(IntegerStruct.TWO)
 		                                         .build();
@@ -1774,7 +1773,7 @@ public class StringStructStringEqualityTest {
 	@Test
 	public void test_stringGreaterThan_FillPointer1() {
 		final String str1 = "123";
-		final StringStruct struct1 = StringStruct.builder(IntegerStructImpl.valueOf(str1.length()))
+		final StringStruct struct1 = StringStruct.builder(IntegerStruct.toLispInteger(str1.length()))
 		                                         .initialContents(StringStruct.toLispString(str1))
 		                                         .fillPointer(IntegerStruct.TWO)
 		                                         .build();
@@ -1796,7 +1795,7 @@ public class StringStructStringEqualityTest {
 		final String str1 = "11";
 		final StringStruct struct1 = StringStruct.toLispString(str1);
 		final String str2 = "123";
-		final StringStruct struct2 = StringStruct.builder(IntegerStructImpl.valueOf(str2.length()))
+		final StringStruct struct2 = StringStruct.builder(IntegerStruct.toLispInteger(str2.length()))
 		                                         .initialContents(StringStruct.toLispString(str2))
 		                                         .fillPointer(IntegerStruct.TWO)
 		                                         .build();
@@ -1814,12 +1813,12 @@ public class StringStructStringEqualityTest {
 	@Test
 	public void test_stringGreaterThan_FillPointer_Both() {
 		final String str1 = "1123";
-		final StringStruct struct1 = StringStruct.builder(IntegerStructImpl.valueOf(str1.length()))
+		final StringStruct struct1 = StringStruct.builder(IntegerStruct.toLispInteger(str1.length()))
 		                                         .initialContents(StringStruct.toLispString(str1))
 		                                         .fillPointer(IntegerStruct.TWO)
 		                                         .build();
 		final String str2 = "123";
-		final StringStruct struct2 = StringStruct.builder(IntegerStructImpl.valueOf(str2.length()))
+		final StringStruct struct2 = StringStruct.builder(IntegerStruct.toLispInteger(str2.length()))
 		                                         .initialContents(StringStruct.toLispString(str2))
 		                                         .fillPointer(IntegerStruct.TWO)
 		                                         .build();
@@ -2264,7 +2263,7 @@ public class StringStructStringEqualityTest {
 	@Test
 	public void test_stringLessThanOrEqualTo_FillPointer1() {
 		final String str1 = "123";
-		final StringStruct struct1 = StringStruct.builder(IntegerStructImpl.valueOf(str1.length()))
+		final StringStruct struct1 = StringStruct.builder(IntegerStruct.toLispInteger(str1.length()))
 		                                         .initialContents(StringStruct.toLispString(str1))
 		                                         .fillPointer(IntegerStruct.TWO)
 		                                         .build();
@@ -2286,7 +2285,7 @@ public class StringStructStringEqualityTest {
 		final String str1 = "13";
 		final StringStruct struct1 = StringStruct.toLispString(str1);
 		final String str2 = "123";
-		final StringStruct struct2 = StringStruct.builder(IntegerStructImpl.valueOf(str2.length()))
+		final StringStruct struct2 = StringStruct.builder(IntegerStruct.toLispInteger(str2.length()))
 		                                         .initialContents(StringStruct.toLispString(str2))
 		                                         .fillPointer(IntegerStruct.TWO)
 		                                         .build();
@@ -2304,12 +2303,12 @@ public class StringStructStringEqualityTest {
 	@Test
 	public void test_stringLessThanOrEqualTo_FillPointer_Both() {
 		final String str1 = "123";
-		final StringStruct struct1 = StringStruct.builder(IntegerStructImpl.valueOf(str1.length()))
+		final StringStruct struct1 = StringStruct.builder(IntegerStruct.toLispInteger(str1.length()))
 		                                         .initialContents(StringStruct.toLispString(str1))
 		                                         .fillPointer(IntegerStruct.TWO)
 		                                         .build();
 		final String str2 = "1123";
-		final StringStruct struct2 = StringStruct.builder(IntegerStructImpl.valueOf(str2.length()))
+		final StringStruct struct2 = StringStruct.builder(IntegerStruct.toLispInteger(str2.length()))
 		                                         .initialContents(StringStruct.toLispString(str2))
 		                                         .fillPointer(IntegerStruct.TWO)
 		                                         .build();
@@ -2412,7 +2411,7 @@ public class StringStructStringEqualityTest {
 		final StringStruct struct2 = StringStruct.toLispString(str2);
 		final LispStruct result = struct1.stringLessThanOrEqualTo(StringEqualityContext.builder(struct2)
 		                                                                               .build());
-		Assert.assertThat(result, is(IntegerStructImpl.valueOf(3)));
+		Assert.assertThat(result, is(IntegerStruct.toLispInteger(3)));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
 	}
@@ -2760,7 +2759,7 @@ public class StringStructStringEqualityTest {
 	@Test
 	public void test_stringGreaterThanOrEqualTo_FillPointer1() {
 		final String str1 = "123";
-		final StringStruct struct1 = StringStruct.builder(IntegerStructImpl.valueOf(str1.length()))
+		final StringStruct struct1 = StringStruct.builder(IntegerStruct.toLispInteger(str1.length()))
 		                                         .initialContents(StringStruct.toLispString(str1))
 		                                         .fillPointer(IntegerStruct.TWO)
 		                                         .build();
@@ -2783,7 +2782,7 @@ public class StringStructStringEqualityTest {
 		final String str1 = "11";
 		final StringStruct struct1 = StringStruct.toLispString(str1);
 		final String str2 = "123";
-		final StringStruct struct2 = StringStruct.builder(IntegerStructImpl.valueOf(str2.length()))
+		final StringStruct struct2 = StringStruct.builder(IntegerStruct.toLispInteger(str2.length()))
 		                                         .initialContents(StringStruct.toLispString(str2))
 		                                         .fillPointer(IntegerStruct.TWO)
 		                                         .build();
@@ -2802,12 +2801,12 @@ public class StringStructStringEqualityTest {
 	@Test
 	public void test_stringGreaterThanOrEqualTo_FillPointer_Both() {
 		final String str1 = "1123";
-		final StringStruct struct1 = StringStruct.builder(IntegerStructImpl.valueOf(str1.length()))
+		final StringStruct struct1 = StringStruct.builder(IntegerStruct.toLispInteger(str1.length()))
 		                                         .initialContents(StringStruct.toLispString(str1))
 		                                         .fillPointer(IntegerStruct.TWO)
 		                                         .build();
 		final String str2 = "123";
-		final StringStruct struct2 = StringStruct.builder(IntegerStructImpl.valueOf(str2.length()))
+		final StringStruct struct2 = StringStruct.builder(IntegerStruct.toLispInteger(str2.length()))
 		                                         .initialContents(StringStruct.toLispString(str2))
 		                                         .fillPointer(IntegerStruct.TWO)
 		                                         .build();
@@ -2916,7 +2915,7 @@ public class StringStructStringEqualityTest {
 		final LispStruct result = struct1.stringGreaterThanOrEqualTo(
 				StringEqualityContext.builder(struct2)
 				                     .build());
-		Assert.assertThat(result, is(IntegerStructImpl.valueOf(3)));
+		Assert.assertThat(result, is(IntegerStruct.toLispInteger(3)));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
 	}
@@ -3260,7 +3259,7 @@ public class StringStructStringEqualityTest {
 	@Test
 	public void test_stringEqualIgnoreCase_FillPointer1() {
 		final String str1 = "123";
-		final StringStruct struct1 = StringStruct.builder(IntegerStructImpl.valueOf(str1.length()))
+		final StringStruct struct1 = StringStruct.builder(IntegerStruct.toLispInteger(str1.length()))
 		                                         .initialContents(StringStruct.toLispString(str1))
 		                                         .fillPointer(IntegerStruct.TWO)
 		                                         .build();
@@ -3282,7 +3281,7 @@ public class StringStructStringEqualityTest {
 		final String str1 = "12";
 		final StringStruct struct1 = StringStruct.toLispString(str1);
 		final String str2 = "123";
-		final StringStruct struct2 = StringStruct.builder(IntegerStructImpl.valueOf(str2.length()))
+		final StringStruct struct2 = StringStruct.builder(IntegerStruct.toLispInteger(str2.length()))
 		                                         .initialContents(StringStruct.toLispString(str2))
 		                                         .fillPointer(IntegerStruct.TWO)
 		                                         .build();
@@ -3300,12 +3299,12 @@ public class StringStructStringEqualityTest {
 	@Test
 	public void test_stringEqualIgnoreCase_FillPointer_Both() {
 		final String str1 = "123";
-		final StringStruct struct1 = StringStruct.builder(IntegerStructImpl.valueOf(str1.length()))
+		final StringStruct struct1 = StringStruct.builder(IntegerStruct.toLispInteger(str1.length()))
 		                                         .initialContents(StringStruct.toLispString(str1))
 		                                         .fillPointer(IntegerStruct.TWO)
 		                                         .build();
 		final String str2 = "124";
-		final StringStruct struct2 = StringStruct.builder(IntegerStructImpl.valueOf(str2.length()))
+		final StringStruct struct2 = StringStruct.builder(IntegerStruct.toLispInteger(str2.length()))
 		                                         .initialContents(StringStruct.toLispString(str2))
 		                                         .fillPointer(IntegerStruct.TWO)
 		                                         .build();
@@ -3739,7 +3738,7 @@ public class StringStructStringEqualityTest {
 	@Test
 	public void test_stringNotEqualIgnoreCase_FillPointer1() {
 		final String str1 = "123";
-		final StringStruct struct1 = StringStruct.builder(IntegerStructImpl.valueOf(str1.length()))
+		final StringStruct struct1 = StringStruct.builder(IntegerStruct.toLispInteger(str1.length()))
 		                                         .initialContents(StringStruct.toLispString(str1))
 		                                         .fillPointer(IntegerStruct.TWO)
 		                                         .build();
@@ -3761,7 +3760,7 @@ public class StringStructStringEqualityTest {
 		final String str1 = "12";
 		final StringStruct struct1 = StringStruct.toLispString(str1);
 		final String str2 = "123";
-		final StringStruct struct2 = StringStruct.builder(IntegerStructImpl.valueOf(str2.length()))
+		final StringStruct struct2 = StringStruct.builder(IntegerStruct.toLispInteger(str2.length()))
 		                                         .initialContents(StringStruct.toLispString(str2))
 		                                         .fillPointer(IntegerStruct.TWO)
 		                                         .build();
@@ -3780,12 +3779,12 @@ public class StringStructStringEqualityTest {
 	@Test
 	public void test_stringNotEqualIgnoreCase_FillPointer_Both() {
 		final String str1 = "123";
-		final StringStruct struct1 = StringStruct.builder(IntegerStructImpl.valueOf(str1.length()))
+		final StringStruct struct1 = StringStruct.builder(IntegerStruct.toLispInteger(str1.length()))
 		                                         .initialContents(StringStruct.toLispString(str1))
 		                                         .fillPointer(IntegerStruct.TWO)
 		                                         .build();
 		final String str2 = "124";
-		final StringStruct struct2 = StringStruct.builder(IntegerStructImpl.valueOf(str2.length()))
+		final StringStruct struct2 = StringStruct.builder(IntegerStruct.toLispInteger(str2.length()))
 		                                         .initialContents(StringStruct.toLispString(str2))
 		                                         .fillPointer(IntegerStruct.TWO)
 		                                         .build();
@@ -4225,7 +4224,7 @@ public class StringStructStringEqualityTest {
 	@Test
 	public void test_stringLessThanIgnoreCase_FillPointer1() {
 		final String str1 = "123";
-		final StringStruct struct1 = StringStruct.builder(IntegerStructImpl.valueOf(str1.length()))
+		final StringStruct struct1 = StringStruct.builder(IntegerStruct.toLispInteger(str1.length()))
 		                                         .initialContents(StringStruct.toLispString(str1))
 		                                         .fillPointer(IntegerStruct.TWO)
 		                                         .build();
@@ -4248,7 +4247,7 @@ public class StringStructStringEqualityTest {
 		final String str1 = "13";
 		final StringStruct struct1 = StringStruct.toLispString(str1);
 		final String str2 = "123";
-		final StringStruct struct2 = StringStruct.builder(IntegerStructImpl.valueOf(str2.length()))
+		final StringStruct struct2 = StringStruct.builder(IntegerStruct.toLispInteger(str2.length()))
 		                                         .initialContents(StringStruct.toLispString(str2))
 		                                         .fillPointer(IntegerStruct.TWO)
 		                                         .build();
@@ -4267,12 +4266,12 @@ public class StringStructStringEqualityTest {
 	@Test
 	public void test_stringLessThanIgnoreCase_FillPointer_Both() {
 		final String str1 = "123";
-		final StringStruct struct1 = StringStruct.builder(IntegerStructImpl.valueOf(str1.length()))
+		final StringStruct struct1 = StringStruct.builder(IntegerStruct.toLispInteger(str1.length()))
 		                                         .initialContents(StringStruct.toLispString(str1))
 		                                         .fillPointer(IntegerStruct.TWO)
 		                                         .build();
 		final String str2 = "1123";
-		final StringStruct struct2 = StringStruct.builder(IntegerStructImpl.valueOf(str2.length()))
+		final StringStruct struct2 = StringStruct.builder(IntegerStruct.toLispInteger(str2.length()))
 		                                         .initialContents(StringStruct.toLispString(str2))
 		                                         .fillPointer(IntegerStruct.TWO)
 		                                         .build();
@@ -4730,7 +4729,7 @@ public class StringStructStringEqualityTest {
 	@Test
 	public void test_stringGreaterThanIgnoreCase_FillPointer1() {
 		final String str1 = "123";
-		final StringStruct struct1 = StringStruct.builder(IntegerStructImpl.valueOf(str1.length()))
+		final StringStruct struct1 = StringStruct.builder(IntegerStruct.toLispInteger(str1.length()))
 		                                         .initialContents(StringStruct.toLispString(str1))
 		                                         .fillPointer(IntegerStruct.TWO)
 		                                         .build();
@@ -4753,7 +4752,7 @@ public class StringStructStringEqualityTest {
 		final String str1 = "11";
 		final StringStruct struct1 = StringStruct.toLispString(str1);
 		final String str2 = "123";
-		final StringStruct struct2 = StringStruct.builder(IntegerStructImpl.valueOf(str2.length()))
+		final StringStruct struct2 = StringStruct.builder(IntegerStruct.toLispInteger(str2.length()))
 		                                         .initialContents(StringStruct.toLispString(str2))
 		                                         .fillPointer(IntegerStruct.TWO)
 		                                         .build();
@@ -4772,12 +4771,12 @@ public class StringStructStringEqualityTest {
 	@Test
 	public void test_stringGreaterThanIgnoreCase_FillPointer_Both() {
 		final String str1 = "1123";
-		final StringStruct struct1 = StringStruct.builder(IntegerStructImpl.valueOf(str1.length()))
+		final StringStruct struct1 = StringStruct.builder(IntegerStruct.toLispInteger(str1.length()))
 		                                         .initialContents(StringStruct.toLispString(str1))
 		                                         .fillPointer(IntegerStruct.TWO)
 		                                         .build();
 		final String str2 = "123";
-		final StringStruct struct2 = StringStruct.builder(IntegerStructImpl.valueOf(str2.length()))
+		final StringStruct struct2 = StringStruct.builder(IntegerStruct.toLispInteger(str2.length()))
 		                                         .initialContents(StringStruct.toLispString(str2))
 		                                         .fillPointer(IntegerStruct.TWO)
 		                                         .build();
@@ -5235,7 +5234,7 @@ public class StringStructStringEqualityTest {
 	@Test
 	public void test_stringLessThanOrEqualToIgnoreCase_FillPointer1() {
 		final String str1 = "123";
-		final StringStruct struct1 = StringStruct.builder(IntegerStructImpl.valueOf(str1.length()))
+		final StringStruct struct1 = StringStruct.builder(IntegerStruct.toLispInteger(str1.length()))
 		                                         .initialContents(StringStruct.toLispString(str1))
 		                                         .fillPointer(IntegerStruct.TWO)
 		                                         .build();
@@ -5258,7 +5257,7 @@ public class StringStructStringEqualityTest {
 		final String str1 = "13";
 		final StringStruct struct1 = StringStruct.toLispString(str1);
 		final String str2 = "123";
-		final StringStruct struct2 = StringStruct.builder(IntegerStructImpl.valueOf(str2.length()))
+		final StringStruct struct2 = StringStruct.builder(IntegerStruct.toLispInteger(str2.length()))
 		                                         .initialContents(StringStruct.toLispString(str2))
 		                                         .fillPointer(IntegerStruct.TWO)
 		                                         .build();
@@ -5277,12 +5276,12 @@ public class StringStructStringEqualityTest {
 	@Test
 	public void test_stringLessThanOrEqualToIgnoreCase_FillPointer_Both() {
 		final String str1 = "123";
-		final StringStruct struct1 = StringStruct.builder(IntegerStructImpl.valueOf(str1.length()))
+		final StringStruct struct1 = StringStruct.builder(IntegerStruct.toLispInteger(str1.length()))
 		                                         .initialContents(StringStruct.toLispString(str1))
 		                                         .fillPointer(IntegerStruct.TWO)
 		                                         .build();
 		final String str2 = "1123";
-		final StringStruct struct2 = StringStruct.builder(IntegerStructImpl.valueOf(str2.length()))
+		final StringStruct struct2 = StringStruct.builder(IntegerStruct.toLispInteger(str2.length()))
 		                                         .initialContents(StringStruct.toLispString(str2))
 		                                         .fillPointer(IntegerStruct.TWO)
 		                                         .build();
@@ -5391,7 +5390,7 @@ public class StringStructStringEqualityTest {
 		final LispStruct result = struct1.stringLessThanOrEqualToIgnoreCase(
 				StringEqualityContext.builder(struct2)
 				                     .build());
-		Assert.assertThat(result, is(IntegerStructImpl.valueOf(3)));
+		Assert.assertThat(result, is(IntegerStruct.toLispInteger(3)));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
 	}
@@ -5740,7 +5739,7 @@ public class StringStructStringEqualityTest {
 	@Test
 	public void test_stringGreaterThanOrEqualToIgnoreCase_FillPointer1() {
 		final String str1 = "123";
-		final StringStruct struct1 = StringStruct.builder(IntegerStructImpl.valueOf(str1.length()))
+		final StringStruct struct1 = StringStruct.builder(IntegerStruct.toLispInteger(str1.length()))
 		                                         .initialContents(StringStruct.toLispString(str1))
 		                                         .fillPointer(IntegerStruct.TWO)
 		                                         .build();
@@ -5763,7 +5762,7 @@ public class StringStructStringEqualityTest {
 		final String str1 = "11";
 		final StringStruct struct1 = StringStruct.toLispString(str1);
 		final String str2 = "123";
-		final StringStruct struct2 = StringStruct.builder(IntegerStructImpl.valueOf(str2.length()))
+		final StringStruct struct2 = StringStruct.builder(IntegerStruct.toLispInteger(str2.length()))
 		                                         .initialContents(StringStruct.toLispString(str2))
 		                                         .fillPointer(IntegerStruct.TWO)
 		                                         .build();
@@ -5782,12 +5781,12 @@ public class StringStructStringEqualityTest {
 	@Test
 	public void test_stringGreaterThanOrEqualToIgnoreCase_FillPointer_Both() {
 		final String str1 = "1123";
-		final StringStruct struct1 = StringStruct.builder(IntegerStructImpl.valueOf(str1.length()))
+		final StringStruct struct1 = StringStruct.builder(IntegerStruct.toLispInteger(str1.length()))
 		                                         .initialContents(StringStruct.toLispString(str1))
 		                                         .fillPointer(IntegerStruct.TWO)
 		                                         .build();
 		final String str2 = "123";
-		final StringStruct struct2 = StringStruct.builder(IntegerStructImpl.valueOf(str2.length()))
+		final StringStruct struct2 = StringStruct.builder(IntegerStruct.toLispInteger(str2.length()))
 		                                         .initialContents(StringStruct.toLispString(str2))
 		                                         .fillPointer(IntegerStruct.TWO)
 		                                         .build();
@@ -5896,7 +5895,7 @@ public class StringStructStringEqualityTest {
 		final LispStruct result = struct1.stringGreaterThanOrEqualToIgnoreCase(
 				StringEqualityContext.builder(struct2)
 				                     .build());
-		Assert.assertThat(result, is(IntegerStructImpl.valueOf(3)));
+		Assert.assertThat(result, is(IntegerStruct.toLispInteger(3)));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
 	}

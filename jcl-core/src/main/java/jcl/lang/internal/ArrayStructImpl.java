@@ -6,7 +6,6 @@ import jcl.lang.IntegerStruct;
 import jcl.lang.NILStruct;
 import jcl.lang.ValuesStruct;
 import jcl.lang.factory.LispStructFactory;
-import jcl.lang.internal.number.IntegerStructImpl;
 import jcl.type.ArrayType;
 import jcl.type.LispType;
 import jcl.type.SimpleArrayType;
@@ -60,6 +59,6 @@ public abstract class ArrayStructImpl extends AbstractArrayStructImpl {
 	public ValuesStruct arrayDisplacement() {
 		return (displacedTo == null)
 		       ? ValuesStruct.valueOf(NILStruct.INSTANCE, IntegerStruct.ZERO)
-		       : ValuesStruct.valueOf(displacedTo, IntegerStructImpl.valueOf(displacedIndexOffset));
+		       : ValuesStruct.valueOf(displacedTo, IntegerStruct.toLispInteger(displacedIndexOffset));
 	}
 }

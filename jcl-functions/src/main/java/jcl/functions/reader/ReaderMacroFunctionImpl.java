@@ -60,7 +60,7 @@ public abstract class ReaderMacroFunctionImpl extends SystemBuiltInFunctionStruc
 		Optional<BigInteger> numberArgument = Optional.empty();
 		if (arguments.hasOptionalArgument(N_ARGUMENT)) {
 			final IntegerStruct macroNumberArgument = arguments.getOptionalArgument(N_ARGUMENT, IntegerStruct.class);
-			final BigInteger bigInteger = macroNumberArgument.bigIntegerValue();
+			final BigInteger bigInteger = macroNumberArgument.toJavaBigInteger();
 			numberArgument = Optional.of(bigInteger);
 		}
 

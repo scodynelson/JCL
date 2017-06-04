@@ -12,7 +12,6 @@ import jcl.lang.LispStruct;
 import jcl.lang.NILStruct;
 import jcl.lang.RationalStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
-import jcl.lang.factory.LispStructFactory;
 import jcl.lang.statics.ReaderVariables;
 import jcl.reader.Reader;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,7 +51,7 @@ final class RationalReaderMacroFunction {
 		final IntegerStruct previousReadBase = ReaderVariables.READ_BASE.getVariableValue();
 
 		// alter the read-base
-		ReaderVariables.READ_BASE.setValue(LispStructFactory.toInteger(radix));
+		ReaderVariables.READ_BASE.setValue(IntegerStruct.toLispInteger(radix));
 
 		// read rational
 		final LispStruct token = reader.read(inputStreamStruct, true, NILStruct.INSTANCE, true);

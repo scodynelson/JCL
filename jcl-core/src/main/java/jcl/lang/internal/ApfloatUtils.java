@@ -1,5 +1,6 @@
 package jcl.lang.internal;
 
+import jcl.lang.DoubleFloatStruct;
 import jcl.lang.IntegerStruct;
 import jcl.lang.NumberStruct;
 import jcl.lang.RationalStruct;
@@ -28,7 +29,7 @@ public final class ApfloatUtils {
 			return toRationalStruct((Aprational) apfloat);
 		}
 		// TODO: default to DoubleFloat???
-		return new DoubleFloatStructImpl(apfloat.doubleValue());
+		return DoubleFloatStruct.toLispFloat(apfloat.doubleValue());
 	}
 
 	public static RationalStruct toRationalStruct(final Aprational aprational) {

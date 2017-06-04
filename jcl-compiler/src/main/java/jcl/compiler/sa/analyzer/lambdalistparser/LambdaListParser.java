@@ -203,7 +203,7 @@ public class LambdaListParser {
 				optionalBindings.add(optionalBinding);
 			} else if (currentElement instanceof ListStruct) {
 				final ListStruct currentParam = (ListStruct) currentElement;
-				final long currentParamLength = currentParam.length().longValue();
+				final long currentParamLength = currentParam.length().toJavaPLong();
 				if ((currentParamLength < 1) || (currentParamLength > 3)) {
 					if (isDestructuringAllowed) {
 						final String destructuringName = "DestructuringSymbolName-" + System.nanoTime();
@@ -525,7 +525,7 @@ public class LambdaListParser {
 				keyBindings.add(keyBinding);
 			} else if (currentElement instanceof ListStruct) {
 				final ListStruct currentParam = (ListStruct) currentElement;
-				final long currentParamLength = currentParam.length().longValue();
+				final long currentParamLength = currentParam.length().toJavaPLong();
 				if ((currentParamLength < 1) || (currentParamLength > 3)) {
 					if (isDestructuringAllowed) {
 						final String destructuringName = "DestructuringSymbolName-" + System.nanoTime();
@@ -568,7 +568,7 @@ public class LambdaListParser {
 						varKeyNameCurrent = getKeywordStruct(varNameCurrent.getName());
 					} else if (firstInCurrent instanceof ListStruct) {
 						final ListStruct currentVar = (ListStruct) firstInCurrent;
-						final long currentVarLength = currentVar.length().longValue();
+						final long currentVarLength = currentVar.length().toJavaPLong();
 						if (currentVarLength == 2) {
 							final LispStruct firstInCurrentVar = currentVar.getCar();
 							if (firstInCurrentVar instanceof SymbolStruct) {
@@ -706,7 +706,7 @@ public class LambdaListParser {
 				auxBindings.add(auxBinding);
 			} else if (currentElement instanceof ListStruct) {
 				final ListStruct currentParam = (ListStruct) currentElement;
-				final long currentParamLength = currentParam.length().longValue();
+				final long currentParamLength = currentParam.length().toJavaPLong();
 				if ((currentParamLength < 1) || (currentParamLength > 2)) {
 					if (isDestructuringAllowed) {
 						final String destructuringName = "DestructuringSymbolName-" + System.nanoTime();

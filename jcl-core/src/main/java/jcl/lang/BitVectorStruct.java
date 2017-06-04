@@ -8,7 +8,6 @@ import java.util.stream.Stream;
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.internal.BitVectorStructImpl;
-import jcl.lang.internal.number.IntegerStructImpl;
 import jcl.type.BitType;
 import jcl.type.BitVectorType;
 import jcl.type.LispType;
@@ -40,8 +39,8 @@ public interface BitVectorStruct extends VectorStruct, BitArrayStruct {
 			if (!length().eql(v.length())) {
 				return false;
 			}
-			for (int i = 0; i < length().intValue(); i++) {
-				final IntegerStruct index = IntegerStructImpl.valueOf(i);
+			for (int i = 0; i < length().toJavaInt(); i++) {
+				final IntegerStruct index = IntegerStruct.toLispInteger(i);
 				if (!bit(index).equal(v.bit(index))) {
 					return false;
 				}
@@ -61,8 +60,8 @@ public interface BitVectorStruct extends VectorStruct, BitArrayStruct {
 			if (!length().eql(v.length())) {
 				return false;
 			}
-			for (int i = 0; i < length().intValue(); i++) {
-				final IntegerStruct index = IntegerStructImpl.valueOf(i);
+			for (int i = 0; i < length().toJavaInt(); i++) {
+				final IntegerStruct index = IntegerStruct.toLispInteger(i);
 				if (!bit(index).equalp(v.bit(index))) {
 					return false;
 				}
@@ -132,10 +131,10 @@ public interface BitVectorStruct extends VectorStruct, BitArrayStruct {
 
 		@Override
 		public BitVectorStruct build() {
-			final int sizeInt = size.intValue();
+			final int sizeInt = size.toJavaInt();
 			final LispType upgradedET = ArrayStruct.upgradedArrayElementType(elementType);
 			final boolean adjustableBoolean = adjustable.booleanValue();
-			final Integer fillPointerInt = (fillPointer == null) ? null : fillPointer.intValue();
+			final Integer fillPointerInt = (fillPointer == null) ? null : fillPointer.toJavaInt();
 
 			if (displacedTo != null) {
 				final LispType displacedToType = displacedTo.getType();

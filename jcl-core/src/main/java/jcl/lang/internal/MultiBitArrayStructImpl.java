@@ -36,7 +36,7 @@ public class MultiBitArrayStructImpl extends MultiArrayStructImpl implements Bit
 	public static BitArrayStruct valueOf(final List<IntegerStruct> dimensions, final IntegerStruct initialElement,
 	                                     final BooleanStruct isAdjustable) {
 		final List<Integer> dimensionInts = dimensions.stream()
-		                                              .map(IntegerStruct::intValue)
+		                                              .map(IntegerStruct::toJavaInt)
 		                                              .collect(Collectors.toList());
 		final int totalSize = dimensionInts.stream()
 		                                   .mapToInt(Integer::intValue)
@@ -53,7 +53,7 @@ public class MultiBitArrayStructImpl extends MultiArrayStructImpl implements Bit
 	public static BitArrayStruct valueOf(final List<IntegerStruct> dimensions, final SequenceStruct initialContents,
 	                                     final BooleanStruct isAdjustable) {
 		final List<Integer> dimensionInts = dimensions.stream()
-		                                              .map(IntegerStruct::intValue)
+		                                              .map(IntegerStruct::toJavaInt)
 		                                              .collect(Collectors.toList());
 		final List<LispStruct> validContents = getValidContents(dimensionInts, initialContents);
 
@@ -65,19 +65,19 @@ public class MultiBitArrayStructImpl extends MultiArrayStructImpl implements Bit
 	public static BitArrayStruct valueOf(final List<IntegerStruct> dimensions, final BitArrayStruct displacedTo,
 	                                     final IntegerStruct displacedIndexOffset, final BooleanStruct isAdjustable) {
 		final List<Integer> dimensionInts = dimensions.stream()
-		                                              .map(IntegerStruct::intValue)
+		                                              .map(IntegerStruct::toJavaInt)
 		                                              .collect(Collectors.toList());
 
 		// TODO: Total size of A be no smaller than the sum of the total size of B plus the offset 'n' supplied by the offset
 
 		return new MultiBitArrayStructImpl(ArrayType.INSTANCE, dimensionInts, displacedTo,
-		                                   displacedIndexOffset.intValue(),
+		                                   displacedIndexOffset.toJavaInt(),
 		                                   isAdjustable.booleanValue());
 	}
 
 	public static BitArrayStruct valueOf(final List<IntegerStruct> dimensions, final IntegerStruct initialElement) {
 		final List<Integer> dimensionInts = dimensions.stream()
-		                                              .map(IntegerStruct::intValue)
+		                                              .map(IntegerStruct::toJavaInt)
 		                                              .collect(Collectors.toList());
 		final int totalSize = dimensionInts.stream()
 		                                   .mapToInt(Integer::intValue)
@@ -91,7 +91,7 @@ public class MultiBitArrayStructImpl extends MultiArrayStructImpl implements Bit
 
 	public static BitArrayStruct valueOf(final List<IntegerStruct> dimensions, final SequenceStruct initialContents) {
 		final List<Integer> dimensionInts = dimensions.stream()
-		                                              .map(IntegerStruct::intValue)
+		                                              .map(IntegerStruct::toJavaInt)
 		                                              .collect(Collectors.toList());
 		final List<LispStruct> validContents = getValidContents(dimensionInts, initialContents);
 
@@ -116,7 +116,7 @@ public class MultiBitArrayStructImpl extends MultiArrayStructImpl implements Bit
 
 		if (numberOfDimensions == 1) {
 			final int dimension = dimensions.get(0);
-			if (initialContents.length().intValue() == dimension) {
+			if (initialContents.length().toJavaInt() == dimension) {
 				return initialContents.stream()
 				                      .map(e -> (IntegerStruct) e)
 				                      .collect(Collectors.toList());
@@ -129,7 +129,7 @@ public class MultiBitArrayStructImpl extends MultiArrayStructImpl implements Bit
 		final List<LispStruct> validContents = new ArrayList<>();
 
 		final int dimension = dimensions.get(0);
-		if (initialContents.length().intValue() == dimension) {
+		if (initialContents.length().toJavaInt() == dimension) {
 			final List<Integer> subDimension = dimensions.subList(1, numberOfDimensions);
 
 			for (final LispStruct contentToCheck : initialContents) {

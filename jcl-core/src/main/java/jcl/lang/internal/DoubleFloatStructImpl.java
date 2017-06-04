@@ -14,9 +14,15 @@ import jcl.lang.LongFloatStruct;
 import jcl.lang.NumberStruct;
 import jcl.lang.RationalStruct;
 import jcl.lang.RealStruct;
+import jcl.lang.SingleFloatStruct;
 import jcl.lang.classes.BuiltInClassStruct;
 import jcl.lang.number.DecodeFloatResult;
 import jcl.lang.number.QuotientRemainder;
+import jcl.lang.statics.ReaderVariables;
+import jcl.type.DoubleFloatType;
+import jcl.type.FloatType;
+import jcl.type.LongFloatType;
+import jcl.type.ShortFloatType;
 import jcl.type.SingleFloatType;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -57,9 +63,9 @@ public class DoubleFloatStructImpl extends BuiltInClassStruct implements DoubleF
 		final DecodedDouble decodedDouble = getDecodedDouble(bits);
 
 		final long mantissa = decodedDouble.getMantissa();
-		final int expt = ArithmeticUtils.pow(2, DOUBLE_PRECISION);
-		final long significand = mantissa / expt;
-		final DoubleFloatStruct significandFloat = new DoubleFloatStructImpl((double) significand);
+		final double expt = ArithmeticUtils.pow(2, DOUBLE_PRECISION);
+		final double significand = mantissa / expt;
+		final DoubleFloatStruct significandFloat = DoubleFloatStruct.toLispFloat(significand);
 
 		final long storedExponent = decodedDouble.getStoredExponent();
 		// 1023 + 52 = 1075
@@ -246,10 +252,21 @@ public class DoubleFloatStructImpl extends BuiltInClassStruct implements DoubleF
 		if (prototype instanceof DoubleFloatStructImpl) {
 			return this;
 		} else {
-			return new SingleFloatStructImpl(value);
+			return SingleFloatStruct.toLispFloat(value);
 		}
 	}
 
+	/**
+	 * Calculates the quotient remainder using the provided {@code operation}. The resulting quotient will be created
+	 * using the provided {@code quotientCreator}.
+	 *
+	 * @param operation
+	 * 		the quotient/remainder operation to perform
+	 * @param quotientCreator
+	 * 		the quotient generator
+	 *
+	 * @return a {@link QuotientRemainder} containing the results of the operation
+	 */
 	private QuotientRemainder calculateQuotientRemainder(final Function<Double, Long> operation,
 	                                                     final Function<Long, RealStruct> quotientCreator) {
 		final long quotient = operation.apply(value);
@@ -257,7 +274,7 @@ public class DoubleFloatStructImpl extends BuiltInClassStruct implements DoubleF
 
 		return new QuotientRemainder(
 				quotientCreator.apply(quotient),
-				new SingleFloatStructImpl(remainder)
+				SingleFloatStruct.toLispFloat(remainder)
 		);
 	}
 
@@ -287,7 +304,7 @@ public class DoubleFloatStructImpl extends BuiltInClassStruct implements DoubleF
 
 			return new QuotientRemainder(
 					quotientCreator.apply(quotient),
-					new DoubleFloatStructImpl(remainder)
+					DoubleFloatStruct.toLispFloat(remainder)
 			);
 		} else if (divisor instanceof LongnumStructImpl) {
 			final long divisorValue = ((LongnumStructImpl) divisor).value;
@@ -298,7 +315,7 @@ public class DoubleFloatStructImpl extends BuiltInClassStruct implements DoubleF
 
 			return new QuotientRemainder(
 					quotientCreator.apply(quotient),
-					new DoubleFloatStructImpl(remainder)
+					DoubleFloatStruct.toLispFloat(remainder)
 			);
 		} else if (divisor instanceof BignumStructImpl) {
 			final float divisorValue = ((BignumStructImpl) divisor).value.floatValue();
@@ -309,7 +326,7 @@ public class DoubleFloatStructImpl extends BuiltInClassStruct implements DoubleF
 
 			return new QuotientRemainder(
 					quotientCreator.apply(quotient),
-					new DoubleFloatStructImpl(remainder)
+					DoubleFloatStruct.toLispFloat(remainder)
 			);
 		} else if (divisor instanceof RatioStructImpl) {
 			final float divisorValue = ((RatioStructImpl) divisor).value.floatValue();
@@ -320,7 +337,7 @@ public class DoubleFloatStructImpl extends BuiltInClassStruct implements DoubleF
 
 			return new QuotientRemainder(
 					quotientCreator.apply(quotient),
-					new DoubleFloatStructImpl(remainder)
+					DoubleFloatStruct.toLispFloat(remainder)
 			);
 		} else if (divisor instanceof SingleFloatStructImpl) {
 			final float divisorValue = ((SingleFloatStructImpl) divisor).value;
@@ -331,7 +348,7 @@ public class DoubleFloatStructImpl extends BuiltInClassStruct implements DoubleF
 
 			return new QuotientRemainder(
 					quotientCreator.apply(quotient),
-					new DoubleFloatStructImpl(remainder)
+					DoubleFloatStruct.toLispFloat(remainder)
 			);
 		} else if (divisor instanceof DoubleFloatStructImpl) {
 			final double divisorValue = ((DoubleFloatStructImpl) divisor).value;
@@ -342,7 +359,7 @@ public class DoubleFloatStructImpl extends BuiltInClassStruct implements DoubleF
 
 			return new QuotientRemainder(
 					quotientCreator.apply(quotient),
-					new DoubleFloatStructImpl(remainder)
+					DoubleFloatStruct.toLispFloat(remainder)
 			);
 		} else {
 			final double divisorValue = divisor.ap().doubleValue();
@@ -353,7 +370,7 @@ public class DoubleFloatStructImpl extends BuiltInClassStruct implements DoubleF
 
 			return new QuotientRemainder(
 					quotientCreator.apply(quotient),
-					new DoubleFloatStructImpl(remainder)
+					DoubleFloatStruct.toLispFloat(remainder)
 			);
 		}
 	}
@@ -466,16 +483,16 @@ public class DoubleFloatStructImpl extends BuiltInClassStruct implements DoubleF
 	public RealStruct atan(final RealStruct real) {
 		if (real instanceof FixnumStructImpl) {
 			final double atan2 = StrictMath.atan2(value, ((FixnumStructImpl) real).value);
-			return new DoubleFloatStructImpl(atan2);
+			return DoubleFloatStruct.toLispFloat(atan2);
 		} else if (real instanceof LongnumStructImpl) {
 			final double atan2 = StrictMath.atan2(value, ((LongnumStructImpl) real).value);
-			return new DoubleFloatStructImpl(atan2);
+			return DoubleFloatStruct.toLispFloat(atan2);
 		} else if (real instanceof SingleFloatStructImpl) {
 			final double atan2 = StrictMath.atan2(value, ((SingleFloatStructImpl) real).value);
-			return new DoubleFloatStructImpl(atan2);
+			return DoubleFloatStruct.toLispFloat(atan2);
 		} else if (real instanceof DoubleFloatStructImpl) {
 			final double atan2 = StrictMath.atan2(value, ((DoubleFloatStructImpl) real).value);
-			return new DoubleFloatStructImpl(atan2);
+			return DoubleFloatStruct.toLispFloat(atan2);
 		}
 		final Apfloat ap = new Apfloat(value);
 		final Apfloat realAp = real.ap();
@@ -494,7 +511,7 @@ public class DoubleFloatStructImpl extends BuiltInClassStruct implements DoubleF
 
 	@Override
 	public FloatStruct abs() {
-		return new DoubleFloatStructImpl(Math.abs(value));
+		return DoubleFloatStruct.toLispFloat(Math.abs(value));
 	}
 
 	@Override
@@ -506,24 +523,24 @@ public class DoubleFloatStructImpl extends BuiltInClassStruct implements DoubleF
 	public NumberStruct add(final NumberStruct number) {
 		if (number instanceof FixnumStructImpl) {
 			final double add = value + ((FixnumStructImpl) number).value;
-			return new DoubleFloatStructImpl(add);
+			return DoubleFloatStruct.toLispFloat(add);
 		} else if (number instanceof LongnumStructImpl) {
 			final double add = value + ((LongnumStructImpl) number).value;
-			return new DoubleFloatStructImpl(add);
+			return DoubleFloatStruct.toLispFloat(add);
 		} else if (number instanceof BignumStructImpl) {
 			final BigDecimal bigDecimal1 = BigDecimal.valueOf(value);
 			final BigDecimal bigDecimal2 = new BigDecimal(((BignumStructImpl) number).value);
 			final BigDecimal add = bigDecimal1.add(bigDecimal2);
-			return new DoubleFloatStructImpl(add.floatValue());
+			return DoubleFloatStruct.toLispFloat(add.floatValue());
 		} else if (number instanceof RatioStructImpl) {
 			final double add = value + ((RatioStructImpl) number).value.floatValue();
-			return new DoubleFloatStructImpl(add);
+			return DoubleFloatStruct.toLispFloat(add);
 		} else if (number instanceof SingleFloatStructImpl) {
 			final double add = value + ((SingleFloatStructImpl) number).value;
-			return new DoubleFloatStructImpl(add);
+			return DoubleFloatStruct.toLispFloat(add);
 		} else if (number instanceof DoubleFloatStructImpl) {
 			final double add = value + ((DoubleFloatStructImpl) number).value;
-			return new DoubleFloatStructImpl(add);
+			return DoubleFloatStruct.toLispFloat(add);
 		}
 		return number.add(this);
 	}
@@ -532,24 +549,24 @@ public class DoubleFloatStructImpl extends BuiltInClassStruct implements DoubleF
 	public NumberStruct subtract(final NumberStruct number) {
 		if (number instanceof FixnumStructImpl) {
 			final double subtract = value - ((FixnumStructImpl) number).value;
-			return new DoubleFloatStructImpl(subtract);
+			return DoubleFloatStruct.toLispFloat(subtract);
 		} else if (number instanceof LongnumStructImpl) {
 			final double subtract = value - ((LongnumStructImpl) number).value;
-			return new DoubleFloatStructImpl(subtract);
+			return DoubleFloatStruct.toLispFloat(subtract);
 		} else if (number instanceof BignumStructImpl) {
 			final BigDecimal bigDecimal1 = BigDecimal.valueOf(value);
 			final BigDecimal bigDecimal2 = new BigDecimal(((BignumStructImpl) number).value);
 			final BigDecimal subtract = bigDecimal1.subtract(bigDecimal2);
-			return new DoubleFloatStructImpl(subtract.floatValue());
+			return DoubleFloatStruct.toLispFloat(subtract.floatValue());
 		} else if (number instanceof RatioStructImpl) {
 			final double subtract = value - ((RatioStructImpl) number).value.floatValue();
-			return new DoubleFloatStructImpl(subtract);
+			return DoubleFloatStruct.toLispFloat(subtract);
 		} else if (number instanceof SingleFloatStructImpl) {
 			final double subtract = value - ((SingleFloatStructImpl) number).value;
-			return new DoubleFloatStructImpl(subtract);
+			return DoubleFloatStruct.toLispFloat(subtract);
 		} else if (number instanceof DoubleFloatStructImpl) {
 			final double subtract = value - ((DoubleFloatStructImpl) number).value;
-			return new DoubleFloatStructImpl(subtract);
+			return DoubleFloatStruct.toLispFloat(subtract);
 		}
 		final Apfloat ap = new Apfloat(value);
 		final Apcomplex numberAp = number.ap();
@@ -561,24 +578,24 @@ public class DoubleFloatStructImpl extends BuiltInClassStruct implements DoubleF
 	public NumberStruct multiply(final NumberStruct number) {
 		if (number instanceof FixnumStructImpl) {
 			final double multiply = value * ((FixnumStructImpl) number).value;
-			return new DoubleFloatStructImpl(multiply);
+			return DoubleFloatStruct.toLispFloat(multiply);
 		} else if (number instanceof LongnumStructImpl) {
 			final double multiply = value * ((LongnumStructImpl) number).value;
-			return new DoubleFloatStructImpl(multiply);
+			return DoubleFloatStruct.toLispFloat(multiply);
 		} else if (number instanceof BignumStructImpl) {
 			final BigDecimal bigDecimal1 = BigDecimal.valueOf(value);
 			final BigDecimal bigDecimal2 = new BigDecimal(((BignumStructImpl) number).value);
 			final BigDecimal multiply = bigDecimal1.multiply(bigDecimal2);
-			return new DoubleFloatStructImpl(multiply.floatValue());
+			return DoubleFloatStruct.toLispFloat(multiply.floatValue());
 		} else if (number instanceof RatioStructImpl) {
 			final double multiply = value * ((RatioStructImpl) number).value.floatValue();
-			return new DoubleFloatStructImpl(multiply);
+			return DoubleFloatStruct.toLispFloat(multiply);
 		} else if (number instanceof SingleFloatStructImpl) {
 			final double multiply = value * ((SingleFloatStructImpl) number).value;
-			return new DoubleFloatStructImpl(multiply);
+			return DoubleFloatStruct.toLispFloat(multiply);
 		} else if (number instanceof DoubleFloatStructImpl) {
 			final double multiply = value * ((DoubleFloatStructImpl) number).value;
-			return new DoubleFloatStructImpl(multiply);
+			return DoubleFloatStruct.toLispFloat(multiply);
 		}
 		return number.multiply(this);
 	}
@@ -587,24 +604,24 @@ public class DoubleFloatStructImpl extends BuiltInClassStruct implements DoubleF
 	public NumberStruct divide(final NumberStruct number) {
 		if (number instanceof FixnumStructImpl) {
 			final double divide = value / ((FixnumStructImpl) number).value;
-			return new DoubleFloatStructImpl(divide);
+			return DoubleFloatStruct.toLispFloat(divide);
 		} else if (number instanceof LongnumStructImpl) {
 			final double divide = value / ((LongnumStructImpl) number).value;
-			return new DoubleFloatStructImpl(divide);
+			return DoubleFloatStruct.toLispFloat(divide);
 		} else if (number instanceof BignumStructImpl) {
 			final BigDecimal bigDecimal1 = BigDecimal.valueOf(value);
 			final BigDecimal bigDecimal2 = new BigDecimal(((BignumStructImpl) number).value);
 			final BigDecimal divide = bigDecimal1.divide(bigDecimal2, MathContext.DECIMAL64);
-			return new DoubleFloatStructImpl(divide.floatValue());
+			return DoubleFloatStruct.toLispFloat(divide.floatValue());
 		} else if (number instanceof RatioStructImpl) {
 			final double divide = value / ((RatioStructImpl) number).value.floatValue();
-			return new DoubleFloatStructImpl(divide);
+			return DoubleFloatStruct.toLispFloat(divide);
 		} else if (number instanceof SingleFloatStructImpl) {
 			final double divide = value / ((SingleFloatStructImpl) number).value;
-			return new DoubleFloatStructImpl(divide);
+			return DoubleFloatStruct.toLispFloat(divide);
 		} else if (number instanceof DoubleFloatStructImpl) {
 			final double divide = value / ((DoubleFloatStructImpl) number).value;
-			return new DoubleFloatStructImpl(divide);
+			return DoubleFloatStruct.toLispFloat(divide);
 		}
 		final Apfloat ap = new Apfloat(value);
 		final Apcomplex numberAp = number.ap();
@@ -650,18 +667,18 @@ public class DoubleFloatStructImpl extends BuiltInClassStruct implements DoubleF
 
 	@Override
 	public FloatStruct negation() {
-		return new DoubleFloatStructImpl(-value);
+		return DoubleFloatStruct.toLispFloat(-value);
 	}
 
 	@Override
 	public FloatStruct reciprocal() {
-		return new DoubleFloatStructImpl(1 / value);
+		return DoubleFloatStruct.toLispFloat(1 / value);
 	}
 
 	@Override
 	public RealStruct exp() {
 		final double exp = StrictMath.exp(value);
-		return new DoubleFloatStructImpl(exp);
+		return DoubleFloatStruct.toLispFloat(exp);
 	}
 
 	@Override
@@ -680,7 +697,7 @@ public class DoubleFloatStructImpl extends BuiltInClassStruct implements DoubleF
 	@Override
 	public RealStruct log() {
 		final double log = StrictMath.log(value);
-		return new DoubleFloatStructImpl(log);
+		return DoubleFloatStruct.toLispFloat(log);
 	}
 
 	@Override
@@ -705,78 +722,104 @@ public class DoubleFloatStructImpl extends BuiltInClassStruct implements DoubleF
 		}
 
 		final double sqrt = StrictMath.sqrt(value);
-		return new DoubleFloatStructImpl(sqrt);
+		return DoubleFloatStruct.toLispFloat(sqrt);
 	}
 
 	@Override
 	public RealStruct sin() {
 		final double sin = StrictMath.sin(value);
-		return new DoubleFloatStructImpl(sin);
+		return DoubleFloatStruct.toLispFloat(sin);
 	}
 
 	@Override
 	public RealStruct cos() {
 		final double cos = StrictMath.cos(value);
-		return new DoubleFloatStructImpl(cos);
+		return DoubleFloatStruct.toLispFloat(cos);
 	}
 
 	@Override
 	public RealStruct tan() {
 		final double tan = StrictMath.tan(value);
-		return new DoubleFloatStructImpl(tan);
+		return DoubleFloatStruct.toLispFloat(tan);
 	}
 
 	@Override
 	public RealStruct asin() {
 		final double asin = StrictMath.asin(value);
-		return new DoubleFloatStructImpl(asin);
+		return DoubleFloatStruct.toLispFloat(asin);
 	}
 
 	@Override
 	public RealStruct acos() {
 		final double acos = StrictMath.acos(value);
-		return new DoubleFloatStructImpl(acos);
+		return DoubleFloatStruct.toLispFloat(acos);
 	}
 
 	@Override
 	public RealStruct atan() {
 		final double atan = StrictMath.atan(value);
-		return new DoubleFloatStructImpl(atan);
+		return DoubleFloatStruct.toLispFloat(atan);
 	}
 
 	@Override
 	public RealStruct sinh() {
 		final double sinh = StrictMath.sinh(value);
-		return new DoubleFloatStructImpl(sinh);
+		return DoubleFloatStruct.toLispFloat(sinh);
 	}
 
 	@Override
 	public RealStruct cosh() {
 		final double cosh = StrictMath.cosh(value);
-		return new DoubleFloatStructImpl(cosh);
+		return DoubleFloatStruct.toLispFloat(cosh);
 	}
 
 	@Override
 	public RealStruct tanh() {
 		final double tanh = StrictMath.tanh(value);
-		return new DoubleFloatStructImpl(tanh);
+		return DoubleFloatStruct.toLispFloat(tanh);
 	}
 
 	@Override
 	public RealStruct asinh() {
 		final double asinh = FastMath.asinh(value);
-		return new DoubleFloatStructImpl(asinh);
+		return DoubleFloatStruct.toLispFloat(asinh);
 	}
 
 	@Override
 	public RealStruct acosh() {
 		final double acosh = FastMath.acosh(value);
-		return new DoubleFloatStructImpl(acosh);
+		return DoubleFloatStruct.toLispFloat(acosh);
 	}
 
 	@Override
 	public RealStruct atanh() {
 		final double atanh = FastMath.atanh(value);
-		return new DoubleFloatStructImpl(atanh);
+		return DoubleFloatStruct.toLispFloat(atanh);
+	}
+
+	/*
+		ToString
+	 */
+
+	@Override
+	public String toString() {
+
+		final FloatType floatType = (FloatType) getType();
+		final FloatType defaultFloatFormat = ReaderVariables.READ_DEFAULT_FLOAT_FORMAT.getVariableValue();
+
+		String floatString = String.valueOf(value);
+		if (floatType.isNotOfType(defaultFloatFormat)) {
+			if (floatType.isOfType(ShortFloatType.INSTANCE)) {
+				floatString = floatString.replace('E', 'S');
+			} else if (floatType.isOfType(SingleFloatType.INSTANCE)) {
+				floatString = floatString.replace('E', 'F');
+			} else if (floatType.isOfType(DoubleFloatType.INSTANCE)) {
+				floatString = floatString.replace('E', 'D');
+			} else if (floatType.isOfType(LongFloatType.INSTANCE)) {
+				floatString = floatString.replace('E', 'L');
+			}
+		}
+
+		return floatString;
 	}
 }

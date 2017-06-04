@@ -33,7 +33,7 @@ public final class WriteByteFunction extends CommonLispBuiltInFunctionStructBase
 		final IntegerStruct byteVal = arguments.getRequiredArgument(BYTE_ARGUMENT, IntegerStruct.class);
 		final OutputStreamStruct outputStreamStruct = arguments.getRequiredArgument(OUTPUT_STREAM_ARGUMENT, OutputStreamStruct.class);
 
-		final int byteValue = byteVal.intValue();
+		final int byteValue = byteVal.toJavaInt();
 		outputStreamStruct.writeByte(byteValue);
 
 		return byteVal;

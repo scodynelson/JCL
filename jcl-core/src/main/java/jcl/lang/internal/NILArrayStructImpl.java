@@ -14,7 +14,6 @@ import jcl.lang.StringStruct;
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.factory.LispStructFactory;
-import jcl.lang.internal.number.IntegerStructImpl;
 import jcl.lang.statics.PrinterVariables;
 import jcl.type.ArrayType;
 import jcl.type.LispType;
@@ -155,7 +154,7 @@ public class NILArrayStructImpl extends ArrayStructImpl {
 		return new NILArrayStructImpl(ArrayType.INSTANCE,
 		                              upgradedET,
 		                              displacedTo,
-		                              displacedIndexOffset.intValue(),
+		                              displacedIndexOffset.toJavaInt(),
 		                              isAdjustable.booleanValue());
 	}
 
@@ -291,7 +290,7 @@ public class NILArrayStructImpl extends ArrayStructImpl {
 			this.elementType = elementType;
 			content = null;
 			this.displacedTo = displacedTo;
-			this.displacedIndexOffset = displacedIndexOffset.intValue();
+			this.displacedIndexOffset = displacedIndexOffset.toJavaInt();
 			return this;
 		} else {
 			return valueOf(upgradedET, displacedTo, displacedIndexOffset, NILStruct.INSTANCE);
@@ -305,7 +304,7 @@ public class NILArrayStructImpl extends ArrayStructImpl {
 			return content;
 		}
 
-		final IntegerStruct indexToGet = IntegerStructImpl.valueOf(displacedIndexOffset);
+		final IntegerStruct indexToGet = IntegerStruct.toLispInteger(displacedIndexOffset);
 		return displacedTo.rowMajorAref(indexToGet);
 	}
 
@@ -315,7 +314,7 @@ public class NILArrayStructImpl extends ArrayStructImpl {
 		if (displacedTo == null) {
 			content = newElement;
 		} else {
-			final IntegerStruct indexToSet = IntegerStructImpl.valueOf(displacedIndexOffset);
+			final IntegerStruct indexToSet = IntegerStruct.toLispInteger(displacedIndexOffset);
 			displacedTo.setfRowMajorAref(newElement, indexToSet);
 		}
 		return newElement;
@@ -396,7 +395,7 @@ public class NILArrayStructImpl extends ArrayStructImpl {
 			if (arrayTotalSize() != ((NILArrayStructImpl) object).arrayTotalSize()) {
 				return false;
 			}
-			if (arrayTotalSize().intValue() != 0) {
+			if (arrayTotalSize().toJavaInt() != 0) {
 				throw new TypeErrorException("Attempt to access an array of element type NIL.");
 			}
 			return true;
@@ -405,7 +404,7 @@ public class NILArrayStructImpl extends ArrayStructImpl {
 			if (arrayTotalSize() != ((StringStruct) object).length()) {
 				return false;
 			}
-			if (arrayTotalSize().intValue() != 0) {
+			if (arrayTotalSize().toJavaInt() != 0) {
 				throw new TypeErrorException("Attempt to access an array of element type NIL.");
 			}
 			return true;

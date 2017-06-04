@@ -7,47 +7,59 @@ package jcl.compiler.icg.generator;
 import jcl.compiler.icg.CodeGenerator;
 import jcl.compiler.icg.GeneratorEvent;
 import jcl.compiler.icg.GeneratorState;
+import jcl.compiler.icg.IntermediateCodeGenerator;
 import jcl.compiler.icg.JavaMethodBuilder;
 import jcl.lang.ComplexStruct;
-import jcl.lang.factory.LispStructFactory;
-import jcl.lang.internal.number.ComplexStructImpl;
-import org.apfloat.Apcomplex;
+import jcl.lang.NumberStruct;
+import jcl.lang.RealStruct;
+import jcl.lang.internal.ComplexStructImpl;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 /**
- * Class to generate {@link ComplexStruct} objects dynamically by utilizing the {@link ComplexStruct#ap()} and {@link
- * ComplexStruct#getValueType()} of the provided {@link ComplexStruct} input value.
+ * Class to generate {@link ComplexStruct} objects dynamically by utilizing the {@link NumberStruct#realPart()} and
+ * {@link NumberStruct#imagPart()} of the provided {@link ComplexStruct} input value.
  */
 @Component
 final class ComplexCodeGenerator implements CodeGenerator<ComplexStructImpl> {
 
 	/**
-	 * Constant {@link String} containing the name for the {@link Apcomplex} class.
+	 * {@link IntermediateCodeGenerator} used for generating the {@link ComplexStruct} real and imaginary values.
 	 */
-	private static final String APCOMPLEX_NAME = Type.getInternalName(Apcomplex.class);
+	@Autowired
+	private IntermediateCodeGenerator codeGenerator;
 
 	/**
-	 * Constant {@link String} containing the description for the {@link Apcomplex#Apcomplex(String)} constructor
+	 * Constant {@link String} containing the name for the {@link ComplexStruct} class.
+	 */
+	private static final String COMPLEX_NAME = Type.getInternalName(ComplexStruct.class);
+
+	/**
+	 * Constant {@link String} containing the name for the {@link ComplexStruct#toLispComplex(RealStruct, RealStruct)}
 	 * method.
 	 */
-	private static final String APCOMPLEX_INIT_METHOD_DESC
-			= CodeGenerators.getConstructorDescription(Apcomplex.class, String.class);
+	private static final String COMPLEX_TO_LISP_COMPLEX_METHOD_NAME = "toLispComplex";
+
+	/**
+	 * Constant {@link String} containing the description for the {@link ComplexStruct#toLispComplex(RealStruct,
+	 * RealStruct)} method.
+	 */
+	private static final String COMPLEX_TO_LISP_COMPLEX_METHOD_DESC
+			= CodeGenerators.getMethodDescription(ComplexStruct.class, COMPLEX_TO_LISP_COMPLEX_METHOD_NAME,
+			                                      RealStruct.class, RealStruct.class);
 
 	/**
 	 * {@inheritDoc}
 	 * Generation method for {@link ComplexStruct} objects, by performing the following operations:
 	 * <ol>
-	 * <li>Constructing a new {@link Apcomplex} from the {@link String} representation of the {@link ComplexStruct#ap}
-	 * value</li>
-	 * <li>Loading the {@link ComplexStruct.ValueType} from the provided {@link ComplexStruct#getValueType()}
-	 * value</li>
-	 * <li>Retrieving a {@link ComplexStruct} via {@link LispStructFactory#toComplex(Apcomplex,
-	 * ComplexStruct.ValueType)} with
-	 * the created {@link Apcomplex} and loaded {@link ComplexStruct.ValueType} values</li>
+	 * <li>Emitting the {@link NumberStruct#realPart()} value.</li>
+	 * <li>Emitting the {@link NumberStruct#imagPart()} value.</li>
+	 * <li>Retrieving a {@link ComplexStruct} via {@link ComplexStruct#toLispComplex(RealStruct, RealStruct)} with
+	 * the created real and imaginary values</li>
 	 * </ol>
 	 *
 	 * @param input
@@ -63,25 +75,13 @@ final class ComplexCodeGenerator implements CodeGenerator<ComplexStructImpl> {
 		final JavaMethodBuilder methodBuilder = generatorState.getCurrentMethodBuilder();
 		final MethodVisitor mv = methodBuilder.getMethodVisitor();
 
-		mv.visitTypeInsn(Opcodes.NEW, APCOMPLEX_NAME);
-		mv.visitInsn(Opcodes.DUP);
+		codeGenerator.generate(input.realPart(), generatorState);
+		codeGenerator.generate(input.imagPart(), generatorState);
 
-		final String apString = input.ap().toString();
-		mv.visitLdcInsn(apString);
-
-		mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
-		                   APCOMPLEX_NAME,
-		                   GenerationConstants.INIT_METHOD_NAME,
-		                   APCOMPLEX_INIT_METHOD_DESC,
-		                   false);
-		final int apComplexStore = methodBuilder.getNextAvailableStore();
-		mv.visitVarInsn(Opcodes.ASTORE, apComplexStore);
-
-		mv.visitVarInsn(Opcodes.ALOAD, apComplexStore);
 		mv.visitMethodInsn(Opcodes.INVOKESTATIC,
-		                   GenerationConstants.LISP_STRUCT_FACTORY_NAME,
-		                   GenerationConstants.LISP_STRUCT_FACTORY_TO_COMPLEX_METHOD_NAME,
-		                   GenerationConstants.LISP_STRUCT_FACTORY_TO_COMPLEX_METHOD_DESC,
-		                   false);
+		                   COMPLEX_NAME,
+		                   COMPLEX_TO_LISP_COMPLEX_METHOD_NAME,
+		                   COMPLEX_TO_LISP_COMPLEX_METHOD_DESC,
+		                   true);
 	}
 }

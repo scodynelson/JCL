@@ -8,6 +8,7 @@ import java.math.BigInteger;
 import java.util.Iterator;
 import java.util.Optional;
 
+import jcl.lang.ComplexStruct;
 import jcl.lang.InputStreamStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
@@ -15,7 +16,6 @@ import jcl.lang.NILStruct;
 import jcl.lang.ReadtableStruct;
 import jcl.lang.RealStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
-import jcl.lang.factory.LispStructFactory;
 import jcl.lang.statics.ReaderVariables;
 import jcl.reader.Reader;
 import jcl.util.CodePointConstants;
@@ -65,7 +65,7 @@ public class SharpCReaderMacroFunction extends ReaderMacroFunctionImpl {
 		}
 
 		final int maxNumberOfTokensForComplex = 2;
-		if (listToken.length().longValue() != maxNumberOfTokensForComplex) {
+		if (listToken.length().toJavaPLong() != maxNumberOfTokensForComplex) {
 			throw new ReaderErrorException("Illegal complex number format: #C" + token);
 		}
 		final Iterator<LispStruct> iterator = listToken.iterator();
@@ -80,6 +80,6 @@ public class SharpCReaderMacroFunction extends ReaderMacroFunctionImpl {
 			throw new ReaderErrorException("Only real numbers are valid tokens for #c. Got: " + imaginaryToken);
 		}
 
-		return LispStructFactory.toComplex((RealStruct) realToken, (RealStruct) imaginaryToken);
+		return ComplexStruct.toLispComplex((RealStruct) realToken, (RealStruct) imaginaryToken);
 	}
 }

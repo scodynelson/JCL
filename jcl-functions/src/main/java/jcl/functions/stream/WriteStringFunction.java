@@ -53,13 +53,13 @@ public final class WriteStringFunction extends CommonLispBuiltInFunctionStructBa
 		}
 
 		final IntegerStruct startParam = arguments.getKeyArgument(CommonLispSymbols.START_KEYWORD, IntegerStruct.class);
-		final int start = startParam.intValue();
+		final int start = startParam.toJavaInt();
 
 		final LispStruct endParam = arguments.getKeyArgument(CommonLispSymbols.END_KEYWORD);
 
 		final String javaString = stringParam.toJavaString();
 		if (endParam instanceof IntegerStruct) {
-			final int end = ((IntegerStruct) endParam).intValue();
+			final int end = ((IntegerStruct) endParam).toJavaInt();
 			outputStreamStruct.writeString(javaString, start, end);
 		} else {
 			outputStreamStruct.writeString(javaString, start);

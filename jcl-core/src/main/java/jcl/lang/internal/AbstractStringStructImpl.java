@@ -20,7 +20,6 @@ import jcl.lang.StringStruct;
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.factory.LispStructFactory;
-import jcl.lang.internal.number.IntegerStructImpl;
 import jcl.lang.statics.CharacterConstants;
 import jcl.type.CharacterType;
 import jcl.type.LispType;
@@ -384,9 +383,9 @@ public abstract class AbstractStringStructImpl extends AbstractVectorStructImpl 
 		if (comparisonOp.test(result)) {
 			final int mismatchIndex = mismatchIndexOp.apply(str1, str2);
 			if (mismatchIndex == -1) {
-				return IntegerStructImpl.valueOf(Math.min(str1.length(), str2.length()));
+				return IntegerStruct.toLispInteger(Math.min(str1.length(), str2.length()));
 			}
-			return IntegerStructImpl.valueOf(mismatchIndex);
+			return IntegerStruct.toLispInteger(mismatchIndex);
 		} else {
 			return NILStruct.INSTANCE;
 		}
@@ -464,7 +463,7 @@ public abstract class AbstractStringStructImpl extends AbstractVectorStructImpl 
 		if (start == null) {
 			startInt = 0;
 		} else {
-			startInt = start.intValue();
+			startInt = start.toJavaInt();
 			final int observedLength = getObservedLength();
 			if ((startInt < 0) || (startInt > observedLength)) {
 				throw new ErrorException(
@@ -490,7 +489,7 @@ public abstract class AbstractStringStructImpl extends AbstractVectorStructImpl 
 		if (end == null) {
 			endInt = getObservedLength();
 		} else {
-			endInt = end.intValue();
+			endInt = end.toJavaInt();
 			final int observedLength = getObservedLength();
 			if ((endInt < 0) || (endInt > observedLength) || (endInt < startInt)) {
 				throw new ErrorException(
@@ -685,7 +684,7 @@ public abstract class AbstractStringStructImpl extends AbstractVectorStructImpl 
 
 	@Override
 	public IntegerStruct length() {
-		return IntegerStructImpl.valueOf(totalSize);
+		return IntegerStruct.toLispInteger(totalSize);
 	}
 
 	@Override

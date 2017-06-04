@@ -8,9 +8,7 @@ import java.util.List;
 
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.factory.LispStructFactory;
-import jcl.lang.internal.number.ComplexStructImpl;
 import org.apfloat.Apcomplex;
-import org.apfloat.Apfloat;
 
 /**
  * The {@link NumberStruct} is the object representation of a Lisp 'number' type.
@@ -405,17 +403,5 @@ public interface NumberStruct extends LispStruct {
 		return equal(object) ||
 				((object instanceof NumberStruct)
 						&& isEqualTo((NumberStruct) object));
-	}
-
-	/*
-	DEPRECATED
-	 */
-
-	@Deprecated
-	static NumberStruct valueOf(final Apcomplex apcomplex) {
-		if (apcomplex instanceof Apfloat) {
-			return RealStruct.valueOf((Apfloat) apcomplex);
-		}
-		return ComplexStructImpl.valueOf(apcomplex);
 	}
 }

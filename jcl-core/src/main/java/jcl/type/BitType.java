@@ -46,7 +46,8 @@ public interface BitType extends UnsignedByteType {
 
 			@Override
 			public boolean typeEquals(final Object obj) {
-				return (this == obj) || (obj instanceof BitType);
+				// TODO: Hack for FixnumType until type system gets reworked
+				return (this == obj) || (obj instanceof BitType) || (obj instanceof FixnumType);
 			}
 
 			@Override

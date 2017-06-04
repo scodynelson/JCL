@@ -12,7 +12,6 @@ import jcl.lang.NILStruct;
 import jcl.lang.StringStruct;
 import jcl.lang.classes.BuiltInClassStruct;
 import jcl.lang.factory.LispStructFactory;
-import jcl.lang.internal.number.IntegerStructImpl;
 import jcl.lang.statics.PrinterVariables;
 import jcl.type.BaseCharType;
 import jcl.type.CharacterType;
@@ -182,7 +181,7 @@ public final class CharacterStructImpl extends BuiltInClassStruct implements Cha
 
 	@Override
 	public IntegerStruct charCode() {
-		return IntegerStructImpl.valueOf(codePoint);
+		return IntegerStruct.toLispInteger(codePoint);
 	}
 
 	@Override
@@ -197,12 +196,12 @@ public final class CharacterStructImpl extends BuiltInClassStruct implements Cha
 
 	@Override
 	public LispStruct charDigit(final IntegerStruct radix) {
-		final int radixInt = radix.intValue();
+		final int radixInt = radix.toJavaInt();
 		final int digit = Character.digit(codePoint, radixInt);
 		if (digit == -1) {
 			return NILStruct.INSTANCE;
 		}
-		return IntegerStructImpl.valueOf(digit);
+		return IntegerStruct.toLispInteger(digit);
 	}
 
 	@Override

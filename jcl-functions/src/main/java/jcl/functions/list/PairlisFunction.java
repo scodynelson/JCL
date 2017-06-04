@@ -34,8 +34,8 @@ public final class PairlisFunction extends CommonLispBuiltInFunctionStructBase {
 		final ListStruct keys = arguments.getRequiredArgument(KEYS_ARGUMENT, ListStruct.class);
 		final ListStruct datums = arguments.getRequiredArgument(DATUMS_ARGUMENT, ListStruct.class);
 
-		final long keysLength = keys.length().longValue();
-		final long datumsLength = datums.length().longValue();
+		final long keysLength = keys.length().toJavaPLong();
+		final long datumsLength = datums.length().toJavaPLong();
 		if (keysLength != datumsLength) {
 			throw new SimpleErrorException("The lists of keys and datums are not the same length.");
 		}

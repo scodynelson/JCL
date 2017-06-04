@@ -21,7 +21,7 @@ import jcl.lang.IntegerStruct;
 import jcl.lang.NumberStruct;
 import jcl.lang.RatioStruct;
 import jcl.lang.RationalStruct;
-import jcl.lang.factory.LispStructFactory;
+import jcl.lang.SingleFloatStruct;
 import jcl.lang.readtable.AttributeType;
 import jcl.lang.statics.ReaderVariables;
 import jcl.type.DoubleFloatType;
@@ -188,7 +188,7 @@ final class NumberTokenAccumulatedReaderState {
 	 * @return true if the provided {@code currentToken} is a valid part of a numeric token; false otherwise
 	 */
 	private static boolean isValidNumericToken(final int firstTokenCodePoint, final int currentToken) {
-		final int currentRadix = ReaderVariables.READ_BASE.getVariableValue().intValue();
+		final int currentRadix = ReaderVariables.READ_BASE.getVariableValue().toJavaInt();
 
 		final int digit = Character.digit(currentToken, currentRadix);
 		final boolean isDigitWithRadix = digit >= 0;
@@ -228,10 +228,11 @@ final class NumberTokenAccumulatedReaderState {
 		}
 
 		final String tokenString = ReaderProcessor.convertTokenAttributesToString(tokenAttributes);
-		final int currentRadix = ReaderVariables.READ_BASE.getVariableValue().intValue();
+		final int currentRadix = ReaderVariables.READ_BASE.getVariableValue().toJavaInt();
 
+		// TODO: Integer parsing
 		final BigInteger bigInteger = new BigInteger(tokenString, currentRadix);
-		return LispStructFactory.toInteger(bigInteger);
+		return IntegerStruct.toLispInteger(bigInteger);
 	}
 
 	/*
@@ -253,7 +254,8 @@ final class NumberTokenAccumulatedReaderState {
 
 		// TODO: FloatType???
 		final FloatType floatType = getFloatType(exponentTokenCodePoint);
-		return LispStructFactory.toFloat(tokenString);
+		// TODO: Float parsing
+		return SingleFloatStruct.toLispFloat(Float.parseFloat(tokenString));
 
 //		if (DoubleFloatType.INSTANCE.isOfType(floatType) || LongFloatType.INSTANCE.isOfType(floatType)) {
 //			try {
@@ -349,11 +351,11 @@ final class NumberTokenAccumulatedReaderState {
 		final int numberOfRationalParts = 2;
 		final String[] rationalParts = tokenString.split("/", numberOfRationalParts);
 
-		final int currentRadix = ReaderVariables.READ_BASE.getVariableValue().intValue();
+		final int currentRadix = ReaderVariables.READ_BASE.getVariableValue().toJavaInt();
 
 		final BigInteger numerator = new BigInteger(rationalParts[0], currentRadix);
 		final BigInteger denominator = new BigInteger(rationalParts[1], currentRadix);
-		return RationalStruct.valueOf(numerator, denominator);
+		return RationalStruct.toLispRational(numerator, denominator);
 	}
 
 	/*
@@ -413,7 +415,8 @@ final class NumberTokenAccumulatedReaderState {
 		// TODO: Not sure this is the best way to handle rational floats for the read algorithm. Might be a better way.
 		// TODO: FloatType???
 		final FloatType floatType = getFloatType(exponentTokenCodePoint);
-		return LispStructFactory.toFloat(bigDecimal);
+		// TODO: Float parsing
+		return SingleFloatStruct.toLispFloat(Float.parseFloat(tokenString));
 
 //		if (DoubleFloatType.INSTANCE.isOfType(floatType) || LongFloatType.INSTANCE.isOfType(floatType)) {
 //			try {

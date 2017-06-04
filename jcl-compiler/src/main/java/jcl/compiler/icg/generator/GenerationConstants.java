@@ -5,7 +5,6 @@
 package jcl.compiler.icg.generator;
 
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -49,8 +48,6 @@ import jcl.type.TypeBaseClass;
 import jcl.type.TypeFactory;
 import jcl.type.typespecifier.AtomicTypeSpecifier;
 import org.apfloat.Apcomplex;
-import org.apfloat.Apfloat;
-import org.apfloat.Apint;
 import org.apfloat.Aprational;
 import org.objectweb.asm.Type;
 
@@ -132,10 +129,6 @@ interface GenerationConstants {
 
 	String JAVA_INTEGER_VALUE_OF_METHOD_DESC = CodeGenerators.getMethodDescription(Integer.class, JAVA_INTEGER_VALUE_OF_METHOD_NAME, int.class);
 
-	String JAVA_BIG_INTEGER_NAME = Type.getInternalName(BigInteger.class);
-
-	String JAVA_BIG_INTEGER_INIT_DESC = CodeGenerators.getConstructorDescription(BigInteger.class, String.class);
-
 	String JAVA_BIG_DECIMAL_NAME = Type.getInternalName(BigDecimal.class);
 
 	String JAVA_BIG_DECIMAL_INIT_DESC = CodeGenerators.getConstructorDescription(BigDecimal.class, String.class);
@@ -194,17 +187,9 @@ interface GenerationConstants {
 
 	String LISP_STRUCT_FACTORY_TO_COMPLEX_METHOD_DESC = CodeGenerators.getMethodDescription(LispStructFactory.class, LISP_STRUCT_FACTORY_TO_COMPLEX_METHOD_NAME, Apcomplex.class);
 
-	String LISP_STRUCT_FACTORY_TO_FLOAT_METHOD_NAME = "toFloat";
-
-	String LISP_STRUCT_FACTORY_TO_FLOAT_METHOD_DESC = CodeGenerators.getMethodDescription(LispStructFactory.class, LISP_STRUCT_FACTORY_TO_FLOAT_METHOD_NAME, Apfloat.class);
-
 	String LISP_STRUCT_FACTORY_TO_RATIO_METHOD_NAME = "toRatio";
 
 	String LISP_STRUCT_FACTORY_TO_RATIO_METHOD_DESC = CodeGenerators.getMethodDescription(LispStructFactory.class, LISP_STRUCT_FACTORY_TO_RATIO_METHOD_NAME, Aprational.class);
-
-	String LISP_STRUCT_FACTORY_TO_INTEGER_METHOD_NAME = "toInteger";
-
-	String LISP_STRUCT_FACTORY_TO_INTEGER_METHOD_DESC = CodeGenerators.getMethodDescription(LispStructFactory.class, LISP_STRUCT_FACTORY_TO_INTEGER_METHOD_NAME, Apint.class);
 
 	String LISP_STRUCT_FACTORY_TO_CONS_CAR_METHOD_NAME = "toCons";
 

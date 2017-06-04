@@ -18,7 +18,6 @@ import jcl.lang.ValuesStruct;
 import jcl.lang.classes.BuiltInClassStruct;
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
-import jcl.lang.internal.number.IntegerStructImpl;
 import jcl.type.ConsType;
 
 /**
@@ -187,7 +186,7 @@ public final class ConsStructImpl extends BuiltInClassStruct implements ConsStru
 
 	@Override
 	public LispStruct[] toArray() {
-		final LispStruct[] result = new LispStruct[Math.toIntExact(length().longValue())];
+		final LispStruct[] result = new LispStruct[length().toJavaInt()];
 		int i = 0;
 
 		for (LispStruct x = this; x instanceof ConsStructImpl; x = ((ConsStructImpl) x).cdr) {
@@ -231,7 +230,7 @@ public final class ConsStructImpl extends BuiltInClassStruct implements ConsStru
 		if (isCircular()) {
 			return null;
 		}
-		return length().longValue();
+		return length().toJavaPLong();
 	}
 
 	@Override
@@ -502,12 +501,12 @@ public final class ConsStructImpl extends BuiltInClassStruct implements ConsStru
 				throw new TypeErrorException("Not a proper list.");
 			}
 		}
-		return IntegerStructImpl.valueOf(length);
+		return IntegerStruct.toLispInteger(length);
 	}
 
 	@Override
 	public LispStruct elt(final IntegerStruct index) {
-		final long longIndex = index.longValue();
+		final long longIndex = index.toJavaPLong();
 		if (longIndex < 0) {
 			throw new TypeErrorException("N value must be non-negative.");
 		}
@@ -533,7 +532,7 @@ public final class ConsStructImpl extends BuiltInClassStruct implements ConsStru
 
 	@Override
 	public LispStruct setfElt(final LispStruct newElement, final IntegerStruct index) {
-		final long longIndex = index.longValue();
+		final long longIndex = index.toJavaPLong();
 		if (longIndex < 0) {
 			throw new TypeErrorException("N value must be non-negative.");
 		}
@@ -639,7 +638,7 @@ public final class ConsStructImpl extends BuiltInClassStruct implements ConsStru
 	@Override
 	public Spliterator<LispStruct> spliterator() {
 		return Spliterators.spliterator(iterator(),
-		                                length().longValue(),
+		                                length().toJavaPLong(),
 		                                Spliterator.ORDERED |
 				                                Spliterator.SIZED |
 				                                Spliterator.NONNULL |

@@ -3,7 +3,6 @@ package jcl.lang;
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.factory.LispStructFactory;
-import jcl.lang.internal.number.IntegerStructImpl;
 import jcl.lang.statics.CharacterConstants;
 import jcl.type.BaseCharType;
 import jcl.type.CharacterType;
@@ -526,7 +525,7 @@ public class StringStructStringTest {
 	@Test
 	public void test_stringUpcase_FillPointer() {
 		final String str = "abc";
-		final StringStruct struct = StringStruct.builder(IntegerStructImpl.valueOf(str.length()))
+		final StringStruct struct = StringStruct.builder(IntegerStruct.toLispInteger(str.length()))
 		                                        .initialContents(StringStruct.toLispString(str))
 		                                        .fillPointer(IntegerStruct.TWO)
 		                                        .build();
@@ -736,7 +735,7 @@ public class StringStructStringTest {
 	@Test
 	public void test_stringDowncase_FillPointer() {
 		final String str = "ABC";
-		final StringStruct struct = StringStruct.builder(IntegerStructImpl.valueOf(str.length()))
+		final StringStruct struct = StringStruct.builder(IntegerStruct.toLispInteger(str.length()))
 		                                        .initialContents(StringStruct.toLispString(str))
 		                                        .fillPointer(IntegerStruct.TWO)
 		                                        .build();
@@ -946,9 +945,9 @@ public class StringStructStringTest {
 	@Test
 	public void test_stringCapitalize_FillPointer() {
 		final String str = "abc def";
-		final StringStruct struct = StringStruct.builder(IntegerStructImpl.valueOf(str.length()))
+		final StringStruct struct = StringStruct.builder(IntegerStruct.toLispInteger(str.length()))
 		                                        .initialContents(StringStruct.toLispString(str))
-		                                        .fillPointer(IntegerStructImpl.valueOf(4))
+		                                        .fillPointer(IntegerStruct.toLispInteger(4))
 		                                        .build();
 		final StringStruct result = struct.stringCapitalize(StringIntervalOpContext.builder()
 		                                                                           .build());
@@ -965,7 +964,7 @@ public class StringStructStringTest {
 	@Test
 	public void test_stringCapitalize_Displaced() {
 		final String str = "abc def";
-		final StringStruct struct = StringStruct.builder(IntegerStructImpl.valueOf(6))
+		final StringStruct struct = StringStruct.builder(IntegerStruct.toLispInteger(6))
 		                                        .displacedTo(StringStruct.toLispString(str))
 		                                        .displacedIndexOffset(IntegerStruct.ONE)
 		                                        .build();
@@ -1160,7 +1159,7 @@ public class StringStructStringTest {
 	@Test
 	public void test_nStringUpcase_FillPointer() {
 		final String str = "abc";
-		final StringStruct struct = StringStruct.builder(IntegerStructImpl.valueOf(str.length()))
+		final StringStruct struct = StringStruct.builder(IntegerStruct.toLispInteger(str.length()))
 		                                        .initialContents(StringStruct.toLispString(str))
 		                                        .fillPointer(IntegerStruct.TWO)
 		                                        .build();
@@ -1376,7 +1375,7 @@ public class StringStructStringTest {
 	@Test
 	public void test_nStringDowncase_FillPointer() {
 		final String str = "ABC";
-		final StringStruct struct = StringStruct.builder(IntegerStructImpl.valueOf(str.length()))
+		final StringStruct struct = StringStruct.builder(IntegerStruct.toLispInteger(str.length()))
 		                                        .initialContents(StringStruct.toLispString(str))
 		                                        .fillPointer(IntegerStruct.TWO)
 		                                        .build();
@@ -1592,9 +1591,9 @@ public class StringStructStringTest {
 	@Test
 	public void test_nStringCapitalize_FillPointer() {
 		final String str = "abc def";
-		final StringStruct struct = StringStruct.builder(IntegerStructImpl.valueOf(str.length()))
+		final StringStruct struct = StringStruct.builder(IntegerStruct.toLispInteger(str.length()))
 		                                        .initialContents(StringStruct.toLispString(str))
-		                                        .fillPointer(IntegerStructImpl.valueOf(4))
+		                                        .fillPointer(IntegerStruct.toLispInteger(4))
 		                                        .build();
 		final StringStruct result = struct.nStringCapitalize(StringIntervalOpContext.builder()
 		                                                                            .build());
@@ -1612,7 +1611,7 @@ public class StringStructStringTest {
 	@Test
 	public void test_nStringCapitalize_Displaced() {
 		final String str = "abc def";
-		final StringStruct struct = StringStruct.builder(IntegerStructImpl.valueOf(6))
+		final StringStruct struct = StringStruct.builder(IntegerStruct.toLispInteger(6))
 		                                        .displacedTo(StringStruct.toLispString(str))
 		                                        .displacedIndexOffset(IntegerStruct.ONE)
 		                                        .build();
@@ -1678,9 +1677,9 @@ public class StringStructStringTest {
 		);
 
 		final String str = "cabdabeac";
-		final StringStruct struct = StringStruct.builder(IntegerStructImpl.valueOf(str.length()))
+		final StringStruct struct = StringStruct.builder(IntegerStruct.toLispInteger(str.length()))
 		                                        .initialContents(StringStruct.toLispString(str))
-		                                        .fillPointer(IntegerStructImpl.valueOf(5))
+		                                        .fillPointer(IntegerStruct.toLispInteger(5))
 		                                        .build();
 
 		final StringStruct result = struct.stringTrim(characterBag);
@@ -1701,7 +1700,7 @@ public class StringStructStringTest {
 		);
 
 		final String str = "cabdabeac";
-		final StringStruct struct = StringStruct.builder(IntegerStructImpl.valueOf(8))
+		final StringStruct struct = StringStruct.builder(IntegerStruct.toLispInteger(8))
 		                                        .displacedTo(StringStruct.toLispString(str))
 		                                        .displacedIndexOffset(IntegerStruct.ONE)
 		                                        .build();
@@ -1766,9 +1765,9 @@ public class StringStructStringTest {
 		);
 
 		final String str = "cabdabeac";
-		final StringStruct struct = StringStruct.builder(IntegerStructImpl.valueOf(str.length()))
+		final StringStruct struct = StringStruct.builder(IntegerStruct.toLispInteger(str.length()))
 		                                        .initialContents(StringStruct.toLispString(str))
-		                                        .fillPointer(IntegerStructImpl.valueOf(5))
+		                                        .fillPointer(IntegerStruct.toLispInteger(5))
 		                                        .build();
 
 		final StringStruct result = struct.stringLeftTrim(characterBag);
@@ -1789,7 +1788,7 @@ public class StringStructStringTest {
 		);
 
 		final String str = "cabdabeac";
-		final StringStruct struct = StringStruct.builder(IntegerStructImpl.valueOf(8))
+		final StringStruct struct = StringStruct.builder(IntegerStruct.toLispInteger(8))
 		                                        .displacedTo(StringStruct.toLispString(str))
 		                                        .displacedIndexOffset(IntegerStruct.ONE)
 		                                        .build();
@@ -1854,9 +1853,9 @@ public class StringStructStringTest {
 		);
 
 		final String str = "cabdabeac";
-		final StringStruct struct = StringStruct.builder(IntegerStructImpl.valueOf(str.length()))
+		final StringStruct struct = StringStruct.builder(IntegerStruct.toLispInteger(str.length()))
 		                                        .initialContents(StringStruct.toLispString(str))
-		                                        .fillPointer(IntegerStructImpl.valueOf(5))
+		                                        .fillPointer(IntegerStruct.toLispInteger(5))
 		                                        .build();
 
 		final StringStruct result = struct.stringRightTrim(characterBag);
@@ -1877,7 +1876,7 @@ public class StringStructStringTest {
 		);
 
 		final String str = "cabdabeac";
-		final StringStruct struct = StringStruct.builder(IntegerStructImpl.valueOf(8))
+		final StringStruct struct = StringStruct.builder(IntegerStruct.toLispInteger(8))
 		                                        .displacedTo(StringStruct.toLispString(str))
 		                                        .displacedIndexOffset(IntegerStruct.ONE)
 		                                        .build();
@@ -1932,7 +1931,7 @@ public class StringStructStringTest {
 	@Test
 	public void test_toJavaString_noArg_FillPointer() {
 		final String str = "abc";
-		final StringStruct struct = StringStruct.builder(IntegerStructImpl.valueOf(str.length()))
+		final StringStruct struct = StringStruct.builder(IntegerStruct.toLispInteger(str.length()))
 		                                        .initialContents(StringStruct.toLispString(str))
 		                                        .fillPointer(IntegerStruct.TWO)
 		                                        .build();
@@ -1978,7 +1977,7 @@ public class StringStructStringTest {
 	public void test_toJavaString_Displaced_FillPointer_Ignore() {
 		final String str = "abc";
 		final StringStruct displacedTo
-				= StringStruct.builder(IntegerStructImpl.valueOf(str.length()))
+				= StringStruct.builder(IntegerStruct.toLispInteger(str.length()))
 				              .initialContents(StringStruct.toLispString(str))
 				              .build();
 		final StringStruct struct
@@ -1999,7 +1998,7 @@ public class StringStructStringTest {
 	public void test_toJavaString_Displaced_FillPointer_NotIgnore() {
 		final String str = "abc";
 		final StringStruct displacedTo
-				= StringStruct.builder(IntegerStructImpl.valueOf(str.length()))
+				= StringStruct.builder(IntegerStruct.toLispInteger(str.length()))
 				              .initialContents(StringStruct.toLispString(str))
 				              .build();
 		final StringStruct struct
@@ -2043,7 +2042,7 @@ public class StringStructStringTest {
 	@Test
 	public void test_toJavaString_FillPointer_Ignore() {
 		final String str = "abc";
-		final StringStruct struct = StringStruct.builder(IntegerStructImpl.valueOf(str.length()))
+		final StringStruct struct = StringStruct.builder(IntegerStruct.toLispInteger(str.length()))
 		                                        .initialContents(StringStruct.toLispString(str))
 		                                        .fillPointer(IntegerStruct.TWO)
 		                                        .build();
@@ -2058,7 +2057,7 @@ public class StringStructStringTest {
 	@Test
 	public void test_toJavaString_FillPointer_NotIgnore() {
 		final String str = "abc";
-		final StringStruct struct = StringStruct.builder(IntegerStructImpl.valueOf(str.length()))
+		final StringStruct struct = StringStruct.builder(IntegerStruct.toLispInteger(str.length()))
 		                                        .initialContents(StringStruct.toLispString(str))
 		                                        .fillPointer(IntegerStruct.TWO)
 		                                        .build();
@@ -2131,7 +2130,7 @@ public class StringStructStringTest {
 	@Test
 	public void test_toString_FillPointer_Escape() {
 		final String str = "abc";
-		final StringStruct struct = StringStruct.builder(IntegerStructImpl.valueOf(str.length()))
+		final StringStruct struct = StringStruct.builder(IntegerStruct.toLispInteger(str.length()))
 		                                        .initialContents(StringStruct.toLispString(str))
 		                                        .fillPointer(IntegerStruct.TWO)
 		                                        .build();
@@ -2182,7 +2181,7 @@ public class StringStructStringTest {
 	@Test
 	public void test_toString_FillPointer_NoEscape() {
 		final String str = "abc";
-		final StringStruct struct = StringStruct.builder(IntegerStructImpl.valueOf(str.length()))
+		final StringStruct struct = StringStruct.builder(IntegerStruct.toLispInteger(str.length()))
 		                                        .initialContents(StringStruct.toLispString(str))
 		                                        .fillPointer(IntegerStruct.TWO)
 		                                        .build();
@@ -2208,7 +2207,7 @@ public class StringStructStringTest {
 	@Test
 	public void test_toString_Complex_NoEscape() {
 		final String str = "abc";
-		final StringStruct struct = StringStruct.builder(IntegerStructImpl.valueOf(str.length()))
+		final StringStruct struct = StringStruct.builder(IntegerStruct.toLispInteger(str.length()))
 		                                        .initialContents(StringStruct.toLispString(str))
 		                                        .adjustable(BooleanStruct.T)
 		                                        .build();
@@ -2235,7 +2234,7 @@ public class StringStructStringTest {
 	@Test
 	public void test_toString_Complex_NoEscape_WithSpecialEscapes() {
 		final String str = "a\\4*j\"p";
-		final StringStruct struct = StringStruct.builder(IntegerStructImpl.valueOf(str.length()))
+		final StringStruct struct = StringStruct.builder(IntegerStruct.toLispInteger(str.length()))
 		                                        .initialContents(StringStruct.toLispString(str))
 		                                        .adjustable(BooleanStruct.T)
 		                                        .build();
@@ -2320,7 +2319,7 @@ public class StringStructStringTest {
 
 		final String str = "abc";
 		final StringStruct displacedTo = StringStruct.toLispString(str);
-		StringStruct.builder(IntegerStructImpl.valueOf(str.length()))
+		StringStruct.builder(IntegerStruct.toLispInteger(str.length()))
 		            .displacedTo(displacedTo)
 		            .displacedIndexOffset(IntegerStruct.MINUS_ONE)
 		            .build();
@@ -2337,7 +2336,7 @@ public class StringStructStringTest {
 
 		final String str = "abc";
 		final StringStruct displacedTo = StringStruct.toLispString(str);
-		StringStruct.builder(IntegerStructImpl.valueOf(str.length()))
+		StringStruct.builder(IntegerStruct.toLispInteger(str.length()))
 		            .displacedTo(displacedTo)
 		            .displacedIndexOffset(IntegerStruct.TEN)
 		            .build();

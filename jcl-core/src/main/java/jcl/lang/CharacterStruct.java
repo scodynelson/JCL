@@ -559,7 +559,7 @@ public interface CharacterStruct extends LispStruct {
 	 * @return a character if is representable by {@code code}, or {@link NILStruct#INSTANCE}
 	 */
 	static LispStruct codeChar(final IntegerStruct code) {
-		final int codeValue = code.intValue();
+		final int codeValue = code.toJavaInt();
 		if (!Character.isDefined(codeValue)) {
 			return NILStruct.INSTANCE;
 		}
@@ -628,8 +628,8 @@ public interface CharacterStruct extends LispStruct {
 	 * @return a CharacterStruct that has the provided {@code weight}, or {@link BooleanStruct#NIL}
 	 */
 	static LispStruct digitChar(final IntegerStruct weight, final IntegerStruct radix) {
-		final int weightInt = weight.intValue();
-		final int radixInt = radix.intValue();
+		final int weightInt = weight.toJavaInt();
+		final int radixInt = radix.toJavaInt();
 
 		final char digit = Character.forDigit(weightInt, radixInt);
 		if (digit == '\0') {

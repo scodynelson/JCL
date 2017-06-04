@@ -5,9 +5,9 @@
 package jcl.functions.hashtable;
 
 import jcl.functions.CommonLispBuiltInFunctionStructBase;
+import jcl.lang.DoubleFloatStruct;
 import jcl.lang.HashTableStruct;
 import jcl.lang.LispStruct;
-import jcl.lang.factory.LispStructFactory;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import org.springframework.stereotype.Component;
@@ -30,6 +30,6 @@ public final class HashTableRehashThresholdFunction extends CommonLispBuiltInFun
 	public LispStruct apply(final Arguments arguments) {
 		final HashTableStruct hashTable = arguments.getRequiredArgument(HASH_TABLE_ARGUMENT, HashTableStruct.class);
 		final float rehashThreshold = hashTable.getRehashThreshold();
-		return LispStructFactory.toFloat(rehashThreshold);
+		return DoubleFloatStruct.toLispFloat(rehashThreshold);
 	}
 }

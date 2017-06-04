@@ -233,13 +233,13 @@ public final class SimpleStringStructImpl extends AbstractStringStructImpl {
 		validateNewInitialElement(newInitialElement, upgradedET);
 
 		final IntegerStruct newTotalSize = context.getDimensions().get(0);
-		final int newTotalSizeInt = newTotalSize.intValue();
+		final int newTotalSizeInt = newTotalSize.toJavaInt();
 
 		final BooleanStruct newAdjustable = context.getAdjustable();
 		final boolean newAdjustableBoolean = newAdjustable.booleanValue();
 
 		final IntegerStruct newFillPointer = context.getFillPointer();
-		final Integer newFillPointerInt = (newFillPointer == null) ? null : newFillPointer.intValue();
+		final Integer newFillPointerInt = (newFillPointer == null) ? null : newFillPointer.toJavaInt();
 
 		final StringBuilder newContents = new StringBuilder(contents);
 		updateContentsWithElement(newContents, newInitialElement, totalSize, newTotalSizeInt);

@@ -34,7 +34,7 @@ public class RadixVariable extends VariableStructImpl<IntegerStruct> {
 		final IntegerStruct variableValue = (IntegerStruct) value;
 
 		// TODO: optimize??
-		final BigInteger bigIntegerValue = variableValue.bigIntegerValue();
+		final BigInteger bigIntegerValue = variableValue.toJavaBigInteger();
 		if (RADIX_RANGE.contains(bigIntegerValue)) {
 			super.setValue(variableValue);
 		} else {

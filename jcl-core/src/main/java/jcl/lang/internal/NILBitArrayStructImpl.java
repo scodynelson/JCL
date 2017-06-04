@@ -59,7 +59,7 @@ public class NILBitArrayStructImpl extends NILArrayStructImpl implements BitArra
 			throw new ErrorException("Requested size is too large to displace to " + displacedTo + '.');
 		}
 
-		return new NILBitArrayStructImpl(ArrayType.INSTANCE, displacedTo, displacedIndexOffset.intValue(),
+		return new NILBitArrayStructImpl(ArrayType.INSTANCE, displacedTo, displacedIndexOffset.toJavaInt(),
 		                                 isAdjustable.booleanValue());
 	}
 

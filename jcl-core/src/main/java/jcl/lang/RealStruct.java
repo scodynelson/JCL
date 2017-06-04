@@ -9,10 +9,8 @@ import java.util.List;
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.factory.LispStructFactory;
 import jcl.lang.internal.ComplexStructImpl;
-import jcl.lang.internal.number.FloatStructImpl;
 import jcl.lang.number.QuotientRemainder;
 import org.apfloat.Apfloat;
-import org.apfloat.Aprational;
 
 /**
  * The {@link RealStruct} is the object representation of a Lisp 'real' type.
@@ -543,17 +541,5 @@ public interface RealStruct extends NumberStruct {
 		return eq(object) ||
 				((object instanceof RealStruct)
 						&& ((RealStruct) object).ap().equals(ap()));
-	}
-
-	/*
-	DEPRECATED
-	 */
-
-	@Deprecated
-	static RealStruct valueOf(final Apfloat apfloat) {
-		if (apfloat instanceof Aprational) {
-			return RationalStruct.valueOf((Aprational) apfloat);
-		}
-		return FloatStructImpl.valueOf(apfloat);
 	}
 }

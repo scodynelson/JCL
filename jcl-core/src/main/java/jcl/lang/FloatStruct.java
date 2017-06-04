@@ -2,37 +2,12 @@ package jcl.lang;
 
 import java.math.BigDecimal;
 
-import jcl.lang.internal.number.FloatStructImpl;
 import jcl.lang.number.DecodeFloatResult;
 
 /**
  * The {@link FloatStruct} is the object representation of a Lisp 'float' type.
  */
 public interface FloatStruct extends RealStruct {
-
-	/**
-	 * {@link FloatStruct} constant representing 0.0.
-	 */
-	@Deprecated
-	FloatStruct ZERO = FloatStructImpl.valueOf(0.0D);
-
-	/**
-	 * {@link FloatStruct} constant representing -0.0.
-	 */
-	@Deprecated
-	FloatStruct MINUS_ZERO = FloatStructImpl.valueOf(-0.0D);
-
-	/**
-	 * {@link FloatStruct} constant representing 1.0.
-	 */
-	@Deprecated
-	FloatStruct ONE = FloatStructImpl.valueOf(1.0D);
-
-	/**
-	 * {@link FloatStruct} constant representing -1.0.
-	 */
-	@Deprecated
-	FloatStruct MINUS_ONE = FloatStructImpl.valueOf(-1.0D);
 
 	/**
 	 * Computes the three main values that characterize this FloatStruct: the significand, exponent, and sign..
@@ -197,24 +172,5 @@ public interface FloatStruct extends RealStruct {
 		return eq(object) ||
 				((object instanceof FloatStruct)
 						&& ((FloatStruct) object).ap().equals(ap()));
-	}
-
-	/*
-	DEPRECATED
-	 */
-
-	@Deprecated
-	default float floatValue() {
-		return toJavaFloat();
-	}
-
-	@Deprecated
-	default double doubleValue() {
-		return toJavaDouble();
-	}
-
-	@Deprecated
-	default BigDecimal bigDecimalValue() {
-		return toJavaBigDecimal();
 	}
 }

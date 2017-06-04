@@ -2,7 +2,6 @@ package jcl.lang;
 
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
-import jcl.lang.internal.number.IntegerStructImpl;
 import jcl.lang.statics.CharacterConstants;
 import org.junit.Assert;
 import org.junit.Rule;
@@ -68,7 +67,7 @@ public class StringStructVectorTest {
 	public void test_fillPointer_Complex() {
 		final String str = "abc";
 		final IntegerStruct fillPointer = IntegerStruct.TWO;
-		final StringStruct struct = StringStruct.builder(IntegerStructImpl.valueOf(str.length()))
+		final StringStruct struct = StringStruct.builder(IntegerStruct.toLispInteger(str.length()))
 		                                        .initialContents(StringStruct.toLispString(str))
 		                                        .fillPointer(fillPointer)
 		                                        .build();
@@ -99,7 +98,7 @@ public class StringStructVectorTest {
 	public void test_setfFillPointer_Complex() {
 		final String str = "abc";
 		final IntegerStruct fillPointer = IntegerStruct.TWO;
-		final StringStruct struct = StringStruct.builder(IntegerStructImpl.valueOf(str.length()))
+		final StringStruct struct = StringStruct.builder(IntegerStruct.toLispInteger(str.length()))
 		                                        .initialContents(StringStruct.toLispString(str))
 		                                        .fillPointer(fillPointer)
 		                                        .build();
@@ -134,7 +133,7 @@ public class StringStructVectorTest {
 
 		final String str = "abc";
 		final IntegerStruct fillPointer = IntegerStruct.TWO;
-		final StringStruct struct = StringStruct.builder(IntegerStructImpl.valueOf(str.length()))
+		final StringStruct struct = StringStruct.builder(IntegerStruct.toLispInteger(str.length()))
 		                                        .initialContents(StringStruct.toLispString(str))
 		                                        .fillPointer(fillPointer)
 		                                        .build();
@@ -153,7 +152,7 @@ public class StringStructVectorTest {
 
 		final String str = "abc";
 		final IntegerStruct fillPointer = IntegerStruct.TWO;
-		final StringStruct struct = StringStruct.builder(IntegerStructImpl.valueOf(str.length()))
+		final StringStruct struct = StringStruct.builder(IntegerStruct.toLispInteger(str.length()))
 		                                        .initialContents(StringStruct.toLispString(str))
 		                                        .fillPointer(fillPointer)
 		                                        .build();
@@ -202,7 +201,7 @@ public class StringStructVectorTest {
 		thrown.expectMessage(containsString("Nothing left to pop."));
 
 		final String str = "abc";
-		final StringStruct struct = StringStruct.builder(IntegerStructImpl.valueOf(str.length()))
+		final StringStruct struct = StringStruct.builder(IntegerStruct.toLispInteger(str.length()))
 		                                        .initialContents(StringStruct.toLispString(str))
 		                                        .fillPointer(IntegerStruct.ZERO)
 		                                        .build();
@@ -215,7 +214,7 @@ public class StringStructVectorTest {
 	@Test
 	public void test_vectorPop_Displaced() {
 		final String str = "abc";
-		final StringStruct struct = StringStruct.builder(IntegerStructImpl.valueOf(str.length()))
+		final StringStruct struct = StringStruct.builder(IntegerStruct.toLispInteger(str.length()))
 		                                        .displacedTo(StringStruct.toLispString(str))
 		                                        .fillPointer(IntegerStruct.TWO)
 		                                        .build();
@@ -231,7 +230,7 @@ public class StringStructVectorTest {
 	@Test
 	public void test_vectorPop_NotDisplaced() {
 		final String str = "abc";
-		final StringStruct struct = StringStruct.builder(IntegerStructImpl.valueOf(str.length()))
+		final StringStruct struct = StringStruct.builder(IntegerStruct.toLispInteger(str.length()))
 		                                        .initialContents(StringStruct.toLispString(str))
 		                                        .fillPointer(IntegerStruct.TWO)
 		                                        .build();
@@ -255,7 +254,7 @@ public class StringStructVectorTest {
 		thrown.expectMessage(containsString("is not a character type."));
 
 		final String str = "abc";
-		final IntegerStruct size = IntegerStructImpl.valueOf(str.length());
+		final IntegerStruct size = IntegerStruct.toLispInteger(str.length());
 
 		final StringStruct struct = StringStruct.builder(size)
 		                                        .initialContents(StringStruct.toLispString(str))
@@ -300,7 +299,7 @@ public class StringStructVectorTest {
 	@Test
 	public void test_vectorPush_FillPointerIsTotalSize() {
 		final String str = "abc";
-		final IntegerStruct size = IntegerStructImpl.valueOf(str.length());
+		final IntegerStruct size = IntegerStruct.toLispInteger(str.length());
 
 		final StringStruct struct = StringStruct.builder(size)
 		                                        .initialContents(StringStruct.toLispString(str))
@@ -321,7 +320,7 @@ public class StringStructVectorTest {
 		final StringStruct displacedTo = StringStruct.toLispString(str);
 		final IntegerStruct fillPointer = IntegerStruct.ONE;
 
-		final StringStruct struct = StringStruct.builder(IntegerStructImpl.valueOf(str.length()))
+		final StringStruct struct = StringStruct.builder(IntegerStruct.toLispInteger(str.length()))
 		                                        .displacedTo(displacedTo)
 		                                        .fillPointer(fillPointer)
 		                                        .build();
@@ -340,7 +339,7 @@ public class StringStructVectorTest {
 		final String str = "abc";
 		final IntegerStruct fillPointer = IntegerStruct.ONE;
 
-		final StringStruct struct = StringStruct.builder(IntegerStructImpl.valueOf(str.length()))
+		final StringStruct struct = StringStruct.builder(IntegerStruct.toLispInteger(str.length()))
 		                                        .initialContents(StringStruct.toLispString(str))
 		                                        .fillPointer(fillPointer)
 		                                        .build();
@@ -364,7 +363,7 @@ public class StringStructVectorTest {
 		thrown.expectMessage(containsString("is not a character type."));
 
 		final String str = "abc";
-		final IntegerStruct size = IntegerStructImpl.valueOf(str.length());
+		final IntegerStruct size = IntegerStruct.toLispInteger(str.length());
 
 		final StringStruct struct = StringStruct.builder(size)
 		                                        .initialContents(StringStruct.toLispString(str))
@@ -412,7 +411,7 @@ public class StringStructVectorTest {
 		thrown.expectMessage(containsString("VECTOR would be extended and is not adjustable."));
 
 		final String str = "abc";
-		final IntegerStruct size = IntegerStructImpl.valueOf(str.length());
+		final IntegerStruct size = IntegerStruct.toLispInteger(str.length());
 		final StringStruct struct = StringStruct.builder(size)
 		                                        .initialContents(StringStruct.toLispString(str))
 		                                        .fillPointer(size)
@@ -427,7 +426,7 @@ public class StringStructVectorTest {
 	@Test
 	public void test_vectorPushExtend_Extension_Displaced() {
 		final String str = "abc";
-		final IntegerStruct size = IntegerStructImpl.valueOf(str.length());
+		final IntegerStruct size = IntegerStruct.toLispInteger(str.length());
 		final StringStruct displacedTo = StringStruct.toLispString(str);
 
 		final StringStruct struct = StringStruct.builder(size)
@@ -449,7 +448,7 @@ public class StringStructVectorTest {
 	@Test
 	public void test_vectorPushExtend_Extension_NotDisplaced() {
 		final String str = "abc";
-		final IntegerStruct size = IntegerStructImpl.valueOf(str.length());
+		final IntegerStruct size = IntegerStruct.toLispInteger(str.length());
 
 		final StringStruct struct = StringStruct.builder(size)
 		                                        .initialContents(StringStruct.toLispString(str))
@@ -471,7 +470,7 @@ public class StringStructVectorTest {
 		final StringStruct displacedTo = StringStruct.toLispString(str);
 		final IntegerStruct fillPointer = IntegerStruct.ONE;
 
-		final StringStruct struct = StringStruct.builder(IntegerStructImpl.valueOf(str.length()))
+		final StringStruct struct = StringStruct.builder(IntegerStruct.toLispInteger(str.length()))
 		                                        .displacedTo(displacedTo)
 		                                        .fillPointer(fillPointer)
 		                                        .build();
@@ -490,7 +489,7 @@ public class StringStructVectorTest {
 		final String str = "abc";
 		final IntegerStruct fillPointer = IntegerStruct.ONE;
 
-		final StringStruct struct = StringStruct.builder(IntegerStructImpl.valueOf(str.length()))
+		final StringStruct struct = StringStruct.builder(IntegerStruct.toLispInteger(str.length()))
 		                                        .initialContents(StringStruct.toLispString(str))
 		                                        .fillPointer(fillPointer)
 		                                        .build();

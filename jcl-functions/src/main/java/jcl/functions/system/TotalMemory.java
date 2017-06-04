@@ -4,11 +4,9 @@
 
 package jcl.functions.system;
 
-import java.math.BigInteger;
-
 import jcl.functions.ExtensionsBuiltInFunctionStructBase;
+import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
-import jcl.lang.factory.LispStructFactory;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import org.springframework.stereotype.Component;
@@ -28,6 +26,6 @@ public final class TotalMemory extends ExtensionsBuiltInFunctionStructBase {
 	@Override
 	public LispStruct apply(final Arguments arguments) {
 		final long totalMemory = Runtime.getRuntime().totalMemory();
-		return LispStructFactory.toInteger(BigInteger.valueOf(totalMemory));
+		return IntegerStruct.toLispInteger(totalMemory);
 	}
 }

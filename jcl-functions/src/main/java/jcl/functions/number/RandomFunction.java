@@ -8,13 +8,13 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 
 import jcl.functions.CommonLispBuiltInFunctionStructBase;
+import jcl.lang.DoubleFloatStruct;
 import jcl.lang.FloatStruct;
 import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.RandomStateStruct;
 import jcl.lang.RealStruct;
 import jcl.lang.condition.exception.TypeErrorException;
-import jcl.lang.factory.LispStructFactory;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.statics.NumberVariables;
@@ -44,13 +44,13 @@ public final class RandomFunction extends CommonLispBuiltInFunctionStructBase {
 		if (real instanceof IntegerStruct) {
 			// TODO: fix??
 			final IntegerStruct number = (IntegerStruct) real;
-			final BigInteger randomInteger = randomState.randomInteger(number.longValue());
-			return LispStructFactory.toInteger(randomInteger);
+			final BigInteger randomInteger = randomState.randomInteger(number.toJavaPLong());
+			return IntegerStruct.toLispInteger(randomInteger);
 		} else if (real instanceof FloatStruct) {
 			// TODO: fix??
 			final FloatStruct number = (FloatStruct) real;
-			final BigDecimal randomFloat = randomState.randomFloat(number.doubleValue());
-			return LispStructFactory.toFloat(randomFloat.doubleValue());
+			final BigDecimal randomFloat = randomState.randomFloat(number.toJavaDouble());
+			return DoubleFloatStruct.toLispFloat(randomFloat.doubleValue());
 		} else {
 			throw new TypeErrorException("Argument not of type Integer or Float: " + real);
 		}

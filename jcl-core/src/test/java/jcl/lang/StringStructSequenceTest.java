@@ -6,7 +6,6 @@ import java.util.Spliterator;
 
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
-import jcl.lang.internal.number.IntegerStructImpl;
 import jcl.lang.statics.CharacterConstants;
 import org.junit.Assert;
 import org.junit.Rule;
@@ -426,11 +425,11 @@ public class StringStructSequenceTest {
 		final String reversedStr = new StringBuilder(str).reverse().toString();
 
 		final IntegerStruct fillPointer = IntegerStruct.TWO;
-		final String reversedSubStr = new StringBuilder(str.substring(0, fillPointer.intValue())).reverse().toString();
+		final String reversedSubStr = new StringBuilder(str.substring(0, fillPointer.toJavaInt())).reverse().toString();
 
 		final StringStruct initialContents = StringStruct.toLispString(str);
 		final StringStruct struct
-				= StringStruct.builder(IntegerStructImpl.valueOf(str.length()))
+				= StringStruct.builder(IntegerStruct.toLispInteger(str.length()))
 				              .initialContents(initialContents)
 				              .fillPointer(fillPointer)
 				              .build();
@@ -451,7 +450,7 @@ public class StringStructSequenceTest {
 
 		final StringStruct initialContents = StringStruct.toLispString(str);
 		final StringStruct struct
-				= StringStruct.builder(IntegerStructImpl.valueOf(str.length()))
+				= StringStruct.builder(IntegerStruct.toLispInteger(str.length()))
 				              .adjustable(BooleanStruct.T)
 				              .initialContents(initialContents)
 				              .build();
@@ -471,7 +470,7 @@ public class StringStructSequenceTest {
 
 		final StringStruct displacedTo = StringStruct.toLispString(str);
 		final StringStruct struct
-				= StringStruct.builder(IntegerStructImpl.valueOf(str.length()))
+				= StringStruct.builder(IntegerStruct.toLispInteger(str.length()))
 				              .displacedTo(displacedTo)
 				              .build();
 
@@ -490,11 +489,11 @@ public class StringStructSequenceTest {
 		final String reversedStr = new StringBuilder(str).reverse().toString();
 
 		final IntegerStruct fillPointer = IntegerStruct.TWO;
-		final String reversedSubStr = new StringBuilder(str.substring(0, fillPointer.intValue())).reverse().toString();
+		final String reversedSubStr = new StringBuilder(str.substring(0, fillPointer.toJavaInt())).reverse().toString();
 
 		final StringStruct displacedTo = StringStruct.toLispString(str);
 		final StringStruct struct
-				= StringStruct.builder(IntegerStructImpl.valueOf(str.length()))
+				= StringStruct.builder(IntegerStruct.toLispInteger(str.length()))
 				              .displacedTo(displacedTo)
 				              .fillPointer(fillPointer)
 				              .build();
@@ -533,11 +532,11 @@ public class StringStructSequenceTest {
 		final String reversedStr = new StringBuilder(str).reverse().toString();
 
 		final IntegerStruct fillPointer = IntegerStruct.TWO;
-		final String reversedSubStr = new StringBuilder(str.substring(0, fillPointer.intValue())).reverse().toString();
+		final String reversedSubStr = new StringBuilder(str.substring(0, fillPointer.toJavaInt())).reverse().toString();
 
 		final StringStruct initialContents = StringStruct.toLispString(str);
 		final StringStruct struct
-				= StringStruct.builder(IntegerStructImpl.valueOf(str.length()))
+				= StringStruct.builder(IntegerStruct.toLispInteger(str.length()))
 				              .initialContents(initialContents)
 				              .fillPointer(fillPointer)
 				              .build();
@@ -558,7 +557,7 @@ public class StringStructSequenceTest {
 
 		final StringStruct initialContents = StringStruct.toLispString(str);
 		final StringStruct struct
-				= StringStruct.builder(IntegerStructImpl.valueOf(str.length()))
+				= StringStruct.builder(IntegerStruct.toLispInteger(str.length()))
 				              .adjustable(BooleanStruct.T)
 				              .initialContents(initialContents)
 				              .build();
@@ -578,7 +577,7 @@ public class StringStructSequenceTest {
 
 		final StringStruct displacedTo = StringStruct.toLispString(str);
 		final StringStruct struct
-				= StringStruct.builder(IntegerStructImpl.valueOf(str.length()))
+				= StringStruct.builder(IntegerStruct.toLispInteger(str.length()))
 				              .displacedTo(displacedTo)
 				              .build();
 
@@ -597,11 +596,11 @@ public class StringStructSequenceTest {
 		final String reversedStr = new StringBuilder(str).reverse().toString();
 
 		final IntegerStruct fillPointer = IntegerStruct.TWO;
-		final String reversedSubStr = new StringBuilder(str.substring(0, fillPointer.intValue())).reverse().toString();
+		final String reversedSubStr = new StringBuilder(str.substring(0, fillPointer.toJavaInt())).reverse().toString();
 
 		final StringStruct displacedTo = StringStruct.toLispString(str);
 		final StringStruct struct
-				= StringStruct.builder(IntegerStructImpl.valueOf(str.length()))
+				= StringStruct.builder(IntegerStruct.toLispInteger(str.length()))
 				              .displacedTo(displacedTo)
 				              .fillPointer(fillPointer)
 				              .build();
@@ -657,7 +656,7 @@ public class StringStructSequenceTest {
 	@Test
 	public void test_iterator_Complex() {
 		final String str = "12345";
-		final StringStruct struct = StringStruct.builder(IntegerStructImpl.valueOf(str.length()))
+		final StringStruct struct = StringStruct.builder(IntegerStruct.toLispInteger(str.length()))
 		                                        .initialContents(StringStruct.toLispString(str))
 		                                        .adjustable(BooleanStruct.T)
 		                                        .build();
@@ -680,7 +679,7 @@ public class StringStructSequenceTest {
 		thrown.expectMessage("All elements consumed.");
 
 		final String str = "12345";
-		final StringStruct struct = StringStruct.builder(IntegerStructImpl.valueOf(str.length()))
+		final StringStruct struct = StringStruct.builder(IntegerStruct.toLispInteger(str.length()))
 		                                        .initialContents(StringStruct.toLispString(str))
 		                                        .adjustable(BooleanStruct.T)
 		                                        .build();
@@ -700,7 +699,7 @@ public class StringStructSequenceTest {
 		final String str = "12345";
 		final StringStruct displacedTo = StringStruct.toLispString(str);
 		final StringStruct struct
-				= StringStruct.builder(IntegerStructImpl.valueOf(str.length()))
+				= StringStruct.builder(IntegerStruct.toLispInteger(str.length()))
 				              .displacedTo(displacedTo)
 				              .build();
 		final Iterator<LispStruct> iterator = struct.iterator();
@@ -725,7 +724,7 @@ public class StringStructSequenceTest {
 		final String str = "12345";
 		final StringStruct displacedTo = StringStruct.toLispString(str);
 		final StringStruct struct
-				= StringStruct.builder(IntegerStructImpl.valueOf(str.length()))
+				= StringStruct.builder(IntegerStruct.toLispInteger(str.length()))
 				              .displacedTo(displacedTo)
 				              .build();
 		final Iterator<LispStruct> iterator = struct.iterator();
@@ -762,7 +761,7 @@ public class StringStructSequenceTest {
 		final String str = "12345";
 		final StringStruct displacedTo = StringStruct.toLispString(str);
 		final StringStruct struct
-				= StringStruct.builder(IntegerStructImpl.valueOf(str.length()))
+				= StringStruct.builder(IntegerStruct.toLispInteger(str.length()))
 				              .displacedTo(displacedTo)
 				              .build();
 		final Spliterator<LispStruct> spliterator = struct.spliterator();

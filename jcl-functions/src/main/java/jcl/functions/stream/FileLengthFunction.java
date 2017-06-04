@@ -4,13 +4,11 @@
 
 package jcl.functions.stream;
 
-import java.math.BigInteger;
-
 import jcl.functions.CommonLispBuiltInFunctionStructBase;
+import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.NILStruct;
 import jcl.lang.StreamStruct;
-import jcl.lang.factory.LispStructFactory;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import org.springframework.stereotype.Component;
@@ -36,7 +34,7 @@ public final class FileLengthFunction extends CommonLispBuiltInFunctionStructBas
 		if (fileLength == null) {
 			return NILStruct.INSTANCE;
 		} else {
-			return LispStructFactory.toInteger(BigInteger.valueOf(fileLength));
+			return IntegerStruct.toLispInteger(fileLength);
 		}
 	}
 }

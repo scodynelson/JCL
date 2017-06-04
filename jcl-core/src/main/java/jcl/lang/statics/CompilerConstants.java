@@ -4,16 +4,13 @@
 
 package jcl.lang.statics;
 
-import java.math.BigInteger;
-
 import jcl.lang.IntegerStruct;
 import jcl.lang.factory.LispStructFactory;
 import jcl.lang.internal.ConstantStructImpl;
-import jcl.lang.internal.number.IntegerStructImpl;
 
 public interface CompilerConstants {
 
-	ConstantStructImpl<IntegerStruct> CALL_ARGUMENTS_LIMIT = ConstantStructImpl.valueOf("CALL-ARGUMENTS-LIMIT", GlobalPackageStruct.COMMON_LISP, IntegerStructImpl.valueOf(BigInteger.valueOf(Short.MAX_VALUE)));
+	ConstantStructImpl<IntegerStruct> CALL_ARGUMENTS_LIMIT = ConstantStructImpl.valueOf("CALL-ARGUMENTS-LIMIT", GlobalPackageStruct.COMMON_LISP, IntegerStruct.toLispInteger(Short.MAX_VALUE));
 
 	// TODO: what is the value for this symbol??
 	ConstantStructImpl<?> ALLOW_OTHER_KEYS = ConstantStructImpl.valueOf("&ALLOW-OTHER-KEYS", GlobalPackageStruct.COMMON_LISP, null);
@@ -35,9 +32,9 @@ public interface CompilerConstants {
 			                                                              OPTIONAL,
 			                                                              REST,
 			                                                              WHOLE));
-	ConstantStructImpl<IntegerStruct> LAMBDA_PARAMETERS_LIMIT = ConstantStructImpl.valueOf("LAMBDA-PARAMETERS-LIMIT", GlobalPackageStruct.COMMON_LISP, IntegerStructImpl.valueOf(BigInteger.valueOf(Short.MAX_VALUE)));
+	ConstantStructImpl<IntegerStruct> LAMBDA_PARAMETERS_LIMIT = ConstantStructImpl.valueOf("LAMBDA-PARAMETERS-LIMIT", GlobalPackageStruct.COMMON_LISP, IntegerStruct.toLispInteger(Short.MAX_VALUE));
 
-	ConstantStructImpl<IntegerStruct> MULTIPLE_VALUES_LIMIT = ConstantStructImpl.valueOf("MULTIPLE-VALUES-LIMIT", GlobalPackageStruct.COMMON_LISP, IntegerStructImpl.valueOf(BigInteger.valueOf(Short.MAX_VALUE)));
+	ConstantStructImpl<IntegerStruct> MULTIPLE_VALUES_LIMIT = ConstantStructImpl.valueOf("MULTIPLE-VALUES-LIMIT", GlobalPackageStruct.COMMON_LISP, IntegerStruct.toLispInteger(Short.MAX_VALUE));
 
-	ConstantStructImpl<IntegerStruct> INTERNAL_TIME_UNITS_PER_SECOND = ConstantStructImpl.valueOf("INTERNAL-TIME-UNITS-PER-SECOND", GlobalPackageStruct.COMMON_LISP, IntegerStructImpl.valueOf(BigInteger.valueOf(1000000)));
+	ConstantStructImpl<IntegerStruct> INTERNAL_TIME_UNITS_PER_SECOND = ConstantStructImpl.valueOf("INTERNAL-TIME-UNITS-PER-SECOND", GlobalPackageStruct.COMMON_LISP, IntegerStruct.toLispInteger(1000000));
 }

@@ -23,7 +23,6 @@ import jcl.lang.VectorStruct;
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.factory.LispStructFactory;
-import jcl.lang.internal.number.IntegerStructImpl;
 import jcl.lang.statics.PrinterVariables;
 import jcl.type.BitType;
 import jcl.type.BitVectorType;
@@ -143,12 +142,12 @@ public final class BitVectorStructImpl extends AbstractBitVectorStructImpl {
 		if (fillPointer == null) {
 			throw new TypeErrorException("VECTOR has no fill-pointer to retrieve.");
 		}
-		return IntegerStructImpl.valueOf(fillPointer);
+		return IntegerStruct.toLispInteger(fillPointer);
 	}
 
 	@Override
 	public IntegerStruct setfFillPointer(final IntegerStruct fillPointer) {
-		final int intValue = fillPointer.intValue();
+		final int intValue = fillPointer.toJavaInt();
 		if ((intValue < 0) || (intValue > totalSize)) {
 			throw new ErrorException(
 					"Fill-pointer " + fillPointer + " value is out of bounds for VECTOR with size " + totalSize + '.');
@@ -183,7 +182,7 @@ public final class BitVectorStructImpl extends AbstractBitVectorStructImpl {
 
 		final Integer formerFillPointer = fillPointer++;
 		contents.set(formerFillPointer, (IntegerStruct) newElement);
-		return IntegerStructImpl.valueOf(formerFillPointer);
+		return IntegerStruct.toLispInteger(formerFillPointer);
 	}
 
 	@Override
@@ -201,7 +200,7 @@ public final class BitVectorStructImpl extends AbstractBitVectorStructImpl {
 
 		final Integer formerFillPointer = fillPointer++;
 		contents.set(formerFillPointer, (IntegerStruct) newElement);
-		return IntegerStructImpl.valueOf(formerFillPointer);
+		return IntegerStruct.toLispInteger(formerFillPointer);
 	}
 
 	/*
@@ -232,7 +231,7 @@ public final class BitVectorStructImpl extends AbstractBitVectorStructImpl {
 		if (isAdjustable) {
 			this.elementType = upgradedET;
 			contents = Stream.generate(() -> (IntegerStruct) initialElement)
-			                 .limit(size.intValue())
+			                 .limit(size.toJavaInt())
 			                 .collect(Collectors.toList());
 			displacedTo = null;
 			displacedIndexOffset = 0;
@@ -270,7 +269,7 @@ public final class BitVectorStructImpl extends AbstractBitVectorStructImpl {
 		final IntegerStruct size = dimensions.get(0);
 		if (isAdjustable) {
 			this.elementType = upgradedET;
-			final List<Integer> dimensionInts = Collections.singletonList(size.intValue());
+			final List<Integer> dimensionInts = Collections.singletonList(size.toJavaInt());
 			contents = ArrayStruct.getValidContents(dimensionInts, elementType, initialContents);
 			displacedTo = null;
 			displacedIndexOffset = 0;
@@ -315,7 +314,7 @@ public final class BitVectorStructImpl extends AbstractBitVectorStructImpl {
 			this.elementType = elementType;
 			contents = null;
 			this.displacedTo = displacedTo;
-			this.displacedIndexOffset = displacedIndexOffset.intValue();
+			this.displacedIndexOffset = displacedIndexOffset.toJavaInt();
 			return this;
 		} else {
 			return VectorStruct.builder(size)
@@ -339,7 +338,7 @@ public final class BitVectorStructImpl extends AbstractBitVectorStructImpl {
 			return contents.get(rowMajorIndex);
 		}
 
-		final IntegerStruct indexToGet = IntegerStructImpl.valueOf(displacedIndexOffset + rowMajorIndex);
+		final IntegerStruct indexToGet = IntegerStruct.toLispInteger(displacedIndexOffset + rowMajorIndex);
 		return displacedTo.rowMajorAref(indexToGet);
 	}
 
@@ -350,7 +349,7 @@ public final class BitVectorStructImpl extends AbstractBitVectorStructImpl {
 		if (displacedTo == null) {
 			contents.set(rowMajorIndex, (IntegerStruct) newElement);
 		} else {
-			final IntegerStruct indexToSet = IntegerStructImpl.valueOf(displacedIndexOffset + rowMajorIndex);
+			final IntegerStruct indexToSet = IntegerStruct.toLispInteger(displacedIndexOffset + rowMajorIndex);
 			displacedTo.setfRowMajorAref(newElement, indexToSet);
 		}
 		return newElement;
@@ -365,7 +364,7 @@ public final class BitVectorStructImpl extends AbstractBitVectorStructImpl {
 	public ValuesStruct arrayDisplacement() {
 		return (displacedTo == null)
 		       ? ValuesStruct.valueOf(NILStruct.INSTANCE, IntegerStruct.ZERO)
-		       : ValuesStruct.valueOf(displacedTo, IntegerStructImpl.valueOf(displacedIndexOffset));
+		       : ValuesStruct.valueOf(displacedTo, IntegerStruct.toLispInteger(displacedIndexOffset));
 	}
 
 	@Override

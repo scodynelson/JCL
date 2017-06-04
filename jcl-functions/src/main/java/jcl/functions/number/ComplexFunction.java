@@ -5,12 +5,12 @@
 package jcl.functions.number;
 
 import jcl.functions.CommonLispBuiltInFunctionStructBase;
-import jcl.lang.FloatStruct;
+import jcl.lang.ComplexStruct;
 import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.RationalStruct;
 import jcl.lang.RealStruct;
-import jcl.lang.factory.LispStructFactory;
+import jcl.lang.SingleFloatStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import org.springframework.stereotype.Component;
@@ -37,13 +37,14 @@ public final class ComplexFunction extends CommonLispBuiltInFunctionStructBase {
 			final RealStruct real = arguments.getRequiredArgument(REALPART_ARGUMENT, RealStruct.class);
 			final RealStruct imaginary = arguments.getOptionalArgument(IMAGPART_ARGUMENT, RealStruct.class);
 
-			return LispStructFactory.toComplex(real, imaginary);
+			return ComplexStruct.toLispComplex(real, imaginary);
 		} else {
 			final RealStruct real = arguments.getRequiredArgument(REALPART_ARGUMENT, RealStruct.class);
 			if (real instanceof RationalStruct) {
 				return real;
 			} else {
-				return LispStructFactory.toComplex(real, FloatStruct.ZERO);
+				// TODO
+				return ComplexStruct.toLispComplex(real, SingleFloatStruct.ZERO);
 			}
 		}
 	}

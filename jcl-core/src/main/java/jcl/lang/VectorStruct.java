@@ -8,7 +8,6 @@ import java.util.stream.Stream;
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.internal.VectorStructImpl;
-import jcl.lang.internal.number.IntegerStructImpl;
 import jcl.type.BitType;
 import jcl.type.CharacterType;
 import jcl.type.LispType;
@@ -140,8 +139,8 @@ public interface VectorStruct extends ArrayStruct, SequenceStruct {
 			if (!length().eql(v.length())) {
 				return false;
 			}
-			for (int i = 0; i < length().intValue(); i++) {
-				final IntegerStruct index = IntegerStructImpl.valueOf(i);
+			for (int i = 0; i < length().toJavaInt(); i++) {
+				final IntegerStruct index = IntegerStruct.toLispInteger(i);
 				if (!aref(index).equalp(v.aref(index))) {
 					return false;
 				}
@@ -246,10 +245,10 @@ public interface VectorStruct extends ArrayStruct, SequenceStruct {
 
 		@Override
 		public VectorStruct build() {
-			final int sizeInt = size.intValue();
+			final int sizeInt = size.toJavaInt();
 			final LispType upgradedET = ArrayStruct.upgradedArrayElementType(elementType);
 			final boolean adjustableBoolean = adjustable.booleanValue();
-			final Integer fillPointerInt = (fillPointer == null) ? null : fillPointer.intValue();
+			final Integer fillPointerInt = (fillPointer == null) ? null : fillPointer.toJavaInt();
 
 			if (displacedTo != null) {
 				final LispType displacedToType = displacedTo.getType();
@@ -268,7 +267,7 @@ public interface VectorStruct extends ArrayStruct, SequenceStruct {
 				                            sizeInt,
 				                            upgradedET,
 				                            displacedTo,
-				                            displacedIndexOffset.intValue(),
+				                            displacedIndexOffset.toJavaInt(),
 				                            adjustableBoolean,
 				                            fillPointerInt);
 			}

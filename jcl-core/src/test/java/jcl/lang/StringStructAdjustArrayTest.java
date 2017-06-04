@@ -4,7 +4,6 @@ import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.factory.LispStructFactory;
 import jcl.lang.internal.SimpleStringStructImpl;
-import jcl.lang.internal.number.IntegerStructImpl;
 import jcl.lang.statics.CharacterConstants;
 import jcl.type.ExtendedCharType;
 import jcl.type.IntegerType;
@@ -161,7 +160,7 @@ public class StringStructAdjustArrayTest {
 		                                        .initialContents(StringStruct.toLispString("1"))
 		                                        .build();
 
-		final StringStruct displacedTo = StringStruct.builder(IntegerStructImpl.valueOf(3))
+		final StringStruct displacedTo = StringStruct.builder(IntegerStruct.toLispInteger(3))
 		                                             .initialContents(StringStruct.toLispString("abc"))
 		                                             .build();
 		final AdjustArrayContext context = AdjustArrayContext.builder(IntegerStruct.TWO)
@@ -196,7 +195,7 @@ public class StringStructAdjustArrayTest {
 		                                        .initialContents(StringStruct.toLispString("1"))
 		                                        .build();
 
-		final StringStruct displacedTo = StringStruct.builder(IntegerStructImpl.valueOf(3))
+		final StringStruct displacedTo = StringStruct.builder(IntegerStruct.toLispInteger(3))
 		                                             .initialContents(StringStruct.toLispString("abc"))
 		                                             .build();
 		final AdjustArrayContext context = AdjustArrayContext.builder(IntegerStruct.TWO)
@@ -236,7 +235,7 @@ public class StringStructAdjustArrayTest {
 		                                        .initialContents(StringStruct.toLispString("1"))
 		                                        .build();
 
-		final StringStruct displacedTo = StringStruct.builder(IntegerStructImpl.valueOf(3))
+		final StringStruct displacedTo = StringStruct.builder(IntegerStruct.toLispInteger(3))
 		                                             .initialContents(StringStruct.toLispString("abc"))
 		                                             .build();
 		final AdjustArrayContext context = AdjustArrayContext.builder(IntegerStruct.TWO)
@@ -273,7 +272,7 @@ public class StringStructAdjustArrayTest {
 		                                        .initialContents(StringStruct.toLispString("1"))
 		                                        .build();
 
-		final StringStruct displacedTo = StringStruct.builder(IntegerStructImpl.valueOf(3))
+		final StringStruct displacedTo = StringStruct.builder(IntegerStruct.toLispInteger(3))
 		                                             .initialContents(StringStruct.toLispString("abc"))
 		                                             .build();
 		final AdjustArrayContext context = AdjustArrayContext.builder(IntegerStruct.TWO)
@@ -312,7 +311,7 @@ public class StringStructAdjustArrayTest {
 		                                        .initialContents(StringStruct.toLispString("1"))
 		                                        .build();
 
-		final StringStruct displacedTo = StringStruct.builder(IntegerStructImpl.valueOf(3))
+		final StringStruct displacedTo = StringStruct.builder(IntegerStruct.toLispInteger(3))
 		                                             .initialContents(StringStruct.toLispString("abc"))
 		                                             .build();
 		final AdjustArrayContext context = AdjustArrayContext.builder(IntegerStruct.TWO)
@@ -349,7 +348,7 @@ public class StringStructAdjustArrayTest {
 		                                        .initialContents(StringStruct.toLispString("1"))
 		                                        .build();
 
-		final StringStruct displacedTo = StringStruct.builder(IntegerStructImpl.valueOf(3))
+		final StringStruct displacedTo = StringStruct.builder(IntegerStruct.toLispInteger(3))
 		                                             .initialContents(StringStruct.toLispString("abc"))
 		                                             .build();
 		final AdjustArrayContext context = AdjustArrayContext.builder(IntegerStruct.TWO)
@@ -389,7 +388,7 @@ public class StringStructAdjustArrayTest {
 		                                        .initialContents(StringStruct.toLispString("1"))
 		                                        .build();
 
-		final StringStruct displacedTo = StringStruct.builder(IntegerStructImpl.valueOf(3))
+		final StringStruct displacedTo = StringStruct.builder(IntegerStruct.toLispInteger(3))
 		                                             .initialContents(StringStruct.toLispString("abc"))
 		                                             .build();
 		final AdjustArrayContext context = AdjustArrayContext.builder(IntegerStruct.TWO)
@@ -431,7 +430,7 @@ public class StringStructAdjustArrayTest {
 		                                        .initialContents(StringStruct.toLispString("1"))
 		                                        .build();
 
-		final StringStruct displacedTo = StringStruct.builder(IntegerStructImpl.valueOf(3))
+		final StringStruct displacedTo = StringStruct.builder(IntegerStruct.toLispInteger(3))
 		                                             .initialContents(StringStruct.toLispString("abc"))
 		                                             .build();
 		final AdjustArrayContext context = AdjustArrayContext.builder(IntegerStruct.TWO)
@@ -474,7 +473,7 @@ public class StringStructAdjustArrayTest {
 		                                        .displacedTo(originalDisplacedTo)
 		                                        .build();
 
-		final StringStruct displacedTo = StringStruct.builder(IntegerStructImpl.valueOf(3))
+		final StringStruct displacedTo = StringStruct.builder(IntegerStruct.toLispInteger(3))
 		                                             .initialContents(StringStruct.toLispString("abc"))
 		                                             .build();
 		final AdjustArrayContext context = AdjustArrayContext.builder(IntegerStruct.TWO)
@@ -514,7 +513,7 @@ public class StringStructAdjustArrayTest {
 		                                        .displacedTo(originalDisplacedTo)
 		                                        .build();
 
-		final StringStruct displacedTo = StringStruct.builder(IntegerStructImpl.valueOf(3))
+		final StringStruct displacedTo = StringStruct.builder(IntegerStruct.toLispInteger(3))
 		                                             .initialContents(StringStruct.toLispString("abc"))
 		                                             .build();
 		final AdjustArrayContext context = AdjustArrayContext.builder(IntegerStruct.TWO)
@@ -556,7 +555,7 @@ public class StringStructAdjustArrayTest {
 		                                        .displacedTo(originalDisplacedTo)
 		                                        .build();
 
-		final StringStruct displacedTo = StringStruct.builder(IntegerStructImpl.valueOf(3))
+		final StringStruct displacedTo = StringStruct.builder(IntegerStruct.toLispInteger(3))
 		                                             .initialContents(StringStruct.toLispString("abc"))
 		                                             .build();
 		final AdjustArrayContext context = AdjustArrayContext.builder(IntegerStruct.TWO)
@@ -596,7 +595,7 @@ public class StringStructAdjustArrayTest {
 		                                        .displacedTo(originalDisplacedTo)
 		                                        .build();
 
-		final StringStruct displacedTo = StringStruct.builder(IntegerStructImpl.valueOf(3))
+		final StringStruct displacedTo = StringStruct.builder(IntegerStruct.toLispInteger(3))
 		                                             .initialContents(StringStruct.toLispString("abc"))
 		                                             .build();
 		final AdjustArrayContext context = AdjustArrayContext.builder(IntegerStruct.TWO)
@@ -639,7 +638,7 @@ public class StringStructAdjustArrayTest {
 		                                        .displacedTo(originalDisplacedTo)
 		                                        .build();
 
-		final StringStruct displacedTo = StringStruct.builder(IntegerStructImpl.valueOf(3))
+		final StringStruct displacedTo = StringStruct.builder(IntegerStruct.toLispInteger(3))
 		                                             .initialContents(StringStruct.toLispString("abc"))
 		                                             .build();
 		final AdjustArrayContext context = AdjustArrayContext.builder(IntegerStruct.TWO)
@@ -684,7 +683,7 @@ public class StringStructAdjustArrayTest {
 		                                        .displacedTo(originalDisplacedTo)
 		                                        .build();
 
-		final StringStruct displacedTo = StringStruct.builder(IntegerStructImpl.valueOf(3))
+		final StringStruct displacedTo = StringStruct.builder(IntegerStruct.toLispInteger(3))
 		                                             .initialContents(StringStruct.toLispString("abc"))
 		                                             .build();
 		final AdjustArrayContext context = AdjustArrayContext.builder(IntegerStruct.TWO)
@@ -1327,7 +1326,7 @@ public class StringStructAdjustArrayTest {
 		                                                 .elementType(ExtendedCharType.INSTANCE)
 		                                                 .initialContents(StringStruct.toLispString("ab"))
 		                                                 .build();
-		final AdjustArrayContext context = AdjustArrayContext.builder(IntegerStructImpl.valueOf(3))
+		final AdjustArrayContext context = AdjustArrayContext.builder(IntegerStruct.toLispInteger(3))
 		                                                     .adjustable(BooleanStruct.T)
 		                                                     .initialContents(initialContents)
 		                                                     .build();

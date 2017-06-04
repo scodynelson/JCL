@@ -11,7 +11,6 @@ import jcl.lang.TStruct;
 import jcl.lang.VectorStruct;
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.factory.LispStructFactory;
-import jcl.lang.internal.number.IntegerStructImpl;
 import jcl.type.LispType;
 import jcl.type.VectorType;
 
@@ -33,12 +32,12 @@ public abstract class AbstractVectorStructImpl extends AbstractArrayStructImpl i
 		if (!IntegerStruct.ZERO.eq(axisNumber)) {
 			throw new ErrorException("Axis " + axisNumber + " is out of bounds for " + this + '.');
 		}
-		return IntegerStructImpl.valueOf(totalSize);
+		return IntegerStruct.toLispInteger(totalSize);
 	}
 
 	@Override
 	public ListStruct arrayDimensions() {
-		final IntegerStruct size = IntegerStructImpl.valueOf(totalSize);
+		final IntegerStruct size = IntegerStruct.toLispInteger(totalSize);
 		return LispStructFactory.toProperList(size);
 	}
 
@@ -62,12 +61,12 @@ public abstract class AbstractVectorStructImpl extends AbstractArrayStructImpl i
 	public IntegerStruct arrayRowMajorIndex(final IntegerStruct... subscripts) {
 		final IntegerStruct subscript = rowMajorIndexInternal(subscripts);
 		final int rowMajorIndex = validateSubscript(subscript);
-		return IntegerStructImpl.valueOf(rowMajorIndex);
+		return IntegerStruct.toLispInteger(rowMajorIndex);
 	}
 
 	@Override
 	public IntegerStruct arrayTotalSize() {
-		return IntegerStructImpl.valueOf(totalSize);
+		return IntegerStruct.toLispInteger(totalSize);
 	}
 
 	protected IntegerStruct rowMajorIndexInternal(final IntegerStruct... subscripts) {
@@ -81,7 +80,7 @@ public abstract class AbstractVectorStructImpl extends AbstractArrayStructImpl i
 	}
 
 	protected int validateSubscript(final IntegerStruct subscript) {
-		final int subscriptInt = subscript.intValue();
+		final int subscriptInt = subscript.toJavaInt();
 		if ((subscriptInt < 0) || (subscriptInt >= totalSize)) {
 			throw new ErrorException("Subscript " + subscript + " is out of bounds for " + this + '.');
 		}

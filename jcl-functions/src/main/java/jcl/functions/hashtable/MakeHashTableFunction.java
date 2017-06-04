@@ -5,6 +5,7 @@
 package jcl.functions.hashtable;
 
 import jcl.functions.CommonLispBuiltInFunctionStructBase;
+import jcl.lang.DoubleFloatStruct;
 import jcl.lang.FloatStruct;
 import jcl.lang.FunctionStruct;
 import jcl.lang.IntegerStruct;
@@ -27,7 +28,7 @@ public final class MakeHashTableFunction extends CommonLispBuiltInFunctionStruct
 	private static final KeywordStruct SIZE =  LispStructFactory.toKeyword("SIZE");
 	private static final KeywordStruct REHASH_SIZE = LispStructFactory.toKeyword("REHASH-SIZE");
 	private static final KeywordStruct REHASH_THRESHOLD = LispStructFactory.toKeyword("REHASH-THRESHOLD");
-	private static final FloatStruct DEFAULT_REHASH_THRESHOLD = LispStructFactory.toFloat(0.75F);
+	private static final FloatStruct DEFAULT_REHASH_THRESHOLD = DoubleFloatStruct.toLispFloat(0.75F);
 
 	public MakeHashTableFunction() {
 		super("Creates and returns a new hash table.",
@@ -55,7 +56,7 @@ public final class MakeHashTableFunction extends CommonLispBuiltInFunctionStruct
 		final FloatStruct rehashThreshold = arguments.getKeyArgument(REHASH_THRESHOLD, FloatStruct.class);
 //		RealType.Factory.getInstance(BigInteger.ZERO, BigInteger.ONE)
 
-		return LispStructFactory.toHashTable(testFunction, size.bigIntegerValue(), rehashThreshold.floatValue());
+		return LispStructFactory.toHashTable(testFunction, size.toJavaBigInteger(), rehashThreshold.toJavaPFloat());
 	}
 
 	private FunctionStruct validateFunctionDesignator(final LispStruct functionDesignator) {

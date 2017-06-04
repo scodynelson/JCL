@@ -7,10 +7,7 @@ package jcl.lang;
 import java.math.BigInteger;
 
 import jcl.lang.internal.RatioStructImpl;
-import jcl.lang.internal.number.IntegerStructImpl;
 import org.apache.commons.math3.fraction.BigFraction;
-import org.apfloat.Apcomplex;
-import org.apfloat.Apint;
 import org.apfloat.Aprational;
 
 /**
@@ -139,32 +136,5 @@ public interface RationalStruct extends RealStruct {
 		return eq(object) ||
 				((object instanceof RationalStruct)
 						&& ((RationalStruct) object).ap().equals(ap()));
-	}
-
-	/*
-	DEPRECATED
-	 */
-
-	@Deprecated
-	static RationalStruct valueOf(final Aprational aprational) {
-		if (aprational instanceof Apint) {
-			return IntegerStructImpl.valueOf((Apint) aprational);
-		}
-		return jcl.lang.internal.number.RatioStructImpl.valueOf(aprational);
-	}
-
-	@Deprecated
-	static RationalStruct valueOf(final BigInteger numerator, final BigInteger denominator) {
-		final Apint numeratorAp = new Apint(numerator);
-		final Apint denominatorAp = new Apint(denominator);
-		return valueOf(numeratorAp, denominatorAp);
-	}
-
-	@Deprecated
-	static RationalStruct valueOf(final Apint numerator, final Apint denominator) {
-		if (Apcomplex.ONE.equals(denominator)) {
-			return IntegerStructImpl.valueOf(numerator);
-		}
-		return jcl.lang.internal.number.RatioStructImpl.valueOf(numerator, denominator);
 	}
 }

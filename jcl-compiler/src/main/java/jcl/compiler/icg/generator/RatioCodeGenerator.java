@@ -7,44 +7,59 @@ package jcl.compiler.icg.generator;
 import jcl.compiler.icg.CodeGenerator;
 import jcl.compiler.icg.GeneratorEvent;
 import jcl.compiler.icg.GeneratorState;
+import jcl.compiler.icg.IntermediateCodeGenerator;
 import jcl.compiler.icg.JavaMethodBuilder;
+import jcl.lang.IntegerStruct;
 import jcl.lang.RatioStruct;
-import jcl.lang.factory.LispStructFactory;
-import jcl.lang.internal.number.RatioStructImpl;
-import org.apfloat.Aprational;
+import jcl.lang.RationalStruct;
+import jcl.lang.internal.RatioStructImpl;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 /**
- * Class to generate {@link RatioStruct} objects dynamically by utilizing the {@link RatioStruct#ap()} of the provided
- * {@link RatioStruct} input value.
+ * Class to generate {@link RatioStruct} objects dynamically by utilizing the {@link RationalStruct#numerator()} and
+ * {@link RationalStruct#denominator()} of the provided {@link RatioStruct} input value.
  */
 @Component
 final class RatioCodeGenerator implements CodeGenerator<RatioStructImpl> {
 
 	/**
-	 * Constant {@link String} containing the name for the {@link Aprational} class.
+	 * {@link IntermediateCodeGenerator} used for generating the {@link RatioStruct} numerator and denominator values.
 	 */
-	private static final String APRATIONAL_NAME = Type.getInternalName(Aprational.class);
+	@Autowired
+	private IntermediateCodeGenerator codeGenerator;
 
 	/**
-	 * Constant {@link String} containing the description for the {@link Aprational#Aprational(String)} constructor
-	 * method.
+	 * Constant {@link String} containing the name for the {@link RationalStruct} class.
 	 */
-	private static final String APRATIONAL_INIT_METHOD_DESC
-			= CodeGenerators.getConstructorDescription(Aprational.class, String.class);
+	private static final String RATIONAL_NAME = Type.getInternalName(RationalStruct.class);
+
+	/**
+	 * Constant {@link String} containing the name for the {@link RationalStruct#toLispRational(IntegerStruct,
+	 * IntegerStruct)} method.
+	 */
+	private static final String RATIONAL_TO_LISP_RATIONAL_METHOD_NAME = "toLispRational";
+
+	/**
+	 * Constant {@link String} containing the description for the {@link RationalStruct#toLispRational(IntegerStruct,
+	 * IntegerStruct)} method.
+	 */
+	private static final String RATIONAL_TO_LISP_RATIONAL_METHOD_DESC
+			= CodeGenerators.getMethodDescription(RationalStruct.class, RATIONAL_TO_LISP_RATIONAL_METHOD_NAME,
+			                                      IntegerStruct.class, IntegerStruct.class);
 
 	/**
 	 * {@inheritDoc}
 	 * Generation method for {@link RatioStruct} objects, by performing the following operations:
 	 * <ol>
-	 * <li>Constructing a new {@link Aprational} from the {@link String} representation of the {@link RatioStruct#ap()}
-	 * value</li>
-	 * <li>Retrieving a {@link RatioStruct} via {@link LispStructFactory#toRatio(Aprational)} with the created {@link
-	 * Aprational} value</li>
+	 * <li>Emitting the {@link RationalStruct#numerator()} value.</li>
+	 * <li>Emitting the {@link RationalStruct#denominator()} value.</li>
+	 * <li>Retrieving a {@link RatioStruct} via {@link RationalStruct#toLispRational(IntegerStruct, IntegerStruct)} with
+	 * the created numerator and denominator values</li>
 	 * </ol>
 	 *
 	 * @param input
@@ -60,21 +75,13 @@ final class RatioCodeGenerator implements CodeGenerator<RatioStructImpl> {
 		final JavaMethodBuilder methodBuilder = generatorState.getCurrentMethodBuilder();
 		final MethodVisitor mv = methodBuilder.getMethodVisitor();
 
-		mv.visitTypeInsn(Opcodes.NEW, APRATIONAL_NAME);
-		mv.visitInsn(Opcodes.DUP);
+		codeGenerator.generate(input.numerator(), generatorState);
+		codeGenerator.generate(input.denominator(), generatorState);
 
-		final String apString = input.ap().toString();
-		mv.visitLdcInsn(apString);
-
-		mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
-		                   APRATIONAL_NAME,
-		                   GenerationConstants.INIT_METHOD_NAME,
-		                   APRATIONAL_INIT_METHOD_DESC,
-		                   false);
 		mv.visitMethodInsn(Opcodes.INVOKESTATIC,
-		                   GenerationConstants.LISP_STRUCT_FACTORY_NAME,
-		                   GenerationConstants.LISP_STRUCT_FACTORY_TO_RATIO_METHOD_NAME,
-		                   GenerationConstants.LISP_STRUCT_FACTORY_TO_RATIO_METHOD_DESC,
-		                   false);
+		                   RATIONAL_NAME,
+		                   RATIONAL_TO_LISP_RATIONAL_METHOD_NAME,
+		                   RATIONAL_TO_LISP_RATIONAL_METHOD_DESC,
+		                   true);
 	}
 }

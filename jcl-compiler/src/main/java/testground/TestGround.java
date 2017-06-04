@@ -18,22 +18,23 @@ import jcl.compiler.icg.generator.GoException;
 import jcl.compiler.icg.generator.ReturnFromException;
 import jcl.compiler.icg.generator.ThrowException;
 import jcl.lang.CharacterStruct;
+import jcl.lang.ComplexStruct;
+import jcl.lang.DoubleFloatStruct;
 import jcl.lang.FunctionStruct;
 import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
 import jcl.lang.NILStruct;
 import jcl.lang.PackageStruct;
+import jcl.lang.RationalStruct;
+import jcl.lang.RealStruct;
+import jcl.lang.SingleFloatStruct;
 import jcl.lang.StringStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.TStruct;
 import jcl.lang.ValuesStruct;
 import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.factory.LispStructFactory;
-import org.apfloat.Apcomplex;
-import org.apfloat.Apfloat;
-import org.apfloat.Apint;
-import org.apfloat.Aprational;
 import org.objectweb.asm.Label;
 
 @SuppressWarnings("all")
@@ -124,24 +125,41 @@ public class TestGround {
 		return CharacterStruct.toLispCharacter(Character.MAX_VALUE);
 	}
 
-	private Object floatGen() {
-		final Apfloat apfloat = new Apfloat("0");
-		return LispStructFactory.toFloat(apfloat);
+	private Object singlefloatGen() {
+		final float f = 1.5F;
+		return SingleFloatStruct.toLispFloat(f);
 	}
 
-	private Object integerGen() {
-		final Apint apint = new Apint("0");
-		return LispStructFactory.toInteger(apint);
+	private Object doublefloatGen() {
+		final double d = 1.5D;
+		return DoubleFloatStruct.toLispFloat(d);
+	}
+
+	private Object fixnumGen() {
+		final int i = 123456789;
+		return IntegerStruct.toLispInteger(i);
+	}
+
+	private Object longnumGen() {
+		final long l = 123456789L;
+		return IntegerStruct.toLispInteger(l);
+	}
+
+	private Object bignumGen() {
+		final BigInteger b = new BigInteger("12345678912356789123456789");
+		return IntegerStruct.toLispInteger(b);
 	}
 
 	private Object ratioGen() {
-		final Aprational aprational = new Aprational("0");
-		return LispStructFactory.toRatio(aprational);
+		final IntegerStruct num = IntegerStruct.toLispInteger(0);
+		final IntegerStruct den = IntegerStruct.toLispInteger(1);
+		return RationalStruct.toLispRational(num, den);
 	}
 
 	private Object complexGen() {
-		final Apcomplex apcomplex = new Apcomplex("0");
-		return LispStructFactory.toComplex(apcomplex);
+		final RealStruct real = IntegerStruct.toLispInteger(0);
+		final RealStruct imag = IntegerStruct.toLispInteger(1);
+		return ComplexStruct.toLispComplex(real, imag);
 	}
 
 	private Object valuesGen() {
@@ -169,7 +187,7 @@ public class TestGround {
 
 	private Object bitVectorGen() {
 		final List<IntegerStruct> contents = new ArrayList<>();
-		final IntegerStruct content = LispStructFactory.toInteger(BigInteger.ZERO);
+		final IntegerStruct content = IntegerStruct.toLispInteger(BigInteger.ZERO);
 		contents.add(content);
 
 		return LispStructFactory.toBitVector(contents);
@@ -177,7 +195,7 @@ public class TestGround {
 
 	private Object vectorGen() {
 		final List<LispStruct> contents = new ArrayList<>();
-		final IntegerStruct content = LispStructFactory.toInteger(BigInteger.ZERO);
+		final IntegerStruct content = IntegerStruct.toLispInteger(BigInteger.ZERO);
 		contents.add(content);
 
 		return LispStructFactory.toVector(contents);
@@ -189,7 +207,7 @@ public class TestGround {
 		dimensions.add(dimension);
 
 		final List<LispStruct> contents = new ArrayList<>();
-		final IntegerStruct content = LispStructFactory.toInteger(BigInteger.ZERO);
+		final IntegerStruct content = IntegerStruct.toLispInteger(BigInteger.ZERO);
 		contents.add(content);
 
 		return LispStructFactory.toArray(dimensions, contents);

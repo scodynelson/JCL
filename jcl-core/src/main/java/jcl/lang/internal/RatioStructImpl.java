@@ -5,6 +5,7 @@ import java.math.RoundingMode;
 import java.util.function.Function;
 
 import com.google.common.math.DoubleMath;
+import jcl.lang.DoubleFloatStruct;
 import jcl.lang.FloatStruct;
 import jcl.lang.IntegerStruct;
 import jcl.lang.NumberStruct;
@@ -152,19 +153,29 @@ public class RatioStructImpl extends BuiltInClassStruct implements RatioStruct {
 
 	@Override
 	public FloatStruct floatingPoint() {
-		// TODO: Default to double-float???
-		return new DoubleFloatStructImpl(value.doubleValue());
+		return SingleFloatStruct.toLispFloat(value.floatValue());
 	}
 
 	@Override
 	public FloatStruct floatingPoint(final FloatStruct prototype) {
 		if (prototype instanceof SingleFloatStruct) {
-			return new SingleFloatStructImpl(value.floatValue());
+			return SingleFloatStruct.toLispFloat(value.floatValue());
 		} else {
-			return new DoubleFloatStructImpl(value.doubleValue());
+			return DoubleFloatStruct.toLispFloat(value.doubleValue());
 		}
 	}
 
+	/**
+	 * Calculates the quotient remainder using the provided {@code operation}. The resulting quotient will be created
+	 * using the provided {@code quotientCreator}.
+	 *
+	 * @param operation
+	 * 		the quotient/remainder operation to perform
+	 * @param quotientCreator
+	 * 		the quotient generator
+	 *
+	 * @return a {@link QuotientRemainder} containing the results of the operation
+	 */
 	private QuotientRemainder calculateQuotientRemainder(final Function<Double, Long> operation,
 	                                                     final Function<Long, RealStruct> quotientCreator) {
 		final long quotient = operation.apply(value.doubleValue());
@@ -172,7 +183,7 @@ public class RatioStructImpl extends BuiltInClassStruct implements RatioStruct {
 
 		return new QuotientRemainder(
 				quotientCreator.apply(quotient),
-				new SingleFloatStructImpl(remainder)
+				SingleFloatStruct.toLispFloat(remainder)
 		);
 	}
 
@@ -244,7 +255,7 @@ public class RatioStructImpl extends BuiltInClassStruct implements RatioStruct {
 
 			return new QuotientRemainder(
 					quotientCreator.apply(quotient),
-					new SingleFloatStructImpl(remainder)
+					SingleFloatStruct.toLispFloat(remainder)
 			);
 		} else if (divisor instanceof DoubleFloatStructImpl) {
 			final double val = value.doubleValue();
@@ -256,7 +267,7 @@ public class RatioStructImpl extends BuiltInClassStruct implements RatioStruct {
 
 			return new QuotientRemainder(
 					quotientCreator.apply(quotient),
-					new DoubleFloatStructImpl(remainder)
+					DoubleFloatStruct.toLispFloat(remainder)
 			);
 		} else {
 			final double val = value.doubleValue();
@@ -268,7 +279,7 @@ public class RatioStructImpl extends BuiltInClassStruct implements RatioStruct {
 
 			return new QuotientRemainder(
 					quotientCreator.apply(quotient),
-					new SingleFloatStructImpl(remainder)
+					SingleFloatStruct.toLispFloat(remainder)
 			);
 		}
 	}
@@ -284,8 +295,8 @@ public class RatioStructImpl extends BuiltInClassStruct implements RatioStruct {
 	 */
 	private static Function<Long, RealStruct> toLispFloat(final RealStruct real) {
 		return (real instanceof SingleFloatStructImpl)
-		       ? SingleFloatStructImpl::new
-		       : DoubleFloatStructImpl::new;
+		       ? SingleFloatStruct::toLispFloat
+		       : DoubleFloatStruct::toLispFloat;
 	}
 
 	@SuppressWarnings("NumericCastThatLosesPrecision")
@@ -459,11 +470,11 @@ public class RatioStructImpl extends BuiltInClassStruct implements RatioStruct {
 		} else if (number instanceof SingleFloatStructImpl) {
 			final float f = value.floatValue();
 			final float subtract = f - ((SingleFloatStructImpl) number).value;
-			return new SingleFloatStructImpl(subtract);
+			return SingleFloatStruct.toLispFloat(subtract);
 		} else if (number instanceof DoubleFloatStructImpl) {
 			final double d = value.doubleValue();
 			final double subtract = d - ((DoubleFloatStructImpl) number).value;
-			return new DoubleFloatStructImpl(subtract);
+			return DoubleFloatStruct.toLispFloat(subtract);
 		}
 		final Aprational ap = ap();
 		final Apcomplex numberAp = number.ap();
@@ -506,11 +517,11 @@ public class RatioStructImpl extends BuiltInClassStruct implements RatioStruct {
 		} else if (number instanceof SingleFloatStructImpl) {
 			final float f = value.floatValue();
 			final float divide = f / ((SingleFloatStructImpl) number).value;
-			return new SingleFloatStructImpl(divide);
+			return SingleFloatStruct.toLispFloat(divide);
 		} else if (number instanceof DoubleFloatStructImpl) {
 			final double d = value.doubleValue();
 			final double divide = d / ((DoubleFloatStructImpl) number).value;
-			return new DoubleFloatStructImpl(divide);
+			return DoubleFloatStruct.toLispFloat(divide);
 		}
 		final Aprational ap = ap();
 		final Apcomplex numberAp = number.ap();

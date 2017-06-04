@@ -20,7 +20,6 @@ import jcl.lang.VectorStruct;
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.factory.LispStructFactory;
-import jcl.lang.internal.number.IntegerStructImpl;
 import jcl.lang.statics.PrinterVariables;
 import jcl.type.LispType;
 import jcl.type.SimpleVectorType;
@@ -119,12 +118,12 @@ public class VectorStructImpl extends AbstractVectorStructImpl {
 		if (fillPointer == null) {
 			throw new TypeErrorException("VECTOR has no fill-pointer to retrieve.");
 		}
-		return IntegerStructImpl.valueOf(fillPointer);
+		return IntegerStruct.toLispInteger(fillPointer);
 	}
 
 	@Override
 	public IntegerStruct setfFillPointer(final IntegerStruct fillPointer) {
-		final int intValue = fillPointer.intValue();
+		final int intValue = fillPointer.toJavaInt();
 		if ((intValue < 0) || (intValue > totalSize)) {
 			throw new ErrorException(
 					"Fill-pointer " + fillPointer + " value is out of bounds for VECTOR with size " + totalSize + '.');
@@ -159,7 +158,7 @@ public class VectorStructImpl extends AbstractVectorStructImpl {
 
 		final Integer formerFillPointer = fillPointer++;
 		contents.set(formerFillPointer, newElement);
-		return IntegerStructImpl.valueOf(formerFillPointer);
+		return IntegerStruct.toLispInteger(formerFillPointer);
 	}
 
 	@Override
@@ -177,7 +176,7 @@ public class VectorStructImpl extends AbstractVectorStructImpl {
 
 		final Integer formerFillPointer = fillPointer++;
 		contents.set(formerFillPointer, newElement);
-		return IntegerStructImpl.valueOf(formerFillPointer);
+		return IntegerStruct.toLispInteger(formerFillPointer);
 	}
 
 	/*
@@ -208,7 +207,7 @@ public class VectorStructImpl extends AbstractVectorStructImpl {
 		if (isAdjustable) {
 			this.elementType = upgradedET;
 			contents = Stream.generate(() -> initialElement)
-			                 .limit(size.intValue())
+			                 .limit(size.toJavaInt())
 			                 .collect(Collectors.toList());
 			displacedTo = null;
 			displacedIndexOffset = 0;
@@ -246,7 +245,7 @@ public class VectorStructImpl extends AbstractVectorStructImpl {
 		final IntegerStruct size = dimensions.get(0);
 		if (isAdjustable) {
 			this.elementType = upgradedET;
-			final List<Integer> dimensionInts = Collections.singletonList(size.intValue());
+			final List<Integer> dimensionInts = Collections.singletonList(size.toJavaInt());
 			contents = ArrayStruct.getValidContents(dimensionInts, elementType, initialContents);
 			displacedTo = null;
 			displacedIndexOffset = 0;
@@ -291,7 +290,7 @@ public class VectorStructImpl extends AbstractVectorStructImpl {
 			this.elementType = elementType;
 			contents = null;
 			this.displacedTo = displacedTo;
-			this.displacedIndexOffset = displacedIndexOffset.intValue();
+			this.displacedIndexOffset = displacedIndexOffset.toJavaInt();
 			return this;
 		} else {
 			return VectorStruct.builder(size)
@@ -315,7 +314,7 @@ public class VectorStructImpl extends AbstractVectorStructImpl {
 			return contents.get(rowMajorIndex);
 		}
 
-		final IntegerStruct indexToGet = IntegerStructImpl.valueOf(displacedIndexOffset + rowMajorIndex);
+		final IntegerStruct indexToGet = IntegerStruct.toLispInteger(displacedIndexOffset + rowMajorIndex);
 		return displacedTo.rowMajorAref(indexToGet);
 	}
 
@@ -326,7 +325,7 @@ public class VectorStructImpl extends AbstractVectorStructImpl {
 		if (displacedTo == null) {
 			contents.set(rowMajorIndex, newElement);
 		} else {
-			final IntegerStruct indexToSet = IntegerStructImpl.valueOf(displacedIndexOffset + rowMajorIndex);
+			final IntegerStruct indexToSet = IntegerStruct.toLispInteger(displacedIndexOffset + rowMajorIndex);
 			displacedTo.setfRowMajorAref(newElement, indexToSet);
 		}
 		return newElement;
@@ -341,7 +340,7 @@ public class VectorStructImpl extends AbstractVectorStructImpl {
 	public ValuesStruct arrayDisplacement() {
 		return (displacedTo == null)
 		       ? ValuesStruct.valueOf(NILStruct.INSTANCE, IntegerStruct.ZERO)
-		       : ValuesStruct.valueOf(displacedTo, IntegerStructImpl.valueOf(displacedIndexOffset));
+		       : ValuesStruct.valueOf(displacedTo, IntegerStruct.toLispInteger(displacedIndexOffset));
 	}
 
 	@Override
@@ -373,9 +372,9 @@ public class VectorStructImpl extends AbstractVectorStructImpl {
 	@Override
 	public IntegerStruct length() {
 		if (fillPointer != null) {
-			return IntegerStructImpl.valueOf(fillPointer);
+			return IntegerStruct.toLispInteger(fillPointer);
 		}
-		return IntegerStructImpl.valueOf(totalSize);
+		return IntegerStruct.toLispInteger(totalSize);
 	}
 
 	@Override
@@ -393,7 +392,7 @@ public class VectorStructImpl extends AbstractVectorStructImpl {
 
 	protected int validateIndexAgainstFillPointer(final IntegerStruct index) {
 		if (fillPointer != null) {
-			final int indexInt = index.intValue();
+			final int indexInt = index.toJavaInt();
 			if (indexInt > fillPointer) {
 				throw new ErrorException(index + " is not a valid sequence index for " + this);
 			}

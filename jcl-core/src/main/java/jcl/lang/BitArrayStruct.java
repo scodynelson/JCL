@@ -49,8 +49,8 @@ public interface BitArrayStruct extends ArrayStruct {
 	default BitArrayStruct bitAnd(final BitArrayStruct bitArray2, final LispStruct optArg) {
 		return bitFunction(bitArray2, optArg, bitLogicContents -> {
 			final int index = bitLogicContents.index;
-			return ((bitLogicContents.contents1.get(index).intValue() == 1)
-					&& (bitLogicContents.contents2.get(index).intValue() == 1))
+			return ((bitLogicContents.contents1.get(index).toJavaInt() == 1)
+					&& (bitLogicContents.contents2.get(index).toJavaInt() == 1))
 			       ? IntegerStruct.ONE
 			       : IntegerStruct.ZERO;
 		});
@@ -59,8 +59,8 @@ public interface BitArrayStruct extends ArrayStruct {
 	default BitArrayStruct bitAndC1(final BitArrayStruct bitArray2, final LispStruct optArg) {
 		return bitFunction(bitArray2, optArg, bitLogicContents -> {
 			final int index = bitLogicContents.index;
-			return ((bitLogicContents.contents1.get(index).intValue() != 1)
-					&& (bitLogicContents.contents2.get(index).intValue() == 1))
+			return ((bitLogicContents.contents1.get(index).toJavaInt() != 1)
+					&& (bitLogicContents.contents2.get(index).toJavaInt() == 1))
 			       ? IntegerStruct.ONE
 			       : IntegerStruct.ZERO;
 		});
@@ -69,8 +69,8 @@ public interface BitArrayStruct extends ArrayStruct {
 	default BitArrayStruct bitAndC2(final BitArrayStruct bitArray2, final LispStruct optArg) {
 		return bitFunction(bitArray2, optArg, bitLogicContents -> {
 			final int index = bitLogicContents.index;
-			return ((bitLogicContents.contents1.get(index).intValue() == 1)
-					&& (bitLogicContents.contents2.get(index).intValue() != 1))
+			return ((bitLogicContents.contents1.get(index).toJavaInt() == 1)
+					&& (bitLogicContents.contents2.get(index).toJavaInt() != 1))
 			       ? IntegerStruct.ONE
 			       : IntegerStruct.ZERO;
 		});
@@ -79,8 +79,8 @@ public interface BitArrayStruct extends ArrayStruct {
 	default BitArrayStruct bitEqv(final BitArrayStruct bitArray2, final LispStruct optArg) {
 		return bitFunction(bitArray2, optArg, bitLogicContents -> {
 			final int index = bitLogicContents.index;
-			return ((bitLogicContents.contents1.get(index).intValue() == 1)
-					== (bitLogicContents.contents2.get(index).intValue() == 1))
+			return ((bitLogicContents.contents1.get(index).toJavaInt() == 1)
+					== (bitLogicContents.contents2.get(index).toJavaInt() == 1))
 			       ? IntegerStruct.ONE
 			       : IntegerStruct.ZERO;
 		});
@@ -89,8 +89,8 @@ public interface BitArrayStruct extends ArrayStruct {
 	default BitArrayStruct bitIor(final BitArrayStruct bitArray2, final LispStruct optArg) {
 		return bitFunction(bitArray2, optArg, bitLogicContents -> {
 			final int index = bitLogicContents.index;
-			return ((bitLogicContents.contents1.get(index).intValue() == 1)
-					|| (bitLogicContents.contents2.get(index).intValue() == 1))
+			return ((bitLogicContents.contents1.get(index).toJavaInt() == 1)
+					|| (bitLogicContents.contents2.get(index).toJavaInt() == 1))
 			       ? IntegerStruct.ONE
 			       : IntegerStruct.ZERO;
 		});
@@ -99,8 +99,8 @@ public interface BitArrayStruct extends ArrayStruct {
 	default BitArrayStruct bitNand(final BitArrayStruct bitArray2, final LispStruct optArg) {
 		return bitFunction(bitArray2, optArg, bitLogicContents -> {
 			final int index = bitLogicContents.index;
-			return ((bitLogicContents.contents1.get(index).intValue() == 1)
-					&& (bitLogicContents.contents2.get(index).intValue() == 1))
+			return ((bitLogicContents.contents1.get(index).toJavaInt() == 1)
+					&& (bitLogicContents.contents2.get(index).toJavaInt() == 1))
 			       ? IntegerStruct.ZERO
 			       : IntegerStruct.ONE;
 		});
@@ -109,8 +109,8 @@ public interface BitArrayStruct extends ArrayStruct {
 	default BitArrayStruct bitNor(final BitArrayStruct bitArray2, final LispStruct optArg) {
 		return bitFunction(bitArray2, optArg, bitLogicContents -> {
 			final int index = bitLogicContents.index;
-			return ((bitLogicContents.contents1.get(index).intValue() == 1)
-					|| (bitLogicContents.contents2.get(index).intValue() == 1))
+			return ((bitLogicContents.contents1.get(index).toJavaInt() == 1)
+					|| (bitLogicContents.contents2.get(index).toJavaInt() == 1))
 			       ? IntegerStruct.ZERO
 			       : IntegerStruct.ONE;
 		});
@@ -119,8 +119,8 @@ public interface BitArrayStruct extends ArrayStruct {
 	default BitArrayStruct bitOrC1(final BitArrayStruct bitArray2, final LispStruct optArg) {
 		return bitFunction(bitArray2, optArg, bitLogicContents -> {
 			final int index = bitLogicContents.index;
-			return ((bitLogicContents.contents1.get(index).intValue() == 0)
-					|| (bitLogicContents.contents2.get(index).intValue() == 1))
+			return ((bitLogicContents.contents1.get(index).toJavaInt() == 0)
+					|| (bitLogicContents.contents2.get(index).toJavaInt() == 1))
 			       ? IntegerStruct.ONE
 			       : IntegerStruct.ZERO;
 		});
@@ -129,8 +129,8 @@ public interface BitArrayStruct extends ArrayStruct {
 	default BitArrayStruct bitOrC2(final BitArrayStruct bitArray2, final LispStruct optArg) {
 		return bitFunction(bitArray2, optArg, bitLogicContents -> {
 			final int index = bitLogicContents.index;
-			return ((bitLogicContents.contents1.get(index).intValue() == 1)
-					|| (bitLogicContents.contents2.get(index).intValue() == 0))
+			return ((bitLogicContents.contents1.get(index).toJavaInt() == 1)
+					|| (bitLogicContents.contents2.get(index).toJavaInt() == 0))
 			       ? IntegerStruct.ONE
 			       : IntegerStruct.ZERO;
 		});
@@ -140,8 +140,8 @@ public interface BitArrayStruct extends ArrayStruct {
 		return bitFunction(bitArray2, optArg, bitLogicContents -> {
 			final int index = bitLogicContents.index;
 			final IntegerStruct newBit;
-			final int bit1 = bitLogicContents.contents1.get(index).intValue();
-			final int bit2 = bitLogicContents.contents2.get(index).intValue();
+			final int bit1 = bitLogicContents.contents1.get(index).toJavaInt();
+			final int bit2 = bitLogicContents.contents2.get(index).toJavaInt();
 			if (((bit1 == 0) && (bit2 == 1))
 					|| ((bit1 == 1) && (bit2 == 0))) {
 				newBit = IntegerStruct.ONE;
@@ -160,9 +160,9 @@ public interface BitArrayStruct extends ArrayStruct {
 		final List<IntegerStruct> contents1 = null; //TODO getContents();
 		final List<IntegerStruct> contentsToUpdate = null; //TODO bitArrayToUpdate.getContents();
 
-		final int totalSize = arrayTotalSize().intValue();
+		final int totalSize = arrayTotalSize().toJavaInt();
 		for (int i = 0; i < totalSize; i++) {
-			final IntegerStruct newBit = (contents1.get(i).intValue() == 0) ? IntegerStruct.ONE : IntegerStruct.ZERO;
+			final IntegerStruct newBit = (contents1.get(i).toJavaInt() == 0) ? IntegerStruct.ONE : IntegerStruct.ZERO;
 			contentsToUpdate.set(i, newBit);
 		}
 
@@ -185,7 +185,7 @@ public interface BitArrayStruct extends ArrayStruct {
 		final List<IntegerStruct> contents2 = null; //TODO bitArray2.getContents();
 		final List<IntegerStruct> contentsToUpdate = null; //TODO bitArrayToUpdate.getContents();
 
-		final int totalSize = arrayTotalSize().intValue();
+		final int totalSize = arrayTotalSize().toJavaInt();
 		for (int i = 0; i < totalSize; i++) {
 			final IntegerStruct newBit = bitLogicFunction.apply(new BitLogicContents(contents1, contents2, i));
 			contentsToUpdate.set(i, newBit);
@@ -297,18 +297,18 @@ public interface BitArrayStruct extends ArrayStruct {
 					return new NILBitArrayStructImpl(ArrayType.INSTANCE,
 //					                                 upgradedET,
                                                      displacedTo,
-                                                     displacedIndexOffset.intValue(),
+                                                     displacedIndexOffset.toJavaInt(),
                                                      adjustableBoolean);
 				}
 
 				final List<Integer> dimensionInts = Arrays.stream(dimensions)
-				                                          .map(IntegerStruct::intValue)
+				                                          .map(IntegerStruct::toJavaInt)
 				                                          .collect(Collectors.toList());
 				return new MultiBitArrayStructImpl(ArrayType.INSTANCE,
 				                                   dimensionInts,
 //				                                   upgradedET,
                                                    displacedTo,
-                                                   displacedIndexOffset.intValue(),
+                                                   displacedIndexOffset.toJavaInt(),
                                                    adjustableBoolean);
 			}
 
@@ -333,7 +333,7 @@ public interface BitArrayStruct extends ArrayStruct {
 				}
 
 				final List<Integer> dimensionInts = Arrays.stream(dimensions)
-				                                          .map(IntegerStruct::intValue)
+				                                          .map(IntegerStruct::toJavaInt)
 				                                          .collect(Collectors.toList());
 				final List<LispStruct> validContents = ArrayStruct.getValidContents(dimensionInts,
 				                                                                    upgradedET,
@@ -358,7 +358,7 @@ public interface BitArrayStruct extends ArrayStruct {
 				}
 
 				final List<Integer> dimensionInts = Arrays.stream(dimensions)
-				                                          .map(IntegerStruct::intValue)
+				                                          .map(IntegerStruct::toJavaInt)
 				                                          .collect(Collectors.toList());
 				final int totalSize = dimensionInts.stream()
 				                                   .mapToInt(Integer::intValue)

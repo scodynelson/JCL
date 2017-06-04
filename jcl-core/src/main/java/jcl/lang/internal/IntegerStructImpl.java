@@ -4,6 +4,7 @@ import java.math.BigInteger;
 
 import jcl.lang.IntegerStruct;
 import jcl.lang.classes.BuiltInClassStruct;
+import jcl.lang.statics.PrinterVariables;
 import jcl.type.IntegerType;
 
 abstract class IntegerStructImpl extends BuiltInClassStruct implements IntegerStruct {
@@ -150,4 +151,61 @@ abstract class IntegerStructImpl extends BuiltInClassStruct implements IntegerSt
 	/*
 	INTEGER-STRUCT
 	 */
+
+	/*
+		ToString
+	 */
+
+	/**
+	 * Int constant for the value '2'.
+	 */
+	private static final int TWO_PRINTER = 2;
+
+	/**
+	 * Int constant for the value '8'.
+	 */
+	private static final int EIGHT_PRINTER = 8;
+
+	/**
+	 * Int constant for the value '10'.
+	 */
+	private static final int TEN_PRINTER = 10;
+
+	/**
+	 * Int constant for the value '16'.
+	 */
+	private static final int SIXTEEN_PRINTER = 16;
+
+	@Override
+	public String toString() {
+		// TODO
+
+		final boolean printRadix = PrinterVariables.PRINT_RADIX.getVariableValue().booleanValue();
+		final int printBase = PrinterVariables.PRINT_BASE.getVariableValue().toJavaInt();
+
+		final StringBuilder stringBuilder = new StringBuilder();
+
+		if (printRadix) {
+			if (printBase == TWO_PRINTER) {
+				stringBuilder.append("#b");
+			} else if (printBase == EIGHT_PRINTER) {
+				stringBuilder.append("#o");
+			} else if (printBase == SIXTEEN_PRINTER) {
+				stringBuilder.append("#x");
+			} else {
+				stringBuilder.append('#');
+				stringBuilder.append(printBase);
+				stringBuilder.append('r');
+			}
+		}
+
+		final BigInteger bigInteger = toJavaBigInteger();
+		stringBuilder.append(bigInteger.toString(printBase));
+
+		if (printRadix && (printBase == TEN_PRINTER)) {
+			stringBuilder.append('.');
+		}
+
+		return stringBuilder.toString();
+	}
 }

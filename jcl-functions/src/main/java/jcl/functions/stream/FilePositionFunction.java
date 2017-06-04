@@ -4,8 +4,6 @@
 
 package jcl.functions.stream;
 
-import java.math.BigInteger;
-
 import jcl.functions.CommonLispBuiltInFunctionStructBase;
 import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
@@ -43,7 +41,7 @@ public final class FilePositionFunction extends CommonLispBuiltInFunctionStructB
 
 		final Long position;
 		if (lispStruct2 instanceof IntegerStruct) {
-			position = ((IntegerStruct) lispStruct2).longValue();
+			position = ((IntegerStruct) lispStruct2).toJavaPLong();
 		} else if (CommonLispSymbols.START_KEYWORD.eq(lispStruct2)) {
 			position = 0L;
 		} else if (CommonLispSymbols.END_KEYWORD.eq(lispStruct2)) {
@@ -56,7 +54,7 @@ public final class FilePositionFunction extends CommonLispBuiltInFunctionStructB
 
 		if (position == null) {
 			final Long currentPosition = stream.filePosition(null);
-			return LispStructFactory.toInteger(BigInteger.valueOf(currentPosition));
+			return IntegerStruct.toLispInteger(currentPosition);
 		} else {
 			final Long newPosition = stream.filePosition(position);
 			return LispStructFactory.toBoolean(newPosition != null);

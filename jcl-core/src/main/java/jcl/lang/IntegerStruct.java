@@ -6,7 +6,6 @@ import java.util.List;
 import jcl.lang.internal.BignumStructImpl;
 import jcl.lang.internal.FixnumStructImpl;
 import jcl.lang.internal.LongnumStructImpl;
-import jcl.lang.internal.number.IntegerStructImpl;
 import org.apfloat.Apint;
 
 /**
@@ -17,27 +16,42 @@ public interface IntegerStruct extends RationalStruct {
 	/**
 	 * {@link IntegerStruct} constant representing 0.
 	 */
-	IntegerStruct ZERO = IntegerStructImpl.valueOf(0);
+	IntegerStruct ZERO = toLispInteger(0);
+
+	/**
+	 * {@link IntegerStruct} constant representing 0.
+	 */
+	IntegerStruct ZERO_NEW = new FixnumStructImpl(0);
 
 	/**
 	 * {@link IntegerStruct} constant representing 1.
 	 */
-	IntegerStruct ONE = IntegerStructImpl.valueOf(1);
+	IntegerStruct ONE = toLispInteger(1);
+
+	/**
+	 * {@link IntegerStruct} constant representing 0.
+	 */
+	IntegerStruct ONE_NEW = new FixnumStructImpl(1);
 
 	/**
 	 * {@link IntegerStruct} constant representing 2.
 	 */
-	IntegerStruct TWO = IntegerStructImpl.valueOf(2);
+	IntegerStruct TWO = toLispInteger(2);
 
 	/**
 	 * {@link IntegerStruct} constant representing 10.
 	 */
-	IntegerStruct TEN = IntegerStructImpl.valueOf(10);
+	IntegerStruct TEN = toLispInteger(10);
 
 	/**
 	 * {@link IntegerStruct} constant representing -1.
 	 */
-	IntegerStruct MINUS_ONE = IntegerStructImpl.valueOf(-1);
+	IntegerStruct MINUS_ONE = toLispInteger(-1);
+
+	/**
+	 * {@link IntegerStruct} constant representing 0.
+	 */
+	IntegerStruct MINUS_ONE_NEW = new FixnumStructImpl(-1);
 
 	/**
 	 * Returns the greatest common divisor of the provided IntegerStructs. If the number of IntegerStructs provided is
@@ -447,24 +461,4 @@ public interface IntegerStruct extends RationalStruct {
 				((object instanceof IntegerStruct)
 						&& ((IntegerStruct) object).ap().equals(ap()));
 	}
-
-	/*
-	DEPRECATED
-	 */
-
-	@Deprecated
-	default int intValue() {
-		return toJavaInteger();
-	}
-
-	@Deprecated
-	default long longValue() {
-		return toJavaLong();
-	}
-
-	@Deprecated
-	default BigInteger bigIntegerValue() {
-		return toJavaBigInteger();
-	}
-
 }

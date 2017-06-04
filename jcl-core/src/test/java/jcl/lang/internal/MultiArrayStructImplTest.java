@@ -174,7 +174,7 @@ public class MultiArrayStructImplTest {
 				                               IntegerStruct.ZERO,
 				                               NILStruct.INSTANCE);
 		final IntegerStruct result = array.arrayDimension(IntegerStruct.ZERO);
-		Assert.assertThat(result.intValue(), is(2));
+		Assert.assertThat(result.toJavaInt(), is(2));
 	}
 
 	@Test
@@ -185,7 +185,7 @@ public class MultiArrayStructImplTest {
 				                               IntegerStruct.ZERO,
 				                               NILStruct.INSTANCE);
 		final IntegerStruct result = array.arrayDimension(IntegerStruct.ONE);
-		Assert.assertThat(result.intValue(), is(10));
+		Assert.assertThat(result.toJavaInt(), is(10));
 	}
 
 	/*
@@ -343,7 +343,7 @@ public class MultiArrayStructImplTest {
 				                               IntegerStruct.ZERO,
 				                               NILStruct.INSTANCE);
 		final IntegerStruct result = array.arrayRank();
-		Assert.assertThat(result.intValue(), is(3));
+		Assert.assertThat(result.toJavaInt(), is(3));
 	}
 
 	/*
@@ -367,7 +367,7 @@ public class MultiArrayStructImplTest {
 				                               IntegerStruct.ZERO,
 				                               NILStruct.INSTANCE);
 		final IntegerStruct result = array.arrayTotalSize();
-		Assert.assertThat(result.intValue(), is(0));
+		Assert.assertThat(result.toJavaInt(), is(0));
 	}
 
 	@Test
@@ -378,7 +378,7 @@ public class MultiArrayStructImplTest {
 				                               IntegerStruct.ZERO,
 				                               NILStruct.INSTANCE);
 		final IntegerStruct result = array.arrayTotalSize();
-		Assert.assertThat(result.intValue(), is(4));
+		Assert.assertThat(result.toJavaInt(), is(4));
 	}
 
 	/*

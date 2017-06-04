@@ -168,7 +168,7 @@ public class VectorStructImplTest {
 				              .initialElement(IntegerStruct.ZERO)
 				              .build();
 		final IntegerStruct result = array.arrayDimension(IntegerStruct.ZERO);
-		Assert.assertThat(result.intValue(), is(2));
+		Assert.assertThat(result.toJavaInt(), is(2));
 
 	}
 
@@ -298,7 +298,7 @@ public class VectorStructImplTest {
 				              .initialElement(IntegerStruct.ZERO)
 				              .build();
 		final IntegerStruct result = array.arrayRank();
-		Assert.assertThat(result.intValue(), is(1));
+		Assert.assertThat(result.toJavaInt(), is(1));
 	}
 
 	/*
@@ -321,7 +321,7 @@ public class VectorStructImplTest {
 				              .initialElement(IntegerStruct.ZERO)
 				              .build();
 		final IntegerStruct result = array.arrayTotalSize();
-		Assert.assertThat(result.intValue(), is(0));
+		Assert.assertThat(result.toJavaInt(), is(0));
 	}
 
 	@Test
@@ -331,7 +331,7 @@ public class VectorStructImplTest {
 				              .initialElement(IntegerStruct.ZERO)
 				              .build();
 		final IntegerStruct result = array.arrayTotalSize();
-		Assert.assertThat(result.intValue(), is(2));
+		Assert.assertThat(result.toJavaInt(), is(2));
 	}
 
 	/*

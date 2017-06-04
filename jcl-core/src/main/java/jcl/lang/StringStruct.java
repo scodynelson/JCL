@@ -7,7 +7,6 @@ import java.util.stream.Stream;
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.internal.ComplexStringStructImpl;
 import jcl.lang.internal.SimpleStringStructImpl;
-import jcl.lang.internal.number.IntegerStructImpl;
 import jcl.lang.statics.CharacterConstants;
 import jcl.type.CharacterType;
 import jcl.type.LispType;
@@ -391,8 +390,8 @@ public interface StringStruct extends VectorStruct {
 			if (!length().eql(string.length())) {
 				return false;
 			}
-			for (int i = 0; i < length().intValue(); i++) {
-				final IntegerStruct index = IntegerStructImpl.valueOf(i);
+			for (int i = 0; i < length().toJavaInt(); i++) {
+				final IntegerStruct index = IntegerStruct.toLispInteger(i);
 				if (!char_(index).equal(string.char_(index))) {
 					return false;
 				}
@@ -416,8 +415,8 @@ public interface StringStruct extends VectorStruct {
 			if (!length().eql(string.length())) {
 				return false;
 			}
-			for (int i = 0; i < length().intValue(); i++) {
-				final IntegerStruct index = IntegerStructImpl.valueOf(i);
+			for (int i = 0; i < length().toJavaInt(); i++) {
+				final IntegerStruct index = IntegerStruct.toLispInteger(i);
 				if (!char_(index).equalp(string.char_(index))) {
 					return false;
 				}
@@ -503,10 +502,10 @@ public interface StringStruct extends VectorStruct {
 
 		@Override
 		public StringStruct build() {
-			final int sizeInt = size.intValue();
+			final int sizeInt = size.toJavaInt();
 			final LispType upgradedET = ArrayStruct.upgradedArrayElementType(elementType);
 			final boolean adjustableBoolean = adjustable.booleanValue();
-			final Integer fillPointerInt = (fillPointer == null) ? null : fillPointer.intValue();
+			final Integer fillPointerInt = (fillPointer == null) ? null : fillPointer.toJavaInt();
 
 			if (displacedTo != null) {
 				final LispType displacedToType = displacedTo.arrayElementType();
@@ -520,7 +519,7 @@ public interface StringStruct extends VectorStruct {
 				return new ComplexStringStructImpl(sizeInt,
 				                                   (CharacterType) upgradedET,
 				                                   displacedTo,
-				                                   displacedIndexOffset.intValue(),
+				                                   displacedIndexOffset.toJavaInt(),
 				                                   adjustableBoolean,
 				                                   fillPointerInt);
 			}

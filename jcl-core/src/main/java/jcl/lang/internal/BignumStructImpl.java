@@ -7,6 +7,7 @@ import java.util.function.Function;
 import com.google.common.math.BigIntegerMath;
 import com.google.common.math.DoubleMath;
 import jcl.lang.BignumStruct;
+import jcl.lang.DoubleFloatStruct;
 import jcl.lang.FloatStruct;
 import jcl.lang.IntegerStruct;
 import jcl.lang.NumberStruct;
@@ -288,15 +289,15 @@ public final class BignumStructImpl extends IntegerStructImpl implements BignumS
 
 	@Override
 	public FloatStruct floatingPoint() {
-		return new SingleFloatStructImpl(value.floatValue());
+		return SingleFloatStruct.toLispFloat(value.floatValue());
 	}
 
 	@Override
 	public FloatStruct floatingPoint(final FloatStruct prototype) {
 		if (prototype instanceof SingleFloatStruct) {
-			return new SingleFloatStructImpl(value.floatValue());
+			return SingleFloatStruct.toLispFloat(value.floatValue());
 		} else {
-			return new DoubleFloatStructImpl(value.doubleValue());
+			return DoubleFloatStruct.toLispFloat(value.doubleValue());
 		}
 	}
 
@@ -379,7 +380,7 @@ public final class BignumStructImpl extends IntegerStructImpl implements BignumS
 
 			return new QuotientRemainder(
 					quotientCreator.apply(quotient),
-					new SingleFloatStructImpl(remainder)
+					SingleFloatStruct.toLispFloat(remainder)
 			);
 		} else if (divisor instanceof DoubleFloatStructImpl) {
 			final double val = value.doubleValue();
@@ -391,7 +392,7 @@ public final class BignumStructImpl extends IntegerStructImpl implements BignumS
 
 			return new QuotientRemainder(
 					quotientCreator.apply(quotient),
-					new DoubleFloatStructImpl(remainder)
+					DoubleFloatStruct.toLispFloat(remainder)
 			);
 		} else {
 			final double val = value.doubleValue();
@@ -403,7 +404,7 @@ public final class BignumStructImpl extends IntegerStructImpl implements BignumS
 
 			return new QuotientRemainder(
 					quotientCreator.apply(quotient),
-					new SingleFloatStructImpl(remainder)
+					SingleFloatStruct.toLispFloat(remainder)
 			);
 		}
 	}
@@ -419,8 +420,8 @@ public final class BignumStructImpl extends IntegerStructImpl implements BignumS
 	 */
 	private static Function<Long, RealStruct> toLispFloat(final RealStruct real) {
 		return (real instanceof SingleFloatStructImpl)
-		       ? SingleFloatStructImpl::new
-		       : DoubleFloatStructImpl::new;
+		       ? SingleFloatStruct::toLispFloat
+		       : DoubleFloatStruct::toLispFloat;
 	}
 
 	@SuppressWarnings("NumericCastThatLosesPrecision")
@@ -439,7 +440,7 @@ public final class BignumStructImpl extends IntegerStructImpl implements BignumS
 	@SuppressWarnings("NumericCastThatLosesPrecision")
 	@Override
 	public QuotientRemainder ffloor() {
-		return new QuotientRemainder(new SingleFloatStructImpl(value.floatValue()), ZERO);
+		return new QuotientRemainder(SingleFloatStruct.toLispFloat(value.floatValue()), ZERO);
 	}
 
 	@SuppressWarnings("NumericCastThatLosesPrecision")
@@ -465,7 +466,7 @@ public final class BignumStructImpl extends IntegerStructImpl implements BignumS
 	@SuppressWarnings("NumericCastThatLosesPrecision")
 	@Override
 	public QuotientRemainder fceiling() {
-		return new QuotientRemainder(new SingleFloatStructImpl(value.floatValue()), ZERO);
+		return new QuotientRemainder(SingleFloatStruct.toLispFloat(value.floatValue()), ZERO);
 	}
 
 	@SuppressWarnings("NumericCastThatLosesPrecision")
@@ -489,7 +490,7 @@ public final class BignumStructImpl extends IntegerStructImpl implements BignumS
 
 	@Override
 	public QuotientRemainder ftruncate() {
-		return new QuotientRemainder(new SingleFloatStructImpl(value.floatValue()), ZERO);
+		return new QuotientRemainder(SingleFloatStruct.toLispFloat(value.floatValue()), ZERO);
 	}
 
 	@Override
@@ -513,7 +514,7 @@ public final class BignumStructImpl extends IntegerStructImpl implements BignumS
 
 	@Override
 	public QuotientRemainder fround() {
-		return new QuotientRemainder(new SingleFloatStructImpl(value.floatValue()), ZERO);
+		return new QuotientRemainder(SingleFloatStruct.toLispFloat(value.floatValue()), ZERO);
 	}
 
 	@Override
@@ -528,7 +529,7 @@ public final class BignumStructImpl extends IntegerStructImpl implements BignumS
 		final Apint ap = new Apint(value);
 		final Apfloat realAp = real.ap();
 		final Apfloat atan2 = ApfloatMath.atan2(ap, realAp);
-		return new SingleFloatStructImpl(atan2.floatValue());
+		return SingleFloatStruct.toLispFloat(atan2.floatValue());
 	}
 
 	/*
@@ -562,11 +563,11 @@ public final class BignumStructImpl extends IntegerStructImpl implements BignumS
 		} else if (number instanceof SingleFloatStructImpl) {
 			final float f = value.floatValue();
 			final float add = f + ((SingleFloatStructImpl) number).value;
-			return new SingleFloatStructImpl(add);
+			return SingleFloatStruct.toLispFloat(add);
 		} else if (number instanceof DoubleFloatStructImpl) {
 			final double d = value.doubleValue();
 			final double add = d + ((DoubleFloatStructImpl) number).value;
-			return new DoubleFloatStructImpl(add);
+			return DoubleFloatStruct.toLispFloat(add);
 		}
 		final Apint ap = new Apint(value);
 		final Apcomplex numberAp = number.ap();
@@ -585,11 +586,11 @@ public final class BignumStructImpl extends IntegerStructImpl implements BignumS
 		} else if (number instanceof SingleFloatStructImpl) {
 			final float f = value.floatValue();
 			final float subtract = f - ((SingleFloatStructImpl) number).value;
-			return new SingleFloatStructImpl(subtract);
+			return SingleFloatStruct.toLispFloat(subtract);
 		} else if (number instanceof DoubleFloatStructImpl) {
 			final double d = value.doubleValue();
 			final double subtract = d - ((DoubleFloatStructImpl) number).value;
-			return new DoubleFloatStructImpl(subtract);
+			return DoubleFloatStruct.toLispFloat(subtract);
 		}
 		final Apint ap = new Apint(value);
 		final Apcomplex numberAp = number.ap();
@@ -608,11 +609,11 @@ public final class BignumStructImpl extends IntegerStructImpl implements BignumS
 		} else if (number instanceof SingleFloatStructImpl) {
 			final float f = value.floatValue();
 			final float multiply = f * ((SingleFloatStructImpl) number).value;
-			return new SingleFloatStructImpl(multiply);
+			return SingleFloatStruct.toLispFloat(multiply);
 		} else if (number instanceof DoubleFloatStructImpl) {
 			final double d = value.doubleValue();
 			final double multiply = d * ((DoubleFloatStructImpl) number).value;
-			return new DoubleFloatStructImpl(multiply);
+			return DoubleFloatStruct.toLispFloat(multiply);
 		}
 		final Apint ap = new Apint(value);
 		final Apcomplex numberAp = number.ap();
@@ -630,11 +631,11 @@ public final class BignumStructImpl extends IntegerStructImpl implements BignumS
 		} else if (number instanceof SingleFloatStructImpl) {
 			final float f = value.floatValue();
 			final float divide = f / ((SingleFloatStructImpl) number).value;
-			return new SingleFloatStructImpl(divide);
+			return SingleFloatStruct.toLispFloat(divide);
 		} else if (number instanceof DoubleFloatStructImpl) {
 			final double d = value.doubleValue();
 			final double divide = d / ((DoubleFloatStructImpl) number).value;
-			return new DoubleFloatStructImpl(divide);
+			return DoubleFloatStruct.toLispFloat(divide);
 		}
 		final Apint ap = new Apint(value);
 		final Apcomplex numberAp = number.ap();
@@ -689,7 +690,7 @@ public final class BignumStructImpl extends IntegerStructImpl implements BignumS
 	public RealStruct exp() {
 		final Apint ap = new Apint(value);
 		final Apfloat exp = ApfloatMath.exp(ap);
-		return new SingleFloatStructImpl(exp.floatValue());
+		return SingleFloatStruct.toLispFloat(exp.floatValue());
 	}
 
 	@Override
@@ -709,7 +710,7 @@ public final class BignumStructImpl extends IntegerStructImpl implements BignumS
 	public RealStruct log() {
 		final Apint ap = new Apint(value);
 		final Apfloat log = ApfloatMath.log(ap);
-		return new SingleFloatStructImpl(log.floatValue());
+		return SingleFloatStruct.toLispFloat(log.floatValue());
 	}
 
 	@Override
@@ -730,90 +731,90 @@ public final class BignumStructImpl extends IntegerStructImpl implements BignumS
 
 		final Apint ap = new Apint(value);
 		final Apfloat sqrt = ApfloatMath.sqrt(ap);
-		return new SingleFloatStructImpl(sqrt.floatValue());
+		return SingleFloatStruct.toLispFloat(sqrt.floatValue());
 	}
 
 	@Override
 	public RealStruct sin() {
 		final Apint ap = new Apint(value);
 		final Apfloat sin = ApfloatMath.sin(ap);
-		return new SingleFloatStructImpl(sin.floatValue());
+		return SingleFloatStruct.toLispFloat(sin.floatValue());
 	}
 
 	@Override
 	public RealStruct cos() {
 		final Apint ap = new Apint(value);
 		final Apfloat cos = ApfloatMath.cos(ap);
-		return new SingleFloatStructImpl(cos.floatValue());
+		return SingleFloatStruct.toLispFloat(cos.floatValue());
 	}
 
 	@Override
 	public RealStruct tan() {
 		final Apint ap = new Apint(value);
 		final Apfloat tan = ApfloatMath.tan(ap);
-		return new SingleFloatStructImpl(tan.floatValue());
+		return SingleFloatStruct.toLispFloat(tan.floatValue());
 	}
 
 	@Override
 	public RealStruct asin() {
 		final Apint ap = new Apint(value);
 		final Apfloat asin = ApfloatMath.asin(ap);
-		return new SingleFloatStructImpl(asin.floatValue());
+		return SingleFloatStruct.toLispFloat(asin.floatValue());
 	}
 
 	@Override
 	public RealStruct acos() {
 		final Apint ap = new Apint(value);
 		final Apfloat acos = ApfloatMath.acos(ap);
-		return new SingleFloatStructImpl(acos.floatValue());
+		return SingleFloatStruct.toLispFloat(acos.floatValue());
 	}
 
 	@Override
 	public RealStruct atan() {
 		final Apint ap = new Apint(value);
 		final Apfloat atan = ApfloatMath.atan(ap);
-		return new SingleFloatStructImpl(atan.floatValue());
+		return SingleFloatStruct.toLispFloat(atan.floatValue());
 	}
 
 	@Override
 	public RealStruct sinh() {
 		final Apint ap = new Apint(value);
 		final Apfloat sinh = ApfloatMath.sinh(ap);
-		return new SingleFloatStructImpl(sinh.floatValue());
+		return SingleFloatStruct.toLispFloat(sinh.floatValue());
 	}
 
 	@Override
 	public RealStruct cosh() {
 		final Apint ap = new Apint(value);
 		final Apfloat cosh = ApfloatMath.cosh(ap);
-		return new SingleFloatStructImpl(cosh.floatValue());
+		return SingleFloatStruct.toLispFloat(cosh.floatValue());
 	}
 
 	@Override
 	public RealStruct tanh() {
 		final Apint ap = new Apint(value);
 		final Apfloat tanh = ApfloatMath.tanh(ap);
-		return new SingleFloatStructImpl(tanh.floatValue());
+		return SingleFloatStruct.toLispFloat(tanh.floatValue());
 	}
 
 	@Override
 	public RealStruct asinh() {
 		final Apint ap = new Apint(value);
 		final Apfloat asinh = ApfloatMath.asinh(ap);
-		return new SingleFloatStructImpl(asinh.floatValue());
+		return SingleFloatStruct.toLispFloat(asinh.floatValue());
 	}
 
 	@Override
 	public RealStruct acosh() {
 		final Apint ap = new Apint(value);
 		final Apfloat acosh = ApfloatMath.acosh(ap);
-		return new SingleFloatStructImpl(acosh.floatValue());
+		return SingleFloatStruct.toLispFloat(acosh.floatValue());
 	}
 
 	@Override
 	public RealStruct atanh() {
 		final Apint ap = new Apint(value);
 		final Apfloat atanh = ApfloatMath.atanh(ap);
-		return new SingleFloatStructImpl(atanh.floatValue());
+		return SingleFloatStruct.toLispFloat(atanh.floatValue());
 	}
 }

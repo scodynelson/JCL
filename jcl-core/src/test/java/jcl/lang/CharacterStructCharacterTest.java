@@ -5,7 +5,6 @@ import java.util.function.Function;
 import jcl.lang.condition.exception.SimpleErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.factory.LispStructFactory;
-import jcl.lang.internal.number.IntegerStructImpl;
 import jcl.lang.statics.CharacterConstants;
 import jcl.util.CodePointConstants;
 import org.junit.Assert;
@@ -291,7 +290,7 @@ public class CharacterStructCharacterTest {
 	public void test_charCode() {
 		final CharacterStruct character = CharacterConstants.LATIN_CAPITAL_LETTER_A_CHAR;
 		final IntegerStruct result = character.charCode();
-		Assert.assertThat(result, is(IntegerStructImpl.valueOf((int) CodePointConstants.LATIN_CAPITAL_LETTER_A)));
+		Assert.assertThat(result, is(IntegerStruct.toLispInteger((int) CodePointConstants.LATIN_CAPITAL_LETTER_A)));
 	}
 
 	/*
@@ -303,7 +302,7 @@ public class CharacterStructCharacterTest {
 	 */
 	@Test
 	public void test_codeChar() {
-		final IntegerStruct code = IntegerStructImpl.valueOf((int) CodePointConstants.LATIN_CAPITAL_LETTER_A);
+		final IntegerStruct code = IntegerStruct.toLispInteger((int) CodePointConstants.LATIN_CAPITAL_LETTER_A);
 		final LispStruct result = CharacterStruct.codeChar(code);
 		Assert.assertThat(result, is(CharacterConstants.LATIN_CAPITAL_LETTER_A_CHAR));
 	}
@@ -343,7 +342,7 @@ public class CharacterStructCharacterTest {
 	public void test_charInt() {
 		final CharacterStruct character = CharacterConstants.LATIN_CAPITAL_LETTER_A_CHAR;
 		final IntegerStruct result = character.charInt();
-		Assert.assertThat(result, is(IntegerStructImpl.valueOf((int) CodePointConstants.LATIN_CAPITAL_LETTER_A)));
+		Assert.assertThat(result, is(IntegerStruct.toLispInteger((int) CodePointConstants.LATIN_CAPITAL_LETTER_A)));
 	}
 
 	/*
@@ -377,7 +376,7 @@ public class CharacterStructCharacterTest {
 	@Test
 	public void test_charDigit_Radix() {
 		final CharacterStruct character = CharacterConstants.LATIN_CAPITAL_LETTER_A_CHAR;
-		final LispStruct result = character.charDigit(IntegerStructImpl.valueOf(16));
+		final LispStruct result = character.charDigit(IntegerStruct.toLispInteger(16));
 
 		Assert.assertThat(result, is(IntegerStruct.TEN));
 	}
@@ -421,7 +420,7 @@ public class CharacterStructCharacterTest {
 	 */
 	@Test
 	public void test_digitChar_Radix() {
-		final IntegerStruct eleven = IntegerStructImpl.valueOf(11);
+		final IntegerStruct eleven = IntegerStruct.toLispInteger(11);
 		final LispStruct result = CharacterStruct.digitChar(IntegerStruct.TEN, eleven);
 		Assert.assertThat(result, is(CharacterConstants.LATIN_CAPITAL_LETTER_A_CHAR));
 	}

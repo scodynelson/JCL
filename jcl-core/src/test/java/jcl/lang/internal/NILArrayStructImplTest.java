@@ -1132,7 +1132,7 @@ public class NILArrayStructImplTest {
 				= NILArrayStructImpl.valueOf(TType.INSTANCE,
 				                             IntegerStruct.ZERO);
 		final IntegerStruct result = array.arrayRank();
-		Assert.assertThat(result.intValue(), is(0));
+		Assert.assertThat(result.toJavaInt(), is(0));
 	}
 
 	/*
@@ -1182,7 +1182,7 @@ public class NILArrayStructImplTest {
 				= NILArrayStructImpl.valueOf(TType.INSTANCE,
 				                             IntegerStruct.ZERO);
 		final IntegerStruct result = array.arrayTotalSize();
-		Assert.assertThat(result.intValue(), is(1));
+		Assert.assertThat(result.toJavaInt(), is(1));
 	}
 
 	/*

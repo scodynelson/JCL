@@ -114,7 +114,7 @@ public final class MergePathnamesFunction extends CommonLispBuiltInFunctionStruc
 		if (componentType == null) {
 			if (defaultVersion instanceof IntegerStruct) {
 				final IntegerStruct integer = (IntegerStruct) defaultVersion;
-				final int intValue = integer.intValue();
+				final int intValue = integer.toJavaInt();
 				if (intValue < 0) {
 					throw new ErrorException("Integer versions must be non-negative. Got: " + integer);
 				}

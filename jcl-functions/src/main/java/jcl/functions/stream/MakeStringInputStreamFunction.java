@@ -45,7 +45,7 @@ public final class MakeStringInputStreamFunction extends CommonLispBuiltInFuncti
 			final LispStruct startParam = arguments.getOptionalArgument(START_ARGUMENT);
 
 			if (startParam instanceof IntegerStruct) {
-				final int possibleStartValue = ((IntegerStruct) startParam).intValue();
+				final int possibleStartValue = ((IntegerStruct) startParam).toJavaInt();
 				if (possibleStartValue > end) {
 					throw new TypeErrorException(functionName + ": Start value must be less than or equal to the length of the String. Got: " + startParam);
 				}
@@ -57,7 +57,7 @@ public final class MakeStringInputStreamFunction extends CommonLispBuiltInFuncti
 			final LispStruct endParam = arguments.getOptionalArgument(END_ARGUMENT);
 
 			if (endParam instanceof IntegerStruct) {
-				final int possibleEndValue = ((IntegerStruct) endParam).intValue();
+				final int possibleEndValue = ((IntegerStruct) endParam).toJavaInt();
 				if (possibleEndValue > end) {
 					throw new TypeErrorException(functionName + ": End value must be less than or equal to the length of the String. Got: " + endParam);
 				}

@@ -12,7 +12,6 @@ import jcl.lang.condition.exception.SimpleErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.internal.MultiArrayStructImpl;
 import jcl.lang.internal.NILArrayStructImpl;
-import jcl.lang.internal.number.IntegerStructImpl;
 import jcl.type.ArrayType;
 import jcl.type.BaseCharType;
 import jcl.type.BitType;
@@ -112,14 +111,14 @@ public interface ArrayStruct extends LispStruct {
 			if (!arrayRank().eql(a.arrayRank())) {
 				return false;
 			}
-			for (int i = 0; i < arrayRank().intValue(); i++) {
-				final IntegerStruct axisNumber = IntegerStructImpl.valueOf(i);
+			for (int i = 0; i < arrayRank().toJavaInt(); i++) {
+				final IntegerStruct axisNumber = IntegerStruct.toLispInteger(i);
 				if (!arrayDimension(axisNumber).eql(a.arrayDimension(axisNumber))) {
 					return false;
 				}
 			}
-			for (int i = 0; i < arrayTotalSize().intValue(); i++) {
-				final IntegerStruct index = IntegerStructImpl.valueOf(i);
+			for (int i = 0; i < arrayTotalSize().toJavaInt(); i++) {
+				final IntegerStruct index = IntegerStruct.toLispInteger(i);
 				if (!rowMajorAref(index).equalp(a.rowMajorAref(index))) {
 					return false;
 				}
@@ -166,7 +165,7 @@ public interface ArrayStruct extends LispStruct {
 
 		if (numberOfDimensions == 1) {
 			final int dimension = dimensions.get(0);
-			if (initialContents.length().intValue() == dimension) {
+			if (initialContents.length().toJavaInt() == dimension) {
 				return getValidContents(elementType, initialContents);
 			} else {
 				throw new SimpleErrorException(
@@ -177,7 +176,7 @@ public interface ArrayStruct extends LispStruct {
 		final List<TYPE> validContents = new ArrayList<>();
 
 		final int dimension = dimensions.get(0);
-		if (initialContents.length().intValue() == dimension) {
+		if (initialContents.length().toJavaInt() == dimension) {
 			final List<Integer> subDimension = dimensions.subList(1, numberOfDimensions);
 
 			for (final LispStruct contentToCheck : initialContents) {
@@ -312,18 +311,18 @@ public interface ArrayStruct extends LispStruct {
 					return new NILArrayStructImpl(ArrayType.INSTANCE,
 					                              upgradedET,
 					                              displacedTo,
-					                              displacedIndexOffset.intValue(),
+					                              displacedIndexOffset.toJavaInt(),
 					                              adjustableBoolean);
 				}
 
 				final List<Integer> dimensionInts = Arrays.stream(dimensions)
-				                                          .map(IntegerStruct::intValue)
+				                                          .map(IntegerStruct::toJavaInt)
 				                                          .collect(Collectors.toList());
 				return new MultiArrayStructImpl(ArrayType.INSTANCE,
 				                                dimensionInts,
 				                                upgradedET,
 				                                displacedTo,
-				                                displacedIndexOffset.intValue(),
+				                                displacedIndexOffset.toJavaInt(),
 				                                adjustableBoolean);
 			}
 
@@ -348,7 +347,7 @@ public interface ArrayStruct extends LispStruct {
 				}
 
 				final List<Integer> dimensionInts = Arrays.stream(dimensions)
-				                                          .map(IntegerStruct::intValue)
+				                                          .map(IntegerStruct::toJavaInt)
 				                                          .collect(Collectors.toList());
 				final List<LispStruct> validContents
 						= getValidContents(dimensionInts,
@@ -374,7 +373,7 @@ public interface ArrayStruct extends LispStruct {
 				}
 
 				final List<Integer> dimensionInts = Arrays.stream(dimensions)
-				                                          .map(IntegerStruct::intValue)
+				                                          .map(IntegerStruct::toJavaInt)
 				                                          .collect(Collectors.toList());
 				final int totalSize = dimensionInts.stream()
 				                                   .mapToInt(Integer::intValue)

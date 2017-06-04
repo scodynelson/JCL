@@ -7,37 +7,47 @@ public interface DoubleFloatStruct extends FloatStruct {
 	/**
 	 * {@link DoubleFloatStruct} constant representing 0.0.
 	 */
-	DoubleFloatStruct ZERO = toLispFloat(0.0D);
+	DoubleFloatStruct ZERO = new DoubleFloatStructImpl(0.0D);
 
 	/**
 	 * {@link DoubleFloatStruct} constant representing -0.0.
 	 */
-	DoubleFloatStruct MINUS_ZERO = toLispFloat(-0.0D);
+	DoubleFloatStruct MINUS_ZERO = new DoubleFloatStructImpl(-0.0D);
 
 	/**
 	 * {@link DoubleFloatStruct} constant representing 1.0.
 	 */
-	DoubleFloatStruct ONE = toLispFloat(1.0D);
+	DoubleFloatStruct ONE = new DoubleFloatStructImpl(1.0D);
 
 	/**
 	 * {@link DoubleFloatStruct} constant representing -1.0.
 	 */
-	DoubleFloatStruct MINUS_ONE = toLispFloat(-1.0D);
+	DoubleFloatStruct MINUS_ONE = new DoubleFloatStructImpl(-1.0D);
 
 	static DoubleFloatStruct toLispFloat(final float value) {
-		return new DoubleFloatStructImpl(value);
+		return toLispFloat((double) value);
 	}
 
 	static DoubleFloatStruct toLispFloat(final Float value) {
-		return new DoubleFloatStructImpl(value);
+		return toLispFloat(value.doubleValue());
 	}
 
 	static DoubleFloatStruct toLispFloat(final double value) {
-		return new DoubleFloatStructImpl(value);
+		if (Double.compare(value, 0.0D) == 0) {
+			return ZERO;
+		} else if (Double.compare(value, -0.0D) == 0) {
+			return MINUS_ZERO;
+		} else if (Double.compare(value, 1.0D) == 0) {
+			return ONE;
+		} else if (Double.compare(value, -1.0D) == 0) {
+			return MINUS_ONE;
+		} else {
+			return new DoubleFloatStructImpl(value);
+		}
 	}
 
 	static DoubleFloatStruct toLispFloat(final Double value) {
-		return new DoubleFloatStructImpl(value);
+		return toLispFloat(value.doubleValue());
 	}
 
 	@Override

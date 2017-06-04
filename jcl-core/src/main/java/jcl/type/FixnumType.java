@@ -56,7 +56,8 @@ public interface FixnumType extends IntegerType {
 
 			@Override
 			public boolean typeEquals(final Object obj) {
-				return (this == obj) || (obj instanceof FixnumType);
+				// TODO: Hack for BitType until type system gets reworked
+				return (this == obj) || (obj instanceof FixnumType) || (obj instanceof BitType);
 			}
 
 			@Override

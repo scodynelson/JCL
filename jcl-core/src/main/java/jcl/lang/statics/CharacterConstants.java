@@ -11,7 +11,6 @@ import java.util.Map;
 import jcl.lang.CharacterStruct;
 import jcl.lang.IntegerStruct;
 import jcl.lang.internal.ConstantStructImpl;
-import jcl.lang.internal.number.IntegerStructImpl;
 import jcl.util.CodePointConstants;
 import lombok.experimental.UtilityClass;
 
@@ -457,5 +456,5 @@ public class CharacterConstants {
 	public static final ConstantStructImpl<IntegerStruct> CHAR_CODE_LIMIT
 			= ConstantStructImpl.valueOf("CHAR-CODE-LIMIT",
 			                             GlobalPackageStruct.COMMON_LISP,
-			                             IntegerStructImpl.valueOf((int) Character.MAX_VALUE));
+			                             IntegerStruct.toLispInteger((int) Character.MAX_VALUE));
 }

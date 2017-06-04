@@ -50,7 +50,7 @@ public final class GensymFunction extends CommonLispBuiltInFunctionStructBase {
 			SymbolVariables.GENSYM_COUNTER.setValue(gensymPostfix.add(IntegerStruct.ONE));
 		}
 
-		final String symbolName = gensymPrefix + gensymPostfix.bigIntegerValue();
+		final String symbolName = gensymPrefix + gensymPostfix;
 		return LispStructFactory.toSymbol(symbolName);
 	}
 }

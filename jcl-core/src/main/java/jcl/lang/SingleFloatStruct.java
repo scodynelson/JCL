@@ -7,37 +7,48 @@ public interface SingleFloatStruct extends FloatStruct {
 	/**
 	 * {@link SingleFloatStruct} constant representing 0.0.
 	 */
-	SingleFloatStruct ZERO = toLispFloat(0.0F);
+	SingleFloatStruct ZERO = new SingleFloatStructImpl(0.0F);
 
 	/**
 	 * {@link SingleFloatStruct} constant representing -0.0.
 	 */
-	SingleFloatStruct MINUS_ZERO = toLispFloat(-0.0F);
+	SingleFloatStruct MINUS_ZERO = new SingleFloatStructImpl(-0.0F);
 
 	/**
 	 * {@link SingleFloatStruct} constant representing 1.0.
 	 */
-	SingleFloatStruct ONE = toLispFloat(1.0F);
+	SingleFloatStruct ONE = new SingleFloatStructImpl(1.0F);
 
 	/**
 	 * {@link SingleFloatStruct} constant representing -1.0.
 	 */
-	SingleFloatStruct MINUS_ONE = toLispFloat(-1.0F);
+	SingleFloatStruct MINUS_ONE = new SingleFloatStructImpl(-1.0F);
 
 	static SingleFloatStruct toLispFloat(final float value) {
-		return new SingleFloatStructImpl(value);
+		if (Float.compare(value, 0.0F) == 0) {
+			return ZERO;
+		} else if (Float.compare(value, -0.0F) == 0) {
+			return MINUS_ZERO;
+		} else if (Float.compare(value, 1.0F) == 0) {
+			return ONE;
+		} else if (Float.compare(value, -1.0F) == 0) {
+			return MINUS_ONE;
+		} else {
+			return new SingleFloatStructImpl(value);
+		}
 	}
 
 	static SingleFloatStruct toLispFloat(final Float value) {
-		return new SingleFloatStructImpl(value);
+		return toLispFloat(value.floatValue());
 	}
 
+	@SuppressWarnings("NumericCastThatLosesPrecision")
 	static SingleFloatStruct toLispFloat(final double value) {
-		return new SingleFloatStructImpl(value);
+		return toLispFloat((float) value);
 	}
 
 	static SingleFloatStruct toLispFloat(final Double value) {
-		return new SingleFloatStructImpl(value);
+		return toLispFloat(value.floatValue());
 	}
 
 	@Override

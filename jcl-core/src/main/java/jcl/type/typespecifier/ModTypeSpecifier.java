@@ -52,13 +52,13 @@ public class ModTypeSpecifier extends TypeBaseClass implements CompoundTypeSpeci
 
 		if (obj instanceof IntegerStruct) {
 			final IntegerStruct objectInteger = (IntegerStruct) obj;
-			final BigInteger objectValue = objectInteger.bigIntegerValue();
+			final BigInteger objectValue = objectInteger.toJavaBigInteger();
 
-			if (objectValue.compareTo(BigInteger.ZERO) == -1) {
+			if (objectValue.compareTo(BigInteger.ZERO) < 0) {
 				return false;
 			}
 
-			final BigInteger integerValue = integerStruct.bigIntegerValue();
+			final BigInteger integerValue = integerStruct.toJavaBigInteger();
 
 			return objectValue.compareTo(integerValue) <= 0;
 		}

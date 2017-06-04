@@ -8,8 +8,8 @@ import java.math.BigInteger;
 
 import jcl.functions.CommonLispBuiltInFunctionStructBase;
 import jcl.lang.HashTableStruct;
+import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
-import jcl.lang.factory.LispStructFactory;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import org.springframework.stereotype.Component;
@@ -32,6 +32,6 @@ public final class HashTableSizeFunction extends CommonLispBuiltInFunctionStruct
 	public LispStruct apply(final Arguments arguments) {
 		final HashTableStruct hashTable = arguments.getRequiredArgument(HASH_TABLE_ARGUMENT, HashTableStruct.class);
 		final BigInteger size = hashTable.getSize();
-		return LispStructFactory.toInteger(size);
+		return IntegerStruct.toLispInteger(size);
 	}
 }

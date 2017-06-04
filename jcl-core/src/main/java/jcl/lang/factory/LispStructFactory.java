@@ -6,7 +6,6 @@ import java.io.OutputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.net.URI;
 import java.net.URL;
@@ -22,13 +21,11 @@ import jcl.lang.BitVectorStruct;
 import jcl.lang.BooleanStruct;
 import jcl.lang.BroadcastStreamStruct;
 import jcl.lang.CharacterNativeStreamStruct;
-import jcl.lang.ComplexStruct;
 import jcl.lang.ConcatenatedStreamStruct;
 import jcl.lang.ConsStruct;
 import jcl.lang.EchoStreamStruct;
 import jcl.lang.EmptyStreamStruct;
 import jcl.lang.FileStreamStruct;
-import jcl.lang.FloatStruct;
 import jcl.lang.FunctionStruct;
 import jcl.lang.HashTableStruct;
 import jcl.lang.InputStreamStruct;
@@ -42,10 +39,7 @@ import jcl.lang.NILStruct;
 import jcl.lang.OutputStreamStruct;
 import jcl.lang.PackageStruct;
 import jcl.lang.PathnameStruct;
-import jcl.lang.RandomStateStruct;
-import jcl.lang.RatioStruct;
 import jcl.lang.ReadtableStruct;
-import jcl.lang.RealStruct;
 import jcl.lang.StringInputStreamStruct;
 import jcl.lang.StringOutputStreamStruct;
 import jcl.lang.SymbolStruct;
@@ -66,11 +60,6 @@ import jcl.lang.internal.PathnameStructImpl;
 import jcl.lang.internal.SymbolStructImpl;
 import jcl.lang.internal.VariableStructImpl;
 import jcl.lang.internal.VectorStructImpl;
-import jcl.lang.internal.number.ComplexStructImpl;
-import jcl.lang.internal.number.FloatStructImpl;
-import jcl.lang.internal.number.IntegerStructImpl;
-import jcl.lang.internal.number.RandomStateStructImpl;
-import jcl.lang.internal.number.RatioStructImpl;
 import jcl.lang.internal.readtable.ReadtableStructImpl;
 import jcl.lang.internal.stream.BinaryNativeStreamStructImpl;
 import jcl.lang.internal.stream.BroadcastStreamStructImpl;
@@ -98,10 +87,6 @@ import jcl.lang.pathname.PathnameVersion;
 import jcl.lang.readtable.ReadtableCase;
 import jcl.type.LispType;
 import org.apache.commons.collections4.CollectionUtils;
-import org.apfloat.Apcomplex;
-import org.apfloat.Apfloat;
-import org.apfloat.Apint;
-import org.apfloat.Aprational;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -119,7 +104,7 @@ public final class LispStructFactory {
 	public static ArrayStruct toArray(final List<Integer> dimensions, final List<LispStruct> contents) {
 		// TODO: Fix me
 		final List<IntegerStruct> dimensionStructs = dimensions.stream()
-		                                                       .map(IntegerStructImpl::valueOf)
+		                                                       .map(IntegerStruct::toLispInteger)
 		                                                       .collect(Collectors.toList());
 		return MultiArrayStructImpl.valueOf(dimensionStructs, contents);
 	}
@@ -191,22 +176,6 @@ public final class LispStructFactory {
 	}
 
 	/*
-	 * Complex
-	 */
-
-	public static ComplexStruct toComplex(final Apcomplex apcomplex) {
-		return ComplexStructImpl.valueOf(apcomplex);
-	}
-
-	public static ComplexStruct toComplex(final Apfloat real, final Apfloat imaginary) {
-		return ComplexStructImpl.valueOf(real, imaginary);
-	}
-
-	public static ComplexStruct toComplex(final RealStruct real, final RealStruct imaginary) {
-		return ComplexStructImpl.valueOf(real, imaginary);
-	}
-
-	/*
 	 * ConcatenatedStream
 	 */
 
@@ -267,85 +236,6 @@ public final class LispStructFactory {
 	}
 
 	/*
-	 * Float
-	 */
-
-	/**
-	 * Returns a FloatStruct object with the provided {@link Float} value.
-	 *
-	 * @param f
-	 * 		the {@link Float} value of the resulting FloatStruct
-	 *
-	 * @return a FloatStruct object with the provided {@link Float} value
-	 */
-	public static FloatStruct toFloat(final Float f) {
-		return FloatStructImpl.valueOf(f);
-	}
-
-	/**
-	 * Returns a FloatStruct object with the provided {@link Double} value.
-	 *
-	 * @param d
-	 * 		the {@link Double} value of the resulting FloatStruct
-	 *
-	 * @return a FloatStruct object with the provided {@link Double} value
-	 */
-	public static FloatStruct toFloat(final Double d) {
-		return FloatStructImpl.valueOf(d);
-	}
-
-	/**
-	 * Returns a FloatStruct object with the provided {@link BigDecimal} value.
-	 *
-	 * @param bigDecimal
-	 * 		the {@link BigDecimal} value of the resulting FloatStruct
-	 *
-	 * @return a FloatStruct object with the provided {@link BigDecimal} value
-	 */
-	public static FloatStruct toFloat(final BigDecimal bigDecimal) {
-		return FloatStructImpl.valueOf(bigDecimal);
-	}
-
-	/**
-	 * Returns a new FloatStruct representing the provided {@link String}.
-	 *
-	 * @param s
-	 * 		the {@link String} representing the new FloatStruct
-	 *
-	 * @return a new FloatStruct representing the provided {@link String}
-	 */
-	public static FloatStruct toFloat(final String s) {
-		return FloatStructImpl.valueOf(s);
-	}
-
-	/**
-	 * Returns a FloatStruct object with the provided {@link Apfloat} value.
-	 *
-	 * @param apfloat
-	 * 		the {@link Apfloat} value of the resulting FloatStruct
-	 *
-	 * @return a FloatStruct object with the provided {@link Apfloat} value
-	 */
-	public static FloatStruct toFloat(final Apfloat apfloat) {
-		return FloatStructImpl.valueOf(apfloat);
-	}
-
-	/**
-	 * Returns a FloatStruct object with the provided {@link Apfloat} value.
-	 *
-	 * @param apfloat
-	 * 		the {@link Apfloat} value of the resulting FloatStruct
-	 * @param prototype
-	 * 		the FloatStruct to use as a prototype for the resulting floating point precision
-	 * 		precision
-	 *
-	 * @return a FloatStruct object with the provided {@link Apfloat} value
-	 */
-	public static FloatStruct toFloat(final Apfloat apfloat, final FloatStruct prototype) {
-		return FloatStructImpl.valueOf(apfloat, prototype);
-	}
-
-	/*
 	 * HashTable
 	 */
 
@@ -353,70 +243,6 @@ public final class LispStructFactory {
 	                                          final BigInteger size,
 	                                          final float rehashThreshold) {
 		return HashTableStructImpl.valueOf(test, size, rehashThreshold);
-	}
-
-	/*
-	 * Integer
-	 */
-
-	/**
-	 * Returns a new IntegerStruct representing the provided {@link Integer}.
-	 *
-	 * @param i
-	 * 		the {@link Integer} representing the new IntegerStruct
-	 *
-	 * @return a new IntegerStruct representing the provided {@link Integer}
-	 */
-	public static IntegerStruct toInteger(final Integer i) {
-		return IntegerStructImpl.valueOf(i);
-	}
-
-	/**
-	 * Returns a new IntegerStruct representing the provided {@link Long}.
-	 *
-	 * @param l
-	 * 		the {@link Long} representing the new IntegerStruct
-	 *
-	 * @return a new IntegerStruct representing the provided {@link Long}
-	 */
-	public static IntegerStruct toInteger(final Long l) {
-		return IntegerStructImpl.valueOf(l);
-	}
-
-	/**
-	 * Returns a new IntegerStruct representing the provided {@link BigInteger}.
-	 *
-	 * @param bigInteger
-	 * 		the {@link BigInteger} representing the new IntegerStruct
-	 *
-	 * @return a new IntegerStruct representing the provided {@link BigInteger}
-	 */
-	public static IntegerStruct toInteger(final BigInteger bigInteger) {
-		return IntegerStructImpl.valueOf(bigInteger);
-	}
-
-	/**
-	 * Returns a new IntegerStruct representing the provided {@link String}.
-	 *
-	 * @param s
-	 * 		the {@link String} representing the new IntegerStruct
-	 *
-	 * @return a new IntegerStruct representing the provided {@link String}
-	 */
-	public static IntegerStruct toInteger(final String s) {
-		return IntegerStructImpl.valueOf(s);
-	}
-
-	/**
-	 * Returns a IntegerStruct object with the provided {@link Apint} value.
-	 *
-	 * @param apint
-	 * 		the {@link Apint} value of the resulting IntegerStruct
-	 *
-	 * @return a IntegerStruct object with the provided {@link Apint} value
-	 */
-	public static IntegerStruct toInteger(final Apint apint) {
-		return IntegerStructImpl.valueOf(apint);
 	}
 
 	/*
@@ -682,56 +508,6 @@ public final class LispStructFactory {
 	                                        final PathnameType type,
 	                                        final PathnameVersion version) {
 		return PathnameStructImpl.valueOf(host, device, directory, name, type, version);
-	}
-
-	/*
-	 * RandomState
-	 */
-
-	public static RandomStateStruct toRandomState() {
-		return RandomStateStructImpl.valueOf();
-	}
-
-	/*
-	 * Ratio
-	 */
-
-	/**
-	 * Returns a new RatioStruct representing the provided {@link String}.
-	 *
-	 * @param s
-	 * 		the {@link String} representing the new RatioStruct
-	 *
-	 * @return a new RatioStruct representing the provided {@link String}
-	 */
-	public static RatioStruct toRatio(final String s) {
-		return RatioStructImpl.valueOf(s);
-	}
-
-	/**
-	 * Returns a RatioStruct object with the provided {@link Aprational} value.
-	 *
-	 * @param aprational
-	 * 		the {@link Aprational} value of the resulting RatioStruct
-	 *
-	 * @return a RatioStruct object with the provided {@link Aprational} value
-	 */
-	public static RatioStruct toRatio(final Aprational aprational) {
-		return RatioStructImpl.valueOf(aprational);
-	}
-
-	/**
-	 * Returns a RatioStruct object with the provided numerator and denominator {@link Apint} values.
-	 *
-	 * @param numerator
-	 * 		the {@link Apint} value of the numerator of the resulting RatioStruct
-	 * @param denominator
-	 * 		the {@link Apint} value of the denominator of the resulting RatioStruct
-	 *
-	 * @return a RatioStruct object with the provided numerator and denominator {@link Apint} values
-	 */
-	public static RatioStruct toRatio(final Apint numerator, final Apint denominator) {
-		return RatioStructImpl.valueOf(numerator, denominator);
 	}
 
 	/*

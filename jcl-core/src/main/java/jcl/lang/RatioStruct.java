@@ -1,7 +1,5 @@
 package jcl.lang;
 
-import org.apache.commons.math3.fraction.BigFraction;
-
 /**
  * The {@link RatioStruct} is the object representation of a Lisp 'ratio' type.
  */
@@ -41,14 +39,5 @@ public interface RatioStruct extends RationalStruct {
 		return eq(object) ||
 				((object instanceof RatioStruct)
 						&& ((RatioStruct) object).ap().equals(ap()));
-	}
-
-	/*
-	DEPRECATED
-	 */
-
-	@Deprecated
-	default BigFraction toBigFraction() {
-		return toJavaBigFraction();
 	}
 }

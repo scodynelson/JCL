@@ -1,9 +1,12 @@
 buildscript {
 	ext {
-		dependencyManagementPluginVersion = "1.0.2.RELEASE"
-		springBootVersion = "1.5.3.RELEASE"
-		springIOPlatformVersion = "Brussels-SR2"
-		apfloatVersion = "1.8.2"
+		dependencyManagementPluginVersion = "1.0.3.RELEASE"
+		sonarqubePluginVersion = "2.5"
+		propdepsPluginVersion = "0.0.9.RELEASE"
+		gradleDependencyAnalyzePluginVersion = "1.2.0"
+		springBootVersion = "1.5.6.RELEASE"
+		springIOPlatformVersion = "Brussels-SR4"
+		apfloatVersion = "1.8.3"
 		asmAllVersion = "5.2"
 		commonsMathVersion = "3.6.1"
 		commonsCollectionsVersion = "4.1"
@@ -17,15 +20,19 @@ buildscript {
 	dependencies {
 		classpath("io.spring.gradle:dependency-management-plugin:${dependencyManagementPluginVersion}")
 		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+//		classpath("io.spring.gradle:propdeps-plugin:${propdepsPluginVersion}")
+//		classpath("ca.cutterslade.gradle:gradle-dependency-analyze:${gradleDependencyAnalyzePluginVersion}")
 		classpath("org.springframework.build.gradle:propdeps-plugin:0.0.7")
-		classpath("ca.cutterslade.gradle:gradle-dependency-analyze:1.1.0")
+		classpath("ca.cutterslade.gradle:gradle-dependency-analyze:1.2.0")
 	}
 }
 
 plugins {
-	id "io.spring.dependency-management" version "1.0.2.RELEASE"
-	id "org.sonarqube" version "2.4"
+	id "io.spring.dependency-management" version "1.0.3.RELEASE"
+	id "org.sonarqube" version "2.5"
 }
+
+apply plugin: "ca.cutterslade.analyze"
 
 allprojects {
 	group = "jcl"
@@ -231,5 +238,5 @@ subprojects {
 //}
 
 task wrapper(type: Wrapper) {
-	gradleVersion = '3.5'
+	gradleVersion = '4.0.2'
 }

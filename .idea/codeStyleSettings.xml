@@ -27,6 +27,10 @@
           <option name="ANNOTATION_PARAMETER_WRAP" value="5" />
           <option name="ALIGN_MULTILINE_ANNOTATION_PARAMETERS" value="true" />
         </JavaCodeStyleSettings>
+        <JetCodeStyleSettings>
+          <option name="NAME_COUNT_TO_USE_STAR_IMPORT" value="2147483647" />
+          <option name="NAME_COUNT_TO_USE_STAR_IMPORT_FOR_MEMBERS" value="2147483647" />
+        </JetCodeStyleSettings>
         <Properties>
           <option name="SPACES_AROUND_KEY_VALUE_DELIMITER" value="true" />
         </Properties>
@@ -64,6 +68,12 @@
           </indentOptions>
         </codeStyleSettings>
         <codeStyleSettings language="XML">
+          <indentOptions>
+            <option name="USE_TAB_CHARACTER" value="true" />
+            <option name="SMART_TABS" value="true" />
+          </indentOptions>
+        </codeStyleSettings>
+        <codeStyleSettings language="kotlin">
           <indentOptions>
             <option name="USE_TAB_CHARACTER" value="true" />
             <option name="SMART_TABS" value="true" />

@@ -1,10 +1,10 @@
 # Language
 language: java
 # JDK Version
-jdk: oraclejdk8
+jdk: oraclejdk9
 before_install:
   - sudo apt-get update -qq
-  - sudo apt-get install oracle-java8-installer
+  - sudo apt-get install oracle-java9-installer
 # Gradle Script
 script: ./gradlew check
 # Gradle Caching

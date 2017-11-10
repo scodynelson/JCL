@@ -49,6 +49,6 @@ final class StringCodeGenerator implements CodeGenerator<SimpleStringStructImpl>
 		                   GenerationConstants.STRING_STRUCT_NAME,
 		                   GenerationConstants.STRING_STRUCT_TO_LISP_STRING_METHOD_NAME,
 		                   GenerationConstants.STRING_STRUCT_TO_LISP_STRING_METHOD_DESC,
-		                   false);
+		                   true);
 	}
 }

@@ -5,7 +5,7 @@
       <configuration />
     </facet>
   </component>
-  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_8">
+  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_9">
     <output-test url="file://$MODULE_DIR$/../../../jcl-functions/out/test/classes" />
     <exclude-output />
     <content url="file://$MODULE_DIR$/../../../jcl-functions/src/test">
@@ -15,6 +15,15 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="jcl-functions_main" />
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/../../../libs/lombok-edge.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
     <orderEntry type="module" module-name="jcl-compiler_main" />
     <orderEntry type="module" module-name="jcl-reader_main" />
     <orderEntry type="module" module-name="jcl-core_main" />
@@ -25,17 +34,17 @@
     <orderEntry type="library" name="Gradle: org.jboss.windup.decompiler.procyon:procyon-compilertools:2.5.0.Final" level="project" />
     <orderEntry type="library" name="Gradle: org.ow2.asm:asm-all:5.2" level="project" />
     <orderEntry type="library" name="Gradle: org.slf4j:slf4j-api:1.7.25" level="project" />
-    <orderEntry type="library" name="Gradle: org.springframework.boot:spring-boot:1.5.6.RELEASE" level="project" />
-    <orderEntry type="library" name="Gradle: org.springframework:spring-context:4.3.10.RELEASE" level="project" />
-    <orderEntry type="library" name="Gradle: org.springframework:spring-aop:4.3.10.RELEASE" level="project" />
-    <orderEntry type="library" name="Gradle: org.springframework:spring-beans:4.3.10.RELEASE" level="project" />
+    <orderEntry type="library" name="Gradle: org.springframework.boot:spring-boot:1.5.7.RELEASE" level="project" />
+    <orderEntry type="library" name="Gradle: org.springframework:spring-context:4.3.11.RELEASE" level="project" />
+    <orderEntry type="library" name="Gradle: org.springframework:spring-aop:4.3.11.RELEASE" level="project" />
+    <orderEntry type="library" name="Gradle: org.springframework:spring-beans:4.3.11.RELEASE" level="project" />
     <orderEntry type="library" name="Gradle: com.ibm.icu:icu4j:59.1" level="project" />
     <orderEntry type="library" name="Gradle: com.google.guava:guava:20.0" level="project" />
     <orderEntry type="library" name="Gradle: io.javaslang:javaslang:2.0.6" level="project" />
     <orderEntry type="library" name="Gradle: org.apache.commons:commons-math3:3.6.1" level="project" />
     <orderEntry type="library" name="Gradle: org.apfloat:apfloat:1.8.3" level="project" />
-    <orderEntry type="library" name="Gradle: org.springframework:spring-expression:4.3.10.RELEASE" level="project" />
-    <orderEntry type="library" name="Gradle: org.springframework:spring-core:4.3.10.RELEASE" level="project" />
+    <orderEntry type="library" name="Gradle: org.springframework:spring-expression:4.3.11.RELEASE" level="project" />
+    <orderEntry type="library" name="Gradle: org.springframework:spring-core:4.3.11.RELEASE" level="project" />
     <orderEntry type="library" name="Gradle: org.jboss.windup.decompiler.procyon:procyon-reflection:2.5.0.Final" level="project" />
     <orderEntry type="library" name="Gradle: io.javaslang:javaslang-match:2.0.6" level="project" />
     <orderEntry type="library" name="Gradle: org.jboss.windup.decompiler.procyon:procyon-core:2.5.0.Final" level="project" />

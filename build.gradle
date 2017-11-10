@@ -4,10 +4,11 @@ buildscript {
 		sonarqubePluginVersion = "2.5"
 		propdepsPluginVersion = "0.0.9.RELEASE"
 		gradleDependencyAnalyzePluginVersion = "1.2.0"
-		springBootVersion = "1.5.6.RELEASE"
-		springIOPlatformVersion = "Brussels-SR4"
+		springBootVersion = "1.5.8.RELEASE"
+		springIOPlatformVersion = "Brussels-SR5"
 		apfloatVersion = "1.8.3"
 		asmAllVersion = "5.2"
+//		asmAllVersion = "6.0_BETA"
 		commonsMathVersion = "3.6.1"
 		commonsCollectionsVersion = "4.1"
 		icu4jVersion = "59.1"
@@ -21,8 +22,9 @@ buildscript {
 		classpath("io.spring.gradle:dependency-management-plugin:${dependencyManagementPluginVersion}")
 		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
 //		classpath("io.spring.gradle:propdeps-plugin:${propdepsPluginVersion}")
-//		classpath("ca.cutterslade.gradle:gradle-dependency-analyze:${gradleDependencyAnalyzePluginVersion}")
+//		classpath("io.spring.gradle:propdeps-plugin:0.0.9.RELEASE")
 		classpath("org.springframework.build.gradle:propdeps-plugin:0.0.7")
+//		classpath("ca.cutterslade.gradle:gradle-dependency-analyze:${gradleDependencyAnalyzePluginVersion}")
 		classpath("ca.cutterslade.gradle:gradle-dependency-analyze:1.2.0")
 	}
 }
@@ -45,7 +47,7 @@ subprojects {
 	apply plugin: "propdeps"
 
 	apply plugin: "java"
-	apply plugin: "ca.cutterslade.analyze"
+//	apply plugin: "ca.cutterslade.analyze"
 
 	apply plugin: "jacoco"
 //	apply plugin: "org.sonarqube"
@@ -53,8 +55,8 @@ subprojects {
 	configurations {
 	}
 
-	sourceCompatibility = "1.8"
-	targetCompatibility = "1.8"
+	sourceCompatibility = JavaVersion.VERSION_1_9
+	targetCompatibility = JavaVersion.VERSION_1_9
 
 	compileJava.options*.compilerArgs = [
 			"-Xlint:serial", "-Xlint:varargs", "-Xlint:cast", "-Xlint:classfile", "-Xlint:dep-ann", "-Xlint:divzero",
@@ -238,5 +240,5 @@ subprojects {
 //}
 
 task wrapper(type: Wrapper) {
-	gradleVersion = '4.0.2'
+	gradleVersion = '4.3.1'
 }

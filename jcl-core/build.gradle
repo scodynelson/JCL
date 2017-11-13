@@ -18,4 +18,5 @@ dependencies {
 
 	testCompile("junit:junit")
 	testCompile("org.hamcrest:hamcrest-core")
+	testCompile("org.spockframework:spock-core")
 }

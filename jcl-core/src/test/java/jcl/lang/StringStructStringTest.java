@@ -2,7 +2,6 @@ package jcl.lang;
 
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
-import jcl.lang.factory.LispStructFactory;
 import jcl.lang.statics.CharacterConstants;
 import jcl.type.BaseCharType;
 import jcl.type.CharacterType;
@@ -1635,7 +1634,7 @@ public class StringStructStringTest {
 		thrown.expect(TypeErrorException.class);
 		thrown.expectMessage(containsString("Non-character elements provided in character bag: "));
 
-		final ListStruct characterBag = LispStructFactory.toProperList(
+		final ListStruct characterBag = ListStruct.toLispList(
 				CharacterConstants.LATIN_SMALL_LETTER_A_CHAR,
 				IntegerStruct.ZERO,
 				CharacterConstants.LATIN_SMALL_LETTER_C_CHAR
@@ -1651,7 +1650,7 @@ public class StringStructStringTest {
 	 */
 	@Test
 	public void test_stringTrim() {
-		final ListStruct characterBag = LispStructFactory.toProperList(
+		final ListStruct characterBag = ListStruct.toLispList(
 				CharacterConstants.LATIN_SMALL_LETTER_A_CHAR,
 				CharacterConstants.LATIN_SMALL_LETTER_B_CHAR,
 				CharacterConstants.LATIN_SMALL_LETTER_C_CHAR
@@ -1670,7 +1669,7 @@ public class StringStructStringTest {
 	 */
 	@Test
 	public void test_stringTrim_FillPointer() {
-		final ListStruct characterBag = LispStructFactory.toProperList(
+		final ListStruct characterBag = ListStruct.toLispList(
 				CharacterConstants.LATIN_SMALL_LETTER_A_CHAR,
 				CharacterConstants.LATIN_SMALL_LETTER_B_CHAR,
 				CharacterConstants.LATIN_SMALL_LETTER_C_CHAR
@@ -1693,7 +1692,7 @@ public class StringStructStringTest {
 	 */
 	@Test
 	public void test_stringTrim_Displaced() {
-		final ListStruct characterBag = LispStructFactory.toProperList(
+		final ListStruct characterBag = ListStruct.toLispList(
 				CharacterConstants.LATIN_SMALL_LETTER_A_CHAR,
 				CharacterConstants.LATIN_SMALL_LETTER_B_CHAR,
 				CharacterConstants.LATIN_SMALL_LETTER_C_CHAR
@@ -1723,7 +1722,7 @@ public class StringStructStringTest {
 		thrown.expect(TypeErrorException.class);
 		thrown.expectMessage(containsString("Non-character elements provided in character bag: "));
 
-		final ListStruct characterBag = LispStructFactory.toProperList(
+		final ListStruct characterBag = ListStruct.toLispList(
 				CharacterConstants.LATIN_SMALL_LETTER_A_CHAR,
 				IntegerStruct.ZERO,
 				CharacterConstants.LATIN_SMALL_LETTER_C_CHAR
@@ -1739,7 +1738,7 @@ public class StringStructStringTest {
 	 */
 	@Test
 	public void test_stringLeftTrim() {
-		final ListStruct characterBag = LispStructFactory.toProperList(
+		final ListStruct characterBag = ListStruct.toLispList(
 				CharacterConstants.LATIN_SMALL_LETTER_A_CHAR,
 				CharacterConstants.LATIN_SMALL_LETTER_B_CHAR,
 				CharacterConstants.LATIN_SMALL_LETTER_C_CHAR
@@ -1758,7 +1757,7 @@ public class StringStructStringTest {
 	 */
 	@Test
 	public void test_stringLeftTrim_FillPointer() {
-		final ListStruct characterBag = LispStructFactory.toProperList(
+		final ListStruct characterBag = ListStruct.toLispList(
 				CharacterConstants.LATIN_SMALL_LETTER_A_CHAR,
 				CharacterConstants.LATIN_SMALL_LETTER_B_CHAR,
 				CharacterConstants.LATIN_SMALL_LETTER_C_CHAR
@@ -1781,7 +1780,7 @@ public class StringStructStringTest {
 	 */
 	@Test
 	public void test_stringLeftTrim_Displaced() {
-		final ListStruct characterBag = LispStructFactory.toProperList(
+		final ListStruct characterBag = ListStruct.toLispList(
 				CharacterConstants.LATIN_SMALL_LETTER_A_CHAR,
 				CharacterConstants.LATIN_SMALL_LETTER_B_CHAR,
 				CharacterConstants.LATIN_SMALL_LETTER_C_CHAR
@@ -1811,7 +1810,7 @@ public class StringStructStringTest {
 		thrown.expect(TypeErrorException.class);
 		thrown.expectMessage(containsString("Non-character elements provided in character bag: "));
 
-		final ListStruct characterBag = LispStructFactory.toProperList(
+		final ListStruct characterBag = ListStruct.toLispList(
 				CharacterConstants.LATIN_SMALL_LETTER_A_CHAR,
 				IntegerStruct.ZERO,
 				CharacterConstants.LATIN_SMALL_LETTER_C_CHAR
@@ -1827,7 +1826,7 @@ public class StringStructStringTest {
 	 */
 	@Test
 	public void test_stringRightTrim() {
-		final ListStruct characterBag = LispStructFactory.toProperList(
+		final ListStruct characterBag = ListStruct.toLispList(
 				CharacterConstants.LATIN_SMALL_LETTER_A_CHAR,
 				CharacterConstants.LATIN_SMALL_LETTER_B_CHAR,
 				CharacterConstants.LATIN_SMALL_LETTER_C_CHAR
@@ -1846,7 +1845,7 @@ public class StringStructStringTest {
 	 */
 	@Test
 	public void test_stringRightTrim_FillPointer() {
-		final ListStruct characterBag = LispStructFactory.toProperList(
+		final ListStruct characterBag = ListStruct.toLispList(
 				CharacterConstants.LATIN_SMALL_LETTER_A_CHAR,
 				CharacterConstants.LATIN_SMALL_LETTER_B_CHAR,
 				CharacterConstants.LATIN_SMALL_LETTER_C_CHAR
@@ -1869,7 +1868,7 @@ public class StringStructStringTest {
 	 */
 	@Test
 	public void test_stringRightTrim_Displaced() {
-		final ListStruct characterBag = LispStructFactory.toProperList(
+		final ListStruct characterBag = ListStruct.toLispList(
 				CharacterConstants.LATIN_SMALL_LETTER_A_CHAR,
 				CharacterConstants.LATIN_SMALL_LETTER_B_CHAR,
 				CharacterConstants.LATIN_SMALL_LETTER_C_CHAR

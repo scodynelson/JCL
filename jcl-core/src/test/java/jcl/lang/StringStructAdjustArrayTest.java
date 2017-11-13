@@ -2,7 +2,6 @@ package jcl.lang;
 
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
-import jcl.lang.factory.LispStructFactory;
 import jcl.lang.internal.SimpleStringStructImpl;
 import jcl.lang.statics.CharacterConstants;
 import jcl.type.ExtendedCharType;
@@ -720,8 +719,8 @@ public class StringStructAdjustArrayTest {
 
 		final StringStruct struct = StringStruct.builder(IntegerStruct.ONE).build();
 
-		final SequenceStruct initialContents = LispStructFactory.toProperList(CharacterConstants.AT_SIGN_CHAR,
-		                                                                      IntegerStruct.ONE);
+		final SequenceStruct initialContents = ListStruct.toLispList(CharacterConstants.AT_SIGN_CHAR,
+		                                                             IntegerStruct.ONE);
 		final AdjustArrayContext context = AdjustArrayContext.builder(IntegerStruct.TWO)
 		                                                     .fillPointer(IntegerStruct.ONE)
 		                                                     .adjustable(BooleanStruct.T)
@@ -745,8 +744,8 @@ public class StringStructAdjustArrayTest {
 		                                        .adjustable(BooleanStruct.T)
 		                                        .build();
 
-		final SequenceStruct initialContents = LispStructFactory.toProperList(CharacterConstants.AT_SIGN_CHAR,
-		                                                                      IntegerStruct.ONE);
+		final SequenceStruct initialContents = ListStruct.toLispList(CharacterConstants.AT_SIGN_CHAR,
+		                                                             IntegerStruct.ONE);
 		final AdjustArrayContext context = AdjustArrayContext.builder(IntegerStruct.TWO)
 		                                                     .fillPointer(IntegerStruct.ONE)
 		                                                     .adjustable(BooleanStruct.T)

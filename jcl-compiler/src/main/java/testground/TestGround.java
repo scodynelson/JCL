@@ -19,6 +19,7 @@ import jcl.compiler.icg.generator.ReturnFromException;
 import jcl.compiler.icg.generator.ThrowException;
 import jcl.lang.CharacterStruct;
 import jcl.lang.ComplexStruct;
+import jcl.lang.ConsStruct;
 import jcl.lang.DoubleFloatStruct;
 import jcl.lang.FunctionStruct;
 import jcl.lang.IntegerStruct;
@@ -173,7 +174,7 @@ public class TestGround {
 	private Object consGen() {
 		final LispStruct car = CharacterStruct.toLispCharacter(97);
 		final LispStruct cdr = CharacterStruct.toLispCharacter(197);
-		return LispStructFactory.toCons(car, cdr);
+		return ConsStruct.toLispCons(car, cdr);
 	}
 
 	private Object pathnameGen() {
@@ -274,7 +275,7 @@ public class TestGround {
 
 		final LispStruct element1 = CharacterStruct.toLispCharacter(97);
 		final LispStruct element2 = CharacterStruct.toLispCharacter(197);
-		return LispStructFactory.toCons(element1, element2);
+		return ConsStruct.toLispCons(element1, element2);
 	}
 
 	@SuppressWarnings({"unchecked", "rawtypes"})

@@ -16,7 +16,6 @@ import jcl.lang.ValuesStruct;
 import jcl.lang.VectorStruct;
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
-import jcl.lang.factory.LispStructFactory;
 import jcl.lang.statics.PrinterVariables;
 import jcl.type.ArrayType;
 import jcl.type.BitType;
@@ -112,7 +111,7 @@ public class NILArrayStructImplTest {
 		thrown.expect(TypeErrorException.class);
 		thrown.expectMessage(containsString("is not a subtype of the upgraded-array-element-type"));
 
-		final SequenceStruct initialContents = LispStructFactory.toProperList(IntegerStruct.ZERO);
+		final SequenceStruct initialContents = ListStruct.toLispList(IntegerStruct.ZERO);
 		NILArrayStructImpl.valueOf(NILType.INSTANCE,
 		                           initialContents,
 		                           NILStruct.INSTANCE);
@@ -125,7 +124,7 @@ public class NILArrayStructImplTest {
 	@Test
 	public void test_valueOf_IC_Adj_IsAdj() {
 
-		final SequenceStruct initialContents = LispStructFactory.toProperList(IntegerStruct.ZERO);
+		final SequenceStruct initialContents = ListStruct.toLispList(IntegerStruct.ZERO);
 		final ArrayStruct array
 				= NILArrayStructImpl.valueOf(TType.INSTANCE,
 				                             initialContents,
@@ -225,7 +224,7 @@ public class NILArrayStructImplTest {
 	@Test
 	public void test_valueOf_Disp_IsNotAdj() {
 
-		final ListStruct initialContents = LispStructFactory.toProperList(IntegerStruct.TEN, IntegerStruct.TWO);
+		final ListStruct initialContents = ListStruct.toLispList(IntegerStruct.TEN, IntegerStruct.TWO);
 		final ArrayStruct displacedTo
 				= VectorStruct.builder(IntegerStruct.TWO)
 				              .initialContents(initialContents)
@@ -291,7 +290,7 @@ public class NILArrayStructImplTest {
 		thrown.expect(TypeErrorException.class);
 		thrown.expectMessage(containsString("is not a subtype of the upgraded-array-element-type"));
 
-		final SequenceStruct initialContents = LispStructFactory.toProperList(IntegerStruct.ZERO);
+		final SequenceStruct initialContents = ListStruct.toLispList(IntegerStruct.ZERO);
 		NILArrayStructImpl.valueOf(NILType.INSTANCE,
 		                           initialContents);
 	}
@@ -302,7 +301,7 @@ public class NILArrayStructImplTest {
 	@Test
 	public void test_valueOf_IC() {
 
-		final SequenceStruct initialContents = LispStructFactory.toProperList(IntegerStruct.ZERO);
+		final SequenceStruct initialContents = ListStruct.toLispList(IntegerStruct.ZERO);
 		final ArrayStruct array
 				= NILArrayStructImpl.valueOf(TType.INSTANCE,
 				                             initialContents);
@@ -479,7 +478,7 @@ public class NILArrayStructImplTest {
 		thrown.expect(ErrorException.class);
 		thrown.expectMessage(containsString("Array cannot be adjusted to a different array dimension rank."));
 
-		final SequenceStruct initialContents = LispStructFactory.toProperList(IntegerStruct.ZERO);
+		final SequenceStruct initialContents = ListStruct.toLispList(IntegerStruct.ZERO);
 		final ArrayStruct array
 				= NILArrayStructImpl.valueOf(TType.INSTANCE,
 				                             initialContents);
@@ -498,7 +497,7 @@ public class NILArrayStructImplTest {
 		thrown.expect(ErrorException.class);
 		thrown.expectMessage(containsString("Non-vector arrays cannot adjust fill-pointer."));
 
-		final SequenceStruct initialContents = LispStructFactory.toProperList(IntegerStruct.ZERO);
+		final SequenceStruct initialContents = ListStruct.toLispList(IntegerStruct.ZERO);
 		final ArrayStruct array
 				= NILArrayStructImpl.valueOf(TType.INSTANCE,
 				                             initialContents);
@@ -517,7 +516,7 @@ public class NILArrayStructImplTest {
 		thrown.expect(TypeErrorException.class);
 		thrown.expectMessage(containsString("must be the same as initial upgraded-array-element-type"));
 
-		final SequenceStruct initialContents = LispStructFactory.toProperList(IntegerStruct.ZERO);
+		final SequenceStruct initialContents = ListStruct.toLispList(IntegerStruct.ZERO);
 		final ArrayStruct array
 				= NILArrayStructImpl.valueOf(BitType.INSTANCE,
 				                             initialContents);
@@ -537,7 +536,7 @@ public class NILArrayStructImplTest {
 		thrown.expect(TypeErrorException.class);
 		thrown.expectMessage(containsString("must be the same as initial upgraded-array-element-type"));
 
-		final SequenceStruct initialContents = LispStructFactory.toProperList(IntegerStruct.ONE);
+		final SequenceStruct initialContents = ListStruct.toLispList(IntegerStruct.ONE);
 		final ArrayStruct array
 				= NILArrayStructImpl.valueOf(TType.INSTANCE,
 				                             initialContents);
@@ -560,7 +559,7 @@ public class NILArrayStructImplTest {
 		final ArrayStruct array
 				= NILArrayStructImpl.valueOf(BitType.INSTANCE,
 				                             initialElement);
-		final SequenceStruct newContents = LispStructFactory.toProperList(CharacterStruct.toLispCharacter('a'));
+		final SequenceStruct newContents = ListStruct.toLispList(CharacterStruct.toLispCharacter('a'));
 		array.adjustArray(Collections.emptyList(),
 		                  BitType.INSTANCE,
 		                  newContents,
@@ -574,13 +573,13 @@ public class NILArrayStructImplTest {
 	@Test
 	public void test_adjustArray_IC_WasAdjustable() {
 
-		final SequenceStruct initialContents = LispStructFactory.toProperList(IntegerStruct.ZERO);
+		final SequenceStruct initialContents = ListStruct.toLispList(IntegerStruct.ZERO);
 		final ArrayStruct array
 				= NILArrayStructImpl.valueOf(TType.INSTANCE,
 				                             initialContents,
 				                             TStruct.INSTANCE);
 
-		final SequenceStruct newContents = LispStructFactory.toProperList(IntegerStruct.ONE);
+		final SequenceStruct newContents = ListStruct.toLispList(IntegerStruct.ONE);
 		final ArrayStruct result
 				= array.adjustArray(Collections.emptyList(),
 				                    TType.INSTANCE,
@@ -599,12 +598,12 @@ public class NILArrayStructImplTest {
 	@Test
 	public void test_adjustArray_IC_WasNotAdjustable() {
 
-		final SequenceStruct initialContents = LispStructFactory.toProperList(IntegerStruct.ZERO);
+		final SequenceStruct initialContents = ListStruct.toLispList(IntegerStruct.ZERO);
 		final ArrayStruct array
 				= NILArrayStructImpl.valueOf(TType.INSTANCE,
 				                             initialContents);
 
-		final SequenceStruct newContents = LispStructFactory.toProperList(IntegerStruct.ONE);
+		final SequenceStruct newContents = ListStruct.toLispList(IntegerStruct.ONE);
 		final ArrayStruct result
 				= array.adjustArray(Collections.emptyList(),
 				                    TType.INSTANCE,

@@ -5,7 +5,7 @@
 package jcl.functions.list;
 
 import jcl.functions.CommonLispBuiltInFunctionStructBase;
-import jcl.lang.IntegerStruct;
+import jcl.lang.FixnumStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
 import jcl.lang.NILStruct;
@@ -31,8 +31,8 @@ public final class MakeListFunction extends CommonLispBuiltInFunctionStructBase 
 
 	@Override
 	public LispStruct apply(final Arguments arguments) {
-		final IntegerStruct size = arguments.getRequiredArgument(SIZE_ARGUMENT, IntegerStruct.class);
+		final FixnumStruct size = arguments.getRequiredArgument(SIZE_ARGUMENT, FixnumStruct.class);
 		final LispStruct initialElement = arguments.getKeyArgument(CommonLispSymbols.INITIAL_ELEMENT_KEYWORD);
-		return ListStruct.makeList(size.toJavaPLong(), initialElement);
+		return ListStruct.makeList(size, initialElement);
 	}
 }

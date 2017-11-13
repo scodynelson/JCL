@@ -11,7 +11,6 @@ import jcl.functions.FunctionHelpers;
 import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
 import jcl.lang.PackageStruct;
-import jcl.lang.factory.LispStructFactory;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import org.springframework.stereotype.Component;
@@ -52,6 +51,6 @@ public final class PackageUsedByListFunction extends CommonLispBuiltInFunctionSt
 		final PackageStruct aPackage = FunctionHelpers.asPackage(lispStruct);
 
 		final List<PackageStruct> usedByList = aPackage.getUsedByList();
-		return LispStructFactory.toProperList(usedByList);
+		return ListStruct.toLispList(usedByList);
 	}
 }

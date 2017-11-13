@@ -22,7 +22,6 @@ import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
 import jcl.lang.NILStruct;
 import jcl.lang.TStruct;
-import jcl.lang.factory.LispStructFactory;
 import jcl.lang.internal.SpecialOperatorStructImpl;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
@@ -118,6 +117,6 @@ public class CompileForm {
 		lambdaFormList.add(NILStruct.INSTANCE);
 		lambdaFormList.add(form);
 
-		return LispStructFactory.toProperList(lambdaFormList);
+		return ListStruct.toLispList(lambdaFormList);
 	}
 }

@@ -126,7 +126,7 @@ final class QuoteCodeGenerator implements CodeGenerator<QuoteStruct> {
 	 * {@code
 	 *      PackageStruct var2 = PackageStruct.findPackage("COMMON-LISP-USER");
 	 *      SymbolStruct var3 = var2.findSymbol("X").getSymbol();
-	 *      ConsStruct var5 = new ConsStruct(var3);
+	 *      ConsStruct var5 = new ConsStruct(var3, NILStruct.INSTANCE);
 	 * }
 	 * </pre>
 	 *
@@ -163,17 +163,21 @@ final class QuoteCodeGenerator implements CodeGenerator<QuoteStruct> {
 			mv.visitVarInsn(Opcodes.ALOAD, secondToLastElementStore);
 			mv.visitVarInsn(Opcodes.ALOAD, lastElementStore);
 			mv.visitMethodInsn(Opcodes.INVOKESTATIC,
-			                   GenerationConstants.LISP_STRUCT_FACTORY_NAME,
-			                   GenerationConstants.LISP_STRUCT_FACTORY_TO_CONS_CAR_CDR_METHOD_NAME,
-			                   GenerationConstants.LISP_STRUCT_FACTORY_TO_CONS_CAR_CDR_METHOD_DESC,
-			                   false);
+			                   GenerationConstants.CONS_STRUCT_NAME,
+			                   GenerationConstants.CONS_STRUCT_FACTORY_TO_CONS_METHOD_NAME,
+			                   GenerationConstants.CONS_STRUCT_FACTORY_TO_CONS_METHOD_DESC,
+			                   true);
 		} else {
 			mv.visitVarInsn(Opcodes.ALOAD, lastElementStore);
+			mv.visitFieldInsn(Opcodes.GETSTATIC,
+			                  GenerationConstants.NIL_STRUCT_NAME,
+			                  GenerationConstants.SINGLETON_INSTANCE,
+			                  GenerationConstants.NIL_STRUCT_DESC);
 			mv.visitMethodInsn(Opcodes.INVOKESTATIC,
-			                   GenerationConstants.LISP_STRUCT_FACTORY_NAME,
-			                   GenerationConstants.LISP_STRUCT_FACTORY_TO_CONS_CAR_METHOD_NAME,
-			                   GenerationConstants.LISP_STRUCT_FACTORY_TO_CONS_CAR_METHOD_DESC,
-			                   false);
+			                   GenerationConstants.CONS_STRUCT_NAME,
+			                   GenerationConstants.CONS_STRUCT_FACTORY_TO_CONS_METHOD_NAME,
+			                   GenerationConstants.CONS_STRUCT_FACTORY_TO_CONS_METHOD_DESC,
+			                   true);
 		}
 		final int previousConsStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, previousConsStore);
@@ -189,10 +193,10 @@ final class QuoteCodeGenerator implements CodeGenerator<QuoteStruct> {
 			mv.visitVarInsn(Opcodes.ALOAD, nextElementStore);
 			mv.visitVarInsn(Opcodes.ALOAD, previousConsStore);
 			mv.visitMethodInsn(Opcodes.INVOKESTATIC,
-			                   GenerationConstants.LISP_STRUCT_FACTORY_NAME,
-			                   GenerationConstants.LISP_STRUCT_FACTORY_TO_CONS_CAR_CDR_METHOD_NAME,
-			                   GenerationConstants.LISP_STRUCT_FACTORY_TO_CONS_CAR_CDR_METHOD_DESC,
-			                   false);
+			                   GenerationConstants.CONS_STRUCT_NAME,
+			                   GenerationConstants.CONS_STRUCT_FACTORY_TO_CONS_METHOD_NAME,
+			                   GenerationConstants.CONS_STRUCT_FACTORY_TO_CONS_METHOD_DESC,
+			                   true);
 			mv.visitVarInsn(Opcodes.ASTORE, previousConsStore);
 		}
 

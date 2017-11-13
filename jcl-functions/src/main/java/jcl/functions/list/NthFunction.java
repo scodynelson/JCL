@@ -5,7 +5,7 @@
 package jcl.functions.list;
 
 import jcl.functions.CommonLispBuiltInFunctionStructBase;
-import jcl.lang.IntegerStruct;
+import jcl.lang.FixnumStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
 import jcl.lang.function.parameterdsl.Arguments;
@@ -30,10 +30,8 @@ public final class NthFunction extends CommonLispBuiltInFunctionStructBase {
 
 	@Override
 	public LispStruct apply(final Arguments arguments) {
-		final IntegerStruct index = arguments.getRequiredArgument(INDEX_ARGUMENT, IntegerStruct.class);
+		final FixnumStruct index = arguments.getRequiredArgument(INDEX_ARGUMENT, FixnumStruct.class);
 		final ListStruct list = arguments.getRequiredArgument(LIST_ARGUMENT, ListStruct.class);
-
-		final long indexValue = index.toJavaPLong();
-		return list.nth(indexValue);
+		return list.nth(index);
 	}
 }

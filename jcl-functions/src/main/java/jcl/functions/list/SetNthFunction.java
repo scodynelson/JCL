@@ -1,7 +1,7 @@
 package jcl.functions.list;
 
 import jcl.functions.SystemBuiltInFunctionStructBase;
-import jcl.lang.IntegerStruct;
+import jcl.lang.FixnumStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
 import jcl.lang.function.parameterdsl.Arguments;
@@ -28,12 +28,9 @@ public final class SetNthFunction extends SystemBuiltInFunctionStructBase {
 
 	@Override
 	public LispStruct apply(final Arguments arguments) {
-		final IntegerStruct index = arguments.getRequiredArgument(INDEX_ARGUMENT, IntegerStruct.class);
+		final FixnumStruct index = arguments.getRequiredArgument(INDEX_ARGUMENT, FixnumStruct.class);
 		final ListStruct list = arguments.getRequiredArgument(LIST_ARGUMENT, ListStruct.class);
 		final LispStruct value = arguments.getRequiredArgument(VALUE_ARGUMENT);
-
-		final long indexValue = index.toJavaPLong();
-		list.setNth(indexValue, value);
-		return value;
+		return list.setNth(index, value);
 	}
 }

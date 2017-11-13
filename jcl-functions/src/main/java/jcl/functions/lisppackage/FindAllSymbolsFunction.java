@@ -9,9 +9,9 @@ import java.util.List;
 import jcl.functions.CommonLispBuiltInFunctionStructBase;
 import jcl.functions.FunctionHelpers;
 import jcl.lang.LispStruct;
+import jcl.lang.ListStruct;
 import jcl.lang.PackageStruct;
 import jcl.lang.SymbolStruct;
-import jcl.lang.factory.LispStructFactory;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import org.springframework.stereotype.Component;
@@ -53,6 +53,6 @@ public final class FindAllSymbolsFunction extends CommonLispBuiltInFunctionStruc
 		final String name = FunctionHelpers.asString(lispStruct).toJavaString();
 
 		final List<SymbolStruct> allSymbols = PackageStruct.findAllSymbols(name);
-		return LispStructFactory.toProperList(allSymbols);
+		return ListStruct.toLispList(allSymbols);
 	}
 }

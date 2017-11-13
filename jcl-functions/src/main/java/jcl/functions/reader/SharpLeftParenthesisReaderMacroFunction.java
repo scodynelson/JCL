@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import jcl.lang.ConsStruct;
 import jcl.lang.InputStreamStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
@@ -79,7 +80,7 @@ public class SharpLeftParenthesisReaderMacroFunction extends ReaderMacroFunction
 			return handleNumberArgument(listToken, numberArgumentValue);
 		}
 
-		return LispStructFactory.toCons(BackquoteReaderMacroFunction.BQ_VECTOR_FLAG, listToken);
+		return ConsStruct.toLispCons(BackquoteReaderMacroFunction.BQ_VECTOR_FLAG, listToken);
 	}
 
 	/**

@@ -3,8 +3,6 @@ package jcl.functions.list;
 import jcl.functions.CommonLispBuiltInFunctionStructBase;
 import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
-import jcl.lang.NILStruct;
-import jcl.lang.factory.LispStructFactory;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import org.springframework.stereotype.Component;
@@ -26,6 +24,6 @@ public final class EndpFunction extends CommonLispBuiltInFunctionStructBase {
 	@Override
 	public LispStruct apply(final Arguments arguments) {
 		final ListStruct list = arguments.getRequiredArgument(LIST_ARGUMENT, ListStruct.class);
-		return LispStructFactory.toBoolean(NILStruct.INSTANCE.eq(list));
+		return list.endP();
 	}
 }

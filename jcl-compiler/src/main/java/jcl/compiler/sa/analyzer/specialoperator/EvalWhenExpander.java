@@ -9,13 +9,13 @@ import java.util.Set;
 import jcl.compiler.environment.Environment;
 import jcl.compiler.function.InternalEval;
 import jcl.compiler.function.expanders.MacroFunctionExpander;
+import jcl.lang.ConsStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
 import jcl.lang.NILStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
-import jcl.lang.factory.LispStructFactory;
 import jcl.lang.internal.SpecialOperatorStructImpl;
 import jcl.lang.statics.CommonLispSymbols;
 import jcl.lang.statics.CompilerVariables;
@@ -73,21 +73,21 @@ public class EvalWhenExpander extends MacroFunctionExpander<LispStruct> {
 
 		if (isTopLevel) {
 			if (isCompileTopLevel(situationList)) {
-				final ListStruct formsList = LispStructFactory.toProperList(forms);
-				final ListStruct prognOperatorList = LispStructFactory.toCons(SpecialOperatorStructImpl.PROGN, formsList);
+				final ListStruct formsList = ListStruct.toLispList(forms);
+				final ListStruct prognOperatorList = ConsStruct.toLispCons(SpecialOperatorStructImpl.PROGN, formsList);
 				return internalEval.eval(prognOperatorList);
 			}
 
 			if (isLoadTopLevel(situationList) || (convertingForCompiler && isExecute(situationList))) {
-				final ListStruct formsList = LispStructFactory.toProperList(forms);
-				final ListStruct prognOperatorList = LispStructFactory.toCons(SpecialOperatorStructImpl.PROGN, formsList);
+				final ListStruct formsList = ListStruct.toLispList(forms);
+				final ListStruct prognOperatorList = ConsStruct.toLispCons(SpecialOperatorStructImpl.PROGN, formsList);
 				return internalEval.eval(prognOperatorList);
 			}
 		}
 
 		if (isExecute(situationList)) {
-			final ListStruct formsList = LispStructFactory.toProperList(forms);
-			final ListStruct prognOperatorList = LispStructFactory.toCons(SpecialOperatorStructImpl.PROGN, formsList);
+			final ListStruct formsList = ListStruct.toLispList(forms);
+			final ListStruct prognOperatorList = ConsStruct.toLispCons(SpecialOperatorStructImpl.PROGN, formsList);
 			return internalEval.eval(prognOperatorList);
 		}
 

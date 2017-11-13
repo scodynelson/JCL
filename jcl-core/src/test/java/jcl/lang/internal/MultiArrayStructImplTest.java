@@ -4,6 +4,7 @@ import java.util.Arrays;
 
 import jcl.lang.ArrayStruct;
 import jcl.lang.BooleanStruct;
+import jcl.lang.FixnumStruct;
 import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
@@ -203,10 +204,10 @@ public class MultiArrayStructImplTest {
 		Assert.assertThat(result, not(is(NILStruct.INSTANCE)));
 		Assert.assertThat(result.length(), is(IntegerStruct.TWO));
 
-		final LispStruct dim1 = result.nth(0);
+		final LispStruct dim1 = result.nth((FixnumStruct) IntegerStruct.ZERO);
 		Assert.assertThat(dim1, is(IntegerStruct.TWO));
 
-		final LispStruct dim2 = result.nth(1);
+		final LispStruct dim2 = result.nth((FixnumStruct) IntegerStruct.ONE);
 		Assert.assertThat(dim2, is(IntegerStruct.TEN));
 	}
 

@@ -13,7 +13,6 @@ import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.ProgramErrorException;
-import jcl.lang.factory.LispStructFactory;
 import jcl.lang.internal.SpecialOperatorStructImpl;
 import jcl.lang.statics.CommonLispSymbols;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,12 +44,12 @@ public class ProgvExpander extends MacroFunctionExpander<ProgvStruct> {
 		}
 		final LispStruct second = iterator.next();
 
-		final ListStruct quotedVars = LispStructFactory.toProperList(SpecialOperatorStructImpl.QUOTE, first);
-		final ListStruct evalVars = LispStructFactory.toProperList(CommonLispSymbols.EVAL, quotedVars);
+		final ListStruct quotedVars = ListStruct.toLispList(SpecialOperatorStructImpl.QUOTE, first);
+		final ListStruct evalVars = ListStruct.toLispList(CommonLispSymbols.EVAL, quotedVars);
 		final LispStruct analyzedEvalVars = formAnalyzer.analyze(evalVars, environment);
 
-		final ListStruct quotedVals = LispStructFactory.toProperList(SpecialOperatorStructImpl.QUOTE, second);
-		final ListStruct evalVals = LispStructFactory.toProperList(CommonLispSymbols.EVAL, quotedVals);
+		final ListStruct quotedVals = ListStruct.toLispList(SpecialOperatorStructImpl.QUOTE, second);
+		final ListStruct evalVals = ListStruct.toLispList(CommonLispSymbols.EVAL, quotedVals);
 		final LispStruct analyzedEvalVals = formAnalyzer.analyze(evalVals, environment);
 
 		// Handle Progn Environment processing

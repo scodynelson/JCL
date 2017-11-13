@@ -22,7 +22,6 @@ import jcl.lang.BooleanStruct;
 import jcl.lang.BroadcastStreamStruct;
 import jcl.lang.CharacterNativeStreamStruct;
 import jcl.lang.ConcatenatedStreamStruct;
-import jcl.lang.ConsStruct;
 import jcl.lang.EchoStreamStruct;
 import jcl.lang.EmptyStreamStruct;
 import jcl.lang.FileStreamStruct;
@@ -33,7 +32,6 @@ import jcl.lang.IntegerStruct;
 import jcl.lang.JavaStreamStruct;
 import jcl.lang.KeywordStruct;
 import jcl.lang.LispStruct;
-import jcl.lang.ListStruct;
 import jcl.lang.LogicalPathnameStruct;
 import jcl.lang.NILStruct;
 import jcl.lang.OutputStreamStruct;
@@ -50,7 +48,6 @@ import jcl.lang.URLStreamStruct;
 import jcl.lang.VectorStruct;
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.internal.BitVectorStructImpl;
-import jcl.lang.internal.ConsStructImpl;
 import jcl.lang.internal.HashTableStructImpl;
 import jcl.lang.internal.KeywordStructImpl;
 import jcl.lang.internal.LogicalPathnameStructImpl;
@@ -86,7 +83,6 @@ import jcl.lang.pathname.PathnameType;
 import jcl.lang.pathname.PathnameVersion;
 import jcl.lang.readtable.ReadtableCase;
 import jcl.type.LispType;
-import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -186,18 +182,6 @@ public final class LispStructFactory {
 	public static ConcatenatedStreamStruct toConcatenatedStream(final boolean interactive,
 	                                                            final Deque<InputStreamStruct> inputStreamStructs) {
 		return ConcatenatedStreamStructImpl.valueOf(interactive, inputStreamStructs);
-	}
-
-	/*
-	 * Cons
-	 */
-
-	public static ConsStruct toCons(final LispStruct car) {
-		return ConsStructImpl.valueOf(car);
-	}
-
-	public static ConsStruct toCons(final LispStruct car, final LispStruct cdr) {
-		return ConsStructImpl.valueOf(car, cdr);
 	}
 
 	/*
@@ -330,110 +314,6 @@ public final class LispStructFactory {
 	}
 
 	/*
-	 * List
-	 */
-
-	/**
-	 * Builds and returns a proper list with the provided {@code lispStructs} as the elements.
-	 *
-	 * @param lispStructs
-	 * 		the list elements
-	 *
-	 * @return a proper list with the provided {@code lispStructs} as the elements
-	 */
-	public static ListStruct toProperList(final LispStruct... lispStructs) {
-		return (lispStructs.length == 0) ? NILStruct.INSTANCE : getProperList(Arrays.asList(lispStructs));
-	}
-
-	/**
-	 * Builds and returns a proper list with the provided {@code lispStructs} as the elements.
-	 *
-	 * @param lispStructs
-	 * 		the list elements
-	 *
-	 * @return a proper list with the provided {@code lispStructs} as the elements
-	 */
-	public static ListStruct toProperList(final List<? extends LispStruct> lispStructs) {
-		return CollectionUtils.isEmpty(lispStructs) ? NILStruct.INSTANCE : getProperList(lispStructs);
-	}
-
-	/**
-	 * Builds and returns a proper list with the provided {@code lispStructs} as the elements.
-	 *
-	 * @param lispStructs
-	 * 		the list elements
-	 *
-	 * @return a proper list with the provided {@code lispStructs} as the elements
-	 */
-	private static ListStruct getProperList(final List<? extends LispStruct> lispStructs) {
-		final LispStruct car = lispStructs.get(0);
-		final List<? extends LispStruct> rest = lispStructs.subList(1, lispStructs.size());
-
-		final LispStruct cdr = CollectionUtils.isEmpty(rest) ? NILStruct.INSTANCE : getProperList(rest);
-		return ConsStructImpl.valueOf(car, cdr);
-	}
-
-	/**
-	 * Builds and returns a dotted list with the provided {@code lispStructs} as the elements.
-	 *
-	 * @param lispStructs
-	 * 		the list elements
-	 *
-	 * @return a dotted list with the provided {@code lispStructs} as the elements
-	 */
-	public static ListStruct toDottedList(final LispStruct... lispStructs) {
-		if (lispStructs.length == 0) {
-			return NILStruct.INSTANCE;
-		} else if (lispStructs.length == 1) {
-			final LispStruct firstElement = lispStructs[0];
-			if (firstElement instanceof ListStruct) {
-				return (ListStruct) firstElement;
-			}
-			return ConsStructImpl.valueOf(firstElement, NILStruct.INSTANCE);
-		} else {
-			return getDottedList(Arrays.asList(lispStructs));
-		}
-	}
-
-	/**
-	 * Builds and returns a dotted list with the provided {@code lispStructs} as the elements.
-	 *
-	 * @param lispStructs
-	 * 		the list elements
-	 *
-	 * @return a dotted list with the provided {@code lispStructs} as the elements
-	 */
-	public static ListStruct toDottedList(final List<? extends LispStruct> lispStructs) {
-		if (CollectionUtils.isEmpty(lispStructs)) {
-			return NILStruct.INSTANCE;
-		} else if (lispStructs.size() == 1) {
-			final LispStruct firstElement = lispStructs.get(0);
-			if (firstElement instanceof ListStruct) {
-				return (ListStruct) firstElement;
-			}
-			return ConsStructImpl.valueOf(firstElement, NILStruct.INSTANCE);
-		} else {
-			return getDottedList(lispStructs);
-		}
-	}
-
-	/**
-	 * Builds and returns a dotted list with the provided {@code lispStructs} as the elements.
-	 *
-	 * @param lispStructs
-	 * 		the list elements
-	 *
-	 * @return a dotted list with the provided {@code lispStructs} as the elements
-	 */
-	private static ListStruct getDottedList(final List<? extends LispStruct> lispStructs) {
-		final LispStruct car = lispStructs.get(0);
-		final List<? extends LispStruct> rest = lispStructs.subList(1, lispStructs.size());
-
-		final LispStruct cdr = (rest.size() == 1) ? lispStructs.get(1) : getDottedList(rest);
-		return ConsStructImpl.valueOf(car, cdr);
-	}
-
-	/*
 	 * Logical Pathname
 	 */
 
@@ -447,14 +327,6 @@ public final class LispStructFactory {
 	                                                      final PathnameType type,
 	                                                      final PathnameVersion version) {
 		return LogicalPathnameStructImpl.valueOf(host, directory, name, type, version);
-	}
-
-	/*
-	 * Nil
-	 */
-
-	public static NILStruct toNil() {
-		return NILStruct.INSTANCE;
 	}
 
 	/*

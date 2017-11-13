@@ -5,7 +5,7 @@
 package jcl.lang.statics;
 
 import jcl.lang.IntegerStruct;
-import jcl.lang.factory.LispStructFactory;
+import jcl.lang.ListStruct;
 import jcl.lang.internal.ConstantStructImpl;
 
 public interface CompilerConstants {
@@ -23,7 +23,7 @@ public interface CompilerConstants {
 	ConstantStructImpl<?> WHOLE = ConstantStructImpl.valueOf("&WHOLE", GlobalPackageStruct.COMMON_LISP, null);
 
 	ConstantStructImpl<?> LAMBDA_LIST_KEYWORDS = ConstantStructImpl.valueOf("LAMBDA-LIST-KEYWORDS", GlobalPackageStruct.COMMON_LISP,
-	                                                                        LispStructFactory.toProperList(
+	                                                                        ListStruct.toLispList(
 			                                                              ALLOW_OTHER_KEYS,
 			                                                              AUX,
 			                                                              BODY,

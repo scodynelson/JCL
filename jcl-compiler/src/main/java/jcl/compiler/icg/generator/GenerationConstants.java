@@ -28,10 +28,12 @@ import jcl.compiler.function.Closure;
 import jcl.compiler.function.CompiledFunctionStruct;
 import jcl.compiler.function.expanders.CompiledMacroFunctionExpander;
 import jcl.lang.CharacterStruct;
+import jcl.lang.ConsStruct;
 import jcl.lang.FunctionStruct;
 import jcl.lang.KeywordStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
+import jcl.lang.NILStruct;
 import jcl.lang.PackageStruct;
 import jcl.lang.PackageSymbolStruct;
 import jcl.lang.StringStruct;
@@ -161,6 +163,22 @@ interface GenerationConstants {
 
 	String CHARACTER_STRUCT_TO_LISP_CHARACTER_METHOD_DESC = CodeGenerators.getMethodDescription(CharacterStruct.class, CHARACTER_STRUCT_TO_LISP_CHARACTER_METHOD_NAME, int.class);
 
+	/**
+	 * Constant {@link String} containing the name for the {@link NILStruct} class.
+	 */
+	String NIL_STRUCT_NAME = Type.getInternalName(NILStruct.class);
+
+	/**
+	 * Constant {@link String} containing the description for the {@link NILStruct} class.
+	 */
+	String NIL_STRUCT_DESC = Type.getDescriptor(NILStruct.class);
+
+	String CONS_STRUCT_NAME = Type.getInternalName(ConsStruct.class);
+
+	String CONS_STRUCT_FACTORY_TO_CONS_METHOD_NAME = "toLispCons";
+
+	String CONS_STRUCT_FACTORY_TO_CONS_METHOD_DESC = CodeGenerators.getMethodDescription(ConsStruct.class, CONS_STRUCT_FACTORY_TO_CONS_METHOD_NAME, LispStruct.class, LispStruct.class);
+
 	String LISP_STRUCT_FACTORY_TO_PATHNAME_URI_METHOD_NAME = "toPathname";
 
 	String LISP_STRUCT_FACTORY_TO_PATHNAME_URI_METHOD_DESC = CodeGenerators.getMethodDescription(LispStructFactory.class, LISP_STRUCT_FACTORY_TO_PATHNAME_URI_METHOD_NAME, URI.class);
@@ -190,14 +208,6 @@ interface GenerationConstants {
 	String LISP_STRUCT_FACTORY_TO_RATIO_METHOD_NAME = "toRatio";
 
 	String LISP_STRUCT_FACTORY_TO_RATIO_METHOD_DESC = CodeGenerators.getMethodDescription(LispStructFactory.class, LISP_STRUCT_FACTORY_TO_RATIO_METHOD_NAME, Aprational.class);
-
-	String LISP_STRUCT_FACTORY_TO_CONS_CAR_METHOD_NAME = "toCons";
-
-	String LISP_STRUCT_FACTORY_TO_CONS_CAR_METHOD_DESC = CodeGenerators.getMethodDescription(LispStructFactory.class, LISP_STRUCT_FACTORY_TO_CONS_CAR_METHOD_NAME, LispStruct.class);
-
-	String LISP_STRUCT_FACTORY_TO_CONS_CAR_CDR_METHOD_NAME = "toCons";
-
-	String LISP_STRUCT_FACTORY_TO_CONS_CAR_CDR_METHOD_DESC = CodeGenerators.getMethodDescription(LispStructFactory.class, LISP_STRUCT_FACTORY_TO_CONS_CAR_CDR_METHOD_NAME, LispStruct.class, LispStruct.class);
 
 	String LISP_STRUCT_FACTORY_TO_SYMBOL_METHOD_NAME = "toSymbol";
 

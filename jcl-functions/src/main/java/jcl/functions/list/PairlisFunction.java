@@ -6,7 +6,6 @@ import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
 import jcl.lang.NILStruct;
 import jcl.lang.condition.exception.SimpleErrorException;
-import jcl.lang.factory.LispStructFactory;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import org.springframework.stereotype.Component;
@@ -48,8 +47,8 @@ public final class PairlisFunction extends CommonLispBuiltInFunctionStructBase {
 		for (int i = 0; i < keysLength; i++) {
 			final LispStruct key = keysArray[i];
 			final LispStruct datum = datumsArray[i];
-			final ConsStruct pair = LispStructFactory.toCons(key, datum);
-			alist = LispStructFactory.toCons(pair, alist);
+			final ConsStruct pair = ConsStruct.toLispCons(key, datum);
+			alist = ConsStruct.toLispCons(pair, alist);
 		}
 
 		return alist;

@@ -10,7 +10,6 @@ import jcl.functions.CommonLispBuiltInFunctionStructBase;
 import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
 import jcl.lang.PackageStruct;
-import jcl.lang.factory.LispStructFactory;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import org.springframework.stereotype.Component;
@@ -46,6 +45,6 @@ public final class ListAllPackagesFunction extends CommonLispBuiltInFunctionStru
 	@Override
 	public LispStruct apply(final Arguments arguments) {
 		final List<PackageStruct> allPackages = PackageStruct.listAllPackages();
-		return LispStructFactory.toProperList(allPackages);
+		return ListStruct.toLispList(allPackages);
 	}
 }

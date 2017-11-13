@@ -12,14 +12,17 @@ import java.util.stream.Stream;
 public interface SequenceStruct extends LispStruct, Iterable<LispStruct> {
 
 	default Stream<LispStruct> stream() {
+		// TODO:
 		throw new UnsupportedOperationException("Not supported yet.");
 	}
 
 	default Stream<LispStruct> parallelStream() {
+		// TODO:
 		throw new UnsupportedOperationException("Not supported yet.");
 	}
 
 	default LispStruct[] toArray() {
+		// TODO:
 		throw new UnsupportedOperationException("Not supported yet.");
 	}
 

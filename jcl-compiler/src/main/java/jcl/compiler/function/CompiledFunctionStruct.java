@@ -20,6 +20,7 @@ import jcl.compiler.environment.binding.lambdalist.RestParameter;
 import jcl.compiler.environment.binding.lambdalist.SuppliedPParameter;
 import jcl.lang.FunctionStruct;
 import jcl.lang.LispStruct;
+import jcl.lang.ListStruct;
 import jcl.lang.NILStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.TStruct;
@@ -290,7 +291,7 @@ public abstract class CompiledFunctionStruct extends FunctionStructImpl {
 
 		if (restBinding != null) {
 			final SymbolStruct restSymbol = restBinding.getVar();
-			final LispStruct restListStruct = LispStructFactory.toProperList(restList);
+			final LispStruct restListStruct = ListStruct.toLispList(restList);
 
 			final FunctionParameterBinding functionParameterBinding = new FunctionParameterBinding(restSymbol, restListStruct, restBinding.isSpecial());
 			functionParametersToBind.add(functionParameterBinding);

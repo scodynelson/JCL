@@ -4,17 +4,13 @@
 
 package jcl.functions.list;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import jcl.functions.CommonLispBuiltInFunctionStructBase;
 import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
-import jcl.lang.NILStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
-import jcl.util.ClassUtils;
-import org.apache.commons.collections4.iterators.ReverseListIterator;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -33,23 +29,6 @@ public final class NconcFunction extends CommonLispBuiltInFunctionStructBase {
 	@Override
 	public LispStruct apply(final Arguments arguments) {
 		final List<LispStruct> restArgument = arguments.getRestArgument();
-
-		final int size = restArgument.size();
-		if (size == 0) {
-			return NILStruct.INSTANCE;
-		}
-		if (size == 1) {
-			return restArgument.get(0);
-		}
-
-		final ReverseListIterator<LispStruct> reverseListIterator = new ReverseListIterator<>(restArgument);
-		final LispStruct object = reverseListIterator.next();
-
-		final List<ListStruct> lists = new ArrayList<>();
-		reverseListIterator.forEachRemaining(argument -> {
-			final ListStruct list = ClassUtils.convert(argument, ListStruct.class);
-			lists.add(list);
-		});
-		return ListStruct.nConc(lists, object);
+		return ListStruct.nConc(restArgument);
 	}
 }

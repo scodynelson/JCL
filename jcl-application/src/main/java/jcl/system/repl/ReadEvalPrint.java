@@ -4,12 +4,12 @@ import jcl.functions.EvalFunction;
 import jcl.functions.readtable.ReadFunction;
 import jcl.lang.InputStreamStruct;
 import jcl.lang.LispStruct;
+import jcl.lang.ListStruct;
 import jcl.lang.NILStruct;
 import jcl.lang.PackageStruct;
 import jcl.lang.ValuesStruct;
 import jcl.lang.condition.exception.ConditionException;
 import jcl.lang.condition.exception.ReaderErrorException;
-import jcl.lang.factory.LispStructFactory;
 import jcl.lang.statics.PackageVariables;
 import jcl.lang.statics.REPLVariables;
 import jcl.lang.statics.StreamVariables;
@@ -86,11 +86,11 @@ public class ReadEvalPrint {
 					if (value instanceof ValuesStruct) {
 						final ValuesStruct values = (ValuesStruct) value;
 						REPLVariables.STAR.setValue(values.getPrimaryValue());
-						REPLVariables.SLASH.setValue(LispStructFactory.toProperList(values.getValuesList()));
+						REPLVariables.SLASH.setValue(ListStruct.toLispList(values.getValuesList()));
 					} else {
 						REPLVariables.STAR.setValue(value);
 						// null check
-						REPLVariables.SLASH.setValue(LispStructFactory.toProperList(value));
+						REPLVariables.SLASH.setValue(ListStruct.toLispList(value));
 					}
 
 					// bind '+' to the form just evaluated and '++' and '+++' to their appropriate values

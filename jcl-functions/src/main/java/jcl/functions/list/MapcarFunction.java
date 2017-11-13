@@ -4,7 +4,7 @@ import java.util.List;
 
 import jcl.lang.FunctionStruct;
 import jcl.lang.LispStruct;
-import jcl.lang.factory.LispStructFactory;
+import jcl.lang.ListStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import org.springframework.stereotype.Component;
@@ -28,6 +28,6 @@ public final class MapcarFunction extends ConsMappingFunction {
 	public LispStruct apply(final Arguments arguments) {
 		final FunctionStruct function = arguments.getRequiredArgument(FN_ARGUMENT, FunctionStruct.class);
 		final List<LispStruct> lists = arguments.getRestArgument();
-		return map1(function, LispStructFactory.toProperList(lists), LIST_ACCUMULATE, true);
+		return map1(function, ListStruct.toLispList(lists), LIST_ACCUMULATE, true);
 	}
 }

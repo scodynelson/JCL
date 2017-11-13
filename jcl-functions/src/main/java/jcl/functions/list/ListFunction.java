@@ -8,7 +8,7 @@ import java.util.List;
 
 import jcl.functions.CommonLispBuiltInFunctionStructBase;
 import jcl.lang.LispStruct;
-import jcl.lang.factory.LispStructFactory;
+import jcl.lang.ListStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import org.springframework.stereotype.Component;
@@ -29,6 +29,6 @@ public final class ListFunction extends CommonLispBuiltInFunctionStructBase {
 	@Override
 	public LispStruct apply(final Arguments arguments) {
 		final List<LispStruct> objects = arguments.getRestArgument();
-		return LispStructFactory.toProperList(objects);
+		return ListStruct.toLispList(objects);
 	}
 }

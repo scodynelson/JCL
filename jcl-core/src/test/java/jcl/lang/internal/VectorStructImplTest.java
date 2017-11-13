@@ -2,6 +2,7 @@ package jcl.lang.internal;
 
 import jcl.lang.ArrayStruct;
 import jcl.lang.BooleanStruct;
+import jcl.lang.FixnumStruct;
 import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
@@ -186,7 +187,7 @@ public class VectorStructImplTest {
 		Assert.assertThat(result, not(is(NILStruct.INSTANCE)));
 		Assert.assertThat(result.length(), is(IntegerStruct.ONE));
 
-		final LispStruct dim = result.nth(0);
+		final LispStruct dim = result.nth((FixnumStruct) IntegerStruct.ZERO);
 		Assert.assertThat(dim, is(IntegerStruct.TWO));
 	}
 

@@ -13,7 +13,6 @@ import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
 import jcl.lang.PackageStruct;
 import jcl.lang.SymbolStruct;
-import jcl.lang.factory.LispStructFactory;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import org.springframework.stereotype.Component;
@@ -54,6 +53,6 @@ public final class PackageShadowingSymbolsFunction extends CommonLispBuiltInFunc
 		final PackageStruct aPackage = FunctionHelpers.asPackage(lispStruct);
 
 		final Collection<SymbolStruct> shadowingSymbols = aPackage.getShadowingSymbols().values();
-		return LispStructFactory.toProperList(new ArrayList<>(shadowingSymbols));
+		return ListStruct.toLispList(new ArrayList<>(shadowingSymbols));
 	}
 }

@@ -13,7 +13,6 @@ import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
 import jcl.lang.PackageStruct;
 import jcl.lang.StringStruct;
-import jcl.lang.factory.LispStructFactory;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import org.springframework.stereotype.Component;
@@ -58,6 +57,6 @@ public final class PackageNicknamesFunction extends CommonLispBuiltInFunctionStr
 				nicknames.stream()
 				         .map(StringStruct::toLispString)
 				         .collect(Collectors.toList());
-		return LispStructFactory.toProperList(nicknamesStructs);
+		return ListStruct.toLispList(nicknamesStructs);
 	}
 }

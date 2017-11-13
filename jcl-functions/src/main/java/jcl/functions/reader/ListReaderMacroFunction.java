@@ -12,7 +12,6 @@ import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
 import jcl.lang.NILStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
-import jcl.lang.factory.LispStructFactory;
 import jcl.lang.statics.ReaderVariables;
 import jcl.lang.stream.ReadPeekResult;
 import jcl.reader.Reader;
@@ -77,7 +76,14 @@ final class ListReaderMacroFunction {
 			return NILStruct.INSTANCE;
 		}
 
-		return isDottedList ? LispStructFactory.toDottedList(currentTokenList) : LispStructFactory.toProperList(currentTokenList);
+		if (isDottedList) {
+			final LispStruct arg = currentTokenList.get(0);
+			final List<LispStruct> others = currentTokenList.subList(1, currentTokenList.size());
+			// NOTE: Cast here is safe due to the 'processDot' logic.
+			return (ListStruct) ListStruct.toLispDottedList(arg, others);
+		}
+
+		return ListStruct.toLispList(currentTokenList);
 	}
 
 	/**

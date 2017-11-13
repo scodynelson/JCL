@@ -12,7 +12,6 @@ import jcl.lang.InputStreamStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.NILStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
-import jcl.lang.factory.LispStructFactory;
 import jcl.lang.statics.ReaderVariables;
 import jcl.lang.stream.ReadPeekResult;
 import jcl.reader.Reader;
@@ -65,14 +64,14 @@ public class CommaReaderMacroFunction extends ReaderMacroFunctionImpl {
 
 			if (nextCodePoint == CodePointConstants.AT_SIGN) {
 				final LispStruct token = reader.read(inputStreamStruct, true, NILStruct.INSTANCE, true);
-				commaCons = LispStructFactory.toCons(BackquoteReaderMacroFunction.BQ_AT_FLAG, token);
+				commaCons = ConsStruct.toLispCons(BackquoteReaderMacroFunction.BQ_AT_FLAG, token);
 			} else if (nextCodePoint == CodePointConstants.FULL_STOP) {
 				final LispStruct token = reader.read(inputStreamStruct, true, NILStruct.INSTANCE, true);
-				commaCons = LispStructFactory.toCons(BackquoteReaderMacroFunction.BQ_DOT_FLAG, token);
+				commaCons = ConsStruct.toLispCons(BackquoteReaderMacroFunction.BQ_DOT_FLAG, token);
 			} else {
 				inputStreamStruct.unreadChar(nextCodePoint);
 				final LispStruct token = reader.read(inputStreamStruct, true, NILStruct.INSTANCE, true);
-				commaCons = LispStructFactory.toCons(BackquoteReaderMacroFunction.BQ_COMMA_FLAG, token);
+				commaCons = ConsStruct.toLispCons(BackquoteReaderMacroFunction.BQ_COMMA_FLAG, token);
 			}
 			return commaCons;
 		} finally {

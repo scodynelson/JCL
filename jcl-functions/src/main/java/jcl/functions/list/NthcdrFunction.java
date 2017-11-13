@@ -1,7 +1,7 @@
 package jcl.functions.list;
 
 import jcl.functions.CommonLispBuiltInFunctionStructBase;
-import jcl.lang.IntegerStruct;
+import jcl.lang.FixnumStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
 import jcl.lang.function.parameterdsl.Arguments;
@@ -26,10 +26,8 @@ public final class NthcdrFunction extends CommonLispBuiltInFunctionStructBase {
 
 	@Override
 	public LispStruct apply(final Arguments arguments) {
-		final IntegerStruct nVal = arguments.getRequiredArgument(N_ARGUMENT, IntegerStruct.class);
+		final FixnumStruct nVal = arguments.getRequiredArgument(N_ARGUMENT, FixnumStruct.class);
 		final ListStruct list = arguments.getRequiredArgument(LIST_ARGUMENT, ListStruct.class);
-
-		final long nLong = nVal.toJavaPLong();
-		return list.nthCdr(nLong);
+		return list.nthCdr(nVal);
 	}
 }

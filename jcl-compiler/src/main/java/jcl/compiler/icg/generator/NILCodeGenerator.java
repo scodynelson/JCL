@@ -11,7 +11,6 @@ import jcl.compiler.icg.JavaMethodBuilder;
 import jcl.lang.NILStruct;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
-import org.objectweb.asm.Type;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
@@ -21,16 +20,6 @@ import org.springframework.stereotype.Component;
  */
 @Component
 final class NILCodeGenerator implements CodeGenerator<NILStruct> {
-
-	/**
-	 * Constant {@link String} containing the name for the {@link NILStruct} class.
-	 */
-	private static final String NIL_STRUCT_NAME = Type.getInternalName(NILStruct.class);
-
-	/**
-	 * Constant {@link String} containing the description for the {@link NILStruct} class.
-	 */
-	private static final String NIL_STRUCT_DESC = Type.getDescriptor(NILStruct.class);
 
 	/**
 	 * {@inheritDoc}
@@ -48,6 +37,9 @@ final class NILCodeGenerator implements CodeGenerator<NILStruct> {
 		final JavaMethodBuilder methodBuilder = generatorState.getCurrentMethodBuilder();
 		final MethodVisitor mv = methodBuilder.getMethodVisitor();
 
-		mv.visitFieldInsn(Opcodes.GETSTATIC, NIL_STRUCT_NAME, GenerationConstants.SINGLETON_INSTANCE, NIL_STRUCT_DESC);
+		mv.visitFieldInsn(Opcodes.GETSTATIC,
+		                  GenerationConstants.NIL_STRUCT_NAME,
+		                  GenerationConstants.SINGLETON_INSTANCE,
+		                  GenerationConstants.NIL_STRUCT_DESC);
 	}
 }

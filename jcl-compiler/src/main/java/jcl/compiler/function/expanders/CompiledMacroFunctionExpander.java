@@ -251,7 +251,7 @@ public abstract class CompiledMacroFunctionExpander<O extends LispStruct> extend
 
 		if (restBinding != null) {
 			final SymbolStruct restSymbol = restBinding.getVar();
-			final LispStruct restListStruct = LispStructFactory.toProperList(restList);
+			final LispStruct restListStruct = ListStruct.toLispList(restList);
 
 			final FunctionParameterBinding functionParameterBinding = new FunctionParameterBinding(restSymbol, restListStruct, restBinding.isSpecial());
 			functionParametersToBind.add(functionParameterBinding);
@@ -259,7 +259,7 @@ public abstract class CompiledMacroFunctionExpander<O extends LispStruct> extend
 
 		if (bodyBinding != null) {
 			final SymbolStruct bodySymbol = bodyBinding.getVar();
-			final LispStruct bodyListStruct = LispStructFactory.toProperList(restList);
+			final LispStruct bodyListStruct = ListStruct.toLispList(restList);
 
 			final FunctionParameterBinding functionParameterBinding = new FunctionParameterBinding(bodySymbol, bodyListStruct, bodyBinding.isSpecial());
 			functionParametersToBind.add(functionParameterBinding);
@@ -466,7 +466,7 @@ public abstract class CompiledMacroFunctionExpander<O extends LispStruct> extend
 
 		if (restBinding != null) {
 			final SymbolStruct restSymbol = restBinding.getVar();
-			final LispStruct restListStruct = LispStructFactory.toProperList(restList);
+			final LispStruct restListStruct = ListStruct.toLispList(restList);
 
 			final FunctionParameterBinding functionParameterBinding = new FunctionParameterBinding(restSymbol, restListStruct, restBinding.isSpecial());
 			functionParametersToBind.add(functionParameterBinding);
@@ -474,7 +474,7 @@ public abstract class CompiledMacroFunctionExpander<O extends LispStruct> extend
 
 		if (bodyBinding != null) {
 			final SymbolStruct bodySymbol = bodyBinding.getVar();
-			final LispStruct bodyListStruct = LispStructFactory.toProperList(restList);
+			final LispStruct bodyListStruct = ListStruct.toLispList(restList);
 
 			final FunctionParameterBinding functionParameterBinding = new FunctionParameterBinding(bodySymbol, bodyListStruct, bodyBinding.isSpecial());
 			functionParametersToBind.add(functionParameterBinding);

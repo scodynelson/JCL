@@ -17,7 +17,6 @@ import jcl.lang.SequenceStruct;
 import jcl.lang.TStruct;
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
-import jcl.lang.factory.LispStructFactory;
 import jcl.lang.statics.PrinterVariables;
 import jcl.type.ArrayType;
 import jcl.type.LispType;
@@ -543,7 +542,7 @@ public class MultiArrayStructImpl extends ArrayStructImpl {
 				= Arrays.stream(sizes)
 				        .mapToObj(IntegerStruct::toLispInteger)
 				        .collect(Collectors.toList());
-		return LispStructFactory.toProperList(dimensionStructs);
+		return ListStruct.toLispList(dimensionStructs);
 	}
 
 	@Override

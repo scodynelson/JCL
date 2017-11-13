@@ -14,7 +14,6 @@ import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.ProgramErrorException;
-import jcl.lang.factory.LispStructFactory;
 import jcl.lang.internal.SpecialOperatorStructImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -49,7 +48,7 @@ public class MultipleValueCallExpander extends MacroFunctionExpander<MultipleVal
 			functionFormAsCompilerFunction = (CompilerFunctionStruct) functionForm;
 		} else if (functionForm instanceof QuoteStruct) {
 			final QuoteStruct quotedFunction = (QuoteStruct) functionForm;
-			final ListStruct functionListStruct = LispStructFactory.toProperList(SpecialOperatorStructImpl.FUNCTION, quotedFunction.getObject());
+			final ListStruct functionListStruct = ListStruct.toLispList(SpecialOperatorStructImpl.FUNCTION, quotedFunction.getObject());
 			functionFormAsCompilerFunction = functionExpander.expand(functionListStruct, environment);
 		} else {
 			throw new ProgramErrorException("MULTIPLE-VALUE-CALL: Invalid argument for function argument: " + functionForm);

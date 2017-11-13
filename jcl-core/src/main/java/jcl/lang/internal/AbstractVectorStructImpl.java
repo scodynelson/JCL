@@ -10,7 +10,6 @@ import jcl.lang.NILStruct;
 import jcl.lang.TStruct;
 import jcl.lang.VectorStruct;
 import jcl.lang.condition.exception.ErrorException;
-import jcl.lang.factory.LispStructFactory;
 import jcl.type.LispType;
 import jcl.type.VectorType;
 
@@ -38,7 +37,7 @@ public abstract class AbstractVectorStructImpl extends AbstractArrayStructImpl i
 	@Override
 	public ListStruct arrayDimensions() {
 		final IntegerStruct size = IntegerStruct.toLispInteger(totalSize);
-		return LispStructFactory.toProperList(size);
+		return ListStruct.toLispList(size);
 	}
 
 	@Override

@@ -2,13 +2,13 @@ package jcl.lang;
 
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Spliterator;
 import java.util.Spliterators;
 import java.util.stream.Stream;
 
 import jcl.lang.condition.exception.SimpleErrorException;
 import jcl.lang.internal.BooleanStructImpl;
-import jcl.lang.internal.ConsStructImpl;
 import jcl.type.NILType;
 import org.apache.commons.lang3.ArrayUtils;
 
@@ -31,52 +31,12 @@ public final class NILStruct extends BooleanStructImpl implements ListStruct {
 	 */
 
 	@Override
-	public LispStruct getCar() {
+	public LispStruct car() {
 		return INSTANCE;
 	}
 
 	@Override
-	public void setCar(final LispStruct car) {
-		throw new SimpleErrorException("Cannot set element within NIL.");
-	}
-
-	@Override
-	public LispStruct getCdr() {
-		return INSTANCE;
-	}
-
-	@Override
-	public void setCdr(final LispStruct cdr) {
-		throw new SimpleErrorException("Cannot set element within NIL.");
-	}
-
-	@Override
-	public boolean isDotted() {
-		return false;
-	}
-
-	@Override
-	public boolean isCircular() {
-		return false;
-	}
-
-	@Override
-	public Stream<LispStruct> stream() {
-		return Stream.empty();
-	}
-
-	@Override
-	public Stream<LispStruct> parallelStream() {
-		return Stream.empty();
-	}
-
-	@Override
-	public LispStruct[] toArray() {
-		return ArrayUtils.toArray();
-	}
-
-	@Override
-	public ListStruct copyTree() {
+	public LispStruct cdr() {
 		return INSTANCE;
 	}
 
@@ -86,13 +46,33 @@ public final class NILStruct extends BooleanStructImpl implements ListStruct {
 	}
 
 	@Override
-	public ListStruct copyAlist() {
+	public ListStruct copyTree() {
 		return INSTANCE;
 	}
 
 	@Override
-	public Long listLength() {
-		return 0L;
+	public LispStruct listLength() {
+		return IntegerStruct.ZERO;
+	}
+
+	@Override
+	public LispStruct nth(final FixnumStruct index) {
+		return INSTANCE;
+	}
+
+	@Override
+	public LispStruct setNth(final FixnumStruct index, final LispStruct newValue) {
+		throw new SimpleErrorException("Cannot set element within NIL.");
+	}
+
+	@Override
+	public ListStruct nthCdr(final FixnumStruct index) {
+		return INSTANCE;
+	}
+
+	@Override
+	public BooleanStruct endP() {
+		return BooleanStruct.T;
 	}
 
 	@Override
@@ -106,28 +86,13 @@ public final class NILStruct extends BooleanStructImpl implements ListStruct {
 	}
 
 	@Override
-	public LispStruct nth(final long index) {
-		return INSTANCE;
-	}
-
-	@Override
-	public void setNth(final long index, final LispStruct newValue) {
-		throw new SimpleErrorException("Cannot set element within NIL.");
-	}
-
-	@Override
-	public ListStruct nthCdr(final long n) {
-		return INSTANCE;
-	}
-
-	@Override
 	public LispStruct getProperty(final LispStruct indicator, final LispStruct defaultValue) {
 		return INSTANCE;
 	}
 
 	@Override
 	public ListStruct setProperty(final LispStruct indicator, final LispStruct newValue) {
-		return ConsStructImpl.valueOf(indicator, newValue);
+		return ConsStruct.toLispCons(indicator, newValue);
 	}
 
 	@Override
@@ -138,6 +103,11 @@ public final class NILStruct extends BooleanStructImpl implements ListStruct {
 	@Override
 	public ValuesStruct getProperties(final ListStruct indicators) {
 		return ValuesStruct.valueOf(INSTANCE, INSTANCE, INSTANCE);
+	}
+
+	@Override
+	public ListStruct copyAlist() {
+		return INSTANCE;
 	}
 
 	@Override
@@ -155,9 +125,29 @@ public final class NILStruct extends BooleanStructImpl implements ListStruct {
 		return INSTANCE;
 	}
 
+	@Override
+	public List<LispStruct> toJavaList() {
+		return Collections.emptyList();
+	}
+
 	/*
 	SEQUENCE
 	 */
+
+	@Override
+	public Stream<LispStruct> stream() {
+		return Stream.empty();
+	}
+
+	@Override
+	public Stream<LispStruct> parallelStream() {
+		return Stream.empty();
+	}
+
+	@Override
+	public LispStruct[] toArray() {
+		return ArrayUtils.toArray();
+	}
 
 	@Override
 	public IntegerStruct length() {
@@ -197,4 +187,45 @@ public final class NILStruct extends BooleanStructImpl implements ListStruct {
 	public Spliterator<LispStruct> spliterator() {
 		return Spliterators.emptySpliterator();
 	}
+
+	/*
+	OLD
+	 */
+
+	@Override
+	@Deprecated
+	public LispStruct getCar() {
+		return INSTANCE;
+	}
+
+	@Override
+	@Deprecated
+	public void setCar(final LispStruct car) {
+		throw new SimpleErrorException("Cannot set element within NIL.");
+	}
+
+	@Override
+	@Deprecated
+	public LispStruct getCdr() {
+		return INSTANCE;
+	}
+
+	@Override
+	@Deprecated
+	public void setCdr(final LispStruct cdr) {
+		throw new SimpleErrorException("Cannot set element within NIL.");
+	}
+
+	@Override
+	@Deprecated
+	public boolean isDotted() {
+		return false;
+	}
+
+	@Override
+	@Deprecated
+	public boolean isCircular() {
+		return false;
+	}
+
 }

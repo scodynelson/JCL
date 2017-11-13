@@ -4,11 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import jcl.functions.CommonLispBuiltInFunctionStructBase;
+import jcl.lang.ConsStruct;
 import jcl.lang.FunctionStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
 import jcl.lang.NILStruct;
-import jcl.lang.factory.LispStructFactory;
 import jcl.lang.function.parameterdsl.Parameters;
 
 abstract class ConsMappingFunction extends CommonLispBuiltInFunctionStructBase {
@@ -24,7 +24,7 @@ abstract class ConsMappingFunction extends CommonLispBuiltInFunctionStructBase {
 	LispStruct map1(final FunctionStruct function, final ListStruct originalArglists,
 	                          final String accumulate, final boolean takeCar) {
 		final ListStruct arglists = originalArglists.copyList();
-		final ListStruct retList = LispStructFactory.toProperList(NILStruct.INSTANCE);
+		final ListStruct retList = ListStruct.toLispList(NILStruct.INSTANCE);
 		ListStruct temp = retList;
 
 		// Outer 'DO' vars
@@ -53,7 +53,7 @@ abstract class ConsMappingFunction extends CommonLispBuiltInFunctionStructBase {
 				} else {
 					carToPush = l.getCar();
 				}
-				args = LispStructFactory.toCons(carToPush, args);
+				args = ConsStruct.toLispCons(carToPush, args);
 
 				// SETF
 				final LispStruct cdarL = ((ListStruct) l.getCar()).getCdr();
@@ -77,7 +77,7 @@ abstract class ConsMappingFunction extends CommonLispBuiltInFunctionStructBase {
 					temp = (ListStruct) nconc.last();
 					break;
 				case LIST_ACCUMULATE:
-					temp.setCdr(LispStructFactory.toProperList(res));
+					temp.setCdr(ListStruct.toLispList(res));
 					temp = (ListStruct) temp.getCdr();
 					break;
 			}

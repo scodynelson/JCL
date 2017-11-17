@@ -37,17 +37,17 @@ public class CharacterStructCharacterTest {
 	@Test
 	public void test_isAlphaChar() {
 		test_Character(CharacterStruct::isAlphaChar,
-		               BooleanStruct.NIL,
-		               BooleanStruct.NIL,
-		               BooleanStruct.NIL,
-		               BooleanStruct.NIL,
-		               BooleanStruct.NIL,
-		               BooleanStruct.NIL,
-		               BooleanStruct.T,
-		               BooleanStruct.NIL,
-		               BooleanStruct.T,
-		               BooleanStruct.NIL,
-		               BooleanStruct.NIL);
+		               NILStruct.INSTANCE,
+		               NILStruct.INSTANCE,
+		               NILStruct.INSTANCE,
+		               NILStruct.INSTANCE,
+		               NILStruct.INSTANCE,
+		               NILStruct.INSTANCE,
+		               TStruct.INSTANCE,
+		               NILStruct.INSTANCE,
+		               TStruct.INSTANCE,
+		               NILStruct.INSTANCE,
+		               NILStruct.INSTANCE);
 	}
 
 	/*
@@ -60,17 +60,17 @@ public class CharacterStructCharacterTest {
 	@Test
 	public void test_isAlphanumeric() {
 		test_Character(CharacterStruct::isAlphanumeric,
-		               BooleanStruct.NIL,
-		               BooleanStruct.NIL,
-		               BooleanStruct.NIL,
-		               BooleanStruct.NIL,
-		               BooleanStruct.T,
-		               BooleanStruct.NIL,
-		               BooleanStruct.T,
-		               BooleanStruct.NIL,
-		               BooleanStruct.T,
-		               BooleanStruct.NIL,
-		               BooleanStruct.NIL);
+		               NILStruct.INSTANCE,
+		               NILStruct.INSTANCE,
+		               NILStruct.INSTANCE,
+		               NILStruct.INSTANCE,
+		               TStruct.INSTANCE,
+		               NILStruct.INSTANCE,
+		               TStruct.INSTANCE,
+		               NILStruct.INSTANCE,
+		               TStruct.INSTANCE,
+		               NILStruct.INSTANCE,
+		               NILStruct.INSTANCE);
 	}
 
 	/*
@@ -83,17 +83,17 @@ public class CharacterStructCharacterTest {
 	@Test
 	public void test_isDigitChar() {
 		test_Character(CharacterStruct::isDigitChar,
-		               BooleanStruct.NIL,
-		               BooleanStruct.NIL,
-		               BooleanStruct.NIL,
-		               BooleanStruct.NIL,
-		               BooleanStruct.T,
-		               BooleanStruct.NIL,
-		               BooleanStruct.NIL,
-		               BooleanStruct.NIL,
-		               BooleanStruct.NIL,
-		               BooleanStruct.NIL,
-		               BooleanStruct.NIL);
+		               NILStruct.INSTANCE,
+		               NILStruct.INSTANCE,
+		               NILStruct.INSTANCE,
+		               NILStruct.INSTANCE,
+		               TStruct.INSTANCE,
+		               NILStruct.INSTANCE,
+		               NILStruct.INSTANCE,
+		               NILStruct.INSTANCE,
+		               NILStruct.INSTANCE,
+		               NILStruct.INSTANCE,
+		               NILStruct.INSTANCE);
 	}
 
 	/*
@@ -106,17 +106,17 @@ public class CharacterStructCharacterTest {
 	@Test
 	public void test_isGraphicChar() {
 		test_Character(CharacterStruct::isGraphicChar,
-		               BooleanStruct.NIL,
-		               BooleanStruct.NIL,
-		               BooleanStruct.NIL,
-		               BooleanStruct.T,
-		               BooleanStruct.T,
-		               BooleanStruct.T,
-		               BooleanStruct.T,
-		               BooleanStruct.T,
-		               BooleanStruct.T,
-		               BooleanStruct.T,
-		               BooleanStruct.NIL);
+		               NILStruct.INSTANCE,
+		               NILStruct.INSTANCE,
+		               NILStruct.INSTANCE,
+		               TStruct.INSTANCE,
+		               TStruct.INSTANCE,
+		               TStruct.INSTANCE,
+		               TStruct.INSTANCE,
+		               TStruct.INSTANCE,
+		               TStruct.INSTANCE,
+		               TStruct.INSTANCE,
+		               NILStruct.INSTANCE);
 	}
 
 	/*
@@ -129,17 +129,17 @@ public class CharacterStructCharacterTest {
 	@Test
 	public void test_isStandardChar() {
 		test_Character(CharacterStruct::isStandardChar,
-		               BooleanStruct.NIL,
-		               BooleanStruct.T,
-		               BooleanStruct.NIL,
-		               BooleanStruct.T,
-		               BooleanStruct.T,
-		               BooleanStruct.T,
-		               BooleanStruct.T,
-		               BooleanStruct.T,
-		               BooleanStruct.T,
-		               BooleanStruct.T,
-		               BooleanStruct.NIL);
+		               NILStruct.INSTANCE,
+		               TStruct.INSTANCE,
+		               NILStruct.INSTANCE,
+		               TStruct.INSTANCE,
+		               TStruct.INSTANCE,
+		               TStruct.INSTANCE,
+		               TStruct.INSTANCE,
+		               TStruct.INSTANCE,
+		               TStruct.INSTANCE,
+		               TStruct.INSTANCE,
+		               NILStruct.INSTANCE);
 	}
 
 	/*
@@ -220,17 +220,17 @@ public class CharacterStructCharacterTest {
 	@Test
 	public void test_isUpperCase() {
 		test_Character(CharacterStruct::isUpperCase,
-		               BooleanStruct.NIL,
-		               BooleanStruct.NIL,
-		               BooleanStruct.NIL,
-		               BooleanStruct.NIL,
-		               BooleanStruct.NIL,
-		               BooleanStruct.NIL,
-		               BooleanStruct.T,
-		               BooleanStruct.NIL,
-		               BooleanStruct.NIL,
-		               BooleanStruct.NIL,
-		               BooleanStruct.NIL);
+		               NILStruct.INSTANCE,
+		               NILStruct.INSTANCE,
+		               NILStruct.INSTANCE,
+		               NILStruct.INSTANCE,
+		               NILStruct.INSTANCE,
+		               NILStruct.INSTANCE,
+		               TStruct.INSTANCE,
+		               NILStruct.INSTANCE,
+		               NILStruct.INSTANCE,
+		               NILStruct.INSTANCE,
+		               NILStruct.INSTANCE);
 	}
 
 	/*
@@ -243,17 +243,17 @@ public class CharacterStructCharacterTest {
 	@Test
 	public void test_isLowerCase() {
 		test_Character(CharacterStruct::isLowerCase,
-		               BooleanStruct.NIL,
-		               BooleanStruct.NIL,
-		               BooleanStruct.NIL,
-		               BooleanStruct.NIL,
-		               BooleanStruct.NIL,
-		               BooleanStruct.NIL,
-		               BooleanStruct.NIL,
-		               BooleanStruct.NIL,
-		               BooleanStruct.T,
-		               BooleanStruct.NIL,
-		               BooleanStruct.NIL);
+		               NILStruct.INSTANCE,
+		               NILStruct.INSTANCE,
+		               NILStruct.INSTANCE,
+		               NILStruct.INSTANCE,
+		               NILStruct.INSTANCE,
+		               NILStruct.INSTANCE,
+		               NILStruct.INSTANCE,
+		               NILStruct.INSTANCE,
+		               TStruct.INSTANCE,
+		               NILStruct.INSTANCE,
+		               NILStruct.INSTANCE);
 	}
 
 	/*
@@ -266,17 +266,17 @@ public class CharacterStructCharacterTest {
 	@Test
 	public void test_isBothCase() {
 		test_Character(CharacterStruct::isBothCase,
-		               BooleanStruct.NIL,
-		               BooleanStruct.NIL,
-		               BooleanStruct.NIL,
-		               BooleanStruct.NIL,
-		               BooleanStruct.NIL,
-		               BooleanStruct.NIL,
-		               BooleanStruct.T,
-		               BooleanStruct.NIL,
-		               BooleanStruct.T,
-		               BooleanStruct.NIL,
-		               BooleanStruct.NIL);
+		               NILStruct.INSTANCE,
+		               NILStruct.INSTANCE,
+		               NILStruct.INSTANCE,
+		               NILStruct.INSTANCE,
+		               NILStruct.INSTANCE,
+		               NILStruct.INSTANCE,
+		               TStruct.INSTANCE,
+		               NILStruct.INSTANCE,
+		               TStruct.INSTANCE,
+		               NILStruct.INSTANCE,
+		               NILStruct.INSTANCE);
 	}
 
 	/*

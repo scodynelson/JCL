@@ -169,7 +169,7 @@ public interface StringStruct extends VectorStruct {
 	 * @param context
 	 * 		the equality context for the equality operation, including the comparison string, start, and end
 	 *
-	 * @return {@link BooleanStruct#T} if the strings are equal; {@link BooleanStruct#NIL} otherwise
+	 * @return T if the strings are equal; NIL otherwise
 	 */
 	BooleanStruct stringEqual(final StringEqualityContext context);
 
@@ -179,8 +179,7 @@ public interface StringStruct extends VectorStruct {
 	 * @param context
 	 * 		the inequality context for the equality operation, including the comparison string, start, and end
 	 *
-	 * @return {@link BooleanStruct#NIL} if the strings are not equal; an {@link IntegerStruct} mismatch index where the
-	 * strings differ otherwise
+	 * @return NIL if the strings are not equal; an {@link IntegerStruct} mismatch index where the strings differ otherwise
 	 */
 	LispStruct stringNotEqual(final StringEqualityContext context);
 
@@ -191,8 +190,8 @@ public interface StringStruct extends VectorStruct {
 	 * @param context
 	 * 		the inequality context for the equality operation, including the comparison string, start, and end
 	 *
-	 * @return {@link BooleanStruct#NIL} if the first string is less-than the second; an {@link IntegerStruct} mismatch
-	 * index where the strings differ otherwise
+	 * @return NIL if the first string is less-than the second; an {@link IntegerStruct} mismatch index where the
+	 * strings differ otherwise
 	 */
 	LispStruct stringLessThan(final StringEqualityContext context);
 
@@ -203,8 +202,8 @@ public interface StringStruct extends VectorStruct {
 	 * @param context
 	 * 		the inequality context for the equality operation, including the comparison string, start, and end
 	 *
-	 * @return {@link BooleanStruct#NIL} if the first string is greater-than the second; an {@link IntegerStruct}
-	 * mismatch index where the strings differ otherwise
+	 * @return NIL if the first string is greater-than the second; an {@link IntegerStruct} mismatch index where the
+	 * strings differ otherwise
 	 */
 	LispStruct stringGreaterThan(final StringEqualityContext context);
 
@@ -215,8 +214,8 @@ public interface StringStruct extends VectorStruct {
 	 * @param context
 	 * 		the inequality context for the equality operation, including the comparison string, start, and end
 	 *
-	 * @return {@link BooleanStruct#NIL} if the first string is less-than-or-equal-to the second; an {@link
-	 * IntegerStruct} mismatch index where the strings differ otherwise
+	 * @return NIL if the first string is less-than-or-equal-to the second; an {@link IntegerStruct} mismatch index
+	 * where the strings differ otherwise
 	 */
 	LispStruct stringLessThanOrEqualTo(final StringEqualityContext context);
 
@@ -227,8 +226,7 @@ public interface StringStruct extends VectorStruct {
 	 * @param context
 	 * 		the inequality context for the equality operation, including the comparison string, start, and end
 	 *
-	 * @return {@link BooleanStruct#NIL} if the first string is greater-than-or-equal-to the second; an {@link
-	 * IntegerStruct} mismatch index where the strings differ otherwise
+	 * @return NIL if the first string is greater-than-or-equal-to the second; an {@link
 	 */
 	LispStruct stringGreaterThanOrEqualTo(final StringEqualityContext context);
 
@@ -238,7 +236,7 @@ public interface StringStruct extends VectorStruct {
 	 * @param context
 	 * 		the equality context for the equality operation, including the comparison string, start, and end
 	 *
-	 * @return {@link BooleanStruct#T} if the strings are equal; {@link BooleanStruct#NIL} otherwise
+	 * @return T if the strings are equal; NIL otherwise
 	 */
 	BooleanStruct stringEqualIgnoreCase(final StringEqualityContext context);
 
@@ -248,8 +246,7 @@ public interface StringStruct extends VectorStruct {
 	 * @param context
 	 * 		the inequality context for the equality operation, including the comparison string, start, and end
 	 *
-	 * @return {@link BooleanStruct#NIL} if the strings are not equal; an {@link IntegerStruct} mismatch index where the
-	 * strings differ otherwise
+	 * @return NIL if the strings are not equal; an {@link IntegerStruct} mismatch index where the strings differ otherwise
 	 */
 	LispStruct stringNotEqualIgnoreCase(final StringEqualityContext context);
 
@@ -260,8 +257,8 @@ public interface StringStruct extends VectorStruct {
 	 * @param context
 	 * 		the inequality context for the equality operation, including the comparison string, start, and end
 	 *
-	 * @return {@link BooleanStruct#NIL} if the first string is less-than the second; an {@link IntegerStruct} mismatch
-	 * index where the strings differ otherwise
+	 * @return NIL if the first string is less-than the second; an {@link IntegerStruct} mismatch index where the
+	 * strings differ otherwise
 	 */
 	LispStruct stringLessThanIgnoreCase(final StringEqualityContext context);
 
@@ -272,8 +269,8 @@ public interface StringStruct extends VectorStruct {
 	 * @param context
 	 * 		the inequality context for the equality operation, including the comparison string, start, and end
 	 *
-	 * @return {@link BooleanStruct#NIL} if the first string is greater-than the second; an {@link IntegerStruct}
-	 * mismatch index where the strings differ otherwise
+	 * @return NIL if the first string is greater-than the second; an {@link IntegerStruct} mismatch index where the
+	 * strings differ otherwise
 	 */
 	LispStruct stringGreaterThanIgnoreCase(final StringEqualityContext context);
 
@@ -284,8 +281,8 @@ public interface StringStruct extends VectorStruct {
 	 * @param context
 	 * 		the inequality context for the equality operation, including the comparison string, start, and end
 	 *
-	 * @return {@link BooleanStruct#NIL} if the first string is less-than-or-equal-to the second; an {@link
-	 * IntegerStruct} mismatch index where the strings differ otherwise
+	 * @return NIL if the first string is less-than-or-equal-to the second; an {@link IntegerStruct} mismatch index
+	 * where the strings differ otherwise
 	 */
 	LispStruct stringLessThanOrEqualToIgnoreCase(final StringEqualityContext context);
 
@@ -296,8 +293,8 @@ public interface StringStruct extends VectorStruct {
 	 * @param context
 	 * 		the inequality context for the equality operation, including the comparison string, start, and end
 	 *
-	 * @return {@link BooleanStruct#NIL} if the first string is greater-than-or-equal-to the second; an {@link
-	 * IntegerStruct} mismatch index where the strings differ otherwise
+	 * @return NIL if the first string is greater-than-or-equal-to the second; an {@link IntegerStruct} mismatch index
+	 * where the strings differ otherwise
 	 */
 	LispStruct stringGreaterThanOrEqualToIgnoreCase(final StringEqualityContext context);
 

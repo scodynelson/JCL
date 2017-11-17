@@ -18,6 +18,7 @@ import jcl.lang.ReadtableStruct;
 import jcl.lang.SequenceStruct;
 import jcl.lang.StringIntervalOpContext;
 import jcl.lang.StringStruct;
+import jcl.lang.TStruct;
 import jcl.lang.ValuesStruct;
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
@@ -127,7 +128,7 @@ public final class SimpleStringStructImpl extends AbstractStringStructImpl {
 
 	@Override
 	public BooleanStruct isSimpleString() {
-		return BooleanStruct.T;
+		return TStruct.INSTANCE;
 	}
 
 	@Override
@@ -258,12 +259,12 @@ public final class SimpleStringStructImpl extends AbstractStringStructImpl {
 
 	@Override
 	public BooleanStruct adjustableArrayP() {
-		return BooleanStruct.NIL;
+		return NILStruct.INSTANCE;
 	}
 
 	@Override
 	public BooleanStruct arrayHasFillPointerP() {
-		return BooleanStruct.NIL;
+		return NILStruct.INSTANCE;
 	}
 
 	@Override

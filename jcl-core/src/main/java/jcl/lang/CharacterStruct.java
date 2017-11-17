@@ -604,12 +604,12 @@ public interface CharacterStruct extends LispStruct {
 
 	/**
 	 * Returns a CharacterStruct that has the provided {@code weight} within a defaulted radix of {@code 10}. If weight
-	 * is greater than the radix, {@link BooleanStruct#NIL} is returned.
+	 * is greater than the radix, NIL is returned.
 	 *
 	 * @param weight
 	 * 		the weight of the CharacterStuct to return
 	 *
-	 * @return a CharacterStruct that has the provided {@code weight}, or {@link BooleanStruct#NIL}
+	 * @return a CharacterStruct that has the provided {@code weight}, or NIL
 	 */
 	static LispStruct digitChar(final IntegerStruct weight) {
 		return digitChar(weight, IntegerStruct.TEN);
@@ -617,14 +617,14 @@ public interface CharacterStruct extends LispStruct {
 
 	/**
 	 * Returns a CharacterStruct that has the provided {@code weight} within the provided {@code radix}. If weight is
-	 * greater than the radix, {@link BooleanStruct#NIL} is returned.
+	 * greater than the radix, NIL is returned.
 	 *
 	 * @param weight
 	 * 		the weight of the CharacterStruct to return
 	 * @param radix
 	 * 		the radix in which to consider the weight
 	 *
-	 * @return a CharacterStruct that has the provided {@code weight}, or {@link BooleanStruct#NIL}
+	 * @return a CharacterStruct that has the provided {@code weight}, or NIL
 	 */
 	static LispStruct digitChar(final IntegerStruct weight, final IntegerStruct radix) {
 		final int weightInt = weight.toJavaInt();

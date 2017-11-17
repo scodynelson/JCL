@@ -451,7 +451,7 @@ public class StringStructSequenceTest {
 		final StringStruct initialContents = StringStruct.toLispString(str);
 		final StringStruct struct
 				= StringStruct.builder(IntegerStruct.toLispInteger(str.length()))
-				              .adjustable(BooleanStruct.T)
+				              .adjustable(TStruct.INSTANCE)
 				              .initialContents(initialContents)
 				              .build();
 
@@ -558,7 +558,7 @@ public class StringStructSequenceTest {
 		final StringStruct initialContents = StringStruct.toLispString(str);
 		final StringStruct struct
 				= StringStruct.builder(IntegerStruct.toLispInteger(str.length()))
-				              .adjustable(BooleanStruct.T)
+				              .adjustable(TStruct.INSTANCE)
 				              .initialContents(initialContents)
 				              .build();
 
@@ -658,7 +658,7 @@ public class StringStructSequenceTest {
 		final String str = "12345";
 		final StringStruct struct = StringStruct.builder(IntegerStruct.toLispInteger(str.length()))
 		                                        .initialContents(StringStruct.toLispString(str))
-		                                        .adjustable(BooleanStruct.T)
+		                                        .adjustable(TStruct.INSTANCE)
 		                                        .build();
 		final Iterator<LispStruct> iterator = struct.iterator();
 
@@ -681,7 +681,7 @@ public class StringStructSequenceTest {
 		final String str = "12345";
 		final StringStruct struct = StringStruct.builder(IntegerStruct.toLispInteger(str.length()))
 		                                        .initialContents(StringStruct.toLispString(str))
-		                                        .adjustable(BooleanStruct.T)
+		                                        .adjustable(TStruct.INSTANCE)
 		                                        .build();
 		final Iterator<LispStruct> iterator = struct.iterator();
 

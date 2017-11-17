@@ -16,6 +16,7 @@ import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
 import jcl.lang.NILStruct;
+import jcl.lang.TStruct;
 import jcl.lang.ValuesStruct;
 import jcl.lang.classes.BuiltInClassStruct;
 import jcl.lang.condition.exception.ErrorException;
@@ -212,13 +213,13 @@ public final class ConsStructImpl extends BuiltInClassStruct implements ConsStru
 
 	@Override
 	public BooleanStruct endP() {
-		return BooleanStruct.NIL;
+		return NILStruct.INSTANCE;
 	}
 
 	@Override
 	public BooleanStruct tailp(final LispStruct object) {
 		if (eql(object)) {
-			return BooleanStruct.T;
+			return TStruct.INSTANCE;
 		}
 		if (cdr instanceof ListStruct) {
 			final ListStruct listCdr = (ListStruct) cdr;

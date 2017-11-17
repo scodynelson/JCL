@@ -77,7 +77,7 @@ public class CharacterStructCharacterEqualityTest {
 		final CharacterStruct char2 = CharacterConstants.LATIN_CAPITAL_LETTER_A_CHAR;
 		final CharacterStruct char3 = CharacterConstants.LATIN_CAPITAL_LETTER_A_CHAR;
 		final BooleanStruct result = CharacterStruct.isEqualTo(char1, char2, char3);
-		Assert.assertThat(result, is(BooleanStruct.T));
+		Assert.assertThat(result, is(TStruct.INSTANCE));
 	}
 
 	/**
@@ -89,7 +89,7 @@ public class CharacterStructCharacterEqualityTest {
 		final CharacterStruct char2 = CharacterConstants.LATIN_CAPITAL_LETTER_A_CHAR;
 		final CharacterStruct char3 = CharacterConstants.LATIN_CAPITAL_LETTER_B_CHAR;
 		final BooleanStruct result = CharacterStruct.isEqualTo(char1, char2, char3);
-		Assert.assertThat(result, is(BooleanStruct.NIL));
+		Assert.assertThat(result, is(NILStruct.INSTANCE));
 	}
 
 	/**
@@ -101,7 +101,7 @@ public class CharacterStructCharacterEqualityTest {
 		final CharacterStruct char2 = CharacterConstants.LATIN_CAPITAL_LETTER_A_CHAR;
 		final CharacterStruct char3 = CharacterConstants.LATIN_SMALL_LETTER_A_CHAR;
 		final BooleanStruct result = CharacterStruct.isEqualTo(char1, char2, char3);
-		Assert.assertThat(result, is(BooleanStruct.NIL));
+		Assert.assertThat(result, is(NILStruct.INSTANCE));
 	}
 
 	/*
@@ -161,7 +161,7 @@ public class CharacterStructCharacterEqualityTest {
 		final CharacterStruct char2 = CharacterConstants.LATIN_CAPITAL_LETTER_B_CHAR;
 		final CharacterStruct char3 = CharacterConstants.LATIN_CAPITAL_LETTER_C_CHAR;
 		final BooleanStruct result = CharacterStruct.isNotEqualTo(char1, char2, char3);
-		Assert.assertThat(result, is(BooleanStruct.T));
+		Assert.assertThat(result, is(TStruct.INSTANCE));
 	}
 
 	/**
@@ -173,7 +173,7 @@ public class CharacterStructCharacterEqualityTest {
 		final CharacterStruct char2 = CharacterConstants.LATIN_CAPITAL_LETTER_A_CHAR;
 		final CharacterStruct char3 = CharacterConstants.LATIN_CAPITAL_LETTER_A_CHAR;
 		final BooleanStruct result = CharacterStruct.isNotEqualTo(char1, char2, char3);
-		Assert.assertThat(result, is(BooleanStruct.NIL));
+		Assert.assertThat(result, is(NILStruct.INSTANCE));
 	}
 
 	/**
@@ -185,7 +185,7 @@ public class CharacterStructCharacterEqualityTest {
 		final CharacterStruct char2 = CharacterConstants.LATIN_SMALL_LETTER_A_CHAR;
 		final CharacterStruct char3 = CharacterConstants.DOLLAR_SIGN_CHAR;
 		final BooleanStruct result = CharacterStruct.isNotEqualTo(char1, char2, char3);
-		Assert.assertThat(result, is(BooleanStruct.T));
+		Assert.assertThat(result, is(TStruct.INSTANCE));
 	}
 
 	/*
@@ -267,7 +267,7 @@ public class CharacterStructCharacterEqualityTest {
 		final CharacterStruct char2 = CharacterConstants.LATIN_CAPITAL_LETTER_B_CHAR;
 		final CharacterStruct char3 = CharacterConstants.LATIN_CAPITAL_LETTER_C_CHAR;
 		final BooleanStruct result = CharacterStruct.isLessThan(char1, char2, char3);
-		Assert.assertThat(result, is(BooleanStruct.T));
+		Assert.assertThat(result, is(TStruct.INSTANCE));
 	}
 
 	/**
@@ -279,7 +279,7 @@ public class CharacterStructCharacterEqualityTest {
 		final CharacterStruct char2 = CharacterConstants.LATIN_CAPITAL_LETTER_B_CHAR;
 		final CharacterStruct char3 = CharacterConstants.LATIN_CAPITAL_LETTER_B_CHAR;
 		final BooleanStruct result = CharacterStruct.isLessThan(char1, char2, char3);
-		Assert.assertThat(result, is(BooleanStruct.NIL));
+		Assert.assertThat(result, is(NILStruct.INSTANCE));
 	}
 
 	/**
@@ -291,7 +291,7 @@ public class CharacterStructCharacterEqualityTest {
 		final CharacterStruct char2 = CharacterConstants.LATIN_CAPITAL_LETTER_B_CHAR;
 		final CharacterStruct char3 = CharacterConstants.LATIN_CAPITAL_LETTER_A_CHAR;
 		final BooleanStruct result = CharacterStruct.isLessThan(char1, char2, char3);
-		Assert.assertThat(result, is(BooleanStruct.NIL));
+		Assert.assertThat(result, is(NILStruct.INSTANCE));
 	}
 
 	/**
@@ -303,7 +303,7 @@ public class CharacterStructCharacterEqualityTest {
 		final CharacterStruct char2 = CharacterConstants.LATIN_CAPITAL_LETTER_B_CHAR;
 		final CharacterStruct char3 = CharacterConstants.LATIN_SMALL_LETTER_A_CHAR;
 		final BooleanStruct result = CharacterStruct.isLessThan(char1, char2, char3);
-		Assert.assertThat(result, is(BooleanStruct.T));
+		Assert.assertThat(result, is(TStruct.INSTANCE));
 	}
 
 	/**
@@ -315,7 +315,7 @@ public class CharacterStructCharacterEqualityTest {
 		final CharacterStruct char2 = CharacterConstants.LATIN_SMALL_LETTER_B_CHAR;
 		final CharacterStruct char3 = CharacterConstants.LATIN_CAPITAL_LETTER_C_CHAR;
 		final BooleanStruct result = CharacterStruct.isLessThan(char1, char2, char3);
-		Assert.assertThat(result, is(BooleanStruct.NIL));
+		Assert.assertThat(result, is(NILStruct.INSTANCE));
 	}
 
 	/*
@@ -397,7 +397,7 @@ public class CharacterStructCharacterEqualityTest {
 		final CharacterStruct char2 = CharacterConstants.LATIN_CAPITAL_LETTER_B_CHAR;
 		final CharacterStruct char3 = CharacterConstants.LATIN_CAPITAL_LETTER_A_CHAR;
 		final BooleanStruct result = CharacterStruct.isGreaterThan(char1, char2, char3);
-		Assert.assertThat(result, is(BooleanStruct.T));
+		Assert.assertThat(result, is(TStruct.INSTANCE));
 	}
 
 	/**
@@ -409,7 +409,7 @@ public class CharacterStructCharacterEqualityTest {
 		final CharacterStruct char2 = CharacterConstants.LATIN_CAPITAL_LETTER_A_CHAR;
 		final CharacterStruct char3 = CharacterConstants.LATIN_CAPITAL_LETTER_A_CHAR;
 		final BooleanStruct result = CharacterStruct.isGreaterThan(char1, char2, char3);
-		Assert.assertThat(result, is(BooleanStruct.NIL));
+		Assert.assertThat(result, is(NILStruct.INSTANCE));
 	}
 
 	/**
@@ -421,7 +421,7 @@ public class CharacterStructCharacterEqualityTest {
 		final CharacterStruct char2 = CharacterConstants.LATIN_CAPITAL_LETTER_A_CHAR;
 		final CharacterStruct char3 = CharacterConstants.LATIN_CAPITAL_LETTER_B_CHAR;
 		final BooleanStruct result = CharacterStruct.isGreaterThan(char1, char2, char3);
-		Assert.assertThat(result, is(BooleanStruct.NIL));
+		Assert.assertThat(result, is(NILStruct.INSTANCE));
 	}
 
 	/**
@@ -433,7 +433,7 @@ public class CharacterStructCharacterEqualityTest {
 		final CharacterStruct char2 = CharacterConstants.LATIN_SMALL_LETTER_A_CHAR;
 		final CharacterStruct char3 = CharacterConstants.LATIN_CAPITAL_LETTER_B_CHAR;
 		final BooleanStruct result = CharacterStruct.isGreaterThan(char1, char2, char3);
-		Assert.assertThat(result, is(BooleanStruct.T));
+		Assert.assertThat(result, is(TStruct.INSTANCE));
 	}
 
 	/**
@@ -445,7 +445,7 @@ public class CharacterStructCharacterEqualityTest {
 		final CharacterStruct char2 = CharacterConstants.LATIN_CAPITAL_LETTER_B_CHAR;
 		final CharacterStruct char3 = CharacterConstants.LATIN_SMALL_LETTER_A_CHAR;
 		final BooleanStruct result = CharacterStruct.isGreaterThan(char1, char2, char3);
-		Assert.assertThat(result, is(BooleanStruct.NIL));
+		Assert.assertThat(result, is(NILStruct.INSTANCE));
 	}
 
 	/*
@@ -527,7 +527,7 @@ public class CharacterStructCharacterEqualityTest {
 		final CharacterStruct char2 = CharacterConstants.LATIN_CAPITAL_LETTER_B_CHAR;
 		final CharacterStruct char3 = CharacterConstants.LATIN_CAPITAL_LETTER_C_CHAR;
 		final BooleanStruct result = CharacterStruct.isLessThanOrEqualTo(char1, char2, char3);
-		Assert.assertThat(result, is(BooleanStruct.T));
+		Assert.assertThat(result, is(TStruct.INSTANCE));
 	}
 
 	/**
@@ -539,7 +539,7 @@ public class CharacterStructCharacterEqualityTest {
 		final CharacterStruct char2 = CharacterConstants.LATIN_CAPITAL_LETTER_B_CHAR;
 		final CharacterStruct char3 = CharacterConstants.LATIN_CAPITAL_LETTER_B_CHAR;
 		final BooleanStruct result = CharacterStruct.isLessThanOrEqualTo(char1, char2, char3);
-		Assert.assertThat(result, is(BooleanStruct.T));
+		Assert.assertThat(result, is(TStruct.INSTANCE));
 	}
 
 	/**
@@ -551,7 +551,7 @@ public class CharacterStructCharacterEqualityTest {
 		final CharacterStruct char2 = CharacterConstants.LATIN_CAPITAL_LETTER_B_CHAR;
 		final CharacterStruct char3 = CharacterConstants.LATIN_CAPITAL_LETTER_A_CHAR;
 		final BooleanStruct result = CharacterStruct.isLessThanOrEqualTo(char1, char2, char3);
-		Assert.assertThat(result, is(BooleanStruct.NIL));
+		Assert.assertThat(result, is(NILStruct.INSTANCE));
 	}
 
 	/**
@@ -563,7 +563,7 @@ public class CharacterStructCharacterEqualityTest {
 		final CharacterStruct char2 = CharacterConstants.LATIN_CAPITAL_LETTER_B_CHAR;
 		final CharacterStruct char3 = CharacterConstants.LATIN_SMALL_LETTER_A_CHAR;
 		final BooleanStruct result = CharacterStruct.isLessThanOrEqualTo(char1, char2, char3);
-		Assert.assertThat(result, is(BooleanStruct.T));
+		Assert.assertThat(result, is(TStruct.INSTANCE));
 	}
 
 	/**
@@ -576,7 +576,7 @@ public class CharacterStructCharacterEqualityTest {
 		final CharacterStruct char2 = CharacterConstants.LATIN_SMALL_LETTER_B_CHAR;
 		final CharacterStruct char3 = CharacterConstants.LATIN_CAPITAL_LETTER_C_CHAR;
 		final BooleanStruct result = CharacterStruct.isLessThanOrEqualTo(char1, char2, char3);
-		Assert.assertThat(result, is(BooleanStruct.NIL));
+		Assert.assertThat(result, is(NILStruct.INSTANCE));
 	}
 
 	/*
@@ -658,7 +658,7 @@ public class CharacterStructCharacterEqualityTest {
 		final CharacterStruct char2 = CharacterConstants.LATIN_CAPITAL_LETTER_B_CHAR;
 		final CharacterStruct char3 = CharacterConstants.LATIN_CAPITAL_LETTER_A_CHAR;
 		final BooleanStruct result = CharacterStruct.isGreaterThanOrEqualTo(char1, char2, char3);
-		Assert.assertThat(result, is(BooleanStruct.T));
+		Assert.assertThat(result, is(TStruct.INSTANCE));
 	}
 
 	/**
@@ -670,7 +670,7 @@ public class CharacterStructCharacterEqualityTest {
 		final CharacterStruct char2 = CharacterConstants.LATIN_CAPITAL_LETTER_A_CHAR;
 		final CharacterStruct char3 = CharacterConstants.LATIN_CAPITAL_LETTER_A_CHAR;
 		final BooleanStruct result = CharacterStruct.isGreaterThanOrEqualTo(char1, char2, char3);
-		Assert.assertThat(result, is(BooleanStruct.T));
+		Assert.assertThat(result, is(TStruct.INSTANCE));
 	}
 
 	/**
@@ -682,7 +682,7 @@ public class CharacterStructCharacterEqualityTest {
 		final CharacterStruct char2 = CharacterConstants.LATIN_CAPITAL_LETTER_A_CHAR;
 		final CharacterStruct char3 = CharacterConstants.LATIN_CAPITAL_LETTER_B_CHAR;
 		final BooleanStruct result = CharacterStruct.isGreaterThanOrEqualTo(char1, char2, char3);
-		Assert.assertThat(result, is(BooleanStruct.NIL));
+		Assert.assertThat(result, is(NILStruct.INSTANCE));
 	}
 
 	/**
@@ -695,7 +695,7 @@ public class CharacterStructCharacterEqualityTest {
 		final CharacterStruct char2 = CharacterConstants.LATIN_SMALL_LETTER_A_CHAR;
 		final CharacterStruct char3 = CharacterConstants.LATIN_CAPITAL_LETTER_B_CHAR;
 		final BooleanStruct result = CharacterStruct.isGreaterThanOrEqualTo(char1, char2, char3);
-		Assert.assertThat(result, is(BooleanStruct.T));
+		Assert.assertThat(result, is(TStruct.INSTANCE));
 	}
 
 	/**
@@ -708,7 +708,7 @@ public class CharacterStructCharacterEqualityTest {
 		final CharacterStruct char2 = CharacterConstants.LATIN_CAPITAL_LETTER_B_CHAR;
 		final CharacterStruct char3 = CharacterConstants.LATIN_SMALL_LETTER_A_CHAR;
 		final BooleanStruct result = CharacterStruct.isGreaterThanOrEqualTo(char1, char2, char3);
-		Assert.assertThat(result, is(BooleanStruct.NIL));
+		Assert.assertThat(result, is(NILStruct.INSTANCE));
 	}
 
 	/*
@@ -768,7 +768,7 @@ public class CharacterStructCharacterEqualityTest {
 		final CharacterStruct char2 = CharacterConstants.LATIN_CAPITAL_LETTER_A_CHAR;
 		final CharacterStruct char3 = CharacterConstants.LATIN_CAPITAL_LETTER_A_CHAR;
 		final BooleanStruct result = CharacterStruct.isEqualToIgnoreCase(char1, char2, char3);
-		Assert.assertThat(result, is(BooleanStruct.T));
+		Assert.assertThat(result, is(TStruct.INSTANCE));
 	}
 
 	/**
@@ -780,7 +780,7 @@ public class CharacterStructCharacterEqualityTest {
 		final CharacterStruct char2 = CharacterConstants.LATIN_CAPITAL_LETTER_A_CHAR;
 		final CharacterStruct char3 = CharacterConstants.LATIN_CAPITAL_LETTER_B_CHAR;
 		final BooleanStruct result = CharacterStruct.isEqualToIgnoreCase(char1, char2, char3);
-		Assert.assertThat(result, is(BooleanStruct.NIL));
+		Assert.assertThat(result, is(NILStruct.INSTANCE));
 	}
 
 	/**
@@ -792,7 +792,7 @@ public class CharacterStructCharacterEqualityTest {
 		final CharacterStruct char2 = CharacterConstants.LATIN_CAPITAL_LETTER_A_CHAR;
 		final CharacterStruct char3 = CharacterConstants.LATIN_SMALL_LETTER_A_CHAR;
 		final BooleanStruct result = CharacterStruct.isEqualToIgnoreCase(char1, char2, char3);
-		Assert.assertThat(result, is(BooleanStruct.T));
+		Assert.assertThat(result, is(TStruct.INSTANCE));
 	}
 
 	/*
@@ -853,7 +853,7 @@ public class CharacterStructCharacterEqualityTest {
 		final CharacterStruct char2 = CharacterConstants.LATIN_CAPITAL_LETTER_B_CHAR;
 		final CharacterStruct char3 = CharacterConstants.LATIN_CAPITAL_LETTER_C_CHAR;
 		final BooleanStruct result = CharacterStruct.isNotEqualToIgnoreCase(char1, char2, char3);
-		Assert.assertThat(result, is(BooleanStruct.T));
+		Assert.assertThat(result, is(TStruct.INSTANCE));
 	}
 
 	/**
@@ -865,7 +865,7 @@ public class CharacterStructCharacterEqualityTest {
 		final CharacterStruct char2 = CharacterConstants.LATIN_CAPITAL_LETTER_A_CHAR;
 		final CharacterStruct char3 = CharacterConstants.LATIN_CAPITAL_LETTER_A_CHAR;
 		final BooleanStruct result = CharacterStruct.isNotEqualToIgnoreCase(char1, char2, char3);
-		Assert.assertThat(result, is(BooleanStruct.NIL));
+		Assert.assertThat(result, is(NILStruct.INSTANCE));
 	}
 
 	/**
@@ -878,7 +878,7 @@ public class CharacterStructCharacterEqualityTest {
 		final CharacterStruct char2 = CharacterConstants.LATIN_SMALL_LETTER_A_CHAR;
 		final CharacterStruct char3 = CharacterConstants.DOLLAR_SIGN_CHAR;
 		final BooleanStruct result = CharacterStruct.isNotEqualToIgnoreCase(char1, char2, char3);
-		Assert.assertThat(result, is(BooleanStruct.NIL));
+		Assert.assertThat(result, is(NILStruct.INSTANCE));
 	}
 
 	/*
@@ -960,7 +960,7 @@ public class CharacterStructCharacterEqualityTest {
 		final CharacterStruct char2 = CharacterConstants.LATIN_CAPITAL_LETTER_B_CHAR;
 		final CharacterStruct char3 = CharacterConstants.LATIN_CAPITAL_LETTER_C_CHAR;
 		final BooleanStruct result = CharacterStruct.isLessThanIgnoreCase(char1, char2, char3);
-		Assert.assertThat(result, is(BooleanStruct.T));
+		Assert.assertThat(result, is(TStruct.INSTANCE));
 	}
 
 	/**
@@ -972,7 +972,7 @@ public class CharacterStructCharacterEqualityTest {
 		final CharacterStruct char2 = CharacterConstants.LATIN_CAPITAL_LETTER_B_CHAR;
 		final CharacterStruct char3 = CharacterConstants.LATIN_CAPITAL_LETTER_B_CHAR;
 		final BooleanStruct result = CharacterStruct.isLessThanIgnoreCase(char1, char2, char3);
-		Assert.assertThat(result, is(BooleanStruct.NIL));
+		Assert.assertThat(result, is(NILStruct.INSTANCE));
 	}
 
 	/**
@@ -984,7 +984,7 @@ public class CharacterStructCharacterEqualityTest {
 		final CharacterStruct char2 = CharacterConstants.LATIN_CAPITAL_LETTER_B_CHAR;
 		final CharacterStruct char3 = CharacterConstants.LATIN_CAPITAL_LETTER_A_CHAR;
 		final BooleanStruct result = CharacterStruct.isLessThanIgnoreCase(char1, char2, char3);
-		Assert.assertThat(result, is(BooleanStruct.NIL));
+		Assert.assertThat(result, is(NILStruct.INSTANCE));
 	}
 
 	/**
@@ -996,7 +996,7 @@ public class CharacterStructCharacterEqualityTest {
 		final CharacterStruct char2 = CharacterConstants.LATIN_CAPITAL_LETTER_B_CHAR;
 		final CharacterStruct char3 = CharacterConstants.LATIN_SMALL_LETTER_A_CHAR;
 		final BooleanStruct result = CharacterStruct.isLessThanIgnoreCase(char1, char2, char3);
-		Assert.assertThat(result, is(BooleanStruct.NIL));
+		Assert.assertThat(result, is(NILStruct.INSTANCE));
 	}
 
 	/**
@@ -1009,7 +1009,7 @@ public class CharacterStructCharacterEqualityTest {
 		final CharacterStruct char2 = CharacterConstants.LATIN_SMALL_LETTER_B_CHAR;
 		final CharacterStruct char3 = CharacterConstants.LATIN_CAPITAL_LETTER_C_CHAR;
 		final BooleanStruct result = CharacterStruct.isLessThanIgnoreCase(char1, char2, char3);
-		Assert.assertThat(result, is(BooleanStruct.T));
+		Assert.assertThat(result, is(TStruct.INSTANCE));
 	}
 
 	/*
@@ -1091,7 +1091,7 @@ public class CharacterStructCharacterEqualityTest {
 		final CharacterStruct char2 = CharacterConstants.LATIN_CAPITAL_LETTER_B_CHAR;
 		final CharacterStruct char3 = CharacterConstants.LATIN_CAPITAL_LETTER_A_CHAR;
 		final BooleanStruct result = CharacterStruct.isGreaterThanIgnoreCase(char1, char2, char3);
-		Assert.assertThat(result, is(BooleanStruct.T));
+		Assert.assertThat(result, is(TStruct.INSTANCE));
 	}
 
 	/**
@@ -1103,7 +1103,7 @@ public class CharacterStructCharacterEqualityTest {
 		final CharacterStruct char2 = CharacterConstants.LATIN_CAPITAL_LETTER_A_CHAR;
 		final CharacterStruct char3 = CharacterConstants.LATIN_CAPITAL_LETTER_A_CHAR;
 		final BooleanStruct result = CharacterStruct.isGreaterThanIgnoreCase(char1, char2, char3);
-		Assert.assertThat(result, is(BooleanStruct.NIL));
+		Assert.assertThat(result, is(NILStruct.INSTANCE));
 	}
 
 	/**
@@ -1115,7 +1115,7 @@ public class CharacterStructCharacterEqualityTest {
 		final CharacterStruct char2 = CharacterConstants.LATIN_CAPITAL_LETTER_A_CHAR;
 		final CharacterStruct char3 = CharacterConstants.LATIN_CAPITAL_LETTER_B_CHAR;
 		final BooleanStruct result = CharacterStruct.isGreaterThanIgnoreCase(char1, char2, char3);
-		Assert.assertThat(result, is(BooleanStruct.NIL));
+		Assert.assertThat(result, is(NILStruct.INSTANCE));
 	}
 
 	/**
@@ -1128,7 +1128,7 @@ public class CharacterStructCharacterEqualityTest {
 		final CharacterStruct char2 = CharacterConstants.LATIN_SMALL_LETTER_A_CHAR;
 		final CharacterStruct char3 = CharacterConstants.LATIN_CAPITAL_LETTER_B_CHAR;
 		final BooleanStruct result = CharacterStruct.isGreaterThanIgnoreCase(char1, char2, char3);
-		Assert.assertThat(result, is(BooleanStruct.NIL));
+		Assert.assertThat(result, is(NILStruct.INSTANCE));
 	}
 
 	/**
@@ -1141,7 +1141,7 @@ public class CharacterStructCharacterEqualityTest {
 		final CharacterStruct char2 = CharacterConstants.LATIN_CAPITAL_LETTER_B_CHAR;
 		final CharacterStruct char3 = CharacterConstants.LATIN_SMALL_LETTER_A_CHAR;
 		final BooleanStruct result = CharacterStruct.isGreaterThanIgnoreCase(char1, char2, char3);
-		Assert.assertThat(result, is(BooleanStruct.T));
+		Assert.assertThat(result, is(TStruct.INSTANCE));
 	}
 
 	/*
@@ -1226,7 +1226,7 @@ public class CharacterStructCharacterEqualityTest {
 		final CharacterStruct char2 = CharacterConstants.LATIN_CAPITAL_LETTER_B_CHAR;
 		final CharacterStruct char3 = CharacterConstants.LATIN_CAPITAL_LETTER_C_CHAR;
 		final BooleanStruct result = CharacterStruct.isLessThanOrEqualToIgnoreCase(char1, char2, char3);
-		Assert.assertThat(result, is(BooleanStruct.T));
+		Assert.assertThat(result, is(TStruct.INSTANCE));
 	}
 
 	/**
@@ -1239,7 +1239,7 @@ public class CharacterStructCharacterEqualityTest {
 		final CharacterStruct char2 = CharacterConstants.LATIN_CAPITAL_LETTER_B_CHAR;
 		final CharacterStruct char3 = CharacterConstants.LATIN_CAPITAL_LETTER_B_CHAR;
 		final BooleanStruct result = CharacterStruct.isLessThanOrEqualToIgnoreCase(char1, char2, char3);
-		Assert.assertThat(result, is(BooleanStruct.T));
+		Assert.assertThat(result, is(TStruct.INSTANCE));
 	}
 
 	/**
@@ -1252,7 +1252,7 @@ public class CharacterStructCharacterEqualityTest {
 		final CharacterStruct char2 = CharacterConstants.LATIN_CAPITAL_LETTER_B_CHAR;
 		final CharacterStruct char3 = CharacterConstants.LATIN_CAPITAL_LETTER_A_CHAR;
 		final BooleanStruct result = CharacterStruct.isLessThanOrEqualToIgnoreCase(char1, char2, char3);
-		Assert.assertThat(result, is(BooleanStruct.NIL));
+		Assert.assertThat(result, is(NILStruct.INSTANCE));
 	}
 
 	/**
@@ -1265,7 +1265,7 @@ public class CharacterStructCharacterEqualityTest {
 		final CharacterStruct char2 = CharacterConstants.LATIN_CAPITAL_LETTER_B_CHAR;
 		final CharacterStruct char3 = CharacterConstants.LATIN_SMALL_LETTER_A_CHAR;
 		final BooleanStruct result = CharacterStruct.isLessThanOrEqualToIgnoreCase(char1, char2, char3);
-		Assert.assertThat(result, is(BooleanStruct.NIL));
+		Assert.assertThat(result, is(NILStruct.INSTANCE));
 	}
 
 	/**
@@ -1278,7 +1278,7 @@ public class CharacterStructCharacterEqualityTest {
 		final CharacterStruct char2 = CharacterConstants.LATIN_SMALL_LETTER_B_CHAR;
 		final CharacterStruct char3 = CharacterConstants.LATIN_CAPITAL_LETTER_C_CHAR;
 		final BooleanStruct result = CharacterStruct.isLessThanOrEqualToIgnoreCase(char1, char2, char3);
-		Assert.assertThat(result, is(BooleanStruct.T));
+		Assert.assertThat(result, is(TStruct.INSTANCE));
 	}
 
 	/*
@@ -1366,7 +1366,7 @@ public class CharacterStructCharacterEqualityTest {
 		final CharacterStruct char2 = CharacterConstants.LATIN_CAPITAL_LETTER_B_CHAR;
 		final CharacterStruct char3 = CharacterConstants.LATIN_CAPITAL_LETTER_A_CHAR;
 		final BooleanStruct result = CharacterStruct.isGreaterThanOrEqualToIgnoreCase(char1, char2, char3);
-		Assert.assertThat(result, is(BooleanStruct.T));
+		Assert.assertThat(result, is(TStruct.INSTANCE));
 	}
 
 	/**
@@ -1379,7 +1379,7 @@ public class CharacterStructCharacterEqualityTest {
 		final CharacterStruct char2 = CharacterConstants.LATIN_CAPITAL_LETTER_A_CHAR;
 		final CharacterStruct char3 = CharacterConstants.LATIN_CAPITAL_LETTER_A_CHAR;
 		final BooleanStruct result = CharacterStruct.isGreaterThanOrEqualToIgnoreCase(char1, char2, char3);
-		Assert.assertThat(result, is(BooleanStruct.T));
+		Assert.assertThat(result, is(TStruct.INSTANCE));
 	}
 
 	/**
@@ -1392,7 +1392,7 @@ public class CharacterStructCharacterEqualityTest {
 		final CharacterStruct char2 = CharacterConstants.LATIN_CAPITAL_LETTER_A_CHAR;
 		final CharacterStruct char3 = CharacterConstants.LATIN_CAPITAL_LETTER_B_CHAR;
 		final BooleanStruct result = CharacterStruct.isGreaterThanOrEqualToIgnoreCase(char1, char2, char3);
-		Assert.assertThat(result, is(BooleanStruct.NIL));
+		Assert.assertThat(result, is(NILStruct.INSTANCE));
 	}
 
 	/**
@@ -1405,7 +1405,7 @@ public class CharacterStructCharacterEqualityTest {
 		final CharacterStruct char2 = CharacterConstants.LATIN_SMALL_LETTER_A_CHAR;
 		final CharacterStruct char3 = CharacterConstants.LATIN_CAPITAL_LETTER_B_CHAR;
 		final BooleanStruct result = CharacterStruct.isGreaterThanOrEqualToIgnoreCase(char1, char2, char3);
-		Assert.assertThat(result, is(BooleanStruct.NIL));
+		Assert.assertThat(result, is(NILStruct.INSTANCE));
 	}
 
 	/**
@@ -1418,6 +1418,6 @@ public class CharacterStructCharacterEqualityTest {
 		final CharacterStruct char2 = CharacterConstants.LATIN_CAPITAL_LETTER_B_CHAR;
 		final CharacterStruct char3 = CharacterConstants.LATIN_SMALL_LETTER_A_CHAR;
 		final BooleanStruct result = CharacterStruct.isGreaterThanOrEqualToIgnoreCase(char1, char2, char3);
-		Assert.assertThat(result, is(BooleanStruct.T));
+		Assert.assertThat(result, is(TStruct.INSTANCE));
 	}
 }

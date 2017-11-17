@@ -72,7 +72,7 @@ public final class NILStruct extends BooleanStructImpl implements ListStruct {
 
 	@Override
 	public BooleanStruct endP() {
-		return BooleanStruct.T;
+		return TStruct.INSTANCE;
 	}
 
 	@Override

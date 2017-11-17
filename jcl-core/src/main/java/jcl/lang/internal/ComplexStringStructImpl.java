@@ -208,7 +208,7 @@ public final class ComplexStringStructImpl extends AbstractStringStructImpl {
 
 	@Override
 	public BooleanStruct isSimpleString() {
-		return BooleanStruct.NIL;
+		return NILStruct.INSTANCE;
 	}
 
 	@Override

@@ -1,8 +1,8 @@
 package jcl.functions.string;
 
 import jcl.functions.CommonLispBuiltInFunctionStructBase;
-import jcl.lang.BooleanStruct;
 import jcl.lang.LispStruct;
+import jcl.lang.NILStruct;
 import jcl.lang.StringStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
@@ -27,7 +27,7 @@ public final class SimpleStringPFunction extends CommonLispBuiltInFunctionStruct
 		final LispStruct object = arguments.getRequiredArgument(OBJECT_ARGUMENT);
 		final boolean isString = object instanceof StringStruct;
 		if (!isString) {
-			return BooleanStruct.NIL;
+			return NILStruct.INSTANCE;
 		}
 		return ((StringStruct) object).isSimpleString();
 	}

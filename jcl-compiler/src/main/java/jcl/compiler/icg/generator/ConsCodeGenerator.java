@@ -19,8 +19,8 @@ import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 /**
- * Class to generate {@link ConsStruct} objects dynamically by utilizing the {@link ConsStruct#getCar()} and {@link
- * ConsStruct#getCdr()} of the provided {@link ConsStruct} input value.
+ * Class to generate {@link ConsStruct} objects dynamically by utilizing the {@link ConsStruct#car()} and {@link
+ * ConsStruct#cdr()} of the provided {@link ConsStruct} input value.
  */
 @Component
 final class ConsCodeGenerator implements CodeGenerator<ConsStructImpl> {
@@ -35,8 +35,8 @@ final class ConsCodeGenerator implements CodeGenerator<ConsStructImpl> {
 	 * {@inheritDoc}
 	 * Generation method for {@link ConsStruct} objects, by performing the following operations:
 	 * <ol>
-	 * <li>Building the {@link ConsStruct#getCar()} value</li>
-	 * <li>Building the {@link ConsStruct#getCdr()} value</li>
+	 * <li>Building the {@link ConsStruct#car()} value</li>
+	 * <li>Building the {@link ConsStruct#cdr()} value</li>
 	 * <li>Constructing a new {@link ConsStruct} with the built car and cdr values</li>
 	 * </ol>
 	 *
@@ -53,12 +53,12 @@ final class ConsCodeGenerator implements CodeGenerator<ConsStructImpl> {
 		final JavaMethodBuilder methodBuilder = generatorState.getCurrentMethodBuilder();
 		final MethodVisitor mv = methodBuilder.getMethodVisitor();
 
-		final LispStruct car = input.getCar();
+		final LispStruct car = input.car();
 		codeGenerator.generate(car, generatorState);
 		final int carStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, carStore);
 
-		final LispStruct cdr = input.getCdr();
+		final LispStruct cdr = input.cdr();
 		codeGenerator.generate(cdr, generatorState);
 		final int cdrStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, cdrStore);

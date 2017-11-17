@@ -52,7 +52,7 @@ public class SharpEqualsSignReaderMacroFunction extends ReaderMacroFunctionImpl 
 	public LispStruct readMacro(final InputStreamStruct inputStreamStruct, final int codePoint, final Optional<BigInteger> numberArgument) {
 		assert codePoint == CodePointConstants.EQUALS_SIGN;
 
-		if (ReaderVariables.READ_SUPPRESS.getVariableValue().booleanValue()) {
+		if (ReaderVariables.READ_SUPPRESS.getVariableValue().toJavaPBoolean()) {
 			return null;
 		}
 
@@ -120,18 +120,18 @@ public class SharpEqualsSignReaderMacroFunction extends ReaderMacroFunctionImpl 
 
 				final ConsStruct consToken = (ConsStruct) token;
 
-				final LispStruct car = consToken.getCar();
+				final LispStruct car = consToken.car();
 				final LispStruct carSubst = replaceTagsWithTokens(car, sharpEqualReplTable, sharpEqualCircleSet);
 
 				if (!carSubst.eq(car)) {
-					consToken.setCar(carSubst);
+					consToken.rplaca(carSubst);
 				}
 
-				final LispStruct cdr = consToken.getCdr();
+				final LispStruct cdr = consToken.cdr();
 				final LispStruct cdrSubst = replaceTagsWithTokens(cdr, sharpEqualReplTable, sharpEqualCircleSet);
 
 				if (!cdrSubst.eq(cdr)) {
-					consToken.setCdr(cdrSubst);
+					consToken.rplacd(cdrSubst);
 				}
 			}
 		}

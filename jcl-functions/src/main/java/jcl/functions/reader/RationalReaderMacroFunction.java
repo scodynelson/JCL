@@ -43,7 +43,7 @@ final class RationalReaderMacroFunction {
 	 * @return the properly parsed {@link RationalStruct}
 	 */
 	LispStruct readRational(final InputStreamStruct inputStreamStruct, final BigInteger radix) {
-		if (ReaderVariables.READ_SUPPRESS.getVariableValue().booleanValue()) {
+		if (ReaderVariables.READ_SUPPRESS.getVariableValue().toJavaPBoolean()) {
 			ExtendedTokenReaderMacroFunction.readExtendedToken(inputStreamStruct, false);
 			return NILStruct.INSTANCE;
 		}

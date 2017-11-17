@@ -6,7 +6,6 @@ import com.ibm.icu.lang.UCharacter;
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.condition.exception.SimpleErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
-import jcl.lang.factory.LispStructFactory;
 import jcl.lang.internal.CharacterStructImpl;
 import jcl.lang.statics.CharacterConstants;
 
@@ -50,7 +49,7 @@ public interface CharacterStruct extends LispStruct {
 			}
 			previousCharacter = currentCharacter;
 		}
-		return LispStructFactory.toBoolean(result);
+		return BooleanStruct.toLispBoolean(result);
 	}
 
 	/**
@@ -88,7 +87,7 @@ public interface CharacterStruct extends LispStruct {
 			}
 			previousCharacter = currentCharacter;
 		}
-		return LispStructFactory.toBoolean(result);
+		return BooleanStruct.toLispBoolean(result);
 	}
 
 	/**
@@ -126,7 +125,7 @@ public interface CharacterStruct extends LispStruct {
 			}
 			previousCharacter = currentCharacter;
 		}
-		return LispStructFactory.toBoolean(result);
+		return BooleanStruct.toLispBoolean(result);
 	}
 
 	/**
@@ -164,7 +163,7 @@ public interface CharacterStruct extends LispStruct {
 			}
 			previousCharacter = currentCharacter;
 		}
-		return LispStructFactory.toBoolean(result);
+		return BooleanStruct.toLispBoolean(result);
 	}
 
 	/**
@@ -202,7 +201,7 @@ public interface CharacterStruct extends LispStruct {
 			}
 			previousCharacter = currentCharacter;
 		}
-		return LispStructFactory.toBoolean(result);
+		return BooleanStruct.toLispBoolean(result);
 	}
 
 	/**
@@ -240,7 +239,7 @@ public interface CharacterStruct extends LispStruct {
 			}
 			previousCharacter = currentCharacter;
 		}
-		return LispStructFactory.toBoolean(result);
+		return BooleanStruct.toLispBoolean(result);
 	}
 
 	/**
@@ -278,7 +277,7 @@ public interface CharacterStruct extends LispStruct {
 			}
 			previousCharacter = currentCharacter;
 		}
-		return LispStructFactory.toBoolean(result);
+		return BooleanStruct.toLispBoolean(result);
 	}
 
 	/**
@@ -316,7 +315,7 @@ public interface CharacterStruct extends LispStruct {
 			}
 			previousCharacter = currentCharacter;
 		}
-		return LispStructFactory.toBoolean(result);
+		return BooleanStruct.toLispBoolean(result);
 	}
 
 	/**
@@ -354,7 +353,7 @@ public interface CharacterStruct extends LispStruct {
 			}
 			previousCharacter = currentCharacter;
 		}
-		return LispStructFactory.toBoolean(result);
+		return BooleanStruct.toLispBoolean(result);
 	}
 
 	/**
@@ -392,7 +391,7 @@ public interface CharacterStruct extends LispStruct {
 			}
 			previousCharacter = currentCharacter;
 		}
-		return LispStructFactory.toBoolean(result);
+		return BooleanStruct.toLispBoolean(result);
 	}
 
 	/**
@@ -430,7 +429,7 @@ public interface CharacterStruct extends LispStruct {
 			}
 			previousCharacter = currentCharacter;
 		}
-		return LispStructFactory.toBoolean(result);
+		return BooleanStruct.toLispBoolean(result);
 	}
 
 	/**
@@ -468,7 +467,7 @@ public interface CharacterStruct extends LispStruct {
 			}
 			previousCharacter = currentCharacter;
 		}
-		return LispStructFactory.toBoolean(result);
+		return BooleanStruct.toLispBoolean(result);
 	}
 
 	/**

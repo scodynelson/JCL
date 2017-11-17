@@ -27,7 +27,7 @@ public final class ListLengthFunction extends CommonLispBuiltInFunctionStructBas
 	public LispStruct apply(final Arguments arguments) {
 		final ListStruct list = arguments.getRequiredArgument(LIST_ARGUMENT, ListStruct.class);
 		final IntegerStruct lispStruct = list.listLength();
-		if (IntegerStruct.MINUS_ONE.eq(lispStruct)) {
+		if (IntegerStruct.MINUS_ONE.eql(lispStruct)) {
 			return NILStruct.INSTANCE;
 		}
 		return lispStruct;

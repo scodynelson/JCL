@@ -977,7 +977,7 @@ public class PathnameStructImpl extends BuiltInClassStruct implements PathnameSt
 
 		final StringBuilder stringBuilder = new StringBuilder();
 
-		if (printEscape.booleanValue()) {
+		if (printEscape.toJavaPBoolean()) {
 			stringBuilder.append("#P");
 		}
 		stringBuilder.append('"');

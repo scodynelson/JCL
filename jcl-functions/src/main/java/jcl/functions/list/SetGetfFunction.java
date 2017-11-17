@@ -34,7 +34,6 @@ public final class SetGetfFunction extends SystemBuiltInFunctionStructBase {
 		final LispStruct indicator = arguments.getRequiredArgument(INDICATOR_ARGUMENT);
 		final LispStruct value = arguments.getRequiredArgument(VALUE_ARGUMENT);
 
-		plist.setProperty(indicator, value);
-		return value;
+		return plist.putf(indicator, value);
 	}
 }

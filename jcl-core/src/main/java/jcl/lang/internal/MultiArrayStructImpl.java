@@ -86,7 +86,7 @@ public class MultiArrayStructImpl extends ArrayStructImpl {
 		                                               .limit(totalSize)
 		                                               .collect(Collectors.toList());
 
-		final boolean adjustableBoolean = isAdjustable.booleanValue();
+		final boolean adjustableBoolean = isAdjustable.toJavaPBoolean();
 		final ArrayType arrayType = getArrayType(adjustableBoolean);
 		return new MultiArrayStructImpl(arrayType, dimensionInts, elementType, initialContents, adjustableBoolean);
 	}
@@ -107,7 +107,7 @@ public class MultiArrayStructImpl extends ArrayStructImpl {
 		final List<LispStruct> validContents = ArrayStruct.getValidContents(dimensionInts, elementType,
 		                                                                    initialContents);
 
-		final boolean adjustableBoolean = isAdjustable.booleanValue();
+		final boolean adjustableBoolean = isAdjustable.toJavaPBoolean();
 		final ArrayType arrayType = getArrayType(adjustableBoolean);
 		return new MultiArrayStructImpl(arrayType, dimensionInts, elementType, validContents, adjustableBoolean);
 	}
@@ -142,7 +142,7 @@ public class MultiArrayStructImpl extends ArrayStructImpl {
 		// TODO: Total size of A be no smaller than the sum of the total size of B plus the offset 'n' supplied by the offset
 
 		return new MultiArrayStructImpl(ArrayType.INSTANCE, dimensionInts, elementType, displacedTo,
-		                                offsetInt, isAdjustable.booleanValue());
+		                                offsetInt, isAdjustable.toJavaPBoolean());
 	}
 
 	public static ArrayStruct valueOf(final List<IntegerStruct> dimensions, final LispType elementType,
@@ -359,7 +359,7 @@ public class MultiArrayStructImpl extends ArrayStructImpl {
 //
 //		this.contents = newData;
 //		this.multidimensionalCounter = newMultidimensionalCounter;
-//		this.isAdjustable = isAdjustable.booleanValue();
+//		this.isAdjustable = isAdjustable.toJavaPBoolean();
 //		this.displacedTo = null;
 //		this.displacedIndexOffset = 0;
 //		this.dimensions = newDims;
@@ -380,7 +380,7 @@ public class MultiArrayStructImpl extends ArrayStructImpl {
 //		                                              .collect(Collectors.toList());
 //		final List<TYPE> validContents = getValidContents(dimensionInts, elementType, initialContents);
 //
-//		final boolean adjustableBoolean = isAdjustable.booleanValue();
+//		final boolean adjustableBoolean = isAdjustable.toJavaPBoolean();
 //		final ArrayType arrayType = getArrayType(adjustableBoolean);
 ////		return new ArrayStructImpl<>(arrayType, dimensionInts, elementType, validContents, adjustableBoolean);
 //
@@ -391,7 +391,7 @@ public class MultiArrayStructImpl extends ArrayStructImpl {
 //		multidimensionalCounter = new MultidimensionalCounter(dimensionArray);
 //
 //		this.elementType = elementType;
-//		this.isAdjustable = isAdjustable.booleanValue();
+//		this.isAdjustable = isAdjustable.toJavaPBoolean();
 //
 //		this.dimensions = dimensions.stream().map(IntegerStruct::intValue).collect(Collectors.toList());
 //		this.contents = new ArrayList<>(contents);
@@ -642,8 +642,8 @@ public class MultiArrayStructImpl extends ArrayStructImpl {
 	public String toString() {
 		// TODO: Ignoring *PRINT-LEVEL* and *PRINT-LENGTH*
 
-		final boolean printArray = PrinterVariables.PRINT_ARRAY.getVariableValue().booleanValue();
-		final boolean printReadably = PrinterVariables.PRINT_READABLY.getVariableValue().booleanValue();
+		final boolean printArray = PrinterVariables.PRINT_ARRAY.getVariableValue().toJavaPBoolean();
+		final boolean printReadably = PrinterVariables.PRINT_READABLY.getVariableValue().toJavaPBoolean();
 
 		final StringBuilder stringBuilder = new StringBuilder();
 

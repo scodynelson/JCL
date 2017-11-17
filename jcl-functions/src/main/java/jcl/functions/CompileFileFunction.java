@@ -100,17 +100,17 @@ public final class CompileFileFunction extends CommonLispBuiltInFunctionStructBa
 		final LispStruct outputFile = arguments.getKeyArgument(CommonLispSymbols.OUTPUT_FILE_KEYWORD);
 		final boolean verbose;
 		if (arguments.hasKeyArgument(CommonLispSymbols.VERBOSE_KEYWORD)) {
-			verbose = arguments.getKeyArgument(CommonLispSymbols.VERBOSE_KEYWORD, BooleanStruct.class).booleanValue();
+			verbose = arguments.getKeyArgument(CommonLispSymbols.VERBOSE_KEYWORD, BooleanStruct.class).toJavaPBoolean();
 		} else {
 			final BooleanStruct currentCompileVerbose = CompilerVariables.COMPILE_VERBOSE.getVariableValue();
-			verbose = currentCompileVerbose.booleanValue();
+			verbose = currentCompileVerbose.toJavaPBoolean();
 		}
 		final boolean print;
 		if (arguments.hasKeyArgument(CommonLispSymbols.PRINT_KEYWORD)) {
-			print = arguments.getKeyArgument(CommonLispSymbols.PRINT_KEYWORD, BooleanStruct.class).booleanValue();
+			print = arguments.getKeyArgument(CommonLispSymbols.PRINT_KEYWORD, BooleanStruct.class).toJavaPBoolean();
 		} else {
 			final BooleanStruct currentCompilePrint = CompilerVariables.COMPILE_PRINT.getVariableValue();
-			print = currentCompilePrint.booleanValue();
+			print = currentCompilePrint.toJavaPBoolean();
 		}
 		final LispStruct externalFormat = arguments.getKeyArgument(CommonLispSymbols.EXTERNAL_FORMAT_KEYWORD);
 		return compileFile(inputFile, outputFile, verbose, print);
@@ -182,7 +182,7 @@ public final class CompileFileFunction extends CommonLispBuiltInFunctionStructBa
 				}
 			} while (form != null);
 
-			if (print && compiledWithWarnings.booleanValue()) {
+			if (print && compiledWithWarnings.toJavaPBoolean()) {
 				// If we printed warnings, make sure to print a newline afterwards.
 				LOGGER.info("");
 			}

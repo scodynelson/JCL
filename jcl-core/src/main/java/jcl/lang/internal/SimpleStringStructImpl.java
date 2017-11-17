@@ -236,7 +236,7 @@ public final class SimpleStringStructImpl extends AbstractStringStructImpl {
 		final int newTotalSizeInt = newTotalSize.toJavaInt();
 
 		final BooleanStruct newAdjustable = context.getAdjustable();
-		final boolean newAdjustableBoolean = newAdjustable.booleanValue();
+		final boolean newAdjustableBoolean = newAdjustable.toJavaPBoolean();
 
 		final IntegerStruct newFillPointer = context.getFillPointer();
 		final Integer newFillPointerInt = (newFillPointer == null) ? null : newFillPointer.toJavaInt();
@@ -363,7 +363,7 @@ public final class SimpleStringStructImpl extends AbstractStringStructImpl {
 
 	@Override
 	public String toString() {
-		final boolean printEscape = PrinterVariables.PRINT_ESCAPE.getVariableValue().booleanValue();
+		final boolean printEscape = PrinterVariables.PRINT_ESCAPE.getVariableValue().toJavaPBoolean();
 
 		final ReadtableStruct readtable = ReaderVariables.READTABLE.getVariableValue();
 

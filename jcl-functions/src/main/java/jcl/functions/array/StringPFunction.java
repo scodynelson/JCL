@@ -5,9 +5,9 @@
 package jcl.functions.array;
 
 import jcl.functions.CommonLispBuiltInFunctionStructBase;
+import jcl.lang.BooleanStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.StringStruct;
-import jcl.lang.factory.LispStructFactory;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import org.springframework.stereotype.Component;
@@ -29,6 +29,6 @@ public final class StringPFunction extends CommonLispBuiltInFunctionStructBase {
 	@Override
 	public LispStruct apply(final Arguments arguments) {
 		final LispStruct object = arguments.getRequiredArgument(OBJECT_ARGUMENT);
-		return LispStructFactory.toBoolean(object instanceof StringStruct);
+		return BooleanStruct.toLispBoolean(object instanceof StringStruct);
 	}
 }

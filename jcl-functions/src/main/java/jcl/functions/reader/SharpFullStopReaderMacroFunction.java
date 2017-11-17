@@ -52,11 +52,11 @@ public class SharpFullStopReaderMacroFunction extends ReaderMacroFunctionImpl {
 		assert codePoint == CodePointConstants.FULL_STOP;
 
 		final LispStruct token = reader.read(inputStreamStruct, true, NILStruct.INSTANCE, true);
-		if (ReaderVariables.READ_SUPPRESS.getVariableValue().booleanValue()) {
+		if (ReaderVariables.READ_SUPPRESS.getVariableValue().toJavaPBoolean()) {
 			return NILStruct.INSTANCE;
 		}
 
-		if (!ReaderVariables.READ_EVAL.getVariableValue().booleanValue()) {
+		if (!ReaderVariables.READ_EVAL.getVariableValue().toJavaPBoolean()) {
 			throw new ReaderErrorException("Attempt to read #. while *READ-EVAL* is bound to NIL.");
 		}
 

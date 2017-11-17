@@ -187,7 +187,7 @@ public class VectorStructImplTest {
 		Assert.assertThat(result, not(is(NILStruct.INSTANCE)));
 		Assert.assertThat(result.length(), is(IntegerStruct.ONE));
 
-		final LispStruct dim = result.nth((FixnumStruct) IntegerStruct.ZERO);
+		final LispStruct dim = result.nth(IntegerStruct.ZERO);
 		Assert.assertThat(dim, is(IntegerStruct.TWO));
 	}
 
@@ -265,7 +265,7 @@ public class VectorStructImplTest {
 				              .initialElement(IntegerStruct.ZERO)
 				              .build();
 		final BooleanStruct result = array.arrayInBoundsP(IntegerStruct.MINUS_ONE);
-		Assert.assertThat(result.booleanValue(), is(false));
+		Assert.assertThat(result.toJavaPBoolean(), is(false));
 	}
 
 	@Test
@@ -275,7 +275,7 @@ public class VectorStructImplTest {
 				              .initialElement(IntegerStruct.ZERO)
 				              .build();
 		final BooleanStruct result = array.arrayInBoundsP(IntegerStruct.TEN);
-		Assert.assertThat(result.booleanValue(), is(false));
+		Assert.assertThat(result.toJavaPBoolean(), is(false));
 	}
 
 	@Test
@@ -285,7 +285,7 @@ public class VectorStructImplTest {
 				              .initialElement(IntegerStruct.ZERO)
 				              .build();
 		final BooleanStruct result = array.arrayInBoundsP(IntegerStruct.ONE);
-		Assert.assertThat(result.booleanValue(), is(true));
+		Assert.assertThat(result.toJavaPBoolean(), is(true));
 	}
 
 	/*

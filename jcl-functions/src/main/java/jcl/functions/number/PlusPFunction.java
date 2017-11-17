@@ -5,9 +5,9 @@
 package jcl.functions.number;
 
 import jcl.functions.CommonLispBuiltInFunctionStructBase;
+import jcl.lang.BooleanStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.RealStruct;
-import jcl.lang.factory.LispStructFactory;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import org.springframework.stereotype.Component;
@@ -29,6 +29,6 @@ public final class PlusPFunction extends CommonLispBuiltInFunctionStructBase {
 	public LispStruct apply(final Arguments arguments) {
 		final RealStruct real = arguments.getRequiredArgument(REAL_ARGUMENT, RealStruct.class);
 		final boolean result = real.plusp();
-		return LispStructFactory.toBoolean(result);
+		return BooleanStruct.toLispBoolean(result);
 	}
 }

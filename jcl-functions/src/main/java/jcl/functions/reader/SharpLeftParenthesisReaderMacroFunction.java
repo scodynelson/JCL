@@ -56,7 +56,7 @@ public class SharpLeftParenthesisReaderMacroFunction extends ReaderMacroFunction
 
 		final ListStruct listToken = listReaderMacroFunction.readList(inputStreamStruct);
 
-		if (ReaderVariables.READ_SUPPRESS.getVariableValue().booleanValue()) {
+		if (ReaderVariables.READ_SUPPRESS.getVariableValue().toJavaPBoolean()) {
 			return NILStruct.INSTANCE;
 		}
 

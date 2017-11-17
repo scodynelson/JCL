@@ -79,19 +79,7 @@ public final class ConsStructImpl extends BuiltInClassStruct implements ConsStru
 	}
 
 	@Override
-	public LispStruct setCar(final LispStruct car) {
-		this.car = car;
-		return car;
-	}
-
-	@Override
 	public LispStruct cdr() {
-		return cdr;
-	}
-
-	@Override
-	public LispStruct setCdr(final LispStruct cdr) {
-		this.cdr = cdr;
 		return cdr;
 	}
 
@@ -109,7 +97,7 @@ public final class ConsStructImpl extends BuiltInClassStruct implements ConsStru
 	}
 
 	@Override
-	public IntegerStruct listLength() {
+	public FixnumStruct listLength() {
 		int n = 0; // Counter.
 		LispStruct fast = this; // Fast pointer: leaps by 2.
 		ListStruct slow = this; // Slow pointer: leaps by 1.
@@ -228,15 +216,15 @@ public final class ConsStructImpl extends BuiltInClassStruct implements ConsStru
 	}
 
 	@Override
-	public boolean tailp(final LispStruct object) {
+	public BooleanStruct tailp(final LispStruct object) {
 		if (eql(object)) {
-			return true;
+			return BooleanStruct.T;
 		}
 		if (cdr instanceof ListStruct) {
 			final ListStruct listCdr = (ListStruct) cdr;
 			return listCdr.tailp(object);
 		}
-		return cdr.eql(object);
+		return BooleanStruct.toLispBoolean(cdr.eql(object));
 	}
 
 	@Override
@@ -304,17 +292,44 @@ public final class ConsStructImpl extends BuiltInClassStruct implements ConsStru
 	}
 
 	@Override
-	public LispStruct last(final long n) {
-		if (n < 0) {
+	public BooleanStruct remf(final LispStruct indicator) {
+		if (!(cdr instanceof ConsStruct)) {
+			throw new ErrorException("List is not a valid property list.");
+		}
+
+		final ConsStruct cdrCons = (ConsStruct) cdr;
+		if (car.eq(indicator)) {
+			if (NILStruct.INSTANCE.eq(cdrCons.cdr())) {
+				throw new ErrorException("Cannot remove last entry from property list.");
+			}
+			if (!(cdrCons.cdr() instanceof ConsStruct)) {
+				throw new ErrorException("List is not a valid property list.");
+			}
+			final ConsStruct cdrCdrCons = (ConsStruct) cdrCons.cdr();
+			car = cdrCdrCons.car();
+			cdr = cdrCdrCons.cdr();
+		} else if (!(cdrCons.cdr() instanceof ListStruct)) {
+			throw new ErrorException("List is not a valid property list.");
+		} else {
+			final ListStruct cdrCdrList = (ListStruct) cdrCons.cdr();
+			return cdrCdrList.remf(indicator);
+		}
+		return NILStruct.INSTANCE;
+	}
+
+	@Override
+	public LispStruct last(final FixnumStruct n) {
+		if (n.minusp()) {
 			throw new TypeErrorException("N value must be non-negative.");
 		}
 
 		LispStruct currentList = this;
 		LispStruct returnList = currentList;
 
-		long index = 0L;
+		int nInt = n.toJavaInt();
+		int index = 0;
 		while (currentList instanceof ConsStruct) {
-			if (n <= index) {
+			if (nInt <= index) {
 				// NOTE: We know this will be safe as the 'cdr' operation will always be performed on the currentList
 				//          first; the only time this isn't true is if 'n' is 0, in which case, the returnList and the
 				//          currentList refer to the same object, 'this', which we already know to be a ConsStruct.
@@ -330,30 +345,29 @@ public final class ConsStructImpl extends BuiltInClassStruct implements ConsStru
 	}
 
 	@Override
-	public ListStruct butLast(final long n) {
-		if (n < 0) {
+	public ListStruct butLast(final FixnumStruct n) {
+		if (n.minusp()) {
 			throw new TypeErrorException("N value must be non-negative.");
 		}
 
-		final LispStruct listLength = listLength();
-		if (listLength == NILStruct.INSTANCE) {
+		final FixnumStruct listLength = listLength();
+		if (IntegerStruct.MINUS_ONE.eql(listLength)) {
 			return NILStruct.INSTANCE;
 		}
-		final long listLengthInt = ((IntegerStruct) listLength).toJavaPLong();
-		if (listLengthInt < n) {
+		if (listLength.isLessThan(n)) {
 			return NILStruct.INSTANCE;
 		}
 
-		final long limit = listLengthInt - n;
+		final int limit = listLength.toJavaInt() - n.toJavaInt();
 		return butLastAux(this, limit);
 	}
 
-	private static ListStruct butLastAux(final ListStruct list, final long limit) {
+	private static ListStruct butLastAux(final ListStruct list, final int limit) {
 		if (limit <= 0) {
 			return NILStruct.INSTANCE;
 		} else {
-			final LispStruct listCar = list.getCar();
-			final LispStruct listCdr = list.getCdr();
+			final LispStruct listCar = list.car();
+			final LispStruct listCdr = list.cdr();
 			// NOTE: We know this will be safe due to the use of 'listLength()'. Therefore, only 'proper' lists will
 			//          pass through here, in which case this is always a good cast.
 			return ConsStruct.toLispCons(listCar, butLastAux((ListStruct) listCdr, limit - 1));
@@ -361,33 +375,32 @@ public final class ConsStructImpl extends BuiltInClassStruct implements ConsStru
 	}
 
 	@Override
-	public ListStruct nButLast(final long n) {
-		if (n < 0) {
+	public ListStruct nButLast(final FixnumStruct n) {
+		if (n.minusp()) {
 			throw new TypeErrorException("N value must be non-negative.");
 		}
 
-		final LispStruct listLength = listLength();
-		if (listLength == NILStruct.INSTANCE) {
+		final FixnumStruct listLength = listLength();
+		if (IntegerStruct.MINUS_ONE.eql(listLength)) {
 			return NILStruct.INSTANCE;
 		}
-		final long listLengthInt = ((IntegerStruct) listLength).toJavaPLong();
-		if (listLengthInt < n) {
+		if (listLength.isLessThan(n)) {
 			return NILStruct.INSTANCE;
 		}
-		if (listLengthInt == 1) {
+		if (IntegerStruct.ONE.eql(listLength)) {
 			return NILStruct.INSTANCE;
 		}
 
-		final long limit = listLengthInt - n;
+		final int limit = listLength.toJavaInt() - n.toJavaInt();
 		nButLastAux(this, limit);
 		return this;
 	}
 
-	private static void nButLastAux(final ListStruct list, final long limit) {
+	private static void nButLastAux(final ListStruct list, final int limit) {
 		if (limit <= 0) {
 			((ConsStruct) list).rplacd(NILStruct.INSTANCE);
 		} else {
-			final LispStruct listCdr = list.getCdr();
+			final LispStruct listCdr = list.cdr();
 			// NOTE: We know this will be safe due to the use of 'listLength()'. Therefore, only 'proper' lists will
 			//          pass through here, in which case this is always a good cast.
 			nButLastAux((ListStruct) listCdr, limit - 1);
@@ -585,7 +598,7 @@ public final class ConsStructImpl extends BuiltInClassStruct implements ConsStru
 	public String toString() {
 		// TODO: Ignoring *PRINT-PRETTY* and the pretty printer in general right now...
 
-		if (IntegerStruct.MINUS_ONE.eq(listLength())) {
+		if (IntegerStruct.MINUS_ONE.eql(listLength())) {
 			return "CIRCULAR LIST PRINTING NOT YET SUPPORTED!!!";
 		}
 
@@ -656,81 +669,6 @@ public final class ConsStructImpl extends BuiltInClassStruct implements ConsStru
 	/*
 	OLD
 	 */
-
-	@Override
-	@Deprecated
-	public LispStruct getCar() {
-		return car;
-	}
-
-	@Override
-	@Deprecated
-	public LispStruct getCdr() {
-		return cdr;
-	}
-
-	@Override
-	@Deprecated
-	public LispStruct getProperty(final LispStruct indicator, final LispStruct defaultValue) {
-		final Iterator<LispStruct> iterator = iterator();
-		while (iterator.hasNext()) {
-			final LispStruct key = iterator.next();
-			if (!iterator.hasNext()) {
-				return defaultValue;
-			}
-			final LispStruct value = iterator.next();
-			if (key.eq(indicator)) {
-				return value;
-			}
-		}
-		return defaultValue;
-	}
-
-	@Override
-	@Deprecated
-	public ListStruct setProperty(final LispStruct indicator, final LispStruct newValue) {
-		if (!(cdr instanceof ConsStruct)) {
-			throw new ErrorException("List is not a valid property list.");
-		}
-
-		final ConsStruct cdrCons = (ConsStruct) cdr;
-		if (car.eq(indicator)) {
-			cdrCons.rplaca(newValue);
-		} else if (!(cdrCons.cdr() instanceof ListStruct)) {
-			throw new ErrorException("List is not a valid property list.");
-		} else {
-			final ListStruct cdrCdrList = (ListStruct) cdrCons.cdr();
-			cdrCdrList.setProperty(indicator, newValue);
-		}
-		return this;
-	}
-
-	@Override
-	@Deprecated
-	public boolean removeProperty(final LispStruct indicator) {
-		if (!(cdr instanceof ConsStruct)) {
-			throw new ErrorException("List is not a valid property list.");
-		}
-
-		final ConsStruct cdrCons = (ConsStruct) cdr;
-		if (car.eq(indicator)) {
-			if (NILStruct.INSTANCE.eq(cdrCons.cdr())) {
-				throw new ErrorException("Cannot remove last entry from property list.");
-			}
-			if (!(cdrCons.cdr() instanceof ConsStruct)) {
-				throw new ErrorException("List is not a valid property list.");
-			}
-			final ConsStruct cdrCdrCons = (ConsStruct) cdrCons.cdr();
-			car = cdrCdrCons.car();
-			cdr = cdrCdrCons.cdr();
-		} else if (!(cdrCons.cdr() instanceof ListStruct)) {
-			throw new ErrorException("List is not a valid property list.");
-		} else {
-			final ListStruct cdrCdrList = (ListStruct) cdrCons.cdr();
-			return cdrCdrList.removeProperty(indicator);
-		}
-		return false;
-	}
 
 	@Override
 	@Deprecated

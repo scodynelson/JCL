@@ -51,7 +51,7 @@ public final class MacroLambdaListParser extends LambdaListParser {
 		// NOTE: this first peek is to ensure we don't damage the initial state of the iterator by consuming the first element early.
 		LispStruct firstElement = null;
 		if (!NILStruct.INSTANCE.eq(lambdaList)) {
-			firstElement = lambdaList.getCar();
+			firstElement = lambdaList.car();
 		}
 
 		LispStruct currentElement = null;
@@ -224,7 +224,7 @@ public final class MacroLambdaListParser extends LambdaListParser {
 		// NOTE: this first peek is to ensure we don't damage the initial state of the iterator by consuming the first element early.
 		LispStruct firstElement = null;
 		if (!NILStruct.INSTANCE.eq(lambdaList)) {
-			firstElement = lambdaList.getCar();
+			firstElement = lambdaList.car();
 		}
 
 		LispStruct currentElement = null;

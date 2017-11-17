@@ -67,7 +67,7 @@ public final class ReadFunction extends CommonLispBuiltInFunctionStructBase {
 	public LispStruct read(final InputStreamStruct inputStreamStruct, final BooleanStruct eofErrorP, final LispStruct eofValue,
 	                       final BooleanStruct recursiveP) {
 
-		return read(inputStreamStruct, eofErrorP.booleanValue(), eofValue, recursiveP.booleanValue());
+		return read(inputStreamStruct, eofErrorP.toJavaPBoolean(), eofValue, recursiveP.toJavaPBoolean());
 	}
 
 	public LispStruct read(final InputStreamStruct inputStreamStruct, final boolean eofErrorP, final LispStruct eofValue,

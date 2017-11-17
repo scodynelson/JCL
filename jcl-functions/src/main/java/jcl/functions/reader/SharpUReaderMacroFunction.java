@@ -40,7 +40,7 @@ public class SharpUReaderMacroFunction extends ReaderMacroFunctionImpl {
 	public LispStruct readMacro(final InputStreamStruct inputStreamStruct, final int codePoint, final Optional<BigInteger> numberArgument) {
 		assert (codePoint == CodePointConstants.LATIN_SMALL_LETTER_U) || (codePoint == CodePointConstants.LATIN_CAPITAL_LETTER_U);
 
-		if (ReaderVariables.READ_SUPPRESS.getVariableValue().booleanValue()) {
+		if (ReaderVariables.READ_SUPPRESS.getVariableValue().toJavaPBoolean()) {
 			return NILStruct.INSTANCE;
 		}
 

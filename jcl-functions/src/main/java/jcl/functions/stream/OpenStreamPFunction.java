@@ -5,9 +5,9 @@
 package jcl.functions.stream;
 
 import jcl.functions.CommonLispBuiltInFunctionStructBase;
+import jcl.lang.BooleanStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.StreamStruct;
-import jcl.lang.factory.LispStructFactory;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import org.springframework.stereotype.Component;
@@ -29,6 +29,6 @@ public final class OpenStreamPFunction extends CommonLispBuiltInFunctionStructBa
 	@Override
 	public LispStruct apply(final Arguments arguments) {
 		final StreamStruct stream = arguments.getRequiredArgument(STREAM_ARGUMENT, StreamStruct.class);
-		return LispStructFactory.toBoolean(!stream.isClosed());
+		return BooleanStruct.toLispBoolean(!stream.isClosed());
 	}
 }

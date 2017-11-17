@@ -50,7 +50,7 @@ public class AtSignReaderMacroFunction extends ReaderMacroFunctionImpl {
 			readtable.setReadtableCase(previousCase);
 		}
 
-		if (ReaderVariables.READ_SUPPRESS.getVariableValue().booleanValue()) {
+		if (ReaderVariables.READ_SUPPRESS.getVariableValue().toJavaPBoolean()) {
 			return null;
 		}
 

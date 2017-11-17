@@ -7,7 +7,6 @@ package jcl.lang;
 import java.util.List;
 
 import jcl.lang.condition.exception.ErrorException;
-import jcl.lang.factory.LispStructFactory;
 import org.apfloat.Apcomplex;
 
 /**
@@ -177,7 +176,7 @@ public interface NumberStruct extends LispStruct {
 			}
 			previousNumber = currentNumber;
 		}
-		return LispStructFactory.toBoolean(result);
+		return BooleanStruct.toLispBoolean(result);
 	}
 
 	/**
@@ -217,7 +216,7 @@ public interface NumberStruct extends LispStruct {
 			}
 			previousNumber = currentNumber;
 		}
-		return LispStructFactory.toBoolean(result);
+		return BooleanStruct.toLispBoolean(result);
 	}
 
 	/**

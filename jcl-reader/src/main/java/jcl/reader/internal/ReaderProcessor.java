@@ -104,7 +104,7 @@ class ReaderProcessor {
 			token = readIllegalCharacter(tokenBuilder);
 		}
 
-		if (ReaderVariables.READ_SUPPRESS.getVariableValue().booleanValue()) {
+		if (ReaderVariables.READ_SUPPRESS.getVariableValue().toJavaPBoolean()) {
 			if (LOGGER.isDebugEnabled()) {
 				LOGGER.debug("{} suppressed.", token);
 			}
@@ -456,7 +456,7 @@ class ReaderProcessor {
 	 */
 	private static LispStruct readTokenAccumulated(final TokenBuilder tokenBuilder) {
 
-		if (ReaderVariables.READ_SUPPRESS.getVariableValue().booleanValue()) {
+		if (ReaderVariables.READ_SUPPRESS.getVariableValue().toJavaPBoolean()) {
 			return null;
 		}
 

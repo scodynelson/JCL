@@ -5,9 +5,9 @@
 package jcl.functions.number;
 
 import jcl.functions.CommonLispBuiltInFunctionStructBase;
+import jcl.lang.BooleanStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.NumberStruct;
-import jcl.lang.factory.LispStructFactory;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import org.springframework.stereotype.Component;
@@ -30,6 +30,6 @@ public final class ZeroPFunction extends CommonLispBuiltInFunctionStructBase {
 	public LispStruct apply(final Arguments arguments) {
 		final NumberStruct number = arguments.getRequiredArgument(NUMBER_ARGUMENT, NumberStruct.class);
 		final boolean result = number.zerop();
-		return LispStructFactory.toBoolean(result);
+		return BooleanStruct.toLispBoolean(result);
 	}
 }

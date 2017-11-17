@@ -48,7 +48,7 @@ public class CommaReaderMacroFunction extends ReaderMacroFunctionImpl {
 		final ReaderContext context = ReaderContextHolder.getContext();
 		final int currentBackquoteLevel = context.getBackquoteLevel();
 		if (currentBackquoteLevel <= 0) {
-			if (ReaderVariables.READ_SUPPRESS.getVariableValue().booleanValue()) {
+			if (ReaderVariables.READ_SUPPRESS.getVariableValue().toJavaPBoolean()) {
 				return NILStruct.INSTANCE;
 			}
 

@@ -292,7 +292,7 @@ public interface ArrayStruct extends LispStruct {
 		@Override
 		public ArrayStruct build() {
 			final LispType upgradedET = upgradedArrayElementType(elementType);
-			final boolean adjustableBoolean = adjustable.booleanValue();
+			final boolean adjustableBoolean = adjustable.toJavaPBoolean();
 
 			if (displacedTo != null) {
 				final LispType displacedToType = displacedTo.getType();

@@ -2,6 +2,7 @@ package jcl.functions.list;
 
 import java.util.List;
 
+import jcl.functions.CommonLispBuiltInFunctionStructBase;
 import jcl.lang.FunctionStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
@@ -10,7 +11,7 @@ import jcl.lang.function.parameterdsl.Parameters;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class MapconFunction extends ConsMappingFunction {
+public final class MapconFunction extends CommonLispBuiltInFunctionStructBase {
 
 	private static final String FUNCTION_NAME = "MAPCON";
 	private static final String FN_ARGUMENT = "FN";
@@ -28,6 +29,6 @@ public final class MapconFunction extends ConsMappingFunction {
 	public LispStruct apply(final Arguments arguments) {
 		final FunctionStruct function = arguments.getRequiredArgument(FN_ARGUMENT, FunctionStruct.class);
 		final List<LispStruct> lists = arguments.getRestArgument();
-		return map1(function, ListStruct.toLispList(lists), NCONC_ACCUMULATE, false);
+		return ListStruct.mapCon(function, ListStruct.toLispList(lists));
 	}
 }

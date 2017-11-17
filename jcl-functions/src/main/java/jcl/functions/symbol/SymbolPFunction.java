@@ -1,9 +1,9 @@
 package jcl.functions.symbol;
 
 import jcl.functions.CommonLispBuiltInFunctionStructBase;
+import jcl.lang.BooleanStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.SymbolStruct;
-import jcl.lang.factory.LispStructFactory;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import org.springframework.stereotype.Component;
@@ -31,6 +31,6 @@ public final class SymbolPFunction extends CommonLispBuiltInFunctionStructBase {
 	@Override
 	public LispStruct apply(final Arguments arguments) {
 		final LispStruct object = arguments.getRequiredArgument(OBJECT_ARGUMENT);
-		return LispStructFactory.toBoolean(object instanceof SymbolStruct);
+		return BooleanStruct.toLispBoolean(object instanceof SymbolStruct);
 	}
 }

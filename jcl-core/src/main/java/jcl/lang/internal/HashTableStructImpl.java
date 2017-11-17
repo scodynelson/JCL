@@ -268,7 +268,7 @@ public final class HashTableStructImpl extends BuiltInClassStruct implements Has
 			}
 
 			final LispStruct lispStruct = (LispStruct) obj;
-			return ((BooleanStruct) equivalenceFn.apply(key, lispStruct)).booleanValue();
+			return ((BooleanStruct) equivalenceFn.apply(key, lispStruct)).toJavaPBoolean();
 		}
 
 		@Override

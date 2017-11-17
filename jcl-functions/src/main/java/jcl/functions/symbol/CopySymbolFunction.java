@@ -32,7 +32,7 @@ public final class CopySymbolFunction extends CommonLispBuiltInFunctionStructBas
 	@Override
 	public LispStruct apply(final Arguments arguments) {
 		final SymbolStruct symbol = arguments.getRequiredArgument(SYMBOL_ARGUMENT, SymbolStruct.class);
-		final boolean copyProperties = arguments.getOptionalArgument(COPY_PROPERTIES_ARGUMENT, BooleanStruct.class).booleanValue();
+		final boolean copyProperties = arguments.getOptionalArgument(COPY_PROPERTIES_ARGUMENT, BooleanStruct.class).toJavaPBoolean();
 		return symbol.copySymbol(copyProperties);
 	}
 }

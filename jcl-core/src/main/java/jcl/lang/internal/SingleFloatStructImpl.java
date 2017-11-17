@@ -97,7 +97,7 @@ public class SingleFloatStructImpl extends BuiltInClassStruct implements SingleF
 		final IntegerStruct exponentInteger = IntegerStruct.toLispInteger(exponent);
 
 		final int sign = decodedFloat.getSign();
-		final IntegerStruct signInteger = (sign == 1) ? IntegerStruct.ONE_NEW : IntegerStruct.MINUS_ONE_NEW;
+		final IntegerStruct signInteger = (sign == 1) ? IntegerStruct.ONE : IntegerStruct.MINUS_ONE;
 
 		return new DecodeFloatResult(significandInteger, exponentInteger, signInteger);
 	}

@@ -60,6 +60,6 @@ public class SatisfiesTypeSpecifier extends TypeBaseClass implements CompoundTyp
 		final LispStruct lispStruct = (LispStruct) obj;
 
 		// TODO: this probably isn't very safe...
-		return ((BooleanStruct) predicate.apply(lispStruct)).booleanValue();
+		return ((BooleanStruct) predicate.apply(lispStruct)).toJavaPBoolean();
 	}
 }

@@ -316,7 +316,7 @@ public class StringStructArrayTest {
 				              .build();
 		final ListStruct result = struct.arrayDimensions();
 		Assert.assertThat(result.length(), is(IntegerStruct.ONE));
-		Assert.assertThat(result.getCar(), is(size));
+		Assert.assertThat(result.car(), is(size));
 	}
 
 	/*

@@ -23,7 +23,7 @@ public abstract class BooleanStructImpl extends ConstantStructImpl<BooleanStruct
 	}
 
 	@Override
-	public boolean booleanValue() {
+	public boolean toJavaPBoolean() {
 		return booleanValue;
 	}
 }

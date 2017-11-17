@@ -141,7 +141,7 @@ final class QuoteCodeGenerator implements CodeGenerator<QuoteStruct> {
 		final JavaMethodBuilder methodBuilder = generatorState.getCurrentMethodBuilder();
 		final MethodVisitor mv = methodBuilder.getMethodVisitor();
 
-		if (IntegerStruct.MINUS_ONE.eq(quotedCons.listLength())) {
+		if (IntegerStruct.MINUS_ONE.eql(quotedCons.listLength())) {
 			throw new ProgramErrorException("Generation of circular lists is not yet supported.");
 		}
 

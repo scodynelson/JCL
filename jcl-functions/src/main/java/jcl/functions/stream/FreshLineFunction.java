@@ -5,9 +5,9 @@
 package jcl.functions.stream;
 
 import jcl.functions.CommonLispBuiltInFunctionStructBase;
+import jcl.lang.BooleanStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.OutputStreamStruct;
-import jcl.lang.factory.LispStructFactory;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.statics.StreamVariables;
@@ -36,6 +36,6 @@ public final class FreshLineFunction extends CommonLispBuiltInFunctionStructBase
 			outputStreamStruct.writeChar('\n');
 		}
 
-		return LispStructFactory.toBoolean(shouldWriteNewline);
+		return BooleanStruct.toLispBoolean(shouldWriteNewline);
 	}
 }

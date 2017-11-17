@@ -5,9 +5,9 @@
 package jcl.functions.symbol;
 
 import jcl.functions.CommonLispBuiltInFunctionStructBase;
+import jcl.lang.BooleanStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.SymbolStruct;
-import jcl.lang.factory.LispStructFactory;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import org.springframework.stereotype.Component;
@@ -34,6 +34,6 @@ public final class RempropFunction extends CommonLispBuiltInFunctionStructBase {
 		final LispStruct indicator = arguments.getRequiredArgument(INDICATOR_ARGUMENT);
 		final boolean wasRemoved = symbol.removeProperty(indicator);
 
-		return LispStructFactory.toBoolean(wasRemoved);
+		return BooleanStruct.toLispBoolean(wasRemoved);
 	}
 }

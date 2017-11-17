@@ -278,7 +278,7 @@ public interface BitArrayStruct extends ArrayStruct {
 		@Override
 		public BitArrayStruct build() {
 			final LispType upgradedET = ArrayStruct.upgradedArrayElementType(elementType);
-			final boolean adjustableBoolean = adjustable.booleanValue();
+			final boolean adjustableBoolean = adjustable.toJavaPBoolean();
 
 			if (displacedTo != null) {
 				final LispType displacedToType = displacedTo.getType();

@@ -45,7 +45,7 @@ public class InternalMacroExpand {
 
 	private static MacroExpandResult macroExpand1(final ListStruct form, final Environment environment) {
 
-		final LispStruct first = form.getCar();
+		final LispStruct first = form.car();
 		if (first instanceof SymbolStruct) {
 
 			final Optional<SymbolStruct> symbolStruct = getSymbolStruct((SymbolStruct) first);

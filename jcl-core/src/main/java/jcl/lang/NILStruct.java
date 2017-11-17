@@ -36,18 +36,8 @@ public final class NILStruct extends BooleanStructImpl implements ListStruct {
 	}
 
 	@Override
-	public LispStruct setCar(final LispStruct car) {
-		throw new SimpleErrorException("Cannot set element within NIL.");
-	}
-
-	@Override
 	public LispStruct cdr() {
 		return INSTANCE;
-	}
-
-	@Override
-	public LispStruct setCdr(final LispStruct cdr) {
-		throw new SimpleErrorException("Cannot set element within NIL.");
 	}
 
 	@Override
@@ -61,7 +51,7 @@ public final class NILStruct extends BooleanStructImpl implements ListStruct {
 	}
 
 	@Override
-	public IntegerStruct listLength() {
+	public FixnumStruct listLength() {
 		return IntegerStruct.ZERO;
 	}
 
@@ -86,8 +76,8 @@ public final class NILStruct extends BooleanStructImpl implements ListStruct {
 	}
 
 	@Override
-	public boolean tailp(final LispStruct object) {
-		return INSTANCE == object;
+	public BooleanStruct tailp(final LispStruct object) {
+		return BooleanStruct.toLispBoolean(INSTANCE.eq(object));
 	}
 
 	@Override
@@ -111,22 +101,27 @@ public final class NILStruct extends BooleanStructImpl implements ListStruct {
 	}
 
 	@Override
+	public BooleanStruct remf(final LispStruct indicator) {
+		return INSTANCE;
+	}
+
+	@Override
 	public ListStruct copyAlist() {
 		return INSTANCE;
 	}
 
 	@Override
-	public LispStruct last(final long n) {
+	public LispStruct last(final FixnumStruct n) {
 		return INSTANCE;
 	}
 
 	@Override
-	public ListStruct butLast(final long n) {
+	public ListStruct butLast(final FixnumStruct n) {
 		return INSTANCE;
 	}
 
 	@Override
-	public ListStruct nButLast(final long n) {
+	public ListStruct nButLast(final FixnumStruct n) {
 		return INSTANCE;
 	}
 
@@ -196,36 +191,6 @@ public final class NILStruct extends BooleanStructImpl implements ListStruct {
 	/*
 	OLD
 	 */
-
-	@Override
-	@Deprecated
-	public LispStruct getCar() {
-		return INSTANCE;
-	}
-
-	@Override
-	@Deprecated
-	public LispStruct getCdr() {
-		return INSTANCE;
-	}
-
-	@Override
-	@Deprecated
-	public LispStruct getProperty(final LispStruct indicator, final LispStruct defaultValue) {
-		return INSTANCE;
-	}
-
-	@Override
-	@Deprecated
-	public ListStruct setProperty(final LispStruct indicator, final LispStruct newValue) {
-		return ConsStruct.toLispCons(indicator, newValue);
-	}
-
-	@Override
-	@Deprecated
-	public boolean removeProperty(final LispStruct indicator) {
-		return false;
-	}
 
 	@Override
 	@Deprecated

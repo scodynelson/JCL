@@ -19,7 +19,6 @@ import jcl.lang.StringIntervalOpContext;
 import jcl.lang.StringStruct;
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
-import jcl.lang.factory.LispStructFactory;
 import jcl.lang.statics.CharacterConstants;
 import jcl.type.CharacterType;
 import jcl.type.LispType;
@@ -351,7 +350,7 @@ public abstract class AbstractStringStructImpl extends AbstractVectorStructImpl 
 		final String str2 = equalityStrings.str2;
 
 		final int result = stringCompareToOp.apply(str1, str2);
-		return LispStructFactory.toBoolean(result == 0);
+		return BooleanStruct.toLispBoolean(result == 0);
 	}
 
 	/**

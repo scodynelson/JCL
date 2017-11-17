@@ -11,7 +11,6 @@ import jcl.lang.LispStruct;
 import jcl.lang.NILStruct;
 import jcl.lang.StringStruct;
 import jcl.lang.classes.BuiltInClassStruct;
-import jcl.lang.factory.LispStructFactory;
 import jcl.lang.statics.PrinterVariables;
 import jcl.type.BaseCharType;
 import jcl.type.CharacterType;
@@ -129,29 +128,29 @@ public final class CharacterStructImpl extends BuiltInClassStruct implements Cha
 
 	@Override
 	public BooleanStruct isAlphaChar() {
-		return LispStructFactory.toBoolean(Character.isLetter(codePoint));
+		return BooleanStruct.toLispBoolean(Character.isLetter(codePoint));
 	}
 
 	@Override
 	public BooleanStruct isAlphanumeric() {
-		return LispStructFactory.toBoolean(Character.isLetterOrDigit(codePoint));
+		return BooleanStruct.toLispBoolean(Character.isLetterOrDigit(codePoint));
 	}
 
 	@Override
 	public BooleanStruct isDigitChar() {
-		return LispStructFactory.toBoolean(Character.isDigit(codePoint));
+		return BooleanStruct.toLispBoolean(Character.isDigit(codePoint));
 	}
 
 	@Override
 	public BooleanStruct isGraphicChar() {
-		return LispStructFactory.toBoolean(CharUtils.isAsciiPrintable((char) codePoint));
+		return BooleanStruct.toLispBoolean(CharUtils.isAsciiPrintable((char) codePoint));
 	}
 
 	@Override
 	public BooleanStruct isStandardChar() {
 		final boolean isStandardChar
 				= CharUtils.isAsciiPrintable((char) codePoint) || (codePoint == CodePointConstants.NEWLINE);
-		return LispStructFactory.toBoolean(isStandardChar);
+		return BooleanStruct.toLispBoolean(isStandardChar);
 	}
 
 	@Override
@@ -166,17 +165,17 @@ public final class CharacterStructImpl extends BuiltInClassStruct implements Cha
 
 	@Override
 	public BooleanStruct isUpperCase() {
-		return LispStructFactory.toBoolean(Character.isUpperCase(codePoint));
+		return BooleanStruct.toLispBoolean(Character.isUpperCase(codePoint));
 	}
 
 	@Override
 	public BooleanStruct isLowerCase() {
-		return LispStructFactory.toBoolean(Character.isLowerCase(codePoint));
+		return BooleanStruct.toLispBoolean(Character.isLowerCase(codePoint));
 	}
 
 	@Override
 	public BooleanStruct isBothCase() {
-		return LispStructFactory.toBoolean(Character.isUpperCase(codePoint) || Character.isLowerCase(codePoint));
+		return BooleanStruct.toLispBoolean(Character.isUpperCase(codePoint) || Character.isLowerCase(codePoint));
 	}
 
 	@Override
@@ -221,7 +220,7 @@ public final class CharacterStructImpl extends BuiltInClassStruct implements Cha
 
 	@Override
 	public String toString() {
-		final boolean printEscape = PrinterVariables.PRINT_ESCAPE.getVariableValue().booleanValue();
+		final boolean printEscape = PrinterVariables.PRINT_ESCAPE.getVariableValue().toJavaPBoolean();
 
 		final StringBuilder stringBuilder = new StringBuilder();
 		if (printEscape) {

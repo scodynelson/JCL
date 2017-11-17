@@ -180,7 +180,7 @@ abstract class IntegerStructImpl extends BuiltInClassStruct implements IntegerSt
 	public String toString() {
 		// TODO
 
-		final boolean printRadix = PrinterVariables.PRINT_RADIX.getVariableValue().booleanValue();
+		final boolean printRadix = PrinterVariables.PRINT_RADIX.getVariableValue().toJavaPBoolean();
 		final int printBase = PrinterVariables.PRINT_BASE.getVariableValue().toJavaInt();
 
 		final StringBuilder stringBuilder = new StringBuilder();

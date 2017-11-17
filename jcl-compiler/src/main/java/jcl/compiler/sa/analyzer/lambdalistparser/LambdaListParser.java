@@ -570,14 +570,14 @@ public class LambdaListParser {
 						final ListStruct currentVar = (ListStruct) firstInCurrent;
 						final long currentVarLength = currentVar.length().toJavaPLong();
 						if (currentVarLength == 2) {
-							final LispStruct firstInCurrentVar = currentVar.getCar();
+							final LispStruct firstInCurrentVar = currentVar.car();
 							if (firstInCurrentVar instanceof SymbolStruct) {
 								varKeyNameCurrent = (SymbolStruct) firstInCurrentVar;
 							} else {
 								throw new ProgramErrorException("LambdaList &key var name list key-name parameters must be a symbol: " + firstInCurrentVar);
 							}
 
-							final LispStruct secondInCurrentVar = ((ListStruct) currentVar.getCdr()).getCar();
+							final LispStruct secondInCurrentVar = ((ListStruct) currentVar.cdr()).car();
 							if (!(secondInCurrentVar instanceof SymbolStruct)) {
 								throw new ProgramErrorException("LambdaList &key var name list name parameters must be a symbol: " + secondInCurrentVar);
 							}

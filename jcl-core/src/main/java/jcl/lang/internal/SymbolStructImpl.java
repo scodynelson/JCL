@@ -526,7 +526,7 @@ public class SymbolStructImpl extends BuiltInClassStruct implements SymbolStruct
 			//      the constant NIL symbol with a dependence on its existence.
 			properties = NILStruct.INSTANCE;
 		}
-		return properties.getProperty(indicator, defaultValue);
+		return properties.getf(indicator, defaultValue);
 	}
 
 	/**
@@ -545,7 +545,7 @@ public class SymbolStructImpl extends BuiltInClassStruct implements SymbolStruct
 			//      the constant NIL symbol with a dependence on its existence.
 			properties = NILStruct.INSTANCE;
 		}
-		return properties.setProperty(indicator, newValue);
+		return properties.putf(indicator, newValue);
 	}
 
 	/**
@@ -563,7 +563,7 @@ public class SymbolStructImpl extends BuiltInClassStruct implements SymbolStruct
 			//      the constant NIL symbol with a dependence on its existence.
 			properties = NILStruct.INSTANCE;
 		}
-		return properties.removeProperty(indicator);
+		return properties.remf(indicator).toJavaPBoolean();
 	}
 
 	/**

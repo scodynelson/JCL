@@ -142,7 +142,7 @@ public abstract class InnerLambdaExpander extends MacroFunctionExpander<InnerLam
 			}
 			final ListStruct functionList = (ListStruct) functionDefinition;
 
-			final LispStruct functionListFirst = functionList.getCar();
+			final LispStruct functionListFirst = functionList.car();
 			if (!(functionListFirst instanceof SymbolStruct)) {
 				throw new TypeErrorException(expanderName + ": First element of function parameter must be a Symbol. Got: " + functionListFirst);
 			}
@@ -161,7 +161,7 @@ public abstract class InnerLambdaExpander extends MacroFunctionExpander<InnerLam
 	                                                final Environment environment, final List<SymbolStruct> functionNames) {
 
 		final ListStruct functionList = (ListStruct) functionDefinition;
-		final SymbolStruct functionName = (SymbolStruct) functionList.getCar();
+		final SymbolStruct functionName = (SymbolStruct) functionList.car();
 		final CompilerFunctionStruct functionInitForm = getFunctionParameterInitForm(functionList, environment, functionNames);
 
 		final boolean isSpecial = declare.getSpecialDeclarations()

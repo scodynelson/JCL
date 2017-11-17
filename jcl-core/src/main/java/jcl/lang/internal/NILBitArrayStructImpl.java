@@ -29,7 +29,7 @@ public class NILBitArrayStructImpl extends NILArrayStructImpl implements BitArra
 	}
 
 	public static BitArrayStruct valueOf(final IntegerStruct initialElement, final BooleanStruct isAdjustable) {
-		final boolean adjustableBoolean = isAdjustable.booleanValue();
+		final boolean adjustableBoolean = isAdjustable.toJavaPBoolean();
 		final ArrayType arrayType = getArrayType(adjustableBoolean);
 		return new NILBitArrayStructImpl(arrayType, initialElement, adjustableBoolean);
 	}
@@ -45,7 +45,7 @@ public class NILBitArrayStructImpl extends NILArrayStructImpl implements BitArra
 			}
 		}
 
-		final boolean adjustableBoolean = isAdjustable.booleanValue();
+		final boolean adjustableBoolean = isAdjustable.toJavaPBoolean();
 		final ArrayType arrayType = getArrayType(adjustableBoolean);
 		// TODO
 		return new NILBitArrayStructImpl(arrayType, initialContents, adjustableBoolean);
@@ -60,7 +60,7 @@ public class NILBitArrayStructImpl extends NILArrayStructImpl implements BitArra
 		}
 
 		return new NILBitArrayStructImpl(ArrayType.INSTANCE, displacedTo, displacedIndexOffset.toJavaInt(),
-		                                 isAdjustable.booleanValue());
+		                                 isAdjustable.toJavaPBoolean());
 	}
 
 	public static BitArrayStruct valueOf(final IntegerStruct initialElement) {

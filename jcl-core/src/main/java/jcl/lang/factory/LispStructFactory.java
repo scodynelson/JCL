@@ -18,7 +18,6 @@ import java.util.stream.Collectors;
 import jcl.lang.ArrayStruct;
 import jcl.lang.BinaryNativeStreamStruct;
 import jcl.lang.BitVectorStruct;
-import jcl.lang.BooleanStruct;
 import jcl.lang.BroadcastStreamStruct;
 import jcl.lang.CharacterNativeStreamStruct;
 import jcl.lang.ConcatenatedStreamStruct;
@@ -33,7 +32,6 @@ import jcl.lang.JavaStreamStruct;
 import jcl.lang.KeywordStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.LogicalPathnameStruct;
-import jcl.lang.NILStruct;
 import jcl.lang.OutputStreamStruct;
 import jcl.lang.PackageStruct;
 import jcl.lang.PathnameStruct;
@@ -42,7 +40,6 @@ import jcl.lang.StringInputStreamStruct;
 import jcl.lang.StringOutputStreamStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.SynonymStreamStruct;
-import jcl.lang.TStruct;
 import jcl.lang.TwoWayStreamStruct;
 import jcl.lang.URLStreamStruct;
 import jcl.lang.VectorStruct;
@@ -130,17 +127,6 @@ public final class LispStructFactory {
 
 	public static BitVectorStruct toBitVector(final List<IntegerStruct> contents) {
 		return BitVectorStructImpl.valueOfCont(contents);
-	}
-
-	/*
-	 * Boolean
-	 */
-
-	public static BooleanStruct toBoolean(final Boolean aBoolean) {
-		if (aBoolean == null) {
-			return NILStruct.INSTANCE;
-		}
-		return aBoolean ? TStruct.INSTANCE : NILStruct.INSTANCE;
 	}
 
 	/*

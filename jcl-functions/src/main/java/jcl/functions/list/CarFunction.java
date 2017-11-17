@@ -28,6 +28,6 @@ public final class CarFunction extends CommonLispBuiltInFunctionStructBase {
 	@Override
 	public LispStruct apply(final Arguments arguments) {
 		final ListStruct list = arguments.getRequiredArgument(LIST_ARGUMENT, ListStruct.class);
-		return list.getCar();
+		return list.car();
 	}
 }

@@ -5,9 +5,9 @@
 package jcl.functions.character;
 
 import jcl.functions.CommonLispBuiltInFunctionStructBase;
+import jcl.lang.BooleanStruct;
 import jcl.lang.CharacterStruct;
 import jcl.lang.LispStruct;
-import jcl.lang.factory.LispStructFactory;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import org.springframework.stereotype.Component;
@@ -32,6 +32,6 @@ public final class CharacterPFunction extends CommonLispBuiltInFunctionStructBas
 	@Override
 	public LispStruct apply(final Arguments arguments) {
 		final LispStruct object = arguments.getRequiredArgument(OBJECT_ARGUMENT);
-		return LispStructFactory.toBoolean(object instanceof CharacterStruct);
+		return BooleanStruct.toLispBoolean(object instanceof CharacterStruct);
 	}
 }

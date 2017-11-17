@@ -16,42 +16,92 @@ public interface IntegerStruct extends RationalStruct {
 	/**
 	 * {@link IntegerStruct} constant representing 0.
 	 */
-	IntegerStruct ZERO = toLispInteger(0);
-
-	/**
-	 * {@link IntegerStruct} constant representing 0.
-	 */
-	IntegerStruct ZERO_NEW = new FixnumStructImpl(0);
+	FixnumStruct ZERO = toLispInteger(0);
 
 	/**
 	 * {@link IntegerStruct} constant representing 1.
 	 */
-	IntegerStruct ONE = toLispInteger(1);
-
-	/**
-	 * {@link IntegerStruct} constant representing 0.
-	 */
-	IntegerStruct ONE_NEW = new FixnumStructImpl(1);
+	FixnumStruct ONE = toLispInteger(1);
 
 	/**
 	 * {@link IntegerStruct} constant representing 2.
 	 */
-	IntegerStruct TWO = toLispInteger(2);
+	FixnumStruct TWO = toLispInteger(2);
+
+	/**
+	 * {@link IntegerStruct} constant representing 3.
+	 */
+	FixnumStruct THREE = toLispInteger(3);
+
+	/**
+	 * {@link IntegerStruct} constant representing 4.
+	 */
+	FixnumStruct FOUR = toLispInteger(4);
+
+	/**
+	 * {@link IntegerStruct} constant representing 5.
+	 */
+	FixnumStruct FIVE = toLispInteger(5);
+
+	/**
+	 * {@link IntegerStruct} constant representing 6.
+	 */
+	FixnumStruct SIX = toLispInteger(6);
+
+	/**
+	 * {@link IntegerStruct} constant representing 7.
+	 */
+	FixnumStruct SEVEN = toLispInteger(7);
+
+	/**
+	 * {@link IntegerStruct} constant representing 8.
+	 */
+	FixnumStruct EIGHT = toLispInteger(8);
+
+	/**
+	 * {@link IntegerStruct} constant representing 9.
+	 */
+	FixnumStruct NINE = toLispInteger(9);
 
 	/**
 	 * {@link IntegerStruct} constant representing 10.
 	 */
-	IntegerStruct TEN = toLispInteger(10);
+	FixnumStruct TEN = toLispInteger(10);
+
+	/**
+	 * {@link IntegerStruct} constant representing 11.
+	 */
+	FixnumStruct ELEVEN = toLispInteger(11);
+
+	/**
+	 * {@link IntegerStruct} constant representing 12.
+	 */
+	FixnumStruct TWELVE = toLispInteger(12);
+
+	/**
+	 * {@link IntegerStruct} constant representing 13.
+	 */
+	FixnumStruct THIRTEEN = toLispInteger(13);
+
+	/**
+	 * {@link IntegerStruct} constant representing 14.
+	 */
+	FixnumStruct FOURTEEN = toLispInteger(14);
+
+	/**
+	 * {@link IntegerStruct} constant representing 15.
+	 */
+	FixnumStruct FIFTEEN = toLispInteger(15);
+
+	/**
+	 * {@link IntegerStruct} constant representing 16.
+	 */
+	FixnumStruct SIXTEEN = toLispInteger(16);
 
 	/**
 	 * {@link IntegerStruct} constant representing -1.
 	 */
-	IntegerStruct MINUS_ONE = toLispInteger(-1);
-
-	/**
-	 * {@link IntegerStruct} constant representing 0.
-	 */
-	IntegerStruct MINUS_ONE_NEW = new FixnumStructImpl(-1);
+	FixnumStruct MINUS_ONE = toLispInteger(-1);
 
 	/**
 	 * Returns the greatest common divisor of the provided IntegerStructs. If the number of IntegerStructs provided is
@@ -372,11 +422,11 @@ public interface IntegerStruct extends RationalStruct {
 	 */
 	BigInteger toJavaBigInteger();
 
-	static IntegerStruct toLispInteger(final int value) {
+	static FixnumStruct toLispInteger(final int value) {
 		return new FixnumStructImpl(value);
 	}
 
-	static IntegerStruct toLispInteger(final Integer value) {
+	static FixnumStruct toLispInteger(final Integer value) {
 		return new FixnumStructImpl(value);
 	}
 

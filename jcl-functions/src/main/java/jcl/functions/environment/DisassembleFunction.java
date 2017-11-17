@@ -65,7 +65,7 @@ public final class DisassembleFunction extends CommonLispBuiltInFunctionStructBa
 			}
 		} else if (functionDesignator instanceof ListStruct) {
 			final SymbolStruct functionSymbol
-					= (SymbolStruct) ((ListStruct) ((ListStruct) functionDesignator).getCdr()).getCar();
+					= (SymbolStruct) ((ListStruct) ((ListStruct) functionDesignator).cdr()).car();
 			if (functionSymbol.hasFunction()) {
 				function = functionSymbol.getFunction();
 			}

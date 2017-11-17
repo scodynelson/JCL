@@ -67,7 +67,7 @@ public final class ReadPreservingWhitespaceFunction extends CommonLispBuiltInFun
 	public LispStruct readPreservingWhitespace(final InputStreamStruct inputStreamStruct, final BooleanStruct eofErrorP, final LispStruct eofValue,
 	                                           final BooleanStruct recursiveP) {
 
-		return readPreservingWhitespace(inputStreamStruct, eofErrorP.booleanValue(), eofValue, recursiveP.booleanValue());
+		return readPreservingWhitespace(inputStreamStruct, eofErrorP.toJavaPBoolean(), eofValue, recursiveP.toJavaPBoolean());
 	}
 
 	public LispStruct readPreservingWhitespace(final InputStreamStruct inputStreamStruct, final boolean eofErrorP, final LispStruct eofValue,

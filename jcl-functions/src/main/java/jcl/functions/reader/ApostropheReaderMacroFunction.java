@@ -44,7 +44,7 @@ public class ApostropheReaderMacroFunction extends ReaderMacroFunctionImpl {
 		assert codePoint == CodePointConstants.APOSTROPHE;
 
 		final LispStruct token = reader.read(inputStreamStruct, true, NILStruct.INSTANCE, true);
-		if (ReaderVariables.READ_SUPPRESS.getVariableValue().booleanValue()) {
+		if (ReaderVariables.READ_SUPPRESS.getVariableValue().toJavaPBoolean()) {
 			return NILStruct.INSTANCE;
 		}
 

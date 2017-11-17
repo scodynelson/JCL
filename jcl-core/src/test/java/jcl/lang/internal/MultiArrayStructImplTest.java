@@ -204,10 +204,10 @@ public class MultiArrayStructImplTest {
 		Assert.assertThat(result, not(is(NILStruct.INSTANCE)));
 		Assert.assertThat(result.length(), is(IntegerStruct.TWO));
 
-		final LispStruct dim1 = result.nth((FixnumStruct) IntegerStruct.ZERO);
+		final LispStruct dim1 = result.nth(IntegerStruct.ZERO);
 		Assert.assertThat(dim1, is(IntegerStruct.TWO));
 
-		final LispStruct dim2 = result.nth((FixnumStruct) IntegerStruct.ONE);
+		final LispStruct dim2 = result.nth(IntegerStruct.ONE);
 		Assert.assertThat(dim2, is(IntegerStruct.TEN));
 	}
 
@@ -263,7 +263,7 @@ public class MultiArrayStructImplTest {
 				                               IntegerStruct.ZERO,
 				                               NILStruct.INSTANCE);
 		final BooleanStruct result = array.arrayInBoundsP(IntegerStruct.ONE);
-		Assert.assertThat(result.booleanValue(), is(false));
+		Assert.assertThat(result.toJavaPBoolean(), is(false));
 	}
 
 	@Test
@@ -274,7 +274,7 @@ public class MultiArrayStructImplTest {
 				                               IntegerStruct.ZERO,
 				                               NILStruct.INSTANCE);
 		final BooleanStruct result = array.arrayInBoundsP(IntegerStruct.ONE, IntegerStruct.ONE, IntegerStruct.ONE);
-		Assert.assertThat(result.booleanValue(), is(false));
+		Assert.assertThat(result.toJavaPBoolean(), is(false));
 	}
 
 	@Test
@@ -285,7 +285,7 @@ public class MultiArrayStructImplTest {
 				                               IntegerStruct.ZERO,
 				                               NILStruct.INSTANCE);
 		final BooleanStruct result = array.arrayInBoundsP(IntegerStruct.MINUS_ONE, IntegerStruct.ONE);
-		Assert.assertThat(result.booleanValue(), is(false));
+		Assert.assertThat(result.toJavaPBoolean(), is(false));
 	}
 
 	@Test
@@ -296,7 +296,7 @@ public class MultiArrayStructImplTest {
 				                               IntegerStruct.ZERO,
 				                               NILStruct.INSTANCE);
 		final BooleanStruct result = array.arrayInBoundsP(IntegerStruct.ONE, IntegerStruct.MINUS_ONE);
-		Assert.assertThat(result.booleanValue(), is(false));
+		Assert.assertThat(result.toJavaPBoolean(), is(false));
 	}
 
 	@Test
@@ -307,7 +307,7 @@ public class MultiArrayStructImplTest {
 				                               IntegerStruct.ZERO,
 				                               NILStruct.INSTANCE);
 		final BooleanStruct result = array.arrayInBoundsP(IntegerStruct.TEN, IntegerStruct.ONE);
-		Assert.assertThat(result.booleanValue(), is(false));
+		Assert.assertThat(result.toJavaPBoolean(), is(false));
 	}
 
 	@Test
@@ -318,7 +318,7 @@ public class MultiArrayStructImplTest {
 				                               IntegerStruct.ZERO,
 				                               NILStruct.INSTANCE);
 		final BooleanStruct result = array.arrayInBoundsP(IntegerStruct.ONE, IntegerStruct.TEN);
-		Assert.assertThat(result.booleanValue(), is(false));
+		Assert.assertThat(result.toJavaPBoolean(), is(false));
 	}
 
 	@Test
@@ -329,7 +329,7 @@ public class MultiArrayStructImplTest {
 				                               IntegerStruct.ZERO,
 				                               NILStruct.INSTANCE);
 		final BooleanStruct result = array.arrayInBoundsP(IntegerStruct.ONE, IntegerStruct.ONE);
-		Assert.assertThat(result.booleanValue(), is(true));
+		Assert.assertThat(result.toJavaPBoolean(), is(true));
 	}
 
 	/*

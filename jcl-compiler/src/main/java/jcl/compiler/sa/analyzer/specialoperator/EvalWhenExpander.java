@@ -68,8 +68,8 @@ public class EvalWhenExpander extends MacroFunctionExpander<LispStruct> {
 		final List<LispStruct> forms = new ArrayList<>();
 		iterator.forEachRemaining(forms::add);
 
-		final boolean isTopLevel = CompilerVariables.COMPILE_TOP_LEVEL.getVariableValue().booleanValue();
-		final boolean convertingForCompiler = !CompilerVariables.CONVERTING_FOR_INTERPRETER.getVariableValue().booleanValue();
+		final boolean isTopLevel = CompilerVariables.COMPILE_TOP_LEVEL.getVariableValue().toJavaPBoolean();
+		final boolean convertingForCompiler = !CompilerVariables.CONVERTING_FOR_INTERPRETER.getVariableValue().toJavaPBoolean();
 
 		if (isTopLevel) {
 			if (isCompileTopLevel(situationList)) {

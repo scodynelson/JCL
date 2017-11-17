@@ -28,8 +28,6 @@ public interface ListStruct extends SequenceStruct {
 	 */
 	LispStruct car();
 
-	LispStruct setCar(final LispStruct car);
-
 	/**
 	 * Returns the 'cdr' (or tail) of the list. If the list is a {@link ConsStruct}, the car {@link LispStruct} is
 	 * returned. If the list is a {@link NILStruct}, {@link NILStruct#INSTANCE} is returned.
@@ -37,8 +35,6 @@ public interface ListStruct extends SequenceStruct {
 	 * @return the 'cdr' (or tail) of the list
 	 */
 	LispStruct cdr();
-
-	LispStruct setCdr(final LispStruct cdr);
 
 	/**
 	 * Returns a shallow copy of the list. Only the structure of the original list is copied, preseving the elements of
@@ -63,7 +59,7 @@ public interface ListStruct extends SequenceStruct {
 	 * @return the length of the list if the list is a proper-list; otherwise {@link NILStruct#INSTANCE} if the list is
 	 * a circular-list
 	 */
-	IntegerStruct listLength();
+	FixnumStruct listLength();
 
 	/**
 	 * Returns a list of length given by size, each of the elements of which is initial-element.
@@ -86,8 +82,6 @@ public interface ListStruct extends SequenceStruct {
 		}
 		return result;
 	}
-
-	// TODO: Push/Pushnew/Pop??
 
 	/**
 	 * Returns the nth element of list at the provided index.
@@ -179,11 +173,11 @@ public interface ListStruct extends SequenceStruct {
 			}
 
 			final LispStruct last = result.last();
-			if (!(last instanceof ListStruct)) {
+			if (!(last instanceof ConsStruct)) {
 				throw new TypeErrorException("Arguments contain a non-proper list -- " + result);
 			}
-			final ListStruct lastOfResult = (ListStruct) last;
-			lastOfResult.setCdr(copyList);
+			final ConsStruct lastOfResult = (ConsStruct) last;
+			lastOfResult.rplacd(copyList);
 		}
 
 		if (NILStruct.INSTANCE.eq(result)) {
@@ -191,11 +185,11 @@ public interface ListStruct extends SequenceStruct {
 		}
 
 		final LispStruct last = result.last();
-		if (!(last instanceof ListStruct)) {
+		if (!(last instanceof ConsStruct)) {
 			throw new TypeErrorException("Arguments contain a non-proper list -- " + result);
 		}
-		final ListStruct lastOfResult = (ListStruct) last;
-		lastOfResult.setCdr(object);
+		final ConsStruct lastOfResult = (ConsStruct) last;
+		lastOfResult.rplacd(object);
 
 		return result;
 	}
@@ -250,11 +244,11 @@ public interface ListStruct extends SequenceStruct {
 			}
 
 			final LispStruct last = result.last();
-			if (!(last instanceof ListStruct)) {
+			if (!(last instanceof ConsStruct)) {
 				throw new TypeErrorException("Arguments contain a non-proper list -- " + result);
 			}
-			final ListStruct lastOfResult = (ListStruct) last;
-			lastOfResult.setCdr(list);
+			final ConsStruct lastOfResult = (ConsStruct) last;
+			lastOfResult.rplacd(list);
 		}
 
 		if (NILStruct.INSTANCE.eq(result)) {
@@ -262,11 +256,11 @@ public interface ListStruct extends SequenceStruct {
 		}
 
 		final LispStruct last = result.last();
-		if (!(last instanceof ListStruct)) {
+		if (!(last instanceof ConsStruct)) {
 			throw new TypeErrorException("Arguments contain a non-proper list -- " + result);
 		}
-		final ListStruct lastOfResult = (ListStruct) last;
-		lastOfResult.setCdr(object);
+		final ConsStruct lastOfResult = (ConsStruct) last;
+		lastOfResult.rplacd(object);
 
 		return result;
 	}
@@ -281,32 +275,128 @@ public interface ListStruct extends SequenceStruct {
 		return nConc(Collections.singletonList(nReverse), tail);
 	}
 
-
 	default ListStruct butLast() {
-		return butLast(1);
+		return butLast(IntegerStruct.ONE);
 	}
 
-	ListStruct butLast(final long n);
+	ListStruct butLast(final FixnumStruct n);
 
 	default ListStruct nButLast() {
-		return nButLast(1);
+		return nButLast(IntegerStruct.ONE);
 	}
 
-	ListStruct nButLast(final long n);
+	ListStruct nButLast(final FixnumStruct n);
 
 	default LispStruct last() {
-		return last(1);
+		return last(IntegerStruct.ONE);
 	}
 
-	LispStruct last(final long n);
+	LispStruct last(final FixnumStruct n);
 
 	ListStruct ldiff(final LispStruct object);
 
-	boolean tailp(final LispStruct object);
+	BooleanStruct tailp(final LispStruct object);
 
 	// TODO: Fast-Member???
 
-	// TODO: Map* functions?
+	enum Accumulate {
+		NONE,
+		LIST,
+		NCONC
+	}
+
+	static LispStruct mapC(final FunctionStruct function, final ListStruct lists) {
+		return listMapper(function, lists, Accumulate.NONE, true);
+	}
+
+	static LispStruct mapCar(final FunctionStruct function, final ListStruct lists) {
+		return listMapper(function, lists, Accumulate.LIST, true);
+	}
+
+	static LispStruct mapCan(final FunctionStruct function, final ListStruct lists) {
+		return listMapper(function, lists, Accumulate.NCONC, true);
+	}
+
+	static LispStruct mapL(final FunctionStruct function, final ListStruct lists) {
+		return listMapper(function, lists, Accumulate.NONE, false);
+	}
+
+	static LispStruct mapList(final FunctionStruct function, final ListStruct lists) {
+		return listMapper(function, lists, Accumulate.LIST, false);
+	}
+
+	static LispStruct mapCon(final FunctionStruct function, final ListStruct lists) {
+		return listMapper(function, lists, Accumulate.NCONC, false);
+	}
+
+	private static LispStruct listMapper(final FunctionStruct function, final ListStruct originalArglists,
+	                                     final Accumulate accumulate, final boolean takeCar) {
+		final ListStruct arglists = originalArglists.copyList();
+		final ConsStruct retList = ConsStruct.toLispCons(NILStruct.INSTANCE, NILStruct.INSTANCE);
+		ConsStruct temp = retList;
+
+		// Outer 'DO' vars
+		ListStruct args = NILStruct.INSTANCE;
+
+		while (true) {
+			for (final LispStruct arglist : arglists) {
+				if (NILStruct.INSTANCE.eq(arglist)) {
+					if (accumulate != null) {
+						return retList.cdr();
+					} else {
+						return originalArglists.car();
+					}
+				}
+			}
+
+			// Inner 'DO' vars
+			ListStruct remainingLists = arglists;
+
+			while (!NILStruct.INSTANCE.eq(remainingLists)) {
+
+				// PUSH
+				final LispStruct carToPush;
+				if (takeCar) {
+					carToPush = ((ListStruct) remainingLists.car()).car();
+				} else {
+					carToPush = remainingLists.car();
+				}
+				args = ConsStruct.toLispCons(carToPush, args);
+
+				// SETF
+				final LispStruct cdarL = ((ListStruct) remainingLists.car()).cdr();
+				((ConsStruct) remainingLists).rplaca(cdarL);
+
+				// Update remainingLists Inner 'DO' var
+				remainingLists = (ListStruct) remainingLists.cdr();
+			}
+
+			// SETQ
+			final LispStruct res = function.apply(args.nReverse().toArray());
+
+			// CASE
+			switch (accumulate) {
+				case NCONC:
+					final List<ListStruct> lists = new ArrayList<>();
+					for (final LispStruct curr : temp) {
+						lists.add((ListStruct) curr);
+					}
+					final ListStruct nconc = (ListStruct) nConc(lists, res);
+					temp = (ConsStruct) nconc.last();
+					break;
+				case LIST:
+					temp.rplacd(toLispList(res));
+					temp = (ConsStruct) temp.cdr();
+					break;
+				case NONE:
+					break;
+			}
+
+			// Update Args Outer 'DO' var
+			args = NILStruct.INSTANCE;
+		}
+	}
+
 
 	/**
 	 * Returns a copy of alist. The list structure of alist is copied, and the elements of alist which are conses are
@@ -332,6 +422,8 @@ public interface ListStruct extends SequenceStruct {
 	LispStruct getf(final LispStruct indicator, final LispStruct defaultValue);
 
 	ListStruct putf(final LispStruct indicator, final LispStruct newValue);
+
+	BooleanStruct remf(final LispStruct indicator);
 
 	// TODO: Fast-Adjoin???
 
@@ -471,21 +563,6 @@ public interface ListStruct extends SequenceStruct {
 	OLD
 	 */
 
-	@Deprecated
-	LispStruct getCar();
-
-	@Deprecated
-	LispStruct getCdr();
-
-	@Deprecated
-	LispStruct getProperty(final LispStruct indicator, final LispStruct defaultValue);
-
-	@Deprecated
-	ListStruct setProperty(final LispStruct indicator, final LispStruct newValue);
-
-	@Deprecated
-	boolean removeProperty(final LispStruct indicator);
-
 	/**
 	 * Determines if the list is a dotted list.
 	 *
@@ -501,6 +578,6 @@ public interface ListStruct extends SequenceStruct {
 	 */
 	@Deprecated
 	default boolean isProper() {
-		return !isDotted() && !IntegerStruct.MINUS_ONE.eq(listLength());
+		return !isDotted() && !IntegerStruct.MINUS_ONE.eql(listLength());
 	}
 }

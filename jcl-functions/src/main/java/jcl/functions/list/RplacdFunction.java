@@ -27,7 +27,6 @@ public final class RplacdFunction extends CommonLispBuiltInFunctionStructBase {
 	public LispStruct apply(final Arguments arguments) {
 		final ConsStruct cons = arguments.getRequiredArgument(CONS_ARGUMENT, ConsStruct.class);
 		final LispStruct object = arguments.getRequiredArgument(OBJECT_ARGUMENT);
-		cons.setCdr(object);
-		return cons;
+		return cons.rplacd(object);
 	}
 }

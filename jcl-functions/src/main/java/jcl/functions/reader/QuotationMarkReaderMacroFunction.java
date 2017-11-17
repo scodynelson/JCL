@@ -54,7 +54,7 @@ public class QuotationMarkReaderMacroFunction extends ReaderMacroFunctionImpl {
 			nextCodePoint = readResult.getResult();
 		}
 
-		if (ReaderVariables.READ_SUPPRESS.getVariableValue().booleanValue()) {
+		if (ReaderVariables.READ_SUPPRESS.getVariableValue().toJavaPBoolean()) {
 			return NILStruct.INSTANCE;
 		}
 

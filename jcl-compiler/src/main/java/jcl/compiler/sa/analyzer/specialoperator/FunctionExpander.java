@@ -54,7 +54,7 @@ public class FunctionExpander extends MacroFunctionExpander<CompilerFunctionStru
 
 	private CompilerFunctionStruct analyzeFunctionList(final ListStruct functionList, final Environment environment) {
 
-		final LispStruct functionListFirst = functionList.getCar();
+		final LispStruct functionListFirst = functionList.car();
 
 		if (!SpecialOperatorStructImpl.LAMBDA.eq(functionListFirst)) {
 			throw new ProgramErrorException("FUNCTION: First element of list argument must be the symbol 'LAMBDA'. Got: " + functionListFirst);

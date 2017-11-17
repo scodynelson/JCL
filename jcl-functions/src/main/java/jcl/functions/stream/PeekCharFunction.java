@@ -73,7 +73,7 @@ public final class PeekCharFunction extends CommonLispBuiltInFunctionStructBase 
 		final LispStruct eofValue = arguments.getOptionalArgument(EOF_VALUE_ARGUMENT);
 		final BooleanStruct recursiveP = arguments.getOptionalArgument(RECURSIVE_P_ARGUMENT, BooleanStruct.class);
 
-		final ReadPeekResult readPeekResult = inputStreamStruct.peekChar(peekType, eofErrorP.booleanValue(), eofValue, recursiveP.booleanValue());
+		final ReadPeekResult readPeekResult = inputStreamStruct.peekChar(peekType, eofErrorP.toJavaPBoolean(), eofValue, recursiveP.toJavaPBoolean());
 		return readPeekResult.isEof() ? eofValue : CharacterStruct.toLispCharacter(readPeekResult.getResult());
 	}
 }

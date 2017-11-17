@@ -49,7 +49,7 @@ public class DollarSignReaderMacroFunction extends ReaderMacroFunctionImpl {
 			readtable.setReadtableCase(previousCase);
 		}
 
-		if (ReaderVariables.READ_SUPPRESS.getVariableValue().booleanValue()) {
+		if (ReaderVariables.READ_SUPPRESS.getVariableValue().toJavaPBoolean()) {
 			return null;
 		}
 

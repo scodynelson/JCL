@@ -128,7 +128,7 @@ public class MacroletExpander extends MacroFunctionExpander<InnerLambdaStruct> {
 			}
 			final ListStruct functionList = (ListStruct) functionDefinition;
 
-			final LispStruct functionListFirst = functionList.getCar();
+			final LispStruct functionListFirst = functionList.car();
 			if (!(functionListFirst instanceof SymbolStruct)) {
 				throw new ProgramErrorException("MACROLET: First element of function parameter must be a Symbol. Got: " + functionListFirst);
 			}
@@ -147,7 +147,7 @@ public class MacroletExpander extends MacroFunctionExpander<InnerLambdaStruct> {
 	                                                        final Environment macroletEnvironment) {
 
 		final ListStruct functionList = (ListStruct) functionDefinition;
-		final SymbolStruct functionName = (SymbolStruct) functionList.getCar();
+		final SymbolStruct functionName = (SymbolStruct) functionList.car();
 		final CompilerFunctionStruct functionInitForm = getFunctionParameterInitForm(functionList, macroletEnvironment);
 
 		final boolean isSpecial = declare.getSpecialDeclarations()

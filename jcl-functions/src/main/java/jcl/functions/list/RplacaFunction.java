@@ -27,7 +27,6 @@ public final class RplacaFunction extends CommonLispBuiltInFunctionStructBase {
 	public LispStruct apply(final Arguments arguments) {
 		final ConsStruct cons = arguments.getRequiredArgument(CONS_ARGUMENT, ConsStruct.class);
 		final LispStruct object = arguments.getRequiredArgument(OBJECT_ARGUMENT);
-		cons.setCar(object);
-		return cons;
+		return cons.rplaca(object);
 	}
 }

@@ -13,7 +13,6 @@ import jcl.lang.SequenceStruct;
 import jcl.lang.StringStruct;
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
-import jcl.lang.factory.LispStructFactory;
 import jcl.lang.statics.PrinterVariables;
 import jcl.type.ArrayType;
 import jcl.type.LispType;
@@ -87,7 +86,7 @@ public class NILArrayStructImpl extends ArrayStructImpl {
 		}
 		final LispType upgradedET = ArrayStruct.upgradedArrayElementType(elementType);
 
-		final boolean adjustableBoolean = isAdjustable.booleanValue();
+		final boolean adjustableBoolean = isAdjustable.toJavaPBoolean();
 		final ArrayType arrayType = getArrayType(adjustableBoolean);
 		return new NILArrayStructImpl(arrayType, upgradedET, initialElement, adjustableBoolean);
 	}
@@ -116,7 +115,7 @@ public class NILArrayStructImpl extends ArrayStructImpl {
 			}
 		}
 
-		final boolean adjustableBoolean = isAdjustable.booleanValue();
+		final boolean adjustableBoolean = isAdjustable.toJavaPBoolean();
 		final ArrayType arrayType = getArrayType(adjustableBoolean);
 		return new NILArrayStructImpl(arrayType, upgradedET, initialContents, adjustableBoolean);
 	}
@@ -155,7 +154,7 @@ public class NILArrayStructImpl extends ArrayStructImpl {
 		                              upgradedET,
 		                              displacedTo,
 		                              displacedIndexOffset.toJavaInt(),
-		                              isAdjustable.booleanValue());
+		                              isAdjustable.toJavaPBoolean());
 	}
 
 	/**
@@ -337,7 +336,7 @@ public class NILArrayStructImpl extends ArrayStructImpl {
 
 	@Override
 	public BooleanStruct arrayInBoundsP(final IntegerStruct... subscripts) {
-		return LispStructFactory.toBoolean(subscripts.length == 0);
+		return BooleanStruct.toLispBoolean(subscripts.length == 0);
 	}
 
 	@Override
@@ -430,8 +429,8 @@ public class NILArrayStructImpl extends ArrayStructImpl {
 	public String toString() {
 		// TODO: Ignoring *PRINT-LEVEL* and *PRINT-LENGTH*
 
-		final boolean printArray = PrinterVariables.PRINT_ARRAY.getVariableValue().booleanValue();
-		final boolean printReadably = PrinterVariables.PRINT_READABLY.getVariableValue().booleanValue();
+		final boolean printArray = PrinterVariables.PRINT_ARRAY.getVariableValue().toJavaPBoolean();
+		final boolean printReadably = PrinterVariables.PRINT_READABLY.getVariableValue().toJavaPBoolean();
 
 		final StringBuilder stringBuilder = new StringBuilder();
 

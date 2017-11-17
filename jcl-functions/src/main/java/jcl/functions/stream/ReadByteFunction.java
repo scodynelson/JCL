@@ -54,7 +54,7 @@ public final class ReadByteFunction extends CommonLispBuiltInFunctionStructBase 
 		final BooleanStruct eofErrorP = arguments.getOptionalArgument(EOF_ERROR_ARGUMENT, BooleanStruct.class);
 		final LispStruct eofValue = arguments.getOptionalArgument(EOF_VALUE_ARGUMENT);
 
-		final ReadPeekResult readPeekResult = inputStreamStruct.readByte(eofErrorP.booleanValue(), eofValue);
+		final ReadPeekResult readPeekResult = inputStreamStruct.readByte(eofErrorP.toJavaPBoolean(), eofValue);
 		return readPeekResult.isEof() ? eofValue : IntegerStruct.toLispInteger(readPeekResult.getResult());
 	}
 }

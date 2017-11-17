@@ -31,6 +31,6 @@ public final class GetfFunction extends CommonLispBuiltInFunctionStructBase {
 		final ListStruct plist = arguments.getRequiredArgument(PLIST_ARGUMENT, ListStruct.class);
 		final LispStruct indicator = arguments.getRequiredArgument(INDICATOR_ARGUMENT);
 		final LispStruct defaultValue = arguments.getOptionalArgument(DEFAULT_ARGUMENT);
-		return plist.getProperty(indicator, defaultValue);
+		return plist.getf(indicator, defaultValue);
 	}
 }

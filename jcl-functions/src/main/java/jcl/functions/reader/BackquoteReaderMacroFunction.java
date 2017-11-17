@@ -106,8 +106,8 @@ public class BackquoteReaderMacroFunction extends ReaderMacroFunctionImpl {
 		if (code instanceof ConsStruct) {
 			final ConsStruct consCode = (ConsStruct) code;
 
-			final LispStruct carConsCode = consCode.getCar();
-			final LispStruct cdrConsCode = consCode.getCdr();
+			final LispStruct carConsCode = consCode.car();
+			final LispStruct cdrConsCode = consCode.cdr();
 
 			if (BQ_AT_FLAG.eq(carConsCode) || BQ_DOT_FLAG.eq(carConsCode)) {
 				final SymbolStruct carConsCodeFlag = (SymbolStruct) carConsCode;
@@ -274,12 +274,12 @@ public class BackquoteReaderMacroFunction extends ReaderMacroFunctionImpl {
 		if (code instanceof ConsStruct) {
 			final ConsStruct consCode = (ConsStruct) code;
 
-			final LispStruct carConsCode = consCode.getCar();
-			final LispStruct cdrConsCode = consCode.getCdr();
+			final LispStruct carConsCode = consCode.car();
+			final LispStruct cdrConsCode = consCode.cdr();
 
 			if (SpecialOperatorStructImpl.QUOTE.eq(carConsCode)) {
 				// NOTE: This cast will always be fine because of how we build the ConsStruct in the CommaReaderMacroFunction
-				final LispStruct cadrConsCode = ((ConsStruct) cdrConsCode).getCar();
+				final LispStruct cadrConsCode = ((ConsStruct) cdrConsCode).car();
 				if (!expandableBackqExpressionP(cadrConsCode)) {
 					final SymbolStruct carConsCodeFlag = (SymbolStruct) carConsCode;
 					return new BackquoteReturn(carConsCodeFlag, cadrConsCode);
@@ -307,7 +307,7 @@ public class BackquoteReaderMacroFunction extends ReaderMacroFunctionImpl {
 	private static boolean expandableBackqExpressionP(final LispStruct o) {
 		if (o instanceof ConsStruct) {
 			final ConsStruct consStruct = (ConsStruct) o;
-			final LispStruct flag = consStruct.getCar();
+			final LispStruct flag = consStruct.car();
 			if (BQ_AT_FLAG.eq(flag) || BQ_DOT_FLAG.eq(flag)) {
 				return true;
 			}
@@ -330,11 +330,11 @@ public class BackquoteReaderMacroFunction extends ReaderMacroFunctionImpl {
 			if (thing instanceof ConsStruct) {
 				final ConsStruct consThing = (ConsStruct) thing;
 
-				final LispStruct cdrThing = consThing.getCdr();
+				final LispStruct cdrThing = consThing.cdr();
 
 				// NOTE: This will always be an ok cast due to the backquote reader algorithm
-				final LispStruct cadrThing = ((ConsStruct) cdrThing).getCar();
-				final LispStruct cddrThing = ((ConsStruct) cdrThing).getCdr();
+				final LispStruct cadrThing = ((ConsStruct) cdrThing).car();
+				final LispStruct cddrThing = ((ConsStruct) cdrThing).cdr();
 
 				if (NILStruct.INSTANCE.eq(cddrThing) && !expandableBackqExpressionP(cadrThing)) {
 					// Basically if there are only 2 items in the list, just use Cons function
@@ -343,7 +343,7 @@ public class BackquoteReaderMacroFunction extends ReaderMacroFunctionImpl {
 
 				// NOTE: This is a safe cast, as the last() will always return a List with the last cons, even if the list is dotted
 				final ListStruct lastThing = (ListStruct) consThing.last();
-				final LispStruct carOfLastThing = lastThing.getCar();
+				final LispStruct carOfLastThing = lastThing.car();
 
 				if (expandableBackqExpressionP(carOfLastThing)) {
 					final ListStruct allButLast = consThing.butLast();

@@ -1,6 +1,7 @@
 package jcl.functions.list;
 
 import jcl.functions.CommonLispBuiltInFunctionStructBase;
+import jcl.lang.FixnumStruct;
 import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
@@ -27,7 +28,7 @@ public final class LastFunction extends CommonLispBuiltInFunctionStructBase {
 	@Override
 	public LispStruct apply(final Arguments arguments) {
 		final ListStruct list = arguments.getRequiredArgument(LIST_ARGUMENT, ListStruct.class);
-		final long nVal = arguments.getOptionalArgument(N_ARGUMENT, IntegerStruct.class).toJavaPLong();
+		final FixnumStruct nVal = arguments.getOptionalArgument(N_ARGUMENT, FixnumStruct.class);
 		return list.last(nVal);
 	}
 }

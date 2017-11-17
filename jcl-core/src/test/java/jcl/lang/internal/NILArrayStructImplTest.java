@@ -1115,7 +1115,7 @@ public class NILArrayStructImplTest {
 				= NILArrayStructImpl.valueOf(TType.INSTANCE,
 				                             IntegerStruct.ZERO);
 		final BooleanStruct result = array.arrayInBoundsP();
-		Assert.assertThat(result.booleanValue(), is(true));
+		Assert.assertThat(result.toJavaPBoolean(), is(true));
 	}
 
 	/*

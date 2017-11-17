@@ -22,7 +22,6 @@ import jcl.lang.ValuesStruct;
 import jcl.lang.VectorStruct;
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
-import jcl.lang.factory.LispStructFactory;
 import jcl.lang.statics.PrinterVariables;
 import jcl.type.BitType;
 import jcl.type.BitVectorType;
@@ -327,7 +326,7 @@ public final class BitVectorStructImpl extends AbstractBitVectorStructImpl {
 
 	@Override
 	public BooleanStruct adjustableArrayP() {
-		return LispStructFactory.toBoolean(isAdjustable);
+		return BooleanStruct.toLispBoolean(isAdjustable);
 	}
 
 	@Override
@@ -357,7 +356,7 @@ public final class BitVectorStructImpl extends AbstractBitVectorStructImpl {
 
 	@Override
 	public BooleanStruct arrayHasFillPointerP() {
-		return LispStructFactory.toBoolean(fillPointer != null);
+		return BooleanStruct.toLispBoolean(fillPointer != null);
 	}
 
 	@Override
@@ -435,7 +434,7 @@ public final class BitVectorStructImpl extends AbstractBitVectorStructImpl {
 
 	@Override
 	public String toString() {
-		final boolean printArray = PrinterVariables.PRINT_ARRAY.getVariableValue().booleanValue();
+		final boolean printArray = PrinterVariables.PRINT_ARRAY.getVariableValue().toJavaPBoolean();
 
 		final StringBuilder stringBuilder = new StringBuilder();
 

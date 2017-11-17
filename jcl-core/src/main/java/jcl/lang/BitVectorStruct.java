@@ -133,7 +133,7 @@ public interface BitVectorStruct extends VectorStruct, BitArrayStruct {
 		public BitVectorStruct build() {
 			final int sizeInt = size.toJavaInt();
 			final LispType upgradedET = ArrayStruct.upgradedArrayElementType(elementType);
-			final boolean adjustableBoolean = adjustable.booleanValue();
+			final boolean adjustableBoolean = adjustable.toJavaPBoolean();
 			final Integer fillPointerInt = (fillPointer == null) ? null : fillPointer.toJavaInt();
 
 			if (displacedTo != null) {

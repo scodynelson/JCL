@@ -82,19 +82,19 @@ public final class LoadFunction extends CommonLispBuiltInFunctionStructBase {
 		final LispStruct filespec = arguments.getRequiredArgument(FILESPEC_ARGUMENT);
 		final boolean verbose;
 		if (arguments.hasKeyArgument(CommonLispSymbols.VERBOSE_KEYWORD)) {
-			verbose = arguments.getKeyArgument(CommonLispSymbols.VERBOSE_KEYWORD, BooleanStruct.class).booleanValue();
+			verbose = arguments.getKeyArgument(CommonLispSymbols.VERBOSE_KEYWORD, BooleanStruct.class).toJavaPBoolean();
 		} else {
 			final BooleanStruct currentLoadVerbose = CompilerVariables.LOAD_VERBOSE.getVariableValue();
-			verbose = currentLoadVerbose.booleanValue();
+			verbose = currentLoadVerbose.toJavaPBoolean();
 		}
 		final boolean print;
 		if (arguments.hasKeyArgument(CommonLispSymbols.PRINT_KEYWORD)) {
-			print = arguments.getKeyArgument(CommonLispSymbols.PRINT_KEYWORD, BooleanStruct.class).booleanValue();
+			print = arguments.getKeyArgument(CommonLispSymbols.PRINT_KEYWORD, BooleanStruct.class).toJavaPBoolean();
 		} else {
 			final BooleanStruct currentLoadPrint = CompilerVariables.LOAD_PRINT.getVariableValue();
-			print = currentLoadPrint.booleanValue();
+			print = currentLoadPrint.toJavaPBoolean();
 		}
-		final boolean ifDoesNotExist = arguments.getKeyArgument(CommonLispSymbols.IF_DOES_NOT_EXIST_KEYWORD, BooleanStruct.class).booleanValue();
+		final boolean ifDoesNotExist = arguments.getKeyArgument(CommonLispSymbols.IF_DOES_NOT_EXIST_KEYWORD, BooleanStruct.class).toJavaPBoolean();
 		final LispStruct externalFormat = arguments.getKeyArgument(CommonLispSymbols.EXTERNAL_FORMAT_KEYWORD);
 		return load(filespec, verbose, print, ifDoesNotExist);
 	}

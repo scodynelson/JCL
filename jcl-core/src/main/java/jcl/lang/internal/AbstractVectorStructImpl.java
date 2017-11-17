@@ -28,7 +28,7 @@ public abstract class AbstractVectorStructImpl extends AbstractArrayStructImpl i
 
 	@Override
 	public IntegerStruct arrayDimension(final IntegerStruct axisNumber) {
-		if (!IntegerStruct.ZERO.eq(axisNumber)) {
+		if (!IntegerStruct.ZERO.eql(axisNumber)) {
 			throw new ErrorException("Axis " + axisNumber + " is out of bounds for " + this + '.');
 		}
 		return IntegerStruct.toLispInteger(totalSize);

@@ -45,7 +45,7 @@ public class MultiBitArrayStructImpl extends MultiArrayStructImpl implements Bit
 		                                               .limit(totalSize)
 		                                               .collect(Collectors.toList());
 
-		final boolean adjustableBoolean = isAdjustable.booleanValue();
+		final boolean adjustableBoolean = isAdjustable.toJavaPBoolean();
 		final ArrayType arrayType = getArrayType(adjustableBoolean);
 		return new MultiBitArrayStructImpl(arrayType, dimensionInts, initialContents, adjustableBoolean);
 	}
@@ -57,7 +57,7 @@ public class MultiBitArrayStructImpl extends MultiArrayStructImpl implements Bit
 		                                              .collect(Collectors.toList());
 		final List<LispStruct> validContents = getValidContents(dimensionInts, initialContents);
 
-		final boolean adjustableBoolean = isAdjustable.booleanValue();
+		final boolean adjustableBoolean = isAdjustable.toJavaPBoolean();
 		final ArrayType arrayType = getArrayType(adjustableBoolean);
 		return new MultiBitArrayStructImpl(arrayType, dimensionInts, validContents, adjustableBoolean);
 	}
@@ -72,7 +72,7 @@ public class MultiBitArrayStructImpl extends MultiArrayStructImpl implements Bit
 
 		return new MultiBitArrayStructImpl(ArrayType.INSTANCE, dimensionInts, displacedTo,
 		                                   displacedIndexOffset.toJavaInt(),
-		                                   isAdjustable.booleanValue());
+		                                   isAdjustable.toJavaPBoolean());
 	}
 
 	public static BitArrayStruct valueOf(final List<IntegerStruct> dimensions, final IntegerStruct initialElement) {

@@ -24,7 +24,6 @@ import jcl.lang.StringStruct;
 import jcl.lang.ValuesStruct;
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
-import jcl.lang.factory.LispStructFactory;
 import jcl.lang.readtable.SyntaxType;
 import jcl.lang.statics.CharacterConstants;
 import jcl.lang.statics.PrinterVariables;
@@ -368,7 +367,7 @@ public final class ComplexStringStructImpl extends AbstractStringStructImpl {
 		if (adjustable) {
 			totalSize = newTotalSize.toJavaInt();
 			elementType = upgradedET;
-			adjustable = newAdjustable.booleanValue();
+			adjustable = newAdjustable.toJavaPBoolean();
 			fillPointer = (newFillPointer == null) ? null : newFillPointer.toJavaInt();
 			contents = null;
 			displacedTo = newDisplacedTo;
@@ -403,7 +402,7 @@ public final class ComplexStringStructImpl extends AbstractStringStructImpl {
 
 		if (adjustable) {
 			final int newTotalSizeInt = newTotalSize.toJavaInt();
-			final boolean newAdjustableBoolean = newAdjustable.booleanValue();
+			final boolean newAdjustableBoolean = newAdjustable.toJavaPBoolean();
 			final Integer newFillPointerInt = (newFillPointer == null) ? null : newFillPointer.toJavaInt();
 
 			final List<CharacterStruct> validContents
@@ -442,7 +441,7 @@ public final class ComplexStringStructImpl extends AbstractStringStructImpl {
 		final int newTotalSizeInt = newTotalSize.toJavaInt();
 
 		final BooleanStruct newAdjustable = context.getAdjustable();
-		final boolean newAdjustableBoolean = newAdjustable.booleanValue();
+		final boolean newAdjustableBoolean = newAdjustable.toJavaPBoolean();
 
 		final IntegerStruct newFillPointer = context.getFillPointer();
 		final Integer newFillPointerInt = (newFillPointer == null) ? null : newFillPointer.toJavaInt();
@@ -483,12 +482,12 @@ public final class ComplexStringStructImpl extends AbstractStringStructImpl {
 
 	@Override
 	public BooleanStruct adjustableArrayP() {
-		return LispStructFactory.toBoolean(adjustable);
+		return BooleanStruct.toLispBoolean(adjustable);
 	}
 
 	@Override
 	public BooleanStruct arrayHasFillPointerP() {
-		return LispStructFactory.toBoolean(fillPointer != null);
+		return BooleanStruct.toLispBoolean(fillPointer != null);
 	}
 
 	@Override
@@ -702,7 +701,7 @@ public final class ComplexStringStructImpl extends AbstractStringStructImpl {
 
 	@Override
 	public String toString() {
-		final boolean printEscape = PrinterVariables.PRINT_ESCAPE.getVariableValue().booleanValue();
+		final boolean printEscape = PrinterVariables.PRINT_ESCAPE.getVariableValue().toJavaPBoolean();
 
 		final ReadtableStruct readtable = ReaderVariables.READTABLE.getVariableValue();
 

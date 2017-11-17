@@ -1,10 +1,8 @@
 package jcl.lang.internal;
 
 import java.util.ArrayList;
-import java.util.IdentityHashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Spliterator;
 import java.util.Spliterators;
@@ -81,7 +79,19 @@ public final class ConsStructImpl extends BuiltInClassStruct implements ConsStru
 	}
 
 	@Override
+	public LispStruct setCar(final LispStruct car) {
+		this.car = car;
+		return car;
+	}
+
+	@Override
 	public LispStruct cdr() {
+		return cdr;
+	}
+
+	@Override
+	public LispStruct setCdr(final LispStruct cdr) {
+		this.cdr = cdr;
 		return cdr;
 	}
 
@@ -99,7 +109,7 @@ public final class ConsStructImpl extends BuiltInClassStruct implements ConsStru
 	}
 
 	@Override
-	public LispStruct listLength() {
+	public IntegerStruct listLength() {
 		int n = 0; // Counter.
 		LispStruct fast = this; // Fast pointer: leaps by 2.
 		ListStruct slow = this; // Slow pointer: leaps by 1.
@@ -127,7 +137,7 @@ public final class ConsStructImpl extends BuiltInClassStruct implements ConsStru
 			// (A deeper property is the converse: if we are stuck in a circular list, then eventually the
 			//  fast pointer will equal the slow pointer. That fact justifies this implementation.)
 			if (fast.eq(slow) && (n > 0)) {
-				return NILStruct.INSTANCE;
+				return IntegerStruct.MINUS_ONE;
 			}
 
 			n += 2;
@@ -242,66 +252,6 @@ public final class ConsStructImpl extends BuiltInClassStruct implements ConsStru
 	}
 
 	@Override
-	public LispStruct getProperty(final LispStruct indicator, final LispStruct defaultValue) {
-		final Iterator<LispStruct> iterator = iterator();
-		while (iterator.hasNext()) {
-			final LispStruct key = iterator.next();
-			if (!iterator.hasNext()) {
-				return defaultValue;
-			}
-			final LispStruct value = iterator.next();
-			if (key.eq(indicator)) {
-				return value;
-			}
-		}
-		return defaultValue;
-	}
-
-	@Override
-	public ListStruct setProperty(final LispStruct indicator, final LispStruct newValue) {
-		if (!(cdr instanceof ConsStruct)) {
-			throw new ErrorException("List is not a valid property list.");
-		}
-
-		final ConsStruct cdrCons = (ConsStruct) cdr;
-		if (car.eq(indicator)) {
-			cdrCons.rplaca(newValue);
-		} else if (!(cdrCons.cdr() instanceof ListStruct)) {
-			throw new ErrorException("List is not a valid property list.");
-		} else {
-			final ListStruct cdrCdrList = (ListStruct) cdrCons.cdr();
-			cdrCdrList.setProperty(indicator, newValue);
-		}
-		return this;
-	}
-
-	@Override
-	public boolean removeProperty(final LispStruct indicator) {
-		if (!(cdr instanceof ConsStruct)) {
-			throw new ErrorException("List is not a valid property list.");
-		}
-
-		final ConsStruct cdrCons = (ConsStruct) cdr;
-		if (car.eq(indicator)) {
-			if (NILStruct.INSTANCE.eq(cdrCons.cdr())) {
-				throw new ErrorException("Cannot remove last entry from property list.");
-			}
-			if (!(cdrCons.cdr() instanceof ConsStruct)) {
-				throw new ErrorException("List is not a valid property list.");
-			}
-			final ConsStruct cdrCdrCons = (ConsStruct) cdrCons.cdr();
-			car = cdrCdrCons.car();
-			cdr = cdrCdrCons.cdr();
-		} else if (!(cdrCons.cdr() instanceof ListStruct)) {
-			throw new ErrorException("List is not a valid property list.");
-		} else {
-			final ListStruct cdrCdrList = (ListStruct) cdrCons.cdr();
-			return cdrCdrList.removeProperty(indicator);
-		}
-		return false;
-	}
-
-	@Override
 	public ValuesStruct getProperties(final ListStruct indicators) {
 		if (!(cdr instanceof ConsStruct)) {
 			throw new ErrorException("List is not a valid property list.");
@@ -317,6 +267,40 @@ public final class ConsStructImpl extends BuiltInClassStruct implements ConsStru
 			final ListStruct cdrCdrList = (ListStruct) cdrCons.cdr();
 			return cdrCdrList.getProperties(indicators);
 		}
+	}
+
+	@Override
+	public LispStruct getf(final LispStruct indicator, final LispStruct defaultValue) {
+		final Iterator<LispStruct> iterator = iterator();
+		while (iterator.hasNext()) {
+			final LispStruct key = iterator.next();
+			if (!iterator.hasNext()) {
+				return defaultValue;
+			}
+			final LispStruct value = iterator.next();
+			if (key.eq(indicator)) {
+				return value;
+			}
+		}
+		return defaultValue;
+	}
+
+	@Override
+	public ListStruct putf(final LispStruct indicator, final LispStruct newValue) {
+		if (!(cdr instanceof ConsStruct)) {
+			throw new ErrorException("List is not a valid property list.");
+		}
+
+		final ConsStruct cdrCons = (ConsStruct) cdr;
+		if (car.eq(indicator)) {
+			cdrCons.rplaca(newValue);
+		} else if (!(cdrCons.cdr() instanceof ListStruct)) {
+			throw new ErrorException("List is not a valid property list.");
+		} else {
+			final ListStruct cdrCdrList = (ListStruct) cdrCons.cdr();
+			cdrCdrList.putf(indicator, newValue);
+		}
+		return this;
 	}
 
 	@Override
@@ -588,7 +572,7 @@ public final class ConsStructImpl extends BuiltInClassStruct implements ConsStru
 	@Override
 	public Spliterator<LispStruct> spliterator() {
 		return Spliterators.spliterator(iterator(),
-		                                length().toJavaPLong(),
+		                                listLength().toJavaPLong(),
 		                                Spliterator.ORDERED |
 				                                Spliterator.SIZED |
 				                                Spliterator.NONNULL |
@@ -601,7 +585,7 @@ public final class ConsStructImpl extends BuiltInClassStruct implements ConsStru
 	public String toString() {
 		// TODO: Ignoring *PRINT-PRETTY* and the pretty printer in general right now...
 
-		if (isCircular()) {
+		if (IntegerStruct.MINUS_ONE.eq(listLength())) {
 			return "CIRCULAR LIST PRINTING NOT YET SUPPORTED!!!";
 		}
 
@@ -660,12 +644,12 @@ public final class ConsStructImpl extends BuiltInClassStruct implements ConsStru
 			}
 			final ConsStruct currentAsCons = (ConsStruct) current;
 
-			final LispStruct currentCdr = currentAsCons.getCdr();
+			final LispStruct currentCdr = currentAsCons.cdr();
 			if (!(currentCdr instanceof ListStruct)) {
 				throw new TypeErrorException("Not a proper list.");
 			}
 			current = (ListStruct) currentCdr;
-			return currentAsCons.getCar();
+			return currentAsCons.car();
 		}
 	}
 
@@ -681,20 +665,71 @@ public final class ConsStructImpl extends BuiltInClassStruct implements ConsStru
 
 	@Override
 	@Deprecated
-	public void setCar(final LispStruct car) {
-		this.car = car;
-	}
-
-	@Override
-	@Deprecated
 	public LispStruct getCdr() {
 		return cdr;
 	}
 
 	@Override
 	@Deprecated
-	public void setCdr(final LispStruct cdr) {
-		this.cdr = cdr;
+	public LispStruct getProperty(final LispStruct indicator, final LispStruct defaultValue) {
+		final Iterator<LispStruct> iterator = iterator();
+		while (iterator.hasNext()) {
+			final LispStruct key = iterator.next();
+			if (!iterator.hasNext()) {
+				return defaultValue;
+			}
+			final LispStruct value = iterator.next();
+			if (key.eq(indicator)) {
+				return value;
+			}
+		}
+		return defaultValue;
+	}
+
+	@Override
+	@Deprecated
+	public ListStruct setProperty(final LispStruct indicator, final LispStruct newValue) {
+		if (!(cdr instanceof ConsStruct)) {
+			throw new ErrorException("List is not a valid property list.");
+		}
+
+		final ConsStruct cdrCons = (ConsStruct) cdr;
+		if (car.eq(indicator)) {
+			cdrCons.rplaca(newValue);
+		} else if (!(cdrCons.cdr() instanceof ListStruct)) {
+			throw new ErrorException("List is not a valid property list.");
+		} else {
+			final ListStruct cdrCdrList = (ListStruct) cdrCons.cdr();
+			cdrCdrList.setProperty(indicator, newValue);
+		}
+		return this;
+	}
+
+	@Override
+	@Deprecated
+	public boolean removeProperty(final LispStruct indicator) {
+		if (!(cdr instanceof ConsStruct)) {
+			throw new ErrorException("List is not a valid property list.");
+		}
+
+		final ConsStruct cdrCons = (ConsStruct) cdr;
+		if (car.eq(indicator)) {
+			if (NILStruct.INSTANCE.eq(cdrCons.cdr())) {
+				throw new ErrorException("Cannot remove last entry from property list.");
+			}
+			if (!(cdrCons.cdr() instanceof ConsStruct)) {
+				throw new ErrorException("List is not a valid property list.");
+			}
+			final ConsStruct cdrCdrCons = (ConsStruct) cdrCons.cdr();
+			car = cdrCdrCons.car();
+			cdr = cdrCdrCons.cdr();
+		} else if (!(cdrCons.cdr() instanceof ListStruct)) {
+			throw new ErrorException("List is not a valid property list.");
+		} else {
+			final ListStruct cdrCdrList = (ListStruct) cdrCons.cdr();
+			return cdrCdrList.removeProperty(indicator);
+		}
+		return false;
 	}
 
 	@Override
@@ -705,60 +740,5 @@ public final class ConsStructImpl extends BuiltInClassStruct implements ConsStru
 			return cdrAsList.isDotted();
 		}
 		return true;
-	}
-
-	private static final Object PRESENT = new Object();
-
-	@Override
-	@Deprecated
-	public boolean isCircular() {
-		final Map<ConsStruct, Object> conses = new IdentityHashMap<>();
-		conses.put(this, PRESENT);
-
-		return innerIsCircular(this, conses);
-	}
-
-	/**
-	 * Tests the provided {@code consStruct} for circularity. If the consStruct itself, or any of its cons nodes are
-	 * located in the provided conses list, the cons is circular. This method is recursive and will constantly populate
-	 * the {@code conses} set with node values for testing.
-	 *
-	 * @param consStruct
-	 * 		the cons structure to test for circularity
-	 * @param conses
-	 * 		the set of cons nodes currently found in the tree
-	 *
-	 * @return whether or not the provided {@code consStruct} is circular
-	 */
-	private static boolean innerIsCircular(final ConsStruct consStruct, final Map<ConsStruct, Object> conses) {
-		return isElementCircular(consStruct.car(), conses) || isElementCircular(consStruct.cdr(), conses);
-	}
-
-	/**
-	 * Tests the provided {@code element} for circularity. If the element is a consStruct, it tests it for circularity
-	 * appropriately.
-	 *
-	 * @param element
-	 * 		the element structure to test for circularity
-	 * @param conses
-	 * 		the set of cons nodes currently found in the tree
-	 *
-	 * @return whether or not the provided {@code element} is circular
-	 */
-	private static boolean isElementCircular(final LispStruct element, final Map<ConsStruct, Object> conses) {
-		final boolean isElementCircular;
-		if (element instanceof ConsStruct) {
-			final ConsStruct elementAsCons = (ConsStruct) element;
-			if (conses.containsKey(elementAsCons)) {
-				return true;
-			}
-
-			conses.put(elementAsCons, PRESENT);
-			isElementCircular = innerIsCircular(elementAsCons, conses);
-			conses.remove(elementAsCons);
-		} else {
-			isElementCircular = false;
-		}
-		return isElementCircular;
 	}
 }

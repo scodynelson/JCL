@@ -31,8 +31,6 @@ public final class AconsFunction extends CommonLispBuiltInFunctionStructBase {
 		final LispStruct key = arguments.getRequiredArgument(KEY_ARGUMENT);
 		final LispStruct datum = arguments.getRequiredArgument(DATUM_ARGUMENT);
 		final ListStruct alist = arguments.getRequiredArgument(ALIST_ARGUMENT, ListStruct.class);
-
-		final ConsStruct pair = ConsStruct.toLispCons(key, datum);
-		return ConsStruct.toLispCons(pair, alist);
+		return ConsStruct.acons(key, datum, alist);
 	}
 }

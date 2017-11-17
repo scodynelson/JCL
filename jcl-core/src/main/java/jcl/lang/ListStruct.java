@@ -28,6 +28,8 @@ public interface ListStruct extends SequenceStruct {
 	 */
 	LispStruct car();
 
+	LispStruct setCar(final LispStruct car);
+
 	/**
 	 * Returns the 'cdr' (or tail) of the list. If the list is a {@link ConsStruct}, the car {@link LispStruct} is
 	 * returned. If the list is a {@link NILStruct}, {@link NILStruct#INSTANCE} is returned.
@@ -36,7 +38,7 @@ public interface ListStruct extends SequenceStruct {
 	 */
 	LispStruct cdr();
 
-	// TODO: C*r getter/setter?
+	LispStruct setCdr(final LispStruct cdr);
 
 	/**
 	 * Returns a shallow copy of the list. Only the structure of the original list is copied, preseving the elements of
@@ -61,7 +63,7 @@ public interface ListStruct extends SequenceStruct {
 	 * @return the length of the list if the list is a proper-list; otherwise {@link NILStruct#INSTANCE} if the list is
 	 * a circular-list
 	 */
-	LispStruct listLength();
+	IntegerStruct listLength();
 
 	/**
 	 * Returns a list of length given by size, each of the elements of which is initial-element.
@@ -87,8 +89,6 @@ public interface ListStruct extends SequenceStruct {
 
 	// TODO: Push/Pushnew/Pop??
 
-	// TODO: First-Tenth -> getter/setter?
-
 	/**
 	 * Returns the nth element of list at the provided index.
 	 *
@@ -97,7 +97,7 @@ public interface ListStruct extends SequenceStruct {
 	 *
 	 * @return the nth element of list at the provided index
 	 */
-	LispStruct nth(FixnumStruct index);
+	LispStruct nth(final FixnumStruct index);
 
 	/**
 	 * Sets the nth element of list at the provided index to the provided new value.
@@ -109,7 +109,7 @@ public interface ListStruct extends SequenceStruct {
 	 *
 	 * @return the new value
 	 */
-	LispStruct setNth(FixnumStruct index, LispStruct newValue);
+	LispStruct setNth(final FixnumStruct index, final LispStruct newValue);
 
 	/**
 	 * Returns the cons within the list where the head of the returned list is at the provided index.
@@ -119,7 +119,7 @@ public interface ListStruct extends SequenceStruct {
 	 *
 	 * @return the cons within the list where the head of the returned list is at the provided index
 	 */
-	ListStruct nthCdr(FixnumStruct index);
+	ListStruct nthCdr(final FixnumStruct index);
 
 	/**
 	 * Returns true if the list is the empty list. Returns false if the list is a cons.
@@ -286,31 +286,27 @@ public interface ListStruct extends SequenceStruct {
 		return butLast(1);
 	}
 
-	ListStruct butLast(long n);
+	ListStruct butLast(final long n);
 
 	default ListStruct nButLast() {
 		return nButLast(1);
 	}
 
-	ListStruct nButLast(long n);
+	ListStruct nButLast(final long n);
 
 	default LispStruct last() {
 		return last(1);
 	}
 
-	LispStruct last(long n);
+	LispStruct last(final long n);
 
-	ListStruct ldiff(LispStruct object);
+	ListStruct ldiff(final LispStruct object);
 
-	boolean tailp(LispStruct object);
-
-	// TODO: Rest?
+	boolean tailp(final LispStruct object);
 
 	// TODO: Fast-Member???
 
 	// TODO: Map* functions?
-
-	// TODO: Acons
 
 	/**
 	 * Returns a copy of alist. The list structure of alist is copied, and the elements of alist which are conses are
@@ -327,20 +323,15 @@ public interface ListStruct extends SequenceStruct {
 
 	// TODO: Fast Rassoc???
 
-	ValuesStruct getProperties(ListStruct indicators);
+	ValuesStruct getProperties(final ListStruct indicators);
 
-	// TODO: Getf
+	default LispStruct getf(final LispStruct indicator) {
+		return getf(indicator, NILStruct.INSTANCE);
+	}
 
-	@Deprecated
-	LispStruct getProperty(LispStruct indicator, LispStruct defaultValue);
+	LispStruct getf(final LispStruct indicator, final LispStruct defaultValue);
 
-	@Deprecated
-	ListStruct setProperty(LispStruct indicator, LispStruct newValue);
-
-	// TODO: Remf
-
-	@Deprecated
-	boolean removeProperty(LispStruct indicator);
+	ListStruct putf(final LispStruct indicator, final LispStruct newValue);
 
 	// TODO: Fast-Adjoin???
 
@@ -484,13 +475,16 @@ public interface ListStruct extends SequenceStruct {
 	LispStruct getCar();
 
 	@Deprecated
-	void setCar(LispStruct car);
-
-	@Deprecated
 	LispStruct getCdr();
 
 	@Deprecated
-	void setCdr(LispStruct cdr);
+	LispStruct getProperty(final LispStruct indicator, final LispStruct defaultValue);
+
+	@Deprecated
+	ListStruct setProperty(final LispStruct indicator, final LispStruct newValue);
+
+	@Deprecated
+	boolean removeProperty(final LispStruct indicator);
 
 	/**
 	 * Determines if the list is a dotted list.
@@ -501,20 +495,12 @@ public interface ListStruct extends SequenceStruct {
 	boolean isDotted();
 
 	/**
-	 * Determines if the list is a circular list.
-	 *
-	 * @return if the list is a circular list
-	 */
-	@Deprecated
-	boolean isCircular();
-
-	/**
 	 * Determines if the list is a proper list.
 	 *
 	 * @return if the list is a proper list
 	 */
 	@Deprecated
 	default boolean isProper() {
-		return !isDotted() && !isCircular();
+		return !isDotted() && !IntegerStruct.MINUS_ONE.eq(listLength());
 	}
 }

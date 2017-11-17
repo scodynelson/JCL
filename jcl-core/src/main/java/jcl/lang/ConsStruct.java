@@ -11,6 +11,11 @@ public interface ConsStruct extends ListStruct {
 
 	ConsStruct rplacd(final LispStruct cdr);
 
+	static LispStruct acons(final LispStruct key, final LispStruct datum, final ListStruct alist) {
+		final ConsStruct pair = toLispCons(key, datum);
+		return toLispCons(pair, alist);
+	}
+
 	/*
 	LISP-STRUCT
 	 */

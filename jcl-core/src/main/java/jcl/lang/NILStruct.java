@@ -36,8 +36,18 @@ public final class NILStruct extends BooleanStructImpl implements ListStruct {
 	}
 
 	@Override
+	public LispStruct setCar(final LispStruct car) {
+		throw new SimpleErrorException("Cannot set element within NIL.");
+	}
+
+	@Override
 	public LispStruct cdr() {
 		return INSTANCE;
+	}
+
+	@Override
+	public LispStruct setCdr(final LispStruct cdr) {
+		throw new SimpleErrorException("Cannot set element within NIL.");
 	}
 
 	@Override
@@ -51,7 +61,7 @@ public final class NILStruct extends BooleanStructImpl implements ListStruct {
 	}
 
 	@Override
-	public LispStruct listLength() {
+	public IntegerStruct listLength() {
 		return IntegerStruct.ZERO;
 	}
 
@@ -86,23 +96,18 @@ public final class NILStruct extends BooleanStructImpl implements ListStruct {
 	}
 
 	@Override
-	public LispStruct getProperty(final LispStruct indicator, final LispStruct defaultValue) {
+	public ValuesStruct getProperties(final ListStruct indicators) {
+		return ValuesStruct.valueOf(INSTANCE, INSTANCE, INSTANCE);
+	}
+
+	@Override
+	public LispStruct getf(final LispStruct indicator, final LispStruct defaultValue) {
 		return INSTANCE;
 	}
 
 	@Override
-	public ListStruct setProperty(final LispStruct indicator, final LispStruct newValue) {
+	public ListStruct putf(final LispStruct indicator, final LispStruct newValue) {
 		return ConsStruct.toLispCons(indicator, newValue);
-	}
-
-	@Override
-	public boolean removeProperty(final LispStruct indicator) {
-		return false;
-	}
-
-	@Override
-	public ValuesStruct getProperties(final ListStruct indicators) {
-		return ValuesStruct.valueOf(INSTANCE, INSTANCE, INSTANCE);
 	}
 
 	@Override
@@ -200,20 +205,26 @@ public final class NILStruct extends BooleanStructImpl implements ListStruct {
 
 	@Override
 	@Deprecated
-	public void setCar(final LispStruct car) {
-		throw new SimpleErrorException("Cannot set element within NIL.");
-	}
-
-	@Override
-	@Deprecated
 	public LispStruct getCdr() {
 		return INSTANCE;
 	}
 
 	@Override
 	@Deprecated
-	public void setCdr(final LispStruct cdr) {
-		throw new SimpleErrorException("Cannot set element within NIL.");
+	public LispStruct getProperty(final LispStruct indicator, final LispStruct defaultValue) {
+		return INSTANCE;
+	}
+
+	@Override
+	@Deprecated
+	public ListStruct setProperty(final LispStruct indicator, final LispStruct newValue) {
+		return ConsStruct.toLispCons(indicator, newValue);
+	}
+
+	@Override
+	@Deprecated
+	public boolean removeProperty(final LispStruct indicator) {
+		return false;
 	}
 
 	@Override
@@ -221,11 +232,4 @@ public final class NILStruct extends BooleanStructImpl implements ListStruct {
 	public boolean isDotted() {
 		return false;
 	}
-
-	@Override
-	@Deprecated
-	public boolean isCircular() {
-		return false;
-	}
-
 }

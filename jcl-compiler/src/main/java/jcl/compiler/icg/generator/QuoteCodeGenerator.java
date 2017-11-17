@@ -11,6 +11,7 @@ import jcl.compiler.icg.IntermediateCodeGenerator;
 import jcl.compiler.icg.JavaMethodBuilder;
 import jcl.compiler.struct.specialoperator.QuoteStruct;
 import jcl.lang.ConsStruct;
+import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.ProgramErrorException;
@@ -114,7 +115,7 @@ final class QuoteCodeGenerator implements CodeGenerator<QuoteStruct> {
 	/**
 	 * Generation method for quoted {@link ConsStruct} objects, by performing the following operations:
 	 * <ol>
-	 * <li>Checking whether or not {@link ConsStruct#isCircular()} is true, throwing a {@link ProgramErrorException} if
+	 * <li>Checking whether or not the {@link ConsStruct} is circular, throwing a {@link ProgramErrorException} if
 	 * so</li>
 	 * <li>Looping throw the {@link ConsStruct} in reverse order using a {@link ListIterator}, generating each element
 	 * into its appropriate embedded {@link ConsStruct}</li>
@@ -140,7 +141,7 @@ final class QuoteCodeGenerator implements CodeGenerator<QuoteStruct> {
 		final JavaMethodBuilder methodBuilder = generatorState.getCurrentMethodBuilder();
 		final MethodVisitor mv = methodBuilder.getMethodVisitor();
 
-		if (quotedCons.isCircular()) {
+		if (IntegerStruct.MINUS_ONE.eq(quotedCons.listLength())) {
 			throw new ProgramErrorException("Generation of circular lists is not yet supported.");
 		}
 

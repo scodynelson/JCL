@@ -1,8 +1,10 @@
 package jcl.functions.list;
 
 import jcl.functions.CommonLispBuiltInFunctionStructBase;
+import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
+import jcl.lang.NILStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import org.springframework.stereotype.Component;
@@ -24,6 +26,10 @@ public final class ListLengthFunction extends CommonLispBuiltInFunctionStructBas
 	@Override
 	public LispStruct apply(final Arguments arguments) {
 		final ListStruct list = arguments.getRequiredArgument(LIST_ARGUMENT, ListStruct.class);
-		return list.listLength();
+		final IntegerStruct lispStruct = list.listLength();
+		if (IntegerStruct.MINUS_ONE.eq(lispStruct)) {
+			return NILStruct.INSTANCE;
+		}
+		return lispStruct;
 	}
 }

@@ -106,7 +106,7 @@ public interface BitVectorStruct extends VectorStruct, BitArrayStruct {
 		}
 
 		@Override
-		public BitVectorStruct.Builder adjustable(final BooleanStruct adjustable) {
+		public BitVectorStruct.Builder adjustable(final boolean adjustable) {
 			this.adjustable = adjustable;
 			return this;
 		}
@@ -133,7 +133,7 @@ public interface BitVectorStruct extends VectorStruct, BitArrayStruct {
 		public BitVectorStruct build() {
 			final int sizeInt = size.toJavaInt();
 			final LispType upgradedET = ArrayStruct.upgradedArrayElementType(elementType);
-			final boolean adjustableBoolean = adjustable.toJavaPBoolean();
+			final boolean adjustableBoolean = adjustable;
 			final Integer fillPointerInt = (fillPointer == null) ? null : fillPointer.toJavaInt();
 
 			if (displacedTo != null) {

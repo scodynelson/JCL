@@ -7,6 +7,7 @@ package jcl.functions.number;
 import java.util.List;
 
 import jcl.functions.CommonLispBuiltInFunctionStructBase;
+import jcl.lang.BooleanStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.RealStruct;
 import jcl.lang.function.parameterdsl.Arguments;
@@ -40,6 +41,7 @@ public final class LessThanFunction extends CommonLispBuiltInFunctionStructBase 
 			realsToCompare[i] = realToCompare;
 		}
 
-		return RealStruct.isLessThan(realsToCompare);
+		final boolean lessThan = RealStruct.isLessThan(realsToCompare);
+		return BooleanStruct.toLispBoolean(lessThan);
 	}
 }

@@ -28,13 +28,12 @@ public class NILBitArrayStructImpl extends NILArrayStructImpl implements BitArra
 		super(arrayType, BitType.INSTANCE, displacedTo, displacedIndexOffset, isAdjustable);
 	}
 
-	public static BitArrayStruct valueOf(final IntegerStruct initialElement, final BooleanStruct isAdjustable) {
-		final boolean adjustableBoolean = isAdjustable.toJavaPBoolean();
-		final ArrayType arrayType = getArrayType(adjustableBoolean);
-		return new NILBitArrayStructImpl(arrayType, initialElement, adjustableBoolean);
+	public static BitArrayStruct valueOf(final IntegerStruct initialElement, final boolean isAdjustable) {
+		final ArrayType arrayType = getArrayType(isAdjustable);
+		return new NILBitArrayStructImpl(arrayType, initialElement, isAdjustable);
 	}
 
-	public static BitArrayStruct valueOf(final SequenceStruct initialContents, final BooleanStruct isAdjustable) {
+	public static BitArrayStruct valueOf(final SequenceStruct initialContents, final boolean isAdjustable) {
 		final LispType upgradedET = BitType.INSTANCE;
 
 		for (final LispStruct initialElement : initialContents) {
@@ -45,10 +44,9 @@ public class NILBitArrayStructImpl extends NILArrayStructImpl implements BitArra
 			}
 		}
 
-		final boolean adjustableBoolean = isAdjustable.toJavaPBoolean();
-		final ArrayType arrayType = getArrayType(adjustableBoolean);
+		final ArrayType arrayType = getArrayType(isAdjustable);
 		// TODO
-		return new NILBitArrayStructImpl(arrayType, initialContents, adjustableBoolean);
+		return new NILBitArrayStructImpl(arrayType, initialContents, isAdjustable);
 	}
 
 	public static BitArrayStruct valueOf(final BitArrayStruct displacedTo, final IntegerStruct displacedIndexOffset,

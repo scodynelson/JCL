@@ -4,7 +4,6 @@ import java.util.Collections;
 import java.util.List;
 
 import jcl.lang.ArrayStruct;
-import jcl.lang.BooleanStruct;
 import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
@@ -77,7 +76,7 @@ public class NILArrayStructImpl extends ArrayStructImpl {
 	 * @return a newly created zero-ranked array structure.
 	 */
 	public static ArrayStruct valueOf(final LispType elementType, final LispStruct initialElement,
-	                                  final BooleanStruct isAdjustable) {
+	                                  final boolean isAdjustable) {
 
 		final LispType initialElementType = initialElement.getType();
 		if (!elementType.typeEquals(initialElementType)) {
@@ -86,9 +85,8 @@ public class NILArrayStructImpl extends ArrayStructImpl {
 		}
 		final LispType upgradedET = ArrayStruct.upgradedArrayElementType(elementType);
 
-		final boolean adjustableBoolean = isAdjustable.toJavaPBoolean();
-		final ArrayType arrayType = getArrayType(adjustableBoolean);
-		return new NILArrayStructImpl(arrayType, upgradedET, initialElement, adjustableBoolean);
+		final ArrayType arrayType = getArrayType(isAdjustable);
+		return new NILArrayStructImpl(arrayType, upgradedET, initialElement, isAdjustable);
 	}
 
 	/**
@@ -104,7 +102,7 @@ public class NILArrayStructImpl extends ArrayStructImpl {
 	 * @return a newly created zero-ranked array structure.
 	 */
 	public static ArrayStruct valueOf(final LispType elementType, final SequenceStruct initialContents,
-	                                  final BooleanStruct isAdjustable) {
+	                                  final boolean isAdjustable) {
 		final LispType upgradedET = ArrayStruct.upgradedArrayElementType(elementType);
 
 		for (final LispStruct initialElement : initialContents) {
@@ -115,9 +113,8 @@ public class NILArrayStructImpl extends ArrayStructImpl {
 			}
 		}
 
-		final boolean adjustableBoolean = isAdjustable.toJavaPBoolean();
-		final ArrayType arrayType = getArrayType(adjustableBoolean);
-		return new NILArrayStructImpl(arrayType, upgradedET, initialContents, adjustableBoolean);
+		final ArrayType arrayType = getArrayType(isAdjustable);
+		return new NILArrayStructImpl(arrayType, upgradedET, initialContents, isAdjustable);
 	}
 
 	/**
@@ -135,7 +132,7 @@ public class NILArrayStructImpl extends ArrayStructImpl {
 	 * @return a newly created zero-ranked array structure.
 	 */
 	public static ArrayStruct valueOf(final LispType elementType, final ArrayStruct displacedTo,
-	                                  final IntegerStruct displacedIndexOffset, final BooleanStruct isAdjustable) {
+	                                  final IntegerStruct displacedIndexOffset, final boolean isAdjustable) {
 
 		final LispType displacedToType = displacedTo.getType();
 		final LispType upgradedET = ArrayStruct.upgradedArrayElementType(elementType);
@@ -154,7 +151,7 @@ public class NILArrayStructImpl extends ArrayStructImpl {
 		                              upgradedET,
 		                              displacedTo,
 		                              displacedIndexOffset.toJavaInt(),
-		                              isAdjustable.toJavaPBoolean());
+		                              isAdjustable);
 	}
 
 	/**
@@ -168,7 +165,7 @@ public class NILArrayStructImpl extends ArrayStructImpl {
 	 * @return a newly created zero-ranked array structure.
 	 */
 	public static ArrayStruct valueOf(final LispType elementType, final LispStruct initialElement) {
-		return valueOf(elementType, initialElement, NILStruct.INSTANCE);
+		return valueOf(elementType, initialElement, false);
 	}
 
 	/**
@@ -182,7 +179,7 @@ public class NILArrayStructImpl extends ArrayStructImpl {
 	 * @return a newly created zero-ranked array structure.
 	 */
 	public static ArrayStruct valueOf(final LispType elementType, final SequenceStruct initialContents) {
-		return valueOf(elementType, initialContents, NILStruct.INSTANCE);
+		return valueOf(elementType, initialContents, false);
 	}
 
 	@Override
@@ -292,7 +289,7 @@ public class NILArrayStructImpl extends ArrayStructImpl {
 			this.displacedIndexOffset = displacedIndexOffset.toJavaInt();
 			return this;
 		} else {
-			return valueOf(upgradedET, displacedTo, displacedIndexOffset, NILStruct.INSTANCE);
+			return valueOf(upgradedET, displacedTo, displacedIndexOffset, false);
 		}
 	}
 
@@ -330,13 +327,13 @@ public class NILArrayStructImpl extends ArrayStructImpl {
 	}
 
 	@Override
-	public BooleanStruct arrayHasFillPointerP() {
-		return NILStruct.INSTANCE;
+	public boolean arrayHasFillPointerP() {
+		return false;
 	}
 
 	@Override
-	public BooleanStruct arrayInBoundsP(final IntegerStruct... subscripts) {
-		return BooleanStruct.toLispBoolean(subscripts.length == 0);
+	public boolean arrayInBoundsP(final IntegerStruct... subscripts) {
+		return subscripts.length == 0;
 	}
 
 	@Override

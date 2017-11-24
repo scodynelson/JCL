@@ -4,9 +4,8 @@
 
 package jcl.functions.character;
 
-import java.util.function.Function;
+import java.util.function.Predicate;
 
-import jcl.lang.BooleanStruct;
 import jcl.lang.CharacterStruct;
 import org.springframework.stereotype.Component;
 
@@ -32,7 +31,7 @@ public final class BothCasePFunction extends AbstractCharacterPredicateFunction 
 	 * @return returns {@link CharacterStruct#isBothCase()} as a method reference predicate
 	 */
 	@Override
-	protected Function<CharacterStruct, BooleanStruct> predicate() {
+	protected Predicate<CharacterStruct> predicate() {
 		return CharacterStruct::isBothCase;
 	}
 }

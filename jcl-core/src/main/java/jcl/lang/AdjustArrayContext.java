@@ -13,7 +13,7 @@ public class AdjustArrayContext {
 		private LispType elementType;
 		private LispStruct initialElement;
 		private SequenceStruct initialContents;
-		private BooleanStruct adjustable = NILStruct.INSTANCE;
+		private boolean adjustable;
 		private IntegerStruct fillPointer;
 		private ArrayStruct displacedTo;
 		private IntegerStruct displacedIndexOffset = IntegerStruct.ZERO;
@@ -37,7 +37,7 @@ public class AdjustArrayContext {
 			return this;
 		}
 
-		public Builder adjustable(final BooleanStruct adjustable) {
+		public Builder adjustable(final boolean adjustable) {
 			this.adjustable = adjustable;
 			return this;
 		}
@@ -73,7 +73,7 @@ public class AdjustArrayContext {
 	private final LispType elementType;
 	private final LispStruct initialElement;
 	private final SequenceStruct initialContents;
-	private final BooleanStruct adjustable;
+	private final boolean adjustable;
 	private final IntegerStruct fillPointer;
 	private final ArrayStruct displacedTo;
 	private final IntegerStruct displacedIndexOffset;
@@ -82,7 +82,7 @@ public class AdjustArrayContext {
 	                           final LispType elementType,
 	                           final LispStruct initialElement,
 	                           final SequenceStruct initialContents,
-	                           final BooleanStruct adjustable,
+	                           final boolean adjustable,
 	                           final IntegerStruct fillPointer,
 	                           final ArrayStruct displacedTo,
 	                           final IntegerStruct displacedIndexOffset) {
@@ -112,7 +112,7 @@ public class AdjustArrayContext {
 		return initialContents;
 	}
 
-	public BooleanStruct getAdjustable() {
+	public boolean getAdjustable() {
 		return adjustable;
 	}
 

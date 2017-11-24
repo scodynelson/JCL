@@ -8,13 +8,10 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import jcl.lang.ArrayStruct;
-import jcl.lang.BooleanStruct;
 import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
-import jcl.lang.NILStruct;
 import jcl.lang.SequenceStruct;
-import jcl.lang.TStruct;
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.statics.PrinterVariables;
@@ -60,7 +57,7 @@ public class MultiArrayStructImpl extends ArrayStructImpl {
 	}
 
 	public static ArrayStruct valueOf(final List<IntegerStruct> dimensions, final LispType elementType,
-	                                  final LispStruct initialElement, final BooleanStruct isAdjustable) {
+	                                  final LispStruct initialElement, final boolean isAdjustable) {
 		final int rank = dimensions.size();
 		if (rank == 0) {
 			throw new IllegalStateException("Construct NILArray instead of MultiArray for a 0-rank array.");
@@ -86,13 +83,12 @@ public class MultiArrayStructImpl extends ArrayStructImpl {
 		                                               .limit(totalSize)
 		                                               .collect(Collectors.toList());
 
-		final boolean adjustableBoolean = isAdjustable.toJavaPBoolean();
-		final ArrayType arrayType = getArrayType(adjustableBoolean);
-		return new MultiArrayStructImpl(arrayType, dimensionInts, elementType, initialContents, adjustableBoolean);
+		final ArrayType arrayType = getArrayType(isAdjustable);
+		return new MultiArrayStructImpl(arrayType, dimensionInts, elementType, initialContents, isAdjustable);
 	}
 
 	public static ArrayStruct valueOf(final List<IntegerStruct> dimensions, final LispType elementType,
-	                                  final SequenceStruct initialContents, final BooleanStruct isAdjustable) {
+	                                  final SequenceStruct initialContents, final boolean isAdjustable) {
 		final int rank = dimensions.size();
 		if (rank == 0) {
 			throw new IllegalStateException("Construct NILArray instead of MultiArray for a 0-rank array.");
@@ -107,14 +103,13 @@ public class MultiArrayStructImpl extends ArrayStructImpl {
 		final List<LispStruct> validContents = ArrayStruct.getValidContents(dimensionInts, elementType,
 		                                                                    initialContents);
 
-		final boolean adjustableBoolean = isAdjustable.toJavaPBoolean();
-		final ArrayType arrayType = getArrayType(adjustableBoolean);
-		return new MultiArrayStructImpl(arrayType, dimensionInts, elementType, validContents, adjustableBoolean);
+		final ArrayType arrayType = getArrayType(isAdjustable);
+		return new MultiArrayStructImpl(arrayType, dimensionInts, elementType, validContents, isAdjustable);
 	}
 
 	public static ArrayStruct valueOf(final List<IntegerStruct> dimensions, final LispType elementType,
 	                                  final ArrayStruct displacedTo, final IntegerStruct displacedIndexOffset,
-	                                  final BooleanStruct isAdjustable) {
+	                                  final boolean isAdjustable) {
 		final int rank = dimensions.size();
 		if (rank == 0) {
 			throw new IllegalStateException("Construct NILArray instead of MultiArray for a 0-rank array.");
@@ -142,17 +137,17 @@ public class MultiArrayStructImpl extends ArrayStructImpl {
 		// TODO: Total size of A be no smaller than the sum of the total size of B plus the offset 'n' supplied by the offset
 
 		return new MultiArrayStructImpl(ArrayType.INSTANCE, dimensionInts, elementType, displacedTo,
-		                                offsetInt, isAdjustable.toJavaPBoolean());
+		                                offsetInt, isAdjustable);
 	}
 
 	public static ArrayStruct valueOf(final List<IntegerStruct> dimensions, final LispType elementType,
 	                                  final LispStruct initialElement) {
-		return valueOf(dimensions, elementType, initialElement, NILStruct.INSTANCE);
+		return valueOf(dimensions, elementType, initialElement, false);
 	}
 
 	public static ArrayStruct valueOf(final List<IntegerStruct> dimensions, final LispType elementType,
 	                                  final SequenceStruct initialContents) {
-		return valueOf(dimensions, elementType, initialContents, NILStruct.INSTANCE);
+		return valueOf(dimensions, elementType, initialContents, false);
 	}
 
 	/*
@@ -546,17 +541,17 @@ public class MultiArrayStructImpl extends ArrayStructImpl {
 	}
 
 	@Override
-	public BooleanStruct arrayHasFillPointerP() {
-		return NILStruct.INSTANCE;
+	public boolean arrayHasFillPointerP() {
+		return false;
 	}
 
 	@Override
-	public BooleanStruct arrayInBoundsP(final IntegerStruct... subscripts) {
+	public boolean arrayInBoundsP(final IntegerStruct... subscripts) {
 		try {
 			rowMajorIndexInternal(subscripts);
-			return TStruct.INSTANCE;
+			return true;
 		} catch (final ErrorException ignored) {
-			return NILStruct.INSTANCE;
+			return false;
 		}
 	}
 

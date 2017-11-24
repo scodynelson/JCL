@@ -9,7 +9,6 @@ import java.util.function.IntConsumer;
 
 import jcl.lang.AdjustArrayContext;
 import jcl.lang.ArrayStruct;
-import jcl.lang.BooleanStruct;
 import jcl.lang.CharacterStruct;
 import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
@@ -18,7 +17,6 @@ import jcl.lang.ReadtableStruct;
 import jcl.lang.SequenceStruct;
 import jcl.lang.StringIntervalOpContext;
 import jcl.lang.StringStruct;
-import jcl.lang.TStruct;
 import jcl.lang.ValuesStruct;
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
@@ -127,8 +125,8 @@ public final class SimpleStringStructImpl extends AbstractStringStructImpl {
 	}
 
 	@Override
-	public BooleanStruct isSimpleString() {
-		return TStruct.INSTANCE;
+	public boolean isSimpleString() {
+		return true;
 	}
 
 	@Override
@@ -178,7 +176,7 @@ public final class SimpleStringStructImpl extends AbstractStringStructImpl {
 	protected StringStruct adjustDisplacedTo(final AdjustArrayContext context, final LispType upgradedET) {
 
 		final IntegerStruct newTotalSize = context.getDimensions().get(0);
-		final BooleanStruct newAdjustable = context.getAdjustable();
+		final boolean newAdjustable = context.getAdjustable();
 		final IntegerStruct newFillPointer = context.getFillPointer();
 		final ArrayStruct newDisplacedTo = context.getDisplacedTo();
 		final IntegerStruct newDisplacedIndexOffset = context.getDisplacedIndexOffset();
@@ -209,7 +207,7 @@ public final class SimpleStringStructImpl extends AbstractStringStructImpl {
 
 		final IntegerStruct newTotalSize = context.getDimensions().get(0);
 		final SequenceStruct newInitialContents = context.getInitialContents();
-		final BooleanStruct newAdjustable = context.getAdjustable();
+		final boolean newAdjustable = context.getAdjustable();
 		final IntegerStruct newFillPointer = context.getFillPointer();
 
 		for (final LispStruct initialElement : newInitialContents) {
@@ -236,8 +234,8 @@ public final class SimpleStringStructImpl extends AbstractStringStructImpl {
 		final IntegerStruct newTotalSize = context.getDimensions().get(0);
 		final int newTotalSizeInt = newTotalSize.toJavaInt();
 
-		final BooleanStruct newAdjustable = context.getAdjustable();
-		final boolean newAdjustableBoolean = newAdjustable.toJavaPBoolean();
+		final boolean newAdjustable = context.getAdjustable();
+		final boolean newAdjustableBoolean = newAdjustable;
 
 		final IntegerStruct newFillPointer = context.getFillPointer();
 		final Integer newFillPointerInt = (newFillPointer == null) ? null : newFillPointer.toJavaInt();
@@ -258,13 +256,13 @@ public final class SimpleStringStructImpl extends AbstractStringStructImpl {
 	}
 
 	@Override
-	public BooleanStruct adjustableArrayP() {
-		return NILStruct.INSTANCE;
+	public boolean adjustableArrayP() {
+		return false;
 	}
 
 	@Override
-	public BooleanStruct arrayHasFillPointerP() {
-		return NILStruct.INSTANCE;
+	public boolean arrayHasFillPointerP() {
+		return false;
 	}
 
 	@Override

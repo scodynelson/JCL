@@ -34,9 +34,9 @@ public class StringStructArrayTest {
 	public void test_adjustableArrayP_True() {
 		final StringStruct struct
 				= StringStruct.builder(IntegerStruct.ONE)
-				              .adjustable(TStruct.INSTANCE)
+				              .adjustable(true)
 				              .build();
-		Assert.assertThat(struct.adjustableArrayP(), is(TStruct.INSTANCE));
+		Assert.assertThat(struct.adjustableArrayP(), is(true));
 	}
 
 	/**
@@ -46,9 +46,9 @@ public class StringStructArrayTest {
 	public void test_adjustableArrayP_False() {
 		final StringStruct struct
 				= StringStruct.builder(IntegerStruct.ONE)
-				              .adjustable(NILStruct.INSTANCE)
+				              .adjustable(false)
 				              .build();
-		Assert.assertThat(struct.adjustableArrayP(), is(NILStruct.INSTANCE));
+		Assert.assertThat(struct.adjustableArrayP(), is(false));
 	}
 
 	/*
@@ -112,7 +112,7 @@ public class StringStructArrayTest {
 		final StringStruct struct
 				= StringStruct.builder(IntegerStruct.ONE)
 				              .initialElement(initialElement)
-				              .adjustable(TStruct.INSTANCE)
+				              .adjustable(true)
 				              .build();
 		struct.adjustArray(AdjustArrayContext.builder(IntegerStruct.TWO)
 		                                     .build());
@@ -346,7 +346,7 @@ public class StringStructArrayTest {
 		final StringStruct struct
 				= StringStruct.builder(IntegerStruct.TEN)
 				              .build();
-		Assert.assertThat(struct.arrayHasFillPointerP(), is(NILStruct.INSTANCE));
+		Assert.assertThat(struct.arrayHasFillPointerP(), is(false));
 	}
 
 	/**
@@ -358,7 +358,7 @@ public class StringStructArrayTest {
 				= StringStruct.builder(IntegerStruct.TEN)
 				              .fillPointer(IntegerStruct.TWO)
 				              .build();
-		Assert.assertThat(struct.arrayHasFillPointerP(), is(TStruct.INSTANCE));
+		Assert.assertThat(struct.arrayHasFillPointerP(), is(true));
 	}
 
 	/*
@@ -427,7 +427,7 @@ public class StringStructArrayTest {
 		final StringStruct struct
 				= StringStruct.builder(IntegerStruct.ONE)
 				              .build();
-		Assert.assertThat(struct.arrayInBoundsP(IntegerStruct.TEN), is(NILStruct.INSTANCE));
+		Assert.assertThat(struct.arrayInBoundsP(IntegerStruct.TEN), is(false));
 	}
 
 	/**
@@ -438,7 +438,7 @@ public class StringStructArrayTest {
 		final StringStruct struct
 				= StringStruct.builder(IntegerStruct.ONE)
 				              .build();
-		Assert.assertThat(struct.arrayInBoundsP(IntegerStruct.ZERO), is(TStruct.INSTANCE));
+		Assert.assertThat(struct.arrayInBoundsP(IntegerStruct.ZERO), is(true));
 	}
 
 	/*
@@ -575,7 +575,7 @@ public class StringStructArrayTest {
 		final StringStruct struct
 				= StringStruct.builder(IntegerStruct.ONE)
 				              .initialElement(initialElement)
-				              .adjustable(TStruct.INSTANCE)
+				              .adjustable(true)
 				              .build();
 		struct.adjustArray(AdjustArrayContext.builder(IntegerStruct.TWO)
 		                                     .build());

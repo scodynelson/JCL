@@ -8,7 +8,6 @@ import java.util.stream.Stream;
 
 import jcl.lang.ArrayStruct;
 import jcl.lang.BitArrayStruct;
-import jcl.lang.BooleanStruct;
 import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.SequenceStruct;
@@ -34,7 +33,7 @@ public class MultiBitArrayStructImpl extends MultiArrayStructImpl implements Bit
 	}
 
 	public static BitArrayStruct valueOf(final List<IntegerStruct> dimensions, final IntegerStruct initialElement,
-	                                     final BooleanStruct isAdjustable) {
+	                                     final boolean isAdjustable) {
 		final List<Integer> dimensionInts = dimensions.stream()
 		                                              .map(IntegerStruct::toJavaInt)
 		                                              .collect(Collectors.toList());
@@ -45,25 +44,23 @@ public class MultiBitArrayStructImpl extends MultiArrayStructImpl implements Bit
 		                                               .limit(totalSize)
 		                                               .collect(Collectors.toList());
 
-		final boolean adjustableBoolean = isAdjustable.toJavaPBoolean();
-		final ArrayType arrayType = getArrayType(adjustableBoolean);
-		return new MultiBitArrayStructImpl(arrayType, dimensionInts, initialContents, adjustableBoolean);
+		final ArrayType arrayType = getArrayType(isAdjustable);
+		return new MultiBitArrayStructImpl(arrayType, dimensionInts, initialContents, isAdjustable);
 	}
 
 	public static BitArrayStruct valueOf(final List<IntegerStruct> dimensions, final SequenceStruct initialContents,
-	                                     final BooleanStruct isAdjustable) {
+	                                     final boolean isAdjustable) {
 		final List<Integer> dimensionInts = dimensions.stream()
 		                                              .map(IntegerStruct::toJavaInt)
 		                                              .collect(Collectors.toList());
 		final List<LispStruct> validContents = getValidContents(dimensionInts, initialContents);
 
-		final boolean adjustableBoolean = isAdjustable.toJavaPBoolean();
-		final ArrayType arrayType = getArrayType(adjustableBoolean);
-		return new MultiBitArrayStructImpl(arrayType, dimensionInts, validContents, adjustableBoolean);
+		final ArrayType arrayType = getArrayType(isAdjustable);
+		return new MultiBitArrayStructImpl(arrayType, dimensionInts, validContents, isAdjustable);
 	}
 
 	public static BitArrayStruct valueOf(final List<IntegerStruct> dimensions, final BitArrayStruct displacedTo,
-	                                     final IntegerStruct displacedIndexOffset, final BooleanStruct isAdjustable) {
+	                                     final IntegerStruct displacedIndexOffset, final boolean isAdjustable) {
 		final List<Integer> dimensionInts = dimensions.stream()
 		                                              .map(IntegerStruct::toJavaInt)
 		                                              .collect(Collectors.toList());
@@ -72,7 +69,7 @@ public class MultiBitArrayStructImpl extends MultiArrayStructImpl implements Bit
 
 		return new MultiBitArrayStructImpl(ArrayType.INSTANCE, dimensionInts, displacedTo,
 		                                   displacedIndexOffset.toJavaInt(),
-		                                   isAdjustable.toJavaPBoolean());
+		                                   isAdjustable);
 	}
 
 	public static BitArrayStruct valueOf(final List<IntegerStruct> dimensions, final IntegerStruct initialElement) {

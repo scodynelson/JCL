@@ -160,7 +160,7 @@ public interface NumberStruct extends LispStruct {
 	 *
 	 * @return the {@literal '=='} comparison provided NumberStruct objects
 	 */
-	static BooleanStruct isEqualTo(final NumberStruct... numbers) {
+	static boolean isEqualTo(final NumberStruct... numbers) {
 		if (numbers.length == 0) {
 			throw new ErrorException("At least one number required to test equality.");
 		}
@@ -176,7 +176,7 @@ public interface NumberStruct extends LispStruct {
 			}
 			previousNumber = currentNumber;
 		}
-		return BooleanStruct.toLispBoolean(result);
+		return result;
 	}
 
 	/**
@@ -200,7 +200,7 @@ public interface NumberStruct extends LispStruct {
 	 *
 	 * @return the {@literal '!='} comparison provided NumberStruct objects
 	 */
-	static BooleanStruct isNotEqualTo(final NumberStruct... numbers) {
+	static boolean isNotEqualTo(final NumberStruct... numbers) {
 		if (numbers.length == 0) {
 			throw new ErrorException("At least one number required to test equality.");
 		}
@@ -216,7 +216,7 @@ public interface NumberStruct extends LispStruct {
 			}
 			previousNumber = currentNumber;
 		}
-		return BooleanStruct.toLispBoolean(result);
+		return result;
 	}
 
 	/**

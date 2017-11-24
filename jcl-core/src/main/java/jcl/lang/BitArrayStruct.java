@@ -253,7 +253,7 @@ public interface BitArrayStruct extends ArrayStruct {
 		}
 
 		@Override
-		public BitArrayStruct.Builder adjustable(final BooleanStruct adjustable) {
+		public BitArrayStruct.Builder adjustable(final boolean adjustable) {
 			this.adjustable = adjustable;
 			return this;
 		}
@@ -278,7 +278,7 @@ public interface BitArrayStruct extends ArrayStruct {
 		@Override
 		public BitArrayStruct build() {
 			final LispType upgradedET = ArrayStruct.upgradedArrayElementType(elementType);
-			final boolean adjustableBoolean = adjustable.toJavaPBoolean();
+			final boolean adjustableBoolean = adjustable;
 
 			if (displacedTo != null) {
 				final LispType displacedToType = displacedTo.getType();

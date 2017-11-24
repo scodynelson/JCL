@@ -4,18 +4,17 @@
 
 package jcl.compiler.function;
 
-import jcl.lang.BooleanStruct;
 import jcl.lang.FunctionStruct;
 
 public class CompileResult {
 
 	private final FunctionStruct function;
 
-	private final BooleanStruct compiledWithWarnings;
+	private final boolean compiledWithWarnings;
 
-	private final BooleanStruct failedToCompile;
+	private final boolean failedToCompile;
 
-	public CompileResult(final FunctionStruct function, final BooleanStruct compiledWithWarnings, final BooleanStruct failedToCompile) {
+	public CompileResult(final FunctionStruct function, final boolean compiledWithWarnings, final boolean failedToCompile) {
 		this.function = function;
 		this.compiledWithWarnings = compiledWithWarnings;
 		this.failedToCompile = failedToCompile;
@@ -25,11 +24,11 @@ public class CompileResult {
 		return function;
 	}
 
-	public BooleanStruct isCompiledWithWarnings() {
+	public boolean isCompiledWithWarnings() {
 		return compiledWithWarnings;
 	}
 
-	public BooleanStruct isFailedToCompile() {
+	public boolean isFailedToCompile() {
 		return failedToCompile;
 	}
 }

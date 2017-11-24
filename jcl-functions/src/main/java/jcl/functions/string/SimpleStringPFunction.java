@@ -1,6 +1,7 @@
 package jcl.functions.string;
 
 import jcl.functions.CommonLispBuiltInFunctionStructBase;
+import jcl.lang.BooleanStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.NILStruct;
 import jcl.lang.StringStruct;
@@ -29,6 +30,7 @@ public final class SimpleStringPFunction extends CommonLispBuiltInFunctionStruct
 		if (!isString) {
 			return NILStruct.INSTANCE;
 		}
-		return ((StringStruct) object).isSimpleString();
+		final boolean isSimpleString = ((StringStruct) object).isSimpleString();
+		return BooleanStruct.toLispBoolean(isSimpleString);
 	}
 }

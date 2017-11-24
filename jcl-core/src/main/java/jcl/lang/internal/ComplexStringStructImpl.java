@@ -12,7 +12,6 @@ import java.util.function.IntConsumer;
 import javaslang.collection.CharSeq;
 import jcl.lang.AdjustArrayContext;
 import jcl.lang.ArrayStruct;
-import jcl.lang.BooleanStruct;
 import jcl.lang.CharacterStruct;
 import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
@@ -207,8 +206,8 @@ public final class ComplexStringStructImpl extends AbstractStringStructImpl {
 	}
 
 	@Override
-	public BooleanStruct isSimpleString() {
-		return NILStruct.INSTANCE;
+	public boolean isSimpleString() {
+		return false;
 	}
 
 	@Override
@@ -347,7 +346,7 @@ public final class ComplexStringStructImpl extends AbstractStringStructImpl {
 	protected StringStruct adjustDisplacedTo(final AdjustArrayContext context, final LispType upgradedET) {
 
 		final IntegerStruct newTotalSize = context.getDimensions().get(0);
-		final BooleanStruct newAdjustable = context.getAdjustable();
+		final boolean newAdjustable = context.getAdjustable();
 		final IntegerStruct newFillPointer = context.getFillPointer();
 		final ArrayStruct newDisplacedTo = context.getDisplacedTo();
 		final IntegerStruct newDisplacedIndexOffset = context.getDisplacedIndexOffset();
@@ -367,7 +366,7 @@ public final class ComplexStringStructImpl extends AbstractStringStructImpl {
 		if (adjustable) {
 			totalSize = newTotalSize.toJavaInt();
 			elementType = upgradedET;
-			adjustable = newAdjustable.toJavaPBoolean();
+			adjustable = newAdjustable;
 			fillPointer = (newFillPointer == null) ? null : newFillPointer.toJavaInt();
 			contents = null;
 			displacedTo = newDisplacedTo;
@@ -389,7 +388,7 @@ public final class ComplexStringStructImpl extends AbstractStringStructImpl {
 
 		final IntegerStruct newTotalSize = context.getDimensions().get(0);
 		final SequenceStruct newInitialContents = context.getInitialContents();
-		final BooleanStruct newAdjustable = context.getAdjustable();
+		final boolean newAdjustable = context.getAdjustable();
 		final IntegerStruct newFillPointer = context.getFillPointer();
 
 		for (final LispStruct initialElement : newInitialContents) {
@@ -402,7 +401,7 @@ public final class ComplexStringStructImpl extends AbstractStringStructImpl {
 
 		if (adjustable) {
 			final int newTotalSizeInt = newTotalSize.toJavaInt();
-			final boolean newAdjustableBoolean = newAdjustable.toJavaPBoolean();
+			final boolean newAdjustableBoolean = newAdjustable;
 			final Integer newFillPointerInt = (newFillPointer == null) ? null : newFillPointer.toJavaInt();
 
 			final List<CharacterStruct> validContents
@@ -440,8 +439,8 @@ public final class ComplexStringStructImpl extends AbstractStringStructImpl {
 		final IntegerStruct newTotalSize = context.getDimensions().get(0);
 		final int newTotalSizeInt = newTotalSize.toJavaInt();
 
-		final BooleanStruct newAdjustable = context.getAdjustable();
-		final boolean newAdjustableBoolean = newAdjustable.toJavaPBoolean();
+		final boolean newAdjustable = context.getAdjustable();
+		final boolean newAdjustableBoolean = newAdjustable;
 
 		final IntegerStruct newFillPointer = context.getFillPointer();
 		final Integer newFillPointerInt = (newFillPointer == null) ? null : newFillPointer.toJavaInt();
@@ -481,13 +480,13 @@ public final class ComplexStringStructImpl extends AbstractStringStructImpl {
 	}
 
 	@Override
-	public BooleanStruct adjustableArrayP() {
-		return BooleanStruct.toLispBoolean(adjustable);
+	public boolean adjustableArrayP() {
+		return adjustable;
 	}
 
 	@Override
-	public BooleanStruct arrayHasFillPointerP() {
-		return BooleanStruct.toLispBoolean(fillPointer != null);
+	public boolean arrayHasFillPointerP() {
+		return fillPointer != null;
 	}
 
 	@Override

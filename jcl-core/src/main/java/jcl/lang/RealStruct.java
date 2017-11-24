@@ -35,7 +35,7 @@ public interface RealStruct extends NumberStruct {
 	 *
 	 * @return the {@literal '<'} comparison provided RealStruct objects
 	 */
-	static BooleanStruct isLessThan(final RealStruct... reals) {
+	static boolean isLessThan(final RealStruct... reals) {
 		if (reals.length == 0) {
 			throw new ErrorException("At least one real required to test equality.");
 		}
@@ -51,7 +51,7 @@ public interface RealStruct extends NumberStruct {
 			}
 			previousReal = currentReal;
 		}
-		return BooleanStruct.toLispBoolean(result);
+		return result;
 	}
 
 	/**
@@ -73,7 +73,7 @@ public interface RealStruct extends NumberStruct {
 	 *
 	 * @return the {@literal '>'} comparison provided RealStruct objects
 	 */
-	static BooleanStruct isGreaterThan(final RealStruct... reals) {
+	static boolean isGreaterThan(final RealStruct... reals) {
 		if (reals.length == 0) {
 			throw new ErrorException("At least one real required to test equality.");
 		}
@@ -89,7 +89,7 @@ public interface RealStruct extends NumberStruct {
 			}
 			previousReal = currentReal;
 		}
-		return BooleanStruct.toLispBoolean(result);
+		return result;
 	}
 
 	/**
@@ -111,7 +111,7 @@ public interface RealStruct extends NumberStruct {
 	 *
 	 * @return the {@literal '<='} comparison provided RealStruct objects
 	 */
-	static BooleanStruct isLessThanOrEqualTo(final RealStruct... reals) {
+	static boolean isLessThanOrEqualTo(final RealStruct... reals) {
 		if (reals.length == 0) {
 			throw new ErrorException("At least one real required to test equality.");
 		}
@@ -127,7 +127,7 @@ public interface RealStruct extends NumberStruct {
 			}
 			previousReal = currentReal;
 		}
-		return BooleanStruct.toLispBoolean(result);
+		return result;
 	}
 
 	/**
@@ -149,7 +149,7 @@ public interface RealStruct extends NumberStruct {
 	 *
 	 * @return the {@literal '>='} comparison provided RealStruct objects
 	 */
-	static BooleanStruct isGreaterThanOrEqualTo(final RealStruct... reals) {
+	static boolean isGreaterThanOrEqualTo(final RealStruct... reals) {
 		if (reals.length == 0) {
 			throw new ErrorException("At least one real required to test equality.");
 		}
@@ -165,7 +165,7 @@ public interface RealStruct extends NumberStruct {
 			}
 			previousReal = currentReal;
 		}
-		return BooleanStruct.toLispBoolean(result);
+		return result;
 	}
 
 	/**

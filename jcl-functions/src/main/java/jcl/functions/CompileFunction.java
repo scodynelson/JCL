@@ -2,6 +2,7 @@ package jcl.functions;
 
 import jcl.compiler.function.CompileForm;
 import jcl.compiler.function.CompileResult;
+import jcl.lang.BooleanStruct;
 import jcl.lang.FunctionStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.NILStruct;
@@ -75,7 +76,11 @@ public final class CompileFunction extends CommonLispBuiltInFunctionStructBase {
 			if (compiledDefinition == null) {
 				return ValuesStruct.valueOf(function, NILStruct.INSTANCE, NILStruct.INSTANCE);
 			} else {
-				return ValuesStruct.valueOf(function, compiledDefinition.isCompiledWithWarnings(), compiledDefinition.isFailedToCompile());
+				return ValuesStruct.valueOf(
+						function,
+						BooleanStruct.toLispBoolean(compiledDefinition.isCompiledWithWarnings()),
+						BooleanStruct.toLispBoolean(compiledDefinition.isFailedToCompile())
+				);
 			}
 		}
 

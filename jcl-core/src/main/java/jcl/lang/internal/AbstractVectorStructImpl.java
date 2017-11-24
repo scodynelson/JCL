@@ -3,11 +3,8 @@ package jcl.lang.internal;
 import java.util.Collections;
 import java.util.List;
 
-import jcl.lang.BooleanStruct;
 import jcl.lang.IntegerStruct;
 import jcl.lang.ListStruct;
-import jcl.lang.NILStruct;
-import jcl.lang.TStruct;
 import jcl.lang.VectorStruct;
 import jcl.lang.condition.exception.ErrorException;
 import jcl.type.LispType;
@@ -41,13 +38,13 @@ public abstract class AbstractVectorStructImpl extends AbstractArrayStructImpl i
 	}
 
 	@Override
-	public BooleanStruct arrayInBoundsP(final IntegerStruct... subscripts) {
+	public boolean arrayInBoundsP(final IntegerStruct... subscripts) {
 		final IntegerStruct subscript = rowMajorIndexInternal(subscripts);
 		try {
 			validateSubscript(subscript);
-			return TStruct.INSTANCE;
+			return true;
 		} catch (final ErrorException ignored) {
-			return NILStruct.INSTANCE;
+			return false;
 		}
 	}
 

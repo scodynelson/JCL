@@ -118,7 +118,7 @@ public class StringStructSequenceTest {
 		final StringStruct struct
 				= StringStruct.builder(IntegerStruct.ONE)
 				              .initialElement(initialElement)
-				              .adjustable(TStruct.INSTANCE)
+				              .adjustable(true)
 				              .build();
 		struct.adjustArray(AdjustArrayContext.builder(IntegerStruct.TWO)
 		                                     .build());
@@ -451,7 +451,7 @@ public class StringStructSequenceTest {
 		final StringStruct initialContents = StringStruct.toLispString(str);
 		final StringStruct struct
 				= StringStruct.builder(IntegerStruct.toLispInteger(str.length()))
-				              .adjustable(TStruct.INSTANCE)
+				              .adjustable(true)
 				              .initialContents(initialContents)
 				              .build();
 
@@ -558,7 +558,7 @@ public class StringStructSequenceTest {
 		final StringStruct initialContents = StringStruct.toLispString(str);
 		final StringStruct struct
 				= StringStruct.builder(IntegerStruct.toLispInteger(str.length()))
-				              .adjustable(TStruct.INSTANCE)
+				              .adjustable(true)
 				              .initialContents(initialContents)
 				              .build();
 
@@ -658,7 +658,7 @@ public class StringStructSequenceTest {
 		final String str = "12345";
 		final StringStruct struct = StringStruct.builder(IntegerStruct.toLispInteger(str.length()))
 		                                        .initialContents(StringStruct.toLispString(str))
-		                                        .adjustable(TStruct.INSTANCE)
+		                                        .adjustable(true)
 		                                        .build();
 		final Iterator<LispStruct> iterator = struct.iterator();
 
@@ -681,7 +681,7 @@ public class StringStructSequenceTest {
 		final String str = "12345";
 		final StringStruct struct = StringStruct.builder(IntegerStruct.toLispInteger(str.length()))
 		                                        .initialContents(StringStruct.toLispString(str))
-		                                        .adjustable(TStruct.INSTANCE)
+		                                        .adjustable(true)
 		                                        .build();
 		final Iterator<LispStruct> iterator = struct.iterator();
 

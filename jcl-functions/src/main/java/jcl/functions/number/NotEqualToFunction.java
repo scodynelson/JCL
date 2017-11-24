@@ -7,6 +7,7 @@ package jcl.functions.number;
 import java.util.List;
 
 import jcl.functions.CommonLispBuiltInFunctionStructBase;
+import jcl.lang.BooleanStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.NumberStruct;
 import jcl.lang.function.parameterdsl.Arguments;
@@ -40,6 +41,7 @@ public final class NotEqualToFunction extends CommonLispBuiltInFunctionStructBas
 			numbersToCompare[i] = numberToCompare;
 		}
 
-		return NumberStruct.isNotEqualTo(numbersToCompare);
+		final boolean notEqualTo = NumberStruct.isNotEqualTo(numbersToCompare);
+		return BooleanStruct.toLispBoolean(notEqualTo);
 	}
 }

@@ -3,13 +3,10 @@ package jcl.lang.internal;
 import java.util.Arrays;
 
 import jcl.lang.ArrayStruct;
-import jcl.lang.BooleanStruct;
-import jcl.lang.FixnumStruct;
 import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
 import jcl.lang.NILStruct;
-import jcl.lang.TStruct;
 import jcl.lang.condition.exception.ErrorException;
 import jcl.type.BitType;
 import jcl.type.LispType;
@@ -102,9 +99,9 @@ public class MultiArrayStructImplTest {
 				= MultiArrayStructImpl.valueOf(Arrays.asList(IntegerStruct.TWO, IntegerStruct.TWO),
 				                               TType.INSTANCE,
 				                               IntegerStruct.ZERO,
-				                               TStruct.INSTANCE);
-		final BooleanStruct result = array.adjustableArrayP();
-		Assert.assertThat(result, is(TStruct.INSTANCE));
+				                               true);
+		final boolean result = array.adjustableArrayP();
+		Assert.assertThat(result, is(true));
 	}
 
 	@Test
@@ -114,9 +111,9 @@ public class MultiArrayStructImplTest {
 				= MultiArrayStructImpl.valueOf(Arrays.asList(IntegerStruct.TWO, IntegerStruct.TWO),
 				                               TType.INSTANCE,
 				                               IntegerStruct.ZERO,
-				                               NILStruct.INSTANCE);
-		final BooleanStruct result = array.adjustableArrayP();
-		Assert.assertThat(result, is(NILStruct.INSTANCE));
+				                               false);
+		final boolean result = array.adjustableArrayP();
+		Assert.assertThat(result, is(false));
 	}
 
 	/*
@@ -150,7 +147,7 @@ public class MultiArrayStructImplTest {
 				= MultiArrayStructImpl.valueOf(Arrays.asList(IntegerStruct.TWO, IntegerStruct.TEN),
 				                               TType.INSTANCE,
 				                               IntegerStruct.ZERO,
-				                               NILStruct.INSTANCE);
+				                               false);
 		array.arrayDimension(IntegerStruct.MINUS_ONE);
 	}
 
@@ -163,7 +160,7 @@ public class MultiArrayStructImplTest {
 				= MultiArrayStructImpl.valueOf(Arrays.asList(IntegerStruct.TWO, IntegerStruct.TEN),
 				                               TType.INSTANCE,
 				                               IntegerStruct.ZERO,
-				                               NILStruct.INSTANCE);
+				                               false);
 		array.arrayDimension(IntegerStruct.TEN);
 	}
 
@@ -173,7 +170,7 @@ public class MultiArrayStructImplTest {
 				= MultiArrayStructImpl.valueOf(Arrays.asList(IntegerStruct.TWO, IntegerStruct.TEN),
 				                               TType.INSTANCE,
 				                               IntegerStruct.ZERO,
-				                               NILStruct.INSTANCE);
+				                               false);
 		final IntegerStruct result = array.arrayDimension(IntegerStruct.ZERO);
 		Assert.assertThat(result.toJavaInt(), is(2));
 	}
@@ -184,7 +181,7 @@ public class MultiArrayStructImplTest {
 				= MultiArrayStructImpl.valueOf(Arrays.asList(IntegerStruct.TWO, IntegerStruct.TEN),
 				                               TType.INSTANCE,
 				                               IntegerStruct.ZERO,
-				                               NILStruct.INSTANCE);
+				                               false);
 		final IntegerStruct result = array.arrayDimension(IntegerStruct.ONE);
 		Assert.assertThat(result.toJavaInt(), is(10));
 	}
@@ -199,7 +196,7 @@ public class MultiArrayStructImplTest {
 				= MultiArrayStructImpl.valueOf(Arrays.asList(IntegerStruct.TWO, IntegerStruct.TEN),
 				                               TType.INSTANCE,
 				                               IntegerStruct.ZERO,
-				                               NILStruct.INSTANCE);
+				                               false);
 		final ListStruct result = array.arrayDimensions();
 		Assert.assertThat(result, not(is(NILStruct.INSTANCE)));
 		Assert.assertThat(result.length(), is(IntegerStruct.TWO));
@@ -222,7 +219,7 @@ public class MultiArrayStructImplTest {
 				= MultiArrayStructImpl.valueOf(Arrays.asList(IntegerStruct.TWO, IntegerStruct.TWO),
 				                               elementType,
 				                               IntegerStruct.ZERO,
-				                               NILStruct.INSTANCE);
+				                               false);
 		final LispType result = array.arrayElementType();
 		Assert.assertThat(result, is(elementType));
 	}
@@ -237,9 +234,9 @@ public class MultiArrayStructImplTest {
 				= MultiArrayStructImpl.valueOf(Arrays.asList(IntegerStruct.TWO, IntegerStruct.TWO),
 				                               TType.INSTANCE,
 				                               IntegerStruct.ZERO,
-				                               NILStruct.INSTANCE);
-		final BooleanStruct result = array.arrayHasFillPointerP();
-		Assert.assertThat(result, is(NILStruct.INSTANCE));
+				                               false);
+		final boolean result = array.arrayHasFillPointerP();
+		Assert.assertThat(result, is(false));
 	}
 
 	/*
@@ -261,9 +258,9 @@ public class MultiArrayStructImplTest {
 				= MultiArrayStructImpl.valueOf(Arrays.asList(IntegerStruct.TWO, IntegerStruct.TWO),
 				                               TType.INSTANCE,
 				                               IntegerStruct.ZERO,
-				                               NILStruct.INSTANCE);
-		final BooleanStruct result = array.arrayInBoundsP(IntegerStruct.ONE);
-		Assert.assertThat(result.toJavaPBoolean(), is(false));
+				                               false);
+		final boolean result = array.arrayInBoundsP(IntegerStruct.ONE);
+		Assert.assertThat(result, is(false));
 	}
 
 	@Test
@@ -272,9 +269,9 @@ public class MultiArrayStructImplTest {
 				= MultiArrayStructImpl.valueOf(Arrays.asList(IntegerStruct.TWO, IntegerStruct.TWO),
 				                               TType.INSTANCE,
 				                               IntegerStruct.ZERO,
-				                               NILStruct.INSTANCE);
-		final BooleanStruct result = array.arrayInBoundsP(IntegerStruct.ONE, IntegerStruct.ONE, IntegerStruct.ONE);
-		Assert.assertThat(result.toJavaPBoolean(), is(false));
+				                               false);
+		final boolean result = array.arrayInBoundsP(IntegerStruct.ONE, IntegerStruct.ONE, IntegerStruct.ONE);
+		Assert.assertThat(result, is(false));
 	}
 
 	@Test
@@ -283,9 +280,9 @@ public class MultiArrayStructImplTest {
 				= MultiArrayStructImpl.valueOf(Arrays.asList(IntegerStruct.TWO, IntegerStruct.TWO, IntegerStruct.TWO),
 				                               TType.INSTANCE,
 				                               IntegerStruct.ZERO,
-				                               NILStruct.INSTANCE);
-		final BooleanStruct result = array.arrayInBoundsP(IntegerStruct.MINUS_ONE, IntegerStruct.ONE);
-		Assert.assertThat(result.toJavaPBoolean(), is(false));
+				                               false);
+		final boolean result = array.arrayInBoundsP(IntegerStruct.MINUS_ONE, IntegerStruct.ONE);
+		Assert.assertThat(result, is(false));
 	}
 
 	@Test
@@ -294,9 +291,9 @@ public class MultiArrayStructImplTest {
 				= MultiArrayStructImpl.valueOf(Arrays.asList(IntegerStruct.TWO, IntegerStruct.TWO, IntegerStruct.TWO),
 				                               TType.INSTANCE,
 				                               IntegerStruct.ZERO,
-				                               NILStruct.INSTANCE);
-		final BooleanStruct result = array.arrayInBoundsP(IntegerStruct.ONE, IntegerStruct.MINUS_ONE);
-		Assert.assertThat(result.toJavaPBoolean(), is(false));
+				                               false);
+		final boolean result = array.arrayInBoundsP(IntegerStruct.ONE, IntegerStruct.MINUS_ONE);
+		Assert.assertThat(result, is(false));
 	}
 
 	@Test
@@ -305,9 +302,9 @@ public class MultiArrayStructImplTest {
 				= MultiArrayStructImpl.valueOf(Arrays.asList(IntegerStruct.TWO, IntegerStruct.TWO, IntegerStruct.TWO),
 				                               TType.INSTANCE,
 				                               IntegerStruct.ZERO,
-				                               NILStruct.INSTANCE);
-		final BooleanStruct result = array.arrayInBoundsP(IntegerStruct.TEN, IntegerStruct.ONE);
-		Assert.assertThat(result.toJavaPBoolean(), is(false));
+				                               false);
+		final boolean result = array.arrayInBoundsP(IntegerStruct.TEN, IntegerStruct.ONE);
+		Assert.assertThat(result, is(false));
 	}
 
 	@Test
@@ -316,9 +313,9 @@ public class MultiArrayStructImplTest {
 				= MultiArrayStructImpl.valueOf(Arrays.asList(IntegerStruct.TWO, IntegerStruct.TWO, IntegerStruct.TWO),
 				                               TType.INSTANCE,
 				                               IntegerStruct.ZERO,
-				                               NILStruct.INSTANCE);
-		final BooleanStruct result = array.arrayInBoundsP(IntegerStruct.ONE, IntegerStruct.TEN);
-		Assert.assertThat(result.toJavaPBoolean(), is(false));
+				                               false);
+		final boolean result = array.arrayInBoundsP(IntegerStruct.ONE, IntegerStruct.TEN);
+		Assert.assertThat(result, is(false));
 	}
 
 	@Test
@@ -327,9 +324,9 @@ public class MultiArrayStructImplTest {
 				= MultiArrayStructImpl.valueOf(Arrays.asList(IntegerStruct.TWO, IntegerStruct.TWO),
 				                               TType.INSTANCE,
 				                               IntegerStruct.ZERO,
-				                               NILStruct.INSTANCE);
-		final BooleanStruct result = array.arrayInBoundsP(IntegerStruct.ONE, IntegerStruct.ONE);
-		Assert.assertThat(result.toJavaPBoolean(), is(true));
+				                               false);
+		final boolean result = array.arrayInBoundsP(IntegerStruct.ONE, IntegerStruct.ONE);
+		Assert.assertThat(result, is(true));
 	}
 
 	/*
@@ -342,7 +339,7 @@ public class MultiArrayStructImplTest {
 				= MultiArrayStructImpl.valueOf(Arrays.asList(IntegerStruct.TWO, IntegerStruct.TWO, IntegerStruct.TWO),
 				                               TType.INSTANCE,
 				                               IntegerStruct.ZERO,
-				                               NILStruct.INSTANCE);
+				                               false);
 		final IntegerStruct result = array.arrayRank();
 		Assert.assertThat(result.toJavaInt(), is(3));
 	}
@@ -366,7 +363,7 @@ public class MultiArrayStructImplTest {
 				= MultiArrayStructImpl.valueOf(Arrays.asList(IntegerStruct.ZERO, IntegerStruct.ZERO),
 				                               TType.INSTANCE,
 				                               IntegerStruct.ZERO,
-				                               NILStruct.INSTANCE);
+				                               false);
 		final IntegerStruct result = array.arrayTotalSize();
 		Assert.assertThat(result.toJavaInt(), is(0));
 	}
@@ -377,7 +374,7 @@ public class MultiArrayStructImplTest {
 				= MultiArrayStructImpl.valueOf(Arrays.asList(IntegerStruct.TWO, IntegerStruct.TWO),
 				                               TType.INSTANCE,
 				                               IntegerStruct.ZERO,
-				                               NILStruct.INSTANCE);
+				                               false);
 		final IntegerStruct result = array.arrayTotalSize();
 		Assert.assertThat(result.toJavaInt(), is(4));
 	}

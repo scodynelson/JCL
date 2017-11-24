@@ -220,7 +220,7 @@ public interface VectorStruct extends ArrayStruct, SequenceStruct {
 		}
 
 		@Override
-		public VectorStruct.Builder adjustable(final BooleanStruct adjustable) {
+		public VectorStruct.Builder adjustable(final boolean adjustable) {
 			this.adjustable = adjustable;
 			return this;
 		}
@@ -247,7 +247,7 @@ public interface VectorStruct extends ArrayStruct, SequenceStruct {
 		public VectorStruct build() {
 			final int sizeInt = size.toJavaInt();
 			final LispType upgradedET = ArrayStruct.upgradedArrayElementType(elementType);
-			final boolean adjustableBoolean = adjustable.toJavaPBoolean();
+			final boolean adjustableBoolean = adjustable;
 			final Integer fillPointerInt = (fillPointer == null) ? null : fillPointer.toJavaInt();
 
 			if (displacedTo != null) {

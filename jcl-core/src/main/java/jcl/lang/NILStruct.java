@@ -71,13 +71,13 @@ public final class NILStruct extends BooleanStructImpl implements ListStruct {
 	}
 
 	@Override
-	public BooleanStruct endP() {
-		return TStruct.INSTANCE;
+	public boolean endP() {
+		return true;
 	}
 
 	@Override
-	public BooleanStruct tailp(final LispStruct object) {
-		return BooleanStruct.toLispBoolean(INSTANCE.eq(object));
+	public boolean tailp(final LispStruct object) {
+		return INSTANCE.eq(object);
 	}
 
 	@Override
@@ -101,8 +101,8 @@ public final class NILStruct extends BooleanStructImpl implements ListStruct {
 	}
 
 	@Override
-	public BooleanStruct remf(final LispStruct indicator) {
-		return INSTANCE;
+	public boolean remf(final LispStruct indicator) {
+		return false;
 	}
 
 	@Override

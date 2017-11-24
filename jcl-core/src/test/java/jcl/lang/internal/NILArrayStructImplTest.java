@@ -46,11 +46,11 @@ public class NILArrayStructImplTest {
 	public final ExpectedException thrown = ExpectedException.none();
 
 	/*
-	Value-Of (LispType, T, BooleanStruct)
+	Value-Of (LispType, T, boolean)
 	 */
 
 	/**
-	 * Test for {@link NILArrayStructImpl#valueOf(LispType, LispStruct, BooleanStruct)} where a {@link
+	 * Test for {@link NILArrayStructImpl#valueOf(LispType, LispStruct, boolean)} where a {@link
 	 * TypeErrorException} is thrown.
 	 */
 	@Test
@@ -61,11 +61,11 @@ public class NILArrayStructImplTest {
 		final IntegerStruct initialElement = IntegerStruct.ZERO;
 		NILArrayStructImpl.valueOf(NILType.INSTANCE,
 		                           initialElement,
-		                           NILStruct.INSTANCE);
+		                           false);
 	}
 
 	/**
-	 * Test for {@link NILArrayStructImpl#valueOf(LispType, LispStruct, BooleanStruct)} where the resulting array is
+	 * Test for {@link NILArrayStructImpl#valueOf(LispType, LispStruct, boolean)} where the resulting array is
 	 * adjustable.
 	 */
 	@Test
@@ -75,14 +75,14 @@ public class NILArrayStructImplTest {
 		final ArrayStruct array
 				= NILArrayStructImpl.valueOf(TType.INSTANCE,
 				                             initialElement,
-				                             TStruct.INSTANCE);
+				                             true);
 		Assert.assertThat(array.getType(), is(ArrayType.INSTANCE));
 		Assert.assertThat(array.aref(), is(initialElement));
-		Assert.assertThat(array.adjustableArrayP(), is(TStruct.INSTANCE));
+		Assert.assertThat(array.adjustableArrayP(), is(true));
 	}
 
 	/**
-	 * Test for {@link NILArrayStructImpl#valueOf(LispType, LispStruct, BooleanStruct)} where the resulting array is not
+	 * Test for {@link NILArrayStructImpl#valueOf(LispType, LispStruct, boolean)} where the resulting array is not
 	 * adjustable.
 	 */
 	@Test
@@ -92,18 +92,18 @@ public class NILArrayStructImplTest {
 		final ArrayStruct array
 				= NILArrayStructImpl.valueOf(TType.INSTANCE,
 				                             initialElement,
-				                             NILStruct.INSTANCE);
+				                             false);
 		Assert.assertThat(array.getType(), is(SimpleArrayType.INSTANCE));
 		Assert.assertThat(array.aref(), is(initialElement));
-		Assert.assertThat(array.adjustableArrayP(), is(NILStruct.INSTANCE));
+		Assert.assertThat(array.adjustableArrayP(), is(false));
 	}
 
 	/*
-	Value-Of (LispType, SequenceStruct, BooleanStruct)
+	Value-Of (LispType, SequenceStruct, boolean)
 	 */
 
 	/**
-	 * Test for {@link NILArrayStructImpl#valueOf(LispType, SequenceStruct, BooleanStruct)} where a {@link
+	 * Test for {@link NILArrayStructImpl#valueOf(LispType, SequenceStruct, boolean)} where a {@link
 	 * TypeErrorException} is thrown.
 	 */
 	@Test
@@ -114,11 +114,11 @@ public class NILArrayStructImplTest {
 		final SequenceStruct initialContents = ListStruct.toLispList(IntegerStruct.ZERO);
 		NILArrayStructImpl.valueOf(NILType.INSTANCE,
 		                           initialContents,
-		                           NILStruct.INSTANCE);
+		                           false);
 	}
 
 	/**
-	 * Test for {@link NILArrayStructImpl#valueOf(LispType, SequenceStruct, BooleanStruct)} where the resulting array is
+	 * Test for {@link NILArrayStructImpl#valueOf(LispType, SequenceStruct, boolean)} where the resulting array is
 	 * adjustable.
 	 */
 	@Test
@@ -128,14 +128,14 @@ public class NILArrayStructImplTest {
 		final ArrayStruct array
 				= NILArrayStructImpl.valueOf(TType.INSTANCE,
 				                             initialContents,
-				                             TStruct.INSTANCE);
+				                             true);
 		Assert.assertThat(array.getType(), is(ArrayType.INSTANCE));
 		Assert.assertThat(array.aref(), is(initialContents));
-		Assert.assertThat(array.adjustableArrayP(), is(TStruct.INSTANCE));
+		Assert.assertThat(array.adjustableArrayP(), is(true));
 	}
 
 	/**
-	 * Test for {@link NILArrayStructImpl#valueOf(LispType, SequenceStruct, BooleanStruct)} where the resulting array is
+	 * Test for {@link NILArrayStructImpl#valueOf(LispType, SequenceStruct, boolean)} where the resulting array is
 	 * not adjustable.
 	 */
 	@Test
@@ -145,18 +145,18 @@ public class NILArrayStructImplTest {
 		final ArrayStruct array
 				= NILArrayStructImpl.valueOf(TType.INSTANCE,
 				                             initialContents,
-				                             NILStruct.INSTANCE);
+				                             false);
 		Assert.assertThat(array.getType(), is(SimpleArrayType.INSTANCE));
 		Assert.assertThat(array.aref(), is(initialContents));
-		Assert.assertThat(array.adjustableArrayP(), is(NILStruct.INSTANCE));
+		Assert.assertThat(array.adjustableArrayP(), is(false));
 	}
 
 	/*
-	Value-Of (LispType, ArrayStruct<T>, IntegerStruct, BooleanStruct)
+	Value-Of (LispType, ArrayStruct<T>, IntegerStruct, boolean)
 	 */
 
 	/**
-	 * Test for {@link NILArrayStructImpl#valueOf(LispType, ArrayStruct, IntegerStruct, BooleanStruct)} where the
+	 * Test for {@link NILArrayStructImpl#valueOf(LispType, ArrayStruct, IntegerStruct, boolean)} where the
 	 * displacedIndexOffset is out of bounds.
 	 */
 	@Test
@@ -170,11 +170,11 @@ public class NILArrayStructImplTest {
 		NILArrayStructImpl.valueOf(TType.INSTANCE,
 		                           displacedTo,
 		                           IntegerStruct.ONE,
-		                           NILStruct.INSTANCE);
+		                           false);
 	}
 
 	/**
-	 * Test for {@link NILArrayStructImpl#valueOf(LispType, ArrayStruct, IntegerStruct, BooleanStruct)} where a {@link
+	 * Test for {@link NILArrayStructImpl#valueOf(LispType, ArrayStruct, IntegerStruct, boolean)} where a {@link
 	 * TypeErrorException} is thrown.
 	 */
 	@Test
@@ -188,11 +188,11 @@ public class NILArrayStructImplTest {
 		NILArrayStructImpl.valueOf(NILType.INSTANCE,
 		                           displacedTo,
 		                           IntegerStruct.ZERO,
-		                           NILStruct.INSTANCE);
+		                           false);
 	}
 
 	/**
-	 * Test for {@link NILArrayStructImpl#valueOf(LispType, ArrayStruct, IntegerStruct, BooleanStruct)} where the
+	 * Test for {@link NILArrayStructImpl#valueOf(LispType, ArrayStruct, IntegerStruct, boolean)} where the
 	 * resulting array is adjustable.
 	 */
 	@Test
@@ -207,10 +207,10 @@ public class NILArrayStructImplTest {
 				= NILArrayStructImpl.valueOf(TType.INSTANCE,
 				                             displacedTo,
 				                             displacedIndexOffset,
-				                             TStruct.INSTANCE);
+				                             true);
 		Assert.assertThat(array.getType(), is(ArrayType.INSTANCE));
 		Assert.assertThat(array.aref(), is(initialElement));
-		Assert.assertThat(array.adjustableArrayP(), is(TStruct.INSTANCE));
+		Assert.assertThat(array.adjustableArrayP(), is(true));
 
 		final ValuesStruct displacement = array.arrayDisplacement();
 		Assert.assertThat(displacement.getValuesList().get(0), is(displacedTo));
@@ -218,7 +218,7 @@ public class NILArrayStructImplTest {
 	}
 
 	/**
-	 * Test for {@link NILArrayStructImpl#valueOf(LispType, ArrayStruct, IntegerStruct, BooleanStruct)} where the
+	 * Test for {@link NILArrayStructImpl#valueOf(LispType, ArrayStruct, IntegerStruct, boolean)} where the
 	 * resulting array is not adjustable.
 	 */
 	@Test
@@ -228,17 +228,17 @@ public class NILArrayStructImplTest {
 		final ArrayStruct displacedTo
 				= VectorStruct.builder(IntegerStruct.TWO)
 				              .initialContents(initialContents)
-				              .adjustable(TStruct.INSTANCE)
+				              .adjustable(true)
 				              .build();
 		final IntegerStruct displacedIndexOffset = IntegerStruct.ONE;
 		final ArrayStruct array
 				= NILArrayStructImpl.valueOf(TType.INSTANCE,
 				                             displacedTo,
 				                             displacedIndexOffset,
-				                             NILStruct.INSTANCE);
+				                             false);
 		Assert.assertThat(array.getType(), is(ArrayType.INSTANCE));
 		Assert.assertThat(array.aref(), is(IntegerStruct.TWO));
-		Assert.assertThat(array.adjustableArrayP(), is(NILStruct.INSTANCE));
+		Assert.assertThat(array.adjustableArrayP(), is(false));
 
 		final ValuesStruct displacement = array.arrayDisplacement();
 		Assert.assertThat(displacement.getValuesList().get(0), is(displacedTo));
@@ -274,7 +274,7 @@ public class NILArrayStructImplTest {
 				                             initialElement);
 		Assert.assertThat(array.getType(), is(SimpleArrayType.INSTANCE));
 		Assert.assertThat(array.aref(), is(initialElement));
-		Assert.assertThat(array.adjustableArrayP(), is(NILStruct.INSTANCE));
+		Assert.assertThat(array.adjustableArrayP(), is(false));
 	}
 
 	/*
@@ -307,7 +307,7 @@ public class NILArrayStructImplTest {
 				                             initialContents);
 		Assert.assertThat(array.getType(), is(SimpleArrayType.INSTANCE));
 		Assert.assertThat(array.aref(), is(initialContents));
-		Assert.assertThat(array.adjustableArrayP(), is(NILStruct.INSTANCE));
+		Assert.assertThat(array.adjustableArrayP(), is(false));
 	}
 
 	/*
@@ -423,7 +423,7 @@ public class NILArrayStructImplTest {
 		final ArrayStruct array
 				= NILArrayStructImpl.valueOf(TType.INSTANCE,
 				                             initialElement,
-				                             TStruct.INSTANCE);
+				                             true);
 
 		final IntegerStruct newElement = IntegerStruct.ONE;
 		final ArrayStruct result
@@ -434,7 +434,7 @@ public class NILArrayStructImplTest {
 		Assert.assertThat(array, sameInstance(result));
 		Assert.assertThat(result.getType(), is(ArrayType.INSTANCE));
 		Assert.assertThat(result.aref(), is(newElement));
-		Assert.assertThat(result.adjustableArrayP(), is(TStruct.INSTANCE));
+		Assert.assertThat(result.adjustableArrayP(), is(true));
 	}
 
 	/**
@@ -458,11 +458,11 @@ public class NILArrayStructImplTest {
 		Assert.assertThat(array, not(sameInstance(result)));
 		Assert.assertThat(array.getType(), is(SimpleArrayType.INSTANCE));
 		Assert.assertThat(array.aref(), is(initialElement));
-		Assert.assertThat(array.adjustableArrayP(), is(NILStruct.INSTANCE));
+		Assert.assertThat(array.adjustableArrayP(), is(false));
 
 		Assert.assertThat(result.getType(), is(SimpleArrayType.INSTANCE));
 		Assert.assertThat(result.aref(), is(newElement));
-		Assert.assertThat(result.adjustableArrayP(), is(NILStruct.INSTANCE));
+		Assert.assertThat(result.adjustableArrayP(), is(false));
 	}
 
 	/*
@@ -577,7 +577,7 @@ public class NILArrayStructImplTest {
 		final ArrayStruct array
 				= NILArrayStructImpl.valueOf(TType.INSTANCE,
 				                             initialContents,
-				                             TStruct.INSTANCE);
+				                             true);
 
 		final SequenceStruct newContents = ListStruct.toLispList(IntegerStruct.ONE);
 		final ArrayStruct result
@@ -588,7 +588,7 @@ public class NILArrayStructImplTest {
 		Assert.assertThat(array, sameInstance(result));
 		Assert.assertThat(result.getType(), is(ArrayType.INSTANCE));
 		Assert.assertThat(result.aref(), is(newContents));
-		Assert.assertThat(result.adjustableArrayP(), is(TStruct.INSTANCE));
+		Assert.assertThat(result.adjustableArrayP(), is(true));
 	}
 
 	/**
@@ -612,11 +612,11 @@ public class NILArrayStructImplTest {
 		Assert.assertThat(array, not(sameInstance(result)));
 		Assert.assertThat(array.getType(), is(SimpleArrayType.INSTANCE));
 		Assert.assertThat(array.aref(), is(initialContents));
-		Assert.assertThat(array.adjustableArrayP(), is(NILStruct.INSTANCE));
+		Assert.assertThat(array.adjustableArrayP(), is(false));
 
 		Assert.assertThat(result.getType(), is(SimpleArrayType.INSTANCE));
 		Assert.assertThat(result.aref(), is(newContents));
-		Assert.assertThat(result.adjustableArrayP(), is(NILStruct.INSTANCE));
+		Assert.assertThat(result.adjustableArrayP(), is(false));
 	}
 
 	/*
@@ -791,7 +791,7 @@ public class NILArrayStructImplTest {
 		final ArrayStruct array
 				= NILArrayStructImpl.valueOf(TType.INSTANCE,
 				                             initialElement,
-				                             TStruct.INSTANCE);
+				                             true);
 
 		final ArrayStruct result
 				= array.adjustArray(Collections.emptyList(),
@@ -802,7 +802,7 @@ public class NILArrayStructImplTest {
 		Assert.assertThat(array, sameInstance(result));
 		Assert.assertThat(result.getType(), is(ArrayType.INSTANCE));
 		Assert.assertThat(result.aref(), is(newElement));
-		Assert.assertThat(result.adjustableArrayP(), is(TStruct.INSTANCE));
+		Assert.assertThat(result.adjustableArrayP(), is(true));
 
 		final ValuesStruct displacement = array.arrayDisplacement();
 		Assert.assertThat(displacement.getValuesList().get(0), is(displacedTo));
@@ -836,11 +836,11 @@ public class NILArrayStructImplTest {
 		Assert.assertThat(array, not(sameInstance(result)));
 		Assert.assertThat(array.getType(), is(SimpleArrayType.INSTANCE));
 		Assert.assertThat(array.aref(), is(initialElement));
-		Assert.assertThat(array.adjustableArrayP(), is(NILStruct.INSTANCE));
+		Assert.assertThat(array.adjustableArrayP(), is(false));
 
 		Assert.assertThat(result.getType(), is(ArrayType.INSTANCE));
 		Assert.assertThat(result.aref(), is(newElement));
-		Assert.assertThat(result.adjustableArrayP(), is(NILStruct.INSTANCE));
+		Assert.assertThat(result.adjustableArrayP(), is(false));
 
 		final ValuesStruct displacement = result.arrayDisplacement();
 		Assert.assertThat(displacement.getValuesList().get(0), is(displacedTo));
@@ -860,9 +860,9 @@ public class NILArrayStructImplTest {
 		final ArrayStruct array
 				= NILArrayStructImpl.valueOf(TType.INSTANCE,
 				                             IntegerStruct.ZERO,
-				                             TStruct.INSTANCE);
-		final BooleanStruct result = array.adjustableArrayP();
-		Assert.assertThat(result, is(TStruct.INSTANCE));
+				                             true);
+		final boolean result = array.adjustableArrayP();
+		Assert.assertThat(result, is(true));
 	}
 
 	/**
@@ -874,9 +874,9 @@ public class NILArrayStructImplTest {
 		final ArrayStruct array
 				= NILArrayStructImpl.valueOf(TType.INSTANCE,
 				                             IntegerStruct.ZERO,
-				                             NILStruct.INSTANCE);
-		final BooleanStruct result = array.adjustableArrayP();
-		Assert.assertThat(result, is(NILStruct.INSTANCE));
+				                             false);
+		final boolean result = array.adjustableArrayP();
+		Assert.assertThat(result, is(false));
 	}
 
 	/*
@@ -924,7 +924,7 @@ public class NILArrayStructImplTest {
 				= NILArrayStructImpl.valueOf(TType.INSTANCE,
 				                             displacedTo,
 				                             displacedIndexOffset,
-				                             NILStruct.INSTANCE);
+				                             false);
 		Assert.assertThat(array.aref(), is(initialElement));
 	}
 
@@ -982,7 +982,7 @@ public class NILArrayStructImplTest {
 				= NILArrayStructImpl.valueOf(TType.INSTANCE,
 				                             displacedTo,
 				                             displacedIndexOffset,
-				                             NILStruct.INSTANCE);
+				                             false);
 		Assert.assertThat(array.aref(), is(initialElement));
 
 		final IntegerStruct newElement = IntegerStruct.ONE;
@@ -1055,8 +1055,8 @@ public class NILArrayStructImplTest {
 		final ArrayStruct array
 				= NILArrayStructImpl.valueOf(TType.INSTANCE,
 				                             IntegerStruct.ZERO);
-		final BooleanStruct result = array.arrayHasFillPointerP();
-		Assert.assertThat(result, is(NILStruct.INSTANCE));
+		final boolean result = array.arrayHasFillPointerP();
+		Assert.assertThat(result, is(false));
 	}
 
 	/*
@@ -1095,7 +1095,7 @@ public class NILArrayStructImplTest {
 				= NILArrayStructImpl.valueOf(TType.INSTANCE,
 				                             displacedTo,
 				                             displacedIndexOffset,
-				                             NILStruct.INSTANCE);
+				                             false);
 
 		final ValuesStruct displacement = array.arrayDisplacement();
 		Assert.assertThat(displacement.getValuesList().get(0), is(displacedTo));
@@ -1114,8 +1114,8 @@ public class NILArrayStructImplTest {
 		final ArrayStruct array
 				= NILArrayStructImpl.valueOf(TType.INSTANCE,
 				                             IntegerStruct.ZERO);
-		final BooleanStruct result = array.arrayInBoundsP();
-		Assert.assertThat(result.toJavaPBoolean(), is(true));
+		final boolean result = array.arrayInBoundsP();
+		Assert.assertThat(result, is(true));
 	}
 
 	/*
@@ -1354,7 +1354,7 @@ public class NILArrayStructImplTest {
 			final ArrayStruct array
 					= NILArrayStructImpl.valueOf(TType.INSTANCE,
 					                             initialElement,
-					                             TStruct.INSTANCE);
+					                             true);
 			final String result = array.toString();
 			Assert.assertThat(result, containsString("#<"));
 			Assert.assertThat(result, containsString(" NIL type "));

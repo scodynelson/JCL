@@ -74,7 +74,7 @@ public class StringStructStringTest {
 		final StringStruct struct
 				= StringStruct.builder(IntegerStruct.ONE)
 				              .initialElement(initialElement)
-				              .adjustable(TStruct.INSTANCE)
+				              .adjustable(true)
 				              .build();
 		struct.adjustArray(AdjustArrayContext.builder(IntegerStruct.TWO)
 		                                     .build());
@@ -211,7 +211,7 @@ public class StringStructStringTest {
 		final StringStruct struct
 				= StringStruct.builder(IntegerStruct.ONE)
 				              .initialElement(initialElement)
-				              .adjustable(TStruct.INSTANCE)
+				              .adjustable(true)
 				              .build();
 		Assert.assertThat(struct.schar(IntegerStruct.ZERO), is(initialElement));
 	}
@@ -278,7 +278,7 @@ public class StringStructStringTest {
 		final StringStruct struct
 				= StringStruct.builder(IntegerStruct.ONE)
 				              .initialElement(initialElement)
-				              .adjustable(TStruct.INSTANCE)
+				              .adjustable(true)
 				              .build();
 		Assert.assertThat(struct.char_(IntegerStruct.ZERO), is(initialElement));
 
@@ -1895,7 +1895,7 @@ public class StringStructStringTest {
 	@Test
 	public void test_isSimpleString_True() {
 		final StringStruct struct = StringStruct.EMPTY_STRING;
-		Assert.assertThat(struct.isSimpleString(), is(TStruct.INSTANCE));
+		Assert.assertThat(struct.isSimpleString(), is(true));
 	}
 
 	/**
@@ -1904,9 +1904,9 @@ public class StringStructStringTest {
 	@Test
 	public void test_isSimpleString_False() {
 		final StringStruct struct = StringStruct.builder(IntegerStruct.ZERO)
-		                                        .adjustable(TStruct.INSTANCE)
+		                                        .adjustable(true)
 		                                        .build();
-		Assert.assertThat(struct.isSimpleString(), is(NILStruct.INSTANCE));
+		Assert.assertThat(struct.isSimpleString(), is(false));
 	}
 
 	/*
@@ -2208,7 +2208,7 @@ public class StringStructStringTest {
 		final String str = "abc";
 		final StringStruct struct = StringStruct.builder(IntegerStruct.toLispInteger(str.length()))
 		                                        .initialContents(StringStruct.toLispString(str))
-		                                        .adjustable(TStruct.INSTANCE)
+		                                        .adjustable(true)
 		                                        .build();
 
 		ToStringTestUtils.validateToStringWithNoEscapes(str, struct);
@@ -2235,7 +2235,7 @@ public class StringStructStringTest {
 		final String str = "a\\4*j\"p";
 		final StringStruct struct = StringStruct.builder(IntegerStruct.toLispInteger(str.length()))
 		                                        .initialContents(StringStruct.toLispString(str))
-		                                        .adjustable(TStruct.INSTANCE)
+		                                        .adjustable(true)
 		                                        .build();
 
 		ToStringTestUtils.validateToStringWithNoEscapes("a\\\\4*j\\\"p", struct);

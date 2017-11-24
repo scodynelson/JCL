@@ -1,13 +1,10 @@
 package jcl.lang.internal;
 
 import jcl.lang.ArrayStruct;
-import jcl.lang.BooleanStruct;
-import jcl.lang.FixnumStruct;
 import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
 import jcl.lang.NILStruct;
-import jcl.lang.TStruct;
 import jcl.lang.VectorStruct;
 import jcl.lang.condition.exception.ErrorException;
 import jcl.type.BitType;
@@ -99,10 +96,10 @@ public class VectorStructImplTest {
 		final ArrayStruct array
 				= VectorStruct.builder(IntegerStruct.TWO)
 				              .initialElement(IntegerStruct.ZERO)
-				              .adjustable(TStruct.INSTANCE)
+				              .adjustable(true)
 				              .build();
-		final BooleanStruct result = array.adjustableArrayP();
-		Assert.assertThat(result, is(TStruct.INSTANCE));
+		final boolean result = array.adjustableArrayP();
+		Assert.assertThat(result, is(true));
 	}
 
 	@Test
@@ -112,8 +109,8 @@ public class VectorStructImplTest {
 				= VectorStruct.builder(IntegerStruct.TWO)
 				              .initialElement(IntegerStruct.ZERO)
 				              .build();
-		final BooleanStruct result = array.adjustableArrayP();
-		Assert.assertThat(result, is(NILStruct.INSTANCE));
+		final boolean result = array.adjustableArrayP();
+		Assert.assertThat(result, is(false));
 	}
 
 	/*
@@ -217,8 +214,8 @@ public class VectorStructImplTest {
 				= VectorStruct.builder(IntegerStruct.TWO)
 				              .initialElement(IntegerStruct.ZERO)
 				              .build();
-		final BooleanStruct result = array.arrayHasFillPointerP();
-		Assert.assertThat(result, is(NILStruct.INSTANCE));
+		final boolean result = array.arrayHasFillPointerP();
+		Assert.assertThat(result, is(false));
 	}
 
 	/*
@@ -264,8 +261,8 @@ public class VectorStructImplTest {
 				= VectorStruct.builder(IntegerStruct.TWO)
 				              .initialElement(IntegerStruct.ZERO)
 				              .build();
-		final BooleanStruct result = array.arrayInBoundsP(IntegerStruct.MINUS_ONE);
-		Assert.assertThat(result.toJavaPBoolean(), is(false));
+		final boolean result = array.arrayInBoundsP(IntegerStruct.MINUS_ONE);
+		Assert.assertThat(result, is(false));
 	}
 
 	@Test
@@ -274,8 +271,8 @@ public class VectorStructImplTest {
 				= VectorStruct.builder(IntegerStruct.TWO)
 				              .initialElement(IntegerStruct.ZERO)
 				              .build();
-		final BooleanStruct result = array.arrayInBoundsP(IntegerStruct.TEN);
-		Assert.assertThat(result.toJavaPBoolean(), is(false));
+		final boolean result = array.arrayInBoundsP(IntegerStruct.TEN);
+		Assert.assertThat(result, is(false));
 	}
 
 	@Test
@@ -284,8 +281,8 @@ public class VectorStructImplTest {
 				= VectorStruct.builder(IntegerStruct.TWO)
 				              .initialElement(IntegerStruct.ZERO)
 				              .build();
-		final BooleanStruct result = array.arrayInBoundsP(IntegerStruct.ONE);
-		Assert.assertThat(result.toJavaPBoolean(), is(true));
+		final boolean result = array.arrayInBoundsP(IntegerStruct.ONE);
+		Assert.assertThat(result, is(true));
 	}
 
 	/*

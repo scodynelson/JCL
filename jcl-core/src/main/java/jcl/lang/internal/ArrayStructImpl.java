@@ -1,7 +1,6 @@
 package jcl.lang.internal;
 
 import jcl.lang.ArrayStruct;
-import jcl.lang.BooleanStruct;
 import jcl.lang.IntegerStruct;
 import jcl.lang.NILStruct;
 import jcl.lang.ValuesStruct;
@@ -50,8 +49,8 @@ public abstract class ArrayStructImpl extends AbstractArrayStructImpl {
 	}
 
 	@Override
-	public BooleanStruct adjustableArrayP() {
-		return BooleanStruct.toLispBoolean(isAdjustable);
+	public boolean adjustableArrayP() {
+		return isAdjustable;
 	}
 
 	@Override

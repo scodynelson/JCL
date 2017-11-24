@@ -1,6 +1,7 @@
 package jcl.functions.string;
 
 import jcl.functions.CommonLispBuiltInFunctionStructBase;
+import jcl.lang.BooleanStruct;
 import jcl.lang.IntegerStruct;
 import jcl.lang.KeywordStruct;
 import jcl.lang.LispStruct;
@@ -59,6 +60,7 @@ public final class StringEqualFunction extends CommonLispBuiltInFunctionStructBa
 			final IntegerStruct end2 = arguments.getKeyArgument(CommonLispSymbols.END_KEYWORD, IntegerStruct.class);
 			builder.end2(end2);
 		}
-		return struct1.stringEqualIgnoreCase(builder.build());
+		final boolean stringEqualIgnoreCase = struct1.stringEqualIgnoreCase(builder.build());
+		return BooleanStruct.toLispBoolean(stringEqualIgnoreCase);
 	}
 }

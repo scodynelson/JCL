@@ -13,7 +13,6 @@ import java.util.stream.Stream;
 
 import jcl.lang.ArrayStruct;
 import jcl.lang.BitVectorStruct;
-import jcl.lang.BooleanStruct;
 import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.NILStruct;
@@ -325,8 +324,8 @@ public final class BitVectorStructImpl extends AbstractBitVectorStructImpl {
 	}
 
 	@Override
-	public BooleanStruct adjustableArrayP() {
-		return BooleanStruct.toLispBoolean(isAdjustable);
+	public boolean adjustableArrayP() {
+		return isAdjustable;
 	}
 
 	@Override
@@ -355,8 +354,8 @@ public final class BitVectorStructImpl extends AbstractBitVectorStructImpl {
 	}
 
 	@Override
-	public BooleanStruct arrayHasFillPointerP() {
-		return BooleanStruct.toLispBoolean(fillPointer != null);
+	public boolean arrayHasFillPointerP() {
+		return fillPointer != null;
 	}
 
 	@Override

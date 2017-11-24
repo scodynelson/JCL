@@ -42,7 +42,7 @@ public interface ArrayStruct extends LispStruct {
 	                        final IntegerStruct fillPointer, final ArrayStruct displacedTo,
 	                        final IntegerStruct displacedIndexOffset);
 
-	BooleanStruct adjustableArrayP();
+	boolean adjustableArrayP();
 
 	LispStruct aref(final IntegerStruct... subscripts);
 
@@ -59,11 +59,11 @@ public interface ArrayStruct extends LispStruct {
 	 */
 	LispType arrayElementType();
 
-	BooleanStruct arrayHasFillPointerP();
+	boolean arrayHasFillPointerP();
 
 	ValuesStruct arrayDisplacement();
 
-	BooleanStruct arrayInBoundsP(final IntegerStruct... subscripts);
+	boolean arrayInBoundsP(final IntegerStruct... subscripts);
 
 	/**
 	 * Gets the array rank.
@@ -267,7 +267,7 @@ public interface ArrayStruct extends LispStruct {
 		}
 
 		@Override
-		public ArrayStruct.Builder adjustable(final BooleanStruct adjustable) {
+		public ArrayStruct.Builder adjustable(final boolean adjustable) {
 			this.adjustable = adjustable;
 			return this;
 		}
@@ -292,7 +292,7 @@ public interface ArrayStruct extends LispStruct {
 		@Override
 		public ArrayStruct build() {
 			final LispType upgradedET = upgradedArrayElementType(elementType);
-			final boolean adjustableBoolean = adjustable.toJavaPBoolean();
+			final boolean adjustableBoolean = adjustable;
 
 			if (displacedTo != null) {
 				final LispType displacedToType = displacedTo.getType();
@@ -396,7 +396,7 @@ public interface ArrayStruct extends LispStruct {
 		protected ET elementType;
 		protected IE initialElement;
 		protected SequenceStruct initialContents;
-		protected BooleanStruct adjustable = NILStruct.INSTANCE;
+		protected boolean adjustable;
 		protected ArrayStruct displacedTo;
 		protected IntegerStruct displacedIndexOffset = IntegerStruct.ZERO;
 
@@ -415,7 +415,7 @@ public interface ArrayStruct extends LispStruct {
 				final SequenceStruct initialContents);
 
 		public abstract ArrayStruct.AbstractBuilder<AS, ET, IE> adjustable(
-				final BooleanStruct adjustable);
+				final boolean adjustable);
 
 		public abstract ArrayStruct.AbstractBuilder<AS, ET, IE> fillPointer(
 				final IntegerStruct fillPointer);

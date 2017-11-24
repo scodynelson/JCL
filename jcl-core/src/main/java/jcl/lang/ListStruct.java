@@ -120,7 +120,7 @@ public interface ListStruct extends SequenceStruct {
 	 *
 	 * @return true if the list is the empty list; false if the list is a cons
 	 */
-	BooleanStruct endP();
+	boolean endP();
 
 	static LispStruct append(final LispStruct... args) {
 		final int size = args.length;
@@ -295,7 +295,7 @@ public interface ListStruct extends SequenceStruct {
 
 	ListStruct ldiff(final LispStruct object);
 
-	BooleanStruct tailp(final LispStruct object);
+	boolean tailp(final LispStruct object);
 
 	// TODO: Fast-Member???
 
@@ -423,7 +423,7 @@ public interface ListStruct extends SequenceStruct {
 
 	ListStruct putf(final LispStruct indicator, final LispStruct newValue);
 
-	BooleanStruct remf(final LispStruct indicator);
+	boolean remf(final LispStruct indicator);
 
 	// TODO: Fast-Adjoin???
 

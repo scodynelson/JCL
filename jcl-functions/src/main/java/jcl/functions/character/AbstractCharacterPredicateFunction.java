@@ -4,7 +4,6 @@
 
 package jcl.functions.character;
 
-import java.util.function.Function;
 import java.util.function.Predicate;
 
 import jcl.functions.CommonLispBuiltInFunctionStructBase;
@@ -33,7 +32,7 @@ abstract class AbstractCharacterPredicateFunction extends CommonLispBuiltInFunct
 	 * Application method for the character function that gets the {@link CharacterStruct} parameter object and applies
 	 * the result of the abstract {@link #predicate()} method with the parameter as the {@link Predicate} parameter.
 	 *
-	 * @param lispStructs
+	 * @param arguments
 	 * 		the function parameters
 	 *
 	 * @return the result of the {@link #predicate()} applied to the {@link CharacterStruct} parameter value
@@ -41,7 +40,7 @@ abstract class AbstractCharacterPredicateFunction extends CommonLispBuiltInFunct
 	@Override
 	public LispStruct apply(final Arguments arguments) {
 		final CharacterStruct character = arguments.getRequiredArgument("CHARACTER", CharacterStruct.class);
-		return predicate().apply(character);
+		return BooleanStruct.toLispBoolean(predicate().test(character));
 	}
 
 	/**
@@ -49,5 +48,5 @@ abstract class AbstractCharacterPredicateFunction extends CommonLispBuiltInFunct
 	 *
 	 * @return returns a {@link Predicate} that consumes a {@link CharacterStruct}
 	 */
-	protected abstract Function<CharacterStruct, BooleanStruct> predicate();
+	protected abstract Predicate<CharacterStruct> predicate();
 }

@@ -8,7 +8,6 @@ import java.util.stream.Collectors;
 
 import jcl.lang.AdjustArrayContext;
 import jcl.lang.ArrayStruct;
-import jcl.lang.BooleanStruct;
 import jcl.lang.CharacterStruct;
 import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
@@ -239,7 +238,7 @@ public abstract class AbstractStringStructImpl extends AbstractVectorStructImpl 
 	}
 
 	@Override
-	public BooleanStruct stringEqual(final StringEqualityContext context) {
+	public boolean stringEqual(final StringEqualityContext context) {
 		return equalComparison(context,
 		                       String::compareTo);
 	}
@@ -285,7 +284,7 @@ public abstract class AbstractStringStructImpl extends AbstractVectorStructImpl 
 	}
 
 	@Override
-	public BooleanStruct stringEqualIgnoreCase(final StringEqualityContext context) {
+	public boolean stringEqualIgnoreCase(final StringEqualityContext context) {
 		return equalComparison(context,
 		                       String::compareToIgnoreCase);
 	}
@@ -343,14 +342,14 @@ public abstract class AbstractStringStructImpl extends AbstractVectorStructImpl 
 	 *
 	 * @return true if the strings are equal; false otherwise
 	 */
-	private BooleanStruct equalComparison(final StringEqualityContext context,
+	private boolean equalComparison(final StringEqualityContext context,
 	                                      final BiFunction<String, String, Integer> stringCompareToOp) {
 		final EqualityStrings equalityStrings = getEqualityStrings(context);
 		final String str1 = equalityStrings.str1;
 		final String str2 = equalityStrings.str2;
 
 		final int result = stringCompareToOp.apply(str1, str2);
-		return BooleanStruct.toLispBoolean(result == 0);
+		return result == 0;
 	}
 
 	/**

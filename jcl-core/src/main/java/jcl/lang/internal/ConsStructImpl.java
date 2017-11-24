@@ -9,14 +9,12 @@ import java.util.Spliterators;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
-import jcl.lang.BooleanStruct;
 import jcl.lang.ConsStruct;
 import jcl.lang.FixnumStruct;
 import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
 import jcl.lang.NILStruct;
-import jcl.lang.TStruct;
 import jcl.lang.ValuesStruct;
 import jcl.lang.classes.BuiltInClassStruct;
 import jcl.lang.condition.exception.ErrorException;
@@ -212,20 +210,20 @@ public final class ConsStructImpl extends BuiltInClassStruct implements ConsStru
 	}
 
 	@Override
-	public BooleanStruct endP() {
-		return NILStruct.INSTANCE;
+	public boolean endP() {
+		return false;
 	}
 
 	@Override
-	public BooleanStruct tailp(final LispStruct object) {
+	public boolean tailp(final LispStruct object) {
 		if (eql(object)) {
-			return TStruct.INSTANCE;
+			return true;
 		}
 		if (cdr instanceof ListStruct) {
 			final ListStruct listCdr = (ListStruct) cdr;
 			return listCdr.tailp(object);
 		}
-		return BooleanStruct.toLispBoolean(cdr.eql(object));
+		return cdr.eql(object);
 	}
 
 	@Override
@@ -293,7 +291,7 @@ public final class ConsStructImpl extends BuiltInClassStruct implements ConsStru
 	}
 
 	@Override
-	public BooleanStruct remf(final LispStruct indicator) {
+	public boolean remf(final LispStruct indicator) {
 		if (!(cdr instanceof ConsStruct)) {
 			throw new ErrorException("List is not a valid property list.");
 		}
@@ -315,7 +313,7 @@ public final class ConsStructImpl extends BuiltInClassStruct implements ConsStru
 			final ListStruct cdrCdrList = (ListStruct) cdrCons.cdr();
 			return cdrCdrList.remf(indicator);
 		}
-		return NILStruct.INSTANCE;
+		return false;
 	}
 
 	@Override

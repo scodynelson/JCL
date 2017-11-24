@@ -266,9 +266,9 @@ public class StringStructStringEqualityTest {
 		final String str = "1";
 		final StringStruct struct1 = StringStruct.toLispString(str);
 		final StringStruct struct2 = StringStruct.toLispString(str);
-		final BooleanStruct result = struct1.stringEqual(StringEqualityContext.builder(struct2)
-		                                                                      .build());
-		Assert.assertThat(result, is(TStruct.INSTANCE));
+		final boolean result = struct1.stringEqual(StringEqualityContext.builder(struct2)
+		                                                                .build());
+		Assert.assertThat(result, is(true));
 		Assert.assertThat(struct1.toJavaString(), is(str));
 		Assert.assertThat(struct2.toJavaString(), is(str));
 	}
@@ -283,11 +283,11 @@ public class StringStructStringEqualityTest {
 		final StringStruct struct1 = StringStruct.toLispString(str1);
 		final String str2 = "31";
 		final StringStruct struct2 = StringStruct.toLispString(str2);
-		final BooleanStruct result = struct1.stringEqual(StringEqualityContext.builder(struct2)
-		                                                                      .start1(IntegerStruct.ONE)
-		                                                                      .start2(IntegerStruct.ONE)
-		                                                                      .build());
-		Assert.assertThat(result, is(TStruct.INSTANCE));
+		final boolean result = struct1.stringEqual(StringEqualityContext.builder(struct2)
+		                                                                .start1(IntegerStruct.ONE)
+		                                                                .start2(IntegerStruct.ONE)
+		                                                                .build());
+		Assert.assertThat(result, is(true));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
 	}
@@ -302,11 +302,11 @@ public class StringStructStringEqualityTest {
 		final StringStruct struct1 = StringStruct.toLispString(str1);
 		final String str2 = "13";
 		final StringStruct struct2 = StringStruct.toLispString(str2);
-		final BooleanStruct result = struct1.stringEqual(StringEqualityContext.builder(struct2)
-		                                                                      .end1(IntegerStruct.ONE)
-		                                                                      .end2(IntegerStruct.ONE)
-		                                                                      .build());
-		Assert.assertThat(result, is(TStruct.INSTANCE));
+		final boolean result = struct1.stringEqual(StringEqualityContext.builder(struct2)
+		                                                                .end1(IntegerStruct.ONE)
+		                                                                .end2(IntegerStruct.ONE)
+		                                                                .build());
+		Assert.assertThat(result, is(true));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
 	}
@@ -321,13 +321,13 @@ public class StringStructStringEqualityTest {
 		final StringStruct struct1 = StringStruct.toLispString(str1);
 		final String str2 = "321";
 		final StringStruct struct2 = StringStruct.toLispString(str2);
-		final BooleanStruct result = struct1.stringEqual(StringEqualityContext.builder(struct2)
-		                                                                      .start1(IntegerStruct.ONE)
-		                                                                      .start2(IntegerStruct.ONE)
-		                                                                      .end1(IntegerStruct.TWO)
-		                                                                      .end2(IntegerStruct.TWO)
-		                                                                      .build());
-		Assert.assertThat(result, is(TStruct.INSTANCE));
+		final boolean result = struct1.stringEqual(StringEqualityContext.builder(struct2)
+		                                                                .start1(IntegerStruct.ONE)
+		                                                                .start2(IntegerStruct.ONE)
+		                                                                .end1(IntegerStruct.TWO)
+		                                                                .end2(IntegerStruct.TWO)
+		                                                                .build());
+		Assert.assertThat(result, is(true));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
 	}
@@ -344,9 +344,9 @@ public class StringStructStringEqualityTest {
 		                                         .build();
 		final String str2 = "12";
 		final StringStruct struct2 = StringStruct.toLispString(str2);
-		final BooleanStruct result = struct1.stringEqual(StringEqualityContext.builder(struct2)
-		                                                                      .build());
-		Assert.assertThat(result, is(TStruct.INSTANCE));
+		final boolean result = struct1.stringEqual(StringEqualityContext.builder(struct2)
+		                                                                .build());
+		Assert.assertThat(result, is(true));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
 	}
@@ -363,9 +363,9 @@ public class StringStructStringEqualityTest {
 		                                         .initialContents(StringStruct.toLispString(str2))
 		                                         .fillPointer(IntegerStruct.TWO)
 		                                         .build();
-		final BooleanStruct result = struct1.stringEqual(StringEqualityContext.builder(struct2)
-		                                                                      .build());
-		Assert.assertThat(result, is(TStruct.INSTANCE));
+		final boolean result = struct1.stringEqual(StringEqualityContext.builder(struct2)
+		                                                                .build());
+		Assert.assertThat(result, is(true));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
 	}
@@ -386,9 +386,9 @@ public class StringStructStringEqualityTest {
 		                                         .initialContents(StringStruct.toLispString(str2))
 		                                         .fillPointer(IntegerStruct.TWO)
 		                                         .build();
-		final BooleanStruct result = struct1.stringEqual(StringEqualityContext.builder(struct2)
-		                                                                      .build());
-		Assert.assertThat(result, is(TStruct.INSTANCE));
+		final boolean result = struct1.stringEqual(StringEqualityContext.builder(struct2)
+		                                                                .build());
+		Assert.assertThat(result, is(true));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
 	}
@@ -405,9 +405,9 @@ public class StringStructStringEqualityTest {
 		                                         .build();
 		final String str2 = "12";
 		final StringStruct struct2 = StringStruct.toLispString(str2);
-		final BooleanStruct result = struct1.stringEqual(StringEqualityContext.builder(struct2)
-		                                                                      .build());
-		Assert.assertThat(result, is(TStruct.INSTANCE));
+		final boolean result = struct1.stringEqual(StringEqualityContext.builder(struct2)
+		                                                                .build());
+		Assert.assertThat(result, is(true));
 		Assert.assertThat(struct1.toJavaString(), is(str1.substring(1)));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
 	}
@@ -424,9 +424,9 @@ public class StringStructStringEqualityTest {
 		                                         .displacedTo(StringStruct.toLispString(str2))
 		                                         .displacedIndexOffset(IntegerStruct.ONE)
 		                                         .build();
-		final BooleanStruct result = struct1.stringEqual(StringEqualityContext.builder(struct2)
-		                                                                      .build());
-		Assert.assertThat(result, is(TStruct.INSTANCE));
+		final boolean result = struct1.stringEqual(StringEqualityContext.builder(struct2)
+		                                                                .build());
+		Assert.assertThat(result, is(true));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2.substring(1)));
 	}
@@ -447,9 +447,9 @@ public class StringStructStringEqualityTest {
 		                                         .displacedTo(StringStruct.toLispString(str2))
 		                                         .displacedIndexOffset(IntegerStruct.ONE)
 		                                         .build();
-		final BooleanStruct result = struct1.stringEqual(StringEqualityContext.builder(struct2)
-		                                                                      .build());
-		Assert.assertThat(result, is(TStruct.INSTANCE));
+		final boolean result = struct1.stringEqual(StringEqualityContext.builder(struct2)
+		                                                                .build());
+		Assert.assertThat(result, is(true));
 		Assert.assertThat(struct1.toJavaString(), is(str1.substring(1)));
 		Assert.assertThat(struct2.toJavaString(), is(str2.substring(1)));
 	}
@@ -464,9 +464,9 @@ public class StringStructStringEqualityTest {
 		final StringStruct struct1 = StringStruct.toLispString(str1);
 		final String str2 = "2";
 		final StringStruct struct2 = StringStruct.toLispString(str2);
-		final BooleanStruct result = struct1.stringEqual(StringEqualityContext.builder(struct2)
-		                                                                      .build());
-		Assert.assertThat(result, is(NILStruct.INSTANCE));
+		final boolean result = struct1.stringEqual(StringEqualityContext.builder(struct2)
+		                                                                .build());
+		Assert.assertThat(result, is(false));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
 	}
@@ -481,9 +481,9 @@ public class StringStructStringEqualityTest {
 		final StringStruct struct1 = StringStruct.toLispString(str1);
 		final String str2 = "a";
 		final StringStruct struct2 = StringStruct.toLispString(str2);
-		final BooleanStruct result = struct1.stringEqual(StringEqualityContext.builder(struct2)
-		                                                                      .build());
-		Assert.assertThat(result, is(NILStruct.INSTANCE));
+		final boolean result = struct1.stringEqual(StringEqualityContext.builder(struct2)
+		                                                                .build());
+		Assert.assertThat(result, is(false));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
 	}
@@ -3186,9 +3186,9 @@ public class StringStructStringEqualityTest {
 		final String str = "1";
 		final StringStruct struct1 = StringStruct.toLispString(str);
 		final StringStruct struct2 = StringStruct.toLispString(str);
-		final LispStruct result = struct1.stringEqualIgnoreCase(StringEqualityContext.builder(struct2)
-		                                                                             .build());
-		Assert.assertThat(result, is(TStruct.INSTANCE));
+		final boolean result = struct1.stringEqualIgnoreCase(StringEqualityContext.builder(struct2)
+		                                                                          .build());
+		Assert.assertThat(result, is(true));
 		Assert.assertThat(struct1.toJavaString(), is(str));
 		Assert.assertThat(struct2.toJavaString(), is(str));
 	}
@@ -3203,11 +3203,11 @@ public class StringStructStringEqualityTest {
 		final StringStruct struct1 = StringStruct.toLispString(str1);
 		final String str2 = "31";
 		final StringStruct struct2 = StringStruct.toLispString(str2);
-		final LispStruct result = struct1.stringEqualIgnoreCase(StringEqualityContext.builder(struct2)
-		                                                                             .start1(IntegerStruct.ONE)
-		                                                                             .start2(IntegerStruct.ONE)
-		                                                                             .build());
-		Assert.assertThat(result, is(TStruct.INSTANCE));
+		final boolean result = struct1.stringEqualIgnoreCase(StringEqualityContext.builder(struct2)
+		                                                                          .start1(IntegerStruct.ONE)
+		                                                                          .start2(IntegerStruct.ONE)
+		                                                                          .build());
+		Assert.assertThat(result, is(true));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
 	}
@@ -3222,11 +3222,11 @@ public class StringStructStringEqualityTest {
 		final StringStruct struct1 = StringStruct.toLispString(str1);
 		final String str2 = "13";
 		final StringStruct struct2 = StringStruct.toLispString(str2);
-		final LispStruct result = struct1.stringEqualIgnoreCase(StringEqualityContext.builder(struct2)
-		                                                                             .end1(IntegerStruct.ONE)
-		                                                                             .end2(IntegerStruct.ONE)
-		                                                                             .build());
-		Assert.assertThat(result, is(TStruct.INSTANCE));
+		final boolean result = struct1.stringEqualIgnoreCase(StringEqualityContext.builder(struct2)
+		                                                                          .end1(IntegerStruct.ONE)
+		                                                                          .end2(IntegerStruct.ONE)
+		                                                                          .build());
+		Assert.assertThat(result, is(true));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
 	}
@@ -3241,13 +3241,13 @@ public class StringStructStringEqualityTest {
 		final StringStruct struct1 = StringStruct.toLispString(str1);
 		final String str2 = "321";
 		final StringStruct struct2 = StringStruct.toLispString(str2);
-		final LispStruct result = struct1.stringEqualIgnoreCase(StringEqualityContext.builder(struct2)
-		                                                                             .start1(IntegerStruct.ONE)
-		                                                                             .start2(IntegerStruct.ONE)
-		                                                                             .end1(IntegerStruct.TWO)
-		                                                                             .end2(IntegerStruct.TWO)
-		                                                                             .build());
-		Assert.assertThat(result, is(TStruct.INSTANCE));
+		final boolean result = struct1.stringEqualIgnoreCase(StringEqualityContext.builder(struct2)
+		                                                                          .start1(IntegerStruct.ONE)
+		                                                                          .start2(IntegerStruct.ONE)
+		                                                                          .end1(IntegerStruct.TWO)
+		                                                                          .end2(IntegerStruct.TWO)
+		                                                                          .build());
+		Assert.assertThat(result, is(true));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
 	}
@@ -3265,9 +3265,9 @@ public class StringStructStringEqualityTest {
 		                                         .build();
 		final String str2 = "12";
 		final StringStruct struct2 = StringStruct.toLispString(str2);
-		final LispStruct result = struct1.stringEqualIgnoreCase(StringEqualityContext.builder(struct2)
-		                                                                             .build());
-		Assert.assertThat(result, is(TStruct.INSTANCE));
+		final boolean result = struct1.stringEqualIgnoreCase(StringEqualityContext.builder(struct2)
+		                                                                          .build());
+		Assert.assertThat(result, is(true));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
 	}
@@ -3285,9 +3285,9 @@ public class StringStructStringEqualityTest {
 		                                         .initialContents(StringStruct.toLispString(str2))
 		                                         .fillPointer(IntegerStruct.TWO)
 		                                         .build();
-		final LispStruct result = struct1.stringEqualIgnoreCase(StringEqualityContext.builder(struct2)
-		                                                                             .build());
-		Assert.assertThat(result, is(TStruct.INSTANCE));
+		final boolean result = struct1.stringEqualIgnoreCase(StringEqualityContext.builder(struct2)
+		                                                                          .build());
+		Assert.assertThat(result, is(true));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
 	}
@@ -3308,9 +3308,9 @@ public class StringStructStringEqualityTest {
 		                                         .initialContents(StringStruct.toLispString(str2))
 		                                         .fillPointer(IntegerStruct.TWO)
 		                                         .build();
-		final LispStruct result = struct1.stringEqualIgnoreCase(StringEqualityContext.builder(struct2)
-		                                                                             .build());
-		Assert.assertThat(result, is(TStruct.INSTANCE));
+		final boolean result = struct1.stringEqualIgnoreCase(StringEqualityContext.builder(struct2)
+		                                                                          .build());
+		Assert.assertThat(result, is(true));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
 	}
@@ -3328,9 +3328,9 @@ public class StringStructStringEqualityTest {
 		                                         .build();
 		final String str2 = "12";
 		final StringStruct struct2 = StringStruct.toLispString(str2);
-		final LispStruct result = struct1.stringEqualIgnoreCase(StringEqualityContext.builder(struct2)
-		                                                                             .build());
-		Assert.assertThat(result, is(TStruct.INSTANCE));
+		final boolean result = struct1.stringEqualIgnoreCase(StringEqualityContext.builder(struct2)
+		                                                                          .build());
+		Assert.assertThat(result, is(true));
 		Assert.assertThat(struct1.toJavaString(), is(str1.substring(1)));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
 	}
@@ -3348,9 +3348,9 @@ public class StringStructStringEqualityTest {
 		                                         .displacedTo(StringStruct.toLispString(str2))
 		                                         .displacedIndexOffset(IntegerStruct.ONE)
 		                                         .build();
-		final LispStruct result = struct1.stringEqualIgnoreCase(StringEqualityContext.builder(struct2)
-		                                                                             .build());
-		Assert.assertThat(result, is(TStruct.INSTANCE));
+		final boolean result = struct1.stringEqualIgnoreCase(StringEqualityContext.builder(struct2)
+		                                                                          .build());
+		Assert.assertThat(result, is(true));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2.substring(1)));
 	}
@@ -3371,9 +3371,9 @@ public class StringStructStringEqualityTest {
 		                                         .displacedTo(StringStruct.toLispString(str2))
 		                                         .displacedIndexOffset(IntegerStruct.ONE)
 		                                         .build();
-		final LispStruct result = struct1.stringEqualIgnoreCase(StringEqualityContext.builder(struct2)
-		                                                                             .build());
-		Assert.assertThat(result, is(TStruct.INSTANCE));
+		final boolean result = struct1.stringEqualIgnoreCase(StringEqualityContext.builder(struct2)
+		                                                                          .build());
+		Assert.assertThat(result, is(true));
 		Assert.assertThat(struct1.toJavaString(), is(str1.substring(1)));
 		Assert.assertThat(struct2.toJavaString(), is(str2.substring(1)));
 	}
@@ -3388,9 +3388,9 @@ public class StringStructStringEqualityTest {
 		final StringStruct struct1 = StringStruct.toLispString(str1);
 		final String str2 = "2";
 		final StringStruct struct2 = StringStruct.toLispString(str2);
-		final LispStruct result = struct1.stringEqualIgnoreCase(StringEqualityContext.builder(struct2)
-		                                                                             .build());
-		Assert.assertThat(result, is(NILStruct.INSTANCE));
+		final boolean result = struct1.stringEqualIgnoreCase(StringEqualityContext.builder(struct2)
+		                                                                          .build());
+		Assert.assertThat(result, is(false));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
 	}
@@ -3405,9 +3405,9 @@ public class StringStructStringEqualityTest {
 		final StringStruct struct1 = StringStruct.toLispString(str1);
 		final String str2 = "a";
 		final StringStruct struct2 = StringStruct.toLispString(str2);
-		final LispStruct result = struct1.stringEqualIgnoreCase(StringEqualityContext.builder(struct2)
-		                                                                             .build());
-		Assert.assertThat(result, is(TStruct.INSTANCE));
+		final boolean result = struct1.stringEqualIgnoreCase(StringEqualityContext.builder(struct2)
+		                                                                          .build());
+		Assert.assertThat(result, is(true));
 		Assert.assertThat(struct1.toJavaString(), is(str1));
 		Assert.assertThat(struct2.toJavaString(), is(str2));
 	}

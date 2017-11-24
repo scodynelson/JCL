@@ -10,7 +10,6 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import jcl.lang.ArrayStruct;
-import jcl.lang.BooleanStruct;
 import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.NILStruct;
@@ -301,8 +300,8 @@ public class VectorStructImpl extends AbstractVectorStructImpl {
 	}
 
 	@Override
-	public BooleanStruct adjustableArrayP() {
-		return BooleanStruct.toLispBoolean(isAdjustable);
+	public boolean adjustableArrayP() {
+		return isAdjustable;
 	}
 
 	@Override
@@ -331,8 +330,8 @@ public class VectorStructImpl extends AbstractVectorStructImpl {
 	}
 
 	@Override
-	public BooleanStruct arrayHasFillPointerP() {
-		return BooleanStruct.toLispBoolean(fillPointer != null);
+	public boolean arrayHasFillPointerP() {
+		return fillPointer != null;
 	}
 
 	@Override

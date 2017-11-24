@@ -187,7 +187,7 @@ public class StringStructVectorTest {
 
 		final StringStruct struct = StringStruct.builder(IntegerStruct.TWO)
 		                                        .initialContents(StringStruct.toLispString("ab"))
-		                                        .adjustable(TStruct.INSTANCE)
+		                                        .adjustable(true)
 		                                        .build();
 		struct.vectorPop();
 	}
@@ -287,7 +287,7 @@ public class StringStructVectorTest {
 
 		final StringStruct struct = StringStruct.builder(IntegerStruct.TWO)
 		                                        .initialContents(StringStruct.toLispString("ab"))
-		                                        .adjustable(TStruct.INSTANCE)
+		                                        .adjustable(true)
 		                                        .build();
 		struct.vectorPush(CharacterConstants.DOLLAR_SIGN_CHAR);
 	}
@@ -396,7 +396,7 @@ public class StringStructVectorTest {
 
 		final StringStruct struct = StringStruct.builder(IntegerStruct.TWO)
 		                                        .initialContents(StringStruct.toLispString("ab"))
-		                                        .adjustable(TStruct.INSTANCE)
+		                                        .adjustable(true)
 		                                        .build();
 		struct.vectorPushExtend(CharacterConstants.DOLLAR_SIGN_CHAR);
 	}
@@ -432,7 +432,7 @@ public class StringStructVectorTest {
 		final StringStruct struct = StringStruct.builder(size)
 		                                        .displacedTo(displacedTo)
 		                                        .fillPointer(size)
-		                                        .adjustable(TStruct.INSTANCE)
+		                                        .adjustable(true)
 		                                        .build();
 		final LispStruct result = struct.vectorPushExtend(CharacterConstants.DOLLAR_SIGN_CHAR);
 		Assert.assertThat(result, is(size));
@@ -453,7 +453,7 @@ public class StringStructVectorTest {
 		final StringStruct struct = StringStruct.builder(size)
 		                                        .initialContents(StringStruct.toLispString(str))
 		                                        .fillPointer(size)
-		                                        .adjustable(TStruct.INSTANCE)
+		                                        .adjustable(true)
 		                                        .build();
 		final LispStruct result = struct.vectorPushExtend(CharacterConstants.DOLLAR_SIGN_CHAR);
 		Assert.assertThat(result, is(size));

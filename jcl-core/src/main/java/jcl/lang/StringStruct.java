@@ -171,7 +171,7 @@ public interface StringStruct extends VectorStruct {
 	 *
 	 * @return T if the strings are equal; NIL otherwise
 	 */
-	BooleanStruct stringEqual(final StringEqualityContext context);
+	boolean stringEqual(final StringEqualityContext context);
 
 	/**
 	 * Determines inequality of strings according to the provided {@link StringEqualityContext}. Case is accounted for.
@@ -238,7 +238,7 @@ public interface StringStruct extends VectorStruct {
 	 *
 	 * @return T if the strings are equal; NIL otherwise
 	 */
-	BooleanStruct stringEqualIgnoreCase(final StringEqualityContext context);
+	boolean stringEqualIgnoreCase(final StringEqualityContext context);
 
 	/**
 	 * Determines inequality of strings according to the provided {@link StringEqualityContext}. Case is ignored.
@@ -303,7 +303,7 @@ public interface StringStruct extends VectorStruct {
 	 *
 	 * @return true if the String is a 'simple' string; false otherwise
 	 */
-	BooleanStruct isSimpleString();
+	boolean isSimpleString();
 
 	/**
 	 * Returns the {@link String} representation of the StringStruct.
@@ -474,7 +474,7 @@ public interface StringStruct extends VectorStruct {
 		}
 
 		@Override
-		public StringStruct.Builder adjustable(final BooleanStruct adjustable) {
+		public StringStruct.Builder adjustable(final boolean adjustable) {
 			this.adjustable = adjustable;
 			return this;
 		}
@@ -501,7 +501,7 @@ public interface StringStruct extends VectorStruct {
 		public StringStruct build() {
 			final int sizeInt = size.toJavaInt();
 			final LispType upgradedET = ArrayStruct.upgradedArrayElementType(elementType);
-			final boolean adjustableBoolean = adjustable.toJavaPBoolean();
+			final boolean adjustableBoolean = adjustable;
 			final Integer fillPointerInt = (fillPointer == null) ? null : fillPointer.toJavaInt();
 
 			if (displacedTo != null) {

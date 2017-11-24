@@ -33,7 +33,7 @@ public interface CharacterStruct extends LispStruct {
 	 *
 	 * @return the '=' comparison of the provided CharacterStructs
 	 */
-	static BooleanStruct isEqualTo(final CharacterStruct... characters) {
+	static boolean isEqualTo(final CharacterStruct... characters) {
 		if (characters.length == 0) {
 			throw new ErrorException("At least one character required to test equality.");
 		}
@@ -49,7 +49,7 @@ public interface CharacterStruct extends LispStruct {
 			}
 			previousCharacter = currentCharacter;
 		}
-		return BooleanStruct.toLispBoolean(result);
+		return result;
 	}
 
 	/**
@@ -71,7 +71,7 @@ public interface CharacterStruct extends LispStruct {
 	 *
 	 * @return the '!=' comparison of the provided CharacterStructs
 	 */
-	static BooleanStruct isNotEqualTo(final CharacterStruct... characters) {
+	static boolean isNotEqualTo(final CharacterStruct... characters) {
 		if (characters.length == 0) {
 			throw new ErrorException("At least one character required to test equality.");
 		}
@@ -87,7 +87,7 @@ public interface CharacterStruct extends LispStruct {
 			}
 			previousCharacter = currentCharacter;
 		}
-		return BooleanStruct.toLispBoolean(result);
+		return result;
 	}
 
 	/**
@@ -109,7 +109,7 @@ public interface CharacterStruct extends LispStruct {
 	 *
 	 * @return the {@literal '<'} comparison of the provided CharacterStructs
 	 */
-	static BooleanStruct isLessThan(final CharacterStruct... characters) {
+	static boolean isLessThan(final CharacterStruct... characters) {
 		if (characters.length == 0) {
 			throw new ErrorException("At least one character required to test equality.");
 		}
@@ -125,7 +125,7 @@ public interface CharacterStruct extends LispStruct {
 			}
 			previousCharacter = currentCharacter;
 		}
-		return BooleanStruct.toLispBoolean(result);
+		return result;
 	}
 
 	/**
@@ -147,7 +147,7 @@ public interface CharacterStruct extends LispStruct {
 	 *
 	 * @return the {@literal '>'} comparison of the provided CharacterStructs
 	 */
-	static BooleanStruct isGreaterThan(final CharacterStruct... characters) {
+	static boolean isGreaterThan(final CharacterStruct... characters) {
 		if (characters.length == 0) {
 			throw new ErrorException("At least one character required to test equality.");
 		}
@@ -163,7 +163,7 @@ public interface CharacterStruct extends LispStruct {
 			}
 			previousCharacter = currentCharacter;
 		}
-		return BooleanStruct.toLispBoolean(result);
+		return result;
 	}
 
 	/**
@@ -185,7 +185,7 @@ public interface CharacterStruct extends LispStruct {
 	 *
 	 * @return the {@literal '<='} comparison of the provided CharacterStructs
 	 */
-	static BooleanStruct isLessThanOrEqualTo(final CharacterStruct... characters) {
+	static boolean isLessThanOrEqualTo(final CharacterStruct... characters) {
 		if (characters.length == 0) {
 			throw new ErrorException("At least one character required to test equality.");
 		}
@@ -201,7 +201,7 @@ public interface CharacterStruct extends LispStruct {
 			}
 			previousCharacter = currentCharacter;
 		}
-		return BooleanStruct.toLispBoolean(result);
+		return result;
 	}
 
 	/**
@@ -223,7 +223,7 @@ public interface CharacterStruct extends LispStruct {
 	 *
 	 * @return the {@literal '>='} comparison of the provided CharacterStructs
 	 */
-	static BooleanStruct isGreaterThanOrEqualTo(final CharacterStruct... characters) {
+	static boolean isGreaterThanOrEqualTo(final CharacterStruct... characters) {
 		if (characters.length == 0) {
 			throw new ErrorException("At least one character required to test equality.");
 		}
@@ -239,7 +239,7 @@ public interface CharacterStruct extends LispStruct {
 			}
 			previousCharacter = currentCharacter;
 		}
-		return BooleanStruct.toLispBoolean(result);
+		return result;
 	}
 
 	/**
@@ -261,7 +261,7 @@ public interface CharacterStruct extends LispStruct {
 	 *
 	 * @return the '=' comparison of the provided CharacterStructs
 	 */
-	static BooleanStruct isEqualToIgnoreCase(final CharacterStruct... characters) {
+	static boolean isEqualToIgnoreCase(final CharacterStruct... characters) {
 		if (characters.length == 0) {
 			throw new ErrorException("At least one character required to test equality.");
 		}
@@ -277,7 +277,7 @@ public interface CharacterStruct extends LispStruct {
 			}
 			previousCharacter = currentCharacter;
 		}
-		return BooleanStruct.toLispBoolean(result);
+		return result;
 	}
 
 	/**
@@ -299,7 +299,7 @@ public interface CharacterStruct extends LispStruct {
 	 *
 	 * @return the '!=' comparison of the provided CharacterStructs
 	 */
-	static BooleanStruct isNotEqualToIgnoreCase(final CharacterStruct... characters) {
+	static boolean isNotEqualToIgnoreCase(final CharacterStruct... characters) {
 		if (characters.length == 0) {
 			throw new ErrorException("At least one character required to test equality.");
 		}
@@ -315,7 +315,7 @@ public interface CharacterStruct extends LispStruct {
 			}
 			previousCharacter = currentCharacter;
 		}
-		return BooleanStruct.toLispBoolean(result);
+		return result;
 	}
 
 	/**
@@ -337,7 +337,7 @@ public interface CharacterStruct extends LispStruct {
 	 *
 	 * @return the {@literal '<'} comparison of the provided CharacterStructs
 	 */
-	static BooleanStruct isLessThanIgnoreCase(final CharacterStruct... characters) {
+	static boolean isLessThanIgnoreCase(final CharacterStruct... characters) {
 		if (characters.length == 0) {
 			throw new ErrorException("At least one character required to test equality.");
 		}
@@ -353,7 +353,7 @@ public interface CharacterStruct extends LispStruct {
 			}
 			previousCharacter = currentCharacter;
 		}
-		return BooleanStruct.toLispBoolean(result);
+		return result;
 	}
 
 	/**
@@ -375,7 +375,7 @@ public interface CharacterStruct extends LispStruct {
 	 *
 	 * @return the {@literal '>'} comparison of the provided CharacterStructs
 	 */
-	static BooleanStruct isGreaterThanIgnoreCase(final CharacterStruct... characters) {
+	static boolean isGreaterThanIgnoreCase(final CharacterStruct... characters) {
 		if (characters.length == 0) {
 			throw new ErrorException("At least one character required to test equality.");
 		}
@@ -391,7 +391,7 @@ public interface CharacterStruct extends LispStruct {
 			}
 			previousCharacter = currentCharacter;
 		}
-		return BooleanStruct.toLispBoolean(result);
+		return result;
 	}
 
 	/**
@@ -413,7 +413,7 @@ public interface CharacterStruct extends LispStruct {
 	 *
 	 * @return the {@literal '<='} comparison of the provided CharacterStructs
 	 */
-	static BooleanStruct isLessThanOrEqualToIgnoreCase(final CharacterStruct... characters) {
+	static boolean isLessThanOrEqualToIgnoreCase(final CharacterStruct... characters) {
 		if (characters.length == 0) {
 			throw new ErrorException("At least one character required to test equality.");
 		}
@@ -429,7 +429,7 @@ public interface CharacterStruct extends LispStruct {
 			}
 			previousCharacter = currentCharacter;
 		}
-		return BooleanStruct.toLispBoolean(result);
+		return result;
 	}
 
 	/**
@@ -451,7 +451,7 @@ public interface CharacterStruct extends LispStruct {
 	 *
 	 * @return the {@literal '>='} comparison of the provided CharacterStructs
 	 */
-	static BooleanStruct isGreaterThanOrEqualToIgnoreCase(final CharacterStruct... characters) {
+	static boolean isGreaterThanOrEqualToIgnoreCase(final CharacterStruct... characters) {
 		if (characters.length == 0) {
 			throw new ErrorException("At least one character required to test equality.");
 		}
@@ -467,7 +467,7 @@ public interface CharacterStruct extends LispStruct {
 			}
 			previousCharacter = currentCharacter;
 		}
-		return BooleanStruct.toLispBoolean(result);
+		return result;
 	}
 
 	/**
@@ -475,28 +475,28 @@ public interface CharacterStruct extends LispStruct {
 	 *
 	 * @return {@code true} if the CharacterStruct is an alphabetic character; {@code false} otherwise
 	 */
-	BooleanStruct isAlphaChar();
+	boolean isAlphaChar();
 
 	/**
 	 * Determines if this CharacterStruct is an alphanumeric character.
 	 *
 	 * @return {@code true} if the CharacterStruct is an alphanumeric character; {@code false} otherwise
 	 */
-	BooleanStruct isAlphanumeric();
+	boolean isAlphanumeric();
 
 	/**
 	 * Determines if this CharacterStruct is a digit character.
 	 *
 	 * @return {@code true} if the CharacterStruct is a digit character; {@code false} otherwise
 	 */
-	BooleanStruct isDigitChar();
+	boolean isDigitChar();
 
 	/**
 	 * Determines if this CharacterStruct is a graphic character.
 	 *
 	 * @return {@code true} if the CharacterStruct is a graphic character; {@code false} otherwise
 	 */
-	BooleanStruct isGraphicChar();
+	boolean isGraphicChar();
 
 	/**
 	 * Determines if this CharacterStruct is a standard character, meaning a graphic character or the newline
@@ -504,7 +504,7 @@ public interface CharacterStruct extends LispStruct {
 	 *
 	 * @return {@code true} if the CharacterStruct is a standard character character; {@code false} otherwise
 	 */
-	BooleanStruct isStandardChar();
+	boolean isStandardChar();
 
 	/**
 	 * Converts this CharacterStruct into its equivalent uppercase CharacterStruct.
@@ -525,21 +525,21 @@ public interface CharacterStruct extends LispStruct {
 	 *
 	 * @return {@code true} if the CharacterStruct is an uppercase character; {@code false} otherwise
 	 */
-	BooleanStruct isUpperCase();
+	boolean isUpperCase();
 
 	/**
 	 * Determines if this CharacterStruct is a lowercase character.
 	 *
 	 * @return {@code true} if the CharacterStruct is a lowercase character; {@code false} otherwise
 	 */
-	BooleanStruct isLowerCase();
+	boolean isLowerCase();
 
 	/**
 	 * Determines if this CharacterStruct is an uppercase or lowercase character.
 	 *
 	 * @return {@code true} if the CharacterStruct is an uppercase or lowercase character; {@code false} otherwise
 	 */
-	BooleanStruct isBothCase();
+	boolean isBothCase();
 
 	/**
 	 * Returns the codePoint of this CharacterStruct as an {@link IntegerStruct}.

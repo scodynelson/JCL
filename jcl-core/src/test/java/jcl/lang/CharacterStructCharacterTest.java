@@ -1,6 +1,6 @@
 package jcl.lang;
 
-import java.util.function.Function;
+import java.util.function.Predicate;
 
 import jcl.lang.condition.exception.SimpleErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
@@ -37,17 +37,17 @@ public class CharacterStructCharacterTest {
 	@Test
 	public void test_isAlphaChar() {
 		test_Character(CharacterStruct::isAlphaChar,
-		               NILStruct.INSTANCE,
-		               NILStruct.INSTANCE,
-		               NILStruct.INSTANCE,
-		               NILStruct.INSTANCE,
-		               NILStruct.INSTANCE,
-		               NILStruct.INSTANCE,
-		               TStruct.INSTANCE,
-		               NILStruct.INSTANCE,
-		               TStruct.INSTANCE,
-		               NILStruct.INSTANCE,
-		               NILStruct.INSTANCE);
+		               false,
+		               false,
+		               false,
+		               false,
+		               false,
+		               false,
+		               true,
+		               false,
+		               true,
+		               false,
+		               false);
 	}
 
 	/*
@@ -60,17 +60,17 @@ public class CharacterStructCharacterTest {
 	@Test
 	public void test_isAlphanumeric() {
 		test_Character(CharacterStruct::isAlphanumeric,
-		               NILStruct.INSTANCE,
-		               NILStruct.INSTANCE,
-		               NILStruct.INSTANCE,
-		               NILStruct.INSTANCE,
-		               TStruct.INSTANCE,
-		               NILStruct.INSTANCE,
-		               TStruct.INSTANCE,
-		               NILStruct.INSTANCE,
-		               TStruct.INSTANCE,
-		               NILStruct.INSTANCE,
-		               NILStruct.INSTANCE);
+		               false,
+		               false,
+		               false,
+		               false,
+		               true,
+		               false,
+		               true,
+		               false,
+		               true,
+		               false,
+		               false);
 	}
 
 	/*
@@ -83,17 +83,17 @@ public class CharacterStructCharacterTest {
 	@Test
 	public void test_isDigitChar() {
 		test_Character(CharacterStruct::isDigitChar,
-		               NILStruct.INSTANCE,
-		               NILStruct.INSTANCE,
-		               NILStruct.INSTANCE,
-		               NILStruct.INSTANCE,
-		               TStruct.INSTANCE,
-		               NILStruct.INSTANCE,
-		               NILStruct.INSTANCE,
-		               NILStruct.INSTANCE,
-		               NILStruct.INSTANCE,
-		               NILStruct.INSTANCE,
-		               NILStruct.INSTANCE);
+		               false,
+		               false,
+		               false,
+		               false,
+		               true,
+		               false,
+		               false,
+		               false,
+		               false,
+		               false,
+		               false);
 	}
 
 	/*
@@ -106,17 +106,17 @@ public class CharacterStructCharacterTest {
 	@Test
 	public void test_isGraphicChar() {
 		test_Character(CharacterStruct::isGraphicChar,
-		               NILStruct.INSTANCE,
-		               NILStruct.INSTANCE,
-		               NILStruct.INSTANCE,
-		               TStruct.INSTANCE,
-		               TStruct.INSTANCE,
-		               TStruct.INSTANCE,
-		               TStruct.INSTANCE,
-		               TStruct.INSTANCE,
-		               TStruct.INSTANCE,
-		               TStruct.INSTANCE,
-		               NILStruct.INSTANCE);
+		               false,
+		               false,
+		               false,
+		               true,
+		               true,
+		               true,
+		               true,
+		               true,
+		               true,
+		               true,
+		               false);
 	}
 
 	/*
@@ -129,17 +129,17 @@ public class CharacterStructCharacterTest {
 	@Test
 	public void test_isStandardChar() {
 		test_Character(CharacterStruct::isStandardChar,
-		               NILStruct.INSTANCE,
-		               TStruct.INSTANCE,
-		               NILStruct.INSTANCE,
-		               TStruct.INSTANCE,
-		               TStruct.INSTANCE,
-		               TStruct.INSTANCE,
-		               TStruct.INSTANCE,
-		               TStruct.INSTANCE,
-		               TStruct.INSTANCE,
-		               TStruct.INSTANCE,
-		               NILStruct.INSTANCE);
+		               false,
+		               true,
+		               false,
+		               true,
+		               true,
+		               true,
+		               true,
+		               true,
+		               true,
+		               true,
+		               false);
 	}
 
 	/*
@@ -220,17 +220,17 @@ public class CharacterStructCharacterTest {
 	@Test
 	public void test_isUpperCase() {
 		test_Character(CharacterStruct::isUpperCase,
-		               NILStruct.INSTANCE,
-		               NILStruct.INSTANCE,
-		               NILStruct.INSTANCE,
-		               NILStruct.INSTANCE,
-		               NILStruct.INSTANCE,
-		               NILStruct.INSTANCE,
-		               TStruct.INSTANCE,
-		               NILStruct.INSTANCE,
-		               NILStruct.INSTANCE,
-		               NILStruct.INSTANCE,
-		               NILStruct.INSTANCE);
+		               false,
+		               false,
+		               false,
+		               false,
+		               false,
+		               false,
+		               true,
+		               false,
+		               false,
+		               false,
+		               false);
 	}
 
 	/*
@@ -243,17 +243,17 @@ public class CharacterStructCharacterTest {
 	@Test
 	public void test_isLowerCase() {
 		test_Character(CharacterStruct::isLowerCase,
-		               NILStruct.INSTANCE,
-		               NILStruct.INSTANCE,
-		               NILStruct.INSTANCE,
-		               NILStruct.INSTANCE,
-		               NILStruct.INSTANCE,
-		               NILStruct.INSTANCE,
-		               NILStruct.INSTANCE,
-		               NILStruct.INSTANCE,
-		               TStruct.INSTANCE,
-		               NILStruct.INSTANCE,
-		               NILStruct.INSTANCE);
+		               false,
+		               false,
+		               false,
+		               false,
+		               false,
+		               false,
+		               false,
+		               false,
+		               true,
+		               false,
+		               false);
 	}
 
 	/*
@@ -266,17 +266,17 @@ public class CharacterStructCharacterTest {
 	@Test
 	public void test_isBothCase() {
 		test_Character(CharacterStruct::isBothCase,
-		               NILStruct.INSTANCE,
-		               NILStruct.INSTANCE,
-		               NILStruct.INSTANCE,
-		               NILStruct.INSTANCE,
-		               NILStruct.INSTANCE,
-		               NILStruct.INSTANCE,
-		               TStruct.INSTANCE,
-		               NILStruct.INSTANCE,
-		               TStruct.INSTANCE,
-		               NILStruct.INSTANCE,
-		               NILStruct.INSTANCE);
+		               false,
+		               false,
+		               false,
+		               false,
+		               false,
+		               false,
+		               true,
+		               false,
+		               true,
+		               false,
+		               false);
 	}
 
 	/*
@@ -735,70 +735,70 @@ public class CharacterStructCharacterTest {
 	 * @param delete
 	 * 		is delete character
 	 */
-	private static void test_Character(final Function<CharacterStruct, BooleanStruct> charFunction,
-	                                   final BooleanStruct preNewLineControl,
-	                                   final BooleanStruct newLine,
-	                                   final BooleanStruct postNewLineControl,
-	                                   final BooleanStruct preDigitSymbol,
-	                                   final BooleanStruct digit,
-	                                   final BooleanStruct preCapitalLetterSymbol,
-	                                   final BooleanStruct capitalLetter,
-	                                   final BooleanStruct postCapitalLetterSymbol,
-	                                   final BooleanStruct smallLetter,
-	                                   final BooleanStruct postSmallLetterSymbol,
-	                                   final BooleanStruct delete) {
+	private static void test_Character(final Predicate<CharacterStruct> charFunction,
+	                                   final boolean preNewLineControl,
+	                                   final boolean newLine,
+	                                   final boolean postNewLineControl,
+	                                   final boolean preDigitSymbol,
+	                                   final boolean digit,
+	                                   final boolean preCapitalLetterSymbol,
+	                                   final boolean capitalLetter,
+	                                   final boolean postCapitalLetterSymbol,
+	                                   final boolean smallLetter,
+	                                   final boolean postSmallLetterSymbol,
+	                                   final boolean delete) {
 		for (int i = CodePointConstants.NULL; i < CodePointConstants.NEWLINE; i++) {
 			final CharacterStruct character = CharacterStruct.toLispCharacter(i);
-			final BooleanStruct result = charFunction.apply(character);
+			final boolean result = charFunction.test(character);
 			Assert.assertThat("Character did not meet requirements: " + character, result, is(preNewLineControl));
 		}
 		{
 			final CharacterStruct character = CharacterConstants.NEWLINE_CHAR;
-			final BooleanStruct result = charFunction.apply(character);
+			final boolean result = charFunction.test(character);
 			Assert.assertThat("Character did not meet requirements: " + character, result, is(newLine));
 		}
 		for (int i = CodePointConstants.VERTICAL_TAB; i < CodePointConstants.SPACE; i++) {
 			final CharacterStruct character = CharacterStruct.toLispCharacter(i);
-			final BooleanStruct result = charFunction.apply(character);
+			final boolean result = charFunction.test(character);
 			Assert.assertThat("Character did not meet requirements: " + character, result, is(postNewLineControl));
 		}
 		for (int i = CodePointConstants.SPACE; i < CodePointConstants.DIGIT_ZERO; i++) {
 			final CharacterStruct character = CharacterStruct.toLispCharacter(i);
-			final BooleanStruct result = charFunction.apply(character);
+			final boolean result = charFunction.test(character);
 			Assert.assertThat("Character did not meet requirements: " + character, result, is(preDigitSymbol));
 		}
 		for (int i = CodePointConstants.DIGIT_ZERO; i < CodePointConstants.COLON; i++) {
 			final CharacterStruct character = CharacterStruct.toLispCharacter(i);
-			final BooleanStruct result = charFunction.apply(character);
+			final boolean result = charFunction.test(character);
 			Assert.assertThat("Character did not meet requirements: " + character, result, is(digit));
 		}
 		for (int i = CodePointConstants.COLON; i < CodePointConstants.LATIN_CAPITAL_LETTER_A; i++) {
 			final CharacterStruct character = CharacterStruct.toLispCharacter(i);
-			final BooleanStruct result = charFunction.apply(character);
+			final boolean result = charFunction.test(character);
 			Assert.assertThat("Character did not meet requirements: " + character, result, is(preCapitalLetterSymbol));
 		}
 		for (int i = CodePointConstants.LATIN_CAPITAL_LETTER_A; i < CodePointConstants.LEFT_SQUARE_BRACKET; i++) {
 			final CharacterStruct character = CharacterStruct.toLispCharacter(i);
-			final BooleanStruct result = charFunction.apply(character);
+			final boolean result = charFunction.test(character);
 			Assert.assertThat("Character did not meet requirements: " + character, result, is(capitalLetter));
 		}
 		for (int i = CodePointConstants.LEFT_SQUARE_BRACKET; i < CodePointConstants.LATIN_SMALL_LETTER_A; i++) {
 			final CharacterStruct character = CharacterStruct.toLispCharacter(i);
-			final BooleanStruct result = charFunction.apply(character);
+			final boolean result = charFunction.test(character);
 			Assert.assertThat("Character did not meet requirements: " + character, result, is(postCapitalLetterSymbol));
 		}
 		for (int i = CodePointConstants.LATIN_SMALL_LETTER_A; i < CodePointConstants.LEFT_CURLY_BRACKET; i++) {
 			final CharacterStruct character = CharacterStruct.toLispCharacter(i);
-			final BooleanStruct result = charFunction.apply(character);
+			final boolean result = charFunction.test(character);
 			Assert.assertThat("Character did not meet requirements: " + character, result, is(smallLetter));
 		}
 		for (int i = CodePointConstants.LEFT_CURLY_BRACKET; i < CodePointConstants.DELETE; i++) {
 			final CharacterStruct character = CharacterStruct.toLispCharacter(i);
-			final BooleanStruct result = charFunction.apply(character);
+			final boolean result = charFunction.test(character);
 			Assert.assertThat("Character did not meet requirements: " + character, result, is(postSmallLetterSymbol));
 		}
 		final CharacterStruct character = CharacterConstants.DELETE_CHAR;
-		final BooleanStruct result = charFunction.apply(character);
+		final boolean result = charFunction.test(character);
 		Assert.assertThat("Character did not meet requirements: " + character, result, is(delete));
 	}
 }

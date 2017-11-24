@@ -94,7 +94,7 @@ public class StringStructAdjustArrayTest {
 		thrown.expectMessage(containsString("is not a subtype of the upgraded-array-element-type"));
 
 		final StringStruct struct = StringStruct.builder(IntegerStruct.ONE)
-		                                        .adjustable(TStruct.INSTANCE)
+		                                        .adjustable(true)
 		                                        .build();
 
 		final VectorStruct displacedTo = VectorStruct.builder(IntegerStruct.ONE).build();
@@ -134,7 +134,7 @@ public class StringStructAdjustArrayTest {
 		thrown.expectMessage(containsString("Requested size is too large to displace to"));
 
 		final StringStruct struct = StringStruct.builder(IntegerStruct.ONE)
-		                                        .adjustable(TStruct.INSTANCE)
+		                                        .adjustable(true)
 		                                        .build();
 
 		final StringStruct displacedTo = StringStruct.builder(IntegerStruct.ONE)
@@ -164,7 +164,7 @@ public class StringStructAdjustArrayTest {
 		                                             .build();
 		final AdjustArrayContext context = AdjustArrayContext.builder(IntegerStruct.TWO)
 		                                                     .fillPointer(IntegerStruct.ONE)
-		                                                     .adjustable(TStruct.INSTANCE)
+		                                                     .adjustable(true)
 		                                                     .displacedTo(displacedTo)
 		                                                     .displacedIndexOffset(IntegerStruct.ONE)
 		                                                     .build();
@@ -173,7 +173,7 @@ public class StringStructAdjustArrayTest {
 		Assert.assertThat(result, not(sameInstance(struct)));
 		Assert.assertThat(result.length(), is(IntegerStruct.ONE));
 		Assert.assertThat(result.arrayTotalSize(), is(IntegerStruct.TWO));
-		Assert.assertThat(result.adjustableArrayP(), is(TStruct.INSTANCE));
+		Assert.assertThat(result.adjustableArrayP(), is(true));
 		Assert.assertThat(result.fillPointer(), is(IntegerStruct.ONE));
 		Assert.assertThat(result.arrayDisplacement().getValuesList().get(0), is(displacedTo));
 		Assert.assertThat(result.arrayDisplacement().getValuesList().get(1), is(IntegerStruct.ONE));
@@ -206,7 +206,7 @@ public class StringStructAdjustArrayTest {
 		Assert.assertThat(result, not(sameInstance(struct)));
 		Assert.assertThat(result.length(), is(IntegerStruct.TWO));
 		Assert.assertThat(result.arrayTotalSize(), is(IntegerStruct.TWO));
-		Assert.assertThat(result.adjustableArrayP(), is(NILStruct.INSTANCE));
+		Assert.assertThat(result.adjustableArrayP(), is(false));
 		try {
 			result.fillPointer();
 			Assert.fail("Expected String not to have fill-pointer.");
@@ -230,7 +230,7 @@ public class StringStructAdjustArrayTest {
 	@Test
 	public void test_adjustArray_Displaced_Complex1() {
 		final StringStruct struct = StringStruct.builder(IntegerStruct.ONE)
-		                                        .adjustable(TStruct.INSTANCE)
+		                                        .adjustable(true)
 		                                        .initialContents(StringStruct.toLispString("1"))
 		                                        .build();
 
@@ -238,7 +238,7 @@ public class StringStructAdjustArrayTest {
 		                                             .initialContents(StringStruct.toLispString("abc"))
 		                                             .build();
 		final AdjustArrayContext context = AdjustArrayContext.builder(IntegerStruct.TWO)
-		                                                     .adjustable(TStruct.INSTANCE)
+		                                                     .adjustable(true)
 		                                                     .fillPointer(IntegerStruct.ONE)
 		                                                     .displacedTo(displacedTo)
 		                                                     .displacedIndexOffset(IntegerStruct.ONE)
@@ -248,7 +248,7 @@ public class StringStructAdjustArrayTest {
 		Assert.assertThat(result, sameInstance(struct));
 		Assert.assertThat(result.length(), is(IntegerStruct.ONE));
 		Assert.assertThat(result.arrayTotalSize(), is(IntegerStruct.TWO));
-		Assert.assertThat(result.adjustableArrayP(), is(TStruct.INSTANCE));
+		Assert.assertThat(result.adjustableArrayP(), is(true));
 		Assert.assertThat(result.fillPointer(), is(IntegerStruct.ONE));
 		Assert.assertThat(result.arrayDisplacement().getValuesList().get(0), is(displacedTo));
 		Assert.assertThat(result.arrayDisplacement().getValuesList().get(1), is(IntegerStruct.ONE));
@@ -275,7 +275,7 @@ public class StringStructAdjustArrayTest {
 		                                             .initialContents(StringStruct.toLispString("abc"))
 		                                             .build();
 		final AdjustArrayContext context = AdjustArrayContext.builder(IntegerStruct.TWO)
-		                                                     .adjustable(TStruct.INSTANCE)
+		                                                     .adjustable(true)
 		                                                     .fillPointer(IntegerStruct.ONE)
 		                                                     .displacedTo(displacedTo)
 		                                                     .displacedIndexOffset(IntegerStruct.ONE)
@@ -285,7 +285,7 @@ public class StringStructAdjustArrayTest {
 		Assert.assertThat(result, not(sameInstance(struct)));
 		Assert.assertThat(result.length(), is(IntegerStruct.ONE));
 		Assert.assertThat(result.arrayTotalSize(), is(IntegerStruct.TWO));
-		Assert.assertThat(result.adjustableArrayP(), is(TStruct.INSTANCE));
+		Assert.assertThat(result.adjustableArrayP(), is(true));
 		Assert.assertThat(result.fillPointer(), is(IntegerStruct.ONE));
 		Assert.assertThat(result.arrayDisplacement().getValuesList().get(0), is(displacedTo));
 		Assert.assertThat(result.arrayDisplacement().getValuesList().get(1), is(IntegerStruct.ONE));
@@ -305,7 +305,7 @@ public class StringStructAdjustArrayTest {
 	@Test
 	public void test_adjustArray_Displaced_Complex3() {
 		final StringStruct struct = StringStruct.builder(IntegerStruct.ONE)
-		                                        .adjustable(TStruct.INSTANCE)
+		                                        .adjustable(true)
 		                                        .fillPointer(IntegerStruct.ZERO)
 		                                        .initialContents(StringStruct.toLispString("1"))
 		                                        .build();
@@ -314,7 +314,7 @@ public class StringStructAdjustArrayTest {
 		                                             .initialContents(StringStruct.toLispString("abc"))
 		                                             .build();
 		final AdjustArrayContext context = AdjustArrayContext.builder(IntegerStruct.TWO)
-		                                                     .adjustable(TStruct.INSTANCE)
+		                                                     .adjustable(true)
 		                                                     .fillPointer(IntegerStruct.ONE)
 		                                                     .displacedTo(displacedTo)
 		                                                     .displacedIndexOffset(IntegerStruct.ONE)
@@ -324,7 +324,7 @@ public class StringStructAdjustArrayTest {
 		Assert.assertThat(result, sameInstance(struct));
 		Assert.assertThat(result.length(), is(IntegerStruct.ONE));
 		Assert.assertThat(result.arrayTotalSize(), is(IntegerStruct.TWO));
-		Assert.assertThat(result.adjustableArrayP(), is(TStruct.INSTANCE));
+		Assert.assertThat(result.adjustableArrayP(), is(true));
 		Assert.assertThat(result.fillPointer(), is(IntegerStruct.ONE));
 		Assert.assertThat(result.arrayDisplacement().getValuesList().get(0), is(displacedTo));
 		Assert.assertThat(result.arrayDisplacement().getValuesList().get(1), is(IntegerStruct.ONE));
@@ -343,7 +343,7 @@ public class StringStructAdjustArrayTest {
 	@Test
 	public void test_adjustArray_Displaced_Complex4() {
 		final StringStruct struct = StringStruct.builder(IntegerStruct.ONE)
-		                                        .adjustable(TStruct.INSTANCE)
+		                                        .adjustable(true)
 		                                        .initialContents(StringStruct.toLispString("1"))
 		                                        .build();
 
@@ -359,7 +359,7 @@ public class StringStructAdjustArrayTest {
 		Assert.assertThat(result, sameInstance(struct));
 		Assert.assertThat(result.length(), is(IntegerStruct.TWO));
 		Assert.assertThat(result.arrayTotalSize(), is(IntegerStruct.TWO));
-		Assert.assertThat(result.adjustableArrayP(), is(NILStruct.INSTANCE));
+		Assert.assertThat(result.adjustableArrayP(), is(false));
 		try {
 			result.fillPointer();
 			Assert.fail("Expected String not to have fill-pointer.");
@@ -399,7 +399,7 @@ public class StringStructAdjustArrayTest {
 		Assert.assertThat(result, not(sameInstance(struct)));
 		Assert.assertThat(result.length(), is(IntegerStruct.TWO));
 		Assert.assertThat(result.arrayTotalSize(), is(IntegerStruct.TWO));
-		Assert.assertThat(result.adjustableArrayP(), is(NILStruct.INSTANCE));
+		Assert.assertThat(result.adjustableArrayP(), is(false));
 		try {
 			result.fillPointer();
 			Assert.fail("Expected String not to have fill-pointer.");
@@ -424,7 +424,7 @@ public class StringStructAdjustArrayTest {
 	@Test
 	public void test_adjustArray_Displaced_Complex6() {
 		final StringStruct struct = StringStruct.builder(IntegerStruct.ONE)
-		                                        .adjustable(TStruct.INSTANCE)
+		                                        .adjustable(true)
 		                                        .fillPointer(IntegerStruct.ZERO)
 		                                        .initialContents(StringStruct.toLispString("1"))
 		                                        .build();
@@ -441,7 +441,7 @@ public class StringStructAdjustArrayTest {
 		Assert.assertThat(result, sameInstance(struct));
 		Assert.assertThat(result.length(), is(IntegerStruct.TWO));
 		Assert.assertThat(result.arrayTotalSize(), is(IntegerStruct.TWO));
-		Assert.assertThat(result.adjustableArrayP(), is(NILStruct.INSTANCE));
+		Assert.assertThat(result.adjustableArrayP(), is(false));
 		try {
 			result.fillPointer();
 			Assert.fail("Expected String not to have fill-pointer.");
@@ -468,7 +468,7 @@ public class StringStructAdjustArrayTest {
 		                                                     .initialContents(StringStruct.toLispString("1"))
 		                                                     .build();
 		final StringStruct struct = StringStruct.builder(IntegerStruct.ONE)
-		                                        .adjustable(TStruct.INSTANCE)
+		                                        .adjustable(true)
 		                                        .displacedTo(originalDisplacedTo)
 		                                        .build();
 
@@ -476,7 +476,7 @@ public class StringStructAdjustArrayTest {
 		                                             .initialContents(StringStruct.toLispString("abc"))
 		                                             .build();
 		final AdjustArrayContext context = AdjustArrayContext.builder(IntegerStruct.TWO)
-		                                                     .adjustable(TStruct.INSTANCE)
+		                                                     .adjustable(true)
 		                                                     .fillPointer(IntegerStruct.ONE)
 		                                                     .displacedTo(displacedTo)
 		                                                     .displacedIndexOffset(IntegerStruct.ONE)
@@ -486,7 +486,7 @@ public class StringStructAdjustArrayTest {
 		Assert.assertThat(result, sameInstance(struct));
 		Assert.assertThat(result.length(), is(IntegerStruct.ONE));
 		Assert.assertThat(result.arrayTotalSize(), is(IntegerStruct.TWO));
-		Assert.assertThat(result.adjustableArrayP(), is(TStruct.INSTANCE));
+		Assert.assertThat(result.adjustableArrayP(), is(true));
 		Assert.assertThat(result.fillPointer(), is(IntegerStruct.ONE));
 		Assert.assertThat(result.arrayDisplacement().getValuesList().get(0), is(displacedTo));
 		Assert.assertThat(result.arrayDisplacement().getValuesList().get(1), is(IntegerStruct.ONE));
@@ -516,7 +516,7 @@ public class StringStructAdjustArrayTest {
 		                                             .initialContents(StringStruct.toLispString("abc"))
 		                                             .build();
 		final AdjustArrayContext context = AdjustArrayContext.builder(IntegerStruct.TWO)
-		                                                     .adjustable(TStruct.INSTANCE)
+		                                                     .adjustable(true)
 		                                                     .fillPointer(IntegerStruct.ONE)
 		                                                     .displacedTo(displacedTo)
 		                                                     .displacedIndexOffset(IntegerStruct.ONE)
@@ -526,7 +526,7 @@ public class StringStructAdjustArrayTest {
 		Assert.assertThat(result, not(sameInstance(struct)));
 		Assert.assertThat(result.length(), is(IntegerStruct.ONE));
 		Assert.assertThat(result.arrayTotalSize(), is(IntegerStruct.TWO));
-		Assert.assertThat(result.adjustableArrayP(), is(TStruct.INSTANCE));
+		Assert.assertThat(result.adjustableArrayP(), is(true));
 		Assert.assertThat(result.fillPointer(), is(IntegerStruct.ONE));
 		Assert.assertThat(result.arrayDisplacement().getValuesList().get(0), is(displacedTo));
 		Assert.assertThat(result.arrayDisplacement().getValuesList().get(1), is(IntegerStruct.ONE));
@@ -549,7 +549,7 @@ public class StringStructAdjustArrayTest {
 		                                                     .initialContents(StringStruct.toLispString("1"))
 		                                                     .build();
 		final StringStruct struct = StringStruct.builder(IntegerStruct.ONE)
-		                                        .adjustable(TStruct.INSTANCE)
+		                                        .adjustable(true)
 		                                        .fillPointer(IntegerStruct.ZERO)
 		                                        .displacedTo(originalDisplacedTo)
 		                                        .build();
@@ -558,7 +558,7 @@ public class StringStructAdjustArrayTest {
 		                                             .initialContents(StringStruct.toLispString("abc"))
 		                                             .build();
 		final AdjustArrayContext context = AdjustArrayContext.builder(IntegerStruct.TWO)
-		                                                     .adjustable(TStruct.INSTANCE)
+		                                                     .adjustable(true)
 		                                                     .fillPointer(IntegerStruct.ONE)
 		                                                     .displacedTo(displacedTo)
 		                                                     .displacedIndexOffset(IntegerStruct.ONE)
@@ -568,7 +568,7 @@ public class StringStructAdjustArrayTest {
 		Assert.assertThat(result, sameInstance(struct));
 		Assert.assertThat(result.length(), is(IntegerStruct.ONE));
 		Assert.assertThat(result.arrayTotalSize(), is(IntegerStruct.TWO));
-		Assert.assertThat(result.adjustableArrayP(), is(TStruct.INSTANCE));
+		Assert.assertThat(result.adjustableArrayP(), is(true));
 		Assert.assertThat(result.fillPointer(), is(IntegerStruct.ONE));
 		Assert.assertThat(result.arrayDisplacement().getValuesList().get(0), is(displacedTo));
 		Assert.assertThat(result.arrayDisplacement().getValuesList().get(1), is(IntegerStruct.ONE));
@@ -590,7 +590,7 @@ public class StringStructAdjustArrayTest {
 		                                                     .initialContents(StringStruct.toLispString("1"))
 		                                                     .build();
 		final StringStruct struct = StringStruct.builder(IntegerStruct.ONE)
-		                                        .adjustable(TStruct.INSTANCE)
+		                                        .adjustable(true)
 		                                        .displacedTo(originalDisplacedTo)
 		                                        .build();
 
@@ -606,7 +606,7 @@ public class StringStructAdjustArrayTest {
 		Assert.assertThat(result, sameInstance(struct));
 		Assert.assertThat(result.length(), is(IntegerStruct.TWO));
 		Assert.assertThat(result.arrayTotalSize(), is(IntegerStruct.TWO));
-		Assert.assertThat(result.adjustableArrayP(), is(NILStruct.INSTANCE));
+		Assert.assertThat(result.adjustableArrayP(), is(false));
 		try {
 			result.fillPointer();
 			Assert.fail("Expected String not to have fill-pointer.");
@@ -649,7 +649,7 @@ public class StringStructAdjustArrayTest {
 		Assert.assertThat(result, not(sameInstance(struct)));
 		Assert.assertThat(result.length(), is(IntegerStruct.TWO));
 		Assert.assertThat(result.arrayTotalSize(), is(IntegerStruct.TWO));
-		Assert.assertThat(result.adjustableArrayP(), is(NILStruct.INSTANCE));
+		Assert.assertThat(result.adjustableArrayP(), is(false));
 		try {
 			result.fillPointer();
 			Assert.fail("Expected String not to have fill-pointer.");
@@ -677,7 +677,7 @@ public class StringStructAdjustArrayTest {
 		                                                     .initialContents(StringStruct.toLispString("1"))
 		                                                     .build();
 		final StringStruct struct = StringStruct.builder(IntegerStruct.ONE)
-		                                        .adjustable(TStruct.INSTANCE)
+		                                        .adjustable(true)
 		                                        .fillPointer(IntegerStruct.ZERO)
 		                                        .displacedTo(originalDisplacedTo)
 		                                        .build();
@@ -694,7 +694,7 @@ public class StringStructAdjustArrayTest {
 		Assert.assertThat(result, sameInstance(struct));
 		Assert.assertThat(result.length(), is(IntegerStruct.TWO));
 		Assert.assertThat(result.arrayTotalSize(), is(IntegerStruct.TWO));
-		Assert.assertThat(result.adjustableArrayP(), is(NILStruct.INSTANCE));
+		Assert.assertThat(result.adjustableArrayP(), is(false));
 		try {
 			result.fillPointer();
 			Assert.fail("Expected String not to have fill-pointer.");
@@ -723,7 +723,7 @@ public class StringStructAdjustArrayTest {
 		                                                             IntegerStruct.ONE);
 		final AdjustArrayContext context = AdjustArrayContext.builder(IntegerStruct.TWO)
 		                                                     .fillPointer(IntegerStruct.ONE)
-		                                                     .adjustable(TStruct.INSTANCE)
+		                                                     .adjustable(true)
 		                                                     .initialContents(initialContents)
 		                                                     .build();
 
@@ -741,14 +741,14 @@ public class StringStructAdjustArrayTest {
 		thrown.expectMessage(containsString("is not a subtype of the upgraded-array-element-type"));
 
 		final StringStruct struct = StringStruct.builder(IntegerStruct.ONE)
-		                                        .adjustable(TStruct.INSTANCE)
+		                                        .adjustable(true)
 		                                        .build();
 
 		final SequenceStruct initialContents = ListStruct.toLispList(CharacterConstants.AT_SIGN_CHAR,
 		                                                             IntegerStruct.ONE);
 		final AdjustArrayContext context = AdjustArrayContext.builder(IntegerStruct.TWO)
 		                                                     .fillPointer(IntegerStruct.ONE)
-		                                                     .adjustable(TStruct.INSTANCE)
+		                                                     .adjustable(true)
 		                                                     .initialContents(initialContents)
 		                                                     .build();
 
@@ -773,7 +773,7 @@ public class StringStructAdjustArrayTest {
 		                                                 .build();
 		final AdjustArrayContext context = AdjustArrayContext.builder(IntegerStruct.TWO)
 		                                                     .fillPointer(IntegerStruct.ONE)
-		                                                     .adjustable(TStruct.INSTANCE)
+		                                                     .adjustable(true)
 		                                                     .initialContents(initialContents)
 		                                                     .build();
 
@@ -781,7 +781,7 @@ public class StringStructAdjustArrayTest {
 		Assert.assertThat(result, not(sameInstance(struct)));
 		Assert.assertThat(result.length(), is(IntegerStruct.ONE));
 		Assert.assertThat(result.arrayTotalSize(), is(IntegerStruct.TWO));
-		Assert.assertThat(result.adjustableArrayP(), is(TStruct.INSTANCE));
+		Assert.assertThat(result.adjustableArrayP(), is(true));
 		Assert.assertThat(result.fillPointer(), is(IntegerStruct.ONE));
 		Assert.assertThat(result.arrayDisplacement().getValuesList().get(0), is(NILStruct.INSTANCE));
 		Assert.assertThat(result.arrayDisplacement().getValuesList().get(1), is(IntegerStruct.ZERO));
@@ -813,7 +813,7 @@ public class StringStructAdjustArrayTest {
 		Assert.assertThat(result, not(sameInstance(struct)));
 		Assert.assertThat(result.length(), is(IntegerStruct.TWO));
 		Assert.assertThat(result.arrayTotalSize(), is(IntegerStruct.TWO));
-		Assert.assertThat(result.adjustableArrayP(), is(NILStruct.INSTANCE));
+		Assert.assertThat(result.adjustableArrayP(), is(false));
 		try {
 			result.fillPointer();
 			Assert.fail("Expected String not to have fill-pointer.");
@@ -837,7 +837,7 @@ public class StringStructAdjustArrayTest {
 	@Test
 	public void test_adjustArray_IContents_Complex1() {
 		final StringStruct struct = StringStruct.builder(IntegerStruct.ONE)
-		                                        .adjustable(TStruct.INSTANCE)
+		                                        .adjustable(true)
 		                                        .initialContents(StringStruct.toLispString("1"))
 		                                        .build();
 
@@ -845,7 +845,7 @@ public class StringStructAdjustArrayTest {
 		                                                 .initialContents(StringStruct.toLispString("bc"))
 		                                                 .build();
 		final AdjustArrayContext context = AdjustArrayContext.builder(IntegerStruct.TWO)
-		                                                     .adjustable(TStruct.INSTANCE)
+		                                                     .adjustable(true)
 		                                                     .fillPointer(IntegerStruct.ONE)
 		                                                     .initialContents(initialContents)
 		                                                     .build();
@@ -854,7 +854,7 @@ public class StringStructAdjustArrayTest {
 		Assert.assertThat(result, sameInstance(struct));
 		Assert.assertThat(result.length(), is(IntegerStruct.ONE));
 		Assert.assertThat(result.arrayTotalSize(), is(IntegerStruct.TWO));
-		Assert.assertThat(result.adjustableArrayP(), is(TStruct.INSTANCE));
+		Assert.assertThat(result.adjustableArrayP(), is(true));
 		Assert.assertThat(result.fillPointer(), is(IntegerStruct.ONE));
 		Assert.assertThat(result.arrayDisplacement().getValuesList().get(0), is(NILStruct.INSTANCE));
 		Assert.assertThat(result.arrayDisplacement().getValuesList().get(1), is(IntegerStruct.ZERO));
@@ -881,7 +881,7 @@ public class StringStructAdjustArrayTest {
 		                                                 .initialContents(StringStruct.toLispString("bc"))
 		                                                 .build();
 		final AdjustArrayContext context = AdjustArrayContext.builder(IntegerStruct.TWO)
-		                                                     .adjustable(TStruct.INSTANCE)
+		                                                     .adjustable(true)
 		                                                     .fillPointer(IntegerStruct.ONE)
 		                                                     .initialContents(initialContents)
 		                                                     .build();
@@ -890,7 +890,7 @@ public class StringStructAdjustArrayTest {
 		Assert.assertThat(result, not(sameInstance(struct)));
 		Assert.assertThat(result.length(), is(IntegerStruct.ONE));
 		Assert.assertThat(result.arrayTotalSize(), is(IntegerStruct.TWO));
-		Assert.assertThat(result.adjustableArrayP(), is(TStruct.INSTANCE));
+		Assert.assertThat(result.adjustableArrayP(), is(true));
 		Assert.assertThat(result.fillPointer(), is(IntegerStruct.ONE));
 		Assert.assertThat(result.arrayDisplacement().getValuesList().get(0), is(NILStruct.INSTANCE));
 		Assert.assertThat(result.arrayDisplacement().getValuesList().get(1), is(IntegerStruct.ZERO));
@@ -910,7 +910,7 @@ public class StringStructAdjustArrayTest {
 	@Test
 	public void test_adjustArray_IContents_Complex3() {
 		final StringStruct struct = StringStruct.builder(IntegerStruct.ONE)
-		                                        .adjustable(TStruct.INSTANCE)
+		                                        .adjustable(true)
 		                                        .fillPointer(IntegerStruct.ZERO)
 		                                        .initialContents(StringStruct.toLispString("1"))
 		                                        .build();
@@ -919,7 +919,7 @@ public class StringStructAdjustArrayTest {
 		                                                 .initialContents(StringStruct.toLispString("bc"))
 		                                                 .build();
 		final AdjustArrayContext context = AdjustArrayContext.builder(IntegerStruct.TWO)
-		                                                     .adjustable(TStruct.INSTANCE)
+		                                                     .adjustable(true)
 		                                                     .fillPointer(IntegerStruct.ONE)
 		                                                     .initialContents(initialContents)
 		                                                     .build();
@@ -928,7 +928,7 @@ public class StringStructAdjustArrayTest {
 		Assert.assertThat(result, sameInstance(struct));
 		Assert.assertThat(result.length(), is(IntegerStruct.ONE));
 		Assert.assertThat(result.arrayTotalSize(), is(IntegerStruct.TWO));
-		Assert.assertThat(result.adjustableArrayP(), is(TStruct.INSTANCE));
+		Assert.assertThat(result.adjustableArrayP(), is(true));
 		Assert.assertThat(result.fillPointer(), is(IntegerStruct.ONE));
 		Assert.assertThat(result.arrayDisplacement().getValuesList().get(0), is(NILStruct.INSTANCE));
 		Assert.assertThat(result.arrayDisplacement().getValuesList().get(1), is(IntegerStruct.ZERO));
@@ -947,7 +947,7 @@ public class StringStructAdjustArrayTest {
 	@Test
 	public void test_adjustArray_IContents_Complex4() {
 		final StringStruct struct = StringStruct.builder(IntegerStruct.ONE)
-		                                        .adjustable(TStruct.INSTANCE)
+		                                        .adjustable(true)
 		                                        .initialContents(StringStruct.toLispString("1"))
 		                                        .build();
 
@@ -962,7 +962,7 @@ public class StringStructAdjustArrayTest {
 		Assert.assertThat(result, sameInstance(struct));
 		Assert.assertThat(result.length(), is(IntegerStruct.TWO));
 		Assert.assertThat(result.arrayTotalSize(), is(IntegerStruct.TWO));
-		Assert.assertThat(result.adjustableArrayP(), is(NILStruct.INSTANCE));
+		Assert.assertThat(result.adjustableArrayP(), is(false));
 		try {
 			result.fillPointer();
 			Assert.fail("Expected String not to have fill-pointer.");
@@ -1001,7 +1001,7 @@ public class StringStructAdjustArrayTest {
 		Assert.assertThat(result, not(sameInstance(struct)));
 		Assert.assertThat(result.length(), is(IntegerStruct.TWO));
 		Assert.assertThat(result.arrayTotalSize(), is(IntegerStruct.TWO));
-		Assert.assertThat(result.adjustableArrayP(), is(NILStruct.INSTANCE));
+		Assert.assertThat(result.adjustableArrayP(), is(false));
 		try {
 			result.fillPointer();
 			Assert.fail("Expected String not to have fill-pointer.");
@@ -1026,7 +1026,7 @@ public class StringStructAdjustArrayTest {
 	@Test
 	public void test_adjustArray_IContents_Complex6() {
 		final StringStruct struct = StringStruct.builder(IntegerStruct.ONE)
-		                                        .adjustable(TStruct.INSTANCE)
+		                                        .adjustable(true)
 		                                        .fillPointer(IntegerStruct.ZERO)
 		                                        .initialContents(StringStruct.toLispString("1"))
 		                                        .build();
@@ -1042,7 +1042,7 @@ public class StringStructAdjustArrayTest {
 		Assert.assertThat(result, sameInstance(struct));
 		Assert.assertThat(result.length(), is(IntegerStruct.TWO));
 		Assert.assertThat(result.arrayTotalSize(), is(IntegerStruct.TWO));
-		Assert.assertThat(result.adjustableArrayP(), is(NILStruct.INSTANCE));
+		Assert.assertThat(result.adjustableArrayP(), is(false));
 		try {
 			result.fillPointer();
 			Assert.fail("Expected String not to have fill-pointer.");
@@ -1069,7 +1069,7 @@ public class StringStructAdjustArrayTest {
 		                                                     .initialContents(StringStruct.toLispString("1"))
 		                                                     .build();
 		final StringStruct struct = StringStruct.builder(IntegerStruct.ONE)
-		                                        .adjustable(TStruct.INSTANCE)
+		                                        .adjustable(true)
 		                                        .displacedTo(originalDisplacedTo)
 		                                        .build();
 
@@ -1077,7 +1077,7 @@ public class StringStructAdjustArrayTest {
 		                                                 .initialContents(StringStruct.toLispString("bc"))
 		                                                 .build();
 		final AdjustArrayContext context = AdjustArrayContext.builder(IntegerStruct.TWO)
-		                                                     .adjustable(TStruct.INSTANCE)
+		                                                     .adjustable(true)
 		                                                     .fillPointer(IntegerStruct.ONE)
 		                                                     .initialContents(initialContents)
 		                                                     .build();
@@ -1086,7 +1086,7 @@ public class StringStructAdjustArrayTest {
 		Assert.assertThat(result, sameInstance(struct));
 		Assert.assertThat(result.length(), is(IntegerStruct.ONE));
 		Assert.assertThat(result.arrayTotalSize(), is(IntegerStruct.TWO));
-		Assert.assertThat(result.adjustableArrayP(), is(TStruct.INSTANCE));
+		Assert.assertThat(result.adjustableArrayP(), is(true));
 		Assert.assertThat(result.fillPointer(), is(IntegerStruct.ONE));
 		Assert.assertThat(result.arrayDisplacement().getValuesList().get(0), is(NILStruct.INSTANCE));
 		Assert.assertThat(result.arrayDisplacement().getValuesList().get(1), is(IntegerStruct.ZERO));
@@ -1116,7 +1116,7 @@ public class StringStructAdjustArrayTest {
 		                                                 .initialContents(StringStruct.toLispString("bc"))
 		                                                 .build();
 		final AdjustArrayContext context = AdjustArrayContext.builder(IntegerStruct.TWO)
-		                                                     .adjustable(TStruct.INSTANCE)
+		                                                     .adjustable(true)
 		                                                     .fillPointer(IntegerStruct.ONE)
 		                                                     .initialContents(initialContents)
 		                                                     .build();
@@ -1125,7 +1125,7 @@ public class StringStructAdjustArrayTest {
 		Assert.assertThat(result, not(sameInstance(struct)));
 		Assert.assertThat(result.length(), is(IntegerStruct.ONE));
 		Assert.assertThat(result.arrayTotalSize(), is(IntegerStruct.TWO));
-		Assert.assertThat(result.adjustableArrayP(), is(TStruct.INSTANCE));
+		Assert.assertThat(result.adjustableArrayP(), is(true));
 		Assert.assertThat(result.fillPointer(), is(IntegerStruct.ONE));
 		Assert.assertThat(result.arrayDisplacement().getValuesList().get(0), is(NILStruct.INSTANCE));
 		Assert.assertThat(result.arrayDisplacement().getValuesList().get(1), is(IntegerStruct.ZERO));
@@ -1148,7 +1148,7 @@ public class StringStructAdjustArrayTest {
 		                                                     .initialContents(StringStruct.toLispString("1"))
 		                                                     .build();
 		final StringStruct struct = StringStruct.builder(IntegerStruct.ONE)
-		                                        .adjustable(TStruct.INSTANCE)
+		                                        .adjustable(true)
 		                                        .fillPointer(IntegerStruct.ZERO)
 		                                        .displacedTo(originalDisplacedTo)
 		                                        .build();
@@ -1157,7 +1157,7 @@ public class StringStructAdjustArrayTest {
 		                                                 .initialContents(StringStruct.toLispString("bc"))
 		                                                 .build();
 		final AdjustArrayContext context = AdjustArrayContext.builder(IntegerStruct.TWO)
-		                                                     .adjustable(TStruct.INSTANCE)
+		                                                     .adjustable(true)
 		                                                     .fillPointer(IntegerStruct.ONE)
 		                                                     .initialContents(initialContents)
 		                                                     .build();
@@ -1166,7 +1166,7 @@ public class StringStructAdjustArrayTest {
 		Assert.assertThat(result, sameInstance(struct));
 		Assert.assertThat(result.length(), is(IntegerStruct.ONE));
 		Assert.assertThat(result.arrayTotalSize(), is(IntegerStruct.TWO));
-		Assert.assertThat(result.adjustableArrayP(), is(TStruct.INSTANCE));
+		Assert.assertThat(result.adjustableArrayP(), is(true));
 		Assert.assertThat(result.fillPointer(), is(IntegerStruct.ONE));
 		Assert.assertThat(result.arrayDisplacement().getValuesList().get(0), is(NILStruct.INSTANCE));
 		Assert.assertThat(result.arrayDisplacement().getValuesList().get(1), is(IntegerStruct.ZERO));
@@ -1188,7 +1188,7 @@ public class StringStructAdjustArrayTest {
 		                                                     .initialContents(StringStruct.toLispString("1"))
 		                                                     .build();
 		final StringStruct struct = StringStruct.builder(IntegerStruct.ONE)
-		                                        .adjustable(TStruct.INSTANCE)
+		                                        .adjustable(true)
 		                                        .displacedTo(originalDisplacedTo)
 		                                        .build();
 
@@ -1203,7 +1203,7 @@ public class StringStructAdjustArrayTest {
 		Assert.assertThat(result, sameInstance(struct));
 		Assert.assertThat(result.length(), is(IntegerStruct.TWO));
 		Assert.assertThat(result.arrayTotalSize(), is(IntegerStruct.TWO));
-		Assert.assertThat(result.adjustableArrayP(), is(NILStruct.INSTANCE));
+		Assert.assertThat(result.adjustableArrayP(), is(false));
 		try {
 			result.fillPointer();
 			Assert.fail("Expected String not to have fill-pointer.");
@@ -1245,7 +1245,7 @@ public class StringStructAdjustArrayTest {
 		Assert.assertThat(result, not(sameInstance(struct)));
 		Assert.assertThat(result.length(), is(IntegerStruct.TWO));
 		Assert.assertThat(result.arrayTotalSize(), is(IntegerStruct.TWO));
-		Assert.assertThat(result.adjustableArrayP(), is(NILStruct.INSTANCE));
+		Assert.assertThat(result.adjustableArrayP(), is(false));
 		try {
 			result.fillPointer();
 			Assert.fail("Expected String not to have fill-pointer.");
@@ -1273,7 +1273,7 @@ public class StringStructAdjustArrayTest {
 		                                                     .initialContents(StringStruct.toLispString("1"))
 		                                                     .build();
 		final StringStruct struct = StringStruct.builder(IntegerStruct.ONE)
-		                                        .adjustable(TStruct.INSTANCE)
+		                                        .adjustable(true)
 		                                        .fillPointer(IntegerStruct.ZERO)
 		                                        .displacedTo(originalDisplacedTo)
 		                                        .build();
@@ -1289,7 +1289,7 @@ public class StringStructAdjustArrayTest {
 		Assert.assertThat(result, sameInstance(struct));
 		Assert.assertThat(result.length(), is(IntegerStruct.TWO));
 		Assert.assertThat(result.arrayTotalSize(), is(IntegerStruct.TWO));
-		Assert.assertThat(result.adjustableArrayP(), is(NILStruct.INSTANCE));
+		Assert.assertThat(result.adjustableArrayP(), is(false));
 		try {
 			result.fillPointer();
 			Assert.fail("Expected String not to have fill-pointer.");
@@ -1326,7 +1326,7 @@ public class StringStructAdjustArrayTest {
 		                                                 .initialContents(StringStruct.toLispString("ab"))
 		                                                 .build();
 		final AdjustArrayContext context = AdjustArrayContext.builder(IntegerStruct.toLispInteger(3))
-		                                                     .adjustable(TStruct.INSTANCE)
+		                                                     .adjustable(true)
 		                                                     .initialContents(initialContents)
 		                                                     .build();
 
@@ -1334,7 +1334,7 @@ public class StringStructAdjustArrayTest {
 		Assert.assertThat(result, not(sameInstance(struct)));
 		Assert.assertThat(result.length(), is(IntegerStruct.TWO));
 		Assert.assertThat(result.arrayTotalSize(), is(IntegerStruct.TWO));
-		Assert.assertThat(result.adjustableArrayP(), is(TStruct.INSTANCE));
+		Assert.assertThat(result.adjustableArrayP(), is(true));
 		try {
 			result.fillPointer();
 			Assert.fail("Expected String not to have fill-pointer.");
@@ -1361,7 +1361,7 @@ public class StringStructAdjustArrayTest {
 
 		final AdjustArrayContext context = AdjustArrayContext.builder(IntegerStruct.TWO)
 		                                                     .fillPointer(IntegerStruct.ONE)
-		                                                     .adjustable(TStruct.INSTANCE)
+		                                                     .adjustable(true)
 		                                                     .initialElement(IntegerStruct.ZERO)
 		                                                     .build();
 
@@ -1383,7 +1383,7 @@ public class StringStructAdjustArrayTest {
 
 		final AdjustArrayContext context = AdjustArrayContext.builder(IntegerStruct.TWO)
 		                                                     .fillPointer(IntegerStruct.ONE)
-		                                                     .adjustable(TStruct.INSTANCE)
+		                                                     .adjustable(true)
 		                                                     .initialElement(CharacterConstants.DOLLAR_SIGN_CHAR)
 		                                                     .build();
 
@@ -1391,7 +1391,7 @@ public class StringStructAdjustArrayTest {
 		Assert.assertThat(result, not(sameInstance(struct)));
 		Assert.assertThat(result.length(), is(IntegerStruct.ONE));
 		Assert.assertThat(result.arrayTotalSize(), is(IntegerStruct.TWO));
-		Assert.assertThat(result.adjustableArrayP(), is(TStruct.INSTANCE));
+		Assert.assertThat(result.adjustableArrayP(), is(true));
 		Assert.assertThat(result.fillPointer(), is(IntegerStruct.ONE));
 		Assert.assertThat(result.arrayDisplacement().getValuesList().get(0), is(NILStruct.INSTANCE));
 		Assert.assertThat(result.arrayDisplacement().getValuesList().get(1), is(IntegerStruct.ZERO));
@@ -1420,7 +1420,7 @@ public class StringStructAdjustArrayTest {
 		Assert.assertThat(result, not(sameInstance(struct)));
 		Assert.assertThat(result.length(), is(IntegerStruct.TWO));
 		Assert.assertThat(result.arrayTotalSize(), is(IntegerStruct.TWO));
-		Assert.assertThat(result.adjustableArrayP(), is(NILStruct.INSTANCE));
+		Assert.assertThat(result.adjustableArrayP(), is(false));
 		try {
 			result.fillPointer();
 			Assert.fail("Expected String not to have fill-pointer.");
@@ -1444,12 +1444,12 @@ public class StringStructAdjustArrayTest {
 	@Test
 	public void test_adjustArray_IElement_Complex1() {
 		final StringStruct struct = StringStruct.builder(IntegerStruct.ONE)
-		                                        .adjustable(TStruct.INSTANCE)
+		                                        .adjustable(true)
 		                                        .initialContents(StringStruct.toLispString("1"))
 		                                        .build();
 
 		final AdjustArrayContext context = AdjustArrayContext.builder(IntegerStruct.TWO)
-		                                                     .adjustable(TStruct.INSTANCE)
+		                                                     .adjustable(true)
 		                                                     .fillPointer(IntegerStruct.ONE)
 		                                                     .initialElement(CharacterConstants.DOLLAR_SIGN_CHAR)
 		                                                     .build();
@@ -1458,7 +1458,7 @@ public class StringStructAdjustArrayTest {
 		Assert.assertThat(result, sameInstance(struct));
 		Assert.assertThat(result.length(), is(IntegerStruct.ONE));
 		Assert.assertThat(result.arrayTotalSize(), is(IntegerStruct.TWO));
-		Assert.assertThat(result.adjustableArrayP(), is(TStruct.INSTANCE));
+		Assert.assertThat(result.adjustableArrayP(), is(true));
 		Assert.assertThat(result.fillPointer(), is(IntegerStruct.ONE));
 		Assert.assertThat(result.arrayDisplacement().getValuesList().get(0), is(NILStruct.INSTANCE));
 		Assert.assertThat(result.arrayDisplacement().getValuesList().get(1), is(IntegerStruct.ZERO));
@@ -1482,7 +1482,7 @@ public class StringStructAdjustArrayTest {
 		                                        .build();
 
 		final AdjustArrayContext context = AdjustArrayContext.builder(IntegerStruct.TWO)
-		                                                     .adjustable(TStruct.INSTANCE)
+		                                                     .adjustable(true)
 		                                                     .fillPointer(IntegerStruct.ONE)
 		                                                     .initialElement(CharacterConstants.DOLLAR_SIGN_CHAR)
 		                                                     .build();
@@ -1491,7 +1491,7 @@ public class StringStructAdjustArrayTest {
 		Assert.assertThat(result, not(sameInstance(struct)));
 		Assert.assertThat(result.length(), is(IntegerStruct.ONE));
 		Assert.assertThat(result.arrayTotalSize(), is(IntegerStruct.TWO));
-		Assert.assertThat(result.adjustableArrayP(), is(TStruct.INSTANCE));
+		Assert.assertThat(result.adjustableArrayP(), is(true));
 		Assert.assertThat(result.fillPointer(), is(IntegerStruct.ONE));
 		Assert.assertThat(result.arrayDisplacement().getValuesList().get(0), is(NILStruct.INSTANCE));
 		Assert.assertThat(result.arrayDisplacement().getValuesList().get(1), is(IntegerStruct.ZERO));
@@ -1511,13 +1511,13 @@ public class StringStructAdjustArrayTest {
 	@Test
 	public void test_adjustArray_IElement_Complex3() {
 		final StringStruct struct = StringStruct.builder(IntegerStruct.ONE)
-		                                        .adjustable(TStruct.INSTANCE)
+		                                        .adjustable(true)
 		                                        .fillPointer(IntegerStruct.ZERO)
 		                                        .initialContents(StringStruct.toLispString("1"))
 		                                        .build();
 
 		final AdjustArrayContext context = AdjustArrayContext.builder(IntegerStruct.TWO)
-		                                                     .adjustable(TStruct.INSTANCE)
+		                                                     .adjustable(true)
 		                                                     .fillPointer(IntegerStruct.ONE)
 		                                                     .initialElement(CharacterConstants.DOLLAR_SIGN_CHAR)
 		                                                     .build();
@@ -1526,7 +1526,7 @@ public class StringStructAdjustArrayTest {
 		Assert.assertThat(result, sameInstance(struct));
 		Assert.assertThat(result.length(), is(IntegerStruct.ONE));
 		Assert.assertThat(result.arrayTotalSize(), is(IntegerStruct.TWO));
-		Assert.assertThat(result.adjustableArrayP(), is(TStruct.INSTANCE));
+		Assert.assertThat(result.adjustableArrayP(), is(true));
 		Assert.assertThat(result.fillPointer(), is(IntegerStruct.ONE));
 		Assert.assertThat(result.arrayDisplacement().getValuesList().get(0), is(NILStruct.INSTANCE));
 		Assert.assertThat(result.arrayDisplacement().getValuesList().get(1), is(IntegerStruct.ZERO));
@@ -1545,7 +1545,7 @@ public class StringStructAdjustArrayTest {
 	@Test
 	public void test_adjustArray_IElement_Complex4() {
 		final StringStruct struct = StringStruct.builder(IntegerStruct.ONE)
-		                                        .adjustable(TStruct.INSTANCE)
+		                                        .adjustable(true)
 		                                        .initialContents(StringStruct.toLispString("1"))
 		                                        .build();
 
@@ -1557,7 +1557,7 @@ public class StringStructAdjustArrayTest {
 		Assert.assertThat(result, sameInstance(struct));
 		Assert.assertThat(result.length(), is(IntegerStruct.TWO));
 		Assert.assertThat(result.arrayTotalSize(), is(IntegerStruct.TWO));
-		Assert.assertThat(result.adjustableArrayP(), is(NILStruct.INSTANCE));
+		Assert.assertThat(result.adjustableArrayP(), is(false));
 		try {
 			result.fillPointer();
 			Assert.fail("Expected String not to have fill-pointer.");
@@ -1593,7 +1593,7 @@ public class StringStructAdjustArrayTest {
 		Assert.assertThat(result, not(sameInstance(struct)));
 		Assert.assertThat(result.length(), is(IntegerStruct.TWO));
 		Assert.assertThat(result.arrayTotalSize(), is(IntegerStruct.TWO));
-		Assert.assertThat(result.adjustableArrayP(), is(NILStruct.INSTANCE));
+		Assert.assertThat(result.adjustableArrayP(), is(false));
 		try {
 			result.fillPointer();
 			Assert.fail("Expected String not to have fill-pointer.");
@@ -1618,7 +1618,7 @@ public class StringStructAdjustArrayTest {
 	@Test
 	public void test_adjustArray_IElement_Complex6() {
 		final StringStruct struct = StringStruct.builder(IntegerStruct.ONE)
-		                                        .adjustable(TStruct.INSTANCE)
+		                                        .adjustable(true)
 		                                        .fillPointer(IntegerStruct.ZERO)
 		                                        .initialContents(StringStruct.toLispString("1"))
 		                                        .build();
@@ -1631,7 +1631,7 @@ public class StringStructAdjustArrayTest {
 		Assert.assertThat(result, sameInstance(struct));
 		Assert.assertThat(result.length(), is(IntegerStruct.TWO));
 		Assert.assertThat(result.arrayTotalSize(), is(IntegerStruct.TWO));
-		Assert.assertThat(result.adjustableArrayP(), is(NILStruct.INSTANCE));
+		Assert.assertThat(result.adjustableArrayP(), is(false));
 		try {
 			result.fillPointer();
 			Assert.fail("Expected String not to have fill-pointer.");
@@ -1658,12 +1658,12 @@ public class StringStructAdjustArrayTest {
 		                                                     .initialContents(StringStruct.toLispString("1"))
 		                                                     .build();
 		final StringStruct struct = StringStruct.builder(IntegerStruct.ONE)
-		                                        .adjustable(TStruct.INSTANCE)
+		                                        .adjustable(true)
 		                                        .displacedTo(originalDisplacedTo)
 		                                        .build();
 
 		final AdjustArrayContext context = AdjustArrayContext.builder(IntegerStruct.TWO)
-		                                                     .adjustable(TStruct.INSTANCE)
+		                                                     .adjustable(true)
 		                                                     .fillPointer(IntegerStruct.ONE)
 		                                                     .initialElement(CharacterConstants.DOLLAR_SIGN_CHAR)
 		                                                     .build();
@@ -1672,7 +1672,7 @@ public class StringStructAdjustArrayTest {
 		Assert.assertThat(result, sameInstance(struct));
 		Assert.assertThat(result.length(), is(IntegerStruct.ONE));
 		Assert.assertThat(result.arrayTotalSize(), is(IntegerStruct.TWO));
-		Assert.assertThat(result.adjustableArrayP(), is(TStruct.INSTANCE));
+		Assert.assertThat(result.adjustableArrayP(), is(true));
 		Assert.assertThat(result.fillPointer(), is(IntegerStruct.ONE));
 		Assert.assertThat(result.arrayDisplacement().getValuesList().get(0), is(NILStruct.INSTANCE));
 		Assert.assertThat(result.arrayDisplacement().getValuesList().get(1), is(IntegerStruct.ZERO));
@@ -1699,7 +1699,7 @@ public class StringStructAdjustArrayTest {
 		                                        .build();
 
 		final AdjustArrayContext context = AdjustArrayContext.builder(IntegerStruct.TWO)
-		                                                     .adjustable(TStruct.INSTANCE)
+		                                                     .adjustable(true)
 		                                                     .fillPointer(IntegerStruct.ONE)
 		                                                     .initialElement(CharacterConstants.DOLLAR_SIGN_CHAR)
 		                                                     .build();
@@ -1708,7 +1708,7 @@ public class StringStructAdjustArrayTest {
 		Assert.assertThat(result, not(sameInstance(struct)));
 		Assert.assertThat(result.length(), is(IntegerStruct.ONE));
 		Assert.assertThat(result.arrayTotalSize(), is(IntegerStruct.TWO));
-		Assert.assertThat(result.adjustableArrayP(), is(TStruct.INSTANCE));
+		Assert.assertThat(result.adjustableArrayP(), is(true));
 		Assert.assertThat(result.fillPointer(), is(IntegerStruct.ONE));
 		Assert.assertThat(result.arrayDisplacement().getValuesList().get(0), is(NILStruct.INSTANCE));
 		Assert.assertThat(result.arrayDisplacement().getValuesList().get(1), is(IntegerStruct.ZERO));
@@ -1731,13 +1731,13 @@ public class StringStructAdjustArrayTest {
 		                                                     .initialContents(StringStruct.toLispString("1"))
 		                                                     .build();
 		final StringStruct struct = StringStruct.builder(IntegerStruct.ONE)
-		                                        .adjustable(TStruct.INSTANCE)
+		                                        .adjustable(true)
 		                                        .fillPointer(IntegerStruct.ZERO)
 		                                        .displacedTo(originalDisplacedTo)
 		                                        .build();
 
 		final AdjustArrayContext context = AdjustArrayContext.builder(IntegerStruct.TWO)
-		                                                     .adjustable(TStruct.INSTANCE)
+		                                                     .adjustable(true)
 		                                                     .fillPointer(IntegerStruct.ONE)
 		                                                     .initialElement(CharacterConstants.DOLLAR_SIGN_CHAR)
 		                                                     .build();
@@ -1746,7 +1746,7 @@ public class StringStructAdjustArrayTest {
 		Assert.assertThat(result, sameInstance(struct));
 		Assert.assertThat(result.length(), is(IntegerStruct.ONE));
 		Assert.assertThat(result.arrayTotalSize(), is(IntegerStruct.TWO));
-		Assert.assertThat(result.adjustableArrayP(), is(TStruct.INSTANCE));
+		Assert.assertThat(result.adjustableArrayP(), is(true));
 		Assert.assertThat(result.fillPointer(), is(IntegerStruct.ONE));
 		Assert.assertThat(result.arrayDisplacement().getValuesList().get(0), is(NILStruct.INSTANCE));
 		Assert.assertThat(result.arrayDisplacement().getValuesList().get(1), is(IntegerStruct.ZERO));
@@ -1768,7 +1768,7 @@ public class StringStructAdjustArrayTest {
 		                                                     .initialContents(StringStruct.toLispString("1"))
 		                                                     .build();
 		final StringStruct struct = StringStruct.builder(IntegerStruct.ONE)
-		                                        .adjustable(TStruct.INSTANCE)
+		                                        .adjustable(true)
 		                                        .displacedTo(originalDisplacedTo)
 		                                        .build();
 
@@ -1780,7 +1780,7 @@ public class StringStructAdjustArrayTest {
 		Assert.assertThat(result, sameInstance(struct));
 		Assert.assertThat(result.length(), is(IntegerStruct.TWO));
 		Assert.assertThat(result.arrayTotalSize(), is(IntegerStruct.TWO));
-		Assert.assertThat(result.adjustableArrayP(), is(NILStruct.INSTANCE));
+		Assert.assertThat(result.adjustableArrayP(), is(false));
 		try {
 			result.fillPointer();
 			Assert.fail("Expected String not to have fill-pointer.");
@@ -1819,7 +1819,7 @@ public class StringStructAdjustArrayTest {
 		Assert.assertThat(result, not(sameInstance(struct)));
 		Assert.assertThat(result.length(), is(IntegerStruct.TWO));
 		Assert.assertThat(result.arrayTotalSize(), is(IntegerStruct.TWO));
-		Assert.assertThat(result.adjustableArrayP(), is(NILStruct.INSTANCE));
+		Assert.assertThat(result.adjustableArrayP(), is(false));
 		try {
 			result.fillPointer();
 			Assert.fail("Expected String not to have fill-pointer.");
@@ -1847,7 +1847,7 @@ public class StringStructAdjustArrayTest {
 		                                                     .initialContents(StringStruct.toLispString("1"))
 		                                                     .build();
 		final StringStruct struct = StringStruct.builder(IntegerStruct.ONE)
-		                                        .adjustable(TStruct.INSTANCE)
+		                                        .adjustable(true)
 		                                        .fillPointer(IntegerStruct.ZERO)
 		                                        .displacedTo(originalDisplacedTo)
 		                                        .build();
@@ -1860,7 +1860,7 @@ public class StringStructAdjustArrayTest {
 		Assert.assertThat(result, sameInstance(struct));
 		Assert.assertThat(result.length(), is(IntegerStruct.TWO));
 		Assert.assertThat(result.arrayTotalSize(), is(IntegerStruct.TWO));
-		Assert.assertThat(result.adjustableArrayP(), is(NILStruct.INSTANCE));
+		Assert.assertThat(result.adjustableArrayP(), is(false));
 		try {
 			result.fillPointer();
 			Assert.fail("Expected String not to have fill-pointer.");
@@ -1880,7 +1880,7 @@ public class StringStructAdjustArrayTest {
 	@Test
 	public void test_adjustArray_IElement_Adjustable_ShrinkString() {
 		final StringStruct struct = StringStruct.builder(IntegerStruct.TWO)
-		                                        .adjustable(TStruct.INSTANCE)
+		                                        .adjustable(true)
 		                                        .initialContents(StringStruct.toLispString("12"))
 		                                        .build();
 
@@ -1892,7 +1892,7 @@ public class StringStructAdjustArrayTest {
 		Assert.assertThat(result, sameInstance(struct));
 		Assert.assertThat(result.length(), is(IntegerStruct.ONE));
 		Assert.assertThat(result.arrayTotalSize(), is(IntegerStruct.ONE));
-		Assert.assertThat(result.adjustableArrayP(), is(NILStruct.INSTANCE));
+		Assert.assertThat(result.adjustableArrayP(), is(false));
 		try {
 			result.fillPointer();
 			Assert.fail("Expected String not to have fill-pointer.");
@@ -1911,7 +1911,7 @@ public class StringStructAdjustArrayTest {
 	@Test
 	public void test_adjustArray_IElement_NotAdjustable_ShrinkString() {
 		final StringStruct struct = StringStruct.builder(IntegerStruct.TWO)
-		                                        .adjustable(NILStruct.INSTANCE)
+		                                        .adjustable(false)
 		                                        .initialContents(StringStruct.toLispString("12"))
 		                                        .build();
 
@@ -1923,7 +1923,7 @@ public class StringStructAdjustArrayTest {
 		Assert.assertThat(result, not(sameInstance(struct)));
 		Assert.assertThat(result.length(), is(IntegerStruct.ONE));
 		Assert.assertThat(result.arrayTotalSize(), is(IntegerStruct.ONE));
-		Assert.assertThat(result.adjustableArrayP(), is(NILStruct.INSTANCE));
+		Assert.assertThat(result.adjustableArrayP(), is(false));
 		try {
 			result.fillPointer();
 			Assert.fail("Expected String not to have fill-pointer.");

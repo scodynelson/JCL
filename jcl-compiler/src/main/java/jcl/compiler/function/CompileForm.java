@@ -16,12 +16,10 @@ import jcl.compiler.icg.IntermediateCodeGenerator;
 import jcl.compiler.icg.JavaClassBuilder;
 import jcl.compiler.sa.SemanticAnalyzer;
 import jcl.compiler.struct.specialoperator.lambda.LambdaStruct;
-import jcl.lang.BooleanStruct;
 import jcl.lang.FunctionStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
 import jcl.lang.NILStruct;
-import jcl.lang.TStruct;
 import jcl.lang.internal.SpecialOperatorStructImpl;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
@@ -58,8 +56,8 @@ public class CompileForm {
 		final LambdaStruct analyzedObj = semanticAnalyzer.analyze(lambdaForm);
 		final Deque<JavaClassBuilder> javaClassBuilderDeque = intermediateCodeGenerator.generate(analyzedObj);
 
-		BooleanStruct compiledWithWarnings = NILStruct.INSTANCE;
-		BooleanStruct failedToCompile = NILStruct.INSTANCE;
+		boolean compiledWithWarnings = false;
+		boolean failedToCompile = false;
 
 		FunctionStruct function = null;
 		for (final JavaClassBuilder javaClassBuilder : javaClassBuilderDeque) {
@@ -103,8 +101,8 @@ public class CompileForm {
 				}
 			} catch (BeansException | IllegalStateException ex) {
 				LOGGER.error("Error compiling definition.", ex);
-				compiledWithWarnings = TStruct.INSTANCE;
-				failedToCompile = TStruct.INSTANCE;
+				compiledWithWarnings = true;
+				failedToCompile = true;
 			}
 		}
 

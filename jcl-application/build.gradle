@@ -1,6 +1,8 @@
-description = "JCL Application"
+plugins {
+	id 'org.springframework.boot' version '1.5.9.RELEASE'
+}
 
-apply plugin: "org.springframework.boot"
+description = "JCL Application"
 
 sourceSets {
 	main {

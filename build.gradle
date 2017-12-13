@@ -1,17 +1,14 @@
 buildscript {
 	ext {
-		dependencyManagementPluginVersion = "1.0.3.RELEASE"
-		sonarqubePluginVersion = "2.5"
 		propdepsPluginVersion = "0.0.9.RELEASE"
-		gradleDependencyAnalyzePluginVersion = "1.2.0"
-		springBootVersion = "1.5.8.RELEASE"
-		springIOPlatformVersion = "Brussels-SR5"
+		gradleDependencyAnalyzePluginVersion = "1.2.1"
+		springIOPlatformVersion = "Brussels-SR6"
 		apfloatVersion = "1.8.3"
 		asmAllVersion = "5.2"
 //		asmAllVersion = "6.0_BETA"
 		commonsMathVersion = "3.6.1"
 		commonsCollectionsVersion = "4.1"
-		icu4jVersion = "59.1"
+		icu4jVersion = "60.2"
 		javaHelpVersion = "2.0.05"
 		procyonVersion = "2.5.0.Final"
 	}
@@ -19,22 +16,15 @@ buildscript {
 		maven { url 'http://repo.spring.io/plugins-release' }
 	}
 	dependencies {
-		classpath("io.spring.gradle:dependency-management-plugin:${dependencyManagementPluginVersion}")
-		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
-//		classpath("io.spring.gradle:propdeps-plugin:${propdepsPluginVersion}")
-//		classpath("io.spring.gradle:propdeps-plugin:0.0.9.RELEASE")
-		classpath("org.springframework.build.gradle:propdeps-plugin:0.0.7")
-//		classpath("ca.cutterslade.gradle:gradle-dependency-analyze:${gradleDependencyAnalyzePluginVersion}")
-		classpath("ca.cutterslade.gradle:gradle-dependency-analyze:1.2.0")
+		classpath("io.spring.gradle:propdeps-plugin:${propdepsPluginVersion}")
+		classpath("ca.cutterslade.gradle:gradle-dependency-analyze:${gradleDependencyAnalyzePluginVersion}")
 	}
 }
 
 plugins {
-	id "io.spring.dependency-management" version "1.0.3.RELEASE"
+	id "io.spring.dependency-management" version "1.0.4.RELEASE"
 	id "org.sonarqube" version "2.5"
 }
-
-apply plugin: "ca.cutterslade.analyze"
 
 allprojects {
 	group = "jcl"
@@ -240,5 +230,5 @@ subprojects {
 //}
 
 task wrapper(type: Wrapper) {
-	gradleVersion = '4.3.1'
+	gradleVersion = '4.4'
 }

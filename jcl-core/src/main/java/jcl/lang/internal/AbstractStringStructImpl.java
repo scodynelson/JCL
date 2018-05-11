@@ -23,7 +23,7 @@ import jcl.type.CharacterType;
 import jcl.type.LispType;
 import jcl.type.StringType;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.text.WordUtils;
+import org.apache.commons.text.WordUtils;
 
 /**
  * Base class for all {@link StringStruct} implementation structures.

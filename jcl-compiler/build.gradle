@@ -4,10 +4,11 @@ dependencies {
 	compile(project(":jcl-core"))
 
 	compile("commons-io:commons-io")
-	compile("org.apfloat:apfloat:${apfloatVersion}")
-	compile("org.ow2.asm:asm-all:${asmAllVersion}")
+	compile("org.apfloat:apfloat")
+	compile("org.ow2.asm:asm-all")
 	compile files("../libs/lombok-edge.jar")
 //	compileOnly("org.projectlombok:lombok")
+//	annotationProcessor("org.projectlombok:lombok")
 //	permitUnusedDeclared("org.projectlombok:lombok")
 	compile("org.slf4j:slf4j-api")
 	compile("org.springframework:spring-context")

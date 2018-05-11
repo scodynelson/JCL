@@ -15,16 +15,16 @@
       <profile default="true" name="Default" enabled="true" />
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="jcl-application_main" target="1.9" />
-      <module name="jcl-application_test" target="1.9" />
-      <module name="jcl-compiler_main" target="1.9" />
-      <module name="jcl-compiler_test" target="1.9" />
-      <module name="jcl-core_main" target="1.9" />
-      <module name="jcl-core_test" target="1.9" />
-      <module name="jcl-functions_main" target="1.9" />
-      <module name="jcl-functions_test" target="1.9" />
-      <module name="jcl-reader_main" target="1.9" />
-      <module name="jcl-reader_test" target="1.9" />
+      <module name="jcl-application_main" target="1.10" />
+      <module name="jcl-application_test" target="1.10" />
+      <module name="jcl-compiler_main" target="1.10" />
+      <module name="jcl-compiler_test" target="1.10" />
+      <module name="jcl-core_main" target="1.10" />
+      <module name="jcl-core_test" target="1.10" />
+      <module name="jcl-functions_main" target="1.10" />
+      <module name="jcl-functions_test" target="1.10" />
+      <module name="jcl-reader_main" target="1.10" />
+      <module name="jcl-reader_test" target="1.10" />
     </bytecodeTargetLevel>
   </component>
 </project>

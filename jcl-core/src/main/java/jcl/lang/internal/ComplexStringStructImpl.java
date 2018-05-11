@@ -9,7 +9,6 @@ import java.util.Spliterators;
 import java.util.function.Function;
 import java.util.function.IntConsumer;
 
-import javaslang.collection.CharSeq;
 import jcl.lang.AdjustArrayContext;
 import jcl.lang.ArrayStruct;
 import jcl.lang.CharacterStruct;
@@ -39,7 +38,7 @@ import jcl.type.StringType;
  */
 public final class ComplexStringStructImpl extends AbstractStringStructImpl {
 
-	private CharSeq charSeq;
+//	private CharSeq charSeq;
 
 	/**
 	 * {@link StringBuilder} containing the implementation contents of the {@link StringStruct}.

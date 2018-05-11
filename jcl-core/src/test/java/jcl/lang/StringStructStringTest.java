@@ -8,7 +8,7 @@ import jcl.type.CharacterType;
 import jcl.type.ExtendedCharType;
 import jcl.type.IntegerType;
 import jcl.type.StandardCharType;
-import org.apache.commons.lang3.text.WordUtils;
+import org.apache.commons.text.WordUtils;
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;

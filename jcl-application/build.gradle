@@ -1,6 +1,6 @@
-plugins {
-	id 'org.springframework.boot' version '1.5.9.RELEASE'
-}
+//plugins {
+//	id 'org.springframework.boot' version '1.5.9.RELEASE'
+//}
 
 description = "JCL Application"
 
@@ -30,9 +30,27 @@ dependencies {
 	testCompile("junit:junit")
 }
 
-bootRepackage {
-	mainClass = "jcl.system.JCL"
-}
+//bootJar {
+//	mainClass = "jcl.system.JCL"
+//}
+
+//jar {
+//	manifest {
+//		attributes 'Main-Class': 'cli.Main'
+//	}
+//}
+//
+//def java_home = System.getenv('JAVA_HOME')
+//task link(type: Exec) {
+//	dependsOn 'clean'
+//	dependsOn 'jar'
+//
+//	workingDir 'build'
+//
+//	commandLine "${java_home}/bin/jlink", '--module-path', "libs${File.pathSeparatorChar}${java_home}/jmods",
+//			'--add-modules', 'cli', '--launcher', 'cli=cli/cli.Main', '--output', 'dist', '--strip-debug',
+//			'--compress', '2', '--no-header-files', '--no-man-pages'
+//}
 
 //********* LISP JAR GENERATION *********//
 

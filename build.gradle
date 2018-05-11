@@ -1,14 +1,16 @@
 buildscript {
 	ext {
 		propdepsPluginVersion = "0.0.9.RELEASE"
-		gradleDependencyAnalyzePluginVersion = "1.2.1"
-		springIOPlatformVersion = "Brussels-SR6"
+		gradleDependencyAnalyzePluginVersion = "1.2.2"
 		apfloatVersion = "1.8.3"
 		asmAllVersion = "5.2"
 //		asmAllVersion = "6.0_BETA"
+		commonsTextVersion = "1.3"
+		commonsIOVersion = "2.6"
 		commonsMathVersion = "3.6.1"
 		commonsCollectionsVersion = "4.1"
-		icu4jVersion = "60.2"
+		guavaVersion = "25.0-jre"
+		icu4jVersion = "61.1"
 		javaHelpVersion = "2.0.05"
 		procyonVersion = "2.5.0.Final"
 	}
@@ -22,8 +24,9 @@ buildscript {
 }
 
 plugins {
-	id "io.spring.dependency-management" version "1.0.4.RELEASE"
-	id "org.sonarqube" version "2.5"
+	id 'org.springframework.boot' version '2.0.2.RELEASE'
+	id "io.spring.dependency-management" version "1.0.5.RELEASE"
+	id "org.sonarqube" version "2.6.2"
 }
 
 allprojects {
@@ -45,8 +48,8 @@ subprojects {
 	configurations {
 	}
 
-	sourceCompatibility = JavaVersion.VERSION_1_9
-	targetCompatibility = JavaVersion.VERSION_1_9
+	sourceCompatibility = JavaVersion.VERSION_1_10
+	targetCompatibility = JavaVersion.VERSION_1_10
 
 	compileJava.options*.compilerArgs = [
 			"-Xlint:serial", "-Xlint:varargs", "-Xlint:cast", "-Xlint:classfile", "-Xlint:dep-ann", "-Xlint:divzero",
@@ -76,7 +79,24 @@ subprojects {
 
 	dependencyManagement {
 		imports {
-			mavenBom "io.spring.platform:platform-bom:${springIOPlatformVersion}"
+			mavenBom "org.springframework.boot:spring-boot-dependencies:2.0.2.RELEASE"
+		}
+		dependencies {
+			dependency("com.ibm.icu:icu4j:${icu4jVersion}")
+			dependency("commons-io:commons-io:${commonsIOVersion}")
+			dependency("com.google.guava:guava:${guavaVersion}")
+			dependency("org.apache.commons:commons-text:${commonsTextVersion}")
+			dependency("org.apache.commons:commons-math3:${commonsMathVersion}")
+			dependency("org.apache.commons:commons-collections4:${commonsCollectionsVersion}")
+			dependency("org.apfloat:apfloat:${apfloatVersion}")
+			dependency("org.ow2.asm:asm-all:${asmAllVersion}")
+			dependency("javax.help:javahelp:${javaHelpVersion}")
+			dependency("org.jboss.windup.decompiler.procyon:procyon-compilertools:${procyonVersion}")
+//			dependency("com.google.guava:guava:${guavaVersion}") {
+//				exclude 'com.google.code.findbugs:jsr305'
+//				exclude 'com.google.errorprone:error_prone_annotations'
+//				exclude 'com.google.j2objc:j2objc-annotations'
+//			}
 		}
 	}
 
@@ -230,5 +250,5 @@ subprojects {
 //}
 
 task wrapper(type: Wrapper) {
-	gradleVersion = '4.4'
+	gradleVersion = '4.7'
 }

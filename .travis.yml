@@ -1,12 +1,19 @@
 # Language
 language: java
+
 # JDK Version
-jdk: oraclejdk9
-before_install:
+jdk: oraclejdk10
+#before_install:
   - sudo apt-get update -qq
-  - sudo apt-get install oracle-java9-installer
+  - sudo apt-get install oracle-java10-installer
+
 # Gradle Script
-script: ./gradlew check
+script:
+# Display Gradle, JVM, and other versions
+  - ./gradlew --version
+# Run all checks
+  - ./gradlew check
+
 # Gradle Caching
 #before_cache:
 #  - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock

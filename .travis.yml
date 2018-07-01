@@ -3,9 +3,6 @@ language: java
 
 # JDK Version
 jdk: oraclejdk10
-before_install:
-  - sudo apt-get update -qq
-  - sudo apt-get install oracle-java10-installer
 
 # Gradle Script
 script:

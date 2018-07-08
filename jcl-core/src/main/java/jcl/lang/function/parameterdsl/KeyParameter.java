@@ -14,6 +14,10 @@ public class KeyParameter {
 		this.keyword = keyword;
 	}
 
+	public Parameters and() {
+		return parameters;
+	}
+
 	public Parameters withInitialValue(final LispStruct initialValue) {
 		this.initialValue = initialValue;
 		return parameters;

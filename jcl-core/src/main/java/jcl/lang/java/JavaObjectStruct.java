@@ -23,4 +23,9 @@ public class JavaObjectStruct extends BuiltInClassStruct {
 	public Object getJavaObject() {
 		return javaObject;
 	}
+
+	@Override
+	public String toString() {
+		return javaObject.toString();
+	}
 }

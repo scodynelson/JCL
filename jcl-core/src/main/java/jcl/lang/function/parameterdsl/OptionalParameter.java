@@ -13,6 +13,10 @@ public class OptionalParameter {
 		this.parameterName = parameterName;
 	}
 
+	public Parameters and() {
+		return parameters;
+	}
+
 	public Parameters withInitialValue(final LispStruct initialValue) {
 		this.initialValue = initialValue;
 		return parameters;

@@ -160,7 +160,7 @@ public class InternalEval {
 
 			final List<LispStruct> arguments = javaMethodCall.getArguments();
 
-			final LispStruct[] methodEvaluatedArgs = new LispStruct[arguments.size()];
+			final Object[] methodEvaluatedArgs = new Object[arguments.size()];
 			final Class<?>[] methodParamTypes = new Class[arguments.size()];
 			for (int i = 0; i < arguments.size(); i++) {
 				final LispStruct currentArg = arguments.get(i);
@@ -227,12 +227,10 @@ public class InternalEval {
 		return function;
 	}
 
-	public LispStruct jInvoke(final Method javaMethod, final Object javaObject, final LispStruct... methodArgs) {
+	public LispStruct jInvoke(final Method javaMethod, final Object javaObject, final Object... methodArgs) {
 
 		final String javaMethodName = javaMethod.getName();
 
-		final Class<?> javaObjectClass = javaObject.getClass();
-		final String javaObjectClassName = javaObjectClass.getName();
 		try {
 			final Object methodResult = javaMethod.invoke(javaObject, (Object[]) methodArgs);
 			if (methodResult instanceof LispStruct) {
@@ -240,7 +238,14 @@ public class InternalEval {
 			}
 			return JavaObjectStruct.valueOf(methodResult);
 		} catch (final InvocationTargetException | IllegalAccessException ex) {
-			final String message = "Java Method '" + javaMethodName + "' could not be properly invoked on Java Class '" + javaObjectClassName + "'.";
+			String message = "Java Method '" + javaMethodName + "' could not be properly invoked";
+
+			if (javaObject != null) {
+				final String javaObjectClassName = javaObject.getClass().getName();
+				message += " on Java Class '" + javaObjectClassName + '\'';
+			}
+			message += '.';
+
 			LOGGER.error(message, ex);
 			throw new ErrorException(message, ex);
 		}

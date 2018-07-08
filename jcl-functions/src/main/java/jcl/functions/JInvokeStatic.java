@@ -17,21 +17,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class JInvoke extends ExtensionsBuiltInFunctionStructBase {
+public class JInvokeStatic extends ExtensionsBuiltInFunctionStructBase {
 
-	private static final String FUNCTION_NAME = "JINVOKE";
+	private static final String FUNCTION_NAME = "JINVOKE-STATIC";
 	private static final String JAVA_METHOD_ARGUMENT = "JAVA-METHOD";
-	private static final String JAVA_OBJECT_ARGUMENT = "JAVA-OBJECT";
 
 	@Autowired
 	private InternalEval internalEval;
 
-	public JInvoke() {
-		super("Invokes an instance method for the provided JavaMethod and JavaObject.",
+	public JInvokeStatic() {
+		super("Invokes a static method for the provided JavaMethod",
 		      FUNCTION_NAME,
 		      Parameters.forFunction(FUNCTION_NAME)
 		                .requiredParameter(JAVA_METHOD_ARGUMENT)
-		                .requiredParameter(JAVA_OBJECT_ARGUMENT)
 		                .restParameter()
 		);
 	}
@@ -43,10 +41,6 @@ public class JInvoke extends ExtensionsBuiltInFunctionStructBase {
 				= arguments.getRequiredArgument(JAVA_METHOD_ARGUMENT, JavaMethodStruct.class);
 		final Method javaMethod = javaMethodStruct.getJavaMethod();
 
-		final Object javaObject = unwrapJavaObject(
-				arguments.getRequiredArgument(JAVA_OBJECT_ARGUMENT)
-		);
-
 		final List<LispStruct> args = arguments.getRestArgument();
 		final Object[] methodArgs = new Object[args.size()];
 		for (int i = 0; i < args.size(); i++) {
@@ -54,7 +48,7 @@ public class JInvoke extends ExtensionsBuiltInFunctionStructBase {
 			methodArgs[i] = unwrapJavaObject(currentArg);
 		}
 
-		return internalEval.jInvoke(javaMethod, javaObject, methodArgs);
+		return internalEval.jInvoke(javaMethod, null, methodArgs);
 	}
 
 	private static Object unwrapJavaObject(final Object javaObject) {

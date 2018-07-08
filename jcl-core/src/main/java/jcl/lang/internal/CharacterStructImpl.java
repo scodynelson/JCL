@@ -7,6 +7,7 @@ package jcl.lang.internal;
 import jcl.compiler.icg.GeneratorState;
 import jcl.compiler.icg.JavaMethodBuilder;
 import jcl.compiler.icg.generator.GenerationConstants;
+import jcl.lang.BooleanStruct;
 import jcl.lang.CharacterStruct;
 import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
@@ -72,32 +73,32 @@ public final class CharacterStructImpl extends BuiltInClassStruct implements Cha
 
 	@Override
 	public boolean isEqualTo(final CharacterStruct character) {
-		return Character.compare((char) codePoint, character.toJavaChar()) == 0;
+		return (char) codePoint == character.toJavaChar();
 	}
 
 	@Override
 	public boolean isNotEqualTo(final CharacterStruct character) {
-		return Character.compare((char) codePoint, character.toJavaChar()) != 0;
+		return (char) codePoint != character.toJavaChar();
 	}
 
 	@Override
 	public boolean isLessThan(final CharacterStruct character) {
-		return Character.compare((char) codePoint, character.toJavaChar()) < 0;
+		return (char) codePoint < character.toJavaChar();
 	}
 
 	@Override
 	public boolean isGreaterThan(final CharacterStruct character) {
-		return Character.compare((char) codePoint, character.toJavaChar()) > 0;
+		return (char) codePoint > character.toJavaChar();
 	}
 
 	@Override
 	public boolean isLessThanOrEqualTo(final CharacterStruct character) {
-		return Character.compare((char) codePoint, character.toJavaChar()) <= 0;
+		return (char) codePoint <= character.toJavaChar();
 	}
 
 	@Override
 	public boolean isGreaterThanOrEqualTo(final CharacterStruct character) {
-		return Character.compare((char) codePoint, character.toJavaChar()) >= 0;
+		return (char) codePoint >= character.toJavaChar();
 	}
 
 	@Override
@@ -131,28 +132,30 @@ public final class CharacterStructImpl extends BuiltInClassStruct implements Cha
 	}
 
 	@Override
-	public boolean isAlphaChar() {
-		return Character.isLetter(codePoint);
+	public BooleanStruct isAlphaChar() {
+		return BooleanStruct.toLispBoolean(Character.isLetter(codePoint));
 	}
 
 	@Override
-	public boolean isAlphanumeric() {
-		return Character.isLetterOrDigit(codePoint);
+	public BooleanStruct isAlphanumeric() {
+		return BooleanStruct.toLispBoolean(Character.isLetterOrDigit(codePoint));
 	}
 
 	@Override
-	public boolean isDigitChar() {
-		return Character.isDigit(codePoint);
+	public BooleanStruct isDigitChar() {
+		return BooleanStruct.toLispBoolean(Character.isDigit(codePoint));
 	}
 
 	@Override
-	public boolean isGraphicChar() {
-		return CharUtils.isAsciiPrintable((char) codePoint);
+	public BooleanStruct isGraphicChar() {
+		return BooleanStruct.toLispBoolean(CharUtils.isAsciiPrintable((char) codePoint));
 	}
 
 	@Override
-	public boolean isStandardChar() {
-		return CharUtils.isAsciiPrintable((char) codePoint) || (codePoint == CodePointConstants.NEWLINE);
+	public BooleanStruct isStandardChar() {
+		return BooleanStruct.toLispBoolean(
+				CharUtils.isAsciiPrintable((char) codePoint) || (codePoint == CodePointConstants.NEWLINE)
+		);
 	}
 
 	@Override
@@ -166,18 +169,18 @@ public final class CharacterStructImpl extends BuiltInClassStruct implements Cha
 	}
 
 	@Override
-	public boolean isUpperCase() {
-		return Character.isUpperCase(codePoint);
+	public BooleanStruct isUpperCase() {
+		return BooleanStruct.toLispBoolean(Character.isUpperCase(codePoint));
 	}
 
 	@Override
-	public boolean isLowerCase() {
-		return Character.isLowerCase(codePoint);
+	public BooleanStruct isLowerCase() {
+		return BooleanStruct.toLispBoolean(Character.isLowerCase(codePoint));
 	}
 
 	@Override
-	public boolean isBothCase() {
-		return Character.isUpperCase(codePoint) || Character.isLowerCase(codePoint);
+	public BooleanStruct isBothCase() {
+		return BooleanStruct.toLispBoolean(Character.isUpperCase(codePoint) || Character.isLowerCase(codePoint));
 	}
 
 	@Override

@@ -6,6 +6,9 @@ import java.util.function.Function;
 
 import com.google.common.math.DoubleMath;
 import com.google.common.math.LongMath;
+import jcl.compiler.icg.GeneratorState;
+import jcl.compiler.icg.JavaMethodBuilder;
+import jcl.compiler.icg.generator.CodeGenerators;
 import jcl.lang.DoubleFloatStruct;
 import jcl.lang.FloatStruct;
 import jcl.lang.IntegerStruct;
@@ -25,6 +28,9 @@ import org.apfloat.ApcomplexMath;
 import org.apfloat.Apfloat;
 import org.apfloat.ApfloatMath;
 import org.apfloat.Apint;
+import org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.Type;
 
 /**
  * The {@link LongnumStructImpl} is the object representation of a Lisp 'bignum' type where the value is representable
@@ -949,5 +955,51 @@ public final class LongnumStructImpl extends IntegerStructImpl implements Longnu
 	public RealStruct atanh() {
 		final double atanh = FastMath.atanh(value);
 		return SingleFloatStruct.toLispFloat(atanh);
+	}
+
+	/*
+	LISP-STRUCT
+	 */
+
+	/**
+	 * Constant {@link String} containing the name for the {@link IntegerStruct} class.
+	 */
+	private static final String INTEGER_NAME = Type.getInternalName(IntegerStruct.class);
+
+	/**
+	 * Constant {@link String} containing the name for the {@link IntegerStruct#toLispInteger(long)} method.
+	 */
+	private static final String INTEGER_TO_LISP_INTEGER_METHOD_NAME = "toLispInteger";
+
+	/**
+	 * Constant {@link String} containing the description for the {@link IntegerStruct#toLispInteger(long)} method.
+	 */
+	private static final String INTEGER_TO_LISP_INTEGER_METHOD_DESC
+			= CodeGenerators.getMethodDescription(IntegerStruct.class, INTEGER_TO_LISP_INTEGER_METHOD_NAME, long.class);
+
+	/**
+	 * {@inheritDoc}
+	 * Generation method for {@link LongnumStruct} objects, by performing the following operations:
+	 * <ol>
+	 * <li>Emitting the {@link IntegerStruct#toJavaPLong()} value.</li>
+	 * <li>Retrieving a {@link LongnumStruct} via {@link IntegerStruct#toLispInteger(long)} with the emitted
+	 * {@code long} value</li>
+	 * </ol>
+	 *
+	 * @param generatorState
+	 * 		stateful object used to hold the current state of the code generation process
+	 */
+	@Override
+	public void generate(final GeneratorState generatorState) {
+		final JavaMethodBuilder methodBuilder = generatorState.getCurrentMethodBuilder();
+		final MethodVisitor mv = methodBuilder.getMethodVisitor();
+
+		mv.visitLdcInsn(value);
+
+		mv.visitMethodInsn(Opcodes.INVOKESTATIC,
+		                   INTEGER_NAME,
+		                   INTEGER_TO_LISP_INTEGER_METHOD_NAME,
+		                   INTEGER_TO_LISP_INTEGER_METHOD_DESC,
+		                   true);
 	}
 }

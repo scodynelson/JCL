@@ -166,6 +166,8 @@ public interface SymbolStruct extends LispStruct {
 	 *
 	 * @param indicator
 	 * 		the key for the property to retrieve
+	 * @param defaultValue
+	 * 		the default value of the property if property cannot be found
 	 *
 	 * @return the property from the symbol {@link ListStruct} properties or {@code null} if the property cannot be
 	 * found.
@@ -181,6 +183,8 @@ public interface SymbolStruct extends LispStruct {
 	 * 		the key for the property to set
 	 * @param newValue
 	 * 		the value of the property
+	 *
+	 * @return the symbol properties {@link ListStruct}
 	 */
 	ListStruct setProperty(final LispStruct indicator, final LispStruct newValue);
 

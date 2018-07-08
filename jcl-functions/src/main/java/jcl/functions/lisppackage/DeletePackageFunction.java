@@ -39,7 +39,7 @@ public final class DeletePackageFunction extends CommonLispBuiltInFunctionStruct
 	 * Application method for {@code delete-package} package function that deletes the provided {@link PackageStruct}
 	 * package-designator.
 	 *
-	 * @param lispStructs
+	 * @param arguments
 	 * 		the function parameters
 	 *
 	 * @return {@link TStruct#INSTANCE}

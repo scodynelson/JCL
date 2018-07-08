@@ -44,7 +44,7 @@ public final class ShadowFunction extends CommonLispBuiltInFunctionStructBase {
 	 * {@inheritDoc}
 	 * Application method for {@code shadow} package function that shadows the provided symbol name parameters.
 	 *
-	 * @param lispStructs
+	 * @param arguments
 	 * 		the function parameters
 	 *
 	 * @return {@link TStruct#INSTANCE}

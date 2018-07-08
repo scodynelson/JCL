@@ -6,6 +6,10 @@ import java.util.function.Function;
 
 import com.google.common.math.BigIntegerMath;
 import com.google.common.math.DoubleMath;
+import jcl.compiler.icg.GeneratorState;
+import jcl.compiler.icg.JavaMethodBuilder;
+import jcl.compiler.icg.generator.CodeGenerators;
+import jcl.compiler.icg.generator.GenerationConstants;
 import jcl.lang.BignumStruct;
 import jcl.lang.DoubleFloatStruct;
 import jcl.lang.FloatStruct;
@@ -24,6 +28,9 @@ import org.apfloat.ApcomplexMath;
 import org.apfloat.Apfloat;
 import org.apfloat.ApfloatMath;
 import org.apfloat.Apint;
+import org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.Type;
 
 /**
  * The {@link BignumStructImpl} is the object representation of a Lisp 'bignum' type where the value is not
@@ -816,5 +823,67 @@ public final class BignumStructImpl extends IntegerStructImpl implements BignumS
 		final Apint ap = new Apint(value);
 		final Apfloat atanh = ApfloatMath.atanh(ap);
 		return SingleFloatStruct.toLispFloat(atanh.floatValue());
+	}
+
+	/*
+	LISP-STRUCT
+	 */
+
+	/**
+	 * Constant {@link String} containing the name for the {@link IntegerStruct} class.
+	 */
+	private static final String INTEGER_NAME = Type.getInternalName(IntegerStruct.class);
+
+	/**
+	 * Constant {@link String} containing the name for the {@link IntegerStruct#toLispInteger(BigInteger)} method.
+	 */
+	private static final String INTEGER_TO_LISP_INTEGER_METHOD_NAME = "toLispInteger";
+
+	/**
+	 * Constant {@link String} containing the description for the {@link IntegerStruct#toLispInteger(BigInteger)}
+	 * method.
+	 */
+	private static final String INTEGER_TO_LISP_INTEGER_METHOD_DESC
+			= CodeGenerators.getMethodDescription(IntegerStruct.class, INTEGER_TO_LISP_INTEGER_METHOD_NAME,
+			                                      BigInteger.class);
+
+	private static final String JAVA_BIG_INTEGER_NAME = Type.getInternalName(BigInteger.class);
+
+	private static final String JAVA_BIG_INTEGER_INIT_DESC = CodeGenerators.getConstructorDescription(BigInteger.class,
+	                                                                                                  String.class);
+
+	/**
+	 * {@inheritDoc}
+	 * Generation method for {@link BignumStruct} objects, by performing the following operations:
+	 * <ol>
+	 * <li>Emitting the {@link IntegerStruct#toJavaBigInteger()} value.</li>
+	 * <li>Retrieving a {@link BignumStruct} via {@link IntegerStruct#toLispInteger(BigInteger)} with the emitted
+	 * {@link BigInteger} value</li>
+	 * </ol>
+	 *
+	 * @param generatorState
+	 * 		stateful object used to hold the current state of the code generation process
+	 */
+	@Override
+	public void generate(final GeneratorState generatorState) {
+		final JavaMethodBuilder methodBuilder = generatorState.getCurrentMethodBuilder();
+		final MethodVisitor mv = methodBuilder.getMethodVisitor();
+
+		mv.visitTypeInsn(Opcodes.NEW, JAVA_BIG_INTEGER_NAME);
+		mv.visitInsn(Opcodes.DUP);
+
+		mv.visitLdcInsn(value.toString());
+
+		mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
+		                   JAVA_BIG_INTEGER_NAME,
+		                   GenerationConstants.INIT_METHOD_NAME,
+		                   JAVA_BIG_INTEGER_INIT_DESC,
+		                   false);
+
+		mv.visitMethodInsn(Opcodes.INVOKESTATIC,
+		                   INTEGER_NAME,
+		                   INTEGER_TO_LISP_INTEGER_METHOD_NAME,
+		                   INTEGER_TO_LISP_INTEGER_METHOD_DESC,
+		                   true);
 	}
 }

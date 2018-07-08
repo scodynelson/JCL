@@ -48,7 +48,7 @@ public final class MakePackageFunction extends CommonLispBuiltInFunctionStructBa
 	 * Application method for the package function that creates a new {@link PackageStruct} object with the provided
 	 * string-designator package name and the optional nicknames list and packages to use list.
 	 *
-	 * @param lispStructs
+	 * @param arguments
 	 * 		the function parameters
 	 *
 	 * @return the newly created {@link PackageStruct} object

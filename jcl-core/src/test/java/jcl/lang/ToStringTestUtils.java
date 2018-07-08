@@ -23,6 +23,8 @@ public final class ToStringTestUtils {
 	 * 		the expected result {@link String} from the {@link Object#toString()} invocation
 	 * @param struct
 	 * 		the {@link Object} to perform the {@link Object#toString()} operation on
+	 * @param <T>
+	 * 		the type of the provided structure
 	 */
 	public static <T extends LispStruct> void validateToStringWithNoEscapes(final String str, final T struct) {
 		final BooleanStruct printEscape = PrinterVariables.PRINT_ESCAPE.getVariableValue();

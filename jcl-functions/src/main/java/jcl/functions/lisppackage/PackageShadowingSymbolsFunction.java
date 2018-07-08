@@ -42,7 +42,7 @@ public final class PackageShadowingSymbolsFunction extends CommonLispBuiltInFunc
 	 * Application method for {@code package-shadowing-symbols} package function that returns the {@link
 	 * PackageStruct#getShadowingSymbols()} values as a {@link ListStruct}.
 	 *
-	 * @param lispStructs
+	 * @param arguments
 	 * 		the function parameters
 	 *
 	 * @return the {@link PackageStruct#getShadowingSymbols()} values as a {@link ListStruct}

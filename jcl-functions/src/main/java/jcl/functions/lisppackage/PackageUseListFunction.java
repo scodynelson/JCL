@@ -40,7 +40,7 @@ public final class PackageUseListFunction extends CommonLispBuiltInFunctionStruc
 	 * Application method for {@code package-use-list} package function that returns the {@link PackageStruct#getUseList()}
 	 * as a {@link ListStruct}.
 	 *
-	 * @param lispStructs
+	 * @param arguments
 	 * 		the function parameters
 	 *
 	 * @return the {@link PackageStruct#getUseList()} as a {@link ListStruct}

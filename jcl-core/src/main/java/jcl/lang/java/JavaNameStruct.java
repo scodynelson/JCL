@@ -4,7 +4,12 @@
 
 package jcl.lang.java;
 
+import jcl.compiler.icg.GeneratorState;
+import jcl.compiler.icg.JavaMethodBuilder;
+import jcl.compiler.icg.generator.GenerationConstants;
 import jcl.lang.classes.BuiltInClassStruct;
+import org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.Opcodes;
 
 public class JavaNameStruct extends BuiltInClassStruct {
 
@@ -22,6 +27,23 @@ public class JavaNameStruct extends BuiltInClassStruct {
 
 	public String getJavaName() {
 		return javaName;
+	}
+
+	/*
+	LISP-STRUCT
+	 */
+
+	@Override
+	public void generate(final GeneratorState generatorState) {
+		final JavaMethodBuilder methodBuilder = generatorState.getCurrentMethodBuilder();
+		final MethodVisitor mv = methodBuilder.getMethodVisitor();
+
+		mv.visitLdcInsn(javaName);
+		mv.visitMethodInsn(Opcodes.INVOKESTATIC,
+		                   GenerationConstants.LISP_STRUCT_FACTORY_NAME,
+		                   GenerationConstants.LISP_STRUCT_FACTORY_TO_JAVA_NAME_METHOD_NAME,
+		                   GenerationConstants.LISP_STRUCT_FACTORY_TO_JAVA_NAME_METHOD_DESC,
+		                   false);
 	}
 
 	/*

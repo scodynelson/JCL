@@ -37,7 +37,7 @@ public final class ListAllPackagesFunction extends CommonLispBuiltInFunctionStru
 	 * Application method for {@code list-all-packages} package function returns the result of {@link
 	 * PackageStruct#listAllPackages()} as a {@link ListStruct}.
 	 *
-	 * @param lispStructs
+	 * @param arguments
 	 * 		the function parameters
 	 *
 	 * @return the result of {@link PackageStruct#listAllPackages()} as a {@link ListStruct}

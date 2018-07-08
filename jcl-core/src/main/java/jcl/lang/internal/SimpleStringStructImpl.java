@@ -7,6 +7,9 @@ import java.util.Spliterators;
 import java.util.function.Function;
 import java.util.function.IntConsumer;
 
+import jcl.compiler.icg.GeneratorState;
+import jcl.compiler.icg.JavaMethodBuilder;
+import jcl.compiler.icg.generator.GenerationConstants;
 import jcl.lang.AdjustArrayContext;
 import jcl.lang.ArrayStruct;
 import jcl.lang.CharacterStruct;
@@ -30,6 +33,8 @@ import jcl.type.LispType;
 import jcl.type.SimpleBaseStringType;
 import jcl.type.SimpleStringType;
 import jcl.type.StringType;
+import org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.Opcodes;
 
 /**
  * The {@link SimpleStringStructImpl} is the object representation of a Lisp 'string' type.
@@ -354,6 +359,35 @@ public final class SimpleStringStructImpl extends AbstractStringStructImpl {
 			}
 			return CharacterStruct.toLispCharacter(character);
 		}
+	}
+
+	/*
+	LISP-STRUCT
+	 */
+
+	/**
+	 * {@inheritDoc}
+	 * Generation method for {@link StringStruct} objects, by performing the following operations:
+	 * <ol>
+	 * <li>Loading the {@link String} constant produced by performing {@link StringStruct#toJavaString()}</li>
+	 * <li>Constructing a new {@link StringStruct} with the loaded {@link String} value</li>
+	 * </ol>
+	 *
+	 * @param generatorState
+	 * 		stateful object used to hold the current state of the code generation process
+	 */
+	@Override
+	public void generate(final GeneratorState generatorState) {
+		final JavaMethodBuilder methodBuilder = generatorState.getCurrentMethodBuilder();
+		final MethodVisitor mv = methodBuilder.getMethodVisitor();
+
+		final String javaString = contents.toString();
+		mv.visitLdcInsn(javaString);
+		mv.visitMethodInsn(Opcodes.INVOKESTATIC,
+		                   GenerationConstants.STRING_STRUCT_NAME,
+		                   GenerationConstants.STRING_STRUCT_TO_LISP_STRING_METHOD_NAME,
+		                   GenerationConstants.STRING_STRUCT_TO_LISP_STRING_METHOD_DESC,
+		                   true);
 	}
 
 	/*

@@ -39,7 +39,7 @@ public final class InPackageFunction extends CommonLispBuiltInFunctionStructBase
 	 * Application method for {@code in-package} package function that gets the package name to set the global {@code
 	 * *package*} variable to. An {@link ErrorException} is thrown when the package cannot be found.
 	 *
-	 * @param lispStructs
+	 * @param arguments
 	 * 		the function parameters
 	 *
 	 * @return the new {@link PackageStruct} value of the global {@code *package*} variable

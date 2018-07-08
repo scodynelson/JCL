@@ -7,6 +7,8 @@ package jcl.lang;
 import java.util.Arrays;
 import java.util.List;
 
+import jcl.compiler.icg.GeneratorState;
+
 public class ValuesStruct implements LispStruct {
 
 	private final List<LispStruct> valuesList;
@@ -37,6 +39,28 @@ public class ValuesStruct implements LispStruct {
 		}
 		return valuesList.get(0);
 	}
+
+	/*
+	LISP-STRUCT
+	 */
+
+	/**
+	 * {@inheritDoc}
+	 * Generation method for {@link ValuesStruct} objects, by generating the {@link ValuesStruct#getPrimaryValue()}
+	 * value.
+	 *
+	 * @param generatorState
+	 * 		stateful object used to hold the current state of the code generation process
+	 */
+	@Override
+	public void generate(final GeneratorState generatorState) {
+		final LispStruct value = getPrimaryValue();
+		value.generate(generatorState);
+	}
+
+	/*
+	OBJECT
+	 */
 
 	@Override
 	public String toString() {

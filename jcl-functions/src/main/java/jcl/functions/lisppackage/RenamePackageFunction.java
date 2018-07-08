@@ -50,7 +50,7 @@ public final class RenamePackageFunction extends CommonLispBuiltInFunctionStruct
 	 * Application method for the package function that renames the provided {@link PackageStruct} package-designator,
 	 * optionally giving it the provided nicknames.
 	 *
-	 * @param lispStructs
+	 * @param arguments
 	 * 		the function parameters
 	 *
 	 * @return the renamed {@link PackageStruct}

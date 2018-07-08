@@ -34,7 +34,7 @@ abstract class AbstractCharacterDesignatorFunction extends CommonLispBuiltInFunc
 	 * Application method for the character function that gets the character-designator parameter object (character,
 	 * string, or symbol) and applies the {@link Function} from the {@link #characterFunction()} function.
 	 *
-	 * @param lispStructs
+	 * @param arguments
 	 * 		the function parameters
 	 *
 	 * @return the result of the {@link #characterFunction()} applied to the character-designator parameter value

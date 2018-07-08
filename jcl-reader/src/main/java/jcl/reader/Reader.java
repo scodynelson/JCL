@@ -15,6 +15,8 @@ public interface Reader {
 	/**
 	 * Reads the next {@link LispStruct} from the {@link InputStreamStruct}.
 	 *
+	 * @param inputStreamStruct
+	 * 		the {@link InputStreamStruct} to read tokens from
 	 * @param eofErrorP
 	 * 		whether or not to throw an error when an End-Of-File is reached
 	 * @param eofValue
@@ -30,6 +32,8 @@ public interface Reader {
 	 * Reads the next {@link LispStruct} from the {@link InputStreamStruct}, making sure to preserve any whitespace
 	 * characters after the {@link LispStruct} token is read.
 	 *
+	 * @param inputStreamStruct
+	 * 		the {@link InputStreamStruct} to read tokens from
 	 * @param eofErrorP
 	 * 		whether or not to throw an error when an End-Of-File is reached
 	 * @param eofValue

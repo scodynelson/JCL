@@ -42,7 +42,7 @@ public final class UninternFunction extends CommonLispBuiltInFunctionStructBase 
 	 * Application method for {@code unintern} package function that uninterns the provided {@link SymbolStruct} from
 	 * an optionally provided {@link PackageStruct}.
 	 *
-	 * @param lispStructs
+	 * @param arguments
 	 * 		the function parameters
 	 *
 	 * @return {@link TStruct#INSTANCE} if the {@link SymbolStruct} was successfully uninterned; {@link

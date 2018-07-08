@@ -1,12 +1,21 @@
 package jcl.lang.internal;
 
+import java.util.List;
+
+import jcl.compiler.icg.GeneratorState;
+import jcl.compiler.icg.JavaMethodBuilder;
+import jcl.compiler.icg.generator.GenerationConstants;
+import jcl.compiler.struct.specialoperator.QuoteStruct;
 import jcl.lang.ArrayStruct;
 import jcl.lang.IntegerStruct;
+import jcl.lang.LispStruct;
 import jcl.lang.NILStruct;
 import jcl.lang.ValuesStruct;
 import jcl.type.ArrayType;
 import jcl.type.LispType;
 import jcl.type.SimpleArrayType;
+import org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.Opcodes;
 
 /**
  * The {@link ArrayStructImpl} is the object representation of a Lisp 'array' type.
@@ -58,5 +67,91 @@ public abstract class ArrayStructImpl extends AbstractArrayStructImpl {
 		return (displacedTo == null)
 		       ? ValuesStruct.valueOf(NILStruct.INSTANCE, IntegerStruct.ZERO)
 		       : ValuesStruct.valueOf(displacedTo, IntegerStruct.toLispInteger(displacedIndexOffset));
+	}
+
+	/*
+	LISP-STRUCT
+	 */
+
+	/**
+	 * {@inheritDoc}
+	 * Generation method for {@link ArrayStruct} objects, by performing the following operations:
+	 * <ol>
+	 * <li>Building the {@link ArrayStruct#getDimensions()} values</li>
+	 * <li>Building the {@link ArrayStruct#getContents()} values, ensuring that each content value is treated as being
+	 * 'quoted'</li>
+	 * <li>Constructing a new {@link ArrayStruct} with the built dimension and content {@link List}s</li>
+	 * </ol>
+	 *
+	 * @param generatorState
+	 * 		stateful object used to hold the current state of the code generation process
+	 */
+	@Override
+	public void generate(final GeneratorState generatorState) {
+		final JavaMethodBuilder methodBuilder = generatorState.getCurrentMethodBuilder();
+		final MethodVisitor mv = methodBuilder.getMethodVisitor();
+
+		mv.visitTypeInsn(Opcodes.NEW, GenerationConstants.JAVA_ARRAY_LIST_NAME);
+		mv.visitInsn(Opcodes.DUP);
+		mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
+		                   GenerationConstants.JAVA_ARRAY_LIST_NAME,
+		                   GenerationConstants.INIT_METHOD_NAME,
+		                   GenerationConstants.JAVA_ARRAY_LIST_INIT_DESC,
+		                   false);
+		final int dimensionsStore = methodBuilder.getNextAvailableStore();
+		mv.visitVarInsn(Opcodes.ASTORE, dimensionsStore);
+
+		final List<Integer> dimensions = getDimensions();
+		for (final Integer dimension : dimensions) {
+			mv.visitVarInsn(Opcodes.ALOAD, dimensionsStore);
+			mv.visitLdcInsn(dimension);
+			mv.visitMethodInsn(Opcodes.INVOKESTATIC,
+			                   GenerationConstants.JAVA_INTEGER_NAME,
+			                   GenerationConstants.JAVA_INTEGER_VALUE_OF_METHOD_NAME,
+			                   GenerationConstants.JAVA_INTEGER_VALUE_OF_METHOD_DESC,
+			                   false);
+			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
+			                   GenerationConstants.JAVA_LIST_NAME,
+			                   GenerationConstants.JAVA_LIST_ADD_METHOD_NAME,
+			                   GenerationConstants.JAVA_LIST_ADD_METHOD_DESC,
+			                   true);
+			mv.visitInsn(Opcodes.POP);
+		}
+
+		mv.visitTypeInsn(Opcodes.NEW, GenerationConstants.JAVA_ARRAY_LIST_NAME);
+		mv.visitInsn(Opcodes.DUP);
+		mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
+		                   GenerationConstants.JAVA_ARRAY_LIST_NAME,
+		                   GenerationConstants.INIT_METHOD_NAME,
+		                   GenerationConstants.JAVA_ARRAY_LIST_INIT_DESC,
+		                   false);
+		final int contentsStore = methodBuilder.getNextAvailableStore();
+		mv.visitVarInsn(Opcodes.ASTORE, contentsStore);
+
+		final int contentStore = methodBuilder.getNextAvailableStore();
+
+		final List<LispStruct> contents = getContents();
+		for (final LispStruct content : contents) {
+			final QuoteStruct quotedContent = new QuoteStruct(content);
+			quotedContent.generate(generatorState);
+			mv.visitVarInsn(Opcodes.ASTORE, contentStore);
+
+			mv.visitVarInsn(Opcodes.ALOAD, contentsStore);
+			mv.visitVarInsn(Opcodes.ALOAD, contentStore);
+			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
+			                   GenerationConstants.JAVA_LIST_NAME,
+			                   GenerationConstants.JAVA_LIST_ADD_METHOD_NAME,
+			                   GenerationConstants.JAVA_LIST_ADD_METHOD_DESC,
+			                   true);
+			mv.visitInsn(Opcodes.POP);
+		}
+
+		mv.visitVarInsn(Opcodes.ALOAD, dimensionsStore);
+		mv.visitVarInsn(Opcodes.ALOAD, contentsStore);
+		mv.visitMethodInsn(Opcodes.INVOKESTATIC,
+		                   GenerationConstants.LISP_STRUCT_FACTORY_NAME,
+		                   GenerationConstants.LISP_STRUCT_FACTORY_TO_ARRAY_METHOD_NAME,
+		                   GenerationConstants.LISP_STRUCT_FACTORY_TO_ARRAY_METHOD_DESC,
+		                   false);
 	}
 }

@@ -37,7 +37,7 @@ public final class StreamErrorStreamFunction extends CommonLispBuiltInFunctionSt
 	 * Application method for {@code stream-error-stream} package function that returns the {@link StreamStruct} that
 	 * was a part of provided {@link StreamErrorException} condition.
 	 *
-	 * @param lispStructs
+	 * @param arguments
 	 * 		the function parameters
 	 *
 	 * @return the {@link StreamStruct} that was a part of provided {@link StreamErrorException} condition

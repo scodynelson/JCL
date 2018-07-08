@@ -9,6 +9,9 @@ import java.util.Spliterators;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
+import jcl.compiler.icg.GeneratorState;
+import jcl.compiler.icg.JavaMethodBuilder;
+import jcl.compiler.icg.generator.GenerationConstants;
 import jcl.lang.ConsStruct;
 import jcl.lang.FixnumStruct;
 import jcl.lang.IntegerStruct;
@@ -21,6 +24,8 @@ import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.condition.exception.SimpleErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.type.ConsType;
+import org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.Opcodes;
 
 /**
  * The {@link ConsStructImpl} is the object representation of a Lisp 'cons' type.
@@ -592,6 +597,48 @@ public final class ConsStructImpl extends BuiltInClassStruct implements ConsStru
 				                                Spliterator.SUBSIZED
 		);
 	}
+
+	/*
+	LISP-STRUCT
+	 */
+
+	/**
+	 * {@inheritDoc}
+	 * Generation method for {@link ConsStruct} objects, by performing the following operations:
+	 * <ol>
+	 * <li>Building the {@link ConsStruct#car()} value</li>
+	 * <li>Building the {@link ConsStruct#cdr()} value</li>
+	 * <li>Constructing a new {@link ConsStruct} with the built car and cdr values</li>
+	 * </ol>
+	 *
+	 * @param generatorState
+	 * 		stateful object used to hold the current state of the code generation process
+	 */
+	@Override
+	public void generate(final GeneratorState generatorState) {
+		final JavaMethodBuilder methodBuilder = generatorState.getCurrentMethodBuilder();
+		final MethodVisitor mv = methodBuilder.getMethodVisitor();
+
+		car.generate(generatorState);
+		final int carStore = methodBuilder.getNextAvailableStore();
+		mv.visitVarInsn(Opcodes.ASTORE, carStore);
+
+		cdr.generate(generatorState);
+		final int cdrStore = methodBuilder.getNextAvailableStore();
+		mv.visitVarInsn(Opcodes.ASTORE, cdrStore);
+
+		mv.visitVarInsn(Opcodes.ALOAD, carStore);
+		mv.visitVarInsn(Opcodes.ALOAD, cdrStore);
+		mv.visitMethodInsn(Opcodes.INVOKESTATIC,
+		                   GenerationConstants.CONS_STRUCT_NAME,
+		                   GenerationConstants.CONS_STRUCT_FACTORY_TO_CONS_METHOD_NAME,
+		                   GenerationConstants.CONS_STRUCT_FACTORY_TO_CONS_METHOD_DESC,
+		                   true);
+	}
+
+	/*
+	OBJECT
+	 */
 
 	@Override
 	public String toString() {

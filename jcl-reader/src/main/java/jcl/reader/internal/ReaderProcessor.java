@@ -67,6 +67,11 @@ class ReaderProcessor {
 	 * If at end of file, end-of-file processing is performed as specified in read. Otherwise, one character, x, is read
 	 * from the input stream, and dispatched according to the syntax type of x to one of steps 2 to 7.
 	 * </p>
+	 *
+	 * @param tokenBuilder
+	 * 		the reader state containing the {@link TokenBuilder#tokenAttributes} to derive the token
+	 *
+	 * @return the parsed token
 	 */
 	static LispStruct read(final TokenBuilder tokenBuilder) {
 
@@ -118,6 +123,11 @@ class ReaderProcessor {
 	 * <p>
 	 * If x is an invalid character, an error of type reader-error is signaled.
 	 * </p>
+	 *
+	 * @param tokenBuilder
+	 * 		the reader state containing the {@link TokenBuilder#tokenAttributes} to derive the token
+	 *
+	 * @return the parsed token
 	 */
 	private static LispStruct readIllegalCharacter(final TokenBuilder tokenBuilder) {
 
@@ -148,6 +158,11 @@ class ReaderProcessor {
 	 * <p>
 	 * If x is a whitespace[2] character, then it is discarded and step 1 is re-entered.
 	 * </p>
+	 *
+	 * @param tokenBuilder
+	 * 		the reader state containing the {@link TokenBuilder#tokenAttributes} to derive the token
+	 *
+	 * @return the parsed token
 	 */
 	private static LispStruct readWhitespace(final TokenBuilder tokenBuilder) {
 		return read(tokenBuilder);
@@ -172,6 +187,11 @@ class ReaderProcessor {
 	 * The reader macro function may return zero values or one value. If one value is returned, then that value is returned
 	 * as the result of the read operation; the algorithm is done. If zero values are returned, then step 1 is re-entered.
 	 * </p>
+	 *
+	 * @param tokenBuilder
+	 * 		the reader state containing the {@link TokenBuilder#tokenAttributes} to derive the token
+	 *
+	 * @return the parsed token
 	 */
 	private static LispStruct readMacroCharacter(final TokenBuilder tokenBuilder) {
 
@@ -213,6 +233,11 @@ class ReaderProcessor {
 	 * if at the end of file. y is treated as if it is a constituent whose only constituent trait is alphabetic[2]. y is
 	 * used to begin a token, and step 8 is entered.
 	 * </p>
+	 *
+	 * @param tokenBuilder
+	 * 		the reader state containing the {@link TokenBuilder#tokenAttributes} to derive the token
+	 *
+	 * @return the parsed token
 	 */
 	private static LispStruct readSingleEscape(final TokenBuilder tokenBuilder) {
 
@@ -240,6 +265,11 @@ class ReaderProcessor {
 	 * If x is a multiple escape character then a token (initially containing no characters) is begun and step 9 is
 	 * entered.
 	 * </p>
+	 *
+	 * @param tokenBuilder
+	 * 		the reader state containing the {@link TokenBuilder#tokenAttributes} to derive the token
+	 *
+	 * @return the parsed token
 	 */
 	private static LispStruct readMultipleEscape(final TokenBuilder tokenBuilder) {
 		return readOddMultipleEscape(tokenBuilder);
@@ -254,6 +284,11 @@ class ReaderProcessor {
 	 * case, it might be replaced with the corresponding character of the opposite case, depending on the readtable case of
 	 * the current readtable. X is used to begin a token, and step 8 is entered.
 	 * </p>
+	 *
+	 * @param tokenBuilder
+	 * 		the reader state containing the {@link TokenBuilder#tokenAttributes} to derive the token
+	 *
+	 * @return the parsed token
 	 */
 	private static LispStruct readConstituent(final TokenBuilder tokenBuilder) {
 
@@ -310,6 +345,11 @@ class ReaderProcessor {
 	 * If y is a whitespace character, then it terminates the token. First the character y is unread if appropriate, and
 	 * then step 10 is entered.
 	 * </p>
+	 *
+	 * @param tokenBuilder
+	 * 		the reader state containing the {@link TokenBuilder#tokenAttributes} to derive the token
+	 *
+	 * @return the parsed token
 	 */
 	private static LispStruct readEvenMultipleEscape(final TokenBuilder tokenBuilder) {
 
@@ -392,6 +432,11 @@ class ReaderProcessor {
 	 * <p>
 	 * If y is an invalid character, an error of type reader-error is signaled.
 	 * </p>
+	 *
+	 * @param tokenBuilder
+	 * 		the reader state containing the {@link TokenBuilder#tokenAttributes} to derive the token
+	 *
+	 * @return the parsed token
 	 */
 	private static LispStruct readOddMultipleEscape(final TokenBuilder tokenBuilder) {
 
@@ -453,6 +498,11 @@ class ReaderProcessor {
 	 * 2) Symbol
 	 * 3) Package with a Symbol
 	 * </p>
+	 *
+	 * @param tokenBuilder
+	 * 		the reader state containing the {@link TokenBuilder#tokenAttributes} to derive the token
+	 *
+	 * @return the parsed token
 	 */
 	private static LispStruct readTokenAccumulated(final TokenBuilder tokenBuilder) {
 

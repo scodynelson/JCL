@@ -41,7 +41,7 @@ public final class FindAllSymbolsFunction extends CommonLispBuiltInFunctionStruc
 	 * Application method for {@code find-all-symbols} package function that returns all the {@link SymbolStruct}s
 	 * that match the provided string-designator symbol name from every registered {@link PackageStruct}.
 	 *
-	 * @param lispStructs
+	 * @param arguments
 	 * 		the function parameters
 	 *
 	 * @return the {@link SymbolStruct}s that match the provided string-designator symbol name from every registered

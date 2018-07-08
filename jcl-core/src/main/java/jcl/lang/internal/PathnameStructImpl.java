@@ -17,6 +17,9 @@ import java.util.List;
 import java.util.StringTokenizer;
 import java.util.regex.Pattern;
 
+import jcl.compiler.icg.GeneratorState;
+import jcl.compiler.icg.JavaMethodBuilder;
+import jcl.compiler.icg.generator.GenerationConstants;
 import jcl.lang.BooleanStruct;
 import jcl.lang.LogicalPathnameStruct;
 import jcl.lang.PathnameStruct;
@@ -39,6 +42,8 @@ import jcl.lang.statics.PrinterVariables;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.SystemUtils;
+import org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.Opcodes;
 
 /**
  * The {@link PathnameStructImpl} is the object representation of a Lisp 'pathname' type.
@@ -970,6 +975,49 @@ public class PathnameStructImpl extends BuiltInClassStruct implements PathnameSt
 
 		return stringBuilder.toString();
 	}
+
+	/*
+	LISP-STRUCT
+	 */
+
+	/**
+	 * {@inheritDoc}
+	 * Generation method for {@link PathnameStruct} objects, by performing the following operations:
+	 * <ol>
+	 * <li>Building the {@link PathnameStruct#getUri()} value</li>
+	 * <li>Constructing a new {@link PathnameStruct} with the built {@link URI} value</li>
+	 * </ol>
+	 *
+	 * @param generatorState
+	 * 		stateful object used to hold the current state of the code generation process
+	 */
+	@Override
+	public void generate(final GeneratorState generatorState) {
+
+		final JavaMethodBuilder methodBuilder = generatorState.getCurrentMethodBuilder();
+		final MethodVisitor mv = methodBuilder.getMethodVisitor();
+
+		final String filePath = uri.toString();
+		mv.visitLdcInsn(filePath);
+		mv.visitMethodInsn(Opcodes.INVOKESTATIC,
+		                   GenerationConstants.JAVA_URI_NAME,
+		                   GenerationConstants.JAVA_URI_CREATE_METHOD_NAME,
+		                   GenerationConstants.JAVA_URI_CREATE_METHOD_DESC,
+		                   false);
+		final int uriStore = methodBuilder.getNextAvailableStore();
+		mv.visitVarInsn(Opcodes.ASTORE, uriStore);
+
+		mv.visitVarInsn(Opcodes.ALOAD, uriStore);
+		mv.visitMethodInsn(Opcodes.INVOKESTATIC,
+		                   GenerationConstants.LISP_STRUCT_FACTORY_NAME,
+		                   GenerationConstants.LISP_STRUCT_FACTORY_TO_PATHNAME_URI_METHOD_NAME,
+		                   GenerationConstants.LISP_STRUCT_FACTORY_TO_PATHNAME_URI_METHOD_DESC,
+		                   false);
+	}
+
+	/*
+	OBJECT
+	 */
 
 	@Override
 	public String toString() {

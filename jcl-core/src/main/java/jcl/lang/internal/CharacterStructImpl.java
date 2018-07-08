@@ -4,6 +4,9 @@
 
 package jcl.lang.internal;
 
+import jcl.compiler.icg.GeneratorState;
+import jcl.compiler.icg.JavaMethodBuilder;
+import jcl.compiler.icg.generator.GenerationConstants;
 import jcl.lang.CharacterStruct;
 import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
@@ -18,6 +21,8 @@ import jcl.type.StandardCharType;
 import jcl.util.CodePointConstants;
 import lombok.EqualsAndHashCode;
 import org.apache.commons.lang3.CharUtils;
+import org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.Opcodes;
 
 /**
  * The {@link CharacterStructImpl} is the object representation of a Lisp 'character' type.
@@ -214,6 +219,43 @@ public final class CharacterStructImpl extends BuiltInClassStruct implements Cha
 	public int toUnicodeCodePoint() {
 		return codePoint;
 	}
+
+	/*
+	LISP-STRUCT
+	 */
+
+	/**
+	 * {@inheritDoc}
+	 * Generation method for {@link CharacterStruct} objects, by performing the following operations:
+	 * <ol>
+	 * <li>Loading the {@link CharacterStruct#toUnicodeCodePoint()} constant</li>
+	 * <li>Retrieving a {@link CharacterStruct} with the loaded code point value</li>
+	 * </ol>
+	 *
+	 * @param generatorState
+	 * 		stateful object used to hold the current state of the code generation process
+	 */
+	@Override
+	public void generate(final GeneratorState generatorState) {
+		final JavaMethodBuilder methodBuilder = generatorState.getCurrentMethodBuilder();
+		final MethodVisitor mv = methodBuilder.getMethodVisitor();
+
+		mv.visitLdcInsn(codePoint);
+		mv.visitMethodInsn(Opcodes.INVOKESTATIC,
+		                   GenerationConstants.JAVA_INTEGER_NAME,
+		                   GenerationConstants.JAVA_INTEGER_VALUE_OF_METHOD_NAME,
+		                   GenerationConstants.JAVA_INTEGER_VALUE_OF_METHOD_DESC,
+		                   false);
+		mv.visitMethodInsn(Opcodes.INVOKESTATIC,
+		                   GenerationConstants.CHARACTER_STRUCT_NAME,
+		                   GenerationConstants.CHARACTER_STRUCT_TO_LISP_CHARACTER_METHOD_NAME,
+		                   GenerationConstants.CHARACTER_STRUCT_TO_LISP_CHARACTER_METHOD_DESC,
+		                   false);
+	}
+
+	/*
+	OBJECT
+	 */
 
 	@Override
 	public String toString() {

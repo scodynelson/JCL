@@ -154,6 +154,10 @@ public interface ArrayStruct extends LispStruct {
 	 * 		the array elementType to check
 	 * @param initialContents
 	 * 		the array contents to check
+	 * @param <TYPE>
+	 * 		the type of the array contents
+	 *
+	 * @return the valid array contents
 	 */
 	static <TYPE extends LispStruct> List<TYPE> getValidContents(final List<Integer> dimensions,
 	                                                             final LispType elementType,

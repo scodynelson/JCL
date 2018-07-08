@@ -36,7 +36,7 @@ public final class CodeCharFunction extends CommonLispBuiltInFunctionStructBase 
 	 * parameter object and applies {@link CharacterStruct#codeChar(IntegerStruct)} against the value to retrieve the
 	 * {@link CharacterStruct} for the {@link IntegerStruct} parameter code value.
 	 *
-	 * @param lispStructs
+	 * @param arguments
 	 * 		the function parameters
 	 *
 	 * @return the {@link CharacterStruct} for the {@link IntegerStruct} parameter code value

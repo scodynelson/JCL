@@ -226,7 +226,8 @@ public interface StringStruct extends VectorStruct {
 	 * @param context
 	 * 		the inequality context for the equality operation, including the comparison string, start, and end
 	 *
-	 * @return NIL if the first string is greater-than-or-equal-to the second; an {@link
+	 * @return NIL if the first string is greater-than-or-equal-to the second; an {@link IntegerStruct} mismatch index
+	 * where the strings differ otherwise
 	 */
 	LispStruct stringGreaterThanOrEqualTo(final StringEqualityContext context);
 

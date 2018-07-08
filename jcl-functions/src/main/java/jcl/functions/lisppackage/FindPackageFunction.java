@@ -38,7 +38,7 @@ public final class FindPackageFunction extends CommonLispBuiltInFunctionStructBa
 	 * Application method for {@code find-package} package function that returns the {@link PackageStruct} with the
 	 * provided package-designator parameter.
 	 *
-	 * @param lispStructs
+	 * @param arguments
 	 * 		the function parameters
 	 *
 	 * @return {@link PackageStruct} with the provided package-designator parameter

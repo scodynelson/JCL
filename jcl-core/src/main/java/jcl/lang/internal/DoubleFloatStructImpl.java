@@ -7,6 +7,9 @@ import java.math.RoundingMode;
 import java.util.function.Function;
 
 import com.google.common.math.DoubleMath;
+import jcl.compiler.icg.GeneratorState;
+import jcl.compiler.icg.JavaMethodBuilder;
+import jcl.compiler.icg.generator.CodeGenerators;
 import jcl.lang.DoubleFloatStruct;
 import jcl.lang.FloatStruct;
 import jcl.lang.IntegerStruct;
@@ -35,6 +38,9 @@ import org.apfloat.ApcomplexMath;
 import org.apfloat.Apfloat;
 import org.apfloat.ApfloatMath;
 import org.apfloat.FixedPrecisionApfloatHelper;
+import org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.Type;
 
 @EqualsAndHashCode(callSuper = false)
 public class DoubleFloatStructImpl extends BuiltInClassStruct implements DoubleFloatStruct, LongFloatStruct {
@@ -798,7 +804,53 @@ public class DoubleFloatStructImpl extends BuiltInClassStruct implements DoubleF
 	}
 
 	/*
-		ToString
+	LISP-STRUCT
+	 */
+
+	/**
+	 * Constant {@link String} containing the name for the {@link DoubleFloatStruct} class.
+	 */
+	private static final String DOUBLE_FLOAT_NAME = Type.getInternalName(DoubleFloatStruct.class);
+
+	/**
+	 * Constant {@link String} containing the name for the {@link DoubleFloatStruct#toLispFloat(double)} method.
+	 */
+	private static final String DOUBLE_FLOAT_TO_LISP_FLOAT_METHOD_NAME = "toLispFloat";
+
+	/**
+	 * Constant {@link String} containing the description for the {@link DoubleFloatStruct#toLispFloat(double)} method.
+	 */
+	private static final String DOUBLE_FLOAT_TO_LISP_FLOAT_METHOD_DESC
+			= CodeGenerators.getMethodDescription(DoubleFloatStruct.class, DOUBLE_FLOAT_TO_LISP_FLOAT_METHOD_NAME, double.class);
+
+	/**
+	 * {@inheritDoc}
+	 * Generation method for {@link DoubleFloatStruct} objects, by performing the following operations:
+	 * <ol>
+	 * <li>Emitting the {@link DoubleFloatStruct#toJavaPDouble()} value.</li>
+	 * <li>Retrieving a {@link DoubleFloatStruct} via {@link DoubleFloatStruct#toLispFloat(double)} with the emitted
+	 * {@code float} value</li>
+	 * </ol>
+	 *
+	 * @param generatorState
+	 * 		stateful object used to hold the current state of the code generation process
+	 */
+	@Override
+	public void generate(final GeneratorState generatorState) {
+		final JavaMethodBuilder methodBuilder = generatorState.getCurrentMethodBuilder();
+		final MethodVisitor mv = methodBuilder.getMethodVisitor();
+
+		mv.visitLdcInsn(value);
+
+		mv.visitMethodInsn(Opcodes.INVOKESTATIC,
+		                   DOUBLE_FLOAT_NAME,
+		                   DOUBLE_FLOAT_TO_LISP_FLOAT_METHOD_NAME,
+		                   DOUBLE_FLOAT_TO_LISP_FLOAT_METHOD_DESC,
+		                   true);
+	}
+
+	/*
+	OBJECT
 	 */
 
 	@Override

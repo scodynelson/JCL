@@ -57,9 +57,9 @@ abstract class AbstractCharacterEqualityFunction extends CommonLispBuiltInFuncti
 	}
 
 	/**
-	 * Abstract method to return a {@link Predicate} that consumes a {@link CharacterStruct[]}.
+	 * Abstract method to return a {@link Predicate} that consumes a {@link CharacterStruct} array.
 	 *
-	 * @return returns a {@link Predicate} that consumes a {@link CharacterStruct[]}
+	 * @return returns a {@link Predicate} that consumes a {@link CharacterStruct} array
 	 */
 	protected abstract Predicate<CharacterStruct[]> characterEqualityPredicate();
 }

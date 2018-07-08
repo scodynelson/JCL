@@ -5,6 +5,7 @@ import java.util.function.Predicate;
 import jcl.lang.condition.exception.SimpleErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.factory.LispStructFactory;
+import jcl.lang.internal.CharacterStructImpl;
 import jcl.lang.statics.CharacterConstants;
 import jcl.util.CodePointConstants;
 import org.junit.Assert;
@@ -684,7 +685,7 @@ public class CharacterStructCharacterTest {
 	 */
 
 	/**
-	 * Test for {@link CharacterStruct#toString()} where escaping is on.
+	 * Test for {@link CharacterStructImpl#toString()} where escaping is on.
 	 */
 	@Test
 	public void test_toString_Escape() {
@@ -694,7 +695,7 @@ public class CharacterStructCharacterTest {
 	}
 
 	/**
-	 * Test for {@link CharacterStruct#toString()} where escaping is off.
+	 * Test for {@link CharacterStructImpl#toString()} where escaping is off.
 	 */
 	@Test
 	public void test_toString_NoEscape() {

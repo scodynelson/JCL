@@ -4,6 +4,8 @@
 
 package jcl.lang;
 
+import jcl.compiler.GenerationUnsupportedException;
+import jcl.compiler.icg.GeneratorState;
 import jcl.type.LispType;
 import jcl.type.TType;
 
@@ -35,5 +37,9 @@ public interface LispStruct {
 
 	default boolean equalp(final LispStruct object) {
 		return equal(object);
+	}
+
+	default void generate(final GeneratorState generatorState) {
+		throw new GenerationUnsupportedException();
 	}
 }

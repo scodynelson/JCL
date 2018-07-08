@@ -36,10 +36,10 @@ public final class DigitCharPFunction extends CommonLispBuiltInFunctionStructBas
 	 * Application method for the {@code digit-char-p} character function that expects an {@link CharacterStruct}
 	 * parameter object with an optional {@link IntegerStruct} radix parameter object and applies {@link
 	 * CharacterStruct#charDigit(IntegerStruct)} against the value and the radix value retrieved from the parameters
-	 * passed to the {@link #getRadix(LispStruct...)} method to retrieve the weighted {@link IntegerStruct} character
+	 * passed in to retrieve the weighted {@link IntegerStruct} character
 	 * code for the {@link CharacterStruct} parameter and optional radix value.
 	 *
-	 * @param lispStructs
+	 * @param arguments
 	 * 		the function parameters
 	 *
 	 * @return the weighted {@link IntegerStruct} character code for the {@link CharacterStruct} parameter and optional

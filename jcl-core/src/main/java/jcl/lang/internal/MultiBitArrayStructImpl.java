@@ -103,6 +103,8 @@ public class MultiBitArrayStructImpl extends MultiArrayStructImpl implements Bit
 	 * 		the array dimensions to check
 	 * @param initialContents
 	 * 		the array contents to check
+	 *
+	 * @return the valid array contents
 	 */
 	private static List<LispStruct> getValidContents(final List<Integer> dimensions,
 	                                                 final SequenceStruct initialContents) {

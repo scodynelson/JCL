@@ -2,6 +2,9 @@ package jcl.lang.internal;
 
 import java.util.Arrays;
 
+import jcl.compiler.icg.GeneratorState;
+import jcl.compiler.icg.JavaMethodBuilder;
+import jcl.compiler.icg.generator.CodeGenerators;
 import jcl.lang.ComplexStruct;
 import jcl.lang.FloatStruct;
 import jcl.lang.NumberStruct;
@@ -12,6 +15,9 @@ import lombok.EqualsAndHashCode;
 import org.apfloat.Apcomplex;
 import org.apfloat.ApcomplexMath;
 import org.apfloat.Apfloat;
+import org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.Type;
 
 /**
  * The {@link ComplexStruct} is the object representation of a Lisp 'complex' type.
@@ -276,5 +282,56 @@ public class ComplexStructImpl extends BuiltInClassStruct implements ComplexStru
 	public NumberStruct atanh() {
 		final Apcomplex atanh = ApcomplexMath.atanh(apcomplex);
 		return ApfloatUtils.toNumberStruct(atanh);
+	}
+
+	/*
+	LISP-STRUCT
+	 */
+
+	/**
+	 * Constant {@link String} containing the name for the {@link ComplexStruct} class.
+	 */
+	private static final String COMPLEX_NAME = Type.getInternalName(ComplexStruct.class);
+
+	/**
+	 * Constant {@link String} containing the name for the {@link ComplexStruct#toLispComplex(RealStruct, RealStruct)}
+	 * method.
+	 */
+	private static final String COMPLEX_TO_LISP_COMPLEX_METHOD_NAME = "toLispComplex";
+
+	/**
+	 * Constant {@link String} containing the description for the {@link ComplexStruct#toLispComplex(RealStruct,
+	 * RealStruct)} method.
+	 */
+	private static final String COMPLEX_TO_LISP_COMPLEX_METHOD_DESC
+			= CodeGenerators.getMethodDescription(ComplexStruct.class, COMPLEX_TO_LISP_COMPLEX_METHOD_NAME,
+			                                      RealStruct.class, RealStruct.class);
+
+	/**
+	 * {@inheritDoc}
+	 * Generation method for {@link ComplexStruct} objects, by performing the following operations:
+	 * <ol>
+	 * <li>Emitting the {@link NumberStruct#realPart()} value.</li>
+	 * <li>Emitting the {@link NumberStruct#imagPart()} value.</li>
+	 * <li>Retrieving a {@link ComplexStruct} via {@link ComplexStruct#toLispComplex(RealStruct, RealStruct)} with
+	 * the created real and imaginary values</li>
+	 * </ol>
+	 *
+	 * @param generatorState
+	 * 		stateful object used to hold the current state of the code generation process
+	 */
+	@Override
+	public void generate(final GeneratorState generatorState) {
+		final JavaMethodBuilder methodBuilder = generatorState.getCurrentMethodBuilder();
+		final MethodVisitor mv = methodBuilder.getMethodVisitor();
+
+		real.generate(generatorState);
+		imaginary.generate(generatorState);
+
+		mv.visitMethodInsn(Opcodes.INVOKESTATIC,
+		                   COMPLEX_NAME,
+		                   COMPLEX_TO_LISP_COMPLEX_METHOD_NAME,
+		                   COMPLEX_TO_LISP_COMPLEX_METHOD_DESC,
+		                   true);
 	}
 }

@@ -39,7 +39,7 @@ public final class PackageNameFunction extends CommonLispBuiltInFunctionStructBa
 	 * Application method for {@code package-name} package function that returns the {@link PackageStruct#getName()} as a
 	 * {@link StringStruct}.
 	 *
-	 * @param lispStructs
+	 * @param arguments
 	 * 		the function parameters
 	 *
 	 * @return the {@link PackageStruct#getName()} as a {@link StringStruct}

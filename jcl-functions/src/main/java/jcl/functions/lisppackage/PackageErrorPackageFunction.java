@@ -37,7 +37,7 @@ public final class PackageErrorPackageFunction extends CommonLispBuiltInFunction
 	 * Application method for {@code package-error-package} package function that returns the {@link PackageStruct}
 	 * that was a part of provided {@link PackageErrorException} condition.
 	 *
-	 * @param lispStructs
+	 * @param arguments
 	 * 		the function parameters
 	 *
 	 * @return the {@link PackageStruct} that was a part of provided {@link PackageErrorException} condition

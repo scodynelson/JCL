@@ -7,6 +7,9 @@ import java.math.RoundingMode;
 import java.util.function.Function;
 
 import com.google.common.math.DoubleMath;
+import jcl.compiler.icg.GeneratorState;
+import jcl.compiler.icg.JavaMethodBuilder;
+import jcl.compiler.icg.generator.CodeGenerators;
 import jcl.lang.DoubleFloatStruct;
 import jcl.lang.FloatStruct;
 import jcl.lang.IntegerStruct;
@@ -35,6 +38,9 @@ import org.apfloat.ApcomplexMath;
 import org.apfloat.Apfloat;
 import org.apfloat.ApfloatMath;
 import org.apfloat.FixedPrecisionApfloatHelper;
+import org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.Type;
 
 @EqualsAndHashCode(callSuper = false)
 public class SingleFloatStructImpl extends BuiltInClassStruct implements SingleFloatStruct, ShortFloatStruct {
@@ -816,7 +822,53 @@ public class SingleFloatStructImpl extends BuiltInClassStruct implements SingleF
 	}
 
 	/*
-		ToString
+	LISP-STRUCT
+	 */
+
+	/**
+	 * Constant {@link String} containing the name for the {@link SingleFloatStruct} class.
+	 */
+	private static final String SINGLE_FLOAT_NAME = Type.getInternalName(SingleFloatStruct.class);
+
+	/**
+	 * Constant {@link String} containing the name for the {@link SingleFloatStruct#toLispFloat(float)} method.
+	 */
+	private static final String SINGLE_FLOAT_TO_LISP_FLOAT_METHOD_NAME = "toLispFloat";
+
+	/**
+	 * Constant {@link String} containing the description for the {@link SingleFloatStruct#toLispFloat(float)} method.
+	 */
+	private static final String SINGLE_FLOAT_TO_LISP_FLOAT_METHOD_DESC
+			= CodeGenerators.getMethodDescription(SingleFloatStruct.class, SINGLE_FLOAT_TO_LISP_FLOAT_METHOD_NAME, float.class);
+
+	/**
+	 * {@inheritDoc}
+	 * Generation method for {@link SingleFloatStruct} objects, by performing the following operations:
+	 * <ol>
+	 * <li>Emitting the {@link SingleFloatStruct#toJavaPFloat()} value.</li>
+	 * <li>Retrieving a {@link SingleFloatStruct} via {@link SingleFloatStruct#toLispFloat(float)} with the emitted
+	 * {@code float} value</li>
+	 * </ol>
+	 *
+	 * @param generatorState
+	 * 		stateful object used to hold the current state of the code generation process
+	 */
+	@Override
+	public void generate(final GeneratorState generatorState) {
+		final JavaMethodBuilder methodBuilder = generatorState.getCurrentMethodBuilder();
+		final MethodVisitor mv = methodBuilder.getMethodVisitor();
+
+		mv.visitLdcInsn(value);
+
+		mv.visitMethodInsn(Opcodes.INVOKESTATIC,
+		                   SINGLE_FLOAT_NAME,
+		                   SINGLE_FLOAT_TO_LISP_FLOAT_METHOD_NAME,
+		                   SINGLE_FLOAT_TO_LISP_FLOAT_METHOD_DESC,
+		                   true);
+	}
+
+	/*
+	OBJECT
 	 */
 
 	@Override

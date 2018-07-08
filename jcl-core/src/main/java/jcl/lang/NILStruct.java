@@ -7,10 +7,15 @@ import java.util.Spliterator;
 import java.util.Spliterators;
 import java.util.stream.Stream;
 
+import jcl.compiler.icg.GeneratorState;
+import jcl.compiler.icg.JavaMethodBuilder;
+import jcl.compiler.icg.generator.GenerationConstants;
 import jcl.lang.condition.exception.SimpleErrorException;
 import jcl.lang.internal.BooleanStructImpl;
 import jcl.type.NILType;
 import org.apache.commons.lang3.ArrayUtils;
+import org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.Opcodes;
 
 /**
  * The {@link NILStruct} is the object representation of a Lisp 'nil' type.
@@ -186,6 +191,28 @@ public final class NILStruct extends BooleanStructImpl implements ListStruct {
 	@Override
 	public Spliterator<LispStruct> spliterator() {
 		return Spliterators.emptySpliterator();
+	}
+
+	/*
+	LISP-STRUCT
+	 */
+
+	/**
+	 * {@inheritDoc}
+	 * Generation method for {@link NILStruct} objects, by retrieving the static singleton {@link NILStruct#INSTANCE}.
+	 *
+	 * @param generatorState
+	 * 		stateful object used to hold the current state of the code generation process
+	 */
+	@Override
+	public void generate(final GeneratorState generatorState) {
+		final JavaMethodBuilder methodBuilder = generatorState.getCurrentMethodBuilder();
+		final MethodVisitor mv = methodBuilder.getMethodVisitor();
+
+		mv.visitFieldInsn(Opcodes.GETSTATIC,
+		                  GenerationConstants.NIL_STRUCT_NAME,
+		                  GenerationConstants.SINGLETON_INSTANCE,
+		                  GenerationConstants.NIL_STRUCT_DESC);
 	}
 
 	/*

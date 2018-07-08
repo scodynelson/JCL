@@ -50,6 +50,8 @@ public interface VectorStruct extends ArrayStruct, SequenceStruct {
 	 *
 	 * @param fillPointer
 	 * 		new vector fill-pointer
+	 *
+	 * @return the new fill-pointer value
 	 */
 	IntegerStruct setfFillPointer(final IntegerStruct fillPointer);
 

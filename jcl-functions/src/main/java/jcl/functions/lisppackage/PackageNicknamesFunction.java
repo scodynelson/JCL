@@ -42,7 +42,7 @@ public final class PackageNicknamesFunction extends CommonLispBuiltInFunctionStr
 	 * Application method for {@code package-nicknames} package function that returns the {@link
 	 * PackageStruct#getNicknames()} as a {@link ListStruct} of {@link StringStruct}s.
 	 *
-	 * @param lispStructs
+	 * @param arguments
 	 * 		the function parameters
 	 *
 	 * @return the {@link PackageStruct#getNicknames()} as a {@link ListStruct} of {@link StringStruct}s

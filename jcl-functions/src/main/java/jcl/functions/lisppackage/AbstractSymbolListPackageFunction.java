@@ -42,7 +42,7 @@ abstract class AbstractSymbolListPackageFunction extends CommonLispBuiltInFuncti
 	 * Application method for the package function that gets the symbol objects and applies the {@link Function} from
 	 * the {@link #symbolListFunction()} function.
 	 *
-	 * @param lispStructs
+	 * @param arguments
 	 * 		the function parameters
 	 *
 	 * @return {@link TStruct#INSTANCE}

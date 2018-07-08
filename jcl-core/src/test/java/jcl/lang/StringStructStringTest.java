@@ -2,6 +2,7 @@ package jcl.lang;
 
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
+import jcl.lang.internal.SimpleStringStructImpl;
 import jcl.lang.statics.CharacterConstants;
 import jcl.type.BaseCharType;
 import jcl.type.CharacterType;
@@ -2110,7 +2111,7 @@ public class StringStructStringTest {
 	 */
 
 	/**
-	 * Test for {@link StringStruct#toString()} where escaping is on and the {@link StringStruct} is displaced.
+	 * Test for {@link SimpleStringStructImpl#toString()} where escaping is on and the {@link StringStruct} is displaced.
 	 */
 	@Test
 	public void test_toString_Displaced_Escape() {
@@ -2124,7 +2125,7 @@ public class StringStructStringTest {
 	}
 
 	/**
-	 * Test for {@link StringStruct#toString()} where escaping is on and the {@link StringStruct} has a fill-pointer.
+	 * Test for {@link SimpleStringStructImpl#toString()} where escaping is on and the {@link StringStruct} has a fill-pointer.
 	 */
 	@Test
 	public void test_toString_FillPointer_Escape() {
@@ -2138,7 +2139,7 @@ public class StringStructStringTest {
 	}
 
 	/**
-	 * Test for {@link StringStruct#toString()} where escaping is on and the {@link StringStruct} is a simple string.
+	 * Test for {@link SimpleStringStructImpl#toString()} where escaping is on and the {@link StringStruct} is a simple string.
 	 */
 	@Test
 	public void test_toString_Simple_Escape() {
@@ -2149,8 +2150,8 @@ public class StringStructStringTest {
 	}
 
 	/**
-	 * Test for {@link StringStruct#toString()} where escaping is on and the {@link StringStruct} has the {@code '\'}
-	 * and {@link '"'} characters.
+	 * Test for {@link SimpleStringStructImpl#toString()} where escaping is on and the {@link StringStruct} has the {@code '\'}
+	 * and {@code '"'} characters.
 	 */
 	@Test
 	public void test_toString_Simple_Escape_WithSpecialEscapes() {
@@ -2161,7 +2162,7 @@ public class StringStructStringTest {
 	}
 
 	/**
-	 * Test for {@link StringStruct#toString()} where escaping is off and the {@link StringStruct} is displaced.
+	 * Test for {@link SimpleStringStructImpl#toString()} where escaping is off and the {@link StringStruct} is displaced.
 	 */
 	@Test
 	public void test_toString_Displaced_NoEscape() {
@@ -2175,7 +2176,7 @@ public class StringStructStringTest {
 	}
 
 	/**
-	 * Test for {@link StringStruct#toString()} where escaping is off and the {@link StringStruct} has a fill-pointer.
+	 * Test for {@link SimpleStringStructImpl#toString()} where escaping is off and the {@link StringStruct} has a fill-pointer.
 	 */
 	@Test
 	public void test_toString_FillPointer_NoEscape() {
@@ -2189,7 +2190,7 @@ public class StringStructStringTest {
 	}
 
 	/**
-	 * Test for {@link StringStruct#toString()} where escaping is off and the {@link StringStruct} is a 'simple' string.
+	 * Test for {@link SimpleStringStructImpl#toString()} where escaping is off and the {@link StringStruct} is a 'simple' string.
 	 */
 	@Test
 	public void test_toString_Simple_NoEscape() {
@@ -2200,7 +2201,7 @@ public class StringStructStringTest {
 	}
 
 	/**
-	 * Test for {@link StringStruct#toString()} where escaping is off and the {@link StringStruct} is a 'complex'
+	 * Test for {@link SimpleStringStructImpl#toString()} where escaping is off and the {@link StringStruct} is a 'complex'
 	 * string.
 	 */
 	@Test
@@ -2215,8 +2216,8 @@ public class StringStructStringTest {
 	}
 
 	/**
-	 * Test for {@link StringStruct#toString()} where escaping is off, the {@link StringStruct} has the {@code '\'} and
-	 * {@link '"'} characters, and the {@link StringStruct} is a 'simple' string.
+	 * Test for {@link SimpleStringStructImpl#toString()} where escaping is off, the {@link StringStruct} has the {@code '\'} and
+	 * {@code '"'} characters, and the {@link StringStruct} is a 'simple' string.
 	 */
 	@Test
 	public void test_toString_Simple_NoEscape_WithSpecialEscapes() {
@@ -2227,8 +2228,8 @@ public class StringStructStringTest {
 	}
 
 	/**
-	 * Test for {@link StringStruct#toString()} where escaping is off, the {@link StringStruct} has the {@code '\'} and
-	 * {@link '"'} characters, and the {@link StringStruct} is a 'complex' string.
+	 * Test for {@link SimpleStringStructImpl#toString()} where escaping is off, the {@link StringStruct} has the {@code '\'} and
+	 * {@code '"'} characters, and the {@link StringStruct} is a 'complex' string.
 	 */
 	@Test
 	public void test_toString_Complex_NoEscape_WithSpecialEscapes() {

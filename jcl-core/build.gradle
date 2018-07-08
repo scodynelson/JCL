@@ -5,6 +5,7 @@ dependencies {
 	compile("commons-io:commons-io")
 	compile("com.google.guava:guava")
 //	compile("io.javaslang:javaslang")
+	compile("org.ow2.asm:asm-all")
 	compile("org.apache.commons:commons-lang3")
 	compile("org.apache.commons:commons-text")
 	compile("org.apache.commons:commons-math3")
@@ -13,6 +14,7 @@ dependencies {
 	compileOnly("org.projectlombok:lombok")
 	annotationProcessor("org.projectlombok:lombok")
 	compile("org.slf4j:slf4j-api")
+	compile("org.springframework:spring-context")
 	compile("org.springframework:spring-core")
 	compile("org.springframework:spring-beans")
 

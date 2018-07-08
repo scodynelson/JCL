@@ -13,6 +13,8 @@ public interface ReadtableStruct extends LispStruct {
 	 * Creates a new dispatching table for the provided {@code codePoint}, designating the {@link SyntaxType} as
 	 * terminating if the provided {@code nonTerminatingP} is false.
 	 *
+	 * @param dispatchTable
+	 * 		the dispatching table {@link FunctionStruct} to use
 	 * @param codePoint
 	 * 		the key for the new dispatching table
 	 * @param nonTerminatingP

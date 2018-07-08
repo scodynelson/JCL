@@ -39,7 +39,7 @@ abstract class AbstractPackageListPackageFunction extends CommonLispBuiltInFunct
 	 * objects are indeed {@link PackageStruct}s, and applies the {@link Function} from the {@link
 	 * #packageListFunction()}.
 	 *
-	 * @param lispStructs
+	 * @param arguments
 	 * 		the function parameters
 	 *
 	 * @return {@link TStruct#INSTANCE}

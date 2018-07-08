@@ -5,6 +5,9 @@ import java.math.RoundingMode;
 import java.util.function.Function;
 
 import com.google.common.math.DoubleMath;
+import jcl.compiler.icg.GeneratorState;
+import jcl.compiler.icg.JavaMethodBuilder;
+import jcl.compiler.icg.generator.CodeGenerators;
 import jcl.lang.DoubleFloatStruct;
 import jcl.lang.FloatStruct;
 import jcl.lang.IntegerStruct;
@@ -24,6 +27,9 @@ import org.apfloat.Apfloat;
 import org.apfloat.ApfloatMath;
 import org.apfloat.Apint;
 import org.apfloat.Aprational;
+import org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.Type;
 
 /**
  * The {@link RatioStruct} is the object representation of a Lisp 'ratio' type.
@@ -713,5 +719,56 @@ public class RatioStructImpl extends BuiltInClassStruct implements RatioStruct {
 		final Aprational ap = ap();
 		final Apfloat atanh = ApfloatMath.atanh(ap);
 		return ApfloatUtils.toRealStruct(atanh);
+	}
+
+	/*
+	LISP-STRUCT
+	 */
+
+	/**
+	 * Constant {@link String} containing the name for the {@link RationalStruct} class.
+	 */
+	private static final String RATIONAL_NAME = Type.getInternalName(RationalStruct.class);
+
+	/**
+	 * Constant {@link String} containing the name for the {@link RationalStruct#toLispRational(IntegerStruct,
+	 * IntegerStruct)} method.
+	 */
+	private static final String RATIONAL_TO_LISP_RATIONAL_METHOD_NAME = "toLispRational";
+
+	/**
+	 * Constant {@link String} containing the description for the {@link RationalStruct#toLispRational(IntegerStruct,
+	 * IntegerStruct)} method.
+	 */
+	private static final String RATIONAL_TO_LISP_RATIONAL_METHOD_DESC
+			= CodeGenerators.getMethodDescription(RationalStruct.class, RATIONAL_TO_LISP_RATIONAL_METHOD_NAME,
+			                                      IntegerStruct.class, IntegerStruct.class);
+
+	/**
+	 * {@inheritDoc}
+	 * Generation method for {@link RatioStruct} objects, by performing the following operations:
+	 * <ol>
+	 * <li>Emitting the {@link RationalStruct#numerator()} value.</li>
+	 * <li>Emitting the {@link RationalStruct#denominator()} value.</li>
+	 * <li>Retrieving a {@link RatioStruct} via {@link RationalStruct#toLispRational(IntegerStruct, IntegerStruct)} with
+	 * the created numerator and denominator values</li>
+	 * </ol>
+	 *
+	 * @param generatorState
+	 * 		stateful object used to hold the current state of the code generation process
+	 */
+	@Override
+	public void generate(final GeneratorState generatorState) {
+		final JavaMethodBuilder methodBuilder = generatorState.getCurrentMethodBuilder();
+		final MethodVisitor mv = methodBuilder.getMethodVisitor();
+
+		numerator.generate(generatorState);
+		denominator.generate(generatorState);
+
+		mv.visitMethodInsn(Opcodes.INVOKESTATIC,
+		                   RATIONAL_NAME,
+		                   RATIONAL_TO_LISP_RATIONAL_METHOD_NAME,
+		                   RATIONAL_TO_LISP_RATIONAL_METHOD_DESC,
+		                   true);
 	}
 }

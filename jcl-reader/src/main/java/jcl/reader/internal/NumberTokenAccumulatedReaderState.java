@@ -210,6 +210,11 @@ final class NumberTokenAccumulatedReaderState {
 	/**
 	 * Sub-piece of Reader algorithm part 10.1, used to produce an {@link IntegerStruct} output when a rational token is
 	 * supplied with no {@link AttributeType#RATIOMARKER} nor {@link AttributeType#DECIMAL}.
+	 *
+	 * @param tokenBuilder
+	 * 		the reader state containing the {@link TokenBuilder#tokenAttributes} to derive the {@link NumberStruct}
+	 *
+	 * @return the processed integer token
 	 */
 	private static NumberStruct processIntegerToken(final TokenBuilder tokenBuilder) {
 
@@ -242,6 +247,11 @@ final class NumberTokenAccumulatedReaderState {
 	/**
 	 * Sub-piece of Reader algorithm part 10.1, used to produce a {@link FloatStruct} output when a float token is
 	 * supplied. This means using the correct exponential {@link RoundingMode#HALF_UP} to produce an accurate float result.
+	 *
+	 * @param tokenBuilder
+	 * 		the reader state containing the {@link TokenBuilder#tokenAttributes} to derive the {@link NumberStruct}
+	 *
+	 * @return the processed float token
 	 */
 	private static NumberStruct processFloatToken(final TokenBuilder tokenBuilder) {
 
@@ -330,6 +340,11 @@ final class NumberTokenAccumulatedReaderState {
 	 * Sub-piece of Reader algorithm part 10.1, used to produce a {@link RatioStruct} output when a rational token is
 	 * supplied with an {@link AttributeType#RATIOMARKER}. This will also produce an {@link IntegerStruct} when the
 	 * resulting {@link BigInteger} has a denominator of {@link BigInteger#ONE}.
+	 *
+	 * @param tokenBuilder
+	 * 		the reader state containing the {@link TokenBuilder#tokenAttributes} to derive the {@link NumberStruct}
+	 *
+	 * @return the processed rational token
 	 */
 	private static NumberStruct processRationalToken(final TokenBuilder tokenBuilder) {
 
@@ -367,6 +382,11 @@ final class NumberTokenAccumulatedReaderState {
 	 * supplied with both an {@link AttributeType#RATIOMARKER} and {@link AttributeType#DECIMAL}. This means using the
 	 * correct exponential division using {@link MathContext#DECIMAL128} and {@link RoundingMode#HALF_UP} to produce an
 	 * accurate float result.
+	 *
+	 * @param tokenBuilder
+	 * 		the reader state containing the {@link TokenBuilder#tokenAttributes} to derive the {@link NumberStruct}
+	 *
+	 * @return the processed rational float token
 	 */
 	private static NumberStruct processRationalFloat(final TokenBuilder tokenBuilder) {
 

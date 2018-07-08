@@ -11,6 +11,9 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import jcl.compiler.icg.GeneratorState;
+import jcl.compiler.icg.JavaMethodBuilder;
+import jcl.compiler.icg.generator.GenerationConstants;
 import jcl.lang.ArrayStruct;
 import jcl.lang.BitVectorStruct;
 import jcl.lang.IntegerStruct;
@@ -26,6 +29,8 @@ import jcl.type.BitType;
 import jcl.type.BitVectorType;
 import jcl.type.LispType;
 import jcl.type.SimpleBitVectorType;
+import org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.Opcodes;
 
 /**
  * The {@link BitVectorStructImpl} is the object representation of a Lisp 'bit-vector' type.
@@ -430,6 +435,65 @@ public final class BitVectorStructImpl extends AbstractBitVectorStructImpl {
 			iterator.forEachRemaining(action);
 		}
 	}
+
+	/*
+	LISP-STRUCT
+	 */
+
+	/**
+	 * {@inheritDoc}
+	 * Generation method for {@link BitVectorStruct} objects, by performing the following operations:
+	 * <ol>
+	 * <li>Building the {@link BitVectorStruct#getContents()}, ensuring that each content {@link IntegerStruct} value is
+	 * generated properly</li>
+	 * <li>Constructing a new {@link BitVectorStruct} with the built content {@link List}</li>
+	 * </ol>
+	 *
+	 * @param generatorState
+	 * 		stateful object used to hold the current state of the code generation process
+	 */
+	@Override
+	public void generate(final GeneratorState generatorState) {
+		final JavaMethodBuilder methodBuilder = generatorState.getCurrentMethodBuilder();
+		final MethodVisitor mv = methodBuilder.getMethodVisitor();
+
+		mv.visitTypeInsn(Opcodes.NEW, GenerationConstants.JAVA_ARRAY_LIST_NAME);
+		mv.visitInsn(Opcodes.DUP);
+		mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
+		                   GenerationConstants.JAVA_ARRAY_LIST_NAME,
+		                   GenerationConstants.INIT_METHOD_NAME,
+		                   GenerationConstants.JAVA_ARRAY_LIST_INIT_DESC,
+		                   false);
+		final int contentsStore = methodBuilder.getNextAvailableStore();
+		mv.visitVarInsn(Opcodes.ASTORE, contentsStore);
+
+		final int contentStore = methodBuilder.getNextAvailableStore();
+
+		for (final IntegerStruct content : contents) {
+			content.generate(generatorState);
+			mv.visitVarInsn(Opcodes.ASTORE, contentStore);
+
+			mv.visitVarInsn(Opcodes.ALOAD, contentsStore);
+			mv.visitVarInsn(Opcodes.ALOAD, contentStore);
+			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
+			                   GenerationConstants.JAVA_LIST_NAME,
+			                   GenerationConstants.JAVA_LIST_ADD_METHOD_NAME,
+			                   GenerationConstants.JAVA_LIST_ADD_METHOD_DESC,
+			                   true);
+			mv.visitInsn(Opcodes.POP);
+		}
+
+		mv.visitVarInsn(Opcodes.ALOAD, contentsStore);
+		mv.visitMethodInsn(Opcodes.INVOKESTATIC,
+		                   GenerationConstants.LISP_STRUCT_FACTORY_NAME,
+		                   GenerationConstants.LISP_STRUCT_FACTORY_TO_BIT_VECTOR_LIST_METHOD_NAME,
+		                   GenerationConstants.LISP_STRUCT_FACTORY_TO_BIT_VECTOR_LIST_METHOD_DESC,
+		                   false);
+	}
+
+	/*
+	OBJECT
+	 */
 
 	@Override
 	public String toString() {

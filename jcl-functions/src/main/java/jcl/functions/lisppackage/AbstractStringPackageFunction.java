@@ -41,7 +41,7 @@ abstract class AbstractStringPackageFunction extends CommonLispBuiltInFunctionSt
 	 * object. If the result of the {@link #packageFunction()} operation is {@code null}, {@link NILStruct#INSTANCE} is
 	 * returned for both the symbol and the package type.
 	 *
-	 * @param lispStructs
+	 * @param arguments
 	 * 		the function parameters
 	 *
 	 * @return a {@link ValuesStruct} object containing the found {@link SymbolStruct} and it's {@link KeywordStruct}

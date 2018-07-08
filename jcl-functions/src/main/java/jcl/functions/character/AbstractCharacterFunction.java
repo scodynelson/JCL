@@ -31,7 +31,7 @@ abstract class AbstractCharacterFunction extends CommonLispBuiltInFunctionStruct
 	 * the result of the abstract {@link #characterFunction()} method with the parameter as the {@link Function}
 	 * parameter.
 	 *
-	 * @param lispStructs
+	 * @param arguments
 	 * 		the function parameters
 	 *
 	 * @return the result of the {@link #characterFunction()} applied to the {@link CharacterStruct} parameter value

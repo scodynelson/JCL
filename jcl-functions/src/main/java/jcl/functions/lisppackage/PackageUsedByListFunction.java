@@ -40,7 +40,7 @@ public final class PackageUsedByListFunction extends CommonLispBuiltInFunctionSt
 	 * Application method for {@code package-used-by-list} package function that returns the {@link
 	 * PackageStruct#getUsedByList()} as a {@link ListStruct}.
 	 *
-	 * @param lispStructs
+	 * @param arguments
 	 * 		the function parameters
 	 *
 	 * @return the {@link PackageStruct#getUsedByList()} as a {@link ListStruct}

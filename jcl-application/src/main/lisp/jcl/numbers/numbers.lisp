@@ -1,22 +1,33 @@
 ;;;; Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
-
+#|
 (eval-when (:load-toplevel :execute)
 (export '()
         (find-package "COMMON-LISP"))
 ) ;eval-when
-
+|#
 (in-package "COMMON-LISP")
 
 ;;;;;;;;;;;;;;;;;;;;;;
 
-(defun 1+ (number)
-  (+ number 1))
-
-(defun 1- (number)
-  (- number 1))
+(defun abs (number)
+  "Returns the absolute value of number."
+  (declare (system::%java-class-name "jcl.numbers.functions.Abs"))
+  ($abs number))
 
 ;;;;;;;;;;;;;;;;;;;;;;
 
+(defun 1+ (number)
+  "Returns the result of adding 1 to the provided number."
+  (declare (system::%java-class-name "jcl.numbers.functions.OnePlus"))
+  (+ number 1))
+
+(defun 1- (number)
+  "Returns the result of subtracting 1 from the provided number."
+  (declare (system::%java-class-name "jcl.numbers.functions.OneMinus"))
+  (- number 1))
+
+;;;;;;;;;;;;;;;;;;;;;;
+#|
 (defun byte (size position)
   (cons size position))
 
@@ -39,9 +50,9 @@
          (mask (1- (ash 1 size))))
     (logior (logand integer (lognot (ash mask position)))
 	        (ash (logand newbyte mask) position))))
-
+|#
 ;;;;;;;;;;;;;;;;;;;;;;
-
+#|
 (defun phase (number)
   "Returns the angle part of the polar representation of a complex number.
    For complex numbers, this is (atan (imagpart number) (realpart number)).
@@ -60,9 +71,9 @@
               (if (zerop (realpart number))
                   (coerce (* (/ pi 2) (signum (imagpart number))) float)
                 (atan (imagpart number) (realpart number))))))
-
+|#
 ;;;;;;;;;;;;;;;;;;;;;;
-
+#|
 (defun boole (op n1 n2)
   (unless (and (integerp n1) (integerp n2))
     (error 'type-error
@@ -89,9 +100,9 @@
      (error 'type-error
             :datum op
             :expected-type (list 'integer #.boole-clr #.boole-orc2)))))
-
+|#
 ;;;;;;;;;;;;;;;;;;;;;;
-
+#|
 (defun parse-integer-error (string)
   (error 'parse-error "not an integer string: ~S" string))
 
@@ -143,9 +154,9 @@
            nil
          (parse-integer-error string)))
      index)))
-
+|#
 ;;;;;;;;;;;;;;;;;;;;;;
-
+#|
 (defun upgraded-complex-part-type (typespec &optional environment)
   (declare (ignore environment))
   (if (subtypep typespec 'REAL)
@@ -153,3 +164,9 @@
     (error 'simple-error
            :format-control "The type ~S is not a subtype of ~S."
            :format-arguments (list typespec 'REAL))))
+|#
+
+;;;;;;;;;;;;;;;;;;;;;;
+
+(export '(abs 1+ 1-)
+        "COMMON-LISP")

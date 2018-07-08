@@ -30,4 +30,9 @@ public class Binding {
 	public LispType getType() {
 		return type;
 	}
+
+	@Override
+	public String toString() {
+		return var.toString();
+	}
 }

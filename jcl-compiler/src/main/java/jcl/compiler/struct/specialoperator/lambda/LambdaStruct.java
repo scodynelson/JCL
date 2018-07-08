@@ -50,4 +50,9 @@ public class LambdaStruct extends CompilerSpecialOperatorStruct {
 	public Environment getLambdaEnvironment() {
 		return lambdaEnvironment;
 	}
+
+	@Override
+	public String toString() {
+		return "(LAMBDA " + lambdaListBindings + ' ' + docString + ' ' + forms + ')';
+	}
 }

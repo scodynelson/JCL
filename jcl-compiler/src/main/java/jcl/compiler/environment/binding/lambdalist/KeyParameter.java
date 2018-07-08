@@ -127,4 +127,32 @@ public class KeyParameter extends Parameter {
 			return Collections.singletonList(build());
 		}
 	}
+
+	@Override
+	public String toString() {
+		final StringBuilder builder = new StringBuilder();
+
+		// TODO: Fix this hardcoded name
+		if ("KEY-NAME".equals(keyName.getName())) {
+			builder.append(getVar());
+		} else {
+			builder.append(keyName)
+			       .append(' ')
+			       .append(getVar());
+		}
+
+		final LispStruct initForm = getInitForm();
+		if (!initForm.eq(NILStruct.INSTANCE)) {
+			builder.append(initForm);
+
+			final SymbolStruct suppliedPBindingVar = suppliedPBinding.getVar();
+
+			// TODO: Fix this hardcoded name
+			if (!"SYSTEM".equals(suppliedPBindingVar.getSymbolPackage().getName())) {
+				builder.append(suppliedPBindingVar);
+			}
+		}
+
+		return builder.toString();
+	}
 }

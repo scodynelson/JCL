@@ -4,6 +4,7 @@
 
 package jcl.compiler.icg.generator;
 
+import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.net.URI;
 import java.util.ArrayList;
@@ -68,6 +69,22 @@ interface GenerationConstants {
 	String CLASS_INIT_METHOD_DESC = "()V";
 
 	String JAVA_OBJECT_NAME = Type.getInternalName(Object.class);
+
+	String JAVA_OBJECT_GET_CLASS_METHOD_NAME = "getClass";
+
+	String JAVA_OBJECT_GET_CLASS_METHOD_DESC = CodeGenerators.getMethodDescription(Object.class, JAVA_OBJECT_GET_CLASS_METHOD_NAME);
+
+	String JAVA_CLASS_NAME = Type.getInternalName(Class.class);
+
+	String JAVA_CLASS_GET_DECLARED_METHOD_METHOD_NAME = "getDeclaredMethod";
+
+	String JAVA_CLASS_GET_DECLARED_METHOD_METHOD_DESC = CodeGenerators.getMethodDescription(Class.class, JAVA_CLASS_GET_DECLARED_METHOD_METHOD_NAME, String.class, Class[].class);
+
+	String JAVA_METHOD_NAME = Type.getInternalName(Method.class);
+
+	String JAVA_METHOD_INVOKE_METHOD_NAME = "invoke";
+
+	String JAVA_METHOD_INVOKE_METHOD_DESC = CodeGenerators.getMethodDescription(Method.class, JAVA_METHOD_INVOKE_METHOD_NAME, Object.class, Object[].class);
 
 	String JAVA_STREAM_NAME = Type.getInternalName(Stream.class);
 
@@ -212,6 +229,10 @@ interface GenerationConstants {
 	String LISP_STRUCT_FACTORY_TO_SYMBOL_METHOD_NAME = "toSymbol";
 
 	String LISP_STRUCT_FACTORY_TO_SYMBOL_METHOD_DESC = CodeGenerators.getMethodDescription(LispStructFactory.class, LISP_STRUCT_FACTORY_TO_SYMBOL_METHOD_NAME, String.class);
+
+	String LISP_STRUCT_FACTORY_TO_JAVA_NAME_METHOD_NAME = "toJavaName";
+
+	String LISP_STRUCT_FACTORY_TO_JAVA_NAME_METHOD_DESC = CodeGenerators.getMethodDescription(LispStructFactory.class, LISP_STRUCT_FACTORY_TO_JAVA_NAME_METHOD_NAME, String.class);
 
 	String SYMBOL_STRUCT_NAME = Type.getInternalName(SymbolStruct.class);
 

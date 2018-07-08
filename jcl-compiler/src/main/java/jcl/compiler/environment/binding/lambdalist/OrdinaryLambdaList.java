@@ -6,6 +6,7 @@ package jcl.compiler.environment.binding.lambdalist;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class OrdinaryLambdaList {
 
@@ -21,8 +22,11 @@ public class OrdinaryLambdaList {
 
 	private final boolean allowOtherKeys;
 
-	public OrdinaryLambdaList(final List<RequiredParameter> requiredBindings, final List<OptionalParameter> optionalBindings,
-	                          final RestParameter restBinding, final List<KeyParameter> keyBindings, final List<AuxParameter> auxBindings,
+	public OrdinaryLambdaList(final List<RequiredParameter> requiredBindings,
+	                          final List<OptionalParameter> optionalBindings,
+	                          final RestParameter restBinding,
+	                          final List<KeyParameter> keyBindings,
+	                          final List<AuxParameter> auxBindings,
 	                          final boolean allowOtherKeys) {
 		this.requiredBindings = requiredBindings;
 		this.optionalBindings = optionalBindings;
@@ -119,5 +123,84 @@ public class OrdinaryLambdaList {
 		public OrdinaryLambdaList build() {
 			return new OrdinaryLambdaList(this);
 		}
+	}
+
+	@Override
+	public String toString() {
+		final StringBuilder builder = new StringBuilder();
+		builder.append('(');
+
+		boolean wasBuilderUpdated = false;
+		if (!requiredBindings.isEmpty()) {
+			final String requiredString = requiredBindings.stream()
+			                                              .map(Object::toString)
+			                                              .collect(Collectors.joining(" "));
+			builder.append(requiredString);
+
+			wasBuilderUpdated = true;
+		}
+		if (!optionalBindings.isEmpty()) {
+			if (wasBuilderUpdated) {
+				builder.append(' ');
+			}
+
+			final String optionalString = optionalBindings.stream()
+			                                              .map(Object::toString)
+			                                              .collect(Collectors.joining(" "));
+			builder.append("&optional ")
+			       .append(optionalString);
+
+			wasBuilderUpdated = true;
+		}
+
+		if (restBinding != null) {
+			if (wasBuilderUpdated) {
+				builder.append(' ');
+			}
+
+			final String restString = restBinding.toString();
+			builder.append("&rest ")
+			       .append(restString);
+
+			wasBuilderUpdated = true;
+		}
+
+		if (!keyBindings.isEmpty()) {
+			if (wasBuilderUpdated) {
+				builder.append(' ');
+			}
+
+			final String keyString = keyBindings.stream()
+			                                    .map(Object::toString)
+			                                    .collect(Collectors.joining(" "));
+			builder.append("&key ")
+			       .append(keyString);
+
+			wasBuilderUpdated = true;
+		}
+
+		if (allowOtherKeys) {
+			if (wasBuilderUpdated) {
+				builder.append(' ');
+			}
+
+			builder.append("&allow-other-keys");
+
+			wasBuilderUpdated = true;
+		}
+
+		if (!auxBindings.isEmpty()) {
+			if (wasBuilderUpdated) {
+				builder.append(' ');
+			}
+
+			final String auxString = auxBindings.stream()
+			                                    .map(Object::toString)
+			                                    .collect(Collectors.joining(" "));
+			builder.append(auxString);
+		}
+
+		builder.append(')');
+		return builder.toString();
 	}
 }

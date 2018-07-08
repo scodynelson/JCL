@@ -62,7 +62,8 @@ public class JCL implements ApplicationRunner {
 				"jcl-application/src/main/lisp/jcl/compiler/base-macro-lambdas.lisp",
 				"jcl-application/src/main/lisp/jcl/compiler/macros.lisp",
 				"jcl-application/src/main/lisp/jcl/iterators/iterators.lisp",
-				"jcl-application/src/main/lisp/jcl/lists/lists.lisp"
+				"jcl-application/src/main/lisp/jcl/lists/lists.lisp",
+				"jcl-application/src/main/lisp/jcl/numbers/numbers.lisp"
 		);
 	}
 
@@ -128,6 +129,11 @@ public class JCL implements ApplicationRunner {
 
 		CompileForm.OUTPUT_FILE = false;
 		pathname = LispStructFactory.toPathname("jcl-application/src/main/lisp/jcl/lists/lists.lisp");
+		loadFunction.load(pathname, false, false, true);
+		CompileForm.OUTPUT_FILE = true;
+
+		CompileForm.OUTPUT_FILE = false;
+		pathname = LispStructFactory.toPathname("jcl-application/src/main/lisp/jcl/numbers/numbers.lisp");
 		loadFunction.load(pathname, false, false, true);
 		CompileForm.OUTPUT_FILE = true;
 	}

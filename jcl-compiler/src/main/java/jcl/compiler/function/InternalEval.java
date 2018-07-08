@@ -149,13 +149,14 @@ public class InternalEval {
 
 			final LispStruct javaObject = javaMethodCall.getJavaObject();
 			final LispStruct evaluatedJavaObject = eval(javaObject);
-			if (!(evaluatedJavaObject instanceof JavaObjectStruct)) {
-				throw new ProgramErrorException(
-						"EVAL: Second argument to Java method call must be a Java object. Got: " + evaluatedJavaObject);
-			}
 
-			final JavaObjectStruct javaObjectStruct = (JavaObjectStruct) evaluatedJavaObject;
-			final Object actualJavaObject = javaObjectStruct.getJavaObject();
+			final Object actualJavaObject ;
+			if (evaluatedJavaObject instanceof JavaObjectStruct) {
+				final JavaObjectStruct javaObjectStruct = (JavaObjectStruct) evaluatedJavaObject;
+				actualJavaObject = javaObjectStruct.getJavaObject();
+			} else {
+				actualJavaObject = evaluatedJavaObject;
+			}
 
 			final List<LispStruct> arguments = javaMethodCall.getArguments();
 

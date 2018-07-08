@@ -30,7 +30,7 @@ public class AtSignReaderMacroFunction extends ReaderMacroFunctionImpl {
 	@Override
 	public void afterPropertiesSet() throws Exception {
 		super.afterPropertiesSet();
-		ReaderVariables.READTABLE.getVariableValue().setMacroCharacter(CodePointConstants.AT_SIGN, this, true);
+		ReaderVariables.READTABLE.getVariableValue().setMacroCharacter(CodePointConstants.AT_SIGN, this, false);
 	}
 
 	@Override

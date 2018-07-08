@@ -23,4 +23,13 @@ public class JavaNameStruct extends BuiltInClassStruct {
 	public String getJavaName() {
 		return javaName;
 	}
+
+	/*
+	OBJECT
+	 */
+
+	@Override
+	public String toString() {
+		return javaName;
+	}
 }

@@ -53,8 +53,11 @@ subprojects {
 	configurations {
 	}
 
-	sourceCompatibility = JavaVersion.VERSION_1_10
-	targetCompatibility = JavaVersion.VERSION_1_10
+//	sourceCompatibility = JavaVersion.VERSION_1_10
+//	targetCompatibility = JavaVersion.VERSION_1_10
+
+	sourceCompatibility = JavaVersion.VERSION_1_9
+	targetCompatibility = JavaVersion.VERSION_1_9
 
 	compileJava.options*.compilerArgs = [
 			"-Xlint:serial", "-Xlint:varargs", "-Xlint:cast", "-Xlint:classfile", "-Xlint:dep-ann", "-Xlint:divzero",

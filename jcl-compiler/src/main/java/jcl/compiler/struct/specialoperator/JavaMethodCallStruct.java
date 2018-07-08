@@ -5,6 +5,7 @@
 package jcl.compiler.struct.specialoperator;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import jcl.compiler.struct.CompilerSpecialOperatorStruct;
 import jcl.lang.LispStruct;
@@ -35,5 +36,23 @@ public class JavaMethodCallStruct extends CompilerSpecialOperatorStruct {
 
 	public List<LispStruct> getArguments() {
 		return arguments;
+	}
+
+	@Override
+	public String toString() {
+		final StringBuilder builder = new StringBuilder("(JAVA-METHOD-CALL ");
+
+		builder.append(methodName);
+		builder.append(' ');
+		builder.append(javaObject);
+
+		final String argumentsString
+				= arguments.stream()
+				           .map(Object::toString)
+				           .collect(Collectors.joining(" "));
+		builder.append(argumentsString);
+		builder.append(')');
+
+		return builder.toString();
 	}
 }

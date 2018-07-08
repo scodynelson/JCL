@@ -97,4 +97,24 @@ public class OptionalParameter extends Parameter {
 			return Collections.singletonList(build());
 		}
 	}
+
+	@Override
+	public String toString() {
+		final StringBuilder builder = new StringBuilder();
+		builder.append(getVar());
+
+		final LispStruct initForm = getInitForm();
+		if (!initForm.eq(NILStruct.INSTANCE)) {
+			builder.append(initForm);
+
+			final SymbolStruct suppliedPBindingVar = suppliedPBinding.getVar();
+
+			// TODO: Fix this hardcoded name
+			if (!"SYSTEM".equals(suppliedPBindingVar.getSymbolPackage().getName())) {
+				builder.append(suppliedPBindingVar);
+			}
+		}
+
+		return builder.toString();
+	}
 }

@@ -4,6 +4,7 @@
 
 package testground;
 
+import java.lang.reflect.Method;
 import java.math.BigInteger;
 import java.net.URI;
 import java.util.ArrayList;
@@ -42,6 +43,31 @@ import org.objectweb.asm.Label;
 public class TestGround {
 
 	private SymbolStruct UNINTERNED_SYMBOL = LispStructFactory.toSymbol("FOO");
+
+	private Object javaMethodCall(final Closure currentClosure) throws Exception {
+		final String methodName = "ADD";
+		final int numOfArguments = 1;
+
+		final LispStruct[] methodArgs = new LispStruct[numOfArguments];
+		final Class<?>[] methodArgTypes = new Class<?>[numOfArguments];
+		for (int i = 0; i < numOfArguments; i++) {
+			final LispStruct currentArgument = CharacterStruct.toLispCharacter(197);
+			methodArgs[i] = currentArgument;
+			methodArgTypes[i] = currentArgument.getClass();
+//			methodParamTypes[i] = Object.class;
+		}
+
+		final LispStruct javaObject = CharacterStruct.toLispCharacter(97);
+		final Method javaMethod = javaObject.getClass().getDeclaredMethod(methodName, methodArgTypes);
+		final Object methodResult = javaMethod.invoke(javaObject, (Object[]) methodArgs);
+
+//		if (methodResult instanceof LispStruct) {
+//			return (LispStruct) methodResult;
+//		}
+//		return JavaObjectStruct.valueOf(methodResult);
+
+		return methodResult;
+	}
 
 	private Object blockGen(final Closure currentClosure) {
 

@@ -76,7 +76,7 @@ public class CharacterStructCharacterEqualityTest {
 		final CharacterStruct char1 = CharacterConstants.LATIN_CAPITAL_LETTER_A_CHAR;
 		final CharacterStruct char2 = CharacterConstants.LATIN_CAPITAL_LETTER_A_CHAR;
 		final CharacterStruct char3 = CharacterConstants.LATIN_CAPITAL_LETTER_A_CHAR;
-		final boolean result = CharacterStruct.isEqualTo(char1, char2, char3);
+		final boolean result = CharacterStruct.isEqualTo(char1, char2, char3).toJavaPBoolean();
 		Assert.assertThat(result, is(true));
 	}
 
@@ -88,7 +88,7 @@ public class CharacterStructCharacterEqualityTest {
 		final CharacterStruct char1 = CharacterConstants.LATIN_CAPITAL_LETTER_A_CHAR;
 		final CharacterStruct char2 = CharacterConstants.LATIN_CAPITAL_LETTER_A_CHAR;
 		final CharacterStruct char3 = CharacterConstants.LATIN_CAPITAL_LETTER_B_CHAR;
-		final boolean result = CharacterStruct.isEqualTo(char1, char2, char3);
+		final boolean result = CharacterStruct.isEqualTo(char1, char2, char3).toJavaPBoolean();
 		Assert.assertThat(result, is(false));
 	}
 
@@ -100,7 +100,7 @@ public class CharacterStructCharacterEqualityTest {
 		final CharacterStruct char1 = CharacterConstants.LATIN_CAPITAL_LETTER_A_CHAR;
 		final CharacterStruct char2 = CharacterConstants.LATIN_CAPITAL_LETTER_A_CHAR;
 		final CharacterStruct char3 = CharacterConstants.LATIN_SMALL_LETTER_A_CHAR;
-		final boolean result = CharacterStruct.isEqualTo(char1, char2, char3);
+		final boolean result = CharacterStruct.isEqualTo(char1, char2, char3).toJavaPBoolean();
 		Assert.assertThat(result, is(false));
 	}
 
@@ -160,7 +160,7 @@ public class CharacterStructCharacterEqualityTest {
 		final CharacterStruct char1 = CharacterConstants.LATIN_CAPITAL_LETTER_A_CHAR;
 		final CharacterStruct char2 = CharacterConstants.LATIN_CAPITAL_LETTER_B_CHAR;
 		final CharacterStruct char3 = CharacterConstants.LATIN_CAPITAL_LETTER_C_CHAR;
-		final boolean result = CharacterStruct.isNotEqualTo(char1, char2, char3);
+		final boolean result = CharacterStruct.isNotEqualTo(char1, char2, char3).toJavaPBoolean();
 		Assert.assertThat(result, is(true));
 	}
 
@@ -172,7 +172,7 @@ public class CharacterStructCharacterEqualityTest {
 		final CharacterStruct char1 = CharacterConstants.LATIN_CAPITAL_LETTER_A_CHAR;
 		final CharacterStruct char2 = CharacterConstants.LATIN_CAPITAL_LETTER_A_CHAR;
 		final CharacterStruct char3 = CharacterConstants.LATIN_CAPITAL_LETTER_A_CHAR;
-		final boolean result = CharacterStruct.isNotEqualTo(char1, char2, char3);
+		final boolean result = CharacterStruct.isNotEqualTo(char1, char2, char3).toJavaPBoolean();
 		Assert.assertThat(result, is(false));
 	}
 
@@ -184,7 +184,7 @@ public class CharacterStructCharacterEqualityTest {
 		final CharacterStruct char1 = CharacterConstants.LATIN_CAPITAL_LETTER_A_CHAR;
 		final CharacterStruct char2 = CharacterConstants.LATIN_SMALL_LETTER_A_CHAR;
 		final CharacterStruct char3 = CharacterConstants.DOLLAR_SIGN_CHAR;
-		final boolean result = CharacterStruct.isNotEqualTo(char1, char2, char3);
+		final boolean result = CharacterStruct.isNotEqualTo(char1, char2, char3).toJavaPBoolean();
 		Assert.assertThat(result, is(true));
 	}
 
@@ -266,7 +266,7 @@ public class CharacterStructCharacterEqualityTest {
 		final CharacterStruct char1 = CharacterConstants.LATIN_CAPITAL_LETTER_A_CHAR;
 		final CharacterStruct char2 = CharacterConstants.LATIN_CAPITAL_LETTER_B_CHAR;
 		final CharacterStruct char3 = CharacterConstants.LATIN_CAPITAL_LETTER_C_CHAR;
-		final boolean result = CharacterStruct.isLessThan(char1, char2, char3);
+		final boolean result = CharacterStruct.isLessThan(char1, char2, char3).toJavaPBoolean();
 		Assert.assertThat(result, is(true));
 	}
 
@@ -278,7 +278,7 @@ public class CharacterStructCharacterEqualityTest {
 		final CharacterStruct char1 = CharacterConstants.LATIN_CAPITAL_LETTER_A_CHAR;
 		final CharacterStruct char2 = CharacterConstants.LATIN_CAPITAL_LETTER_B_CHAR;
 		final CharacterStruct char3 = CharacterConstants.LATIN_CAPITAL_LETTER_B_CHAR;
-		final boolean result = CharacterStruct.isLessThan(char1, char2, char3);
+		final boolean result = CharacterStruct.isLessThan(char1, char2, char3).toJavaPBoolean();
 		Assert.assertThat(result, is(false));
 	}
 
@@ -290,7 +290,7 @@ public class CharacterStructCharacterEqualityTest {
 		final CharacterStruct char1 = CharacterConstants.LATIN_CAPITAL_LETTER_A_CHAR;
 		final CharacterStruct char2 = CharacterConstants.LATIN_CAPITAL_LETTER_B_CHAR;
 		final CharacterStruct char3 = CharacterConstants.LATIN_CAPITAL_LETTER_A_CHAR;
-		final boolean result = CharacterStruct.isLessThan(char1, char2, char3);
+		final boolean result = CharacterStruct.isLessThan(char1, char2, char3).toJavaPBoolean();
 		Assert.assertThat(result, is(false));
 	}
 
@@ -302,7 +302,7 @@ public class CharacterStructCharacterEqualityTest {
 		final CharacterStruct char1 = CharacterConstants.LATIN_CAPITAL_LETTER_A_CHAR;
 		final CharacterStruct char2 = CharacterConstants.LATIN_CAPITAL_LETTER_B_CHAR;
 		final CharacterStruct char3 = CharacterConstants.LATIN_SMALL_LETTER_A_CHAR;
-		final boolean result = CharacterStruct.isLessThan(char1, char2, char3);
+		final boolean result = CharacterStruct.isLessThan(char1, char2, char3).toJavaPBoolean();
 		Assert.assertThat(result, is(true));
 	}
 
@@ -314,7 +314,7 @@ public class CharacterStructCharacterEqualityTest {
 		final CharacterStruct char1 = CharacterConstants.LATIN_SMALL_LETTER_A_CHAR;
 		final CharacterStruct char2 = CharacterConstants.LATIN_SMALL_LETTER_B_CHAR;
 		final CharacterStruct char3 = CharacterConstants.LATIN_CAPITAL_LETTER_C_CHAR;
-		final boolean result = CharacterStruct.isLessThan(char1, char2, char3);
+		final boolean result = CharacterStruct.isLessThan(char1, char2, char3).toJavaPBoolean();
 		Assert.assertThat(result, is(false));
 	}
 
@@ -396,7 +396,7 @@ public class CharacterStructCharacterEqualityTest {
 		final CharacterStruct char1 = CharacterConstants.LATIN_CAPITAL_LETTER_C_CHAR;
 		final CharacterStruct char2 = CharacterConstants.LATIN_CAPITAL_LETTER_B_CHAR;
 		final CharacterStruct char3 = CharacterConstants.LATIN_CAPITAL_LETTER_A_CHAR;
-		final boolean result = CharacterStruct.isGreaterThan(char1, char2, char3);
+		final boolean result = CharacterStruct.isGreaterThan(char1, char2, char3).toJavaPBoolean();
 		Assert.assertThat(result, is(true));
 	}
 
@@ -408,7 +408,7 @@ public class CharacterStructCharacterEqualityTest {
 		final CharacterStruct char1 = CharacterConstants.LATIN_CAPITAL_LETTER_B_CHAR;
 		final CharacterStruct char2 = CharacterConstants.LATIN_CAPITAL_LETTER_A_CHAR;
 		final CharacterStruct char3 = CharacterConstants.LATIN_CAPITAL_LETTER_A_CHAR;
-		final boolean result = CharacterStruct.isGreaterThan(char1, char2, char3);
+		final boolean result = CharacterStruct.isGreaterThan(char1, char2, char3).toJavaPBoolean();
 		Assert.assertThat(result, is(false));
 	}
 
@@ -420,7 +420,7 @@ public class CharacterStructCharacterEqualityTest {
 		final CharacterStruct char1 = CharacterConstants.LATIN_CAPITAL_LETTER_B_CHAR;
 		final CharacterStruct char2 = CharacterConstants.LATIN_CAPITAL_LETTER_A_CHAR;
 		final CharacterStruct char3 = CharacterConstants.LATIN_CAPITAL_LETTER_B_CHAR;
-		final boolean result = CharacterStruct.isGreaterThan(char1, char2, char3);
+		final boolean result = CharacterStruct.isGreaterThan(char1, char2, char3).toJavaPBoolean();
 		Assert.assertThat(result, is(false));
 	}
 
@@ -432,7 +432,7 @@ public class CharacterStructCharacterEqualityTest {
 		final CharacterStruct char1 = CharacterConstants.LATIN_SMALL_LETTER_B_CHAR;
 		final CharacterStruct char2 = CharacterConstants.LATIN_SMALL_LETTER_A_CHAR;
 		final CharacterStruct char3 = CharacterConstants.LATIN_CAPITAL_LETTER_B_CHAR;
-		final boolean result = CharacterStruct.isGreaterThan(char1, char2, char3);
+		final boolean result = CharacterStruct.isGreaterThan(char1, char2, char3).toJavaPBoolean();
 		Assert.assertThat(result, is(true));
 	}
 
@@ -444,7 +444,7 @@ public class CharacterStructCharacterEqualityTest {
 		final CharacterStruct char1 = CharacterConstants.LATIN_CAPITAL_LETTER_C_CHAR;
 		final CharacterStruct char2 = CharacterConstants.LATIN_CAPITAL_LETTER_B_CHAR;
 		final CharacterStruct char3 = CharacterConstants.LATIN_SMALL_LETTER_A_CHAR;
-		final boolean result = CharacterStruct.isGreaterThan(char1, char2, char3);
+		final boolean result = CharacterStruct.isGreaterThan(char1, char2, char3).toJavaPBoolean();
 		Assert.assertThat(result, is(false));
 	}
 
@@ -526,7 +526,7 @@ public class CharacterStructCharacterEqualityTest {
 		final CharacterStruct char1 = CharacterConstants.LATIN_CAPITAL_LETTER_A_CHAR;
 		final CharacterStruct char2 = CharacterConstants.LATIN_CAPITAL_LETTER_B_CHAR;
 		final CharacterStruct char3 = CharacterConstants.LATIN_CAPITAL_LETTER_C_CHAR;
-		final boolean result = CharacterStruct.isLessThanOrEqualTo(char1, char2, char3);
+		final boolean result = CharacterStruct.isLessThanOrEqualTo(char1, char2, char3).toJavaPBoolean();
 		Assert.assertThat(result, is(true));
 	}
 
@@ -538,7 +538,7 @@ public class CharacterStructCharacterEqualityTest {
 		final CharacterStruct char1 = CharacterConstants.LATIN_CAPITAL_LETTER_A_CHAR;
 		final CharacterStruct char2 = CharacterConstants.LATIN_CAPITAL_LETTER_B_CHAR;
 		final CharacterStruct char3 = CharacterConstants.LATIN_CAPITAL_LETTER_B_CHAR;
-		final boolean result = CharacterStruct.isLessThanOrEqualTo(char1, char2, char3);
+		final boolean result = CharacterStruct.isLessThanOrEqualTo(char1, char2, char3).toJavaPBoolean();
 		Assert.assertThat(result, is(true));
 	}
 
@@ -550,7 +550,7 @@ public class CharacterStructCharacterEqualityTest {
 		final CharacterStruct char1 = CharacterConstants.LATIN_CAPITAL_LETTER_A_CHAR;
 		final CharacterStruct char2 = CharacterConstants.LATIN_CAPITAL_LETTER_B_CHAR;
 		final CharacterStruct char3 = CharacterConstants.LATIN_CAPITAL_LETTER_A_CHAR;
-		final boolean result = CharacterStruct.isLessThanOrEqualTo(char1, char2, char3);
+		final boolean result = CharacterStruct.isLessThanOrEqualTo(char1, char2, char3).toJavaPBoolean();
 		Assert.assertThat(result, is(false));
 	}
 
@@ -562,7 +562,7 @@ public class CharacterStructCharacterEqualityTest {
 		final CharacterStruct char1 = CharacterConstants.LATIN_CAPITAL_LETTER_A_CHAR;
 		final CharacterStruct char2 = CharacterConstants.LATIN_CAPITAL_LETTER_B_CHAR;
 		final CharacterStruct char3 = CharacterConstants.LATIN_SMALL_LETTER_A_CHAR;
-		final boolean result = CharacterStruct.isLessThanOrEqualTo(char1, char2, char3);
+		final boolean result = CharacterStruct.isLessThanOrEqualTo(char1, char2, char3).toJavaPBoolean();
 		Assert.assertThat(result, is(true));
 	}
 
@@ -575,7 +575,7 @@ public class CharacterStructCharacterEqualityTest {
 		final CharacterStruct char1 = CharacterConstants.LATIN_SMALL_LETTER_A_CHAR;
 		final CharacterStruct char2 = CharacterConstants.LATIN_SMALL_LETTER_B_CHAR;
 		final CharacterStruct char3 = CharacterConstants.LATIN_CAPITAL_LETTER_C_CHAR;
-		final boolean result = CharacterStruct.isLessThanOrEqualTo(char1, char2, char3);
+		final boolean result = CharacterStruct.isLessThanOrEqualTo(char1, char2, char3).toJavaPBoolean();
 		Assert.assertThat(result, is(false));
 	}
 
@@ -657,7 +657,7 @@ public class CharacterStructCharacterEqualityTest {
 		final CharacterStruct char1 = CharacterConstants.LATIN_CAPITAL_LETTER_C_CHAR;
 		final CharacterStruct char2 = CharacterConstants.LATIN_CAPITAL_LETTER_B_CHAR;
 		final CharacterStruct char3 = CharacterConstants.LATIN_CAPITAL_LETTER_A_CHAR;
-		final boolean result = CharacterStruct.isGreaterThanOrEqualTo(char1, char2, char3);
+		final boolean result = CharacterStruct.isGreaterThanOrEqualTo(char1, char2, char3).toJavaPBoolean();
 		Assert.assertThat(result, is(true));
 	}
 
@@ -669,7 +669,7 @@ public class CharacterStructCharacterEqualityTest {
 		final CharacterStruct char1 = CharacterConstants.LATIN_CAPITAL_LETTER_B_CHAR;
 		final CharacterStruct char2 = CharacterConstants.LATIN_CAPITAL_LETTER_A_CHAR;
 		final CharacterStruct char3 = CharacterConstants.LATIN_CAPITAL_LETTER_A_CHAR;
-		final boolean result = CharacterStruct.isGreaterThanOrEqualTo(char1, char2, char3);
+		final boolean result = CharacterStruct.isGreaterThanOrEqualTo(char1, char2, char3).toJavaPBoolean();
 		Assert.assertThat(result, is(true));
 	}
 
@@ -681,7 +681,7 @@ public class CharacterStructCharacterEqualityTest {
 		final CharacterStruct char1 = CharacterConstants.LATIN_CAPITAL_LETTER_B_CHAR;
 		final CharacterStruct char2 = CharacterConstants.LATIN_CAPITAL_LETTER_A_CHAR;
 		final CharacterStruct char3 = CharacterConstants.LATIN_CAPITAL_LETTER_B_CHAR;
-		final boolean result = CharacterStruct.isGreaterThanOrEqualTo(char1, char2, char3);
+		final boolean result = CharacterStruct.isGreaterThanOrEqualTo(char1, char2, char3).toJavaPBoolean();
 		Assert.assertThat(result, is(false));
 	}
 
@@ -694,7 +694,7 @@ public class CharacterStructCharacterEqualityTest {
 		final CharacterStruct char1 = CharacterConstants.LATIN_SMALL_LETTER_B_CHAR;
 		final CharacterStruct char2 = CharacterConstants.LATIN_SMALL_LETTER_A_CHAR;
 		final CharacterStruct char3 = CharacterConstants.LATIN_CAPITAL_LETTER_B_CHAR;
-		final boolean result = CharacterStruct.isGreaterThanOrEqualTo(char1, char2, char3);
+		final boolean result = CharacterStruct.isGreaterThanOrEqualTo(char1, char2, char3).toJavaPBoolean();
 		Assert.assertThat(result, is(true));
 	}
 
@@ -707,7 +707,7 @@ public class CharacterStructCharacterEqualityTest {
 		final CharacterStruct char1 = CharacterConstants.LATIN_CAPITAL_LETTER_C_CHAR;
 		final CharacterStruct char2 = CharacterConstants.LATIN_CAPITAL_LETTER_B_CHAR;
 		final CharacterStruct char3 = CharacterConstants.LATIN_SMALL_LETTER_A_CHAR;
-		final boolean result = CharacterStruct.isGreaterThanOrEqualTo(char1, char2, char3);
+		final boolean result = CharacterStruct.isGreaterThanOrEqualTo(char1, char2, char3).toJavaPBoolean();
 		Assert.assertThat(result, is(false));
 	}
 
@@ -767,7 +767,7 @@ public class CharacterStructCharacterEqualityTest {
 		final CharacterStruct char1 = CharacterConstants.LATIN_CAPITAL_LETTER_A_CHAR;
 		final CharacterStruct char2 = CharacterConstants.LATIN_CAPITAL_LETTER_A_CHAR;
 		final CharacterStruct char3 = CharacterConstants.LATIN_CAPITAL_LETTER_A_CHAR;
-		final boolean result = CharacterStruct.isEqualToIgnoreCase(char1, char2, char3);
+		final boolean result = CharacterStruct.isEqualToIgnoreCase(char1, char2, char3).toJavaPBoolean();
 		Assert.assertThat(result, is(true));
 	}
 
@@ -779,7 +779,7 @@ public class CharacterStructCharacterEqualityTest {
 		final CharacterStruct char1 = CharacterConstants.LATIN_CAPITAL_LETTER_A_CHAR;
 		final CharacterStruct char2 = CharacterConstants.LATIN_CAPITAL_LETTER_A_CHAR;
 		final CharacterStruct char3 = CharacterConstants.LATIN_CAPITAL_LETTER_B_CHAR;
-		final boolean result = CharacterStruct.isEqualToIgnoreCase(char1, char2, char3);
+		final boolean result = CharacterStruct.isEqualToIgnoreCase(char1, char2, char3).toJavaPBoolean();
 		Assert.assertThat(result, is(false));
 	}
 
@@ -791,7 +791,7 @@ public class CharacterStructCharacterEqualityTest {
 		final CharacterStruct char1 = CharacterConstants.LATIN_CAPITAL_LETTER_A_CHAR;
 		final CharacterStruct char2 = CharacterConstants.LATIN_CAPITAL_LETTER_A_CHAR;
 		final CharacterStruct char3 = CharacterConstants.LATIN_SMALL_LETTER_A_CHAR;
-		final boolean result = CharacterStruct.isEqualToIgnoreCase(char1, char2, char3);
+		final boolean result = CharacterStruct.isEqualToIgnoreCase(char1, char2, char3).toJavaPBoolean();
 		Assert.assertThat(result, is(true));
 	}
 
@@ -852,7 +852,7 @@ public class CharacterStructCharacterEqualityTest {
 		final CharacterStruct char1 = CharacterConstants.LATIN_CAPITAL_LETTER_A_CHAR;
 		final CharacterStruct char2 = CharacterConstants.LATIN_CAPITAL_LETTER_B_CHAR;
 		final CharacterStruct char3 = CharacterConstants.LATIN_CAPITAL_LETTER_C_CHAR;
-		final boolean result = CharacterStruct.isNotEqualToIgnoreCase(char1, char2, char3);
+		final boolean result = CharacterStruct.isNotEqualToIgnoreCase(char1, char2, char3).toJavaPBoolean();
 		Assert.assertThat(result, is(true));
 	}
 
@@ -864,7 +864,7 @@ public class CharacterStructCharacterEqualityTest {
 		final CharacterStruct char1 = CharacterConstants.LATIN_CAPITAL_LETTER_A_CHAR;
 		final CharacterStruct char2 = CharacterConstants.LATIN_CAPITAL_LETTER_A_CHAR;
 		final CharacterStruct char3 = CharacterConstants.LATIN_CAPITAL_LETTER_A_CHAR;
-		final boolean result = CharacterStruct.isNotEqualToIgnoreCase(char1, char2, char3);
+		final boolean result = CharacterStruct.isNotEqualToIgnoreCase(char1, char2, char3).toJavaPBoolean();
 		Assert.assertThat(result, is(false));
 	}
 
@@ -877,7 +877,7 @@ public class CharacterStructCharacterEqualityTest {
 		final CharacterStruct char1 = CharacterConstants.LATIN_CAPITAL_LETTER_A_CHAR;
 		final CharacterStruct char2 = CharacterConstants.LATIN_SMALL_LETTER_A_CHAR;
 		final CharacterStruct char3 = CharacterConstants.DOLLAR_SIGN_CHAR;
-		final boolean result = CharacterStruct.isNotEqualToIgnoreCase(char1, char2, char3);
+		final boolean result = CharacterStruct.isNotEqualToIgnoreCase(char1, char2, char3).toJavaPBoolean();
 		Assert.assertThat(result, is(false));
 	}
 
@@ -959,7 +959,7 @@ public class CharacterStructCharacterEqualityTest {
 		final CharacterStruct char1 = CharacterConstants.LATIN_CAPITAL_LETTER_A_CHAR;
 		final CharacterStruct char2 = CharacterConstants.LATIN_CAPITAL_LETTER_B_CHAR;
 		final CharacterStruct char3 = CharacterConstants.LATIN_CAPITAL_LETTER_C_CHAR;
-		final boolean result = CharacterStruct.isLessThanIgnoreCase(char1, char2, char3);
+		final boolean result = CharacterStruct.isLessThanIgnoreCase(char1, char2, char3).toJavaPBoolean();
 		Assert.assertThat(result, is(true));
 	}
 
@@ -971,7 +971,7 @@ public class CharacterStructCharacterEqualityTest {
 		final CharacterStruct char1 = CharacterConstants.LATIN_CAPITAL_LETTER_A_CHAR;
 		final CharacterStruct char2 = CharacterConstants.LATIN_CAPITAL_LETTER_B_CHAR;
 		final CharacterStruct char3 = CharacterConstants.LATIN_CAPITAL_LETTER_B_CHAR;
-		final boolean result = CharacterStruct.isLessThanIgnoreCase(char1, char2, char3);
+		final boolean result = CharacterStruct.isLessThanIgnoreCase(char1, char2, char3).toJavaPBoolean();
 		Assert.assertThat(result, is(false));
 	}
 
@@ -983,7 +983,7 @@ public class CharacterStructCharacterEqualityTest {
 		final CharacterStruct char1 = CharacterConstants.LATIN_CAPITAL_LETTER_A_CHAR;
 		final CharacterStruct char2 = CharacterConstants.LATIN_CAPITAL_LETTER_B_CHAR;
 		final CharacterStruct char3 = CharacterConstants.LATIN_CAPITAL_LETTER_A_CHAR;
-		final boolean result = CharacterStruct.isLessThanIgnoreCase(char1, char2, char3);
+		final boolean result = CharacterStruct.isLessThanIgnoreCase(char1, char2, char3).toJavaPBoolean();
 		Assert.assertThat(result, is(false));
 	}
 
@@ -995,7 +995,7 @@ public class CharacterStructCharacterEqualityTest {
 		final CharacterStruct char1 = CharacterConstants.LATIN_CAPITAL_LETTER_A_CHAR;
 		final CharacterStruct char2 = CharacterConstants.LATIN_CAPITAL_LETTER_B_CHAR;
 		final CharacterStruct char3 = CharacterConstants.LATIN_SMALL_LETTER_A_CHAR;
-		final boolean result = CharacterStruct.isLessThanIgnoreCase(char1, char2, char3);
+		final boolean result = CharacterStruct.isLessThanIgnoreCase(char1, char2, char3).toJavaPBoolean();
 		Assert.assertThat(result, is(false));
 	}
 
@@ -1008,7 +1008,7 @@ public class CharacterStructCharacterEqualityTest {
 		final CharacterStruct char1 = CharacterConstants.LATIN_SMALL_LETTER_A_CHAR;
 		final CharacterStruct char2 = CharacterConstants.LATIN_SMALL_LETTER_B_CHAR;
 		final CharacterStruct char3 = CharacterConstants.LATIN_CAPITAL_LETTER_C_CHAR;
-		final boolean result = CharacterStruct.isLessThanIgnoreCase(char1, char2, char3);
+		final boolean result = CharacterStruct.isLessThanIgnoreCase(char1, char2, char3).toJavaPBoolean();
 		Assert.assertThat(result, is(true));
 	}
 
@@ -1090,7 +1090,7 @@ public class CharacterStructCharacterEqualityTest {
 		final CharacterStruct char1 = CharacterConstants.LATIN_CAPITAL_LETTER_C_CHAR;
 		final CharacterStruct char2 = CharacterConstants.LATIN_CAPITAL_LETTER_B_CHAR;
 		final CharacterStruct char3 = CharacterConstants.LATIN_CAPITAL_LETTER_A_CHAR;
-		final boolean result = CharacterStruct.isGreaterThanIgnoreCase(char1, char2, char3);
+		final boolean result = CharacterStruct.isGreaterThanIgnoreCase(char1, char2, char3).toJavaPBoolean();
 		Assert.assertThat(result, is(true));
 	}
 
@@ -1102,7 +1102,7 @@ public class CharacterStructCharacterEqualityTest {
 		final CharacterStruct char1 = CharacterConstants.LATIN_CAPITAL_LETTER_B_CHAR;
 		final CharacterStruct char2 = CharacterConstants.LATIN_CAPITAL_LETTER_A_CHAR;
 		final CharacterStruct char3 = CharacterConstants.LATIN_CAPITAL_LETTER_A_CHAR;
-		final boolean result = CharacterStruct.isGreaterThanIgnoreCase(char1, char2, char3);
+		final boolean result = CharacterStruct.isGreaterThanIgnoreCase(char1, char2, char3).toJavaPBoolean();
 		Assert.assertThat(result, is(false));
 	}
 
@@ -1114,7 +1114,7 @@ public class CharacterStructCharacterEqualityTest {
 		final CharacterStruct char1 = CharacterConstants.LATIN_CAPITAL_LETTER_B_CHAR;
 		final CharacterStruct char2 = CharacterConstants.LATIN_CAPITAL_LETTER_A_CHAR;
 		final CharacterStruct char3 = CharacterConstants.LATIN_CAPITAL_LETTER_B_CHAR;
-		final boolean result = CharacterStruct.isGreaterThanIgnoreCase(char1, char2, char3);
+		final boolean result = CharacterStruct.isGreaterThanIgnoreCase(char1, char2, char3).toJavaPBoolean();
 		Assert.assertThat(result, is(false));
 	}
 
@@ -1127,7 +1127,7 @@ public class CharacterStructCharacterEqualityTest {
 		final CharacterStruct char1 = CharacterConstants.LATIN_SMALL_LETTER_B_CHAR;
 		final CharacterStruct char2 = CharacterConstants.LATIN_SMALL_LETTER_A_CHAR;
 		final CharacterStruct char3 = CharacterConstants.LATIN_CAPITAL_LETTER_B_CHAR;
-		final boolean result = CharacterStruct.isGreaterThanIgnoreCase(char1, char2, char3);
+		final boolean result = CharacterStruct.isGreaterThanIgnoreCase(char1, char2, char3).toJavaPBoolean();
 		Assert.assertThat(result, is(false));
 	}
 
@@ -1140,7 +1140,7 @@ public class CharacterStructCharacterEqualityTest {
 		final CharacterStruct char1 = CharacterConstants.LATIN_CAPITAL_LETTER_C_CHAR;
 		final CharacterStruct char2 = CharacterConstants.LATIN_CAPITAL_LETTER_B_CHAR;
 		final CharacterStruct char3 = CharacterConstants.LATIN_SMALL_LETTER_A_CHAR;
-		final boolean result = CharacterStruct.isGreaterThanIgnoreCase(char1, char2, char3);
+		final boolean result = CharacterStruct.isGreaterThanIgnoreCase(char1, char2, char3).toJavaPBoolean();
 		Assert.assertThat(result, is(true));
 	}
 
@@ -1225,7 +1225,7 @@ public class CharacterStructCharacterEqualityTest {
 		final CharacterStruct char1 = CharacterConstants.LATIN_CAPITAL_LETTER_A_CHAR;
 		final CharacterStruct char2 = CharacterConstants.LATIN_CAPITAL_LETTER_B_CHAR;
 		final CharacterStruct char3 = CharacterConstants.LATIN_CAPITAL_LETTER_C_CHAR;
-		final boolean result = CharacterStruct.isLessThanOrEqualToIgnoreCase(char1, char2, char3);
+		final boolean result = CharacterStruct.isLessThanOrEqualToIgnoreCase(char1, char2, char3).toJavaPBoolean();
 		Assert.assertThat(result, is(true));
 	}
 
@@ -1238,7 +1238,7 @@ public class CharacterStructCharacterEqualityTest {
 		final CharacterStruct char1 = CharacterConstants.LATIN_CAPITAL_LETTER_A_CHAR;
 		final CharacterStruct char2 = CharacterConstants.LATIN_CAPITAL_LETTER_B_CHAR;
 		final CharacterStruct char3 = CharacterConstants.LATIN_CAPITAL_LETTER_B_CHAR;
-		final boolean result = CharacterStruct.isLessThanOrEqualToIgnoreCase(char1, char2, char3);
+		final boolean result = CharacterStruct.isLessThanOrEqualToIgnoreCase(char1, char2, char3).toJavaPBoolean();
 		Assert.assertThat(result, is(true));
 	}
 
@@ -1251,7 +1251,7 @@ public class CharacterStructCharacterEqualityTest {
 		final CharacterStruct char1 = CharacterConstants.LATIN_CAPITAL_LETTER_A_CHAR;
 		final CharacterStruct char2 = CharacterConstants.LATIN_CAPITAL_LETTER_B_CHAR;
 		final CharacterStruct char3 = CharacterConstants.LATIN_CAPITAL_LETTER_A_CHAR;
-		final boolean result = CharacterStruct.isLessThanOrEqualToIgnoreCase(char1, char2, char3);
+		final boolean result = CharacterStruct.isLessThanOrEqualToIgnoreCase(char1, char2, char3).toJavaPBoolean();
 		Assert.assertThat(result, is(false));
 	}
 
@@ -1264,7 +1264,7 @@ public class CharacterStructCharacterEqualityTest {
 		final CharacterStruct char1 = CharacterConstants.LATIN_CAPITAL_LETTER_A_CHAR;
 		final CharacterStruct char2 = CharacterConstants.LATIN_CAPITAL_LETTER_B_CHAR;
 		final CharacterStruct char3 = CharacterConstants.LATIN_SMALL_LETTER_A_CHAR;
-		final boolean result = CharacterStruct.isLessThanOrEqualToIgnoreCase(char1, char2, char3);
+		final boolean result = CharacterStruct.isLessThanOrEqualToIgnoreCase(char1, char2, char3).toJavaPBoolean();
 		Assert.assertThat(result, is(false));
 	}
 
@@ -1277,7 +1277,7 @@ public class CharacterStructCharacterEqualityTest {
 		final CharacterStruct char1 = CharacterConstants.LATIN_SMALL_LETTER_A_CHAR;
 		final CharacterStruct char2 = CharacterConstants.LATIN_SMALL_LETTER_B_CHAR;
 		final CharacterStruct char3 = CharacterConstants.LATIN_CAPITAL_LETTER_C_CHAR;
-		final boolean result = CharacterStruct.isLessThanOrEqualToIgnoreCase(char1, char2, char3);
+		final boolean result = CharacterStruct.isLessThanOrEqualToIgnoreCase(char1, char2, char3).toJavaPBoolean();
 		Assert.assertThat(result, is(true));
 	}
 
@@ -1365,7 +1365,7 @@ public class CharacterStructCharacterEqualityTest {
 		final CharacterStruct char1 = CharacterConstants.LATIN_CAPITAL_LETTER_C_CHAR;
 		final CharacterStruct char2 = CharacterConstants.LATIN_CAPITAL_LETTER_B_CHAR;
 		final CharacterStruct char3 = CharacterConstants.LATIN_CAPITAL_LETTER_A_CHAR;
-		final boolean result = CharacterStruct.isGreaterThanOrEqualToIgnoreCase(char1, char2, char3);
+		final boolean result = CharacterStruct.isGreaterThanOrEqualToIgnoreCase(char1, char2, char3).toJavaPBoolean();
 		Assert.assertThat(result, is(true));
 	}
 
@@ -1378,7 +1378,7 @@ public class CharacterStructCharacterEqualityTest {
 		final CharacterStruct char1 = CharacterConstants.LATIN_CAPITAL_LETTER_B_CHAR;
 		final CharacterStruct char2 = CharacterConstants.LATIN_CAPITAL_LETTER_A_CHAR;
 		final CharacterStruct char3 = CharacterConstants.LATIN_CAPITAL_LETTER_A_CHAR;
-		final boolean result = CharacterStruct.isGreaterThanOrEqualToIgnoreCase(char1, char2, char3);
+		final boolean result = CharacterStruct.isGreaterThanOrEqualToIgnoreCase(char1, char2, char3).toJavaPBoolean();
 		Assert.assertThat(result, is(true));
 	}
 
@@ -1391,7 +1391,7 @@ public class CharacterStructCharacterEqualityTest {
 		final CharacterStruct char1 = CharacterConstants.LATIN_CAPITAL_LETTER_B_CHAR;
 		final CharacterStruct char2 = CharacterConstants.LATIN_CAPITAL_LETTER_A_CHAR;
 		final CharacterStruct char3 = CharacterConstants.LATIN_CAPITAL_LETTER_B_CHAR;
-		final boolean result = CharacterStruct.isGreaterThanOrEqualToIgnoreCase(char1, char2, char3);
+		final boolean result = CharacterStruct.isGreaterThanOrEqualToIgnoreCase(char1, char2, char3).toJavaPBoolean();
 		Assert.assertThat(result, is(false));
 	}
 
@@ -1404,7 +1404,7 @@ public class CharacterStructCharacterEqualityTest {
 		final CharacterStruct char1 = CharacterConstants.LATIN_SMALL_LETTER_B_CHAR;
 		final CharacterStruct char2 = CharacterConstants.LATIN_SMALL_LETTER_A_CHAR;
 		final CharacterStruct char3 = CharacterConstants.LATIN_CAPITAL_LETTER_B_CHAR;
-		final boolean result = CharacterStruct.isGreaterThanOrEqualToIgnoreCase(char1, char2, char3);
+		final boolean result = CharacterStruct.isGreaterThanOrEqualToIgnoreCase(char1, char2, char3).toJavaPBoolean();
 		Assert.assertThat(result, is(false));
 	}
 
@@ -1417,7 +1417,7 @@ public class CharacterStructCharacterEqualityTest {
 		final CharacterStruct char1 = CharacterConstants.LATIN_CAPITAL_LETTER_C_CHAR;
 		final CharacterStruct char2 = CharacterConstants.LATIN_CAPITAL_LETTER_B_CHAR;
 		final CharacterStruct char3 = CharacterConstants.LATIN_SMALL_LETTER_A_CHAR;
-		final boolean result = CharacterStruct.isGreaterThanOrEqualToIgnoreCase(char1, char2, char3);
+		final boolean result = CharacterStruct.isGreaterThanOrEqualToIgnoreCase(char1, char2, char3).toJavaPBoolean();
 		Assert.assertThat(result, is(true));
 	}
 }

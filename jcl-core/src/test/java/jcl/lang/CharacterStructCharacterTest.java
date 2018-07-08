@@ -1,5 +1,6 @@
 package jcl.lang;
 
+import java.util.function.Function;
 import java.util.function.Predicate;
 
 import jcl.lang.condition.exception.SimpleErrorException;
@@ -736,7 +737,7 @@ public class CharacterStructCharacterTest {
 	 * @param delete
 	 * 		is delete character
 	 */
-	private static void test_Character(final Predicate<CharacterStruct> charFunction,
+	private static void test_Character(final Function<CharacterStruct, BooleanStruct> charFunction,
 	                                   final boolean preNewLineControl,
 	                                   final boolean newLine,
 	                                   final boolean postNewLineControl,
@@ -750,56 +751,56 @@ public class CharacterStructCharacterTest {
 	                                   final boolean delete) {
 		for (int i = CodePointConstants.NULL; i < CodePointConstants.NEWLINE; i++) {
 			final CharacterStruct character = CharacterStruct.toLispCharacter(i);
-			final boolean result = charFunction.test(character);
+			final boolean result = charFunction.apply(character).toJavaPBoolean();
 			Assert.assertThat("Character did not meet requirements: " + character, result, is(preNewLineControl));
 		}
 		{
 			final CharacterStruct character = CharacterConstants.NEWLINE_CHAR;
-			final boolean result = charFunction.test(character);
+			final boolean result = charFunction.apply(character).toJavaPBoolean();
 			Assert.assertThat("Character did not meet requirements: " + character, result, is(newLine));
 		}
 		for (int i = CodePointConstants.VERTICAL_TAB; i < CodePointConstants.SPACE; i++) {
 			final CharacterStruct character = CharacterStruct.toLispCharacter(i);
-			final boolean result = charFunction.test(character);
+			final boolean result = charFunction.apply(character).toJavaPBoolean();
 			Assert.assertThat("Character did not meet requirements: " + character, result, is(postNewLineControl));
 		}
 		for (int i = CodePointConstants.SPACE; i < CodePointConstants.DIGIT_ZERO; i++) {
 			final CharacterStruct character = CharacterStruct.toLispCharacter(i);
-			final boolean result = charFunction.test(character);
+			final boolean result = charFunction.apply(character).toJavaPBoolean();
 			Assert.assertThat("Character did not meet requirements: " + character, result, is(preDigitSymbol));
 		}
 		for (int i = CodePointConstants.DIGIT_ZERO; i < CodePointConstants.COLON; i++) {
 			final CharacterStruct character = CharacterStruct.toLispCharacter(i);
-			final boolean result = charFunction.test(character);
+			final boolean result = charFunction.apply(character).toJavaPBoolean();
 			Assert.assertThat("Character did not meet requirements: " + character, result, is(digit));
 		}
 		for (int i = CodePointConstants.COLON; i < CodePointConstants.LATIN_CAPITAL_LETTER_A; i++) {
 			final CharacterStruct character = CharacterStruct.toLispCharacter(i);
-			final boolean result = charFunction.test(character);
+			final boolean result = charFunction.apply(character).toJavaPBoolean();
 			Assert.assertThat("Character did not meet requirements: " + character, result, is(preCapitalLetterSymbol));
 		}
 		for (int i = CodePointConstants.LATIN_CAPITAL_LETTER_A; i < CodePointConstants.LEFT_SQUARE_BRACKET; i++) {
 			final CharacterStruct character = CharacterStruct.toLispCharacter(i);
-			final boolean result = charFunction.test(character);
+			final boolean result = charFunction.apply(character).toJavaPBoolean();
 			Assert.assertThat("Character did not meet requirements: " + character, result, is(capitalLetter));
 		}
 		for (int i = CodePointConstants.LEFT_SQUARE_BRACKET; i < CodePointConstants.LATIN_SMALL_LETTER_A; i++) {
 			final CharacterStruct character = CharacterStruct.toLispCharacter(i);
-			final boolean result = charFunction.test(character);
+			final boolean result = charFunction.apply(character).toJavaPBoolean();
 			Assert.assertThat("Character did not meet requirements: " + character, result, is(postCapitalLetterSymbol));
 		}
 		for (int i = CodePointConstants.LATIN_SMALL_LETTER_A; i < CodePointConstants.LEFT_CURLY_BRACKET; i++) {
 			final CharacterStruct character = CharacterStruct.toLispCharacter(i);
-			final boolean result = charFunction.test(character);
+			final boolean result = charFunction.apply(character).toJavaPBoolean();
 			Assert.assertThat("Character did not meet requirements: " + character, result, is(smallLetter));
 		}
 		for (int i = CodePointConstants.LEFT_CURLY_BRACKET; i < CodePointConstants.DELETE; i++) {
 			final CharacterStruct character = CharacterStruct.toLispCharacter(i);
-			final boolean result = charFunction.test(character);
+			final boolean result = charFunction.apply(character).toJavaPBoolean();
 			Assert.assertThat("Character did not meet requirements: " + character, result, is(postSmallLetterSymbol));
 		}
 		final CharacterStruct character = CharacterConstants.DELETE_CHAR;
-		final boolean result = charFunction.test(character);
+		final boolean result = charFunction.apply(character).toJavaPBoolean();
 		Assert.assertThat("Character did not meet requirements: " + character, result, is(delete));
 	}
 }

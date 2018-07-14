@@ -805,7 +805,7 @@ public interface CommonLispSymbols {
 	SymbolStruct SET_MACRO_CHARACTER = null;
 	SymbolStruct SET_PPRINT_DISPATCH = null;
 	SymbolStruct SET_SYNTAX_FROM_CHAR = null;
-	SymbolStruct SETF = null;
+	SymbolStruct SETF = GlobalPackageStruct.COMMON_LISP.intern("SETF").getSymbol();
 	SymbolStruct SETQ = null;
 	SymbolStruct SEVENTH = null;
 	SymbolStruct SHADOW = null;

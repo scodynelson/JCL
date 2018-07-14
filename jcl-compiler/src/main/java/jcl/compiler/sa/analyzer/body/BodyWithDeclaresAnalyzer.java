@@ -19,10 +19,10 @@ public class BodyWithDeclaresAnalyzer {
 
 		final Iterator<LispStruct> iterator = input.iterator();
 
+		declares.add(SpecialOperatorStructImpl.DECLARE);
+
 		if (iterator.hasNext()) {
 			LispStruct next = iterator.next();
-
-			declares.add(SpecialOperatorStructImpl.DECLARE);
 
 			while (isDeclaration(next)) {
 				final ListStruct declareStatement = (ListStruct) next;

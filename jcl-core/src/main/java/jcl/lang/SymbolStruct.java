@@ -86,6 +86,8 @@ public interface SymbolStruct extends LispStruct {
 
 	FunctionStruct unbindFunction();
 
+	void setSetfFunction(final FunctionStruct function);
+
 	/**
 	 * Getter for symbol {@link MacroFunctionExpanderInter} property.
 	 *

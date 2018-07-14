@@ -76,10 +76,6 @@ public interface GenerationConstants {
 
 	String JAVA_CLASS_NAME = Type.getInternalName(Class.class);
 
-	String JAVA_CLASS_GET_DECLARED_METHOD_METHOD_NAME = "getDeclaredMethod";
-
-	String JAVA_CLASS_GET_DECLARED_METHOD_METHOD_DESC = CodeGenerators.getMethodDescription(Class.class, JAVA_CLASS_GET_DECLARED_METHOD_METHOD_NAME, String.class, Class[].class);
-
 	String JAVA_METHOD_NAME = Type.getInternalName(Method.class);
 
 	String JAVA_METHOD_INVOKE_METHOD_NAME = "invoke";
@@ -233,6 +229,10 @@ public interface GenerationConstants {
 	String LISP_STRUCT_FACTORY_TO_JAVA_NAME_METHOD_NAME = "toJavaName";
 
 	String LISP_STRUCT_FACTORY_TO_JAVA_NAME_METHOD_DESC = CodeGenerators.getMethodDescription(LispStructFactory.class, LISP_STRUCT_FACTORY_TO_JAVA_NAME_METHOD_NAME, String.class);
+
+	String LISP_STRUCT_FACTORY_TO_JAVA_REFLECTION_METHOD_METHOD_NAME = "toJavaReflectionMethod";
+
+	String LISP_STRUCT_FACTORY_TO_JAVA_REFLECTION_METHOD_METHOD_DESC = CodeGenerators.getMethodDescription(LispStructFactory.class, LISP_STRUCT_FACTORY_TO_JAVA_REFLECTION_METHOD_METHOD_NAME, String.class, Class.class, Class[].class);
 
 	String SYMBOL_STRUCT_NAME = Type.getInternalName(SymbolStruct.class);
 

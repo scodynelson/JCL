@@ -11,6 +11,7 @@ import jcl.compiler.struct.specialoperator.declare.DeclareStruct;
 import jcl.compiler.struct.specialoperator.declare.JavaClassNameDeclarationStruct;
 import jcl.compiler.struct.specialoperator.declare.LispNameDeclarationStruct;
 import jcl.compiler.struct.specialoperator.declare.SpecialDeclarationStruct;
+import jcl.lang.ConsStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
 import jcl.lang.StringStruct;
@@ -111,12 +112,30 @@ public class DeclareExpander extends MacroFunctionExpander<DeclareStruct> {
 		}
 
 		final LispStruct lispName = declSpecBody.get(0);
-		if (!(lispName instanceof SymbolStruct)) {
-			throw new TypeErrorException("DECLARE: LISP-NAME must be a Symbol. Got: " + lispName);
-		}
-		final SymbolStruct lispNameSymbol = (SymbolStruct) lispName;
 
-		final String name = lispNameSymbol.getName().replace('-', '_');
+		final String name;
+		if (lispName instanceof SymbolStruct) {
+			final SymbolStruct lispNameSymbol = (SymbolStruct) lispName;
+			name = lispNameSymbol.getName().replace('-', '_');
+		} else if (lispName instanceof ConsStruct) {
+			final ConsStruct lispNameCons = (ConsStruct) lispName;
+
+			final StringBuilder builder = new StringBuilder();
+			for (final LispStruct current : lispNameCons) {
+				if (current instanceof SymbolStruct) {
+					builder.append(((SymbolStruct) current).getName())
+					       .append('_');
+				} else {
+					throw new TypeErrorException("DECLARE: LISP-NAME that is a Cons must only contain Symbols. Got: " + lispName);
+				}
+			}
+
+			builder.setLength(builder.length() - 1);
+			name = builder.toString();
+		} else {
+			throw new TypeErrorException("DECLARE: LISP-NAME must be a Symbol or a Cons. Got: " + lispName);
+		}
+
 		final String realName = name.chars()
 		                            .filter(Character::isJavaIdentifierPart)
 		                            .mapToObj(e -> (char) e)

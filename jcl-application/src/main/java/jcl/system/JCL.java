@@ -51,6 +51,8 @@ public class JCL implements ApplicationRunner {
 	private final List<String> lispFilesToLoad;
 
 	public JCL() throws IOException {
+		BootstrapSymbols.bootstrap();
+
 		try (LoggerOutputStream loggerOutputStream = new LoggerOutputStream(LOGGER)) {
 			final JavaStreamStruct characterStream = LispStructFactory.toJavaStream(System.in, loggerOutputStream);
 
@@ -64,7 +66,8 @@ public class JCL implements ApplicationRunner {
 				"jcl-application/src/main/lisp/jcl/iterators/iterators.lisp",
 				"jcl-application/src/main/lisp/jcl/characters/characters.lisp",
 				"jcl-application/src/main/lisp/jcl/lists/lists.lisp",
-				"jcl-application/src/main/lisp/jcl/numbers/numbers.lisp"
+				"jcl-application/src/main/lisp/jcl/numbers/numbers.lisp",
+				"jcl-application/src/main/lisp/jcl/hashtables/hashtables.lisp"
 		);
 	}
 
@@ -140,6 +143,11 @@ public class JCL implements ApplicationRunner {
 
 		CompileForm.OUTPUT_FILE = false;
 		pathname = LispStructFactory.toPathname("jcl-application/src/main/lisp/jcl/numbers/numbers.lisp");
+		loadFunction.load(pathname, false, false, true);
+		CompileForm.OUTPUT_FILE = true;
+
+		CompileForm.OUTPUT_FILE = false;
+		pathname = LispStructFactory.toPathname("jcl-application/src/main/lisp/jcl/hashtables/hashtables.lisp");
 		loadFunction.load(pathname, false, false, true);
 		CompileForm.OUTPUT_FILE = true;
 	}

@@ -46,6 +46,8 @@ public class SymbolStructImpl extends BuiltInClassStruct implements SymbolStruct
 
 	protected Stack<FunctionStruct> functionStack = new Stack<>();
 
+	protected FunctionStruct setfFunction;
+
 	protected MacroFunctionExpanderInter macroFunctionExpander;
 
 	protected CompilerMacroFunctionExpanderInter compilerMacroFunctionExpander;
@@ -397,6 +399,11 @@ public class SymbolStructImpl extends BuiltInClassStruct implements SymbolStruct
 	@Override
 	public FunctionStruct unbindFunction() {
 		return functionStack.pop();
+	}
+
+	@Override
+	public void setSetfFunction(final FunctionStruct function) {
+		setfFunction = function;
 	}
 
 	/**

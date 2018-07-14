@@ -30,6 +30,7 @@ import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.internal.DeclarationStructImpl;
 import jcl.lang.internal.SpecialOperatorStructImpl;
 import jcl.type.TType;
+import org.apache.commons.lang3.ObjectUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -188,7 +189,7 @@ public class MacroletExpander extends MacroFunctionExpander<InnerLambdaStruct> {
 		final BodyProcessingResult bodyProcessingResult = bodyWithDeclaresAndDocStringAnalyzer.analyze(forms);
 
 		final List<LispStruct> declares = bodyProcessingResult.getDeclares();
-		final StringStruct docString = bodyProcessingResult.getDocString();
+		final StringStruct docString = ObjectUtils.defaultIfNull(bodyProcessingResult.getDocString(), StringStruct.EMPTY_STRING);
 		final List<LispStruct> bodyForms = bodyProcessingResult.getBodyForms();
 
 		// NOTE: Make Dotted list here so the 'contents' of the body get added to the block
@@ -212,7 +213,7 @@ public class MacroletExpander extends MacroFunctionExpander<InnerLambdaStruct> {
 
 		final ListStruct fullDeclaration = ListStruct.toLispList(declares);
 
-		final ListStruct innerLambdaListStruct = ListStruct.toLispList(SpecialOperatorStructImpl.LAMBDA, lambdaList, fullDeclaration, docString, innerBlockListStruct);
+		final ListStruct innerLambdaListStruct = ListStruct.toLispList(SpecialOperatorStructImpl.MACRO_LAMBDA, lambdaList, fullDeclaration, docString, innerBlockListStruct);
 		final ListStruct innerFunctionListStruct = ListStruct.toLispList(SpecialOperatorStructImpl.FUNCTION, innerLambdaListStruct);
 
 		// Evaluate in the 'current' environment.

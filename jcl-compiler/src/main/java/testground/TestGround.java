@@ -54,11 +54,11 @@ public class TestGround {
 			final LispStruct currentArgument = CharacterStruct.toLispCharacter(197);
 			methodArgs[i] = currentArgument;
 			methodArgTypes[i] = currentArgument.getClass();
-//			methodParamTypes[i] = Object.class;
 		}
 
 		final LispStruct javaObject = CharacterStruct.toLispCharacter(97);
-		final Method javaMethod = javaObject.getClass().getDeclaredMethod(methodName, methodArgTypes);
+		final Method javaMethod
+				= LispStructFactory.toJavaReflectionMethod(methodName, javaObject.getClass(), methodArgTypes);
 		final Object methodResult = javaMethod.invoke(javaObject, (Object[]) methodArgs);
 
 //		if (methodResult instanceof LispStruct) {

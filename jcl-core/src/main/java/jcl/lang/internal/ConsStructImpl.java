@@ -644,7 +644,7 @@ public final class ConsStructImpl extends BuiltInClassStruct implements ConsStru
 	public String toString() {
 		// TODO: Ignoring *PRINT-PRETTY* and the pretty printer in general right now...
 
-		if (IntegerStruct.MINUS_ONE.eql(listLength())) {
+		if ((cdr instanceof ConsStruct) && IntegerStruct.MINUS_ONE.eql(listLength())) {
 			return "CIRCULAR LIST PRINTING NOT YET SUPPORTED!!!";
 		}
 

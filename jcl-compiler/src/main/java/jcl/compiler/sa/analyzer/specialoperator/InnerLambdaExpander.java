@@ -32,6 +32,7 @@ import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.internal.DeclarationStructImpl;
 import jcl.lang.internal.SpecialOperatorStructImpl;
+import org.apache.commons.lang3.ObjectUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -193,7 +194,7 @@ public abstract class InnerLambdaExpander extends MacroFunctionExpander<InnerLam
 		final BodyProcessingResult bodyProcessingResult = bodyWithDeclaresAndDocStringAnalyzer.analyze(forms);
 
 		final List<LispStruct> declares = bodyProcessingResult.getDeclares();
-		final StringStruct docString = bodyProcessingResult.getDocString();
+		final StringStruct docString = ObjectUtils.defaultIfNull(bodyProcessingResult.getDocString(), StringStruct.EMPTY_STRING);
 		final List<LispStruct> bodyForms = bodyProcessingResult.getBodyForms();
 
 		// NOTE: Make Dotted list here so the 'contents' of the body get added to the block

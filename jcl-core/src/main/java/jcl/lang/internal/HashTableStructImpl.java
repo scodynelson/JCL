@@ -4,15 +4,24 @@
 
 package jcl.lang.internal;
 
-import java.math.BigDecimal;
-import java.math.BigInteger;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 import jcl.lang.BooleanStruct;
+import jcl.lang.ConsStruct;
+import jcl.lang.FixnumStruct;
+import jcl.lang.FloatStruct;
 import jcl.lang.FunctionStruct;
 import jcl.lang.HashTableStruct;
+import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
+import jcl.lang.ListStruct;
+import jcl.lang.NILStruct;
+import jcl.lang.SingleFloatStruct;
+import jcl.lang.TStruct;
+import jcl.lang.ValuesStruct;
 import jcl.lang.classes.BuiltInClassStruct;
 import jcl.type.HashTableType;
 import jcl.type.LispType;
@@ -33,7 +42,7 @@ public final class HashTableStructImpl extends BuiltInClassStruct implements Has
 	/**
 	 * The threshold used in the rehashing of the {@link #map}.
 	 */
-	private final float rehashThreshold;
+	private final FloatStruct rehashThreshold;
 
 	/**
 	 * The internal {@link Map} containing the {@link LispStruct} keys and values.
@@ -50,130 +59,96 @@ public final class HashTableStructImpl extends BuiltInClassStruct implements Has
 	 * @param rehashThreshold
 	 * 		the threshold amount when resizing the table
 	 */
-	private HashTableStructImpl(final FunctionStruct test, final BigInteger size, final float rehashThreshold) {
+	public HashTableStructImpl(final FunctionStruct test, final FixnumStruct size, final FloatStruct rehashThreshold) {
 		super(HashTableType.INSTANCE, null, null);
 		this.test = test;
 		this.rehashThreshold = rehashThreshold;
 
-		map = new ConcurrentHashMap<>(size.intValue(), rehashThreshold);
+		map = new ConcurrentHashMap<>(size.toJavaInt(), rehashThreshold.toJavaPFloat());
 	}
 
-	public static HashTableStructImpl valueOf(final FunctionStruct test, final BigInteger size, final float rehashThreshold) {
+	public static HashTableStructImpl valueOf(final FunctionStruct test, final FixnumStruct size,
+	                                          final FloatStruct rehashThreshold) {
 		return new HashTableStructImpl(test, size, rehashThreshold);
 	}
 
-	/**
-	 * Getter for hash-table {@link #test} property.
-	 *
-	 * @return hash-table {@link #test} property
-	 */
 	@Override
-	public FunctionStruct getTest() {
+	public ListStruct entries() {
+		final List<ConsStruct> entriesList
+				= map.entrySet()
+				     .stream()
+				     .map(entry -> ConsStruct.toLispCons(((KeyWrapper) entry.getKey()).getKey(),
+				                                         entry.getValue()))
+				     .collect(Collectors.toList());
+		return ListStruct.toLispList(entriesList);
+	}
+
+	@Override
+	public FunctionStruct test() {
 		return test;
 	}
 
-	/**
-	 * Returns {@link BigDecimal#ONE} for the hash-table rehash size.
-	 *
-	 * @return {@link BigDecimal#ONE} for the hash-table rehash size
-	 */
 	@Override
-	public BigDecimal getRehashSize() {
-		return BigDecimal.ONE;
+	public FloatStruct rehashSize() {
+		return SingleFloatStruct.ONE;
 	}
 
-	/**
-	 * Getter for hash-table {@link #rehashThreshold} property.
-	 *
-	 * @return hash-table {@link #rehashThreshold} property
-	 */
 	@Override
-	public float getRehashThreshold() {
+	public FloatStruct rehashThreshold() {
 		return rehashThreshold;
 	}
 
-	/**
-	 * Gets the current size of the internal map.
-	 *
-	 * @return the current size of the internal map
-	 */
 	@Override
-	public BigInteger getSize() {
-		return getCount();
+	public IntegerStruct size() {
+		return count();
 	}
 
-	/**
-	 * Gets the current number of items in the internal map.
-	 *
-	 * @return the current number of items in the internal map
-	 */
 	@Override
-	public BigInteger getCount() {
-		return BigInteger.valueOf(map.size());
+	public IntegerStruct count() {
+		return IntegerStruct.toLispInteger(map.size());
 	}
 
-	/**
-	 * Returns the value stored in the map matching the provided key.
-	 *
-	 * @param key
-	 * 		the key to find the matching stored value
-	 *
-	 * @return the matching stored value for the provided key
-	 */
 	@Override
-	public LispStruct getHash(final LispStruct key) {
+	public LispStruct getHash(final LispStruct key, final LispStruct defaultValue) {
 		final LispStruct keyWrapper = KeyWrapper.getInstance(key, test);
-		return map.get(keyWrapper);
+		if (map.containsKey(keyWrapper)) {
+			return ValuesStruct.valueOf(map.get(keyWrapper), TStruct.INSTANCE);
+		} else {
+			return ValuesStruct.valueOf(defaultValue, NILStruct.INSTANCE);
+		}
 	}
 
-	/**
-	 * Sets or inserts the value stored in the map matching the provided key.
-	 *
-	 * @param key
-	 * 		the key to set or insert the provided value
-	 * @param value
-	 * 		the value to be stored in the table
-	 */
 	@Override
-	public void setHash(final LispStruct key, final LispStruct value) {
+	public LispStruct putHash(final LispStruct key, final LispStruct value) {
 		final LispStruct keyWrapper = KeyWrapper.getInstance(key, test);
 		map.put(keyWrapper, value);
+		return value;
 	}
 
-	/**
-	 * Removes the value stored in the map matching the provided key.
-	 *
-	 * @param key
-	 * 		the key to remove the matching stored value
-	 *
-	 * @return the removed value or {@code null} if no value existed
-	 */
 	@Override
-	public LispStruct remHash(final LispStruct key) {
+	public BooleanStruct remHash(final LispStruct key) {
 		final LispStruct keyWrapper = KeyWrapper.getInstance(key, test);
-		return map.remove(keyWrapper);
+		if (map.containsKey(keyWrapper)) {
+			map.remove(keyWrapper);
+			return TStruct.INSTANCE;
+		} else {
+			return NILStruct.INSTANCE;
+		}
 	}
 
-	/**
-	 * Clears the internal map.
-	 */
 	@Override
-	public void clrHash() {
+	public HashTableStruct clrHash() {
 		map.clear();
+		return this;
 	}
 
-	/**
-	 * Runs a mapping function over the internal map.
-	 *
-	 * @param function
-	 * 		the mapping function
-	 */
 	@Override
-	public void mapHash(final FunctionStruct function) {
+	public LispStruct mapHash(final FunctionStruct function) {
 		for (final Map.Entry<LispStruct, LispStruct> entry : map.entrySet()) {
 			final LispStruct keyWrapper = new KeyWrapper(entry.getKey(), test);
 			function.apply(keyWrapper, entry.getValue());
 		}
+		return NILStruct.INSTANCE;
 	}
 
 	@Override
@@ -205,13 +180,7 @@ public final class HashTableStructImpl extends BuiltInClassStruct implements Has
 
 	@Override
 	public String toString() {
-//		final String typeClassName = getType().getClass().getSimpleName().toUpperCase();
-
-		final String printedTest = test.toString();
-
-		final BigInteger mapSize = getCount();
-
-		return "#<" + "HASH-TABLE" + " :TEST " + printedTest + " :SIZE " + mapSize + '>';
+		return "#<" + "HASH-TABLE" + " :TEST " + test + " :SIZE " + size() + '>';
 	}
 
 	/**
@@ -263,12 +232,12 @@ public final class HashTableStructImpl extends BuiltInClassStruct implements Has
 
 		@Override
 		public boolean equals(final Object obj) {
-			if (!(obj instanceof LispStruct)) {
+			if (!(obj instanceof KeyWrapper)) {
 				return false;
 			}
 
-			final LispStruct lispStruct = (LispStruct) obj;
-			return ((BooleanStruct) equivalenceFn.apply(key, lispStruct)).toJavaPBoolean();
+			final KeyWrapper lispStruct = (KeyWrapper) obj;
+			return ((BooleanStruct) equivalenceFn.apply(key, lispStruct.key)).toJavaPBoolean();
 		}
 
 		@Override

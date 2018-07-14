@@ -6,7 +6,6 @@ import java.io.OutputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.math.BigInteger;
 import java.net.URI;
 import java.net.URL;
 import java.nio.file.Path;
@@ -24,8 +23,6 @@ import jcl.lang.ConcatenatedStreamStruct;
 import jcl.lang.EchoStreamStruct;
 import jcl.lang.EmptyStreamStruct;
 import jcl.lang.FileStreamStruct;
-import jcl.lang.FunctionStruct;
-import jcl.lang.HashTableStruct;
 import jcl.lang.InputStreamStruct;
 import jcl.lang.IntegerStruct;
 import jcl.lang.JavaStreamStruct;
@@ -45,7 +42,6 @@ import jcl.lang.URLStreamStruct;
 import jcl.lang.VectorStruct;
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.internal.BitVectorStructImpl;
-import jcl.lang.internal.HashTableStructImpl;
 import jcl.lang.internal.KeywordStructImpl;
 import jcl.lang.internal.LogicalPathnameStructImpl;
 import jcl.lang.internal.MultiArrayStructImpl;
@@ -206,16 +202,6 @@ public final class LispStructFactory {
 	}
 
 	/*
-	 * HashTable
-	 */
-
-	public static HashTableStruct toHashTable(final FunctionStruct test,
-	                                          final BigInteger size,
-	                                          final float rehashThreshold) {
-		return HashTableStructImpl.valueOf(test, size, rehashThreshold);
-	}
-
-	/*
 	 * JavaClassStruct
 	 */
 
@@ -232,20 +218,52 @@ public final class LispStructFactory {
 	 * JavaMethodStruct
 	 */
 
-	public static JavaMethodStruct toJavaMethod(final String methodName,
-	                                            final Class<?> javaClass,
-	                                            final Class<?>... parameterTypes) {
+	public static Method toJavaReflectionMethod(final String methodName,
+	                                           final Class<?> javaClass,
+	                                           final Class<?>... parameterTypes) {
 		final String javaClassName = javaClass.getName();
-		try {
-			final Method method = javaClass.getDeclaredMethod(methodName, parameterTypes);
-			return JavaMethodStruct.valueOf(method);
-		} catch (final NoSuchMethodException ex) {
+		final Method[] methods = javaClass.getMethods();
+
+		Method matchingMethod = null;
+
+		for (final Method method : methods) {
+			final String currentMethodName = method.getName();
+			if (!currentMethodName.equals(methodName)) {
+				continue;
+			}
+			final Class<?>[] currentParamTypes = method.getParameterTypes();
+			if (currentParamTypes.length != parameterTypes.length) {
+				continue;
+			}
+
+			boolean matches = true;
+			for (int i = 0; i < currentParamTypes.length; i++) {
+				final Class<?> currentParamType = currentParamTypes[i];
+				final Class<?> expectedParamType = parameterTypes[i];
+
+				if (!currentParamType.isAssignableFrom(expectedParamType)) {
+					matches = false;
+				}
+			}
+			if (matches) {
+				matchingMethod = method;
+				break;
+			}
+		}
+		if (matchingMethod == null) {
 			throw new ErrorException(
 					"Java Class '" + javaClassName +
 							"' does not have the method '" + methodName +
 							"' with parameter types '" + Arrays.toString(parameterTypes) +
-							"'.", ex);
+							"'.");
 		}
+		return matchingMethod;
+	}
+
+	public static JavaMethodStruct toJavaMethod(final String methodName,
+	                                            final Class<?> javaClass,
+	                                            final Class<?>... parameterTypes) {
+		return JavaMethodStruct.valueOf(toJavaReflectionMethod(methodName, javaClass, parameterTypes));
 	}
 
 	/*

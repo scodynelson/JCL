@@ -166,8 +166,7 @@ public class InternalEval {
 				final LispStruct currentArg = arguments.get(i);
 				final LispStruct evaluatedArgument = eval(currentArg);
 				methodEvaluatedArgs[i] = evaluatedArgument;
-				// TODO: can we dynamically determine the types???
-				methodParamTypes[i] = Object.class;
+				methodParamTypes[i] = evaluatedArgument.getClass();
 			}
 
 			final JavaMethodStruct javaMethodStruct = LispStructFactory.toJavaMethod(methodName.getJavaName(),
@@ -232,7 +231,7 @@ public class InternalEval {
 		final String javaMethodName = javaMethod.getName();
 
 		try {
-			final Object methodResult = javaMethod.invoke(javaObject, (Object[]) methodArgs);
+			final Object methodResult = javaMethod.invoke(javaObject, methodArgs);
 			if (methodResult instanceof LispStruct) {
 				return (LispStruct) methodResult;
 			}

@@ -5,10 +5,13 @@ import java.util.Iterator;
 import jcl.compiler.environment.Environment;
 import jcl.compiler.function.expanders.MacroFunctionExpander;
 import jcl.compiler.sa.analyzer.LambdaExpander;
+import jcl.compiler.sa.analyzer.MacroLambdaExpander;
 import jcl.compiler.struct.specialoperator.CompilerFunctionStruct;
 import jcl.compiler.struct.specialoperator.LambdaCompilerFunctionStruct;
+import jcl.compiler.struct.specialoperator.MacroLambdaCompilerFunctionStruct;
 import jcl.compiler.struct.specialoperator.SymbolCompilerFunctionStruct;
 import jcl.compiler.struct.specialoperator.lambda.LambdaStruct;
+import jcl.compiler.struct.specialoperator.lambda.MacroLambdaStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
 import jcl.lang.SymbolStruct;
@@ -23,6 +26,9 @@ public class FunctionExpander extends MacroFunctionExpander<CompilerFunctionStru
 
 	@Autowired
 	private LambdaExpander lambdaExpander;
+
+	@Autowired
+	private MacroLambdaExpander macroLambdaExpander;
 
 	@Override
 	public SymbolStruct getFunctionSymbol() {
@@ -56,11 +62,14 @@ public class FunctionExpander extends MacroFunctionExpander<CompilerFunctionStru
 
 		final LispStruct functionListFirst = functionList.car();
 
-		if (!SpecialOperatorStructImpl.LAMBDA.eq(functionListFirst)) {
+		if (SpecialOperatorStructImpl.LAMBDA.eq(functionListFirst)) {
+			final LambdaStruct analyzedLambda = lambdaExpander.expand(functionList, environment);
+			return new LambdaCompilerFunctionStruct(analyzedLambda);
+		} else if(!SpecialOperatorStructImpl.LAMBDA.eq(functionListFirst)) {
+			final MacroLambdaStruct analyzedMacroLambda = macroLambdaExpander.expand(functionList, environment);
+			return new MacroLambdaCompilerFunctionStruct(analyzedMacroLambda);
+		} else {
 			throw new ProgramErrorException("FUNCTION: First element of list argument must be the symbol 'LAMBDA'. Got: " + functionListFirst);
 		}
-
-		final LambdaStruct analyzedLambda = lambdaExpander.expand(functionList, environment);
-		return new LambdaCompilerFunctionStruct(analyzedLambda);
 	}
 }

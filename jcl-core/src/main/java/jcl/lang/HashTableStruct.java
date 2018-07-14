@@ -1,47 +1,49 @@
 package jcl.lang;
 
-import java.math.BigDecimal;
-import java.math.BigInteger;
+import jcl.lang.condition.exception.TypeErrorException;
+import jcl.lang.internal.HashTableStructImpl;
 
 /**
  * The {@link HashTableStruct} is the object representation of a Lisp 'hash-table' type.
  */
 public interface HashTableStruct extends LispStruct {
 
+	ListStruct entries();
+
 	/**
 	 * Getter for hash-table test property.
 	 *
 	 * @return hash-table test property
 	 */
-	FunctionStruct getTest();
+	FunctionStruct test();
 
 	/**
 	 * Getter for hash-table rehash-size property.
 	 *
 	 * @return hash-table rehash-size property
 	 */
-	BigDecimal getRehashSize();
+	FloatStruct rehashSize();
 
 	/**
 	 * Getter for hash-table rehash-threshold property.
 	 *
 	 * @return hash-table rehash-threshold property
 	 */
-	float getRehashThreshold();
+	FloatStruct rehashThreshold();
 
 	/**
 	 * Gets the current size of the internal map.
 	 *
 	 * @return the current size of the internal map
 	 */
-	BigInteger getSize();
+	IntegerStruct size();
 
 	/**
 	 * Gets the current number of items in the internal map.
 	 *
 	 * @return the current number of items in the internal map
 	 */
-	BigInteger getCount();
+	IntegerStruct count();
 
 	/**
 	 * Returns the value stored in the map matching the provided key.
@@ -51,7 +53,21 @@ public interface HashTableStruct extends LispStruct {
 	 *
 	 * @return the matching stored value for the provided key
 	 */
-	LispStruct getHash(final LispStruct key);
+	default LispStruct getHash(final LispStruct key) {
+		return getHash(key, NILStruct.INSTANCE);
+	}
+
+	/**
+	 * Returns the value stored in the map matching the provided key.
+	 *
+	 * @param key
+	 * 		the key to find the matching stored value
+	 * @param defaultValue
+	 * 		the default value to be returned if no mapping matches the provided key
+	 *
+	 * @return the matching stored value for the provided key
+	 */
+	LispStruct getHash(final LispStruct key, final LispStruct defaultValue);
 
 	/**
 	 * Sets or inserts the value stored in the map matching the provided key.
@@ -60,8 +76,10 @@ public interface HashTableStruct extends LispStruct {
 	 * 		the key to set or insert the provided value
 	 * @param value
 	 * 		the value to be stored in the table
+	 *
+	 * @return the stored value
 	 */
-	void setHash(final LispStruct key, final LispStruct value);
+	LispStruct putHash(final LispStruct key, final LispStruct value);
 
 	/**
 	 * Removes the value stored in the map matching the provided key.
@@ -71,18 +89,74 @@ public interface HashTableStruct extends LispStruct {
 	 *
 	 * @return the removed value or {@code null} if no value existed
 	 */
-	LispStruct remHash(final LispStruct key);
+	BooleanStruct remHash(final LispStruct key);
 
 	/**
 	 * Clears the internal map.
+	 *
+	 * @return the instance with the internal map cleared
 	 */
-	void clrHash();
+	HashTableStruct clrHash();
+
+	/**
+	 * Runs a mapping function over the internal map.
+	 *
+	 * @param designator
+	 * 		the mapping function
+	 *
+	 * @return NIL
+	 */
+	default LispStruct mapHash(final LispStruct designator) {
+		final FunctionStruct functionVal;
+		if (designator instanceof FunctionStruct) {
+			functionVal = (FunctionStruct) designator;
+		} else if (designator instanceof SymbolStruct) {
+			functionVal = ((SymbolStruct) designator).getFunction();
+		} else {
+			throw new TypeErrorException("UNCAUGHT TYPE ERROR.");
+		}
+
+		return mapHash(functionVal);
+	}
 
 	/**
 	 * Runs a mapping function over the internal map.
 	 *
 	 * @param function
 	 * 		the mapping function
+	 *
+	 * @return NIL
 	 */
-	void mapHash(final FunctionStruct function);
+	LispStruct mapHash(final FunctionStruct function);
+
+	static IntegerStruct sxHash(final LispStruct object) {
+		return IntegerStruct.toLispInteger(object.hashCode());
+	}
+
+	/**
+	 * Returns a new HashTableStruct with the provided {@link LispStruct} {@code test} to be used as the key comparator
+	 * (should be a function-designator, initialized to the provided {@link FixnumStruct} {@code size}, with a rehashing
+	 * threshold matching the provided {@link FloatStruct} {@code rehashThreshold}.
+	 *
+	 * @param test
+	 * 		the {@link LispStruct} to be used as the key comparator; should be a function-designator
+	 * @param size
+	 * 		the initial size of the table
+	 * @param rehashThreshold
+	 * 		the rehashing threshold of the table
+	 *
+	 * @return a new HashTableStruct
+	 */
+	static HashTableStruct toLispHashTable(final LispStruct test, final FixnumStruct size,
+	                                       final FloatStruct rehashThreshold) {
+		final FunctionStruct realTest;
+		if (test instanceof FunctionStruct) {
+			realTest = (FunctionStruct) test;
+		} else if (test instanceof SymbolStruct) {
+			realTest = ((SymbolStruct) test).getFunction();
+		} else {
+			throw new TypeErrorException("UNCAUGHT TYPE ERROR.");
+		}
+		return new HashTableStructImpl(realTest, size, rehashThreshold);
+	}
 }

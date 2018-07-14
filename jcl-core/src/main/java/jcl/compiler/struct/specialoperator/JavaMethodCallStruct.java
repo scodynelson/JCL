@@ -119,19 +119,18 @@ public class JavaMethodCallStruct extends CompilerSpecialOperatorStruct {
 		final int javaObjectStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, javaObjectStore);
 
+		mv.visitVarInsn(Opcodes.ALOAD, methodNameStore);
 		mv.visitVarInsn(Opcodes.ALOAD, javaObjectStore);
 		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
 		                   GenerationConstants.JAVA_OBJECT_NAME,
 		                   GenerationConstants.JAVA_OBJECT_GET_CLASS_METHOD_NAME,
 		                   GenerationConstants.JAVA_OBJECT_GET_CLASS_METHOD_DESC,
 		                   false);
-
-		mv.visitVarInsn(Opcodes.ALOAD, methodNameStore);
 		mv.visitVarInsn(Opcodes.ALOAD, methodArgumentTypesStore);
-		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
-		                   GenerationConstants.JAVA_CLASS_NAME,
-		                   GenerationConstants.JAVA_CLASS_GET_DECLARED_METHOD_METHOD_NAME,
-		                   GenerationConstants.JAVA_CLASS_GET_DECLARED_METHOD_METHOD_DESC,
+		mv.visitMethodInsn(Opcodes.INVOKESTATIC,
+		                   GenerationConstants.LISP_STRUCT_FACTORY_NAME,
+		                   GenerationConstants.LISP_STRUCT_FACTORY_TO_JAVA_REFLECTION_METHOD_METHOD_NAME,
+		                   GenerationConstants.LISP_STRUCT_FACTORY_TO_JAVA_REFLECTION_METHOD_METHOD_DESC,
 		                   false);
 		final int javaMethodStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, javaMethodStore);

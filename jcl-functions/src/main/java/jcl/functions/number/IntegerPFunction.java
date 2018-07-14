@@ -2,23 +2,27 @@
  * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
  */
 
-package jcl.functions.hashtable;
+package jcl.functions.number;
 
 import jcl.functions.CommonLispBuiltInFunctionStructBase;
+import jcl.lang.BooleanStruct;
 import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import org.springframework.stereotype.Component;
 
+/**
+ * Function implementation for {@code integerp}.
+ */
 @Component
-public final class SxHashFunction extends CommonLispBuiltInFunctionStructBase {
+public final class IntegerPFunction extends CommonLispBuiltInFunctionStructBase {
 
-	private static final String FUNCTION_NAME = "SXHASH";
+	private static final String FUNCTION_NAME = "INTEGERP";
 	private static final String OBJECT_ARGUMENT = "OBJECT";
 
-	public SxHashFunction() {
-		super("Returns a hash code for object.",
+	public IntegerPFunction() {
+		super("Returns true if object is of type integer; otherwise, returns false.",
 		      FUNCTION_NAME,
 		      Parameters.forFunction(FUNCTION_NAME)
 		                .requiredParameter(OBJECT_ARGUMENT)
@@ -28,7 +32,6 @@ public final class SxHashFunction extends CommonLispBuiltInFunctionStructBase {
 	@Override
 	public LispStruct apply(final Arguments arguments) {
 		final LispStruct object = arguments.getRequiredArgument(OBJECT_ARGUMENT);
-		final int hashCode = object.hashCode();
-		return IntegerStruct.toLispInteger(hashCode);
+		return BooleanStruct.toLispBoolean(object instanceof IntegerStruct);
 	}
 }
